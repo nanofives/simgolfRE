@@ -32,9 +32,12 @@ def function_lists() -> dict[str, list[str]]:
     return out
 
 
-def entries_file() -> pathlib.Path:
+def entries_file(skip: frozenset = frozenset()) -> pathlib.Path:
+    """Every function entry to arm; `skip` = golf_clean.exe entries a scenario hooks with Frida
+    (an INT3 and a Frida inline hook must not share a first byte)."""
     out = pathlib.Path(tempfile.gettempdir()) / "simgolf_cov_entries.txt"
-    out.write_text("".join(f"{mod}{TAB}{a}\n" for mod, addrs in function_lists().items() for a in addrs))
+    out.write_text("".join(f"{mod}{TAB}{a}\n" for mod, addrs in function_lists().items() for a in addrs
+                           if not (mod == "golf_clean.exe" and a in skip)))
     return out
 
 
@@ -42,7 +45,9 @@ def one_run(name: str) -> tuple[dict[tuple[str, str], int], list[str]]:
     spec = scenario.SCENARIOS[name]
     phases = ["boot"] + [p for p, _ in spec["phases"]]
     dump = pathlib.Path(tempfile.gettempdir()) / f"simgolf_cov_{time.time_ns()}.tsv"
-    with Game(env={"SIMGOLF_SKIP_INTRO": "1", **spec["env"]}, coverage=entries_file()) as g:
+    watched = {f"{a:08x}": ph for a, ph in spec.get("watched", {}).items()}
+    with Game(env={"SIMGOLF_SKIP_INTRO": "1", **spec["env"]}, coverage=entries_file(set(watched)),
+              extra_js=spec.get("js", [])) as g:
         g.wait_window()
         imgcmp.wait_for(g, imgcmp.load(scenario.GOLDEN / "main_menu.png"), timeout=60)
         for i, (_, step) in enumerate(spec["phases"], start=1):
@@ -50,10 +55,13 @@ def one_run(name: str) -> tuple[dict[tuple[str, str], int], list[str]]:
             step(g)
         assert g.alive, g.detach_reason
         g.cov_dump(dump)
+        seen_watched = {a for a in watched if scenario.events_script(g).calls(int(a, 16))} if watched else set()
     out = {}
     for line in dump.read_text().splitlines()[1:]:
         mod, addr, mask = line.split(TAB)
         out[(mod, addr)] = int(mask, 16)
+    for a in seen_watched:
+        out[("golf_clean.exe", a)] = 1 << phases.index(watched[a])
     return out, phases
 
 

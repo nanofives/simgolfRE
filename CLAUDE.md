@@ -95,8 +95,13 @@ SimGolf\
 normalized instructions against the anchored binary, writes `log/diff/<addr>_<name>.match.csv`.
 Flags found so far: `golf_clean.exe` `/O2` (or `/Ox`, indistinguishable so far); `Terrain.dll`
 `/Od /ZI /GZ /GX` (debug, C++ EH on: `getInstance` has an SEH frame; /GX changes nothing else).
-26 functions at 100% (all 4 Terrain accessors in both builds, 19 of the 22 live exported Terrain.dll
-methods incl. initSystem/resize/calcAllNormals/tileHit). Remaining live exports: drawLine, localRender, render.
+29 functions at 100%: the 4 Terrain accessors in both builds and ALL 22 live exported Terrain.dll methods
+(incl. render 399 ins, localRender 380, drawLine 219, resize 150). Original source file:
+`C:\ProjectsDTerrainLowPoly\Terrain.cpp` (assert in localRender). With /ZI, `__LINE__` is relative to a
+per-function variable, so an assert must sit at the same line offset as in the original (localRender:
+base+3). VC6's STL headers are 8.3-named on the CD (fctional, algrithm, stdxcept, ...); long-name copies
+were added to tools/vc6/vc98/include. Style differences the matcher resolves: `continue` vs a single `&&`
+condition (localRender vs render), variable-left vs expression-left comparisons, early return vs wrapping if.
 The shim links VC6 output: `shimuild_vc6.bat` compiles `re/match/terrain.cpp` (/O2 /Zl) and
 `/DSG_VC6_TERRAIN` makes it the tileAt detour (the original 57 bytes appear verbatim in winmm.dll). Debug builds compile almost literally, so they reveal source shape the release
 optimizer erased (e.g. Terrain accessors delegate to inline `Tile` methods). When several spellings
@@ -153,9 +158,15 @@ from the recording that neighbours can be checked against.
 ### Scenarios (`re/tools/scenario.py`)
 `sandbox_basic` (menu -> Sandbox -> Monterey, 40 s), `course_season` (+ build tee/green with the Build
 Course palette, open the hole with `H`, 240 s at x32 = ~6 game years), `championship` (installs the
-fixture course `tests/fixtures/championship/`, Play a Championship -> Easy -> course -> Gary Golf ->
-tournament with leaderboard; Gary's own shots wait for player input, not driven yet).
-Census: `py -3.12 re/tools/coverage_census.py --scenario <name>`; union so far exe 805/2207, Terrain.dll 422/1050.
+fixture course, Play a Championship -> Easy -> course -> Gary Golf; the harness plays Gary's shots:
+straight shot at the cup found by colour (red pennant + pale pole base) or the green centroid, zooming
+out with X when the green is off-screen; 5/5 rounds finish in 45-107 s), `golfer_events` (organic golfer
+info panel by clicking a golfer under its name label; then an INJECTED landmark notice 0x004722c0 called
+on the game thread via re/frida/js/events.js; the organic trigger is open, U-0003).
+Census: `py -3.12 re/tools/coverage_census.py --scenario <name>`. All 6 patch-linked functions are now
+reached (5 organically). Functions a scenario hooks with Frida are excluded from INT3 arming ("watched")
+and recorded from the hook instead; injected calls use NativeFunction `exceptions: 'propagate'` so the
+INT3 VEH sees them.
 Input gotchas: posted mouse lParam is rescaled by Windows from the DPI-aware harness to the DPI-unaware
 game (send physical coords: `Game._lp`); keys need WM_CHAR too; right click drops a build tool.
 

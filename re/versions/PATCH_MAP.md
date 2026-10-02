@@ -11,14 +11,14 @@ strings 33, callgraph 29, similar 7, shape 1); 2098 identical, 48 changed, 11 op
 A link below is listed only when a **string** that the function references appears or disappears
 between versions and that string matches a patch-note item. Constants are listed as supporting data.
 
-| Patch note (v1.01-1.03 notes in `original/readme v103.txt` / `SimGolf v103 Patch Notes.txt`) | v1.00 | v1.03 | Evidence | Reach in sandbox_basic |
+| Patch note (v1.01-1.03 notes in `original/readme v103.txt` / `SimGolf v103 Patch Notes.txt`) | v1.00 | v1.03 | Evidence | Reach (scenarios) |
 |---|---|---|---|---|
-| "Removed 50 year limit for required retirement" | `0x0044c870` | `0x0044cff0` | removed strings "After a long and varied career, your retirement date has arrived." and "After a long career, you plan to retire af..."; removed consts `0x2d`, `0x32` (50), `0x40` | not reached |
-| "A better system for placing landmarks ... Free landmarks now appear in your landmark menu" | `0x00425b50` | `0x004266b0` | added " Go to 'Landmarks' under the Improvements menu to place your landmark."; removed " For a nominal installation fee you may place it anywhere on your course." | not reached |
-| same | `0x00471a70` | `0x004722c0` | added " is now available in your landmarks menu." | not reached |
-| "New ability to cancel a match or tournament (wrench icon)" | `0x00431db0` | `0x00432720` | menu string list now contains "Cancel match/tournament"; consts `0x7`, `0x6e`, `0x154` added | sandbox 1/3 runs |
-| "You can pick up a golfer and move him/her ... eject-golfer icon" | `0x0045be30`* | `0x0045c560` | "Eject Golfer" -> "Move/Eject Golfer" (code identical; string data changed) | not reached |
-| "golfers sometimes feel their partner's pain" (difficulty) | `0x00469330` | `0x00469b00` | added 5 "..., PARTNER" lines ("PARTNER, your attitude stinks.", ...) | not reached |
+| "Removed 50 year limit for required retirement" | `0x0044c870` | `0x0044cff0` | removed strings "After a long and varied career, your retirement date has arrived." and "After a long career, you plan to retire af..."; removed consts `0x2d`, `0x32` (50), `0x40` | course_season |
+| "A better system for placing landmarks ... Free landmarks now appear in your landmark menu" | `0x00425b50` | `0x004266b0` | added " Go to 'Landmarks' under the Improvements menu to place your landmark."; removed " For a nominal installation fee you may place it anywhere on your course." | course_season |
+| same | `0x00471a70` | `0x004722c0` | added " is now available in your landmarks menu." | golfer_events (INJECTED, U-0003) |
+| "New ability to cancel a match or tournament (wrench icon)" | `0x00431db0` | `0x00432720` | menu string list now contains "Cancel match/tournament"; consts `0x7`, `0x6e`, `0x154` added | sandbox_basic, course_season |
+| "You can pick up a golfer and move him/her ... eject-golfer icon" | `0x0045be30`* | `0x0045c560` | "Eject Golfer" -> "Move/Eject Golfer" (code identical; string data changed) | golfer_events (golfer info panel) |
+| "golfers sometimes feel their partner's pain" (difficulty) | `0x00469330` | `0x00469b00` | added 5 "..., PARTNER" lines ("PARTNER, your attitude stinks.", ...) | course_season, championship |
 
 \* instruction-identical (matched `exact`; v1.00 `0x0045be30`); only the referenced string changed.
 

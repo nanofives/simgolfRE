@@ -24,9 +24,11 @@
 - [x] VC6 matching scaled: 26 functions 100%; VC6 objects linked into the shim (tileAt detour = original bytes).
 
 ## P1 Map the live surface (next)
-- [ ] Drive Gary Golf's shots in the championship (shot panel) so whole rounds complete.
-- [ ] Scenarios for landmark donation and the golfer panel (click a moving golfer).
-- [ ] Match the 3 large live Terrain exports (drawLine, localRender, render), then unexported callees.
+- [x] Gary's shots driven; championship rounds complete (5/5).
+- [x] Golfer panel scenario (organic); landmark notice reached by injection (organic trigger: U-0003).
+- [x] All 22 live exported Terrain.dll methods matched at 100% (29 functions total).
+- [ ] Match the unexported Terrain.dll callees (Tile methods, drawTile, isCulled, ...), then golf_clean.exe.
+- [ ] Organic landmark donation (map FUN_00466370's golfer-pair switch to golfer stories).
 - [ ] Neighbourhood recording (target + callers + callees in one run).
 Goal: know which functions actually run, so confidence work targets reachable code.
 - [ ] More census scenarios (a played round, save/load, tournament) -> `re/coverage/<scenario>.tsv`.
