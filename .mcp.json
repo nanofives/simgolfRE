@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "ghidra": {
+      "command": "py",
+      "args": [
+        "-3.12",
+        "C:\\Users\\maria\\Desktop\\Proyectos\\TD5RE\\ghidra\\headless-mcp\\ghidra_headless_mcp.py",
+        "--ghidra-install-dir",
+        "C:\\Users\\maria\\Desktop\\Proyectos\\TD5RE\\ghidra\\ghidra_12.0.3_PUBLIC"
+      ]
+    },
+    "frida-game-hacking": {
+      "command": "py",
+      "args": [
+        "-3.12",
+        "-m",
+        "frida_game_hacking_mcp"
+      ]
+    }
+  }
+}

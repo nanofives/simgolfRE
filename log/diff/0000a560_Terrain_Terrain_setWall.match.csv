@@ -1,0 +1,33 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x44","sub esp, 0x44",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x44]","lea edi, [ebp - 0x44]",True
+8,"mov ecx, 0x11","mov ecx, 0x11",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov al, byte ptr [ebp + 0x14]","mov al, byte ptr [ebp + 0x14]",True
+14,push eax,push eax,True
+15,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+16,push ecx,push ecx,True
+17,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+18,push edx,push edx,True
+19,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+20,call 0x31,call 0x100011d1,True
+21,pop edi,pop edi,True
+22,pop esi,pop esi,True
+23,pop ebx,pop ebx,True
+24,"add esp, 0x44","add esp, 0x44",True
+25,"cmp ebp, esp","cmp ebp, esp",True
+26,call 0x3e,call 0x100180a0,True
+27,"mov esp, ebp","mov esp, ebp",True
+28,pop ebp,pop ebp,True
+29,ret 0x10,ret 0x10,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?setWall@Terrain@@QAEXPAVTile@@HH_N@Z,module=Terrain.dll
+VERDICT,GREEN,30,100.0%

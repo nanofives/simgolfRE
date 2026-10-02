@@ -1,0 +1,7 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+2,"mov al, byte ptr [ecx + eax + 0x234]","mov al, byte ptr [ecx + eax + 0x234]",True
+3,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?getWall@Terrain@@QAE_NPAVTile@@H@Z,module=golf_clean.exe
+VERDICT,GREEN,4,100.0%

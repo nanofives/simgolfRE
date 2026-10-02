@@ -1,0 +1,50 @@
+{
+  "iso_sha256": "5C6D9C6C3D798EB12BEA2CF54DB8598F6764131F52424448EE8CC9621DEF9A96",
+  "files": {
+    "golf.exe": {
+      "size": 2286953,
+      "sha256": "200711A655DEB60DD63B2C379B25086B90CBF9A0B8C8BCC5427B224201BAC0A2",
+      "note": "SafeDisc 2.60.52 v1.03 exe (from Patch/SimGolf_Patch_v103.exe). Protected anchor; cannot run on Win11 without loader."
+    },
+    "golf.v100.safedisc.exe": {
+      "size": 1944781,
+      "sha256": "70ECE7CD1A55ED5EB4C00090557F9015423B9190F339159EC52D787E34EDDC14",
+      "note": "SafeDisc v1.00 retail exe (from data2.cab). Kept for reference only."
+    },
+    "golf_clean.exe": {
+      "size": 2286953,
+      "sha256": "E74EA9F95350796432CB1CCDA3BFFE00E48789F3E410CD5FFB61F70ACEB26789",
+      "note": "Safedisc2Cleaner v1.2.0 output from golf.exe (v1.03). THE RE TARGET and the diffing reference. Never patch in place."
+    },
+    "jgld.dll": {
+      "size": 1273898,
+      "sha256": "07D6B89C9CAE741222DF7741C9116ACE5F64EC7B7B44124092AB7BC1C86629D4",
+      "note": "Jackal graphics library, DEBUG build (C:\\JackDev\\Debug\\jgld.pdb). This is the one golf_clean.exe loads."
+    },
+    "jgl.dll": {
+      "size": 393216,
+      "sha256": "24F99FE7D3C05DA5DCDA7E99BF74A49E2C740E09F245D95CD80E1A4EEDA4F90C",
+      "note": "Jackal graphics library, release build. Not loaded by golf_clean.exe."
+    },
+    "Terrain.dll": {
+      "size": 454719,
+      "sha256": "378E61D2F2061F85E517EADE8B64E92ECDE00D30AB866C091D55CB737ADCE0A4",
+      "note": "OpenGL terrain renderer."
+    },
+    "sound.dll": {
+      "size": 458752,
+      "sha256": "E5089A819D7C320363D2CF96637EE66D9EF59D29549F7C118D2AC4E42ACCB108",
+      "note": "Audio (DirectSound/winmm)."
+    },
+    "binkw32.dll": {
+      "size": 291328,
+      "sha256": "F2AD88706CF898FF489C5B3F19FAC5A4D51DD59110B8E919B518C1D0F9A9B73A",
+      "note": "RAD Bink 1.x video."
+    },
+    "golf_v100_clean.exe": {
+      "size": 1944781,
+      "sha256": "D47002A9E5A1249092720DA064207E9DA39C7D35B9A8F9DDE9BD9C767FDC38E8",
+      "note": "Safedisc2Cleaner v1.2.0 output from golf.v100.safedisc.exe (retail v1.00, SafeDisc 2.51.021). Used only for version diffing against v1.03."
+    }
+  }
+}

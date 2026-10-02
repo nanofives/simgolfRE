@@ -1,0 +1,28 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x14]","mov eax, dword ptr [ecx + 0x14]",True
+1,push esi,push esi,True
+2,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+3,"cmp esi, eax","cmp esi, eax",True
+4,jge 0x37,jge 0x449107,True
+5,"test esi, esi","test esi, esi",True
+6,jl 0x37,jl 0x449107,True
+7,"mov edx, dword ptr [esp + 0xc]","mov edx, dword ptr [esp + 0xc]",True
+8,push edi,push edi,True
+9,"mov edi, dword ptr [ecx + 0x18]","mov edi, dword ptr [ecx + 0x18]",True
+10,"cmp edx, edi","cmp edx, edi",True
+11,pop edi,pop edi,True
+12,jge 0x37,jge 0x449107,True
+13,"test edx, edx","test edx, edx",True
+14,jl 0x37,jl 0x449107,True
+15,"imul eax, edx","imul eax, edx",True
+16,"add eax, esi","add eax, esi",True
+17,pop esi,pop esi,True
+18,"lea edx, [eax + eax*8]","lea edx, [eax + eax*8]",True
+19,"lea eax, [eax + edx*8]","lea eax, [eax + edx*8]",True
+20,"lea eax, [ecx + eax*8 + 0x3a4]","lea eax, [ecx + eax*8 + 0x3a4]",True
+21,ret 8,ret 8,True
+22,"xor eax, eax","xor eax, eax",True
+23,pop esi,pop esi,True
+24,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?tileAt@Terrain@@QAEPAVTile@@HH@Z,module=golf_clean.exe
+VERDICT,GREEN,25,100.0%

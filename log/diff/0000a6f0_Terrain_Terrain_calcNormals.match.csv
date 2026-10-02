@@ -1,0 +1,29 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x44","sub esp, 0x44",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x44]","lea edi, [ebp - 0x44]",True
+8,"mov ecx, 0x11","mov ecx, 0x11",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+14,je 0x2b,je 0x1000a71b,True
+15,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+16,call 0x2b,call 0x100010f5,True
+17,pop edi,pop edi,True
+18,pop esi,pop esi,True
+19,pop ebx,pop ebx,True
+20,"add esp, 0x44","add esp, 0x44",True
+21,"cmp ebp, esp","cmp ebp, esp",True
+22,call 0x38,call 0x100180a0,True
+23,"mov esp, ebp","mov esp, ebp",True
+24,pop ebp,pop ebp,True
+25,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?calcNormals@Terrain@@QAEXPAVTile@@@Z,module=Terrain.dll
+VERDICT,GREEN,26,100.0%

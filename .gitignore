@@ -1,0 +1,47 @@
+# Game media and derived binaries (copyrighted; never commit)
+SM_SIMGOLF.iso
+iso/
+extracted/
+original/
+tools/unwrap/*.exe
+tools/unwrap/*.dll
+tools/unwrap/*.sys
+tools/unwrap/0000*
+tools/safedisc/
+# Third-party sources are re-cloned by their build scripts
+tools/src/
+# Ghidra projects (large; rebuilt from original/ by the import recipe in CLAUDE.md)
+*.gpr
+*.rep/
+*.lock
+*.lock~
+simgolf_pool/
+# Build / runtime output
+shim/build/
+log/*
+!log/diff/
+re/dumps/
+__pycache__/
+.pytest_cache/
+.happy-share/
+re/replay/
+tools/vc6/
+Visual Studio 6.iso
+# One-time unwrap work dirs hold game binaries and the third-party Cleaner; only the driver is ours
+tools/unwrap/*
+!tools/unwrap/drive_cleaner.py
+tools/unwrap_v100/
+.happy-share/
+.happy/
+# VC6 /ZI writes these into the working directory
+*.pdb
+*.idb
+# Game-derived assets: regenerate from your own copy with re/tools/capture_goldens.py
+tests/golden/*.png
+tests/fixtures/championship/*
+# Full string/fingerprint dumps of the game binaries: regenerate with re/tools/fingerprints.py
+re/versions/*.jsonl
+!tests/fixtures/championship/README.md
+.last_master_sync
+shim/*.exp
+shim/*.lib

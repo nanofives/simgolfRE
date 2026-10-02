@@ -1,0 +1,7 @@
+addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_diff,scenario,notes
+00001d50,Terrain.dll,Terrain::tileAt (Terrain.dll),terrain,C4,verified,re/analysis/terrain/00001d50_TerrainDll_tileAt.md,shim/src/re/Terrain.cpp,Terrain::render;Terrain::localRender;Terrain::stripRender;Terrain::tileHit,none,,,export ?tileAt@Terrain@@QAEPAVTile@@HH@Z via ILT thunk 0x1000108c
+00432720,golf_clean.exe,OptionsMenuBuild,ui,C1,located,,,,,,,"refs menu strings 'Save the Current Game', 'Cancel match/tournament' (new in v1.03); patch note 1.02 cancel match (re/versions/PATCH_MAP.md)"
+004490d0,golf_clean.exe,Terrain::tileAt,terrain,C2,transcribed,re/analysis/terrain/004490d0_tileAt.md,,none,none,log/diff/004490d0_Terrain_tileAt.path1.csv,,export ?tileAt@Terrain@@QAEPAVTile@@HH@Z ordinal 4 (golf_clean.exe export table)
+0044cff0,golf_clean.exe,CareerRetirementFlow,golfer,C1,located,,,,,,,"v1.00 0x0044c870 refs 'After a long and varied career, your retirement date has arrived.'; v1.03 drops it and const 0x32; patch note 1.02 'Removed 50 year limit for required retirement' (re/versions/PATCH_MAP.md)"
+0045c560,golf_clean.exe,GolferPanelEject,ui,C1,located,,,,,,,string 'Eject Golfer' -> 'Move/Eject Golfer' in v1.03; patch note 1.02 move/eject golfer (re/versions/PATCH_MAP.md)
+004722c0,golf_clean.exe,LandmarkAvailableNotice,course,C1,located,,,,,,,v1.03 adds string ' is now available in your landmarks menu.'; patch note 1.02 free landmarks (re/versions/PATCH_MAP.md)

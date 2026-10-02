@@ -1,0 +1,11 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"test eax, eax","test eax, eax",True
+2,je 0x12,je 0x449122,True
+3,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+4,"mov eax, dword ptr [eax + ecx*4]","mov eax, dword ptr [eax + ecx*4]",True
+5,ret 8,ret 8,True
+6,"xor eax, eax","xor eax, eax",True
+7,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?getElevation@Terrain@@QAEHPAVTile@@H@Z,module=golf_clean.exe
+VERDICT,GREEN,8,100.0%
