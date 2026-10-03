@@ -1,0 +1,36 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x44","sub esp, 0x44",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x44]","lea edi, [ebp - 0x44]",True
+8,"mov ecx, 0x11","mov ecx, 0x11",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"mov byte ptr [eax + 1], 0","mov byte ptr [eax + 1], 0",True
+15,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+16,"mov byte ptr [ecx], 0","mov byte ptr [ecx], 0",True
+17,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+18,"mov byte ptr [edx + 2], 0","mov byte ptr [edx + 2], 0",True
+19,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+20,"mov byte ptr [eax + 3], 0","mov byte ptr [eax + 3], 0",True
+21,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+22,"mov byte ptr [ecx + 4], 0","mov byte ptr [ecx + 4], 0",True
+23,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+24,"mov byte ptr [edx + 5], 0","mov byte ptr [edx + 5], 0",True
+25,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+26,"mov byte ptr [eax + 6], 0","mov byte ptr [eax + 6], 0",True
+27,pop edi,pop edi,True
+28,pop esi,pop esi,True
+29,pop ebx,pop ebx,True
+30,"mov esp, ebp","mov esp, ebp",True
+31,pop ebp,pop ebp,True
+32,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?clear@PathInfo@@QAEXXZ,module=Terrain.dll
+VERDICT,GREEN,33,100.0%

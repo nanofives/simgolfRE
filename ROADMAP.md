@@ -27,8 +27,16 @@
 - [x] Gary's shots driven; championship rounds complete (5/5).
 - [x] Golfer panel scenario (organic); landmark notice reached by injection (organic trigger: U-0003).
 - [x] All 22 live exported Terrain.dll methods matched at 100% (29 functions total).
-- [ ] Match the unexported Terrain.dll callees (Tile methods, drawTile, isCulled, ...), then golf_clean.exe.
-- [ ] Organic landmark donation (map FUN_00466370's golfer-pair switch to golfer stories).
+- [x] 29 unexported Terrain.dll callees matched (every one under 600 bytes on the list; 58 functions total).
+- [x] Large callees matched too (render, drawTileObjects, isCulled, elevate/lowerCorner, ctor, drawTile,
+      texture loader, 0x10038900), setTypeId's callees and loadLighting: 73 functions at 100%.
+- [x] golf_clean.exe matching started: 15 live functions at 100% (/O2); 3 partials in re/match/wip/.
+- [ ] More golf_clean.exe: golfer AI (FUN_00467a00 thoughts, FUN_00427380 hole end), story chain.
+- [x] Organic story chain mapped (U-0003 partial): golfer_stories scenario advances chapters on a
+      multi-hole course.
+- [x] +0xa4 mapped: golfer mood, thought deltas in FUN_00467a00 (U-0003).
+- [x] 5-hole saved-game fixture (stories5.sve) + load flow; saves need original\saved games\ (now created).
+- [ ] Organic landmark: chapter 4 for both partners not reached yet on the fixture.
 - [ ] Neighbourhood recording (target + callers + callees in one run).
 Goal: know which functions actually run, so confidence work targets reachable code.
 - [ ] More census scenarios (a played round, save/load, tournament) -> `re/coverage/<scenario>.tsv`.

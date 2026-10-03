@@ -1,0 +1,84 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x48","sub esp, 0x48",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x48]","lea edi, [ebp - 0x48]",True
+8,"mov ecx, 0x12","mov ecx, 0x12",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"xor ecx, ecx","xor ecx, ecx",True
+15,"mov cl, byte ptr [eax + 0x208]","mov cl, byte ptr [eax + 0x208]",True
+16,"test ecx, ecx","test ecx, ecx",True
+17,je 0x36,je 0x10014056,True
+18,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+19,"mov byte ptr [edx + 0x20a], 1","mov byte ptr [edx + 0x20a], 1",True
+20,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+21,"cmp dword ptr [eax + 0x24], 7","cmp dword ptr [eax + 0x24], 7",True
+22,jne 0x47,jne 0x10014067,True
+23,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+24,call 0x47,call 0x10001168,True
+25,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+26,"cmp dword ptr [ecx + 0x24], 6","cmp dword ptr [ecx + 0x24], 6",True
+27,jne 0x5a,jne 0x1001407a,True
+28,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+29,call 0x58,call 0x1000114f,True
+30,jmp 0x6d,jmp 0x1001408d,True
+31,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+32,"cmp dword ptr [edx + 0x24], 0x11","cmp dword ptr [edx + 0x24], 0x11",True
+33,jne 0x6d,jne 0x1001408d,True
+34,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+35,"mov byte ptr [eax + 0x244], 1","mov byte ptr [eax + 0x244], 1",True
+36,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+37,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+38,"mov dword ptr [ecx + 0x24], edx","mov dword ptr [ecx + 0x24], edx",True
+39,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+40,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+41,"cmp dword ptr [ebp - 8], 0x14","cmp dword ptr [ebp - 8], 0x14",True
+42,ja 0xd6,ja 0x100140f6,True
+43,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+44,"xor ecx, ecx","xor ecx, ecx",True
+45,"mov cl, byte ptr [edx]","mov cl, byte ptr [edx + 0x10014131]",True
+46,jmp dword ptr [ecx*4],jmp dword ptr [ecx*4 + 0x10014115],True
+47,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+48,call 0x9c,call 0x10001203,True
+49,jmp 0xe2,jmp 0x10014102,True
+50,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+51,push eax,push eax,True
+52,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+53,call 0xaa,call 0x10001258,True
+54,jmp 0xe2,jmp 0x10014102,True
+55,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+56,call 0xb4,call 0x10001230,True
+57,jmp 0xe2,jmp 0x10014102,True
+58,push 0xd,push 0xd,True
+59,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+60,call 0xc0,call 0x10001258,True
+61,jmp 0xe2,jmp 0x10014102,True
+62,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+63,call 0xca,call 0x100012e9,True
+64,jmp 0xe2,jmp 0x10014102,True
+65,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+66,call 0xd4,call 0x1000103c,True
+67,jmp 0xe2,jmp 0x10014102,True
+68,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+69,push ecx,push ecx,True
+70,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+71,call 0xe2,call 0x10001258,True
+72,pop edi,pop edi,True
+73,pop esi,pop esi,True
+74,pop ebx,pop ebx,True
+75,"add esp, 0x48","add esp, 0x48",True
+76,"cmp ebp, esp","cmp ebp, esp",True
+77,call 0xef,call 0x100180a0,True
+78,"mov esp, ebp","mov esp, ebp",True
+79,pop ebp,pop ebp,True
+80,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?setTypeId@Tile@@QAEXH@Z,module=Terrain.dll
+VERDICT,GREEN,81,100.0%

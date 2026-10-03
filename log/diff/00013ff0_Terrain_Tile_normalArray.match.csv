@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"mov eax, 0","mov eax, 0x10070a18",True
+11,pop edi,pop edi,True
+12,pop esi,pop esi,True
+13,pop ebx,pop ebx,True
+14,"mov esp, ebp","mov esp, ebp",True
+15,pop ebp,pop ebp,True
+16,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?normalArray@Tile@@SAPAMXZ,module=Terrain.dll
+VERDICT,GREEN,17,100.0%

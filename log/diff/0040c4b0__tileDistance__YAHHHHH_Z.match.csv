@@ -1,0 +1,24 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+1,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+2,"mov edx, dword ptr [esp + 0xc]","mov edx, dword ptr [esp + 0xc]",True
+3,"shl eax, 0xa","shl eax, 0xa",True
+4,"sub ecx, eax","sub ecx, eax",True
+5,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+6,"shl edx, 0xa","shl edx, 0xa",True
+7,"sub eax, edx","sub eax, edx",True
+8,"sub ecx, 0x200","sub ecx, 0x200",True
+9,"sub eax, 0x200","sub eax, 0x200",True
+10,push ecx,push ecx,True
+11,push eax,push eax,True
+12,call 0x2c,call 0x40acd0,True
+13,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+14,"add esp, 8","add esp, 8",True
+15,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+16,cdq ,cdq ,True
+17,"and edx, 0x3ff","and edx, 0x3ff",True
+18,"add eax, edx","add eax, edx",True
+19,"sar eax, 0xa","sar eax, 0xa",True
+20,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?tileDistance@@YAHHHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,21,100.0%

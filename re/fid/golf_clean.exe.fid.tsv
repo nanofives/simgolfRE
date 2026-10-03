@@ -1,0 +1,332 @@
+entry	name	size	score	unique	names	library
+004a4fac	FUN_004a4fac	23	25.00	1	__fpmath	VC6|12.00.8168|libc
+004a5007	FUN_004a5007	72	301.02	1	_free	VC6|12.00.8168|libcmt
+004a504f	_malloc	18	19.67	1	_malloc	Visual Studio|2003|Release
+004a5061	__nh_malloc	44	65.35	1	__nh_malloc	VC6|12.00.8168|libcmt
+004a508d	FUN_004a508d	78	318.36	1	__heap_alloc	VC6|12.00.8168|libcmt
+004a50db	FUN_004a50db	45	84.67	1	__cinit	VC6|12.00.8168|libcmt
+004a5108	FUN_004a5108	17	71.68	1	_exit	VC6|12.00.8168|libcmt
+004a5119	__exit	17	141.68	1	__exit	VC6|12.00.8168|libcmt
+004a51cf	FUN_004a51cf	9	35.67	0	__lockexit;__unlockexit	VC6|12.00.8168|libcmt
+004a51d8	FUN_004a51d8	9	35.67	0	__lockexit;__unlockexit	VC6|12.00.8168|libcmt
+004a51e1	FUN_004a51e1	26	22.01	1	__initterm	VC6|12.00.8168|libc
+004a51fb	FUN_004a51fb	45	68.03	1	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	VC6|12.00.8168|libc
+004a522f	FUN_004a522f	7	150.00	0	?_CallMemberFunction1@@YGXPAX00@Z;?_CallMemberFunction2@@YGXPAX00H@Z	VC6|12.00.8168|libc
+004a5236	FUN_004a5236	7	150.00	0	?_CallMemberFunction1@@YGXPAX00@Z;?_CallMemberFunction2@@YGXPAX00H@Z	VC6|12.00.8168|libc
+004a523d	FUN_004a523d	79	116.00	1	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	VC6|12.00.8168|libc
+004a528c	FUN_004a528c	54	89.70	1	___CxxFrameHandler	VC6|12.00.8168|libc
+004a52c2	FUN_004a52c2	84	83.06	1	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	VC6|12.00.8168|libcmt
+004a5316	FUN_004a5316	37	78.03	1	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	VC6|12.00.8168|libc
+004a533b	FUN_004a533b	182	119.00	1	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	VC6|12.00.8168|libcmt
+004a53f1	FUN_004a53f1	114	147.43	1	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	VC6|12.00.8168|libc
+004a5466	FUN_004a5466	123	290.09	1	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	VC6|12.00.8168|libcmt
+004a54e4	__global_unwind2	32	17.00	1	__global_unwind2	Visual Studio|2012|Release
+004a5526	__local_unwind2	104	56.41	1	__local_unwind2	Visual Studio|2003|Release
+004a558e	__abnormal_termination	35	35.02	1	__abnormal_termination	VC6|12.00.8168|libcmt
+004a55b1	__NLG_Notify1	9	35.00	1	__NLG_Notify1	Visual Studio|2017|Release
+004a55d2	FUN_004a55d2	106	41.00	1	??_L@YGXPAXIHP6EX0@Z1@Z	VC6|12.00.8168|libc
+004a563c	FUN_004a563c	24	74.02	1	$L264	VC6|12.00.8168|libc
+004a5654	FUN_004a5654	126	178.69	1	__onexit	VC6|12.00.8168|libcmt
+004a56d2	FUN_004a56d2	18	39.67	1	_atexit	VC6|12.00.8168|libcmt
+004a5713	FUN_004a5713	104	39.00	1	??_M@YGXPAXIHP6EX0@Z@Z	VC6|12.00.8168|libc
+004a577b	FUN_004a577b	24	72.02	0	$L16493;$L16506	VC6|12.00.8168|libc
+004a5793	FUN_004a5793	81	36.00	1	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	VC6|12.00.8168|libc
+004a57f1	operator_new	14	20.34	1	??2@YAPAXI@Z	Visual Studio|2003|Release
+004a5800	FUN_004a5800	58	34.68	1	_strpbrk	VC6|12.00.8168|libc
+004a583a	FUN_004a583a	101	396.00	1	__read	VC6|12.00.8168|libcmt
+004a589f	FUN_004a589f	473	450.00	1	__read_lk	VC6|12.00.8168|libcmt
+004a5a78	FUN_004a5a78	93	359.00	1	__close	VC6|12.00.8168|libcmt
+004a5ad5	FUN_004a5ad5	131	133.00	1	__close_lk	VC6|12.00.8168|libcmt
+004a5b58	FUN_004a5b58	101	435.00	1	__write	VC6|12.00.8168|libcmt
+004a5bbd	FUN_004a5bbd	395	277.00	1	__write_lk	VC6|12.00.8168|libcmt
+004a5d48	FUN_004a5d48	23	232.35	1	__open	VC6|12.00.8168|libcmt
+004a5d5f	FUN_004a5d5f	719	811.00	1	__sopen	VC6|12.00.8168|libcmt
+004a6030	__ftol	39	21.70	1	__ftol	Visual Studio|2012|Release
+004a6057	FUN_004a6057	17	36.68	1	__tell	VC6|12.00.8168|libcmt
+004a6070	FUN_004a6070	47	21.02	0	$$$00001;__alloca_probe	VC6|12.00.8168|libc
+004a609f	FUN_004a609f	49	62.69	1	_fclose	VC6|12.00.8168|libcmt
+004a60d0	__fclose_lk	76	133.04	1	__fclose_lk	VC6|12.00.8168|libcmt
+004a611c	FUN_004a611c	49	229.68	1	__fsopen	VC6|12.00.8168|libcmt
+004a614d	FUN_004a614d	19	25.68	0	__wfopen;_fopen	VC6|12.00.8168|libcmt
+004a6170	_strchr	193	103.07	1	_strchr	Visual Studio|1998|Release
+004a622c	FUN_004a622c	60	670.68	1	_fprintf	VC6|12.00.8168|libcmt
+004a6268	FUN_004a6268	47	136.69	1	_fwrite	VC6|12.00.8168|libcmt
+004a6297	FUN_004a6297	266	313.47	1	__fwrite_lk	VC6|12.00.8168|libcmt
+004a63a1	FUN_004a63a1	47	123.69	1	_fread	VC6|12.00.8168|libcmt
+004a63d0	FUN_004a63d0	232	237.47	1	__fread_lk	VC6|12.00.8168|libcmt
+004a64f0	_strstr	128	72.37	1	_strstr	Visual Studio|1998|Release
+004a6570	FUN_004a6570	40	16.02	1	_isdigit	VC6|12.00.8168|libc
+004a6598	FUN_004a6598	40	889.02	1	_isspace	VC6|12.00.8168|libc
+004a65c0	FUN_004a65c0	46	16.02	1	_isprint	VC6|12.00.8168|libc
+004a65ee	FUN_004a65ee	98	143.70	1	_fgets	VC6|12.00.8168|libcmt
+004a6650	FUN_004a6650	111	113.70	1	_toupper	VC6|12.00.8168|libcmt
+004a66bf	FUN_004a66bf	204	296.12	1	__toupper_lk	VC6|12.00.8168|libcmt
+004a678b	FUN_004a678b	164	93.08	1	_strtok	VC6|12.00.8168|libcmt
+004a682f	entry	253	635.00	1	_WinMainCRTStartup	VC6|12.00.8168|libcmt
+004a6980	FUN_004a6980	312	1117.08	1	_realloc	VC6|12.00.8168|libcmt
+004a6ad0	_strncmp	56	34.35	1	_strncmp	Visual Studio|1998|Release
+004a6b08	FUN_004a6b08	139	70.05	1	_atol	VC6|12.00.8168|libc
+004a6b93	FUN_004a6b93	11	60.67	1	_atoi	VC6|12.00.8168|libc
+004a6ba0	_memchr	165	89.40	1	_memchr	Visual Studio|1998|Release
+004a6c50	_strrchr	39	25.01	1	_strrchr	Visual Studio|1998|Release
+004a6c80	_strncpy	254	213.42	1	_strncpy	VC6|12.00.8168|libc
+004a6d80	FUN_004a6d80	664	231.00	0	_memcpy;_memmove	VC6|12.00.8168|libc
+004a70b5	FUN_004a70b5	100	117.00	1	_rewind	VC6|12.00.8168|libcmt
+004a7119	FUN_004a7119	44	84.02	1	_fseek	VC6|12.00.8168|libcmt
+004a7145	FUN_004a7145	141	272.75	1	__fseek_lk	VC6|12.00.8168|libcmt
+004a71d2	FUN_004a71d2	111	155.70	1	_tolower	VC6|12.00.8168|libcmt
+004a7241	FUN_004a7241	203	476.10	1	__tolower_lk	VC6|12.00.8168|libcmt
+004a730c	FUN_004a730c	353	203.00	1	__ftell_lk	VC6|12.00.8168|libcmt
+004a7470	FUN_004a7470	62	36.68	1	_strcspn	VC6|12.00.8168|libc
+004a74ae	FUN_004a74ae	18	16.34	1	__setdefaultprecision	VC6|12.00.8168|libc
+004a74c0	FUN_004a74c0	62	39.70	1	__ms_p5_test_fdiv	VC6|12.00.8168|libc
+004a74fe	FUN_004a74fe	41	36.67	1	__ms_p5_mp_test_fdiv	VC6|12.00.8168|libc
+004a7527	FUN_004a7527	90	77.02	1	__forcdecpt	VC6|12.00.8168|libcmt
+004a75e7	__fassign	62	53.37	1	__fassign	VC6|12.00.8168|libc
+004a7625	FUN_004a7625	97	257.72	1	__cftoe	VC6|12.00.8168|libcmt
+004a7686	FUN_004a7686	194	222.08	1	__cftoe2	VC6|12.00.8168|libcmt
+004a7748	FUN_004a7748	85	232.05	1	__cftof	VC6|12.00.8168|libcmt
+004a779d	FUN_004a779d	167	199.76	1	__cftof2	VC6|12.00.8168|libcmt
+004a7844	FUN_004a7844	147	355.08	1	__cftog	VC6|12.00.8168|libcmt
+004a78d7	__cfltcvt	81	173.73	1	__cfltcvt	VC6|12.00.8168|libcmt
+004a7928	FUN_004a7928	37	176.01	1	__shift	VC6|12.00.8168|libcmt
+004a794d	FUN_004a794d	60	97.68	1	__heap_init	VC6|12.00.8168|libcmt
+004a7989	FUN_004a7989	41	34.00	1	__mtinitlocks	VC6|12.00.8168|libcmt
+004a79b2	FUN_004a79b2	97	30.00	1	__lock	VC6|12.00.8168|libcmt
+004a7a28	FUN_004a7a28	62	35.02	1	___sbh_heap_init	VC6|12.00.8168|libc
+004a7a66	FUN_004a7a66	43	173.02	1	___sbh_find_block	VC6|12.00.8168|libcmt
+004a7a91	FUN_004a7a91	811	478.09	1	___sbh_free_block	VC6|12.00.8168|libcmt
+004a7dbc	FUN_004a7dbc	777	677.09	1	___sbh_alloc_block	VC6|12.00.8168|libcmt
+004a80c5	FUN_004a80c5	177	322.00	1	___sbh_alloc_new_region	VC6|12.00.8168|libc
+004a8176	FUN_004a8176	251	388.49	1	___sbh_alloc_new_group	VC6|12.00.8168|libc
+004a8271	FUN_004a8271	758	454.09	1	___sbh_resize_block	VC6|12.00.8168|libcmt
+004a8567	FUN_004a8567	27	187.34	1	__callnewh	VC6|12.00.8168|libcmt
+004a8582	FUN_004a8582	155	367.78	1	___InternalCxxFrameHandler	VC6|12.00.8168|libcmt
+004a861d	FUN_004a861d	435	538.62	1	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	VC6|12.00.8168|libcmt
+004a87d0	FUN_004a87d0	170	374.46	1	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	VC6|12.00.8168|libcmt
+004a887a	FUN_004a887a	93	240.72	1	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	VC6|12.00.8168|libcmt
+004a88d7	FUN_004a88d7	132	170.00	1	___FrameUnwindToState	VC6|12.00.8168|libc
+004a898b	FUN_004a898b	123	542.41	1	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z	VC6|12.00.8168|libcmt
+004a8a06	FUN_004a8a06	165	137.00	1	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	VC6|12.00.8168|libcmt
+004a8ad3	FUN_004a8ad3	78	119.05	1	$L17310	VC6|12.00.8168|libcmt
+004a8b4b	FUN_004a8b4b	440	254.00	1	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	VC6|12.00.8168|libc
+004a8d0f	FUN_004a8d0f	86	193.00	1	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	VC6|12.00.8168|libcmt
+004a8d76	FUN_004a8d76	35	165.02	1	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	VC6|12.00.8168|libc
+004a8da0	__CallSettingFrame@12	76	43.04	1	__CallSettingFrame@12	Visual Studio|2017|Release
+004a8dec	FUN_004a8dec	84	156.02	1	__mtinit	VC6|12.00.8168|libcmt
+004a8e40	FUN_004a8e40	19	62.68	1	__initptd	VC6|12.00.8168|libcmt
+004a8e53	FUN_004a8e53	103	87.35	1	__getptd	VC6|12.00.8168|libcmt
+004a8eba	FUN_004a8eba	86	208.00	1	?terminate@@YAXXZ	VC6|12.00.8168|libcmt
+004a8f1b	FUN_004a8f1b	79	479.00	1	?_inconsistency@@YAXXZ	VC6|12.00.8168|libcmt
+004a9039	FUN_004a9039	27	44.35	1	__seh_longjmp_unwind@4	Visual Studio|2003|Release
+004a9054	FUN_004a9054	69	72.69	1	__msize	VC6|12.00.8168|libcmt
+004a9099	FUN_004a9099	115	32.00	1	__dosmaperr	VC6|12.00.8168|libcmt
+004a911e	FUN_004a911e	291	347.00	1	__alloc_osfhnd	VC6|12.00.8168|libcmt
+004a9241	FUN_004a9241	124	267.00	1	__set_osfhnd	VC6|12.00.8168|libcmt
+004a92bd	FUN_004a92bd	127	89.00	1	__free_osfhnd	VC6|12.00.8168|libcmt
+004a933c	FUN_004a933c	66	228.00	1	__get_osfhandle	VC6|12.00.8168|libcmt
+004a937e	FUN_004a937e	95	224.00	1	__lock_fhandle	VC6|12.00.8168|libcmt
+004a93dd	FUN_004a93dd	34	332.00	1	__unlock_fhandle	VC6|12.00.8168|libcmt
+004a93ff	FUN_004a93ff	444	206.00	1	__ioinit	VC6|12.00.8168|libcmt
+004a95bb	FUN_004a95bb	101	418.00	1	__lseek	VC6|12.00.8168|libcmt
+004a9620	FUN_004a9620	115	679.00	1	__lseek_lk	VC6|12.00.8168|libcmt
+004a9693	FUN_004a9693	293	540.11	1	__chsize_lk	VC6|12.00.8168|libcmt
+004a9874	FUN_004a9874	47	181.68	0	__lock_file;__unlock_file	VC6|12.00.8168|libcmt
+004a98a3	FUN_004a98a3	35	140.35	0	__lock_file2;__unlock_file2	VC6|12.00.8168|libcmt
+004a98c6	FUN_004a98c6	47	199.68	1	__unlock_file	VC6|12.00.8168|libcmt
+004a98f5	FUN_004a98f5	35	140.35	0	__lock_file2;__unlock_file2	VC6|12.00.8168|libcmt
+004a9918	__freebuf	43	48.03	1	__freebuf	Visual Studio|2003|Release
+004a9943	FUN_004a9943	47	114.34	1	_fflush	VC6|12.00.8168|libcmt
+004a9972	FUN_004a9972	46	184.35	1	__fflush_lk	VC6|12.00.8168|libcmt
+004a99a0	FUN_004a99a0	92	327.06	1	__flush	VC6|12.00.8168|libcmt
+004a9a05	FUN_004a9a05	164	121.06	1	_flsall	VC6|12.00.8168|libcmt
+004a9aa9	FUN_004a9aa9	368	402.19	1	__openfile	VC6|12.00.8168|libcmt
+004a9c19	FUN_004a9c19	200	110.41	1	__getstream	VC6|12.00.8168|libcmt
+004a9ce1	FUN_004a9ce1	141	85.00	1	__stbuf	VC6|12.00.8168|libcmt
+004a9d6e	FUN_004a9d6e	42	82.04	1	__ftbuf	VC6|12.00.8168|libcmt
+004a9d98	FUN_004a9d98	1825	825.00	1	__output	VC6|12.00.8168|libcmt
+004aa4d9	FUN_004aa4d9	53	743.69	1	_write_char	VC6|12.00.8168|libcmt
+004aa50e	FUN_004aa50e	49	616.02	1	_write_multi_char	VC6|12.00.8168|libc
+004aa53f	FUN_004aa53f	56	621.02	1	_write_string	VC6|12.00.8168|libc
+004aa577	FUN_004aa577	13	574.01	1	_get_int_arg	VC6|12.00.8168|libc
+004aa584	FUN_004aa584	16	575.68	1	_get_int64_arg	VC6|12.00.8168|libc
+004aa594	FUN_004aa594	14	574.01	1	_get_short_arg	VC6|12.00.8168|libc
+004aa5a2	FUN_004aa5a2	280	317.00	1	__flsbuf	VC6|12.00.8168|libcmt
+004aa6c0	FUN_004aa6c0	664	231.00	0	_memcpy;_memmove	VC6|12.00.8168|libc
+004aa9f5	FUN_004aa9f5	220	269.00	1	__filbuf	VC6|12.00.8168|libcmt
+004aaad1	FUN_004aaad1	117	171.42	1	__isctype	VC6|12.00.8168|libc
+004aab46	FUN_004aab46	511	450.00	1	___crtLCMapStringA	VC6|12.00.8168|libc
+004aad6a	FUN_004aad6a	318	222.18	1	__XcptFilter	VC6|12.00.8168|libcmt
+004aaea8	FUN_004aaea8	58	126.69	1	_xcptlookup	VC6|12.00.8168|libcmt
+004aaee2	FUN_004aaee2	88	117.36	1	__wincmdln	VC6|12.00.8168|libcmt
+004aaf3a	FUN_004aaf3a	185	138.70	1	__setenvp	VC6|12.00.8168|libcmt
+004aaff3	FUN_004aaff3	153	322.38	1	__setargv	VC6|12.00.8168|libcmt
+004ab08c	FUN_004ab08c	436	279.85	1	_parse_cmdline	VC6|12.00.8168|libc
+004ab240	FUN_004ab240	306	192.04	1	___crtGetEnvironmentStringsA	VC6|12.00.8168|libcmt
+004ab372	FUN_004ab372	57	104.68	1	__FF_MSGBANNER	VC6|12.00.8168|libc
+004ab3ab	FUN_004ab3ab	339	358.41	1	__NMSG_WRITE	VC6|12.00.8168|libc
+004ab500	__allmul	52	883.03	1	__allmul	VC6|12.00.8168|libc
+004ab534	FUN_004ab534	141	400.38	1	_calloc	VC6|12.00.8168|libcmt
+004ab5c1	FUN_004ab5c1	53	144.69	1	__control87	VC6|12.00.8168|libc
+004ab5f6	FUN_004ab5f6	22	36.01	1	__controlfp	VC6|12.00.8168|libc
+004ab60c	FUN_004ab60c	146	95.41	1	__abstract_cw	VC6|12.00.8168|libc
+004ab69e	FUN_004ab69e	137	90.41	1	__hw_cw	VC6|12.00.8168|libc
+004ab727	FUN_004ab727	73	113.71	1	__ZeroTail	VC6|12.00.8168|libc
+004ab770	FUN_004ab770	86	133.04	1	__IncMan	VC6|12.00.8168|libc
+004ab7c6	FUN_004ab7c6	140	287.41	1	__RoundMan	VC6|12.00.8168|libc
+004ab852	FUN_004ab852	27	142.35	1	__CopyMan	VC6|12.00.8168|libc
+004ab86d	FUN_004ab86d	12	134.67	1	__FillZeroMan	VC6|12.00.8168|libc
+004ab879	FUN_004ab879	27	142.35	1	__IsZeroMan	VC6|12.00.8168|libc
+004ab894	FUN_004ab894	141	208.76	1	__ShrMan	VC6|12.00.8168|libc
+004ab921	FUN_004ab921	364	337.53	1	__ld12cvt	VC6|12.00.8168|libc
+004aba8d	FUN_004aba8d	22	152.01	0	__ld12tod;__ld12tof	VC6|12.00.8168|libc
+004abaa3	FUN_004abaa3	22	152.01	0	__ld12tod;__ld12tof	VC6|12.00.8168|libc
+004abab9	FUN_004abab9	45	465.69	0	__atodbl;__atoflt	VC6|12.00.8168|libc
+004abae6	FUN_004abae6	45	465.69	0	__atodbl;__atoflt	VC6|12.00.8168|libc
+004abb13	FUN_004abb13	119	201.39	1	__fptostr	VC6|12.00.8168|libcmt
+004abb8a	FUN_004abb8a	92	476.39	1	__fltout2	VC6|12.00.8168|libcmt
+004abbe6	FUN_004abbe6	182	126.09	1	___dtold	VC6|12.00.8168|libcmt
+004abcb0	FUN_004abcb0	224	191.10	1	_strcat	VC6|12.00.8168|libc
+004abd90	_memset	88	47.37	1	_memset	Visual Studio|1998|Release
+004abdf0	_strlen	123	56.73	1	_strlen	Visual Studio|1998|Release
+004abe74	FUN_004abe74	70	58.69	1	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	VC6|12.00.8168|libcmt
+004abed8	FUN_004abed8	28	295.01	1	?_ValidateRead@@YAHPBXI@Z	VC6|12.00.8168|libcmt
+004abef4	FUN_004abef4	28	159.01	0	?_ValidateRead@@YAHPBXI@Z;?_ValidateWrite@@YAHPAXI@Z	VC6|12.00.8168|libc
+004abf10	FUN_004abf10	24	178.34	1	?_ValidateExecute@@YAHP6GHXZ@Z	VC6|12.00.8168|libc
+004abf30	_strcmp	129	104.05	1	_strcmp	VC6|12.00.8168|libc
+004abfb4	FUN_004abfb4	23	251.01	1	_abort	VC6|12.00.8168|libcmt
+004abfcb	FUN_004abfcb	97	117.00	1	__setmode_lk	VC6|12.00.8168|libcmt
+004ac0ad	FUN_004ac0ad	147	120.00	1	__commit	VC6|12.00.8168|libcmt
+004ac140	FUN_004ac140	41	165.00	1	__isatty	VC6|12.00.8168|libcmt
+004ac169	FUN_004ac169	89	640.69	1	_wctomb	VC6|12.00.8168|libcmt
+004ac1c2	FUN_004ac1c2	105	79.72	1	__wctomb_lk	VC6|12.00.8168|libcmt
+004ac230	__aulldiv	104	620.72	1	__aulldiv	VC6|12.00.8168|libc
+004ac2a0	__aullrem	117	625.07	1	__aullrem	VC6|12.00.8168|libc
+004ac315	FUN_004ac315	68	253.72	1	__getbuf	VC6|12.00.8168|libcmt
+004ac359	FUN_004ac359	318	274.00	1	___crtGetStringTypeA	VC6|12.00.8168|libc
+004ac4a2	FUN_004ac4a2	17	60.68	1	__ismbblead	VC6|12.00.8168|libc
+004ac4b3	FUN_004ac4b3	49	21.00	1	_x_ismbbtype	VC6|12.00.8168|libc
+004ac4e4	FUN_004ac4e4	429	336.79	1	__setmbcp	VC6|12.00.8168|libcmt
+004ac691	FUN_004ac691	74	155.36	1	_getSystemCP	VC6|12.00.8168|libcmt
+004ac6db	FUN_004ac6db	51	159.36	1	_CPtoLCID	VC6|12.00.8168|libcmt
+004ac70e	FUN_004ac70e	41	152.67	1	_setSBCS	VC6|12.00.8168|libcmt
+004ac737	FUN_004ac737	389	553.12	1	_setSBUpLow	VC6|12.00.8168|libcmt
+004ac8bc	FUN_004ac8bc	28	298.01	1	___initmbctable	VC6|12.00.8168|libcmt
+004ac8d8	FUN_004ac8d8	137	132.01	1	___crtMessageBoxA	VC6|12.00.8168|libc
+004ac961	FUN_004ac961	386	204.20	1	_raise	VC6|12.00.8168|libcmt
+004acae3	FUN_004acae3	61	160.70	1	$L17058	VC6|12.00.8168|libcmt
+004acb20	FUN_004acb20	33	267.35	1	___addl	VC6|12.00.8168|libc
+004acb41	___add_12	94	350.38	1	___add_12	VC6|12.00.8168|libc
+004acb9f	FUN_004acb9f	46	493.03	1	___shl_12	VC6|12.00.8168|libc
+004acbcd	FUN_004acbcd	45	423.70	1	___shr_12	VC6|12.00.8168|libc
+004acbfa	FUN_004acbfa	199	559.12	1	___mtold12	VC6|12.00.8168|libc
+004accc1	FUN_004accc1	1185	550.00	1	___strgtold12	VC6|12.00.8168|libc
+004ad192	FUN_004ad192	659	646.09	1	_$I10_OUTPUT	VC6|12.00.8168|libcmt
+004ad425	FUN_004ad425	45	72.04	1	__itoa	VC6|12.00.8168|libc
+004ad452	FUN_004ad452	92	72.04	1	_xtoa	VC6|12.00.8168|libc
+004ad4b0	FUN_004ad4b0	208	171.08	1	__strcmpi	VC6|12.00.8168|libcmt
+004ad580	FUN_004ad580	257	186.06	1	__strnicmp	VC6|12.00.8168|libcmt
+004ad681	FUN_004ad681	544	583.06	1	___ld12mul	VC6|12.00.8168|libc
+004ad8a1	FUN_004ad8a1	124	872.41	1	___multtenpow12	VC6|12.00.8168|libc
+004ad91d	FUN_004ad91d	33	58.68	1	_getenv	VC6|12.00.8168|libcmt
+004ad93e	FUN_004ad93e	125	138.36	1	__getenv_lk	VC6|12.00.8168|libcmt
+004ad9bb	__mbsnbicoll	63	318.70	1	__mbsnbicoll	VC6|12.00.8168|libc
+004ad9fa	FUN_004ad9fa	110	389.03	1	___wtomb_environ	VC6|12.00.8168|libc
+004ada68	FUN_004ada68	597	251.00	1	___crtCompareStringA	VC6|12.00.8168|libc
+004adce5	FUN_004adce5	43	397.02	1	_strncnt	VC6|12.00.8168|libc
+004add10	FUN_004add10	391	520.79	1	___crtsetenv	VC6|12.00.8168|libcmt
+004ade97	FUN_004ade97	88	204.03	1	_findenv	VC6|12.00.8168|libc
+004adeef	FUN_004adeef	103	213.70	1	_copy_environ	VC6|12.00.8168|libc
+004adf56	FUN_004adf56	151	208.05	1	__mbschr	VC6|12.00.8168|libcmt
+004adfed	FUN_004adfed	43	66.67	1	__strdup	VC6|12.00.8168|libc
+004ae020	FUN_004ae020	293	471.45	1	_CreateJPG	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae150	FUN_004ae150	184	250.79	1	_jpeg_CreateCompress	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae210	FUN_004ae210	12	91.67	1	_jpeg_destroy_compress	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae220	FUN_004ae220	78	70.70	1	_jpeg_suppress_tables	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae270	FUN_004ae270	258	197.80	1	_jpeg_finish_compress	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae380	FUN_004ae380	117	200.40	1	_jpeg_start_compress	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae400	FUN_004ae400	196	159.46	1	_jpeg_write_scanlines	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae4d0	FUN_004ae4d0	61	100.71	1	_jpeg_stdio_dest	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae600	FUN_004ae600	186	113.79	1	_jpeg_add_quant_table	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae6c0	FUN_004ae6c0	52	94.02	1	_jpeg_set_linear_quality	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae700	FUN_004ae700	56	36.03	1	_jpeg_quality_scaling	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae740	FUN_004ae740	30	117.68	1	_jpeg_set_quality	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae760	FUN_004ae760	239	232.82	1	_jpeg_set_defaults	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae850	FUN_004ae850	90	126.02	1	_std_huff_tables	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae8b0	FUN_004ae8b0	93	77.39	1	_add_huff_table	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae910	FUN_004ae910	95	393.00	1	_jpeg_default_colorspace	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004ae990	FUN_004ae990	716	256.00	1	_jpeg_set_colorspace	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004aec80	FUN_004aec80	76	98.38	1	_jpeg_std_error	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004aee30	FUN_004aee30	308	193.85	1	_jinit_memory_mgr	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004aef70	FUN_004aef70	303	253.00	1	_alloc_small	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004af0a0	FUN_004af0a0	29	174.35	1	_out_of_memory	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004af0c0	FUN_004af0c0	161	224.10	1	_alloc_large	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004af170	FUN_004af170	168	241.74	1	_alloc_sarray	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004af220	FUN_004af220	176	245.75	1	_alloc_barray	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004af690	FUN_004af690	154	84.07	1	_do_sarray_io	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004af880	FUN_004af880	159	86.74	1	_do_barray_io	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004af920	FUN_004af920	241	129.83	1	_free_pool	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afa60	FUN_004afa60	35	104.03	1	_jpeg_abort	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afa90	FUN_004afa90	31	22.02	1	_jpeg_destroy	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afab0	FUN_004afab0	31	72.69	1	_jpeg_alloc_quant_table	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afad0	FUN_004afad0	31	45.02	1	_jpeg_alloc_huff_table	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afaf0	FUN_004afaf0	97	77.70	1	_jinit_marker_writer	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afbb0	FUN_004afbb0	60	412.70	1	_emit_byte	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afbf0	FUN_004afbf0	32	405.68	1	_emit_marker	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afc10	FUN_004afc10	40	410.68	1	_emit_2bytes	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afc80	FUN_004afc80	151	100.39	1	_emit_jfif_app0	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afd20	FUN_004afd20	146	107.74	1	_emit_adobe_app14	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004afec0	FUN_004afec0	214	139.43	1	_emit_dqt	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004affa0	FUN_004affa0	184	132.09	1	_emit_sof	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0120	FUN_004b0120	191	135.09	1	_emit_dht	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b01f0	FUN_004b01f0	42	40.35	1	_emit_dri	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0220	FUN_004b0220	221	131.40	1	_emit_sos	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b03a0	FUN_004b03a0	183	747.07	1	_jinit_compress_master	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0460	FUN_004b0460	14	202.34	1	_jpeg_get_small	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0470	FUN_004b0470	12	97.67	0	_jpeg_free_large;_jpeg_free_small	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b04c0	FUN_004b04c0	16	297.68	1	_jdiv_round_up	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b04d0	FUN_004b04d0	24	86.68	1	_jround_up	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b04f0	FUN_004b04f0	70	65.04	1	_jcopy_sample_rows	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0540	FUN_004b0540	27	14.68	1	_jzero_far	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0560	FUN_004b0560	135	121.08	1	_jinit_c_main_controller	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b06f0	FUN_004b06f0	187	158.12	1	_jinit_c_coef_controller	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0860	FUN_004b0860	78	191.38	1	_start_iMCU_row	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0d70	FUN_004b0d70	486	239.62	1	_compress_output	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b0f60	FUN_004b0f60	282	126.15	1	_jpeg_make_c_derived_tbl	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b1080	FUN_004b1080	558	253.02	1	_jpeg_gen_optimal_table	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b12b0	FUN_004b12b0	59	78.37	1	_jinit_huff_encoder	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b15c0	FUN_004b15c0	1051	543.09	1	_encode_one_block	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b19e0	FUN_004b19e0	44	586.36	1	_dump_buffer	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b1a10	FUN_004b1a10	198	478.10	1	_emit_bits	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b1ae0	FUN_004b1ae0	140	155.73	1	_emit_restart	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b1b70	FUN_004b1b70	165	160.42	1	_flush_bits	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b1d80	FUN_004b1d80	160	81.06	1	_htest_one_block	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b1f30	FUN_004b1f30	56	76.70	1	_jinit_phuff_encoder	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b2420	FUN_004b2420	60	413.71	1	_dump_buffer	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b2460	FUN_004b2460	165	343.10	1	_emit_restart	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b2510	FUN_004b2510	190	174.79	1	_flush_bits	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b25d0	FUN_004b25d0	498	394.98	1	_emit_eobrun	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b27d0	FUN_004b27d0	228	304.80	1	_emit_buffered_bits	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b34b0	FUN_004b34b0	145	106.74	1	_jinit_forward_dct	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b3a80	FUN_004b3a80	172	230.76	1	_jinit_c_prep_controller	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b3d00	FUN_004b3d00	52	61.69	1	_expand_bottom_edge	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b3f10	FUN_004b3f10	292	202.87	1	_create_context_buffer	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b4040	FUN_004b4040	387	203.85	1	_jinit_downsampler	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b4390	FUN_004b4390	92	48.71	1	_expand_right_edge	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b4a60	FUN_004b4a60	528	233.00	1	_jinit_color_converter	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b51e0	FUN_004b51e0	191	592.77	1	_jinit_c_master_control	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b52a0	FUN_004b52a0	461	267.27	1	_initial_setup	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b5470	FUN_004b5470	927	454.09	1	_validate_script	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b59d0	FUN_004b59d0	255	109.79	1	_select_scan_parameters	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b5ad0	FUN_004b5ad0	458	185.55	1	_per_scan_setup	IJG libjpeg|SimGolf JPEG.lib|JPEG
+004b65d6	FUN_004b65d6	82	709.39	1	_sprintf	VC6|12.00.8168|libcmt
+004b6628	FUN_004b6628	52	882.37	1	_sscanf	VC6|12.00.8168|libc
+004b665c	FUN_004b665c	2597	1092.09	1	__input	VC6|12.00.8168|libcmt
+004b7081	FUN_004b7081	55	883.36	1	__hextodec	VC6|12.00.8168|libc
+004b70b8	FUN_004b70b8	26	962.34	1	__inc	VC6|12.00.8168|libcmt
+004b70d2	FUN_004b70d2	23	914.68	1	__un_inc	VC6|12.00.8168|libc
+004b70e9	FUN_004b70e9	36	897.34	1	__whiteout	VC6|12.00.8168|libc
+004b710d	FUN_004b710d	93	969.03	1	_mbtowc	VC6|12.00.8168|libcmt
+004b716a	FUN_004b716a	201	119.07	1	__mbtowc_lk	VC6|12.00.8168|libcmt
+004b7240	__allshl	31	875.01	1	__allshl	VC6|12.00.8168|libc
+004b725f	FUN_004b725f	110	86.07	0	__ungetc_lk;_ungetc	VC6|12.00.8168|libc

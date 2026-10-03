@@ -67,3 +67,38 @@ def test_golfer_panel_and_landmark_injection():
         assert result and result[-1][3] == "ok", result
         time.sleep(3)
         assert g.alive
+
+
+@pytest.mark.slow
+def test_golfer_stories_advance_organically():
+    """Organic (U-0003): on a multi-hole course FUN_00466370 advances a golfer-pair story chapter (returns
+    non-zero), which it never does on the 1-hole course (it returns 0 while the golfer's hole, char +0x21, is < 2)."""
+    if Game.running_instances():
+        pytest.fail("SimGolf already running")
+    spec = scenario.SCENARIOS["golfer_stories"]
+    with Game(env={"SIMGOLF_SKIP_INTRO": "1", **spec["env"]}, extra_js=spec["js"]) as g:
+        g.wait_window()
+        scenario.to_sandbox(g)
+        scenario.build_four_holes(g)
+        scenario.story_season(g)
+        assert g.extra["advanced"], g.extra
+        assert g.alive
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("name, fixture", [("stories_fixture", scenario.STORIES_FIXTURE),
+                                           ("stories9_fixture", scenario.STORIES9_FIXTURE)])
+def test_stories_fixture_loads_and_advances(name, fixture):
+    """The 5- and 9-hole saves load through Continue Saved Game (the 'saved games' folder exists) and a
+    pair-story chapter advances organically within the season."""
+    if not fixture.exists():
+        pytest.skip(f"{fixture.name} not built (see tests/fixtures/stories/README.md)")
+    if Game.running_instances():
+        pytest.fail("SimGolf already running")
+    spec = scenario.SCENARIOS[name]
+    with Game(env={"SIMGOLF_SKIP_INTRO": "1", **spec["env"]}, extra_js=spec["js"]) as g:
+        g.wait_window()
+        for _, step in spec["phases"]:
+            step(g)
+        assert g.extra["advanced"], g.extra
+        assert g.alive

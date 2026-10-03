@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,call dword ptr [0],call dword ptr [0x4ba21c],True
+1,"lea ecx, [eax + eax*8]","lea ecx, [eax + eax*8]",True
+2,"mov dword ptr [0], eax","mov dword ptr [0x51b380], eax",True
+3,"lea edx, [eax + ecx*4]","lea edx, [eax + ecx*4]",True
+4,"mov dword ptr [0], edx","mov dword ptr [0x822d9c], edx",True
+5,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?seedFromTime@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,6,100.0%

@@ -1,0 +1,56 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x44","sub esp, 0x44",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x44]","lea edi, [ebp - 0x44]",True
+7,"mov ecx, 0x11","mov ecx, 0x11",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+11,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+12,fld dword ptr [eax],fld dword ptr [eax],True
+13,fmul dword ptr [ecx],fmul dword ptr [ecx],True
+14,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+15,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+16,fld dword ptr [edx + 4],fld dword ptr [edx + 4],True
+17,fmul dword ptr [eax + 4],fmul dword ptr [eax + 4],True
+18,faddp st(1),faddp st(1),True
+19,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+20,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+21,fld dword ptr [ecx + 8],fld dword ptr [ecx + 8],True
+22,fmul dword ptr [edx + 8],fmul dword ptr [edx + 8],True
+23,faddp st(1),faddp st(1),True
+24,"sub esp, 8","sub esp, 8",True
+25,fstp qword ptr [esp],fstp qword ptr [esp],True
+26,call 0x49,call 0x100192c4,True
+27,"add esp, 8","add esp, 8",True
+28,fstp dword ptr [ebp - 4],fstp dword ptr [ebp - 4],True
+29,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+30,fld dword ptr [eax],fld dword ptr [eax],True
+31,fdiv dword ptr [ebp - 4],fdiv dword ptr [ebp - 4],True
+32,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+33,fstp dword ptr [ecx],fstp dword ptr [ecx],True
+34,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+35,fld dword ptr [edx + 4],fld dword ptr [edx + 4],True
+36,fdiv dword ptr [ebp - 4],fdiv dword ptr [ebp - 4],True
+37,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+38,fstp dword ptr [eax + 4],fstp dword ptr [eax + 4],True
+39,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+40,fld dword ptr [ecx + 8],fld dword ptr [ecx + 8],True
+41,fdiv dword ptr [ebp - 4],fdiv dword ptr [ebp - 4],True
+42,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+43,fstp dword ptr [edx + 8],fstp dword ptr [edx + 8],True
+44,pop edi,pop edi,True
+45,pop esi,pop esi,True
+46,pop ebx,pop ebx,True
+47,"add esp, 0x44","add esp, 0x44",True
+48,"cmp ebp, esp","cmp ebp, esp",True
+49,call 0x87,call 0x100180a0,True
+50,"mov esp, ebp","mov esp, ebp",True
+51,pop ebp,pop ebp,True
+52,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?normalize@@YAXPAM@Z,module=Terrain.dll
+VERDICT,GREEN,53,100.0%

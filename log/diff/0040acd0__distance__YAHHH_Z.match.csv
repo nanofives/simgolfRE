@@ -1,0 +1,52 @@
+instruction,recompiled,original,match
+0,push ecx,push ecx,True
+1,push esi,push esi,True
+2,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+3,"mov eax, esi","mov eax, esi",True
+4,push edi,push edi,True
+5,cdq ,cdq ,True
+6,"xor eax, edx","xor eax, edx",True
+7,"mov edi, 1","mov edi, 1",True
+8,"sub eax, edx","sub eax, edx",True
+9,"mov dword ptr [esp + 8], edi","mov dword ptr [esp + 8], edi",True
+10,"cmp eax, 0x4000","cmp eax, 0x4000",True
+11,jle 0x34,jle 0x40ad04,True
+12,"mov eax, esi","mov eax, esi",True
+13,"mov edi, 8","mov edi, 8",True
+14,cdq ,cdq ,True
+15,"and edx, 7","and edx, 7",True
+16,"mov dword ptr [esp + 8], edi","mov dword ptr [esp + 8], edi",True
+17,"add eax, edx","add eax, edx",True
+18,"sar eax, 3","sar eax, 3",True
+19,"mov esi, eax","mov esi, eax",True
+20,"mov ecx, dword ptr [esp + 0x14]","mov ecx, dword ptr [esp + 0x14]",True
+21,"mov eax, ecx","mov eax, ecx",True
+22,cdq ,cdq ,True
+23,"xor eax, edx","xor eax, edx",True
+24,"sub eax, edx","sub eax, edx",True
+25,"cmp eax, 0x4000","cmp eax, 0x4000",True
+26,jle 0x5e,jle 0x40ad2e,True
+27,"mov eax, ecx","mov eax, ecx",True
+28,cdq ,cdq ,True
+29,"and edx, 7","and edx, 7",True
+30,"add eax, edx","add eax, edx",True
+31,"sar eax, 3","sar eax, 3",True
+32,"mov ecx, eax","mov ecx, eax",True
+33,"lea eax, [edi*8]","lea eax, [edi*8]",True
+34,"mov dword ptr [esp + 8], eax","mov dword ptr [esp + 8], eax",True
+35,"mov edx, esi","mov edx, esi",True
+36,"mov eax, ecx","mov eax, ecx",True
+37,"imul edx, esi","imul edx, esi",True
+38,"imul eax, ecx","imul eax, ecx",True
+39,"add edx, eax","add edx, eax",True
+40,"mov dword ptr [esp + 0x10], edx","mov dword ptr [esp + 0x10], edx",True
+41,fild dword ptr [esp + 0x10],fild dword ptr [esp + 0x10],True
+42,fsqrt ,fsqrt ,True
+43,fimul dword ptr [esp + 8],fimul dword ptr [esp + 8],True
+44,call 0x7d,call 0x4a6030,True
+45,pop edi,pop edi,True
+46,pop esi,pop esi,True
+47,pop ecx,pop ecx,True
+48,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?distance@@YAHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,49,100.0%

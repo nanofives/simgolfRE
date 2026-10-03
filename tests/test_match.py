@@ -70,3 +70,18 @@ def test_shim_links_the_vc6_compiled_tileat():
     import pefile
     original = pefile.PE(str(ROOT / "original" / "golf_clean.exe")).get_data(0x490D0, 0x39)
     assert original in (ROOT / "shim" / "build" / "winmm.dll").read_bytes()
+
+
+def test_switch_tables_are_stripped_but_case_order_still_counts(tmp_path):
+    """The matcher drops VC6's trailing jump tables (not part of Ghidra's body) but still compares the
+    case blocks: moving `case 6` ahead of `case 0x11` in Tile::setTypeId must not match."""
+    src = (ROOT / "re" / "match" / "terrain_tile2.cpp").read_text()
+    ok = [r for r in match.compare(ROOT / "re" / "match" / "terrain_tile2.cpp", "", False) if "setTypeId" in r[2]]
+    assert ok[0][4] == 1.0
+    a = "    case 0x11:\n        f_1000d480(type);\n        break;\n"
+    b = "    case 6:\n        f_1000de60();\n        break;\n"
+    assert a in src and b in src
+    f = tmp_path / "t.cpp"
+    f.write_text(src.replace(a + b, b + a))
+    bad = [r for r in match.compare(f, "", False) if "setTypeId" in r[2]]
+    assert bad[0][4] < 1.0

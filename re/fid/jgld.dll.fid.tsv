@@ -1,0 +1,390 @@
+entry	name	size	score	unique	names	library
+1007e6d0	FUN_1007e6d0	161	76.44	1	operator_delete	VC6|12.00.8168|libcmtd
+1007e780	__chkesp	56	29.35	1	__chkesp	VC6|12.00.8168|libcd
+1007e7c0	_memset	88	47.37	1	_memset	Visual Studio|1998|Release
+1007e820	FUN_1007e820	33	47.00	1	__fpmath	VC6|12.00.8168|libcd
+1007e860	FUN_1007e860	65	22.00	1	__cfltcvt_init	VC6|12.00.8168|libcd
+1007eaf0	FUN_1007eaf0	45	90.03	1	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	VC6|12.00.8168|libcd
+1007eb30	_CallMemberFunction0	7	41.00	1	?_CallMemberFunction0@@YGXPAX0@Z	Visual Studio|2003|Release
+1007eb40	FUN_1007eb40	7	207.00	0	?_CallMemberFunction1@@YGXPAX00@Z;?_CallMemberFunction2@@YGXPAX00H@Z	VC6|12.00.8168|libcd
+1007eb50	FUN_1007eb50	7	207.00	0	?_CallMemberFunction1@@YGXPAX00@Z;?_CallMemberFunction2@@YGXPAX00H@Z	VC6|12.00.8168|libcd
+1007eb60	FUN_1007eb60	86	159.39	1	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	VC6|12.00.8168|libcd
+1007ebc0	FID_conflict:___CxxFrameHandler3	60	122.71	1	___CxxFrameHandler	VC6|12.00.8168|libcd
+1007ec00	___CxxLongjmpUnwind@4	38	88.03	1	___CxxLongjmpUnwind@4	VC6|12.00.8168|libcd
+1007ec30	FUN_1007ec30	104	93.74	1	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	VC6|12.00.8168|libcmtd
+1007eca0	FUN_1007eca0	57	121.04	1	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	VC6|12.00.8168|libcd
+1007ece0	FUN_1007ece0	204	190.49	1	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	VC6|12.00.8168|libcmtd
+1007edb0	FUN_1007edb0	124	184.43	1	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	VC6|12.00.8168|libcd
+1007ee40	FUN_1007ee40	130	402.41	1	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	VC6|12.00.8168|libcmtd
+1007eed0	__global_unwind2	32	56.01	1	__global_unwind2	Visual Studio|2003|Release
+1007ef12	__local_unwind2	104	93.41	1	__local_unwind2	Visual Studio|2003|Release
+1007ef7a	__abnormal_termination	35	39.02	1	__abnormal_termination	VC6|12.00.8168|libcmtd
+1007ef9d	__NLG_Notify1	9	35.00	1	__NLG_Notify1	Visual Studio|2017|Release
+1007efc0	FUN_1007efc0	179	76.73	1	__onexit	VC6|12.00.8168|libcmtd
+1007f080	FUN_1007f080	24	59.34	1	_atexit	VC6|12.00.8168|libcmtd
+1007f0a0	FUN_1007f0a0	77	23.36	1	___onexitinit	VC6|12.00.8168|libcd
+1007f0f0	operator_new	28	27.35	1	??2@YAPAXI@Z	Visual Studio|2003|Debug
+1007f12c	__ftol	39	21.70	1	__ftol	Visual Studio|2012|Release
+1007f160	FUN_1007f160	56	90.01	1	__cinit	VC6|12.00.8168|libcmtd
+1007f1a0	FUN_1007f1a0	21	62.68	1	_exit	VC6|12.00.8168|libcmtd
+1007f1c0	__exit	21	396.68	1	__exit	VC6|12.00.8168|libcmtd
+1007f1e0	FUN_1007f1e0	19	122.68	1	__cexit	VC6|12.00.8168|libcmtd
+1007f200	FUN_1007f200	19	61.68	1	__c_exit	VC6|12.00.8168|libcmtd
+1007f220	FUN_1007f220	227	161.42	1	doexit	VC6|12.00.8168|libcmtd
+1007f310	FUN_1007f310	15	105.34	0	__lockexit;__unlockexit	VC6|12.00.8168|libcmtd
+1007f320	FUN_1007f320	15	105.34	0	__lockexit;__unlockexit	VC6|12.00.8168|libcmtd
+1007f330	__initterm	37	83.36	1	__initterm	VC6|12.00.8168|libcmtd
+1007f370	FUN_1007f370	33	19.69	0	_abs;_labs	Visual Studio|2012|Debug
+1007f3a0	FUN_1007f3a0	664	316.09	0	_memcpy;_memmove	VC6|12.00.8168|libc
+1007f6e0	_strlen	123	56.73	1	_strlen	Visual Studio|1998|Release
+1007f770	FUN_1007f770	224	536.10	1	_strcat	VC6|12.00.8168|libcd
+1007f850	FUN_1007f850	130	197.41	1	_fclose	VC6|12.00.8168|libcmtd
+1007f8e0	FUN_1007f8e0	190	276.13	1	__fclose_lk	VC6|12.00.8168|libcmtd
+1007f9a0	FUN_1007f9a0	252	476.13	1	__fsopen	VC6|12.00.8168|libcmtd
+1007faa0	FUN_1007faa0	23	99.68	1	_fopen	VC6|12.00.8168|libcmtd
+1007fab8	__setjmp3	123	42.00	1	__setjmp3	Visual Studio|2012|Release
+1007fb40	_malloc	38	20.69	1	_malloc	Visual Studio|2012|Debug
+1007fb70	__malloc_dbg	44	23.69	1	__malloc_dbg	Visual Studio|2012|Debug
+1007fba0	__nh_malloc	27	28.02	1	__nh_malloc	Visual Studio|2003|Debug
+1007fc60	FUN_1007fc60	23	250.35	1	__heap_alloc	VC6|12.00.8168|libcd
+1007fc80	FUN_1007fc80	787	247.00	1	__heap_alloc_dbg	VC6|12.00.8168|libcd
+1007ffa0	_calloc	36	57.36	1	_calloc	Visual Studio|2003|Debug
+1007ffd0	__calloc_dbg	96	338.75	1	__calloc_dbg	VC6|12.00.8168|libcmtd
+10080030	FID_conflict:__expand	36	50.36	0	__expand;_realloc	Visual Studio|2003|Debug
+10080060	FID_conflict:__realloc_dbg	99	57.00	0	__expand_dbg;__realloc_dbg	Visual Studio|2003|Debug
+100800f0	FUN_100800f0	1297	399.00	1	realloc_help	VC6|12.00.8168|libcd
+10080610	FID_conflict:__expand	36	50.36	0	__expand;_realloc	Visual Studio|2003|Debug
+10080640	FID_conflict:__realloc_dbg	99	57.00	0	__expand_dbg;__realloc_dbg	Visual Studio|2003|Debug
+100806f0	FUN_100806f0	19	322.01	1	__free_lk	VC6|12.00.8168|libcmtd
+10080710	__free_dbg	82	32.00	1	__free_dbg	Visual Studio|2003|Debug
+10080780	FUN_10080780	1004	373.00	1	__free_dbg_lk	VC6|12.00.8168|libcmtd
+10080e40	FUN_10080e40	136	383.09	1	_CheckBytes	VC6|12.00.8168|libcd
+10081280	FUN_10081280	34	128.35	1	__CrtSetDbgFlag	VC6|12.00.8168|libcmtd
+10081360	__CrtIsValidPointer	75	113.71	1	__CrtIsValidPointer	Visual Studio|2003|Debug
+100814e0	__CrtIsMemoryBlock	262	117.00	1	__CrtIsMemoryBlock	Visual Studio|2003|Debug
+100817e0	FUN_100817e0	291	147.27	1	__CrtMemDifference	VC6|12.00.8168|libcd
+10081c10	FUN_10081c10	276	125.87	1	__printMemBlockData	VC6|12.00.8168|libcd
+10081d30	FUN_10081d30	116	166.73	1	__CrtDumpMemoryLeaks	VC6|12.00.8168|libcmtd
+10081db0	FUN_10081db0	197	99.80	1	__CrtMemDumpStatistics	VC6|12.00.8168|libcd
+10081e80	FUN_10081e80	11	407.00	1	__CrtDbgBreak	VC6|12.00.8168|libcd
+10081e90	FUN_10081e90	87	40.72	1	__CrtSetReportMode	VC6|12.00.8168|libcd
+10081ef0	__CrtSetReportFile	126	49.40	1	__CrtSetReportFile	Visual Studio|2003|Debug
+10081f90	FUN_10081f90	912	741.93	1	__CrtDbgReport	VC6|12.00.8168|libcd
+10082320	FUN_10082320	780	856.22	1	_CrtMessageWindow	VC6|12.00.8168|libcmtd
+10082630	FUN_10082630	313	939.75	1	__CRT_INIT@12	VC6|12.00.8168|libcmtd
+10082770	entry	243	175.17	1	__DllMainCRTStartup@12	VC6|12.00.8168|libcmtd
+100828b0	_memcmp	172	91.40	1	_memcmp	Visual Studio|1998|Release
+10082960	FUN_10082960	243	260.83	1	_fabs	VC6|12.00.8168|libcmtd
+10082c80	FUN_10082c80	250	1117.85	1	_sprintf	VC6|12.00.8168|libcmtd
+10082d80	FUN_10082d80	62	203.37	1	_fread	VC6|12.00.8168|libcmtd
+10082dc0	FUN_10082dc0	463	456.06	1	__fread_lk	VC6|12.00.8168|libcmtd
+10082f90	_longjmp	120	114.00	1	_longjmp	Visual Studio|2003|Debug
+10083010	FUN_10083010	193	1046.45	1	_fprintf	VC6|12.00.8168|libcmtd
+100830e0	FUN_100830e0	300	147.84	1	___initstdio	VC6|12.00.8168|libcmtd
+10083210	FUN_10083210	26	71.00	1	___endstdio	VC6|12.00.8168|libcmtd
+10083230	FUN_10083230	61	179.36	0	__lock_file;__unlock_file	VC6|12.00.8168|libcmtd
+10083270	FUN_10083270	41	207.69	0	__lock_file2;__unlock_file2	VC6|12.00.8168|libcmtd
+100832a0	FUN_100832a0	61	266.36	1	__unlock_file	VC6|12.00.8168|libcmtd
+100832e0	FUN_100832e0	41	207.69	0	__lock_file2;__unlock_file2	VC6|12.00.8168|libcmtd
+10083310	FUN_10083310	55	48.00	1	__mtinitlocks	VC6|12.00.8168|libcmtd
+10083350	FUN_10083350	159	64.07	1	__mtdeletelocks	VC6|12.00.8168|libcmtd
+100833f0	FUN_100833f0	151	55.08	1	__lock	VC6|12.00.8168|libcmtd
+100834d0	__setdefaultprecision	23	62.01	1	__setdefaultprecision	VC6|12.00.8168|libcmtd
+100834f0	FUN_100834f0	94	62.07	1	__ms_p5_test_fdiv	VC6|12.00.8168|libcd
+10083550	__ms_p5_mp_test_fdiv	66	66.70	1	__ms_p5_mp_test_fdiv	VC6|12.00.8168|libcd
+100835a0	FUN_100835a0	168	116.78	1	__forcdecpt	VC6|12.00.8168|libcmtd
+10083650	__cropzeros	215	104.80	1	__cropzeros	Visual Studio|2003|Release
+10083730	__positive	45	20.69	1	__positive	Visual Studio|2003|Release
+10083760	__fassign	72	59.05	1	__fassign	VC6|12.00.8168|libcd
+100837b0	FUN_100837b0	118	354.08	1	__cftoe	VC6|12.00.8168|libcmtd
+10083830	FUN_10083830	358	330.28	1	__cftoe2	VC6|12.00.8168|libcmtd
+100839a0	FUN_100839a0	106	330.74	1	__cftof	VC6|12.00.8168|libcmtd
+10083a10	FUN_10083a10	317	305.60	1	__cftof2	VC6|12.00.8168|libcmtd
+10083b50	FUN_10083b50	229	522.18	1	__cftog	VC6|12.00.8168|libcmtd
+10083c40	__cfltcvt	95	222.40	1	__cfltcvt	VC6|12.00.8168|libcmtd
+10083ca0	__shift	46	258.03	1	__shift	VC6|12.00.8168|libcmtd
+10083eb7	__startOneArgErrorHandling	60	155.05	1	__startOneArgErrorHandling	VC6|12.00.8168|libcd
+10083f45	__fload_withFB	67	30.38	1	__fload_withFB	Visual Studio|2012|Release
+10083fab	__math_exit	42	38.68	1	__math_exit	Visual Studio|2012|Release
+10084090	FUN_10084090	239	525.85	1	___InternalCxxFrameHandler	VC6|12.00.8168|libcmtd
+10084180	FUN_10084180	672	743.09	1	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	VC6|12.00.8168|libcmtd
+10084420	FUN_10084420	277	534.22	1	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	VC6|12.00.8168|libcmtd
+10084540	FUN_10084540	182	353.45	1	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	VC6|12.00.8168|libcmtd
+10084600	FUN_10084600	224	253.00	1	___FrameUnwindToState	VC6|12.00.8168|libcd
+10084700	ArrayUnwindFilter	44	20.69	0	?ArrayUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z;?FrameUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z	Visual Studio|2012|Debug
+10084730	CatchIt	183	767.80	1	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z	VC6|12.00.8168|libcmtd
+100847f0	FUN_100847f0	172	180.00	1	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	VC6|12.00.8168|libcmtd
+100848cd	FUN_100848cd	94	130.07	1	$L17287	VC6|12.00.8168|libcmtd
+1008492b	FUN_1008492b	20	53.00	1	$L17288	VC6|12.00.8168|libcmtd
+10084940	FUN_10084940	66	33.38	1	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	VC6|12.00.8168|libcd
+10084990	FUN_10084990	621	349.00	1	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	VC6|12.00.8168|libcd
+10084c10	___DestructExceptionObject	111	275.00	1	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	VC6|12.00.8168|libcmtd
+10084ca0	FID_conflict:___AdjustPointer	70	243.40	1	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	VC6|12.00.8168|libcd
+10084cf0	__CallSettingFrame@12	76	43.04	1	__CallSettingFrame@12	Visual Studio|2017|Release
+10084d40	FUN_10084d40	130	164.39	1	__mtinit	VC6|12.00.8168|libcmtd
+10084dd0	FUN_10084dd0	41	112.34	1	__mtterm	VC6|12.00.8168|libcmtd
+10084e00	FUN_10084e00	25	87.35	1	__initptd	VC6|12.00.8168|libcmtd
+10084e20	FUN_10084e20	152	100.08	1	__getptd	VC6|12.00.8168|libcmtd
+10084ec0	FUN_10084ec0	263	175.86	1	__freeptd	VC6|12.00.8168|libcmtd
+100850a0	FUN_100850a0	90	646.00	1	?_inconsistency@@YAXXZ	VC6|12.00.8168|libcmtd
+10085110	FUN_10085110	17	28.00	0	$L16634;$L16651;$L16767	VC6|12.00.8168|libcd
+10085130	FUN_10085130	122	554.40	1	__close	VC6|12.00.8168|libcmtd
+100851b0	__close_lk	170	191.77	1	__close_lk	VC6|12.00.8168|libcmtd
+10085260	FUN_10085260	146	130.10	1	__freebuf	VC6|12.00.8168|libcmtd
+10085300	FUN_10085300	68	160.04	1	_fflush	VC6|12.00.8168|libcmtd
+10085350	FUN_10085350	65	256.03	1	__fflush_lk	VC6|12.00.8168|libcmtd
+100853a0	FUN_100853a0	183	265.49	1	__flush	VC6|12.00.8168|libcmtd
+10085460	FUN_10085460	15	102.34	1	__flushall	VC6|12.00.8168|libcmtd
+10085470	FUN_10085470	319	193.53	1	flsall	VC6|12.00.8168|libcmtd
+100855b0	FUN_100855b0	797	749.09	1	__openfile	VC6|12.00.8168|libcmtd
+10085940	FUN_10085940	384	250.91	1	__getstream	VC6|12.00.8168|libcmtd
+10085ac0	_set_new_handler	48	19.69	1	_set_new_handler	VC6|12.00.8168|libcmtd
+10085b00	__callnewh	45	54.69	1	__callnewh	Visual Studio|2003|Debug
+10085bf5	FUN_10085bf5	27	44.35	1	__seh_longjmp_unwind@4	Visual Studio|2003|Release
+10085c10	__malloc_base	32	47.68	1	__malloc_base	Visual Studio|2003|Debug
+10085c30	__nh_malloc_base	87	85.72	1	__nh_malloc_base	Visual Studio|2003|Debug
+10085c90	__heap_alloc_base	101	60.00	1	__heap_alloc_base	Visual Studio|2003|Debug
+100865e0	__heapchk	98	50.00	1	__heapchk	Visual Studio|2003|Debug
+100866f0	__heapset	10	26.00	1	__heapset	Visual Studio|2003|Debug
+10086840	___sbh_heap_init	98	26.36	1	___sbh_heap_init	Visual Studio|2008|Debug
+100868b0	FUN_100868b0	85	39.72	1	___sbh_find_block	VC6|12.00.8168|libcd
+10086910	FUN_10086910	95	47.07	1	___sbh_verify_block	VC6|12.00.8168|libcd
+10086f50	FUN_10086f50	1334	732.09	1	___sbh_alloc_block	VC6|12.00.8168|libcd
+10087490	FUN_10087490	271	499.00	1	___sbh_alloc_new_region	VC6|12.00.8168|libcd
+100875a0	FUN_100875a0	494	658.09	1	___sbh_alloc_new_group	VC6|12.00.8168|libcd
+10087790	FUN_10087790	1515	574.09	1	___sbh_resize_block	VC6|12.00.8168|libcd
+10087d80	FUN_10087d80	304	99.45	1	___sbh_heapmin	VC6|12.00.8168|libcd
+10087eb0	FUN_10087eb0	1565	340.00	1	___sbh_heap_check	VC6|12.00.8168|libcd
+10089800	FUN_10089800	183	218.80	1	__isctype	VC6|12.00.8168|libcd
+100898c0	__itoa	66	462.05	1	__itoa	VC6|12.00.8168|libcd
+10089910	xtoa	194	169.85	1	xtoa	VC6|12.00.8168|libcd
+100899e0	__ltoa	63	103.38	1	__ltoa	Visual Studio|2003|Debug
+10089a20	__ultoa	30	88.02	1	__ultoa	Visual Studio|2003|Debug
+10089a40	__i64toa	72	126.72	1	__i64toa	Visual Studio|2003|Debug
+10089a90	x64toa	242	259.88	1	x64toa	VC6|12.00.8168|libcd
+10089b90	__ui64toa	31	107.02	1	__ui64toa	Visual Studio|2003|Debug
+10089bb0	FUN_10089bb0	249	1521.85	1	__snprintf	VC6|12.00.8168|libcmtd
+10089cb0	FUN_10089cb0	243	1337.51	1	__vsnprintf	VC6|12.00.8168|libcmtd
+10089db0	FUN_10089db0	47	21.02	0	$$$00001;__alloca_probe	VC6|12.00.8168|libc
+10089de0	FUN_10089de0	507	234.63	1	_signal	VC6|12.00.8168|libcmtd
+1008a010	FUN_1008a010	146	61.44	1	ctrlevent_capture	VC6|12.00.8168|libcmtd
+1008a0b0	FUN_1008a0b0	522	462.42	1	_raise	VC6|12.00.8168|libcmtd
+1008a2f0	FUN_1008a2f0	91	340.06	1	siglookup	VC6|12.00.8168|libcmtd
+1008a360	FUN_1008a360	13	36.67	1	___pxcptinfoptrs	VC6|12.00.8168|libcmtd
+1008a370	FUN_1008a370	187	358.74	1	___crtMessageBoxA	VC6|12.00.8168|libcd
+1008a430	_strncpy	254	1318.42	1	_strncpy	VC6|12.00.8168|libcmtd
+1008a530	FUN_1008a530	804	374.09	1	__ioinit	VC6|12.00.8168|libcmtd
+1008a860	__ioterm	155	122.76	1	__ioterm	VC6|12.00.8168|libcmtd
+1008a900	FUN_1008a900	329	203.20	1	__setenvp	VC6|12.00.8168|libcmtd
+1008aa50	FUN_1008aa50	216	517.12	1	__setargv	VC6|12.00.8168|libcmtd
+1008ab30	FUN_1008ab30	1060	508.09	1	parse_cmdline	VC6|12.00.8168|libcd
+1008af60	FUN_1008af60	537	289.01	1	___crtGetEnvironmentStringsA	VC6|12.00.8168|libcmtd
+1008b180	__FF_MSGBANNER	73	137.36	1	__FF_MSGBANNER	VC6|12.00.8168|libcd
+1008b1d0	FUN_1008b1d0	447	409.52	1	__NMSG_WRITE	VC6|12.00.8168|libcd
+1008b390	__GET_RTERRMSG	80	35.04	1	__GET_RTERRMSG	VC6|12.00.8168|libcd
+1008b3e0	FUN_1008b3e0	85	278.72	1	__handle_qnan1	VC6|12.00.8168|libcmtd
+1008b440	FUN_1008b440	103	612.40	1	__handle_qnan2	VC6|12.00.8168|libcmtd
+1008b4b0	FUN_1008b4b0	178	1068.79	1	__except1	VC6|12.00.8168|libcmtd
+1008b570	FUN_1008b570	206	1408.15	1	__except2	VC6|12.00.8168|libcmtd
+1008b640	FUN_1008b640	1201	785.09	1	__raise_exc	VC6|12.00.8168|libcd
+1008bb10	FUN_1008bb10	882	740.09	1	__handle_exc	VC6|12.00.8168|libcd
+1008be90	__umatherr	155	343.78	1	__umatherr	VC6|12.00.8168|libcmtd
+1008bf30	FID_conflict:__set_errno_from_matherr	58	321.70	1	__set_errno	VC6|12.00.8168|libcmtd
+1008bf70	__get_fname	63	76.70	1	__get_fname	VC6|12.00.8168|libcd
+1008bfb0	FUN_1008bfb0	113	193.41	1	__errcode	VC6|12.00.8168|libcd
+1008c030	FUN_1008c030	62	633.05	1	__set_exp	VC6|12.00.8168|libcd
+1008c070	FUN_1008c070	45	21.03	1	__get_exp	VC6|12.00.8168|libcd
+1008c0a0	FUN_1008c0a0	51	44.03	1	__add_exp	VC6|12.00.8168|libcd
+1008c0e0	FUN_1008c0e0	52	26.04	1	__set_bexp	VC6|12.00.8168|libcd
+1008c120	FUN_1008c120	124	519.08	1	__sptype	VC6|12.00.8168|libcd
+1008c1a0	FUN_1008c1a0	313	1008.90	1	__decomp	VC6|12.00.8168|libcd
+1008c2e0	FUN_1008c2e0	22	437.34	1	__statfp	VC6|12.00.8168|libcd
+1008c300	FUN_1008c300	23	438.34	1	__clrfp	VC6|12.00.8168|libcd
+1008c320	FUN_1008c320	50	1051.03	1	__ctrlfp	VC6|12.00.8168|libcmtd
+1008c360	FUN_1008c360	117	323.05	1	__set_statfp	VC6|12.00.8168|libcd
+1008c5f0	FUN_1008c5f0	612	283.69	1	__powhlp	VC6|12.00.8168|libcd
+1008c860	FUN_1008c860	128	309.73	1	__d_inttype	VC6|12.00.8168|libcd
+1008c8e0	FUN_1008c8e0	628	711.09	1	__flsbuf	VC6|12.00.8168|libcmtd
+1008cb60	FUN_1008cb60	3108	1447.09	1	__output	VC6|12.00.8168|libcmtd
+1008d890	FUN_1008d890	119	1108.09	1	write_char	VC6|12.00.8168|libcmtd
+1008d910	FUN_1008d910	53	861.70	1	write_multi_char	VC6|12.00.8168|libcd
+1008d950	FUN_1008d950	74	873.05	1	write_string	VC6|12.00.8168|libcd
+1008d9a0	FUN_1008d9a0	26	805.35	1	get_int_arg	VC6|12.00.8168|libcd
+1008d9c0	FUN_1008d9c0	31	808.02	1	get_int64_arg	VC6|12.00.8168|libcd
+1008d9e0	FUN_1008d9e0	27	805.35	1	get_short_arg	VC6|12.00.8168|libcd
+1008da00	FUN_1008da00	484	494.04	1	__filbuf	VC6|12.00.8168|libcmtd
+1008dbf0	FUN_1008dbf0	130	748.74	1	__read	VC6|12.00.8168|libcmtd
+1008dc80	FUN_1008dc80	1093	845.09	1	__read_lk	VC6|12.00.8168|libcmtd
+1008e0d0	__rt_probe_read4@4	91	66.00	1	__rt_probe_read4@4	Visual Studio|2003|Debug
+1008e160	FUN_1008e160	343	224.21	1	__stbuf	VC6|12.00.8168|libcmtd
+1008e2c0	FUN_1008e2c0	148	197.77	1	__ftbuf	VC6|12.00.8168|libcmtd
+1008e360	FUN_1008e360	218	136.80	1	__fcloseall	VC6|12.00.8168|libcmtd
+1008e440	FUN_1008e440	31	74.01	1	__statusfp	VC6|12.00.8168|libcd
+1008e460	FUN_1008e460	32	75.01	1	__clearfp	VC6|12.00.8168|libcd
+1008e480	FUN_1008e480	79	272.05	1	__control87	VC6|12.00.8168|libcd
+1008e4d0	__controlfp	26	50.68	1	__controlfp	VC6|12.00.8168|libcd
+1008e4f0	FUN_1008e4f0	88	54.39	1	__fpreset	VC6|12.00.8168|libcmtd
+1008e550	FUN_1008e550	377	205.63	1	__abstract_cw	VC6|12.00.8168|libcd
+1008e6d0	FUN_1008e6d0	346	190.60	1	__hw_cw	VC6|12.00.8168|libcd
+1008e830	FUN_1008e830	167	115.13	1	__abstract_sw	VC6|12.00.8168|libcd
+1008e8f0	FUN_1008e8f0	147	199.08	1	_tolower	VC6|12.00.8168|libcmtd
+1008e990	FUN_1008e990	299	587.89	1	__tolower_lk	VC6|12.00.8168|libcmtd
+1008eac0	FUN_1008eac0	132	147.10	1	__ZeroTail	VC6|12.00.8168|libcd
+1008eb50	__IncMan	168	188.14	1	__IncMan	VC6|12.00.8168|libcd
+1008ec00	FUN_1008ec00	219	457.18	1	__RoundMan	VC6|12.00.8168|libcd
+1008ece0	__CopyMan	76	217.40	1	__CopyMan	VC6|12.00.8168|libcd
+1008ed30	__FillZeroMan	47	200.37	1	__FillZeroMan	VC6|12.00.8168|libcd
+1008ed60	__IsZeroMan	55	205.04	1	__IsZeroMan	VC6|12.00.8168|libcd
+1008eda0	__ShrMan	236	300.88	1	__ShrMan	VC6|12.00.8168|libcd
+1008ee90	FUN_1008ee90	578	495.09	1	__ld12cvt	VC6|12.00.8168|libcd
+1008f0e0	FUN_1008f0e0	26	210.01	0	__ld12tod;__ld12tof	VC6|12.00.8168|libcd
+1008f100	FUN_1008f100	26	210.01	0	__ld12tod;__ld12tof	VC6|12.00.8168|libcd
+1008f120	FUN_1008f120	191	216.15	1	__ld12told	VC6|12.00.8168|libcd
+1008f1e0	FUN_1008f1e0	54	750.04	0	__atodbl;__atoflt	VC6|12.00.8168|libcd
+1008f220	FUN_1008f220	54	770.04	1	__atoldbl	VC6|12.00.8168|libcd
+1008f260	FUN_1008f260	54	750.04	0	__atodbl;__atoflt	VC6|12.00.8168|libcd
+1008f2a0	FUN_1008f2a0	250	302.21	1	__fptostr	VC6|12.00.8168|libcmtd
+1008f3a0	FUN_1008f3a0	119	709.76	1	__fltout2	VC6|12.00.8168|libcmtd
+1008f420	FUN_1008f420	354	201.28	1	___dtold	VC6|12.00.8168|libcmtd
+1008f590	FUN_1008f590	664	316.09	0	_memcpy;_memmove	VC6|12.00.8168|libc
+1008f8e0	FUN_1008f8e0	348	915.27	1	__87except	VC6|12.00.8168|libcmtd
+1008fa60	FUN_1008fa60	91	48.04	1	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	VC6|12.00.8168|libcd
+1008fb00	FUN_1008fb00	43	431.69	1	?_ValidateRead@@YAHPBXI@Z	VC6|12.00.8168|libcmtd
+1008fb30	FUN_1008fb30	43	222.69	0	?_ValidateRead@@YAHPBXI@Z;?_ValidateWrite@@YAHPAXI@Z	VC6|12.00.8168|libcd
+1008fb60	_ValidateExecute	39	247.02	1	?_ValidateExecute@@YAHP6GHXZ@Z	VC6|12.00.8168|libcd
+1008fb90	_strcmp	129	851.05	1	_strcmp	VC6|12.00.8168|libcmtd
+1008fc20	__XcptFilter	446	230.35	1	__XcptFilter	VC6|12.00.8168|libcmtd
+1008fde0	FUN_1008fde0	89	170.72	1	xcptlookup	VC6|12.00.8168|libcmtd
+1008fe60	FUN_1008fe60	482	649.98	1	__alloc_osfhnd	VC6|12.00.8168|libcmtd
+10090050	__set_osfhnd	183	492.11	1	__set_osfhnd	VC6|12.00.8168|libcmtd
+10090110	FUN_10090110	216	136.47	1	__free_osfhnd	VC6|12.00.8168|libcmtd
+100901f0	FUN_100901f0	102	328.06	1	__get_osfhandle	VC6|12.00.8168|libcmtd
+10090260	FUN_10090260	260	306.19	1	__open_osfhandle	VC6|12.00.8168|libcmtd
+10090370	FUN_10090370	134	351.10	1	__lock_fhandle	VC6|12.00.8168|libcmtd
+10090400	__unlock_fhandle	38	596.69	1	__unlock_fhandle	VC6|12.00.8168|libcmtd
+10090430	__dosmaperr	145	51.74	1	__dosmaperr	Visual Studio|2003|Debug
+100904f0	FUN_100904f0	210	182.45	1	__commit	VC6|12.00.8168|libcmtd
+100905d0	FUN_100905d0	130	542.74	1	__write	VC6|12.00.8168|libcmtd
+10090660	FUN_10090660	627	461.68	1	__write_lk	VC6|12.00.8168|libcmtd
+100908e0	FID_conflict:__open	63	376.72	1	__open	VC6|12.00.8168|libcmtd
+10090920	FUN_10090920	1294	1337.00	1	__sopen	VC6|12.00.8168|libcmtd
+10090e80	FUN_10090e80	27	274.35	1	_strtol	VC6|12.00.8168|libcmtd
+10090ea0	FUN_10090ea0	817	393.09	1	strtoxl	VC6|12.00.8168|libcmtd
+100911e0	FUN_100911e0	27	274.35	1	_strtoul	VC6|12.00.8168|libcmtd
+10091210	_strchr	193	103.07	1	_strchr	Visual Studio|1998|Release
+100912d0	_strstr	128	72.37	1	_strstr	Visual Studio|1998|Release
+10091350	_strncmp	56	283.35	1	_strncmp	VC6|12.00.8168|libcmtd
+10091390	FUN_10091390	421	629.00	1	___crtGetStringTypeA	VC6|12.00.8168|libcd
+10091550	__aulldiv	104	932.72	1	__aulldiv	VC6|12.00.8168|libcd
+100915c0	__aullrem	117	937.07	1	__aullrem	VC6|12.00.8168|libcd
+10091640	FUN_10091640	836	560.09	1	__setmbcp	VC6|12.00.8168|libcmtd
+10091990	getSystemCP	89	247.37	1	getSystemCP	VC6|12.00.8168|libcmtd
+100919f0	FUN_100919f0	80	255.04	1	_CPtoLCID	VC6|12.00.8168|libcmtd
+10091a70	setSBCS	116	263.40	1	setSBCS	VC6|12.00.8168|libcmtd
+10091af0	FUN_10091af0	770	803.18	1	setSBUpLow	VC6|12.00.8168|libcmtd
+10091e20	FUN_10091e20	34	388.68	1	___initmbctable	VC6|12.00.8168|libcmtd
+10091e50	__matherr	7	162.00	1	__matherr	VC6|12.00.8168|libcd
+10092bf0	FUN_10092bf0	27	61.68	1	__frnd	VC6|12.00.8168|libcd
+10092c10	__copysign	42	250.03	1	__copysign	VC6|12.00.8168|libcd
+10092c40	__chgsign	44	22.03	1	__chgsign	Visual Studio|2003|Release
+10092c70	FUN_10092c70	25	242.68	1	__scalb	VC6|12.00.8168|libcd
+10092c90	FUN_10092c90	300	379.86	1	__logb	VC6|12.00.8168|libcmtd
+10092dc0	FUN_10092dc0	826	596.09	1	__nextafter	VC6|12.00.8168|libcmtd
+10093100	FUN_10093100	34	15.35	1	__finite	VC6|12.00.8168|libcd
+10093130	FUN_10093130	73	31.71	1	__isnan	VC6|12.00.8168|libcd
+10093180	FUN_10093180	211	176.47	1	__fpclass	VC6|12.00.8168|libcd
+10093260	FUN_10093260	130	360.74	1	__lseek	VC6|12.00.8168|libcmtd
+100932f0	FUN_100932f0	178	1117.13	1	__lseek_lk	VC6|12.00.8168|libcmtd
+100933b0	FUN_100933b0	199	461.15	1	__getbuf	VC6|12.00.8168|libcmtd
+10093480	__isatty	50	327.03	1	__isatty	VC6|12.00.8168|libcmtd
+100934c0	FUN_100934c0	119	876.39	1	_wctomb	VC6|12.00.8168|libcmtd
+10093540	FUN_10093540	160	93.76	1	__wctomb_lk	VC6|12.00.8168|libcmtd
+100935e0	FUN_100935e0	1007	873.09	1	_setlocale	VC6|12.00.8168|libcmtd
+100939d0	FUN_100939d0	403	504.21	1	__setlocale_set_cat	VC6|12.00.8168|libcmtd
+10093b70	FUN_10093b70	256	504.12	1	__setlocale_get_all	VC6|12.00.8168|libcmtd
+10093c70	FUN_10093c70	388	833.85	1	__expandlocale	VC6|12.00.8168|libcmtd
+10093e10	__strcats	79	223.73	1	__strcats	VC6|12.00.8168|libcd
+10093e60	FUN_10093e60	349	410.23	1	___lc_strtolc	VC6|12.00.8168|libcd
+10093fc0	___lc_lctostr	101	176.39	1	___lc_lctostr	VC6|12.00.8168|libcd
+10094030	FUN_10094030	727	621.00	1	___crtLCMapStringA	VC6|12.00.8168|libcd
+10094340	FUN_10094340	80	283.39	1	strncnt	VC6|12.00.8168|libcd
+10094390	___addl	62	452.72	1	___addl	VC6|12.00.8168|libcd
+100943d0	___add_12	173	583.48	1	___add_12	VC6|12.00.8168|libcd
+10094480	___shl_12	96	817.41	1	___shl_12	VC6|12.00.8168|libcd
+100944e0	___shr_12	99	724.42	1	___shr_12	VC6|12.00.8168|libcd
+10094550	FUN_10094550	315	927.25	1	___mtold12	VC6|12.00.8168|libcd
+10094690	FUN_10094690	2586	897.00	1	___strgtold12	VC6|12.00.8168|libcd
+100951c0	FUN_100951c0	79	784.40	1	___STRINGTOLD	VC6|12.00.8168|libcd
+10095210	FUN_10095210	1302	998.09	1	_$I10_OUTPUT	VC6|12.00.8168|libcmtd
+10095730	FUN_10095730	115	231.40	1	__chsize	VC6|12.00.8168|libcmtd
+100957b0	FUN_100957b0	560	855.18	1	__chsize_lk	VC6|12.00.8168|libcmtd
+100959f0	FUN_100959f0	147	401.08	1	_toupper	VC6|12.00.8168|libcmtd
+10095a90	FUN_10095a90	299	410.89	1	__toupper_lk	VC6|12.00.8168|libcmtd
+10095bc0	FUN_10095bc0	700	625.09	1	_ldexp	VC6|12.00.8168|libcmtd
+10095e80	___init_time	219	822.09	1	___init_time	VC6|12.00.8168|libcd
+10095f60	FUN_10095f60	1423	798.09	1	__get_lc_time	VC6|12.00.8168|libcd
+100964f0	___free_lc_time	779	363.09	0	___free_lc_time;__free_lc_time	Visual Studio|2003|Debug
+10096800	FUN_10096800	678	435.28	1	___init_numeric	VC6|12.00.8168|libcd
+10096ab0	fix_grouping	125	228.75	1	fix_grouping	VC6|12.00.8168|libcd
+10096b30	FUN_10096b30	304	366.12	1	___init_monetary	VC6|12.00.8168|libcd
+10096c60	FUN_10096c60	525	562.09	1	__get_lc_lconv	VC6|12.00.8168|libcd
+10096e70	fix_grouping	125	249.75	1	fix_grouping	VC6|12.00.8168|libcd
+10096ef0	FUN_10096ef0	147	143.44	1	__free_lc_lconv	VC6|12.00.8168|libcd
+10096f90	FUN_10096f90	928	829.09	1	___init_ctype	VC6|12.00.8168|libcd
+10097340	FUN_10097340	62	401.68	1	_strcspn	VC6|12.00.8168|libcmtd
+10097380	FUN_10097380	58	283.68	1	_strpbrk	VC6|12.00.8168|libcmtd
+100973c0	FUN_100973c0	512	518.51	1	___get_qualified_locale	VC6|12.00.8168|libcd
+100975c0	FUN_100975c0	130	201.78	1	_TranslateName	VC6|12.00.8168|libcd
+10097650	FUN_10097650	186	225.72	1	_GetLcidFromLangCountry	VC6|12.00.8168|libcd
+10097710	FUN_10097710	804	466.92	1	_LangCountryEnumProc@4	VC6|12.00.8168|libcmtd
+10097a40	FUN_10097a40	116	206.37	1	_GetLcidFromLanguage	VC6|12.00.8168|libcd
+10097ac0	FUN_10097ac0	287	284.10	1	_LanguageEnumProc@4	VC6|12.00.8168|libcmtd
+10097be0	FUN_10097be0	69	154.35	1	_GetLcidFromCountry	VC6|12.00.8168|libcd
+10097c30	FUN_10097c30	172	130.73	1	_CountryEnumProc@4	VC6|12.00.8168|libcd
+10097ce0	FUN_10097ce0	43	143.67	1	_GetLcidFromDefault	VC6|12.00.8168|libcd
+10097d10	FUN_10097d10	155	337.40	1	_ProcessCodePage	VC6|12.00.8168|libcd
+10097db0	FUN_10097db0	79	291.38	1	_TestDefaultCountry	VC6|12.00.8168|libcd
+10097e00	FUN_10097e00	135	421.40	1	_TestDefaultLanguage	VC6|12.00.8168|libcd
+10097e90	FUN_10097e90	77	157.37	1	_IsThisWindowsNT	VC6|12.00.8168|libcd
+10097ee0	crtGetLocaleInfoA	388	280.61	1	crtGetLocaleInfoA	VC6|12.00.8168|libcd
+10098070	FUN_10098070	118	442.10	1	_LcidFromHexString	VC6|12.00.8168|libcd
+100980f0	_GetPrimaryLen	101	172.75	1	_GetPrimaryLen	VC6|12.00.8168|libcd
+10098160	FUN_10098160	1085	918.09	1	___ld12mul	VC6|12.00.8168|libcd
+100985a0	FUN_100985a0	195	1451.16	1	___multtenpow12	VC6|12.00.8168|libcd
+10098670	FUN_10098670	115	159.40	1	__setmode	VC6|12.00.8168|libcmtd
+100986f0	FUN_100986f0	207	257.16	1	__setmode_lk	VC6|12.00.8168|libcmtd
+100987c0	FUN_100987c0	289	138.24	1	__Getdays	VC6|12.00.8168|libcd
+100988f0	FUN_100988f0	291	139.58	1	__Getmonths	VC6|12.00.8168|libcd
+10098a20	FUN_10098a20	878	331.09	1	__Gettnames	VC6|12.00.8168|libcd
+10098d90	FUN_10098d90	31	18.02	0	__aligned_recalloc_base;__cftof;__mbccpy_s;__mbsnbcat_s;__mbsnbcpy_s;__mbsnbset_s;__mbsncat_s;__mbsncpy_s;__mbsnset_s;__ultoa_s;__ultow_s;_strftime;_wcsftime	Visual Studio|2012|Debug
+10098f40	FUN_10098f40	1389	1349.09	1	__expandtime	VC6|12.00.8168|libcmtd
+10099560	FID_conflict:_store_str	72	475.38	1	__store_str	VC6|12.00.8168|libcd
+100995b0	FUN_100995b0	173	588.79	1	__store_num	VC6|12.00.8168|libcd
+10099660	FID_conflict:_store_number	172	156.81	1	__store_number	VC6|12.00.8168|libcd
+10099710	FUN_10099710	1152	1317.09	1	__store_winword	VC6|12.00.8168|libcd
+10099c30	FUN_10099c30	650	1705.05	1	___getlocaleinfo	VC6|12.00.8168|libcd
+10099ed0	FUN_10099ed0	575	442.00	1	___crtGetStringTypeW	VC6|12.00.8168|libcd
+1009a140	FUN_1009a140	208	184.08	1	__strcmpi	VC6|12.00.8168|libcmtd
+1009a210	FUN_1009a210	257	485.06	1	__strnicmp	VC6|12.00.8168|libcmtd
+1009a320	FUN_1009a320	255	431.53	1	_atol	VC6|12.00.8168|libcmtd
+1009a420	FUN_1009a420	17	94.34	1	_atoi	VC6|12.00.8168|libcd
+1009a440	FUN_1009a440	297	166.22	1	__atoi64	VC6|12.00.8168|libcd
+1009a570	FUN_1009a570	61	702.69	1	___tzset	VC6|12.00.8168|libcmtd
+1009a5b0	FUN_1009a5b0	30	257.68	1	__tzset	VC6|12.00.8168|libcmtd
+1009a5d0	FUN_1009a5d0	939	668.09	1	__tzset_lk	VC6|12.00.8168|libcmtd
+1009a980	FUN_1009a980	46	260.36	1	__isindst	VC6|12.00.8168|libcmtd
+1009a9b0	FUN_1009a9b0	762	460.97	1	__isindst_lk	VC6|12.00.8168|libcmtd
+1009acb0	FUN_1009acb0	504	444.63	1	cvtdate	VC6|12.00.8168|libcd
+1009aeb0	FUN_1009aeb0	382	289.00	1	___crtGetLocaleInfoW	VC6|12.00.8168|libcd
+1009b050	FUN_1009b050	398	294.00	1	___crtGetLocaleInfoA	VC6|12.00.8168|libcd
+1009b200	__allmul	52	128.03	1	__allmul	VC6|12.00.8168|libcd
+1009b240	FUN_1009b240	46	85.36	1	_getenv	VC6|12.00.8168|libcmtd
+1009b270	FID_conflict:__getenv_lk	198	442.78	1	__getenv_lk	VC6|12.00.8168|libcmtd
+1009b340	__mbsnbicoll	79	466.38	1	__mbsnbicoll	VC6|12.00.8168|libcd
+1009b390	FUN_1009b390	174	573.13	1	___wtomb_environ	VC6|12.00.8168|libcd
+1009b440	FUN_1009b440	970	378.00	1	___crtCompareStringA	VC6|12.00.8168|libcd
+1009b840	FUN_1009b840	80	358.39	1	strncnt	VC6|12.00.8168|libcd
+1009b890	FUN_1009b890	736	616.09	1	___crtsetenv	VC6|12.00.8168|libcmtd
+1009bb70	findenv	124	301.07	1	findenv	VC6|12.00.8168|libcd
+1009bbf0	copy_environ	238	319.84	1	copy_environ	VC6|12.00.8168|libcd
+1009bce0	FUN_1009bce0	237	312.80	1	__mbschr	VC6|12.00.8168|libcmtd

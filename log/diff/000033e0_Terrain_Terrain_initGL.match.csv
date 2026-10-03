@@ -1,0 +1,84 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x44","sub esp, 0x44",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x44]","lea edi, [ebp - 0x44]",True
+8,"mov ecx, 0x11","mov ecx, 0x11",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov esi, esp","mov esi, esp",True
+14,push 0x1101,push 0x1101,True
+15,push 0xc50,push 0xc50,True
+16,call dword ptr [0],call dword ptr [0x101135d8],True
+17,"cmp esi, esp","cmp esi, esp",True
+18,call 0x36,call 0x100180a0,True
+19,"mov esi, esp","mov esi, esp",True
+20,push 0xb20,push 0xb20,True
+21,call dword ptr [0],call dword ptr [0x101135e0],True
+22,"cmp esi, esp","cmp esi, esp",True
+23,call 0x4a,call 0x100180a0,True
+24,"mov esi, esp","mov esi, esp",True
+25,push 0x1102,push 0x1102,True
+26,push 0xc52,push 0xc52,True
+27,call dword ptr [0],call dword ptr [0x101135d8],True
+28,"cmp esi, esp","cmp esi, esp",True
+29,call 0x63,call 0x100180a0,True
+30,"mov esi, esp","mov esi, esp",True
+31,push 0xde1,push 0xde1,True
+32,call dword ptr [0],call dword ptr [0x101135e0],True
+33,"cmp esi, esp","cmp esi, esp",True
+34,call 0x77,call 0x100180a0,True
+35,"mov esi, esp","mov esi, esp",True
+36,push 0xb50,push 0xb50,True
+37,call dword ptr [0],call dword ptr [0x101135e0],True
+38,"cmp esi, esp","cmp esi, esp",True
+39,call 0x8b,call 0x100180a0,True
+40,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+41,"xor ecx, ecx","xor ecx, ecx",True
+42,"mov cl, byte ptr [eax + 0x28]","mov cl, byte ptr [eax + 0x28]",True
+43,"test ecx, ecx","test ecx, ecx",True
+44,je 0xad,je 0x1000348d,True
+45,"mov esi, esp","mov esi, esp",True
+46,push 0x900,push 0x900,True
+47,call dword ptr [0],call dword ptr [0x101135dc],True
+48,"cmp esi, esp","cmp esi, esp",True
+49,call 0xab,call 0x100180a0,True
+50,jmp 0xc1,jmp 0x100034a1,True
+51,"mov esi, esp","mov esi, esp",True
+52,push 0x901,push 0x901,True
+53,call dword ptr [0],call dword ptr [0x101135dc],True
+54,"cmp esi, esp","cmp esi, esp",True
+55,call 0xc1,call 0x100180a0,True
+56,"mov esi, esp","mov esi, esp",True
+57,push 0xb44,push 0xb44,True
+58,call dword ptr [0],call dword ptr [0x101135e0],True
+59,"cmp esi, esp","cmp esi, esp",True
+60,call 0xd5,call 0x100180a0,True
+61,"mov esi, esp","mov esi, esp",True
+62,push 0x8074,push 0x8074,True
+63,call dword ptr [0],call dword ptr [0x101135d4],True
+64,"cmp esi, esp","cmp esi, esp",True
+65,call 0xe9,call 0x100180a0,True
+66,"mov esi, esp","mov esi, esp",True
+67,push 0x8075,push 0x8075,True
+68,call dword ptr [0],call dword ptr [0x101135d4],True
+69,"cmp esi, esp","cmp esi, esp",True
+70,call 0xfd,call 0x100180a0,True
+71,"mov al, 1","mov al, 1",True
+72,pop edi,pop edi,True
+73,pop esi,pop esi,True
+74,pop ebx,pop ebx,True
+75,"add esp, 0x44","add esp, 0x44",True
+76,"cmp ebp, esp","cmp ebp, esp",True
+77,call 0x10c,call 0x100180a0,True
+78,"mov esp, ebp","mov esp, ebp",True
+79,pop ebp,pop ebp,True
+80,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?initGL@Terrain@@QAE_NXZ,module=Terrain.dll
+VERDICT,GREEN,81,100.0%

@@ -269,8 +269,10 @@ def find_golfer_labels(img, min_px=12):
 
 
 GOLFER_PANEL_FN = 0x0045C560          # cdecl (golfer index, ?) — golfer info panel (C1 GolferPanelEject)
-LANDMARK_NOTICE_FN = 0x004722C0       # cdecl (golfer index, partner index) — landmark-available notice
-PAIR_PARTNER = 0x00579568             # short at + idx*0x100: the 2nd argument at the only call site 0x004667e1
+LANDMARK_NOTICE_FN = 0x004722C0       # cdecl (golfer index, story id) — landmark-available notice
+STORY_ID = 0x00579568                 # short at + idx*0x100 (golfer +0xb0, -1 = none): the 2nd argument at the
+                                      # only call site 0x004667e1
+STORY_ADVANCE_FN = 0x00466370         # cdecl (golfer, force) — advances a pair story one chapter (UNCERTAINTIES U-0003)
 
 
 def events_script(g):
@@ -304,11 +306,11 @@ def open_golfer_panel(g, tries=10):
 
 def inject_landmark_notice(g, golfer):
     """NOT organic: call the landmark-available notice on the game thread for a golfer that is on the course,
-    with the partner argument the game itself would pass (short at PAIR_PARTNER + golfer*0x100).
-    The organic trigger is an open question (UNCERTAINTIES U-0003)."""
+    with the story-id argument the game itself would pass (short at STORY_ID + golfer*0x100).
+    The organic path is a pair story reaching chapter 4 (golfer_stories scenario, UNCERTAINTIES U-0003)."""
     ev = events_script(g)
-    partner = ev.read_s16(PAIR_PARTNER + golfer * 0x100)
-    ev.inject(LANDMARK_NOTICE_FN, golfer, partner)
+    story = ev.read_s16(STORY_ID + golfer * 0x100)
+    ev.inject(LANDMARK_NOTICE_FN, golfer, story)
     for _ in range(20):
         time.sleep(0.25)
         if ev.done():
@@ -340,4 +342,119 @@ SCENARIOS["golfer_events"] = {
                ("season", lambda g: run_season(g, 25)),
                ("golfer_panel", lambda g: (open_golfer_panel(g), g.click(592, 258), time.sleep(1))),
                ("landmark_inject", lambda g: inject_landmark_notice(g, events_script(g).calls(GOLFER_PANEL_FN)[-1][0]))],
+}
+
+
+# ---- Golfer pair stories (organic path toward the landmark, U-0003) -------------------------------------
+# FUN_00466370 advances a story only when the golfer's current hole (char +0x21) is >= 2 (or byte +0x22 != 0),
+# so on the 1-hole course stories never move. A multi-hole course moves them within one game year at x32. Terrain is random per run, so some of the
+# FOUR_HOLES placements can be refused (water, trees); one extra hole is enough to advance a story.
+
+def build_next_hole(g, tee, green):
+    """With the Build Course palette still open (build_first_hole leaves it open): add tee + green, open it."""
+    g.click(*TOOL_TEE); time.sleep(0.8)
+    g.click(*tee); time.sleep(1.2)
+    g.click(*TOOL_GREEN); time.sleep(0.8)
+    g.click(*green); time.sleep(2)
+    g.click(300, 350, right=True); time.sleep(1)
+    g.key(VK_H); time.sleep(3)
+
+
+FOUR_HOLES = [((570, 380), (330, 280)), ((370, 300), (620, 250)), ((650, 280), (450, 180))]
+
+
+def build_four_holes(g):
+    build_first_hole(g)
+    for tee, green in FOUR_HOLES:
+        build_next_hole(g, tee, green)
+
+
+def story_season(g, seconds=150):
+    """Run the season until FUN_00466370 returns non-zero (a chapter advanced: it returns 0 on every gate,
+    log/decomp_466370.c); records the advancing calls and the best story stage (short +0xb2) in g.extra."""
+    ev = events_script(g)
+    ev.watch(STORY_ADVANCE_FN)
+    t0, best, advanced = time.time(), 0, []
+    while time.time() - t0 < seconds:
+        run_season(g, 10)
+        best = max([best] + [s[3] for s in ev.stories()])
+        advanced = [c for c in ev.calls(STORY_ADVANCE_FN) if c[2]]
+        if advanced:
+            break
+    g.extra = {"advanced": advanced, "best_stage": best, "calls": len(ev.calls(STORY_ADVANCE_FN))}
+    print("stories:", g.extra, flush=True)
+    if not advanced:
+        raise RuntimeError(f"no story chapter advanced: {g.extra}")
+
+
+SCENARIOS["golfer_stories"] = {
+    "env": {"SIMGOLF_TIMEWARP": "32"},
+    "js": ["events.js"],
+    "watched": {STORY_ADVANCE_FN: "season"},
+    "phases": [("menu", lambda g: time.sleep(3)),
+               ("sandbox", lambda g: to_sandbox(g)),
+               ("build_holes", lambda g: build_four_holes(g)),
+               ("season", lambda g: story_season(g))],
+}
+
+
+# ---- Saved-game fixtures ----------------------------------------------------------------------------
+# The game saves to "saved games\" under its working directory (original\); the installer creates that folder
+# and the portable install did not, so saves failed silently until it existed (2026-10-03).
+SAVED_GAMES = ROOT / "original" / "saved games"
+STORIES_FIXTURE = ROOT / "tests" / "fixtures" / "stories" / "stories5.sve"
+
+
+def load_saved_game(g, fixture):
+    """main menu -> Continue Saved Game -> pick `fixture` (copied into saved games) -> OK -> in game.
+    The list shows the game's own autosaves (&AutoSave*.sve) first, then the other files by name."""
+    SAVED_GAMES.mkdir(exist_ok=True)
+    shutil.copy2(fixture, SAVED_GAMES / fixture.name)
+    others = sorted(p.name.lower() for p in SAVED_GAMES.glob("*.sve") if not p.name.startswith("&"))
+    row = len(list(SAVED_GAMES.glob("&*.sve"))) + others.index(fixture.name.lower())
+    imgcmp.wait_for(g, imgcmp.load(GOLDEN / "main_menu.png"), timeout=60)
+    g.click(170, 80); time.sleep(3)
+    g.click(400, 121 + 16 * row); time.sleep(1)
+    g.click(632, 553); time.sleep(8)
+
+
+def view_stories_course(g):
+    """After loading the stories fixture the camera starts below-right of the course; 2x Up + 1x Left (short
+    presses, ~140 px each) brings all 5 holes into the rect FUN_004289e0 requires (x 0x32..0x2ee, y 0x32..0x1c2)."""
+    for _ in range(4):
+        g.key(0x1B); time.sleep(0.5)
+    for vk in (0x26, 0x26, 0x25):
+        g.key(vk, hold=0.05); time.sleep(1)
+
+
+SCENARIOS["stories_fixture"] = {
+    "env": {"SIMGOLF_TIMEWARP": "32"},
+    "js": ["events.js"],
+    "watched": {STORY_ADVANCE_FN: "season"},
+    "phases": [("load", lambda g: (load_saved_game(g, STORIES_FIXTURE), view_stories_course(g))),
+               ("season", lambda g: story_season(g))],
+}
+
+
+# 9-hole fixture on Scotland (Harold's Keep): 5 holes on the left field, 4 on the right, 35-103 yards.
+# Built at normal zoom. Zooming out does NOT help: in a 25 min x32 run zoomed out no story advanced past stage 1
+# (the rect test in FUN_004289e0 uses positions that leave the left holes outside when zoomed out). After loading,
+# the camera sits ~100 px left of the build view: the course spans x ~20-700, so only the tees of holes 1-5
+# fall left of the rect (x < 0x32). Arrow keys move ~250 px per press and edge scrolling did nothing, so this
+# is the best view found. Purpose: room for 4 chapter advances in one visit (U-0003).
+STORIES9_FIXTURE = ROOT / "tests" / "fixtures" / "stories" / "stories9.sve"
+
+
+def view_stories9_course(g):
+    for _ in range(4):
+        g.key(0x1B); time.sleep(0.5)
+    g.click(*GOLF_ICON); time.sleep(1)    # the save has the Build Course palette open: close it
+
+
+SCENARIOS["stories9_fixture"] = {
+    "env": {"SIMGOLF_TIMEWARP": "32"},
+    "js": ["events.js"],
+    "watched": {STORY_ADVANCE_FN: "season"},
+    "phases": [("load", lambda g: (load_saved_game(g, STORIES9_FIXTURE), view_stories9_course(g))),
+               ("season", lambda g: story_season(g))],
 }

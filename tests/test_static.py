@@ -99,6 +99,8 @@ def test_cd_root_files_present():
 def test_launcher_present():
     bat = (ROOT / "Play SimGolf.bat").read_text()
     assert "golf_clean.exe" in bat
+    # the game writes "saved games\<name>.sve" relative to original\ and never creates the folder
+    assert r'mkdir "%~dp0original\saved games"' in bat
 
 
 # ---------------------------------------------------------------- shim

@@ -45,6 +45,10 @@ Read this before touching anything under `original/` or `shim/`.
   (`Software\Electronic Arts\EA Games\Sid Meier's SimGolf\ergc`, App Paths, Uninstall) are unused.
 - The two TrueType fonts are loaded by Jackal itself (`AddFontResourceA` / `CreateScalableFontResourceA`
   imported by `jgld.dll`), session-scoped. No font install needed.
+- Folders the installer creates: the game saves with `CreateFileA("saved games\<name>.sve")` relative to its
+  working directory (`original\`), observed with a Frida hook on CreateFileA/W (2026-10-03). Without that
+  folder "Save the Current Game" fails with no message. `re/tools/scenario.py` (`load_saved_game`) creates
+  `original\saved games\`; the folder is gitignored. Autosaves land there as `&AutoSave<n>.sve`.
 
 ## 5. Windows 11 compatibility problems found, and the shim's fix for each
 

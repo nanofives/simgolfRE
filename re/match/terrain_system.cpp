@@ -12,7 +12,7 @@ public:
     void initSystem(int width, int height, HDC dc, bool flipY);
     void resize(int width, int height);
 
-    void initTextures();                 // 0x100033e0 (unexported; name tentative)
+    void initGL();                       // 0x100033e0 (unexported; GL state setup, matched in terrain_tile4.cpp)
     void initLists();                    // 0x100037e0 (unexported; name tentative)
     void relight();                      // 0x100076e0 (unexported; also called by loadNewCourseType)
 
@@ -45,7 +45,7 @@ void Terrain::initSystem(int width, int height, HDC dc, bool flipY)
             MessageBox(0, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
     }
     m_flipY = flipY;
-    initTextures();
+    initGL();
     initLists();
     relight();
     resize(width, height);

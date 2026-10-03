@@ -78,7 +78,7 @@ def compile_obj(src: pathlib.Path, flags: str) -> pathlib.Path:
 
 # ------------------------------------------------------------------ compare
 def function_from_obj(secs, syms, wanted: str):
-    """(bytes, relocation offsets) for the function whose symbol matches `wanted` (exact or substring)."""
+    """(bytes, relocation offsets, symbol name, same-section reloc targets) for the function whose symbol matches `wanted` (exact or substring)."""
     cands = [s for s in syms if s["sec"] > 0 and s["type"] == 0x20 and (s["name"] == wanted or wanted in s["name"])]
     if not cands:
         raise SystemExit(f"symbol {wanted!r} not in obj; functions: {[s['name'] for s in syms if s['type'] == 0x20]}")
@@ -98,7 +98,11 @@ def function_from_obj(secs, syms, wanted: str):
         return sym.get("sec") == -1 or sym.get("name") in const_syms
 
     relocs = [off - start for off, symidx, _ in sec["relocs"] if start <= off < end and not is_const(symidx)]
-    return sec["data"][start:end], relocs, s["name"]
+    # relocation site -> target offset inside this function's slice, for targets in the same section
+    # (VC6 switch tables are addressed through local label symbols with a stored addend of 0)
+    local = {off - start: by_index[symidx]["value"] - start for off, symidx, _ in sec["relocs"]
+             if start <= off < end and by_index.get(symidx, {}).get("sec") == s["sec"]}
+    return sec["data"][start:end], relocs, s["name"], local
 
 
 TSV = {"golf_clean.exe": "functions_ghidra.tsv", "Terrain.dll": "functions_ghidra_Terrain.dll.tsv"}
@@ -146,13 +150,22 @@ def normalize(code: bytes, base: int, start: int, is_abs) -> list[tuple[str, str
                     mem = op.mem
                     disp = mem.disp & 0xFFFFFFFF
                     parts = [ins.reg_name(mem.base) if mem.base else "", ins.reg_name(mem.index) + f"*{mem.scale}" if mem.index else ""]
-                    d = "<addr>" if is_abs(ins, i, disp) and not mem.base else (hex(mem.disp) if mem.disp else "")
+                    # an address displacement is masked with or without a base register (`mov cl, [edx+tbl]`)
+                    d = "<addr>" if is_abs(ins, i, disp) else (hex(mem.disp) if mem.disp else "")
                     ops.append(f"{op.size}[" + "+".join(x for x in parts + [d] if x) + "]")
                 else:
                     ops.append(ins.reg_name(op.reg))
             key = m + " " + ",".join(ops)
         out.append((f"{m} {ins.op_str}", key))
     return out
+
+
+def strip_switch_tables(code: bytes, local: dict) -> bytes:
+    """VC6 places a switch's jump table (and its index-byte table) right after the function's code, inside
+    the obj symbol's range; Ghidra's function size stops before them. `local` maps relocation sites to their
+    same-section targets (slice offsets), so the code ends at the lowest target the body points into."""
+    targets = [t for site, t in local.items() if site < t < len(code)]
+    return code[:min(targets)] if targets else code
 
 
 def file_flags(text: str, module: str) -> str | None:
@@ -172,7 +185,7 @@ def compare(src: pathlib.Path, flags: str, show: bool):
             objs[fl] = coff(compile_obj(src, fl))
         secs, syms = objs[fl]
         addr = int(addr, 16)
-        mine, relocs, full = function_from_obj(secs, syms, sym)
+        mine, relocs, full, local = function_from_obj(secs, syms, sym)
         size = ghidra_size(mod, addr)
         if size is None:
             raise SystemExit(f"no Ghidra size for {mod} 0x{addr:08x}; refusing to guess the original's length")
@@ -195,7 +208,7 @@ def compare(src: pathlib.Path, flags: str, show: bool):
         def orig_abs(ins, i, v):
             return pe_base <= v < pe_base + img_size
 
-        a = normalize(mine, 0, 0, mine_abs)
+        a = normalize(strip_switch_tables(mine, local), 0, 0, mine_abs)
         b = normalize(orig, addr, addr, orig_abs)
         # MSVC pads functions with int3/nop up to 16 bytes; padding is not part of either body
         while a and a[-1][0].split()[0] in ("int3", "nop"):

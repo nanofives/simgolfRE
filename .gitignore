@@ -42,6 +42,13 @@ tests/fixtures/championship/*
 # Full string/fingerprint dumps of the game binaries: regenerate with re/tools/fingerprints.py
 re/versions/*.jsonl
 !tests/fixtures/championship/README.md
+tests/fixtures/stories/*
+!tests/fixtures/stories/README.md
+original/saved games/
 .last_master_sync
 shim/*.exp
 shim/*.lib
+# Function ID work project and database (rebuild: py -3.12 re/tools/build_fiddb.py, ~45 min; VC6 libs not committed)
+ghidra/fid_work/
+ghidra/backup/
+re/fid/*.fidb

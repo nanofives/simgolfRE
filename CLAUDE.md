@@ -96,7 +96,17 @@ normalized instructions against the anchored binary, writes `log/diff/<addr>_<na
 Flags found so far: `golf_clean.exe` `/O2` (or `/Ox`, indistinguishable so far); `Terrain.dll`
 `/Od /ZI /GZ /GX` (debug, C++ EH on: `getInstance` has an SEH frame; /GX changes nothing else).
 29 functions at 100%: the 4 Terrain accessors in both builds and ALL 22 live exported Terrain.dll methods
-(incl. render 399 ins, localRender 380, drawLine 219, resize 150). Original source file:
+(incl. render 399 ins, localRender 380, drawLine 219, resize 150), plus 29 unexported callees
+(Tile accessors/reset/setTypeId/layPath/calcNormals, buildArrays, reloadTextures, initGL, normalize;
+`terrain_tile*.cpp`) and 9 large ones (Tile::render, drawTileObjects, isCulled, elevate/lowerCorner, the
+Terrain ctor, drawTile, the texture loader "relight", 0x10038900), setTypeId's callees (face blending
+0x10013670, type-6/7 enter/leave walks) and loadLighting; golf_clean.exe at /O2: 15 live functions
+(golf_util/golf_small/golf_story.cpp: RNG, clamp, sign, distance, tile accessors, storyText...).
+88 functions (69 Terrain.dll + 19 exe; count with `grep -h "// MATCH:" re/match/*.cpp`). Release-build
+misses are kept in `re/match/wip/` with what was tried (register roles, loop pointer anchors); the 100% test
+only globs `re/match/*.cpp`. Unreferenced locals show only as frame size (loadLighting: 0x1c bytes). The ctor fixes the type table:
+0x25 x {char name[0x14]; int count;} at +0x2c (names: 0 Tee, 2 Fairway, 4 Rough, ... in terrain_ctor.cpp). VC6 puts switch jump tables after the function inside the obj symbol;
+match.py strips them (reloc targets into the body's tail) and still compares case-block order. Original source file:
 `C:\ProjectsDTerrainLowPoly\Terrain.cpp` (assert in localRender). With /ZI, `__LINE__` is relative to a
 per-function variable, so an assert must sit at the same line offset as in the original (localRender:
 base+3). VC6's STL headers are 8.3-named on the CD (fctional, algrithm, stdxcept, ...); long-name copies
@@ -155,6 +165,22 @@ from the recording that neighbours can be checked against.
 - `re/tools/sbfl.py` (Ochiai), `re/tools/cov_bisect.py` (ddmin; needs a deterministic oracle).
 - Read `re/analysis/TESTING_STRATEGY.md` before trusting any FAIL: first decide harness vs game.
 
+### Function ID, saves, time travel
+- **FidDb** `re/fid/simgolf_vc6.fidb` (not committed; `py -3.12 re/tools/build_fiddb.py`, ~45 min): the 12 VC6
+  static CRT/STL/iostream libs (release + debug) + `original\JPEG.lib` (IJG libjpeg compress side + `CreateJPG`).
+  `py -3.12 re/tools/fid_report.py --program <module>` -> `re/fid/<module>.fid.tsv`, read-only on a pool slot,
+  applies nothing. `py -3.12 re/tools/fid_apply.py [--dry-run]` applies with Ghidra's ApplyFidEntriesCommand
+  (USER/IMPORTED names untouched, `$L` labels reverted) -> `re/fid/<module>.fid_applied.tsv`. Applied to the master
+  2026-10-03: exe 296, Terrain.dll 423, jgld.dll 270, sound.dll 287 renames (backup `ghidra/backup/`, not committed).
+  Headless `-import` of a `.lib` does nothing ("Ignoring file '.'"); `BuildFidDb.java` imports the members itself.
+- **.sve** `py -3.12 re/tools/sve.py info|diff|dump|check`: 100-byte header + raw dump of 86 globals (+ flag-gated
+  tail) written by FUN_0040afa0 (`re/analysis/save/0040afa0_save_serializer.md`). 20 globals named (labels `g_*` in
+  the master via `ghidra/scripts/LabelGlobals.java`; args `<va>#<name>`, the .bat splits on `=`); the rest: U-0004.
+- **TTD** (WinDbg 1.2603 + TTD 1.11 installed): `py -3.12 re/tools/ttd_record.py` (one UAC prompt: ttd.exe
+  -attach needs admin; the game runs unelevated) -> `log/ttd/<scenario>/*.run` (~1 GB). Query with
+  `py -3.12 re/tools/ttd_query.py <run> --index` once, then `dx @$cursession.TTD.Memory(lo,hi,"r"|"w"|"e")`.
+  The game runs far slower under TTD; ReadFile'd data is not a recorded write.
+
 ### Scenarios (`re/tools/scenario.py`)
 `sandbox_basic` (menu -> Sandbox -> Monterey, 40 s), `course_season` (+ build tee/green with the Build
 Course palette, open the hole with `H`, 240 s at x32 = ~6 game years), `championship` (installs the
@@ -162,7 +188,13 @@ fixture course, Play a Championship -> Easy -> course -> Gary Golf; the harness 
 straight shot at the cup found by colour (red pennant + pale pole base) or the green centroid, zooming
 out with X when the green is off-screen; 5/5 rounds finish in 45-107 s), `golfer_events` (organic golfer
 info panel by clicking a golfer under its name label; then an INJECTED landmark notice 0x004722c0 called
-on the game thread via re/frida/js/events.js; the organic trigger is open, U-0003).
+on the game thread via re/frida/js/events.js), `golfer_stories` (4-hole course at x32 until the pair-story
+advance FUN_00466370 returns 1; organic path toward the landmark, which needs both partners at chapter 4;
+the 1-hole course can never advance a story because of the hole >= 2 gate, U-0003).
+`stories_fixture` loads `tests/fixtures/stories/stories5.sve` (5 holes, not committed; README there) via
+Continue Saved Game; the camera must be moved back over the course (`view_stories_course`) because story
+advances only happen for golfers inside the screen rect. `stories9_fixture`: same with `stories9.sve` (Scotland, 9 holes;
+do not zoom out: a 25 min zoomed-out run never passed stage 1).
 Census: `py -3.12 re/tools/coverage_census.py --scenario <name>`. All 6 patch-linked functions are now
 reached (5 organically). Functions a scenario hooks with Frida are excluded from INT3 arming ("watched")
 and recorded from the hook instead; injected calls use NativeFunction `exceptions: 'propagate'` so the

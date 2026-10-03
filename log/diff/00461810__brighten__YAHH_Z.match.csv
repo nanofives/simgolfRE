@@ -1,0 +1,10 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"cmp eax, 0xdf","cmp eax, 0xdf",True
+2,jge 0xf,jge 0x46181f,True
+3,"add eax, 0x20","add eax, 0x20",True
+4,ret ,ret ,True
+5,"mov eax, 0xff","mov eax, 0xff",True
+6,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?brighten@@YAHH@Z,module=golf_clean.exe
+VERDICT,GREEN,7,100.0%

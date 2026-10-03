@@ -26,7 +26,7 @@ public:
     void setWall(Tile* t, int a, int b, bool on);
     void layPath(Tile* t, int on, int dir);
     void lowerEdgeCorner(Tile* t, int corner, Tile* other, float amount);
-    void lowerEdge(Tile* t, Tile* other, float amount);  // unexported Terrain method at 0x10038900 (also calls tileAt); name tentative
+    void lowerEdge(Tile* t, Tile* other, float amount);  // 0x10038900, matched in terrain_edge.cpp (draws, does not lower)
 };
 
 // MATCH: Terrain.dll 0x1000a510 ?hasPath@Terrain@@QAE_NPAVTile@@@Z
