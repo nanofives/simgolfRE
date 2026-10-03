@@ -1,0 +1,56 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,push ebx,push ebx,True
+2,push ebp,push ebp,True
+3,push esi,push esi,True
+4,"test eax, eax","test eax, eax",True
+5,push edi,push edi,True
+6,je 0x69,je 0x45bfe9,True
+7,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+8,"mov edi, dword ptr [0]","mov edi, dword ptr [0x4ba21c]",True
+9,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+10,"lea ecx, [eax + eax*4]","lea ecx, [eax + eax*4]",True
+11,"mov eax, 0x51eb851f","mov eax, 0x51eb851f",True
+12,"shl ecx, 3","shl ecx, 3",True
+13,imul ecx,imul ecx,True
+14,"sar edx, 5","sar edx, 5",True
+15,"mov eax, edx","mov eax, edx",True
+16,"shr eax, 0x1f","shr eax, 0x1f",True
+17,"add edx, eax","add edx, eax",True
+18,"mov esi, edx","mov esi, edx",True
+19,call edi,call edi,True
+20,"mov ebx, eax","mov ebx, eax",True
+21,call edi,call edi,True
+22,"sub eax, ebx","sub eax, ebx",True
+23,"cmp eax, esi","cmp eax, esi",True
+24,jae 0x69,jae 0x45bfe9,True
+25,"mov ebp, dword ptr [esp + 0x18]","mov ebp, dword ptr [esp + 0x18]",True
+26,call 0x46,call 0x483c30,True
+27,"test ebp, ebp","test ebp, ebp",True
+28,je 0x61,je 0x45bfe1,True
+29,call 0x4f,call 0x45c030,True
+30,call 0x54,call 0x45af00,True
+31,"test eax, eax","test eax, eax",True
+32,je 0x70,je 0x45bff0,True
+33,"mov eax, dword ptr [0]","mov eax, dword ptr [0x822d68]",True
+34,"test eax, eax","test eax, eax",True
+35,jne 0x70,jne 0x45bff0,True
+36,call edi,call edi,True
+37,"sub eax, ebx","sub eax, ebx",True
+38,"cmp eax, esi","cmp eax, esi",True
+39,jb 0x41,jb 0x45bfc1,True
+40,pop edi,pop edi,True
+41,pop esi,pop esi,True
+42,pop ebp,pop ebp,True
+43,"xor eax, eax","xor eax, eax",True
+44,pop ebx,pop ebx,True
+45,ret ,ret ,True
+46,call 0x75,call 0x45aed0,True
+47,pop edi,pop edi,True
+48,pop esi,pop esi,True
+49,pop ebp,pop ebp,True
+50,"mov eax, 1","mov eax, 1",True
+51,pop ebx,pop ebx,True
+52,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?waitTicks@@YAHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,53,100.0%

@@ -61,5 +61,5 @@ instruction,recompiled,original,match
 59,"mov esp, ebp","mov esp, ebp",True
 60,pop ebp,pop ebp,True
 61,ret 8,ret 8,True
-meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?passCollarInfo@Terrain@@QAEXQAHH@Z,module=Terrain.dll
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?passCollarInfo@Terrain@@QAEXQAHH@Z,module=Terrain.dll
 VERDICT,GREEN,62,100.0%

@@ -85,3 +85,18 @@ def test_switch_tables_are_stripped_but_case_order_still_counts(tmp_path):
     f.write_text(src.replace(a + b, b + a))
     bad = [r for r in match.compare(f, "", False) if "setTypeId" in r[2]]
     assert bad[0][4] < 1.0
+
+
+def test_switch_table_targets_are_compared(tmp_path):
+    """Same instructions, different case -> block mapping must not match: VC6 emits identical code for
+    Snd484::setMode whether mode 3 / out-of-range fall to the `m_54 = m` store (original, 0x4842c7) or not,
+    and only the jump table at 0x4842d0 tells them apart."""
+    src = (ROOT / "re" / "match" / "golf_small10.cpp").read_text()
+    good = [r for r in match.compare(ROOT / "re" / "match" / "golf_small10.cpp", "", False) if "setMode" in r[2]]
+    assert good[0][4] == 1.0
+    a = "    case 7: m_44 |= 0x80;\n    default: m_54 = m;\n"
+    assert a in src
+    f = tmp_path / "t.cpp"
+    f.write_text(src.replace(a, "    case 7: m_44 |= 0x80; m_54 = m; break;\n"))
+    bad = [r for r in match.compare(f, "", False) if "setMode" in r[2]]
+    assert bad[0][4] < 1.0

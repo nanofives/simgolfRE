@@ -1,0 +1,29 @@
+instruction,recompiled,original,match
+0,push ecx,push ecx,True
+1,push esi,push esi,True
+2,"mov dword ptr [esp + 4], 0","mov dword ptr [esp + 4], 0",True
+3,"mov esi, 0","mov esi, 0x83b9f4",True
+4,fild dword ptr [esp + 4],fild dword ptr [esp + 4],True
+5,fmul qword ptr [0],fmul qword ptr [0x4bba50],True
+6,fsin ,fsin ,True
+7,fmul qword ptr [0],fmul qword ptr [0x4bba48],True
+8,call 0x26,call 0x4a6030,True
+9,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+10,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+11,"add esi, 4","add esi, 4",True
+12,inc edx,inc edx,True
+13,"cmp esi, 0x400","cmp esi, 0x83bdf4",True
+14,"mov dword ptr [esp + 4], edx","mov dword ptr [esp + 4], edx",True
+15,jl 0xf,jl 0x491c1f,True
+16,push 0x64,push 0x64,True
+17,push 0x40000000,push 0x40000000,True
+18,call 0x48,call 0x491c70,True
+19,push 0x64,push 0x64,True
+20,push 0xa02d82d8,push 0xa02d82d8,True
+21,call 0x54,call 0x491d80,True
+22,"add esp, 0x10","add esp, 0x10",True
+23,pop esi,pop esi,True
+24,pop ecx,pop ecx,True
+25,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?initSinTable@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,26,100.0%

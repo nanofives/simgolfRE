@@ -169,5 +169,5 @@ instruction,recompiled,original,match
 167,"mov esp, ebp","mov esp, ebp",True
 168,pop ebp,pop ebp,True
 169,ret 8,ret 8,True
-meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?tileHit@Terrain@@QAEPAVTile@@HH@Z,module=Terrain.dll
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?tileHit@Terrain@@QAEPAVTile@@HH@Z,module=Terrain.dll
 VERDICT,GREEN,170,100.0%

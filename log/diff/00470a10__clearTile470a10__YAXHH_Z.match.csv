@@ -1,0 +1,26 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x59bf90]",True
+1,push esi,push esi,True
+2,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+3,"lea ecx, [eax + eax*2]","lea ecx, [eax + eax*2]",True
+4,"shl ecx, 3","shl ecx, 3",True
+5,"sub ecx, eax","sub ecx, eax",True
+6,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+7,"mov cl, byte ptr [ecx*2 + 3]","mov cl, byte ptr [ecx*2 + 0x571ff7]",True
+8,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+9,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+10,"shl eax, 1","shl eax, 1",True
+11,"cmp cl, 2","cmp cl, 2",True
+12,setne dl,setne dl,True
+13,dec edx,dec edx,True
+14,"and edx, 0xfffffffd","and edx, 0xfffffffd",True
+15,"add edx, 0x14","add edx, 0x14",True
+16,"cmp cl, 2","cmp cl, 2",True
+17,"mov byte ptr [eax + esi], dl","mov byte ptr [eax + esi + 0x5722e8], dl",True
+18,jne 0x4a,jne 0x470a5a,True
+19,"add eax, esi","add eax, esi",True
+20,"and word ptr [eax*2], 0xfcdf","and word ptr [eax*2 + 0x53caf0], 0xfcdf",True
+21,pop esi,pop esi,True
+22,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?clearTile470a10@@YAXHH@Z,module=golf_clean.exe
+VERDICT,GREEN,23,100.0%

@@ -1,0 +1,28 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,push edi,push edi,True
+3,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+4,"test eax, eax","test eax, eax",True
+5,je 0x19,je 0x492e99,True
+6,push eax,push eax,True
+7,call dword ptr [0],call dword ptr [0x4ba0d0],True
+8,"mov dword ptr [esi + 4], 0","mov dword ptr [esi + 4], 0",True
+9,"mov eax, dword ptr [esi + 0xc]","mov eax, dword ptr [esi + 0xc]",True
+10,"mov edi, dword ptr [0]","mov edi, dword ptr [0x4ba0cc]",True
+11,"test eax, eax","test eax, eax",True
+12,je 0x30,je 0x492eb0,True
+13,push eax,push eax,True
+14,call edi,call edi,True
+15,"mov dword ptr [esi + 0xc], 0","mov dword ptr [esi + 0xc], 0",True
+16,"mov eax, dword ptr [esi + 8]","mov eax, dword ptr [esi + 8]",True
+17,"cmp eax, -1","cmp eax, -1",True
+18,je 0x42,je 0x492ec2,True
+19,push eax,push eax,True
+20,call edi,call edi,True
+21,"mov dword ptr [esi + 8], 0xffffffff","mov dword ptr [esi + 8], 0xffffffff",True
+22,pop edi,pop edi,True
+23,pop esi,pop esi,True
+24,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?close@Mapping@@QAEXXZ,module=golf_clean.exe
+VERDICT,GREEN,25,100.0%

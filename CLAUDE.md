@@ -100,11 +100,16 @@ Flags found so far: `golf_clean.exe` `/O2` (or `/Ox`, indistinguishable so far);
 (Tile accessors/reset/setTypeId/layPath/calcNormals, buildArrays, reloadTextures, initGL, normalize;
 `terrain_tile*.cpp`) and 9 large ones (Tile::render, drawTileObjects, isCulled, elevate/lowerCorner, the
 Terrain ctor, drawTile, the texture loader "relight", 0x10038900), setTypeId's callees (face blending
-0x10013670, type-6/7 enter/leave walks) and loadLighting; golf_clean.exe at /O2: 15 live functions
-(golf_util/golf_small/golf_story.cpp: RNG, clamp, sign, distance, tile accessors, storyText...).
-88 functions (69 Terrain.dll + 19 exe; count with `grep -h "// MATCH:" re/match/*.cpp`). Release-build
+0x10013670, type-6/7 enter/leave walks) and loadLighting; golf_clean.exe at /O2: 99 live functions
+(golf_util/golf_small*/golf_story.cpp: RNG, clamp, distance, tile accessors, storyText, playSound,
+window z-order, string table, block allocator, sine table...).
+172 functions (69 Terrain.dll + 103 exe; count with `grep -h "// MATCH:" re/match/*.cpp`). Release-build
 misses are kept in `re/match/wip/` with what was tried (register roles, loop pointer anchors); the 100% test
-only globs `re/match/*.cpp`. Unreferenced locals show only as frame size (loadLighting: 0x1c bytes). The ctor fixes the type table:
+only globs `re/match/*.cpp`. match.py compares a tail-call `jmp` to another function like a call.
+match.py also compares switch jump/index tables entry by entry once the code matches (2026-10-03): it caught
+`rebuild` and the texture loader with case 1 and 2 swapped (identical code, masked string addresses), and
+Snd484::setMode whose default is the `m_54 = m` store. Masked string operands are not compared: check them
+by hand when cases differ only by a literal. Unreferenced locals show only as frame size (loadLighting: 0x1c bytes). The ctor fixes the type table:
 0x25 x {char name[0x14]; int count;} at +0x2c (names: 0 Tee, 2 Fairway, 4 Rough, ... in terrain_ctor.cpp). VC6 puts switch jump tables after the function inside the obj symbol;
 match.py strips them (reloc targets into the body's tail) and still compares case-block order. Original source file:
 `C:\ProjectsDTerrainLowPoly\Terrain.cpp` (assert in localRender). With /ZI, `__LINE__` is relative to a
@@ -194,7 +199,10 @@ the 1-hole course can never advance a story because of the hole >= 2 gate, U-000
 `stories_fixture` loads `tests/fixtures/stories/stories5.sve` (5 holes, not committed; README there) via
 Continue Saved Game; the camera must be moved back over the course (`view_stories_course`) because story
 advances only happen for golfers inside the screen rect. `stories9_fixture`: same with `stories9.sve` (Scotland, 9 holes;
-do not zoom out: a 25 min zoomed-out run never passed stage 1).
+do not zoom out: a 25 min zoomed-out run never passed stage 1). The camera is the tile pair at
+0x4c2ba0/0x4c2ba4 (world->screen FUN_0042fb90); arrows move it 4 tiles, `events.js` `setCamera` 1 tile.
+Golfer arrivals are capped by membership (type table 0x5849e0 +2): only member types arrive, so a save with
+few members rarely produces story pairs (`re/analysis/golfers/00406670_membership.md`, U-0003).
 Census: `py -3.12 re/tools/coverage_census.py --scenario <name>`. All 6 patch-linked functions are now
 reached (5 organically). Functions a scenario hooks with Frida are excluded from INT3 arming ("watched")
 and recorded from the hook instead; injected calls use NativeFunction `exceptions: 'propagate'` so the

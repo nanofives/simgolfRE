@@ -1,0 +1,49 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,"mov esi, ecx","mov esi, ecx",True
+4,"test ebx, ebx","test ebx, ebx",True
+5,je 0x5d,je 0x484bdd,True
+6,"mov eax, dword ptr [esi + 0x50]","mov eax, dword ptr [esi + 0x50]",True
+7,"test eax, eax","test eax, eax",True
+8,je 0x1c,je 0x484b9c,True
+9,push eax,push eax,True
+10,call 0x19,call 0x4a4ffc,True
+11,"add esp, 4","add esp, 4",True
+12,push edi,push edi,True
+13,"mov edi, ebx","mov edi, ebx",True
+14,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+15,"xor eax, eax","xor eax, eax",True
+16,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+17,not ecx,not ecx,True
+18,push ecx,push ecx,True
+19,call 0x2e,call 0x4a57f1,True
+20,"mov edx, eax","mov edx, eax",True
+21,"mov edi, ebx","mov edi, ebx",True
+22,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+23,"xor eax, eax","xor eax, eax",True
+24,"add esp, 4","add esp, 4",True
+25,"mov dword ptr [esi + 0x50], edx","mov dword ptr [esi + 0x50], edx",True
+26,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+27,not ecx,not ecx,True
+28,"sub edi, ecx","sub edi, ecx",True
+29,"mov eax, ecx","mov eax, ecx",True
+30,"mov esi, edi","mov esi, edi",True
+31,"mov edi, edx","mov edi, edx",True
+32,"shr ecx, 2","shr ecx, 2",True
+33,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+34,"mov ecx, eax","mov ecx, eax",True
+35,"and ecx, 3","and ecx, 3",True
+36,"xor eax, eax","xor eax, eax",True
+37,"rep movsb byte ptr es:[edi], byte ptr [esi]","rep movsb byte ptr es:[edi], byte ptr [esi]",True
+38,pop edi,pop edi,True
+39,pop esi,pop esi,True
+40,pop ebx,pop ebx,True
+41,ret 4,ret 4,True
+42,pop esi,pop esi,True
+43,"mov eax, 0xa","mov eax, 0xa",True
+44,pop ebx,pop ebx,True
+45,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?setName@Snd484@@QAEHPBD@Z,module=golf_clean.exe
+VERDICT,GREEN,46,100.0%

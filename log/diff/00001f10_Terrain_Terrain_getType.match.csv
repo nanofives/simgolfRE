@@ -23,5 +23,5 @@ instruction,recompiled,original,match
 21,"mov esp, ebp","mov esp, ebp",True
 22,pop ebp,pop ebp,True
 23,ret 4,ret 4,True
-meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?getType@Terrain@@QAEHPAVTile@@@Z,module=Terrain.dll
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?getType@Terrain@@QAEHPAVTile@@@Z,module=Terrain.dll
 VERDICT,GREEN,24,100.0%

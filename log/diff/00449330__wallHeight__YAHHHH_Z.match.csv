@@ -1,0 +1,47 @@
+instruction,recompiled,original,match
+0,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+1,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+2,push ebx,push ebx,True
+3,push esi,push esi,True
+4,"mov esi, dword ptr [esp + 0x10]","mov esi, dword ptr [esp + 0x10]",True
+5,"lea eax, [edx + edx*4]","lea eax, [edx + edx*4]",True
+6,"mov ebx, 1","mov ebx, 1",True
+7,push edi,push edi,True
+8,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+9,"shl ebx, cl","shl ebx, cl",True
+10,"lea eax, [esi + eax*2]","lea eax, [esi + eax*2]",True
+11,"movsx edi, byte ptr [eax]","movsx edi, byte ptr [eax + 0x5619a0]",True
+12,"test ebx, edi","test ebx, edi",True
+13,jne 0x30,jne 0x449360,True
+14,pop edi,pop edi,True
+15,pop esi,pop esi,True
+16,"xor eax, eax","xor eax, eax",True
+17,pop ebx,pop ebx,True
+18,ret ,ret ,True
+19,"movsx eax, byte ptr [eax]","movsx eax, byte ptr [eax + 0x5722e8]",True
+20,"lea eax, [eax + eax*2]","lea eax, [eax + eax*2]",True
+21,"shl eax, 4","shl eax, 4",True
+22,"mov al, byte ptr [eax + 8]","mov al, byte ptr [eax + 0x578378]",True
+23,"test al, al","test al, al",True
+24,je 0x4e,je 0x44937e,True
+25,pop edi,pop edi,True
+26,pop esi,pop esi,True
+27,"movsx eax, al","movsx eax, al",True
+28,pop ebx,pop ebx,True
+29,ret ,ret ,True
+30,"mov eax, dword ptr [ecx*4]","mov eax, dword ptr [ecx*4 + 0x4c2878]",True
+31,pop edi,pop edi,True
+32,"add eax, edx","add eax, edx",True
+33,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+34,"lea edx, [eax + eax*4]","lea edx, [eax + eax*4]",True
+35,"mov eax, dword ptr [ecx*4]","mov eax, dword ptr [ecx*4 + 0x4c2898]",True
+36,"lea ecx, [eax + edx*2]","lea ecx, [eax + edx*2]",True
+37,"movsx eax, byte ptr [ecx + esi]","movsx eax, byte ptr [ecx + esi + 0x5722e8]",True
+38,pop esi,pop esi,True
+39,pop ebx,pop ebx,True
+40,"lea edx, [eax + eax*2]","lea edx, [eax + eax*2]",True
+41,"shl edx, 4","shl edx, 4",True
+42,"movsx eax, byte ptr [edx + 8]","movsx eax, byte ptr [edx + 0x578378]",True
+43,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?wallHeight@@YAHHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,44,100.0%

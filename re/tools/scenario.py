@@ -445,10 +445,17 @@ SCENARIOS["stories_fixture"] = {
 STORIES9_FIXTURE = ROOT / "tests" / "fixtures" / "stories" / "stories9.sve"
 
 
+CAMERA_TILE = (0x4c2ba0, 0x4c2ba4)       # camera centre tile x, y (world->screen FUN_0042fb90 reads them)
+
+
 def view_stories9_course(g):
+    """Close popups and the palette, then put the camera on tile (24, 24): the course is ~760 px wide at normal
+    zoom, wider than the 0x32..0x2ee rect; (24, 24) leaves ~40 px out on the left and ~20 on the right.
+    Arrow keys move the camera 4 tiles per press (~250 px), so the 1-tile step is a direct write (view only)."""
     for _ in range(4):
         g.key(0x1B); time.sleep(0.5)
     g.click(*GOLF_ICON); time.sleep(1)    # the save has the Build Course palette open: close it
+    events_script(g).set_camera(24, 24); time.sleep(1)
 
 
 SCENARIOS["stories9_fixture"] = {

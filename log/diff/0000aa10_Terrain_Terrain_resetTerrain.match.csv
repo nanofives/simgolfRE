@@ -75,5 +75,5 @@ instruction,recompiled,original,match
 73,"mov esp, ebp","mov esp, ebp",True
 74,pop ebp,pop ebp,True
 75,ret ,ret ,True
-meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?resetTerrain@Terrain@@QAEXXZ,module=Terrain.dll
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?resetTerrain@Terrain@@QAEXXZ,module=Terrain.dll
 VERDICT,GREEN,76,100.0%

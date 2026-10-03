@@ -8,7 +8,7 @@ class Random {
 public:
     unsigned int seed;
     double next();
-    int range(unsigned short n);
+    unsigned short range(unsigned short n);
 };
 
 // MATCH: golf_clean.exe 0x0045c1a0 ?next@Random@@QAENXZ
@@ -18,10 +18,10 @@ double Random::next()
     return ((seed >> 16) & 0x7fff) * (1.0 / 32768.0);
 }
 
-// MATCH: golf_clean.exe 0x0045c1e0 ?range@Random@@QAEHG@Z
-int Random::range(unsigned short n)
+// MATCH: golf_clean.exe 0x0045c1e0 ?range@Random@@QAEGG@Z
+unsigned short Random::range(unsigned short n)
 {
-    return (int)(next() * n);
+    return (unsigned short)(next() * n);   // callers keep only ax (0x405920: mov si, ax)
 }
 
 // MATCH: golf_clean.exe 0x00467130 ?clamp@@YAHHHH@Z

@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 0x1c]","mov eax, dword ptr [esp + 0x1c]",True
+1,"mov ecx, dword ptr [esp + 0x18]","mov ecx, dword ptr [esp + 0x18]",True
+2,"mov edx, dword ptr [esp + 0x14]","mov edx, dword ptr [esp + 0x14]",True
+3,push eax,push eax,True
+4,"mov eax, dword ptr [esp + 0x14]","mov eax, dword ptr [esp + 0x14]",True
+5,push ecx,push ecx,True
+6,"mov ecx, dword ptr [esp + 0x14]","mov ecx, dword ptr [esp + 0x14]",True
+7,push edx,push edx,True
+8,"mov edx, dword ptr [esp + 0x14]","mov edx, dword ptr [esp + 0x14]",True
+9,push eax,push eax,True
+10,"mov eax, dword ptr [esp + 0x14]","mov eax, dword ptr [esp + 0x14]",True
+11,push ecx,push ecx,True
+12,push edx,push edx,True
+13,push eax,push eax,True
+14,call 0x28,call 0x4493d0,True
+15,"add esp, 0x1c","add esp, 0x1c",True
+16,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?f_406220@@YAHHHHHHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%

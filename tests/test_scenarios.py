@@ -72,7 +72,9 @@ def test_golfer_panel_and_landmark_injection():
 @pytest.mark.slow
 def test_golfer_stories_advance_organically():
     """Organic (U-0003): on a multi-hole course FUN_00466370 advances a golfer-pair story chapter (returns
-    non-zero), which it never does on the 1-hole course (it returns 0 while the golfer's hole, char +0x21, is < 2)."""
+    non-zero), which it never does on the 1-hole course (it returns 0 while the golfer's hole, char +0x21, is < 2).
+    Known flaky: the sandbox terrain is random and can refuse the extra holes (failed once in a full-suite run,
+    2026-10-04; passed 2/2 alone). The saved-game fixtures below do not depend on terrain."""
     if Game.running_instances():
         pytest.fail("SimGolf already running")
     spec = scenario.SCENARIOS["golfer_stories"]

@@ -1,0 +1,24 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"mov edi, dword ptr [esp + 0x14]","mov edi, dword ptr [esp + 0x14]",True
+5,"mov esi, ecx","mov esi, ecx",True
+6,push edi,push edi,True
+7,push ebx,push ebx,True
+8,call 0x14,call 0x47b170,True
+9,"mov eax, dword ptr [esi + 0x1ac]","mov eax, dword ptr [esi + 0x1ac]",True
+10,"mov ecx, dword ptr [ebx]","mov ecx, dword ptr [ebx]",True
+11,"sub ecx, eax","sub ecx, eax",True
+12,"mov dword ptr [ebx], ecx","mov dword ptr [ebx], ecx",True
+13,"mov ecx, dword ptr [esi + 0x1b0]","mov ecx, dword ptr [esi + 0x1b0]",True
+14,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+15,"sub eax, ecx","sub eax, ecx",True
+16,"mov dword ptr [edi], eax","mov dword ptr [edi], eax",True
+17,pop edi,pop edi,True
+18,pop esi,pop esi,True
+19,pop ebx,pop ebx,True
+20,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?toLocal@View47b@@QAEXPAH0@Z,module=golf_clean.exe
+VERDICT,GREEN,21,100.0%

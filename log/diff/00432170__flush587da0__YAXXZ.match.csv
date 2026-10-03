@@ -1,0 +1,13 @@
+instruction,recompiled,original,match
+0,"mov al, byte ptr [0]","mov al, byte ptr [0x587da0]",True
+1,"test al, al","test al, al",True
+2,je 0x27,je 0x432197,True
+3,push 0,push 0x587da0,True
+4,call 0x13,call 0x431fa0,True
+5,push 0,push 0x587da0,True
+6,call 0x1d,call 0x431ee0,True
+7,"add esp, 8","add esp, 8",True
+8,"mov byte ptr [0], 0","mov byte ptr [0x587da0], 0",True
+9,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?flush587da0@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,10,100.0%

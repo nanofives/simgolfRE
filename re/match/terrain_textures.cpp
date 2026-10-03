@@ -46,11 +46,11 @@ void Terrain::relight()
     case 0:
         strcat(base, "Parkland/");
         break;
-    case 1:
-        strcat(base, "Desert/");
-        break;
     case 2:
         strcat(base, "Tropical/");
+        break;
+    case 1:
+        strcat(base, "Desert/");
         break;
     case 3:
         strcat(base, "Links/");

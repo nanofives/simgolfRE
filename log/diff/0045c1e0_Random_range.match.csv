@@ -7,5 +7,5 @@ instruction,recompiled,original,match
 5,fmulp st(1),fmulp st(1),True
 6,call 0x1d,call 0x4a6030,True
 7,ret 4,ret 4,True
-meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?range@Random@@QAEHG@Z,module=golf_clean.exe
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?range@Random@@QAEGG@Z,module=golf_clean.exe
 VERDICT,GREEN,8,100.0%

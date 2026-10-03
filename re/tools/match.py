@@ -127,7 +127,7 @@ def original_bytes(module: str, addr: int, n: int) -> bytes:
     return pe.get_data(rva, n)
 
 
-def normalize(code: bytes, base: int, start: int, is_abs) -> list[tuple[str, str]]:
+def normalize(code: bytes, base: int, start: int, is_abs, obj: bool = False) -> list[tuple[str, str]]:
     """Disassemble and normalize: absolute addresses -> <addr>, calls -> <fn>, internal branch targets
     relative to the function start. `is_abs(ins, operand_index, value)` says whether a value is an address.
     Returns [(display text, comparison key)]."""
@@ -138,6 +138,10 @@ def normalize(code: bytes, base: int, start: int, is_abs) -> list[tuple[str, str
         m = ins.mnemonic
         if m == "call" and ins.bytes[0] == 0xE8:
             key = "call <fn>"
+        elif ins.bytes[0] == 0xE9 and ins.operands and (
+                is_abs(ins, 0, ins.operands[0].imm) if obj
+                else not (start <= ins.operands[0].imm < start + len(code))):
+            key = "jmp <fn>"            # tail call: relocated in the obj / leaves the original body; like a call
         elif ins.bytes[0] in (0xE8, 0xE9, 0xEB) or (ins.bytes[0] in range(0x70, 0x80)) or (ins.bytes[0] == 0x0F and ins.bytes[1] in range(0x80, 0x90)):
             tgt = ins.operands[0].imm if ins.operands else 0
             key = f"{m} +0x{tgt - start:x}"
@@ -166,6 +170,30 @@ def strip_switch_tables(code: bytes, local: dict) -> bytes:
     same-section targets (slice offsets), so the code ends at the lowest target the body points into."""
     targets = [t for site, t in local.items() if site < t < len(code)]
     return code[:min(targets)] if targets else code
+
+
+def switch_table_mismatches(mine: bytes, local: dict, orig_tail: bytes, addr: int) -> list[str]:
+    """Compares the switch tables VC6 placed after the code (which strip_switch_tables cut off): every 4-byte
+    entry relocated to a label in our obj must point at the same function offset as the original entry, and
+    every other byte (index tables) must be equal. Only meaningful when the code itself matched, so both
+    tables start at the same offset. Trailing int3/nop padding is ignored."""
+    cut = len(strip_switch_tables(mine, local))
+    tail = mine[cut:]
+    bad, i = [], 0
+    while i < len(tail):
+        site = cut + i
+        if site in local:
+            want = int.from_bytes(orig_tail[i:i + 4], "little") - addr
+            if want != local[site]:
+                bad.append(f"entry @+0x{site:x}: original -> +0x{want:x}, ours -> +0x{local[site]:x}")
+            i += 4
+            continue
+        if tail[i] in (0xCC, 0x90) and all(b in (0xCC, 0x90) for b in tail[i:]):
+            break
+        if i < len(orig_tail) and tail[i] != orig_tail[i]:
+            bad.append(f"byte @+0x{site:x}: original {orig_tail[i]:#04x}, ours {tail[i]:#04x}")
+        i += 1
+    return bad
 
 
 def file_flags(text: str, module: str) -> str | None:
@@ -208,16 +236,26 @@ def compare(src: pathlib.Path, flags: str, show: bool):
         def orig_abs(ins, i, v):
             return pe_base <= v < pe_base + img_size
 
-        a = normalize(strip_switch_tables(mine, local), 0, 0, mine_abs)
+        a = normalize(strip_switch_tables(mine, local), 0, 0, mine_abs, obj=True)
         b = normalize(orig, addr, addr, orig_abs)
         # MSVC pads functions with int3/nop up to 16 bytes; padding is not part of either body
-        while a and a[-1][0].split()[0] in ("int3", "nop"):
+        # (and VC6 aligns a trailing switch table with multi-byte no-ops: lea ecx,[ecx] / mov edi,edi / lea esi,[esi])
+        while a and (a[-1][0].split()[0] in ("int3", "nop")
+                     or a[-1][0] in ("lea ecx, [ecx]", "mov edi, edi", "lea esi, [esi]", "lea esp, [esp]")):
             a.pop()
         sm = difflib.SequenceMatcher(None, [x[1] for x in a], [x[1] for x in b], autojunk=False)
         same = sum(bl.size for bl in sm.get_matching_blocks())
         acc = same / max(len(a), len(b))
+        table_bad = []
+        if acc == 1:
+            cut = len(strip_switch_tables(mine, local))
+            if cut < len(mine):
+                table_bad = switch_table_mismatches(mine, local, original_bytes(mod, addr + cut, len(mine) - cut), addr)
+                if table_bad:
+                    acc = 0.999                  # instructions equal, switch dispatch differs: not a match
         results.append((mod, addr, sym, full, acc, a, b, fl))
-        print(f"{mod:14} 0x{addr:08x} {sym}: {100 * acc:.1f}% ({same}/{max(len(a), len(b))} instructions)  flags={fl}")
+        print(f"{mod:14} 0x{addr:08x} {sym}: {100 * acc:.1f}% ({same}/{max(len(a), len(b))} instructions)  flags={fl}"
+              + (f"  SWITCH TABLE DIFFERS: {table_bad[:3]}" if table_bad else ""))
         if show or acc < 1:
             for tag, i1, i2, j1, j2 in sm.get_opcodes():
                 if tag == "equal" and not show:

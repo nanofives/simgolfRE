@@ -1,0 +1,21 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"test eax, eax","test eax, eax",True
+2,jl 0x2d,jl 0x40bf8d,True
+3,"cmp eax, 0x32","cmp eax, 0x32",True
+4,jge 0x2d,jge 0x40bf8d,True
+5,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+6,"test ecx, ecx","test ecx, ecx",True
+7,jl 0x2d,jl 0x40bf8d,True
+8,"cmp ecx, 0x32","cmp ecx, 0x32",True
+9,jge 0x2d,jge 0x40bf8d,True
+10,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+11,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+12,"cmp byte ptr [ecx + eax*2], 0x14","cmp byte ptr [ecx + eax*2 + 0x5722e8], 0x14",True
+13,je 0x2d,je 0x40bf8d,True
+14,"xor eax, eax","xor eax, eax",True
+15,ret ,ret ,True
+16,"mov eax, 1","mov eax, 1",True
+17,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?tileBlocked@@YAHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,18,100.0%

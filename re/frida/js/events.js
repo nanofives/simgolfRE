@@ -3,6 +3,8 @@
 //  inject(addr, a0, a1):   call a cdecl void f(int,int) ON THE GAME THREAD (queued, executed from the main
 //                          loop's GetKeyboardState call, ~13/s) so game state is never touched concurrently.
 //  readS16(addr):          read a signed 16-bit value from game memory.
+//  setCamera(x, y):        camera centre tile (ints at 0x4c2ba0/0x4c2ba4; read by world->screen FUN_0042fb90).
+//                          View-only: the arrow keys change the same pair in steps of 4 tiles.
 //  stories():              golfer slots with a story (short +0xb0 != -1): [slot, story, partner +0xa2,
 //                          stage +0xb2, counter +0xb4, hole +0x21]. Records: base 0x5794b8, stride 0x100.
 // Injection is NOT organic gameplay: scenarios that use it must say so (re/tools/scenario.py).
@@ -28,6 +30,8 @@ rpc.exports = {
   inject(addr, a0, a1) { queue.push([addr, a0, a1]); return queue.length; },
   done() { return done.slice(); },
   readS16(addr) { return ptr(addr).readS16(); },
+  setCamera(x, y) { ptr(0x4c2ba0).writeS32(x); ptr(0x4c2ba4).writeS32(y); },
+  camera() { return [ptr(0x4c2ba0).readS32(), ptr(0x4c2ba4).readS32()]; },
   stories() {
     const out = [];
     for (let i = 0; i < 0x98; i++) {   // 0x98 slots: loop bound in FUN_004289e0 (`if (0x97 < local_6c)`)

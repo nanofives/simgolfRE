@@ -1,0 +1,13 @@
+instruction,recompiled,original,match
+0,"mov ecx, 0","mov ecx, 0x821020",True
+1,call 0xa,call 0x4837f0,True
+2,"mov ecx, 0","mov ecx, 0x821f08",True
+3,call 0x14,call 0x4837f0,True
+4,"mov ecx, 0","mov ecx, 0x821ec8",True
+5,call 0x1e,call 0x4837f0,True
+6,"mov ecx, 0","mov ecx, 0x821f28",True
+7,call 0x28,call 0x4837f0,True
+8,"mov ecx, 0","mov ecx, 0x821ee8",True
+9,jmp 0x32,jmp 0x4837f0,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?reset44ac60@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,10,100.0%

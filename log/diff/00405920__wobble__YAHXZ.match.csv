@@ -1,0 +1,34 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push 0x65,push 0x65,True
+2,"mov ecx, 0","mov ecx, 0x822d9c",True
+3,call 0xd,call 0x45c1e0,True
+4,"mov si, ax","mov si, ax",True
+5,"and esi, 0xffff","and esi, 0xffff",True
+6,"sub esi, 0x32","sub esi, 0x32",True
+7,push esi,push esi,True
+8,call 0x1f,call 0x467150,True
+9,"mov ecx, eax","mov ecx, eax",True
+10,"mov eax, esi","mov eax, esi",True
+11,cdq ,cdq ,True
+12,"xor eax, edx","xor eax, edx",True
+13,"add esp, 4","add esp, 4",True
+14,"sub eax, edx","sub eax, edx",True
+15,"cmp eax, 0x14","cmp eax, 0x14",True
+16,pop esi,pop esi,True
+17,jge 0x38,jge 0x405958,True
+18,cdq ,cdq ,True
+19,"sub eax, edx","sub eax, edx",True
+20,"sar eax, 1","sar eax, 1",True
+21,jmp 0x46,jmp 0x405966,True
+22,"cmp eax, 0x28","cmp eax, 0x28",True
+23,jge 0x42,jge 0x405962,True
+24,"sub eax, 0xa","sub eax, 0xa",True
+25,jmp 0x46,jmp 0x405966,True
+26,"lea eax, [eax + eax - 0x32]","lea eax, [eax + eax - 0x32]",True
+27,"cmp ecx, 1","cmp ecx, 1",True
+28,je 0x4d,je 0x40596d,True
+29,neg eax,neg eax,True
+30,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?wobble@@YAHXZ,module=golf_clean.exe
+VERDICT,GREEN,31,100.0%

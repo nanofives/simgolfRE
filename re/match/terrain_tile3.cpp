@@ -94,11 +94,11 @@ void Terrain::rebuild()
     case 0:
         loadLighting("ParklandLighting.txt");
         break;
-    case 1:
-        loadLighting("DesertLighting.txt");
-        break;
     case 2:
         loadLighting("TropicalLighting.txt");
+        break;
+    case 1:
+        loadLighting("DesertLighting.txt");
         break;
     case 3:
         loadLighting("LinksLighting.txt");

@@ -1,0 +1,34 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"mov edi, ebx","mov edi, ebx",True
+5,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+6,"xor eax, eax","xor eax, eax",True
+7,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+8,not ecx,not ecx,True
+9,dec ecx,dec ecx,True
+10,je 0x3a,je 0x4925aa,True
+11,"lea esi, [ecx + ebx - 1]","lea esi, [ecx + ebx - 1]",True
+12,"cmp esi, ebx","cmp esi, ebx",True
+13,jb 0x3a,jb 0x4925aa,True
+14,"xor eax, eax","xor eax, eax",True
+15,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+16,push eax,push eax,True
+17,call 0x27,call 0x4a6598,True
+18,"add esp, 4","add esp, 4",True
+19,"test eax, eax","test eax, eax",True
+20,je 0x3a,je 0x4925aa,True
+21,"cmp esi, ebx","cmp esi, ebx",True
+22,"mov byte ptr [esi], 0","mov byte ptr [esi], 0",True
+23,je 0x3a,je 0x4925aa,True
+24,dec esi,dec esi,True
+25,"cmp esi, ebx","cmp esi, ebx",True
+26,jae 0x1d,jae 0x49258d,True
+27,pop edi,pop edi,True
+28,pop esi,pop esi,True
+29,pop ebx,pop ebx,True
+30,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?trimRight@@YAXPAD@Z,module=golf_clean.exe
+VERDICT,GREEN,31,100.0%

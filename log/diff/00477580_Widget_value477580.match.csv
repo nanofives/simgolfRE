@@ -1,0 +1,17 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x5c]","mov eax, dword ptr [ecx + 0x5c]",True
+1,"test eax, eax","test eax, eax",True
+2,jne 0xf,jne 0x47758f,True
+3,"mov eax, dword ptr [0]","mov eax, dword ptr [0x83ad44]",True
+4,"mov dword ptr [ecx + 0x5c], eax","mov dword ptr [ecx + 0x5c], eax",True
+5,"mov eax, dword ptr [ecx + 0x5c]","mov eax, dword ptr [ecx + 0x5c]",True
+6,"mov ecx, dword ptr [eax + 8]","mov ecx, dword ptr [eax + 8]",True
+7,"test ecx, ecx","test ecx, ecx",True
+8,jl 0x1f,jl 0x47759f,True
+9,"mov eax, dword ptr [eax + 0x10]","mov eax, dword ptr [eax + 0x10]",True
+10,"add eax, ecx","add eax, ecx",True
+11,ret ,ret ,True
+12,"mov eax, dword ptr [eax + 0xc]","mov eax, dword ptr [eax + 0xc]",True
+13,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?value477580@Widget@@QAEHXZ,module=golf_clean.exe
+VERDICT,GREEN,14,100.0%

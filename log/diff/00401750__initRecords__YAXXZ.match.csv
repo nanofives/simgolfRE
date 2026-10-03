@@ -1,0 +1,45 @@
+instruction,recompiled,original,match
+0,"mov eax, 0","mov eax, 0x56d1d8",True
+1,"mov word ptr [eax], 0xffff","mov word ptr [eax], 0xffff",True
+2,"add eax, 0x3c","add eax, 0x3c",True
+3,"cmp eax, 0x1770","cmp eax, 0x56e948",True
+4,jl 5,jl 0x401755,True
+5,push esi,push esi,True
+6,push 0,push 0,True
+7,call 0x1c,call 0x401000,True
+8,push 0,push 0,True
+9,push 0,push 0,True
+10,push 0,push 0,True
+11,push 0,push 0,True
+12,call 0x29,call 0x401040,True
+13,push 1,push 1,True
+14,call 0x30,call 0x401000,True
+15,push 0,push 0,True
+16,push 0,push 0,True
+17,push 1,push 1,True
+18,push 1,push 1,True
+19,call 0x3d,call 0x401040,True
+20,push 2,push 2,True
+21,call 0x44,call 0x401000,True
+22,push 0,push 0,True
+23,push 0,push 0,True
+24,push 2,push 2,True
+25,push 2,push 2,True
+26,call 0x51,call 0x401040,True
+27,"add esp, 0x3c","add esp, 0x3c",True
+28,"mov esi, 3","mov esi, 3",True
+29,push esi,push esi,True
+30,call 0x5f,call 0x401000,True
+31,push 0,push 0,True
+32,push 0,push 0,True
+33,push esi,push esi,True
+34,push esi,push esi,True
+35,call 0x6a,call 0x401040,True
+36,"add esp, 0x14","add esp, 0x14",True
+37,inc esi,inc esi,True
+38,"cmp esi, 6","cmp esi, 6",True
+39,jl 0x59,jl 0x4017a9,True
+40,pop esi,pop esi,True
+41,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?initRecords@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,42,100.0%
