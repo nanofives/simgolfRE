@@ -1,0 +1,14 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,call 8,call 0x492dc0,True
+3,"test byte ptr [esp + 8], 1","test byte ptr [esp + 8], 1",True
+4,je 0x18,je 0x492db8,True
+5,push esi,push esi,True
+6,call 0x15,call 0x4a4ffc,True
+7,"add esp, 4","add esp, 4",True
+8,"mov eax, esi","mov eax, esi",True
+9,pop esi,pop esi,True
+10,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=??_GObj492@@UAEPAXI@Z,module=golf_clean.exe
+VERDICT,GREEN,11,100.0%

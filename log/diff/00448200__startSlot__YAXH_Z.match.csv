@@ -1,0 +1,10 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,push 0x3e8,push 0x3e8,True
+2,"lea eax, [eax + eax*2]","lea eax, [eax + eax*2]",True
+3,"lea eax, [eax + eax*8]","lea eax, [eax + eax*8]",True
+4,"lea ecx, [eax*4]","lea ecx, [eax*4 + 0x80d840]",True
+5,call 0x1b,call 0x484750,True
+6,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?startSlot@@YAXH@Z,module=golf_clean.exe
+VERDICT,GREEN,7,100.0%

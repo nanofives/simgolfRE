@@ -1,0 +1,50 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,"mov eax, 0x1f4","mov eax, 0x1f4",True
+2,"cmp ecx, 0xf","cmp ecx, 0xf",True
+3,ja 0x83,ja 0x46f253,True
+4,jmp dword ptr [ecx*4],jmp dword ptr [ecx*4 + 0x46f270],True
+5,"mov eax, 0x1f4","mov eax, 0x1f4",True
+6,jmp 0x83,jmp 0x46f253,True
+7,"mov eax, 0x258","mov eax, 0x258",True
+8,jmp 0x83,jmp 0x46f253,True
+9,"mov eax, 0x2bc","mov eax, 0x2bc",True
+10,jmp 0x83,jmp 0x46f253,True
+11,"mov eax, 0x320","mov eax, 0x320",True
+12,jmp 0x83,jmp 0x46f253,True
+13,"mov eax, 0x4b0","mov eax, 0x4b0",True
+14,jmp 0x83,jmp 0x46f253,True
+15,"mov eax, 0x5dc","mov eax, 0x5dc",True
+16,jmp 0x83,jmp 0x46f253,True
+17,"mov eax, 0x7d0","mov eax, 0x7d0",True
+18,jmp 0x83,jmp 0x46f253,True
+19,"mov eax, 0x9c4","mov eax, 0x9c4",True
+20,jmp 0x83,jmp 0x46f253,True
+21,"mov eax, 0xbb8","mov eax, 0xbb8",True
+22,jmp 0x83,jmp 0x46f253,True
+23,"mov eax, 0xfa0","mov eax, 0xfa0",True
+24,jmp 0x83,jmp 0x46f253,True
+25,"mov eax, 0x1388","mov eax, 0x1388",True
+26,jmp 0x83,jmp 0x46f253,True
+27,"mov eax, 0x1770","mov eax, 0x1770",True
+28,jmp 0x83,jmp 0x46f253,True
+29,"mov eax, 0x1b58","mov eax, 0x1b58",True
+30,jmp 0x83,jmp 0x46f253,True
+31,"mov eax, 0x1f40","mov eax, 0x1f40",True
+32,jmp 0x83,jmp 0x46f253,True
+33,"mov eax, 0x2328","mov eax, 0x2328",True
+34,jmp 0x83,jmp 0x46f253,True
+35,"mov eax, 0x2710","mov eax, 0x2710",True
+36,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+37,"lea ecx, [eax + eax*4]","lea ecx, [eax + eax*4]",True
+38,"mov eax, 0x51eb851f","mov eax, 0x51eb851f",True
+39,"shl ecx, 2","shl ecx, 2",True
+40,imul ecx,imul ecx,True
+41,"mov eax, edx","mov eax, edx",True
+42,"sar eax, 5","sar eax, 5",True
+43,"mov ecx, eax","mov ecx, eax",True
+44,"shr ecx, 0x1f","shr ecx, 0x1f",True
+45,"add eax, ecx","add eax, ecx",True
+46,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?tierPrice@@YAHH@Z,module=golf_clean.exe
+VERDICT,GREEN,47,100.0%

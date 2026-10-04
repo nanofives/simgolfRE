@@ -1,0 +1,14 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov eax, dword ptr [esi + 0x158]","mov eax, dword ptr [esi + 0x158]",True
+3,"test eax, eax","test eax, eax",True
+4,je 0x20,je 0x487fa0,True
+5,push eax,push eax,True
+6,call 0x13,call 0x4a609f,True
+7,"add esp, 4","add esp, 4",True
+8,"mov dword ptr [esi + 0x158], 0","mov dword ptr [esi + 0x158], 0",True
+9,pop esi,pop esi,True
+10,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?close@File487@@QAEXXZ,module=golf_clean.exe
+VERDICT,GREEN,11,100.0%

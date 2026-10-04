@@ -361,12 +361,27 @@ def build_next_hole(g, tee, green):
 
 
 FOUR_HOLES = [((570, 380), (330, 280)), ((370, 300), (620, 250)), ((650, 280), (450, 180))]
+# Extra spots tried when the random terrain refused some of FOUR_HOLES (water, trees, too close to a green).
+FALLBACK_HOLES = [((150, 250), (280, 300)), ((600, 200), (720, 280)), ((450, 140), (600, 110)),
+                  ((200, 380), (350, 420)), ((540, 430), (680, 380)), ((100, 160), (230, 130))]
+HOLES_PLUS1 = 0x005685F0                 # short: open holes + 1 (Ghidra: g_holes_plus1; 6 on the 5-hole save)
 
 
-def build_four_holes(g):
+def open_holes(g):
+    return events_script(g).read_s16(HOLES_PLUS1) - 1
+
+
+def build_four_holes(g, want=2):
+    """Builds up to 4 holes; on terrain that refuses them, keeps trying FALLBACK_HOLES until at least `want`
+    are open (story advances need a hole >= 2). Returns the number of open holes."""
     build_first_hole(g)
     for tee, green in FOUR_HOLES:
         build_next_hole(g, tee, green)
+    for tee, green in FALLBACK_HOLES:
+        if open_holes(g) >= max(want, 4):
+            break
+        build_next_hole(g, tee, green)
+    return open_holes(g)
 
 
 def story_season(g, seconds=150):
@@ -463,5 +478,30 @@ SCENARIOS["stories9_fixture"] = {
     "js": ["events.js"],
     "watched": {STORY_ADVANCE_FN: "season"},
     "phases": [("load", lambda g: (load_saved_game(g, STORIES9_FIXTURE), view_stories9_course(g))),
+               ("season", lambda g: story_season(g))],
+}
+
+
+# 5-hole fixture built to keep golfer moods up (2026-10-04, Ocean's Edge MC): every hole has a fairway painted
+# between tee and green, so shots stay off the rough (thought 2 'Darn, I'm in the rough!', -1) and the
+# rough-to-bad-lie complaint (thought 8, -2) does not fire. Measured before saving: moods 2..10 over 150 s at x32
+# and 1 golfer type banned, where the tee+green-only courses lost 8-12 types in 200 s.
+# The holes are short (~90 yd) and get the hole flag 8 ('too easy', FUN_0042dea0), which costs -1 per under-par
+# score (thought 0x13 -> 0x17 in FUN_00467a00), but that stays below the fairway gain. Not committed (game-derived).
+MOOD5_FIXTURE = ROOT / "tests" / "fixtures" / "stories" / "mood5.sve"
+
+
+def view_mood5_course(g):
+    """Close popups and put the camera back on the tile it had when the save was made (28, 15)."""
+    for _ in range(4):
+        g.key(0x1B); time.sleep(0.5)
+    events_script(g).set_camera(28, 15); time.sleep(1)
+
+
+SCENARIOS["mood5_fixture"] = {
+    "env": {"SIMGOLF_TIMEWARP": "32"},
+    "js": ["events.js"],
+    "watched": {STORY_ADVANCE_FN: "season"},
+    "phases": [("load", lambda g: (load_saved_game(g, MOOD5_FIXTURE), view_mood5_course(g))),
                ("season", lambda g: story_season(g))],
 }

@@ -18,3 +18,12 @@ normal zoom in one screen (the Build Course palette resets the zoom). Load with
 zoomed-out 25 min run never passed stage 1; at normal zoom the tees of holes 1-5 sit just left of the rect). Why 9: a story needs 4 chapter advances in one visit and each hole
 from the 2nd gives at most one chance; the 5-hole course topped out at chapter 3 in 25 min at x32.
 Greens placed next to another green are refused silently: check the "Hole #N ... is now open" message.
+
+# mood5.sve (not committed: game-derived)
+
+Ocean's Edge MC: 5 par-3 holes of ~90 yards, each with a fairway painted between tee and green (fairway clicks
+from 20% to 80% of the tee-green line every ~20 px, then green, then tee, right click, `H`), built to keep golfer
+moods up (re/analysis/golfers/00406670_membership.md, "What drives mood down"). Hole 5's green was refused on
+the first click and placed again. Saved with wrench -> "Save the Current Game" (Backspace over the default
+name, type `mood5`, Enter). Load with `scenario.load_saved_game(g, scenario.MOOD5_FIXTURE)` then
+`scenario.view_mood5_course(g)` (camera tile (28, 15), read from 0x4c2ba0/a4 when the save was made).

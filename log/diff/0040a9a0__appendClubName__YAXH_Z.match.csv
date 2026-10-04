@@ -1,0 +1,56 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,push esi,push esi,True
+2,"cmp eax, 0xd","cmp eax, 0xd",True
+3,push edi,push edi,True
+4,ja 0x9e,ja 0x40aa3e,True
+5,jmp dword ptr [eax*4],jmp dword ptr [eax*4 + 0x40aa44],True
+6,"mov edi, 0","mov edi, 0x4c5220",True
+7,jmp 0x76,jmp 0x40aa16,True
+8,"mov edi, 0","mov edi, 0x4c5218",True
+9,jmp 0x76,jmp 0x40aa16,True
+10,"mov edi, 0","mov edi, 0x4c5210",True
+11,jmp 0x76,jmp 0x40aa16,True
+12,"mov edi, 0","mov edi, 0x4c5208",True
+13,jmp 0x76,jmp 0x40aa16,True
+14,"mov edi, 0","mov edi, 0x4c5200",True
+15,jmp 0x76,jmp 0x40aa16,True
+16,"mov edi, 0","mov edi, 0x4c51f8",True
+17,jmp 0x76,jmp 0x40aa16,True
+18,"mov edi, 0","mov edi, 0x4c51f0",True
+19,jmp 0x76,jmp 0x40aa16,True
+20,"mov edi, 0","mov edi, 0x4c51e8",True
+21,jmp 0x76,jmp 0x40aa16,True
+22,"mov edi, 0","mov edi, 0x4c51e0",True
+23,jmp 0x76,jmp 0x40aa16,True
+24,"mov edi, 0","mov edi, 0x4c51d8",True
+25,jmp 0x76,jmp 0x40aa16,True
+26,"mov edi, 0","mov edi, 0x4c51d0",True
+27,jmp 0x76,jmp 0x40aa16,True
+28,"mov edi, 0","mov edi, 0x4c51c4",True
+29,jmp 0x76,jmp 0x40aa16,True
+30,"mov edi, 0","mov edi, 0x4c51b8",True
+31,jmp 0x76,jmp 0x40aa16,True
+32,"mov edi, 0","mov edi, 0x4c51b0",True
+33,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+34,"xor eax, eax","xor eax, eax",True
+35,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+36,not ecx,not ecx,True
+37,"sub edi, ecx","sub edi, ecx",True
+38,"mov esi, edi","mov esi, edi",True
+39,"mov edx, ecx","mov edx, ecx",True
+40,"mov edi, 0","mov edi, 0x51a068",True
+41,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+42,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+43,"mov ecx, edx","mov ecx, edx",True
+44,dec edi,dec edi,True
+45,"shr ecx, 2","shr ecx, 2",True
+46,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+47,"mov ecx, edx","mov ecx, edx",True
+48,"and ecx, 3","and ecx, 3",True
+49,"rep movsb byte ptr es:[edi], byte ptr [esi]","rep movsb byte ptr es:[edi], byte ptr [esi]",True
+50,pop edi,pop edi,True
+51,pop esi,pop esi,True
+52,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?appendClubName@@YAXH@Z,module=golf_clean.exe
+VERDICT,GREEN,53,100.0%

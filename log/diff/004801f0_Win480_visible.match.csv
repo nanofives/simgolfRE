@@ -1,0 +1,16 @@
+instruction,recompiled,original,match
+0,"test byte ptr [ecx + 0xa0], 1","test byte ptr [ecx + 0xa0], 1",True
+1,jne 0xc,jne 0x4801fc,True
+2,"xor eax, eax","xor eax, eax",True
+3,ret ,ret ,True
+4,"mov ecx, dword ptr [ecx + 0x130]","mov ecx, dword ptr [ecx + 0x130]",True
+5,"test ecx, ecx","test ecx, ecx",True
+6,je 0x20,je 0x480210,True
+7,call 0x1b,call 0x4801f0,True
+8,"test eax, eax","test eax, eax",True
+9,jne 0x20,jne 0x480210,True
+10,ret ,ret ,True
+11,"mov eax, 1","mov eax, 1",True
+12,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?visible@Win480@@QAEHXZ,module=golf_clean.exe
+VERDICT,GREEN,13,100.0%

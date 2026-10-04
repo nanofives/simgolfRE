@@ -30,7 +30,7 @@
 - [x] 29 unexported Terrain.dll callees matched (every one under 600 bytes on the list; 58 functions total).
 - [x] Large callees matched too (render, drawTileObjects, isCulled, elevate/lowerCorner, ctor, drawTile,
       texture loader, 0x10038900), setTypeId's callees and loadLighting: 73 functions at 100%.
-- [x] golf_clean.exe: 99 live functions at 100% (/O2), 17 partials in re/match/wip/ (2026-10-03).
+- [x] golf_clean.exe: 145 live functions at 100% (/O2), 25 partials in re/match/wip/ (2026-10-04).
 - [ ] More golf_clean.exe: golfer AI (FUN_00467a00 thoughts, FUN_00427380 hole end), story chain.
 - [x] Organic story chain mapped (U-0003 partial): golfer_stories scenario advances chapters on a
       multi-hole course.

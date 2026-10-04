@@ -1,0 +1,12 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,call 0xb,call 0x492570,True
+4,push esi,push esi,True
+5,call 0x11,call 0x4924e0,True
+6,"add esp, 8","add esp, 8",True
+7,pop esi,pop esi,True
+8,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?runBoth@@YAXH@Z,module=golf_clean.exe
+VERDICT,GREEN,9,100.0%

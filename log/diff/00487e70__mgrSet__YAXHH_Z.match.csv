@@ -1,0 +1,10 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+2,push eax,push eax,True
+3,push ecx,push ecx,True
+4,"mov ecx, 0","mov ecx, 0x83b000",True
+5,call 0x14,call 0x487fb0,True
+6,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?mgrSet@@YAXHH@Z,module=golf_clean.exe
+VERDICT,GREEN,7,100.0%

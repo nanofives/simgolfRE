@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"test eax, eax","test eax, eax",True
+2,jne 0xe,jne 0x490c8e,True
+3,"mov eax, 3","mov eax, 3",True
+4,ret ,ret ,True
+5,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+6,"test ecx, ecx","test ecx, ecx",True
+7,je 0x1a,je 0x490c9a,True
+8,"mov dword ptr [0], eax","mov dword ptr [0x83b9b4], eax",True
+9,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+10,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+11,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+12,"mov dword ptr [0], eax","mov dword ptr [0x83b9b8], eax",True
+13,"mov dword ptr [0], ecx","mov dword ptr [0x83b9bc], ecx",True
+14,"mov dword ptr [0], edx","mov dword ptr [0x83b9c0], edx",True
+15,"xor eax, eax","xor eax, eax",True
+16,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?select490@@YAHPAUSel490@@HHH@Z,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%
