@@ -7,13 +7,13 @@ extern signed char g_grid838c1c[];       // 0x838c1c, rows of 19 bytes (+1 = y+1
 // MATCH: golf_clean.exe 0x004674c0 ?bilinear@@YAHHH@Z
 int bilinear(int x, int y)
 {
-    x -= 0x80;
     y -= 0x80;
+    x -= 0x80;
     int gx = x >> 8 & 0xf;
     int gy = y >> 8 & 0xf;
-    int i = gy + gx * 19;
     int fx = x >> 3 & 0x1f;
     int fy = y >> 3 & 0x1f;
+    int i = gy + gx * 19;
     return (g_grid838c1c[i + 1] * (32 - fx) * fy + g_grid838c1c[i + 19] * (32 - fy) * fx
             + g_grid838c1c[i] * (32 - fx) * (32 - fy) + g_grid838c1c[i + 20] * fy * fx) / 32;
 }

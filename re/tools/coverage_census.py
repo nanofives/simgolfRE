@@ -20,7 +20,8 @@ import imgcmp  # noqa: E402
 import scenario  # noqa: E402
 
 TAB = "\t"
-MODULE_TSVS = {"golf_clean.exe": "functions_ghidra.tsv", "Terrain.dll": "functions_ghidra_Terrain.dll.tsv"}
+MODULE_TSVS = {"golf_clean.exe": "functions_ghidra.tsv", "Terrain.dll": "functions_ghidra_Terrain.dll.tsv",
+               "jgld.dll": "functions_ghidra_jgld.dll.tsv", "sound.dll": "functions_ghidra_sound.dll.tsv"}
 
 
 def function_lists() -> dict[str, list[str]]:

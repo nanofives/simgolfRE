@@ -6,7 +6,8 @@ int tileDistance(int x, int y, int tx, int ty);  // 0x0040c4b0
 
 // 256 placed objects at 0x58bcb8 (stride 0x10). Type-4 objects with level < 16 whose tile is within
 // (level * 5 + 40) * 5 / 3 of (x, y) set bit (level & 3); the mask is stored at 0x541318 and the function
-// returns whether every bit of `want` is present. (What type 4 is: not established here.)
+// returns whether every bit of `want` is present. Type 4 is Landmark (object table 0x4c26b0 + t*0x14, name
+// first; re/analysis/golfers/004669f0_story_reply.md).
 struct PlacedObject {
     short type;                          // +0x00
     short tx, ty;                        // +0x02, +0x04

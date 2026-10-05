@@ -1,0 +1,4 @@
+module	entry	size	reason
+golf_clean.exe	0x004aecd0	28	libjpeg error_exit: ends in exit(1) (noreturn); Ghidra continues through the padding into output_message
+golf_clean.exe	0x004aecf0	48	libjpeg output_message: inside FUN_004aecd0 in Ghidra
+golf_clean.exe	0x00486ec0	76	body ends at 0x486f0b; Ghidra counts a 4-byte nop pad before 0x486f10

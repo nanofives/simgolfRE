@@ -52,3 +52,5 @@ shim/*.lib
 ghidra/fid_work/
 ghidra/backup/
 re/fid/*.fidb
+# Downloaded third-party tarballs (the sources used are vendored in re/match/vendor/)
+tools/libsrc/

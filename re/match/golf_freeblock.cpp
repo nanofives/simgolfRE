@@ -1,5 +1,5 @@
-// golf_clean.exe 0x0043d520 (release). WIP 81%: logic as below; the original keeps size[i] in edx and the slot
-// pointer in ecx during the merge loop. Tried base-left comparison. Not in the 100% suite.
+// golf_clean.exe 0x0043d520 (release): block allocator free. 100% after re/tools/match_permute.py swapped the two
+// statements in the merge loop (size += before start = -1); the hand attempts stopped at 81%.
 // FLAGS golf_clean.exe: /O2
 extern int g_blockStart[100];            // 0x820b70
 extern int g_blockSize[100];             // 0x820d00
@@ -15,8 +15,8 @@ void freeBlock(int base, int n)
             g_blockSize[i] += n;
             for (int j = 0; j < 100; j++) {
                 if (g_blockStart[j] == g_blockStart[i] + g_blockSize[i]) {
-                    g_blockStart[j] = -1;
                     g_blockSize[i] += g_blockSize[j];
+                    g_blockStart[j] = -1;
                     g_blockSize[j] = 0;
                 }
             }

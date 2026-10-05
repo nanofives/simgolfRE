@@ -19,8 +19,8 @@ int waitInput(int ms)
     g_822d94 = 0;
     g_822d68 = 0;
     for (;;) {
-        pumpMessages();
         DWORD t = timeGetTime();
+        pumpMessages();
         if (g_822d68 || poll45ae70() || g_83afcc)
             break;
         if (ms && (int)(t - t0) >= ms)

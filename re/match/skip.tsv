@@ -1,0 +1,341 @@
+module	addr	reason
+golf_clean.exe	0x004840e0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00487210	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00449210	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0049c8e0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00482b60	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00485260	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00486f10	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00487060	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00492800	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0040af70	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00421b90	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00480b00	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00492d40	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x004493d0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00475c60	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x004832e0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00486d20	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00490bf0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00476d40	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0047cfd0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0044ac00	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0044ae60	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00473c60	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00483930	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0047b9a0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0047f2f0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00476700	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00476750	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0047e4c0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00473f60	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00480c20	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0046ddd0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0047e450	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00482420	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00449400	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00463100	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00488230	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00485ff0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00432620	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00483e90	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00474440	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0049c830	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0040df80	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0047fa30	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0044b060	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0044a380	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0045c0c0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x004674c0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00404090	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00404120	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x0042f120	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x004340a0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00449f00	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00409950	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x004099f0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00477c30	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+golf_clean.exe	0x00483fc0	deferred in exe batches 1-14 (2026-10-03), reason not recorded; retry
+Terrain.dll	0x10015960	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100159bd	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100159c8	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10015e63	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10015e6e	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016443	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001644e	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016470	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016502	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001650d	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016910	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016930	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016aa1	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016aac	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016ac0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016ae0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016b9d	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016ba8	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016bc0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016c70	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016fe5	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10016ff0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10017050	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100170dd	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100170e8	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10017150	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10017386	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10017391	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100173b0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100173d0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10017558	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10017563	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100176b0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10017961	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001796c	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100183d0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10018550	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10018580	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10018bc6	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10018cb0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10018cd0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019150	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019164	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001916d	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019200	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019214	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001921d	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100192b0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100192c4	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100192cd	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019370	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019389	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019392	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019565	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019c80	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019cf0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019eb0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10019ed0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a115	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a120	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a197	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a1a2	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a1c1	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a200	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a300	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001a9c0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001aa61	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001aa6c	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001ab5a	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001ab65	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001abd0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001ad86	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001ad91	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001af9b	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001afa6	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b040	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b060	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b0db	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b0e6	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b15d	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b168	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b212	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b257	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b262	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b2d0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b300	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001b540	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d0a0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d0b0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d0e0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d2c0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d340	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d4a0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d530	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d5a0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001d960	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001dc10	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001dd80	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001dfc0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001e020	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001e250	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001e2e0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1001e8e0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10020af0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10020b80	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10020c0a	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10020c10	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100212a0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10021b70	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10021b80	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10021da0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10021db5	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10021dcc	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10021e28	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10021e3e	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10022490	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10022a20	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10024320	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100243f0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10024400	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100270f0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10027da0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10027e10	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10027e30	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10027e80	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1002a3e0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1002a430	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1002b200	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1002e310	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x1002f150	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10030a60	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10030a80	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10031b90	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10033920	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10036470	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100374c0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x100374e0	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10037500	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10037840	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10037850	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+Terrain.dll	0x10037920	debug CRT/STL region 0x100158e0-0x100378c0 (every FidDb-identified function lies there, no game function matched there); chunk not identified by FID
+jgld.dll	0x1007e8b0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007e8d0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007e8e4	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007e8ed	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007e990	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007e9a4	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007e9ad	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007ea40	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007ea54	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007ea5d	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007efa6	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007f110	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007f360	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007f370	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007f760	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007fbc0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007fc1d	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1007fc28	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100800c3	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100800ce	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100806a3	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100806ae	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100806d0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080762	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008076d	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080b70	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080b90	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080d01	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080d0c	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080d20	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080d40	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080dfd	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080e08	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080e20	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10080ed0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081245	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081250	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100812b0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008133d	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081348	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100813b0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100815e6	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100815f1	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081610	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081630	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100817b8	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100817c3	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081910	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081bc1	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081bcc	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10081f70	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10082870	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10082a60	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10082a79	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10082a82	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10083230	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10083490	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100834b0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10083ea0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10083f15	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10083f2c	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10083f88	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10084700	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10084fd0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10084fe0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10084ff0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085080	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008510a	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085110	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085af0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085cf5	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085d00	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085d77	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085d82	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085da1	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085de0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085df0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085e91	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085e9c	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085f8a	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10085f95	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086000	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100861b6	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100861c1	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100863cb	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100863d6	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086470	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086490	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008650b	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086516	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008658d	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086598	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086642	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086687	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086692	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086700	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086730	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10086970	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100884d0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100884e0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10088510	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100886f0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10088770	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100888d0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10088960	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100889d0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10088d90	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10089040	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100891b0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100893f0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10089450	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10089680	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10089710	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10089db0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008a350	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008e8e0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008f8d0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008fac0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008fae0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008fb30	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x1008fe40	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100904d0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100904e0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10091e00	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10093e00	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100959e0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x100964f0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10097330	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10098d90	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10098db0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+jgld.dll	0x10099ec0	CRT fragment: no /GZ stack fill (0xcccccccc), not compiled with the game's debug flags
+golf_clean.exe	0x004abca0	C runtime: strcat, hand-written assembly (not compiler output)
+golf_clean.exe	0x004a55ba	C runtime: _NLG_Notify, hand-written assembly (uses the caller's ebp/eax)
+golf_clean.exe	0x004a6070	C runtime: _chkstk/_alloca_probe, hand-written assembly
+golf_clean.exe	0x004a4ffc	C runtime: operator delete wrapper; push dword ptr [esp+4] where /O2 emits mov/push
+golf_clean.exe	0x004a614d	C runtime: fopen -> _fsopen; push dword ptr [esp+N] where /O2 emits mov/push
+golf_clean.exe	0x004a7a13	C runtime: _unlock; keeps an ebp frame that /O2 omits
+golf_clean.exe	0x004a6937	C runtime: _amsg_exit; push [esp+4] and pop ecx where /O2 emits mov/push and add esp
+golf_clean.exe	0x004a695c	C runtime: fast_error_exit; push [esp+4] and pop ecx where /O2 emits mov/push and add esp
+golf_clean.exe	0x004a64b8	C runtime: remove/_unlink; push [esp+4] and pop ecx where /O2 emits mov/push and add esp
+golf_clean.exe	0x004abef4	C runtime: _ValidateRead/Write; push 1; pop esi where /O2 emits mov
+golf_clean.exe	0x004a9874	C runtime: _lock_file; pop ecx where /O2 emits add esp

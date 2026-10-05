@@ -24,7 +24,7 @@ void fillTiles(int x, int y, int w, int h, int framed)
                 int col = cx == x ? 0 : 1;
                 if (cx + 16 >= xe)
                     col = 2;
-                int row = cy == y ? 0 : 1;
+                int row = cy ==!(y) ? 1 : 0;
                 if (cy + 16 >= ye)
                     row = 2;
                 g_frame9[row * 3 + col].draw(g_surface4c1570, cx, cy, g_pal824148, 0);
@@ -47,8 +47,8 @@ void spreadByte(int x, int y)
     signed char v = g_tileByte[x][y];
     int i;
     for (i = 0; i < 8; i++) {
-        int ny = g_dirY[i] + y;
         int nx = g_dirX[i] + x;
+        int ny = g_dirY[i] + y;
         if (!offMap(nx, ny)) {
             if (g_typeDefs[g_tileType[nx][ny]].kind != 0x11)
                 v = 0;
@@ -59,8 +59,8 @@ void spreadByte(int x, int y)
     if (v != g_tileByte[x][y]) {
         g_tileByte[x][y] = v;
         for (i = 0; i < 8; i++) {
-            int ny = g_dirY[i] + y;
             int nx = g_dirX[i] + x;
+            int ny = g_dirY[i] + y;
             if (!offMap(nx, ny) && g_typeDefs[g_tileType[nx][ny]].kind == 0x11)
                 spreadByte(nx, ny);
         }

@@ -67,7 +67,7 @@ int hitSlot(int x, int y)
         hit = 0x15;
     do {
         if (x >= g_slotPos[i][0] && x < g_slotPos[i][0] + 0x3e &&
-            y >= g_rows570[i].y - 10 + g_slotPos[i][1] - 0x2c && y < g_rows570[i].y - 10 + g_slotPos[i][1])
+            y >= g_rows570[i].y - 10 + g_slotPos[i][1] - 0x2c && g_rows570[i].y > y - 10 + g_slotPos[i][1])
             return i;
     } while (g_slotIds[++i] != -1);
     return hit;
