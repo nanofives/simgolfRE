@@ -1,0 +1,15 @@
+module	addr	name	type	evidence
+sound.dll	0x100b5d20	g_crtHeapMode	int	written by setSbhThreshold 0x10045e34 (values 1/2/3); read by msize 0x10045581 to select group (3) vs region (2) small-block heap
+sound.dll	0x100b5d10	g_crtProcessHeap	HANDLE	HeapCreate handle used in HeapAlloc at sbhGroupHeapInit 0x10045ee7 and HeapDestroy at sbhHeapTerm 0x10045d6d
+sound.dll	0x100653d8	g_sbhRegionList	void*[]	circular region-header list head: written by sbhRegionCreate 0x10046e50, walked by sbhRegionLocate 0x100470ac and sbhRegionHeapCheck 0x1004751d
+sound.dll	0x100653e8	g_sbhRegionListSentinel	int	set to -1 by sbhRegionFree 0x10046f94 when the embedded list head is unused; read by sbhRegionCreate 0x10046e50
+sound.dll	0x100673f8	g_sbhRegionRover	void*	region rover pointer read by sbhRegionHeapCheck 0x1004751d and updated in the region free path
+sound.dll	0x100b5590	g_sbhFreePageCount	int	free 4 KB page counter incremented by sbhPageFree 0x10047103 (decommit triggered at 0x20) and decremented by sbhRegionDecommit 0x10046fea
+sound.dll	0x100b5d08	g_sbhGroupRegionArray	void*	group-heap region array allocated by sbhGroupHeapInit 0x10045ee7 and freed by sbhHeapTerm 0x10045d6d
+sound.dll	0x100b5d04	g_sbhGroupRegionCount	int	group-heap region count set by sbhGroupHeapInit 0x10045ee7 and looped by sbhHeapTerm 0x10045d6d
+sound.dll	0x100b5d0c	g_sbhGroupThreshold	uint	group-heap small-block threshold (< 0x3f9) written by setSbhThreshold 0x10045e34 and sbhGroupHeapInit 0x10045ee7
+sound.dll	0x100673fc	g_sbhRegionThreshold	uint	region-heap small-block threshold (< 0x781) written by setSbhThreshold 0x10045e34, read by the region allocation path at 0x10042b95
+sound.dll	0x10064ea8	g_nlgDest	int[3]	NLG destination record (EAX, arg, EBP) written by NLG_Notify 0x10042482 at 0x10064ea8/0x10064eac/0x10064eb0
+sound.dll	0x100651b8	g_cfltcvtTable	void*[6]	floating-point conversion function-pointer table written by cfltcvtInit 0x10042506 (entries __cfltcvt/__fassign/__forcdecpt and two LAB stubs)
+sound.dll	0x1005ecb0	g_codecBiquadCoeffs	float[5]	biquad section coefficients at 0x1005ecb0/0x1005ecb4/0x1005ecb8/0x1005ecbc/0x1005ecc0 read by codecBiquadFilter 0x10040e30
+sound.dll	0x1005ec6c	g_codecFirCoeffs	float[]	symmetric FIR tap coefficients starting at 0x1005ec6c read by codecSymmetricFir 0x100404d0

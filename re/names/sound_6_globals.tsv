@@ -1,0 +1,19 @@
+module	addr	name	type	evidence
+sound.dll	0x1005b5c0	vt_Ctrl5b5c0	vtable	installed by Ctrl5b5c0_ctor 0x1001bd90 (the 0xe4-byte control object with a 128-byte value table at +0x5c)
+sound.dll	0x1005b59c	vt_Ctrl5b59c	vtable	installed by Ctrl5b5c0_ctor 0x1001bd90 as the embedded base at +0x2c
+sound.dll	0x1005b638	vt_Ctrl5b638	vtable	installed by Ctrl5b638_ctor 0x1001c870 (type 6 control object)
+sound.dll	0x1005b614	vt_Ctrl5b614	vtable	installed by Ctrl5b638_ctor 0x1001c870 as the embedded base at +0x2c
+sound.dll	0x1005b5f0	vt_Ctrl5b5f0	vtable	installed by Ctrl5b5f0_ctor 0x1001c5c0 (type 5 control element)
+sound.dll	0x1005b668	vt_Ctrl5b668	vtable	installed by Ctrl5b668_ctor 0x1001cbf0 (type 1 control element)
+sound.dll	0x1005b58c	vt_Ctrl5b58c	vtable	installed by Ctrl5b58c_dtor 0x1001c080 / 0x1001c990 and MidiReader_freeContent 0x1001b870; the reader/base control object vtable
+sound.dll	0x1005bb90	vtbl_Ch5bb90	vtable	SubChannel-derived channel vtable installed by Ch5bb90_ctor 0x1002c490 and Ch5bb90_dtor 0x1002b620
+sound.dll	0x1005c000	vtbl_Ch5c000	vtable	SubChannel-derived channel vtable installed by Ch5c000_ctor 0x1002e550
+sound.dll	0x1005c178	vtbl_Ch5c178	vtable	SubChannel-derived channel vtable installed by Ch5c178_ctor 0x1002e930 and Ch5c178_dtor 0x1002ea30
+sound.dll	0x1005c234	vtbl_Ch5c234	vtable	SubChannel-derived channel vtable installed by Ch5c234_dtor 0x1002ef40
+sound.dll	0x1005c2ec	vtbl_Ch5c2ec	vtable	SubChannel-derived channel vtable installed by Ch5c2ec_dtor 0x1002f3f0
+sound.dll	0x1005be88	vtbl_Ch5be88	vtable	channel object vtable installed by Ch5be88_dtorA 0x1002d560 and Ch5be88_dtorB 0x1002e660
+sound.dll	0x1005b8b0	vt_DeviceBaseIntermediate	vtable	shared intermediate base vtable installed by VoiceBase/MidiDeviceBase/WaveInDeviceBase dtors (0x10028ff0, 0x10029f60, 0x1002a3b0) and VoiceBase_dtor 0x10029200
+sound.dll	0x10063ea0	g_defaultWaveFormat	WAVEFORMATEX	the default format block (0x12 bytes 0x10063ea0..0x10063eb1) copied into a channel at +0xbc by Channel_setFormat 0x10030fb0 when no explicit format is given
+sound.dll	0x100b5070	g_activeListHead	void*	head of the intrusive active list (nodes linked by +0x48 prev / +0x4c next); rewritten when the head node is unlinked by unlinkFromActiveList 0x1002b090
+sound.dll	0x1005b8a8	g_float1	float	the constant 1.0 subtracted in nextRandomFloat 0x100285a0 to map a [1,2) mantissa-trick float down to [0,1)
+sound.dll	0x1005c3a4	vtbl_Ch5c3a4	vtable	Mixer-derived channel vtable installed by Ch5c3a4_ctor 0x1002f740

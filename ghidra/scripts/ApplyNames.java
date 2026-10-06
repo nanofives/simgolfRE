@@ -26,6 +26,19 @@ public class ApplyNames extends GhidraScript {
 		int renamed = 0, kept = 0, missing = 0, labeled = 0, reset = 0;
 		File[] files = dir.listFiles((d, n) -> n.endsWith(".tsv"));
 		java.util.Arrays.sort(files);
+		// a withdrawn address that a names file names again (new evidence) is renamed, not reset
+		java.util.Set<String> named = new java.util.HashSet<>();
+		for (File f : files) {
+			if (f.getName().endsWith("_globals.tsv") || f.getName().equals("withdrawn.tsv")) {
+				continue;
+			}
+			for (String l : Files.readAllLines(f.toPath())) {
+				String[] c = l.split("	");
+				if (c.length >= 3 && c[0].equals(prog)) {
+					named.add(c[1].toLowerCase());
+				}
+			}
+		}
 		for (File f : files) {
 			boolean globals = f.getName().endsWith("_globals.tsv");
 			boolean withdrawn = f.getName().equals("withdrawn.tsv");
@@ -56,6 +69,9 @@ public class ApplyNames extends GhidraScript {
 				}
 				Function fn = getFunctionAt(addr);
 				if (withdrawn) {
+					if (named.contains(c[1].toLowerCase())) {
+						continue;
+					}
 					if (fn != null && fn.getSymbol().getSource() != SourceType.DEFAULT) {
 						fn.getSymbol().setNameAndNamespace(null, currentProgram.getGlobalNamespace(), SourceType.DEFAULT);
 						println("RESET " + addr + " -> " + fn.getName());

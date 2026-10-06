@@ -1,0 +1,10 @@
+module	addr	name	type	evidence
+sound.dll	0x10064a80	g_codecSymbolTable	int[128]	indexed by (code&0x7f) in decodeTableSymbol 0x1003e520 to yield a nibble plus a bit4 flag
+sound.dll	0x100647e4	g_codecExpThresholds	int[]	binary-searched in quantizeParams 0x1003c220 (16-step bisection) to turn a magnitude into an exponent 0x1f-idx/2
+sound.dll	0x100646e8	g_codecQuantTableA	int[64]	indexed 0..0x3f in quantizeParams 0x1003c220 for the first two param_7 values
+sound.dll	0x10064684	g_codecBiasTable	int[]	added as a per-position bias in quantizeParams 0x1003c220 (indexed (order+1)-i)
+sound.dll	0x100646c4	g_codecDivTable	int[]	divisor base for intPow in quantizeParams 0x1003c220 (indexed (order+1)-i)
+sound.dll	0x10064558	g_codecReorderTable	int[]	indexed by (value&0x1e)/2 in quantizeParams 0x1003c220 when packing the spare param_7[4..9] slots
+sound.dll	0x10064a18	g_codecPulseCoeffs	int[26]	fixed coefficient/pulse table consumed by codecApplyFixedCoeffs 0x1003d040 (via 0x10040e30) and the voiced path of lpcSynthesize 0x1003d1d0
+sound.dll	0x100b58a0	g_codecOrder	int	written =10 by codecSetParams 0x1003aa50; read as the LPC/loop order in quantizeParams 0x1003c220 and the codec stages
+sound.dll	0x100b58a8	g_codecMode	int	written =1 by codecSetParams 0x1003aa50; read as the mode selector in quantizeParams 0x1003c220

@@ -244,6 +244,13 @@ C2 = this mechanical transcription (decided 2026-10-06): all 2669 named function
 `c2_note.py --all --out log/c2_batch.tsv` + `re_classify.py batch log/c2_batch.tsv --to C2` (notes in
 re/analysis/<subsystem>/<addr>_<name>.md). C3 still needs a hand-written `## Purpose`, a hooked reimplementation and
 a GREEN path-1 A/B. Regenerate a note after renaming by deleting it and rerunning (hand-written notes are never touched).
+C3 (started 2026-10-06, 13 golf_clean.exe functions): hand-written reimplementations (not the recompiled match, which
+proves no understanding) in `shim/src/re/golf_math.cpp` (pure integer leaves) and `golf_tables.cpp` (read-only table
+lookups); a `## Purpose` added to the generated note (c2_note.py then never regenerates it); vectors in
+`re/frida/hooks_registry.py`; fixtures in `re/frida/js/diff_fixtures.js` seed main-menu tables so every branch runs
+(`golf_tables`: tiles, wall masks/heights, golfers, cell tables). Pick live (scoreboard reach > 0), matched, small
+leaves first; stateful functions (RNG, writers) need state reset between arms before they can be A/B'd.
+`py -3.12 re/frida/diff_hook.py <names...>` runs all in one boot; then `re_classify.py promote <addr> --to C3 --file <cpp>`.
 `xref.load_pe` is fast_load: call `pe.parse_data_directories()` before reading imports.
 
 ### A/B verification (`diff-original` skill)
