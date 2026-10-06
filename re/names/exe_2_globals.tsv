@@ -16,5 +16,5 @@ golf_clean.exe	0x0057956e	g_golferRecords	byte[]	golfer record array (stride 0x8
 golf_clean.exe	0x0058587a	g_golferRoster	byte[]	golfer roster array (stride 0x4c) read by pickGolferName 0x00467600
 golf_clean.exe	0x00571fd8	g_courseTable	byte[]	12-entry table (stride 0x2e) seeded by seedCourseTable 0x0046f2b0
 golf_clean.exe	0x0051a068	g_textBuffer	char[]	shared text scratch buffer, target of pickGolferName 0x00467600
-golf_clean.exe	0x0083ad50	g_graphicsDevice	void**	graphics device object pointer; vtable +0xb4 read by build16BitColorTable 0x00461830
+golf_clean.exe	0x0083ad50	g_graphicsDevice	void* (graphics DLL object; *ptr is its vtable)	graphics device object pointer; vtable +0xb4 read by build16BitColorTable 0x00461830; set by engine init 0x004855b0 from 0x004a00a0 (LoadLibraryA + GetProcAddress of jgld export at RVA 0x1780, name string 0x004e4a2c)
 golf_clean.exe	0x0083ab98	g_focusedItem	void*	focused/selected list item pointer, written by setFocusItem 0x0047ae80

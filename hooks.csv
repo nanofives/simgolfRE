@@ -161,7 +161,9 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 000380a0,Terrain.dll,Terrain::reloadTextures,terrain,C1,located,,,,,,,match re/match/terrain_tile4.cpp
 000381a0,Terrain.dll,Terrain::drawTile,terrain,C1,located,,,,,,,match re/match/terrain_drawtile.cpp
 00038900,Terrain.dll,Terrain::lowerEdge,terrain,C1,located,,,,,,,match re/match/terrain_edge.cpp
+00401000,golf_clean.exe,resetRecordBank,course,C1,located,,,,,,,caller 0x00401750 (initRecords); g_recordBanks 0x004e6d20; g_recordOccupancy
 00401040,golf_clean.exe,placeRecord,sim,C1,located,,,,,,,reads record banks 0x004e6d20/d40/d50/d70 and footprint-def table 0x004c11e0
+004011b0,golf_clean.exe,freeRecordAtPos,course,C1,located,,,,,,,match re/match/golf_raw_12.cpp; caller 0x0040e400 (clearObjectFootprint)
 004011e0,golf_clean.exe,spawnObject,sim,C1,located,,,,,,,match re/match/golf_hand_07_4011e0.cpp; callee 0x0045c1e0 (Random::range)
 004012d0,golf_clean.exe,drawRecords,render,C1,located,,,,,,,"callees 0x0042fb90 (world->screen), 0x0043d6f0 (cellAt), 0x004628d0/0x00462a30 (sprite draw); reads record banks 0x004e6d20..70 and camera rotation 0x005685f4"
 00401750,golf_clean.exe,initRecords,sim,C1,located,,,,,,,"match re/match/golf_small10.cpp; callees 0x00401000, placeRecord"
@@ -170,6 +172,8 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00401c30,golf_clean.exe,deletingDtor_401c30,crt,C1,located,,,,,,,match re/match/golf_raw_14.cpp; callee 0x004a5007 (_free)
 00401c70,golf_clean.exe,List401c70_dtor,crt,C1,located,,,,,,,match re/match/golf_hand_04.cpp; called from Unwind thunks 0x004b7f69..
 00401d10,golf_clean.exe,S3List_add,util,C1,located,,,,,,,match re/match/golf_hand_s3.cpp; string 0x004c1434 (out-of-heap message); callee 0x00474860 (heap alloc)
+00402130,golf_clean.exe,listIterNext,util,C1,located,,,,,,,match re/match/golf_raw_01.cpp; caller 0x004763d0 (drawMenuList)
+00402160,golf_clean.exe,listIterValue,util,C1,located,,,,,,,"match re/match/golf_raw_01.cpp; caller 0x004763d0 (drawMenuList), 0x0049f370 (optionListDraw)"
 004021a0,golf_clean.exe,unwindCleanup_4021a0,crt,C1,located,,,,,,,match re/match/golf_raw_01.cpp; called from Unwind 0x004b90d4..
 004021b0,golf_clean.exe,unwindFree_4021b0,crt,C1,located,,,,,,,match re/match/golf_raw_07.cpp; called from Unwind thunks; callee 0x004a5007 (_free)
 004021e0,golf_clean.exe,C4021e0_dtor,crt,C1,located,,,,,,,match re/match/golf_hand_04.cpp; called from Unwind 0x004b7dc0
@@ -187,6 +191,8 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00404000,golf_clean.exe,atexitRegister_00404000,crt,C1,located,,,,,,,match re/match/golf_raw_07.cpp; callee 0x004a56d2 (_atexit)
 00404040,golf_clean.exe,initGlobalArray_00404040,crt,C1,located,,,,,,,match re/match/golf_arrays.cpp; callee 0x004a55d2 (??_L vector ctor iterator)
 00404060,golf_clean.exe,atexitRegister_00404060,crt,C1,located,,,,,,,match re/match/golf_raw_07.cpp; callee 0x004a56d2 (_atexit)
+00404090,golf_clean.exe,flicNextFrame,video,C1,located,,,,,,,"caller 0x0043d740 (loadFlic); callee 0x00482e20 (Link482::resolve), 0x00482e40 (Link482b::send), 0x00482e10 (Link482::data)"
+00404120,golf_clean.exe,flicOpenStream,video,C1,located,,,,,,,"caller 0x0043d740 (loadFlic); callee 0x00481f40 (Flic::open), 0x00482b90 (Flic::createStream), 0x00482e10 (Link482::data)"
 004041c0,golf_clean.exe,resetPair,util,C1,located,,,,,,,"match re/match/golf_small4.cpp; callees 0x00481ba0, 0x00482dd0 (member dtor)"
 004041f0,golf_clean.exe,unwindFree_4041f0,crt,C1,located,,,,,,,match re/match/golf_raw_01.cpp; called from ~110 Unwind thunks; callee 0x00473ae0
 00404200,golf_clean.exe,C404200_dtor,crt,C1,located,,,,,,,"match re/match/golf_hand_02.cpp; callees 0x00473ae0, 0x00482dd0 (member dtor)"
@@ -229,6 +235,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00404840,golf_clean.exe,staticInit_00404840,crt,C1,located,,,,,,,match re/match/golf_raw_01.cpp; callee 0x004837f0 FUN_004837f0 [??0C4837f0@@QAE@XZ]
 00404850,golf_clean.exe,atexitRegister_00404850,crt,C1,located,,,,,,,match re/match/golf_raw_07.cpp; callee 0x004a56d2 (_atexit)
 00404970,golf_clean.exe,scaleX,render,C1,located,,,,,,,match re/match/golf_small2.cpp; reads 0x00822c8c
+004049a0,golf_clean.exe,drawLineOnSurface,render,C1,located,,,,,,,match re/match/golf_raw_01.cpp; caller 0x0046e710 (drawRectScaled); callee 0x00478b80 (Widget_fillRect)
 004049d0,golf_clean.exe,drawText4049d0,ui,C1,located,,,,,,,"match re/match/golf_small7.cpp; callees 0x00476310 (Widget::setQuad), 0x00477c30"
 00404a20,golf_clean.exe,drawTextScaled,ui,C1,located,,,,,,,"match re/match/golf_hand_05.cpp; callees scaleX, Widget::setQuad, 0x00477580 (Widget::value)"
 00404ad0,golf_clean.exe,drawTextSurface,ui,C1,located,,,,,,,"match re/match/golf_hand_05.cpp; callees Widget::setQuad, Widget::value, 0x00477c30"
@@ -256,13 +263,16 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00405900,golf_clean.exe,atexitRegister_00405900,crt,C1,located,,,,,,,match re/match/golf_raw_07.cpp; callee 0x004a56d2 (_atexit)
 00405920,golf_clean.exe,wobble,sim,C1,located,,,,,,,"match re/match/golf_small8.cpp; callees Random::range, sign"
 00405970,golf_clean.exe,addHabitatSlot,sim,C1,located,,,,,,,match re/match/golf_hand_04.cpp; callee Random::range
+00405a00,golf_clean.exe,playHabitatSound,audio,C1,located,,,,,,,"match re/match/golf_raw_07.cpp; caller 0x00405e30 (placeHabitat), 0x00430360 (drawWorldObjects); callee 0x0040c500 (playSoundAt)"
 00405ac0,golf_clean.exe,sanitizeFileName,util,C1,located,,,,,,,match re/match/golf_hand_01.cpp; string 0x004c3ee0 (illegal filename chars); callee 0x004a5800 (_strpbrk)
 00405b10,golf_clean.exe,saveGameDialog,save,C1,located,,,,,,,"strings 0x004c3eec (Invalid File Name), 0x004c3f00 (Game Saved.), 0x004c3f74 (SAVE GAME prompt); callees sanitizeFileName, saveGame"
 00405e30,golf_clean.exe,placeHabitat,sim,C1,located,,,,,,,"string 0x004c3f9c ( habitat); callees addHabitatSlot, playSoundAt, queueMessage, tileBlocked"
+004060a0,golf_clean.exe,computeRatingTrend,golfer,C1,located,,,,,,,caller 0x00427380 (matchUpdate)
 004061b0,golf_clean.exe,staticInit_004061b0,crt,C1,located,,,,,,,match re/match/golf_raw_01.cpp; callee 0x00474ae0 FUN_00474ae0 [??0C474ae0@@QAE@XZ]
 004061c0,golf_clean.exe,atexitRegister_004061c0,crt,C1,located,,,,,,,match re/match/golf_raw_07.cpp; callee 0x004a56d2 (_atexit)
 004061f0,golf_clean.exe,staticInit_004061f0,crt,C1,located,,,,,,,match re/match/golf_raw_01.cpp; callee 0x00474ae0 FUN_00474ae0 [??0C474ae0@@QAE@XZ]
 00406200,golf_clean.exe,atexitRegister_00406200,crt,C1,located,,,,,,,match re/match/golf_raw_07.cpp; callee 0x004a56d2 (_atexit)
+00406220,golf_clean.exe,drawMinimapSegment,render,C1,located,,,,,,,match re/match/golf_small3.cpp; caller 0x0040f5c0 (mainLoop); callee 0x004493d0 (drawMapLine)
 00406250,golf_clean.exe,showLoadingScreen,frontend,C1,located,,,,,,,"strings 0x004c3fa8 (Loading...), golf-quote strings, 0x004c44ac (interface\Loading_Screens\...); callees surface ctors"
 004065c0,golf_clean.exe,showCharacterIntro,frontend,C1,located,,,,,,,"match re/match/golf_hand_05.cpp; strings 0x004c4714/0x004c46bc (customize-character help); callees drawWindow, 0x0045f0f0"
 00406670,golf_clean.exe,membershipReport,economy,C1,located,,,,,,,"strings 0x004c4784 (members: ), 0x004c47a4 (Current membership...); callees startMessage, playSound"
@@ -279,7 +289,11 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00407c60,golf_clean.exe,drawCircle,render,C1,located,,,,,,,"match re/match/golf_small23.cpp; callees setLinePoint, lineTo, 0x0042fb90 (world->screen)"
 00407e00,golf_clean.exe,narrateShot,sim,C1,located,,,,,,,"strings 0x004c4e58 (SimFoto), 0x004c4fe8 (into the hole), skill-change strings; callees appendHoleName, appendClubName, startMessage, playSound"
 00409620,golf_clean.exe,scanShotArea,sim,C1,located,,,,,,,"callees narrateShot, distance, typeAtPos, tileDistance, Random, clamp; caller updateGolfers"
+00409950,golf_clean.exe,updatePairSnapshot,golfer,C1,located,,,,,,,"caller 0x004099f0 (addGolferPair), 0x004226a0 (trialShot), 0x004289e0 (updateGolfers); g_storyPairs 0x0059fc60"
+004099f0,golf_clean.exe,addGolferPair,golfer,C1,located,,,,,,,"caller 0x0040f5c0 (mainLoop), 0x004289e0 (updateGolfers); callee 0x00409950 (updatePairSnapshot); g_storyPairs 0x0059fc60; g_golfers"
 00409a90,golf_clean.exe,scanNearbyGolfers,sim,C1,located,,,,,,,"callees 0x00407000 (holeQuadrants), distance, Random, 0x00467a00; caller updateGolfers"
+00409bf0,golf_clean.exe,updateRollingStats,sim,C1,located,,,,,,,"caller 0x0040f5c0 (mainLoop); callee 0x00467270 (foldRange), 0x004672b0 (absDiff); g_date"
+00409cb0,golf_clean.exe,pushTripleEntry,sim,C1,located,,,,,,,match re/match/golf_raw_01.cpp; g_arrayCount 0x005a9cd4
 00409cf0,golf_clean.exe,editTerrainHeight,terrain,C1,located,,,,,,,"callees 0x0042f2c0 (markKind11), 0x0042f7a0 (r0_rebuild), playSound, sign; reads camera 0x004c2ba0/0x004c2ba4"
 0040a130,golf_clean.exe,setGrids,render,C1,located,,,,,,,match re/match/golf_small2.cpp
 0040a160,golf_clean.exe,buildToolLabel,ui,C1,located,,,,,,,"strings 0x004c50d8 (Remove ), 0x004c5144 (Demolish ), 0x004c515c (Out of bounds); callees tileBlocked, objectAt"
@@ -321,9 +335,12 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0040d6a0,golf_clean.exe,tickMessage,ui,C1,located,,,,,,,match re/match/golf_small24.cpp; callee drawWindow
 0040d7b0,golf_clean.exe,appendDate,ui,C1,located,,,,,,,match re/match/golf_small23.cpp; callee __itoa; writes 0x0058a528
 0040daa0,golf_clean.exe,appendCourseTitle,ui,C1,located,,,,,,,match re/match/golf_hand_07_40daa0.cpp; strings 0x004c5364 ( Golf Club)..; callee appendString
+0040db90,golf_clean.exe,evalPlacementArea,course,C1,located,,,,,,,"caller 0x0040f5c0 (mainLoop), 0x00456be0 (showRoutingMapScreen), 0x00470a60 (applyTerrainEdit); callee 0x0040bf60 (tileBlocked), 0x0040df80 (objectAt); g_tile_type; g_tileFlags; g_placed_objects"
 0040ddb0,golf_clean.exe,nearestPlaced,course,C1,located,,,,,,,match re/match/golf_small25.cpp; callee distance
+0040de70,golf_clean.exe,findNearestTargetTile,golfer,C1,located,,,,,,,"caller 0x004289e0 (updateGolfers); callee 0x0040acd0 (distance), 0x0040bf60 (tileBlocked); g_tileFlags"
 0040df80,golf_clean.exe,objectAt,course,C1,located,,,,,,,reads g_placed_objects 0x0058bcb8 and footprint table 0x004c26c0
 0040e000,golf_clean.exe,stampCourseTiles,terrain,C1,located,,,,,,,writes g_tile_type (values 1/4/0x11/0x15/0x16) and g_tile_byte; callee 0x0042f7a0 (r0_rebuild)
+0040e400,golf_clean.exe,clearObjectFootprint,course,C1,located,,,,,,,"caller 0x0040a4e0 (demolishObject), 0x0046d0c0 (resetGolferState); callee 0x0042ef40 (rateLot), 0x0040c890 (pointsPopup), 0x0042f7a0 (rebuildHeightfield), 0x004011b0 (freeRecordAtPos); g_placed_objects; g_tile_type; g_tileFlags"
 0040e5b0,golf_clean.exe,rankValue,economy,C1,located,,,,,,,match re/match/golf_hand_01.cpp
 0040e5f0,golf_clean.exe,appendUpgradeText,ui,C1,located,,,,,,,match re/match/golf_hand_r3.cpp; strings 0x004c53a4/0x004c53ec (upgrade benefits)
 0040e720,golf_clean.exe,announceBuilding,course,C1,located,,,,,,,"strings 0x004c5824 (You may now build a ), 0x004c591c (Hole #), par/dogleg text; callees logTick, startMessage, appendUpgradeText"
@@ -337,6 +354,8 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 004223f0,golf_clean.exe,decaySum2,sim,C1,located,,,,,,,match re/match/golf_small6.cpp
 00422430,golf_clean.exe,shotPower,sim,C1,located,,,,,,,"match re/match/golf_small27.cpp; callees decaySum, decaySum2"
 00422530,golf_clean.exe,rateTile,course,C1,located,,,,,,,match re/match/golf_hand_r1.cpp; callee typeAtPos; reads 0x00543cc8
+004226a0,golf_clean.exe,trialShot,ai,C1,located,,,,,,,"caller 0x0040f5c0 (mainLoop), 0x00422fb0 (simulateBallFlight); callee 0x00424120 (simulateShot), 0x0045c1e0 (Random::range); g_golfers; g_tile_type"
+00422fb0,golf_clean.exe,simulateBallFlight,sim,C1,located,,,,,,,"caller 0x00424120 (simulateShot); callee 0x00421fa0 (scanTileLine), 0x00422530 (rateTile), 0x004226a0 (trialShot); g_tile_type; g_typeAttr"
 00424120,golf_clean.exe,simulateShot,sim,C1,located,,,,,,,"callees wobble, shotPower, rateTile, heightBlend, sign, thoughtFlag, distance"
 00426670,golf_clean.exe,resetGolfer,golfer,C1,located,,,,,,,match re/match/golf_small6.cpp; writes 0x005689e8/0x00568d08
 004266b0,golf_clean.exe,patronEvent,golfer,C1,located,,,,,,,"strings 0x004c6d24 (vacation home), 0x004c6f88 (landmark donation), 0x004c7058 (expansion approval); callees landmarkName, startMessage, 0x00469a20 (appendOpinion)"
@@ -353,6 +372,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0042f120,golf_clean.exe,floodMark,terrain,C1,located,,,,,,,"recursive; writes tile-flag array 0x0053caf0 (bit 0x40), reads type table 0x00578372"
 0042f1c0,golf_clean.exe,propagateType11,terrain,C1,located,,,,,,,"recursive; callee tileBlocked; reads/writes g_tile_byte, reads g_tile_type"
 0042f2c0,golf_clean.exe,markTileKind11,terrain,C1,located,,,,,,,match re/match/golf_small11.cpp; callee 0x42f1c0
+0042f340,golf_clean.exe,rebuildTileCoverage,course,C1,located,,,,,,,"caller 0x00409cf0 (editTerrainHeight), 0x0040b9b0 (loadGame), 0x0040f5c0 (mainLoop), 0x00470a60 (applyTerrainEdit); callee 0x0042f120 (floodMark), 0x00467130 (clamp); g_tileFlags"
 0042f4b0,golf_clean.exe,cornerRange,terrain,C1,located,,,,,,,match re/match/golf_small12.cpp; callee 0x40c170 (r3_f40c170)
 0042f530,golf_clean.exe,relaxEdges42f530,terrain,C1,located,,,,,,,match re/match/golf_hand_r0.cpp; callee 0x40bf60 (tileBlocked); callee 0x42f4b0 (cornerRange)
 0042f630,golf_clean.exe,relaxTile42f630,terrain,C1,located,,,,,,,match re/match/golf_hand_05.cpp; callee 0x40bf60 (tileBlocked)
@@ -361,12 +381,15 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0042f940,golf_clean.exe,tileToScreen,render,C1,located,,,,,,,match re/match/golf_small27.cpp; callee 0x42fb90 (worldToScreen)
 0042fa30,golf_clean.exe,heightAt42fa30,terrain,C1,located,,,,,,,match re/match/golf_hand_r3.cpp; callee 0x42f4b0 (cornerRange)
 0042fb90,golf_clean.exe,worldToScreen,render,C1,located,,,,,,,callee 0x42f4b0 (cornerRange); reads g_4c2ba0/g_4c2ba4 (camera); caller 0x42f940 (tileToScreen)
+00430020,golf_clean.exe,screenToTile,render,C1,located,,,,,,,"caller 0x004038f0 (drawFlyingBall), 0x0040f5c0 (mainLoop); callee 0x0042f940 (tileToScreen), 0x0042fb90 (worldToScreen), 0x0040acd0 (distance); g_cameraRot; gCameraTileX; gCameraTileY"
+00430360,golf_clean.exe,drawWorldObjects,render,C1,located,,,,,,,"caller 0x0040f5c0 (mainLoop); callee 0x00462a30 (enqueueSprite), 0x00474440 (Surface_drawSprite), 0x0042fb90 (worldToScreen), 0x00467a00 (emitGolferThought), 0x00405a00 (playHabitatSound), 0x0045c1e0 (Random::range)"
 004315e0,golf_clean.exe,buildGolferBioText,golfer,C1,located,,,,,,,string 0x4c77f4 ( favorite color is ); string 0x4c7820 ( likes ); callee 0x45b880 (clearBuffers)
 00431d20,golf_clean.exe,saveCourseJpg,save,C1,located,,,,,,,match re/match/golf_hand_r1.cpp; import _CreateJPG
 00431ee0,golf_clean.exe,saveThumbAndFull,save,C1,located,,,,,,,match re/match/golf_hand_06_i.cpp; string 0x4c782c; string 0x4c7838; callee 0x431d20
 00431fa0,golf_clean.exe,writeCourseInfo,save,C1,located,,,,,,,match re/match/golf_hand_s1.cpp; string 0x4c7918 ([Course]); import _fprintf
 00432170,golf_clean.exe,flushCourseInfo,save,C1,located,,,,,,,match re/match/golf_small3.cpp; callee 0x431ee0; callee 0x431fa0
 004321d0,golf_clean.exe,capsLockOff,input,C1,located,,,,,,,match re/match/golf_small4.cpp
+00432200,golf_clean.exe,drawAmenityRow,ui,C1,located,,,,,,,"caller 0x00434cf0 (drawAmenitiesPanel); callee 0x00473f60 (Surface_stretchBlit), 0x00473cb0 (Surface_drawScaled), 0x004628d0 (addSprite), 0x0043d6f0 (cellAt), 0x00467170 (approxDistance)"
 00432560,golf_clean.exe,showPreferencesMenu,ui,C1,located,,,,,,,match re/match/golf_hand_05.cpp; string 0x4c7c34; caller 0x432720 (showSystemMenu)
 00432620,golf_clean.exe,drawPanelBackdrop,ui,C1,located,,,,,,,callee 0x404b70 (text); callee 0x4493d0 (drawMapLine); callers are the build/employee panels
 004326a0,golf_clean.exe,nearestMenuSpot,ui,C1,located,,,,,,,match re/match/golf_small10.cpp; callee 0x467170 (approxDistance)
@@ -407,6 +430,8 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0043a400,golf_clean.exe,selectDifficultyScreen,frontend,C1,located,,,,,,,string 0x4c8748 (Select Difficulty); string 0x4c871c (Impossible); string 0x4c875c (interface\TitleSelDiff)
 0043a8c0,golf_clean.exe,pickAProScreen,frontend,C1,located,,,,,,,string 0x4c8830 (Pick A Pro); string 0x4c8814 (Themes\Championship\*.pro); string 0x4c883c (Title_PickAPro)
 0043b610,golf_clean.exe,loadGameBrowserScreen,frontend,C1,located,,,,,,,string 0x4c8930 (Load Previous Game); string 0x4c8960 (Select Championship Course); string 0x4c8874 (Saved Games\)
+0043cb50,golf_clean.exe,editBoxTimer_dtor,ui,C1,located,,,,,,,"match re/match/golf_hand_r0.cpp; callee 0x004805a0 (Base4805a0::dtor), 0x004860d0 (EditBox::dtor), 0x00486ce0 (Timer::dtor)"
+0043cbd0,golf_clean.exe,editBoxTimer_deleteDtor,ui,C1,located,,,,,,,"match re/match/golf_raw_07.cpp; callee 0x0043cb50 (editBoxTimer_dtor), 0x004a4ffc (operator delete)"
 0043cc10,golf_clean.exe,arrayStaticInit_43cc10,crt,C1,located,,,,,,,match re/match/golf_arrays.cpp; import ??_L (vector ctor iterator)
 0043cc30,golf_clean.exe,registerExit_43cc30,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0043cc70,golf_clean.exe,staticCtor_43cc70,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
@@ -462,6 +487,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0044a410,golf_clean.exe,togglePath,terrain,C1,located,,,,,,,match re/match/golf_hand_r1.cpp; callee layPath/updatePath/hasPath (imports)
 0044a5b0,golf_clean.exe,rebuildTileData,terrain,C1,located,,,,,,,match re/match/golf_hand_r1.cpp; callee 0x449f00/0x449fa0/0x44a380/0x44a410
 0044a6e0,golf_clean.exe,renderTerrainStrip,terrain,C1,located,,,,,,,callee stripRender (Terrain import); caller 0x4498a0
+0044ac00,golf_clean.exe,listEraseRange,util,C1,located,,,,,,,caller 0x004498a0 (updateTerrainRender); callee 0x004a4ffc (operator delete)
 0044ac60,golf_clean.exe,initPanelState,ui,C1,located,,,,,,,match re/match/golf_small4.cpp; callee 0x4837f0 (ctor); writes g_821020/g_821ec8
 0044aca0,golf_clean.exe,registerExit_44aca0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0044ad20,golf_clean.exe,arrayStaticInit_44ad20,crt,C1,located,,,,,,,match re/match/golf_arrays.cpp; import ??_L (vector ctor iterator)
@@ -470,6 +496,8 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0044ad90,golf_clean.exe,registerExit_44ad90,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0044add0,golf_clean.exe,staticCtor_44add0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044ade0,golf_clean.exe,registerExit_44ade0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
+0044ae00,golf_clean.exe,gSurfaceDtor_44ae00,render,C1,located,,,,,,,match re/match/golf_hand_02.cpp; callee 0x00473ae0 (Surface_free); vtable 0x004ba2d8
+0044ae60,golf_clean.exe,gSurfaceCtor_44ae60,render,C1,located,,,,,,,caller 0x0044add0/0x0044aec0/0x0044af00/0x0044af40 (staticCtor thunks); callee 0x00473ab0 (Surface_ctor)
 0044aec0,golf_clean.exe,staticCtor_44aec0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044aed0,golf_clean.exe,registerExit_44aed0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0044af00,golf_clean.exe,staticCtor_44af00,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
@@ -478,20 +506,32 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0044af50,golf_clean.exe,registerExit_44af50,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0044af80,golf_clean.exe,staticCtor_44af80,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044af90,golf_clean.exe,registerExit_44af90,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
+0044afb0,golf_clean.exe,gSurfaceDtor_44afb0,render,C1,located,,,,,,,match re/match/golf_hand_05.cpp; callee 0x00473ae0 (Surface_free); vtable 0x004ba2d8
+0044b060,golf_clean.exe,gSurfaceCtor_44b060,render,C1,located,,,,,,,caller 0x0044af80/0x0044b100/0x0044b140 (staticCtor thunks); callee 0x00473ab0 (Surface_ctor)
 0044b100,golf_clean.exe,staticCtor_44b100,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044b110,golf_clean.exe,registerExit_44b110,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0044b140,golf_clean.exe,staticCtor_44b140,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044b150,golf_clean.exe,registerExit_44b150,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0044b180,golf_clean.exe,staticCtor_44b180,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044b190,golf_clean.exe,registerExit_44b190,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
+0044b1b0,golf_clean.exe,gSurfaceDtor_44b1b0,render,C1,located,,,,,,,"match re/match/golf_hand_08_e.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)"
+0044b2c0,golf_clean.exe,gSurfaceCtor_44b2c0,render,C1,located,,,,,,,"match re/match/golf_hand_07_44b2c0.cpp; caller 0x0044b180 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)"
 0044b3b0,golf_clean.exe,staticCtor_44b3b0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044b3c0,golf_clean.exe,registerExit_44b3c0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
+0044b3e0,golf_clean.exe,gSurfaceDtor_44b3e0,render,C1,located,,,,,,,"match re/match/golf_hand_r0.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)"
+0044b450,golf_clean.exe,gSurfaceCtor_44b450,render,C1,located,,,,,,,"match re/match/golf_hand_r2.cpp; caller 0x0044b3b0 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)"
 0044b4c0,golf_clean.exe,staticCtor_44b4c0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044b4d0,golf_clean.exe,registerExit_44b4d0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
+0044b4f0,golf_clean.exe,gSurfaceDtor_44b4f0,render,C1,located,,,,,,,"match re/match/golf_hand_05.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)"
+0044b5a0,golf_clean.exe,gSurfaceCtor_44b5a0,render,C1,located,,,,,,,"match re/match/golf_hand_05.cpp; caller 0x0044b4c0 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)"
 0044b660,golf_clean.exe,staticCtor_44b660,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044b670,golf_clean.exe,registerExit_44b670,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
+0044b690,golf_clean.exe,gSurfaceDtor_44b690,render,C1,located,,,,,,,"match re/match/golf_hand_02.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)"
+0044b6f0,golf_clean.exe,gSurfaceCtor_44b6f0,render,C1,located,,,,,,,"match re/match/golf_hand_02.cpp; caller 0x0044b660 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)"
 0044b760,golf_clean.exe,staticCtor_44b760,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; callee is an object constructor
 0044b770,golf_clean.exe,registerExit_44b770,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
+0044b790,golf_clean.exe,gSurfaceDtor_44b790,render,C1,located,,,,,,,match re/match/golf_hand_r3.cpp; callee 0x00473ae0 (Surface_free)
+0044b8d0,golf_clean.exe,gSurfaceCtor_44b8d0,render,C1,located,,,,,,,match re/match/golf_hand_07_44b8d0.cpp; caller 0x0044b760 (staticCtor); callee 0x00473ab0 (Surface_ctor)
 0044b9c0,golf_clean.exe,showCreditsScreen,video,C1,located,,,,,,,match re/match/golf_hand_s3.cpp; string 0x4d21a4 ($bink); string 0x4d21ac (CREDITS.txt)
 0044bde0,golf_clean.exe,loadInfoScreenArt,ui,C1,located,,,,,,,string 0x4d21e0 (tournament result_alpha.pcx); string 0x4d2534 (memberRoster.pcx)
 0044cce0,golf_clean.exe,resetAllPanels,ui,C1,located,,,,,,,match re/match/golf_hand_s2.cpp; destroys g_821020/g_821040/g_821070...; caller 0x45baf0
@@ -533,6 +573,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0045bac0,golf_clean.exe,registerExit_45bac0,crt,C1,located,,,,,,,match re/match/golf_raw_0*.cpp; import _atexit
 0045baf0,golf_clean.exe,gameMain,boot,C1,located,,,,,,,string 0x4d3910 (Sid Meier's SimGolf); string 0x4d3904 (jgld.dll); caller 0x4a682f (entry)
 0045bf80,golf_clean.exe,waitTicks,util,C1,located,,,,,,,match re/match/golf_small12.cpp; callee 0x45c030 (pumpMessages)
+0045c000,golf_clean.exe,Cursor_deleteDtor,render,C1,located,,,,,,,"match re/match/golf_raw_08.cpp; callee 0x004884b0 (Cursor::destroy), 0x004a4ffc (operator delete); vtable 0x004ba7f4"
 0045c030,golf_clean.exe,pumpMessages,input,C1,located,,,,,,,match re/match/golf_small12.cpp; callee 0x483cd0
 0045c0c0,golf_clean.exe,pumpAndRedraw,input,C1,located,,,,,,,callee 0x45c030 (pumpMessages); callee setDirtyFlagA/B; many callers
 0045c150,golf_clean.exe,pumpLight,input,C1,located,,,,,,,match re/match/golf_small3.cpp; callee 0x45c030 (pumpMessages)
@@ -561,7 +602,9 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00462a30,golf_clean.exe,enqueueSprite,render,C1,located,,,,,,,"writes DAT_00838200, DAT_00830164, DAT_00831164, DAT_0082415c; reads DAT_004c2844"
 00462be0,golf_clean.exe,drawQueuedSprite,render,C1,located,,,,,,,caller 0x00463100 (renderSpriteQueue); reads DAT_0082815c; callee 0x004740f0 (Surface_blit2)
 00463100,golf_clean.exe,renderSpriteQueue,render,C1,located,,,,,,,"caller 0x0040f5c0; callee 0x00462be0 (drawQueuedSprite); reads DAT_0082c160, DAT_008361f4"
+00463170,golf_clean.exe,boundIndex,util,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x00463180 (buildSceneSprites)
 00463180,golf_clean.exe,buildSceneSprites,render,C1,located,,,,,,,caller 0x0040f5c0; callee 0x0043d6f0 (cellAt); callee 0x004628d0 (addSprite)
+00465560,golf_clean.exe,resetScrollText,ui,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x0046dea0 (runScrollText); callee 0x00483d30 (enterModal483d30)
 004658b0,golf_clean.exe,loadThemes,course,C1,located,,,,,,,match re/match/golf_hand_07_4658b0.cpp; string 0x004c84e8; callee 0x004659a0 (loadGolferRoster)
 004659a0,golf_clean.exe,loadGolferRoster,golfer,C1,located,,,,,,,string 0x004e1848; string 0x004e188c; caller 0x004658b0 (loadThemes); callee 0x0043d2a0 (listFiles43d2a0)
 00466370,golf_clean.exe,advanceStory,golfer,C1,located,,,,,,,callee 0x004668f0 (storyText); callee 0x004722c0 (announceLandmark); note CLAUDE.md scenario golfer_stories
@@ -592,9 +635,12 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0046d200,golf_clean.exe,buildTournamentPrep,course,C1,located,,,,,,,string 0x004e3d54; string 0x004e3cc0
 0046d6e0,golf_clean.exe,showPopup,ui,C1,located,,,,,,,callee 0x0040cc00 (S2_panel40cc00); callee 0x0045bf80 (waitTicks); callee 0x0045c030 (pumpMessages); 11 callers
 0046ddd0,golf_clean.exe,startNewCourse,boot,C1,located,,,,,,,"callee 0x0046c970 (loadGolfPro); writes _g_cash_div100, g_date, g_flags"
+0046de40,golf_clean.exe,gImageCtor_838f98,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor)
+0046de50,golf_clean.exe,atexitThunk_46de50,crt,C1,located,,,,,,,match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
 0046de70,golf_clean.exe,scrollTextWindow,ui,C1,located,,,,,,,match re/match/golf_raw_13.cpp; callee 0x0046dea0 (runScrollText)
 0046dea0,golf_clean.exe,runScrollText,ui,C1,located,,,,,,,caller 0x0046de70 (scrollTextWindow); callee 0x0046e260 (drawScrollText); callee 0x0045bf80 (waitTicks)
 0046e260,golf_clean.exe,drawScrollText,ui,C1,located,,,,,,,caller 0x0046dea0 (runScrollText); callee 0x00477250 (Text_put)
+0046e710,golf_clean.exe,drawRectScaled,render,C1,located,,,,,,,"match re/match/golf_raw_08.cpp; caller 0x0046e260 (drawScrollText); callee 0x00404970 (scaleX), 0x004049a0 (drawLineOnSurface)"
 0046e7b0,golf_clean.exe,postEvent,sim,C1,located,,,,,,,match re/match/golf_hand_02.cpp; caller 0x00460df0 (announceHoleType)
 0046e810,golf_clean.exe,showBulletinBoard,ui,C1,located,,,,,,,string 0x004e3e58; string 0x004e3e7c; caller 0x0040f5c0
 0046f1d0,golf_clean.exe,tierPrice,economy,C1,located,,,,,,,match re/match/golf_small15.cpp
@@ -604,9 +650,11 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00470a60,golf_clean.exe,applyTerrainEdit,terrain,C1,located,,,,,,,callee 0x00402970 (spawnWalker); callee 0x0042f7a0 (r0_rebuild42f7a0); callee 0x00470a10 (clearTile)
 004722c0,golf_clean.exe,LandmarkAvailableNotice,course,C1,located,,,,,,,v1.03 adds string ' is now available in your landmarks menu.'; patch note 1.02 free landmarks (re/versions/PATCH_MAP.md)
 004724c0,golf_clean.exe,listThemes,frontend,C1,located,,,,,,,match re/match/golf_hand_07_4724c0.cpp; string 0x004c3c5c
+004725b0,golf_clean.exe,showThemePackSelect,frontend,C1,located,,,,,,,"string 0x004e40e0 (menu title), string 0x004e40f4, string 0x004e1868, string 0x004e4130; callee 0x00475840 (loadImage), 0x00480c80 (Window::refreshFull)"
 004732d0,golf_clean.exe,addScore,course,C1,located,,,,,,,match re/match/golf_hand_r1.cpp; string 0x004d6098
 00473470,golf_clean.exe,drawScoreSummary,ui,C1,located,,,,,,,string 0x004e4148; string 0x004e4170; caller 0x0044cff0 (showEndOfYearScreen)
 00473a70,golf_clean.exe,initGlobalImage,crt,C1,located,,,,,,,match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor); operates on DAT_00839348
+00473a80,golf_clean.exe,atexitThunk_473a80,crt,C1,located,,,,,,,match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
 00473ab0,golf_clean.exe,Surface_ctor,render,C1,located,,,,,,,match re/match/golf_hand_00.cpp; __fastcall ctor
 00473ae0,golf_clean.exe,Surface_init,render,C1,located,,,,,,,match re/match/golf_raw_11.cpp
 00473b50,golf_clean.exe,Surface_open,render,C1,located,,,,,,,match re/match/golf_hand_04.cpp; __thiscall(char* name)
@@ -623,13 +671,23 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00474260,golf_clean.exe,Sprite_drawScaled,render,C1,located,,,,,,,match re/match/golf_hand_08_h.cpp
 00474380,golf_clean.exe,Surface_draw,render,C1,located,,,,,,,match re/match/golf_hand_06_j.cpp
 00474440,golf_clean.exe,Surface_drawSprite,render,C1,located,,,,,,,calls backing-surface vtable +0x94
+004744c0,golf_clean.exe,Surface_copyFrom,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x00482570 (decodeImageChunks); callee 0x00473ae0 (Surface_free); g_graphicsDevice 0x0083ad50
 00474550,golf_clean.exe,Surface_create,render,C1,located,,,,,,,match re/match/golf_hand_03.cpp; __fastcall
 004745c0,golf_clean.exe,Surface_init2,render,C1,located,,,,,,,match re/match/golf_hand_04.cpp
 00474650,golf_clean.exe,Surface_get,render,C1,located,,,,,,,match re/match/golf_hand_05.cpp
+00474780,golf_clean.exe,Buf_init,util,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x004747a0 (Buf_ctor), 0x004747e0 (Buf_releaseData)"
+004747a0,golf_clean.exe,Buf_ctor,util,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x004882a0 (KeyTable::ctor), 0x00489150 (ListModel::ctor), 0x0048ce00 (TextView::ctor); callee 0x00474780 (Buf_init); vtable 0x004ba84c"
+004747c0,golf_clean.exe,Buf_deleteDtor,util,C1,located,,,,,,,"match re/match/golf_raw_08.cpp; callee 0x00474810 (Buf_dtor), 0x004a4ffc (operator delete)"
+004747e0,golf_clean.exe,Buf_releaseData,util,C1,located,,,,,,,"match re/match/golf_classes.cpp; caller 0x004894b0 (ListModel::clear), 0x0048d480 (TextView::reset); callee 0x004a5007 (free), 0x00474780 (Buf_init)"
+00474810,golf_clean.exe,Buf_dtor,util,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x004882f0 (KeyTable::dtor), 0x00489370 (ListModel::dtor), 0x00491710 (Dialog::dtor); callee 0x004747e0 (Buf_releaseData); vtable 0x004ba84c"
 00474820,golf_clean.exe,Buf_alloc,util,C1,located,,,,,,,match re/match/golf_small6.cpp
 00474860,golf_clean.exe,heapAlloc,util,C1,located,,,,,,,match re/match/golf_hand_s0_k.cpp; string 0x004e41b0
+00474a90,golf_clean.exe,gSurfaceCtor_839a68,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; callee 0x00473ab0 (Surface_ctor)
+00474aa0,golf_clean.exe,atexitThunk_474aa0,crt,C1,located,,,,,,,match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
 00474ae0,golf_clean.exe,Image_ctor,render,C1,located,,,,,,,match re/match/golf_hand_09_a.cpp; __fastcall ctor
+00474c20,golf_clean.exe,Image_deleteDtor,render,C1,located,,,,,,,"match re/match/golf_raw_08.cpp; callee 0x00474c40 (Image_dtor), 0x004a4ffc (operator delete)"
 00474c40,golf_clean.exe,Image_dtor,render,C1,located,,,,,,,match re/match/golf_hand_r0.cpp; virtual dtor
+00474cb0,golf_clean.exe,Image_releaseAll,render,C1,located,,,,,,,"match re/match/golf_raw_08.cpp; caller 0x0044b9c0 (showCreditsScreen), 0x0044bde0 (loadInfoScreenArt); callee 0x00483010 (Cache dtor), 0x004a5007 (free); g_graphicsDevice 0x0083ad50"
 00474dd0,golf_clean.exe,Surface_createFull,render,C1,located,,,,,,,match re/match/golf_hand_04.cpp; 7-arg create
 00474e70,golf_clean.exe,Surface_paint,render,C1,located,,,,,,,match re/match/golf_hand_03.cpp
 00474ee0,golf_clean.exe,loadBmp,render,C1,located,,,,,,,match re/match/golf_hand_r2.cpp; __stdcall; tagBITMAPINFO
@@ -638,6 +696,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00475410,golf_clean.exe,flipBmpRows,render,C1,located,,,,,,,match re/match/golf_hand_r3.cpp; __stdcall; tagBITMAPINFOHEADER
 00475580,golf_clean.exe,saveBmp,render,C1,located,,,,,,,caller 0x00407e00; callee _fwrite
 00475840,golf_clean.exe,loadImage,render,C1,located,,,,,,,string 0x004e4234; callee 0x00478cd0 (loadImageData); 22 callers
+00475b00,golf_clean.exe,Widget_fillRectR,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x00475b20 (Surface_box), 0x0047cdb0 (drawTooltip)"
 00475b20,golf_clean.exe,Surface_box,render,C1,located,,,,,,,match re/match/golf_hand_01.cpp
 00475b60,golf_clean.exe,DC_call84,render,C1,located,,,,,,,match re/match/golf_hand_01.cpp; calls DC vtable +0x84
 00475ba0,golf_clean.exe,DC_call90,render,C1,located,,,,,,,match re/match/golf_hand_01.cpp; calls DC vtable +0x90
@@ -647,16 +706,22 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00475c90,golf_clean.exe,Surface_fillRegion,render,C1,located,,,,,,,match re/match/golf_hand_03.cpp
 00475d00,golf_clean.exe,Surface_blit3,render,C1,located,,,,,,,match re/match/golf_hand_04.cpp
 00475da0,golf_clean.exe,Surface_fill,render,C1,located,,,,,,,match re/match/golf_hand_02.cpp
+00475df0,golf_clean.exe,drawRoutingPoly,render,C1,located,,,,,,,match re/match/golf_raw_08.cpp; caller 0x00456be0 (showRoutingMapScreen); callee 0x00493520 (fillConvexPoly)
 00475e10,golf_clean.exe,blitLeft,render,C1,located,,,,,,,caller 0x004791b0 (drawComposite); callee 0x00475b00
 00475fb0,golf_clean.exe,blitMid,render,C1,located,,,,,,,caller 0x004791b0 (drawComposite)
 00476140,golf_clean.exe,blitRight,render,C1,located,,,,,,,caller 0x004791b0 (drawComposite); callee 0x00473e60 (Image_draw)
 004762d0,golf_clean.exe,setDrawTarget,render,C1,located,,,,,,,writes this+0x5c/0x60/0x64/0x68
 00476310,golf_clean.exe,Widget_setQuad,ui,C1,located,,,,,,,match re/match/golf_small2.cpp; 40 callers
+00476340,golf_clean.exe,Widget_setQuad70,ui,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x004887c0 (Button::create), 0x00488970 (Button::setColorHover)"
+00476370,golf_clean.exe,Widget_setQuad74,ui,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x004887c0 (Button::create), 0x004889b0 (Button::setColorPressed)"
+004763a0,golf_clean.exe,Widget_setQuad78,ui,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x0048e900 (TextView::build), 0x0048fe60 (TextView::render)"
+004763d0,golf_clean.exe,drawMenuList,ui,C1,located,,,,,,,"callee 0x00402130 (listIterNext), 0x00402160 (listIterValue), 0x00478750 (TextView_beginDrawRun), 0x00477580 (Widget_value), 0x00478970 (Text_flush)"
 00476650,golf_clean.exe,Widget_draw,ui,C1,located,,,,,,,match re/match/golf_hand_02.cpp
 004766a0,golf_clean.exe,Widget_draw2,ui,C1,located,,,,,,,match re/match/golf_hand_02.cpp
 00476700,golf_clean.exe,drawStringAt,ui,C1,located,,,,,,,callee 0x00477fc0 (drawStringLeft)
 00476750,golf_clean.exe,drawStringAt2,ui,C1,located,,,,,,,callee 0x00478140 (drawString)
 004767a0,golf_clean.exe,allocTextBuffer,ui,C1,located,,,,,,,caller 0x004775b0 (drawRichText); callee _malloc
+00476d40,golf_clean.exe,scanMarkupText,ui,C1,located,,,,,,,"caller 0x00476ef0 (measureMarkupRun), 0x00477280 (drawMarkupRun), 0x004775b0 (drawRichText)"
 00476d80,golf_clean.exe,skipToken,ui,C1,located,,,,,,,match re/match/golf_hand_01.cpp
 00476dd0,golf_clean.exe,scanToken,ui,C1,located,,,,,,,match re/match/golf_hand_02.cpp
 00476e20,golf_clean.exe,wrapText,ui,C1,located,,,,,,,match re/match/golf_hand_r0.cpp
@@ -678,29 +743,55 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 004782d0,golf_clean.exe,measureText,ui,C1,located,,,,,,,callee 0x00476ef0 (measureMarkupRun); callee 0x00477c30 (drawText)
 00478430,golf_clean.exe,measureText2,ui,C1,located,,,,,,,callee 0x00476ef0 (measureMarkupRun)
 00478530,golf_clean.exe,measureText3,ui,C1,located,,,,,,,callee 0x00476ef0; callee 0x00477da0 (drawCentered2)
+004785e0,golf_clean.exe,TextView_beginMeasure,ui,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x0048fe60 (TextView::render); callee 0x00478610 (measureText4)
 00478610,golf_clean.exe,measureText4,ui,C1,located,,,,,,,callee 0x00476ef0; callee 0x00477250 (Text_put)
+00478700,golf_clean.exe,TextView_endSegment,ui,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x0048fe60 (TextView::render); callee 0x00477580 (Widget_value)
+00478750,golf_clean.exe,TextView_beginDrawRun,ui,C1,located,,,,,,,match re/match/golf_raw_11.cpp; caller 0x004763d0 (drawMenuList); callee 0x004787a0 (drawTextBlock)
 004787a0,golf_clean.exe,drawTextBlock,ui,C1,located,,,,,,,callee 0x00476ef0; callee 0x00477c30 (drawText)
 00478970,golf_clean.exe,Text_flush,ui,C1,located,,,,,,,match re/match/golf_hand_04.cpp
+004789f0,golf_clean.exe,Widget_applyPalette,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x00485790 (Image::loadPcx), 0x00495100 (decodeImagePaletted), 0x00488970 (Button::setColorHover)"
 00478a20,golf_clean.exe,List_reset,ui,C1,located,,,,,,,match re/match/golf_small7.cpp
 00478a70,golf_clean.exe,Widget_reset,ui,C1,located,,,,,,,match re/match/golf_small2.cpp
 00478a90,golf_clean.exe,addDropdownSpot,ui,C1,located,,,,,,,match re/match/golf_raw_13.cpp; string 0x004e428c
 00478af0,golf_clean.exe,Win_fillRect,ui,C1,located,,,,,,,match re/match/golf_small6.cpp
+00478b30,golf_clean.exe,Widget_clearArea,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x0047d850 (drawPanelContents), 0x004808c0 (Window::paint)"
+00478b50,golf_clean.exe,Widget_fillArea,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x00478af0 (Win_fillRect), 0x0047cdb0 (drawTooltip), 0x00480a10 (Window::paintBackground)"
+00478b80,golf_clean.exe,Widget_fillRect,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x00407e00 (narrateShot), 0x0045c560 (drawGolferInfoPanel), 0x004049a0 (drawLineOnSurface)"
+00478bb0,golf_clean.exe,Widget_drawHLine,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x00479560 (Widget_drawBevelBox)
+00478be0,golf_clean.exe,Widget_drawVLine,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x00479560 (Widget_drawBevelBox)
+00478c10,golf_clean.exe,Widget_drawHLineDepth,render,C1,located,,,,,,,"match re/match/golf_raw_13.cpp; caller 0x00479610 (Widget_drawBox); callee 0x00485d40 (Image::hline), 0x00494d30 (drawColorRunA)"
+00478c70,golf_clean.exe,Widget_drawVLineDepth,render,C1,located,,,,,,,"match re/match/golf_raw_13.cpp; caller 0x00479610 (Widget_drawBox); callee 0x00485e80 (Image::vline), 0x00494f00 (drawColorRunB)"
 00478cd0,golf_clean.exe,loadImageData,render,C1,located,,,,,,,match re/match/golf_hand_r3.cpp; string 0x004e4218
 00478df0,golf_clean.exe,drawLineH,render,C1,located,,,,,,,callee 0x004796a0 (Surface_pixelPtr)
 00478ea0,golf_clean.exe,drawLineV,render,C1,located,,,,,,,callee 0x004796a0 (Surface_pixelPtr)
 00478f50,golf_clean.exe,openImageAsset,render,C1,located,,,,,,,string 0x004e4234; string 0x004e42b0; string 0x004e42b8
 004791b0,golf_clean.exe,drawComposite,render,C1,located,,,,,,,callee 0x00475e10/0x00475fb0/0x00476140
+00479560,golf_clean.exe,Widget_drawBevelBox,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x004795d0 (Widget_drawBevelBoxR), 0x004a3f10 (panelDraw4a3f10); callee 0x00478bb0 (Widget_drawHLine), 0x00478be0 (Widget_drawVLine)"
+004795d0,golf_clean.exe,Widget_drawBevelBoxR,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x0047cdb0 (drawTooltip), 0x00496fc0 (scrollbarDraw); callee 0x00479560 (Widget_drawBevelBox)"
+00479610,golf_clean.exe,Widget_drawBox,render,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x00479670 (Widget_drawBoxR); callee 0x00478c10 (Widget_drawHLineDepth), 0x00478c70 (Widget_drawVLineDepth)"
+00479670,golf_clean.exe,Widget_drawBoxR,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x0049dab0 (listPanelDraw); callee 0x00479610 (Widget_drawBox)
 004796a0,golf_clean.exe,Surface_pixelPtr,render,C1,located,,,,,,,match re/match/golf_hand_r0.cpp
 00479830,golf_clean.exe,blendRed,render,C1,located,,,,,,,match re/match/golf_hand_04.cpp
 004798c0,golf_clean.exe,blendGreen,render,C1,located,,,,,,,match re/match/golf_hand_04.cpp
 00479950,golf_clean.exe,drawPixelRun,render,C1,located,,,,,,,callee 0x004796a0 (Surface_pixelPtr)
+004799f0,golf_clean.exe,gImageCtor_83a500,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor)
+00479a00,golf_clean.exe,atexitThunk_479a00,crt,C1,located,,,,,,,match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
+00479a40,golf_clean.exe,gImageCtor_83a7b8,render,C1,located,,,,,,,match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor)
+00479a50,golf_clean.exe,atexitThunk_479a50,crt,C1,located,,,,,,,match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
 00479a80,golf_clean.exe,Surface_clip,render,C1,located,,,,,,,match re/match/golf_hand_05.cpp; tagRECT
+00479b20,golf_clean.exe,releaseCursorClip,input,C1,located,,,,,,,match re/match/golf_raw_02.cpp; caller 0x0047b820 (Window::detach); import ClipCursor
+00479b40,golf_clean.exe,ChildArray_grow,ui,C1,located,,,,,,,"match re/match/golf_raw_08.cpp; caller 0x0047e5f0 (ChildArray::insert); callee 0x004a504f (malloc), 0x004a5007 (free)"
 00479bb0,golf_clean.exe,Vec_release,util,C1,located,,,,,,,"match re/match/golf_classes.cpp; field +0x224 buffer, +0x228 refcount; callee _free"
 00479c40,golf_clean.exe,View_ctor,ui,C1,located,,,,,,,installs vtables 0x4ba8b4 and 0x4baa10
+00479f10,golf_clean.exe,View_deleteDtor,ui,C1,located,,,,,,,"match re/match/golf_raw_08.cpp; callee 0x0047a3c0 (View_dtor), 0x004a4ffc (operator delete)"
 00479f30,golf_clean.exe,layoutNode,ui,C1,located,,,,,,,callee 0x00479f30 (self); callee 0x0047b080 (contains@Node47b)
 0047a3c0,golf_clean.exe,View_dtor,ui,C1,located,,,,,,,match re/match/golf_hand_r0.cpp; virtual dtor
 0047a4c0,golf_clean.exe,layoutViewTree,ui,C1,located,,,,,,,string 0x004e42f0; string 0x004e4304; callee 0x00479f30 (layoutNode)
+0047ab00,golf_clean.exe,EditBox_setCursorChar,input,C1,located,,,,,,,match re/match/golf_raw_13.cpp; caller 0x00486110 (EditBox::create); callee 0x0047d130 (drawCursor)
+0047ab50,golf_clean.exe,View_toLocal,ui,C1,located,,,,,,,"match re/match/golf_raw_13.cpp; caller 0x0040f5c0 (mainLoop), 0x0045c560 (drawGolferInfoPanel); callee 0x0047b200 (View::fromParent); g_graphicsDevice 0x0083ad50"
+0047abc0,golf_clean.exe,isPrimaryMouseDown,input,C1,located,,,,,,,"match re/match/golf_raw_02.cpp; caller 0x00488cf0 (Button::onMouseMove); import GetAsyncKeyState, GetSystemMetrics"
 0047abe0,golf_clean.exe,View_attach,ui,C1,located,,,,,,,match re/match/golf_hand_r2.cpp
+0047ada0,golf_clean.exe,View_unlinkFromParent,ui,C1,located,,,,,,,match re/match/golf_raw_14.cpp; caller 0x00479f30 (layoutNode); callee 0x004a5007 (free)
 0047ae80,golf_clean.exe,setFocusItem,ui,C1,located,,,,,,,writes DAT_0083ab98; calls item vtable +0xf0
 0047af60,golf_clean.exe,Container::cycleSelection,ui,C1,located,,,,,,,match re/match/golf_hand_08_t_sw2.cpp
 0047b080,golf_clean.exe,Node::contains,ui,C1,located,,,,,,,match re/match/golf_small8.cpp
@@ -844,6 +935,8 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00483850,golf_clean.exe,Surface::createSized,render,C1,located,,,,,,,match re/match/golf_raw_13.cpp
 004838b0,golf_clean.exe,Surface::releaseBacking,render,C1,located,,,,,,,match re/match/golf_raw_03.cpp
 004838f0,golf_clean.exe,Stream4838f0::puts,render,C1,located,,,,,,,match re/match/golf_hand_01.cpp
+00483930,golf_clean.exe,measureTextWidth,ui,C1,located,,,,,,,"caller 0x004767a0 (allocTextBuffer), 0x00477280 (drawMarkupRun), 0x00483980 (wrapTextToWidth)"
+00483980,golf_clean.exe,wrapTextToWidth,ui,C1,located,,,,,,,"caller 0x00476ef0 (measureMarkupRun); callee 0x00483930 (measureTextWidth), 0x004a6ba0 (memchr)"
 00483ac0,golf_clean.exe,setPrimarySurface,render,C1,located,,,,,,,match re/match/golf_raw_13.cpp;string 0x004e43ac
 00483b10,golf_clean.exe,clearPrimarySurface,render,C1,located,,,,,,,match re/match/golf_raw_11.cpp
 00483b90,golf_clean.exe,Surface::ctorVtbl483b90,render,C1,located,,,,,,,match re/match/golf_raw_03.cpp
@@ -1123,10 +1216,12 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 004935b0,golf_clean.exe,reverseFindChar,util,C1,located,,,,,,,none
 004935f0,golf_clean.exe,findByteInRange,util,C1,located,,,,,,,match re/match/golf_hand_01.cpp; caller 0x004942f0 (expandTextMarkup)
 00493630,golf_clean.exe,fill16,render,C1,located,,,,,,,match re/match/golf_hand_01.cpp; caller 0x00495420 (decodeImage16)
+00493670,golf_clean.exe,TextView_layoutRun,ui,C1,located,,,,,,,match re/match/golf_raw_04.cpp; caller 0x0049acf0 (netHandleControl); callee 0x0048e1c0 (TextView::layout)
 004936a0,golf_clean.exe,comboInit,ui,C1,located,,,,,,,"caller 0x004775b0; callee 0x00493ef0 (comboSetItems), 0x00494020 (listSetItems), 0x00493a60 (comboRefresh), setValue/create widgets"
 00493a30,golf_clean.exe,comboRefreshThunk,ui,C1,located,,,,,,,match re/match/golf_raw_04.cpp; callee 0x00493a60 (comboRefresh)
 00493a60,golf_clean.exe,comboRefresh,ui,C1,located,,,,,,,"match re/match/golf_hand_r2.cpp; callee 0x00493f50 (comboLayoutItems), drawBox 0x00477e60, setQuad, 0x004941e0/0x004942a0 (current index)"
 00493b90,golf_clean.exe,comboOpenPopup,ui,C1,located,,,,,,,"caller 0x004936a0 (comboInit); callee toParent 0x0047b170, moveTo 0x0047b420, 0x00493a60 (comboRefresh)"
+00493ed0,golf_clean.exe,comboListQuery,ui,C1,located,,,,,,,"match re/match/golf_raw_04.cpp; caller 0x004775b0 (drawRichText), 0x00493b90 (comboOpenPopup)"
 00493ef0,golf_clean.exe,comboSetItems,ui,C1,located,,,,,,,match re/match/golf_hand_03.cpp; callee 0x00493f50 (comboLayoutItems)
 00493f50,golf_clean.exe,comboLayoutItems,ui,C1,located,,,,,,,"match re/match/golf_hand_06_o.cpp; callee draw 0x00473e60, 0x00476140"
 00494020,golf_clean.exe,listSetItems,ui,C1,located,,,,,,,match re/match/golf_hand_r0.cpp; callee moveTo 0x0047b420
@@ -1139,6 +1234,8 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00494f00,golf_clean.exe,drawColorRunB,render,C1,located,,,,,,,"caller 0x00478c70; sibling of 0x00494d30, same palette-lookup-then-write-16bit shape"
 00495100,golf_clean.exe,decodeImagePaletted,render,C1,located,,,,,,,"string 0x004e472c (string in the binary); callee setPalette 0x004830e0, paint 0x00474e70, _strncmp; caller 0x00478cd0 (load@r3_C478cd0)"
 00495420,golf_clean.exe,decodeImage16,render,C1,located,,,,,,,"string 0x004e4748 (string in the binary); callee 0x00493630 (fill16), paint 0x00474e70; caller 0x00478cd0"
+00495770,golf_clean.exe,redrawRegion,render,C1,located,,,,,,,"match re/match/golf_small17.cpp; callee 0x0047f8e0 (redrawDrawList), 0x0047cdb0 (drawTooltip)"
+00495cb0,golf_clean.exe,Timer_fire,ui,C1,located,,,,,,,match re/match/golf_hand_03.cpp; callee 0x00486ec0 (Timer::stop)
 00495d30,golf_clean.exe,initWidgetTable,ui,C1,located,,,,,,,match re/match/golf_hand_r2.cpp; caller 0x00479c40; writes the 0x60-entry table at g_widgetTable 0x0083fe78
 00495eb0,golf_clean.exe,resetWidgetTable,ui,C1,located,,,,,,,"match re/match/golf_raw_06.cpp; writes the same table g_widgetTable 0x0083fe78; callers 0x00479f30, 0x0047a3c0, 0x0047d7c0"
 00496030,golf_clean.exe,buildLabeledControl,ui,C1,located,,,,,,,"match re/match/golf_hand_r2.cpp; callee 0x004804a0, 0x004a13f0 (ctorObj4a13f0); reads the 11-string label table at 0x004e4764"
@@ -1177,11 +1274,14 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0049b7b0,golf_clean.exe,netPoll,net,C1,located,,,,,,,"match re/match/golf_hand_r0.cpp; callers 0x00497fc0/0x00499140; callee pop 0x004a4c70 (queuePop), netQueueMessage"
 0049b970,golf_clean.exe,netHeapAlloc,net,C1,located,,,,,,,"string 0x004c1434 (string in the binary), 0x004c1458 (string in the binary); callee _malloc, _exit, alloc 0x00474860"
 0049bec0,golf_clean.exe,netListRemove,net,C1,located,,,,,,,match re/match/golf_hand_05.cpp; caller 0x0049acf0 (netHandleControl)
+0049bf70,golf_clean.exe,screenObj_deleteDtor,ui,C1,located,,,,,,,"match re/match/golf_raw_14.cpp; callee 0x004853d0 (Screen::dtor), 0x004a5007 (free); vtable 0x004ba278"
 0049bff0,golf_clean.exe,initGlobalObj_49c020,ui,C1,located,,,,,,,match re/match/golf_raw_05.cpp; callee 0x0049c020 (ctorGlobalObj49c020)
 0049c000,golf_clean.exe,regAtexit_49c000,crt,C1,located,,,,,,,match re/match/golf_raw_09.cpp; callee _atexit 0x004a56d2
 0049c020,golf_clean.exe,ctorGlobalObj49c020,ui,C1,located,,,,,,,"match re/match/golf_hand_r1.cpp; callee ctors 0x004804a0, 0x004837f0, 0x00486c90"
 0049c780,golf_clean.exe,globalObjDtor49c780,ui,C1,located,,,,,,,"match re/match/golf_hand_04.cpp; callee member dtors 0x004805a0/0x00486ce0, 0x0049c0a0"
 0049c800,golf_clean.exe,globalObjDeleteDtor49c800,ui,C1,located,,,,,,,"match re/match/golf_raw_09.cpp; callee 0x0049c780 (globalObjDtor49c780), operator delete 0x004a4ffc"
+0049c830,golf_clean.exe,createCache,render,C1,located,,,,,,,"callee 0x00482fd0 (Cache482fd0::ctor), 0x004a57f1 (operator new)"
+0049c8b0,golf_clean.exe,freeCacheField,ui,C1,located,,,,,,,"match re/match/golf_raw_12.cpp; callee 0x00483010 (Cache dtor), 0x004a4ffc (operator delete)"
 0049c8e0,golf_clean.exe,serviceMovie,video,C1,located,,,,,,,callers showScreen/hideScreen/redrawAll 0x00483bb0..; callee 0x0049c910 (serviceMovieFrame)
 0049c910,golf_clean.exe,serviceMovieFrame,video,C1,located,,,,,,,"match re/match/golf_raw_05.cpp; callee 0x0049cae0 (movieDecodeStart), 0x0049cb20 (movieReadProcess), 0x0049ccc0 (moviePlayFrame)"
 0049c940,golf_clean.exe,movieAdvanceFrame,video,C1,located,,,,,,,"string 0x004e4924 (string in the binary), 0x004e4910 (string in the binary), 0x004e48f4 (string in the binary); callee logLine 0x004a0320"
@@ -1194,6 +1294,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0049d010,golf_clean.exe,initPairArrayGlobal,util,C1,located,,,,,,,match re/match/golf_raw_05.cpp; callee 0x0049d050; writes global 0x008406e8
 0049d020,golf_clean.exe,regAtexit_49d020,crt,C1,located,,,,,,,match re/match/golf_raw_09.cpp; callee _atexit
 0049d050,golf_clean.exe,allocPairArray,util,C1,located,,,,,,,match re/match/golf_raw_05.cpp; callee 0x004747a0
+0049d070,golf_clean.exe,pairArray_deleteDtor,util,C1,located,,,,,,,"match re/match/golf_raw_09.cpp; callee 0x00474810 (Buf_dtor), 0x004a4ffc (operator delete)"
 0049d090,golf_clean.exe,strAssign,util,C1,located,,,,,,,"match re/match/golf_small7.cpp; string 0x004e49f4 (string in the binary); callee alloc 0x00474820, dup 0x0049d100"
 0049d0e0,golf_clean.exe,strFree,util,C1,located,,,,,,,match re/match/golf_raw_05.cpp; callee dtor 0x004747e0; caller strAssign
 0049d100,golf_clean.exe,strDup,util,C1,located,,,,,,,match re/match/golf_small7.cpp; callee alloc 0x00474860
@@ -1222,6 +1323,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0049dab0,golf_clean.exe,listPanelDraw,ui,C1,located,,,,,,,"callers 0x0049e230 (listPanelOnScroll), 0x0049e450; callee setQuad 0x00476310, drawCentered 0x00477cd0, drawRight 0x004781f0, draw 0x00473e60"
 0049e230,golf_clean.exe,listPanelOnScroll,ui,C1,located,,,,,,,"match re/match/golf_hand_s0.cpp; callee 0x0049dab0 (listPanelDraw), refresh 0x00480ce0, getSel 0x00489950"
 0049e450,golf_clean.exe,listPanelRefresh,ui,C1,located,,,,,,,"callee 0x0049dab0 (listPanelDraw), refresh 0x00480ce0"
+0049e640,golf_clean.exe,listSelectionChanged,ui,C1,located,,,,,,,match re/match/golf_raw_12.cpp; callee 0x00489950 (ListModel::selectedId)
 0049e7d0,golf_clean.exe,listPanelReadValue,ui,C1,located,,,,,,,callee value477580 0x00477580; reads widget value fields
 0049e9d0,golf_clean.exe,loadCursors,input,C1,located,,,,,,,match re/match/golf_hand_r2.cpp; string 0x004e49fc (string in the binary); writes cursor globals 0x00840830/0x00840860/0x00840890
 0049ead0,golf_clean.exe,freeCursors,input,C1,located,,,,,,,match re/match/golf_raw_06.cpp; callee 0x00473ae0; frees cursor globals 0x00840830/0x00840860/0x00840890
@@ -1267,6 +1369,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 004a11c0,golf_clean.exe,panelStop,ui,C1,located,,,,,,,"match re/match/golf_hand_02.cpp; caller 0x0048fe60; callee panelBuildText 0x0049d770, optionDialogDraw 0x0049f050, 0x004a2a60, 0x004a3be0"
 004a1250,golf_clean.exe,viewDispatchOpen,ui,C1,located,,,,,,,"match re/match/golf_hand_04.cpp; caller init 0x0048db60; callee open 0x004896b0, viewFieldCleanup49d690/49ece0, reset 0x004a23a0"
 004a12e0,golf_clean.exe,viewDispatchReset,ui,C1,located,,,,,,,"match re/match/golf_hand_04.cpp; caller init 0x0048db60; callee reset 0x004897f0, viewFieldCleanup49d690/49ece0, 0x004a3860"
+004a1370,golf_clean.exe,getFieldValueByKind,ui,C1,located,,,,,,,"match re/match/golf_raw_05.cpp; caller 0x0048e1c0 (TextView::layout), 0x00490960 (TextView::select)"
 004a13f0,golf_clean.exe,ctorObj4a13f0,ui,C1,located,,,,,,,match re/match/golf_hand_06_e.cpp; callers 0x0048ce00/0x0048e900/0x00496030; callee ctor 0x00488500
 004a14c0,golf_clean.exe,resetMsgObject,util,C1,located,,,,,,,"match re/match/golf_hand_05.cpp; callers netSendMessages 0x00499140, comboDtor 0x00497a20; callee 0x004886d0"
 004a2250,golf_clean.exe,viewFieldCtor4a2250,ui,C1,located,,,,,,,"match re/match/golf_hand_06_g.cpp; caller viewCtor4a0740; callee 0x004804a0, 0x00489150"
@@ -1299,12 +1402,14 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 004a4680,golf_clean.exe,panelOnKey,ui,C1,located,,,,,,,match re/match/golf_hand_r2.cpp; callee panelDraw4a3f10 0x004a3f10
 004a4890,golf_clean.exe,listFindById,ui,C1,located,,,,,,,match re/match/golf_hand_02.cpp; caller panelOnPick 0x004a4350
 004a48f0,golf_clean.exe,listGetAt,util,C1,located,,,,,,,match re/match/golf_hand_04.cpp
+004a4ad0,golf_clean.exe,findMarkupTokenIndex,ui,C1,located,,,,,,,match re/match/golf_raw_13.cpp; caller 0x004942f0 (expandTextMarkup)
 004a4b00,golf_clean.exe,listClear4a4b,util,C1,located,,,,,,,match re/match/golf_classes.cpp; caller netSendShutdown 0x00497d10; callee _free
 004a4b60,golf_clean.exe,listAppend4a4b60,util,C1,located,,,,,,,match re/match/golf_hand_08_c.cpp; callers netService/netSendMessages; callee _malloc
 004a4c70,golf_clean.exe,queuePop,util,C1,located,,,,,,,match re/match/golf_hand_06_k.cpp; caller netPoll 0x0049b7b0; callee _free
 004a4d30,golf_clean.exe,listClearThunk,util,C1,located,,,,,,,match re/match/golf_raw_05.cpp; callee 0x004a4d50 (listClear4a4d)
 004a4d50,golf_clean.exe,listClear4a4d,util,C1,located,,,,,,,match re/match/golf_hand_02.cpp; callee _free
 004a4db0,golf_clean.exe,listPush,util,C1,located,,,,,,,"match re/match/golf_hand_07_4a4db0.cpp; caller movieReadFrame 0x0049cb90; callee removeHead 0x004a4ed0, _malloc"
+004a4ea0,golf_clean.exe,readListNode,util,C1,located,,,,,,,match re/match/golf_raw_05.cpp; caller 0x0049ccc0 (moviePlayFrame)
 004a4ed0,golf_clean.exe,listRemoveHead,util,C1,located,,,,,,,"match re/match/golf_classes.cpp; callers moviePlayFrame 0x0049ccc0, listPush; callee _free"
 004a4fc4,golf_clean.exe,initFpControl,crt,C1,located,,,,,,,match re/match/golf_hand_01.cpp; caller __fpmath 0x004a4fac; writes FP control globals 0x004e4b00..0x004e4b14
 004a512a,golf_clean.exe,doexit,crt,C1,located,,,,,,,"callers _exit 0x004a5108, __exit 0x004a5119; callee __initterm 0x004a51e1, __lockexit"
@@ -1546,27 +1651,81 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00009120,jgld.dll,rectWidth,util,C1,located,,,,,,,match re/match/jgld_raw_02.cpp
 00009160,jgld.dll,rectHeight,util,C1,located,,,,,,,match re/match/jgld_raw_02.cpp
 000091a0,jgld.dll,Surface::blitT,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x10013c50/0x10012db0/0x1000ed70"
+000092e0,jgld.dll,initDepthInfo,render,C1,located,,,,,,,caller 0x10007660 (Surface::ctor)
 00009320,jgld.dll,Surface::fillRect,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
 00009440,jgld.dll,Surface::fill2,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
 000094e0,jgld.dll,Surface::drawLine,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x1000fb70 (line8)/0x1000b140 (line16)"
 000095a0,jgld.dll,Surface::drawDashedLine,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x10010870 (dashedLine8)/0x1000c140 (dashedLine16)"
 00009690,jgld.dll,SurfaceBase::ctor,render,C1,located,,,,,,,"match re/match/jgld_raw_02.cpp, vtable 0x1011d220, callee 0x10006ab0 (Tracked::ctor)"
 000096f0,jgld.dll,SurfaceBase::dtor,render,C1,located,,,,,,,"match re/match/jgld_raw_02.cpp, vtable 0x1011d220, callee 0x10006b80 (Tracked::dtor)"
+00009740,jgld.dll,SurfaceBase::acquireDC_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
 00009770,jgld.dll,Surface::fillRectDispatch,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x10011dd0/0x1000dcf0"
+00009810,jgld.dll,SurfaceBase::releaseDC_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+00009870,jgld.dll,SurfaceBase::blitT_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+000098b0,jgld.dll,SurfaceBase::fillRect_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
 000098f0,jgld.dll,Surface::blit16,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
+000099c0,jgld.dll,SurfaceBase::fill2_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+00009a00,jgld.dll,SurfaceBase::drawLine_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+00009a40,jgld.dll,SurfaceBase::drawDashedLine_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+00009a80,jgld.dll,SurfaceBase::defaultVfn68,render,C1,located,,,,,,,vtable 0x1011d220
 00009ac0,jgld.dll,Surface::blendRectDispatch,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x1000dfc0 (blendRect16)"
+00009b50,jgld.dll,SurfaceBase::defaultVfn6c,render,C1,located,,,,,,,vtable 0x1011d220
+00009b90,jgld.dll,SurfaceBase::defaultVfn70,render,C1,located,,,,,,,vtable 0x1011d220
+00009bd0,jgld.dll,SurfaceBase::loadPng_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+00009c10,jgld.dll,SurfaceBase::saveImage_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
 00009c50,jgld.dll,Surface::ditherRectDispatch,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x10011f80/0x1000e580"
+00009d00,jgld.dll,SurfaceBase::defaultVfn7c,render,C1,located,,,,,,,vtable 0x1011d220
+00009d40,jgld.dll,SurfaceBase::drawTo_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+00009d80,jgld.dll,SurfaceBase::defaultVfn88,render,C1,located,,,,,,,vtable 0x1011d220
+00009dc0,jgld.dll,SurfaceBase::defaultVfn90,render,C1,located,,,,,,,vtable 0x1011d220
+00009e00,jgld.dll,SurfaceBase::drawToZ_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
 00009e40,jgld.dll,Surface::ditherBlendRectDispatch,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x1000e8b0 (ditherBlendRect16)"
+00009ed0,jgld.dll,SurfaceBase::defaultVfn94,render,C1,located,,,,,,,vtable 0x1011d220
+00009f10,jgld.dll,SurfaceBase::defaultVfn98,render,C1,located,,,,,,,vtable 0x1011d220
+00009f50,jgld.dll,SurfaceBase::defaultVfn80,render,C1,located,,,,,,,vtable 0x1011d220
+00009f90,jgld.dll,SurfaceBase::defaultVfn9c,render,C1,located,,,,,,,vtable 0x1011d220
 00009fd0,jgld.dll,Surface::drawTo,render,C1,located,,,,,,,match re/match/jgld_surface_sprite.cpp
+0000a170,jgld.dll,SurfaceBase::defaultVfna4,render,C1,located,,,,,,,vtable 0x1011d220
+0000a1b0,jgld.dll,SurfaceBase::defaultVfna0,render,C1,located,,,,,,,vtable 0x1011d220
+0000a1f0,jgld.dll,SurfaceBase::selectObject_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+0000a230,jgld.dll,SurfaceBase::selectSystemFont_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+0000a270,jgld.dll,SurfaceBase::setTextColorRGB_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+0000a2b0,jgld.dll,SurfaceBase::setTextColor16_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
+0000a2f0,jgld.dll,SurfaceBase::textOut_default,render,C1,located,,,,,,,"vtable 0x1011d220, vtable 0x1011d0b0"
 0000a330,jgld.dll,Surface::drawToZ,render,C1,located,,,,,,,match re/match/jgld_surface_sprite.cpp
 0000a4e0,jgld.dll,SurfaceBase::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_02.cpp, callee 0x100096f0 (SurfaceBase::dtor)"
 0000a550,jgld.dll,Surface::saveImage,render,C1,located,,,,,,,"match re/match/jgld_surface.cpp, callee 0x10012140 (writePcx8)"
+0000a5d0,jgld.dll,Surface::setField4d0,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000a620,jgld.dll,Surface::getField4d0,render,C1,located,,,,,,,vtable 0x1011d0b0
 0000a660,jgld.dll,makeColor,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
+0000a750,jgld.dll,Surface::fwdVfn18,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000a7b0,jgld.dll,Surface::fwdVfn20,render,C1,located,,,,,,,vtable 0x1011d0b0
 0000a810,jgld.dll,Surface::call3a,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
 0000a870,jgld.dll,Surface::call3b,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
 0000a8d0,jgld.dll,Surface::callBounds,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
 0000a930,jgld.dll,Surface::getClip,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
+0000a990,jgld.dll,Surface::getClipRectPtr,render,C1,located,,,,,,,vtable 0x1011d0b0
 0000a9d0,jgld.dll,Surface::getBounds,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
+0000aa30,jgld.dll,Surface::getBoundsRectPtr,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000aa70,jgld.dll,Surface::width,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000aab0,jgld.dll,Surface::height,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000aaf0,jgld.dll,Surface::getField40,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ab30,jgld.dll,Surface::getDepthPtr,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ab70,jgld.dll,Surface::getField7c,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000abb0,jgld.dll,Surface::unimplVfn68,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000abf0,jgld.dll,Surface::unimplVfn6c,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ac30,jgld.dll,Surface::unimplVfn70,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ac70,jgld.dll,Surface::unimplVfn7c,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000acb0,jgld.dll,Surface::unimplVfn88,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000acf0,jgld.dll,Surface::unimplVfn90,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ad30,jgld.dll,Surface::unimplVfn94,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ad70,jgld.dll,Surface::unimplVfn98,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000adb0,jgld.dll,Surface::unimplVfn80,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000adf0,jgld.dll,Surface::unimplVfn9c,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ae30,jgld.dll,Surface::unimplVfna4,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000ae70,jgld.dll,Surface::unimplVfna0,render,C1,located,,,,,,,vtable 0x1011d0b0
+0000aeb0,jgld.dll,setField28,render,C1,located,,,,,,,match re/match/jgld_raw_03.cpp
+0000aef0,jgld.dll,Surface::getField810,render,C1,located,,,,,,,match re/match/jgld_raw_03.cpp
 0000af30,jgld.dll,fillWords,render,C1,located,,,,,,,match re/match/jgld_color.cpp
 0000afe0,jgld.dll,Surface::fill16,render,C1,located,,,,,,,match re/match/jgld_surface.cpp
 0000b140,jgld.dll,Surface::line16,render,C1,located,,,,,,,"caller 0x100094e0 (Surface::drawLine), callee 0x1000ba90/0x1000bde0"
@@ -1622,16 +1781,24 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00016270,jgld.dll,Sprite::drawF,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 000165a0,jgld.dll,Sprite::drawG,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 000168e0,jgld.dll,SpriteBase::~SpriteBase,render,C1,located,,,,,,,match re/match/jgld_sprite_dtor.cpp
+00016930,jgld.dll,SpriteBase::deletingDtor,render,C1,located,,,,,,,"vtable 0x1011d444, callee 0x100168e0 (SpriteBase::~SpriteBase)"
 000169a0,jgld.dll,Sprite::drawH,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 00016cb0,jgld.dll,Sprite::drawI,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 00016fc0,jgld.dll,Sprite::drawJ,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 000172b0,jgld.dll,Sprite::drawK,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
+000175d0,jgld.dll,Sprite::drawQ,render,C1,located,,,,,,,"vtable 0x1011d380, string 0x1011d528, string 0x1011d56c"
 000178a0,jgld.dll,Sprite::drawL,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 00017b40,jgld.dll,Sprite::drawM,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
+00017eb0,jgld.dll,Sprite::setField10,render,C1,located,,,,,,,vtable 0x1011d380
+00017ef0,jgld.dll,Sprite::getField10,render,C1,located,,,,,,,vtable 0x1011d380
 00017f30,jgld.dll,getField28,render,C1,located,,,,,,,match re/match/jgld_small1.cpp
 00017f70,jgld.dll,getField14,render,C1,located,,,,,,,match re/match/jgld_small1.cpp
+00017fb0,jgld.dll,Sprite::emptyVfn24,render,C1,located,,,,,,,vtable 0x1011d380
 00017fe0,jgld.dll,getField20,render,C1,located,,,,,,,match re/match/jgld_small1.cpp
 00018020,jgld.dll,getField2c,render,C1,located,,,,,,,match re/match/jgld_small1.cpp
+00018060,jgld.dll,Sprite::getField30,render,C1,located,,,,,,,vtable 0x1011d380
+000180a0,jgld.dll,Sprite::getField34,render,C1,located,,,,,,,vtable 0x1011d380
+000180e0,jgld.dll,Sprite::getFlag18,render,C1,located,,,,,,,caller 0x10015180 (Sprite::draw)
 00018120,jgld.dll,Sprite::drawN,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 00018490,jgld.dll,Sprite::lineTo,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
 00018510,jgld.dll,Sprite::dashTo,render,C1,located,,,,,,,match re/match/jgld_sprite.cpp
@@ -1719,8 +1886,10 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00065390,jgld.dll,createDisplay,render,C1,located,,,,,,,match re/match/jgld_display_noeh.cpp
 00065420,jgld.dll,Lib::destroyDisplay,render,C1,located,,,,,,,match re/match/jgld_display_noeh.cpp
 000654b0,jgld.dll,Display::Display,render,C1,located,,,,,,,match re/match/jgld_display.cpp
+000656c0,jgld.dll,Display::shutdown,render,C1,located,,,,,,,"import ChangeDisplaySettingsA, import DestroyWindow"
 000657e0,jgld.dll,Display::createWindow,ui,C1,located,,,,,,,match re/match/jgld_display.cpp
 00065a90,jgld.dll,Display::enumModes,render,C1,located,,,,,,,match re/match/jgld_display.cpp
+00065bf0,jgld.dll,Display::getField138,render,C1,located,,,,,,,match re/match/jgld_raw_03.cpp
 00065c30,jgld.dll,Display::findMode,render,C1,located,,,,,,,match re/match/jgld_display.cpp
 00065da0,jgld.dll,Display::setMode,render,C1,located,,,,,,,match re/match/jgld_display.cpp
 00065ea0,jgld.dll,Display::pickMode,render,C1,located,,,,,,,match re/match/jgld_display.cpp
@@ -1728,9 +1897,38 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00066200,jgld.dll,Display::setDesktopMode,render,C1,located,,,,,,,match re/match/jgld_display.cpp
 000662a0,jgld.dll,Display::setModeIndex,render,C1,located,,,,,,,match re/match/jgld_display.cpp
 00066470,jgld.dll,Display::present,render,C1,located,,,,,,,match re/match/jgld_display.cpp
+00066650,jgld.dll,Display::getWindowRect,ui,C1,located,,,,,,,import GetWindowRect
+000666b0,jgld.dll,Display::getField12c130,render,C1,located,,,,,,,match re/match/jgld_raw_03.cpp
+00066710,jgld.dll,Display::invalidate,ui,C1,located,,,,,,,import InvalidateRect
 00066780,jgld.dll,Display::getCursor,input,C1,located,,,,,,,match re/match/jgld_display.cpp
+00066810,jgld.dll,Display::setWindowPos,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, import SetWindowPos, vtable 0x1011d640"
 00066890,jgld.dll,Display::setResolution,render,C1,located,,,,,,,match re/match/jgld_display.cpp
 00066970,jgld.dll,Display::restore,render,C1,located,,,,,,,match re/match/jgld_display.cpp
+000669e0,jgld.dll,Array_e0::dtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x10066bd0 (Array_e0::deletingDtor), vtable 0x1011da58"
+00066a30,jgld.dll,Array_Rec14::dtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x10066c40 (Array_Rec14::deletingDtor), vtable 0x1011da5c"
+00066a80,jgld.dll,Array_Rec14::count,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x10065c30 (Display::findMode), note re/match/jgld_display.cpp"
+00066ac0,jgld.dll,Array_Rec14::reset,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x10065a90 (Display::enumModes)"
+00066b00,jgld.dll,Array_Rec94::dtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x10066cb0 (Array_Rec94::deletingDtor), vtable 0x1011da60"
+00066b50,jgld.dll,Array_Rec94::count,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x100662a0 (Display::setModeIndex)"
+00066b90,jgld.dll,Array_Rec94::reset,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x10065a90 (Display::enumModes)"
+00066bd0,jgld.dll,Array_e0::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, vtable 0x1011da58, callee 0x100669e0 (Array_e0::dtor)"
+00066c40,jgld.dll,Array_Rec14::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, vtable 0x1011da5c, callee 0x10066a30 (Array_Rec14::dtor)"
+00066cb0,jgld.dll,Array_Rec94::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, vtable 0x1011da60, callee 0x10066b00 (Array_Rec94::dtor)"
+00066d20,jgld.dll,DisplayBase::dtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, caller 0x100674f0 (DisplayBase::deletingDtor), vtable 0x1011d7dc"
+00066d60,jgld.dll,DisplayBase::getHwnd,render,C1,located,,,,,,,"match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc, note re/match/jgld_display.cpp"
+00066d90,jgld.dll,DisplayBase::getInstance,render,C1,located,,,,,,,"match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc"
+00066dc0,jgld.dll,DisplayBase::setWindowPos,render,C1,located,,,,,,,"match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc"
+000674c0,jgld.dll,DisplayBase::setCommandHandler,ui,C1,located,,,,,,,"match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc"
+000674f0,jgld.dll,DisplayBase::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_03.cpp, vtable 0x1011d7dc, callee 0x10066d20 (DisplayBase::dtor)"
+00067560,jgld.dll,Display::getHwnd,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011d640, note re/match/jgld_display.cpp"
+000675a0,jgld.dll,Display::getInstance,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011d640"
+000675e0,jgld.dll,Display::showWindow,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640"
+00067640,jgld.dll,Display::hideWindow,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640"
+000676a0,jgld.dll,Display::minimizeWindow,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640"
+00067700,jgld.dll,Display::maximizeWindow,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640"
+00067760,jgld.dll,Display::getWidth,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x100662a0 (Display::setModeIndex), vtable 0x1011d640"
+000677a0,jgld.dll,Display::getHeight,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x100662a0 (Display::setModeIndex), vtable 0x1011d640"
+000677e0,jgld.dll,Display::getBpp,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x100662a0 (Display::setModeIndex), vtable 0x1011d640"
 00067850,jgld.dll,Factory::createFont,render,C1,located,,,,,,,match re/match/jgld_factory.cpp
 00067910,jgld.dll,Factory::createPalette,render,C1,located,,,,,,,match re/match/jgld_factory.cpp
 000679d0,jgld.dll,Factory::createSurface,render,C1,located,,,,,,,match re/match/jgld_factory.cpp
@@ -1739,9 +1937,25 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00067bd0,jgld.dll,Factory::destroyPalette,render,C1,located,,,,,,,match re/match/jgld_factory.cpp
 00067c50,jgld.dll,Factory::destroySurface,render,C1,located,,,,,,,match re/match/jgld_factory.cpp
 00067cd0,jgld.dll,Factory::destroySprite,render,C1,located,,,,,,,match re/match/jgld_factory.cpp
+00067d50,jgld.dll,Display::setScale,render,C1,located,,,,,,,"match re/match/jgld_raw_10.cpp, vtable 0x1011d640"
+00067da0,jgld.dll,Display::getScale,render,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, vtable 0x1011d640"
+00067e00,jgld.dll,Display::initFonts,render,C1,located,,,,,,,"match re/match/jgld_raw_10.cpp, callee 0x10068f30 (initFonts), vtable 0x1011d640"
+00067e40,jgld.dll,Display::shutdownFonts,render,C1,located,,,,,,,"match re/match/jgld_raw_10.cpp, callee 0x10068fa0 (initFontTable), vtable 0x1011d640"
+00067e80,jgld.dll,Display::createPalette,render,C1,located,,,,,,,"match re/match/jgld_raw_10.cpp, callee 0x1006aa70 (createPalette), vtable 0x1011d640"
+00067ed0,jgld.dll,Display::freePalette,render,C1,located,,,,,,,"match re/match/jgld_raw_10.cpp, callee 0x1006ad60 (deleteLogPalette), vtable 0x1011d640"
 00067f10,jgld.dll,Lib::setCommandHandler,ui,C1,located,,,,,,,match re/match/jgld_factory.cpp
+00067f60,jgld.dll,storeCommandHandler,ui,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x10067f10 (Lib::setCommandHandler)"
+00067fa0,jgld.dll,Array_e0::ctor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x10065010 (static init of 0x101286e0), vtable 0x1011da58"
+00068000,jgld.dll,Array_e0::clear,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, import operator delete, caller 0x10068570"
+000680a0,jgld.dll,Array_Rec14::ctor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x10065120 (static init of g_modes 0x101286c8), vtable 0x1011da5c"
+00068100,jgld.dll,Array_Rec14::clear,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, import operator delete, caller 0x100685c0"
 000681a0,jgld.dll,Array_Rec14::add,util,C1,located,,,,,,,match re/match/jgld_font.cpp
+00068300,jgld.dll,Array_Rec94::ctor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x10065230 (static init of g_devmodes 0x101286f8), vtable 0x1011da60"
+00068360,jgld.dll,Array_Rec94::clear,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, import operator delete, caller 0x10068610"
 00068400,jgld.dll,Array_Rec94::add,util,C1,located,,,,,,,match re/match/jgld_font.cpp
+00068570,jgld.dll,Array_e0::clearRet,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, callee 0x10068000 (Array_e0::clear)"
+000685c0,jgld.dll,Array_Rec14::clearRet,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, callee 0x10068100 (Array_Rec14::clear)"
+00068610,jgld.dll,Array_Rec94::clearRet,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, callee 0x10068360 (Array_Rec94::clear)"
 00068660,jgld.dll,Font::Font,render,C1,located,,,,,,,match re/match/jgld_font.cpp
 00068760,jgld.dll,Font::~Font,render,C1,located,,,,,,,match re/match/jgld_font.cpp
 00068850,jgld.dll,Font::create,render,C1,located,,,,,,,match re/match/jgld_font.cpp
@@ -1751,21 +1965,46 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00068f30,jgld.dll,initFonts,render,C1,located,,,,,,,match re/match/jgld_font.cpp
 00068fa0,jgld.dll,initFontTable,render,C1,located,,,,,,,match re/match/jgld_font.cpp
 00069010,jgld.dll,FontBase::~FontBase,render,C1,located,,,,,,,match re/match/jgld_font.cpp
+00069050,jgld.dll,FontBase::create,render,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, vtable 0x1011da90"
+00069090,jgld.dll,FontBase::loadFile,render,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, vtable 0x1011da90"
+000690d0,jgld.dll,FontBase::release,render,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, vtable 0x1011da90"
+00069100,jgld.dll,FontBase::textWidth,render,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, vtable 0x1011da90"
+00069140,jgld.dll,FontBase::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011da90, callee 0x10069010 (FontBase::~FontBase)"
+000691b0,jgld.dll,Font::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011da6c, callee 0x10068760 (Font::~Font)"
 00069220,jgld.dll,FontBase::FontBase,render,C1,located,,,,,,,match re/match/jgld_font.cpp
 000692b0,jgld.dll,windowProc,ui,C1,located,,,,,,,"callee 0x10069ac0 (onPaint), callee 0x10069c70 (onKey), callee 0x1006a0e0 (onCommand)"
 000699c0,jgld.dll,realizePalette,render,C1,located,,,,,,,match re/match/jgld_app.cpp
+00069a70,jgld.dll,onPaletteChanged,render,C1,located,,,,,,,"match re/match/jgld_raw_10.cpp, caller 0x100692b0 (windowProc), callee 0x100699c0 (realizePalette)"
 00069ac0,jgld.dll,onPaint,ui,C1,located,,,,,,,match re/match/jgld_app.cpp
 00069b90,jgld.dll,onActivate,ui,C1,located,,,,,,,match re/match/jgld_app.cpp
 00069c70,jgld.dll,onKey,input,C1,located,,,,,,,match re/match/jgld_app.cpp
 00069d50,jgld.dll,onChar,input,C1,located,,,,,,,match re/match/jgld_app.cpp
+00069db0,jgld.dll,onWmSize,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
+00069e10,jgld.dll,onWmNcHitTest,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
+00069e70,jgld.dll,onWmMouseWheel,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
+00069ee0,jgld.dll,onWmMouseMove,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
+00069f40,jgld.dll,onWmLButtonDown,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
+00069fb0,jgld.dll,onWmLButtonUp,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
+0006a010,jgld.dll,onWmRButtonDown,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
+0006a080,jgld.dll,onWmRButtonUp,input,C1,located,,,,,,,"match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)"
 0006a0e0,jgld.dll,onCommand,ui,C1,located,,,,,,,match re/match/jgld_app.cpp
+0006a150,jgld.dll,Palette::ctor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011db10, callee 0x1006a260 (PaletteBase::ctor)"
+0006a1f0,jgld.dll,Palette::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011db10, callee 0x1006a2c0 (Palette::~Palette)"
+0006a260,jgld.dll,PaletteBase::ctor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x1006a150 (Palette::ctor), vtable 0x1011db3c"
 0006a2c0,jgld.dll,Palette::~Palette,render,C1,located,,,,,,,match re/match/jgld_app.cpp
+0006a380,jgld.dll,Palette::reset,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x1006a2c0 (Palette::~Palette), vtable 0x1011db10"
 0006a3d0,jgld.dll,Palette::update,render,C1,located,,,,,,,match re/match/jgld_app.cpp
 0006a4a0,jgld.dll,Palette::apply,render,C1,located,,,,,,,match re/match/jgld_app.cpp
 0006a600,jgld.dll,Palette::setDefault,render,C1,located,,,,,,,match re/match/jgld_app.cpp
 0006a860,jgld.dll,Palette::animate,render,C1,located,,,,,,,match re/match/jgld_app.cpp
+0006a8e0,jgld.dll,Palette::getRGBRange,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011db10"
 0006a9a0,jgld.dll,Palette::setRGB,render,C1,located,,,,,,,match re/match/jgld_app.cpp
 0006aa70,jgld.dll,createPalette,render,C1,located,,,,,,,match re/match/jgld_app.cpp
+0006ad60,jgld.dll,deleteLogPalette,render,C1,located,,,,,,,"match re/match/jgld_raw_10.cpp, import DeleteObject, caller 0x10067ed0 (Display::freePalette)"
+0006add0,jgld.dll,Palette::getColor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011db10"
+0006ae50,jgld.dll,Palette::toRGBQuads,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x100089d0 (Surface::setPalette)"
+0006af00,jgld.dll,PaletteBase::dtor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, caller 0x1006af50 (PaletteBase::deletingDtor), vtable 0x1011db3c"
+0006af50,jgld.dll,PaletteBase::deletingDtor,render,C1,located,,,,,,,"match re/match/jgld_raw_04.cpp, vtable 0x1011db3c, callee 0x1006af00 (PaletteBase::dtor)"
 0006bac0,jgld.dll,png_create_read_struct,util,C1,located,,,,,,,match re/match/jgld_png_read.cpp; libpng 1.0.5 release source
 0006bca0,jgld.dll,png_read_init,util,C1,located,,,,,,,match re/match/jgld_png_read.cpp; libpng 1.0.5 release source
 0006be20,jgld.dll,png_read_info,util,C1,located,,,,,,,match re/match/jgld_png_read.cpp; libpng 1.0.5 release source
@@ -2322,7 +2561,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0002d240,sound.dll,Voice_setName,audio,C1,located,,,,,,,caller 0x100041d0 (loadSoundFile); callee 0x100424d7 (operator new)
 0002ed50,sound.dll,buildVoiceRxName,audio,C1,located,,,,,,,string 0x10063e80
 0002f220,sound.dll,buildVoiceTxName,audio,C1,located,,,,,,,string 0x10063e8c
-0002f680,sound.dll,stopEngineVoices,audio,C1,located,,,,,,,import MessageBoxA
+0002f680,sound.dll,stopEngineVoices,audio,C0,located,,,,,,,"import MessageBoxA; demoted C1->C0: round-1 name stopEngineVoices unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 0002fc10,sound.dll,createBlankVoice,audio,C0,located,,,,,,,string 0x10063e98; demoted C1->C0: round-1 name createBlankVoice unsupported: string 0x10063e98 is not referenced by the function
 0002ffa0,sound.dll,markSoundTime,audio,C1,located,,,,,,,import timeGetTime
 0002ffd0,sound.dll,updateSoundTimer,audio,C1,located,,,,,,,import timeGetTime
@@ -2404,14 +2643,14 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 0003e400,sound.dll,floatFloorToInt,audio,C1,located,,,,,,,"callee 0x1004339c (_floor); callee 0x10042550 (__ftol); callers 0x1003edc0,0x1003f720,0x10041020"
 000414f0,sound.dll,formatUnsignedDecimal,crt,C0,located,,,,,,,"string 0x1005eccc; demoted C1->C0: round-1 name formatUnsignedDecimal unsupported: no reference to string 0x1005eccc, x87 code called only by the codec 0x10040000"
 0004249a,sound.dll,operator_delete,crt,C1,located,,,,,,,callee 0x10042c07 (free); called by ~150 destructors
-00042690,sound.dll,crtBeginThread,crt,C1,located,,,,,,,"import CreateThread, import ResumeThread, import TlsSetValue"
+00042690,sound.dll,crtBeginThread,crt,C0,located,,,,,,,"import CreateThread, import ResumeThread, import TlsSetValue; demoted C1->C0: round-1 name crtBeginThread unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 00042a8e,sound.dll,crtEndThread,crt,C1,located,,,,,,,"import ExitThread, import CloseHandle"
 00042b0b,sound.dll,heap_alloc,crt,C1,located,,,,,,,caller 0x10042adf (__nh_malloc); callee 0x10046283 (___sbh_alloc_block); callee 0x10047710 (__lock)
 00042b72,sound.dll,heapAllocUnlockFunclet,crt,C1,located,,,,,,,"caller 0x10042b0b (heap_alloc); callee 0x10047771 (_unlock, index 9)"
-00042bd1,sound.dll,crtMalloc,crt,C1,located,,,,,,,import HeapAlloc
+00042bd1,sound.dll,crtMalloc,crt,C0,located,,,,,,,"import HeapAlloc; demoted C1->C0: round-1 name crtMalloc unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 00042c07,sound.dll,free,crt,C1,located,,,,,,,callee 0x10045f2f (__sbh_find_block); callee 0x10045f5a (__sbh_free_block); callee 0x10047710 (__lock)
 00042c71,sound.dll,freeUnlockFunclet,crt,C1,located,,,,,,,caller 0x10042c07 (free); callee 0x10047771 (_unlock)
-00042cc9,sound.dll,crtFree,crt,C1,located,,,,,,,import HeapFree
+00042cc9,sound.dll,crtFree,crt,C0,located,,,,,,,"import HeapFree; demoted C1->C0: round-1 name crtFree unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 0004319b,sound.dll,_amsg_exit,crt,C1,located,,,,,,,callee 0x10047de6 (__FF_MSGBANNER); callee 0x10047e1f (__NMSG_WRITE); data 0x10064ee0
 000431f0,sound.dll,CIsqrt,crt,C1,located,,,,,,,callee 0x1004320d (sqrt_classify); callee 0x10048268; reads ST0
 00043204,sound.dll,sqrt,crt,C1,located,,,,,,,"game FP callers 0x1003d1d0,0x1003d8d0,0x1003ec60,0x1003f720; callee 0x10048225 (__fload_withFB); falls into the sqrt classify path"
@@ -2423,21 +2662,21 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00045181,sound.dll,crtExitProcess,crt,C1,located,,,,,,,"import ExitProcess, import TerminateProcess, import GetCurrentProcess"
 00045252,sound.dll,crtRealloc,crt,C1,located,,,,,,,"import HeapAlloc, import HeapReAlloc"
 000453dd,sound.dll,reallocUnlockFunclet,crt,C1,located,,,,,,,caller 0x10045252 (crtRealloc); callee 0x10047771 (_unlock)
-000455eb,sound.dll,crtMsize,crt,C1,located,,,,,,,import HeapSize
+000455eb,sound.dll,crtMsize,crt,C0,located,,,,,,,"import HeapSize; demoted C1->C0: round-1 name crtMsize unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 00045680,sound.dll,strchr,crt,C1,located,,,,,,,"0x7efefeff dword null-scan for a target char; callers 0x10045bc8 (crtHeapSelect),0x10051cfd (__mbschr)"
 0004588f,sound.dll,_errno,crt,C1,located,,,,,,,"callee 0x10044171 (__getptd); callers 0x10048f2d (__set_errno),0x1004581c (__dosmaperr),0x1004a7ac (_strtoxl)"
 00045898,sound.dll,__doserrno,crt,C1,located,,,,,,,"callee 0x10044171 (__getptd); callers 0x1004581c (__dosmaperr),0x100491f7 (__commit),0x1004928a (__write),0x1004dfc9 (__close)"
 000458a1,sound.dll,calloc,crt,C1,located,,,,,,,"callers 0x10042984 (__beginthread),0x100440ec (__mtinit),0x10044171 (__getptd); computes param_1*param_2 with overflow check < 0xffffffe1"
 0004593a,sound.dll,callocUnlockFunclet,crt,C1,located,,,,,,,caller 0x100458a1 (calloc); callee 0x10047771 (_unlock)
-000459c3,sound.dll,crtExceptionFilter,crt,C1,located,,,,,,,import UnhandledExceptionFilter
+000459c3,sound.dll,crtExceptionFilter,crt,C0,located,,,,,,,"import UnhandledExceptionFilter; demoted C1->C0: round-1 name crtExceptionFilter unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 00045bc8,sound.dll,crtHeapSelect,crt,C1,located,,,,,,,"import GetEnvironmentVariableA, import GetVersionExA"
 00045d10,sound.dll,crtHeapInit,crt,C1,located,,,,,,,"import HeapCreate, import HeapDestroy"
 00045f5a,sound.dll,__sbh_free_block,crt,C1,located,,,,,,,caller 0x10042c07 (free); caller 0x10045252 (crtRealloc); callee 0x10042cf0 (memcpy); follows ___sbh_find_block
 00047148,sound.dll,crtCommitPages,crt,C1,located,,,,,,,import VirtualAlloc
-0004751d,sound.dll,crtLockInit,crt,C1,located,,,,,,,"import InitializeCriticalSection, import EnterCriticalSection"
+0004751d,sound.dll,crtLockInit,crt,C0,located,,,,,,,"import InitializeCriticalSection, import EnterCriticalSection; demoted C1->C0: round-1 name crtLockInit unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 00047771,sound.dll,_unlock,crt,C1,located,,,,,,,"import GetStartupInfoA, import GetStdHandle, import GetFileType, string 0x1005f1b4; demoted C1->C0: round-1 name crtStartupIo wrong: body is LeaveCriticalSection(g_crtLockTable[i]) = _unlock; import LeaveCriticalSection (IAT 0x100b84e0); table 0x10067400"
 00049604,sound.dll,crtValidatePointer,crt,C1,located,,,,,,,"import IsBadReadPtr, import IsBadWritePtr"
 0004a010,sound.dll,strcpy,crt,C1,located,,,,,,,"0x7efefeff dword null-scan copy loop; callers 0x10051d94 (__strdup),0x100479ae (__setenvp),0x10047e1f (__NMSG_WRITE)"
-0004a158,sound.dll,crtWideCharConvert,crt,C1,located,,,,,,,"import WideCharToMultiByte, import SetFilePointer"
+0004a158,sound.dll,crtWideCharConvert,crt,C0,located,,,,,,,"import WideCharToMultiByte, import SetFilePointer; demoted C1->C0: round-1 name crtWideCharConvert unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)"
 0004aa10,sound.dll,_alloca_probe,crt,C1,located,,,,,,,fid re/fid/sound.dll.fid.tsv (__alloca_probe)
 0004e4b3,sound.dll,__free_lc_time,crt,C1,located,,,,,,,fid re/fid/sound.dll.fid.tsv (___free_lc_time); callee 0x10042c07 (free)

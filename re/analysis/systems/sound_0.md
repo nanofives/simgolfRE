@@ -137,7 +137,7 @@ every closer).
 
 ## 7. Notifications
 
-`g_notifyWindow` (0x100b5038) is the owner HWND. `postNotification` 0x1000dbe0, `postMidiNotification`
+`g_soundThreadState` (0x100b5038) is the sound thread state struct (flag +0, CRITICAL_SECTION +4, thread id +0x1c, handle +0x20, event +0x24; corrected 2026-10-06, it is not an HWND): callers pass its address to postSoundThreadMessage 0x1002aa90. (the PostMessageA path uses a window handle held by the object, e.g. [esi+0x1420] in 0x1000dbe0) `postNotification` 0x1000dbe0, `postMidiNotification`
 0x10020b60, and the per-device `dispatchCommand` handlers (`Midi_Device::dispatchCommand` 0x1000a670,
 `Wave_Device::dispatchCommand` 0x1000cd80) post completion/notification messages via `PostMessageA`.
 
@@ -164,4 +164,4 @@ helpers: `listNode3Init` 0x100087f0, `pairStore` 0x10008810, `pairClear` 0x10008
 | 0x100b4a24 | g_waveInDevice | Wave_In_Device singleton |
 | 0x100b4a04 | g_waveInCapture | active capture object |
 | 0x100b4a08 | g_openMmioCount | open mmio handle count |
-| 0x100b5038 | g_notifyWindow | PostMessageA target HWND |
+| 0x100b5038 | g_soundThreadState | sound thread state struct (address passed to postSoundThreadMessage) |

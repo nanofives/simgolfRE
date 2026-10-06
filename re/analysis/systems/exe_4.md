@@ -5,7 +5,7 @@ This range is the engine's **UI toolkit** (a Widget-based control library), plus
 low-level string/path/polygon helpers. 211 functions, all named.
 
 Base facts verified from the decompilation:
-- `g_app` = global `DAT_0083ad50`, the application/window-manager object created by `engineInit`
+- `g_graphicsDevice` = global `DAT_0083ad50`, the graphics DLL object (jgld export at RVA 0x1780) obtained by `engineInit`
   (0x004855b0). Called through its vtable: `+0x20` returns the main HWND, `+0xa8` returns the screen
   width, `+0x80` creates a surface, `+0x150` forces a redraw.
 - `Widget` is the control base class (ctor `0x004804a0`, create `0x004806c0`, invalidate at vtable
@@ -16,7 +16,7 @@ Base facts verified from the decompilation:
   stride, `+0xe4` pixel format, `+0xe8` palette. Pixels are 16-bit in the draw paths here.
 
 ## Engine lifecycle (boot)
-- `engineInit` 0x004855b0 creates `g_app` and, per the `param_3` subsystem bitmask, brings up each
+- `engineInit` 0x004855b0 creates `g_graphicsDevice` and, per the `param_3` subsystem bitmask, brings up each
   subsystem (graphics 0x8000, sound 0x2 -> 0x00483320, input, message box 0x100 -> 0x00490bf0,
   sine table 0x4000 -> 0x00491c10, cursor metrics 0x800 -> 0x004884e0, timer lock 0x1000). Writes
   `g_engineFlags` (0x0083afd0).

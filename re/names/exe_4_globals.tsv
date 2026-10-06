@@ -1,5 +1,4 @@
 module	addr	name	type	evidence
-golf_clean.exe	0x0083ad50	g_app	int*	written by engineInit 0x004855b0 (FUN_004a00a0 result); read everywhere via vtable (getHwnd +0x20, screenWidth +0xa8, createSurface +0x80)
 golf_clean.exe	0x0083afd0	g_engineFlags	uint	written by engineInit 0x004855b0 from param_3 (subsystem bitmask)
 golf_clean.exe	0x0083afec	g_timerLock	int	inc by Timer::lockInc 0x00486fe0, dec by Timer::lockDec 0x00486ff0
 golf_clean.exe	0x0083af80	g_resCloseHook1	code*	called by closeHookA 0x00487430 when non-null

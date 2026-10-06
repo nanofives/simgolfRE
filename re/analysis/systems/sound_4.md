@@ -94,7 +94,7 @@ HMMIO at +0x44 or +0 depending on node type:
 
 The global open-sound list is a doubly-linked list headed at `g_openSoundList` 0x100b49c8 (named by
 round 1); unlinking also updates `g_openSoundListPrevVal` 0x100b49cc, `g_openSoundListCursor`
-0x100b49d0 and `g_openSoundCount` 0x100b49d4, and each unlink decrements `g_openStreamCount`
+0x100b49d0 and `g_openSoundCount` 0x100b49d4, and each unlink decrements `g_openMmioCount`
 0x100b4a08.
 
 ### Decode / mmio buffering

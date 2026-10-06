@@ -1,0 +1,6 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x0059fc60	g_storyPairs	story-pair table, 10 entries of 0x388 bytes (golfer idx @+0, partner idx @+2, event counter @+4)	written by addGolferPair 0x004099f0 and updatePairSnapshot 0x00409950 (scanned to 0x005a34e0), read by trialShot 0x004226a0
+golf_clean.exe	0x00568d0c	g_nearTileDist	int	written by findNearestTargetTile 0x0040de70 as the running minimum distance (seeded from its param_3<<10)
+golf_clean.exe	0x0056a91c	g_nearTileX	int	written by findNearestTargetTile 0x0040de70 with the best tile x (-1 when none found)
+golf_clean.exe	0x0056a920	g_nearTileY	int	written by findNearestTargetTile 0x0040de70 with the best tile y
+golf_clean.exe	0x0083aa98	g_cursorClipOwner	void*	window that currently owns the ClipCursor rect; cleared by releaseCursorClip 0x00479b20 which calls ClipCursor(NULL) when the detaching window matches

@@ -4,7 +4,6 @@ golf_clean.exe	0x0083ab94	g_zcount	int	z-list length; incremented by zPush (0x47
 golf_clean.exe	0x00839ac0	g_drawList	Window*[]	paint-order list appended by collectDrawList (0x47e330), read by redrawDrawList (0x47f8e0)
 golf_clean.exe	0x0083ab90	g_drawCount	int	g_drawList length; reset by rebuildDrawList (0x47e450), written by collectDrawList, read by redrawDrawList
 golf_clean.exe	0x0083ab2c	g_curWidget	Window*	set to `this` by every mouse/click/key dispatch handler (0x47bf40..0x47c970) before invoking callbacks
-golf_clean.exe	0x0083ad50	g_screenMgr	ScreenMgr*	display/screen manager object; width/height/invalidate/redraw/present called throughout (center 0x47b310, invalidate 0x480ce0, screenFlip 0x483ba0)
 golf_clean.exe	0x0083ad44	g_primarySurface	Surface*	written by setPrimarySurface (0x483ac0), cleared by clearPrimarySurface (0x483b10)
 golf_clean.exe	0x0083ab40	g_focusWin	Window*	keyboard focus window; written by Window::setFocus (0x47f1b0), read by hitTestScreen (0x47f700), cleared by detach (0x47b820)
 golf_clean.exe	0x0083ab44	g_focusWin2	Window*	secondary focus window; written by setFocus (0x47f1b0), read by hitTestScreen (0x47f700)

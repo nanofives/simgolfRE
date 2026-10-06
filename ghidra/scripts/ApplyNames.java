@@ -38,11 +38,18 @@ public class ApplyNames extends GhidraScript {
 				Address addr = toAddr(Long.parseLong(c[1].replace("0x", ""), 16));
 				if (globals) {
 					Symbol cur = st.getPrimarySymbol(addr);
+					String label = SymbolUtilities.replaceInvalidChars(c[2], true);
 					if (cur != null && cur.getSource() != SourceType.DEFAULT) {
-						kept++;
-						continue;
+						boolean replace = overwrite && cur.getSource() == SourceType.USER_DEFINED
+								&& cur.getSymbolType() == SymbolType.LABEL && !cur.getName().equals(label);
+						if (!replace) {
+							kept++;
+							continue;
+						}
+						println("RELABEL " + addr + " " + cur.getName() + " -> " + label);
+						cur.delete();
 					}
-					Symbol s = st.createLabel(addr, SymbolUtilities.replaceInvalidChars(c[2], true), SourceType.USER_DEFINED);
+					Symbol s = st.createLabel(addr, label, SourceType.USER_DEFINED);
 					s.setPrimary();
 					labeled++;
 					continue;

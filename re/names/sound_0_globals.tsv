@@ -15,10 +15,8 @@ sound.dll	0x100b4a08	g_openMmioCount	int	incremented by mmio openers 0x10006420,
 sound.dll	0x100b4a34	g_dsBufferList	void*	head of the active DirectSound buffer list (nodes link at +0xbc/+0xc0), walked/freed in 0x10011970 (releaseAll),0x10011a80; filled by 0x10012d10/0x10012fe0
 sound.dll	0x100b4a38	g_dsBufferListTail	void*	tail/free pointer paired with g_100b4a34 in 0x10011970,0x10011a80,0x10011970
 sound.dll	0x100b4a3c	g_dsCoopLevel	DWORD	passed as the cooperative-level/window argument to 0x10011c60 (DirectSoundDevice::create) by 0x1000baa0,0x1000c020
-sound.dll	0x100b5038	g_notifyWindow	HWND	owner window used as the PostMessageA target in 0x1000dbe0,0x1000a670,0x1000cd80,0x10020b60
 sound.dll	0x100b4fe8	g_cmdTableHead	void*	list head read in 0x10022320 (copied to g_100b4ff0), entries hold a name at *entry; also used by 0x100204e0,0x10021fa0
 sound.dll	0x100b4ff0	g_cmdTableCursor	void*	cursor copied from g_100b4fe8 in 0x10022320
-sound.dll	0x100b49c0	g_soundList	void*	written by 0x100093e0 (create_sound); also 0x10020fe0,0x1001aef0
 sound.dll	0x1005b19c	vt_CtrlObject	vtable	set by 0x1001bc50 (CtrlObject::ctor); referenced by ~12 functions as the base-object vtable
 sound.dll	0x1005b1c0	vt_WaveStream	vtable	set by 0x10006160 (WaveStream::destroy),0x10006020
 sound.dll	0x1005b178	vt_WaveFmt3Stream	vtable	set by 0x10005440 (Wave_Device::readFmtChunk) on the format-3 stream object

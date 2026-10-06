@@ -15,6 +15,7 @@ IMP = re.compile(r"\bimports? ([A-Za-z_][\w@]*)")
 
 def iat(mod):
     pe, _ = xref.load_pe(mod)
+    pe.parse_data_directories()                    # load_pe is fast_load: imports are not parsed yet
     out = {}
     for e in getattr(pe, "DIRECTORY_ENTRY_IMPORT", []):
         for i in e.imports:

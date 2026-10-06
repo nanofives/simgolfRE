@@ -4,6 +4,253 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  jgld.dll:0006af50  PaletteBase::deletingDtor  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011db3c, callee 0x1006af00 (PaletteBase::dtor)
+2026-10-06  jgld.dll:0006af00  PaletteBase::dtor  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x1006af50 (PaletteBase::deletingDtor), vtable 0x1011db3c
+2026-10-06  jgld.dll:0006ae50  Palette::toRGBQuads  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x100089d0 (Surface::setPalette)
+2026-10-06  jgld.dll:0006add0  Palette::getColor  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011db10
+2026-10-06  jgld.dll:0006a8e0  Palette::getRGBRange  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011db10
+2026-10-06  jgld.dll:0006a380  Palette::reset  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x1006a2c0 (Palette::~Palette), vtable 0x1011db10
+2026-10-06  jgld.dll:0006a260  PaletteBase::ctor  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x1006a150 (Palette::ctor), vtable 0x1011db3c
+2026-10-06  jgld.dll:0006a1f0  Palette::deletingDtor  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011db10, callee 0x1006a2c0 (Palette::~Palette)
+2026-10-06  jgld.dll:0006a150  Palette::ctor  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011db10, callee 0x1006a260 (PaletteBase::ctor)
+2026-10-06  jgld.dll:00069100  FontBase::textWidth  C0->C1  match re/match/jgld_raw_09.cpp, vtable 0x1011da90
+2026-10-06  jgld.dll:000690d0  FontBase::release  C0->C1  match re/match/jgld_raw_09.cpp, vtable 0x1011da90
+2026-10-06  jgld.dll:00069050  FontBase::create  C0->C1  match re/match/jgld_raw_09.cpp, vtable 0x1011da90
+2026-10-06  jgld.dll:00069090  FontBase::loadFile  C0->C1  match re/match/jgld_raw_09.cpp, vtable 0x1011da90
+2026-10-06  jgld.dll:00069140  FontBase::deletingDtor  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011da90, callee 0x10069010 (FontBase::~FontBase)
+2026-10-06  jgld.dll:000691b0  Font::deletingDtor  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011da6c, callee 0x10068760 (Font::~Font)
+2026-10-06  jgld.dll:00066b90  Array_Rec94::reset  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x10065a90 (Display::enumModes)
+2026-10-06  jgld.dll:00066b50  Array_Rec94::count  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x100662a0 (Display::setModeIndex)
+2026-10-06  jgld.dll:00066cb0  Array_Rec94::deletingDtor  C0->C1  match re/match/jgld_raw_03.cpp, vtable 0x1011da60, callee 0x10066b00 (Array_Rec94::dtor)
+2026-10-06  jgld.dll:00066b00  Array_Rec94::dtor  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x10066cb0 (Array_Rec94::deletingDtor), vtable 0x1011da60
+2026-10-06  jgld.dll:00068610  Array_Rec94::clearRet  C0->C1  match re/match/jgld_raw_04.cpp, callee 0x10068360 (Array_Rec94::clear)
+2026-10-06  jgld.dll:00068360  Array_Rec94::clear  C0->C1  match re/match/jgld_raw_04.cpp, import operator delete, caller 0x10068610
+2026-10-06  jgld.dll:00068300  Array_Rec94::ctor  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x10065230 (static init of g_devmodes 0x101286f8), vtable 0x1011da60
+2026-10-06  jgld.dll:00066ac0  Array_Rec14::reset  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x10065a90 (Display::enumModes)
+2026-10-06  jgld.dll:00066a80  Array_Rec14::count  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x10065c30 (Display::findMode), note re/match/jgld_display.cpp
+2026-10-06  jgld.dll:00066c40  Array_Rec14::deletingDtor  C0->C1  match re/match/jgld_raw_03.cpp, vtable 0x1011da5c, callee 0x10066a30 (Array_Rec14::dtor)
+2026-10-06  jgld.dll:00066a30  Array_Rec14::dtor  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x10066c40 (Array_Rec14::deletingDtor), vtable 0x1011da5c
+2026-10-06  jgld.dll:000685c0  Array_Rec14::clearRet  C0->C1  match re/match/jgld_raw_04.cpp, callee 0x10068100 (Array_Rec14::clear)
+2026-10-06  jgld.dll:00068100  Array_Rec14::clear  C0->C1  match re/match/jgld_raw_04.cpp, import operator delete, caller 0x100685c0
+2026-10-06  jgld.dll:000680a0  Array_Rec14::ctor  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x10065120 (static init of g_modes 0x101286c8), vtable 0x1011da5c
+2026-10-06  jgld.dll:00066bd0  Array_e0::deletingDtor  C0->C1  match re/match/jgld_raw_03.cpp, vtable 0x1011da58, callee 0x100669e0 (Array_e0::dtor)
+2026-10-06  jgld.dll:000669e0  Array_e0::dtor  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x10066bd0 (Array_e0::deletingDtor), vtable 0x1011da58
+2026-10-06  jgld.dll:00068570  Array_e0::clearRet  C0->C1  match re/match/jgld_raw_04.cpp, callee 0x10068000 (Array_e0::clear)
+2026-10-06  jgld.dll:00068000  Array_e0::clear  C0->C1  match re/match/jgld_raw_04.cpp, import operator delete, caller 0x10068570
+2026-10-06  jgld.dll:00067fa0  Array_e0::ctor  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x10065010 (static init of 0x101286e0), vtable 0x1011da58
+2026-10-06  jgld.dll:0006a080  onWmRButtonUp  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:0006a010  onWmRButtonDown  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:00069fb0  onWmLButtonUp  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:00069f40  onWmLButtonDown  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:00069ee0  onWmMouseMove  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:00069e70  onWmMouseWheel  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:00069e10  onWmNcHitTest  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:00069db0  onWmSize  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x100692b0 (windowProc)
+2026-10-06  jgld.dll:00069a70  onPaletteChanged  C0->C1  match re/match/jgld_raw_10.cpp, caller 0x100692b0 (windowProc), callee 0x100699c0 (realizePalette)
+2026-10-06  jgld.dll:0006ad60  deleteLogPalette  C0->C1  match re/match/jgld_raw_10.cpp, import DeleteObject, caller 0x10067ed0 (Display::freePalette)
+2026-10-06  jgld.dll:00067f60  storeCommandHandler  C0->C1  match re/match/jgld_raw_09.cpp, caller 0x10067f10 (Lib::setCommandHandler)
+2026-10-06  jgld.dll:000674c0  DisplayBase::setCommandHandler  C0->C1  match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc
+2026-10-06  jgld.dll:00066dc0  DisplayBase::setWindowPos  C0->C1  match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc
+2026-10-06  jgld.dll:00066d90  DisplayBase::getInstance  C0->C1  match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc
+2026-10-06  jgld.dll:00066d60  DisplayBase::getHwnd  C0->C1  match re/match/jgld_raw_08.cpp, vtable 0x1011d7dc, note re/match/jgld_display.cpp
+2026-10-06  jgld.dll:00066d20  DisplayBase::dtor  C0->C1  match re/match/jgld_raw_03.cpp, caller 0x100674f0 (DisplayBase::deletingDtor), vtable 0x1011d7dc
+2026-10-06  jgld.dll:000674f0  DisplayBase::deletingDtor  C0->C1  match re/match/jgld_raw_03.cpp, vtable 0x1011d7dc, callee 0x10066d20 (DisplayBase::dtor)
+2026-10-06  jgld.dll:00067ed0  Display::freePalette  C0->C1  match re/match/jgld_raw_10.cpp, callee 0x1006ad60 (deleteLogPalette), vtable 0x1011d640
+2026-10-06  jgld.dll:00067e80  Display::createPalette  C0->C1  match re/match/jgld_raw_10.cpp, callee 0x1006aa70 (createPalette), vtable 0x1011d640
+2026-10-06  jgld.dll:00067e40  Display::shutdownFonts  C0->C1  match re/match/jgld_raw_10.cpp, callee 0x10068fa0 (initFontTable), vtable 0x1011d640
+2026-10-06  jgld.dll:00067e00  Display::initFonts  C0->C1  match re/match/jgld_raw_10.cpp, callee 0x10068f30 (initFonts), vtable 0x1011d640
+2026-10-06  jgld.dll:00067da0  Display::getScale  C0->C1  match re/match/jgld_raw_09.cpp, vtable 0x1011d640
+2026-10-06  jgld.dll:00067d50  Display::setScale  C0->C1  match re/match/jgld_raw_10.cpp, vtable 0x1011d640
+2026-10-06  jgld.dll:000677e0  Display::getBpp  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x100662a0 (Display::setModeIndex), vtable 0x1011d640
+2026-10-06  jgld.dll:000677a0  Display::getHeight  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x100662a0 (Display::setModeIndex), vtable 0x1011d640
+2026-10-06  jgld.dll:00067760  Display::getWidth  C0->C1  match re/match/jgld_raw_04.cpp, caller 0x100662a0 (Display::setModeIndex), vtable 0x1011d640
+2026-10-06  jgld.dll:00067700  Display::maximizeWindow  C0->C1  match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640
+2026-10-06  jgld.dll:000676a0  Display::minimizeWindow  C0->C1  match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640
+2026-10-06  jgld.dll:00067640  Display::hideWindow  C0->C1  match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640
+2026-10-06  jgld.dll:000675e0  Display::showWindow  C0->C1  match re/match/jgld_raw_04.cpp, import ShowWindow, vtable 0x1011d640
+2026-10-06  jgld.dll:000675a0  Display::getInstance  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011d640
+2026-10-06  jgld.dll:00067560  Display::getHwnd  C0->C1  match re/match/jgld_raw_04.cpp, vtable 0x1011d640, note re/match/jgld_display.cpp
+2026-10-06  jgld.dll:00066810  Display::setWindowPos  C0->C1  match re/match/jgld_raw_03.cpp, import SetWindowPos, vtable 0x1011d640
+2026-10-06  jgld.dll:000666b0  Display::getField12c130  C0->C1  match re/match/jgld_raw_03.cpp
+2026-10-06  jgld.dll:00065bf0  Display::getField138  C0->C1  match re/match/jgld_raw_03.cpp
+2026-10-06  jgld.dll:000656c0  Display::shutdown  C0->C1  import ChangeDisplaySettingsA, import DestroyWindow
+2026-10-06  jgld.dll:00066710  Display::invalidate  C0->C1  import InvalidateRect
+2026-10-06  jgld.dll:00066650  Display::getWindowRect  C0->C1  import GetWindowRect
+2026-10-06  jgld.dll:000175d0  Sprite::drawQ  C0->C1  vtable 0x1011d380, string 0x1011d528, string 0x1011d56c
+2026-10-06  jgld.dll:000180e0  Sprite::getFlag18  C0->C1  caller 0x10015180 (Sprite::draw)
+2026-10-06  jgld.dll:000180a0  Sprite::getField34  C0->C1  vtable 0x1011d380
+2026-10-06  jgld.dll:00018060  Sprite::getField30  C0->C1  vtable 0x1011d380
+2026-10-06  jgld.dll:00017fb0  Sprite::emptyVfn24  C0->C1  vtable 0x1011d380
+2026-10-06  jgld.dll:00017ef0  Sprite::getField10  C0->C1  vtable 0x1011d380
+2026-10-06  jgld.dll:00017eb0  Sprite::setField10  C0->C1  vtable 0x1011d380
+2026-10-06  jgld.dll:00016930  SpriteBase::deletingDtor  C0->C1  vtable 0x1011d444, callee 0x100168e0 (SpriteBase::~SpriteBase)
+2026-10-06  jgld.dll:000092e0  initDepthInfo  C0->C1  caller 0x10007660 (Surface::ctor)
+2026-10-06  jgld.dll:0000aeb0  setField28  C0->C1  match re/match/jgld_raw_03.cpp
+2026-10-06  jgld.dll:0000aef0  Surface::getField810  C0->C1  match re/match/jgld_raw_03.cpp
+2026-10-06  jgld.dll:0000ab70  Surface::getField7c  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000ab30  Surface::getDepthPtr  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000aaf0  Surface::getField40  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000aab0  Surface::height  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000aa70  Surface::width  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000aa30  Surface::getBoundsRectPtr  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a990  Surface::getClipRectPtr  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a620  Surface::getField4d0  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a5d0  Surface::setField4d0  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a7b0  Surface::fwdVfn20  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a750  Surface::fwdVfn18  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000ae30  Surface::unimplVfna4  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000ae70  Surface::unimplVfna0  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000adf0  Surface::unimplVfn9c  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000ad70  Surface::unimplVfn98  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000ad30  Surface::unimplVfn94  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000acf0  Surface::unimplVfn90  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000acb0  Surface::unimplVfn88  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000adb0  Surface::unimplVfn80  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000ac70  Surface::unimplVfn7c  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000ac30  Surface::unimplVfn70  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000abf0  Surface::unimplVfn6c  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000abb0  Surface::unimplVfn68  C0->C1  vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a170  SurfaceBase::defaultVfna4  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:0000a1b0  SurfaceBase::defaultVfna0  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009f90  SurfaceBase::defaultVfn9c  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009f10  SurfaceBase::defaultVfn98  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009ed0  SurfaceBase::defaultVfn94  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009dc0  SurfaceBase::defaultVfn90  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009d80  SurfaceBase::defaultVfn88  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009f50  SurfaceBase::defaultVfn80  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009d00  SurfaceBase::defaultVfn7c  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009b90  SurfaceBase::defaultVfn70  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009b50  SurfaceBase::defaultVfn6c  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:00009a80  SurfaceBase::defaultVfn68  C0->C1  vtable 0x1011d220
+2026-10-06  jgld.dll:0000a2f0  SurfaceBase::textOut_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a270  SurfaceBase::setTextColorRGB_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a2b0  SurfaceBase::setTextColor16_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a230  SurfaceBase::selectSystemFont_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:0000a1f0  SurfaceBase::selectObject_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009e00  SurfaceBase::drawToZ_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009d40  SurfaceBase::drawTo_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009c10  SurfaceBase::saveImage_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009bd0  SurfaceBase::loadPng_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009a00  SurfaceBase::drawLine_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009a40  SurfaceBase::drawDashedLine_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:000099c0  SurfaceBase::fill2_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:000098b0  SurfaceBase::fillRect_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009870  SurfaceBase::blitT_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009810  SurfaceBase::releaseDC_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  jgld.dll:00009740  SurfaceBase::acquireDC_default  C0->C1  vtable 0x1011d220, vtable 0x1011d0b0
+2026-10-06  004a4ea0  readListNode  C0->C1  match re/match/golf_raw_05.cpp; caller 0x0049ccc0 (moviePlayFrame)
+2026-10-06  004a4ad0  findMarkupTokenIndex  C0->C1  match re/match/golf_raw_13.cpp; caller 0x004942f0 (expandTextMarkup)
+2026-10-06  004a1370  getFieldValueByKind  C0->C1  match re/match/golf_raw_05.cpp; caller 0x0048e1c0 (TextView::layout), 0x00490960 (TextView::select)
+2026-10-06  0049e640  listSelectionChanged  C0->C1  match re/match/golf_raw_12.cpp; callee 0x00489950 (ListModel::selectedId)
+2026-10-06  0049d070  pairArray_deleteDtor  C0->C1  match re/match/golf_raw_09.cpp; callee 0x00474810 (Buf_dtor), 0x004a4ffc (operator delete)
+2026-10-06  0049c8b0  freeCacheField  C0->C1  match re/match/golf_raw_12.cpp; callee 0x00483010 (Cache dtor), 0x004a4ffc (operator delete)
+2026-10-06  0049c830  createCache  C0->C1  callee 0x00482fd0 (Cache482fd0::ctor), 0x004a57f1 (operator new)
+2026-10-06  0049bf70  screenObj_deleteDtor  C0->C1  match re/match/golf_raw_14.cpp; callee 0x004853d0 (Screen::dtor), 0x004a5007 (free); vtable 0x004ba278
+2026-10-06  00495cb0  Timer_fire  C0->C1  match re/match/golf_hand_03.cpp; callee 0x00486ec0 (Timer::stop)
+2026-10-06  00495770  redrawRegion  C0->C1  match re/match/golf_small17.cpp; callee 0x0047f8e0 (redrawDrawList), 0x0047cdb0 (drawTooltip)
+2026-10-06  00493ed0  comboListQuery  C0->C1  match re/match/golf_raw_04.cpp; caller 0x004775b0 (drawRichText), 0x00493b90 (comboOpenPopup)
+2026-10-06  00493670  TextView_layoutRun  C0->C1  match re/match/golf_raw_04.cpp; caller 0x0049acf0 (netHandleControl); callee 0x0048e1c0 (TextView::layout)
+2026-10-06  00483980  wrapTextToWidth  C0->C1  caller 0x00476ef0 (measureMarkupRun); callee 0x00483930 (measureTextWidth), 0x004a6ba0 (memchr)
+2026-10-06  00483930  measureTextWidth  C0->C1  caller 0x004767a0 (allocTextBuffer), 0x00477280 (drawMarkupRun), 0x00483980 (wrapTextToWidth)
+2026-10-06  0047ada0  View_unlinkFromParent  C0->C1  match re/match/golf_raw_14.cpp; caller 0x00479f30 (layoutNode); callee 0x004a5007 (free)
+2026-10-06  0047abc0  isPrimaryMouseDown  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00488cf0 (Button::onMouseMove); import GetAsyncKeyState, GetSystemMetrics
+2026-10-06  0047ab50  View_toLocal  C0->C1  match re/match/golf_raw_13.cpp; caller 0x0040f5c0 (mainLoop), 0x0045c560 (drawGolferInfoPanel); callee 0x0047b200 (View::fromParent); g_graphicsDevice 0x0083ad50
+2026-10-06  0047ab00  EditBox_setCursorChar  C0->C1  match re/match/golf_raw_13.cpp; caller 0x00486110 (EditBox::create); callee 0x0047d130 (drawCursor)
+2026-10-06  00479f10  View_deleteDtor  C0->C1  match re/match/golf_raw_08.cpp; callee 0x0047a3c0 (View_dtor), 0x004a4ffc (operator delete)
+2026-10-06  00479b40  ChildArray_grow  C0->C1  match re/match/golf_raw_08.cpp; caller 0x0047e5f0 (ChildArray::insert); callee 0x004a504f (malloc), 0x004a5007 (free)
+2026-10-06  00479b20  releaseCursorClip  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0047b820 (Window::detach); import ClipCursor
+2026-10-06  00479a50  atexitThunk_479a50  C0->C1  match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
+2026-10-06  00479a40  gImageCtor_83a7b8  C0->C1  match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor)
+2026-10-06  00479a00  atexitThunk_479a00  C0->C1  match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
+2026-10-06  004799f0  gImageCtor_83a500  C0->C1  match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor)
+2026-10-06  00479670  Widget_drawBoxR  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0049dab0 (listPanelDraw); callee 0x00479610 (Widget_drawBox)
+2026-10-06  00479610  Widget_drawBox  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00479670 (Widget_drawBoxR); callee 0x00478c10 (Widget_drawHLineDepth), 0x00478c70 (Widget_drawVLineDepth)
+2026-10-06  004795d0  Widget_drawBevelBoxR  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0047cdb0 (drawTooltip), 0x00496fc0 (scrollbarDraw); callee 0x00479560 (Widget_drawBevelBox)
+2026-10-06  00479560  Widget_drawBevelBox  C0->C1  match re/match/golf_raw_02.cpp; caller 0x004795d0 (Widget_drawBevelBoxR), 0x004a3f10 (panelDraw4a3f10); callee 0x00478bb0 (Widget_drawHLine), 0x00478be0 (Widget_drawVLine)
+2026-10-06  00478c70  Widget_drawVLineDepth  C0->C1  match re/match/golf_raw_13.cpp; caller 0x00479610 (Widget_drawBox); callee 0x00485e80 (Image::vline), 0x00494f00 (drawColorRunB)
+2026-10-06  00478c10  Widget_drawHLineDepth  C0->C1  match re/match/golf_raw_13.cpp; caller 0x00479610 (Widget_drawBox); callee 0x00485d40 (Image::hline), 0x00494d30 (drawColorRunA)
+2026-10-06  00478be0  Widget_drawVLine  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00479560 (Widget_drawBevelBox)
+2026-10-06  00478bb0  Widget_drawHLine  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00479560 (Widget_drawBevelBox)
+2026-10-06  00478b80  Widget_fillRect  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00407e00 (narrateShot), 0x0045c560 (drawGolferInfoPanel), 0x004049a0 (drawLineOnSurface)
+2026-10-06  00478b50  Widget_fillArea  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00478af0 (Win_fillRect), 0x0047cdb0 (drawTooltip), 0x00480a10 (Window::paintBackground)
+2026-10-06  00478b30  Widget_clearArea  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0047d850 (drawPanelContents), 0x004808c0 (Window::paint)
+2026-10-06  004789f0  Widget_applyPalette  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00485790 (Image::loadPcx), 0x00495100 (decodeImagePaletted), 0x00488970 (Button::setColorHover)
+2026-10-06  00478750  TextView_beginDrawRun  C0->C1  match re/match/golf_raw_11.cpp; caller 0x004763d0 (drawMenuList); callee 0x004787a0 (drawTextBlock)
+2026-10-06  00478700  TextView_endSegment  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0048fe60 (TextView::render); callee 0x00477580 (Widget_value)
+2026-10-06  004785e0  TextView_beginMeasure  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0048fe60 (TextView::render); callee 0x00478610 (measureText4)
+2026-10-06  00476d40  scanMarkupText  C0->C1  caller 0x00476ef0 (measureMarkupRun), 0x00477280 (drawMarkupRun), 0x004775b0 (drawRichText)
+2026-10-06  004763d0  drawMenuList  C0->C1  callee 0x00402130 (listIterNext), 0x00402160 (listIterValue), 0x00478750 (TextView_beginDrawRun), 0x00477580 (Widget_value), 0x00478970 (Text_flush)
+2026-10-06  004763a0  Widget_setQuad78  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0048e900 (TextView::build), 0x0048fe60 (TextView::render)
+2026-10-06  00476370  Widget_setQuad74  C0->C1  match re/match/golf_raw_02.cpp; caller 0x004887c0 (Button::create), 0x004889b0 (Button::setColorPressed)
+2026-10-06  00476340  Widget_setQuad70  C0->C1  match re/match/golf_raw_02.cpp; caller 0x004887c0 (Button::create), 0x00488970 (Button::setColorHover)
+2026-10-06  00475df0  drawRoutingPoly  C0->C1  match re/match/golf_raw_08.cpp; caller 0x00456be0 (showRoutingMapScreen); callee 0x00493520 (fillConvexPoly)
+2026-10-06  00475b00  Widget_fillRectR  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00475b20 (Surface_box), 0x0047cdb0 (drawTooltip)
+2026-10-06  00474cb0  Image_releaseAll  C0->C1  match re/match/golf_raw_08.cpp; caller 0x0044b9c0 (showCreditsScreen), 0x0044bde0 (loadInfoScreenArt); callee 0x00483010 (Cache dtor), 0x004a5007 (free); g_graphicsDevice 0x0083ad50
+2026-10-06  00474c20  Image_deleteDtor  C0->C1  match re/match/golf_raw_08.cpp; callee 0x00474c40 (Image_dtor), 0x004a4ffc (operator delete)
+2026-10-06  00474aa0  atexitThunk_474aa0  C0->C1  match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
+2026-10-06  00474a90  gSurfaceCtor_839a68  C0->C1  match re/match/golf_raw_02.cpp; callee 0x00473ab0 (Surface_ctor)
+2026-10-06  00474810  Buf_dtor  C0->C1  match re/match/golf_raw_02.cpp; caller 0x004882f0 (KeyTable::dtor), 0x00489370 (ListModel::dtor), 0x00491710 (Dialog::dtor); callee 0x004747e0 (Buf_releaseData); vtable 0x004ba84c
+2026-10-06  004747e0  Buf_releaseData  C0->C1  match re/match/golf_classes.cpp; caller 0x004894b0 (ListModel::clear), 0x0048d480 (TextView::reset); callee 0x004a5007 (free), 0x00474780 (Buf_init)
+2026-10-06  004747c0  Buf_deleteDtor  C0->C1  match re/match/golf_raw_08.cpp; callee 0x00474810 (Buf_dtor), 0x004a4ffc (operator delete)
+2026-10-06  004747a0  Buf_ctor  C0->C1  match re/match/golf_raw_02.cpp; caller 0x004882a0 (KeyTable::ctor), 0x00489150 (ListModel::ctor), 0x0048ce00 (TextView::ctor); callee 0x00474780 (Buf_init); vtable 0x004ba84c
+2026-10-06  00474780  Buf_init  C0->C1  match re/match/golf_raw_02.cpp; caller 0x004747a0 (Buf_ctor), 0x004747e0 (Buf_releaseData)
+2026-10-06  004744c0  Surface_copyFrom  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00482570 (decodeImageChunks); callee 0x00473ae0 (Surface_free); g_graphicsDevice 0x0083ad50
+2026-10-06  00473a80  atexitThunk_473a80  C0->C1  match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
+2026-10-06  004725b0  showThemePackSelect  C0->C1  string 0x004e40e0 (menu title), string 0x004e40f4, string 0x004e1868, string 0x004e4130; callee 0x00475840 (loadImage), 0x00480c80 (Window::refreshFull)
+2026-10-06  0046e710  drawRectScaled  C0->C1  match re/match/golf_raw_08.cpp; caller 0x0046e260 (drawScrollText); callee 0x00404970 (scaleX), 0x004049a0 (drawLineOnSurface)
+2026-10-06  0046de50  atexitThunk_46de50  C0->C1  match re/match/golf_raw_08.cpp; callee 0x004a56d2 (_atexit)
+2026-10-06  0046de40  gImageCtor_838f98  C0->C1  match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor)
+2026-10-06  00465560  resetScrollText  C0->C1  match re/match/golf_raw_02.cpp; caller 0x0046dea0 (runScrollText); callee 0x00483d30 (enterModal483d30)
+2026-10-06  00463170  boundIndex  C0->C1  match re/match/golf_raw_02.cpp; caller 0x00463180 (buildSceneSprites)
+2026-10-06  0045c000  Cursor_deleteDtor  C0->C1  match re/match/golf_raw_08.cpp; callee 0x004884b0 (Cursor::destroy), 0x004a4ffc (operator delete); vtable 0x004ba7f4
+2026-10-06  0044b8d0  gSurfaceCtor_44b8d0  C0->C1  match re/match/golf_hand_07_44b8d0.cpp; caller 0x0044b760 (staticCtor); callee 0x00473ab0 (Surface_ctor)
+2026-10-06  0044b790  gSurfaceDtor_44b790  C0->C1  match re/match/golf_hand_r3.cpp; callee 0x00473ae0 (Surface_free)
+2026-10-06  0044b6f0  gSurfaceCtor_44b6f0  C0->C1  match re/match/golf_hand_02.cpp; caller 0x0044b660 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)
+2026-10-06  0044b690  gSurfaceDtor_44b690  C0->C1  match re/match/golf_hand_02.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)
+2026-10-06  0044b5a0  gSurfaceCtor_44b5a0  C0->C1  match re/match/golf_hand_05.cpp; caller 0x0044b4c0 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)
+2026-10-06  0044b4f0  gSurfaceDtor_44b4f0  C0->C1  match re/match/golf_hand_05.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)
+2026-10-06  0044b450  gSurfaceCtor_44b450  C0->C1  match re/match/golf_hand_r2.cpp; caller 0x0044b3b0 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)
+2026-10-06  0044b3e0  gSurfaceDtor_44b3e0  C0->C1  match re/match/golf_hand_r0.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)
+2026-10-06  0044b2c0  gSurfaceCtor_44b2c0  C0->C1  match re/match/golf_hand_07_44b2c0.cpp; caller 0x0044b180 (staticCtor); callee 0x00473ab0 (Surface_ctor), 0x004a55d2 (vector ctor iterator)
+2026-10-06  0044b1b0  gSurfaceDtor_44b1b0  C0->C1  match re/match/golf_hand_08_e.cpp; callee 0x00473ae0 (Surface_free), 0x004a5713 (vector dtor iterator)
+2026-10-06  0044b060  gSurfaceCtor_44b060  C0->C1  caller 0x0044af80/0x0044b100/0x0044b140 (staticCtor thunks); callee 0x00473ab0 (Surface_ctor)
+2026-10-06  0044afb0  gSurfaceDtor_44afb0  C0->C1  match re/match/golf_hand_05.cpp; callee 0x00473ae0 (Surface_free); vtable 0x004ba2d8
+2026-10-06  0044ae60  gSurfaceCtor_44ae60  C0->C1  caller 0x0044add0/0x0044aec0/0x0044af00/0x0044af40 (staticCtor thunks); callee 0x00473ab0 (Surface_ctor)
+2026-10-06  0044ae00  gSurfaceDtor_44ae00  C0->C1  match re/match/golf_hand_02.cpp; callee 0x00473ae0 (Surface_free); vtable 0x004ba2d8
+2026-10-06  0044ac00  listEraseRange  C0->C1  caller 0x004498a0 (updateTerrainRender); callee 0x004a4ffc (operator delete)
+2026-10-06  0043cbd0  editBoxTimer_deleteDtor  C0->C1  match re/match/golf_raw_07.cpp; callee 0x0043cb50 (editBoxTimer_dtor), 0x004a4ffc (operator delete)
+2026-10-06  0043cb50  editBoxTimer_dtor  C0->C1  match re/match/golf_hand_r0.cpp; callee 0x004805a0 (Base4805a0::dtor), 0x004860d0 (EditBox::dtor), 0x00486ce0 (Timer::dtor)
+2026-10-06  00432200  drawAmenityRow  C0->C1  caller 0x00434cf0 (drawAmenitiesPanel); callee 0x00473f60 (Surface_stretchBlit), 0x00473cb0 (Surface_drawScaled), 0x004628d0 (addSprite), 0x0043d6f0 (cellAt), 0x00467170 (approxDistance)
+2026-10-06  00430360  drawWorldObjects  C0->C1  caller 0x0040f5c0 (mainLoop); callee 0x00462a30 (enqueueSprite), 0x00474440 (Surface_drawSprite), 0x0042fb90 (worldToScreen), 0x00467a00 (emitGolferThought), 0x00405a00 (playHabitatSound), 0x0045c1e0 (Random::range)
+2026-10-06  00430020  screenToTile  C0->C1  caller 0x004038f0 (drawFlyingBall), 0x0040f5c0 (mainLoop); callee 0x0042f940 (tileToScreen), 0x0042fb90 (worldToScreen), 0x0040acd0 (distance); g_cameraRot; gCameraTileX; gCameraTileY
+2026-10-06  0042f340  rebuildTileCoverage  C0->C1  caller 0x00409cf0 (editTerrainHeight), 0x0040b9b0 (loadGame), 0x0040f5c0 (mainLoop), 0x00470a60 (applyTerrainEdit); callee 0x0042f120 (floodMark), 0x00467130 (clamp); g_tileFlags
+2026-10-06  00422fb0  simulateBallFlight  C0->C1  caller 0x00424120 (simulateShot); callee 0x00421fa0 (scanTileLine), 0x00422530 (rateTile), 0x004226a0 (trialShot); g_tile_type; g_typeAttr
+2026-10-06  004226a0  trialShot  C0->C1  caller 0x0040f5c0 (mainLoop), 0x00422fb0 (simulateBallFlight); callee 0x00424120 (simulateShot), 0x0045c1e0 (Random::range); g_golfers; g_tile_type
+2026-10-06  0040e400  clearObjectFootprint  C0->C1  caller 0x0040a4e0 (demolishObject), 0x0046d0c0 (resetGolferState); callee 0x0042ef40 (rateLot), 0x0040c890 (pointsPopup), 0x0042f7a0 (rebuildHeightfield), 0x004011b0 (freeRecordAtPos); g_placed_objects; g_tile_type; g_tileFlags
+2026-10-06  0040de70  findNearestTargetTile  C0->C1  caller 0x004289e0 (updateGolfers); callee 0x0040acd0 (distance), 0x0040bf60 (tileBlocked); g_tileFlags
+2026-10-06  0040db90  evalPlacementArea  C0->C1  caller 0x0040f5c0 (mainLoop), 0x00456be0 (showRoutingMapScreen), 0x00470a60 (applyTerrainEdit); callee 0x0040bf60 (tileBlocked), 0x0040df80 (objectAt); g_tile_type; g_tileFlags; g_placed_objects
+2026-10-06  00409cb0  pushTripleEntry  C0->C1  match re/match/golf_raw_01.cpp; g_arrayCount 0x005a9cd4
+2026-10-06  00409bf0  updateRollingStats  C0->C1  caller 0x0040f5c0 (mainLoop); callee 0x00467270 (foldRange), 0x004672b0 (absDiff); g_date
+2026-10-06  004099f0  addGolferPair  C0->C1  caller 0x0040f5c0 (mainLoop), 0x004289e0 (updateGolfers); callee 0x00409950 (updatePairSnapshot); g_storyPairs 0x0059fc60; g_golfers
+2026-10-06  00409950  updatePairSnapshot  C0->C1  caller 0x004099f0 (addGolferPair), 0x004226a0 (trialShot), 0x004289e0 (updateGolfers); g_storyPairs 0x0059fc60
+2026-10-06  00406220  drawMinimapSegment  C0->C1  match re/match/golf_small3.cpp; caller 0x0040f5c0 (mainLoop); callee 0x004493d0 (drawMapLine)
+2026-10-06  004060a0  computeRatingTrend  C0->C1  caller 0x00427380 (matchUpdate)
+2026-10-06  00405a00  playHabitatSound  C0->C1  match re/match/golf_raw_07.cpp; caller 0x00405e30 (placeHabitat), 0x00430360 (drawWorldObjects); callee 0x0040c500 (playSoundAt)
+2026-10-06  004049a0  drawLineOnSurface  C0->C1  match re/match/golf_raw_01.cpp; caller 0x0046e710 (drawRectScaled); callee 0x00478b80 (Widget_fillRect)
+2026-10-06  00404120  flicOpenStream  C0->C1  caller 0x0043d740 (loadFlic); callee 0x00481f40 (Flic::open), 0x00482b90 (Flic::createStream), 0x00482e10 (Link482::data)
+2026-10-06  00404090  flicNextFrame  C0->C1  caller 0x0043d740 (loadFlic); callee 0x00482e20 (Link482::resolve), 0x00482e40 (Link482b::send), 0x00482e10 (Link482::data)
+2026-10-06  00402160  listIterValue  C0->C1  match re/match/golf_raw_01.cpp; caller 0x004763d0 (drawMenuList), 0x0049f370 (optionListDraw)
+2026-10-06  00402130  listIterNext  C0->C1  match re/match/golf_raw_01.cpp; caller 0x004763d0 (drawMenuList)
+2026-10-06  004011b0  freeRecordAtPos  C0->C1  match re/match/golf_raw_12.cpp; caller 0x0040e400 (clearObjectFootprint)
+2026-10-06  00401000  resetRecordBank  C0->C1  caller 0x00401750 (initRecords); g_recordBanks 0x004e6d20; g_recordOccupancy
+2026-10-06  0004751d  crtLockInit  C1<-C0  DEMOTED: round-1 name crtLockInit unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
+2026-10-06  0004a158  crtWideCharConvert  C1<-C0  DEMOTED: round-1 name crtWideCharConvert unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
+2026-10-06  000459c3  crtExceptionFilter  C1<-C0  DEMOTED: round-1 name crtExceptionFilter unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
+2026-10-06  000455eb  crtMsize  C1<-C0  DEMOTED: round-1 name crtMsize unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
+2026-10-06  00042cc9  crtFree  C1<-C0  DEMOTED: round-1 name crtFree unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
+2026-10-06  00042bd1  crtMalloc  C1<-C0  DEMOTED: round-1 name crtMalloc unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
+2026-10-06  00042690  crtBeginThread  C1<-C0  DEMOTED: round-1 name crtBeginThread unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
+2026-10-06  0002f680  stopEngineVoices  C1<-C0  DEMOTED: round-1 name stopEngineVoices unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv)
 2026-10-06  sound.dll:00030080  Sound5c450_ctor  name Sound_ctor->Sound5c450_ctor  re/names/sound_4.tsv
 2026-10-06  sound.dll:00030180  Sound5c450_dtor  name Sound_dtor->Sound5c450_dtor  re/names/sound_4.tsv
 2026-10-06  sound.dll:0001ff50  Sound5b6a8_dtor  name Sound_dtor->Sound5b6a8_dtor  re/names/sound_3.tsv

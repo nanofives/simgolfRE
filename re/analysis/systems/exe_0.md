@@ -14,7 +14,7 @@ save/load, text building, and the 2D HUD drawing helpers. Most functions are rea
 
 Placed objects on the course live in two parallel systems.
 
-- **g_placedObjects** (0x0058bcb8): a flat table of 256 entries x 16 bytes. Fields confirmed from
+- **g_placed_objects** (0x0058bcb8): a flat table of 256 entries x 16 bytes. Fields confirmed from
   `objectAt` 0x0040df80: `short type @+0` (-1 = empty), `short x @+2`, `short y @+4`, `int variant @+8`.
   `objectAt(x,y)` scans it and returns the index whose footprint (size from `g_recordDefs`/0x004c26c0)
   covers a tile. `holeQuadrants` 0x00407000 scans the same table for type-4 objects within
@@ -73,7 +73,7 @@ Driven from `mainLoop` through `updateGolfers` 0x004289e0 (20851 bytes), the lar
 
 ## 5. Economy (economy)
 
-`canAfford` 0x00406c30 reads `g_cash` 0x00571fd4 and compares against a cost, posting an
+`canAfford` 0x00406c30 reads `g_cash_div100` 0x00571fd4 and compares against a cost, posting an
 insufficient-funds message. `hireEmployee` 0x0040aa80 gates hiring on course size (Daily-Fee course,
 6+ holes) and cash. Lot/home-site valuation is `rateLot` 0x0042ef40 with `clearCost`.
 

@@ -1,3 +1,11 @@
 module	addr	reason
 sound.dll	0x100414f0	name formatUnsignedDecimal withdrawn 2026-10-06: string 0x1005eccc is not referenced, x87 code called only by the codec 0x10040000
 sound.dll	0x1002fc10	name createBlankVoice withdrawn 2026-10-06: string 0x10063e98 is not referenced
+sound.dll	0x1002f680	name stopEngineVoices withdrawn 2026-10-06: 18 bytes, no calls and no imports; the cited MessageBoxA is not called
+sound.dll	0x10042690	name crtBeginThread withdrawn 2026-10-06: no call of CreateThread/ResumeThread/TlsSetValue in the function
+sound.dll	0x10042bd1	name crtMalloc withdrawn 2026-10-06: 9-byte funclet whose only call is _unlock 0x10047771; HeapAlloc is not called
+sound.dll	0x10042cc9	name crtFree withdrawn 2026-10-06: 9-byte funclet whose only call is _unlock 0x10047771; HeapFree is not called
+sound.dll	0x100455eb	name crtMsize withdrawn 2026-10-06: 9-byte funclet whose only call is _unlock 0x10047771; HeapSize is not called
+sound.dll	0x100459c3	name crtExceptionFilter withdrawn 2026-10-06: 9-byte funclet whose only call is _unlock 0x10047771; UnhandledExceptionFilter is not called
+sound.dll	0x1004a158	name crtWideCharConvert withdrawn 2026-10-06: 9-byte funclet whose only call is _amsg_exit; WideCharToMultiByte/SetFilePointer are not called
+sound.dll	0x1004751d	name crtLockInit withdrawn 2026-10-06: no call of InitializeCriticalSection/EnterCriticalSection in the function

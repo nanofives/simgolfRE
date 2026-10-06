@@ -1,5 +1,12 @@
 # sound.dll — ID sound_1 (0x10027e20 – 0x10051319, 404 functions)
 
+> Audit 2026-10-06: 10 round-1 names of this range were withdrawn and 0x10047771 renamed _unlock (cited strings/imports never
+> touch; re/names/withdrawn.tsv) and 7 rows corrected in re/names/sound_1*.tsv. Where this writeup gives `+0xNN`
+> offsets taken from Ghidra's `param_1[N]` (dword indices), the byte offset is 4*N: destroyMixerVoices walks from
+> +0x6c (not +0x1b), flushMmioBuffer and startDevicePlayback test the flags byte at +0x58, WaveInDevice_ctor
+> stores the count at +0x38, caps at +0x8 and a WAVEFORMATEX (mono, 8000 Hz, 16-bit) at +0x48. The names TSV is
+> authoritative over this text.
+
 Module `original\sound.dll`, DirectSound/winmm audio engine, release build. Imports span
 KERNEL32 (threads, events, critical sections, heap), USER32 (a hidden message window),
 ole32 (`CoCreateInstance` for DirectSound), WINMM (`waveIn*`, `midiOut*`, `mmio*`, `time*`)
@@ -52,7 +59,7 @@ RIFF files are read through the Win32 `mmio*` API.
 - `streamWaveSamples` (0x10030ba0) streams decoded PCM into a caller `double*` buffer, gated on
   stream handle `g_100b49f4` (SNDERR 0x13 when absent).
 - `closeMmioSound` (0x10035ca0) `mmioClose`s the handle at obj+0x44, frees the MMIO buffer,
-  decrements `g_openStreamCount` (0x100b4a08) and unlinks the sound from `g_openSoundList`
+  decrements `g_openMmioCount` (0x100b4a08) and unlinks the sound from `g_openSoundList`
   (0x100b49c8). `flushMmioBuffer` (0x10037920) uses mmioAdvance/mmioSeek/mmioSetBuffer on the
   I/O window.
 

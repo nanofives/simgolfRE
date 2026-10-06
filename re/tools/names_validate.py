@@ -39,6 +39,11 @@ for f in sorted(glob.glob("re/names/*.tsv")):
         if len(c) == 6:
             seen[(c[0], "name", c[2])].append(f)
             seen[(c[0], "addr", int(c[1], 16))].append(f)
+for f in sorted(glob.glob("re/names/*_globals.tsv")):
+    for l in open(f, encoding="utf-8").read().splitlines()[1:]:
+        c = l.split("	")
+        if len(c) == 5:
+            seen[(c[0], "global", int(c[1], 16))].append(f)
 dups = {k: v for k, v in seen.items() if len(v) > 1}
 for (mod, kind, key), fs in sorted(dups.items(), key=str):
     print(f"duplicate {kind} in {mod}: {key if kind == 'name' else hex(key)} in {', '.join(fs)}")

@@ -234,6 +234,13 @@ it caught 2 round-1 sound.dll names whose cited string the function never touche
 [overwrite]` applies them to a program (USER names kept unless `overwrite`, IMPORTED always kept, `Class::method` ->
 namespaces), run headless with `-process <prog> -noanalysis`.
 `re/tools/xref.py <module> 0x<addr>` gives offline callers/callees/strings (capstone, thunks resolved, cached in log/).
+Round 2 (2026-10-06): exe_6, jgld_2 (Surface/SurfaceBase 60-slot vtable map), jgld_3 (Display/DisplayBase 86-slot
+vtables 0x1011d640/0x1011d7dc, Array/Font/Palette), audits of sound_1 (log/naming/sound_1_audit.tsv) and of 4 global
+conflicts (log/naming/globals_conflicts.tsv). names_validate.py also rejects a global address named in two files.
+`re/tools/c2_note.py` writes a C2 transcription per function (reads/writes with width, branch signedness, callees with
+imports and resolved thunks, constants, convention from `ret N` and registers read before written; never a
+`## Purpose`), linking the names row, the system writeup and any hand-written note; `--all` covers every C1 row.
+`xref.load_pe` is fast_load: call `pe.parse_data_directories()` before reading imports.
 
 ### A/B verification (`diff-original` skill)
 Add vectors to `re/frida/hooks_registry.py`, run `py -3.12 re/frida/diff_hook.py <name>`. Never write

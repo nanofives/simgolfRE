@@ -973,7 +973,7 @@ entry	name	size	callers	callees
 0002f570	FUN_1002f570	21	0	0
 0002f5a0	FUN_1002f5a0	38	0	1
 0002f5e0	FUN_1002f5e0	117	0	2
-0002f680	stopEngineVoices	18	0	0
+0002f680	FUN_1002f680	18	0	0
 0002f740	FUN_1002f740	107	0	2
 0002f810	FUN_1002f810	3	0	0
 0002f880	FUN_1002f880	30	0	2
@@ -1214,7 +1214,7 @@ entry	name	size	callers	callees
 00042577	_sprintf	82	3	2
 000425c9	__onexit	126	1	4
 00042647	_atexit	18	0	1
-00042690	crtBeginThread	133	4	0
+00042690	FUN_10042690	133	4	0
 00042710	_strncpy	254	7	0
 0004280e	??_M@YGXPAXIHP6EX0@Z@Z	104	9	1
 00042876	FID_conflict:$L16506	24	1	1
@@ -1228,10 +1228,10 @@ entry	name	size	callers	callees
 00042adf	__nh_malloc	44	2	2
 00042b0b	heap_alloc	231	1	6
 00042b72	heapAllocUnlockFunclet	9	1	1
-00042bd1	crtMalloc	9	1	1
+00042bd1	FUN_10042bd1	9	1	1
 00042c07	free	215	25	8
 00042c71	freeUnlockFunclet	9	1	1
-00042cc9	crtFree	9	1	1
+00042cc9	FUN_10042cc9	9	1	1
 00042cf0	FID_conflict:_memcpy	664	6	0
 00043025	__CRT_INIT@12	217	1	14
 000430fe	entry	157	0	2
@@ -1308,7 +1308,7 @@ entry	name	size	callers	callees
 000453dd	reallocUnlockFunclet	9	1	1
 0004552b	FUN_1004552b	11	1	1
 00045581	FUN_10045581	214	1	6
-000455eb	crtMsize	9	1	1
+000455eb	FUN_100455eb	9	1	1
 00045666	FUN_10045666	9	1	1
 00045680	strchr	188	2	0
 00045801	__seh_longjmp_unwind@4	27	0	1
@@ -1317,7 +1317,7 @@ entry	name	size	callers	callees
 00045898	__doserrno	9	11	1
 000458a1	calloc	289	3	8
 0004593a	callocUnlockFunclet	9	1	1
-000459c3	crtExceptionFilter	9	1	1
+000459c3	FUN_100459c3	9	1	1
 000459de	__XcptFilter	318	0	3
 00045b1c	_xcptlookup	58	1	0
 00045b80	__callnewh	27	3	0
@@ -1342,7 +1342,7 @@ entry	name	size	callers	callees
 00047148	crtCommitPages	520	3	4
 00047350	FUN_10047350	292	1	0
 00047474	FUN_10047474	169	1	0
-0004751d	crtLockInit	350	0	0
+0004751d	FUN_1004751d	350	0	0
 0004767b	__mtinitlocks	41	1	1
 000476a4	__mtdeletelocks	108	1	2
 00047710	__lock	97	26	7
@@ -1428,7 +1428,7 @@ entry	name	size	callers	callees
 0004a010	strcpy	7	15	0
 0004a020	_strcat	224	3	0
 0004a100	_memset	88	7	0
-0004a158	crtWideCharConvert	9	1	1
+0004a158	FUN_1004a158	9	1	1
 0004a161	__lseek	101	1	5
 0004a1c6	__lseek_lk	115	2	5
 0004a239	__getbuf	68	1	1

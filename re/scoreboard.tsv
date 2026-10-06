@@ -1,13 +1,9 @@
 module	addr	name	size	reach	understanding	verification	priority	phases	evidence
-golf_clean.exe	00430360	FUN_00430360	4676	3	0	0	18	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
-golf_clean.exe	00422fb0	FUN_00422fb0	4455	3	0	0	18	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
-golf_clean.exe	004226a0	FUN_004226a0	2320	3	0	0	18	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 Terrain.dll	000266b0	__sopen	1294	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0001f0c0	__read_lk	1093	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00023860	parse_cmdline	1060	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00016520	__free_dbg_lk	1004	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00029c20	__setmbcp	836	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00430020	FUN_00430020	817	3	0	0	18	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	004a7a91	___sbh_free_block	811	3	0	0	18	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 Terrain.dll	00023260	__ioinit	804	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0001f850	__openfile	797	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -22,7 +18,6 @@ Terrain.dll	0001f510	FID_conflict:_memcpy	664	3	0	0	18	championship:boot;champio
 Terrain.dll	00035c30	open	604	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	0001e020	FUN_1001e020	548	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00023c90	___crtGetEnvironmentStringsA	537	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	0040db90	FUN_0040db90	536	3	0	0	18	course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004aab46	___crtLCMapStringA	511	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0001ee40	__filbuf	484	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00025da0	__alloc_osfhnd	482	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -37,7 +32,6 @@ golf_clean.exe	004ac737	_setSBUpLow	389	3	0	0	18	championship:boot;course_season
 Terrain.dll	0001fbe0	__getstream	384	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00026d60	__abstract_cw	377	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004a9aa9	__openfile	368	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	0042f340	FUN_0042f340	362	3	0	0	18	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00035440	ipfx	351	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00026ee0	__hw_cw	346	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	000348a0	get	345	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -51,11 +45,9 @@ Terrain.dll	0001e790	___initstdio	300	3	0	0	18	championship:boot;course_season:b
 Terrain.dll	00033980	ifstream	294	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00017150	FUN_10017150	292	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a911e	__alloc_osfhnd	291	3	0	0	18	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	00474cb0	FUN_00474cb0	286	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00021a60	__freeptd	263	3	0	0	18	championship:championship_setup;championship:tournament;course_season:sandbox;course_season:season;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004ad580	__strnicmp	257	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00018d20	_atol	255	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
-golf_clean.exe	004060a0	FUN_004060a0	253	3	0	0	18	course_season:season;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	004a682f	entry	253	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00017f80	__fsopen	252	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a8176	___sbh_alloc_new_group	251	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -72,7 +64,6 @@ Terrain.dll	00026450	__getbuf	199	3	0	0	18	championship:boot;championship:champi
 Terrain.dll	00035130	istream	196	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004a6170	_strchr	193	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00017cb0	__fclose_lk	190	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	00409bf0	FUN_00409bf0	187	3	0	0	18	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	004aaf3a	__setenvp	185	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00034a90	ios	184	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	0001ec30	__flush	183	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -88,10 +79,7 @@ Terrain.dll	00035f10	streambuf	160	3	0	0	18	championship:championship_setup;cour
 Terrain.dll	000192cd	FUN_100192cd	157	3	0	0	18	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004aaff3	__setargv	153	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	000219c0	__getptd	152	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	004099f0	FUN_004099f0	151	3	0	0	18	course_season:build_hole;course_season:season;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 Terrain.dll	00019e10	__lock	151	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	00409950	FUN_00409950	148	3	0	0	18	course_season:build_hole;course_season:season;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
-golf_clean.exe	00404120	FUN_00404120	146	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004ab60c	__abstract_cw	146	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0001eaf0	__freebuf	146	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0001916d	FUN_1001916d	145	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -99,7 +87,6 @@ Terrain.dll	0001921d	FUN_1001921d	145	3	0	0	18	championship:championship_setup;c
 Terrain.dll	00024350	__dosmaperr	145	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004ab534	_calloc	141	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0001e250	FUN_1001e250	141	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00404090	FUN_00404090	138	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004ab69e	__hw_cw	137	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00016be0	_CheckBytes	136	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	000262b0	__lock_fhandle	134	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -109,7 +96,6 @@ Terrain.dll	00017c20	_fclose	130	3	0	0	18	championship:boot;championship:champio
 Terrain.dll	0001f030	__read	130	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	000218e0	__mtinit	130	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00026520	__lseek	130	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
-golf_clean.exe	0044b060	FUN_0044b060	129	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00018f70	_strcmp	129	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004a64f0	_strstr	128	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a92bd	__free_osfhnd	127	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -119,7 +105,6 @@ golf_clean.exe	004a9241	__set_osfhnd	124	3	0	0	18	championship:boot;championship
 golf_clean.exe	004abdf0	_strlen	123	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00019590	_strlen	123	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0001e9c0	__close	122	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	0049c830	FUN_0049c830	119	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a9099	__dosmaperr	115	3	0	0	18	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season	
 Terrain.dll	00018670	`eh_vector_constructor_iterator'	113	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004a6650	_toupper	111	3	0	0	18	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
@@ -157,10 +142,7 @@ Terrain.dll	00017100	__CrtIsValidPointer	75	3	0	0	18	championship:boot;champions
 golf_clean.exe	0047b9a0	FUN_0047b9a0	74	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004ac691	_getSystemCP	74	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004a5007	_free	72	3	0	0	18	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
-golf_clean.exe	00483930	FUN_00483930	71	3	0	0	18	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	004a9054	__msize	69	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	0044ac00	FUN_0044ac00	68	3	0	0	18	championship:championship_setup;course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	
-golf_clean.exe	0044ae60	FUN_0044ae60	68	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004ac315	__getbuf	68	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00021de5	__fload_withFB	67	3	0	0	18	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004a933c	__get_osfhandle	66	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -171,7 +153,6 @@ golf_clean.exe	004a7a28	___sbh_heap_init	62	3	0	0	18	championship:boot;course_se
 Terrain.dll	00017d70	_fread	62	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0001e8e0	__lock_file	61	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0001e950	__unlock_file	61	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	00476d40	FUN_00476d40	60	3	0	0	18	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	004a794d	__heap_init	60	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0001a1c1	FUN_1001a1c1	60	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00034460	in_avail	60	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -181,7 +162,6 @@ Terrain.dll	000159c8	FUN_100159c8	56	3	0	0	18	championship:boot;championship:cha
 Terrain.dll	000180a0	__chkesp	56	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0001e3d0	__cinit	56	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00019d30	__mtinitlocks	55	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00401000	FUN_00401000	54	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00018ce0	_rand	54	3	0	0	18	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	000344a0	blen	54	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00034760	out_waiting	54	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -192,7 +172,6 @@ Terrain.dll	00034500	setg	50	3	0	0	18	championship:championship_setup;course_sea
 golf_clean.exe	004a609f	_fclose	49	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a611c	__fsopen	49	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004ac4b3	_x_ismbbtype	49	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	004789f0	FUN_004789f0	48	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00036340	sync	48	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004a6070	FUN_004a6070	47	3	0	0	18	championship:boot;course_season:boot;course_season:build_hole;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:season;sandbox_basic:boot	
 golf_clean.exe	004a63a1	_fread	47	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -208,7 +187,6 @@ Terrain.dll	00015910	__malloc_dbg	44	3	0	0	18	championship:boot;championship:cha
 golf_clean.exe	004a7a66	___sbh_find_block	43	3	0	0	18	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	004a9918	__freebuf	43	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004adce5	_strncnt	43	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00478b80	FUN_00478b80	42	3	0	0	18	championship:championship_setup;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 Terrain.dll	00021e4b	__math_exit	42	3	0	0	18	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004a74fe	__ms_p5_mp_test_fdiv	41	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004a7989	__mtinitlocks	41	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -227,12 +205,10 @@ Terrain.dll	00034150	lock	37	3	0	0	18	championship:championship_setup;course_sea
 golf_clean.exe	004a98a3	FID_conflict:__lock_file2	35	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a93dd	__unlock_fhandle	34	3	0	0	18	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0002a400	___initmbctable	34	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00478b50	FUN_00478b50	33	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00018340	__fpmath	33	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	000352e0	~istream	31	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00037510	operator_new	31	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00033ab0	rdbuf	29	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
-golf_clean.exe	00475b00	FUN_00475b00	28	3	0	0	18	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	004ac8bc	___initmbctable	28	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	000186e1	FUN_100186e1	28	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00018c90	operator_new	28	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -246,7 +222,6 @@ golf_clean.exe	004a4fac	__fpmath	23	3	0	0	18	championship:boot;course_season:boo
 golf_clean.exe	004a5d48	__open	23	3	0	0	18	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot	
 Terrain.dll	00018080	_fopen	23	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	000202f0	__setdefaultprecision	23	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00478b30	FUN_00478b30	22	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004ab5f6	__controlfp	22	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00019eb0	FUN_10019eb0	22	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00033900	delbuf	22	3	0	0	18	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -256,8 +231,6 @@ golf_clean.exe	004a614d	FUN_004a614d	19	3	0	0	18	championship:boot;championship:
 golf_clean.exe	004a8e40	__initptd	19	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00016470	FUN_10016470	19	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	000186fd	FUN_100186fd	19	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00474780	FUN_00474780	18	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	004747a0	FUN_004747a0	18	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004a504f	_malloc	18	3	0	0	18	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	004a56d2	_atexit	18	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004a74ae	__setdefaultprecision	18	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -281,19 +254,10 @@ Terrain.dll	00034a80	__mtlock	15	3	0	0	18	championship:championship_setup;course
 golf_clean.exe	004a57f1	operator_new	14	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	000243f0	FUN_100243f0	13	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00024400	FUN_10024400	13	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	0046de50	FUN_0046de50	12	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00473a80	FUN_00473a80	12	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00474aa0	FUN_00474aa0	12	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00479a00	FUN_00479a00	12	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00479a50	FUN_00479a50	12	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00023eb0	_DllMain@12	12	3	0	0	18	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a4ffc	FUN_004a4ffc	11	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	000159bd	FUN_100159bd	11	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00016502	FUN_10016502	11	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
-golf_clean.exe	0046de40	FUN_0046de40	10	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00474a90	FUN_00474a90	10	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	004799f0	FUN_004799f0	10	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
-golf_clean.exe	00479a40	FUN_00479a40	10	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0001a200	FUN_1001a200	10	3	0	0	18	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a51cf	FID_conflict:__lockexit	9	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004a51d8	FID_conflict:__lockexit	9	3	0	0	18	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -464,6 +428,8 @@ golf_clean.exe	00407e00	narrateShot	6107	3	1	0	15	course_season:season;golfer_st
 golf_clean.exe	00470a60	applyTerrainEdit	6056	3	1	0	15	course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	00427380	matchUpdate	5723	3	1	0	15	course_season:season;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	0046f550	courseActionMenu	4996	3	1	0	15	course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
+golf_clean.exe	00430360	drawWorldObjects	4676	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
+golf_clean.exe	00422fb0	simulateBallFlight	4455	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	0045de80	announceVipGolfer	4426	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	0044bde0	loadInfoScreenArt	3833	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00402a40	updateWalkers	3729	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
@@ -474,6 +440,7 @@ golf_clean.exe	0040e720	announceBuilding	2614	3	1	0	15	course_season:build_hole;
 Terrain.dll	0000ea30	Tile::drawSkirts	2528	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	004659a0	loadGolferRoster	2509	3	1	0	15	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	0046e810	showBulletinBoard	2409	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
+golf_clean.exe	004226a0	trialShot	2320	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	0042dea0	holeMagazineEvent	2303	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	00461830	build16BitColorTable	2020	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00462020	formatGolferTitle	1963	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
@@ -505,6 +472,7 @@ golf_clean.exe	00432ba0	showMainRadialMenu	930	3	1	0	15	championship:championshi
 golf_clean.exe	0047d130	drawCursor	901	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	0040a160	buildToolLabel	887	3	1	0	15	course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	
 golf_clean.exe	0040d320	drawWindow	881	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
+golf_clean.exe	00430020	screenToTile	817	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	00409620	scanShotArea	803	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	00495100	decodeImagePaletted	795	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00012ec0	Tile::setFaceTexture	790	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -519,6 +487,7 @@ golf_clean.exe	0046f2b0	seedCourseTable	669	3	1	0	15	championship:championship_s
 golf_clean.exe	00405e30	placeHabitat	616	3	1	0	15	course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	
 golf_clean.exe	00477280	drawMarkupRun	599	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	00482b90	Flic::createStream	573	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
+golf_clean.exe	0040db90	evalPlacementArea	536	3	1	0	15	course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00003a50	rotateAxis	535	3	1	0	15	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	0045c200	drawThoughtBubble	532	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	0047cdb0	drawTooltip	530	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
@@ -533,6 +502,7 @@ golf_clean.exe	0047d610	buildControlStrip47d610	427	3	1	0	15	championship:boot;c
 golf_clean.exe	00481ca0	Flic::buildFrameTable	416	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	0045af30	renderTextWidget45af30	412	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	004827d0	decodeSprite4827d0	367	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
+golf_clean.exe	0042f340	rebuildTileCoverage	362	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	0040bfe0	cornerHeights	359	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	00401040	placeRecord	356	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00482570	decodeImageChunks	346	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
@@ -541,14 +511,17 @@ golf_clean.exe	0045b660	lookupThemeText	343	3	1	0	15	championship:championship_s
 golf_clean.exe	0047f8e0	redrawDrawList	326	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	00483190	allocColorRange	322	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0040cdd0	drawWindowFrame	288	3	1	0	15	course_season:build_hole;golfer_events:build_hole;golfer_events:landmark_inject;golfer_stories:build_holes	
+golf_clean.exe	00474cb0	Image_releaseAll	286	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004672d0	angleFixed	270	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season	
 golf_clean.exe	00491c70	sinScaled	267	3	1	0	15	championship:boot;course_season:boot;course_season:build_hole;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:season;sandbox_basic:boot	
+golf_clean.exe	004060a0	computeRatingTrend	253	3	1	0	15	course_season:season;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	0042f1c0	propagateType11	248	3	1	0	15	course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	0047be40	Window::mouseEvent238	246	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	00481ba0	Flic::reset	243	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	0040ca10	blitPanel	226	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	004671a0	direction8	205	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season	
 golf_clean.exe	0047b820	Window::detach	203	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00409bf0	updateRollingStats	187	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	00484a40	Snd::configure	181	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00478ea0	drawLineV	173	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	00432f90	hitTestSlot432f90	167	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
@@ -557,20 +530,26 @@ golf_clean.exe	00449f00	applyTileVariation	158	3	1	0	15	championship:championshi
 golf_clean.exe	00483fc0	soundVersionCheck	157	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00477c30	drawText	153	3	1	0	15	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	00407000	holeQuadrants	151	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
+golf_clean.exe	004099f0	addGolferPair	151	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
+golf_clean.exe	00409950	updatePairSnapshot	148	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	0042f120	floodMark	147	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
+golf_clean.exe	00404120	flicOpenStream	146	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004674c0	bilinearSample	146	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	0047d570	Window::layoutScrollbars	145	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00013f00	Terrain::flagCode	144	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 golf_clean.exe	0045c0c0	pumpAndRedraw	142	3	1	0	15	course_season:season;golfer_events:season;golfer_stories:build_holes	
+golf_clean.exe	00404090	flicNextFrame	138	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	0000c210	Tile::Tile	133	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0044a380	applyTileWalls	132	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
 Terrain.dll	00013dd0	Terrain::idClass	130	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
+golf_clean.exe	0044b060	gSurfaceCtor_44b060	129	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0047fa30	redrawWindow	127	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	0047f1b0	Window::setFocus	126	3	1	0	15	course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	
 golf_clean.exe	00474440	Surface_drawSprite	122	3	1	0	15	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	00483e90	initSound	121	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00432620	drawPanelBackdrop	120	3	1	0	15	course_season:build_hole;golfer_events:build_hole;golfer_events:golfer_panel;golfer_stories:build_holes	
 golf_clean.exe	0040df80	objectAt	119	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
+golf_clean.exe	0049c830	createCache	119	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	00001b60	swapRedBlue	116	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	00488230	Reader::readLine	110	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00449400	applyCourseType	107	3	1	0	15	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -586,15 +565,20 @@ golf_clean.exe	0047e2d0	clipAllWindows	88	3	1	0	15	championship:boot;championshi
 golf_clean.exe	0047d510	Window::releaseScrollbars	83	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0047f2f0	currentFocusOwner	77	3	1	0	15	championship:tournament;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	004a00a0	loadGraphsyObject	74	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00483930	measureTextWidth	71	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	00473c60	Surface_blitTakeDirty	70	3	1	0	15	championship:boot;course_season:boot;course_season:season;golfer_events:boot;golfer_stories:boot;golfer_stories:build_holes;sandbox_basic:boot	
 Terrain.dll	000154a0	Tile::isSolidType	69	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
+golf_clean.exe	0044ac00	listEraseRange	68	3	1	0	15	championship:championship_setup;course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	
+golf_clean.exe	0044ae60	gSurfaceCtor_44ae60	68	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0047eee0	matchInputCode	65	3	1	0	15	championship:tournament;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	00481b50	Flic::ctor481b50	65	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00012e70	setTextureId	62	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
+golf_clean.exe	00476d40	scanMarkupText	60	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	0047cfd0	resetViewState47cfd0	60	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0000f690	PathInfo::PathInfo	57	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	0000f750	WallInfo::WallInfo	57	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00002010	roundHalf	55	3	1	0	15	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	
+golf_clean.exe	00401000	resetRecordBank	54	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00484f40	Snd::setPitch	54	3	1	0	15	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	00486d20	Timer::init	54	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00487ea0	Reader::ctor	54	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -605,6 +589,7 @@ Terrain.dll	0000c520	Tile::setNeighbour	51	3	1	0	15	championship:championship_se
 golf_clean.exe	004838b0	Surface::releaseBacking	50	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00001ed0	Tile::getWall	50	3	1	0	15	championship:championship_setup;course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	
 golf_clean.exe	004832e0	startColorCycle	49	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	004789f0	Widget_applyPalette	48	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004889f0	setButtonDefaults	48	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00490cf0	MsgBox::setButtonB	48	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00001fa0	Faces::Faces	48	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -616,6 +601,7 @@ golf_clean.exe	00421b90	drawScaledSprite421b90	44	3	1	0	15	championship:champion
 golf_clean.exe	00486f10	Timer::reset	43	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	00487060	BinkPlayer::close	43	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00492800	HotList::resetFields	43	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
+golf_clean.exe	00478b80	Widget_fillRect	42	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	
 golf_clean.exe	00482b60	Flic::ctorBase482b60	42	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00485260	Snd::ctor485260	42	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 Terrain.dll	00001f60	Tile::getType	42	3	1	0	15	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	
@@ -632,6 +618,7 @@ golf_clean.exe	004846d0	Snd::setField38	37	3	1	0	15	championship:boot;championsh
 golf_clean.exe	004a00f0	resolveAndOpenFile	36	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	004882a0	KeyTable::ctor	35	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00483030	Cache483030::attach	34	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
+golf_clean.exe	00478b50	Widget_fillArea	33	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
 Terrain.dll	000158b0	iabs	33	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	004a0180	loggerCtor	32	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00483d60	modalFocusClear483d60	31	3	1	0	15	championship:championship_setup;course_season:sandbox;course_season:season;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
@@ -639,13 +626,17 @@ golf_clean.exe	00483320	resetScreenState	30	3	1	0	15	championship:boot;course_se
 golf_clean.exe	00484750	Snd::applyField484750	30	3	1	0	15	championship:championship_setup;course_season:sandbox;course_season:season;golfer_events:sandbox;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	00483b10	clearPrimarySurface	29	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00404360	staticInit_404360	28	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00475b00	Widget_fillRectR	28	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	00491d80	cosScaled	25	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0049d050	allocPairArray	25	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00483cd0	frameTick483cd0	24	3	1	0	15	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	
 golf_clean.exe	004846b0	Snd::setField34	23	3	1	0	15	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	
+golf_clean.exe	00478b30	Widget_clearArea	22	3	1	0	15	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	
 golf_clean.exe	0045ae30	setDirtyFlagA	21	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	0045ae50	setDirtyFlagB	21	3	1	0	15	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
 golf_clean.exe	00483d40	modalPush483d40	19	3	1	0	15	championship:championship_setup;course_season:sandbox;course_season:season;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	
+golf_clean.exe	00474780	Buf_init	18	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	004747a0	Buf_ctor	18	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00487a20	NodeListB::ctor	18	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00487b40	NodeListC::ctor	18	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00487d80	initGlobalReader	16	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -717,6 +708,11 @@ golf_clean.exe	0044b670	registerExit_44b670	12	3	1	0	15	championship:boot;course
 golf_clean.exe	0044b770	registerExit_44b770	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0045ba70	registerExit_45ba70	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0045bac0	registerExit_45bac0	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	0046de50	atexitThunk_46de50	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00473a80	atexitThunk_473a80	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00474aa0	atexitThunk_474aa0	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00479a00	atexitThunk_479a00	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00479a50	atexitThunk_479a50	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00482e90	atexit_482ea0	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00482ed0	atexit_482ee0	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00482f10	atexit_482f20	12	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -783,7 +779,11 @@ golf_clean.exe	0044b660	staticCtor_44b660	10	3	1	0	15	championship:boot;course_s
 golf_clean.exe	0044b760	staticCtor_44b760	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0045ba60	staticCtor_45ba60	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0045bab0	staticCtor_45bab0	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	0046de40	gImageCtor_838f98	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00473a70	initGlobalImage	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00474a90	gSurfaceCtor_839a68	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	004799f0	gImageCtor_83a500	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
+golf_clean.exe	00479a40	gImageCtor_83a7b8	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	0047d840	setDragTarget	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00482e80	staticInit_g83acb0	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
 golf_clean.exe	00482ec0	staticInit_g83ac30	10	3	1	0	15	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	
@@ -820,17 +820,9 @@ golf_clean.exe	00476700	drawStringAt	80	2	1	0	10	course_season:season;golfer_sto
 golf_clean.exe	00476750	drawStringAt2	80	2	1	0	10	course_season:season;golfer_stories:build_holes	
 Terrain.dll	00013670	FUN_10013670	1507	3	0	3	9	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/00013670_Terrain_Tile_f_10013670.match.csv
 Terrain.dll	00013500	FUN_10013500	285	3	0	3	9	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/00013500_Terrain_Tile_f_10013500.match.csv
-golf_clean.exe	0044b8d0	FUN_0044b8d0	225	3	0	3	9	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b8d0___0C44b8d0__QAE_XZ.match.csv
 Terrain.dll	00015230	FUN_10015230	224	3	0	3	9	championship:championship_setup;course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	log/diff/00015230_Terrain_Tile_f_10015230.match.csv
-golf_clean.exe	0044b2c0	FUN_0044b2c0	223	3	0	3	9	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b2c0___0C44b2c0__QAE_XZ.match.csv
-golf_clean.exe	0044b5a0	FUN_0044b5a0	161	3	0	3	9	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b5a0___0C44b5a0__QAE_XZ.match.csv
 Terrain.dll	0000d480	FUN_1000d480	147	3	0	3	9	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/0000d480_Terrain_Tile_f_1000d480.match.csv
 Terrain.dll	0001b060	FUN_1001b060	123	3	0	3	9	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/0001b060_jgld_Sprite_draw16t_1001b060.match.csv
-golf_clean.exe	0047ab50	FUN_0047ab50	103	3	0	3	9	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	log/diff/0047ab50_FUN_0047ab50.match.csv
-golf_clean.exe	0044b450	FUN_0044b450	96	3	0	3	9	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b450___0R2C44b450__QAE_XZ.match.csv
-golf_clean.exe	0044b6f0	FUN_0044b6f0	83	3	0	3	9	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b6f0___0C44b6f0__QAE_XZ.match.csv
-golf_clean.exe	00406220	FUN_00406220	44	3	0	3	9	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:season;golfer_stories:build_holes	log/diff/00406220__f_406220__YAHHHHHHHH_Z.match.csv
-golf_clean.exe	00495770	FUN_00495770	26	3	0	3	9	championship:boot;course_season:boot;course_season:season;golfer_events:boot;golfer_stories:boot;golfer_stories:build_holes;sandbox_basic:boot	log/diff/00495770__release495__YGXH_Z.match.csv
 Terrain.dll	0000f7f0	Tile::drawWalls	3476	3	1	3	6	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/0000f7f0_Terrain_Tile_drawWalls.match.csv
 Terrain.dll	00011ef0	Tile::smoothNormals	2859	3	1	3	6	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/00011ef0_Terrain_Tile_smoothNormals.match.csv
 Terrain.dll	000076e0	Terrain::relight	2297	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/000076e0_Terrain_Terrain_relight.match.csv
@@ -893,7 +885,6 @@ golf_clean.exe	00478cd0	loadImageData	283	3	1	3	6	championship:boot;championship
 golf_clean.exe	00406c30	canAfford	275	3	1	3	6	course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	log/diff/00406c30__canAfford__YAHH_Z.match.csv
 golf_clean.exe	00481760	Window::calcSizeFromCorners	272	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00481760_R1C481760_calcSize.match.csv
 Terrain.dll	000033e0	Terrain::initGL	272	3	1	3	6	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/000033e0_Terrain_Terrain_initGL.match.csv
-golf_clean.exe	0040de70	FUN_0040de70	266	1	0	0	6	golfer_events:golfer_panel	
 golf_clean.exe	0047b310	Window::center	261	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0047b310_C47b310_center.match.csv
 golf_clean.exe	0047cb10	Window::innerSize	254	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0047cb10_R1C47cb10_inner.match.csv
 golf_clean.exe	00481e40	Flic::indexFrames	253	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/00481e40_r3_Flc481_index.match.csv
@@ -912,8 +903,10 @@ golf_clean.exe	0047c5d0	Window::key	231	3	1	3	6	championship:tournament;course_s
 golf_clean.exe	00487090	BinkPlayer::play	228	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00487090_C487090_play.match.csv
 golf_clean.exe	00482990	Surface::blitRLE	227	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/00482990_C482990_brun.match.csv
 golf_clean.exe	004658b0	loadThemes	226	3	1	3	6	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/004658b0__loadThemes4658b0__YAXH_Z.match.csv
+golf_clean.exe	0044b8d0	gSurfaceCtor_44b8d0	225	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b8d0___0C44b8d0__QAE_XZ.match.csv
 golf_clean.exe	004826f0	Palette::decodeChunk	224	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/004826f0_C4826f0_colorChunk.match.csv
 Terrain.dll	0000aa10	Terrain::resetTerrain	224	3	1	3	6	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/0000aa10_Terrain_Terrain_resetTerrain.match.csv
+golf_clean.exe	0044b2c0	gSurfaceCtor_44b2c0	223	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b2c0___0C44b2c0__QAE_XZ.match.csv
 golf_clean.exe	0049fe50	loadFonts	221	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0049fe50__loadFonts49fe50__YAHXZ.match.csv
 golf_clean.exe	0047c1b0	Window::click	219	3	1	3	6	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/0047c1b0_C47c1b0_click.match.csv
 golf_clean.exe	004051f0	initGlobalArray_004051f0	217	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/004051f0___E61.match.csv
@@ -959,6 +952,7 @@ golf_clean.exe	0049d3b0	loadFileWinResource	170	3	1	3	6	championship:boot;course
 golf_clean.exe	004741b0	Sprite_draw	169	3	1	3	6	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	log/diff/004741b0_C4741b0_draw.match.csv
 golf_clean.exe	00483340	clearScreenObjects	167	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00483340__clear483340__YAXXZ.match.csv
 golf_clean.exe	0040a9a0	appendClubName	161	3	1	3	6	course_season:season;golfer_stories:build_holes;golfer_stories:season	log/diff/0040a9a0__appendClubName__YAXH_Z.match.csv
+golf_clean.exe	0044b5a0	gSurfaceCtor_44b5a0	161	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b5a0___0C44b5a0__QAE_XZ.match.csv
 golf_clean.exe	0047b8f0	Label::setText	161	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0047b8f0_C47b8f0_setText.match.csv
 Terrain.dll	000031a0	Terrain::getInstance	161	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/000031a0_Terrain_Terrain_getInstance.match.csv
 golf_clean.exe	0046f1d0	tierPrice	160	3	1	3	6	course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/0046f1d0__tierPrice__YAHH_Z.match.csv
@@ -1011,12 +1005,14 @@ Terrain.dll	0000b470	std::list<Tile*>::erase	111	3	1	3	6	championship:championsh
 golf_clean.exe	00484260	Snd::setMode	109	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00484260_Snd484_setMode.match.csv
 golf_clean.exe	00482f60	Cache482f60::ctor	105	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00482f60___0R1C482f60__QAE_XZ.match.csv
 golf_clean.exe	00484150	Snd::ctorBase	104	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00484150___0r3_C484150__QAE_XZ.match.csv
+golf_clean.exe	0047ab50	View_toLocal	103	3	1	3	6	championship:boot;championship:championship_setup;championship:menu;championship:tournament;course_season:boot;course_season:build_hole;course_season:menu;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:menu;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:menu;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:menu;sandbox_basic:sandbox	log/diff/0047ab50_FUN_0047ab50.match.csv
 golf_clean.exe	00484b80	Snd::setName	103	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00484b80_Snd484_setName.match.csv
 golf_clean.exe	00473bf0	Surface_blit	102	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/00473bf0_Surf473_f473bf0.match.csv
 golf_clean.exe	004a95bb	__lseek	101	1	0	0	6	championship:championship_setup	
 golf_clean.exe	00483070	Cache483070::reset	100	3	1	3	6	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/00483070_C483070_reset.match.csv
 golf_clean.exe	00474c40	Image_dtor	99	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/00474c40___1R0C474c40__UAE_XZ.match.csv
 golf_clean.exe	00487280	NodeList::ctor	98	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00487280___0r3_C487280__QAE_XZ.match.csv
+golf_clean.exe	0044b450	gSurfaceCtor_44b450	96	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b450___0R2C44b450__QAE_XZ.match.csv
 golf_clean.exe	0047e580	zRaise	96	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/0047e580__zRaise__YAXPAUWin9c___Z.match.csv
 golf_clean.exe	0040c450	slopeMix	94	3	1	3	6	championship:championship_setup;course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	log/diff/0040c450__mix40c450__YAHHHI_Z.match.csv
 golf_clean.exe	00486070	EditBox::ctor	94	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00486070___0C486070__QAE_XZ.match.csv
@@ -1036,6 +1032,7 @@ golf_clean.exe	00480c80	Window::refreshFull	85	3	1	3	6	championship:boot;champio
 Terrain.dll	0000a3e0	Terrain::layPath	84	3	1	3	6	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/0000a3e0_Terrain_Terrain_layPath.match.csv
 Terrain.dll	0000af70	std::list<Tile*>::begin	84	3	1	3	6	championship:championship_setup;course_season:build_hole;golfer_events:build_hole;golfer_stories:build_holes	log/diff/0000af70_Terrain__begin___list_PAVTile__V__allocator_PAVTile___std___std__QAE_AViterator_12_XZ.match.csv
 Terrain.dll	0000f6e0	PathInfo::clear	84	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/0000f6e0_Terrain_PathInfo_clear.match.csv
+golf_clean.exe	0044b6f0	gSurfaceCtor_44b6f0	83	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044b6f0___0C44b6f0__QAE_XZ.match.csv
 golf_clean.exe	00492850	HotList::ctor	83	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/00492850___0C492850__QAE_XZ.match.csv
 golf_clean.exe	004481b0	playSound	80	3	1	3	6	championship:boot;championship:championship_setup;championship:tournament;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/004481b0__playSound__YAXHHHHH_Z.match.csv
 golf_clean.exe	00484820	Snd::ctorDerived	80	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/00484820___0r3_C484820__QAE_XZ.match.csv
@@ -1126,6 +1123,7 @@ golf_clean.exe	0040c860	clearMatching	45	3	1	3	6	course_season:build_hole;golfer
 golf_clean.exe	004321d0	capsLockOff	45	3	1	3	6	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	log/diff/004321d0__capsLockOff__YAXXZ.match.csv
 Terrain.dll	00002510	ios::fail	45	3	1	3	6	championship:championship_setup;course_season:sandbox;golfer_events:sandbox;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/00002510_Terrain_ios_fail.match.csv
 Terrain.dll	00013320	Tile::hasPath	45	3	1	3	6	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/00013320_Terrain_Tile_hasPath.match.csv
+golf_clean.exe	00406220	drawMinimapSegment	44	3	1	3	6	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:season;golfer_stories:build_holes	log/diff/00406220__f_406220__YAHHHHHHHH_Z.match.csv
 golf_clean.exe	004223c0	decaySum	44	3	1	3	6	course_season:season;golfer_events:golfer_panel;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	log/diff/004223c0__decaySum__YAHH_Z.match.csv
 golf_clean.exe	0046c940	typeBit7Clear	44	3	1	3	6	championship:championship_setup;championship:tournament;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:sandbox	log/diff/0046c940__typeBit7Clear__YAIH_Z.match.csv
 golf_clean.exe	00477250	Text_put	44	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;course_season:season;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:sandbox;golfer_events:season;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;golfer_stories:season;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/00477250_Text477_put.match.csv
@@ -1187,6 +1185,7 @@ golf_clean.exe	00487e10	initKeyTableArray	28	3	1	3	6	championship:boot;course_se
 golf_clean.exe	004492f0	tileByte	26	3	1	3	6	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/004492f0__tileByte__YAHHH_Z.match.csv
 golf_clean.exe	00449310	tileQuery449310	26	3	1	3	6	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/00449310__f_449310__YAHHHH_Z.match.csv
 golf_clean.exe	0047e120	Panel::notify	26	3	1	3	6	championship:boot;championship:championship_setup;course_season:boot;course_season:build_hole;course_season:sandbox;golfer_events:boot;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:sandbox;golfer_stories:boot;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:boot;sandbox_basic:sandbox	log/diff/0047e120_Panel47e_notify.match.csv
+golf_clean.exe	00495770	redrawRegion	26	3	1	3	6	championship:boot;course_season:boot;course_season:season;golfer_events:boot;golfer_stories:boot;golfer_stories:build_holes;sandbox_basic:boot	log/diff/00495770__release495__YGXH_Z.match.csv
 golf_clean.exe	0044ad20	arrayStaticInit_44ad20	25	3	1	3	6	championship:boot;course_season:boot;golfer_events:boot;golfer_stories:boot;sandbox_basic:boot	log/diff/0044ad20___E31.match.csv
 golf_clean.exe	00467150	sign	25	3	1	3	6	course_season:build_hole;course_season:season;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	log/diff/00467150__sign__YAHH_Z.match.csv
 golf_clean.exe	004672b0	absDiff	25	3	1	3	6	course_season:build_hole;course_season:season;golfer_events:build_hole;golfer_events:golfer_panel;golfer_events:landmark_inject;golfer_events:season;golfer_stories:build_holes;golfer_stories:season	log/diff/004672b0__f_4672b0__YAHHH_Z.match.csv
@@ -1219,6 +1218,7 @@ golf_clean.exe	0043a400	selectDifficultyScreen	1215	1	1	0	5	championship:champio
 golf_clean.exe	0040a4e0	demolishObject	1213	1	1	0	5	golfer_stories:build_holes	
 golf_clean.exe	0040bbf0	deserializeCourse	778	1	1	0	5	championship:championship_setup	
 golf_clean.exe	00460df0	announceHoleType	759	1	1	0	5	course_season:season	
+golf_clean.exe	0040de70	findNearestTargetTile	266	1	1	0	5	golfer_events:golfer_panel	
 golf_clean.exe	0046ddd0	startNewCourse	96	1	1	0	5	championship:championship_setup	
 golf_clean.exe	004732d0	addScore	409	2	1	3	4	course_season:season;golfer_stories:build_holes	log/diff/004732d0__addScore4732d0__YAHXZ.match.csv
 golf_clean.exe	00435f00	hitGolferPanel435f00	348	2	1	3	4	championship:championship_setup;championship:tournament	log/diff/00435f00__hit435f00__YAHHH_Z.match.csv
@@ -1242,7 +1242,7 @@ golf_clean.exe	00453330	showHoleStatsScreen	4961	0	1	0	0
 golf_clean.exe	00497fc0	netService	4479	0	1	0	0		
 golf_clean.exe	0044e770	showShortcutsScreen	3898	0	1	0	0		
 golf_clean.exe	00454c50	showMembershipRoster	3520	0	1	0	0		
-golf_clean.exe	004725b0	FUN_004725b0	3355	0	0	0	0		
+golf_clean.exe	004725b0	showThemePackSelect	3355	0	1	0	0		
 golf_clean.exe	004587a0	showBuyLandScreen	3158	0	1	0	0		
 Terrain.dll	00024c60	__output	3108	0	0	0	0		
 golf_clean.exe	00455ed0	showHistographScreen	2911	0	1	0	0		
@@ -1328,7 +1328,7 @@ Terrain.dll	00019610	__assert	892	0	0	0	0
 Terrain.dll	00016c70	FUN_10016c70	885	0	0	0	0		
 Terrain.dll	0002d260	__handle_exc	882	0	0	0	0		
 Terrain.dll	000306f0	__Gettnames	878	0	0	0	0		
-golf_clean.exe	00432200	FUN_00432200	864	0	0	0	0		
+golf_clean.exe	00432200	drawAmenityRow	864	0	1	0	0		
 golf_clean.exe	00496330	scrollbarCreate	859	0	1	0	0		
 golf_clean.exe	004a3880	panelBuild4a3880	852	0	1	0	0		
 Terrain.dll	00004c70	Terrain::drawCardinalSpline	834	0	1	0	0		
@@ -1364,7 +1364,7 @@ Terrain.dll	00024410	FID_conflict:_memcpy	664	0	0	0	0
 golf_clean.exe	004ad192	_$I10_OUTPUT	659	0	0	0	0		
 Terrain.dll	00031900	___getlocaleinfo	650	0	0	0	0		
 golf_clean.exe	0049ccc0	moviePlayFrame	645	0	1	0	0		
-golf_clean.exe	004763d0	FUN_004763d0	628	0	0	0	0		
+golf_clean.exe	004763d0	drawMenuList	628	0	1	0	0		
 Terrain.dll	0001fd60	__flsbuf	628	0	0	0	0		
 Terrain.dll	00020070	__write_lk	627	0	0	0	0		
 Terrain.dll	00021530	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	621	0	0	0	0		
@@ -1439,7 +1439,7 @@ golf_clean.exe	00475050	reloadBmp	433	0	1	0	0
 golf_clean.exe	004b5810	prepare_for_pass	433	0	1	3	0		log/diff/004b5810__prepare_for_pass.match.csv
 golf_clean.exe	0049ab40	netServiceControl	432	0	1	0	0		
 golf_clean.exe	00496fc0	scrollbarDraw	427	0	1	3	0		log/diff/00496fc0_R0C496fc0_draw.match.csv
-golf_clean.exe	0040e400	FUN_0040e400	424	0	0	0	0		
+golf_clean.exe	0040e400	clearObjectFootprint	424	0	1	0	0		
 golf_clean.exe	004a35e0	panelSubReset4a35e0	422	0	1	3	0		log/diff/004a35e0_R0C4a35e0_reset.match.csv
 golf_clean.exe	00475e10	blitLeft	411	0	1	0	0		
 golf_clean.exe	00488cf0	Button::onMouseMove	408	0	1	3	0		log/diff/00488cf0_r3_Btn488_hover.match.csv
@@ -1493,7 +1493,7 @@ Terrain.dll	00005090	Terrain::hermitePoint	322	0	1	3	0		log/diff/00005090_Terrai
 golf_clean.exe	004a0740	viewCtor4a0740	321	0	1	3	0		log/diff/004a0740___0R0D4a0740__QAE_XZ.match.csv
 golf_clean.exe	004896b0	ListModel::setKey	320	0	1	3	0		log/diff/004896b0_C4896b0_open.match.csv
 Terrain.dll	0001ed00	flsall	319	0	0	0	0		
-golf_clean.exe	00483980	FUN_00483980	318	0	0	0	0		
+golf_clean.exe	00483980	wrapTextToWidth	318	0	1	0	0		
 golf_clean.exe	00485d40	Image::hline	318	0	1	3	0		log/diff/00485d40_C485d40_hline.match.csv
 golf_clean.exe	004aad6a	__XcptFilter	318	0	0	0	0		
 golf_clean.exe	004a0600	postMessageLine	317	0	1	3	0		log/diff/004a0600_O4a0600_post.match.csv
@@ -1507,7 +1507,7 @@ golf_clean.exe	0047ed30	Window::hitTestBorder	311	0	1	3	0		log/diff/0047ed30_C47
 golf_clean.exe	0046d0c0	resetGolferState	310	0	1	3	0		log/diff/0046d0c0__reset46d0c0__YAXXZ.match.csv
 golf_clean.exe	0049fa90	optionDialogOnKey	308	0	1	3	0		log/diff/0049fa90_D49fa90_onKey.match.csv
 golf_clean.exe	004aee30	jinit_memory_mgr	308	0	1	3	0		log/diff/004aee30__jinit_memory_mgr.match.csv
-golf_clean.exe	0044b790	FUN_0044b790	305	0	0	3	0		log/diff/0044b790___1r3_C44b790__QAE_XZ.match.csv
+golf_clean.exe	0044b790	gSurfaceDtor_44b790	305	0	1	3	0		log/diff/0044b790___1r3_C44b790__QAE_XZ.match.csv
 golf_clean.exe	00480220	Tooltip::show	305	0	1	3	0		log/diff/00480220_R0C480220_showTip.match.csv
 golf_clean.exe	00489370	ListModel::dtor	305	0	1	3	0		log/diff/00489370___1R1C489370__UAE_XZ.match.csv
 Terrain.dll	0001c950	___sbh_heapmin	304	0	0	0	0		
@@ -1542,7 +1542,7 @@ Terrain.dll	000179b0	__printMemBlockData	276	0	0	0	0
 Terrain.dll	0001c060	___sbh_alloc_new_region	271	0	0	0	0		
 golf_clean.exe	004973c0	scrollbarScrollBy	270	0	1	3	0		log/diff/004973c0_C4973c0_scroll.match.csv
 Terrain.dll	00036c90	operator=	270	0	0	0	0		
-golf_clean.exe	0044b1b0	FUN_0044b1b0	269	0	0	3	0		log/diff/0044b1b0___1C44b1b0__QAE_XZ.match.csv
+golf_clean.exe	0044b1b0	gSurfaceDtor_44b1b0	269	0	1	3	0		log/diff/0044b1b0___1C44b1b0__QAE_XZ.match.csv
 golf_clean.exe	00477eb0	drawCentered3	269	0	1	3	0		log/diff/00477eb0_C477eb0_drawCentered.match.csv
 Terrain.dll	0000c3d0	Tile::~Tile	267	0	1	0	0		
 golf_clean.exe	004a6297	__fwrite_lk	266	0	0	0	0		
@@ -1618,7 +1618,7 @@ golf_clean.exe	004a08a0	panelDispatch	216	0	1	3	0		log/diff/004a08a0_C4a08a0_dis
 golf_clean.exe	00490960	TextView::select	215	0	1	3	0		log/diff/00490960_R2C490960_select.match.csv
 Terrain.dll	00020470	__cropzeros	215	0	0	0	0		
 golf_clean.exe	004afec0	emit_dqt	214	0	1	3	0		log/diff/004afec0__emit_dqt.match.csv
-golf_clean.exe	0047ada0	FUN_0047ada0	213	0	0	3	0		log/diff/0047ada0_FUN_0047ada0.match.csv
+golf_clean.exe	0047ada0	View_unlinkFromParent	213	0	1	3	0		log/diff/0047ada0_FUN_0047ada0.match.csv
 golf_clean.exe	004a2250	viewFieldCtor4a2250	213	0	1	3	0		log/diff/004a2250___0C4a2250__QAE_XZ.match.csv
 Terrain.dll	00035200	istream	213	0	0	0	0		
 golf_clean.exe	00467600	pickGolferName	212	0	1	0	0		
@@ -1686,7 +1686,7 @@ golf_clean.exe	004a14c0	resetMsgObject	183	0	1	3	0		log/diff/004a14c0_C4a14c0_re
 golf_clean.exe	004b03a0	jinit_compress_master	183	0	1	3	0		log/diff/004b03a0__jinit_compress_master.match.csv
 Terrain.dll	0001e6d0	__isctype	183	0	0	0	0		
 Terrain.dll	000212d0	CatchIt	183	0	0	0	0		
-golf_clean.exe	00405a00	FUN_00405a00	182	0	0	0	0		
+golf_clean.exe	00405a00	playHabitatSound	182	0	1	0	0		
 golf_clean.exe	004a533b	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	182	0	0	0	0		
 golf_clean.exe	004abbe6	___dtold	182	0	0	0	0		
 Terrain.dll	000210e0	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	182	0	0	0	0		
@@ -1702,7 +1702,7 @@ golf_clean.exe	004b0640	process_data_simple_main	176	0	1	3	0		log/diff/004b0640_
 golf_clean.exe	00404a20	drawTextScaled	175	0	1	3	0		log/diff/00404a20__text404a20__YAXPBDHHH_Z.match.csv
 golf_clean.exe	004b4eb0	rgb_gray_convert	174	0	1	3	0		log/diff/004b4eb0__rgb_gray_convert.match.csv
 Terrain.dll	00032dd0	___wtomb_environ	174	0	0	0	0		
-golf_clean.exe	0044afb0	FUN_0044afb0	173	0	0	3	0		log/diff/0044afb0___1C44afb0__QAE_XZ.match.csv
+golf_clean.exe	0044afb0	gSurfaceDtor_44afb0	173	0	1	3	0		log/diff/0044afb0___1C44afb0__QAE_XZ.match.csv
 golf_clean.exe	0049cf50	movieSelectStream	173	0	1	3	0		log/diff/0049cf50_C49cf50_select.match.csv
 Terrain.dll	0002b7d0	___add_12	173	0	0	0	0		
 Terrain.dll	00031280	__store_num	173	0	0	0	0		
@@ -1726,7 +1726,7 @@ Terrain.dll	00027360	__IncMan	168	0	0	0	0
 golf_clean.exe	004a779d	__cftof2	167	0	0	0	0		
 Terrain.dll	00027040	__abstract_sw	167	0	0	0	0		
 Terrain.dll	000369a0	flush	167	0	0	0	0		
-golf_clean.exe	0044b4f0	FUN_0044b4f0	166	0	0	3	0		log/diff/0044b4f0___1C44b4f0__QAE_XZ.match.csv
+golf_clean.exe	0044b4f0	gSurfaceDtor_44b4f0	166	0	1	3	0		log/diff/0044b4f0___1C44b4f0__QAE_XZ.match.csv
 golf_clean.exe	0049bec0	netListRemove	166	0	1	3	0		log/diff/0049bec0_L49bec0_remove.match.csv
 Terrain.dll	00035910	eatwhite	166	0	0	0	0		
 golf_clean.exe	004a6ba0	_memchr	165	0	0	0	0		
@@ -1765,7 +1765,7 @@ golf_clean.exe	004340a0	hitBuildingTool	151	0	1	0	0
 golf_clean.exe	004a4350	panelOnPick	151	0	1	3	0		log/diff/004a4350_C4a4350_onPick.match.csv
 golf_clean.exe	004adf56	__mbschr	151	0	0	0	0		
 golf_clean.exe	004afc80	emit_jfif_app0	151	0	1	3	0		log/diff/004afc80__emit_jfif_app0.match.csv
-golf_clean.exe	0046e710	FUN_0046e710	150	0	0	0	0		
+golf_clean.exe	0046e710	drawRectScaled	150	0	1	0	0		
 golf_clean.exe	004382f0	charEditorZone	148	0	1	3	0		log/diff/004382f0__zone4382f0__YAHHH_Z.match.csv
 Terrain.dll	00029b80	__ftbuf	148	0	0	0	0		
 golf_clean.exe	00401c70	List401c70_dtor	147	0	1	3	0		log/diff/00401c70___1C401c70__UAE_XZ.match.csv
@@ -1797,7 +1797,7 @@ golf_clean.exe	004ab894	__ShrMan	141	0	0	0	0
 Terrain.dll	00017050	FUN_10017050	141	0	0	0	0		
 Terrain.dll	00035770	putback	141	0	0	0	0		
 Terrain.dll	00036630	sbumpc	141	0	0	0	0		
-golf_clean.exe	004744c0	FUN_004744c0	140	0	0	0	0		
+golf_clean.exe	004744c0	Surface_copyFrom	140	0	1	0	0		
 golf_clean.exe	00480ce0	Window::invalidate	140	0	1	3	0		log/diff/00480ce0_C480ce0_refresh.match.csv
 golf_clean.exe	004ab7c6	__RoundMan	140	0	0	0	0		
 golf_clean.exe	004b1ae0	emit_restart	140	0	1	3	0		log/diff/004b1ae0__emit_restart.match.csv
@@ -1894,7 +1894,7 @@ Terrain.dll	0002db50	__setmode	115	0	0	0	0
 golf_clean.exe	004a53f1	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	114	0	0	0	0		
 Terrain.dll	0002d700	__errcode	113	0	0	0	0		
 Terrain.dll	00033fa0	filebuf	113	0	0	0	0		
-golf_clean.exe	0044b3e0	FUN_0044b3e0	111	0	0	3	0		log/diff/0044b3e0___1R0C44b3e0__QAE_XZ.match.csv
+golf_clean.exe	0044b3e0	gSurfaceDtor_44b3e0	111	0	1	3	0		log/diff/0044b3e0___1R0C44b3e0__QAE_XZ.match.csv
 golf_clean.exe	00473fc0	Surface_blitMasked	111	0	1	3	0		log/diff/00473fc0_Surf473_f473fc0.match.csv
 golf_clean.exe	004a71d2	_tolower	111	0	0	0	0		
 Terrain.dll	000217b0	___DestructExceptionObject	111	0	0	0	0		
@@ -1910,8 +1910,8 @@ golf_clean.exe	00404280	R2C404280_dtor	107	0	1	3	0		log/diff/00404280___1R2C4042
 Terrain.dll	00001d50	Terrain::tileAt (Terrain.dll)	107	3	3	3	0	championship:championship_setup;course_season:build_hole;course_season:sandbox;golfer_events:build_hole;golfer_events:sandbox;golfer_stories:build_holes;golfer_stories:sandbox;sandbox_basic:sandbox	log/diff/00001d50_Terrain_Terrain_tileAt.match.csv
 Terrain.dll	0001ad91	FUN_1001ad91	106	0	0	0	0		
 Terrain.dll	000207c0	__cftof	106	0	0	0	0		
-golf_clean.exe	0043cb50	FUN_0043cb50	105	0	0	3	0		log/diff/0043cb50___1R0C43cb50__UAE_XZ.match.csv
-golf_clean.exe	00479560	FUN_00479560	105	0	0	0	0		
+golf_clean.exe	0043cb50	editBoxTimer_dtor	105	0	1	3	0		log/diff/0043cb50___1R0C43cb50__UAE_XZ.match.csv
+golf_clean.exe	00479560	Widget_drawBevelBox	105	0	1	0	0		
 golf_clean.exe	0048e0b0	TextView::setLineSpacing	105	0	1	3	0		log/diff/0048e0b0_FUN_0048e0b0.match.csv
 golf_clean.exe	0048e120	TextView::setFontSize	105	0	1	3	0		log/diff/0048e120_FUN_0048e120.match.csv
 golf_clean.exe	0049ef80	flagIsSet	105	0	1	3	0		log/diff/0049ef80_C49ef80_isSet.match.csv
@@ -1930,23 +1930,23 @@ golf_clean.exe	004b50d0	grayscale_convert	103	0	1	3	0		log/diff/004b50d0__graysc
 Terrain.dll	0002cb90	__handle_qnan2	103	0	0	0	0		
 golf_clean.exe	004967f0	setWidgetScalar	102	0	1	3	0		log/diff/004967f0_FUN_004967f0.match.csv
 golf_clean.exe	004ae590	term_destination	102	0	1	3	0		log/diff/004ae590__term_destination.match.csv
-golf_clean.exe	00495cb0	FUN_00495cb0	101	0	0	3	0		log/diff/00495cb0__f495cb0__YGXPAUT495___Z.match.csv
+golf_clean.exe	00495cb0	Timer_fire	101	0	1	3	0		log/diff/00495cb0__f495cb0__YGXPAUT495___Z.match.csv
 Terrain.dll	0002b3c0	___lc_lctostr	101	0	0	0	0		
 Terrain.dll	0002ff10	_GetPrimaryLen	101	0	0	0	0		
 golf_clean.exe	004a70b5	_rewind	100	0	0	0	0		
 Terrain.dll	00015e00	FID_conflict:__realloc_dbg	99	0	0	0	0		
 Terrain.dll	000163e0	FID_conflict:__realloc_dbg	99	0	0	0	0		
 Terrain.dll	0002b8e0	___shr_12	99	0	0	0	0		
-golf_clean.exe	00479b40	FUN_00479b40	98	0	0	0	0		
+golf_clean.exe	00479b40	ChildArray_grow	98	0	1	0	0		
 golf_clean.exe	0047e700	ChildArray::bringToFront	98	0	1	3	0		log/diff/0047e700_C47e700_bringToFront.match.csv
 Terrain.dll	0001b1b0	__heapchk	98	0	0	0	0		
 Terrain.dll	0001b410	___sbh_heap_init	98	0	0	0	0		
 golf_clean.exe	004a7625	__cftoe	97	0	0	0	0		
 golf_clean.exe	004abfcb	__setmode_lk	97	0	0	0	0		
 golf_clean.exe	004afaf0	jinit_marker_writer	97	0	1	3	0		log/diff/004afaf0__jinit_marker_writer.match.csv
-golf_clean.exe	00478c10	FUN_00478c10	96	0	0	3	0		log/diff/00478c10_FUN_00478c10.match.csv
-golf_clean.exe	00478c70	FUN_00478c70	96	0	0	3	0		log/diff/00478c70_FUN_00478c70.match.csv
-golf_clean.exe	00479610	FUN_00479610	96	0	0	0	0		
+golf_clean.exe	00478c10	Widget_drawHLineDepth	96	0	1	3	0		log/diff/00478c10_FUN_00478c10.match.csv
+golf_clean.exe	00478c70	Widget_drawVLineDepth	96	0	1	3	0		log/diff/00478c70_FUN_00478c70.match.csv
+golf_clean.exe	00479610	Widget_drawBox	96	0	1	0	0		
 golf_clean.exe	004843e0	unlinkSound	96	0	1	0	0		
 golf_clean.exe	00486250	EditBox::resizeBuffer	96	0	1	0	0		
 golf_clean.exe	00493ef0	comboSetItems	96	0	1	3	0		log/diff/00493ef0_C493ef0_setItems.match.csv
@@ -1970,7 +1970,7 @@ golf_clean.exe	004a887a	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@P
 golf_clean.exe	004ae8b0	add_huff_table	93	0	1	3	0		log/diff/004ae8b0__add_huff_table.match.csv
 golf_clean.exe	004b710d	_mbtowc	93	0	0	0	0		
 Terrain.dll	000058a0	factorial	93	0	1	0	0		
-golf_clean.exe	0044b690	FUN_0044b690	92	0	0	3	0		log/diff/0044b690___1C44b690__QAE_XZ.match.csv
+golf_clean.exe	0044b690	gSurfaceDtor_44b690	92	0	1	3	0		log/diff/0044b690___1C44b690__QAE_XZ.match.csv
 golf_clean.exe	0046e7b0	postEvent	92	0	1	3	0		log/diff/0046e7b0__post46e7b0__YAXHHH_Z.match.csv
 golf_clean.exe	004844e0	Snd::unlinkFromList	92	0	1	3	0		log/diff/004844e0_C4844e0_unlink.match.csv
 golf_clean.exe	00487390	NodeList::dtor	92	0	1	3	0		log/diff/00487390___1C487390__UAE_XZ.match.csv
@@ -1992,7 +1992,7 @@ golf_clean.exe	00491410	LabelButton::dtor	89	0	1	3	0		log/diff/00491410___1C4914
 golf_clean.exe	004ac169	_wctomb	89	0	0	0	0		
 Terrain.dll	000280a0	xcptlookup	89	0	0	0	0		
 Terrain.dll	00034240	sputc	89	0	0	0	0		
-golf_clean.exe	0044ae00	FUN_0044ae00	88	0	0	3	0		log/diff/0044ae00___1C44ae00__QAE_XZ.match.csv
+golf_clean.exe	0044ae00	gSurfaceDtor_44ae00	88	0	1	3	0		log/diff/0044ae00___1C44ae00__QAE_XZ.match.csv
 golf_clean.exe	004979a0	scrollbarResetState	88	0	1	3	0		log/diff/004979a0_C4979a0_reset.match.csv
 golf_clean.exe	004ade97	_findenv	88	0	0	0	0		
 Terrain.dll	00026d00	__fpreset	88	0	0	0	0		
@@ -2080,16 +2080,16 @@ golf_clean.exe	00497cc0	netFlush	69	0	1	3	0		log/diff/00497cc0_C497cc0_flush.mat
 Terrain.dll	0002fa00	_GetLcidFromCountry	69	0	0	0	0		
 Terrain.dll	0001eb90	_fflush	68	0	0	0	0		
 golf_clean.exe	00477e60	drawBox	67	0	1	3	0		log/diff/00477e60_C477e60_drawBox.match.csv
-golf_clean.exe	00478700	FUN_00478700	67	0	0	0	0		
-golf_clean.exe	00478750	FUN_00478750	67	0	0	0	0		
-golf_clean.exe	0047ab00	FUN_0047ab00	66	0	0	3	0		log/diff/0047ab00_FUN_0047ab00.match.csv
+golf_clean.exe	00478700	TextView_endSegment	67	0	1	0	0		
+golf_clean.exe	00478750	TextView_beginDrawRun	67	0	1	0	0		
+golf_clean.exe	0047ab00	EditBox_setCursorChar	66	0	1	3	0		log/diff/0047ab00_FUN_0047ab00.match.csv
 Terrain.dll	000133a0	Tile::setConnected	66	0	1	0	0		
 Terrain.dll	000214e0	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	66	0	0	0	0		
 Terrain.dll	00022b00	__itoa	66	0	0	0	0		
 golf_clean.exe	00476d80	skipToken	65	0	1	3	0		log/diff/00476d80__skipToken__YAPADPADPAH_Z.match.csv
 golf_clean.exe	00484b30	Snd::busy	65	0	1	3	0		log/diff/00484b30_C484b30c_busy.match.csv
 golf_clean.exe	00490c30	MsgBox::freeLabels	65	0	1	0	0		
-golf_clean.exe	0049bf70	FUN_0049bf70	65	0	0	3	0		log/diff/0049bf70_FUN_0049bf70.match.csv
+golf_clean.exe	0049bf70	screenObj_deleteDtor	65	0	1	3	0		log/diff/0049bf70_FUN_0049bf70.match.csv
 Terrain.dll	0001ebe0	__fflush_lk	65	0	0	0	0		
 Terrain.dll	00037530	_isalpha	65	0	0	0	0		
 Terrain.dll	00037640	_isxdigit	65	0	0	0	0		
@@ -2175,7 +2175,7 @@ golf_clean.exe	004ae700	jpeg_quality_scaling	56	0	1	3	0		log/diff/004ae700__jpeg
 golf_clean.exe	004b1f30	jinit_phuff_encoder	56	0	1	3	0		log/diff/004b1f30__jinit_phuff_encoder.match.csv
 Terrain.dll	00001f10	Terrain::getType	56	0	1	3	0		log/diff/00001f10_Terrain_Terrain_getType.match.csv
 Terrain.dll	00024c20	_strncmp	56	0	0	0	0		
-golf_clean.exe	0049e640	FUN_0049e640	55	0	0	0	0		
+golf_clean.exe	0049e640	listSelectionChanged	55	0	1	0	0		
 golf_clean.exe	004b7081	__hextodec	55	0	0	0	0		
 Terrain.dll	0001796c	FUN_1001796c	55	0	0	0	0		
 Terrain.dll	00027570	__IsZeroMan	55	0	0	0	0		
@@ -2190,7 +2190,7 @@ golf_clean.exe	004b816a	Unwind@004b816a	54	0	0	0	0
 Terrain.dll	000279f0	FID_conflict:__atodbl	54	0	0	0	0		
 Terrain.dll	00027a30	__atoldbl	54	0	0	0	0		
 Terrain.dll	00027a70	FID_conflict:__atodbl	54	0	0	0	0		
-golf_clean.exe	004795d0	FUN_004795d0	53	0	0	0	0		
+golf_clean.exe	004795d0	Widget_drawBevelBoxR	53	0	1	0	0		
 golf_clean.exe	00483c90	pumpInput483c90	53	0	1	3	0		log/diff/00483c90__drain483c90__YAHXZ.match.csv
 golf_clean.exe	00483cf0	pumpInput483cf0	53	0	1	3	0		log/diff/00483cf0__drain483cf0__YAHXZ.match.csv
 golf_clean.exe	0049aa30	netNameOf	53	0	1	3	0		log/diff/0049aa30_C49aa30_nameOf.match.csv
@@ -2198,7 +2198,7 @@ golf_clean.exe	004aa4d9	_write_char	53	0	0	0	0
 Terrain.dll	0001ab65	FUN_1001ab65	53	0	0	0	0		
 Terrain.dll	00025a10	write_multi_char	53	0	0	0	0		
 Terrain.dll	00036960	operator<<	53	0	0	0	0		
-golf_clean.exe	00409cb0	FUN_00409cb0	52	0	0	0	0		
+golf_clean.exe	00409cb0	pushTripleEntry	52	0	1	0	0		
 golf_clean.exe	00489890	ListModel::append	52	0	1	3	0		log/diff/00489890_C489890_begin.match.csv
 golf_clean.exe	0049e990	FUN_0049e990	52	0	0	0	0		
 golf_clean.exe	004a0060	freeGraphsyObject	52	0	1	0	0		
@@ -2212,7 +2212,7 @@ Terrain.dll	00033f60	CBlobProperty::CBlobProperty	52	0	0	0	0
 golf_clean.exe	004838f0	Stream4838f0::puts	51	0	1	3	0		log/diff/004838f0_C4838f0_puts.match.csv
 golf_clean.exe	00486b30	EditBox::setCaretActive	51	0	1	3	0		log/diff/00486b30_C486b30_setOn.match.csv
 golf_clean.exe	004935b0	reverseFindChar	51	0	1	3	0		log/diff/004935b0__findBack__YAPADPAD0D_Z.match.csv
-golf_clean.exe	004a1370	FUN_004a1370	51	0	0	0	0		
+golf_clean.exe	004a1370	getFieldValueByKind	51	0	1	0	0		
 golf_clean.exe	004ac6db	_CPtoLCID	51	0	0	0	0		
 golf_clean.exe	004b80ce	Unwind@004b80ce	51	0	0	0	0		
 golf_clean.exe	004b8101	Unwind@004b8101	51	0	0	0	0		
@@ -2224,19 +2224,19 @@ Terrain.dll	0002d7d0	__ctrlfp	50	0	0	0	0
 golf_clean.exe	004860d0	EditBox::dtor	49	0	1	3	0		log/diff/004860d0___1C4860d0__QAE_XZ.match.csv
 golf_clean.exe	0049eff0	bitSet	49	0	1	3	0		log/diff/0049eff0_C49eff0_setBit.match.csv
 golf_clean.exe	004aa50e	_write_multi_char	49	0	0	0	0		
-golf_clean.exe	00479670	FUN_00479670	48	0	0	0	0		
+golf_clean.exe	00479670	Widget_drawBoxR	48	0	1	0	0		
 golf_clean.exe	00486cf0	Timer::initA	48	0	1	0	0		
 golf_clean.exe	004884b0	Cursor::destroy	48	0	1	0	0		
 golf_clean.exe	0049ee90	flagToggle49ee90	48	0	1	3	0		log/diff/0049ee90_C49ee90_toggle.match.csv
 golf_clean.exe	0049eec0	flagToggle49eec0	48	0	1	3	0		log/diff/0049eec0_C49eec0_toggle.match.csv
 Terrain.dll	00019cc0	_set_new_handler	48	0	0	0	0		
 Terrain.dll	0001afa6	FUN_1001afa6	48	0	0	0	0		
-golf_clean.exe	004011b0	FUN_004011b0	47	0	0	0	0		
-golf_clean.exe	00402130	FUN_00402130	47	0	0	0	0		
-golf_clean.exe	004785e0	FUN_004785e0	47	0	0	0	0		
+golf_clean.exe	004011b0	freeRecordAtPos	47	0	1	0	0		
+golf_clean.exe	00402130	listIterNext	47	0	1	0	0		
+golf_clean.exe	004785e0	TextView_beginMeasure	47	0	1	0	0		
 golf_clean.exe	00480360	Tooltip::hide	47	0	1	0	0		
 golf_clean.exe	0049c910	serviceMovieFrame	47	0	1	0	0		
-golf_clean.exe	004a4ea0	FUN_004a4ea0	47	0	0	0	0		
+golf_clean.exe	004a4ea0	readListNode	47	0	1	0	0		
 golf_clean.exe	004a6268	_fwrite	47	0	0	0	0		
 golf_clean.exe	004a9943	_fflush	47	0	0	0	0		
 Terrain.dll	00001e40	Tile::getCorner	47	0	1	0	0		
@@ -2286,24 +2286,24 @@ Terrain.dll	0001d0b0	FUN_1001d0b0	43	0	0	0	0
 Terrain.dll	00027e50	?_ValidateRead@@YAHPBXI@Z	43	0	0	0	0		
 Terrain.dll	00027e80	?_ValidateWrite@@YAHPAXI@Z	43	0	0	0	0		
 Terrain.dll	0002fb00	_GetLcidFromDefault	43	0	0	0	0		
-golf_clean.exe	004a4ad0	FUN_004a4ad0	42	0	0	3	0		log/diff/004a4ad0_FUN_004a4ad0.match.csv
+golf_clean.exe	004a4ad0	findMarkupTokenIndex	42	0	1	3	0		log/diff/004a4ad0_FUN_004a4ad0.match.csv
 golf_clean.exe	004a64b8	FUN_004a64b8	42	0	0	0	0		
 golf_clean.exe	004a9d6e	__ftbuf	42	0	0	0	0		
 golf_clean.exe	004b01f0	emit_dri	42	0	1	3	0		log/diff/004b01f0__emit_dri.match.csv
 Terrain.dll	000292e0	__copysign	42	0	0	0	0		
 Terrain.dll	00035000	bitalloc	42	0	0	0	0		
-golf_clean.exe	0049c8b0	FUN_0049c8b0	41	0	0	0	0		
+golf_clean.exe	0049c8b0	freeCacheField	41	0	1	0	0		
 golf_clean.exe	004ac140	__isatty	41	0	0	0	0		
 golf_clean.exe	004ac70e	_setSBCS	41	0	0	0	0		
 Terrain.dll	0001e990	FID_conflict:__lock_file2	41	0	0	0	0		
 Terrain.dll	00021970	__mtterm	41	0	0	0	0		
 Terrain.dll	00037460	type_info::operator!=	41	0	0	0	0		
-golf_clean.exe	004049a0	FUN_004049a0	40	0	0	0	0		
-golf_clean.exe	00476340	FUN_00476340	40	0	0	0	0		
-golf_clean.exe	00476370	FUN_00476370	40	0	0	0	0		
-golf_clean.exe	004763a0	FUN_004763a0	40	0	0	0	0		
-golf_clean.exe	00478bb0	FUN_00478bb0	40	0	0	0	0		
-golf_clean.exe	00478be0	FUN_00478be0	40	0	0	0	0		
+golf_clean.exe	004049a0	drawLineOnSurface	40	0	1	0	0		
+golf_clean.exe	00476340	Widget_setQuad70	40	0	1	0	0		
+golf_clean.exe	00476370	Widget_setQuad74	40	0	1	0	0		
+golf_clean.exe	004763a0	Widget_setQuad78	40	0	1	0	0		
+golf_clean.exe	00478bb0	Widget_drawHLine	40	0	1	0	0		
+golf_clean.exe	00478be0	Widget_drawVLine	40	0	1	0	0		
 golf_clean.exe	0048cac0	ListBox::clearSelection	40	0	1	0	0		
 golf_clean.exe	004924b0	flushBlitSurface	40	0	1	3	0		log/diff/004924b0__release4924b0__YAXXZ.match.csv
 golf_clean.exe	0049fe20	FUN_0049fe20	40	0	0	0	0		
@@ -2330,7 +2330,7 @@ golf_clean.exe	0048e190	TextView::setSize	37	0	1	0	0
 golf_clean.exe	004a5316	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	37	0	0	0	0		
 golf_clean.exe	004a7928	__shift	37	0	0	0	0		
 Terrain.dll	000347e0	pbump	37	0	0	0	0		
-golf_clean.exe	0045c000	FUN_0045c000	36	0	0	0	0		
+golf_clean.exe	0045c000	Cursor_deleteDtor	36	0	1	0	0		
 golf_clean.exe	0047d810	View::scalarDtor47d810	36	0	1	0	0		
 golf_clean.exe	00488460	Reader::scalarDtor	36	0	1	0	0		
 golf_clean.exe	004a0320	logLine	36	0	1	0	0		
@@ -2340,11 +2340,11 @@ Terrain.dll	0000bba0	std::_Lockit::~_Lockit	36	0	1	3	0		log/diff/0000bba0_Terrai
 Terrain.dll	00015d40	_calloc	36	0	0	0	0		
 Terrain.dll	00015dd0	FID_conflict:__expand	36	0	0	0	0		
 Terrain.dll	000163b0	FID_conflict:__expand	36	0	0	0	0		
-golf_clean.exe	004747e0	FUN_004747e0	35	0	0	3	0		log/diff/004747e0___1C4747e0__QAE_XZ.match.csv
+golf_clean.exe	004747e0	Buf_releaseData	35	0	1	3	0		log/diff/004747e0___1C4747e0__QAE_XZ.match.csv
 golf_clean.exe	00487770	HashTable::bucketEmpty	35	0	1	3	0		log/diff/00487770_C487770_a.match.csv
 golf_clean.exe	004877a0	HashTable::bucketSet	35	0	1	3	0		log/diff/004877a0_C487770_isSet.match.csv
 golf_clean.exe	0048c610	ListBox::forwardClick	35	0	1	0	0		
-golf_clean.exe	00493670	FUN_00493670	35	0	0	0	0		
+golf_clean.exe	00493670	TextView_layoutRun	35	0	1	0	0		
 golf_clean.exe	004a558e	__abnormal_termination	35	0	0	0	0		
 golf_clean.exe	004a695c	FUN_004a695c	35	0	0	0	0		
 golf_clean.exe	004a8d76	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	35	0	0	0	0		
@@ -2386,10 +2386,10 @@ Terrain.dll	00030a60	FUN_10030a60	31	0	0	0	0
 Terrain.dll	00036c70	~ostream	31	0	0	0	0		
 golf_clean.exe	00404260	deletingDtor_404260	30	0	1	0	0		
 golf_clean.exe	00404380	deletingDtor_404380	30	0	1	0	0		
-golf_clean.exe	0043cbd0	FUN_0043cbd0	30	0	0	0	0		
-golf_clean.exe	004747c0	FUN_004747c0	30	0	0	0	0		
-golf_clean.exe	00474c20	FUN_00474c20	30	0	0	0	0		
-golf_clean.exe	00479f10	FUN_00479f10	30	0	0	0	0		
+golf_clean.exe	0043cbd0	editBoxTimer_deleteDtor	30	0	1	0	0		
+golf_clean.exe	004747c0	Buf_deleteDtor	30	0	1	0	0		
+golf_clean.exe	00474c20	Image_deleteDtor	30	0	1	0	0		
+golf_clean.exe	00479f10	View_deleteDtor	30	0	1	0	0		
 golf_clean.exe	00480580	View4804a0::scalarDtor	30	0	1	0	0		
 golf_clean.exe	00484110	releaseSoundObj	30	0	1	3	0		log/diff/00484110__call484110__YAHH_Z.match.csv
 golf_clean.exe	004841c0	Snd::scalarDtor4841c0	30	0	1	0	0		
@@ -2410,7 +2410,7 @@ golf_clean.exe	004916f0	Dialog::scalarDtor	30	0	1	0	0
 golf_clean.exe	004928b0	HotList::scalarDtor	30	0	1	0	0		
 golf_clean.exe	00497a00	comboDeleteDtor	30	0	1	0	0		
 golf_clean.exe	0049c800	globalObjDeleteDtor49c800	30	0	1	0	0		
-golf_clean.exe	0049d070	FUN_0049d070	30	0	0	0	0		
+golf_clean.exe	0049d070	pairArray_deleteDtor	30	0	1	0	0		
 golf_clean.exe	0049ead0	freeCursors	30	0	1	0	0		
 golf_clean.exe	004a0160	loggerDeleteDtor	30	0	1	0	0		
 golf_clean.exe	004ae740	jpeg_set_quality	30	0	1	3	0		log/diff/004ae740__jpeg_set_quality.match.csv
@@ -2442,9 +2442,9 @@ Terrain.dll	000173b0	FUN_100173b0	28	0	0	0	0
 Terrain.dll	000183d0	FUN_100183d0	28	0	0	0	0		
 Terrain.dll	00018495	FID_conflict:$L16506	28	0	0	0	0		
 Terrain.dll	0001a300	FUN_1001a300	28	0	0	0	0		
-golf_clean.exe	00475df0	FUN_00475df0	27	0	0	0	0		
-golf_clean.exe	00479b20	FUN_00479b20	27	0	0	0	0		
-golf_clean.exe	0047abc0	FUN_0047abc0	27	0	0	0	0		
+golf_clean.exe	00475df0	drawRoutingPoly	27	0	1	0	0		
+golf_clean.exe	00479b20	releaseCursorClip	27	0	1	0	0		
+golf_clean.exe	0047abc0	isPrimaryMouseDown	27	0	1	0	0		
 golf_clean.exe	00489c90	ListBox::subDtor	27	0	1	3	0		log/diff/00489c90___1C489c90__QAE_XZ.match.csv
 golf_clean.exe	00491490	Widget::setFlagBit0	27	0	1	0	0		
 golf_clean.exe	004914b0	Widget::setFlagBit1	27	0	1	0	0		
@@ -2502,7 +2502,7 @@ golf_clean.exe	004b772e	Unwind@004b772e	24	0	0	0	0
 golf_clean.exe	004b777e	Unwind@004b777e	24	0	0	0	0		
 Terrain.dll	00018bc6	FUN_10018bc6	24	0	0	0	0		
 golf_clean.exe	00449110	Terrain::getElevation	23	0	1	3	0		log/diff/00449110_Terrain_getElevation.match.csv
-golf_clean.exe	00465560	FUN_00465560	23	0	0	0	0		
+golf_clean.exe	00465560	resetScrollText	23	0	1	0	0		
 golf_clean.exe	0047b9f0	Window::fwdScroll26c	23	0	1	0	0		
 golf_clean.exe	0047ba10	Window::fwdScroll270	23	0	1	0	0		
 golf_clean.exe	0047ba70	Window::setField26c5a0	23	0	1	0	0		
@@ -2534,7 +2534,7 @@ Terrain.dll	0004123a	Unwind@1004123a	22	0	0	0	0
 Terrain.dll	0004128a	Unwind@1004128a	22	0	0	0	0		
 Terrain.dll	000412da	Unwind@100412da	22	0	0	0	0		
 golf_clean.exe	00485590	showMessageBox	21	0	1	0	0		
-golf_clean.exe	00493ed0	FUN_00493ed0	21	0	0	0	0		
+golf_clean.exe	00493ed0	comboListQuery	21	0	1	0	0		
 Terrain.dll	0001e410	_exit	21	0	0	0	0		
 Terrain.dll	0001e430	__exit	21	0	0	0	0		
 Terrain.dll	00021da0	FUN_10021da0	21	0	0	0	0		
@@ -2569,7 +2569,7 @@ golf_clean.exe	00449130	Terrain::getWall	18	0	1	3	0		log/diff/00449130_Terrain_g
 golf_clean.exe	004967d0	scrollbarResetThumb	18	0	1	0	0		
 Terrain.dll	00034fc0	lockc	18	0	0	0	0		
 Terrain.dll	00034fe0	lockc	18	0	0	0	0		
-golf_clean.exe	00402160	FUN_00402160	17	0	0	0	0		
+golf_clean.exe	00402160	listIterValue	17	0	1	0	0		
 golf_clean.exe	00484130	clearSoundPtrs	17	0	1	0	0		
 golf_clean.exe	004a5108	_exit	17	0	0	0	0		
 golf_clean.exe	004a5119	__exit	17	0	0	0	0		
@@ -2597,7 +2597,7 @@ Terrain.dll	00034f40	precision	17	0	0	0	0
 Terrain.dll	00034f60	rdstate	17	0	0	0	0		
 Terrain.dll	00036560	eback	17	0	0	0	0		
 Terrain.dll	000374c0	FUN_100374c0	17	0	0	0	0		
-golf_clean.exe	00463170	FUN_00463170	16	0	0	0	0		
+golf_clean.exe	00463170	boundIndex	16	0	1	0	0		
 golf_clean.exe	0047d010	screenTick47d010	16	0	1	0	0		
 golf_clean.exe	004aa584	_get_int64_arg	16	0	0	0	0		
 golf_clean.exe	004b04c0	jdiv_round_up	16	0	1	3	0		log/diff/004b04c0__jdiv_round_up.match.csv
@@ -2703,7 +2703,7 @@ Terrain.dll	00041200	Unwind@10041200	12	0	0	0	0
 Terrain.dll	00041250	Unwind@10041250	12	0	0	0	0		
 Terrain.dll	000412a0	Unwind@100412a0	12	0	0	0	0		
 Terrain.dll	000412f0	Unwind@100412f0	12	0	0	0	0		
-golf_clean.exe	00474810	FUN_00474810	11	0	0	0	0		
+golf_clean.exe	00474810	Buf_dtor	11	0	1	0	0		
 golf_clean.exe	0047d7c0	View::ctorVtbl47d7c0	11	0	1	0	0		
 golf_clean.exe	00483b90	Surface::ctorVtbl483b90	11	0	1	0	0		
 golf_clean.exe	00487040	BinkPlayer::dtor	11	0	1	0	0		
@@ -3216,7 +3216,7 @@ golf_clean.exe	00404350	Base4805a0::dtor	5	0	0	0	0
 golf_clean.exe	00483020	FUN_00483020	5	0	0	0	0		
 golf_clean.exe	00487cb0	FUN_00487cb0	5	0	0	0	0		
 golf_clean.exe	0049bfc0	Screen::dtor	5	0	0	0	0		
-golf_clean.exe	0049d040	thunk_FUN_00474810	5	0	0	0	0		
+golf_clean.exe	0049d040	Buf_dtor	5	0	0	0	0		
 golf_clean.exe	004b0480	jpeg_mem_available	5	0	1	3	0		log/diff/004b0480__jpeg_mem_available.match.csv
 Terrain.dll	00001023	Terrain::hasConnectedPath	5	0	0	0	0		
 Terrain.dll	00001073	Terrain::bernstein	5	0	0	0	0		

@@ -79,7 +79,7 @@ clears and repaints. `Label::setText` (0x47b8f0) manages a window's heap text at
 ## 2. Image / sprite / FLC decoder + display surfaces (render / video)
 
 ### Display surface and screen manager
-The screen manager object g_screenMgr (0x83ad50) owns the display. Surfaces are created through it:
+The screen manager object g_graphicsDevice (0x83ad50) owns the display. Surfaces are created through it:
 `Surface::createFromId` (0x483800, vtable f29), `Surface::createSized` (0x483850), `releaseBacking`
 (0x4838b0), `ctorVtbl483b90` (0x483b90). `setPrimarySurface` (0x483ac0) installs g_primarySurface (0x83ad44);
 `clearPrimarySurface` (0x483b10); `screenFlip` (0x483ba0) presents. Two manager singletons g_screenMgrA/B
@@ -118,7 +118,7 @@ or windowing step (its consumer is outside this range).
 screen object. The event pump drains the OS/message queue while setting the phase global g_inputPhase
 (0x83ad4c): `pumpInput483bd0` (0x3f), `pumpInput483c90` (2), `pumpInput483cf0` (8), `pumpInput483c30`.
 Modal state: `enterModal483d30` (0x483d30), `modalPush483d40` (0x483d40), `modalFocusClear483d60` (0x483d60),
-`leaveModal483d80` (0x483d80), `frameTick483cd0` (0x483cd0). All route through g_screenMgr vtable slots.
+`leaveModal483d80` (0x483d80), `frameTick483cd0` (0x483cd0). All route through g_graphicsDevice vtable slots.
 
 ## 4. Sound system (audio)
 
