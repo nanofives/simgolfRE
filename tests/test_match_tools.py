@@ -75,3 +75,22 @@ def test_lang_c_compiles_as_c(tmp_path):
     f.write_text(c)
     res = match.compare(f, "", False, quiet=True)
     assert len(res) == 1 and res[0][4] == 1.0, res[0][4] if res else None
+
+
+def test_permuter_scheduling_rewrites():
+    body = "{\n    a = 1;\n    b = 2;\n    c = 3;\n    i++;\n}"
+    assert any("b = 2;\n    c = 3;\n    a = 1;" in v for v in match_permute.rw_move(body))
+    assert any("++i;" in v for v in match_permute.rw_incform(body))
+    assert any("y + x" in v for v in match_permute.rw_commute("{\n    r = x + y;\n}"))
+    assert any("unsigned n;" in v for v in match_permute.rw_signed("{\n    int n;\n}"))
+    split = list(match_permute.rw_initsplit("{\n    int n = f();\n    g(n);\n}"))
+    assert split and "int n;\n    n = f();" in split[0]
+    loop = list(match_permute.rw_forwhile("{\n    for (i = 0; i < n; i++) {\n        f(i);\n    }\n}"))
+    assert loop and "while (i < n)" in loop[0] and "i++;" in loop[0]
+
+
+def test_permuter_register_renaming():
+    # the same code with esi/edi exchanged is equal once registers are renamed by first use
+    a = ["mov esi,[ecx+4]", "mov edi,[ecx+8]", "add esi,edi"]
+    b = ["mov edi,[ecx+4]", "mov esi,[ecx+8]", "add edi,esi"]
+    assert a != b and match_permute.alpha(a) == match_permute.alpha(b)
