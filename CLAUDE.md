@@ -271,7 +271,7 @@ heightBlend only returns its clamp bounds). One registry entry per global mode (
 Parallel C3 (2026-10-07): agents prepare batches in their own files, never shared ones: `shim/src/re/<ID>.cpp`,
 `re/frida/registry.d/<ID>.py` (`HOOKS = {...}`, merged by hooks_registry.py, duplicate names rejected),
 `re/frida/js/fixtures.d/<ID>.js` (`Object.assign(globalThis.DIFF_FIXTURES, {...})`, loaded by diff_hook.py),
-`log/c3/<ID>_purpose.md`; `shim\check_re.bat srce\<ID>.cpp` compile-checks without deploying. One verifier
+`log/c3/<ID>_purpose.md`; `shim\check_re.bat src\re\<ID>.cpp` compile-checks without deploying. One verifier
 (the game is single-instance) builds once, runs diff_hook over all new names in one boot, checks each spread, inserts
 the Purposes and promotes. Brief: log/c3_brief.md (local).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
