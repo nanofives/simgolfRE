@@ -169,3 +169,20 @@ HOOKS.update({
     "evalPlacementArea_ct1": dict(module="golf_clean.exe", addr=0x0040DB90, abi="default", ret="int",
                                   args=["int", "int", "int", "int"], fixture="place_ct1", vectors=_PLACE),
 })
+
+
+# Fragments (one file per C3 batch, so parallel agents never edit the same file): re/frida/registry.d/<batch>.py
+# each defines HOOKS = {name: dict(...)} in the format above; names must be unique across all files.
+def _load_fragments():
+    import importlib.util, pathlib
+    for f in sorted((pathlib.Path(__file__).parent / "registry.d").glob("*.py")):
+        spec = importlib.util.spec_from_file_location(f"registry_d_{f.stem}", f)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        dup = set(mod.HOOKS) & set(HOOKS)
+        if dup:
+            raise ValueError(f"{f.name}: hook names already registered: {sorted(dup)}")
+        HOOKS.update(mod.HOOKS)
+
+
+_load_fragments()

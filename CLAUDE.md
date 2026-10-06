@@ -268,6 +268,12 @@ instructions) — 28 at C3. Fixtures seed golfer records (0x5794c0, 0x100 each),
 each), the 0x5a4998 level table (51 per row), placed objects (0x58bcb8, 16 each) and the signed height grid at
 0x838c1c that bilinearSample 0x4674c0 reads (16x16, 19-byte rows; amplitude matters: too small or too large and
 heightBlend only returns its clamp bounds). One registry entry per global mode (`_mode1`, `_c0`, `_tick`, `_ct1`).
+Parallel C3 (2026-10-07): agents prepare batches in their own files, never shared ones: `shim/src/re/<ID>.cpp`,
+`re/frida/registry.d/<ID>.py` (`HOOKS = {...}`, merged by hooks_registry.py, duplicate names rejected),
+`re/frida/js/fixtures.d/<ID>.js` (`Object.assign(globalThis.DIFF_FIXTURES, {...})`, loaded by diff_hook.py),
+`log/c3/<ID>_purpose.md`; `shim\check_re.bat srce\<ID>.cpp` compile-checks without deploying. One verifier
+(the game is single-instance) builds once, runs diff_hook over all new names in one boot, checks each spread, inserts
+the Purposes and promotes. Brief: log/c3_brief.md (local).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

@@ -37,7 +37,9 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
     with Game(env={"SIMGOLF_SKIP_INTRO": "1"}) as g:
         g.wait_window()
         # Fixtures and the runner must share one script runtime, so they load as one source.
-        src = (JS_DIR / "diff_fixtures.js").read_text() + "\n" + (JS_DIR / "diff_hook.js").read_text()
+        # base fixtures, then one fragment per C3 batch (js/fixtures.d/*.js: Object.assign(globalThis.DIFF_FIXTURES, {...}))
+        parts = [JS_DIR / "diff_fixtures.js"] + sorted((JS_DIR / "fixtures.d").glob("*.js")) + [JS_DIR / "diff_hook.js"]
+        src = "\n".join(p.read_text() for p in parts)
         sc = g.session.create_script(src)
         sc.load()
         for name in names:
