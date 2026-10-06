@@ -213,7 +213,11 @@ an anti-island caller and callee. C4 needs a canonical-scenario ON/OFF run (D-00
 C4 evidence.
 `hooks.csv` is keyed by (module, addr): the three DLLs share the image base 0x10000000 and 204 RVAs collide.
 `re_classify.py batch <tsv...> --to C1` promotes every row of a names TSV through the same gates (DLL VAs are
-converted to RVAs; one CHANGELOG line each); `status --summary` prints counts per module.
+converted to RVAs; one CHANGELOG line each); `status --summary` prints counts per module; `retag <tsv...>` copies a
+TSV's subsystem column onto tracked rows (level unchanged). Subsystem `net` (Jackal network layer, exe 0x497b40-0x49bec0)
+was added 2026-10-06. `re/functions_ghidra*.tsv` are exported from the master with
+`-postScript ListFunctions.java <out.tsv> -readOnly` (namespaced names; thunks carry their target's name, no `thunk_`
+prefix, so tools exclude them by size <= 5).
 
 ### Names and systems (`re/names/`, `re/analysis/systems/`)
 `re/names/<id>.tsv` (`module addr name subsystem evidence purpose`) and `<id>_globals.tsv` (`module addr name type

@@ -1162,21 +1162,21 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00497a20,golf_clean.exe,comboDtor,ui,C1,located,,,,,,,"match re/match/golf_hand_06_e.cpp; callee 0x004961d0 (controlInitBase), reset 0x004a14c0, member dtors"
 00497b00,golf_clean.exe,gfxFlushA,render,C1,located,,,,,,,match re/match/golf_small17.cpp; callers showScreen/hideScreen 0x00483bb0/0x00483c10; callee 0x0049aa70 (netPump)
 00497b20,golf_clean.exe,gfxFlushB,render,C1,located,,,,,,,match re/match/golf_small17.cpp; callers showScreen/redrawAll; callee 0x0049ab40 (netServiceControl)
-00497b40,golf_clean.exe,netSendList,util,C1,located,,,,,,,"match re/match/golf_hand_07_497b40.cpp; caller 0x0049b690 (netQueueMessage); callee 0x00499140 (netSendMessages), _malloc/_free"
-00497c20,golf_clean.exe,netTimerReadA,util,C1,located,,,,,,,match re/match/golf_raw_05.cpp; reads global 0x008400b0
-00497c70,golf_clean.exe,netTimerReadB,util,C1,located,,,,,,,match re/match/golf_raw_05.cpp; reads global 0x008400b0
-00497cc0,golf_clean.exe,netFlush,util,C1,located,,,,,,,match re/match/golf_hand_01.cpp; callee 0x00499140 (netSendMessages)
-00497d10,golf_clean.exe,netSendShutdown,util,C1,located,,,,,,,"match re/match/golf_hand_s2.cpp; callers 0x00497fc0/0x00499140/0x0049b7b0; callee clear 0x004a4b00, _free"
-00497fc0,golf_clean.exe,netService,util,C1,located,,,,,,,"string 0x004e4680 (string in the binary), 0x004e47b0 (string in the binary), 0x004e47e8 (string in the binary); caller 0x0049aa70 (netPump)"
-00499140,golf_clean.exe,netSendMessages,util,C1,located,,,,,,,"string 0x004e47fc (string in the binary); callers netSendList/netFlush/netPump; callee _malloc/_free, add 0x004a4b60"
-0049aa30,golf_clean.exe,netNameOf,util,C1,located,,,,,,,match re/match/golf_hand_01.cpp; callers 0x00497fc0/0x00499140/0x0049acf0
-0049aa70,golf_clean.exe,netPump,util,C1,located,,,,,,,"match re/match/golf_hand_06_l.cpp; callee 0x00497fc0 (netService), 0x00499140 (netSendMessages); caller gfxFlushA"
-0049ab40,golf_clean.exe,netServiceControl,util,C1,located,,,,,,,"caller gfxFlushB 0x00497b20; callee 0x0049acf0 (netHandleControl), 0x00499140"
-0049acf0,golf_clean.exe,netHandleControl,util,C1,located,,,,,,,"string 0x004e4824 (string in the binary), 0x004e4838 (string in the binary), 0x004e484c (string in the binary); callee netNameOf, remove 0x0049bec0"
-0049b690,golf_clean.exe,netQueueMessage,util,C1,located,,,,,,,"match re/match/golf_hand_08_h.cpp; caller 0x0049b7b0 (netPoll); callee netSendList, 0x0049b970 (netHeapAlloc)"
-0049b7b0,golf_clean.exe,netPoll,util,C1,located,,,,,,,"match re/match/golf_hand_r0.cpp; callers 0x00497fc0/0x00499140; callee pop 0x004a4c70 (queuePop), netQueueMessage"
-0049b970,golf_clean.exe,netHeapAlloc,util,C1,located,,,,,,,"string 0x004c1434 (string in the binary), 0x004c1458 (string in the binary); callee _malloc, _exit, alloc 0x00474860"
-0049bec0,golf_clean.exe,netListRemove,util,C1,located,,,,,,,match re/match/golf_hand_05.cpp; caller 0x0049acf0 (netHandleControl)
+00497b40,golf_clean.exe,netSendList,net,C1,located,,,,,,,"match re/match/golf_hand_07_497b40.cpp; caller 0x0049b690 (netQueueMessage); callee 0x00499140 (netSendMessages), _malloc/_free"
+00497c20,golf_clean.exe,netTimerReadA,net,C1,located,,,,,,,match re/match/golf_raw_05.cpp; reads global 0x008400b0
+00497c70,golf_clean.exe,netTimerReadB,net,C1,located,,,,,,,match re/match/golf_raw_05.cpp; reads global 0x008400b0
+00497cc0,golf_clean.exe,netFlush,net,C1,located,,,,,,,match re/match/golf_hand_01.cpp; callee 0x00499140 (netSendMessages)
+00497d10,golf_clean.exe,netSendShutdown,net,C1,located,,,,,,,"match re/match/golf_hand_s2.cpp; callers 0x00497fc0/0x00499140/0x0049b7b0; callee clear 0x004a4b00, _free"
+00497fc0,golf_clean.exe,netService,net,C1,located,,,,,,,"string 0x004e4680 (string in the binary), 0x004e47b0 (string in the binary), 0x004e47e8 (string in the binary); caller 0x0049aa70 (netPump)"
+00499140,golf_clean.exe,netSendMessages,net,C1,located,,,,,,,"string 0x004e47fc (string in the binary); callers netSendList/netFlush/netPump; callee _malloc/_free, add 0x004a4b60"
+0049aa30,golf_clean.exe,netNameOf,net,C1,located,,,,,,,match re/match/golf_hand_01.cpp; callers 0x00497fc0/0x00499140/0x0049acf0
+0049aa70,golf_clean.exe,netPump,net,C1,located,,,,,,,"match re/match/golf_hand_06_l.cpp; callee 0x00497fc0 (netService), 0x00499140 (netSendMessages); caller gfxFlushA"
+0049ab40,golf_clean.exe,netServiceControl,net,C1,located,,,,,,,"caller gfxFlushB 0x00497b20; callee 0x0049acf0 (netHandleControl), 0x00499140"
+0049acf0,golf_clean.exe,netHandleControl,net,C1,located,,,,,,,"string 0x004e4824 (string in the binary), 0x004e4838 (string in the binary), 0x004e484c (string in the binary); callee netNameOf, remove 0x0049bec0"
+0049b690,golf_clean.exe,netQueueMessage,net,C1,located,,,,,,,"match re/match/golf_hand_08_h.cpp; caller 0x0049b7b0 (netPoll); callee netSendList, 0x0049b970 (netHeapAlloc)"
+0049b7b0,golf_clean.exe,netPoll,net,C1,located,,,,,,,"match re/match/golf_hand_r0.cpp; callers 0x00497fc0/0x00499140; callee pop 0x004a4c70 (queuePop), netQueueMessage"
+0049b970,golf_clean.exe,netHeapAlloc,net,C1,located,,,,,,,"string 0x004c1434 (string in the binary), 0x004c1458 (string in the binary); callee _malloc, _exit, alloc 0x00474860"
+0049bec0,golf_clean.exe,netListRemove,net,C1,located,,,,,,,match re/match/golf_hand_05.cpp; caller 0x0049acf0 (netHandleControl)
 0049bff0,golf_clean.exe,initGlobalObj_49c020,ui,C1,located,,,,,,,match re/match/golf_raw_05.cpp; callee 0x0049c020 (ctorGlobalObj49c020)
 0049c000,golf_clean.exe,regAtexit_49c000,crt,C1,located,,,,,,,match re/match/golf_raw_09.cpp; callee _atexit 0x004a56d2
 0049c020,golf_clean.exe,ctorGlobalObj49c020,ui,C1,located,,,,,,,"match re/match/golf_hand_r1.cpp; callee ctors 0x004804a0, 0x004837f0, 0x00486c90"

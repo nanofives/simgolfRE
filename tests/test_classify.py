@@ -174,3 +174,18 @@ def test_batch_promotes_through_the_gates_and_keys_dlls_by_module(proj):
     assert rows[("golf_clean.exe", "00401000")]["name"] == "Foo"
     log = (proj / "re" / "analysis" / "CHANGELOG.md").read_text()
     assert log.count("->C1") == 3 and "sound.dll:00002650" in log and "OLD ENTRY" in log
+
+
+def test_retag_changes_only_the_subsystem_of_tracked_rows(proj):
+    (proj / "re" / "functions_ghidra_sound.dll.tsv").write_text("entry\tname\tsize\tcallers\tcallees\n00002650\tFUN_10002650\t78\t1\t0\n")
+    tsv = proj / "names.tsv"
+    tsv.write_text("module\taddr\tname\tsubsystem\tevidence\tpurpose\n"
+                   "sound.dll\t0x10002650\tnetPoll\tutil\timport recv\tpolls\n")
+    assert run(proj, "batch", str(tsv), "--to", "C1") == 0
+    tsv.write_text("module\taddr\tname\tsubsystem\tevidence\tpurpose\n"
+                   "sound.dll\t0x10002650\tnetPoll\tnet\timport recv\tpolls\n"
+                   "sound.dll\t0x10003000\tuntracked\tnet\tx\tnot in hooks.csv\n")
+    assert run(proj, "retag", str(tsv)) == 0
+    row = rc.Project(proj).rows()[("sound.dll", "00002650")]
+    assert row["subsystem"] == "net" and row["confidence"] == "C1"
+    assert "subsystem util->net" in (proj / "re" / "analysis" / "CHANGELOG.md").read_text()

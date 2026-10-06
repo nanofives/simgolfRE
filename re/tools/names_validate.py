@@ -1,7 +1,7 @@
 """Validate naming outputs: field counts, subsystems, unique names/addrs, banned words.   py -3.12 re/tools/names_validate.py ID..."""
 import re, sys
 
-SUBS = set("boot frontend render terrain course golfer economy ai audio video input save ui sim util crt unknown".split())
+SUBS = set("boot frontend render terrain course golfer economy ai audio video input save ui sim net util crt unknown".split())
 BANNED = re.compile(r"\b(probably|likely|seems to|appears to|I think|presumably|might be|maybe)\b", re.I)
 bad = 0
 for i in sys.argv[1:]:

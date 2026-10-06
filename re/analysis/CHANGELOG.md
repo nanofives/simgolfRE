@@ -4,6 +4,21 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  0049bec0  netListRemove  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  0049b970  netHeapAlloc  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  0049b7b0  netPoll  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  0049b690  netQueueMessage  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  0049acf0  netHandleControl  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  0049ab40  netServiceControl  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  0049aa70  netPump  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  0049aa30  netNameOf  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  00499140  netSendMessages  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  00497fc0  netService  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  00497d10  netSendShutdown  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  00497cc0  netFlush  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  00497c70  netTimerReadB  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  00497c20  netTimerReadA  subsystem util->net  re/names/exe_5.tsv
+2026-10-06  00497b40  netSendList  subsystem util->net  re/names/exe_5.tsv
 2026-10-06  0047ae80  setFocusItem  C0->C1  writes DAT_0083ab98; calls item vtable +0xf0
 2026-10-06  0047abe0  View_attach  C0->C1  match re/match/golf_hand_r2.cpp
 2026-10-06  0047a4c0  layoutViewTree  C0->C1  string 0x004e42f0; string 0x004e4304; callee 0x00479f30 (layoutNode)

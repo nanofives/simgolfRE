@@ -5,9 +5,8 @@ Range of 211 functions. 190 named in `re/names/exe_5.tsv`, 21 left in
 `re/match/*.cpp` unless the evidence column cites only callers/callees/strings.
 All offsets below are from the decompilation at the cited address.
 
-Subsystem note: this range contains the Jackal engine's network/transport layer.
-There is no `net` token in the allowed subsystem set, so those functions are tagged
-`util` (engine infrastructure) and described as the (string in the binary) here.
+Subsystem note: this range contains the Jackal engine's network/transport layer. Its 15
+`net*` functions are tagged `net` (subsystem added 2026-10-06; they were `util` before).
 
 ## 1. Dropdown/combo control (ui) — 0x004936a0 .. 0x00494020, 0x004940e0
 
@@ -65,7 +64,7 @@ track rect at `this+0x5ac` and the min/max/page range. `scrollbarResetState`
 (0x00497a20) and its deleting variant (0x00497a00) tear the control down.
 `orderPair` (0x00496770) swaps two ints into ascending order (drag range helper).
 
-## 5. Network/transport layer (util) — 0x00497b00 .. 0x0049bec0
+## 5. Network/transport layer (net) — 0x00497b00 .. 0x0049bec0
 
 The Jackal engine network stack (string (string in the binary) 0x004e4680). Entry is `netPump`
 (0x0049aa70), called from `gfxFlushA` (0x00497b00) during screen flush;

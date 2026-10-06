@@ -24,7 +24,7 @@ import sys
 DEFAULT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 LEVELS = ["C0", "C1", "C2", "C3", "C4"]
 SUBSYSTEMS = {"boot", "frontend", "render", "terrain", "course", "golfer", "economy", "ai", "audio", "video",
-              "input", "save", "ui", "sim", "util", "crt", "unknown"}
+              "input", "save", "ui", "sim", "net", "util", "crt", "unknown"}
 COLUMNS = ["addr", "module", "name", "subsystem", "confidence", "status", "note", "file", "callers", "callees",
            "frida_diff", "scenario", "notes"]
 NOTE_SECTIONS_C2 = ["## Signature", "## Reads", "## Writes", "## Callees", "## Constants"]
@@ -345,12 +345,54 @@ def cmd_batch(p: Project, a) -> int:
             refused += r != 0
     if ok:
         p.save(rows)
-        text = p.changelog.read_text() if p.changelog.exists() else "# CHANGELOG (newest first)\n\n" + MARKER + "\n"
-        if MARKER not in text:
-            raise SystemExit(f"{p.changelog} lost its {MARKER} marker; refusing to write")
-        p.changelog.write_text(text.replace(MARKER, MARKER + "\n" + "\n".join(reversed(p.pending_log)), 1))
+        _flush_log(p)
     print(f"batch {a.to}: {ok} promoted, {refused} refused")
     return 0 if not refused else 2
+
+
+def _flush_log(p: Project) -> None:
+    text = p.changelog.read_text() if p.changelog.exists() else "# CHANGELOG (newest first)\n\n" + MARKER + "\n"
+    if MARKER not in text:
+        raise SystemExit(f"{p.changelog} lost its {MARKER} marker; refusing to write")
+    p.changelog.write_text(text.replace(MARKER, MARKER + "\n" + "\n".join(reversed(p.pending_log)), 1))
+
+
+def cmd_retag(p: Project, a) -> int:
+    """Copy the subsystem column of names TSVs onto rows already in hooks.csv (the level does not change).
+    One CHANGELOG line per changed row; rows not in hooks.csv are skipped (promote them with `batch`)."""
+    rows = p.rows()
+    p.pending_log = []
+    changed = skipped = 0
+    for path in a.tsv:
+        lines = pathlib.Path(path).read_text().splitlines()
+        head = lines[0].split("\t")
+        for line in lines[1:]:
+            c = dict(zip(head, line.split("\t")))
+            if not c.get("addr") or not c.get("subsystem"):
+                continue
+            if c["subsystem"] not in SUBSYSTEMS:
+                raise SystemExit(f"{path}: unknown subsystem {c['subsystem']!r} at {c['addr']}")
+            mod = c.get("module") or "golf_clean.exe"
+            va = int(c["addr"], 16)
+            base = 0 if mod == "golf_clean.exe" else 0x10000000
+            addr = f"{va - base if va >= base else va:08x}"
+            row = rows.get((mod, addr))
+            if row is None:
+                skipped += 1
+                continue
+            old = row.get("subsystem") or ""
+            if old == c["subsystem"]:
+                continue
+            row["subsystem"] = c["subsystem"]
+            where = addr if mod == "golf_clean.exe" else f"{mod}:{addr}"
+            p.pending_log.append(f"{datetime.date.today()}  {where}  {row.get('name')}  subsystem {old}->{c['subsystem']}"
+                                 f"  {pathlib.Path(path).as_posix()}")
+            changed += 1
+    if changed:
+        p.save(rows)
+        _flush_log(p)
+    print(f"retag: {changed} changed, {skipped} not in hooks.csv")
+    return 0
 
 
 def main(argv=None) -> int:
@@ -373,6 +415,8 @@ def main(argv=None) -> int:
     b = sub.add_parser("batch", help="promote every row of one or more TSVs (module addr name subsystem evidence)")
     b.add_argument("tsv", nargs="+")
     b.add_argument("--to", required=True, choices=LEVELS[1:])
+    rt = sub.add_parser("retag", help="update the subsystem of tracked rows from names TSVs")
+    rt.add_argument("tsv", nargs="+")
     a = ap.parse_args(argv)
     p = Project(a.root)
     if a.cmd == "check":
@@ -383,6 +427,8 @@ def main(argv=None) -> int:
         return cmd_demote(p, a)
     if a.cmd == "batch":
         return cmd_batch(p, a)
+    if a.cmd == "retag":
+        return cmd_retag(p, a)
     return cmd_status(p, a)
 
 
