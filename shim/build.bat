@@ -2,6 +2,10 @@
 rem Build simgolf_shim as winmm.dll (x86) and deploy it next to golf_clean.exe.
 call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
 cd /d %~dp0
+rem An inherited CL (Git Bash / Windows PowerShell here carry CL=/MP12) makes cl relaunch itself per source and
+rem mangles the quoted /Fo path into a stray "C:\Program.obj" link input; this build sets its own flags.
+set CL=
+set _CL_=
 rem Parallel builds (one per agent, CLAUDE.md "parallel C3"): SIMGOLF_BUILD_DIR (objects + dll), SIMGOLF_DEPLOY_DIR
 rem (install copy to deploy into) and SIMGOLF_RE_BATCHES (batch list) override build, ..\original and re_batches.txt.
 set BDIR=build
