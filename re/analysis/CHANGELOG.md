@@ -4,6 +4,360 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  sound.dll:00030080  Sound5c450_ctor  name Sound_ctor->Sound5c450_ctor  re/names/sound_4.tsv
+2026-10-06  sound.dll:00030180  Sound5c450_dtor  name Sound_dtor->Sound5c450_dtor  re/names/sound_4.tsv
+2026-10-06  sound.dll:0001ff50  Sound5b6a8_dtor  name Sound_dtor->Sound5b6a8_dtor  re/names/sound_3.tsv
+2026-10-06  sound.dll:0001f4a0  Sound5b6a8_ctor  name Sound_ctor->Sound5b6a8_ctor  re/names/sound_3.tsv
+2026-10-06  sound.dll:0003e400  floatFloorToInt  C0->C1  callee 0x1004339c (_floor); callee 0x10042550 (__ftol); callers 0x1003edc0,0x1003f720,0x10041020
+2026-10-06  sound.dll:0003c640  codecStageDispatch  C0->C1  caller 0x1003b150 (codecProcessResource); 14 callees 0x1003e600..0x10040da0
+2026-10-06  sound.dll:0003b230  codecSynthStage  C0->C1  caller 0x1003a980 (codecProcessBlock); callees 0x1003d0a0,0x1003d1d0,0x1003d8d0,0x1003da50
+2026-10-06  sound.dll:0003b5a0  codecTransformStage  C0->C1  caller 0x1003a980 (codecProcessBlock); callees 0x1003e2c0,0x1003e480,0x1003e520,0x10042550 (__ftol)
+2026-10-06  sound.dll:0003c180  bitPack  C0->C1  caller 0x1003b150 (codecProcessResource); callee 0x1003bf30 (bitPermute) with mode 0
+2026-10-06  sound.dll:0003c1d0  bitUnpack  C0->C1  caller 0x1003a980 (codecProcessBlock); callee 0x1003bf30 (bitPermute) with mode 1
+2026-10-06  sound.dll:0003bf30  bitPermute  C0->C1  callers 0x1003c180 (bitPack),0x1003c1d0 (bitUnpack); table 0x1006447c (54 entries); masks 0x10064454
+2026-10-06  sound.dll:0003b150  codecProcessResource  C0->C1  caller 0x100316c0 (loadWaveResource); callees 0x1003c180 (bitPack),0x1003c220,0x1003c640 (codecStageDispatch),0x1003d040
+2026-10-06  sound.dll:0003a980  codecProcessBlock  C0->C1  caller 0x10030840 (openMmioSound); data 0x10063ef0; callees 0x1003c1d0 (bitUnpack),0x1003b5a0 (codecTransformStage),0x1003b230 (codecSynthStage)
+2026-10-06  sound.dll:0003a770  getDsCoopLevel  C0->C1  data 0x100b4a3c (g_dsCoopLevel)
+2026-10-06  sound.dll:0004e4b3  __free_lc_time  C0->C1  fid re/fid/sound.dll.fid.tsv (___free_lc_time); callee 0x10042c07 (free)
+2026-10-06  sound.dll:0004aa10  _alloca_probe  C0->C1  fid re/fid/sound.dll.fid.tsv (__alloca_probe)
+2026-10-06  sound.dll:0004593a  callocUnlockFunclet  C0->C1  caller 0x100458a1 (calloc); callee 0x10047771 (_unlock)
+2026-10-06  sound.dll:000453dd  reallocUnlockFunclet  C0->C1  caller 0x10045252 (crtRealloc); callee 0x10047771 (_unlock)
+2026-10-06  sound.dll:00042c71  freeUnlockFunclet  C0->C1  caller 0x10042c07 (free); callee 0x10047771 (_unlock)
+2026-10-06  sound.dll:00042b72  heapAllocUnlockFunclet  C0->C1  caller 0x10042b0b (heap_alloc); callee 0x10047771 (_unlock, index 9)
+2026-10-06  sound.dll:000432b0  CItranscendental1  C0->C1  callee 0x1004877b (__ctrandisp1); caller 0x1003da50; reads ST0
+2026-10-06  sound.dll:000432d0  CIlog  C0->C1  callee 0x100432ed (log_classify); callee 0x10048268; reads ST0
+2026-10-06  sound.dll:000432ed  log_classify  C0->C1  string 0x10064f00 ((string in the binary)); callee 0x10048197 (__startOneArgErrorHandling); callee 0x1004828b (__math_exit); caller 0x100432d0 (CIlog)
+2026-10-06  sound.dll:000432e4  log  C0->C1  caller 0x1003da50; callee 0x10048225 (__fload_withFB); falls into the log classify path
+2026-10-06  sound.dll:000431f0  CIsqrt  C0->C1  callee 0x1004320d (sqrt_classify); callee 0x10048268; reads ST0
+2026-10-06  sound.dll:0004320d  sqrt_classify  C0->C1  string 0x10064ef0 ((string in the binary)); callee 0x1004828b (__math_exit); callee 0x10048197 (__startOneArgErrorHandling); caller 0x100431f0 (CIsqrt)
+2026-10-06  sound.dll:00043204  sqrt  C0->C1  game FP callers 0x1003d1d0,0x1003d8d0,0x1003ec60,0x1003f720; callee 0x10048225 (__fload_withFB); falls into the sqrt classify path
+2026-10-06  sound.dll:00045680  strchr  C0->C1  0x7efefeff dword null-scan for a target char; callers 0x10045bc8 (crtHeapSelect),0x10051cfd (__mbschr)
+2026-10-06  sound.dll:0004a010  strcpy  C0->C1  0x7efefeff dword null-scan copy loop; callers 0x10051d94 (__strdup),0x100479ae (__setenvp),0x10047e1f (__NMSG_WRITE)
+2026-10-06  sound.dll:000458a1  calloc  C0->C1  callers 0x10042984 (__beginthread),0x100440ec (__mtinit),0x10044171 (__getptd); computes param_1*param_2 with overflow check < 0xffffffe1
+2026-10-06  sound.dll:00045898  __doserrno  C0->C1  callee 0x10044171 (__getptd); callers 0x1004581c (__dosmaperr),0x100491f7 (__commit),0x1004928a (__write),0x1004dfc9 (__close)
+2026-10-06  sound.dll:0004588f  _errno  C0->C1  callee 0x10044171 (__getptd); callers 0x10048f2d (__set_errno),0x1004581c (__dosmaperr),0x1004a7ac (_strtoxl)
+2026-10-06  sound.dll:00045f5a  __sbh_free_block  C0->C1  caller 0x10042c07 (free); caller 0x10045252 (crtRealloc); callee 0x10042cf0 (memcpy); follows ___sbh_find_block
+2026-10-06  sound.dll:00042b0b  heap_alloc  C0->C1  caller 0x10042adf (__nh_malloc); callee 0x10046283 (___sbh_alloc_block); callee 0x10047710 (__lock)
+2026-10-06  sound.dll:00042c07  free  C0->C1  callee 0x10045f2f (__sbh_find_block); callee 0x10045f5a (__sbh_free_block); callee 0x10047710 (__lock)
+2026-10-06  sound.dll:0004249a  operator_delete  C0->C1  callee 0x10042c07 (free); called by ~150 destructors
+2026-10-06  sound.dll:0004319b  _amsg_exit  C0->C1  callee 0x10047de6 (__FF_MSGBANNER); callee 0x10047e1f (__NMSG_WRITE); data 0x10064ee0
+2026-10-06  sound.dll:00038130  Voice_setRateReverse  C0->C1  callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:00038070  Voice_setRateForward  C0->C1  caller chain via renderChannelVoice; callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:00033f90  Channel_closeStreamList  C0->C1  import mmioClose
+2026-10-06  sound.dll:000340b0  Channel_releaseBuffers  C0->C1  caller 0x10011a80 (DirectSoundDevice::stopAll),0x100326a0 (parseRiffWave)
+2026-10-06  sound.dll:0002b4e0  SubChannel_ctor  C0->C1  vtable 0x1005bae0; caller 0x100399a0 (loadMultiChannel)
+2026-10-06  sound.dll:000399a0  loadMultiChannel  C0->C1  callee 0x100326a0 (parseRiffWave),0x100424d7 (operator new)
+2026-10-06  sound.dll:00034430  serviceChannelPlayback  C0->C1  caller 0x1000cd80 (Wave_Device::dispatchCommand)
+2026-10-06  sound.dll:00032500  updateVoiceRate  C0->C1  caller 0x1000cd80 (Wave_Device::dispatchCommand); callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:00032640  closeDecoder  C0->C1  caller 0x1000cd80 (Wave_Device::dispatchCommand)
+2026-10-06  sound.dll:00032440  voiceListRemove  C0->C1  caller 0x10012d10 (DirectSoundDevice::createBuffer),0x10012fe0 (DirectSoundDevice::createBufferFmt)
+2026-10-06  sound.dll:000385d0  listAppendNodeB  C0->C1  caller 0x100326a0 (parseRiffWave); callee 0x100424d7 (operator new)
+2026-10-06  sound.dll:00038550  listAppendNodeA  C0->C1  caller 0x100326a0 (parseRiffWave); callee 0x100424d7 (operator new)
+2026-10-06  sound.dll:00031e50  Channel_ctor  C0->C1  caller 0x100326a0 (parseRiffWave); callee 0x10037c40 (Voice_resetDefaults)
+2026-10-06  sound.dll:00037c40  Voice_resetDefaults  C0->C1  caller 0x10006850 (Wave_Device::appendBuffer),0x10030840 (openMmioSound); callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:00037760  Voice_setLoopFlag  C0->C1  caller 0x10007010 (writeWaveFile),0x100097d0 (delete_sound),0x1000cd80 (Wave_Device::dispatchCommand)
+2026-10-06  sound.dll:0002d240  Voice_setName  C0->C1  caller 0x100041d0 (loadSoundFile); callee 0x100424d7 (operator new)
+2026-10-06  sound.dll:0002d100  allocVoiceSlot  C0->C1  caller 0x100041d0 (loadSoundFile); callee 0x100424d7 (operator new)
+2026-10-06  sound.dll:0002cee0  MixBuffer_ctor  C0->C1  vtable 0x1005be84; caller 0x100041d0 (loadSoundFile)
+2026-10-06  sound.dll:0002ceb0  VoiceSlot_init  C0->C1  caller 0x100041d0 (loadSoundFile)
+2026-10-06  sound.dll:00031200  StreamReader_ctor  C0->C1  vtable 0x1005c528; caller 0x100093e0 (create_sound); callee 0x1002f220 (buildVoiceTxName)
+2026-10-06  sound.dll:00030080  Sound_ctor  C0->C1  vtable 0x1005c450; caller 0x100093e0 (create_sound); callee 0x1002ed50 (buildVoiceRxName)
+2026-10-06  sound.dll:00039e70  Channel_startVoiceTimed  C0->C1  callee 0x10008ce0 (SoundTimer::start),0x100348f0 (Channel_startVoice)
+2026-10-06  sound.dll:0002cb00  Mixer_dtor  C0->C1  vtable 0x1005bdd8; callee 0x100097d0 (delete_sound)
+2026-10-06  sound.dll:0002bee0  Device_createStartQueue  C0->C1  callee 0x100093e0 (create_sound)
+2026-10-06  sound.dll:0002bd80  Device_lazyCreateSound  C0->C1  caller 0x1002b7c0 (startDevicePlayback); callee 0x100093e0 (create_sound),0x100097d0 (delete_sound)
+2026-10-06  sound.dll:0002bc60  Device_prepareSoundFlags  C0->C1  callee 0x100093e0 (create_sound),0x100097d0 (delete_sound)
+2026-10-06  sound.dll:0002bbe0  Device_createAndStart  C0->C1  callee 0x100093e0 (create_sound)
+2026-10-06  sound.dll:0002bb10  Object_setName  C0->C1  callee 0x100424d7 (operator new)
+2026-10-06  sound.dll:000287c0  SoundWindowObj_unsubclass  C0->C1  import SetWindowLongA; caller 0x1000b960 (Wave_Device::stop)
+2026-10-06  sound.dll:000286f0  SoundWindowObj_subclass  C0->C1  import SetWindowLongA
+2026-10-06  sound.dll:00039c10  SoundGroup_rewind  C0->C1  caller 0x100288a0 (soundWindowProc),0x10028b70 (soundWindowSubclassProc); callee 0x100339c0 (rewindChannel)
+2026-10-06  sound.dll:00039b30  SoundGroup_stop  C0->C1  caller 0x100288a0 (soundWindowProc),0x10028b70 (soundWindowSubclassProc); callee 0x100340b0
+2026-10-06  sound.dll:00034fb0  serviceDecodeRing  C0->C1  caller 0x100288a0 (soundWindowProc),0x10028b70 (soundWindowSubclassProc); callee 0x10033300 (fillDecodeRing)
+2026-10-06  sound.dll:00035340  Channel_setPanGains  C0->C1  caller 0x10036280 (renderChannelSingle)
+2026-10-06  sound.dll:00035460  Channel_recomputeVoiceGains  C0->C1  caller 0x100339c0 (rewindChannel),0x10034db0 (Voice_stopAndFlag); callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:00034db0  Voice_stopAndFlag  C0->C1  caller 0x1000cd80 (Wave_Device::dispatchCommand),0x10021a90 (Midi_Device::sendShortMsg); callee 0x10035460
+2026-10-06  sound.dll:000348f0  Channel_startVoice  C0->C1  caller 0x100215c0 (Midi_Device::noteOn); callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:00038400  Channel_clearBackref  C0->C1  caller 0x100215c0 (Midi_Device::noteOn)
+2026-10-06  sound.dll:000381f0  Voice_noteOff  C0->C1  caller 0x10021a90 (Midi_Device::sendShortMsg)
+2026-10-06  sound.dll:00038330  Channel_findVoiceByTag  C0->C1  caller 0x10021a90 (Midi_Device::sendShortMsg)
+2026-10-06  sound.dll:000382c0  Channel_allocVoiceSlot  C0->C1  caller 0x100215c0 (Midi_Device::noteOn)
+2026-10-06  sound.dll:00037f30  Voice_setPanGains  C0->C1  caller 0x100215c0 (Midi_Device::noteOn),0x10035ca0 (closeMmioSound)
+2026-10-06  sound.dll:000383b0  Voice_setLevel  C0->C1  caller 0x100213d0 (Midi_Device::setChannelVolume),0x100215c0 (Midi_Device::noteOn)
+2026-10-06  sound.dll:0002add0  Engine_playSound  C0->C1  callee 0x100093e0 (create_sound); callee 0x100424d7 (operator new)
+2026-10-06  sound.dll:0002ad10  Sound_setSourceType  C0->C1  caller 0x1002ed50 (buildVoiceRxName),0x1002f220 (buildVoiceTxName)
+2026-10-06  sound.dll:0002a8a0  stopSoundThreadFull  C0->C1  import EnterCriticalSection,SetEvent,Sleep; caller 0x1000b960 (Wave_Device::stop)
+2026-10-06  sound.dll:0002a240  WaveInDeviceBase_ctor  C0->C1  vtable 0x1005ba5c; caller 0x1000e910 (Dll_Wave_In_Device::create_device)
+2026-10-06  sound.dll:00029e70  MidiDeviceBase_ctor  C0->C1  vtable 0x1005b9e4; caller 0x10009a90 (Dll_Midi_Device::create_device)
+2026-10-06  sound.dll:00029020  VoiceBase_ctor  C0->C1  vtable 0x1005b914; caller 0x1000b1d0 (Wave_Device::ctor)
+2026-10-06  sound.dll:00028810  pumpWaveMessages  C0->C1  import PeekMessageA; caller 0x100041d0 (loadSoundFile); callee 0x10028b70 (soundWindowSubclassProc)
+2026-10-06  sound.dll:000286a0  SoundWindowObj_dtor  C0->C1  vtable 0x1005b8ac; import SetWindowLongA
+2026-10-06  sound.dll:00028560  randRange  C0->C1  caller 0x100215c0 (Midi_Device::noteOn)
+2026-10-06  sound.dll:00033300  fillDecodeRing  C0->C1  import mmioAdvance,mmioGetInfo,mmioSeek,mmioSetInfo; caller 0x100326a0 (parseRiffWave)
+2026-10-06  sound.dll:000312a0  streamReaderDtor  C0->C1  vtable 0x1005c528; import mmioClose
+2026-10-06  sound.dll:00031560  freeMmioHandleListGetInfo  C0->C1  import mmioClose,mmioGetInfo
+2026-10-06  sound.dll:00031490  freeMmioHandleList  C0->C1  import mmioClose
+2026-10-06  sound.dll:00030570  Sound_freeBufferList  C0->C1  import mmioClose; caller 0x1000cd80 (Wave_Device::dispatchCommand)
+2026-10-06  sound.dll:000303f0  Sound_stop  C0->C1  import mmioClose
+2026-10-06  sound.dll:000339c0  rewindChannel  C0->C1  import mmioSeek,mmioAdvance,mmioGetInfo
+2026-10-06  sound.dll:00032290  beginDecodeStreamB  C0->C1  import mmioRead; caller 0x100326a0 (parseRiffWave)
+2026-10-06  sound.dll:00032130  beginDecodeStreamA  C0->C1  import mmioRead; caller 0x100326a0 (parseRiffWave)
+2026-10-06  sound.dll:00032020  Sound_resetBuffers  C0->C1  import mmioClose; caller 0x100326a0 (parseRiffWave)
+2026-10-06  sound.dll:00030180  Sound_dtor  C0->C1  vtable 0x1005c450; import mmioClose
+2026-10-06  sound.dll:000350e0  mmioSeekToSample  C0->C1  import mmioSeek,mmioAdvance
+2026-10-06  sound.dll:00034fe0  mmioReadBuffered  C0->C1  import mmioGetInfo,mmioSetInfo; callee 0x10042cf0 (memcpy)
+2026-10-06  sound.dll:00038c70  WaveInDevice_unprepareHeaders  C0->C1  import waveInUnprepareHeader
+2026-10-06  sound.dll:00038b40  WaveInDevice_prepareHeaders  C0->C1  import waveInPrepareHeader
+2026-10-06  sound.dll:00038710  WaveInDevice_dtor  C0->C1  vtable 0x1005c604; import waveInStop,waveInReset; callee 0x10039140 (WaveInDevice_close)
+2026-10-06  sound.dll:000281d0  mixCopy8bitStereo  C0->C1  callee of the mixer-pointer table (reached via pointer); shares the voice layout of renderChannelSingle
+2026-10-06  sound.dll:00027e20  mixAdd8bitStereo  C0->C1  callee of the mixer-pointer table (reached via pointer); shares the voice layout of renderChannelSingle
+2026-10-06  sound.dll:00036660  renderChannelStreamed  C0->C1  caller 0x10007010 (writeWaveFile); callee 0x10035ca0 (closeMmioSound); callee 0x1002aa90 (postSoundThreadMessage); callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:000371d0  renderChannelVoice  C0->C1  caller 0x10035990 (renderChannel); callee 0x10019770/0x10019b20/0x10019ec0/0x1001a6c0/0x1001a910 (mixer family); callee 0x10042550 (__ftol)
+2026-10-06  sound.dll:00036280  renderChannelSingle  C0->C1  caller 0x10035990 (renderChannel); callee 0x10019770/0x10019b20/0x10019ec0/0x1001a2c0/0x1001a6c0/0x1001a910 (mixer family); import PostMessageA
+2026-10-06  sound.dll:00035990  renderChannel  C0->C1  callee 0x10036280 (renderChannelSingle); callee 0x100371d0 (renderChannelVoice); callee 0x10036660 (renderChannelStreamed); import timeGetTime
+2026-10-06  sound.dll:00023000  Seq_findTrackOrZero  C0->C1  track list this+0x218
+2026-10-06  sound.dll:0001e630  Seq_scaleTickRate  C0->C1  global g_soundTimer 0x100b49ec
+2026-10-06  sound.dll:0001caf0  CtrlObject3_ctor  C0->C1  callers 0x100041d0 (loadSoundFile),0x10024460; vtable 0x1005b644
+2026-10-06  sound.dll:0001d0a0  Sound_setAltName  C0->C1  callers 0x100041d0 (loadSoundFile),0x10020fe0 (Seq_setupChannel),0x10021fa0 (Seq_updateChannel)
+2026-10-06  sound.dll:0001ced0  Sound_setName  C0->C1  callers 0x100041d0 (loadSoundFile),0x10020fe0,0x10024280,0x10024360; callee _strrchr
+2026-10-06  sound.dll:0001ad30  Sound_anyChannelActive  C0->C1  caller 0x100204e0 (Sound_reapIdle)
+2026-10-06  sound.dll:00023080  Seq_findTrackById  C0->C1  callee 0x1002e430
+2026-10-06  sound.dll:00024d40  NodeList_clear  C0->C1  callee 0x1004249a (delete)
+2026-10-06  sound.dll:00024630  Seq_resetTrackControllers  C0->C1  callee Seq_listGetAt
+2026-10-06  sound.dll:00024360  Seq_mergeChannelDesc  C0->C1  callers 0x10020fe0 (Seq_setupChannel),0x10021fa0 (Seq_updateChannel); callee 0x1001ced0
+2026-10-06  sound.dll:00024280  Seq_loadChannelDesc  C0->C1  caller 0x10020fe0 (Seq_setupChannel); callee 0x1001ced0
+2026-10-06  sound.dll:0001e1c0  Seq_rewind  C0->C1  caller 0x10022240 (Seq_reset); callee 0x1001e8e0 (Seq_rewindTracks)
+2026-10-06  sound.dll:00022240  Seq_reset  C0->C1  callee 0x1001e1c0 (Seq_rewind)
+2026-10-06  sound.dll:000204b0  Seq_closeFile  C0->C1  caller 0x1000a330; callee 0x1001e3d0 (closeFile)
+2026-10-06  sound.dll:00021ee0  Seq_setTempo  C0->C1  import __ftol; data 0x1005b69c,0x1005b6a0
+2026-10-06  sound.dll:0001e9a0  Track_setData  C0->C1  caller 0x10024500 (Seq_selectTrack); callee 0x1001ef80 (Midi_scanTrack)
+2026-10-06  sound.dll:0001e6e0  byteSwap16  C0->C1  caller 0x10021bf0 (handleMetaEvent)
+2026-10-06  sound.dll:0001ff50  Sound_dtor  C0->C1  callers 0x10004000,0x1001f6c0; vtable 0x1005b6a8; callee 0x1001e3d0 (closeFile)
+2026-10-06  sound.dll:00022750  Seq_setPlayOrderMode  C0->C1  callee 0x10023d00 (Seq_buildPlayOrder)
+2026-10-06  sound.dll:00024040  Seq_dispatchChannelCmd  C0->C1  callee 0x10021fa0 (Seq_updateChannel)
+2026-10-06  sound.dll:00023d00  Seq_buildPlayOrder  C0->C1  caller 0x10022750 (Seq_setPlayOrderMode); import timeGetTime; global 0x100b4fe0
+2026-10-06  sound.dll:00021fa0  Seq_updateChannel  C0->C1  callers 0x100041d0 (loadSoundFile),0x10024040
+2026-10-06  sound.dll:00020fe0  Seq_setupChannel  C0->C1  callers 0x100041d0 (loadSoundFile),0x10021fa0; global g_soundWindow 0x100b49c0
+2026-10-06  sound.dll:0001e7d0  MidiReader_dtor  C0->C1  caller 0x1001e3d0 (closeFile); vtable 0x1005b68c; callee 0x1001b870
+2026-10-06  sound.dll:0001e2b0  Seq_dtor  C0->C1  caller 0x1001ff50; callee 0x1001e3d0 (Midi_Device::closeFile)
+2026-10-06  sound.dll:0001d380  MidiReader_init  C0->C1  callers 0x1001f4a0 (Sound_ctor),0x1001f6f0 (Seq_ctor)
+2026-10-06  sound.dll:0001f6f0  Seq_ctor  C0->C1  callees 0x1002d450,0x1001d380
+2026-10-06  sound.dll:0001f4a0  Sound_ctor  C0->C1  callers 0x10003f30,0x100093e0 (create_sound); callees 0x1002d450,0x1001d380
+2026-10-06  sound.dll:0001e750  MidiReader_ctor  C0->C1  callee 0x1001bca0 (CtrlObject2_ctor); vtable 0x1005b68c
+2026-10-06  sound.dll:0001bca0  CtrlObject2_ctor  C0->C1  callers 0x1001d810 (loadFile),0x1001dce0 (loadFromMemory),0x1001e750; vtable 0x1005b590
+2026-10-06  sound.dll:0001d4a0  Midi_resetFileState  C0->C1  callers 0x1001d810 (loadFile),0x1001dce0 (loadFromMemory); import mmioClose
+2026-10-06  sound.dll:00023e10  Seq_applyTrackFlag  C0->C1  caller 0x100041d0 (loadSoundFile); callee Seq_listGetAt
+2026-10-06  sound.dll:00024c50  Voice_setPlayModeBits  C0->C1  caller 0x100041d0 (loadSoundFile)
+2026-10-06  sound.dll:00022280  Seq_copyChannelParams  C0->C1  caller 0x100041d0 (loadSoundFile)
+2026-10-06  sound.dll:00021240  Sound_findByName  C0->C1  caller 0x100041d0 (loadSoundFile); global g_cmdTableHead 0x100b4fe8
+2026-10-06  sound.dll:000204e0  Sound_reapIdle  C0->C1  caller 0x100041d0 (loadSoundFile); global g_cmdTableHead 0x100b4fe8; callee 0x1001ad30
+2026-10-06  sound.dll:00020360  Midi_loadMemoryAndPreRoll  C0->C1  caller 0x100041d0 (loadSoundFile); callees 0x1001dce0 (loadFromMemory),Seq_listGetAt,Seq_preRollTrack
+2026-10-06  sound.dll:0001ab60  Sound_initEntry  C0->C1  caller 0x10022320 (Sound_lookupOrCreate)
+2026-10-06  sound.dll:00022320  Sound_lookupOrCreate  C0->C1  global g_cmdTableHead 0x100b4fe8; callees 0x1002d430 (strcmp),operator_new,0x1001ab60
+2026-10-06  sound.dll:00022d00  Seq_buildTrack14  C0->C1  caller 0x100041d0 (loadSoundFile); callees 0x1000b000,NodeList inserts,operator_new
+2026-10-06  sound.dll:000229f0  Seq_buildTrack9  C0->C1  callees 0x1000b000,NodeList_pushBack/Front/insert,operator_new
+2026-10-06  sound.dll:00020d80  Voice_allNotesOff  C0->C1  callers 0x1000a330,0x1000a670 (dispatchCommand); callees Midi_Device::flushMessages,0x1001ac40
+2026-10-06  sound.dll:0001ac40  Voice_notifyChannelNotes  C0->C1  caller 0x10020d80 (Voice_allNotesOff); callees postNotification,0x1000e050,0x10039c10
+2026-10-06  sound.dll:00025010  NodeList_initNode  C0->C1  callers 0x100229f0,0x10022d00
+2026-10-06  sound.dll:00024f90  NodeList_pushFront  C0->C1  callers 0x100229f0,0x10022d00; callee operator_new
+2026-10-06  sound.dll:00024e60  NodeList_insert  C0->C1  callers 0x100229f0,0x10022d00; callee operator_new
+2026-10-06  sound.dll:00024de0  NodeList_pushBack  C0->C1  callers 0x100229f0,0x10022d00; callee operator_new
+2026-10-06  sound.dll:000247c0  Seq_allocTrackSlot  C0->C1  caller 0x10021bf0 (handleMetaEvent); callee Seq_scheduleEvent; global 0x100b5010
+2026-10-06  sound.dll:00024500  Seq_selectTrack  C0->C1  callees Seq_listGetAt,Track_advancePos,Seq_preRollTrack
+2026-10-06  sound.dll:00024920  Midi_seekTrackToTick  C0->C1  caller 0x10024b80; callee 0x1001e710 (Midi_readVarLen)
+2026-10-06  sound.dll:00024b80  Seq_scheduleEvent  C0->C1  callers 0x10023610,0x100247c0; callee Seq_listGetAt
+2026-10-06  sound.dll:0001adc0  Midi_advanceMsgRing  C0->C1  caller 0x100215c0 (noteOn)
+2026-10-06  sound.dll:0001bb80  Seq_firstTrackData  C0->C1  callers 0x100215c0 (noteOn),0x10021a90 (sendShortMsg)
+2026-10-06  sound.dll:00023c20  Seq_cmdHandler12  C0->C1  caller 0x1000a670 (dispatchCommand) case 0xc; producer 0x10023ea0
+2026-10-06  sound.dll:00023c70  Seq_cmdHandler11  C0->C1  caller 0x1000a670 (dispatchCommand) case 0xb
+2026-10-06  sound.dll:00023a60  Seq_cmdHandler10  C0->C1  caller 0x1000a670 (dispatchCommand) case 10
+2026-10-06  sound.dll:00023950  Seq_replayEventRange  C0->C1  caller 0x100238b0 (Seq_cmdHandler9); callees Seq_listGetAt,emitEvent,Seq_rewindTracks
+2026-10-06  sound.dll:00023610  Seq_remarkEventRange  C0->C1  caller 0x10023540 (Seq_cmdHandler8); callee Seq_listGetAt
+2026-10-06  sound.dll:000238b0  Seq_cmdHandler9  C0->C1  caller 0x1000a670 (dispatchCommand) cases 8 and 9
+2026-10-06  sound.dll:00023540  Seq_cmdHandler8  C0->C1  caller 0x1000a670 (dispatchCommand) case 8
+2026-10-06  sound.dll:000231e0  Seq_cmdHandler7  C0->C1  caller 0x1000a670 (dispatchCommand) case 7
+2026-10-06  sound.dll:000207f0  Seq_preRollAllTracks  C0->C1  callee 0x100205f0 (Seq_preRollTrack); track count via vtbl+0xb4
+2026-10-06  sound.dll:00020720  Seq_stepTrackMeta  C0->C1  caller 0x10021bf0 (handleMetaEvent); calls playEvent,Midi_readVarLen,Track_advancePos
+2026-10-06  sound.dll:000205f0  Seq_preRollTrack  C0->C1  callers 0x1001f8c0 (Voice::update),0x10020be0,0x10020360,0x100207f0,0x10024500; calls playEvent,Midi_readVarLen,Track_advancePos
+2026-10-06  sound.dll:00023ea0  Voice_requestCmd12  C0->C1  callee 0x1000a240 (CommandQueue::push) with code 0xc; handler 0x10023c20
+2026-10-06  sound.dll:00020ee0  Voice_requestStopDrain  C0->C1  callee 0x1000a240 (CommandQueue::push) with code 2; sets +0x2b bits 2,3
+2026-10-06  sound.dll:00020ea0  Voice_requestStop  C0->C1  callee 0x1000a240 (CommandQueue::push) with code 2; reads +0xac bit0
+2026-10-06  sound.dll:00020be0  Voice_startPlayback  C0->C1  callee 0x1000a240 (CommandQueue::push) with code 1; import timeGetTime; calls 0x100205f0 per track
+2026-10-06  sound.dll:0001d780  Seq_listGetAt  C0->C1  callers (19, sequencer): 0x100205f0,0x10020be0,0x10023610,0x10023950,0x10023c20...
+2026-10-06  sound.dll:0001e530  Track_clearFlag8  C0->C1  caller 0x10020be0 (Voice_startPlayback)
+2026-10-06  sound.dll:0001e230  Track_resetReadState  C0->C1  caller 0x10020be0 (Voice_startPlayback)
+2026-10-06  sound.dll:0001e9f0  Track_advancePos  C0->C1  callers 0x1001f8c0 (Voice::update),0x100205f0,0x10020720
+2026-10-06  sound.dll:0001e8e0  Seq_rewindTracks  C0->C1  callers 0x1001d810 (loadFile),0x1001dce0 (loadFromMemory),0x10021bf0 (handleMetaEvent),0x10023950,0x1001e1c0; callee 0x1001bc00
+2026-10-06  sound.dll:0001ef80  Midi_scanTrack  C0->C1  callers 0x1001d810 (loadFile),0x1001dce0 (loadFromMemory),0x1001e9a0; VLQ + status switch
+2026-10-06  sound.dll:0001e710  Midi_readVarLen  C0->C1  callers 0x10021bf0 (handleMetaEvent),0x1001f8c0 (Voice::update),0x100205f0,0x10020720,0x10024920; VLQ algorithm
+2026-10-06  sound.dll:000274e0  Voice_renderUnityB  C0->C1  reads rate +0x220 and ring position +0x20/+0x1c/+0x24; no fractional sample read
+2026-10-06  sound.dll:00027310  Voice_renderUnityA  C0->C1  reads rate +0x220 and ring position +0x20/+0x1c/+0x24; no fractional sample read
+2026-10-06  sound.dll:00026800  Voice_renderStream32  C0->C1  reads voice ring +0x1358 and rate +0x220; uint* samples at voice+0x18
+2026-10-06  sound.dll:00026d30  Voice_renderStream8d  C0->C1  reads voice ring +0x1358 and rate +0x220; byte* samples at voice+0x18
+2026-10-06  sound.dll:00025c80  Voice_renderStream8c  C0->C1  reads voice ring +0x1358 and rate +0x220; byte* samples at voice+0x18
+2026-10-06  sound.dll:00019400  Voice_renderStream8b  C0->C1  reads voice ring +0x1358 and rate +0x220; byte* samples at voice+0x18
+2026-10-06  sound.dll:00019060  Voice_renderStream8a  C0->C1  reads voice ring +0x1358 and rate +0x220; byte* samples at voice+0x18
+2026-10-06  sound.dll:00027ad0  Voice_renderStream16e  C0->C1  reads voice ring +0x1358 and rate +0x220; short* samples at voice+0x18
+2026-10-06  sound.dll:00027730  Voice_renderStream16d  C0->C1  reads voice ring +0x1358 and rate +0x220; short* samples at voice+0x18
+2026-10-06  sound.dll:00026260  Voice_renderStream16c  C0->C1  reads voice ring +0x1358 and rate +0x220; undefined2* samples at voice+0x18
+2026-10-06  sound.dll:000256c0  Voice_renderStream16b  C0->C1  reads voice ring +0x1358 and rate +0x220; undefined2* samples at voice+0x18
+2026-10-06  sound.dll:00018d10  Voice_renderStream16a  C0->C1  reads voice ring +0x1358 and rate +0x220; short* samples at voice+0x18
+2026-10-06  sound.dll:00019ec0  Voice_mixSet8bit  C0->C1  caller 0x10036280 (voice+0x18e==8 path); caller 0x100371d0
+2026-10-06  sound.dll:0001a2c0  Voice_mixAdd8bit  C0->C1  caller 0x10036280 (voice+0x18e==8 path)
+2026-10-06  sound.dll:0001a6c0  Voice_mixSetStereo16  C0->C1  caller 0x10036280 (voice+0x182==2 path); caller 0x100371d0
+2026-10-06  sound.dll:0001a910  Voice_mixAddStereo16  C0->C1  caller 0x10036280 (voice+0x182==2 path)
+2026-10-06  sound.dll:00019b20  Voice_mixSetMono16  C0->C1  caller 0x10036280; caller 0x100371d0
+2026-10-06  sound.dll:00019770  Voice_mixAddMono16  C0->C1  caller 0x10036280 (selects via +0x182/+0x18e); caller 0x100371d0
+2026-10-06  sound.dll:00006b00  startStream  C0->C1  callee virtual vtbl+0x7c
+2026-10-06  sound.dll:00011760  getDeviceCaps  C0->C1  callee IDirectSound::GetCaps (interface vtbl+0x10)
+2026-10-06  sound.dll:0000f190  DsBuffer::setVolumeRaw  C0->C1  callee IDirectSoundBuffer::SetVolume (vtbl+0x3c)
+2026-10-06  sound.dll:0000f160  DsBuffer::setFrequency  C0->C1  callee IDirectSoundBuffer::SetFrequency (vtbl+0x44)
+2026-10-06  sound.dll:0000e8f0  Wave_In_Device::dtor  C0->C1  sets vtable vt_WaveInDevice 0x1005b3d4; callee 0x1002a3b0
+2026-10-06  sound.dll:0000e8c0  Wave_In_Device::scalarDeletingDtor  C0->C1  callee 0x1000e8f0 (Wave_In_Device::dtor)
+2026-10-06  sound.dll:0000e2d0  getWaveDeviceInterface  C0->C1  reads g_waveDevice 0x100b49f0
+2026-10-06  sound.dll:00011160  stubReturnBC  C0->C1  leaf
+2026-10-06  sound.dll:0000e570  stubReturnBB  C0->C1  leaf
+2026-10-06  sound.dll:0000e350  stubReturnBA  C0->C1  leaf
+2026-10-06  sound.dll:0000a100  stubReturn2fB  C0->C1  leaf
+2026-10-06  sound.dll:0000a0c0  stubReturn2fA  C0->C1  leaf
+2026-10-06  sound.dll:0000a200  Midi_Device::disableOutput  C0->C1  writes g_100b49bc
+2026-10-06  sound.dll:0000a1b0  Midi_Device::enableOutput  C0->C1  callee 0x10028810; writes g_100b49bc
+2026-10-06  sound.dll:00007bd0  mixAddSamples  C0->C1  leaf; param_3*2 short accumulate
+2026-10-06  sound.dll:00005740  ctrlScalarDeletingDtor  C0->C1  callee 0x10005720 (initCtrlVtable)
+2026-10-06  sound.dll:00005720  initCtrlVtable  C0->C1  sets vtable vt_CtrlObject 0x1005b19c
+2026-10-06  sound.dll:00003fd0  Sound::scalarDeletingDtor  C0->C1  callee 0x10004000 (Sound::dtor)
+2026-10-06  sound.dll:0000ae80  clearNodeListG  C0->C1  callee 0x1004249a (free)
+2026-10-06  sound.dll:00006c70  clearNodeListF  C0->C1  callee 0x1004249a (free)
+2026-10-06  sound.dll:00005b60  clearNodeListE  C0->C1  callee 0x1004249a (free)
+2026-10-06  sound.dll:00005a60  clearNodeListD  C0->C1  callee 0x1004249a (free)
+2026-10-06  sound.dll:00010b40  DsBuffer::spinPosition  C0->C1  callee IDirectSoundBuffer::GetCurrentPosition (vtbl+0x10)
+2026-10-06  sound.dll:00010920  DsBuffer::calibratePosition  C0->C1  callee IDirectSoundBuffer::GetCurrentPosition (vtbl+0x10),0x1000f480 (mapDsError); writes g_dsPollTuning 0x10063dfc
+2026-10-06  sound.dll:0000e120  addToSoundList  C0->C1  callee 0x1000e680 (appendNodeC)
+2026-10-06  sound.dll:00006e00  initStreamBuffer  C0->C1  allocates 0x20000 bytes
+2026-10-06  sound.dll:00005eb0  unregisterSound  C0->C1  reads/writes g_soundRegistry 0x100b5000,0x100b5008
+2026-10-06  sound.dll:00004000  Sound::dtor  C0->C1  sets vtable 0x1005b000; callee 0x1004249a (free)
+2026-10-06  sound.dll:00003f30  Sound::ctor  C0->C1  callee 0x1001f4a0; sets vtable 0x1005b000; caller 0x100093e0 (create_sound)
+2026-10-06  sound.dll:00010860  DsBuffer::lockCaptureRegion  C0->C1  callee IDirectSoundBuffer::GetCurrentPosition (vtbl+0x10); caller 0x100075e0 (writeWaveFileB)
+2026-10-06  sound.dll:000103b0  DsBuffer::getWriteRegion  C0->C1  callee IDirectSoundBuffer::GetCurrentPosition (vtbl+0x10)
+2026-10-06  sound.dll:00011810  appendNamedNode  C0->C1  allocates 0x14-byte node; count +0x148
+2026-10-06  sound.dll:00011790  getNodeByIndex  C0->C1  count +0x148
+2026-10-06  sound.dll:000116a0  seekListToIndex  C0->C1  caller 0x1000c020 (Wave_Device::restart)
+2026-10-06  sound.dll:0000b030  getSpanLength  C0->C1  caller 0x10021bf0 (Midi_Device::handleMetaEvent)
+2026-10-06  sound.dll:00005e00  registerSound  C0->C1  callee 0x10005e30 (appendNodeB); writes g_soundRegistry 0x100b5000
+2026-10-06  sound.dll:0000e680  appendNodeC  C0->C1  caller 0x100215c0 (Midi_Device::noteOn)
+2026-10-06  sound.dll:0000f020  DsBuffer::restartPlayback  C0->C1  callee IDirectSoundBuffer::Stop (vtbl+0x48),Play (vtbl+0x30),GetFormat (vtbl+0x14); caller 0x1000bf90 (Wave_Device::startOutput)
+2026-10-06  sound.dll:0000b110  openWaveStreamFile  C0->C1  callee 0x100086f0 (openMmioFile); reads g_waveStream 0x100b49f4
+2026-10-06  sound.dll:0000cc40  cmdNode::scalarDeletingDtor  C0->C1  callee 0x10008840 (pairClear); caller 0x1000c420 (Wave_Device::processCommandQueue)
+2026-10-06  sound.dll:0000b2b0  Wave_Device::scalarDeletingDtor  C0->C1  callee 0x1000b2e0 (Wave_Device::dtor)
+2026-10-06  sound.dll:00009c80  Midi_Device::scalarDeletingDtor  C0->C1  callee 0x10009cb0 (Midi_Device::dtor)
+2026-10-06  sound.dll:00006130  WaveStream::scalarDeletingDtor  C0->C1  callee 0x10006160 (WaveStream::destroy)
+2026-10-06  sound.dll:00005e30  appendNodeB  C0->C1  caller 0x1000a670 (Midi_Device::dispatchCommand)
+2026-10-06  sound.dll:00006bd0  computeCaptureDuration  C0->C1  caller 0x10007010 (writeWaveFile),0x100075e0 (writeWaveFileB)
+2026-10-06  sound.dll:00005c00  listPopFront  C0->C1  caller 0x100041d0 (loadSoundFile)
+2026-10-06  sound.dll:00005770  processWaveChunks  C0->C1  caller 0x100041d0 (loadSoundFile)
+2026-10-06  sound.dll:00006020  WaveStream::ctor  C0->C1  callee 0x1002e930; sets vtable vt_WaveStream 0x1005b1c0; caller 0x100093e0 (create_sound)
+2026-10-06  sound.dll:00008470  flushSoundList  C0->C1  callee 0x1000dbe0 (postNotification); caller 0x10007010 (writeWaveFile),0x100075e0 (writeWaveFileB); reads g_soundEngine 0x100b4a20
+2026-10-06  sound.dll:0000c230  Wave_Device::serviceTick  C0->C1  callee 0x1000cd80 (Wave_Device::dispatchCommand),0x10010db0 (DsBuffer::play),0x10007010 (writeWaveFile),0x100075e0 (writeWaveFileB); reads g_waveDevice 0x100b49f0,g_waveStream 0x100b49f4
+2026-10-06  sound.dll:0000cc70  Wave_Device::flushCommandQueue  C0->C1  callee 0x100088c0 (CommandQueue::at); caller 0x1000b960 (Wave_Device::stop); ring +0x1d8
+2026-10-06  sound.dll:0000dcf0  Wave_Device::scanCommandRing  C0->C1  callee 0x100088c0 (CommandQueue::at),0x10008840 (pairClear); caller 0x1000c420 (Wave_Device::processCommandQueue)
+2026-10-06  sound.dll:0000c420  Wave_Device::processCommandQueue  C0->C1  callee 0x100088c0 (CommandQueue::at),0x1000dcf0 (Wave_Device::scanCommandRing),0x1000e700; ring +0x1d8 head +0x41dc
+2026-10-06  sound.dll:0000aaf0  Midi_Device::scanCommandRing  C0->C1  callee 0x100088c0 (CommandQueue::at),0x10008840 (pairClear); caller 0x1000a330,0x1000a670 (Midi_Device::dispatchCommand)
+2026-10-06  sound.dll:0000a330  Midi_Device::drainCommandQueue  C0->C1  callee 0x1000aaf0 (Midi_Device::scanCommandRing); ring +0x50 head +0x4050 tail +0x4054
+2026-10-06  sound.dll:0000e5e0  clearNodeListC  C0->C1  callee 0x1004249a (free)
+2026-10-06  sound.dll:0000e700  findAndUnlinkNodeB  C0->C1  caller 0x1000c420
+2026-10-06  sound.dll:0000e050  removeSoundNode  C0->C1  caller 0x100097d0 (delete_sound)
+2026-10-06  sound.dll:0000e310  serviceWaveDevice  C0->C1  callee 0x10012040; reads g_waveDevice 0x100b49f0
+2026-10-06  sound.dll:0000ec00  Wave_In_Device::closeCapture  C0->C1  callee 0x10008d70 (SoundTimer::killEvent),0x10008920 (SoundTimer::unregisterClient); reads g_waveInCapture 0x100b4a04
+2026-10-06  sound.dll:0000ead0  Wave_In_Device::openCapture  C0->C1  callee 0x10038650 (WaveInDevice_ctor); writes g_waveInCapture 0x100b4a04
+2026-10-06  sound.dll:0000e870  Wave_In_Device::ctor  C0->C1  callee 0x1002a240 (WaveInDeviceBase ctor); sets vtable vt_WaveInDevice 0x1005b3d4
+2026-10-06  sound.dll:0000f810  DsBuffer::lockEntire  C0->C1  callee IDirectSoundBuffer::Lock (vtbl+0x2c),Unlock (vtbl+0x4c); caller 0x1000c020 (Wave_Device::restart)
+2026-10-06  sound.dll:0000f0c0  DsBuffer::setBufferSize  C0->C1  caller 0x10012d10 (DirectSoundDevice::createBuffer),0x10012fe0 (DirectSoundDevice::createBufferFmt)
+2026-10-06  sound.dll:00012b80  DsBuffer::scalarDeletingDtor  C0->C1  callee 0x1000ef60 (DsBuffer::destroy); caller 0x100128b0,0x10012d10,0x10012fe0
+2026-10-06  sound.dll:0000c3d0  WaveCmdQueue::pushValue  C0->C1  caller 0x100097d0 (delete_sound),0x1002fc10; ring +0x1d8 head +0x41dc
+2026-10-06  sound.dll:0000c2f0  WaveCmdQueue::pushNode  C0->C1  callee 0x100087f0 (listNode3Init); caller 0x100097d0 (delete_sound); ring +0x1d8 head +0x41dc
+2026-10-06  sound.dll:00006f00  resizeDynArray  C0->C1  caller 0x1000baa0 (Wave_Device::start),0x1000c020 (Wave_Device::restart)
+2026-10-06  sound.dll:00006ec0  freeDynArray  C0->C1  caller 0x1000b960 (Wave_Device::stop)
+2026-10-06  sound.dll:0000e2a0  setOutputMasterVolume  C0->C1  callee 0x10013560 (DirectSoundDevice::setMasterVolume); reads g_waveDevice 0x100b49f0
+2026-10-06  sound.dll:0000a170  registerTimerClient  C0->C1  callee 0x100088e0 (SoundTimer::registerClient),0x10008ce0 (SoundTimer::start); reads g_soundTimer 0x100b49ec
+2026-10-06  sound.dll:0000bf90  Wave_Device::startOutput  C0->C1  callee 0x100088e0 (SoundTimer::registerClient),0x10008ce0 (SoundTimer::start),0x10010db0 (DsBuffer::play)
+2026-10-06  sound.dll:0000bef0  Wave_Device::stopOutput  C0->C1  callee 0x10008920 (SoundTimer::unregisterClient),0x10008d70 (SoundTimer::killEvent),0x1000f760 (DsBuffer::stop)
+2026-10-06  sound.dll:0000be00  Wave_Device::closeOutput  C0->C1  callee 0x10008d70 (SoundTimer::killEvent),0x11a80 (DirectSoundDevice::stopAll),0x100132e0 (DirectSoundDevice::removeBuffer); reads g_waveDevice 0x100b49f0
+2026-10-06  sound.dll:0000b2e0  Wave_Device::dtor  C0->C1  callee 0x1000b960 (Wave_Device::stop),0x10008890 (CommandQueue::clear); sets vtable 0x1005b304
+2026-10-06  sound.dll:00009cb0  Midi_Device::dtor  C0->C1  callee 0x10008890 (CommandQueue::clear); sets vtable vt_MidiSeq 0x1005b28c
+2026-10-06  sound.dll:00009be0  Midi_Device::ctor  C0->C1  callee 0x10008860 (CommandQueue::init),0x10029e70; sets vtable vt_MidiSeq 0x1005b28c; caller 0x10009a90 (Dll_Midi_Device::create_device)
+2026-10-06  sound.dll:00013750  clearNodeListB  C0->C1  callee 0x1004249a (free)
+2026-10-06  sound.dll:00013620  clearNodeListA  C0->C1  callee 0x1004249a (free)
+2026-10-06  sound.dll:000137f0  appendNode  C0->C1  allocates 0xc-byte node
+2026-10-06  sound.dll:000136c0  findAndUnlinkNode  C0->C1  caller 0x100128b0 (DirectSoundDevice::acquireBuffer)
+2026-10-06  sound.dll:000135a0  Ds3DListener::setPosition  C0->C1  callee IDirectSound3DListener::SetPosition (vtbl+0x38); interface +0xd8
+2026-10-06  sound.dll:00013560  DirectSoundDevice::setMasterVolume  C0->C1  callee 0x1000f1c0 (DsBuffer::setVolume); writes +0x188; reads g_dsBufferList 0x100b4a34
+2026-10-06  sound.dll:000134e0  unlinkDsBuffer  C0->C1  reads/writes g_dsBufferList 0x100b4a34/38
+2026-10-06  sound.dll:000133d0  DirectSoundDevice::releaseAllBuffers  C0->C1  callee 0x10010060 (DsBuffer::releaseIfOwned),0x1000ef60 (DsBuffer::destroy); reads/clears g_dsBufferList 0x100b4a34/38
+2026-10-06  sound.dll:000132e0  DirectSoundDevice::removeBuffer  C0->C1  callee 0x10010060 (DsBuffer::releaseIfOwned),0x1000ef60 (DsBuffer::destroy); reads g_dsBufferList 0x100b4a34
+2026-10-06  sound.dll:00018110  mixResampleL  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8, ring +0x1358
+2026-10-06  sound.dll:00017eb0  mixCopyF  C0->C1  reads voice sample buffer at +8 {+0x18/+0x1c/+0x20/+0x24}; no 16.16 rate fields
+2026-10-06  sound.dll:00017c10  mixCopyE  C0->C1  reads voice sample buffer at +8 {+0x18/+0x1c/+0x20/+0x24}; no 16.16 rate fields
+2026-10-06  sound.dll:000178c0  mixResampleK  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:00017520  mixResampleJ  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:00017160  mixResampleI  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:00016d90  mixResampleH  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:00015f70  mixResampleG  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:00015cf0  mixResampleF  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8
+2026-10-06  sound.dll:00015aa0  mixCopyD  C0->C1  reads voice sample buffer at +8 {+0x18/+0x1c/+0x20/+0x24}; no 16.16 rate fields
+2026-10-06  sound.dll:000156c0  mixResampleE  C0->C1  reads voice sample buffer at +8, rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:000152b0  mixResampleD  C0->C1  reads voice sample buffer at +8 {+0x18/+0x1c/+0x20/+0x24}, rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:000188d0  streamRenderTail  C0->C1  caller 0x10030ba0 (streamWaveSamples)
+2026-10-06  sound.dll:000184a0  streamRenderBlock  C0->C1  caller 0x10030ba0 (streamWaveSamples)
+2026-10-06  sound.dll:00016850  mixRenderOuterC  C0->C1  callee 0x10016340 (mixCopyInnerC),0x100165a0 (mixResampleInnerC); reads rate +0x1e8/+0x1f8/+0x220
+2026-10-06  sound.dll:000165a0  mixResampleInnerC  C0->C1  caller 0x10016850 (mixRenderOuterC); reads rate +0x1e8/+0x1f8/+0x220
+2026-10-06  sound.dll:00016340  mixCopyInnerC  C0->C1  caller 0x10016850 (mixRenderOuterC)
+2026-10-06  sound.dll:00014d20  mixRenderOuterB2  C0->C1  callee 0x10014250 (mixCopyInnerB),0x10014510 (mixResampleInnerB); reads rate +0x1e8/+0x1f8/+0x220
+2026-10-06  sound.dll:00014510  mixResampleInnerB  C0->C1  caller 0x10014820 (mixRenderRatedB),0x10014d20 (mixRenderOuterB2); reads rate +0x1e8/+0x1f8/+0x220
+2026-10-06  sound.dll:00014250  mixCopyInnerB  C0->C1  caller 0x10014820 (mixRenderRatedB),0x10014d20 (mixRenderOuterB2)
+2026-10-06  sound.dll:00013dd0  mixRenderOuterA2  C0->C1  callee 0x10013b10 (mixResampleInnerA); reads rate +0x1e8/+0x1f8/+0x220
+2026-10-06  sound.dll:00013b10  mixResampleInnerA  C0->C1  caller 0x10013dd0; reads voice sample buffer at +8 {+0x18 data,+0x1c len,+0x20 pos,+0x24 loop}, 16.16 rate +0x1e8/+0x1f8/+0x220, ring +0x1358
+2026-10-06  sound.dll:00011180  initSoundVoice  C0->C1  callee 0x1000eef0 (DsBuffer::ctor); sets +0x188=0x7f
+2026-10-06  sound.dll:000128b0  DirectSoundDevice::acquireBuffer  C0->C1  callee 0x10010e30 (DsBuffer::isBusy),0x10032440,0x100136c0
+2026-10-06  sound.dll:00012690  DirectSoundDevice::freeBufferById  C0->C1  callee 0x10010e30 (DsBuffer::isBusy),0x10032440
+2026-10-06  sound.dll:000124c0  DirectSoundDevice::freeIdleBuffer  C0->C1  callee 0x10010e30 (DsBuffer::isBusy),0x10032440; reads +0x168
+2026-10-06  sound.dll:00012260  DirectSoundDevice::duplicateBuffer  C0->C1  callee IDirectSound::DuplicateSoundBuffer (vtbl+0x14); writes g_dsBufferList 0x100b4a34
+2026-10-06  sound.dll:00012bb0  DirectSoundDevice::createPoolBufferEx  C0->C1  callee 0x1000eef0 (DsBuffer::ctor),0x1000fbb0 (DsBuffer::create); writes g_dsBufferList 0x100b4a34
+2026-10-06  sound.dll:00012120  DirectSoundDevice::createPoolBuffer  C0->C1  callee 0x1000eef0 (DsBuffer::ctor),0x1000fbb0 (DsBuffer::create); writes g_dsBufferList 0x100b4a34
+2026-10-06  sound.dll:000120a0  DirectSoundDevice::setCooperativeLevel  C0->C1  callee IDirectSound::SetCooperativeLevel (vtbl+0x18); writes g_dsCoopLevel 0x100b4a3c
+2026-10-06  sound.dll:00011110  Ds3DBuffer::setPositionZ  C0->C1  callee IDirectSound3DBuffer::SetPosition (vtbl+0x4c)
+2026-10-06  sound.dll:000110c0  Ds3DBuffer::setPositionY  C0->C1  callee IDirectSound3DBuffer::SetPosition (vtbl+0x4c)
+2026-10-06  sound.dll:00011070  Ds3DBuffer::setPositionX  C0->C1  callee IDirectSound3DBuffer::SetPosition (vtbl+0x4c)
+2026-10-06  sound.dll:00011000  Ds3DBuffer::setPosition  C0->C1  callee IDirectSound3DBuffer::SetPosition (vtbl+0x4c); interface +0x64
+2026-10-06  sound.dll:00010f30  DsBuffer::configureDesc  C0->C1  writes +0x70,+0x74,+0x80
+2026-10-06  sound.dll:00010eb0  DsBuffer::setRegionMs  C0->C1  reads +0xac,+0xb4,+0x78
+2026-10-06  sound.dll:0000fec0  DsBuffer::hasAuxInterfaces  C0->C1  reads +0x64,+0x68
+2026-10-06  sound.dll:00010020  DsBuffer::releaseNotify  C0->C1  callee IUnknown::Release (vtbl+8)
+2026-10-06  sound.dll:0000ffd0  DsBuffer::releaseAux  C0->C1  callee IUnknown::Release (vtbl+8)
+2026-10-06  sound.dll:0000ff60  DsBuffer::queryNotify  C0->C1  callee IDirectSoundBuffer::QueryInterface (vtbl+0); data IID_IDirectSoundNotify 0x1005d52c
+2026-10-06  sound.dll:0000fef0  DsBuffer::query3D  C0->C1  callee IDirectSoundBuffer::QueryInterface (vtbl+0); data IID_IDirectSound3DBuffer 0x1005d57c,IID_IDirectSound3DListener 0x1005d58c
+2026-10-06  sound.dll:00010660  DsBuffer::getPosition  C0->C1  callee 0x10010be0 (DsBuffer::getTimedPosition),0x100106b0 (DsBuffer::getPlayPosition)
+2026-10-06  sound.dll:00010be0  DsBuffer::getTimedPosition  C0->C1  callee IDirectSoundBuffer::Stop (vtbl+0x48),Play (vtbl+0x30),GetFormat (vtbl+0x14); import timeGetTime
+2026-10-06  sound.dll:000106b0  DsBuffer::getPlayPosition  C0->C1  callee IDirectSoundBuffer::GetCurrentPosition (vtbl+0x10)
+2026-10-06  sound.dll:00010db0  DsBuffer::play  C0->C1  callee IDirectSoundBuffer::Play (vtbl+0x30),GetFormat (vtbl+0x14); import timeGetTime
+2026-10-06  sound.dll:000101a0  DsBuffer::restore  C0->C1  callee IDirectSoundBuffer::Restore (vtbl+0x50)
+2026-10-06  sound.dll:00010370  DsBuffer::unlock  C0->C1  callee IDirectSoundBuffer::Unlock (vtbl+0x4c)
+2026-10-06  sound.dll:0000f790  DsBuffer::setPosition  C0->C1  callee IDirectSoundBuffer::SetCurrentPosition (vtbl+0x34)
+2026-10-06  sound.dll:0000f760  DsBuffer::stop  C0->C1  callee IDirectSoundBuffer::Stop (vtbl+0x48)
+2026-10-06  sound.dll:0000f2b0  DsBuffer::applyOwnerVolume  C0->C1  callee IDirectSoundBuffer::SetVolume (vtbl+0x3c); reads owner +0x188
+2026-10-06  sound.dll:0000f1c0  DsBuffer::setVolume  C0->C1  callee IDirectSoundBuffer::SetVolume (vtbl+0x3c)
+2026-10-06  sound.dll:0000f990  DsBuffer::setPrimaryFormat  C0->C1  callee IDirectSoundBuffer::SetFormat (vtbl+0x38)
+2026-10-06  sound.dll:00010e30  DsBuffer::isBusy  C0->C1  callee IDirectSoundBuffer::GetStatus (vtbl+0x24); caller 0x100124c0,0x10012690
+2026-10-06  sound.dll:00010060  DsBuffer::releaseIfOwned  C0->C1  callee IDirectSoundBuffer::Stop (vtbl+0x48),IUnknown::Release (vtbl+8); guard +0x5c
+2026-10-06  sound.dll:0000f8f0  DsBuffer::release  C0->C1  callee IDirectSoundBuffer::Stop (vtbl+0x48),IUnknown::Release (vtbl+8)
+2026-10-06  sound.dll:0000ef60  DsBuffer::destroy  C0->C1  callee IDirectSoundBuffer::Stop (vtbl+0x48),IUnknown::Release (vtbl+8); caller 0x10012690
+2026-10-06  sound.dll:0000f480  mapDsError  C0->C1  caller 0x100120a0,0x10010920; returns SNDERR codes
+2026-10-06  sound.dll:0000fbb0  DsBuffer::create  C0->C1  callee IDirectSound::CreateSoundBuffer (interface vtbl+0xc); caller 0x10012120,0x10012bb0
+2026-10-06  sound.dll:0000f590  DsBuffer::initDesc  C0->C1  caller 0x1000eef0 (DsBuffer::ctor)
+2026-10-06  sound.dll:0000eef0  DsBuffer::ctor  C0->C1  caller 0x10012120,0x10012bb0 (DirectSoundDevice::createPoolBuffer); callee 0x1000f590 (DsBuffer::initDesc)
+2026-10-06  0002fc10  createBlankVoice  C1<-C0  DEMOTED: round-1 name createBlankVoice unsupported: string 0x10063e98 is not referenced by the function
+2026-10-06  sound.dll:00047771  _unlock  C0->C1  import GetStartupInfoA, import GetStdHandle, import GetFileType, string 0x1005f1b4; demoted C1->C0: round-1 name crtStartupIo wrong: body is LeaveCriticalSection(g_crtLockTable[i]) = _unlock; import LeaveCriticalSection (IAT 0x100b84e0); table 0x10067400
+2026-10-06  00047771  crtStartupIo  C1<-C0  DEMOTED: round-1 name crtStartupIo wrong: body is LeaveCriticalSection(g_crtLockTable[i]) = _unlock
+2026-10-06  000414f0  formatUnsignedDecimal  C1<-C0  DEMOTED: round-1 name formatUnsignedDecimal unsupported: no reference to string 0x1005eccc, x87 code called only by the codec 0x10040000
 2026-10-06  0049bec0  netListRemove  subsystem util->net  re/names/exe_5.tsv
 2026-10-06  0049b970  netHeapAlloc  subsystem util->net  re/names/exe_5.tsv
 2026-10-06  0049b7b0  netPoll  subsystem util->net  re/names/exe_5.tsv

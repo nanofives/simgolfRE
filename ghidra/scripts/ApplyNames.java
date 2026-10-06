@@ -2,7 +2,9 @@
 // evidence purpose) rename a function when its current name is DEFAULT or ANALYSIS (FUN_*, FidDb names stay only if
 // they were imported or user-set); `Class::method` puts the function in a class namespace. Rows of *_globals.tsv
 // (module addr name type evidence) label data addresses whose primary symbol is a default one. Script arg: the
-// re/names directory. Prints one line per change and a summary.
+// re/names directory; optional second arg `overwrite` also replaces USER_DEFINED names that differ (to correct
+// names this script applied earlier; IMPORTED names always stay). Rows of re/names/withdrawn.tsv (module addr
+// reason) reset a function to its default FUN_ name. Prints one line per change and a summary.
 //@category Symbol
 import ghidra.app.script.GhidraScript;
 import ghidra.app.util.NamespaceUtils;
@@ -18,13 +20,15 @@ public class ApplyNames extends GhidraScript {
 	@Override
 	protected void run() throws Exception {
 		File dir = new File(getScriptArgs()[0]);
+		boolean overwrite = getScriptArgs().length > 1 && getScriptArgs()[1].equals("overwrite");
 		String prog = currentProgram.getName();
 		SymbolTable st = currentProgram.getSymbolTable();
-		int renamed = 0, kept = 0, missing = 0, labeled = 0;
+		int renamed = 0, kept = 0, missing = 0, labeled = 0, reset = 0;
 		File[] files = dir.listFiles((d, n) -> n.endsWith(".tsv"));
 		java.util.Arrays.sort(files);
 		for (File f : files) {
 			boolean globals = f.getName().endsWith("_globals.tsv");
+			boolean withdrawn = f.getName().equals("withdrawn.tsv");
 			List<String> lines = Files.readAllLines(f.toPath());
 			for (int i = 1; i < lines.size(); i++) {
 				String[] c = lines.get(i).split("\t");
@@ -44,13 +48,21 @@ public class ApplyNames extends GhidraScript {
 					continue;
 				}
 				Function fn = getFunctionAt(addr);
+				if (withdrawn) {
+					if (fn != null && fn.getSymbol().getSource() != SourceType.DEFAULT) {
+						fn.getSymbol().setNameAndNamespace(null, currentProgram.getGlobalNamespace(), SourceType.DEFAULT);
+						println("RESET " + addr + " -> " + fn.getName());
+						reset++;
+					}
+					continue;
+				}
 				if (fn == null) {
 					println("MISSING " + addr + " " + c[2] + " (" + f.getName() + ")");
 					missing++;
 					continue;
 				}
 				SourceType src = fn.getSymbol().getSource();
-				if (src == SourceType.USER_DEFINED || src == SourceType.IMPORTED) {
+				if (src == SourceType.IMPORTED || (src == SourceType.USER_DEFINED && !(overwrite && !fn.getName(true).equals(c[2])))) {
 					if (!fn.getName(true).equals(c[2])) {
 						println("KEEP " + addr + " " + fn.getName(true) + " (" + src + ") over " + c[2]);
 					}
@@ -73,6 +85,6 @@ public class ApplyNames extends GhidraScript {
 				renamed++;
 			}
 		}
-		println("APPLYNAMES " + prog + " renamed=" + renamed + " labeled=" + labeled + " kept=" + kept + " missing=" + missing);
+		println("APPLYNAMES " + prog + " renamed=" + renamed + " labeled=" + labeled + " kept=" + kept + " missing=" + missing + " reset=" + reset);
 	}
 }

@@ -358,7 +358,7 @@ def _flush_log(p: Project) -> None:
 
 
 def cmd_retag(p: Project, a) -> int:
-    """Copy the subsystem column of names TSVs onto rows already in hooks.csv (the level does not change).
+    """Copy the subsystem and name columns of names TSVs onto rows already in hooks.csv (the level does not change).
     One CHANGELOG line per changed row; rows not in hooks.csv are skipped (promote them with `batch`)."""
     rows = p.rows()
     p.pending_log = []
@@ -380,14 +380,15 @@ def cmd_retag(p: Project, a) -> int:
             if row is None:
                 skipped += 1
                 continue
-            old = row.get("subsystem") or ""
-            if old == c["subsystem"]:
-                continue
-            row["subsystem"] = c["subsystem"]
             where = addr if mod == "golf_clean.exe" else f"{mod}:{addr}"
-            p.pending_log.append(f"{datetime.date.today()}  {where}  {row.get('name')}  subsystem {old}->{c['subsystem']}"
-                                 f"  {pathlib.Path(path).as_posix()}")
-            changed += 1
+            for col in ("subsystem", "name"):
+                old, new = row.get(col) or "", c.get(col) or ""
+                if not new or old == new:
+                    continue
+                row[col] = new
+                p.pending_log.append(f"{datetime.date.today()}  {where}  {c.get('name')}  {col} {old}->{new}"
+                                     f"  {pathlib.Path(path).as_posix()}")
+                changed += 1
     if changed:
         p.save(rows)
         _flush_log(p)
@@ -415,7 +416,7 @@ def main(argv=None) -> int:
     b = sub.add_parser("batch", help="promote every row of one or more TSVs (module addr name subsystem evidence)")
     b.add_argument("tsv", nargs="+")
     b.add_argument("--to", required=True, choices=LEVELS[1:])
-    rt = sub.add_parser("retag", help="update the subsystem of tracked rows from names TSVs")
+    rt = sub.add_parser("retag", help="update the subsystem and name of tracked rows from names TSVs")
     rt.add_argument("tsv", nargs="+")
     a = ap.parse_args(argv)
     p = Project(a.root)

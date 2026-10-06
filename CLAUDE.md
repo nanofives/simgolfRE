@@ -225,8 +225,14 @@ evidence`) hold evidence-backed names. `terrain.tsv` and `libs.tsv` (libpng/zlib
 via `re/tools/names_from_match.py`; `exe_0..5`, `jgld_0..1`, `sound_0..1` were named by agents from
 `log/naming_brief.md` (2026-10-06) with a system writeup each in `re/analysis/systems/<id>.md`. Before committing
 new ones: `re/tools/names_sanitize.py` (quoted binary text -> placeholder; the repo is public) and
-`re/tools/names_validate.py <id>...`. `ghidra/scripts/ApplyNames.java <re/names dir>` applies them to a program
-(USER/IMPORTED names kept, `Class::method` -> namespaces), run headless with `-process <prog> -noanalysis`.
+`re/tools/names_validate.py <id>...` (also checks names/addresses unique across all files of a module) and
+`re/tools/names_check_evidence.py` (every `string 0x..` / `import X` citation must be referenced by the function;
+it caught 2 round-1 sound.dll names whose cited string the function never touches). sound.dll round 2 (`sound_2..5`,
+2026-10-06) took it from 127 to 471 named; the mixer dispatch (`count` vs 0xb) selects accumulate vs overwrite bodies
+(verified: 0x10019770 and 0x10019b20 differ only by `fadd [edi]`). Withdrawn names go in `re/names/withdrawn.tsv`
+(ApplyNames resets them to FUN_; `re_classify.py demote` lowers the row). `ghidra/scripts/ApplyNames.java <re/names dir>
+[overwrite]` applies them to a program (USER names kept unless `overwrite`, IMPORTED always kept, `Class::method` ->
+namespaces), run headless with `-process <prog> -noanalysis`.
 `re/tools/xref.py <module> 0x<addr>` gives offline callers/callees/strings (capstone, thunks resolved, cached in log/).
 
 ### A/B verification (`diff-original` skill)

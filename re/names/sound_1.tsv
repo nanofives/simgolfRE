@@ -32,7 +32,6 @@ sound.dll	0x1002baa0	getPlaybackTime	audio	import timeGetTime	reads timeGetTime(
 sound.dll	0x1002c5e0	destroyMixerVoices	audio	import timeGetTime, vtable 0x1005bcb4	destructor (vtable 0x1005bcb4): walks 0x28 voice-pointer slots from this+0x1b freeing each non-null entry
 sound.dll	0x1002ed50	buildVoiceRxName	audio	string 0x10063e80	constructor: sets field[1]=0x7f (default level) and copies the literal name (string in the binary) into the object's std::string at this+3
 sound.dll	0x1002f220	buildVoiceTxName	audio	string 0x10063e8c	constructor: sets field[1]=0x7f and copies the literal name (string in the binary) into the object's std::string at this+3
-sound.dll	0x1002fc10	createBlankVoice	audio	string 0x10063e98	if the engine g_100b4a20 is present, allocates a 0x10-byte voice object (operator new) tagged (string in the binary) and links it at param+0xf8
 sound.dll	0x10042690	crtBeginThread	crt	import CreateThread, import ResumeThread, import TlsSetValue	C runtime _beginthread: allocates a per-thread block, CreateThread(suspended)+TlsSetValue then ResumeThread
 sound.dll	0x10042a8e	crtEndThread	crt	import ExitThread, import CloseHandle	C runtime _endthread: CloseHandle on the thread then ExitThread
 sound.dll	0x10042bd1	crtMalloc	crt	import HeapAlloc	C runtime allocator: returns HeapAlloc(process heap, 0, size)
@@ -45,7 +44,6 @@ sound.dll	0x10045bc8	crtHeapSelect	crt	import GetEnvironmentVariableA, import Ge
 sound.dll	0x10045d10	crtHeapInit	crt	import HeapCreate, import HeapDestroy	C runtime heap init/term: HeapCreate on startup, HeapDestroy on teardown
 sound.dll	0x10049604	crtValidatePointer	crt	import IsBadReadPtr, import IsBadWritePtr	C runtime _ValidateRead/_ValidateWrite: IsBadReadPtr/IsBadWritePtr parameter validation
 sound.dll	0x1004a158	crtWideCharConvert	crt	import WideCharToMultiByte, import SetFilePointer	C runtime write path converting wide chars with WideCharToMultiByte
-sound.dll	0x10047771	crtStartupIo	crt	import GetStartupInfoA, import GetStdHandle, import GetFileType, string 0x1005f1b4	C runtime stdio/startup init: GetStartupInfoA, probes the std handles (GetStdHandle/GetFileType); references the (string in the binary) banner
+sound.dll	0x10047771	_unlock	crt	import LeaveCriticalSection (IAT 0x100b84e0); table 0x10067400	LeaveCriticalSection on the CRITICAL_SECTION at g_crtLockTable[index] (0x10067400 + index*4); called by the heap and CRT unlock paths
 sound.dll	0x10047148	crtCommitPages	crt	import VirtualAlloc	C runtime small-block heap: commits pages with VirtualAlloc
 sound.dll	0x1004751d	crtLockInit	crt	import InitializeCriticalSection, import EnterCriticalSection	C runtime multithread lock table init (InitializeCriticalSection + EnterCriticalSection)
-sound.dll	0x100414f0	formatUnsignedDecimal	crt	string 0x1005eccc	formats a value with the '%lu' conversion

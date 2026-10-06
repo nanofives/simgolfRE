@@ -27,3 +27,21 @@ for i in sys.argv[1:]:
     for m in BANNED.finditer(md):
         bad += 1; print(f"systems/{i}.md: banned '{m.group(0)}'")
 print("bad", bad)
+
+# names and addresses must also be unique across every names file of a module
+import collections, glob
+seen = collections.defaultdict(list)
+for f in sorted(glob.glob("re/names/*.tsv")):
+    if f.endswith("_globals.tsv"):
+        continue
+    for l in open(f, encoding="utf-8").read().splitlines()[1:]:
+        c = l.split("\t")
+        if len(c) == 6:
+            seen[(c[0], "name", c[2])].append(f)
+            seen[(c[0], "addr", int(c[1], 16))].append(f)
+dups = {k: v for k, v in seen.items() if len(v) > 1}
+for (mod, kind, key), fs in sorted(dups.items(), key=str):
+    print(f"duplicate {kind} in {mod}: {key if kind == 'name' else hex(key)} in {', '.join(fs)}")
+print("cross-file duplicates", len(dups))
+if bad or dups:
+    sys.exit(1)

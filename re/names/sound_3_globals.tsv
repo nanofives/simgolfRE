@@ -1,0 +1,7 @@
+module	addr	name	type	evidence
+sound.dll	0x100b5010	g_trackRoundRobin	int	round-robin cursor advanced and wrapped in 0x100247c0 (Seq_allocTrackSlot) over the track-index array at this+0x238 (count +0x23c)
+sound.dll	0x100b4fe0	g_playOrderSeed	DWORD	written with timeGetTime() in 0x10023d00 (Seq_buildPlayOrder) then passed to 0x100285a0 as a shuffle seed for the play-order array
+sound.dll	0x1005b590	vt_CtrlObject2	vtable	installed by 0x1001bca0 (CtrlObject2_ctor); base debug-header object used by the SMF reader
+sound.dll	0x1005b68c	vt_MidiReader	vtable	installed by 0x1001e750 (MidiReader_ctor) and 0x1001e7d0 (MidiReader_dtor)
+sound.dll	0x1005b6a8	vt_Sound5b6a8	vtable	installed by 0x1001ff50 (Sound5b6a8_dtor); the Sound object vtable
+sound.dll	0x1005b644	vt_CtrlObject3	vtable	installed by 0x1001caf0 (CtrlObject3_ctor); 4cc tag 0x6c727463, declared size 0x38

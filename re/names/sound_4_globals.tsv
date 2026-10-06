@@ -1,0 +1,13 @@
+module	addr	name	type	evidence
+sound.dll	0x100b49cc	g_openSoundListPrevVal	int	the previous-node value saved while unlinking from g_100b49c8 in Sound5c450_dtor 0x10030180, Sound_resetBuffers 0x10032020, Sound_stop 0x100303f0, Channel_closeStreamList 0x10033f90
+sound.dll	0x100b49d0	g_openSoundListCursor	void*	the walk cursor paired with g_100b49cc during the g_100b49c8 unlink in Sound5c450_dtor 0x10030180 and the other closers
+sound.dll	0x100b49d4	g_openSoundCount	int	decremented each time a node is unlinked from g_100b49c8 (Sound5c450_dtor 0x10030180, Sound_resetBuffers 0x10032020, Channel_closeStreamList 0x10033f90)
+sound.dll	0x1005c450	vt_Sound5c450	vtable	installed by Sound5c450_ctor 0x10030080 and reinstalled by Sound5c450_dtor 0x10030180
+sound.dll	0x1005c528	vtbl_StreamReader	vtable	installed by StreamReader_ctor 0x10031200 and reinstalled by streamReaderDtor 0x100312a0
+sound.dll	0x1005bae0	vtbl_SubChannel	vtable	installed by SubChannel_ctor 0x1002b4e0; also the base vtable reinstalled by Mixer_dtor 0x1002cb00
+sound.dll	0x1005bdd8	vtbl_Mixer	vtable	installed by Mixer_dtor 0x1002cb00 (the most-derived vtable before chaining to vtbl_SubChannel)
+sound.dll	0x1005be84	vtbl_MixBuffer	vtable	installed by MixBuffer_ctor 0x1002cee0
+sound.dll	0x1005b914	vtbl_VoiceBase	vtable	installed by VoiceBase_ctor 0x10029020 (final vtable after the 0x1005b8b0 intermediate)
+sound.dll	0x1005b9e4	vtbl_MidiDeviceBase	vtable	installed by MidiDeviceBase_ctor 0x10029e70
+sound.dll	0x1005ba5c	vtbl_WaveInDeviceBase	vtable	installed by WaveInDeviceBase_ctor 0x1002a240
+sound.dll	0x1005b488	g_levelScale	double	level-to-double scale constant read by Voice_setLevel 0x100383b0 (this+0x58 = level * g_levelScale)

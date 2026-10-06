@@ -79,8 +79,9 @@ handle at obj+0x44; several small helpers around 0x10031000–0x10034000 are thi
 ## 4. Named voices and the engine object
 
 - `g_soundEngine` (0x100b4a20) is the global engine instance (flags at +0x1a4, a sub-object at
-  +0xf8). `createBlankVoice` (0x1002fc10) allocates a 0x10-byte voice tagged `blank` (0x10063e98)
-  and links it at +0xf8.
+  +0xf8). 0x1002fc10 (unnamed since 2026-10-06; the
+  name `createBlankVoice` cited a string it does not reference) allocates a 0x10-byte object, constructs it through
+  0x10001299 and passes it to a method of the engine.
 - `buildVoiceRxName` (0x1002ed50) and `buildVoiceTxName` (0x1002f220) are constructors that set a
   default level (field[1]=0x7f) and copy the literal names `Voice Rx` (0x10063e80) /
   `Voice Tx` (0x10063e8c) into the object's std::string at this+3.

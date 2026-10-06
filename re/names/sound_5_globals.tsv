@@ -1,0 +1,7 @@
+module	addr	name	type	evidence
+sound.dll	0x1006447c	g_codecPermTable	int[54]	indexed by 0x1003bf30 (bitPermute) in both the 1..0x36 permutation loops
+sound.dll	0x10064454	g_codecBitMasks	uint[]	per-position bit masks read by 0x1003bf30 (bitPermute) as &DAT_10064454 + i*4
+sound.dll	0x10063ef0	g_codecConfig	struct	config/header block read by 0x1003a980 (codecProcessBlock) and passed to bitUnpack
+sound.dll	0x10064ef0	g_str_sqrt	char[5]	(string in the binary) name string referenced by 0x1004320d (sqrt_classify) for math error reporting
+sound.dll	0x10064f00	g_str_log	char[4]	(string in the binary) name string referenced by 0x100432ed (log_classify) for math error reporting
+sound.dll	0x10067400	g_crtLockTable	CRITICAL_SECTION[]	lock-index table indexed by _unlock 0x10047771 (LeaveCriticalSection) and the CRT __lock
