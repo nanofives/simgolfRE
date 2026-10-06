@@ -4,6 +4,8 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  00470a10  clearTile  C2->C3  log/diff/00470a10_clearTile.path1.csv
+2026-10-06  0045c1a0  Random::next  C2->C3  log/diff/0045c1a0_Random_next.path1.csv
 2026-10-06  sound.dll:00051319  cvtdate  C1->C2  re/analysis/crt/00051319_sound_cvtdate.md
 2026-10-06  sound.dll:0004fe24  Strftime  C1->C2  re/analysis/crt/0004fe24_sound_Strftime.md
 2026-10-06  sound.dll:0004a158  __fptrap  C1->C2  re/analysis/crt/0004a158_sound_fptrap.md

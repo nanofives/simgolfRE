@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 76 bytes, 23 instructions, subsystem `terrain`. Mechani
 clears a single terrain tile (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Clears course cell (x, y): reads the kind byte of the current course (index dword at 0x0059bf90, 0x2e-byte records, byte at 0x00571ff7 + index*0x2e); writes tile type 0x11 when the kind is 2, else 0x14, at 0x005722e8 + x*50 + y (0x00470a45), and for kind 2 also clears bits 0x0320 of the cell's flags word at 0x0053caf0 + (x*50 + y)*2 (and with 0xfcdf at 0x00470a50) (0x00470a10). Reimplemented in `shim/src/re/golf_state.cpp`; path-1 A/B with state comparison over 36 cells for kind 2 (`log/diff/00470a10_clearTile.path1.csv`) and for kind 0 (`log/diff/00470a10_clearTile_kind0.path1.csv`) is GREEN: the tile and flags tables written match byte for byte.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small8.cpp` as `?clearTile470a10@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00470a5b): callee pops 0 bytes of stack arguments.

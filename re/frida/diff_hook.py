@@ -43,23 +43,32 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
         for name in names:
             spec = dict(HOOKS[name])
             spec["vectors"] = [list(v) for v in spec["vectors"]]
-            call = {k: spec.get(k) for k in ("module", "addr", "abi", "ret", "args", "fixture", "vectors")}
+            spec["state"] = [list(s) for s in spec.get("state", [])]
+            call = {k: spec.get(k) for k in ("module", "addr", "abi", "ret", "args", "fixture", "vectors", "state")}
             if override_re and name in override_re:
                 call["override_re"] = override_re[name]
             r = sc.exports_sync.run(call)
-            ok = r["witness"] == 0xE9 and all(row["orig"] == row["re"] for row in r["rows"])
+            same = lambda row: row["orig"] == row["re"] and row.get("state_match", True)
+            ok = r["witness"] == 0xE9 and all(same(row) for row in r["rows"])
+            stateful = bool(spec["state"])
             path = out_dir / f"{spec['addr']:08x}_{name}.path1.csv"
             with path.open("w", newline="") as f:
                 w = csv.writer(f)
-                w.writerow(["vector", "original", "reimpl", "match"])
+                w.writerow(["vector", "original", "reimpl", "match"] + (["state_original", "state_reimpl", "state_changed"] if stateful else []))
                 for row in r["rows"]:
-                    w.writerow([" ".join(map(str, row["vector"])), row["orig"], row["re"], row["orig"] == row["re"]])
+                    extra = [row["state_orig"], row["state_re"], row["state_changed"]] if stateful else []
+                    w.writerow([" ".join(map(str, row["vector"])), row["orig"], row["re"], same(row)] + extra)
+                if stateful:
+                    w.writerow(["state_regions", " ".join(f"{b}+0x{o:x}:{n}" if isinstance(b, str) else f"0x{b:08x}+0x{o:x}:{n}"
+                                                          for b, o, n in spec["state"]), "", ""])
                 w.writerow(["install_witness", f"0x{r['witness']:02x}", "0xe9", r["witness"] == 0xE9])
                 w.writerow(["meta", f"detour={r['detour']}", f"original={r['original']}",
                             datetime.datetime.now().isoformat(timespec="seconds")])
                 w.writerow(["VERDICT", "GREEN" if ok else "RED", len(r["rows"]), ""])
-            mism = sum(row["orig"] != row["re"] for row in r["rows"])
-            print(f"{name}: {'GREEN' if ok else 'RED'}  {len(r['rows'])} vectors, {mism} mismatches, "
+            mism = sum(not same(row) for row in r["rows"])
+            st = (f", state checked ({sum(row['state_changed'] for row in r['rows'])} vectors change it, "
+                  f"{sum(not row['state_match'] for row in r['rows'])} state mismatches)") if stateful else ""
+            print(f"{name}: {'GREEN' if ok else 'RED'}  {len(r['rows'])} vectors, {mism} mismatches{st}, "
                   f"witness 0x{r['witness']:02x} -> {path}")
             results[name] = ok
     return results

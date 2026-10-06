@@ -42,6 +42,27 @@ globalThis.DIFF_FIXTURES = {
     [5, 0, 7, 3].forEach((v, i) => ptr('0x0053f3e8').add(i * 4).writeS32(v));
     return { obj: ptr('0x005722e8') };
   },
+  // 16 Random objects (a seed dword each) for Random::next 0x0045c1a0: s0..s15 cover 0, 1, sign/carry edges and
+  // arbitrary values. State region: $obj + 0, 64 bytes.
+  rng_seeds() {
+    const seeds = [0, 1, 0x3039, 0x7fff, 0x8000, 0xffff, 0x10000, 0x41c64e6d, 0x7fffffff, 0x80000000, 0xfffffffe,
+                   0xffffffff, 0x12345678, 0xdeadbeef, 0x0badf00d, 0xa5a5a5a5];
+    const obj = Memory.alloc(seeds.length * 4);
+    const fx = { obj };
+    seeds.forEach((s, i) => { obj.add(i * 4).writeU32(s >>> 0); fx['s' + i] = obj.add(i * 4); });
+    return fx;
+  },
+  // Current course (dword 0x0059bf90) = 0 with kind byte (0x00571ff7) 2 / 0, plus the tile pattern and a flags
+  // pattern (0x0053caf0 words = 0xffff ^ cell) so clearTile 0x00470a10's writes are visible.
+  course_kind2() { return globalThis.DIFF_FIXTURES._course(2); },
+  course_kind0() { return globalThis.DIFF_FIXTURES._course(0); },
+  _course(kind) {
+    globalThis.DIFF_FIXTURES.tile_types_pattern();
+    ptr('0x0059bf90').writeS32(0);
+    ptr('0x00571ff7').writeS8(kind);
+    for (let i = 0; i < 2500; i++) ptr('0x0053caf0').add(i * 2).writeU16((0xffff ^ i) & 0xffff);
+    return { obj: ptr('0x005722e8') };
+  },
   // Rect {x0 = 10, y0 = 20, x1 = 30, y1 = 40} for pointInRect 0x00492610.
   rect_10_20_30_40() {
     const obj = Memory.alloc(16);

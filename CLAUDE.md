@@ -249,7 +249,13 @@ proves no understanding) in `shim/src/re/golf_math.cpp` (pure integer leaves) an
 lookups); a `## Purpose` added to the generated note (c2_note.py then never regenerates it); vectors in
 `re/frida/hooks_registry.py`; fixtures in `re/frida/js/diff_fixtures.js` seed main-menu tables so every branch runs
 (`golf_tables`: tiles, wall masks/heights, golfers, cell tables). Pick live (scoreboard reach > 0), matched, small
-leaves first; stateful functions (RNG, writers) need state reset between arms before they can be A/B'd.
+leaves first. Stateful functions: give the registry entry `state=[(addr | "$fixture_key", offset, size), ...]`;
+diff_hook then snapshots those regions per vector, runs both arms from the same snapshot, compares the return value
+AND the regions afterwards (CSV columns state_original/state_reimpl/state_changed, FNV hashes), and restores them.
+Test-only override `orig_restore_state` (the original's value with its write undone) must read RED on state alone
+(tests/test_diff_tool.py). Regions the running game writes concurrently make a run flaky. A function whose behaviour
+depends on a fixture-set global gets one registry entry per setting (clearTile / clearTile_kind0).
+`shim/src/re/golf_state.cpp`: Random::next, clearTile.
 `py -3.12 re/frida/diff_hook.py <names...>` runs all in one boot; then `re_classify.py promote <addr> --to C3 --file <cpp>`.
 `xref.load_pe` is fast_load: call `pe.parse_data_directories()` before reading imports.
 

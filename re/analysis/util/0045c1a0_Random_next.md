@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 52 bytes, 13 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Advances the RNG state (g_4ba800) and returns the next double in [0,1). (`re/names/exe_1.tsv`)
 
+## Purpose
+Linear congruential generator step of a Random object: seed = seed * 0x41c64e6d + 0x3039 (32-bit wrap), stored back at [this] (0x0045c1b8), then returns ((seed >> 16) & 0x7fff) times the double at 0x004ba800 (1/32768), a value in [0, 1) (0x0045c1a0). Reimplemented in `shim/src/re/golf_state.cpp`; path-1 A/B with state comparison over 16 seeds (0, 1, 0xffffffff, 0x80000000, ...): return values and the seed written back match (`log/diff/0045c1a0_Random_next.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_util.cpp` as `?next@Random@@QAENXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045c1d3): callee pops 0 bytes of stack arguments.

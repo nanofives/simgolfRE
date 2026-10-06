@@ -85,3 +85,17 @@ HOOKS.update({
                         vectors=[(x, y, "$obj") for x in (-0x80000000, 0, 9, 10, 11, 29, 30, 31, 0x7FFFFFFF)
                                  for y in (-0x80000000, 0, 19, 20, 21, 39, 40, 41, 0x7FFFFFFF)]),
 })
+
+_CLEAR = [(x, y) for x in (0, 1, 7, 24, 48, 49) for y in (0, 2, 13, 25, 48, 49)]
+_COURSE_STATE = [(0x005722E8, 0, 2500), (0x0053CAF0, 0, 5000), (0x0059BF90, 0, 4), (0x00571FF7, 0, 1)]
+HOOKS.update({
+    # Stateful functions (2026-10-06): diff_hook snapshots the `state` regions, runs both arms from the same
+    # snapshot, compares return value AND the regions afterwards, then restores them. shim/src/re/golf_state.cpp.
+    "Random_next": dict(module="golf_clean.exe", addr=0x0045C1A0, abi="thiscall", ret="double", args=["pointer"],
+                        fixture="rng_seeds", state=[("$obj", 0, 64)],
+                        vectors=[(f"$s{i}",) for i in range(16)] * 2),
+    "clearTile": dict(module="golf_clean.exe", addr=0x00470A10, abi="default", ret="void", args=["int", "int"],
+                      fixture="course_kind2", state=_COURSE_STATE, vectors=_CLEAR),
+    "clearTile_kind0": dict(module="golf_clean.exe", addr=0x00470A10, abi="default", ret="void", args=["int", "int"],
+                            fixture="course_kind0", state=_COURSE_STATE, vectors=_CLEAR),
+})

@@ -20,9 +20,25 @@ rpc.exports = {
     const wrong = spec.override_re === 'null'
       ? new NativeCallback(() => (spec.ret === 'pointer' ? ptr(0) : 0), spec.ret, spec.args, spec.abi)
       : null;
-    const fo = mk(original), fr = mk(wrong || (spec.override_re ? ptr(spec.override_re) : detour));
+    // State: memory regions [base, offset, size] (base = an address, or "$name" for a fixture pointer) that the
+    // function reads or writes. Each vector runs both arms from the same snapshot; the regions are compared
+    // after each arm and restored at the end, so stateful functions (RNG, writers) can be A/B'd and the game
+    // is left as it was. The game keeps running meanwhile: regions it writes concurrently make a run flaky.
+    const regs = (spec.state || []).map((s) => ({
+      p: (typeof s[0] === 'string' ? fx[s[0].slice(1)] : ptr(s[0])).add(s[1]), n: s[2] }));
+    const snap = () => regs.map((r) => r.p.readByteArray(r.n));
+    const restore = (s) => regs.forEach((r, i) => r.p.writeByteArray(s[i]));
+    const hex = (bufs) => bufs.map((b) => Array.from(new Uint8Array(b), (x) => x.toString(16).padStart(2, '0')).join('')).join('|');
+    const fnv = (s) => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); };
+    // orig_restore_state (test-only negative control): the original's return value with its state change undone.
+    const fo0 = mk(original);
+    const restoring = spec.override_re === 'orig_restore_state'
+      ? new NativeCallback(function (...a) { const s = snap(); const r = fo0(...a); restore(s); return r; }, spec.ret, spec.args, spec.abi)
+      : null;
+    const fo = fo0, fr = mk(wrong || restoring || (spec.override_re ? ptr(spec.override_re) : detour));
     const resolve = (v) => (typeof v === 'string' && v.startsWith('$')) ? fx[v.slice(1)] : v;
     const norm = (r) => {
+      if (spec.ret === 'void') return 'void';
       if (spec.ret !== 'pointer') return r.toString();
       if (r.isNull()) return 'NULL';
       return fx.obj ? 'obj+0x' + r.sub(fx.obj).toString(16) : r.toString();
@@ -30,7 +46,17 @@ rpc.exports = {
     const rows = [];
     for (const vec of spec.vectors) {
       const args = vec.map(resolve);
-      rows.push({ vector: vec, orig: norm(fo(...args)), re: norm(fr(...args)) });
+      if (!regs.length) {
+        rows.push({ vector: vec, orig: norm(fo(...args)), re: norm(fr(...args)) });
+        continue;
+      }
+      const before = snap();
+      const ro = norm(fo(...args)); const so = hex(snap());
+      restore(before);
+      const rr = norm(fr(...args)); const sr = hex(snap());
+      restore(before);
+      rows.push({ vector: vec, orig: ro, re: rr, state_orig: fnv(so), state_re: fnv(sr), state_match: so === sr,
+                  state_changed: so !== hex(before) });
     }
     return { witness, detour: detour.toString(), original: original.toString(), rows };
   },
