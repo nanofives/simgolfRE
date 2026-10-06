@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 42 bytes, 20 instructions, subsystem `util`. Mechanical
 approximate 2D distance (octagonal metric) between two deltas (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Approximates the length of the vector (dx, dy) without a square root: with a = |dx| and b = |dy| (negated when negative), it returns (min(a, b) + 2*max(a, b)) / 2, i.e. max + min/2 with C truncating division (0x00467170). Ties (a == b) take the second form. Reimplemented in `shim/src/re/golf_math.cpp`; path-1 A/B over 144 (dx, dy) pairs including INT_MIN/INT_MAX is GREEN (`log/diff/00467170_approxDistance.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small3.cpp` as `?approxDistance@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00467190, 0x00467199): callee pops 0 bytes of stack arguments.

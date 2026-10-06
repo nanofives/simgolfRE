@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 160 bytes, 47 instructions, subsystem `economy`. Mechan
 returns the purchase price for a given tier (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Returns the price of a tier 0..15 from a jump table at 0x0046f270: 500, 600, 700, 800, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000; any other tier (unsigned compare, ja at 0x0046f1dc, so negatives too) gives 500. The result passes through v * 100 / 100, which leaves it unchanged for these values (0x0046f1d0). Reimplemented in `shim/src/re/golf_math.cpp`; path-1 A/B over tiers -3..19 and extremes is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small15.cpp` as `?tierPrice@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046f26f): callee pops 0 bytes of stack arguments.

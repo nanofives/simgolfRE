@@ -43,7 +43,7 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
         for name in names:
             spec = dict(HOOKS[name])
             spec["vectors"] = [list(v) for v in spec["vectors"]]
-            call = {k: spec[k] for k in ("module", "addr", "abi", "ret", "args", "fixture", "vectors")}
+            call = {k: spec.get(k) for k in ("module", "addr", "abi", "ret", "args", "fixture", "vectors")}
             if override_re and name in override_re:
                 call["override_re"] = override_re[name]
             r = sc.exports_sync.run(call)

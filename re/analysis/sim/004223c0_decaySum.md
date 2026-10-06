@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 44 bytes, 20 instructions, subsystem `sim`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 accumulates a decaying weighted sum (shot-power term) (`re/names/exe_0.tsv`)
 
+## Purpose
+Accumulates x/8 over a decaying series: each step adds x/8 (signed, truncating) and then subtracts x >> s from x, where s is the signed byte at 0x005783a1; it always runs once and repeats while x >= 0x40 (jge at 0x004223e5), returning the sum (0x004223c0). Reimplemented in `shim/src/re/golf_math.cpp`; path-1 A/B over 34 values (both signs, the 0x40 boundary, int extremes) with the live value of 0x005783a1 is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small4.cpp` as `?decaySum@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004223eb): callee pops 0 bytes of stack arguments.

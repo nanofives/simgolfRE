@@ -4,6 +4,13 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  0040bf60  tileBlocked  C2->C3  log/diff/0040bf60_tileBlocked.path1.csv
+2026-10-06  0046f1d0  tierPrice  C2->C3  log/diff/0046f1d0_tierPrice.path1.csv
+2026-10-06  00404970  scaleX  C2->C3  log/diff/00404970_scaleX.path1.csv
+2026-10-06  004223f0  decaySum2  C2->C3  log/diff/004223f0_decaySum2.path1.csv
+2026-10-06  004223c0  decaySum  C2->C3  log/diff/004223c0_decaySum.path1.csv
+2026-10-06  0044faf0  bucketValue  C2->C3  log/diff/0044faf0_bucketValue.path1.csv
+2026-10-06  00467170  approxDistance  C2->C3  log/diff/00467170_approxDistance.path1.csv
 2026-10-06  sound.dll:0004e4b3  __free_lc_time  C1->C2  re/analysis/crt/0004e4b3_sound_free_lc_time.md
 2026-10-06  sound.dll:0004aa10  _alloca_probe  C1->C2  re/analysis/crt/0004aa10_sound_alloca_probe.md
 2026-10-06  sound.dll:0004a010  strcpy  C1->C2  re/analysis/crt/0004a010_sound_strcpy.md

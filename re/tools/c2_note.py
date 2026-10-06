@@ -328,8 +328,12 @@ def note_path(mod, rva, name, subsystem):
 
 
 def existing_note(row):
+    """The row's note when it must not be regenerated: hand-written, or carrying a hand `## Purpose`."""
     n = row.get("note") or ""
-    return n if n and (ROOT / n).is_file() else None
+    if not (n and (ROOT / n).is_file()):
+        return None
+    text = (ROOT / n).read_text(encoding="utf-8")
+    return n if (GEN not in text or "## Purpose" in text) else None
 
 
 def main():
@@ -366,9 +370,11 @@ def main():
                 continue
             text, callers, callees = res
             p = note_path(mod, rva, row["name"], row["subsystem"])
-            if (ROOT / p).exists() and GEN not in (ROOT / p).read_text(encoding="utf-8"):
-                skipped += 1                       # a hand-written note of the same name: leave it alone
-                continue
+            if (ROOT / p).exists():
+                old = (ROOT / p).read_text(encoding="utf-8")
+                if GEN not in old or "## Purpose" in old:
+                    skipped += 1                   # hand-written, or a generated note given a hand Purpose (C3)
+                    continue
             (ROOT / p).parent.mkdir(parents=True, exist_ok=True)
             (ROOT / p).write_text(text, encoding="utf-8")
             path = p.as_posix()

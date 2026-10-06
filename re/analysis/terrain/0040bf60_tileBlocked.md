@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 51 bytes, 18 instructions, subsystem `terrain`. Mechani
 returns whether a tile is out of bounds or blocked (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+Tells whether a course grid cell is blocked: returns 1 when x or y lies outside 0..49 (signed compares at 0x0040bf66..0x0040bf78) or when the tile type byte at 0x005722e8 + x*50 + y is 0x14 (cmp at 0x0040bf80), else 0 (0x0040bf60). Reimplemented in `shim/src/re/golf_math.cpp`; path-1 A/B over 391 cells with a seeded type table (fixture `tile_types_pattern`: 79 in-range cells of type 0x14 return 1, 220 return 0) is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?tileBlocked@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040bf8c, 0x0040bf92): callee pops 0 bytes of stack arguments.

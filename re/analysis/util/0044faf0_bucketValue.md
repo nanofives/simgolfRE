@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 50 bytes, 21 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Maps a value into a bucket index (used by reports/pricing). (`re/names/exe_1.tsv`)
 
+## Purpose
+Maps an integer to one of four buckets by signed thresholds: v <= 5 -> 0, v <= 9 -> 1, v <= 0x11 (17) -> 2, v == 0x12 (18) -> 3, anything above 18 -> -1 (0x0044faf0). Reimplemented in `shim/src/re/golf_math.cpp`; path-1 A/B over 46 values around every threshold and the int extremes is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small4.cpp` as `?bucket44faf0@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044fafb, 0x0044fb06, 0x0044fb11, 0x0044fb21): callee pops 0 bytes of stack arguments.
