@@ -282,7 +282,7 @@ GREEN, more than one distinct result or a state change, and a Purpose); `--keys`
 back). VC6 converts double to int with __ftol 0x4a6030: 64-bit fistp, low dword kept (NaN -> 0, not 0x80000000);
 reimplementations write (int)(long long)v (c3b distance was RED until then).
 First parallel round (2026-10-07): c3a 12, c3b 9, c3c 11, c3d 8 promoted (68 at C3), the three later batches
-A/B'd at the same time on original\, instances and instances\c (6-8 s). Fixes it forced: diff_hook writes
+A/B'd at the same time on original\, instances\b and instances\c (6-8 s). Fixes it forced: diff_hook writes
 `Class::method` keys as `Class_method` file names, records a bad entry or crash as ERROR and goes on, accepts a
 number for a pointer argument (0 = NULL), and rewrites `Memory.alloc(` to `__keepAlloc(` in fixtures
 (js/keepalive.js): Frida frees an allocation no JS value references, so a parent stored only at view+0x130 was
