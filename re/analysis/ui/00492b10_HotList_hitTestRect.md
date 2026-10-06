@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 160 bytes, 68 instructions, subsystem `ui`. Mechanical 
 Like hitTest but also outputs the matched hotspot's rect. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+As hitTest 0x00492a90, and on a hit it additionally copies the entry's 16-byte rect (entry+4) into `*outRect` when outRect is non-null (four dword copies at 0x00492b85..0x00492ba4), returning the index or -1 (0x00492b10). Returns `ret 0x14`, __thiscall. Matched 100% as `?hitRect@HotList2@@QAEHHHPAH0PAURect4@@@Z` (re/match/golf_small15.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: HotList_hitTestRect (10 vectors, 8 distinct results, 7 changing state, `log/diff/00492b10_HotList_hitTestRect.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small15.cpp` as `?hitRect@HotList2@@QAEHHHPAH0PAURect4@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00492b4e, 0x00492bad): callee pops 20 bytes of stack arguments.

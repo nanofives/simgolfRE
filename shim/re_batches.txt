@@ -1,3 +1,6 @@
 # Parallel C3 batches linked into the shim: one file name per line, relative to shim/src/re. The verifier adds a
 # batch when it is about to be A/B'd and removes it if the A/B is RED (see CLAUDE.md, parallel C3).
 c3b.cpp
+c3a.cpp
+c3c.cpp
+c3d.cpp

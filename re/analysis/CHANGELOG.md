@@ -4,6 +4,37 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  00492b10  HotList::hitTestRect  C2->C3  log/diff/00492b10_HotList_hitTestRect.path1.csv
+2026-10-06  00492a90  HotList::hitTest  C2->C3  log/diff/00492a90_HotList_hitTest.path1.csv
+2026-10-06  0047b200  View::fromParent  C2->C3  log/diff/0047b200_View_fromParent.path1.csv
+2026-10-06  0047b170  View::toParent  C2->C3  log/diff/0047b170_View_toParent.path1.csv
+2026-10-06  0047b120  View::offsetRectToLocal  C2->C3  log/diff/0047b120_View_offsetRectToLocal.path1.csv
+2026-10-06  0047b0d0  View::offsetRectToParent  C2->C3  log/diff/0047b0d0_View_offsetRectToParent.path1.csv
+2026-10-06  0047b080  Node::contains  C2->C3  log/diff/0047b080_Node_contains.path1.csv
+2026-10-06  004326a0  nearestMenuSpot  C2->C3  log/diff/004326a0_nearestMenuSpot.path1.csv
+2026-10-06  00490d20  MsgBox::setColorB  C2->C3  log/diff/00490d20_MsgBox_setColorB.path1.csv
+2026-10-06  00490cc0  MsgBox::setColorA  C2->C3  log/diff/00490cc0_MsgBox_setColorA.path1.csv
+2026-10-06  00490c80  MsgBox::setButtonA  C2->C3  log/diff/00490c80_MsgBox_setButtonA.path1.csv
+2026-10-06  00488490  Cursor::ctor  C2->C3  log/diff/00488490_Cursor_ctor.path1.csv
+2026-10-06  00487000  BinkPlayer::ctor  C2->C3  log/diff/00487000_BinkPlayer_ctor.path1.csv
+2026-10-06  00484150  Snd::ctorBase  C2->C3  log/diff/00484150_Snd_ctorBase.path1.csv
+2026-10-06  004801f0  Window::visible  C2->C3  log/diff/004801f0_Window_visible.path1.csv
+2026-10-06  0047b2d0  View::toGlobal  C2->C3  log/diff/0047b2d0_View_toGlobal.path1.csv
+2026-10-06  0047b290  View::toLocal  C2->C3  log/diff/0047b290_View_toLocal.path1.csv
+2026-10-06  00477580  Widget_value  C2->C3  log/diff/00477580_Widget_value.path1.csv
+2026-10-06  00476310  Widget_setQuad  C2->C3  log/diff/00476310_Widget_setQuad.path1.csv
+2026-10-06  004675d0  thoughtFlag  C2->C3  log/diff/004675d0_thoughtFlag.path1.csv
+2026-10-06  0045c420  thoughtBalance  C2->C3  log/diff/0045c420_thoughtBalance.path1.csv
+2026-10-06  004493b0  tileFlag20  C2->C3  log/diff/004493b0_tileFlag20.path1.csv
+2026-10-06  00449310  tileQuery449310  C2->C3  log/diff/00449310_tileQuery449310.path1.csv
+2026-10-06  004492f0  tileByte  C2->C3  log/diff/004492f0_tileByte.path1.csv
+2026-10-06  0042f530  relaxEdges42f530  C2->C3  log/diff/0042f530_relaxEdges42f530.path1.csv
+2026-10-06  0042f4b0  cornerRange  C2->C3  log/diff/0042f4b0_cornerRange.path1.csv
+2026-10-06  0042dba0  sampleHeight  C2->C3  log/diff/0042dba0_sampleHeight.path1.csv
+2026-10-06  00422430  shotPower  C2->C3  log/diff/00422430_shotPower.path1.csv
+2026-10-06  0040ddb0  nearestPlaced  C2->C3  log/diff/0040ddb0_nearestPlaced.path1.csv
+2026-10-06  0040bfa0  typeAtPos  C2->C3  log/diff/0040bfa0_typeAtPos.path1.csv
+2026-10-06  00402930  freeAtTile  C2->C3  log/diff/00402930_freeAtTile.path1.csv
 2026-10-06  0043d520  freeBlock  C2->C3  log/diff/0043d520_freeBlock.path1.csv
 2026-10-06  00492570  trimTrailingSpace  C2->C3  log/diff/00492570_trimTrailingSpace.path1.csv
 2026-10-06  004924e0  trimLeadingSpace  C2->C3  log/diff/004924e0_trimLeadingSpace.path1.csv

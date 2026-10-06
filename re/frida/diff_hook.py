@@ -26,6 +26,11 @@ from hooks_registry import HOOKS  # noqa: E402
 DIFF_DIR = ROOT / "log" / "diff"
 
 
+def csv_name(key: str) -> str:
+    """Registry key as a file name: `Class::method` keys carry characters Windows forbids."""
+    return key.replace("::", "_").replace("<", "(").replace(">", ")").replace("*", "P")
+
+
 def run(names: list[str], override_re: dict[str, int | str] | None = None, out_dir: pathlib.Path = DIFF_DIR) -> dict[str, bool]:
     """override_re (tests only): an address, or "null" for a stub returning NULL/0, called instead of
     the detour to prove a wrong body reads RED."""
@@ -42,8 +47,10 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
         # only batches listed in shim/re_batches.txt: a fragment still being written must not break the run
         from hooks_registry import enabled_batches
         frags = [p for p in sorted((JS_DIR / "fixtures.d").glob("*.js")) if p.stem in enabled_batches()]
-        parts = [JS_DIR / "diff_fixtures.js"] + frags + [JS_DIR / "diff_hook.js"]
-        src = "\n".join(p.read_text() for p in parts)
+        parts = [JS_DIR / "keepalive.js", JS_DIR / "diff_fixtures.js"] + frags + [JS_DIR / "diff_hook.js"]
+        # fixtures allocate through __keepAlloc (keepalive.js) so linked blocks are never garbage-collected mid-run
+        src = "\n".join(p.read_text() if p.name in ("keepalive.js", "diff_hook.js")
+                        else p.read_text().replace("Memory.alloc(", "__keepAlloc(") for p in parts)
         sc = g.session.create_script(src)
         sc.load()
         for name in names:
@@ -53,11 +60,25 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
             call = {k: spec.get(k) for k in ("module", "addr", "abi", "ret", "args", "fixture", "vectors", "state")}
             if override_re and name in override_re:
                 call["override_re"] = override_re[name]
-            r = sc.exports_sync.run(call)
+            path = out_dir / f"{spec['addr']:08x}_{csv_name(name)}.path1.csv"
+            try:
+                r = sc.exports_sync.run(call)
+            except Exception as e:                 # a bad entry or a crash must not hide the other hooks' results
+                with path.open("w", newline="") as f:
+                    w = csv.writer(f)
+                    w.writerow(["vector", "original", "reimpl", "match"])
+                    w.writerow(["error", type(e).__name__, str(e)[:200], ""])
+                    w.writerow(["VERDICT", "ERROR", 0, ""])
+                print(f"{name}: ERROR  {type(e).__name__}: {e} -> {path}")
+                results[name] = False
+                if not g.alive:                    # the game died (e.g. an access violation): later hooks cannot run
+                    print(f"  game process ended ({g.detach_reason}); remaining hooks not run")
+                    break
+                continue
             same = lambda row: row["orig"] == row["re"] and row.get("state_match", True)
             ok = r["witness"] == 0xE9 and all(same(row) for row in r["rows"])
             stateful = bool(spec["state"])
-            path = out_dir / f"{spec['addr']:08x}_{name}.path1.csv"
+            path = out_dir / f"{spec['addr']:08x}_{csv_name(name)}.path1.csv"
             with path.open("w", newline="") as f:
                 w = csv.writer(f)
                 w.writerow(["vector", "original", "reimpl", "match"] + (["state_original", "state_reimpl", "state_changed"] if stateful else []))
@@ -70,7 +91,7 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
                 w.writerow(["install_witness", f"0x{r['witness']:02x}", "0xe9", r["witness"] == 0xE9])
                 w.writerow(["meta", f"detour={r['detour']}", f"original={r['original']}",
                             datetime.datetime.now().isoformat(timespec="seconds")])
-                distinct = len({row["orig"] for row in r["rows"]} | {row.get("state_orig") for row in r["rows"]} - {None})
+                distinct = len({(row["orig"], row.get("state_orig")) for row in r["rows"]})   # (return, final state) pairs
                 w.writerow(["distinct_results", distinct, "", ""])
                 w.writerow(["VERDICT", "GREEN" if ok else "RED", len(r["rows"]), ""])
             mism = sum(not same(row) for row in r["rows"])

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 26 bytes, 8 instructions, subsystem `terrain`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Returns a raw byte of a tile from the exe tile array. (`re/names/exe_1.tsv`)
 
+## Purpose
+tileByte (0x004492f0) reads the per-cell byte of the 50x50 grid at 0x0056988c, indexed `x*50 + y` (the two `lea eax,[eax+eax*4]` at 0x004492fa/0x004492fd give x*25, doubled by the `eax*2` scale at 0x00449300), and returns it zero-extended (`xor ecx,ecx` / `mov cl` at 0x004492f8/0x00449300); a pure reader of one byte. Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: tileByte (110 vectors, 92 distinct results, `log/diff/004492f0_tileByte.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small.cpp` as `?tileByte@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00449309): callee pops 0 bytes of stack arguments.

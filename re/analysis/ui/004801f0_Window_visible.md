@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 38 bytes, 13 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 returns 1 only if m_flags bit1 is set and every parent (m_parent) is also visible (`re/names/exe_3.tsv`)
 
+## Purpose
+`__thiscall() -> int` returns 0 when bit 0 of the byte at this+0xa0 is clear (0x004801f0, 0x004801f9); otherwise, if the parent pointer at this+0x130 is non-null, it recurses on the parent (0x004801fc, 0x00480206) and returns 0 when the parent is not visible (0x0048020d, 0x0048020f), else returns 1 (0x00480210) — so an object is visible iff bit 0 of +0xa0 is set here and on every ancestor. Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: Window::visible (10 vectors, 2 distinct results, `log/diff/004801f0_Window_visible.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small18.cpp` as `?visible@Win480@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004801fb, 0x0048020f, 0x00480215): callee pops 0 bytes of stack arguments.

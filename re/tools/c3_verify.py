@@ -23,7 +23,9 @@ def keys_of(batch):
 
 
 def csv_facts(addr, key):
-    p = ROOT / "log" / "diff" / f"{addr:08x}_{key}.path1.csv"
+    sys.path.insert(0, str(ROOT / "re" / "frida"))
+    from diff_hook import csv_name
+    p = ROOT / "log" / "diff" / f"{addr:08x}_{csv_name(key)}.path1.csv"
     if not p.exists():
         return None
     rows = list(csv.reader(p.open()))

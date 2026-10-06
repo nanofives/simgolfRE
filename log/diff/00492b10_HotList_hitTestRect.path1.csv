@@ -1,0 +1,16 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj 5 5 $aOut $bOut $outRect,0,0,True,97a55d90,97a55d90,True
+$obj 30 30 $aOut $bOut $outRect,1,1,True,ba1e9cb8,ba1e9cb8,True
+$obj 70 70 $aOut $bOut $outRect,4,4,True,37db0829,37db0829,True
+$obj 110 10 $aOut $bOut $outRect,3,3,True,72913a0b,72913a0b,True
+$obj 205 205 $aOut $bOut $outRect,5,5,True,823490d3,823490d3,True
+$obj 55 55 $aOut $bOut $outRect,2,2,True,adb318c9,adb318c9,True
+$obj 15 15 $aOut $bOut $outRect,-1,-1,True,c7d96ac5,c7d96ac5,False
+$obj 1000 1000 $aOut $bOut $outRect,-1,-1,True,c7d96ac5,c7d96ac5,False
+$obj 70 70 0 0 $outRect,4,4,True,bbbbdf69,bbbbdf69,True
+$obj 15 15 $aOut $bOut $outRect,-1,-1,True,c7d96ac5,c7d96ac5,False
+state_regions,$scratch+0x0:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6cdf8430,original=0x1440e80,2026-10-06T15:54:56
+distinct_results,8,,
+VERDICT,GREEN,10,

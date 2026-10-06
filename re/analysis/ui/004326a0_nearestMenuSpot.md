@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 113 bytes, 46 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Returns the index of the nearest radial-menu slot to a point. (`re/names/exe_1.tsv`)
 
+## Purpose
+Picks the nearest radial-menu spot to a query point (0x004326a0). It scans the spot table at 0x004c7930 (4 bytes per entry: short sx at +0, short sy at +2, sign-extended at 0x004326c3/0x004326bf) until an entry's first short is -1 (sentinel, 0x004326f9); best starts -1 (0x004326ae) and bestD starts 30 (0x004326b8). Each spot i scores approxDistance(x - sx, y - sy) (0x00467170, call at 0x004326d2) multiplied by (i + 6) (0x004326d7/0x004326dd) then divided by 8 with signed truncation (0x004326e0..0x004326e6); the smaller score wins (0x004326eb), and a winning index of 6 is returned as -1 (cmp at 0x00432706). Returns `ret`, __cdecl. Matched 100% as `?nearestSpot@@YAHHH@Z` (re/match/golf_small10.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: nearestMenuSpot (12 vectors, 4 distinct results, `log/diff/004326a0_nearestMenuSpot.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small10.cpp` as `?nearestSpot@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00432710): callee pops 0 bytes of stack arguments.

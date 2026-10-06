@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 78 bytes, 30 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 translates a RECT by this view origin via toParent (f_47b170) (`re/names/exe_3.tsv`)
 
+## Purpose
+Translates a RECT from a view's local space into its parent's space (0x0047b0d0). It returns without touching the RECT when the pointer is null (tested at 0x0047b0da); otherwise it computes the parent offset of the point (0, 0) through toParent 0x0047b170 (call at 0x0047b0ee), then adds that dx to the RECT's left (+0) and right (+8) and dy to its top (+4) and bottom (+0xc) (0x0047b0f7..0x0047b116). Returns `ret 4`, __thiscall. Matched 100% as `?offsetRect@View47c@@QAEXPAUtagRECT@@@Z` (re/match/golf_small8.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: View_offsetRectToParent (11 vectors, 11 distinct results, 10 changing state, `log/diff/0047b0d0_View_offsetRectToParent.path1.csv`); View_offsetRectToParent_parent (11 vectors, 11 distinct results, 10 changing state, `log/diff/0047b0d0_View_offsetRectToParent_parent.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small8.cpp` as `?offsetRect@View47c@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047b11b): callee pops 4 bytes of stack arguments.

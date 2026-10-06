@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj $x0 $y0,void,void,True,cd44ade2,cd44ade2,True
+$obj $x1 $y1,void,void,True,58705c14,58705c14,True
+$obj $x2 $y2,void,void,True,13099469,13099469,True
+$obj $x3 $y3,void,void,True,66be38f0,66be38f0,True
+$obj $x4 $y4,void,void,True,5459215a,5459215a,True
+$obj $x5 $y5,void,void,True,ed2d38ca,ed2d38ca,True
+$obj $x6 $y6,void,void,True,42671465,42671465,True
+$obj $x7 $y7,void,void,True,5112b529,5112b529,True
+$obj $x8 $y8,void,void,True,9dcc04de,9dcc04de,True
+$obj $x9 $y9,void,void,True,5f16769a,5f16769a,True
+$obj $x10 $y10,void,void,True,2ac892c5,2ac892c5,True
+$obj $x11 $y11,void,void,True,8d9a6d6e,8d9a6d6e,True
+state_regions,$coords+0x0:96,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6cdf8660,original=0x1440da0,2026-10-06T15:54:56
+distinct_results,12,,
+VERDICT,GREEN,12,

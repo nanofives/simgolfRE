@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 34 bytes, 11 instructions, subsystem `golfer`. Mechanic
 returns a golfer thought-category flag bit (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+thoughtFlag (0x004675d0) reads the first thought word at 0x00579540 + g*0x100 (`shl eax,8` at 0x004675d4), returns 2 when bit 0x8000 is set (`test ah,0x80` / `mov eax,2` at 0x004675de/0x004675e3), and otherwise returns the complement of bit 0x4000 (`not eax; shr eax,0xe; and eax,1` at 0x004675e9) — 1 when clear, 0 when set. Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: thoughtFlag (32 vectors, 3 distinct results, `log/diff/004675d0_thoughtFlag.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small2.cpp` as `?thoughtFlag@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004675e8, 0x004675f1): callee pops 0 bytes of stack arguments.

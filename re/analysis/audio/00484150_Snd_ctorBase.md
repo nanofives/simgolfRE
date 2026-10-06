@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 104 bytes, 33 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 base sound-object constructor: nulls the device/name pointers, zeroes frame state and sets the default rate 1000 (setRate) (`re/names/exe_3.tsv`)
 
+## Purpose
+`__thiscall() -> this` runs the base ctor 0x00485260 (0x0048416e), which installs vtable 0x004badec at this+0, sets this+4 to 0x7f and zeroes this+8 and this+0xc..this+0x30; then it installs the derived vtable 0x004bac68 at this+0 (0x00484175), zeroes the dwords at this+0x48, this+0x4c, this+0x40, this+0x50 and this+0x44 (0x0048417d..0x0048418f), runs setRate 0x004846d0 with 1000 (0x0048419d — with this+0x40 just set to 0, setRate stores 1000 at this+0x38 and skips its vtable call), then zeroes this+0x54 (0x004841a6) and returns `this` (0x00484150). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: Snd::ctorBase (6 vectors, 6 distinct results, 6 changing state, `log/diff/00484150_Snd_ctorBase.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `??0r3_C484150@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004841b7): callee pops 0 bytes of stack arguments.

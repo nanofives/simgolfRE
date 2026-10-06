@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 118 bytes, 53 instructions, subsystem `ui`. Mechanical 
 Returns the index of the topmost hotspot containing point (param_1,param_2), outputting its two payload ids. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Finds the top-most hot-list entry under a point and reports its two payload values (0x00492a90). It scans entries from the highest index down (count at +0x58, 0x00492a95; entries base at +0x50, 0x00492aa5; stride 0x20, shl 5 at 0x00492aa2), calling inRect(x, y, entry+4) (0x00492610, call at 0x00492ab3). On the first hit it writes the entry's dword at +0x18 to `*aOut` when aOut is non-null (0x00492ad9) and the dword at +0x14 to `*bOut` when bOut is non-null (0x00492aef), and returns the index; it returns -1 when nothing contains the point (0x00492aca). Returns `ret 0x10`, __thiscall. Matched 100% as `?hit@HotList@@QAEHHHPAH0@Z` (re/match/golf_small11.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: HotList_hitTest (10 vectors, 9 distinct results, 7 changing state, `log/diff/00492a90_HotList_hitTest.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small11.cpp` as `?hit@HotList@@QAEHHHPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00492ace, 0x00492b03): callee pops 16 bytes of stack arguments.

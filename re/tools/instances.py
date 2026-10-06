@@ -1,4 +1,4 @@
-"""Extra copies of the portable install for parallel A/B runs (CLAUDE.md, parallel C3).
+r"""Extra copies of the portable install for parallel A/B runs (CLAUDE.md, parallel C3).
 
     py -3.12 re/tools/instances.py create c3a        # copy original\ -> instances\c3a (no logs), ~266 MB
     py -3.12 re/tools/instances.py list

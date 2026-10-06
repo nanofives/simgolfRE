@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 133 bytes, 44 instructions, subsystem `ui`. Mechanical 
 adds this view scroll (m_1bc/m_1c0) and origin (m_1ac/m_1b0) to a point, recursing into m_parent (+0x130) when m_9c bit 0x20 is set (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Transforms the point (`*x`, `*y`) from a view's local space into its parent's space, in place (0x0047b170). It adds the view's scroll offset (+0x1bc/+0x1c0, read at 0x0047b179/0x0047b18d) and origin (+0x1ac/+0x1b0, read at 0x0047b17f/0x0047b193) to `*x`/`*y`. When the flags byte at +0x9c has bit 0x20 (tested at 0x0047b1ab) and the parent pointer at +0x130 is non-null (0x0047b1af), it recurses into the parent (0x0047b1bb), accumulating the whole ancestor chain; then, when +0x9c also has bit 0x8000 (tested at 0x0047b1c6), it subtracts the parent's own origin +0x1ac/+0x1b0 (0x0047b1d3/0x0047b1e5) so a scrolling parent is not double-counted. Returns `ret 8` (two stack args, __thiscall). Matched 100% as `?toParent@View47d@@QAEXPAH0@Z` (re/match/golf_small13.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: View_toParent (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047b170_View_toParent.path1.csv`); View_toParent_parent (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047b170_View_toParent_parent.path1.csv`); View_toParent_scroll (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047b170_View_toParent_scroll.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small13.cpp` as `?toParent@View47d@@QAEXPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047b1f2): callee pops 8 bytes of stack arguments.

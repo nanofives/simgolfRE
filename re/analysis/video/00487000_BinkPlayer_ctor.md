@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 29 bytes, 10 instructions, subsystem `video`. Mechanica
 Constructs the Bink video player, clearing its Bink/buffer/target fields. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+`__thiscall() -> this` installs the vtable 0x004baea8 at this+0 (0x00487004) and zeroes the dwords at this+0xc, this+4, this+8, this+0x10, this+0x14, this+0x18 (0x0048700a..0x00487019), returning `this`, with no callees (0x00487000). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: BinkPlayer::ctor (10 vectors, 10 distinct results, 10 changing state, `log/diff/00487000_BinkPlayer_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `??0C487000@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048701c): callee pops 0 bytes of stack arguments.

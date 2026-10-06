@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 50 bytes, 21 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 calls fromParent then adds the view origin m_1ac/m_1b0 (`re/names/exe_3.tsv`)
 
+## Purpose
+`__thiscall(x, y)` calls the inner transform 0x0047b200 with the two `int*` arguments and `this` (0x0047b2df), then adds the view origin — the dwords at this+0x1ac and this+0x1b0 — to *x and *y (0x0047b2e4..0x0047b2f0), returning with `ret 8`; it is the local-to-world counterpart of toLocal (0x0047b2d0). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: View::toGlobal (10 vectors, 10 distinct results, 10 changing state, `log/diff/0047b2d0_View_toGlobal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?toGlobal@View47b@@QAEXPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047b2ff): callee pops 8 bytes of stack arguments.

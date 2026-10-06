@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 23 bytes, 8 instructions, subsystem `ui`. Mechanical tr
 Constructs a cursor holder object, clearing its handle/bitmap fields. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+`__thiscall() -> this` installs the vtable 0x004ba7f4 at this+0 (0x00488494) and zeroes the dwords at this+4, this+0xc, this+0x10, this+8 (0x0048849a, 0x0048849d, 0x004884a0, 0x004884a3), returning `this` in eax, with no callees (0x00488490). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: Cursor::ctor (10 vectors, 10 distinct results, 10 changing state, `log/diff/00488490_Cursor_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `??0C488490@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004884a6): callee pops 0 bytes of stack arguments.

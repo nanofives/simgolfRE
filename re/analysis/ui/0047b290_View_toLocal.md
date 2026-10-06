@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 50 bytes, 21 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 calls toParent then subtracts the view origin m_1ac/m_1b0 (`re/names/exe_3.tsv`)
 
+## Purpose
+`__thiscall(x, y)` calls the inner transform 0x0047b170 with the two `int*` arguments and `this` (0x0047b29f), which adds the view offset/origin along the parent chain, then subtracts the view origin — the dwords at this+0x1ac and this+0x1b0 — from *x and *y (0x0047b2a4..0x0047b2b0), returning with `ret 8`; it is the world-to-local point transform (0x0047b290). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: View::toLocal (10 vectors, 10 distinct results, 10 changing state, `log/diff/0047b290_View_toLocal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?toLocal@View47b@@QAEXPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047b2bf): callee pops 8 bytes of stack arguments.

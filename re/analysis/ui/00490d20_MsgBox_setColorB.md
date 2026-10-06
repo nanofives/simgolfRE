@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 39 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 Stores the message-box colour-quad B globals DAT_004e4544/0x4550/0x455c/0x4568. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Stores the four `__cdecl` arguments to arg0 at 0x004e4544, arg1 at 0x004e4550, arg2 at 0x004e455c, arg3 at 0x004e4568 (stride 0xc; stores at 0x00490d2c, 0x00490d35, 0x00490d3b, 0x00490d41), with no reads, branches or callees (0x00490d20); it has the same shape as setColorA over a different destination block. Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: MsgBox::setColorB (10 vectors, 10 distinct results, 10 changing state, `log/diff/00490d20_MsgBox_setColorB.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small3.cpp` as `?set4e4544@@YAXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00490d46): callee pops 0 bytes of stack arguments.

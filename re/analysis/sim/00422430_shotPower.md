@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 247 bytes, 91 instructions, subsystem `sim`. Mechanical
 computes the shot power/length for a golfer and club (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+shotPower (0x00422430) holds a 10-slot cache (dist 0x005a47b8, lie 0x005685c8, value 0x0053fd20, write index 0x005a9ce0); on a `(dist, lie)` hit it returns the cached value (0x004224d9), and otherwise stores the key and bisects an initial guess `v = t*33 - t*t/48 + 64` (with `t = dist*20/25`) toward `target = dist*1024/25`, each step calling shotReach(v, lie) (0x004223f0) or, when `putt` is non-zero, puttReach(v) (0x004223c0), halving the step until it is <= 2 (0x00422500), then caches and returns v. Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: shotPower (64 vectors, 48 distinct results, 64 changing state, `log/diff/00422430_shotPower.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small27.cpp` as `?powerFor@@YAHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004224e1, 0x00422526): callee pops 0 bytes of stack arguments.

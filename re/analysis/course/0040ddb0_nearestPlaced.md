@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 183 bytes, 57 instructions, subsystem `course`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 returns the nearest placed object of a kind to a position (`re/names/exe_0.tsv`)
 
+## Purpose
+nearestPlaced (0x0040ddb0) resets the distance scratch at 0x00568d0c to 0xffff (0x0040ddcb), then scans the 256 placed-object records at 0x0058bcb8 (stride 0x10; type word +0, tx +2, ty +4, flags byte +7); for records whose type matches the argument it returns the current best early once a type>=6 record lacks flag 0x40 (0x0040ddef), and otherwise keeps the index of the record with the smallest distance (0x0040acd0) between the two tile centres (tile + objDef-size/2, the size byte at 0x004c26c0 + type*20), each scaled `<<10` with a +0x200 bias, returning the best index or -1 (0x0040de5b). Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: nearestPlaced (63 vectors, 43 distinct results, 63 changing state, `log/diff/0040ddb0_nearestPlaced.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small25.cpp` as `?nearestPlaced@@YAHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040de66): callee pops 0 bytes of stack arguments.

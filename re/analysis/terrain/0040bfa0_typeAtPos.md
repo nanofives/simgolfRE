@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 55 bytes, 22 instructions, subsystem `terrain`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 returns the tile type at a position, or a sentinel if blocked (`re/names/exe_0.tsv`)
 
+## Purpose
+typeAtPos (0x0040bfa0) converts pixel coordinates to a tile (`sar edi,0xa` / `sar esi,0xa` at 0x0040bfaa/0x0040bfad = `>>10`), returns 0x14 when tileBlocked(x, y) (0x0040bf60) is non-zero (0x0040bfbe), and otherwise returns the signed tile-type byte at 0x005722e8 + x*50 + y (0x0040bfcc). Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: typeAtPos (53 vectors, 30 distinct results, `log/diff/0040bfa0_typeAtPos.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?typeAtPos@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040bfc5, 0x0040bfd6): callee pops 0 bytes of stack arguments.

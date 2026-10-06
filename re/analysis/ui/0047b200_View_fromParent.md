@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 133 bytes, 44 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 inverse of toParent: subtracts scroll+origin and recurses into m_parent (`re/names/exe_3.tsv`)
 
+## Purpose
+Inverse of toParent: transforms (`*x`, `*y`) from parent space into the view's local space (0x0047b200). It subtracts the view's scroll+origin (+0x1bc/+0x1c0 and +0x1ac/+0x1b0, 0x0047b209..0x0047b22c) from `*x`/`*y`, recurses into the parent on flags byte +0x9c bit 0x20 with a non-null +0x130, and on +0x9c bit 0x8000 adds the parent origin +0x1ac/+0x1b0 back. Same field offsets as toParent. Returns `ret 8`, __thiscall. Matched 100% as `?fromParent@View47d@@QAEXPAH0@Z` (re/match/golf_small13.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: View_fromParent (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047b200_View_fromParent.path1.csv`); View_fromParent_parent (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047b200_View_fromParent_parent.path1.csv`); View_fromParent_scroll (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047b200_View_fromParent_scroll.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small13.cpp` as `?fromParent@View47d@@QAEXPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047b282): callee pops 8 bytes of stack arguments.

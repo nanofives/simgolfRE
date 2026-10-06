@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 88 bytes, 36 instructions, subsystem `terrain`. Mechani
 samples the terrain height field at a tile (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+sampleHeight (0x0042dba0), with `x,y >> 2` (sar 2 at 0x0042dbab/0x0042dbae), forms `a = bilinearSample(x, y) * 6` (the `*3` lea then `shl ...,1` at 0x0042dbb8/0x0042dbc3) and `b = bilinearSample(x*2, y*2)` (0x004674c0), then returns `clamp((a + b*4) * 7 / 64 / 2, 0, 0x200)` (0x00467130; the `*7` via `lea[ecx*8]-ecx`, `/64` via `sar 6`, `/2` via `sar 1`, all truncating toward zero). Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: sampleHeight (108 vectors, 71 distinct results, `log/diff/0042dba0_sampleHeight.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small9.cpp` as `?sample42dba0@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042dbf7): callee pops 0 bytes of stack arguments.

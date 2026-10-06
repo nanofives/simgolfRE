@@ -45,7 +45,8 @@ rpc.exports = {
     };
     const rows = [];
     for (const vec of spec.vectors) {
-      const args = vec.map(resolve);
+      // a plain number for a pointer argument (e.g. 0 = NULL) becomes a NativePointer
+      const args = vec.map((v, i) => { const x = resolve(v); return spec.args[i] === 'pointer' && typeof x === 'number' ? ptr(x) : x; });
       if (!regs.length) {
         rows.push({ vector: vec, orig: norm(fo(...args)), re: norm(fr(...args)) });
         continue;

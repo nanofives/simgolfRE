@@ -1,0 +1,17 @@
+vector,original,reimpl,match
+20 10,0,0,True
+60 30,-1,-1,True
+10 -40,-1,-1,True
+100 100,3,3,True
+80 5,-1,-1,True
+-10 200,-1,-1,True
+70 70,-1,-1,True
+-5 -5,7,7,True
+5000 5000,-1,-1,True
+-5000 0,-1,-1,True
+0 0,7,7,True
+1000 -1000,-1,-1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6cdf8530,original=0x1440e40,2026-10-06T15:54:56
+distinct_results,4,,
+VERDICT,GREEN,12,

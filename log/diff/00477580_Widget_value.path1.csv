@@ -1,0 +1,15 @@
+vector,original,reimpl,match
+$w0,1007,1007,True
+$w1,50,50,True
+$w2,500,500,True
+$w3,11,11,True
+$w4,238,238,True
+$w5,0,0,True
+$w6,2147483191,2147483191,True
+$w7,77,77,True
+$w8,1073741825,1073741825,True
+$w9,-3,-3,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6ce38310,original=0x1440cc0,2026-10-06T15:54:56
+distinct_results,10,,
+VERDICT,GREEN,10,

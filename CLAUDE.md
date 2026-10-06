@@ -281,6 +281,13 @@ GREEN, more than one distinct result or a state change, and a Purpose); `--keys`
 `--apply` inserts the agent's Purpose with the A/B facts taken from the CSVs and promotes (refused ones are rolled
 back). VC6 converts double to int with __ftol 0x4a6030: 64-bit fistp, low dword kept (NaN -> 0, not 0x80000000);
 reimplementations write (int)(long long)v (c3b distance was RED until then).
+First parallel round (2026-10-07): c3a 12, c3b 9, c3c 11, c3d 8 promoted (68 at C3), the three later batches
+A/B'd at the same time on original\, instances and instances\c (6-8 s). Fixes it forced: diff_hook writes
+`Class::method` keys as `Class_method` file names, records a bad entry or crash as ERROR and goes on, accepts a
+number for a pointer argument (0 = NULL), and rewrites `Memory.alloc(` to `__keepAlloc(` in fixtures
+(js/keepalive.js): Frida frees an allocation no JS value references, so a parent stored only at view+0x130 was
+freed mid-run (c3d RED and access violations until then). `distinct_results` counts (return, final state) pairs.
+Held at C2: raiseFromNeighbours 0x42f6e0 (fixture never exercises it), Snd::ctorDerived 0x484820 (no static caller).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

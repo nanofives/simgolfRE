@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 58 bytes, 17 instructions, subsystem `ui`. Mechanical t
 Stores the message-box button-A object/callbacks into globals g_0083b9b4/0x83b9b8/0x83b9bc/0x83b9c0. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+`__cdecl(p, a, b, c)` returns 3 when `p` is null (0x00490c86, 0x00490c88); otherwise, when the dword at p+4 is non-zero, it stores `p` into the pointer global 0x0083b9b4 (0x00490c93, 0x00490c95), then stores a, b, c to the dwords at 0x0083b9b8, 0x0083b9bc, 0x0083b9c0 (0x00490ca6, 0x00490cab, 0x00490cb1) and returns 0 (0x00490c80). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: MsgBox::setButtonA (10 vectors, 9 distinct results, 7 changing state, `log/diff/00490c80_MsgBox_setButtonA.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small19.cpp` as `?select490@@YAHPAUSel490@@HHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00490c8d, 0x00490cb9): callee pops 0 bytes of stack arguments.

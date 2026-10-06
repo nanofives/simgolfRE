@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 37 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 sets a widget's rectangle (x,y,w,h) (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`, `re/analysis/systems/exe_2.md`, `re/analysis/systems/exe_4.md`.
 
+## Purpose
+`__thiscall(a, b, c, d)` stores the four stack arguments to the dwords at this+0x6c, this+0x7c, this+0x8c, this+0x9c (0x00476318, 0x0047631f, 0x00476326, 0x0047632c) and returns with `ret 0x10` popping the four arguments, with no reads, branches or callees (0x00476310). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: Widget_setQuad (10 vectors, 10 distinct results, 10 changing state, `log/diff/00476310_Widget_setQuad.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small2.cpp` as `?setQuad@Widget@@QAEXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00476332): callee pops 16 bytes of stack arguments.

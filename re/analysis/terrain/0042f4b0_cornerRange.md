@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 128 bytes, 59 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Computes the min/max of the four corner heights of a tile into two out-params. (`re/names/exe_1.tsv`)
 
+## Purpose
+cornerRange (0x0042f4b0) seeds `*pMax` and `*pMin` to heightBlend(x, y) (0x0040c170, called with an ignored 3rd argument 0), then widens the range over heightBlend at (x+1, y), (x+1, y-1) and (x, y-1) (`y--` at 0x0042f4f2); the pointer in esi (0x0042f4e6) accumulates the maximum and the pointer in ecx (0x0042f4f0) the minimum. Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: cornerRange (110 vectors, 30 distinct results, 110 changing state, `log/diff/0042f4b0_cornerRange.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small12.cpp` as `?cornerRange@@YAXHHPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042f52f): callee pops 0 bytes of stack arguments.

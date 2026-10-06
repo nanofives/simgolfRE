@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 78 bytes, 33 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 returns 1 if the argument is a child or transitive descendant of this node (m_children +0x224, count +0x22c) (`re/names/exe_3.tsv`)
 
+## Purpose
+Depth-first membership test: returns 1 when node `n` is a descendant of `this`, else 0 (0x0047b080). It returns 0 immediately for a null `n` (tested at 0x0047b087), reads the child count at +0x22c (0x0047b08d) and the child-pointer array at +0x224 (0x0047b099), and for each child returns 1 if the child equals `n` (cmp at 0x0047b0a2) or if the child contains `n` (recursion, call at 0x0047b0a7); it returns 0 after exhausting the children. Returns `ret 4`, __thiscall. Matched 100% as `?contains@Node47b@@QAEHPAV1@@Z` (re/match/golf_small8.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: Node_contains (14 vectors, 2 distinct results, `log/diff/0047b080_Node_contains.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small8.cpp` as `?contains@Node47b@@QAEHPAV1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047b0c0, 0x0047b0cb): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 53 bytes, 19 instructions, subsystem `golfer`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Returns the net balance of a golfer's positive/negative thoughts. (`re/names/exe_1.tsv`)
 
+## Purpose
+thoughtBalance (0x0045c420) walks the 5 thought words at 0x00579540 + g*0x100 (`+0,+2,+4,+6,+8`; loop counter esi=5 at 0x0045c430), adding 1 when a word's top two bits are exactly 0x4000 and subtracting 1 when exactly 0xc000 (`and cx,0xc000`; compares at 0x0045c43d/0x0045c445), and returns the net count (range -5..5). Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: thoughtBalance (32 vectors, 3 distinct results, `log/diff/0045c420_thoughtBalance.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?thoughtBalance@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045c454): callee pops 0 bytes of stack arguments.

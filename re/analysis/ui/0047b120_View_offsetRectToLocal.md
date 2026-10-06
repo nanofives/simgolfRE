@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 78 bytes, 30 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 translates a RECT into local coordinates via toLocal (`re/names/exe_3.tsv`)
 
+## Purpose
+As offsetRectToParent but the offset is the local transform from toLocal 0x0047b290 (call at 0x0047b13e) instead of toParent (0x0047b120). Same null check (0x0047b12a) and RECT field adds to left/right (+0/+8) and top/bottom (+4/+0xc) at 0x0047b147..0x0047b166. Returns `ret 4`, __thiscall. Matched 100% as `?offsetRectLocal@View47c@@QAEXPAUtagRECT@@@Z` (re/match/golf_small8.cpp). Reimplemented in `shim/src/re/c3d.cpp`; path-1 A/B GREEN: View_offsetRectToLocal (11 vectors, 11 distinct results, 10 changing state, `log/diff/0047b120_View_offsetRectToLocal.path1.csv`); View_offsetRectToLocal_parent (11 vectors, 11 distinct results, 10 changing state, `log/diff/0047b120_View_offsetRectToLocal_parent.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small8.cpp` as `?offsetRectLocal@View47c@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047b16b): callee pops 4 bytes of stack arguments.

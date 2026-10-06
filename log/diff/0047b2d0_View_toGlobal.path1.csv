@@ -1,0 +1,16 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$view $px0 $py0,void,void,True,9e0ceed2,9e0ceed2,True
+$view $px1 $py1,void,void,True,263daf04,263daf04,True
+$view $px2 $py2,void,void,True,bf67a9e4,bf67a9e4,True
+$view $px3 $py3,void,void,True,2ed36ea6,2ed36ea6,True
+$view $px4 $py4,void,void,True,da5698ac,da5698ac,True
+$view $px5 $py5,void,void,True,840e7f36,840e7f36,True
+$view $px6 $py6,void,void,True,7a6307c0,7a6307c0,True
+$view $px7 $py7,void,void,True,2b8712d6,2b8712d6,True
+$view $px8 $py8,void,void,True,d58c9515,d58c9515,True
+$view $px9 $py9,void,void,True,c009c0fd,c009c0fd,True
+state_regions,$coords+0x0:80,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6ce382b0,original=0x1440d00,2026-10-06T15:54:56
+distinct_results,10,,
+VERDICT,GREEN,10,

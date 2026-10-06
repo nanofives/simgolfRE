@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 35 bytes, 14 instructions, subsystem `ui`. Mechanical t
 returns a widget's current integer value (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+`__thiscall() -> int` reads the object pointer at this+0x5c (lazily setting it to the pointer global 0x0083ad44 when null, 0x00477585, 0x00477587, 0x0047758c) and, with that object's dword at +8 (0x00477592), returns the object's dword at +0x10 plus the +8 value when +8 >= 0 (0x00477599, 0x0047759c) or the object's dword at +0xc when +8 < 0 (0x0047759f) — that is, `rec->i >= 0 ? rec->base + rec->i : rec->base0` (0x00477580). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: Widget_value (10 vectors, 10 distinct results, `log/diff/00477580_Widget_value.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small2.cpp` as `?value477580@Widget@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047759e, 0x004775a2): callee pops 0 bytes of stack arguments.
