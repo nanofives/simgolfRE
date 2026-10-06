@@ -176,7 +176,8 @@ HOOKS.update({
 def enabled_batches():
     """Batch ids listed in shim/re_batches.txt (the ones linked into the shim and verified by diff_hook)."""
     import pathlib
-    f = pathlib.Path(__file__).resolve().parents[2] / "shim" / "re_batches.txt"
+    import os
+    f = pathlib.Path(os.environ.get("SIMGOLF_RE_BATCHES") or pathlib.Path(__file__).resolve().parents[2] / "shim" / "re_batches.txt")
     if not f.exists():
         return set()
     return {l.strip()[:-4] for l in f.read_text().splitlines() if l.strip().endswith(".cpp") and not l.startswith("#")}

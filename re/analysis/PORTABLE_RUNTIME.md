@@ -79,9 +79,13 @@ mouse is never moved.
 
 ## 7. Process facts the harness depends on
 
-- **Single instance.** A second copy exits ~2 s after start. A leftover instance makes every new boot
-  "die" mysteriously; `Game.start()` refuses to start while any JackalClass window exists, and never
-  kills a process it did not spawn.
+- **Not single-instance (corrected 2026-10-07).** No module has an instance guard (log/single_instance_notes.md,
+  static; then three copies ran side by side, two from the same folder). What made "a second copy" exit with code 0
+  right after creating its window is the compatibility layer `DWM8And16BitMitigation`, set in HKCU/HKLM
+  AppCompatFlags\Layers for the path `original\golf_clean.exe` only: a copy at another path fails its 16-bit mode
+  set. `re/tools/game.py` passes `__COMPAT_LAYER=DWM8And16BitMitigation`, so copies under `instances\<name>`
+  (re/tools/instances.py) work. `Game.start()` still refuses while any JackalClass window exists (protecting other
+  sessions' runs) unless `SIMGOLF_ALLOW_MULTI=1`; it never kills a process it did not spawn.
 - The game window is DPI-unaware: on a 125% display the 800x600 client is bitmap-scaled to 1000x750
   physical pixels. `Game.shot()` resizes back to 800x600 game space.
 - At spawn, only ntdll/kernel32/user32 are mapped. Hook DLL exports (binkw32, Terrain) from Frida via

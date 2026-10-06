@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import datetime
 import pathlib
 import sys
@@ -28,7 +29,7 @@ DIFF_DIR = ROOT / "log" / "diff"
 def run(names: list[str], override_re: dict[str, int | str] | None = None, out_dir: pathlib.Path = DIFF_DIR) -> dict[str, bool]:
     """override_re (tests only): an address, or "null" for a stub returning NULL/0, called instead of
     the detour to prove a wrong body reads RED."""
-    if Game.running_instances():
+    if os.environ.get("SIMGOLF_ALLOW_MULTI") != "1" and Game.running_instances():
         raise SystemExit("SimGolf already running; the game is single-instance")
     if override_re and out_dir == DIFF_DIR:
         raise ValueError("negative-control runs must not write into log/diff (evidence)")

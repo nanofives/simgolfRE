@@ -352,9 +352,13 @@ OpenGL and while covered). Never grab screen pixels: another window on top produ
 `PrintWindow` returned black frames 8-18% of the time (2026-10-02).
 
 ### Process hygiene
-The game is **single-instance** (a second copy exits after ~2 s). Track the PID you spawn and kill
-only that one. `Game.start()` refuses to run while another SimGolf window exists. Never blanket-kill
-by name.
+The game has **no single-instance guard**: a copy only failed because the `DWM8And16BitMitigation` compatibility
+layer is registered for `original\golf_clean.exe`'s path; game.py passes it as `__COMPAT_LAYER` (2026-10-07).
+Parallel A/B: `re/tools/instances.py create <name>` -> instances\<name>, then `SIMGOLF_ALLOW_MULTI=1
+SIMGOLF_GAME_DIR=instances/<name>` for game.py / diff_hook, and `SIMGOLF_BUILD_DIR / SIMGOLF_DEPLOY_DIR /
+SIMGOLF_RE_BATCHES` for build.bat. Keep copies at short paths (a Temp-path copy failed). Track the PID you spawn
+and kill only that one. Without SIMGOLF_ALLOW_MULTI `Game.start()` refuses while another SimGolf window exists.
+Never blanket-kill by name.
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default

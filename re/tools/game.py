@@ -13,6 +13,7 @@ Hygiene rules (same as Mashed): track the PID you spawn, kill only that PID, nev
 from __future__ import annotations
 
 import ctypes
+import os
 import ctypes.wintypes as wt
 import pathlib
 import threading
@@ -22,7 +23,8 @@ import frida
 from PIL import Image, ImageGrab
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-GAME_DIR = ROOT / "original"
+# SIMGOLF_GAME_DIR: run another copy of the install (parallel A/B, CLAUDE.md "parallel C3"); default original\.
+GAME_DIR = pathlib.Path(os.environ.get("SIMGOLF_GAME_DIR") or ROOT / "original")
 JS_DIR = ROOT / "re" / "frida" / "js"
 DEFAULT_EXE = "golf_clean.exe"
 GAME_W, GAME_H = 800, 600
@@ -98,15 +100,22 @@ class Game:
         return sorted(set(found))
 
     def start(self) -> "Game":
-        others = self.running_instances()
+        # The game itself has no single-instance guard (log/single_instance_notes.md, 2026-10-07: three copies, two in
+        # the same folder, ran side by side). This refusal protects other sessions' runs; SIMGOLF_ALLOW_MULTI=1
+        # (parallel A/B from separate install copies) skips it.
+        others = [] if os.environ.get("SIMGOLF_ALLOW_MULTI") == "1" else self.running_instances()
         if others:
-            # The game is single-instance: a second copy exits ~2 s after start.
             # Never kill these: they may belong to another session.
             raise RuntimeError(f"SimGolf already running (PIDs {others}); the game is single-instance")
         # Windowed mode / Bink fix live in the native shim (original/winmm.dll); env vars override its ini.
         # Virtual cursor parked in the top-left corner from the first frame (no hover anywhere); the
         # user's real mouse never reaches the game.
-        env = {"SIMGOLF_WINDOWED": "1" if self.windowed else "0", "SIMGOLF_VCURSOR": "2,2", **self.env}
+        # __COMPAT_LAYER: original\golf_clean.exe has the DWM8And16BitMitigation compatibility layer in the registry
+        # (HKCU/HKLM AppCompatFlags\Layers, keyed by its path); a copy at any other path does not, its 16-bit mode
+        # set fails and the game exits with code 0 right after creating its window. Passing the layer in the
+        # environment applies it to the spawned process wherever the install lives (2026-10-07).
+        env = {"SIMGOLF_WINDOWED": "1" if self.windowed else "0", "SIMGOLF_VCURSOR": "2,2",
+               "__COMPAT_LAYER": "DWM8And16BitMitigation", **self.env}
         self.pid = frida.spawn([str(GAME_DIR / self.exe), *self.args], cwd=str(GAME_DIR), env=env)
         self.session = frida.attach(self.pid)
         self.session.on("detached", self._on_detached)
