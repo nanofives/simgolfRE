@@ -64,12 +64,18 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
                 w.writerow(["install_witness", f"0x{r['witness']:02x}", "0xe9", r["witness"] == 0xE9])
                 w.writerow(["meta", f"detour={r['detour']}", f"original={r['original']}",
                             datetime.datetime.now().isoformat(timespec="seconds")])
+                distinct = len({row["orig"] for row in r["rows"]} | {row.get("state_orig") for row in r["rows"]} - {None})
+                w.writerow(["distinct_results", distinct, "", ""])
                 w.writerow(["VERDICT", "GREEN" if ok else "RED", len(r["rows"]), ""])
             mism = sum(not same(row) for row in r["rows"])
             st = (f", state checked ({sum(row['state_changed'] for row in r['rows'])} vectors change it, "
                   f"{sum(not row['state_match'] for row in r['rows'])} state mismatches)") if stateful else ""
             print(f"{name}: {'GREEN' if ok else 'RED'}  {len(r['rows'])} vectors, {mism} mismatches{st}, "
                   f"witness 0x{r['witness']:02x} -> {path}")
+            changed = any(row.get("state_changed") for row in r["rows"])
+            if len({row["orig"] for row in r["rows"]}) == 1 and len(r["rows"]) > 1 and not changed:
+                print(f"  WARNING {name}: every vector returned {r['rows'][0]['orig']} and no state changed: the vectors "
+                      "or the fixture do not exercise the function (a GREEN here is not evidence)")
             results[name] = ok
     return results
 

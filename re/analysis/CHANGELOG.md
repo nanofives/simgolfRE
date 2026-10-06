@@ -4,6 +4,10 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  0042fa30  heightAt42fa30  C2->C3  log/diff/0042fa30_heightAt42fa30.path1.csv
+2026-10-06  0040c450  slopeMix  C2->C3  log/diff/0040c450_slopeMix.path1.csv
+2026-10-06  0040c2f0  slopeY  C2->C3  log/diff/0040c2f0_slopeY.path1.csv
+2026-10-06  0040c3a0  slopeX  C2->C3  log/diff/0040c3a0_slopeX.path1.csv
 2026-10-06  0040c860  clearMatching  C2->C3  log/diff/0040c860_clearMatching.path1.csv
 2026-10-06  sound.dll:00047474  sbhResizeBlock  callers none->0x10045252  log/c2_refresh.tsv
 2026-10-06  sound.dll:00047148  crtCommitPages  callers none->0x10042b0b;0x10045252;0x100458a1  log/c2_refresh.tsv

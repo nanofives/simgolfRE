@@ -259,6 +259,10 @@ depends on a fixture-set global gets one registry entry per setting (clearTile /
 pointsPopup, logTick, resetGolfer, appendOpinion (21 at C3). Not A/B'd on purpose: zPush 0x47e4c0 (fake windows in
 the live z-list the game draws from), snapshotTables 0x462800 (no arguments and its pages already equal at the menu:
 an empty GREEN is not evidence).
+`golf_terrain.cpp` (batch 4): slopeX, slopeY, slopeMix, heightAt42fa30 (25 at C3), fixture `terrain_slopes` seeds
+the per-corner heights cornerHeights 0x40bfe0 returns first. A first run was GREEN with every slope 0 because the
+fixture gave all corners of a cell one height: diff_hook now writes a `distinct_results` row and warns when every
+vector returns the same value with no state change; always look at the spread before promoting.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

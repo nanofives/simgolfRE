@@ -133,3 +133,18 @@ HOOKS.update({
                           vectors=[(r, t) for r in (-0x80000000, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x7F, 0x80, 0x7FFFFFFF)
                                    for t in (-1, 0, 1, 2)]),
 })
+
+# world coordinates: tile = v >> 10; offsets around the 0x200 half-tile split and the tile edges
+_WORLD = [t * 1024 + o for t in (0, 1, 3, 7, 12, 25, 31, 48) for o in (0, 1, 0x1FF, 0x200, 0x201, 0x3FF)]
+_WXY = [(x, y) for i, x in enumerate(_WORLD) for y in _WORLD[i % 7::7]]
+HOOKS.update({
+    # Batch 4 of C3 (2026-10-06): terrain height/slope readers, shim/src/re/golf_terrain.cpp, fixture terrain_slopes.
+    "slopeX": dict(module="golf_clean.exe", addr=0x0040C3A0, abi="default", ret="int", args=["int", "int"],
+                   fixture="terrain_slopes", vectors=_WXY),
+    "slopeY": dict(module="golf_clean.exe", addr=0x0040C2F0, abi="default", ret="int", args=["int", "int"],
+                   fixture="terrain_slopes", vectors=_WXY),
+    "slopeMix": dict(module="golf_clean.exe", addr=0x0040C450, abi="default", ret="int", args=["int", "int", "uint"],
+                     fixture="terrain_slopes", vectors=[(x, y, d) for x, y in _WXY[::3] for d in range(8)]),
+    "heightAt42fa30": dict(module="golf_clean.exe", addr=0x0042FA30, abi="default", ret="int", args=["int", "int"],
+                           fixture="terrain_slopes", vectors=_WXY),
+})

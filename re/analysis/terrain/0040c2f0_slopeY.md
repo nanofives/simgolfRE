@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 171 bytes, 72 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 computes the Y-axis slope of a tile (`re/names/exe_0.tsv`)
 
+## Purpose
+Slope of the terrain along y, the counterpart of slopeX 0x0040c3a0 with the same zero cases: corner 3 - corner 5 in the lower half of the tile (y > tile start + 0x200), else corner 1 - corner 7 (0x0040c2f0). Reimplemented in `shim/src/re/golf_terrain.cpp`; path-1 A/B over 330 points on the fixture `terrain_slopes` (corner heights 1..7 per cell corner in 0x0051b770, type flags 8/2/4/0/0/1 by type % 6) is GREEN (results -6..3).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small20.cpp` as `?slopeY@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c384, 0x0040c393, 0x0040c39a): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 94 bytes, 37 instructions, subsystem `terrain`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 combines the X and Y slopes of a tile into one value (`re/names/exe_0.tsv`)
 
+## Purpose
+Terrain slope in one of 8 directions: p = slopeY 0x0040c2f0 and q = slopeX 0x0040c3a0 at (x, y), both clamped to -1..1 by clamp 0x00467130 when dir is odd (diagonals); returns dy[dir]*q + dx[dir]*p with the direction tables 0x004c2898 / 0x004c2878 (0x0040c450). Reimplemented in `shim/src/re/golf_terrain.cpp`; path-1 A/B over 880 (x, y, dir) on the fixture `terrain_slopes` (corner heights 1..7 per cell corner in 0x0051b770, type flags 8/2/4/0/0/1 by type % 6) is GREEN (results -3..3).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small9.cpp` as `?mix40c450@@YAHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c4ad): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 342 bytes, 141 instructions, subsystem `terrain`. Mecha
 ## Role (from the naming pass, not a C3 purpose)
 Returns the interpolated terrain height at a sub-tile position. (`re/names/exe_1.tsv`)
 
+## Purpose
+Terrain height at world point (x, y), scaled by 16: 0 when the tile type's flags dword (0x0057837c + type*0x30) has bit 0x8 set; when it has bit 0x2 (else bit 0x4) (min / max corner - 3) * 16 from cornerRange 0x0042f4b0; otherwise the four corners 5, 7, 1, 3 minus 3 (cornerHeights 0x0040bfe0), their common value * 16 when equal, else their bilinear interpolation at the in-tile offset scaled by 16 with truncating divisions by 1024 twice (0x0042fa30). Reimplemented in `shim/src/re/golf_terrain.cpp`; path-1 A/B over 330 points on the fixture `terrain_slopes` (corner heights 1..7 per cell corner in 0x0051b770, type flags 8/2/4/0/0/1 by type % 6) is GREEN (flat, ramp and interpolated values all occur).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `?r3_heightAt@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042fa6c, 0x0042fa96, 0x0042fac0, 0x0042fb22, 0x0042fb85): callee pops 0 bytes of stack arguments.

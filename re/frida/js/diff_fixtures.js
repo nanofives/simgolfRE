@@ -104,6 +104,22 @@ globalThis.DIFF_FIXTURES = {
     return { obj: ptr('0x005689e8') };
   },
   text_ab() { globalThis.DIFF_FIXTURES._text('ab'); return { obj: ptr('0x0051a068') }; },
+  // Terrain readers (slopeX/slopeY/slopeMix/heightAt): golf_tables, plus corner heights 1..7 in the 8-byte-per-cell
+  // table cornerHeights 0x0040bfe0 returns first (0x0051b770 + (x*50 + y)*8 + corner = (x*3 + y*5 + c*3) % 7 + 1),
+  // type flags dwords 0x0057837c + t*0x30 by t % 6: 8 (flat), 2 and 4 (ramp paths), 0, 0, 1; bit 0 of 0x0059e7b8
+  // cleared.
+  terrain_slopes() {
+    globalThis.DIFF_FIXTURES.golf_tables();
+    const c = ptr('0x0051b770');
+    for (let x = 0; x < 50; x++)
+      for (let y = 0; y < 50; y++)
+        for (let k = 0; k < 8; k++)
+          c.add((x * 50 + y) * 8 + k).writeS8((x * 3 + y * 5 + k * 3) % 7 + 1);
+    for (let t = 0; t < 32; t++) ptr('0x0057837c').add(t * 0x30).writeU32([8, 2, 4, 0, 0, 1][t % 6]);
+    const fl = ptr('0x0059e7b8');
+    fl.writeU8(fl.readU8() & 0xfe);
+    return { obj: ptr('0x005722e8') };
+  },
   // Rect {x0 = 10, y0 = 20, x1 = 30, y1 = 40} for pointInRect 0x00492610.
   rect_10_20_30_40() {
     const obj = Memory.alloc(16);
