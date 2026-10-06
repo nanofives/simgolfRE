@@ -120,6 +120,65 @@ globalThis.DIFF_FIXTURES = {
     fl.writeU8(fl.readU8() & 0xfe);
     return { obj: ptr('0x005722e8') };
   },
+  // rateTile 0x00422530: golf_tables, then golfer records i = 0..0x9f (0x005794c0 + i*0x100) with varied fields
+  // (+0x11 flag = i & 1, +0xb2 = (i*7) % 11 - 3, position +0xcc/+0xd0 on tiles (i % 50, (i*7) % 50), +0x10 = i % 3,
+  // +0x0e = i % 4, +0xe8 = i % 9, +0xe9 = i % 11, +0x2e = i % 7 - 2, +0x1a = i % 2), type byte +2 (0x00578372 +
+  // t*0x30) = t % 5 - 1 for t < 32, 0x00543cc8 = 2, mode dword 0x00822c88 = mode.
+  _ratings(mode) {
+    globalThis.DIFF_FIXTURES.golf_tables();
+    for (let i = 0; i < 0xa0; i++) {
+      const g = ptr('0x005794c0').add(i * 0x100);
+      g.add(0x11).writeU8(i & 1); g.add(0xb2).writeS8((i * 13) % 50 - 10);
+      g.add(0xcc).writeS32((i % 50) * 1024 + 300); g.add(0xd0).writeS32(((i * 7) % 50) * 1024 + 700);
+      g.add(0x10).writeU8(i % 3); g.add(0x0e).writeU16(i % 4); g.add(0xe8).writeU8(i % 9);
+      g.add(0xe9).writeU8(i % 11); g.add(0x2e).writeS8(i % 7 - 2); g.add(0x1a).writeU8(i % 2);
+    }
+    for (let k = 0; k < 32; k++) ptr('0x00578372').add(k * 0x30).writeS8(k % 5 - 1);
+    ptr('0x00543cc8').writeS32(2);
+    ptr('0x00822c88').writeS32(mode);
+    return { obj: ptr('0x005794c0') };
+  },
+  ratings_mode0() { return globalThis.DIFF_FIXTURES._ratings(0); },
+  ratings_mode1() { return globalThis.DIFF_FIXTURES._ratings(1); },
+  // heightBlend 0x0040c170: golf_tables; bit 0 of 0x0059e7b8 cleared; dword 0x00834170 = tick; current course 0 with
+  // bytes +2 / +4 (0x00571ff6 / 0x00571ff8) = m2 / m4; 0x00822c88 = 1; table 0x005a4998 (51 per row) = (x + y) % 13;
+  // height grid 0x00838c1c = (i * 13) % 50 - 10.
+  _blend(tick, m2, m4) {
+    globalThis.DIFF_FIXTURES.golf_tables();
+    const fl = ptr('0x0059e7b8'); fl.writeU8(fl.readU8() & 0xfe);
+    ptr('0x00834170').writeS32(tick);
+    ptr('0x0059bf90').writeS32(0);
+    ptr('0x00571ff6').writeS8(m2); ptr('0x00571ff8').writeS8(m4);
+    ptr('0x00822c88').writeS32(1);
+    for (let x = 0; x < 50; x++) for (let y = 0; y < 51; y++) ptr('0x005a4998').add(x * 51 + y).writeU8((x + y) % 13);
+    // the 16 x 16 (19-byte rows) signed height grid bilinearSample 0x004674c0 reads for sampleHeight 0x0042dba0
+    for (let i = 0; i < 19 * 18; i++) ptr('0x00838c1c').add(i).writeS8((i * 13) % 50 - 10);
+    return { obj: ptr('0x005722e8') };
+  },
+  blend_c2() { return globalThis.DIFF_FIXTURES._blend(0, 2, 1); },
+  blend_c0() { return globalThis.DIFF_FIXTURES._blend(0, 0, 0); },
+  blend_tick() { return globalThis.DIFF_FIXTURES._blend(5, 2, 1); },
+  // evalPlacementArea 0x0040db90: golf_tables; flags words 0x0053caf0 = 0x400 every 17th cell, 0x8000 every 41st,
+  // 0x0080 every 53rd, else 0; course type byte 0x005a34e0 = ct; type bytes +0 / +2 (0x00578374 / 0x00578376) =
+  // t % 4 - 1 / (t % 3 ? 13 : 0); placed objects: record r < 8 at 16-byte records 0x0058bcb8 = {type r % 5, x 5r, y 3r},
+  // the rest type -1 (empty).
+  _place(ct) {
+    globalThis.DIFF_FIXTURES.golf_tables();
+    for (let i = 0; i < 2500; i++)
+      ptr('0x0053caf0').add(i * 2).writeU16(i % 17 === 0 ? 0x400 : i % 41 === 0 ? 0x8000 : i % 53 === 0 ? 0x80 : 0);
+    ptr('0x005a34e0').writeS8(ct);
+    for (let t = 0; t < 32; t++) {
+      ptr('0x00578374').add(t * 0x30).writeS8(t % 4 - 1);
+      ptr('0x00578376').add(t * 0x30).writeS8(t % 3 ? 13 : 0);
+    }
+    for (let r = 0; r < 256; r++) {
+      const o = ptr('0x0058bcb8').add(r * 16);
+      o.writeS16(r < 8 ? r % 5 : -1); o.add(2).writeS16(5 * r); o.add(4).writeS16(3 * r);
+    }
+    return { obj: ptr('0x005722e8') };
+  },
+  place_ct0() { return globalThis.DIFF_FIXTURES._place(0); },
+  place_ct1() { return globalThis.DIFF_FIXTURES._place(1); },
   // Rect {x0 = 10, y0 = 20, x1 = 30, y1 = 40} for pointInRect 0x00492610.
   rect_10_20_30_40() {
     const obj = Memory.alloc(16);

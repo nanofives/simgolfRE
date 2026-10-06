@@ -263,6 +263,11 @@ an empty GREEN is not evidence).
 the per-corner heights cornerHeights 0x40bfe0 returns first. A first run was GREEN with every slope 0 because the
 fixture gave all corners of a cell one height: diff_hook now writes a `distinct_results` row and warns when every
 vector returns the same value with no state change; always look at the spread before promoting.
+`golf_course.cpp` (batch 5): rateTile, heightBlend, evalPlacementArea (no matched source; written from the
+instructions) — 28 at C3. Fixtures seed golfer records (0x5794c0, 0x100 each), course records (0x571ff4, 0x2e
+each), the 0x5a4998 level table (51 per row), placed objects (0x58bcb8, 16 each) and the signed height grid at
+0x838c1c that bilinearSample 0x4674c0 reads (16x16, 19-byte rows; amplitude matters: too small or too large and
+heightBlend only returns its clamp bounds). One registry entry per global mode (`_mode1`, `_c0`, `_tick`, `_ct1`).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

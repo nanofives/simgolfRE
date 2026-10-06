@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 374 bytes, 125 instructions, subsystem `terrain`. Mecha
 samples and blends terrain height at a sub-tile position (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+Height level 3..15 of course cell (x, y) (0x0040c170): 3 outside the 50x50 grid or when bit 0 of 0x0059e7b8 is set; when the dword at 0x00834170 is non-zero, 3 for a type-0x14 cell blocked at (x-1, y) and (x, y+1) (tileBlocked 0x0040bf60), else the byte at 0x005a4998 + x*51 + y; otherwise 3 for tile types 0x11/0x12/0x13 or a 0x11 cell at x+1, else h = sampleHeight 0x0042dba0 at (x << 7, y << 7) when the current course record's byte +2 (0x00571ff4 + course*0x2e) is 2, else at (x << 6, y << 6), plus (16 - y) * d / -6 for y < 16 when its byte +4 is 1 (d = the dword at 0x004c2fa0), and returns clamp(h / d + 1, 3 + (dword 0x00822c88 != 0), 15). Reimplemented in `shim/src/re/golf_course.cpp`; path-1 A/B over 144 cells for both course settings (55 vectors differ between them) and with 0x00834170 set is GREEN, on a seeded height grid at 0x00838c1c.
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `?r3_f40c170@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c20c, 0x0040c2dc, 0x0040c2e5): callee pops 0 bytes of stack arguments.

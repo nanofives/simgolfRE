@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 536 bytes, 156 instructions, subsystem `course`. Mechan
 scans a param_3-sized tile block (origin param_1), returns -1 if any interior tile is blocked/occupied/edge-invalid, otherwise sums per-tile-type modification cost from the attribute table at 0x00578374 (stride 0x30) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Scores an (n+2) x (n+2) block of course cells from (x-1, y-1) for placing an object of kind `kind` (0x0040db90): border cells only record whether any is not tile type 0x11; inner cells are rejected (-1) by tileBlocked 0x0040bf60, by flag bit 0x8000 (words at 0x0053caf0), and, for kind != 0, by type 0x15, type 0, flags & 0x8080, or a type-0x16 / flag-0x400 cell whose placed object (objectAt 0x0040df80, records at 0x0058bcb8) is of another kind; kind 0xc on course type 0 or 2 (byte 0x005a34e0) also rejects any non-0x11 inner cell. Accepted cells add the signed byte at 0x00578374 + type*0x30 when the type's byte +2 is 13 and the same byte of types 0xc, 0x11 (kind != 0xc), 0x12, 0x13 for those tiles. The sum is returned when a border cell was not 0x11 or kind is 0 or 4, else -1. Written from the instructions (no matched source) in `shim/src/re/golf_course.cpp`; path-1 A/B over 180 (x, y, n, kind) for course types 0 and 1 is GREEN (rejections, zero and positive sums).
+
 ## Signature
 - Returns with `ret` (at 0x0040dd9b, 0x0040dda7): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0040db9f before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

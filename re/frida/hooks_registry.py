@@ -148,3 +148,24 @@ HOOKS.update({
     "heightAt42fa30": dict(module="golf_clean.exe", addr=0x0042FA30, abi="default", ret="int", args=["int", "int"],
                            fixture="terrain_slopes", vectors=_WXY),
 })
+
+_BLEND = [(x, y) for x in (-1, 0, 1, 2, 7, 13, 24, 25, 31, 48, 49, 50) for y in (-1, 0, 1, 5, 12, 15, 16, 17, 30, 48, 49, 50)]
+_PLACE = [(x, y, n, k) for x, y in ((1, 1), (3, 7), (10, 20), (20, 5), (31, 33), (44, 40))
+          for n in (-2, -1, 0, 1, 2, 3) for k in (0, 3, 4, 7, 12)]
+HOOKS.update({
+    # Batch 5 of C3 (2026-10-06): course/golfer table readers, shim/src/re/golf_course.cpp.
+    "rateTile": dict(module="golf_clean.exe", addr=0x00422530, abi="default", ret="int", args=["int"],
+                     fixture="ratings_mode0", vectors=[(i,) for i in range(0xa0)]),
+    "rateTile_mode1": dict(module="golf_clean.exe", addr=0x00422530, abi="default", ret="int", args=["int"],
+                           fixture="ratings_mode1", vectors=[(i,) for i in range(0xa0)]),
+    "heightBlend": dict(module="golf_clean.exe", addr=0x0040C170, abi="default", ret="int", args=["int", "int"],
+                        fixture="blend_c2", vectors=_BLEND),
+    "heightBlend_c0": dict(module="golf_clean.exe", addr=0x0040C170, abi="default", ret="int", args=["int", "int"],
+                           fixture="blend_c0", vectors=_BLEND),
+    "heightBlend_tick": dict(module="golf_clean.exe", addr=0x0040C170, abi="default", ret="int", args=["int", "int"],
+                             fixture="blend_tick", vectors=_BLEND),
+    "evalPlacementArea": dict(module="golf_clean.exe", addr=0x0040DB90, abi="default", ret="int",
+                              args=["int", "int", "int", "int"], fixture="place_ct0", vectors=_PLACE),
+    "evalPlacementArea_ct1": dict(module="golf_clean.exe", addr=0x0040DB90, abi="default", ret="int",
+                                  args=["int", "int", "int", "int"], fixture="place_ct1", vectors=_PLACE),
+})
