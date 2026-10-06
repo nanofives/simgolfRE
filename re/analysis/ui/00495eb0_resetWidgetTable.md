@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 345 bytes, 77 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 resets the global widget table at 0x0083fe78 back to its initial state. (`re/names/exe_5.tsv`)
 
+## Purpose
+Copies the 38-dword template at 0x0083fe78 into the passed object in a fixed reorder (0x00495eb0, __fastcall with the object in ecx). The source words 0x0083fe78, 0x0083fe7c, 0x0083fe80, 0x0083fe84 are written to dst+4, dst+0xc, dst+0x10, dst+8 (0x00495eb0..0x00495ec8); the remaining source words 0x0083fe88..0x0083ff0c are written to dst+0x14..dst+0x98 in order. Matched 100% as `?FUN_00495eb0@f_00495eb0@@YIXH@Z` (re/match/golf_raw_06.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: resetWidgetTable (10 vectors, 10 distinct results, 10 changing state, `log/diff/00495eb0_resetWidgetTable.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_00495eb0@f_00495eb0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00496008): callee pops 0 bytes of stack arguments.

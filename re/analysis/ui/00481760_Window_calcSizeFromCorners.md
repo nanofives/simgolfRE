@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 272 bytes, 87 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 computes the content size m_1a4/m_1a8 as the max of opposite corner-widget extents (m_52c..m_550) per layout mode m_9c bit 0x10 (`re/names/exe_3.tsv`)
 
+## Purpose
+Fills a window's two size words at this+0x1a4 and this+0x1a8 from four corner objects (0x00481760). When the flags byte at +0x9c has bit 0x10 (test at 0x00481769) the corners are (+0x52c, +0x534, +0x530, +0x538); otherwise (0x004817f9) they are (+0x54c, +0x550, +0x530, +0x538). Nothing is written when any of the four is null (0x0048177a..0x004817a4). Each corner holds a width at +0x18 and a height at +0x1c; this+0x1a4 = max(c0->w + c1->w, c3->w + c2->w) and this+0x1a8 = max(c0->h + c2->h, c3->h + c1->h) (0x004817aa..0x00481865). Matched 100% as `?calcSize@R1C481760@@QAEXXZ` (re/match/golf_hand_r1.cpp). __thiscall. Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: Window_calcSizeFromCorners (10 vectors, 10 distinct results, 10 changing state, `log/diff/00481760_Window_calcSizeFromCorners.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?calcSize@R1C481760@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004817f8, 0x0048186f): callee pops 0 bytes of stack arguments.

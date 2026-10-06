@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 148 bytes, 44 instructions, subsystem `golfer`. Mechani
 copies cached golfer attributes from table 0x00579594 into the active story-pair record region (0x0059fce8/0x0059fd68) and increments the pair event counter at 0x0059fc64+param_1*0x388 while below 0x1f (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+updatePairSnapshot (0x00409950) records one story-pair event for pair p (record stride 0x388, `eax = p*0x388` at 0x00409956..0x00409964). It reads the pair's counter (signed word at 0x0059fc64 + rec, 0x00409967) and golfer id (signed word at 0x0059fc60 + rec, 0x0040996e) and forms `s = id << 8` (0x00409979/0x00409984). Into slot `rec + counter*4` (0x0040999c..0x004099a0) it stores three cached golfer attributes, selected by whether the counter is zero: the dwords at `s+0x57958c/0x579590/0x579594` when non-zero, otherwise `s+0x57957c/0x579580` and 0 (0x0040997c..0x004099cf), written to 0x0059fc68, 0x0059fce8 and 0x0059fd68 + slot (0x004099a5/0x004099bd/0x004099d3). It increments the counter word while it is below 0x1f (`cmp esi,0x1f`/`jge`/`inc` at 0x004099d0/0x004099dc). Reimplemented in `shim/src/re/c3e.cpp`; path-1 A/B GREEN: updatePairSnapshot (10 vectors, 10 distinct results, 10 changing state, `log/diff/00409950_updatePairSnapshot.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004099e3): callee pops 0 bytes of stack arguments.
 

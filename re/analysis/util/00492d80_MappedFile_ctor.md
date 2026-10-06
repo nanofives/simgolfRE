@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 24 bytes, 7 instructions, subsystem `util`. Mechanical 
 Constructs a memory-mapped-file wrapper, clearing its handle/view fields. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+MappedFile::ctor (0x00492d80) installs the object's vtable pointer 0x004bba78 at [this] (0x00492d84) and initialises m_4 = 0 (0x00492d8a), m_8 = -1 (0x00492d8d) and m_c = 0 (0x00492d94), returning this in eax (`mov eax,ecx` at 0x00492d80). __thiscall, no stack arguments (`ret`). Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: MappedFile::ctor (10 vectors, 10 distinct results, 10 changing state, `log/diff/00492d80_MappedFile_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `??0C492d80@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00492d97): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 52 bytes, 17 instructions, subsystem `render`. Mechanic
 sets the draw context's target surface and clip rectangle (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+`setDrawTarget(surf, a, b, c)` records a draw target in the context object (this). It returns 3 and writes nothing when `surf` is null (0x004762d3). Otherwise it stores `surf` at this+0x5c only when the dword surf+4 is non-zero (0x004762dd), then stores `a` at this+0x60, `c` at this+0x68 and `b` at this+0x64 (0x004762ee..0x00476300), and returns 0. The function has no callees. Reimplemented in `shim/src/re/c3k.cpp`; path-1 A/B GREEN: setDrawTarget (12 vectors, 10 distinct results, 8 changing state, `log/diff/004762d0_setDrawTarget.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x004762dd, 0x00476301): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x004762e7 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

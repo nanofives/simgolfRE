@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 356 bytes, 118 instructions, subsystem `sim`. Mechanica
 tries to place a 6x6 footprint object into a record bank: tests occupancy grid 0x004e6d70 for collision, writes id/x/y into 0x004e6d20..60, returns 1 on success else 0 (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+`placeRecord(bank, type, row, col)` places footprint `type` into record bank `bank` at tile (row, col). The first loop (0x00401077..0x004010e7) computes a collision/bounds flag in esi that 0x004010e9 then discards by jumping past every read of it, so placement is in fact unconditional. The function scans the bank's 16 id words at 0x004e6d20 + bank*0x74 for the first free one (value -1, 0x00401100); it returns 0 when the bank is full (0x00401112). Otherwise it writes `type` into that id word (0x00401133), the `row` and `col` bytes and 0xff into the parallel byte arrays at 0x004e6d40/0x004e6d50/0x004e6d60 at the slot (0x00401143..0x00401151), then for each set bit of the six footprint-definition bytes at 0x004c11e0 + type*0x27 writes the slot index into the occupancy grid at 0x004e6d70[col + (row + r)*6 + bank*0x74 + c] (0x0040117b), and returns 1. Reimplemented in `shim/src/re/c3k.cpp`; path-1 A/B GREEN: placeRecord (12 vectors, 10 distinct results, 9 changing state, `log/diff/00401040_placeRecord.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00401118, 0x004011a3): callee pops 0 bytes of stack arguments.
 

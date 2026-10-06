@@ -53,4 +53,55 @@ Object.assign(globalThis.DIFF_FIXTURES, {
     for (let i = 0; i < 0x28; i += 4) p.add(i).writeS32(0);
     return { obj: p };
   },
+
+  // c3i fix-up (2026-10-06): the three Surf473 methods only reached their null guards with c3h_surface (m_4 == 0), so
+  // the A/B never ran the format/fill/blit path and they were held back. c3i_surface gives the surface a non-null
+  // DirectDraw object (fake) with ONE fake vtable so the path runs, without any live game surface or DirectDraw object:
+  //   * fakeSurf (Surf473): +4 points at fakeDD;  znull (Surf473): +4 == 0, for the "return 7" guard.
+  //   * fakeDD: +0 points at vtbl. vtbl has two NativeCallback slots:
+  //       - +0x40 fill/blit: called thiscall by Surface_fillRegion (this->m_4 vtable+0x40, args sm4,&rect,&rect) and
+  //         Surface_blit3 (args sm4,&r1,&r2). It records this(tm4), sm4 and the two rectangles into `rec` and returns
+  //         0x2a, so the function returns 0x2a (distinct from 0x10 and 7) and `rec` changes.
+  //       - +0xe4 format: called thiscall by Surface_blit (s->m_4 vtable+0xe4). It records the surface into `rec` and
+  //         returns a pointer whose first dword is 16 (not 8), so Surface_blit takes the depth-mismatch branch and
+  //         returns 0 (the 8-bit blitTo path would need a real DirectDraw surface and is left to the 100% body match).
+  //   * rec (0x40 bytes) is the state region; both A/B arms call the same callback with the same inputs, so the
+  //     recorded bytes match and change only on the vectors that reach a virtual slot.
+  c3i_surface() {
+    const vtbl = __keepAlloc(0x100);
+    for (let i = 0; i < 0x100; i += 4) vtbl.add(i).writeS32(0);
+    const fakeDD = __keepAlloc(0x10);
+    for (let i = 0; i < 0x10; i += 4) fakeDD.add(i).writeS32(0);
+    fakeDD.writePointer(vtbl);                       // fakeDD->vtable
+    const fakeSurf = __keepAlloc(0x28);
+    for (let i = 0; i < 0x28; i += 4) fakeSurf.add(i).writeS32(0);
+    fakeSurf.add(4).writePointer(fakeDD);            // fakeSurf->m_4 = fakeDD
+    const znull = __keepAlloc(0x28);
+    for (let i = 0; i < 0x28; i += 4) znull.add(i).writeS32(0);  // znull->m_4 = 0
+    const rec = __keepAlloc(0x40);
+    for (let i = 0; i < 0x40; i += 4) rec.add(i).writeS32(0);
+    const fmt = __keepAlloc(4);
+    fmt.writeS32(16);                                // pixel depth != 8 -> Surface_blit returns 0
+
+    // fill/blit at vtable+0x40: thiscall (tm4, sm4, r1*, r2*). Record contents (identical across both arms).
+    const fillCb = new NativeCallback(function (tm4, sm4, r1, r2) {
+      rec.writePointer(tm4);
+      rec.add(4).writePointer(sm4);
+      for (let i = 0; i < 4; i++) rec.add(8 + i * 4).writeS32(r1.add(i * 4).readS32());
+      for (let i = 0; i < 4; i++) rec.add(0x18 + i * 4).writeS32(r2.add(i * 4).readS32());
+      return 0x2a;
+    }, 'int', ['pointer', 'pointer', 'pointer', 'pointer'], 'thiscall');
+
+    // format at vtable+0xe4: thiscall (ddSurface) -> pointer to {depth}. Record the surface.
+    const formatCb = new NativeCallback(function (dd) {
+      rec.add(0x30).writePointer(dd);
+      rec.add(0x34).writeS32(0xf0);
+      return fmt;
+    }, 'pointer', ['pointer'], 'thiscall');
+
+    vtbl.add(0x40).writePointer(fillCb);
+    vtbl.add(0xe4).writePointer(formatCb);
+    globalThis.__diffKeepAlive.push(fillCb, formatCb);   // NativeCallbacks are not rewritten to __keepAlloc
+    return { obj: fakeSurf, znull: znull, rec: rec };
+  },
 });

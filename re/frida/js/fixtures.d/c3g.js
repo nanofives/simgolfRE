@@ -107,3 +107,40 @@ Object.assign(globalThis.DIFF_FIXTURES, {
   c3g_panel_mode0() { ptr('0x00567afc').writeS32(0); return {}; },
   c3g_panel_mode3() { ptr('0x00567afc').writeS32(3); return {}; },
 });
+
+// c3i fix-up (2026-10-06): the three widget/window leaves were held back for too few vectors (the leaf gate needs
+// >= 10). Each writes only through its `this` pointer, so ten private objects exercise the same body ten times; the
+// state list names all ten objects and only the one a vector targets changes, so the ten vectors give ten distinct
+// final states. Never the live window list or the live widget table.
+Object.assign(globalThis.DIFF_FIXTURES, {
+  // Window::calcSizeFromCorners 0x00481760: ten window objects, alternating the +0x9c flag bit 0x10 (which selects the
+  // +0x52c/+0x534 vs +0x54c/+0x550 corner pair), each over four corner objects (width +0x18, height +0x1c) with sizes
+  // that differ per window, so each window's computed (width, height) at +0x1a4/+0x1a8 differs.
+  c3i_calcsize() {
+    const corner = (w, h) => { const c = Memory.alloc(0x20); c.add(0x18).writeS32(w); c.add(0x1c).writeS32(h); return c; };
+    const offs = [0x52c, 0x530, 0x534, 0x538, 0x54c, 0x550];
+    const out = {};
+    for (let i = 0; i < 10; i++) {
+      const o = Memory.alloc(0x600);
+      o.add(0x9c).writeU8(i & 1 ? 0x10 : 0x00);
+      offs.forEach((off, j) => o.add(off).writePointer(corner((i + 1) * (j + 2), (j + 1) * (i + 3))));
+      out['o' + i] = o;
+    }
+    return out;
+  },
+
+  // resetWidgetTable 0x00495eb0 / initWidgetTable 0x00495d30: the 38-int template at 0x0083fe78 is the source; ten
+  // private 0x100-byte objects pre-filled with 0xcc (which no template word equals) receive the reordered copy, so the
+  // copy is a visible change and the ten objects' written regions all differ in position within the state list.
+  c3i_widget10() {
+    const src = ptr('0x0083fe78');
+    for (let i = 0; i < 38; i++) src.add(i * 4).writeS32(0x4000 + i * 7);
+    const out = {};
+    for (let i = 0; i < 10; i++) {
+      const o = Memory.alloc(0x100);
+      for (let j = 0; j < 0x100; j++) o.add(j).writeU8(0xcc);
+      out['o' + i] = o;
+    }
+    return out;
+  },
+});

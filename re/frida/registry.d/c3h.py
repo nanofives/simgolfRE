@@ -45,20 +45,39 @@ HOOKS.update({
                          state=[(0x0055EB40, 0, 5000), (0x0055FEC8, 0, 5000), ("$sx", 0, 4), ("$sy", 0, 4)],
                          vectors=[(x, y, "$sx", "$sy") for x, y in _TILES]),
 
-    # --- surface guards: the null branches only (a non-null surface would call DirectDraw). fx.obj is a fake
-    #     Surf473 whose m_4 (the DirectDraw surface at +4) is 0, so a non-null surface argument returns 7 and the
-    #     blit/fill path is never reached; a null argument returns 0x10. ---
+    # --- surface methods: c3i_surface gives the surface a non-null fake DirectDraw object (one fake vtable) so the
+    #     format/fill/blit path runs. $obj is a fake Surf473 whose m_4 (+4) points at fakeDD; $znull has m_4 == 0 for
+    #     the "return 7" guard; $rec (0x40) is the state region the vtable callbacks record their arguments into.
+    #     Surface_blit: a null source -> 0x10, a source with m_4 == 0 -> 7, and a live fake source -> the format()
+    #     virtual (vtable+0xe4) runs and reports depth 16 (!= 8), so it returns 0 (the 8-bit blitTo path needs a real
+    #     DirectDraw surface; the 100% body match covers it). Three distinct results. ---
     "Surface_blit": dict(module="golf_clean.exe", addr=0x00473BF0, abi="thiscall", ret="int",
-                         args=["pointer", "pointer", "int", "int", "int", "int", "int", "int"], fixture="c3h_surface",
-                         vectors=[("$obj", 0, 1, 2, 3, 4, 5, 6), ("$obj", "$obj", 1, 2, 3, 4, 5, 6),
-                                  ("$obj", 0, 0, 0, 0, 0, 0, 0), ("$obj", "$obj", 10, 20, 30, 40, 50, 60)]),
+                         args=["pointer", "pointer", "int", "int", "int", "int", "int", "int"], fixture="c3i_surface",
+                         state=[("$rec", 0, 0x40)],
+                         vectors=[("$obj", 0, 1, 2, 3, 4, 5, 6), ("$obj", 0, 9, 9, 9, 9, 9, 9),
+                                  ("$obj", "$znull", 1, 2, 3, 4, 5, 6), ("$obj", "$znull", 7, 8, 9, 10, 11, 12),
+                                  ("$obj", "$obj", 1, 2, 3, 4, 5, 6), ("$obj", "$obj", 10, 20, 30, 40, 50, 60),
+                                  ("$obj", "$obj", -1, -2, -3, -4, -5, -6), ("$obj", "$obj", 0, 0, 0, 0, 0, 0),
+                                  ("$obj", "$obj", 100, 200, 300, 400, 500, 600)]),
+    # Surface_fillRegion: null source -> 0x10; this->m_4 or s->m_4 null -> 7; otherwise the fill virtual (this->m_4
+    # vtable+0x40) runs with the rect {x,y,x+w,y+h} as source and dest, records into $rec and returns 0x2a. 10 vectors
+    # (leaf gate needs >= 10): two 0x10, two 7, six fill with distinct rects -> distinct final states and the fill path.
     "Surface_fillRegion": dict(module="golf_clean.exe", addr=0x00475C90, abi="thiscall", ret="int",
-                               args=["pointer", "pointer", "int", "int", "int", "int"], fixture="c3h_surface",
-                               vectors=[("$obj", 0, 1, 2, 3, 4), ("$obj", "$obj", 1, 2, 3, 4),
-                                        ("$obj", 0, 0, 0, 0, 0), ("$obj", "$obj", 5, 6, 7, 8)]),
+                               args=["pointer", "pointer", "int", "int", "int", "int"], fixture="c3i_surface",
+                               state=[("$rec", 0, 0x40)],
+                               vectors=[("$obj", 0, 1, 2, 3, 4), ("$obj", 0, 5, 6, 7, 8),
+                                        ("$znull", "$obj", 1, 2, 3, 4), ("$obj", "$znull", 1, 2, 3, 4),
+                                        ("$obj", "$obj", 10, 20, 30, 40), ("$obj", "$obj", 0, 0, 5, 5),
+                                        ("$obj", "$obj", -3, -4, 100, 200), ("$obj", "$obj", 7, 7, 7, 7),
+                                        ("$obj", "$obj", 50, 60, 70, 80), ("$obj", "$obj", 1, 1, 2, 2)]),
+    # Surface_blit3: same guards; otherwise the blit virtual (this->m_4 vtable+0x40) runs with src->m_4 and the two
+    # rects {x,y,x+w,y+h} and {x2,y2,x2+w2,y2+h2}, records into $rec and returns 0x2a. 10 vectors (leaf gate).
     "Surface_blit3": dict(module="golf_clean.exe", addr=0x00475D00, abi="thiscall", ret="int",
                           args=["pointer", "pointer", "int", "int", "int", "int", "int", "int", "int", "int"],
-                          fixture="c3h_surface",
-                          vectors=[("$obj", 0, 1, 2, 3, 4, 5, 6, 7, 8), ("$obj", "$obj", 1, 2, 3, 4, 5, 6, 7, 8),
-                                   ("$obj", 0, 0, 0, 0, 0, 0, 0, 0, 0), ("$obj", "$obj", 9, 8, 7, 6, 5, 4, 3, 2)]),
+                          fixture="c3i_surface", state=[("$rec", 0, 0x40)],
+                          vectors=[("$obj", 0, 1, 2, 3, 4, 5, 6, 7, 8), ("$obj", 0, 9, 8, 7, 6, 5, 4, 3, 2),
+                                   ("$znull", "$obj", 1, 2, 3, 4, 5, 6, 7, 8), ("$obj", "$znull", 1, 2, 3, 4, 5, 6, 7, 8),
+                                   ("$obj", "$obj", 10, 20, 30, 40, 11, 22, 33, 44), ("$obj", "$obj", 0, 0, 5, 5, 1, 1, 2, 2),
+                                   ("$obj", "$obj", -3, -4, 100, 200, -1, -2, 50, 60), ("$obj", "$obj", 7, 7, 7, 7, 8, 8, 8, 8),
+                                   ("$obj", "$obj", 50, 60, 70, 80, 90, 100, 110, 120), ("$obj", "$obj", 2, 3, 4, 5, 6, 7, 8, 9)]),
 })

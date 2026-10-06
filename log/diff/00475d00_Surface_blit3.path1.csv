@@ -1,9 +1,16 @@
-vector,original,reimpl,match
-$obj 0 1 2 3 4 5 6 7 8,16,16,True
-$obj $obj 1 2 3 4 5 6 7 8,7,7,True
-$obj 0 0 0 0 0 0 0 0 0,16,16,True
-$obj $obj 9 8 7 6 5 4 3 2,7,7,True
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj 0 1 2 3 4 5 6 7 8,16,16,True,6aab37c5,6aab37c5,False
+$obj 0 9 8 7 6 5 4 3 2,16,16,True,6aab37c5,6aab37c5,False
+$znull $obj 1 2 3 4 5 6 7 8,7,7,True,6aab37c5,6aab37c5,False
+$obj $znull 1 2 3 4 5 6 7 8,7,7,True,6aab37c5,6aab37c5,False
+$obj $obj 10 20 30 40 11 22 33 44,42,42,True,31b6944b,31b6944b,True
+$obj $obj 0 0 5 5 1 1 2 2,42,42,True,b97125d1,b97125d1,True
+$obj $obj -3 -4 100 200 -1 -2 50 60,42,42,True,f18f8bd7,f18f8bd7,True
+$obj $obj 7 7 7 7 8 8 8 8,42,42,True,0ef6b211,0ef6b211,True
+$obj $obj 50 60 70 80 90 100 110 120,42,42,True,17001286,17001286,True
+$obj $obj 2 3 4 5 6 7 8 9,42,42,True,24536f49,24536f49,True
+state_regions,$rec+0x0:64,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x66f88f10,original=0x1440e80,2026-10-06T18:03:00
-distinct_results,2,,
-VERDICT,GREEN,4,
+meta,detour=0x6d629240,original=0x1440c60,2026-10-06T18:39:00
+distinct_results,8,,
+VERDICT,GREEN,10,

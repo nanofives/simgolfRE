@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 23 bytes, 9 instructions, subsystem `audio`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 stores a value in m_34 and forwards it to the device object m_40 (vtable f19) (`re/names/exe_3.tsv`)
 
+## Purpose
+Snd::setField34 (0x004846b0) stores its argument at this+0x34 (0x004846b4); when the device object at this+0x40 is non-null (0x004846b7, 0x004846bc) it also forwards the argument to that object through its vtable slot +0x4c (0x004846c1), so with this+0x40 null the only observable effect is the store at this+0x34. Reimplemented in `shim/src/re/c3j.cpp`; path-1 A/B GREEN: Snd::setField34 (10 vectors, 10 distinct results, 10 changing state, `log/diff/004846b0_Snd_setField34.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004846b0@C_FUN_004846b0@f_004846b0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004846c4): callee pops 4 bytes of stack arguments.

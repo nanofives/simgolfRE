@@ -75,3 +75,20 @@ Object.assign(globalThis.DIFF_FIXTURES, {
     return { obj: store };
   },
 });
+
+// c3i fix-up (2026-10-06): MappedFile::ctor 0x00492d80 takes no stack arguments, so one object was a single vector
+// (the leaf gate needs >= 10). It writes the same four fields (vtable 0x004bba78, 0, -1, 0) wherever `this` points, so
+// ten separate 0x10-byte objects exercise the same body at ten addresses. Each is pre-filled with 0xaa (so every write
+// is a visible change) and listed as its own state region; because only the object a vector targets changes, the ten
+// vectors produce ten distinct final states (and ten distinct `this` return values).
+Object.assign(globalThis.DIFF_FIXTURES, {
+  c3i_mappedfile10() {
+    const out = {};
+    for (let i = 0; i < 10; i++) {
+      const o = Memory.alloc(0x10);
+      for (let j = 0; j < 0x10; j++) o.add(j).writeU8(0xaa);
+      out['o' + i] = o;
+    }
+    return out;
+  },
+});

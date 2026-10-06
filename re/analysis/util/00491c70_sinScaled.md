@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 267 bytes, 84 instructions, subsystem `util`. Mechanica
 Fixed-point sine of a 32-bit angle param_1 scaled by amplitude param_2, interpolating the g_0083b9f4 table. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+sinScaled (0x00491c70) returns a fixed-point sine of the 32-bit angle scaled by amp, by linearly interpolating the 257-entry table at 0x0083b9f4. It negates amp when the angle's sign bit is set (`test ecx,0x80000000` / `neg edx` at 0x00491c78..0x00491c80), takes index = (angle & 0x3fffffff) >> 22 as the table slot (0x00491c85..0x00491c93) and frac = angle & 0x3fffff as the 22-bit fraction, reads the adjacent entries tabA = 0x0083b9f4[index] and tabB = 0x0083b9f8[index] (= 0x0083b9f4[index+1]) and forms base = ((tabB - tabA) * frac) >> 22 (0x00491cb0..0x00491cbb); the interpolated value is base + tabA, or base - tabA + 0xffff when angle bit 30 is set (0x00491c8b / 0x00491cbe..0x00491cc1). amp is pre-shifted so the final multiply stays in 32 bits, with signed thresholds: amp < 0xffff multiplies then shifts the product right 16 (`cmp 0xffff` / `jge` at 0x00491c96, `sar eax,0x10` at 0x00491cc9); 0xffff <= amp < 0xffffff uses amp >> 8 then >> 8 (`cmp 0xffffff` / `jge` at 0x00491ce5, 0x00491ced / 0x00491d1b); amp >= 0xffffff uses amp >> 16 with no final shift (0x00491d37). It reads only the global sine table (initialised by initSinTable 0x00491c10). Reimplemented in `shim/src/re/c3l.cpp`; path-1 A/B GREEN: sinScaled (210 vectors, 115 distinct results, `log/diff/00491c70_sinScaled.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00491ccc, 0x00491ce4, 0x00491d1e, 0x00491d36, 0x00491d65, 0x00491d7a): callee pops 0 bytes of stack arguments.
 

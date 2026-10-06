@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 266 bytes, 83 instructions, subsystem `golfer`. Mechani
 searches tiles within +-4 of (param_1>>10,param_2>>10) for the nearest unblocked tile whose g_tileFlags has bit 0x200 set, writing min distance to 0x00568d0c and the tile x/y to 0x0056a91c/0x0056a920 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+findNearestTargetTile (0x0040de70) searches the 9x9 tile block centred on `(px>>10, py>>10)` (the `sar ...,0xa` and `+-4` at 0x0040de80-0x0040dea5); it initialises the min-distance global 0x00568d0c to `maxDist << 10` (0x0040de91) and the result-x global 0x0056a91c to -1 (0x0040de97), then for every cell that is not blocked (tileBlocked(x, y) == 0 at 0x0040dee0) and whose flags word at 0x0053caf0[x*50 + y] has bit 0x200 set (0x0040def2, 0x0040defa) it computes distance((x<<10) - px + 0x200, (y<<10) - py + 0x200) (0x0040df05-0x0040df22) and, when below the running minimum (0x0040df30), records that distance, x and y in 0x00568d0c / 0x0056a91c / 0x0056a920 (0x0040df34-0x0040df3f). Reimplemented in `shim/src/re/c3j.cpp`; path-1 A/B GREEN: findNearestTargetTile (10 vectors, 10 distinct results, 10 changing state, `log/diff/0040de70_findNearestTargetTile.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0040df79): callee pops 0 bytes of stack arguments.
 

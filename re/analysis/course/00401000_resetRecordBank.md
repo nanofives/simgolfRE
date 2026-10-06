@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 54 bytes, 16 instructions, subsystem `course`. Mechanic
 fills 8 dwords at g_recordBanks+param_1*0x74 and 9 dwords at g_recordOccupancy+param_1*0x74 with 0xffffffff (frees record bank param_1) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`, `re/analysis/systems/exe_6.md`.
 
+## Purpose
+resetRecordBank (0x00401000) frees record bank p by filling 8 dwords at 0x004e6d20 + p*0x74 and 9 dwords at 0x004e6d70 + p*0x74 with -1 (the two `rep stosd` at 0x00401022/0x00401032). The offset p*0x74 is formed as `29*p << 2` (`lea`/`sub`/`lea`/`shl` at 0x00401005..0x00401016). Reimplemented in `shim/src/re/c3e.cpp`; path-1 A/B GREEN: resetRecordBank (10 vectors, 10 distinct results, 10 changing state, `log/diff/00401000_resetRecordBank.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00401035): callee pops 0 bytes of stack arguments.
 

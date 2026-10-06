@@ -24,12 +24,16 @@ HOOKS.update({
                                     ("$bad", 10), ("$bad", 3)]),
 
     # --- writers (state = the regions each one mutates) ---
+    # c3i fix-up (leaf gate needs >= 10 vectors): p = 0..9 writes banks within 0x004e6d20..0x004e71a8, so the region
+    # is widened to 0x490 and pre-filled (c3i_resetbank) to cover and restore every write; 10 distinct sub-ranges.
     "resetRecordBank": dict(module="golf_clean.exe", addr=0x00401000, abi="default", ret="void", args=["int"],
-                            fixture="c3e_banks", state=[(0x004E6D20, 0, 0x2C0)],
-                            vectors=[(p,) for p in (0, 1, 2, 3, 4, 5)]),
+                            fixture="c3i_resetbank", state=[(0x004E6D20, 0, 0x490)],
+                            vectors=[(p,) for p in range(10)]),
+    # c3i fix-up (leaf gate needs >= 10 vectors): g_storyPairs holds exactly 10 pairs; c3i_pairs seeds all 10 with
+    # distinct ids and a 0/2/4 counter cycle (both attribute sources), so p = 0..9 give 10 distinct final states.
     "updatePairSnapshot": dict(module="golf_clean.exe", addr=0x00409950, abi="default", ret="void", args=["int"],
-                               fixture="c3e_pairs", state=[(0x0059FC60, 0, 0xBC0)],
-                               vectors=[(p,) for p in (0, 1, 2, 3)]),
+                               fixture="c3i_pairs", state=[(0x0059FC60, 0, 0x3880)],
+                               vectors=[(p,) for p in range(10)]),
     "addGolferPair": dict(module="golf_clean.exe", addr=0x004099F0, abi="default", ret="void", args=["int"],
                           fixture="c3e_addpair", state=[(0x0059FC60, 0, 0x390)],
                           vectors=[(g,) for g in (0, 1, 2, 3, 4, 5, 6, 7)]),

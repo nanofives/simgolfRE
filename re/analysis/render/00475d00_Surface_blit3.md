@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 147 bytes, 51 instructions, subsystem `render`. Mechani
 blits a surface with source and dest rectangles (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Surface_blit3 (0x00475d00) is the thiscall source-and-dest-rect blit of a Surf473. It returns 0x10 when the source argument is null (`test eax,eax` at 0x00475d07), 7 when this surface at this+4 is null or the source surface at src+4 is null (0x00475d18 / 0x00475d1f -> 0x00475d87), and otherwise builds rect1 {x, y, x+w, y+h} and rect2 {x2, y2, x2+w2, y2+h2} (0x00475d33..0x00475d6f) and calls blit (this->m_4 virtual slot +0x40) with the source surface and the two rectangles (0x00475d7c). Matched in re/match/golf_hand_04.cpp (`?blit@C475d00@@QAEHPAU1@HHHHHHHH@Z`). Reimplemented in `shim/src/re/c3h.cpp`; path-1 A/B GREEN: Surface_blit3 (10 vectors, 8 distinct results, 6 changing state, `log/diff/00475d00_Surface_blit3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?blit@C475d00@@QAEHPAU1@HHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x24` (at 0x00475d15, 0x00475d84, 0x00475d90): callee pops 36 bytes of stack arguments.

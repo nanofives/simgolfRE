@@ -44,25 +44,24 @@ HOOKS = {
     "appendCourseTitle_b": dict(module="golf_clean.exe", addr=0x0040DAA0, abi="default", ret="void", args=["int"],
                                 fixture="c3g_course_b", state=[(0x0051A068, 0, 256)],
                                 vectors=[(-1,), (0,), (1,), (2,)]),
-    # Window::calcSizeFromCorners 0x00481760: max() over four corner objects into +0x1a4/+0x1a8. Four window
-    # objects (two with flag bit 0x10, two without) with different corner sizes; each window's +0x1a4 is a region.
+    # Window::calcSizeFromCorners 0x00481760: max() over four corner objects into +0x1a4/+0x1a8. c3i fix-up (leaf gate
+    # needs >= 10 vectors): ten window objects (alternating flag bit 0x10) with per-window corner sizes, each window's
+    # +0x1a4 a region; each vector writes only its own window, so the ten give ten distinct (width, height) pairs.
     "Window_calcSizeFromCorners": dict(module="golf_clean.exe", addr=0x00481760, abi="thiscall", ret="void",
-                                       args=["pointer"], fixture="c3g_calcsize",
-                                       state=[("$o0", 0x1A4, 8), ("$o1", 0x1A4, 8), ("$o2", 0x1A4, 8),
-                                              ("$o3", 0x1A4, 8)],
-                                       vectors=[("$o0",), ("$o1",), ("$o2",), ("$o3",)]),
-    # resetWidgetTable 0x00495eb0: reordered copy of the 0x0083fe78 template into the object (+4..+0x98). Two source
-    # patterns so the copied bytes differ between the keys.
+                                       args=["pointer"], fixture="c3i_calcsize",
+                                       state=[(f"$o{i}", 0x1A4, 8) for i in range(10)],
+                                       vectors=[(f"$o{i}",) for i in range(10)]),
+    # resetWidgetTable 0x00495eb0: reordered copy of the 0x0083fe78 template into the object (+4..+0x98). c3i fix-up
+    # (leaf gate needs >= 10 vectors): ten private objects (c3i_widget10) receive the copy; each vector writes only its
+    # own object, so the ten give ten distinct final states (the state list names all ten).
     "resetWidgetTable": dict(module="golf_clean.exe", addr=0x00495EB0, abi="thiscall", ret="void", args=["pointer"],
-                             fixture="c3g_widget_a", state=[("$obj", 4, 0x98)], vectors=[("$obj",)]),
-    "resetWidgetTable_b": dict(module="golf_clean.exe", addr=0x00495EB0, abi="thiscall", ret="void", args=["pointer"],
-                               fixture="c3g_widget_b", state=[("$obj", 4, 0x98)], vectors=[("$obj",)]),
+                             fixture="c3i_widget10", state=[(f"$o{i}", 4, 0x98) for i in range(10)],
+                             vectors=[(f"$o{i}",) for i in range(10)]),
     # initWidgetTable 0x00495d30: constructor; vtable 0x004baa14 at +0 then the same copy (+0..+0x98). ret is this
-    # (not compared); declared void.
+    # (not compared); declared void. c3i fix-up (leaf gate needs >= 10 vectors): same ten-object scheme, state +0..+0x9c.
     "initWidgetTable": dict(module="golf_clean.exe", addr=0x00495D30, abi="thiscall", ret="void", args=["pointer"],
-                            fixture="c3g_widget_a", state=[("$obj", 0, 0x9C)], vectors=[("$obj",)]),
-    "initWidgetTable_b": dict(module="golf_clean.exe", addr=0x00495D30, abi="thiscall", ret="void", args=["pointer"],
-                              fixture="c3g_widget_b", state=[("$obj", 0, 0x9C)], vectors=[("$obj",)]),
+                            fixture="c3i_widget10", state=[(f"$o{i}", 0, 0x9C) for i in range(10)],
+                            vectors=[(f"$o{i}",) for i in range(10)]),
     # startMessage 0x0040cb00: refused (0) while a message runs/pends with prio<=0, or in mode 3; otherwise 1 and
     # writes the ticker globals. Three fixtures: idle (proceeds), busy (direction byte 1), mode 3 (always refused).
     "startMessage": dict(module="golf_clean.exe", addr=0x0040CB00, abi="default", ret="int", args=["int", "int", "int"],

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 151 bytes, 57 instructions, subsystem `course`. Mechani
 scans the object table for type-4 objects in range, sets 0x00541318 to a 4-direction bitmask, and returns whether it covers the requested mask (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+holeQuadrants (0x00407000) scans the 256 placed-object records at 0x0058bcb8 (stride 0x10, from esi = 0x0058bcbc to < 0x0058ccbc at 0x0040700a/0x00407075); for each record whose type word +0 is 4 (0x0040700f) and whose int field +8 is below 0x10 signed (0x00407016) it calls tileDistance(a, b, objY, objX) on the two arguments and the record's signed words +2/+4 (0x0040701c-0x0040702b), and when that distance is below `((field*5 + 0x28) * 5) / 3` (signed division by 3, 0x00407038-0x0040704f) it sets bit `1 << (field & 3)` in an accumulator (the jump table at 0x00407098, bodies 0x00407060-0x0040706f); it stores the accumulator at 0x00541318 (0x00407081) and returns whether it covers the requested mask, `(bits & mask) == mask` (0x00407087-0x0040708e). Reimplemented in `shim/src/re/c3j.cpp`; path-1 A/B GREEN: holeQuadrants (12 vectors, 7 distinct results, 9 changing state, `log/diff/00407000_holeQuadrants.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00407096): callee pops 0 bytes of stack arguments.
 

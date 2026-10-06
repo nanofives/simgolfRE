@@ -4,6 +4,31 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  00485260  Snd::ctor485260  C2->C3  log/diff/00485260_Snd_ctor485260.path1.csv
+2026-10-06  00485140  Snd::setVolume  C2->C3  log/diff/00485140_Snd_setVolume.path1.csv
+2026-10-06  004846b0  Snd::setField34  C2->C3  log/diff/004846b0_Snd_setField34.path1.csv
+2026-10-06  0040de70  findNearestTargetTile  C2->C3  log/diff/0040de70_findNearestTargetTile.path1.csv
+2026-10-06  00407000  holeQuadrants  C2->C3  log/diff/00407000_holeQuadrants.path1.csv
+2026-10-06  004060a0  computeRatingTrend  C2->C3  log/diff/004060a0_computeRatingTrend.path1.csv
+2026-10-06  0047cb10  Window::innerSize  C2->C3  log/diff/0047cb10_Window_innerSize.path1.csv
+2026-10-06  004762d0  setDrawTarget  C2->C3  log/diff/004762d0_setDrawTarget.path1.csv
+2026-10-06  0040bfe0  cornerHeights  C2->C3  log/diff/0040bfe0_cornerHeights.path1.csv
+2026-10-06  0040a9a0  appendClubName  C2->C3  log/diff/0040a9a0_appendClubName.path1.csv
+2026-10-06  00401040  placeRecord  C2->C3  log/diff/00401040_placeRecord.path1.csv
+2026-10-06  00491c70  sinScaled  C2->C3  log/diff/00491c70_sinScaled.path1.csv
+2026-10-06  00476d40  scanMarkupText  C2->C3  log/diff/00476d40_scanMarkupText.path1.csv
+2026-10-06  004672d0  angleFixed  C2->C3  log/diff/004672d0_angleFixed.path1.csv
+2026-10-06  004671a0  direction8  C2->C3  log/diff/004671a0_direction8.path1.csv
+2026-10-06  00432f90  hitTestSlot432f90  C2->C3  log/diff/00432f90_hitTestSlot432f90.path1.csv
+2026-10-06  00475d00  Surface_blit3  C2->C3  log/diff/00475d00_Surface_blit3.path1.csv
+2026-10-06  00475c90  Surface_fillRegion  C2->C3  log/diff/00475c90_Surface_fillRegion.path1.csv
+2026-10-06  00495eb0  resetWidgetTable  C2->C3  log/diff/00495eb0_resetWidgetTable.path1.csv
+2026-10-06  00495d30  initWidgetTable  C2->C3  log/diff/00495d30_initWidgetTable.path1.csv
+2026-10-06  00481760  Window::calcSizeFromCorners  C2->C3  log/diff/00481760_Window_calcSizeFromCorners.path1.csv
+2026-10-06  00492d80  MappedFile::ctor  C2->C3  log/diff/00492d80_MappedFile_ctor.path1.csv
+2026-10-06  00409950  updatePairSnapshot  C2->C3  log/diff/00409950_updatePairSnapshot.path1.csv
+2026-10-06  00401000  resetRecordBank  C2->C3  log/diff/00401000_resetRecordBank.path1.csv
+2026-10-06  0042f6e0  raiseFromNeighbours  C2->C3  log/diff/0042f6e0_raiseFromNeighbours.path1.csv
 2026-10-06  00435f00  hitGolferPanel435f00  C2->C3  log/diff/00435f00_hitGolferPanel435f00.path1.csv
 2026-10-06  0042dd50  appendCents  C2->C3  log/diff/0042dd50_appendCents.path1.csv
 2026-10-06  0042dc00  appendNumber  C2->C3  log/diff/0042dc00_appendNumber.path1.csv

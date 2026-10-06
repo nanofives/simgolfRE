@@ -108,6 +108,6 @@ vector,original,reimpl,match
 2048 400,113,113,True
 2048 900,197,197,True
 install_witness,0xe9,0xe9,True
-meta,detour=0x6d717dc0,original=0x1440b40,2026-10-06T15:54:56
+meta,detour=0x6d5384e0,original=0xca0680,2026-10-06T18:39:13
 distinct_results,71,,
 VERDICT,GREEN,108,

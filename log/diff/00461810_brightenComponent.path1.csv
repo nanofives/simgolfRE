@@ -14,6 +14,6 @@ vector,original,reimpl,match
 256,255,255,True
 2147483647,255,255,True
 install_witness,0xe9,0xe9,True
-meta,detour=0x66f88eb0,original=0x1440da0,2026-10-06T18:02:56
+meta,detour=0x6d6291e0,original=0x1440b80,2026-10-06T18:38:57
 distinct_results,9,,
 VERDICT,GREEN,14,

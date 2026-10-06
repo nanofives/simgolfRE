@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 60 bytes, 29 instructions, subsystem `ui`. Mechanical t
 scans the string for the first markup delimiter ({ } [ ] $), returning a pointer to it (or the end) and decrementing the remaining-length *param_2 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+scanMarkupText (0x00476d40) scans the byte string s for the first markup delimiter, one of { } [ ] $ (bytes 0x7b, 0x7d, 0x5b, 0x5d, 0x24, compared at 0x00476d52..0x00476d66). It advances the pointer while the remaining count *lenp is non-zero (`inc eax` / `dec edx` / `jne` at 0x00476d6b..0x00476d6d); on a delimiter, or when the count reaches 0, it writes the remaining count back to *lenp and returns the scan pointer (0x00476d6f..0x00476d71). A starting count of 0 returns s unchanged and writes nothing (`and edx,edx` / `je` at 0x00476d4c..0x00476d4e). A leaf; the only memory it touches are the caller's string and count. Reimplemented in `shim/src/re/c3l.cpp`; path-1 A/B GREEN: scanMarkupText (10 vectors, 10 distinct results, 7 changing state, `log/diff/00476d40_scanMarkupText.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00476d7b): callee pops 0 bytes of stack arguments.
 

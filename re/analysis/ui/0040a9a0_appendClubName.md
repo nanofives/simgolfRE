@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 161 bytes, 53 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 appends a golf-club name selected by index (`re/names/exe_0.tsv`)
 
+## Purpose
+`appendClubName(club)` appends the name of golf club `club` to the global text buffer at 0x0051a068. It is a 14-way switch (jump table at 0x0040aa44, dispatched at 0x0040a9af) whose cases each load one string pointer — club 0 is "Driver" at 0x004c5220, and the pointers descend to club 13 "Putter" at 0x004c51b0 — and strcat it onto the buffer (the inline repne scasb / rep movs at 0x0040aa16..0x0040aa3c). An index above 13 is rejected by the unsigned compare at 0x0040a9a5 (cmp eax, 0xd / ja), leaving the buffer unchanged. The function has no callees. Reimplemented in `shim/src/re/c3k.cpp`; path-1 A/B GREEN: appendClubName (18 vectors, 15 distinct results, 14 changing state, `log/diff/0040a9a0_appendClubName.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small15.cpp` as `?appendClubName@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040aa40): callee pops 0 bytes of stack arguments.

@@ -12,6 +12,6 @@ $obj 64,63,63,True,9a18742c,9a18742c,True
 $obj 1000,63,63,True,9a18742c,9a18742c,True
 state_regions,$obj+0x8:4,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x66f88c90,original=0x1440dc0,2026-10-06T18:02:10
+meta,detour=0x6d539140,original=0xca0aa0,2026-10-06T18:39:16
 distinct_results,7,,
 VERDICT,GREEN,11,

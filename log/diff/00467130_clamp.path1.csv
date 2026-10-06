@@ -160,6 +160,6 @@ vector,original,reimpl,match
 100 60 20,100,100,True
 100 60 100,100,100,True
 install_witness,0xe9,0xe9,True
-meta,detour=0x66f88ab0,original=0x1440d00,2026-10-06T18:02:10
+meta,detour=0x6d538f60,original=0xca09e0,2026-10-06T18:39:16
 distinct_results,10,,
 VERDICT,GREEN,160,

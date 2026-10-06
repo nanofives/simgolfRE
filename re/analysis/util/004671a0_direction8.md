@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 205 bytes, 94 instructions, subsystem `util`. Mechanica
 classifies a (dx,dy) vector into one of 8 compass octants using sign and 2:1 ratio tests (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+direction8 (0x004671a0) classifies the vector (a, b) (a = first arg at [esp+8] after the pushes, b = second) into one of eight octants. It takes A = |a| and B = |b| (the cdq/xor/sub idioms at 0x004671b7..0x004671c3) and, per sign quadrant, starts from a default octant, switches to the adjacent octant when |a| > 2|b| (`lea edx,[ecx+ecx]` / `cmp` / `jle` at 0x004671c5..0x004671ca) and returns the on-axis octant when |b| > 2|a| (`add eax,eax` / `cmp` / `jle` at 0x004671d1..0x004671d5). The {default, adjacent, on-axis} triples are {3, 2, 4} for a>0 b>0 (0x004671b9..0x004671dc), {1, 2, 0} for a>0 b<=0 (0x004671ea..0x00467209), {5, 6, 4} for a<=0 b>0 (0x00467218..0x00467237) and {7, 6, 0} for a<=0 b<=0 (0x00467245..0x00467264). A pure leaf with no memory access. Reimplemented in `shim/src/re/c3l.cpp`; path-1 A/B GREEN: direction8 (289 vectors, 8 distinct results, `log/diff/004671a0_direction8.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004671e2, 0x0046720c, 0x0046723d, 0x00467267, 0x0046726c): callee pops 0 bytes of stack arguments.
 

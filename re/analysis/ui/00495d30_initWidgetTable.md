@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 372 bytes, 79 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 constructor that zero/initializes the global widget table at 0x0083fe78. (`re/names/exe_5.tsv`)
 
+## Purpose
+Constructs a widget-table object: it writes the vtable pointer 0x004baa14 at this+0 (0x00495d32), then copies the 38-dword template at 0x0083fe78 into the object with the same reorder as resetWidgetTable, source words [0..3] to this+4, this+0xc, this+0x10, this+8 and source words [4..37] to this+0x14..this+0x98 (0x00495d38 onward). Matched 100% as `??0R2C495d30@@QAE@XZ` (re/match/golf_hand_r2.cpp). __thiscall; it returns `this`. Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: initWidgetTable (10 vectors, 10 distinct results, 10 changing state, `log/diff/00495d30_initWidgetTable.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `??0R2C495d30@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00495ea3): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 254 bytes, 81 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 shrinks a (w,h) pair to the client size by subtracting title bar and borders per m_9c flags (`re/names/exe_3.tsv`)
 
+## Purpose
+`Window::innerSize(w, h)` subtracts this window's frame from the caller's content size at `*w` and `*h`; it returns immediately when either pointer is null (0x0047cb13, 0x0047cb1d). The flags dword at this+0x9c selects the adjustments: bit 0x04 subtracts the border width (the dword at 0x0083ff10) from `*h` (0x0047cb33); bit 0x08 subtracts it from `*w` (0x0047cb3f); bit 0x400, or bit 0x11, subtracts twice this+0x184 from both `*w` and `*h` and, when this+0x188 is not -1, adds (this+0x184 - this+0x188) to `*h` (0x0047cb52..0x0047cbcc); bit 0x10 adds (this+0x184 - this+0x180) to `*h` (0x0047cbd4); finally, when the child pointer this+0x15c is non-zero and bit 0x20000000 is clear, it subtracts the child's extent fetched through the child's vtable slot +0x170 (0x0047cbf4). Reimplemented in `shim/src/re/c3k.cpp`; path-1 A/B GREEN: Window::innerSize (10 vectors, 9 distinct results, 9 changing state, `log/diff/0047cb10_Window_innerSize.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?inner@R1C47cb10@@QAEXPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047cc0b): callee pops 8 bytes of stack arguments.

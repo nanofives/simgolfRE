@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 270 bytes, 126 instructions, subsystem `util`. Mechanic
 computes a 16.16 fixed-point atan2-style angle from (dx,-dy) using quadrant constants 0x4000/0x8000/0xc000 (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+angleFixed (0x004672d0) returns a 16.16 fixed-point atan2-style angle for the vector (x, -y), with x = the first argument and -y = the negated second argument (`neg ebx` at 0x004672da). The axis cases return 0x80000000 / 0 when x == 0 (0x004672e0..0x004672f4) and 0xc0000000 / 0x40000000 when -y == 0 (0x004672f9..0x0046730d). Otherwise it divides the smaller magnitude shifted left 14 by the larger (0x0046730e..0x0046733c, with a flag for |x| > |-y|), evaluates the approximation t = ratio, d = |0x1333 - t|, p = 0x2800 - ((11*d) << 8 >> 14), c = (p*t) >> 14 (0x00467340..0x00467362), adds the per-quadrant base 0x0000 / 0x4000 / 0x8000 / 0xc000 chosen from the two sign tests (0x00467365..0x004673d1) and returns the result shifted left 16 (`shl eax,0x10`). A pure leaf with no memory access. Reimplemented in `shim/src/re/c3l.cpp`; path-1 A/B GREEN: angleFixed (289 vectors, 208 distinct results, `log/diff/004672d0_angleFixed.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004672f4, 0x0046730d, 0x0046737f, 0x00467390, 0x0046739e, 0x004673b3, 0x004673be, 0x004673d0 (+1 more)): callee pops 0 bytes of stack arguments.
 

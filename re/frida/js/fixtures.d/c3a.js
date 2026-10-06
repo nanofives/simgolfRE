@@ -92,3 +92,28 @@ Object.assign(globalThis.DIFF_FIXTURES, {
     return { obj: ptr('0x005a47b8') };
   },
 });
+
+// c3i fix-up (2026-10-06): a dedicated fixture for raiseFromNeighbours 0x0042f6e0 so the raise actually fires. The
+// shared c3a_terrain_read left neighbours with mismatched tile types and a level grid that never let a neighbour win,
+// so every vector returned 0 with no state change (held back as single-valued). c3i_raise seeds:
+//   * tile types 0x005722e8 uniformly to 2 (non-blocked: tileBlocked 0x0040bf60 only blocks type 0x14), so every
+//     orthogonal neighbour passes the type gate;
+//   * tile bytes 0x0056988c to the column parity x&1, so when sameByte != 0 only the vertical neighbours (same column,
+//     same byte) qualify and the horizontal ones (opposite parity) are excluded -- the sameByte branch then changes
+//     the result for cells whose tallest neighbour is horizontal;
+//   * the signed level grid 0x00543018 to a non-monotonic pattern, so most interior cells have a taller qualifying
+//     neighbour (raise -> return 1, level byte written) while the local maxima do not (return 0, no write).
+// Only our own synthetic values are written; the three tables are the same ones the function and tileBlocked read.
+Object.assign(globalThis.DIFF_FIXTURES, {
+  c3i_raise() {
+    const ty = ptr('0x005722e8'), by = ptr('0x0056988c'), lv = ptr('0x00543018');
+    for (let x = 0; x < 50; x++)
+      for (let y = 0; y < 50; y++) {
+        const cell = x * 50 + y;
+        ty.add(cell).writeU8(2);                               // uniform non-blocked type
+        by.add(cell).writeU8(x & 1);                           // column parity -> sameByte keeps vertical neighbours
+        lv.add(cell).writeS8(((x * 17 + y * 13) % 31) - 15);   // non-monotonic signed levels
+      }
+    return { obj: lv };
+  },
+});

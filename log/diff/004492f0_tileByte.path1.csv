@@ -110,6 +110,6 @@ vector,original,reimpl,match
 49 48,231,231,True
 49 49,234,234,True
 install_witness,0xe9,0xe9,True
-meta,detour=0x6d718020,original=0x1440a80,2026-10-06T15:54:56
+meta,detour=0x6d538740,original=0xca05c0,2026-10-06T18:39:12
 distinct_results,92,,
 VERDICT,GREEN,110,

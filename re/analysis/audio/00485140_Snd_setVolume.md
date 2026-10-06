@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 102 bytes, 31 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 stores the volume (0..0x7f) in m_4 and forwards the scaled value to the device m_40 (vtable f40) (`re/names/exe_3.tsv`)
 
+## Purpose
+Snd::setVolume (0x00485140) stores the low 7 bits of its argument at this+4 (`and eax,0x7f` at 0x00485147, store at 0x00485156); when this+0x3c is below 0x10 unsigned (0x0048515c) it would scale the value through the table at 0x0083ada8 and the `__ftol` helper 0x004a6030 (0x00485161-0x0048518d), but that scaled value is consumed only by the device object at this+0x40 through its vtable slot +0x40 (0x0048519d), so with this+0x40 null and this+0x3c >= 0x10 the only observable effect is the store at this+4. Reimplemented in `shim/src/re/c3j.cpp`; path-1 A/B GREEN: Snd::setVolume (10 vectors, 10 distinct results, 10 changing state, `log/diff/00485140_Snd_setVolume.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004851a3): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0048514b before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

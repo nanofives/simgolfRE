@@ -293,6 +293,11 @@ A/B'd on their own instances\<ID> until c3_verify said READY; the verifier re-ra
 promoted 26 (c3e 4, c3f 10, c3g 7, c3h 5; 94 at C3). `c3_verify.py --apply --skip <addrs>` holds back READY ones
 whose A/B only reached guard branches (c3h Surface_blit/fillRegion/blit3: the DirectDraw path never ran). The
 gate's leaf rule (>= 10 vectors without callees) and the caller rule held back 8 more.
+Third round (2026-10-07): a fix-up agent (c3i) re-did the evidence of 11 held-back functions in the earlier batches'
+files (9 promoted; clearBuffers held: its 10 vectors are one argument-free call repeated; Surface_blit held: the copy
+path still never runs), and c3j/c3k/c3l added 16 (119 at C3; propagateType11 held: one of 7 vectors does anything).
+Verify ONE batch per boot (parallel boots on instances are fine): running five batches' fixtures in one boot crashed
+at appendDate and made appendToBuffer45b8b0 RED once (its input text 0x51a068 is now in its state regions).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

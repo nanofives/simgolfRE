@@ -1,0 +1,34 @@
+vector,original,reimpl,match
+237 525,22,22,True
+240 528,22,22,True
+235 523,22,22,True
+261 578,21,21,True
+263 580,21,21,True
+258 575,21,21,True
+300 470,0,0,True
+290 460,0,0,True
+331 497,0,0,True
+340 470,1,1,True
+350 495,1,1,True
+400 470,2,2,True
+470 470,3,3,True
+640 470,5,5,True
+310 510,7,7,True
+320 500,7,7,True
+430 510,9,9,True
+560 510,11,11,True
+750 440,13,13,True
+700 530,-1,-1,True
+760 490,15,15,True
+0 0,-1,-1,True
+400 400,-1,-1,True
+800 599,-1,-1,True
+269 455,-1,-1,True
+797 480,-1,-1,True
+500 537,-1,-1,True
+-100 -100,-1,-1,True
+240 455,-1,-1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d48a510,original=0x1440e80,2026-10-06T18:43:25
+distinct_results,13,,
+VERDICT,GREEN,29,

@@ -32,6 +32,6 @@ vector,original,reimpl,match
 30,2,2,True
 31,2,2,True
 install_witness,0xe9,0xe9,True
-meta,detour=0x6d717ff0,original=0x1440ac0,2026-10-06T15:54:56
+meta,detour=0x6d538710,original=0xca0600,2026-10-06T18:39:12
 distinct_results,3,,
 VERDICT,GREEN,32,

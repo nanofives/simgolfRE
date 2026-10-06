@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 359 bytes, 143 instructions, subsystem `terrain`. Mecha
 computes the four corner heights of a tile (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+`cornerHeights(x, y, corner, flag)` returns one corner's height for tile (x, y). It returns 3 unless 0 <= x,y < 50 and `corner` is odd (0x0040c013). With `flag` non-zero it returns the cached byte at 0x0051b770 + (y + x*50)*8 + corner when that byte is non-zero (0x0040c02a). Otherwise, with f = the tile type's flags dword at 0x0057837c + type*0x30 (type read from 0x005722e8): f & 2 returns the byte at 0x00543018 + cell when f & 1, else cornerRange's minimum (cornerRange at 0x0042f4b0); f & 4 returns that byte when f & 1, else cornerRange's maximum; f & 8 returns 3. Otherwise it takes heightBlend (0x0040c170) of the four corners (x+1,y-1), (x+1,y), (x,y), (x,y-1) and returns the one selected by corner & 7 (1, 3, 5 pick the first three, 7 picks the last — the switch at 0x0040c11a). cornerRange itself is max/min over heightBlend of the same four corners. Reimplemented in `shim/src/re/c3k.cpp`; path-1 A/B GREEN: cornerHeights (15 vectors, 11 distinct results, `log/diff/0040bfe0_cornerHeights.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0040c03a, 0x0040c068, 0x0040c083, 0x0040c095, 0x0040c0b0, 0x0040c127, 0x0040c12e, 0x0040c135 (+2 more)): callee pops 0 bytes of stack arguments.
 

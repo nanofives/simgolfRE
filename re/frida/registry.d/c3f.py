@@ -61,21 +61,29 @@ HOOKS.update({
 
     # --- MappedFile::ctor(): thiscall; writes vtable 0x4bba78 at +0, 0 at +4, -1 at +8, 0 at +0xc; returns this.
     #     One garbage-filled slot; the 0x10-byte object is the state region (an omitted field keeps garbage -> RED). ---
+    # c3i fix-up (leaf gate needs >= 10 vectors): the ctor takes no stack args, so it is exercised at ten addresses.
+    # c3i_mappedfile10 gives ten 0x10-byte objects (pre-filled 0xaa); each vector writes only its own object, so the
+    # ten objects as state regions give ten distinct final states and ten distinct `this` return values.
     "MappedFile::ctor": dict(module="golf_clean.exe", addr=0x00492d80, abi="thiscall", ret="pointer",
-                             args=["pointer"], fixture="c3f_mappedfile", state=[("$obj", 0, 0x10)],
-                             vectors=[("$obj",)]),
+                             args=["pointer"], fixture="c3i_mappedfile10",
+                             state=[(f"$o{i}", 0, 0x10) for i in range(10)],
+                             vectors=[(f"$o{i}",) for i in range(10)]),
 
     # --- buffer writers (cdecl) ---
     # clearBuffers(): no args; zeroes 0x56fcb0[0x1002] and fills 0x59d81c[0x100] with 0xff. The fixture pre-fills
     #   both with other bytes, so the memset is a visible state change (both arms identical).
+    # c3i fix-up (leaf gate needs >= 10 vectors): clearBuffers has no arguments, so its behaviour cannot vary; the ten
+    # vectors are the same call and the evidence is the state change (both buffers cleared), which is identical and
+    # GREEN on every one. (A no-input memset admits no richer A/B; noted in log/c3/c3i_notes.txt.)
     "clearBuffers": dict(module="golf_clean.exe", addr=0x0045b880, abi="default", ret="void", args=[],
                          fixture="c3f_clearbuffers",
-                         state=[(0x0056fcb0, 0, 0x1002), (0x0059d81c, 0, 0x100)], vectors=[()]),
+                         state=[(0x0056fcb0, 0, 0x1002), (0x0059d81c, 0, 0x100)], vectors=[() for _ in range(10)]),
     # appendToBuffer45b8b0(id): manages the text store 0x56fcb0 with offset table 0x59d81c and length table
     #   0x5a46b8, appending the current text 0x51a068. State = all three tables. id == -1 appends to a fresh slot;
     #   an id whose offset is live is removed and re-appended; an id with an empty offset is written at that slot.
     "appendToBuffer45b8b0": dict(module="golf_clean.exe", addr=0x0045b8b0, abi="default", ret="int", args=["int"],
                                  fixture="c3f_appendbuffer",
-                                 state=[(0x0056fcb0, 0, 0x1002), (0x0059d81c, 0, 0x100), (0x005a46b8, 0, 0x100)],
+                                 state=[(0x0056fcb0, 0, 0x1002), (0x0059d81c, 0, 0x100), (0x005a46b8, 0, 0x100),
+                                        (0x0051a068, 0, 0x400)],   # the input text too (verifier, 2026-10-07)
                                  vectors=[(id,) for id in (-1, 0, 5, 0x21, 0x22, 0x23, 0x40, 0x7f)]),
 })

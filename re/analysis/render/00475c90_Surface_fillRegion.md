@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 111 bytes, 41 instructions, subsystem `render`. Mechani
 fills a surface region (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Surface_fillRegion (0x00475c90) is the thiscall rectangle fill of a Surf473. It returns 0x10 when the source argument is null (`test eax,eax` at 0x00475c97), 7 when this surface at this+4 is null or the source surface at s+4 is null (0x00475ca8 / 0x00475caf -> 0x00475cf3), and otherwise builds the rectangle {x, y, x+w, y+h} (0x00475cc3..0x00475cdb) and calls fill (this->m_4 virtual slot +0x40) with that rectangle as both source and destination (0x00475ce8). Matched in re/match/golf_hand_03.cpp (`?f475c90@Surf473@@QAEHPAU1@HHHH@Z`). Reimplemented in `shim/src/re/c3h.cpp`; path-1 A/B GREEN: Surface_fillRegion (10 vectors, 8 distinct results, 6 changing state, `log/diff/00475c90_Surface_fillRegion.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f475c90@Surf473@@QAEHPAU1@HHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00475ca5, 0x00475cf0, 0x00475cfc): callee pops 20 bytes of stack arguments.

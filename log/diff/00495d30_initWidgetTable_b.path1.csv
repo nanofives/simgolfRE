@@ -1,7 +1,0 @@
-vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$obj,void,void,True,902b7372,902b7372,True
-state_regions,$obj+0x0:156,,
-install_witness,0xe9,0xe9,True
-meta,detour=0x66f5a080,original=0x29f0e40,2026-10-06T18:06:52
-distinct_results,1,,
-VERDICT,GREEN,1,

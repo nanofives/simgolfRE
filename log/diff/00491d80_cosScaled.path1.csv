@@ -84,6 +84,6 @@ vector,original,reimpl,match
 -2147483647 -1,0,0,True
 -2147483647 -1024,1023,1023,True
 install_witness,0xe9,0xe9,True
-meta,detour=0x66f88b00,original=0x1440d60,2026-10-06T18:02:10
+meta,detour=0x6d538fb0,original=0xca0a40,2026-10-06T18:39:16
 distinct_results,32,,
 VERDICT,GREEN,84,

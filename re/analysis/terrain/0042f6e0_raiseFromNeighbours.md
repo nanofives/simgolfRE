@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 181 bytes, 57 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Raises a tile corner to match the highest of its neighbouring corners. (`re/names/exe_1.tsv`)
 
+## Purpose
+raiseFromNeighbours (0x0042f6e0), for cell `(x, y)` (signed level byte at 0x00543018 + x*50+y), scans the four orthogonal neighbours (kDirX/kDirY at 0x004c2878/0x004c2898, indices 0,2,4,6 — the loop steps the byte offset by 8), considers a neighbour only when it is not blocked (0x0040bf60), shares this cell's tile type (0x005722e8) and — when `sameByte` is non-zero (0x0042f74a) — its tile byte (0x0056988c), raises the cell's level to the greatest such neighbour level (writing the signed byte at 0x0042f773), and returns 1 if any raise happened else 0 (0x0042f789). Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: raiseFromNeighbours (126 vectors, 44 distinct results, 74 changing state, `log/diff/0042f6e0_raiseFromNeighbours.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small28.cpp` as `?raiseFromNeighbours@@YAHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042f794): callee pops 0 bytes of stack arguments.

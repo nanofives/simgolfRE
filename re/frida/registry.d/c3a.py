@@ -47,8 +47,11 @@ HOOKS.update({
     "freeAtTile": dict(module="golf_clean.exe", addr=0x00402930, abi="default", ret="void", args=["int", "int"],
                        fixture="c3a_records", state=[(0x005736B0, 0, 256 * 0x24)],
                        vectors=[(tx, ty) for tx in (0, 1, 2, 7, 24, 48, 49) for ty in (0, 3, 13, 25, 48, 49)]),
+    # c3i fix-up: c3i_raise seeds a uniform non-blocked type, column-parity tile bytes and a non-monotonic level grid
+    # so raises actually fire (return 1 + a level-byte write) for most interior cells and the sameByte branch changes
+    # the result for cells whose tallest neighbour is horizontal; local maxima still return 0 with no write.
     "raiseFromNeighbours": dict(module="golf_clean.exe", addr=0x0042F6E0, abi="default", ret="int",
-                                args=["int", "int", "int"], fixture="c3a_terrain_read",
+                                args=["int", "int", "int"], fixture="c3i_raise",
                                 state=[(0x00543018, 0, 2500)],
                                 vectors=[(x, y, s) for x, y in _INNER for s in (0, 1)]),
     "relaxEdges42f530": dict(module="golf_clean.exe", addr=0x0042F530, abi="default", ret="void",

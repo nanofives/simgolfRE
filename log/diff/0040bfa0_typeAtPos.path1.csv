@@ -53,6 +53,6 @@ vector,original,reimpl,match
 51200 10240,20,20,True
 10240 51200,20,20,True
 install_witness,0xe9,0xe9,True
-meta,detour=0x6d718080,original=0x1440b00,2026-10-06T15:54:56
+meta,detour=0x6d5387a0,original=0xca0640,2026-10-06T18:39:12
 distinct_results,30,,
 VERDICT,GREEN,53,

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 253 bytes, 96 instructions, subsystem `golfer`. Mechani
 computes a weighted-average difference (col6 minus col7, scaled by 100) over the per-index stat table at 0x00575ada (stride 0x208), selecting the source column from param_2 (1->6,2->5,4->3) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+computeRatingTrend (0x004060a0) builds two 8-slot accumulators over the per-index stat record of stride 0x208 (edx = idx*0x208, from the `shl edx,6`/`add`/`shl edx,3` at 0x004060ab-0x004060b1): slot `j` of the weight accumulator starts at `(signed byte at 0x00575ab0 + idx*0x208) << 3` (0x004060ba `movsx`, 0x004060c1 `shl eax,3`) and slot `j` of the count accumulator starts at 8 (0x004060cc-0x004060d9), then for outer step 1..9 (0x004060e1, 0x00406119, 0x0040611d) and each of the 8 slots it adds the signed word at 0x00575ada + idx*0x208 + (outer-1)*2 + j*0x16 (0x004060f0; `add esi,0x16` at 0x0040610d, base `+2` per outer at 0x0040611a) to the count slot (0x004060fe) and `word*outer` to the weight slot (0x00406104-0x00406107); it returns 0 when count slot 7 is 0 (0x0040612c), otherwise it picks slot 6, 5 or 3 for the second argument value 1, 2 or 4 respectively provided that count slot is non-zero (0x00406136-0x00406163, a failed pick returns 0 at 0x00406193) and returns `weight[pick]*100/count[pick] - weight[7]*100/count[7]` with C signed division (0x00406169-0x0040618a). Reimplemented in `shim/src/re/c3j.cpp`; path-1 A/B GREEN: computeRatingTrend (20 vectors, 13 distinct results, `log/diff/004060a0_computeRatingTrend.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00406192, 0x0040619c): callee pops 0 bytes of stack arguments.
 

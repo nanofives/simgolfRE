@@ -106,3 +106,40 @@ Object.assign(globalThis.DIFF_FIXTURES, {
     return { obj: base };
   },
 });
+
+// c3i fix-up (2026-10-06): wider fixtures for two leaves that were held back for too few vectors (the leaf gate needs
+// >= 10). Both reach genuinely distinct final states per vector, so the extra vectors are evidence, not padding.
+Object.assign(globalThis.DIFF_FIXTURES, {
+  // resetRecordBank 0x00401000 writes bank p (8 dwords at 0x004e6d20 + p*0x74, then 9 dwords at 0x004e6d70 + p*0x74)
+  // to -1. p = 0..9 land within 0x004e6d20..0x004e71a8 (bank 9's second run ends at +0x488), so a 0x490-byte region
+  // covers every write. Pre-fill it with a non -1 pattern so each bank's two runs are a visible change; each p writes
+  // a different sub-range, so the 10 vectors give 10 distinct final states.
+  c3i_resetbank() {
+    const b = ptr('0x004e6d20');
+    for (let i = 0; i < 0x490 / 4; i++) b.add(i * 4).writeS32(0x1000 + i);
+    return { obj: b };
+  },
+
+  // updatePairSnapshot 0x00409950 records one event for pair p (stride 0x388); g_storyPairs at 0x0059fc60 holds exactly
+  // 10 pairs (end 0x005a34e0, 0x3880 bytes). Seed all 10 with distinct ids (id = p) and a counter that cycles 0/2/4,
+  // so both the counter==0 and counter!=0 attribute sources run and the write slot rec+counter*4 varies; zero the whole
+  // array first and seed the cached golfer attributes at 0x0057957c/80/8c/90/94 + id*0x100 for ids 0..9. Each p writes a
+  // different pair record, so the 10 vectors give 10 distinct final states.
+  c3i_pairs() {
+    const area = ptr('0x0059fc60');
+    for (let i = 0; i < 0x3880 / 4; i++) area.add(i * 4).writeS32(0);
+    for (let p = 0; p < 10; p++) {
+      const rec = p * 0x388;
+      area.add(rec + 0).writeS16(p);              // 0x59fc60 golfer id
+      area.add(rec + 4).writeS16((p % 3) * 2);    // 0x59fc64 counter: 0,2,4 cycling
+    }
+    for (let id = 0; id < 10; id++) {
+      ptr('0x0057957c').add(id * 0x100).writeS32(0x1100 + id);
+      ptr('0x00579580').add(id * 0x100).writeS32(0x2200 + id);
+      ptr('0x0057958c').add(id * 0x100).writeS32(0x3300 + id);
+      ptr('0x00579590').add(id * 0x100).writeS32(0x4400 + id);
+      ptr('0x00579594').add(id * 0x100).writeS32(0x5500 + id);
+    }
+    return { obj: area };
+  },
+});

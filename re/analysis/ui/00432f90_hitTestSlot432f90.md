@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 167 bytes, 62 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Returns the slot/cell index under a point using approxDistance. (`re/names/exe_1.tsv`)
 
+## Purpose
+hitTestSlot432f90 (0x00432f90) returns the index of the toolbar slot under the screen point (x, y), or a hotspot code, or -1. It starts with ebx = -1 (0x00432fa2) and sets two hotspots first: approxDistance(x - 0xed, y - 0x20d) < 0x14 sets ebx = 0x16 (call at 0x00432faf, `cmp eax,0x14` / `jge` at 0x00432fb7) and approxDistance(x - 0x105, y - 0x242) < 0xf sets ebx = 0x15 (0x00432fcf, 0x00432fd7). It then walks slots i = 0..: the x range is [xmin, xmin + 0x3e) with xmin = (short)[0x004c79b4 + i*4] (0x00432feb..0x00432ff8); the top edge is (int)[0x00570cd4 + i*0xb0] - 0xa + (short)[0x004c79b6 + i*4] (0x00432ff1 / 0x00432ff2 / 0x00433002) and the y range is [top - 0x2c, top) (0x00433004..0x00433011). The first slot whose range contains (x, y) returns its index i (0x00433029); the walk stops when (unsigned char)[0x004c79a1 + i] == 0xff (0x00433023), returning ebx. Its only callee is approxDistance; the tables at 0x004c79b4 (x bounds) and 0x004c79a1 (terminator, first 0xff at index 15) are const image data and 0x00570cd4 reads as zero at the menu. Reimplemented in `shim/src/re/c3l.cpp`; path-1 A/B GREEN: hitTestSlot432f90 (29 vectors, 13 distinct results, `log/diff/00432f90_hitTestSlot432f90.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0043302f, 0x00433036): callee pops 0 bytes of stack arguments.
 
