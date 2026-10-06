@@ -134,7 +134,7 @@ jgld.dll's ~40 sprite blitters onto 16-bit surfaces (4.2-4.9 KB each) share one 
 inline `__asm` loops: `re/tools/blit/gen.py <addr> <name> ...` (`TPL=<template>`) fills `re/tools/blit/body*.cpp` with each function's blocks (found
 as `push esi; push edi` .. `pop edi; pop esi`), giving `jgld_blit*.cpp` (69 functions; templates and generators in re/tools/blit/).
 Release exe hand matching scales with parallel local agents, one output file each (`golf_hand_NN.cpp`, flags
-`/O2 /GX`: /GX only adds the SEH frames the original has); their notes are in `log/probe/bNN_notes.txt`.
+`/O2 /GX`: /GX only adds the SEH frames the original has); their notes are in `log/probe/*_notes.txt`. Function extents Ghidra gets wrong (noreturn calls, trailing pads, cut-off tails) go in `re/match/boundaries.tsv`. What is left near 99% is mostly VC6 /O2 scheduling and register allocation that source rewrites do not move.
 Library-header code (VC6 STL, old iostream inlines): compile an instantiation and let
 `re/tools/match_autoname.py <src> --module <m> --range LO HI [--prefer regex]` assign every obj function to the
 addresses it matches at 100% (it flags names that compile identically). Terrain.dll (phase 1, done 2026-10-05): all 170
@@ -155,7 +155,7 @@ Terrain ctor, drawTile, the texture loader "relight", 0x10038900), setTypeId's c
 0x10013670, type-6/7 enter/leave walks) and loadLighting; golf_clean.exe at /O2: 151 live functions
 (golf_util/golf_small*/golf_story.cpp: RNG, clamp, distance, tile accessors, storyText, playSound,
 window z-order, string table, block allocator, sine table...).
-2206 functions (170 Terrain.dll + 1035 exe + 756 jgld.dll + 245 sound.dll, 2026-10-05; count with `grep -h "// MATCH:" re/match/*.cpp`). Release-build
+2241 functions (170 Terrain.dll + 1070 exe + 756 jgld.dll + 245 sound.dll, 2026-10-05; count with `grep -h "// MATCH:" re/match/*.cpp`). Release-build
 misses are kept in `re/match/wip/` with what was tried (register roles, loop pointer anchors); the 100% test
 only globs `re/match/*.cpp`. match.py compares a tail-call `jmp` to another function like a call.
 match.py also compares switch jump/index tables entry by entry once the code matches (2026-10-03): it caught
