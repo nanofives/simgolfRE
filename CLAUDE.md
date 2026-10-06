@@ -240,6 +240,10 @@ conflicts (log/naming/globals_conflicts.tsv). names_validate.py also rejects a g
 `re/tools/c2_note.py` writes a C2 transcription per function (reads/writes with width, branch signedness, callees with
 imports and resolved thunks, constants, convention from `ret N` and registers read before written; never a
 `## Purpose`), linking the names row, the system writeup and any hand-written note; `--all` covers every C1 row.
+C2 = this mechanical transcription (decided 2026-10-06): all 2669 named functions were promoted with
+`c2_note.py --all --out log/c2_batch.tsv` + `re_classify.py batch log/c2_batch.tsv --to C2` (notes in
+re/analysis/<subsystem>/<addr>_<name>.md). C3 still needs a hand-written `## Purpose`, a hooked reimplementation and
+a GREEN path-1 A/B. Regenerate a note after renaming by deleting it and rerunning (hand-written notes are never touched).
 `xref.load_pe` is fast_load: call `pe.parse_data_directories()` before reading imports.
 
 ### A/B verification (`diff-original` skill)
