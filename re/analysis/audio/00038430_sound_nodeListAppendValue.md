@@ -35,7 +35,7 @@ Through registers:
 - 0x100424d7 `operator_new` at 0x10038435
 
 ## Callers
-0x10032410 `FUN_10032410`
+0x10032410 `DsDevice_registerBuffer`
 
 ## Constants
 - `0x0` at 0x10038445, 0x1003844b

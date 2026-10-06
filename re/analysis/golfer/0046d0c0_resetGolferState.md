@@ -39,7 +39,7 @@ Through registers:
 - 0x0046d040 `initGolferState` at 0x0046d1ed
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x0045a090 `showTournamentResults`
+0x0045a090 `showTournamentResults`
 
 ## Constants
 - `0x0` at 0x0046d1e3

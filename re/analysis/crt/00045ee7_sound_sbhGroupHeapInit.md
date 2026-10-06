@@ -33,7 +33,7 @@ Globals:
 - import `KERNEL32.dll!HeapAlloc` at 0x10045ef4
 
 ## Callers
-0x10045d10 `crtHeapInit`, 0x10045e34 `FUN_10045e34`
+0x10045d10 `crtHeapInit`, 0x10045e34 `setSbhThreshold`
 
 ## Constants
 - `0x0` at 0x10045eec, 0x10045f08, 0x10045f0f

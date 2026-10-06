@@ -38,7 +38,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x14]` at 0x10029255
 
 ## Callers
-0x1000b2e0 `Wave_Device::dtor`, 0x10029140 `FUN_10029140`, 0x100587c0 `Unwind@100587c0`, 0x100587f0 `Unwind@100587f0`
+0x1000b2e0 `Wave_Device::dtor`, 0x10029140 `VoiceBase_scalarDtor`, 0x100587c0 `Unwind@100587c0`, 0x100587f0 `Unwind@100587f0`
 
 ## Constants
 - `0x0` at 0x10029230

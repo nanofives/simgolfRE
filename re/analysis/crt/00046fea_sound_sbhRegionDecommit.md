@@ -44,11 +44,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10047016, 0x1004706d, 0x10047078, 0x1004708c
 
 ## Callees
-- 0x10046f94 `FUN_10046f94` at 0x1004708f
+- 0x10046f94 `sbhRegionFree` at 0x1004708f
 - import `KERNEL32.dll!VirtualFree` at 0x10047028
 
 ## Callers
-0x10047103 `FUN_10047103`
+0x10047103 `sbhPageFree`
 
 ## Constants
 - `0x0` at 0x10047001, 0x1004705e, 0x1004709d

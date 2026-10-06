@@ -83,7 +83,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glTexParameterf` at 0x1000c07a, 0x1000c098
 
 ## Callers
-0x100076e0 `FUN_100076e0`
+0x100076e0 `Terrain::relight`
 
 ## Constants
 - `0x0` at 0x1000be4e, 0x1000be52, 0x1000be5a, 0x1000be5e, 0x1000be62, 0x1000be66, 0x1000be6a, 0x1000be6e (+14 more)

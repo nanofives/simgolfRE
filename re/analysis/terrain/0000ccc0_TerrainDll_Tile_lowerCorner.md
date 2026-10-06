@@ -108,12 +108,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1000cfbf, 0x1000cff8, 0x1000d030, 0x1000d043, 0x1000d074, 0x1000d087, 0x1000d0bf, 0x1000d0f7 (+5 more)
 
 ## Callees
-- 0x1000119a -> 0x10001f60 `FUN_10001f60` (incremental-linking thunk) at 0x1000cff0, 0x1000d028, 0x1000d03b, 0x1000d06c, 0x1000d07f, 0x1000d0b7, 0x1000d0ef, 0x1000d102 (+4 more)
+- 0x1000119a -> 0x10001f60 `Tile::getType` (incremental-linking thunk) at 0x1000cff0, 0x1000d028, 0x1000d03b, 0x1000d06c, 0x1000d07f, 0x1000d0b7, 0x1000d0ef, 0x1000d102 (+4 more)
 - 0x100180a0 `__chkesp` at 0x1000d2c8
 - indirect `jmp [edx*4+0x1000d2d3]` at 0x1000ccff
 
 ## Callers
-0x1000a620 `?lowerCorner@Terrain@@QAEXPAVTile@@H@Z`, 0x1000a680 `?lowerEdgeCorner@Terrain@@QAEXPAVTile@@H0M@Z`
+0x1000a620 `Terrain::lowerCorner`, 0x1000a680 `Terrain::lowerEdgeCorner`
 
 ## Constants
 - `0x0` at 0x1000cd4c, 0x1000cd53, 0x1000cd5f, 0x1000cd66, 0x1000cd89, 0x1000cdc6, 0x1000cdcd, 0x1000ce2a (+22 more)

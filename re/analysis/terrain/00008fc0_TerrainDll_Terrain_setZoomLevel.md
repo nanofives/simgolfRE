@@ -48,7 +48,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1000900a, 0x10009016, 0x10009032, 0x1000903e, 0x1000905a, 0x10009066
 
 ## Callees
-- 0x100012f8 -> 0x10009ed0 `?resize@Terrain@@QAEXHH@Z` (incremental-linking thunk) at 0x100090a1
+- 0x100012f8 -> 0x10009ed0 `Terrain::resize` (incremental-linking thunk) at 0x100090a1
 - 0x100180a0 `__chkesp` at 0x10008fec, 0x10008ffb, 0x10009154, 0x100091b3, 0x100091c7, 0x100091d4
 - import `OPENGL32.dll!glLoadIdentity` at 0x10008ff3
 - import `OPENGL32.dll!glMatrixMode` at 0x10008fe4, 0x100091bf

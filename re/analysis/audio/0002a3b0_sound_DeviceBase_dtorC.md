@@ -28,7 +28,7 @@ Through registers:
 - indirect `jmp [eax+0x14]` at 0x1002a3bf
 
 ## Callers
-0x1000e8f0 `Wave_In_Device::dtor`, 0x1002a380 `FUN_1002a380`
+0x1000e8f0 `Wave_In_Device::dtor`, 0x1002a380 `WaveInDeviceBase_scalarDtor`
 
 ## Constants
 - `0x1005b8b0` (268810416) = address in the image (data) at 0x1002a3b0

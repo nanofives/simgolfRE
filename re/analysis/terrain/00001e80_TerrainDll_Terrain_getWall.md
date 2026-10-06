@@ -22,11 +22,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x10001e9a
 
 ## Callees
-- 0x100012da -> 0x10001ed0 `FUN_10001ed0` (incremental-linking thunk) at 0x10001ea4
+- 0x100012da -> 0x10001ed0 `Tile::getWall` (incremental-linking thunk) at 0x10001ea4
 - 0x100180a0 `__chkesp` at 0x10001eb1
 
 ## Callers
-0x10007380 `FUN_10007380`
+0x10007380 `Terrain::drawTileObjects`
 
 ## Constants
 - `0x11` (17) at 0x10001e8d

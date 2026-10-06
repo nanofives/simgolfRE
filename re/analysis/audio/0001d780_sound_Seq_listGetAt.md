@@ -35,7 +35,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x100041d0 `loadSoundFile`, 0x1001f8c0 `Voice::update`, 0x10020360 `Midi_loadMemoryAndPreRoll`, 0x100205f0 `Seq_preRollTrack`, 0x10020be0 `Voice_startPlayback`, 0x100229f0 `Seq_buildTrack9`, 0x10023610 `Seq_remarkEventRange`, 0x10023950 `Seq_replayEventRange`, 0x10023a60 `Seq_cmdHandler10`, 0x10023c20 `Seq_cmdHandler12`, 0x10023e10 `Seq_applyTrackFlag`, 0x10023f10 `FUN_10023f10`, 0x10024040 `Seq_dispatchChannelCmd`, 0x100241f0 `FUN_100241f0`, 0x10024500 `Seq_selectTrack`, 0x10024630 `Seq_resetTrackControllers`, 0x100246a0 `Midi_Device::emitEvent`, 0x100247c0 `Seq_allocTrackSlot`, 0x10024b80 `Seq_scheduleEvent`
+0x100041d0 `loadSoundFile`, 0x1001f8c0 `Voice::update`, 0x10020360 `Midi_loadMemoryAndPreRoll`, 0x100205f0 `Seq_preRollTrack`, 0x10020be0 `Voice_startPlayback`, 0x100229f0 `Seq_buildTrack9`, 0x10023610 `Seq_remarkEventRange`, 0x10023950 `Seq_replayEventRange`, 0x10023a60 `Seq_cmdHandler10`, 0x10023c20 `Seq_cmdHandler12`, 0x10023e10 `Seq_applyTrackFlag`, 0x10023f10 `Seq_getTrackFlagHigh`, 0x10024040 `Seq_dispatchChannelCmd`, 0x100241f0 `Seq_getListElementAt`, 0x10024500 `Seq_selectTrack`, 0x10024630 `Seq_resetTrackControllers`, 0x100246a0 `Midi_Device::emitEvent`, 0x100247c0 `Seq_allocTrackSlot`, 0x10024b80 `Seq_scheduleEvent`
 
 ## Constants
 - `0x24` (36) at 0x1001d7dc

@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003c640`), 2551 bytes, 582 instructions, subsystem `
 
 ## Role (from the naming pass, not a C3 purpose)
 Dispatcher for the codecProcessResource path: runs the fourteen transform/analysis sub-stages between 0x1003e600 and 0x10040da0. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`, `re/analysis/systems/sound_8.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1003d036): callee pops 0 bytes of stack arguments.
@@ -129,20 +129,20 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1003cc13
 
 ## Callees
-- 0x1003e600 `FUN_1003e600` at 0x1003cfa1
-- 0x1003e6d0 `FUN_1003e6d0` at 0x1003cf80
-- 0x1003e9f0 `FUN_1003e9f0` at 0x1003cf5b
-- 0x1003ec60 `FUN_1003ec60` at 0x1003cf2d
-- 0x1003ed00 `FUN_1003ed00` at 0x1003ceee
+- 0x1003e600 `substituteIfBelowThreshold` at 0x1003cfa1
+- 0x1003e6d0 `gaussSolveClamped` at 0x1003cf80
+- 0x1003e9f0 `codecAutocorrelation` at 0x1003cf5b
+- 0x1003ec60 `codecRmsEnergy` at 0x1003cf2d
+- 0x1003ed00 `codecRemoveMean` at 0x1003ceee
 - 0x1003edc0 `FUN_1003edc0` at 0x1003cea6
-- 0x1003f310 `FUN_1003f310` at 0x1003ce4f
+- 0x1003f310 `codecGainSmoother` at 0x1003ce4f
 - 0x1003f720 `FUN_1003f720` at 0x1003ce16
-- 0x10040000 `FUN_10040000` at 0x1003cd85
-- 0x10040330 `FUN_10040330` at 0x1003cd4b
-- 0x100404d0 `FUN_100404d0` at 0x1003cd1f
+- 0x10040000 `codecPitchAnalysis` at 0x1003cd85
+- 0x10040330 `codecCorrelationLags` at 0x1003cd4b
+- 0x100404d0 `codecSymmetricFir` at 0x1003cd1f
 - 0x10040740 `FUN_10040740` at 0x1003ccf4
 - 0x10040ab0 `FUN_10040ab0` at 0x1003ccaa
-- 0x10040da0 `FUN_10040da0` at 0x1003cc75
+- 0x10040da0 `codecFirstOrderFilter` at 0x1003cc75
 - 0x100431ce `FUN_100431ce` at 0x1003d02e
 
 ## Callers

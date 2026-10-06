@@ -43,13 +43,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10038921, 0x10038a76, 0x10038acc, 0x10038b32, 0x10038b88, 0x10038bde, 0x10038c44, 0x10038c9a (+3 more)
 
 ## Callees
-- 0x10001037 -> 0x10015460 `FUN_10015460` (incremental-linking thunk) at 0x10038a6a, 0x10038ac0, 0x10038b14, 0x10038b7c, 0x10038bd2, 0x10038c26, 0x10038c8e, 0x10038ce4 (+4 more)
-- 0x10001041 -> 0x1000e6c0 `FUN_1000e6c0` (incremental-linking thunk) at 0x10038e85, 0x10038ea5, 0x10038ec5, 0x10038ee5, 0x10038f08
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x10038a3e, 0x10038a63, 0x10038a94, 0x10038ab9, 0x10038ae9, 0x10038b0d, 0x10038b50, 0x10038b75 (+16 more)
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x100389ba, 0x10038a29, 0x10038a4e, 0x10038a7f, 0x10038aa4, 0x10038ad1, 0x10038af5, 0x10038b3b (+17 more)
-- 0x10001253 -> 0x1000adc0 `FUN_1000adc0` (incremental-linking thunk) at 0x10038a0d
-- 0x100012a3 -> 0x10003830 `FUN_10003830` (incremental-linking thunk) at 0x10038e62
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x100389dd, 0x10038a32, 0x10038a57, 0x10038a8b, 0x10038ab0, 0x10038add, 0x10038b01, 0x10038b44 (+17 more)
+- 0x10001037 -> 0x10015460 `Tile::isHidden` (incremental-linking thunk) at 0x10038a6a, 0x10038ac0, 0x10038b14, 0x10038b7c, 0x10038bd2, 0x10038c26, 0x10038c8e, 0x10038ce4 (+4 more)
+- 0x10001041 -> 0x1000e6c0 `Tile::render` (incremental-linking thunk) at 0x10038e85, 0x10038ea5, 0x10038ec5, 0x10038ee5, 0x10038f08
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x10038a3e, 0x10038a63, 0x10038a94, 0x10038ab9, 0x10038ae9, 0x10038b0d, 0x10038b50, 0x10038b75 (+16 more)
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x100389ba, 0x10038a29, 0x10038a4e, 0x10038a7f, 0x10038aa4, 0x10038ad1, 0x10038af5, 0x10038b3b (+17 more)
+- 0x10001253 -> 0x1000adc0 `Terrain::setViewAngle` (incremental-linking thunk) at 0x10038a0d
+- 0x100012a3 -> 0x10003830 `Terrain::light1Off` (incremental-linking thunk) at 0x10038e62
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x100389dd, 0x10038a32, 0x10038a57, 0x10038a8b, 0x10038ab0, 0x10038add, 0x10038b01, 0x10038b44 (+17 more)
 - 0x100180a0 `__chkesp` at 0x1003894e, 0x1003895d, 0x10038987, 0x100389ac, 0x10038a01, 0x10038e7d, 0x10038e9d, 0x10038ebd (+7 more)
 - 0x10019610 `__assert` at 0x10038938
 - import `OPENGL32.dll!glDisable` at 0x10038f14
@@ -63,7 +63,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glTranslatef` at 0x100389f9, 0x10038e75, 0x10038e95, 0x10038eb5, 0x10038ed5, 0x10038ef8
 
 ## Callers
-0x1000a680 `?lowerEdgeCorner@Terrain@@QAEXPAVTile@@H0M@Z`
+0x1000a680 `Terrain::lowerEdgeCorner`
 
 ## Constants
 - `0x0` at 0x1003891d, 0x10038940, 0x10038964, 0x10038966, 0x10038968, 0x1003896a, 0x10038971, 0x1003898e (+11 more)

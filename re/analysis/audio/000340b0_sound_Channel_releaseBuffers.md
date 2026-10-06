@@ -67,13 +67,13 @@ Through registers:
 
 ## Callees
 - 0x10001677 -> 0x100132e0 `DirectSoundDevice::removeBuffer` (incremental-linking thunk) at 0x10034124, 0x10034131
-- 0x10001866 -> 0x10033ba0 `FUN_10033ba0` (incremental-linking thunk) at 0x1003432d
+- 0x10001866 -> 0x10033ba0 `Channel_resetPanState` (incremental-linking thunk) at 0x1003432d
 - 0x1004249a `operator_delete` at 0x10034108, 0x100341a9, 0x10034246, 0x1003426e, 0x10034284, 0x100342c1, 0x100342dd, 0x10034310
 - 0x10042c07 `free` at 0x10034265
 - import `WINMM.dll!mmioClose` at 0x1003414c, 0x100341ec
 
 ## Callers
-0x10011a80 `DirectSoundDevice::stopAll`, 0x100326a0 `parseRiffWave`, 0x10039870 `FUN_10039870`, 0x10039b30 `SoundGroup_stop`
+0x10011a80 `DirectSoundDevice::stopAll`, 0x100326a0 `parseRiffWave`, 0x10039870 `MultiSound_dtor`, 0x10039b30 `SoundGroup_stop`
 
 ## Constants
 - `0x1` at 0x100341d7

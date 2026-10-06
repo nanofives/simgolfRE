@@ -59,11 +59,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x1003af5e, 0x1003af86, 0x1003afc5, 0x1003b027
 
 ## Callees
-- 0x1003aa50 `FUN_1003aa50` at 0x1003af08
+- 0x1003aa50 `codecSetParams` at 0x1003af08
 - 0x100431ce `FUN_100431ce` at 0x1003b147
 
 ## Callers
-0x1003aea0 `FUN_1003aea0`
+0x1003aea0 `codecAllocContextB`
 
 ## Constants
 - `0x0` at 0x1003af23, 0x1003af2d, 0x1003af41, 0x1003af48, 0x1003af66, 0x1003af70, 0x1003af8e, 0x1003af9f (+18 more)

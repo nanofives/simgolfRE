@@ -87,7 +87,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - indirect `jmp [eax*4+0x427370]` at 0x00426da6
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`
+0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`
 
 ## Constants
 - `0x0` at 0x00426865, 0x0042686d, 0x00426872, 0x0042693a, 0x00426b81, 0x00426b83, 0x00426b85, 0x00426c4b (+9 more)

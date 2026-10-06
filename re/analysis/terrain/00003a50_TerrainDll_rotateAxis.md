@@ -60,13 +60,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10003ae9, 0x10003b7c, 0x10003c09
 
 ## Callees
-- 0x10001190 -> 0x10001880 `FUN_10001880` (incremental-linking thunk) at 0x10003a6c
+- 0x10001190 -> 0x10001880 `degToRad` (incremental-linking thunk) at 0x10003a6c
 - 0x100180a0 `__chkesp` at 0x10003c5e
 - 0x10019164 `FUN_10019164` at 0x10003a91
 - 0x10019214 `FUN_10019214` at 0x10003a7d
 
 ## Callers
-0x10003540 `?changeLighting@Terrain@@QAEXH@Z`, 0x10006dd0 `FUN_10006dd0`
+0x10003540 `Terrain::changeLighting`, 0x10006dd0 `Terrain::loadLighting`
 
 ## Constants
 - `0x0` at 0x10003aa3, 0x10003aaa, 0x10003ab1, 0x10003abf, 0x10003ac6, 0x10003acd

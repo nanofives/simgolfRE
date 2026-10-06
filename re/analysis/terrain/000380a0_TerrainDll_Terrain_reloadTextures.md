@@ -40,7 +40,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glDeleteTextures` at 0x1003811d
 
 ## Callers
-0x10001af0 `?loadNewCourseType@Terrain@@QAEXH@Z`, 0x10003090 `??1Terrain@@QAE@XZ`, 0x100076e0 `FUN_100076e0`, 0x10009ba0 `?closeSystem@Terrain@@QAEXXZ`
+0x10001af0 `Terrain::loadNewCourseType`, 0x10003090 `Terrain::~Terrain`, 0x100076e0 `Terrain::relight`, 0x10009ba0 `Terrain::closeSystem`
 
 ## Constants
 - `0x0` at 0x100380ce, 0x100380ea, 0x1003812a, 0x1003815b, 0x1003816f, 0x1003817f

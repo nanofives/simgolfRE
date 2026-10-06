@@ -92,10 +92,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10007834
 
 ## Callees
-- 0x10001177 -> 0x1000bbd0 `FUN_1000bbd0` (incremental-linking thunk) at 0x100078dc, 0x100079cf, 0x10007af9, 0x10007b95, 0x10007eb6, 0x10007f24, 0x10007f92
-- 0x10001195 -> 0x1000be30 `FUN_1000be30` (incremental-linking thunk) at 0x10007c3b, 0x10007c83, 0x10007ccb, 0x10007d13, 0x10007d70, 0x10007db8, 0x10007e00, 0x10007e48
-- 0x100012ee -> 0x100380a0 `FUN_100380a0` (incremental-linking thunk) at 0x10007772
-- 0x1000132f -> 0x10012e70 `FUN_10012e70` (incremental-linking thunk) at 0x10007917, 0x10007a0a, 0x10007b35, 0x10007bcc, 0x10007c4a, 0x10007c92, 0x10007cda, 0x10007d22 (+7 more)
+- 0x10001177 -> 0x1000bbd0 `textureLoad` (incremental-linking thunk) at 0x100078dc, 0x100079cf, 0x10007af9, 0x10007b95, 0x10007eb6, 0x10007f24, 0x10007f92
+- 0x10001195 -> 0x1000be30 `LoadTGA` (incremental-linking thunk) at 0x10007c3b, 0x10007c83, 0x10007ccb, 0x10007d13, 0x10007d70, 0x10007db8, 0x10007e00, 0x10007e48
+- 0x100012ee -> 0x100380a0 `Terrain::reloadTextures` (incremental-linking thunk) at 0x10007772
+- 0x1000132f -> 0x10012e70 `setTextureId` (incremental-linking thunk) at 0x10007917, 0x10007a0a, 0x10007b35, 0x10007bcc, 0x10007c4a, 0x10007c92, 0x10007cda, 0x10007d22 (+7 more)
 - 0x100180a0 `__chkesp` at 0x10007fd0
 - 0x10018580 `FUN_10018580` at 0x10007848, 0x10007a6f, 0x10007c18, 0x10007c60, 0x10007ca8, 0x10007cf0, 0x10007d4d, 0x10007d95 (+5 more)
 - 0x10018590 `_strcat` at 0x100077a5, 0x100077bb, 0x100077d1, 0x100077e7, 0x100077fd, 0x10007868, 0x1000787c, 0x10007a8f (+12 more)
@@ -103,7 +103,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - indirect `jmp [edx*4+0x10007fd9]` at 0x10007792
 
 ## Callers
-0x10001af0 `?loadNewCourseType@Terrain@@QAEXH@Z`, 0x10002ae0 `FUN_10002ae0`, 0x10009c80 `?initSystem@Terrain@@QAEXHHPAUHDC__@@_N@Z`
+0x10001af0 `Terrain::loadNewCourseType`, 0x10002ae0 `Terrain::Terrain`, 0x10009c80 `Terrain::initSystem`
 
 ## Constants
 - `0x0` at 0x1000774f, 0x10007759, 0x10007805, 0x1000782d, 0x100078d3, 0x100078f1, 0x10007906, 0x100079c6 (+26 more)

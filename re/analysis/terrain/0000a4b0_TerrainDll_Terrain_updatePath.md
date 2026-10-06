@@ -24,8 +24,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000a4ca
 
 ## Callees
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x1000a4dc
-- 0x10001131 -> 0x100133a0 `FUN_100133a0` (incremental-linking thunk) at 0x1000a4e3
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x1000a4dc
+- 0x10001131 -> 0x100133a0 `Tile::setConnected` (incremental-linking thunk) at 0x1000a4e3
 - 0x100180a0 `__chkesp` at 0x1000a4f0
 
 ## Callers

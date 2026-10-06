@@ -93,7 +93,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x1000119f -> 0x10035990 `renderChannel` (incremental-linking thunk) at 0x1000787d
-- 0x10001302 -> 0x10035f60 `FUN_10035f60` (incremental-linking thunk) at 0x1000789d
+- 0x10001302 -> 0x10035f60 `Channel_stubReturnB` (incremental-linking thunk) at 0x1000789d
 - 0x1000154b -> 0x10037760 `Voice_setLoopFlag` (incremental-linking thunk) at 0x100078d6
 - 0x100016a9 -> 0x10030ba0 `streamWaveSamples` (incremental-linking thunk) at 0x10007743
 - 0x10001b9f -> 0x10010e30 `DsBuffer::isBusy` (incremental-linking thunk) at 0x100078ba

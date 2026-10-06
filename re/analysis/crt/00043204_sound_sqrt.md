@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00043204`), 9 bytes, 2 instructions, subsystem `crt`.
 
 ## Role (from the naming pass, not a C3 purpose)
 CRT sqrt entry: loads the FP argument and computes the square root, branching to the special-value path on domain errors. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_8.md`.
 
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
@@ -19,7 +19,7 @@ None.
 - 0x10048225 `__fload_withFB` at 0x10043208
 
 ## Callers
-0x1003d1d0 `FUN_1003d1d0`, 0x1003d8d0 `FUN_1003d8d0`, 0x1003ec60 `FUN_1003ec60`, 0x1003f720 `FUN_1003f720`
+0x1003d1d0 `lpcSynthesize`, 0x1003d8d0 `reflectionToLpc`, 0x1003ec60 `codecRmsEnergy`, 0x1003f720 `FUN_1003f720`
 
 ## Constants
 - `0x4` at 0x10043204

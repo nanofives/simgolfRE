@@ -35,7 +35,7 @@ Through registers:
 
 ## Callees
 - 0x10001212 -> 0x100348f0 `Channel_startVoice` (incremental-linking thunk) at 0x10039ed3
-- 0x10001866 -> 0x10033ba0 `FUN_10033ba0` (incremental-linking thunk) at 0x10039e8d
+- 0x10001866 -> 0x10033ba0 `Channel_resetPanState` (incremental-linking thunk) at 0x10039e8d
 - 0x10001dfc -> 0x10008ce0 `SoundTimer::start` (incremental-linking thunk) at 0x10039ec3
 - indirect `call [edx+0x10]` at 0x10039ea0
 - indirect `call [edx+0x7c]` at 0x10039ef3

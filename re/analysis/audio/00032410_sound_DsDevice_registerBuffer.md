@@ -23,7 +23,7 @@ Through registers:
 - `je` (equality) at 0x10032416
 
 ## Callees
-- 0x100016ae -> 0x10038430 `FUN_10038430` (incremental-linking thunk) at 0x10032422
+- 0x100016ae -> 0x10038430 `nodeListAppendValue` (incremental-linking thunk) at 0x10032422
 
 ## Callers
 0x10012260 `DirectSoundDevice::duplicateBuffer`

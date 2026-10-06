@@ -69,7 +69,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0046d6e0 `showPopup` at 0x0040a5e0, 0x0040a8c7
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x0` at 0x0040a6da, 0x0040a6dc, 0x0040a6de, 0x0040a6f9, 0x0040a71a, 0x0040a721, 0x0040a74e, 0x0040a758 (+1 more)

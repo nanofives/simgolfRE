@@ -23,13 +23,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000b22a
 
 ## Callees
-- 0x10001055 -> 0x1000afe0 `FUN_1000afe0` (incremental-linking thunk) at 0x1000b234
-- 0x10001091 -> 0x1000af70 `FUN_1000af70` (incremental-linking thunk) at 0x1000b243
-- 0x100011ef -> 0x1000b470 `FUN_1000b470` (incremental-linking thunk) at 0x1000b252
+- 0x10001055 -> 0x1000afe0 `std::list(TileP)::end` (incremental-linking thunk) at 0x1000b234
+- 0x10001091 -> 0x1000af70 `std::list(TileP)::begin` (incremental-linking thunk) at 0x1000b243
+- 0x100011ef -> 0x1000b470 `std::list(TileP)::erase` (incremental-linking thunk) at 0x1000b252
 - 0x100180a0 `__chkesp` at 0x1000b25f
 
 ## Callers
-0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x100089e0 `?localRender@Terrain@@QAEXPAVTile@@0M@Z`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`
+0x10006410 `Terrain::pathUpdateRender`, 0x100089e0 `Terrain::localRender`, 0x10009270 `Terrain::stripRender`
 
 ## Constants
 - `0x14` (20) at 0x1000b21d

@@ -255,7 +255,15 @@ AND the regions afterwards (CSV columns state_original/state_reimpl/state_change
 Test-only override `orig_restore_state` (the original's value with its write undone) must read RED on state alone
 (tests/test_diff_tool.py). Regions the running game writes concurrently make a run flaky. A function whose behaviour
 depends on a fixture-set global gets one registry entry per setting (clearTile / clearTile_kind0).
-`shim/src/re/golf_state.cpp`: Random::next, clearTile.
+`shim/src/re/golf_state.cpp`: Random::next, clearTile. `golf_writers.cpp` (batch 3): queueMessage, clearMatching,
+pointsPopup, logTick, resetGolfer, appendOpinion (21 at C3). Not A/B'd on purpose: zPush 0x47e4c0 (fake windows in
+the live z-list the game draws from), snapshotTables 0x462800 (no arguments and its pages already equal at the menu:
+an empty GREEN is not evidence).
+Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
+`re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
+range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
+`c2_note.py --refresh --out log/c2_refresh.tsv` + `re_classify.py retag log/c2_refresh.tsv` (rewrites generated notes
+without a hand Purpose, refreshes callers/callees in hooks.csv).
 `py -3.12 re/frida/diff_hook.py <names...>` runs all in one boot; then `re_classify.py promote <addr> --to C3 --file <cpp>`.
 `xref.load_pe` is fast_load: call `pe.parse_data_directories()` before reading imports.
 

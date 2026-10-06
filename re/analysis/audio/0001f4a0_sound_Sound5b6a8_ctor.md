@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0001f4a0`), 426 bytes, 93 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructor for the Sound object: runs the base ctor 0x1002d450, initializes the embedded SMF reader at +0x18 (0x1001d380) and zeroes the sequencer region at +0x218 (param_1[0x86]..). (`re/names/sound_3.tsv`)
-System writeup: `re/analysis/systems/sound_3.md`.
+System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1001f649): callee pops 0 bytes of stack arguments.
@@ -67,7 +67,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0xc]` dword at 0x1001f4bd, 0x1001f5c9, 0x1001f5df, 0x1001f620
 
 ## Callees
-- 0x100015f5 -> 0x1002d450 `FUN_1002d450` (incremental-linking thunk) at 0x1001f4c1
+- 0x100015f5 -> 0x1002d450 `Ch5be88_ctor` (incremental-linking thunk) at 0x1001f4c1
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x1001f590
 - 0x10001b1d -> 0x1001d380 `MidiReader_init` (incremental-linking thunk) at 0x1001f4cf
 - 0x10042550 `__ftol` at 0x1001f617

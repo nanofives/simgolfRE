@@ -40,12 +40,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10012d1a
 
 ## Callees
-- 0x100011a9 -> 0x10037c80 `FUN_10037c80` (incremental-linking thunk) at 0x10012df6
-- 0x1000131b -> 0x10011ef0 `FUN_10011ef0` (incremental-linking thunk) at 0x10012d28, 0x10012d34, 0x10012d40, 0x10012d4c
+- 0x100011a9 -> 0x10037c80 `normalize` (incremental-linking thunk) at 0x10012df6
+- 0x1000131b -> 0x10011ef0 `Tile::smoothNormals` (incremental-linking thunk) at 0x10012d28, 0x10012d34, 0x10012d40, 0x10012d4c
 - 0x100180a0 `__chkesp` at 0x10012e10
 
 ## Callers
-0x1000a6f0 `?calcNormals@Terrain@@QAEXPAVTile@@@Z`, 0x1000a740 `?calcAllNormals@Terrain@@QAEXPAVTile@@@Z`
+0x1000a6f0 `Terrain::calcNormals`, 0x1000a740 `Terrain::calcAllNormals`
 
 ## Constants
 - `0x0` at 0x10012d23, 0x10012d3b, 0x10012d51, 0x10012e01

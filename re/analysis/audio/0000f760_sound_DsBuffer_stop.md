@@ -26,7 +26,7 @@ None.
 - indirect `call [ecx+0x48]` at 0x1000f770
 
 ## Callers
-0x1000bef0 `Wave_Device::stopOutput`, 0x10032640 `closeDecoder`, 0x10035fc0 `FUN_10035fc0`
+0x1000bef0 `Wave_Device::stopOutput`, 0x10032640 `closeDecoder`, 0x10035fc0 `Channel_stepVolumeFade`
 
 ## Constants
 - `0x2` at 0x1000f767

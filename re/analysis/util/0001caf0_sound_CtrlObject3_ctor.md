@@ -33,7 +33,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x100041d0 `loadSoundFile`, 0x10024460 `FUN_10024460`
+0x100041d0 `loadSoundFile`, 0x10024460 `ChannelDesc_ctor`
 
 ## Constants
 - `0x2` at 0x1001cb31

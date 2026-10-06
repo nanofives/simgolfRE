@@ -24,7 +24,7 @@ None.
 None (leaf).
 
 ## Callers
-0x1001bee0 `FUN_1001bee0`, 0x1001c400 `FUN_1001c400`
+0x1001bee0 `Ctrl5b19c_ctor`, 0x1001c400 `Ctrl5b5c0_buildTable`
 
 ## Constants
 - `0x9` at 0x1001c1e7

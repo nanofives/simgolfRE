@@ -22,7 +22,7 @@ None.
 - `je` (equality) at 0x1003976d
 
 ## Callees
-- 0x10001d39 -> 0x10039870 `FUN_10039870` (incremental-linking thunk) at 0x10039763
+- 0x10001d39 -> 0x10039870 `MultiSound_dtor` (incremental-linking thunk) at 0x10039763
 - 0x1004249a `operator_delete` at 0x10039770
 
 ## Callers

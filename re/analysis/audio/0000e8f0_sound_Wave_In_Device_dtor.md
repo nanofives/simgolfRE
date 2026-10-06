@@ -19,7 +19,7 @@ Through registers:
 - `[ecx]` dword at 0x1000e8f0
 
 ## Callees
-- 0x10001e06 -> 0x1002a3b0 `FUN_1002a3b0` (incremental-linking thunk) at 0x1000e8f6
+- 0x10001e06 -> 0x1002a3b0 `DeviceBase_dtorC` (incremental-linking thunk) at 0x1000e8f6
 
 ## Callers
 0x1000e8c0 `Wave_In_Device::scalarDeletingDtor`

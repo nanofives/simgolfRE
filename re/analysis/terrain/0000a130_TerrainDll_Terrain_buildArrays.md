@@ -37,16 +37,16 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x1000a17e, 0x1000a19f, 0x1000a229, 0x1000a24a
 
 ## Callees
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x1000a25e, 0x1000a298, 0x1000a2d2, 0x1000a30c
-- 0x100010aa -> 0x100153c0 `FUN_100153c0` (incremental-linking thunk) at 0x1000a1fb
-- 0x100010c3 -> 0x10002060 `FUN_10002060` (incremental-linking thunk) at 0x1000a202
-- 0x100010d7 -> 0x1000c560 `FUN_1000c560` (incremental-linking thunk) at 0x1000a15b
-- 0x10001113 -> 0x1000c520 `FUN_1000c520` (incremental-linking thunk) at 0x1000a285, 0x1000a2bf, 0x1000a2f9, 0x1000a333
-- 0x1000119f -> 0x1000c2c0 `FUN_1000c2c0` (incremental-linking thunk) at 0x1000a1c8
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x1000a25e, 0x1000a298, 0x1000a2d2, 0x1000a30c
+- 0x100010aa -> 0x100153c0 `Tile::getFaces` (incremental-linking thunk) at 0x1000a1fb
+- 0x100010c3 -> 0x10002060 `Faces::build` (incremental-linking thunk) at 0x1000a202
+- 0x100010d7 -> 0x1000c560 `initGrid` (incremental-linking thunk) at 0x1000a15b
+- 0x10001113 -> 0x1000c520 `Tile::setNeighbour` (incremental-linking thunk) at 0x1000a285, 0x1000a2bf, 0x1000a2f9, 0x1000a333
+- 0x1000119f -> 0x1000c2c0 `Tile::reset` (incremental-linking thunk) at 0x1000a1c8
 - 0x100180a0 `__chkesp` at 0x1000a34c
 
 ## Callers
-0x1000a970 `?initTerrain@Terrain@@QAEXXZ`, 0x1000aa10 `?resetTerrain@Terrain@@QAEXXZ`
+0x1000a970 `Terrain::initTerrain`, 0x1000aa10 `Terrain::resetTerrain`
 
 ## Constants
 - `0x0` at 0x1000a163, 0x1000a184, 0x1000a20e, 0x1000a22f, 0x1000a29e

@@ -25,7 +25,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 None.

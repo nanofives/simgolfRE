@@ -58,21 +58,21 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10006619, 0x10006636
 
 ## Callees
-- 0x10001037 -> 0x10015460 `FUN_10015460` (incremental-linking thunk) at 0x1000660d
-- 0x10001041 -> 0x1000e6c0 `FUN_1000e6c0` (incremental-linking thunk) at 0x100066bf
-- 0x10001055 -> 0x1000afe0 `FUN_1000afe0` (incremental-linking thunk) at 0x1000669e
-- 0x10001082 -> 0x100381a0 `FUN_100381a0` (incremental-linking thunk) at 0x10006647
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x100065f1
-- 0x10001091 -> 0x1000af70 `FUN_1000af70` (incremental-linking thunk) at 0x10006677
-- 0x100010af -> 0x1000b320 `FUN_1000b320` (incremental-linking thunk) at 0x1000668c
-- 0x100010eb -> 0x10013320 `FUN_10013320` (incremental-linking thunk) at 0x100065fc
-- 0x10001140 -> 0x1000b3d0 `FUN_1000b3d0` (incremental-linking thunk) at 0x100066a7
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x100064c5, 0x10006514, 0x10006521, 0x1000652c, 0x10006540, 0x10006593, 0x100065ac
-- 0x100011e5 -> 0x1000b210 `FUN_1000b210` (incremental-linking thunk) at 0x100066cf
-- 0x10001212 -> 0x10007380 `FUN_10007380` (incremental-linking thunk) at 0x1000665b
-- 0x1000126c -> 0x1000b2d0 `FUN_1000b2d0` (incremental-linking thunk) at 0x100066b8
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x100064e8, 0x10006552, 0x1000655f, 0x1000656d, 0x10006581, 0x100065c0, 0x100065d9
-- 0x10001316 -> 0x10006850 `FUN_10006850` (incremental-linking thunk) at 0x1000662a
+- 0x10001037 -> 0x10015460 `Tile::isHidden` (incremental-linking thunk) at 0x1000660d
+- 0x10001041 -> 0x1000e6c0 `Tile::render` (incremental-linking thunk) at 0x100066bf
+- 0x10001055 -> 0x1000afe0 `std::list(TileP)::end` (incremental-linking thunk) at 0x1000669e
+- 0x10001082 -> 0x100381a0 `Terrain::drawTile` (incremental-linking thunk) at 0x10006647
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x100065f1
+- 0x10001091 -> 0x1000af70 `std::list(TileP)::begin` (incremental-linking thunk) at 0x10006677
+- 0x100010af -> 0x1000b320 `std::list(TileP)::iterator::operator++` (incremental-linking thunk) at 0x1000668c
+- 0x100010eb -> 0x10013320 `Tile::hasPath` (incremental-linking thunk) at 0x100065fc
+- 0x10001140 -> 0x1000b3d0 `std::list(TileP)::const_iterator::operator!=` (incremental-linking thunk) at 0x100066a7
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x100064c5, 0x10006514, 0x10006521, 0x1000652c, 0x10006540, 0x10006593, 0x100065ac
+- 0x100011e5 -> 0x1000b210 `std::list(TileP)::clear` (incremental-linking thunk) at 0x100066cf
+- 0x10001212 -> 0x10007380 `Terrain::drawTileObjects` (incremental-linking thunk) at 0x1000665b
+- 0x1000126c -> 0x1000b2d0 `std::list(TileP)::const_iterator::operator*` (incremental-linking thunk) at 0x100066b8
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x100064e8, 0x10006552, 0x1000655f, 0x1000656d, 0x10006581, 0x100065c0, 0x100065d9
+- 0x10001316 -> 0x10006850 `Terrain::isCulled` (incremental-linking thunk) at 0x1000662a
 - 0x100180a0 `__chkesp` at 0x10006459, 0x10006468, 0x10006492, 0x100064b7, 0x1000650c, 0x100066de, 0x100066ed, 0x100066fa
 - import `OPENGL32.dll!glFlush` at 0x100066e5
 - import `OPENGL32.dll!glLoadIdentity` at 0x10006451

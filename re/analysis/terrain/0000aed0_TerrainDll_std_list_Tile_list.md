@@ -26,14 +26,14 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000aeea
 
 ## Callees
-- 0x10001055 -> 0x1000afe0 `FUN_1000afe0` (incremental-linking thunk) at 0x1000aef4
-- 0x10001091 -> 0x1000af70 `FUN_1000af70` (incremental-linking thunk) at 0x1000af03
-- 0x100011cc -> 0x1000b5b0 `FUN_1000b5b0` (incremental-linking thunk) at 0x1000af21
-- 0x100011ef -> 0x1000b470 `FUN_1000b470` (incremental-linking thunk) at 0x1000af12
+- 0x10001055 -> 0x1000afe0 `std::list(TileP)::end` (incremental-linking thunk) at 0x1000aef4
+- 0x10001091 -> 0x1000af70 `std::list(TileP)::begin` (incremental-linking thunk) at 0x1000af03
+- 0x100011cc -> 0x1000b5b0 `std::list(TileP)::_Freenode` (incremental-linking thunk) at 0x1000af21
+- 0x100011ef -> 0x1000b470 `std::list(TileP)::erase` (incremental-linking thunk) at 0x1000af12
 - 0x100180a0 `__chkesp` at 0x1000af42
 
 ## Callers
-0x10003090 `??1Terrain@@QAE@XZ`, 0x100410ce `Unwind@100410ce`, 0x1004111e `Unwind@1004111e`
+0x10003090 `Terrain::~Terrain`, 0x100410ce `Unwind@100410ce`, 0x1004111e `Unwind@1004111e`
 
 ## Constants
 - `0x0` at 0x1000af29, 0x1000af33

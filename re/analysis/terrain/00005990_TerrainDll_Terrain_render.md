@@ -75,13 +75,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10005aae, 0x10005c0a, 0x10005c27, 0x10005c44, 0x10005cc4, 0x10005ce1, 0x10005cfe, 0x10005d7e (+3 more)
 
 ## Callees
-- 0x10001037 -> 0x10015460 `FUN_10015460` (incremental-linking thunk) at 0x10005bfe, 0x10005cb8, 0x10005d72, 0x10005e1f
-- 0x10001041 -> 0x1000e6c0 `FUN_1000e6c0` (incremental-linking thunk) at 0x10005af2, 0x10005c2c, 0x10005ce6, 0x10005da0, 0x10005e4d
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x10005aeb, 0x10005bed, 0x10005ca7, 0x10005d61, 0x10005e0e
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x10005a52, 0x10005b03, 0x10005b10, 0x10005b1b, 0x10005b2f, 0x10005b93, 0x10005bac, 0x10005c76 (+5 more)
-- 0x10001253 -> 0x1000adc0 `FUN_1000adc0` (incremental-linking thunk) at 0x10005aa5
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x10005a75, 0x10005b41, 0x10005b4e, 0x10005b59, 0x10005b6d, 0x10005bbc, 0x10005bd5, 0x10005c4d (+5 more)
-- 0x10001316 -> 0x10006850 `FUN_10006850` (incremental-linking thunk) at 0x10005c1b, 0x10005cd5, 0x10005d8f, 0x10005e3c
+- 0x10001037 -> 0x10015460 `Tile::isHidden` (incremental-linking thunk) at 0x10005bfe, 0x10005cb8, 0x10005d72, 0x10005e1f
+- 0x10001041 -> 0x1000e6c0 `Tile::render` (incremental-linking thunk) at 0x10005af2, 0x10005c2c, 0x10005ce6, 0x10005da0, 0x10005e4d
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x10005aeb, 0x10005bed, 0x10005ca7, 0x10005d61, 0x10005e0e
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x10005a52, 0x10005b03, 0x10005b10, 0x10005b1b, 0x10005b2f, 0x10005b93, 0x10005bac, 0x10005c76 (+5 more)
+- 0x10001253 -> 0x1000adc0 `Terrain::setViewAngle` (incremental-linking thunk) at 0x10005aa5
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x10005a75, 0x10005b41, 0x10005b4e, 0x10005b59, 0x10005b6d, 0x10005bbc, 0x10005bd5, 0x10005c4d (+5 more)
+- 0x10001316 -> 0x10006850 `Terrain::isCulled` (incremental-linking thunk) at 0x10005c1b, 0x10005cd5, 0x10005d8f, 0x10005e3c
 - 0x100180a0 `__chkesp` at 0x100059e6, 0x100059f5, 0x10005a1f, 0x10005a44, 0x10005a99, 0x10005e63, 0x10005e72, 0x10005e84
 - import `OPENGL32.dll!glFlush` at 0x10005e6a
 - import `OPENGL32.dll!glLoadIdentity` at 0x100059de

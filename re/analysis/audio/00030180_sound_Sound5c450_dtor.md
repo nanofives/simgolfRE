@@ -53,12 +53,12 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x10001b45 -> 0x10037df0 `FUN_10037df0` (incremental-linking thunk) at 0x10030275
-- 0x10001cc6 -> 0x1002ef40 `FUN_1002ef40` (incremental-linking thunk) at 0x1003032b
+- 0x10001cc6 -> 0x1002ef40 `Ch5c234_dtor` (incremental-linking thunk) at 0x1003032b
 - 0x1004249a `operator_delete` at 0x100301d3, 0x1003024f, 0x1003027b, 0x100302a2, 0x100302dc, 0x1003030e
 - indirect `call ebp` at 0x100301f9
 
 ## Callers
-0x10030150 `FUN_10030150`
+0x10030150 `Sound5c450_scalarDtor`
 
 ## Constants
 - `0x1` at 0x100301ad

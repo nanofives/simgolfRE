@@ -55,8 +55,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x100035c5
 
 ## Callees
-- 0x100010f0 -> 0x10003a50 `FUN_10003a50` (incremental-linking thunk) at 0x1000362b, 0x10003645
-- 0x100011a9 -> 0x10037c80 `FUN_10037c80` (incremental-linking thunk) at 0x10003651
+- 0x100010f0 -> 0x10003a50 `rotateAxis` (incremental-linking thunk) at 0x1000362b, 0x10003645
+- 0x100011a9 -> 0x10037c80 `normalize` (incremental-linking thunk) at 0x10003651
 - 0x100180a0 `__chkesp` at 0x100036c5, 0x100036e5, 0x10003702, 0x1000371f, 0x10003733, 0x10003743
 - import `OPENGL32.dll!glEnable` at 0x1000372b
 - import `OPENGL32.dll!glLightfv` at 0x100036bd, 0x100036dd, 0x100036fa, 0x10003717

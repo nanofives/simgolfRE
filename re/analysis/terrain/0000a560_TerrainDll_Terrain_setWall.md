@@ -24,7 +24,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000a57a
 
 ## Callees
-- 0x100011d1 -> 0x10015400 `FUN_10015400` (incremental-linking thunk) at 0x1000a58c
+- 0x100011d1 -> 0x10015400 `Tile::setWall` (incremental-linking thunk) at 0x1000a58c
 - 0x100180a0 `__chkesp` at 0x1000a599
 
 ## Callers

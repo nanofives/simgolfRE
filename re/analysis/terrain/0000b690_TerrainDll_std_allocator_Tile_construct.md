@@ -22,11 +22,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000b6aa
 
 ## Callees
-- 0x10001320 -> 0x1000ba40 `FUN_1000ba40` (incremental-linking thunk) at 0x1000b6b5
+- 0x10001320 -> 0x1000ba40 `std::_Construct` (incremental-linking thunk) at 0x1000b6b5
 - 0x100180a0 `__chkesp` at 0x1000b6c5
 
 ## Callers
-0x1000b100 `FUN_1000b100`
+0x1000b100 `std::list(TileP)::insert`
 
 ## Constants
 - `0x8` at 0x1000b6ba

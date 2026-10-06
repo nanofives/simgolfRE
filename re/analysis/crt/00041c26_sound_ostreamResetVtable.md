@@ -20,7 +20,7 @@ Through registers:
 - `[eax+ecx-0x8]` dword at 0x10041c2c
 
 ## Callees
-- 0x10041aad `FUN_10041aad` at 0x10041c34
+- 0x10041aad `iosResetVtable` at 0x10041c34
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

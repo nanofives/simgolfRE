@@ -36,7 +36,7 @@ Globals:
 - 0x004a4f2e `TERRAIN.DLL::Terrain::getVariation` at 0x004494cb
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x1` at 0x00449513

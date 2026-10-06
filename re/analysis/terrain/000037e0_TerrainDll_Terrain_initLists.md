@@ -21,11 +21,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x100037fa
 
 ## Callees
-- 0x1000130c -> 0x10003980 `FUN_10003980` (incremental-linking thunk) at 0x10003800
+- 0x1000130c -> 0x10003980 `Terrain::rebuild` (incremental-linking thunk) at 0x10003800
 - 0x100180a0 `__chkesp` at 0x1000380f
 
 ## Callers
-0x10009c80 `?initSystem@Terrain@@QAEXHHPAUHDC__@@_N@Z`
+0x10009c80 `Terrain::initSystem`
 
 ## Constants
 - `0x1` at 0x10003805

@@ -47,8 +47,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x1000c455, 0x1000c46d, 0x1000c485, 0x1000c49d
 
 ## Callees
-- 0x10001113 -> 0x1000c520 `FUN_1000c520` (incremental-linking thunk) at 0x1000c461, 0x1000c479, 0x1000c491, 0x1000c4a9
-- 0x10001348 -> 0x10001fe0 `FUN_10001fe0` (incremental-linking thunk) at 0x1000c4bb
+- 0x10001113 -> 0x1000c520 `Tile::setNeighbour` (incremental-linking thunk) at 0x1000c461, 0x1000c479, 0x1000c491, 0x1000c4a9
+- 0x10001348 -> 0x10001fe0 `Faces::~Faces` (incremental-linking thunk) at 0x1000c4bb
 - 0x100180a0 `__chkesp` at 0x1000c4d2
 
 ## Callers

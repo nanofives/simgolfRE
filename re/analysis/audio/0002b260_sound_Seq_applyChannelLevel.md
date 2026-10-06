@@ -29,7 +29,7 @@ Through registers:
 - indirect `call [edx+0x40]` at 0x1002b279
 
 ## Callers
-0x10020f50 `FUN_10020f50`
+0x10020f50 `Seq_setField730Clamped`
 
 ## Constants
 - `0x7f` (127) at 0x1002b264, 0x1002b269

@@ -33,7 +33,7 @@ Through registers:
 - import `KERNEL32.dll!GetModuleHandleA` at 0x10045ba5
 
 ## Callers
-0x10045bc8 `crtHeapSelect`, 0x10045e34 `FUN_10045e34`
+0x10045bc8 `crtHeapSelect`, 0x10045e34 `setSbhThreshold`
 
 ## Constants
 - `0x0` at 0x10045ba0, 0x10045ba2

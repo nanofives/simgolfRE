@@ -44,7 +44,7 @@ Globals:
 - 0x00436c00 `handleEmployeeAction` at 0x00435693
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x1` at 0x00435715

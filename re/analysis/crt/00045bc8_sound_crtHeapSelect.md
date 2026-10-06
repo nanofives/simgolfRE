@@ -34,9 +34,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10045bf8, 0x10045c4b, 0x10045c65, 0x10045ca1, 0x10045cd4, 0x10045cdd
 
 ## Callees
-- 0x10042690 `FUN_10042690` at 0x10045cb1
+- 0x10042690 `strstr` at 0x10045cb1
 - 0x10045680 `strchr` at 0x10045cbf
-- 0x10045b9b `FUN_10045b9b` at 0x10045cfe
+- 0x10045b9b `getModuleLinkerVersion` at 0x10045cfe
 - 0x1004a795 `_strtol` at 0x10045ce3
 - 0x1004a9d0 `_strncmp` at 0x10045c5b
 - 0x1004aa10 `_alloca_probe` at 0x10045bd0

@@ -44,7 +44,7 @@ Through registers:
 - indirect `call [edx+0xdc]` at 0x00478ee0
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x1` at 0x00478f40

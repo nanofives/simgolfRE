@@ -24,7 +24,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x1000a711
 
 ## Callees
-- 0x100010f5 -> 0x10012cf0 `FUN_10012cf0` (incremental-linking thunk) at 0x1000a716
+- 0x100010f5 -> 0x10012cf0 `Tile::calcNormals` (incremental-linking thunk) at 0x1000a716
 - 0x100180a0 `__chkesp` at 0x1000a723
 
 ## Callers

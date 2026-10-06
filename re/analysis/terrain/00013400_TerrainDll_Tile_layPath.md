@@ -40,7 +40,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000a3e0 `?layPath@Terrain@@QAEXPAVTile@@HH@Z`
+0x1000a3e0 `Terrain::layPath`
 
 ## Constants
 - `0x0` at 0x10013433, 0x1001344f, 0x10013485, 0x1001349d, 0x100134a7, 0x100134b1

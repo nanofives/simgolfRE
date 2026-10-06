@@ -35,7 +35,7 @@ Through registers:
 - `[esi]` dword at 0x1001c8c4
 
 ## Callees
-- 0x10001235 -> 0x1001d130 `FUN_1001d130` (incremental-linking thunk) at 0x1001c876
+- 0x10001235 -> 0x1001d130 `PtrList_init` (incremental-linking thunk) at 0x1001c876
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

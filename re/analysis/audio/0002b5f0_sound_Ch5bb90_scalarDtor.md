@@ -22,7 +22,7 @@ None.
 - `je` (equality) at 0x1002b5fd
 
 ## Callees
-- 0x10002108 -> 0x1002b620 `FUN_1002b620` (incremental-linking thunk) at 0x1002b5f3
+- 0x10002108 -> 0x1002b620 `Ch5bb90_dtor` (incremental-linking thunk) at 0x1002b5f3
 - 0x1004249a `operator_delete` at 0x1002b600
 
 ## Callers

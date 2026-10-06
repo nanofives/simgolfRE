@@ -81,7 +81,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1004019c, 0x100401da, 0x10040246, 0x10040308
 
 ## Callees
-- 0x100414f0 `FUN_100414f0` at 0x1004006a, 0x10040185, 0x1004022f
+- 0x100414f0 `codecAmdfPitch` at 0x1004006a, 0x10040185, 0x1004022f
 - 0x10042550 `__ftol` at 0x1004008d, 0x100401b1, 0x1004025b
 - 0x100431ce `FUN_100431ce` at 0x10040321
 

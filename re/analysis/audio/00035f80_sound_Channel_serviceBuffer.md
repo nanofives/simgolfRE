@@ -26,7 +26,7 @@ Through registers:
 
 ## Callees
 - 0x10001b9f -> 0x10010e30 `DsBuffer::isBusy` (incremental-linking thunk) at 0x10035f8a
-- 0x10002716 -> 0x10035fc0 `FUN_10035fc0` (incremental-linking thunk) at 0x10035fa7
+- 0x10002716 -> 0x10035fc0 `Channel_stepVolumeFade` (incremental-linking thunk) at 0x10035fa7
 
 ## Callers
 0x10007010 `writeWaveFile`

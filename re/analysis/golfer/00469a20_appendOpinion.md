@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 180 bytes, 61 instructions, subsystem `golfer`. Mechani
 appends a golfer opinion phrase to the comment buffer (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Appends one of 11 strings to the text buffer 0x0051a068 (strcat, inlined) chosen by rating and twist: ratings 0..5 through the jump table at 0x00469ad4; 6 and 7 each pick one of two strings by twist (<= 1 for 6, < 1 for 7); other ratings in 0..0x7f pick by twist < 1; ratings outside 0..0x7f get 0x004e28e4 (0x00469a20). Reimplemented in `shim/src/re/golf_writers.cpp`; path-1 A/B with state comparison over 60 (rating, twist) pairs is GREEN (strings compared by hash, never recorded).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small27.cpp` as `?appendOpinion@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00469ad3): callee pops 0 bytes of stack arguments.

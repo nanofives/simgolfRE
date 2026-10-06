@@ -84,7 +84,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glVertex3fv` at 0x1000f8ec, 0x1000f91e, 0x1000f956, 0x1000f991, 0x1000f9c8, 0x1000fa05, 0x1000fa42, 0x1000fa7a (+40 more)
 
 ## Callers
-0x1000e6c0 `FUN_1000e6c0`
+0x1000e6c0 `Tile::render`
 
 ## Constants
 - `0x0` at 0x1000f80d, 0x1000f81f, 0x1000f845, 0x1000f8c6, 0x1000f8fb, 0x1000f8fd, 0x1000f92d, 0x1000f96a (+34 more)

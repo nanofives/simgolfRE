@@ -53,7 +53,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x1004249a `operator_delete` at 0x1002c61b, 0x1002c641, 0x1002c6ad
 
 ## Callers
-0x1002c5b0 `FUN_1002c5b0`
+0x1002c5b0 `MixerVoiceArray_scalarDtor`
 
 ## Constants
 - `0x1` at 0x1002c634

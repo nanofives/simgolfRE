@@ -19,7 +19,7 @@ None.
 - 0x10048225 `__fload_withFB` at 0x100432e8
 
 ## Callers
-0x1003da50 `FUN_1003da50`
+0x1003da50 `interpSubframeParams`
 
 ## Constants
 - `0x4` at 0x100432e4

@@ -35,7 +35,7 @@ None.
 - indirect `call [eax+0xe4]` at 0x00473c19
 
 ## Callers
-0x00406250 `showLoadingScreen`, 0x0040f5c0 `mainLoop`, 0x00437fa0 `loadThemeFile`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043cd70 `showTitleScreen`, 0x0043d740 `loadFlic`, 0x0043dbe0 `loadWorldAssets`, 0x00442180 `loadInterfaceArt`, 0x0046f550 `courseActionMenu`, 0x004725b0 `showThemePackSelect`, 0x00473c60 `Surface_blitTakeDirty`, 0x0049d1b0 `loadPcxSurface`, 0x0049e9d0 `loadCursors`, 0x0049fe50 `loadFonts`
+0x00406250 `showLoadingScreen`, 0x00437fa0 `loadThemeFile`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043cd70 `showTitleScreen`, 0x0043d740 `loadFlic`, 0x0043dbe0 `loadWorldAssets`, 0x00442180 `loadInterfaceArt`, 0x0046f550 `courseActionMenu`, 0x004725b0 `showThemePackSelect`, 0x00473c60 `Surface_blitTakeDirty`, 0x0049d1b0 `loadPcxSurface`, 0x0049e9d0 `loadCursors`, 0x0049fe50 `loadFonts`
 
 ## Constants
 - `0x7` at 0x00473c0e

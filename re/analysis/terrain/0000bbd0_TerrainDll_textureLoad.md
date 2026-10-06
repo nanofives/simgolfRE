@@ -36,10 +36,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1000bbff, 0x1000bc1f, 0x1000bcfc, 0x1000bd3c
 
 ## Callees
-- 0x10001109 -> 0x10001b60 `FUN_10001b60` (incremental-linking thunk) at 0x1000bc10
-- 0x100012df -> 0x100016a0 `FUN_100016a0` (incremental-linking thunk) at 0x1000bbf0
-- 0x1001577e `gluBuild2DMipmaps` at 0x1000bd82
-- 0x10015784 `gluBuild1DMipmaps` at 0x1000bd59
+- 0x10001109 -> 0x10001b60 `swapRedBlue` (incremental-linking thunk) at 0x1000bc10
+- 0x100012df -> 0x100016a0 `LoadDIBitmap` (incremental-linking thunk) at 0x1000bbf0
+- 0x1001577e `GLU32.DLL::gluBuild2DMipmaps` at 0x1000bd82
+- 0x10015784 `GLU32.DLL::gluBuild1DMipmaps` at 0x1000bd59
 - 0x10016470 `FUN_10016470` at 0x1000bd8b, 0x1000bd97
 - 0x100180a0 `__chkesp` at 0x1000bc41, 0x1000bc58, 0x1000bc75, 0x1000bc92, 0x1000bcae, 0x1000bcca, 0x1000bce7, 0x1000bd2e (+1 more)
 - import `OPENGL32.dll!glBindTexture` at 0x1000bc50
@@ -49,7 +49,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glTexParameteri` at 0x1000bc6d, 0x1000bc8a, 0x1000bca6, 0x1000bcc2
 
 ## Callers
-0x100076e0 `FUN_100076e0`
+0x100076e0 `Terrain::relight`
 
 ## Constants
 - `0x0` at 0x1000bbfb, 0x1000bd0e, 0x1000bd20

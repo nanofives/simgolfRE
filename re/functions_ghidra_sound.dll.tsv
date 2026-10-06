@@ -1,1722 +1,1722 @@
-entry	name	size	callers	callees
-00001005	thunk_FUN_10031be0	5	3	0
-00001014	Midi_Device::closeFile	5	5	0
-00001019	CtrlObject_dtorA	5	1	0
-0000101e	Channel_setReverseRate	5	0	0
-00001037	Seq_cmdHandler12	5	1	0
-00001041	CtrlObject_dtorB	5	1	0
-00001046	DirectSoundDevice::createBuffer	5	2	0
-0000104b	DirectSoundDevice::releaseAll	5	5	0
-0000105f	Sound_assignName	5	1	0
-0000106e	NodeList_initNode	5	2	0
-00001073	NodeList_pushFront	5	2	0
-0000107d	thunk_FUN_1002e460	5	0	0
-0000108c	streamReaderDtor	5	1	0
-000010a0	DirectSoundDevice::setCooperativeLevel	5	0	0
-000010aa	CommandQueue::init	5	3	0
-000010be	Track_clearFlag8	5	1	0
-000010dc	Voice_mixSetStereo16	5	2	0
-000010f5	Sound_setName	5	4	0
-00001109	WaveInDevice_reset	5	0	0
-00001113	Channel_serviceBuffer	5	1	0
-00001127	Voice_setPlayModeBits	5	1	0
-0000113b	WaveInDevice_dtor	5	1	0
-0000114f	nextRandomFloat	5	1	0
-0000115e	DsBuffer::getTimedPosition	5	1	0
-00001163	Sound::ctor	5	1	0
-00001177	SoundWindowObj_subclass	5	0	0
-00001181	DsBuffer::setFrequency	5	1	0
-00001186	Seq_cmdHandler7	5	2	0
-0000118b	Seq_setupChannel	5	2	0
-0000119f	renderChannel	5	2	0
-000011b8	Channel_closeAndFree	5	5	0
-000011c2	Dll_Wave_Device::delete_device	5	0	0
-000011c7	WaveCmdQueue::pushValue	5	3	0
-000011cc	Seq_stepTrackMeta	5	1	0
-000011d6	postSoundThreadMessage	5	7	0
-000011db	Seq_cmdHandler11	5	2	0
-000011e5	DirectSoundDevice::createBufferFmt	5	4	0
-000011f9	closeDecoder	5	1	0
-00001203	DsBuffer::play	5	4	0
-00001212	Channel_startVoice	5	2	0
-00001217	cmdNode::scalarDeletingDtor	5	1	0
-0000122b	Channel_setStreamSource	5	1	0
-00001230	buildVoiceRxName	5	1	0
-00001235	PtrList_init	5	2	0
-0000123f	Ctrl5b19c_ctor	5	0	0
-00001249	Seq_applyTrackFlag	5	1	0
-0000124e	Midi_Device::handleMetaEvent	5	1	0
-00001253	thunk_FUN_10039470	5	1	0
-00001258	clearNodeListG	5	3	0
-0000125d	Ch5c178_ctor	5	1	0
-00001262	Channel_set3DPositionZ	5	0	0
-00001299	pairStore	5	3	0
-0000129e	MidiReader_dtor	5	1	0
-000012a3	thunk_FUN_1002e3f0	5	1	0
-000012bc	listAppendNodeA	5	1	0
-000012d5	DsBuffer::releaseIfOwned	5	9	0
-000012e9	nodeListClear	5	1	0
-000012ee	Voice_mixAddStereo16	5	2	0
-000012f3	findAndUnlinkNodeB	5	1	0
-00001302	Channel_stubReturnB	5	2	0
-00001311	resizeDynArray	5	2	0
-00001320	DsDevice_registerBuffer	5	1	0
-0000132f	thunk_FUN_1002e3c0	5	1	0
-00001334	thunk_FUN_1001b160	5	1	0
-00001339	DsBuffer::restartPlayback	5	1	0
-0000136b	thunk_FUN_1002e430	5	1	0
-0000137a	create_sound	5	9	0
-0000138e	WaveStream::ctor	5	1	0
-00001398	Channel_clearBackref	5	1	0
-0000139d	Midi_readVarLen	5	5	0
-0000140b	StreamReader_ctor	5	1	0
-00001410	thunk_FUN_1000b000	5	3	0
-0000144c	DsBuffer::release	5	1	0
-00001465	SubChannel_ctor	5	3	0
-00001474	Seq_cmdHandler9	5	2	0
-000014a6	Voice_noteOff	5	1	0
-000014bf	thunk_FUN_1001ccf0	5	3	0
-000014c4	thunk_FUN_10009210	5	1	0
-000014c9	Sound_findByName	5	1	0
-000014ce	mixCopyInnerB	5	2	0
-000014d8	Seq_dtor	5	4	0
-000014e2	Ds3DBuffer::setPositionZ	5	1	0
-000014f1	initCtrlVtable	5	2	1
-00001505	DsBuffer::initDesc	5	1	0
-00001514	writeWaveFile	5	1	0
-00001519	Seq_remarkEventRange	5	1	0
-00001546	Midi_advanceMsgRing	5	1	0
-0000154b	Voice_setLoopFlag	5	5	0
-00001550	Seq_updateChannel	5	2	0
-0000156e	ChainObject_dtor	5	1	0
-00001591	Voice_setName	5	1	0
-000015a0	findAndUnlinkNode	5	3	0
-000015a5	writeWaveFileB	5	1	0
-000015aa	Channel_setVolume	5	1	0
-000015b4	Wave_In_Device::op1	5	2	0
-000015c8	thunk_FUN_1002b4a0	5	0	0
-000015cd	clearNodeListC	5	2	0
-000015d2	Seq_loadChannelDesc	5	1	0
-000015e1	CommandQueue::push	5	5	0
-000015e6	mixResampleInnerB	5	2	0
-000015f5	Ch5be88_ctor	5	2	0
-000015fa	Seq_listGetAt	5	19	0
-00001604	Sound_setAltName	5	3	0
-00001622	PtrList_freeNodesB	5	1	0
-0000163b	thunk_FUN_1002e530	5	18	0
-00001640	streamRenderBlock	5	1	0
-0000164a	Ds3DListener::setPosition	5	1	0
-00001654	Ctrl_appendIfAccepted	5	2	0
-00001672	thunk_FUN_10012040	5	1	0
-00001677	DirectSoundDevice::removeBuffer	5	7	0
-00001681	appendNode	5	1	0
-0000168b	updateVoiceRate	5	1	0
-00001695	DsBuffer::getPlayPosition	5	1	0
-0000169f	Midi_Device::loadFromMemory	5	1	0
-000016a4	SoundGroup_stop	5	4	0
-000016a9	streamWaveSamples	5	2	0
-000016ae	nodeListAppendValue	5	1	0
-000016bd	Midi_Device::sendShortMsg	5	1	0
-000016db	startSignalThread	5	0	0
-000016f4	Device_lazyCreateSound	5	1	0
-000016f9	Channel_setPitchRate	5	1	0
-00001703	Seq_rewind	5	1	0
-0000170d	initStreamBuffer	5	0	0
-0000174e	clearNodeListE	5	1	0
-0000175d	NodeList_clear	5	6	0
-00001762	DsBuffer::queryNotify	5	1	0
-0000176c	loadWaveResource	5	1	0
-0000177b	thunk_FUN_10039450	5	1	0
-00001780	soundWindowProc	5	1	0
-0000179e	WaveInDeviceMgr::call_back	5	0	0
-000017a8	MmioBuffer_init	5	2	0
-000017da	Wave_Device::dtor	5	1	0
-00001807	Midi_seekTrackToTick	5	1	0
-0000180c	DirectSoundDevice::create	5	2	0
-00001816	pairClear	5	10	0
-0000182f	DsBuffer::setRegionMs	5	3	0
-00001839	Channel_allocAndInitVoice	5	0	0
-0000183e	Mixer_ctor	5	1	0
-00001866	Channel_resetPanState	5	3	0
-00001870	Wave_Device::readFmtChunk	5	1	0
-0000187a	Channel_findVoiceByTag	5	1	0
-00001889	Ds3DBuffer::setPosition	5	2	0
-0000188e	Wave_Device::flushCommandQueue	5	1	0
-00001893	Sound5b6a8_dtor	5	4	0
-000018a2	Sound_setSourceType	5	16	0
-000018c5	Sound5c450_ctor	5	1	0
-000018ca	MidiReader_freeContent	5	1	0
-000018f7	DsBuffer::setVolume	5	4	0
-00001906	Seq_firstTrackData	5	2	0
-0000190b	postMidiNotification	5	1	0
-00001910	DsBuffer::destroy	5	15	0
-00001924	thunk_FUN_1002bff0	5	1	0
-00001929	Sound_initEntry	5	1	0
-0000192e	seekListToIndex	5	1	0
-00001933	streamRenderTail	5	1	0
-00001942	Sound_anyChannelActive	5	1	0
-0000194c	Midi_resetFileState	5	2	0
-00001956	Seq_preRollTrack	5	5	0
-0000196f	Midi_Device::scanCommandRing	5	2	0
-00001974	Channel_set3DPosition	5	1	0
-0000198d	Channel_applyFlags	5	0	0
-00001997	pumpWaveMessages	5	2	0
-000019a1	CommandQueue::clear	5	3	0
-000019c4	Sound5c450_dtor	5	1	0
-000019ce	DeviceBase_dtorA	5	2	0
-000019d3	clearNodeListB	5	1	0
-000019e2	Midi_Device::dtor	5	1	0
-000019e7	Seq_clearTrackFlag8All	5	1	0
-000019ec	mixResampleInnerC	5	1	0
-00001a05	thunk_FUN_1001b1f0	5	0	0
-00001a14	Midi_Device::noteOn	5	1	0
-00001a2d	DsBuffer::stop	5	3	0
-00001a32	freeDynArray	5	1	0
-00001a3c	Channel_allocVoiceSlot	5	1	0
-00001a4b	thunk_FUN_1001c060	5	2	0
-00001a55	Sound_reapIdle	5	1	0
-00001a5f	Dll_Midi_Device::delete_device	5	0	0
-00001a73	MixBuffer_ctor	5	1	0
-00001a78	Ch5c178_dtor	5	4	0
-00001a7d	Channel_setPanGains	5	4	0
-00001a87	delete_sound	5	20	0
-00001a9b	Wave_Device::stop	5	1	0
-00001aa0	thunk_FUN_1001e680	5	0	0
-00001aaf	Sound_resetBuffers	5	1	0
-00001ab9	CtrlObject_dtorC	5	4	0
-00001ac3	SoundTimer::linkClient	5	1	0
-00001b09	thunk_FUN_10037860	5	0	0
-00001b13	writeWaveChunk	5	1	0
-00001b18	closeMmioSound	5	1	0
-00001b1d	MidiReader_init	5	2	0
-00001b22	DeviceBase_dtorB	5	5	0
-00001b2c	byteSwap16	5	1	0
-00001b3b	postNotification	5	2	0
-00001b45	thunk_FUN_10037df0	5	7	0
-00001b4a	DsBuffer::configureDesc	5	1	0
-00001b7c	beginDecodeStreamB	5	1	0
-00001b81	DirectSoundDevice::close	5	2	0
-00001b9f	DsBuffer::isBusy	5	9	0
-00001ba4	Wave_In_Device::op2	5	2	0
-00001bb8	listAppendNodeB	5	1	0
-00001bbd	Midi_Device::flushMessages	5	1	0
-00001bcc	Seq_buildPlayOrder	5	1	0
-00001bf4	Channel_releaseVoices	5	1	0
-00001bfe	DsBuffer::create	5	6	0
-00001c1c	DsBuffer::ctor	5	7	0
-00001c26	getDeviceCaps	5	0	1
-00001c30	DsBuffer::query3D	5	1	0
-00001c35	DsBuffer::setBufferSize	5	2	0
-00001c3f	Seq_replayEventRange	5	1	0
-00001c4e	Voice::update	5	1	0
-00001c5d	DsBuffer::lockEntire	5	1	0
-00001c67	init_sound_timer	5	0	0
-00001c6c	Wave_Device::freeBufferList	5	2	0
-00001c7b	Track_advancePos	5	3	0
-00001c94	Ch5be88_dtorB	5	1	0
-00001ca3	Seq_rewindTracks	5	5	0
-00001cb2	writeWaveChunkB	5	1	0
-00001cb7	ResourceList_pushBack	5	1	0
-00001cc1	Ch5be88_dtorA	5	5	0
-00001cc6	Ch5c234_dtor	5	4	1
-00001cda	PtrList_freeNodesA	5	1	1
-00001cdf	nodeListClear2	5	3	1
-00001d02	mixRenderA	5	1	0
-00001d11	Channel_releaseBuffers	5	4	0
-00001d39	MultiSound_dtor	5	1	0
-00001d52	Seq_mergeChannelDesc	5	2	0
-00001d66	Seq_freeChannelObjects	5	3	0
-00001d75	DsBuffer::setPrimaryFormat	5	2	0
-00001d93	Wave_Device::scanCommandRing	5	1	0
-00001dac	VoiceBase_dtor	5	4	1
-00001dcf	nodeListPopFront	5	1	0
-00001dd4	Mixer_dtor	5	1	0
-00001dd9	Voice_allNotesOff	5	2	0
-00001dde	thunk_FUN_10032660	5	1	0
-00001de8	rewindChannel	5	1	0
-00001dfc	SoundTimer::start	5	4	0
-00001e01	thunk_FUN_1001b0d0	5	1	0
-00001e06	DeviceBase_dtorC	5	2	0
-00001e4c	flushMmioBuffer	5	0	0
-00001e51	parseRiffWave	5	4	0
-00001e56	Voice_resetDefaults	5	2	0
-00001e74	CtrlObject2_ctor	5	3	0
-00001e79	Sound_freeBufferList	5	2	0
-00001e7e	thunk_FUN_1002c270	5	0	0
-00001e83	Wave_Device::dispatchCommand	5	1	0
-00001e92	Mixer_dtor	5	2	1
-00001eb0	Channel_set3DPositionY	5	0	0
-00001eb5	SubChannel_dtor	5	11	1
-00001ebf	unlinkDsBuffer	5	3	0
-00001ec4	voiceListRemove	5	5	0
-00001ec9	DsBuffer::unlock	5	7	0
-00001ed3	SoundTimer::unregisterClient	5	4	0
-00001ed8	Channel_set3DPositionX	5	0	0
-00001ef1	NodeList_insert	5	2	0
-00001efb	Channel_recomputeVoiceGains	5	4	0
-00001f05	Ds3DBuffer::setPositionX	5	1	0
-00001f0f	flushSoundList	5	3	0
-00001f1e	destroyMixerVoices	5	1	0
-00001f32	Seq_setPlayRange	5	1	0
-00001f37	serviceChannelPlayback	5	2	0
-00001f4b	Midi_Device::dispatchCommand	5	1	0
-00001f64	Voice_mixSetMono16	5	2	0
-00001f7d	DirectSoundDevice::freeBufferById	5	1	0
-00001f82	Wave_Device::ctor	5	1	0
-00001fa0	thunk_FUN_1001aef0	5	1	0
-00001fa5	WaveInDevice_ctor	5	1	0
-00001fbe	listPopFront	5	1	0
-00001fcd	Dll_Wave_Device::create_device	5	0	0
-00001ffa	CtrlObject::ctor	5	1	0
-00002004	thunk_FUN_1001cd30	5	5	0
-00002013	DirectSoundDevice::enumerate	5	1	0
-00002022	fillDecodeRing	5	3	0
-00002031	listNode3Init	5	4	0
-00002036	buildVoiceTxName	5	1	0
-00002040	Voice_setLevel	5	2	0
-0000204a	Ctrl5b5c0_transposeTable	5	2	0
-00002068	Midi_Device::playEvent	5	3	0
-00002081	DsBuffer::hasAuxInterfaces	5	1	0
-0000209a	randRange	5	2	0
-000020a4	WaveInDevice_requeueBuffer	5	2	0
-000020b3	WaveCmdQueue::pushNode	5	5	0
-000020b8	Channel_findStreamNode	5	1	0
-000020c7	renderChannelStreamed	5	2	0
-000020e5	Dll_Wave_In_Device::create_device	5	0	0
-000020f4	Voice_notifyChannelNotes	5	1	0
-000020f9	DirectSoundDevice::stopAll	5	1	0
-00002108	Ch5bb90_dtor	5	7	0
-00002117	Channel_broadcastVoiceBit1	5	1	0
-0000211c	Channel_setRateGlide	5	0	0
-00002121	WaveInDevice_start	5	0	0
-0000213a	WaveInDevice_open	5	0	0
-0000213f	DsBuffer::restore	5	7	0
-00002153	Channel_propagateFlag0	5	1	0
-0000215d	Midi_scanTrack	5	3	0
-00002162	WaveInDevice_allocCaptureBuffers	5	1	0
-00002180	Ctrl5b668_ctor	5	1	0
-0000218a	SoundTimer::stop	5	1	0
-0000219e	WaveInDevice_prepareHeaders	5	0	0
-000021a3	initSoundVoice	5	0	0
-000021b7	Object_setName	5	1	0
-000021cb	Dll_Midi_Device::create_device	5	0	0
-000021df	VoiceBase_ctor	5	1	0
-000021ee	Midi_Device::emitEvent	5	1	0
-000021fd	Dll_Wave_In_Device::delete_device	5	0	0
-00002202	Ctrl5b58c_dtor	5	2	0
-00002211	openMmioFile	5	1	0
-00002220	Voice_mixSet8bit	5	2	0
-0000222f	getNodeByIndex	5	0	0
-00002243	removeSoundNode	5	2	0
-00002252	DsBuffer::scalarDeletingDtor	5	3	0
-00002257	CommandQueue::at	5	5	0
-0000227a	SoundTimer::registerClient	5	4	0
-00002284	clearNodeListF	5	4	0
-00002298	Track_setData	5	1	0
-000022b1	SoundTimer::init	5	1	0
-000022ca	Midi_Device::setChannelVolume	5	1	0
-000022e8	DsBuffer::setPosition	5	1	0
-000022ed	thunk_FUN_1001bc00	5	1	0
-000022f2	computeCaptureDuration	5	2	0
-000022f7	PtrList_pushBack	5	1	0
-000022fc	serviceDecodeRing	5	2	0
-0000231a	Voice_setPanGains	5	4	0
-0000232e	Wave_In_Device::dtor	5	1	0
-0000233d	DsBuffer::getPosition	5	3	0
-00002351	appendNodeC	5	2	0
-00002360	SoundWindowObj_unsubclass	5	1	0
-0000237e	Ch5c3a4_ctor	5	1	0
-00002388	DirectSoundDevice::setMasterVolume	5	1	0
-0000239c	Track_resetReadState	5	1	0
-000023ab	Seq_buildTrack14	5	1	0
-000023e7	Seq_cmdHandler10	5	2	0
-000023f1	addToSoundList	5	1	0
-000023f6	renderChannelVoice	5	1	0
-0000240a	Seq_scheduleEvent	5	2	0
-00002419	unlinkFromActiveList	5	1	0
-0000242d	Midi_loadMemoryAndPreRoll	5	1	0
-00002446	Sound::dtor	5	1	0
-00002455	thunk_FUN_1001ae50	5	1	0
-0000245a	thunk_FUN_1002c0d0	5	1	0
-0000245f	DirectSoundDevice::releaseAllBuffers	5	1	0
-00002469	MemBlock_deleteDtor	5	1	0
-0000246e	Seq_closeFile	5	1	0
-0000247d	thunk_FUN_1001c820	5	1	1
-00002491	clearNodeListA	5	4	0
-000024a0	loadMultiChannel	5	1	1
-000024aa	WaveInDevice_close	5	1	0
-000024af	CtrlObject_dtorD	5	1	0
-000024b4	WaveInDevice_addBuffer	5	0	0
-000024b9	DsBuffer::lockCaptureRegion	5	1	0
-000024be	closeMmioHandle	5	0	0
-000024c8	allocVoiceSlot	5	1	0
-000024cd	Seq_allocTrackSlot	5	1	0
-000024d7	Channel_stopVoices	5	1	0
-000024e6	SoundTimer::stopKeepLock	5	1	0
-000024f0	Channel_setRate	5	0	0
-00002509	beginDecodeStreamA	5	1	0
-00002513	Sound5b6a8_ctor	5	2	0
-00002518	WaveStream::destroy	5	1	0
-0000251d	mixCopyInnerC	5	1	0
-00002522	stubReturnBC	5	1	0
-0000255e	getSpanLength	5	1	0
-00002568	SoundGroup_rewind	5	5	0
-00002572	DirectSoundDevice::duplicateBuffer	5	2	0
-00002595	Ctrl5b58c_dtorEmbedded	5	1	0
-0000259a	Midi_Device::drainCommandQueue	5	0	0
-0000259f	openMmioSound	5	0	0
-000025b3	Ctrl5b5c0_ctor	5	1	0
-000025bd	NodeList_pushBack	5	2	0
-000025c2	Seq_cmdHandler8	5	2	0
-000025c7	Channel_set3DBufferStub	5	0	0
-000025d6	Seq_applyChannelLevel	5	1	0
-000025ea	MultiSound_ctor	5	1	0
-000025ef	soundWindowSubclassProc	5	1	0
-000025f4	thunk_FUN_1002d430	5	2	0
-000025f9	thunk_FUN_100378b0	5	0	0
-0000260d	MidiDeviceBase_ctor	5	2	0
-00002612	Ch5c2ec_dtor	5	3	0
-00002617	Voice_mixAddMono16	5	2	0
-00002621	VoiceSlot_init	5	1	0
-0000262b	mixResampleInnerA	5	1	0
-00002644	CtrlObject3_ctor	5	2	0
-00002649	renderChannelSingle	5	1	0
-0000265d	release_sound	5	0	0
-0000267b	Voice_mixAdd8bit	5	1	0
-0000268a	mapDsError	5	6	0
-0000269e	Seq_scaleTickRate	5	0	0
-000026ad	MultiSound_ctorWithType	5	2	0
-000026c1	appendNodeB	5	2	0
-000026e4	DsBuffer::setVolumeRaw	5	1	0
-000026e9	Engine_playSound	5	3	0
-000026ee	thunk_FUN_1002c370	5	0	0
-000026fd	SoundTimer::killEvent	5	5	0
-0000270c	Midi_Device::loadFile	5	0	0
-00002711	Seq_copyChannelParams	5	1	0
-00002716	Channel_stepVolumeFade	5	1	0
-0000272a	Voice_stopAndFlag	5	2	0
-0000272f	processWaveChunks	5	1	0
-00002757	stopSoundThreadFull	5	1	0
-0000275c	Ds3DBuffer::setPositionY	5	1	0
-00002761	WaveInDeviceBase_ctor	5	2	0
-00002766	clearNodeListD	5	6	0
-00002770	get_sound_version	5	0	0
-0000278e	thunk_FUN_10024260	5	0	0
-00003f30	Sound::ctor	127	0	2
-00003fd0	Sound::scalarDeletingDtor	30	0	2
-00004000	Sound::dtor	356	0	2
-000041d0	loadSoundFile	3762	0	37
-00005440	Wave_Device::readFmtChunk	440	0	4
-00005670	FUN_10005670	24	0	0
-000056e0	FUN_100056e0	4	0	0
-00005700	FUN_10005700	4	0	0
-00005720	initCtrlVtable	7	1	0
-00005740	ctrlScalarDeletingDtor	30	0	2
-00005770	processWaveChunks	196	0	1
-00005a60	clearNodeListD	125	0	1
-00005b60	clearNodeListE	125	0	1
-00005c00	listPopFront	66	0	1
-00005dd0	FUN_10005dd0	32	0	0
-00005e00	registerSound	32	0	1
-00005e30	appendNodeB	86	0	1
-00005eb0	unregisterSound	109	0	1
-00005f60	FUN_10005f60	30	0	0
-00005fb0	FUN_10005fb0	7	0	0
-00006020	WaveStream::ctor	194	0	2
-00006130	WaveStream::scalarDeletingDtor	30	0	2
-00006160	WaveStream::destroy	333	0	4
-00006310	FUN_10006310	8	0	1
-00006330	closeMmioNodeList	185	0	3
-00006420	Wave_Device::openMemoryMmio	138	0	2
-000064e0	Wave_Device::freeBufferList	698	0	3
-00006850	Wave_Device::appendBuffer	409	0	4
-00006b00	startStream	52	0	0
-00006bd0	computeCaptureDuration	113	0	1
-00006c70	clearNodeListF	125	0	1
-00006d70	FUN_10006d70	3	0	0
-00006db0	FUN_10006db0	7	0	0
-00006e00	initStreamBuffer	132	0	1
-00006ec0	freeDynArray	37	0	1
-00006f00	resizeDynArray	137	0	2
-00007010	writeWaveFile	1170	0	16
-000075e0	writeWaveFileB	1210	0	15
-00007bd0	mixAddSamples	47	0	0
-00007c30	writeWaveHeaderA	110	0	1
-00007cc0	writeWaveHeaderB	113	0	1
-00007d60	writeWaveHeaderC	110	0	1
-00007df0	writeWaveChunk	500	0	4
-00008070	writeWaveChunkB	808	0	4
-00008470	flushSoundList	507	0	5
-000086f0	openMmioFile	96	0	1
-00008770	closeMmioHandle	30	0	1
-000087f0	listNode3Init	13	0	0
-00008810	pairStore	18	0	0
-00008840	pairClear	14	0	0
-00008860	CommandQueue::init	30	0	0
-00008890	CommandQueue::clear	28	0	0
-000088c0	CommandQueue::at	15	0	0
-000088e0	SoundTimer::registerClient	42	0	3
-00008920	SoundTimer::unregisterClient	147	0	3
-000089f0	SoundTimer::init	154	0	2
-00008ac0	SoundTimer::stop	234	0	6
-00008bf0	SoundTimer::stopKeepLock	186	0	5
-00008ce0	SoundTimer::start	98	0	2
-00008d70	SoundTimer::killEvent	100	0	4
-00008ed0	SoundTimer::onTick	278	0	5
-00009040	SoundTimer::linkClient	83	0	1
-00009210	FUN_10009210	29	0	0
-000092e0	init_sound_timer	100	0	2
-00009370	get_sound_version	6	0	0
-00009390	release_sound	59	0	3
-000093e0	create_sound	766	0	11
-000097d0	delete_sound	396	0	7
-00009a90	Dll_Midi_Device::create_device	220	0	3
-00009bb0	Dll_Midi_Device::delete_device	29	0	0
-00009be0	Midi_Device::ctor	122	0	2
-00009c80	Midi_Device::scalarDeletingDtor	30	0	2
-00009cb0	Midi_Device::dtor	192	0	3
-00009da0	Midi_Device::openOutput	72	0	2
-0000a050	Device::serviceVoices	78	0	2
-0000a0c0	stubReturn2fA	6	0	0
-0000a100	stubReturn2fB	8	0	0
-0000a170	registerTimerClient	36	0	2
-0000a1b0	Midi_Device::enableOutput	51	0	1
-0000a200	Midi_Device::disableOutput	43	0	0
-0000a240	CommandQueue::push	180	0	2
-0000a330	Midi_Device::drainCommandQueue	600	0	10
-0000a670	Midi_Device::dispatchCommand	746	0	14
-0000aaf0	Midi_Device::scanCommandRing	710	0	3
-0000ae80	clearNodeListG	125	0	1
-0000af20	FUN_1000af20	15	0	0
-0000af40	FUN_1000af40	4	0	0
-0000afa0	FUN_1000afa0	10	0	0
-0000afe0	FUN_1000afe0	10	0	0
-0000b000	FUN_1000b000	29	0	1
-0000b030	getSpanLength	10	0	0
-0000b050	Dll_Wave_Device::create_device	143	0	2
-0000b110	openWaveStreamFile	31	0	1
-0000b1a0	Dll_Wave_Device::delete_device	29	0	0
-0000b1d0	Wave_Device::ctor	172	0	2
-0000b2b0	Wave_Device::scalarDeletingDtor	30	0	2
-0000b2e0	Wave_Device::dtor	250	0	4
-0000b960	Wave_Device::stop	246	0	9
-0000baa0	Wave_Device::start	677	0	11
-0000be00	Wave_Device::closeOutput	190	0	4
-0000bef0	Wave_Device::stopOutput	122	0	3
-0000bf90	Wave_Device::startOutput	103	0	4
-0000c020	Wave_Device::restart	409	0	14
-0000c230	Wave_Device::serviceTick	139	0	4
-0000c2f0	WaveCmdQueue::pushNode	164	0	2
-0000c3d0	WaveCmdQueue::pushValue	52	0	0
-0000c420	Wave_Device::processCommandQueue	1648	0	10
-0000cc40	cmdNode::scalarDeletingDtor	30	0	2
-0000cc70	Wave_Device::flushCommandQueue	182	0	3
-0000cd80	Wave_Device::dispatchCommand	2756	0	14
-0000dbe0	postNotification	194	0	4
-0000dcf0	Wave_Device::scanCommandRing	675	0	3
-0000e050	removeSoundNode	156	0	1
-0000e120	addToSoundList	35	0	1
-0000e1d0	FUN_1000e1d0	27	0	0
-0000e2a0	setOutputMasterVolume	23	0	1
-0000e2d0	getWaveDeviceInterface	15	0	0
-0000e310	serviceWaveDevice	34	0	1
-0000e350	stubReturnBA	8	0	0
-0000e570	stubReturnBB	8	0	0
-0000e5e0	clearNodeListC	125	0	1
-0000e680	appendNodeC	86	0	1
-0000e700	findAndUnlinkNodeB	109	0	1
-0000e7d0	FUN_1000e7d0	12	0	0
-0000e870	Wave_In_Device::ctor	52	0	1
-0000e8c0	Wave_In_Device::scalarDeletingDtor	30	0	2
-0000e8f0	Wave_In_Device::dtor	11	0	1
-0000e910	Dll_Wave_In_Device::create_device	191	0	2
-0000ea00	Dll_Wave_In_Device::delete_device	29	0	0
-0000ead0	Wave_In_Device::openCapture	198	0	3
-0000ec00	Wave_In_Device::closeCapture	57	0	2
-0000ed00	FUN_1000ed00	18	0	0
-0000ed50	FUN_1000ed50	5	0	0
-0000ed70	Wave_In_Device::op1	31	0	1
-0000eda0	Wave_In_Device::op2	21	0	1
-0000edf0	FUN_1000edf0	8	0	0
-0000ee10	FUN_1000ee10	8	0	0
-0000eef0	DsBuffer::ctor	78	0	1
-0000ef60	DsBuffer::destroy	133	0	0
-0000f020	DsBuffer::restartPlayback	87	0	1
-0000f0c0	DsBuffer::setBufferSize	27	0	0
-0000f160	DsBuffer::setFrequency	21	0	0
-0000f190	DsBuffer::setVolumeRaw	27	0	0
-0000f1c0	DsBuffer::setVolume	180	0	1
-0000f2b0	DsBuffer::applyOwnerVolume	157	0	1
-0000f480	mapDsError	115	0	0
-0000f590	DsBuffer::initDesc	309	0	0
-0000f760	DsBuffer::stop	22	0	0
-0000f790	DsBuffer::setPosition	91	0	0
-0000f810	DsBuffer::lockEntire	163	0	0
-0000f8f0	DsBuffer::release	114	0	0
-0000f990	DsBuffer::setPrimaryFormat	333	0	0
-0000fbb0	DsBuffer::create	527	0	0
-0000fec0	DsBuffer::hasAuxInterfaces	20	0	0
-0000fef0	DsBuffer::query3D	76	0	0
-0000ff60	DsBuffer::queryNotify	66	0	0
-0000ffd0	DsBuffer::releaseAux	57	0	0
-00010020	DsBuffer::releaseNotify	34	0	0
-00010060	DsBuffer::releaseIfOwned	143	0	0
-000101a0	DsBuffer::restore	198	0	0
-00010370	DsBuffer::unlock	42	0	0
-000103b0	DsBuffer::getWriteRegion	369	0	0
-00010660	DsBuffer::getPosition	62	0	2
-000106b0	DsBuffer::getPlayPosition	333	0	0
-00010860	DsBuffer::lockCaptureRegion	131	0	0
-00010920	DsBuffer::calibratePosition	424	0	1
-00010b40	DsBuffer::spinPosition	125	0	0
-00010be0	DsBuffer::getTimedPosition	302	0	1
-00010db0	DsBuffer::play	85	0	1
-00010e30	DsBuffer::isBusy	50	0	0
-00010eb0	DsBuffer::setRegionMs	82	0	0
-00010f30	DsBuffer::configureDesc	151	0	0
-00011000	Ds3DBuffer::setPosition	74	0	0
-00011070	Ds3DBuffer::setPositionX	59	0	0
-000110c0	Ds3DBuffer::setPositionY	59	0	0
-00011110	Ds3DBuffer::setPositionZ	59	0	0
-00011160	stubReturnBC	8	0	0
-00011180	initSoundVoice	203	0	1
-00011290	DirectSoundDevice::close	455	0	4
-000114e0	DirectSoundDevice::enumerate	224	0	2
-000116a0	seekListToIndex	88	0	0
-00011760	getDeviceCaps	28	1	0
-00011790	getNodeByIndex	93	0	1
-00011810	appendNamedNode	259	0	1
-00011970	DirectSoundDevice::releaseAll	208	0	3
-00011a80	DirectSoundDevice::stopAll	382	0	6
-00011c60	DirectSoundDevice::create	756	0	9
-00012040	FUN_10012040	5	0	0
-000120a0	DirectSoundDevice::setCooperativeLevel	81	0	2
-00012120	DirectSoundDevice::createPoolBuffer	250	0	5
-00012260	DirectSoundDevice::duplicateBuffer	470	0	9
-000124c0	DirectSoundDevice::freeIdleBuffer	361	0	5
-00012690	DirectSoundDevice::freeBufferById	421	0	6
-000128b0	DirectSoundDevice::acquireBuffer	567	0	11
-00012b80	DsBuffer::scalarDeletingDtor	30	0	2
-00012bb0	DirectSoundDevice::createPoolBufferEx	262	0	5
-00012d10	DirectSoundDevice::createBuffer	571	0	12
-00012fe0	DirectSoundDevice::createBufferFmt	600	0	13
-000132e0	DirectSoundDevice::removeBuffer	183	0	3
-000133d0	DirectSoundDevice::releaseAllBuffers	127	0	3
-000134e0	unlinkDsBuffer	88	0	0
-00013560	DirectSoundDevice::setMasterVolume	45	0	1
-000135a0	Ds3DListener::setPosition	89	0	1
-00013620	clearNodeListA	125	0	1
-000136c0	findAndUnlinkNode	109	0	1
-00013750	clearNodeListB	125	0	1
-000137f0	appendNode	86	0	1
-00013890	mixRenderA	500	0	0
-00013b10	mixResampleInnerA	549	0	0
-00013dd0	mixRenderOuterA2	888	0	2
-00014250	mixCopyInnerB	549	0	0
-00014510	mixResampleInnerB	615	0	0
-00014820	mixRenderRatedB	1014	0	2
-00014d20	mixRenderOuterB2	994	0	2
-000152b0	mixResampleD	797	0	0
-000156c0	mixResampleE	758	0	0
-00015a80	FUN_10015a80	3	0	0
-00015aa0	mixCopyD	452	0	0
-00015cf0	mixResampleF	497	0	0
-00015f70	mixResampleG	745	0	0
-00016340	mixCopyInnerC	471	0	0
-000165a0	mixResampleInnerC	537	0	0
-00016850	mixRenderOuterC	936	0	2
-00016d10	FUN_10016d10	3	0	0
-00016d30	FUN_10016d30	3	0	0
-00016d90	mixResampleH	749	0	0
-00017160	mixResampleI	722	0	0
-00017500	FUN_10017500	3	0	0
-00017520	mixResampleJ	724	0	0
-000178c0	mixResampleK	667	0	0
-00017c10	mixCopyE	523	0	0
-00017eb0	mixCopyF	469	0	0
-00018110	mixResampleL	715	0	0
-000184a0	streamRenderBlock	838	0	0
-000188d0	streamRenderTail	859	0	0
-00018d10	Voice_renderStream16a	666	0	0
-00019060	Voice_renderStream8a	736	0	0
-00019400	Voice_renderStream8b	695	0	0
-00019770	Voice_mixAddMono16	738	0	0
-00019b20	Voice_mixSetMono16	726	0	0
-00019ec0	Voice_mixSet8bit	804	0	0
-0001a2c0	Voice_mixAdd8bit	816	0	0
-0001a6c0	Voice_mixSetStereo16	452	0	0
-0001a910	Voice_mixAddStereo16	461	0	0
-0001ab60	Sound_initEntry	67	0	0
-0001abd0	Seq_freeChannelObjects	75	0	1
-0001ac40	Voice_notifyChannelNotes	191	0	3
-0001ad30	Sound_anyChannelActive	111	0	0
-0001adc0	Midi_advanceMsgRing	40	0	0
-0001ae00	Seq_setPlayRange	56	0	0
-0001ae50	FUN_1001ae50	128	0	0
-0001aef0	FUN_1001aef0	372	0	3
-0001b0d0	FUN_1001b0d0	103	0	0
-0001b160	FUN_1001b160	101	0	2
-0001b1f0	FUN_1001b1f0	426	0	2
-0001b570	ChainObject_dtor	245	0	1
-0001b870	MidiReader_freeContent	229	0	1
-0001b9a0	Ctrl_appendIfAccepted	43	0	1
-0001ba70	FUN_1001ba70	127	0	1
-0001bb10	PtrList_deleteAll	71	0	1
-0001bb80	Seq_firstTrackData	17	0	0
-0001bbb0	Ctrl5b5c0_resetElements	58	0	0
-0001bc00	FUN_1001bc00	51	0	0
-0001bc50	CtrlObject::ctor	50	0	0
-0001bca0	CtrlObject2_ctor	51	0	0
-0001bd90	Ctrl5b5c0_ctor	151	0	0
-0001bea0	ChainObject_scalarDtor	34	0	2
-0001bee0	Ctrl5b19c_ctor	295	0	2
-0001c060	FUN_1001c060	7	0	0
-0001c080	Ctrl5b58c_dtor	229	0	1
-0001c1e0	Ctrl5b5c0_transposeTable	21	0	0
-0001c1f5	FUN_1001c1f5	73	0	0
-0001c2a0	CtrlBase_resetElements	58	0	0
-0001c2f0	CtrlBase_flushElements	51	0	0
-0001c340	FUN_1001c340	17	0	0
-0001c370	Ctrl5b5c0_mapValue	112	0	0
-0001c400	Ctrl5b5c0_buildTable	89	0	1
-0001c530	CtrlObject_scalarDtorA	30	0	2
-0001c560	CtrlObject_dtorA	7	0	0
-0001c5c0	Ctrl5b5f0_ctor	164	0	2
-0001c6e0	CtrlObject_scalarDtorB	30	0	2
-0001c710	CtrlObject_dtorB	7	0	0
-0001c730	FUN_1001c730	65	0	2
-0001c7a0	streamReadByte	44	0	0
-0001c7e0	streamConsumeByte	38	0	0
-0001c820	FUN_1001c820	61	1	1
-0001c870	Ctrl5b638_ctor	125	0	1
-0001c950	Ctrl5b58c_scalarDtor	34	0	2
-0001c990	Ctrl5b58c_dtorEmbedded	245	0	1
-0001caf0	CtrlObject3_ctor	80	0	0
-0001cb60	FUN_1001cb60	10	0	0
-0001cb80	FUN_1001cb80	8	0	0
-0001cba0	CtrlObject_scalarDtorC	30	0	2
-0001cbd0	CtrlObject_dtorC	7	0	0
-0001cbf0	Ctrl5b668_ctor	72	0	0
-0001cc60	FUN_1001cc60	10	0	0
-0001cc80	FUN_1001cc80	8	0	0
-0001cca0	CtrlObject_scalarDtorD	30	0	2
-0001ccd0	CtrlObject_dtorD	7	0	0
-0001ccf0	FUN_1001ccf0	42	0	0
-0001cd30	FUN_1001cd30	37	0	1
-0001ced0	Sound_setName	263	0	3
-0001d0a0	Sound_setAltName	103	0	2
-0001d130	PtrList_init	16	0	0
-0001d150	PtrList_pushBack	86	0	1
-0001d1d0	PtrList_pushFront	83	0	1
-0001d250	PtrList_insert	225	0	1
-0001d380	MidiReader_init	218	0	0
-0001d4a0	Midi_resetFileState	183	0	1
-0001d780	Seq_listGetAt	98	0	0
-0001d810	Midi_Device::loadFile	965	0	11
-0001dce0	Midi_Device::loadFromMemory	857	0	10
-0001e1c0	Seq_rewind	75	0	1
-0001e230	Track_resetReadState	84	0	0
-0001e2b0	Seq_dtor	211	0	2
-0001e3d0	Midi_Device::closeFile	241	0	3
-0001e530	Track_clearFlag8	11	0	0
-0001e630	Seq_scaleTickRate	62	0	0
-0001e680	FUN_1001e680	23	0	0
-0001e6e0	byteSwap16	27	0	0
-0001e710	Midi_readVarLen	40	0	0
-0001e750	MidiReader_ctor	93	0	1
-0001e7d0	MidiReader_dtor	103	0	2
-0001e8e0	Seq_rewindTracks	133	0	1
-0001e9a0	Track_setData	64	0	2
-0001e9f0	Track_advancePos	49	0	0
-0001eab0	FUN_1001eab0	268	0	0
-0001ecc0	FUN_1001ecc0	312	0	0
-0001ef10	Midi_Device::flushMessages	72	0	1
-0001ef80	Midi_scanTrack	219	0	0
-0001f150	Seq_clearTrackFlag8All	66	0	0
-0001f1c0	PtrList_freeNodesA	125	1	1
-0001f4a0	Sound5b6a8_ctor	426	0	5
-0001f6c0	Sound5b6a8_scalarDtor	30	0	2
-0001f6f0	Seq_ctor	358	0	5
-0001f8c0	Voice::update	1338	0	7
-0001ff50	Sound5b6a8_dtor	640	0	6
-00020360	Midi_loadMemoryAndPreRoll	211	0	3
-000204b0	Seq_closeFile	28	0	1
-000204e0	Sound_reapIdle	196	0	3
-000205f0	Seq_preRollTrack	232	0	4
-00020720	Seq_stepTrackMeta	154	0	3
-000207f0	Seq_preRollAllTracks	89	0	1
-00020870	Midi_Device::playEvent	280	0	4
-00020b60	postMidiNotification	92	0	2
-00020be0	Voice_startPlayback	281	0	6
-00020d80	Voice_allNotesOff	209	0	2
-00020ea0	Voice_requestStop	41	0	1
-00020ee0	Voice_requestStopDrain	73	0	1
-00020f50	Seq_setField730Clamped	60	0	1
-00020fe0	Seq_setupChannel	466	0	8
-00021240	Sound_findByName	123	0	0
-00021370	FUN_10021370	7	0	0
-000213d0	Midi_Device::setChannelVolume	315	0	1
-000215c0	Midi_Device::noteOn	970	0	9
-00021a90	Midi_Device::sendShortMsg	272	0	5
-00021bf0	Midi_Device::handleMetaEvent	504	0	7
-00021ee0	Seq_setTempo	130	0	1
-00021fa0	Seq_updateChannel	465	0	5
-00022200	Seq_setCurrentIndex	43	0	0
-00022240	Seq_reset	39	0	1
-00022280	Seq_copyChannelParams	119	0	0
-00022320	Sound_lookupOrCreate	833	0	9
-00022750	Seq_setPlayOrderMode	60	0	1
-000227a0	Seq_setField240	15	0	0
-000228d0	Seq_removeTrackById	214	0	1
-000229f0	Seq_buildTrack9	620	0	8
-00022d00	Seq_buildTrack14	608	0	6
-00023000	Seq_findTrackOrZero	84	0	0
-00023080	Seq_findTrackById	111	0	1
-000231e0	Seq_cmdHandler7	141	0	0
-00023540	Seq_cmdHandler8	150	0	1
-00023610	Seq_remarkEventRange	246	0	2
-000238b0	Seq_cmdHandler9	117	0	1
-00023950	Seq_replayEventRange	200	0	3
-00023a60	Seq_cmdHandler10	217	0	1
-00023c20	Seq_cmdHandler12	52	0	1
-00023c70	Seq_cmdHandler11	106	0	0
-00023d00	Seq_buildPlayOrder	206	0	3
-00023e10	Seq_applyTrackFlag	98	0	1
-00023ea0	Voice_requestCmd12	70	0	1
-00023f10	Seq_getTrackFlagHigh	58	0	1
-00024040	Seq_dispatchChannelCmd	312	0	3
-000241f0	Seq_getListElementAt	46	0	1
-00024230	FUN_10024230	23	0	1
-00024260	FUN_10024260	12	0	1
-00024280	Seq_loadChannelDesc	104	0	1
-00024360	Seq_mergeChannelDesc	135	0	1
-00024460	ChannelDesc_ctor	39	0	1
-000244a0	FUN_100244a0	8	0	1
-00024500	Seq_selectTrack	135	0	3
-00024630	Seq_resetTrackControllers	72	0	1
-000246a0	Midi_Device::emitEvent	221	0	2
-000247c0	Seq_allocTrackSlot	203	0	2
-00024920	Midi_seekTrackToTick	322	0	1
-00024b80	Seq_scheduleEvent	149	0	2
-00024c50	Voice_setPlayModeBits	79	0	0
-00024ce0	FUN_10024ce0	8	0	0
-00024d40	NodeList_clear	125	0	1
-00024de0	NodeList_pushBack	86	0	1
-00024e60	NodeList_insert	225	0	1
-00024f90	NodeList_pushFront	83	0	1
-00025010	NodeList_initNode	25	0	0
-00025190	mixRenderRatedC	1056	0	0
-000256c0	Voice_renderStream16b	1155	0	0
-00025c80	Voice_renderStream8c	1194	0	0
-00026260	Voice_renderStream16c	1151	0	0
-00026800	Voice_renderStream32	1053	0	0
-00026d30	Voice_renderStream8d	1191	0	0
-00027310	Voice_renderUnityA	363	0	0
-000274e0	Voice_renderUnityB	457	0	0
-00027730	Voice_renderStream16d	725	0	0
-00027ad0	Voice_renderStream16e	666	0	0
-00027e20	mixAdd8bitStereo	748	0	0
-000281d0	mixCopy8bitStereo	691	0	0
-00028560	randRange	37	0	0
-000285a0	nextRandomFloat	42	0	0
-00028630	destroySoundWindowObj	79	0	2
-000286a0	SoundWindowObj_dtor	59	0	1
-000286f0	SoundWindowObj_subclass	64	0	1
-00028740	createSoundWindow	83	0	2
-000287c0	SoundWindowObj_unsubclass	55	0	1
-00028810	pumpWaveMessages	100	0	2
-000288a0	soundWindowProc	542	0	8
-00028b70	soundWindowSubclassProc	574	0	8
-00028fb0	DeviceBase_scalarDtor	43	0	1
-00028ff0	DeviceBase_dtorA	19	0	0
-00029020	VoiceBase_ctor	122	0	1
-00029140	VoiceBase_scalarDtor	30	0	2
-00029170	VoiceBase_clearList	111	0	1
-00029200	VoiceBase_dtor	103	1	1
-000292d0	VoiceBase_openInner	59	0	0
-00029320	VoiceBase_closeInner	26	0	0
-00029600	FUN_10029600	15	0	0
-00029620	FUN_10029620	5	0	0
-000296d0	FUN_100296d0	28	0	0
-00029700	FUN_10029700	18	0	0
-00029bb0	FUN_10029bb0	15	0	0
-00029c30	FUN_10029c30	31	0	0
-00029cd0	FUN_10029cd0	41	0	0
-00029d40	FUN_10029d40	31	0	0
-00029e30	FUN_10029e30	5	0	0
-00029e70	MidiDeviceBase_ctor	40	0	0
-00029f30	MidiDeviceBase_scalarDtor	30	0	2
-00029f60	DeviceBase_dtorB	19	0	0
-00029f90	MidiDeviceBase_openInner	66	0	0
-0002a000	MidiDeviceBase_closeInner	26	0	0
-0002a050	FUN_1002a050	5	0	0
-0002a1d0	FUN_1002a1d0	15	0	0
-0002a1f0	FUN_1002a1f0	15	0	0
-0002a240	WaveInDeviceBase_ctor	40	0	0
-0002a2a0	FUN_1002a2a0	3	0	0
-0002a360	FUN_1002a360	5	0	0
-0002a380	WaveInDeviceBase_scalarDtor	30	0	2
-0002a3b0	DeviceBase_dtorC	19	0	0
-0002a3e0	FUN_1002a3e0	5	0	0
-0002a420	WaveInDeviceBase_openInner	59	0	0
-0002a470	WaveInDeviceBase_closeInner	33	0	0
-0002a4e0	FUN_1002a4e0	28	0	0
-0002a650	FUN_1002a650	15	0	0
-0002a670	FUN_1002a670	15	0	0
-0002a7c0	initSignalQueue	51	0	2
-0002a810	stopSignalThread	111	0	6
-0002a8a0	stopSoundThreadFull	81	0	4
-0002a920	startSignalThread	54	0	3
-0002a970	soundThreadPump	210	0	6
-0002aa90	postSoundThreadMessage	94	0	3
-0002ab10	FUN_1002ab10	138	0	0
-0002abd0	SubChannel_scalarDtor	30	0	2
-0002ac00	SubChannel_dtor	171	1	2
-0002ace0	FUN_1002ace0	24	0	0
-0002ad10	Sound_setSourceType	109	0	0
-0002add0	Engine_playSound	236	0	3
-0002b090	unlinkFromActiveList	92	0	0
-0002b130	FUN_1002b130	50	0	0
-0002b200	FUN_1002b200	18	0	0
-0002b260	Seq_applyChannelLevel	31	0	0
-0002b2c0	FUN_1002b2c0	23	0	0
-0002b330	FUN_1002b330	37	0	0
-0002b3a0	FUN_1002b3a0	30	0	0
-0002b430	FUN_1002b430	30	0	0
-0002b4a0	FUN_1002b4a0	45	0	0
-0002b4e0	SubChannel_ctor	190	0	1
-0002b5f0	Ch5bb90_scalarDtor	30	0	2
-0002b620	Ch5bb90_dtor	273	0	2
-0002b7c0	startDevicePlayback	93	0	2
-0002b870	FUN_1002b870	23	0	0
-0002baa0	getPlaybackTime	67	0	1
-0002bb10	Object_setName	103	0	2
-0002bbe0	Device_createAndStart	90	0	1
-0002bc60	Device_prepareSoundFlags	210	0	3
-0002bd80	Device_lazyCreateSound	206	0	3
-0002bee0	Device_createStartQueue	143	0	1
-0002bfa0	FUN_1002bfa0	57	0	0
-0002bff0	FUN_1002bff0	54	0	0
-0002c040	Channel_applyFlags	102	0	0
-0002c0d0	FUN_1002c0d0	74	0	0
-0002c1a0	FUN_1002c1a0	15	0	0
-0002c1f0	FUN_1002c1f0	56	0	0
-0002c270	FUN_1002c270	34	0	0
-0002c2d0	FUN_1002c2d0	6	0	0
-0002c310	FUN_1002c310	8	0	0
-0002c370	FUN_1002c370	13	0	0
-0002c3d0	FUN_1002c3d0	31	0	0
-0002c400	FUN_1002c400	31	0	0
-0002c430	FUN_1002c430	31	0	0
-0002c490	Ch5bb90_ctor	214	0	1
-0002c5b0	MixerVoiceArray_scalarDtor	30	0	2
-0002c5e0	destroyMixerVoices	327	0	2
-0002c9f0	Mixer_ctor	165	0	1
-0002cad0	Mixer_scalarDtor	30	0	2
-0002cb00	Mixer_dtor	220	1	2
-0002ce60	MultiSound_freeSlots	49	0	1
-0002ceb0	VoiceSlot_init	31	0	0
-0002cee0	MixBuffer_ctor	79	0	0
-0002d100	allocVoiceSlot	253	0	2
-0002d240	Voice_setName	93	0	2
-0002d430	FUN_1002d430	7	0	0
-0002d450	Ch5be88_ctor	166	0	0
-0002d530	Ch5be88_scalarDtorA	30	0	2
-0002d560	Ch5be88_dtorA	226	0	2
-0002d7a0	FUN_1002d7a0	31	0	0
-0002d8c0	FUN_1002d8c0	23	0	0
-0002d8f0	FUN_1002d8f0	31	0	0
-0002d920	FUN_1002d920	21	0	0
-0002da30	FUN_1002da30	31	0	0
-0002db00	FUN_1002db00	28	0	0
-0002dba0	FUN_1002dba0	36	0	0
-0002dbe0	FUN_1002dbe0	31	0	0
-0002dc40	FUN_1002dc40	18	0	0
-0002dd10	FUN_1002dd10	116	0	2
-0002ddb0	Channel_propagateFlag0	39	0	1
-0002ddf0	Sound_assignName	110	0	2
-0002deb0	SubChannel_openSourceType2	90	0	2
-0002dff0	Channel_releaseSound	79	0	1
-0002e130	FUN_1002e130	33	0	0
-0002e290	FUN_1002e290	23	0	0
-0002e3c0	FUN_1002e3c0	25	0	0
-0002e3f0	FUN_1002e3f0	35	0	0
-0002e430	FUN_1002e430	20	0	0
-0002e460	FUN_1002e460	20	0	0
-0002e530	FUN_1002e530	7	0	0
-0002e550	Ch5c000_ctor	176	0	1
-0002e630	Ch5be88_scalarDtorB	30	0	2
-0002e660	Ch5be88_dtorB	226	0	2
-0002e790	FUN_1002e790	24	0	0
-0002e8f0	FUN_1002e8f0	44	0	0
-0002e930	Ch5c178_ctor	153	0	1
-0002ea00	Ch5c178_scalarDtor	30	0	2
-0002ea30	Ch5c178_dtor	201	0	2
-0002eb40	openSourceType4	105	0	2
-0002ebd0	FUN_1002ebd0	59	0	1
-0002ec20	FUN_1002ec20	25	0	0
-0002ec50	FUN_1002ec50	15	0	0
-0002ed30	FUN_1002ed30	3	0	0
-0002ed50	buildVoiceRxName	240	0	2
-0002eea0	FUN_1002eea0	8	0	0
-0002eee0	FUN_1002eee0	18	0	0
-0002ef10	Ch5c234_scalarDtor	30	0	2
-0002ef40	Ch5c234_dtor	220	1	2
-0002f060	openSourceType6	100	0	2
-0002f0f0	FUN_1002f0f0	59	0	1
-0002f190	FUN_1002f190	18	0	0
-0002f220	buildVoiceTxName	245	0	2
-0002f360	FUN_1002f360	3	0	0
-0002f3c0	Ch5c2ec_scalarDtor	30	0	2
-0002f3f0	Ch5c2ec_dtor	223	0	2
-0002f530	FUN_1002f530	40	0	0
-0002f570	FUN_1002f570	21	0	0
-0002f5a0	FUN_1002f5a0	38	0	1
-0002f5e0	openSourceType7	117	0	2
-0002f680	FUN_1002f680	18	0	0
-0002f740	Ch5c3a4_ctor	107	0	2
-0002f810	FUN_1002f810	3	0	0
-0002f880	FUN_1002f880	30	0	2
-0002f8b0	Mixer_dtor	5	0	0
-0002f8d0	MultiSound_setSlotSource	313	0	4
-0002fa60	FUN_1002fa60	170	0	0
-0002fb40	FUN_1002fb40	21	0	0
-0002fb70	enqueueWaveCmdE	126	0	3
-0002fc10	FUN_1002fc10	155	0	3
-0002ffa0	markSoundTime	17	0	1
-0002ffd0	updateSoundTimer	17	0	1
-00030080	Sound5c450_ctor	147	0	2
-00030150	Sound5c450_scalarDtor	30	0	2
-00030180	Sound5c450_dtor	451	0	4
-000303f0	Sound_stop	303	0	3
-00030570	Sound_freeBufferList	280	0	3
-00030840	openMmioSound	687	0	8
-00030ba0	streamWaveSamples	823	0	5
-00030fb0	Channel_setFormat	146	0	1
-00031080	Channel_start	72	0	1
-000311b0	FUN_100311b0	7	0	0
-00031200	StreamReader_ctor	73	0	1
-00031270	StreamReader_scalarDtor	30	0	2
-000312a0	streamReaderDtor	335	0	4
-00031450	WaveInStream_start	36	0	1
-00031490	freeMmioHandleList	152	0	2
-00031560	freeMmioHandleListGetInfo	197	0	4
-000316c0	loadWaveResource	341	0	6
-000319e0	WaveInStream_resetCodec	63	0	2
-00031ac0	PtrList_freeNodesB	125	0	1
-00031b60	ResourceList_pushBack	86	0	1
-00031be0	FUN_10031be0	492	0	2
-00031e50	Channel_ctor	366	0	3
-00032020	Sound_resetBuffers	198	0	2
-00032130	beginDecodeStreamA	257	0	5
-00032290	beginDecodeStreamB	291	0	5
-00032410	DsDevice_registerBuffer	26	0	1
-00032440	voiceListRemove	131	0	1
-00032500	updateVoiceRate	246	0	1
-00032640	closeDecoder	15	0	1
-00032660	FUN_10032660	6	0	0
-000326a0	parseRiffWave	2429	0	23
-00033300	fillDecodeRing	1203	0	4
-00033990	Channel_parseWaveHeader	18	0	1
-000339c0	rewindChannel	369	0	6
-00033ba0	Channel_resetPanState	146	0	1
-00033c70	Channel_closeAndFree	594	0	4
-00033f90	Channel_closeStreamList	224	0	3
-000340b0	Channel_releaseBuffers	688	0	5
-00034430	serviceChannelPlayback	646	0	7
-00034770	Channel_allocAndInitVoice	290	0	0
-000348f0	Channel_startVoice	368	0	1
-00034ac0	Channel_releaseVoices	145	0	0
-00034b90	Channel_stopVoices	180	0	0
-00034c80	Channel_setRateGlide	227	0	0
-00034db0	Voice_stopAndFlag	27	0	1
-00034fb0	serviceDecodeRing	19	0	1
-00034fe0	mmioReadBuffered	105	0	3
-000350e0	mmioSeekToSample	67	0	2
-00035150	Channel_setVolume	69	0	1
-000351c0	Channel_setRate	298	0	2
-00035340	Channel_setPanGains	215	0	0
-00035460	Channel_recomputeVoiceGains	281	0	1
-000355d0	Channel_setReverseRate	296	0	1
-00035750	Channel_setPitchRate	13	0	0
-00035770	Channel_findStreamNode	76	0	0
-000357e0	Channel_checkOpen	167	0	0
-000358c0	Channel_readCurrentSample	145	0	0
-00035990	renderChannel	521	0	4
-00035ca0	closeMmioSound	551	0	4
-00035f60	Channel_stubReturnB	8	0	0
-00035f80	Channel_serviceBuffer	46	0	2
-00035fc0	Channel_stepVolumeFade	555	0	3
-00036280	renderChannelSingle	782	0	9
-00036660	renderChannelStreamed	2322	0	8
-000371d0	renderChannelVoice	1083	0	7
-00037720	Channel_setStreamSource	33	0	0
-00037760	Voice_setLoopFlag	51	0	0
-000377f0	Channel_broadcastVoiceBit1	73	0	0
-00037860	FUN_10037860	56	0	0
-000378b0	FUN_100378b0	65	0	0
-00037920	flushMmioBuffer	377	0	6
-00037b00	Channel_set3DPosition	44	0	1
-00037b40	Channel_set3DPositionX	34	0	1
-00037b80	Channel_set3DPositionY	34	0	1
-00037bc0	Channel_set3DPositionZ	34	0	1
-00037c00	Channel_set3DBufferStub	34	0	1
-00037c40	Voice_resetDefaults	321	0	1
-00037df0	FUN_10037df0	1	0	0
-00037e10	MmioBuffer_init	85	0	0
-00037f30	Voice_setPanGains	252	0	0
-00038070	Voice_setRateForward	141	0	1
-00038130	Voice_setRateReverse	142	0	1
-000381f0	Voice_noteOff	82	0	0
-000382c0	Channel_allocVoiceSlot	70	0	0
-00038330	Channel_findVoiceByTag	82	0	0
-000383b0	Voice_setLevel	58	0	1
-00038400	Channel_clearBackref	27	0	0
-00038430	nodeListAppendValue	86	0	1
-000384b0	nodeListClear2	125	1	1
-00038550	listAppendNodeA	86	0	1
-000385d0	listAppendNodeB	86	0	1
-00038650	WaveInDevice_ctor	106	0	2
-000386e0	WaveInDevice_deleteDtor	30	0	2
-00038710	WaveInDevice_dtor	298	0	6
-00038890	WaveInDevice_allocCaptureBuffers	284	0	1
-00038a00	WaveInDevice_stop	165	0	3
-00038ae0	MemBlock_deleteDtor	47	0	1
-00038b20	WaveInDevice_start	13	0	1
-00038b40	WaveInDevice_prepareHeaders	171	0	1
-00038c70	WaveInDevice_unprepareHeaders	171	0	1
-00038da0	WaveInDevice_addBuffer	171	0	1
-00038f10	WaveInDevice_reset	27	0	2
-00038f60	WaveInDevice_queryCaps	66	0	1
-00038fd0	onWaveInCallbackMessage	89	0	2
-00039050	WaveInDevice_open	125	0	1
-00039140	WaveInDevice_close	233	0	6
-000393d0	WaveInDevice_requeueBuffer	88	0	4
-00039450	FUN_10039450	12	0	0
-00039470	FUN_10039470	10	0	0
-000394c0	freePointerAndClear	26	0	1
-000394f0	MemBlock_alloc	58	0	1
-00039580	nodeListClear	125	0	1
-00039620	nodeListPopFront	66	0	1
-00039690	MultiSound_ctor	154	0	3
-00039760	MultiSound_deleteDtor	30	0	2
-00039790	MultiSound_ctorWithType	164	0	3
-00039870	MultiSound_dtor	196	0	4
-000399a0	loadMultiChannel	307	1	6
-00039b30	SoundGroup_stop	122	0	2
-00039bd0	MultiSound_enqueueCmd3	41	0	1
-00039c10	SoundGroup_rewind	26	0	1
-00039c40	MultiSound_release	43	0	2
-00039c80	MultiSound_stop	8	0	1
-00039ce0	MultiSound_start	310	0	4
-00039e70	Channel_startVoiceTimed	141	0	3
-0003a080	MultiSound_setVoiceBit1On	28	0	1
-0003a210	MultiSound_setPitchCents	262	0	3
-0003a560	MultiSound_getStatus	22	0	1
-0003a5b0	MultiSound_set3DPosition	26	0	1
-0003a710	FUN_1003a710	7	0	0
-0003a730	MultiSound_findStreamNode	8	0	1
-0003a770	getDsCoopLevel	6	0	0
-0003a800	MultiSound_is3DEnabled	27	0	0
-0003a978	DSOUND.DLL::DirectSoundEnumerateA	6	1	0
-0003a980	codecProcessBlock	193	1	4
-0003aa50	codecSetParams	63	2	0
-0003aa90	codecAllocContextA	78	1	3
-0003aae0	codecInitContextA	956	1	2
-0003aea0	codecAllocContextB	78	1	3
-0003aef0	codecInitContextB	608	1	2
-0003b150	codecProcessResource	213	1	5
-0003b230	codecSynthStage	879	1	5
-0003b5a0	codecTransformStage	2435	1	5
-0003bf30	bitPermute	578	2	0
-0003c180	bitPack	75	1	2
-0003c1d0	bitUnpack	73	1	2
-0003c220	quantizeParams	1043	1	3
-0003c640	codecStageDispatch	2551	1	15
-0003d040	codecApplyFixedCoeffs	86	1	2
-0003d0a0	applyIir2	291	1	0
-0003d1d0	lpcSynthesize	1779	1	3
-0003d8d0	reflectionToLpc	381	1	2
-0003da50	interpSubframeParams	2150	1	4
-0003e2c0	intPow	184	2	0
-0003e380	floatCopySign	118	2	0
-0003e400	floatFloorToInt	127	3	3
-0003e480	medianOfThree	148	1	0
-0003e520	decodeTableSymbol	218	1	0
-0003e600	substituteIfBelowThreshold	207	1	0
-0003e6d0	gaussSolveClamped	800	1	0
-0003e9f0	codecAutocorrelation	617	1	0
-0003ec60	codecRmsEnergy	154	1	2
-0003ed00	codecRemoveMean	177	1	0
-0003edc0	FUN_1003edc0	1350	1	2
-0003f310	codecGainSmoother	1036	1	0
-0003f720	FUN_1003f720	2199	1	4
-00040000	codecPitchAnalysis	810	1	3
-00040330	codecCorrelationLags	408	1	0
-000404d0	codecSymmetricFir	613	1	0
-00040740	FUN_10040740	867	1	0
-00040ab0	FUN_10040ab0	749	1	2
-00040da0	codecFirstOrderFilter	135	1	0
-00040e30	codecBiquadFilter	296	1	0
-00040f60	codecCombFilter	184	1	0
-00041020	FUN_10041020	1220	1	3
-000414f0	codecAmdfPitch	351	1	0
-0004164f	operator<<	177	0	4
-00041700	operator<<	164	0	4
-000417a4	opfx	116	4	3
-00041818	osfx	176	4	2
-000418c8	operator<<	41	0	3
-000418f1	flush	136	1	2
-00041979	ostream	54	1	1
-000419da	ostream	101	1	3
-00041a3f	ostream	110	0	3
-00041aad	iosResetVtable	15	1	0
-00041abc	operator=	134	0	5
-00041b42	ostream_withassign	91	0	3
-00041bc8	ostream_withassign	94	0	3
-00041c26	ostreamResetVtable	19	0	1
-00041c39	writepad	364	4	2
-00041da5	sputc	34	2	0
-00041dc7	operator<<	124	0	4
-00041e43	initCriticalSection	11	2	1
-00041e4e	deleteCriticalSection	11	1	1
-00041e59	enterCriticalSection	11	2	1
-00041e64	leaveCriticalSection	11	3	1
-00041e6f	ios	94	6	1
-00041ecd	`scalar_deleting_destructor'	28	0	2
-00041f52	ios	72	0	2
-00041f9a	~ios	74	7	1
-00041fe4	init	47	3	0
-00042013	operator=	59	2	0
-000420a5	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0
-000420d9	?_CallMemberFunction0@@YGXPAX0@Z	7	1	0
-000420e0	FID_conflict:_CallMemberFunction1	7	1	0
-000420e7	FID_conflict:_CallMemberFunction1	7	1	0
-000420ee	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	79	2	1
-0004213d	___CxxFrameHandler	54	0	1
-0004218d	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	84	1	1
-000421e1	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	37	0	1
-00042206	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	182	1	1
-000422bc	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	114	0	2
-00042331	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	123	2	1
-000423ac	__global_unwind2	32	0	1
-000423ee	__local_unwind2	104	1	1
-00042456	__abnormal_termination	35	1	0
-00042479	__NLG_Notify1	9	1	0
-00042482	NLG_Notify	24	1	0
-0004249a	operator_delete	11	208	1
-000424b0	_strrchr	39	3	0
-000424d7	operator_new	14	66	1
-000424ee	__fpmath	23	1	3
-00042505	FUN_10042505	1	2	0
-00042506	cfltcvtInit	56	1	0
-00042550	__ftol	39	27	0
-00042577	_sprintf	82	3	2
-000425c9	__onexit	126	1	4
-00042647	_atexit	18	0	1
-00042690	strstr	133	4	0
-00042710	_strncpy	254	7	0
-0004280e	??_M@YGXPAXIHP6EX0@Z@Z	104	9	1
-00042876	FID_conflict:$L16506	24	1	1
-0004288e	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	81	2	0
-00042902	??_L@YGXPAXIHP6EX0@Z1@Z	106	5	1
-0004296c	FUN_1004296c	24	1	1
-00042984	__beginthread	119	1	7
-000429fb	__threadstart@4	116	0	4
-00042a8e	crtEndThread	61	1	6
-00042acd	_malloc	18	24	1
-00042adf	__nh_malloc	44	2	2
-00042b0b	heap_alloc	231	1	6
-00042b72	heapAllocUnlockFunclet	9	1	1
-00042bd1	heapAllocUnlockFunclet2	9	1	1
-00042c07	free	215	25	8
-00042c71	freeUnlockFunclet	9	1	1
-00042cc9	freeUnlockFunclet2	9	1	1
-00042cf0	FID_conflict:_memcpy	664	6	0
-00043025	__CRT_INIT@12	217	1	14
-000430fe	entry	157	0	2
-0004319b	_amsg_exit	48	9	3
-000431ce	FUN_100431ce	3	23	0
-000431d1	FUN_100431d1	12	0	0
-000431f0	CIsqrt	20	0	2
-00043204	sqrt	9	4	1
-0004320d	sqrt_classify	157	1	4
-000432b0	CItranscendental1	10	1	1
-000432d0	CIlog	20	0	2
-000432e4	log	9	1	1
-000432ed	log_classify	188	1	3
-0004339c	_floor	207	1	5
-0004346b	_fflush	47	1	4
-0004349a	__fflush_lk	46	2	2
-000434c8	__flush	92	2	1
-0004352d	_flsall	164	1	5
-0004368d	FID_conflict:__lock_file	47	2	2
-000436bc	FID_conflict:__lock_file2	35	1	2
-000436df	FID_conflict:__lock_file	47	2	2
-0004370e	FID_conflict:__lock_file2	35	1	2
-00043731	~type_info	41	1	3
-0004375a	`scalar_deleting_destructor'	28	0	2
-000437e0	EH_prolog	31	5	0
-00043800	_strlen	123	20	0
-0004387b	___InternalCxxFrameHandler	155	3	3
-00043916	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	435	1	9
-00043ac9	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	170	1	4
-00043b73	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	93	1	1
-00043bd0	___FrameUnwindToState	132	2	2
-00043c84	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z	123	2	5
-00043cff	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	165	1	3
-00043dcc	FUN_10043dcc	78	1	3
-00043e44	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	440	1	8
-00044008	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	86	2	1
-0004406f	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	35	1	0
-000440a0	__CallSettingFrame@12	76	2	1
-000440ec	__mtinit	84	1	6
-00044140	__mtterm	30	1	2
-0004415e	__initptd	19	3	0
-00044171	__getptd	103	12	8
-000441d8	__freeptd	160	2	3
-00044284	?terminate@@YAXXZ	86	3	2
-000442fd	?_inconsistency@@YAXXZ	79	5	1
-00044353	__setdefaultprecision	18	1	1
-00044365	__ms_p5_test_fdiv	62	1	0
-000443a3	__ms_p5_mp_test_fdiv	41	1	3
-000443cc	__forcdecpt	90	0	2
-0004448c	__fassign	62	0	2
-000444ca	__cftoe	97	1	3
-0004452b	__cftoe2	194	2	2
-000445ed	__cftof	85	1	3
-00044642	__cftof2	167	2	2
-000446e9	__cftog	147	1	4
-0004477c	__cfltcvt	81	0	3
-000447cd	__shift	37	2	2
-000447f2	__flsbuf	280	2	4
-0004490a	__output	1825	1	11
-0004504b	_write_char	53	3	1
-00045080	_write_multi_char	49	1	1
-000450b1	_write_string	56	1	1
-000450e9	_get_int_arg	13	1	0
-000450f6	_get_int64_arg	16	1	0
-00045106	_get_short_arg	14	1	0
-00045114	__cinit	45	1	2
-00045152	__exit	17	3	1
-00045163	__cexit	15	1	1
-00045181	crtExitProcess	163	2	6
-00045226	FID_conflict:__lockexit	9	2	1
-0004522f	FID_conflict:__lockexit	9	2	1
-00045238	__initterm	26	2	0
-00045252	crtRealloc	781	2	17
-000453dd	reallocUnlockFunclet	9	1	1
-0004552b	reallocUnlockFunclet2	11	1	1
-00045581	msize	214	1	6
-000455eb	msizeUnlockFunclet	9	1	1
-00045666	msizeUnlockFunclet2	9	1	1
-00045680	strchr	188	2	0
-00045801	__seh_longjmp_unwind@4	27	0	1
-0004581c	__dosmaperr	115	5	2
-0004588f	_errno	9	17	1
-00045898	__doserrno	9	11	1
-000458a1	calloc	289	3	8
-0004593a	callocUnlockFunclet	9	1	1
-000459c3	callocUnlockFunclet2	9	1	1
-000459de	__XcptFilter	318	0	3
-00045b1c	_xcptlookup	58	1	0
-00045b80	__callnewh	27	3	0
-00045b9b	getModuleLinkerVersion	45	2	1
-00045bc8	crtHeapSelect	328	1	9
-00045d10	crtHeapInit	93	1	5
-00045d6d	sbhHeapTerm	168	1	3
-00045e34	setSbhThreshold	179	0	3
-00045ee7	sbhGroupHeapInit	72	2	1
-00045f2f	___sbh_find_block	43	3	0
-00045f5a	__sbh_free_block	809	2	3
-00046283	___sbh_alloc_block	777	3	2
-0004658c	___sbh_alloc_new_region	177	1	4
-0004663d	___sbh_alloc_new_group	251	1	1
-00046738	___sbh_resize_block	758	1	0
-00046aff	___sbh_heap_check	815	0	1
-00046e50	sbhRegionCreate	324	3	5
-00046f94	sbhRegionFree	86	1	2
-00046fea	sbhRegionDecommit	194	1	2
-000470ac	sbhRegionLocate	87	3	0
-00047103	sbhPageFree	69	2	1
-00047148	crtCommitPages	520	3	4
-00047350	sbhFindFreeRun	292	1	0
-00047474	sbhResizeBlock	169	1	0
-0004751d	sbhRegionHeapCheck	350	0	0
-0004767b	__mtinitlocks	41	1	1
-000476a4	__mtdeletelocks	108	1	2
-00047710	__lock	97	26	7
-00047771	_unlock	21	31	1
-0004779e	__ioinit	444	1	6
-0004795a	__ioterm	84	1	2
-000479ae	__setenvp	185	1	6
-00047a67	__setargv	153	1	5
-00047b00	_parse_cmdline	436	1	0
-00047cb4	___crtGetEnvironmentStringsA	306	1	8
-00047de6	__FF_MSGBANNER	57	1	1
-00047e1f	__NMSG_WRITE	339	3	8
-00047fb0	__trandisp1	103	2	0
-00048017	__trandisp2	140	2	0
-00048180	fp2ArgResultDispatch	23	0	0
-00048197	__startOneArgErrorHandling	60	3	1
-000481f5	fpuSetControlWord	23	1	0
-0004820c	fpStatusExceptionType	25	2	0
-00048225	__fload_withFB	67	2	0
-00048268	doubleExponentField	22	2	0
-0004828b	__math_exit	42	2	1
-00048580	__cintrindisp2	62	0	2
-000485be	__cintrindisp1	61	0	2
-000485fb	__ctrandisp2	72	0	3
-00048643	fpTranscendentalDispatch	7	2	0
-0004864a	fpIntrinsicDispatch	305	2	1
-0004877b	__ctrandisp1	51	1	3
-000487ae	__fload	60	2	0
-000487ea	__handle_qnan1	84	2	3
-0004883e	__handle_qnan2	96	2	3
-0004889e	__except1	152	2	6
-00048936	__except2	165	2	6
-000489db	__raise_exc	691	3	3
-00048c8e	__handle_exc	535	3	2
-00048ea5	__umatherr	136	4	4
-00048f2d	__set_errno	40	4	1
-00048f55	__get_fname	37	1	0
-00048f7a	__errcode	45	2	0
-00048fa7	__frnd	18	2	0
-00048fb9	__set_exp	41	3	0
-00049022	__set_bexp	36	0	0
-00049046	__sptype	90	4	0
-000490a0	__decomp	193	4	1
-00049161	__statfp	14	1	0
-0004916f	__clrfp	15	1	0
-0004917e	__ctrlfp	35	10	0
-000491a1	__set_statfp	86	1	0
-000491f7	__commit	147	1	7
-0004928a	__write	101	2	5
-000492ef	__write_lk	395	1	6
-00049500	_strcmp	129	6	0
-00049584	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	70	0	2
-000495e8	?_ValidateRead@@YAHPBXI@Z	28	2	1
-00049604	crtValidatePointer	28	1	1
-00049620	?_ValidateExecute@@YAHP6GHXZ@Z	24	2	1
-00049638	_abort	23	1	3
-00049662	__clearfp	20	0	1
-00049676	__control87	53	1	2
-000496ab	__controlfp	22	1	1
-000496ec	__abstract_cw	146	1	0
-0004977e	__hw_cw	137	1	0
-00049807	__abstract_sw	53	1	0
-0004983c	__isctype	117	7	1
-000498b9	_tolower	111	1	5
-00049928	__tolower_lk	203	3	2
-000499f3	__ZeroTail	73	1	0
-00049a3c	__IncMan	86	1	1
-00049a92	__RoundMan	140	2	2
-00049b1e	__CopyMan	27	1	0
-00049b39	__FillZeroMan	12	1	0
-00049b45	__IsZeroMan	27	1	0
-00049b60	__ShrMan	141	1	0
-00049bed	__ld12cvt	364	2	5
-00049d59	FID_conflict:__ld12tod	22	1	1
-00049d6f	FID_conflict:__ld12tod	22	1	1
-00049d85	__ld12told	122	2	1
-00049dff	FID_conflict:__atodbl	45	1	2
-00049e2c	__atoldbl	46	0	2
-00049e5a	FID_conflict:__atodbl	45	1	2
-00049e87	__fptostr	119	3	2
-00049efe	__fltout2	92	3	3
-00049f5a	___dtold	182	1	0
-0004a010	strcpy	7	15	0
-0004a020	_strcat	224	3	0
-0004a100	_memset	88	7	0
-0004a158	__fptrap	9	1	1
-0004a161	__lseek	101	1	5
-0004a1c6	__lseek_lk	115	2	5
-0004a239	__getbuf	68	1	1
-0004a27d	__isatty	41	1	0
-0004a2a6	_wctomb	89	1	5
-0004a2ff	__wctomb_lk	105	1	2
-0004a370	__aulldiv	104	2	0
-0004a3e0	__aullrem	117	2	0
-0004a460	FID_conflict:_memcpy	664	6	0
-0004a795	_strtol	23	1	1
-0004a7ac	_strtoxl	517	1	3
-0004a9d0	_strncmp	56	2	0
-0004aa10	_alloca_probe	47	7	0
-0004aa3f	__setmbcp	429	1	7
-0004abec	_getSystemCP	74	1	0
-0004ac36	_CPtoLCID	51	1	0
-0004ac69	_setSBCS	41	1	0
-0004ac92	_setSBUpLow	389	1	3
-0004ae27	___initmbctable	28	2	1
-0004ae43	___crtMessageBoxA	137	1	2
-0004aecc	__87except	208	2	5
-0004af9c	__powhlp	304	0	1
-0004b0cc	__d_inttype	101	1	2
-0004becb	FUN_1004becb	3	2	0
-0004bece	__alloc_osfhnd	291	1	7
-0004bff1	__set_osfhnd	124	1	3
-0004c06d	__free_osfhnd	127	1	3
-0004c0ec	__get_osfhandle	66	3	2
-0004c12e	__open_osfhandle	167	0	8
-0004c1d5	__lock_fhandle	95	5	4
-0004c234	__unlock_fhandle	34	5	1
-0004c256	_fclose	49	0	3
-0004c287	__fclose_lk	76	1	4
-0004c2d3	_signal	386	0	10
-0004c4b7	_raise	386	1	5
-0004c639	FUN_1004c639	61	2	0
-0004c688	___crtGetStringTypeA	318	3	5
-0004c7d1	_setlocale	582	0	13
-0004ca17	__setlocale_set_cat	283	1	6
-0004cb32	__setlocale_get_all	185	1	5
-0004cbeb	__expandlocale	280	2	6
-0004cd06	__strcats	37	2	1
-0004cd2b	___lc_strtolc	204	1	4
-0004cdf7	___lc_lctostr	83	1	2
-0004ce4a	___crtLCMapStringA	511	3	6
-0004d06e	_strncnt	43	1	0
-0004d099	___addl	33	3	0
-0004d0ba	___add_12	94	2	1
-0004d118	___shl_12	46	3	0
-0004d146	___shr_12	45	2	0
-0004d173	___mtold12	199	1	2
-0004d23a	___strgtold12	1185	4	3
-0004d70b	___STRINGTOLD	60	0	2
-0004d747	_$I10_OUTPUT	659	1	6
-0004d9e2	_toupper	111	1	5
-0004da51	__toupper_lk	204	1	2
-0004db1d	__copysign	33	1	0
-0004db3e	__chgsign	37	0	0
-0004db79	__logb	231	0	5
-0004dc60	__nextafter	661	0	5
-0004df37	__fpclass	146	1	1
-0004dfc9	__close	93	1	5
-0004e026	__close_lk	131	1	5
-0004e0a9	__freebuf	43	1	1
-0004e165	__get_lc_time	846	0	1
-0004e4b3	__free_lc_time	400	0	1
-0004e818	_fix_grouping	55	0	0
-0004e91a	__get_lc_lconv	290	0	2
-0004ea3c	_fix_grouping	55	1	0
-0004ea73	__free_lc_lconv	78	0	1
-0004eac1	___init_ctype	581	0	6
-0004ed10	_strcspn	62	2	0
-0004ed50	_strpbrk	58	1	0
-0004ed8a	___get_qualified_locale	381	1	11
-0004ef07	_TranslateName	88	1	1
-0004ef5f	_GetLcidFromLangCountry	135	1	3
-0004efe6	_LangCountryEnumProc@4	516	0	6
-0004f1ea	_GetLcidFromLanguage	86	1	3
-0004f240	_LanguageEnumProc@4	189	0	4
-0004f2fd	_GetLcidFromCountry	55	1	2
-0004f334	_CountryEnumProc@4	134	0	3
-0004f3ba	_GetLcidFromDefault	26	1	1
-0004f3d4	_ProcessCodePage	102	1	2
-0004f43a	_TestDefaultCountry	31	2	0
-0004f459	_TestDefaultLanguage	98	2	3
-0004f4bb	_IsThisWindowsNT	54	1	1
-0004f4f1	_crtGetLocaleInfoA@16	230	0	2
-0004f5d7	_LcidFromHexString	57	4	0
-0004f610	_GetPrimaryLen	33	3	0
-0004f631	___ld12mul	544	2	3
-0004f851	___multtenpow12	124	2	1
-0004f8cd	_ldexp	486	0	7
-0004fab3	__Getdays	143	0	3
-0004fb42	__Getmonths	149	0	3
-0004fbd7	__Gettnames	562	0	4
-0004fe24	Strftime	250	0	5
-0004ff1e	__expandtime	1007	2	4
-0005030d	__store_str	39	1	0
-00050334	__store_num	111	1	1
-000503a3	__store_number	73	1	0
-000503ec	__store_winword	719	1	2
-000506bb	___getlocaleinfo	312	3	7
-000507f9	___crtGetStringTypeW	423	1	6
-000509be	__itoa	45	1	1
-000509eb	_xtoa	92	2	0
-00050a47	__ltoa	42	0	1
-00050a8c	__i64toa	49	0	1
-00050abd	_x64toa@20	134	2	2
-00050b43	__ui64toa	27	0	1
-00050b60	__strcmpi	208	5	3
-00050c30	__strnicmp	257	2	3
-00050d31	_atol	139	2	1
-00050e81	___tzset	46	1	3
-00050ec5	__tzset_lk	647	1	12
-0005116d	FID_conflict:__isindst_lk	428	0	1
-00051319	cvtdate	320	1	0
-00051459	___crtGetLocaleInfoW	264	1	4
-0005156c	___crtGetLocaleInfoA	275	1	4
-000516e5	__getenv_lk	125	1	3
-00051762	__mbsnbicoll	63	2	1
-000517a1	___wtomb_environ	110	2	3
-0005180f	___crtCompareStringA	597	1	6
-00051a8c	_strncnt	43	1	0
-00051ab7	___crtsetenv	391	1	10
-00051c3e	_findenv	88	1	1
-00051c96	_copy_environ	103	1	3
-00051cfd	__mbschr	151	1	3
-00051d94	__strdup	43	1	3
-00051dc0	KERNEL32.DLL::RtlUnwind	6	2	0
-00058480	Unwind@10058480	8	0	1
-00058488	Unwind@10058488	14	0	1
-000584b0	Unwind@100584b0	8	0	1
-000584b8	Unwind@100584b8	14	0	1
-000584e0	Unwind@100584e0	11	0	1
-000584eb	Unwind@100584eb	11	0	1
-000584f6	Unwind@100584f6	11	0	1
-00058501	Unwind@10058501	14	0	1
-0005850f	Unwind@1005850f	14	0	1
-0005851d	Unwind@1005851d	14	0	1
-0005852b	Unwind@1005852b	14	0	1
-00058560	Unwind@10058560	8	0	1
-00058568	Unwind@10058568	11	0	1
-00058590	Unwind@10058590	8	0	1
-00058598	Unwind@10058598	11	0	1
-000585c0	Unwind@100585c0	8	0	1
-000585c8	Unwind@100585c8	11	0	1
-000585f0	Unwind@100585f0	11	0	1
-00058610	Unwind@10058610	11	0	1
-00058630	Unwind@10058630	11	0	1
-00058650	Unwind@10058650	11	0	1
-0005865b	Unwind@1005865b	11	0	1
-00058666	Unwind@10058666	11	0	1
-00058671	Unwind@10058671	11	0	1
-0005867c	Unwind@1005867c	11	0	1
-00058687	Unwind@10058687	11	0	1
-00058692	Unwind@10058692	11	0	1
-000586c0	Unwind@100586c0	11	0	1
-000586e0	Unwind@100586e0	11	0	1
-000586eb	Unwind@100586eb	8	0	1
-000586f3	Unwind@100586f3	11	0	1
-00058720	Unwind@10058720	8	0	1
-00058728	Unwind@10058728	11	0	1
-00058750	Unwind@10058750	8	0	1
-00058758	Unwind@10058758	11	0	1
-00058780	Unwind@10058780	11	0	1
-000587a0	Unwind@100587a0	11	0	1
-000587c0	Unwind@100587c0	8	0	1
-000587c8	Unwind@100587c8	14	0	1
-000587f0	Unwind@100587f0	8	0	1
-000587f8	Unwind@100587f8	14	0	1
-00058806	Unwind@10058806	14	0	1
-00058830	Unwind@10058830	11	0	1
-0005883b	Unwind@1005883b	11	0	1
-00058860	Unwind@10058860	11	0	1
-00058880	Unwind@10058880	11	0	1
-0005888b	Unwind@1005888b	11	0	1
-000588b0	Unwind@100588b0	11	0	1
-000588d0	Unwind@100588d0	11	0	1
-000588f0	Unwind@100588f0	11	0	1
-00058910	Unwind@10058910	11	0	1
-0005891b	Unwind@1005891b	14	0	1
-00058929	Unwind@10058929	14	0	1
-00058950	Unwind@10058950	11	0	1
-00058970	Unwind@10058970	11	0	1
-00058990	Unwind@10058990	11	0	1
-000589b0	Unwind@100589b0	11	0	1
-000589d0	Unwind@100589d0	11	0	1
-000589f0	Unwind@100589f0	11	0	1
-00058a10	Unwind@10058a10	11	0	1
-00058a1b	Unwind@10058a1b	11	0	1
-00058a40	Unwind@10058a40	11	0	1
-00058a60	Unwind@10058a60	11	0	1
-00058a80	Unwind@10058a80	8	0	1
-00058a88	Unwind@10058a88	11	0	1
-00058ab0	Unwind@10058ab0	11	0	1
-00058ad0	Unwind@10058ad0	8	0	1
-00058af0	Unwind@10058af0	11	0	1
-00058b10	Unwind@10058b10	11	0	1
-00058b30	Unwind@10058b30	11	0	1
-00058b50	Unwind@10058b50	14	0	1
-00058b70	Unwind@10058b70	8	0	1
-00058b90	Unwind@10058b90	8	0	1
-00058b98	Unwind@10058b98	11	0	1
-00058ba3	Unwind@10058ba3	14	0	1
-00058bb1	Unwind@10058bb1	14	0	1
-00058bbf	Unwind@10058bbf	24	0	1
-00058c00	Unwind@10058c00	8	0	1
-00058c08	Unwind@10058c08	11	0	1
-00058c13	Unwind@10058c13	14	0	1
-00058c21	Unwind@10058c21	14	0	1
-00058c2f	Unwind@10058c2f	24	0	1
-00058c70	Unwind@10058c70	8	0	1
-00058c78	Unwind@10058c78	39	0	1
-00058c9f	Unwind@10058c9f	14	0	1
-00058cad	Unwind@10058cad	14	0	1
-00058cbb	Unwind@10058cbb	24	0	1
-00058d00	Unwind@10058d00	11	0	1
-00058d20	Unwind@10058d20	11	0	1
-00058d40	Unwind@10058d40	11	0	1
-00058d4b	Unwind@10058d4b	11	0	1
-00058d70	Unwind@10058d70	11	0	1
-00058d7b	Unwind@10058d7b	11	0	1
-00058da0	Unwind@10058da0	8	0	1
-00058dc0	Unwind@10058dc0	8	0	1
-00058de0	Unwind@10058de0	8	0	1
-00058e00	Unwind@10058e00	8	0	1
-00058e20	Unwind@10058e20	8	0	1
-00058e40	Unwind@10058e40	8	0	1
-00058e48	Unwind@10058e48	8	0	1
-00058e60	Unwind@10058e60	8	0	1
-00058e80	Unwind@10058e80	8	0	1
-00058e88	Unwind@10058e88	8	0	1
-00058e90	Unwind@10058e90	8	0	1
-00058eb0	Unwind@10058eb0	8	0	1
-00058ed0	Unwind@10058ed0	8	0	1
-00058ed8	Unwind@10058ed8	8	0	1
-00058ef0	Unwind@10058ef0	8	0	1
-00058f10	Unwind@10058f10	8	0	1
-00058f18	Unwind@10058f18	8	0	1
-00058f30	Unwind@10058f30	8	0	1
-00058f50	Unwind@10058f50	8	0	1
-00058f58	Unwind@10058f58	8	0	1
-00058f70	Unwind@10058f70	8	0	1
-00058f90	Unwind@10058f90	8	0	1
-00058f98	Unwind@10058f98	8	0	1
-00058fb0	Unwind@10058fb0	8	0	1
-00058fb8	Unwind@10058fb8	8	0	1
-00058fd0	Unwind@10058fd0	8	0	1
-00058fd8	Unwind@10058fd8	8	0	1
-00058ff0	Unwind@10058ff0	8	0	1
-00058ff8	Unwind@10058ff8	8	0	1
-00059010	Unwind@10059010	8	0	1
-00059018	Unwind@10059018	8	0	1
-00059030	Unwind@10059030	8	0	1
-00059050	Unwind@10059050	11	0	1
-00059070	Unwind@10059070	11	0	1
-00059090	Unwind@10059090	11	0	1
-000590b0	Unwind@100590b0	11	0	1
-000590d0	Unwind@100590d0	11	0	1
-000590f0	Unwind@100590f0	8	0	1
-000590f8	Unwind@100590f8	11	0	1
-00059120	Unwind@10059120	8	0	1
-00059128	Unwind@10059128	11	0	1
-00059150	Unwind@10059150	14	0	1
-00059170	Unwind@10059170	8	0	1
-00059178	Unwind@10059178	11	0	1
-000591a0	Unwind@100591a0	27	0	1
-000591bb	Unwind@100591bb	14	0	1
-000591c9	Unwind@100591c9	14	0	1
-00059200	Unwind@10059200	27	0	1
-0005921b	Unwind@1005921b	14	0	1
-00059229	Unwind@10059229	14	0	1
-00059260	Unwind@10059260	27	0	1
-0005927b	Unwind@1005927b	14	0	1
-00059289	Unwind@10059289	14	0	1
-000592c0	Unwind@100592c0	11	0	1
-000592e0	Unwind@100592e0	8	0	1
-000592e8	Unwind@100592e8	11	0	1
-00059310	Unwind@10059310	8	0	1
-00059318	Unwind@10059318	11	0	1
-00059340	Unwind@10059340	8	0	1
-00059348	Unwind@10059348	39	0	1
-00059390	Unwind@10059390	11	0	1
-0005939b	Unwind@1005939b	8	0	1
-000593a3	Unwind@100593a3	11	0	1
-000593d0	Unwind@100593d0	11	0	1
-000593ec	Unwind@100593ec	26	0	1
-00059410	Unwind@10059410	26	0	1
-00059434	Unwind@10059434	8	0	1
-00059448	Unwind@10059448	26	0	1
-0005946c	Unwind@1005946c	26	0	1
+entry	name	size	callers	callees	ranges
+00001005	thunk_FUN_10031be0	5	3	0	00001005-0000100a
+00001014	Midi_Device::closeFile	5	5	0	00001014-00001019
+00001019	CtrlObject_dtorA	5	1	0	00001019-0000101e
+0000101e	Channel_setReverseRate	5	0	0	0000101e-00001023
+00001037	Seq_cmdHandler12	5	1	0	00001037-0000103c
+00001041	CtrlObject_dtorB	5	1	0	00001041-00001046
+00001046	DirectSoundDevice::createBuffer	5	2	0	00001046-0000104b
+0000104b	DirectSoundDevice::releaseAll	5	5	0	0000104b-00001050
+0000105f	Sound_assignName	5	1	0	0000105f-00001064
+0000106e	NodeList_initNode	5	2	0	0000106e-00001073
+00001073	NodeList_pushFront	5	2	0	00001073-00001078
+0000107d	thunk_FUN_1002e460	5	0	0	0000107d-00001082
+0000108c	streamReaderDtor	5	1	0	0000108c-00001091
+000010a0	DirectSoundDevice::setCooperativeLevel	5	0	0	000010a0-000010a5
+000010aa	CommandQueue::init	5	3	0	000010aa-000010af
+000010be	Track_clearFlag8	5	1	0	000010be-000010c3
+000010dc	Voice_mixSetStereo16	5	2	0	000010dc-000010e1
+000010f5	Sound_setName	5	4	0	000010f5-000010fa
+00001109	WaveInDevice_reset	5	0	0	00001109-0000110e
+00001113	Channel_serviceBuffer	5	1	0	00001113-00001118
+00001127	Voice_setPlayModeBits	5	1	0	00001127-0000112c
+0000113b	WaveInDevice_dtor	5	1	0	0000113b-00001140
+0000114f	nextRandomFloat	5	1	0	0000114f-00001154
+0000115e	DsBuffer::getTimedPosition	5	1	0	0000115e-00001163
+00001163	Sound::ctor	5	1	0	00001163-00001168
+00001177	SoundWindowObj_subclass	5	0	0	00001177-0000117c
+00001181	DsBuffer::setFrequency	5	1	0	00001181-00001186
+00001186	Seq_cmdHandler7	5	2	0	00001186-0000118b
+0000118b	Seq_setupChannel	5	2	0	0000118b-00001190
+0000119f	renderChannel	5	2	0	0000119f-000011a4
+000011b8	Channel_closeAndFree	5	5	0	000011b8-000011bd
+000011c2	Dll_Wave_Device::delete_device	5	0	0	000011c2-000011c7
+000011c7	WaveCmdQueue::pushValue	5	3	0	000011c7-000011cc
+000011cc	Seq_stepTrackMeta	5	1	0	000011cc-000011d1
+000011d6	postSoundThreadMessage	5	7	0	000011d6-000011db
+000011db	Seq_cmdHandler11	5	2	0	000011db-000011e0
+000011e5	DirectSoundDevice::createBufferFmt	5	4	0	000011e5-000011ea
+000011f9	closeDecoder	5	1	0	000011f9-000011fe
+00001203	DsBuffer::play	5	4	0	00001203-00001208
+00001212	Channel_startVoice	5	2	0	00001212-00001217
+00001217	cmdNode::scalarDeletingDtor	5	1	0	00001217-0000121c
+0000122b	Channel_setStreamSource	5	1	0	0000122b-00001230
+00001230	buildVoiceRxName	5	1	0	00001230-00001235
+00001235	PtrList_init	5	2	0	00001235-0000123a
+0000123f	Ctrl5b19c_ctor	5	0	0	0000123f-00001244
+00001249	Seq_applyTrackFlag	5	1	0	00001249-0000124e
+0000124e	Midi_Device::handleMetaEvent	5	1	0	0000124e-00001253
+00001253	thunk_FUN_10039470	5	1	0	00001253-00001258
+00001258	clearNodeListG	5	3	0	00001258-0000125d
+0000125d	Ch5c178_ctor	5	1	0	0000125d-00001262
+00001262	Channel_set3DPositionZ	5	0	0	00001262-00001267
+00001299	pairStore	5	3	0	00001299-0000129e
+0000129e	MidiReader_dtor	5	1	0	0000129e-000012a3
+000012a3	thunk_FUN_1002e3f0	5	1	0	000012a3-000012a8
+000012bc	listAppendNodeA	5	1	0	000012bc-000012c1
+000012d5	DsBuffer::releaseIfOwned	5	9	0	000012d5-000012da
+000012e9	nodeListClear	5	1	0	000012e9-000012ee
+000012ee	Voice_mixAddStereo16	5	2	0	000012ee-000012f3
+000012f3	findAndUnlinkNodeB	5	1	0	000012f3-000012f8
+00001302	Channel_stubReturnB	5	2	0	00001302-00001307
+00001311	resizeDynArray	5	2	0	00001311-00001316
+00001320	DsDevice_registerBuffer	5	1	0	00001320-00001325
+0000132f	thunk_FUN_1002e3c0	5	1	0	0000132f-00001334
+00001334	thunk_FUN_1001b160	5	1	0	00001334-00001339
+00001339	DsBuffer::restartPlayback	5	1	0	00001339-0000133e
+0000136b	thunk_FUN_1002e430	5	1	0	0000136b-00001370
+0000137a	create_sound	5	9	0	0000137a-0000137f
+0000138e	WaveStream::ctor	5	1	0	0000138e-00001393
+00001398	Channel_clearBackref	5	1	0	00001398-0000139d
+0000139d	Midi_readVarLen	5	5	0	0000139d-000013a2
+0000140b	StreamReader_ctor	5	1	0	0000140b-00001410
+00001410	thunk_FUN_1000b000	5	3	0	00001410-00001415
+0000144c	DsBuffer::release	5	1	0	0000144c-00001451
+00001465	SubChannel_ctor	5	3	0	00001465-0000146a
+00001474	Seq_cmdHandler9	5	2	0	00001474-00001479
+000014a6	Voice_noteOff	5	1	0	000014a6-000014ab
+000014bf	thunk_FUN_1001ccf0	5	3	0	000014bf-000014c4
+000014c4	thunk_FUN_10009210	5	1	0	000014c4-000014c9
+000014c9	Sound_findByName	5	1	0	000014c9-000014ce
+000014ce	mixCopyInnerB	5	2	0	000014ce-000014d3
+000014d8	Seq_dtor	5	4	0	000014d8-000014dd
+000014e2	Ds3DBuffer::setPositionZ	5	1	0	000014e2-000014e7
+000014f1	initCtrlVtable	5	2	1	000014f1-000014f6
+00001505	DsBuffer::initDesc	5	1	0	00001505-0000150a
+00001514	writeWaveFile	5	1	0	00001514-00001519
+00001519	Seq_remarkEventRange	5	1	0	00001519-0000151e
+00001546	Midi_advanceMsgRing	5	1	0	00001546-0000154b
+0000154b	Voice_setLoopFlag	5	5	0	0000154b-00001550
+00001550	Seq_updateChannel	5	2	0	00001550-00001555
+0000156e	ChainObject_dtor	5	1	0	0000156e-00001573
+00001591	Voice_setName	5	1	0	00001591-00001596
+000015a0	findAndUnlinkNode	5	3	0	000015a0-000015a5
+000015a5	writeWaveFileB	5	1	0	000015a5-000015aa
+000015aa	Channel_setVolume	5	1	0	000015aa-000015af
+000015b4	Wave_In_Device::op1	5	2	0	000015b4-000015b9
+000015c8	thunk_FUN_1002b4a0	5	0	0	000015c8-000015cd
+000015cd	clearNodeListC	5	2	0	000015cd-000015d2
+000015d2	Seq_loadChannelDesc	5	1	0	000015d2-000015d7
+000015e1	CommandQueue::push	5	5	0	000015e1-000015e6
+000015e6	mixResampleInnerB	5	2	0	000015e6-000015eb
+000015f5	Ch5be88_ctor	5	2	0	000015f5-000015fa
+000015fa	Seq_listGetAt	5	19	0	000015fa-000015ff
+00001604	Sound_setAltName	5	3	0	00001604-00001609
+00001622	PtrList_freeNodesB	5	1	0	00001622-00001627
+0000163b	thunk_FUN_1002e530	5	18	0	0000163b-00001640
+00001640	streamRenderBlock	5	1	0	00001640-00001645
+0000164a	Ds3DListener::setPosition	5	1	0	0000164a-0000164f
+00001654	Ctrl_appendIfAccepted	5	2	0	00001654-00001659
+00001672	thunk_FUN_10012040	5	1	0	00001672-00001677
+00001677	DirectSoundDevice::removeBuffer	5	7	0	00001677-0000167c
+00001681	appendNode	5	1	0	00001681-00001686
+0000168b	updateVoiceRate	5	1	0	0000168b-00001690
+00001695	DsBuffer::getPlayPosition	5	1	0	00001695-0000169a
+0000169f	Midi_Device::loadFromMemory	5	1	0	0000169f-000016a4
+000016a4	SoundGroup_stop	5	4	0	000016a4-000016a9
+000016a9	streamWaveSamples	5	2	0	000016a9-000016ae
+000016ae	nodeListAppendValue	5	1	0	000016ae-000016b3
+000016bd	Midi_Device::sendShortMsg	5	1	0	000016bd-000016c2
+000016db	startSignalThread	5	0	0	000016db-000016e0
+000016f4	Device_lazyCreateSound	5	1	0	000016f4-000016f9
+000016f9	Channel_setPitchRate	5	1	0	000016f9-000016fe
+00001703	Seq_rewind	5	1	0	00001703-00001708
+0000170d	initStreamBuffer	5	0	0	0000170d-00001712
+0000174e	clearNodeListE	5	1	0	0000174e-00001753
+0000175d	NodeList_clear	5	6	0	0000175d-00001762
+00001762	DsBuffer::queryNotify	5	1	0	00001762-00001767
+0000176c	loadWaveResource	5	1	0	0000176c-00001771
+0000177b	thunk_FUN_10039450	5	1	0	0000177b-00001780
+00001780	soundWindowProc	5	1	0	00001780-00001785
+0000179e	WaveInDeviceMgr::call_back	5	0	0	0000179e-000017a3
+000017a8	MmioBuffer_init	5	2	0	000017a8-000017ad
+000017da	Wave_Device::dtor	5	1	0	000017da-000017df
+00001807	Midi_seekTrackToTick	5	1	0	00001807-0000180c
+0000180c	DirectSoundDevice::create	5	2	0	0000180c-00001811
+00001816	pairClear	5	10	0	00001816-0000181b
+0000182f	DsBuffer::setRegionMs	5	3	0	0000182f-00001834
+00001839	Channel_allocAndInitVoice	5	0	0	00001839-0000183e
+0000183e	Mixer_ctor	5	1	0	0000183e-00001843
+00001866	Channel_resetPanState	5	3	0	00001866-0000186b
+00001870	Wave_Device::readFmtChunk	5	1	0	00001870-00001875
+0000187a	Channel_findVoiceByTag	5	1	0	0000187a-0000187f
+00001889	Ds3DBuffer::setPosition	5	2	0	00001889-0000188e
+0000188e	Wave_Device::flushCommandQueue	5	1	0	0000188e-00001893
+00001893	Sound5b6a8_dtor	5	4	0	00001893-00001898
+000018a2	Sound_setSourceType	5	16	0	000018a2-000018a7
+000018c5	Sound5c450_ctor	5	1	0	000018c5-000018ca
+000018ca	MidiReader_freeContent	5	1	0	000018ca-000018cf
+000018f7	DsBuffer::setVolume	5	4	0	000018f7-000018fc
+00001906	Seq_firstTrackData	5	2	0	00001906-0000190b
+0000190b	postMidiNotification	5	1	0	0000190b-00001910
+00001910	DsBuffer::destroy	5	15	0	00001910-00001915
+00001924	thunk_FUN_1002bff0	5	1	0	00001924-00001929
+00001929	Sound_initEntry	5	1	0	00001929-0000192e
+0000192e	seekListToIndex	5	1	0	0000192e-00001933
+00001933	streamRenderTail	5	1	0	00001933-00001938
+00001942	Sound_anyChannelActive	5	1	0	00001942-00001947
+0000194c	Midi_resetFileState	5	2	0	0000194c-00001951
+00001956	Seq_preRollTrack	5	5	0	00001956-0000195b
+0000196f	Midi_Device::scanCommandRing	5	2	0	0000196f-00001974
+00001974	Channel_set3DPosition	5	1	0	00001974-00001979
+0000198d	Channel_applyFlags	5	0	0	0000198d-00001992
+00001997	pumpWaveMessages	5	2	0	00001997-0000199c
+000019a1	CommandQueue::clear	5	3	0	000019a1-000019a6
+000019c4	Sound5c450_dtor	5	1	0	000019c4-000019c9
+000019ce	DeviceBase_dtorA	5	2	0	000019ce-000019d3
+000019d3	clearNodeListB	5	1	0	000019d3-000019d8
+000019e2	Midi_Device::dtor	5	1	0	000019e2-000019e7
+000019e7	Seq_clearTrackFlag8All	5	1	0	000019e7-000019ec
+000019ec	mixResampleInnerC	5	1	0	000019ec-000019f1
+00001a05	thunk_FUN_1001b1f0	5	0	0	00001a05-00001a0a
+00001a14	Midi_Device::noteOn	5	1	0	00001a14-00001a19
+00001a2d	DsBuffer::stop	5	3	0	00001a2d-00001a32
+00001a32	freeDynArray	5	1	0	00001a32-00001a37
+00001a3c	Channel_allocVoiceSlot	5	1	0	00001a3c-00001a41
+00001a4b	thunk_FUN_1001c060	5	2	0	00001a4b-00001a50
+00001a55	Sound_reapIdle	5	1	0	00001a55-00001a5a
+00001a5f	Dll_Midi_Device::delete_device	5	0	0	00001a5f-00001a64
+00001a73	MixBuffer_ctor	5	1	0	00001a73-00001a78
+00001a78	Ch5c178_dtor	5	4	0	00001a78-00001a7d
+00001a7d	Channel_setPanGains	5	4	0	00001a7d-00001a82
+00001a87	delete_sound	5	20	0	00001a87-00001a8c
+00001a9b	Wave_Device::stop	5	1	0	00001a9b-00001aa0
+00001aa0	thunk_FUN_1001e680	5	0	0	00001aa0-00001aa5
+00001aaf	Sound_resetBuffers	5	1	0	00001aaf-00001ab4
+00001ab9	CtrlObject_dtorC	5	4	0	00001ab9-00001abe
+00001ac3	SoundTimer::linkClient	5	1	0	00001ac3-00001ac8
+00001b09	thunk_FUN_10037860	5	0	0	00001b09-00001b0e
+00001b13	writeWaveChunk	5	1	0	00001b13-00001b18
+00001b18	closeMmioSound	5	1	0	00001b18-00001b1d
+00001b1d	MidiReader_init	5	2	0	00001b1d-00001b22
+00001b22	DeviceBase_dtorB	5	5	0	00001b22-00001b27
+00001b2c	byteSwap16	5	1	0	00001b2c-00001b31
+00001b3b	postNotification	5	2	0	00001b3b-00001b40
+00001b45	thunk_FUN_10037df0	5	7	0	00001b45-00001b4a
+00001b4a	DsBuffer::configureDesc	5	1	0	00001b4a-00001b4f
+00001b7c	beginDecodeStreamB	5	1	0	00001b7c-00001b81
+00001b81	DirectSoundDevice::close	5	2	0	00001b81-00001b86
+00001b9f	DsBuffer::isBusy	5	9	0	00001b9f-00001ba4
+00001ba4	Wave_In_Device::op2	5	2	0	00001ba4-00001ba9
+00001bb8	listAppendNodeB	5	1	0	00001bb8-00001bbd
+00001bbd	Midi_Device::flushMessages	5	1	0	00001bbd-00001bc2
+00001bcc	Seq_buildPlayOrder	5	1	0	00001bcc-00001bd1
+00001bf4	Channel_releaseVoices	5	1	0	00001bf4-00001bf9
+00001bfe	DsBuffer::create	5	6	0	00001bfe-00001c03
+00001c1c	DsBuffer::ctor	5	7	0	00001c1c-00001c21
+00001c26	getDeviceCaps	5	0	1	00001c26-00001c2b
+00001c30	DsBuffer::query3D	5	1	0	00001c30-00001c35
+00001c35	DsBuffer::setBufferSize	5	2	0	00001c35-00001c3a
+00001c3f	Seq_replayEventRange	5	1	0	00001c3f-00001c44
+00001c4e	Voice::update	5	1	0	00001c4e-00001c53
+00001c5d	DsBuffer::lockEntire	5	1	0	00001c5d-00001c62
+00001c67	init_sound_timer	5	0	0	00001c67-00001c6c
+00001c6c	Wave_Device::freeBufferList	5	2	0	00001c6c-00001c71
+00001c7b	Track_advancePos	5	3	0	00001c7b-00001c80
+00001c94	Ch5be88_dtorB	5	1	0	00001c94-00001c99
+00001ca3	Seq_rewindTracks	5	5	0	00001ca3-00001ca8
+00001cb2	writeWaveChunkB	5	1	0	00001cb2-00001cb7
+00001cb7	ResourceList_pushBack	5	1	0	00001cb7-00001cbc
+00001cc1	Ch5be88_dtorA	5	5	0	00001cc1-00001cc6
+00001cc6	Ch5c234_dtor	5	4	1	00001cc6-00001ccb
+00001cda	PtrList_freeNodesA	5	1	1	00001cda-00001cdf
+00001cdf	nodeListClear2	5	3	1	00001cdf-00001ce4
+00001d02	mixRenderA	5	1	0	00001d02-00001d07
+00001d11	Channel_releaseBuffers	5	4	0	00001d11-00001d16
+00001d39	MultiSound_dtor	5	1	0	00001d39-00001d3e
+00001d52	Seq_mergeChannelDesc	5	2	0	00001d52-00001d57
+00001d66	Seq_freeChannelObjects	5	3	0	00001d66-00001d6b
+00001d75	DsBuffer::setPrimaryFormat	5	2	0	00001d75-00001d7a
+00001d93	Wave_Device::scanCommandRing	5	1	0	00001d93-00001d98
+00001dac	VoiceBase_dtor	5	4	1	00001dac-00001db1
+00001dcf	nodeListPopFront	5	1	0	00001dcf-00001dd4
+00001dd4	Mixer_dtor	5	1	0	00001dd4-00001dd9
+00001dd9	Voice_allNotesOff	5	2	0	00001dd9-00001dde
+00001dde	thunk_FUN_10032660	5	1	0	00001dde-00001de3
+00001de8	rewindChannel	5	1	0	00001de8-00001ded
+00001dfc	SoundTimer::start	5	4	0	00001dfc-00001e01
+00001e01	thunk_FUN_1001b0d0	5	1	0	00001e01-00001e06
+00001e06	DeviceBase_dtorC	5	2	0	00001e06-00001e0b
+00001e4c	flushMmioBuffer	5	0	0	00001e4c-00001e51
+00001e51	parseRiffWave	5	4	0	00001e51-00001e56
+00001e56	Voice_resetDefaults	5	2	0	00001e56-00001e5b
+00001e74	CtrlObject2_ctor	5	3	0	00001e74-00001e79
+00001e79	Sound_freeBufferList	5	2	0	00001e79-00001e7e
+00001e7e	thunk_FUN_1002c270	5	0	0	00001e7e-00001e83
+00001e83	Wave_Device::dispatchCommand	5	1	0	00001e83-00001e88
+00001e92	Mixer_dtor	5	2	1	00001e92-00001e97
+00001eb0	Channel_set3DPositionY	5	0	0	00001eb0-00001eb5
+00001eb5	SubChannel_dtor	5	11	1	00001eb5-00001eba
+00001ebf	unlinkDsBuffer	5	3	0	00001ebf-00001ec4
+00001ec4	voiceListRemove	5	5	0	00001ec4-00001ec9
+00001ec9	DsBuffer::unlock	5	7	0	00001ec9-00001ece
+00001ed3	SoundTimer::unregisterClient	5	4	0	00001ed3-00001ed8
+00001ed8	Channel_set3DPositionX	5	0	0	00001ed8-00001edd
+00001ef1	NodeList_insert	5	2	0	00001ef1-00001ef6
+00001efb	Channel_recomputeVoiceGains	5	4	0	00001efb-00001f00
+00001f05	Ds3DBuffer::setPositionX	5	1	0	00001f05-00001f0a
+00001f0f	flushSoundList	5	3	0	00001f0f-00001f14
+00001f1e	destroyMixerVoices	5	1	0	00001f1e-00001f23
+00001f32	Seq_setPlayRange	5	1	0	00001f32-00001f37
+00001f37	serviceChannelPlayback	5	2	0	00001f37-00001f3c
+00001f4b	Midi_Device::dispatchCommand	5	1	0	00001f4b-00001f50
+00001f64	Voice_mixSetMono16	5	2	0	00001f64-00001f69
+00001f7d	DirectSoundDevice::freeBufferById	5	1	0	00001f7d-00001f82
+00001f82	Wave_Device::ctor	5	1	0	00001f82-00001f87
+00001fa0	thunk_FUN_1001aef0	5	1	0	00001fa0-00001fa5
+00001fa5	WaveInDevice_ctor	5	1	0	00001fa5-00001faa
+00001fbe	listPopFront	5	1	0	00001fbe-00001fc3
+00001fcd	Dll_Wave_Device::create_device	5	0	0	00001fcd-00001fd2
+00001ffa	CtrlObject::ctor	5	1	0	00001ffa-00001fff
+00002004	thunk_FUN_1001cd30	5	5	0	00002004-00002009
+00002013	DirectSoundDevice::enumerate	5	1	0	00002013-00002018
+00002022	fillDecodeRing	5	3	0	00002022-00002027
+00002031	listNode3Init	5	4	0	00002031-00002036
+00002036	buildVoiceTxName	5	1	0	00002036-0000203b
+00002040	Voice_setLevel	5	2	0	00002040-00002045
+0000204a	Ctrl5b5c0_transposeTable	5	2	0	0000204a-0000204f
+00002068	Midi_Device::playEvent	5	3	0	00002068-0000206d
+00002081	DsBuffer::hasAuxInterfaces	5	1	0	00002081-00002086
+0000209a	randRange	5	2	0	0000209a-0000209f
+000020a4	WaveInDevice_requeueBuffer	5	2	0	000020a4-000020a9
+000020b3	WaveCmdQueue::pushNode	5	5	0	000020b3-000020b8
+000020b8	Channel_findStreamNode	5	1	0	000020b8-000020bd
+000020c7	renderChannelStreamed	5	2	0	000020c7-000020cc
+000020e5	Dll_Wave_In_Device::create_device	5	0	0	000020e5-000020ea
+000020f4	Voice_notifyChannelNotes	5	1	0	000020f4-000020f9
+000020f9	DirectSoundDevice::stopAll	5	1	0	000020f9-000020fe
+00002108	Ch5bb90_dtor	5	7	0	00002108-0000210d
+00002117	Channel_broadcastVoiceBit1	5	1	0	00002117-0000211c
+0000211c	Channel_setRateGlide	5	0	0	0000211c-00002121
+00002121	WaveInDevice_start	5	0	0	00002121-00002126
+0000213a	WaveInDevice_open	5	0	0	0000213a-0000213f
+0000213f	DsBuffer::restore	5	7	0	0000213f-00002144
+00002153	Channel_propagateFlag0	5	1	0	00002153-00002158
+0000215d	Midi_scanTrack	5	3	0	0000215d-00002162
+00002162	WaveInDevice_allocCaptureBuffers	5	1	0	00002162-00002167
+00002180	Ctrl5b668_ctor	5	1	0	00002180-00002185
+0000218a	SoundTimer::stop	5	1	0	0000218a-0000218f
+0000219e	WaveInDevice_prepareHeaders	5	0	0	0000219e-000021a3
+000021a3	initSoundVoice	5	0	0	000021a3-000021a8
+000021b7	Object_setName	5	1	0	000021b7-000021bc
+000021cb	Dll_Midi_Device::create_device	5	0	0	000021cb-000021d0
+000021df	VoiceBase_ctor	5	1	0	000021df-000021e4
+000021ee	Midi_Device::emitEvent	5	1	0	000021ee-000021f3
+000021fd	Dll_Wave_In_Device::delete_device	5	0	0	000021fd-00002202
+00002202	Ctrl5b58c_dtor	5	2	0	00002202-00002207
+00002211	openMmioFile	5	1	0	00002211-00002216
+00002220	Voice_mixSet8bit	5	2	0	00002220-00002225
+0000222f	getNodeByIndex	5	0	0	0000222f-00002234
+00002243	removeSoundNode	5	2	0	00002243-00002248
+00002252	DsBuffer::scalarDeletingDtor	5	3	0	00002252-00002257
+00002257	CommandQueue::at	5	5	0	00002257-0000225c
+0000227a	SoundTimer::registerClient	5	4	0	0000227a-0000227f
+00002284	clearNodeListF	5	4	0	00002284-00002289
+00002298	Track_setData	5	1	0	00002298-0000229d
+000022b1	SoundTimer::init	5	1	0	000022b1-000022b6
+000022ca	Midi_Device::setChannelVolume	5	1	0	000022ca-000022cf
+000022e8	DsBuffer::setPosition	5	1	0	000022e8-000022ed
+000022ed	thunk_FUN_1001bc00	5	1	0	000022ed-000022f2
+000022f2	computeCaptureDuration	5	2	0	000022f2-000022f7
+000022f7	PtrList_pushBack	5	1	0	000022f7-000022fc
+000022fc	serviceDecodeRing	5	2	0	000022fc-00002301
+0000231a	Voice_setPanGains	5	4	0	0000231a-0000231f
+0000232e	Wave_In_Device::dtor	5	1	0	0000232e-00002333
+0000233d	DsBuffer::getPosition	5	3	0	0000233d-00002342
+00002351	appendNodeC	5	2	0	00002351-00002356
+00002360	SoundWindowObj_unsubclass	5	1	0	00002360-00002365
+0000237e	Ch5c3a4_ctor	5	1	0	0000237e-00002383
+00002388	DirectSoundDevice::setMasterVolume	5	1	0	00002388-0000238d
+0000239c	Track_resetReadState	5	1	0	0000239c-000023a1
+000023ab	Seq_buildTrack14	5	1	0	000023ab-000023b0
+000023e7	Seq_cmdHandler10	5	2	0	000023e7-000023ec
+000023f1	addToSoundList	5	1	0	000023f1-000023f6
+000023f6	renderChannelVoice	5	1	0	000023f6-000023fb
+0000240a	Seq_scheduleEvent	5	2	0	0000240a-0000240f
+00002419	unlinkFromActiveList	5	1	0	00002419-0000241e
+0000242d	Midi_loadMemoryAndPreRoll	5	1	0	0000242d-00002432
+00002446	Sound::dtor	5	1	0	00002446-0000244b
+00002455	thunk_FUN_1001ae50	5	1	0	00002455-0000245a
+0000245a	thunk_FUN_1002c0d0	5	1	0	0000245a-0000245f
+0000245f	DirectSoundDevice::releaseAllBuffers	5	1	0	0000245f-00002464
+00002469	MemBlock_deleteDtor	5	1	0	00002469-0000246e
+0000246e	Seq_closeFile	5	1	0	0000246e-00002473
+0000247d	thunk_FUN_1001c820	5	1	1	0000247d-00002482
+00002491	clearNodeListA	5	4	0	00002491-00002496
+000024a0	loadMultiChannel	5	1	1	000024a0-000024a5
+000024aa	WaveInDevice_close	5	1	0	000024aa-000024af
+000024af	CtrlObject_dtorD	5	1	0	000024af-000024b4
+000024b4	WaveInDevice_addBuffer	5	0	0	000024b4-000024b9
+000024b9	DsBuffer::lockCaptureRegion	5	1	0	000024b9-000024be
+000024be	closeMmioHandle	5	0	0	000024be-000024c3
+000024c8	allocVoiceSlot	5	1	0	000024c8-000024cd
+000024cd	Seq_allocTrackSlot	5	1	0	000024cd-000024d2
+000024d7	Channel_stopVoices	5	1	0	000024d7-000024dc
+000024e6	SoundTimer::stopKeepLock	5	1	0	000024e6-000024eb
+000024f0	Channel_setRate	5	0	0	000024f0-000024f5
+00002509	beginDecodeStreamA	5	1	0	00002509-0000250e
+00002513	Sound5b6a8_ctor	5	2	0	00002513-00002518
+00002518	WaveStream::destroy	5	1	0	00002518-0000251d
+0000251d	mixCopyInnerC	5	1	0	0000251d-00002522
+00002522	stubReturnBC	5	1	0	00002522-00002527
+0000255e	getSpanLength	5	1	0	0000255e-00002563
+00002568	SoundGroup_rewind	5	5	0	00002568-0000256d
+00002572	DirectSoundDevice::duplicateBuffer	5	2	0	00002572-00002577
+00002595	Ctrl5b58c_dtorEmbedded	5	1	0	00002595-0000259a
+0000259a	Midi_Device::drainCommandQueue	5	0	0	0000259a-0000259f
+0000259f	openMmioSound	5	0	0	0000259f-000025a4
+000025b3	Ctrl5b5c0_ctor	5	1	0	000025b3-000025b8
+000025bd	NodeList_pushBack	5	2	0	000025bd-000025c2
+000025c2	Seq_cmdHandler8	5	2	0	000025c2-000025c7
+000025c7	Channel_set3DBufferStub	5	0	0	000025c7-000025cc
+000025d6	Seq_applyChannelLevel	5	1	0	000025d6-000025db
+000025ea	MultiSound_ctor	5	1	0	000025ea-000025ef
+000025ef	soundWindowSubclassProc	5	1	0	000025ef-000025f4
+000025f4	thunk_FUN_1002d430	5	2	0	000025f4-000025f9
+000025f9	thunk_FUN_100378b0	5	0	0	000025f9-000025fe
+0000260d	MidiDeviceBase_ctor	5	2	0	0000260d-00002612
+00002612	Ch5c2ec_dtor	5	3	0	00002612-00002617
+00002617	Voice_mixAddMono16	5	2	0	00002617-0000261c
+00002621	VoiceSlot_init	5	1	0	00002621-00002626
+0000262b	mixResampleInnerA	5	1	0	0000262b-00002630
+00002644	CtrlObject3_ctor	5	2	0	00002644-00002649
+00002649	renderChannelSingle	5	1	0	00002649-0000264e
+0000265d	release_sound	5	0	0	0000265d-00002662
+0000267b	Voice_mixAdd8bit	5	1	0	0000267b-00002680
+0000268a	mapDsError	5	6	0	0000268a-0000268f
+0000269e	Seq_scaleTickRate	5	0	0	0000269e-000026a3
+000026ad	MultiSound_ctorWithType	5	2	0	000026ad-000026b2
+000026c1	appendNodeB	5	2	0	000026c1-000026c6
+000026e4	DsBuffer::setVolumeRaw	5	1	0	000026e4-000026e9
+000026e9	Engine_playSound	5	3	0	000026e9-000026ee
+000026ee	thunk_FUN_1002c370	5	0	0	000026ee-000026f3
+000026fd	SoundTimer::killEvent	5	5	0	000026fd-00002702
+0000270c	Midi_Device::loadFile	5	0	0	0000270c-00002711
+00002711	Seq_copyChannelParams	5	1	0	00002711-00002716
+00002716	Channel_stepVolumeFade	5	1	0	00002716-0000271b
+0000272a	Voice_stopAndFlag	5	2	0	0000272a-0000272f
+0000272f	processWaveChunks	5	1	0	0000272f-00002734
+00002757	stopSoundThreadFull	5	1	0	00002757-0000275c
+0000275c	Ds3DBuffer::setPositionY	5	1	0	0000275c-00002761
+00002761	WaveInDeviceBase_ctor	5	2	0	00002761-00002766
+00002766	clearNodeListD	5	6	0	00002766-0000276b
+00002770	get_sound_version	5	0	0	00002770-00002775
+0000278e	thunk_FUN_10024260	5	0	0	0000278e-00002793
+00003f30	Sound::ctor	127	0	2	00003f30-00003faf
+00003fd0	Sound::scalarDeletingDtor	30	0	2	00003fd0-00003fee
+00004000	Sound::dtor	356	0	2	00004000-00004164
+000041d0	loadSoundFile	3762	0	37	000041d0-00005082
+00005440	Wave_Device::readFmtChunk	440	0	4	00005440-000055f8
+00005670	FUN_10005670	24	0	0	00005670-00005688
+000056e0	FUN_100056e0	4	0	0	000056e0-000056e4
+00005700	FUN_10005700	4	0	0	00005700-00005704
+00005720	initCtrlVtable	7	1	0	00005720-00005727
+00005740	ctrlScalarDeletingDtor	30	0	2	00005740-0000575e
+00005770	processWaveChunks	196	0	1	00005770-00005834
+00005a60	clearNodeListD	125	0	1	00005a60-00005add
+00005b60	clearNodeListE	125	0	1	00005b60-00005bdd
+00005c00	listPopFront	66	0	1	00005c00-00005c42
+00005dd0	FUN_10005dd0	32	0	0	00005dd0-00005df0
+00005e00	registerSound	32	0	1	00005e00-00005e20
+00005e30	appendNodeB	86	0	1	00005e30-00005e86
+00005eb0	unregisterSound	109	0	1	00005eb0-00005f1d
+00005f60	FUN_10005f60	30	0	0	00005f60-00005f7e
+00005fb0	FUN_10005fb0	7	0	0	00005fb0-00005fb7
+00006020	WaveStream::ctor	194	0	2	00006020-000060e2
+00006130	WaveStream::scalarDeletingDtor	30	0	2	00006130-0000614e
+00006160	WaveStream::destroy	333	0	4	00006160-000062ad
+00006310	FUN_10006310	8	0	1	00006310-00006318
+00006330	closeMmioNodeList	185	0	3	00006330-000063e9
+00006420	Wave_Device::openMemoryMmio	138	0	2	00006420-000064aa
+000064e0	Wave_Device::freeBufferList	698	0	3	000064e0-0000679a
+00006850	Wave_Device::appendBuffer	409	0	4	00006850-000069e9
+00006b00	startStream	52	0	0	00006b00-00006b34
+00006bd0	computeCaptureDuration	113	0	1	00006bd0-00006c41
+00006c70	clearNodeListF	125	0	1	00006c70-00006ced
+00006d70	FUN_10006d70	3	0	0	00006d70-00006d73
+00006db0	FUN_10006db0	7	0	0	00006db0-00006db7
+00006e00	initStreamBuffer	132	0	1	00006e00-00006e84
+00006ec0	freeDynArray	37	0	1	00006ec0-00006ee5
+00006f00	resizeDynArray	137	0	2	00006f00-00006f89
+00007010	writeWaveFile	1170	0	16	00007010-000074a2
+000075e0	writeWaveFileB	1210	0	15	000075e0-00007a9a
+00007bd0	mixAddSamples	47	0	0	00007bd0-00007bff
+00007c30	writeWaveHeaderA	110	0	1	00007c30-00007c9e
+00007cc0	writeWaveHeaderB	113	0	1	00007cc0-00007d31
+00007d60	writeWaveHeaderC	110	0	1	00007d60-00007dce
+00007df0	writeWaveChunk	500	0	4	00007df0-00007fe4
+00008070	writeWaveChunkB	808	0	4	00008070-00008398
+00008470	flushSoundList	507	0	5	00008470-0000866b
+000086f0	openMmioFile	96	0	1	000086f0-00008750
+00008770	closeMmioHandle	30	0	1	00008770-0000878e
+000087f0	listNode3Init	13	0	0	000087f0-000087fd
+00008810	pairStore	18	0	0	00008810-00008822
+00008840	pairClear	14	0	0	00008840-0000884e
+00008860	CommandQueue::init	30	0	0	00008860-0000887e
+00008890	CommandQueue::clear	28	0	0	00008890-000088ac
+000088c0	CommandQueue::at	15	0	0	000088c0-000088cf
+000088e0	SoundTimer::registerClient	42	0	3	000088e0-0000890a
+00008920	SoundTimer::unregisterClient	147	0	3	00008920-000089b3
+000089f0	SoundTimer::init	154	0	2	000089f0-00008a8a
+00008ac0	SoundTimer::stop	234	0	6	00008ac0-00008baa
+00008bf0	SoundTimer::stopKeepLock	186	0	5	00008bf0-00008caa
+00008ce0	SoundTimer::start	98	0	2	00008ce0-00008d42
+00008d70	SoundTimer::killEvent	100	0	4	00008d70-00008dd4
+00008ed0	SoundTimer::onTick	278	0	5	00008ed0-00008fe6
+00009040	SoundTimer::linkClient	83	0	1	00009040-00009093
+00009210	FUN_10009210	29	0	0	00009210-0000922d
+000092e0	init_sound_timer	100	0	2	000092e0-00009344
+00009370	get_sound_version	6	0	0	00009370-00009376
+00009390	release_sound	59	0	3	00009390-000093cb
+000093e0	create_sound	766	0	11	000093e0-000096de
+000097d0	delete_sound	396	0	7	000097d0-0000995c
+00009a90	Dll_Midi_Device::create_device	220	0	3	00009a90-00009b6c
+00009bb0	Dll_Midi_Device::delete_device	29	0	0	00009bb0-00009bcd
+00009be0	Midi_Device::ctor	122	0	2	00009be0-00009c5a
+00009c80	Midi_Device::scalarDeletingDtor	30	0	2	00009c80-00009c9e
+00009cb0	Midi_Device::dtor	192	0	3	00009cb0-00009d70
+00009da0	Midi_Device::openOutput	72	0	2	00009da0-00009de8
+0000a050	Device::serviceVoices	78	0	2	0000a050-0000a09e
+0000a0c0	stubReturn2fA	6	0	0	0000a0c0-0000a0c6
+0000a100	stubReturn2fB	8	0	0	0000a100-0000a108
+0000a170	registerTimerClient	36	0	2	0000a170-0000a194
+0000a1b0	Midi_Device::enableOutput	51	0	1	0000a1b0-0000a1e3
+0000a200	Midi_Device::disableOutput	43	0	0	0000a200-0000a22b
+0000a240	CommandQueue::push	180	0	2	0000a240-0000a2f4
+0000a330	Midi_Device::drainCommandQueue	600	0	10	0000a330-0000a588
+0000a670	Midi_Device::dispatchCommand	746	0	14	0000a670-0000a95a
+0000aaf0	Midi_Device::scanCommandRing	710	0	3	0000aaf0-0000adb6
+0000ae80	clearNodeListG	125	0	1	0000ae80-0000aefd
+0000af20	FUN_1000af20	15	0	0	0000af20-0000af2f
+0000af40	FUN_1000af40	4	0	0	0000af40-0000af44
+0000afa0	FUN_1000afa0	10	0	0	0000afa0-0000afaa
+0000afe0	FUN_1000afe0	10	0	0	0000afe0-0000afea
+0000b000	FUN_1000b000	29	0	1	0000b000-0000b01d
+0000b030	getSpanLength	10	0	0	0000b030-0000b03a
+0000b050	Dll_Wave_Device::create_device	143	0	2	0000b050-0000b0df
+0000b110	openWaveStreamFile	31	0	1	0000b110-0000b12f
+0000b1a0	Dll_Wave_Device::delete_device	29	0	0	0000b1a0-0000b1bd
+0000b1d0	Wave_Device::ctor	172	0	2	0000b1d0-0000b27c
+0000b2b0	Wave_Device::scalarDeletingDtor	30	0	2	0000b2b0-0000b2ce
+0000b2e0	Wave_Device::dtor	250	0	4	0000b2e0-0000b3da
+0000b960	Wave_Device::stop	246	0	9	0000b960-0000ba56
+0000baa0	Wave_Device::start	677	0	11	0000baa0-0000bd45
+0000be00	Wave_Device::closeOutput	190	0	4	0000be00-0000bebe
+0000bef0	Wave_Device::stopOutput	122	0	3	0000bef0-0000bf6a
+0000bf90	Wave_Device::startOutput	103	0	4	0000bf90-0000bff7
+0000c020	Wave_Device::restart	409	0	14	0000c020-0000c1b9
+0000c230	Wave_Device::serviceTick	139	0	4	0000c230-0000c2bb
+0000c2f0	WaveCmdQueue::pushNode	164	0	2	0000c2f0-0000c394
+0000c3d0	WaveCmdQueue::pushValue	52	0	0	0000c3d0-0000c404
+0000c420	Wave_Device::processCommandQueue	1648	0	10	0000c420-0000ca90
+0000cc40	cmdNode::scalarDeletingDtor	30	0	2	0000cc40-0000cc5e
+0000cc70	Wave_Device::flushCommandQueue	182	0	3	0000cc70-0000cd26
+0000cd80	Wave_Device::dispatchCommand	2756	0	14	0000cd80-0000d844
+0000dbe0	postNotification	194	0	4	0000dbe0-0000dca2
+0000dcf0	Wave_Device::scanCommandRing	675	0	3	0000dcf0-0000df93
+0000e050	removeSoundNode	156	0	1	0000e050-0000e0ec
+0000e120	addToSoundList	35	0	1	0000e120-0000e143
+0000e1d0	FUN_1000e1d0	27	0	0	0000e1d0-0000e1eb
+0000e2a0	setOutputMasterVolume	23	0	1	0000e2a0-0000e2b7
+0000e2d0	getWaveDeviceInterface	15	0	0	0000e2d0-0000e2df
+0000e310	serviceWaveDevice	34	0	1	0000e310-0000e332
+0000e350	stubReturnBA	8	0	0	0000e350-0000e358
+0000e570	stubReturnBB	8	0	0	0000e570-0000e578
+0000e5e0	clearNodeListC	125	0	1	0000e5e0-0000e65d
+0000e680	appendNodeC	86	0	1	0000e680-0000e6d6
+0000e700	findAndUnlinkNodeB	109	0	1	0000e700-0000e76d
+0000e7d0	FUN_1000e7d0	12	0	0	0000e7d0-0000e7dc
+0000e870	Wave_In_Device::ctor	52	0	1	0000e870-0000e8a4
+0000e8c0	Wave_In_Device::scalarDeletingDtor	30	0	2	0000e8c0-0000e8de
+0000e8f0	Wave_In_Device::dtor	11	0	1	0000e8f0-0000e8fb
+0000e910	Dll_Wave_In_Device::create_device	191	0	2	0000e910-0000e9cf
+0000ea00	Dll_Wave_In_Device::delete_device	29	0	0	0000ea00-0000ea1d
+0000ead0	Wave_In_Device::openCapture	198	0	3	0000ead0-0000eb96
+0000ec00	Wave_In_Device::closeCapture	57	0	2	0000ec00-0000ec39
+0000ed00	FUN_1000ed00	18	0	0	0000ed00-0000ed12
+0000ed50	FUN_1000ed50	5	0	0	0000ed50-0000ed55
+0000ed70	Wave_In_Device::op1	31	0	1	0000ed70-0000ed8f
+0000eda0	Wave_In_Device::op2	21	0	1	0000eda0-0000edb5
+0000edf0	FUN_1000edf0	8	0	0	0000edf0-0000edf8
+0000ee10	FUN_1000ee10	8	0	0	0000ee10-0000ee18
+0000eef0	DsBuffer::ctor	78	0	1	0000eef0-0000ef3e
+0000ef60	DsBuffer::destroy	133	0	0	0000ef60-0000efe5
+0000f020	DsBuffer::restartPlayback	87	0	1	0000f020-0000f077
+0000f0c0	DsBuffer::setBufferSize	27	0	0	0000f0c0-0000f0db
+0000f160	DsBuffer::setFrequency	21	0	0	0000f160-0000f175
+0000f190	DsBuffer::setVolumeRaw	27	0	0	0000f190-0000f1ab
+0000f1c0	DsBuffer::setVolume	180	0	1	0000f1c0-0000f274
+0000f2b0	DsBuffer::applyOwnerVolume	157	0	1	0000f2b0-0000f34d
+0000f480	mapDsError	115	0	0	0000f480-0000f4f3
+0000f590	DsBuffer::initDesc	309	0	0	0000f590-0000f6c5
+0000f760	DsBuffer::stop	22	0	0	0000f760-0000f776
+0000f790	DsBuffer::setPosition	91	0	0	0000f790-0000f7eb
+0000f810	DsBuffer::lockEntire	163	0	0	0000f810-0000f8b3
+0000f8f0	DsBuffer::release	114	0	0	0000f8f0-0000f962
+0000f990	DsBuffer::setPrimaryFormat	333	0	0	0000f990-0000fadd
+0000fbb0	DsBuffer::create	527	0	0	0000fbb0-0000fdbf
+0000fec0	DsBuffer::hasAuxInterfaces	20	0	0	0000fec0-0000fed4
+0000fef0	DsBuffer::query3D	76	0	0	0000fef0-0000ff3c
+0000ff60	DsBuffer::queryNotify	66	0	0	0000ff60-0000ffa2
+0000ffd0	DsBuffer::releaseAux	57	0	0	0000ffd0-00010009
+00010020	DsBuffer::releaseNotify	34	0	0	00010020-00010042
+00010060	DsBuffer::releaseIfOwned	143	0	0	00010060-000100ef
+000101a0	DsBuffer::restore	198	0	0	000101a0-00010266
+00010370	DsBuffer::unlock	42	0	0	00010370-0001039a
+000103b0	DsBuffer::getWriteRegion	369	0	0	000103b0-00010521
+00010660	DsBuffer::getPosition	62	0	2	00010660-0001069e
+000106b0	DsBuffer::getPlayPosition	333	0	0	000106b0-000107fd
+00010860	DsBuffer::lockCaptureRegion	131	0	0	00010860-000108e3
+00010920	DsBuffer::calibratePosition	424	0	1	00010920-00010ac8
+00010b40	DsBuffer::spinPosition	125	0	0	00010b40-00010bbd
+00010be0	DsBuffer::getTimedPosition	302	0	1	00010be0-00010d0e
+00010db0	DsBuffer::play	85	0	1	00010db0-00010e05
+00010e30	DsBuffer::isBusy	50	0	0	00010e30-00010e62
+00010eb0	DsBuffer::setRegionMs	82	0	0	00010eb0-00010f02
+00010f30	DsBuffer::configureDesc	151	0	0	00010f30-00010fc7
+00011000	Ds3DBuffer::setPosition	74	0	0	00011000-0001104a
+00011070	Ds3DBuffer::setPositionX	59	0	0	00011070-000110ab
+000110c0	Ds3DBuffer::setPositionY	59	0	0	000110c0-000110fb
+00011110	Ds3DBuffer::setPositionZ	59	0	0	00011110-0001114b
+00011160	stubReturnBC	8	0	0	00011160-00011168
+00011180	initSoundVoice	203	0	1	00011180-0001124b
+00011290	DirectSoundDevice::close	455	0	4	00011290-00011457
+000114e0	DirectSoundDevice::enumerate	224	0	2	000114e0-000115c0
+000116a0	seekListToIndex	88	0	0	000116a0-000116f8
+00011760	getDeviceCaps	28	1	0	00011760-0001177c
+00011790	getNodeByIndex	93	0	1	00011790-000117ed
+00011810	appendNamedNode	259	0	1	00011810-00011913
+00011970	DirectSoundDevice::releaseAll	208	0	3	00011970-00011a40
+00011a80	DirectSoundDevice::stopAll	382	0	6	00011a80-00011bfe
+00011c60	DirectSoundDevice::create	756	0	9	00011c60-00011f54
+00012040	FUN_10012040	5	0	0	00012040-00012045
+000120a0	DirectSoundDevice::setCooperativeLevel	81	0	2	000120a0-000120f1
+00012120	DirectSoundDevice::createPoolBuffer	250	0	5	00012120-0001221a
+00012260	DirectSoundDevice::duplicateBuffer	470	0	9	00012260-00012436
+000124c0	DirectSoundDevice::freeIdleBuffer	361	0	5	000124c0-00012629
+00012690	DirectSoundDevice::freeBufferById	421	0	6	00012690-00012835
+000128b0	DirectSoundDevice::acquireBuffer	567	0	11	000128b0-00012ae7
+00012b80	DsBuffer::scalarDeletingDtor	30	0	2	00012b80-00012b9e
+00012bb0	DirectSoundDevice::createPoolBufferEx	262	0	5	00012bb0-00012cb6
+00012d10	DirectSoundDevice::createBuffer	571	0	12	00012d10-00012f4b
+00012fe0	DirectSoundDevice::createBufferFmt	600	0	13	00012fe0-00013238
+000132e0	DirectSoundDevice::removeBuffer	183	0	3	000132e0-00013397
+000133d0	DirectSoundDevice::releaseAllBuffers	127	0	3	000133d0-0001344f
+000134e0	unlinkDsBuffer	88	0	0	000134e0-00013538
+00013560	DirectSoundDevice::setMasterVolume	45	0	1	00013560-0001358d
+000135a0	Ds3DListener::setPosition	89	0	1	000135a0-000135f9
+00013620	clearNodeListA	125	0	1	00013620-0001369d
+000136c0	findAndUnlinkNode	109	0	1	000136c0-0001372d
+00013750	clearNodeListB	125	0	1	00013750-000137cd
+000137f0	appendNode	86	0	1	000137f0-00013846
+00013890	mixRenderA	500	0	0	00013890-00013a84
+00013b10	mixResampleInnerA	549	0	0	00013b10-00013d35
+00013dd0	mixRenderOuterA2	888	0	2	00013dd0-00014148
+00014250	mixCopyInnerB	549	0	0	00014250-00014475
+00014510	mixResampleInnerB	615	0	0	00014510-00014777
+00014820	mixRenderRatedB	1014	0	2	00014820-00014c16
+00014d20	mixRenderOuterB2	994	0	2	00014d20-00015102
+000152b0	mixResampleD	797	0	0	000152b0-000155cd
+000156c0	mixResampleE	758	0	0	000156c0-000159b6
+00015a80	FUN_10015a80	3	0	0	00015a80-00015a83
+00015aa0	mixCopyD	452	0	0	00015aa0-00015c64
+00015cf0	mixResampleF	497	0	0	00015cf0-00015ee1
+00015f70	mixResampleG	745	0	0	00015f70-00016259
+00016340	mixCopyInnerC	471	0	0	00016340-00016517
+000165a0	mixResampleInnerC	537	0	0	000165a0-000167b9
+00016850	mixRenderOuterC	936	0	2	00016850-00016bf8
+00016d10	FUN_10016d10	3	0	0	00016d10-00016d13
+00016d30	FUN_10016d30	3	0	0	00016d30-00016d33
+00016d90	mixResampleH	749	0	0	00016d90-0001707d
+00017160	mixResampleI	722	0	0	00017160-00017432
+00017500	FUN_10017500	3	0	0	00017500-00017503
+00017520	mixResampleJ	724	0	0	00017520-000177f4
+000178c0	mixResampleK	667	0	0	000178c0-00017b5b
+00017c10	mixCopyE	523	0	0	00017c10-00017e1b
+00017eb0	mixCopyF	469	0	0	00017eb0-00018085
+00018110	mixResampleL	715	0	0	00018110-000183db
+000184a0	streamRenderBlock	838	0	0	000184a0-000187e6
+000188d0	streamRenderTail	859	0	0	000188d0-00018b70;00018b73-00018c2e
+00018d10	Voice_renderStream16a	666	0	0	00018d10-00018faa
+00019060	Voice_renderStream8a	736	0	0	00019060-00019340
+00019400	Voice_renderStream8b	695	0	0	00019400-000196b7
+00019770	Voice_mixAddMono16	738	0	0	00019770-00019a52
+00019b20	Voice_mixSetMono16	726	0	0	00019b20-00019df6
+00019ec0	Voice_mixSet8bit	804	0	0	00019ec0-0001a1e4
+0001a2c0	Voice_mixAdd8bit	816	0	0	0001a2c0-0001a5f0
+0001a6c0	Voice_mixSetStereo16	452	0	0	0001a6c0-0001a884
+0001a910	Voice_mixAddStereo16	461	0	0	0001a910-0001aadd
+0001ab60	Sound_initEntry	67	0	0	0001ab60-0001aba3
+0001abd0	Seq_freeChannelObjects	75	0	1	0001abd0-0001ac1b
+0001ac40	Voice_notifyChannelNotes	191	0	3	0001ac40-0001acff
+0001ad30	Sound_anyChannelActive	111	0	0	0001ad30-0001ad9f
+0001adc0	Midi_advanceMsgRing	40	0	0	0001adc0-0001ade8
+0001ae00	Seq_setPlayRange	56	0	0	0001ae00-0001ae38
+0001ae50	FUN_1001ae50	128	0	0	0001ae50-0001aed0
+0001aef0	FUN_1001aef0	372	0	3	0001aef0-0001b064
+0001b0d0	FUN_1001b0d0	103	0	0	0001b0d0-0001b137
+0001b160	FUN_1001b160	101	0	2	0001b160-0001b1c5
+0001b1f0	FUN_1001b1f0	426	0	2	0001b1f0-0001b39a
+0001b570	ChainObject_dtor	245	0	1	0001b570-0001b665
+0001b870	MidiReader_freeContent	229	0	1	0001b870-0001b955
+0001b9a0	Ctrl_appendIfAccepted	43	0	1	0001b9a0-0001b9cb
+0001ba70	FUN_1001ba70	127	0	1	0001ba70-0001baef
+0001bb10	PtrList_deleteAll	71	0	1	0001bb10-0001bb57
+0001bb80	Seq_firstTrackData	17	0	0	0001bb80-0001bb91
+0001bbb0	Ctrl5b5c0_resetElements	58	0	0	0001bbb0-0001bbea
+0001bc00	FUN_1001bc00	51	0	0	0001bc00-0001bc33
+0001bc50	CtrlObject::ctor	50	0	0	0001bc50-0001bc82
+0001bca0	CtrlObject2_ctor	51	0	0	0001bca0-0001bcd3
+0001bd90	Ctrl5b5c0_ctor	151	0	0	0001bd90-0001be27
+0001bea0	ChainObject_scalarDtor	34	0	2	0001bea0-0001bec2
+0001bee0	Ctrl5b19c_ctor	295	0	2	0001bee0-0001c007
+0001c060	FUN_1001c060	7	0	0	0001c060-0001c067
+0001c080	Ctrl5b58c_dtor	229	0	1	0001c080-0001c165
+0001c1e0	Ctrl5b5c0_transposeTable	21	0	0	0001c1e0-0001c1f5
+0001c1f5	FUN_1001c1f5	73	0	0	0001c1f5-0001c23e
+0001c2a0	CtrlBase_resetElements	58	0	0	0001c2a0-0001c2da
+0001c2f0	CtrlBase_flushElements	51	0	0	0001c2f0-0001c323
+0001c340	FUN_1001c340	17	0	0	0001c340-0001c351
+0001c370	Ctrl5b5c0_mapValue	112	0	0	0001c370-0001c3e0
+0001c400	Ctrl5b5c0_buildTable	89	0	1	0001c400-0001c459
+0001c530	CtrlObject_scalarDtorA	30	0	2	0001c530-0001c54e
+0001c560	CtrlObject_dtorA	7	0	0	0001c560-0001c567
+0001c5c0	Ctrl5b5f0_ctor	164	0	2	0001c5c0-0001c664
+0001c6e0	CtrlObject_scalarDtorB	30	0	2	0001c6e0-0001c6fe
+0001c710	CtrlObject_dtorB	7	0	0	0001c710-0001c717
+0001c730	FUN_1001c730	65	0	2	0001c730-0001c771
+0001c7a0	streamReadByte	44	0	0	0001c7a0-0001c7cc
+0001c7e0	streamConsumeByte	38	0	0	0001c7e0-0001c806
+0001c820	FUN_1001c820	61	1	1	0001c820-0001c85d
+0001c870	Ctrl5b638_ctor	125	0	1	0001c870-0001c8ed
+0001c950	Ctrl5b58c_scalarDtor	34	0	2	0001c950-0001c972
+0001c990	Ctrl5b58c_dtorEmbedded	245	0	1	0001c990-0001ca85
+0001caf0	CtrlObject3_ctor	80	0	0	0001caf0-0001cb40
+0001cb60	FUN_1001cb60	10	0	0	0001cb60-0001cb6a
+0001cb80	FUN_1001cb80	8	0	0	0001cb80-0001cb88
+0001cba0	CtrlObject_scalarDtorC	30	0	2	0001cba0-0001cbbe
+0001cbd0	CtrlObject_dtorC	7	0	0	0001cbd0-0001cbd7
+0001cbf0	Ctrl5b668_ctor	72	0	0	0001cbf0-0001cc38
+0001cc60	FUN_1001cc60	10	0	0	0001cc60-0001cc6a
+0001cc80	FUN_1001cc80	8	0	0	0001cc80-0001cc88
+0001cca0	CtrlObject_scalarDtorD	30	0	2	0001cca0-0001ccbe
+0001ccd0	CtrlObject_dtorD	7	0	0	0001ccd0-0001ccd7
+0001ccf0	FUN_1001ccf0	42	0	0	0001ccf0-0001cd1a
+0001cd30	FUN_1001cd30	37	0	1	0001cd30-0001cd55
+0001ced0	Sound_setName	263	0	3	0001ced0-0001cfd7
+0001d0a0	Sound_setAltName	103	0	2	0001d0a0-0001d107
+0001d130	PtrList_init	16	0	0	0001d130-0001d140
+0001d150	PtrList_pushBack	86	0	1	0001d150-0001d1a6
+0001d1d0	PtrList_pushFront	83	0	1	0001d1d0-0001d223
+0001d250	PtrList_insert	225	0	1	0001d250-0001d331
+0001d380	MidiReader_init	218	0	0	0001d380-0001d45a
+0001d4a0	Midi_resetFileState	183	0	1	0001d4a0-0001d557
+0001d780	Seq_listGetAt	98	0	0	0001d780-0001d7e2
+0001d810	Midi_Device::loadFile	965	0	11	0001d810-0001dbd5
+0001dce0	Midi_Device::loadFromMemory	857	0	10	0001dce0-0001e039
+0001e1c0	Seq_rewind	75	0	1	0001e1c0-0001e20b
+0001e230	Track_resetReadState	84	0	0	0001e230-0001e284
+0001e2b0	Seq_dtor	211	0	2	0001e2b0-0001e383
+0001e3d0	Midi_Device::closeFile	241	0	3	0001e3d0-0001e4c1
+0001e530	Track_clearFlag8	11	0	0	0001e530-0001e53b
+0001e630	Seq_scaleTickRate	62	0	0	0001e630-0001e66e
+0001e680	FUN_1001e680	23	0	0	0001e680-0001e697
+0001e6e0	byteSwap16	27	0	0	0001e6e0-0001e6fb
+0001e710	Midi_readVarLen	40	0	0	0001e710-0001e738
+0001e750	MidiReader_ctor	93	0	1	0001e750-0001e7ad
+0001e7d0	MidiReader_dtor	103	0	2	0001e7d0-0001e837
+0001e8e0	Seq_rewindTracks	133	0	1	0001e8e0-0001e965
+0001e9a0	Track_setData	64	0	2	0001e9a0-0001e9e0
+0001e9f0	Track_advancePos	49	0	0	0001e9f0-0001ea21
+0001eab0	FUN_1001eab0	268	0	0	0001eab0-0001ebbc
+0001ecc0	FUN_1001ecc0	312	0	0	0001ecc0-0001edf8
+0001ef10	Midi_Device::flushMessages	72	0	1	0001ef10-0001ef58
+0001ef80	Midi_scanTrack	219	0	0	0001ef80-0001f05b
+0001f150	Seq_clearTrackFlag8All	66	0	0	0001f150-0001f192
+0001f1c0	PtrList_freeNodesA	125	1	1	0001f1c0-0001f23d
+0001f4a0	Sound5b6a8_ctor	426	0	5	0001f4a0-0001f64a
+0001f6c0	Sound5b6a8_scalarDtor	30	0	2	0001f6c0-0001f6de
+0001f6f0	Seq_ctor	358	0	5	0001f6f0-0001f856
+0001f8c0	Voice::update	1338	0	7	0001f8c0-0001fdfa
+0001ff50	Sound5b6a8_dtor	640	0	6	0001ff50-000201d0
+00020360	Midi_loadMemoryAndPreRoll	211	0	3	00020360-00020433
+000204b0	Seq_closeFile	28	0	1	000204b0-000204cc
+000204e0	Sound_reapIdle	196	0	3	000204e0-000205a4
+000205f0	Seq_preRollTrack	232	0	4	000205f0-000206d8
+00020720	Seq_stepTrackMeta	154	0	3	00020720-000207ba
+000207f0	Seq_preRollAllTracks	89	0	1	000207f0-00020849
+00020870	Midi_Device::playEvent	280	0	4	00020870-00020988
+00020b60	postMidiNotification	92	0	2	00020b60-00020bbc
+00020be0	Voice_startPlayback	281	0	6	00020be0-00020cf9
+00020d80	Voice_allNotesOff	209	0	2	00020d80-00020e51
+00020ea0	Voice_requestStop	41	0	1	00020ea0-00020ec9
+00020ee0	Voice_requestStopDrain	73	0	1	00020ee0-00020f29
+00020f50	Seq_setField730Clamped	60	0	1	00020f50-00020f8c
+00020fe0	Seq_setupChannel	466	0	8	00020fe0-000211b2
+00021240	Sound_findByName	123	0	0	00021240-000212bb
+00021370	FUN_10021370	7	0	0	00021370-00021377
+000213d0	Midi_Device::setChannelVolume	315	0	1	000213d0-0002150b
+000215c0	Midi_Device::noteOn	970	0	9	000215c0-0002198a
+00021a90	Midi_Device::sendShortMsg	272	0	5	00021a90-00021ba0
+00021bf0	Midi_Device::handleMetaEvent	504	0	7	00021bf0-00021de8
+00021ee0	Seq_setTempo	130	0	1	00021ee0-00021f62
+00021fa0	Seq_updateChannel	465	0	5	00021fa0-00022171
+00022200	Seq_setCurrentIndex	43	0	0	00022200-0002222b
+00022240	Seq_reset	39	0	1	00022240-00022267
+00022280	Seq_copyChannelParams	119	0	0	00022280-000222f7
+00022320	Sound_lookupOrCreate	833	0	9	00022320-00022661
+00022750	Seq_setPlayOrderMode	60	0	1	00022750-0002278c
+000227a0	Seq_setField240	15	0	0	000227a0-000227af
+000228d0	Seq_removeTrackById	214	0	1	000228d0-000229a6
+000229f0	Seq_buildTrack9	620	0	8	000229f0-00022c5c
+00022d00	Seq_buildTrack14	608	0	6	00022d00-00022f60
+00023000	Seq_findTrackOrZero	84	0	0	00023000-00023054
+00023080	Seq_findTrackById	111	0	1	00023080-000230ef
+000231e0	Seq_cmdHandler7	141	0	0	000231e0-0002326d
+00023540	Seq_cmdHandler8	150	0	1	00023540-000235d6
+00023610	Seq_remarkEventRange	246	0	2	00023610-00023706
+000238b0	Seq_cmdHandler9	117	0	1	000238b0-00023925
+00023950	Seq_replayEventRange	200	0	3	00023950-00023a18
+00023a60	Seq_cmdHandler10	217	0	1	00023a60-00023b39
+00023c20	Seq_cmdHandler12	52	0	1	00023c20-00023c54
+00023c70	Seq_cmdHandler11	106	0	0	00023c70-00023cda
+00023d00	Seq_buildPlayOrder	206	0	3	00023d00-00023dce
+00023e10	Seq_applyTrackFlag	98	0	1	00023e10-00023e72
+00023ea0	Voice_requestCmd12	70	0	1	00023ea0-00023ee6
+00023f10	Seq_getTrackFlagHigh	58	0	1	00023f10-00023f4a
+00024040	Seq_dispatchChannelCmd	312	0	3	00024040-00024178
+000241f0	Seq_getListElementAt	46	0	1	000241f0-0002421e
+00024230	FUN_10024230	23	0	1	00024230-00024247
+00024260	FUN_10024260	12	0	1	00024260-0002426c
+00024280	Seq_loadChannelDesc	104	0	1	00024280-000242e8
+00024360	Seq_mergeChannelDesc	135	0	1	00024360-000243e7
+00024460	ChannelDesc_ctor	39	0	1	00024460-00024487
+000244a0	FUN_100244a0	8	0	1	000244a0-000244a8
+00024500	Seq_selectTrack	135	0	3	00024500-00024587
+00024630	Seq_resetTrackControllers	72	0	1	00024630-00024678
+000246a0	Midi_Device::emitEvent	221	0	2	000246a0-0002477d
+000247c0	Seq_allocTrackSlot	203	0	2	000247c0-0002488b
+00024920	Midi_seekTrackToTick	322	0	1	00024920-00024a62
+00024b80	Seq_scheduleEvent	149	0	2	00024b80-00024c15
+00024c50	Voice_setPlayModeBits	79	0	0	00024c50-00024c9f
+00024ce0	FUN_10024ce0	8	0	0	00024ce0-00024ce8
+00024d40	NodeList_clear	125	0	1	00024d40-00024dbd
+00024de0	NodeList_pushBack	86	0	1	00024de0-00024e36
+00024e60	NodeList_insert	225	0	1	00024e60-00024f41
+00024f90	NodeList_pushFront	83	0	1	00024f90-00024fe3
+00025010	NodeList_initNode	25	0	0	00025010-00025029
+00025190	mixRenderRatedC	1056	0	0	00025190-000255b0
+000256c0	Voice_renderStream16b	1155	0	0	000256c0-00025b43
+00025c80	Voice_renderStream8c	1194	0	0	00025c80-0002612a
+00026260	Voice_renderStream16c	1151	0	0	00026260-000266df
+00026800	Voice_renderStream32	1053	0	0	00026800-00026c1d
+00026d30	Voice_renderStream8d	1191	0	0	00026d30-000271d7
+00027310	Voice_renderUnityA	363	0	0	00027310-0002747b
+000274e0	Voice_renderUnityB	457	0	0	000274e0-000276a9
+00027730	Voice_renderStream16d	725	0	0	00027730-00027a05
+00027ad0	Voice_renderStream16e	666	0	0	00027ad0-00027d6a
+00027e20	mixAdd8bitStereo	748	0	0	00027e20-0002810c
+000281d0	mixCopy8bitStereo	691	0	0	000281d0-00028483
+00028560	randRange	37	0	0	00028560-00028585
+000285a0	nextRandomFloat	42	0	0	000285a0-000285ca
+00028630	destroySoundWindowObj	79	0	2	00028630-0002867f
+000286a0	SoundWindowObj_dtor	59	0	1	000286a0-000286db
+000286f0	SoundWindowObj_subclass	64	0	1	000286f0-00028730
+00028740	createSoundWindow	83	0	2	00028740-00028793
+000287c0	SoundWindowObj_unsubclass	55	0	1	000287c0-000287f7
+00028810	pumpWaveMessages	100	0	2	00028810-00028874
+000288a0	soundWindowProc	542	0	8	000288a0-00028abe
+00028b70	soundWindowSubclassProc	574	0	8	00028b70-00028dae
+00028fb0	DeviceBase_scalarDtor	43	0	1	00028fb0-00028fdb
+00028ff0	DeviceBase_dtorA	19	0	0	00028ff0-00029003
+00029020	VoiceBase_ctor	122	0	1	00029020-0002909a
+00029140	VoiceBase_scalarDtor	30	0	2	00029140-0002915e
+00029170	VoiceBase_clearList	111	0	1	00029170-000291df
+00029200	VoiceBase_dtor	103	1	1	00029200-00029267
+000292d0	VoiceBase_openInner	59	0	0	000292d0-0002930b
+00029320	VoiceBase_closeInner	26	0	0	00029320-0002933a
+00029600	FUN_10029600	15	0	0	00029600-0002960f
+00029620	FUN_10029620	5	0	0	00029620-00029625
+000296d0	FUN_100296d0	28	0	0	000296d0-000296ec
+00029700	FUN_10029700	18	0	0	00029700-00029712
+00029bb0	FUN_10029bb0	15	0	0	00029bb0-00029bbf
+00029c30	FUN_10029c30	31	0	0	00029c30-00029c4f
+00029cd0	FUN_10029cd0	41	0	0	00029cd0-00029cf9
+00029d40	FUN_10029d40	31	0	0	00029d40-00029d5f
+00029e30	FUN_10029e30	5	0	0	00029e30-00029e35
+00029e70	MidiDeviceBase_ctor	40	0	0	00029e70-00029e98
+00029f30	MidiDeviceBase_scalarDtor	30	0	2	00029f30-00029f4e
+00029f60	DeviceBase_dtorB	19	0	0	00029f60-00029f73
+00029f90	MidiDeviceBase_openInner	66	0	0	00029f90-00029fd2
+0002a000	MidiDeviceBase_closeInner	26	0	0	0002a000-0002a01a
+0002a050	FUN_1002a050	5	0	0	0002a050-0002a055
+0002a1d0	FUN_1002a1d0	15	0	0	0002a1d0-0002a1df
+0002a1f0	FUN_1002a1f0	15	0	0	0002a1f0-0002a1ff
+0002a240	WaveInDeviceBase_ctor	40	0	0	0002a240-0002a268
+0002a2a0	FUN_1002a2a0	3	0	0	0002a2a0-0002a2a3
+0002a360	FUN_1002a360	5	0	0	0002a360-0002a365
+0002a380	WaveInDeviceBase_scalarDtor	30	0	2	0002a380-0002a39e
+0002a3b0	DeviceBase_dtorC	19	0	0	0002a3b0-0002a3c3
+0002a3e0	FUN_1002a3e0	5	0	0	0002a3e0-0002a3e5
+0002a420	WaveInDeviceBase_openInner	59	0	0	0002a420-0002a45b
+0002a470	WaveInDeviceBase_closeInner	33	0	0	0002a470-0002a491
+0002a4e0	FUN_1002a4e0	28	0	0	0002a4e0-0002a4fc
+0002a650	FUN_1002a650	15	0	0	0002a650-0002a65f
+0002a670	FUN_1002a670	15	0	0	0002a670-0002a67f
+0002a7c0	initSignalQueue	51	0	2	0002a7c0-0002a7f3
+0002a810	stopSignalThread	111	0	6	0002a810-0002a87f
+0002a8a0	stopSoundThreadFull	81	0	4	0002a8a0-0002a8f1
+0002a920	startSignalThread	54	0	3	0002a920-0002a956
+0002a970	soundThreadPump	210	0	6	0002a970-0002aa42
+0002aa90	postSoundThreadMessage	94	0	3	0002aa90-0002aaee
+0002ab10	FUN_1002ab10	138	0	0	0002ab10-0002ab9a
+0002abd0	SubChannel_scalarDtor	30	0	2	0002abd0-0002abee
+0002ac00	SubChannel_dtor	171	1	2	0002ac00-0002acab
+0002ace0	FUN_1002ace0	24	0	0	0002ace0-0002acf8
+0002ad10	Sound_setSourceType	109	0	0	0002ad10-0002ad7d
+0002add0	Engine_playSound	236	0	3	0002add0-0002aebc
+0002b090	unlinkFromActiveList	92	0	0	0002b090-0002b0ec
+0002b130	FUN_1002b130	50	0	0	0002b130-0002b162
+0002b200	FUN_1002b200	18	0	0	0002b200-0002b212
+0002b260	Seq_applyChannelLevel	31	0	0	0002b260-0002b27f
+0002b2c0	FUN_1002b2c0	23	0	0	0002b2c0-0002b2d7
+0002b330	FUN_1002b330	37	0	0	0002b330-0002b355
+0002b3a0	FUN_1002b3a0	30	0	0	0002b3a0-0002b3be
+0002b430	FUN_1002b430	30	0	0	0002b430-0002b44e
+0002b4a0	FUN_1002b4a0	45	0	0	0002b4a0-0002b4cd
+0002b4e0	SubChannel_ctor	190	0	1	0002b4e0-0002b59e
+0002b5f0	Ch5bb90_scalarDtor	30	0	2	0002b5f0-0002b60e
+0002b620	Ch5bb90_dtor	273	0	2	0002b620-0002b731
+0002b7c0	startDevicePlayback	93	0	2	0002b7c0-0002b81d
+0002b870	FUN_1002b870	23	0	0	0002b870-0002b887
+0002baa0	getPlaybackTime	67	0	1	0002baa0-0002bae3
+0002bb10	Object_setName	103	0	2	0002bb10-0002bb77
+0002bbe0	Device_createAndStart	90	0	1	0002bbe0-0002bc3a
+0002bc60	Device_prepareSoundFlags	210	0	3	0002bc60-0002bd32
+0002bd80	Device_lazyCreateSound	206	0	3	0002bd80-0002be4e
+0002bee0	Device_createStartQueue	143	0	1	0002bee0-0002bf6f
+0002bfa0	FUN_1002bfa0	57	0	0	0002bfa0-0002bfd9
+0002bff0	FUN_1002bff0	54	0	0	0002bff0-0002c026
+0002c040	Channel_applyFlags	102	0	0	0002c040-0002c0a6
+0002c0d0	FUN_1002c0d0	74	0	0	0002c0d0-0002c11a
+0002c1a0	FUN_1002c1a0	15	0	0	0002c1a0-0002c1af
+0002c1f0	FUN_1002c1f0	56	0	0	0002c1f0-0002c228
+0002c270	FUN_1002c270	34	0	0	0002c270-0002c292
+0002c2d0	FUN_1002c2d0	6	0	0	0002c2d0-0002c2d6
+0002c310	FUN_1002c310	8	0	0	0002c310-0002c318
+0002c370	FUN_1002c370	13	0	0	0002c370-0002c37d
+0002c3d0	FUN_1002c3d0	31	0	0	0002c3d0-0002c3ef
+0002c400	FUN_1002c400	31	0	0	0002c400-0002c41f
+0002c430	FUN_1002c430	31	0	0	0002c430-0002c44f
+0002c490	Ch5bb90_ctor	214	0	1	0002c490-0002c566
+0002c5b0	MixerVoiceArray_scalarDtor	30	0	2	0002c5b0-0002c5ce
+0002c5e0	destroyMixerVoices	327	0	2	0002c5e0-0002c727
+0002c9f0	Mixer_ctor	165	0	1	0002c9f0-0002ca95
+0002cad0	Mixer_scalarDtor	30	0	2	0002cad0-0002caee
+0002cb00	Mixer_dtor	220	1	2	0002cb00-0002cbdc
+0002ce60	MultiSound_freeSlots	49	0	1	0002ce60-0002ce91
+0002ceb0	VoiceSlot_init	31	0	0	0002ceb0-0002cecf
+0002cee0	MixBuffer_ctor	79	0	0	0002cee0-0002cf2f
+0002d100	allocVoiceSlot	253	0	2	0002d100-0002d1fd
+0002d240	Voice_setName	93	0	2	0002d240-0002d29d
+0002d430	FUN_1002d430	7	0	0	0002d430-0002d437
+0002d450	Ch5be88_ctor	166	0	0	0002d450-0002d4f6
+0002d530	Ch5be88_scalarDtorA	30	0	2	0002d530-0002d54e
+0002d560	Ch5be88_dtorA	226	0	2	0002d560-0002d642
+0002d7a0	FUN_1002d7a0	31	0	0	0002d7a0-0002d7bf
+0002d8c0	FUN_1002d8c0	23	0	0	0002d8c0-0002d8d7
+0002d8f0	FUN_1002d8f0	31	0	0	0002d8f0-0002d90f
+0002d920	FUN_1002d920	21	0	0	0002d920-0002d935
+0002da30	FUN_1002da30	31	0	0	0002da30-0002da4f
+0002db00	FUN_1002db00	28	0	0	0002db00-0002db1c
+0002dba0	FUN_1002dba0	36	0	0	0002dba0-0002dbc4
+0002dbe0	FUN_1002dbe0	31	0	0	0002dbe0-0002dbff
+0002dc40	FUN_1002dc40	18	0	0	0002dc40-0002dc52
+0002dd10	FUN_1002dd10	116	0	2	0002dd10-0002dd84
+0002ddb0	Channel_propagateFlag0	39	0	1	0002ddb0-0002ddd7
+0002ddf0	Sound_assignName	110	0	2	0002ddf0-0002de5e
+0002deb0	SubChannel_openSourceType2	90	0	2	0002deb0-0002df0a
+0002dff0	Channel_releaseSound	79	0	1	0002dff0-0002e03f
+0002e130	FUN_1002e130	33	0	0	0002e130-0002e151
+0002e290	FUN_1002e290	23	0	0	0002e290-0002e2a7
+0002e3c0	FUN_1002e3c0	25	0	0	0002e3c0-0002e3d9
+0002e3f0	FUN_1002e3f0	35	0	0	0002e3f0-0002e413
+0002e430	FUN_1002e430	20	0	0	0002e430-0002e444
+0002e460	FUN_1002e460	20	0	0	0002e460-0002e474
+0002e530	FUN_1002e530	7	0	0	0002e530-0002e537
+0002e550	Ch5c000_ctor	176	0	1	0002e550-0002e600
+0002e630	Ch5be88_scalarDtorB	30	0	2	0002e630-0002e64e
+0002e660	Ch5be88_dtorB	226	0	2	0002e660-0002e742
+0002e790	FUN_1002e790	24	0	0	0002e790-0002e7a8
+0002e8f0	FUN_1002e8f0	44	0	0	0002e8f0-0002e91c
+0002e930	Ch5c178_ctor	153	0	1	0002e930-0002e9c9
+0002ea00	Ch5c178_scalarDtor	30	0	2	0002ea00-0002ea1e
+0002ea30	Ch5c178_dtor	201	0	2	0002ea30-0002eaf9
+0002eb40	openSourceType4	105	0	2	0002eb40-0002eba9
+0002ebd0	FUN_1002ebd0	59	0	1	0002ebd0-0002ec0b
+0002ec20	FUN_1002ec20	25	0	0	0002ec20-0002ec39
+0002ec50	FUN_1002ec50	15	0	0	0002ec50-0002ec5f
+0002ed30	FUN_1002ed30	3	0	0	0002ed30-0002ed33
+0002ed50	buildVoiceRxName	240	0	2	0002ed50-0002ee40
+0002eea0	FUN_1002eea0	8	0	0	0002eea0-0002eea8
+0002eee0	FUN_1002eee0	18	0	0	0002eee0-0002eef2
+0002ef10	Ch5c234_scalarDtor	30	0	2	0002ef10-0002ef2e
+0002ef40	Ch5c234_dtor	220	1	2	0002ef40-0002f01c
+0002f060	openSourceType6	100	0	2	0002f060-0002f0c4
+0002f0f0	FUN_1002f0f0	59	0	1	0002f0f0-0002f12b
+0002f190	FUN_1002f190	18	0	0	0002f190-0002f1a2
+0002f220	buildVoiceTxName	245	0	2	0002f220-0002f315
+0002f360	FUN_1002f360	3	0	0	0002f360-0002f363
+0002f3c0	Ch5c2ec_scalarDtor	30	0	2	0002f3c0-0002f3de
+0002f3f0	Ch5c2ec_dtor	223	0	2	0002f3f0-0002f4cf
+0002f530	FUN_1002f530	40	0	0	0002f530-0002f558
+0002f570	FUN_1002f570	21	0	0	0002f570-0002f585
+0002f5a0	FUN_1002f5a0	38	0	1	0002f5a0-0002f5c6
+0002f5e0	openSourceType7	117	0	2	0002f5e0-0002f655
+0002f680	FUN_1002f680	18	0	0	0002f680-0002f692
+0002f740	Ch5c3a4_ctor	107	0	2	0002f740-0002f7ab
+0002f810	FUN_1002f810	3	0	0	0002f810-0002f813
+0002f880	FUN_1002f880	30	0	2	0002f880-0002f89e
+0002f8b0	Mixer_dtor	5	0	0	0002f8b0-0002f8b5
+0002f8d0	MultiSound_setSlotSource	313	0	4	0002f8d0-0002fa09
+0002fa60	FUN_1002fa60	170	0	0	0002fa60-0002fb0a
+0002fb40	FUN_1002fb40	21	0	0	0002fb40-0002fb55
+0002fb70	enqueueWaveCmdE	126	0	3	0002fb70-0002fbee
+0002fc10	FUN_1002fc10	155	0	3	0002fc10-0002fcab
+0002ffa0	markSoundTime	17	0	1	0002ffa0-0002ffb1
+0002ffd0	updateSoundTimer	17	0	1	0002ffd0-0002ffe1
+00030080	Sound5c450_ctor	147	0	2	00030080-00030113
+00030150	Sound5c450_scalarDtor	30	0	2	00030150-0003016e
+00030180	Sound5c450_dtor	451	0	4	00030180-00030343
+000303f0	Sound_stop	303	0	3	000303f0-0003051f
+00030570	Sound_freeBufferList	280	0	3	00030570-00030688
+00030840	openMmioSound	687	0	8	00030840-00030aef
+00030ba0	streamWaveSamples	823	0	5	00030ba0-00030ed7
+00030fb0	Channel_setFormat	146	0	1	00030fb0-00031042
+00031080	Channel_start	72	0	1	00031080-000310c8
+000311b0	FUN_100311b0	7	0	0	000311b0-000311b7
+00031200	StreamReader_ctor	73	0	1	00031200-00031249
+00031270	StreamReader_scalarDtor	30	0	2	00031270-0003128e
+000312a0	streamReaderDtor	335	0	4	000312a0-000313ef
+00031450	WaveInStream_start	36	0	1	00031450-00031474
+00031490	freeMmioHandleList	152	0	2	00031490-00031528
+00031560	freeMmioHandleListGetInfo	197	0	4	00031560-00031625
+000316c0	loadWaveResource	341	0	6	000316c0-00031815
+000319e0	WaveInStream_resetCodec	63	0	2	000319e0-00031a1f
+00031ac0	PtrList_freeNodesB	125	0	1	00031ac0-00031b3d
+00031b60	ResourceList_pushBack	86	0	1	00031b60-00031bb6
+00031be0	FUN_10031be0	492	0	2	00031be0-00031dcc
+00031e50	Channel_ctor	366	0	3	00031e50-00031fbe
+00032020	Sound_resetBuffers	198	0	2	00032020-000320e6
+00032130	beginDecodeStreamA	257	0	5	00032130-00032231
+00032290	beginDecodeStreamB	291	0	5	00032290-000323b3
+00032410	DsDevice_registerBuffer	26	0	1	00032410-0003242a
+00032440	voiceListRemove	131	0	1	00032440-000324c3
+00032500	updateVoiceRate	246	0	1	00032500-000325f6
+00032640	closeDecoder	15	0	1	00032640-0003264f
+00032660	FUN_10032660	6	0	0	00032660-00032666
+000326a0	parseRiffWave	2429	0	23	000326a0-0003301d
+00033300	fillDecodeRing	1203	0	4	00033300-000337b3
+00033990	Channel_parseWaveHeader	18	0	1	00033990-000339a2
+000339c0	rewindChannel	369	0	6	000339c0-00033b31
+00033ba0	Channel_resetPanState	146	0	1	00033ba0-00033c32
+00033c70	Channel_closeAndFree	594	0	4	00033c70-00033ec2
+00033f90	Channel_closeStreamList	224	0	3	00033f90-00034070
+000340b0	Channel_releaseBuffers	688	0	5	000340b0-00034360
+00034430	serviceChannelPlayback	646	0	7	00034430-000346b6
+00034770	Channel_allocAndInitVoice	290	0	0	00034770-00034892
+000348f0	Channel_startVoice	368	0	1	000348f0-00034a60
+00034ac0	Channel_releaseVoices	145	0	0	00034ac0-00034b51
+00034b90	Channel_stopVoices	180	0	0	00034b90-00034c44
+00034c80	Channel_setRateGlide	227	0	0	00034c80-00034d63
+00034db0	Voice_stopAndFlag	27	0	1	00034db0-00034dcb
+00034fb0	serviceDecodeRing	19	0	1	00034fb0-00034fc3
+00034fe0	mmioReadBuffered	105	0	3	00034fe0-00035049
+000350e0	mmioSeekToSample	67	0	2	000350e0-00035123
+00035150	Channel_setVolume	69	0	1	00035150-00035195
+000351c0	Channel_setRate	298	0	2	000351c0-000352ea
+00035340	Channel_setPanGains	215	0	0	00035340-00035417
+00035460	Channel_recomputeVoiceGains	281	0	1	00035460-00035579
+000355d0	Channel_setReverseRate	296	0	1	000355d0-000356f8
+00035750	Channel_setPitchRate	13	0	0	00035750-0003575d
+00035770	Channel_findStreamNode	76	0	0	00035770-000357bc
+000357e0	Channel_checkOpen	167	0	0	000357e0-00035887
+000358c0	Channel_readCurrentSample	145	0	0	000358c0-00035951
+00035990	renderChannel	521	0	4	00035990-00035b99
+00035ca0	closeMmioSound	551	0	4	00035ca0-00035ec7
+00035f60	Channel_stubReturnB	8	0	0	00035f60-00035f68
+00035f80	Channel_serviceBuffer	46	0	2	00035f80-00035fae
+00035fc0	Channel_stepVolumeFade	555	0	3	00035fc0-000361eb
+00036280	renderChannelSingle	782	0	9	00036280-0003658e
+00036660	renderChannelStreamed	2322	0	8	00036660-00036f72
+000371d0	renderChannelVoice	1083	0	7	000371d0-0003760b
+00037720	Channel_setStreamSource	33	0	0	00037720-00037741
+00037760	Voice_setLoopFlag	51	0	0	00037760-00037793
+000377f0	Channel_broadcastVoiceBit1	73	0	0	000377f0-00037839
+00037860	FUN_10037860	56	0	0	00037860-00037898
+000378b0	FUN_100378b0	65	0	0	000378b0-000378f1
+00037920	flushMmioBuffer	377	0	6	00037920-00037a99
+00037b00	Channel_set3DPosition	44	0	1	00037b00-00037b2c
+00037b40	Channel_set3DPositionX	34	0	1	00037b40-00037b62
+00037b80	Channel_set3DPositionY	34	0	1	00037b80-00037ba2
+00037bc0	Channel_set3DPositionZ	34	0	1	00037bc0-00037be2
+00037c00	Channel_set3DBufferStub	34	0	1	00037c00-00037c22
+00037c40	Voice_resetDefaults	321	0	1	00037c40-00037d81
+00037df0	FUN_10037df0	1	0	0	00037df0-00037df1
+00037e10	MmioBuffer_init	85	0	0	00037e10-00037e65
+00037f30	Voice_setPanGains	252	0	0	00037f30-0003802c
+00038070	Voice_setRateForward	141	0	1	00038070-000380fd
+00038130	Voice_setRateReverse	142	0	1	00038130-000381be
+000381f0	Voice_noteOff	82	0	0	000381f0-00038242
+000382c0	Channel_allocVoiceSlot	70	0	0	000382c0-00038306
+00038330	Channel_findVoiceByTag	82	0	0	00038330-00038382
+000383b0	Voice_setLevel	58	0	1	000383b0-000383ea
+00038400	Channel_clearBackref	27	0	0	00038400-0003841b
+00038430	nodeListAppendValue	86	0	1	00038430-00038486
+000384b0	nodeListClear2	125	1	1	000384b0-0003852d
+00038550	listAppendNodeA	86	0	1	00038550-000385a6
+000385d0	listAppendNodeB	86	0	1	000385d0-00038626
+00038650	WaveInDevice_ctor	106	0	2	00038650-000386ba
+000386e0	WaveInDevice_deleteDtor	30	0	2	000386e0-000386fe
+00038710	WaveInDevice_dtor	298	0	6	00038710-0003883a
+00038890	WaveInDevice_allocCaptureBuffers	284	0	1	00038890-000389ac
+00038a00	WaveInDevice_stop	165	0	3	00038a00-00038aa5
+00038ae0	MemBlock_deleteDtor	47	0	1	00038ae0-00038b0f
+00038b20	WaveInDevice_start	13	0	1	00038b20-00038b2d
+00038b40	WaveInDevice_prepareHeaders	171	0	1	00038b40-00038beb
+00038c70	WaveInDevice_unprepareHeaders	171	0	1	00038c70-00038d1b
+00038da0	WaveInDevice_addBuffer	171	0	1	00038da0-00038e4b
+00038f10	WaveInDevice_reset	27	0	2	00038f10-00038f2b
+00038f60	WaveInDevice_queryCaps	66	0	1	00038f60-00038fa2
+00038fd0	onWaveInCallbackMessage	89	0	2	00038fd0-00039029
+00039050	WaveInDevice_open	125	0	1	00039050-000390cd
+00039140	WaveInDevice_close	233	0	6	00039140-00039229
+000393d0	WaveInDevice_requeueBuffer	88	0	4	000393d0-00039428
+00039450	FUN_10039450	12	0	0	00039450-0003945c
+00039470	FUN_10039470	10	0	0	00039470-0003947a
+000394c0	freePointerAndClear	26	0	1	000394c0-000394da
+000394f0	MemBlock_alloc	58	0	1	000394f0-0003952a
+00039580	nodeListClear	125	0	1	00039580-000395fd
+00039620	nodeListPopFront	66	0	1	00039620-00039662
+00039690	MultiSound_ctor	154	0	3	00039690-0003972a
+00039760	MultiSound_deleteDtor	30	0	2	00039760-0003977e
+00039790	MultiSound_ctorWithType	164	0	3	00039790-00039834
+00039870	MultiSound_dtor	196	0	4	00039870-00039934
+000399a0	loadMultiChannel	307	1	6	000399a0-00039ad3
+00039b30	SoundGroup_stop	122	0	2	00039b30-00039baa
+00039bd0	MultiSound_enqueueCmd3	41	0	1	00039bd0-00039bf9
+00039c10	SoundGroup_rewind	26	0	1	00039c10-00039c2a
+00039c40	MultiSound_release	43	0	2	00039c40-00039c6b
+00039c80	MultiSound_stop	8	0	1	00039c80-00039c88
+00039ce0	MultiSound_start	310	0	4	00039ce0-00039e16
+00039e70	Channel_startVoiceTimed	141	0	3	00039e70-00039efd
+0003a080	MultiSound_setVoiceBit1On	28	0	1	0003a080-0003a09c
+0003a210	MultiSound_setPitchCents	262	0	3	0003a210-0003a316
+0003a560	MultiSound_getStatus	22	0	1	0003a560-0003a576
+0003a5b0	MultiSound_set3DPosition	26	0	1	0003a5b0-0003a5ca
+0003a710	FUN_1003a710	7	0	0	0003a710-0003a717
+0003a730	MultiSound_findStreamNode	8	0	1	0003a730-0003a738
+0003a770	getDsCoopLevel	6	0	0	0003a770-0003a776
+0003a800	MultiSound_is3DEnabled	27	0	0	0003a800-0003a81b
+0003a978	DSOUND.DLL::DirectSoundEnumerateA	6	1	0	0003a978-0003a97e
+0003a980	codecProcessBlock	193	1	4	0003a980-0003aa41
+0003aa50	codecSetParams	63	2	0	0003aa50-0003aa8f
+0003aa90	codecAllocContextA	78	1	3	0003aa90-0003aade
+0003aae0	codecInitContextA	956	1	2	0003aae0-0003ae9c
+0003aea0	codecAllocContextB	78	1	3	0003aea0-0003aeee
+0003aef0	codecInitContextB	608	1	2	0003aef0-0003b150
+0003b150	codecProcessResource	213	1	5	0003b150-0003b225
+0003b230	codecSynthStage	879	1	5	0003b230-0003b59f
+0003b5a0	codecTransformStage	2435	1	5	0003b5a0-0003bf23
+0003bf30	bitPermute	578	2	0	0003bf30-0003c172
+0003c180	bitPack	75	1	2	0003c180-0003c1cb
+0003c1d0	bitUnpack	73	1	2	0003c1d0-0003c219
+0003c220	quantizeParams	1043	1	3	0003c220-0003c633
+0003c640	codecStageDispatch	2551	1	15	0003c640-0003d037
+0003d040	codecApplyFixedCoeffs	86	1	2	0003d040-0003d096
+0003d0a0	applyIir2	291	1	0	0003d0a0-0003d1c3
+0003d1d0	lpcSynthesize	1779	1	3	0003d1d0-0003d8c3
+0003d8d0	reflectionToLpc	381	1	2	0003d8d0-0003da4d
+0003da50	interpSubframeParams	2150	1	4	0003da50-0003e2b6
+0003e2c0	intPow	184	2	0	0003e2c0-0003e378
+0003e380	floatCopySign	118	2	0	0003e380-0003e3f6
+0003e400	floatFloorToInt	127	3	3	0003e400-0003e47f
+0003e480	medianOfThree	148	1	0	0003e480-0003e514
+0003e520	decodeTableSymbol	218	1	0	0003e520-0003e5fa
+0003e600	substituteIfBelowThreshold	207	1	0	0003e600-0003e6cf
+0003e6d0	gaussSolveClamped	800	1	0	0003e6d0-0003e9f0
+0003e9f0	codecAutocorrelation	617	1	0	0003e9f0-0003ec59
+0003ec60	codecRmsEnergy	154	1	2	0003ec60-0003ecfa
+0003ed00	codecRemoveMean	177	1	0	0003ed00-0003edb1
+0003edc0	FUN_1003edc0	1350	1	2	0003edc0-0003f306
+0003f310	codecGainSmoother	1036	1	0	0003f310-0003f71c
+0003f720	FUN_1003f720	2199	1	4	0003f720-0003ffb7
+00040000	codecPitchAnalysis	810	1	3	00040000-0004032a
+00040330	codecCorrelationLags	408	1	0	00040330-000404c8
+000404d0	codecSymmetricFir	613	1	0	000404d0-00040735
+00040740	FUN_10040740	867	1	0	00040740-00040aa3
+00040ab0	FUN_10040ab0	749	1	2	00040ab0-00040d9d
+00040da0	codecFirstOrderFilter	135	1	0	00040da0-00040e27
+00040e30	codecBiquadFilter	296	1	0	00040e30-00040f58
+00040f60	codecCombFilter	184	1	0	00040f60-00041018
+00041020	FUN_10041020	1220	1	3	00041020-000414e4
+000414f0	codecAmdfPitch	351	1	0	000414f0-0004164f
+0004164f	operator<<	177	0	4	0004164f-00041700
+00041700	operator<<	164	0	4	00041700-000417a4
+000417a4	opfx	116	4	3	000417a4-00041818
+00041818	osfx	176	4	2	00041818-000418c8
+000418c8	operator<<	41	0	3	000418c8-000418f1
+000418f1	flush	136	1	2	000418f1-00041979
+00041979	ostream	54	1	1	00041979-000419af
+000419da	ostream	101	1	3	000419da-00041a3f
+00041a3f	ostream	110	0	3	00041a3f-00041aad
+00041aad	iosResetVtable	15	1	0	00041aad-00041abc
+00041abc	operator=	134	0	5	00041abc-00041b42
+00041b42	ostream_withassign	91	0	3	00041b42-00041b9d
+00041bc8	ostream_withassign	94	0	3	00041bc8-00041c26
+00041c26	ostreamResetVtable	19	0	1	00041c26-00041c39
+00041c39	writepad	364	4	2	00041c39-00041da5
+00041da5	sputc	34	2	0	00041da5-00041dc7
+00041dc7	operator<<	124	0	4	00041dc7-00041e43
+00041e43	initCriticalSection	11	2	1	00041e43-00041e4e
+00041e4e	deleteCriticalSection	11	1	1	00041e4e-00041e59
+00041e59	enterCriticalSection	11	2	1	00041e59-00041e64
+00041e64	leaveCriticalSection	11	3	1	00041e64-00041e6f
+00041e6f	ios	94	6	1	00041e6f-00041ecd
+00041ecd	`scalar_deleting_destructor'	28	0	2	00041ecd-00041ee9
+00041f52	ios	72	0	2	00041f52-00041f9a
+00041f9a	~ios	74	7	1	00041f9a-00041fe4
+00041fe4	init	47	3	0	00041fe4-00042013
+00042013	operator=	59	2	0	00042013-0004204e
+000420a5	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0	000420a5-000420d2
+000420d9	?_CallMemberFunction0@@YGXPAX0@Z	7	1	0	000420d9-000420e0
+000420e0	FID_conflict:_CallMemberFunction1	7	1	0	000420e0-000420e7
+000420e7	FID_conflict:_CallMemberFunction1	7	1	0	000420e7-000420ee
+000420ee	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	79	2	1	000420ee-0004213d
+0004213d	___CxxFrameHandler	54	0	1	0004213d-00042173
+0004218d	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	84	1	1	0004218d-000421e1
+000421e1	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	37	0	1	000421e1-00042206
+00042206	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	182	1	1	00042206-000422bc
+000422bc	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	114	0	2	000422bc-00042329;0004232c-00042331
+00042331	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	123	2	1	00042331-000423ac
+000423ac	__global_unwind2	32	0	1	000423ac-000423cc
+000423ee	__local_unwind2	104	1	1	000423ee-00042456
+00042456	__abnormal_termination	35	1	0	00042456-00042479
+00042479	__NLG_Notify1	9	1	0	00042479-00042482
+00042482	NLG_Notify	24	1	0	00042482-0004249a
+0004249a	operator_delete	11	208	1	0004249a-000424a5
+000424b0	_strrchr	39	3	0	000424b0-000424d7
+000424d7	operator_new	14	66	1	000424d7-000424e5
+000424ee	__fpmath	23	1	3	000424ee-00042505
+00042505	FUN_10042505	1	2	0	00042505-00042506
+00042506	cfltcvtInit	56	1	0	00042506-0004253e
+00042550	__ftol	39	27	0	00042550-00042577
+00042577	_sprintf	82	3	2	00042577-000425c9
+000425c9	__onexit	126	1	4	000425c9-00042647
+00042647	_atexit	18	0	1	00042647-00042659
+00042690	strstr	133	4	0	00042690-00042710;00045670-00045675
+00042710	_strncpy	254	7	0	00042710-0004280e
+0004280e	??_M@YGXPAXIHP6EX0@Z@Z	104	9	1	0004280e-00042876
+00042876	FID_conflict:$L16506	24	1	1	00042876-0004288e
+0004288e	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	81	2	0	0004288e-000428ca;000428d7-000428ec
+00042902	??_L@YGXPAXIHP6EX0@Z1@Z	106	5	1	00042902-0004296c
+0004296c	FUN_1004296c	24	1	1	0004296c-00042984
+00042984	__beginthread	119	1	7	00042984-000429fb
+000429fb	__threadstart@4	116	0	4	000429fb-00042a6f
+00042a8e	crtEndThread	61	1	6	00042a8e-00042acb
+00042acd	_malloc	18	24	1	00042acd-00042adf
+00042adf	__nh_malloc	44	2	2	00042adf-00042b0b
+00042b0b	heap_alloc	231	1	6	00042b0b-00042b72;00042b7b-00042bce;00042bda-00042c07
+00042b72	heapAllocUnlockFunclet	9	1	1	00042b72-00042b7b
+00042bd1	heapAllocUnlockFunclet2	9	1	1	00042bd1-00042bda
+00042c07	free	215	25	8	00042c07-00042c71;00042c7a-00042cc9;00042cd2-00042cf0
+00042c71	freeUnlockFunclet	9	1	1	00042c71-00042c7a
+00042cc9	freeUnlockFunclet2	9	1	1	00042cc9-00042cd2
+00042cf0	FID_conflict:_memcpy	664	6	0	00042cf0-00042d4b;00042d4c-00042d53;00042d60-00042d89;00042d8c-00042daf;00042db0-00042dc9;00042dec-00042e36;00042e48-00042e4f;00042e50-00042e5b;00042e5c-00042e6d;00042e70-00042e87;00042e88-00042eae;00042eb0-00042eb9;00042ebc-00042edb;00042ee8-00042f05;00042f08-00042f2f;00042f30-00042f61;00042f84-00042fce;00042fe0-00042fe7;00042fe8-00042ff5;00042ff8-0004300b;0004300c-00043025
+00043025	__CRT_INIT@12	217	1	14	00043025-000430fe
+000430fe	entry	157	0	2	000430fe-0004319b
+0004319b	_amsg_exit	48	9	3	0004319b-000431cb
+000431ce	FUN_100431ce	3	23	0	000431ce-000431d1
+000431d1	FUN_100431d1	12	0	0	000431d1-000431dd
+000431f0	CIsqrt	20	0	2	000431f0-00043204
+00043204	sqrt	9	4	1	00043204-0004320d
+0004320d	sqrt_classify	157	1	4	0004320d-000432aa
+000432b0	CItranscendental1	10	1	1	000432b0-000432ba
+000432d0	CIlog	20	0	2	000432d0-000432e4
+000432e4	log	9	1	1	000432e4-000432ed
+000432ed	log_classify	188	1	3	000432ed-0004339c;0004827e-0004828b
+0004339c	_floor	207	1	5	0004339c-0004346b
+0004346b	_fflush	47	1	4	0004346b-0004349a
+0004349a	__fflush_lk	46	2	2	0004349a-000434c8
+000434c8	__flush	92	2	1	000434c8-00043524
+0004352d	_flsall	164	1	5	0004352d-000435d1
+0004368d	FID_conflict:__lock_file	47	2	2	0004368d-000436bc
+000436bc	FID_conflict:__lock_file2	35	1	2	000436bc-000436df
+000436df	FID_conflict:__lock_file	47	2	2	000436df-0004370e
+0004370e	FID_conflict:__lock_file2	35	1	2	0004370e-00043731
+00043731	~type_info	41	1	3	00043731-0004375a
+0004375a	`scalar_deleting_destructor'	28	0	2	0004375a-00043776
+000437e0	EH_prolog	31	5	0	000437e0-000437ff
+00043800	_strlen	123	20	0	00043800-0004387b
+0004387b	___InternalCxxFrameHandler	155	3	3	0004387b-00043916
+00043916	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	435	1	9	00043916-00043ac9
+00043ac9	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	170	1	4	00043ac9-00043b73
+00043b73	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	93	1	1	00043b73-00043bd0
+00043bd0	___FrameUnwindToState	132	2	2	00043bd0-00043c37;00043c51-00043c6e
+00043c84	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z	123	2	5	00043c84-00043cff
+00043cff	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	165	1	3	00043cff-00043da4
+00043dcc	FUN_10043dcc	78	1	3	00043dcc-00043e1a
+00043e44	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	440	1	8	00043e44-00043ffc
+00044008	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	86	2	1	00044008-0004405e
+0004406f	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	35	1	0	0004406f-00044092
+000440a0	__CallSettingFrame@12	76	2	1	000440a0-000440ec
+000440ec	__mtinit	84	1	6	000440ec-00044140
+00044140	__mtterm	30	1	2	00044140-0004415e
+0004415e	__initptd	19	3	0	0004415e-00044171
+00044171	__getptd	103	12	8	00044171-000441d8
+000441d8	__freeptd	160	2	3	000441d8-00044278
+00044284	?terminate@@YAXXZ	86	3	2	00044284-000442cc;000442d7-000442e5
+000442fd	?_inconsistency@@YAXXZ	79	5	1	000442fd-0004433a;00044341-00044353
+00044353	__setdefaultprecision	18	1	1	00044353-00044365
+00044365	__ms_p5_test_fdiv	62	1	0	00044365-000443a3
+000443a3	__ms_p5_mp_test_fdiv	41	1	3	000443a3-000443cc
+000443cc	__forcdecpt	90	0	2	000443cc-00044426
+0004448c	__fassign	62	0	2	0004448c-000444ca
+000444ca	__cftoe	97	1	3	000444ca-0004452b
+0004452b	__cftoe2	194	2	2	0004452b-000445ed
+000445ed	__cftof	85	1	3	000445ed-00044642
+00044642	__cftof2	167	2	2	00044642-000446e9
+000446e9	__cftog	147	1	4	000446e9-0004477c
+0004477c	__cfltcvt	81	0	3	0004477c-000447cd
+000447cd	__shift	37	2	2	000447cd-000447f2
+000447f2	__flsbuf	280	2	4	000447f2-0004490a
+0004490a	__output	1825	1	11	0004490a-0004502b
+0004504b	_write_char	53	3	1	0004504b-00045080
+00045080	_write_multi_char	49	1	1	00045080-000450b1
+000450b1	_write_string	56	1	1	000450b1-000450e9
+000450e9	_get_int_arg	13	1	0	000450e9-000450f6
+000450f6	_get_int64_arg	16	1	0	000450f6-00045106
+00045106	_get_short_arg	14	1	0	00045106-00045114
+00045114	__cinit	45	1	2	00045114-00045141
+00045152	__exit	17	3	1	00045152-00045163
+00045163	__cexit	15	1	1	00045163-00045172
+00045181	crtExitProcess	163	2	6	00045181-00045224
+00045226	FID_conflict:__lockexit	9	2	1	00045226-0004522f
+0004522f	FID_conflict:__lockexit	9	2	1	0004522f-00045238
+00045238	__initterm	26	2	0	00045238-00045252
+00045252	crtRealloc	781	2	17	00045252-000453d5;000453e6-00045525;00045536-00045581
+000453dd	reallocUnlockFunclet	9	1	1	000453dd-000453e6
+0004552b	reallocUnlockFunclet2	11	1	1	0004552b-00045536
+00045581	msize	214	1	6	00045581-000455e8;000455f4-00045663
+000455eb	msizeUnlockFunclet	9	1	1	000455eb-000455f4
+00045666	msizeUnlockFunclet2	9	1	1	00045666-0004566f
+00045680	strchr	188	2	0	00045680-0004573c
+00045801	__seh_longjmp_unwind@4	27	0	1	00045801-0004581c
+0004581c	__dosmaperr	115	5	2	0004581c-0004588f
+0004588f	_errno	9	17	1	0004588f-00045898
+00045898	__doserrno	9	11	1	00045898-000458a1
+000458a1	calloc	289	3	8	000458a1-00045935;00045943-000459be;000459cc-000459de
+0004593a	callocUnlockFunclet	9	1	1	0004593a-00045943
+000459c3	callocUnlockFunclet2	9	1	1	000459c3-000459cc
+000459de	__XcptFilter	318	0	3	000459de-00045b1c
+00045b1c	_xcptlookup	58	1	0	00045b1c-00045b56
+00045b80	__callnewh	27	3	0	00045b80-00045b9b
+00045b9b	getModuleLinkerVersion	45	2	1	00045b9b-00045bc8
+00045bc8	crtHeapSelect	328	1	9	00045bc8-00045d10
+00045d10	crtHeapInit	93	1	5	00045d10-00045d6d
+00045d6d	sbhHeapTerm	168	1	3	00045d6d-00045e15
+00045e34	setSbhThreshold	179	0	3	00045e34-00045ee7
+00045ee7	sbhGroupHeapInit	72	2	1	00045ee7-00045f2f
+00045f2f	___sbh_find_block	43	3	0	00045f2f-00045f5a
+00045f5a	__sbh_free_block	809	2	3	00045f5a-00046283
+00046283	___sbh_alloc_block	777	3	2	00046283-0004658c
+0004658c	___sbh_alloc_new_region	177	1	4	0004658c-0004663d
+0004663d	___sbh_alloc_new_group	251	1	1	0004663d-00046738
+00046738	___sbh_resize_block	758	1	0	00046738-00046a2e
+00046aff	___sbh_heap_check	815	0	1	00046aff-00046e2e
+00046e50	sbhRegionCreate	324	3	5	00046e50-00046f94
+00046f94	sbhRegionFree	86	1	2	00046f94-00046fea
+00046fea	sbhRegionDecommit	194	1	2	00046fea-000470ac
+000470ac	sbhRegionLocate	87	3	0	000470ac-00047103
+00047103	sbhPageFree	69	2	1	00047103-00047148
+00047148	crtCommitPages	520	3	4	00047148-00047350
+00047350	sbhFindFreeRun	292	1	0	00047350-00047474
+00047474	sbhResizeBlock	169	1	0	00047474-0004751d
+0004751d	sbhRegionHeapCheck	350	0	0	0004751d-0004767b
+0004767b	__mtinitlocks	41	1	1	0004767b-000476a4
+000476a4	__mtdeletelocks	108	1	2	000476a4-00047710
+00047710	__lock	97	26	7	00047710-00047771
+00047771	_unlock	21	31	1	00047771-00047786
+0004779e	__ioinit	444	1	6	0004779e-0004795a
+0004795a	__ioterm	84	1	2	0004795a-000479ae
+000479ae	__setenvp	185	1	6	000479ae-00047a67
+00047a67	__setargv	153	1	5	00047a67-00047b00
+00047b00	_parse_cmdline	436	1	0	00047b00-00047cb4
+00047cb4	___crtGetEnvironmentStringsA	306	1	8	00047cb4-00047de6
+00047de6	__FF_MSGBANNER	57	1	1	00047de6-00047e1f
+00047e1f	__NMSG_WRITE	339	3	8	00047e1f-00047f72
+00047fb0	__trandisp1	103	2	0	00047fb0-00048017
+00048017	__trandisp2	140	2	0	00048017-000480a3
+00048180	fp2ArgResultDispatch	23	0	0	00048180-00048197
+00048197	__startOneArgErrorHandling	60	3	1	00048197-000481d3
+000481f5	fpuSetControlWord	23	1	0	000481f5-0004820c
+0004820c	fpStatusExceptionType	25	2	0	0004820c-00048225
+00048225	__fload_withFB	67	2	0	00048225-00048268
+00048268	doubleExponentField	22	2	0	00048268-0004827e
+0004828b	__math_exit	42	2	1	0004828b-000482b5
+00048580	__cintrindisp2	62	0	2	00048580-000485be
+000485be	__cintrindisp1	61	0	2	000485be-000485fb
+000485fb	__ctrandisp2	72	0	3	000485fb-00048643
+00048643	fpTranscendentalDispatch	7	2	0	00048643-0004864a
+0004864a	fpIntrinsicDispatch	305	2	1	0004864a-0004877b
+0004877b	__ctrandisp1	51	1	3	0004877b-000487ae
+000487ae	__fload	60	2	0	000487ae-000487ea
+000487ea	__handle_qnan1	84	2	3	000487ea-0004883e
+0004883e	__handle_qnan2	96	2	3	0004883e-0004889e
+0004889e	__except1	152	2	6	0004889e-00048936
+00048936	__except2	165	2	6	00048936-000489db
+000489db	__raise_exc	691	3	3	000489db-00048c8e
+00048c8e	__handle_exc	535	3	2	00048c8e-00048ea5
+00048ea5	__umatherr	136	4	4	00048ea5-00048f2d
+00048f2d	__set_errno	40	4	1	00048f2d-00048f55
+00048f55	__get_fname	37	1	0	00048f55-00048f7a
+00048f7a	__errcode	45	2	0	00048f7a-00048fa7
+00048fa7	__frnd	18	2	0	00048fa7-00048fb9
+00048fb9	__set_exp	41	3	0	00048fb9-00048fe2
+00049022	__set_bexp	36	0	0	00049022-00049046
+00049046	__sptype	90	4	0	00049046-000490a0
+000490a0	__decomp	193	4	1	000490a0-00049161
+00049161	__statfp	14	1	0	00049161-0004916f
+0004916f	__clrfp	15	1	0	0004916f-0004917e
+0004917e	__ctrlfp	35	10	0	0004917e-000491a1
+000491a1	__set_statfp	86	1	0	000491a1-000491f7
+000491f7	__commit	147	1	7	000491f7-0004928a
+0004928a	__write	101	2	5	0004928a-000492ef
+000492ef	__write_lk	395	1	6	000492ef-0004947a
+00049500	_strcmp	129	6	0	00049500-00049543;00049544-0004954a;0004954c-00049584
+00049584	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	70	0	2	00049584-000495ca
+000495e8	?_ValidateRead@@YAHPBXI@Z	28	2	1	000495e8-00049604
+00049604	crtValidatePointer	28	1	1	00049604-00049620
+00049620	?_ValidateExecute@@YAHP6GHXZ@Z	24	2	1	00049620-00049638
+00049638	_abort	23	1	3	00049638-0004964f
+00049662	__clearfp	20	0	1	00049662-00049676
+00049676	__control87	53	1	2	00049676-000496ab
+000496ab	__controlfp	22	1	1	000496ab-000496c1
+000496ec	__abstract_cw	146	1	0	000496ec-0004977e
+0004977e	__hw_cw	137	1	0	0004977e-00049807
+00049807	__abstract_sw	53	1	0	00049807-0004983c
+0004983c	__isctype	117	7	1	0004983c-000498b1
+000498b9	_tolower	111	1	5	000498b9-00049928
+00049928	__tolower_lk	203	3	2	00049928-000499f3
+000499f3	__ZeroTail	73	1	0	000499f3-00049a3c
+00049a3c	__IncMan	86	1	1	00049a3c-00049a92
+00049a92	__RoundMan	140	2	2	00049a92-00049b1e
+00049b1e	__CopyMan	27	1	0	00049b1e-00049b39
+00049b39	__FillZeroMan	12	1	0	00049b39-00049b45
+00049b45	__IsZeroMan	27	1	0	00049b45-00049b60
+00049b60	__ShrMan	141	1	0	00049b60-00049bed
+00049bed	__ld12cvt	364	2	5	00049bed-00049d59
+00049d59	FID_conflict:__ld12tod	22	1	1	00049d59-00049d6f
+00049d6f	FID_conflict:__ld12tod	22	1	1	00049d6f-00049d85
+00049d85	__ld12told	122	2	1	00049d85-00049dff
+00049dff	FID_conflict:__atodbl	45	1	2	00049dff-00049e2c
+00049e2c	__atoldbl	46	0	2	00049e2c-00049e5a
+00049e5a	FID_conflict:__atodbl	45	1	2	00049e5a-00049e87
+00049e87	__fptostr	119	3	2	00049e87-00049efe
+00049efe	__fltout2	92	3	3	00049efe-00049f5a
+00049f5a	___dtold	182	1	0	00049f5a-0004a010
+0004a010	strcpy	7	15	0	0004a010-0004a017
+0004a020	_strcat	224	3	0	0004a020-0004a100
+0004a100	_memset	88	7	0	0004a100-0004a158
+0004a158	__fptrap	9	1	1	0004a158-0004a161
+0004a161	__lseek	101	1	5	0004a161-0004a1c6
+0004a1c6	__lseek_lk	115	2	5	0004a1c6-0004a239
+0004a239	__getbuf	68	1	1	0004a239-0004a27d
+0004a27d	__isatty	41	1	0	0004a27d-0004a2a6
+0004a2a6	_wctomb	89	1	5	0004a2a6-0004a2ff
+0004a2ff	__wctomb_lk	105	1	2	0004a2ff-0004a368
+0004a370	__aulldiv	104	2	0	0004a370-0004a3d8
+0004a3e0	__aullrem	117	2	0	0004a3e0-0004a455
+0004a460	FID_conflict:_memcpy	664	6	0	0004a460-0004a4bb;0004a4bc-0004a4c3;0004a4d0-0004a4f9;0004a4fc-0004a51f;0004a520-0004a539;0004a55c-0004a5a6;0004a5b8-0004a5bf;0004a5c0-0004a5cb;0004a5cc-0004a5dd;0004a5e0-0004a5f7;0004a5f8-0004a61e;0004a620-0004a629;0004a62c-0004a64b;0004a658-0004a675;0004a678-0004a69f;0004a6a0-0004a6d1;0004a6f4-0004a73e;0004a750-0004a757;0004a758-0004a765;0004a768-0004a77b;0004a77c-0004a795
+0004a795	_strtol	23	1	1	0004a795-0004a7ac
+0004a7ac	_strtoxl	517	1	3	0004a7ac-0004a9b1
+0004a9d0	_strncmp	56	2	0	0004a9d0-0004aa08
+0004aa10	_alloca_probe	47	7	0	0004aa10-0004aa3f
+0004aa3f	__setmbcp	429	1	7	0004aa3f-0004abec
+0004abec	_getSystemCP	74	1	0	0004abec-0004ac36
+0004ac36	_CPtoLCID	51	1	0	0004ac36-0004ac69
+0004ac69	_setSBCS	41	1	0	0004ac69-0004ac92
+0004ac92	_setSBUpLow	389	1	3	0004ac92-0004ae17
+0004ae27	___initmbctable	28	2	1	0004ae27-0004ae43
+0004ae43	___crtMessageBoxA	137	1	2	0004ae43-0004aecc
+0004aecc	__87except	208	2	5	0004aecc-0004af9c
+0004af9c	__powhlp	304	0	1	0004af9c-0004b0cc
+0004b0cc	__d_inttype	101	1	2	0004b0cc-0004b131
+0004becb	FUN_1004becb	3	2	0	0004becb-0004bece
+0004bece	__alloc_osfhnd	291	1	7	0004bece-0004bff1
+0004bff1	__set_osfhnd	124	1	3	0004bff1-0004c06d
+0004c06d	__free_osfhnd	127	1	3	0004c06d-0004c0ec
+0004c0ec	__get_osfhandle	66	3	2	0004c0ec-0004c12e
+0004c12e	__open_osfhandle	167	0	8	0004c12e-0004c1d5
+0004c1d5	__lock_fhandle	95	5	4	0004c1d5-0004c234
+0004c234	__unlock_fhandle	34	5	1	0004c234-0004c256
+0004c256	_fclose	49	0	3	0004c256-0004c287
+0004c287	__fclose_lk	76	1	4	0004c287-0004c2d3
+0004c2d3	_signal	386	0	10	0004c2d3-0004c455
+0004c4b7	_raise	386	1	5	0004c4b7-0004c639
+0004c639	FUN_1004c639	61	2	0	0004c639-0004c676
+0004c688	___crtGetStringTypeA	318	3	5	0004c688-0004c781;0004c78c-0004c7d1
+0004c7d1	_setlocale	582	0	13	0004c7d1-0004ca17
+0004ca17	__setlocale_set_cat	283	1	6	0004ca17-0004cb32
+0004cb32	__setlocale_get_all	185	1	5	0004cb32-0004cbeb
+0004cbeb	__expandlocale	280	2	6	0004cbeb-0004cd03
+0004cd06	__strcats	37	2	1	0004cd06-0004cd2b
+0004cd2b	___lc_strtolc	204	1	4	0004cd2b-0004cdf7
+0004cdf7	___lc_lctostr	83	1	2	0004cdf7-0004ce4a
+0004ce4a	___crtLCMapStringA	511	3	6	0004ce4a-0004cf5a;0004cf6d-0004d00e;0004d020-0004d06e
+0004d06e	_strncnt	43	1	0	0004d06e-0004d099
+0004d099	___addl	33	3	0	0004d099-0004d0ba
+0004d0ba	___add_12	94	2	1	0004d0ba-0004d118
+0004d118	___shl_12	46	3	0	0004d118-0004d146
+0004d146	___shr_12	45	2	0	0004d146-0004d173
+0004d173	___mtold12	199	1	2	0004d173-0004d23a
+0004d23a	___strgtold12	1185	4	3	0004d23a-0004d6db
+0004d70b	___STRINGTOLD	60	0	2	0004d70b-0004d747
+0004d747	_$I10_OUTPUT	659	1	6	0004d747-0004d9da
+0004d9e2	_toupper	111	1	5	0004d9e2-0004da51
+0004da51	__toupper_lk	204	1	2	0004da51-0004db1d
+0004db1d	__copysign	33	1	0	0004db1d-0004db3e
+0004db3e	__chgsign	37	0	0	0004db3e-0004db63
+0004db79	__logb	231	0	5	0004db79-0004dc60
+0004dc60	__nextafter	661	0	5	0004dc60-0004def5
+0004df37	__fpclass	146	1	1	0004df37-0004dfc9
+0004dfc9	__close	93	1	5	0004dfc9-0004e026
+0004e026	__close_lk	131	1	5	0004e026-0004e0a9
+0004e0a9	__freebuf	43	1	1	0004e0a9-0004e0d4
+0004e165	__get_lc_time	846	0	1	0004e165-0004e4b3
+0004e4b3	__free_lc_time	400	0	1	0004e4b3-0004e643
+0004e818	_fix_grouping	55	0	0	0004e818-0004e84f
+0004e91a	__get_lc_lconv	290	0	2	0004e91a-0004ea3c
+0004ea3c	_fix_grouping	55	1	0	0004ea3c-0004ea73
+0004ea73	__free_lc_lconv	78	0	1	0004ea73-0004eac1
+0004eac1	___init_ctype	581	0	6	0004eac1-0004ed06
+0004ed10	_strcspn	62	2	0	0004ed10-0004ed4e
+0004ed50	_strpbrk	58	1	0	0004ed50-0004ed8a
+0004ed8a	___get_qualified_locale	381	1	11	0004ed8a-0004ef07
+0004ef07	_TranslateName	88	1	1	0004ef07-0004ef5f
+0004ef5f	_GetLcidFromLangCountry	135	1	3	0004ef5f-0004efe6
+0004efe6	_LangCountryEnumProc@4	516	0	6	0004efe6-0004f1ea
+0004f1ea	_GetLcidFromLanguage	86	1	3	0004f1ea-0004f240
+0004f240	_LanguageEnumProc@4	189	0	4	0004f240-0004f2fd
+0004f2fd	_GetLcidFromCountry	55	1	2	0004f2fd-0004f334
+0004f334	_CountryEnumProc@4	134	0	3	0004f334-0004f3ba
+0004f3ba	_GetLcidFromDefault	26	1	1	0004f3ba-0004f3d4
+0004f3d4	_ProcessCodePage	102	1	2	0004f3d4-0004f43a
+0004f43a	_TestDefaultCountry	31	2	0	0004f43a-0004f459
+0004f459	_TestDefaultLanguage	98	2	3	0004f459-0004f4bb
+0004f4bb	_IsThisWindowsNT	54	1	1	0004f4bb-0004f4f1
+0004f4f1	_crtGetLocaleInfoA@16	230	0	2	0004f4f1-0004f5d7
+0004f5d7	_LcidFromHexString	57	4	0	0004f5d7-0004f610
+0004f610	_GetPrimaryLen	33	3	0	0004f610-0004f631
+0004f631	___ld12mul	544	2	3	0004f631-0004f851
+0004f851	___multtenpow12	124	2	1	0004f851-0004f8cd
+0004f8cd	_ldexp	486	0	7	0004f8cd-0004fab3
+0004fab3	__Getdays	143	0	3	0004fab3-0004fb42
+0004fb42	__Getmonths	149	0	3	0004fb42-0004fbd7
+0004fbd7	__Gettnames	562	0	4	0004fbd7-0004fe09
+0004fe24	Strftime	250	0	5	0004fe24-0004ff1e
+0004ff1e	__expandtime	1007	2	4	0004ff1e-0005030d
+0005030d	__store_str	39	1	0	0005030d-00050334
+00050334	__store_num	111	1	1	00050334-000503a3
+000503a3	__store_number	73	1	0	000503a3-000503ec
+000503ec	__store_winword	719	1	2	000503ec-000506bb
+000506bb	___getlocaleinfo	312	3	7	000506bb-000507f3
+000507f9	___crtGetStringTypeW	423	1	6	000507f9-000508e5;000508f8-00050942;0005094d-000509be
+000509be	__itoa	45	1	1	000509be-000509eb
+000509eb	_xtoa	92	2	0	000509eb-00050a47
+00050a47	__ltoa	42	0	1	00050a47-00050a71
+00050a8c	__i64toa	49	0	1	00050a8c-00050abd
+00050abd	_x64toa@20	134	2	2	00050abd-00050b43
+00050b43	__ui64toa	27	0	1	00050b43-00050b5e
+00050b60	__strcmpi	208	5	3	00050b60-00050c30
+00050c30	__strnicmp	257	2	3	00050c30-00050d31
+00050d31	_atol	139	2	1	00050d31-00050dbc
+00050e81	___tzset	46	1	3	00050e81-00050eaf
+00050ec5	__tzset_lk	647	1	12	00050ec5-0005114c
+0005116d	FID_conflict:__isindst_lk	428	0	1	0005116d-00051319
+00051319	cvtdate	320	1	0	00051319-00051459
+00051459	___crtGetLocaleInfoW	264	1	4	00051459-00051512;0005151d-0005156c
+0005156c	___crtGetLocaleInfoA	275	1	4	0005156c-0005162b;00051636-0005168a
+000516e5	__getenv_lk	125	1	3	000516e5-00051762
+00051762	__mbsnbicoll	63	2	1	00051762-000517a1
+000517a1	___wtomb_environ	110	2	3	000517a1-0005180f
+0005180f	___crtCompareStringA	597	1	6	0005180f-000519c6;000519dc-00051a35;00051a47-00051a8c
+00051a8c	_strncnt	43	1	0	00051a8c-00051ab7
+00051ab7	___crtsetenv	391	1	10	00051ab7-00051c3e
+00051c3e	_findenv	88	1	1	00051c3e-00051c96
+00051c96	_copy_environ	103	1	3	00051c96-00051cfd
+00051cfd	__mbschr	151	1	3	00051cfd-00051d94
+00051d94	__strdup	43	1	3	00051d94-00051dbf
+00051dc0	KERNEL32.DLL::RtlUnwind	6	2	0	00051dc0-00051dc6
+00058480	Unwind@10058480	8	0	1	00058480-00058488
+00058488	Unwind@10058488	14	0	1	00058488-00058496
+000584b0	Unwind@100584b0	8	0	1	000584b0-000584b8
+000584b8	Unwind@100584b8	14	0	1	000584b8-000584c6
+000584e0	Unwind@100584e0	11	0	1	000584e0-000584eb
+000584eb	Unwind@100584eb	11	0	1	000584eb-000584f6
+000584f6	Unwind@100584f6	11	0	1	000584f6-00058501
+00058501	Unwind@10058501	14	0	1	00058501-0005850f
+0005850f	Unwind@1005850f	14	0	1	0005850f-0005851d
+0005851d	Unwind@1005851d	14	0	1	0005851d-0005852b
+0005852b	Unwind@1005852b	14	0	1	0005852b-00058539
+00058560	Unwind@10058560	8	0	1	00058560-00058568
+00058568	Unwind@10058568	11	0	1	00058568-00058573
+00058590	Unwind@10058590	8	0	1	00058590-00058598
+00058598	Unwind@10058598	11	0	1	00058598-000585a3
+000585c0	Unwind@100585c0	8	0	1	000585c0-000585c8
+000585c8	Unwind@100585c8	11	0	1	000585c8-000585d3
+000585f0	Unwind@100585f0	11	0	1	000585f0-000585fb
+00058610	Unwind@10058610	11	0	1	00058610-0005861b
+00058630	Unwind@10058630	11	0	1	00058630-0005863b
+00058650	Unwind@10058650	11	0	1	00058650-0005865b
+0005865b	Unwind@1005865b	11	0	1	0005865b-00058666
+00058666	Unwind@10058666	11	0	1	00058666-00058671
+00058671	Unwind@10058671	11	0	1	00058671-0005867c
+0005867c	Unwind@1005867c	11	0	1	0005867c-00058687
+00058687	Unwind@10058687	11	0	1	00058687-00058692
+00058692	Unwind@10058692	11	0	1	00058692-0005869d
+000586c0	Unwind@100586c0	11	0	1	000586c0-000586cb
+000586e0	Unwind@100586e0	11	0	1	000586e0-000586eb
+000586eb	Unwind@100586eb	8	0	1	000586eb-000586f3
+000586f3	Unwind@100586f3	11	0	1	000586f3-000586fe
+00058720	Unwind@10058720	8	0	1	00058720-00058728
+00058728	Unwind@10058728	11	0	1	00058728-00058733
+00058750	Unwind@10058750	8	0	1	00058750-00058758
+00058758	Unwind@10058758	11	0	1	00058758-00058763
+00058780	Unwind@10058780	11	0	1	00058780-0005878b
+000587a0	Unwind@100587a0	11	0	1	000587a0-000587ab
+000587c0	Unwind@100587c0	8	0	1	000587c0-000587c8
+000587c8	Unwind@100587c8	14	0	1	000587c8-000587d6
+000587f0	Unwind@100587f0	8	0	1	000587f0-000587f8
+000587f8	Unwind@100587f8	14	0	1	000587f8-00058806
+00058806	Unwind@10058806	14	0	1	00058806-00058814
+00058830	Unwind@10058830	11	0	1	00058830-0005883b
+0005883b	Unwind@1005883b	11	0	1	0005883b-00058846
+00058860	Unwind@10058860	11	0	1	00058860-0005886b
+00058880	Unwind@10058880	11	0	1	00058880-0005888b
+0005888b	Unwind@1005888b	11	0	1	0005888b-00058896
+000588b0	Unwind@100588b0	11	0	1	000588b0-000588bb
+000588d0	Unwind@100588d0	11	0	1	000588d0-000588db
+000588f0	Unwind@100588f0	11	0	1	000588f0-000588fb
+00058910	Unwind@10058910	11	0	1	00058910-0005891b
+0005891b	Unwind@1005891b	14	0	1	0005891b-00058929
+00058929	Unwind@10058929	14	0	1	00058929-00058937
+00058950	Unwind@10058950	11	0	1	00058950-0005895b
+00058970	Unwind@10058970	11	0	1	00058970-0005897b
+00058990	Unwind@10058990	11	0	1	00058990-0005899b
+000589b0	Unwind@100589b0	11	0	1	000589b0-000589bb
+000589d0	Unwind@100589d0	11	0	1	000589d0-000589db
+000589f0	Unwind@100589f0	11	0	1	000589f0-000589fb
+00058a10	Unwind@10058a10	11	0	1	00058a10-00058a1b
+00058a1b	Unwind@10058a1b	11	0	1	00058a1b-00058a26
+00058a40	Unwind@10058a40	11	0	1	00058a40-00058a4b
+00058a60	Unwind@10058a60	11	0	1	00058a60-00058a6b
+00058a80	Unwind@10058a80	8	0	1	00058a80-00058a88
+00058a88	Unwind@10058a88	11	0	1	00058a88-00058a93
+00058ab0	Unwind@10058ab0	11	0	1	00058ab0-00058abb
+00058ad0	Unwind@10058ad0	8	0	1	00058ad0-00058ad8
+00058af0	Unwind@10058af0	11	0	1	00058af0-00058afb
+00058b10	Unwind@10058b10	11	0	1	00058b10-00058b1b
+00058b30	Unwind@10058b30	11	0	1	00058b30-00058b3b
+00058b50	Unwind@10058b50	14	0	1	00058b50-00058b5e
+00058b70	Unwind@10058b70	8	0	1	00058b70-00058b78
+00058b90	Unwind@10058b90	8	0	1	00058b90-00058b98
+00058b98	Unwind@10058b98	11	0	1	00058b98-00058ba3
+00058ba3	Unwind@10058ba3	14	0	1	00058ba3-00058bb1
+00058bb1	Unwind@10058bb1	14	0	1	00058bb1-00058bbf
+00058bbf	Unwind@10058bbf	24	0	1	00058bbf-00058bd7
+00058c00	Unwind@10058c00	8	0	1	00058c00-00058c08
+00058c08	Unwind@10058c08	11	0	1	00058c08-00058c13
+00058c13	Unwind@10058c13	14	0	1	00058c13-00058c21
+00058c21	Unwind@10058c21	14	0	1	00058c21-00058c2f
+00058c2f	Unwind@10058c2f	24	0	1	00058c2f-00058c47
+00058c70	Unwind@10058c70	8	0	1	00058c70-00058c78
+00058c78	Unwind@10058c78	39	0	1	00058c78-00058c9f
+00058c9f	Unwind@10058c9f	14	0	1	00058c9f-00058cad
+00058cad	Unwind@10058cad	14	0	1	00058cad-00058cbb
+00058cbb	Unwind@10058cbb	24	0	1	00058cbb-00058cd3
+00058d00	Unwind@10058d00	11	0	1	00058d00-00058d0b
+00058d20	Unwind@10058d20	11	0	1	00058d20-00058d2b
+00058d40	Unwind@10058d40	11	0	1	00058d40-00058d4b
+00058d4b	Unwind@10058d4b	11	0	1	00058d4b-00058d56
+00058d70	Unwind@10058d70	11	0	1	00058d70-00058d7b
+00058d7b	Unwind@10058d7b	11	0	1	00058d7b-00058d86
+00058da0	Unwind@10058da0	8	0	1	00058da0-00058da8
+00058dc0	Unwind@10058dc0	8	0	1	00058dc0-00058dc8
+00058de0	Unwind@10058de0	8	0	1	00058de0-00058de8
+00058e00	Unwind@10058e00	8	0	1	00058e00-00058e08
+00058e20	Unwind@10058e20	8	0	1	00058e20-00058e28
+00058e40	Unwind@10058e40	8	0	1	00058e40-00058e48
+00058e48	Unwind@10058e48	8	0	1	00058e48-00058e50
+00058e60	Unwind@10058e60	8	0	1	00058e60-00058e68
+00058e80	Unwind@10058e80	8	0	1	00058e80-00058e88
+00058e88	Unwind@10058e88	8	0	1	00058e88-00058e90
+00058e90	Unwind@10058e90	8	0	1	00058e90-00058e98
+00058eb0	Unwind@10058eb0	8	0	1	00058eb0-00058eb8
+00058ed0	Unwind@10058ed0	8	0	1	00058ed0-00058ed8
+00058ed8	Unwind@10058ed8	8	0	1	00058ed8-00058ee0
+00058ef0	Unwind@10058ef0	8	0	1	00058ef0-00058ef8
+00058f10	Unwind@10058f10	8	0	1	00058f10-00058f18
+00058f18	Unwind@10058f18	8	0	1	00058f18-00058f20
+00058f30	Unwind@10058f30	8	0	1	00058f30-00058f38
+00058f50	Unwind@10058f50	8	0	1	00058f50-00058f58
+00058f58	Unwind@10058f58	8	0	1	00058f58-00058f60
+00058f70	Unwind@10058f70	8	0	1	00058f70-00058f78
+00058f90	Unwind@10058f90	8	0	1	00058f90-00058f98
+00058f98	Unwind@10058f98	8	0	1	00058f98-00058fa0
+00058fb0	Unwind@10058fb0	8	0	1	00058fb0-00058fb8
+00058fb8	Unwind@10058fb8	8	0	1	00058fb8-00058fc0
+00058fd0	Unwind@10058fd0	8	0	1	00058fd0-00058fd8
+00058fd8	Unwind@10058fd8	8	0	1	00058fd8-00058fe0
+00058ff0	Unwind@10058ff0	8	0	1	00058ff0-00058ff8
+00058ff8	Unwind@10058ff8	8	0	1	00058ff8-00059000
+00059010	Unwind@10059010	8	0	1	00059010-00059018
+00059018	Unwind@10059018	8	0	1	00059018-00059020
+00059030	Unwind@10059030	8	0	1	00059030-00059038
+00059050	Unwind@10059050	11	0	1	00059050-0005905b
+00059070	Unwind@10059070	11	0	1	00059070-0005907b
+00059090	Unwind@10059090	11	0	1	00059090-0005909b
+000590b0	Unwind@100590b0	11	0	1	000590b0-000590bb
+000590d0	Unwind@100590d0	11	0	1	000590d0-000590db
+000590f0	Unwind@100590f0	8	0	1	000590f0-000590f8
+000590f8	Unwind@100590f8	11	0	1	000590f8-00059103
+00059120	Unwind@10059120	8	0	1	00059120-00059128
+00059128	Unwind@10059128	11	0	1	00059128-00059133
+00059150	Unwind@10059150	14	0	1	00059150-0005915e
+00059170	Unwind@10059170	8	0	1	00059170-00059178
+00059178	Unwind@10059178	11	0	1	00059178-00059183
+000591a0	Unwind@100591a0	27	0	1	000591a0-000591bb
+000591bb	Unwind@100591bb	14	0	1	000591bb-000591c9
+000591c9	Unwind@100591c9	14	0	1	000591c9-000591d7
+00059200	Unwind@10059200	27	0	1	00059200-0005921b
+0005921b	Unwind@1005921b	14	0	1	0005921b-00059229
+00059229	Unwind@10059229	14	0	1	00059229-00059237
+00059260	Unwind@10059260	27	0	1	00059260-0005927b
+0005927b	Unwind@1005927b	14	0	1	0005927b-00059289
+00059289	Unwind@10059289	14	0	1	00059289-00059297
+000592c0	Unwind@100592c0	11	0	1	000592c0-000592cb
+000592e0	Unwind@100592e0	8	0	1	000592e0-000592e8
+000592e8	Unwind@100592e8	11	0	1	000592e8-000592f3
+00059310	Unwind@10059310	8	0	1	00059310-00059318
+00059318	Unwind@10059318	11	0	1	00059318-00059323
+00059340	Unwind@10059340	8	0	1	00059340-00059348
+00059348	Unwind@10059348	39	0	1	00059348-0005936f
+00059390	Unwind@10059390	11	0	1	00059390-0005939b
+0005939b	Unwind@1005939b	8	0	1	0005939b-000593a3
+000593a3	Unwind@100593a3	11	0	1	000593a3-000593ae
+000593d0	Unwind@100593d0	11	0	1	000593d0-000593db
+000593ec	Unwind@100593ec	26	0	1	000593ec-00059406
+00059410	Unwind@10059410	26	0	1	00059410-0005942a
+00059434	Unwind@10059434	8	0	1	00059434-0005943c
+00059448	Unwind@10059448	26	0	1	00059448-00059462
+0005946c	Unwind@1005946c	26	0	1	0005946c-00059486

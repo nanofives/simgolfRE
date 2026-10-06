@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x000093e0`), 766 bytes, 222 instructions, subsystem `a
 
 ## Role (from the naming pass, not a C3 purpose)
 Creates a Sound object from a filename, selecting the format id (1/2/3) by matching the file extension (rmi/aif/mid/wav); reads g_100b4a1c and g_soundWindow 0x100b49c0 (read at 0x1000949b, passed to the Sound object). (`re/names/sound_0.tsv`)
-System writeup: `re/analysis/systems/sound_0.md`.
+System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret` (at 0x100094d4, 0x100094f2, 0x10009542, 0x10009582, 0x100095a0, 0x100095e0, 0x10009620, 0x1000965c (+4 more)): callee pops 0 bytes of stack arguments.
@@ -38,21 +38,21 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x10009400, 0x10009404, 0x100094dc, 0x1000958a
 
 ## Callees
-- 0x1000105f -> 0x1002ddf0 `FUN_1002ddf0` (incremental-linking thunk) at 0x1000952c
+- 0x1000105f -> 0x1002ddf0 `Sound_assignName` (incremental-linking thunk) at 0x1000952c
 - 0x10001163 -> 0x10003f30 `Sound::ctor` (incremental-linking thunk) at 0x100095c4
 - 0x1000138e -> 0x10006020 `WaveStream::ctor` (incremental-linking thunk) at 0x10009566
 - 0x1000140b -> 0x10031200 `StreamReader_ctor` (incremental-linking thunk) at 0x10009640
 - 0x100018c5 -> 0x10030080 `Sound5c450_ctor` (incremental-linking thunk) at 0x10009604
 - 0x100021b7 -> 0x1002bb10 `Object_setName` (incremental-linking thunk) at 0x100094be
-- 0x1000237e -> 0x1002f740 `FUN_1002f740` (incremental-linking thunk) at 0x10009694
+- 0x1000237e -> 0x1002f740 `Ch5c3a4_ctor` (incremental-linking thunk) at 0x10009694
 - 0x10002513 -> 0x1001f4a0 `Sound5b6a8_ctor` (incremental-linking thunk) at 0x10009512
-- 0x100026ad -> 0x10039790 `FUN_10039790` (incremental-linking thunk) at 0x100094a4
+- 0x100026ad -> 0x10039790 `MultiSound_ctorWithType` (incremental-linking thunk) at 0x100094a4
 - 0x100424d7 `operator_new` at 0x10009483, 0x100094f8, 0x10009548, 0x100095a6, 0x100095e6, 0x10009626, 0x1000967a
-- 0x10042690 `FUN_10042690` at 0x10009413, 0x1000942c, 0x10009445, 0x1000945e
+- 0x10042690 `strstr` at 0x10009413, 0x1000942c, 0x10009445, 0x1000945e
 - indirect `jmp [eax*4+0x100096e0]` at 0x10009477
 
 ## Callers
-0x1002add0 `Engine_playSound`, 0x1002bbe0 `Device_createAndStart`, 0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002bee0 `Device_createStartQueue`, 0x1002deb0 `FUN_1002deb0`, 0x1002eb40 `FUN_1002eb40`, 0x1002f060 `FUN_1002f060`, 0x1002f5e0 `FUN_1002f5e0`
+0x1002add0 `Engine_playSound`, 0x1002bbe0 `Device_createAndStart`, 0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002bee0 `Device_createStartQueue`, 0x1002deb0 `SubChannel_openSourceType2`, 0x1002eb40 `openSourceType4`, 0x1002f060 `openSourceType6`, 0x1002f5e0 `openSourceType7`
 
 ## Constants
 - `0x0` at 0x10009491

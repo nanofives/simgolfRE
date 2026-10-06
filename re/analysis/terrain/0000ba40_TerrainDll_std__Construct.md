@@ -29,11 +29,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x1000ba6d
 
 ## Callees
-- 0x10001069 -> 0x1000bab0 `FUN_1000bab0` (incremental-linking thunk) at 0x1000ba5e
+- 0x10001069 -> 0x1000bab0 `operator_new` (incremental-linking thunk) at 0x1000ba5e
 - 0x100180a0 `__chkesp` at 0x1000ba90
 
 ## Callers
-0x1000b690 `FUN_1000b690`
+0x1000b690 `std::allocator(TileP)::construct`
 
 ## Constants
 - `0x0` at 0x1000ba69, 0x1000ba81

@@ -41,7 +41,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x10039712
 
 ## Callers
-0x1002f8d0 `FUN_1002f8d0`
+0x1002f8d0 `MultiSound_setSlotSource`
 
 ## Constants
 - `0x1` at 0x100396cf

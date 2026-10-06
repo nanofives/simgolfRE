@@ -60,7 +60,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0042f7a0 `rebuildHeightfield` at 0x0040e59b
 
 ## Callers
-0x0040a4e0 `demolishObject`, 0x0046d0c0 `resetGolferState`
+0x0040a4e0 `demolishObject`, 0x0040f5c0 `mainLoop`, 0x0046d0c0 `resetGolferState`
 
 ## Constants
 - `0x0` at 0x0040e584

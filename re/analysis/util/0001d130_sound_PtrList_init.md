@@ -24,7 +24,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1001bee0 `FUN_1001bee0`, 0x1001c870 `FUN_1001c870`
+0x1001bee0 `Ctrl5b19c_ctor`, 0x1001c870 `Ctrl5b638_ctor`
 
 ## Constants
 None.

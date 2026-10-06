@@ -21,9 +21,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000a98a
 
 ## Callees
-- 0x10001163 -> 0x10003270 `FUN_10003270` (incremental-linking thunk) at 0x1000a9b9
-- 0x10001181 -> 0x1000a130 `FUN_1000a130` (incremental-linking thunk) at 0x1000a990
-- 0x100011d6 -> 0x100032b0 `FUN_100032b0` (incremental-linking thunk) at 0x1000a998
+- 0x10001163 -> 0x10003270 `Terrain::normalArray` (incremental-linking thunk) at 0x1000a9b9
+- 0x10001181 -> 0x1000a130 `Terrain::buildArrays` (incremental-linking thunk) at 0x1000a990
+- 0x100011d6 -> 0x100032b0 `Terrain::vertexArray` (incremental-linking thunk) at 0x1000a998
 - 0x100180a0 `__chkesp` at 0x1000a9b1, 0x1000a9d0, 0x1000a9dd
 - import `OPENGL32.dll!glNormalPointer` at 0x1000a9c8
 - import `OPENGL32.dll!glVertexPointer` at 0x1000a9a9

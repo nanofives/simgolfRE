@@ -23,7 +23,7 @@ None.
 - `je` (equality) at 0x10039c56
 
 ## Callees
-- 0x10001bf4 -> 0x10034ac0 `FUN_10034ac0` (incremental-linking thunk) at 0x10039c47
+- 0x10001bf4 -> 0x10034ac0 `Channel_releaseVoices` (incremental-linking thunk) at 0x10039c47
 - 0x100020b3 -> 0x1000c2f0 `WaveCmdQueue::pushNode` (incremental-linking thunk) at 0x10039c61
 
 ## Callers

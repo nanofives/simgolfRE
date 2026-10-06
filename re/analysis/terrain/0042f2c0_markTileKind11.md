@@ -29,7 +29,7 @@ Through registers:
 - 0x0042f1c0 `propagateType11` at 0x0042f317
 
 ## Callers
-0x00409cf0 `editTerrainHeight`, 0x0040a4e0 `demolishObject`, 0x0040b9b0 `loadGame`, 0x00470a60 `applyTerrainEdit`
+0x00409cf0 `editTerrainHeight`, 0x0040a4e0 `demolishObject`, 0x0040b9b0 `loadGame`, 0x0040f5c0 `mainLoop`, 0x00470a60 `applyTerrainEdit`
 
 ## Constants
 - `0x2` at 0x0042f2c6

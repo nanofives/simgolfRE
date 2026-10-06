@@ -85,8 +85,8 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x10001334 -> 0x1001b160 `FUN_1001b160` (incremental-linking thunk) at 0x1002241a
 - 0x10001929 -> 0x1001ab60 `Sound_initEntry` (incremental-linking thunk) at 0x100223f9
-- 0x10001d66 -> 0x1001abd0 `FUN_1001abd0` (incremental-linking thunk) at 0x10022608
-- 0x10001f32 -> 0x1001ae00 `FUN_1001ae00` (incremental-linking thunk) at 0x10022468
+- 0x10001d66 -> 0x1001abd0 `Seq_freeChannelObjects` (incremental-linking thunk) at 0x10022608
+- 0x10001f32 -> 0x1001ae00 `Seq_setPlayRange` (incremental-linking thunk) at 0x10022468
 - 0x10001fa0 -> 0x1001aef0 `FUN_1001aef0` (incremental-linking thunk) at 0x1002242e
 - 0x10002455 -> 0x1001ae50 `FUN_1001ae50` (incremental-linking thunk) at 0x1002244a
 - 0x100025f4 -> 0x1002d430 `FUN_1002d430` (incremental-linking thunk) at 0x10022379, 0x10022412

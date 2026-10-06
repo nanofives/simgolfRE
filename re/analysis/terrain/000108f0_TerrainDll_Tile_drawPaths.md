@@ -90,7 +90,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1001091a
 
 ## Callees
-- 0x1000134d -> 0x100116d0 `FUN_100116d0` (incremental-linking thunk) at 0x100113da
+- 0x1000134d -> 0x100116d0 `Tile::drawCornerOverlays` (incremental-linking thunk) at 0x100113da
 - 0x100180a0 `__chkesp` at 0x10010a21, 0x10010a3a, 0x10010a5e, 0x10010a89, 0x10010aa8, 0x10010ac1, 0x10010b06, 0x10010b24 (+56 more)
 - import `OPENGL32.dll!glBegin` at 0x10010a81, 0x10010ce4, 0x10010f47, 0x100111ae
 - import `OPENGL32.dll!glBindTexture` at 0x10010a56, 0x10010cd3, 0x10010f36, 0x1001119d
@@ -103,7 +103,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glVertex3f` at 0x10010afe, 0x10010b7a, 0x10010c00, 0x10010c86, 0x10010d61, 0x10010de7, 0x10010e6c, 0x10010ee9 (+8 more)
 
 ## Callers
-0x1000e6c0 `FUN_1000e6c0`
+0x1000e6c0 `Tile::render`
 
 ## Constants
 - `0x0` at 0x10010921, 0x10010932, 0x10010953, 0x10010963, 0x10010984, 0x10010994, 0x100109b5, 0x100109c5 (+5 more)

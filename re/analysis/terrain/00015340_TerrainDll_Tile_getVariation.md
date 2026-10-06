@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10003390 `?getVariation@Terrain@@QAEHPAVTile@@@Z`, 0x10015650 `FUN_10015650`
+0x10003390 `Terrain::getVariation`, 0x10015650 `Tile::edgeKind`
 
 ## Constants
 - `0x11` (17) at 0x1001534d

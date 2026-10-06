@@ -42,7 +42,7 @@ Through registers:
 - `jne` (equality) at 0x10030fb9
 
 ## Callees
-- 0x1003aea0 `FUN_1003aea0` at 0x10031031
+- 0x1003aea0 `codecAllocContextB` at 0x10031031
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

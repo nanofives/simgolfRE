@@ -36,7 +36,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jle` (signed) at 0x10023d2c, 0x10023d8f
 
 ## Callees
-- 0x1000114f -> 0x100285a0 `FUN_100285a0` (incremental-linking thunk) at 0x10023d42
+- 0x1000114f -> 0x100285a0 `nextRandomFloat` (incremental-linking thunk) at 0x10023d42
 - 0x10042550 `__ftol` at 0x10023d47
 - import `WINMM.dll!timeGetTime` at 0x10023d17
 

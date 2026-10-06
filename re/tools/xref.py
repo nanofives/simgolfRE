@@ -39,15 +39,18 @@ def read_cstr(pe, base, va, maxlen=200):
 
 
 def functions(mod):
-    """[(va, name, size)] from the Ghidra list, sizes capped like match.ghidra_size."""
+    """[(va, name, size, ranges)] from the Ghidra list. ranges = [(lo, hi)] VAs, end exclusive: the body's address
+    ranges when the list has them and the body is not one block (mainLoop 0x0040f5c0 has code up to 0x00421614);
+    otherwise one range from the entry, its size capped like match.ghidra_size."""
     rows = [l.split("\t") for l in (ROOT / "re" / match.TSV[mod]).read_text().splitlines()[1:]]
     base = match.image_base(mod)
+    off = 0 if mod == "golf_clean.exe" else base
     out = []
     for r in rows:
-        key = int(r[0], 16)
-        va = key if mod == "golf_clean.exe" else key + base
+        va = int(r[0], 16) + off
         size = match.ghidra_size(mod, va) or int(r[2])
-        out.append((va, r[1], size))
+        rngs = [tuple(int(x, 16) + off for x in s.split("-")) for s in r[5].split(";")] if len(r) > 5 and ";" in r[5] else []
+        out.append((va, r[1], size, rngs or [(va, va + size)]))
     return sorted(out)
 
 
@@ -56,19 +59,24 @@ def build(mod):
     md = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
     md.detail = True
     fns = functions(mod)
-    entries = {va for va, _, _ in fns}
+    entries = {f[0] for f in fns}
     img_lo, img_hi = base, base + pe.OPTIONAL_HEADER.SizeOfImage
     idx = {}
-    for va, name, size in fns:
-        try:
-            code = pe.get_data(va - base, size)
-        except Exception:
+    for va, name, size, rngs in fns:
+        insns = []
+        for lo, hi in rngs:
+            try:
+                insns += list(md.disasm(pe.get_data(lo - base, hi - lo), lo))
+            except Exception:
+                continue
+        if not insns:
             continue
+        inside = lambda t: any(lo <= t < hi for lo, hi in rngs)
         calls, strs, data = set(), set(), set()
-        for ins in md.disasm(code, va):
+        for ins in insns:
             if ins.mnemonic in ("call", "jmp") and ins.operands and ins.operands[0].type == capstone.x86.X86_OP_IMM:
                 t = ins.operands[0].imm & 0xFFFFFFFF
-                if t in entries and (ins.mnemonic == "call" or not (va <= t < va + size)):
+                if t in entries and (ins.mnemonic == "call" or not inside(t)):
                     calls.add(t)
                 continue
             for op in ins.operands:
@@ -83,10 +91,11 @@ def build(mod):
                     strs.add(v)
                 else:
                     data.add(v)
-        idx[va] = {"name": name, "size": size, "calls": sorted(calls), "strings": sorted(strs), "data": sorted(data)}
+        idx[va] = {"name": name, "size": size, "ranges": [list(r) for r in rngs], "calls": sorted(calls),
+                   "strings": sorted(strs), "data": sorted(data)}
     # debug DLLs call through incremental-linking thunks (a 5-byte `jmp body`): attribute calls to the body
     thunk = {}
-    for va, name, size in fns:
+    for va, name, size, _ in fns:
         try:
             b = pe.get_data(va - base, 5)
         except Exception:

@@ -73,7 +73,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call ebp` at 0x10033cc8, 0x10033d5f
 
 ## Callers
-0x10039870 `FUN_10039870`, 0x100592e8 `Unwind@100592e8`, 0x10059318 `Unwind@10059318`, 0x10059348 `Unwind@10059348`, 0x100593a3 `Unwind@100593a3`
+0x10039870 `MultiSound_dtor`, 0x100592e8 `Unwind@100592e8`, 0x10059318 `Unwind@10059318`, 0x10059348 `Unwind@10059348`, 0x100593a3 `Unwind@100593a3`
 
 ## Constants
 - `0x1` at 0x10033d7c

@@ -40,7 +40,7 @@ Through registers:
 - 0x004762d0 `setDrawTarget` at 0x0040c819
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x0` at 0x0040c7cd

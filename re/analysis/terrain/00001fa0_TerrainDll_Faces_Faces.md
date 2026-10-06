@@ -25,7 +25,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000c210 `FUN_1000c210`
+0x1000c210 `Tile::Tile`
 
 ## Constants
 - `0x0` at 0x10001fc0

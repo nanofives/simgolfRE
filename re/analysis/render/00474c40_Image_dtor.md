@@ -32,7 +32,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004928d0 `HotList::dtor` at 0x00474c7b, 0x00474c8e
 
 ## Callers
-0x00406250 `showLoadingScreen`, 0x0040f5c0 `mainLoop`, 0x00437910 `promptAndSaveFile`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043cd70 `showTitleScreen`, 0x0043dbe0 `loadWorldAssets`, 0x0044b9c0 `showCreditsScreen`, 0x0044bde0 `loadInfoScreenArt`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0045baf0 `gameMain`, 0x0045f0f0 `skillPointDialog`, 0x0046e810 `showBulletinBoard`, 0x0046f550 `courseActionMenu`, 0x004725b0 `showThemePackSelect`, 0x00473470 `drawScoreSummary`, 0x00474c20 `Image_deleteDtor` (+33 more)
+0x00406250 `showLoadingScreen`, 0x0040f5c0 `mainLoop`, 0x00437910 `promptAndSaveFile`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043cd70 `showTitleScreen`, 0x0043dbe0 `loadWorldAssets`, 0x00442180 `loadInterfaceArt`, 0x0044b9c0 `showCreditsScreen`, 0x0044bde0 `loadInfoScreenArt`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0045baf0 `gameMain`, 0x0045f0f0 `skillPointDialog`, 0x0046e810 `showBulletinBoard`, 0x0046f550 `courseActionMenu`, 0x004725b0 `showThemePackSelect`, 0x00473470 `drawScoreSummary` (+34 more)
 
 ## Constants
 - `0x0` at 0x00474c76

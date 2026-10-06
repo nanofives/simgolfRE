@@ -22,11 +22,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000b76a
 
 ## Callees
-- 0x10001078 -> 0x1000b9b0 `FUN_1000b9b0` (incremental-linking thunk) at 0x1000b774
+- 0x10001078 -> 0x1000b9b0 `std::reverse_bidirectional_iterator(std::list(TileP)::const_iterator)::ctor` (incremental-linking thunk) at 0x1000b774
 - 0x100180a0 `__chkesp` at 0x1000b784
 
 ## Callers
-0x1000af70 `FUN_1000af70`, 0x1000afe0 `FUN_1000afe0`, 0x1000b100 `FUN_1000b100`
+0x1000af70 `std::list(TileP)::begin`, 0x1000afe0 `std::list(TileP)::end`, 0x1000b100 `std::list(TileP)::insert`
 
 ## Constants
 - `0x11` (17) at 0x1000b75d

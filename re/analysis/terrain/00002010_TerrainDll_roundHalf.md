@@ -24,7 +24,7 @@ Through registers:
 - 0x100183ec `__ftol` at 0x1000203b
 
 ## Callers
-0x10002060 `FUN_10002060`
+0x10002060 `Faces::build`
 
 ## Constants
 - `0x2` at 0x10002031

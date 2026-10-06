@@ -24,7 +24,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1003aae0 `FUN_1003aae0`, 0x1003aef0 `FUN_1003aef0`
+0x1003aae0 `codecInitContextA`, 0x1003aef0 `codecInitContextB`
 
 ## Constants
 - `0x1` at 0x1003aa7c

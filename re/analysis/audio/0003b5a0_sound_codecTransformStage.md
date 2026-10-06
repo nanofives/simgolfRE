@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003b5a0`), 2435 bytes, 768 instructions, subsystem `
 
 ## Role (from the naming pass, not a C3 purpose)
 Second codec stage: floating-point transform over the unpacked coefficients into integer output via __ftol. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1003bf22): callee pops 0 bytes of stack arguments.
@@ -162,9 +162,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1003b655, 0x1003b68f, 0x1003b6bc, 0x1003b6c5, 0x1003b8f3, 0x1003b98a, 0x1003ba31, 0x1003ba43 (+7 more)
 
 ## Callees
-- 0x1003e2c0 `FUN_1003e2c0` at 0x1003be18, 0x1003be7e
-- 0x1003e480 `FUN_1003e480` at 0x1003baef, 0x1003bbe2, 0x1003bc8c
-- 0x1003e520 `FUN_1003e520` at 0x1003b8aa, 0x1003b967
+- 0x1003e2c0 `intPow` at 0x1003be18, 0x1003be7e
+- 0x1003e480 `medianOfThree` at 0x1003baef, 0x1003bbe2, 0x1003bc8c
+- 0x1003e520 `decodeTableSymbol` at 0x1003b8aa, 0x1003b967
 - 0x10042550 `__ftol` at 0x1003b9dd, 0x1003beb6
 - 0x100431ce `FUN_100431ce` at 0x1003bf1a
 

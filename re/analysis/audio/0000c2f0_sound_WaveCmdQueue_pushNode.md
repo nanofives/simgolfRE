@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0000c2f0`), 164 bytes, 47 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Allocates a 0x10-byte command node and enqueues it in the 4096-entry wave command ring at +0x1d8 (head +0x41dc mask 0xfff); returns 0x22 when full. (`re/names/sound_2.tsv`)
-System writeup: `re/analysis/systems/sound_2.md`.
+System writeup: `re/analysis/systems/sound_2.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x1000c336, 0x1000c391): callee pops 8 bytes of stack arguments.
@@ -44,7 +44,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x100424d7 `operator_new` at 0x1000c33b
 
 ## Callers
-0x100097d0 `delete_sound`, 0x10031080 `FUN_10031080`, 0x10039bd0 `FUN_10039bd0`, 0x10039c40 `FUN_10039c40`, 0x10039ce0 `FUN_10039ce0`
+0x100097d0 `delete_sound`, 0x10031080 `Channel_start`, 0x10039bd0 `MultiSound_enqueueCmd3`, 0x10039c40 `MultiSound_release`, 0x10039ce0 `MultiSound_start`
 
 ## Constants
 - `0x0` at 0x1000c349

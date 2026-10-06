@@ -35,7 +35,7 @@ Through registers:
 - 0x100424d7 `operator_new` at 0x1001d155
 
 ## Callers
-0x1001b9a0 `FUN_1001b9a0`
+0x1001b9a0 `Ctrl_appendIfAccepted`
 
 ## Constants
 - `0x0` at 0x1001d165, 0x1001d16b

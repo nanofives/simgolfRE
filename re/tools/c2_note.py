@@ -124,10 +124,12 @@ def note(ctx, mod, va, name, subsystem):
     size = fn["size"] if fn else None
     if size is None:
         return None
-    code = pe.get_data(va - base, size)
+    rngs = fn.get("ranges") or [[va, va + size]]  # non-contiguous bodies: every range (xref.functions)
     md = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
     md.detail = True
-    insns = list(md.disasm(code, va))
+    insns = []
+    for lo, hi in rngs:
+        insns += list(md.disasm(pe.get_data(lo - base, hi - lo), lo))
     entries = set(idx)
     names = {a: f["name"] for a, f in idx.items()}
     img_lo, img_hi = base, base + pe.OPTIONAL_HEADER.SizeOfImage
@@ -165,7 +167,7 @@ def note(ctx, mod, va, name, subsystem):
             op = ins.operands[0]
             if op.type == x86.X86_OP_IMM:
                 t = op.imm & 0xFFFFFFFF
-                if mn == "call" or not (va <= t < va + size):
+                if mn == "call" or not any(lo <= t < hi for lo, hi in rngs):
                     callees[t].append(ins.address)
                 continue
             if op.type == x86.X86_OP_MEM and not op.mem.base and not op.mem.index:
@@ -209,7 +211,7 @@ def note(ctx, mod, va, name, subsystem):
     rva = va - base if mod != "golf_clean.exe" else va
     L = [f"# {hexa(va)} {name}", "",
          f"Module `{mod}`" + (f" (RVA `0x{rva:08x}`)" if mod != "golf_clean.exe" else "") +
-         f", {size} bytes, {len(insns)} instructions, subsystem `{subsystem}`. Mechanical transcription {GEN} "
+         f", {size} bytes" + (f" in {len(rngs)} address ranges" if len(rngs) > 1 else "") + f", {len(insns)} instructions, subsystem `{subsystem}`. Mechanical transcription {GEN} "
          f"from the anchored binary; registers are cited by name and fields as `[reg+0xNN]`.", ""]
     nr = ctx.namerows.get((mod, va))
     if nr:
@@ -343,6 +345,9 @@ def main():
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--out", default="log/c2_batch.tsv")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--refresh", action="store_true",
+                    help="rewrite the generated notes (no hand Purpose) of every C2+ row in place, and list callers/"
+                         "callees of all C2+ rows in --out for `re_classify.py retag` (after the xref index changed)")
     a = ap.parse_args()
     ctx = Ctx()
     if a.addr:
@@ -357,12 +362,25 @@ def main():
     out = ["module\taddr\tname\tsubsystem\tnote\tcallers\tcallees"]
     written = skipped = 0
     for row in rows:
-        if (row.get("confidence") or "C0") != "C1":
+        level = row.get("confidence") or "C0"
+        if (level != "C1") if not a.refresh else (level in ("C0", "C1")):
             continue
         mod = row.get("module") or "golf_clean.exe"
         rva = int(row["addr"], 16)
         va = rva if mod == "golf_clean.exe" else rva + 0x10000000
         path = existing_note(row)
+        if a.refresh and not path and row.get("note") and (ROOT / row["note"]).is_file():
+            res = note(ctx, mod, va, row["name"], row["subsystem"])
+            if res is None:
+                skipped += 1
+                continue
+            text, callers, callees = res
+            (ROOT / row["note"]).write_text(text, encoding="utf-8")
+            written += 1
+            cl = ";".join(hexa(c) for c in callers) or "none"
+            ce = ";".join(hexa(c) for c in callees) or "none"
+            out.append(f"{mod}	{hexa(va)}	{row['name']}	{row['subsystem']}	{row['note']}	{cl}	{ce}")
+            continue
         if not path:
             res = note(ctx, mod, va, row["name"], row["subsystem"])
             if res is None:

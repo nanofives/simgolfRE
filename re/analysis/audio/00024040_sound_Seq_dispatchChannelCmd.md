@@ -62,7 +62,7 @@ Through registers:
 ## Callees
 - 0x10001550 -> 0x10021fa0 `Seq_updateChannel` (incremental-linking thunk) at 0x10024062, 0x10024082
 - 0x100015fa -> 0x1001d780 `Seq_listGetAt` (incremental-linking thunk) at 0x100240a7, 0x10024160
-- 0x10001654 -> 0x1001b9a0 `FUN_1001b9a0` (incremental-linking thunk) at 0x1002416e
+- 0x10001654 -> 0x1001b9a0 `Ctrl_appendIfAccepted` (incremental-linking thunk) at 0x1002416e
 - indirect `call [eax+0xb4]` at 0x10024094
 - indirect `jmp [ecx*4+0x10024178]` at 0x10024078
 

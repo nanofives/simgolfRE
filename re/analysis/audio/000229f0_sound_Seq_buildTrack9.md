@@ -72,7 +72,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x10001073 -> 0x10024f90 `NodeList_pushFront` (incremental-linking thunk) at 0x10022be6
 - 0x10001410 -> 0x1000b000 `FUN_1000b000` (incremental-linking thunk) at 0x10022a38
 - 0x100015fa -> 0x1001d780 `Seq_listGetAt` (incremental-linking thunk) at 0x10022a6d
-- 0x100019e7 -> 0x1001f150 `FUN_1001f150` (incremental-linking thunk) at 0x10022a99
+- 0x100019e7 -> 0x1001f150 `Seq_clearTrackFlag8All` (incremental-linking thunk) at 0x10022a99
 - 0x10001ef1 -> 0x10024e60 `NodeList_insert` (incremental-linking thunk) at 0x10022c52
 - 0x100025bd -> 0x10024de0 `NodeList_pushBack` (incremental-linking thunk) at 0x10022b99, 0x10022ba1, 0x10022bd5, 0x10022bf7
 - 0x100424d7 `operator_new` at 0x10022a22, 0x10022aa0, 0x10022aec, 0x10022c00

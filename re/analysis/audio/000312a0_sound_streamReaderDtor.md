@@ -46,12 +46,12 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x10001ba4 -> 0x1000eda0 `Wave_In_Device::op2` (incremental-linking thunk) at 0x10031360
-- 0x10002612 -> 0x1002f3f0 `FUN_1002f3f0` (incremental-linking thunk) at 0x100313d7
+- 0x10002612 -> 0x1002f3f0 `Ch5c2ec_dtor` (incremental-linking thunk) at 0x100313d7
 - 0x1004249a `operator_delete` at 0x100312ef, 0x1003131c, 0x10031343, 0x10031388, 0x100313ba
 - indirect `call ebp` at 0x1003130c
 
 ## Callers
-0x10031270 `FUN_10031270`
+0x10031270 `StreamReader_scalarDtor`
 
 ## Constants
 - `0x1` at 0x100312cd

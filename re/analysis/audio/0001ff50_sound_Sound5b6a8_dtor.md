@@ -56,13 +56,13 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x10001014 -> 0x1001e3d0 `Midi_Device::closeFile` (incremental-linking thunk) at 0x1001ff8d
 - 0x100014d8 -> 0x1001e2b0 `Seq_dtor` (incremental-linking thunk) at 0x100201a9
-- 0x10001cc1 -> 0x1002d560 `FUN_1002d560` (incremental-linking thunk) at 0x100201b8
+- 0x10001cc1 -> 0x1002d560 `Ch5be88_dtorA` (incremental-linking thunk) at 0x100201b8
 - 0x10002004 -> 0x1001cd30 `FUN_1001cd30` (incremental-linking thunk) at 0x1001ffae
 - 0x1004249a `operator_delete` at 0x1001ffb4, 0x1001fffc, 0x10020018, 0x1002004b, 0x100200b0, 0x100200f4, 0x1002013d, 0x10020181
 - 0x1004280e `??_M@YGXPAXIHP6EX0@Z@Z` at 0x1002007b
 
 ## Callers
-0x10004000 `Sound::dtor`, 0x1001f6c0 `FUN_1001f6c0`, 0x10058480 `Unwind@10058480`, 0x100584b0 `Unwind@100584b0`
+0x10004000 `Sound::dtor`, 0x1001f6c0 `Sound5b6a8_scalarDtor`, 0x10058480 `Unwind@10058480`, 0x100584b0 `Unwind@100584b0`
 
 ## Constants
 - `0x1` at 0x1001ff86, 0x10020113

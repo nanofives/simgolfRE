@@ -36,7 +36,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x100031d4
 
 ## Callees
-- 0x100012d5 -> 0x10002ae0 `FUN_10002ae0` (incremental-linking thunk) at 0x100031fa
+- 0x100012d5 -> 0x10002ae0 `Terrain::Terrain` (incremental-linking thunk) at 0x100031fa
 - 0x100180a0 `__chkesp` at 0x10003238
 - 0x10018c90 `operator_new` at 0x100031db
 

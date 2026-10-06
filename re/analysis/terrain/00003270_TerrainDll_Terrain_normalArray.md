@@ -20,11 +20,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000328a
 
 ## Callees
-- 0x100011f4 -> 0x10013ff0 `FUN_10013ff0` (incremental-linking thunk) at 0x1000328d
+- 0x100011f4 -> 0x10013ff0 `Tile::normalArray` (incremental-linking thunk) at 0x1000328d
 - 0x100180a0 `__chkesp` at 0x1000329a
 
 ## Callers
-0x1000a970 `?initTerrain@Terrain@@QAEXXZ`, 0x1000aa10 `?resetTerrain@Terrain@@QAEXXZ`
+0x1000a970 `Terrain::initTerrain`, 0x1000aa10 `Terrain::resetTerrain`
 
 ## Constants
 - `0x11` (17) at 0x1000327d

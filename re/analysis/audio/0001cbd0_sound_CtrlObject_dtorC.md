@@ -22,7 +22,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x100041d0 `loadSoundFile`, 0x1001cba0 `FUN_1001cba0`, 0x100244a0 `FUN_100244a0`, 0x100584e0 `Unwind@100584e0`
+0x100041d0 `loadSoundFile`, 0x1001cba0 `CtrlObject_scalarDtorC`, 0x100244a0 `FUN_100244a0`, 0x100584e0 `Unwind@100584e0`
 
 ## Constants
 - `0x1005b19c` (268808604) = address in the image (data) at 0x1001cbd0

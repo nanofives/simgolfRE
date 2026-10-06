@@ -1,1051 +1,1051 @@
-entry	name	size	callers	callees
-00001005	std::list(TileP)::size	5	1	0
-0000100f	std::allocator(TileP)::construct	5	1	0
-00001014	Terrain::setWall	5	0	0
-00001019	ifstream::{vbase_dtor}	5	3	0
-0000101e	Tile::drawSkirts	5	2	0
-00001023	Terrain::hasConnectedPath	5	0	0
-00001028	Terrain::flagCode	5	1	0
-00001032	Terrain::loadNewCourseType	5	0	0
-00001037	Tile::isHidden	5	6	0
-0000103c	thunk_FUN_10013500	5	5	0
-00001041	Tile::render	5	5	0
-00001046	std::list(TileP)::iterator::iterator	5	3	0
-0000104b	Terrain::render	5	0	0
-00001050	Tile::setRotation	5	1	0
-00001055	std::list(TileP)::end	5	7	0
-0000105a	Terrain::getVariation	5	0	0
-0000105f	PathInfo::clear	5	2	0
-00001069	operator_new	5	1	0
-00001073	Terrain::bernstein	5	1	0
-00001078	std::reverse_bidirectional_iterator(std::list(TileP)::const_iterator)::ctor	5	1	0
-0000107d	Terrain::hasPath	5	0	0
-00001082	Terrain::drawTile	5	4	0
-0000108c	Terrain::tileAt	5	11	0
-00001091	std::list(TileP)::begin	5	6	0
-00001096	thunk_FUN_10013670	5	1	0
-0000109b	Terrain::tileHit	5	0	0
-000010a0	Terrain::resetTerrain	5	0	0
-000010a5	Terrain::drawBezierSpline	5	0	0
-000010aa	Tile::getFaces	5	6	0
-000010af	std::list(TileP)::iterator::operator++	5	6	0
-000010b4	Terrain::passCollarInfo	5	0	0
-000010b9	Tile::setVariation	5	1	0
-000010be	std::list(TileP)::list	5	1	0
-000010c3	Faces::build	5	1	0
-000010c8	Tile::vertexArray	5	1	0
-000010d2	Terrain::calcAllNormals	5	0	0
-000010d7	initGrid	5	1	0
-000010dc	Tile::lowerCorner	5	2	0
-000010e1	std::list(TileP)::_Acc::_Next	5	5	0
-000010e6	Tile::getVariation	5	2	0
-000010eb	Tile::hasPath	5	2	0
-000010f0	rotateAxis	5	2	0
-000010f5	Tile::calcNormals	5	2	0
-000010fa	Tile::elevateCorner	5	1	0
-00001104	Tile::maxHeight	5	1	0
-00001109	swapRedBlue	5	1	0
-0000110e	ios::lockptr	5	6	0
-00001113	Tile::setNeighbour	5	2	0
-00001118	Terrain::lowerEdge	5	1	0
-0000111d	Tile::edgeKind	5	1	0
-00001122	Tile::drawPaths	5	1	0
-00001127	Terrain::lowerCorner	5	0	0
-0000112c	ios::fail	5	1	0
-00001131	Tile::setConnected	5	1	0
-00001136	Terrain::getInstance	5	0	0
-0000113b	PathInfo::PathInfo	5	1	0
-00001140	std::list(TileP)::const_iterator::operator!=	5	5	0
-00001145	Tile::getY	5	9	0
-0000114f	thunk_FUN_10014190	5	1	0
-00001154	Terrain::lowerEdgeCorner	5	0	0
-00001159	std::list(TileP)::_Acc::_Prev	5	3	0
-0000115e	std::list(TileP)::const_iterator::_Mynode	5	2	0
-00001163	Terrain::normalArray	5	2	0
-00001168	thunk_FUN_100149e0	5	1	0
-0000116d	Tile::setFaceTexture	5	1	0
-00001172	ios::unlock	5	7	0
-00001177	textureLoad	5	1	0
-0000117c	Terrain::localRender	5	0	0
-00001181	Terrain::buildArrays	5	2	0
-00001186	Terrain::drawCircle	5	0	0
-0000118b	std::_Destroy	5	1	0
-00001190	degToRad	5	1	0
-00001195	LoadTGA	5	1	0
-0000119a	Tile::getType	5	9	0
-0000119f	Tile::reset	5	3	0
-000011a4	Faces::Faces	5	1	0
-000011a9	normalize	5	5	0
-000011ae	WallInfo::WallInfo	5	1	0
-000011b3	Terrain::drawLine	5	0	0
-000011b8	istream::getline	5	1	0
-000011c2	Terrain::changeLighting	5	0	0
-000011c7	WallInfo::clear	5	2	0
-000011cc	std::list(TileP)::_Freenode	5	2	0
-000011d1	Tile::setWall	5	1	0
-000011d6	Terrain::vertexArray	5	2	0
-000011db	std::reverse_bidirectional_iterator(std::list(TileP)::iterator)::ctor	5	1	0
-000011e0	Terrain::pathUpdateRender	5	0	0
-000011e5	std::list(TileP)::clear	5	3	0
-000011ea	Terrain::renderTile	5	0	0
-000011ef	std::list(TileP)::erase	5	2	0
-000011f4	Tile::normalArray	5	1	0
-000011f9	std::list(TileP)::push_back	5	1	0
-000011fe	std::list(TileP)::const_iterator::const_iterator	5	1	0
-00001203	thunk_FUN_1000d540	5	1	0
-00001208	factorial	5	1	0
-0000120d	Tile::getCorner	5	1	0
-00001212	Terrain::drawTileObjects	5	4	0
-00001217	Terrain::closeSystem	5	0	0
-0000121c	Terrain::setType	5	0	0
-00001221	std::list(TileP)::const_iterator::operator++	5	1	0
-00001226	std::list(TileP)::erase_1000b800	5	1	0
-0000122b	Terrain::relight	5	3	0
-00001230	thunk_FUN_1000de60	5	1	0
-00001235	Tile::setTypeId	5	1	0
-0000123a	std::allocator(TileP)::destroy	5	1	0
-0000123f	std::list(TileP)::empty	5	1	0
-00001244	Terrain::drawCardinalSpline	5	0	0
-00001249	Terrain::initLists	5	1	0
-0000124e	Terrain::getType	5	0	0
-00001253	Terrain::setViewAngle	5	4	0
-00001258	thunk_FUN_1000d480	5	1	0
-0000125d	Terrain::updatePath	5	0	0
-00001262	Terrain::idClass	5	1	0
-00001267	std::_Allocate	5	1	0
-0000126c	std::list(TileP)::const_iterator::operator*	5	4	0
-00001271	std::list(TileP)::_Acc::_Value	5	3	0
-00001276	std::allocator(TileP)::_Charalloc	5	1	0
-0000127b	ios::lock	5	5	0
-00001280	std::list(TileP)::~list	5	3	0
-00001285	Tile::isSolidType	5	1	0
-0000128a	Tile::layPath	5	1	0
-0000128f	std::list(TileP)::const_iterator::operator==	5	2	0
-00001294	Terrain::setZoomLevel	5	0	0
-00001299	Terrain::stripRender	5	1	0
-0000129e	std::list(TileP)::_Buynode	5	2	0
-000012a3	Terrain::light1Off	5	1	0
-000012a8	std::list(TileP)::insert	5	2	0
-000012ad	Tile::getX	5	9	0
-000012b2	Tile::drawWalls	5	1	0
-000012b7	roundHalf	5	1	0
-000012bc	Terrain::getWall	5	1	0
-000012c1	Terrain::layPath	5	0	0
-000012c6	Terrain::faceNormal	5	1	0
-000012cb	Terrain::initTerrain	5	0	0
-000012d0	Terrain::hermitePoint	5	1	0
-000012d5	Terrain::Terrain	5	1	0
-000012da	Tile::getWall	5	1	0
-000012df	LoadDIBitmap	5	1	0
-000012e4	Terrain::initSystem	5	0	0
-000012e9	thunk_FUN_10015230	5	1	0
-000012ee	Terrain::reloadTextures	5	4	0
-000012f3	Terrain::initGL	5	1	0
-000012f8	Terrain::resize	5	2	0
-000012fd	Terrain::loadLighting	5	1	0
-00001302	Terrain::~Terrain	5	0	0
-00001307	Terrain::calcNormals	5	0	0
-0000130c	Terrain::rebuild	5	2	0
-00001311	Tile::isOpenType	5	1	0
-00001316	Terrain::isCulled	5	4	0
-0000131b	Tile::smoothNormals	5	1	0
-00001320	std::_Construct	5	1	0
-00001325	powf2	5	1	0
-0000132a	Tile::isConnected	5	1	0
-0000132f	setTextureId	5	1	0
-00001334	std::allocator(TileP)::deallocate	5	1	0
-00001339	Terrain::setSplineHeight	5	0	0
-0000133e	Terrain::elevateCorner	5	0	0
-00001343	Terrain::getElevation	5	0	0
-00001348	Faces::~Faces	5	3	0
-0000134d	Tile::drawCornerOverlays	5	1	0
-000016a0	LoadDIBitmap	480	0	7
-00001880	degToRad	40	0	0
-000018b0	ios::lock	67	0	3
-00001900	SaveDIBitmap	470	0	5
-00001af0	Terrain::loadNewCourseType	91	0	4
-00001b60	swapRedBlue	116	0	0
-00001c00	flipVertical	258	0	0
-00001d50	Terrain::tileAt	107	0	0
-00001de0	Terrain::getElevation	70	0	2
-00001e40	Tile::getCorner	47	0	0
-00001e80	Terrain::getWall	60	0	2
-00001ed0	Tile::getWall	50	0	0
-00001f10	Terrain::getType	56	0	2
-00001f60	Tile::getType	42	0	0
-00001fa0	Faces::Faces	48	0	0
-00001fe0	Faces::~Faces	36	0	0
-00002010	roundHalf	55	0	1
-00002060	Faces::build	1196	0	2
-00002510	ios::fail	45	0	0
-00002640	Tile::setHeight	212	0	0
-00002750	Tile::setNormal	335	0	0
-00002900	Tile::minHeight	480	0	0
-00002ae0	Terrain::Terrain	1064	0	6
-00002f80	Tile::setVariation	50	0	0
-00003090	Terrain::~Terrain	226	0	5
-000031a0	Terrain::getInstance	161	0	3
-00003270	Terrain::normalArray	51	0	2
-000032b0	Terrain::vertexArray	51	0	2
-000032f0	Terrain::setType	128	0	5
-00003390	Terrain::getVariation	59	0	2
-000033e0	Terrain::initGL	272	0	5
-00003540	Terrain::changeLighting	526	0	5
-000037e0	Terrain::initLists	56	0	2
-00003830	Terrain::light1Off	257	0	4
-00003980	Terrain::rebuild	143	0	2
-00003a50	rotateAxis	535	0	4
-00003f80	ios::lockptr	42	0	0
-000042a0	Terrain::drawCircle	38	0	0
-000046a0	ifstream::{vbase_dtor}	68	0	3
-000048a0	Terrain::drawLine	734	0	15
-00004c70	Terrain::drawCardinalSpline	834	0	16
-00005090	Terrain::hermitePoint	322	0	2
-00005230	Terrain::drawBezierSpline	1042	0	17
-00005750	Terrain::bernstein	180	0	3
-00005840	powf2	70	0	2
-000058a0	factorial	93	0	0
-00005960	Tile::getX	42	0	0
-00005990	Terrain::render	1279	0	15
-00006410	Terrain::pathUpdateRender	757	0	23
-00006810	Tile::getY	42	0	0
-00006850	Terrain::isCulled	1005	0	4
-00006dd0	Terrain::loadLighting	1313	0	15
-00007380	Terrain::drawTileObjects	853	0	9
-000076e0	Terrain::relight	2297	0	8
-000080e0	Terrain::renderTile	760	0	18
-000089e0	Terrain::localRender	1200	0	23
-00008fc0	Terrain::setZoomLevel	543	0	5
-00009270	Terrain::stripRender	1840	0	24
-00009ba0	Terrain::closeSystem	179	0	5
-00009c80	Terrain::initSystem	486	0	10
-00009ed0	Terrain::resize	487	0	5
-0000a130	Terrain::buildArrays	549	0	7
-0000a3e0	Terrain::layPath	84	0	2
-0000a450	Terrain::hasConnectedPath	71	0	3
-0000a4b0	Terrain::updatePath	75	0	3
-0000a510	Terrain::hasPath	56	0	2
-0000a560	Terrain::setWall	68	0	2
-0000a5c0	Terrain::elevateCorner	66	0	2
-0000a620	Terrain::lowerCorner	66	0	2
-0000a680	Terrain::lowerEdgeCorner	86	0	3
-0000a6f0	Terrain::calcNormals	62	0	2
-0000a740	Terrain::calcAllNormals	201	0	5
-0000a840	Terrain::setSplineHeight	46	0	0
-0000a880	Terrain::passCollarInfo	182	0	3
-0000a970	Terrain::initTerrain	118	0	6
-0000aa10	Terrain::resetTerrain	224	0	7
-0000ab30	Terrain::tileHit	524	0	5
-0000adc0	Terrain::setViewAngle	118	0	0
-0000ae60	std::list(TileP)::list	89	0	2
-0000aed0	std::list(TileP)::~list	123	0	5
-0000af70	std::list(TileP)::begin	84	0	3
-0000afe0	std::list(TileP)::end	73	0	2
-0000b040	std::list(TileP)::empty	59	0	2
-0000b090	std::list(TileP)::push_back	79	0	3
-0000b100	std::list(TileP)::insert	209	0	8
-0000b210	std::list(TileP)::clear	88	0	4
-0000b280	std::reverse_bidirectional_iterator(std::list(TileP)::iterator)::ctor	57	0	2
-0000b2d0	std::list(TileP)::const_iterator::operator*	60	0	2
-0000b320	std::list(TileP)::iterator::operator++	75	0	2
-0000b380	std::list(TileP)::const_iterator::operator==	53	0	0
-0000b3d0	std::list(TileP)::const_iterator::operator!=	70	0	2
-0000b430	std::list(TileP)::size	42	0	0
-0000b470	std::list(TileP)::erase	111	0	4
-0000b500	std::list(TileP)::_Buynode	138	0	4
-0000b5b0	std::list(TileP)::_Freenode	62	0	2
-0000b600	std::list(TileP)::_Acc::_Next	34	0	0
-0000b630	std::list(TileP)::_Acc::_Prev	37	0	0
-0000b660	std::list(TileP)::_Acc::_Value	37	0	0
-0000b690	std::allocator(TileP)::construct	64	0	2
-0000b6e0	std::list(TileP)::const_iterator::const_iterator	39	0	0
-0000b710	std::list(TileP)::const_iterator::_Mynode	41	0	0
-0000b750	std::list(TileP)::iterator::iterator	63	0	2
-0000b7a0	std::list(TileP)::const_iterator::operator++	70	0	2
-0000b800	std::list(TileP)::erase_1000b800	213	0	8
-0000b910	std::allocator(TileP)::_Charalloc	62	0	2
-0000b960	std::allocator(TileP)::deallocate	60	0	2
-0000b9b0	std::reverse_bidirectional_iterator(std::list(TileP)::const_iterator)::ctor	49	0	0
-0000b9f0	std::allocator(TileP)::destroy	60	0	2
-0000ba40	std::_Construct	89	0	2
-0000bab0	operator_new	34	0	0
-0000bae0	std::_Allocate	66	0	2
-0000bb40	std::_Destroy	31	0	0
-0000bb70	std::_Lockit::_Lockit	39	0	0
-0000bba0	std::_Lockit::~_Lockit	36	0	0
-0000bbd0	textureLoad	483	0	11
-0000be30	LoadTGA	786	0	11
-0000c210	Tile::Tile	133	0	4
-0000c2c0	Tile::reset	211	0	3
-0000c3d0	Tile::~Tile	267	0	3
-0000c520	Tile::setNeighbour	51	0	0
-0000c560	initGrid	465	0	0
-0000c7b0	Tile::elevateCorner	1003	0	0
-0000ccc0	Tile::lowerCorner	1555	0	2
-0000d480	FUN_1000d480	147	0	2
-0000d540	FUN_1000d540	1858	0	4
-0000de60	FUN_1000de60	1707	0	4
-0000e6c0	Tile::render	703	0	10
-0000ea30	Tile::drawSkirts	2528	0	10
-0000f690	PathInfo::PathInfo	57	0	2
-0000f6e0	PathInfo::clear	84	0	0
-0000f750	WallInfo::WallInfo	57	0	2
-0000f7a0	WallInfo::clear	64	0	0
-0000f7f0	Tile::drawWalls	3476	0	7
-00010590	istream::getline	131	0	4
-000108f0	Tile::drawPaths	2836	0	11
-000116d0	Tile::drawCornerOverlays	1270	0	6
-00011d60	Terrain::faceNormal	318	0	2
-00011ef0	Tile::smoothNormals	2859	0	4
-00012cf0	Tile::calcNormals	297	0	3
-00012e70	setTextureId	62	0	0
-00012ec0	Tile::setFaceTexture	790	0	0
-00013320	Tile::hasPath	45	0	0
-00013360	Tile::isConnected	45	0	0
-000133a0	Tile::setConnected	66	0	0
-00013400	Tile::layPath	193	0	0
-00013500	FUN_10013500	285	0	2
-00013670	FUN_10013670	1507	0	7
-00013dd0	Terrain::idClass	130	0	0
-00013f00	Terrain::flagCode	144	0	0
-00013fc0	Tile::vertexArray	36	0	0
-00013ff0	Tile::normalArray	36	0	0
-00014020	Tile::setTypeId	245	0	8
-00014190	FUN_10014190	1699	0	3
-000149e0	FUN_100149e0	1699	0	3
-00015230	FUN_10015230	224	0	2
-00015340	Tile::getVariation	42	0	0
-00015380	Tile::setRotation	47	0	0
-000153c0	Tile::getFaces	42	0	0
-00015400	Tile::setWall	69	0	0
-00015460	Tile::isHidden	50	0	0
-000154a0	Tile::isSolidType	69	0	0
-00015500	Tile::maxHeight	141	0	0
-000155b0	Tile::isOpenType	118	0	0
-00015650	Tile::edgeKind	242	0	3
-0001577e	GLU32.DLL::gluBuild2DMipmaps	6	1	0
-00015784	GLU32.DLL::gluBuild1DMipmaps	6	1	0
-000158b0	iabs	33	3	0
-000158e0	_malloc	38	4	1
-00015910	__malloc_dbg	44	22	1
-00015940	__nh_malloc	27	1	1
-00015960	FUN_10015960	93	4	4
-000159bd	FUN_100159bd	11	1	1
-000159c8	FUN_100159c8	56	1	1
-00015a00	__heap_alloc	23	0	1
-00015a20	__heap_alloc_dbg	787	2	5
-00015d40	_calloc	36	0	1
-00015d70	__calloc_dbg	96	6	1
-00015dd0	FID_conflict:__expand	36	0	1
-00015e00	FID_conflict:__realloc_dbg	99	2	4
-00015e63	FUN_10015e63	11	1	1
-00015e6e	FUN_10015e6e	20	1	0
-00015e90	realloc_help	1297	2	9
-000163b0	FID_conflict:__expand	36	0	1
-000163e0	FID_conflict:__realloc_dbg	99	1	4
-00016443	FUN_10016443	11	1	1
-0001644e	FUN_1001644e	20	1	0
-00016470	FUN_10016470	19	2	1
-00016490	__free_lk	19	0	1
-000164b0	__free_dbg	82	24	4
-00016502	FUN_10016502	11	1	1
-0001650d	FUN_1001650d	17	1	0
-00016520	__free_dbg_lk	1004	2	7
-00016910	FUN_10016910	19	0	1
-00016930	FUN_10016930	369	1	6
-00016aa1	FUN_10016aa1	11	1	1
-00016aac	FUN_10016aac	20	1	0
-00016ac0	FUN_10016ac0	28	0	0
-00016ae0	FUN_10016ae0	189	0	5
-00016b9d	FUN_10016b9d	11	1	1
-00016ba8	FUN_10016ba8	17	1	0
-00016bc0	FUN_10016bc0	28	0	0
-00016be0	_CheckBytes	136	2	1
-00016c70	FUN_10016c70	885	4	6
-00016fe5	FUN_10016fe5	11	1	1
-00016ff0	FUN_10016ff0	20	1	0
-00017020	__CrtSetDbgFlag	34	2	0
-00017050	FUN_10017050	141	0	3
-000170dd	FUN_100170dd	11	1	1
-000170e8	FUN_100170e8	17	1	0
-00017100	__CrtIsValidPointer	75	3	2
-00017150	FUN_10017150	292	5	5
-00017280	__CrtIsMemoryBlock	262	0	5
-00017386	FUN_10017386	11	1	1
-00017391	FUN_10017391	20	1	0
-000173b0	FUN_100173b0	28	0	0
-000173d0	FUN_100173d0	392	1	4
-00017558	FUN_10017558	11	1	1
-00017563	FUN_10017563	17	1	0
-00017580	__CrtMemDifference	291	0	1
-000176b0	FUN_100176b0	689	1	6
-00017961	FUN_10017961	11	1	1
-0001796c	FUN_1001796c	55	1	1
-000179b0	__printMemBlockData	276	1	3
-00017ad0	__CrtDumpMemoryLeaks	116	2	3
-00017b50	__CrtMemDumpStatistics	197	0	1
-00017c20	_fclose	130	4	4
-00017cb0	__fclose_lk	190	1	5
-00017d70	_fread	62	2	3
-00017db0	__fread_lk	463	1	3
-00017f80	__fsopen	252	1	4
-00018080	_fopen	23	3	1
-000180a0	__chkesp	56	112	1
-000180e0	_fwrite	62	1	3
-00018120	__fwrite_lk	537	1	4
-00018340	__fpmath	33	1	3
-00018370	FUN_10018370	5	0	0
-00018380	__cfltcvt_init	65	1	0
-000183d0	FUN_100183d0	28	0	0
-000183ec	__ftol	39	2	0
-00018420	??_M@YGXPAXIHP6EX0@Z@Z	117	3	2
-00018495	FID_conflict:$L16506	28	1	1
-000184b1	FID_conflict:$L16507	19	1	0
-000184d0	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	105	2	0
-00018550	ArrayUnwindFilter	44	0	1
-00018580	FUN_10018580	7	21	0
-00018590	_strcat	224	6	0
-00018670	`eh_vector_constructor_iterator'	113	1	2
-000186e1	FUN_100186e1	28	1	1
-000186fd	FUN_100186fd	19	1	0
-00018710	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0
-00018750	_CallMemberFunction0	7	1	0
-00018760	FID_conflict:_CallMemberFunction1	7	1	0
-00018770	FID_conflict:_CallMemberFunction1	7	1	0
-00018780	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	86	2	1
-000187e0	FID_conflict:___CxxFrameHandler3	60	0	1
-00018820	___CxxLongjmpUnwind@4	38	0	1
-00018850	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	104	1	1
-000188c0	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	57	0	1
-00018900	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	204	1	1
-000189d0	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	124	0	2
-00018a60	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	130	2	1
-00018af0	__global_unwind2	32	0	1
-00018b32	__local_unwind2	104	1	1
-00018b9a	__abnormal_termination	35	1	0
-00018bbd	__NLG_Notify1	9	1	0
-00018bc6	FUN_10018bc6	24	1	0
-00018be0	operator_delete	161	17	4
-00018c90	operator_new	28	5	1
-00018cb0	FUN_10018cb0	26	0	1
-00018cd0	FUN_10018cd0	16	0	1
-00018ce0	_rand	54	1	1
-00018d20	_atol	255	3	1
-00018e20	_atoi	17	1	1
-00018e40	__atoi64	297	0	2
-00018f70	_strcmp	129	10	0
-00019000	_strtok	325	1	1
-00019150	FUN_10019150	20	0	2
-00019164	FUN_10019164	9	1	1
-0001916d	FUN_1001916d	145	1	3
-00019200	FUN_10019200	20	0	2
-00019214	FUN_10019214	9	1	1
-0001921d	FUN_1001921d	145	1	3
-000192b0	FUN_100192b0	20	0	2
-000192c4	FUN_100192c4	9	1	1
-000192cd	FUN_100192cd	157	1	4
-00019370	FUN_10019370	25	0	1
-00019389	FUN_10019389	9	2	1
-00019392	FUN_10019392	467	1	8
-00019565	FUN_10019565	40	1	0
-00019590	_strlen	123	24	0
-00019610	__assert	892	3	14
-00019990	_memcmp	172	1	0
-00019a40	__CRT_INIT@12	313	1	16
-00019b80	entry	243	0	2
-00019c80	__amsg_exit	58	9	3
-00019cc0	_set_new_handler	48	0	2
-00019cf0	FUN_10019cf0	10	0	0
-00019d00	__callnewh	45	5	0
-00019d30	__mtinitlocks	55	1	1
-00019d70	__mtdeletelocks	159	1	2
-00019e10	__lock	151	45	7
-00019eb0	FUN_10019eb0	22	50	1
-00019ed0	FUN_10019ed0	26	0	2
-00019fb1	__seh_longjmp_unwind@4	27	0	1
-00019fd0	_memset	88	10	0
-0001a030	__malloc_base	32	1	1
-0001a050	__nh_malloc_base	87	1	2
-0001a0b0	__heap_alloc_base	101	2	4
-0001a115	FUN_1001a115	11	1	1
-0001a120	FUN_1001a120	19	1	1
-0001a197	FUN_1001a197	11	0	1
-0001a1a2	FUN_1001a1a2	31	0	1
-0001a1c1	FUN_1001a1c1	60	1	1
-0001a200	FUN_1001a200	10	3	0
-0001a210	__CrtDbgBreak	11	2	1
-0001a220	__CrtSetReportMode	87	0	0
-0001a280	__CrtSetReportFile	126	0	1
-0001a300	FUN_1001a300	28	0	0
-0001a320	__CrtDbgReport	912	36	15
-0001a6b0	_CrtMessageWindow	780	1	11
-0001a9c0	FUN_1001a9c0	161	1	5
-0001aa61	FUN_1001aa61	11	1	1
-0001aa6c	FUN_1001aa6c	60	1	1
-0001ab5a	FUN_1001ab5a	11	0	1
-0001ab65	FUN_1001ab65	53	0	1
-0001abd0	FUN_1001abd0	960	1	20
-0001ad86	FUN_1001ad86	11	1	1
-0001ad91	FUN_1001ad91	106	1	3
-0001af9b	FUN_1001af9b	11	1	1
-0001afa6	FUN_1001afa6	48	1	2
-0001b040	FUN_1001b040	17	3	0
-0001b060	FUN_1001b060	123	3	5
-0001b0db	FUN_1001b0db	11	1	1
-0001b0e6	FUN_1001b0e6	30	1	1
-0001b15d	FUN_1001b15d	11	0	1
-0001b168	FUN_1001b168	43	0	1
-0001b1b0	__heapchk	98	2	4
-0001b212	FUN_1001b212	11	1	1
-0001b21d	thunk_FUN_1001b262	2	1	0
-0001b257	FUN_1001b257	11	0	1
-0001b262	FUN_1001b262	82	0	4
-0001b2c0	__heapset	10	0	1
-0001b2d0	FUN_1001b2d0	39	0	0
-0001b300	FUN_1001b300	266	0	3
-0001b410	___sbh_heap_init	98	2	1
-0001b480	___sbh_find_block	85	4	0
-0001b4e0	___sbh_verify_block	95	1	0
-0001b540	FUN_1001b540	1500	2	3
-0001bb20	___sbh_alloc_block	1334	2	2
-0001c060	___sbh_alloc_new_region	271	1	4
-0001c170	___sbh_alloc_new_group	494	1	1
-0001c360	___sbh_resize_block	1515	2	0
-0001c950	___sbh_heapmin	304	0	3
-0001ca80	___sbh_heap_check	1565	1	1
-0001d0a0	FUN_1001d0a0	10	0	0
-0001d0b0	FUN_1001d0b0	43	0	0
-0001d0e0	FUN_1001d0e0	478	3	5
-0001d2c0	FUN_1001d2c0	115	1	2
-0001d340	FUN_1001d340	343	1	2
-0001d4a0	FUN_1001d4a0	144	2	0
-0001d530	FUN_1001d530	108	1	1
-0001d5a0	FUN_1001d5a0	952	1	4
-0001d960	FUN_1001d960	681	1	0
-0001dc10	FUN_1001dc10	356	1	0
-0001dd80	FUN_1001dd80	567	0	0
-0001dfc0	FUN_1001dfc0	92	2	1
-0001e020	FUN_1001e020	548	1	9
-0001e250	FUN_1001e250	141	1	5
-0001e2e0	FUN_1001e2e0	232	1	3
-0001e3d0	__cinit	56	1	2
-0001e410	_exit	21	0	1
-0001e430	__exit	21	5	1
-0001e450	__cexit	19	1	1
-0001e470	__c_exit	19	0	1
-0001e490	doexit	227	4	8
-0001e580	FID_conflict:__lockexit	15	1	1
-0001e590	FID_conflict:__lockexit	15	1	1
-0001e5a0	__initterm	37	2	0
-0001e5d0	_sprintf	250	1	3
-0001e6d0	__isctype	183	22	1
-0001e790	___initstdio	300	0	2
-0001e8c0	___endstdio	26	0	2
-0001e8e0	__lock_file	61	6	2
-0001e920	FID_conflict:__lock_file2	41	2	2
-0001e950	__unlock_file	61	7	2
-0001e990	FID_conflict:__lock_file2	41	2	2
-0001e9c0	__close	122	3	5
-0001ea40	__close_lk	170	1	5
-0001eaf0	__freebuf	146	2	2
-0001eb90	_fflush	68	2	4
-0001ebe0	__fflush_lk	65	2	2
-0001ec30	__flush	183	5	1
-0001ecf0	__flushall	15	1	1
-0001ed00	flsall	319	2	5
-0001ee40	__filbuf	484	1	3
-0001f030	__read	130	3	5
-0001f0c0	__read_lk	1093	2	6
-0001f510	FID_conflict:_memcpy	664	9	0
-0001f850	__openfile	797	1	2
-0001fbe0	__getstream	384	1	7
-0001fd60	__flsbuf	628	5	5
-0001ffe0	__write	130	5	5
-00020070	__write_lk	627	2	6
-000202f0	__setdefaultprecision	23	2	1
-00020310	__ms_p5_test_fdiv	94	1	0
-00020370	__ms_p5_mp_test_fdiv	66	1	3
-000203c0	__forcdecpt	168	0	2
-00020470	__cropzeros	215	0	0
-00020550	__positive	45	0	0
-00020580	__fassign	72	0	2
-000205d0	__cftoe	118	1	3
-00020650	__cftoe2	358	2	2
-000207c0	__cftof	106	1	3
-00020830	__cftof2	317	2	2
-00020970	__cftog	229	1	4
-00020a60	__cfltcvt	95	0	3
-00020ac0	__shift	46	2	2
-00020af0	FUN_10020af0	92	7	2
-00020b5e	_abort	5	1	1
-00020b80	FUN_10020b80	29	0	2
-00020ba0	?_inconsistency@@YAXXZ	90	5	3
-00020c0a	FUN_10020c0a	6	1	1
-00020c10	FUN_10020c10	17	1	0
-00020c30	___InternalCxxFrameHandler	239	3	3
-00020d20	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	672	1	9
-00020fc0	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	277	1	4
-000210e0	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	182	1	1
-000211a0	___FrameUnwindToState	224	3	2
-000212a0	ArrayUnwindFilter	44	0	1
-000212d0	CatchIt	183	2	5
-00021390	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	172	1	4
-0002146d	FUN_1002146d	94	1	3
-000214cb	FUN_100214cb	20	1	0
-000214e0	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	66	0	0
-00021530	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	621	1	8
-000217b0	___DestructExceptionObject	111	2	1
-00021840	FID_conflict:___AdjustPointer	70	1	0
-00021890	__CallSettingFrame@12	76	2	1
-000218e0	__mtinit	130	1	6
-00021970	__mtterm	41	1	2
-000219a0	__initptd	25	2	0
-000219c0	__getptd	152	17	8
-00021a60	__freeptd	263	1	3
-00021b70	FUN_10021b70	11	0	1
-00021b80	FUN_10021b80	11	0	1
-00021b90	__allmul	52	1	0
-00021da0	FUN_10021da0	21	1	0
-00021db5	FUN_10021db5	23	2	0
-00021dcc	FUN_10021dcc	25	3	0
-00021de5	__fload_withFB	67	5	0
-00021e28	FUN_10021e28	22	3	0
-00021e3e	FUN_10021e3e	13	1	0
-00021e4b	__math_exit	42	3	1
-00021e89	__check_range_exit	163	1	2
-00021f30	__startTwoArgErrorHandling	23	2	0
-00021f47	__startOneArgErrorHandling	60	5	1
-000221a0	__powhlp	612	1	1
-00022410	__d_inttype	128	1	2
-00022490	_abort	30	2	3
-000224b0	_signal	507	0	10
-000226e0	ctrlevent_capture	146	0	2
-00022780	_raise	522	3	5
-000229c0	siglookup	91	2	0
-00022a20	FUN_10022a20	13	0	1
-00022a30	___pxcptinfoptrs	13	1	1
-00022a40	___crtMessageBoxA	187	3	2
-00022b00	__itoa	66	4	1
-00022b50	xtoa	194	3	0
-00022c20	__ltoa	63	0	1
-00022c60	__ultoa	30	0	1
-00022c80	__i64toa	72	0	1
-00022cd0	x64toa	242	2	2
-00022dd0	__ui64toa	31	0	1
-00022df0	_strncat	291	1	0
-00022f20	_strncpy	254	8	0
-00023020	_fprintf	193	1	6
-000230f0	_setvbuf	365	1	6
-00023260	__ioinit	804	1	6
-00023590	__ioterm	155	1	2
-00023630	__setenvp	329	1	6
-00023780	__setargv	216	1	5
-00023860	parse_cmdline	1060	1	0
-00023c90	___crtGetEnvironmentStringsA	537	1	8
-00023eb0	_DllMain@12	12	1	0
-00023ec0	__FF_MSGBANNER	73	1	1
-00023f10	__NMSG_WRITE	447	3	9
-000240d0	__GET_RTERRMSG	80	0	0
-00024120	__snprintf	249	2	3
-00024220	__vsnprintf	243	1	3
-00024320	FUN_10024320	47	10	0
-00024350	__dosmaperr	145	6	2
-000243f0	FUN_100243f0	13	25	1
-00024400	FUN_10024400	13	16	1
-00024410	FID_conflict:_memcpy	664	8	0
-00024750	_strtol	27	1	1
-00024770	strtoxl	817	2	3
-00024ab0	_strtoul	27	0	1
-00024ae0	_strchr	193	2	0
-00024ba0	_strstr	128	1	0
-00024c20	_strncmp	56	2	0
-00024c60	__output	3108	4	12
-00025990	write_char	119	3	1
-00025a10	write_multi_char	53	1	1
-00025a50	write_string	74	1	1
-00025aa0	get_int_arg	26	1	0
-00025ac0	get_int64_arg	31	1	0
-00025ae0	get_short_arg	27	1	0
-00025b00	___crtGetStringTypeA	421	3	5
-00025cc0	__fcloseall	218	1	5
-00025da0	__alloc_osfhnd	482	2	7
-00025f90	__set_osfhnd	183	2	3
-00026050	__free_osfhnd	216	1	3
-00026130	__get_osfhandle	102	4	2
-000261a0	__open_osfhandle	260	0	8
-000262b0	__lock_fhandle	134	8	4
-00026340	__unlock_fhandle	38	9	1
-00026370	__commit	210	1	7
-00026450	__getbuf	199	2	2
-00026520	__lseek	130	3	5
-000265b0	__lseek_lk	178	5	5
-00026670	FID_conflict:__open	63	0	1
-000266b0	__sopen	1294	3	14
-00026c10	__isatty	50	2	0
-00026c50	__statusfp	31	0	1
-00026c70	__clearfp	32	0	1
-00026c90	__control87	79	1	2
-00026ce0	__controlfp	26	1	1
-00026d00	__fpreset	88	0	2
-00026d60	__abstract_cw	377	1	0
-00026ee0	__hw_cw	346	1	0
-00027040	__abstract_sw	167	2	0
-000270f0	FUN_100270f0	11	0	0
-00027100	_tolower	147	1	5
-000271a0	__tolower_lk	299	3	2
-000272d0	__ZeroTail	132	1	0
-00027360	__IncMan	168	1	1
-00027410	__RoundMan	219	2	2
-000274f0	__CopyMan	76	1	0
-00027540	__FillZeroMan	47	1	0
-00027570	__IsZeroMan	55	1	0
-000275b0	__ShrMan	236	1	0
-000276a0	__ld12cvt	578	2	5
-000278f0	FID_conflict:__ld12tod	26	1	1
-00027910	FID_conflict:__ld12tod	26	1	1
-00027930	__ld12told	191	2	1
-000279f0	FID_conflict:__atodbl	54	1	2
-00027a30	__atoldbl	54	0	2
-00027a70	FID_conflict:__atodbl	54	1	2
-00027ab0	__fptostr	250	3	2
-00027bb0	__fltout2	119	3	3
-00027c30	___dtold	354	1	0
-00027da0	__fptrap	15	1	1
-00027db0	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	91	0	2
-00027e10	FUN_10027e10	21	0	1
-00027e30	FUN_10027e30	17	0	1
-00027e50	?_ValidateRead@@YAHPBXI@Z	43	2	1
-00027e80	?_ValidateWrite@@YAHPAXI@Z	43	1	1
-00027eb0	_ValidateExecute	39	2	1
-00027ee0	__XcptFilter	446	0	3
-000280a0	xcptlookup	89	1	0
-00028100	__87except	348	1	5
-00029010	__set_exp	62	4	0
-00029050	__get_exp	45	0	0
-00029080	__add_exp	51	0	1
-000290c0	__set_bexp	52	0	0
-00029100	__sptype	124	3	0
-00029180	__decomp	313	4	1
-000292c0	__frnd	27	1	0
-000292e0	__copysign	42	1	0
-00029310	__chgsign	44	0	0
-00029340	__scalb	25	0	1
-00029360	__logb	300	0	5
-00029490	__nextafter	826	0	5
-000297d0	__finite	34	0	0
-00029800	__isnan	73	0	0
-00029850	__fpclass	211	1	1
-00029930	__aulldiv	104	2	0
-000299a0	__aullrem	117	2	0
-00029a20	__stbuf	343	1	3
-00029b80	__ftbuf	148	1	2
-00029c20	__setmbcp	836	1	7
-00029f70	getSystemCP	89	1	2
-00029fd0	_CPtoLCID	80	1	0
-0002a050	setSBCS	116	1	0
-0002a0d0	setSBUpLow	770	1	3
-0002a3e0	FUN_1002a3e0	23	0	0
-0002a400	___initmbctable	34	2	1
-0002a430	FUN_1002a430	11	0	0
-0002a440	_toupper	147	1	5
-0002a4e0	__toupper_lk	299	1	2
-0002a610	_wctomb	119	1	5
-0002a690	__wctomb_lk	160	1	2
-0002a730	__chsize	115	0	4
-0002a7b0	__chsize_lk	560	2	11
-0002a9e0	_setlocale	1007	0	13
-0002add0	__setlocale_set_cat	403	1	6
-0002af70	__setlocale_get_all	256	1	5
-0002b070	__expandlocale	388	2	6
-0002b200	FUN_1002b200	7	0	0
-0002b210	__strcats	79	2	1
-0002b260	___lc_strtolc	349	1	4
-0002b3c0	___lc_lctostr	101	1	2
-0002b430	___crtLCMapStringA	727	3	6
-0002b740	strncnt	80	1	0
-0002b790	___addl	62	3	0
-0002b7d0	___add_12	173	2	1
-0002b880	___shl_12	96	3	0
-0002b8e0	___shr_12	99	2	0
-0002b950	___mtold12	315	1	2
-0002ba90	___strgtold12	2586	4	3
-0002c5c0	___STRINGTOLD	79	0	2
-0002c610	_$I10_OUTPUT	1302	1	6
-0002cb30	__handle_qnan1	85	1	3
-0002cb90	__handle_qnan2	103	2	3
-0002cc00	__except1	178	1	6
-0002ccc0	__except2	206	2	6
-0002cd90	__raise_exc	1201	3	3
-0002d260	__handle_exc	882	3	2
-0002d5e0	__umatherr	155	4	4
-0002d680	FID_conflict:__set_errno_from_matherr	58	4	1
-0002d6c0	__get_fname	63	1	0
-0002d700	__errcode	113	2	0
-0002d780	__matherr	7	2	0
-0002d790	__statfp	22	1	0
-0002d7b0	__clrfp	23	1	0
-0002d7d0	__ctrlfp	50	9	0
-0002d810	__set_statfp	117	1	0
-0002d890	_ldexp	700	1	7
-0002db50	__setmode	115	1	4
-0002dbd0	__setmode_lk	207	2	1
-0002dca0	___init_time	219	0	4
-0002dd80	__get_lc_time	1423	1	1
-0002e310	___free_lc_time	779	1	1
-0002e620	___init_numeric	678	0	5
-0002e8d0	fix_grouping	125	1	0
-0002e950	___init_monetary	304	0	4
-0002ea80	__get_lc_lconv	525	1	2
-0002ec90	fix_grouping	125	1	0
-0002ed10	__free_lc_lconv	147	1	1
-0002edb0	___init_ctype	928	0	6
-0002f150	FUN_1002f150	7	0	0
-0002f160	_strcspn	62	2	0
-0002f1a0	_strpbrk	58	1	0
-0002f1e0	___get_qualified_locale	512	1	11
-0002f3e0	_TranslateName	130	1	1
-0002f470	_GetLcidFromLangCountry	186	1	3
-0002f530	_LangCountryEnumProc@4	804	0	6
-0002f860	_GetLcidFromLanguage	116	1	3
-0002f8e0	_LanguageEnumProc@4	287	0	4
-0002fa00	_GetLcidFromCountry	69	1	2
-0002fa50	_CountryEnumProc@4	172	0	3
-0002fb00	_GetLcidFromDefault	43	1	1
-0002fb30	_ProcessCodePage	155	1	2
-0002fbd0	_TestDefaultCountry	79	2	0
-0002fc20	_TestDefaultLanguage	135	2	3
-0002fcb0	_IsThisWindowsNT	77	1	1
-0002fd00	crtGetLocaleInfoA	388	0	2
-0002fe90	_LcidFromHexString	118	4	0
-0002ff10	_GetPrimaryLen	101	3	0
-0002ff80	___ld12mul	1085	2	3
-000303c0	___multtenpow12	195	2	1
-00030490	__Getdays	289	0	3
-000305c0	__Getmonths	291	0	3
-000306f0	__Gettnames	878	0	4
-00030a60	FUN_10030a60	31	0	1
-00030a80	FUN_10030a80	394	1	5
-00030c10	__expandtime	1389	2	4
-00031230	FID_conflict:_store_str	72	1	0
-00031280	__store_num	173	1	1
-00031330	FID_conflict:_store_number	172	1	0
-000313e0	__store_winword	1152	1	2
-00031900	___getlocaleinfo	650	4	7
-00031b90	FUN_10031b90	10	0	0
-00031ba0	___crtGetStringTypeW	575	1	6
-00031e10	__strcmpi	208	5	3
-00031ee0	__strnicmp	257	2	3
-00031ff0	___tzset	61	1	3
-00032030	__tzset	30	0	3
-00032050	__tzset_lk	939	2	12
-00032400	__isindst	46	0	3
-00032430	__isindst_lk	762	1	1
-00032730	cvtdate	504	1	0
-00032930	___crtGetLocaleInfoW	382	1	4
-00032ad0	___crtGetLocaleInfoA	398	1	4
-00032c80	_getenv	46	0	3
-00032cb0	FID_conflict:__getenv_lk	198	2	3
-00032d80	__mbsnbicoll	79	2	1
-00032dd0	___wtomb_environ	174	2	3
-00032e80	___crtCompareStringA	970	1	7
-00033280	strncnt	80	1	0
-000332d0	___crtsetenv	736	1	10
-000335b0	findenv	124	1	1
-00033630	copy_environ	238	1	4
-00033720	__mbschr	237	1	3
-00033810	ifstream	227	0	5
-00033900	delbuf	22	6	0
-00033920	FUN_10033920	17	4	1
-00033940	`scalar_deleting_destructor'	55	0	2
-00033980	ifstream	294	1	7
-00033ab0	rdbuf	29	6	1
-00033ad0	rdbuf	17	5	0
-00033af0	ifstream	233	0	5
-00033be0	ifstream	239	0	5
-00033cd0	FID_conflict:~ifstream	39	1	1
-00033d00	setbuf	110	0	3
-00033d70	clear	46	7	2
-00033da0	is_open	26	2	2
-00033dc0	is_open	25	2	0
-00033de0	attach	73	0	3
-00033e30	open	94	0	4
-00033e90	close	84	1	3
-00033ef0	filebuf	51	2	1
-00033f30	`scalar_deleting_destructor'	46	0	2
-00033f60	CBlobProperty::CBlobProperty	52	1	1
-00033fa0	filebuf	113	1	2
-00034020	~filebuf	108	1	4
-00034090	lock	37	7	2
-000340c0	lockptr	17	5	0
-000340e0	close	107	3	3
-00034150	lock	37	6	2
-00034180	overflow	185	0	10
-00034240	sputc	89	2	0
-000342a0	base	17	2	0
-000342c0	ebuf	17	4	0
-000342e0	pptr	17	1	0
-00034300	epptr	17	1	0
-00034320	setp	40	2	0
-00034350	unbuffered	17	6	0
-00034370	underflow	237	0	9
-00034460	in_avail	60	3	1
-000344a0	blen	54	1	0
-000344e0	gptr	17	10	0
-00034500	setg	50	2	0
-00034540	seekoff	131	0	2
-000345d0	sync	396	4	12
-00034760	out_waiting	54	1	0
-000347a0	pbase	17	1	0
-000347c0	egptr	17	6	0
-000347e0	pbump	37	1	0
-00034810	setbuf	105	1	6
-00034880	unbuffered	22	3	0
-000348a0	get	345	1	4
-00034a00	isfx	51	3	2
-00034a40	unlockbuf	16	7	1
-00034a50	__mtlockinit	15	5	1
-00034a60	__mtlockterm	15	2	1
-00034a70	__mtlock	15	3	1
-00034a80	__mtlock	15	3	1
-00034a90	ios	184	16	2
-00034b50	`scalar_deleting_destructor'	46	0	2
-00034b80	ios	197	0	2
-00034c50	ios	120	0	3
-00034cd0	~ios	169	22	2
-00034d80	init	131	6	1
-00034e10	delbuf	17	3	0
-00034e30	operator=	130	3	6
-00034ec0	flags	17	1	0
-00034ee0	width	17	1	0
-00034f00	tie	17	1	0
-00034f20	fill	17	1	0
-00034f40	precision	17	1	0
-00034f60	rdstate	17	1	0
-00034f80	xalloc	61	0	2
-00034fc0	lockc	18	2	1
-00034fe0	lockc	18	2	1
-00035000	bitalloc	42	0	2
-00035030	istream	131	1	1
-000350c0	`scalar_deleting_destructor'	55	0	2
-00035100	`vbase_destructor'	33	1	2
-00035130	istream	196	5	2
-00035200	istream	213	0	3
-000352e0	~istream	31	7	0
-00035300	operator=	313	0	7
-00035440	ipfx	351	3	7
-000355a0	lockbuf	16	6	1
-000355b0	operator>>	364	0	5
-00035720	peek	70	0	3
-00035770	putback	141	0	5
-00035800	sputbackc	88	2	1
-00035860	IsEmpty	25	1	0
-00035880	sync	137	0	3
-00035910	eatwhite	166	1	6
-000359c0	istream_withassign	133	0	2
-00035a50	`scalar_deleting_destructor'	55	0	2
-00035a90	`vbase_destructor'	33	1	2
-00035ac0	istream_withassign	137	0	2
-00035b50	FID_conflict:~ifstream	39	1	1
-00035b80	attach	162	1	7
-00035c30	open	604	2	9
-00035e90	setmode	117	0	3
-00035f10	streambuf	160	3	2
-00035fb0	`scalar_deleting_destructor'	46	0	2
-00035fe0	streambuf	205	0	2
-000360b0	~streambuf	86	4	4
-00036110	setbuf	84	0	0
-00036170	xsputn	142	0	0
-00036200	xsgetn	313	0	3
-00036340	sync	48	1	1
-00036370	allocate	59	2	0
-000363b0	doallocate	87	0	2
-00036410	setb	81	4	1
-00036470	FUN_10036470	16	0	0
-00036480	seekpos	34	0	0
-000364b0	pbackfail	171	0	6
-00036560	eback	17	1	0
-00036580	snextc	170	1	2
-00036630	sbumpc	141	0	2
-000366c0	stossc	126	2	2
-00036740	sgetc	65	4	0
-00036790	opfx	169	1	4
-00036840	osfx	279	1	3
-00036960	operator<<	53	0	3
-000369a0	flush	167	2	4
-00036a50	ostream	88	1	1
-00036ab0	`scalar_deleting_destructor'	55	0	2
-00036af0	`vbase_destructor'	33	1	2
-00036b20	ostream	153	1	2
-00036bc0	ostream	170	0	3
-00036c70	~ostream	31	2	0
-00036c90	operator=	270	0	7
-00036da0	ostream_withassign	133	0	2
-00036e30	`scalar_deleting_destructor'	55	0	2
-00036e70	`vbase_destructor'	33	1	2
-00036ea0	ostream_withassign	137	0	2
-00036f30	~ostream_withassign	39	1	1
-00036f60	writepad	598	1	3
-000371c0	sputn	32	1	0
-000371f2	KERNEL32.DLL::RtlUnwind	6	2	0
-000373c0	~type_info	64	1	3
-00037400	`scalar_deleting_destructor'	46	0	2
-00037430	type_info::operator==	40	0	1
-00037460	type_info::operator!=	41	0	1
-00037490	type_info::before	44	0	1
-000374c0	FUN_100374c0	17	0	0
-000374e0	FUN_100374e0	25	0	0
-00037500	FUN_10037500	16	0	0
-00037510	operator_new	31	7	1
-00037530	_isalpha	65	0	1
-00037580	_isupper	60	0	1
-000375c0	_islower	60	0	1
-00037600	_isdigit	60	0	1
-00037640	_isxdigit	65	0	1
-00037690	_isspace	60	2	1
-000376d0	_ispunct	60	0	1
-00037710	_isalnum	65	0	1
-00037760	_isprint	65	0	1
-000377b0	_isgraph	65	0	1
-00037800	_iscntrl	60	0	1
-00037840	FUN_10037840	16	0	0
-00037850	FUN_10037850	11	0	0
-00037860	___iscsymf	95	0	1
-000378c0	___iscsym	95	0	1
-00037920	FUN_10037920	15	0	1
-00037930	ios::unlock	67	0	3
-00037c80	normalize	139	0	2
-000380a0	Terrain::reloadTextures	244	0	2
-000381a0	Terrain::drawTile	1877	0	13
-00038900	Terrain::lowerEdge	1638	0	18
-000410b0	Unwind@100410b0	30	0	1
-000410ce	Unwind@100410ce	15	0	1
-00041100	Unwind@10041100	30	0	1
-0004111e	Unwind@1004111e	15	0	1
-00041150	Unwind@10041150	11	0	1
-00041170	Unwind@10041170	12	0	1
-00041190	Unwind@10041190	12	0	1
-000411b0	Unwind@100411b0	12	0	1
-000411d0	Unwind@100411d0	26	0	1
-000411ea	Unwind@100411ea	22	0	1
-00041200	Unwind@10041200	12	0	1
-00041220	Unwind@10041220	26	0	1
-0004123a	Unwind@1004123a	22	0	1
-00041250	Unwind@10041250	12	0	1
-00041270	Unwind@10041270	26	0	1
-0004128a	Unwind@1004128a	22	0	1
-000412a0	Unwind@100412a0	12	0	1
-000412c0	Unwind@100412c0	26	0	1
-000412da	Unwind@100412da	22	0	1
-000412f0	Unwind@100412f0	12	0	1
-00041310	Unwind@10041310	9	0	1
-00041330	Unwind@10041330	9	0	1
-00041350	Unwind@10041350	26	0	1
-00041380	Unwind@10041380	26	0	1
-000413b0	Unwind@100413b0	9	0	1
-000413d0	Unwind@100413d0	26	0	1
-00041400	Unwind@10041400	26	0	1
-00041430	Unwind@10041430	26	0	1
-00041460	Unwind@10041460	26	0	1
-00041490	Unwind@10041490	9	0	1
-000414b0	Unwind@100414b0	26	0	1
-000414e0	Unwind@100414e0	26	0	1
+entry	name	size	callers	callees	ranges
+00001005	std::list(TileP)::size	5	1	0	00001005-0000100a
+0000100f	std::allocator(TileP)::construct	5	1	0	0000100f-00001014
+00001014	Terrain::setWall	5	0	0	00001014-00001019
+00001019	ifstream::{vbase_dtor}	5	3	0	00001019-0000101e
+0000101e	Tile::drawSkirts	5	2	0	0000101e-00001023
+00001023	Terrain::hasConnectedPath	5	0	0	00001023-00001028
+00001028	Terrain::flagCode	5	1	0	00001028-0000102d
+00001032	Terrain::loadNewCourseType	5	0	0	00001032-00001037
+00001037	Tile::isHidden	5	6	0	00001037-0000103c
+0000103c	thunk_FUN_10013500	5	5	0	0000103c-00001041
+00001041	Tile::render	5	5	0	00001041-00001046
+00001046	std::list(TileP)::iterator::iterator	5	3	0	00001046-0000104b
+0000104b	Terrain::render	5	0	0	0000104b-00001050
+00001050	Tile::setRotation	5	1	0	00001050-00001055
+00001055	std::list(TileP)::end	5	7	0	00001055-0000105a
+0000105a	Terrain::getVariation	5	0	0	0000105a-0000105f
+0000105f	PathInfo::clear	5	2	0	0000105f-00001064
+00001069	operator_new	5	1	0	00001069-0000106e
+00001073	Terrain::bernstein	5	1	0	00001073-00001078
+00001078	std::reverse_bidirectional_iterator(std::list(TileP)::const_iterator)::ctor	5	1	0	00001078-0000107d
+0000107d	Terrain::hasPath	5	0	0	0000107d-00001082
+00001082	Terrain::drawTile	5	4	0	00001082-00001087
+0000108c	Terrain::tileAt	5	11	0	0000108c-00001091
+00001091	std::list(TileP)::begin	5	6	0	00001091-00001096
+00001096	thunk_FUN_10013670	5	1	0	00001096-0000109b
+0000109b	Terrain::tileHit	5	0	0	0000109b-000010a0
+000010a0	Terrain::resetTerrain	5	0	0	000010a0-000010a5
+000010a5	Terrain::drawBezierSpline	5	0	0	000010a5-000010aa
+000010aa	Tile::getFaces	5	6	0	000010aa-000010af
+000010af	std::list(TileP)::iterator::operator++	5	6	0	000010af-000010b4
+000010b4	Terrain::passCollarInfo	5	0	0	000010b4-000010b9
+000010b9	Tile::setVariation	5	1	0	000010b9-000010be
+000010be	std::list(TileP)::list	5	1	0	000010be-000010c3
+000010c3	Faces::build	5	1	0	000010c3-000010c8
+000010c8	Tile::vertexArray	5	1	0	000010c8-000010cd
+000010d2	Terrain::calcAllNormals	5	0	0	000010d2-000010d7
+000010d7	initGrid	5	1	0	000010d7-000010dc
+000010dc	Tile::lowerCorner	5	2	0	000010dc-000010e1
+000010e1	std::list(TileP)::_Acc::_Next	5	5	0	000010e1-000010e6
+000010e6	Tile::getVariation	5	2	0	000010e6-000010eb
+000010eb	Tile::hasPath	5	2	0	000010eb-000010f0
+000010f0	rotateAxis	5	2	0	000010f0-000010f5
+000010f5	Tile::calcNormals	5	2	0	000010f5-000010fa
+000010fa	Tile::elevateCorner	5	1	0	000010fa-000010ff
+00001104	Tile::maxHeight	5	1	0	00001104-00001109
+00001109	swapRedBlue	5	1	0	00001109-0000110e
+0000110e	ios::lockptr	5	6	0	0000110e-00001113
+00001113	Tile::setNeighbour	5	2	0	00001113-00001118
+00001118	Terrain::lowerEdge	5	1	0	00001118-0000111d
+0000111d	Tile::edgeKind	5	1	0	0000111d-00001122
+00001122	Tile::drawPaths	5	1	0	00001122-00001127
+00001127	Terrain::lowerCorner	5	0	0	00001127-0000112c
+0000112c	ios::fail	5	1	0	0000112c-00001131
+00001131	Tile::setConnected	5	1	0	00001131-00001136
+00001136	Terrain::getInstance	5	0	0	00001136-0000113b
+0000113b	PathInfo::PathInfo	5	1	0	0000113b-00001140
+00001140	std::list(TileP)::const_iterator::operator!=	5	5	0	00001140-00001145
+00001145	Tile::getY	5	9	0	00001145-0000114a
+0000114f	thunk_FUN_10014190	5	1	0	0000114f-00001154
+00001154	Terrain::lowerEdgeCorner	5	0	0	00001154-00001159
+00001159	std::list(TileP)::_Acc::_Prev	5	3	0	00001159-0000115e
+0000115e	std::list(TileP)::const_iterator::_Mynode	5	2	0	0000115e-00001163
+00001163	Terrain::normalArray	5	2	0	00001163-00001168
+00001168	thunk_FUN_100149e0	5	1	0	00001168-0000116d
+0000116d	Tile::setFaceTexture	5	1	0	0000116d-00001172
+00001172	ios::unlock	5	7	0	00001172-00001177
+00001177	textureLoad	5	1	0	00001177-0000117c
+0000117c	Terrain::localRender	5	0	0	0000117c-00001181
+00001181	Terrain::buildArrays	5	2	0	00001181-00001186
+00001186	Terrain::drawCircle	5	0	0	00001186-0000118b
+0000118b	std::_Destroy	5	1	0	0000118b-00001190
+00001190	degToRad	5	1	0	00001190-00001195
+00001195	LoadTGA	5	1	0	00001195-0000119a
+0000119a	Tile::getType	5	9	0	0000119a-0000119f
+0000119f	Tile::reset	5	3	0	0000119f-000011a4
+000011a4	Faces::Faces	5	1	0	000011a4-000011a9
+000011a9	normalize	5	5	0	000011a9-000011ae
+000011ae	WallInfo::WallInfo	5	1	0	000011ae-000011b3
+000011b3	Terrain::drawLine	5	0	0	000011b3-000011b8
+000011b8	istream::getline	5	1	0	000011b8-000011bd
+000011c2	Terrain::changeLighting	5	0	0	000011c2-000011c7
+000011c7	WallInfo::clear	5	2	0	000011c7-000011cc
+000011cc	std::list(TileP)::_Freenode	5	2	0	000011cc-000011d1
+000011d1	Tile::setWall	5	1	0	000011d1-000011d6
+000011d6	Terrain::vertexArray	5	2	0	000011d6-000011db
+000011db	std::reverse_bidirectional_iterator(std::list(TileP)::iterator)::ctor	5	1	0	000011db-000011e0
+000011e0	Terrain::pathUpdateRender	5	0	0	000011e0-000011e5
+000011e5	std::list(TileP)::clear	5	3	0	000011e5-000011ea
+000011ea	Terrain::renderTile	5	0	0	000011ea-000011ef
+000011ef	std::list(TileP)::erase	5	2	0	000011ef-000011f4
+000011f4	Tile::normalArray	5	1	0	000011f4-000011f9
+000011f9	std::list(TileP)::push_back	5	1	0	000011f9-000011fe
+000011fe	std::list(TileP)::const_iterator::const_iterator	5	1	0	000011fe-00001203
+00001203	thunk_FUN_1000d540	5	1	0	00001203-00001208
+00001208	factorial	5	1	0	00001208-0000120d
+0000120d	Tile::getCorner	5	1	0	0000120d-00001212
+00001212	Terrain::drawTileObjects	5	4	0	00001212-00001217
+00001217	Terrain::closeSystem	5	0	0	00001217-0000121c
+0000121c	Terrain::setType	5	0	0	0000121c-00001221
+00001221	std::list(TileP)::const_iterator::operator++	5	1	0	00001221-00001226
+00001226	std::list(TileP)::erase_1000b800	5	1	0	00001226-0000122b
+0000122b	Terrain::relight	5	3	0	0000122b-00001230
+00001230	thunk_FUN_1000de60	5	1	0	00001230-00001235
+00001235	Tile::setTypeId	5	1	0	00001235-0000123a
+0000123a	std::allocator(TileP)::destroy	5	1	0	0000123a-0000123f
+0000123f	std::list(TileP)::empty	5	1	0	0000123f-00001244
+00001244	Terrain::drawCardinalSpline	5	0	0	00001244-00001249
+00001249	Terrain::initLists	5	1	0	00001249-0000124e
+0000124e	Terrain::getType	5	0	0	0000124e-00001253
+00001253	Terrain::setViewAngle	5	4	0	00001253-00001258
+00001258	thunk_FUN_1000d480	5	1	0	00001258-0000125d
+0000125d	Terrain::updatePath	5	0	0	0000125d-00001262
+00001262	Terrain::idClass	5	1	0	00001262-00001267
+00001267	std::_Allocate	5	1	0	00001267-0000126c
+0000126c	std::list(TileP)::const_iterator::operator*	5	4	0	0000126c-00001271
+00001271	std::list(TileP)::_Acc::_Value	5	3	0	00001271-00001276
+00001276	std::allocator(TileP)::_Charalloc	5	1	0	00001276-0000127b
+0000127b	ios::lock	5	5	0	0000127b-00001280
+00001280	std::list(TileP)::~list	5	3	0	00001280-00001285
+00001285	Tile::isSolidType	5	1	0	00001285-0000128a
+0000128a	Tile::layPath	5	1	0	0000128a-0000128f
+0000128f	std::list(TileP)::const_iterator::operator==	5	2	0	0000128f-00001294
+00001294	Terrain::setZoomLevel	5	0	0	00001294-00001299
+00001299	Terrain::stripRender	5	1	0	00001299-0000129e
+0000129e	std::list(TileP)::_Buynode	5	2	0	0000129e-000012a3
+000012a3	Terrain::light1Off	5	1	0	000012a3-000012a8
+000012a8	std::list(TileP)::insert	5	2	0	000012a8-000012ad
+000012ad	Tile::getX	5	9	0	000012ad-000012b2
+000012b2	Tile::drawWalls	5	1	0	000012b2-000012b7
+000012b7	roundHalf	5	1	0	000012b7-000012bc
+000012bc	Terrain::getWall	5	1	0	000012bc-000012c1
+000012c1	Terrain::layPath	5	0	0	000012c1-000012c6
+000012c6	Terrain::faceNormal	5	1	0	000012c6-000012cb
+000012cb	Terrain::initTerrain	5	0	0	000012cb-000012d0
+000012d0	Terrain::hermitePoint	5	1	0	000012d0-000012d5
+000012d5	Terrain::Terrain	5	1	0	000012d5-000012da
+000012da	Tile::getWall	5	1	0	000012da-000012df
+000012df	LoadDIBitmap	5	1	0	000012df-000012e4
+000012e4	Terrain::initSystem	5	0	0	000012e4-000012e9
+000012e9	thunk_FUN_10015230	5	1	0	000012e9-000012ee
+000012ee	Terrain::reloadTextures	5	4	0	000012ee-000012f3
+000012f3	Terrain::initGL	5	1	0	000012f3-000012f8
+000012f8	Terrain::resize	5	2	0	000012f8-000012fd
+000012fd	Terrain::loadLighting	5	1	0	000012fd-00001302
+00001302	Terrain::~Terrain	5	0	0	00001302-00001307
+00001307	Terrain::calcNormals	5	0	0	00001307-0000130c
+0000130c	Terrain::rebuild	5	2	0	0000130c-00001311
+00001311	Tile::isOpenType	5	1	0	00001311-00001316
+00001316	Terrain::isCulled	5	4	0	00001316-0000131b
+0000131b	Tile::smoothNormals	5	1	0	0000131b-00001320
+00001320	std::_Construct	5	1	0	00001320-00001325
+00001325	powf2	5	1	0	00001325-0000132a
+0000132a	Tile::isConnected	5	1	0	0000132a-0000132f
+0000132f	setTextureId	5	1	0	0000132f-00001334
+00001334	std::allocator(TileP)::deallocate	5	1	0	00001334-00001339
+00001339	Terrain::setSplineHeight	5	0	0	00001339-0000133e
+0000133e	Terrain::elevateCorner	5	0	0	0000133e-00001343
+00001343	Terrain::getElevation	5	0	0	00001343-00001348
+00001348	Faces::~Faces	5	3	0	00001348-0000134d
+0000134d	Tile::drawCornerOverlays	5	1	0	0000134d-00001352
+000016a0	LoadDIBitmap	480	0	7	000016a0-00001880
+00001880	degToRad	40	0	0	00001880-000018a8
+000018b0	ios::lock	67	0	3	000018b0-000018f3
+00001900	SaveDIBitmap	470	0	5	00001900-00001ad6
+00001af0	Terrain::loadNewCourseType	91	0	4	00001af0-00001b4b
+00001b60	swapRedBlue	116	0	0	00001b60-00001bd4
+00001c00	flipVertical	258	0	0	00001c00-00001d02
+00001d50	Terrain::tileAt	107	0	0	00001d50-00001dbb
+00001de0	Terrain::getElevation	70	0	2	00001de0-00001e26
+00001e40	Tile::getCorner	47	0	0	00001e40-00001e6f
+00001e80	Terrain::getWall	60	0	2	00001e80-00001ebc
+00001ed0	Tile::getWall	50	0	0	00001ed0-00001f02
+00001f10	Terrain::getType	56	0	2	00001f10-00001f48
+00001f60	Tile::getType	42	0	0	00001f60-00001f8a
+00001fa0	Faces::Faces	48	0	0	00001fa0-00001fd0
+00001fe0	Faces::~Faces	36	0	0	00001fe0-00002004
+00002010	roundHalf	55	0	1	00002010-00002047
+00002060	Faces::build	1196	0	2	00002060-0000250c
+00002510	ios::fail	45	0	0	00002510-0000253d
+00002640	Tile::setHeight	212	0	0	00002640-00002714
+00002750	Tile::setNormal	335	0	0	00002750-0000289f
+00002900	Tile::minHeight	480	0	0	00002900-00002ae0
+00002ae0	Terrain::Terrain	1064	0	6	00002ae0-00002f08
+00002f80	Tile::setVariation	50	0	0	00002f80-00002fb2
+00003090	Terrain::~Terrain	226	0	5	00003090-00003172
+000031a0	Terrain::getInstance	161	0	3	000031a0-00003241
+00003270	Terrain::normalArray	51	0	2	00003270-000032a3
+000032b0	Terrain::vertexArray	51	0	2	000032b0-000032e3
+000032f0	Terrain::setType	128	0	5	000032f0-00003370
+00003390	Terrain::getVariation	59	0	2	00003390-000033cb
+000033e0	Terrain::initGL	272	0	5	000033e0-000034f0
+00003540	Terrain::changeLighting	526	0	5	00003540-0000374e
+000037e0	Terrain::initLists	56	0	2	000037e0-00003818
+00003830	Terrain::light1Off	257	0	4	00003830-00003931
+00003980	Terrain::rebuild	143	0	2	00003980-00003a0f
+00003a50	rotateAxis	535	0	4	00003a50-00003c67
+00003f80	ios::lockptr	42	0	0	00003f80-00003faa
+000042a0	Terrain::drawCircle	38	0	0	000042a0-000042c6
+000046a0	ifstream::{vbase_dtor}	68	0	3	000046a0-000046e4
+000048a0	Terrain::drawLine	734	0	15	000048a0-00004b7e
+00004c70	Terrain::drawCardinalSpline	834	0	16	00004c70-00004fb2
+00005090	Terrain::hermitePoint	322	0	2	00005090-000051d2
+00005230	Terrain::drawBezierSpline	1042	0	17	00005230-00005642
+00005750	Terrain::bernstein	180	0	3	00005750-00005804
+00005840	powf2	70	0	2	00005840-00005886
+000058a0	factorial	93	0	0	000058a0-000058fd
+00005960	Tile::getX	42	0	0	00005960-0000598a
+00005990	Terrain::render	1279	0	15	00005990-00005e8f
+00006410	Terrain::pathUpdateRender	757	0	23	00006410-00006705
+00006810	Tile::getY	42	0	0	00006810-0000683a
+00006850	Terrain::isCulled	1005	0	4	00006850-00006c3d
+00006dd0	Terrain::loadLighting	1313	0	15	00006dd0-000072f1
+00007380	Terrain::drawTileObjects	853	0	9	00007380-000076d5
+000076e0	Terrain::relight	2297	0	8	000076e0-00007fd9
+000080e0	Terrain::renderTile	760	0	18	000080e0-000083d8
+000089e0	Terrain::localRender	1200	0	23	000089e0-00008e90
+00008fc0	Terrain::setZoomLevel	543	0	5	00008fc0-000091df
+00009270	Terrain::stripRender	1840	0	24	00009270-000099a0
+00009ba0	Terrain::closeSystem	179	0	5	00009ba0-00009c53
+00009c80	Terrain::initSystem	486	0	10	00009c80-00009e66
+00009ed0	Terrain::resize	487	0	5	00009ed0-0000a0b7
+0000a130	Terrain::buildArrays	549	0	7	0000a130-0000a355
+0000a3e0	Terrain::layPath	84	0	2	0000a3e0-0000a434
+0000a450	Terrain::hasConnectedPath	71	0	3	0000a450-0000a497
+0000a4b0	Terrain::updatePath	75	0	3	0000a4b0-0000a4fb
+0000a510	Terrain::hasPath	56	0	2	0000a510-0000a548
+0000a560	Terrain::setWall	68	0	2	0000a560-0000a5a4
+0000a5c0	Terrain::elevateCorner	66	0	2	0000a5c0-0000a602
+0000a620	Terrain::lowerCorner	66	0	2	0000a620-0000a662
+0000a680	Terrain::lowerEdgeCorner	86	0	3	0000a680-0000a6d6
+0000a6f0	Terrain::calcNormals	62	0	2	0000a6f0-0000a72e
+0000a740	Terrain::calcAllNormals	201	0	5	0000a740-0000a809
+0000a840	Terrain::setSplineHeight	46	0	0	0000a840-0000a86e
+0000a880	Terrain::passCollarInfo	182	0	3	0000a880-0000a936
+0000a970	Terrain::initTerrain	118	0	6	0000a970-0000a9e6
+0000aa10	Terrain::resetTerrain	224	0	7	0000aa10-0000aaf0
+0000ab30	Terrain::tileHit	524	0	5	0000ab30-0000ad3c
+0000adc0	Terrain::setViewAngle	118	0	0	0000adc0-0000ae36
+0000ae60	std::list(TileP)::list	89	0	2	0000ae60-0000aeb9
+0000aed0	std::list(TileP)::~list	123	0	5	0000aed0-0000af4b
+0000af70	std::list(TileP)::begin	84	0	3	0000af70-0000afc4
+0000afe0	std::list(TileP)::end	73	0	2	0000afe0-0000b029
+0000b040	std::list(TileP)::empty	59	0	2	0000b040-0000b07b
+0000b090	std::list(TileP)::push_back	79	0	3	0000b090-0000b0df
+0000b100	std::list(TileP)::insert	209	0	8	0000b100-0000b1d1
+0000b210	std::list(TileP)::clear	88	0	4	0000b210-0000b268
+0000b280	std::reverse_bidirectional_iterator(std::list(TileP)::iterator)::ctor	57	0	2	0000b280-0000b2b9
+0000b2d0	std::list(TileP)::const_iterator::operator*	60	0	2	0000b2d0-0000b30c
+0000b320	std::list(TileP)::iterator::operator++	75	0	2	0000b320-0000b36b
+0000b380	std::list(TileP)::const_iterator::operator==	53	0	0	0000b380-0000b3b5
+0000b3d0	std::list(TileP)::const_iterator::operator!=	70	0	2	0000b3d0-0000b416
+0000b430	std::list(TileP)::size	42	0	0	0000b430-0000b45a
+0000b470	std::list(TileP)::erase	111	0	4	0000b470-0000b4df
+0000b500	std::list(TileP)::_Buynode	138	0	4	0000b500-0000b58a
+0000b5b0	std::list(TileP)::_Freenode	62	0	2	0000b5b0-0000b5ee
+0000b600	std::list(TileP)::_Acc::_Next	34	0	0	0000b600-0000b622
+0000b630	std::list(TileP)::_Acc::_Prev	37	0	0	0000b630-0000b655
+0000b660	std::list(TileP)::_Acc::_Value	37	0	0	0000b660-0000b685
+0000b690	std::allocator(TileP)::construct	64	0	2	0000b690-0000b6d0
+0000b6e0	std::list(TileP)::const_iterator::const_iterator	39	0	0	0000b6e0-0000b707
+0000b710	std::list(TileP)::const_iterator::_Mynode	41	0	0	0000b710-0000b739
+0000b750	std::list(TileP)::iterator::iterator	63	0	2	0000b750-0000b78f
+0000b7a0	std::list(TileP)::const_iterator::operator++	70	0	2	0000b7a0-0000b7e6
+0000b800	std::list(TileP)::erase_1000b800	213	0	8	0000b800-0000b8d5
+0000b910	std::allocator(TileP)::_Charalloc	62	0	2	0000b910-0000b94e
+0000b960	std::allocator(TileP)::deallocate	60	0	2	0000b960-0000b99c
+0000b9b0	std::reverse_bidirectional_iterator(std::list(TileP)::const_iterator)::ctor	49	0	0	0000b9b0-0000b9e1
+0000b9f0	std::allocator(TileP)::destroy	60	0	2	0000b9f0-0000ba2c
+0000ba40	std::_Construct	89	0	2	0000ba40-0000ba99
+0000bab0	operator_new	34	0	0	0000bab0-0000bad2
+0000bae0	std::_Allocate	66	0	2	0000bae0-0000bb22
+0000bb40	std::_Destroy	31	0	0	0000bb40-0000bb5f
+0000bb70	std::_Lockit::_Lockit	39	0	0	0000bb70-0000bb97
+0000bba0	std::_Lockit::~_Lockit	36	0	0	0000bba0-0000bbc4
+0000bbd0	textureLoad	483	0	11	0000bbd0-0000bdb3
+0000be30	LoadTGA	786	0	11	0000be30-0000c142
+0000c210	Tile::Tile	133	0	4	0000c210-0000c295
+0000c2c0	Tile::reset	211	0	3	0000c2c0-0000c393
+0000c3d0	Tile::~Tile	267	0	3	0000c3d0-0000c4db
+0000c520	Tile::setNeighbour	51	0	0	0000c520-0000c553
+0000c560	initGrid	465	0	0	0000c560-0000c731
+0000c7b0	Tile::elevateCorner	1003	0	0	0000c7b0-0000cb9b
+0000ccc0	Tile::lowerCorner	1555	0	2	0000ccc0-0000d2d3
+0000d480	FUN_1000d480	147	0	2	0000d480-0000d513
+0000d540	FUN_1000d540	1858	0	4	0000d540-0000dc82
+0000de60	FUN_1000de60	1707	0	4	0000de60-0000e50b
+0000e6c0	Tile::render	703	0	10	0000e6c0-0000e97f
+0000ea30	Tile::drawSkirts	2528	0	10	0000ea30-0000f410
+0000f690	PathInfo::PathInfo	57	0	2	0000f690-0000f6c9
+0000f6e0	PathInfo::clear	84	0	0	0000f6e0-0000f734
+0000f750	WallInfo::WallInfo	57	0	2	0000f750-0000f789
+0000f7a0	WallInfo::clear	64	0	0	0000f7a0-0000f7e0
+0000f7f0	Tile::drawWalls	3476	0	7	0000f7f0-00010584
+00010590	istream::getline	131	0	4	00010590-00010613
+000108f0	Tile::drawPaths	2836	0	11	000108f0-00011404
+000116d0	Tile::drawCornerOverlays	1270	0	6	000116d0-00011bc6
+00011d60	Terrain::faceNormal	318	0	2	00011d60-00011e9e
+00011ef0	Tile::smoothNormals	2859	0	4	00011ef0-00012a1b
+00012cf0	Tile::calcNormals	297	0	3	00012cf0-00012e19
+00012e70	setTextureId	62	0	0	00012e70-00012eae
+00012ec0	Tile::setFaceTexture	790	0	0	00012ec0-000131d6
+00013320	Tile::hasPath	45	0	0	00013320-0001334d
+00013360	Tile::isConnected	45	0	0	00013360-0001338d
+000133a0	Tile::setConnected	66	0	0	000133a0-000133e2
+00013400	Tile::layPath	193	0	0	00013400-000134c1
+00013500	FUN_10013500	285	0	2	00013500-0001361d
+00013670	FUN_10013670	1507	0	7	00013670-00013c53
+00013dd0	Terrain::idClass	130	0	0	00013dd0-00013e52
+00013f00	Terrain::flagCode	144	0	0	00013f00-00013f90
+00013fc0	Tile::vertexArray	36	0	0	00013fc0-00013fe4
+00013ff0	Tile::normalArray	36	0	0	00013ff0-00014014
+00014020	Tile::setTypeId	245	0	8	00014020-00014115
+00014190	FUN_10014190	1699	0	3	00014190-00014833
+000149e0	FUN_100149e0	1699	0	3	000149e0-00015083
+00015230	FUN_10015230	224	0	2	00015230-00015310
+00015340	Tile::getVariation	42	0	0	00015340-0001536a
+00015380	Tile::setRotation	47	0	0	00015380-000153af
+000153c0	Tile::getFaces	42	0	0	000153c0-000153ea
+00015400	Tile::setWall	69	0	0	00015400-00015445
+00015460	Tile::isHidden	50	0	0	00015460-00015492
+000154a0	Tile::isSolidType	69	0	0	000154a0-000154e5
+00015500	Tile::maxHeight	141	0	0	00015500-0001558d
+000155b0	Tile::isOpenType	118	0	0	000155b0-00015626
+00015650	Tile::edgeKind	242	0	3	00015650-00015742
+0001577e	GLU32.DLL::gluBuild2DMipmaps	6	1	0	0001577e-00015784
+00015784	GLU32.DLL::gluBuild1DMipmaps	6	1	0	00015784-0001578a
+000158b0	iabs	33	3	0	000158b0-000158d1
+000158e0	_malloc	38	4	1	000158e0-00015906
+00015910	__malloc_dbg	44	22	1	00015910-0001593c
+00015940	__nh_malloc	27	1	1	00015940-0001595b
+00015960	FUN_10015960	93	4	4	00015960-000159bd
+000159bd	FUN_100159bd	11	1	1	000159bd-000159c8
+000159c8	FUN_100159c8	56	1	1	000159c8-00015a00
+00015a00	__heap_alloc	23	0	1	00015a00-00015a17
+00015a20	__heap_alloc_dbg	787	2	5	00015a20-00015d33
+00015d40	_calloc	36	0	1	00015d40-00015d64
+00015d70	__calloc_dbg	96	6	1	00015d70-00015dd0
+00015dd0	FID_conflict:__expand	36	0	1	00015dd0-00015df4
+00015e00	FID_conflict:__realloc_dbg	99	2	4	00015e00-00015e63
+00015e63	FUN_10015e63	11	1	1	00015e63-00015e6e
+00015e6e	FUN_10015e6e	20	1	0	00015e6e-00015e82
+00015e90	realloc_help	1297	2	9	00015e90-000163a1
+000163b0	FID_conflict:__expand	36	0	1	000163b0-000163d4
+000163e0	FID_conflict:__realloc_dbg	99	1	4	000163e0-00016443
+00016443	FUN_10016443	11	1	1	00016443-0001644e
+0001644e	FUN_1001644e	20	1	0	0001644e-00016462
+00016470	FUN_10016470	19	2	1	00016470-00016483
+00016490	__free_lk	19	0	1	00016490-000164a3
+000164b0	__free_dbg	82	24	4	000164b0-00016502
+00016502	FUN_10016502	11	1	1	00016502-0001650d
+0001650d	FUN_1001650d	17	1	0	0001650d-0001651e
+00016520	__free_dbg_lk	1004	2	7	00016520-0001690c
+00016910	FUN_10016910	19	0	1	00016910-00016923
+00016930	FUN_10016930	369	1	6	00016930-00016aa1
+00016aa1	FUN_10016aa1	11	1	1	00016aa1-00016aac
+00016aac	FUN_10016aac	20	1	0	00016aac-00016ac0
+00016ac0	FUN_10016ac0	28	0	0	00016ac0-00016adc
+00016ae0	FUN_10016ae0	189	0	5	00016ae0-00016b9d
+00016b9d	FUN_10016b9d	11	1	1	00016b9d-00016ba8
+00016ba8	FUN_10016ba8	17	1	0	00016ba8-00016bb9
+00016bc0	FUN_10016bc0	28	0	0	00016bc0-00016bdc
+00016be0	_CheckBytes	136	2	1	00016be0-00016c68
+00016c70	FUN_10016c70	885	4	6	00016c70-00016fe5
+00016fe5	FUN_10016fe5	11	1	1	00016fe5-00016ff0
+00016ff0	FUN_10016ff0	20	1	0	00016ff0-00017004
+00017020	__CrtSetDbgFlag	34	2	0	00017020-00017042
+00017050	FUN_10017050	141	0	3	00017050-000170dd
+000170dd	FUN_100170dd	11	1	1	000170dd-000170e8
+000170e8	FUN_100170e8	17	1	0	000170e8-000170f9
+00017100	__CrtIsValidPointer	75	3	2	00017100-0001714b
+00017150	FUN_10017150	292	5	5	00017150-00017274
+00017280	__CrtIsMemoryBlock	262	0	5	00017280-00017386
+00017386	FUN_10017386	11	1	1	00017386-00017391
+00017391	FUN_10017391	20	1	0	00017391-000173a5
+000173b0	FUN_100173b0	28	0	0	000173b0-000173cc
+000173d0	FUN_100173d0	392	1	4	000173d0-00017558
+00017558	FUN_10017558	11	1	1	00017558-00017563
+00017563	FUN_10017563	17	1	0	00017563-00017574
+00017580	__CrtMemDifference	291	0	1	00017580-000176a3
+000176b0	FUN_100176b0	689	1	6	000176b0-00017961
+00017961	FUN_10017961	11	1	1	00017961-0001796c
+0001796c	FUN_1001796c	55	1	1	0001796c-000179a3
+000179b0	__printMemBlockData	276	1	3	000179b0-00017ac4
+00017ad0	__CrtDumpMemoryLeaks	116	2	3	00017ad0-00017b44
+00017b50	__CrtMemDumpStatistics	197	0	1	00017b50-00017c15
+00017c20	_fclose	130	4	4	00017c20-00017ca2
+00017cb0	__fclose_lk	190	1	5	00017cb0-00017d6e
+00017d70	_fread	62	2	3	00017d70-00017dae
+00017db0	__fread_lk	463	1	3	00017db0-00017f7f
+00017f80	__fsopen	252	1	4	00017f80-0001807c
+00018080	_fopen	23	3	1	00018080-00018097
+000180a0	__chkesp	56	112	1	000180a0-000180d8
+000180e0	_fwrite	62	1	3	000180e0-0001811e
+00018120	__fwrite_lk	537	1	4	00018120-00018339
+00018340	__fpmath	33	1	3	00018340-00018361
+00018370	FUN_10018370	5	0	0	00018370-00018375
+00018380	__cfltcvt_init	65	1	0	00018380-000183c1
+000183d0	FUN_100183d0	28	0	0	000183d0-000183ec
+000183ec	__ftol	39	2	0	000183ec-00018413
+00018420	??_M@YGXPAXIHP6EX0@Z@Z	117	3	2	00018420-00018495
+00018495	FID_conflict:$L16506	28	1	1	00018495-000184b1
+000184b1	FID_conflict:$L16507	19	1	0	000184b1-000184c4
+000184d0	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	105	2	0	000184d0-00018526;0001853d-00018550
+00018550	ArrayUnwindFilter	44	0	1	00018550-0001857c
+00018580	FUN_10018580	7	21	0	00018580-00018587
+00018590	_strcat	224	6	0	00018590-00018670
+00018670	`eh_vector_constructor_iterator'	113	1	2	00018670-000186e1
+000186e1	FUN_100186e1	28	1	1	000186e1-000186fd
+000186fd	FUN_100186fd	19	1	0	000186fd-00018710
+00018710	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0	00018710-0001873d
+00018750	_CallMemberFunction0	7	1	0	00018750-00018757
+00018760	FID_conflict:_CallMemberFunction1	7	1	0	00018760-00018767
+00018770	FID_conflict:_CallMemberFunction1	7	1	0	00018770-00018777
+00018780	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	86	2	1	00018780-000187d6
+000187e0	FID_conflict:___CxxFrameHandler3	60	0	1	000187e0-0001881c
+00018820	___CxxLongjmpUnwind@4	38	0	1	00018820-00018846
+00018850	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	104	1	1	00018850-000188b8
+000188c0	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	57	0	1	000188c0-000188f9
+00018900	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	204	1	1	00018900-000189cc
+000189d0	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	124	0	2	000189d0-00018a47;00018a4c-00018a51
+00018a60	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	130	2	1	00018a60-00018ae2
+00018af0	__global_unwind2	32	0	1	00018af0-00018b10
+00018b32	__local_unwind2	104	1	1	00018b32-00018b9a
+00018b9a	__abnormal_termination	35	1	0	00018b9a-00018bbd
+00018bbd	__NLG_Notify1	9	1	0	00018bbd-00018bc6
+00018bc6	FUN_10018bc6	24	1	0	00018bc6-00018bde
+00018be0	operator_delete	161	17	4	00018be0-00018c81
+00018c90	operator_new	28	5	1	00018c90-00018cac
+00018cb0	FUN_10018cb0	26	0	1	00018cb0-00018cca
+00018cd0	FUN_10018cd0	16	0	1	00018cd0-00018ce0
+00018ce0	_rand	54	1	1	00018ce0-00018d16
+00018d20	_atol	255	3	1	00018d20-00018e1f
+00018e20	_atoi	17	1	1	00018e20-00018e31
+00018e40	__atoi64	297	0	2	00018e40-00018f69
+00018f70	_strcmp	129	10	0	00018f70-00018fb3;00018fb4-00018fba;00018fbc-00018ff4
+00019000	_strtok	325	1	1	00019000-00019145
+00019150	FUN_10019150	20	0	2	00019150-00019164
+00019164	FUN_10019164	9	1	1	00019164-0001916d
+0001916d	FUN_1001916d	145	1	3	0001916d-000191fe
+00019200	FUN_10019200	20	0	2	00019200-00019214
+00019214	FUN_10019214	9	1	1	00019214-0001921d
+0001921d	FUN_1001921d	145	1	3	0001921d-000192ae
+000192b0	FUN_100192b0	20	0	2	000192b0-000192c4
+000192c4	FUN_100192c4	9	1	1	000192c4-000192cd
+000192cd	FUN_100192cd	157	1	4	000192cd-0001936a
+00019370	FUN_10019370	25	0	1	00019370-00019389
+00019389	FUN_10019389	9	2	1	00019389-00019392
+00019392	FUN_10019392	467	1	8	00019392-00019565
+00019565	FUN_10019565	40	1	0	00019565-0001958d
+00019590	_strlen	123	24	0	00019590-0001960b
+00019610	__assert	892	3	14	00019610-00019975;00019977-0001998e
+00019990	_memcmp	172	1	0	00019990-00019a3c
+00019a40	__CRT_INIT@12	313	1	16	00019a40-00019b79
+00019b80	entry	243	0	2	00019b80-00019c73
+00019c80	__amsg_exit	58	9	3	00019c80-00019cba
+00019cc0	_set_new_handler	48	0	2	00019cc0-00019cf0
+00019cf0	FUN_10019cf0	10	0	0	00019cf0-00019cfa
+00019d00	__callnewh	45	5	0	00019d00-00019d2d
+00019d30	__mtinitlocks	55	1	1	00019d30-00019d67
+00019d70	__mtdeletelocks	159	1	2	00019d70-00019e0f
+00019e10	__lock	151	45	7	00019e10-00019ea7
+00019eb0	FUN_10019eb0	22	50	1	00019eb0-00019ec6
+00019ed0	FUN_10019ed0	26	0	2	00019ed0-00019eea
+00019fb1	__seh_longjmp_unwind@4	27	0	1	00019fb1-00019fcc
+00019fd0	_memset	88	10	0	00019fd0-0001a028
+0001a030	__malloc_base	32	1	1	0001a030-0001a050
+0001a050	__nh_malloc_base	87	1	2	0001a050-0001a0a7
+0001a0b0	__heap_alloc_base	101	2	4	0001a0b0-0001a115
+0001a115	FUN_1001a115	11	1	1	0001a115-0001a120
+0001a120	FUN_1001a120	19	1	1	0001a120-0001a133
+0001a197	FUN_1001a197	11	0	1	0001a197-0001a1a2
+0001a1a2	FUN_1001a1a2	31	0	1	0001a1a2-0001a1c1
+0001a1c1	FUN_1001a1c1	60	1	1	0001a1c1-0001a1fd
+0001a200	FUN_1001a200	10	3	0	0001a200-0001a20a
+0001a210	__CrtDbgBreak	11	2	1	0001a210-0001a21b
+0001a220	__CrtSetReportMode	87	0	0	0001a220-0001a277
+0001a280	__CrtSetReportFile	126	0	1	0001a280-0001a2fe
+0001a300	FUN_1001a300	28	0	0	0001a300-0001a31c
+0001a320	__CrtDbgReport	912	36	15	0001a320-0001a6b0
+0001a6b0	_CrtMessageWindow	780	1	11	0001a6b0-0001a9bc
+0001a9c0	FUN_1001a9c0	161	1	5	0001a9c0-0001aa61
+0001aa61	FUN_1001aa61	11	1	1	0001aa61-0001aa6c
+0001aa6c	FUN_1001aa6c	60	1	1	0001aa6c-0001aaa8
+0001ab5a	FUN_1001ab5a	11	0	1	0001ab5a-0001ab65
+0001ab65	FUN_1001ab65	53	0	1	0001ab65-0001ab86;0001abb9-0001abcd
+0001abd0	FUN_1001abd0	960	1	20	0001abd0-0001ad86;0001adfb-0001af9b;0001afd6-0001b040
+0001ad86	FUN_1001ad86	11	1	1	0001ad86-0001ad91
+0001ad91	FUN_1001ad91	106	1	3	0001ad91-0001adfb
+0001af9b	FUN_1001af9b	11	1	1	0001af9b-0001afa6
+0001afa6	FUN_1001afa6	48	1	2	0001afa6-0001afd6
+0001b040	FUN_1001b040	17	3	0	0001b040-0001b051
+0001b060	FUN_1001b060	123	3	5	0001b060-0001b0db
+0001b0db	FUN_1001b0db	11	1	1	0001b0db-0001b0e6
+0001b0e6	FUN_1001b0e6	30	1	1	0001b0e6-0001b104
+0001b15d	FUN_1001b15d	11	0	1	0001b15d-0001b168
+0001b168	FUN_1001b168	43	0	1	0001b168-0001b182;0001b195-0001b1a6
+0001b1b0	__heapchk	98	2	4	0001b1b0-0001b212
+0001b212	FUN_1001b212	11	1	1	0001b212-0001b21d
+0001b21d	thunk_FUN_1001b262	2	1	0	0001b21d-0001b21f
+0001b257	FUN_1001b257	11	0	1	0001b257-0001b262
+0001b262	FUN_1001b262	82	0	4	0001b262-0001b2b4
+0001b2c0	__heapset	10	0	1	0001b2c0-0001b2ca
+0001b2d0	FUN_1001b2d0	39	0	0	0001b2d0-0001b2f7
+0001b300	FUN_1001b300	266	0	3	0001b300-0001b40a
+0001b410	___sbh_heap_init	98	2	1	0001b410-0001b472
+0001b480	___sbh_find_block	85	4	0	0001b480-0001b4d5
+0001b4e0	___sbh_verify_block	95	1	0	0001b4e0-0001b53f
+0001b540	FUN_1001b540	1500	2	3	0001b540-0001bb1c
+0001bb20	___sbh_alloc_block	1334	2	2	0001bb20-0001c056
+0001c060	___sbh_alloc_new_region	271	1	4	0001c060-0001c16f
+0001c170	___sbh_alloc_new_group	494	1	1	0001c170-0001c35e
+0001c360	___sbh_resize_block	1515	2	0	0001c360-0001c94b
+0001c950	___sbh_heapmin	304	0	3	0001c950-0001ca80
+0001ca80	___sbh_heap_check	1565	1	1	0001ca80-0001d09d
+0001d0a0	FUN_1001d0a0	10	0	0	0001d0a0-0001d0aa
+0001d0b0	FUN_1001d0b0	43	0	0	0001d0b0-0001d0db
+0001d0e0	FUN_1001d0e0	478	3	5	0001d0e0-0001d2be
+0001d2c0	FUN_1001d2c0	115	1	2	0001d2c0-0001d333
+0001d340	FUN_1001d340	343	1	2	0001d340-0001d497
+0001d4a0	FUN_1001d4a0	144	2	0	0001d4a0-0001d530
+0001d530	FUN_1001d530	108	1	1	0001d530-0001d59c
+0001d5a0	FUN_1001d5a0	952	1	4	0001d5a0-0001d958
+0001d960	FUN_1001d960	681	1	0	0001d960-0001dc09
+0001dc10	FUN_1001dc10	356	1	0	0001dc10-0001dd74
+0001dd80	FUN_1001dd80	567	0	0	0001dd80-0001dfb7
+0001dfc0	FUN_1001dfc0	92	2	1	0001dfc0-0001e01c
+0001e020	FUN_1001e020	548	1	9	0001e020-0001e244
+0001e250	FUN_1001e250	141	1	5	0001e250-0001e2dd
+0001e2e0	FUN_1001e2e0	232	1	3	0001e2e0-0001e3c8
+0001e3d0	__cinit	56	1	2	0001e3d0-0001e408
+0001e410	_exit	21	0	1	0001e410-0001e425
+0001e430	__exit	21	5	1	0001e430-0001e445
+0001e450	__cexit	19	1	1	0001e450-0001e463
+0001e470	__c_exit	19	0	1	0001e470-0001e483
+0001e490	doexit	227	4	8	0001e490-0001e573
+0001e580	FID_conflict:__lockexit	15	1	1	0001e580-0001e58f
+0001e590	FID_conflict:__lockexit	15	1	1	0001e590-0001e59f
+0001e5a0	__initterm	37	2	0	0001e5a0-0001e5c5
+0001e5d0	_sprintf	250	1	3	0001e5d0-0001e6ca
+0001e6d0	__isctype	183	22	1	0001e6d0-0001e787
+0001e790	___initstdio	300	0	2	0001e790-0001e8bc
+0001e8c0	___endstdio	26	0	2	0001e8c0-0001e8da
+0001e8e0	__lock_file	61	6	2	0001e8e0-0001e91d
+0001e920	FID_conflict:__lock_file2	41	2	2	0001e920-0001e949
+0001e950	__unlock_file	61	7	2	0001e950-0001e98d
+0001e990	FID_conflict:__lock_file2	41	2	2	0001e990-0001e9b9
+0001e9c0	__close	122	3	5	0001e9c0-0001ea3a
+0001ea40	__close_lk	170	1	5	0001ea40-0001eaea
+0001eaf0	__freebuf	146	2	2	0001eaf0-0001eb82
+0001eb90	_fflush	68	2	4	0001eb90-0001ebd4
+0001ebe0	__fflush_lk	65	2	2	0001ebe0-0001ec21
+0001ec30	__flush	183	5	1	0001ec30-0001ece7
+0001ecf0	__flushall	15	1	1	0001ecf0-0001ecff
+0001ed00	flsall	319	2	5	0001ed00-0001ee3f
+0001ee40	__filbuf	484	1	3	0001ee40-0001f024
+0001f030	__read	130	3	5	0001f030-0001f0b2
+0001f0c0	__read_lk	1093	2	6	0001f0c0-0001f505
+0001f510	FID_conflict:_memcpy	664	9	0	0001f510-0001f56b;0001f56c-0001f573;0001f580-0001f5a9;0001f5ac-0001f5cf;0001f5d0-0001f5e9;0001f60c-0001f656;0001f668-0001f66f;0001f670-0001f67b;0001f67c-0001f68d;0001f690-0001f6a7;0001f6a8-0001f6ce;0001f6d0-0001f6d9;0001f6dc-0001f6fb;0001f708-0001f725;0001f728-0001f74f;0001f750-0001f781;0001f7a4-0001f7ee;0001f800-0001f807;0001f808-0001f815;0001f818-0001f82b;0001f82c-0001f845
+0001f850	__openfile	797	1	2	0001f850-0001fb6d
+0001fbe0	__getstream	384	1	7	0001fbe0-0001fd60
+0001fd60	__flsbuf	628	5	5	0001fd60-0001ffd4
+0001ffe0	__write	130	5	5	0001ffe0-00020062
+00020070	__write_lk	627	2	6	00020070-000202e3
+000202f0	__setdefaultprecision	23	2	1	000202f0-00020307
+00020310	__ms_p5_test_fdiv	94	1	0	00020310-0002036e
+00020370	__ms_p5_mp_test_fdiv	66	1	3	00020370-000203b2
+000203c0	__forcdecpt	168	0	2	000203c0-00020468
+00020470	__cropzeros	215	0	0	00020470-00020547
+00020550	__positive	45	0	0	00020550-0002057d
+00020580	__fassign	72	0	2	00020580-000205c8
+000205d0	__cftoe	118	1	3	000205d0-00020646
+00020650	__cftoe2	358	2	2	00020650-000207b6
+000207c0	__cftof	106	1	3	000207c0-0002082a
+00020830	__cftof2	317	2	2	00020830-0002096d
+00020970	__cftog	229	1	4	00020970-00020a55
+00020a60	__cfltcvt	95	0	3	00020a60-00020abf
+00020ac0	__shift	46	2	2	00020ac0-00020aee
+00020af0	FUN_10020af0	92	7	2	00020af0-00020b40;00020b50-00020b5c
+00020b5e	_abort	5	1	1	00020b5e-00020b63
+00020b80	FUN_10020b80	29	0	2	00020b80-00020b9d
+00020ba0	?_inconsistency@@YAXXZ	90	5	3	00020ba0-00020bec;00020bfc-00020c0a
+00020c0a	FUN_10020c0a	6	1	1	00020c0a-00020c10
+00020c10	FUN_10020c10	17	1	0	00020c10-00020c21
+00020c30	___InternalCxxFrameHandler	239	3	3	00020c30-00020d1f
+00020d20	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	672	1	9	00020d20-00020fc0
+00020fc0	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	277	1	4	00020fc0-000210d5
+000210e0	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	182	1	1	000210e0-00021196
+000211a0	___FrameUnwindToState	224	3	2	000211a0-00021239;00021250-00021297
+000212a0	ArrayUnwindFilter	44	0	1	000212a0-000212cc
+000212d0	CatchIt	183	2	5	000212d0-00021387
+00021390	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	172	1	4	00021390-0002142e;0002145f-0002146d
+0002146d	FUN_1002146d	94	1	3	0002146d-000214cb
+000214cb	FUN_100214cb	20	1	0	000214cb-000214df
+000214e0	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	66	0	0	000214e0-00021522
+00021530	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	621	1	8	00021530-0002178c;0002179a-000217ab
+000217b0	___DestructExceptionObject	111	2	1	000217b0-0002180e;00021825-00021836
+00021840	FID_conflict:___AdjustPointer	70	1	0	00021840-00021886
+00021890	__CallSettingFrame@12	76	2	1	00021890-000218dc
+000218e0	__mtinit	130	1	6	000218e0-00021962
+00021970	__mtterm	41	1	2	00021970-00021999
+000219a0	__initptd	25	2	0	000219a0-000219b9
+000219c0	__getptd	152	17	8	000219c0-00021a58
+00021a60	__freeptd	263	1	3	00021a60-00021b67
+00021b70	FUN_10021b70	11	0	1	00021b70-00021b7b
+00021b80	FUN_10021b80	11	0	1	00021b80-00021b8b
+00021b90	__allmul	52	1	0	00021b90-00021bc4
+00021da0	FUN_10021da0	21	1	0	00021da0-00021db5
+00021db5	FUN_10021db5	23	2	0	00021db5-00021dcc
+00021dcc	FUN_10021dcc	25	3	0	00021dcc-00021de5
+00021de5	__fload_withFB	67	5	0	00021de5-00021e28
+00021e28	FUN_10021e28	22	3	0	00021e28-00021e3e
+00021e3e	FUN_10021e3e	13	1	0	00021e3e-00021e4b
+00021e4b	__math_exit	42	3	1	00021e4b-00021e75
+00021e89	__check_range_exit	163	1	2	00021e89-00021f2c
+00021f30	__startTwoArgErrorHandling	23	2	0	00021f30-00021f47
+00021f47	__startOneArgErrorHandling	60	5	1	00021f47-00021f83
+000221a0	__powhlp	612	1	1	000221a0-00022404
+00022410	__d_inttype	128	1	2	00022410-00022490
+00022490	_abort	30	2	3	00022490-000224ae
+000224b0	_signal	507	0	10	000224b0-000226ab
+000226e0	ctrlevent_capture	146	0	2	000226e0-00022772
+00022780	_raise	522	3	5	00022780-0002298a
+000229c0	siglookup	91	2	0	000229c0-00022a1b
+00022a20	FUN_10022a20	13	0	1	00022a20-00022a2d
+00022a30	___pxcptinfoptrs	13	1	1	00022a30-00022a3d
+00022a40	___crtMessageBoxA	187	3	2	00022a40-00022afb
+00022b00	__itoa	66	4	1	00022b00-00022b42
+00022b50	xtoa	194	3	0	00022b50-00022c12
+00022c20	__ltoa	63	0	1	00022c20-00022c5f
+00022c60	__ultoa	30	0	1	00022c60-00022c7e
+00022c80	__i64toa	72	0	1	00022c80-00022cc8
+00022cd0	x64toa	242	2	2	00022cd0-00022dc2
+00022dd0	__ui64toa	31	0	1	00022dd0-00022def
+00022df0	_strncat	291	1	0	00022df0-00022f13
+00022f20	_strncpy	254	8	0	00022f20-0002301e
+00023020	_fprintf	193	1	6	00023020-000230e1
+000230f0	_setvbuf	365	1	6	000230f0-0002325d
+00023260	__ioinit	804	1	6	00023260-00023584
+00023590	__ioterm	155	1	2	00023590-0002362b
+00023630	__setenvp	329	1	6	00023630-00023779
+00023780	__setargv	216	1	5	00023780-00023858
+00023860	parse_cmdline	1060	1	0	00023860-00023c84
+00023c90	___crtGetEnvironmentStringsA	537	1	8	00023c90-00023ea9
+00023eb0	_DllMain@12	12	1	0	00023eb0-00023ebc
+00023ec0	__FF_MSGBANNER	73	1	1	00023ec0-00023f09
+00023f10	__NMSG_WRITE	447	3	9	00023f10-000240cf
+000240d0	__GET_RTERRMSG	80	0	0	000240d0-00024120
+00024120	__snprintf	249	2	3	00024120-00024219
+00024220	__vsnprintf	243	1	3	00024220-00024313
+00024320	FUN_10024320	47	10	0	00024320-0002434f
+00024350	__dosmaperr	145	6	2	00024350-000243e1
+000243f0	FUN_100243f0	13	25	1	000243f0-000243fd
+00024400	FUN_10024400	13	16	1	00024400-0002440d
+00024410	FID_conflict:_memcpy	664	8	0	00024410-0002446b;0002446c-00024473;00024480-000244a9;000244ac-000244cf;000244d0-000244e9;0002450c-00024556;00024568-0002456f;00024570-0002457b;0002457c-0002458d;00024590-000245a7;000245a8-000245ce;000245d0-000245d9;000245dc-000245fb;00024608-00024625;00024628-0002464f;00024650-00024681;000246a4-000246ee;00024700-00024707;00024708-00024715;00024718-0002472b;0002472c-00024745
+00024750	_strtol	27	1	1	00024750-0002476b
+00024770	strtoxl	817	2	3	00024770-00024aa1
+00024ab0	_strtoul	27	0	1	00024ab0-00024acb
+00024ae0	_strchr	193	2	0	00024ad0-00024ad5;00024ae0-00024b9c
+00024ba0	_strstr	128	1	0	00024ba0-00024c20
+00024c20	_strncmp	56	2	0	00024c20-00024c58
+00024c60	__output	3108	4	12	00024c60-00025884
+00025990	write_char	119	3	1	00025990-00025a07
+00025a10	write_multi_char	53	1	1	00025a10-00025a45
+00025a50	write_string	74	1	1	00025a50-00025a9a
+00025aa0	get_int_arg	26	1	0	00025aa0-00025aba
+00025ac0	get_int64_arg	31	1	0	00025ac0-00025adf
+00025ae0	get_short_arg	27	1	0	00025ae0-00025afb
+00025b00	___crtGetStringTypeA	421	3	5	00025b00-00025c44;00025c5b-00025cbc
+00025cc0	__fcloseall	218	1	5	00025cc0-00025d9a
+00025da0	__alloc_osfhnd	482	2	7	00025da0-00025f82
+00025f90	__set_osfhnd	183	2	3	00025f90-00026047
+00026050	__free_osfhnd	216	1	3	00026050-00026128
+00026130	__get_osfhandle	102	4	2	00026130-00026196
+000261a0	__open_osfhandle	260	0	8	000261a0-000262a4
+000262b0	__lock_fhandle	134	8	4	000262b0-00026336
+00026340	__unlock_fhandle	38	9	1	00026340-00026366
+00026370	__commit	210	1	7	00026370-00026442
+00026450	__getbuf	199	2	2	00026450-00026517
+00026520	__lseek	130	3	5	00026520-000265a2
+000265b0	__lseek_lk	178	5	5	000265b0-00026662
+00026670	FID_conflict:__open	63	0	1	00026670-000266af
+000266b0	__sopen	1294	3	14	000266b0-00026bbe
+00026c10	__isatty	50	2	0	00026c10-00026c42
+00026c50	__statusfp	31	0	1	00026c50-00026c6f
+00026c70	__clearfp	32	0	1	00026c70-00026c90
+00026c90	__control87	79	1	2	00026c90-00026cdf
+00026ce0	__controlfp	26	1	1	00026ce0-00026cfa
+00026d00	__fpreset	88	0	2	00026d00-00026d58
+00026d60	__abstract_cw	377	1	0	00026d60-00026ed9
+00026ee0	__hw_cw	346	1	0	00026ee0-0002703a
+00027040	__abstract_sw	167	2	0	00027040-000270e7
+000270f0	FUN_100270f0	11	0	0	000270f0-000270fb
+00027100	_tolower	147	1	5	00027100-00027193
+000271a0	__tolower_lk	299	3	2	000271a0-000272cb
+000272d0	__ZeroTail	132	1	0	000272d0-00027354
+00027360	__IncMan	168	1	1	00027360-00027408
+00027410	__RoundMan	219	2	2	00027410-000274eb
+000274f0	__CopyMan	76	1	0	000274f0-0002753c
+00027540	__FillZeroMan	47	1	0	00027540-0002756f
+00027570	__IsZeroMan	55	1	0	00027570-000275a7
+000275b0	__ShrMan	236	1	0	000275b0-0002769c
+000276a0	__ld12cvt	578	2	5	000276a0-000278e2
+000278f0	FID_conflict:__ld12tod	26	1	1	000278f0-0002790a
+00027910	FID_conflict:__ld12tod	26	1	1	00027910-0002792a
+00027930	__ld12told	191	2	1	00027930-000279ef
+000279f0	FID_conflict:__atodbl	54	1	2	000279f0-00027a26
+00027a30	__atoldbl	54	0	2	00027a30-00027a66
+00027a70	FID_conflict:__atodbl	54	1	2	00027a70-00027aa6
+00027ab0	__fptostr	250	3	2	00027ab0-00027baa
+00027bb0	__fltout2	119	3	3	00027bb0-00027c27
+00027c30	___dtold	354	1	0	00027c30-00027d92
+00027da0	__fptrap	15	1	1	00027da0-00027daf
+00027db0	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	91	0	2	00027db0-00027e0b
+00027e10	FUN_10027e10	21	0	1	00027e10-00027e25
+00027e30	FUN_10027e30	17	0	1	00027e30-00027e41
+00027e50	?_ValidateRead@@YAHPBXI@Z	43	2	1	00027e50-00027e7b
+00027e80	?_ValidateWrite@@YAHPAXI@Z	43	1	1	00027e80-00027eab
+00027eb0	_ValidateExecute	39	2	1	00027eb0-00027ed7
+00027ee0	__XcptFilter	446	0	3	00027ee0-0002809e
+000280a0	xcptlookup	89	1	0	000280a0-000280f9
+00028100	__87except	348	1	5	00028100-0002825c
+00029010	__set_exp	62	4	0	00029010-0002904e
+00029050	__get_exp	45	0	0	00029050-0002907d
+00029080	__add_exp	51	0	1	00029080-000290b3
+000290c0	__set_bexp	52	0	0	000290c0-000290f4
+00029100	__sptype	124	3	0	00029100-0002917c
+00029180	__decomp	313	4	1	00029180-000292b9
+000292c0	__frnd	27	1	0	000292c0-000292db
+000292e0	__copysign	42	1	0	000292e0-0002930a
+00029310	__chgsign	44	0	0	00029310-0002933c
+00029340	__scalb	25	0	1	00029340-00029359
+00029360	__logb	300	0	5	00029360-0002948c
+00029490	__nextafter	826	0	5	00029490-000297ca
+000297d0	__finite	34	0	0	000297d0-000297f2
+00029800	__isnan	73	0	0	00029800-00029849
+00029850	__fpclass	211	1	1	00029850-00029923
+00029930	__aulldiv	104	2	0	00029930-00029998
+000299a0	__aullrem	117	2	0	000299a0-00029a15
+00029a20	__stbuf	343	1	3	00029a20-00029b77
+00029b80	__ftbuf	148	1	2	00029b80-00029c14
+00029c20	__setmbcp	836	1	7	00029c20-00029f64
+00029f70	getSystemCP	89	1	2	00029f70-00029fc9
+00029fd0	_CPtoLCID	80	1	0	00029fd0-0002a020
+0002a050	setSBCS	116	1	0	0002a050-0002a0c4
+0002a0d0	setSBUpLow	770	1	3	0002a0d0-0002a3d2
+0002a3e0	FUN_1002a3e0	23	0	0	0002a3e0-0002a3f7
+0002a400	___initmbctable	34	2	1	0002a400-0002a422
+0002a430	FUN_1002a430	11	0	0	0002a430-0002a43b
+0002a440	_toupper	147	1	5	0002a440-0002a4d3
+0002a4e0	__toupper_lk	299	1	2	0002a4e0-0002a60b
+0002a610	_wctomb	119	1	5	0002a610-0002a687
+0002a690	__wctomb_lk	160	1	2	0002a690-0002a730
+0002a730	__chsize	115	0	4	0002a730-0002a7a3
+0002a7b0	__chsize_lk	560	2	11	0002a7b0-0002a9e0
+0002a9e0	_setlocale	1007	0	13	0002a9e0-0002adcf
+0002add0	__setlocale_set_cat	403	1	6	0002add0-0002af63
+0002af70	__setlocale_get_all	256	1	5	0002af70-0002b070
+0002b070	__expandlocale	388	2	6	0002b070-0002b1f4
+0002b200	FUN_1002b200	7	0	0	0002b200-0002b207
+0002b210	__strcats	79	2	1	0002b210-0002b25f
+0002b260	___lc_strtolc	349	1	4	0002b260-0002b3bd
+0002b3c0	___lc_lctostr	101	1	2	0002b3c0-0002b425
+0002b430	___crtLCMapStringA	727	3	6	0002b430-0002b576;0002b58d-0002b66c;0002b683-0002b735
+0002b740	strncnt	80	1	0	0002b740-0002b790
+0002b790	___addl	62	3	0	0002b790-0002b7ce
+0002b7d0	___add_12	173	2	1	0002b7d0-0002b87d
+0002b880	___shl_12	96	3	0	0002b880-0002b8e0
+0002b8e0	___shr_12	99	2	0	0002b8e0-0002b943
+0002b950	___mtold12	315	1	2	0002b950-0002ba8b
+0002ba90	___strgtold12	2586	4	3	0002ba90-0002c4aa
+0002c5c0	___STRINGTOLD	79	0	2	0002c5c0-0002c60f
+0002c610	_$I10_OUTPUT	1302	1	6	0002c610-0002cb26
+0002cb30	__handle_qnan1	85	1	3	0002cb30-0002cb85
+0002cb90	__handle_qnan2	103	2	3	0002cb90-0002cbf7
+0002cc00	__except1	178	1	6	0002cc00-0002ccb2
+0002ccc0	__except2	206	2	6	0002ccc0-0002cd8e
+0002cd90	__raise_exc	1201	3	3	0002cd90-0002d241
+0002d260	__handle_exc	882	3	2	0002d260-0002d5d2
+0002d5e0	__umatherr	155	4	4	0002d5e0-0002d67b
+0002d680	FID_conflict:__set_errno_from_matherr	58	4	1	0002d680-0002d6ba
+0002d6c0	__get_fname	63	1	0	0002d6c0-0002d6ff
+0002d700	__errcode	113	2	0	0002d700-0002d771
+0002d780	__matherr	7	2	0	0002d780-0002d787
+0002d790	__statfp	22	1	0	0002d790-0002d7a6
+0002d7b0	__clrfp	23	1	0	0002d7b0-0002d7c7
+0002d7d0	__ctrlfp	50	9	0	0002d7d0-0002d802
+0002d810	__set_statfp	117	1	0	0002d810-0002d885
+0002d890	_ldexp	700	1	7	0002d890-0002db4c
+0002db50	__setmode	115	1	4	0002db50-0002dbc3
+0002dbd0	__setmode_lk	207	2	1	0002dbd0-0002dc9f
+0002dca0	___init_time	219	0	4	0002dca0-0002dd7b
+0002dd80	__get_lc_time	1423	1	1	0002dd80-0002e30f
+0002e310	___free_lc_time	779	1	1	0002e310-0002e61b
+0002e620	___init_numeric	678	0	5	0002e620-0002e8c6
+0002e8d0	fix_grouping	125	1	0	0002e8d0-0002e94d
+0002e950	___init_monetary	304	0	4	0002e950-0002ea80
+0002ea80	__get_lc_lconv	525	1	2	0002ea80-0002ec8d
+0002ec90	fix_grouping	125	1	0	0002ec90-0002ed0d
+0002ed10	__free_lc_lconv	147	1	1	0002ed10-0002eda3
+0002edb0	___init_ctype	928	0	6	0002edb0-0002f150
+0002f150	FUN_1002f150	7	0	0	0002f150-0002f157
+0002f160	_strcspn	62	2	0	0002f160-0002f19e
+0002f1a0	_strpbrk	58	1	0	0002f1a0-0002f1da
+0002f1e0	___get_qualified_locale	512	1	11	0002f1e0-0002f3e0
+0002f3e0	_TranslateName	130	1	1	0002f3e0-0002f462
+0002f470	_GetLcidFromLangCountry	186	1	3	0002f470-0002f52a
+0002f530	_LangCountryEnumProc@4	804	0	6	0002f530-0002f854
+0002f860	_GetLcidFromLanguage	116	1	3	0002f860-0002f8d4
+0002f8e0	_LanguageEnumProc@4	287	0	4	0002f8e0-0002f9ff
+0002fa00	_GetLcidFromCountry	69	1	2	0002fa00-0002fa45
+0002fa50	_CountryEnumProc@4	172	0	3	0002fa50-0002fafc
+0002fb00	_GetLcidFromDefault	43	1	1	0002fb00-0002fb2b
+0002fb30	_ProcessCodePage	155	1	2	0002fb30-0002fbcb
+0002fbd0	_TestDefaultCountry	79	2	0	0002fbd0-0002fc1f
+0002fc20	_TestDefaultLanguage	135	2	3	0002fc20-0002fca7
+0002fcb0	_IsThisWindowsNT	77	1	1	0002fcb0-0002fcfd
+0002fd00	crtGetLocaleInfoA	388	0	2	0002fd00-0002fe84
+0002fe90	_LcidFromHexString	118	4	0	0002fe90-0002ff06
+0002ff10	_GetPrimaryLen	101	3	0	0002ff10-0002ff75
+0002ff80	___ld12mul	1085	2	3	0002ff80-000303bd
+000303c0	___multtenpow12	195	2	1	000303c0-00030483
+00030490	__Getdays	289	0	3	00030490-000305b1
+000305c0	__Getmonths	291	0	3	000305c0-000306e3
+000306f0	__Gettnames	878	0	4	000306f0-00030a5e
+00030a60	FUN_10030a60	31	0	1	00030a60-00030a7f
+00030a80	FUN_10030a80	394	1	5	00030a80-00030c0a
+00030c10	__expandtime	1389	2	4	00030c10-0003117d
+00031230	FID_conflict:_store_str	72	1	0	00031230-00031278
+00031280	__store_num	173	1	1	00031280-0003132d
+00031330	FID_conflict:_store_number	172	1	0	00031330-000313dc
+000313e0	__store_winword	1152	1	2	000313e0-00031860
+00031900	___getlocaleinfo	650	4	7	00031900-00031b8a
+00031b90	FUN_10031b90	10	0	0	00031b90-00031b9a
+00031ba0	___crtGetStringTypeW	575	1	6	00031ba0-00031cc7;00031cde-00031d46;00031d5d-00031e0d
+00031e10	__strcmpi	208	5	3	00031e10-00031ee0
+00031ee0	__strnicmp	257	2	3	00031ee0-00031fe1
+00031ff0	___tzset	61	1	3	00031ff0-0003202d
+00032030	__tzset	30	0	3	00032030-0003204e
+00032050	__tzset_lk	939	2	12	00032050-000323fb
+00032400	__isindst	46	0	3	00032400-0003242e
+00032430	__isindst_lk	762	1	1	00032430-0003272a
+00032730	cvtdate	504	1	0	00032730-00032928
+00032930	___crtGetLocaleInfoW	382	1	4	00032930-00032a2d;00032a44-00032ac5
+00032ad0	___crtGetLocaleInfoA	398	1	4	00032ad0-00032bcf;00032be6-00032c75
+00032c80	_getenv	46	0	3	00032c80-00032cae
+00032cb0	FID_conflict:__getenv_lk	198	2	3	00032cb0-00032d76
+00032d80	__mbsnbicoll	79	2	1	00032d80-00032dcf
+00032dd0	___wtomb_environ	174	2	3	00032dd0-00032e7e
+00032e80	___crtCompareStringA	970	1	7	00032e80-0003315f;00033176-000331fd;00033214-00033278
+00033280	strncnt	80	1	0	00033280-000332d0
+000332d0	___crtsetenv	736	1	10	000332d0-000335b0
+000335b0	findenv	124	1	1	000335b0-0003362c
+00033630	copy_environ	238	1	4	00033630-0003371e
+00033720	__mbschr	237	1	3	00033720-0003380d
+00033810	ifstream	227	0	5	00033810-000338f3
+00033900	delbuf	22	6	0	00033900-00033916
+00033920	FUN_10033920	17	4	1	00033920-00033931
+00033940	`scalar_deleting_destructor'	55	0	2	00033940-00033977
+00033980	ifstream	294	1	7	00033980-00033aa6
+00033ab0	rdbuf	29	6	1	00033ab0-00033acd
+00033ad0	rdbuf	17	5	0	00033ad0-00033ae1
+00033af0	ifstream	233	0	5	00033af0-00033bd9
+00033be0	ifstream	239	0	5	00033be0-00033ccf
+00033cd0	FID_conflict:~ifstream	39	1	1	00033cd0-00033cf7
+00033d00	setbuf	110	0	3	00033d00-00033d6e
+00033d70	clear	46	7	2	00033d70-00033d9e
+00033da0	is_open	26	2	2	00033da0-00033dba
+00033dc0	is_open	25	2	0	00033dc0-00033dd9
+00033de0	attach	73	0	3	00033de0-00033e29
+00033e30	open	94	0	4	00033e30-00033e8e
+00033e90	close	84	1	3	00033e90-00033ee4
+00033ef0	filebuf	51	2	1	00033ef0-00033f23
+00033f30	`scalar_deleting_destructor'	46	0	2	00033f30-00033f5e
+00033f60	CBlobProperty::CBlobProperty	52	1	1	00033f60-00033f94
+00033fa0	filebuf	113	1	2	00033fa0-00034011
+00034020	~filebuf	108	1	4	00034020-0003408c
+00034090	lock	37	7	2	00034090-000340b5
+000340c0	lockptr	17	5	0	000340c0-000340d1
+000340e0	close	107	3	3	000340e0-0003414b
+00034150	lock	37	6	2	00034150-00034175
+00034180	overflow	185	0	10	00034180-00034239
+00034240	sputc	89	2	0	00034240-00034299
+000342a0	base	17	2	0	000342a0-000342b1
+000342c0	ebuf	17	4	0	000342c0-000342d1
+000342e0	pptr	17	1	0	000342e0-000342f1
+00034300	epptr	17	1	0	00034300-00034311
+00034320	setp	40	2	0	00034320-00034348
+00034350	unbuffered	17	6	0	00034350-00034361
+00034370	underflow	237	0	9	00034370-0003445d
+00034460	in_avail	60	3	1	00034460-0003449c
+000344a0	blen	54	1	0	000344a0-000344d6
+000344e0	gptr	17	10	0	000344e0-000344f1
+00034500	setg	50	2	0	00034500-00034532
+00034540	seekoff	131	0	2	00034540-000345c3
+000345d0	sync	396	4	12	000345d0-0003475c
+00034760	out_waiting	54	1	0	00034760-00034796
+000347a0	pbase	17	1	0	000347a0-000347b1
+000347c0	egptr	17	6	0	000347c0-000347d1
+000347e0	pbump	37	1	0	000347e0-00034805
+00034810	setbuf	105	1	6	00034810-00034879
+00034880	unbuffered	22	3	0	00034880-00034896
+000348a0	get	345	1	4	000348a0-000349f9
+00034a00	isfx	51	3	2	00034a00-00034a33
+00034a40	unlockbuf	16	7	1	00034a40-00034a50
+00034a50	__mtlockinit	15	5	1	00034a50-00034a5f
+00034a60	__mtlockterm	15	2	1	00034a60-00034a6f
+00034a70	__mtlock	15	3	1	00034a70-00034a7f
+00034a80	__mtlock	15	3	1	00034a80-00034a8f
+00034a90	ios	184	16	2	00034a90-00034b48
+00034b50	`scalar_deleting_destructor'	46	0	2	00034b50-00034b7e
+00034b80	ios	197	0	2	00034b80-00034c45
+00034c50	ios	120	0	3	00034c50-00034cc8
+00034cd0	~ios	169	22	2	00034cd0-00034d79
+00034d80	init	131	6	1	00034d80-00034e03
+00034e10	delbuf	17	3	0	00034e10-00034e21
+00034e30	operator=	130	3	6	00034e30-00034eb2
+00034ec0	flags	17	1	0	00034ec0-00034ed1
+00034ee0	width	17	1	0	00034ee0-00034ef1
+00034f00	tie	17	1	0	00034f00-00034f11
+00034f20	fill	17	1	0	00034f20-00034f31
+00034f40	precision	17	1	0	00034f40-00034f51
+00034f60	rdstate	17	1	0	00034f60-00034f71
+00034f80	xalloc	61	0	2	00034f80-00034fbd
+00034fc0	lockc	18	2	1	00034fc0-00034fd2
+00034fe0	lockc	18	2	1	00034fe0-00034ff2
+00035000	bitalloc	42	0	2	00035000-0003502a
+00035030	istream	131	1	1	00035030-000350b3
+000350c0	`scalar_deleting_destructor'	55	0	2	000350c0-000350f7
+00035100	`vbase_destructor'	33	1	2	00035100-00035121
+00035130	istream	196	5	2	00035130-000351f4
+00035200	istream	213	0	3	00035200-000352d5
+000352e0	~istream	31	7	0	000352e0-000352ff
+00035300	operator=	313	0	7	00035300-00035439
+00035440	ipfx	351	3	7	00035440-0003559f
+000355a0	lockbuf	16	6	1	000355a0-000355b0
+000355b0	operator>>	364	0	5	000355b0-0003571c
+00035720	peek	70	0	3	00035720-00035766
+00035770	putback	141	0	5	00035770-000357fd
+00035800	sputbackc	88	2	1	00035800-00035858
+00035860	IsEmpty	25	1	0	00035860-00035879
+00035880	sync	137	0	3	00035880-00035909
+00035910	eatwhite	166	1	6	00035910-000359b6
+000359c0	istream_withassign	133	0	2	000359c0-00035a45
+00035a50	`scalar_deleting_destructor'	55	0	2	00035a50-00035a87
+00035a90	`vbase_destructor'	33	1	2	00035a90-00035ab1
+00035ac0	istream_withassign	137	0	2	00035ac0-00035b49
+00035b50	FID_conflict:~ifstream	39	1	1	00035b50-00035b77
+00035b80	attach	162	1	7	00035b80-00035c22
+00035c30	open	604	2	9	00035c30-00035e8c
+00035e90	setmode	117	0	3	00035e90-00035f05
+00035f10	streambuf	160	3	2	00035f10-00035fb0
+00035fb0	`scalar_deleting_destructor'	46	0	2	00035fb0-00035fde
+00035fe0	streambuf	205	0	2	00035fe0-000360ad
+000360b0	~streambuf	86	4	4	000360b0-00036106
+00036110	setbuf	84	0	0	00036110-00036164
+00036170	xsputn	142	0	0	00036170-000361fe
+00036200	xsgetn	313	0	3	00036200-00036339
+00036340	sync	48	1	1	00036340-00036370
+00036370	allocate	59	2	0	00036370-000363ab
+000363b0	doallocate	87	0	2	000363b0-00036407
+00036410	setb	81	4	1	00036410-00036461
+00036470	FUN_10036470	16	0	0	00036470-00036480
+00036480	seekpos	34	0	0	00036480-000364a2
+000364b0	pbackfail	171	0	6	000364b0-0003655b
+00036560	eback	17	1	0	00036560-00036571
+00036580	snextc	170	1	2	00036580-0003662a
+00036630	sbumpc	141	0	2	00036630-000366bd
+000366c0	stossc	126	2	2	000366c0-0003673e
+00036740	sgetc	65	4	0	00036740-00036781
+00036790	opfx	169	1	4	00036790-00036839
+00036840	osfx	279	1	3	00036840-00036957
+00036960	operator<<	53	0	3	00036960-00036995
+000369a0	flush	167	2	4	000369a0-00036a47
+00036a50	ostream	88	1	1	00036a50-00036aa8
+00036ab0	`scalar_deleting_destructor'	55	0	2	00036ab0-00036ae7
+00036af0	`vbase_destructor'	33	1	2	00036af0-00036b11
+00036b20	ostream	153	1	2	00036b20-00036bb9
+00036bc0	ostream	170	0	3	00036bc0-00036c6a
+00036c70	~ostream	31	2	0	00036c70-00036c8f
+00036c90	operator=	270	0	7	00036c90-00036d9e
+00036da0	ostream_withassign	133	0	2	00036da0-00036e25
+00036e30	`scalar_deleting_destructor'	55	0	2	00036e30-00036e67
+00036e70	`vbase_destructor'	33	1	2	00036e70-00036e91
+00036ea0	ostream_withassign	137	0	2	00036ea0-00036f29
+00036f30	~ostream_withassign	39	1	1	00036f30-00036f57
+00036f60	writepad	598	1	3	00036f60-000371b6
+000371c0	sputn	32	1	0	000371c0-000371e0
+000371f2	KERNEL32.DLL::RtlUnwind	6	2	0	000371f2-000371f8
+000373c0	~type_info	64	1	3	000373c0-00037400
+00037400	`scalar_deleting_destructor'	46	0	2	00037400-0003742e
+00037430	type_info::operator==	40	0	1	00037430-00037458
+00037460	type_info::operator!=	41	0	1	00037460-00037489
+00037490	type_info::before	44	0	1	00037490-000374bc
+000374c0	FUN_100374c0	17	0	0	000374c0-000374d1
+000374e0	FUN_100374e0	25	0	0	000374e0-000374f9
+00037500	FUN_10037500	16	0	0	00037500-00037510
+00037510	operator_new	31	7	1	00037510-0003752f
+00037530	_isalpha	65	0	1	00037530-00037571
+00037580	_isupper	60	0	1	00037580-000375bc
+000375c0	_islower	60	0	1	000375c0-000375fc
+00037600	_isdigit	60	0	1	00037600-0003763c
+00037640	_isxdigit	65	0	1	00037640-00037681
+00037690	_isspace	60	2	1	00037690-000376cc
+000376d0	_ispunct	60	0	1	000376d0-0003770c
+00037710	_isalnum	65	0	1	00037710-00037751
+00037760	_isprint	65	0	1	00037760-000377a1
+000377b0	_isgraph	65	0	1	000377b0-000377f1
+00037800	_iscntrl	60	0	1	00037800-0003783c
+00037840	FUN_10037840	16	0	0	00037840-00037850
+00037850	FUN_10037850	11	0	0	00037850-0003785b
+00037860	___iscsymf	95	0	1	00037860-000378bf
+000378c0	___iscsym	95	0	1	000378c0-0003791f
+00037920	FUN_10037920	15	0	1	00037920-0003792f
+00037930	ios::unlock	67	0	3	00037930-00037973
+00037c80	normalize	139	0	2	00037c80-00037d0b
+000380a0	Terrain::reloadTextures	244	0	2	000380a0-00038194
+000381a0	Terrain::drawTile	1877	0	13	000381a0-000388f5
+00038900	Terrain::lowerEdge	1638	0	18	00038900-00038f66
+000410b0	Unwind@100410b0	30	0	1	000410b0-000410ce
+000410ce	Unwind@100410ce	15	0	1	000410ce-000410dd
+00041100	Unwind@10041100	30	0	1	00041100-0004111e
+0004111e	Unwind@1004111e	15	0	1	0004111e-0004112d
+00041150	Unwind@10041150	11	0	1	00041150-0004115b
+00041170	Unwind@10041170	12	0	1	00041170-0004117c
+00041190	Unwind@10041190	12	0	1	00041190-0004119c
+000411b0	Unwind@100411b0	12	0	1	000411b0-000411bc
+000411d0	Unwind@100411d0	26	0	1	000411d0-000411ea
+000411ea	Unwind@100411ea	22	0	1	000411ea-00041200
+00041200	Unwind@10041200	12	0	1	00041200-0004120c
+00041220	Unwind@10041220	26	0	1	00041220-0004123a
+0004123a	Unwind@1004123a	22	0	1	0004123a-00041250
+00041250	Unwind@10041250	12	0	1	00041250-0004125c
+00041270	Unwind@10041270	26	0	1	00041270-0004128a
+0004128a	Unwind@1004128a	22	0	1	0004128a-000412a0
+000412a0	Unwind@100412a0	12	0	1	000412a0-000412ac
+000412c0	Unwind@100412c0	26	0	1	000412c0-000412da
+000412da	Unwind@100412da	22	0	1	000412da-000412f0
+000412f0	Unwind@100412f0	12	0	1	000412f0-000412fc
+00041310	Unwind@10041310	9	0	1	00041310-00041319
+00041330	Unwind@10041330	9	0	1	00041330-00041339
+00041350	Unwind@10041350	26	0	1	00041350-0004136a
+00041380	Unwind@10041380	26	0	1	00041380-0004139a
+000413b0	Unwind@100413b0	9	0	1	000413b0-000413b9
+000413d0	Unwind@100413d0	26	0	1	000413d0-000413ea
+00041400	Unwind@10041400	26	0	1	00041400-0004141a
+00041430	Unwind@10041430	26	0	1	00041430-0004144a
+00041460	Unwind@10041460	26	0	1	00041460-0004147a
+00041490	Unwind@10041490	9	0	1	00041490-00041499
+000414b0	Unwind@100414b0	26	0	1	000414b0-000414ca
+000414e0	Unwind@100414e0	26	0	1	000414e0-000414fa

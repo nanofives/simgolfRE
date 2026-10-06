@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 45 bytes, 12 instructions, subsystem `sim`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 clears records matching a key (`re/names/exe_0.tsv`)
 
+## Purpose
+Expires matching messages: for each of the 8 ring slots whose 0x0056c770 entry equals a and 0x0056c794 entry equals b, zeroes the lifetime in 0x0056a924 (0x0040c860). Reimplemented in `shim/src/re/golf_writers.cpp`; path-1 A/B with state comparison over 20 (a, b) pairs on a seeded ring (6 of them clear at least one slot) is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small4.cpp` as `?clearMatching@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c88c): callee pops 0 bytes of stack arguments.

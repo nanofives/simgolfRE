@@ -56,7 +56,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x48]` at 0x1002ae55
 
 ## Callers
-0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002deb0 `FUN_1002deb0`
+0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002deb0 `SubChannel_openSourceType2`
 
 ## Constants
 - `0x1` at 0x1002ade1, 0x1002adf9, 0x1002ae38, 0x1002ae3c, 0x1002ae51

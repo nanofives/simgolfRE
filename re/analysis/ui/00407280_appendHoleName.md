@@ -37,7 +37,7 @@ Through registers:
 - 0x004ad425 `__itoa` at 0x0040730a
 
 ## Callers
-0x00407e00 `narrateShot`, 0x0042dea0 `holeMagazineEvent`, 0x0044fb30 `showCourseReport`, 0x00453330 `showHoleStatsScreen`, 0x00469b00 `buildGolferComment`
+0x00407e00 `narrateShot`, 0x0040f5c0 `mainLoop`, 0x0042dea0 `holeMagazineEvent`, 0x0044fb30 `showCourseReport`, 0x00453330 `showHoleStatsScreen`, 0x00469b00 `buildGolferComment`
 
 ## Constants
 - `0x2` at 0x004072fd, 0x00407330

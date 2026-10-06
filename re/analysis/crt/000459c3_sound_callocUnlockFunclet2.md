@@ -20,7 +20,7 @@ None.
 - 0x10047771 `_unlock` at 0x100459c5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x100458a1 `calloc`
 
 ## Constants
 - `0x9` at 0x100459c3

@@ -21,11 +21,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000b92a
 
 ## Callees
-- 0x10001267 -> 0x1000bae0 `FUN_1000bae0` (incremental-linking thunk) at 0x1000b933
+- 0x10001267 -> 0x1000bae0 `std::_Allocate` (incremental-linking thunk) at 0x1000b933
 - 0x100180a0 `__chkesp` at 0x1000b943
 
 ## Callers
-0x1000b500 `FUN_1000b500`
+0x1000b500 `std::list(TileP)::_Buynode`
 
 ## Constants
 - `0x0` at 0x1000b92d

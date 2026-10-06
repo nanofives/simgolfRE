@@ -45,7 +45,7 @@ Through registers:
 - 0x00480c80 `Window::refreshFull` at 0x0043313e
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x0` at 0x0043313c, 0x00433143, 0x00433170

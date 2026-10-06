@@ -29,9 +29,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x10001b15
 
 ## Callees
-- 0x1000122b -> 0x100076e0 `FUN_100076e0` (incremental-linking thunk) at 0x10001b33
-- 0x100012ee -> 0x100380a0 `FUN_100380a0` (incremental-linking thunk) at 0x10001b2b
-- 0x1000130c -> 0x10003980 `FUN_10003980` (incremental-linking thunk) at 0x10001b23
+- 0x1000122b -> 0x100076e0 `Terrain::relight` (incremental-linking thunk) at 0x10001b33
+- 0x100012ee -> 0x100380a0 `Terrain::reloadTextures` (incremental-linking thunk) at 0x10001b2b
+- 0x1000130c -> 0x10003980 `Terrain::rebuild` (incremental-linking thunk) at 0x10001b23
 - 0x100180a0 `__chkesp` at 0x10001b40
 
 ## Callers

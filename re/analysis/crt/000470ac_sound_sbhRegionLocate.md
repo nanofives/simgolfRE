@@ -33,7 +33,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10042c07 `free`, 0x10045252 `crtRealloc`, 0x10045581 `msize`
 
 ## Constants
 - `0x4` at 0x100470f7

@@ -30,7 +30,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1003a080 `FUN_1003a080`
+0x1003a080 `MultiSound_setVoiceBit1On`
 
 ## Constants
 - `0x1` at 0x100377f3, 0x100377fc, 0x10037805, 0x1003782b

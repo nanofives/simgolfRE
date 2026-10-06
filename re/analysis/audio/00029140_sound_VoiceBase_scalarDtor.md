@@ -22,7 +22,7 @@ None.
 - `je` (equality) at 0x1002914d
 
 ## Callees
-- 0x10001dac -> 0x10029200 `FUN_10029200` (incremental-linking thunk) at 0x10029143
+- 0x10001dac -> 0x10029200 `VoiceBase_dtor` (incremental-linking thunk) at 0x10029143
 - 0x1004249a `operator_delete` at 0x10029150
 
 ## Callers

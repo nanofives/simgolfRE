@@ -24,7 +24,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000a130 `FUN_1000a130`, 0x1000d540 `FUN_1000d540`, 0x1000de60 `FUN_1000de60`, 0x10011ef0 `FUN_10011ef0`, 0x10014190 `FUN_10014190`, 0x100149e0 `FUN_100149e0`
+0x1000a130 `Terrain::buildArrays`, 0x1000d540 `FUN_1000d540`, 0x1000de60 `FUN_1000de60`, 0x10011ef0 `Tile::smoothNormals`, 0x10014190 `FUN_10014190`, 0x100149e0 `FUN_100149e0`
 
 ## Constants
 - `0x11` (17) at 0x100153cd

@@ -52,7 +52,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax]` at 0x1002ef75
 
 ## Callers
-0x1002ef10 `FUN_1002ef10`, 0x10030180 `Sound5c450_dtor`, 0x100590f0 `Unwind@100590f0`, 0x10059120 `Unwind@10059120`
+0x1002ef10 `Ch5c234_scalarDtor`, 0x10030180 `Sound5c450_dtor`, 0x100590f0 `Unwind@100590f0`, 0x10059120 `Unwind@10059120`
 
 ## Constants
 - `0x1` at 0x1002ef73, 0x1002ef96

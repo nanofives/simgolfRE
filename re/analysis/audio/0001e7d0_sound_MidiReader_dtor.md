@@ -33,7 +33,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `je` (equality) at 0x1001e800, 0x1001e806
 
 ## Callees
-- 0x100018ca -> 0x1001b870 `FUN_1001b870` (incremental-linking thunk) at 0x1001e822
+- 0x100018ca -> 0x1001b870 `MidiReader_freeContent` (incremental-linking thunk) at 0x1001e822
 - 0x1004249a `operator_delete` at 0x1001e809
 
 ## Callers

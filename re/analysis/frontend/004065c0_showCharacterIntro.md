@@ -35,7 +35,7 @@ Through registers:
 - 0x0045f0f0 `skillPointDialog` at 0x0040665f
 
 ## Callers
-0x0040f190 `customizeCharacter`, 0x0040f5c0 `mainLoop`
+0x0040f190 `customizeCharacter`
 
 ## Constants
 - `0x0` at 0x0040661e, 0x00406658

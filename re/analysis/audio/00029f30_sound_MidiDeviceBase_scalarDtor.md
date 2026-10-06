@@ -22,7 +22,7 @@ None.
 - `je` (equality) at 0x10029f3d
 
 ## Callees
-- 0x10001b22 -> 0x10029f60 `FUN_10029f60` (incremental-linking thunk) at 0x10029f33
+- 0x10001b22 -> 0x10029f60 `DeviceBase_dtorB` (incremental-linking thunk) at 0x10029f33
 - 0x1004249a `operator_delete` at 0x10029f40
 
 ## Callers

@@ -30,7 +30,7 @@ None.
 - indirect `call [ecx+0x24]` at 0x10010e46
 
 ## Callers
-0x10007010 `writeWaveFile`, 0x100075e0 `writeWaveFileB`, 0x100124c0 `DirectSoundDevice::freeIdleBuffer`, 0x10012690 `DirectSoundDevice::freeBufferById`, 0x100128b0 `DirectSoundDevice::acquireBuffer`, 0x10012d10 `DirectSoundDevice::createBuffer`, 0x10012fe0 `DirectSoundDevice::createBufferFmt`, 0x10034430 `serviceChannelPlayback`, 0x10035f80 `FUN_10035f80`
+0x10007010 `writeWaveFile`, 0x100075e0 `writeWaveFileB`, 0x100124c0 `DirectSoundDevice::freeIdleBuffer`, 0x10012690 `DirectSoundDevice::freeBufferById`, 0x100128b0 `DirectSoundDevice::acquireBuffer`, 0x10012d10 `DirectSoundDevice::createBuffer`, 0x10012fe0 `DirectSoundDevice::createBufferFmt`, 0x10034430 `serviceChannelPlayback`, 0x10035f80 `Channel_serviceBuffer`
 
 ## Constants
 - `0x1` at 0x10010e50, 0x10010e5d

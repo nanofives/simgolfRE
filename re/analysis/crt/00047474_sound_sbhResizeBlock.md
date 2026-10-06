@@ -50,7 +50,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10045252 `crtRealloc`
 
 ## Constants
 - `0x0` at 0x10047487, 0x100474c7, 0x100474f5, 0x10047500

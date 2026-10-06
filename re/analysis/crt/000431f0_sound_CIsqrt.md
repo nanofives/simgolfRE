@@ -18,7 +18,7 @@ None.
 
 ## Callees
 - 0x1004320d `sqrt_classify` at 0x100431fb
-- 0x10048268 `FUN_10048268` at 0x100431f6
+- 0x10048268 `doubleExponentField` at 0x100431f6
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

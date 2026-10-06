@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10005990 `?render@Terrain@@QAE_NPAVTile@@M@Z`, 0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x10006850 `FUN_10006850`, 0x10007380 `FUN_10007380`, 0x100089e0 `?localRender@Terrain@@QAEXPAVTile@@0M@Z`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`, 0x1000a740 `?calcAllNormals@Terrain@@QAEXPAVTile@@@Z`, 0x100381a0 `FUN_100381a0`, 0x10038900 `FUN_10038900`
+0x10005990 `Terrain::render`, 0x10006410 `Terrain::pathUpdateRender`, 0x10006850 `Terrain::isCulled`, 0x10007380 `Terrain::drawTileObjects`, 0x100089e0 `Terrain::localRender`, 0x10009270 `Terrain::stripRender`, 0x1000a740 `Terrain::calcAllNormals`, 0x100381a0 `Terrain::drawTile`, 0x10038900 `Terrain::lowerEdge`
 
 ## Constants
 - `0x11` (17) at 0x1000596d

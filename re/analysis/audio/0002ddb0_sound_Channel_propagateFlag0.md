@@ -26,10 +26,10 @@ Through registers:
 - `je` (equality) at 0x1002ddca
 
 ## Callees
-- 0x10002153 -> 0x1002ddb0 `FUN_1002ddb0` (incremental-linking thunk) at 0x1002ddcd
+- 0x10002153 -> 0x1002ddb0 `Channel_propagateFlag0` (incremental-linking thunk) at 0x1002ddcd
 
 ## Callers
-0x1002ddb0 `FUN_1002ddb0`
+0x1002ddb0 `Channel_propagateFlag0`
 
 ## Constants
 - `0x1` at 0x1002ddbc

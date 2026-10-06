@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 62 bytes, 15 instructions, subsystem `golfer`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 resets a golfer record to defaults (`re/names/exe_0.tsv`)
 
+## Purpose
+Resets golfer g: zeroes the bytes at 0x005794d5, 0x005794d9 and 0x005794da + g*0x100, then marks as free (word +0 = 0xffff) every entry of the 100-entry, 8-byte queue at 0x005689e8 whose word +4 equals the golfer's type word (0x0057956e + g*0x100) (0x00426670). Reimplemented in `shim/src/re/golf_writers.cpp`; path-1 A/B with state comparison over 16 golfers on a seeded queue is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small6.cpp` as `?resetGolfer426670@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004266ad): callee pops 0 bytes of stack arguments.

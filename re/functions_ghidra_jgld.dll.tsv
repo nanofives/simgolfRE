@@ -1,1570 +1,1570 @@
-entry	name	size	callers	callees
-00001005	MappedFile::ctor	5	3	0
-0000100a	onKey	5	1	0
-00001014	Font::release	5	1	0
-00001019	rectFromXYWH	5	77	0
-0000101e	Font::Font	5	1	0
-00001028	realizePalette	5	3	0
-0000102d	blueOf	5	3	0
-0000103c	Vector3::negate	5	1	0
-00001046	Sprite::draw16_1003dca0	5	1	0
-00001055	Array_Rec14::ctor	5	1	0
-0000105a	Surface::fill2_8	5	1	0
-0000105f	LinkedList::count	5	1	0
-0000106e	Sprite::draw16_1004ca10	5	1	0
-0000107d	Surface::dashedHLine8	5	1	0
-00001087	intersect	5	79	0
-0000108c	FontBase::~FontBase	5	4	0
-00001091	Random::next	5	1	0
-00001096	Palette::update	5	2	0
-000010a0	Sprite::blitMask	5	2	0
-000010aa	Surface::release	5	1	0
-000010af	Sprite::draw8_10061db0	5	1	0
-000010b4	Sprite::blitPair	5	1	0
-000010be	Surface::vline	5	1	0
-000010d7	Surface::dashedVLine8	5	1	0
-000010e6	Sprite::draw16_100358b0	5	1	0
-000010f5	onWmNcHitTest	5	1	0
-000010fa	Sprite::draw16_10040930	5	1	0
-00001113	Matrix::setRotation	5	2	0
-00001118	Sprite::getFlag18	5	17	0
-00001136	Sprite::draw16_10054e20	5	1	0
-0000113b	Matrix::copyCtor	5	3	0
-0000114a	Sprite::draw16_100298b0	5	1	0
-0000114f	LinkedList::add	5	1	0
-00001154	Sprite::draw16_10049ea0	5	1	0
-00001159	DisplayBase::dtor	5	3	0
-0000115e	Surface::ditherBlendRect16	5	1	0
-00001168	Sprite::draw16_1001cde0	5	1	0
-0000116d	Array_Rec14::reset	5	1	0
-00001186	Surface::blitT_8to16	5	1	0
-0000119a	Matrix::dtor	5	12	0
-0000119f	Array_Rec14::add	5	1	0
-000011a4	Vector3::cross	5	2	0
-000011a9	Sprite::draw16_1003b060	5	1	0
-000011ae	setField28	5	2	0
-000011c7	DllMain	5	1	0
-000011d1	onWmMouseWheel	5	1	0
-000011ea	Sprite::draw16_1002ed60	5	1	0
-000011f4	Surface::fillRectC8	5	1	0
-000011f9	storeCommandHandler	5	1	0
-00001203	Quat::conjugate	5	2	0
-00001217	initFontTable	5	2	0
-0000121c	Quat::setAxisAngle	5	5	0
-00001221	Sprite::draw_1001f2d0	5	1	0
-0000122b	thunk_FUN_10069270	5	1	0
-0000123a	LinkedList::removeCurrent	5	1	0
-00001249	Surface::line16	5	1	0
-00001258	Surface::dashedLine16	5	1	0
-0000125d	Surface::dtor	5	1	0
-00001262	Sprite::draw16_1004dff0	5	1	0
-0000126c	Sprite::draw16_10043430	5	1	0
-00001276	Sprite::draw16_10036e60	5	1	0
-0000127b	Sprite::remap8	5	1	0
-00001280	onActivate	5	1	0
-0000129e	deleteLogPalette	5	2	0
-000012b2	Surface::dashedVLine16	5	1	0
-000012c1	MappedFile::dtor	5	5	0
-000012cb	Surface::getField810	5	1	0
-000012f3	Sprite::draw16_1004b430	5	1	0
-000012f8	Sprite::draw8_10063f60	5	1	0
-0000132f	onWmRButtonDown	5	1	0
-0000133e	Vector3::add	5	2	0
-00001343	Transform::setTranslation	5	1	0
-00001352	onPaint	5	1	0
-00001370	Surface::line8	5	1	0
-00001375	Array_Rec94::add	5	1	0
-0000137f	Vector3::addXYZ	5	1	0
-00001384	Sprite::draw16_10045e50	5	1	0
-00001389	Sprite::draw16_1004f5d0	5	1	0
-0000139d	Sprite::draw16_100576a0	5	1	0
-000013a2	Sprite::blitMaskScaled	5	1	0
-000013a7	LinkedList::ctor	5	1	0
-000013ac	Array_Rec14::count	5	3	0
-000013b1	redOf	5	3	0
-000013c0	Palette::toRGBQuads	5	1	0
-000013cf	Array_e0::clearRet	5	1	0
-000013d9	Sprite::draw16_10039a60	5	1	0
-000013de	Surface::fillRect16	5	1	0
-000013e3	Tracked::ctor	5	4	0
-000013e8	Quat::ctor	5	11	0
-000013f7	Display::Display	5	1	0
-00001401	Sprite::draw8_10060cf0	5	1	0
-0000140b	Sprite::draw16m_1001df80	5	1	0
-0000141f	thunk_FUN_1001b590	5	1	0
-0000142e	Sprite::drawRle16b	5	1	0
-00001438	Vector3::scale	5	2	0
-00001451	Palette::reset	5	1	0
-00001460	Sprite::draw16_10050bb0	5	1	0
-0000146a	Sprite::drawRle16p	5	1	0
-0000147e	Surface::fill8	5	1	0
-00001488	Vector3::addAssignRet	5	6	0
-00001492	SurfaceBase::ctor	5	2	0
-0000149c	SurfaceBase::dtor	5	5	0
-000014bf	Sprite::draw16_10027430	5	1	0
-000014c4	Sprite::draw16_10026240	5	1	0
-000014d3	Sprite::draw16_100473b0	5	1	0
-000014dd	initDepthInfo	5	2	0
-000014e2	Transform::copyCtor	5	4	0
-000014e7	thunk_FUN_1006afc0	5	1	0
-000014f6	onPaletteChanged	5	1	0
-00001500	LinkedList::clear	5	1	0
-00001505	Sprite::draw16_10032d60	5	1	0
-0000150a	Sprite::draw16_1003c660	5	1	0
-0000150f	Array_Rec94::dtor	5	2	0
-00001514	Sprite::drawRle16t	5	1	0
-0000152d	Surface::clear8	5	1	0
-00001532	Transform::set	5	1	0
-00001537	Surface::blendRect16	5	1	0
-0000153c	Array_Rec94::ctor	5	1	0
-0000154b	Random::ctor	5	2	0
-00001555	PaletteBase::ctor	5	1	0
-0000155a	thunk_FUN_1001a6b0	5	1	0
-0000156e	Surface::blitT_16to16	5	1	0
-0000157d	MappedFile::openWrite	5	2	0
-00001582	makeColor	5	5	0
-0000159b	Sprite::draw_10062dd0	5	1	0
-000015b4	Sprite::drawRle16n	5	1	0
-000015be	Sprite::create16	5	1	0
-000015c3	Sprite::release	5	1	0
-000015d2	Surface::fill16	5	1	0
-000015eb	Sprite::draw8_1005fd20	5	1	0
-000015f5	Surface::hline	5	1	0
-00001609	Array_Rec94::count	5	1	0
-0000160e	Array_Rec94::reset	5	1	0
-00001613	thunk_FUN_1001b650	5	1	0
-0000161d	Surface::blit16from16	5	1	0
-00001627	Sprite::draw16_10038460	5	1	0
-0000164a	ListNode::dtor	5	1	0
-00001659	initFonts	5	1	0
-0000165e	ListNode::ctor	5	1	0
-00001663	thunk_FUN_1001b5d0	5	1	0
-00001668	Sprite::draw16_100317c0	5	1	0
-00001672	Vector3::subAssignRet	5	2	0
-00001681	Sprite::draw16_10048910	5	1	0
-0000168b	Sprite::draw16_1002d890	5	1	0
-000016ae	thunk_FUN_10065670	5	1	0
-000016b3	Surface::dashedHLine16	5	1	0
-000016bd	Array_Rec14::dtor	5	2	0
-000016c2	Transform::dtor	5	15	0
-000016cc	Sprite::draw_1005ed80	5	1	0
-000016d6	equal	5	3	0
-000016db	Matrix::loadIdentity	5	4	0
-000016e0	onWmLButtonDown	5	1	0
-000016e5	Sprite::draw16_10030290	5	1	0
-000016f4	Random::range	5	1	0
-000016f9	Sprite::draw16_100537f0	5	1	0
-000016fe	Sprite::draw_1005dde0	5	1	0
-00001703	Transform::assignOp	5	5	0
-00001708	onCommand	5	1	0
-0000172b	Sprite::draw16_1003f2e0	5	1	0
-00001735	Sprite::dtor	5	5	0
-0000173a	rectHeight	5	6	0
-00001744	Sprite::draw_1002ab90	5	1	0
-0000174e	greenOf	5	3	0
-0000175d	Surface::blit8from8	5	1	0
-00001771	Array_e0::dtor	5	2	0
-00001780	get_graphsy_object_ptr	5	0	0
-00001794	rectWidth	5	6	0
-00001799	Sprite::draw16_100521d0	5	1	0
-0000179e	Palette::~Palette	5	1	0
-000017a8	Array_e0::ctor	5	1	0
-000017b2	Sprite::drawG	5	1	0
-000017b7	jfree	5	7	0
-000017bc	MappedFile::create	5	1	0
-000017c1	SpriteBase::ctor	5	2	0
-000017c6	jalloc	5	6	0
-000017cb	Sprite::draw16_10034300	5	1	0
-000017d0	Surface::ctorOwner	5	1	0
-000017df	SpriteBase::~SpriteBase	5	3	0
-000017e9	Transform::reset	5	3	0
-000017f3	Surface::blitT_8to8	5	1	0
-000017f8	Matrix::ctor	5	4	0
-000017fd	Sprite::draw16_10028630	5	1	0
-00001802	Sprite::draw16_10044940	5	1	0
-00001807	thunk_FUN_1001b610	5	1	0
-0000180c	Font::~Font	5	1	0
-00001811	Transform::ctor	5	5	0
-00001825	Sprite::create8	5	1	0
-0000182f	Sprite::drawRle16mk	5	1	0
-00001843	onChar	5	1	0
-00001884	Vector3::mulScalar	5	2	0
-00001889	Sprite::draw16_10022a10	5	1	0
-00001898	FontBase::FontBase	5	1	0
-0000189d	setRect4	5	1	0
-000018ac	Sprite::blitPair1	5	1	0
-000018b6	fillWords	5	2	0
-000018bb	MappedFile::close	5	5	0
-000018c0	thunk_FUN_100052b0	5	1	0
-000018d4	Matrix::setRotationTranslation	5	1	0
-000018de	Sprite::ctorN	5	3	0
-000018f7	onWmRButtonUp	5	1	0
-000018fc	Palette::apply	5	1	0
-00001901	Surface::dashedLine8	5	1	0
-00001906	LinkedList::find	5	1	0
-00001915	Sprite::draw16t_1001b060	5	1	0
-0000191a	Palette::ctor	5	1	0
-0000191f	Array_Rec94::clearRet	5	1	0
-00001924	Quat::setIdentity	5	1	0
-00001933	onWmSize	5	1	0
-00001947	onWmLButtonUp	5	1	0
-0000194c	Array_Rec14::clear	5	2	0
-00001951	Surface::ditherRectC8	5	1	0
-0000195b	Tracked::dtor	5	6	0
-00001960	Vector3::set	5	7	0
-00001979	LinkedList::dtor	5	2	0
-0000197e	Sprite::draw_1002bcf0	5	1	0
-00001983	Quat::mulAssign	5	5	0
-000019a1	Surface::blitKey8to16	5	1	0
-000019b0	PaletteBase::dtor	5	3	0
-000019b5	Sprite::drawRle16m	5	1	0
-000019ba	Array_Rec94::clear	5	2	0
-000019ce	Array_Rec14::clearRet	5	1	0
-000019d3	createPalette	5	1	0
-000019d8	Surface::hline16	5	1	0
-000019dd	thunk_FUN_10065630	5	1	0
-000019f1	Array_e0::clear	5	2	0
-00001a0a	Sprite::drawRle16c	5	1	0
-00001a0f	Vector3::rotate	5	7	0
-00001a1e	Transform::setRotation	5	1	0
-00001a23	Surface::clear16	5	1	0
-00001a28	Surface::vline16	5	1	0
-00001a37	Matrix::setTranslation	5	2	0
-00001a50	Sprite::draw16_1001bc40	5	1	0
-00001a55	Vector3::mulAssignScalar	5	1	0
-00001a5a	Sprite::drawB	5	1	0
-00001a64	Vector3::dot	5	2	0
-00001a69	Sprite::draw16_10056450	5	1	0
-00001a6e	Surface::writePcx8	5	1	0
-00001a78	Sprite::draw16m_1001e970	5	1	0
-00001a82	Sprite::draw16t_1001ab40	5	1	0
-00001a96	Surface::ditherRect16	5	1	0
-00001aaf	Tracked::deleteAll	5	1	0
-00001abe	Sprite::draw16_10041f80	5	1	0
-00001ad2	Sprite::draw16_10024140	5	1	0
-00001adc	Quat::mul	5	2	0
-00001aeb	MappedFile::closeTruncate	5	1	0
-00001af5	Matrix::assign	5	1	0
-00001b09	onWmMouseMove	5	1	0
-00001b0e	Sprite::draw16_10020430	5	1	0
-00002650	MappedFile::ctor	78	0	0
-000026c0	MappedFile::deletingDtor	81	0	3
-00002730	MappedFile::ctorNameFlag	92	0	4
-000027b0	MappedFile::ctorName	90	0	4
-00002820	MappedFile::dtor	63	0	2
-00002870	MappedFile::openRead	341	0	7
-00002a20	MappedFile::openWrite	344	0	7
-00002bd0	MappedFile::create	458	0	9
-00002e10	MappedFile::close	169	0	3
-00002ef0	MappedFile::closeTruncate	274	0	6
-00003050	Quat::ctor	73	0	2
-000030b0	Quat::copyFrom	75	0	0
-00003110	Quat::ctorAxisAngle	67	0	2
-00003170	Quat::setIdentity	70	0	2
-000031d0	Matrix::ctorQuatVec	76	0	2
-00003230	Matrix::ctorQuat	72	0	2
-00003290	Matrix::ctorVec	72	0	2
-000032f0	Matrix::dtor	63	0	2
-00003340	Matrix::reset	54	0	2
-00003390	Transform::ctorQuatVec	87	0	3
-00003400	Transform::ctorQuat	83	0	3
-00003470	Transform::ctorVec	83	0	3
-000034e0	Transform::dtor	63	0	2
-00003530	Transform::assign	94	0	0
-000035b0	FUN_100035b0	54	0	2
-00003600	Matrix::deletingDtor	81	0	3
-00003670	Transform::deletingDtor	81	0	3
-000036e0	Vector3::set	64	0	0
-00003730	Vector3::setZero	65	0	0
-00003790	Vector3::add	112	0	0
-00003820	Vector3::sub	112	0	0
-000038b0	Vector3::addAssignRet	94	0	0
-00003930	Vector3::subAssignRet	94	0	0
-000039b0	Vector3::mulScalar	106	0	0
-00003a40	Vector3::mulAssignScalar	88	0	0
-00003ab0	Vector3::equals	99	0	0
-00003b30	Vector3::distance	154	0	2
-00003bf0	Vector3::distance2	118	0	0
-00003c90	Vector3::dot	76	0	0
-00003cf0	Vector3::normalize	194	0	2
-00003df0	Vector3::negate	76	0	0
-00003e50	Vector3::cross	146	0	0
-00003f10	Vector3::scale	85	0	0
-00003f80	Vector3::midpoint	125	0	0
-00004020	Vector3::addXYZ	81	0	0
-00004090	Vector3::addAssign	89	0	0
-00004100	Vector3::rotate	243	0	4
-00004230	Quat::setAxisAngle	146	0	4
-000042f0	Quat::mulAssign	222	0	6
-00004410	Quat::mul	222	0	6
-00004530	Quat::conjugate	76	0	0
-00004590	Matrix::ctor	66	0	2
-000045f0	Matrix::loadIdentity	116	0	0
-00004690	Matrix::setRotationTranslation	72	0	3
-000046f0	Matrix::setTranslation	73	0	0
-00004750	Matrix::setRotation	312	0	0
-000048e0	Matrix::add	198	0	4
-000049e0	Matrix::scaleDiagonal	90	0	0
-00004a50	Matrix::mulAssign	496	0	4
-00004cc0	Matrix::addEquals	97	0	0
-00004d40	Matrix::subEquals	97	0	0
-00004dc0	Matrix::equals	97	0	0
-00004e40	Matrix::mulPoint	205	0	0
-00004f40	Matrix::mulScalar	192	0	4
-00005030	Matrix::mulMatrix	503	0	4
-000052b0	FUN_100052b0	57	0	2
-00005300	FUN_10005300	39	0	0
-00005330	FUN_10005330	39	0	0
-00005360	Matrix::translateVec	94	0	0
-000053e0	Matrix::translateXYZ	86	0	0
-00005450	Transform::ctor	77	0	3
-000054b0	Transform::setTranslation	94	0	2
-00005530	Transform::setRotation	106	0	2
-000055c0	Transform::set	104	0	0
-00005650	Transform::reset	46	0	0
-00005690	Transform::getMatrix	401	0	2
-00005890	Transform::addVector3	200	0	6
-00005990	Transform::translateVec	121	0	2
-00005a30	Transform::subVector3	200	0	6
-00005b30	Transform::untranslate	121	0	2
-00005bd0	Transform::translateXYZ	126	0	3
-00005c70	Transform::move	121	0	2
-00005d10	Transform::apply	147	0	3
-00005dd0	Transform::mulTransform	429	0	8
-00005ff0	Transform::scaled	171	0	6
-000060d0	Transform::mulAssignTransform	329	0	7
-00006270	Transform::scaleTranslation	79	0	2
-000062e0	Transform::invert	68	0	3
-00006340	Transform::rotate	178	0	5
-00006420	Transform::rotateX	195	0	6
-00006520	Transform::rotateY	195	0	6
-00006620	Transform::rotateZ	195	0	6
-00006720	Matrix::copyCtor	88	0	0
-00006790	Matrix::assign	133	0	0
-00006840	Transform::assignOp	115	0	0
-000068d0	Transform::copyCtor	124	0	0
-00006970	FUN_10006970	51	0	3
-000069b0	FUN_100069b0	51	1	2
-000069f0	FUN_100069f0	54	1	2
-00006a40	atexitDestroyGlobalList	80	0	2
-00006ab0	Tracked::ctor	74	0	2
-00006b10	Tracked::deletingDtor	81	0	3
-00006b80	Tracked::dtor	79	0	3
-00006bf0	Tracked::deleteAll	110	0	2
-00006c80	LinkedList::ctor	78	0	0
-00006cf0	LinkedList::dtor	63	0	2
-00006d40	LinkedList::count	42	0	0
-00006d80	LinkedList::deletingDtor	81	0	3
-00006df0	LinkedList::clear	262	0	1
-00006f40	LinkedList::add	349	0	4
-00007100	LinkedList::removeCurrent	345	0	1
-000072b0	LinkedList::find	151	0	0
-00007370	ListNode::ctor	88	0	0
-000073e0	ListNode::deletingDtor	81	0	3
-00007450	ListNode::dtor	65	0	0
-000074b0	FUN_100074b0	46	0	2
-000074f0	FUN_100074f0	51	1	2
-00007530	Random::next	91	0	0
-000075b0	Random::range	81	0	3
-00007620	Random::ctor	48	0	0
-00007660	Surface::ctor	531	0	6
-00007900	Surface::deletingDtor	81	0	3
-00007970	Surface::ctorOwner	508	0	6
-00007bf0	Surface::dtor	166	0	4
-00007cc0	Surface::release	299	0	4
-00007e40	allocDrawBuffer	993	0	11
-00008360	rectFromXYWH	72	0	0
-000083c0	Surface::setClip	365	0	6
-00008590	intersect	68	0	2
-000085f0	equal	64	0	2
-00008640	Surface::acquireDC	84	0	0
-000086b0	Surface::releaseDC	97	0	0
-00008730	Surface::acquireDC2	96	0	0
-000087b0	Surface::releaseDC2	97	0	0
-00008830	Surface::pixelAddr	287	0	1
-000089d0	Surface::setPalette	213	0	4
-00008ae0	Surface::selectObject	129	0	2
-00008b90	Surface::selectSystemFont	130	0	3
-00008c40	Surface::setTextColorRGB	151	0	2
-00008d00	Surface::setTextColor16	128	0	2
-00008da0	Surface::textOut	130	0	2
-00008e50	Surface::blit	225	0	3
-00008f70	Surface::stretchTo	334	0	4
-00009120	rectWidth	42	0	0
-00009160	rectHeight	43	0	0
-000091a0	Surface::blitT	246	0	4
-000092e0	initDepthInfo	49	0	0
-00009320	Surface::fillRect	225	0	5
-00009440	Surface::fill2	127	0	2
-000094e0	Surface::drawLine	150	0	3
-000095a0	Surface::drawDashedLine	182	0	3
-00009690	SurfaceBase::ctor	66	0	2
-000096f0	SurfaceBase::dtor	63	0	2
-00009740	SurfaceBase::acquireDC_default	38	0	0
-00009770	Surface::fillRectDispatch	126	0	3
-00009810	SurfaceBase::releaseDC_default	38	0	0
-00009840	FUN_10009840	38	0	0
-00009870	SurfaceBase::blitT_default	43	0	0
-000098b0	SurfaceBase::fillRect_default	43	0	0
-000098f0	Surface::blit16	158	0	2
-000099c0	SurfaceBase::fill2_default	43	0	0
-00009a00	SurfaceBase::drawLine_default	43	0	0
-00009a40	SurfaceBase::drawDashedLine_default	43	0	0
-00009a80	SurfaceBase::defaultVfn68	43	0	0
-00009ac0	Surface::blendRectDispatch	111	0	2
-00009b50	SurfaceBase::defaultVfn6c	43	0	0
-00009b90	SurfaceBase::defaultVfn70	43	0	0
-00009bd0	SurfaceBase::loadPng_default	43	0	0
-00009c10	SurfaceBase::saveImage_default	43	0	0
-00009c50	Surface::ditherRectDispatch	131	0	3
-00009d00	SurfaceBase::defaultVfn7c	43	0	0
-00009d40	SurfaceBase::drawTo_default	43	0	0
-00009d80	SurfaceBase::defaultVfn88	43	0	0
-00009dc0	SurfaceBase::defaultVfn90	43	0	0
-00009e00	SurfaceBase::drawToZ_default	43	0	0
-00009e40	Surface::ditherBlendRectDispatch	111	0	2
-00009ed0	SurfaceBase::defaultVfn94	43	0	0
-00009f10	SurfaceBase::defaultVfn98	43	0	0
-00009f50	SurfaceBase::defaultVfn80	43	0	0
-00009f90	SurfaceBase::defaultVfn9c	43	0	0
-00009fd0	Surface::drawTo	332	0	5
-0000a170	SurfaceBase::defaultVfna4	43	0	0
-0000a1b0	SurfaceBase::defaultVfna0	43	0	0
-0000a1f0	SurfaceBase::selectObject_default	43	0	0
-0000a230	SurfaceBase::selectSystemFont_default	41	0	0
-0000a270	SurfaceBase::setTextColorRGB_default	43	0	0
-0000a2b0	SurfaceBase::setTextColor16_default	43	0	0
-0000a2f0	SurfaceBase::textOut_default	43	0	0
-0000a330	Surface::drawToZ	336	0	5
-0000a4e0	SurfaceBase::deletingDtor	81	0	3
-0000a550	Surface::saveImage	103	0	2
-0000a5d0	Surface::setField4d0	52	0	0
-0000a620	Surface::getField4d0	45	0	0
-0000a660	makeColor	188	0	1
-0000a750	Surface::fwdVfn18	66	0	1
-0000a7b0	Surface::fwdVfn20	66	0	1
-0000a810	Surface::call3a	76	0	1
-0000a870	Surface::call3b	76	0	1
-0000a8d0	Surface::callBounds	73	0	1
-0000a930	Surface::getClip	69	0	0
-0000a990	Surface::getClipRectPtr	42	0	0
-0000a9d0	Surface::getBounds	69	0	0
-0000aa30	Surface::getBoundsRectPtr	42	0	0
-0000aa70	Surface::width	48	0	0
-0000aab0	Surface::height	48	0	0
-0000aaf0	Surface::getField40	42	0	0
-0000ab30	Surface::getDepthPtr	42	0	0
-0000ab70	Surface::getField7c	42	0	0
-0000abb0	Surface::unimplVfn68	43	0	0
-0000abf0	Surface::unimplVfn6c	43	0	0
-0000ac30	Surface::unimplVfn70	43	0	0
-0000ac70	Surface::unimplVfn7c	43	0	0
-0000acb0	Surface::unimplVfn88	43	0	0
-0000acf0	Surface::unimplVfn90	43	0	0
-0000ad30	Surface::unimplVfn94	43	0	0
-0000ad70	Surface::unimplVfn98	43	0	0
-0000adb0	Surface::unimplVfn80	43	0	0
-0000adf0	Surface::unimplVfn9c	43	0	0
-0000ae30	Surface::unimplVfna4	43	0	0
-0000ae70	Surface::unimplVfna0	43	0	0
-0000aeb0	setField28	47	0	0
-0000aef0	Surface::getField810	45	0	0
-0000af30	fillWords	140	0	0
-0000afe0	Surface::fill16	282	0	5
-0000b140	Surface::line16	1902	0	4
-0000ba90	Surface::hline16	674	0	1
-0000bde0	Surface::vline16	680	0	1
-0000c140	Surface::dashedLine16	2924	0	4
-0000cf90	Surface::dashedHLine16	1097	0	1
-0000d4f0	Surface::dashedVLine16	1121	0	1
-0000da70	Surface::clear16	502	0	3
-0000dcf0	Surface::fillRect16	566	0	4
-0000dfc0	Surface::blendRect16	914	0	6
-0000e440	redOf	98	0	1
-0000e4c0	greenOf	98	0	1
-0000e540	blueOf	42	0	0
-0000e580	Surface::ditherRect16	653	0	2
-0000e8b0	Surface::ditherBlendRect16	970	0	6
-0000ed70	Surface::blitT_16to16	1877	0	3
-0000f6a0	Surface::blit16from16	374	0	3
-0000f880	Surface::fill8	276	0	5
-0000f9e0	Surface::fill2_8	313	0	5
-0000fb70	Surface::line8	1658	0	4
-00010390	setRect4	66	0	0
-000103f0	Surface::hline	437	0	2
-00010620	Surface::vline	463	0	1
-00010870	Surface::dashedLine8	2541	0	4
-000114e0	Surface::dashedHLine8	736	0	1
-00011880	Surface::dashedVLine8	764	0	1
-00011c40	Surface::clear8	317	0	2
-00011dd0	Surface::fillRectC8	335	0	3
-00011f80	Surface::ditherRectC8	358	0	2
-00012140	Surface::writePcx8	1586	0	8
-00012900	Surface::blitKey8to16	952	0	3
-00012db0	Surface::blitT_8to16	2106	0	3
-00013800	Surface::blit8from8	877	0	3
-00013c50	Surface::blitT_8to8	1837	0	3
-00014550	trace	60	0	2
-000145a0	loadPng	939	0	18
-00014a40	jalloc	53	0	2
-00014a90	jfree	65	0	2
-00014af0	Sprite::ctor	208	0	3
-00014c00	Sprite::deletingDtor	81	0	3
-00014c70	SpriteBase::ctor	66	0	2
-00014cd0	Sprite::ctorN	209	0	3
-00014de0	Sprite::dtor	159	0	4
-00014eb0	Sprite::release	248	0	2
-00014ff0	Sprite::create	169	0	3
-000150d0	Sprite::remap	138	0	3
-00015180	Sprite::draw	608	0	5
-00015480	Sprite::drawB	681	0	7
-000157e0	Sprite::drawC	780	0	5
-00015bb0	Sprite::drawD	772	0	5
-00015f80	Sprite::drawE	590	0	6
-00016270	Sprite::drawF	648	0	4
-000165a0	Sprite::drawG	663	0	6
-000168e0	SpriteBase::~SpriteBase	63	0	2
-00016930	SpriteBase::deletingDtor	81	0	3
-000169a0	Sprite::drawH	626	0	5
-00016cb0	Sprite::drawI	623	0	5
-00016fc0	Sprite::drawJ	593	0	4
-000172b0	Sprite::drawK	637	0	5
-000175d0	Sprite::drawQ	452	0	2
-000178a0	Sprite::drawL	528	0	4
-00017b40	Sprite::drawM	693	0	5
-00017eb0	Sprite::setField10	47	0	0
-00017ef0	Sprite::getField10	42	0	0
-00017f30	getField28	42	0	0
-00017f70	getField14	42	0	0
-00017fb0	Sprite::emptyVfn24	38	0	0
-00017fe0	getField20	42	0	0
-00018020	getField2c	42	0	0
-00018060	Sprite::getField30	42	0	0
-000180a0	Sprite::getField34	42	0	0
-000180e0	Sprite::getFlag18	45	0	0
-00018120	Sprite::drawN	693	0	5
-00018490	Sprite::lineTo	100	0	2
-00018510	Sprite::dashTo	123	0	2
-000185b0	Sprite::drawO	695	0	5
-00018920	Sprite::drawAlpha	2182	0	33
-000193d0	Sprite::drawP	890	0	7
-00019830	Sprite::blt16a	156	0	2
-00019900	Sprite::blt16b	161	0	2
-000199d0	Sprite::blt16c	161	0	2
-00019aa0	Sprite::bltS	181	0	2
-00019b90	Sprite::bltS2	185	0	2
-00019c80	FUN_10019c80	893	0	5
-0001a0e0	Sprite::copyFrom	288	0	3
-0001a250	Sprite::create16	893	0	5
-0001a6b0	FUN_1001a6b0	923	0	4
-0001ab40	Sprite::draw16t_1001ab40	1046	0	6
-0001b060	Sprite::draw16t_1001b060	1055	0	6
-0001b590	FUN_1001b590	40	0	0
-0001b5d0	FUN_1001b5d0	40	0	0
-0001b610	FUN_1001b610	40	0	0
-0001b650	FUN_1001b650	40	0	0
-0001b690	Sprite::create8	880	0	5
-0001bae0	Sprite::remap8	279	0	1
-0001bc40	Sprite::draw16_1001bc40	3610	0	6
-0001cde0	Sprite::draw16_1001cde0	3610	0	6
-0001df80	Sprite::draw16m_1001df80	2029	0	4
-0001e970	Sprite::draw16m_1001e970	1911	0	4
-0001f2d0	Sprite::draw_1001f2d0	3556	0	6
-00020430	Sprite::draw16_10020430	3869	0	6
-00021720	Sprite::draw16_10021720	3877	0	6
-00022a10	Sprite::draw16_10022a10	4746	0	6
-00024140	Sprite::draw16_10024140	4858	0	6
-00025900	Sprite::blitPair	983	0	3
-00025dd0	Sprite::blitPair1	899	0	3
-00026240	Sprite::draw16_10026240	3668	0	6
-00027430	Sprite::draw16_10027430	3676	0	6
-00028630	Sprite::draw16_10028630	3780	0	6
-000298b0	Sprite::draw16_100298b0	3860	0	6
-0002ab90	Sprite::draw_1002ab90	3551	0	6
-0002bcf0	Sprite::draw_1002bcf0	3639	0	6
-0002cec0	Sprite::blitMask	982	0	4
-0002d390	Sprite::blitMaskScaled	1024	0	5
-0002d890	Sprite::draw16_1002d890	4258	0	6
-0002ed60	Sprite::draw16_1002ed60	4338	0	6
-00030290	Sprite::draw16_10030290	4338	0	6
-000317c0	Sprite::draw16_100317c0	4418	0	6
-00032d60	Sprite::draw16_10032d60	4418	0	6
-00034300	Sprite::draw16_10034300	4434	0	6
-000358b0	Sprite::draw16_100358b0	4434	0	6
-00036e60	Sprite::draw16_10036e60	4498	0	6
-00038460	Sprite::draw16_10038460	4498	0	6
-00039a60	Sprite::draw16_10039a60	4498	0	6
-0003b060	Sprite::draw16_1003b060	4498	0	6
-0003c660	Sprite::draw16_1003c660	4546	0	6
-0003dca0	Sprite::draw16_1003dca0	4546	0	6
-0003f2e0	Sprite::draw16_1003f2e0	4562	0	6
-00040930	Sprite::draw16_10040930	4562	0	6
-00041f80	Sprite::draw16_10041f80	4234	0	6
-00043430	Sprite::draw16_10043430	4314	0	6
-00044940	Sprite::draw16_10044940	4314	0	6
-00045e50	Sprite::draw16_10045e50	4378	0	6
-000473b0	Sprite::draw16_100473b0	4378	0	6
-00048910	Sprite::draw16_10048910	4410	0	6
-00049ea0	Sprite::draw16_10049ea0	4410	0	6
-0004b430	Sprite::draw16_1004b430	4474	0	6
-0004ca10	Sprite::draw16_1004ca10	4474	0	6
-0004dff0	Sprite::draw16_1004dff0	4474	0	6
-0004f5d0	Sprite::draw16_1004f5d0	4474	0	6
-00050bb0	Sprite::draw16_10050bb0	4522	0	6
-000521d0	Sprite::draw16_100521d0	4522	0	6
-000537f0	Sprite::draw16_100537f0	4538	0	6
-00054e20	Sprite::draw16_10054e20	4538	0	6
-00056450	Sprite::draw16_10056450	3746	0	6
-000576a0	Sprite::draw16_100576a0	3850	0	6
-00058970	Sprite::drawRle16p	2321	0	6
-000594d0	Sprite::drawRle16n	2291	0	6
-0005a000	Sprite::drawRle16mk	1549	0	5
-0005a790	Sprite::drawRle16m	1512	0	5
-0005af00	Sprite::drawRle16t	2403	0	6
-0005bac0	Sprite::drawRle16c	2297	0	6
-0005c600	Sprite::drawRle16b	2440	0	6
-0005d1f0	Sprite::drawRle16	2442	0	6
-0005dde0	Sprite::draw_1005dde0	3196	0	6
-0005ed80	Sprite::draw_1005ed80	3196	0	6
-0005fd20	Sprite::draw8_1005fd20	3234	0	6
-00060cf0	Sprite::draw8_10060cf0	3428	0	6
-00061db0	Sprite::draw8_10061db0	3300	0	6
-00062dd0	Sprite::draw_10062dd0	3597	0	6
-00063f60	Sprite::draw8_10063f60	3356	0	6
-00064fd0	FUN_10064fd0	51	0	3
-00065010	FUN_10065010	51	1	2
-00065050	FUN_10065050	54	1	2
-000650a0	FUN_100650a0	51	0	2
-000650e0	FUN_100650e0	51	0	3
-00065120	FUN_10065120	51	1	2
-00065160	FUN_10065160	54	1	2
-000651b0	FUN_100651b0	51	0	2
-000651f0	FUN_100651f0	51	0	3
-00065230	FUN_10065230	51	1	2
-00065270	FUN_10065270	54	1	2
-000652c0	FUN_100652c0	51	0	2
-00065300	DllMain	110	0	3
-00065390	createDisplay	115	0	3
-00065420	Lib::destroyDisplay	104	0	2
-000654b0	Display::Display	213	0	3
-000655c0	FUN_100655c0	81	0	3
-00065630	FUN_10065630	48	0	0
-00065670	FUN_10065670	63	0	2
-000656c0	Display::shutdown	220	0	4
-000657e0	Display::createWindow	545	0	9
-00065a90	Display::enumModes	280	0	6
-00065bf0	Display::getField138	45	0	0
-00065c30	Display::findMode	288	0	2
-00065da0	Display::setMode	199	0	1
-00065ea0	Display::pickMode	325	0	2
-00066040	Display::pickModeFreq	352	0	2
-00066200	Display::setDesktopMode	120	0	2
-000662a0	Display::setModeIndex	371	0	5
-00066470	Display::present	378	0	5
-00066650	Display::getWindowRect	77	0	2
-000666b0	Display::getField12c130	66	0	0
-00066710	Display::invalidate	79	0	2
-00066780	Display::getCursor	112	0	3
-00066810	Display::setWindowPos	93	0	2
-00066890	Display::setResolution	171	0	4
-00066970	Display::restore	85	0	2
-000669e0	Array_e0::dtor	63	0	2
-00066a30	Array_Rec14::dtor	63	0	2
-00066a80	Array_Rec14::count	42	0	0
-00066ac0	Array_Rec14::reset	46	0	0
-00066b00	Array_Rec94::dtor	63	0	2
-00066b50	Array_Rec94::count	42	0	0
-00066b90	Array_Rec94::reset	46	0	0
-00066bd0	Array_e0::deletingDtor	81	0	3
-00066c40	Array_Rec14::deletingDtor	81	0	3
-00066cb0	Array_Rec94::deletingDtor	81	0	3
-00066d20	DisplayBase::dtor	45	0	0
-00066d60	DisplayBase::getHwnd	38	0	0
-00066d90	DisplayBase::getInstance	38	0	0
-00066dc0	DisplayBase::setWindowPos	38	0	0
-00066df0	FUN_10066df0	43	0	0
-00066e30	FUN_10066e30	43	0	0
-00066e70	FUN_10066e70	38	0	0
-00066ea0	FUN_10066ea0	36	0	0
-00066ed0	FUN_10066ed0	40	0	0
-00066f10	FUN_10066f10	38	0	0
-00066f40	FUN_10066f40	41	0	0
-00066f80	FUN_10066f80	41	0	0
-00066fc0	FUN_10066fc0	41	0	0
-00067000	FUN_10067000	43	0	0
-00067040	FUN_10067040	43	0	0
-00067080	FUN_10067080	43	0	0
-000670c0	FUN_100670c0	43	0	0
-00067100	FUN_10067100	43	0	0
-00067140	FUN_10067140	43	0	0
-00067180	FUN_10067180	43	0	0
-000671c0	FUN_100671c0	43	0	0
-00067200	FUN_10067200	43	0	0
-00067240	FUN_10067240	43	0	0
-00067280	FUN_10067280	43	0	0
-000672c0	FUN_100672c0	43	0	0
-00067300	FUN_10067300	43	0	0
-00067340	FUN_10067340	43	0	0
-00067380	FUN_10067380	43	0	0
-000673c0	FUN_100673c0	43	0	0
-00067400	FUN_10067400	43	0	0
-00067440	FUN_10067440	43	0	0
-00067480	FUN_10067480	43	0	0
-000674c0	DisplayBase::setCommandHandler	38	0	0
-000674f0	DisplayBase::deletingDtor	81	0	3
-00067560	Display::getHwnd	45	0	0
-000675a0	Display::getInstance	45	0	0
-000675e0	Display::showWindow	73	0	2
-00067640	Display::hideWindow	73	0	2
-000676a0	Display::minimizeWindow	73	0	2
-00067700	Display::maximizeWindow	73	0	2
-00067760	Display::getWidth	45	0	0
-000677a0	Display::getHeight	45	0	0
-000677e0	Display::getBpp	45	0	0
-00067820	FUN_10067820	38	0	0
-00067850	Factory::createFont	145	0	3
-00067910	Factory::createPalette	148	0	3
-000679d0	Factory::createSurface	148	0	3
-00067a90	Factory::createSprite	145	0	3
-00067b50	Factory::destroyFont	99	0	1
-00067bd0	Factory::destroyPalette	99	0	1
-00067c50	Factory::destroySurface	99	0	1
-00067cd0	Factory::destroySprite	99	0	1
-00067d50	Display::setScale	64	0	0
-00067da0	Display::getScale	70	0	0
-00067e00	Display::initFonts	51	0	2
-00067e40	Display::shutdownFonts	51	0	2
-00067e80	Display::createPalette	64	0	2
-00067ed0	Display::freePalette	51	0	2
-00067f10	Lib::setCommandHandler	63	0	2
-00067f60	storeCommandHandler	46	0	0
-00067fa0	Array_e0::ctor	76	0	2
-00068000	Array_e0::clear	116	0	2
-000680a0	Array_Rec14::ctor	76	0	2
-00068100	Array_Rec14::clear	116	0	2
-000681a0	Array_Rec14::add	276	0	4
-00068300	Array_Rec94::ctor	76	0	2
-00068360	Array_Rec94::clear	116	0	2
-00068400	Array_Rec94::add	288	0	4
-00068570	Array_e0::clearRet	56	0	2
-000685c0	Array_Rec14::clearRet	56	0	2
-00068610	Array_Rec94::clearRet	56	0	2
-00068660	Font::Font	193	0	3
-00068760	Font::~Font	183	0	4
-00068850	Font::create	524	0	7
-00068ae0	Font::loadFile	563	0	11
-00068da0	Font::release	143	0	4
-00068e60	Font::textWidth	163	0	4
-00068f30	initFonts	86	0	3
-00068fa0	initFontTable	81	0	2
-00069010	FontBase::~FontBase	45	0	0
-00069050	FontBase::create	43	0	0
-00069090	FontBase::loadFile	43	0	0
-000690d0	FontBase::release	36	0	0
-00069100	FontBase::textWidth	40	0	0
-00069140	FontBase::deletingDtor	81	0	3
-000691b0	Font::deletingDtor	81	0	3
-00069220	FontBase::FontBase	48	0	0
-00069270	FUN_10069270	49	0	0
-000692b0	windowProc	1224	0	17
-000699c0	realizePalette	138	0	5
-00069a70	onPaletteChanged	61	0	2
-00069ac0	onPaint	161	0	3
-00069b90	onActivate	171	0	4
-00069c70	onKey	171	0	2
-00069d50	onChar	71	0	1
-00069db0	onWmSize	74	0	1
-00069e10	onWmNcHitTest	75	0	1
-00069e70	onWmMouseWheel	78	0	1
-00069ee0	onWmMouseMove	75	0	1
-00069f40	onWmLButtonDown	78	0	1
-00069fb0	onWmLButtonUp	75	0	1
-0006a010	onWmRButtonDown	78	0	1
-0006a080	onWmRButtonUp	75	0	1
-0006a0e0	onCommand	80	0	1
-0006a150	Palette::ctor	116	0	2
-0006a1f0	Palette::deletingDtor	81	0	3
-0006a260	PaletteBase::ctor	66	0	2
-0006a2c0	Palette::~Palette	144	0	3
-0006a380	Palette::reset	62	0	0
-0006a3d0	Palette::update	159	0	6
-0006a4a0	Palette::apply	271	0	0
-0006a600	Palette::setDefault	483	0	2
-0006a860	Palette::animate	93	0	2
-0006a8e0	Palette::getRGBRange	145	0	0
-0006a9a0	Palette::setRGB	163	0	2
-0006aa70	createPalette	599	0	5
-0006ad60	deleteLogPalette	81	0	2
-0006add0	Palette::getColor	91	0	0
-0006ae50	Palette::toRGBQuads	137	0	0
-0006af00	PaletteBase::dtor	63	0	2
-0006af50	PaletteBase::deletingDtor	81	0	3
-0006afc0	FUN_1006afc0	46	0	0
-0006b000	FUN_1006b000	44	0	0
-0006b040	FUN_1006b040	44	0	0
-0006b080	FUN_1006b080	90	0	2
-0006b0f0	FUN_1006b0f0	170	0	4
-0006b1d0	FUN_1006b1d0	368	0	4
-0006b3a0	FUN_1006b3a0	124	0	4
-0006b440	FUN_1006b440	130	0	4
-0006b4f0	FUN_1006b4f0	130	0	4
-0006b5a0	FUN_1006b5a0	319	0	4
-0006b730	FUN_1006b730	130	0	4
-0006b7e0	FUN_1006b7e0	130	0	4
-0006b890	FUN_1006b890	85	0	2
-0006b900	FUN_1006b900	85	0	2
-0006b970	FUN_1006b970	130	0	4
-0006ba20	FUN_1006ba20	123	0	4
-0006bac0	png_create_read_struct	447	1	9
-0006bca0	png_read_init	346	0	7
-0006be20	png_read_info	1304	1	25
-0006c340	png_read_update_info	82	0	3
-0006c3a0	png_start_read_image	66	0	2
-0006c3f0	png_read_row	1804	2	16
-0006cb20	png_read_rows	292	0	2
-0006cc50	png_read_image	171	1	3
-0006cd00	png_read_end	1097	1	25
-0006d150	png_destroy_read_struct	243	1	4
-0006d250	png_read_destroy	893	1	7
-0006d5d0	png_set_read_status_fn	43	0	0
-0006d600	png_set_bgr	46	1	0
-0006d630	png_set_swap	61	1	0
-0006d670	png_set_packing	71	0	0
-0006d6c0	png_set_packswap	64	0	0
-0006d700	png_set_shift	68	0	0
-0006d750	png_set_interlace_handling	72	1	0
-0006d7a0	png_set_filler	164	0	0
-0006d850	png_set_swap_alpha	49	0	0
-0006d890	png_set_invert_alpha	49	0	0
-0006d8d0	png_set_invert_mono	46	0	0
-0006d900	png_do_invert	122	1	0
-0006d980	png_do_swap	134	1	0
-0006da10	png_do_packswap	169	1	0
-0006dac0	png_do_strip_filler	1356	1	0
-0006e010	png_do_bgr	497	1	0
-0006e210	png_set_user_transform_info	58	0	0
-0006e250	png_get_user_transform_ptr	37	0	0
-0006e280	png_get_valid	56	0	0
-0006e2c0	png_get_rowbytes	53	0	0
-0006e300	png_get_image_width	52	0	0
-0006e340	png_get_image_height	53	0	0
-0006e380	png_get_bit_depth	53	0	0
-0006e3c0	png_get_color_type	53	0	0
-0006e400	png_get_filter_type	53	0	0
-0006e440	png_get_interlace_type	53	0	0
-0006e480	png_get_compression_type	53	0	0
-0006e4c0	png_get_x_pixels_per_meter	86	0	0
-0006e520	png_get_y_pixels_per_meter	86	0	0
-0006e580	png_get_pixels_per_meter	100	0	0
-0006e5f0	png_get_pixel_aspect_ratio	122	0	0
-0006e670	png_get_x_offset_microns	86	0	0
-0006e6d0	png_get_y_offset_microns	86	0	0
-0006e730	png_get_x_offset_pixels	85	0	0
-0006e790	png_get_y_offset_pixels	85	0	0
-0006e7f0	png_get_channels	53	0	0
-0006e830	png_get_signature	53	0	0
-0006e870	png_get_bKGD	82	0	0
-0006e8d0	png_get_cHRM	237	0	0
-0006e9c0	png_get_gAMA	82	0	0
-0006ea20	png_get_sRGB	87	0	0
-0006ea80	png_get_hIST	82	0	0
-0006eae0	png_get_IHDR	338	1	2
-0006ec40	png_get_oFFs	121	0	0
-0006ecc0	png_get_pCAL	236	0	0
-0006edb0	png_get_pHYs	148	0	0
-0006ee50	png_get_PLTE	96	1	0
-0006eeb0	png_get_sBIT	82	0	0
-0006ef10	png_get_text	96	0	0
-0006ef70	png_get_tIME	85	0	0
-0006efd0	png_get_tRNS	201	0	0
-0006f0a0	png_get_rgb_to_gray_status	40	0	0
-0006f0d0	png_set_crc_action	314	0	2
-0006f230	png_set_background	249	0	3
-0006f330	png_set_strip_16	46	0	0
-0006f360	png_set_strip_alpha	49	1	0
-0006f3a0	png_set_dither	3037	0	5
-0006ff80	png_set_gamma	119	0	2
-00070000	png_set_expand	46	0	0
-00070030	png_set_gray_1_2_4_to_8	46	0	0
-00070060	png_set_palette_to_rgb	46	0	0
-00070090	png_set_tRNS_to_alpha	46	0	0
-000700c0	png_set_gray_to_rgb	46	0	0
-000700f0	png_set_rgb_to_gray	360	0	3
-00070260	png_set_read_user_transform_fn	58	0	0
-000702a0	png_init_read_transformations	4604	1	5
-000714c0	png_read_transform_info	775	1	0
-000717d0	png_do_read_transformations	1705	1	22
-00071e80	png_do_unpack	571	1	0
-000720c0	png_do_unshift	831	1	0
-00072430	png_do_chop	181	1	0
-000724f0	png_do_read_swap_alpha	865	1	0
-00072860	png_do_read_invert_alpha	877	1	0
-00072bd0	png_do_read_filler	1856	1	0
-00073310	png_do_gray_to_rgb	944	1	0
-000736c0	png_do_rgb_to_gray	3950	1	0
-00074630	png_build_grayscale_palette	242	0	0
-00074750	png_do_background	8131	1	2
-00076760	png_do_gamma	1856	1	0
-00076ec0	png_do_expand_palette	1075	1	0
-00077300	png_do_expand	1924	1	0
-00077a90	png_do_dither	668	1	0
-00077d30	png_build_gamma_table	2066	1	4
-00078550	png_get_header_version	49	0	0
-00078590	png_set_sig_bytes	86	0	2
-000785f0	png_sig_cmp	126	2	2
-00078670	png_check_sig	64	0	2
-000786b0	png_zalloc	151	1	3
-00078750	png_zfree	57	1	2
-00078790	png_reset_crc	64	4	2
-000787d0	png_calculate_crc	157	1	2
-00078870	png_create_info_struct	85	1	3
-000788d0	png_destroy_info_struct	105	0	3
-00078940	png_info_init	60	2	2
-00078980	png_info_destroy	283	2	3
-00078aa0	png_get_io_ptr	37	0	0
-00078ad0	png_init_io	40	1	0
-00078b00	png_convert_to_rfc1123	221	0	3
-00078be0	png_get_copyright	55	0	0
-00078c20	png_check_version	31	0	0
-00078c40	png_read_data	99	6	2
-00078cb0	png_set_read_fn	143	2	2
-00078d40	png_default_read_data	94	0	3
-00078da0	png_create_struct	117	2	3
-00078e20	png_destroy_struct	59	3	2
-00078e60	png_malloc	98	14	3
-00078ed0	png_free	67	10	2
-00078f20	png_memcpy_check	92	1	3
-00078f80	png_memset_check	92	2	3
-00078fe0	png_error	92	31	2
-00079040	png_warning	94	23	2
-000790a0	png_chunk_error	86	3	3
-00079100	png_format_buffer	326	2	2
-00079250	png_chunk_warning	86	1	3
-000792b0	FUN_100792b0	57	1	2
-00079300	png_default_warning	63	1	2
-00079340	png_set_error_fn	58	1	0
-00079380	png_get_error_ptr	37	0	0
-000793b0	png_get_int_32	83	10	0
-00079410	png_get_uint_32	83	1	0
-00079470	png_get_uint_16	59	4	0
-000794b0	png_crc_read	81	20	3
-00079510	png_crc_finish	272	20	5
-00079620	png_crc_error	178	1	3
-000796e0	png_handle_IHDR	734	2	6
-000799e0	png_handle_PLTE	562	2	7
-00079c20	png_handle_IEND	145	2	4
-00079cc0	png_handle_gAMA	511	2	9
-00079ec0	png_handle_sBIT	519	2	6
-0007a0d0	png_handle_cHRM	1786	2	9
-0007a7d0	png_handle_sRGB	866	2	8
-0007ab40	png_handle_tRNS	801	2	8
-0007ae70	png_handle_bKGD	816	2	7
-0007b1a0	png_handle_hIST	465	2	8
-0007b380	png_handle_pHYs	331	2	7
-0007b4d0	png_handle_oFFs	331	2	7
-0007b620	png_handle_pCAL	899	2	9
-0007b9b0	png_handle_tIME	306	2	7
-0007baf0	png_handle_tEXt	334	2	7
-0007bc40	png_handle_zTXt	1296	2	12
-0007c150	png_handle_unknown	149	2	4
-0007c1f0	png_check_chunk_name	282	1	2
-0007c310	png_combine_row	1267	1	2
-0007c810	png_do_read_interlace	1639	1	2
-0007ce80	png_read_filter_row	993	1	2
-0007d280	png_read_finish_row	1072	1	11
-0007d6b0	png_read_start_row	1054	3	5
-0007dad0	png_set_bKGD	90	1	2
-0007db30	png_set_cHRM	155	2	0
-0007dbd0	png_set_gAMA	69	2	0
-0007dc20	png_set_hIST	68	1	0
-0007dc70	png_set_IHDR	316	1	2
-0007ddb0	png_set_oFFs	87	1	0
-0007de10	png_set_pCAL	431	1	4
-0007dfc0	png_set_pHYs	87	1	0
-0007e020	png_set_PLTE	80	1	0
-0007e070	png_set_sBIT	90	1	2
-0007e0d0	png_set_sRGB	69	1	0
-0007e120	png_set_sRGB_gAMA_and_cHRM	254	1	4
-0007e220	png_set_text	480	2	5
-0007e400	png_set_tIME	107	1	2
-0007e470	png_set_tRNS	136	1	2
-0007e500	png_permit_empty_plte	51	0	0
-0007e6d0	operator_delete	161	29	4
-0007e780	__chkesp	56	484	1
-0007e7c0	_memset	88	21	0
-0007e820	__fpmath	33	1	3
-0007e850	FUN_1007e850	5	0	0
-0007e860	__cfltcvt_init	65	1	0
-0007e8b0	FUN_1007e8b0	28	0	0
-0007e8d0	FUN_1007e8d0	20	0	2
-0007e8e4	FUN_1007e8e4	9	2	1
-0007e8ed	FUN_1007e8ed	157	1	4
-0007e990	FUN_1007e990	20	0	2
-0007e9a4	FUN_1007e9a4	9	1	1
-0007e9ad	FUN_1007e9ad	145	1	3
-0007ea40	FUN_1007ea40	20	0	2
-0007ea54	FUN_1007ea54	9	1	1
-0007ea5d	FUN_1007ea5d	158	1	3
-0007eaf0	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0
-0007eb30	_CallMemberFunction0	7	1	0
-0007eb40	FID_conflict:_CallMemberFunction1	7	1	0
-0007eb50	FID_conflict:_CallMemberFunction1	7	1	0
-0007eb60	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	86	2	1
-0007ebc0	FID_conflict:___CxxFrameHandler3	60	0	1
-0007ec00	___CxxLongjmpUnwind@4	38	0	1
-0007ec30	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	104	1	1
-0007eca0	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	57	0	1
-0007ece0	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	204	1	1
-0007edb0	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	124	0	2
-0007ee40	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	130	2	1
-0007eed0	__global_unwind2	32	1	1
-0007ef12	__local_unwind2	104	2	1
-0007ef7a	__abnormal_termination	35	1	0
-0007ef9d	__NLG_Notify1	9	1	0
-0007efa6	FUN_1007efa6	24	2	0
-0007efc0	__onexit	179	1	4
-0007f080	_atexit	24	4	1
-0007f0a0	___onexitinit	77	0	2
-0007f0f0	operator_new	28	9	1
-0007f110	FUN_1007f110	26	0	1
-0007f12c	__ftol	39	66	0
-0007f160	__cinit	56	1	2
-0007f1a0	_exit	21	2	1
-0007f1c0	__exit	21	4	1
-0007f1e0	__cexit	19	1	1
-0007f200	__c_exit	19	0	1
-0007f220	doexit	227	4	8
-0007f310	FID_conflict:__lockexit	15	2	1
-0007f320	FID_conflict:__lockexit	15	2	1
-0007f330	__initterm	37	2	0
-0007f360	FUN_1007f360	15	0	1
-0007f370	FUN_1007f370	33	72	0
-0007f3a0	FID_conflict:_memcpy	664	32	0
-0007f6e0	_strlen	123	25	0
-0007f760	FUN_1007f760	7	20	0
-0007f770	_strcat	224	6	0
-0007f850	_fclose	130	2	4
-0007f8e0	__fclose_lk	190	1	5
-0007f9a0	__fsopen	252	1	4
-0007faa0	_fopen	23	1	1
-0007fab8	__setjmp3	123	2	0
-0007fb40	_malloc	38	6	1
-0007fb70	__malloc_dbg	44	22	1
-0007fba0	__nh_malloc	27	1	1
-0007fbc0	FUN_1007fbc0	93	3	4
-0007fc1d	FUN_1007fc1d	11	1	1
-0007fc28	FUN_1007fc28	56	1	1
-0007fc60	__heap_alloc	23	0	1
-0007fc80	__heap_alloc_dbg	787	2	5
-0007ffa0	_calloc	36	1	1
-0007ffd0	__calloc_dbg	96	6	1
-00080030	FID_conflict:__expand	36	0	1
-00080060	FID_conflict:__realloc_dbg	99	3	4
-000800c3	FUN_100800c3	11	1	1
-000800ce	FUN_100800ce	20	1	0
-000800f0	realloc_help	1297	2	9
-00080610	FID_conflict:__expand	36	2	1
-00080640	FID_conflict:__realloc_dbg	99	1	4
-000806a3	FUN_100806a3	11	1	1
-000806ae	FUN_100806ae	20	1	0
-000806d0	FUN_100806d0	19	4	1
-000806f0	__free_lk	19	0	1
-00080710	__free_dbg	82	24	4
-00080762	FUN_10080762	11	1	1
-0008076d	FUN_1008076d	17	1	0
-00080780	__free_dbg_lk	1004	2	7
-00080b70	FUN_10080b70	19	0	1
-00080b90	FUN_10080b90	369	2	6
-00080d01	FUN_10080d01	11	1	1
-00080d0c	FUN_10080d0c	20	1	0
-00080d20	FUN_10080d20	28	0	0
-00080d40	FUN_10080d40	189	0	5
-00080dfd	FUN_10080dfd	11	1	1
-00080e08	FUN_10080e08	17	1	0
-00080e20	FUN_10080e20	28	0	0
-00080e40	_CheckBytes	136	2	1
-00080ed0	FUN_10080ed0	885	4	6
-00081245	FUN_10081245	11	1	1
-00081250	FUN_10081250	20	1	0
-00081280	__CrtSetDbgFlag	34	2	0
-000812b0	FUN_100812b0	141	0	3
-0008133d	FUN_1008133d	11	1	1
-00081348	FUN_10081348	17	1	0
-00081360	__CrtIsValidPointer	75	3	2
-000813b0	FUN_100813b0	292	5	5
-000814e0	__CrtIsMemoryBlock	262	0	5
-000815e6	FUN_100815e6	11	1	1
-000815f1	FUN_100815f1	20	1	0
-00081610	FUN_10081610	28	0	0
-00081630	FUN_10081630	392	1	4
-000817b8	FUN_100817b8	11	1	1
-000817c3	FUN_100817c3	17	1	0
-000817e0	__CrtMemDifference	291	0	1
-00081910	FUN_10081910	689	1	6
-00081bc1	FUN_10081bc1	11	1	1
-00081bcc	FUN_10081bcc	55	1	1
-00081c10	__printMemBlockData	276	1	3
-00081d30	__CrtDumpMemoryLeaks	116	2	3
-00081db0	__CrtMemDumpStatistics	197	0	1
-00081e80	__CrtDbgBreak	11	2	1
-00081e90	__CrtSetReportMode	87	0	0
-00081ef0	__CrtSetReportFile	126	0	1
-00081f70	FUN_10081f70	28	0	0
-00081f90	__CrtDbgReport	912	62	15
-00082320	_CrtMessageWindow	780	1	11
-00082630	__CRT_INIT@12	313	1	16
-00082770	entry	243	0	2
-00082870	__amsg_exit	58	10	3
-000828b0	_memcmp	172	5	0
-00082960	_fabs	243	5	4
-00082a60	FUN_10082a60	25	0	1
-00082a79	FUN_10082a79	9	2	1
-00082a82	FUN_10082a82	78	1	2
-00082c80	_sprintf	250	4	3
-00082d80	_fread	62	1	3
-00082dc0	__fread_lk	463	1	3
-00082f90	_longjmp	120	1	4
-00083010	_fprintf	193	6	6
-000830e0	___initstdio	300	0	2
-00083210	___endstdio	26	0	2
-00083230	__lock_file	61	4	2
-00083270	FID_conflict:__lock_file2	41	2	2
-000832a0	__unlock_file	61	5	2
-000832e0	FID_conflict:__lock_file2	41	2	2
-00083310	__mtinitlocks	55	1	1
-00083350	__mtdeletelocks	159	1	2
-000833f0	__lock	151	44	7
-00083490	FUN_10083490	22	49	1
-000834b0	FUN_100834b0	26	0	2
-000834d0	__setdefaultprecision	23	2	1
-000834f0	__ms_p5_test_fdiv	94	1	0
-00083550	__ms_p5_mp_test_fdiv	66	1	3
-000835a0	__forcdecpt	168	0	2
-00083650	__cropzeros	215	0	0
-00083730	__positive	45	0	0
-00083760	__fassign	72	0	2
-000837b0	__cftoe	118	1	3
-00083830	__cftoe2	358	2	2
-000839a0	__cftof	106	1	3
-00083a10	__cftof2	317	2	2
-00083b50	__cftog	229	1	4
-00083c40	__cfltcvt	95	0	3
-00083ca0	__shift	46	2	2
-00083ea0	FUN_10083ea0	23	0	0
-00083eb7	__startOneArgErrorHandling	60	4	1
-00083f15	FUN_10083f15	23	2	0
-00083f2c	FUN_10083f2c	25	3	0
-00083f45	__fload_withFB	67	5	0
-00083f88	FUN_10083f88	22	3	0
-00083fab	__math_exit	42	3	1
-00084090	___InternalCxxFrameHandler	239	3	3
-00084180	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	672	1	9
-00084420	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	277	1	4
-00084540	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	182	1	1
-00084600	___FrameUnwindToState	224	3	2
-00084700	ArrayUnwindFilter	44	0	1
-00084730	CatchIt	183	2	5
-000847f0	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	172	1	4
-000848cd	FUN_100848cd	94	1	3
-0008492b	FUN_1008492b	20	1	0
-00084940	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	66	0	0
-00084990	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	621	1	8
-00084c10	___DestructExceptionObject	111	2	1
-00084ca0	FID_conflict:___AdjustPointer	70	1	0
-00084cf0	__CallSettingFrame@12	76	2	1
-00084d40	__mtinit	130	1	6
-00084dd0	__mtterm	41	1	2
-00084e00	__initptd	25	2	0
-00084e20	__getptd	152	14	8
-00084ec0	__freeptd	263	1	3
-00084fd0	FUN_10084fd0	11	0	1
-00084fe0	FUN_10084fe0	11	0	1
-00084ff0	FUN_10084ff0	92	6	2
-0008505e	_abort	5	1	1
-00085080	FUN_10085080	29	0	2
-000850a0	?_inconsistency@@YAXXZ	90	5	3
-0008510a	FUN_1008510a	6	1	1
-00085110	FUN_10085110	17	1	0
-00085130	__close	122	2	5
-000851b0	__close_lk	170	1	5
-00085260	__freebuf	146	1	2
-00085300	_fflush	68	0	4
-00085350	__fflush_lk	65	2	2
-000853a0	__flush	183	3	1
-00085460	__flushall	15	1	1
-00085470	flsall	319	2	5
-000855b0	__openfile	797	1	2
-00085940	__getstream	384	1	7
-00085ac0	_set_new_handler	48	0	2
-00085af0	FUN_10085af0	10	0	0
-00085b00	__callnewh	45	5	0
-00085bf5	__seh_longjmp_unwind@4	27	0	1
-00085c10	__malloc_base	32	1	1
-00085c30	__nh_malloc_base	87	1	2
-00085c90	__heap_alloc_base	101	2	4
-00085cf5	FUN_10085cf5	11	1	1
-00085d00	FUN_10085d00	19	1	1
-00085d77	FUN_10085d77	11	0	1
-00085d82	FUN_10085d82	31	0	1
-00085da1	FUN_10085da1	60	1	1
-00085de0	FUN_10085de0	10	3	0
-00085df0	FUN_10085df0	161	1	5
-00085e91	FUN_10085e91	11	1	1
-00085e9c	FUN_10085e9c	60	1	1
-00085f8a	FUN_10085f8a	11	0	1
-00085f95	FUN_10085f95	53	0	1
-00086000	FUN_10086000	960	1	20
-000861b6	FUN_100861b6	11	1	1
-000861c1	FUN_100861c1	106	1	3
-000863cb	FUN_100863cb	11	1	1
-000863d6	FUN_100863d6	48	1	2
-00086470	FUN_10086470	17	3	0
-00086490	FUN_10086490	123	2	5
-0008650b	FUN_1008650b	11	1	1
-00086516	FUN_10086516	30	1	1
-0008658d	FUN_1008658d	11	0	1
-00086598	FUN_10086598	43	0	1
-000865e0	__heapchk	98	2	4
-00086642	FUN_10086642	11	1	1
-0008664d	thunk_FUN_10086692	2	1	0
-00086687	FUN_10086687	11	0	1
-00086692	FUN_10086692	82	0	4
-000866f0	__heapset	10	0	1
-00086700	FUN_10086700	39	0	0
-00086730	FUN_10086730	266	0	3
-00086840	___sbh_heap_init	98	2	1
-000868b0	___sbh_find_block	85	4	0
-00086910	___sbh_verify_block	95	1	0
-00086970	FUN_10086970	1500	2	3
-00086f50	___sbh_alloc_block	1334	2	2
-00087490	___sbh_alloc_new_region	271	1	4
-000875a0	___sbh_alloc_new_group	494	1	1
-00087790	___sbh_resize_block	1515	2	0
-00087d80	___sbh_heapmin	304	0	3
-00087eb0	___sbh_heap_check	1565	1	1
-000884d0	FUN_100884d0	10	0	0
-000884e0	FUN_100884e0	43	0	0
-00088510	FUN_10088510	478	3	5
-000886f0	FUN_100886f0	115	1	2
-00088770	FUN_10088770	343	1	2
-000888d0	FUN_100888d0	144	2	0
-00088960	FUN_10088960	108	1	1
-000889d0	FUN_100889d0	952	1	4
-00088d90	FUN_10088d90	681	1	0
-00089040	FUN_10089040	356	1	0
-000891b0	FUN_100891b0	567	0	0
-000893f0	FUN_100893f0	92	2	1
-00089450	FUN_10089450	548	1	9
-00089680	FUN_10089680	141	1	5
-00089710	FUN_10089710	232	1	3
-00089800	__isctype	183	9	1
-000898c0	__itoa	66	2	1
-00089910	xtoa	194	3	0
-000899e0	__ltoa	63	0	1
-00089a20	__ultoa	30	0	1
-00089a40	__i64toa	72	0	1
-00089a90	x64toa	242	2	2
-00089b90	__ui64toa	31	0	1
-00089bb0	__snprintf	249	2	3
-00089cb0	__vsnprintf	243	1	3
-00089db0	FUN_10089db0	47	10	0
-00089de0	_signal	507	0	10
-0008a010	ctrlevent_capture	146	0	2
-0008a0b0	_raise	522	2	5
-0008a2f0	siglookup	91	2	0
-0008a350	FUN_1008a350	13	0	1
-0008a360	___pxcptinfoptrs	13	1	1
-0008a370	___crtMessageBoxA	187	2	2
-0008a430	_strncpy	254	7	0
-0008a530	__ioinit	804	1	6
-0008a860	__ioterm	155	1	2
-0008a900	__setenvp	329	1	6
-0008aa50	__setargv	216	1	5
-0008ab30	parse_cmdline	1060	1	0
-0008af60	___crtGetEnvironmentStringsA	537	1	8
-0008b180	__FF_MSGBANNER	73	1	1
-0008b1d0	__NMSG_WRITE	447	3	9
-0008b390	__GET_RTERRMSG	80	0	0
-0008b3e0	__handle_qnan1	85	2	3
-0008b440	__handle_qnan2	103	2	3
-0008b4b0	__except1	178	2	6
-0008b570	__except2	206	2	6
-0008b640	__raise_exc	1201	3	3
-0008bb10	__handle_exc	882	3	2
-0008be90	__umatherr	155	4	4
-0008bf30	FID_conflict:__set_errno_from_matherr	58	4	1
-0008bf70	__get_fname	63	1	0
-0008bfb0	__errcode	113	2	0
-0008c030	__set_exp	62	4	0
-0008c070	__get_exp	45	0	0
-0008c0a0	__add_exp	51	0	1
-0008c0e0	__set_bexp	52	0	0
-0008c120	__sptype	124	4	0
-0008c1a0	__decomp	313	4	1
-0008c2e0	__statfp	22	1	0
-0008c300	__clrfp	23	1	0
-0008c320	__ctrlfp	50	10	0
-0008c360	__set_statfp	117	1	0
-0008c5f0	__powhlp	612	0	1
-0008c860	__d_inttype	128	1	2
-0008c8e0	__flsbuf	628	4	5
-0008cb60	__output	3108	4	12
-0008d890	write_char	119	3	1
-0008d910	write_multi_char	53	1	1
-0008d950	write_string	74	1	1
-0008d9a0	get_int_arg	26	1	0
-0008d9c0	get_int64_arg	31	1	0
-0008d9e0	get_short_arg	27	1	0
-0008da00	__filbuf	484	1	3
-0008dbf0	__read	130	2	5
-0008dc80	__read_lk	1093	2	6
-0008e0d0	__rt_probe_read4@4	91	1	0
-0008e160	__stbuf	343	1	3
-0008e2c0	__ftbuf	148	1	2
-0008e360	__fcloseall	218	1	5
-0008e440	__statusfp	31	0	1
-0008e460	__clearfp	32	0	1
-0008e480	__control87	79	1	2
-0008e4d0	__controlfp	26	1	1
-0008e4f0	__fpreset	88	0	2
-0008e550	__abstract_cw	377	1	0
-0008e6d0	__hw_cw	346	1	0
-0008e830	__abstract_sw	167	2	0
-0008e8e0	FUN_1008e8e0	11	0	0
-0008e8f0	_tolower	147	1	5
-0008e990	__tolower_lk	299	3	2
-0008eac0	__ZeroTail	132	1	0
-0008eb50	__IncMan	168	1	1
-0008ec00	__RoundMan	219	2	2
-0008ece0	__CopyMan	76	1	0
-0008ed30	__FillZeroMan	47	1	0
-0008ed60	__IsZeroMan	55	1	0
-0008eda0	__ShrMan	236	1	0
-0008ee90	__ld12cvt	578	2	5
-0008f0e0	FID_conflict:__ld12tod	26	1	1
-0008f100	FID_conflict:__ld12tod	26	1	1
-0008f120	__ld12told	191	2	1
-0008f1e0	FID_conflict:__atodbl	54	1	2
-0008f220	__atoldbl	54	0	2
-0008f260	FID_conflict:__atodbl	54	1	2
-0008f2a0	__fptostr	250	3	2
-0008f3a0	__fltout2	119	3	3
-0008f420	___dtold	354	1	0
-0008f590	FID_conflict:_memcpy	664	6	0
-0008f8d0	__fptrap	15	1	1
-0008f8e0	__87except	348	1	5
-0008fa60	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	91	0	2
-0008fac0	FUN_1008fac0	21	0	1
-0008fae0	FUN_1008fae0	17	0	1
-0008fb00	?_ValidateRead@@YAHPBXI@Z	43	2	1
-0008fb30	?_ValidateWrite@@YAHPAXI@Z	43	1	1
-0008fb60	_ValidateExecute	39	2	1
-0008fb90	_strcmp	129	6	0
-0008fc20	__XcptFilter	446	0	3
-0008fde0	xcptlookup	89	1	0
-0008fe40	_abort	30	1	3
-0008fe60	__alloc_osfhnd	482	2	7
-00090050	__set_osfhnd	183	2	3
-00090110	__free_osfhnd	216	1	3
-000901f0	__get_osfhandle	102	4	2
-00090260	__open_osfhandle	260	0	8
-00090370	__lock_fhandle	134	8	4
-00090400	__unlock_fhandle	38	9	1
-00090430	__dosmaperr	145	6	2
-000904d0	FUN_100904d0	13	25	1
-000904e0	FUN_100904e0	13	16	1
-000904f0	__commit	210	1	7
-000905d0	__write	130	2	5
-00090660	__write_lk	627	2	6
-000908e0	FID_conflict:__open	63	0	1
-00090920	__sopen	1294	2	14
-00090e80	_strtol	27	1	1
-00090ea0	strtoxl	817	2	3
-000911e0	_strtoul	27	0	1
-00091210	_strchr	193	2	0
-000912d0	_strstr	128	1	0
-00091350	_strncmp	56	2	0
-00091390	___crtGetStringTypeA	421	3	5
-00091550	__aulldiv	104	2	0
-000915c0	__aullrem	117	2	0
-00091640	__setmbcp	836	1	7
-00091990	getSystemCP	89	1	2
-000919f0	_CPtoLCID	80	1	0
-00091a70	setSBCS	116	1	0
-00091af0	setSBUpLow	770	1	3
-00091e00	FUN_10091e00	23	0	0
-00091e20	___initmbctable	34	2	1
-00091e50	__matherr	7	2	0
-00092bf0	__frnd	27	1	0
-00092c10	__copysign	42	1	0
-00092c40	__chgsign	44	0	0
-00092c70	__scalb	25	0	1
-00092c90	__logb	300	0	5
-00092dc0	__nextafter	826	0	5
-00093100	__finite	34	0	0
-00093130	__isnan	73	0	0
-00093180	__fpclass	211	1	1
-00093260	__lseek	130	1	5
-000932f0	__lseek_lk	178	5	5
-000933b0	__getbuf	199	2	2
-00093480	__isatty	50	2	0
-000934c0	_wctomb	119	1	5
-00093540	__wctomb_lk	160	1	2
-000935e0	_setlocale	1007	0	13
-000939d0	__setlocale_set_cat	403	1	6
-00093b70	__setlocale_get_all	256	1	5
-00093c70	__expandlocale	388	2	6
-00093e00	FUN_10093e00	7	0	0
-00093e10	__strcats	79	2	1
-00093e60	___lc_strtolc	349	1	4
-00093fc0	___lc_lctostr	101	1	2
-00094030	___crtLCMapStringA	727	3	6
-00094340	strncnt	80	1	0
-00094390	___addl	62	3	0
-000943d0	___add_12	173	2	1
-00094480	___shl_12	96	3	0
-000944e0	___shr_12	99	2	0
-00094550	___mtold12	315	1	2
-00094690	___strgtold12	2586	4	3
-000951c0	___STRINGTOLD	79	0	2
-00095210	_$I10_OUTPUT	1302	1	6
-00095730	__chsize	115	0	4
-000957b0	__chsize_lk	560	2	11
-000959e0	FUN_100959e0	11	0	0
-000959f0	_toupper	147	1	5
-00095a90	__toupper_lk	299	1	2
-00095bc0	_ldexp	700	1	7
-00095e80	___init_time	219	0	4
-00095f60	__get_lc_time	1423	1	1
-000964f0	___free_lc_time	779	1	1
-00096800	___init_numeric	678	0	5
-00096ab0	fix_grouping	125	1	0
-00096b30	___init_monetary	304	0	4
-00096c60	__get_lc_lconv	525	1	2
-00096e70	fix_grouping	125	1	0
-00096ef0	__free_lc_lconv	147	1	1
-00096f90	___init_ctype	928	0	6
-00097330	FUN_10097330	7	0	0
-00097340	_strcspn	62	2	0
-00097380	_strpbrk	58	1	0
-000973c0	___get_qualified_locale	512	1	11
-000975c0	_TranslateName	130	1	1
-00097650	_GetLcidFromLangCountry	186	1	3
-00097710	_LangCountryEnumProc@4	804	0	6
-00097a40	_GetLcidFromLanguage	116	1	3
-00097ac0	_LanguageEnumProc@4	287	0	4
-00097be0	_GetLcidFromCountry	69	1	2
-00097c30	_CountryEnumProc@4	172	0	3
-00097ce0	_GetLcidFromDefault	43	1	1
-00097d10	_ProcessCodePage	155	1	2
-00097db0	_TestDefaultCountry	79	2	0
-00097e00	_TestDefaultLanguage	135	2	3
-00097e90	_IsThisWindowsNT	77	1	1
-00097ee0	crtGetLocaleInfoA	388	0	2
-00098070	_LcidFromHexString	118	4	0
-000980f0	_GetPrimaryLen	101	3	0
-00098160	___ld12mul	1085	2	3
-000985a0	___multtenpow12	195	2	1
-00098670	__setmode	115	0	4
-000986f0	__setmode_lk	207	2	1
-000987c0	__Getdays	289	0	3
-000988f0	__Getmonths	291	0	3
-00098a20	__Gettnames	878	0	4
-00098d90	FUN_10098d90	31	0	1
-00098db0	FUN_10098db0	394	1	5
-00098f40	__expandtime	1389	2	4
-00099560	FID_conflict:_store_str	72	1	0
-000995b0	__store_num	173	1	1
-00099660	FID_conflict:_store_number	172	1	0
-00099710	__store_winword	1152	1	2
-00099c30	___getlocaleinfo	650	4	7
-00099ec0	FUN_10099ec0	10	0	0
-00099ed0	___crtGetStringTypeW	575	1	6
-0009a140	__strcmpi	208	5	3
-0009a210	__strnicmp	257	2	3
-0009a320	_atol	255	3	1
-0009a420	_atoi	17	0	1
-0009a440	__atoi64	297	0	2
-0009a570	___tzset	61	1	3
-0009a5b0	__tzset	30	0	3
-0009a5d0	__tzset_lk	939	2	12
-0009a980	__isindst	46	0	3
-0009a9b0	__isindst_lk	762	1	1
-0009acb0	cvtdate	504	1	0
-0009aeb0	___crtGetLocaleInfoW	382	1	4
-0009b050	___crtGetLocaleInfoA	398	1	4
-0009b200	__allmul	52	1	0
-0009b240	_getenv	46	0	3
-0009b270	FID_conflict:__getenv_lk	198	2	3
-0009b340	__mbsnbicoll	79	2	1
-0009b390	___wtomb_environ	174	2	3
-0009b440	___crtCompareStringA	970	1	7
-0009b840	strncnt	80	1	0
-0009b890	___crtsetenv	736	1	10
-0009bb70	findenv	124	1	1
-0009bbf0	copy_environ	238	1	4
-0009bce0	__mbschr	237	1	3
-0009bdd0	inflateReset	145	4	2
-0009be70	inflateEnd	154	2	2
-0009bf10	inflateInit2_	403	1	4
-0009c0b0	inflateInit_	63	2	2
-0009c0f0	inflate	1709	3	3
-0009c7e0	inflateSetDictionary	223	0	3
-0009c8c0	inflateSync	379	0	2
-0009ca40	get_crc_table	36	0	0
-0009ca70	crc32	501	2	0
-0009cc70	inflate_blocks_reset	278	4	3
-0009cd90	inflate_blocks_new	225	1	2
-0009ce80	inflate_blocks	5080	1	10
-0009e290	inflate_blocks_free	124	1	2
-0009e310	inflate_set_dictionary	91	1	2
-0009e370	adler32	652	1	0
-0009e600	FUN_1009e600	36	0	0
-0009e630	z_error	70	0	3
-0009e680	zcalloc	77	0	2
-0009e6d0	zcfree	53	0	2
-0009e710	inflate_trees_bits	138	1	3
-0009e7a0	huft_build	1886	3	2
-0009ef00	inflate_trees_dynamic	299	1	3
-0009f030	inflate_trees_fixed	469	1	2
-0009f210	falloc	58	0	0
-0009f250	inflate_trees_free	155	5	1
-0009f2f0	inflate_codes_new	127	1	1
-0009f370	inflate_codes	3393	1	3
-000a00e0	inflate_codes_free	70	2	1
-000a0130	inflate_flush	516	2	2
-000a0340	inflate_fast	1585	1	0
-000a0972	KERNEL32.DLL::RtlUnwind	6	2	0
-000aec40	Unwind@100aec40	9	0	1
-000aec49	Unwind@100aec49	23	0	1
-000aec80	Unwind@100aec80	9	0	1
-000aeca0	Unwind@100aeca0	9	0	1
-000aeca9	Unwind@100aeca9	23	0	1
-000aece0	Unwind@100aece0	9	0	1
-000aece9	Unwind@100aece9	23	0	1
-000aed20	Unwind@100aed20	9	0	1
-000aed29	Unwind@100aed29	23	0	1
-000aed60	Unwind@100aed60	9	0	1
-000aed69	Unwind@100aed69	23	0	1
-000aeda0	Unwind@100aeda0	9	0	1
-000aeda9	Unwind@100aeda9	23	0	1
-000aede0	Unwind@100aede0	9	0	1
-000aede9	Unwind@100aede9	23	0	1
-000aee20	Unwind@100aee20	9	0	1
-000aee40	Unwind@100aee40	11	0	1
-000aee60	Unwind@100aee60	9	0	1
-000aee80	Unwind@100aee80	9	0	1
-000aeea0	Unwind@100aeea0	9	0	1
-000aeec0	Unwind@100aeec0	9	0	1
-000aeee0	Unwind@100aeee0	9	0	1
-000aef00	Unwind@100aef00	9	0	1
-000aef20	Unwind@100aef20	9	0	1
-000aef40	Unwind@100aef40	9	0	1
-000aef60	Unwind@100aef60	11	0	1
-000aef80	Unwind@100aef80	11	0	1
-000aefa0	Unwind@100aefa0	11	0	1
-000aefc0	Unwind@100aefc0	11	0	1
-000aefe0	Unwind@100aefe0	9	0	1
-000af000	Unwind@100af000	9	0	1
-000af009	Unwind@100af009	40	0	1
-000af050	Unwind@100af050	9	0	1
+entry	name	size	callers	callees	ranges
+00001005	MappedFile::ctor	5	3	0	00001005-0000100a
+0000100a	onKey	5	1	0	0000100a-0000100f
+00001014	Font::release	5	1	0	00001014-00001019
+00001019	rectFromXYWH	5	77	0	00001019-0000101e
+0000101e	Font::Font	5	1	0	0000101e-00001023
+00001028	realizePalette	5	3	0	00001028-0000102d
+0000102d	blueOf	5	3	0	0000102d-00001032
+0000103c	Vector3::negate	5	1	0	0000103c-00001041
+00001046	Sprite::draw16_1003dca0	5	1	0	00001046-0000104b
+00001055	Array_Rec14::ctor	5	1	0	00001055-0000105a
+0000105a	Surface::fill2_8	5	1	0	0000105a-0000105f
+0000105f	LinkedList::count	5	1	0	0000105f-00001064
+0000106e	Sprite::draw16_1004ca10	5	1	0	0000106e-00001073
+0000107d	Surface::dashedHLine8	5	1	0	0000107d-00001082
+00001087	intersect	5	79	0	00001087-0000108c
+0000108c	FontBase::~FontBase	5	4	0	0000108c-00001091
+00001091	Random::next	5	1	0	00001091-00001096
+00001096	Palette::update	5	2	0	00001096-0000109b
+000010a0	Sprite::blitMask	5	2	0	000010a0-000010a5
+000010aa	Surface::release	5	1	0	000010aa-000010af
+000010af	Sprite::draw8_10061db0	5	1	0	000010af-000010b4
+000010b4	Sprite::blitPair	5	1	0	000010b4-000010b9
+000010be	Surface::vline	5	1	0	000010be-000010c3
+000010d7	Surface::dashedVLine8	5	1	0	000010d7-000010dc
+000010e6	Sprite::draw16_100358b0	5	1	0	000010e6-000010eb
+000010f5	onWmNcHitTest	5	1	0	000010f5-000010fa
+000010fa	Sprite::draw16_10040930	5	1	0	000010fa-000010ff
+00001113	Matrix::setRotation	5	2	0	00001113-00001118
+00001118	Sprite::getFlag18	5	17	0	00001118-0000111d
+00001136	Sprite::draw16_10054e20	5	1	0	00001136-0000113b
+0000113b	Matrix::copyCtor	5	3	0	0000113b-00001140
+0000114a	Sprite::draw16_100298b0	5	1	0	0000114a-0000114f
+0000114f	LinkedList::add	5	1	0	0000114f-00001154
+00001154	Sprite::draw16_10049ea0	5	1	0	00001154-00001159
+00001159	DisplayBase::dtor	5	3	0	00001159-0000115e
+0000115e	Surface::ditherBlendRect16	5	1	0	0000115e-00001163
+00001168	Sprite::draw16_1001cde0	5	1	0	00001168-0000116d
+0000116d	Array_Rec14::reset	5	1	0	0000116d-00001172
+00001186	Surface::blitT_8to16	5	1	0	00001186-0000118b
+0000119a	Matrix::dtor	5	12	0	0000119a-0000119f
+0000119f	Array_Rec14::add	5	1	0	0000119f-000011a4
+000011a4	Vector3::cross	5	2	0	000011a4-000011a9
+000011a9	Sprite::draw16_1003b060	5	1	0	000011a9-000011ae
+000011ae	setField28	5	2	0	000011ae-000011b3
+000011c7	DllMain	5	1	0	000011c7-000011cc
+000011d1	onWmMouseWheel	5	1	0	000011d1-000011d6
+000011ea	Sprite::draw16_1002ed60	5	1	0	000011ea-000011ef
+000011f4	Surface::fillRectC8	5	1	0	000011f4-000011f9
+000011f9	storeCommandHandler	5	1	0	000011f9-000011fe
+00001203	Quat::conjugate	5	2	0	00001203-00001208
+00001217	initFontTable	5	2	0	00001217-0000121c
+0000121c	Quat::setAxisAngle	5	5	0	0000121c-00001221
+00001221	Sprite::draw_1001f2d0	5	1	0	00001221-00001226
+0000122b	thunk_FUN_10069270	5	1	0	0000122b-00001230
+0000123a	LinkedList::removeCurrent	5	1	0	0000123a-0000123f
+00001249	Surface::line16	5	1	0	00001249-0000124e
+00001258	Surface::dashedLine16	5	1	0	00001258-0000125d
+0000125d	Surface::dtor	5	1	0	0000125d-00001262
+00001262	Sprite::draw16_1004dff0	5	1	0	00001262-00001267
+0000126c	Sprite::draw16_10043430	5	1	0	0000126c-00001271
+00001276	Sprite::draw16_10036e60	5	1	0	00001276-0000127b
+0000127b	Sprite::remap8	5	1	0	0000127b-00001280
+00001280	onActivate	5	1	0	00001280-00001285
+0000129e	deleteLogPalette	5	2	0	0000129e-000012a3
+000012b2	Surface::dashedVLine16	5	1	0	000012b2-000012b7
+000012c1	MappedFile::dtor	5	5	0	000012c1-000012c6
+000012cb	Surface::getField810	5	1	0	000012cb-000012d0
+000012f3	Sprite::draw16_1004b430	5	1	0	000012f3-000012f8
+000012f8	Sprite::draw8_10063f60	5	1	0	000012f8-000012fd
+0000132f	onWmRButtonDown	5	1	0	0000132f-00001334
+0000133e	Vector3::add	5	2	0	0000133e-00001343
+00001343	Transform::setTranslation	5	1	0	00001343-00001348
+00001352	onPaint	5	1	0	00001352-00001357
+00001370	Surface::line8	5	1	0	00001370-00001375
+00001375	Array_Rec94::add	5	1	0	00001375-0000137a
+0000137f	Vector3::addXYZ	5	1	0	0000137f-00001384
+00001384	Sprite::draw16_10045e50	5	1	0	00001384-00001389
+00001389	Sprite::draw16_1004f5d0	5	1	0	00001389-0000138e
+0000139d	Sprite::draw16_100576a0	5	1	0	0000139d-000013a2
+000013a2	Sprite::blitMaskScaled	5	1	0	000013a2-000013a7
+000013a7	LinkedList::ctor	5	1	0	000013a7-000013ac
+000013ac	Array_Rec14::count	5	3	0	000013ac-000013b1
+000013b1	redOf	5	3	0	000013b1-000013b6
+000013c0	Palette::toRGBQuads	5	1	0	000013c0-000013c5
+000013cf	Array_e0::clearRet	5	1	0	000013cf-000013d4
+000013d9	Sprite::draw16_10039a60	5	1	0	000013d9-000013de
+000013de	Surface::fillRect16	5	1	0	000013de-000013e3
+000013e3	Tracked::ctor	5	4	0	000013e3-000013e8
+000013e8	Quat::ctor	5	11	0	000013e8-000013ed
+000013f7	Display::Display	5	1	0	000013f7-000013fc
+00001401	Sprite::draw8_10060cf0	5	1	0	00001401-00001406
+0000140b	Sprite::draw16m_1001df80	5	1	0	0000140b-00001410
+0000141f	thunk_FUN_1001b590	5	1	0	0000141f-00001424
+0000142e	Sprite::drawRle16b	5	1	0	0000142e-00001433
+00001438	Vector3::scale	5	2	0	00001438-0000143d
+00001451	Palette::reset	5	1	0	00001451-00001456
+00001460	Sprite::draw16_10050bb0	5	1	0	00001460-00001465
+0000146a	Sprite::drawRle16p	5	1	0	0000146a-0000146f
+0000147e	Surface::fill8	5	1	0	0000147e-00001483
+00001488	Vector3::addAssignRet	5	6	0	00001488-0000148d
+00001492	SurfaceBase::ctor	5	2	0	00001492-00001497
+0000149c	SurfaceBase::dtor	5	5	0	0000149c-000014a1
+000014bf	Sprite::draw16_10027430	5	1	0	000014bf-000014c4
+000014c4	Sprite::draw16_10026240	5	1	0	000014c4-000014c9
+000014d3	Sprite::draw16_100473b0	5	1	0	000014d3-000014d8
+000014dd	initDepthInfo	5	2	0	000014dd-000014e2
+000014e2	Transform::copyCtor	5	4	0	000014e2-000014e7
+000014e7	thunk_FUN_1006afc0	5	1	0	000014e7-000014ec
+000014f6	onPaletteChanged	5	1	0	000014f6-000014fb
+00001500	LinkedList::clear	5	1	0	00001500-00001505
+00001505	Sprite::draw16_10032d60	5	1	0	00001505-0000150a
+0000150a	Sprite::draw16_1003c660	5	1	0	0000150a-0000150f
+0000150f	Array_Rec94::dtor	5	2	0	0000150f-00001514
+00001514	Sprite::drawRle16t	5	1	0	00001514-00001519
+0000152d	Surface::clear8	5	1	0	0000152d-00001532
+00001532	Transform::set	5	1	0	00001532-00001537
+00001537	Surface::blendRect16	5	1	0	00001537-0000153c
+0000153c	Array_Rec94::ctor	5	1	0	0000153c-00001541
+0000154b	Random::ctor	5	2	0	0000154b-00001550
+00001555	PaletteBase::ctor	5	1	0	00001555-0000155a
+0000155a	thunk_FUN_1001a6b0	5	1	0	0000155a-0000155f
+0000156e	Surface::blitT_16to16	5	1	0	0000156e-00001573
+0000157d	MappedFile::openWrite	5	2	0	0000157d-00001582
+00001582	makeColor	5	5	0	00001582-00001587
+0000159b	Sprite::draw_10062dd0	5	1	0	0000159b-000015a0
+000015b4	Sprite::drawRle16n	5	1	0	000015b4-000015b9
+000015be	Sprite::create16	5	1	0	000015be-000015c3
+000015c3	Sprite::release	5	1	0	000015c3-000015c8
+000015d2	Surface::fill16	5	1	0	000015d2-000015d7
+000015eb	Sprite::draw8_1005fd20	5	1	0	000015eb-000015f0
+000015f5	Surface::hline	5	1	0	000015f5-000015fa
+00001609	Array_Rec94::count	5	1	0	00001609-0000160e
+0000160e	Array_Rec94::reset	5	1	0	0000160e-00001613
+00001613	thunk_FUN_1001b650	5	1	0	00001613-00001618
+0000161d	Surface::blit16from16	5	1	0	0000161d-00001622
+00001627	Sprite::draw16_10038460	5	1	0	00001627-0000162c
+0000164a	ListNode::dtor	5	1	0	0000164a-0000164f
+00001659	initFonts	5	1	0	00001659-0000165e
+0000165e	ListNode::ctor	5	1	0	0000165e-00001663
+00001663	thunk_FUN_1001b5d0	5	1	0	00001663-00001668
+00001668	Sprite::draw16_100317c0	5	1	0	00001668-0000166d
+00001672	Vector3::subAssignRet	5	2	0	00001672-00001677
+00001681	Sprite::draw16_10048910	5	1	0	00001681-00001686
+0000168b	Sprite::draw16_1002d890	5	1	0	0000168b-00001690
+000016ae	thunk_FUN_10065670	5	1	0	000016ae-000016b3
+000016b3	Surface::dashedHLine16	5	1	0	000016b3-000016b8
+000016bd	Array_Rec14::dtor	5	2	0	000016bd-000016c2
+000016c2	Transform::dtor	5	15	0	000016c2-000016c7
+000016cc	Sprite::draw_1005ed80	5	1	0	000016cc-000016d1
+000016d6	equal	5	3	0	000016d6-000016db
+000016db	Matrix::loadIdentity	5	4	0	000016db-000016e0
+000016e0	onWmLButtonDown	5	1	0	000016e0-000016e5
+000016e5	Sprite::draw16_10030290	5	1	0	000016e5-000016ea
+000016f4	Random::range	5	1	0	000016f4-000016f9
+000016f9	Sprite::draw16_100537f0	5	1	0	000016f9-000016fe
+000016fe	Sprite::draw_1005dde0	5	1	0	000016fe-00001703
+00001703	Transform::assignOp	5	5	0	00001703-00001708
+00001708	onCommand	5	1	0	00001708-0000170d
+0000172b	Sprite::draw16_1003f2e0	5	1	0	0000172b-00001730
+00001735	Sprite::dtor	5	5	0	00001735-0000173a
+0000173a	rectHeight	5	6	0	0000173a-0000173f
+00001744	Sprite::draw_1002ab90	5	1	0	00001744-00001749
+0000174e	greenOf	5	3	0	0000174e-00001753
+0000175d	Surface::blit8from8	5	1	0	0000175d-00001762
+00001771	Array_e0::dtor	5	2	0	00001771-00001776
+00001780	get_graphsy_object_ptr	5	0	0	00001780-00001785
+00001794	rectWidth	5	6	0	00001794-00001799
+00001799	Sprite::draw16_100521d0	5	1	0	00001799-0000179e
+0000179e	Palette::~Palette	5	1	0	0000179e-000017a3
+000017a8	Array_e0::ctor	5	1	0	000017a8-000017ad
+000017b2	Sprite::drawG	5	1	0	000017b2-000017b7
+000017b7	jfree	5	7	0	000017b7-000017bc
+000017bc	MappedFile::create	5	1	0	000017bc-000017c1
+000017c1	SpriteBase::ctor	5	2	0	000017c1-000017c6
+000017c6	jalloc	5	6	0	000017c6-000017cb
+000017cb	Sprite::draw16_10034300	5	1	0	000017cb-000017d0
+000017d0	Surface::ctorOwner	5	1	0	000017d0-000017d5
+000017df	SpriteBase::~SpriteBase	5	3	0	000017df-000017e4
+000017e9	Transform::reset	5	3	0	000017e9-000017ee
+000017f3	Surface::blitT_8to8	5	1	0	000017f3-000017f8
+000017f8	Matrix::ctor	5	4	0	000017f8-000017fd
+000017fd	Sprite::draw16_10028630	5	1	0	000017fd-00001802
+00001802	Sprite::draw16_10044940	5	1	0	00001802-00001807
+00001807	thunk_FUN_1001b610	5	1	0	00001807-0000180c
+0000180c	Font::~Font	5	1	0	0000180c-00001811
+00001811	Transform::ctor	5	5	0	00001811-00001816
+00001825	Sprite::create8	5	1	0	00001825-0000182a
+0000182f	Sprite::drawRle16mk	5	1	0	0000182f-00001834
+00001843	onChar	5	1	0	00001843-00001848
+00001884	Vector3::mulScalar	5	2	0	00001884-00001889
+00001889	Sprite::draw16_10022a10	5	1	0	00001889-0000188e
+00001898	FontBase::FontBase	5	1	0	00001898-0000189d
+0000189d	setRect4	5	1	0	0000189d-000018a2
+000018ac	Sprite::blitPair1	5	1	0	000018ac-000018b1
+000018b6	fillWords	5	2	0	000018b6-000018bb
+000018bb	MappedFile::close	5	5	0	000018bb-000018c0
+000018c0	thunk_FUN_100052b0	5	1	0	000018c0-000018c5
+000018d4	Matrix::setRotationTranslation	5	1	0	000018d4-000018d9
+000018de	Sprite::ctorN	5	3	0	000018de-000018e3
+000018f7	onWmRButtonUp	5	1	0	000018f7-000018fc
+000018fc	Palette::apply	5	1	0	000018fc-00001901
+00001901	Surface::dashedLine8	5	1	0	00001901-00001906
+00001906	LinkedList::find	5	1	0	00001906-0000190b
+00001915	Sprite::draw16t_1001b060	5	1	0	00001915-0000191a
+0000191a	Palette::ctor	5	1	0	0000191a-0000191f
+0000191f	Array_Rec94::clearRet	5	1	0	0000191f-00001924
+00001924	Quat::setIdentity	5	1	0	00001924-00001929
+00001933	onWmSize	5	1	0	00001933-00001938
+00001947	onWmLButtonUp	5	1	0	00001947-0000194c
+0000194c	Array_Rec14::clear	5	2	0	0000194c-00001951
+00001951	Surface::ditherRectC8	5	1	0	00001951-00001956
+0000195b	Tracked::dtor	5	6	0	0000195b-00001960
+00001960	Vector3::set	5	7	0	00001960-00001965
+00001979	LinkedList::dtor	5	2	0	00001979-0000197e
+0000197e	Sprite::draw_1002bcf0	5	1	0	0000197e-00001983
+00001983	Quat::mulAssign	5	5	0	00001983-00001988
+000019a1	Surface::blitKey8to16	5	1	0	000019a1-000019a6
+000019b0	PaletteBase::dtor	5	3	0	000019b0-000019b5
+000019b5	Sprite::drawRle16m	5	1	0	000019b5-000019ba
+000019ba	Array_Rec94::clear	5	2	0	000019ba-000019bf
+000019ce	Array_Rec14::clearRet	5	1	0	000019ce-000019d3
+000019d3	createPalette	5	1	0	000019d3-000019d8
+000019d8	Surface::hline16	5	1	0	000019d8-000019dd
+000019dd	thunk_FUN_10065630	5	1	0	000019dd-000019e2
+000019f1	Array_e0::clear	5	2	0	000019f1-000019f6
+00001a0a	Sprite::drawRle16c	5	1	0	00001a0a-00001a0f
+00001a0f	Vector3::rotate	5	7	0	00001a0f-00001a14
+00001a1e	Transform::setRotation	5	1	0	00001a1e-00001a23
+00001a23	Surface::clear16	5	1	0	00001a23-00001a28
+00001a28	Surface::vline16	5	1	0	00001a28-00001a2d
+00001a37	Matrix::setTranslation	5	2	0	00001a37-00001a3c
+00001a50	Sprite::draw16_1001bc40	5	1	0	00001a50-00001a55
+00001a55	Vector3::mulAssignScalar	5	1	0	00001a55-00001a5a
+00001a5a	Sprite::drawB	5	1	0	00001a5a-00001a5f
+00001a64	Vector3::dot	5	2	0	00001a64-00001a69
+00001a69	Sprite::draw16_10056450	5	1	0	00001a69-00001a6e
+00001a6e	Surface::writePcx8	5	1	0	00001a6e-00001a73
+00001a78	Sprite::draw16m_1001e970	5	1	0	00001a78-00001a7d
+00001a82	Sprite::draw16t_1001ab40	5	1	0	00001a82-00001a87
+00001a96	Surface::ditherRect16	5	1	0	00001a96-00001a9b
+00001aaf	Tracked::deleteAll	5	1	0	00001aaf-00001ab4
+00001abe	Sprite::draw16_10041f80	5	1	0	00001abe-00001ac3
+00001ad2	Sprite::draw16_10024140	5	1	0	00001ad2-00001ad7
+00001adc	Quat::mul	5	2	0	00001adc-00001ae1
+00001aeb	MappedFile::closeTruncate	5	1	0	00001aeb-00001af0
+00001af5	Matrix::assign	5	1	0	00001af5-00001afa
+00001b09	onWmMouseMove	5	1	0	00001b09-00001b0e
+00001b0e	Sprite::draw16_10020430	5	1	0	00001b0e-00001b13
+00002650	MappedFile::ctor	78	0	0	00002650-0000269e
+000026c0	MappedFile::deletingDtor	81	0	3	000026c0-00002711
+00002730	MappedFile::ctorNameFlag	92	0	4	00002730-0000278c
+000027b0	MappedFile::ctorName	90	0	4	000027b0-0000280a
+00002820	MappedFile::dtor	63	0	2	00002820-0000285f
+00002870	MappedFile::openRead	341	0	7	00002870-000029c5
+00002a20	MappedFile::openWrite	344	0	7	00002a20-00002b78
+00002bd0	MappedFile::create	458	0	9	00002bd0-00002d9a
+00002e10	MappedFile::close	169	0	3	00002e10-00002eb9
+00002ef0	MappedFile::closeTruncate	274	0	6	00002ef0-00003002
+00003050	Quat::ctor	73	0	2	00003050-00003099
+000030b0	Quat::copyFrom	75	0	0	000030b0-000030fb
+00003110	Quat::ctorAxisAngle	67	0	2	00003110-00003153
+00003170	Quat::setIdentity	70	0	2	00003170-000031b6
+000031d0	Matrix::ctorQuatVec	76	0	2	000031d0-0000321c
+00003230	Matrix::ctorQuat	72	0	2	00003230-00003278
+00003290	Matrix::ctorVec	72	0	2	00003290-000032d8
+000032f0	Matrix::dtor	63	0	2	000032f0-0000332f
+00003340	Matrix::reset	54	0	2	00003340-00003376
+00003390	Transform::ctorQuatVec	87	0	3	00003390-000033e7
+00003400	Transform::ctorQuat	83	0	3	00003400-00003453
+00003470	Transform::ctorVec	83	0	3	00003470-000034c3
+000034e0	Transform::dtor	63	0	2	000034e0-0000351f
+00003530	Transform::assign	94	0	0	00003530-0000358e
+000035b0	FUN_100035b0	54	0	2	000035b0-000035e6
+00003600	Matrix::deletingDtor	81	0	3	00003600-00003651
+00003670	Transform::deletingDtor	81	0	3	00003670-000036c1
+000036e0	Vector3::set	64	0	0	000036e0-00003720
+00003730	Vector3::setZero	65	0	0	00003730-00003771
+00003790	Vector3::add	112	0	0	00003790-00003800
+00003820	Vector3::sub	112	0	0	00003820-00003890
+000038b0	Vector3::addAssignRet	94	0	0	000038b0-0000390e
+00003930	Vector3::subAssignRet	94	0	0	00003930-0000398e
+000039b0	Vector3::mulScalar	106	0	0	000039b0-00003a1a
+00003a40	Vector3::mulAssignScalar	88	0	0	00003a40-00003a98
+00003ab0	Vector3::equals	99	0	0	00003ab0-00003b13
+00003b30	Vector3::distance	154	0	2	00003b30-00003bca
+00003bf0	Vector3::distance2	118	0	0	00003bf0-00003c66
+00003c90	Vector3::dot	76	0	0	00003c90-00003cdc
+00003cf0	Vector3::normalize	194	0	2	00003cf0-00003db2
+00003df0	Vector3::negate	76	0	0	00003df0-00003e3c
+00003e50	Vector3::cross	146	0	0	00003e50-00003ee2
+00003f10	Vector3::scale	85	0	0	00003f10-00003f65
+00003f80	Vector3::midpoint	125	0	0	00003f80-00003ffd
+00004020	Vector3::addXYZ	81	0	0	00004020-00004071
+00004090	Vector3::addAssign	89	0	0	00004090-000040e9
+00004100	Vector3::rotate	243	0	4	00004100-000041f3
+00004230	Quat::setAxisAngle	146	0	4	00004230-000042c2
+000042f0	Quat::mulAssign	222	0	6	000042f0-000043ce
+00004410	Quat::mul	222	0	6	00004410-000044ee
+00004530	Quat::conjugate	76	0	0	00004530-0000457c
+00004590	Matrix::ctor	66	0	2	00004590-000045d2
+000045f0	Matrix::loadIdentity	116	0	0	000045f0-00004664
+00004690	Matrix::setRotationTranslation	72	0	3	00004690-000046d8
+000046f0	Matrix::setTranslation	73	0	0	000046f0-00004739
+00004750	Matrix::setRotation	312	0	0	00004750-00004888
+000048e0	Matrix::add	198	0	4	000048e0-000049a6
+000049e0	Matrix::scaleDiagonal	90	0	0	000049e0-00004a3a
+00004a50	Matrix::mulAssign	496	0	4	00004a50-00004c40
+00004cc0	Matrix::addEquals	97	0	0	00004cc0-00004d21
+00004d40	Matrix::subEquals	97	0	0	00004d40-00004da1
+00004dc0	Matrix::equals	97	0	0	00004dc0-00004e21
+00004e40	Matrix::mulPoint	205	0	0	00004e40-00004f0d
+00004f40	Matrix::mulScalar	192	0	4	00004f40-00005000
+00005030	Matrix::mulMatrix	503	0	4	00005030-00005227
+000052b0	FUN_100052b0	57	0	2	000052b0-000052e9
+00005300	FUN_10005300	39	0	0	00005300-00005327
+00005330	FUN_10005330	39	0	0	00005330-00005357
+00005360	Matrix::translateVec	94	0	0	00005360-000053be
+000053e0	Matrix::translateXYZ	86	0	0	000053e0-00005436
+00005450	Transform::ctor	77	0	3	00005450-0000549d
+000054b0	Transform::setTranslation	94	0	2	000054b0-0000550e
+00005530	Transform::setRotation	106	0	2	00005530-0000559a
+000055c0	Transform::set	104	0	0	000055c0-00005628
+00005650	Transform::reset	46	0	0	00005650-0000567e
+00005690	Transform::getMatrix	401	0	2	00005690-00005821
+00005890	Transform::addVector3	200	0	6	00005890-00005958
+00005990	Transform::translateVec	121	0	2	00005990-00005a09
+00005a30	Transform::subVector3	200	0	6	00005a30-00005af8
+00005b30	Transform::untranslate	121	0	2	00005b30-00005ba9
+00005bd0	Transform::translateXYZ	126	0	3	00005bd0-00005c4e
+00005c70	Transform::move	121	0	2	00005c70-00005ce9
+00005d10	Transform::apply	147	0	3	00005d10-00005da3
+00005dd0	Transform::mulTransform	429	0	8	00005dd0-00005f7d
+00005ff0	Transform::scaled	171	0	6	00005ff0-0000609b
+000060d0	Transform::mulAssignTransform	329	0	7	000060d0-00006219
+00006270	Transform::scaleTranslation	79	0	2	00006270-000062bf
+000062e0	Transform::invert	68	0	3	000062e0-00006324
+00006340	Transform::rotate	178	0	5	00006340-000063f2
+00006420	Transform::rotateX	195	0	6	00006420-000064e3
+00006520	Transform::rotateY	195	0	6	00006520-000065e3
+00006620	Transform::rotateZ	195	0	6	00006620-000066e3
+00006720	Matrix::copyCtor	88	0	0	00006720-00006778
+00006790	Matrix::assign	133	0	0	00006790-00006815
+00006840	Transform::assignOp	115	0	0	00006840-000068b3
+000068d0	Transform::copyCtor	124	0	0	000068d0-0000694c
+00006970	FUN_10006970	51	0	3	00006970-000069a3
+000069b0	FUN_100069b0	51	1	2	000069b0-000069e3
+000069f0	FUN_100069f0	54	1	2	000069f0-00006a26
+00006a40	atexitDestroyGlobalList	80	0	2	00006a40-00006a90
+00006ab0	Tracked::ctor	74	0	2	00006ab0-00006afa
+00006b10	Tracked::deletingDtor	81	0	3	00006b10-00006b61
+00006b80	Tracked::dtor	79	0	3	00006b80-00006bcf
+00006bf0	Tracked::deleteAll	110	0	2	00006bf0-00006c5e
+00006c80	LinkedList::ctor	78	0	0	00006c80-00006cce
+00006cf0	LinkedList::dtor	63	0	2	00006cf0-00006d2f
+00006d40	LinkedList::count	42	0	0	00006d40-00006d6a
+00006d80	LinkedList::deletingDtor	81	0	3	00006d80-00006dd1
+00006df0	LinkedList::clear	262	0	1	00006df0-00006ef6
+00006f40	LinkedList::add	349	0	4	00006f40-0000709d
+00007100	LinkedList::removeCurrent	345	0	1	00007100-00007259
+000072b0	LinkedList::find	151	0	0	000072b0-00007347
+00007370	ListNode::ctor	88	0	0	00007370-000073c8
+000073e0	ListNode::deletingDtor	81	0	3	000073e0-00007431
+00007450	ListNode::dtor	65	0	0	00007450-00007491
+000074b0	FUN_100074b0	46	0	2	000074b0-000074de
+000074f0	FUN_100074f0	51	1	2	000074f0-00007523
+00007530	Random::next	91	0	0	00007530-0000758b
+000075b0	Random::range	81	0	3	000075b0-00007601
+00007620	Random::ctor	48	0	0	00007620-00007650
+00007660	Surface::ctor	531	0	6	00007660-00007873
+00007900	Surface::deletingDtor	81	0	3	00007900-00007951
+00007970	Surface::ctorOwner	508	0	6	00007970-00007b6c
+00007bf0	Surface::dtor	166	0	4	00007bf0-00007c96
+00007cc0	Surface::release	299	0	4	00007cc0-00007deb
+00007e40	allocDrawBuffer	993	0	11	00007e40-00008221
+00008360	rectFromXYWH	72	0	0	00008360-000083a8
+000083c0	Surface::setClip	365	0	6	000083c0-0000852d
+00008590	intersect	68	0	2	00008590-000085d4
+000085f0	equal	64	0	2	000085f0-00008630
+00008640	Surface::acquireDC	84	0	0	00008640-00008694
+000086b0	Surface::releaseDC	97	0	0	000086b0-00008711
+00008730	Surface::acquireDC2	96	0	0	00008730-00008790
+000087b0	Surface::releaseDC2	97	0	0	000087b0-00008811
+00008830	Surface::pixelAddr	287	0	1	00008830-0000894f
+000089d0	Surface::setPalette	213	0	4	000089d0-00008aa5
+00008ae0	Surface::selectObject	129	0	2	00008ae0-00008b61
+00008b90	Surface::selectSystemFont	130	0	3	00008b90-00008c12
+00008c40	Surface::setTextColorRGB	151	0	2	00008c40-00008cd7
+00008d00	Surface::setTextColor16	128	0	2	00008d00-00008d80
+00008da0	Surface::textOut	130	0	2	00008da0-00008e22
+00008e50	Surface::blit	225	0	3	00008e50-00008f31
+00008f70	Surface::stretchTo	334	0	4	00008f70-000090be
+00009120	rectWidth	42	0	0	00009120-0000914a
+00009160	rectHeight	43	0	0	00009160-0000918b
+000091a0	Surface::blitT	246	0	4	000091a0-00009296
+000092e0	initDepthInfo	49	0	0	000092e0-00009311
+00009320	Surface::fillRect	225	0	5	00009320-00009401
+00009440	Surface::fill2	127	0	2	00009440-000094bf
+000094e0	Surface::drawLine	150	0	3	000094e0-00009576
+000095a0	Surface::drawDashedLine	182	0	3	000095a0-00009656
+00009690	SurfaceBase::ctor	66	0	2	00009690-000096d2
+000096f0	SurfaceBase::dtor	63	0	2	000096f0-0000972f
+00009740	SurfaceBase::acquireDC_default	38	0	0	00009740-00009766
+00009770	Surface::fillRectDispatch	126	0	3	00009770-000097ee
+00009810	SurfaceBase::releaseDC_default	38	0	0	00009810-00009836
+00009840	FUN_10009840	38	0	0	00009840-00009866
+00009870	SurfaceBase::blitT_default	43	0	0	00009870-0000989b
+000098b0	SurfaceBase::fillRect_default	43	0	0	000098b0-000098db
+000098f0	Surface::blit16	158	0	2	000098f0-0000998e
+000099c0	SurfaceBase::fill2_default	43	0	0	000099c0-000099eb
+00009a00	SurfaceBase::drawLine_default	43	0	0	00009a00-00009a2b
+00009a40	SurfaceBase::drawDashedLine_default	43	0	0	00009a40-00009a6b
+00009a80	SurfaceBase::defaultVfn68	43	0	0	00009a80-00009aab
+00009ac0	Surface::blendRectDispatch	111	0	2	00009ac0-00009b2f
+00009b50	SurfaceBase::defaultVfn6c	43	0	0	00009b50-00009b7b
+00009b90	SurfaceBase::defaultVfn70	43	0	0	00009b90-00009bbb
+00009bd0	SurfaceBase::loadPng_default	43	0	0	00009bd0-00009bfb
+00009c10	SurfaceBase::saveImage_default	43	0	0	00009c10-00009c3b
+00009c50	Surface::ditherRectDispatch	131	0	3	00009c50-00009cd3
+00009d00	SurfaceBase::defaultVfn7c	43	0	0	00009d00-00009d2b
+00009d40	SurfaceBase::drawTo_default	43	0	0	00009d40-00009d6b
+00009d80	SurfaceBase::defaultVfn88	43	0	0	00009d80-00009dab
+00009dc0	SurfaceBase::defaultVfn90	43	0	0	00009dc0-00009deb
+00009e00	SurfaceBase::drawToZ_default	43	0	0	00009e00-00009e2b
+00009e40	Surface::ditherBlendRectDispatch	111	0	2	00009e40-00009eaf
+00009ed0	SurfaceBase::defaultVfn94	43	0	0	00009ed0-00009efb
+00009f10	SurfaceBase::defaultVfn98	43	0	0	00009f10-00009f3b
+00009f50	SurfaceBase::defaultVfn80	43	0	0	00009f50-00009f7b
+00009f90	SurfaceBase::defaultVfn9c	43	0	0	00009f90-00009fbb
+00009fd0	Surface::drawTo	332	0	5	00009fd0-0000a11c
+0000a170	SurfaceBase::defaultVfna4	43	0	0	0000a170-0000a19b
+0000a1b0	SurfaceBase::defaultVfna0	43	0	0	0000a1b0-0000a1db
+0000a1f0	SurfaceBase::selectObject_default	43	0	0	0000a1f0-0000a21b
+0000a230	SurfaceBase::selectSystemFont_default	41	0	0	0000a230-0000a259
+0000a270	SurfaceBase::setTextColorRGB_default	43	0	0	0000a270-0000a29b
+0000a2b0	SurfaceBase::setTextColor16_default	43	0	0	0000a2b0-0000a2db
+0000a2f0	SurfaceBase::textOut_default	43	0	0	0000a2f0-0000a31b
+0000a330	Surface::drawToZ	336	0	5	0000a330-0000a480
+0000a4e0	SurfaceBase::deletingDtor	81	0	3	0000a4e0-0000a531
+0000a550	Surface::saveImage	103	0	2	0000a550-0000a5b7
+0000a5d0	Surface::setField4d0	52	0	0	0000a5d0-0000a604
+0000a620	Surface::getField4d0	45	0	0	0000a620-0000a64d
+0000a660	makeColor	188	0	1	0000a660-0000a71c
+0000a750	Surface::fwdVfn18	66	0	1	0000a750-0000a792
+0000a7b0	Surface::fwdVfn20	66	0	1	0000a7b0-0000a7f2
+0000a810	Surface::call3a	76	0	1	0000a810-0000a85c
+0000a870	Surface::call3b	76	0	1	0000a870-0000a8bc
+0000a8d0	Surface::callBounds	73	0	1	0000a8d0-0000a919
+0000a930	Surface::getClip	69	0	0	0000a930-0000a975
+0000a990	Surface::getClipRectPtr	42	0	0	0000a990-0000a9ba
+0000a9d0	Surface::getBounds	69	0	0	0000a9d0-0000aa15
+0000aa30	Surface::getBoundsRectPtr	42	0	0	0000aa30-0000aa5a
+0000aa70	Surface::width	48	0	0	0000aa70-0000aaa0
+0000aab0	Surface::height	48	0	0	0000aab0-0000aae0
+0000aaf0	Surface::getField40	42	0	0	0000aaf0-0000ab1a
+0000ab30	Surface::getDepthPtr	42	0	0	0000ab30-0000ab5a
+0000ab70	Surface::getField7c	42	0	0	0000ab70-0000ab9a
+0000abb0	Surface::unimplVfn68	43	0	0	0000abb0-0000abdb
+0000abf0	Surface::unimplVfn6c	43	0	0	0000abf0-0000ac1b
+0000ac30	Surface::unimplVfn70	43	0	0	0000ac30-0000ac5b
+0000ac70	Surface::unimplVfn7c	43	0	0	0000ac70-0000ac9b
+0000acb0	Surface::unimplVfn88	43	0	0	0000acb0-0000acdb
+0000acf0	Surface::unimplVfn90	43	0	0	0000acf0-0000ad1b
+0000ad30	Surface::unimplVfn94	43	0	0	0000ad30-0000ad5b
+0000ad70	Surface::unimplVfn98	43	0	0	0000ad70-0000ad9b
+0000adb0	Surface::unimplVfn80	43	0	0	0000adb0-0000addb
+0000adf0	Surface::unimplVfn9c	43	0	0	0000adf0-0000ae1b
+0000ae30	Surface::unimplVfna4	43	0	0	0000ae30-0000ae5b
+0000ae70	Surface::unimplVfna0	43	0	0	0000ae70-0000ae9b
+0000aeb0	setField28	47	0	0	0000aeb0-0000aedf
+0000aef0	Surface::getField810	45	0	0	0000aef0-0000af1d
+0000af30	fillWords	140	0	0	0000af30-0000afbc
+0000afe0	Surface::fill16	282	0	5	0000afe0-0000b0fa
+0000b140	Surface::line16	1902	0	4	0000b140-0000b8ae
+0000ba90	Surface::hline16	674	0	1	0000ba90-0000bd32
+0000bde0	Surface::vline16	680	0	1	0000bde0-0000c088
+0000c140	Surface::dashedLine16	2924	0	4	0000c140-0000ccac
+0000cf90	Surface::dashedHLine16	1097	0	1	0000cf90-0000d3d9
+0000d4f0	Surface::dashedVLine16	1121	0	1	0000d4f0-0000d951
+0000da70	Surface::clear16	502	0	3	0000da70-0000dc66
+0000dcf0	Surface::fillRect16	566	0	4	0000dcf0-0000df26
+0000dfc0	Surface::blendRect16	914	0	6	0000dfc0-0000e352
+0000e440	redOf	98	0	1	0000e440-0000e4a2
+0000e4c0	greenOf	98	0	1	0000e4c0-0000e522
+0000e540	blueOf	42	0	0	0000e540-0000e56a
+0000e580	Surface::ditherRect16	653	0	2	0000e580-0000e80d
+0000e8b0	Surface::ditherBlendRect16	970	0	6	0000e8b0-0000ec7a
+0000ed70	Surface::blitT_16to16	1877	0	3	0000ed70-0000f4c5
+0000f6a0	Surface::blit16from16	374	0	3	0000f6a0-0000f816
+0000f880	Surface::fill8	276	0	5	0000f880-0000f994
+0000f9e0	Surface::fill2_8	313	0	5	0000f9e0-0000fb19
+0000fb70	Surface::line8	1658	0	4	0000fb70-000101ea
+00010390	setRect4	66	0	0	00010390-000103d2
+000103f0	Surface::hline	437	0	2	000103f0-000105a5
+00010620	Surface::vline	463	0	1	00010620-000107ef
+00010870	Surface::dashedLine8	2541	0	4	00010870-0001125d
+000114e0	Surface::dashedHLine8	736	0	1	000114e0-000117c0
+00011880	Surface::dashedVLine8	764	0	1	00011880-00011b7c
+00011c40	Surface::clear8	317	0	2	00011c40-00011d7d
+00011dd0	Surface::fillRectC8	335	0	3	00011dd0-00011f1f
+00011f80	Surface::ditherRectC8	358	0	2	00011f80-000120e6
+00012140	Surface::writePcx8	1586	0	8	00012140-00012772
+00012900	Surface::blitKey8to16	952	0	3	00012900-00012cb8
+00012db0	Surface::blitT_8to16	2106	0	3	00012db0-000135ea
+00013800	Surface::blit8from8	877	0	3	00013800-00013b6d
+00013c50	Surface::blitT_8to8	1837	0	3	00013c50-0001437d
+00014550	trace	60	0	2	00014550-0001458c
+000145a0	loadPng	939	0	18	000145a0-0001494b
+00014a40	jalloc	53	0	2	00014a40-00014a75
+00014a90	jfree	65	0	2	00014a90-00014ad1
+00014af0	Sprite::ctor	208	0	3	00014af0-00014bc0
+00014c00	Sprite::deletingDtor	81	0	3	00014c00-00014c51
+00014c70	SpriteBase::ctor	66	0	2	00014c70-00014cb2
+00014cd0	Sprite::ctorN	209	0	3	00014cd0-00014da1
+00014de0	Sprite::dtor	159	0	4	00014de0-00014e7f
+00014eb0	Sprite::release	248	0	2	00014eb0-00014fa8
+00014ff0	Sprite::create	169	0	3	00014ff0-00015099
+000150d0	Sprite::remap	138	0	3	000150d0-0001515a
+00015180	Sprite::draw	608	0	5	00015180-000153e0
+00015480	Sprite::drawB	681	0	7	00015480-00015729
+000157e0	Sprite::drawC	780	0	5	000157e0-00015aec
+00015bb0	Sprite::drawD	772	0	5	00015bb0-00015eb4
+00015f80	Sprite::drawE	590	0	6	00015f80-000161ce
+00016270	Sprite::drawF	648	0	4	00016270-000164f8
+000165a0	Sprite::drawG	663	0	6	000165a0-00016837
+000168e0	SpriteBase::~SpriteBase	63	0	2	000168e0-0001691f
+00016930	SpriteBase::deletingDtor	81	0	3	00016930-00016981
+000169a0	Sprite::drawH	626	0	5	000169a0-00016c12
+00016cb0	Sprite::drawI	623	0	5	00016cb0-00016f1f
+00016fc0	Sprite::drawJ	593	0	4	00016fc0-00017211
+000172b0	Sprite::drawK	637	0	5	000172b0-0001752d
+000175d0	Sprite::drawQ	452	0	2	000175d0-00017693;00017705-00017806
+000178a0	Sprite::drawL	528	0	4	000178a0-00017ab0
+00017b40	Sprite::drawM	693	0	5	00017b40-00017df5
+00017eb0	Sprite::setField10	47	0	0	00017eb0-00017edf
+00017ef0	Sprite::getField10	42	0	0	00017ef0-00017f1a
+00017f30	getField28	42	0	0	00017f30-00017f5a
+00017f70	getField14	42	0	0	00017f70-00017f9a
+00017fb0	Sprite::emptyVfn24	38	0	0	00017fb0-00017fd6
+00017fe0	getField20	42	0	0	00017fe0-0001800a
+00018020	getField2c	42	0	0	00018020-0001804a
+00018060	Sprite::getField30	42	0	0	00018060-0001808a
+000180a0	Sprite::getField34	42	0	0	000180a0-000180ca
+000180e0	Sprite::getFlag18	45	0	0	000180e0-0001810d
+00018120	Sprite::drawN	693	0	5	00018120-000183d5
+00018490	Sprite::lineTo	100	0	2	00018490-000184f4
+00018510	Sprite::dashTo	123	0	2	00018510-0001858b
+000185b0	Sprite::drawO	695	0	5	000185b0-00018867
+00018920	Sprite::drawAlpha	2182	0	33	00018920-000191a6
+000193d0	Sprite::drawP	890	0	7	000193d0-0001974a
+00019830	Sprite::blt16a	156	0	2	00019830-000198cc
+00019900	Sprite::blt16b	161	0	2	00019900-000199a1
+000199d0	Sprite::blt16c	161	0	2	000199d0-00019a71
+00019aa0	Sprite::bltS	181	0	2	00019aa0-00019b55
+00019b90	Sprite::bltS2	185	0	2	00019b90-00019c49
+00019c80	FUN_10019c80	893	0	5	00019c80-00019ffd
+0001a0e0	Sprite::copyFrom	288	0	3	0001a0e0-0001a200
+0001a250	Sprite::create16	893	0	5	0001a250-0001a5cd
+0001a6b0	FUN_1001a6b0	923	0	4	0001a6b0-0001aa4b
+0001ab40	Sprite::draw16t_1001ab40	1046	0	6	0001ab40-0001af56
+0001b060	Sprite::draw16t_1001b060	1055	0	6	0001b060-0001b47f
+0001b590	FUN_1001b590	40	0	0	0001b590-0001b5b8
+0001b5d0	FUN_1001b5d0	40	0	0	0001b5d0-0001b5f8
+0001b610	FUN_1001b610	40	0	0	0001b610-0001b638
+0001b650	FUN_1001b650	40	0	0	0001b650-0001b678
+0001b690	Sprite::create8	880	0	5	0001b690-0001ba00
+0001bae0	Sprite::remap8	279	0	1	0001bae0-0001bbf7
+0001bc40	Sprite::draw16_1001bc40	3610	0	6	0001bc40-0001ca5a
+0001cde0	Sprite::draw16_1001cde0	3610	0	6	0001cde0-0001dbfa
+0001df80	Sprite::draw16m_1001df80	2029	0	4	0001df80-0001e76d
+0001e970	Sprite::draw16m_1001e970	1911	0	4	0001e970-0001f0e7
+0001f2d0	Sprite::draw_1001f2d0	3556	0	6	0001f2d0-000200b4
+00020430	Sprite::draw16_10020430	3869	0	6	00020430-0002134d
+00021720	Sprite::draw16_10021720	3877	0	6	00021720-00022645
+00022a10	Sprite::draw16_10022a10	4746	0	6	00022a10-00023c9a
+00024140	Sprite::draw16_10024140	4858	0	6	00024140-0002543a
+00025900	Sprite::blitPair	983	0	3	00025900-00025cd7
+00025dd0	Sprite::blitPair1	899	0	3	00025dd0-00026153
+00026240	Sprite::draw16_10026240	3668	0	6	00026240-00027094
+00027430	Sprite::draw16_10027430	3676	0	6	00027430-0002828c
+00028630	Sprite::draw16_10028630	3780	0	6	00028630-000294f4
+000298b0	Sprite::draw16_100298b0	3860	0	6	000298b0-0002a7c4
+0002ab90	Sprite::draw_1002ab90	3551	0	6	0002ab90-0002b96f
+0002bcf0	Sprite::draw_1002bcf0	3639	0	6	0002bcf0-0002cb27
+0002cec0	Sprite::blitMask	982	0	4	0002cec0-0002d296
+0002d390	Sprite::blitMaskScaled	1024	0	5	0002d390-0002d790
+0002d890	Sprite::draw16_1002d890	4258	0	6	0002d890-0002e932
+0002ed60	Sprite::draw16_1002ed60	4338	0	6	0002ed60-0002fe52
+00030290	Sprite::draw16_10030290	4338	0	6	00030290-00031382
+000317c0	Sprite::draw16_100317c0	4418	0	6	000317c0-00032902
+00032d60	Sprite::draw16_10032d60	4418	0	6	00032d60-00033ea2
+00034300	Sprite::draw16_10034300	4434	0	6	00034300-00035452
+000358b0	Sprite::draw16_100358b0	4434	0	6	000358b0-00036a02
+00036e60	Sprite::draw16_10036e60	4498	0	6	00036e60-00037ff2
+00038460	Sprite::draw16_10038460	4498	0	6	00038460-000395f2
+00039a60	Sprite::draw16_10039a60	4498	0	6	00039a60-0003abf2
+0003b060	Sprite::draw16_1003b060	4498	0	6	0003b060-0003c1f2
+0003c660	Sprite::draw16_1003c660	4546	0	6	0003c660-0003d822
+0003dca0	Sprite::draw16_1003dca0	4546	0	6	0003dca0-0003ee62
+0003f2e0	Sprite::draw16_1003f2e0	4562	0	6	0003f2e0-000404b2
+00040930	Sprite::draw16_10040930	4562	0	6	00040930-00041b02
+00041f80	Sprite::draw16_10041f80	4234	0	6	00041f80-0004300a
+00043430	Sprite::draw16_10043430	4314	0	6	00043430-0004450a
+00044940	Sprite::draw16_10044940	4314	0	6	00044940-00045a1a
+00045e50	Sprite::draw16_10045e50	4378	0	6	00045e50-00046f6a
+000473b0	Sprite::draw16_100473b0	4378	0	6	000473b0-000484ca
+00048910	Sprite::draw16_10048910	4410	0	6	00048910-00049a4a
+00049ea0	Sprite::draw16_10049ea0	4410	0	6	00049ea0-0004afda
+0004b430	Sprite::draw16_1004b430	4474	0	6	0004b430-0004c5aa
+0004ca10	Sprite::draw16_1004ca10	4474	0	6	0004ca10-0004db8a
+0004dff0	Sprite::draw16_1004dff0	4474	0	6	0004dff0-0004f16a
+0004f5d0	Sprite::draw16_1004f5d0	4474	0	6	0004f5d0-0005074a
+00050bb0	Sprite::draw16_10050bb0	4522	0	6	00050bb0-00051d5a
+000521d0	Sprite::draw16_100521d0	4522	0	6	000521d0-0005337a
+000537f0	Sprite::draw16_100537f0	4538	0	6	000537f0-000549aa
+00054e20	Sprite::draw16_10054e20	4538	0	6	00054e20-00055fda
+00056450	Sprite::draw16_10056450	3746	0	6	00056450-000572f2
+000576a0	Sprite::draw16_100576a0	3850	0	6	000576a0-000585aa
+00058970	Sprite::drawRle16p	2321	0	6	00058970-00059281
+000594d0	Sprite::drawRle16n	2291	0	6	000594d0-00059dc3
+0005a000	Sprite::drawRle16mk	1549	0	5	0005a000-0005a60d
+0005a790	Sprite::drawRle16m	1512	0	5	0005a790-0005ad78
+0005af00	Sprite::drawRle16t	2403	0	6	0005af00-0005b863
+0005bac0	Sprite::drawRle16c	2297	0	6	0005bac0-0005c3b9
+0005c600	Sprite::drawRle16b	2440	0	6	0005c600-0005cf88
+0005d1f0	Sprite::drawRle16	2442	0	6	0005d1f0-0005db7a
+0005dde0	Sprite::draw_1005dde0	3196	0	6	0005dde0-0005ea5c
+0005ed80	Sprite::draw_1005ed80	3196	0	6	0005ed80-0005f9fc
+0005fd20	Sprite::draw8_1005fd20	3234	0	6	0005fd20-000609c2
+00060cf0	Sprite::draw8_10060cf0	3428	0	6	00060cf0-00061a54
+00061db0	Sprite::draw8_10061db0	3300	0	6	00061db0-00062a94
+00062dd0	Sprite::draw_10062dd0	3597	0	6	00062dd0-00063bdd
+00063f60	Sprite::draw8_10063f60	3356	0	6	00063f60-00064c7c
+00064fd0	FUN_10064fd0	51	0	3	00064fd0-00065003
+00065010	FUN_10065010	51	1	2	00065010-00065043
+00065050	FUN_10065050	54	1	2	00065050-00065086
+000650a0	FUN_100650a0	51	0	2	000650a0-000650d3
+000650e0	FUN_100650e0	51	0	3	000650e0-00065113
+00065120	FUN_10065120	51	1	2	00065120-00065153
+00065160	FUN_10065160	54	1	2	00065160-00065196
+000651b0	FUN_100651b0	51	0	2	000651b0-000651e3
+000651f0	FUN_100651f0	51	0	3	000651f0-00065223
+00065230	FUN_10065230	51	1	2	00065230-00065263
+00065270	FUN_10065270	54	1	2	00065270-000652a6
+000652c0	FUN_100652c0	51	0	2	000652c0-000652f3
+00065300	DllMain	110	0	3	00065300-0006536e
+00065390	createDisplay	115	0	3	00065390-00065403
+00065420	Lib::destroyDisplay	104	0	2	00065420-00065488
+000654b0	Display::Display	213	0	3	000654b0-00065585
+000655c0	FUN_100655c0	81	0	3	000655c0-00065611
+00065630	FUN_10065630	48	0	0	00065630-00065660
+00065670	FUN_10065670	63	0	2	00065670-000656af
+000656c0	Display::shutdown	220	0	4	000656c0-0006579c
+000657e0	Display::createWindow	545	0	9	000657e0-00065a01
+00065a90	Display::enumModes	280	0	6	00065a90-00065ba8
+00065bf0	Display::getField138	45	0	0	00065bf0-00065c1d
+00065c30	Display::findMode	288	0	2	00065c30-00065d50
+00065da0	Display::setMode	199	0	1	00065da0-00065e67
+00065ea0	Display::pickMode	325	0	2	00065ea0-00065fe5
+00066040	Display::pickModeFreq	352	0	2	00066040-000661a0
+00066200	Display::setDesktopMode	120	0	2	00066200-00066278
+000662a0	Display::setModeIndex	371	0	5	000662a0-00066413
+00066470	Display::present	378	0	5	00066470-000665ea
+00066650	Display::getWindowRect	77	0	2	00066650-0006669d
+000666b0	Display::getField12c130	66	0	0	000666b0-000666f2
+00066710	Display::invalidate	79	0	2	00066710-0006675f
+00066780	Display::getCursor	112	0	3	00066780-000667f0
+00066810	Display::setWindowPos	93	0	2	00066810-0006686d
+00066890	Display::setResolution	171	0	4	00066890-0006693b
+00066970	Display::restore	85	0	2	00066970-000669c5
+000669e0	Array_e0::dtor	63	0	2	000669e0-00066a1f
+00066a30	Array_Rec14::dtor	63	0	2	00066a30-00066a6f
+00066a80	Array_Rec14::count	42	0	0	00066a80-00066aaa
+00066ac0	Array_Rec14::reset	46	0	0	00066ac0-00066aee
+00066b00	Array_Rec94::dtor	63	0	2	00066b00-00066b3f
+00066b50	Array_Rec94::count	42	0	0	00066b50-00066b7a
+00066b90	Array_Rec94::reset	46	0	0	00066b90-00066bbe
+00066bd0	Array_e0::deletingDtor	81	0	3	00066bd0-00066c21
+00066c40	Array_Rec14::deletingDtor	81	0	3	00066c40-00066c91
+00066cb0	Array_Rec94::deletingDtor	81	0	3	00066cb0-00066d01
+00066d20	DisplayBase::dtor	45	0	0	00066d20-00066d4d
+00066d60	DisplayBase::getHwnd	38	0	0	00066d60-00066d86
+00066d90	DisplayBase::getInstance	38	0	0	00066d90-00066db6
+00066dc0	DisplayBase::setWindowPos	38	0	0	00066dc0-00066de6
+00066df0	FUN_10066df0	43	0	0	00066df0-00066e1b
+00066e30	FUN_10066e30	43	0	0	00066e30-00066e5b
+00066e70	FUN_10066e70	38	0	0	00066e70-00066e96
+00066ea0	FUN_10066ea0	36	0	0	00066ea0-00066ec4
+00066ed0	FUN_10066ed0	40	0	0	00066ed0-00066ef8
+00066f10	FUN_10066f10	38	0	0	00066f10-00066f36
+00066f40	FUN_10066f40	41	0	0	00066f40-00066f69
+00066f80	FUN_10066f80	41	0	0	00066f80-00066fa9
+00066fc0	FUN_10066fc0	41	0	0	00066fc0-00066fe9
+00067000	FUN_10067000	43	0	0	00067000-0006702b
+00067040	FUN_10067040	43	0	0	00067040-0006706b
+00067080	FUN_10067080	43	0	0	00067080-000670ab
+000670c0	FUN_100670c0	43	0	0	000670c0-000670eb
+00067100	FUN_10067100	43	0	0	00067100-0006712b
+00067140	FUN_10067140	43	0	0	00067140-0006716b
+00067180	FUN_10067180	43	0	0	00067180-000671ab
+000671c0	FUN_100671c0	43	0	0	000671c0-000671eb
+00067200	FUN_10067200	43	0	0	00067200-0006722b
+00067240	FUN_10067240	43	0	0	00067240-0006726b
+00067280	FUN_10067280	43	0	0	00067280-000672ab
+000672c0	FUN_100672c0	43	0	0	000672c0-000672eb
+00067300	FUN_10067300	43	0	0	00067300-0006732b
+00067340	FUN_10067340	43	0	0	00067340-0006736b
+00067380	FUN_10067380	43	0	0	00067380-000673ab
+000673c0	FUN_100673c0	43	0	0	000673c0-000673eb
+00067400	FUN_10067400	43	0	0	00067400-0006742b
+00067440	FUN_10067440	43	0	0	00067440-0006746b
+00067480	FUN_10067480	43	0	0	00067480-000674ab
+000674c0	DisplayBase::setCommandHandler	38	0	0	000674c0-000674e6
+000674f0	DisplayBase::deletingDtor	81	0	3	000674f0-00067541
+00067560	Display::getHwnd	45	0	0	00067560-0006758d
+000675a0	Display::getInstance	45	0	0	000675a0-000675cd
+000675e0	Display::showWindow	73	0	2	000675e0-00067629
+00067640	Display::hideWindow	73	0	2	00067640-00067689
+000676a0	Display::minimizeWindow	73	0	2	000676a0-000676e9
+00067700	Display::maximizeWindow	73	0	2	00067700-00067749
+00067760	Display::getWidth	45	0	0	00067760-0006778d
+000677a0	Display::getHeight	45	0	0	000677a0-000677cd
+000677e0	Display::getBpp	45	0	0	000677e0-0006780d
+00067820	FUN_10067820	38	0	0	00067820-00067846
+00067850	Factory::createFont	145	0	3	00067850-000678e1
+00067910	Factory::createPalette	148	0	3	00067910-000679a4
+000679d0	Factory::createSurface	148	0	3	000679d0-00067a64
+00067a90	Factory::createSprite	145	0	3	00067a90-00067b21
+00067b50	Factory::destroyFont	99	0	1	00067b50-00067bb3
+00067bd0	Factory::destroyPalette	99	0	1	00067bd0-00067c33
+00067c50	Factory::destroySurface	99	0	1	00067c50-00067cb3
+00067cd0	Factory::destroySprite	99	0	1	00067cd0-00067d33
+00067d50	Display::setScale	64	0	0	00067d50-00067d90
+00067da0	Display::getScale	70	0	0	00067da0-00067de6
+00067e00	Display::initFonts	51	0	2	00067e00-00067e33
+00067e40	Display::shutdownFonts	51	0	2	00067e40-00067e73
+00067e80	Display::createPalette	64	0	2	00067e80-00067ec0
+00067ed0	Display::freePalette	51	0	2	00067ed0-00067f03
+00067f10	Lib::setCommandHandler	63	0	2	00067f10-00067f4f
+00067f60	storeCommandHandler	46	0	0	00067f60-00067f8e
+00067fa0	Array_e0::ctor	76	0	2	00067fa0-00067fec
+00068000	Array_e0::clear	116	0	2	00068000-00068074
+000680a0	Array_Rec14::ctor	76	0	2	000680a0-000680ec
+00068100	Array_Rec14::clear	116	0	2	00068100-00068174
+000681a0	Array_Rec14::add	276	0	4	000681a0-000682b4
+00068300	Array_Rec94::ctor	76	0	2	00068300-0006834c
+00068360	Array_Rec94::clear	116	0	2	00068360-000683d4
+00068400	Array_Rec94::add	288	0	4	00068400-00068520
+00068570	Array_e0::clearRet	56	0	2	00068570-000685a8
+000685c0	Array_Rec14::clearRet	56	0	2	000685c0-000685f8
+00068610	Array_Rec94::clearRet	56	0	2	00068610-00068648
+00068660	Font::Font	193	0	3	00068660-00068721
+00068760	Font::~Font	183	0	4	00068760-00068817
+00068850	Font::create	524	0	7	00068850-00068a5c
+00068ae0	Font::loadFile	563	0	11	00068ae0-00068d13
+00068da0	Font::release	143	0	4	00068da0-00068e2f
+00068e60	Font::textWidth	163	0	4	00068e60-00068f03
+00068f30	initFonts	86	0	3	00068f30-00068f86
+00068fa0	initFontTable	81	0	2	00068fa0-00068ff1
+00069010	FontBase::~FontBase	45	0	0	00069010-0006903d
+00069050	FontBase::create	43	0	0	00069050-0006907b
+00069090	FontBase::loadFile	43	0	0	00069090-000690bb
+000690d0	FontBase::release	36	0	0	000690d0-000690f4
+00069100	FontBase::textWidth	40	0	0	00069100-00069128
+00069140	FontBase::deletingDtor	81	0	3	00069140-00069191
+000691b0	Font::deletingDtor	81	0	3	000691b0-00069201
+00069220	FontBase::FontBase	48	0	0	00069220-00069250
+00069270	FUN_10069270	49	0	0	00069270-000692a1
+000692b0	windowProc	1224	0	17	000692b0-00069778
+000699c0	realizePalette	138	0	5	000699c0-00069a4a
+00069a70	onPaletteChanged	61	0	2	00069a70-00069aad
+00069ac0	onPaint	161	0	3	00069ac0-00069b61
+00069b90	onActivate	171	0	4	00069b90-00069c3b
+00069c70	onKey	171	0	2	00069c70-00069d1b
+00069d50	onChar	71	0	1	00069d50-00069d97
+00069db0	onWmSize	74	0	1	00069db0-00069dfa
+00069e10	onWmNcHitTest	75	0	1	00069e10-00069e5b
+00069e70	onWmMouseWheel	78	0	1	00069e70-00069ebe
+00069ee0	onWmMouseMove	75	0	1	00069ee0-00069f2b
+00069f40	onWmLButtonDown	78	0	1	00069f40-00069f8e
+00069fb0	onWmLButtonUp	75	0	1	00069fb0-00069ffb
+0006a010	onWmRButtonDown	78	0	1	0006a010-0006a05e
+0006a080	onWmRButtonUp	75	0	1	0006a080-0006a0cb
+0006a0e0	onCommand	80	0	1	0006a0e0-0006a130
+0006a150	Palette::ctor	116	0	2	0006a150-0006a1c4
+0006a1f0	Palette::deletingDtor	81	0	3	0006a1f0-0006a241
+0006a260	PaletteBase::ctor	66	0	2	0006a260-0006a2a2
+0006a2c0	Palette::~Palette	144	0	3	0006a2c0-0006a350
+0006a380	Palette::reset	62	0	0	0006a380-0006a3be
+0006a3d0	Palette::update	159	0	6	0006a3d0-0006a46f
+0006a4a0	Palette::apply	271	0	0	0006a4a0-0006a5af
+0006a600	Palette::setDefault	483	0	2	0006a600-0006a7e3
+0006a860	Palette::animate	93	0	2	0006a860-0006a8bd
+0006a8e0	Palette::getRGBRange	145	0	0	0006a8e0-0006a971
+0006a9a0	Palette::setRGB	163	0	2	0006a9a0-0006aa43
+0006aa70	createPalette	599	0	5	0006aa70-0006acc7
+0006ad60	deleteLogPalette	81	0	2	0006ad60-0006adb1
+0006add0	Palette::getColor	91	0	0	0006add0-0006ae2b
+0006ae50	Palette::toRGBQuads	137	0	0	0006ae50-0006aed9
+0006af00	PaletteBase::dtor	63	0	2	0006af00-0006af3f
+0006af50	PaletteBase::deletingDtor	81	0	3	0006af50-0006afa1
+0006afc0	FUN_1006afc0	46	0	0	0006afc0-0006afee
+0006b000	FUN_1006b000	44	0	0	0006b000-0006b02c
+0006b040	FUN_1006b040	44	0	0	0006b040-0006b06c
+0006b080	FUN_1006b080	90	0	2	0006b080-0006b0da
+0006b0f0	FUN_1006b0f0	170	0	4	0006b0f0-0006b19a
+0006b1d0	FUN_1006b1d0	368	0	4	0006b1d0-0006b340
+0006b3a0	FUN_1006b3a0	124	0	4	0006b3a0-0006b41c
+0006b440	FUN_1006b440	130	0	4	0006b440-0006b4c2
+0006b4f0	FUN_1006b4f0	130	0	4	0006b4f0-0006b572
+0006b5a0	FUN_1006b5a0	319	0	4	0006b5a0-0006b6df
+0006b730	FUN_1006b730	130	0	4	0006b730-0006b7b2
+0006b7e0	FUN_1006b7e0	130	0	4	0006b7e0-0006b862
+0006b890	FUN_1006b890	85	0	2	0006b890-0006b8e5
+0006b900	FUN_1006b900	85	0	2	0006b900-0006b955
+0006b970	FUN_1006b970	130	0	4	0006b970-0006b9f2
+0006ba20	FUN_1006ba20	123	0	4	0006ba20-0006ba9b
+0006bac0	png_create_read_struct	447	1	9	0006bac0-0006bc7f
+0006bca0	png_read_init	346	0	7	0006bca0-0006bdfa
+0006be20	png_read_info	1304	1	25	0006be20-0006c338
+0006c340	png_read_update_info	82	0	3	0006c340-0006c392
+0006c3a0	png_start_read_image	66	0	2	0006c3a0-0006c3e2
+0006c3f0	png_read_row	1804	2	16	0006c3f0-0006cafc
+0006cb20	png_read_rows	292	0	2	0006cb20-0006cc44
+0006cc50	png_read_image	171	1	3	0006cc50-0006ccfb
+0006cd00	png_read_end	1097	1	25	0006cd00-0006d149
+0006d150	png_destroy_read_struct	243	1	4	0006d150-0006d243
+0006d250	png_read_destroy	893	1	7	0006d250-0006d5cd
+0006d5d0	png_set_read_status_fn	43	0	0	0006d5d0-0006d5fb
+0006d600	png_set_bgr	46	1	0	0006d600-0006d62e
+0006d630	png_set_swap	61	1	0	0006d630-0006d66d
+0006d670	png_set_packing	71	0	0	0006d670-0006d6b7
+0006d6c0	png_set_packswap	64	0	0	0006d6c0-0006d700
+0006d700	png_set_shift	68	0	0	0006d700-0006d744
+0006d750	png_set_interlace_handling	72	1	0	0006d750-0006d798
+0006d7a0	png_set_filler	164	0	0	0006d7a0-0006d844
+0006d850	png_set_swap_alpha	49	0	0	0006d850-0006d881
+0006d890	png_set_invert_alpha	49	0	0	0006d890-0006d8c1
+0006d8d0	png_set_invert_mono	46	0	0	0006d8d0-0006d8fe
+0006d900	png_do_invert	122	1	0	0006d900-0006d97a
+0006d980	png_do_swap	134	1	0	0006d980-0006da06
+0006da10	png_do_packswap	169	1	0	0006da10-0006dab9
+0006dac0	png_do_strip_filler	1356	1	0	0006dac0-0006e00c
+0006e010	png_do_bgr	497	1	0	0006e010-0006e201
+0006e210	png_set_user_transform_info	58	0	0	0006e210-0006e24a
+0006e250	png_get_user_transform_ptr	37	0	0	0006e250-0006e275
+0006e280	png_get_valid	56	0	0	0006e280-0006e2b8
+0006e2c0	png_get_rowbytes	53	0	0	0006e2c0-0006e2f5
+0006e300	png_get_image_width	52	0	0	0006e300-0006e334
+0006e340	png_get_image_height	53	0	0	0006e340-0006e375
+0006e380	png_get_bit_depth	53	0	0	0006e380-0006e3b5
+0006e3c0	png_get_color_type	53	0	0	0006e3c0-0006e3f5
+0006e400	png_get_filter_type	53	0	0	0006e400-0006e435
+0006e440	png_get_interlace_type	53	0	0	0006e440-0006e475
+0006e480	png_get_compression_type	53	0	0	0006e480-0006e4b5
+0006e4c0	png_get_x_pixels_per_meter	86	0	0	0006e4c0-0006e516
+0006e520	png_get_y_pixels_per_meter	86	0	0	0006e520-0006e576
+0006e580	png_get_pixels_per_meter	100	0	0	0006e580-0006e5e4
+0006e5f0	png_get_pixel_aspect_ratio	122	0	0	0006e5f0-0006e66a
+0006e670	png_get_x_offset_microns	86	0	0	0006e670-0006e6c6
+0006e6d0	png_get_y_offset_microns	86	0	0	0006e6d0-0006e726
+0006e730	png_get_x_offset_pixels	85	0	0	0006e730-0006e785
+0006e790	png_get_y_offset_pixels	85	0	0	0006e790-0006e7e5
+0006e7f0	png_get_channels	53	0	0	0006e7f0-0006e825
+0006e830	png_get_signature	53	0	0	0006e830-0006e865
+0006e870	png_get_bKGD	82	0	0	0006e870-0006e8c2
+0006e8d0	png_get_cHRM	237	0	0	0006e8d0-0006e9bd
+0006e9c0	png_get_gAMA	82	0	0	0006e9c0-0006ea12
+0006ea20	png_get_sRGB	87	0	0	0006ea20-0006ea77
+0006ea80	png_get_hIST	82	0	0	0006ea80-0006ead2
+0006eae0	png_get_IHDR	338	1	2	0006eae0-0006ec32
+0006ec40	png_get_oFFs	121	0	0	0006ec40-0006ecb9
+0006ecc0	png_get_pCAL	236	0	0	0006ecc0-0006edac
+0006edb0	png_get_pHYs	148	0	0	0006edb0-0006ee44
+0006ee50	png_get_PLTE	96	1	0	0006ee50-0006eeb0
+0006eeb0	png_get_sBIT	82	0	0	0006eeb0-0006ef02
+0006ef10	png_get_text	96	0	0	0006ef10-0006ef70
+0006ef70	png_get_tIME	85	0	0	0006ef70-0006efc5
+0006efd0	png_get_tRNS	201	0	0	0006efd0-0006f099
+0006f0a0	png_get_rgb_to_gray_status	40	0	0	0006f0a0-0006f0c8
+0006f0d0	png_set_crc_action	314	0	2	0006f0d0-0006f20a
+0006f230	png_set_background	249	0	3	0006f230-0006f329
+0006f330	png_set_strip_16	46	0	0	0006f330-0006f35e
+0006f360	png_set_strip_alpha	49	1	0	0006f360-0006f391
+0006f3a0	png_set_dither	3037	0	5	0006f3a0-0006ff7d
+0006ff80	png_set_gamma	119	0	2	0006ff80-0006fff7
+00070000	png_set_expand	46	0	0	00070000-0007002e
+00070030	png_set_gray_1_2_4_to_8	46	0	0	00070030-0007005e
+00070060	png_set_palette_to_rgb	46	0	0	00070060-0007008e
+00070090	png_set_tRNS_to_alpha	46	0	0	00070090-000700be
+000700c0	png_set_gray_to_rgb	46	0	0	000700c0-000700ee
+000700f0	png_set_rgb_to_gray	360	0	3	000700f0-00070258
+00070260	png_set_read_user_transform_fn	58	0	0	00070260-0007029a
+000702a0	png_init_read_transformations	4604	1	5	000702a0-0007149c
+000714c0	png_read_transform_info	775	1	0	000714c0-000717c7
+000717d0	png_do_read_transformations	1705	1	22	000717d0-00071e79
+00071e80	png_do_unpack	571	1	0	00071e80-000720bb
+000720c0	png_do_unshift	831	1	0	000720c0-000723ff
+00072430	png_do_chop	181	1	0	00072430-000724e5
+000724f0	png_do_read_swap_alpha	865	1	0	000724f0-00072851
+00072860	png_do_read_invert_alpha	877	1	0	00072860-00072bcd
+00072bd0	png_do_read_filler	1856	1	0	00072bd0-00073310
+00073310	png_do_gray_to_rgb	944	1	0	00073310-000736c0
+000736c0	png_do_rgb_to_gray	3950	1	0	000736c0-0007462e
+00074630	png_build_grayscale_palette	242	0	0	00074630-00074722
+00074750	png_do_background	8131	1	2	00074750-00076713
+00076760	png_do_gamma	1856	1	0	00076760-00076ea0
+00076ec0	png_do_expand_palette	1075	1	0	00076ec0-000772f3
+00077300	png_do_expand	1924	1	0	00077300-00077a84
+00077a90	png_do_dither	668	1	0	00077a90-00077d2c
+00077d30	png_build_gamma_table	2066	1	4	00077d30-00078542
+00078550	png_get_header_version	49	0	0	00078550-00078581
+00078590	png_set_sig_bytes	86	0	2	00078590-000785e6
+000785f0	png_sig_cmp	126	2	2	000785f0-0007866e
+00078670	png_check_sig	64	0	2	00078670-000786b0
+000786b0	png_zalloc	151	1	3	000786b0-00078747
+00078750	png_zfree	57	1	2	00078750-00078789
+00078790	png_reset_crc	64	4	2	00078790-000787d0
+000787d0	png_calculate_crc	157	1	2	000787d0-0007886d
+00078870	png_create_info_struct	85	1	3	00078870-000788c5
+000788d0	png_destroy_info_struct	105	0	3	000788d0-00078939
+00078940	png_info_init	60	2	2	00078940-0007897c
+00078980	png_info_destroy	283	2	3	00078980-00078a9b
+00078aa0	png_get_io_ptr	37	0	0	00078aa0-00078ac5
+00078ad0	png_init_io	40	1	0	00078ad0-00078af8
+00078b00	png_convert_to_rfc1123	221	0	3	00078b00-00078bdd
+00078be0	png_get_copyright	55	0	0	00078be0-00078c17
+00078c20	png_check_version	31	0	0	00078c20-00078c3f
+00078c40	png_read_data	99	6	2	00078c40-00078ca3
+00078cb0	png_set_read_fn	143	2	2	00078cb0-00078d3f
+00078d40	png_default_read_data	94	0	3	00078d40-00078d9e
+00078da0	png_create_struct	117	2	3	00078da0-00078e15
+00078e20	png_destroy_struct	59	3	2	00078e20-00078e5b
+00078e60	png_malloc	98	14	3	00078e60-00078ec2
+00078ed0	png_free	67	10	2	00078ed0-00078f13
+00078f20	png_memcpy_check	92	1	3	00078f20-00078f7c
+00078f80	png_memset_check	92	2	3	00078f80-00078fdc
+00078fe0	png_error	92	31	2	00078fe0-0007903c
+00079040	png_warning	94	23	2	00079040-0007909e
+000790a0	png_chunk_error	86	3	3	000790a0-000790f6
+00079100	png_format_buffer	326	2	2	00079100-00079246
+00079250	png_chunk_warning	86	1	3	00079250-000792a6
+000792b0	FUN_100792b0	57	1	2	000792b0-000792e9
+00079300	png_default_warning	63	1	2	00079300-0007933f
+00079340	png_set_error_fn	58	1	0	00079340-0007937a
+00079380	png_get_error_ptr	37	0	0	00079380-000793a5
+000793b0	png_get_int_32	83	10	0	000793b0-00079403
+00079410	png_get_uint_32	83	1	0	00079410-00079463
+00079470	png_get_uint_16	59	4	0	00079470-000794ab
+000794b0	png_crc_read	81	20	3	000794b0-00079501
+00079510	png_crc_finish	272	20	5	00079510-00079620
+00079620	png_crc_error	178	1	3	00079620-000796d2
+000796e0	png_handle_IHDR	734	2	6	000796e0-000799be
+000799e0	png_handle_PLTE	562	2	7	000799e0-00079c12
+00079c20	png_handle_IEND	145	2	4	00079c20-00079cb1
+00079cc0	png_handle_gAMA	511	2	9	00079cc0-00079ebf
+00079ec0	png_handle_sBIT	519	2	6	00079ec0-0007a0c7
+0007a0d0	png_handle_cHRM	1786	2	9	0007a0d0-0007a7ca
+0007a7d0	png_handle_sRGB	866	2	8	0007a7d0-0007ab32
+0007ab40	png_handle_tRNS	801	2	8	0007ab40-0007ae61
+0007ae70	png_handle_bKGD	816	2	7	0007ae70-0007b1a0
+0007b1a0	png_handle_hIST	465	2	8	0007b1a0-0007b371
+0007b380	png_handle_pHYs	331	2	7	0007b380-0007b4cb
+0007b4d0	png_handle_oFFs	331	2	7	0007b4d0-0007b61b
+0007b620	png_handle_pCAL	899	2	9	0007b620-0007b9a3
+0007b9b0	png_handle_tIME	306	2	7	0007b9b0-0007bae2
+0007baf0	png_handle_tEXt	334	2	7	0007baf0-0007bc3e
+0007bc40	png_handle_zTXt	1296	2	12	0007bc40-0007c150
+0007c150	png_handle_unknown	149	2	4	0007c150-0007c1e5
+0007c1f0	png_check_chunk_name	282	1	2	0007c1f0-0007c30a
+0007c310	png_combine_row	1267	1	2	0007c310-0007c803
+0007c810	png_do_read_interlace	1639	1	2	0007c810-0007ce77
+0007ce80	png_read_filter_row	993	1	2	0007ce80-0007d261
+0007d280	png_read_finish_row	1072	1	11	0007d280-0007d6b0
+0007d6b0	png_read_start_row	1054	3	5	0007d6b0-0007dace
+0007dad0	png_set_bKGD	90	1	2	0007dad0-0007db2a
+0007db30	png_set_cHRM	155	2	0	0007db30-0007dbcb
+0007dbd0	png_set_gAMA	69	2	0	0007dbd0-0007dc15
+0007dc20	png_set_hIST	68	1	0	0007dc20-0007dc64
+0007dc70	png_set_IHDR	316	1	2	0007dc70-0007ddac
+0007ddb0	png_set_oFFs	87	1	0	0007ddb0-0007de07
+0007de10	png_set_pCAL	431	1	4	0007de10-0007dfbf
+0007dfc0	png_set_pHYs	87	1	0	0007dfc0-0007e017
+0007e020	png_set_PLTE	80	1	0	0007e020-0007e070
+0007e070	png_set_sBIT	90	1	2	0007e070-0007e0ca
+0007e0d0	png_set_sRGB	69	1	0	0007e0d0-0007e115
+0007e120	png_set_sRGB_gAMA_and_cHRM	254	1	4	0007e120-0007e21e
+0007e220	png_set_text	480	2	5	0007e220-0007e400
+0007e400	png_set_tIME	107	1	2	0007e400-0007e46b
+0007e470	png_set_tRNS	136	1	2	0007e470-0007e4f8
+0007e500	png_permit_empty_plte	51	0	0	0007e500-0007e533
+0007e6d0	operator_delete	161	29	4	0007e6d0-0007e771
+0007e780	__chkesp	56	484	1	0007e780-0007e7b8
+0007e7c0	_memset	88	21	0	0007e7c0-0007e818
+0007e820	__fpmath	33	1	3	0007e820-0007e841
+0007e850	FUN_1007e850	5	0	0	0007e850-0007e855
+0007e860	__cfltcvt_init	65	1	0	0007e860-0007e8a1
+0007e8b0	FUN_1007e8b0	28	0	0	0007e8b0-0007e8cc
+0007e8d0	FUN_1007e8d0	20	0	2	0007e8d0-0007e8e4
+0007e8e4	FUN_1007e8e4	9	2	1	0007e8e4-0007e8ed
+0007e8ed	FUN_1007e8ed	157	1	4	0007e8ed-0007e98a
+0007e990	FUN_1007e990	20	0	2	0007e990-0007e9a4
+0007e9a4	FUN_1007e9a4	9	1	1	0007e9a4-0007e9ad
+0007e9ad	FUN_1007e9ad	145	1	3	0007e9ad-0007ea3e
+0007ea40	FUN_1007ea40	20	0	2	0007ea40-0007ea54
+0007ea54	FUN_1007ea54	9	1	1	0007ea54-0007ea5d
+0007ea5d	FUN_1007ea5d	158	1	3	0007ea5d-0007eaee;00083f9e-00083fab
+0007eaf0	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0	0007eaf0-0007eb1d
+0007eb30	_CallMemberFunction0	7	1	0	0007eb30-0007eb37
+0007eb40	FID_conflict:_CallMemberFunction1	7	1	0	0007eb40-0007eb47
+0007eb50	FID_conflict:_CallMemberFunction1	7	1	0	0007eb50-0007eb57
+0007eb60	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	86	2	1	0007eb60-0007ebb6
+0007ebc0	FID_conflict:___CxxFrameHandler3	60	0	1	0007ebc0-0007ebfc
+0007ec00	___CxxLongjmpUnwind@4	38	0	1	0007ec00-0007ec26
+0007ec30	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	104	1	1	0007ec30-0007ec98
+0007eca0	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	57	0	1	0007eca0-0007ecd9
+0007ece0	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	204	1	1	0007ece0-0007edac
+0007edb0	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	124	0	2	0007edb0-0007ee27;0007ee2c-0007ee31
+0007ee40	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	130	2	1	0007ee40-0007eec2
+0007eed0	__global_unwind2	32	1	1	0007eed0-0007eef0
+0007ef12	__local_unwind2	104	2	1	0007ef12-0007ef7a
+0007ef7a	__abnormal_termination	35	1	0	0007ef7a-0007ef9d
+0007ef9d	__NLG_Notify1	9	1	0	0007ef9d-0007efa6
+0007efa6	FUN_1007efa6	24	2	0	0007efa6-0007efbe
+0007efc0	__onexit	179	1	4	0007efc0-0007f073
+0007f080	_atexit	24	4	1	0007f080-0007f098
+0007f0a0	___onexitinit	77	0	2	0007f0a0-0007f0ed
+0007f0f0	operator_new	28	9	1	0007f0f0-0007f10c
+0007f110	FUN_1007f110	26	0	1	0007f110-0007f12a
+0007f12c	__ftol	39	66	0	0007f12c-0007f153
+0007f160	__cinit	56	1	2	0007f160-0007f198
+0007f1a0	_exit	21	2	1	0007f1a0-0007f1b5
+0007f1c0	__exit	21	4	1	0007f1c0-0007f1d5
+0007f1e0	__cexit	19	1	1	0007f1e0-0007f1f3
+0007f200	__c_exit	19	0	1	0007f200-0007f213
+0007f220	doexit	227	4	8	0007f220-0007f303
+0007f310	FID_conflict:__lockexit	15	2	1	0007f310-0007f31f
+0007f320	FID_conflict:__lockexit	15	2	1	0007f320-0007f32f
+0007f330	__initterm	37	2	0	0007f330-0007f355
+0007f360	FUN_1007f360	15	0	1	0007f360-0007f36f
+0007f370	FUN_1007f370	33	72	0	0007f370-0007f391
+0007f3a0	FID_conflict:_memcpy	664	32	0	0007f3a0-0007f3fb;0007f3fc-0007f403;0007f410-0007f439;0007f43c-0007f45f;0007f460-0007f479;0007f49c-0007f4e6;0007f4f8-0007f4ff;0007f500-0007f50b;0007f50c-0007f51d;0007f520-0007f537;0007f538-0007f55e;0007f560-0007f569;0007f56c-0007f58b;0007f598-0007f5b5;0007f5b8-0007f5df;0007f5e0-0007f611;0007f634-0007f67e;0007f690-0007f697;0007f698-0007f6a5;0007f6a8-0007f6bb;0007f6bc-0007f6d5
+0007f6e0	_strlen	123	25	0	0007f6e0-0007f75b
+0007f760	FUN_1007f760	7	20	0	0007f760-0007f767
+0007f770	_strcat	224	6	0	0007f770-0007f850
+0007f850	_fclose	130	2	4	0007f850-0007f8d2
+0007f8e0	__fclose_lk	190	1	5	0007f8e0-0007f99e
+0007f9a0	__fsopen	252	1	4	0007f9a0-0007fa9c
+0007faa0	_fopen	23	1	1	0007faa0-0007fab7
+0007fab8	__setjmp3	123	2	0	0007fab8-0007fb33
+0007fb40	_malloc	38	6	1	0007fb40-0007fb66
+0007fb70	__malloc_dbg	44	22	1	0007fb70-0007fb9c
+0007fba0	__nh_malloc	27	1	1	0007fba0-0007fbbb
+0007fbc0	FUN_1007fbc0	93	3	4	0007fbc0-0007fc1d
+0007fc1d	FUN_1007fc1d	11	1	1	0007fc1d-0007fc28
+0007fc28	FUN_1007fc28	56	1	1	0007fc28-0007fc60
+0007fc60	__heap_alloc	23	0	1	0007fc60-0007fc77
+0007fc80	__heap_alloc_dbg	787	2	5	0007fc80-0007ff93
+0007ffa0	_calloc	36	1	1	0007ffa0-0007ffc4
+0007ffd0	__calloc_dbg	96	6	1	0007ffd0-00080030
+00080030	FID_conflict:__expand	36	0	1	00080030-00080054
+00080060	FID_conflict:__realloc_dbg	99	3	4	00080060-000800c3
+000800c3	FUN_100800c3	11	1	1	000800c3-000800ce
+000800ce	FUN_100800ce	20	1	0	000800ce-000800e2
+000800f0	realloc_help	1297	2	9	000800f0-00080601
+00080610	FID_conflict:__expand	36	2	1	00080610-00080634
+00080640	FID_conflict:__realloc_dbg	99	1	4	00080640-000806a3
+000806a3	FUN_100806a3	11	1	1	000806a3-000806ae
+000806ae	FUN_100806ae	20	1	0	000806ae-000806c2
+000806d0	FUN_100806d0	19	4	1	000806d0-000806e3
+000806f0	__free_lk	19	0	1	000806f0-00080703
+00080710	__free_dbg	82	24	4	00080710-00080762
+00080762	FUN_10080762	11	1	1	00080762-0008076d
+0008076d	FUN_1008076d	17	1	0	0008076d-0008077e
+00080780	__free_dbg_lk	1004	2	7	00080780-00080b6c
+00080b70	FUN_10080b70	19	0	1	00080b70-00080b83
+00080b90	FUN_10080b90	369	2	6	00080b90-00080d01
+00080d01	FUN_10080d01	11	1	1	00080d01-00080d0c
+00080d0c	FUN_10080d0c	20	1	0	00080d0c-00080d20
+00080d20	FUN_10080d20	28	0	0	00080d20-00080d3c
+00080d40	FUN_10080d40	189	0	5	00080d40-00080dfd
+00080dfd	FUN_10080dfd	11	1	1	00080dfd-00080e08
+00080e08	FUN_10080e08	17	1	0	00080e08-00080e19
+00080e20	FUN_10080e20	28	0	0	00080e20-00080e3c
+00080e40	_CheckBytes	136	2	1	00080e40-00080ec8
+00080ed0	FUN_10080ed0	885	4	6	00080ed0-00081245
+00081245	FUN_10081245	11	1	1	00081245-00081250
+00081250	FUN_10081250	20	1	0	00081250-00081264
+00081280	__CrtSetDbgFlag	34	2	0	00081280-000812a2
+000812b0	FUN_100812b0	141	0	3	000812b0-0008133d
+0008133d	FUN_1008133d	11	1	1	0008133d-00081348
+00081348	FUN_10081348	17	1	0	00081348-00081359
+00081360	__CrtIsValidPointer	75	3	2	00081360-000813ab
+000813b0	FUN_100813b0	292	5	5	000813b0-000814d4
+000814e0	__CrtIsMemoryBlock	262	0	5	000814e0-000815e6
+000815e6	FUN_100815e6	11	1	1	000815e6-000815f1
+000815f1	FUN_100815f1	20	1	0	000815f1-00081605
+00081610	FUN_10081610	28	0	0	00081610-0008162c
+00081630	FUN_10081630	392	1	4	00081630-000817b8
+000817b8	FUN_100817b8	11	1	1	000817b8-000817c3
+000817c3	FUN_100817c3	17	1	0	000817c3-000817d4
+000817e0	__CrtMemDifference	291	0	1	000817e0-00081903
+00081910	FUN_10081910	689	1	6	00081910-00081bc1
+00081bc1	FUN_10081bc1	11	1	1	00081bc1-00081bcc
+00081bcc	FUN_10081bcc	55	1	1	00081bcc-00081c03
+00081c10	__printMemBlockData	276	1	3	00081c10-00081d24
+00081d30	__CrtDumpMemoryLeaks	116	2	3	00081d30-00081da4
+00081db0	__CrtMemDumpStatistics	197	0	1	00081db0-00081e75
+00081e80	__CrtDbgBreak	11	2	1	00081e80-00081e8b
+00081e90	__CrtSetReportMode	87	0	0	00081e90-00081ee7
+00081ef0	__CrtSetReportFile	126	0	1	00081ef0-00081f6e
+00081f70	FUN_10081f70	28	0	0	00081f70-00081f8c
+00081f90	__CrtDbgReport	912	62	15	00081f90-00082320
+00082320	_CrtMessageWindow	780	1	11	00082320-0008262c
+00082630	__CRT_INIT@12	313	1	16	00082630-00082769
+00082770	entry	243	0	2	00082770-00082863
+00082870	__amsg_exit	58	10	3	00082870-000828aa
+000828b0	_memcmp	172	5	0	000828b0-0008295c
+00082960	_fabs	243	5	4	00082960-00082a53
+00082a60	FUN_10082a60	25	0	1	00082a60-00082a79
+00082a79	FUN_10082a79	9	2	1	00082a79-00082a82
+00082a82	FUN_10082a82	78	1	2	00082a82-00082ab1;00082b19-00082b22;00082b49-00082b5f
+00082c80	_sprintf	250	4	3	00082c80-00082d7a
+00082d80	_fread	62	1	3	00082d80-00082dbe
+00082dc0	__fread_lk	463	1	3	00082dc0-00082f8f
+00082f90	_longjmp	120	1	4	00082f90-00083008
+00083010	_fprintf	193	6	6	00083010-000830d1
+000830e0	___initstdio	300	0	2	000830e0-0008320c
+00083210	___endstdio	26	0	2	00083210-0008322a
+00083230	__lock_file	61	4	2	00083230-0008326d
+00083270	FID_conflict:__lock_file2	41	2	2	00083270-00083299
+000832a0	__unlock_file	61	5	2	000832a0-000832dd
+000832e0	FID_conflict:__lock_file2	41	2	2	000832e0-00083309
+00083310	__mtinitlocks	55	1	1	00083310-00083347
+00083350	__mtdeletelocks	159	1	2	00083350-000833ef
+000833f0	__lock	151	44	7	000833f0-00083487
+00083490	FUN_10083490	22	49	1	00083490-000834a6
+000834b0	FUN_100834b0	26	0	2	000834b0-000834ca
+000834d0	__setdefaultprecision	23	2	1	000834d0-000834e7
+000834f0	__ms_p5_test_fdiv	94	1	0	000834f0-0008354e
+00083550	__ms_p5_mp_test_fdiv	66	1	3	00083550-00083592
+000835a0	__forcdecpt	168	0	2	000835a0-00083648
+00083650	__cropzeros	215	0	0	00083650-00083727
+00083730	__positive	45	0	0	00083730-0008375d
+00083760	__fassign	72	0	2	00083760-000837a8
+000837b0	__cftoe	118	1	3	000837b0-00083826
+00083830	__cftoe2	358	2	2	00083830-00083996
+000839a0	__cftof	106	1	3	000839a0-00083a0a
+00083a10	__cftof2	317	2	2	00083a10-00083b4d
+00083b50	__cftog	229	1	4	00083b50-00083c35
+00083c40	__cfltcvt	95	0	3	00083c40-00083c9f
+00083ca0	__shift	46	2	2	00083ca0-00083cce
+00083ea0	FUN_10083ea0	23	0	0	00083ea0-00083eb7
+00083eb7	__startOneArgErrorHandling	60	4	1	00083eb7-00083ef3
+00083f15	FUN_10083f15	23	2	0	00083f15-00083f2c
+00083f2c	FUN_10083f2c	25	3	0	00083f2c-00083f45
+00083f45	__fload_withFB	67	5	0	00083f45-00083f88
+00083f88	FUN_10083f88	22	3	0	00083f88-00083f9e
+00083fab	__math_exit	42	3	1	00083fab-00083fd5
+00084090	___InternalCxxFrameHandler	239	3	3	00084090-0008417f
+00084180	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	672	1	9	00084180-00084420
+00084420	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	277	1	4	00084420-00084535
+00084540	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	182	1	1	00084540-000845f6
+00084600	___FrameUnwindToState	224	3	2	00084600-00084699;000846b0-000846f7
+00084700	ArrayUnwindFilter	44	0	1	00084700-0008472c
+00084730	CatchIt	183	2	5	00084730-000847e7
+000847f0	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	172	1	4	000847f0-0008488e;000848bf-000848cd
+000848cd	FUN_100848cd	94	1	3	000848cd-0008492b
+0008492b	FUN_1008492b	20	1	0	0008492b-0008493f
+00084940	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	66	0	0	00084940-00084982
+00084990	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	621	1	8	00084990-00084bec;00084bfa-00084c0b
+00084c10	___DestructExceptionObject	111	2	1	00084c10-00084c6e;00084c85-00084c96
+00084ca0	FID_conflict:___AdjustPointer	70	1	0	00084ca0-00084ce6
+00084cf0	__CallSettingFrame@12	76	2	1	00084cf0-00084d3c
+00084d40	__mtinit	130	1	6	00084d40-00084dc2
+00084dd0	__mtterm	41	1	2	00084dd0-00084df9
+00084e00	__initptd	25	2	0	00084e00-00084e19
+00084e20	__getptd	152	14	8	00084e20-00084eb8
+00084ec0	__freeptd	263	1	3	00084ec0-00084fc7
+00084fd0	FUN_10084fd0	11	0	1	00084fd0-00084fdb
+00084fe0	FUN_10084fe0	11	0	1	00084fe0-00084feb
+00084ff0	FUN_10084ff0	92	6	2	00084ff0-00085040;00085050-0008505c
+0008505e	_abort	5	1	1	0008505e-00085063
+00085080	FUN_10085080	29	0	2	00085080-0008509d
+000850a0	?_inconsistency@@YAXXZ	90	5	3	000850a0-000850ec;000850fc-0008510a
+0008510a	FUN_1008510a	6	1	1	0008510a-00085110
+00085110	FUN_10085110	17	1	0	00085110-00085121
+00085130	__close	122	2	5	00085130-000851aa
+000851b0	__close_lk	170	1	5	000851b0-0008525a
+00085260	__freebuf	146	1	2	00085260-000852f2
+00085300	_fflush	68	0	4	00085300-00085344
+00085350	__fflush_lk	65	2	2	00085350-00085391
+000853a0	__flush	183	3	1	000853a0-00085457
+00085460	__flushall	15	1	1	00085460-0008546f
+00085470	flsall	319	2	5	00085470-000855af
+000855b0	__openfile	797	1	2	000855b0-000858cd
+00085940	__getstream	384	1	7	00085940-00085ac0
+00085ac0	_set_new_handler	48	0	2	00085ac0-00085af0
+00085af0	FUN_10085af0	10	0	0	00085af0-00085afa
+00085b00	__callnewh	45	5	0	00085b00-00085b2d
+00085bf5	__seh_longjmp_unwind@4	27	0	1	00085bf5-00085c10
+00085c10	__malloc_base	32	1	1	00085c10-00085c30
+00085c30	__nh_malloc_base	87	1	2	00085c30-00085c87
+00085c90	__heap_alloc_base	101	2	4	00085c90-00085cf5
+00085cf5	FUN_10085cf5	11	1	1	00085cf5-00085d00
+00085d00	FUN_10085d00	19	1	1	00085d00-00085d13
+00085d77	FUN_10085d77	11	0	1	00085d77-00085d82
+00085d82	FUN_10085d82	31	0	1	00085d82-00085da1
+00085da1	FUN_10085da1	60	1	1	00085da1-00085ddd
+00085de0	FUN_10085de0	10	3	0	00085de0-00085dea
+00085df0	FUN_10085df0	161	1	5	00085df0-00085e91
+00085e91	FUN_10085e91	11	1	1	00085e91-00085e9c
+00085e9c	FUN_10085e9c	60	1	1	00085e9c-00085ed8
+00085f8a	FUN_10085f8a	11	0	1	00085f8a-00085f95
+00085f95	FUN_10085f95	53	0	1	00085f95-00085fb6;00085fe9-00085ffd
+00086000	FUN_10086000	960	1	20	00086000-000861b6;0008622b-000863cb;00086406-00086470
+000861b6	FUN_100861b6	11	1	1	000861b6-000861c1
+000861c1	FUN_100861c1	106	1	3	000861c1-0008622b
+000863cb	FUN_100863cb	11	1	1	000863cb-000863d6
+000863d6	FUN_100863d6	48	1	2	000863d6-00086406
+00086470	FUN_10086470	17	3	0	00086470-00086481
+00086490	FUN_10086490	123	2	5	00086490-0008650b
+0008650b	FUN_1008650b	11	1	1	0008650b-00086516
+00086516	FUN_10086516	30	1	1	00086516-00086534
+0008658d	FUN_1008658d	11	0	1	0008658d-00086598
+00086598	FUN_10086598	43	0	1	00086598-000865b2;000865c5-000865d6
+000865e0	__heapchk	98	2	4	000865e0-00086642
+00086642	FUN_10086642	11	1	1	00086642-0008664d
+0008664d	thunk_FUN_10086692	2	1	0	0008664d-0008664f
+00086687	FUN_10086687	11	0	1	00086687-00086692
+00086692	FUN_10086692	82	0	4	00086692-000866e4
+000866f0	__heapset	10	0	1	000866f0-000866fa
+00086700	FUN_10086700	39	0	0	00086700-00086727
+00086730	FUN_10086730	266	0	3	00086730-0008683a
+00086840	___sbh_heap_init	98	2	1	00086840-000868a2
+000868b0	___sbh_find_block	85	4	0	000868b0-00086905
+00086910	___sbh_verify_block	95	1	0	00086910-0008696f
+00086970	FUN_10086970	1500	2	3	00086970-00086f4c
+00086f50	___sbh_alloc_block	1334	2	2	00086f50-00087486
+00087490	___sbh_alloc_new_region	271	1	4	00087490-0008759f
+000875a0	___sbh_alloc_new_group	494	1	1	000875a0-0008778e
+00087790	___sbh_resize_block	1515	2	0	00087790-00087d7b
+00087d80	___sbh_heapmin	304	0	3	00087d80-00087eb0
+00087eb0	___sbh_heap_check	1565	1	1	00087eb0-000884cd
+000884d0	FUN_100884d0	10	0	0	000884d0-000884da
+000884e0	FUN_100884e0	43	0	0	000884e0-0008850b
+00088510	FUN_10088510	478	3	5	00088510-000886ee
+000886f0	FUN_100886f0	115	1	2	000886f0-00088763
+00088770	FUN_10088770	343	1	2	00088770-000888c7
+000888d0	FUN_100888d0	144	2	0	000888d0-00088960
+00088960	FUN_10088960	108	1	1	00088960-000889cc
+000889d0	FUN_100889d0	952	1	4	000889d0-00088d88
+00088d90	FUN_10088d90	681	1	0	00088d90-00089039
+00089040	FUN_10089040	356	1	0	00089040-000891a4
+000891b0	FUN_100891b0	567	0	0	000891b0-000893e7
+000893f0	FUN_100893f0	92	2	1	000893f0-0008944c
+00089450	FUN_10089450	548	1	9	00089450-00089674
+00089680	FUN_10089680	141	1	5	00089680-0008970d
+00089710	FUN_10089710	232	1	3	00089710-000897f8
+00089800	__isctype	183	9	1	00089800-000898b7
+000898c0	__itoa	66	2	1	000898c0-00089902
+00089910	xtoa	194	3	0	00089910-000899d2
+000899e0	__ltoa	63	0	1	000899e0-00089a1f
+00089a20	__ultoa	30	0	1	00089a20-00089a3e
+00089a40	__i64toa	72	0	1	00089a40-00089a88
+00089a90	x64toa	242	2	2	00089a90-00089b82
+00089b90	__ui64toa	31	0	1	00089b90-00089baf
+00089bb0	__snprintf	249	2	3	00089bb0-00089ca9
+00089cb0	__vsnprintf	243	1	3	00089cb0-00089da3
+00089db0	FUN_10089db0	47	10	0	00089db0-00089ddf
+00089de0	_signal	507	0	10	00089de0-00089fdb
+0008a010	ctrlevent_capture	146	0	2	0008a010-0008a0a2
+0008a0b0	_raise	522	2	5	0008a0b0-0008a2ba
+0008a2f0	siglookup	91	2	0	0008a2f0-0008a34b
+0008a350	FUN_1008a350	13	0	1	0008a350-0008a35d
+0008a360	___pxcptinfoptrs	13	1	1	0008a360-0008a36d
+0008a370	___crtMessageBoxA	187	2	2	0008a370-0008a42b
+0008a430	_strncpy	254	7	0	0008a430-0008a52e
+0008a530	__ioinit	804	1	6	0008a530-0008a854
+0008a860	__ioterm	155	1	2	0008a860-0008a8fb
+0008a900	__setenvp	329	1	6	0008a900-0008aa49
+0008aa50	__setargv	216	1	5	0008aa50-0008ab28
+0008ab30	parse_cmdline	1060	1	0	0008ab30-0008af54
+0008af60	___crtGetEnvironmentStringsA	537	1	8	0008af60-0008b179
+0008b180	__FF_MSGBANNER	73	1	1	0008b180-0008b1c9
+0008b1d0	__NMSG_WRITE	447	3	9	0008b1d0-0008b38f
+0008b390	__GET_RTERRMSG	80	0	0	0008b390-0008b3e0
+0008b3e0	__handle_qnan1	85	2	3	0008b3e0-0008b435
+0008b440	__handle_qnan2	103	2	3	0008b440-0008b4a7
+0008b4b0	__except1	178	2	6	0008b4b0-0008b562
+0008b570	__except2	206	2	6	0008b570-0008b63e
+0008b640	__raise_exc	1201	3	3	0008b640-0008baf1
+0008bb10	__handle_exc	882	3	2	0008bb10-0008be82
+0008be90	__umatherr	155	4	4	0008be90-0008bf2b
+0008bf30	FID_conflict:__set_errno_from_matherr	58	4	1	0008bf30-0008bf6a
+0008bf70	__get_fname	63	1	0	0008bf70-0008bfaf
+0008bfb0	__errcode	113	2	0	0008bfb0-0008c021
+0008c030	__set_exp	62	4	0	0008c030-0008c06e
+0008c070	__get_exp	45	0	0	0008c070-0008c09d
+0008c0a0	__add_exp	51	0	1	0008c0a0-0008c0d3
+0008c0e0	__set_bexp	52	0	0	0008c0e0-0008c114
+0008c120	__sptype	124	4	0	0008c120-0008c19c
+0008c1a0	__decomp	313	4	1	0008c1a0-0008c2d9
+0008c2e0	__statfp	22	1	0	0008c2e0-0008c2f6
+0008c300	__clrfp	23	1	0	0008c300-0008c317
+0008c320	__ctrlfp	50	10	0	0008c320-0008c352
+0008c360	__set_statfp	117	1	0	0008c360-0008c3d5
+0008c5f0	__powhlp	612	0	1	0008c5f0-0008c854
+0008c860	__d_inttype	128	1	2	0008c860-0008c8e0
+0008c8e0	__flsbuf	628	4	5	0008c8e0-0008cb54
+0008cb60	__output	3108	4	12	0008cb60-0008d784
+0008d890	write_char	119	3	1	0008d890-0008d907
+0008d910	write_multi_char	53	1	1	0008d910-0008d945
+0008d950	write_string	74	1	1	0008d950-0008d99a
+0008d9a0	get_int_arg	26	1	0	0008d9a0-0008d9ba
+0008d9c0	get_int64_arg	31	1	0	0008d9c0-0008d9df
+0008d9e0	get_short_arg	27	1	0	0008d9e0-0008d9fb
+0008da00	__filbuf	484	1	3	0008da00-0008dbe4
+0008dbf0	__read	130	2	5	0008dbf0-0008dc72
+0008dc80	__read_lk	1093	2	6	0008dc80-0008e0c5
+0008e0d0	__rt_probe_read4@4	91	1	0	0008e0d0-0008e115;0008e13f-0008e155
+0008e160	__stbuf	343	1	3	0008e160-0008e2b7
+0008e2c0	__ftbuf	148	1	2	0008e2c0-0008e354
+0008e360	__fcloseall	218	1	5	0008e360-0008e43a
+0008e440	__statusfp	31	0	1	0008e440-0008e45f
+0008e460	__clearfp	32	0	1	0008e460-0008e480
+0008e480	__control87	79	1	2	0008e480-0008e4cf
+0008e4d0	__controlfp	26	1	1	0008e4d0-0008e4ea
+0008e4f0	__fpreset	88	0	2	0008e4f0-0008e548
+0008e550	__abstract_cw	377	1	0	0008e550-0008e6c9
+0008e6d0	__hw_cw	346	1	0	0008e6d0-0008e82a
+0008e830	__abstract_sw	167	2	0	0008e830-0008e8d7
+0008e8e0	FUN_1008e8e0	11	0	0	0008e8e0-0008e8eb
+0008e8f0	_tolower	147	1	5	0008e8f0-0008e983
+0008e990	__tolower_lk	299	3	2	0008e990-0008eabb
+0008eac0	__ZeroTail	132	1	0	0008eac0-0008eb44
+0008eb50	__IncMan	168	1	1	0008eb50-0008ebf8
+0008ec00	__RoundMan	219	2	2	0008ec00-0008ecdb
+0008ece0	__CopyMan	76	1	0	0008ece0-0008ed2c
+0008ed30	__FillZeroMan	47	1	0	0008ed30-0008ed5f
+0008ed60	__IsZeroMan	55	1	0	0008ed60-0008ed97
+0008eda0	__ShrMan	236	1	0	0008eda0-0008ee8c
+0008ee90	__ld12cvt	578	2	5	0008ee90-0008f0d2
+0008f0e0	FID_conflict:__ld12tod	26	1	1	0008f0e0-0008f0fa
+0008f100	FID_conflict:__ld12tod	26	1	1	0008f100-0008f11a
+0008f120	__ld12told	191	2	1	0008f120-0008f1df
+0008f1e0	FID_conflict:__atodbl	54	1	2	0008f1e0-0008f216
+0008f220	__atoldbl	54	0	2	0008f220-0008f256
+0008f260	FID_conflict:__atodbl	54	1	2	0008f260-0008f296
+0008f2a0	__fptostr	250	3	2	0008f2a0-0008f39a
+0008f3a0	__fltout2	119	3	3	0008f3a0-0008f417
+0008f420	___dtold	354	1	0	0008f420-0008f582
+0008f590	FID_conflict:_memcpy	664	6	0	0008f590-0008f5eb;0008f5ec-0008f5f3;0008f600-0008f629;0008f62c-0008f64f;0008f650-0008f669;0008f68c-0008f6d6;0008f6e8-0008f6ef;0008f6f0-0008f6fb;0008f6fc-0008f70d;0008f710-0008f727;0008f728-0008f74e;0008f750-0008f759;0008f75c-0008f77b;0008f788-0008f7a5;0008f7a8-0008f7cf;0008f7d0-0008f801;0008f824-0008f86e;0008f880-0008f887;0008f888-0008f895;0008f898-0008f8ab;0008f8ac-0008f8c5
+0008f8d0	__fptrap	15	1	1	0008f8d0-0008f8df
+0008f8e0	__87except	348	1	5	0008f8e0-0008fa3c
+0008fa60	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	91	0	2	0008fa60-0008fabb
+0008fac0	FUN_1008fac0	21	0	1	0008fac0-0008fad5
+0008fae0	FUN_1008fae0	17	0	1	0008fae0-0008faf1
+0008fb00	?_ValidateRead@@YAHPBXI@Z	43	2	1	0008fb00-0008fb2b
+0008fb30	?_ValidateWrite@@YAHPAXI@Z	43	1	1	0008fb30-0008fb5b
+0008fb60	_ValidateExecute	39	2	1	0008fb60-0008fb87
+0008fb90	_strcmp	129	6	0	0008fb90-0008fbd3;0008fbd4-0008fbda;0008fbdc-0008fc14
+0008fc20	__XcptFilter	446	0	3	0008fc20-0008fdde
+0008fde0	xcptlookup	89	1	0	0008fde0-0008fe39
+0008fe40	_abort	30	1	3	0008fe40-0008fe5e
+0008fe60	__alloc_osfhnd	482	2	7	0008fe60-00090042
+00090050	__set_osfhnd	183	2	3	00090050-00090107
+00090110	__free_osfhnd	216	1	3	00090110-000901e8
+000901f0	__get_osfhandle	102	4	2	000901f0-00090256
+00090260	__open_osfhandle	260	0	8	00090260-00090364
+00090370	__lock_fhandle	134	8	4	00090370-000903f6
+00090400	__unlock_fhandle	38	9	1	00090400-00090426
+00090430	__dosmaperr	145	6	2	00090430-000904c1
+000904d0	FUN_100904d0	13	25	1	000904d0-000904dd
+000904e0	FUN_100904e0	13	16	1	000904e0-000904ed
+000904f0	__commit	210	1	7	000904f0-000905c2
+000905d0	__write	130	2	5	000905d0-00090652
+00090660	__write_lk	627	2	6	00090660-000908d3
+000908e0	FID_conflict:__open	63	0	1	000908e0-0009091f
+00090920	__sopen	1294	2	14	00090920-00090e2e
+00090e80	_strtol	27	1	1	00090e80-00090e9b
+00090ea0	strtoxl	817	2	3	00090ea0-000911d1
+000911e0	_strtoul	27	0	1	000911e0-000911fb
+00091210	_strchr	193	2	0	00091200-00091205;00091210-000912cc
+000912d0	_strstr	128	1	0	000912d0-00091350
+00091350	_strncmp	56	2	0	00091350-00091388
+00091390	___crtGetStringTypeA	421	3	5	00091390-000914d4;000914eb-0009154c
+00091550	__aulldiv	104	2	0	00091550-000915b8
+000915c0	__aullrem	117	2	0	000915c0-00091635
+00091640	__setmbcp	836	1	7	00091640-00091984
+00091990	getSystemCP	89	1	2	00091990-000919e9
+000919f0	_CPtoLCID	80	1	0	000919f0-00091a40
+00091a70	setSBCS	116	1	0	00091a70-00091ae4
+00091af0	setSBUpLow	770	1	3	00091af0-00091df2
+00091e00	FUN_10091e00	23	0	0	00091e00-00091e17
+00091e20	___initmbctable	34	2	1	00091e20-00091e42
+00091e50	__matherr	7	2	0	00091e50-00091e57
+00092bf0	__frnd	27	1	0	00092bf0-00092c0b
+00092c10	__copysign	42	1	0	00092c10-00092c3a
+00092c40	__chgsign	44	0	0	00092c40-00092c6c
+00092c70	__scalb	25	0	1	00092c70-00092c89
+00092c90	__logb	300	0	5	00092c90-00092dbc
+00092dc0	__nextafter	826	0	5	00092dc0-000930fa
+00093100	__finite	34	0	0	00093100-00093122
+00093130	__isnan	73	0	0	00093130-00093179
+00093180	__fpclass	211	1	1	00093180-00093253
+00093260	__lseek	130	1	5	00093260-000932e2
+000932f0	__lseek_lk	178	5	5	000932f0-000933a2
+000933b0	__getbuf	199	2	2	000933b0-00093477
+00093480	__isatty	50	2	0	00093480-000934b2
+000934c0	_wctomb	119	1	5	000934c0-00093537
+00093540	__wctomb_lk	160	1	2	00093540-000935e0
+000935e0	_setlocale	1007	0	13	000935e0-000939cf
+000939d0	__setlocale_set_cat	403	1	6	000939d0-00093b63
+00093b70	__setlocale_get_all	256	1	5	00093b70-00093c70
+00093c70	__expandlocale	388	2	6	00093c70-00093df4
+00093e00	FUN_10093e00	7	0	0	00093e00-00093e07
+00093e10	__strcats	79	2	1	00093e10-00093e5f
+00093e60	___lc_strtolc	349	1	4	00093e60-00093fbd
+00093fc0	___lc_lctostr	101	1	2	00093fc0-00094025
+00094030	___crtLCMapStringA	727	3	6	00094030-00094176;0009418d-0009426c;00094283-00094335
+00094340	strncnt	80	1	0	00094340-00094390
+00094390	___addl	62	3	0	00094390-000943ce
+000943d0	___add_12	173	2	1	000943d0-0009447d
+00094480	___shl_12	96	3	0	00094480-000944e0
+000944e0	___shr_12	99	2	0	000944e0-00094543
+00094550	___mtold12	315	1	2	00094550-0009468b
+00094690	___strgtold12	2586	4	3	00094690-000950aa
+000951c0	___STRINGTOLD	79	0	2	000951c0-0009520f
+00095210	_$I10_OUTPUT	1302	1	6	00095210-00095726
+00095730	__chsize	115	0	4	00095730-000957a3
+000957b0	__chsize_lk	560	2	11	000957b0-000959e0
+000959e0	FUN_100959e0	11	0	0	000959e0-000959eb
+000959f0	_toupper	147	1	5	000959f0-00095a83
+00095a90	__toupper_lk	299	1	2	00095a90-00095bbb
+00095bc0	_ldexp	700	1	7	00095bc0-00095e7c
+00095e80	___init_time	219	0	4	00095e80-00095f5b
+00095f60	__get_lc_time	1423	1	1	00095f60-000964ef
+000964f0	___free_lc_time	779	1	1	000964f0-000967fb
+00096800	___init_numeric	678	0	5	00096800-00096aa6
+00096ab0	fix_grouping	125	1	0	00096ab0-00096b2d
+00096b30	___init_monetary	304	0	4	00096b30-00096c60
+00096c60	__get_lc_lconv	525	1	2	00096c60-00096e6d
+00096e70	fix_grouping	125	1	0	00096e70-00096eed
+00096ef0	__free_lc_lconv	147	1	1	00096ef0-00096f83
+00096f90	___init_ctype	928	0	6	00096f90-00097330
+00097330	FUN_10097330	7	0	0	00097330-00097337
+00097340	_strcspn	62	2	0	00097340-0009737e
+00097380	_strpbrk	58	1	0	00097380-000973ba
+000973c0	___get_qualified_locale	512	1	11	000973c0-000975c0
+000975c0	_TranslateName	130	1	1	000975c0-00097642
+00097650	_GetLcidFromLangCountry	186	1	3	00097650-0009770a
+00097710	_LangCountryEnumProc@4	804	0	6	00097710-00097a34
+00097a40	_GetLcidFromLanguage	116	1	3	00097a40-00097ab4
+00097ac0	_LanguageEnumProc@4	287	0	4	00097ac0-00097bdf
+00097be0	_GetLcidFromCountry	69	1	2	00097be0-00097c25
+00097c30	_CountryEnumProc@4	172	0	3	00097c30-00097cdc
+00097ce0	_GetLcidFromDefault	43	1	1	00097ce0-00097d0b
+00097d10	_ProcessCodePage	155	1	2	00097d10-00097dab
+00097db0	_TestDefaultCountry	79	2	0	00097db0-00097dff
+00097e00	_TestDefaultLanguage	135	2	3	00097e00-00097e87
+00097e90	_IsThisWindowsNT	77	1	1	00097e90-00097edd
+00097ee0	crtGetLocaleInfoA	388	0	2	00097ee0-00098064
+00098070	_LcidFromHexString	118	4	0	00098070-000980e6
+000980f0	_GetPrimaryLen	101	3	0	000980f0-00098155
+00098160	___ld12mul	1085	2	3	00098160-0009859d
+000985a0	___multtenpow12	195	2	1	000985a0-00098663
+00098670	__setmode	115	0	4	00098670-000986e3
+000986f0	__setmode_lk	207	2	1	000986f0-000987bf
+000987c0	__Getdays	289	0	3	000987c0-000988e1
+000988f0	__Getmonths	291	0	3	000988f0-00098a13
+00098a20	__Gettnames	878	0	4	00098a20-00098d8e
+00098d90	FUN_10098d90	31	0	1	00098d90-00098daf
+00098db0	FUN_10098db0	394	1	5	00098db0-00098f3a
+00098f40	__expandtime	1389	2	4	00098f40-000994ad
+00099560	FID_conflict:_store_str	72	1	0	00099560-000995a8
+000995b0	__store_num	173	1	1	000995b0-0009965d
+00099660	FID_conflict:_store_number	172	1	0	00099660-0009970c
+00099710	__store_winword	1152	1	2	00099710-00099b90
+00099c30	___getlocaleinfo	650	4	7	00099c30-00099eba
+00099ec0	FUN_10099ec0	10	0	0	00099ec0-00099eca
+00099ed0	___crtGetStringTypeW	575	1	6	00099ed0-00099ff7;0009a00e-0009a076;0009a08d-0009a13d
+0009a140	__strcmpi	208	5	3	0009a140-0009a210
+0009a210	__strnicmp	257	2	3	0009a210-0009a311
+0009a320	_atol	255	3	1	0009a320-0009a41f
+0009a420	_atoi	17	0	1	0009a420-0009a431
+0009a440	__atoi64	297	0	2	0009a440-0009a569
+0009a570	___tzset	61	1	3	0009a570-0009a5ad
+0009a5b0	__tzset	30	0	3	0009a5b0-0009a5ce
+0009a5d0	__tzset_lk	939	2	12	0009a5d0-0009a97b
+0009a980	__isindst	46	0	3	0009a980-0009a9ae
+0009a9b0	__isindst_lk	762	1	1	0009a9b0-0009acaa
+0009acb0	cvtdate	504	1	0	0009acb0-0009aea8
+0009aeb0	___crtGetLocaleInfoW	382	1	4	0009aeb0-0009afad;0009afc4-0009b045
+0009b050	___crtGetLocaleInfoA	398	1	4	0009b050-0009b14f;0009b166-0009b1f5
+0009b200	__allmul	52	1	0	0009b200-0009b234
+0009b240	_getenv	46	0	3	0009b240-0009b26e
+0009b270	FID_conflict:__getenv_lk	198	2	3	0009b270-0009b336
+0009b340	__mbsnbicoll	79	2	1	0009b340-0009b38f
+0009b390	___wtomb_environ	174	2	3	0009b390-0009b43e
+0009b440	___crtCompareStringA	970	1	7	0009b440-0009b71f;0009b736-0009b7bd;0009b7d4-0009b838
+0009b840	strncnt	80	1	0	0009b840-0009b890
+0009b890	___crtsetenv	736	1	10	0009b890-0009bb70
+0009bb70	findenv	124	1	1	0009bb70-0009bbec
+0009bbf0	copy_environ	238	1	4	0009bbf0-0009bcde
+0009bce0	__mbschr	237	1	3	0009bce0-0009bdcd
+0009bdd0	inflateReset	145	4	2	0009bdd0-0009be61
+0009be70	inflateEnd	154	2	2	0009be70-0009bf0a
+0009bf10	inflateInit2_	403	1	4	0009bf10-0009c0a3
+0009c0b0	inflateInit_	63	2	2	0009c0b0-0009c0ef
+0009c0f0	inflate	1709	3	3	0009c0f0-0009c79d
+0009c7e0	inflateSetDictionary	223	0	3	0009c7e0-0009c8bf
+0009c8c0	inflateSync	379	0	2	0009c8c0-0009ca3b
+0009ca40	get_crc_table	36	0	0	0009ca40-0009ca64
+0009ca70	crc32	501	2	0	0009ca70-0009cc65
+0009cc70	inflate_blocks_reset	278	4	3	0009cc70-0009cd86
+0009cd90	inflate_blocks_new	225	1	2	0009cd90-0009ce71
+0009ce80	inflate_blocks	5080	1	10	0009ce80-0009e258
+0009e290	inflate_blocks_free	124	1	2	0009e290-0009e30c
+0009e310	inflate_set_dictionary	91	1	2	0009e310-0009e36b
+0009e370	adler32	652	1	0	0009e370-0009e5fc
+0009e600	FUN_1009e600	36	0	0	0009e600-0009e624
+0009e630	z_error	70	0	3	0009e630-0009e676
+0009e680	zcalloc	77	0	2	0009e680-0009e6cd
+0009e6d0	zcfree	53	0	2	0009e6d0-0009e705
+0009e710	inflate_trees_bits	138	1	3	0009e710-0009e79a
+0009e7a0	huft_build	1886	3	2	0009e7a0-0009eefe
+0009ef00	inflate_trees_dynamic	299	1	3	0009ef00-0009f02b
+0009f030	inflate_trees_fixed	469	1	2	0009f030-0009f205
+0009f210	falloc	58	0	0	0009f210-0009f24a
+0009f250	inflate_trees_free	155	5	1	0009f250-0009f2eb
+0009f2f0	inflate_codes_new	127	1	1	0009f2f0-0009f36f
+0009f370	inflate_codes	3393	1	3	0009f370-000a00b1
+000a00e0	inflate_codes_free	70	2	1	000a00e0-000a0126
+000a0130	inflate_flush	516	2	2	000a0130-000a0334
+000a0340	inflate_fast	1585	1	0	000a0340-000a0971
+000a0972	KERNEL32.DLL::RtlUnwind	6	2	0	000a0972-000a0978
+000aec40	Unwind@100aec40	9	0	1	000aec40-000aec49
+000aec49	Unwind@100aec49	23	0	1	000aec49-000aec60
+000aec80	Unwind@100aec80	9	0	1	000aec80-000aec89
+000aeca0	Unwind@100aeca0	9	0	1	000aeca0-000aeca9
+000aeca9	Unwind@100aeca9	23	0	1	000aeca9-000aecc0
+000aece0	Unwind@100aece0	9	0	1	000aece0-000aece9
+000aece9	Unwind@100aece9	23	0	1	000aece9-000aed00
+000aed20	Unwind@100aed20	9	0	1	000aed20-000aed29
+000aed29	Unwind@100aed29	23	0	1	000aed29-000aed40
+000aed60	Unwind@100aed60	9	0	1	000aed60-000aed69
+000aed69	Unwind@100aed69	23	0	1	000aed69-000aed80
+000aeda0	Unwind@100aeda0	9	0	1	000aeda0-000aeda9
+000aeda9	Unwind@100aeda9	23	0	1	000aeda9-000aedc0
+000aede0	Unwind@100aede0	9	0	1	000aede0-000aede9
+000aede9	Unwind@100aede9	23	0	1	000aede9-000aee00
+000aee20	Unwind@100aee20	9	0	1	000aee20-000aee29
+000aee40	Unwind@100aee40	11	0	1	000aee40-000aee4b
+000aee60	Unwind@100aee60	9	0	1	000aee60-000aee69
+000aee80	Unwind@100aee80	9	0	1	000aee80-000aee89
+000aeea0	Unwind@100aeea0	9	0	1	000aeea0-000aeea9
+000aeec0	Unwind@100aeec0	9	0	1	000aeec0-000aeec9
+000aeee0	Unwind@100aeee0	9	0	1	000aeee0-000aeee9
+000aef00	Unwind@100aef00	9	0	1	000aef00-000aef09
+000aef20	Unwind@100aef20	9	0	1	000aef20-000aef29
+000aef40	Unwind@100aef40	9	0	1	000aef40-000aef49
+000aef60	Unwind@100aef60	11	0	1	000aef60-000aef6b
+000aef80	Unwind@100aef80	11	0	1	000aef80-000aef8b
+000aefa0	Unwind@100aefa0	11	0	1	000aefa0-000aefab
+000aefc0	Unwind@100aefc0	11	0	1	000aefc0-000aefcb
+000aefe0	Unwind@100aefe0	9	0	1	000aefe0-000aefe9
+000af000	Unwind@100af000	9	0	1	000af000-000af009
+000af009	Unwind@100af009	40	0	1	000af009-000af031
+000af050	Unwind@100af050	9	0	1	000af050-000af059

@@ -48,7 +48,7 @@ Through registers:
 - 0x10042550 `__ftol` at 0x1003613c, 0x100361d9
 
 ## Callers
-0x10035f80 `FUN_10035f80`
+0x10035f80 `Channel_serviceBuffer`
 
 ## Constants
 - `0x1` at 0x1003601b, 0x10036077, 0x100360ca, 0x100360e3

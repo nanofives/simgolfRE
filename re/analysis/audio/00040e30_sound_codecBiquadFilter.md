@@ -64,7 +64,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1003d040 `FUN_1003d040`
+0x1003d040 `codecApplyFixedCoeffs`
 
 ## Constants
 - `0x0` at 0x10040e48

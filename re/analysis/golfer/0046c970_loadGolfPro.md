@@ -132,7 +132,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00467130 `clamp` at 0x0046cce8
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x0046ddd0 `startNewCourse`
+0x0046ddd0 `startNewCourse`
 
 ## Constants
 - `0x0` at 0x0046c9ae, 0x0046c9ed, 0x0046ca04, 0x0046cb61, 0x0046cce5, 0x0046cfbd

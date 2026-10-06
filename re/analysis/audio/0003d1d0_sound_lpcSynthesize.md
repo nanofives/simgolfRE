@@ -128,7 +128,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1003d320, 0x1003d3dd
 
 ## Callees
-- 0x10040f60 `FUN_10040f60` at 0x1003d34c, 0x1003d37e, 0x1003d563
+- 0x10040f60 `codecCombFilter` at 0x1003d34c, 0x1003d37e, 0x1003d563
 - 0x100431ce `FUN_100431ce` at 0x1003d8ba
 - 0x10043204 `sqrt` at 0x1003d437, 0x1003d862
 

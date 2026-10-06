@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000b750 `FUN_1000b750`
+0x1000b750 `std::list(TileP)::iterator::iterator`
 
 ## Constants
 - `0x11` (17) at 0x1000b9bd

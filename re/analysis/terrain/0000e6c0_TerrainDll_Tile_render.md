@@ -57,10 +57,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jns` (signed) at 0x1000e728
 
 ## Callees
-- 0x1000101e -> 0x1000ea30 `FUN_1000ea30` (incremental-linking thunk) at 0x1000e969
-- 0x10001122 -> 0x100108f0 `FUN_100108f0` (incremental-linking thunk) at 0x1000e957
-- 0x1000119a -> 0x10001f60 `FUN_10001f60` (incremental-linking thunk) at 0x1000e70e
-- 0x100012b2 -> 0x1000f7f0 `FUN_1000f7f0` (incremental-linking thunk) at 0x1000e95f
+- 0x1000101e -> 0x1000ea30 `Tile::drawSkirts` (incremental-linking thunk) at 0x1000e969
+- 0x10001122 -> 0x100108f0 `Tile::drawPaths` (incremental-linking thunk) at 0x1000e957
+- 0x1000119a -> 0x10001f60 `Tile::getType` (incremental-linking thunk) at 0x1000e70e
+- 0x100012b2 -> 0x1000f7f0 `Tile::drawWalls` (incremental-linking thunk) at 0x1000e95f
 - 0x100180a0 `__chkesp` at 0x1000e7aa, 0x1000e7e6, 0x1000e807, 0x1000e846, 0x1000e863, 0x1000e8a3, 0x1000e8c0, 0x1000e900 (+3 more)
 - import `OPENGL32.dll!glArrayElement` at 0x1000e85b, 0x1000e8b8, 0x1000e915
 - import `OPENGL32.dll!glBegin` at 0x1000e7ff
@@ -69,7 +69,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glTexCoord2fv` at 0x1000e83e, 0x1000e89b, 0x1000e8f8
 
 ## Callers
-0x10005990 `?render@Terrain@@QAE_NPAVTile@@M@Z`, 0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x100089e0 `?localRender@Terrain@@QAEXPAVTile@@0M@Z`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`, 0x10038900 `FUN_10038900`
+0x10005990 `Terrain::render`, 0x10006410 `Terrain::pathUpdateRender`, 0x100089e0 `Terrain::localRender`, 0x10009270 `Terrain::stripRender`, 0x10038900 `Terrain::lowerEdge`
 
 ## Constants
 - `0x0` at 0x1000e6dd, 0x1000e6fe, 0x1000e73e

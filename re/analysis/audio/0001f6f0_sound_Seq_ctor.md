@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0001f6f0`), 358 bytes, 77 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructor for the sequencer/player object: base ctor 0x1002d450, initializes the embedded reader at +0x60 (0x1001d380) and zeroes the sequencer control region +0x218..+0x22c. (`re/names/sound_3.tsv`)
-System writeup: `re/analysis/systems/sound_3.md`.
+System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x1001f853): callee pops 4 bytes of stack arguments.
@@ -59,7 +59,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0xc]` dword at 0x1001f7c4, 0x1001f7da, 0x1001f821
 
 ## Callees
-- 0x100015f5 -> 0x1002d450 `FUN_1002d450` (incremental-linking thunk) at 0x1001f710
+- 0x100015f5 -> 0x1002d450 `Ch5be88_ctor` (incremental-linking thunk) at 0x1001f710
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x1001f799
 - 0x10001b1d -> 0x1001d380 `MidiReader_init` (incremental-linking thunk) at 0x1001f71e
 - 0x10042550 `__ftol` at 0x1001f812

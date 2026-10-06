@@ -32,7 +32,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1003a730 `FUN_1003a730`
+0x1003a730 `MultiSound_findStreamNode`
 
 ## Constants
 - `0xffffffff` (-1) at 0x10035776

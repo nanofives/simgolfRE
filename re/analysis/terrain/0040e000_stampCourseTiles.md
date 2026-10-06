@@ -82,7 +82,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0045c1e0 `Random::range` at 0x0040e1ae, 0x0040e1c2, 0x0040e1e9, 0x0040e1fd, 0x0040e224, 0x0040e238, 0x0040e25f, 0x0040e273
 
 ## Callers
-0x00409cf0 `editTerrainHeight`, 0x0046d200 `buildTournamentPrep`, 0x00470a60 `applyTerrainEdit`
+0x00409cf0 `editTerrainHeight`, 0x0040f5c0 `mainLoop`, 0x0046d200 `buildTournamentPrep`, 0x00470a60 `applyTerrainEdit`
 
 ## Constants
 - `0x0` at 0x0040e046, 0x0040e332

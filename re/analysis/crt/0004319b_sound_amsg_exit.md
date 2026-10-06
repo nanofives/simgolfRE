@@ -30,7 +30,7 @@ None.
 - indirect `call [0x10064ee0]` at 0x100431c5
 
 ## Callers
-0x100429fb `__threadstart@4`, 0x10042a8e `crtEndThread`, 0x10044171 `__getptd`, 0x10047710 `__lock`, 0x1004779e `__ioinit`, 0x100479ae `__setenvp`, 0x10047a67 `__setargv`, 0x1004a158 `FUN_1004a158`, 0x10051c96 `_copy_environ`
+0x100429fb `__threadstart@4`, 0x10042a8e `crtEndThread`, 0x10044171 `__getptd`, 0x10047710 `__lock`, 0x1004779e `__ioinit`, 0x100479ae `__setenvp`, 0x10047a67 `__setargv`, 0x1004a158 `__fptrap`, 0x10051c96 `_copy_environ`
 
 ## Constants
 - `0x1` at 0x100431a0, 0x100431a9

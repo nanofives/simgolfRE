@@ -30,7 +30,7 @@ None.
 - 0x004762d0 `setDrawTarget` at 0x00432633
 
 ## Callers
-0x004038f0 `drawFlyingBall`, 0x00432ba0 `showMainRadialMenu`, 0x00433e50 `drawTerrainToolbar`, 0x00434350 `drawBuildingPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x004362f0 `drawGolferActionPanel`, 0x00436e50 `drawEmployeeDetailPanel`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0045c560 `drawGolferInfoPanel`, 0x0046f550 `courseActionMenu`
+0x004038f0 `drawFlyingBall`, 0x00432ba0 `showMainRadialMenu`, 0x00433e50 `drawTerrainToolbar`, 0x00434350 `drawBuildingPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x004362f0 `drawGolferActionPanel`, 0x00436e50 `drawEmployeeDetailPanel`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0045c560 `drawGolferInfoPanel`
 
 ## Constants
 - `0x0` at 0x00432628, 0x0043262a, 0x0043262c

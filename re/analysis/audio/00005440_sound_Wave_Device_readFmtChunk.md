@@ -62,7 +62,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x10001ffa -> 0x1001bc50 `CtrlObject::ctor` (incremental-linking thunk) at 0x10005461
-- 0x100025b3 -> 0x1001bd90 `FUN_1001bd90` (incremental-linking thunk) at 0x100054d5
+- 0x100025b3 -> 0x1001bd90 `Ctrl5b5c0_ctor` (incremental-linking thunk) at 0x100054d5
 - 0x100424d7 `operator_new` at 0x100054be, 0x10005595
 - indirect `call ebp` at 0x10005488, 0x10005498, 0x100054ab, 0x100054fa, 0x1000550c, 0x1000551c, 0x1000552e, 0x1000553e (+1 more)
 

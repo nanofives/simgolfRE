@@ -61,7 +61,7 @@ Through registers:
 - indirect `jmp [eax*4+0x432b80]` at 0x00432936
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x0` at 0x00432760, 0x00432941, 0x00432a76, 0x00432ab5, 0x00432ac5, 0x00432ac7, 0x00432ac9

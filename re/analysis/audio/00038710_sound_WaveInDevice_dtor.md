@@ -43,15 +43,15 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x100387bf, 0x10038825
 
 ## Callees
-- 0x10001dcf -> 0x10039620 `FUN_10039620` (incremental-linking thunk) at 0x100387b8
-- 0x10002469 -> 0x10038ae0 `FUN_10038ae0` (incremental-linking thunk) at 0x100387b1
+- 0x10001dcf -> 0x10039620 `nodeListPopFront` (incremental-linking thunk) at 0x100387b8
+- 0x10002469 -> 0x10038ae0 `MemBlock_deleteDtor` (incremental-linking thunk) at 0x100387b1
 - 0x100024aa -> 0x10039140 `WaveInDevice_close` (incremental-linking thunk) at 0x1003875d
 - 0x1004249a `operator_delete` at 0x10038794, 0x100387e5, 0x10038814
 - indirect `call ebx` at 0x10038759, 0x10038772
 - indirect `call edi` at 0x10038753, 0x1003876c
 
 ## Callers
-0x100386e0 `FUN_100386e0`
+0x100386e0 `WaveInDevice_deleteDtor`
 
 ## Constants
 - `0x1` at 0x10038762, 0x100387ad

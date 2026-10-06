@@ -20,7 +20,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 None.
 
 ## Callees
-- 0x10001974 -> 0x10037b00 `FUN_10037b00` (incremental-linking thunk) at 0x1003a5c2
+- 0x10001974 -> 0x10037b00 `Channel_set3DPosition` (incremental-linking thunk) at 0x1003a5c2
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

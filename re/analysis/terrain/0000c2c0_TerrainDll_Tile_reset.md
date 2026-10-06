@@ -39,12 +39,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x1000c33e
 
 ## Callees
-- 0x1000105f -> 0x1000f6e0 `FUN_1000f6e0` (incremental-linking thunk) at 0x1000c36d
-- 0x100011c7 -> 0x1000f7a0 `FUN_1000f7a0` (incremental-linking thunk) at 0x1000c37b
+- 0x1000105f -> 0x1000f6e0 `PathInfo::clear` (incremental-linking thunk) at 0x1000c36d
+- 0x100011c7 -> 0x1000f7a0 `WallInfo::clear` (incremental-linking thunk) at 0x1000c37b
 - 0x100180a0 `__chkesp` at 0x1000c388
 
 ## Callers
-0x10002ae0 `FUN_10002ae0`, 0x1000a130 `FUN_1000a130`, 0x1000aa10 `?resetTerrain@Terrain@@QAEXXZ`
+0x10002ae0 `Terrain::Terrain`, 0x1000a130 `Terrain::buildArrays`, 0x1000aa10 `Terrain::resetTerrain`
 
 ## Constants
 - `0x0` at 0x1000c2ef, 0x1000c2f6, 0x1000c303, 0x1000c30d, 0x1000c317, 0x1000c321, 0x1000c328, 0x1000c346 (+1 more)

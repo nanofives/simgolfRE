@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10006dd0 `FUN_10006dd0`
+0x10006dd0 `Terrain::loadLighting`
 
 ## Constants
 - `0x6` at 0x10002533

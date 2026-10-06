@@ -32,17 +32,17 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x8]` dword at 0x1000b832
 
 ## Callees
-- 0x100010af -> 0x1000b320 `FUN_1000b320` (incremental-linking thunk) at 0x1000b826
-- 0x100010e1 -> 0x1000b600 `FUN_1000b600` (incremental-linking thunk) at 0x1000b839, 0x1000b852, 0x1000b870
-- 0x10001159 -> 0x1000b630 `FUN_1000b630` (incremental-linking thunk) at 0x1000b847, 0x1000b862, 0x1000b87b
-- 0x1000115e -> 0x1000b710 `FUN_1000b710` (incremental-linking thunk) at 0x1000b82d
-- 0x100011cc -> 0x1000b5b0 `FUN_1000b5b0` (incremental-linking thunk) at 0x1000b8a3
-- 0x1000123a -> 0x1000b9f0 `FUN_1000b9f0` (incremental-linking thunk) at 0x1000b897
-- 0x10001271 -> 0x1000b660 `FUN_1000b660` (incremental-linking thunk) at 0x1000b88b
+- 0x100010af -> 0x1000b320 `std::list(TileP)::iterator::operator++` (incremental-linking thunk) at 0x1000b826
+- 0x100010e1 -> 0x1000b600 `std::list(TileP)::_Acc::_Next` (incremental-linking thunk) at 0x1000b839, 0x1000b852, 0x1000b870
+- 0x10001159 -> 0x1000b630 `std::list(TileP)::_Acc::_Prev` (incremental-linking thunk) at 0x1000b847, 0x1000b862, 0x1000b87b
+- 0x1000115e -> 0x1000b710 `std::list(TileP)::const_iterator::_Mynode` (incremental-linking thunk) at 0x1000b82d
+- 0x100011cc -> 0x1000b5b0 `std::list(TileP)::_Freenode` (incremental-linking thunk) at 0x1000b8a3
+- 0x1000123a -> 0x1000b9f0 `std::allocator(TileP)::destroy` (incremental-linking thunk) at 0x1000b897
+- 0x10001271 -> 0x1000b660 `std::list(TileP)::_Acc::_Value` (incremental-linking thunk) at 0x1000b88b
 - 0x100180a0 `__chkesp` at 0x1000b8ca
 
 ## Callers
-0x1000b470 `FUN_1000b470`
+0x1000b470 `std::list(TileP)::erase`
 
 ## Constants
 - `0x0` at 0x1000b81d

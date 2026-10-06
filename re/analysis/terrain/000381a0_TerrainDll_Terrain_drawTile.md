@@ -39,22 +39,22 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x100382a4, 0x10038323, 0x1003836b, 0x1003837f, 0x100383ac, 0x10038461, 0x100384e0, 0x10038528 (+10 more)
 
 ## Callees
-- 0x10001055 -> 0x1000afe0 `FUN_1000afe0` (incremental-linking thunk) at 0x10038247, 0x1003828f, 0x100382e6, 0x10038342, 0x10038404, 0x1003844c, 0x100384a3, 0x100384ff (+8 more)
-- 0x10001091 -> 0x1000af70 `FUN_1000af70` (incremental-linking thunk) at 0x10038230, 0x100383ed, 0x100385aa, 0x1003875a
-- 0x100010af -> 0x1000b320 `FUN_1000b320` (incremental-linking thunk) at 0x1003827b, 0x1003832e, 0x10038438, 0x100384eb, 0x100385f5, 0x100386a8, 0x100387ab, 0x1003886a
-- 0x10001140 -> 0x1000b3d0 `FUN_1000b3d0` (incremental-linking thunk) at 0x10038250, 0x100382ef, 0x1003834b, 0x1003840d, 0x100384ac, 0x10038508, 0x100385ca, 0x10038669 (+4 more)
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x100381d1, 0x10038307, 0x10038363, 0x10038425, 0x1003846d, 0x100384d8, 0x10038520, 0x10038681 (+5 more)
-- 0x100011db -> 0x1000b280 `FUN_1000b280` (incremental-linking thunk) at 0x100381dc
-- 0x100011f9 -> 0x1000b090 `FUN_1000b090` (incremental-linking thunk) at 0x10038219, 0x100383d6, 0x10038593, 0x10038743
-- 0x1000123f -> 0x1000b040 `FUN_1000b040` (incremental-linking thunk) at 0x100381fe, 0x100383bb, 0x10038578, 0x10038728
-- 0x1000126c -> 0x1000b2d0 `FUN_1000b2d0` (incremental-linking thunk) at 0x10038261, 0x100382a9, 0x10038300, 0x10038314, 0x1003835c, 0x10038370, 0x1003841e, 0x10038466 (+16 more)
-- 0x1000128f -> 0x1000b380 `FUN_1000b380` (incremental-linking thunk) at 0x10038298, 0x10038455, 0x10038612, 0x100387cb
-- 0x100012a8 -> 0x1000b100 `FUN_1000b100` (incremental-linking thunk) at 0x100382cf, 0x1003839b, 0x1003848c, 0x10038558, 0x10038649, 0x10038715, 0x10038805, 0x100388da
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x100381c6, 0x10038268, 0x100382b0, 0x1003831b, 0x10038377, 0x100384c4, 0x10038534, 0x100385e2 (+5 more)
+- 0x10001055 -> 0x1000afe0 `std::list(TileP)::end` (incremental-linking thunk) at 0x10038247, 0x1003828f, 0x100382e6, 0x10038342, 0x10038404, 0x1003844c, 0x100384a3, 0x100384ff (+8 more)
+- 0x10001091 -> 0x1000af70 `std::list(TileP)::begin` (incremental-linking thunk) at 0x10038230, 0x100383ed, 0x100385aa, 0x1003875a
+- 0x100010af -> 0x1000b320 `std::list(TileP)::iterator::operator++` (incremental-linking thunk) at 0x1003827b, 0x1003832e, 0x10038438, 0x100384eb, 0x100385f5, 0x100386a8, 0x100387ab, 0x1003886a
+- 0x10001140 -> 0x1000b3d0 `std::list(TileP)::const_iterator::operator!=` (incremental-linking thunk) at 0x10038250, 0x100382ef, 0x1003834b, 0x1003840d, 0x100384ac, 0x10038508, 0x100385ca, 0x10038669 (+4 more)
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x100381d1, 0x10038307, 0x10038363, 0x10038425, 0x1003846d, 0x100384d8, 0x10038520, 0x10038681 (+5 more)
+- 0x100011db -> 0x1000b280 `std::reverse_bidirectional_iterator(std::list(TileP)::iterator)::ctor` (incremental-linking thunk) at 0x100381dc
+- 0x100011f9 -> 0x1000b090 `std::list(TileP)::push_back` (incremental-linking thunk) at 0x10038219, 0x100383d6, 0x10038593, 0x10038743
+- 0x1000123f -> 0x1000b040 `std::list(TileP)::empty` (incremental-linking thunk) at 0x100381fe, 0x100383bb, 0x10038578, 0x10038728
+- 0x1000126c -> 0x1000b2d0 `std::list(TileP)::const_iterator::operator*` (incremental-linking thunk) at 0x10038261, 0x100382a9, 0x10038300, 0x10038314, 0x1003835c, 0x10038370, 0x1003841e, 0x10038466 (+16 more)
+- 0x1000128f -> 0x1000b380 `std::list(TileP)::const_iterator::operator==` (incremental-linking thunk) at 0x10038298, 0x10038455, 0x10038612, 0x100387cb
+- 0x100012a8 -> 0x1000b100 `std::list(TileP)::insert` (incremental-linking thunk) at 0x100382cf, 0x1003839b, 0x1003848c, 0x10038558, 0x10038649, 0x10038715, 0x10038805, 0x100388da
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x100381c6, 0x10038268, 0x100382b0, 0x1003831b, 0x10038377, 0x100384c4, 0x10038534, 0x100385e2 (+5 more)
 - 0x100180a0 `__chkesp` at 0x100388ea
 
 ## Callers
-0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x10007380 `FUN_10007380`, 0x100089e0 `?localRender@Terrain@@QAEXPAVTile@@0M@Z`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`
+0x10006410 `Terrain::pathUpdateRender`, 0x10007380 `Terrain::drawTileObjects`, 0x100089e0 `Terrain::localRender`, 0x10009270 `Terrain::stripRender`
 
 ## Constants
 - `0x0` at 0x10038272, 0x10038325, 0x1003842f, 0x100384e2, 0x100385ec, 0x1003869f, 0x1003879f, 0x1003885e

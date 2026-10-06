@@ -20,7 +20,7 @@ None.
 - 0x10047771 `_unlock` at 0x10042bd3
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10042b0b `heap_alloc`
 
 ## Constants
 - `0x9` at 0x10042bd1

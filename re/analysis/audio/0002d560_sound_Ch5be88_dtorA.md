@@ -50,7 +50,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x1004249a `operator_delete` at 0x1002d592, 0x1002d5c9
 
 ## Callers
-0x1001ff50 `Sound5b6a8_dtor`, 0x1002d530 `FUN_1002d530`, 0x10058b90 `Unwind@10058b90`, 0x10058c00 `Unwind@10058c00`, 0x10058c70 `Unwind@10058c70`
+0x1001ff50 `Sound5b6a8_dtor`, 0x1002d530 `Ch5be88_scalarDtorA`, 0x10058b90 `Unwind@10058b90`, 0x10058c00 `Unwind@10058c00`, 0x10058c70 `Unwind@10058c70`
 
 ## Constants
 - `0x1` at 0x1002d5bc

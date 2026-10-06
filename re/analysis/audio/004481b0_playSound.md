@@ -31,7 +31,7 @@ None.
 - 0x00485140 `Snd::setVolume` at 0x004481da
 
 ## Callers
-0x00406670 `membershipReport`, 0x00407e00 `narrateShot`, 0x00409cf0 `editTerrainHeight`, 0x0040a4e0 `demolishObject`, 0x0040aa80 `hireEmployee`, 0x0040c500 `playSoundAt`, 0x0040d320 `drawWindow`, 0x0040e720 `announceBuilding`, 0x0040f190 `customizeCharacter`, 0x0040f5c0 `mainLoop`, 0x004266b0 `patronEvent`, 0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`, 0x0042dea0 `holeMagazineEvent`, 0x00432720 `showSystemMenu`, 0x00434140 `pickBuilding`, 0x00436e50 `drawEmployeeDetailPanel`, 0x004385d0 `showCharacterEditor`, 0x0044cff0 `showEndOfYearScreen`, 0x004587a0 `showBuyLandScreen` (+8 more)
+0x00406670 `membershipReport`, 0x00407e00 `narrateShot`, 0x00409cf0 `editTerrainHeight`, 0x0040a4e0 `demolishObject`, 0x0040aa80 `hireEmployee`, 0x0040c500 `playSoundAt`, 0x0040d320 `drawWindow`, 0x0040e720 `announceBuilding`, 0x0040f190 `customizeCharacter`, 0x0040f5c0 `mainLoop`, 0x004266b0 `patronEvent`, 0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`, 0x0042dea0 `holeMagazineEvent`, 0x00432720 `showSystemMenu`, 0x00434140 `pickBuilding`, 0x00436e50 `drawEmployeeDetailPanel`, 0x004385d0 `showCharacterEditor`, 0x0044cff0 `showEndOfYearScreen`, 0x004587a0 `showBuyLandScreen` (+9 more)
 
 ## Constants
 - `0x80d840` (8443968) = address in the image (data) at 0x004481c0

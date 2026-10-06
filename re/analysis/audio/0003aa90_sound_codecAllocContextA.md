@@ -23,12 +23,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x1003aabc
 
 ## Callees
-- 0x1003aae0 `FUN_1003aae0` at 0x1003aac2
+- 0x1003aae0 `codecInitContextA` at 0x1003aac2
 - 0x10042acd `_malloc` at 0x1003aaad
 - 0x100431ce `FUN_100431ce` at 0x1003aad5
 
 ## Callers
-0x100319e0 `FUN_100319e0`
+0x100319e0 `WaveInStream_resetCodec`
 
 ## Constants
 - `0x0` at 0x1003aab8

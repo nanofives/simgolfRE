@@ -45,7 +45,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x10039c80 `FUN_10039c80`
+0x10039c80 `MultiSound_stop`
 
 ## Constants
 - `0x1` at 0x10034ba4, 0x10034baa, 0x10034bd4, 0x10034bf5

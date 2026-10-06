@@ -68,13 +68,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1004719c, 0x100471eb, 0x10047234, 0x1004725e, 0x1004728b, 0x100472d6
 
 ## Callees
-- 0x10046e50 `FUN_10046e50` at 0x10047317
-- 0x10047350 `FUN_10047350` at 0x10047192, 0x100471e1
+- 0x10046e50 `sbhRegionCreate` at 0x10047317
+- 0x10047350 `sbhFindFreeRun` at 0x10047192, 0x100471e1
 - 0x1004a100 `_memset` at 0x10047297
 - import `KERNEL32.dll!VirtualAlloc` at 0x10047283
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10042b0b `heap_alloc`, 0x10045252 `crtRealloc`, 0x100458a1 `calloc`
 
 ## Constants
 - `0x0` at 0x10047230, 0x10047245, 0x10047291

@@ -37,8 +37,8 @@ None.
 - `jne` (equality) at 0x10039cef, 0x10039d0d, 0x10039d2a, 0x10039d6c, 0x10039d8b, 0x10039ded
 
 ## Callees
-- 0x100015aa -> 0x10035150 `FUN_10035150` (incremental-linking thunk) at 0x10039d9e
-- 0x10001866 -> 0x10033ba0 `FUN_10033ba0` (incremental-linking thunk) at 0x10039d2f
+- 0x100015aa -> 0x10035150 `Channel_setVolume` (incremental-linking thunk) at 0x10039d9e
+- 0x10001866 -> 0x10033ba0 `Channel_resetPanState` (incremental-linking thunk) at 0x10039d2f
 - 0x10001f37 -> 0x10034430 `serviceChannelPlayback` (incremental-linking thunk) at 0x10039d71, 0x10039da5
 - 0x100020b3 -> 0x1000c2f0 `WaveCmdQueue::pushNode` (incremental-linking thunk) at 0x10039dd1, 0x10039e06
 - indirect `call [eax+0x6c]` at 0x10039d08

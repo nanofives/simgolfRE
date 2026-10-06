@@ -30,9 +30,9 @@ Globals:
 - `jne` (equality) at 0x10045e40, 0x10045e5d, 0x10045e78
 
 ## Callees
-- 0x10045b9b `FUN_10045b9b` at 0x10045e85
-- 0x10045ee7 `FUN_10045ee7` at 0x10045e9a
-- 0x10046e50 `FUN_10046e50` at 0x10045ec4
+- 0x10045b9b `getModuleLinkerVersion` at 0x10045e85
+- 0x10045ee7 `sbhGroupHeapInit` at 0x10045e9a
+- 0x10046e50 `sbhRegionCreate` at 0x10045ec4
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -26,7 +26,7 @@ Through registers:
 
 ## Callees
 - 0x100015b4 -> 0x1000ed70 `Wave_In_Device::op1` (incremental-linking thunk) at 0x10031a16
-- 0x1003aa90 `FUN_1003aa90` at 0x10031a04
+- 0x1003aa90 `codecAllocContextA` at 0x10031a04
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

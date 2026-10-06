@@ -142,10 +142,10 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x10001997 -> 0x10028810 `pumpWaveMessages` (incremental-linking thunk) at 0x1000425f
 - 0x10001a55 -> 0x100204e0 `Sound_reapIdle` (incremental-linking thunk) at 0x100049d7
 - 0x10001a73 -> 0x1002cee0 `MixBuffer_ctor` (incremental-linking thunk) at 0x1000462b
-- 0x10001ab9 -> 0x1001cbd0 `FUN_1001cbd0` (incremental-linking thunk) at 0x100042f1, 0x100043ba, 0x10004d10, 0x10004dd9, 0x10004ed3, 0x10005060
+- 0x10001ab9 -> 0x1001cbd0 `CtrlObject_dtorC` (incremental-linking thunk) at 0x100042f1, 0x100043ba, 0x10004d10, 0x10004dd9, 0x10004ed3, 0x10005060
 - 0x10001fbe -> 0x10005c00 `listPopFront` (incremental-linking thunk) at 0x100042c5, 0x1000438e, 0x10004ce4
 - 0x10002004 -> 0x1001cd30 `FUN_1001cd30` (incremental-linking thunk) at 0x100042da, 0x100043a3, 0x10004cf9, 0x10004dc2, 0x10004ebc, 0x10005049
-- 0x10002180 -> 0x1001cbf0 `FUN_1001cbf0` (incremental-linking thunk) at 0x1000456d
+- 0x10002180 -> 0x1001cbf0 `Ctrl5b668_ctor` (incremental-linking thunk) at 0x1000456d
 - 0x100023ab -> 0x10022d00 `Seq_buildTrack14` (incremental-linking thunk) at 0x1000452f
 - 0x1000242d -> 0x10020360 `Midi_loadMemoryAndPreRoll` (incremental-linking thunk) at 0x10004df9
 - 0x100024c8 -> 0x1002d100 `allocVoiceSlot` (incremental-linking thunk) at 0x1000496a

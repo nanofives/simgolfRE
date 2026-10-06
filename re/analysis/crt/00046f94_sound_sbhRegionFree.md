@@ -38,7 +38,7 @@ Through registers:
 - import `KERNEL32.dll!VirtualFree` at 0x10046fa3
 
 ## Callers
-0x10046fea `FUN_10046fea`
+0x10046fea `sbhRegionDecommit`
 
 ## Constants
 - `0x0` at 0x10046f9e, 0x10046fc7

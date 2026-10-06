@@ -28,7 +28,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1002f8d0 `FUN_1002f8d0`
+0x1002f8d0 `MultiSound_setSlotSource`
 
 ## Constants
 - `0xfb` (251) at 0x10037731

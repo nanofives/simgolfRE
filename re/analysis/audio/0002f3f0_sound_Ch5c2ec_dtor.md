@@ -49,7 +49,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x1004249a `operator_delete` at 0x1002f435, 0x1002f456
 
 ## Callers
-0x1002f3c0 `FUN_1002f3c0`, 0x100312a0 `streamReaderDtor`, 0x10059170 `Unwind@10059170`
+0x1002f3c0 `Ch5c2ec_scalarDtor`, 0x100312a0 `streamReaderDtor`, 0x10059170 `Unwind@10059170`
 
 ## Constants
 - `0x1` at 0x1002f449

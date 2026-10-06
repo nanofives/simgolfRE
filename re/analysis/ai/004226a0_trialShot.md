@@ -104,7 +104,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004672b0 `absDiff` at 0x004227bc
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00422fb0 `simulateBallFlight`
+0x00422fb0 `simulateBallFlight`
 
 ## Constants
 - `0x0` at 0x004226b2, 0x00422703, 0x00422883, 0x00422aa5, 0x00422f80

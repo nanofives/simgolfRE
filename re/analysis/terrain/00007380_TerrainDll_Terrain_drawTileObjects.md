@@ -43,18 +43,18 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10007474, 0x10007512, 0x1000766a, 0x1000768b
 
 ## Callees
-- 0x10001037 -> 0x10015460 `FUN_10015460` (incremental-linking thunk) at 0x1000765e
-- 0x10001082 -> 0x100381a0 `FUN_100381a0` (incremental-linking thunk) at 0x100076a0
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x10007401, 0x1000741a, 0x10007447, 0x10007460, 0x1000749f, 0x100074b8, 0x100074e5, 0x100074fe (+8 more)
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x100073ab
-- 0x10001212 -> 0x10007380 `FUN_10007380` (incremental-linking thunk) at 0x100076b8
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x100073a0
-- 0x100012bc -> 0x10001e80 `?getWall@Terrain@@QAE_NPAVTile@@H@Z` (incremental-linking thunk) at 0x100073e5, 0x1000742b, 0x10007483, 0x100074c9, 0x10007521, 0x10007567, 0x100075b2, 0x100075f8
-- 0x10001316 -> 0x10006850 `FUN_10006850` (incremental-linking thunk) at 0x1000767f
+- 0x10001037 -> 0x10015460 `Tile::isHidden` (incremental-linking thunk) at 0x1000765e
+- 0x10001082 -> 0x100381a0 `Terrain::drawTile` (incremental-linking thunk) at 0x100076a0
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x10007401, 0x1000741a, 0x10007447, 0x10007460, 0x1000749f, 0x100074b8, 0x100074e5, 0x100074fe (+8 more)
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x100073ab
+- 0x10001212 -> 0x10007380 `Terrain::drawTileObjects` (incremental-linking thunk) at 0x100076b8
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x100073a0
+- 0x100012bc -> 0x10001e80 `Terrain::getWall` (incremental-linking thunk) at 0x100073e5, 0x1000742b, 0x10007483, 0x100074c9, 0x10007521, 0x10007567, 0x100075b2, 0x100075f8
+- 0x10001316 -> 0x10006850 `Terrain::isCulled` (incremental-linking thunk) at 0x1000767f
 - 0x100180a0 `__chkesp` at 0x100076ca
 
 ## Callers
-0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x10007380 `FUN_10007380`, 0x100089e0 `?localRender@Terrain@@QAEXPAVTile@@0M@Z`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`
+0x10006410 `Terrain::pathUpdateRender`, 0x10007380 `Terrain::drawTileObjects`, 0x100089e0 `Terrain::localRender`, 0x10009270 `Terrain::stripRender`
 
 ## Constants
 - `0x0` at 0x100073b3, 0x100073ba, 0x100073c1, 0x100074c0, 0x1000755e, 0x10007635, 0x10007650

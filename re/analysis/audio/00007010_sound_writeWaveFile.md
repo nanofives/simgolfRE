@@ -82,9 +82,9 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x1000701f, 0x1000703d, 0x1000705d, 0x10007083, 0x100070ee, 0x1000710b, 0x1000712f, 0x10007138 (+14 more)
 
 ## Callees
-- 0x10001113 -> 0x10035f80 `FUN_10035f80` (incremental-linking thunk) at 0x100072c7
+- 0x10001113 -> 0x10035f80 `Channel_serviceBuffer` (incremental-linking thunk) at 0x100072c7
 - 0x1000119f -> 0x10035990 `renderChannel` (incremental-linking thunk) at 0x1000729d
-- 0x10001302 -> 0x10035f60 `FUN_10035f60` (incremental-linking thunk) at 0x1000732f
+- 0x10001302 -> 0x10035f60 `Channel_stubReturnB` (incremental-linking thunk) at 0x1000732f
 - 0x1000154b -> 0x10037760 `Voice_setLoopFlag` (incremental-linking thunk) at 0x10007369
 - 0x100016a9 -> 0x10030ba0 `streamWaveSamples` (incremental-linking thunk) at 0x10007156
 - 0x10001b13 -> 0x10007df0 `writeWaveChunk` (incremental-linking thunk) at 0x1000747b

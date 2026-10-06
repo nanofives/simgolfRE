@@ -46,7 +46,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jle` (signed) at 0x1003a22a
 
 ## Callees
-- 0x100016f9 -> 0x10035750 `FUN_10035750` (incremental-linking thunk) at 0x1003a2f4
+- 0x100016f9 -> 0x10035750 `Channel_setPitchRate` (incremental-linking thunk) at 0x1003a2f4
 - 0x10001924 -> 0x1002bff0 `FUN_1002bff0` (incremental-linking thunk) at 0x1003a23c
 - 0x10042550 `__ftol` at 0x1003a2e9
 - indirect `call [edx+0xcc]` at 0x1003a277

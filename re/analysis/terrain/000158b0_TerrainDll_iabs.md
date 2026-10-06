@@ -27,7 +27,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x100016a0 `FUN_100016a0`, 0x10001900 `FUN_10001900`, 0x10005230 `?drawBezierSpline@Terrain@@QAEXHHHHHHHHH@Z`
+0x100016a0 `LoadDIBitmap`, 0x10001900 `SaveDIBitmap`, 0x10005230 `Terrain::drawBezierSpline`
 
 ## Constants
 - `0x0` at 0x100158b4

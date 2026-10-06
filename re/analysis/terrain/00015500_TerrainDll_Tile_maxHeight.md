@@ -44,7 +44,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10006850 `FUN_10006850`
+0x10006850 `Terrain::isCulled`
 
 ## Constants
 - `0x16` (22) at 0x1001550d

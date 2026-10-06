@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00029e70`), 40 bytes, 13 instructions, subsystem `aud
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs the Midi_Device base sub-object: default level this[2]=0x7f, zeroes this[1..7], installs vtable 0x1005b9e4. (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10029e97): callee pops 0 bytes of stack arguments.

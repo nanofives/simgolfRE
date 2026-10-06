@@ -66,7 +66,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10040000 `FUN_10040000`
+0x10040000 `codecPitchAnalysis`
 
 ## Constants
 - `0x0` at 0x10041583

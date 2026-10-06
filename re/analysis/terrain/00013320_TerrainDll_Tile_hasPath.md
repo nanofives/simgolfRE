@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x1000a510 `?hasPath@Terrain@@QAE_NPAVTile@@@Z`
+0x10006410 `Terrain::pathUpdateRender`, 0x1000a510 `Terrain::hasPath`
 
 ## Constants
 - `0x11` (17) at 0x1001332d

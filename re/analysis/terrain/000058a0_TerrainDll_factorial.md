@@ -30,7 +30,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10005750 `FUN_10005750`
+0x10005750 `Terrain::bernstein`
 
 ## Constants
 - `0x0` at 0x100058b8

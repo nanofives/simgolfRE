@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000a450 `?hasConnectedPath@Terrain@@QAE_NHH@Z`
+0x1000a450 `Terrain::hasConnectedPath`
 
 ## Constants
 - `0x11` (17) at 0x1001336d

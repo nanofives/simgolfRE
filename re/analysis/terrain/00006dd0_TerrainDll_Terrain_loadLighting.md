@@ -70,11 +70,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x10006e3f, 0x10006e95, 0x10006f94, 0x10007093
 
 ## Callees
-- 0x10001019 -> 0x100046a0 `FUN_100046a0` (incremental-linking thunk) at 0x10006e4e, 0x100072cc
-- 0x100010f0 -> 0x10003a50 `FUN_10003a50` (incremental-linking thunk) at 0x10007192, 0x100071af
-- 0x1000112c -> 0x10002510 `FUN_10002510` (incremental-linking thunk) at 0x10006e38
-- 0x100011a9 -> 0x10037c80 `FUN_10037c80` (incremental-linking thunk) at 0x100071be
-- 0x100011b8 -> 0x10010590 `FUN_10010590` (incremental-linking thunk) at 0x10006e6c, 0x10006eab, 0x10006ec6, 0x10006f6b, 0x10006faa, 0x10006fc5, 0x1000706a, 0x100070a9 (+1 more)
+- 0x10001019 -> 0x100046a0 `ifstream::{vbase_dtor}` (incremental-linking thunk) at 0x10006e4e, 0x100072cc
+- 0x100010f0 -> 0x10003a50 `rotateAxis` (incremental-linking thunk) at 0x10007192, 0x100071af
+- 0x1000112c -> 0x10002510 `ios::fail` (incremental-linking thunk) at 0x10006e38
+- 0x100011a9 -> 0x10037c80 `normalize` (incremental-linking thunk) at 0x100071be
+- 0x100011b8 -> 0x10010590 `istream::getline` (incremental-linking thunk) at 0x10006e6c, 0x10006eab, 0x10006ec6, 0x10006f6b, 0x10006faa, 0x10006fc5, 0x1000706a, 0x100070a9 (+1 more)
 - 0x100180a0 `__chkesp` at 0x10007209, 0x10007226, 0x10007243, 0x10007260, 0x10007274, 0x10007294, 0x100072af, 0x100072e6
 - 0x10018e20 `_atoi` at 0x10006ee0, 0x10006f0d, 0x10006f3a, 0x10006fdf, 0x1000700c, 0x10007039, 0x100070de, 0x1000710b (+1 more)
 - 0x10018f70 `_strcmp` at 0x10006e8b, 0x10006f8a, 0x10007089
@@ -87,7 +87,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glMateriali` at 0x100072a7
 
 ## Callers
-0x10003980 `FUN_10003980`
+0x10003980 `Terrain::rebuild`
 
 ## Constants
 - `0x0` at 0x10006e21, 0x10006f02, 0x10006f2f, 0x10007001, 0x1000702e, 0x10007100, 0x1000712d, 0x10007173 (+4 more)

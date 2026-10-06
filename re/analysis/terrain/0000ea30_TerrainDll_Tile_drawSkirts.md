@@ -65,8 +65,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1000ea54, 0x1000ea6b, 0x1000eab3, 0x1000eac9, 0x1000eca9, 0x1000ecd5, 0x1000ed13, 0x1000ed29 (+10 more)
 
 ## Callees
-- 0x1000101e -> 0x1000ea30 `FUN_1000ea30` (incremental-linking thunk) at 0x1000ecc7, 0x1000ecf3, 0x1000ef18, 0x1000ef44, 0x1000f16c, 0x1000f198, 0x1000f3cc, 0x1000f3f8
-- 0x1000119a -> 0x10001f60 `FUN_10001f60` (incremental-linking thunk) at 0x1000eaab, 0x1000ed0b, 0x1000ef5c, 0x1000f1b0
+- 0x1000101e -> 0x1000ea30 `Tile::drawSkirts` (incremental-linking thunk) at 0x1000ecc7, 0x1000ecf3, 0x1000ef18, 0x1000ef44, 0x1000f16c, 0x1000f198, 0x1000f3cc, 0x1000f3f8
+- 0x1000119a -> 0x10001f60 `Tile::getType` (incremental-linking thunk) at 0x1000eaab, 0x1000ed0b, 0x1000ef5c, 0x1000f1b0
 - 0x100180a0 `__chkesp` at 0x1000ea93, 0x1000eadb, 0x1000eaf7, 0x1000eb0d, 0x1000eb2e, 0x1000eb41, 0x1000eb7b, 0x1000eb91 (+54 more)
 - import `OPENGL32.dll!glBegin` at 0x1000ead3, 0x1000ed33, 0x1000ef84, 0x1000f1d8
 - import `OPENGL32.dll!glBindTexture` at 0x1000ea8b
@@ -77,7 +77,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glVertex3fv` at 0x1000eb26, 0x1000ebfb, 0x1000ec86, 0x1000ed86, 0x1000ee55, 0x1000eed7, 0x1000efd4, 0x1000f0a0 (+4 more)
 
 ## Callers
-0x1000e6c0 `FUN_1000e6c0`, 0x1000ea30 `FUN_1000ea30`
+0x1000e6c0 `Tile::render`, 0x1000ea30 `Tile::drawSkirts`
 
 ## Constants
 - `0x0` at 0x1000ea5b, 0x1000ea6d, 0x1000ea9b, 0x1000eab9, 0x1000eb03, 0x1000eb35, 0x1000eb37, 0x1000eb82 (+42 more)

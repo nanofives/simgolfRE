@@ -26,7 +26,7 @@ Through registers:
 - 0x10019389 `FUN_10019389` at 0x1000586a
 
 ## Callers
-0x10005750 `FUN_10005750`
+0x10005750 `Terrain::bernstein`
 
 ## Constants
 - `0x8` at 0x1000585b, 0x10005864

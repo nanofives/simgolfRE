@@ -161,7 +161,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x10002509 -> 0x10032130 `beginDecodeStreamA` (incremental-linking thunk) at 0x10032b4c
 - 0x1004249a `operator_delete` at 0x10032bca, 0x10032c9e
 - 0x100424d7 `operator_new` at 0x100328fb, 0x100329fa, 0x10032e99
-- 0x10042690 `FUN_10042690` at 0x100326b3, 0x100326c9
+- 0x10042690 `strstr` at 0x100326b3, 0x100326c9
 - 0x10042acd `_malloc` at 0x10032ec7
 - import `WINMM.dll!mmioAdvance` at 0x10032f81
 - import `WINMM.dll!mmioAscend` at 0x100328b2, 0x10032951, 0x10032a39, 0x10032a4b
@@ -177,7 +177,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call esi` at 0x1003280e, 0x1003281b, 0x10032857, 0x100328bf, 0x1003296a, 0x10032985, 0x100329bb, 0x10032a57 (+2 more)
 
 ## Callers
-0x10011c60 `DirectSoundDevice::create`, 0x10031e50 `Channel_ctor`, 0x10033990 `FUN_10033990`, 0x100399a0 `loadMultiChannel`
+0x10011c60 `DirectSoundDevice::create`, 0x10031e50 `Channel_ctor`, 0x10033990 `Channel_parseWaveHeader`, 0x100399a0 `loadMultiChannel`
 
 ## Constants
 - `0x0` at 0x10032807, 0x10032810, 0x1003282c, 0x10032850, 0x100328a5, 0x100328a9, 0x100328b8, 0x1003294d (+20 more)

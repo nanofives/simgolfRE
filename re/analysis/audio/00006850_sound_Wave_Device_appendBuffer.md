@@ -66,7 +66,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x1000689b, 0x100069ca
 
 ## Callees
-- 0x100017a8 -> 0x10037e10 `FUN_10037e10` (incremental-linking thunk) at 0x10006912
+- 0x100017a8 -> 0x10037e10 `MmioBuffer_init` (incremental-linking thunk) at 0x10006912
 - 0x10001e56 -> 0x10037c40 `Voice_resetDefaults` (incremental-linking thunk) at 0x100068f5
 - 0x100424d7 `operator_new` at 0x100068dd, 0x1000692a
 - import `WINMM.dll!mmioClose` at 0x100068a7

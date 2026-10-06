@@ -55,7 +55,7 @@ Globals:
 - indirect `jmp [esi*4+0x4362b8]` at 0x0043615b
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x0` at 0x004360c3, 0x00436109, 0x0043613e, 0x00436170, 0x00436182, 0x0043619c, 0x00436250

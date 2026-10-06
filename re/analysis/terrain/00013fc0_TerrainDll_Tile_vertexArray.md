@@ -20,7 +20,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x100032b0 `FUN_100032b0`
+0x100032b0 `Terrain::vertexArray`
 
 ## Constants
 - `0x10` (16) at 0x10013fcc

@@ -31,17 +31,17 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x8]` dword at 0x1000b125, 0x1000b161
 
 ## Callees
-- 0x1000100f -> 0x1000b690 `FUN_1000b690` (incremental-linking thunk) at 0x1000b194
-- 0x10001046 -> 0x1000b750 `FUN_1000b750` (incremental-linking thunk) at 0x1000b1af
-- 0x100010e1 -> 0x1000b600 `FUN_1000b600` (incremental-linking thunk) at 0x1000b173
-- 0x10001159 -> 0x1000b630 `FUN_1000b630` (incremental-linking thunk) at 0x1000b12c, 0x1000b149, 0x1000b157, 0x1000b168
-- 0x1000115e -> 0x1000b710 `FUN_1000b710` (incremental-linking thunk) at 0x1000b120
-- 0x10001271 -> 0x1000b660 `FUN_1000b660` (incremental-linking thunk) at 0x1000b188
-- 0x1000129e -> 0x1000b500 `FUN_1000b500` (incremental-linking thunk) at 0x1000b13e
+- 0x1000100f -> 0x1000b690 `std::allocator(TileP)::construct` (incremental-linking thunk) at 0x1000b194
+- 0x10001046 -> 0x1000b750 `std::list(TileP)::iterator::iterator` (incremental-linking thunk) at 0x1000b1af
+- 0x100010e1 -> 0x1000b600 `std::list(TileP)::_Acc::_Next` (incremental-linking thunk) at 0x1000b173
+- 0x10001159 -> 0x1000b630 `std::list(TileP)::_Acc::_Prev` (incremental-linking thunk) at 0x1000b12c, 0x1000b149, 0x1000b157, 0x1000b168
+- 0x1000115e -> 0x1000b710 `std::list(TileP)::const_iterator::_Mynode` (incremental-linking thunk) at 0x1000b120
+- 0x10001271 -> 0x1000b660 `std::list(TileP)::_Acc::_Value` (incremental-linking thunk) at 0x1000b188
+- 0x1000129e -> 0x1000b500 `std::list(TileP)::_Buynode` (incremental-linking thunk) at 0x1000b13e
 - 0x100180a0 `__chkesp` at 0x1000b1c6
 
 ## Callers
-0x1000b090 `FUN_1000b090`, 0x100381a0 `FUN_100381a0`
+0x1000b090 `std::list(TileP)::push_back`, 0x100381a0 `Terrain::drawTile`
 
 ## Constants
 - `0x1` at 0x1000b19f

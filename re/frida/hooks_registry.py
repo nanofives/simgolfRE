@@ -99,3 +99,37 @@ HOOKS.update({
     "clearTile_kind0": dict(module="golf_clean.exe", addr=0x00470A10, abi="default", ret="void", args=["int", "int"],
                             fixture="course_kind0", state=_COURSE_STATE, vectors=_CLEAR),
 })
+
+_MSG_STATE = [(0x0053BBA8, 0, 4), (0x0056C770, 0, 32), (0x0056C794, 0, 32), (0x0056A794, 0, 32), (0x0056A924, 0, 32),
+              (0x0056C570, 0, 512)]
+_POP_STATE = [(0x0059ABB0, 0, 4), (0x00542FD8, 0, 32), (0x00542FF8, 0, 32), (0x00542DD8, 0, 32), (0x00542F00, 0, 32),
+              (0x00575CA0, 0, 4 * 0x208)]
+_POPS = [(p, x, y, w) for p in (0, 5, -3, 0x7FFFFFFF) for x, y in ((0, 0), (17, -4)) for w in (-1, 0, 3)]
+HOOKS.update({
+    # Batch 3 of C3 (2026-10-06): writers, shim/src/re/golf_writers.cpp, A/B'd with state regions.
+    "queueMessage": dict(module="golf_clean.exe", addr=0x0040C720, abi="default", ret="void", args=["int", "int", "int"],
+                         fixture="msg_ring_n7", state=_MSG_STATE,
+                         vectors=[(a, b, c) for a in (0, 1, -1) for b in (0, 7) for c in (0, 0x7FFFFFFF)]),
+    "queueMessage_n3": dict(module="golf_clean.exe", addr=0x0040C720, abi="default", ret="void",
+                            args=["int", "int", "int"], fixture="msg_ring_n3", state=_MSG_STATE,
+                            vectors=[(a, b, c) for a in (0, 2) for b in (1, -5) for c in (3,)]),
+    "clearMatching": dict(module="golf_clean.exe", addr=0x0040C860, abi="default", ret="void", args=["int", "int"],
+                          fixture="msg_ring_n7", state=_MSG_STATE,
+                          vectors=[(a, b) for a in (-1, 0, 1, 2, 3) for b in (-1, 0, 1, 2)]),
+    "pointsPopup": dict(module="golf_clean.exe", addr=0x0040C890, abi="default", ret="void",
+                        args=["int", "int", "int", "int"], fixture="pop_ring_n7", state=_POP_STATE, vectors=_POPS),
+    "pointsPopup_n2": dict(module="golf_clean.exe", addr=0x0040C890, abi="default", ret="void",
+                           args=["int", "int", "int", "int"], fixture="pop_ring_n2", state=_POP_STATE, vectors=_POPS),
+    "pointsPopup_off": dict(module="golf_clean.exe", addr=0x0040C890, abi="default", ret="void",
+                            args=["int", "int", "int", "int"], fixture="pop_ring_off", state=_POP_STATE, vectors=_POPS),
+    "logTick": dict(module="golf_clean.exe", addr=0x0040C6F0, abi="default", ret="void", args=["int", "int"],
+                    fixture="tick_12345", state=[(0x00568600, 0, 1000), (0x00834170, 0, 4)],
+                    vectors=[(a, b) for a in (0, 1, 0x7FFF, 0x12345678, -1) for b in (0, 2, 0x8000)]),
+    "resetGolfer": dict(module="golf_clean.exe", addr=0x00426670, abi="default", ret="void", args=["int"],
+                        fixture="golfer_queue", state=[(0x005794D5, 0, 0x1000), (0x005689E8, 0, 800)],
+                        vectors=[(g,) for g in range(16)]),
+    "appendOpinion": dict(module="golf_clean.exe", addr=0x00469A20, abi="default", ret="void", args=["int", "int"],
+                          fixture="text_ab", state=[(0x0051A068, 0, 1024)],
+                          vectors=[(r, t) for r in (-0x80000000, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x7F, 0x80, 0x7FFFFFFF)
+                                   for t in (-1, 0, 1, 2)]),
+})

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 122 bytes, 39 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 appends a message to the on-screen message queue (`re/names/exe_0.tsv`)
 
+## Purpose
+Adds a message to an 8-slot ring: at the write index (dword 0x0053bba8) stores a, b and c in the dword arrays 0x0056c770, 0x0056c794 and 0x0056a794, sets the slot's lifetime 0x0056a924 to 0x30, copies the text buffer 0x0051a068 (strcpy, inlined as repne scasb / rep movsd) into the slot's 64 bytes at 0x0056c570 + slot*64, and advances the index to (slot + 1) % 8 (0x0040c720). Reimplemented in `shim/src/re/golf_writers.cpp`; path-1 A/B with state comparison is GREEN for write index 7 (wraps to 0, 12 vectors) and 3 (4 vectors).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small11.cpp` as `?queueMessage@@YAXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c799): callee pops 0 bytes of stack arguments.

@@ -32,7 +32,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10005990 `?render@Terrain@@QAE_NPAVTile@@M@Z`, 0x100089e0 `?localRender@Terrain@@QAEXPAVTile@@0M@Z`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`, 0x10038900 `FUN_10038900`
+0x10005990 `Terrain::render`, 0x100089e0 `Terrain::localRender`, 0x10009270 `Terrain::stripRender`, 0x10038900 `Terrain::lowerEdge`
 
 ## Constants
 - `0x0` at 0x1000aded

@@ -28,7 +28,7 @@ None.
 - 0x10001889 -> 0x10011000 `Ds3DBuffer::setPosition` (incremental-linking thunk) at 0x10037b1c
 
 ## Callers
-0x1003a5b0 `FUN_1003a5b0`
+0x1003a5b0 `MultiSound_set3DPosition`
 
 ## Constants
 - `0xb` (11) at 0x10037b24

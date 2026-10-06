@@ -29,13 +29,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x100105aa
 
 ## Callees
-- 0x10001172 -> 0x10037930 `FUN_10037930` (incremental-linking thunk) at 0x100105f5
-- 0x1000127b -> 0x100018b0 `FUN_100018b0` (incremental-linking thunk) at 0x100105b9
+- 0x10001172 -> 0x10037930 `ios::unlock` (incremental-linking thunk) at 0x100105f5
+- 0x1000127b -> 0x100018b0 `ios::lock` (incremental-linking thunk) at 0x100105b9
 - 0x100180a0 `__chkesp` at 0x10010608
 - 0x100348a0 `get` at 0x100105e4
 
 ## Callers
-0x10006dd0 `FUN_10006dd0`
+0x10006dd0 `Terrain::loadLighting`
 
 ## Constants
 - `0x1` at 0x100105c7

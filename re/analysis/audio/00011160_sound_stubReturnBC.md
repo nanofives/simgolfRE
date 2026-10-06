@@ -18,7 +18,7 @@ None.
 None (leaf).
 
 ## Callers
-0x10037c00 `FUN_10037c00`
+0x10037c00 `Channel_set3DBufferStub`
 
 ## Constants
 - `0xb` (11) at 0x10011160

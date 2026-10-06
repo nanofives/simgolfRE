@@ -37,7 +37,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x10001a7d -> 0x10035340 `Channel_setPanGains` (incremental-linking thunk) at 0x10033c27
 
 ## Callers
-0x100340b0 `Channel_releaseBuffers`, 0x10039ce0 `FUN_10039ce0`, 0x10039e70 `Channel_startVoiceTimed`
+0x100340b0 `Channel_releaseBuffers`, 0x10039ce0 `MultiSound_start`, 0x10039e70 `Channel_startVoiceTimed`
 
 ## Constants
 - `0x1` at 0x10033bd1, 0x10033be5, 0x10033bf0

@@ -30,7 +30,7 @@ Through registers:
 - 0x004a5800 `_strpbrk` at 0x00405acb
 
 ## Callers
-0x00405b10 `saveGameDialog`, 0x00432720 `showSystemMenu`, 0x00437910 `promptAndSaveFile`
+0x00405b10 `saveGameDialog`, 0x0040f5c0 `mainLoop`, 0x00432720 `showSystemMenu`, 0x00437910 `promptAndSaveFile`
 
 ## Constants
 - `0x8` at 0x00405ad0

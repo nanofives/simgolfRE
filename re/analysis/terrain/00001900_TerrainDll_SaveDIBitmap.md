@@ -54,7 +54,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10001930, 0x10001941, 0x100019b5, 0x100019ce, 0x100019d9
 
 ## Callees
-- 0x100158b0 `FUN_100158b0` at 0x1000196c
+- 0x100158b0 `iabs` at 0x1000196c
 - 0x10017c20 `_fclose` at 0x10001a52, 0x10001a7e, 0x10001aaa, 0x10001abb
 - 0x10018080 `_fopen` at 0x10001921
 - 0x100180a0 `__chkesp` at 0x10001acd

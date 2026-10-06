@@ -31,7 +31,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000c2c0 `FUN_1000c2c0`, 0x1000f690 `FUN_1000f690`
+0x1000c2c0 `Tile::reset`, 0x1000f690 `PathInfo::PathInfo`
 
 ## Constants
 - `0x0` at 0x1000f700, 0x1000f707, 0x1000f70d, 0x1000f714, 0x1000f71b, 0x1000f722, 0x1000f729

@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x000399a0`), 307 bytes, 85 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 thiscall(filespec): parses the RIFF file into the embedded channel this+0x70 (parseRiffWave); if it is a multi-channel file (this+0x1438 in [2,3)) allocates the extra 0x1450-byte sub-channels at this+0x1440 (operator_new + ctor 0x1002b4e0). (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x10039ad0): callee pops 4 bytes of stack arguments.

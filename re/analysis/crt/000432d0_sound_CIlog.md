@@ -18,7 +18,7 @@ None.
 
 ## Callees
 - 0x100432ed `log_classify` at 0x100432db
-- 0x10048268 `FUN_10048268` at 0x100432d6
+- 0x10048268 `doubleExponentField` at 0x100432d6
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

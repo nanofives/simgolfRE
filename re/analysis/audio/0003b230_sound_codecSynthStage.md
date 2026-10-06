@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003b230`), 879 bytes, 234 instructions, subsystem `a
 
 ## Role (from the naming pass, not a C3 purpose)
 Third codec stage: synthesis sub-tree (FUN_1003d1d0/d8d0 use sqrt, FUN_1003da50 uses log and a transcendental) producing the final sample buffer. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1003b59e): callee pops 0 bytes of stack arguments.
@@ -76,10 +76,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1003b35c
 
 ## Callees
-- 0x1003d0a0 `FUN_1003d0a0` at 0x1003b4b7
-- 0x1003d1d0 `FUN_1003d1d0` at 0x1003b491
-- 0x1003d8d0 `FUN_1003d8d0` at 0x1003b43d
-- 0x1003da50 `FUN_1003da50` at 0x1003b3d2
+- 0x1003d0a0 `applyIir2` at 0x1003b4b7
+- 0x1003d1d0 `lpcSynthesize` at 0x1003b491
+- 0x1003d8d0 `reflectionToLpc` at 0x1003b43d
+- 0x1003da50 `interpSubframeParams` at 0x1003b3d2
 - 0x100431ce `FUN_100431ce` at 0x1003b596
 
 ## Callers

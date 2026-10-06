@@ -27,9 +27,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000c24d, 0x1000c270
 
 ## Callees
-- 0x1000113b -> 0x1000f690 `FUN_1000f690` (incremental-linking thunk) at 0x1000c25d
-- 0x100011a4 -> 0x10001fa0 `FUN_10001fa0` (incremental-linking thunk) at 0x1000c248
-- 0x100011ae -> 0x1000f750 `FUN_1000f750` (incremental-linking thunk) at 0x1000c26b
+- 0x1000113b -> 0x1000f690 `PathInfo::PathInfo` (incremental-linking thunk) at 0x1000c25d
+- 0x100011a4 -> 0x10001fa0 `Faces::Faces` (incremental-linking thunk) at 0x1000c248
+- 0x100011ae -> 0x1000f750 `WallInfo::WallInfo` (incremental-linking thunk) at 0x1000c26b
 - 0x100180a0 `__chkesp` at 0x1000c28c
 
 ## Callers

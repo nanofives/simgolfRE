@@ -23,12 +23,12 @@ Through registers:
 - `jge` (signed) at 0x1003794f
 
 ## Callees
-- 0x1000110e -> 0x10003f80 `FUN_10003f80` (incremental-linking thunk) at 0x10037954
+- 0x1000110e -> 0x10003f80 `ios::lockptr` (incremental-linking thunk) at 0x10037954
 - 0x100180a0 `__chkesp` at 0x1003796a
 - 0x10034a80 `__mtlock` at 0x1003795a
 
 ## Callers
-0x10010590 `FUN_10010590`, 0x10033d70 `clear`, 0x10034a00 `isfx`, 0x10035440 `ipfx`, 0x10036790 `opfx`, 0x10036840 `osfx`, 0x100369a0 `flush`
+0x10010590 `istream::getline`, 0x10033d70 `clear`, 0x10034a00 `isfx`, 0x10035440 `ipfx`, 0x10036790 `opfx`, 0x10036840 `osfx`, 0x100369a0 `flush`
 
 ## Constants
 - `0x0` at 0x1003794b

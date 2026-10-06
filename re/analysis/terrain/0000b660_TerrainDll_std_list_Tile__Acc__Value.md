@@ -21,7 +21,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1000b100 `FUN_1000b100`, 0x1000b2d0 `FUN_1000b2d0`, 0x1000b800 `FUN_1000b800`
+0x1000b100 `std::list(TileP)::insert`, 0x1000b2d0 `std::list(TileP)::const_iterator::operator*`, 0x1000b800 `std::list(TileP)::erase_1000b800`
 
 ## Constants
 - `0x8` at 0x1000b67b

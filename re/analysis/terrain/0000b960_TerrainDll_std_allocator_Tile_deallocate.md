@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10018be0 `operator_delete` at 0x1000b981
 
 ## Callers
-0x1000b5b0 `FUN_1000b5b0`
+0x1000b5b0 `std::list(TileP)::_Freenode`
 
 ## Constants
 - `0x4` at 0x1000b986

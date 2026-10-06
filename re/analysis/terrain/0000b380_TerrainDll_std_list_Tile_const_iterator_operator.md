@@ -28,7 +28,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000b3d0 `FUN_1000b3d0`, 0x100381a0 `FUN_100381a0`
+0x1000b3d0 `std::list(TileP)::const_iterator::operator!=`, 0x100381a0 `Terrain::drawTile`
 
 ## Constants
 - `0x11` (17) at 0x1000b38d

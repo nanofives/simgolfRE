@@ -71,22 +71,22 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10009494, 0x100094b1, 0x100095f3, 0x10009610, 0x10009752, 0x1000976f, 0x100098b1, 0x100098ce
 
 ## Callees
-- 0x10001037 -> 0x10015460 `FUN_10015460` (incremental-linking thunk) at 0x10009488, 0x100095e7, 0x10009746, 0x100098a5
-- 0x10001041 -> 0x1000e6c0 `FUN_1000e6c0` (incremental-linking thunk) at 0x10009957
-- 0x10001055 -> 0x1000afe0 `FUN_1000afe0` (incremental-linking thunk) at 0x10009936
-- 0x10001082 -> 0x100381a0 `FUN_100381a0` (incremental-linking thunk) at 0x100094c2, 0x10009621, 0x10009780, 0x100098df
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x10009463, 0x100095c2, 0x10009721, 0x10009880
-- 0x10001091 -> 0x1000af70 `FUN_1000af70` (incremental-linking thunk) at 0x1000990f
-- 0x100010af -> 0x1000b320 `FUN_1000b320` (incremental-linking thunk) at 0x10009924
-- 0x10001140 -> 0x1000b3d0 `FUN_1000b3d0` (incremental-linking thunk) at 0x1000993f
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x10009310, 0x1000941f, 0x10009447, 0x10009551, 0x1000956a, 0x100096b0, 0x100096c9, 0x1000980f (+1 more)
-- 0x100011e5 -> 0x1000b210 `FUN_1000b210` (incremental-linking thunk) at 0x10009967
-- 0x10001212 -> 0x10007380 `FUN_10007380` (incremental-linking thunk) at 0x100094d6, 0x10009635, 0x10009794, 0x100098f3
-- 0x10001253 -> 0x1000adc0 `FUN_1000adc0` (incremental-linking thunk) at 0x10009363
-- 0x1000126c -> 0x1000b2d0 `FUN_1000b2d0` (incremental-linking thunk) at 0x10009950
-- 0x10001299 -> 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z` (incremental-linking thunk) at 0x10009398, 0x100093aa, 0x100094f7, 0x10009509, 0x10009656, 0x10009668, 0x100097b5, 0x100097c7
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x10009333, 0x100093f2, 0x1000940b, 0x1000957e, 0x100095a6, 0x100096dd, 0x10009705, 0x1000983c (+1 more)
-- 0x10001316 -> 0x10006850 `FUN_10006850` (incremental-linking thunk) at 0x100094a5, 0x10009604, 0x10009763, 0x100098c2
+- 0x10001037 -> 0x10015460 `Tile::isHidden` (incremental-linking thunk) at 0x10009488, 0x100095e7, 0x10009746, 0x100098a5
+- 0x10001041 -> 0x1000e6c0 `Tile::render` (incremental-linking thunk) at 0x10009957
+- 0x10001055 -> 0x1000afe0 `std::list(TileP)::end` (incremental-linking thunk) at 0x10009936
+- 0x10001082 -> 0x100381a0 `Terrain::drawTile` (incremental-linking thunk) at 0x100094c2, 0x10009621, 0x10009780, 0x100098df
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x10009463, 0x100095c2, 0x10009721, 0x10009880
+- 0x10001091 -> 0x1000af70 `std::list(TileP)::begin` (incremental-linking thunk) at 0x1000990f
+- 0x100010af -> 0x1000b320 `std::list(TileP)::iterator::operator++` (incremental-linking thunk) at 0x10009924
+- 0x10001140 -> 0x1000b3d0 `std::list(TileP)::const_iterator::operator!=` (incremental-linking thunk) at 0x1000993f
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x10009310, 0x1000941f, 0x10009447, 0x10009551, 0x1000956a, 0x100096b0, 0x100096c9, 0x1000980f (+1 more)
+- 0x100011e5 -> 0x1000b210 `std::list(TileP)::clear` (incremental-linking thunk) at 0x10009967
+- 0x10001212 -> 0x10007380 `Terrain::drawTileObjects` (incremental-linking thunk) at 0x100094d6, 0x10009635, 0x10009794, 0x100098f3
+- 0x10001253 -> 0x1000adc0 `Terrain::setViewAngle` (incremental-linking thunk) at 0x10009363
+- 0x1000126c -> 0x1000b2d0 `std::list(TileP)::const_iterator::operator*` (incremental-linking thunk) at 0x10009950
+- 0x10001299 -> 0x10009270 `Terrain::stripRender` (incremental-linking thunk) at 0x10009398, 0x100093aa, 0x100094f7, 0x10009509, 0x10009656, 0x10009668, 0x100097b5, 0x100097c7
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x10009333, 0x100093f2, 0x1000940b, 0x1000957e, 0x100095a6, 0x100096dd, 0x10009705, 0x1000983c (+1 more)
+- 0x10001316 -> 0x10006850 `Terrain::isCulled` (incremental-linking thunk) at 0x100094a5, 0x10009604, 0x10009763, 0x100098c2
 - 0x100180a0 `__chkesp` at 0x100092a4, 0x100092b3, 0x100092dd, 0x10009302, 0x10009357, 0x10009976, 0x10009985, 0x10009995
 - import `OPENGL32.dll!glFlush` at 0x1000997d
 - import `OPENGL32.dll!glLoadIdentity` at 0x1000929c
@@ -98,7 +98,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - indirect `jmp [eax*4+0x100099a0]` at 0x10009384
 
 ## Callers
-0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`
+0x10009270 `Terrain::stripRender`
 
 ## Constants
 - `0x0` at 0x10009293, 0x100092ba, 0x100092bc, 0x100092be, 0x100092c0, 0x100092c7, 0x100092e4, 0x100092eb (+11 more)

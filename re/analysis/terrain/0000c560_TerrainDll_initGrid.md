@@ -52,7 +52,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000a130 `FUN_1000a130`
+0x1000a130 `Terrain::buildArrays`
 
 ## Constants
 - `0x0` at 0x1000c58b, 0x1000c5a9, 0x1000c616, 0x1000c632, 0x1000c6b8, 0x1000c6d4, 0x1000c70c

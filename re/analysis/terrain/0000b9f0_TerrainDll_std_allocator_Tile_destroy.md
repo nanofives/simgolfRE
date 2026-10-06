@@ -21,11 +21,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000ba0a
 
 ## Callees
-- 0x1000118b -> 0x1000bb40 `FUN_1000bb40` (incremental-linking thunk) at 0x1000ba11
+- 0x1000118b -> 0x1000bb40 `std::_Destroy` (incremental-linking thunk) at 0x1000ba11
 - 0x100180a0 `__chkesp` at 0x1000ba21
 
 ## Callers
-0x1000b800 `FUN_1000b800`
+0x1000b800 `std::list(TileP)::erase_1000b800`
 
 ## Constants
 - `0x4` at 0x1000ba16

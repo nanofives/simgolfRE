@@ -50,7 +50,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - indirect `jmp [ecx*4+0x10014115]` at 0x100140ad
 
 ## Callers
-0x100032f0 `?setType@Terrain@@QAEXPAVTile@@HH@Z`
+0x100032f0 `Terrain::setType`
 
 ## Constants
 - `0x1` at 0x1001404f, 0x10014086

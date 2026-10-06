@@ -84,7 +84,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jns` (signed) at 0x10030905
 
 ## Callees
-- 0x100017a8 -> 0x10037e10 `FUN_10037e10` (incremental-linking thunk) at 0x10030a12
+- 0x100017a8 -> 0x10037e10 `MmioBuffer_init` (incremental-linking thunk) at 0x10030a12
 - 0x10001e56 -> 0x10037c40 `Voice_resetDefaults` (incremental-linking thunk) at 0x100309ee
 - 0x1003a980 `codecProcessBlock` at 0x10030946
 - 0x100424d7 `operator_new` at 0x100309d5, 0x10030a2a

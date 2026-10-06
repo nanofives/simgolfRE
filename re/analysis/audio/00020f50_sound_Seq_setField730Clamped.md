@@ -23,7 +23,7 @@ Through registers:
 - `jle` (signed) at 0x10020f5b
 
 ## Callees
-- 0x100025d6 -> 0x1002b260 `FUN_1002b260` (incremental-linking thunk) at 0x10020f63, 0x10020f7c
+- 0x100025d6 -> 0x1002b260 `Seq_applyChannelLevel` (incremental-linking thunk) at 0x10020f63, 0x10020f7c
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -35,12 +35,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0xc]` dword at 0x10005777
 
 ## Callees
-- 0x10001208 -> 0x100058a0 `FUN_100058a0` (incremental-linking thunk) at 0x1000576f, 0x10005784, 0x10005797
-- 0x10001325 -> 0x10005840 `FUN_10005840` (incremental-linking thunk) at 0x100057b9, 0x100057e6
+- 0x10001208 -> 0x100058a0 `factorial` (incremental-linking thunk) at 0x1000576f, 0x10005784, 0x10005797
+- 0x10001325 -> 0x10005840 `powf2` (incremental-linking thunk) at 0x100057b9, 0x100057e6
 - 0x100180a0 `__chkesp` at 0x100057f9
 
 ## Callers
-0x10005230 `?drawBezierSpline@Terrain@@QAEXHHHHHHHHH@Z`
+0x10005230 `Terrain::drawBezierSpline`
 
 ## Constants
 - `0x2` at 0x1000576d, 0x1000578e, 0x100057c7

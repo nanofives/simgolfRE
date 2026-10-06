@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00029020`), 122 bytes, 38 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a device/voice base object: sets default level this[2]=0x7f, zeroes fields, array-constructs 0x10 sub-objects of 0x18 bytes at this+9 (ctor 0x100020db), installs vtable 0x1005b914. (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10029099): callee pops 0 bytes of stack arguments.

@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00031e50`), 366 bytes, 83 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 thiscall(obj): array-constructs the 0x10 sub-voice slots of 0x110 bytes at this+0x238 (element ctor Voice_resetDefaults), then zeroes the voice-list head/tail/count at this+0x1338..0x1354 and the MMIOINFO at this+0xc. (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x10031fbb): callee pops 4 bytes of stack arguments.

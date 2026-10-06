@@ -21,7 +21,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1000ba40 `FUN_1000ba40`
+0x1000ba40 `std::_Construct`
 
 ## Constants
 - `0x10` (16) at 0x1000babc

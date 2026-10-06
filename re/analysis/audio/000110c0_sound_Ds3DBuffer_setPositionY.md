@@ -32,7 +32,7 @@ Through registers:
 - indirect `call [edx+0x4c]` at 0x100110f2
 
 ## Callers
-0x10037b80 `FUN_10037b80`
+0x10037b80 `Channel_set3DPositionY`
 
 ## Constants
 - `0x0` at 0x100110da

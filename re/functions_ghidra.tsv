@@ -1,2208 +1,2208 @@
-entry	name	size	callers	callees
-00401000	resetRecordBank	54	1	0
-00401040	placeRecord	356	1	0
-004011b0	freeRecordAtPos	47	1	0
-004011e0	spawnObject	237	1	1
-004012d0	drawRecords	1110	1	5
-00401750	initRecords	117	2	2
-004017d0	placeAnimal	1061	1	6
-00401c00	tickAnimals	39	1	1
-00401c30	deletingDtor_401c30	59	0	1
-00401c70	List401c70_dtor	147	8	1
-00401d10	S3List_add	1050	6	4
-00402130	listIterNext	47	1	0
-00402160	listIterValue	17	2	0
-00402190	FUN_00402190	3	7	0
-004021a0	unwindCleanup_4021a0	15	4	0
-004021b0	unwindFree_4021b0	38	11	1
-004021e0	C4021e0_dtor	147	1	1
-00402280	S3List_add2	1050	1	4
-004026a0	List402_clear	115	4	0
-00402930	freeAtTile	57	1	0
-00402970	spawnWalker	194	2	1
-00402a40	updateWalkers	3729	1	14
-004038f0	drawFlyingBall	1550	1	15
-00403f20	initGlobalArray_00403f20	31	0	1
-00403f40	atexitRegister_00403f40	12	0	1
-00403f80	initGlobalArray_00403f80	28	0	1
-00403fa0	atexitRegister_00403fa0	12	0	1
-00403fe0	initGlobalArray_00403fe0	28	0	1
-00404000	atexitRegister_00404000	12	0	1
-00404040	initGlobalArray_00404040	28	0	1
-00404060	atexitRegister_00404060	12	0	1
-00404090	flicNextFrame	138	1	3
-00404120	flicOpenStream	146	1	3
-004041c0	resetPair	45	1	2
-004041f0	unwindFree_4041f0	11	108	1
-00404200	C404200_dtor	86	2	2
-00404260	deletingDtor_404260	30	0	2
-00404280	R2C404280_dtor	107	0	3
-00404320	staticInit_00404320	10	0	1
-00404330	atexitRegister_00404330	12	0	1
-00404350	Base4805a0::dtor	5	1	0
-00404360	staticInit_404360	28	1	1
-00404380	deletingDtor_404380	30	0	2
-004043b0	staticInit_004043b0	10	0	1
-004043c0	atexitRegister_004043c0	12	0	1
-004043f0	staticInit_004043f0	10	0	1
-00404400	atexitRegister_00404400	12	0	1
-00404440	staticInit_00404440	10	0	1
-00404450	atexitRegister_00404450	12	0	1
-00404490	staticInit_00404490	10	0	1
-004044a0	atexitRegister_004044a0	12	0	1
-004044e0	staticInit_004044e0	10	0	1
-004044f0	atexitRegister_004044f0	12	0	1
-00404530	staticInit_00404530	10	0	1
-00404540	atexitRegister_00404540	12	0	1
-00404580	staticInit_00404580	10	0	1
-00404590	atexitRegister_00404590	12	0	1
-004045d0	staticInit_004045d0	10	0	1
-004045e0	atexitRegister_004045e0	12	0	1
-00404620	staticInit_00404620	10	0	1
-00404630	atexitRegister_00404630	12	0	1
-00404670	staticInit_00404670	10	0	1
-00404680	atexitRegister_00404680	12	0	1
-004046c0	staticInit_004046c0	10	0	1
-004046d0	atexitRegister_004046d0	12	0	1
-00404700	staticInit_00404700	10	0	1
-00404710	atexitRegister_00404710	12	0	1
-00404750	staticInit_00404750	10	0	1
-00404760	atexitRegister_00404760	12	0	1
-004047a0	staticInit_004047a0	10	0	1
-004047b0	atexitRegister_004047b0	12	0	1
-004047f0	staticInit_004047f0	10	0	1
-00404800	atexitRegister_00404800	12	0	1
-00404840	staticInit_00404840	10	0	1
-00404850	atexitRegister_00404850	12	0	1
-00404970	scaleX	37	5	0
-004049a0	drawLineOnSurface	40	1	1
-004049d0	drawText4049d0	68	22	2
-00404a20	drawTextScaled	175	1	4
-00404ad0	drawTextSurface	154	7	3
-00404b70	drawCenteredText	69	27	2
-00404bc0	drawCenteredText2	69	18	2
-00404c20	initGlobalArray_00404c20	200	0	2
-00404cf0	atexitRegister_00404cf0	12	0	1
-00404e00	initGlobalArray_00404e00	136	0	2
-00404e90	atexitRegister_00404e90	12	0	1
-00404f50	initGlobalArray_00404f50	172	0	1
-00405000	atexitRegister_00405000	12	0	1
-004050b0	initGlobalArray_004050b0	148	0	1
-00405150	atexitRegister_00405150	12	0	1
-004051f0	initGlobalArray_004051f0	217	0	1
-004052d0	atexitRegister_004052d0	12	0	1
-004053a0	initGlobalArray_004053a0	145	0	1
-00405440	atexitRegister_00405440	12	0	1
-004054e0	initGlobalArray_004054e0	145	0	1
-00405580	atexitRegister_00405580	12	0	1
-00405620	initGlobalArray_00405620	145	0	1
-004056c0	atexitRegister_004056c0	12	0	1
-00405760	initGlobalArray_00405760	193	0	1
-00405830	atexitRegister_00405830	12	0	1
-004058f0	staticInit_004058f0	10	0	1
-00405900	atexitRegister_00405900	12	0	1
-00405920	wobble	78	1	2
-00405970	addHabitatSlot	134	1	1
-00405a00	playHabitatSound	182	2	1
-00405ac0	sanitizeFileName	69	4	1
-00405b10	saveGameDialog	786	1	12
-00405e30	placeHabitat	616	2	6
-004060a0	computeRatingTrend	253	1	0
-004061b0	staticInit_004061b0	10	0	1
-004061c0	atexitRegister_004061c0	12	0	1
-004061f0	staticInit_004061f0	10	0	1
-00406200	atexitRegister_00406200	12	0	1
-00406220	drawMinimapSegment	44	1	1
-00406250	showLoadingScreen	777	2	12
-004065c0	showCharacterIntro	176	1	2
-00406670	membershipReport	1467	1	6
-00406c30	canAfford	275	3	4
-00406d50	buildStatusText	457	1	2
-00407000	holeQuadrants	151	6	1
-004070b0	inRange	448	2	1
-00407280	appendHoleName	192	6	2
-00407340	nearestHole	189	1	1
-00407400	canStep	152	2	1
-004074a0	landmarkName	521	7	0
-00407700	decorationName	996	3	1
-00407b60	sceneryLabel	255	1	1
-00407c60	drawCircle	194	3	5
-00407e00	narrateShot	6107	1	26
-00409620	scanShotArea	803	1	7
-00409950	updatePairSnapshot	148	3	0
-004099f0	addGolferPair	151	1	1
-00409a90	scanNearbyGolfers	345	1	4
-00409bf0	updateRollingStats	187	1	2
-00409cb0	pushTripleEntry	52	1	0
-00409cf0	editTerrainHeight	1087	1	8
-0040a130	setGrids	38	1	0
-0040a160	buildToolLabel	887	1	2
-0040a4e0	demolishObject	1213	1	9
-0040a9a0	appendClubName	161	3	0
-0040aa80	hireEmployee	586	2	9
-0040acd0	distance	129	16	1
-0040ad60	loadTopScores	514	1	5
-0040af70	saveFieldIo	44	2	2
-0040afa0	serializeCourse	1267	2	1
-0040b4a0	saveGame	477	5	7
-0040b840	loadCourse	358	1	10
-0040b9b0	loadGame	576	2	12
-0040bbf0	deserializeCourse	778	1	1
-0040bf00	setLinePoint	20	5	0
-0040bf20	lineTo	63	5	1
-0040bf60	tileBlocked	51	29	0
-0040bfa0	typeAtPos	55	8	1
-0040bfe0	cornerHeights	359	8	2
-0040c170	heightBlend	374	6	3
-0040c2f0	slopeY	171	1	1
-0040c3a0	slopeX	173	1	1
-0040c450	slopeMix	94	2	3
-0040c4b0	tileDistance	66	7	1
-0040c500	playSoundAt	487	10	4
-0040c6f0	logTick	46	8	0
-0040c720	queueMessage	122	2	0
-0040c7a0	drawLabels	185	1	3
-0040c860	clearMatching	45	1	0
-0040c890	pointsPopup	118	7	0
-0040c910	drawMoneyLabels	251	1	4
-0040ca10	blitPanel	226	4	1
-0040cb00	startMessage	247	18	1
-0040cc00	drawPanelS2	455	4	2
-0040cdd0	drawWindowFrame	288	1	2
-0040cef0	drawFrameR3	448	6	2
-0040d0b0	drawFrameS2	618	3	2
-0040d320	drawWindow	881	11	10
-0040d6a0	tickMessage	183	1	1
-0040d7b0	appendDate	214	7	1
-0040daa0	appendCourseTitle	237	13	2
-0040db90	evalPlacementArea	536	3	2
-0040ddb0	nearestPlaced	183	1	1
-0040de70	findNearestTargetTile	266	1	2
-0040df80	objectAt	119	7	0
-0040e000	stampCourseTiles	1011	4	2
-0040e400	clearObjectFootprint	424	3	4
-0040e5b0	rankValue	60	1	0
-0040e5f0	appendUpgradeText	293	1	0
-0040e720	announceBuilding	2614	1	8
-0040f190	customizeCharacter	1068	1	7
-0040f5c0	mainLoop	59614	1	198
-00421b60	drawScaledSprite421b60	39	1	1
-00421b90	drawScaledSprite421b90	44	1	1
-00421bc0	updateMembership	982	4	2
-00421fa0	scanTileLine	1056	1	6
-004223c0	decaySum	44	1	0
-004223f0	decaySum2	64	1	0
-00422430	shotPower	247	1	2
-00422530	rateTile	360	5	2
-004226a0	trialShot	2320	1	11
-00422fb0	simulateBallFlight	4455	1	19
-00424120	simulateShot	9490	3	21
-00426670	resetGolfer	62	2	0
-004266b0	patronEvent	3264	2	11
-00427380	matchUpdate	5723	1	17
-004289e0	updateGolfers	20851	1	45
-0042dba0	sampleHeight	88	4	2
-0042dc00	appendNumber	324	18	2
-0042dd50	appendCents	335	9	1
-0042dea0	holeMagazineEvent	2303	1	8
-0042e7a0	directionOf	60	1	0
-0042e7e0	pathStep	1665	2	12
-0042ee80	clearCost	183	1	1
-0042ef40	rateLot	465	3	2
-0042f120	floodMark	147	2	1
-0042f1c0	propagateType11	248	2	2
-0042f2c0	markTileKind11	118	5	1
-0042f340	rebuildTileCoverage	362	4	2
-0042f4b0	cornerRange	128	5	1
-0042f530	relaxEdges42f530	251	1	3
-0042f630	relaxTile42f630	172	1	1
-0042f6e0	raiseFromNeighbours	181	1	1
-0042f7a0	rebuildHeightfield	416	8	5
-0042f940	tileToScreen	232	6	1
-0042fa30	heightAt42fa30	342	2	2
-0042fb90	worldToScreen	1157	15	2
-00430020	screenToTile	817	2	3
-00430360	drawWorldObjects	4676	1	16
-004315e0	buildGolferBioText	1480	2	3
-00431d20	saveCourseJpg	440	2	5
-00431ee0	saveThumbAndFull	184	1	2
-00431fa0	writeCourseInfo	450	1	6
-00432170	flushCourseInfo	40	1	2
-004321d0	capsLockOff	45	1	2
-00432200	drawAmenityRow	864	1	5
-00432560	showPreferencesMenu	177	1	1
-00432620	drawPanelBackdrop	120	10	3
-004326a0	nearestMenuSpot	113	2	1
-00432720	showSystemMenu	1026	1	12
-00432ba0	showMainRadialMenu	930	1	4
-00432f90	hitTestSlot432f90	167	2	1
-00433040	clickSlotPanel	332	1	6
-00433190	showInfoCursorPanel	2692	1	16
-00433c60	hitBuildTool433c60	193	2	1
-00433d30	clickBuildTool433d30	277	1	4
-00433e50	drawTerrainToolbar	549	1	5
-004340a0	hitBuildingTool	151	2	1
-00434140	pickBuilding	526	1	8
-00434350	drawBuildingPanel	1537	1	11
-00434980	pickAmenity434980	315	2	1
-00434ac0	clickAmenityPanel	508	1	5
-00434cf0	drawAmenitiesPanel	2108	1	10
-00435570	hitEmployeeSlot435570	264	2	2
-00435680	clickEmployeeView	210	1	2
-00435760	drawEmployeeViewPanel	1951	1	13
-00435f00	hitGolferPanel435f00	348	2	1
-00436060	clickGolferPanel	598	1	4
-004362f0	drawGolferActionPanel	2014	1	10
-00436b00	hitEmployee436b00	250	2	1
-00436c00	handleEmployeeAction	554	2	4
-00436e50	drawEmployeeDetailPanel	2551	2	15
-004378a0	fileExists	39	5	1
-004378e0	staticCtor_4378e0	10	0	1
-004378f0	registerExit_4378f0	12	0	1
-00437910	promptAndSaveFile	1679	3	15
-00437fa0	loadThemeFile	702	7	5
-00438260	nearestCharControl	142	1	1
-004382f0	charEditorZone	148	1	1
-00438390	pickCharEditor	502	1	7
-004385a0	staticCtor_4385a0	10	0	1
-004385b0	registerExit_4385b0	12	0	1
-004385d0	showCharacterEditor	7528	2	51
-0043a400	selectDifficultyScreen	1215	1	17
-0043a8c0	pickAProScreen	3374	1	30
-0043b610	loadGameBrowserScreen	5408	3	36
-0043cb50	editBoxTimer_dtor	105	1	3
-0043cbd0	editBoxTimer_deleteDtor	30	0	2
-0043cc10	arrayStaticInit_43cc10	28	0	1
-0043cc30	registerExit_43cc30	12	0	1
-0043cc70	staticCtor_43cc70	10	0	1
-0043cc80	registerExit_43cc80	12	0	1
-0043ccb0	staticCtor_43ccb0	10	0	1
-0043ccc0	registerExit_43ccc0	12	0	1
-0043cce0	playAudioFile	144	2	8
-0043cd70	showTitleScreen	1291	1	6
-0043d2a0	listMatchingFiles	418	7	4
-0043d460	arrayStaticInit_43d460	37	0	2
-0043d490	registerExit_43d490	12	0	1
-0043d4e0	staticCtor_43d4e0	10	0	1
-0043d4f0	registerExit_43d4f0	12	0	1
-0043d520	freeBlock	171	1	0
-0043d5d0	allocBlock	95	1	0
-0043d640	staticCtor_43d640	10	0	1
-0043d650	registerExit_43d650	12	0	1
-0043d670	freeTable	118	1	2
-0043d6f0	cellAt	66	13	0
-0043d740	loadFlic	1182	2	13
-0043dbe0	loadWorldAssets	17732	3	7
-00442180	loadInterfaceArt	24059	2	11
-00448160	arrayStaticInit_448160	28	0	1
-00448180	registerExit_448180	12	0	1
-004481b0	playSound	80	29	5
-00448200	startSoundSlot	28	3	1
-00448220	loadSoundTable	3724	1	1
-004490b0	shutdownSoundSystem	31	1	2
-004490d0	Terrain::tileAt	61	0	0
-00449110	Terrain::getElevation	23	0	0
-00449130	Terrain::getWall	18	0	0
-00449150	Terrain::getType	10	0	0
-004491c0	staticCtor_4491c0	10	0	1
-004491d0	registerExit_4491d0	12	0	1
-00449210	allocTileBuffer	41	0	1
-00449240	registerExit_449240	12	0	1
-004492d0	tileType	23	3	0
-004492f0	tileByte	26	3	0
-00449310	tileQuery449310	26	2	1
-00449330	wallHeight	128	2	0
-004493b0	tileFlag20	28	2	0
-004493d0	drawMapLine	47	7	1
-00449400	applyCourseType	107	2	2
-00449470	syncTiles	172	1	5
-00449520	refreshTerrain	24	2	2
-00449540	rebuildTerrainGrid	588	2	11
-00449790	initTerrain	208	1	5
-00449860	freeTerrain	50	1	3
-004498a0	updateTerrainRender	1455	1	11
-00449f00	applyTileVariation	158	1	4
-00449fa0	applyTileElevation	934	1	5
-0044a380	applyTileWalls	132	1	2
-0044a410	togglePath	402	1	5
-0044a5b0	rebuildTileData	300	1	6
-0044a6e0	renderTerrainStrip	1212	1	2
-0044ac00	listEraseRange	68	1	1
-0044ac60	initPanelState	50	0	1
-0044aca0	registerExit_44aca0	12	0	1
-0044ad20	arrayStaticInit_44ad20	25	0	1
-0044ad40	registerExit_44ad40	12	0	1
-0044ad80	staticCtor_44ad80	10	0	1
-0044ad90	registerExit_44ad90	12	0	1
-0044add0	staticCtor_44add0	10	0	1
-0044ade0	registerExit_44ade0	12	0	1
-0044ae00	gSurfaceDtor_44ae00	88	0	1
-0044ae60	gSurfaceCtor_44ae60	68	4	1
-0044aec0	staticCtor_44aec0	10	0	1
-0044aed0	registerExit_44aed0	12	0	1
-0044af00	staticCtor_44af00	10	0	1
-0044af10	registerExit_44af10	12	0	1
-0044af40	staticCtor_44af40	10	0	1
-0044af50	registerExit_44af50	12	0	1
-0044af80	staticCtor_44af80	10	0	1
-0044af90	registerExit_44af90	12	0	1
-0044afb0	gSurfaceDtor_44afb0	173	0	1
-0044b060	gSurfaceCtor_44b060	129	3	1
-0044b100	staticCtor_44b100	10	0	1
-0044b110	registerExit_44b110	12	0	1
-0044b140	staticCtor_44b140	10	0	1
-0044b150	registerExit_44b150	12	0	1
-0044b180	staticCtor_44b180	10	0	1
-0044b190	registerExit_44b190	12	0	1
-0044b1b0	gSurfaceDtor_44b1b0	269	0	2
-0044b2c0	gSurfaceCtor_44b2c0	223	1	2
-0044b3b0	staticCtor_44b3b0	10	0	1
-0044b3c0	registerExit_44b3c0	12	0	1
-0044b3e0	gSurfaceDtor_44b3e0	111	0	2
-0044b450	gSurfaceCtor_44b450	96	1	2
-0044b4c0	staticCtor_44b4c0	10	0	1
-0044b4d0	registerExit_44b4d0	12	0	1
-0044b4f0	gSurfaceDtor_44b4f0	166	0	2
-0044b5a0	gSurfaceCtor_44b5a0	161	1	2
-0044b660	staticCtor_44b660	10	0	1
-0044b670	registerExit_44b670	12	0	1
-0044b690	gSurfaceDtor_44b690	92	0	2
-0044b6f0	gSurfaceCtor_44b6f0	83	1	2
-0044b760	staticCtor_44b760	10	0	1
-0044b770	registerExit_44b770	12	0	1
-0044b790	gSurfaceDtor_44b790	305	0	1
-0044b8d0	gSurfaceCtor_44b8d0	225	1	1
-0044b9c0	showCreditsScreen	1044	1	24
-0044bde0	loadInfoScreenArt	3833	1	7
-0044cce0	resetAllPanels	783	1	2
-0044cff0	showEndOfYearScreen	5695	1	31
-0044e770	showShortcutsScreen	3898	1	21
-0044f6b0	showFinancialReport	1075	1	17
-0044faf0	bucketValue	50	6	0
-0044fb30	showCourseReport	14054	1	21
-00453260	golferScore	58	3	0
-004532a0	appendRatingLabel	115	1	0
-00453330	showHoleStatsScreen	4961	1	19
-004546b0	showPlayerCommentsReport	1433	1	15
-00454c50	showMembershipRoster	3520	1	17
-00455a30	showBestScoresScreen	1182	1	15
-00455ed0	showHistographScreen	2911	1	22
-00456b70	mapToScreen456b70	59	2	0
-00456bb0	overlayCharAt	45	1	0
-00456be0	showRoutingMapScreen	6713	1	34
-004587a0	showBuyLandScreen	3158	1	27
-00459400	showHireEmployeeDialog	1087	1	16
-00459850	showGolferPairSelect	2112	1	20
-0045a090	showTournamentResults	3467	1	24
-0045ae30	setDirtyFlagA	21	5	0
-0045ae50	setDirtyFlagB	21	5	0
-0045ae70	flushRedraw	88	25	2
-0045aed0	waitRedrawReady	46	1	2
-0045af00	drainAndRedraw	37	2	2
-0045af30	renderTextWidget45af30	412	1	1
-0045b0d0	drawValueWidget	487	4	4
-0045b2c0	textInputBox	925	6	13
-0045b660	lookupThemeText	343	1	4
-0045b7c0	replaceInText	189	2	1
-0045b880	clearBuffers	34	2	0
-0045b8b0	appendToBuffer45b8b0	310	3	0
-0045b9f0	appendString	85	6	0
-0045ba60	staticCtor_45ba60	10	0	1
-0045ba70	registerExit_45ba70	12	0	1
-0045bab0	staticCtor_45bab0	10	0	1
-0045bac0	registerExit_45bac0	12	0	1
-0045baf0	gameMain	1166	1	38
-0045bf80	waitTicks	127	29	5
-0045c000	Cursor_deleteDtor	36	0	2
-0045c030	pumpMessages	129	30	4
-0045c0c0	pumpAndRedraw	142	13	6
-0045c150	pumpLight	39	12	3
-0045c1a0	Random::next	52	1	0
-0045c1e0	Random::range	32	43	2
-0045c200	drawThoughtBubble	532	3	6
-0045c420	thoughtBalance	53	1	0
-0045c460	substituteStoryNames	248	1	2
-0045c560	drawGolferInfoPanel	6292	1	26
-0045de30	swapTableEntry	70	1	0
-0045de80	announceVipGolfer	4426	2	10
-0045f0f0	skillPointDialog	1908	4	20
-0045f870	showCourseRanking	1246	1	7
-0045fd80	buildScenarioIntro	1883	1	3
-004604f0	showTutorialText	2173	1	2
-00460df0	announceHoleType	759	1	2
-00461110	drawMatchScoreboard	1242	1	7
-004615f0	spreadShade	252	1	3
-004616f0	spreadAllShade	237	1	1
-00461810	brightenComponent	21	1	0
-00461830	build16BitColorTable	2020	1	1
-00462020	formatGolferTitle	1963	4	1
-004627d0	resetSpriteQueue	41	1	0
-00462800	snapshotTables	197	1	0
-004628d0	addSprite	345	11	1
-00462a30	enqueueSprite	432	6	0
-00462be0	drawQueuedSprite	1302	2	12
-00463100	renderSpriteQueue	107	1	3
-00463170	boundIndex	16	1	0
-00463180	buildSceneSprites	9100	1	15
-00465560	resetScrollText	23	1	1
-004658b0	loadThemes	226	2	3
-004659a0	loadGolferRoster	2509	1	8
-00466370	advanceStory	1376	2	9
-004668f0	storyText	254	2	1
-004669f0	computeStoryReply	381	1	3
-00466b70	loadStoryStrings	1426	5	3
-00467110	seedFromTime	24	1	1
-00467130	clamp	29	44	0
-00467150	sign	25	5	0
-00467170	approxDistance	42	19	0
-004671a0	direction8	205	4	0
-00467270	foldRange	49	11	1
-004672b0	absDiff	25	10	1
-004672d0	angleFixed	270	11	0
-004673e0	genNoise	212	1	1
-004674c0	bilinearSample	146	1	0
-00467560	appendEndearment	90	1	0
-004675d0	thoughtFlag	34	6	0
-00467600	pickGolferName	212	5	0
-004676e0	buildGolferName	457	18	0
-00467a00	emitGolferThought	7763	11	14
-00469a20	appendOpinion	180	4	0
-00469b00	buildGolferComment	11309	7	10
-0046c940	typeBit7Clear	44	15	0
-0046c970	loadGolfPro	1729	1	3
-0046d040	initGolferState	128	1	1
-0046d0c0	resetGolferState	310	1	2
-0046d200	buildTournamentPrep	1246	1	5
-0046d6e0	showPopup	1714	11	20
-0046ddd0	startNewCourse	96	1	3
-0046de40	gImageCtor_838f98	10	0	1
-0046de50	atexitThunk_46de50	12	0	1
-0046de70	scrollTextWindow	45	5	1
-0046dea0	runScrollText	909	1	11
-0046e260	drawScrollText	1200	1	9
-0046e710	drawRectScaled	150	1	2
-0046e7b0	postEvent	92	7	0
-0046e810	showBulletinBoard	2409	1	24
-0046f1d0	tierPrice	160	1	0
-0046f2b0	seedCourseTable	669	2	1
-0046f550	courseActionMenu	4996	0	37
-00470a00	courseActionMenu	5	1	0
-00470a10	clearTile	76	1	0
-00470a60	applyTerrainEdit	6056	1	12
-004722c0	announceLandmark	442	1	4
-004724c0	listThemes	235	1	2
-004725b0	showThemePackSelect	3355	1	23
-004732d0	addScore	409	2	1
-00473470	drawScoreSummary	1509	2	13
-00473a70	initGlobalImage	10	0	1
-00473a80	atexitThunk_473a80	12	0	1
-00473ab0	Surface_ctor	38	30	0
-00473ae0	Surface_init	100	31	3
-00473b50	Surface_open	146	1	2
-00473bf0	Surface_blit	102	15	1
-00473c60	Surface_blitTakeDirty	70	4	1
-00473cb0	Surface_drawScaled	310	18	3
-00473df0	Surface_drawRegion	109	1	0
-00473e60	Image_draw	248	46	3
-00473f60	Surface_stretchBlit	95	32	0
-00473fc0	Surface_blitMasked	111	0	0
-00474030	Surface_drawScaled2	180	2	1
-004740f0	Surface_blit2	189	4	0
-004741b0	Sprite_draw	169	2	0
-00474260	Sprite_drawScaled	280	1	0
-00474380	Surface_draw	187	1	1
-00474440	Surface_drawSprite	122	18	0
-004744c0	Surface_copyFrom	140	1	1
-00474550	Surface_create	112	1	1
-004745c0	Surface_init2	133	1	2
-00474650	Surface_get	161	0	2
-00474780	Buf_init	18	2	0
-004747a0	Buf_ctor	18	4	1
-004747c0	Buf_deleteDtor	30	0	2
-004747e0	Buf_releaseData	35	5	2
-00474810	Buf_dtor	11	43	1
-00474820	Buf_alloc	62	3	2
-00474860	heapAlloc	554	8	7
-00474a90	gSurfaceCtor_839a68	10	1	1
-00474aa0	atexitThunk_474aa0	12	1	1
-00474ae0	Image_ctor	306	36	1
-00474c20	Image_deleteDtor	30	0	2
-00474c40	Image_dtor	99	54	2
-00474cb0	Image_releaseAll	286	9	3
-00474dd0	Surface_createFull	147	17	4
-00474e70	Surface_paint	111	3	1
-00474ee0	loadBmp	361	1	5
-00475050	reloadBmp	433	1	3
-00475210	loadBmpSurface	508	1	5
-00475410	flipBmpRows	356	3	2
-00475580	saveBmp	693	2	6
-00475840	loadImage	701	22	10
-00475b00	Widget_fillRectR	28	6	0
-00475b20	Surface_box	57	1	1
-00475b60	DC_call84	58	2	0
-00475ba0	DC_call90	63	0	0
-00475be0	DC_calla4	63	0	0
-00475c20	DC_calla0	63	0	0
-00475c60	Surface_blitThunk	47	20	1
-00475c90	Surface_fillRegion	111	3	0
-00475d00	Surface_blit3	147	2	0
-00475da0	Surface_fill	70	2	0
-00475df0	drawRoutingPoly	27	1	1
-00475e10	blitLeft	411	1	2
-00475fb0	blitMid	400	2	3
-00476140	blitRight	399	4	3
-004762d0	setDrawTarget	52	61	0
-00476310	Widget_setQuad	37	40	0
-00476340	Widget_setQuad70	40	17	0
-00476370	Widget_setQuad74	40	17	0
-004763a0	Widget_setQuad78	40	2	0
-004763d0	drawMenuList	628	0	7
-00476650	Widget_draw	80	7	1
-004766a0	Widget_draw2	85	1	1
-00476700	drawStringAt	80	10	1
-00476750	drawStringAt2	80	3	1
-004767a0	allocTextBuffer	1439	1	3
-00476d40	scanMarkupText	60	3	0
-00476d80	skipToken	65	3	0
-00476dd0	scanToken	70	3	0
-00476e20	wrapText	200	3	2
-00476ef0	measureMarkupRun	729	6	7
-00477250	Text_put	44	19	1
-00477280	drawMarkupRun	599	8	6
-00477560	Widget_get	28	5	0
-00477580	Widget_value	35	23	0
-004775b0	drawRichText	1525	8	18
-00477c30	drawText	153	11	1
-00477cd0	drawCentered	206	5	2
-00477da0	drawCentered2	192	5	2
-00477e60	drawBox	67	1	1
-00477eb0	drawCentered3	269	3	3
-00477fc0	drawStringLeft	177	1	2
-00478080	drawRight	179	1	2
-00478140	drawString	169	2	2
-004781f0	drawRight2	221	3	3
-004782d0	measureText	344	2	3
-00478430	measureText2	256	1	3
-00478530	measureText3	168	2	3
-004785e0	TextView_beginMeasure	47	1	1
-00478610	measureText4	227	2	3
-00478700	TextView_endSegment	67	1	1
-00478750	TextView_beginDrawRun	67	1	1
-004787a0	drawTextBlock	463	2	4
-00478970	Text_flush	125	1	2
-004789f0	Widget_applyPalette	48	9	0
-00478a20	List_reset	67	1	1
-00478a70	Widget_reset	28	1	1
-00478a90	addDropdownSpot	87	1	2
-00478af0	Win_fillRect	62	5	1
-00478b30	Widget_clearArea	22	4	0
-00478b50	Widget_fillArea	33	3	0
-00478b80	Widget_fillRect	42	10	0
-00478bb0	Widget_drawHLine	40	1	0
-00478be0	Widget_drawVLine	40	1	0
-00478c10	Widget_drawHLineDepth	96	1	2
-00478c70	Widget_drawVLineDepth	96	1	2
-00478cd0	loadImageData	283	1	4
-00478df0	drawLineH	168	2	1
-00478ea0	drawLineV	173	0	1
-00478f50	openImageAsset	608	1	6
-004791b0	drawComposite	937	0	4
-00479560	Widget_drawBevelBox	105	2	2
-004795d0	Widget_drawBevelBoxR	53	3	1
-00479610	Widget_drawBox	96	1	2
-00479670	Widget_drawBoxR	48	1	1
-004796a0	Surface_pixelPtr	333	5	0
-00479830	blendRed	144	2	1
-004798c0	blendGreen	144	2	1
-00479950	drawPixelRun	110	2	1
-004799f0	gImageCtor_83a500	10	0	1
-00479a00	atexitThunk_479a00	12	0	1
-00479a40	gImageCtor_83a7b8	10	0	1
-00479a50	atexitThunk_479a50	12	0	1
-00479a80	Surface_clip	156	1	4
-00479b20	releaseCursorClip	27	1	1
-00479b40	ChildArray_grow	98	1	2
-00479bb0	Vec_release	142	1	2
-00479c40	View_ctor	708	1	2
-00479f10	View_deleteDtor	30	0	2
-00479f30	layoutNode	1156	4	9
-0047a3c0	View_dtor	254	4	4
-0047a4c0	layoutViewTree	1589	1	15
-0047ab00	EditBox_setCursorChar	66	1	1
-0047ab50	View_toLocal	103	27	1
-0047abc0	isPrimaryMouseDown	27	1	2
-0047abe0	View_attach	440	1	2
-0047ada0	View_unlinkFromParent	213	1	1
-0047ae80	setFocusItem	219	0	0
-0047af60	Container::cycleSelection	277	0	1
-0047b080	Node::contains	78	3	1
-0047b0d0	View::offsetRectToParent	78	5	1
-0047b120	View::offsetRectToLocal	78	3	1
-0047b170	View::toParent	133	8	1
-0047b200	View::fromParent	133	6	1
-0047b290	View::toLocal	50	1	1
-0047b2d0	View::toGlobal	50	3	1
-0047b310	Window::center	261	1	2
-0047b420	Window::moveTo	179	5	1
-0047b4e0	Window::setSize	393	0	5
-0047b670	Window::show	420	3	6
-0047b820	Window::detach	203	0	4
-0047b8f0	Label::setText	161	2	3
-0047b9a0	FUN_0047b9a0	74	2	1
-0047b9f0	Window::fwdScroll26c	23	4	1
-0047ba10	Window::fwdScroll270	23	3	1
-0047ba30	Window::fwdRange26c	28	2	1
-0047ba50	Window::fwdRange270	28	2	1
-0047ba70	Window::setField26c5a0	23	2	0
-0047ba90	Window::setField2705a0	23	2	0
-0047bc60	Window::resized	472	2	2
-0047be40	Window::mouseEvent238	246	0	3
-0047bf40	Window::mouseDispatch23c	206	0	1
-0047c010	Window::mouseDispatch240	206	1	1
-0047c0e0	Window::mouseDispatch244	203	0	1
-0047c1b0	Window::click	219	0	1
-0047c290	Window::mouseDispatch24c	203	0	1
-0047c360	Window::mouseDispatch250	206	0	1
-0047c430	Window::mouseDispatch254	206	1	1
-0047c500	Window::mouseDispatch258	206	0	1
-0047c5d0	Window::key	231	2	1
-0047c6c0	Window::dispatchAccel	674	1	3
-0047c970	Window::dispatchCommand	153	1	1
-0047ca10	Window::adjustSizeOuter	244	2	0
-0047cb10	Window::innerSize	254	1	0
-0047cc10	Window::growRect	205	1	0
-0047cce0	Window::shrinkRect	207	2	0
-0047cdb0	drawTooltip	530	7	9
-0047cfd0	resetViewState47cfd0	60	1	3
-0047d010	screenTick47d010	16	1	0
-0047d020	Widget::setValue	63	2	0
-0047d060	addDirtyRect	194	1	3
-0047d130	drawCursor	901	1	10
-0047d510	Window::releaseScrollbars	83	1	0
-0047d570	Window::layoutScrollbars	145	1	1
-0047d610	buildControlStrip47d610	427	0	4
-0047d7c0	View::ctorVtbl47d7c0	11	2	1
-0047d7d0	Window::isFocusChild	63	0	0
-0047d810	View::scalarDtor47d810	36	0	2
-0047d840	setDragTarget	10	1	0
-0047d850	drawPanelContents	2237	1	9
-0047e120	Panel::notify	26	2	2
-0047e140	relayoutClip	392	5	5
-0047e2d0	clipAllWindows	88	1	1
-0047e330	collectDrawList	286	2	2
-0047e450	rebuildDrawList	101	4	2
-0047e4c0	zPush	85	1	0
-0047e520	listRemove	86	1	0
-0047e580	zRaise	96	1	1
-0047e5f0	ChildArray::insert	137	1	1
-0047e680	ChildArray::remove	121	1	1
-0047e700	ChildArray::bringToFront	98	1	1
-0047ed30	Window::hitTestBorder	311	0	0
-0047eee0	matchInputCode	65	0	0
-0047f1b0	Window::setFocus	126	0	3
-0047f2f0	currentFocusOwner	77	0	1
-0047f340	hitTestTree	952	2	4
-0047f700	hitTestScreen	478	1	3
-0047f8e0	redrawDrawList	326	4	3
-0047fa30	redrawWindow	127	1	2
-0047fab0	compositeScreen	1789	0	9
-004801f0	Window::visible	38	15	1
-00480220	Tooltip::show	305	2	4
-00480360	Tooltip::hide	47	4	2
-00480390	List480::dtor	119	1	1
-00480410	BinkFrame::scalarDtor	134	0	2
-004804a0	View4804a0::ctor	212	12	2
-00480580	View4804a0::scalarDtor	30	0	2
-004805a0	Base4805a0::dtor	103	59	2
-00480610	Window::ctorInit	167	9	2
-004806c0	Window::create	425	11	8
-00480870	Window::createFromRect	72	1	1
-004808c0	Window::paint	324	4	3
-00480a10	Window::paintBackground	238	1	3
-00480b00	fillWindowRect	39	17	1
-00480c20	Window::refreshRect	95	1	4
-00480c80	Window::refreshFull	85	42	1
-00480ce0	Window::invalidate	140	9	2
-00480d70	Window::doLayout	69	0	1
-004810d0	drawPanel4810d0	1668	0	4
-00481760	Window::calcSizeFromCorners	272	1	0
-00481870	allocResampleTable	673	1	3
-00481b20	freeResampleTable	29	1	1
-00481b50	Flic::ctor481b50	65	0	1
-00481ba0	Flic::reset	243	4	2
-00481ca0	Flic::buildFrameTable	416	1	3
-00481e40	Flic::indexFrames	253	1	2
-00481f40	Flic::open	1141	1	13
-004823c0	setNewHeap	91	1	4
-00482420	Image::step	102	2	1
-00482490	Image::seek	215	1	2
-00482570	decodeImageChunks	346	3	8
-004826f0	Palette::decodeChunk	224	1	0
-004827d0	decodeSprite4827d0	367	1	0
-00482940	Surface::clear	77	1	0
-00482990	Surface::blitRLE	227	1	0
-00482a80	Surface::copyRaw	82	1	0
-00482ae0	Decoder482ae0::ctor	61	1	0
-00482b20	Decoder482b20::ctor	61	1	0
-00482b60	Flic::ctorBase482b60	42	1	1
-00482b90	Flic::createStream	573	2	5
-00482dd0	Stream482dd0::dtor	49	4	1
-00482e10	Link482::data	14	2	0
-00482e20	Link482::resolve	21	1	1
-00482e40	Link482b::send	38	2	1
-00482e80	staticInit_g83acb0	10	0	1
-00482e90	atexit_482ea0	12	0	1
-00482ec0	staticInit_g83ac30	10	0	1
-00482ed0	atexit_482ee0	12	0	1
-00482f00	staticInit_g83ac88	13	0	1
-00482f10	atexit_482f20	12	0	1
-00482f60	Cache482f60::ctor	105	1	0
-00482fd0	Cache482fd0::ctor	51	14	0
-00483010	Cache483010::ctorVtbl	11	16	1
-00483020	FUN_00483020	5	1	0
-00483030	Cache483030::attach	34	2	1
-00483060	Cache483060::detach	15	2	0
-00483070	Cache483070::reset	100	2	1
-004830e0	Palette::setEntries	170	1	0
-00483190	allocColorRange	322	1	6
-004832e0	startColorCycle	49	1	2
-00483320	resetScreenState	30	1	1
-00483340	clearScreenObjects	167	2	0
-004833f0	Table483::find	34	2	0
-00483420	Palette::nearest	462	1	0
-004835f0	Cache482f60::dtor	338	0	2
-004837b0	screenMgrCtor4837b0	10	0	1
-004837c0	atexit_4837d0	12	0	1
-004837f0	C4837f0::ctor	16	17	0
-00483800	Surface::createFromId	78	3	1
-00483850	Surface::createSized	88	1	1
-004838b0	Surface::releaseBacking	50	5	0
-004838f0	Stream4838f0::puts	51	1	0
-00483930	measureTextWidth	71	3	0
-00483980	wrapTextToWidth	318	1	2
-00483ac0	setPrimarySurface	76	1	2
-00483b10	clearPrimarySurface	29	2	0
-00483b90	Surface::ctorVtbl483b90	11	2	1
-00483ba0	screenFlip	14	0	0
-00483bb0	showScreen	29	2	3
-00483bd0	pumpInput483bd0	53	9	2
-00483c10	hideScreen	29	1	3
-00483c30	pumpInput483c30	58	3	3
-00483c70	redrawAll	24	4	2
-00483c90	pumpInput483c90	53	1	2
-00483cd0	frameTick483cd0	24	2	2
-00483cf0	pumpInput483cf0	53	2	2
-00483d30	enterModal483d30	15	26	3
-00483d40	modalPush483d40	19	1	1
-00483d60	modalFocusClear483d60	31	1	1
-00483d80	leaveModal483d80	19	1	1
-00483de0	staticInit_g83ad80	10	0	1
-00483df0	atexit_483e00	12	0	1
-00483e20	staticInit_g83ad58	10	0	1
-00483e30	atexit_483e40	12	0	1
-00483e60	staticInit_g83af98	10	0	1
-00483e70	atexit_483e80	12	0	1
-00483e90	initSound	121	1	5
-00483f10	shutdownSound	163	1	7
-00483fc0	soundVersionCheck	157	1	5
-00484060	freeSoundLib	44	3	2
-00484090	callSoundHook74	35	1	0
-004840c0	callSoundHook94	18	1	0
-004840e0	createSound4840e0	40	5	0
-00484110	releaseSoundObj	30	5	0
-00484130	clearSoundPtrs	17	1	0
-00484150	Snd::ctorBase	104	2	2
-004841c0	Snd::scalarDtor4841c0	30	0	2
-004841e0	Snd::dtor	127	6	4
-00484260	Snd::setMode	109	2	0
-004842f0	SndMusic::setFile	236	2	3
-004843e0	unlinkSound	96	1	0
-004844e0	Snd::unlinkFromList	92	2	0
-00484550	Snd::stop484550	50	0	0
-004845d0	Snd::queryDevice4845d0	15	1	0
-004845e0	Snd::status	18	1	0
-004846b0	Snd::setField34	23	1	0
-004846d0	Snd::setField38	37	1	0
-00484750	Snd::applyField484750	30	1	0
-004847b0	Snd::applyField4847b0	30	0	0
-004847f0	Snd::setPan	45	1	0
-00484820	Snd::ctorDerived	80	0	2
-00484880	SndMusic::scalarDtor	30	0	2
-004848a0	SndMusic::dtor	123	1	4
-00484940	Snd::play	159	1	4
-00484a40	Snd::configure	181	0	2
-00484b30	Snd::busy	65	0	2
-00484b80	Snd::setName	103	1	2
-00484c20	SndStream::open484c20	90	1	1
-00484c80	Snd::open	210	0	3
-00484d60	Snd::reopen	206	1	3
-00484e30	Snd::applyMode484e30	51	1	0
-00484e70	Snd::start	143	0	1
-00484f00	Snd::stop484f00	57	1	0
-00484f40	Snd::setPitch	54	1	0
-00484ff0	Snd::flags	74	0	0
-00485140	Snd::setVolume	102	1	1
-00485260	Snd::ctor485260	42	1	0
-004852b0	Snd::scalarDtor4852b0	30	0	2
-004852d0	Snd::setVtbl4852d0	7	4	0
-004852e0	VoiceRx::ctor	158	1	3
-004853b0	Screen::scalarDtor	30	0	2
-004853d0	Screen::dtor	117	1	2
-004854c0	Screen::close	59	0	1
-00485590	showMessageBox	21	1	1
-004855b0	engineInit	399	1	18
-00485740	engineShutdown	80	2	13
-00485790	Image::loadPcx	781	1	5
-00485aa0	Image::savePcx	664	1	3
-00485d40	Image::hline	318	1	0
-00485e80	Image::vline	354	1	0
-00485ff0	EditBox::resetFields	119	2	0
-00486070	EditBox::ctor	94	2	3
-004860d0	EditBox::dtor	49	3	4
-00486110	EditBox::create	239	2	6
-00486200	EditBox::setText	80	2	1
-00486250	EditBox::resizeBuffer	96	3	3
-004862b0	EditBox::wrapToLines	124	1	1
-00486330	EditBox::lineIndexAt	44	1	0
-00486360	EditBox::charPosToPixel	122	0	3
-004863e0	EditBox::pixelToCharPos	259	0	3
-004866f0	EditBox::insertChar	185	0	2
-00486b30	EditBox::setCaretActive	51	1	2
-00486c90	Timer::ctor	48	5	0
-00486cc0	Timer::scalarDtor	30	0	2
-00486ce0	Timer::dtor	11	11	1
-00486cf0	Timer::initA	48	1	1
-00486d20	Timer::init	54	4	1
-00486d60	Timer::initStartOnce	46	2	2
-00486d90	Timer::initStartRepeat	46	0	2
-00486dc0	Timer::startOnce	113	3	2
-00486e40	Timer::startRepeat	116	2	2
-00486ec0	Timer::stop	120	7	2
-00486f10	Timer::reset	43	6	1
-00486f90	Timer::callback	79	0	1
-00486fe0	Timer::lockInc	14	1	0
-00486ff0	Timer::lockDec	7	1	0
-00487000	BinkPlayer::ctor	29	1	0
-00487020	BinkPlayer::scalarDtor	30	0	2
-00487040	BinkPlayer::dtor	11	1	1
-00487050	BinkPlayer::setTarget	10	1	0
-00487060	BinkPlayer::close	43	2	2
-00487090	BinkPlayer::play	228	1	10
-00487180	BinkPlayer::frame	133	1	7
-00487210	StrList::ctor	40	3	0
-00487240	StrList::scalarDtor	30	0	2
-00487260	StrList::dtor	19	6	0
-00487280	NodeList::ctor	98	1	2
-004872f0	NodeList::scalarDtor	30	0	2
-00487310	NodeList::clear	118	0	1
-00487390	NodeList::dtor	92	1	2
-00487430	closeHookA	39	1	0
-00487460	releaseWithHookA	33	1	1
-00487630	resourceQuery	15	1	0
-004876c0	HashTable::remove	162	1	1
-00487770	HashTable::bucketEmpty	35	1	0
-004877a0	HashTable::bucketSet	35	1	0
-004879f0	closeHookB	39	1	0
-00487a20	NodeListB::ctor	18	1	1
-00487a40	NodeListB::scalarDtor	30	0	2
-00487a60	NodeListB::dtor	11	1	1
-00487a70	resourceLoadB	66	1	0
-00487ac0	releaseWithHookB	33	1	1
-00487af0	FUN_00487af0	3	0	0
-00487b00	FUN_00487b00	5	1	0
-00487b40	NodeListC::ctor	18	1	1
-00487b60	NodeListC::scalarDtor	30	0	2
-00487b80	NodeListC::dtor	11	1	1
-00487bd0	closeHookC	39	0	0
-00487c00	resourceLoad	59	1	0
-00487c40	releaseWithHookC	33	1	0
-00487cb0	FUN_00487cb0	5	1	0
-00487ce0	NodeList::clearScalarDtor	137	0	1
-00487d80	initGlobalReader	16	0	1
-00487d90	registerReaderAtexit	12	0	1
-00487e10	initKeyTableArray	28	0	1
-00487e30	registerKeyTableAtexit	12	0	1
-00487e60	destroyGlobalReader	10	2	1
-00487e70	readSectionGlobal	21	3	1
-00487e90	readLineGlobal	10	3	1
-00487ea0	Reader::ctor	54	1	1
-00487ee0	Reader::allocBuffers	71	1	2
-00487f30	Reader::free	68	2	2
-00487f80	Reader::closeFile	34	3	1
-00487fb0	Reader::open	634	1	12
-00488230	Reader::readLine	110	1	3
-004882a0	KeyTable::ctor	35	0	1
-004882d0	KeyTable::scalarDtor	30	0	2
-004882f0	KeyTable::dtor	28	1	1
-00488310	KeyTable::find	260	1	2
-00488420	KeyTable::lookup	60	1	1
-00488460	Reader::scalarDtor	36	0	2
-00488490	Cursor::ctor	23	1	0
-004884b0	Cursor::destroy	48	1	1
-004884e0	cacheCursorMetrics	29	1	1
-00488500	Button::ctor	289	1	2
-00488630	Button::scalarDtor	30	0	2
-00488650	Button::dtor	121	14	3
-004886d0	Button::resetFields	238	2	2
-004887c0	Button::create	355	3	6
-00488930	Button::setColorNormal	61	1	2
-00488970	Button::setColorHover	61	1	2
-004889b0	Button::setColorPressed	61	1	2
-004889f0	setButtonDefaults	48	1	0
-00488a20	Button::setTooltip	137	1	2
-00488cf0	Button::onMouseMove	408	0	4
-00488fd0	Button::onTimer	264	0	5
-004890e0	Button::setMode	61	1	0
-00489150	ListModel::ctor	508	6	1
-00489350	ListModel::scalarDtor	30	0	2
-00489370	ListModel::dtor	305	8	4
-004894b0	ListModel::clear	502	8	1
-004896b0	ListModel::setKey	320	2	2
-004897f0	ListModel::reset	159	2	1
-00489890	ListModel::append	52	1	1
-004898d0	ListModel::indexOfId	115	1	0
-00489950	ListModel::selectedId	127	8	0
-004899d0	ListModel::findId	91	1	0
-00489a30	ListModel::idAt	128	4	0
-00489ab0	ListModel::setClickHandler	45	1	0
-00489b30	ListModel::destroyNodes	338	4	2
-00489c90	ListBox::subDtor	27	74	1
-00489cb0	ListBox::ctor	293	1	2
-00489de0	ListBox::dtor	93	3	1
-00489e40	ListBox::resetFields	141	4	2
-00489ed0	ListBox::selectById	117	1	1
-00489f50	ListBox::setSelection	458	7	4
-0048a120	ListBox::measure	1199	3	6
-0048a5d0	ListBox::build	998	2	12
-0048aa00	ListBox::onNavKey	1169	0	2
-0048aea0	ListBox::typeAhead	1271	0	7
-0048c420	ListBox::onScroll	198	0	2
-0048c560	ListBox::fireSelectChanged	170	0	1
-0048c610	ListBox::forwardClick	35	0	0
-0048c640	ListBox::addItem	157	1	2
-0048c6e0	ListBox::onMouse	437	1	11
-0048c8a0	ListBox::onDrag	537	0	2
-0048cac0	ListBox::clearSelection	40	0	0
-0048caf0	ListBox::scrollBy	146	0	1
-0048cd80	matchDirective	122	1	2
-0048ce00	TextView::ctor	1658	4	10
-0048d480	TextView::reset	1760	6	12
-0048db60	TextView::init	668	1	9
-0048de00	MsgBox::setLabelA	132	2	2
-0048de90	MsgBox::setLabelB	132	2	2
-0048df20	TextView::addText	158	1	2
-0048dfc0	TextView::addImage	75	1	1
-0048e010	TextView::setName	146	1	2
-0048e0b0	TextView::setLineSpacing	105	6	0
-0048e120	TextView::setFontSize	105	6	0
-0048e190	TextView::setSize	37	7	0
-0048e1c0	TextView::layout	1757	4	24
-0048e900	TextView::build	5472	3	25
-0048fe60	TextView::render	2768	0	20
-00490960	TextView::select	215	0	2
-00490a40	TextView::updateSelection	126	0	1
-00490bf0	MsgBox::initDefaults	51	1	2
-00490c30	MsgBox::freeLabels	65	1	1
-00490c80	MsgBox::setButtonA	58	1	0
-00490cc0	MsgBox::setColorA	39	1	0
-00490cf0	MsgBox::setButtonB	48	1	0
-00490d20	MsgBox::setColorB	39	1	0
-00491310	TextView::create	90	0	2
-00491410	LabelButton::dtor	89	77	2
-00491470	LabelButton::scalarDtor	30	0	2
-00491490	Widget::setFlagBit0	27	1	0
-004914b0	Widget::setFlagBit1	27	1	0
-004914d0	Dialog::subDtor	38	36	3
-00491500	Dialog::viewDtor	380	5	6
-00491680	Dialog::childDtor	83	2	1
-004916f0	Dialog::scalarDtor	30	0	2
-00491710	Dialog::dtor	444	5	11
-00491c10	initSinTable	90	1	3
-00491c70	sinScaled	267	3	0
-00491d80	cosScaled	25	1	1
-00491da0	resolveDataPath	593	1	2
-00492000	cropSprite	1060	1	3
-00492450	blitErrorPtr	6	2	0
-00492460	blitError	15	1	0
-00492470	shutdownBlitter	56	1	2
-004924b0	flushBlitSurface	40	1	0
-004924e0	trimLeadingSpace	129	1	1
-00492570	trimTrailingSpace	62	1	1
-004925b0	trimSpaces	22	4	2
-004925d0	stripNewline	23	2	1
-004925f0	appendNewline	27	1	0
-00492610	pointInRect	52	4	0
-00492660	HotList::freeEntryTip	37	1	1
-00492690	HotList::grow	265	1	2
-00492800	HotList::resetFields	43	2	1
-00492830	HotList::releaseArray	32	4	1
-00492850	HotList::ctor	83	4	2
-004928b0	HotList::scalarDtor	30	0	2
-004928d0	HotList::dtor	80	49	2
-00492920	HotList::alloc	135	4	3
-004929b0	HotList::add	223	3	3
-00492a90	HotList::hitTest	118	8	1
-00492b10	HotList::hitTestRect	160	9	1
-00492bd0	HotList::showTip	229	0	3
-00492cc0	HotList::onMouseMove	116	1	2
-00492d40	HotList::cancelTip	39	1	2
-00492d80	MappedFile::ctor	24	3	0
-00492da0	MappedFile::scalarDtor	30	0	2
-00492dc0	MappedFile::dtor	11	5	1
-00492dd0	MappedFile::open	172	3	6
-00492e80	MappedFile::close	69	3	2
-00492ed0	polyEdgeStep	208	3	0
-00492fa0	polyEdgeAdvance	87	2	1
-00493000	fillSpanDown	121	1	0
-00493080	fillSpanUp	115	1	0
-00493100	fillConvexPoly8	463	1	3
-004932d0	fillConvexPoly16	578	1	3
-00493520	fillConvexPoly	95	1	2
-00493580	swapInts	39	1	0
-004935b0	reverseFindChar	51	1	0
-004935f0	findByteInRange	57	1	0
-00493630	fill16	62	1	0
-00493670	TextView_layoutRun	35	1	1
-004936a0	comboInit	897	1	8
-00493a30	comboRefreshThunk	44	1	1
-00493a60	comboRefresh	290	2	8
-00493b90	comboOpenPopup	819	1	8
-00493ed0	comboListQuery	21	2	0
-00493ef0	comboSetItems	96	1	1
-00493f50	comboLayoutItems	201	2	2
-00494020	listSetItems	180	1	1
-004940e0	comboFindItem	250	1	0
-004941e0	listCurrentIndex	183	3	0
-004942a0	comboCurrentIndex	73	1	0
-004942f0	expandTextMarkup	2418	1	6
-00494cb0	setHudTextSlot	122	4	0
-00494d30	drawColorRunA	460	1	0
-00494f00	drawColorRunB	497	1	0
-00495100	decodeImagePaletted	795	1	4
-00495420	decodeImage16	816	1	6
-00495770	redrawRegion	26	0	2
-00495cb0	Timer_fire	101	0	1
-00495d30	initWidgetTable	372	1	0
-00495eb0	resetWidgetTable	345	4	0
-00496030	buildLabeledControl	407	1	2
-004961d0	controlInitBase	350	2	1
-00496330	scrollbarCreate	859	2	4
-00496690	scrollbarCreateA_impl	59	1	1
-004966d0	scrollbarCreateB_impl	60	1	1
-00496710	scrollbarCreateA	43	1	1
-00496740	scrollbarCreateB	43	1	1
-00496770	orderPair	93	2	1
-004967d0	scrollbarResetThumb	18	1	1
-004967f0	setWidgetScalar	102	2	0
-00496c30	scrollbarOnDown	238	0	0
-00496d20	scrollbarOnDrag	59	0	0
-00496e30	scrollbarOnKey	400	0	0
-00496fc0	scrollbarDraw	427	0	6
-004973c0	scrollbarScrollBy	270	0	0
-004974d0	scrollbarThumbRect	1218	1	0
-004979a0	scrollbarResetState	88	1	0
-00497a00	comboDeleteDtor	30	0	2
-00497a20	comboDtor	193	1	4
-00497b00	gfxFlushA	25	6	1
-00497b20	gfxFlushB	25	9	1
-00497b40	netSendList	224	1	3
-00497c20	netTimerReadA	78	0	0
-00497c70	netTimerReadB	78	0	0
-00497cc0	netFlush	69	0	1
-00497d10	netSendShutdown	586	3	8
-00497fc0	netService	4479	1	26
-00499140	netSendMessages	6382	5	30
-0049aa30	netNameOf	53	3	0
-0049aa70	netPump	199	1	2
-0049ab40	netServiceControl	432	3	3
-0049acf0	netHandleControl	2428	2	21
-0049b690	netQueueMessage	282	1	2
-0049b7b0	netPoll	448	2	4
-0049b970	netHeapAlloc	1346	1	5
-0049bec0	netListRemove	166	1	0
-0049bf70	screenObj_deleteDtor	65	0	2
-0049bfc0	Screen::dtor	5	1	0
-0049bff0	initGlobalObj_49c020	10	0	1
-0049c000	regAtexit_49c000	12	0	1
-0049c020	ctorGlobalObj49c020	113	1	3
-0049c0a0	FUN_0049c0a0	11	1	0
-0049c780	globalObjDtor49c780	122	1	4
-0049c800	globalObjDeleteDtor49c800	30	0	2
-0049c830	createCache	119	0	2
-0049c8b0	freeCacheField	41	1	2
-0049c8e0	serviceMovie	41	4	1
-0049c910	serviceMovieFrame	47	1	3
-0049c940	movieAdvanceFrame	408	2	5
-0049cae0	movieDecodeStart	64	1	4
-0049cb20	movieReadProcess	86	1	5
-0049cb80	movieStepReturn1	8	3	0
-0049cb90	movieReadFrame	301	2	5
-0049ccc0	moviePlayFrame	645	3	9
-0049cf50	movieSelectStream	173	1	0
-0049d010	initPairArrayGlobal	10	0	1
-0049d020	regAtexit_49d020	12	0	1
-0049d040	Buf_dtor	5	1	0
-0049d050	allocPairArray	25	1	1
-0049d070	pairArray_deleteDtor	30	0	2
-0049d090	strAssign	65	1	3
-0049d0e0	strFree	19	2	1
-0049d100	strDup	67	1	1
-0049d160	initGfxGlobal_840710	10	0	1
-0049d170	regAtexit_49d170	12	0	1
-0049d1b0	loadPcxSurface	199	1	5
-0049d280	freeGfxGlobal_840710	10	1	1
-0049d2a0	initGfxGlobal_8407c0	10	0	1
-0049d2b0	regAtexit_49d2b0	12	0	1
-0049d300	initGfxGlobal_840790	10	0	1
-0049d310	regAtexit_49d310	12	0	1
-0049d360	initGfxGlobal_8407f0	10	0	1
-0049d370	regAtexit_49d370	12	0	1
-0049d3b0	loadFileWinResource	170	1	5
-0049d460	freeFileWinBuf	29	2	1
-0049d490	initGfxGlobal_840830	10	0	1
-0049d4a0	regAtexit_49d4a0	12	0	1
-0049d4f0	initGfxGlobal_840890	10	0	1
-0049d500	regAtexit_49d500	12	0	1
-0049d550	initGfxGlobal_840860	10	0	1
-0049d560	regAtexit_49d560	12	0	1
-0049d5a0	viewFieldCtor49d5a0	231	1	2
-0049d690	viewFieldCleanup49d690	63	5	2
-0049d6d0	panelBuildRow	157	1	2
-0049d770	panelBuildText	826	2	2
-0049dab0	listPanelDraw	1907	2	13
-0049e230	listPanelOnScroll	541	0	4
-0049e450	listPanelRefresh	396	0	2
-0049e640	listSelectionChanged	55	0	1
-0049e7b0	FUN_0049e7b0	23	0	0
-0049e7d0	listPanelReadValue	440	0	1
-0049e990	FUN_0049e990	52	0	0
-0049e9d0	loadCursors	248	1	4
-0049ead0	freeCursors	30	1	1
-0049eb00	initGfxGlobal_8408c8	10	0	1
-0049eb10	regAtexit_49eb10	12	0	1
-0049eb60	initGfxGlobal_8408f8	10	0	1
-0049eb70	regAtexit_49eb70	12	0	1
-0049ebb0	viewFieldCtor49ebb0	197	1	2
-0049ec80	viewFieldDtor49ec80	83	3	1
-0049ece0	viewFieldCleanup49ece0	57	4	2
-0049ed20	optionDialogBuild	363	1	6
-0049ee90	flagToggle49ee90	48	1	2
-0049eec0	flagToggle49eec0	48	1	2
-0049eef0	flagSet	139	1	0
-0049ef80	flagIsSet	105	2	0
-0049eff0	bitSet	49	1	0
-0049f030	bitTest	32	3	0
-0049f050	optionDialogDraw	798	2	6
-0049f370	optionListDraw	1577	2	9
-0049f9a0	optionDialogUpdate	236	0	7
-0049fa90	optionDialogOnKey	308	0	4
-0049fc30	FUN_0049fc30	45	0	0
-0049fd80	FUN_0049fd80	23	0	0
-0049fda0	optionDialogOnMouse	123	0	0
-0049fe20	FUN_0049fe20	40	0	0
-0049fe50	loadFonts	221	1	4
-0049ff30	freeFonts	20	1	1
-004a0060	freeGraphsyObject	52	2	1
-004a00a0	loadGraphsyObject	74	1	3
-004a00f0	resolveAndOpenFile	36	3	2
-004a0130	initLogFile	16	0	1
-004a0140	regAtexit_4a0140	12	0	1
-004a0160	loggerDeleteDtor	30	0	2
-004a0180	loggerCtor	32	1	1
-004a01a0	freeLoggerBuf	34	1	1
-004a01d0	loggerSetPath	176	1	4
-004a0280	logWrite	156	1	3
-004a0320	logLine	36	6	1
-004a0350	radioSelect	483	0	1
-004a0540	bufferCopyTo	144	0	2
-004a05d0	bufferFree	43	1	1
-004a0600	postMessageLine	317	1	1
-004a0740	viewCtor4a0740	321	1	7
-004a0890	FUN_004a0890	1	9	0
-004a08a0	panelDispatch	216	1	5
-004a09a0	sendCommand	80	1	2
-004a11c0	panelStop	93	1	5
-004a1250	viewDispatchOpen	138	1	6
-004a12e0	viewDispatchReset	138	1	6
-004a1370	getFieldValueByKind	51	2	0
-004a13f0	ctorObj4a13f0	200	3	1
-004a14c0	resetMsgObject	183	4	2
-004a2250	viewFieldCtor4a2250	213	1	2
-004a2330	viewFieldDtor4a2330	104	2	1
-004a23a0	viewFieldReset4a23a0	96	4	2
-004a2400	panelCreate4a2400	1179	1	11
-004a28a0	listAddEntry	220	1	3
-004a2980	FUN_004a2980	26	1	0
-004a29a0	FUN_004a29a0	19	1	0
-004a29c0	setStringField	152	1	2
-004a2a60	panelBuildChildren	748	2	6
-004a2d50	panelDrawRow	589	0	2
-004a2fa0	widgetShow	70	0	0
-004a3110	panelSubCtor4a3110	593	1	7
-004a3370	panelSubDtor4a3370	27	2	1
-004a33e0	panelSubDtor4a33e0	147	1	1
-004a3480	panelSubDtor4a3480	343	3	3
-004a35e0	panelSubReset4a35e0	422	4	7
-004a3790	panelOpenReset4a3790	197	1	6
-004a3860	panelReset4a3860	29	1	2
-004a3880	panelBuild4a3880	852	1	8
-004a3be0	panelBuildText4a3be0	808	2	6
-004a3f10	panelDraw4a3f10	1065	2	8
-004a4340	FUN_004a4340	3	0	0
-004a4350	panelOnPick	151	0	3
-004a43f0	hotHitCb0	57	0	1
-004a4430	hotHitCb1	57	0	1
-004a4470	hotHitCb2	57	0	1
-004a44b0	hotHitCb3	57	0	1
-004a44f0	hotHitCb4	57	0	1
-004a4530	hotHitCb5	57	0	1
-004a4570	hotHitCb6	57	0	1
-004a4680	panelOnKey	399	0	1
-004a4870	FUN_004a4870	32	0	0
-004a4890	listFindById	91	1	0
-004a48f0	listGetAt	128	0	0
-004a4ad0	findMarkupTokenIndex	42	1	0
-004a4b00	listClear4a4b	96	1	3
-004a4b60	listAppend4a4b60	261	2	3
-004a4c70	queuePop	192	1	3
-004a4d30	listClearThunk	19	1	1
-004a4d50	listClear4a4d	84	1	1
-004a4db0	listPush	225	1	2
-004a4ea0	readListNode	47	1	0
-004a4ed0	listRemoveHead	62	2	1
-004a4f10	TERRAIN.DLL::Terrain::getInstance	6	0	0
-004a4f16	TERRAIN.DLL::Terrain::drawLine	6	1	0
-004a4f1c	TERRAIN.DLL::Terrain::loadNewCourseType	6	1	0
-004a4f22	TERRAIN.DLL::Terrain::passCollarInfo	6	2	0
-004a4f28	TERRAIN.DLL::Terrain::setType	6	3	0
-004a4f2e	TERRAIN.DLL::Terrain::getVariation	6	2	0
-004a4f34	TERRAIN.DLL::Terrain::resetTerrain	6	1	0
-004a4f3a	TERRAIN.DLL::Terrain::layPath	6	2	0
-004a4f40	TERRAIN.DLL::Terrain::setWall	6	2	0
-004a4f46	TERRAIN.DLL::Terrain::calcNormals	6	1	0
-004a4f4c	TERRAIN.DLL::Terrain::elevateCorner	6	2	0
-004a4f52	TERRAIN.DLL::Terrain::initTerrain	6	1	0
-004a4f58	TERRAIN.DLL::Terrain::initSystem	6	1	0
-004a4f5e	TERRAIN.DLL::Terrain::~Terrain	6	1	0
-004a4f64	TERRAIN.DLL::Terrain::closeSystem	6	1	0
-004a4f6a	TERRAIN.DLL::Terrain::pathUpdateRender	6	1	0
-004a4f70	TERRAIN.DLL::Terrain::localRender	6	1	0
-004a4f76	TERRAIN.DLL::Terrain::calcAllNormals	6	1	0
-004a4f7c	TERRAIN.DLL::Terrain::setZoomLevel	6	1	0
-004a4f82	TERRAIN.DLL::Terrain::render	6	1	0
-004a4f88	TERRAIN.DLL::Terrain::lowerEdgeCorner	6	1	0
-004a4f8e	TERRAIN.DLL::Terrain::lowerCorner	6	1	0
-004a4f94	TERRAIN.DLL::Terrain::hasConnectedPath	6	1	0
-004a4f9a	TERRAIN.DLL::Terrain::updatePath	6	1	0
-004a4fa0	TERRAIN.DLL::Terrain::hasPath	6	1	0
-004a4fa6	TERRAIN.DLL::Terrain::stripRender	6	1	0
-004a4fac	__fpmath	23	1	3
-004a4fc4	initFpControl	56	1	0
-004a4ffc	FUN_004a4ffc	11	72	1
-004a5007	_free	72	61	5
-004a504f	_malloc	18	54	1
-004a5061	__nh_malloc	44	2	2
-004a508d	__heap_alloc	78	1	4
-004a50db	__cinit	45	1	2
-004a5108	_exit	17	8	1
-004a5119	__exit	17	3	1
-004a512a	doexit	163	2	6
-004a51cf	FID_conflict:__lockexit	9	2	1
-004a51d8	FID_conflict:__lockexit	9	2	1
-004a51e1	__initterm	26	2	0
-004a51fb	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0
-004a522f	FID_conflict:_CallMemberFunction1	7	2	0
-004a5236	FID_conflict:_CallMemberFunction1	7	1	0
-004a523d	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	79	2	1
-004a528c	___CxxFrameHandler	54	0	1
-004a52c2	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	84	1	1
-004a5316	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	37	0	1
-004a533b	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	182	1	1
-004a53f1	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	114	0	2
-004a5466	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	123	2	1
-004a54e4	__global_unwind2	32	0	1
-004a5526	__local_unwind2	104	1	1
-004a558e	__abnormal_termination	35	1	0
-004a55b1	__NLG_Notify1	9	1	0
-004a55ba	FUN_004a55ba	24	1	0
-004a55d2	??_L@YGXPAXIHP6EX0@Z1@Z	106	31	1
-004a563c	FUN_004a563c	24	1	1
-004a5654	__onexit	126	1	4
-004a56d2	_atexit	18	87	1
-004a5713	??_M@YGXPAXIHP6EX0@Z@Z	104	22	1
-004a577b	FID_conflict:$L16506	24	1	1
-004a5793	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	81	2	0
-004a57f1	operator_new	14	23	1
-004a5800	_strpbrk	58	1	0
-004a583a	__read	101	6	5
-004a589f	__read_lk	473	2	6
-004a5a78	__close	93	7	5
-004a5ad5	__close_lk	131	1	5
-004a5b58	__write	101	6	5
-004a5bbd	__write_lk	395	2	6
-004a5d48	__open	23	5	1
-004a5d5f	__sopen	719	2	14
-004a6030	__ftol	39	9	0
-004a6057	__tell	17	1	1
-004a6070	FUN_004a6070	47	9	0
-004a609f	_fclose	49	12	3
-004a60d0	__fclose_lk	76	1	4
-004a611c	__fsopen	49	1	3
-004a614d	FUN_004a614d	19	10	1
-004a6170	_strchr	193	13	0
-004a622c	_fprintf	60	3	5
-004a6268	_fwrite	47	4	3
-004a6297	__fwrite_lk	266	1	4
-004a63a1	_fread	47	3	3
-004a63d0	__fread_lk	232	1	3
-004a64b8	FUN_004a64b8	42	2	3
-004a64f0	_strstr	128	5	0
-004a6570	_isdigit	40	1	1
-004a6598	_isspace	40	4	1
-004a65c0	_isprint	46	1	1
-004a65ee	_fgets	98	5	3
-004a6650	_toupper	111	1	5
-004a66bf	__toupper_lk	204	1	2
-004a678b	_strtok	164	1	1
-004a682f	entry	253	0	16
-004a6937	__amsg_exit	34	7	3
-004a695c	FUN_004a695c	35	1	3
-004a6980	_realloc	312	3	12
-004a6ad0	_strncmp	56	8	0
-004a6b08	_atol	139	2	1
-004a6b93	_atoi	11	2	1
-004a6ba0	_memchr	165	1	0
-004a6c50	_strrchr	39	1	0
-004a6c80	_strncpy	254	3	0
-004a6d80	FID_conflict:_memcpy	664	5	0
-004a70b5	_rewind	100	1	4
-004a7119	_fseek	44	1	3
-004a7145	__fseek_lk	141	1	4
-004a71d2	_tolower	111	2	5
-004a7241	__tolower_lk	203	3	2
-004a730c	__ftell_lk	353	1	2
-004a7470	_strcspn	62	0	0
-004a74ae	__setdefaultprecision	18	1	1
-004a74c0	__ms_p5_test_fdiv	62	1	0
-004a74fe	__ms_p5_mp_test_fdiv	41	1	3
-004a7527	__forcdecpt	90	0	2
-004a75e7	__fassign	62	0	2
-004a7625	__cftoe	97	1	3
-004a7686	__cftoe2	194	2	2
-004a7748	__cftof	85	1	3
-004a779d	__cftof2	167	2	2
-004a7844	__cftog	147	1	4
-004a78d7	__cfltcvt	81	0	3
-004a7928	__shift	37	2	2
-004a794d	__heap_init	60	1	3
-004a7989	__mtinitlocks	41	1	1
-004a79b2	__lock	97	23	7
-004a7a13	FUN_004a7a13	21	23	1
-004a7a28	___sbh_heap_init	62	1	1
-004a7a66	___sbh_find_block	43	3	0
-004a7a91	___sbh_free_block	811	2	3
-004a7dbc	___sbh_alloc_block	777	3	2
-004a80c5	___sbh_alloc_new_region	177	1	4
-004a8176	___sbh_alloc_new_group	251	1	1
-004a8271	___sbh_resize_block	758	1	0
-004a8567	__callnewh	27	3	0
-004a8582	___InternalCxxFrameHandler	155	3	3
-004a861d	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	435	1	9
-004a87d0	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	170	1	4
-004a887a	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	93	1	1
-004a88d7	___FrameUnwindToState	132	2	2
-004a898b	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z	123	2	5
-004a8a06	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	165	1	3
-004a8ad3	FUN_004a8ad3	78	1	3
-004a8b4b	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	440	1	8
-004a8d0f	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	86	2	1
-004a8d76	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	35	1	0
-004a8da0	__CallSettingFrame@12	76	2	1
-004a8dec	__mtinit	84	1	6
-004a8e40	__initptd	19	2	0
-004a8e53	__getptd	103	11	8
-004a8eba	?terminate@@YAXXZ	86	3	2
-004a8f1b	?_inconsistency@@YAXXZ	79	5	1
-004a9039	__seh_longjmp_unwind@4	27	0	1
-004a9054	__msize	69	1	4
-004a9099	__dosmaperr	115	6	2
-004a910c	errnoPtr	9	19	1
-004a9115	doserrnoPtr	9	13	1
-004a911e	__alloc_osfhnd	291	1	7
-004a9241	__set_osfhnd	124	1	3
-004a92bd	__free_osfhnd	127	1	3
-004a933c	__get_osfhandle	66	4	2
-004a937e	__lock_fhandle	95	6	4
-004a93dd	__unlock_fhandle	34	6	1
-004a93ff	__ioinit	444	1	6
-004a95bb	__lseek	101	5	5
-004a9620	__lseek_lk	115	5	5
-004a9693	__chsize_lk	293	1	10
-004a9874	__lock_file	47	8	2
-004a98a3	FID_conflict:__lock_file2	35	2	2
-004a98c6	__unlock_file	47	9	2
-004a98f5	FID_conflict:__lock_file2	35	2	2
-004a9918	__freebuf	43	1	1
-004a9943	_fflush	47	1	4
-004a9972	__fflush_lk	46	2	2
-004a99a0	__flush	92	6	1
-004a9a05	_flsall	164	1	5
-004a9aa9	__openfile	368	1	1
-004a9c19	__getstream	200	1	7
-004a9ce1	__stbuf	141	1	2
-004a9d6e	__ftbuf	42	1	1
-004a9d98	__output	1825	2	11
-004aa4d9	_write_char	53	3	1
-004aa50e	_write_multi_char	49	1	1
-004aa53f	_write_string	56	1	1
-004aa577	_get_int_arg	13	1	0
-004aa584	_get_int64_arg	16	1	0
-004aa594	_get_short_arg	14	1	0
-004aa5a2	__flsbuf	280	3	4
-004aa6c0	FID_conflict:_memcpy	664	4	0
-004aa9f5	__filbuf	220	3	2
-004aaad1	__isctype	117	10	1
-004aab46	___crtLCMapStringA	511	3	6
-004aad6a	__XcptFilter	318	1	3
-004aaea8	_xcptlookup	58	1	0
-004aaee2	__wincmdln	88	1	2
-004aaf3a	__setenvp	185	1	6
-004aaff3	__setargv	153	1	5
-004ab08c	_parse_cmdline	436	1	0
-004ab240	___crtGetEnvironmentStringsA	306	1	8
-004ab372	__FF_MSGBANNER	57	2	1
-004ab3ab	__NMSG_WRITE	339	4	8
-004ab500	__allmul	52	1	0
-004ab534	_calloc	141	2	6
-004ab5c1	__control87	53	1	2
-004ab5f6	__controlfp	22	1	1
-004ab60c	__abstract_cw	146	1	0
-004ab69e	__hw_cw	137	1	0
-004ab727	__ZeroTail	73	1	0
-004ab770	__IncMan	86	1	1
-004ab7c6	__RoundMan	140	1	2
-004ab852	__CopyMan	27	1	0
-004ab86d	__FillZeroMan	12	1	0
-004ab879	__IsZeroMan	27	1	0
-004ab894	__ShrMan	141	1	0
-004ab921	__ld12cvt	364	2	5
-004aba8d	FID_conflict:__ld12tod	22	1	1
-004abaa3	FID_conflict:__ld12tod	22	1	1
-004abab9	FID_conflict:__atodbl	45	1	2
-004abae6	FID_conflict:__atodbl	45	1	2
-004abb13	__fptostr	119	3	2
-004abb8a	__fltout2	92	3	3
-004abbe6	___dtold	182	1	0
-004abca0	FUN_004abca0	7	7	0
-004abcb0	_strcat	224	1	0
-004abd90	_memset	88	5	0
-004abdf0	_strlen	123	9	0
-004abe6b	amsgExitThunk	9	2	1
-004abe74	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	70	0	2
-004abed8	?_ValidateRead@@YAHPBXI@Z	28	2	1
-004abef4	?_ValidateWrite@@YAHPAXI@Z	28	1	1
-004abf10	?_ValidateExecute@@YAHP6GHXZ@Z	24	2	1
-004abf30	_strcmp	129	1	0
-004abfb4	_abort	23	1	3
-004abfcb	__setmode_lk	97	1	1
-004ac0ad	__commit	147	1	7
-004ac140	__isatty	41	2	0
-004ac169	_wctomb	89	1	5
-004ac1c2	__wctomb_lk	105	1	2
-004ac230	__aulldiv	104	1	0
-004ac2a0	__aullrem	117	1	0
-004ac315	__getbuf	68	3	1
-004ac359	___crtGetStringTypeA	318	2	5
-004ac4a2	__ismbblead	17	1	1
-004ac4b3	_x_ismbbtype	49	1	0
-004ac4e4	__setmbcp	429	1	7
-004ac691	_getSystemCP	74	1	0
-004ac6db	_CPtoLCID	51	1	0
-004ac70e	_setSBCS	41	1	0
-004ac737	_setSBUpLow	389	1	3
-004ac8bc	___initmbctable	28	3	1
-004ac8d8	___crtMessageBoxA	137	1	2
-004ac961	_raise	386	1	5
-004acae3	FUN_004acae3	61	1	0
-004acb20	___addl	33	3	0
-004acb41	___add_12	94	2	1
-004acb9f	___shl_12	46	3	0
-004acbcd	___shr_12	45	2	0
-004acbfa	___mtold12	199	1	2
-004accc1	___strgtold12	1185	2	3
-004ad192	_$I10_OUTPUT	659	1	6
-004ad425	__itoa	45	56	1
-004ad452	_xtoa	92	1	0
-004ad4b0	__strcmpi	208	3	3
-004ad580	__strnicmp	257	2	3
-004ad681	___ld12mul	544	2	3
-004ad8a1	___multtenpow12	124	2	1
-004ad91d	_getenv	33	1	3
-004ad93e	__getenv_lk	125	1	3
-004ad9bb	__mbsnbicoll	63	2	1
-004ad9fa	___wtomb_environ	110	2	3
-004ada68	___crtCompareStringA	597	1	6
-004adce5	_strncnt	43	2	0
-004add10	___crtsetenv	391	1	10
-004ade97	_findenv	88	1	1
-004adeef	_copy_environ	103	1	3
-004adf56	__mbschr	151	1	3
-004adfed	__strdup	43	1	3
-004ae020	_CreateJPG	293	1	9
-004ae150	jpeg_CreateCompress	184	1	1
-004ae210	jpeg_abort_compress	12	1	1
-004ae220	jpeg_suppress_tables	78	1	0
-004ae270	jpeg_finish_compress	258	1	1
-004ae380	jpeg_start_compress	117	1	2
-004ae400	jpeg_write_scanlines	196	1	0
-004ae4d0	jpeg_stdio_dest	61	1	0
-004ae590	term_destination	102	0	2
-004ae600	jpeg_add_quant_table	186	1	1
-004ae6c0	jpeg_set_linear_quality	52	1	1
-004ae700	jpeg_quality_scaling	56	1	0
-004ae740	jpeg_set_quality	30	1	2
-004ae760	jpeg_set_defaults	239	1	3
-004ae850	std_huff_tables	90	1	1
-004ae8b0	add_huff_table	93	1	1
-004ae910	jpeg_default_colorspace	95	2	1
-004ae990	jpeg_set_colorspace	716	1	0
-004aec80	jpeg_std_error	76	1	0
-004aecd0	error_exit	80	0	3
-004aee30	jinit_memory_mgr	308	1	5
-004aef70	alloc_small	303	4	2
-004af0a0	out_of_memory	29	2	0
-004af0c0	alloc_large	161	2	2
-004af170	alloc_sarray	168	1	2
-004af220	alloc_barray	176	1	2
-004af2d0	request_virt_sarray	110	0	1
-004af340	request_virt_barray	110	0	1
-004af3b0	realize_virt_arrays	385	0	4
-004af690	do_sarray_io	154	0	0
-004af880	do_barray_io	159	0	0
-004af920	free_pool	241	0	1
-004afa60	jpeg_abort	35	1	0
-004afa90	jpeg_destroy	31	2	0
-004afab0	jpeg_alloc_quant_table	31	1	0
-004afad0	jpeg_alloc_huff_table	31	1	0
-004afaf0	jinit_marker_writer	97	1	0
-004afb60	write_any_marker	79	0	3
-004afbb0	emit_byte	60	9	0
-004afbf0	emit_marker	32	10	1
-004afc10	emit_2bytes	40	8	1
-004afc40	write_file_header	59	0	3
-004afc80	emit_jfif_app0	151	1	3
-004afd20	emit_adobe_app14	146	1	3
-004afdc0	write_frame_header	246	0	2
-004afec0	emit_dqt	214	2	3
-004affa0	emit_sof	184	1	3
-004b0120	emit_dht	191	1	3
-004b01e0	null_method	1	0	0
-004b01f0	emit_dri	42	0	2
-004b0220	emit_sos	221	0	3
-004b0320	write_tables_only	128	0	3
-004b03a0	jinit_compress_master	183	1	10
-004b0460	jpeg_get_large	14	3	1
-004b0470	jpeg_free_large	12	1	1
-004b0480	jpeg_mem_available	5	1	0
-004b0490	jpeg_open_backing_store	20	1	0
-004b04b0	jpeg_mem_init	3	2	0
-004b04c0	jdiv_round_up	16	2	0
-004b04d0	jround_up	24	1	0
-004b04f0	jcopy_sample_rows	70	2	0
-004b0540	jzero_far	27	0	0
-004b0560	jinit_c_main_controller	135	1	0
-004b0640	process_data_simple_main	176	0	0
-004b06f0	jinit_c_coef_controller	187	1	1
-004b0860	start_iMCU_row	78	1	0
-004b0d70	compress_output	486	0	1
-004b0f60	jpeg_make_c_derived_tbl	282	0	0
-004b1080	jpeg_gen_optimal_table	558	0	0
-004b12b0	jinit_huff_encoder	59	1	0
-004b15c0	encode_one_block	1051	0	2
-004b19e0	dump_buffer	44	4	0
-004b1a10	emit_bits	198	1	1
-004b1ae0	emit_restart	140	0	2
-004b1b70	flush_bits	165	1	1
-004b1d80	htest_one_block	160	0	0
-004b1f30	jinit_phuff_encoder	56	1	0
-004b2420	dump_buffer_4b2420	60	4	0
-004b2460	emit_restart_4b2460	165	0	3
-004b2510	flush_bits_4b2510	190	1	1
-004b25d0	emit_eobrun	498	1	2
-004b27d0	emit_buffered_bits	228	1	1
-004b34b0	jinit_forward_dct	145	1	0
-004b3a80	jinit_c_prep_controller	172	1	1
-004b3d00	expand_bottom_edge	52	0	1
-004b3f10	create_context_buffer	292	1	0
-004b4040	jinit_downsampler	387	1	0
-004b4390	expand_right_edge	92	1	0
-004b43f0	fullsize_downsample	70	0	2
-004b4a60	jinit_color_converter	528	1	0
-004b4eb0	rgb_gray_convert	174	0	0
-004b50d0	grayscale_convert	103	0	0
-004b51e0	jinit_c_master_control	191	1	2
-004b52a0	initial_setup	461	1	1
-004b5470	validate_script	927	1	0
-004b5810	prepare_for_pass	433	0	2
-004b59d0	select_scan_parameters	255	1	0
-004b5ad0	per_scan_setup	458	1	1
-004b5ca0	pass_startup	43	0	0
-004b65d0	KERNEL32.DLL::RtlUnwind	6	2	0
-004b65d6	_sprintf	82	0	2
-004b6628	_sscanf	52	1	2
-004b665c	__input	2597	1	11
-004b7081	__hextodec	55	1	1
-004b70b8	__inc	26	2	1
-004b70d2	__un_inc	23	1	1
-004b70e9	__whiteout	36	1	2
-004b710d	_mbtowc	93	1	5
-004b716a	__mbtowc_lk	201	1	2
-004b7240	__allshl	31	1	0
-004b725f	FID_conflict:_ungetc	110	1	1
-004b72d0	Unwind@004b72d0	11	0	1
-004b72f0	Unwind@004b72f0	8	0	1
-004b72f8	Unwind@004b72f8	11	0	1
-004b7310	Unwind@004b7310	11	0	1
-004b731b	Unwind@004b731b	11	0	1
-004b7330	Unwind@004b7330	11	0	1
-004b733b	Unwind@004b733b	11	0	1
-004b7346	Unwind@004b7346	11	0	1
-004b7351	Unwind@004b7351	11	0	1
-004b735c	Unwind@004b735c	11	0	1
-004b7367	Unwind@004b7367	11	0	1
-004b7380	Unwind@004b7380	11	0	1
-004b73a0	Unwind@004b73a0	11	0	1
-004b73c0	Unwind@004b73c0	22	0	1
-004b73d6	Unwind@004b73d6	11	0	1
-004b73f0	Unwind@004b73f0	22	0	1
-004b7406	Unwind@004b7406	11	0	1
-004b7420	Unwind@004b7420	22	0	1
-004b7436	Unwind@004b7436	11	0	1
-004b7450	Unwind@004b7450	8	0	1
-004b7458	Unwind@004b7458	14	0	1
-004b7470	Unwind@004b7470	11	0	1
-004b7490	Unwind@004b7490	11	0	1
-004b74b0	Unwind@004b74b0	11	0	1
-004b74d0	Unwind@004b74d0	8	0	1
-004b74f0	Unwind@004b74f0	8	0	1
-004b7510	Unwind@004b7510	8	0	1
-004b7518	Unwind@004b7518	11	0	1
-004b7523	Unwind@004b7523	11	0	1
-004b752e	Unwind@004b752e	14	0	1
-004b753c	Unwind@004b753c	14	0	1
-004b7560	Unwind@004b7560	8	0	1
-004b7568	Unwind@004b7568	11	0	1
-004b7573	Unwind@004b7573	11	0	1
-004b757e	Unwind@004b757e	14	0	1
-004b758c	Unwind@004b758c	14	0	1
-004b75b0	Unwind@004b75b0	8	0	1
-004b75b8	Unwind@004b75b8	11	0	1
-004b75c3	Unwind@004b75c3	11	0	1
-004b75ce	Unwind@004b75ce	14	0	1
-004b75dc	Unwind@004b75dc	14	0	1
-004b75ea	Unwind@004b75ea	14	0	1
-004b75f8	Unwind@004b75f8	14	0	1
-004b7606	Unwind@004b7606	14	0	1
-004b7614	Unwind@004b7614	24	0	1
-004b7640	Unwind@004b7640	8	0	1
-004b7648	Unwind@004b7648	11	0	1
-004b7653	Unwind@004b7653	11	0	1
-004b765e	Unwind@004b765e	14	0	1
-004b766c	Unwind@004b766c	14	0	1
-004b767a	Unwind@004b767a	14	0	1
-004b7688	Unwind@004b7688	14	0	1
-004b7696	Unwind@004b7696	14	0	1
-004b76a4	Unwind@004b76a4	24	0	1
-004b76d0	Unwind@004b76d0	8	0	1
-004b76d8	Unwind@004b76d8	11	0	1
-004b76f0	Unwind@004b76f0	8	0	1
-004b76f8	Unwind@004b76f8	11	0	1
-004b7710	Unwind@004b7710	8	0	1
-004b7718	Unwind@004b7718	22	0	1
-004b772e	Unwind@004b772e	24	0	1
-004b7746	Unwind@004b7746	14	0	1
-004b7760	Unwind@004b7760	8	0	1
-004b7768	Unwind@004b7768	22	0	1
-004b777e	Unwind@004b777e	24	0	1
-004b7796	Unwind@004b7796	14	0	1
-004b77b0	Unwind@004b77b0	8	0	1
-004b77d0	Unwind@004b77d0	8	0	1
-004b77f0	Unwind@004b77f0	8	0	1
-004b77f8	Unwind@004b77f8	11	0	1
-004b7803	Unwind@004b7803	11	0	1
-004b780e	Unwind@004b780e	14	0	1
-004b781c	Unwind@004b781c	14	0	1
-004b782a	Unwind@004b782a	14	0	1
-004b7838	Unwind@004b7838	14	0	1
-004b7846	Unwind@004b7846	14	0	1
-004b7854	Unwind@004b7854	14	0	1
-004b7862	Unwind@004b7862	14	0	1
-004b7870	Unwind@004b7870	14	0	1
-004b7890	Unwind@004b7890	8	0	1
-004b7898	Unwind@004b7898	11	0	1
-004b78a3	Unwind@004b78a3	11	0	1
-004b78ae	Unwind@004b78ae	14	0	1
-004b78bc	Unwind@004b78bc	14	0	1
-004b78ca	Unwind@004b78ca	14	0	1
-004b78d8	Unwind@004b78d8	14	0	1
-004b78e6	Unwind@004b78e6	14	0	1
-004b78f4	Unwind@004b78f4	14	0	1
-004b7902	Unwind@004b7902	14	0	1
-004b7910	Unwind@004b7910	14	0	1
-004b7930	Unwind@004b7930	11	0	1
-004b793b	Unwind@004b793b	11	0	1
-004b7946	Unwind@004b7946	11	0	1
-004b7960	Unwind@004b7960	11	0	1
-004b7980	Unwind@004b7980	11	0	1
-004b798b	Unwind@004b798b	11	0	1
-004b7996	Unwind@004b7996	11	0	1
-004b79a1	Unwind@004b79a1	11	0	1
-004b79ac	Unwind@004b79ac	11	0	1
-004b79b7	Unwind@004b79b7	11	0	1
-004b79c2	Unwind@004b79c2	11	0	1
-004b79e0	Unwind@004b79e0	11	0	1
-004b79eb	Unwind@004b79eb	11	0	1
-004b79f6	Unwind@004b79f6	11	0	1
-004b7a10	Unwind@004b7a10	11	0	1
-004b7a30	Unwind@004b7a30	8	0	1
-004b7a50	Unwind@004b7a50	8	0	1
-004b7a70	Unwind@004b7a70	11	0	1
-004b7a7b	Unwind@004b7a7b	11	0	1
-004b7a90	Unwind@004b7a90	22	0	1
-004b7aa6	Unwind@004b7aa6	11	0	1
-004b7ab1	Unwind@004b7ab1	11	0	1
-004b7ad0	Unwind@004b7ad0	22	0	1
-004b7ae6	Unwind@004b7ae6	22	0	1
-004b7afc	Unwind@004b7afc	11	0	1
-004b7b20	Unwind@004b7b20	11	0	1
-004b7b40	Unwind@004b7b40	14	0	1
-004b7b60	Unwind@004b7b60	14	0	1
-004b7b6e	Unwind@004b7b6e	14	0	1
-004b7b90	Unwind@004b7b90	11	0	1
-004b7b9b	Unwind@004b7b9b	14	0	1
-004b7bc0	Unwind@004b7bc0	11	0	1
-004b7be0	Unwind@004b7be0	8	0	1
-004b7c00	Unwind@004b7c00	8	0	1
-004b7c08	Unwind@004b7c08	14	0	1
-004b7c16	Unwind@004b7c16	14	0	1
-004b7c30	Unwind@004b7c30	11	0	1
-004b7c3b	Unwind@004b7c3b	11	0	1
-004b7c46	Unwind@004b7c46	11	0	1
-004b7c51	Unwind@004b7c51	11	0	1
-004b7c5c	Unwind@004b7c5c	11	0	1
-004b7c67	Unwind@004b7c67	11	0	1
-004b7c80	Unwind@004b7c80	8	0	1
-004b7ca0	Unwind@004b7ca0	8	0	1
-004b7cc0	Unwind@004b7cc0	11	0	1
-004b7ce0	Unwind@004b7ce0	11	0	1
-004b7ceb	Unwind@004b7ceb	11	0	1
-004b7cf6	Unwind@004b7cf6	17	0	1
-004b7d07	Unwind@004b7d07	19	0	1
-004b7d1a	Unwind@004b7d1a	17	0	1
-004b7d2b	Unwind@004b7d2b	19	0	1
-004b7d3e	Unwind@004b7d3e	17	0	1
-004b7d4f	Unwind@004b7d4f	19	0	1
-004b7d62	Unwind@004b7d62	17	0	1
-004b7d80	Unwind@004b7d80	11	0	1
-004b7da0	Unwind@004b7da0	11	0	1
-004b7dc0	Unwind@004b7dc0	11	0	1
-004b7de0	Unwind@004b7de0	8	0	1
-004b7e00	Unwind@004b7e00	8	0	1
-004b7e20	Unwind@004b7e20	8	0	1
-004b7e40	Unwind@004b7e40	8	0	1
-004b7e60	Unwind@004b7e60	8	0	1
-004b7e80	Unwind@004b7e80	14	0	1
-004b7ea0	Unwind@004b7ea0	8	0	1
-004b7ec0	Unwind@004b7ec0	8	0	1
-004b7ee0	Unwind@004b7ee0	8	0	1
-004b7f00	Unwind@004b7f00	8	0	1
-004b7f08	Unwind@004b7f08	14	0	1
-004b7f20	Unwind@004b7f20	8	0	1
-004b7f28	Unwind@004b7f28	14	0	1
-004b7f36	Unwind@004b7f36	14	0	1
-004b7f50	Unwind@004b7f50	11	0	1
-004b7f5b	Unwind@004b7f5b	14	0	1
-004b7f69	Unwind@004b7f69	11	0	1
-004b7f80	Unwind@004b7f80	11	0	1
-004b7fa0	Unwind@004b7fa0	26	0	1
-004b7fd0	Unwind@004b7fd0	8	0	1
-004b7fd8	Unwind@004b7fd8	14	0	1
-004b7fe6	Unwind@004b7fe6	14	0	1
-004b7ff4	Unwind@004b7ff4	14	0	1
-004b8002	Unwind@004b8002	14	0	1
-004b8010	Unwind@004b8010	14	0	1
-004b801e	Unwind@004b801e	14	0	1
-004b802c	Unwind@004b802c	14	0	1
-004b803a	Unwind@004b803a	14	0	1
-004b8060	Unwind@004b8060	11	0	1
-004b8080	Unwind@004b8080	11	0	1
-004b80a0	Unwind@004b80a0	8	0	1
-004b80c0	Unwind@004b80c0	14	0	1
-004b80ce	Unwind@004b80ce	51	0	1
-004b8101	Unwind@004b8101	51	0	1
-004b8134	Unwind@004b8134	54	0	1
-004b816a	Unwind@004b816a	54	0	1
-004b81b0	Unwind@004b81b0	8	0	1
-004b81b8	Unwind@004b81b8	14	0	1
-004b81c6	Unwind@004b81c6	14	0	1
-004b81d4	Unwind@004b81d4	14	0	1
-004b81e2	Unwind@004b81e2	14	0	1
-004b81f0	Unwind@004b81f0	14	0	1
-004b81fe	Unwind@004b81fe	14	0	1
-004b820c	Unwind@004b820c	14	0	1
-004b821a	Unwind@004b821a	14	0	1
-004b8228	Unwind@004b8228	11	0	1
-004b8233	Unwind@004b8233	11	0	1
-004b823e	Unwind@004b823e	8	0	1
-004b8246	Unwind@004b8246	8	0	1
-004b8260	Unwind@004b8260	11	0	1
-004b8280	Unwind@004b8280	11	0	1
-004b82a0	Unwind@004b82a0	11	0	1
-004b82c0	Unwind@004b82c0	11	0	1
-004b82e0	Unwind@004b82e0	11	0	1
-004b8300	Unwind@004b8300	8	0	1
-004b8308	Unwind@004b8308	14	0	1
-004b8320	Unwind@004b8320	8	0	1
-004b8328	Unwind@004b8328	14	0	1
-004b8336	Unwind@004b8336	14	0	1
-004b8344	Unwind@004b8344	8	0	1
-004b834c	Unwind@004b834c	8	0	1
-004b8360	Unwind@004b8360	11	0	1
-004b836b	Unwind@004b836b	11	0	1
-004b8376	Unwind@004b8376	11	0	1
-004b8381	Unwind@004b8381	11	0	1
-004b838c	Unwind@004b838c	11	0	1
-004b8397	Unwind@004b8397	11	0	1
-004b83a2	Unwind@004b83a2	11	0	1
-004b83ad	Unwind@004b83ad	11	0	1
-004b83b8	Unwind@004b83b8	11	0	1
-004b83c3	Unwind@004b83c3	11	0	1
-004b83ce	Unwind@004b83ce	11	0	1
-004b83d9	Unwind@004b83d9	11	0	1
-004b83e4	Unwind@004b83e4	11	0	1
-004b83ef	Unwind@004b83ef	11	0	1
-004b83fa	Unwind@004b83fa	11	0	1
-004b8405	Unwind@004b8405	11	0	1
-004b8410	Unwind@004b8410	11	0	1
-004b841b	Unwind@004b841b	11	0	1
-004b8426	Unwind@004b8426	11	0	1
-004b8431	Unwind@004b8431	11	0	1
-004b843c	Unwind@004b843c	11	0	1
-004b8447	Unwind@004b8447	11	0	1
-004b8452	Unwind@004b8452	11	0	1
-004b845d	Unwind@004b845d	11	0	1
-004b8468	Unwind@004b8468	11	0	1
-004b8473	Unwind@004b8473	11	0	1
-004b847e	Unwind@004b847e	11	0	1
-004b8489	Unwind@004b8489	11	0	1
-004b8494	Unwind@004b8494	11	0	1
-004b849f	Unwind@004b849f	11	0	1
-004b84aa	Unwind@004b84aa	11	0	1
-004b84b5	Unwind@004b84b5	11	0	1
-004b84c0	Unwind@004b84c0	11	0	1
-004b84cb	Unwind@004b84cb	11	0	1
-004b84d6	Unwind@004b84d6	11	0	1
-004b84e1	Unwind@004b84e1	11	0	1
-004b84ec	Unwind@004b84ec	11	0	1
-004b84f7	Unwind@004b84f7	11	0	1
-004b8502	Unwind@004b8502	11	0	1
-004b850d	Unwind@004b850d	11	0	1
-004b8518	Unwind@004b8518	11	0	1
-004b8523	Unwind@004b8523	11	0	1
-004b852e	Unwind@004b852e	11	0	1
-004b8539	Unwind@004b8539	11	0	1
-004b8544	Unwind@004b8544	11	0	1
-004b854f	Unwind@004b854f	11	0	1
-004b855a	Unwind@004b855a	11	0	1
-004b8565	Unwind@004b8565	11	0	1
-004b8570	Unwind@004b8570	11	0	1
-004b857b	Unwind@004b857b	11	0	1
-004b8586	Unwind@004b8586	11	0	1
-004b8591	Unwind@004b8591	11	0	1
-004b859c	Unwind@004b859c	11	0	1
-004b85a7	Unwind@004b85a7	11	0	1
-004b85b2	Unwind@004b85b2	11	0	1
-004b85bd	Unwind@004b85bd	11	0	1
-004b85c8	Unwind@004b85c8	11	0	1
-004b85d3	Unwind@004b85d3	11	0	1
-004b85de	Unwind@004b85de	11	0	1
-004b85e9	Unwind@004b85e9	11	0	1
-004b85f4	Unwind@004b85f4	11	0	1
-004b85ff	Unwind@004b85ff	11	0	1
-004b860a	Unwind@004b860a	11	0	1
-004b8615	Unwind@004b8615	11	0	1
-004b8620	Unwind@004b8620	11	0	1
-004b862b	Unwind@004b862b	11	0	1
-004b8636	Unwind@004b8636	11	0	1
-004b8641	Unwind@004b8641	11	0	1
-004b864c	Unwind@004b864c	11	0	1
-004b8657	Unwind@004b8657	11	0	1
-004b8662	Unwind@004b8662	11	0	1
-004b866d	Unwind@004b866d	11	0	1
-004b8678	Unwind@004b8678	11	0	1
-004b8683	Unwind@004b8683	11	0	1
-004b868e	Unwind@004b868e	11	0	1
-004b8699	Unwind@004b8699	11	0	1
-004b86a4	Unwind@004b86a4	11	0	1
-004b86af	Unwind@004b86af	11	0	1
-004b86ba	Unwind@004b86ba	11	0	1
-004b86c5	Unwind@004b86c5	11	0	1
-004b86d0	Unwind@004b86d0	11	0	1
-004b86db	Unwind@004b86db	11	0	1
-004b86e6	Unwind@004b86e6	11	0	1
-004b86f1	Unwind@004b86f1	11	0	1
-004b86fc	Unwind@004b86fc	11	0	1
-004b8707	Unwind@004b8707	11	0	1
-004b8712	Unwind@004b8712	11	0	1
-004b871d	Unwind@004b871d	11	0	1
-004b8728	Unwind@004b8728	11	0	1
-004b8733	Unwind@004b8733	11	0	1
-004b873e	Unwind@004b873e	11	0	1
-004b8749	Unwind@004b8749	11	0	1
-004b8754	Unwind@004b8754	11	0	1
-004b875f	Unwind@004b875f	11	0	1
-004b876a	Unwind@004b876a	11	0	1
-004b8775	Unwind@004b8775	11	0	1
-004b8780	Unwind@004b8780	11	0	1
-004b878b	Unwind@004b878b	11	0	1
-004b8796	Unwind@004b8796	11	0	1
-004b87a1	Unwind@004b87a1	11	0	1
-004b87ac	Unwind@004b87ac	11	0	1
-004b87b7	Unwind@004b87b7	11	0	1
-004b87c2	Unwind@004b87c2	11	0	1
-004b87cd	Unwind@004b87cd	11	0	1
-004b87d8	Unwind@004b87d8	11	0	1
-004b87e3	Unwind@004b87e3	11	0	1
-004b87ee	Unwind@004b87ee	11	0	1
-004b87f9	Unwind@004b87f9	11	0	1
-004b8804	Unwind@004b8804	11	0	1
-004b8820	Unwind@004b8820	11	0	1
-004b882b	Unwind@004b882b	11	0	1
-004b8836	Unwind@004b8836	11	0	1
-004b8841	Unwind@004b8841	11	0	1
-004b884c	Unwind@004b884c	11	0	1
-004b8857	Unwind@004b8857	11	0	1
-004b8862	Unwind@004b8862	11	0	1
-004b886d	Unwind@004b886d	11	0	1
-004b8878	Unwind@004b8878	11	0	1
-004b8883	Unwind@004b8883	11	0	1
-004b888e	Unwind@004b888e	11	0	1
-004b8899	Unwind@004b8899	11	0	1
-004b88a4	Unwind@004b88a4	11	0	1
-004b88af	Unwind@004b88af	11	0	1
-004b88ba	Unwind@004b88ba	11	0	1
-004b88c5	Unwind@004b88c5	11	0	1
-004b88d0	Unwind@004b88d0	11	0	1
-004b88db	Unwind@004b88db	11	0	1
-004b88e6	Unwind@004b88e6	11	0	1
-004b88f1	Unwind@004b88f1	11	0	1
-004b88fc	Unwind@004b88fc	11	0	1
-004b8907	Unwind@004b8907	11	0	1
-004b8912	Unwind@004b8912	11	0	1
-004b891d	Unwind@004b891d	11	0	1
-004b8928	Unwind@004b8928	11	0	1
-004b8933	Unwind@004b8933	11	0	1
-004b893e	Unwind@004b893e	11	0	1
-004b8949	Unwind@004b8949	11	0	1
-004b8954	Unwind@004b8954	11	0	1
-004b895f	Unwind@004b895f	11	0	1
-004b896a	Unwind@004b896a	11	0	1
-004b8975	Unwind@004b8975	11	0	1
-004b8980	Unwind@004b8980	11	0	1
-004b898b	Unwind@004b898b	11	0	1
-004b8996	Unwind@004b8996	11	0	1
-004b89a1	Unwind@004b89a1	11	0	1
-004b89ac	Unwind@004b89ac	11	0	1
-004b89b7	Unwind@004b89b7	11	0	1
-004b89c2	Unwind@004b89c2	11	0	1
-004b89cd	Unwind@004b89cd	11	0	1
-004b89d8	Unwind@004b89d8	11	0	1
-004b89e3	Unwind@004b89e3	11	0	1
-004b89ee	Unwind@004b89ee	11	0	1
-004b89f9	Unwind@004b89f9	11	0	1
-004b8a04	Unwind@004b8a04	11	0	1
-004b8a0f	Unwind@004b8a0f	11	0	1
-004b8a1a	Unwind@004b8a1a	11	0	1
-004b8a25	Unwind@004b8a25	11	0	1
-004b8a30	Unwind@004b8a30	11	0	1
-004b8a3b	Unwind@004b8a3b	11	0	1
-004b8a46	Unwind@004b8a46	11	0	1
-004b8a51	Unwind@004b8a51	11	0	1
-004b8a5c	Unwind@004b8a5c	11	0	1
-004b8a67	Unwind@004b8a67	11	0	1
-004b8a72	Unwind@004b8a72	11	0	1
-004b8a7d	Unwind@004b8a7d	14	0	1
-004b8a8b	Unwind@004b8a8b	14	0	1
-004b8a99	Unwind@004b8a99	11	0	1
-004b8aa4	Unwind@004b8aa4	11	0	1
-004b8aaf	Unwind@004b8aaf	11	0	1
-004b8aba	Unwind@004b8aba	11	0	1
-004b8ac5	Unwind@004b8ac5	11	0	1
-004b8ad0	Unwind@004b8ad0	11	0	1
-004b8adb	Unwind@004b8adb	11	0	1
-004b8ae6	Unwind@004b8ae6	11	0	1
-004b8af1	Unwind@004b8af1	11	0	1
-004b8afc	Unwind@004b8afc	11	0	1
-004b8b07	Unwind@004b8b07	11	0	1
-004b8b12	Unwind@004b8b12	11	0	1
-004b8b1d	Unwind@004b8b1d	11	0	1
-004b8b28	Unwind@004b8b28	11	0	1
-004b8b33	Unwind@004b8b33	11	0	1
-004b8b3e	Unwind@004b8b3e	11	0	1
-004b8b49	Unwind@004b8b49	11	0	1
-004b8b54	Unwind@004b8b54	11	0	1
-004b8b5f	Unwind@004b8b5f	11	0	1
-004b8b6a	Unwind@004b8b6a	11	0	1
-004b8b75	Unwind@004b8b75	11	0	1
-004b8b80	Unwind@004b8b80	11	0	1
-004b8b8b	Unwind@004b8b8b	11	0	1
-004b8b96	Unwind@004b8b96	11	0	1
-004b8ba1	Unwind@004b8ba1	11	0	1
-004b8bac	Unwind@004b8bac	11	0	1
-004b8bb7	Unwind@004b8bb7	11	0	1
-004b8bc2	Unwind@004b8bc2	11	0	1
-004b8bcd	Unwind@004b8bcd	11	0	1
-004b8bd8	Unwind@004b8bd8	11	0	1
-004b8be3	Unwind@004b8be3	11	0	1
-004b8bee	Unwind@004b8bee	11	0	1
-004b8bf9	Unwind@004b8bf9	11	0	1
-004b8c04	Unwind@004b8c04	11	0	1
-004b8c0f	Unwind@004b8c0f	11	0	1
-004b8c1a	Unwind@004b8c1a	11	0	1
-004b8c25	Unwind@004b8c25	11	0	1
-004b8c30	Unwind@004b8c30	11	0	1
-004b8c3b	Unwind@004b8c3b	11	0	1
-004b8c46	Unwind@004b8c46	11	0	1
-004b8c51	Unwind@004b8c51	11	0	1
-004b8c5c	Unwind@004b8c5c	11	0	1
-004b8c67	Unwind@004b8c67	11	0	1
-004b8c72	Unwind@004b8c72	11	0	1
-004b8c7d	Unwind@004b8c7d	11	0	1
-004b8c88	Unwind@004b8c88	11	0	1
-004b8c93	Unwind@004b8c93	11	0	1
-004b8c9e	Unwind@004b8c9e	11	0	1
-004b8ca9	Unwind@004b8ca9	11	0	1
-004b8cb4	Unwind@004b8cb4	11	0	1
-004b8cbf	Unwind@004b8cbf	11	0	1
-004b8cca	Unwind@004b8cca	11	0	1
-004b8cd5	Unwind@004b8cd5	11	0	1
-004b8ce0	Unwind@004b8ce0	11	0	1
-004b8ceb	Unwind@004b8ceb	11	0	1
-004b8cf6	Unwind@004b8cf6	11	0	1
-004b8d01	Unwind@004b8d01	11	0	1
-004b8d0c	Unwind@004b8d0c	11	0	1
-004b8d17	Unwind@004b8d17	11	0	1
-004b8d22	Unwind@004b8d22	11	0	1
-004b8d2d	Unwind@004b8d2d	11	0	1
-004b8d38	Unwind@004b8d38	11	0	1
-004b8d43	Unwind@004b8d43	11	0	1
-004b8d4e	Unwind@004b8d4e	11	0	1
-004b8d59	Unwind@004b8d59	11	0	1
-004b8d64	Unwind@004b8d64	11	0	1
-004b8d6f	Unwind@004b8d6f	11	0	1
-004b8d7a	Unwind@004b8d7a	11	0	1
-004b8d85	Unwind@004b8d85	11	0	1
-004b8d90	Unwind@004b8d90	11	0	1
-004b8d9b	Unwind@004b8d9b	11	0	1
-004b8da6	Unwind@004b8da6	11	0	1
-004b8db1	Unwind@004b8db1	11	0	1
-004b8dbc	Unwind@004b8dbc	11	0	1
-004b8dc7	Unwind@004b8dc7	11	0	1
-004b8dd2	Unwind@004b8dd2	11	0	1
-004b8ddd	Unwind@004b8ddd	11	0	1
-004b8de8	Unwind@004b8de8	11	0	1
-004b8df3	Unwind@004b8df3	11	0	1
-004b8dfe	Unwind@004b8dfe	11	0	1
-004b8e09	Unwind@004b8e09	11	0	1
-004b8e14	Unwind@004b8e14	11	0	1
-004b8e1f	Unwind@004b8e1f	11	0	1
-004b8e2a	Unwind@004b8e2a	11	0	1
-004b8e35	Unwind@004b8e35	11	0	1
-004b8e50	Unwind@004b8e50	11	0	1
-004b8e5b	Unwind@004b8e5b	11	0	1
-004b8e66	Unwind@004b8e66	11	0	1
-004b8e71	Unwind@004b8e71	11	0	1
-004b8e7c	Unwind@004b8e7c	11	0	1
-004b8e87	Unwind@004b8e87	11	0	1
-004b8e92	Unwind@004b8e92	11	0	1
-004b8e9d	Unwind@004b8e9d	11	0	1
-004b8ea8	Unwind@004b8ea8	11	0	1
-004b8eb3	Unwind@004b8eb3	11	0	1
-004b8ebe	Unwind@004b8ebe	11	0	1
-004b8ec9	Unwind@004b8ec9	11	0	1
-004b8ed4	Unwind@004b8ed4	11	0	1
-004b8edf	Unwind@004b8edf	11	0	1
-004b8eea	Unwind@004b8eea	11	0	1
-004b8ef5	Unwind@004b8ef5	11	0	1
-004b8f00	Unwind@004b8f00	11	0	1
-004b8f0b	Unwind@004b8f0b	11	0	1
-004b8f16	Unwind@004b8f16	11	0	1
-004b8f21	Unwind@004b8f21	11	0	1
-004b8f2c	Unwind@004b8f2c	11	0	1
-004b8f37	Unwind@004b8f37	11	0	1
-004b8f42	Unwind@004b8f42	11	0	1
-004b8f4d	Unwind@004b8f4d	11	0	1
-004b8f58	Unwind@004b8f58	11	0	1
-004b8f63	Unwind@004b8f63	11	0	1
-004b8f6e	Unwind@004b8f6e	11	0	1
-004b8f79	Unwind@004b8f79	11	0	1
-004b8f84	Unwind@004b8f84	11	0	1
-004b8f8f	Unwind@004b8f8f	11	0	1
-004b8f9a	Unwind@004b8f9a	11	0	1
-004b8fa5	Unwind@004b8fa5	11	0	1
-004b8fb0	Unwind@004b8fb0	11	0	1
-004b8fbb	Unwind@004b8fbb	11	0	1
-004b8fc6	Unwind@004b8fc6	11	0	1
-004b8fd1	Unwind@004b8fd1	11	0	1
-004b8fdc	Unwind@004b8fdc	11	0	1
-004b8fe7	Unwind@004b8fe7	11	0	1
-004b8ff2	Unwind@004b8ff2	11	0	1
-004b8ffd	Unwind@004b8ffd	11	0	1
-004b9008	Unwind@004b9008	11	0	1
-004b9013	Unwind@004b9013	11	0	1
-004b901e	Unwind@004b901e	11	0	1
-004b9029	Unwind@004b9029	11	0	1
-004b9034	Unwind@004b9034	11	0	1
-004b903f	Unwind@004b903f	11	0	1
-004b904a	Unwind@004b904a	11	0	1
-004b9055	Unwind@004b9055	11	0	1
-004b9060	Unwind@004b9060	11	0	1
-004b906b	Unwind@004b906b	11	0	1
-004b9076	Unwind@004b9076	11	0	1
-004b9081	Unwind@004b9081	11	0	1
-004b908c	Unwind@004b908c	11	0	1
-004b9097	Unwind@004b9097	11	0	1
-004b90a2	Unwind@004b90a2	11	0	1
-004b90c0	Unwind@004b90c0	20	0	1
-004b90d4	Unwind@004b90d4	26	0	1
-004b90ee	Unwind@004b90ee	17	0	1
-004b90ff	Unwind@004b90ff	26	0	1
-004b9119	Unwind@004b9119	20	0	1
-004b912d	Unwind@004b912d	26	0	1
-004b9147	Unwind@004b9147	17	0	1
-004b9158	Unwind@004b9158	28	0	1
-004b9180	Unwind@004b9180	8	0	1
-004b9188	Unwind@004b9188	14	0	1
-004b91a0	Unwind@004b91a0	8	0	1
-004b91a8	Unwind@004b91a8	14	0	1
-004b91c0	Unwind@004b91c0	11	0	1
-004b91e0	Unwind@004b91e0	11	0	1
-004b9200	Unwind@004b9200	26	0	1
-004b9230	Unwind@004b9230	11	0	1
-004b9250	Unwind@004b9250	26	0	1
-004b9280	Unwind@004b9280	11	0	1
-004b92a0	Unwind@004b92a0	29	0	1
-004b92bd	Unwind@004b92bd	29	0	1
-004b92da	Unwind@004b92da	11	0	1
-004b92e5	Unwind@004b92e5	11	0	1
-004b92f0	Unwind@004b92f0	14	0	1
-004b92fe	Unwind@004b92fe	14	0	1
-004b9320	Unwind@004b9320	11	0	1
-004b9340	Unwind@004b9340	29	0	1
-004b9370	Unwind@004b9370	11	0	1
-004b9390	Unwind@004b9390	29	0	1
-004b93ad	Unwind@004b93ad	29	0	1
-004b93ca	Unwind@004b93ca	11	0	1
-004b93d5	Unwind@004b93d5	11	0	1
-004b93f0	Unwind@004b93f0	14	0	1
-004b93fe	Unwind@004b93fe	11	0	1
+entry	name	size	callers	callees	ranges
+00401000	resetRecordBank	54	1	0	00401000-00401036
+00401040	placeRecord	356	1	0	00401040-004011a4
+004011b0	freeRecordAtPos	47	1	0	004011b0-004011df
+004011e0	spawnObject	237	1	1	004011e0-004012cd
+004012d0	drawRecords	1110	1	5	004012d0-00401726
+00401750	initRecords	117	2	2	00401750-004017c5
+004017d0	placeAnimal	1061	1	6	004017d0-00401bf5
+00401c00	tickAnimals	39	1	1	00401c00-00401c27
+00401c30	deletingDtor_401c30	59	0	1	00401c30-00401c6b
+00401c70	List401c70_dtor	147	8	1	00401c70-00401d03
+00401d10	S3List_add	1050	6	4	00401d10-0040212a
+00402130	listIterNext	47	1	0	00402130-0040215f
+00402160	listIterValue	17	2	0	00402160-00402171
+00402190	FUN_00402190	3	7	0	00402190-00402193
+004021a0	unwindCleanup_4021a0	15	4	0	004021a0-004021af
+004021b0	unwindFree_4021b0	38	11	1	004021b0-004021d6
+004021e0	C4021e0_dtor	147	1	1	004021e0-00402273
+00402280	S3List_add2	1050	1	4	00402280-0040269a
+004026a0	List402_clear	115	4	0	004026a0-00402713
+00402930	freeAtTile	57	1	0	00402930-00402969
+00402970	spawnWalker	194	2	1	00402970-00402a32
+00402a40	updateWalkers	3729	1	14	00402a40-004038d1
+004038f0	drawFlyingBall	1550	1	15	004038f0-00403efe
+00403f20	initGlobalArray_00403f20	31	0	1	00403f20-00403f3f
+00403f40	atexitRegister_00403f40	12	0	1	00403f40-00403f4c
+00403f80	initGlobalArray_00403f80	28	0	1	00403f80-00403f9c
+00403fa0	atexitRegister_00403fa0	12	0	1	00403fa0-00403fac
+00403fe0	initGlobalArray_00403fe0	28	0	1	00403fe0-00403ffc
+00404000	atexitRegister_00404000	12	0	1	00404000-0040400c
+00404040	initGlobalArray_00404040	28	0	1	00404040-0040405c
+00404060	atexitRegister_00404060	12	0	1	00404060-0040406c
+00404090	flicNextFrame	138	1	3	00404090-0040411a
+00404120	flicOpenStream	146	1	3	00404120-004041b2
+004041c0	resetPair	45	1	2	004041c0-004041ed
+004041f0	unwindFree_4041f0	11	108	1	004041f0-004041fb
+00404200	C404200_dtor	86	2	2	00404200-00404256
+00404260	deletingDtor_404260	30	0	2	00404260-0040427e
+00404280	R2C404280_dtor	107	0	3	00404280-004042eb
+00404320	staticInit_00404320	10	0	1	00404320-0040432a
+00404330	atexitRegister_00404330	12	0	1	00404330-0040433c
+00404350	Base4805a0::dtor	5	1	0	00404350-00404355
+00404360	staticInit_404360	28	1	1	00404360-0040437c
+00404380	deletingDtor_404380	30	0	2	00404380-0040439e
+004043b0	staticInit_004043b0	10	0	1	004043b0-004043ba
+004043c0	atexitRegister_004043c0	12	0	1	004043c0-004043cc
+004043f0	staticInit_004043f0	10	0	1	004043f0-004043fa
+00404400	atexitRegister_00404400	12	0	1	00404400-0040440c
+00404440	staticInit_00404440	10	0	1	00404440-0040444a
+00404450	atexitRegister_00404450	12	0	1	00404450-0040445c
+00404490	staticInit_00404490	10	0	1	00404490-0040449a
+004044a0	atexitRegister_004044a0	12	0	1	004044a0-004044ac
+004044e0	staticInit_004044e0	10	0	1	004044e0-004044ea
+004044f0	atexitRegister_004044f0	12	0	1	004044f0-004044fc
+00404530	staticInit_00404530	10	0	1	00404530-0040453a
+00404540	atexitRegister_00404540	12	0	1	00404540-0040454c
+00404580	staticInit_00404580	10	0	1	00404580-0040458a
+00404590	atexitRegister_00404590	12	0	1	00404590-0040459c
+004045d0	staticInit_004045d0	10	0	1	004045d0-004045da
+004045e0	atexitRegister_004045e0	12	0	1	004045e0-004045ec
+00404620	staticInit_00404620	10	0	1	00404620-0040462a
+00404630	atexitRegister_00404630	12	0	1	00404630-0040463c
+00404670	staticInit_00404670	10	0	1	00404670-0040467a
+00404680	atexitRegister_00404680	12	0	1	00404680-0040468c
+004046c0	staticInit_004046c0	10	0	1	004046c0-004046ca
+004046d0	atexitRegister_004046d0	12	0	1	004046d0-004046dc
+00404700	staticInit_00404700	10	0	1	00404700-0040470a
+00404710	atexitRegister_00404710	12	0	1	00404710-0040471c
+00404750	staticInit_00404750	10	0	1	00404750-0040475a
+00404760	atexitRegister_00404760	12	0	1	00404760-0040476c
+004047a0	staticInit_004047a0	10	0	1	004047a0-004047aa
+004047b0	atexitRegister_004047b0	12	0	1	004047b0-004047bc
+004047f0	staticInit_004047f0	10	0	1	004047f0-004047fa
+00404800	atexitRegister_00404800	12	0	1	00404800-0040480c
+00404840	staticInit_00404840	10	0	1	00404840-0040484a
+00404850	atexitRegister_00404850	12	0	1	00404850-0040485c
+00404970	scaleX	37	5	0	00404970-00404995
+004049a0	drawLineOnSurface	40	1	1	004049a0-004049c8
+004049d0	drawText4049d0	68	22	2	004049d0-00404a14
+00404a20	drawTextScaled	175	1	4	00404a20-00404acf
+00404ad0	drawTextSurface	154	7	3	00404ad0-00404b6a
+00404b70	drawCenteredText	69	27	2	00404b70-00404bb5
+00404bc0	drawCenteredText2	69	18	2	00404bc0-00404c05
+00404c20	initGlobalArray_00404c20	200	0	2	00404c20-00404ce8
+00404cf0	atexitRegister_00404cf0	12	0	1	00404cf0-00404cfc
+00404e00	initGlobalArray_00404e00	136	0	2	00404e00-00404e88
+00404e90	atexitRegister_00404e90	12	0	1	00404e90-00404e9c
+00404f50	initGlobalArray_00404f50	172	0	1	00404f50-00404ffc
+00405000	atexitRegister_00405000	12	0	1	00405000-0040500c
+004050b0	initGlobalArray_004050b0	148	0	1	004050b0-00405144
+00405150	atexitRegister_00405150	12	0	1	00405150-0040515c
+004051f0	initGlobalArray_004051f0	217	0	1	004051f0-004052c9
+004052d0	atexitRegister_004052d0	12	0	1	004052d0-004052dc
+004053a0	initGlobalArray_004053a0	145	0	1	004053a0-00405431
+00405440	atexitRegister_00405440	12	0	1	00405440-0040544c
+004054e0	initGlobalArray_004054e0	145	0	1	004054e0-00405571
+00405580	atexitRegister_00405580	12	0	1	00405580-0040558c
+00405620	initGlobalArray_00405620	145	0	1	00405620-004056b1
+004056c0	atexitRegister_004056c0	12	0	1	004056c0-004056cc
+00405760	initGlobalArray_00405760	193	0	1	00405760-00405821
+00405830	atexitRegister_00405830	12	0	1	00405830-0040583c
+004058f0	staticInit_004058f0	10	0	1	004058f0-004058fa
+00405900	atexitRegister_00405900	12	0	1	00405900-0040590c
+00405920	wobble	78	1	2	00405920-0040596e
+00405970	addHabitatSlot	134	1	1	00405970-004059f6
+00405a00	playHabitatSound	182	2	1	00405a00-00405ab6
+00405ac0	sanitizeFileName	69	4	1	00405ac0-00405b05
+00405b10	saveGameDialog	786	1	12	00405b10-00405e22
+00405e30	placeHabitat	616	2	6	00405e30-00406098
+004060a0	computeRatingTrend	253	1	0	004060a0-0040619d
+004061b0	staticInit_004061b0	10	0	1	004061b0-004061ba
+004061c0	atexitRegister_004061c0	12	0	1	004061c0-004061cc
+004061f0	staticInit_004061f0	10	0	1	004061f0-004061fa
+00406200	atexitRegister_00406200	12	0	1	00406200-0040620c
+00406220	drawMinimapSegment	44	1	1	00406220-0040624c
+00406250	showLoadingScreen	777	2	12	00406250-00406559
+004065c0	showCharacterIntro	176	1	2	004065c0-00406670
+00406670	membershipReport	1467	1	6	00406670-00406c2b
+00406c30	canAfford	275	3	4	00406c30-00406d43
+00406d50	buildStatusText	457	1	2	00406d50-00406f19
+00407000	holeQuadrants	151	6	1	00407000-00407097
+004070b0	inRange	448	2	1	004070b0-00407270
+00407280	appendHoleName	192	6	2	00407280-00407340
+00407340	nearestHole	189	1	1	00407340-004073fd
+00407400	canStep	152	2	1	00407400-00407498
+004074a0	landmarkName	521	7	0	004074a0-004076a9
+00407700	decorationName	996	3	1	00407700-00407ae4
+00407b60	sceneryLabel	255	1	1	00407b60-00407c5f
+00407c60	drawCircle	194	3	5	00407c60-00407d22
+00407e00	narrateShot	6107	1	26	00407e00-004095db
+00409620	scanShotArea	803	1	7	00409620-00409943
+00409950	updatePairSnapshot	148	3	0	00409950-004099e4
+004099f0	addGolferPair	151	1	1	004099f0-00409a87
+00409a90	scanNearbyGolfers	345	1	4	00409a90-00409be9
+00409bf0	updateRollingStats	187	1	2	00409bf0-00409cab
+00409cb0	pushTripleEntry	52	1	0	00409cb0-00409ce4
+00409cf0	editTerrainHeight	1087	1	8	00409cf0-0040a12f
+0040a130	setGrids	38	1	0	0040a130-0040a156
+0040a160	buildToolLabel	887	1	2	0040a160-0040a4d7
+0040a4e0	demolishObject	1213	1	9	0040a4e0-0040a99d
+0040a9a0	appendClubName	161	3	0	0040a9a0-0040aa41
+0040aa80	hireEmployee	586	2	9	0040aa80-0040acca
+0040acd0	distance	129	16	1	0040acd0-0040ad51
+0040ad60	loadTopScores	514	1	5	0040ad60-0040af62
+0040af70	saveFieldIo	44	2	2	0040af70-0040af9c
+0040afa0	serializeCourse	1267	2	1	0040afa0-0040b493
+0040b4a0	saveGame	477	5	7	0040b4a0-0040b67d
+0040b840	loadCourse	358	1	10	0040b840-0040b9a6
+0040b9b0	loadGame	576	2	12	0040b9b0-0040bbf0
+0040bbf0	deserializeCourse	778	1	1	0040bbf0-0040befa
+0040bf00	setLinePoint	20	5	0	0040bf00-0040bf14
+0040bf20	lineTo	63	5	1	0040bf20-0040bf5f
+0040bf60	tileBlocked	51	29	0	0040bf60-0040bf93
+0040bfa0	typeAtPos	55	8	1	0040bfa0-0040bfd7
+0040bfe0	cornerHeights	359	8	2	0040bfe0-0040c147
+0040c170	heightBlend	374	6	3	0040c170-0040c2e6
+0040c2f0	slopeY	171	1	1	0040c2f0-0040c39b
+0040c3a0	slopeX	173	1	1	0040c3a0-0040c44d
+0040c450	slopeMix	94	2	3	0040c450-0040c4ae
+0040c4b0	tileDistance	66	7	1	0040c4b0-0040c4f2
+0040c500	playSoundAt	487	10	4	0040c500-0040c6e7
+0040c6f0	logTick	46	8	0	0040c6f0-0040c71e
+0040c720	queueMessage	122	2	0	0040c720-0040c79a
+0040c7a0	drawLabels	185	1	3	0040c7a0-0040c859
+0040c860	clearMatching	45	1	0	0040c860-0040c88d
+0040c890	pointsPopup	118	7	0	0040c890-0040c906
+0040c910	drawMoneyLabels	251	1	4	0040c910-0040ca0b
+0040ca10	blitPanel	226	4	1	0040ca10-0040caf2
+0040cb00	startMessage	247	18	1	0040cb00-0040cbf7
+0040cc00	drawPanelS2	455	4	2	0040cc00-0040cdc7
+0040cdd0	drawWindowFrame	288	1	2	0040cdd0-0040cef0
+0040cef0	drawFrameR3	448	6	2	0040cef0-0040d0b0
+0040d0b0	drawFrameS2	618	3	2	0040d0b0-0040d31a
+0040d320	drawWindow	881	11	10	0040d320-0040d691
+0040d6a0	tickMessage	183	1	1	0040d6a0-0040d757
+0040d7b0	appendDate	214	7	1	0040d7b0-0040d886
+0040daa0	appendCourseTitle	237	13	2	0040daa0-0040db8d
+0040db90	evalPlacementArea	536	3	2	0040db90-0040dda8
+0040ddb0	nearestPlaced	183	1	1	0040ddb0-0040de67
+0040de70	findNearestTargetTile	266	1	2	0040de70-0040df7a
+0040df80	objectAt	119	7	0	0040df80-0040dff7
+0040e000	stampCourseTiles	1011	4	2	0040e000-0040e3f3
+0040e400	clearObjectFootprint	424	3	4	0040e400-0040e5a8
+0040e5b0	rankValue	60	1	0	0040e5b0-0040e5ec
+0040e5f0	appendUpgradeText	293	1	0	0040e5f0-0040e715
+0040e720	announceBuilding	2614	1	8	0040e720-0040f156
+0040f190	customizeCharacter	1068	1	7	0040f190-0040f5bc
+0040f5c0	mainLoop	59614	1	198	0040f5c0-00410896;0041094f-004115dc;00411604-00411ca1;00411cf0-004124c9;004125f2-00412909;00412998-00412a78;004130bd-004135b1;004135ff-00414216;0041423e-0041438f;0041439c-0041442c;0041444a-00414710;00414731-00416ecb;00417068-00418329;004185bb-00418fac;0041901c-0041a100;0041a594-0041b6e2;0041b740-0041ba11;0041ba48-0041c5b9;0041de11-0041de30;0041e070-0041e1bf;0041e22b-0041e70b;0041eaa5-0041f4f4;0041f91c-0042068b;00420760-00421351;00421376-00421615
+00421b60	drawScaledSprite421b60	39	1	1	00421b60-00421b87
+00421b90	drawScaledSprite421b90	44	1	1	00421b90-00421bbc
+00421bc0	updateMembership	982	4	2	00421bc0-00421f96
+00421fa0	scanTileLine	1056	1	6	00421fa0-004223c0
+004223c0	decaySum	44	1	0	004223c0-004223ec
+004223f0	decaySum2	64	1	0	004223f0-00422430
+00422430	shotPower	247	1	2	00422430-00422527
+00422530	rateTile	360	5	2	00422530-00422698
+004226a0	trialShot	2320	1	11	004226a0-00422fb0
+00422fb0	simulateBallFlight	4455	1	19	00422fb0-00424117
+00424120	simulateShot	9490	3	21	00424120-00426632
+00426670	resetGolfer	62	2	0	00426670-004266ae
+004266b0	patronEvent	3264	2	11	004266b0-00427370
+00427380	matchUpdate	5723	1	17	00427380-004289db
+004289e0	updateGolfers	20851	1	45	004289e0-0042db53
+0042dba0	sampleHeight	88	4	2	0042dba0-0042dbf8
+0042dc00	appendNumber	324	18	2	0042dc00-0042dd44
+0042dd50	appendCents	335	9	1	0042dd50-0042de9f
+0042dea0	holeMagazineEvent	2303	1	8	0042dea0-0042e79f
+0042e7a0	directionOf	60	1	0	0042e7a0-0042e7dc
+0042e7e0	pathStep	1665	2	12	0042e7e0-0042ee61
+0042ee80	clearCost	183	1	1	0042ee80-0042ef37
+0042ef40	rateLot	465	3	2	0042ef40-0042f111
+0042f120	floodMark	147	2	1	0042f120-0042f1b3
+0042f1c0	propagateType11	248	2	2	0042f1c0-0042f2b8
+0042f2c0	markTileKind11	118	5	1	0042f2c0-0042f336
+0042f340	rebuildTileCoverage	362	4	2	0042f340-0042f4aa
+0042f4b0	cornerRange	128	5	1	0042f4b0-0042f530
+0042f530	relaxEdges42f530	251	1	3	0042f530-0042f62b
+0042f630	relaxTile42f630	172	1	1	0042f630-0042f6dc
+0042f6e0	raiseFromNeighbours	181	1	1	0042f6e0-0042f795
+0042f7a0	rebuildHeightfield	416	8	5	0042f7a0-0042f940
+0042f940	tileToScreen	232	6	1	0042f940-0042fa28
+0042fa30	heightAt42fa30	342	2	2	0042fa30-0042fb86
+0042fb90	worldToScreen	1157	15	2	0042fb90-00430015
+00430020	screenToTile	817	2	3	00430020-00430351
+00430360	drawWorldObjects	4676	1	16	00430360-004315a4
+004315e0	buildGolferBioText	1480	2	3	004315e0-00431ba8
+00431d20	saveCourseJpg	440	2	5	00431d20-00431ed8
+00431ee0	saveThumbAndFull	184	1	2	00431ee0-00431f98
+00431fa0	writeCourseInfo	450	1	6	00431fa0-00432162
+00432170	flushCourseInfo	40	1	2	00432170-00432198
+004321d0	capsLockOff	45	1	2	004321d0-004321fd
+00432200	drawAmenityRow	864	1	5	00432200-00432560
+00432560	showPreferencesMenu	177	1	1	00432560-00432611
+00432620	drawPanelBackdrop	120	10	3	00432620-00432698
+004326a0	nearestMenuSpot	113	2	1	004326a0-00432711
+00432720	showSystemMenu	1026	1	12	00432720-00432b22
+00432ba0	showMainRadialMenu	930	1	4	00432ba0-00432f42
+00432f90	hitTestSlot432f90	167	2	1	00432f90-00433037
+00433040	clickSlotPanel	332	1	6	00433040-0043318c
+00433190	showInfoCursorPanel	2692	1	16	00433190-00433c14
+00433c60	hitBuildTool433c60	193	2	1	00433c60-00433d21
+00433d30	clickBuildTool433d30	277	1	4	00433d30-00433e45
+00433e50	drawTerrainToolbar	549	1	5	00433e50-00434075
+004340a0	hitBuildingTool	151	2	1	004340a0-00434137
+00434140	pickBuilding	526	1	8	00434140-0043434e
+00434350	drawBuildingPanel	1537	1	11	00434350-00434951
+00434980	pickAmenity434980	315	2	1	00434980-00434abb
+00434ac0	clickAmenityPanel	508	1	5	00434ac0-00434cbc
+00434cf0	drawAmenitiesPanel	2108	1	10	00434cf0-0043552c
+00435570	hitEmployeeSlot435570	264	2	2	00435570-00435678
+00435680	clickEmployeeView	210	1	2	00435680-00435752
+00435760	drawEmployeeViewPanel	1951	1	13	00435760-00435eff
+00435f00	hitGolferPanel435f00	348	2	1	00435f00-0043605c
+00436060	clickGolferPanel	598	1	4	00436060-004362b6
+004362f0	drawGolferActionPanel	2014	1	10	004362f0-00436ace
+00436b00	hitEmployee436b00	250	2	1	00436b00-00436bfa
+00436c00	handleEmployeeAction	554	2	4	00436c00-00436e2a
+00436e50	drawEmployeeDetailPanel	2551	2	15	00436e50-00437847
+004378a0	fileExists	39	5	1	004378a0-004378c7
+004378e0	staticCtor_4378e0	10	0	1	004378e0-004378ea
+004378f0	registerExit_4378f0	12	0	1	004378f0-004378fc
+00437910	promptAndSaveFile	1679	3	15	00437910-00437f9f
+00437fa0	loadThemeFile	702	7	5	00437fa0-0043825e
+00438260	nearestCharControl	142	1	1	00438260-004382ee
+004382f0	charEditorZone	148	1	1	004382f0-00438384
+00438390	pickCharEditor	502	1	7	00438390-00438586
+004385a0	staticCtor_4385a0	10	0	1	004385a0-004385aa
+004385b0	registerExit_4385b0	12	0	1	004385b0-004385bc
+004385d0	showCharacterEditor	7528	2	51	004385d0-0043a338
+0043a400	selectDifficultyScreen	1215	1	17	0043a400-0043a8bf
+0043a8c0	pickAProScreen	3374	1	30	0043a8c0-0043b5ee
+0043b610	loadGameBrowserScreen	5408	3	36	0043b610-0043cb30
+0043cb50	editBoxTimer_dtor	105	1	3	0043cb50-0043cbb9
+0043cbd0	editBoxTimer_deleteDtor	30	0	2	0043cbd0-0043cbee
+0043cc10	arrayStaticInit_43cc10	28	0	1	0043cc10-0043cc2c
+0043cc30	registerExit_43cc30	12	0	1	0043cc30-0043cc3c
+0043cc70	staticCtor_43cc70	10	0	1	0043cc70-0043cc7a
+0043cc80	registerExit_43cc80	12	0	1	0043cc80-0043cc8c
+0043ccb0	staticCtor_43ccb0	10	0	1	0043ccb0-0043ccba
+0043ccc0	registerExit_43ccc0	12	0	1	0043ccc0-0043cccc
+0043cce0	playAudioFile	144	2	8	0043cce0-0043cd70
+0043cd70	showTitleScreen	1291	1	6	0043cd70-0043d27b
+0043d2a0	listMatchingFiles	418	7	4	0043d2a0-0043d442
+0043d460	arrayStaticInit_43d460	37	0	2	0043d460-0043d485
+0043d490	registerExit_43d490	12	0	1	0043d490-0043d49c
+0043d4e0	staticCtor_43d4e0	10	0	1	0043d4e0-0043d4ea
+0043d4f0	registerExit_43d4f0	12	0	1	0043d4f0-0043d4fc
+0043d520	freeBlock	171	1	0	0043d520-0043d5cb
+0043d5d0	allocBlock	95	1	0	0043d5d0-0043d62f
+0043d640	staticCtor_43d640	10	0	1	0043d640-0043d64a
+0043d650	registerExit_43d650	12	0	1	0043d650-0043d65c
+0043d670	freeTable	118	1	2	0043d670-0043d6e6
+0043d6f0	cellAt	66	13	0	0043d6f0-0043d732
+0043d740	loadFlic	1182	2	13	0043d740-0043dbde
+0043dbe0	loadWorldAssets	17732	3	7	0043dbe0-00442124
+00442180	loadInterfaceArt	24059	2	11	00442180-004456c6;0044575d-0044579c;00445833-00445a51;00445aa0-004480f8
+00448160	arrayStaticInit_448160	28	0	1	00448160-0044817c
+00448180	registerExit_448180	12	0	1	00448180-0044818c
+004481b0	playSound	80	29	5	004481b0-00448200
+00448200	startSoundSlot	28	3	1	00448200-0044821c
+00448220	loadSoundTable	3724	1	1	00448220-004490ac
+004490b0	shutdownSoundSystem	31	1	2	004490b0-004490cf
+004490d0	Terrain::tileAt	61	0	0	004490d0-0044910d
+00449110	Terrain::getElevation	23	0	0	00449110-00449127
+00449130	Terrain::getWall	18	0	0	00449130-00449142
+00449150	Terrain::getType	10	0	0	00449150-0044915a
+004491c0	staticCtor_4491c0	10	0	1	004491c0-004491ca
+004491d0	registerExit_4491d0	12	0	1	004491d0-004491dc
+00449210	allocTileBuffer	41	0	1	00449210-00449239
+00449240	registerExit_449240	12	0	1	00449240-0044924c
+004492d0	tileType	23	3	0	004492d0-004492e7
+004492f0	tileByte	26	3	0	004492f0-0044930a
+00449310	tileQuery449310	26	2	1	00449310-0044932a
+00449330	wallHeight	128	2	0	00449330-004493b0
+004493b0	tileFlag20	28	2	0	004493b0-004493cc
+004493d0	drawMapLine	47	7	1	004493d0-004493ff
+00449400	applyCourseType	107	2	2	00449400-0044946b
+00449470	syncTiles	172	1	5	00449470-0044951c
+00449520	refreshTerrain	24	2	2	00449520-00449538
+00449540	rebuildTerrainGrid	588	2	11	00449540-0044978c
+00449790	initTerrain	208	1	5	00449790-00449860
+00449860	freeTerrain	50	1	3	00449860-00449892
+004498a0	updateTerrainRender	1455	1	11	004498a0-00449e4f
+00449f00	applyTileVariation	158	1	4	00449f00-00449f9e
+00449fa0	applyTileElevation	934	1	5	00449fa0-0044a346
+0044a380	applyTileWalls	132	1	2	0044a380-0044a404
+0044a410	togglePath	402	1	5	0044a410-0044a5a2
+0044a5b0	rebuildTileData	300	1	6	0044a5b0-0044a6dc
+0044a6e0	renderTerrainStrip	1212	1	2	0044a6e0-0044ab9c
+0044ac00	listEraseRange	68	1	1	0044ac00-0044ac44
+0044ac60	initPanelState	50	0	1	0044ac60-0044ac92
+0044aca0	registerExit_44aca0	12	0	1	0044aca0-0044acac
+0044ad20	arrayStaticInit_44ad20	25	0	1	0044ad20-0044ad39
+0044ad40	registerExit_44ad40	12	0	1	0044ad40-0044ad4c
+0044ad80	staticCtor_44ad80	10	0	1	0044ad80-0044ad8a
+0044ad90	registerExit_44ad90	12	0	1	0044ad90-0044ad9c
+0044add0	staticCtor_44add0	10	0	1	0044add0-0044adda
+0044ade0	registerExit_44ade0	12	0	1	0044ade0-0044adec
+0044ae00	gSurfaceDtor_44ae00	88	0	1	0044ae00-0044ae58
+0044ae60	gSurfaceCtor_44ae60	68	4	1	0044ae60-0044aea4
+0044aec0	staticCtor_44aec0	10	0	1	0044aec0-0044aeca
+0044aed0	registerExit_44aed0	12	0	1	0044aed0-0044aedc
+0044af00	staticCtor_44af00	10	0	1	0044af00-0044af0a
+0044af10	registerExit_44af10	12	0	1	0044af10-0044af1c
+0044af40	staticCtor_44af40	10	0	1	0044af40-0044af4a
+0044af50	registerExit_44af50	12	0	1	0044af50-0044af5c
+0044af80	staticCtor_44af80	10	0	1	0044af80-0044af8a
+0044af90	registerExit_44af90	12	0	1	0044af90-0044af9c
+0044afb0	gSurfaceDtor_44afb0	173	0	1	0044afb0-0044b05d
+0044b060	gSurfaceCtor_44b060	129	3	1	0044b060-0044b0e1
+0044b100	staticCtor_44b100	10	0	1	0044b100-0044b10a
+0044b110	registerExit_44b110	12	0	1	0044b110-0044b11c
+0044b140	staticCtor_44b140	10	0	1	0044b140-0044b14a
+0044b150	registerExit_44b150	12	0	1	0044b150-0044b15c
+0044b180	staticCtor_44b180	10	0	1	0044b180-0044b18a
+0044b190	registerExit_44b190	12	0	1	0044b190-0044b19c
+0044b1b0	gSurfaceDtor_44b1b0	269	0	2	0044b1b0-0044b2bd
+0044b2c0	gSurfaceCtor_44b2c0	223	1	2	0044b2c0-0044b39f
+0044b3b0	staticCtor_44b3b0	10	0	1	0044b3b0-0044b3ba
+0044b3c0	registerExit_44b3c0	12	0	1	0044b3c0-0044b3cc
+0044b3e0	gSurfaceDtor_44b3e0	111	0	2	0044b3e0-0044b44f
+0044b450	gSurfaceCtor_44b450	96	1	2	0044b450-0044b4b0
+0044b4c0	staticCtor_44b4c0	10	0	1	0044b4c0-0044b4ca
+0044b4d0	registerExit_44b4d0	12	0	1	0044b4d0-0044b4dc
+0044b4f0	gSurfaceDtor_44b4f0	166	0	2	0044b4f0-0044b596
+0044b5a0	gSurfaceCtor_44b5a0	161	1	2	0044b5a0-0044b641
+0044b660	staticCtor_44b660	10	0	1	0044b660-0044b66a
+0044b670	registerExit_44b670	12	0	1	0044b670-0044b67c
+0044b690	gSurfaceDtor_44b690	92	0	2	0044b690-0044b6ec
+0044b6f0	gSurfaceCtor_44b6f0	83	1	2	0044b6f0-0044b743
+0044b760	staticCtor_44b760	10	0	1	0044b760-0044b76a
+0044b770	registerExit_44b770	12	0	1	0044b770-0044b77c
+0044b790	gSurfaceDtor_44b790	305	0	1	0044b790-0044b8c1
+0044b8d0	gSurfaceCtor_44b8d0	225	1	1	0044b8d0-0044b9b1
+0044b9c0	showCreditsScreen	1044	1	24	0044b9c0-0044bdd4
+0044bde0	loadInfoScreenArt	3833	1	7	0044bde0-0044ccd9
+0044cce0	resetAllPanels	783	1	2	0044cce0-0044cfef
+0044cff0	showEndOfYearScreen	5695	1	31	0044cff0-0044e62f
+0044e770	showShortcutsScreen	3898	1	21	0044e770-0044f6aa
+0044f6b0	showFinancialReport	1075	1	17	0044f6b0-0044fae3
+0044faf0	bucketValue	50	6	0	0044faf0-0044fb22
+0044fb30	showCourseReport	14054	1	21	0044fb30-00453216
+00453260	golferScore	58	3	0	00453260-0045329a
+004532a0	appendRatingLabel	115	1	0	004532a0-00453313
+00453330	showHoleStatsScreen	4961	1	19	00453330-00454691
+004546b0	showPlayerCommentsReport	1433	1	15	004546b0-00454c49
+00454c50	showMembershipRoster	3520	1	17	00454c50-00455a10
+00455a30	showBestScoresScreen	1182	1	15	00455a30-00455ece
+00455ed0	showHistographScreen	2911	1	22	00455ed0-00456a2f
+00456b70	mapToScreen456b70	59	2	0	00456b70-00456bab
+00456bb0	overlayCharAt	45	1	0	00456bb0-00456bdd
+00456be0	showRoutingMapScreen	6713	1	34	00456be0-00456f93;00456fcb-00457c6f;00457d34-00457dd0;00457df1-00458737
+004587a0	showBuyLandScreen	3158	1	27	004587a0-004593f6
+00459400	showHireEmployeeDialog	1087	1	16	00459400-0045983f
+00459850	showGolferPairSelect	2112	1	20	00459850-0045a090
+0045a090	showTournamentResults	3467	1	24	0045a090-0045ae1b
+0045ae30	setDirtyFlagA	21	5	0	0045ae30-0045ae45
+0045ae50	setDirtyFlagB	21	5	0	0045ae50-0045ae65
+0045ae70	flushRedraw	88	25	2	0045ae70-0045aec8
+0045aed0	waitRedrawReady	46	1	2	0045aed0-0045aefe
+0045af00	drainAndRedraw	37	2	2	0045af00-0045af25
+0045af30	renderTextWidget45af30	412	1	1	0045af30-0045b0cc
+0045b0d0	drawValueWidget	487	4	4	0045b0d0-0045b2b7
+0045b2c0	textInputBox	925	6	13	0045b2c0-0045b65d
+0045b660	lookupThemeText	343	1	4	0045b660-0045b7b7
+0045b7c0	replaceInText	189	2	1	0045b7c0-0045b87d
+0045b880	clearBuffers	34	2	0	0045b880-0045b8a2
+0045b8b0	appendToBuffer45b8b0	310	3	0	0045b8b0-0045b9e6
+0045b9f0	appendString	85	6	0	0045b9f0-0045ba45
+0045ba60	staticCtor_45ba60	10	0	1	0045ba60-0045ba6a
+0045ba70	registerExit_45ba70	12	0	1	0045ba70-0045ba7c
+0045bab0	staticCtor_45bab0	10	0	1	0045bab0-0045baba
+0045bac0	registerExit_45bac0	12	0	1	0045bac0-0045bacc
+0045baf0	gameMain	1166	1	38	0045baf0-0045bf7e
+0045bf80	waitTicks	127	29	5	0045bf80-0045bfff
+0045c000	Cursor_deleteDtor	36	0	2	0045c000-0045c024
+0045c030	pumpMessages	129	30	4	0045c030-0045c0b1
+0045c0c0	pumpAndRedraw	142	13	6	0045c0c0-0045c14e
+0045c150	pumpLight	39	12	3	0045c150-0045c177
+0045c1a0	Random::next	52	1	0	0045c1a0-0045c1d4
+0045c1e0	Random::range	32	43	2	0045c1e0-0045c200
+0045c200	drawThoughtBubble	532	3	6	0045c200-0045c414
+0045c420	thoughtBalance	53	1	0	0045c420-0045c455
+0045c460	substituteStoryNames	248	1	2	0045c460-0045c558
+0045c560	drawGolferInfoPanel	6292	1	26	0045c560-0045ddf4
+0045de30	swapTableEntry	70	1	0	0045de30-0045de76
+0045de80	announceVipGolfer	4426	2	10	0045de80-0045efca
+0045f0f0	skillPointDialog	1908	4	20	0045f0f0-0045f864
+0045f870	showCourseRanking	1246	1	7	0045f870-0045fd4e
+0045fd80	buildScenarioIntro	1883	1	3	0045fd80-004604db
+004604f0	showTutorialText	2173	1	2	004604f0-00460d6d
+00460df0	announceHoleType	759	1	2	00460df0-004610e7
+00461110	drawMatchScoreboard	1242	1	7	00461110-004615ea
+004615f0	spreadShade	252	1	3	004615f0-004616ec
+004616f0	spreadAllShade	237	1	1	004616f0-004617dd
+00461810	brightenComponent	21	1	0	00461810-00461825
+00461830	build16BitColorTable	2020	1	1	00461830-00462014
+00462020	formatGolferTitle	1963	4	1	00462020-004627cb
+004627d0	resetSpriteQueue	41	1	0	004627d0-004627f9
+00462800	snapshotTables	197	1	0	00462800-004628c5
+004628d0	addSprite	345	11	1	004628d0-00462a29
+00462a30	enqueueSprite	432	6	0	00462a30-00462be0
+00462be0	drawQueuedSprite	1302	2	12	00462be0-004630f6
+00463100	renderSpriteQueue	107	1	3	00463100-0046316b
+00463170	boundIndex	16	1	0	00463170-00463180
+00463180	buildSceneSprites	9100	1	15	00463180-0046550c
+00465560	resetScrollText	23	1	1	00465560-00465577
+004658b0	loadThemes	226	2	3	004658b0-00465992
+004659a0	loadGolferRoster	2509	1	8	004659a0-0046636d
+00466370	advanceStory	1376	2	9	00466370-004668d0
+004668f0	storyText	254	2	1	004668f0-004669ee
+004669f0	computeStoryReply	381	1	3	004669f0-00466b6d
+00466b70	loadStoryStrings	1426	5	3	00466b70-00467102
+00467110	seedFromTime	24	1	1	00467110-00467128
+00467130	clamp	29	44	0	00467130-0046714d
+00467150	sign	25	5	0	00467150-00467169
+00467170	approxDistance	42	19	0	00467170-0046719a
+004671a0	direction8	205	4	0	004671a0-0046726d
+00467270	foldRange	49	11	1	00467270-004672a1
+004672b0	absDiff	25	10	1	004672b0-004672c9
+004672d0	angleFixed	270	11	0	004672d0-004673de
+004673e0	genNoise	212	1	1	004673e0-004674b4
+004674c0	bilinearSample	146	1	0	004674c0-00467552
+00467560	appendEndearment	90	1	0	00467560-004675ba
+004675d0	thoughtFlag	34	6	0	004675d0-004675f2
+00467600	pickGolferName	212	5	0	00467600-004676d4
+004676e0	buildGolferName	457	18	0	004676e0-00467861;0046786a-004678b2
+00467a00	emitGolferThought	7763	11	14	00467a00-00469853
+00469a20	appendOpinion	180	4	0	00469a20-00469ad4
+00469b00	buildGolferComment	11309	7	10	00469b00-0046c72d
+0046c940	typeBit7Clear	44	15	0	0046c940-0046c96c
+0046c970	loadGolfPro	1729	1	3	0046c970-0046d031
+0046d040	initGolferState	128	1	1	0046d040-0046d0c0
+0046d0c0	resetGolferState	310	1	2	0046d0c0-0046d1f6
+0046d200	buildTournamentPrep	1246	1	5	0046d200-0046d6de
+0046d6e0	showPopup	1714	11	20	0046d6e0-0046dd92
+0046ddd0	startNewCourse	96	1	3	0046ddd0-0046de30
+0046de40	gImageCtor_838f98	10	0	1	0046de40-0046de4a
+0046de50	atexitThunk_46de50	12	0	1	0046de50-0046de5c
+0046de70	scrollTextWindow	45	5	1	0046de70-0046de9d
+0046dea0	runScrollText	909	1	11	0046dea0-0046e22d
+0046e260	drawScrollText	1200	1	9	0046e260-0046e710
+0046e710	drawRectScaled	150	1	2	0046e710-0046e7a6
+0046e7b0	postEvent	92	7	0	0046e7b0-0046e80c
+0046e810	showBulletinBoard	2409	1	24	0046e810-0046f179
+0046f1d0	tierPrice	160	1	0	0046f1d0-0046f270
+0046f2b0	seedCourseTable	669	2	1	0046f2b0-0046f54d
+0046f550	courseActionMenu	4996	0	37	0046f550-004702bb;004703a2-004709bb
+00470a00	courseActionMenu	5	1	0	00470a00-00470a05
+00470a10	clearTile	76	1	0	00470a10-00470a5c
+00470a60	applyTerrainEdit	6056	1	12	00470a60-00472208
+004722c0	announceLandmark	442	1	4	004722c0-0047247a
+004724c0	listThemes	235	1	2	004724c0-004725ab
+004725b0	showThemePackSelect	3355	1	23	004725b0-004732cb
+004732d0	addScore	409	2	1	004732d0-00473469
+00473470	drawScoreSummary	1509	2	13	00473470-00473a55
+00473a70	initGlobalImage	10	0	1	00473a70-00473a7a
+00473a80	atexitThunk_473a80	12	0	1	00473a80-00473a8c
+00473ab0	Surface_ctor	38	30	0	00473ab0-00473ad6
+00473ae0	Surface_init	100	31	3	00473ae0-00473b44
+00473b50	Surface_open	146	1	2	00473b50-00473be2
+00473bf0	Surface_blit	102	15	1	00473bf0-00473c56
+00473c60	Surface_blitTakeDirty	70	4	1	00473c60-00473ca6
+00473cb0	Surface_drawScaled	310	18	3	00473cb0-00473de6
+00473df0	Surface_drawRegion	109	1	0	00473df0-00473e5d
+00473e60	Image_draw	248	46	3	00473e60-00473f58
+00473f60	Surface_stretchBlit	95	32	0	00473f60-00473fbf
+00473fc0	Surface_blitMasked	111	0	0	00473fc0-0047402f
+00474030	Surface_drawScaled2	180	2	1	00474030-004740e4
+004740f0	Surface_blit2	189	4	0	004740f0-004741ad
+004741b0	Sprite_draw	169	2	0	004741b0-00474259
+00474260	Sprite_drawScaled	280	1	0	00474260-00474378
+00474380	Surface_draw	187	1	1	00474380-0047443b
+00474440	Surface_drawSprite	122	18	0	00474440-004744ba
+004744c0	Surface_copyFrom	140	1	1	004744c0-0047454c
+00474550	Surface_create	112	1	1	00474550-004745c0
+004745c0	Surface_init2	133	1	2	004745c0-00474645
+00474650	Surface_get	161	0	2	00474650-004746f1
+00474780	Buf_init	18	2	0	00474780-00474792
+004747a0	Buf_ctor	18	4	1	004747a0-004747b2
+004747c0	Buf_deleteDtor	30	0	2	004747c0-004747de
+004747e0	Buf_releaseData	35	5	2	004747e0-00474803
+00474810	Buf_dtor	11	43	1	00474810-0047481b
+00474820	Buf_alloc	62	3	2	00474820-0047485e
+00474860	heapAlloc	554	8	7	00474860-00474a8a
+00474a90	gSurfaceCtor_839a68	10	1	1	00474a90-00474a9a
+00474aa0	atexitThunk_474aa0	12	1	1	00474aa0-00474aac
+00474ae0	Image_ctor	306	36	1	00474ae0-00474c12
+00474c20	Image_deleteDtor	30	0	2	00474c20-00474c3e
+00474c40	Image_dtor	99	54	2	00474c40-00474ca3
+00474cb0	Image_releaseAll	286	9	3	00474cb0-00474dce
+00474dd0	Surface_createFull	147	17	4	00474dd0-00474e63
+00474e70	Surface_paint	111	3	1	00474e70-00474edf
+00474ee0	loadBmp	361	1	5	00474ee0-00475049
+00475050	reloadBmp	433	1	3	00475050-00475201
+00475210	loadBmpSurface	508	1	5	00475210-0047540c
+00475410	flipBmpRows	356	3	2	00475410-00475574
+00475580	saveBmp	693	2	6	00475580-00475835
+00475840	loadImage	701	22	10	00475840-00475afd
+00475b00	Widget_fillRectR	28	6	0	00475b00-00475b1c
+00475b20	Surface_box	57	1	1	00475b20-00475b59
+00475b60	DC_call84	58	2	0	00475b60-00475b9a
+00475ba0	DC_call90	63	0	0	00475ba0-00475bdf
+00475be0	DC_calla4	63	0	0	00475be0-00475c1f
+00475c20	DC_calla0	63	0	0	00475c20-00475c5f
+00475c60	Surface_blitThunk	47	20	1	00475c60-00475c8f
+00475c90	Surface_fillRegion	111	3	0	00475c90-00475cff
+00475d00	Surface_blit3	147	2	0	00475d00-00475d93
+00475da0	Surface_fill	70	2	0	00475da0-00475de6
+00475df0	drawRoutingPoly	27	1	1	00475df0-00475e0b
+00475e10	blitLeft	411	1	2	00475e10-00475fab
+00475fb0	blitMid	400	2	3	00475fb0-00476140
+00476140	blitRight	399	4	3	00476140-004762cf
+004762d0	setDrawTarget	52	61	0	004762d0-00476304
+00476310	Widget_setQuad	37	40	0	00476310-00476335
+00476340	Widget_setQuad70	40	17	0	00476340-00476368
+00476370	Widget_setQuad74	40	17	0	00476370-00476398
+004763a0	Widget_setQuad78	40	2	0	004763a0-004763c8
+004763d0	drawMenuList	628	0	7	004763d0-00476644
+00476650	Widget_draw	80	7	1	00476650-004766a0
+004766a0	Widget_draw2	85	1	1	004766a0-004766f5
+00476700	drawStringAt	80	10	1	00476700-00476750
+00476750	drawStringAt2	80	3	1	00476750-004767a0
+004767a0	allocTextBuffer	1439	1	3	004767a0-00476d3f
+00476d40	scanMarkupText	60	3	0	00476d40-00476d7c
+00476d80	skipToken	65	3	0	00476d80-00476dc1
+00476dd0	scanToken	70	3	0	00476dd0-00476e16
+00476e20	wrapText	200	3	2	00476e20-00476ee8
+00476ef0	measureMarkupRun	729	6	7	00476ef0-004771c9
+00477250	Text_put	44	19	1	00477250-0047727c
+00477280	drawMarkupRun	599	8	6	00477280-004774d7
+00477560	Widget_get	28	5	0	00477560-0047757c
+00477580	Widget_value	35	23	0	00477580-004775a3
+004775b0	drawRichText	1525	8	18	004775b0-00477ba5
+00477c30	drawText	153	11	1	00477c30-00477cc9
+00477cd0	drawCentered	206	5	2	00477cd0-00477d9e
+00477da0	drawCentered2	192	5	2	00477da0-00477e60
+00477e60	drawBox	67	1	1	00477e60-00477ea3
+00477eb0	drawCentered3	269	3	3	00477eb0-00477fbd
+00477fc0	drawStringLeft	177	1	2	00477fc0-00478071
+00478080	drawRight	179	1	2	00478080-00478133
+00478140	drawString	169	2	2	00478140-004781e9
+004781f0	drawRight2	221	3	3	004781f0-004782cd
+004782d0	measureText	344	2	3	004782d0-00478428
+00478430	measureText2	256	1	3	00478430-00478530
+00478530	measureText3	168	2	3	00478530-004785d8
+004785e0	TextView_beginMeasure	47	1	1	004785e0-0047860f
+00478610	measureText4	227	2	3	00478610-004786f3
+00478700	TextView_endSegment	67	1	1	00478700-00478743
+00478750	TextView_beginDrawRun	67	1	1	00478750-00478793
+004787a0	drawTextBlock	463	2	4	004787a0-0047896f
+00478970	Text_flush	125	1	2	00478970-004789ed
+004789f0	Widget_applyPalette	48	9	0	004789f0-00478a20
+00478a20	List_reset	67	1	1	00478a20-00478a63
+00478a70	Widget_reset	28	1	1	00478a70-00478a8c
+00478a90	addDropdownSpot	87	1	2	00478a90-00478ae7
+00478af0	Win_fillRect	62	5	1	00478af0-00478b2e
+00478b30	Widget_clearArea	22	4	0	00478b30-00478b46
+00478b50	Widget_fillArea	33	3	0	00478b50-00478b71
+00478b80	Widget_fillRect	42	10	0	00478b80-00478baa
+00478bb0	Widget_drawHLine	40	1	0	00478bb0-00478bd8
+00478be0	Widget_drawVLine	40	1	0	00478be0-00478c08
+00478c10	Widget_drawHLineDepth	96	1	2	00478c10-00478c70
+00478c70	Widget_drawVLineDepth	96	1	2	00478c70-00478cd0
+00478cd0	loadImageData	283	1	4	00478cd0-00478deb
+00478df0	drawLineH	168	2	1	00478df0-00478e98
+00478ea0	drawLineV	173	0	1	00478ea0-00478f4d
+00478f50	openImageAsset	608	1	6	00478f50-004791b0
+004791b0	drawComposite	937	0	4	004791b0-00479559
+00479560	Widget_drawBevelBox	105	2	2	00479560-004795c9
+004795d0	Widget_drawBevelBoxR	53	3	1	004795d0-00479605
+00479610	Widget_drawBox	96	1	2	00479610-00479670
+00479670	Widget_drawBoxR	48	1	1	00479670-004796a0
+004796a0	Surface_pixelPtr	333	5	0	004796a0-004797ed
+00479830	blendRed	144	2	1	00479830-004798c0
+004798c0	blendGreen	144	2	1	004798c0-00479950
+00479950	drawPixelRun	110	2	1	00479950-004799be
+004799f0	gImageCtor_83a500	10	0	1	004799f0-004799fa
+00479a00	atexitThunk_479a00	12	0	1	00479a00-00479a0c
+00479a40	gImageCtor_83a7b8	10	0	1	00479a40-00479a4a
+00479a50	atexitThunk_479a50	12	0	1	00479a50-00479a5c
+00479a80	Surface_clip	156	1	4	00479a80-00479b1c
+00479b20	releaseCursorClip	27	1	1	00479b20-00479b3b
+00479b40	ChildArray_grow	98	1	2	00479b40-00479ba2
+00479bb0	Vec_release	142	1	2	00479bb0-00479c3e
+00479c40	View_ctor	708	1	2	00479c40-00479f04
+00479f10	View_deleteDtor	30	0	2	00479f10-00479f2e
+00479f30	layoutNode	1156	4	9	00479f30-0047a3b4
+0047a3c0	View_dtor	254	4	4	0047a3c0-0047a4be
+0047a4c0	layoutViewTree	1589	1	15	0047a4c0-0047aaf5
+0047ab00	EditBox_setCursorChar	66	1	1	0047ab00-0047ab42
+0047ab50	View_toLocal	103	27	1	0047ab50-0047abb7
+0047abc0	isPrimaryMouseDown	27	1	2	0047abc0-0047abdb
+0047abe0	View_attach	440	1	2	0047abe0-0047ad98
+0047ada0	View_unlinkFromParent	213	1	1	0047ada0-0047ae75
+0047ae80	setFocusItem	219	0	0	0047ae80-0047af5b
+0047af60	Container::cycleSelection	277	0	1	0047af60-0047b075
+0047b080	Node::contains	78	3	1	0047b080-0047b0ce
+0047b0d0	View::offsetRectToParent	78	5	1	0047b0d0-0047b11e
+0047b120	View::offsetRectToLocal	78	3	1	0047b120-0047b16e
+0047b170	View::toParent	133	8	1	0047b170-0047b1f5
+0047b200	View::fromParent	133	6	1	0047b200-0047b285
+0047b290	View::toLocal	50	1	1	0047b290-0047b2c2
+0047b2d0	View::toGlobal	50	3	1	0047b2d0-0047b302
+0047b310	Window::center	261	1	2	0047b310-0047b415
+0047b420	Window::moveTo	179	5	1	0047b420-0047b4d3
+0047b4e0	Window::setSize	393	0	5	0047b4e0-0047b669
+0047b670	Window::show	420	3	6	0047b670-0047b814
+0047b820	Window::detach	203	0	4	0047b820-0047b8eb
+0047b8f0	Label::setText	161	2	3	0047b8f0-0047b991
+0047b9a0	FUN_0047b9a0	74	2	1	0047b9a0-0047b9ea
+0047b9f0	Window::fwdScroll26c	23	4	1	0047b9f0-0047ba07
+0047ba10	Window::fwdScroll270	23	3	1	0047ba10-0047ba27
+0047ba30	Window::fwdRange26c	28	2	1	0047ba30-0047ba4c
+0047ba50	Window::fwdRange270	28	2	1	0047ba50-0047ba6c
+0047ba70	Window::setField26c5a0	23	2	0	0047ba70-0047ba87
+0047ba90	Window::setField2705a0	23	2	0	0047ba90-0047baa7
+0047bc60	Window::resized	472	2	2	0047bc60-0047be38
+0047be40	Window::mouseEvent238	246	0	3	0047be40-0047bf36
+0047bf40	Window::mouseDispatch23c	206	0	1	0047bf40-0047c00e
+0047c010	Window::mouseDispatch240	206	1	1	0047c010-0047c0de
+0047c0e0	Window::mouseDispatch244	203	0	1	0047c0e0-0047c1ab
+0047c1b0	Window::click	219	0	1	0047c1b0-0047c28b
+0047c290	Window::mouseDispatch24c	203	0	1	0047c290-0047c35b
+0047c360	Window::mouseDispatch250	206	0	1	0047c360-0047c42e
+0047c430	Window::mouseDispatch254	206	1	1	0047c430-0047c4fe
+0047c500	Window::mouseDispatch258	206	0	1	0047c500-0047c5ce
+0047c5d0	Window::key	231	2	1	0047c5d0-0047c6b7
+0047c6c0	Window::dispatchAccel	674	1	3	0047c6c0-0047c962
+0047c970	Window::dispatchCommand	153	1	1	0047c970-0047ca09
+0047ca10	Window::adjustSizeOuter	244	2	0	0047ca10-0047cb04
+0047cb10	Window::innerSize	254	1	0	0047cb10-0047cc0e
+0047cc10	Window::growRect	205	1	0	0047cc10-0047ccdd
+0047cce0	Window::shrinkRect	207	2	0	0047cce0-0047cdaf
+0047cdb0	drawTooltip	530	7	9	0047cdb0-0047cfc2
+0047cfd0	resetViewState47cfd0	60	1	3	0047cfd0-0047d00c
+0047d010	screenTick47d010	16	1	0	0047d010-0047d020
+0047d020	Widget::setValue	63	2	0	0047d020-0047d05f
+0047d060	addDirtyRect	194	1	3	0047d060-0047d122
+0047d130	drawCursor	901	1	10	0047d130-0047d4b5
+0047d510	Window::releaseScrollbars	83	1	0	0047d510-0047d563
+0047d570	Window::layoutScrollbars	145	1	1	0047d570-0047d601
+0047d610	buildControlStrip47d610	427	0	4	0047d610-0047d7bb
+0047d7c0	View::ctorVtbl47d7c0	11	2	1	0047d7c0-0047d7cb
+0047d7d0	Window::isFocusChild	63	0	0	0047d7d0-0047d80f
+0047d810	View::scalarDtor47d810	36	0	2	0047d810-0047d834
+0047d840	setDragTarget	10	1	0	0047d840-0047d84a
+0047d850	drawPanelContents	2237	1	9	0047d850-0047e10d
+0047e120	Panel::notify	26	2	2	0047e120-0047e13a
+0047e140	relayoutClip	392	5	5	0047e140-0047e2c8
+0047e2d0	clipAllWindows	88	1	1	0047e2d0-0047e328
+0047e330	collectDrawList	286	2	2	0047e330-0047e44e
+0047e450	rebuildDrawList	101	4	2	0047e450-0047e4b5
+0047e4c0	zPush	85	1	0	0047e4c0-0047e515
+0047e520	listRemove	86	1	0	0047e520-0047e576
+0047e580	zRaise	96	1	1	0047e580-0047e5e0
+0047e5f0	ChildArray::insert	137	1	1	0047e5f0-0047e679
+0047e680	ChildArray::remove	121	1	1	0047e680-0047e6f9
+0047e700	ChildArray::bringToFront	98	1	1	0047e700-0047e762
+0047ed30	Window::hitTestBorder	311	0	0	0047ed30-0047ee67
+0047eee0	matchInputCode	65	0	0	0047eee0-0047ef21
+0047f1b0	Window::setFocus	126	0	3	0047f1b0-0047f22e
+0047f2f0	currentFocusOwner	77	0	1	0047f2f0-0047f33d
+0047f340	hitTestTree	952	2	4	0047f340-0047f6f8
+0047f700	hitTestScreen	478	1	3	0047f700-0047f8de
+0047f8e0	redrawDrawList	326	4	3	0047f8e0-0047fa26
+0047fa30	redrawWindow	127	1	2	0047fa30-0047faaf
+0047fab0	compositeScreen	1789	0	9	0047fab0-004801ad
+004801f0	Window::visible	38	15	1	004801f0-00480216
+00480220	Tooltip::show	305	2	4	00480220-00480351
+00480360	Tooltip::hide	47	4	2	00480360-0048038f
+00480390	List480::dtor	119	1	1	00480390-00480407
+00480410	BinkFrame::scalarDtor	134	0	2	00480410-00480496
+004804a0	View4804a0::ctor	212	12	2	004804a0-00480574
+00480580	View4804a0::scalarDtor	30	0	2	00480580-0048059e
+004805a0	Base4805a0::dtor	103	59	2	004805a0-00480607
+00480610	Window::ctorInit	167	9	2	00480610-004806b7
+004806c0	Window::create	425	11	8	004806c0-00480869
+00480870	Window::createFromRect	72	1	1	00480870-004808b8
+004808c0	Window::paint	324	4	3	004808c0-00480a04
+00480a10	Window::paintBackground	238	1	3	00480a10-00480afe
+00480b00	fillWindowRect	39	17	1	00480b00-00480b27
+00480c20	Window::refreshRect	95	1	4	00480c20-00480c7f
+00480c80	Window::refreshFull	85	42	1	00480c80-00480cd5
+00480ce0	Window::invalidate	140	9	2	00480ce0-00480d6c
+00480d70	Window::doLayout	69	0	1	00480d70-00480db5
+004810d0	drawPanel4810d0	1668	0	4	004810d0-00481754
+00481760	Window::calcSizeFromCorners	272	1	0	00481760-00481870
+00481870	allocResampleTable	673	1	3	00481870-00481b11
+00481b20	freeResampleTable	29	1	1	00481b20-00481b3d
+00481b50	Flic::ctor481b50	65	0	1	00481b50-00481b91
+00481ba0	Flic::reset	243	4	2	00481ba0-00481c93
+00481ca0	Flic::buildFrameTable	416	1	3	00481ca0-00481e40
+00481e40	Flic::indexFrames	253	1	2	00481e40-00481f3d
+00481f40	Flic::open	1141	1	13	00481f40-004823b5
+004823c0	setNewHeap	91	1	4	004823c0-0048241b
+00482420	Image::step	102	2	1	00482420-00482486
+00482490	Image::seek	215	1	2	00482490-00482567
+00482570	decodeImageChunks	346	3	8	00482570-004826ca
+004826f0	Palette::decodeChunk	224	1	0	004826f0-004827d0
+004827d0	decodeSprite4827d0	367	1	0	004827d0-0048293f
+00482940	Surface::clear	77	1	0	00482940-0048298d
+00482990	Surface::blitRLE	227	1	0	00482990-00482a73
+00482a80	Surface::copyRaw	82	1	0	00482a80-00482ad2
+00482ae0	Decoder482ae0::ctor	61	1	0	00482ae0-00482b1d
+00482b20	Decoder482b20::ctor	61	1	0	00482b20-00482b5d
+00482b60	Flic::ctorBase482b60	42	1	1	00482b60-00482b8a
+00482b90	Flic::createStream	573	2	5	00482b90-00482dcd
+00482dd0	Stream482dd0::dtor	49	4	1	00482dd0-00482e01
+00482e10	Link482::data	14	2	0	00482e10-00482e1e
+00482e20	Link482::resolve	21	1	1	00482e20-00482e35
+00482e40	Link482b::send	38	2	1	00482e40-00482e66
+00482e80	staticInit_g83acb0	10	0	1	00482e80-00482e8a
+00482e90	atexit_482ea0	12	0	1	00482e90-00482e9c
+00482ec0	staticInit_g83ac30	10	0	1	00482ec0-00482eca
+00482ed0	atexit_482ee0	12	0	1	00482ed0-00482edc
+00482f00	staticInit_g83ac88	13	0	1	00482f00-00482f0d
+00482f10	atexit_482f20	12	0	1	00482f10-00482f1c
+00482f60	Cache482f60::ctor	105	1	0	00482f60-00482fc9
+00482fd0	Cache482fd0::ctor	51	14	0	00482fd0-00483003
+00483010	Cache483010::ctorVtbl	11	16	1	00483010-0048301b
+00483020	FUN_00483020	5	1	0	00483020-00483025
+00483030	Cache483030::attach	34	2	1	00483030-00483052
+00483060	Cache483060::detach	15	2	0	00483060-0048306f
+00483070	Cache483070::reset	100	2	1	00483070-004830d4
+004830e0	Palette::setEntries	170	1	0	004830e0-0048318a
+00483190	allocColorRange	322	1	6	00483190-004832d2
+004832e0	startColorCycle	49	1	2	004832e0-00483311
+00483320	resetScreenState	30	1	1	00483320-0048333e
+00483340	clearScreenObjects	167	2	0	00483340-004833e7
+004833f0	Table483::find	34	2	0	004833f0-00483412
+00483420	Palette::nearest	462	1	0	00483420-004835ee
+004835f0	Cache482f60::dtor	338	0	2	004835f0-00483742
+004837b0	screenMgrCtor4837b0	10	0	1	004837b0-004837ba
+004837c0	atexit_4837d0	12	0	1	004837c0-004837cc
+004837f0	C4837f0::ctor	16	17	0	004837f0-00483800
+00483800	Surface::createFromId	78	3	1	00483800-0048384e
+00483850	Surface::createSized	88	1	1	00483850-004838a8
+004838b0	Surface::releaseBacking	50	5	0	004838b0-004838e2
+004838f0	Stream4838f0::puts	51	1	0	004838f0-00483923
+00483930	measureTextWidth	71	3	0	00483930-00483977
+00483980	wrapTextToWidth	318	1	2	00483980-00483abe
+00483ac0	setPrimarySurface	76	1	2	00483ac0-00483b0c
+00483b10	clearPrimarySurface	29	2	0	00483b10-00483b2d
+00483b90	Surface::ctorVtbl483b90	11	2	1	00483b90-00483b9b
+00483ba0	screenFlip	14	0	0	00483ba0-00483bae
+00483bb0	showScreen	29	2	3	00483bb0-00483bcd
+00483bd0	pumpInput483bd0	53	9	2	00483bd0-00483c05
+00483c10	hideScreen	29	1	3	00483c10-00483c2d
+00483c30	pumpInput483c30	58	3	3	00483c30-00483c6a
+00483c70	redrawAll	24	4	2	00483c70-00483c88
+00483c90	pumpInput483c90	53	1	2	00483c90-00483cc5
+00483cd0	frameTick483cd0	24	2	2	00483cd0-00483ce8
+00483cf0	pumpInput483cf0	53	2	2	00483cf0-00483d25
+00483d30	enterModal483d30	15	26	3	00483d30-00483d3f
+00483d40	modalPush483d40	19	1	1	00483d40-00483d53
+00483d60	modalFocusClear483d60	31	1	1	00483d60-00483d7f
+00483d80	leaveModal483d80	19	1	1	00483d80-00483d93
+00483de0	staticInit_g83ad80	10	0	1	00483de0-00483dea
+00483df0	atexit_483e00	12	0	1	00483df0-00483dfc
+00483e20	staticInit_g83ad58	10	0	1	00483e20-00483e2a
+00483e30	atexit_483e40	12	0	1	00483e30-00483e3c
+00483e60	staticInit_g83af98	10	0	1	00483e60-00483e6a
+00483e70	atexit_483e80	12	0	1	00483e70-00483e7c
+00483e90	initSound	121	1	5	00483e90-00483f09
+00483f10	shutdownSound	163	1	7	00483f10-00483fb3
+00483fc0	soundVersionCheck	157	1	5	00483fc0-0048405d
+00484060	freeSoundLib	44	3	2	00484060-0048408c
+00484090	callSoundHook74	35	1	0	00484090-004840b3
+004840c0	callSoundHook94	18	1	0	004840c0-004840d2
+004840e0	createSound4840e0	40	5	0	004840e0-00484108
+00484110	releaseSoundObj	30	5	0	00484110-0048412e
+00484130	clearSoundPtrs	17	1	0	00484130-00484141
+00484150	Snd::ctorBase	104	2	2	00484150-004841b8
+004841c0	Snd::scalarDtor4841c0	30	0	2	004841c0-004841de
+004841e0	Snd::dtor	127	6	4	004841e0-0048425f
+00484260	Snd::setMode	109	2	0	00484260-004842cd
+004842f0	SndMusic::setFile	236	2	3	004842f0-004843dc
+004843e0	unlinkSound	96	1	0	004843e0-00484440
+004844e0	Snd::unlinkFromList	92	2	0	004844e0-0048453c
+00484550	Snd::stop484550	50	0	0	00484550-00484582
+004845d0	Snd::queryDevice4845d0	15	1	0	004845d0-004845df
+004845e0	Snd::status	18	1	0	004845e0-004845f2
+004846b0	Snd::setField34	23	1	0	004846b0-004846c7
+004846d0	Snd::setField38	37	1	0	004846d0-004846f5
+00484750	Snd::applyField484750	30	1	0	00484750-0048476e
+004847b0	Snd::applyField4847b0	30	0	0	004847b0-004847ce
+004847f0	Snd::setPan	45	1	0	004847f0-0048481d
+00484820	Snd::ctorDerived	80	0	2	00484820-00484870
+00484880	SndMusic::scalarDtor	30	0	2	00484880-0048489e
+004848a0	SndMusic::dtor	123	1	4	004848a0-0048491b
+00484940	Snd::play	159	1	4	00484940-004849df
+00484a40	Snd::configure	181	0	2	00484a40-00484af5
+00484b30	Snd::busy	65	0	2	00484b30-00484b71
+00484b80	Snd::setName	103	1	2	00484b80-00484be7
+00484c20	SndStream::open484c20	90	1	1	00484c20-00484c7a
+00484c80	Snd::open	210	0	3	00484c80-00484d52
+00484d60	Snd::reopen	206	1	3	00484d60-00484e2e
+00484e30	Snd::applyMode484e30	51	1	0	00484e30-00484e63
+00484e70	Snd::start	143	0	1	00484e70-00484eff
+00484f00	Snd::stop484f00	57	1	0	00484f00-00484f39
+00484f40	Snd::setPitch	54	1	0	00484f40-00484f76
+00484ff0	Snd::flags	74	0	0	00484ff0-0048503a
+00485140	Snd::setVolume	102	1	1	00485140-004851a6
+00485260	Snd::ctor485260	42	1	0	00485260-0048528a
+004852b0	Snd::scalarDtor4852b0	30	0	2	004852b0-004852ce
+004852d0	Snd::setVtbl4852d0	7	4	0	004852d0-004852d7
+004852e0	VoiceRx::ctor	158	1	3	004852e0-0048537e
+004853b0	Screen::scalarDtor	30	0	2	004853b0-004853ce
+004853d0	Screen::dtor	117	1	2	004853d0-00485445
+004854c0	Screen::close	59	0	1	004854c0-004854fb
+00485590	showMessageBox	21	1	1	00485590-004855a5
+004855b0	engineInit	399	1	18	004855b0-0048573f
+00485740	engineShutdown	80	2	13	00485740-00485790
+00485790	Image::loadPcx	781	1	5	00485790-00485a9d
+00485aa0	Image::savePcx	664	1	3	00485aa0-00485d38
+00485d40	Image::hline	318	1	0	00485d40-00485e7e
+00485e80	Image::vline	354	1	0	00485e80-00485fe2
+00485ff0	EditBox::resetFields	119	2	0	00485ff0-00486067
+00486070	EditBox::ctor	94	2	3	00486070-004860ce
+004860d0	EditBox::dtor	49	3	4	004860d0-00486101
+00486110	EditBox::create	239	2	6	00486110-004861ff
+00486200	EditBox::setText	80	2	1	00486200-00486250
+00486250	EditBox::resizeBuffer	96	3	3	00486250-004862b0
+004862b0	EditBox::wrapToLines	124	1	1	004862b0-0048632c
+00486330	EditBox::lineIndexAt	44	1	0	00486330-0048635c
+00486360	EditBox::charPosToPixel	122	0	3	00486360-004863da
+004863e0	EditBox::pixelToCharPos	259	0	3	004863e0-004864e3
+004866f0	EditBox::insertChar	185	0	2	004866f0-004867a9
+00486b30	EditBox::setCaretActive	51	1	2	00486b30-00486b63
+00486c90	Timer::ctor	48	5	0	00486c90-00486cc0
+00486cc0	Timer::scalarDtor	30	0	2	00486cc0-00486cde
+00486ce0	Timer::dtor	11	11	1	00486ce0-00486ceb
+00486cf0	Timer::initA	48	1	1	00486cf0-00486d20
+00486d20	Timer::init	54	4	1	00486d20-00486d56
+00486d60	Timer::initStartOnce	46	2	2	00486d60-00486d8e
+00486d90	Timer::initStartRepeat	46	0	2	00486d90-00486dbe
+00486dc0	Timer::startOnce	113	3	2	00486dc0-00486e31
+00486e40	Timer::startRepeat	116	2	2	00486e40-00486eb4
+00486ec0	Timer::stop	120	7	2	00483da0-00483dcc;00486ec0-00486f0c
+00486f10	Timer::reset	43	6	1	00486f10-00486f3b
+00486f90	Timer::callback	79	0	1	00486f90-00486fdf
+00486fe0	Timer::lockInc	14	1	0	00486fe0-00486fee
+00486ff0	Timer::lockDec	7	1	0	00486ff0-00486ff7
+00487000	BinkPlayer::ctor	29	1	0	00487000-0048701d
+00487020	BinkPlayer::scalarDtor	30	0	2	00487020-0048703e
+00487040	BinkPlayer::dtor	11	1	1	00487040-0048704b
+00487050	BinkPlayer::setTarget	10	1	0	00487050-0048705a
+00487060	BinkPlayer::close	43	2	2	00487060-0048708b
+00487090	BinkPlayer::play	228	1	10	00487090-00487174
+00487180	BinkPlayer::frame	133	1	7	00487180-00487205
+00487210	StrList::ctor	40	3	0	00487210-00487238
+00487240	StrList::scalarDtor	30	0	2	00487240-0048725e
+00487260	StrList::dtor	19	6	0	00487260-00487273
+00487280	NodeList::ctor	98	1	2	00487280-004872e2
+004872f0	NodeList::scalarDtor	30	0	2	004872f0-0048730e
+00487310	NodeList::clear	118	0	1	00487310-00487386
+00487390	NodeList::dtor	92	1	2	00487390-004873ec
+00487430	closeHookA	39	1	0	00487430-00487457
+00487460	releaseWithHookA	33	1	1	00487460-00487481
+00487630	resourceQuery	15	1	0	00487630-0048763f
+004876c0	HashTable::remove	162	1	1	004876c0-00487762
+00487770	HashTable::bucketEmpty	35	1	0	00487770-00487793
+004877a0	HashTable::bucketSet	35	1	0	004877a0-004877c3
+004879f0	closeHookB	39	1	0	004879f0-00487a17
+00487a20	NodeListB::ctor	18	1	1	00487a20-00487a32
+00487a40	NodeListB::scalarDtor	30	0	2	00487a40-00487a5e
+00487a60	NodeListB::dtor	11	1	1	00487a60-00487a6b
+00487a70	resourceLoadB	66	1	0	00487a70-00487ab2
+00487ac0	releaseWithHookB	33	1	1	00487ac0-00487ae1
+00487af0	FUN_00487af0	3	0	0	00487af0-00487af3
+00487b00	FUN_00487b00	5	1	0	00487b00-00487b05
+00487b40	NodeListC::ctor	18	1	1	00487b40-00487b52
+00487b60	NodeListC::scalarDtor	30	0	2	00487b60-00487b7e
+00487b80	NodeListC::dtor	11	1	1	00487b80-00487b8b
+00487bd0	closeHookC	39	0	0	00487bd0-00487bf7
+00487c00	resourceLoad	59	1	0	00487c00-00487c3b
+00487c40	releaseWithHookC	33	1	0	00487c40-00487c61
+00487cb0	FUN_00487cb0	5	1	0	00487cb0-00487cb5
+00487ce0	NodeList::clearScalarDtor	137	0	1	00487ce0-00487d69
+00487d80	initGlobalReader	16	0	1	00487d80-00487d90
+00487d90	registerReaderAtexit	12	0	1	00487d90-00487d9c
+00487e10	initKeyTableArray	28	0	1	00487e10-00487e2c
+00487e30	registerKeyTableAtexit	12	0	1	00487e30-00487e3c
+00487e60	destroyGlobalReader	10	2	1	00487e60-00487e6a
+00487e70	readSectionGlobal	21	3	1	00487e70-00487e85
+00487e90	readLineGlobal	10	3	1	00487e90-00487e9a
+00487ea0	Reader::ctor	54	1	1	00487ea0-00487ed6
+00487ee0	Reader::allocBuffers	71	1	2	00487ee0-00487f27
+00487f30	Reader::free	68	2	2	00487f30-00487f74
+00487f80	Reader::closeFile	34	3	1	00487f80-00487fa2
+00487fb0	Reader::open	634	1	12	00487fb0-0048822a
+00488230	Reader::readLine	110	1	3	00488230-0048829e
+004882a0	KeyTable::ctor	35	0	1	004882a0-004882c3
+004882d0	KeyTable::scalarDtor	30	0	2	004882d0-004882ee
+004882f0	KeyTable::dtor	28	1	1	004882f0-0048830c
+00488310	KeyTable::find	260	1	2	00488310-00488414
+00488420	KeyTable::lookup	60	1	1	00488420-0048845c
+00488460	Reader::scalarDtor	36	0	2	00488460-00488484
+00488490	Cursor::ctor	23	1	0	00488490-004884a7
+004884b0	Cursor::destroy	48	1	1	004884b0-004884e0
+004884e0	cacheCursorMetrics	29	1	1	004884e0-004884fd
+00488500	Button::ctor	289	1	2	00488500-00488621
+00488630	Button::scalarDtor	30	0	2	00488630-0048864e
+00488650	Button::dtor	121	14	3	00488650-004886c9
+004886d0	Button::resetFields	238	2	2	004886d0-004887be
+004887c0	Button::create	355	3	6	004887c0-00488923
+00488930	Button::setColorNormal	61	1	2	00488930-0048896d
+00488970	Button::setColorHover	61	1	2	00488970-004889ad
+004889b0	Button::setColorPressed	61	1	2	004889b0-004889ed
+004889f0	setButtonDefaults	48	1	0	004889f0-00488a20
+00488a20	Button::setTooltip	137	1	2	00488a20-00488aa9
+00488cf0	Button::onMouseMove	408	0	4	00488cf0-00488e88
+00488fd0	Button::onTimer	264	0	5	00488fd0-004890d8
+004890e0	Button::setMode	61	1	0	004890e0-0048911d
+00489150	ListModel::ctor	508	6	1	00489150-0048934c
+00489350	ListModel::scalarDtor	30	0	2	00489350-0048936e
+00489370	ListModel::dtor	305	8	4	00489370-004894a1
+004894b0	ListModel::clear	502	8	1	004894b0-004896a6
+004896b0	ListModel::setKey	320	2	2	004896b0-004897f0
+004897f0	ListModel::reset	159	2	1	004897f0-0048988f
+00489890	ListModel::append	52	1	1	00489890-004898c4
+004898d0	ListModel::indexOfId	115	1	0	004898d0-00489943
+00489950	ListModel::selectedId	127	8	0	00489950-004899cf
+004899d0	ListModel::findId	91	1	0	004899d0-00489a2b
+00489a30	ListModel::idAt	128	4	0	00489a30-00489ab0
+00489ab0	ListModel::setClickHandler	45	1	0	00489ab0-00489add
+00489b30	ListModel::destroyNodes	338	4	2	00489b30-00489c82
+00489c90	ListBox::subDtor	27	74	1	00489c90-00489cab
+00489cb0	ListBox::ctor	293	1	2	00489cb0-00489dd5
+00489de0	ListBox::dtor	93	3	1	00489de0-00489e3d
+00489e40	ListBox::resetFields	141	4	2	00489e40-00489ecd
+00489ed0	ListBox::selectById	117	1	1	00489ed0-00489f45
+00489f50	ListBox::setSelection	458	7	4	00489f50-0048a11a
+0048a120	ListBox::measure	1199	3	6	0048a120-0048a5cf
+0048a5d0	ListBox::build	998	2	12	0048a5d0-0048a9b6
+0048aa00	ListBox::onNavKey	1169	0	2	0048aa00-0048ae91
+0048aea0	ListBox::typeAhead	1271	0	7	0048aea0-0048b397
+0048c420	ListBox::onScroll	198	0	2	0048c420-0048c4e6
+0048c560	ListBox::fireSelectChanged	170	0	1	0048c560-0048c60a
+0048c610	ListBox::forwardClick	35	0	0	0048c610-0048c633
+0048c640	ListBox::addItem	157	1	2	0048c640-0048c6dd
+0048c6e0	ListBox::onMouse	437	1	11	0048c6e0-0048c895
+0048c8a0	ListBox::onDrag	537	0	2	0048c8a0-0048cab9
+0048cac0	ListBox::clearSelection	40	0	0	0048cac0-0048cae8
+0048caf0	ListBox::scrollBy	146	0	1	0048caf0-0048cb82
+0048cd80	matchDirective	122	1	2	0048cd80-0048cdfa
+0048ce00	TextView::ctor	1658	4	10	0048ce00-0048d47a
+0048d480	TextView::reset	1760	6	12	0048d480-0048db60
+0048db60	TextView::init	668	1	9	0048db60-0048ddfc
+0048de00	MsgBox::setLabelA	132	2	2	0048de00-0048de84
+0048de90	MsgBox::setLabelB	132	2	2	0048de90-0048df14
+0048df20	TextView::addText	158	1	2	0048df20-0048dfbe
+0048dfc0	TextView::addImage	75	1	1	0048dfc0-0048e00b
+0048e010	TextView::setName	146	1	2	0048e010-0048e0a2
+0048e0b0	TextView::setLineSpacing	105	6	0	0048e0b0-0048e119
+0048e120	TextView::setFontSize	105	6	0	0048e120-0048e189
+0048e190	TextView::setSize	37	7	0	0048e190-0048e1b5
+0048e1c0	TextView::layout	1757	4	24	0048e1c0-0048e89d
+0048e900	TextView::build	5472	3	25	0048e900-0048fe60
+0048fe60	TextView::render	2768	0	20	0048fe60-00490930
+00490960	TextView::select	215	0	2	00490960-00490a37
+00490a40	TextView::updateSelection	126	0	1	00490a40-00490abe
+00490bf0	MsgBox::initDefaults	51	1	2	00490bf0-00490c23
+00490c30	MsgBox::freeLabels	65	1	1	00490c30-00490c71
+00490c80	MsgBox::setButtonA	58	1	0	00490c80-00490cba
+00490cc0	MsgBox::setColorA	39	1	0	00490cc0-00490ce7
+00490cf0	MsgBox::setButtonB	48	1	0	00490cf0-00490d20
+00490d20	MsgBox::setColorB	39	1	0	00490d20-00490d47
+00491310	TextView::create	90	0	2	00491310-0049136a
+00491410	LabelButton::dtor	89	77	2	00491410-00491469
+00491470	LabelButton::scalarDtor	30	0	2	00491470-0049148e
+00491490	Widget::setFlagBit0	27	1	0	00491490-004914ab
+004914b0	Widget::setFlagBit1	27	1	0	004914b0-004914cb
+004914d0	Dialog::subDtor	38	36	3	004914d0-004914f6
+00491500	Dialog::viewDtor	380	5	6	00491500-0049167c
+00491680	Dialog::childDtor	83	2	1	00491680-004916d3
+004916f0	Dialog::scalarDtor	30	0	2	004916f0-0049170e
+00491710	Dialog::dtor	444	5	11	00491710-004918cc
+00491c10	initSinTable	90	1	3	00491c10-00491c6a
+00491c70	sinScaled	267	3	0	00491c70-00491d7b
+00491d80	cosScaled	25	1	1	00491d80-00491d99
+00491da0	resolveDataPath	593	1	2	00491da0-00491ff1
+00492000	cropSprite	1060	1	3	00492000-00492424
+00492450	blitErrorPtr	6	2	0	00492450-00492456
+00492460	blitError	15	1	0	00492460-0049246f
+00492470	shutdownBlitter	56	1	2	00492470-004924a8
+004924b0	flushBlitSurface	40	1	0	004924b0-004924d8
+004924e0	trimLeadingSpace	129	1	1	004924e0-00492561
+00492570	trimTrailingSpace	62	1	1	00492570-004925ae
+004925b0	trimSpaces	22	4	2	004925b0-004925c6
+004925d0	stripNewline	23	2	1	004925d0-004925e7
+004925f0	appendNewline	27	1	0	004925f0-0049260b
+00492610	pointInRect	52	4	0	00492610-00492644
+00492660	HotList::freeEntryTip	37	1	1	00492660-00492685
+00492690	HotList::grow	265	1	2	00492690-00492799
+00492800	HotList::resetFields	43	2	1	00492800-0049282b
+00492830	HotList::releaseArray	32	4	1	00492830-00492850
+00492850	HotList::ctor	83	4	2	00492850-004928a3
+004928b0	HotList::scalarDtor	30	0	2	004928b0-004928ce
+004928d0	HotList::dtor	80	49	2	004928d0-00492920
+00492920	HotList::alloc	135	4	3	00492920-004929a7
+004929b0	HotList::add	223	3	3	004929b0-00492a8f
+00492a90	HotList::hitTest	118	8	1	00492a90-00492b06
+00492b10	HotList::hitTestRect	160	9	1	00492b10-00492bb0
+00492bd0	HotList::showTip	229	0	3	00492bd0-00492cb5
+00492cc0	HotList::onMouseMove	116	1	2	00492cc0-00492d34
+00492d40	HotList::cancelTip	39	1	2	00492d40-00492d67
+00492d80	MappedFile::ctor	24	3	0	00492d80-00492d98
+00492da0	MappedFile::scalarDtor	30	0	2	00492da0-00492dbe
+00492dc0	MappedFile::dtor	11	5	1	00492dc0-00492dcb
+00492dd0	MappedFile::open	172	3	6	00492dd0-00492e7c
+00492e80	MappedFile::close	69	3	2	00492e80-00492ec5
+00492ed0	polyEdgeStep	208	3	0	00492ed0-00492fa0
+00492fa0	polyEdgeAdvance	87	2	1	00492fa0-00492ff7
+00493000	fillSpanDown	121	1	0	00493000-00493079
+00493080	fillSpanUp	115	1	0	00493080-004930f3
+00493100	fillConvexPoly8	463	1	3	00493100-004932cf
+004932d0	fillConvexPoly16	578	1	3	004932d0-00493512
+00493520	fillConvexPoly	95	1	2	00493520-0049357f
+00493580	swapInts	39	1	0	00493580-004935a7
+004935b0	reverseFindChar	51	1	0	004935b0-004935e3
+004935f0	findByteInRange	57	1	0	004935f0-00493629
+00493630	fill16	62	1	0	00493630-0049366e
+00493670	TextView_layoutRun	35	1	1	00493670-00493693
+004936a0	comboInit	897	1	8	004936a0-00493a21
+00493a30	comboRefreshThunk	44	1	1	00493a30-00493a5c
+00493a60	comboRefresh	290	2	8	00493a60-00493b82
+00493b90	comboOpenPopup	819	1	8	00493b90-00493ec3
+00493ed0	comboListQuery	21	2	0	00493ed0-00493ee5
+00493ef0	comboSetItems	96	1	1	00493ef0-00493f50
+00493f50	comboLayoutItems	201	2	2	00493f50-00494019
+00494020	listSetItems	180	1	1	00494020-004940d4
+004940e0	comboFindItem	250	1	0	004940e0-004941da
+004941e0	listCurrentIndex	183	3	0	004941e0-00494297
+004942a0	comboCurrentIndex	73	1	0	004942a0-004942e9
+004942f0	expandTextMarkup	2418	1	6	004942f0-00494c62
+00494cb0	setHudTextSlot	122	4	0	00494cb0-00494d2a
+00494d30	drawColorRunA	460	1	0	00494d30-00494efc
+00494f00	drawColorRunB	497	1	0	00494f00-004950f1
+00495100	decodeImagePaletted	795	1	4	00495100-0049541b
+00495420	decodeImage16	816	1	6	00495420-00495750
+00495770	redrawRegion	26	0	2	00495770-0049578a
+00495cb0	Timer_fire	101	0	1	00495cb0-00495d15
+00495d30	initWidgetTable	372	1	0	00495d30-00495ea4
+00495eb0	resetWidgetTable	345	4	0	00495eb0-00496009
+00496030	buildLabeledControl	407	1	2	00496030-004961c7
+004961d0	controlInitBase	350	2	1	004961d0-0049632e
+00496330	scrollbarCreate	859	2	4	00496330-0049668b
+00496690	scrollbarCreateA_impl	59	1	1	00496690-004966cb
+004966d0	scrollbarCreateB_impl	60	1	1	004966d0-0049670c
+00496710	scrollbarCreateA	43	1	1	00496710-0049673b
+00496740	scrollbarCreateB	43	1	1	00496740-0049676b
+00496770	orderPair	93	2	1	00496770-004967cd
+004967d0	scrollbarResetThumb	18	1	1	004967d0-004967e2
+004967f0	setWidgetScalar	102	2	0	004967f0-00496856
+00496c30	scrollbarOnDown	238	0	0	00496c30-00496d1e
+00496d20	scrollbarOnDrag	59	0	0	00496d20-00496d5b
+00496e30	scrollbarOnKey	400	0	0	00496e30-00496fc0
+00496fc0	scrollbarDraw	427	0	6	00496fc0-0049716b
+004973c0	scrollbarScrollBy	270	0	0	004973c0-004974ce
+004974d0	scrollbarThumbRect	1218	1	0	004974d0-00497992
+004979a0	scrollbarResetState	88	1	0	004979a0-004979f8
+00497a00	comboDeleteDtor	30	0	2	00497a00-00497a1e
+00497a20	comboDtor	193	1	4	00497a20-00497ae1
+00497b00	gfxFlushA	25	6	1	00497b00-00497b19
+00497b20	gfxFlushB	25	9	1	00497b20-00497b39
+00497b40	netSendList	224	1	3	00497b40-00497c20
+00497c20	netTimerReadA	78	0	0	00497c20-00497c6e
+00497c70	netTimerReadB	78	0	0	00497c70-00497cbe
+00497cc0	netFlush	69	0	1	00497cc0-00497d05
+00497d10	netSendShutdown	586	3	8	00497d10-00497f5a
+00497fc0	netService	4479	1	26	00497fc0-0049913f
+00499140	netSendMessages	6382	5	30	00499140-0049aa2e
+0049aa30	netNameOf	53	3	0	0049aa30-0049aa65
+0049aa70	netPump	199	1	2	0049aa70-0049ab37
+0049ab40	netServiceControl	432	3	3	0049ab40-0049acf0
+0049acf0	netHandleControl	2428	2	21	0049acf0-0049b66c
+0049b690	netQueueMessage	282	1	2	0049b690-0049b7aa
+0049b7b0	netPoll	448	2	4	0049b7b0-0049b970
+0049b970	netHeapAlloc	1346	1	5	0049b970-0049beb2
+0049bec0	netListRemove	166	1	0	0049bec0-0049bf66
+0049bf70	screenObj_deleteDtor	65	0	2	0049bf70-0049bfb1
+0049bfc0	Screen::dtor	5	1	0	0049bfc0-0049bfc5
+0049bff0	initGlobalObj_49c020	10	0	1	0049bff0-0049bffa
+0049c000	regAtexit_49c000	12	0	1	0049c000-0049c00c
+0049c020	ctorGlobalObj49c020	113	1	3	0049c020-0049c091
+0049c0a0	FUN_0049c0a0	11	1	0	0049c0a0-0049c0ab
+0049c780	globalObjDtor49c780	122	1	4	0049c780-0049c7fa
+0049c800	globalObjDeleteDtor49c800	30	0	2	0049c800-0049c81e
+0049c830	createCache	119	0	2	0049c830-0049c8a7
+0049c8b0	freeCacheField	41	1	2	0049c8b0-0049c8d9
+0049c8e0	serviceMovie	41	4	1	0049c8e0-0049c909
+0049c910	serviceMovieFrame	47	1	3	0049c910-0049c93f
+0049c940	movieAdvanceFrame	408	2	5	0049c940-0049cad8
+0049cae0	movieDecodeStart	64	1	4	0049cae0-0049cb20
+0049cb20	movieReadProcess	86	1	5	0049cb20-0049cb76
+0049cb80	movieStepReturn1	8	3	0	0049cb80-0049cb88
+0049cb90	movieReadFrame	301	2	5	0049cb90-0049ccbd
+0049ccc0	moviePlayFrame	645	3	9	0049ccc0-0049cf45
+0049cf50	movieSelectStream	173	1	0	0049cf50-0049cffd
+0049d010	initPairArrayGlobal	10	0	1	0049d010-0049d01a
+0049d020	regAtexit_49d020	12	0	1	0049d020-0049d02c
+0049d040	Buf_dtor	5	1	0	0049d040-0049d045
+0049d050	allocPairArray	25	1	1	0049d050-0049d069
+0049d070	pairArray_deleteDtor	30	0	2	0049d070-0049d08e
+0049d090	strAssign	65	1	3	0049d090-0049d0d1
+0049d0e0	strFree	19	2	1	0049d0e0-0049d0f3
+0049d100	strDup	67	1	1	0049d100-0049d143
+0049d160	initGfxGlobal_840710	10	0	1	0049d160-0049d16a
+0049d170	regAtexit_49d170	12	0	1	0049d170-0049d17c
+0049d1b0	loadPcxSurface	199	1	5	0049d1b0-0049d277
+0049d280	freeGfxGlobal_840710	10	1	1	0049d280-0049d28a
+0049d2a0	initGfxGlobal_8407c0	10	0	1	0049d2a0-0049d2aa
+0049d2b0	regAtexit_49d2b0	12	0	1	0049d2b0-0049d2bc
+0049d300	initGfxGlobal_840790	10	0	1	0049d300-0049d30a
+0049d310	regAtexit_49d310	12	0	1	0049d310-0049d31c
+0049d360	initGfxGlobal_8407f0	10	0	1	0049d360-0049d36a
+0049d370	regAtexit_49d370	12	0	1	0049d370-0049d37c
+0049d3b0	loadFileWinResource	170	1	5	0049d3b0-0049d45a
+0049d460	freeFileWinBuf	29	2	1	0049d460-0049d47d
+0049d490	initGfxGlobal_840830	10	0	1	0049d490-0049d49a
+0049d4a0	regAtexit_49d4a0	12	0	1	0049d4a0-0049d4ac
+0049d4f0	initGfxGlobal_840890	10	0	1	0049d4f0-0049d4fa
+0049d500	regAtexit_49d500	12	0	1	0049d500-0049d50c
+0049d550	initGfxGlobal_840860	10	0	1	0049d550-0049d55a
+0049d560	regAtexit_49d560	12	0	1	0049d560-0049d56c
+0049d5a0	viewFieldCtor49d5a0	231	1	2	0049d5a0-0049d687
+0049d690	viewFieldCleanup49d690	63	5	2	0049d690-0049d6cf
+0049d6d0	panelBuildRow	157	1	2	0049d6d0-0049d76d
+0049d770	panelBuildText	826	2	2	0049d770-0049daaa
+0049dab0	listPanelDraw	1907	2	13	0049dab0-0049e223
+0049e230	listPanelOnScroll	541	0	4	0049e230-0049e44d
+0049e450	listPanelRefresh	396	0	2	0049e450-0049e5dc
+0049e640	listSelectionChanged	55	0	1	0049e640-0049e677
+0049e7b0	FUN_0049e7b0	23	0	0	0049e7b0-0049e7c7
+0049e7d0	listPanelReadValue	440	0	1	0049e7d0-0049e988
+0049e990	FUN_0049e990	52	0	0	0049e990-0049e9c4
+0049e9d0	loadCursors	248	1	4	0049e9d0-0049eac8
+0049ead0	freeCursors	30	1	1	0049ead0-0049eaee
+0049eb00	initGfxGlobal_8408c8	10	0	1	0049eb00-0049eb0a
+0049eb10	regAtexit_49eb10	12	0	1	0049eb10-0049eb1c
+0049eb60	initGfxGlobal_8408f8	10	0	1	0049eb60-0049eb6a
+0049eb70	regAtexit_49eb70	12	0	1	0049eb70-0049eb7c
+0049ebb0	viewFieldCtor49ebb0	197	1	2	0049ebb0-0049ec75
+0049ec80	viewFieldDtor49ec80	83	3	1	0049ec80-0049ecd3
+0049ece0	viewFieldCleanup49ece0	57	4	2	0049ece0-0049ed19
+0049ed20	optionDialogBuild	363	1	6	0049ed20-0049ee8b
+0049ee90	flagToggle49ee90	48	1	2	0049ee90-0049eec0
+0049eec0	flagToggle49eec0	48	1	2	0049eec0-0049eef0
+0049eef0	flagSet	139	1	0	0049eef0-0049ef7b
+0049ef80	flagIsSet	105	2	0	0049ef80-0049efe9
+0049eff0	bitSet	49	1	0	0049eff0-0049f021
+0049f030	bitTest	32	3	0	0049f030-0049f050
+0049f050	optionDialogDraw	798	2	6	0049f050-0049f36e
+0049f370	optionListDraw	1577	2	9	0049f370-0049f999
+0049f9a0	optionDialogUpdate	236	0	7	0049f9a0-0049fa8c
+0049fa90	optionDialogOnKey	308	0	4	0049fa90-0049fbc4
+0049fc30	FUN_0049fc30	45	0	0	0049fc30-0049fc5d
+0049fd80	FUN_0049fd80	23	0	0	0049fd80-0049fd97
+0049fda0	optionDialogOnMouse	123	0	0	0049fda0-0049fe1b
+0049fe20	FUN_0049fe20	40	0	0	0049fe20-0049fe48
+0049fe50	loadFonts	221	1	4	0049fe50-0049ff2d
+0049ff30	freeFonts	20	1	1	0049ff30-0049ff44
+004a0060	freeGraphsyObject	52	2	1	004a0060-004a0094
+004a00a0	loadGraphsyObject	74	1	3	004a00a0-004a00ea
+004a00f0	resolveAndOpenFile	36	3	2	004a00f0-004a0114
+004a0130	initLogFile	16	0	1	004a0130-004a0140
+004a0140	regAtexit_4a0140	12	0	1	004a0140-004a014c
+004a0160	loggerDeleteDtor	30	0	2	004a0160-004a017e
+004a0180	loggerCtor	32	1	1	004a0180-004a01a0
+004a01a0	freeLoggerBuf	34	1	1	004a01a0-004a01c2
+004a01d0	loggerSetPath	176	1	4	004a01d0-004a0280
+004a0280	logWrite	156	1	3	004a0280-004a031c
+004a0320	logLine	36	6	1	004a0320-004a0344
+004a0350	radioSelect	483	0	1	004a0350-004a0533
+004a0540	bufferCopyTo	144	0	2	004a0540-004a05d0
+004a05d0	bufferFree	43	1	1	004a05d0-004a05fb
+004a0600	postMessageLine	317	1	1	004a0600-004a073d
+004a0740	viewCtor4a0740	321	1	7	004a0740-004a0881
+004a0890	FUN_004a0890	1	9	0	004a0890-004a0891
+004a08a0	panelDispatch	216	1	5	004a08a0-004a0978
+004a09a0	sendCommand	80	1	2	004a09a0-004a09f0
+004a11c0	panelStop	93	1	5	004a11c0-004a121d
+004a1250	viewDispatchOpen	138	1	6	004a1250-004a12da
+004a12e0	viewDispatchReset	138	1	6	004a12e0-004a136a
+004a1370	getFieldValueByKind	51	2	0	004a1370-004a13a3
+004a13f0	ctorObj4a13f0	200	3	1	004a13f0-004a14b8
+004a14c0	resetMsgObject	183	4	2	004a14c0-004a1577
+004a2250	viewFieldCtor4a2250	213	1	2	004a2250-004a2325
+004a2330	viewFieldDtor4a2330	104	2	1	004a2330-004a2398
+004a23a0	viewFieldReset4a23a0	96	4	2	004a23a0-004a2400
+004a2400	panelCreate4a2400	1179	1	11	004a2400-004a289b
+004a28a0	listAddEntry	220	1	3	004a28a0-004a297c
+004a2980	FUN_004a2980	26	1	0	004a2980-004a299a
+004a29a0	FUN_004a29a0	19	1	0	004a29a0-004a29b3
+004a29c0	setStringField	152	1	2	004a29c0-004a2a58
+004a2a60	panelBuildChildren	748	2	6	004a2a60-004a2d4c
+004a2d50	panelDrawRow	589	0	2	004a2d50-004a2f9d
+004a2fa0	widgetShow	70	0	0	004a2fa0-004a2fe6
+004a3110	panelSubCtor4a3110	593	1	7	004a3110-004a3361
+004a3370	panelSubDtor4a3370	27	2	1	004a3370-004a338b
+004a33e0	panelSubDtor4a33e0	147	1	1	004a33e0-004a3473
+004a3480	panelSubDtor4a3480	343	3	3	004a3480-004a35d7
+004a35e0	panelSubReset4a35e0	422	4	7	004a35e0-004a3786
+004a3790	panelOpenReset4a3790	197	1	6	004a3790-004a3855
+004a3860	panelReset4a3860	29	1	2	004a3860-004a387d
+004a3880	panelBuild4a3880	852	1	8	004a3880-004a3bd4
+004a3be0	panelBuildText4a3be0	808	2	6	004a3be0-004a3f08
+004a3f10	panelDraw4a3f10	1065	2	8	004a3f10-004a4339
+004a4340	FUN_004a4340	3	0	0	004a4340-004a4343
+004a4350	panelOnPick	151	0	3	004a4350-004a43e7
+004a43f0	hotHitCb0	57	0	1	004a43f0-004a4429
+004a4430	hotHitCb1	57	0	1	004a4430-004a4469
+004a4470	hotHitCb2	57	0	1	004a4470-004a44a9
+004a44b0	hotHitCb3	57	0	1	004a44b0-004a44e9
+004a44f0	hotHitCb4	57	0	1	004a44f0-004a4529
+004a4530	hotHitCb5	57	0	1	004a4530-004a4569
+004a4570	hotHitCb6	57	0	1	004a4570-004a45a9
+004a4680	panelOnKey	399	0	1	004a4680-004a480f
+004a4870	FUN_004a4870	32	0	0	004a4870-004a4890
+004a4890	listFindById	91	1	0	004a4890-004a48eb
+004a48f0	listGetAt	128	0	0	004a48f0-004a4970
+004a4ad0	findMarkupTokenIndex	42	1	0	004a4ad0-004a4afa
+004a4b00	listClear4a4b	96	1	3	004a4b00-004a4b60
+004a4b60	listAppend4a4b60	261	2	3	004a4b60-004a4c65
+004a4c70	queuePop	192	1	3	004a4c70-004a4d30
+004a4d30	listClearThunk	19	1	1	004a4d30-004a4d43
+004a4d50	listClear4a4d	84	1	1	004a4d50-004a4da4
+004a4db0	listPush	225	1	2	004a4db0-004a4e91
+004a4ea0	readListNode	47	1	0	004a4ea0-004a4ecf
+004a4ed0	listRemoveHead	62	2	1	004a4ed0-004a4f0e
+004a4f10	TERRAIN.DLL::Terrain::getInstance	6	0	0	004a4f10-004a4f16
+004a4f16	TERRAIN.DLL::Terrain::drawLine	6	1	0	004a4f16-004a4f1c
+004a4f1c	TERRAIN.DLL::Terrain::loadNewCourseType	6	1	0	004a4f1c-004a4f22
+004a4f22	TERRAIN.DLL::Terrain::passCollarInfo	6	2	0	004a4f22-004a4f28
+004a4f28	TERRAIN.DLL::Terrain::setType	6	3	0	004a4f28-004a4f2e
+004a4f2e	TERRAIN.DLL::Terrain::getVariation	6	2	0	004a4f2e-004a4f34
+004a4f34	TERRAIN.DLL::Terrain::resetTerrain	6	1	0	004a4f34-004a4f3a
+004a4f3a	TERRAIN.DLL::Terrain::layPath	6	2	0	004a4f3a-004a4f40
+004a4f40	TERRAIN.DLL::Terrain::setWall	6	2	0	004a4f40-004a4f46
+004a4f46	TERRAIN.DLL::Terrain::calcNormals	6	1	0	004a4f46-004a4f4c
+004a4f4c	TERRAIN.DLL::Terrain::elevateCorner	6	2	0	004a4f4c-004a4f52
+004a4f52	TERRAIN.DLL::Terrain::initTerrain	6	1	0	004a4f52-004a4f58
+004a4f58	TERRAIN.DLL::Terrain::initSystem	6	1	0	004a4f58-004a4f5e
+004a4f5e	TERRAIN.DLL::Terrain::~Terrain	6	1	0	004a4f5e-004a4f64
+004a4f64	TERRAIN.DLL::Terrain::closeSystem	6	1	0	004a4f64-004a4f6a
+004a4f6a	TERRAIN.DLL::Terrain::pathUpdateRender	6	1	0	004a4f6a-004a4f70
+004a4f70	TERRAIN.DLL::Terrain::localRender	6	1	0	004a4f70-004a4f76
+004a4f76	TERRAIN.DLL::Terrain::calcAllNormals	6	1	0	004a4f76-004a4f7c
+004a4f7c	TERRAIN.DLL::Terrain::setZoomLevel	6	1	0	004a4f7c-004a4f82
+004a4f82	TERRAIN.DLL::Terrain::render	6	1	0	004a4f82-004a4f88
+004a4f88	TERRAIN.DLL::Terrain::lowerEdgeCorner	6	1	0	004a4f88-004a4f8e
+004a4f8e	TERRAIN.DLL::Terrain::lowerCorner	6	1	0	004a4f8e-004a4f94
+004a4f94	TERRAIN.DLL::Terrain::hasConnectedPath	6	1	0	004a4f94-004a4f9a
+004a4f9a	TERRAIN.DLL::Terrain::updatePath	6	1	0	004a4f9a-004a4fa0
+004a4fa0	TERRAIN.DLL::Terrain::hasPath	6	1	0	004a4fa0-004a4fa6
+004a4fa6	TERRAIN.DLL::Terrain::stripRender	6	1	0	004a4fa6-004a4fac
+004a4fac	__fpmath	23	1	3	004a4fac-004a4fc3
+004a4fc4	initFpControl	56	1	0	004a4fc4-004a4ffc
+004a4ffc	FUN_004a4ffc	11	72	1	004a4ffc-004a5007
+004a5007	_free	72	61	5	004a5007-004a504f
+004a504f	_malloc	18	54	1	004a504f-004a5061
+004a5061	__nh_malloc	44	2	2	004a5061-004a508d
+004a508d	__heap_alloc	78	1	4	004a508d-004a50db
+004a50db	__cinit	45	1	2	004a50db-004a5108
+004a5108	_exit	17	8	1	004a5108-004a5119
+004a5119	__exit	17	3	1	004a5119-004a512a
+004a512a	doexit	163	2	6	004a512a-004a51cd
+004a51cf	FID_conflict:__lockexit	9	2	1	004a51cf-004a51d8
+004a51d8	FID_conflict:__lockexit	9	2	1	004a51d8-004a51e1
+004a51e1	__initterm	26	2	0	004a51e1-004a51fb
+004a51fb	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	45	1	0	004a51fb-004a5228
+004a522f	FID_conflict:_CallMemberFunction1	7	2	0	004a522f-004a5236
+004a5236	FID_conflict:_CallMemberFunction1	7	1	0	004a5236-004a523d
+004a523d	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	79	2	1	004a523d-004a528c
+004a528c	___CxxFrameHandler	54	0	1	004a528c-004a52c2
+004a52c2	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	84	1	1	004a52c2-004a5316
+004a5316	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	37	0	1	004a5316-004a533b
+004a533b	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	182	1	1	004a533b-004a53f1
+004a53f1	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	114	0	2	004a53f1-004a545e;004a5461-004a5466
+004a5466	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	123	2	1	004a5466-004a54e1
+004a54e4	__global_unwind2	32	0	1	004a54e4-004a5504
+004a5526	__local_unwind2	104	1	1	004a5526-004a558e
+004a558e	__abnormal_termination	35	1	0	004a558e-004a55b1
+004a55b1	__NLG_Notify1	9	1	0	004a55b1-004a55ba
+004a55ba	FUN_004a55ba	24	1	0	004a55ba-004a55d2
+004a55d2	??_L@YGXPAXIHP6EX0@Z1@Z	106	31	1	004a55d2-004a563c
+004a563c	FUN_004a563c	24	1	1	004a563c-004a5654
+004a5654	__onexit	126	1	4	004a5654-004a56d2
+004a56d2	_atexit	18	87	1	004a56d2-004a56e4
+004a5713	??_M@YGXPAXIHP6EX0@Z@Z	104	22	1	004a5713-004a577b
+004a577b	FID_conflict:$L16506	24	1	1	004a577b-004a5793
+004a5793	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	81	2	0	004a5793-004a57cf;004a57dc-004a57f1
+004a57f1	operator_new	14	23	1	004a57f1-004a57ff
+004a5800	_strpbrk	58	1	0	004a5800-004a583a
+004a583a	__read	101	6	5	004a583a-004a589f
+004a589f	__read_lk	473	2	6	004a589f-004a5a78
+004a5a78	__close	93	7	5	004a5a78-004a5ad5
+004a5ad5	__close_lk	131	1	5	004a5ad5-004a5b58
+004a5b58	__write	101	6	5	004a5b58-004a5bbd
+004a5bbd	__write_lk	395	2	6	004a5bbd-004a5d48
+004a5d48	__open	23	5	1	004a5d48-004a5d5f
+004a5d5f	__sopen	719	2	14	004a5d5f-004a602e
+004a6030	__ftol	39	9	0	004a6030-004a6057
+004a6057	__tell	17	1	1	004a6057-004a6068
+004a6070	FUN_004a6070	47	9	0	004a6070-004a609f
+004a609f	_fclose	49	12	3	004a609f-004a60d0
+004a60d0	__fclose_lk	76	1	4	004a60d0-004a611c
+004a611c	__fsopen	49	1	3	004a611c-004a614d
+004a614d	FUN_004a614d	19	10	1	004a614d-004a6160
+004a6170	_strchr	193	13	0	004a6160-004a6165;004a6170-004a622c
+004a622c	_fprintf	60	3	5	004a622c-004a6268
+004a6268	_fwrite	47	4	3	004a6268-004a6297
+004a6297	__fwrite_lk	266	1	4	004a6297-004a63a1
+004a63a1	_fread	47	3	3	004a63a1-004a63d0
+004a63d0	__fread_lk	232	1	3	004a63d0-004a64b8
+004a64b8	FUN_004a64b8	42	2	3	004a64b8-004a64e2
+004a64f0	_strstr	128	5	0	004a64f0-004a6570
+004a6570	_isdigit	40	1	1	004a6570-004a6598
+004a6598	_isspace	40	4	1	004a6598-004a65c0
+004a65c0	_isprint	46	1	1	004a65c0-004a65ee
+004a65ee	_fgets	98	5	3	004a65ee-004a6650
+004a6650	_toupper	111	1	5	004a6650-004a66bf
+004a66bf	__toupper_lk	204	1	2	004a66bf-004a678b
+004a678b	_strtok	164	1	1	004a678b-004a682f
+004a682f	entry	253	0	16	004a682f-004a692c
+004a6937	__amsg_exit	34	7	3	004a6937-004a6959
+004a695c	FUN_004a695c	35	1	3	004a695c-004a697f
+004a6980	_realloc	312	3	12	004a6980-004a6ab8
+004a6ad0	_strncmp	56	8	0	004a6ad0-004a6b08
+004a6b08	_atol	139	2	1	004a6b08-004a6b93
+004a6b93	_atoi	11	2	1	004a6b93-004a6b9e
+004a6ba0	_memchr	165	1	0	004a6ba0-004a6c45
+004a6c50	_strrchr	39	1	0	004a6c50-004a6c77
+004a6c80	_strncpy	254	3	0	004a6c80-004a6d7e
+004a6d80	FID_conflict:_memcpy	664	5	0	004a6d80-004a6ddb;004a6ddc-004a6de3;004a6df0-004a6e19;004a6e1c-004a6e3f;004a6e40-004a6e59;004a6e7c-004a6ec6;004a6ed8-004a6edf;004a6ee0-004a6eeb;004a6eec-004a6efd;004a6f00-004a6f17;004a6f18-004a6f3e;004a6f40-004a6f49;004a6f4c-004a6f6b;004a6f78-004a6f95;004a6f98-004a6fbf;004a6fc0-004a6ff1;004a7014-004a705e;004a7070-004a7077;004a7078-004a7085;004a7088-004a709b;004a709c-004a70b5
+004a70b5	_rewind	100	1	4	004a70b5-004a7119
+004a7119	_fseek	44	1	3	004a7119-004a7145
+004a7145	__fseek_lk	141	1	4	004a7145-004a71d2
+004a71d2	_tolower	111	2	5	004a71d2-004a7241
+004a7241	__tolower_lk	203	3	2	004a7241-004a730c
+004a730c	__ftell_lk	353	1	2	004a730c-004a746d
+004a7470	_strcspn	62	0	0	004a7470-004a74ae
+004a74ae	__setdefaultprecision	18	1	1	004a74ae-004a74c0
+004a74c0	__ms_p5_test_fdiv	62	1	0	004a74c0-004a74fe
+004a74fe	__ms_p5_mp_test_fdiv	41	1	3	004a74fe-004a7527
+004a7527	__forcdecpt	90	0	2	004a7527-004a7581
+004a75e7	__fassign	62	0	2	004a75e7-004a7625
+004a7625	__cftoe	97	1	3	004a7625-004a7686
+004a7686	__cftoe2	194	2	2	004a7686-004a7748
+004a7748	__cftof	85	1	3	004a7748-004a779d
+004a779d	__cftof2	167	2	2	004a779d-004a7844
+004a7844	__cftog	147	1	4	004a7844-004a78d7
+004a78d7	__cfltcvt	81	0	3	004a78d7-004a7928
+004a7928	__shift	37	2	2	004a7928-004a794d
+004a794d	__heap_init	60	1	3	004a794d-004a7989
+004a7989	__mtinitlocks	41	1	1	004a7989-004a79b2
+004a79b2	__lock	97	23	7	004a79b2-004a7a13
+004a7a13	FUN_004a7a13	21	23	1	004a7a13-004a7a28
+004a7a28	___sbh_heap_init	62	1	1	004a7a28-004a7a66
+004a7a66	___sbh_find_block	43	3	0	004a7a66-004a7a91
+004a7a91	___sbh_free_block	811	2	3	004a7a91-004a7dbc
+004a7dbc	___sbh_alloc_block	777	3	2	004a7dbc-004a80c5
+004a80c5	___sbh_alloc_new_region	177	1	4	004a80c5-004a8176
+004a8176	___sbh_alloc_new_group	251	1	1	004a8176-004a8271
+004a8271	___sbh_resize_block	758	1	0	004a8271-004a8567
+004a8567	__callnewh	27	3	0	004a8567-004a8582
+004a8582	___InternalCxxFrameHandler	155	3	3	004a8582-004a861d
+004a861d	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	435	1	9	004a861d-004a87d0
+004a87d0	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	170	1	4	004a87d0-004a887a
+004a887a	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	93	1	1	004a887a-004a88d7
+004a88d7	___FrameUnwindToState	132	2	2	004a88d7-004a893e;004a8958-004a8975
+004a898b	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z	123	2	5	004a898b-004a8a06
+004a8a06	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	165	1	3	004a8a06-004a8aab
+004a8ad3	FUN_004a8ad3	78	1	3	004a8ad3-004a8b21
+004a8b4b	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	440	1	8	004a8b4b-004a8d03
+004a8d0f	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	86	2	1	004a8d0f-004a8d65
+004a8d76	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	35	1	0	004a8d76-004a8d99
+004a8da0	__CallSettingFrame@12	76	2	1	004a8da0-004a8dec
+004a8dec	__mtinit	84	1	6	004a8dec-004a8e40
+004a8e40	__initptd	19	2	0	004a8e40-004a8e53
+004a8e53	__getptd	103	11	8	004a8e53-004a8eba
+004a8eba	?terminate@@YAXXZ	86	3	2	004a8eba-004a8f02;004a8f0d-004a8f1b
+004a8f1b	?_inconsistency@@YAXXZ	79	5	1	004a8f1b-004a8f58;004a8f5f-004a8f71
+004a9039	__seh_longjmp_unwind@4	27	0	1	004a9039-004a9054
+004a9054	__msize	69	1	4	004a9054-004a9099
+004a9099	__dosmaperr	115	6	2	004a9099-004a910c
+004a910c	errnoPtr	9	19	1	004a910c-004a9115
+004a9115	doserrnoPtr	9	13	1	004a9115-004a911e
+004a911e	__alloc_osfhnd	291	1	7	004a911e-004a9241
+004a9241	__set_osfhnd	124	1	3	004a9241-004a92bd
+004a92bd	__free_osfhnd	127	1	3	004a92bd-004a933c
+004a933c	__get_osfhandle	66	4	2	004a933c-004a937e
+004a937e	__lock_fhandle	95	6	4	004a937e-004a93dd
+004a93dd	__unlock_fhandle	34	6	1	004a93dd-004a93ff
+004a93ff	__ioinit	444	1	6	004a93ff-004a95bb
+004a95bb	__lseek	101	5	5	004a95bb-004a9620
+004a9620	__lseek_lk	115	5	5	004a9620-004a9693
+004a9693	__chsize_lk	293	1	10	004a9693-004a97b8
+004a9874	__lock_file	47	8	2	004a9874-004a98a3
+004a98a3	FID_conflict:__lock_file2	35	2	2	004a98a3-004a98c6
+004a98c6	__unlock_file	47	9	2	004a98c6-004a98f5
+004a98f5	FID_conflict:__lock_file2	35	2	2	004a98f5-004a9918
+004a9918	__freebuf	43	1	1	004a9918-004a9943
+004a9943	_fflush	47	1	4	004a9943-004a9972
+004a9972	__fflush_lk	46	2	2	004a9972-004a99a0
+004a99a0	__flush	92	6	1	004a99a0-004a99fc
+004a9a05	_flsall	164	1	5	004a9a05-004a9aa9
+004a9aa9	__openfile	368	1	1	004a9aa9-004a9c19
+004a9c19	__getstream	200	1	7	004a9c19-004a9ce1
+004a9ce1	__stbuf	141	1	2	004a9ce1-004a9d6e
+004a9d6e	__ftbuf	42	1	1	004a9d6e-004a9d98
+004a9d98	__output	1825	2	11	004a9d98-004aa4b9
+004aa4d9	_write_char	53	3	1	004aa4d9-004aa50e
+004aa50e	_write_multi_char	49	1	1	004aa50e-004aa53f
+004aa53f	_write_string	56	1	1	004aa53f-004aa577
+004aa577	_get_int_arg	13	1	0	004aa577-004aa584
+004aa584	_get_int64_arg	16	1	0	004aa584-004aa594
+004aa594	_get_short_arg	14	1	0	004aa594-004aa5a2
+004aa5a2	__flsbuf	280	3	4	004aa5a2-004aa6ba
+004aa6c0	FID_conflict:_memcpy	664	4	0	004aa6c0-004aa71b;004aa71c-004aa723;004aa730-004aa759;004aa75c-004aa77f;004aa780-004aa799;004aa7bc-004aa806;004aa818-004aa81f;004aa820-004aa82b;004aa82c-004aa83d;004aa840-004aa857;004aa858-004aa87e;004aa880-004aa889;004aa88c-004aa8ab;004aa8b8-004aa8d5;004aa8d8-004aa8ff;004aa900-004aa931;004aa954-004aa99e;004aa9b0-004aa9b7;004aa9b8-004aa9c5;004aa9c8-004aa9db;004aa9dc-004aa9f5
+004aa9f5	__filbuf	220	3	2	004aa9f5-004aaad1
+004aaad1	__isctype	117	10	1	004aaad1-004aab46
+004aab46	___crtLCMapStringA	511	3	6	004aab46-004aac56;004aac69-004aad0a;004aad1c-004aad6a
+004aad6a	__XcptFilter	318	1	3	004aad6a-004aaea8
+004aaea8	_xcptlookup	58	1	0	004aaea8-004aaee2
+004aaee2	__wincmdln	88	1	2	004aaee2-004aaf3a
+004aaf3a	__setenvp	185	1	6	004aaf3a-004aaff3
+004aaff3	__setargv	153	1	5	004aaff3-004ab08c
+004ab08c	_parse_cmdline	436	1	0	004ab08c-004ab240
+004ab240	___crtGetEnvironmentStringsA	306	1	8	004ab240-004ab372
+004ab372	__FF_MSGBANNER	57	2	1	004ab372-004ab3ab
+004ab3ab	__NMSG_WRITE	339	4	8	004ab3ab-004ab4fe
+004ab500	__allmul	52	1	0	004ab500-004ab534
+004ab534	_calloc	141	2	6	004ab534-004ab5c1
+004ab5c1	__control87	53	1	2	004ab5c1-004ab5f6
+004ab5f6	__controlfp	22	1	1	004ab5f6-004ab60c
+004ab60c	__abstract_cw	146	1	0	004ab60c-004ab69e
+004ab69e	__hw_cw	137	1	0	004ab69e-004ab727
+004ab727	__ZeroTail	73	1	0	004ab727-004ab770
+004ab770	__IncMan	86	1	1	004ab770-004ab7c6
+004ab7c6	__RoundMan	140	1	2	004ab7c6-004ab852
+004ab852	__CopyMan	27	1	0	004ab852-004ab86d
+004ab86d	__FillZeroMan	12	1	0	004ab86d-004ab879
+004ab879	__IsZeroMan	27	1	0	004ab879-004ab894
+004ab894	__ShrMan	141	1	0	004ab894-004ab921
+004ab921	__ld12cvt	364	2	5	004ab921-004aba8d
+004aba8d	FID_conflict:__ld12tod	22	1	1	004aba8d-004abaa3
+004abaa3	FID_conflict:__ld12tod	22	1	1	004abaa3-004abab9
+004abab9	FID_conflict:__atodbl	45	1	2	004abab9-004abae6
+004abae6	FID_conflict:__atodbl	45	1	2	004abae6-004abb13
+004abb13	__fptostr	119	3	2	004abb13-004abb8a
+004abb8a	__fltout2	92	3	3	004abb8a-004abbe6
+004abbe6	___dtold	182	1	0	004abbe6-004abc9c
+004abca0	FUN_004abca0	7	7	0	004abca0-004abca7
+004abcb0	_strcat	224	1	0	004abcb0-004abd90
+004abd90	_memset	88	5	0	004abd90-004abde8
+004abdf0	_strlen	123	9	0	004abdf0-004abe6b
+004abe6b	amsgExitThunk	9	2	1	004abe6b-004abe74
+004abe74	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	70	0	2	004abe74-004abeba
+004abed8	?_ValidateRead@@YAHPBXI@Z	28	2	1	004abed8-004abef4
+004abef4	?_ValidateWrite@@YAHPAXI@Z	28	1	1	004abef4-004abf10
+004abf10	?_ValidateExecute@@YAHP6GHXZ@Z	24	2	1	004abf10-004abf28
+004abf30	_strcmp	129	1	0	004abf30-004abf73;004abf74-004abf7a;004abf7c-004abfb4
+004abfb4	_abort	23	1	3	004abfb4-004abfcb
+004abfcb	__setmode_lk	97	1	1	004abfcb-004ac02c
+004ac0ad	__commit	147	1	7	004ac0ad-004ac140
+004ac140	__isatty	41	2	0	004ac140-004ac169
+004ac169	_wctomb	89	1	5	004ac169-004ac1c2
+004ac1c2	__wctomb_lk	105	1	2	004ac1c2-004ac22b
+004ac230	__aulldiv	104	1	0	004ac230-004ac298
+004ac2a0	__aullrem	117	1	0	004ac2a0-004ac315
+004ac315	__getbuf	68	3	1	004ac315-004ac359
+004ac359	___crtGetStringTypeA	318	2	5	004ac359-004ac452;004ac45d-004ac4a2
+004ac4a2	__ismbblead	17	1	1	004ac4a2-004ac4b3
+004ac4b3	_x_ismbbtype	49	1	0	004ac4b3-004ac4e4
+004ac4e4	__setmbcp	429	1	7	004ac4e4-004ac691
+004ac691	_getSystemCP	74	1	0	004ac691-004ac6db
+004ac6db	_CPtoLCID	51	1	0	004ac6db-004ac70e
+004ac70e	_setSBCS	41	1	0	004ac70e-004ac737
+004ac737	_setSBUpLow	389	1	3	004ac737-004ac8bc
+004ac8bc	___initmbctable	28	3	1	004ac8bc-004ac8d8
+004ac8d8	___crtMessageBoxA	137	1	2	004ac8d8-004ac961
+004ac961	_raise	386	1	5	004ac961-004acae3
+004acae3	FUN_004acae3	61	1	0	004acae3-004acb20
+004acb20	___addl	33	3	0	004acb20-004acb41
+004acb41	___add_12	94	2	1	004acb41-004acb9f
+004acb9f	___shl_12	46	3	0	004acb9f-004acbcd
+004acbcd	___shr_12	45	2	0	004acbcd-004acbfa
+004acbfa	___mtold12	199	1	2	004acbfa-004accc1
+004accc1	___strgtold12	1185	2	3	004accc1-004ad162
+004ad192	_$I10_OUTPUT	659	1	6	004ad192-004ad425
+004ad425	__itoa	45	56	1	004ad425-004ad452
+004ad452	_xtoa	92	1	0	004ad452-004ad4ae
+004ad4b0	__strcmpi	208	3	3	004ad4b0-004ad580
+004ad580	__strnicmp	257	2	3	004ad580-004ad681
+004ad681	___ld12mul	544	2	3	004ad681-004ad8a1
+004ad8a1	___multtenpow12	124	2	1	004ad8a1-004ad91d
+004ad91d	_getenv	33	1	3	004ad91d-004ad93e
+004ad93e	__getenv_lk	125	1	3	004ad93e-004ad9bb
+004ad9bb	__mbsnbicoll	63	2	1	004ad9bb-004ad9fa
+004ad9fa	___wtomb_environ	110	2	3	004ad9fa-004ada68
+004ada68	___crtCompareStringA	597	1	6	004ada68-004adc1f;004adc35-004adc8e;004adca0-004adce5
+004adce5	_strncnt	43	2	0	004adce5-004add10
+004add10	___crtsetenv	391	1	10	004add10-004ade97
+004ade97	_findenv	88	1	1	004ade97-004adeef
+004adeef	_copy_environ	103	1	3	004adeef-004adf56
+004adf56	__mbschr	151	1	3	004adf56-004adfed
+004adfed	__strdup	43	1	3	004adfed-004ae018
+004ae020	_CreateJPG	293	1	9	004ae020-004ae145
+004ae150	jpeg_CreateCompress	184	1	1	004ae150-004ae208
+004ae210	jpeg_abort_compress	12	1	1	004ae210-004ae21c
+004ae220	jpeg_suppress_tables	78	1	0	004ae220-004ae26e
+004ae270	jpeg_finish_compress	258	1	1	004ae270-004ae372
+004ae380	jpeg_start_compress	117	1	2	004ae380-004ae3f5
+004ae400	jpeg_write_scanlines	196	1	0	004ae400-004ae4c4
+004ae4d0	jpeg_stdio_dest	61	1	0	004ae4d0-004ae50d
+004ae590	term_destination	102	0	2	004ae590-004ae5f6
+004ae600	jpeg_add_quant_table	186	1	1	004ae600-004ae6ba
+004ae6c0	jpeg_set_linear_quality	52	1	1	004ae6c0-004ae6f4
+004ae700	jpeg_quality_scaling	56	1	0	004ae700-004ae738
+004ae740	jpeg_set_quality	30	1	2	004ae740-004ae75e
+004ae760	jpeg_set_defaults	239	1	3	004ae760-004ae84f
+004ae850	std_huff_tables	90	1	1	004ae850-004ae8aa
+004ae8b0	add_huff_table	93	1	1	004ae8b0-004ae90d
+004ae910	jpeg_default_colorspace	95	2	1	004ae910-004ae96f
+004ae990	jpeg_set_colorspace	716	1	0	004ae990-004aec5c
+004aec80	jpeg_std_error	76	1	0	004aec80-004aeccc
+004aecd0	error_exit	80	0	3	004aecd0-004aed20
+004aee30	jinit_memory_mgr	308	1	5	004aee30-004aef64
+004aef70	alloc_small	303	4	2	004aef70-004af09f
+004af0a0	out_of_memory	29	2	0	004af0a0-004af0bd
+004af0c0	alloc_large	161	2	2	004af0c0-004af161
+004af170	alloc_sarray	168	1	2	004af170-004af218
+004af220	alloc_barray	176	1	2	004af220-004af2d0
+004af2d0	request_virt_sarray	110	0	1	004af2d0-004af33e
+004af340	request_virt_barray	110	0	1	004af340-004af3ae
+004af3b0	realize_virt_arrays	385	0	4	004af3b0-004af531
+004af690	do_sarray_io	154	0	0	004af690-004af72a
+004af880	do_barray_io	159	0	0	004af880-004af91f
+004af920	free_pool	241	0	1	004af920-004afa11
+004afa60	jpeg_abort	35	1	0	004afa60-004afa83
+004afa90	jpeg_destroy	31	2	0	004afa90-004afaaf
+004afab0	jpeg_alloc_quant_table	31	1	0	004afab0-004afacf
+004afad0	jpeg_alloc_huff_table	31	1	0	004afad0-004afaef
+004afaf0	jinit_marker_writer	97	1	0	004afaf0-004afb51
+004afb60	write_any_marker	79	0	3	004afb60-004afbaf
+004afbb0	emit_byte	60	9	0	004afbb0-004afbec
+004afbf0	emit_marker	32	10	1	004afbf0-004afc10
+004afc10	emit_2bytes	40	8	1	004afc10-004afc38
+004afc40	write_file_header	59	0	3	004afc40-004afc7b
+004afc80	emit_jfif_app0	151	1	3	004afc80-004afd17
+004afd20	emit_adobe_app14	146	1	3	004afd20-004afdb2
+004afdc0	write_frame_header	246	0	2	004afdc0-004afeb6
+004afec0	emit_dqt	214	2	3	004afec0-004aff96
+004affa0	emit_sof	184	1	3	004affa0-004b0058
+004b0120	emit_dht	191	1	3	004b0120-004b01df
+004b01e0	null_method	1	0	0	004b01e0-004b01e1
+004b01f0	emit_dri	42	0	2	004b01f0-004b021a
+004b0220	emit_sos	221	0	3	004b0220-004b02fd
+004b0320	write_tables_only	128	0	3	004b0320-004b03a0
+004b03a0	jinit_compress_master	183	1	10	004b03a0-004b0457
+004b0460	jpeg_get_large	14	3	1	004b0460-004b046e
+004b0470	jpeg_free_large	12	1	1	004b0470-004b047c
+004b0480	jpeg_mem_available	5	1	0	004b0480-004b0485
+004b0490	jpeg_open_backing_store	20	1	0	004b0490-004b04a4
+004b04b0	jpeg_mem_init	3	2	0	004b04b0-004b04b3
+004b04c0	jdiv_round_up	16	2	0	004b04c0-004b04d0
+004b04d0	jround_up	24	1	0	004b04d0-004b04e8
+004b04f0	jcopy_sample_rows	70	2	0	004b04f0-004b0536
+004b0540	jzero_far	27	0	0	004b0540-004b055b
+004b0560	jinit_c_main_controller	135	1	0	004b0560-004b05e7
+004b0640	process_data_simple_main	176	0	0	004b0640-004b06f0
+004b06f0	jinit_c_coef_controller	187	1	1	004b06f0-004b07ab
+004b0860	start_iMCU_row	78	1	0	004b0860-004b08ae
+004b0d70	compress_output	486	0	1	004b0d70-004b0f56
+004b0f60	jpeg_make_c_derived_tbl	282	0	0	004b0f60-004b107a
+004b1080	jpeg_gen_optimal_table	558	0	0	004b1080-004b12ae
+004b12b0	jinit_huff_encoder	59	1	0	004b12b0-004b12eb
+004b15c0	encode_one_block	1051	0	2	004b15c0-004b19db
+004b19e0	dump_buffer	44	4	0	004b19e0-004b1a0c
+004b1a10	emit_bits	198	1	1	004b1a10-004b1ad6
+004b1ae0	emit_restart	140	0	2	004b1ae0-004b1b6c
+004b1b70	flush_bits	165	1	1	004b1b70-004b1c15
+004b1d80	htest_one_block	160	0	0	004b1d80-004b1e20
+004b1f30	jinit_phuff_encoder	56	1	0	004b1f30-004b1f68
+004b2420	dump_buffer_4b2420	60	4	0	004b2420-004b245c
+004b2460	emit_restart_4b2460	165	0	3	004b2460-004b2505
+004b2510	flush_bits_4b2510	190	1	1	004b2510-004b25ce
+004b25d0	emit_eobrun	498	1	2	004b25d0-004b27c2
+004b27d0	emit_buffered_bits	228	1	1	004b27d0-004b28b4
+004b34b0	jinit_forward_dct	145	1	0	004b34b0-004b3541
+004b3a80	jinit_c_prep_controller	172	1	1	004b3a80-004b3b2c
+004b3d00	expand_bottom_edge	52	0	1	004b3d00-004b3d34
+004b3f10	create_context_buffer	292	1	0	004b3f10-004b4034
+004b4040	jinit_downsampler	387	1	0	004b4040-004b41c3
+004b4390	expand_right_edge	92	1	0	004b4390-004b43ec
+004b43f0	fullsize_downsample	70	0	2	004b43f0-004b4436
+004b4a60	jinit_color_converter	528	1	0	004b4a60-004b4c70
+004b4eb0	rgb_gray_convert	174	0	0	004b4eb0-004b4f5e
+004b50d0	grayscale_convert	103	0	0	004b50d0-004b5137
+004b51e0	jinit_c_master_control	191	1	2	004b51e0-004b529f
+004b52a0	initial_setup	461	1	1	004b52a0-004b546d
+004b5470	validate_script	927	1	0	004b5470-004b580f
+004b5810	prepare_for_pass	433	0	2	004b5810-004b59c1
+004b59d0	select_scan_parameters	255	1	0	004b59d0-004b5acf
+004b5ad0	per_scan_setup	458	1	1	004b5ad0-004b5c9a
+004b5ca0	pass_startup	43	0	0	004b5ca0-004b5ccb
+004b65d0	KERNEL32.DLL::RtlUnwind	6	2	0	004b65d0-004b65d6
+004b65d6	_sprintf	82	0	2	004b65d6-004b6628
+004b6628	_sscanf	52	1	2	004b6628-004b665c
+004b665c	__input	2597	1	11	004b665c-004b7081
+004b7081	__hextodec	55	1	1	004b7081-004b70b8
+004b70b8	__inc	26	2	1	004b70b8-004b70d2
+004b70d2	__un_inc	23	1	1	004b70d2-004b70e9
+004b70e9	__whiteout	36	1	2	004b70e9-004b710d
+004b710d	_mbtowc	93	1	5	004b710d-004b716a
+004b716a	__mbtowc_lk	201	1	2	004b716a-004b7233
+004b7240	__allshl	31	1	0	004b7240-004b725f
+004b725f	FID_conflict:_ungetc	110	1	1	004b725f-004b72cd
+004b72d0	Unwind@004b72d0	11	0	1	004b72d0-004b72db
+004b72f0	Unwind@004b72f0	8	0	1	004b72f0-004b72f8
+004b72f8	Unwind@004b72f8	11	0	1	004b72f8-004b7303
+004b7310	Unwind@004b7310	11	0	1	004b7310-004b731b
+004b731b	Unwind@004b731b	11	0	1	004b731b-004b7326
+004b7330	Unwind@004b7330	11	0	1	004b7330-004b733b
+004b733b	Unwind@004b733b	11	0	1	004b733b-004b7346
+004b7346	Unwind@004b7346	11	0	1	004b7346-004b7351
+004b7351	Unwind@004b7351	11	0	1	004b7351-004b735c
+004b735c	Unwind@004b735c	11	0	1	004b735c-004b7367
+004b7367	Unwind@004b7367	11	0	1	004b7367-004b7372
+004b7380	Unwind@004b7380	11	0	1	004b7380-004b738b
+004b73a0	Unwind@004b73a0	11	0	1	004b73a0-004b73ab
+004b73c0	Unwind@004b73c0	22	0	1	004b73c0-004b73d6
+004b73d6	Unwind@004b73d6	11	0	1	004b73d6-004b73e1
+004b73f0	Unwind@004b73f0	22	0	1	004b73f0-004b7406
+004b7406	Unwind@004b7406	11	0	1	004b7406-004b7411
+004b7420	Unwind@004b7420	22	0	1	004b7420-004b7436
+004b7436	Unwind@004b7436	11	0	1	004b7436-004b7441
+004b7450	Unwind@004b7450	8	0	1	004b7450-004b7458
+004b7458	Unwind@004b7458	14	0	1	004b7458-004b7466
+004b7470	Unwind@004b7470	11	0	1	004b7470-004b747b
+004b7490	Unwind@004b7490	11	0	1	004b7490-004b749b
+004b74b0	Unwind@004b74b0	11	0	1	004b74b0-004b74bb
+004b74d0	Unwind@004b74d0	8	0	1	004b74d0-004b74d8
+004b74f0	Unwind@004b74f0	8	0	1	004b74f0-004b74f8
+004b7510	Unwind@004b7510	8	0	1	004b7510-004b7518
+004b7518	Unwind@004b7518	11	0	1	004b7518-004b7523
+004b7523	Unwind@004b7523	11	0	1	004b7523-004b752e
+004b752e	Unwind@004b752e	14	0	1	004b752e-004b753c
+004b753c	Unwind@004b753c	14	0	1	004b753c-004b754a
+004b7560	Unwind@004b7560	8	0	1	004b7560-004b7568
+004b7568	Unwind@004b7568	11	0	1	004b7568-004b7573
+004b7573	Unwind@004b7573	11	0	1	004b7573-004b757e
+004b757e	Unwind@004b757e	14	0	1	004b757e-004b758c
+004b758c	Unwind@004b758c	14	0	1	004b758c-004b759a
+004b75b0	Unwind@004b75b0	8	0	1	004b75b0-004b75b8
+004b75b8	Unwind@004b75b8	11	0	1	004b75b8-004b75c3
+004b75c3	Unwind@004b75c3	11	0	1	004b75c3-004b75ce
+004b75ce	Unwind@004b75ce	14	0	1	004b75ce-004b75dc
+004b75dc	Unwind@004b75dc	14	0	1	004b75dc-004b75ea
+004b75ea	Unwind@004b75ea	14	0	1	004b75ea-004b75f8
+004b75f8	Unwind@004b75f8	14	0	1	004b75f8-004b7606
+004b7606	Unwind@004b7606	14	0	1	004b7606-004b7614
+004b7614	Unwind@004b7614	24	0	1	004b7614-004b762c
+004b7640	Unwind@004b7640	8	0	1	004b7640-004b7648
+004b7648	Unwind@004b7648	11	0	1	004b7648-004b7653
+004b7653	Unwind@004b7653	11	0	1	004b7653-004b765e
+004b765e	Unwind@004b765e	14	0	1	004b765e-004b766c
+004b766c	Unwind@004b766c	14	0	1	004b766c-004b767a
+004b767a	Unwind@004b767a	14	0	1	004b767a-004b7688
+004b7688	Unwind@004b7688	14	0	1	004b7688-004b7696
+004b7696	Unwind@004b7696	14	0	1	004b7696-004b76a4
+004b76a4	Unwind@004b76a4	24	0	1	004b76a4-004b76bc
+004b76d0	Unwind@004b76d0	8	0	1	004b76d0-004b76d8
+004b76d8	Unwind@004b76d8	11	0	1	004b76d8-004b76e3
+004b76f0	Unwind@004b76f0	8	0	1	004b76f0-004b76f8
+004b76f8	Unwind@004b76f8	11	0	1	004b76f8-004b7703
+004b7710	Unwind@004b7710	8	0	1	004b7710-004b7718
+004b7718	Unwind@004b7718	22	0	1	004b7718-004b772e
+004b772e	Unwind@004b772e	24	0	1	004b772e-004b7746
+004b7746	Unwind@004b7746	14	0	1	004b7746-004b7754
+004b7760	Unwind@004b7760	8	0	1	004b7760-004b7768
+004b7768	Unwind@004b7768	22	0	1	004b7768-004b777e
+004b777e	Unwind@004b777e	24	0	1	004b777e-004b7796
+004b7796	Unwind@004b7796	14	0	1	004b7796-004b77a4
+004b77b0	Unwind@004b77b0	8	0	1	004b77b0-004b77b8
+004b77d0	Unwind@004b77d0	8	0	1	004b77d0-004b77d8
+004b77f0	Unwind@004b77f0	8	0	1	004b77f0-004b77f8
+004b77f8	Unwind@004b77f8	11	0	1	004b77f8-004b7803
+004b7803	Unwind@004b7803	11	0	1	004b7803-004b780e
+004b780e	Unwind@004b780e	14	0	1	004b780e-004b781c
+004b781c	Unwind@004b781c	14	0	1	004b781c-004b782a
+004b782a	Unwind@004b782a	14	0	1	004b782a-004b7838
+004b7838	Unwind@004b7838	14	0	1	004b7838-004b7846
+004b7846	Unwind@004b7846	14	0	1	004b7846-004b7854
+004b7854	Unwind@004b7854	14	0	1	004b7854-004b7862
+004b7862	Unwind@004b7862	14	0	1	004b7862-004b7870
+004b7870	Unwind@004b7870	14	0	1	004b7870-004b787e
+004b7890	Unwind@004b7890	8	0	1	004b7890-004b7898
+004b7898	Unwind@004b7898	11	0	1	004b7898-004b78a3
+004b78a3	Unwind@004b78a3	11	0	1	004b78a3-004b78ae
+004b78ae	Unwind@004b78ae	14	0	1	004b78ae-004b78bc
+004b78bc	Unwind@004b78bc	14	0	1	004b78bc-004b78ca
+004b78ca	Unwind@004b78ca	14	0	1	004b78ca-004b78d8
+004b78d8	Unwind@004b78d8	14	0	1	004b78d8-004b78e6
+004b78e6	Unwind@004b78e6	14	0	1	004b78e6-004b78f4
+004b78f4	Unwind@004b78f4	14	0	1	004b78f4-004b7902
+004b7902	Unwind@004b7902	14	0	1	004b7902-004b7910
+004b7910	Unwind@004b7910	14	0	1	004b7910-004b791e
+004b7930	Unwind@004b7930	11	0	1	004b7930-004b793b
+004b793b	Unwind@004b793b	11	0	1	004b793b-004b7946
+004b7946	Unwind@004b7946	11	0	1	004b7946-004b7951
+004b7960	Unwind@004b7960	11	0	1	004b7960-004b796b
+004b7980	Unwind@004b7980	11	0	1	004b7980-004b798b
+004b798b	Unwind@004b798b	11	0	1	004b798b-004b7996
+004b7996	Unwind@004b7996	11	0	1	004b7996-004b79a1
+004b79a1	Unwind@004b79a1	11	0	1	004b79a1-004b79ac
+004b79ac	Unwind@004b79ac	11	0	1	004b79ac-004b79b7
+004b79b7	Unwind@004b79b7	11	0	1	004b79b7-004b79c2
+004b79c2	Unwind@004b79c2	11	0	1	004b79c2-004b79cd
+004b79e0	Unwind@004b79e0	11	0	1	004b79e0-004b79eb
+004b79eb	Unwind@004b79eb	11	0	1	004b79eb-004b79f6
+004b79f6	Unwind@004b79f6	11	0	1	004b79f6-004b7a01
+004b7a10	Unwind@004b7a10	11	0	1	004b7a10-004b7a1b
+004b7a30	Unwind@004b7a30	8	0	1	004b7a30-004b7a38
+004b7a50	Unwind@004b7a50	8	0	1	004b7a50-004b7a58
+004b7a70	Unwind@004b7a70	11	0	1	004b7a70-004b7a7b
+004b7a7b	Unwind@004b7a7b	11	0	1	004b7a7b-004b7a86
+004b7a90	Unwind@004b7a90	22	0	1	004b7a90-004b7aa6
+004b7aa6	Unwind@004b7aa6	11	0	1	004b7aa6-004b7ab1
+004b7ab1	Unwind@004b7ab1	11	0	1	004b7ab1-004b7abc
+004b7ad0	Unwind@004b7ad0	22	0	1	004b7ad0-004b7ae6
+004b7ae6	Unwind@004b7ae6	22	0	1	004b7ae6-004b7afc
+004b7afc	Unwind@004b7afc	11	0	1	004b7afc-004b7b07
+004b7b20	Unwind@004b7b20	11	0	1	004b7b20-004b7b2b
+004b7b40	Unwind@004b7b40	14	0	1	004b7b40-004b7b4e
+004b7b60	Unwind@004b7b60	14	0	1	004b7b60-004b7b6e
+004b7b6e	Unwind@004b7b6e	14	0	1	004b7b6e-004b7b7c
+004b7b90	Unwind@004b7b90	11	0	1	004b7b90-004b7b9b
+004b7b9b	Unwind@004b7b9b	14	0	1	004b7b9b-004b7ba9
+004b7bc0	Unwind@004b7bc0	11	0	1	004b7bc0-004b7bcb
+004b7be0	Unwind@004b7be0	8	0	1	004b7be0-004b7be8
+004b7c00	Unwind@004b7c00	8	0	1	004b7c00-004b7c08
+004b7c08	Unwind@004b7c08	14	0	1	004b7c08-004b7c16
+004b7c16	Unwind@004b7c16	14	0	1	004b7c16-004b7c24
+004b7c30	Unwind@004b7c30	11	0	1	004b7c30-004b7c3b
+004b7c3b	Unwind@004b7c3b	11	0	1	004b7c3b-004b7c46
+004b7c46	Unwind@004b7c46	11	0	1	004b7c46-004b7c51
+004b7c51	Unwind@004b7c51	11	0	1	004b7c51-004b7c5c
+004b7c5c	Unwind@004b7c5c	11	0	1	004b7c5c-004b7c67
+004b7c67	Unwind@004b7c67	11	0	1	004b7c67-004b7c72
+004b7c80	Unwind@004b7c80	8	0	1	004b7c80-004b7c88
+004b7ca0	Unwind@004b7ca0	8	0	1	004b7ca0-004b7ca8
+004b7cc0	Unwind@004b7cc0	11	0	1	004b7cc0-004b7ccb
+004b7ce0	Unwind@004b7ce0	11	0	1	004b7ce0-004b7ceb
+004b7ceb	Unwind@004b7ceb	11	0	1	004b7ceb-004b7cf6
+004b7cf6	Unwind@004b7cf6	17	0	1	004b7cf6-004b7d07
+004b7d07	Unwind@004b7d07	19	0	1	004b7d07-004b7d1a
+004b7d1a	Unwind@004b7d1a	17	0	1	004b7d1a-004b7d2b
+004b7d2b	Unwind@004b7d2b	19	0	1	004b7d2b-004b7d3e
+004b7d3e	Unwind@004b7d3e	17	0	1	004b7d3e-004b7d4f
+004b7d4f	Unwind@004b7d4f	19	0	1	004b7d4f-004b7d62
+004b7d62	Unwind@004b7d62	17	0	1	004b7d62-004b7d73
+004b7d80	Unwind@004b7d80	11	0	1	004b7d80-004b7d8b
+004b7da0	Unwind@004b7da0	11	0	1	004b7da0-004b7dab
+004b7dc0	Unwind@004b7dc0	11	0	1	004b7dc0-004b7dcb
+004b7de0	Unwind@004b7de0	8	0	1	004b7de0-004b7de8
+004b7e00	Unwind@004b7e00	8	0	1	004b7e00-004b7e08
+004b7e20	Unwind@004b7e20	8	0	1	004b7e20-004b7e28
+004b7e40	Unwind@004b7e40	8	0	1	004b7e40-004b7e48
+004b7e60	Unwind@004b7e60	8	0	1	004b7e60-004b7e68
+004b7e80	Unwind@004b7e80	14	0	1	004b7e80-004b7e8e
+004b7ea0	Unwind@004b7ea0	8	0	1	004b7ea0-004b7ea8
+004b7ec0	Unwind@004b7ec0	8	0	1	004b7ec0-004b7ec8
+004b7ee0	Unwind@004b7ee0	8	0	1	004b7ee0-004b7ee8
+004b7f00	Unwind@004b7f00	8	0	1	004b7f00-004b7f08
+004b7f08	Unwind@004b7f08	14	0	1	004b7f08-004b7f16
+004b7f20	Unwind@004b7f20	8	0	1	004b7f20-004b7f28
+004b7f28	Unwind@004b7f28	14	0	1	004b7f28-004b7f36
+004b7f36	Unwind@004b7f36	14	0	1	004b7f36-004b7f44
+004b7f50	Unwind@004b7f50	11	0	1	004b7f50-004b7f5b
+004b7f5b	Unwind@004b7f5b	14	0	1	004b7f5b-004b7f69
+004b7f69	Unwind@004b7f69	11	0	1	004b7f69-004b7f74
+004b7f80	Unwind@004b7f80	11	0	1	004b7f80-004b7f8b
+004b7fa0	Unwind@004b7fa0	26	0	1	004b7fa0-004b7fba
+004b7fd0	Unwind@004b7fd0	8	0	1	004b7fd0-004b7fd8
+004b7fd8	Unwind@004b7fd8	14	0	1	004b7fd8-004b7fe6
+004b7fe6	Unwind@004b7fe6	14	0	1	004b7fe6-004b7ff4
+004b7ff4	Unwind@004b7ff4	14	0	1	004b7ff4-004b8002
+004b8002	Unwind@004b8002	14	0	1	004b8002-004b8010
+004b8010	Unwind@004b8010	14	0	1	004b8010-004b801e
+004b801e	Unwind@004b801e	14	0	1	004b801e-004b802c
+004b802c	Unwind@004b802c	14	0	1	004b802c-004b803a
+004b803a	Unwind@004b803a	14	0	1	004b803a-004b8048
+004b8060	Unwind@004b8060	11	0	1	004b8060-004b806b
+004b8080	Unwind@004b8080	11	0	1	004b8080-004b808b
+004b80a0	Unwind@004b80a0	8	0	1	004b80a0-004b80a8
+004b80c0	Unwind@004b80c0	14	0	1	004b80c0-004b80ce
+004b80ce	Unwind@004b80ce	51	0	1	004b80ce-004b8101
+004b8101	Unwind@004b8101	51	0	1	004b8101-004b8134
+004b8134	Unwind@004b8134	54	0	1	004b8134-004b816a
+004b816a	Unwind@004b816a	54	0	1	004b816a-004b81a0
+004b81b0	Unwind@004b81b0	8	0	1	004b81b0-004b81b8
+004b81b8	Unwind@004b81b8	14	0	1	004b81b8-004b81c6
+004b81c6	Unwind@004b81c6	14	0	1	004b81c6-004b81d4
+004b81d4	Unwind@004b81d4	14	0	1	004b81d4-004b81e2
+004b81e2	Unwind@004b81e2	14	0	1	004b81e2-004b81f0
+004b81f0	Unwind@004b81f0	14	0	1	004b81f0-004b81fe
+004b81fe	Unwind@004b81fe	14	0	1	004b81fe-004b820c
+004b820c	Unwind@004b820c	14	0	1	004b820c-004b821a
+004b821a	Unwind@004b821a	14	0	1	004b821a-004b8228
+004b8228	Unwind@004b8228	11	0	1	004b8228-004b8233
+004b8233	Unwind@004b8233	11	0	1	004b8233-004b823e
+004b823e	Unwind@004b823e	8	0	1	004b823e-004b8246
+004b8246	Unwind@004b8246	8	0	1	004b8246-004b824e
+004b8260	Unwind@004b8260	11	0	1	004b8260-004b826b
+004b8280	Unwind@004b8280	11	0	1	004b8280-004b828b
+004b82a0	Unwind@004b82a0	11	0	1	004b82a0-004b82ab
+004b82c0	Unwind@004b82c0	11	0	1	004b82c0-004b82cb
+004b82e0	Unwind@004b82e0	11	0	1	004b82e0-004b82eb
+004b8300	Unwind@004b8300	8	0	1	004b8300-004b8308
+004b8308	Unwind@004b8308	14	0	1	004b8308-004b8316
+004b8320	Unwind@004b8320	8	0	1	004b8320-004b8328
+004b8328	Unwind@004b8328	14	0	1	004b8328-004b8336
+004b8336	Unwind@004b8336	14	0	1	004b8336-004b8344
+004b8344	Unwind@004b8344	8	0	1	004b8344-004b834c
+004b834c	Unwind@004b834c	8	0	1	004b834c-004b8354
+004b8360	Unwind@004b8360	11	0	1	004b8360-004b836b
+004b836b	Unwind@004b836b	11	0	1	004b836b-004b8376
+004b8376	Unwind@004b8376	11	0	1	004b8376-004b8381
+004b8381	Unwind@004b8381	11	0	1	004b8381-004b838c
+004b838c	Unwind@004b838c	11	0	1	004b838c-004b8397
+004b8397	Unwind@004b8397	11	0	1	004b8397-004b83a2
+004b83a2	Unwind@004b83a2	11	0	1	004b83a2-004b83ad
+004b83ad	Unwind@004b83ad	11	0	1	004b83ad-004b83b8
+004b83b8	Unwind@004b83b8	11	0	1	004b83b8-004b83c3
+004b83c3	Unwind@004b83c3	11	0	1	004b83c3-004b83ce
+004b83ce	Unwind@004b83ce	11	0	1	004b83ce-004b83d9
+004b83d9	Unwind@004b83d9	11	0	1	004b83d9-004b83e4
+004b83e4	Unwind@004b83e4	11	0	1	004b83e4-004b83ef
+004b83ef	Unwind@004b83ef	11	0	1	004b83ef-004b83fa
+004b83fa	Unwind@004b83fa	11	0	1	004b83fa-004b8405
+004b8405	Unwind@004b8405	11	0	1	004b8405-004b8410
+004b8410	Unwind@004b8410	11	0	1	004b8410-004b841b
+004b841b	Unwind@004b841b	11	0	1	004b841b-004b8426
+004b8426	Unwind@004b8426	11	0	1	004b8426-004b8431
+004b8431	Unwind@004b8431	11	0	1	004b8431-004b843c
+004b843c	Unwind@004b843c	11	0	1	004b843c-004b8447
+004b8447	Unwind@004b8447	11	0	1	004b8447-004b8452
+004b8452	Unwind@004b8452	11	0	1	004b8452-004b845d
+004b845d	Unwind@004b845d	11	0	1	004b845d-004b8468
+004b8468	Unwind@004b8468	11	0	1	004b8468-004b8473
+004b8473	Unwind@004b8473	11	0	1	004b8473-004b847e
+004b847e	Unwind@004b847e	11	0	1	004b847e-004b8489
+004b8489	Unwind@004b8489	11	0	1	004b8489-004b8494
+004b8494	Unwind@004b8494	11	0	1	004b8494-004b849f
+004b849f	Unwind@004b849f	11	0	1	004b849f-004b84aa
+004b84aa	Unwind@004b84aa	11	0	1	004b84aa-004b84b5
+004b84b5	Unwind@004b84b5	11	0	1	004b84b5-004b84c0
+004b84c0	Unwind@004b84c0	11	0	1	004b84c0-004b84cb
+004b84cb	Unwind@004b84cb	11	0	1	004b84cb-004b84d6
+004b84d6	Unwind@004b84d6	11	0	1	004b84d6-004b84e1
+004b84e1	Unwind@004b84e1	11	0	1	004b84e1-004b84ec
+004b84ec	Unwind@004b84ec	11	0	1	004b84ec-004b84f7
+004b84f7	Unwind@004b84f7	11	0	1	004b84f7-004b8502
+004b8502	Unwind@004b8502	11	0	1	004b8502-004b850d
+004b850d	Unwind@004b850d	11	0	1	004b850d-004b8518
+004b8518	Unwind@004b8518	11	0	1	004b8518-004b8523
+004b8523	Unwind@004b8523	11	0	1	004b8523-004b852e
+004b852e	Unwind@004b852e	11	0	1	004b852e-004b8539
+004b8539	Unwind@004b8539	11	0	1	004b8539-004b8544
+004b8544	Unwind@004b8544	11	0	1	004b8544-004b854f
+004b854f	Unwind@004b854f	11	0	1	004b854f-004b855a
+004b855a	Unwind@004b855a	11	0	1	004b855a-004b8565
+004b8565	Unwind@004b8565	11	0	1	004b8565-004b8570
+004b8570	Unwind@004b8570	11	0	1	004b8570-004b857b
+004b857b	Unwind@004b857b	11	0	1	004b857b-004b8586
+004b8586	Unwind@004b8586	11	0	1	004b8586-004b8591
+004b8591	Unwind@004b8591	11	0	1	004b8591-004b859c
+004b859c	Unwind@004b859c	11	0	1	004b859c-004b85a7
+004b85a7	Unwind@004b85a7	11	0	1	004b85a7-004b85b2
+004b85b2	Unwind@004b85b2	11	0	1	004b85b2-004b85bd
+004b85bd	Unwind@004b85bd	11	0	1	004b85bd-004b85c8
+004b85c8	Unwind@004b85c8	11	0	1	004b85c8-004b85d3
+004b85d3	Unwind@004b85d3	11	0	1	004b85d3-004b85de
+004b85de	Unwind@004b85de	11	0	1	004b85de-004b85e9
+004b85e9	Unwind@004b85e9	11	0	1	004b85e9-004b85f4
+004b85f4	Unwind@004b85f4	11	0	1	004b85f4-004b85ff
+004b85ff	Unwind@004b85ff	11	0	1	004b85ff-004b860a
+004b860a	Unwind@004b860a	11	0	1	004b860a-004b8615
+004b8615	Unwind@004b8615	11	0	1	004b8615-004b8620
+004b8620	Unwind@004b8620	11	0	1	004b8620-004b862b
+004b862b	Unwind@004b862b	11	0	1	004b862b-004b8636
+004b8636	Unwind@004b8636	11	0	1	004b8636-004b8641
+004b8641	Unwind@004b8641	11	0	1	004b8641-004b864c
+004b864c	Unwind@004b864c	11	0	1	004b864c-004b8657
+004b8657	Unwind@004b8657	11	0	1	004b8657-004b8662
+004b8662	Unwind@004b8662	11	0	1	004b8662-004b866d
+004b866d	Unwind@004b866d	11	0	1	004b866d-004b8678
+004b8678	Unwind@004b8678	11	0	1	004b8678-004b8683
+004b8683	Unwind@004b8683	11	0	1	004b8683-004b868e
+004b868e	Unwind@004b868e	11	0	1	004b868e-004b8699
+004b8699	Unwind@004b8699	11	0	1	004b8699-004b86a4
+004b86a4	Unwind@004b86a4	11	0	1	004b86a4-004b86af
+004b86af	Unwind@004b86af	11	0	1	004b86af-004b86ba
+004b86ba	Unwind@004b86ba	11	0	1	004b86ba-004b86c5
+004b86c5	Unwind@004b86c5	11	0	1	004b86c5-004b86d0
+004b86d0	Unwind@004b86d0	11	0	1	004b86d0-004b86db
+004b86db	Unwind@004b86db	11	0	1	004b86db-004b86e6
+004b86e6	Unwind@004b86e6	11	0	1	004b86e6-004b86f1
+004b86f1	Unwind@004b86f1	11	0	1	004b86f1-004b86fc
+004b86fc	Unwind@004b86fc	11	0	1	004b86fc-004b8707
+004b8707	Unwind@004b8707	11	0	1	004b8707-004b8712
+004b8712	Unwind@004b8712	11	0	1	004b8712-004b871d
+004b871d	Unwind@004b871d	11	0	1	004b871d-004b8728
+004b8728	Unwind@004b8728	11	0	1	004b8728-004b8733
+004b8733	Unwind@004b8733	11	0	1	004b8733-004b873e
+004b873e	Unwind@004b873e	11	0	1	004b873e-004b8749
+004b8749	Unwind@004b8749	11	0	1	004b8749-004b8754
+004b8754	Unwind@004b8754	11	0	1	004b8754-004b875f
+004b875f	Unwind@004b875f	11	0	1	004b875f-004b876a
+004b876a	Unwind@004b876a	11	0	1	004b876a-004b8775
+004b8775	Unwind@004b8775	11	0	1	004b8775-004b8780
+004b8780	Unwind@004b8780	11	0	1	004b8780-004b878b
+004b878b	Unwind@004b878b	11	0	1	004b878b-004b8796
+004b8796	Unwind@004b8796	11	0	1	004b8796-004b87a1
+004b87a1	Unwind@004b87a1	11	0	1	004b87a1-004b87ac
+004b87ac	Unwind@004b87ac	11	0	1	004b87ac-004b87b7
+004b87b7	Unwind@004b87b7	11	0	1	004b87b7-004b87c2
+004b87c2	Unwind@004b87c2	11	0	1	004b87c2-004b87cd
+004b87cd	Unwind@004b87cd	11	0	1	004b87cd-004b87d8
+004b87d8	Unwind@004b87d8	11	0	1	004b87d8-004b87e3
+004b87e3	Unwind@004b87e3	11	0	1	004b87e3-004b87ee
+004b87ee	Unwind@004b87ee	11	0	1	004b87ee-004b87f9
+004b87f9	Unwind@004b87f9	11	0	1	004b87f9-004b8804
+004b8804	Unwind@004b8804	11	0	1	004b8804-004b880f
+004b8820	Unwind@004b8820	11	0	1	004b8820-004b882b
+004b882b	Unwind@004b882b	11	0	1	004b882b-004b8836
+004b8836	Unwind@004b8836	11	0	1	004b8836-004b8841
+004b8841	Unwind@004b8841	11	0	1	004b8841-004b884c
+004b884c	Unwind@004b884c	11	0	1	004b884c-004b8857
+004b8857	Unwind@004b8857	11	0	1	004b8857-004b8862
+004b8862	Unwind@004b8862	11	0	1	004b8862-004b886d
+004b886d	Unwind@004b886d	11	0	1	004b886d-004b8878
+004b8878	Unwind@004b8878	11	0	1	004b8878-004b8883
+004b8883	Unwind@004b8883	11	0	1	004b8883-004b888e
+004b888e	Unwind@004b888e	11	0	1	004b888e-004b8899
+004b8899	Unwind@004b8899	11	0	1	004b8899-004b88a4
+004b88a4	Unwind@004b88a4	11	0	1	004b88a4-004b88af
+004b88af	Unwind@004b88af	11	0	1	004b88af-004b88ba
+004b88ba	Unwind@004b88ba	11	0	1	004b88ba-004b88c5
+004b88c5	Unwind@004b88c5	11	0	1	004b88c5-004b88d0
+004b88d0	Unwind@004b88d0	11	0	1	004b88d0-004b88db
+004b88db	Unwind@004b88db	11	0	1	004b88db-004b88e6
+004b88e6	Unwind@004b88e6	11	0	1	004b88e6-004b88f1
+004b88f1	Unwind@004b88f1	11	0	1	004b88f1-004b88fc
+004b88fc	Unwind@004b88fc	11	0	1	004b88fc-004b8907
+004b8907	Unwind@004b8907	11	0	1	004b8907-004b8912
+004b8912	Unwind@004b8912	11	0	1	004b8912-004b891d
+004b891d	Unwind@004b891d	11	0	1	004b891d-004b8928
+004b8928	Unwind@004b8928	11	0	1	004b8928-004b8933
+004b8933	Unwind@004b8933	11	0	1	004b8933-004b893e
+004b893e	Unwind@004b893e	11	0	1	004b893e-004b8949
+004b8949	Unwind@004b8949	11	0	1	004b8949-004b8954
+004b8954	Unwind@004b8954	11	0	1	004b8954-004b895f
+004b895f	Unwind@004b895f	11	0	1	004b895f-004b896a
+004b896a	Unwind@004b896a	11	0	1	004b896a-004b8975
+004b8975	Unwind@004b8975	11	0	1	004b8975-004b8980
+004b8980	Unwind@004b8980	11	0	1	004b8980-004b898b
+004b898b	Unwind@004b898b	11	0	1	004b898b-004b8996
+004b8996	Unwind@004b8996	11	0	1	004b8996-004b89a1
+004b89a1	Unwind@004b89a1	11	0	1	004b89a1-004b89ac
+004b89ac	Unwind@004b89ac	11	0	1	004b89ac-004b89b7
+004b89b7	Unwind@004b89b7	11	0	1	004b89b7-004b89c2
+004b89c2	Unwind@004b89c2	11	0	1	004b89c2-004b89cd
+004b89cd	Unwind@004b89cd	11	0	1	004b89cd-004b89d8
+004b89d8	Unwind@004b89d8	11	0	1	004b89d8-004b89e3
+004b89e3	Unwind@004b89e3	11	0	1	004b89e3-004b89ee
+004b89ee	Unwind@004b89ee	11	0	1	004b89ee-004b89f9
+004b89f9	Unwind@004b89f9	11	0	1	004b89f9-004b8a04
+004b8a04	Unwind@004b8a04	11	0	1	004b8a04-004b8a0f
+004b8a0f	Unwind@004b8a0f	11	0	1	004b8a0f-004b8a1a
+004b8a1a	Unwind@004b8a1a	11	0	1	004b8a1a-004b8a25
+004b8a25	Unwind@004b8a25	11	0	1	004b8a25-004b8a30
+004b8a30	Unwind@004b8a30	11	0	1	004b8a30-004b8a3b
+004b8a3b	Unwind@004b8a3b	11	0	1	004b8a3b-004b8a46
+004b8a46	Unwind@004b8a46	11	0	1	004b8a46-004b8a51
+004b8a51	Unwind@004b8a51	11	0	1	004b8a51-004b8a5c
+004b8a5c	Unwind@004b8a5c	11	0	1	004b8a5c-004b8a67
+004b8a67	Unwind@004b8a67	11	0	1	004b8a67-004b8a72
+004b8a72	Unwind@004b8a72	11	0	1	004b8a72-004b8a7d
+004b8a7d	Unwind@004b8a7d	14	0	1	004b8a7d-004b8a8b
+004b8a8b	Unwind@004b8a8b	14	0	1	004b8a8b-004b8a99
+004b8a99	Unwind@004b8a99	11	0	1	004b8a99-004b8aa4
+004b8aa4	Unwind@004b8aa4	11	0	1	004b8aa4-004b8aaf
+004b8aaf	Unwind@004b8aaf	11	0	1	004b8aaf-004b8aba
+004b8aba	Unwind@004b8aba	11	0	1	004b8aba-004b8ac5
+004b8ac5	Unwind@004b8ac5	11	0	1	004b8ac5-004b8ad0
+004b8ad0	Unwind@004b8ad0	11	0	1	004b8ad0-004b8adb
+004b8adb	Unwind@004b8adb	11	0	1	004b8adb-004b8ae6
+004b8ae6	Unwind@004b8ae6	11	0	1	004b8ae6-004b8af1
+004b8af1	Unwind@004b8af1	11	0	1	004b8af1-004b8afc
+004b8afc	Unwind@004b8afc	11	0	1	004b8afc-004b8b07
+004b8b07	Unwind@004b8b07	11	0	1	004b8b07-004b8b12
+004b8b12	Unwind@004b8b12	11	0	1	004b8b12-004b8b1d
+004b8b1d	Unwind@004b8b1d	11	0	1	004b8b1d-004b8b28
+004b8b28	Unwind@004b8b28	11	0	1	004b8b28-004b8b33
+004b8b33	Unwind@004b8b33	11	0	1	004b8b33-004b8b3e
+004b8b3e	Unwind@004b8b3e	11	0	1	004b8b3e-004b8b49
+004b8b49	Unwind@004b8b49	11	0	1	004b8b49-004b8b54
+004b8b54	Unwind@004b8b54	11	0	1	004b8b54-004b8b5f
+004b8b5f	Unwind@004b8b5f	11	0	1	004b8b5f-004b8b6a
+004b8b6a	Unwind@004b8b6a	11	0	1	004b8b6a-004b8b75
+004b8b75	Unwind@004b8b75	11	0	1	004b8b75-004b8b80
+004b8b80	Unwind@004b8b80	11	0	1	004b8b80-004b8b8b
+004b8b8b	Unwind@004b8b8b	11	0	1	004b8b8b-004b8b96
+004b8b96	Unwind@004b8b96	11	0	1	004b8b96-004b8ba1
+004b8ba1	Unwind@004b8ba1	11	0	1	004b8ba1-004b8bac
+004b8bac	Unwind@004b8bac	11	0	1	004b8bac-004b8bb7
+004b8bb7	Unwind@004b8bb7	11	0	1	004b8bb7-004b8bc2
+004b8bc2	Unwind@004b8bc2	11	0	1	004b8bc2-004b8bcd
+004b8bcd	Unwind@004b8bcd	11	0	1	004b8bcd-004b8bd8
+004b8bd8	Unwind@004b8bd8	11	0	1	004b8bd8-004b8be3
+004b8be3	Unwind@004b8be3	11	0	1	004b8be3-004b8bee
+004b8bee	Unwind@004b8bee	11	0	1	004b8bee-004b8bf9
+004b8bf9	Unwind@004b8bf9	11	0	1	004b8bf9-004b8c04
+004b8c04	Unwind@004b8c04	11	0	1	004b8c04-004b8c0f
+004b8c0f	Unwind@004b8c0f	11	0	1	004b8c0f-004b8c1a
+004b8c1a	Unwind@004b8c1a	11	0	1	004b8c1a-004b8c25
+004b8c25	Unwind@004b8c25	11	0	1	004b8c25-004b8c30
+004b8c30	Unwind@004b8c30	11	0	1	004b8c30-004b8c3b
+004b8c3b	Unwind@004b8c3b	11	0	1	004b8c3b-004b8c46
+004b8c46	Unwind@004b8c46	11	0	1	004b8c46-004b8c51
+004b8c51	Unwind@004b8c51	11	0	1	004b8c51-004b8c5c
+004b8c5c	Unwind@004b8c5c	11	0	1	004b8c5c-004b8c67
+004b8c67	Unwind@004b8c67	11	0	1	004b8c67-004b8c72
+004b8c72	Unwind@004b8c72	11	0	1	004b8c72-004b8c7d
+004b8c7d	Unwind@004b8c7d	11	0	1	004b8c7d-004b8c88
+004b8c88	Unwind@004b8c88	11	0	1	004b8c88-004b8c93
+004b8c93	Unwind@004b8c93	11	0	1	004b8c93-004b8c9e
+004b8c9e	Unwind@004b8c9e	11	0	1	004b8c9e-004b8ca9
+004b8ca9	Unwind@004b8ca9	11	0	1	004b8ca9-004b8cb4
+004b8cb4	Unwind@004b8cb4	11	0	1	004b8cb4-004b8cbf
+004b8cbf	Unwind@004b8cbf	11	0	1	004b8cbf-004b8cca
+004b8cca	Unwind@004b8cca	11	0	1	004b8cca-004b8cd5
+004b8cd5	Unwind@004b8cd5	11	0	1	004b8cd5-004b8ce0
+004b8ce0	Unwind@004b8ce0	11	0	1	004b8ce0-004b8ceb
+004b8ceb	Unwind@004b8ceb	11	0	1	004b8ceb-004b8cf6
+004b8cf6	Unwind@004b8cf6	11	0	1	004b8cf6-004b8d01
+004b8d01	Unwind@004b8d01	11	0	1	004b8d01-004b8d0c
+004b8d0c	Unwind@004b8d0c	11	0	1	004b8d0c-004b8d17
+004b8d17	Unwind@004b8d17	11	0	1	004b8d17-004b8d22
+004b8d22	Unwind@004b8d22	11	0	1	004b8d22-004b8d2d
+004b8d2d	Unwind@004b8d2d	11	0	1	004b8d2d-004b8d38
+004b8d38	Unwind@004b8d38	11	0	1	004b8d38-004b8d43
+004b8d43	Unwind@004b8d43	11	0	1	004b8d43-004b8d4e
+004b8d4e	Unwind@004b8d4e	11	0	1	004b8d4e-004b8d59
+004b8d59	Unwind@004b8d59	11	0	1	004b8d59-004b8d64
+004b8d64	Unwind@004b8d64	11	0	1	004b8d64-004b8d6f
+004b8d6f	Unwind@004b8d6f	11	0	1	004b8d6f-004b8d7a
+004b8d7a	Unwind@004b8d7a	11	0	1	004b8d7a-004b8d85
+004b8d85	Unwind@004b8d85	11	0	1	004b8d85-004b8d90
+004b8d90	Unwind@004b8d90	11	0	1	004b8d90-004b8d9b
+004b8d9b	Unwind@004b8d9b	11	0	1	004b8d9b-004b8da6
+004b8da6	Unwind@004b8da6	11	0	1	004b8da6-004b8db1
+004b8db1	Unwind@004b8db1	11	0	1	004b8db1-004b8dbc
+004b8dbc	Unwind@004b8dbc	11	0	1	004b8dbc-004b8dc7
+004b8dc7	Unwind@004b8dc7	11	0	1	004b8dc7-004b8dd2
+004b8dd2	Unwind@004b8dd2	11	0	1	004b8dd2-004b8ddd
+004b8ddd	Unwind@004b8ddd	11	0	1	004b8ddd-004b8de8
+004b8de8	Unwind@004b8de8	11	0	1	004b8de8-004b8df3
+004b8df3	Unwind@004b8df3	11	0	1	004b8df3-004b8dfe
+004b8dfe	Unwind@004b8dfe	11	0	1	004b8dfe-004b8e09
+004b8e09	Unwind@004b8e09	11	0	1	004b8e09-004b8e14
+004b8e14	Unwind@004b8e14	11	0	1	004b8e14-004b8e1f
+004b8e1f	Unwind@004b8e1f	11	0	1	004b8e1f-004b8e2a
+004b8e2a	Unwind@004b8e2a	11	0	1	004b8e2a-004b8e35
+004b8e35	Unwind@004b8e35	11	0	1	004b8e35-004b8e40
+004b8e50	Unwind@004b8e50	11	0	1	004b8e50-004b8e5b
+004b8e5b	Unwind@004b8e5b	11	0	1	004b8e5b-004b8e66
+004b8e66	Unwind@004b8e66	11	0	1	004b8e66-004b8e71
+004b8e71	Unwind@004b8e71	11	0	1	004b8e71-004b8e7c
+004b8e7c	Unwind@004b8e7c	11	0	1	004b8e7c-004b8e87
+004b8e87	Unwind@004b8e87	11	0	1	004b8e87-004b8e92
+004b8e92	Unwind@004b8e92	11	0	1	004b8e92-004b8e9d
+004b8e9d	Unwind@004b8e9d	11	0	1	004b8e9d-004b8ea8
+004b8ea8	Unwind@004b8ea8	11	0	1	004b8ea8-004b8eb3
+004b8eb3	Unwind@004b8eb3	11	0	1	004b8eb3-004b8ebe
+004b8ebe	Unwind@004b8ebe	11	0	1	004b8ebe-004b8ec9
+004b8ec9	Unwind@004b8ec9	11	0	1	004b8ec9-004b8ed4
+004b8ed4	Unwind@004b8ed4	11	0	1	004b8ed4-004b8edf
+004b8edf	Unwind@004b8edf	11	0	1	004b8edf-004b8eea
+004b8eea	Unwind@004b8eea	11	0	1	004b8eea-004b8ef5
+004b8ef5	Unwind@004b8ef5	11	0	1	004b8ef5-004b8f00
+004b8f00	Unwind@004b8f00	11	0	1	004b8f00-004b8f0b
+004b8f0b	Unwind@004b8f0b	11	0	1	004b8f0b-004b8f16
+004b8f16	Unwind@004b8f16	11	0	1	004b8f16-004b8f21
+004b8f21	Unwind@004b8f21	11	0	1	004b8f21-004b8f2c
+004b8f2c	Unwind@004b8f2c	11	0	1	004b8f2c-004b8f37
+004b8f37	Unwind@004b8f37	11	0	1	004b8f37-004b8f42
+004b8f42	Unwind@004b8f42	11	0	1	004b8f42-004b8f4d
+004b8f4d	Unwind@004b8f4d	11	0	1	004b8f4d-004b8f58
+004b8f58	Unwind@004b8f58	11	0	1	004b8f58-004b8f63
+004b8f63	Unwind@004b8f63	11	0	1	004b8f63-004b8f6e
+004b8f6e	Unwind@004b8f6e	11	0	1	004b8f6e-004b8f79
+004b8f79	Unwind@004b8f79	11	0	1	004b8f79-004b8f84
+004b8f84	Unwind@004b8f84	11	0	1	004b8f84-004b8f8f
+004b8f8f	Unwind@004b8f8f	11	0	1	004b8f8f-004b8f9a
+004b8f9a	Unwind@004b8f9a	11	0	1	004b8f9a-004b8fa5
+004b8fa5	Unwind@004b8fa5	11	0	1	004b8fa5-004b8fb0
+004b8fb0	Unwind@004b8fb0	11	0	1	004b8fb0-004b8fbb
+004b8fbb	Unwind@004b8fbb	11	0	1	004b8fbb-004b8fc6
+004b8fc6	Unwind@004b8fc6	11	0	1	004b8fc6-004b8fd1
+004b8fd1	Unwind@004b8fd1	11	0	1	004b8fd1-004b8fdc
+004b8fdc	Unwind@004b8fdc	11	0	1	004b8fdc-004b8fe7
+004b8fe7	Unwind@004b8fe7	11	0	1	004b8fe7-004b8ff2
+004b8ff2	Unwind@004b8ff2	11	0	1	004b8ff2-004b8ffd
+004b8ffd	Unwind@004b8ffd	11	0	1	004b8ffd-004b9008
+004b9008	Unwind@004b9008	11	0	1	004b9008-004b9013
+004b9013	Unwind@004b9013	11	0	1	004b9013-004b901e
+004b901e	Unwind@004b901e	11	0	1	004b901e-004b9029
+004b9029	Unwind@004b9029	11	0	1	004b9029-004b9034
+004b9034	Unwind@004b9034	11	0	1	004b9034-004b903f
+004b903f	Unwind@004b903f	11	0	1	004b903f-004b904a
+004b904a	Unwind@004b904a	11	0	1	004b904a-004b9055
+004b9055	Unwind@004b9055	11	0	1	004b9055-004b9060
+004b9060	Unwind@004b9060	11	0	1	004b9060-004b906b
+004b906b	Unwind@004b906b	11	0	1	004b906b-004b9076
+004b9076	Unwind@004b9076	11	0	1	004b9076-004b9081
+004b9081	Unwind@004b9081	11	0	1	004b9081-004b908c
+004b908c	Unwind@004b908c	11	0	1	004b908c-004b9097
+004b9097	Unwind@004b9097	11	0	1	004b9097-004b90a2
+004b90a2	Unwind@004b90a2	11	0	1	004b90a2-004b90ad
+004b90c0	Unwind@004b90c0	20	0	1	004b90c0-004b90d4
+004b90d4	Unwind@004b90d4	26	0	1	004b90d4-004b90ee
+004b90ee	Unwind@004b90ee	17	0	1	004b90ee-004b90ff
+004b90ff	Unwind@004b90ff	26	0	1	004b90ff-004b9119
+004b9119	Unwind@004b9119	20	0	1	004b9119-004b912d
+004b912d	Unwind@004b912d	26	0	1	004b912d-004b9147
+004b9147	Unwind@004b9147	17	0	1	004b9147-004b9158
+004b9158	Unwind@004b9158	28	0	1	004b9158-004b9174
+004b9180	Unwind@004b9180	8	0	1	004b9180-004b9188
+004b9188	Unwind@004b9188	14	0	1	004b9188-004b9196
+004b91a0	Unwind@004b91a0	8	0	1	004b91a0-004b91a8
+004b91a8	Unwind@004b91a8	14	0	1	004b91a8-004b91b6
+004b91c0	Unwind@004b91c0	11	0	1	004b91c0-004b91cb
+004b91e0	Unwind@004b91e0	11	0	1	004b91e0-004b91eb
+004b9200	Unwind@004b9200	26	0	1	004b9200-004b921a
+004b9230	Unwind@004b9230	11	0	1	004b9230-004b923b
+004b9250	Unwind@004b9250	26	0	1	004b9250-004b926a
+004b9280	Unwind@004b9280	11	0	1	004b9280-004b928b
+004b92a0	Unwind@004b92a0	29	0	1	004b92a0-004b92bd
+004b92bd	Unwind@004b92bd	29	0	1	004b92bd-004b92da
+004b92da	Unwind@004b92da	11	0	1	004b92da-004b92e5
+004b92e5	Unwind@004b92e5	11	0	1	004b92e5-004b92f0
+004b92f0	Unwind@004b92f0	14	0	1	004b92f0-004b92fe
+004b92fe	Unwind@004b92fe	14	0	1	004b92fe-004b930c
+004b9320	Unwind@004b9320	11	0	1	004b9320-004b932b
+004b9340	Unwind@004b9340	29	0	1	004b9340-004b935d
+004b9370	Unwind@004b9370	11	0	1	004b9370-004b937b
+004b9390	Unwind@004b9390	29	0	1	004b9390-004b93ad
+004b93ad	Unwind@004b93ad	29	0	1	004b93ad-004b93ca
+004b93ca	Unwind@004b93ca	11	0	1	004b93ca-004b93d5
+004b93d5	Unwind@004b93d5	11	0	1	004b93d5-004b93e0
+004b93f0	Unwind@004b93f0	14	0	1	004b93f0-004b93fe
+004b93fe	Unwind@004b93fe	11	0	1	004b93fe-004b9409

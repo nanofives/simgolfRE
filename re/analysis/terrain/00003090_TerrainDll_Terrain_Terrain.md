@@ -39,8 +39,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x100030e4, 0x1000310c
 
 ## Callees
-- 0x10001280 -> 0x1000aed0 `FUN_1000aed0` (incremental-linking thunk) at 0x1000312d
-- 0x100012ee -> 0x100380a0 `FUN_100380a0` (incremental-linking thunk) at 0x1000311b
+- 0x10001280 -> 0x1000aed0 `std::list(TileP)::~list` (incremental-linking thunk) at 0x1000312d
+- 0x100012ee -> 0x100380a0 `Terrain::reloadTextures` (incremental-linking thunk) at 0x1000311b
 - 0x100180a0 `__chkesp` at 0x10003169
 - 0x10018420 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x10003152
 - 0x10018be0 `operator_delete` at 0x100030f3

@@ -59,7 +59,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - indirect `jmp [ecx*4+0x10011bc6]` at 0x1001171c
 
 ## Callers
-0x100108f0 `FUN_100108f0`
+0x100108f0 `Tile::drawPaths`
 
 ## Constants
 - `0x0` at 0x100116ed, 0x100116f4, 0x100116fb, 0x10011702, 0x10011828, 0x10011872, 0x10011907, 0x100119ec (+4 more)

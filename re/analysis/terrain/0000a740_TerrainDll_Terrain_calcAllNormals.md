@@ -43,10 +43,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jle` (signed) at 0x1000a7cf
 
 ## Callees
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x1000a7dc
-- 0x100010f5 -> 0x10012cf0 `FUN_10012cf0` (incremental-linking thunk) at 0x1000a7ed
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x1000a782, 0x1000a79b
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x1000a7ab, 0x1000a7c4
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x1000a7dc
+- 0x100010f5 -> 0x10012cf0 `Tile::calcNormals` (incremental-linking thunk) at 0x1000a7ed
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x1000a782, 0x1000a79b
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x1000a7ab, 0x1000a7c4
 - 0x100180a0 `__chkesp` at 0x1000a7fe
 
 ## Callers

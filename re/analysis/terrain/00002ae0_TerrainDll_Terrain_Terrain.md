@@ -61,15 +61,15 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x10002bca, 0x10002be7, 0x10002c40, 0x10002c6b, 0x10002c83, 0x10002c9b
 
 ## Callees
-- 0x100010be -> 0x1000ae60 `FUN_1000ae60` (incremental-linking thunk) at 0x10002b48
-- 0x1000119f -> 0x1000c2c0 `FUN_1000c2c0` (incremental-linking thunk) at 0x10002c10
-- 0x1000122b -> 0x100076e0 `FUN_100076e0` (incremental-linking thunk) at 0x10002edc
+- 0x100010be -> 0x1000ae60 `std::list(TileP)::list` (incremental-linking thunk) at 0x10002b48
+- 0x1000119f -> 0x1000c2c0 `Tile::reset` (incremental-linking thunk) at 0x10002c10
+- 0x1000122b -> 0x100076e0 `Terrain::relight` (incremental-linking thunk) at 0x10002edc
 - 0x100180a0 `__chkesp` at 0x10002efd
 - 0x10018580 `FUN_10018580` at 0x10002ccf, 0x10002ce3, 0x10002cf7, 0x10002d0b, 0x10002d22, 0x10002d39, 0x10002d4f, 0x10002d66 (+16 more)
 - 0x10018670 ``eh_vector_constructor_iterator'` at 0x10002b2f
 
 ## Callers
-0x100031a0 `?getInstance@Terrain@@SAPAV1@XZ`
+0x100031a0 `Terrain::getInstance`
 
 ## Constants
 - `0x0` at 0x10002b34, 0x10002b51, 0x10002b70, 0x10002ba2, 0x10002bab, 0x10002baf, 0x10002bcc, 0x10002c1c (+7 more)

@@ -36,7 +36,7 @@ Through registers:
 - `jne` (equality) at 0x100057a3, 0x100057e0, 0x10005829
 
 ## Callees
-- 0x10001654 -> 0x1001b9a0 `FUN_1001b9a0` (incremental-linking thunk) at 0x10005808
+- 0x10001654 -> 0x1001b9a0 `Ctrl_appendIfAccepted` (incremental-linking thunk) at 0x10005808
 - indirect `call [edx+0x118]` at 0x100057fd
 
 ## Callers

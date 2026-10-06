@@ -25,7 +25,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x100076e0 `FUN_100076e0`
+0x100076e0 `Terrain::relight`
 
 ## Constants
 - `0x10` (16) at 0x10012e7c

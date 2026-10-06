@@ -48,7 +48,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10019389 `FUN_10019389` at 0x100050bd, 0x100050d8
 
 ## Callers
-0x10004c70 `?drawCardinalSpline@Terrain@@QAEXHHHHHHHHHHH@Z`
+0x10004c70 `Terrain::drawCardinalSpline`
 
 ## Constants
 - `0x0` at 0x100050b2, 0x100050cd, 0x100050e6, 0x10005151

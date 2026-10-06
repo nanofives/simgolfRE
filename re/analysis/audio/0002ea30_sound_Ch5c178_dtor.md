@@ -52,7 +52,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax]` at 0x1002ea65
 
 ## Callers
-0x10006160 `WaveStream::destroy`, 0x1002ea00 `FUN_1002ea00`, 0x10058590 `Unwind@10058590`, 0x100585c0 `Unwind@100585c0`
+0x10006160 `WaveStream::destroy`, 0x1002ea00 `Ch5c178_scalarDtor`, 0x10058590 `Unwind@10058590`, 0x100585c0 `Unwind@100585c0`
 
 ## Constants
 - `0x1` at 0x1002ea63, 0x1002ea73

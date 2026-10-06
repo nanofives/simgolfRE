@@ -43,7 +43,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x100019a1 -> 0x10008890 `CommandQueue::clear` (incremental-linking thunk) at 0x1000b328
 - 0x10001a9b -> 0x1000b960 `Wave_Device::stop` (incremental-linking thunk) at 0x1000b318
-- 0x10001dac -> 0x10029200 `FUN_10029200` (incremental-linking thunk) at 0x1000b3c3
+- 0x10001dac -> 0x10029200 `VoiceBase_dtor` (incremental-linking thunk) at 0x1000b3c3
 - 0x1004249a `operator_delete` at 0x1000b35c, 0x1000b3a0
 
 ## Callers

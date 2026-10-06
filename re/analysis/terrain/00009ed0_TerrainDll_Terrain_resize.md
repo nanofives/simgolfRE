@@ -57,7 +57,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glViewport` at 0x10009f15
 
 ## Callers
-0x10008fc0 `?setZoomLevel@Terrain@@QAEXH@Z`, 0x10009c80 `?initSystem@Terrain@@QAEXHHPAUHDC__@@_N@Z`
+0x10008fc0 `Terrain::setZoomLevel`, 0x10009c80 `Terrain::initSystem`
 
 ## Constants
 - `0x0` at 0x10009eed, 0x10009efa, 0x10009f11, 0x10009f13, 0x10009fbc, 0x10009fc3, 0x1000a023, 0x1000a02a

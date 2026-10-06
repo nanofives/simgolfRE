@@ -33,7 +33,7 @@ Through registers:
 - 0x00409950 `updatePairSnapshot` at 0x00409a4a
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x004289e0 `updateGolfers`
+0x004289e0 `updateGolfers`
 
 ## Constants
 - `0x0` at 0x00409a41

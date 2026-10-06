@@ -21,7 +21,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1000b100 `FUN_1000b100`, 0x1000b500 `FUN_1000b500`, 0x1000b800 `FUN_1000b800`
+0x1000b100 `std::list(TileP)::insert`, 0x1000b500 `std::list(TileP)::_Buynode`, 0x1000b800 `std::list(TileP)::erase_1000b800`
 
 ## Constants
 - `0x4` at 0x1000b64b

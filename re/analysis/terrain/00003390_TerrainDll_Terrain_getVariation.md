@@ -21,7 +21,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x100033aa
 
 ## Callees
-- 0x100010e6 -> 0x10015340 `FUN_10015340` (incremental-linking thunk) at 0x100033b0
+- 0x100010e6 -> 0x10015340 `Tile::getVariation` (incremental-linking thunk) at 0x100033b0
 - 0x100180a0 `__chkesp` at 0x100033c0
 
 ## Callers

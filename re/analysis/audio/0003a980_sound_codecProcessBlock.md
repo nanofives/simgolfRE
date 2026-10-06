@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003a980`), 193 bytes, 77 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Audio codec block pipeline reached from openMmioSound: reads the config at 0x10063ef0 then runs bitUnpack -> codecTransformStage -> codecSynthStage, writing the output sample buffer (param_3). (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1003aa40): callee pops 0 bytes of stack arguments.

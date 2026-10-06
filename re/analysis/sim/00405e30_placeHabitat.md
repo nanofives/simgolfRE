@@ -61,7 +61,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0045c1e0 `Random::range` at 0x00405e5f, 0x00405e74, 0x00405e8d, 0x00405ea5, 0x00405ed4, 0x00405f39, 0x00405f9c, 0x00405fd2 (+1 more)
 
 ## Callers
-0x0040a4e0 `demolishObject`
+0x0040a4e0 `demolishObject`, 0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x0` at 0x00405f7a

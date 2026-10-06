@@ -49,7 +49,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x1000ac36, 0x1000ac70
 
 ## Callees
-- 0x1000108c -> 0x10001d50 `?tileAt@Terrain@@QAEPAVTile@@HH@Z` (incremental-linking thunk) at 0x1000ad24
+- 0x1000108c -> 0x10001d50 `Terrain::tileAt` (incremental-linking thunk) at 0x1000ad24
 - 0x100180a0 `__chkesp` at 0x1000ab5c, 0x1000ab7e, 0x1000ab92, 0x1000abb4, 0x1000abc8, 0x1000aca8, 0x1000acca, 0x1000acde (+3 more)
 - 0x100183ec `__ftol` at 0x1000ac09, 0x1000ac1e, 0x1000ac58
 - 0x10022b00 `__itoa` at 0x1000ab6b, 0x1000aba1, 0x1000acb7, 0x1000aced

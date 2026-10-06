@@ -37,7 +37,7 @@ Through registers:
 
 ## Callees
 - 0x10001942 -> 0x1001ad30 `Sound_anyChannelActive` (incremental-linking thunk) at 0x1002050a
-- 0x10001d66 -> 0x1001abd0 `FUN_1001abd0` (incremental-linking thunk) at 0x1002056e
+- 0x10001d66 -> 0x1001abd0 `Seq_freeChannelObjects` (incremental-linking thunk) at 0x1002056e
 - 0x1004249a `operator_delete` at 0x10020559, 0x10020574
 
 ## Callers

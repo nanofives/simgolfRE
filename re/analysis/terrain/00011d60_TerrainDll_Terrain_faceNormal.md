@@ -46,11 +46,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x10011d7a
 
 ## Callees
-- 0x100011a9 -> 0x10037c80 `FUN_10037c80` (incremental-linking thunk) at 0x10011e83
+- 0x100011a9 -> 0x10037c80 `normalize` (incremental-linking thunk) at 0x10011e83
 - 0x100180a0 `__chkesp` at 0x10011e93
 
 ## Callers
-0x10011ef0 `FUN_10011ef0`
+0x10011ef0 `Tile::smoothNormals`
 
 ## Constants
 - `0x4` at 0x10011e88

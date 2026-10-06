@@ -48,7 +48,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax+0x4]` at 0x1002ca60
 
 ## Callers
-0x1002f740 `FUN_1002f740`
+0x1002f740 `Ch5c3a4_ctor`
 
 ## Constants
 - `0x8` at 0x1002ca76

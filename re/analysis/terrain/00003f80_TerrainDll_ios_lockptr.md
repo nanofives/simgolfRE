@@ -25,7 +25,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x100018b0 `FUN_100018b0`, 0x10034a90 `ios`, 0x10034b80 `ios`, 0x10034c50 `ios`, 0x10034cd0 `~ios`, 0x10037930 `FUN_10037930`
+0x100018b0 `ios::lock`, 0x10034a90 `ios`, 0x10034b80 `ios`, 0x10034c50 `ios`, 0x10034cd0 `~ios`, 0x10037930 `ios::unlock`
 
 ## Constants
 - `0x11` (17) at 0x10003f8d

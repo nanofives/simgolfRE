@@ -61,7 +61,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x1000118b -> 0x10020fe0 `Seq_setupChannel` (incremental-linking thunk) at 0x10022163
 - 0x10001604 -> 0x1001d0a0 `Sound_setAltName` (incremental-linking thunk) at 0x10021fe3
 - 0x10001d52 -> 0x10024360 `Seq_mergeChannelDesc` (incremental-linking thunk) at 0x10021fd0
-- 0x10001d66 -> 0x1001abd0 `FUN_1001abd0` (incremental-linking thunk) at 0x10022132
+- 0x10001d66 -> 0x1001abd0 `Seq_freeChannelObjects` (incremental-linking thunk) at 0x10022132
 - 0x1004249a `operator_delete` at 0x10022116, 0x10022138
 
 ## Callers

@@ -358,7 +358,8 @@ def _flush_log(p: Project) -> None:
 
 
 def cmd_retag(p: Project, a) -> int:
-    """Copy the subsystem and name columns of names TSVs onto rows already in hooks.csv (the level does not change).
+    """Copy the subsystem, name, callers and callees columns of a TSV onto rows already in hooks.csv (the level does
+    not change; callers/callees only when the TSV has those columns, as c2_note.py --refresh writes).
     One CHANGELOG line per changed row; rows not in hooks.csv are skipped (promote them with `batch`)."""
     rows = p.rows()
     p.pending_log = []
@@ -381,7 +382,7 @@ def cmd_retag(p: Project, a) -> int:
                 skipped += 1
                 continue
             where = addr if mod == "golf_clean.exe" else f"{mod}:{addr}"
-            for col in ("subsystem", "name"):
+            for col in ("subsystem", "name", "callers", "callees"):
                 old, new = row.get(col) or "", c.get(col) or ""
                 if not new or old == new:
                     continue

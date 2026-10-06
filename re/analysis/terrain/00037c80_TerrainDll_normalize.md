@@ -32,7 +32,7 @@ Through registers:
 - 0x100192c4 `FUN_100192c4` at 0x10037cc4
 
 ## Callers
-0x10003540 `?changeLighting@Terrain@@QAEXH@Z`, 0x10006dd0 `FUN_10006dd0`, 0x10011d60 `FUN_10011d60`, 0x10011ef0 `FUN_10011ef0`, 0x10012cf0 `FUN_10012cf0`
+0x10003540 `Terrain::changeLighting`, 0x10006dd0 `Terrain::loadLighting`, 0x10011d60 `Terrain::faceNormal`, 0x10011ef0 `Tile::smoothNormals`, 0x10012cf0 `Tile::calcNormals`
 
 ## Constants
 - `0x8` at 0x10037cbe, 0x10037cc9

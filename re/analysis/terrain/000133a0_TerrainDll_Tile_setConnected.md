@@ -30,7 +30,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000a4b0 `?updatePath@Terrain@@QAEXHHH@Z`
+0x1000a4b0 `Terrain::updatePath`
 
 ## Constants
 - `0x0` at 0x100133bd, 0x100133d2

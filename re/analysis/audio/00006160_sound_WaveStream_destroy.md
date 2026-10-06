@@ -44,7 +44,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x10006221, 0x10006289
 
 ## Callees
-- 0x10001a78 -> 0x1002ea30 `FUN_1002ea30` (incremental-linking thunk) at 0x10006295
+- 0x10001a78 -> 0x1002ea30 `Ch5c178_dtor` (incremental-linking thunk) at 0x10006295
 - 0x10001b45 -> 0x10037df0 `FUN_10037df0` (incremental-linking thunk) at 0x100061e3
 - 0x1004249a `operator_delete` at 0x100061b3, 0x100061e9, 0x10006210, 0x10006246, 0x10006278
 - indirect `call ebp` at 0x100061d5

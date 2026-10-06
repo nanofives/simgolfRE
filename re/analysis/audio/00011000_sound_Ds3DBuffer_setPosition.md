@@ -33,7 +33,7 @@ Through registers:
 - indirect `call [ecx+0x4c]` at 0x1001103d
 
 ## Callers
-0x10034430 `serviceChannelPlayback`, 0x10037b00 `FUN_10037b00`
+0x10034430 `serviceChannelPlayback`, 0x10037b00 `Channel_set3DPosition`
 
 ## Constants
 - `0x0` at 0x10011013

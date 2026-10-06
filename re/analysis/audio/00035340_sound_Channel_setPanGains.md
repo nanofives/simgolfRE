@@ -46,7 +46,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 None (leaf).
 
 ## Callers
-0x100339c0 `rewindChannel`, 0x10033ba0 `FUN_10033ba0`, 0x100351c0 `FUN_100351c0`, 0x10036280 `renderChannelSingle`
+0x100339c0 `rewindChannel`, 0x10033ba0 `Channel_resetPanState`, 0x100351c0 `Channel_setRate`, 0x10036280 `renderChannelSingle`
 
 ## Constants
 - `0x3f` (63) at 0x10035351, 0x10035356, 0x100353a9

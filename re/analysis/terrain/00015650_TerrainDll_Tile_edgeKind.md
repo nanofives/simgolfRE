@@ -36,8 +36,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10015671, 0x10015681, 0x1001568a, 0x100156c9, 0x100156d9
 
 ## Callees
-- 0x100010e6 -> 0x10015340 `FUN_10015340` (incremental-linking thunk) at 0x100156a9, 0x100156ce
-- 0x1000119a -> 0x10001f60 `FUN_10001f60` (incremental-linking thunk) at 0x1001568f, 0x100156f6, 0x10015719
+- 0x100010e6 -> 0x10015340 `Tile::getVariation` (incremental-linking thunk) at 0x100156a9, 0x100156ce
+- 0x1000119a -> 0x10001f60 `Tile::getType` (incremental-linking thunk) at 0x1001568f, 0x100156f6, 0x10015719
 - 0x100180a0 `__chkesp` at 0x10015737
 
 ## Callers

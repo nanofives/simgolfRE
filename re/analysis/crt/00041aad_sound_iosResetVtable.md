@@ -23,7 +23,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x10041c26 `FUN_10041c26`
+0x10041c26 `ostreamResetVtable`
 
 ## Constants
 - `0x1005ecd4` (268823764) = address in the image (data) at 0x10041ab3

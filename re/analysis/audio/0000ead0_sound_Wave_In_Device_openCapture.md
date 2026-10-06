@@ -41,7 +41,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x10001fa5 -> 0x10038650 `WaveInDevice_ctor` (incremental-linking thunk) at 0x1000eb1a
-- 0x10002162 -> 0x10038890 `FUN_10038890` (incremental-linking thunk) at 0x1000eb39
+- 0x10002162 -> 0x10038890 `WaveInDevice_allocCaptureBuffers` (incremental-linking thunk) at 0x1000eb39
 - 0x100424d7 `operator_new` at 0x1000eb00
 - indirect `call [eax]` at 0x1000eb52
 

@@ -41,14 +41,14 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jle` (signed) at 0x100398a7
 
 ## Callees
-- 0x100011b8 -> 0x10033c70 `FUN_10033c70` (incremental-linking thunk) at 0x1003990f
+- 0x100011b8 -> 0x10033c70 `Channel_closeAndFree` (incremental-linking thunk) at 0x1003990f
 - 0x10001d11 -> 0x100340b0 `Channel_releaseBuffers` (incremental-linking thunk) at 0x100398dd
-- 0x10002108 -> 0x1002b620 `FUN_1002b620` (incremental-linking thunk) at 0x1003991e
+- 0x10002108 -> 0x1002b620 `Ch5bb90_dtor` (incremental-linking thunk) at 0x1003991e
 - 0x1004249a `operator_delete` at 0x100398ed
 - indirect `call [eax]` at 0x100398ba
 
 ## Callers
-0x10039760 `FUN_10039760`
+0x10039760 `MultiSound_deleteDtor`
 
 ## Constants
 - `0x0` at 0x100398bc, 0x100398f5, 0x10039901

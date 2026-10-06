@@ -42,7 +42,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x3c]` at 0x1000f26b
 
 ## Callers
-0x10013560 `DirectSoundDevice::setMasterVolume`, 0x10035150 `FUN_10035150`, 0x10035fc0 `FUN_10035fc0`, 0x10036660 `renderChannelStreamed`
+0x10013560 `DirectSoundDevice::setMasterVolume`, 0x10035150 `Channel_setVolume`, 0x10035fc0 `Channel_stepVolumeFade`, 0x10036660 `renderChannelStreamed`
 
 ## Constants
 - `0x0` at 0x1000f1ec, 0x1000f1fc, 0x1000f229

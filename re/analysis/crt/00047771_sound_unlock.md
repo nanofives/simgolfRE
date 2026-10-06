@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00047771`), 21 bytes, 7 instructions, subsystem `crt`
 
 ## Role (from the naming pass, not a C3 purpose)
 LeaveCriticalSection on the CRITICAL_SECTION at g_crtLockTable[index] (0x10067400 + index*4); called by the heap and CRT unlock paths (`re/names/sound_1.tsv`)
-System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_8.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10047785): callee pops 0 bytes of stack arguments.
@@ -22,7 +22,7 @@ None.
 - import `KERNEL32.dll!LeaveCriticalSection` at 0x1004777e
 
 ## Callers
-0x10042b72 `heapAllocUnlockFunclet`, 0x10042bd1 `FUN_10042bd1`, 0x10042c71 `freeUnlockFunclet`, 0x10042cc9 `FUN_10042cc9`, 0x1004352d `_flsall`, 0x100436df `FID_conflict:__lock_file`, 0x1004370e `FID_conflict:__lock_file2`, 0x10043731 `~type_info`, 0x1004522f `FID_conflict:__lockexit`, 0x100453dd `reallocUnlockFunclet`, 0x1004552b `FUN_1004552b`, 0x100455eb `FUN_100455eb`, 0x10045666 `FUN_10045666`, 0x1004593a `callocUnlockFunclet`, 0x100459c3 `FUN_100459c3`, 0x10047710 `__lock`, 0x100498b9 `_tolower`, 0x1004a2a6 `_wctomb`, 0x1004aa3f `__setmbcp`, 0x1004bece `__alloc_osfhnd` (+11 more)
+0x10042b72 `heapAllocUnlockFunclet`, 0x10042bd1 `heapAllocUnlockFunclet2`, 0x10042c71 `freeUnlockFunclet`, 0x10042cc9 `freeUnlockFunclet2`, 0x1004352d `_flsall`, 0x100436df `FID_conflict:__lock_file`, 0x1004370e `FID_conflict:__lock_file2`, 0x10043731 `~type_info`, 0x1004522f `FID_conflict:__lockexit`, 0x100453dd `reallocUnlockFunclet`, 0x1004552b `reallocUnlockFunclet2`, 0x100455eb `msizeUnlockFunclet`, 0x10045666 `msizeUnlockFunclet2`, 0x1004593a `callocUnlockFunclet`, 0x100459c3 `callocUnlockFunclet2`, 0x10047710 `__lock`, 0x100498b9 `_tolower`, 0x1004a2a6 `_wctomb`, 0x1004aa3f `__setmbcp`, 0x1004bece `__alloc_osfhnd` (+11 more)
 
 ## Constants
 None.

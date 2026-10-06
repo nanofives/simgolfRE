@@ -20,7 +20,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x10003270 `FUN_10003270`
+0x10003270 `Terrain::normalArray`
 
 ## Constants
 - `0x10` (16) at 0x10013ffc

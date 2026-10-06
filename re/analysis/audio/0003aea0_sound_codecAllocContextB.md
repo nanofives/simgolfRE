@@ -23,12 +23,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x1003aecc
 
 ## Callees
-- 0x1003aef0 `FUN_1003aef0` at 0x1003aed2
+- 0x1003aef0 `codecInitContextB` at 0x1003aed2
 - 0x10042acd `_malloc` at 0x1003aebd
 - 0x100431ce `FUN_100431ce` at 0x1003aee5
 
 ## Callers
-0x10030fb0 `FUN_10030fb0`
+0x10030fb0 `Channel_setFormat`
 
 ## Constants
 - `0x0` at 0x1003aec8

@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0002b4e0`), 190 bytes, 59 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 fastcall(obj): constructs a sub-channel/mixer-voice object (vtable 0x1005bae0): sets default level obj[1]=0x7f, zeroes the descriptor fields obj[3..] and list fields obj+0x40..0x4c. (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1002b59d): callee pops 0 bytes of stack arguments.
@@ -55,7 +55,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax+0x4]` at 0x1002b550
 
 ## Callers
-0x10039690 `FUN_10039690`, 0x10039790 `FUN_10039790`, 0x100399a0 `loadMultiChannel`
+0x10039690 `MultiSound_ctor`, 0x10039790 `MultiSound_ctorWithType`, 0x100399a0 `loadMultiChannel`
 
 ## Constants
 - `0x1` at 0x1002b55f

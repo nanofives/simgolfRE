@@ -29,13 +29,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x1000b4a0
 
 ## Callees
-- 0x100010af -> 0x1000b320 `FUN_1000b320` (incremental-linking thunk) at 0x1000b4ab
-- 0x10001140 -> 0x1000b3d0 `FUN_1000b3d0` (incremental-linking thunk) at 0x1000b494
-- 0x10001226 -> 0x1000b800 `FUN_1000b800` (incremental-linking thunk) at 0x1000b4ba
+- 0x100010af -> 0x1000b320 `std::list(TileP)::iterator::operator++` (incremental-linking thunk) at 0x1000b4ab
+- 0x10001140 -> 0x1000b3d0 `std::list(TileP)::const_iterator::operator!=` (incremental-linking thunk) at 0x1000b494
+- 0x10001226 -> 0x1000b800 `std::list(TileP)::erase_1000b800` (incremental-linking thunk) at 0x1000b4ba
 - 0x100180a0 `__chkesp` at 0x1000b4d4
 
 ## Callers
-0x1000aed0 `FUN_1000aed0`, 0x1000b210 `FUN_1000b210`
+0x1000aed0 `std::list(TileP)::~list`, 0x1000b210 `std::list(TileP)::clear`
 
 ## Constants
 - `0x0` at 0x1000b4a2

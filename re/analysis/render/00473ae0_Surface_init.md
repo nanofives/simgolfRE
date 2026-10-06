@@ -42,7 +42,7 @@ Through registers:
 - indirect `call [edx+0x94]` at 0x00473afa
 
 ## Callers
-0x004041f0 `unwindFree_4041f0`, 0x00404200 `C404200_dtor`, 0x00404280 `R2C404280_dtor`, 0x00406250 `showLoadingScreen`, 0x0040f5c0 `mainLoop`, 0x0043d670 `freeTable`, 0x0044ae00 `gSurfaceDtor_44ae00`, 0x0044afb0 `gSurfaceDtor_44afb0`, 0x0044b1b0 `gSurfaceDtor_44b1b0`, 0x0044b3e0 `gSurfaceDtor_44b3e0`, 0x0044b4f0 `gSurfaceDtor_44b4f0`, 0x0044b690 `gSurfaceDtor_44b690`, 0x0044b790 `gSurfaceDtor_44b790`, 0x0044b9c0 `showCreditsScreen`, 0x0044cce0 `resetAllPanels`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x00473b50 `Surface_open`, 0x004744c0 `Surface_copyFrom`, 0x00474550 `Surface_create` (+12 more)
+0x004041f0 `unwindFree_4041f0`, 0x00404200 `C404200_dtor`, 0x00404280 `R2C404280_dtor`, 0x00406250 `showLoadingScreen`, 0x0043d670 `freeTable`, 0x0044ae00 `gSurfaceDtor_44ae00`, 0x0044afb0 `gSurfaceDtor_44afb0`, 0x0044b1b0 `gSurfaceDtor_44b1b0`, 0x0044b3e0 `gSurfaceDtor_44b3e0`, 0x0044b4f0 `gSurfaceDtor_44b4f0`, 0x0044b690 `gSurfaceDtor_44b690`, 0x0044b790 `gSurfaceDtor_44b790`, 0x0044b9c0 `showCreditsScreen`, 0x0044cce0 `resetAllPanels`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x00473b50 `Surface_open`, 0x004744c0 `Surface_copyFrom`, 0x00474550 `Surface_create`, 0x004745c0 `Surface_init2` (+11 more)
 
 ## Constants
 - `0x4` at 0x00473b0d, 0x00473b28

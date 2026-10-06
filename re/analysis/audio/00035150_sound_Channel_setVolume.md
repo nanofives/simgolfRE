@@ -30,7 +30,7 @@ None.
 - 0x100018f7 -> 0x1000f1c0 `DsBuffer::setVolume` (incremental-linking thunk) at 0x1003516a, 0x10035181
 
 ## Callers
-0x10039ce0 `FUN_10039ce0`
+0x10039ce0 `MultiSound_start`
 
 ## Constants
 - `0x10` (16) at 0x10035175

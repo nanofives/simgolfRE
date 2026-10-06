@@ -33,7 +33,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glHint` at 0x10003409, 0x10003436
 
 ## Callers
-0x10009c80 `?initSystem@Terrain@@QAEXHHPAUHDC__@@_N@Z`
+0x10009c80 `Terrain::initSystem`
 
 ## Constants
 - `0x1` at 0x100034dd

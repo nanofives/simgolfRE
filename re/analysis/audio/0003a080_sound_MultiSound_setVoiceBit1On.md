@@ -22,7 +22,7 @@ None.
 - `jne` (equality) at 0x1003a087
 
 ## Callees
-- 0x10002117 -> 0x100377f0 `FUN_100377f0` (incremental-linking thunk) at 0x1003a094
+- 0x10002117 -> 0x100377f0 `Channel_broadcastVoiceBit1` (incremental-linking thunk) at 0x1003a094
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

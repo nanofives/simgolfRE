@@ -39,7 +39,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000bbd0 `FUN_1000bbd0`
+0x1000bbd0 `textureLoad`
 
 ## Constants
 - `0x0` at 0x10001b78, 0x10001ba9

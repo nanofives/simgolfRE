@@ -22,7 +22,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1001c530 `FUN_1001c530`
+0x1001c530 `CtrlObject_scalarDtorA`
 
 ## Constants
 - `0x1005b19c` (268808604) = address in the image (data) at 0x1001c560

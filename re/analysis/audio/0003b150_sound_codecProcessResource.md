@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003b150`), 213 bytes, 83 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Audio codec block pipeline reached from loadWaveResource: runs bitPack, FUN_1003c220, codecStageDispatch and FUN_1003d040 over the resource buffers. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1003b224): callee pops 0 bytes of stack arguments.
@@ -27,9 +27,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 
 ## Callees
 - 0x1003c180 `bitPack` at 0x1003b207
-- 0x1003c220 `FUN_1003c220` at 0x1003b1e3
+- 0x1003c220 `quantizeParams` at 0x1003b1e3
 - 0x1003c640 `codecStageDispatch` at 0x1003b1bf
-- 0x1003d040 `FUN_1003d040` at 0x1003b19c
+- 0x1003d040 `codecApplyFixedCoeffs` at 0x1003b19c
 - 0x100431ce `FUN_100431ce` at 0x1003b21c
 
 ## Callers

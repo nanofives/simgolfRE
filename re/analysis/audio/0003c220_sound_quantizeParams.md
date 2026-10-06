@@ -102,7 +102,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1003c53a, 0x1003c571
 
 ## Callees
-- 0x1003e2c0 `FUN_1003e2c0` at 0x1003c523
+- 0x1003e2c0 `intPow` at 0x1003c523
 - 0x10042550 `__ftol` at 0x1003c258, 0x1003c294, 0x1003c4b2
 - 0x100431ce `FUN_100431ce` at 0x1003c62a
 

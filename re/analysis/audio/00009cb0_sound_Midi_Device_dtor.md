@@ -41,7 +41,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x100019a1 -> 0x10008890 `CommandQueue::clear` (incremental-linking thunk) at 0x10009ce0
-- 0x10001b22 -> 0x10029f60 `FUN_10029f60` (incremental-linking thunk) at 0x10009d59
+- 0x10001b22 -> 0x10029f60 `DeviceBase_dtorB` (incremental-linking thunk) at 0x10009d59
 - 0x1004249a `operator_delete` at 0x10009d0a, 0x10009d3c
 
 ## Callers

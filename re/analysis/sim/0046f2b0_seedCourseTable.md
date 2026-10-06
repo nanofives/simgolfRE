@@ -76,7 +76,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0045c1e0 `Random::range` at 0x0046f2f0, 0x0046f406
 
 ## Callers
-0x0046f550 `courseActionMenu`
+0x0040f5c0 `mainLoop`, 0x0046f550 `courseActionMenu`
 
 ## Constants
 - `0x1` at 0x0046f2f8, 0x0046f346, 0x0046f40e, 0x0046f469, 0x0046f46b

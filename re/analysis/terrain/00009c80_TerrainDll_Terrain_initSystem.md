@@ -47,10 +47,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10009cd3, 0x10009d10, 0x10009d4d, 0x10009d87, 0x10009df3, 0x10009dff, 0x10009e17, 0x10009e23 (+2 more)
 
 ## Callees
-- 0x1000122b -> 0x100076e0 `FUN_100076e0` (incremental-linking thunk) at 0x10009dc2
-- 0x10001249 -> 0x100037e0 `FUN_100037e0` (incremental-linking thunk) at 0x10009dba
-- 0x100012f3 -> 0x100033e0 `FUN_100033e0` (incremental-linking thunk) at 0x10009db2
-- 0x100012f8 -> 0x10009ed0 `?resize@Terrain@@QAEXHH@Z` (incremental-linking thunk) at 0x10009dd2
+- 0x1000122b -> 0x100076e0 `Terrain::relight` (incremental-linking thunk) at 0x10009dc2
+- 0x10001249 -> 0x100037e0 `Terrain::initLists` (incremental-linking thunk) at 0x10009dba
+- 0x100012f3 -> 0x100033e0 `Terrain::initGL` (incremental-linking thunk) at 0x10009db2
+- 0x100012f8 -> 0x10009ed0 `Terrain::resize` (incremental-linking thunk) at 0x10009dd2
 - 0x100180a0 `__chkesp` at 0x10009cc7, 0x10009ced, 0x10009d09, 0x10009d2a, 0x10009d3d, 0x10009d67, 0x10009d80, 0x10009da1 (+1 more)
 - import `GDI32.dll!ChoosePixelFormat` at 0x10009cbf
 - import `GDI32.dll!SetPixelFormat` at 0x10009d01

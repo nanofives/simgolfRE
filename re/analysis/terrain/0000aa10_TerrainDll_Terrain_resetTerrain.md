@@ -32,10 +32,10 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x1000aa48, 0x1000aa65
 
 ## Callees
-- 0x10001163 -> 0x10003270 `FUN_10003270` (incremental-linking thunk) at 0x1000aac3
-- 0x10001181 -> 0x1000a130 `FUN_1000a130` (incremental-linking thunk) at 0x1000aa9a
-- 0x1000119f -> 0x1000c2c0 `FUN_1000c2c0` (incremental-linking thunk) at 0x1000aa8e
-- 0x100011d6 -> 0x100032b0 `FUN_100032b0` (incremental-linking thunk) at 0x1000aaa2
+- 0x10001163 -> 0x10003270 `Terrain::normalArray` (incremental-linking thunk) at 0x1000aac3
+- 0x10001181 -> 0x1000a130 `Terrain::buildArrays` (incremental-linking thunk) at 0x1000aa9a
+- 0x1000119f -> 0x1000c2c0 `Tile::reset` (incremental-linking thunk) at 0x1000aa8e
+- 0x100011d6 -> 0x100032b0 `Terrain::vertexArray` (incremental-linking thunk) at 0x1000aaa2
 - 0x100180a0 `__chkesp` at 0x1000aabb, 0x1000aada, 0x1000aae7
 - import `OPENGL32.dll!glNormalPointer` at 0x1000aad2
 - import `OPENGL32.dll!glVertexPointer` at 0x1000aab3

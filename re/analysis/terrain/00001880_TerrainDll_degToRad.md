@@ -23,7 +23,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x10003a50 `FUN_10003a50`
+0x10003a50 `rotateAxis`
 
 ## Constants
 - `0x10` (16) at 0x1000188c

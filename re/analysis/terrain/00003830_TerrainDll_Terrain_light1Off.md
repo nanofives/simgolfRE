@@ -38,7 +38,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `OPENGL32.dll!glLightfv` at 0x100038c5, 0x100038e2, 0x100038ff
 
 ## Callers
-0x10038900 `FUN_10038900`
+0x10038900 `Terrain::lowerEdge`
 
 ## Constants
 - `0x0` at 0x10003861, 0x10003868, 0x1000386f, 0x10003876, 0x1000387d, 0x10003884, 0x1000388b, 0x10003892 (+4 more)

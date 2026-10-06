@@ -21,11 +21,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000b29a
 
 ## Callees
-- 0x100011fe -> 0x1000b6e0 `FUN_1000b6e0` (incremental-linking thunk) at 0x1000b2a0
+- 0x100011fe -> 0x1000b6e0 `std::list(TileP)::const_iterator::const_iterator` (incremental-linking thunk) at 0x1000b2a0
 - 0x100180a0 `__chkesp` at 0x1000b2b0
 
 ## Callers
-0x100381a0 `FUN_100381a0`
+0x100381a0 `Terrain::drawTile`
 
 ## Constants
 - `0x11` (17) at 0x1000b28d

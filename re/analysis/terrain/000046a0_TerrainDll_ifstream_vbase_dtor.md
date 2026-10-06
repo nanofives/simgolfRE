@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10034cd0 `~ios` at 0x100046ce
 
 ## Callers
-0x10006dd0 `FUN_10006dd0`, 0x10033940 ``scalar_deleting_destructor'`, 0x10041170 `Unwind@10041170`
+0x10006dd0 `Terrain::loadLighting`, 0x10033940 ``scalar_deleting_destructor'`, 0x10041170 `Unwind@10041170`
 
 ## Constants
 - `0xc` (12) at 0x100046c0, 0x100046cb

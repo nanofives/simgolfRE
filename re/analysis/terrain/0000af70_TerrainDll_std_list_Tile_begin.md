@@ -26,12 +26,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000af8a
 
 ## Callees
-- 0x10001046 -> 0x1000b750 `FUN_1000b750` (incremental-linking thunk) at 0x1000afa2
-- 0x100010e1 -> 0x1000b600 `FUN_1000b600` (incremental-linking thunk) at 0x1000af94
+- 0x10001046 -> 0x1000b750 `std::list(TileP)::iterator::iterator` (incremental-linking thunk) at 0x1000afa2
+- 0x100010e1 -> 0x1000b600 `std::list(TileP)::_Acc::_Next` (incremental-linking thunk) at 0x1000af94
 - 0x100180a0 `__chkesp` at 0x1000afb9
 
 ## Callers
-0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x100089e0 `?localRender@Terrain@@QAEXPAVTile@@0M@Z`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`, 0x1000aed0 `FUN_1000aed0`, 0x1000b210 `FUN_1000b210`, 0x100381a0 `FUN_100381a0`
+0x10006410 `Terrain::pathUpdateRender`, 0x100089e0 `Terrain::localRender`, 0x10009270 `Terrain::stripRender`, 0x1000aed0 `std::list(TileP)::~list`, 0x1000b210 `std::list(TileP)::clear`, 0x100381a0 `Terrain::drawTile`
 
 ## Constants
 - `0x4` at 0x1000af99

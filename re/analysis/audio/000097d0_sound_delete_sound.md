@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x000097d0`), 396 bytes, 132 instructions, subsystem `a
 
 ## Role (from the naming pass, not a C3 purpose)
 Destroys a Sound object created by create_sound; reads g_100b4a1c, g_100b49ec, g_100b4a20. (`re/names/sound_0.tsv`)
-System writeup: `re/analysis/systems/sound_0.md`.
+System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1000995b): callee pops 0 bytes of stack arguments.
@@ -64,7 +64,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x1000988b, 0x1000993c
 
 ## Callers
-0x100288a0 `soundWindowProc`, 0x10028b70 `soundWindowSubclassProc`, 0x1002ac00 `FUN_1002ac00`, 0x1002b620 `FUN_1002b620`, 0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002c5e0 `destroyMixerVoices`, 0x1002cb00 `Mixer_dtor`, 0x1002d560 `FUN_1002d560`, 0x1002dff0 `FUN_1002dff0`, 0x1002e660 `FUN_1002e660`, 0x1002ea30 `FUN_1002ea30`, 0x1002eb40 `FUN_1002eb40`, 0x1002ebd0 `FUN_1002ebd0`, 0x1002ef40 `FUN_1002ef40`, 0x1002f060 `FUN_1002f060`, 0x1002f0f0 `FUN_1002f0f0`, 0x1002f3f0 `FUN_1002f3f0`, 0x1002f5a0 `FUN_1002f5a0`, 0x1002f5e0 `FUN_1002f5e0`
+0x100288a0 `soundWindowProc`, 0x10028b70 `soundWindowSubclassProc`, 0x1002ac00 `SubChannel_dtor`, 0x1002b620 `Ch5bb90_dtor`, 0x1002bc60 `Device_prepareSoundFlags`, 0x1002bd80 `Device_lazyCreateSound`, 0x1002c5e0 `destroyMixerVoices`, 0x1002cb00 `Mixer_dtor`, 0x1002d560 `Ch5be88_dtorA`, 0x1002dff0 `Channel_releaseSound`, 0x1002e660 `Ch5be88_dtorB`, 0x1002ea30 `Ch5c178_dtor`, 0x1002eb40 `openSourceType4`, 0x1002ebd0 `FUN_1002ebd0`, 0x1002ef40 `Ch5c234_dtor`, 0x1002f060 `openSourceType6`, 0x1002f0f0 `FUN_1002f0f0`, 0x1002f3f0 `Ch5c2ec_dtor`, 0x1002f5a0 `FUN_1002f5a0`, 0x1002f5e0 `openSourceType7`
 
 ## Constants
 - `0x1` at 0x10009887, 0x10009930, 0x10009941

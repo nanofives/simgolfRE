@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10001f10 `?getType@Terrain@@QAEHPAVTile@@@Z`, 0x1000ccc0 `FUN_1000ccc0`, 0x1000d540 `FUN_1000d540`, 0x1000de60 `FUN_1000de60`, 0x1000e6c0 `FUN_1000e6c0`, 0x1000ea30 `FUN_1000ea30`, 0x10014190 `FUN_10014190`, 0x100149e0 `FUN_100149e0`, 0x10015650 `FUN_10015650`
+0x10001f10 `Terrain::getType`, 0x1000ccc0 `Tile::lowerCorner`, 0x1000d540 `FUN_1000d540`, 0x1000de60 `FUN_1000de60`, 0x1000e6c0 `Tile::render`, 0x1000ea30 `Tile::drawSkirts`, 0x10014190 `FUN_10014190`, 0x100149e0 `FUN_100149e0`, 0x10015650 `Tile::edgeKind`
 
 ## Constants
 - `0x11` (17) at 0x10001f6d

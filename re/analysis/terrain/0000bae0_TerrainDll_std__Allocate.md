@@ -27,7 +27,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10018c90 `operator_new` at 0x1000bb09
 
 ## Callers
-0x1000b910 `FUN_1000b910`
+0x1000b910 `std::allocator(TileP)::_Charalloc`
 
 ## Constants
 - `0x0` at 0x1000baf8, 0x1000bafe

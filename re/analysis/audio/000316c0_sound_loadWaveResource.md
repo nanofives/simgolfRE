@@ -53,7 +53,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x100316ce, 0x10031739, 0x100317c5
 
 ## Callees
-- 0x10001cb7 -> 0x10031b60 `FUN_10031b60` (incremental-linking thunk) at 0x10031805
+- 0x10001cb7 -> 0x10031b60 `ResourceList_pushBack` (incremental-linking thunk) at 0x10031805
 - 0x1003b150 `codecProcessResource` at 0x1003179f
 - 0x100424d7 `operator_new` at 0x10031719
 - import `WINMM.dll!mmioGetInfo` at 0x10031760

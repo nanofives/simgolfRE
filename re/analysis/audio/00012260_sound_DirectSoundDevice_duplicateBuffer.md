@@ -62,7 +62,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x1001229e, 0x10012306, 0x10012316
 
 ## Callees
-- 0x10001320 -> 0x10032410 `FUN_10032410` (incremental-linking thunk) at 0x100123a1
+- 0x10001320 -> 0x10032410 `DsDevice_registerBuffer` (incremental-linking thunk) at 0x100123a1
 - 0x10001762 -> 0x1000ff60 `DsBuffer::queryNotify` (incremental-linking thunk) at 0x100123bc
 - 0x10001910 -> 0x1000ef60 `DsBuffer::destroy` (incremental-linking thunk) at 0x100123f5
 - 0x10001c1c -> 0x1000eef0 `DsBuffer::ctor` (incremental-linking thunk) at 0x100122d3

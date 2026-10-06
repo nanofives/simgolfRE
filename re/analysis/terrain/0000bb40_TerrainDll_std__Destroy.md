@@ -20,7 +20,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1000b9f0 `FUN_1000b9f0`
+0x1000b9f0 `std::allocator(TileP)::destroy`
 
 ## Constants
 - `0x10` (16) at 0x1000bb4c

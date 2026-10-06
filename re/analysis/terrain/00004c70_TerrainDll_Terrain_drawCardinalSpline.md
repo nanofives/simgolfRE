@@ -73,7 +73,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x10004eb2
 
 ## Callees
-- 0x100012d0 -> 0x10005090 `FUN_10005090` (incremental-linking thunk) at 0x10004ecf
+- 0x100012d0 -> 0x10005090 `Terrain::hermitePoint` (incremental-linking thunk) at 0x10004ecf
 - 0x100180a0 `__chkesp` at 0x10004d46, 0x10004d55, 0x10004d64, 0x10004da1, 0x10004db5, 0x10004dc4, 0x10004dd3, 0x10004de7 (+19 more)
 - import `OPENGL32.dll!glBegin` at 0x10004e6f
 - import `OPENGL32.dll!glBlendFunc` at 0x10004e20

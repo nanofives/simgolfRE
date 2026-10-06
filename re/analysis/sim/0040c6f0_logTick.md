@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 46 bytes, 15 instructions, subsystem `sim`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 records a per-tick entry into a rolling history/log buffer (`re/names/exe_0.tsv`)
 
+## Purpose
+Records (short)(a | b) in a 500-entry word log at 0x00568600, at entry (tick / 1024) % 500 where tick is the dword at 0x00834170 (signed division and remainder) (0x0040c6f0). Reimplemented in `shim/src/re/golf_writers.cpp`; path-1 A/B with state comparison over 15 (a, b) pairs at tick 0x12345 is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small4.cpp` as `?logTick@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c71d): callee pops 0 bytes of stack arguments.

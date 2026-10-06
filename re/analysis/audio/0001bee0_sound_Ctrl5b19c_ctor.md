@@ -71,8 +71,8 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0x8]` dword at 0x1001befa
 
 ## Callees
-- 0x10001235 -> 0x1001d130 `FUN_1001d130` (incremental-linking thunk) at 0x1001bf01
-- 0x1000204a -> 0x1001c1e0 `FUN_1001c1e0` (incremental-linking thunk) at 0x1001bfc1
+- 0x10001235 -> 0x1001d130 `PtrList_init` (incremental-linking thunk) at 0x1001bf01
+- 0x1000204a -> 0x1001c1e0 `Ctrl5b5c0_transposeTable` (incremental-linking thunk) at 0x1001bfc1
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -77,8 +77,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x10005512, 0x1000553d
 
 ## Callees
-- 0x10001073 -> 0x10005750 `FUN_10005750` (incremental-linking thunk) at 0x1000551f
-- 0x100158b0 `FUN_100158b0` at 0x100052aa, 0x100052bb, 0x100052cc, 0x100052dd
+- 0x10001073 -> 0x10005750 `Terrain::bernstein` (incremental-linking thunk) at 0x1000551f
+- 0x100158b0 `iabs` at 0x100052aa, 0x100052bb, 0x100052cc, 0x100052dd
 - 0x100180a0 `__chkesp` at 0x1000532f, 0x1000533e, 0x1000534d, 0x10005396, 0x100053d5, 0x100053e9, 0x100053f8, 0x10005407 (+20 more)
 - import `OPENGL32.dll!glBegin` at 0x100054a3
 - import `OPENGL32.dll!glBlendFunc` at 0x10005454

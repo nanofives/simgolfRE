@@ -33,10 +33,10 @@ Through registers:
 - `jne` (equality) at 0x1004712e, 0x1004713d
 
 ## Callees
-- 0x10046fea `FUN_10046fea` at 0x10047141
+- 0x10046fea `sbhRegionDecommit` at 0x10047141
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10042c07 `free`, 0x10045252 `crtRealloc`
 
 ## Constants
 - `0x0` at 0x1004711e

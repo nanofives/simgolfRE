@@ -47,9 +47,9 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x1002f93f
 
 ## Callees
-- 0x1000122b -> 0x10037720 `FUN_10037720` (incremental-linking thunk) at 0x1002f9ed
+- 0x1000122b -> 0x10037720 `Channel_setStreamSource` (incremental-linking thunk) at 0x1002f9ed
 - 0x10001dde -> 0x10032660 `FUN_10032660` (incremental-linking thunk) at 0x1002f9d7
-- 0x100025ea -> 0x10039690 `FUN_10039690` (incremental-linking thunk) at 0x1002f990
+- 0x100025ea -> 0x10039690 `MultiSound_ctor` (incremental-linking thunk) at 0x1002f990
 - 0x100424d7 `operator_new` at 0x1002f97a
 - indirect `call [eax+0x6c]` at 0x1002f9a4
 - indirect `call [edx+0x10]` at 0x1002f9b4

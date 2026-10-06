@@ -30,9 +30,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jle` (signed) at 0x1000331b
 
 ## Callees
-- 0x10001050 -> 0x10015380 `FUN_10015380` (incremental-linking thunk) at 0x1000334c
-- 0x100010b9 -> 0x10002f80 `FUN_10002f80` (incremental-linking thunk) at 0x10003334, 0x10003340
-- 0x10001235 -> 0x10014020 `FUN_10014020` (incremental-linking thunk) at 0x10003358
+- 0x10001050 -> 0x10015380 `Tile::setRotation` (incremental-linking thunk) at 0x1000334c
+- 0x100010b9 -> 0x10002f80 `Tile::setVariation` (incremental-linking thunk) at 0x10003334, 0x10003340
+- 0x10001235 -> 0x10014020 `Tile::setTypeId` (incremental-linking thunk) at 0x10003358
 - 0x100180a0 `__chkesp` at 0x10003365
 - 0x10018ce0 `_rand` at 0x1000331d
 

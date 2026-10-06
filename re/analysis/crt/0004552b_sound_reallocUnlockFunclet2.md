@@ -19,7 +19,7 @@ None.
 - 0x10047771 `_unlock` at 0x1004552d
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10045252 `crtRealloc`
 
 ## Constants
 - `0x9` at 0x1004552b

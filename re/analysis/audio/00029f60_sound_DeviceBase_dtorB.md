@@ -28,7 +28,7 @@ Through registers:
 - indirect `jmp [eax+0x14]` at 0x10029f6f
 
 ## Callers
-0x10009cb0 `Midi_Device::dtor`, 0x10029f30 `FUN_10029f30`, 0x100586eb `Unwind@100586eb`, 0x10058720 `Unwind@10058720`, 0x10058750 `Unwind@10058750`
+0x10009cb0 `Midi_Device::dtor`, 0x10029f30 `MidiDeviceBase_scalarDtor`, 0x100586eb `Unwind@100586eb`, 0x10058720 `Unwind@10058720`, 0x10058750 `Unwind@10058750`
 
 ## Constants
 - `0x1005b8b0` (268810416) = address in the image (data) at 0x10029f60

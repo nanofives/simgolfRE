@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 118 bytes, 30 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 queues a floating points/score popup at a location (`re/names/exe_0.tsv`)
 
+## Purpose
+Adds a points popup: does nothing when pts is 0 or bit 0x1000000 of the dword at 0x0059e7b8 is set; when who != -1 subtracts pts from the dword at 0x00575ca0 + who*0x208; then at the write index (0x0059abb0) stores x, y, pts and lifetime 0x18 in 0x00542fd8, 0x00542ff8, 0x00542dd8 and 0x00542f00 and advances the index to (slot + 1) % 8 (0x0040c890). Reimplemented in `shim/src/re/golf_writers.cpp`; path-1 A/B with state comparison is GREEN for write index 7 (wrap) and 2 and with the flag set (no state change), 24 vectors each.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small10.cpp` as `?pointsPopup@@YAXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c905): callee pops 0 bytes of stack arguments.

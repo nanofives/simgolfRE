@@ -24,7 +24,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x100097d0 `delete_sound`, 0x1002fb70 `FUN_1002fb70`, 0x1002fc10 `FUN_1002fc10`
+0x100097d0 `delete_sound`, 0x1002fb70 `enqueueWaveCmdE`, 0x1002fc10 `FUN_1002fc10`
 
 ## Constants
 None.

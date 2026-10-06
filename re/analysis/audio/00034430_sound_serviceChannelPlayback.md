@@ -79,7 +79,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x100026e4 -> 0x1000f190 `DsBuffer::setVolumeRaw` (incremental-linking thunk) at 0x1003452b
 
 ## Callers
-0x1000cd80 `Wave_Device::dispatchCommand`, 0x10039ce0 `FUN_10039ce0`
+0x1000cd80 `Wave_Device::dispatchCommand`, 0x10039ce0 `MultiSound_start`
 
 ## Constants
 - `0x1` at 0x10034463, 0x1003446e, 0x10034478, 0x10034483, 0x100345bc, 0x1003468e

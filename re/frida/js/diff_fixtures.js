@@ -63,6 +63,47 @@ globalThis.DIFF_FIXTURES = {
     for (let i = 0; i < 2500; i++) ptr('0x0053caf0').add(i * 2).writeU16((0xffff ^ i) & 0xffff);
     return { obj: ptr('0x005722e8') };
   },
+  // Batch 3 writers. Our own ASCII in the text buffer 0x0051a068 (no game text is written or recorded).
+  _text(s) { ptr('0x0051a068').writeUtf8String(s); },
+  // Message ring (queueMessage 0x0040c720 / clearMatching 0x0040c860): a = i % 3, b = i % 2, ttl = 0x30 - i,
+  // write index 0x0053bba8 = n.
+  _msgs(n) {
+    globalThis.DIFF_FIXTURES._text('ab-msg');
+    for (let i = 0; i < 8; i++) {
+      ptr('0x0056c770').add(i * 4).writeS32(i % 3);
+      ptr('0x0056c794').add(i * 4).writeS32(i % 2);
+      ptr('0x0056a924').add(i * 4).writeS32(0x30 - i);
+    }
+    ptr('0x0053bba8').writeS32(n);
+    return { obj: ptr('0x0056c770') };
+  },
+  msg_ring_n7() { return globalThis.DIFF_FIXTURES._msgs(7); },
+  msg_ring_n3() { return globalThis.DIFF_FIXTURES._msgs(3); },
+  // Popup ring (pointsPopup 0x0040c890): flags 0x0059e7b8 bit 0x1000000 set or clear, write index 0x0059abb0 = n,
+  // the who records 0x00575ca0 + who*0x208 (who 0..3) = 1000 + who.
+  _pops(flag, n) {
+    const fl = ptr('0x0059e7b8');
+    fl.writeU32(flag ? (fl.readU32() | 0x1000000) : (fl.readU32() & ~0x1000000) >>> 0);
+    ptr('0x0059abb0').writeS32(n);
+    for (let w = 0; w < 4; w++) ptr('0x00575ca0').add(w * 0x208).writeS32(1000 + w);
+    return { obj: ptr('0x00542dd8') };
+  },
+  pop_ring_n7() { return globalThis.DIFF_FIXTURES._pops(false, 7); },
+  pop_ring_n2() { return globalThis.DIFF_FIXTURES._pops(false, 2); },
+  pop_ring_off() { return globalThis.DIFF_FIXTURES._pops(true, 4); },
+  // logTick 0x0040c6f0: tick dword 0x00834170 = 0x12345 (slot (0x12345 / 1024) % 500 = 72).
+  tick_12345() { ptr('0x00834170').writeS32(0x12345); return { obj: ptr('0x00568600') }; },
+  // resetGolfer 0x00426670: golfers as golf_tables (type g % 12) and the 100 queue entries at 0x005689e8
+  // (word +0 = i, word +4 = i % 13).
+  golfer_queue() {
+    globalThis.DIFF_FIXTURES.golf_tables();
+    for (let i = 0; i < 100; i++) {
+      ptr('0x005689e8').add(i * 8).writeS16(i);
+      ptr('0x005689e8').add(i * 8 + 4).writeS16(i % 13);
+    }
+    return { obj: ptr('0x005689e8') };
+  },
+  text_ab() { globalThis.DIFF_FIXTURES._text('ab'); return { obj: ptr('0x0051a068') }; },
   // Rect {x0 = 10, y0 = 20, x1 = 30, y1 = 40} for pointInRect 0x00492610.
   rect_10_20_30_40() {
     const obj = Memory.alloc(16);

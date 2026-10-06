@@ -47,7 +47,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0xc]` dword at 0x1000603b
 
 ## Callees
-- 0x1000125d -> 0x1002e930 `FUN_1002e930` (incremental-linking thunk) at 0x1000603f
+- 0x1000125d -> 0x1002e930 `Ch5c178_ctor` (incremental-linking thunk) at 0x1000603f
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x1000609a
 
 ## Callers

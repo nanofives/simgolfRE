@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000b100 `FUN_1000b100`, 0x1000b800 `FUN_1000b800`
+0x1000b100 `std::list(TileP)::insert`, 0x1000b800 `std::list(TileP)::erase_1000b800`
 
 ## Constants
 - `0x11` (17) at 0x1000b71d

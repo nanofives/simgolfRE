@@ -43,7 +43,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1003d1d0 `FUN_1003d1d0`
+0x1003d1d0 `lpcSynthesize`
 
 ## Constants
 - `0x0` at 0x10040fe2, 0x10041000

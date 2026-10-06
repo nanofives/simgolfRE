@@ -30,12 +30,12 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `ja` (unsigned) at 0x100039a9
 
 ## Callees
-- 0x100012fd -> 0x10006dd0 `FUN_10006dd0` (incremental-linking thunk) at 0x100039bd, 0x100039cc, 0x100039db, 0x100039ea, 0x100039f9
+- 0x100012fd -> 0x10006dd0 `Terrain::loadLighting` (incremental-linking thunk) at 0x100039bd, 0x100039cc, 0x100039db, 0x100039ea, 0x100039f9
 - 0x100180a0 `__chkesp` at 0x10003a06
 - indirect `jmp [ecx*4+0x10003a0f]` at 0x100039ae
 
 ## Callers
-0x10001af0 `?loadNewCourseType@Terrain@@QAEXH@Z`, 0x100037e0 `FUN_100037e0`
+0x10001af0 `Terrain::loadNewCourseType`, 0x100037e0 `Terrain::initLists`
 
 ## Constants
 - `0x3` at 0x100039a5

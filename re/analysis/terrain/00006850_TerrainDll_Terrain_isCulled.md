@@ -71,13 +71,13 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10006874, 0x100068d9, 0x100068e5, 0x1000690f, 0x1000691b, 0x10006945, 0x10006951
 
 ## Callees
-- 0x10001104 -> 0x10015500 `FUN_10015500` (incremental-linking thunk) at 0x100069c0, 0x10006a72, 0x10006b27, 0x10006bc8
-- 0x10001145 -> 0x10006810 `FUN_10006810` (incremental-linking thunk) at 0x100068a4, 0x100068ae
-- 0x100012ad -> 0x10005960 `FUN_10005960` (incremental-linking thunk) at 0x100068bb, 0x100068c5
+- 0x10001104 -> 0x10015500 `Tile::maxHeight` (incremental-linking thunk) at 0x100069c0, 0x10006a72, 0x10006b27, 0x10006bc8
+- 0x10001145 -> 0x10006810 `Tile::getY` (incremental-linking thunk) at 0x100068a4, 0x100068ae
+- 0x100012ad -> 0x10005960 `Tile::getX` (incremental-linking thunk) at 0x100068bb, 0x100068c5
 - 0x100180a0 `__chkesp` at 0x10006c32
 
 ## Callers
-0x10005990 `?render@Terrain@@QAE_NPAVTile@@M@Z`, 0x10006410 `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z`, 0x10007380 `FUN_10007380`, 0x10009270 `?stripRender@Terrain@@QAEXPAVTile@@HM@Z`
+0x10005990 `Terrain::render`, 0x10006410 `Terrain::pathUpdateRender`, 0x10007380 `Terrain::drawTileObjects`, 0x10009270 `Terrain::stripRender`
 
 ## Constants
 - `0x0` at 0x10006a09, 0x10006abe, 0x10006b73, 0x10006c17

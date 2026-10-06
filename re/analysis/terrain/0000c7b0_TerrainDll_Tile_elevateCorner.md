@@ -99,7 +99,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - indirect `jmp [edx*4+0x1000cb9b]` at 0x1000c7ef
 
 ## Callers
-0x1000a5c0 `?elevateCorner@Terrain@@QAEXPAVTile@@H@Z`
+0x1000a5c0 `Terrain::elevateCorner`
 
 ## Constants
 - `0x0` at 0x1000c83c, 0x1000c843, 0x1000c84f, 0x1000c856, 0x1000c879, 0x1000c8b6, 0x1000c8bd, 0x1000c91a (+14 more)

@@ -25,7 +25,7 @@ Through registers:
 - 0x00401040 `placeRecord` at 0x00401774, 0x00401788, 0x0040179c, 0x004017b5
 
 ## Callers
-0x004315e0 `buildGolferBioText`
+0x0040f5c0 `mainLoop`, 0x004315e0 `buildGolferBioText`
 
 ## Constants
 - `0x0` at 0x00401765, 0x0040176c, 0x0040176e, 0x00401770, 0x00401772, 0x00401780, 0x00401782, 0x00401794 (+3 more)

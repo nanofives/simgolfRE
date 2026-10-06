@@ -25,7 +25,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `je` (equality) at 0x1003d05c
 
 ## Callees
-- 0x10040e30 `FUN_10040e30` at 0x1003d07b
+- 0x10040e30 `codecBiquadFilter` at 0x1003d07b
 - 0x100431ce `FUN_100431ce` at 0x1003d08d
 
 ## Callers

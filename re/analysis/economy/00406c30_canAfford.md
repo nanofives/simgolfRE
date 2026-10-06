@@ -39,7 +39,7 @@ Through registers:
 - 0x00480c80 `Window::refreshFull` at 0x00406d29
 
 ## Callers
-0x0040aa80 `hireEmployee`, 0x004587a0 `showBuyLandScreen`
+0x0040aa80 `hireEmployee`, 0x0040f5c0 `mainLoop`, 0x004587a0 `showBuyLandScreen`
 
 ## Constants
 - `0x0` at 0x00406d27, 0x00406d2e

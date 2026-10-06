@@ -27,11 +27,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `[ebp-0x4]` dword at 0x1000ae7a
 
 ## Callees
-- 0x1000129e -> 0x1000b500 `FUN_1000b500` (incremental-linking thunk) at 0x1000ae8e
+- 0x1000129e -> 0x1000b500 `std::list(TileP)::_Buynode` (incremental-linking thunk) at 0x1000ae8e
 - 0x100180a0 `__chkesp` at 0x1000aeae
 
 ## Callers
-0x10002ae0 `FUN_10002ae0`
+0x10002ae0 `Terrain::Terrain`
 
 ## Constants
 - `0x0` at 0x1000ae87, 0x1000ae89, 0x1000ae9c

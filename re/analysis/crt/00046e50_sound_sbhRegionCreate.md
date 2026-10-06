@@ -52,7 +52,7 @@ Through registers:
 - indirect `call ebp` at 0x10046e95, 0x10046eaf
 
 ## Callers
-0x10045d10 `crtHeapInit`, 0x10045e34 `FUN_10045e34`, 0x10047148 `crtCommitPages`
+0x10045d10 `crtHeapInit`, 0x10045e34 `setSbhThreshold`, 0x10047148 `crtCommitPages`
 
 ## Constants
 - `0x0` at 0x10046e69, 0x10046e93, 0x10046ec2, 0x10046ed0, 0x10046f35, 0x10046f6d, 0x10046f7f

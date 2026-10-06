@@ -39,7 +39,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x00407e00 `narrateShot`, 0x0040e720 `announceBuilding`, 0x0040f5c0 `mainLoop`, 0x00427380 `matchUpdate`, 0x0042dea0 `holeMagazineEvent`, 0x0044fb30 `showCourseReport`, 0x0045a090 `showTournamentResults`, 0x00460df0 `announceHoleType`
+0x00407e00 `narrateShot`, 0x0040e720 `announceBuilding`, 0x00427380 `matchUpdate`, 0x0042dea0 `holeMagazineEvent`, 0x0044fb30 `showCourseReport`, 0x0045a090 `showTournamentResults`, 0x00460df0 `announceHoleType`
 
 ## Constants
 - `0x0` at 0x0046e7ec

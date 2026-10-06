@@ -26,8 +26,8 @@ Globals:
 
 ## Callees
 - 0x10045bc8 `crtHeapSelect` at 0x10045d30
-- 0x10045ee7 `FUN_10045ee7` at 0x10045d44
-- 0x10046e50 `FUN_10046e50` at 0x10045d51
+- 0x10045ee7 `sbhGroupHeapInit` at 0x10045d44
+- 0x10046e50 `sbhRegionCreate` at 0x10045d51
 - import `KERNEL32.dll!HeapCreate` at 0x10045d21
 - import `KERNEL32.dll!HeapDestroy` at 0x10045d60
 

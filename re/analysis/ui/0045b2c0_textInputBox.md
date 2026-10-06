@@ -69,7 +69,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a65c0 `_isprint` at 0x0045b5e4
 
 ## Callers
-0x00405b10 `saveGameDialog`, 0x00432720 `showSystemMenu`, 0x00436c00 `handleEmployeeAction`, 0x004385d0 `showCharacterEditor`, 0x0046f550 `courseActionMenu`
+0x00405b10 `saveGameDialog`, 0x0040f5c0 `mainLoop`, 0x00432720 `showSystemMenu`, 0x00436c00 `handleEmployeeAction`, 0x004385d0 `showCharacterEditor`, 0x0046f550 `courseActionMenu`
 
 ## Constants
 - `0x0` at 0x0045b355, 0x0045b357, 0x0045b359, 0x0045b3f6, 0x0045b3f8, 0x0045b3fa, 0x0045b42c, 0x0045b4ed (+7 more)

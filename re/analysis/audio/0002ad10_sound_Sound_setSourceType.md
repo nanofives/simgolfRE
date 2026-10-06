@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0002ad10`), 109 bytes, 35 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 thiscall(type): stores the source type at this+0x54 and sets the matching format bits in this+0x44 (type1->4, 2->8, 4->0x10, 5->0x28, 6->0x100, 7->0x80). (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x1002ad2f, 0x1002ad3e, 0x1002ad4d, 0x1002ad5c, 0x1002ad6b, 0x1002ad7a): callee pops 4 bytes of stack arguments.
@@ -29,7 +29,7 @@ Through registers:
 - indirect `jmp [edx*4+0x1002ad80]` at 0x1002ad1c
 
 ## Callers
-0x10003f30 `Sound::ctor`, 0x10006020 `WaveStream::ctor`, 0x1001f4a0 `Sound5b6a8_ctor`, 0x1001f6f0 `Seq_ctor`, 0x1002b4e0 `SubChannel_ctor`, 0x1002c490 `FUN_1002c490`, 0x1002c9f0 `FUN_1002c9f0`, 0x1002e550 `FUN_1002e550`, 0x1002e930 `FUN_1002e930`, 0x1002ed50 `buildVoiceRxName`, 0x1002f220 `buildVoiceTxName`, 0x1002f740 `FUN_1002f740`, 0x10030080 `Sound5c450_ctor`, 0x10039690 `FUN_10039690`, 0x10039790 `FUN_10039790`, 0x100399a0 `loadMultiChannel`
+0x10003f30 `Sound::ctor`, 0x10006020 `WaveStream::ctor`, 0x1001f4a0 `Sound5b6a8_ctor`, 0x1001f6f0 `Seq_ctor`, 0x1002b4e0 `SubChannel_ctor`, 0x1002c490 `Ch5bb90_ctor`, 0x1002c9f0 `Mixer_ctor`, 0x1002e550 `Ch5c000_ctor`, 0x1002e930 `Ch5c178_ctor`, 0x1002ed50 `buildVoiceRxName`, 0x1002f220 `buildVoiceTxName`, 0x1002f740 `Ch5c3a4_ctor`, 0x10030080 `Sound5c450_ctor`, 0x10039690 `MultiSound_ctor`, 0x10039790 `MultiSound_ctorWithType`, 0x100399a0 `loadMultiChannel`
 
 ## Constants
 - `0x1` at 0x1002ad65

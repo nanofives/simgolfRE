@@ -41,7 +41,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1003b5a0 `codecTransformStage`, 0x1003c220 `FUN_1003c220`
+0x1003b5a0 `codecTransformStage`, 0x1003c220 `quantizeParams`
 
 ## Constants
 - `0x0` at 0x1003e2e8, 0x1003e2ee, 0x1003e307, 0x1003e31b, 0x1003e358

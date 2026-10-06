@@ -44,7 +44,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x100016d0, 0x10001749, 0x100017ab, 0x100017fb
 
 ## Callees
-- 0x100158b0 `FUN_100158b0` at 0x100017da
+- 0x100158b0 `iabs` at 0x100017da
 - 0x100158e0 `_malloc` at 0x10001736, 0x100017ec
 - 0x10016470 `FUN_10016470` at 0x10001781, 0x10001803, 0x1000183c, 0x10001848
 - 0x10017c20 `_fclose` at 0x100016f6, 0x1000171a, 0x1000174f, 0x1000178d, 0x1000180f, 0x10001854, 0x10001864
@@ -53,7 +53,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x100180a0 `__chkesp` at 0x10001877
 
 ## Callers
-0x1000bbd0 `FUN_1000bbd0`
+0x1000bbd0 `textureLoad`
 
 ## Constants
 - `0x0` at 0x100016cc, 0x10001746, 0x100017a7, 0x100017f7

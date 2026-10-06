@@ -26,7 +26,7 @@ None.
 - 0x1000177b -> 0x10039450 `FUN_10039450` (incremental-linking thunk) at 0x1000ed87
 
 ## Callers
-0x10031450 `FUN_10031450`, 0x100319e0 `FUN_100319e0`
+0x10031450 `WaveInStream_start`, 0x100319e0 `WaveInStream_resetCodec`
 
 ## Constants
 - `0x13` (19) at 0x1000ed7a

@@ -28,7 +28,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x10009bc3, 0x10009bdc, 0x10009c12
 
 ## Callees
-- 0x100012ee -> 0x100380a0 `FUN_100380a0` (incremental-linking thunk) at 0x10009c3d
+- 0x100012ee -> 0x100380a0 `Terrain::reloadTextures` (incremental-linking thunk) at 0x10009c3d
 - 0x100180a0 `__chkesp` at 0x10009bd5, 0x10009bf6, 0x10009c0b, 0x10009c2c, 0x10009c4a
 - import `OPENGL32.dll!wglDeleteContext` at 0x10009c03
 - import `OPENGL32.dll!wglMakeCurrent` at 0x10009bcd

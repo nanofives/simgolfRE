@@ -27,7 +27,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10001de0 `?getElevation@Terrain@@QAEHPAVTile@@H@Z`
+0x10001de0 `Terrain::getElevation`
 
 ## Constants
 - `0x11` (17) at 0x10001e4d

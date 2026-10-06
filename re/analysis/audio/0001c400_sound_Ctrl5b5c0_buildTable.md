@@ -27,7 +27,7 @@ Through registers:
 - `jb` (unsigned) at 0x1001c447
 
 ## Callees
-- 0x1000204a -> 0x1001c1e0 `FUN_1001c1e0` (incremental-linking thunk) at 0x1001c44f
+- 0x1000204a -> 0x1001c1e0 `Ctrl5b5c0_transposeTable` (incremental-linking thunk) at 0x1001c44f
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

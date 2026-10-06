@@ -27,7 +27,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x10001e80 `?getWall@Terrain@@QAE_NPAVTile@@H@Z`
+0x10001e80 `Terrain::getWall`
 
 ## Constants
 - `0x11` (17) at 0x10001edd

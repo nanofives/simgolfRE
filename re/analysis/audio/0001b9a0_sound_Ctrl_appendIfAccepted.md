@@ -24,7 +24,7 @@ None.
 - `jne` (equality) at 0x1001b9af
 
 ## Callees
-- 0x100022f7 -> 0x1001d150 `FUN_1001d150` (incremental-linking thunk) at 0x1001b9bf
+- 0x100022f7 -> 0x1001d150 `PtrList_pushBack` (incremental-linking thunk) at 0x1001b9bf
 - indirect `call [eax]` at 0x1001b9ab
 
 ## Callers

@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0002cb00`), 220 bytes, 75 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor (vtable 0x1005bdd8 then base 0x1005bae0): frees the 0x28 voice-pointer slots at this+0x16 and the sub-object at this+0x14. (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1002cbdb): callee pops 0 bytes of stack arguments.
@@ -52,7 +52,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x1004249a `operator_delete` at 0x1002cb3b, 0x1002cb61
 
 ## Callers
-0x1002cad0 `FUN_1002cad0`, 0x10059030 `Unwind@10059030`
+0x1002cad0 `Mixer_scalarDtor`, 0x10059030 `Unwind@10059030`
 
 ## Constants
 - `0x1` at 0x1002cb54

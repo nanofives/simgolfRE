@@ -26,7 +26,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x100032f0 `?setType@Terrain@@QAEXPAVTile@@HH@Z`
+0x100032f0 `Terrain::setType`
 
 ## Constants
 - `0x11` (17) at 0x10002f8d

@@ -96,11 +96,11 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x100020c2, 0x100020de
 
 ## Callees
-- 0x100012b7 -> 0x10002010 `FUN_10002010` (incremental-linking thunk) at 0x10002158, 0x10002180, 0x100021a2, 0x100021d3, 0x100021fe, 0x1000222f, 0x100022f5, 0x1000231d (+4 more)
+- 0x100012b7 -> 0x10002010 `roundHalf` (incremental-linking thunk) at 0x10002158, 0x10002180, 0x100021a2, 0x100021d3, 0x100021fe, 0x1000222f, 0x100022f5, 0x1000231d (+4 more)
 - 0x100180a0 `__chkesp` at 0x10002501
 
 ## Callers
-0x1000a130 `FUN_1000a130`
+0x1000a130 `Terrain::buildArrays`
 
 ## Constants
 - `0x0` at 0x1000207d, 0x100020ac, 0x100020c8, 0x1000224d, 0x1000226f, 0x100023ea, 0x1000240c

@@ -23,7 +23,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x1003a210 `FUN_1003a210`
+0x1003a210 `MultiSound_setPitchCents`
 
 ## Constants
 None.

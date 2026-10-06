@@ -18,7 +18,7 @@ None.
 None.
 
 ## Callees
-- 0x100020b8 -> 0x10035770 `FUN_10035770` (incremental-linking thunk) at 0x1003a733
+- 0x100020b8 -> 0x10035770 `Channel_findStreamNode` (incremental-linking thunk) at 0x1003a733
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

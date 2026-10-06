@@ -23,7 +23,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 None (leaf).
 
 ## Callers
-0x1000c3d0 `FUN_1000c3d0`, 0x10041190 `Unwind@10041190`, 0x100411b0 `Unwind@100411b0`
+0x1000c3d0 `Tile::~Tile`, 0x10041190 `Unwind@10041190`, 0x100411b0 `Unwind@100411b0`
 
 ## Constants
 - `0x11` (17) at 0x10001fed

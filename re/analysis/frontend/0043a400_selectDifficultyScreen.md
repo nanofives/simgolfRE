@@ -74,7 +74,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0043a89f
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0040f5c0 `mainLoop`
 
 ## Constants
 - `0x1` at 0x0043a4ae, 0x0043a4bb, 0x0043a4bd, 0x0043a4dc, 0x0043a4de, 0x0043a504, 0x0043a506, 0x0043a529 (+8 more)

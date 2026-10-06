@@ -18,7 +18,7 @@ None.
 None.
 
 ## Callees
-- 0x100024d7 -> 0x10034b90 `FUN_10034b90` (incremental-linking thunk) at 0x10039c83
+- 0x100024d7 -> 0x10034b90 `Channel_stopVoices` (incremental-linking thunk) at 0x10039c83
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

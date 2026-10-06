@@ -19,7 +19,7 @@ None.
 - 0x1004877b `__ctrandisp1` at 0x100432b5
 
 ## Callers
-0x1003da50 `FUN_1003da50`
+0x1003da50 `interpSubframeParams`
 
 ## Constants
 - `0x100675ea` (268858858) = address in the image (data) at 0x100432b0
