@@ -1,0 +1,36 @@
+module	addr	name	type	evidence
+sound.dll	0x100b4990	g_timerLock	CRITICAL_SECTION	InitializeCriticalSection in 0x100089f0 (SoundTimer::init); Enter/Leave in 0x10008ed0,0x100088e0,0x10008920
+sound.dll	0x100b49a8	g_timerBusy	int	written 0x10008ce0 (SoundTimer::start)=0, 0x10008ed0 (SoundTimer::onTick) reentrancy guard
+sound.dll	0x100b49d8	g_soundTimerFlag	int	written by 0x100092e0 (init_sound_timer)
+sound.dll	0x100b49ec	g_soundTimer	SoundTimer*	written by 0x100092e0 (init_sound_timer); read by 0x10009390 (release_sound),0x10009da0
+sound.dll	0x100b4a1c	g_midiDevice	Midi_Device*	written 0x10009a90 (Dll_Midi_Device::create_device); read/cleared 0x10009bb0 (delete_device); used by midiOut emitters 0x1001ef10,0x100215c0
+sound.dll	0x100b49f0	g_waveDevice	Wave_Device*	written 0x1000b1d0 (Wave_Device::ctor); used by 0x1000baa0 (Wave_Device::start),0x1000b960
+sound.dll	0x100b49f4	g_waveOwner	void*	non-null gate checked in 0x1000baa0 (Wave_Device::start) before creating the device
+sound.dll	0x100b49f8	g_primaryBuffer	IDirectSoundBuffer*	written 0x1000baa0 (Wave_Device::start) via 0x10012d10 (createBuffer)
+sound.dll	0x100b49fc	g_secondaryBuffer1	IDirectSoundBuffer*	written 0x1000baa0 (Wave_Device::start) via 0x10012fe0 (createBufferFmt)
+sound.dll	0x100b4a00	g_secondaryBuffer2	IDirectSoundBuffer*	written 0x1000baa0 (Wave_Device::start) via 0x10012fe0 (createBufferFmt)
+sound.dll	0x100b4a24	g_waveInDevice	Wave_In_Device*	written 0x1000e910 (Dll_Wave_In_Device::create_device); cleared 0x1000ea00 (delete_device)
+sound.dll	0x100b4a04	g_waveInCapture	void*	read by 0x1000ed70,0x1000eda0 (Wave_In_Device::op1/op2), null -> returns 0x13
+sound.dll	0x100b4a08	g_openMmioCount	int	incremented by mmio openers 0x10006420,0x100086f0,0x100041d0; decremented by closers 0x10006160,0x10006330,0x10008770,0x1001e3d0
+sound.dll	0x100b4a34	g_dsBufferList	void*	head of the active DirectSound buffer list (nodes link at +0xbc/+0xc0), walked/freed in 0x10011970 (releaseAll),0x10011a80; filled by 0x10012d10/0x10012fe0
+sound.dll	0x100b4a38	g_dsBufferListTail	void*	tail/free pointer paired with g_100b4a34 in 0x10011970,0x10011a80,0x10011970
+sound.dll	0x100b4a3c	g_dsCoopLevel	DWORD	passed as the cooperative-level/window argument to 0x10011c60 (DirectSoundDevice::create) by 0x1000baa0,0x1000c020
+sound.dll	0x100b5038	g_notifyWindow	HWND	owner window used as the PostMessageA target in 0x1000dbe0,0x1000a670,0x1000cd80,0x10020b60
+sound.dll	0x100b4fe8	g_cmdTableHead	void*	list head read in 0x10022320 (copied to g_100b4ff0), entries hold a name at *entry; also used by 0x100204e0,0x10021fa0
+sound.dll	0x100b4ff0	g_cmdTableCursor	void*	cursor copied from g_100b4fe8 in 0x10022320
+sound.dll	0x100b49c0	g_soundList	void*	written by 0x100093e0 (create_sound); also 0x10020fe0,0x1001aef0
+sound.dll	0x1005b19c	vt_CtrlObject	vtable	set by 0x1001bc50 (CtrlObject::ctor); referenced by ~12 functions as the base-object vtable
+sound.dll	0x1005b1c0	vt_WaveStream	vtable	set by 0x10006160 (WaveStream::destroy),0x10006020
+sound.dll	0x1005b178	vt_WaveFmt3Stream	vtable	set by 0x10005440 (Wave_Device::readFmtChunk) on the format-3 stream object
+sound.dll	0x1005b3d4	vt_WaveInDevice	vtable	set by 0x1000e910 (Dll_Wave_In_Device::create_device); referenced by 0x1000e870,0x1000e8f0,0x1000e910
+sound.dll	0x1005b28c	vt_MidiSeq	vtable	set by 0x10009a90-area ctor; referenced by 0x10009a90,0x10009be0,0x10009cb0
+sound.dll	0x1005d5dc	IID_IDirectSound	GUID	CoCreateInstance riid arg in 0x10011c60 (DirectSoundDevice::create)
+sound.dll	0x1005d67c	CLSID_DirectSound	GUID	CoCreateInstance rclsid arg in 0x10011c60 (DirectSoundDevice::create)
+sound.dll	0x10063db4	g_extRmi	char[4]	'rmi' extension string matched in 0x100093e0 (create_sound)
+sound.dll	0x10063db8	g_extAif	char[4]	'aif' extension string matched in 0x100093e0 (create_sound)
+sound.dll	0x10063dbc	g_extMid	char[4]	'mid' extension string matched in 0x100093e0 (create_sound)
+sound.dll	0x10063dc0	g_extWav	char[4]	'wav' extension string matched in 0x100093e0 (create_sound)
+sound.dll	0x10063dc8	g_defaultWaveFormat	WAVEFORMATEX	PCM tag 1, 1 channel, 22050 Hz, 44100 B/s, block 2, 16-bit; passed to 0x10012fe0 by 0x1000baa0
+sound.dll	0x10063d90	g_fccMThd	FOURCC	(string in the binary) passed to mmioStringToFOURCCA in 0x100041d0,0x1001d810,0x1001dce0
+sound.dll	0x10063e08	g_fccMTrk	FOURCC	(string in the binary) used by the SMF loaders 0x1001d810,0x1001dce0
+sound.dll	0x10063d98	g_fmtTimerLate	char[]	format string (string in the binary) used by 0x10008ed0 (SoundTimer::onTick)

@@ -1,0 +1,13 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x00820ed0	gTerrain	Terrain* (handle)	read by every terrain-glue function that calls Terrain.dll imports (0x449470 syncTiles, 0x449540 rebuildTerrainGrid, 0x449790 initTerrain, 0x449860 freeTerrain)
+golf_clean.exe	0x004c2ba0	gCameraTileX	int	read by 0x42fb90 (worldToScreen) and 0x430020; moved by arrow keys per re/analysis camera note
+golf_clean.exe	0x004c2ba4	gCameraTileY	int	read by 0x42fb90 (worldToScreen) and 0x430020
+golf_clean.exe	0x0056fcb0	gTextBuffer	char[]	written by 0x45b9f0 (appendString); cleared by 0x45b880 (clearBuffers)
+golf_clean.exe	0x0059d81c	gTextBuffer2	char[]	cleared by 0x45b880 (clearBuffers); written by 0x45b8b0 (appendToBuffer45b8b0)
+golf_clean.exe	0x0059d91c	gTextBuffer2Index	int	written by 0x45b8b0 (appendToBuffer45b8b0)
+golf_clean.exe	0x004ba800	gRngState	unsigned (LCG state)	read and written by 0x45c1a0 (Random::next)
+golf_clean.exe	0x00822b98	gDirtyFlagA	int	written by 0x45ae30 (setDirtyFlagA); read by 0x45ae70/0x45aed0 (redraw)
+golf_clean.exe	0x00822b9c	gDirtyFlagB	int	written by 0x45ae50 (setDirtyFlagB); read by 0x45aed0 (waitRedrawReady)
+golf_clean.exe	0x00587da0	gCourseInfoDirty	int	read by 0x432170 (flushCourseInfo) to decide whether to rewrite the course info/thumbnails
+golf_clean.exe	0x00820f18	gTileBuffer	void*	allocated by 0x449210 (allocTileBuffer); read by 0x44a5b0 (rebuildTileData)
+golf_clean.exe	0x00579540	gThoughtTable	int[]	read by 0x45c420 (thoughtBalance) to sum a golfer's positive/negative thoughts

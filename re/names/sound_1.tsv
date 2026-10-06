@@ -1,0 +1,51 @@
+module	addr	name	subsystem	evidence	purpose
+sound.dll	0x10028740	createSoundWindow	audio	import RegisterClassA, import CreateWindowExA, string 0x10063e10	registers window class (string in the binary) and creates hidden window (string in the binary), storing the HWND at this+8; returns an SNDERR code from whether the HWND is non-null
+sound.dll	0x10028630	destroySoundWindowObj	audio	import SetWindowLongA, vtable 0x1005b8ac	scalar deleting destructor: sets vtable 0x1005b8ac, if subclassed (this+4 bit2) restores the saved WNDPROC via SetWindowLongA(hwnd,-4,this+0xc), clears this+8/0xc, frees via 0x1004249a when arg&1
+sound.dll	0x100288a0	soundWindowProc	audio	import DefWindowProcA, caller 0x1002a970 (soundThreadPump)	window procedure for the sound message window; dispatches sound messages and falls through to DefWindowProcA
+sound.dll	0x10028b70	soundWindowSubclassProc	audio	import CallWindowProcA	subclass window procedure: handles buffer-completion messages (0x7eb/0x7ec range) on WAVEHDR objects, else chains to the original proc via CallWindowProcA
+sound.dll	0x1002a7c0	initSignalQueue	audio	import InitializeCriticalSection, import CreateEventA	constructor: zeroes flag at this+0, InitializeCriticalSection at this+4, clears this+0x1c/0x20, creates a manual-reset event at this+0x24
+sound.dll	0x1002a920	startSignalThread	audio	import ResetEvent, import SetThreadPriority	ResetEvents this+0x24, if not already running sets flag bit0, starts the worker thread at 0x10001366 via _beginthread storing the handle at this+0x20 and SetThreadPriority(,0)
+sound.dll	0x1002a810	stopSignalThread	audio	import SetEvent, import Sleep, import EnterCriticalSection	if running: clears flag bit0, signals the event at this+0x24 under the critical section, Sleep(0) to yield, then clears thread handle/id fields at this+0x1c..0x23
+sound.dll	0x1002a970	soundThreadPump	audio	import MsgWaitForMultipleObjects, import PeekMessageA, callee 0x100288a0 (soundWindowProc)	worker-thread message loop: sets running flag g_100b5060, records thread id g_100b5054, waits on event g_100b505c, drains PeekMessageA posting each to soundWindowProc under critical section g_100b503c
+sound.dll	0x1002aa90	postSoundThreadMessage	audio	import PostThreadMessageA, import OutputDebugStringA, string 0x10063e68	PostThreadMessageA to the worker thread id at this+0x1c, retrying with OutputDebugStringA((string in the binary)) + Sleep(100) until it succeeds; returns 0x15 if the thread flag is clear
+sound.dll	0x10038fd0	onWaveInCallbackMessage	audio	import PostMessageA, callee 0x1002aa90 (postSoundThreadMessage)	if message==0x3c0, posts WIM_DATA (0x7f0) either to window g_100b49c0 (when the engine g_100b4a20 flag bit5 set) or to the sound thread via postSoundThreadMessage(g_100b5038)
+sound.dll	0x10038650	WaveInDevice_ctor	audio	import waveInGetNumDevs, import waveInGetDevCapsA, vtable 0x1005c604	constructor: installs vtable 0x1005c604, stores waveInGetNumDevs count at +0xe, reads caps via waveInGetDevCapsA into +2, sets default format fields (8000/16000 Hz, 2ch/16bit) at +0x13/+0x14/+0x15
+sound.dll	0x10039050	WaveInDevice_open	audio	import waveInOpen	opens the capture device with waveInOpen(this+0x44, format this+0x48, callback 0x1000179e), translating MMRESULT into SNDERR codes
+sound.dll	0x10039140	WaveInDevice_close	audio	import waveInClose, import waveInStop, import waveInReset	under critical section g_100b503c: waveInStop/waveInReset, walks the WAVEHDR list from this+0x5c calling waveInUnprepareHeader, then closes the device
+sound.dll	0x100393d0	WaveInDevice_requeueBuffer	audio	import waveInPrepareHeader, import waveInAddBuffer, import waveInUnprepareHeader	waveInUnprepareHeader then waveInPrepareHeader + waveInAddBuffer to recycle a WAVEHDR back into the capture queue
+sound.dll	0x10038a00	WaveInDevice_stop	audio	import waveInStop, import waveInReset	stops capture with waveInStop then waveInReset on the device handle at this+0x44
+sound.dll	0x10038b20	WaveInDevice_start	audio	import waveInStart	starts capture via waveInStart on the device handle
+sound.dll	0x10038da0	WaveInDevice_addBuffer	audio	import waveInAddBuffer	submits a WAVEHDR to the capture device via waveInAddBuffer
+sound.dll	0x10038f10	WaveInDevice_reset	audio	import waveInReset, import waveInStop, import waveInGetNumDevs	stops and resets the capture device
+sound.dll	0x10038f60	WaveInDevice_queryCaps	audio	import waveInGetDevCapsA	queries device capabilities with waveInGetDevCapsA into a WAVEINCAPSA buffer
+sound.dll	0x100326a0	parseRiffWave	audio	import mmioOpenA, import mmioDescend, string 0x10063ee0, string 0x10063ed8, string 0x10063ed0, string 0x10063eb8	RIFF reader: walks RIFF/WAVE chunks (fmt /data/cue /smpl) with mmioDescend/mmioAscend/mmioRead, detecting 'MP3'/'mp3' tagged data; fills _MMCKINFO chunk structs on the stack
+sound.dll	0x10030840	openMmioSound	audio	import mmioOpenA, import mmioGetInfo, import mmioSetInfo	opens a sound file with mmioOpenA and wires its MMIOINFO buffer, reading float sample data into a local buffer
+sound.dll	0x100316c0	loadWaveResource	audio	import mmioOpenA, import mmioClose, import mmioGetInfo, import mmioSetInfo	thiscall loader: validates args (returns SNDERR 10/0x10), opens the file via mmioOpenA and reads it; the voice index is capped at 100 (this+0x68)
+sound.dll	0x10030ba0	streamWaveSamples	audio	import mmioClose	thiscall(out double*, pos, count, int*): returns SNDERR 0x13 when the stream handle g_100b49f4 is clear, otherwise streams decoded PCM samples into the caller buffer
+sound.dll	0x10035ca0	closeMmioSound	audio	import mmioClose	closes an open sound: mmioClose on the handle at obj+0x44, frees the MMIO buffer via 0x10042c07, decrements the open-stream count g_100b4a08 and unlinks it from list g_100b49c8
+sound.dll	0x10037920	flushMmioBuffer	audio	import mmioAdvance, import mmioSeek, import mmioSetBuffer	advances/seeks the mmio buffer (flags at obj+0x16) to flush or refill the I/O window
+sound.dll	0x1002f680	stopEngineVoices	audio	import MessageBoxA	if the sub-object at this+0x40 is non-null, tail-calls its virtual method at vtbl+0x94
+sound.dll	0x1002ffa0	markSoundTime	audio	import timeGetTime	stores timeGetTime() into the object field at this+0x100 (a playback timestamp)
+sound.dll	0x1002ffd0	updateSoundTimer	audio	import timeGetTime	reads timeGetTime() to advance a timing field on the object
+sound.dll	0x1002b7c0	startDevicePlayback	audio	import timeGetTime, callee 0x1002bd80	if the device object at this+0x40 (this+0x10 word) is null returns SNDERR 0x14, else lazily creates it via 0x1002bd80 and calls its virtual method vtbl+0x1c
+sound.dll	0x1002baa0	getPlaybackTime	audio	import timeGetTime	reads timeGetTime() for a playback-position computation
+sound.dll	0x1002c5e0	destroyMixerVoices	audio	import timeGetTime, vtable 0x1005bcb4	destructor (vtable 0x1005bcb4): walks 0x28 voice-pointer slots from this+0x1b freeing each non-null entry
+sound.dll	0x1002ed50	buildVoiceRxName	audio	string 0x10063e80	constructor: sets field[1]=0x7f (default level) and copies the literal name (string in the binary) into the object's std::string at this+3
+sound.dll	0x1002f220	buildVoiceTxName	audio	string 0x10063e8c	constructor: sets field[1]=0x7f and copies the literal name (string in the binary) into the object's std::string at this+3
+sound.dll	0x1002fc10	createBlankVoice	audio	string 0x10063e98	if the engine g_100b4a20 is present, allocates a 0x10-byte voice object (operator new) tagged (string in the binary) and links it at param+0xf8
+sound.dll	0x10042690	crtBeginThread	crt	import CreateThread, import ResumeThread, import TlsSetValue	C runtime _beginthread: allocates a per-thread block, CreateThread(suspended)+TlsSetValue then ResumeThread
+sound.dll	0x10042a8e	crtEndThread	crt	import ExitThread, import CloseHandle	C runtime _endthread: CloseHandle on the thread then ExitThread
+sound.dll	0x10042bd1	crtMalloc	crt	import HeapAlloc	C runtime allocator: returns HeapAlloc(process heap, 0, size)
+sound.dll	0x10042cc9	crtFree	crt	import HeapFree	C runtime deallocator built on HeapFree
+sound.dll	0x10045252	crtRealloc	crt	import HeapAlloc, import HeapReAlloc	C runtime realloc: grows/relocates a block with HeapReAlloc (HeapAlloc when ptr is null)
+sound.dll	0x100455eb	crtMsize	crt	import HeapSize	C runtime _msize: returns the block size via HeapSize
+sound.dll	0x100459c3	crtExceptionFilter	crt	import UnhandledExceptionFilter	C runtime _XcptFilter: routes an unhandled exception to UnhandledExceptionFilter
+sound.dll	0x10045181	crtExitProcess	crt	import ExitProcess, import TerminateProcess, import GetCurrentProcess	C runtime process exit: ExitProcess, falling back to TerminateProcess(GetCurrentProcess())
+sound.dll	0x10045bc8	crtHeapSelect	crt	import GetEnvironmentVariableA, import GetVersionExA	C runtime heap-mode init: reads env vars (string in the binary)/(string in the binary) to pick the heap implementation
+sound.dll	0x10045d10	crtHeapInit	crt	import HeapCreate, import HeapDestroy	C runtime heap init/term: HeapCreate on startup, HeapDestroy on teardown
+sound.dll	0x10049604	crtValidatePointer	crt	import IsBadReadPtr, import IsBadWritePtr	C runtime _ValidateRead/_ValidateWrite: IsBadReadPtr/IsBadWritePtr parameter validation
+sound.dll	0x1004a158	crtWideCharConvert	crt	import WideCharToMultiByte, import SetFilePointer	C runtime write path converting wide chars with WideCharToMultiByte
+sound.dll	0x10047771	crtStartupIo	crt	import GetStartupInfoA, import GetStdHandle, import GetFileType, string 0x1005f1b4	C runtime stdio/startup init: GetStartupInfoA, probes the std handles (GetStdHandle/GetFileType); references the (string in the binary) banner
+sound.dll	0x10047148	crtCommitPages	crt	import VirtualAlloc	C runtime small-block heap: commits pages with VirtualAlloc
+sound.dll	0x1004751d	crtLockInit	crt	import InitializeCriticalSection, import EnterCriticalSection	C runtime multithread lock table init (InitializeCriticalSection + EnterCriticalSection)
+sound.dll	0x100414f0	formatUnsignedDecimal	crt	string 0x1005eccc	formats a value with the '%lu' conversion

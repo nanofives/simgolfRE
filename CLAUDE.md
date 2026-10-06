@@ -211,6 +211,19 @@ here claimed `Terrain.dll` called the exe's `tileAt`; the import table and a run
 `re/analysis/CHANGELOG.md`. One level at a time. C3 needs a GREEN path-1 A/B with install witness and
 an anti-island caller and callee. C4 needs a canonical-scenario ON/OFF run (D-0002). Path-1 is never
 C4 evidence.
+`hooks.csv` is keyed by (module, addr): the three DLLs share the image base 0x10000000 and 204 RVAs collide.
+`re_classify.py batch <tsv...> --to C1` promotes every row of a names TSV through the same gates (DLL VAs are
+converted to RVAs; one CHANGELOG line each); `status --summary` prints counts per module.
+
+### Names and systems (`re/names/`, `re/analysis/systems/`)
+`re/names/<id>.tsv` (`module addr name subsystem evidence purpose`) and `<id>_globals.tsv` (`module addr name type
+evidence`) hold evidence-backed names. `terrain.tsv` and `libs.tsv` (libpng/zlib/libjpeg) come from matched sources
+via `re/tools/names_from_match.py`; `exe_0..5`, `jgld_0..1`, `sound_0..1` were named by agents from
+`log/naming_brief.md` (2026-10-06) with a system writeup each in `re/analysis/systems/<id>.md`. Before committing
+new ones: `re/tools/names_sanitize.py` (quoted binary text -> placeholder; the repo is public) and
+`re/tools/names_validate.py <id>...`. `ghidra/scripts/ApplyNames.java <re/names dir>` applies them to a program
+(USER/IMPORTED names kept, `Class::method` -> namespaces), run headless with `-process <prog> -noanalysis`.
+`re/tools/xref.py <module> 0x<addr>` gives offline callers/callees/strings (capstone, thunks resolved, cached in log/).
 
 ### A/B verification (`diff-original` skill)
 Add vectors to `re/frida/hooks_registry.py`, run `py -3.12 re/frida/diff_hook.py <name>`. Never write

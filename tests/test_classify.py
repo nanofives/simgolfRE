@@ -56,7 +56,7 @@ def to_c2(root, note=NOTE, **kw):
 
 
 def level(root):
-    return rc.Project(root).rows()["00401000"]["confidence"]
+    return rc.Project(root).rows()[("golf_clean.exe", "00401000")]["confidence"]
 
 
 def test_c1_requires_real_name(proj):
@@ -151,5 +151,26 @@ def test_demote_is_logged(proj):
 def test_real_tracker_state():
     """The live tracker: Terrain::tileAt is C2 and held there (dead code)."""
     rows = rc.Project(ROOT).rows()
-    assert rows["004490d0"]["confidence"] == "C2"
+    assert rows[("golf_clean.exe", "004490d0")]["confidence"] == "C2"
     assert run(ROOT, "check", "0x004490d0", "--to", "C3", "--file", "shim/src/re/Terrain.cpp") == 2
+
+
+def test_batch_promotes_through_the_gates_and_keys_dlls_by_module(proj):
+    # jgld.dll and sound.dll share the image base: the same RVA in both must stay two rows
+    for m in ("jgld.dll", "sound.dll"):
+        (proj / "re" / f"functions_ghidra_{m}.tsv").write_text("entry\tname\tsize\tcallers\tcallees\n00002650\tFUN_10002650\t78\t1\t0\n")
+    tsv = proj / "names.tsv"
+    tsv.write_text("module\taddr\tname\tsubsystem\tevidence\tpurpose\n"
+                   "golf_clean.exe\t0x00401000\tFoo\tutil\tstring 0x4d0000\tadds\n"
+                   "jgld.dll\t0x10002650\tSurface::lock\trender\tmatch re/match/x.cpp\tlocks\n"
+                   "sound.dll\t0x10002650\tSnd::open\taudio\timport waveOutOpen\topens\n"
+                   "sound.dll\t0x10009999\tNotAFunction\taudio\timport x\tnot in the function list\n"
+                   "golf_clean.exe\t0x00401000\tFoo2\tbogus\tx\tbad subsystem and already C1\n")
+    assert run(proj, "batch", str(tsv), "--to", "C1") == 2          # two rows refused
+    rows = rc.Project(proj).rows()
+    assert rows[("jgld.dll", "00002650")]["name"] == "Surface::lock"
+    assert rows[("sound.dll", "00002650")]["name"] == "Snd::open"
+    assert ("sound.dll", "00009999") not in rows
+    assert rows[("golf_clean.exe", "00401000")]["name"] == "Foo"
+    log = (proj / "re" / "analysis" / "CHANGELOG.md").read_text()
+    assert log.count("->C1") == 3 and "sound.dll:00002650" in log and "OLD ENTRY" in log

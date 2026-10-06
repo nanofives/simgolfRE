@@ -1,0 +1,25 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x0083ad50	g_app	int*	written by engineInit 0x004855b0 (FUN_004a00a0 result); read everywhere via vtable (getHwnd +0x20, screenWidth +0xa8, createSurface +0x80)
+golf_clean.exe	0x0083afd0	g_engineFlags	uint	written by engineInit 0x004855b0 from param_3 (subsystem bitmask)
+golf_clean.exe	0x0083afec	g_timerLock	int	inc by Timer::lockInc 0x00486fe0, dec by Timer::lockDec 0x00486ff0
+golf_clean.exe	0x0083af80	g_resCloseHook1	code*	called by closeHookA 0x00487430 when non-null
+golf_clean.exe	0x0083af88	g_resCloseHook2	code*	called by closeHookB 0x004879f0 when non-null
+golf_clean.exe	0x0083af90	g_resCloseHook3	code*	called by closeHookC 0x00487bd0 when non-null
+golf_clean.exe	0x0083b000	g_sectionReader	Reader	constructed by 0x00487d80, opened by readSectionGlobal 0x00487e70, read by readLineGlobal 0x00487e90
+golf_clean.exe	0x0083b170	g_keyTables	KeyTable[16]	placement-new array (0x120 bytes each) by 0x00487e10; scanned end 0x0083b5ef by KeyTable::lookup 0x00488420
+golf_clean.exe	0x0083b5f8	g_cursorWidth	int	written by cacheCursorMetrics 0x004884e0 (GetSystemMetrics SM_CXCURSOR)
+golf_clean.exe	0x0083b5fc	g_cursorHeight	int	written by cacheCursorMetrics 0x004884e0 (GetSystemMetrics SM_CYCURSOR)
+golf_clean.exe	0x0083b60c	g_defaultButtonFont	int	written by setButtonDefaults 0x004889f0, read by Button::create 0x004887c0
+golf_clean.exe	0x0083b994	g_msgBoxLabelA	char*	malloc'd by MsgBox::setLabelA 0x0048de00, freed by MsgBox::freeLabels 0x00490c30
+golf_clean.exe	0x0083b998	g_msgBoxLabelB	char*	malloc'd by MsgBox::setLabelB 0x0048de90 (e.g. (string in the binary)), freed by 0x00490c30
+golf_clean.exe	0x0083b9b4	g_msgBoxButtonA	int	written by MsgBox::setButtonA 0x00490c80, cleared by 0x00490c30
+golf_clean.exe	0x0083b9c4	g_msgBoxButtonB	int	written by MsgBox::setButtonB 0x00490cf0, cleared by 0x00490c30
+golf_clean.exe	0x0083b9f4	g_sinTable	int[]	built by initSinTable 0x00491c10 (fsin), read by sinScaled/cosScaled 0x00491c70/0x00491d80
+golf_clean.exe	0x0083c004	g_pathScratch	char[256]	path scratch buffer written and returned by resolveDataPath 0x00491da0
+golf_clean.exe	0x0083c310	g_blitError	int	returned by blitError 0x00492460, address by blitErrorPtr 0x00492450
+golf_clean.exe	0x0083c328	g_blitContext	int*	released by shutdownBlitter 0x00492470
+golf_clean.exe	0x0083c330	g_blitSurface	int	released/flushed via g_0083c32c by flushBlitSurface 0x004924b0
+golf_clean.exe	0x0083d348	g_hotListFreeGuard	int	guards HotList::freeEntryTip 0x00492660; set during HotList::grow 0x00492690
+golf_clean.exe	0x0083d34c	g_polyFillColor	ushort	16-bit fill colour read by fillSpanDown/Up 0x00493000/0x00493080
+golf_clean.exe	0x0083d358	g_polyVerts	int*	polygon vertex table read by polyEdgeStep 0x00492ed0
+golf_clean.exe	0x0083d378	g_polyVertCount	int	vertex count bound used by polyEdgeStep 0x00492ed0

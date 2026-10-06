@@ -42,15 +42,21 @@ class Project:
         self.changelog = root / "re" / "analysis" / "CHANGELOG.md"
         self.uncert = root / "UNCERTAINTIES.md"
         self.fn_tsv = root / "re" / "functions_ghidra.tsv"
+        self.fn_tsvs = {"golf_clean.exe": self.fn_tsv}
+        for m in ("Terrain.dll", "jgld.dll", "sound.dll"):
+            self.fn_tsvs[m] = root / "re" / f"functions_ghidra_{m}.tsv"
+        self._names = {}
+        self.pending_log = []
         self.diff_dir = root / "log" / "diff"
         self.shim_dll = root / "shim" / "build" / "winmm.dll"
 
     # ---------- hooks.csv ----------
-    def rows(self) -> dict[str, dict]:
+    def rows(self) -> dict[tuple[str, str], dict]:
+        """Keyed by (module, addr): the three DLLs share the image base 0x10000000, so an RVA alone is ambiguous."""
         if not self.hooks.exists():
             return {}
         with self.hooks.open(newline="") as f:
-            return {r["addr"]: r for r in csv.DictReader(f)}
+            return {(r.get("module") or "golf_clean.exe", r["addr"]): r for r in csv.DictReader(f)}
 
     def save(self, rows: dict[str, dict]):
         with self.hooks.open("w", newline="") as f:
@@ -67,14 +73,14 @@ class Project:
         self.changelog.write_text(text.replace(MARKER, f"{MARKER}\n{line}", 1))
 
     # ---------- lookups ----------
-    def ghidra_name(self, addr: str) -> str | None:
-        if not self.fn_tsv.exists():
-            return None
-        for line in self.fn_tsv.read_text().splitlines()[1:]:
-            parts = line.split("\t")
-            if parts and parts[0].lower() == addr:
-                return parts[1]
-        return None
+    def ghidra_name(self, addr: str, module: str = "golf_clean.exe") -> str | None:
+        """Name in the module's Ghidra function list (exe: VA; DLLs: RVA, as in hooks.csv)."""
+        if module not in self._names:
+            f = self.fn_tsvs.get(module)
+            self._names[module] = {} if not (f and f.exists()) else {
+                l.split("\t")[0].lower(): l.split("\t")[1]
+                for l in f.read_text().splitlines()[1:] if "\t" in l}
+        return self._names[module].get(addr)
 
     def open_blocking_uncertainties(self, addr: str) -> list[str]:
         if not self.uncert.exists():
@@ -127,8 +133,10 @@ def gates(p: Project, row: dict, target: str, args) -> list[tuple[bool, str]]:
         res.append((bool(name) and not DEFAULT_NAME.match(name), f"non-default name ({name or 'missing'})"))
         res.append((row.get("subsystem") in SUBSYSTEMS, f"subsystem in {sorted(SUBSYSTEMS)} ({row.get('subsystem') or 'missing'})"))
         res.append((bool(row.get("notes")), "evidence pointer recorded (--evidence)"))
-        if row.get("module", "golf_clean.exe") == "golf_clean.exe" and p.fn_tsv.exists():
-            res.append((p.ghidra_name(addr) is not None, "a function exists at this address in re/functions_ghidra.tsv"))
+        mod = row.get("module") or "golf_clean.exe"
+        if p.fn_tsvs.get(mod) and p.fn_tsvs[mod].exists():
+            res.append((p.ghidra_name(addr, mod) is not None,
+                        f"a function exists at this address in {p.fn_tsvs[mod].relative_to(p.root).as_posix()}"))
 
     if target in ("C2", "C3", "C4"):
         note = p.root / row.get("note", "") if row.get("note") else None
@@ -193,27 +201,28 @@ def gates(p: Project, row: dict, target: str, args) -> list[tuple[bool, str]]:
     return res
 
 
-def _identified(p: Project, item: str, rows: dict) -> bool:
+def _identified(p: Project, item: str, rows: dict, module: str = "golf_clean.exe") -> bool:
     item = item.strip()
     if re.fullmatch(r"(0x)?[0-9a-fA-F]{6,8}", item):
         a = norm_addr(item)
-        r = rows.get(a)
+        r = rows.get((module, a))
         if r and LEVELS.index(r.get("confidence") or "C0") >= 2:
             return True
-        name = (r or {}).get("name") or p.ghidra_name(a) or ""
+        name = (r or {}).get("name") or p.ghidra_name(a, module) or ""
         return bool(name) and not DEFAULT_NAME.match(name)
     return bool(item) and not DEFAULT_NAME.match(item)
 
 
 def anti_island(p: Project, row: dict, diff: dict | None) -> list[tuple[bool, str]]:
     rows = p.rows()
+    mod = row.get("module") or "golf_clean.exe"
     callers = [c for c in (row.get("callers") or "").split(";") if c.strip()]
     callees = [c for c in (row.get("callees") or "").split(";") if c.strip()]
     out = []
     if callers == ["none"] or not callers:
         out.append((False, "anti-island (callers): no caller and no identified caller; dead code stays at C2"))
     else:
-        out.append((any(_identified(p, c, rows) for c in callers),
+        out.append((any(_identified(p, c, rows, mod) for c in callers),
                     f"anti-island (callers): one caller at C2+ or identified ({';'.join(callers)})"))
     if callees == ["none"]:
         n = diff["vectors"] if diff else 0
@@ -221,7 +230,7 @@ def anti_island(p: Project, row: dict, diff: dict | None) -> list[tuple[bool, st
     elif callees == ["indirect"]:
         out.append((bool(diff and diff["green"]), "indirect-dispatch exemption: A/B exercised the dispatch (recording stub)"))
     else:
-        out.append((any(_identified(p, c, rows) for c in callees),
+        out.append((any(_identified(p, c, rows, mod) for c in callees),
                     f"anti-island (callees): one callee at C2+ or identified ({';'.join(callees)})"))
     return out
 
@@ -236,20 +245,23 @@ def apply_args(row: dict, a):
         row["notes"] = (row.get("notes", "") + "; " if row.get("notes") else "") + a.evidence
 
 
-def cmd_check(p: Project, a, write: bool) -> int:
+def cmd_check(p: Project, a, write: bool, rows: dict | None = None, quiet: bool = False) -> int:
     addr = norm_addr(a.addr)
-    rows = p.rows()
-    row = dict(rows.get(addr) or {"addr": addr, "module": "golf_clean.exe", "confidence": "C0"})
+    mod = getattr(a, "module", None) or "golf_clean.exe"
+    batch = rows is not None
+    rows = p.rows() if rows is None else rows
+    row = dict(rows.get((mod, addr)) or {"addr": addr, "module": mod, "confidence": "C0"})
     apply_args(row, a)
     results = gates(p, row, a.to, a)
     for ok, desc in results:
-        print(f"  [{'PASS' if ok else 'FAIL'}] {desc}")
+        if not quiet or not ok:
+            print(f"  [{'PASS' if ok else 'FAIL'}] {desc}")
     passed = all(ok for ok, _ in results)
     if not write:
         print(f"{addr} {row.get('confidence') or 'C0'} -> {a.to}: {'all gates pass' if passed else 'REFUSED'}")
         return 0 if passed else 2
     if not passed:
-        print(f"REFUSED: {addr} stays {row.get('confidence') or 'C0'}")
+        print(f"REFUSED: {mod} {addr} stays {row.get('confidence') or 'C0'}")
         return 2
     old = row.get("confidence") or "C0"
     row["confidence"] = a.to
@@ -260,21 +272,27 @@ def cmd_check(p: Project, a, write: bool) -> int:
     s = p.diff_csv(addr, row.get("name", ""), "scenario")
     if s:
         row["scenario"] = s.relative_to(p.root).as_posix()
-    rows[addr] = row
-    p.save(rows)
+    rows[(mod, addr)] = row
     ev = row.get("frida_diff") if a.to == "C3" else (row.get("scenario") if a.to == "C4" else row.get("note") or row.get("notes"))
-    p.log(f"{datetime.date.today()}  {addr}  {row.get('name')}  {old}->{a.to}  {ev}")
-    print(f"PROMOTED {addr} {row.get('name')}: {old} -> {a.to}")
+    where = addr if mod == "golf_clean.exe" else f"{mod}:{addr}"
+    if batch:
+        p.pending_log.append(f"{datetime.date.today()}  {where}  {row.get('name')}  {old}->{a.to}  {ev}")
+    else:
+        p.save(rows)
+        p.log(f"{datetime.date.today()}  {where}  {row.get('name')}  {old}->{a.to}  {ev}")
+    if not quiet:
+        print(f"PROMOTED {where} {row.get('name')}: {old} -> {a.to}")
     return 0
 
 
 def cmd_demote(p: Project, a) -> int:
     addr = norm_addr(a.addr)
+    mod = getattr(a, "module", None) or "golf_clean.exe"
     rows = p.rows()
-    if addr not in rows:
-        print(f"{addr} not in hooks.csv")
+    if (mod, addr) not in rows:
+        print(f"{mod} {addr} not in hooks.csv")
         return 1
-    row = rows[addr]
+    row = rows[(mod, addr)]
     old = row.get("confidence") or "C0"
     if LEVELS.index(a.to) >= LEVELS.index(old):
         print(f"demote must lower the level ({old} -> {a.to})")
@@ -294,9 +312,45 @@ def cmd_status(p: Project, a) -> int:
     total = sum(1 for _ in open(p.fn_tsv)) - 1 if p.fn_tsv.exists() else 0
     print(f"golf_clean.exe functions in Ghidra: {total}")
     print("tracked: " + ", ".join(f"{lvl}={c.get(lvl, 0)}" for lvl in LEVELS))
-    for r in sorted(rows.values(), key=lambda r: r["addr"]):
-        print(f"  {r['addr']}  {r.get('confidence'):3}  {r.get('subsystem', ''):9} {r.get('name', '')}")
+    by_mod = Counter((r.get("module") or "golf_clean.exe", r.get("confidence") or "C0") for r in rows.values())
+    for m in sorted({k[0] for k in by_mod}):
+        print(f"  {m}: " + ", ".join(f"{lvl}={by_mod.get((m, lvl), 0)}" for lvl in LEVELS))
+    if not getattr(a, "summary", False):
+        for r in sorted(rows.values(), key=lambda r: (r.get("module") or "", r["addr"])):
+            print(f"  {r.get('module', ''):14} {r['addr']}  {r.get('confidence'):3}  {r.get('subsystem', ''):9} {r.get('name', '')}")
     return 0
+
+
+def cmd_batch(p: Project, a) -> int:
+    """Promote every row of a TSV (header: module addr name subsystem evidence ...) by one level through the same
+    gates as `promote`: hooks.csv is written once, one CHANGELOG line per promotion. DLL addresses may be VAs."""
+    rows = p.rows()
+    p.pending_log = []
+    ok = refused = 0
+    for path in a.tsv:
+        lines = pathlib.Path(path).read_text().splitlines()
+        head = lines[0].split("\t")
+        for line in lines[1:]:
+            c = dict(zip(head, line.split("\t")))
+            if not c.get("addr"):
+                continue
+            mod = c.get("module") or "golf_clean.exe"
+            va = int(c["addr"], 16)
+            base = 0 if mod == "golf_clean.exe" else 0x10000000
+            ns = argparse.Namespace(addr=f"{va - base if va >= base else va:08x}", to=a.to, module=mod,
+                                    name=c.get("name"), subsystem=c.get("subsystem"), evidence=c.get("evidence"),
+                                    note=c.get("note"), file=None, callers=c.get("callers"), callees=c.get("callees"))
+            r = cmd_check(p, ns, write=True, rows=rows, quiet=True)
+            ok += r == 0
+            refused += r != 0
+    if ok:
+        p.save(rows)
+        text = p.changelog.read_text() if p.changelog.exists() else "# CHANGELOG (newest first)\n\n" + MARKER + "\n"
+        if MARKER not in text:
+            raise SystemExit(f"{p.changelog} lost its {MARKER} marker; refusing to write")
+        p.changelog.write_text(text.replace(MARKER, MARKER + "\n" + "\n".join(reversed(p.pending_log)), 1))
+    print(f"batch {a.to}: {ok} promoted, {refused} refused")
+    return 0 if not refused else 2
 
 
 def main(argv=None) -> int:
@@ -311,9 +365,14 @@ def main(argv=None) -> int:
             s.add_argument(f"--{opt}")
     d = sub.add_parser("demote")
     d.add_argument("addr")
+    d.add_argument("--module")
     d.add_argument("--to", required=True, choices=LEVELS)
     d.add_argument("--reason", required=True)
-    sub.add_parser("status")
+    st = sub.add_parser("status")
+    st.add_argument("--summary", action="store_true", help="counts per module only")
+    b = sub.add_parser("batch", help="promote every row of one or more TSVs (module addr name subsystem evidence)")
+    b.add_argument("tsv", nargs="+")
+    b.add_argument("--to", required=True, choices=LEVELS[1:])
     a = ap.parse_args(argv)
     p = Project(a.root)
     if a.cmd == "check":
@@ -322,6 +381,8 @@ def main(argv=None) -> int:
         return cmd_check(p, a, write=True)
     if a.cmd == "demote":
         return cmd_demote(p, a)
+    if a.cmd == "batch":
+        return cmd_batch(p, a)
     return cmd_status(p, a)
 
 

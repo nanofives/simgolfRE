@@ -1,0 +1,37 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x0083a2d8	g_zlist	Window*[]	written by zPush/zRaise (0x47e4c0/0x47e580), read by rebuildDrawList/clipAllWindows (0x47e450/0x47e2d0)
+golf_clean.exe	0x0083ab94	g_zcount	int	z-list length; incremented by zPush (0x47e4c0), loop bound in clipAllWindows/rebuildDrawList
+golf_clean.exe	0x00839ac0	g_drawList	Window*[]	paint-order list appended by collectDrawList (0x47e330), read by redrawDrawList (0x47f8e0)
+golf_clean.exe	0x0083ab90	g_drawCount	int	g_drawList length; reset by rebuildDrawList (0x47e450), written by collectDrawList, read by redrawDrawList
+golf_clean.exe	0x0083ab2c	g_curWidget	Window*	set to `this` by every mouse/click/key dispatch handler (0x47bf40..0x47c970) before invoking callbacks
+golf_clean.exe	0x0083ad50	g_screenMgr	ScreenMgr*	display/screen manager object; width/height/invalidate/redraw/present called throughout (center 0x47b310, invalidate 0x480ce0, screenFlip 0x483ba0)
+golf_clean.exe	0x0083ad44	g_primarySurface	Surface*	written by setPrimarySurface (0x483ac0), cleared by clearPrimarySurface (0x483b10)
+golf_clean.exe	0x0083ab40	g_focusWin	Window*	keyboard focus window; written by Window::setFocus (0x47f1b0), read by hitTestScreen (0x47f700), cleared by detach (0x47b820)
+golf_clean.exe	0x0083ab44	g_focusWin2	Window*	secondary focus window; written by setFocus (0x47f1b0), read by hitTestScreen (0x47f700)
+golf_clean.exe	0x0083aae0	g_removingWin	Window*	window currently being removed; read by collectDrawList/rebuildDrawList (0x47e330/0x47e450) to drop it from the draw list
+golf_clean.exe	0x0083a2c8	g_tipRect	RECT	tooltip bounds; written by Tooltip::show (0x480220), read by Tooltip::hide (0x480360) and drawTooltip (0x47cdb0)
+golf_clean.exe	0x0083aac4	g_tipText	char*	tooltip text pointer; written by Tooltip::show (0x480220), read by drawTooltip (0x47cdb0), cleared by Tooltip::hide (0x480360)
+golf_clean.exe	0x0083aac0	g_tipOwner	Window*	window that owns the active tooltip; written by Tooltip::show (0x480220) and hide (0x480360)
+golf_clean.exe	0x0083aac8	g_tipFont	Font*	font object used for tooltip text metrics/draw (textWidth/lineHeight in Tooltip::show 0x480220)
+golf_clean.exe	0x0083a7b8	g_blitSaveBuf	void*	saved background buffer blitted by addDirtyRect (0x47d060) and compositeScreen (0x47fab0)
+golf_clean.exe	0x0083a4d8	g_dirtyRect	RECT	accumulated dirty region unioned by addDirtyRect (0x47d060)
+golf_clean.exe	0x0083aaa4	g_blitX	int	pending blit x, read by addDirtyRect (0x47d060)
+golf_clean.exe	0x0083aaa8	g_blitY	int	pending blit y, read by addDirtyRect (0x47d060)
+golf_clean.exe	0x0083aab4	g_blitW	int	pending blit width, read by addDirtyRect (0x47d060)
+golf_clean.exe	0x0083aab8	g_blitH	int	pending blit height, read by addDirtyRect (0x47d060)
+golf_clean.exe	0x0083ad4c	g_inputPhase	int	event-pump phase; written by pumpInput483bd0/483c90/483cf0 (0x483bd0/0x483c90/0x483cf0) around the drain loops
+golf_clean.exe	0x0083aba4	g_codeBuf	char[10]	circular recent-keystroke buffer (g_83aba4..g_83abad) scanned by matchInputCode (0x47eee0)
+golf_clean.exe	0x0083ff10	g_titleBarH	int	title bar / border thickness added by growRect/adjustSizeOuter, subtracted by shrinkRect/innerSize (0x47cc10/0x47ca10/0x47cce0/0x47cb10)
+golf_clean.exe	0x0083afc0	g_soundDll	HMODULE	sound.dll module handle; set by soundVersionCheck (0x483fc0), freed by freeSoundLib (0x484060), gate for callSoundHook94 (0x4840c0)
+golf_clean.exe	0x0083afc4	g_soundReady	int	sound-system initialized flag; set by initSound (0x483e90), cleared by freeSoundLib (0x484060), gate for createSound4840e0 (0x4840e0)
+golf_clean.exe	0x0083af6c	g_soundFns	void*[11]	sound.dll function-pointer table; zeroed by clearSoundPtrs (0x484130), factory entry read by createSound4840e0 (0x4840e0)
+golf_clean.exe	0x0083af68	g_soundHead	Snd*	head of the active-sound linked list; relinked by unlinkSound/Snd::unlinkFromList (0x4843e0/0x4844e0), drained by shutdownSound (0x483f10)
+golf_clean.exe	0x0083af64	g_soundTail	Snd*	tail of the active-sound linked list; relinked by unlinkSound (0x4843e0) and Snd::unlinkFromList (0x4844e0)
+golf_clean.exe	0x0083ad58	g_sfxDevice	SoundDevice	sfx sound device singleton (C487c00); constructed by staticInit_g83ad58 (0x483e20), loaded by initSound (0x483e90)
+golf_clean.exe	0x0083ad80	g_musicDevice	SoundDevice	main/music sound device singleton (C487c00); constructed by staticInit_g83ad80 (0x483de0), loaded by initSound (0x483e90)
+golf_clean.exe	0x0083af98	g_voiceDevice	SoundDevice	voice sound device singleton (C487c00); constructed by staticInit_g83af98 (0x483e60), loaded by initSound (0x483e90) when flag bit3 is set
+golf_clean.exe	0x0083acb0	g_screenMgrA	ScreenMgr	screen manager singleton; constructed by staticInit_g83acb0 (0x482e80), reattached by resetScreenState (0x483320)
+golf_clean.exe	0x0083ac30	g_screenMgrB	ScreenMgr	screen manager singleton; constructed by staticInit_g83ac30 (0x482ec0), reattached by resetScreenState (0x483320)
+golf_clean.exe	0x0083ac88	g_screenObjList	List	screen object list; cleared by clearScreenObjects (0x483340), initialized by staticInit_g83ac88 (0x482f00)
+golf_clean.exe	0x0083ac10	g_resampleBuf	void*	work buffer allocated by allocResampleTable (0x481870), freed by freeResampleTable (0x481b20)
+golf_clean.exe	0x0083ac14	g_resampleLen	int	element count stored by allocResampleTable (0x481870)

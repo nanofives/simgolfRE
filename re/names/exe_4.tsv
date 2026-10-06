@@ -1,0 +1,212 @@
+module	addr	name	subsystem	evidence	purpose
+golf_clean.exe	0x004853b0	Screen::scalarDtor	render	callee 0x004853d0 (Screen::dtor), callee 0x004a4ffc (operator delete)	Scalar-deleting destructor: runs the destructor then frees this when bit0 of param_1 is set.
+golf_clean.exe	0x004853d0	Screen::dtor	render	vtable 0x004badf8, callee 0x004841e0	Destructor: releases the device object at this+0x40 (field [0x10]) via its vtable, frees buffer at [0x14], chains to base dtor 0x004841e0.
+golf_clean.exe	0x004854c0	Screen::close	render	callee 0x00484110, callee 0x004a00a0	Releases the device object at field [0x10] (vtable 0x5c query, 0x38/0x484110 destroy) and calls this vtable+0x80.
+golf_clean.exe	0x00485590	showMessageBox	ui	import MessageBoxA	Shows a modal Win32 message box with text param_1 and caption param_2.
+golf_clean.exe	0x004855b0	engineInit	boot	callee 0x004a00a0 (create app), callee 0x00491c10 (initSinTable), callee 0x004884e0 (cacheCursorMetrics), callee 0x00486fe0 (Timer::lockInc)	Master engine initializer: creates the global app object g_0083ad50 and, per the param_3 subsystem bitmask, brings up graphics/sound/input/message-box/sine-table/cursor/timer subsystems; writes g_0083afd0.
+golf_clean.exe	0x00485740	engineShutdown	boot	callee 0x00492470 (shutdownBlitter), callee 0x00486ff0 (Timer::lockDec), callee 0x00490c30 (MsgBox::freeLabels)	Tears down every engine subsystem in order (blitter, timers, message box, sound, resources).
+golf_clean.exe	0x00485790	Image::loadPcx	render	import fread, callee 0x00474e70 (surface resize), callee 0x004789f0	Reads a 0x80-byte PCX header (signature 0x0a, bpp 8), RLE-decodes the 8-bit image into the surface at this+4, then reads the 256-color palette and builds a palette object at this+0xac.
+golf_clean.exe	0x00485aa0	Image::savePcx	render	import fwrite	Writes a PCX file: 0x80-byte header, RLE-encodes each surface row from the surface at this+4, then marker 0x0c and the 256-entry palette.
+golf_clean.exe	0x00485d40	Image::hline	render	callee surface vtable 0xcc (clipRect)/0x14 (lockBits)/0x24 (unlock)	Draws a clipped horizontal line of 16-bit color param_4 from x param_1..param_2 at y param_3 on the surface at this+4.
+golf_clean.exe	0x00485e80	Image::vline	render	callee surface vtable 0xcc/0x14/0xe0 (stride)	Draws a clipped vertical line of 16-bit color param_4 at x param_1 from y param_2..param_3 on the surface at this+4, stepping by the surface stride.
+golf_clean.exe	0x00485ff0	EditBox::resetFields	ui	caller 0x00486070 (EditBox::ctor), caller 0x004860d0	Clears the text-control state at this+0x574..0x5a8 (text ptr, capacity, length, focus) and loads default colors/padding from DAT_004e43f0 etc.
+golf_clean.exe	0x00486070	EditBox::ctor	ui	vtable 0x004ba4a8, callee 0x004804a0 (Widget::ctor), callee 0x00486c90 (Timer::ctor)	Constructs the edit control: Widget base ctor, caret-blink Timer at this+0x16b, sets vtables, calls resetFields.
+golf_clean.exe	0x004860d0	EditBox::dtor	ui	callee 0x00485ff0, callee 0x00480610	Destructor: frees the text buffer field [0x15d], resets fields, destroys the caret Timer, chains to base dtor.
+golf_clean.exe	0x00486110	EditBox::create	ui	callee 0x004806c0 (Widget::create), callee 0x00486cf0 (Timer::init)	Creates the edit window (x,y,w,h, style), allocates a 0x40-byte text buffer, measures current length, starts the caret-blink timer.
+golf_clean.exe	0x00486200	EditBox::setText	ui	import strncpy	Copies param_1 into the text buffer at this+0x574 (capped at capacity this+0x578), recomputes length into this+0x5a4, and invalidates via vtable+0x120.
+golf_clean.exe	0x00486250	EditBox::resizeBuffer	ui	import malloc, import strncpy	Reallocates the text buffer at this+0x574 to param_1 bytes, copying the old contents, and stores the new capacity at this+0x578.
+golf_clean.exe	0x004862b0	EditBox::wrapToLines	ui	callee 0x00476e20 (text wrap)	Word-wraps the text buffer to the control width using the font object at this+0x274, filling the caller's line-pointer array and count.
+golf_clean.exe	0x00486330	EditBox::lineIndexAt	ui	caller 0x00486360	Returns the index of the wrapped line whose start offset is <= byte position param_1.
+golf_clean.exe	0x00486360	EditBox::charPosToPixel	ui	callee 0x00486330, callee 0x00477280 (text measure)	Maps a character byte offset to on-screen pixel x,y using the wrapped line table and font metrics at this+0x274.
+golf_clean.exe	0x004863e0	EditBox::pixelToCharPos	ui	callee 0x004862b0, callee 0x00477280	Maps a pixel x,y to the nearest character byte offset within the wrapped text.
+golf_clean.exe	0x004866f0	EditBox::insertChar	ui	import MessageBeep	Inserts character param_1 at the caret (this+0x5a4), shifting the tail with memcpy; beeps and returns when the buffer is full; invalidates via vtable+0x120.
+golf_clean.exe	0x00486b30	EditBox::setCaretActive	ui	callee 0x00486dc0 (Timer::startOnce), callee 0x00486ec0 (Timer::stop)	Starts or stops the caret-blink timer at this+0x5ac depending on param_1 and stores the focus flag at this+0x5a8.
+golf_clean.exe	0x00486c90	Timer::ctor	util	vtable 0x004baea0	Constructs a multimedia timer object, clearing its fields and defaulting the resolution field [10] to 5.
+golf_clean.exe	0x00486cc0	Timer::scalarDtor	util	callee 0x00486ce0	Scalar-deleting destructor for the Timer.
+golf_clean.exe	0x00486ce0	Timer::dtor	util	vtable 0x004baea0, callee 0x00486f10	Destructor: kills any running timer and resets fields.
+golf_clean.exe	0x00486cf0	Timer::initA	util	callee 0x00486f10	Resets the timer then stores callback (this+0x10), context (0x1c), interval (0x20), resolution (0x28).
+golf_clean.exe	0x00486d20	Timer::init	util	callee 0x00486f10	Resets the timer then stores callback/context/flags/interval/resolution into this+0x10..0x28.
+golf_clean.exe	0x00486d60	Timer::initStartOnce	util	callee 0x00486d20, callee 0x00486dc0	Initializes the timer fields then arms a one-shot timer.
+golf_clean.exe	0x00486d90	Timer::initStartRepeat	util	callee 0x00486d20, callee 0x00486e40	Initializes the timer fields then arms a periodic timer.
+golf_clean.exe	0x00486dc0	Timer::startOnce	util	import timeSetEvent, import SetTimer	Arms a one-shot timer: uses timeSetEvent for intervals < 50 ms, otherwise SetTimer on the app window; stores the id at this+0xc.
+golf_clean.exe	0x00486e40	Timer::startRepeat	util	import timeSetEvent, import SetTimer	Arms a periodic timer (timeSetEvent or SetTimer); sets the repeat flag at this+8.
+golf_clean.exe	0x00486ec0	Timer::stop	util	import timeKillEvent, import KillTimer	Cancels the running timer (timeKillEvent or KillTimer) and clears the id; on a one-shot path pokes the app redraw flag g_0083ad4c.
+golf_clean.exe	0x00486f10	Timer::reset	util	callee 0x00486ec0	Stops the timer and zeroes its fields, defaulting resolution [0x28] to 5.
+golf_clean.exe	0x00486f90	Timer::callback	util	import PostMessageA	timeSetEvent callback: invokes the timer's direct callback if set, else posts message 0x401 with the timer as wParam to the app window.
+golf_clean.exe	0x00486fe0	Timer::lockInc	util	caller 0x004855b0 (engineInit)	Increments the timer-reentrancy lock counter g_0083afec.
+golf_clean.exe	0x00486ff0	Timer::lockDec	util	caller 0x00485740 (engineShutdown)	Decrements the timer-reentrancy lock counter g_0083afec.
+golf_clean.exe	0x00487000	BinkPlayer::ctor	video	vtable 0x004baea8	Constructs the Bink video player, clearing its Bink/buffer/target fields.
+golf_clean.exe	0x00487020	BinkPlayer::scalarDtor	video	callee 0x00487040	Scalar-deleting destructor for the Bink player.
+golf_clean.exe	0x00487040	BinkPlayer::dtor	video	vtable 0x004baea8, callee 0x00487060	Destructor: closes the Bink stream and buffer.
+golf_clean.exe	0x00487050	BinkPlayer::setTarget	video	none	Stores the output DIB/window target at this+0xc.
+golf_clean.exe	0x00487060	BinkPlayer::close	video	import BinkClose, import BinkBufferClose	Closes the Bink handle (this+4) and Bink buffer (this+8) if open.
+golf_clean.exe	0x00487090	BinkPlayer::play	video	import BinkOpen, import BinkBufferOpen, import BinkSetSoundSystem, import ShowCursor	Opens a Bink video, creates its buffer on the target DIB, hides the cursor, and runs the decode/present loop until the clip ends or is cancelled.
+golf_clean.exe	0x00487180	BinkPlayer::frame	video	import BinkDoFrame, import BinkCopyToBuffer, import BinkBufferBlit	Decodes one Bink frame into the buffer and blits it; advances to the next frame, returning false at the last frame.
+golf_clean.exe	0x00487210	StrList::ctor	util	vtable 0x004baeac	Constructs a container object (vtable 0x004baeac), default field [2]=0x7f.
+golf_clean.exe	0x00487240	StrList::scalarDtor	util	callee 0x00487260	Scalar-deleting destructor for the 0x004baeac container.
+golf_clean.exe	0x00487260	StrList::dtor	util	vtable 0x004baeac	Destructor: if a child handler at field [5] exists, calls its vtable+0x14.
+golf_clean.exe	0x00487280	NodeList::ctor	util	vtable 0x004baf00, callee 0x004877d0 (array init)	Constructs a growable node list (nodes of 0x1c bytes, block of 0x10).
+golf_clean.exe	0x004872f0	NodeList::scalarDtor	util	callee 0x00487390	Scalar-deleting destructor for the 0x004baf00 node list.
+golf_clean.exe	0x00487310	NodeList::clear	util	callee 0x004a4ffc	Walks and frees every node in the list, decrementing the count at this+0x18.
+golf_clean.exe	0x00487390	NodeList::dtor	util	vtable 0x004baf00, callee 0x00487310	Destructor: clears all nodes and runs the array destructor.
+golf_clean.exe	0x00487430	closeHookA	util	global 0x0083af80	If this+0x14 is set and the global hook g_0083af80 is installed, invokes it and clears this+0x14.
+golf_clean.exe	0x00487460	releaseWithHookA	util	callee 0x00487430	Calls the child object (this+0x14) vtable+0x14 destroy, then closeHookA, then clears this+0x14.
+golf_clean.exe	0x004876c0	HashTable::remove	util	none	Unlinks the node param_1 from its bucket (16 buckets of 0x1c bytes at this+0x30) and frees it, fixing up the bucket head/tail and count.
+golf_clean.exe	0x00487770	HashTable::bucketEmpty	util	none	Returns true if bucket index param_1 is out of range or its flag byte at +0x24 is zero.
+golf_clean.exe	0x004877a0	HashTable::bucketSet	util	none	Returns true if bucket index param_1 is in range and its flag byte at +0x25 is non-zero.
+golf_clean.exe	0x00487630	resourceQuery	util	none	Returns the result of the child object (this+0x14) vtable+0x74 when the child is present, else 0.
+golf_clean.exe	0x004879f0	closeHookB	util	global 0x0083af88	If this+0x14 is set and the global hook g_0083af88 is installed, invokes it and clears this+0x14.
+golf_clean.exe	0x00487a20	NodeListB::ctor	util	vtable 0x004bafb0, callee 0x00487210	Constructs a node-list variant with vtable 0x004bafb0.
+golf_clean.exe	0x00487a40	NodeListB::scalarDtor	util	callee 0x00487a60	Scalar-deleting destructor for the 0x004bafb0 list.
+golf_clean.exe	0x00487a60	NodeListB::dtor	util	vtable 0x004bafb0, callee 0x00487260	Destructor for the 0x004bafb0 list.
+golf_clean.exe	0x00487a70	resourceLoadB	util	callee closeHookB 0x004879f0	Opens a resource via this vtable+4, loads it via the child (this+0x14) vtable+0x10; on success closes via vtable+8 and clears this+0x14.
+golf_clean.exe	0x00487ac0	releaseWithHookB	util	callee 0x004879f0	Calls the child object (this+0x14) vtable+0x14, then closeHookB, then clears this+0x14.
+golf_clean.exe	0x00487b40	NodeListC::ctor	util	vtable 0x004bb014, callee 0x00487210	Constructs a node-list variant with vtable 0x004bb014.
+golf_clean.exe	0x00487b60	NodeListC::scalarDtor	util	callee 0x00487b80	Scalar-deleting destructor for the 0x004bb014 list.
+golf_clean.exe	0x00487b80	NodeListC::dtor	util	vtable 0x004bb014, callee 0x00487260	Destructor for the 0x004bb014 list.
+golf_clean.exe	0x00487bd0	closeHookC	util	global 0x0083af90	If this+0x14 is set and the global hook g_0083af90 is installed, invokes it and clears this+0x14.
+golf_clean.exe	0x00487c00	resourceLoad	util	callee 0x004a4ffc	Opens a resource via this vtable+4 and loads it via the child (this+0x14) vtable+0x10; closes via vtable+8 on success.
+golf_clean.exe	0x00487c40	releaseWithHookC	util	none	Calls the child (field [5]) vtable+0x14 then this vtable+8 and clears field [5].
+golf_clean.exe	0x00487ce0	NodeList::clearScalarDtor	util	vtable 0x004bafac, callee 0x004a4ffc	Clears the list and runs the scalar-deleting destructor (vtable 0x004bafac).
+golf_clean.exe	0x00487d80	initGlobalReader	crt	callee 0x00487ea0	Static initializer: constructs the global section reader g_0083b000 with a 0x200-byte buffer.
+golf_clean.exe	0x00487d90	registerReaderAtexit	crt	import atexit	Registers the global-reader teardown with atexit.
+golf_clean.exe	0x00487e10	initKeyTableArray	crt	callee 0x004882a0	Static initializer (_$E36): placement-constructs the 16-entry KeyTable array at g_0083b170 (0x120 bytes each).
+golf_clean.exe	0x00487e30	registerKeyTableAtexit	crt	import atexit	Registers the KeyTable-array teardown with atexit.
+golf_clean.exe	0x00487e60	destroyGlobalReader	crt	callee 0x00487f80	Static teardown: closes the global section reader g_0083b000.
+golf_clean.exe	0x00487e70	readSectionGlobal	util	callee 0x00487fb0 (Reader::open)	Opens a named [section] in a file on the global section reader g_0083b000.
+golf_clean.exe	0x00487e90	readLineGlobal	util	callee 0x00488230 (Reader::readLine)	Reads the next trimmed line from the global section reader g_0083b000.
+golf_clean.exe	0x00487ea0	Reader::ctor	util	vtable 0x004bb084, callee 0x00487ee0	Constructs a text section reader and allocates its two line buffers.
+golf_clean.exe	0x00487ee0	Reader::allocBuffers	util	import malloc	Allocates the two param_1-byte line buffers at this+0x15c and this+0x160.
+golf_clean.exe	0x00487f30	Reader::free	util	import free, callee 0x00487f80	Closes the file and frees both line buffers.
+golf_clean.exe	0x00487f80	Reader::closeFile	util	import fclose	Closes the FILE* at this+0x158 if open.
+golf_clean.exe	0x00487fb0	Reader::open	util	string 0x004d3884, string 0x004e442c (seek log), import fgets, import fseek	Opens a text file (forcing a .txt extension) and seeks to the first line matching section name param_2, leaving the FILE* at this+0x158.
+golf_clean.exe	0x00488230	Reader::readLine	util	import fgets, callee 0x004925d0 (stripNewline), callee 0x004925b0 (trim)	Reads the next line into this+0x15c, strips the newline and trims whitespace, and records it at this+0x154.
+golf_clean.exe	0x004882a0	KeyTable::ctor	util	vtable 0x004bb088, callee 0x004747a0	Constructs a key/value lookup table (embedded string map at field [0x42]).
+golf_clean.exe	0x004882d0	KeyTable::scalarDtor	util	callee 0x004882f0	Scalar-deleting destructor for the KeyTable.
+golf_clean.exe	0x004882f0	KeyTable::dtor	util	vtable 0x004bb088, callee 0x00474810	Destructor for the KeyTable.
+golf_clean.exe	0x00488310	KeyTable::find	util	string 0x004e4418 (.txt), import strcmpi	Matches param_1 against the table's file name, then searches its key array for param_2 and returns the associated value, else -1.
+golf_clean.exe	0x00488420	KeyTable::lookup	util	callee 0x00488310	Scans the global KeyTable array g_0083b170..g_0083b5ef for one whose find() matches, returning its file offset.
+golf_clean.exe	0x00488460	Reader::scalarDtor	util	vtable 0x004bb084, callee 0x00487f30	Scalar-deleting destructor for the section reader.
+golf_clean.exe	0x00488490	Cursor::ctor	ui	vtable 0x004ba7f4	Constructs a cursor holder object, clearing its handle/bitmap fields.
+golf_clean.exe	0x004884b0	Cursor::destroy	ui	import DestroyCursor	Destroys the HCURSOR at this+4 and releases the bitmap object at this+8.
+golf_clean.exe	0x004884e0	cacheCursorMetrics	ui	import GetSystemMetrics	Caches SM_CXCURSOR/SM_CYCURSOR into globals g_0083b5f8/g_0083b5fc.
+golf_clean.exe	0x00488500	Button::ctor	ui	vtable 0x004bb0a8, callee 0x004804a0 (Widget::ctor), callee 0x00486c90 (Timer::ctor)	Constructs a push-button control: Widget base, two Timers (press/tooltip) at this+0x15f and 0x16d, default colors from DAT_004e443c etc.
+golf_clean.exe	0x00488630	Button::scalarDtor	ui	callee 0x00488650	Scalar-deleting destructor for the Button.
+golf_clean.exe	0x00488650	Button::dtor	ui	vtable 0x004bb0a8, callee 0x004886d0	Destructor: resets fields, destroys both Timers, chains to base dtor.
+golf_clean.exe	0x004886d0	Button::resetFields	ui	import free	Resets the button state and reloads default colors from DAT_004e443c etc, freeing label/tooltip buffers at [0x17d]/[0x17e].
+golf_clean.exe	0x004887c0	Button::create	ui	callee 0x004806c0 (Widget::create), callee 0x00476310 (setQuad), import malloc	Creates the button window, duplicates the label into this+0x5f4, stores the command id at this+0x5e8, and sets its colour quads.
+golf_clean.exe	0x00488930	Button::setColorNormal	ui	callee 0x00476310 (Widget::setQuad)	When active (this+0x130), sets the normal text colour quad on the font object at this+0x274.
+golf_clean.exe	0x00488970	Button::setColorHover	ui	callee 0x00476340	When active, sets the hover text colour quad on the font object at this+0x274.
+golf_clean.exe	0x004889b0	Button::setColorPressed	ui	callee 0x00476370	When active, sets the pressed text colour quad on the font object at this+0x274.
+golf_clean.exe	0x004889f0	setButtonDefaults	ui	caller 0x004855b0 (engineInit)	Stores the default button font/colour globals g_0083b60c/g_0083b610/g_0083b614.
+golf_clean.exe	0x00488a20	Button::setTooltip	ui	import malloc, import free	Duplicates the tooltip string param_1 into this+0x5f8 (freeing any previous one).
+golf_clean.exe	0x00488cf0	Button::onMouseMove	ui	callee 0x00492610 (pointInRect), callee 0x00486ec0 (Timer::stop)	Hit-tests the cursor against the button rect, toggling its hover state at this+0x614, starting/stopping the tooltip timer and notifying the parent at this+0x130.
+golf_clean.exe	0x00488fd0	Button::onTimer	ui	callee 0x00486ec0, callee 0x0047b170	Timer-driven handler: on fire 0 draws the tooltip bitmap; on fire 1 re-arms the press timer; otherwise invokes the click vtable slot.
+golf_clean.exe	0x004890e0	Button::setMode	ui	none	Stores a mode value at this+0x578, invalidates, and notifies the parent control via vtable+0xd8.
+golf_clean.exe	0x00489150	ListModel::ctor	ui	vtable 0x004bb21c, callee 0x004747a0	Constructs a list data model (linked list of items plus an embedded sub-object at this+0x30) with default colours from DAT_004e4488 etc.
+golf_clean.exe	0x00489350	ListModel::scalarDtor	ui	callee 0x00489370	Scalar-deleting destructor for the ListModel.
+golf_clean.exe	0x00489370	ListModel::dtor	ui	vtable 0x004bb21c, callee 0x004894b0	Destructor: clears item nodes and runs the embedded sub-object destructor.
+golf_clean.exe	0x004894b0	ListModel::clear	ui	none	Frees every item node (walking next pointer +0xc), resets head/tail/count, and reloads default colours.
+golf_clean.exe	0x004896b0	ListModel::setKey	ui	callee 0x00474820	Sets the model key string at this+4 and clears the item list.
+golf_clean.exe	0x004897f0	ListModel::reset	ui	callee 0x004894b0	Clears the item list and stores a context pointer at this+0x1c/0xd8.
+golf_clean.exe	0x00489890	ListModel::append	ui	callee 0x00401d10	Appends item param_1 to the list via the embedded node allocator.
+golf_clean.exe	0x004898d0	ListModel::indexOfId	ui	none	Walks the item list and records at this+0xf0 the index of the item whose id (+4) equals param_1.
+golf_clean.exe	0x00489950	ListModel::selectedId	ui	none	Returns the id of the item at the current selection index this+0xf0, walking the list from the head.
+golf_clean.exe	0x004899d0	ListModel::findId	ui	none	Returns the index of the first item whose id equals param_1.
+golf_clean.exe	0x00489a30	ListModel::idAt	ui	none	Returns the id of the item at index param_1 (supports negative indices from the tail).
+golf_clean.exe	0x00489ab0	ListModel::setClickHandler	ui	none	Stores the click target object (this+0x74) and its two callback slots (this+0x78/0x7c).
+golf_clean.exe	0x00489b30	ListModel::destroyNodes	ui	vtable 0x004bb22c	Destructor helper that frees all nodes twice through the two embedded vtables (0x004bb22c then 0x004ba270).
+golf_clean.exe	0x00489c90	ListBox::subDtor	ui	vtable 0x004ba278	Sub-object destructor that restores g_00839650 from field [0x2c].
+golf_clean.exe	0x00489cb0	ListBox::ctor	ui	vtable 0x004bb3cc, callee 0x004804a0 (Widget::ctor), callee 0x00489150 (ListModel::ctor)	Constructs the scrollable list-box control: a Widget window at this+0x5c and a ListModel at this+0x5d4, wiring the multiple-inheritance sub-object vtables.
+golf_clean.exe	0x00489de0	ListBox::dtor	ui	vtable 0x004bb3cc, callee 0x00489e40	Destructor for the list-box control.
+golf_clean.exe	0x00489e40	ListBox::resetFields	ui	callee 0x00480610, callee 0x004894b0	Destroys the embedded window and model and reloads the control's default colours.
+golf_clean.exe	0x00489ed0	ListBox::selectById	ui	callee 0x00489f50	Finds the item whose id equals param_1 and selects it (or clears selection).
+golf_clean.exe	0x00489f50	ListBox::setSelection	ui	callee 0x00489950, callee 0x00489a30, callee 0x0047b9f0 (scroll)	Sets the selected index, scrolls it into view, and fires the selection-changed callbacks on the owner.
+golf_clean.exe	0x0048a120	ListBox::measure	ui	callee 0x00477250 (text width), callee 0x00476310 (setQuad)	Computes the widest item and per-row metrics, then derives the row count, item height and scrollbar range for the list.
+golf_clean.exe	0x0048a5d0	ListBox::build	ui	callee 0x004806c0 (Widget::create), callee 0x0048a120, callee 0x0047ba30 (scroll range)	Creates the list window and scrollbar and lays it out using measure().
+golf_clean.exe	0x0048aa00	ListBox::onNavKey	ui	callee 0x00489f50 (setSelection)	Keyboard navigation handler that moves the selection (page/arrow) within the list.
+golf_clean.exe	0x0048aea0	ListBox::typeAhead	ui	import tolower, callee 0x00489950, callee 0x00480ce0 (refresh)	Incremental type-to-select: matches typed letters against item text and selects the first match.
+golf_clean.exe	0x0048c420	ListBox::onScroll	ui	callee 0x00489f50, callee 0x00480ce0	Scrollbar notification: updates the top row index and re-selects/redraws the list.
+golf_clean.exe	0x0048c560	ListBox::fireSelectChanged	ui	callee 0x00489950	Invokes the owner's selection-changed callbacks with the currently selected item.
+golf_clean.exe	0x0048c610	ListBox::forwardClick	ui	none	Forwards a click at param_1,param_2 to the owner object's vtable+0x74.
+golf_clean.exe	0x0048c640	ListBox::addItem	ui	callee 0x00476e20 (text measure), callee 0x00401d10	Adds a text item to the list, measuring its width and growing the content height.
+golf_clean.exe	0x0048c6e0	ListBox::onMouse	ui	import ReleaseCapture, callee 0x0048a120, callee 0x0048a5d0	Mouse handler: hit-tests and re-selects, updates the scrollbar range, and fires selection callbacks.
+golf_clean.exe	0x0048c8a0	ListBox::onDrag	ui	callee 0x00480ce0	Maps a drag position to a row, updates the highlighted/selected row and redraws.
+golf_clean.exe	0x0048cac0	ListBox::clearSelection	ui	none	Clears the selected index (sets to -1) and invalidates the control.
+golf_clean.exe	0x0048caf0	ListBox::scrollBy	ui	callee 0x0047b9f0	Scrolls the list up or down one row (when the scrollbar style bit is set) and invalidates.
+golf_clean.exe	0x0048cd80	matchDirective	util	string 0x004e4584 keyword table, callee 0x004925b0 (trim)	Matches the leading token of *param_1 against the directive keyword table (0x004e4584..0x004e45db), advances the pointer past it, and returns the matched index.
+golf_clean.exe	0x0048ce00	TextView::ctor	ui	vtable 0x004bb3f8, callee 0x004804a0 (Widget::ctor), callee 0x00492850 (HotList::ctor)	Constructs the scrollable formatted-text view (0x2114 bytes): Widget base, span lists at this+0x13e0/0x1410, HotList, and default colours from DAT_004e44e4 etc.
+golf_clean.exe	0x0048d480	TextView::reset	ui	callee 0x00489e40, callee 0x0049d690 (cleanup)	Clears all text spans, image nodes and child controls back to the empty state.
+golf_clean.exe	0x0048db60	TextView::init	ui	callee 0x0048d480, callee 0x00474820, callee 0x0048e190	Initializes the text view from style flags param_1 and key param_2: sets alignment mode at this+0x1654, builds the span lists, and sizes the content.
+golf_clean.exe	0x0048df20	TextView::addText	ui	callee 0x00401d10, callee 0x004a0600	Adds a text span, decoding a leading '^' escape (alignment/colour code) and appending the span node to this+0x1410.
+golf_clean.exe	0x0048dfc0	TextView::addImage	ui	callee 0x00401d10	Adds an image/icon node param_1 to the image span list at this+0x13e0 and bumps the line count.
+golf_clean.exe	0x0048e010	TextView::setName	ui	import malloc, import free	Duplicates the name/key string param_1 into this+0x5c8.
+golf_clean.exe	0x0048e0b0	TextView::setLineSpacing	ui	callee app vtable+0xa8 (screen width)	Sets the line-spacing field at [0x1498]; scales it by 3/2 when the screen width is >= 1024.
+golf_clean.exe	0x0048e120	TextView::setFontSize	ui	callee app vtable+0xa8	Sets the font-size field at [0x1494]; scales it by 3/2 when the screen width is >= 1024.
+golf_clean.exe	0x0048e190	TextView::setSize	ui	none	Stores the content width/height at this+0x1fb8/0x1fbc (ignoring the 0x2000 sentinel).
+golf_clean.exe	0x0048e1c0	TextView::layout	ui	none	Word-wraps the text spans into lines, computing per-line widths/heights and the total content extent.
+golf_clean.exe	0x0048e900	TextView::build	ui	string 0x004c8590 (Cancel), callee 0x004806c0 (Widget::create), callee 0x004887c0 (Button::create)	Builds the full text-view dialog: creates the window, OK/Cancel buttons and scrollbar, and lays out the formatted text.
+golf_clean.exe	0x0048fe60	TextView::render	ui	callee 0x00476e20 (wrap), callee 0x00477250 (put text), callee 0x00489f50	Draws the visible text rows with wrapping, selection highlighting and embedded images.
+golf_clean.exe	0x00490960	TextView::select	ui	callee 0x004a1370, callee 0x00489950	Sets the current selection (from a row index or sentinel) and triggers a redraw/notify.
+golf_clean.exe	0x00490a40	TextView::updateSelection	ui	callee 0x00489950	Recomputes and stores the current selection value at this+0x5c0.
+golf_clean.exe	0x00490bf0	MsgBox::initDefaults	ui	string 0x004c8590 (Cancel), callee 0x0048de90, callee 0x0048de00	Initializes message-box defaults: sets the two default button labels (Cancel plus DAT_004e3db0) and clears the callback globals.
+golf_clean.exe	0x00490c30	MsgBox::freeLabels	ui	import free	Clears the message-box callback globals and frees the two label strings g_0083b994/g_0083b998.
+golf_clean.exe	0x00490c80	MsgBox::setButtonA	ui	none	Stores the message-box button-A object/callbacks into globals g_0083b9b4/0x83b9b8/0x83b9bc/0x83b9c0.
+golf_clean.exe	0x00490cc0	MsgBox::setColorA	ui	none	Stores the message-box colour-quad A globals DAT_004e4504/0x4514/0x4524/0x4534.
+golf_clean.exe	0x00490cf0	MsgBox::setButtonB	ui	none	Stores the message-box button-B object/callbacks into globals g_0083b9c4/0x83b9c8/0x83b9cc.
+golf_clean.exe	0x00490d20	MsgBox::setColorB	ui	none	Stores the message-box colour-quad B globals DAT_004e4544/0x4550/0x455c/0x4568.
+golf_clean.exe	0x0048de00	MsgBox::setLabelA	ui	caller 0x00490bf0, import malloc	Duplicates label string param_1 into the global g_0083b994.
+golf_clean.exe	0x0048de90	MsgBox::setLabelB	ui	caller 0x00490bf0 (passes Cancel), import malloc	Duplicates label string param_1 (e.g. (string in the binary)) into the global g_0083b998.
+golf_clean.exe	0x00491310	TextView::create	ui	callee 0x0048ce00 (TextView::ctor), import operator new	Allocates a 0x2114-byte TextView and constructs it.
+golf_clean.exe	0x00491410	LabelButton::dtor	ui	vtable 0x004bb5b4, callee 0x00488650	Destructor for a Button-derived label control (vtable 0x004bb5b4).
+golf_clean.exe	0x00491470	LabelButton::scalarDtor	ui	callee 0x00491410	Scalar-deleting destructor for the 0x004bb5b4 control.
+golf_clean.exe	0x00491490	Widget::setFlagBit0	ui	none	Sets or clears bit0 of the flag word at this+0x24.
+golf_clean.exe	0x004914b0	Widget::setFlagBit1	ui	none	Sets or clears bit1 of the flag word at this+0x24.
+golf_clean.exe	0x004914d0	Dialog::subDtor	ui	callee 0x00491500, callee 0x00489370	Destructor helper for a composite dialog: tears down the embedded view and model sub-objects.
+golf_clean.exe	0x00491500	Dialog::viewDtor	ui	vtable 0x004bba3c, callee 0x0049d690, callee 0x00489de0	Destroys the dialog's embedded formatted-view and its several child widgets.
+golf_clean.exe	0x00491680	Dialog::childDtor	ui	vtable 0x004bb744, callee 0x0049d690	Destroys one embedded child control group of the dialog.
+golf_clean.exe	0x004916f0	Dialog::scalarDtor	ui	callee 0x00491710	Scalar-deleting destructor for the composite dialog.
+golf_clean.exe	0x00491710	Dialog::dtor	ui	vtable 0x004bb3f8, callee 0x0048d480, callee 0x004928d0 (HotList::dtor)	Destructor for the composite dialog window: tears down the TextView, HotList, two lists and two buttons.
+golf_clean.exe	0x00491c10	initSinTable	util	import fsin	Builds the fixed-point sine lookup table at g_0083b9f4 from fsin over the angle index, then seeds the sin/cos helpers.
+golf_clean.exe	0x00491c70	sinScaled	util	caller 0x00491c10	Fixed-point sine of a 32-bit angle param_1 scaled by amplitude param_2, interpolating the g_0083b9f4 table.
+golf_clean.exe	0x00491d80	cosScaled	util	caller 0x00491c10	Fixed-point cosine companion to sinScaled, interpolating the g_0083b9f4 table.
+golf_clean.exe	0x00491da0	resolveDataPath	util	import FindFirstFileA, import FindClose	Resolves filename param_1 against the configured data search directories, returning the first existing path in the scratch buffer g_0083c004.
+golf_clean.exe	0x00492000	cropSprite	render	callee 0x00473ae0, callee app vtable+0x80 (createSurface), import malloc	Scans a source surface for its transparent (0xff) border and copies the tightly-cropped pixels into a new surface, recording the trimmed offsets/size.
+golf_clean.exe	0x00492450	blitErrorPtr	render	none	Returns the address of the blitter error-code global g_0083c310.
+golf_clean.exe	0x00492460	blitError	render	none	Returns the blitter error code g_0083c310, defaulting to 8 when zero.
+golf_clean.exe	0x00492470	shutdownBlitter	render	callee 0x004924b0, caller 0x00485740 (engineShutdown)	Flushes and releases the global blit surface objects g_0083c328/g_0083c330 and clears the context.
+golf_clean.exe	0x004924b0	flushBlitSurface	render	none	Releases the pending blit surface g_0083c330 through the context g_0083c32c vtable+0x80.
+golf_clean.exe	0x004924e0	trimLeadingSpace	util	import isspace	Removes leading whitespace from string param_1 in place (via a 512-byte scratch copy).
+golf_clean.exe	0x00492570	trimTrailingSpace	util	import isspace	Removes trailing whitespace from string param_1 in place.
+golf_clean.exe	0x004925b0	trimSpaces	util	callee 0x00492570, callee 0x004924e0	Trims trailing then leading whitespace from string param_1.
+golf_clean.exe	0x004925d0	stripNewline	util	import strrchr	Truncates string param_1 at the last newline character.
+golf_clean.exe	0x004925f0	appendNewline	util	none	Appends a newline and NUL terminator to string param_1.
+golf_clean.exe	0x00492610	pointInRect	util	caller 0x00488cf0	Returns true if point (param_1,param_2) lies inside rect {left,top,right,bottom} at param_3.
+golf_clean.exe	0x00492660	HotList::freeEntryTip	ui	import free	Frees an entry's tooltip string at +0x1c (guarded by g_0083d348).
+golf_clean.exe	0x00492690	HotList::grow	ui	import operator new	Grows the hotspot-rect array at this+0x50 by 10 entries (0x20 bytes each), copying existing entries.
+golf_clean.exe	0x00492800	HotList::resetFields	ui	callee 0x00486f10 (Timer::reset)	Resets the hotspot list fields and its embedded tooltip Timer at this+0x20.
+golf_clean.exe	0x00492830	HotList::releaseArray	ui	callee 0x00492800	Releases the hotspot-rect array and resets fields.
+golf_clean.exe	0x00492850	HotList::ctor	ui	vtable 0x004bba74, callee 0x00486c90 (Timer::ctor)	Constructs the tooltip hotspot list with a tooltip Timer at this+8 and default delay 1000 ms at [0x17].
+golf_clean.exe	0x004928b0	HotList::scalarDtor	ui	callee 0x004928d0	Scalar-deleting destructor for the HotList.
+golf_clean.exe	0x004928d0	HotList::dtor	ui	vtable 0x004bba74, callee 0x00492830	Destructor: releases the rect array and destroys the tooltip Timer.
+golf_clean.exe	0x00492920	HotList::alloc	ui	import operator new	Allocates the hotspot-rect array with capacity param_1 (0x20 bytes each).
+golf_clean.exe	0x004929b0	HotList::add	ui	import malloc	Adds a hotspot: stores its rect (x,y,w,h), two payload ids, and an optional duplicated tooltip string.
+golf_clean.exe	0x00492a90	HotList::hitTest	ui	callee 0x00492610 (pointInRect)	Returns the index of the topmost hotspot containing point (param_1,param_2), outputting its two payload ids.
+golf_clean.exe	0x00492b10	HotList::hitTestRect	ui	callee 0x00492610	Like hitTest but also outputs the matched hotspot's rect.
+golf_clean.exe	0x00492bd0	HotList::showTip	ui	callee 0x00486ec0 (Timer::stop), callee 0x00480220 (draw text)	Stops the tip timer and draws the tooltip text for hotspot index param_1 near its rect.
+golf_clean.exe	0x00492cc0	HotList::onMouseMove	ui	callee 0x00486d20 (Timer::init), callee 0x00486e40 (Timer::startRepeat)	Finds the hotspot under (param_1,param_2) and starts the tooltip delay timer for it.
+golf_clean.exe	0x00492d40	HotList::cancelTip	ui	callee 0x00486ec0	Stops the tooltip timer and resets the active-hotspot fields.
+golf_clean.exe	0x00492d80	MappedFile::ctor	util	vtable 0x004bba78	Constructs a memory-mapped-file wrapper, clearing its handle/view fields.
+golf_clean.exe	0x00492da0	MappedFile::scalarDtor	util	callee 0x00492dc0	Scalar-deleting destructor for the MappedFile.
+golf_clean.exe	0x00492dc0	MappedFile::dtor	util	vtable 0x004bba78, callee 0x00492e80	Destructor: unmaps the view and closes the handles.
+golf_clean.exe	0x00492dd0	MappedFile::open	util	import CreateFileA, import CreateFileMappingA, import MapViewOfFile	Opens param_1 read-only and maps it, storing the view/handles/size; param_2 selects random-access flags.
+golf_clean.exe	0x00492e80	MappedFile::close	util	import UnmapViewOfFile, import CloseHandle	Unmaps the view and closes the mapping and file handles.
+golf_clean.exe	0x00492ed0	polyEdgeStep	render	global 0x0083d358 (vertex table)	Sets up a polygon-edge DDA for the scanline filler: finds the next edge spanning the current scanline in the vertex table g_0083d358 and computes its x step/error.
+golf_clean.exe	0x00492fa0	polyEdgeAdvance	render	callee 0x00492ed0	Advances a polygon edge by one scanline, re-setting up at the next vertex when the current span is exhausted.
+golf_clean.exe	0x00493000	fillSpanDown	render	global 0x0083d34c (fill colour)	Fills a clipped horizontal run of the 16-bit fill colour g_0083d34c into the surface bits for one scanline.
+golf_clean.exe	0x00493080	fillSpanUp	render	global 0x0083d34c	Companion span filler for the opposite scan direction.
+golf_clean.exe	0x00493100	fillConvexPoly8	render	callee 0x00492ed0, callee 0x00493000	Scanline-fills a convex polygon into an 8-bit surface using the polygon edge DDA.
+golf_clean.exe	0x004932d0	fillConvexPoly16	render	callee 0x00492ed0, callee 0x00493000	Scanline-fills a convex polygon into a 16-bit surface using the polygon edge DDA.
+golf_clean.exe	0x00493520	fillConvexPoly	render	callee 0x00493100, callee 0x004932d0	Dispatches polygon fill to the 8-bit or 16-bit routine based on the target surface bit depth (vtable 0xe4).
+golf_clean.exe	0x00493580	swapInts	util	none	Swaps two 32-bit integers in place using XOR.
+golf_clean.exe	0x004935b0	reverseFindChar	util	none	Searches backward from param_2 down to param_1 for character param_3, returning its address or NULL.

@@ -1,0 +1,20 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x00838200	g_spriteQueueCount	int	written by enqueueSprite 0x00462a30 (index), read/looped by renderSpriteQueue 0x00463100
+golf_clean.exe	0x0082c160	g_spriteQueueHead	int	head index written by enqueueSprite 0x00462a30, iterated by renderSpriteQueue 0x00463100
+golf_clean.exe	0x008361f4	g_spriteQueueNext	int[]	next-index links written by enqueueSprite 0x00462a30, followed by renderSpriteQueue 0x00463100
+golf_clean.exe	0x0082415c	g_spriteSortKey	int[]	z/sort key written by enqueueSprite 0x00462a30 (param_3), compared during list insertion
+golf_clean.exe	0x00830164	g_spriteX	int[]	screen x written by enqueueSprite 0x00462a30, read by drawQueuedSprite 0x00462be0
+golf_clean.exe	0x00831164	g_spriteY	int[]	screen y written by enqueueSprite 0x00462a30, read by drawQueuedSprite 0x00462be0
+golf_clean.exe	0x0082815c	g_spriteFlags	int[]	flags written by enqueueSprite 0x00462a30 (param_8), tested by drawQueuedSprite 0x00462be0 (bit 0x100)
+golf_clean.exe	0x004c2844	g_zoomScale	int	zoom/scale factor read by enqueueSprite 0x00462a30 and drawQueuedSprite 0x00462be0
+golf_clean.exe	0x00822c8c	g_zoomLevel	int	zoom level read by enqueueSprite/drawQueuedSprite to pick sprite tier (0x10/0xd/0xa)
+golf_clean.exe	0x00824148	g_color16Lut	ushort*	16-bit RGB lookup table pointer, filled by build16BitColorTable 0x00461830
+golf_clean.exe	0x00822da0	g_tileShadeA	byte[]	tile shade map written (clamped 0..255) by spreadShade 0x004615f0
+golf_clean.exe	0x0082376c	g_tileShadeB	byte[]	second tile shade map written by spreadShade 0x004615f0
+golf_clean.exe	0x00838c1c	g_sampleGrid	char[]	0x13-stride value grid bilinearly sampled by bilinearSample 0x004674c0
+golf_clean.exe	0x0057956e	g_golferRecords	byte[]	golfer record array (stride 0x80) read by formatGolferTitle 0x00462020
+golf_clean.exe	0x0058587a	g_golferRoster	byte[]	golfer roster array (stride 0x4c) read by pickGolferName 0x00467600
+golf_clean.exe	0x00571fd8	g_courseTable	byte[]	12-entry table (stride 0x2e) seeded by seedCourseTable 0x0046f2b0
+golf_clean.exe	0x0051a068	g_textBuffer	char[]	shared text scratch buffer, target of pickGolferName 0x00467600
+golf_clean.exe	0x0083ad50	g_graphicsDevice	void**	graphics device object pointer; vtable +0xb4 read by build16BitColorTable 0x00461830
+golf_clean.exe	0x0083ab98	g_focusedItem	void*	focused/selected list item pointer, written by setFocusItem 0x0047ae80

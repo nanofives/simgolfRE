@@ -1,0 +1,209 @@
+module	addr	name	subsystem	evidence	purpose
+golf_clean.exe	0x0047af60	Container::cycleSelection	ui	match re/match/golf_hand_08_t_sw2.cpp	cycles selection to the next visible child of the container at m_130 via first()/advance()/select() (g_83ab98 saves the start child)
+golf_clean.exe	0x0047b080	Node::contains	ui	match re/match/golf_small8.cpp	returns 1 if the argument is a child or transitive descendant of this node (m_children +0x224, count +0x22c)
+golf_clean.exe	0x0047b0d0	View::offsetRectToParent	ui	match re/match/golf_small8.cpp	translates a RECT by this view origin via toParent (f_47b170)
+golf_clean.exe	0x0047b120	View::offsetRectToLocal	ui	match re/match/golf_small8.cpp	translates a RECT into local coordinates via toLocal
+golf_clean.exe	0x0047b170	View::toParent	ui	match re/match/golf_small13.cpp	adds this view scroll (m_1bc/m_1c0) and origin (m_1ac/m_1b0) to a point, recursing into m_parent (+0x130) when m_9c bit 0x20 is set
+golf_clean.exe	0x0047b200	View::fromParent	ui	match re/match/golf_small13.cpp	inverse of toParent: subtracts scroll+origin and recurses into m_parent
+golf_clean.exe	0x0047b290	View::toLocal	ui	match re/match/golf_small5.cpp	calls toParent then subtracts the view origin m_1ac/m_1b0
+golf_clean.exe	0x0047b2d0	View::toGlobal	ui	match re/match/golf_small5.cpp	calls fromParent then adds the view origin m_1ac/m_1b0
+golf_clean.exe	0x0047b310	Window::center	ui	match re/match/golf_hand_08_b.cpp	centers the window in the screen (g_83ad50 width/height) using m_1bc or m_1ac per m_a0 bit2, adjusts via m_130 then moveTo
+golf_clean.exe	0x0047b420	Window::moveTo	ui	match re/match/golf_small19.cpp	moves the window rect (m_rc2 or m_rc per m_flags bit2) to (x,y) via offsetRect then relayouts children (clip47e140)
+golf_clean.exe	0x0047b4e0	Window::setSize	ui	match re/match/golf_hand_r2.cpp	resizes the window: clamps size, sets m_1ac/m_1bc rects, relayouts, calls resized and notifies the screen g_83ad50->update
+golf_clean.exe	0x0047b670	Window::show	ui	match re/match/golf_hand_r3.cpp	makes the window visible (m_a0 bit1), rebuilds the z-list (f47e450), resizes/draws, activates the focus child and invalidates its rect on g_83ad50
+golf_clean.exe	0x0047b820	Window::detach	ui	match re/match/golf_raw_11.cpp;caller 0x0047e520 (listRemove)	removes a window from the screen: clears focus/capture globals (g_83ab40/44, g_83aa98), rebuilds the draw list and hides any tooltip (f00480360)
+golf_clean.exe	0x0047b8f0	Label::setText	ui	match re/match/golf_hand_05.cpp	frees and reallocates the label text at m_14c (malloc+strcat); if visible, triggers relayout (v77) and repaint (v79)
+golf_clean.exe	0x0047b9f0	Window::fwdScroll26c	ui	match re/match/golf_raw_02.cpp	forwards a scroll value to the child object at +0x26c (FUN_004967f0)
+golf_clean.exe	0x0047ba10	Window::fwdScroll270	ui	match re/match/golf_raw_02.cpp	forwards a scroll value to the child object at +0x270 (FUN_004967f0)
+golf_clean.exe	0x0047ba30	Window::fwdRange26c	ui	match re/match/golf_raw_02.cpp	forwards a (pos,range) pair to the child at +0x26c (FUN_00496770)
+golf_clean.exe	0x0047ba50	Window::fwdRange270	ui	match re/match/golf_raw_02.cpp	forwards a (pos,range) pair to the child at +0x270 (FUN_00496770)
+golf_clean.exe	0x0047ba70	Window::setField26c5a0	ui	match re/match/golf_raw_03.cpp	stores a value at offset 0x5a0 of the child object at +0x26c
+golf_clean.exe	0x0047ba90	Window::setField2705a0	ui	match re/match/golf_raw_03.cpp	stores a value at offset 0x5a0 of the child object at +0x270
+golf_clean.exe	0x0047bc60	Window::resized	ui	match re/match/golf_hand_s2.cpp;callee 0x0047d570 (Window::layoutScrollbars)	repositions the scrollbar children m_26c/m_270 after a size change, calls the m_230 resize callback and onSize
+golf_clean.exe	0x0047be40	Window::mouseEvent238	input	Ghidra decompilation of 0x0047be40 (re/tools/decomp.py); callers/callees from re/tools/xref.py	mouse handler: on hit calls m_238 then routes the point through the HotList m_bc, else the miss handler (vtable +0x6c); notifies panels m_1c/m_50
+golf_clean.exe	0x0047bf40	Window::mouseDispatch23c	input	match re/match/golf_hand_06_win.cpp	mouse-button handler: sets g_83ab2c, calls m_23c, hit-tests m_bc to dispatch hit34 or miss98, notifies panels m_44/m_6c
+golf_clean.exe	0x0047c010	Window::mouseDispatch240	input	match re/match/golf_hand_06_win.cpp	mouse handler via callback m_240, hit30/miss9c, panels m_48/m_70
+golf_clean.exe	0x0047c0e0	Window::mouseDispatch244	input	match re/match/golf_hand_06_win.cpp	mouse handler via callback m_244, hit3c/miss74, panels m_20/m_54
+golf_clean.exe	0x0047c1b0	Window::click	input	match re/match/golf_hand_07_47c1b0.cpp	click handler: sets g_83ab2c, calls m_248 and the global click hook g_83ab04, hit-tests m_bc to dispatch hit()/miss(), notifies panel m_24 or (alt) m_58
+golf_clean.exe	0x0047c290	Window::mouseDispatch24c	input	match re/match/golf_hand_06_win.cpp	mouse handler via callback m_24c, hit48/miss7c, panels m_28/m_5c
+golf_clean.exe	0x0047c360	Window::mouseDispatch250	input	match re/match/golf_hand_06_win.cpp	mouse handler via callback m_250, hit38/miss80, panels m_2c/m_60
+golf_clean.exe	0x0047c430	Window::mouseDispatch254	input	match re/match/golf_hand_06_win.cpp	mouse handler via callback m_254, hit44/miss84, panels m_30/m_64
+golf_clean.exe	0x0047c500	Window::mouseDispatch258	input	match re/match/golf_hand_06_win.cpp	mouse handler via callback m_258, hit4c/miss88, panels m_34/m_68
+golf_clean.exe	0x0047c5d0	Window::key	input	match re/match/golf_hand_07_47c5d0.cpp	key handler: Enter closes with -1, Esc with -2, Tab tabs the focus child m_140, else forwards to the child and the m_25c callback plus onKey
+golf_clean.exe	0x0047c6c0	Window::dispatchAccel	input	import MapVirtualKeyA;callee 0x0047c5d0 (Window::key)	routes a virtual key to the focused child windows (+0x26c/+0x270, accelerator vtable +0x8c), filtering with MapVirtualKeyA, falling back to Window::key
+golf_clean.exe	0x0047c970	Window::dispatchCommand	input	match re/match/golf_hand_05.cpp	dispatches a command id: forwards to the focus child m_140 then the m_264 callback plus v37, sets g_83ab2c and notifies panel m_40
+golf_clean.exe	0x0047ca10	Window::adjustSizeOuter	ui	match re/match/golf_hand_r2.cpp	grows a (w,h) pair to the outer window size by adding the title bar (g_83ff10) and borders m_184/m_188 per m_flags
+golf_clean.exe	0x0047cb10	Window::innerSize	ui	match re/match/golf_hand_r1.cpp	shrinks a (w,h) pair to the client size by subtracting title bar and borders per m_9c flags
+golf_clean.exe	0x0047cc10	Window::growRect	ui	match re/match/golf_hand_06_b.cpp	expands a RECT by the title bar and borders per m_9c flags (inverse of shrinkRect)
+golf_clean.exe	0x0047cce0	Window::shrinkRect	ui	caller 0x0047b4e0 (Window::setSize)	shrinks a RECT inward by the title bar and borders per m_9c flags, subtracting the caption child m_15c height
+golf_clean.exe	0x0047cdb0	drawTooltip	ui	caller 0x00480220 (Tooltip::show);callee 0x004a6170 (strchr)	renders the tooltip: splits the text g_83aac4 on the caret and draws each line centered in g_83a2c8 with the tooltip font, blitting the saved background g_83a7b8
+golf_clean.exe	0x0047cfd0	resetViewState47cfd0	ui	caller 0x004855b0 (init4855b0)	constructs a temporary C474ae0 view, zeros globals g_83a4e8..g_83a4f4, calls FUN_004a0890 and destroys it
+golf_clean.exe	0x0047d010	screenTick47d010	ui	match re/match/golf_raw_11.cpp	calls screen manager g_83ad50 vtable slot f2 when the screen object exists
+golf_clean.exe	0x0047d020	Widget::setValue	ui	match re/match/golf_hand_01.cpp	when m_a0 bit1 is set, stores the value in m_184 and triggers a resize to the current width/height
+golf_clean.exe	0x0047d060	addDirtyRect	render	match re/match/golf_hand_06_b.cpp	blits the saved buffer g_83a7b8 and unions the pending rect (g_83aaa4/aaa8/aab4/aab8) into the dirty region g_83a4d8, optionally flushing
+golf_clean.exe	0x0047d130	drawCursor	ui	caller 0x0047ab00 (setCursor)	builds and draws the mouse cursor sprite: creates the cursor widget (FUN_00474dd0), positions it globally (toGlobal), marks it dirty (addDirtyRect) and hit-tests under it (S1hitTest)
+golf_clean.exe	0x0047d510	Window::releaseScrollbars	ui	match re/match/golf_raw_11.cpp	releases the scrollbar children m_150/m_154/m_158 (vtable destroy) and nulls them
+golf_clean.exe	0x0047d570	Window::layoutScrollbars	ui	Ghidra decompilation of 0x0047d570 (re/tools/decomp.py); callers/callees from re/tools/xref.py	moves the scrollbar/corner children m_150/m_154/m_158 to the bottom-right inner edge using their extent, via moveTo
+golf_clean.exe	0x0047d610	buildControlStrip47d610	ui	Ghidra decompilation of 0x0047d610 (re/tools/decomp.py); callers/callees from re/tools/xref.py	creates a row of child controls via FUN_00474dd0, stores the result and sets g_83ad10
+golf_clean.exe	0x0047d7c0	View::ctorVtbl47d7c0	ui	match re/match/golf_raw_03.cpp	sets the vtable pointer PTR_004baa14 and calls FUN_00495eb0 to finish base init
+golf_clean.exe	0x0047d7d0	Window::isFocusChild	ui	match re/match/golf_raw_03.cpp	returns 1 if m_9c bit 0x1000 is set or this window is the active child of its parent container (m_130->m_13c->m_4)
+golf_clean.exe	0x0047d810	View::scalarDtor47d810	crt	match re/match/golf_raw_08.cpp	scalar deleting destructor: sets vtable PTR_004baa14, cleans up (FUN_00495eb0) and frees when flag bit0 is set
+golf_clean.exe	0x0047d840	setDragTarget	input	match re/match/golf_raw_03.cpp	stores the argument into the drag/capture global g_83ab60
+golf_clean.exe	0x0047d850	drawPanelContents	ui	caller 0x004810d0 (drawPanel4810d0)	large panel content renderer: lays out and draws text fields (drawCentered/drawRight), quads (setQuad) and sub-images for a composite panel
+golf_clean.exe	0x0047e120	Panel::notify	ui	match re/match/golf_small17.cpp	notifies the panel owner m_owner, or the default handler, that the panel changed
+golf_clean.exe	0x0047e140	relayoutClip	ui	match re/match/golf_hand_r1.cpp	recomputes clip rectangles for a window and its visible children recursively (IntersectRect against inner/outer rects), storing each into m_1dc
+golf_clean.exe	0x0047e2d0	clipAllWindows	ui	match re/match/golf_raw_11.cpp	clips every shown top-level window in the z-list g_83a2d8[g_83ab94] against the screen rect via relayoutClip
+golf_clean.exe	0x0047e330	collectDrawList	ui	match re/match/golf_hand_r0.cpp	recursively appends visible windows of a subtree into the draw list g_839ac0 (count g_83ab90), honoring the back-layer flag 0x20 and the removed-window marker g_83aae0
+golf_clean.exe	0x0047e450	rebuildDrawList	ui	Ghidra decompilation of 0x0047e450 (re/tools/decomp.py); callers/callees from re/tools/xref.py	clears the draw-list count g_83ab90 and rebuilds it by collecting every shown top-level window of the z-list g_83a2d8 (collectDrawList), then clipAllWindows
+golf_clean.exe	0x0047e4c0	zPush	ui	match re/match/golf_small9.cpp	inserts a window into the z-list g_zlist (0x83a2d8): back-layer windows (flag 0x2000000) go to the end, others to the front, bumping g_zcount
+golf_clean.exe	0x0047e520	listRemove	ui	match re/match/golf_hand_02.cpp	removes a window from the global window list g_list47e (count g_count47e), releasing it and compacting the array
+golf_clean.exe	0x0047e580	zRaise	ui	match re/match/golf_small9.cpp	raises a window to the front of the z-list g_zlist (skipping back-layer windows) and rebuilds the draw list (f47e450)
+golf_clean.exe	0x0047e5f0	ChildArray::insert	ui	match re/match/golf_raw_13.cpp	inserts a child window into this container array at +0x224 (count +0x22c), growing it (FUN_00479b40), front/back ordered by flag 0x2000000
+golf_clean.exe	0x0047e680	ChildArray::remove	ui	match re/match/golf_hand_03.cpp	removes a child from the container array m_data (count m_count), releasing it, compacting and shrinking when slack reaches 10
+golf_clean.exe	0x0047e700	ChildArray::bringToFront	ui	match re/match/golf_hand_03.cpp	moves a child to the front of the container array m_data and refreshes, skipping back-layer windows
+golf_clean.exe	0x0047ed30	Window::hitTestBorder	ui	match re/match/golf_hand_09_f.cpp	classifies a point into a window border/resize region code (corners, edges, caption 2) using border thickness m_1f0 and flags m_9c
+golf_clean.exe	0x0047eee0	matchInputCode	input	string 0x004e42ec	compares the tail of the circular keystroke buffer g_83aba4..g_83abad backward against the code string at 0x4e42ec, returning 1 on a full match
+golf_clean.exe	0x0047f1b0	Window::setFocus	input	match re/match/golf_raw_03.cpp	gives this window keyboard focus: notifies the parent (vtable f75) and stores itself in g_83ab40 or g_83ab44 per the last argument
+golf_clean.exe	0x0047f2f0	currentFocusOwner	input	Ghidra decompilation of 0x0047f2f0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	returns the +0xb0 owner of the current focus/hover window (from g_83ab54/g_83b990/g_83ab38/g_83ab60) when it is visible
+golf_clean.exe	0x0047f340	hitTestTree	input	Ghidra decompilation of 0x0047f340 (re/tools/decomp.py); callers/callees from re/tools/xref.py	recursively finds the deepest visible child window containing a point (inRect test)
+golf_clean.exe	0x0047f700	hitTestScreen	input	match re/match/golf_hand_s1.cpp	resolves the window under the pointer: tries the captured/focus windows (g_83ab40/44/30/34) in local coords, else searches the modal/root trees g_83ab54/50 via hitTestTree
+golf_clean.exe	0x0047f8e0	redrawDrawList	render	Ghidra decompilation of 0x0047f8e0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	repaints windows from the draw list g_839ac0 starting at a given window, calling each visible entry draw vtable slot (+0x13c) into the target rect
+golf_clean.exe	0x0047fa30	redrawWindow	render	Ghidra decompilation of 0x0047fa30 (re/tools/decomp.py); callers/callees from re/tools/xref.py	converts a window origin to parent space (toParent) and repaints the draw list from that window (redrawDrawList)
+golf_clean.exe	0x0047fab0	compositeScreen	render	Ghidra decompilation of 0x0047fab0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	full screen composite: walks windows computing clip rects (offsetRect/fromParent/toGlobal/adjustSize/clip47e140) and repaints them (redrawDrawList) over the dirty region
+golf_clean.exe	0x004801f0	Window::visible	ui	match re/match/golf_small18.cpp	returns 1 only if m_flags bit1 is set and every parent (m_parent) is also visible
+golf_clean.exe	0x00480220	Tooltip::show	ui	match re/match/golf_hand_r0.cpp;callee 0x004a6170 (strchr)	lays out a multi-line tooltip rect g_83a2c8 above/below an anchor RECT sized to the widest line (font g_83aac8), stores the text g_83aac4 and draws it
+golf_clean.exe	0x00480360	Tooltip::hide	ui	match re/match/golf_raw_09.cpp	if a tooltip is shown (g_83aac4) clears it and repaints the covered area g_83a2c8 (redrawDrawList + drawTooltip)
+golf_clean.exe	0x00480390	List480::dtor	util	match re/match/golf_hand_03.cpp	virtual destructor: clears the list and nulls m_10
+golf_clean.exe	0x00480410	BinkFrame::scalarDtor	video	match re/match/golf_hand_04.cpp	scalar deleting destructor of the Bink video frame wrapper (C480410)
+golf_clean.exe	0x004804a0	View4804a0::ctor	ui	Ghidra decompilation of 0x004804a0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	constructor zeroing the 16-slot array m_52c and view fields, caching g_83ac18 into m_56c
+golf_clean.exe	0x00480580	View4804a0::scalarDtor	ui	match re/match/golf_raw_09.cpp	scalar deleting destructor wrapper for View4804a0 (FUN_004805a0 + conditional free)
+golf_clean.exe	0x004805a0	Base4805a0::dtor	ui	match re/match/golf_hand_r2.cpp	virtual destructor clearing m_570
+golf_clean.exe	0x00480610	Window::ctorInit	ui	match re/match/golf_raw_03.cpp	constructor body zeroing a window: base init (FUN_00479f30), cursor sub-object init (FUN_00474cb0) and clearing many fields (m_15c, m_69/m_6a, m_14b..)
+golf_clean.exe	0x004806c0	Window::create	ui	match re/match/golf_hand_r2.cpp	creates a window: reset, copies the 11 default corner widgets g_83abe4.., optional image m_568, base create, layout, adjustSize and open
+golf_clean.exe	0x00480870	Window::createFromRect	ui	match re/match/golf_raw_03.cpp	creates a window from a RECT argument by forwarding its left/top/width/height to Window::create, returning 0x10 on null rect
+golf_clean.exe	0x004808c0	Window::paint	render	match re/match/golf_hand_r2.cpp	paints the window: if flag 0x80000 and backing window m_130 are set blits m_130 and optional fill g_83abe0, else the base paint
+golf_clean.exe	0x00480a10	Window::paintBackground	render	caller 0x00496fc0 (draw@R0C496fc0)	paints the window background: if a backing window m_130 is set blits it (FUN_00475c60) and optionally fills with g_83abe0, else the default paint
+golf_clean.exe	0x00480b00	fillWindowRect	render	Ghidra decompilation of 0x00480b00 (re/tools/decomp.py); callers/callees from re/tools/xref.py	fills a rectangle in the current window surface via Window::fillRect (FUN_00478af0)
+golf_clean.exe	0x00480c20	Window::refreshRect	ui	Ghidra decompilation of 0x00480c20 (re/tools/decomp.py); callers/callees from re/tools/xref.py	offsets the dirty rect to global space (offsetRect) and redraws it when the window is visible
+golf_clean.exe	0x00480c80	Window::refreshFull	ui	match re/match/golf_raw_13.cpp	recomputes the full content size from the backing object m_278 and refreshes the whole rect (refreshRect)
+golf_clean.exe	0x00480ce0	Window::invalidate	ui	match re/match/golf_hand_04.cpp	computes the window rect in screen coords (getOrigin) and invalidates it on the screen manager g_83ad50d
+golf_clean.exe	0x00480d70	Window::doLayout	ui	match re/match/golf_raw_03.cpp	runs the one-shot layout pass guarded by m_88 bit0: sets g_83ab2c, calls the m_15c layout callback and vtable f22, then invalidate
+golf_clean.exe	0x004810d0	drawPanel4810d0	ui	Ghidra decompilation of 0x004810d0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	large composite info-panel builder/renderer: draws framed images and text through drawPanelContents
+golf_clean.exe	0x00481760	Window::calcSizeFromCorners	ui	match re/match/golf_hand_r1.cpp	computes the content size m_1a4/m_1a8 as the max of opposite corner-widget extents (m_52c..m_550) per layout mode m_9c bit 0x10
+golf_clean.exe	0x00481870	allocResampleTable	util	caller 0x0045baf0;import malloc	validates an even length >=4, stores it in g_83ac14, allocates the g_83ac10 work buffer (g_83abb0*len*2 bytes) and a double[len] window; returns 3/4 on bad args or OOM
+golf_clean.exe	0x00481b20	freeResampleTable	util	match re/match/golf_raw_11.cpp;import free	frees the g_83ac10 work buffer allocated by allocResampleTable
+golf_clean.exe	0x00481b50	Flic::ctor481b50	video	match re/match/golf_raw_03.cpp	constructs a FLC/animation object: base init (FUN_00482b60), sets vtable PTR_004ba2e0 and zeroes its frame fields
+golf_clean.exe	0x00481ba0	Flic::reset	video	match re/match/golf_raw_11.cpp	releases a FLC object: destroys sub-objects m_54/m_6c/m_70 (vtable destroy) and clears its frame pointers
+golf_clean.exe	0x00481ca0	Flic::buildFrameTable	video	Ghidra decompilation of 0x00481ca0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	allocates (operator new) and fills the per-frame pointer table of a loaded FLC animation, resetting via FUN_00481ba0
+golf_clean.exe	0x00481e40	Flic::indexFrames	video	match re/match/golf_hand_r3.cpp	builds the row/column frame index of a FLC resource by walking chunks until the 0xf1fa frame magic, into m_48/m_4c
+golf_clean.exe	0x00481f40	Flic::open	video	callee 0x00492dd0 (MappedFile::open)	opens and parses a FLC/sprite animation resource via a memory-mapped file (MappedFile::open), building its frame index and decoder objects
+golf_clean.exe	0x004823c0	setNewHeap	crt	match re/match/golf_hand_r1.cpp;string 0x004c1434;string 0x004c1458	installs a custom allocator (g_839650) when given one, or falls back to malloc; on allocator failure shows a MessageBox and _exit(3)
+golf_clean.exe	0x00482420	Image::step	render	Ghidra decompilation of 0x00482420 (re/tools/decomp.py); callers/callees from re/tools/xref.py	advances image/animation decode by invoking the chunk decoder (decodeImageChunks) for the next unit
+golf_clean.exe	0x00482490	Image::seek	render	match re/match/golf_hand_r1.cpp	seeks to frame (a,b) of a multi-frame image resource, loading and stepping chunk records (m_48 table) into the frame state
+golf_clean.exe	0x00482570	decodeImageChunks	render	Ghidra decompilation of 0x00482570 (re/tools/decomp.py); callers/callees from re/tools/xref.py	iterates the chunks of an image/frame and dispatches each to the palette (colorChunk), clear, RLE (brun), raw copy or sprite decoder by chunk type
+golf_clean.exe	0x004826f0	Palette::decodeChunk	render	match re/match/golf_hand_07_4826f0.cpp	decodes a palette chunk (runs of skip,count RGB triples) into a 256-entry table and uploads it to the display palette m_74
+golf_clean.exe	0x004827d0	decodeSprite4827d0	render	Ghidra decompilation of 0x004827d0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	decodes a transparency/run compressed sprite (0xc000 skip-rows, 0x8000 single-pixel control words) into the locked 16-bit surface at m_58
+golf_clean.exe	0x00482940	Surface::clear	render	match re/match/golf_hand_02.cpp	locks the destination surface and zero-fills pitch*height bytes, then unlocks
+golf_clean.exe	0x00482990	Surface::blitRLE	render	match re/match/golf_hand_07_482990.cpp	decodes a per-scanline byte-run (brun) RLE image into the locked surface, copying literal runs (negative count) or filling repeat runs
+golf_clean.exe	0x00482a80	Surface::copyRaw	render	match re/match/golf_hand_02.cpp	locks the destination surface and memcpys pitch*height bytes from source+6 into it
+golf_clean.exe	0x00482ae0	Decoder482ae0::ctor	render	match re/match/golf_hand_01.cpp	empty constructor of an image-decoder dispatch object (virtual base)
+golf_clean.exe	0x00482b20	Decoder482b20::ctor	render	match re/match/golf_hand_01.cpp	empty constructor of an image-decoder dispatch object (virtual base)
+golf_clean.exe	0x00482b60	Flic::ctorBase482b60	video	Ghidra decompilation of 0x00482b60 (re/tools/decomp.py); callers/callees from re/tools/xref.py	constructs the FLC object base sub-object (C473ab0 ctor), called from Flic::ctor481b50
+golf_clean.exe	0x00482b90	Flic::createStream	video	Ghidra decompilation of 0x00482b90 (re/tools/decomp.py); callers/callees from re/tools/xref.py	creates a FLC stream object (C482dd0) and wires its link target via Link482b::send
+golf_clean.exe	0x00482dd0	Stream482dd0::dtor	render	match re/match/golf_classes.cpp	destructor: resets fields (m_38/m_3c=0, m_40=-1) and frees the buffer m_34
+golf_clean.exe	0x00482e10	Link482::data	render	match re/match/golf_raw_03.cpp	returns the link payload pointer at +8, or 0 when the target slot +4 is empty
+golf_clean.exe	0x00482e20	Link482::resolve	render	match re/match/golf_small16.cpp	returns the link target via the manager find(this,0), or 0 if unbound
+golf_clean.exe	0x00482e40	Link482b::send	render	match re/match/golf_small18.cpp	sends (a,b,c) to the link target m_4 passing this as sender, or 0 when unbound
+golf_clean.exe	0x00482e80	staticInit_g83acb0	crt	match re/match/golf_raw_03.cpp	static-object constructor building the screen manager singleton at g_83acb0
+golf_clean.exe	0x00482e90	atexit_482ea0	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00482ea0 with _atexit
+golf_clean.exe	0x00482ec0	staticInit_g83ac30	crt	match re/match/golf_raw_03.cpp	static-object constructor building the screen manager singleton at g_83ac30
+golf_clean.exe	0x00482ed0	atexit_482ee0	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00482ee0 with _atexit
+golf_clean.exe	0x00482f00	staticInit_g83ac88	crt	match re/match/golf_raw_03.cpp	static-object initializer calling FUN_00482f60 on g_83ac88
+golf_clean.exe	0x00482f10	atexit_482f20	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00482f20 with _atexit
+golf_clean.exe	0x00482f60	Cache482f60::ctor	render	match re/match/golf_hand_r1.cpp	constructs the resource/palette cache object (empty body)
+golf_clean.exe	0x00482fd0	Cache482fd0::ctor	render	match re/match/golf_hand_01.cpp	constructs a 5-slot resource cache, each slot id set to -1 with cleared object/buffer pointers
+golf_clean.exe	0x00483010	Cache483010::ctorVtbl	render	match re/match/golf_raw_03.cpp	sets the cache vtable PTR_004babbc and calls reset (FUN_00483070)
+golf_clean.exe	0x00483030	Cache483030::attach	render	match re/match/golf_raw_03.cpp	resets the cache then obtains a device object from the screen manager g_83ad50 (vtable f30) into m_4 and initializes it
+golf_clean.exe	0x00483060	Cache483060::detach	render	match re/match/golf_raw_03.cpp	releases the cache device object m_4 via vtable slot f3
+golf_clean.exe	0x00483070	Cache483070::reset	render	match re/match/golf_classes.cpp	releases the cache: returns m_4 to the manager g_mgr and, per slot, destroys the object, frees the buffer and clears the id
+golf_clean.exe	0x004830e0	Palette::setEntries	render	match re/match/golf_hand_05.cpp;import tagBITMAPINFO	copies BITMAPINFO RGBQUAD entries [first,first+count) into an RGB triple buffer and uploads them to the hardware palette m_4
+golf_clean.exe	0x00483190	allocColorRange	render	caller 0x0045baf0;callee 0x004833f0 (Table483::find)	registers an animated color range in the 5-entry Table483 (find free slot), allocating its state (C486c90) for palette cycling
+golf_clean.exe	0x004832e0	startColorCycle	render	callee 0x004833f0 (Table483::find);callee 0x00486dc0 (Timer::start)	finds the color range in Table483 and starts its cycling timer (Timer486::start)
+golf_clean.exe	0x00483320	resetScreenState	render	match re/match/golf_raw_03.cpp	reconstructs the screen managers g_83acb0/g_83ac30 and reattaches them to g_83ad50 (vtable f48) after clearScreenObjects
+golf_clean.exe	0x00483340	clearScreenObjects	render	match re/match/golf_hand_05.cpp	clears the screen object list g_83ac88 and resets the screen manager g_83ad50 (vtable s49)
+golf_clean.exe	0x004833f0	Table483::find	render	match re/match/golf_small18.cpp	returns the index of a key among 5 entries, or the first free (-1) slot, or 5 when full
+golf_clean.exe	0x00483420	Palette::nearest	render	match re/match/golf_hand_s1.cpp	returns the nearest palette index to an (r,g,b) color by least squared distance over 256 entries, excluding reserved ranges (10..0xf5) when requested
+golf_clean.exe	0x004835f0	Cache482f60::dtor	render	match re/match/golf_hand_r1.cpp	destructor calling reset() to release the cache slots
+golf_clean.exe	0x004837b0	screenMgrCtor4837b0	render	match re/match/golf_raw_03.cpp	constructs the screen manager singleton at g_83ad20 (FUN_004837f0)
+golf_clean.exe	0x004837c0	atexit_4837d0	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_004837d0 with _atexit
+golf_clean.exe	0x004837f0	C4837f0::ctor	render	match re/match/golf_hand_00.cpp	empty constructor of a screen/resource object
+golf_clean.exe	0x00483800	Surface::createFromId	render	match re/match/golf_raw_13.cpp	creates a display surface from a resource id via the screen manager g_83ad50 (vtable f29) and initializes it, returning 3 on null id
+golf_clean.exe	0x00483850	Surface::createSized	render	match re/match/golf_raw_13.cpp	creates a w*h display surface via the screen manager g_83ad50 and initializes it, returning 0x10 on zero dimensions
+golf_clean.exe	0x004838b0	Surface::releaseBacking	render	match re/match/golf_raw_03.cpp	releases the display surface backing object m_4 (screen manager g_83ad50 vtable f34) and clears its state fields
+golf_clean.exe	0x004838f0	Stream4838f0::puts	render	match re/match/golf_hand_01.cpp	writes a C string to the stream target m_4 (write with strlen)
+golf_clean.exe	0x00483ac0	setPrimarySurface	render	match re/match/golf_raw_13.cpp;string 0x004e43ac	installs a display surface as the primary (g_83ad44) after reset, creating its default backing (createFromId with 0x4e43ac)
+golf_clean.exe	0x00483b10	clearPrimarySurface	render	match re/match/golf_raw_11.cpp	resets the screen manager g_83ad50 (vtable f47) and clears the primary surface global g_83ad44
+golf_clean.exe	0x00483b90	Surface::ctorVtbl483b90	render	match re/match/golf_raw_03.cpp	sets the surface vtable PTR_004ba468 and calls releaseBacking to zero its state
+golf_clean.exe	0x00483ba0	screenFlip	render	match re/match/golf_raw_03.cpp	calls the screen manager g_83ad50 present/flip (vtable f73)
+golf_clean.exe	0x00483bb0	showScreen	ui	match re/match/golf_small17.cpp	brings the screen online: pre49c8e0, flushes queues A/B and shows the screen object g_screen83a
+golf_clean.exe	0x00483bd0	pumpInput483bd0	ui	match re/match/golf_small5.cpp	sets input phase g_83ad4c=0x3f and pumps events (f483bb0) until drained, then phase 0 and f497b00
+golf_clean.exe	0x00483c10	hideScreen	ui	match re/match/golf_small17.cpp	takes the screen offline: pre49c8e0, flushes queues B/A and hides the screen object g_screen83a
+golf_clean.exe	0x00483c30	pumpInput483c30	ui	match re/match/golf_small6.cpp	input-pump variant setting phase g_83ad4c and draining the event queue
+golf_clean.exe	0x00483c70	redrawAll	ui	match re/match/golf_small16.cpp	full redraw: pre49c8e0, pre497b20 and screen redraw g_screen83a->redraw
+golf_clean.exe	0x00483c90	pumpInput483c90	ui	match re/match/golf_hand_01.cpp	sets phase g_83ad4c=2, pumps poll483c70 until drained, returns finish497b00
+golf_clean.exe	0x00483cd0	frameTick483cd0	ui	match re/match/golf_raw_03.cpp	runs one display tick: pre49c8e0, pre497b20 and screen manager g_83ad50 vtable f79
+golf_clean.exe	0x00483cf0	pumpInput483cf0	ui	match re/match/golf_hand_01.cpp	sets phase g_83ad4c=8, pumps poll483cd0 until drained, returns finish497b00
+golf_clean.exe	0x00483d30	enterModal483d30	ui	match re/match/golf_raw_03.cpp	enters a modal input state: modalPush (f483d40) and modalFocusClear (f483d60) then finish497b20
+golf_clean.exe	0x00483d40	modalPush483d40	ui	match re/match/golf_raw_03.cpp	pushes a modal input layer on the screen manager g_83ad50 (vtable f82) and finish497b20
+golf_clean.exe	0x00483d60	modalFocusClear483d60	ui	match re/match/golf_raw_03.cpp	clears focus (g_83ab40/44=0) via screen manager g_83ad50 vtable f83 and finish497b20
+golf_clean.exe	0x00483d80	leaveModal483d80	ui	match re/match/golf_raw_03.cpp	leaves the modal input state: finish497b20 then screen manager g_83ad50 vtable f72
+golf_clean.exe	0x00483de0	staticInit_g83ad80	crt	match re/match/golf_raw_03.cpp	static-object constructor for the sound device singleton g_83ad80 (FUN_00487280)
+golf_clean.exe	0x00483df0	atexit_483e00	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00483e00 with _atexit
+golf_clean.exe	0x00483e20	staticInit_g83ad58	crt	match re/match/golf_raw_03.cpp	static-object constructor for the sound device singleton g_83ad58 (FUN_00487a20)
+golf_clean.exe	0x00483e30	atexit_483e40	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00483e40 with _atexit
+golf_clean.exe	0x00483e60	staticInit_g83af98	crt	match re/match/golf_raw_03.cpp	static-object constructor for the sound device singleton g_83af98 (FUN_00487b40)
+golf_clean.exe	0x00483e70	atexit_483e80	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00483e80 with _atexit
+golf_clean.exe	0x00483e90	initSound	audio	caller 0x0045baf0	initializes the sound system: runs soundVersionCheck, loads the sfx/music/voice device singletons g_83ad58/g_83ad80/g_83af98 (C487c00::load) and sets g_83afc4
+golf_clean.exe	0x00483f10	shutdownSound	audio	match re/match/golf_hand_05.cpp	shuts the sound system down: stops/unlinks every active sound in the list g_83af68, destroys the device singletons and frees the library (freeSoundLib)
+golf_clean.exe	0x00483fc0	soundVersionCheck	audio	string 0x004bac50;string 0x004e43bc	loads sound.dll (g_83afc0) and warns via MessageBox if the sound header versions mismatch
+golf_clean.exe	0x00484060	freeSoundLib	audio	match re/match/golf_raw_11.cpp;import FreeLibrary	clears the init flag g_83afc4, FreeLibrary(sound.dll handle g_83afc0) and zeroes the function-pointer table (clearSoundPtrs)
+golf_clean.exe	0x00484090	callSoundHook74	audio	match re/match/golf_small18.cpp	calls the sound.dll hook g_fn83af74(a,b) when the library is loaded (g_hook83afc0), else returns 4
+golf_clean.exe	0x004840c0	callSoundHook94	audio	match re/match/golf_hand_00.cpp	calls the sound.dll hook g_83af94() when installed (g_83afc0), else 0
+golf_clean.exe	0x004840e0	createSound4840e0	audio	Ghidra decompilation of 0x004840e0 (re/tools/decomp.py); callers/callees from re/tools/xref.py	creates a sound object via the sound.dll factory hook g_83af6c(a,b,c); returns 1 when sound is not initialized (g_83afc4)
+golf_clean.exe	0x00484110	releaseSoundObj	audio	match re/match/golf_hand_00.cpp	calls the sound.dll release hook g_83af70(obj) when installed (g_83afc4), else returns 1
+golf_clean.exe	0x00484130	clearSoundPtrs	audio	match re/match/golf_raw_03.cpp	zeroes the 11-entry sound.dll function-pointer table starting at g_83af6c
+golf_clean.exe	0x00484150	Snd::ctorBase	audio	match re/match/golf_hand_r3.cpp	base sound-object constructor: nulls the device/name pointers, zeroes frame state and sets the default rate 1000 (setRate)
+golf_clean.exe	0x004841c0	Snd::scalarDtor4841c0	audio	match re/match/golf_raw_09.cpp	scalar deleting destructor wrapper (FUN_004841e0 + conditional free)
+golf_clean.exe	0x004841e0	Snd::dtor	audio	match re/match/golf_hand_04.cpp	sound destructor: frees the name m_50 and the device object m_40 (releaseSoundObj), then cleanup
+golf_clean.exe	0x00484260	Snd::setMode	audio	match re/match/golf_small10.cpp	sets the sound mode m_54 and the corresponding playback flag bits in m_44 (switch over modes 1,2,4,5,6,7)
+golf_clean.exe	0x004842f0	SndMusic::setFile	audio	match re/match/golf_hand_07_4842f0.cpp	assigns a music/stream file: opens the device (createSound), loads the file, marks playing (m_44 bit0) and stores the name m_50
+golf_clean.exe	0x004843e0	unlinkSound	audio	match re/match/golf_raw_03.cpp	removes a sound object from the active list (head g_83af68 / tail g_83af64) by relinking its m_48/m_4c neighbours
+golf_clean.exe	0x004844e0	Snd::unlinkFromList	audio	match re/match/golf_hand_02.cpp	unlinks a sound object from the active list (head g_83af68 / tail g_83af64) by relinking m_prev/m_next, clearing flag bit1
+golf_clean.exe	0x00484550	Snd::stop484550	audio	match re/match/golf_hand_01.cpp	stops a sound: m_40 stop (v5), v32, clears the device m_40 and state bit0
+golf_clean.exe	0x004845d0	Snd::queryDevice4845d0	audio	match re/match/golf_raw_03.cpp	forwards to the device object m_40 vtable f23, returning 0 when no device
+golf_clean.exe	0x004845e0	Snd::status	audio	match re/match/golf_hand_00.cpp	returns the device status via m_40 vtable v8, or the default 0x14 when no device
+golf_clean.exe	0x004846b0	Snd::setField34	audio	match re/match/golf_raw_03.cpp	stores a value in m_34 and forwards it to the device object m_40 (vtable f19)
+golf_clean.exe	0x004846d0	Snd::setField38	audio	match re/match/golf_raw_03.cpp	stores a nonzero value in m_38 and forwards it to the device m_40 (vtable f1), returning 10 on zero
+golf_clean.exe	0x00484750	Snd::applyField484750	audio	match re/match/golf_raw_03.cpp	sets a field on the device (vtable f1) and, if it returned 0, calls vtable f10
+golf_clean.exe	0x004847b0	Snd::applyField4847b0	audio	match re/match/golf_raw_03.cpp	sets a field on the device (vtable f21) and, if it returned 0, calls vtable f10
+golf_clean.exe	0x004847f0	Snd::setPan	audio	match re/match/golf_raw_03.cpp	clamps pan to [-0x40,0x3f], stores it in m_8 and forwards to the device m_40 (vtable f17)
+golf_clean.exe	0x00484820	Snd::ctorDerived	audio	match re/match/golf_hand_r3.cpp	derived sound constructor: setMode(1), default pitch 1.0 (m_60) and zeroed state
+golf_clean.exe	0x00484880	SndMusic::scalarDtor	audio	match re/match/golf_raw_09.cpp	scalar deleting destructor wrapper for the streaming sound object (FUN_004848a0 + free)
+golf_clean.exe	0x004848a0	SndMusic::dtor	audio	match re/match/golf_hand_04.cpp	streaming sound destructor: returns its slot to the manager g_83ad80c when m_3c<16, frees the name and cleans up
+golf_clean.exe	0x00484940	Snd::play	audio	match re/match/golf_hand_05.cpp	plays a one-shot sound: checks mixer limits (g_83ad80), reloads if needed (f484d60), starts it (m_40 v7) and records the start time m_68
+golf_clean.exe	0x00484a40	Snd::configure	audio	Ghidra decompilation of 0x00484a40 (re/tools/decomp.py); callers/callees from re/tools/xref.py	configures a sound from a flag word: sets the name, maps flags into m_58 and opens/loops the device accordingly
+golf_clean.exe	0x00484b30	Snd::busy	audio	match re/match/golf_hand_01.cpp;import timeGetTime	returns 1 while a fire-and-forget sound is still within its duration (m_64 vs timeGetTime-m_68), else delegates to busy2
+golf_clean.exe	0x00484b80	Snd::setName	audio	match re/match/golf_small10.cpp	replaces the sound name string m_50 (delete[]+new) or returns 10 on a null name
+golf_clean.exe	0x00484c20	SndStream::open484c20	audio	match re/match/golf_hand_r0.cpp	opens a streaming sound from an id: creates the device (createSound), sets its source (get) and refreshes
+golf_clean.exe	0x00484c80	Snd::open	audio	match re/match/golf_hand_06_n.cpp	opens a sound file by name: creates the device, maps config bits m_58 to device flags, loads it and applies volume/pan
+golf_clean.exe	0x00484d60	Snd::reopen	audio	match re/match/golf_hand_06_n.cpp	re-opens the current sound (m_name): recreates the device, reapplies config flags and reloads the file
+golf_clean.exe	0x00484e30	Snd::applyMode484e30	audio	match re/match/golf_raw_03.cpp	applies a mode to the device (vtable f34) and queries status (vtable f35) unless flag bit2 is set
+golf_clean.exe	0x00484e70	Snd::start	audio	match re/match/golf_hand_04.cpp	starts a loaded sound: creates the device if absent (createSound4840e0), applies flags, runs it (m_40->run) and marks state m_44 bit0
+golf_clean.exe	0x00484f00	Snd::stop484f00	audio	match re/match/golf_hand_01.cpp	stops a streaming sound: m_40 stop (v5), clears m_40, calls v32 unless m_58 bit1 and clears state bit0
+golf_clean.exe	0x00484f40	Snd::setPitch	audio	match re/match/golf_raw_03.cpp	clamps a pitch/frequency offset to [-0x4b0,0x4b0], stores it in m_5c and forwards to the device m_40 (vtable f39)
+golf_clean.exe	0x00484ff0	Snd::flags	audio	match re/match/golf_hand_02.cpp	builds the public flag word from the device flags (m_40) and the internal config bits m_58
+golf_clean.exe	0x00485140	Snd::setVolume	audio	caller 0x004481b0 (playSound);import __ftol	stores the volume (0..0x7f) in m_4 and forwards the scaled value to the device m_40 (vtable f40)
+golf_clean.exe	0x00485260	Snd::ctor485260	audio	Ghidra decompilation of 0x00485260 (re/tools/decomp.py); callers/callees from re/tools/xref.py	sound-object constructor: sets vtable PTR_004badec, default volume 0x7f and zeroes 9 state fields
+golf_clean.exe	0x004852b0	Snd::scalarDtor4852b0	audio	match re/match/golf_raw_09.cpp	scalar deleting destructor wrapper (FUN_004852d0 + conditional free)
+golf_clean.exe	0x004852d0	Snd::setVtbl4852d0	audio	match re/match/golf_raw_04.cpp	sets the sound-object vtable pointer PTR_004badec
+golf_clean.exe	0x004852e0	VoiceRx::ctor	audio	match re/match/golf_hand_05.cpp;string 0x004e43c8	constructs the named (string in the binary) sound object: setKind(6) and copies the 10-char name into m_50

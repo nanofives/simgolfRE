@@ -1,0 +1,190 @@
+module	addr	name	subsystem	evidence	purpose
+golf_clean.exe	0x0042f2c0	markTileKind11	terrain	match re/match/golf_small11.cpp; callee 0x42f1c0	Scans a tile grid via FUN_0042f1c0, writing a kind marker into tables 0x5722e8 and 0x572cac.
+golf_clean.exe	0x0042f4b0	cornerRange	terrain	match re/match/golf_small12.cpp; callee 0x40c170 (r3_f40c170)	Computes the min/max of the four corner heights of a tile into two out-params.
+golf_clean.exe	0x0042f530	relaxEdges42f530	terrain	match re/match/golf_hand_r0.cpp; callee 0x40bf60 (tileBlocked); callee 0x42f4b0 (cornerRange)	Relaxes heightfield edges around a tile, skipping blocked tiles.
+golf_clean.exe	0x0042f630	relaxTile42f630	terrain	match re/match/golf_hand_05.cpp; callee 0x40bf60 (tileBlocked)	Smooths one tile's corner heights toward its neighbours.
+golf_clean.exe	0x0042f6e0	raiseFromNeighbours	terrain	match re/match/golf_small28.cpp; callee 0x40bf60 (tileBlocked)	Raises a tile corner to match the highest of its neighbouring corners.
+golf_clean.exe	0x0042f7a0	rebuildHeightfield	terrain	match re/match/golf_hand_r0.cpp; callee 0x42f530/0x42f630/0x42f6e0	Rebuilds the terrain heightfield by relaxing edges and raising corners across the grid.
+golf_clean.exe	0x0042f940	tileToScreen	render	match re/match/golf_small27.cpp; callee 0x42fb90 (worldToScreen)	Converts a tile coordinate to screen pixels via worldToScreen.
+golf_clean.exe	0x0042fa30	heightAt42fa30	terrain	match re/match/golf_hand_r3.cpp; callee 0x42f4b0 (cornerRange)	Returns the interpolated terrain height at a sub-tile position.
+golf_clean.exe	0x0042fb90	worldToScreen	render	callee 0x42f4b0 (cornerRange); reads g_4c2ba0/g_4c2ba4 (camera); caller 0x42f940 (tileToScreen)	Projects a world tile position to screen space using the camera tile pair g_4c2ba0/g_4c2ba4.
+golf_clean.exe	0x00431d20	saveCourseJpg	save	match re/match/golf_hand_r1.cpp; import _CreateJPG	Encodes a window region to a JPEG file via CreateJPG.
+golf_clean.exe	0x00431ee0	saveThumbAndFull	save	match re/match/golf_hand_06_i.cpp; string 0x4c782c; string 0x4c7838; callee 0x431d20	Writes Thumb.jpg and Full.jpg screenshots of the course via saveCourseJpg.
+golf_clean.exe	0x00431fa0	writeCourseInfo	save	match re/match/golf_hand_s1.cpp; string 0x4c7918 ([Course]); import _fprintf	Writes the [Course] .srf info file (Name/Par/Yards/Cash/ratings) for a saved/championship course.
+golf_clean.exe	0x00432170	flushCourseInfo	save	match re/match/golf_small3.cpp; callee 0x431ee0; callee 0x431fa0	When dirty flag g_587da0 is set, writes the course thumbnails and the course info file.
+golf_clean.exe	0x004321d0	capsLockOff	input	match re/match/golf_small4.cpp	Clears the CAPS LOCK keyboard state (writes g_4ba1e8/g_4ba1ec).
+golf_clean.exe	0x00432560	showPreferencesMenu	ui	match re/match/golf_hand_05.cpp; string 0x4c7c34; caller 0x432720 (showSystemMenu)	Opens the Preferences submenu via the popup menu helper 0x46d6e0.
+golf_clean.exe	0x004326a0	nearestMenuSpot	ui	match re/match/golf_small10.cpp; callee 0x467170 (approxDistance)	Returns the index of the nearest radial-menu slot to a point.
+golf_clean.exe	0x00432720	showSystemMenu	ui	match re/match/golf_hand_s3.cpp; string 0x4c7c48; string 0x4c5bf8 (Rename Course...)	Builds and runs the System Functions menu (Save/Load/Rename/Reports/Exit).
+golf_clean.exe	0x00432620	drawPanelBackdrop	ui	callee 0x404b70 (text); callee 0x4493d0 (drawMapLine); callers are the build/employee panels	Draws the shared build-panel backdrop (border line plus a label) used by the tool panels.
+golf_clean.exe	0x00432ba0	showMainRadialMenu	ui	string 0x4c7de0 (Rotate Map); string 0x4c7e6c (Build Course); caller 0x40f5c0 (main loop)	Builds the main right-click radial command menu (zoom/pause/build/people/info).
+golf_clean.exe	0x00432f90	hitTestSlot432f90	ui	callee 0x467170 (approxDistance); callers 0x433040/0x433190	Returns the slot/cell index under a point using approxDistance.
+golf_clean.exe	0x00433040	clickSlotPanel	ui	match re/match/golf_small34.cpp; string 0x4c7e7c; callee 0x434ac0 (S2_click)	Handles a click on the build-slot panel and its right-click-to-confirm/undo flow.
+golf_clean.exe	0x00433190	showInfoCursorPanel	ui	string 0x4c60e0 (Lie: ); string 0x4c7f1c (Improvements); string 0x4c7f80 (interface\tropical.txt)	Draws the Info Cursor / shot-lie and improvements panel and loads the theme description text.
+golf_clean.exe	0x00433c60	hitBuildTool433c60	ui	match re/match/golf_hand_06_h.cpp; callee 0x467170 (approxDistance)	Hit-tests the build-tool toolbar, returning the tool index under a point.
+golf_clean.exe	0x00433d30	clickBuildTool433d30	ui	match re/match/golf_hand_r2.cpp; string 0x4c7e7c; callee 0x433c60 (hitBuildTool)	Handles a click on the terrain build toolbar with the confirm/undo flow.
+golf_clean.exe	0x00433e50	drawTerrainToolbar	ui	match re/match/golf_hand_s1.cpp; string 0x4c7fe0 (Analyze Golf Shot); string 0x4c7ff4	Draws the terrain build toolbar (Undo/Analyze/Raise-lower/Buildings).
+golf_clean.exe	0x004340a0	hitBuildingTool	ui	callee 0x467170 (approxDistance); callers 0x434140/0x434350	Hit-tests the building panel, returning the entry under a point.
+golf_clean.exe	0x00434140	pickBuilding	ui	match re/match/golf_hand_s1.cpp; string 0x4c8084 (upgraded buildings...); callee 0x4340a0	Handles selecting/upgrading a building from the building panel.
+golf_clean.exe	0x00434350	drawBuildingPanel	ui	string 0x4c69a8 (Upgraded ); string 0x4c8100 (Elevation); string 0x4c816c (Golfers play faster)	Draws the building panel with each building's upgrade benefits and cost.
+golf_clean.exe	0x00434980	pickAmenity434980	ui	match re/match/golf_hand_09_g.cpp; callee 0x467170 (approxDistance)	Hit-tests the amenities/landmarks panel, returning the entry under a point.
+golf_clean.exe	0x00434ac0	clickAmenityPanel	ui	match re/match/golf_hand_s2.cpp; string 0x4c7e7c; callee 0x434980 (pickAmenity)	Handles a click on the amenities panel with the confirm/undo flow.
+golf_clean.exe	0x00434cf0	drawAmenitiesPanel	ui	string 0x4c8238 (Landmarks); string 0x4c820c (Scenic Bridge); string 0x4c825c (Pathway)	Draws the amenities/landmarks build panel (bridges, trees, benches, pathways, ballwashers).
+golf_clean.exe	0x00435570	hitEmployeeSlot435570	ui	match re/match/golf_hand_08_c.cpp; callee 0x467170 (approxDistance)	Hit-tests the employee view panel, returning the slot under a point.
+golf_clean.exe	0x00435680	clickEmployeeView	ui	match re/match/golf_hand_06_h.cpp; callee 0x435570 (hitEmployeeSlot); callee 0x436c00	Handles a click in the employee view panel.
+golf_clean.exe	0x00435760	drawEmployeeViewPanel	ui	string 0x4c5dc8 (Golfers); string 0x4c82c8 (Hire Employees)	Draws the employee roster view panel.
+golf_clean.exe	0x00435f00	hitGolferPanel435f00	ui	match re/match/golf_hand_r2.cpp; callee 0x467170 (approxDistance)	Hit-tests the golfer/action panel, returning the entry under a point.
+golf_clean.exe	0x00436060	clickGolferPanel	ui	match re/match/golf_hand_s1.cpp; callee 0x435f00 (hitGolferPanel); callee 0x4385d0 (showCharacterEditor)	Handles a click in the golfer/action panel.
+golf_clean.exe	0x004362f0	drawGolferActionPanel	ui	string 0x4c8344 (Begin Tournament); string 0x4c82e8 (Low punch shot); string 0x4c836c (Practice Round)	Draws the golfer action panel (shot types, tournament, practice round).
+golf_clean.exe	0x00436b00	hitEmployee436b00	ui	match re/match/golf_raw_13.cpp; callee 0x467170 (approxDistance); callers 0x436c00/0x436e50	Hit-tests the employee detail panel, returning the control under a point.
+golf_clean.exe	0x00436c00	handleEmployeeAction	ui	string 0x4c837c (Rename Employee...); callee 0x45b2c0 (textInputBox)	Handles employee detail actions (rename/move/fire) including the rename text entry.
+golf_clean.exe	0x00436e50	drawEmployeeDetailPanel	ui	string 0x4c8390 (Fire this employee); string 0x4c83f0 (Satisfied customers:)	Draws the employee detail panel with stats and action buttons.
+golf_clean.exe	0x00437fa0	loadThemeFile	course	string 0x4c84f4 (Themes\Standard\); callee 0x473bf0 (surface); import _fread	Loads a theme asset/palette file from Themes\ (falling back to Themes\Standard\).
+golf_clean.exe	0x00437910	promptAndSaveFile	save	string 0x4c3f0c (already exists...); string 0x4c84a4 (Invalid file path); import _fwrite	Validates a file name, prompts on overwrite, and writes a course/character file.
+golf_clean.exe	0x00438260	nearestCharControl	ui	match re/match/golf_hand_04.cpp; callee 0x467170 (approxDistance)	Hit-tests the character editor, returning the nearest control.
+golf_clean.exe	0x004382f0	charEditorZone	ui	match re/match/golf_hand_04.cpp; callee 0x467170 (approxDistance)	Returns the character-editor zone/field under a point.
+golf_clean.exe	0x00438390	pickCharEditor	ui	match re/match/golf_hand_s0.cpp; callee 0x4382f0 (charEditorZone)	Handles a pick/drag interaction in the character editor.
+golf_clean.exe	0x004385d0	showCharacterEditor	golfer	string 0x4c85f4 (Save character); string 0x4c8598 (Gender); string 0x4c86e4 (interface\CustGlfBckMale)	Runs the golfer/character editor (gender, skin/hair/clothes, body, save/load .chr/.pro).
+golf_clean.exe	0x0043a400	selectDifficultyScreen	frontend	string 0x4c8748 (Select Difficulty); string 0x4c871c (Impossible); string 0x4c875c (interface\TitleSelDiff)	Shows the difficulty selection screen before a championship.
+golf_clean.exe	0x0043a8c0	pickAProScreen	frontend	string 0x4c8830 (Pick A Pro); string 0x4c8814 (Themes\Championship\*.pro); string 0x4c883c (Title_PickAPro)	Shows the Pick A Pro screen listing championship .pro files with delete prompt.
+golf_clean.exe	0x0043b610	loadGameBrowserScreen	frontend	string 0x4c8930 (Load Previous Game); string 0x4c8960 (Select Championship Course); string 0x4c8874 (Saved Games\)	Shows the load-game / championship-course browser and loads the chosen file.
+golf_clean.exe	0x0043cd70	showTitleScreen	frontend	string 0x4c89ac (interface\TitleMO); string 0x4c8a0c (SMSG_introfinal.bik); caller 0x45baf0 (gameMain)	Sets up and displays the title screen and plays the intro Bink video.
+golf_clean.exe	0x0043cce0	playAudioFile	audio	match re/match/golf_hand_04.cpp; callee 0x487090 (play@C487090); callee 0x4378a0 (fileExists)	Plays an audio file if it exists (used for title/menu music).
+golf_clean.exe	0x004378a0	fileExists	util	match re/match/golf_small3.cpp	Returns whether a file path exists (reads g_4ba090).
+golf_clean.exe	0x0043d2a0	listMatchingFiles	util	match re/match/golf_hand_r2.cpp; import _strstr; string 0x4c8a2c (shadow)	Enumerates files matching a pattern, skipping shadow entries, into a list.
+golf_clean.exe	0x0043d520	freeBlock	util	match re/match/golf_freeblock.cpp; caller 0x43d670 (freeTable)	Frees one block of the flic/asset block allocator (g_820b70/g_820d00).
+golf_clean.exe	0x0043d5d0	allocBlock	util	match re/match/golf_small9.cpp; caller 0x43d740 (loadFlic)	Allocates a block in the flic/asset block allocator.
+golf_clean.exe	0x0043d670	freeTable	util	match re/match/golf_small11.cpp; callee 0x43d520 (freeBlock)	Frees a whole block table.
+golf_clean.exe	0x0043d6f0	cellAt	sim	match re/match/golf_small7.cpp; many callers	Returns the world grid Cell pointer for a (layer,x,y) coordinate.
+golf_clean.exe	0x0043d740	loadFlic	render	string 0x4c8a3c (Too many flics!); string 0x4c8a50 (.flc); callee 0x43d5d0 (allocBlock)	Loads a .flc animation into the flic table.
+golf_clean.exe	0x0043dbe0	loadWorldAssets	render	string 0x4c8a6c (trees\Links\ScotsPine_Lg); string 0x4c273c (Snack Bar); callee 0x43d740 (loadFlic)	Loads all per-theme world sprites/flics (trees, flowers, water, bridges, buildings).
+golf_clean.exe	0x00442180	loadInterfaceArt	render	string 0x4c5ee4 (bldg.pcx); string 0x4cd018 (interface\EmployeePanel); callee 0x43dbe0 (loadWorldAssets)	Loads the interface panel art and building art, then the world assets.
+golf_clean.exe	0x004481b0	playSound	audio	match re/match/golf_small8.cpp; many callers	Plays a sound effect on a channel (volume/pan/pitch args).
+golf_clean.exe	0x00448200	startSoundSlot	audio	match re/match/golf_small17.cpp; callee 0x484750	Starts/primes a sound channel slot.
+golf_clean.exe	0x00448220	loadSoundTable	audio	match re/match/golf_raw_06.cpp; string 0x4d0604 (sounds\interface\wrong.wav); caller 0x45baf0 (gameMain)	Loads the full sound-filename table (interface/emotion/celeb/golf sfx).
+golf_clean.exe	0x004490b0	shutdownSoundSystem	audio	match re/match/golf_raw_12.cpp; callee 0x483f10 (shutdown); callee 0x484f00 (stop); caller 0x45baf0	Stops playback and shuts down the sound system at exit.
+golf_clean.exe	0x004490d0	Terrain::tileAt	terrain	match re/match/terrain.cpp	Exported accessor returning the Tile at (x,y); dead code in the exe (live copy is in Terrain.dll).
+golf_clean.exe	0x00449110	Terrain::getElevation	terrain	match re/match/terrain.cpp	Exported accessor returning a tile corner elevation; dead code in the exe.
+golf_clean.exe	0x00449130	Terrain::getWall	terrain	match re/match/terrain.cpp	Exported accessor returning a tile wall flag; dead code in the exe.
+golf_clean.exe	0x00449150	Terrain::getType	terrain	match re/match/terrain.cpp	Exported accessor returning a tile type id; dead code in the exe.
+golf_clean.exe	0x00449210	allocTileBuffer	terrain	callee operator_new; writes g_820f18/g_820f1c/g_820f20 read by 0x44a5b0 (rebuildTileData)	Allocates the exe-side tile buffer used when syncing tiles to Terrain.dll.
+golf_clean.exe	0x004492d0	tileType	terrain	match re/match/golf_small.cpp; callers 0x449470/0x449540	Returns the type id of a tile from the exe tile array.
+golf_clean.exe	0x004492f0	tileByte	terrain	match re/match/golf_small.cpp; callers 0x449470/0x449540	Returns a raw byte of a tile from the exe tile array.
+golf_clean.exe	0x00449310	tileQuery449310	terrain	match re/match/golf_small.cpp; callee 0x40bfe0; callers 0x449540/0x449fa0	Returns a per-tile value used by terrain elevation/wall sync.
+golf_clean.exe	0x00449330	wallHeight	terrain	match re/match/golf_small12.cpp; callers 0x449540/0x44a380	Computes the wall height for a tile edge.
+golf_clean.exe	0x004493b0	tileFlag20	terrain	match re/match/golf_small2.cpp; callers 0x449540/0x44a410	Returns tile flag bit 0x20 (path) for a tile.
+golf_clean.exe	0x004493d0	drawMapLine	render	callee drawLine (jgld import); many callers	Draws a line on the map surface via the jgld drawLine export (g_820ed0).
+golf_clean.exe	0x00449400	applyCourseType	terrain	callee loadNewCourseType (Terrain import); callee passCollarInfo; reads g_578372	Pushes the current course-type/collar settings to Terrain.dll.
+golf_clean.exe	0x00449470	syncTiles	terrain	match re/match/golf_hand_05.cpp; callee setType/getVariation (Terrain imports)	Syncs the exe tile types/variations into the Terrain.dll tile grid.
+golf_clean.exe	0x00449520	refreshTerrain	terrain	match re/match/golf_small16.cpp; callee resetTerrain (import); callee 0x449540	Resets and rebuilds the Terrain.dll grid from the exe tiles.
+golf_clean.exe	0x00449540	rebuildTerrainGrid	terrain	match re/match/golf_hand_s0.cpp; callee setType/layPath/setWall/calcNormals/elevateCorner (imports)	Rebuilds the full Terrain.dll grid (types, paths, walls, normals, corner heights).
+golf_clean.exe	0x00449790	initTerrain	terrain	match re/match/golf_hand_06_f.cpp; callee initTerrain/initSystem (imports); callee 0x449540	Initializes Terrain.dll for a course of given dimensions and rebuilds the grid.
+golf_clean.exe	0x00449860	freeTerrain	terrain	match re/match/golf_hand_01.cpp; callee ~Terrain/closeSystem (imports); caller 0x45baf0	Destroys the Terrain.dll instance and closes its system at shutdown.
+golf_clean.exe	0x004498a0	updateTerrainRender	terrain	callee render/localRender/setZoomLevel/calcAllNormals (imports); callee 0x449790	Drives per-frame terrain rebuild and rendering through Terrain.dll.
+golf_clean.exe	0x00449f00	applyTileVariation	terrain	callee getVariation/setType (imports); callee 0x4492d0 (tileType); caller 0x44a5b0	Pushes one tile's type and variation into Terrain.dll.
+golf_clean.exe	0x00449fa0	applyTileElevation	terrain	callee elevateCorner/lowerCorner/lowerEdgeCorner (imports); caller 0x44a5b0	Pushes one tile's corner elevations into Terrain.dll.
+golf_clean.exe	0x0044a380	applyTileWalls	terrain	callee setWall (import); callee 0x449330 (wallHeight); caller 0x44a5b0	Pushes one tile's wall edges into Terrain.dll.
+golf_clean.exe	0x0044a410	togglePath	terrain	match re/match/golf_hand_r1.cpp; callee layPath/updatePath/hasPath (imports)	Toggles the path flag on a tile and updates connected path rendering.
+golf_clean.exe	0x0044a5b0	rebuildTileData	terrain	match re/match/golf_hand_r1.cpp; callee 0x449f00/0x449fa0/0x44a380/0x44a410	Iterates a tile range applying type/elevation/wall/path to Terrain.dll.
+golf_clean.exe	0x0044a6e0	renderTerrainStrip	terrain	callee stripRender (Terrain import); caller 0x4498a0	Renders a terrain strip through Terrain.dll stripRender.
+golf_clean.exe	0x0044ac60	initPanelState	ui	match re/match/golf_small4.cpp; callee 0x4837f0 (ctor); writes g_821020/g_821ec8	Constructs the global panel/widget state objects at startup.
+golf_clean.exe	0x0044cce0	resetAllPanels	ui	match re/match/golf_hand_s2.cpp; destroys g_821020/g_821040/g_821070...; caller 0x45baf0	Tears down all global panel/widget state objects on session reset/exit.
+golf_clean.exe	0x0044b9c0	showCreditsScreen	video	match re/match/golf_hand_s3.cpp; string 0x4d21a4 ($bink); string 0x4d21ac (CREDITS.txt)	Shows the credits screen, scrolling CREDITS.txt over a Bink video.
+golf_clean.exe	0x0044bde0	loadInfoScreenArt	ui	string 0x4d21e0 (tournament result_alpha.pcx); string 0x4d2534 (memberRoster.pcx)	Loads the PCX art for all info screens (reports, roster, histograph, buy-land).
+golf_clean.exe	0x0044cff0	showEndOfYearScreen	economy	string 0x4d2a00 (END of  YEAR:  ); string 0x4d2758 (two years to return to positive cash); string 0x4d2a10 (endoyear.pcx)	Shows the end-of-year summary with economy events and board warnings.
+golf_clean.exe	0x0044e770	showShortcutsScreen	ui	string 0x4d2dac (KEYBOARD SHORTCUTS); string 0x4d2dc0 (shortcuts.pcx)	Shows the keyboard shortcuts help screen.
+golf_clean.exe	0x0044f6b0	showFinancialReport	economy	string 0x4d2e10 (FINANCIAL REPORT)	Shows the financial report screen.
+golf_clean.exe	0x0044faf0	bucketValue	util	match re/match/golf_small4.cpp; many callers	Maps a value into a bucket index (used by reports/pricing).
+golf_clean.exe	0x0044fb30	showCourseReport	ui	string 0x4d2e4c (COURSE REPORT); string 0x4d3104 (REPORT of the SIM GOLF ASSOCIATION)	Shows the SGA course report and evaluation screen.
+golf_clean.exe	0x00453260	golferScore	golfer	match re/match/golf_small6.cpp; callers 0x459850/0x45de80	Returns a golfer's score/handicap value from the golfer record.
+golf_clean.exe	0x004532a0	appendRatingLabel	golfer	match re/match/golf_hand_03.cpp; string 0x4d3144 ( (outstanding)); string 0x4d3174 ( (poor))	Appends a parenthesised rating adjective (poor..outstanding) to the text buffer.
+golf_clean.exe	0x00453330	showHoleStatsScreen	ui	string 0x4d326c (HOLE STATS for ); string 0x4d31f0 (Stroke average)	Shows the per-hole statistics screen.
+golf_clean.exe	0x004546b0	showPlayerCommentsReport	ui	string 0x4d3288 (PLAYER COMMENTS REPORT); string 0x4d327c (Frequency)	Shows the player comments report screen.
+golf_clean.exe	0x00454c50	showMembershipRoster	ui	string 0x4d32f0 (Membership Roster); string 0x4c8658 (Gold Member)	Shows the membership roster screen.
+golf_clean.exe	0x00455a30	showBestScoresScreen	ui	string 0x4d3318 ( Hole Scores); string 0x4d3328 (Best ); caller 0x432720 (showSystemMenu)	Shows the best hole scores screen.
+golf_clean.exe	0x00455ed0	showHistographScreen	ui	string 0x4d3354 (HISTOGRAPH); string 0x4d3330 (Happy Ending.)	Shows the histograph screen of year-over-year events and ratings.
+golf_clean.exe	0x00456b70	mapToScreen456b70	render	match re/match/golf_hand_01.cpp; callers 0x456be0/0x4587a0	Converts a map cell to screen pixels for the routing/value overlay maps.
+golf_clean.exe	0x00456bb0	overlayCharAt	util	match re/match/golf_raw_11.cpp; caller 0x456be0 (showRoutingMapScreen)	Returns the overlay cell character/level at a (x,y) for the routing/aura map.
+golf_clean.exe	0x00456be0	showRoutingMapScreen	ui	string 0x4d3644 (ROUTING MAP); string 0x4d3620 (COURSE AURA); string 0x4d3634 (HOME SITE VALUE)	Shows the routing/aura/home-site-value overview maps.
+golf_clean.exe	0x004587a0	showBuyLandScreen	economy	string 0x4d36cc (TRACTS FOR SALE); string 0x4d3698 (Buy tract #); callee 0x406c30 (canAfford)	Shows the buy-land screen listing tracts for sale and handles purchase.
+golf_clean.exe	0x00459400	showHireEmployeeDialog	economy	string 0x4d372c (HIRE AN EMPLOYEE); string 0x4d36e8 (Thirst quenchers...); caller 0x40aa80	Shows the hire-an-employee dialog with per-week wages.
+golf_clean.exe	0x00459850	showGolferPairSelect	golfer	string 0x4d374c (SELECT THE NEXT PAIR OF GOLFERS); string 0x4d3740 ( years old)	Shows the select-next-pair-of-golfers screen with bios.
+golf_clean.exe	0x0045a090	showTournamentResults	ui	string 0x4d3784 (TOURNAMENT RESULTS); string 0x4d37c4 (LEADER BOARD of)	Shows the tournament results / leader board screen.
+golf_clean.exe	0x004315e0	buildGolferBioText	golfer	string 0x4c77f4 ( favorite color is ); string 0x4c7820 ( likes ); callee 0x45b880 (clearBuffers)	Composes a golfer's bio text (favorite color, likes) into the text buffer.
+golf_clean.exe	0x0045ae30	setDirtyFlagA	render	callers 0x40f5c0/0x45b2c0/0x45c0c0; writes g_822b98	Sets screen-dirty flag A (g_822b98).
+golf_clean.exe	0x0045ae50	setDirtyFlagB	render	callers 0x40f5c0/0x43a8c0/0x45c0c0; writes g_822b9c	Sets screen-dirty flag B (g_822b9c).
+golf_clean.exe	0x0045ae70	flushRedraw	render	callee 0x483c30 (drain); callee 0x483c70 (redrawAll); many callers	Flushes pending input/events and redraws the whole screen.
+golf_clean.exe	0x0045aed0	waitRedrawReady	render	match re/match/golf_raw_02.cpp; callee 0x45af00; callee 0x483cf0 (drain)	Waits until the redraw/drain pipeline reports ready.
+golf_clean.exe	0x0045af00	drainAndRedraw	render	match re/match/golf_raw_02.cpp; callee 0x483c30 (drain); callee 0x483c70 (redrawAll)	Drains events and redraws, returning the pipeline state.
+golf_clean.exe	0x0045af30	renderTextWidget45af30	ui	callee 0x477250 (put@Text477); caller 0x40d320	Lays out and draws a multi-line text field through the Text477 widget.
+golf_clean.exe	0x0045b0d0	drawValueWidget	ui	callee 0x477580 (value477580@Widget); callee 0x477250 (put@Text477)	Reads a widget's value and draws its text/number representation.
+golf_clean.exe	0x0045b2c0	textInputBox	ui	callee 0x478af0 (fillRect); callee 0x477250 (put@Text477); import _isprint	Runs a modal text-entry box, echoing printable keys.
+golf_clean.exe	0x0045b660	lookupThemeText	course	import _fgets; import __strcmpi; caller 0x433190 (showInfoCursorPanel)	Reads the theme description text file and returns the line matching a key.
+golf_clean.exe	0x0045b7c0	replaceInText	util	match re/match/golf_small25.cpp; import _strstr; callers 0x45c460/0x469b00	Replaces a substring token within a text buffer.
+golf_clean.exe	0x0045b880	clearBuffers	util	match re/match/golf_small2.cpp; writes g_56fcb0/g_59d81c; callers 0x4315e0/0x442180	Clears the two global text accumulation buffers.
+golf_clean.exe	0x0045b8b0	appendToBuffer45b8b0	util	match re/match/golf_hand_r2.cpp; writes g_59d81c/g_59d91c	Appends an entry to the secondary text buffer.
+golf_clean.exe	0x0045b9f0	appendString	util	match re/match/golf_small9.cpp; writes g_56fcb0	Appends a string to the primary text buffer g_56fcb0.
+golf_clean.exe	0x0045baf0	gameMain	boot	string 0x4d3910 (Sid Meier's SimGolf); string 0x4d3904 (jgld.dll); caller 0x4a682f (entry)	Program main: registers fonts, creates the window, loads sounds, seeds RNG, runs the title/main loop, then tears down.
+golf_clean.exe	0x0045bf80	waitTicks	util	match re/match/golf_small12.cpp; callee 0x45c030 (pumpMessages)	Pumps messages until a tick deadline, returning elapsed ticks.
+golf_clean.exe	0x0045c030	pumpMessages	input	match re/match/golf_small12.cpp; callee 0x483cd0	Runs the Windows message pump once (g_822d68/g_822d74).
+golf_clean.exe	0x0045c0c0	pumpAndRedraw	input	callee 0x45c030 (pumpMessages); callee setDirtyFlagA/B; many callers	Pumps messages, marks the screen dirty, and redraws.
+golf_clean.exe	0x0045c150	pumpLight	input	match re/match/golf_small3.cpp; callee 0x45c030 (pumpMessages)	Lightweight message pump plus a drain, used inside report screens.
+golf_clean.exe	0x0045c1a0	Random::next	util	match re/match/golf_util.cpp; reads/writes g_4ba800	Advances the RNG state (g_4ba800) and returns the next double in [0,1).
+golf_clean.exe	0x0045c1e0	Random::range	util	match re/match/golf_util.cpp; callee 0x45c1a0 (Random::next); many callers	Returns a random integer in [lo,hi] via Random::next.
+golf_clean.exe	0x0045c200	drawThoughtBubble	golfer	callee 0x4675d0 (thoughtFlag); callee 0x473cb0 (drawScaled); callers 0x40d320/0x45c560	Draws a golfer's thought-bubble icon from its thought flags.
+golf_clean.exe	0x0045c420	thoughtBalance	golfer	match re/match/golf_small5.cpp; reads g_579540	Returns the net balance of a golfer's positive/negative thoughts.
+golf_clean.exe	0x0045c460	substituteStoryNames	golfer	match re/match/golf_hand_r0.cpp; string 0x4d3954 (PARTNER); string 0x4d395c (MYNAME); callee 0x45b7c0 (replaceInText)	Substitutes PARTNER/MYNAME tokens in story text with golfer names.
+golf_clean.exe	0x004378e0	staticCtor_4378e0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x004385a0	staticCtor_4385a0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0043cc70	staticCtor_43cc70	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0043ccb0	staticCtor_43ccb0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0043d4e0	staticCtor_43d4e0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0043d640	staticCtor_43d640	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x004491c0	staticCtor_4491c0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044ad80	staticCtor_44ad80	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044add0	staticCtor_44add0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044aec0	staticCtor_44aec0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044af00	staticCtor_44af00	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044af40	staticCtor_44af40	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044af80	staticCtor_44af80	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044b100	staticCtor_44b100	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044b140	staticCtor_44b140	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044b180	staticCtor_44b180	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044b3b0	staticCtor_44b3b0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044b4c0	staticCtor_44b4c0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044b660	staticCtor_44b660	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0044b760	staticCtor_44b760	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0045ba60	staticCtor_45ba60	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x0045bab0	staticCtor_45bab0	crt	match re/match/golf_raw_0*.cpp; callee is an object constructor	Compiler-generated static initializer: constructs one file-scope global object.
+golf_clean.exe	0x004378f0	registerExit_4378f0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x004385b0	registerExit_4385b0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0043cc30	registerExit_43cc30	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0043cc80	registerExit_43cc80	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0043ccc0	registerExit_43ccc0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0043d490	registerExit_43d490	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0043d4f0	registerExit_43d4f0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0043d650	registerExit_43d650	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x00448180	registerExit_448180	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x004491d0	registerExit_4491d0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x00449240	registerExit_449240	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044aca0	registerExit_44aca0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044ad40	registerExit_44ad40	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044ad90	registerExit_44ad90	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044ade0	registerExit_44ade0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044aed0	registerExit_44aed0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044af10	registerExit_44af10	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044af50	registerExit_44af50	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044af90	registerExit_44af90	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044b110	registerExit_44b110	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044b150	registerExit_44b150	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044b190	registerExit_44b190	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044b3c0	registerExit_44b3c0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044b4d0	registerExit_44b4d0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044b670	registerExit_44b670	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0044b770	registerExit_44b770	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0045ba70	registerExit_45ba70	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0045bac0	registerExit_45bac0	crt	match re/match/golf_raw_0*.cpp; import _atexit	Compiler-generated thunk that registers a file-scope object's destructor via atexit.
+golf_clean.exe	0x0043cc10	arrayStaticInit_43cc10	crt	match re/match/golf_arrays.cpp; import ??_L (vector ctor iterator)	Compiler-generated static initializer for a global array of objects.
+golf_clean.exe	0x0043d460	arrayStaticInit_43d460	crt	match re/match/golf_arrays.cpp; import ??_L (vector ctor iterator)	Compiler-generated static initializer for a global array of objects.
+golf_clean.exe	0x0044ad20	arrayStaticInit_44ad20	crt	match re/match/golf_arrays.cpp; import ??_L (vector ctor iterator)	Compiler-generated static initializer for a global array of objects.
+golf_clean.exe	0x00448160	arrayStaticInit_448160	crt	match re/match/golf_arrays.cpp; import ??_L (vector ctor iterator)	Compiler-generated static initializer for a global array of objects.

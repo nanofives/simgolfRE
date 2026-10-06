@@ -1,0 +1,18 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x00840710	g_pcxSurface	gfx surface object	written by loadPcxSurface 0x0049d1b0 and initGfxGlobal_840710 0x0049d160; freed by freeGfxGlobal_840710 0x0049d280
+golf_clean.exe	0x00840820	g_fileWinBuf	byte buffer ptr	written (malloc) by loadFileWinResource 0x0049d3b0; freed by freeFileWinBuf 0x0049d460
+golf_clean.exe	0x00840830	g_cursorSurfA	cursor gfx surface	written by loadCursors 0x0049e9d0; freed by freeCursors 0x0049ead0
+golf_clean.exe	0x00840860	g_cursorSurfB	cursor gfx surface	written by loadCursors 0x0049e9d0; freed by freeCursors 0x0049ead0
+golf_clean.exe	0x00840890	g_cursorSurfC	cursor gfx surface	written by loadCursors 0x0049e9d0; freed by freeCursors 0x0049ead0
+golf_clean.exe	0x008408c8	g_fontSurfA	font gfx surface	written by loadFonts 0x0049fe50; freed by freeFonts 0x0049ff30
+golf_clean.exe	0x008408f8	g_fontSurfB	font gfx surface	written by loadFonts 0x0049fe50; freed by freeFonts 0x0049ff30
+golf_clean.exe	0x0084092c	g_graphsyObject	resource object ptr	written by loadGraphsyObject 0x004a00a0; freed by freeGraphsyObject 0x004a0060
+golf_clean.exe	0x00840930	g_logFile	FILE* log handle	opened ((string in the binary)) by initLogFile 0x004a0130; used (fprintf/fclose) by logWrite 0x004a0280
+golf_clean.exe	0x0083fe78	g_widgetTable	0x60-entry table	initialized by initWidgetTable 0x00495d30; reset by resetWidgetTable 0x00495eb0
+golf_clean.exe	0x0083e8b8	g_hudTextX	int[10] x coords	written by setHudTextSlot 0x00494cb0 (one slot per text item)
+golf_clean.exe	0x0083d3c8	g_hudTextY	int[10] y coords	written by setHudTextSlot 0x00494cb0 (one slot per text item)
+golf_clean.exe	0x0083e8e0	g_hudTextBuf	char[10][0x100] text	written by setHudTextSlot 0x00494cb0 (slot index * 0x100)
+golf_clean.exe	0x008406e8	g_pairArray	int-pair array ptr	initialized by initPairArrayGlobal 0x0049d010 via allocPairArray 0x0049d050
+golf_clean.exe	0x0083ab30	g_scrollDragX	int drag anchor	written by scrollbarOnDown 0x00496c30; read by scrollbarOnDrag 0x00496d20
+golf_clean.exe	0x0083ab34	g_scrollDragY	int drag anchor	written by scrollbarOnDown 0x00496c30; read by scrollbarOnDrag 0x00496d20
+golf_clean.exe	0x008400b0	g_netTimer	int timing counter	read/updated by netTimerReadA 0x00497c20, netTimerReadB 0x00497c70, and net service routines

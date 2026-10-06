@@ -1,0 +1,146 @@
+module	addr	name	subsystem	evidence	purpose
+jgld.dll	0x100168e0	SpriteBase::~SpriteBase	render	match re/match/jgld_sprite_dtor.cpp	destructor for the sprite base object; releases the pixel buffer
+jgld.dll	0x100169a0	Sprite::drawH	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant H); 100% instruction match
+jgld.dll	0x10016cb0	Sprite::drawI	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant I); 100% instruction match
+jgld.dll	0x10016fc0	Sprite::drawJ	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant J); 100% instruction match
+jgld.dll	0x100172b0	Sprite::drawK	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant K); 100% instruction match
+jgld.dll	0x100178a0	Sprite::drawL	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant L); 100% instruction match
+jgld.dll	0x10017b40	Sprite::drawM	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant M); 100% instruction match
+jgld.dll	0x10017f30	getField28	render	match re/match/jgld_small1.cpp	returns the int field at this+0x28
+jgld.dll	0x10017f70	getField14	render	match re/match/jgld_small1.cpp	returns the int field at this+0x14
+jgld.dll	0x10017fe0	getField20	render	match re/match/jgld_small1.cpp	returns the int field at this+0x20
+jgld.dll	0x10018020	getField2c	render	match re/match/jgld_small1.cpp	returns the int field at this+0x2c
+jgld.dll	0x10018120	Sprite::drawN	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant N); 100% instruction match
+jgld.dll	0x10018490	Sprite::lineTo	render	match re/match/jgld_sprite.cpp	draws a straight line into the sprite's own pixel buffer
+jgld.dll	0x10018510	Sprite::dashTo	render	match re/match/jgld_sprite.cpp	draws a dashed line into the sprite's own pixel buffer
+jgld.dll	0x100185b0	Sprite::drawO	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant O); 100% instruction match
+jgld.dll	0x10018920	Sprite::drawAlpha	render	match re/match/jgld_blitY17.cpp	alpha-blends the sprite onto the target Surface using a Pal16 blend table
+jgld.dll	0x100193d0	Sprite::drawP	render	match re/match/jgld_sprite.cpp	blits the sprite to a Surface at (x,y) (draw variant P); 100% instruction match
+jgld.dll	0x10019830	Sprite::blt16a	render	match re/match/jgld_sprite.cpp	16-bit block copy of the sprite to a Surface (variant)
+jgld.dll	0x10019900	Sprite::blt16b	render	match re/match/jgld_sprite.cpp	16-bit block copy of the sprite to a Surface (variant)
+jgld.dll	0x100199d0	Sprite::blt16c	render	match re/match/jgld_sprite.cpp	16-bit block copy of the sprite to a Surface (variant)
+jgld.dll	0x10019aa0	Sprite::bltS	render	match re/match/jgld_sprite.cpp	blits this sprite into another sprite's pixel buffer
+jgld.dll	0x10019b90	Sprite::bltS2	render	match re/match/jgld_sprite.cpp	blits this sprite into another sprite's pixel buffer
+jgld.dll	0x1001a0e0	Sprite::copyFrom	render	match re/match/jgld_sprite.cpp	copies the pixel buffer and dimensions from another Sprite into this one
+jgld.dll	0x1001a250	Sprite::create16	render	match re/match/jgld_sprite.cpp	allocates this sprite's 16-bit pixel buffer for (w,h) and stores the pointer/stride
+jgld.dll	0x1001ab40	Sprite::draw16t_1001ab40	render	match re/match/jgld_blitY16.cpp	transparent 16-bit sprite blit to a Surface (clip/scale variant; exact selector not determined)
+jgld.dll	0x1001b060	Sprite::draw16t_1001b060	render	match re/match/jgld_blitY15.cpp	transparent 16-bit sprite blit to a Surface (clip/scale variant; exact selector not determined)
+jgld.dll	0x1001b690	Sprite::create8	render	match re/match/jgld_sprite.cpp	allocates this sprite's 8-bit pixel buffer for (w,h) and stores the pointer/stride
+jgld.dll	0x1001bae0	Sprite::remap8	render	match re/match/jgld_sprite.cpp	remaps the sprite's 8-bit indices through a 256-entry translation table
+jgld.dll	0x1001bc40	Sprite::draw16_1001bc40	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1001cde0	Sprite::draw16_1001cde0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1001df80	Sprite::draw16m_1001df80	render	match re/match/jgld_blitY14.cpp	masked 16-bit sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x1001e970	Sprite::draw16m_1001e970	render	match re/match/jgld_blitY13.cpp	masked 16-bit sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x1001f2d0	Sprite::draw_1001f2d0	render	match re/match/jgld_blit16e.cpp	sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x10020430	Sprite::draw16_10020430	render	match re/match/jgld_blit16c.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10021720	Sprite::draw16_10021720	render	match re/match/jgld_blit16c.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10022a10	Sprite::draw16_10022a10	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10024140	Sprite::draw16_10024140	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10025900	Sprite::blitPair	render	match re/match/jgld_blitY3.cpp	blits a two-part (paired) sprite onto a Surface
+jgld.dll	0x10025dd0	Sprite::blitPair1	render	match re/match/jgld_blitY4.cpp	blits one half of a paired sprite onto a Surface
+jgld.dll	0x10026240	Sprite::draw16_10026240	render	match re/match/jgld_blit16b.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10027430	Sprite::draw16_10027430	render	match re/match/jgld_blit16b.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10028630	Sprite::draw16_10028630	render	match re/match/jgld_blit16b.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x100298b0	Sprite::draw16_100298b0	render	match re/match/jgld_blit16b.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1002ab90	Sprite::draw_1002ab90	render	match re/match/jgld_blit16d.cpp	sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x1002bcf0	Sprite::draw_1002bcf0	render	match re/match/jgld_blit16d.cpp	sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x1002cec0	Sprite::blitMask	render	match re/match/jgld_blitY1.cpp	blits the sprite onto a Surface masked by a second mask sprite
+jgld.dll	0x1002d390	Sprite::blitMaskScaled	render	match re/match/jgld_blitY2.cpp	blits the sprite onto a Surface, scaled, masked by a second mask sprite
+jgld.dll	0x1002d890	Sprite::draw16_1002d890	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1002ed60	Sprite::draw16_1002ed60	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10030290	Sprite::draw16_10030290	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x100317c0	Sprite::draw16_100317c0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10032d60	Sprite::draw16_10032d60	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10034300	Sprite::draw16_10034300	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x100358b0	Sprite::draw16_100358b0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10036e60	Sprite::draw16_10036e60	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10038460	Sprite::draw16_10038460	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10039a60	Sprite::draw16_10039a60	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1003b060	Sprite::draw16_1003b060	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1003c660	Sprite::draw16_1003c660	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1003dca0	Sprite::draw16_1003dca0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1003f2e0	Sprite::draw16_1003f2e0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10040930	Sprite::draw16_10040930	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10041f80	Sprite::draw16_10041f80	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10043430	Sprite::draw16_10043430	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10044940	Sprite::draw16_10044940	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10045e50	Sprite::draw16_10045e50	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x100473b0	Sprite::draw16_100473b0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10048910	Sprite::draw16_10048910	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10049ea0	Sprite::draw16_10049ea0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1004b430	Sprite::draw16_1004b430	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1004ca10	Sprite::draw16_1004ca10	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1004dff0	Sprite::draw16_1004dff0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x1004f5d0	Sprite::draw16_1004f5d0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10050bb0	Sprite::draw16_10050bb0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x100521d0	Sprite::draw16_100521d0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x100537f0	Sprite::draw16_100537f0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10054e20	Sprite::draw16_10054e20	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10056450	Sprite::draw16_10056450	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x100576a0	Sprite::draw16_100576a0	render	match re/match/jgld_blit16.cpp	16-bit sprite blit to a Surface (clip/scale/flip variant; exact selector not determined)
+jgld.dll	0x10058970	Sprite::drawRle16p	render	match re/match/jgld_blitY10.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x100594d0	Sprite::drawRle16n	render	match re/match/jgld_blitY8.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x1005a000	Sprite::drawRle16mk	render	match re/match/jgld_blitY12.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x1005a790	Sprite::drawRle16m	render	match re/match/jgld_blitY11.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x1005af00	Sprite::drawRle16t	render	match re/match/jgld_blitY9.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x1005bac0	Sprite::drawRle16c	render	match re/match/jgld_blitY7.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x1005c600	Sprite::drawRle16b	render	match re/match/jgld_blitY6.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x1005d1f0	Sprite::drawRle16	render	match re/match/jgld_blitY5.cpp	draws an RLE-compressed 16-bit sprite to a Surface (variant)
+jgld.dll	0x1005dde0	Sprite::draw_1005dde0	render	match re/match/jgld_blit8c.cpp	sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x1005ed80	Sprite::draw_1005ed80	render	match re/match/jgld_blit8c.cpp	sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x1005fd20	Sprite::draw8_1005fd20	render	match re/match/jgld_blit8b.cpp	8-bit sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x10060cf0	Sprite::draw8_10060cf0	render	match re/match/jgld_blit8.cpp	8-bit sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x10061db0	Sprite::draw8_10061db0	render	match re/match/jgld_blit8.cpp	8-bit sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x10062dd0	Sprite::draw_10062dd0	render	match re/match/jgld_blit8d.cpp	sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x10063f60	Sprite::draw8_10063f60	render	match re/match/jgld_blit8.cpp	8-bit sprite blit to a Surface (variant; exact selector not determined)
+jgld.dll	0x10065300	DllMain	boot	match re/match/jgld_display.cpp	DLL entry point; dispatches process/thread attach and detach
+jgld.dll	0x10065390	createDisplay	render	match re/match/jgld_display_noeh.cpp	allocates (operator new 0x14c) and constructs the single Display object and stores it in g_display (0x1012870c) and 0x10128420
+jgld.dll	0x10065420	Lib::destroyDisplay	render	match re/match/jgld_display_noeh.cpp	destroys and frees the global Display object
+jgld.dll	0x100654b0	Display::Display	render	match re/match/jgld_display.cpp	constructs the Display object: zeroes fields and installs the vtable
+jgld.dll	0x100657e0	Display::createWindow	ui	match re/match/jgld_display.cpp	registers the window class (name string 0x1011d978) and creates the game window, storing the Listener in g_listener (0x1012872c)
+jgld.dll	0x10065a90	Display::enumModes	render	match re/match/jgld_display.cpp	enumerates Windows display modes (EnumDisplaySettingsA) into the mode tables at 0x101286c8/0x101286f8
+jgld.dll	0x10065c30	Display::findMode	render	match re/match/jgld_display.cpp	returns the index of the enumerated display mode matching (w,h,bpp)
+jgld.dll	0x10065da0	Display::setMode	render	match re/match/jgld_display.cpp	selects the display mode matching (w,h,bpp,fullscreen)
+jgld.dll	0x10065ea0	Display::pickMode	render	match re/match/jgld_display.cpp	chooses the best enumerated display mode for (w,h,bpp)
+jgld.dll	0x10066040	Display::pickModeFreq	render	match re/match/jgld_display.cpp	chooses the best enumerated display mode for (w,h,bpp,fullscreen,freq)
+jgld.dll	0x10066200	Display::setDesktopMode	render	match re/match/jgld_display.cpp	records the current desktop display-mode index
+jgld.dll	0x100662a0	Display::setModeIndex	render	match re/match/jgld_display.cpp	applies display mode by index via EnumDisplaySettingsA; if width is 640 shows a MessageBox requiring 800x600 or more (string 0x..)
+jgld.dll	0x10066470	Display::present	render	match re/match/jgld_display.cpp	blits the back-buffer Surface (via this+0x148) to the screen DC (BitBlt rop 0xcc0020), clipped to the dirty rect
+jgld.dll	0x10066780	Display::getCursor	input	match re/match/jgld_display.cpp	reads the current mouse cursor position into the two out-parameters
+jgld.dll	0x10066890	Display::setResolution	render	match re/match/jgld_display.cpp	sets the target display resolution (width,height)
+jgld.dll	0x10066970	Display::restore	render	match re/match/jgld_display.cpp	restores the saved display mode
+jgld.dll	0x10067850	Factory::createFont	render	match re/match/jgld_factory.cpp	allocates and constructs a Font object
+jgld.dll	0x10067910	Factory::createPalette	render	match re/match/jgld_factory.cpp	allocates and constructs a Palette object
+jgld.dll	0x100679d0	Factory::createSurface	render	match re/match/jgld_factory.cpp	allocates and constructs a Surface object
+jgld.dll	0x10067a90	Factory::createSprite	render	match re/match/jgld_factory.cpp	allocates and constructs a Sprite object
+jgld.dll	0x10067b50	Factory::destroyFont	render	match re/match/jgld_factory.cpp	destroys and frees a Font object
+jgld.dll	0x10067bd0	Factory::destroyPalette	render	match re/match/jgld_factory.cpp	destroys and frees a Palette object
+jgld.dll	0x10067c50	Factory::destroySurface	render	match re/match/jgld_factory.cpp	destroys and frees a Surface object
+jgld.dll	0x10067cd0	Factory::destroySprite	render	match re/match/jgld_factory.cpp	destroys and frees a Sprite object
+jgld.dll	0x10067f10	Lib::setCommandHandler	ui	match re/match/jgld_factory.cpp	stores the command-handler callback in g_commandHandler (0x10128728)
+jgld.dll	0x100681a0	Array_Rec14::add	util	match re/match/jgld_font.cpp	appends a 0x14-byte (5-dword) record to the dynamic array (buffer +0x4, count +0xc, capacity +0x8), growing by +0x10 entries when full
+jgld.dll	0x10068400	Array_Rec94::add	util	match re/match/jgld_font.cpp	appends a fixed-size record to the dynamic array (buffer +0x4, count +0xc, capacity +0x8), growing when full
+jgld.dll	0x10068660	Font::Font	render	match re/match/jgld_font.cpp	constructs the Font object and allocates its metrics block
+jgld.dll	0x10068760	Font::~Font	render	match re/match/jgld_font.cpp	destructor for the Font; releases its GDI font and metrics
+jgld.dll	0x10068850	Font::create	render	match re/match/jgld_font.cpp	creates a GDI font (CreateFontIndirectA) from height/style flags and caches its text metrics via the shared DC g_fontDC (0x10128724)
+jgld.dll	0x10068ae0	Font::loadFile	render	match re/match/jgld_font.cpp	loads a (string in the binary) font-resource file (AddFontResource) and creates the font
+jgld.dll	0x10068da0	Font::release	render	match re/match/jgld_font.cpp	selects out and deletes the Font's GDI font object
+jgld.dll	0x10068e60	Font::textWidth	render	match re/match/jgld_font.cpp	measures a string's pixel width via GetTextExtentPoint32A on the shared DC g_fontDC (0x10128724)
+jgld.dll	0x10068f30	initFonts	render	match re/match/jgld_font.cpp	creates the shared font memory DC g_fontDC (CreateCompatibleDC) at 0x10128724
+jgld.dll	0x10068fa0	initFontTable	render	match re/match/jgld_font.cpp	deletes the shared font DC g_fontDC (0x10128724) if present
+jgld.dll	0x10069010	FontBase::~FontBase	render	match re/match/jgld_font.cpp	destructor for the FontBase
+jgld.dll	0x10069220	FontBase::FontBase	render	match re/match/jgld_font.cpp	constructs the FontBase; installs the vtable
+jgld.dll	0x100692b0	windowProc	ui	callee 0x10069ac0 (onPaint), callee 0x10069c70 (onKey), callee 0x1006a0e0 (onCommand)	the game window procedure: dispatches window messages to realizePalette/onPaint/onActivate/onKey/onChar/onCommand and the mouse-event handlers (0x10069db0-0x1006a080)
+jgld.dll	0x100699c0	realizePalette	render	match re/match/jgld_app.cpp	selects and realizes the GDI palette g_logPalette (0x10128738) into the window DC
+jgld.dll	0x10069ac0	onPaint	ui	match re/match/jgld_app.cpp	BeginPaint the window, forwards the paint rect to the listener (g_listener 0x1012872c vtable +4), EndPaint
+jgld.dll	0x10069b90	onActivate	ui	match re/match/jgld_app.cpp	on WM_ACTIVATE invalidates the window, realizes the palette on activate, forwards to the listener (+0x2c), DefWindowProc
+jgld.dll	0x10069c70	onKey	input	match re/match/jgld_app.cpp	forwards a key event to the listener (g_listener +0xc); on key-down drains the display message queue or peeks WM_CHAR for VK 0x60-0x6f
+jgld.dll	0x10069d50	onChar	input	match re/match/jgld_app.cpp	forwards a WM_CHAR character to the listener (g_listener 0x1012872c vtable +0x10)
+jgld.dll	0x1006a0e0	onCommand	ui	match re/match/jgld_app.cpp	if g_commandHandler (0x10128728) is set, invokes it with the command id
+jgld.dll	0x1006a2c0	Palette::~Palette	render	match re/match/jgld_app.cpp	destructor for the Palette
+jgld.dll	0x1006a3d0	Palette::update	render	match re/match/jgld_app.cpp	seeds a Random from QueryPerformanceCounter (+0x818), loops a random 16-bit value into the dirty counter (+0x810), then calls apply
+jgld.dll	0x1006a4a0	Palette::apply	render	match re/match/jgld_app.cpp	rebuilds the 16-bit RGB565 (+0x40c) and RGB555 (+0x60c) colour lookup tables from the 256 BGRA entries at +0xc when the dirty counter (+0x810) differs from +0x814
+jgld.dll	0x1006a600	Palette::setDefault	render	match re/match/jgld_app.cpp	fills the 256 palette entries: first/last 10 from the default system-colour tables (0x1011dab0,0x1011dad8), the rest as a greyscale ramp, then calls update
+jgld.dll	0x1006a860	Palette::animate	render	match re/match/jgld_app.cpp	if g_logPalette (0x10128738) exists, AnimatePalette entries 10..0xec from this+0x34
+jgld.dll	0x1006a9a0	Palette::setRGB	render	match re/match/jgld_app.cpp	copies count RGB triples from src into the palette entries at +0xc (offset by index), then calls update
+jgld.dll	0x1006aa70	createPalette	render	match re/match/jgld_app.cpp	builds a 256-entry Win32 LOGPALETTE (version 0x300) from the default colour tables and creates the GDI palette

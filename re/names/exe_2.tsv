@@ -1,0 +1,162 @@
+module	addr	name	subsystem	evidence	purpose
+golf_clean.exe	0x0045c560	drawGolferInfoPanel	golfer	string 0x004d3978; string 0x004d39b4; caller 0x0040f5c0	renders the per-golfer info popup (marital status, Thirst/Hunger/Energy/Attitude bars, View Story/Next Chapter/Golfer Comments/Take Snapshot/Move-Eject/Customize buttons)
+golf_clean.exe	0x0045de30	swapTableEntry	util	match re/match/golf_hand_01.cpp	swaps two table entries
+golf_clean.exe	0x0045de80	announceVipGolfer	golfer	string 0x004d3a14; string 0x004c6fa4; callee 0x00467a00 (emitGolferThought)	builds the VIP-arrival notice for heiress/CEO/commissioner golfers who may donate a landmark, buy land or invest
+golf_clean.exe	0x0045f0f0	skillPointDialog	golfer	string 0x004d3bf4; string 0x004d3c3c	modal dialog that spends/confirms a player golfer's unused skill points
+golf_clean.exe	0x0045f870	showCourseRanking	economy	string 0x004d3ca4; string 0x004d3c54	shows the Top 10 Golf Courses ranking message for the player course; callers not identified
+golf_clean.exe	0x0045fd80	buildScenarioIntro	frontend	match re/match/golf_hand_t2.cpp; string 0x004d44d4; string 0x004d4324	assembles the scenario welcome/back-story narration text (country-club / golf-links / uncle-Harry variants); callers not identified
+golf_clean.exe	0x004604f0	showTutorialText	frontend	string 0x004d49d0; callee 0x0040b4a0 (s0_saveGame40b4a0); callee 0x0040cb00 (startMessage)	drives the Sim Golf Course Tycoon tutorial text pages
+golf_clean.exe	0x00460df0	announceHoleType	course	string 0x004d5538; caller 0x0042dea0; callee 0x0046e7b0 (post46e7b0)	posts the hole-type classification notice (CLASSIC/STRATEGIC/HEROIC/CREATIVE/CHALLENGE/PRECISE/FREEWAY) for a rated hole
+golf_clean.exe	0x00461110	drawMatchScoreboard	ui	string 0x004d55b0; string 0x004c88a8; caller 0x004362f0; callee 0x00477250 (Text_put)	draws the exhibition/tournament match scoreboard header (round, hole, player vs player, tier)
+golf_clean.exe	0x004615f0	spreadShade	terrain	caller 0x004616f0 (spreadAllShade); callee 0x00467170 (approxDistance); writes DAT_00822da0, DAT_0082376c	spreads a brightness delta across a tile neighbourhood into the shade maps DAT_00822da0 and DAT_0082376c, clamped 0..255
+golf_clean.exe	0x004616f0	spreadAllShade	terrain	match re/match/golf_hand_07_4616f0.cpp; caller 0x0045baf0; callee 0x004615f0 (spreadShade)	iterates the tile map calling spreadShade to rebuild the shade maps
+golf_clean.exe	0x00461810	brightenComponent	render	match re/match/golf_small.cpp	clamps/offsets a single colour component
+golf_clean.exe	0x00461830	build16BitColorTable	render	callee 0x00461810 (brightenComponent); reads DAT_0083ad50; writes DAT_00824148	builds the 16-bit RGB lookup table at DAT_00824148, choosing 565 vs 555 layout from the device cap (DAT_0083ad50 vtable +0xb4)
+golf_clean.exe	0x00462020	formatGolferTitle	golfer	callee 0x0046c940 (typeBit7Clear); reads DAT_0057956e	builds a golfer's display name/title string from the golfer record at DAT_0057956e (stride 0x80)
+golf_clean.exe	0x004627d0	resetSpriteQueue	render	caller 0x0040f5c0; writes DAT_00838200, DAT_0082c160, DAT_008371f4	resets the sprite draw queue (count=0, head=-1, next-array filled with -1) at the start of a frame
+golf_clean.exe	0x00462800	snapshotTables	save	match re/match/golf_small22.cpp	snapshots the live game tables into save buffers
+golf_clean.exe	0x004628d0	addSprite	render	match re/match/golf_hand_r0.cpp; callee 0x00462a30 (enqueueSprite)	wrapper that forwards eight sprite parameters to enqueueSprite
+golf_clean.exe	0x00462a30	enqueueSprite	render	writes DAT_00838200, DAT_00830164, DAT_00831164, DAT_0082415c; reads DAT_004c2844	appends a sprite to the depth-sorted draw queue (count DAT_00838200, parallel x/y/flag/z arrays) and inserts it into the z-sorted linked list
+golf_clean.exe	0x00462be0	drawQueuedSprite	render	caller 0x00463100 (renderSpriteQueue); reads DAT_0082815c; callee 0x004740f0 (Surface_blit2)	draws one entry of the sprite draw queue (blit plus optional text label), scaled by the current zoom tier
+golf_clean.exe	0x00463100	renderSpriteQueue	render	caller 0x0040f5c0; callee 0x00462be0 (drawQueuedSprite); reads DAT_0082c160, DAT_008361f4	walks the z-sorted sprite queue (head DAT_0082c160, next DAT_008361f4) and draws every entry
+golf_clean.exe	0x00463180	buildSceneSprites	render	caller 0x0040f5c0; callee 0x0043d6f0 (cellAt); callee 0x004628d0 (addSprite)	builds the per-frame course sprite queue from world cells (projects tiles, enqueues golfers/objects)
+golf_clean.exe	0x004658b0	loadThemes	course	match re/match/golf_hand_07_4658b0.cpp; string 0x004c84e8; callee 0x004659a0 (loadGolferRoster)	loads the available theme list and the standard roster
+golf_clean.exe	0x004659a0	loadGolferRoster	golfer	string 0x004e1848; string 0x004e188c; caller 0x004658b0 (loadThemes); callee 0x0043d2a0 (listFiles43d2a0)	loads the pro-golfer and celebrity roster from Themes\Standard (progolfers.dta, celebrities.dta, *.glf, *.txt)
+golf_clean.exe	0x00466370	advanceStory	golfer	callee 0x004668f0 (storyText); callee 0x004722c0 (announceLandmark); note CLAUDE.md scenario golfer_stories	advances a golfer pair's story chapter and triggers its story text/landmark/sound
+golf_clean.exe	0x004668f0	storyText	golfer	match re/match/golf_story.cpp; callee 0x004669f0 (computeStoryReply); note re/analysis/golfers	generates a story chapter's text line for a golfer pair
+golf_clean.exe	0x004669f0	computeStoryReply	golfer	caller 0x004668f0 (storyText); callee 0x00466b70 (loadStoryStrings); note re/analysis/golfers/004669f0_story_reply.md	recomputes a story partner's chapter from mood/counter and latest thought
+golf_clean.exe	0x00466b70	loadStoryStrings	golfer	string 0x004c6c10; string 0x004c84e8; callee _fgets	reads a story/thought text file from the current theme (Themes\<theme>, Standard fallback)
+golf_clean.exe	0x00467110	seedFromTime	util	match re/match/golf_small.cpp	seeds the RNG state from the system time
+golf_clean.exe	0x00467130	clamp	util	match re/match/golf_util.cpp; 44 callers	clamps an integer to [lo,hi]
+golf_clean.exe	0x00467150	sign	util	match re/match/golf_util.cpp	returns the sign (-1/0/1) of an integer
+golf_clean.exe	0x00467170	approxDistance	util	match re/match/golf_small3.cpp; 19 callers	approximate 2D distance (octagonal metric) between two deltas
+golf_clean.exe	0x004671a0	direction8	util	returns constants 0..7	classifies a (dx,dy) vector into one of 8 compass octants using sign and 2:1 ratio tests
+golf_clean.exe	0x00467270	foldRange	util	match re/match/golf_small4.cpp	folds/wraps a value into a range
+golf_clean.exe	0x004672b0	absDiff	util	match re/match/golf_small.cpp	small two-argument arithmetic helper
+golf_clean.exe	0x004672d0	angleFixed	util	returns 16.16 quadrant angles	computes a 16.16 fixed-point atan2-style angle from (dx,-dy) using quadrant constants 0x4000/0x8000/0xc000
+golf_clean.exe	0x004673e0	genNoise	terrain	match re/match/golf_hand_06_p.cpp	generates a pseudo-random noise map
+golf_clean.exe	0x004674c0	bilinearSample	terrain	caller 0x0042dba0 (sample42dba0); reads DAT_00838c1c	bilinearly interpolates a value from the 0x13-stride grid at DAT_00838c1c for sub-tile coordinates
+golf_clean.exe	0x00467560	appendEndearment	golfer	match re/match/golf_hand_02.cpp; string 0x004e1b5c; string 0x004e1b68	appends a gendered endearment suffix to the text buffer
+golf_clean.exe	0x004675d0	thoughtFlag	golfer	match re/match/golf_small2.cpp	returns a golfer thought-category flag bit
+golf_clean.exe	0x00467600	pickGolferName	golfer	reads DAT_0058587a; reads PTR_s_Chuck_004c148c	copies a default first name from the name table 0x4c148c into text buffer 0x51a068 for the golfer record at DAT_0058587a (stride 0x4c)
+golf_clean.exe	0x004676e0	buildGolferName	golfer	string 0x004e1b80; string 0x004e1bac	assembles a golfer's full name with roman-numeral suffix (III/VII/VIII); 18 callers across golfer code
+golf_clean.exe	0x00467a00	emitGolferThought	golfer	string 0x004e1bd4; string 0x004e1c30; callee 0x00467a00 (self); callee 0x0040cb00 (startMessage)	produces a golfer's situational thought/comment (first club use, new-facility appreciation, shot setup, slow-play frustration, VIP excitement)
+golf_clean.exe	0x00469a20	appendOpinion	golfer	match re/match/golf_small27.cpp; string 0x004e28e4	appends a golfer opinion phrase to the comment buffer
+golf_clean.exe	0x00469b00	buildGolferComment	golfer	string 0x004d3954; string 0x004e2ae0; callee 0x00469a20 (appendOpinion); callee 0x0045b7c0 (replaceInText)	builds a golfer's spoken comment about a hole, expanding PARTNER/MYNAME/DATA() tokens and appending opinion phrases
+golf_clean.exe	0x0046c940	typeBit7Clear	golfer	match re/match/golf_util.cpp; 15 callers	returns whether bit 7 of a golfer type byte is clear
+golf_clean.exe	0x0046c970	loadGolfPro	golfer	string 0x004c593c; string 0x004c5948; caller 0x0046ddd0 (startNewCourse)	loads a hired Golf Pro employee from a .pro file
+golf_clean.exe	0x0046d040	initGolferState	golfer	match re/match/golf_hand_04.cpp	initialises golfer subsystem state
+golf_clean.exe	0x0046d0c0	resetGolferState	golfer	match re/match/golf_hand_09_d.cpp; string 0x004d6088	resets golfer/pro subsystem state
+golf_clean.exe	0x0046d200	buildTournamentPrep	course	string 0x004e3d54; string 0x004e3cc0	builds the tournament-preparation recommendations text (rough depth, green speed, TV towers); callers not identified
+golf_clean.exe	0x0046d6e0	showPopup	ui	callee 0x0040cc00 (S2_panel40cc00); callee 0x0045bf80 (waitTicks); callee 0x0045c030 (pumpMessages); 11 callers	draws a modal message/notice panel and pumps input until dismissed
+golf_clean.exe	0x0046ddd0	startNewCourse	boot	callee 0x0046c970 (loadGolfPro); writes _g_cash_div100, g_date, g_flags	initialises a fresh course game state (cash=1000, date=0x2c00, flags=0x4000000) and loads the starting golf pro
+golf_clean.exe	0x0046de70	scrollTextWindow	ui	match re/match/golf_raw_13.cpp; callee 0x0046dea0 (runScrollText)	entry point that opens the scrolling text window
+golf_clean.exe	0x0046dea0	runScrollText	ui	caller 0x0046de70 (scrollTextWindow); callee 0x0046e260 (drawScrollText); callee 0x0045bf80 (waitTicks)	interactive loop for the scrolling text window (pumps messages, scrolls content)
+golf_clean.exe	0x0046e260	drawScrollText	ui	caller 0x0046dea0 (runScrollText); callee 0x00477250 (Text_put)	draws the scrolling text window contents
+golf_clean.exe	0x0046e7b0	postEvent	sim	match re/match/golf_hand_02.cpp; caller 0x00460df0 (announceHoleType)	posts an event/notice into the event queue
+golf_clean.exe	0x0046e810	showBulletinBoard	ui	string 0x004e3e58; string 0x004e3e7c; caller 0x0040f5c0	renders the bulletin-board / accomplishments screen with snapshot thumbnails and skill-point rewards
+golf_clean.exe	0x0046f1d0	tierPrice	economy	match re/match/golf_small15.cpp	returns the purchase price for a given tier
+golf_clean.exe	0x0046f2b0	seedCourseTable	sim	caller 0x0046f550 (courseActionMenu); callee 0x0045c1e0 (range@Random); writes DAT_00571fd8	seeds 12 records into the table at DAT_00571fd8 (stride 0x2e) with random ids and names copied from 0x4c1e90
+golf_clean.exe	0x0046f550	courseActionMenu	ui	string 0x004c3f5c; string 0x004e3ebc; callee 0x0040b4a0 (s0_saveGame40b4a0); callee 0x0046f1d0 (tierPrice)	multi-purpose course menu handler: save-game dialog, land purchase, scenic-item placement
+golf_clean.exe	0x00470a10	clearTile	terrain	match re/match/golf_small8.cpp	clears a single terrain tile
+golf_clean.exe	0x00470a60	applyTerrainEdit	terrain	callee 0x00402970 (spawnWalker); callee 0x0042f7a0 (r0_rebuild42f7a0); callee 0x00470a10 (clearTile)	applies a terrain/course edit (clears tiles, samples terrain, spawns walkers, rebuilds) from the main update
+golf_clean.exe	0x004722c0	announceLandmark	golfer	match re/match/golf_hand_r0.cpp; note re/frida/js/events.js	posts the now-available-in-your-landmarks-menu notice when a golfer donates a landmark
+golf_clean.exe	0x004724c0	listThemes	frontend	match re/match/golf_hand_07_4724c0.cpp; string 0x004c3c5c	enumerates the available themes for the frontend menus
+golf_clean.exe	0x004732d0	addScore	course	match re/match/golf_hand_r1.cpp; string 0x004d6098	records a golfer's score into the scorecard
+golf_clean.exe	0x00473470	drawScoreSummary	ui	string 0x004e4148; string 0x004e4170; caller 0x0044cff0 (showEndOfYearScreen)	draws the score summary panel (Total Score, Fun, Skill, Cash, Top-10 trophies)
+golf_clean.exe	0x00473a70	initGlobalImage	crt	match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor); operates on DAT_00839348	static initializer that constructs the global image object at DAT_00839348
+golf_clean.exe	0x00473ab0	Surface_ctor	render	match re/match/golf_hand_00.cpp; __fastcall ctor	constructs a graphics surface wrapper object
+golf_clean.exe	0x00473ae0	Surface_init	render	match re/match/golf_raw_11.cpp	initialises surface fields
+golf_clean.exe	0x00473b50	Surface_open	render	match re/match/golf_hand_04.cpp; __thiscall(char* name)	opens/loads a named surface resource
+golf_clean.exe	0x00473bf0	Surface_blit	render	match re/match/golf_hand_03.cpp	blits a source surface region onto this surface
+golf_clean.exe	0x00473c60	Surface_blitTakeDirty	render	callee 0x00473bf0 (Surface_blit)	blits a surface then takes over its dirty-rect field (+0xac)
+golf_clean.exe	0x00473cb0	Surface_drawScaled	render	match re/match/golf_hand_09_e.cpp	draws a scaled image onto this surface
+golf_clean.exe	0x00473df0	Surface_drawRegion	render	match re/match/golf_hand_03.cpp	draws a surface region onto this surface
+golf_clean.exe	0x00473e60	Image_draw	render	match re/match/golf_hand_r1.cpp; 40+ callers	draws an image/sprite onto a target via its backing-surface vtable
+golf_clean.exe	0x00473f60	Surface_stretchBlit	render	calls backing-surface vtable +0x54	stretch-blits one surface onto another through the backing-device vtable
+golf_clean.exe	0x00473fc0	Surface_blitMasked	render	match re/match/golf_hand_03.cpp	masked blit of a surface region
+golf_clean.exe	0x00474030	Surface_drawScaled2	render	match re/match/golf_hand_05.cpp	draws a scaled rectangle region
+golf_clean.exe	0x004740f0	Surface_blit2	render	match re/match/golf_hand_06_j.cpp	blits a surface at an offset
+golf_clean.exe	0x004741b0	Sprite_draw	render	match re/match/golf_hand_05.cpp	draws a sprite structure at x,y
+golf_clean.exe	0x00474260	Sprite_drawScaled	render	match re/match/golf_hand_08_h.cpp	draws a scaled sprite structure
+golf_clean.exe	0x00474380	Surface_draw	render	match re/match/golf_hand_06_j.cpp	draws a surface rectangle with full source/dest coords
+golf_clean.exe	0x00474440	Surface_drawSprite	render	calls backing-surface vtable +0x94	draws a sprite onto this surface at the surface origin offset (+0x20,+0x24)
+golf_clean.exe	0x00474550	Surface_create	render	match re/match/golf_hand_03.cpp; __fastcall	creates a surface of the given dimensions
+golf_clean.exe	0x004745c0	Surface_init2	render	match re/match/golf_hand_04.cpp	initialises a created surface
+golf_clean.exe	0x00474650	Surface_get	render	match re/match/golf_hand_05.cpp	fetches a surface/object by descriptor
+golf_clean.exe	0x00474820	Buf_alloc	util	match re/match/golf_small6.cpp	allocates a buffer of the requested size
+golf_clean.exe	0x00474860	heapAlloc	util	match re/match/golf_hand_s0_k.cpp; string 0x004e41b0	block-heap allocator that warns on oversized requests
+golf_clean.exe	0x00474ae0	Image_ctor	render	match re/match/golf_hand_09_a.cpp; __fastcall ctor	constructs an image object
+golf_clean.exe	0x00474c40	Image_dtor	render	match re/match/golf_hand_r0.cpp; virtual dtor	destroys an image object
+golf_clean.exe	0x00474dd0	Surface_createFull	render	match re/match/golf_hand_04.cpp; 7-arg create	creates a surface with full attributes
+golf_clean.exe	0x00474e70	Surface_paint	render	match re/match/golf_hand_03.cpp	fills/paints a surface with a value
+golf_clean.exe	0x00474ee0	loadBmp	render	match re/match/golf_hand_r2.cpp; __stdcall; tagBITMAPINFO	loads a BMP file into a DIB pixel buffer
+golf_clean.exe	0x00475050	reloadBmp	render	caller 0x00475210 (loadBmpSurface)	reload helper for the BMP surface loader
+golf_clean.exe	0x00475210	loadBmpSurface	render	caller 0x0046e810 (showBulletinBoard); callee 0x00474ee0 (loadBmp); callee 0x00475410 (flipBmpRows)	loads a BMP file into a newly created surface
+golf_clean.exe	0x00475410	flipBmpRows	render	match re/match/golf_hand_r3.cpp; __stdcall; tagBITMAPINFOHEADER	flips the rows of a top-down/bottom-up DIB
+golf_clean.exe	0x00475580	saveBmp	render	caller 0x00407e00; callee _fwrite	writes a surface out to a BMP file
+golf_clean.exe	0x00475840	loadImage	render	string 0x004e4234; callee 0x00478cd0 (loadImageData); 22 callers	loads an image asset (.pcx/.bmp) into a surface
+golf_clean.exe	0x00475b20	Surface_box	render	match re/match/golf_hand_01.cpp	draws a rectangle box on a surface
+golf_clean.exe	0x00475b60	DC_call84	render	match re/match/golf_hand_01.cpp; calls DC vtable +0x84	forwards to the device-context method at vtable +0x84
+golf_clean.exe	0x00475ba0	DC_call90	render	match re/match/golf_hand_01.cpp; calls DC vtable +0x90	forwards to the device-context method at vtable +0x90
+golf_clean.exe	0x00475be0	DC_calla4	render	match re/match/golf_hand_01.cpp; calls DC vtable +0xa4	forwards to the device-context method at vtable +0xa4
+golf_clean.exe	0x00475c20	DC_calla0	render	match re/match/golf_hand_01.cpp; calls DC vtable +0xa0	forwards to the device-context method at vtable +0xa0
+golf_clean.exe	0x00475c60	Surface_blitThunk	render	callee 0x00475d00 (Surface_blit3)	thunk forwarding to the surface blit at 0x475d00
+golf_clean.exe	0x00475c90	Surface_fillRegion	render	match re/match/golf_hand_03.cpp	fills a surface region
+golf_clean.exe	0x00475d00	Surface_blit3	render	match re/match/golf_hand_04.cpp	blits a surface with source and dest rectangles
+golf_clean.exe	0x00475da0	Surface_fill	render	match re/match/golf_hand_02.cpp	fills a surface rectangle with a colour
+golf_clean.exe	0x00475e10	blitLeft	render	caller 0x004791b0 (drawComposite); callee 0x00475b00	blit helper used by the composite drawer
+golf_clean.exe	0x00475fb0	blitMid	render	caller 0x004791b0 (drawComposite)	blit helper used by the composite drawer
+golf_clean.exe	0x00476140	blitRight	render	caller 0x004791b0 (drawComposite); callee 0x00473e60 (Image_draw)	blit helper used by the composite drawer
+golf_clean.exe	0x004762d0	setDrawTarget	render	writes this+0x5c/0x60/0x64/0x68	sets the draw context's target surface and clip rectangle
+golf_clean.exe	0x00476310	Widget_setQuad	ui	match re/match/golf_small2.cpp; 40 callers	sets a widget's rectangle (x,y,w,h)
+golf_clean.exe	0x00476650	Widget_draw	ui	match re/match/golf_hand_02.cpp	draws a simple widget element
+golf_clean.exe	0x004766a0	Widget_draw2	ui	match re/match/golf_hand_02.cpp	draws a widget element (5-arg variant)
+golf_clean.exe	0x00476700	drawStringAt	ui	callee 0x00477fc0 (drawStringLeft)	draws a text string at a position (wrapper)
+golf_clean.exe	0x00476750	drawStringAt2	ui	callee 0x00478140 (drawString)	draws a text string at a position (wrapper variant)
+golf_clean.exe	0x004767a0	allocTextBuffer	ui	caller 0x004775b0 (drawRichText); callee _malloc	allocates/grows the working buffer for rich-text layout
+golf_clean.exe	0x00476d80	skipToken	ui	match re/match/golf_hand_01.cpp	skips the next whitespace-delimited markup token
+golf_clean.exe	0x00476dd0	scanToken	ui	match re/match/golf_hand_02.cpp	scans the next markup token
+golf_clean.exe	0x00476e20	wrapText	ui	match re/match/golf_hand_r0.cpp	word-wraps a text line to a pixel width
+golf_clean.exe	0x00476ef0	measureMarkupRun	ui	string 0x004e423c; callee 0x00476d80 (skipToken)	measures a run of marked-up text, handling $DROPLINK/$DROPDOWN/$LINK tokens
+golf_clean.exe	0x00477250	Text_put	ui	match re/match/golf_small4.cpp	appends a string to a text layout object
+golf_clean.exe	0x00477280	drawMarkupRun	ui	string 0x004e423c	draws a run of marked-up text, resolving $DROP/$LINK tokens
+golf_clean.exe	0x00477560	Widget_get	ui	match re/match/golf_hand_00.cpp	reads a widget value
+golf_clean.exe	0x00477580	Widget_value	ui	match re/match/golf_small2.cpp; 23 callers	returns a widget's current integer value
+golf_clean.exe	0x004775b0	drawRichText	ui	string 0x004e4254; 8 drawCentered/drawRight callers	core rich-text renderer: parses markup and draws wrapped, aligned text
+golf_clean.exe	0x00477c30	drawText	ui	callee 0x004775b0 (drawRichText)	forwarder that renders a plain text string via drawRichText
+golf_clean.exe	0x00477cd0	drawCentered	ui	match re/match/golf_hand_r1.cpp; char* + tagRECT	draws centered text within a RECT
+golf_clean.exe	0x00477da0	drawCentered2	ui	match re/match/golf_hand_r2.cpp	draws centered text within x,y,w,h
+golf_clean.exe	0x00477e60	drawBox	ui	match re/match/golf_hand_01.cpp	draws a bordered box
+golf_clean.exe	0x00477eb0	drawCentered3	ui	match re/match/golf_hand_08_e.cpp	draws centered text within a rect structure
+golf_clean.exe	0x00477fc0	drawStringLeft	ui	callee 0x00477280 (drawMarkupRun)	draws left-aligned (markup-aware) text
+golf_clean.exe	0x00478080	drawRight	ui	match re/match/golf_hand_05.cpp	draws right-aligned text within x,y,w,h
+golf_clean.exe	0x00478140	drawString	ui	callee 0x00477280 (drawMarkupRun)	draws a text string (markup-aware)
+golf_clean.exe	0x004781f0	drawRight2	ui	match re/match/golf_hand_07_4781f0.cpp	draws right-aligned text within a rect structure
+golf_clean.exe	0x004782d0	measureText	ui	callee 0x00476ef0 (measureMarkupRun); callee 0x00477c30 (drawText)	measures and draws a block of wrapped text
+golf_clean.exe	0x00478430	measureText2	ui	callee 0x00476ef0 (measureMarkupRun)	measures/draws a wrapped text block (variant)
+golf_clean.exe	0x00478530	measureText3	ui	callee 0x00476ef0; callee 0x00477da0 (drawCentered2)	measures and draws centered wrapped text
+golf_clean.exe	0x00478610	measureText4	ui	callee 0x00476ef0; callee 0x00477250 (Text_put)	measures a wrapped text block into a text object
+golf_clean.exe	0x004787a0	drawTextBlock	ui	callee 0x00476ef0; callee 0x00477c30 (drawText)	lays out and draws a multi-line text block
+golf_clean.exe	0x00478970	Text_flush	ui	match re/match/golf_hand_04.cpp	flushes the accumulated text layout
+golf_clean.exe	0x00478a20	List_reset	ui	match re/match/golf_small7.cpp	clears a list widget's items
+golf_clean.exe	0x00478a70	Widget_reset	ui	match re/match/golf_small2.cpp	resets a widget to defaults
+golf_clean.exe	0x00478a90	addDropdownSpot	ui	match re/match/golf_raw_13.cpp; string 0x004e428c	registers a dropdown hit-spot, warning if the maximum is exceeded
+golf_clean.exe	0x00478af0	Win_fillRect	ui	match re/match/golf_small6.cpp	fills a rectangle within a window
+golf_clean.exe	0x00478cd0	loadImageData	render	match re/match/golf_hand_r3.cpp; string 0x004e4218	decodes signature-tagged image data into a surface buffer
+golf_clean.exe	0x00478df0	drawLineH	render	callee 0x004796a0 (Surface_pixelPtr)	draws a horizontal pixel line on a surface
+golf_clean.exe	0x00478ea0	drawLineV	render	callee 0x004796a0 (Surface_pixelPtr)	draws a vertical pixel line on a surface
+golf_clean.exe	0x00478f50	openImageAsset	render	string 0x004e4234; string 0x004e42b0; string 0x004e42b8	opens an image asset by extension (.pcx/.pcf/.pcg) with a signature check
+golf_clean.exe	0x004791b0	drawComposite	render	callee 0x00475e10/0x00475fb0/0x00476140	draws a 3-part (left/mid/right) composite image such as a stretched bar
+golf_clean.exe	0x004796a0	Surface_pixelPtr	render	match re/match/golf_hand_r0.cpp	returns a pointer to a pixel at (x,y) on a surface
+golf_clean.exe	0x00479830	blendRed	render	match re/match/golf_hand_04.cpp	blends the red channel of a 16-bit pixel
+golf_clean.exe	0x004798c0	blendGreen	render	match re/match/golf_hand_04.cpp	blends the green channel of a 16-bit pixel
+golf_clean.exe	0x00479950	drawPixelRun	render	callee 0x004796a0 (Surface_pixelPtr)	writes a run of pixels via Surface_pixelPtr
+golf_clean.exe	0x00479a80	Surface_clip	render	match re/match/golf_hand_05.cpp; tagRECT	clips a rectangle to the surface bounds
+golf_clean.exe	0x00479bb0	Vec_release	util	match re/match/golf_classes.cpp; field +0x224 buffer, +0x228 refcount; callee _free	decrements a vector's refcount and frees its backing buffer when it reaches zero
+golf_clean.exe	0x00479c40	View_ctor	ui	installs vtables 0x4ba8b4 and 0x4baa10	constructor for a view/panel object (sets two vtables and clears its fields)
+golf_clean.exe	0x00479f30	layoutNode	ui	callee 0x00479f30 (self); callee 0x0047b080 (contains@Node47b)	recursively lays out a view-tree node and its children
+golf_clean.exe	0x0047a3c0	View_dtor	ui	match re/match/golf_hand_r0.cpp; virtual dtor	destroys a view/widget tree node
+golf_clean.exe	0x0047a4c0	layoutViewTree	ui	string 0x004e42f0; string 0x004e4304; callee 0x00479f30 (layoutNode)	builds and lays out a view/widget tree, aborting if parent nesting exceeds MAX_PARENTS
+golf_clean.exe	0x0047abe0	View_attach	ui	match re/match/golf_hand_r2.cpp	attaches a child view to a parent
+golf_clean.exe	0x0047ae80	setFocusItem	ui	writes DAT_0083ab98; calls item vtable +0xf0	sets the focused/selected item in a list container, toggling focus via vtable +0xf0

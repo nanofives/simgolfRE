@@ -1,0 +1,12 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x0058bcb8	g_placedObjects	struct{short type;short x;short y;short pad;int variant}[256] (0x10 stride)	read by objectAt 0x0040df80 (type@+0, x@+2, y@+4) and holeQuadrants 0x00407000; -1 type marks an empty slot
+golf_clean.exe	0x004e6d20	g_recordBanks	record banks, 0x74 bytes/bank, 16 slots (id short @+0, x @+0x40, y @+0x50, animCounter @+0x60)	written by placeRecord 0x00401040, read by drawRecords 0x004012d0
+golf_clean.exe	0x004e6d70	g_recordOccupancy	byte[6x6] per-tile occupancy within a bank	written by placeRecord 0x00401040 (collision test), read by drawRecords 0x004012d0
+golf_clean.exe	0x004c11e0	g_recordDefs	record definition table, 0x27 bytes/entry (6-byte footprint bitmask rows + size byte @+6)	read by placeRecord 0x00401040 (footprint bits) and drawRecords 0x004012d0 (size @0x4c11e6)
+golf_clean.exe	0x0053caf0	g_tileFlags	byte[] tile flags, stride 0x32 per row (bit 0x40=visited, 0x20, 0x800)	written by floodMark 0x0042f120, read by updateWalkers 0x00402a40 and propagateType11 0x0042f1c0
+golf_clean.exe	0x00578372	g_typeAttr	per-tile-type attribute table, stride 0x30 (attr @+0, kind @+4 at 0x00578376)	read by scanTileLine 0x00421fa0, rateTile 0x00422530, updateWalkers 0x00402a40, stampCourseTiles
+golf_clean.exe	0x00585850	g_walkers	ambient walker/critter table, stride 0x4c (x @+0, y @+4) with parallel state arrays at 0x00585862	written by spawnWalker 0x00402970, read/updated by updateWalkers 0x00402a40
+golf_clean.exe	0x0058a528	g_textBuf	shared text-build buffer	written by appendNumber 0x0042dc00, appendCents 0x0042dd50, appendDate 0x0040d7b0, appendHoleName 0x00407280 (all __itoa into it)
+golf_clean.exe	0x005685f4	g_cameraRot	camera rotation (0,2,4,6)	read by drawRecords 0x004012d0 (switch selects sprite orientation and label offset)
+golf_clean.exe	0x00541318	g_holeDirMask	4-bit mask of directions with a type-4 object in range	written and read by holeQuadrants 0x00407000
+golf_clean.exe	0x00571fd4	g_cash	player cash balance (int)	read by canAfford 0x00406c30 as the balance compared against a cost (posts an insufficient-funds message); referenced by hireEmployee 0x0040aa80 and demolishObject 0x0040a4e0

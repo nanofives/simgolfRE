@@ -1,0 +1,14 @@
+module	addr	name	type	evidence
+sound.dll	0x100b5038	g_soundThreadState	struct (flag+0x00, CRITICAL_SECTION+0x04, threadId+0x1c, threadHandle+0x20, event+0x24)	written by initSignalQueue 0x1002a7c0; read/written by startSignalThread 0x1002a920, stopSignalThread 0x1002a810, postSoundThreadMessage 0x1002aa90, onWaveInCallbackMessage 0x10038fd0
+sound.dll	0x100b503c	g_soundThreadCrit	CRITICAL_SECTION (alias of g_soundThreadState+0x04)	entered by soundThreadPump 0x1002a970 and WaveInDevice_close 0x10039140
+sound.dll	0x100b505c	g_soundThreadEvent	HANDLE (manual-reset event)	waited on by soundThreadPump 0x1002a970 (MsgWaitForMultipleObjects)
+sound.dll	0x100b5054	g_soundThreadId	DWORD	written by soundThreadPump 0x1002a970 (GetCurrentThreadId)
+sound.dll	0x100b5060	g_soundThreadRunning	int flag	set to 1 on entry and 0 on exit of soundThreadPump 0x1002a970
+sound.dll	0x100b4a20	g_soundEngine	pointer to engine object (flags at +0x1a4, sub-object at +0xf8)	read by onWaveInCallbackMessage 0x10038fd0, createBlankVoice 0x1002fc10
+sound.dll	0x100b49c0	g_soundWindow	HWND	PostMessageA target in onWaveInCallbackMessage 0x10038fd0
+sound.dll	0x100b4a08	g_openStreamCount	int counter	decremented by closeMmioSound 0x10035ca0
+sound.dll	0x100b49c8	g_openSoundList	linked-list head (next at +0x04)	walked and unlinked by closeMmioSound 0x10035ca0
+sound.dll	0x1005b8ac	vtbl_SoundWindowObj	vtable	installed by destroySoundWindowObj 0x10028630
+sound.dll	0x1005bcb4	vtbl_MixerVoiceArray	vtable	installed by destroyMixerVoices 0x1002c5e0
+sound.dll	0x1005c604	vtbl_WaveInDevice	vtable	installed by WaveInDevice_ctor 0x10038650
+sound.dll	0x10063e18	g_sndWindowClass	WNDCLASSA	passed to RegisterClassA by createSoundWindow 0x10028740

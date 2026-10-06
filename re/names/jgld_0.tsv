@@ -1,0 +1,213 @@
+module	addr	name	subsystem	evidence	purpose
+jgld.dll	0x10002650	MappedFile::ctor	util	match re/match/jgld_raw_01.cpp, vtable 0x1011d01c	constructs a MappedFile: stores vtable 0x1011d01c, view ptr (+4)=0, file handle (+8)=-1, mapping handle (+0xc)=0.
+jgld.dll	0x100026c0	MappedFile::deletingDtor	util	match re/match/jgld_raw_01.cpp, callee 0x10002820 (MappedFile::dtor)	scalar deleting destructor: runs MappedFile::dtor then operator_delete when flag&1.
+jgld.dll	0x10002730	MappedFile::ctorNameFlag	util	match re/match/jgld_raw_01.cpp, callee 0x10002a20 (MappedFile::openWrite)	constructs from (const char* name, int flag): sets vtable, then calls openWrite(name,flag).
+jgld.dll	0x100027b0	MappedFile::ctorName	util	match re/match/jgld_raw_01.cpp, callee 0x10002a20 (MappedFile::openWrite)	constructs from (const char* name): sets vtable, then calls openWrite(name,0).
+jgld.dll	0x10002820	MappedFile::dtor	util	match re/match/jgld_raw_01.cpp, callee 0x10002e10 (MappedFile::close)	destructor: restores vtable 0x1011d01c and calls close.
+jgld.dll	0x10002870	MappedFile::openRead	util	match re/match/jgld_mappedfile.cpp, import CreateFileA/CreateFileMappingA/MapViewOfFile	opens a file read-only and maps a view; stores view(+4), file handle(+8), mapping handle(+0xc), size(+? ).
+jgld.dll	0x10002a20	MappedFile::openWrite	util	match re/match/jgld_mappedfile.cpp, import CreateFileA/CreateFileMappingA/MapViewOfFile	opens/creates a file for write and maps a view.
+jgld.dll	0x10002bd0	MappedFile::create	util	match re/match/jgld_mappedfile.cpp, import CreateFileA/CreateFileMappingA/MapViewOfFile	creates a file of a given size and maps a writable view.
+jgld.dll	0x10002e10	MappedFile::close	util	match re/match/jgld_raw_01.cpp, import UnmapViewOfFile/CloseHandle	unmaps the view(+4), closes the mapping handle(+0xc) and file handle(+8), resetting them to 0/-1.
+jgld.dll	0x10002ef0	MappedFile::closeTruncate	util	match re/match/jgld_raw_01.cpp, import SetFilePointer/SetEndOfFile/CloseHandle	if the final size < mapped size, truncates the file to (size-mappedSize) via SetFilePointer/SetEndOfFile then closes; else closes normally.
+jgld.dll	0x10003730	Vector3::setZero	util	match re/match/jgld_raw_01.cpp	sets the three floats at +0/+4/+8 to 0.
+jgld.dll	0x100036e0	Vector3::set	util	match re/match/jgld_raw_01.cpp	stores three given floats into +0/+4/+8.
+jgld.dll	0x10003df0	Vector3::negate	util	match re/match/jgld_raw_01.cpp	negates the three floats at +0/+4/+8 in place.
+jgld.dll	0x10003f10	Vector3::scale	util	match re/match/jgld_raw_01.cpp	multiplies the three floats at +0/+4/+8 by a scalar in place.
+jgld.dll	0x10004020	Vector3::addXYZ	util	match re/match/jgld_raw_01.cpp	adds three scalar components to +0/+4/+8 in place.
+jgld.dll	0x10004090	Vector3::addAssign	util	match re/match/jgld_raw_01.cpp	adds another Vector3's components to +0/+4/+8 in place.
+jgld.dll	0x100038b0	Vector3::addAssignRet	util	match re/match/jgld_raw_01.cpp	adds another 3-float vector componentwise, returns this (loop i<3 over +i*4).
+jgld.dll	0x10003930	Vector3::subAssignRet	util	match re/match/jgld_raw_01.cpp	subtracts another 3-float vector componentwise, returns this.
+jgld.dll	0x10003790	Vector3::add	util	match re/match/jgld_raw_01.cpp	writes out = this + other for the three components to a result pointer.
+jgld.dll	0x10003820	Vector3::sub	util	match re/match/jgld_raw_01.cpp	writes out = this - other for the three components to a result pointer.
+jgld.dll	0x10003f80	Vector3::midpoint	util	match re/match/jgld_raw_01.cpp, data 0x1011d04c (0.5f)	writes out = (this + other) * 0.5 componentwise (constant 0.5f at 0x1011d04c).
+jgld.dll	0x100039b0	Vector3::mulScalar	util	match re/match/jgld_math.cpp	returns a copy of this scaled by a float (operator*(float) const).
+jgld.dll	0x10003a40	Vector3::mulAssignScalar	util	match re/match/jgld_math.cpp	scales this by a float in place, returns this& (operator*=).
+jgld.dll	0x10003ab0	Vector3::equals	util	match re/match/jgld_math.cpp	returns whether this equals another Vector3 componentwise (operator==).
+jgld.dll	0x10003b30	Vector3::distance	util	match re/match/jgld_math.cpp	returns the Euclidean distance between this and another Vector3.
+jgld.dll	0x10003bf0	Vector3::distance2	util	match re/match/jgld_math.cpp	returns the squared distance between this and another Vector3.
+jgld.dll	0x10003c90	Vector3::dot	util	match re/match/jgld_math.cpp	returns the dot product of this and another Vector3 (operator*).
+jgld.dll	0x10003cf0	Vector3::normalize	util	match re/match/jgld_math.cpp	scales this to unit length in place.
+jgld.dll	0x10003e50	Vector3::cross	util	match re/match/jgld_math.cpp	returns the cross product of this and another Vector3.
+jgld.dll	0x10004100	Vector3::rotate	util	match re/match/jgld_math.cpp	rotates this vector by a quaternion in place.
+jgld.dll	0x10003050	Quat::ctor	util	match re/match/jgld_raw_01.cpp, callee 0x100036e0 (Vector3::set)	constructs an identity quaternion: x/y/z(+0/+4/+8)=0, w(+0xc)=1.0; returns this.
+jgld.dll	0x10003170	Quat::setIdentity	util	match re/match/jgld_raw_01.cpp	resets to the identity quaternion (0,0,0,1).
+jgld.dll	0x100030b0	Quat::copyFrom	util	match re/match/jgld_raw_01.cpp	copies four floats from another quaternion if the source is non-null, returns this.
+jgld.dll	0x10003110	Quat::ctorAxisAngle	util	match re/match/jgld_raw_01.cpp, callee 0x10004230 (Quat::setAxisAngle)	constructs from (angle, axis) by delegating to setAxisAngle.
+jgld.dll	0x10004230	Quat::setAxisAngle	util	match re/match/jgld_math.cpp	sets this quaternion from an angle and a Vector3 axis.
+jgld.dll	0x100042f0	Quat::mulAssign	util	match re/match/jgld_math.cpp	multiplies this quaternion by another in place, returns this& (operator*=).
+jgld.dll	0x10004410	Quat::mul	util	match re/match/jgld_math.cpp	returns the product of this quaternion and another (operator*).
+jgld.dll	0x10004530	Quat::conjugate	util	match re/match/jgld_math.cpp	conjugates this quaternion in place (negates x,y,z).
+jgld.dll	0x10004590	Matrix::ctor	util	match re/match/jgld_math.cpp, callee 0x100045f0 (Matrix::loadIdentity)	default constructor: loads the identity matrix.
+jgld.dll	0x100045f0	Matrix::loadIdentity	util	match re/match/jgld_raw_01.cpp	zeroes the 16 floats at +4 and sets the diagonal (+4,+0x18,+0x2c,+0x40)=1.0.
+jgld.dll	0x10006720	Matrix::copyCtor	util	match re/match/jgld_math.cpp	copy constructor (??0Matrix from const Matrix&).
+jgld.dll	0x100032f0	Matrix::dtor	util	match re/match/jgld_math.cpp	destructor (??1Matrix); restores vtable.
+jgld.dll	0x10003600	Matrix::deletingDtor	util	match re/match/jgld_raw_01.cpp, callee 0x100032f0 (Matrix::dtor)	scalar deleting destructor for Matrix.
+jgld.dll	0x100031d0	Matrix::ctorQuatVec	util	match re/match/jgld_raw_01.cpp, vtable 0x1011d024, callee 0x10004690	constructs a Matrix from (Quat, Vector3): sets vtable 0x1011d024, calls setRotationTranslation.
+jgld.dll	0x10003230	Matrix::ctorQuat	util	match re/match/jgld_raw_01.cpp, vtable 0x1011d024, callee 0x10004750 (Matrix::setRotation)	constructs a Matrix from a Quat: sets vtable 0x1011d024, calls setRotation.
+jgld.dll	0x10003290	Matrix::ctorVec	util	match re/match/jgld_raw_01.cpp, vtable 0x1011d024, callee 0x100046f0 (Matrix::setTranslation)	constructs a Matrix from a Vector3: sets vtable 0x1011d024, calls setTranslation.
+jgld.dll	0x10004690	Matrix::setRotationTranslation	util	match re/match/jgld_raw_01.cpp, callee 0x10004750, callee 0x100046f0	sets both rotation (from Quat) and translation (from Vector3).
+jgld.dll	0x100046f0	Matrix::setTranslation	util	match re/match/jgld_raw_01.cpp	stores a Vector3 into the translation row at +0x34/+0x38/+0x3c.
+jgld.dll	0x10004750	Matrix::setRotation	util	match re/match/jgld_math.cpp	fills the rotation part of the matrix from a quaternion.
+jgld.dll	0x100048e0	Matrix::add	util	match re/match/jgld_math.cpp	returns the sum of this matrix and another (operator+).
+jgld.dll	0x10004a50	Matrix::mulAssign	util	match re/match/jgld_math.cpp	multiplies this matrix by another in place, returns this& (operator*=).
+jgld.dll	0x10004cc0	Matrix::addEquals	util	match re/match/jgld_raw_01.cpp	adds another matrix's 16 floats componentwise, returns this.
+jgld.dll	0x10004d40	Matrix::subEquals	util	match re/match/jgld_raw_01.cpp	subtracts another matrix's 16 floats componentwise, returns this.
+jgld.dll	0x100049e0	Matrix::scaleDiagonal	util	match re/match/jgld_raw_01.cpp	scales the diagonal elements (+4,+0x18,+0x2c) by a scalar, returns this.
+jgld.dll	0x10004dc0	Matrix::equals	util	match re/match/jgld_math.cpp	returns whether this matrix equals another (operator==).
+jgld.dll	0x10004e40	Matrix::mulPoint	util	match re/match/jgld_math.cpp	transforms a Vector3 by this matrix, returning the resulting Vector3 (operator*).
+jgld.dll	0x10004f40	Matrix::mulScalar	util	match re/match/jgld_math.cpp	returns this matrix scaled by a float (operator*).
+jgld.dll	0x10005030	Matrix::mulMatrix	util	match re/match/jgld_math.cpp	returns the product of this matrix and another (operator*).
+jgld.dll	0x10005360	Matrix::translateVec	util	match re/match/jgld_math.cpp	applies a Vector3 translation to this matrix, returns this&.
+jgld.dll	0x100053e0	Matrix::translateXYZ	util	match re/match/jgld_math.cpp	applies an (x,y,z) translation to this matrix, returns this&.
+jgld.dll	0x10006790	Matrix::assign	util	match re/match/jgld_raw_01.cpp	copies another matrix's 16 floats (+4) into this, returns this.
+jgld.dll	0x10005450	Transform::ctor	util	match re/match/jgld_math.cpp, vtable 0x1011d028	default constructor for Transform.
+jgld.dll	0x100068d0	Transform::copyCtor	util	match re/match/jgld_math.cpp	copy constructor (??0Transform from const Transform&).
+jgld.dll	0x100034e0	Transform::dtor	util	match re/match/jgld_math.cpp	destructor (??1Transform).
+jgld.dll	0x10003670	Transform::deletingDtor	util	match re/match/jgld_raw_01.cpp, callee 0x100034e0 (Transform::dtor)	scalar deleting destructor for Transform.
+jgld.dll	0x10003390	Transform::ctorQuatVec	util	match re/match/jgld_raw_01.cpp, vtable 0x1011d028, callee 0x100055c0 (Transform::set)	constructs from (Quat, Vector3): default-constructs the rotation quat at +4, sets vtable, calls set.
+jgld.dll	0x10003400	Transform::ctorQuat	util	match re/match/jgld_raw_01.cpp, vtable 0x1011d028, callee 0x10005530 (Transform::setRotation)	constructs from a Quat: default-constructs quat at +4, sets vtable, calls setRotation.
+jgld.dll	0x10003470	Transform::ctorVec	util	match re/match/jgld_raw_01.cpp, vtable 0x1011d028, callee 0x100054b0 (Transform::setTranslation)	constructs from a Vector3: default-constructs quat at +4, sets vtable, calls setTranslation.
+jgld.dll	0x10003530	Transform::assign	util	match re/match/jgld_math.cpp	stores a rotation Quat and translation Vector3 into the transform.
+jgld.dll	0x100054b0	Transform::setTranslation	util	match re/match/jgld_math.cpp	sets the translation Vector3 at +0x14.
+jgld.dll	0x10005530	Transform::setRotation	util	match re/match/jgld_math.cpp	sets the rotation Quat at +4.
+jgld.dll	0x100055c0	Transform::set	util	match re/match/jgld_math.cpp	sets both rotation (Quat) and translation (Vector3).
+jgld.dll	0x10005650	Transform::reset	util	match re/match/jgld_math.cpp	resets the transform to identity.
+jgld.dll	0x10005690	Transform::getMatrix	util	match re/match/jgld_math.cpp	writes the 4x4 Matrix equivalent of this transform into the out parameter.
+jgld.dll	0x10005890	Transform::addVector3	util	match re/match/jgld_math.cpp	returns this transform with a Vector3 added to its translation (operator+).
+jgld.dll	0x10005a30	Transform::subVector3	util	match re/match/jgld_math.cpp	returns this transform with a Vector3 subtracted from its translation (operator-).
+jgld.dll	0x10005990	Transform::translateVec	util	match re/match/jgld_math.cpp	translates by a Vector3 in place, returns this& (byte-identical to move, 0x10005c70).
+jgld.dll	0x10005b30	Transform::untranslate	util	match re/match/jgld_math.cpp	subtracts a Vector3 from the translation in place, returns this&.
+jgld.dll	0x10005bd0	Transform::translateXYZ	util	match re/match/jgld_math.cpp	translates by (x,y,z) in place, returns this&.
+jgld.dll	0x10005c70	Transform::move	util	match re/match/jgld_math.cpp	translates by a Vector3 in place, returns this& (byte-identical to translateVec, 0x10005990).
+jgld.dll	0x10005d10	Transform::apply	util	match re/match/jgld_math.cpp	applies this transform to a Vector3, returning the transformed point.
+jgld.dll	0x10005dd0	Transform::mulTransform	util	match re/match/jgld_math.cpp	returns the composition of this transform with another (operator*).
+jgld.dll	0x10005ff0	Transform::scaled	util	match re/match/jgld_math.cpp	returns this transform with its translation scaled by a float.
+jgld.dll	0x100060d0	Transform::mulAssignTransform	util	match re/match/jgld_math.cpp	composes this transform with another in place, returns this& (operator*=).
+jgld.dll	0x10006270	Transform::scaleTranslation	util	match re/match/jgld_raw_01.cpp	if flag bit 2 at +0x20 is set, scales the translation Vector3 at +0x14 by a float.
+jgld.dll	0x100062e0	Transform::invert	util	match re/match/jgld_raw_01.cpp, callee 0x10003df0, callee 0x10004530	inverts the transform: negates the translation at +0x14 and conjugates the rotation quat at +4.
+jgld.dll	0x10006340	Transform::rotate	util	match re/match/jgld_math.cpp	rotates the transform by an angle about a Vector3 axis.
+jgld.dll	0x10006420	Transform::rotateX	util	match re/match/jgld_math.cpp	rotates the transform about the X axis by an angle.
+jgld.dll	0x10006520	Transform::rotateY	util	match re/match/jgld_math.cpp	rotates the transform about the Y axis by an angle.
+jgld.dll	0x10006620	Transform::rotateZ	util	match re/match/jgld_math.cpp	rotates the transform about the Z axis by an angle.
+jgld.dll	0x10006840	Transform::assignOp	util	match re/match/jgld_math.cpp	copy assignment operator (operator=).
+jgld.dll	0x10006ab0	Tracked::ctor	util	match re/match/jgld_list.cpp	constructs a Tracked base object and links it into the global tracked list.
+jgld.dll	0x10006b10	Tracked::deletingDtor	util	match re/match/jgld_list.cpp	scalar deleting destructor for Tracked.
+jgld.dll	0x10006b80	Tracked::dtor	util	match re/match/jgld_list.cpp	destructor: unlinks this object from the global tracked list.
+jgld.dll	0x10006bf0	Tracked::deleteAll	util	match re/match/jgld_list.cpp	static: deletes every object currently in the global tracked list.
+jgld.dll	0x10006c80	LinkedList::ctor	util	match re/match/jgld_list.cpp	constructs an empty LinkedList.
+jgld.dll	0x10006cf0	LinkedList::dtor	util	match re/match/jgld_list.cpp	destructor: clears the list.
+jgld.dll	0x10006d40	LinkedList::count	util	match re/match/jgld_list.cpp	returns the number of nodes in the list.
+jgld.dll	0x10006d80	LinkedList::deletingDtor	util	match re/match/jgld_list.cpp	scalar deleting destructor for LinkedList.
+jgld.dll	0x10006df0	LinkedList::clear	util	match re/match/jgld_list.cpp	removes and frees every node in the list.
+jgld.dll	0x10006f40	LinkedList::add	util	match re/match/jgld_list.cpp, string 0x1011d060 (debug warning)	inserts a payload pointer as a new ListNode (ordered/unordered per flag; warns on misuse).
+jgld.dll	0x10007100	LinkedList::removeCurrent	util	match re/match/jgld_list.cpp	removes the current node from the list.
+jgld.dll	0x100072b0	LinkedList::find	util	match re/match/jgld_list.cpp	searches the list for a payload pointer, returns its index/flag.
+jgld.dll	0x10007370	ListNode::ctor	util	match re/match/jgld_list.cpp	constructs a ListNode holding a payload pointer and a type byte.
+jgld.dll	0x100073e0	ListNode::deletingDtor	util	match re/match/jgld_list.cpp	scalar deleting destructor for ListNode.
+jgld.dll	0x10007450	ListNode::dtor	util	match re/match/jgld_list.cpp	destructor for ListNode.
+jgld.dll	0x10006a40	atexitDestroyGlobalList	crt	match re/match/jgld_list.cpp, callee 0x10006cf0 (LinkedList::dtor), data 0x10128428/0x10128444	once-guarded (flag 0x10128444 bit0) teardown that destroys the global LinkedList at 0x10128428.
+jgld.dll	0x10007530	Random::next	util	match re/match/jgld_random.cpp, data 0x1011d0a0 (32768.0f)	advances the LCG seed (seed*0x41c64e6d+0x3039) and returns (seed>>16 & 0x7fff)/32768 as a float in [0,1).
+jgld.dll	0x100075b0	Random::range	util	match re/match/jgld_random.cpp, callee 0x10007530 (Random::next)	returns next() scaled into [0,n).
+jgld.dll	0x10007620	Random::ctor	util	match re/match/jgld_random.cpp	constructs a Random with seed (+0) = 0.
+jgld.dll	0x10007660	Surface::ctor	render	match re/match/jgld_surface.cpp, vtable 0x1011d0b0, callee 0x10009690 (SurfaceBase::ctor)	default constructor: runs the SurfaceBase ctor, sets vtable 0x1011d0b0 and zeroes the surface fields.
+jgld.dll	0x10007970	Surface::ctorOwner	render	match re/match/jgld_surface.cpp, vtable 0x1011d0b0	constructs a Surface bound to an Owner pointer.
+jgld.dll	0x10007900	Surface::deletingDtor	render	match re/match/jgld_surface.cpp	scalar deleting destructor for Surface.
+jgld.dll	0x10007bf0	Surface::dtor	render	match re/match/jgld_surface.cpp	destructor: releases surface resources.
+jgld.dll	0x10007cc0	Surface::release	render	match re/match/jgld_surface.cpp	frees the surface's pixel buffer / GDI resources.
+jgld.dll	0x10009690	SurfaceBase::ctor	render	match re/match/jgld_raw_02.cpp, vtable 0x1011d220, callee 0x10006ab0 (Tracked::ctor)	constructs the Tracked-derived base of Surface, setting vtable 0x1011d220.
+jgld.dll	0x100096f0	SurfaceBase::dtor	render	match re/match/jgld_raw_02.cpp, vtable 0x1011d220, callee 0x10006b80 (Tracked::dtor)	destructor of Surface's base class; restores vtable 0x1011d220 and runs the Tracked dtor.
+jgld.dll	0x1000a4e0	SurfaceBase::deletingDtor	render	match re/match/jgld_raw_02.cpp, callee 0x100096f0 (SurfaceBase::dtor)	scalar deleting destructor for Surface's base class.
+jgld.dll	0x100083c0	Surface::setClip	render	match re/match/jgld_surface.cpp	sets the clip rectangle, intersecting with the surface bounds.
+jgld.dll	0x1000a930	Surface::getClip	render	match re/match/jgld_surface.cpp	copies the current clip rectangle into the out parameter.
+jgld.dll	0x1000a9d0	Surface::getBounds	render	match re/match/jgld_surface.cpp	copies the surface bounds rectangle into the out parameter.
+jgld.dll	0x10008830	Surface::pixelAddr	render	match re/match/jgld_surface.cpp	returns the address of pixel (x,y) within the surface buffer.
+jgld.dll	0x100089d0	Surface::setPalette	render	match re/match/jgld_surface.cpp	installs a Palette pointer for an 8-bit surface.
+jgld.dll	0x10008e50	Surface::blit	render	match re/match/jgld_surface.cpp	copies a rectangle from another Surface (plain blit).
+jgld.dll	0x10008f70	Surface::stretchTo	render	match re/match/jgld_surface.cpp	copies a source rectangle into a destination rectangle with scaling.
+jgld.dll	0x100091a0	Surface::blitT	render	match re/match/jgld_surface.cpp, callee 0x10013c50/0x10012db0/0x1000ed70	transparent blit: dispatches on src depth (+0x24) and dst depth (vtbl+0xe4) to the 8->8, 8->16 or 16->16 routine.
+jgld.dll	0x10009320	Surface::fillRect	render	match re/match/jgld_surface.cpp	fills a rectangle with a color.
+jgld.dll	0x10009440	Surface::fill2	render	match re/match/jgld_surface.cpp	fills a rectangle with a color (second variant).
+jgld.dll	0x100094e0	Surface::drawLine	render	match re/match/jgld_surface.cpp, callee 0x1000fb70 (line8)/0x1000b140 (line16)	draws a line: dispatches on depth to line8 (8-bit) or line16 (16-bit).
+jgld.dll	0x100095a0	Surface::drawDashedLine	render	match re/match/jgld_surface.cpp, callee 0x10010870 (dashedLine8)/0x1000c140 (dashedLine16)	draws a dashed line: dispatches on depth to dashedLine8 or dashedLine16.
+jgld.dll	0x10009770	Surface::fillRectDispatch	render	match re/match/jgld_surface.cpp, callee 0x10011dd0/0x1000dcf0	fills a RECT with a color: dispatches on depth to fillRectC8 (8-bit) or fillRect16.
+jgld.dll	0x10009c50	Surface::ditherRectDispatch	render	match re/match/jgld_surface.cpp, callee 0x10011f80/0x1000e580	dithers a RECT with a color: dispatches on depth to ditherRectC8 (8-bit) or ditherRect16.
+jgld.dll	0x10009ac0	Surface::blendRectDispatch	render	match re/match/jgld_surface.cpp, callee 0x1000dfc0 (blendRect16)	alpha-blends a RECT (16-bit path only) via blendRect16.
+jgld.dll	0x10009e40	Surface::ditherBlendRectDispatch	render	match re/match/jgld_surface.cpp, callee 0x1000e8b0 (ditherBlendRect16)	dither+blend a RECT (16-bit path only) via ditherBlendRect16.
+jgld.dll	0x1000a550	Surface::saveImage	render	match re/match/jgld_surface.cpp, callee 0x10012140 (writePcx8)	saves the surface to a file: for an 8-bit surface writes a PCX via writePcx8.
+jgld.dll	0x10009fd0	Surface::drawTo	render	match re/match/jgld_surface_sprite.cpp	draws this surface onto another surface at (x,y).
+jgld.dll	0x1000a330	Surface::drawToZ	render	match re/match/jgld_surface_sprite.cpp	draws this surface onto another with a depth/key parameter.
+jgld.dll	0x1000a810	Surface::call3a	render	match re/match/jgld_surface.cpp	forwards to a virtual with two int args (vtbl helper).
+jgld.dll	0x1000a870	Surface::call3b	render	match re/match/jgld_surface.cpp	forwards to a virtual with two int args (vtbl helper).
+jgld.dll	0x1000a8d0	Surface::callBounds	render	match re/match/jgld_surface.cpp	forwards to a bounds-related virtual (vtbl helper).
+jgld.dll	0x1000afe0	Surface::fill16	render	match re/match/jgld_surface.cpp	fills a rectangle with a 16-bit color.
+jgld.dll	0x1000ba90	Surface::hline16	render	match re/match/jgld_surface16.cpp	draws a horizontal run of 16-bit pixels.
+jgld.dll	0x1000bde0	Surface::vline16	render	match re/match/jgld_surface16.cpp	draws a vertical run of 16-bit pixels.
+jgld.dll	0x1000b140	Surface::line16	render	caller 0x100094e0 (Surface::drawLine), callee 0x1000ba90/0x1000bde0	draws an arbitrary line on a 16-bit surface (Bresenham; axis-aligned runs go through hline16/vline16).
+jgld.dll	0x1000c140	Surface::dashedLine16	render	caller 0x100095a0 (Surface::drawDashedLine), callee 0x1000cf90/0x1000d4f0	draws a dashed/patterned line on a 16-bit surface.
+jgld.dll	0x1000cf90	Surface::dashedHLine16	render	caller 0x1000c140 (Surface::dashedLine16)	draws a dashed horizontal line on a 16-bit surface.
+jgld.dll	0x1000d4f0	Surface::dashedVLine16	render	caller 0x1000c140 (Surface::dashedLine16)	draws a dashed vertical line on a 16-bit surface.
+jgld.dll	0x1000da70	Surface::clear16	render	match re/match/jgld_surface16.cpp	fills the whole 16-bit surface with a color.
+jgld.dll	0x1000dcf0	Surface::fillRect16	render	match re/match/jgld_surface16.cpp	fills a clipped RECT with a 16-bit color.
+jgld.dll	0x1000dfc0	Surface::blendRect16	render	match re/match/jgld_surface16.cpp	alpha-blends a 16-bit color into a clipped RECT.
+jgld.dll	0x1000e580	Surface::ditherRect16	render	match re/match/jgld_surface16.cpp	fills a clipped RECT with a 16-bit color using an ordered dither.
+jgld.dll	0x1000e8b0	Surface::ditherBlendRect16	render	match re/match/jgld_surface16.cpp	dithers and alpha-blends a 16-bit color into a clipped RECT.
+jgld.dll	0x1000ed70	Surface::blitT_16to16	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	transparent blit from a 16-bit source to a 16-bit surface (clips via intersect).
+jgld.dll	0x10012db0	Surface::blitT_8to16	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	transparent blit from an 8-bit source to a 16-bit surface.
+jgld.dll	0x10013c50	Surface::blitT_8to8	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	transparent blit from an 8-bit source to an 8-bit surface.
+jgld.dll	0x1000f6a0	Surface::blit16from16	render	match re/match/jgld_surface.cpp	copies a RECT between two 16-bit surfaces.
+jgld.dll	0x1000f880	Surface::fill8	render	match re/match/jgld_surface.cpp	fills a rectangle with an 8-bit color.
+jgld.dll	0x1000f9e0	Surface::fill2_8	render	match re/match/jgld_surface.cpp	fills a rectangle with an 8-bit color (second variant).
+jgld.dll	0x1000fb70	Surface::line8	render	match re/match/jgld_surface.cpp	draws an arbitrary line on an 8-bit surface.
+jgld.dll	0x100103f0	Surface::hline	render	match re/match/jgld_surface.cpp	draws a horizontal line (8-bit).
+jgld.dll	0x10010620	Surface::vline	render	match re/match/jgld_surface.cpp	draws a vertical line (8-bit).
+jgld.dll	0x10010870	Surface::dashedLine8	render	match re/match/jgld_surface.cpp	draws a dashed/patterned line on an 8-bit surface.
+jgld.dll	0x100114e0	Surface::dashedHLine8	render	match re/match/jgld_surface.cpp	draws a dashed horizontal line on an 8-bit surface.
+jgld.dll	0x10011880	Surface::dashedVLine8	render	match re/match/jgld_surface.cpp	draws a dashed vertical line on an 8-bit surface.
+jgld.dll	0x10011c40	Surface::clear8	render	match re/match/jgld_surface.cpp	fills the whole 8-bit surface with a color.
+jgld.dll	0x10011dd0	Surface::fillRectC8	render	match re/match/jgld_surface.cpp, caller 0x10009770	fills a clipped RECT with an 8-bit color (depth-8 impl of fillRectDispatch).
+jgld.dll	0x10011f80	Surface::ditherRectC8	render	match re/match/jgld_surface.cpp, caller 0x10009c50	fills a clipped RECT with an 8-bit color using a dither (depth-8 impl of ditherRectDispatch).
+jgld.dll	0x10012140	Surface::writePcx8	render	caller 0x1000a550 (Surface::saveImage), callee 0x10002bd0 (MappedFile::create), string 0x1011d354 (file-extension string)	writes the 8-bit surface to a .pcx file via a memory-mapped file (RLE-encoded).
+jgld.dll	0x10012900	Surface::blitKey8to16	render	match re/match/jgld_surface16.cpp	blits an 8-bit source onto a 16-bit surface using a color key.
+jgld.dll	0x10013800	Surface::blit8from8	render	match re/match/jgld_surface.cpp	copies a RECT between two 8-bit surfaces.
+jgld.dll	0x1000a660	makeColor	render	match re/match/jgld_surface.cpp	packs (r,g,b) into a 16-bit pixel value.
+jgld.dll	0x1000e440	redOf	render	match re/match/jgld_color.cpp	extracts the red channel from a 16-bit pixel.
+jgld.dll	0x1000e4c0	greenOf	render	match re/match/jgld_color.cpp	extracts the green channel from a 16-bit pixel.
+jgld.dll	0x1000e540	blueOf	render	match re/match/jgld_color.cpp	extracts the blue channel from a 16-bit pixel.
+jgld.dll	0x1000af30	fillWords	render	match re/match/jgld_color.cpp	fills count 16-bit words at a pointer with a value (word memset).
+jgld.dll	0x10008640	Surface::acquireDC	render	match re/match/jgld_raw_02.cpp	returns the cached GDI DC (+0x4b8=+0x4bc) and increments its use count (+0x4c4).
+jgld.dll	0x100086b0	Surface::releaseDC	render	match re/match/jgld_raw_02.cpp	decrements the DC use count (+0x4c4); clears the cached DC when it reaches 0.
+jgld.dll	0x10008b90	Surface::selectSystemFont	render	match re/match/jgld_raw_02.cpp, import GetStockObject/SelectObject	gets the surface DC (vtbl+0x28), selects GetStockObject(SYSTEM_FONT), then releases the DC (vtbl+0x2c).
+jgld.dll	0x10008c40	Surface::setTextColorRGB	render	match re/match/jgld_raw_02.cpp, import SetTextColor	sets the GDI text color from (r,g,b) on the surface DC.
+jgld.dll	0x10008d00	Surface::setTextColor16	render	match re/match/jgld_raw_02.cpp, import SetTextColor	sets the GDI text color from a 16-bit color value on the surface DC.
+jgld.dll	0x10008da0	Surface::textOut	render	match re/match/jgld_raw_02.cpp, import TextOutA	draws a text string at (x,y) on the surface DC via TextOutA.
+jgld.dll	0x10008360	rectFromXYWH	util	match re/match/jgld_raw_02.cpp	writes a RECT {x, y, x+w, y+h} from (x,y,w,h).
+jgld.dll	0x10010390	setRect4	util	match re/match/jgld_raw_03.cpp	copies four ints (l,t,r,b) into a RECT.
+jgld.dll	0x10009120	rectWidth	util	match re/match/jgld_raw_02.cpp	returns right-left of a RECT.
+jgld.dll	0x10009160	rectHeight	util	match re/match/jgld_raw_02.cpp	returns bottom-top of a RECT.
+jgld.dll	0x10008590	intersect	util	match re/match/jgld_surface.cpp	computes the intersection of two RECTs, returns whether it is non-empty.
+jgld.dll	0x100085f0	equal	util	match re/match/jgld_surface.cpp	returns whether two RECTs are equal.
+jgld.dll	0x10014550	trace	util	match re/match/jgld_sprite.cpp	debug trace helper (level, format string).
+jgld.dll	0x10014a40	jalloc	util	match re/match/jgld_sprite.cpp	allocates memory (library malloc wrapper).
+jgld.dll	0x10014a90	jfree	util	match re/match/jgld_sprite.cpp	frees memory (library free wrapper).
+jgld.dll	0x10014c70	SpriteBase::ctor	render	match re/match/jgld_raw_03.cpp, vtable 0x1011d444, callee 0x10006ab0 (Tracked::ctor)	constructs the Tracked-derived sprite base, setting vtable 0x1011d444.
+jgld.dll	0x10014af0	Sprite::ctor	render	match re/match/jgld_raw_03.cpp, vtable 0x1011d380, callee 0x10014c70 (SpriteBase::ctor)	default Sprite constructor: runs SpriteBase ctor, sets vtable 0x1011d380 and zeroes members [2..9].
+jgld.dll	0x10014cd0	Sprite::ctorN	render	match re/match/jgld_raw_03.cpp, vtable 0x1011d380, callee 0x10014c70 (SpriteBase::ctor)	Sprite constructor storing an initial value into member [3]; sets vtable 0x1011d380.
+jgld.dll	0x10014de0	Sprite::dtor	render	match re/match/jgld_sprite_dtor.cpp, vtable 0x1011d380, import DeleteCriticalSection, callee 0x10014eb0 (Sprite::release)	destructor: deletes the critical section at +0x38, calls release, then the SpriteBase dtor.
+jgld.dll	0x10014eb0	Sprite::release	render	match re/match/jgld_sprite.cpp	frees the sprite's pixel/line data.
+jgld.dll	0x10014ff0	Sprite::create	render	match re/match/jgld_sprite.cpp, callee 0x1001b690 (create8)/0x1001a250 (create16)	creates sprite storage: dispatches on depth to create8 or create16, then calls vtbl+0x10 on failure.
+jgld.dll	0x100150d0	Sprite::remap	render	match re/match/jgld_sprite.cpp, string 0x1011d508 (jglsprite.cpp assert)	remaps the sprite's palette indices.
+jgld.dll	0x10015180	Sprite::draw	render	match re/match/jgld_sprite.cpp	draws the sprite onto a Surface at (x,y) (variant A).
+jgld.dll	0x10015480	Sprite::drawB	render	match re/match/jgld_sprite.cpp	draws the sprite onto a Surface (variant B).
+jgld.dll	0x100157e0	Sprite::drawC	render	match re/match/jgld_sprite.cpp	draws the sprite onto a Surface with extra byte/int params (variant C).
+jgld.dll	0x10015bb0	Sprite::drawD	render	match re/match/jgld_sprite.cpp	draws the sprite onto a Surface with extra byte param (variant D).
+jgld.dll	0x10015f80	Sprite::drawE	render	match re/match/jgld_sprite.cpp	draws the sprite onto a Surface (variant E).
+jgld.dll	0x10016270	Sprite::drawF	render	match re/match/jgld_sprite.cpp	draws the sprite onto a Surface (variant F).
+jgld.dll	0x100165a0	Sprite::drawG	render	match re/match/jgld_sprite.cpp	draws the sprite onto a Surface (variant G).
+jgld.dll	0x10007e40	allocDrawBuffer	render	string 0x1011d1d0 (fatal error message), string 0x1011d210 (error title), import _exit	allocates the global draw buffer; on failure prints a fatal error and calls _exit.
+jgld.dll	0x100145a0	loadPng	render	import png_create_read_struct/png_read_image/png_get_IHDR, import _fopen, string 0x1011d368 (libpng version string)	loads a PNG image via libpng 1.0.5 (fopen, read IHDR/PLTE, strip alpha, read image) into a jalloc'd buffer.
+jgld.dll	0x100098f0	Surface::blit16	render	match re/match/jgld_surface.cpp	blits a source RECT between two 16-bit surfaces (depth-dispatched, both 16-bit).
+jgld.dll	0x10008730	Surface::acquireDC2	render	match re/match/jgld_raw_02.cpp	returns a secondary cached DC (+0x4cc=+0x4c0) and, if non-null, increments its use count (+0x4c8).
+jgld.dll	0x100087b0	Surface::releaseDC2	render	match re/match/jgld_raw_02.cpp	decrements the secondary DC use count (+0x4c8); clears it at 0.
+jgld.dll	0x10008ae0	Surface::selectObject	render	match re/match/jgld_raw_02.cpp, import SelectObject	gets the surface DC (vtbl+0x28), selects the GDI object at *(arg+0x18) into it, then releases the DC (vtbl+0x2c).
+jgld.dll	0x10014c00	Sprite::deletingDtor	render	match re/match/jgld_raw_03.cpp, callee 0x10014de0 (Sprite::dtor)	scalar deleting destructor for Sprite.
+jgld.dll	0x10003340	Matrix::reset	util	match re/match/jgld_raw_01.cpp, callee 0x100045f0 (Matrix::loadIdentity)	resets the matrix to identity (loadIdentity wrapper).
