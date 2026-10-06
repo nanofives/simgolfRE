@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 128 bytes, 44 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Computes the wall height for a tile edge. (`re/names/exe_1.tsv`)
 
+## Purpose
+Height of the wall on side `dir` (0..7) of course cell (x, y): 0 unless bit `dir` of the cell's wall mask (0x005619a0 + x*50 + y, test at 0x00449356) is set; then the signed wall height of the cell's tile type (0x00578378 + type*0x30) when it is non-zero, else the wall height of the type of the neighbour cell (x + dx[dir], y + dy[dir]) with the direction tables at 0x004c2878 / 0x004c2898 (0x00449330). Reimplemented in `shim/src/re/golf_tables.cpp`; path-1 A/B over 200 (x, y, dir) with seeded masks and heights is GREEN (126 zero results, the rest positive and negative heights).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small12.cpp` as `?wallHeight@@YAHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044935f, 0x0044937d, 0x004493af): callee pops 0 bytes of stack arguments.

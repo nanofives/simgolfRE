@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 58 bytes, 20 instructions, subsystem `golfer`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Returns a golfer's score/handicap value from the golfer record. (`re/names/exe_1.tsv`)
 
+## Purpose
+Score of golfer g: (the golfer's type word at 0x0057956e + g*0x100) % 10, plus 20, 30 and 45 for bits 0, 1 and 2 of the flags word at 0x00579570 + g*0x100 (0x00453260). Reimplemented in `shim/src/re/golf_tables.cpp`; path-1 A/B over 16 seeded golfers covering all 8 flag combinations is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small6.cpp` as `?golferScore453260@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00453299): callee pops 0 bytes of stack arguments.

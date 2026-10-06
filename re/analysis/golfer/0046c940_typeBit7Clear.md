@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 44 bytes, 12 instructions, subsystem `golfer`. Mechanic
 returns whether bit 7 of a golfer type byte is clear (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Returns 1 when bit 7 of the byte at 0x004d60a9 + type*0x230 is clear, else 0, where type is golfer g's type word at 0x0057956e + g*0x100 (0x0046c940). Reimplemented in `shim/src/re/golf_tables.cpp`; path-1 A/B over 16 golfers (8 types with bit 7 set by the fixture, 8 clear) is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_util.cpp` as `?typeBit7Clear@@YAIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046c96b): callee pops 0 bytes of stack arguments.

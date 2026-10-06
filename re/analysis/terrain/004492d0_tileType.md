@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 23 bytes, 6 instructions, subsystem `terrain`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Returns the type id of a tile from the exe tile array. (`re/names/exe_1.tsv`)
 
+## Purpose
+Returns the signed tile type byte of course cell (x, y) from the 50x50 table at 0x005722e8, indexed x*50 + y, without bounds checks (0x004492d0). Reimplemented in `shim/src/re/golf_tables.cpp`; path-1 A/B over 72 cells of a seeded table (fixture `golf_tables`) is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small.cpp` as `?tileType@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004492e6): callee pops 0 bytes of stack arguments.

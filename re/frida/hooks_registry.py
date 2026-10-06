@@ -63,3 +63,25 @@ HOOKS.update({
     "tileBlocked": dict(module="golf_clean.exe", addr=0x0040BF60, abi="default", ret="int", args=["int", "int"],
                         fixture="tile_types_pattern", vectors=_TILES),
 })
+
+_CELLS = [(x, y) for x in (0, 1, 2, 10, 24, 25, 47, 48, 49) for y in (0, 1, 2, 13, 26, 47, 48, 49)]
+HOOKS.update({
+    # Batch 2 of C3 (2026-10-06): read-only table lookups, shim/src/re/golf_tables.cpp, fixture golf_tables.
+    "tileType": dict(module="golf_clean.exe", addr=0x004492D0, abi="default", ret="int", args=["int", "int"],
+                     fixture="golf_tables", vectors=_CELLS),
+    "wallHeight": dict(module="golf_clean.exe", addr=0x00449330, abi="default", ret="int", args=["int", "int", "int"],
+                       fixture="golf_tables",
+                       vectors=[(x, y, d) for x in (1, 2, 10, 25, 48) for y in (1, 3, 13, 26, 48) for d in range(8)]),
+    "cellAt": dict(module="golf_clean.exe", addr=0x0043D6F0, abi="default", ret="pointer", args=["int", "int", "int"],
+                   fixture="golf_tables",
+                   vectors=[(t, c, r) for t in range(4) for c in (-0x80000000, -2, -1, 0, 1, 2, 4, 5, 6, 7, 0x7FFFFFFF)
+                            for r in (0, 1, 3)]),
+    "golferScore": dict(module="golf_clean.exe", addr=0x00453260, abi="default", ret="int", args=["int"],
+                        fixture="golf_tables", vectors=[(g,) for g in range(16)]),
+    "typeBit7Clear": dict(module="golf_clean.exe", addr=0x0046C940, abi="default", ret="int", args=["int"],
+                          fixture="golf_tables", vectors=[(g,) for g in range(16)]),
+    "pointInRect": dict(module="golf_clean.exe", addr=0x00492610, abi="default", ret="int",
+                        args=["int", "int", "pointer"], fixture="rect_10_20_30_40",
+                        vectors=[(x, y, "$obj") for x in (-0x80000000, 0, 9, 10, 11, 29, 30, 31, 0x7FFFFFFF)
+                                 for y in (-0x80000000, 0, 19, 20, 21, 39, 40, 41, 0x7FFFFFFF)]),
+})

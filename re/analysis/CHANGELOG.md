@@ -4,6 +4,12 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  00492610  pointInRect  C2->C3  log/diff/00492610_pointInRect.path1.csv
+2026-10-06  0046c940  typeBit7Clear  C2->C3  log/diff/0046c940_typeBit7Clear.path1.csv
+2026-10-06  00453260  golferScore  C2->C3  log/diff/00453260_golferScore.path1.csv
+2026-10-06  0043d6f0  cellAt  C2->C3  log/diff/0043d6f0_cellAt.path1.csv
+2026-10-06  00449330  wallHeight  C2->C3  log/diff/00449330_wallHeight.path1.csv
+2026-10-06  004492d0  tileType  C2->C3  log/diff/004492d0_tileType.path1.csv
 2026-10-06  0040bf60  tileBlocked  C2->C3  log/diff/0040bf60_tileBlocked.path1.csv
 2026-10-06  0046f1d0  tierPrice  C2->C3  log/diff/0046f1d0_tierPrice.path1.csv
 2026-10-06  00404970  scaleX  C2->C3  log/diff/00404970_scaleX.path1.csv

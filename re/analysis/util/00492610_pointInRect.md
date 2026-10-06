@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 52 bytes, 24 instructions, subsystem `util`. Mechanical
 Returns true if point (param_1,param_2) lies inside rect {left,top,right,bottom} at param_3. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Point-in-rectangle test with half-open bounds: returns 1 when r[0] <= x < r[2] and r[1] <= y < r[3] (signed compares, r = {x0, y0, x1, y1} ints), else 0 (0x00492610). Reimplemented in `shim/src/re/golf_tables.cpp`; path-1 A/B over 81 points around the edges of {10, 20, 30, 40} is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?inRect@@YAHHHPAURect4@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049261e, 0x00492626, 0x00492634, 0x00492643): callee pops 0 bytes of stack arguments.

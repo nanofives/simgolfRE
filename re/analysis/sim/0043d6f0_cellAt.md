@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 66 bytes, 19 instructions, subsystem `sim`. Mechanical 
 Returns the world grid Cell pointer for a (layer,x,y) coordinate. (`re/names/exe_1.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Returns the address of the 0x2c-byte cell (col, row) of cell table `table`: the shared empty cell 0x0053ba48 when the table's base index (0x005a9370) is -1 or col >= its width (0x0053f3e8, signed); otherwise 0x005aaa30 + (width*row + base + col)*0x2c (0x0043d6f0). Negative columns are not rejected. Reimplemented in `shim/src/re/golf_tables.cpp`; path-1 A/B over 132 vectors on 4 seeded tables is GREEN.
+
 ## Signature
 - Matched at 100% by `re/match/golf_small7.cpp` as `?cellAt@@YAPAUCell2c@@HHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043d705, 0x0043d71a, 0x0043d731): callee pops 0 bytes of stack arguments.
