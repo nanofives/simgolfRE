@@ -4,6 +4,15 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  0043d520  freeBlock  C2->C3  log/diff/0043d520_freeBlock.path1.csv
+2026-10-06  00492570  trimTrailingSpace  C2->C3  log/diff/00492570_trimTrailingSpace.path1.csv
+2026-10-06  004924e0  trimLeadingSpace  C2->C3  log/diff/004924e0_trimLeadingSpace.path1.csv
+2026-10-06  00467270  foldRange  C2->C3  log/diff/00467270_foldRange.path1.csv
+2026-10-06  0045b9f0  appendString  C2->C3  log/diff/0045b9f0_appendString.path1.csv
+2026-10-06  0045b7c0  replaceInText  C2->C3  log/diff/0045b7c0_replaceInText.path1.csv
+2026-10-06  0043d5d0  allocBlock  C2->C3  log/diff/0043d5d0_allocBlock.path1.csv
+2026-10-06  0040c4b0  tileDistance  C2->C3  log/diff/0040c4b0_tileDistance.path1.csv
+2026-10-06  0040acd0  distance  C2->C3  log/diff/0040acd0_distance.path1.csv
 2026-10-06  0040db90  evalPlacementArea  C2->C3  log/diff/0040db90_evalPlacementArea.path1.csv
 2026-10-06  0040c170  heightBlend  C2->C3  log/diff/0040c170_heightBlend.path1.csv
 2026-10-06  00422530  rateTile  C2->C3  log/diff/00422530_rateTile.path1.csv

@@ -274,6 +274,13 @@ Parallel C3 (2026-10-07): agents prepare batches in their own files, never share
 `log/c3/<ID>_purpose.md`; `shim\check_re.bat src\re\<ID>.cpp` compile-checks without deploying. One verifier
 (the game is single-instance) builds once, runs diff_hook over all new names in one boot, checks each spread, inserts
 the Purposes and promotes. Brief: log/c3_brief.md (local).
+`shim/re_batches.txt` lists the batches linked into the shim; build.bat compiles the core files plus only those,
+and diff_hook / hooks_registry load only their fixture and registry fragments (an unlisted fragment that fails
+to import is skipped with a warning). `py -3.12 re/tools/c3_verify.py <ID>` reports each address (READY = all keys
+GREEN, more than one distinct result or a state change, and a Purpose); `--keys` prints the keys for diff_hook;
+`--apply` inserts the agent's Purpose with the A/B facts taken from the CSVs and promotes (refused ones are rolled
+back). VC6 converts double to int with __ftol 0x4a6030: 64-bit fistp, low dword kept (NaN -> 0, not 0x80000000);
+reimplementations write (int)(long long)v (c3b distance was RED until then).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

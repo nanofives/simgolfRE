@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 49 bytes, 16 instructions, subsystem `util`. Mechanical
 folds/wraps a value into a range (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Reflects `a` into the range [0, 0x40000000) and returns sinScaled(a, b) (0x00491c70). When a's sign bit is set, b is negated and the sign bit cleared (je at 0x0046727d); when bit 0x40000000 is then set, a is replaced by 0x7fffffff - a (je at 0x0046728b). Matched at 100% by `re/match/golf_small4.cpp` (`?fold467270@@YAHHH@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: foldRange (72 vectors, 9 distinct results, `log/diff/00467270_foldRange.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small4.cpp` as `?fold467270@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004672a0): callee pops 0 bytes of stack arguments.

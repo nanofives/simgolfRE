@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 129 bytes, 54 instructions, subsystem `util`. Mechanica
 Removes leading whitespace from string param_1 in place (via a 512-byte scratch copy). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Removes the run of leading `isspace` bytes from the NUL-terminated string in place. It advances past leading whitespace (isspace callee 0x004a6598), copies the remainder into a 0x200-byte stack buffer and back over the input (0x004924e0). Matched at 100% by `re/match/golf_small12.cpp` (`?trimLeft@@YAXPAD@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: trimLeadingSpace (8 vectors, 7 distinct results, 5 changing state, `log/diff/004924e0_trimLeadingSpace.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small12.cpp` as `?trimLeft@@YAXPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00492560): callee pops 0 bytes of stack arguments.

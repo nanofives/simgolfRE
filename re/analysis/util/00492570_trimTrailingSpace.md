@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 62 bytes, 31 instructions, subsystem `util`. Mechanical
 Removes trailing whitespace from string param_1 in place. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Removes trailing `isspace` bytes in place. For a non-empty string it walks from the last byte toward the front writing NUL over each whitespace byte, stopping at the first non-space or at the first byte (strlen and isspace callee 0x004a6598, 0x00492570). Matched at 100% by `re/match/golf_small6.cpp` (`?trimRight@@YAXPAD@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: trimTrailingSpace (8 vectors, 7 distinct results, 5 changing state, `log/diff/00492570_trimTrailingSpace.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small6.cpp` as `?trimRight@@YAXPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004925ad): callee pops 0 bytes of stack arguments.

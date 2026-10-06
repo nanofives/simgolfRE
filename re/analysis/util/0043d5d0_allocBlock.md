@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 95 bytes, 35 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Allocates a block in the flic/asset block allocator. (`re/names/exe_1.tsv`)
 
+## Purpose
+First-fit allocation of n units from the 100-region block pool (starts at 0x00820b70, sizes at 0x00820d00; a start < 0 marks an empty slot). It returns the start of the first region with start >= 0 and size >= n, carving n off its front when size > n (start += n, size -= n) or consuming the region whole when size == n (size = 0, start = -1); returns -1 when none fits (0x0043d5d0). Matched at 100% by `re/match/golf_small9.cpp` (`?allocBlock@@YAHH@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: allocBlock (10 vectors, 10 distinct results, 6 changing state, `log/diff/0043d5d0_allocBlock.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small9.cpp` as `?allocBlock@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043d5f5, 0x0043d61f, 0x0043d62e): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 85 bytes, 33 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Appends a string to the primary text buffer g_56fcb0. (`re/names/exe_1.tsv`)
 
+## Purpose
+Appends string `id` of the string table to the shared text buffer; returns 1 when the entry exists, 0 otherwise. `id == -1` returns 0 (je at 0x0045b9f7); the signed word offset at 0x0059d81c + id*2 (0x0045b9f9) equal to -1 returns 0 (je at 0x0045ba05); otherwise the NUL-terminated string at 0x0056fcb0 + offset is strcat'd onto the text buffer 0x0051a068 (src set at 0x0045ba0c, dest at 0x0045ba21) and the function returns 1. Matched at 100% by `re/match/golf_small9.cpp` (`?appendString@@YAHH@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: appendString (14 vectors, 13 distinct results, 10 changing state, `log/diff/0045b9f0_appendString.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small9.cpp` as `?appendString@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045ba41, 0x0045ba44): callee pops 0 bytes of stack arguments.

@@ -173,12 +173,28 @@ HOOKS.update({
 
 # Fragments (one file per C3 batch, so parallel agents never edit the same file): re/frida/registry.d/<batch>.py
 # each defines HOOKS = {name: dict(...)} in the format above; names must be unique across all files.
+def enabled_batches():
+    """Batch ids listed in shim/re_batches.txt (the ones linked into the shim and verified by diff_hook)."""
+    import pathlib
+    f = pathlib.Path(__file__).resolve().parents[2] / "shim" / "re_batches.txt"
+    if not f.exists():
+        return set()
+    return {l.strip()[:-4] for l in f.read_text().splitlines() if l.strip().endswith(".cpp") and not l.startswith("#")}
+
+
 def _load_fragments():
-    import importlib.util, pathlib
+    import importlib.util, pathlib, sys
+    enabled = enabled_batches()
     for f in sorted((pathlib.Path(__file__).parent / "registry.d").glob("*.py")):
         spec = importlib.util.spec_from_file_location(f"registry_d_{f.stem}", f)
         mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
+        try:
+            spec.loader.exec_module(mod)
+        except Exception as e:                     # a batch still being written must not break verification
+            if f.stem in enabled:
+                raise
+            print(f"hooks_registry: skipped {f.name} (not enabled, {type(e).__name__}: {e})", file=sys.stderr)
+            continue
         dup = set(mod.HOOKS) & set(HOOKS)
         if dup:
             raise ValueError(f"{f.name}: hook names already registered: {sorted(dup)}")

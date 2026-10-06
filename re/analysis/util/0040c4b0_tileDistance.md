@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 66 bytes, 21 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 distance between two tiles in world units (`re/names/exe_0.tsv`)
 
+## Purpose
+Distance from world point (x, y) to the centre of tile (tx, ty): tiles are 0x400 units across and the centre is +0x200, so it calls distance 0x0040acd0 with `(x - tx*0x400 - 0x200, y - ty*0x400 - 0x200)` and scales the result by 25/1024 (0x0040c4b0). Matched at 100% by `re/match/golf_util.cpp` (`?tileDistance@@YAHHHHH@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: tileDistance (25 vectors, 21 distinct results, `log/diff/0040c4b0_tileDistance.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_util.cpp` as `?tileDistance@@YAHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040c4f1): callee pops 0 bytes of stack arguments.

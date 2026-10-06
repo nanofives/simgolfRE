@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 171 bytes, 52 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Frees one block of the flic/asset block allocator (g_820b70/g_820d00). (`re/names/exe_1.tsv`)
 
+## Purpose
+Returns n units at `base` to the block pool (100 slots: region starts at 0x00820b70, sizes at 0x00820d00) (0x0043d520). If a region ends exactly at base (start >= 0 && base == start + size) it is extended by n and any region that then begins at its new end is merged into it and emptied (start = -1, size = 0); otherwise the (base, n) region is placed in the first empty slot (start < 0). Matched at 100% by `re/match/golf_freeblock.cpp` (`?freeBlock@@YAXHH@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: freeBlock (12 vectors, 13 distinct results, 12 changing state, `log/diff/0043d520_freeBlock.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_freeblock.cpp` as `?freeBlock@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043d55d, 0x0043d5b6, 0x0043d5ca): callee pops 0 bytes of stack arguments.

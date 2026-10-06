@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 129 bytes, 49 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 euclidean distance between two points (`re/names/exe_0.tsv`)
 
+## Purpose
+Length of the fixed-point vector (dx, dy). Each component whose absolute value exceeds 0x4000 is divided by 8 before squaring and the overall scale multiplied by 8 (threshold 0x4000 at 0x0040acd0), so `dx*dx + dy*dy` cannot overflow a 32-bit int; the result is `sqrt(dx*dx + dy*dy) * scale` truncated to int by the `__ftol` helper 0x004a6030, which truncates through a 64-bit fistp and keeps the low dword: when dx*dx overflows (|dx| near INT_MAX) the sum can be negative, sqrt gives NaN and the result is 0, not 0x80000000. Matched at 100% by `re/match/golf_util.cpp` (`?distance@@YAHHH@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: distance (72 vectors, 14 distinct results, `log/diff/0040acd0_distance.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_util.cpp` as `?distance@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040ad50): callee pops 0 bytes of stack arguments.

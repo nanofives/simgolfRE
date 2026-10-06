@@ -38,7 +38,10 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
         g.wait_window()
         # Fixtures and the runner must share one script runtime, so they load as one source.
         # base fixtures, then one fragment per C3 batch (js/fixtures.d/*.js: Object.assign(globalThis.DIFF_FIXTURES, {...}))
-        parts = [JS_DIR / "diff_fixtures.js"] + sorted((JS_DIR / "fixtures.d").glob("*.js")) + [JS_DIR / "diff_hook.js"]
+        # only batches listed in shim/re_batches.txt: a fragment still being written must not break the run
+        from hooks_registry import enabled_batches
+        frags = [p for p in sorted((JS_DIR / "fixtures.d").glob("*.js")) if p.stem in enabled_batches()]
+        parts = [JS_DIR / "diff_fixtures.js"] + frags + [JS_DIR / "diff_hook.js"]
         src = "\n".join(p.read_text() for p in parts)
         sc = g.session.create_script(src)
         sc.load()

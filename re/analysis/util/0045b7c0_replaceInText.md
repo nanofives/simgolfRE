@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 189 bytes, 75 instructions, subsystem `util`. Mechanica
 Replaces a substring token within a text buffer. (`re/names/exe_1.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Replaces the first occurrence of `key` in the text buffer 0x0051a068 with `repl` (strstr callee 0x004a64f0, 0x0045b7c0). When the key is found, the tail from the match on is saved in a 512-byte stack buffer, the match position is truncated to NUL, `repl` is appended, then the saved tail past the key's length is appended; when the key is absent the buffer is unchanged. Matched at 100% by `re/match/golf_small25.cpp` (`?replaceInText@@YAXPBD0@Z`). Reimplemented in `shim/src/re/c3b.cpp`; path-1 A/B GREEN: replaceInText (6 vectors, 7 distinct results, 5 changing state, `log/diff/0045b7c0_replaceInText.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small25.cpp` as `?replaceInText@@YAXPBD0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045b87c): callee pops 0 bytes of stack arguments.

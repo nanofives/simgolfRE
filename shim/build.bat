@@ -11,8 +11,12 @@ if exist ..\tools\vc6\vc98\bin\cl.exe (
   set VC6OBJ=build\vc6\terrain.obj
   set VC6DEF=/DSG_VC6_TERRAIN
 )
+rem Reimplementations: the core files always; a parallel C3 batch (src\re\<ID>.cpp) only once the verifier lists it
+rem in re_batches.txt, so unfinished batches neither break the build nor install unverified hooks.
+set REFILES=src\re\hooks.cpp src\re\Terrain.cpp src\re\golf_*.cpp
+if exist re_batches.txt for /f "usebackq eol=# tokens=*" %%f in ("re_batches.txt") do call set REFILES=%%REFILES%% src\re\%%f
 cl /nologo /O2 /MT /W3 /EHsc /D_CRT_SECURE_NO_WARNINGS %VC6DEF% /Fobuild\ /LD ^
-   src\shim.cpp src\patches.cpp src\coverage.cpp src\re\*.cpp src\winmm_proxy.gen.cpp ^
+   src\shim.cpp src\patches.cpp src\coverage.cpp %REFILES% src\winmm_proxy.gen.cpp ^
    deps\minhook\buffer.cpp deps\minhook\hook.cpp deps\minhook\trampoline.cpp deps\minhook\hde\hde32.cpp ^
    %VC6OBJ% /link /DEF:src\winmm.def /OUT:build\winmm.dll user32.lib kernel32.lib shlwapi.lib || exit /b 1
 copy /y build\winmm.dll ..\original\winmm.dll >nul || exit /b 1
