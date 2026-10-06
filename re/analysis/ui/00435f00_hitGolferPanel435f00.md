@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 348 bytes, 108 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Hit-tests the golfer/action panel, returning the entry under a point. (`re/names/exe_1.tsv`)
 
+## Purpose
+Returns the index of the golfer-info-panel hotspot under the point (x, y), or -1 (0x00435f00). Each hotspot is tested as approxDistance(x - hx, y - hy) 0x00467170 against a radius: hotspot 0 at (0x111, 0x22f) radius 20, 1 at (0x139, 0x207) radius 15, 2 at (0x139, 0x224) radius 15, 3 at (0x139, 0x244) radius 15 (0x00435f0c onward); when the mode dword at 0x00567afc is 3 (0x00435fa2) also hotspots 4..8 at x = 0x19e / 0x1ed / 0x23c / 0x28b / 0x2da, y = 0x1f9, radius 20; then 9 at (0x11e, 0x1ea) radius 15 and 10 at (0xe7, 0x21c) radius 15. The tests run in order and a later match overwrites the result. Matched 100% as `?hit435f00@@YAHHH@Z` (re/match/golf_hand_r2.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: hitGolferPanel435f00 (9 vectors, 7 distinct results, `log/diff/00435f00_hitGolferPanel435f00.path1.csv`); hitGolferPanel435f00_mode3 (12 vectors, 12 distinct results, `log/diff/00435f00_hitGolferPanel435f00_mode3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?hit435f00@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043605b): callee pops 0 bytes of stack arguments.

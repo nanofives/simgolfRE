@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 324 bytes, 133 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 appends an integer with thousands separators to the shared text buffer 0x0058a528 (`re/names/exe_0.tsv`)
 
+## Purpose
+Appends the integer `n` to the shared text buffer at 0x0051a068 with thousands separators (0x0042dc00). A negative `n` first appends "-" and is negated (0x0042dc0e..0x0042dc24); when `n` is at least 1000 it recurses on `n / 1000` through its own address 0x0042dc00 (call at 0x0042dc54) and appends "," (0x0042dc5c). It then takes `r = n % 1000` (0x0042dc3a) and, when `r < 100` and `n != 0`, zero-pads the group: a "0" when `n >= 1000` (0x0042dc80) and another "0" when `r < 10` and `n >= 100` (0x0042dc98); finally it appends the decimal text of `r` from __itoa 0x004ad425 into the scratch buffer 0x0058a528 (call at 0x0042dd0e). Matched 100% as `?appendNumber@@YAXH@Z` (re/match/golf_small32.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: appendNumber (20 vectors, 20 distinct results, 20 changing state, `log/diff/0042dc00_appendNumber.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small32.cpp` as `?appendNumber@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042dd43): callee pops 0 bytes of stack arguments.

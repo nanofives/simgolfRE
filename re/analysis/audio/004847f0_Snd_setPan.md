@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 45 bytes, 16 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 clamps pan to [-0x40,0x3f], stores it in m_8 and forwards to the device m_40 (vtable f17) (`re/names/exe_3.tsv`)
 
+## Purpose
+Snd::setPan (0x004847f0) clamps the pan to [-0x40, 0x3f] (0x004847f4..0x00484805), stores it at [this+8] (0x0048480a), notifies the device virtual +0x44 when [this+0x40] is non-null (0x00484817), and returns the clamped value in eax (`ret 4`). __thiscall, one stack argument. Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: Snd::setPan (11 vectors, 7 distinct results, 10 changing state, `log/diff/004847f0_Snd_setPan.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004847f0@C_FUN_004847f0@f_004847f0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048481a): callee pops 4 bytes of stack arguments.

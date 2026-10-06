@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 37 bytes, 14 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 stores a nonzero value in m_38 and forwards it to the device m_40 (vtable f1), returning 10 on zero (`re/names/exe_3.tsv`)
 
+## Purpose
+Snd::setField38 (0x004846d0) returns 10 when the argument is 0 (`test eax,eax; jne` then `mov eax,0xa` at 0x004846d4..0x004846d8) without writing; otherwise it stores the value at [this+0x38] (0x004846e0), notifies the device virtual +4 when [this+0x40] is non-null (0x004846ed), and returns 0 (`xor eax,eax` at 0x004846f0). __thiscall, one stack argument (`ret 4`). Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: Snd::setField38 (8 vectors, 8 distinct results, 7 changing state, `log/diff/004846d0_Snd_setField38.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004846d0@C_FUN_004846d0@f_004846d0@@QAEIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004846dd, 0x004846f2): callee pops 4 bytes of stack arguments.

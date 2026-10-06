@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 119 bytes, 44 instructions, subsystem `course`. Mechani
 returns the index of the placed object whose footprint covers (x,y), or -1 (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+objectAt (0x0040df80) scans the 256 placed-object records at 0x0058bcb8 (stride 0x10, end 0x0058ccb8; type word +0, rx word +2, ry word +4) for the one whose footprint covers (x, y). A record with type -1 is skipped (0x0040df96). Its footprint side is the signed byte at 0x004c26c0 + type*0x14 (`lea esi,[edx+edx*4]`/`movsx` at 0x0040dfa3/0x0040dfa6), extended by `dword[0x005a8c38 + type*4] - 1` when type >= 6 and type != 7 (the `jl`/`je 5`/`je 7` at 0x0040dfae/0x0040dfb4/0x0040dfba, then 0x0040dfbc/0x0040dfc3). The record matches when `rx <= x < rx + side` (0x0040dfcd/0x0040dfd3) and `ry <= y < ry + side` (0x0040dfdb/0x0040dfe1); it returns the matching index or -1 (0x0040dfef). Reimplemented in `shim/src/re/c3e.cpp`; path-1 A/B GREEN: objectAt (90 vectors, 5 distinct results, `log/diff/0040df80_objectAt.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0040dff6): callee pops 0 bytes of stack arguments.
 

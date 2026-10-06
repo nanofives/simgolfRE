@@ -1,0 +1,12 @@
+vector,original,reimpl,match
+$code 10,0,0,True
+$code 5,1,1,True
+$code 2,1,1,True
+$code 1,1,1,True
+$code 0,0,0,True
+$bad 10,1,1,True
+$bad 3,1,1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x670b94d0,original=0x1100e00,2026-10-06T18:06:16
+distinct_results,2,,
+VERDICT,GREEN,7,

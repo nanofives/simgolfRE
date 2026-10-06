@@ -288,6 +288,11 @@ number for a pointer argument (0 = NULL), and rewrites `Memory.alloc(` to `__kee
 (js/keepalive.js): Frida frees an allocation no JS value references, so a parent stored only at view+0x130 was
 freed mid-run (c3d RED and access violations until then). `distinct_results` counts (return, final state) pairs.
 Held at C2: raiseFromNeighbours 0x42f6e0 (fixture never exercises it), Snd::ctorDerived 0x484820 (no static caller).
+Second round (2026-10-07): agents also built (`powershell -NoProfile -File shim/build_instance.ps1 -Id <ID>`) and
+A/B'd on their own instances\<ID> until c3_verify said READY; the verifier re-ran every key on the main build and
+promoted 26 (c3e 4, c3f 10, c3g 7, c3h 5; 94 at C3). `c3_verify.py --apply --skip <addrs>` holds back READY ones
+whose A/B only reached guard branches (c3h Surface_blit/fillRegion/blit3: the DirectDraw path never ran). The
+gate's leaf rule (>= 10 vectors without callees) and the caller rule held back 8 more.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

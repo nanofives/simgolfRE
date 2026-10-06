@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 25 bytes, 8 instructions, subsystem `util`. Mechanical 
 Fixed-point cosine companion to sinScaled, interpolating the g_0083b9f4 table. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+cosScaled (0x00491d80) adds 0x3fffffff to its first argument (`add ecx,0x3fffffff` at 0x00491d88) and tail-calls 0x00491c70 with (a + 0x3fffffff, b) (the `call 0x491c70` at 0x00491d90, __cdecl), returning its result unchanged; 0x00491c70 performs the phase fold and the trig-table lookup scaled by b. Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: cosScaled (84 vectors, 32 distinct results, `log/diff/00491d80_cosScaled.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00491d80@f_00491d80@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00491d98): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 21 bytes, 7 instructions, subsystem `render`. Mechanica
 clamps/offsets a single colour component (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+brightenComponent (0x00461810) brightens one colour component toward white: it returns the argument plus 0x20 when the argument is below 0xdf (`cmp eax,0xdf` / `jge` at 0x00461814, `add eax,0x20` at 0x0046181b), and 0xff otherwise (0x0046181f), so the result saturates at 0xff. A pure leaf with no memory access; matched in re/match/golf_small.cpp (`?brighten@@YAHH@Z`). Reimplemented in `shim/src/re/c3h.cpp`; path-1 A/B GREEN: brightenComponent (14 vectors, 9 distinct results, `log/diff/00461810_brightenComponent.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small.cpp` as `?brighten@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046181e, 0x00461824): callee pops 0 bytes of stack arguments.

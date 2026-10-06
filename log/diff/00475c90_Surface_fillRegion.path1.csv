@@ -1,0 +1,9 @@
+vector,original,reimpl,match
+$obj 0 1 2 3 4,16,16,True
+$obj $obj 1 2 3 4,7,7,True
+$obj 0 0 0 0 0,16,16,True
+$obj $obj 5 6 7 8,7,7,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x66f89050,original=0x1440e60,2026-10-06T18:03:00
+distinct_results,2,,
+VERDICT,GREEN,4,

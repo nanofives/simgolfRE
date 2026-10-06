@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 25 bytes, 8 instructions, subsystem `util`. Mechanical 
 small two-argument arithmetic helper (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+absDiff (0x004672b0) is a one-line forwarder: it adds 0x40000000 to its first argument (`add ecx,0x40000000` at 0x004672b8) and tail-calls 0x00467270 with (a + 0x40000000, b) (the `call 0x467270` at 0x004672c0, __cdecl so the caller cleans the two pushes); the result of 0x00467270 is returned unchanged. 0x00467270 applies the sign/fold reduction of the phase and reads the trig table through 0x00491c70. Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: absDiff (84 vectors, 29 distinct results, `log/diff/004672b0_absDiff.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small.cpp` as `?f_4672b0@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004672c8): callee pops 0 bytes of stack arguments.

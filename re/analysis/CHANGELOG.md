@@ -4,6 +4,32 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-06  00435f00  hitGolferPanel435f00  C2->C3  log/diff/00435f00_hitGolferPanel435f00.path1.csv
+2026-10-06  0042dd50  appendCents  C2->C3  log/diff/0042dd50_appendCents.path1.csv
+2026-10-06  0042dc00  appendNumber  C2->C3  log/diff/0042dc00_appendNumber.path1.csv
+2026-10-06  0040daa0  appendCourseTitle  C2->C3  log/diff/0040daa0_appendCourseTitle.path1.csv
+2026-10-06  0040d7b0  appendDate  C2->C3  log/diff/0040d7b0_appendDate.path1.csv
+2026-10-06  0040cb00  startMessage  C2->C3  log/diff/0040cb00_startMessage.path1.csv
+2026-10-06  00407280  appendHoleName  C2->C3  log/diff/00407280_appendHoleName.path1.csv
+2026-10-06  004674c0  bilinearSample  C2->C3  log/diff/004674c0_bilinearSample.path1.csv
+2026-10-06  0040df80  objectAt  C2->C3  log/diff/0040df80_objectAt.path1.csv
+2026-10-06  00409bf0  updateRollingStats  C2->C3  log/diff/00409bf0_updateRollingStats.path1.csv
+2026-10-06  004099f0  addGolferPair  C2->C3  log/diff/004099f0_addGolferPair.path1.csv
+2026-10-06  004833f0  Table483::find  C2->C3  log/diff/004833f0_Table483_find.path1.csv
+2026-10-06  00461810  brightenComponent  C2->C3  log/diff/00461810_brightenComponent.path1.csv
+2026-10-06  0042f940  tileToScreen  C2->C3  log/diff/0042f940_tileToScreen.path1.csv
+2026-10-06  0040bf00  setLinePoint  C2->C3  log/diff/0040bf00_setLinePoint.path1.csv
+2026-10-06  0040a130  setGrids  C2->C3  log/diff/0040a130_setGrids.path1.csv
+2026-10-06  00491d80  cosScaled  C2->C3  log/diff/00491d80_cosScaled.path1.csv
+2026-10-06  00484f40  Snd::setPitch  C2->C3  log/diff/00484f40_Snd_setPitch.path1.csv
+2026-10-06  004847f0  Snd::setPan  C2->C3  log/diff/004847f0_Snd_setPan.path1.csv
+2026-10-06  004846d0  Snd::setField38  C2->C3  log/diff/004846d0_Snd_setField38.path1.csv
+2026-10-06  00484260  Snd::setMode  C2->C3  log/diff/00484260_Snd_setMode.path1.csv
+2026-10-06  004672b0  absDiff  C2->C3  log/diff/004672b0_absDiff.path1.csv
+2026-10-06  00467150  sign  C2->C3  log/diff/00467150_sign.path1.csv
+2026-10-06  00467130  clamp  C2->C3  log/diff/00467130_clamp.path1.csv
+2026-10-06  0045c1e0  Random::range  C2->C3  log/diff/0045c1e0_Random_range.path1.csv
+2026-10-06  0045b8b0  appendToBuffer45b8b0  C2->C3  log/diff/0045b8b0_appendToBuffer45b8b0.path1.csv
 2026-10-06  00492b10  HotList::hitTestRect  C2->C3  log/diff/00492b10_HotList_hitTestRect.path1.csv
 2026-10-06  00492a90  HotList::hitTest  C2->C3  log/diff/00492a90_HotList_hitTest.path1.csv
 2026-10-06  0047b200  View::fromParent  C2->C3  log/diff/0047b200_View_fromParent.path1.csv

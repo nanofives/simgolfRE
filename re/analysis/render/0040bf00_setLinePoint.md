@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 20 bytes, 5 instructions, subsystem `render`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 stores the current line start point for lineTo (`re/names/exe_0.tsv`)
 
+## Purpose
+setLinePoint (0x0040bf00) stores the current line-drawing point: `a` at 0x005a412c and `b` at 0x005a4130 (0x0040bf08 / 0x0040bf0d). A pure writer of two dwords; matched in re/match/golf_small.cpp (`?setPair@@YAXHH@Z`). It is the companion of lineTo (0x0040bf20), which draws from this point and then updates it. Reimplemented in `shim/src/re/c3h.cpp`; path-1 A/B GREEN: setLinePoint (24 vectors, 24 distinct results, 23 changing state, `log/diff/0040bf00_setLinePoint.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small.cpp` as `?setPair@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040bf13): callee pops 0 bytes of stack arguments.

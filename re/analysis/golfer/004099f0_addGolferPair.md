@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 151 bytes, 43 instructions, subsystem `golfer`. Mechani
 finds a free slot (==-1) in g_storyPairs (0x0059fc60, stride 0x388) and registers golfer param_1 with its partner from 0x0057955a, zeroing the counter and copying both golfers' 0x40-dword records into the slot (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+addGolferPair (0x004099f0) registers golfer g in the first free story-pair slot. It scans g_storyPairs at 0x0059fc60 (stride 0x388, end 0x005a34e0) for a header word of -1 (0x004099f7..0x00409a0a) and returns without writing when none is free. Into the found slot (offset slot*0x388) it stores g as the id word (0x0059fc60 + off, 0x00409a26), the partner word read at 0x0057955a + g*0x100 (0x00409a33/0x00409a3a), and a zero counter (0x0059fc64 + off, 0x00409a41). It then calls updatePairSnapshot(slot) (0x00409a4a) and copies both golfers' 0x40-dword records at 0x005794b8 + id*0x100 into the slot regions 0x0059fde8 + off and 0x0059fee8 + off (the two `rep movsd` at 0x00409a63/0x00409a80). Reimplemented in `shim/src/re/c3e.cpp`; path-1 A/B GREEN: addGolferPair (8 vectors, 8 distinct results, 8 changing state, `log/diff/004099f0_addGolferPair.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00409a0c, 0x00409a86): callee pops 0 bytes of stack arguments.
 

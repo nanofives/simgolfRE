@@ -57,6 +57,7 @@ def main():
     ap.add_argument("batch")
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--keys", action="store_true")
+    ap.add_argument("--skip", default="", help="comma-separated addresses not to promote (e.g. only guard branches were exercised)")
     a = ap.parse_args()
     hooks = keys_of(a.batch)
     if a.keys:
@@ -81,7 +82,10 @@ def main():
         for k, f in facts.items():
             print(f"    {k:28} " + ("no CSV" if not f else f"{f['verdict']} {f['vectors']} vectors, {f['distinct']} distinct"
                                      + (f", {f['changed']} change state" if f["stateful"] else "")))
-        if status == "READY":
+        skip = {int(s, 16) for s in a.skip.split(",") if s.strip()}
+        if status == "READY" and addr in skip:
+            print("    held back by --skip")
+        elif status == "READY":
             ready.append((addr, row, facts))
     if not a.apply:
         return 0

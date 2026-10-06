@@ -1,0 +1,26 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0,void,void,True,af5ad294,af5ad294,True
+1,void,void,True,eaf083f6,eaf083f6,True
+9,void,void,True,252ec886,252ec886,True
+10,void,void,True,cc89eba4,cc89eba4,True
+99,void,void,True,b18f2b5a,b18f2b5a,True
+100,void,void,True,531fa8c6,531fa8c6,True
+101,void,void,True,f6cac574,f6cac574,True
+999,void,void,True,a394daae,a394daae,True
+1000,void,void,True,07cb9af1,07cb9af1,True
+1001,void,void,True,e02d14bf,e02d14bf,True
+1234,void,void,True,20ceb6cf,20ceb6cf,True
+10000,void,void,True,a883f5b8,a883f5b8,True
+12345,void,void,True,03c50b56,03c50b56,True
+999999,void,void,True,6298c0d7,6298c0d7,True
+1000000,void,void,True,b3b7465d,b3b7465d,True
+-1,void,void,True,b038d010,b038d010,True
+-99,void,void,True,8c062c34,8c062c34,True
+-1000,void,void,True,3926467f,3926467f,True
+-12345,void,void,True,1505b214,1505b214,True
+2147483647,void,void,True,e0dde93d,e0dde93d,True
+state_regions,0x0051a068+0x0:256 0x0058a528+0x0:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x66f59d80,original=0x29f0d60,2026-10-06T18:06:52
+distinct_results,20,,
+VERDICT,GREEN,20,

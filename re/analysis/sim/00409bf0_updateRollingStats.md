@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 187 bytes, 71 instructions, subsystem `sim`. Mechanical
 iterates the table at 0x005736bc (stride 0x24) applying fold/abs decay to the per-entry accumulators, resetting entries whose running value drops below 1 and freeing ([-1]=-1) those older than g_date-0x400 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+updateRollingStats (0x00409bf0) sweeps the 256 records at 0x005736bc (stride 0x24, end 0x00575abc) and decays each live entry's accumulators. A record whose liveness dword [esi-4] is -1 is skipped (0x00409bfd/0x00409c00). For a live record it adds `foldRange([esi+8], [esi+0xc]/16)` to [esi-4] (0x00409c06..0x00409c21), subtracts `absDiff([esi+8], [esi+0xc]/16)` from [esi] (0x00409c24..0x00409c41), and adds `[esi+0x10]/32` to [esi+4] (0x00409c43..0x00409c56). When that sum is <= 0 it zeroes [esi+0x10], [esi+0xc] and [esi+4], and frees the record ([esi-4] = -1) when the global date 0x00834170 is past `[esi+0x14] + 0x400` (0x00409c59..0x00409c78). It then decays [esi+0xc] by `[esi+0xc] >> 4` (0x00409c7b..0x00409c85) and, unless both [esi+4] and [esi+0x10] are zero, subtracts 0x40 from [esi+0x10] (0x00409c88..0x00409c94). The /16 and /32 are C truncating divisions (the `cdq`/`and`/`add`/`sar` idioms); the decay `>>4` is an arithmetic shift. foldRange (0x00467270) and absDiff (0x004672b0) run their originals. Reimplemented in `shim/src/re/c3e.cpp`; path-1 A/B GREEN: updateRollingStats (1 vectors, 1 distinct results, 1 changing state, `log/diff/00409bf0_updateRollingStats.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00409caa): callee pops 0 bytes of stack arguments.
 

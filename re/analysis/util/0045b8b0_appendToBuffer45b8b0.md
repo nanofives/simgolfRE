@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 310 bytes, 110 instructions, subsystem `util`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Appends an entry to the secondary text buffer. (`re/names/exe_1.tsv`)
 
+## Purpose
+appendToBuffer45b8b0 (0x0045b8b0) manages the text store at 0x0056fcb0 with the 128-entry offset table at 0x0059d81c (shorts, -1 = empty) and length table at 0x005a46b8 (shorts), appending the current text at 0x0051a068. When id != -1 and its offset is live it removes that entry: the bytes after it are packed down over it (memcpy of 0x1002 - len - off), its offset is set to -1 and every later offset is shifted left by len. It then computes the highest end (max of offset+length over live entries) and, for id == -1, the first empty slot with index > 0x20 (an explicit id reuses that slot); if the text plus its NUL fits below 0x1002 it is copied at end, the slot's offset and length are recorded and the slot index is returned, otherwise -1. Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: appendToBuffer45b8b0 (8 vectors, 7 distinct results, 8 changing state, `log/diff/0045b8b0_appendToBuffer45b8b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?store45b8b0@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045b9dd, 0x0045b9e5): callee pops 0 bytes of stack arguments.

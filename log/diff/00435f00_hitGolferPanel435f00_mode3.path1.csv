@@ -1,0 +1,17 @@
+vector,original,reimpl,match
+273 559,0,0,True
+313 519,1,1,True
+313 548,2,2,True
+313 580,3,3,True
+414 505,4,4,True
+493 505,5,5,True
+572 505,6,6,True
+651 505,7,7,True
+730 505,8,8,True
+286 490,9,9,True
+231 540,10,10,True
+0 0,-1,-1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x66f59f20,original=0x29f0e80,2026-10-06T18:06:52
+distinct_results,12,,
+VERDICT,GREEN,12,

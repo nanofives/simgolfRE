@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 32 bytes, 8 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Returns a random integer in [lo,hi] via Random::next. (`re/names/exe_1.tsv`)
 
+## Purpose
+Random::range (0x0045c1e0) advances the linear-congruential generator by calling Random::next (0x0045c1a0, this in ecx), which rewrites the 4-byte seed at [this] and returns a double in [0,1); it masks the argument n to 16 bits (`and eax,0xffff` at 0x0045c1e9), multiplies the double by that count (`fild`/`fmulp` at 0x0045c1f2/0x0045c1f6), truncates the product to int with __ftol (0x004a6030, 0x0045c1f8) and returns it in eax (callers keep only ax). __thiscall with one stack argument (`ret 4`). Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: Random::range (15 vectors, 8 distinct results, 15 changing state, `log/diff/0045c1e0_Random_range.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_util.cpp` as `?range@Random@@QAEGG@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0045c1fd): callee pops 4 bytes of stack arguments.

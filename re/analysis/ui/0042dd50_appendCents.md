@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 335 bytes, 132 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 appends a currency amount (dollars and cents) to the text buffer (`re/names/exe_0.tsv`)
 
+## Purpose
+Appends the cents amount `n` to the text buffer 0x0051a068 as "units.cc" and stores `n` in the dword at 0x00569628 (0x0042dd50, store at 0x0042dd56). A negative `n` (0x0042dd5f): when the buffer's last character is '+' it overwrites it with NUL (0x0042dd6c..0x0042dd79), then appends "-" and negates `n`. It appends the decimal text of `n / 100` from __itoa 0x004ad425 into 0x0058a528, then ".", a "0" when `n % 100 < 10` (0x0042ddcc), then the decimal text of `n % 100`. Matched 100% as `?appendCents@@YAXH@Z` (re/match/golf_small33.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: appendCents (18 vectors, 18 distinct results, 18 changing state, `log/diff/0042dd50_appendCents.path1.csv`); appendCents_plus (5 vectors, 5 distinct results, 5 changing state, `log/diff/0042dd50_appendCents_plus.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small33.cpp` as `?appendCents@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042de9e): callee pops 0 bytes of stack arguments.

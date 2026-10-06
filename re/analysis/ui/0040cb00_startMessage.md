@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 247 bytes, 75 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 starts a popup/notification message box with the given text and buttons (`re/names/exe_0.tsv`)
 
+## Purpose
+Starts the on-screen message ticker with the current text buffer (0x0040cb00). It returns 0 (refused) when the direction byte at 0x00569498 or the busy dword at 0x0053df54 is set and `prio <= 0`, or when the mode dword at 0x00567afc is 3 (0x0040cb09..0x0040cb34). Otherwise it clears 0x0053df54, copies the text buffer 0x0051a068 into the message buffer at 0x005a6d40 (0x0040cb45), sets the direction byte 0x00569498 to 1, stores `arg` at 0x005a34ec, the display length `strlen(text) / ((0x00822c88 != 0) + 3) + 16` at 0x005a7144 and `sound` at 0x004c2e08 (0x0040cb53..0x0040cb90); a negative `prio` sets the delay at 0x005694a4 to `-prio` (0x0040cb95); it then stores Random::range(600) at 0x0056d1a8 and Random::range(200) + 200 at 0x0056d1ac (Random::range 0x0045c1e0, calls at 0x0040cbaa/0x0040cbc1) and returns 1. Matched 100% as `?startMessage@@YAHHHH@Z` (re/match/golf_small30.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: startMessage (6 vectors, 6 distinct results, 6 changing state, `log/diff/0040cb00_startMessage.path1.csv`); startMessage_busy (6 vectors, 3 distinct results, 2 changing state, `log/diff/0040cb00_startMessage_busy.path1.csv`); startMessage_mode3 (6 vectors, 1 distinct results, 0 changing state, `log/diff/0040cb00_startMessage_mode3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small30.cpp` as `?startMessage@@YAHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040cbf2, 0x0040cbf6): callee pops 0 bytes of stack arguments.

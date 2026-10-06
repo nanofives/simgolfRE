@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 232 bytes, 75 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 Converts a tile coordinate to screen pixels via worldToScreen. (`re/names/exe_1.tsv`)
 
+## Purpose
+tileToScreen (0x0042f940) returns the screen position of the centre of tile (tx, ty), cached per tile. It returns 0 unless 0 <= tx,ty < 50 (0x0042f94b..0x0042f966). The cache is the short grids g_tileSX at 0x0055eb40 and g_tileSY at 0x0055fec8, indexed `(tx*50+ty)*2` (0x0042f978 / 0x0042f99c). A cached X that is nonzero and not -99 is returned directly: *sx = X, *sy = Y, return 1 (0x0042f984..0x0042f99c). A zero (uncached) cell is computed by worldToScreen(tx*0x400+0x200, ty*0x400+0x200, sx, sy, 0) (0x0042fb90, called at 0x0042f9cc); if *sx is in [-0x40, g_viewW+0x40) and *sy in [-0x2a, g_viewH+0x2a) (g_viewW = 0x00822c8c, g_viewH = 0x00822c90) the position is cached and 1 returned (stores at 0x0042fa00 / 0x0042fa0a), otherwise the X cell is marked -99 (0xff9d, 0x0042fa19) and 0 returned. A cached -99 returns 0 without recomputing. Matched in re/match/golf_small27.cpp (`?tileToScreen@@YAHHHPAH0@Z`). Reimplemented in `shim/src/re/c3h.cpp`; path-1 A/B GREEN: tileToScreen (62 vectors, 42 distinct results, 41 changing state, `log/diff/0042f940_tileToScreen.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small27.cpp` as `?tileToScreen@@YAHHHPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042f9ac, 0x0042fa18, 0x0042fa27): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 38 bytes, 10 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 stores grid spacing/offset globals (no live callers) (`re/names/exe_0.tsv`)
 
+## Purpose
+setGrids (0x0040a130) stores two per-cell bytes for tile (x, y): the low byte of `a` into the 50x50 grid at 0x005830b8 and the low byte of `b` into the grid at 0x0059c090, both indexed `x*50 + y` (the two `lea eax,[eax+eax*4]` give x*25, the `lea eax,[ecx+eax*2]` scales to x*50 and adds y at 0x0040a13c..0x0040a142; stores at 0x0040a149 / 0x0040a14f). A pure writer; matched in re/match/golf_small2.cpp (`?setGrids@@YAXHHDD@Z`). Reimplemented in `shim/src/re/c3h.cpp`; path-1 A/B GREEN: setGrids (90 vectors, 90 distinct results, 90 changing state, `log/diff/0040a130_setGrids.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small2.cpp` as `?setGrids@@YAXHHDD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040a155): callee pops 0 bytes of stack arguments.

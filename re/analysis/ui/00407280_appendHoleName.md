@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 192 bytes, 71 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 appends the hole label (Hole N or a named hole) to the text buffer (`re/names/exe_0.tsv`)
 
+## Purpose
+Appends a hole's name to the text buffer 0x0051a068 (0x00407280). With `rec = hole * 0x208`, when the flags byte at 0x00575cb0 + rec has bit 0x81 (test at 0x00407291) it calls appendString(hole) 0x0045b9f0 (call at 0x0040729b) and returns if that is non-zero (0x004072a5); otherwise it appends a par-specific name indexed by `hole`: par 3 (the byte at 0x00575ab0 + rec) from the pointer table 0x004c2e88, par 4 from 0x004c2e38, else from 0x004c2ed8 (0x004072ab..0x004072d3). When bit 0x81 is clear it appends "Hole " (0x004c4978) then the decimal text of `hole` from __itoa 0x004ad425 into 0x0058a528. Matched 100% as `?appendHoleName@@YAXH@Z` (re/match/golf_small24.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: appendHoleName (6 vectors, 5 distinct results, 6 changing state, `log/diff/00407280_appendHoleName.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small24.cpp` as `?appendHoleName@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040733f): callee pops 0 bytes of stack arguments.

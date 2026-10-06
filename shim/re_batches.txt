@@ -4,3 +4,7 @@ c3b.cpp
 c3a.cpp
 c3c.cpp
 c3d.cpp
+c3f.cpp
+c3h.cpp
+c3e.cpp
+c3g.cpp

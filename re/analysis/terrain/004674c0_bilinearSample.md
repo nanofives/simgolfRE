@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 146 bytes, 49 instructions, subsystem `terrain`. Mechan
 bilinearly interpolates a value from the 0x13-stride grid at DAT_00838c1c for sub-tile coordinates (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+bilinearSample (0x004674c0) bilinearly interpolates the signed-byte height grid at 0x00838c1c (row stride 0x13 = 19). Each argument is biased by -0x80 (0x004674c9/0x004674d0); the integer tile index is `(v >> 8) & 0xf` (0x004674dc/0x004674e2 for x, 0x004674df/0x004674e5 for y) and the sub-tile weight is `(v >> 3) & 0x1f` (0x004674f2/0x004674f8 and 0x004674fb/0x0046750c), with the complementary weights `0x20 - weight` (0x004674ea/0x00467516 and 0x0046750f/0x00467514). The base index is `iy + ix*19` (the `lea edi,[eax+eax*8]`/`lea esi,[esi+edi*2]` at 0x004674ef/0x004674f5), and the four corners are `grid[base+0]`, `grid[base+1]`, `grid[base+19]`, `grid[base+20]` (0x00467526/0x004674fe/0x00467505/0x0046752d). It returns `(c01*ifx*fy + c10*ify*fx + c00*ifx*ify + c11*fy*fx) / 32`, the final division being the `cdq`/`and edx,0x1f`/`add`/`sar eax,5` at 0x00467546..0x0046754e (C truncation toward zero). Reimplemented in `shim/src/re/c3e.cpp`; path-1 A/B GREEN: bilinearSample (256 vectors, 175 distinct results, `log/diff/004674c0_bilinearSample.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00467551): callee pops 0 bytes of stack arguments.
 

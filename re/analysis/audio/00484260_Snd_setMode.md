@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 109 bytes, 35 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 sets the sound mode m_54 and the corresponding playback flag bits in m_44 (switch over modes 1,2,4,5,6,7) (`re/names/exe_3.tsv`)
 
+## Purpose
+Snd::setMode (0x00484260) selects through the jump table at 0x004842d0 and ORs a bit into the flag word [this+0x44] by mode — 4 -> 0x10, 2 -> 8, 1 -> 4, 5 -> 0x28, 6 -> 0x100, 7 -> 0x80 — then stores the mode at [this+0x54]; mode 3 and out-of-range values skip the OR and only store the mode (the default target 0x004842c7 into which case 7 falls). __thiscall, one stack argument (`ret 4`), returns void. Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: Snd::setMode (11 vectors, 11 distinct results, 10 changing state, `log/diff/00484260_Snd_setMode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small10.cpp` as `?setMode@Snd484@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048427f, 0x0048428e, 0x0048429d, 0x004842ac, 0x004842bb, 0x004842ca): callee pops 4 bytes of stack arguments.

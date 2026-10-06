@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 214 bytes, 84 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 appends the in-game date to the text buffer (`re/names/exe_0.tsv`)
 
+## Purpose
+Appends a game date to the text buffer 0x0051a068 as "<month> <year>" (0x0040d7b0). It computes `year = date / 8192` and `month = date / 1024 % 8` (0x0040d7b6..0x0040d7e0), stores `(short)year` in the word at 0x005a6d3c (0x0040d7ec), appends the month name from the pointer table at 0x004c2908 indexed by `month` (0x0040d7f5), a space, then the decimal text of `year + 2001` from __itoa 0x004ad425 into 0x0058a528. The year axis has 8 months and year 0 maps to 2001. Matched 100% as `?appendDate@@YAXH@Z` (re/match/golf_small23.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: appendDate (12 vectors, 12 distinct results, 12 changing state, `log/diff/0040d7b0_appendDate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small23.cpp` as `?appendDate@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040d885): callee pops 0 bytes of stack arguments.

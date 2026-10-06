@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 54 bytes, 17 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 clamps a pitch/frequency offset to [-0x4b0,0x4b0], stores it in m_5c and forwards to the device m_40 (vtable f39) (`re/names/exe_3.tsv`)
 
+## Purpose
+Snd::setPitch (0x00484f40) clamps the pitch to [-0x4b0, 0x4b0] (0x00484f44..0x00484f59), stores the clamped value at [this+0x5c] (0x00484f5e), and when the device pointer at [this+0x40] is non-null notifies it through the device's virtual slot +0x9c with the clamped value (0x00484f6b); it returns 0 (`xor eax,eax` at 0x00484f71). __thiscall, one stack argument (`ret 4`). Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: Snd::setPitch (11 vectors, 7 distinct results, 10 changing state, `log/diff/00484f40_Snd_setPitch.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00484f40@C_FUN_00484f40@f_00484f40@@QAEIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00484f73): callee pops 4 bytes of stack arguments.

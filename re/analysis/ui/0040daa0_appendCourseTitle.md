@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 237 bytes, 86 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 builds the full course title (name plus suffix such as Golf Club / Country Club) (`re/names/exe_0.tsv`)
 
+## Purpose
+Appends the current course's title to the text buffer 0x0051a068, with an optional club suffix (0x0040daa0). When appendString(0) 0x0045b9f0 returns 0 (call at 0x0040daa4) it appends the site name string at 0x004c1ea9 + site * 0x82, where `site` is the byte at 0x00571ff4 + course * 0x2e and `course` is the dword at 0x0059bf90 (0x0040dab0..0x0040dad8). When the `full` argument is not -1 (0x0040daff) it appends a suffix chosen by bucketValue(holes - 1) 0x0044faf0, `holes` being the dword at 0x005685f0 (0x0040db08..0x0040db17): case 1 -> 0x004c5364 (full == 1) or 0x004c5360, case 2 -> 0x004c5374 or 0x004c5370, case 3 -> 0x004c5384 or 0x004e9a84, default -> 0x004c5398 or 0x004c5394. Matched 100% as `?courseTitle40daa0@@YAXH@Z` (re/match/golf_hand_07_40daa0.cpp). Reimplemented in `shim/src/re/c3g.cpp`; path-1 A/B GREEN: appendCourseTitle (4 vectors, 3 distinct results, 4 changing state, `log/diff/0040daa0_appendCourseTitle.path1.csv`); appendCourseTitle_b (4 vectors, 3 distinct results, 4 changing state, `log/diff/0040daa0_appendCourseTitle_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_40daa0.cpp` as `?courseTitle40daa0@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040db8c): callee pops 0 bytes of stack arguments.
