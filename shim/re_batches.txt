@@ -27,3 +27,7 @@ c3ab.cpp
 c3aa.cpp
 c3z.cpp
 c3y.cpp
+c3ad.cpp
+c3af.cpp
+c3ae.cpp
+c3ac.cpp

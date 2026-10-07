@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 60 bytes, 26 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Writes one byte to the JPEG output through the compressor's destination manager. It loads cinfo->dest (cinfo+0x14), stores the low byte of `val` at *next_output_byte (dest+0, 0x004afbbe), advances next_output_byte (0x004afbc7) and decrements free_in_buffer (dest+4, 0x004afbc9). When free_in_buffer reaches zero (0x004afbcc) it calls dest->empty_output_buffer (dest+0xc, 0x004afbcf) to flush and refill, and if that returns FALSE (0x004afbd7, meaning I/O suspension, which the stdio destination never requests) it raises ERREXIT JERR_CANT_SUSPEND = 0x16 through cinfo->err (msg_code at err+0x14, error_exit at err+0, 0x004afbe5). Matches re/match/golf_jpeg_cmarker.cpp (IJG libjpeg 6a). Reimplemented in `shim/src/re/c3af.cpp`; path-1 A/B GREEN: emit_byte (12 vectors, 10 distinct results, 12 changing state, `log/diff/004afbb0_emit_byte.path1.csv`); emit_byte_full (4 vectors, 4 distinct results, 4 changing state, `log/diff/004afbb0_emit_byte_full.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_byte` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afbeb): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 145 bytes, 44 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Allocates the forward-DCT controller (0x30 bytes) in the per-image pool via cinfo->mem->alloc_small(cinfo, 1, 0x30) (0x004b34be), stores it at cinfo+0x160 (0x004b34c5) and sets its start_pass method pointer = 0x004b3550 (fdct+0, 0x004b34cb). It then selects the per-method DCT routines from the DCT method at cinfo+0xbc (0x004b34d1): method 0 sets fdct+4 = 0x004b3720 and fdct+8 = 0x004b5d50; method 1 sets fdct+4 = 0x004b3720 and fdct+8 = 0x004b6110; method 2 sets fdct+4 = 0x004b38c0 and fdct+0x1c = 0x004b6360; any other value raises ERREXIT JERR_NOT_COMPILED = 0x2f (0x004b34e5). Finally it zeroes the divisor-table pointer cache at fdct+0xc..+0x18 and fdct+0x20..+0x2c (the loop at 0x004b352d). Transcribed from the disassembly. Reimplemented in `shim/src/re/c3af.cpp`; path-1 A/B GREEN: jinit_forward_dct (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b34b0_jinit_forward_dct.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cdctmgr.cpp` as `_jinit_forward_dct` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b3540): callee pops 0 bytes of stack arguments.

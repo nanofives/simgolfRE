@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 40 bytes, 17 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Emits a 16-bit integer most-significant byte first: emit_byte(cinfo, (value>>8)&0xFF) at 0x004afc20 then emit_byte(cinfo, value&0xFF) at 0x004afc2d. Matches re/match/golf_jpeg_cmarker.cpp. No conditional branches; both output bytes vary with the value. emit_byte (0x004afbb0) runs through its original address (in-batch; re-run with SIMGOLF_HOOKS_OFF=004afbb0). Reimplemented in `shim/src/re/c3af.cpp`; path-1 A/B GREEN: emit_2bytes (12 vectors, 12 distinct results, 12 changing state, `log/diff/004afc10_emit_2bytes.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_2bytes` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afc37): callee pops 0 bytes of stack arguments.

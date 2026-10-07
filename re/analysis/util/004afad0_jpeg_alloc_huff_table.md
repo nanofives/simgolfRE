@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 31 bytes, 9 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Allocates a JHUFF_TBL (0x118 bytes) in the permanent pool via cinfo->mem->alloc_small(cinfo, 0, 0x118) (0x004afadf), clears its sent_table flag at +0x114 (0x004afae4) and returns it. Matches re/match/golf_jpeg_cparam.cpp. No conditional branches. Reimplemented in `shim/src/re/c3af.cpp`; path-1 A/B GREEN: jpeg_alloc_huff_table (10 vectors, 10 distinct results, 10 changing state, `log/diff/004afad0_jpeg_alloc_huff_table.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_comapi.cpp` as `_jpeg_alloc_huff_table` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afaee): callee pops 0 bytes of stack arguments.

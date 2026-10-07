@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 61 bytes, 21 instructions, subsystem `ui`. Mechanical t
 When active (this+0x130), sets the normal text colour quad on the font object at this+0x274. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Button::setColorNormal(this, a, b, c, d) sets the button's normal-state text colour. When the active flag this+0x130 is nonzero (0x00488938) it calls Widget_applyPalette 0x004789f0 on the font object this+0x274 with the global palette 0x0083ad10 (0x00488949), then Widget_setQuad 0x00476310 on this+0x274 with the four colour components (a, b, c, d) (0x00488964). It does nothing when the flag is clear. Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: Button::setColorNormal (7 vectors, 7 distinct results, 6 changing state, `log/diff/00488930_Button_setColorNormal.path1.csv`); Button::setColorNormal_off (1 vectors, 1 distinct results, 0 changing state, `log/diff/00488930_Button_setColorNormal_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00488930@C_FUN_00488930@f_00488930@@QAEXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x0048896a): callee pops 16 bytes of stack arguments.

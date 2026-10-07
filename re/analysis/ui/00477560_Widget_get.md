@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 28 bytes, 11 instructions, subsystem `ui`. Mechanical t
 reads a widget value (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Widget_get(this) returns the dword at p + 0x10, where p is the object pointer this+0x5c. When this+0x5c is null (0x00477563) it first defaults p to the global default-font pointer 0x0083ad44 and stores it back at this+0x5c (0x0047756c) before the read. Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: Widget_get (11 vectors, 11 distinct results, 1 changing state, `log/diff/00477560_Widget_get.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?get@C477560@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00477574, 0x0047757b): callee pops 0 bytes of stack arguments.

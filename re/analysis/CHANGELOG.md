@@ -4,6 +4,24 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-07  0042dea0  holeMagazineEvent  C2->C3  log/diff/0042dea0_holeMagazineEvent.path1.csv
+2026-10-07  0048cd80  matchDirective  C2->C3  log/diff/0048cd80_matchDirective.path1.csv
+2026-10-07  004889b0  Button::setColorPressed  C2->C3  log/diff/004889b0_Button_setColorPressed.path1.csv
+2026-10-07  00488930  Button::setColorNormal  C2->C3  log/diff/00488930_Button_setColorNormal.path1.csv
+2026-10-07  00478b80  Widget_fillRect  C2->C3  log/diff/00478b80_Widget_fillRect.path1.csv
+2026-10-07  00478700  TextView_endSegment  C2->C3  log/diff/00478700_TextView_endSegment.path1.csv
+2026-10-07  00477560  Widget_get  C2->C3  log/diff/00477560_Widget_get.path1.csv
+2026-10-07  0042ef40  rateLot  C2->C3  log/diff/0042ef40_rateLot.path1.csv
+2026-10-07  00407b60  sceneryLabel  C2->C3  log/diff/00407b60_sceneryLabel.path1.csv
+2026-10-07  004b34b0  jinit_forward_dct  C2->C3  log/diff/004b34b0_jinit_forward_dct.path1.csv
+2026-10-07  004afc10  emit_2bytes  C2->C3  log/diff/004afc10_emit_2bytes.path1.csv
+2026-10-07  004afbf0  emit_marker  C2->C3  log/diff/004afbf0_emit_marker.path1.csv
+2026-10-07  004afbb0  emit_byte  C2->C3  log/diff/004afbb0_emit_byte.path1.csv
+2026-10-07  004afad0  jpeg_alloc_huff_table  C2->C3  log/diff/004afad0_jpeg_alloc_huff_table.path1.csv
+2026-10-07  004afab0  jpeg_alloc_quant_table  C2->C3  log/diff/004afab0_jpeg_alloc_quant_table.path1.csv
+2026-10-07  004ae4d0  jpeg_stdio_dest  C2->C3  log/diff/004ae4d0_jpeg_stdio_dest.path1.csv
+2026-10-07  00402970  spawnWalker  C2->C3  log/diff/00402970_spawnWalker.path1.csv
+2026-10-07  00461830  build16BitColorTable  C2->C3  log/diff/00461830_build16BitColorTable_555.path1.csv
 2026-10-07  00483980  wrapTextToWidth  C2->C3  log/diff/00483980_wrapTextToWidth_acc0.path1.csv
 2026-10-07  004a2250  viewFieldCtor4a2250  C2->C3  log/diff/004a2250_viewFieldCtor4a2250.path1.csv
 2026-10-07  004940e0  comboFindItem  C2->C3  log/diff/004940e0_comboFindItem.path1.csv

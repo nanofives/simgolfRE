@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 61 bytes, 20 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Installs the stdio destination manager on a compressor. If cinfo->dest (cinfo+0x14) is NULL (0x004ae4da) it allocates a 0x1c-byte manager via cinfo->mem->alloc_small(cinfo, 0, 0x1c) (0x004ae4e4) and stores it at cinfo+0x14 (0x004ae4e9). It then writes the three method pointers init_destination = 0x004ae510 (dest+8), empty_output_buffer = 0x004ae540 (dest+0xc) and term_destination = 0x004ae590 (dest+0x10), and the output FILE* argument at dest+0x14 (0x004ae4f4..0x004ae509). Matches re/match/golf_jpeg_cmarker.cpp (jdatadst). Reimplemented in `shim/src/re/c3af.cpp`; path-1 A/B GREEN: jpeg_stdio_dest (10 vectors, 10 distinct results, 10 changing state, `log/diff/004ae4d0_jpeg_stdio_dest.path1.csv`); jpeg_stdio_dest_alloc (4 vectors, 4 distinct results, 4 changing state, `log/diff/004ae4d0_jpeg_stdio_dest_alloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_datadst.cpp` as `_jpeg_stdio_dest` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae50c): callee pops 0 bytes of stack arguments.

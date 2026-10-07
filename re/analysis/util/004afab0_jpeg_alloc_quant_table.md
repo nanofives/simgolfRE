@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 31 bytes, 9 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Allocates a JQUANT_TBL (0x84 bytes) in the permanent pool by calling cinfo->mem->alloc_small(cinfo, 0, 0x84) through the pointer at mem+0 (cinfo+4), clears the table's sent_table flag at +0x80 (0x004afac4) and returns the table. Matches re/match/golf_jpeg_cparam.cpp. No conditional branches; the returned pointer and the cleared flag are the observable effect. Reimplemented in `shim/src/re/c3af.cpp`; path-1 A/B GREEN: jpeg_alloc_quant_table (10 vectors, 10 distinct results, 10 changing state, `log/diff/004afab0_jpeg_alloc_quant_table.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_comapi.cpp` as `_jpeg_alloc_quant_table` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004aface): callee pops 0 bytes of stack arguments.

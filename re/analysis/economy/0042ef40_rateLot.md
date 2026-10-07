@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 465 bytes, 162 instructions, subsystem `economy`. Mecha
 computes a lot/home-site value and prep cost (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+rateLot(x, y) scores a 2x2 lot/home site at tile (x, y). It first sums clearCost 0x0042ee80 over the 12-cell ring of the footprint (the two loops at 0x0042ef66..0x0042efb3: rows y-1 and y+2 for x-1..x+2, and columns x-1 and x+2 for y..y+1). It then walks the 18-entry record table 0x00575cb8 (stride 0x208): a record counts when its byte +0 is nonzero (0x0042efdd) and its dword +0x20 is nonzero (0x0042efe7). For such a record v = (short)+0x158 * 1000 / (+0x20 + +0x24/2 + 4) + (3 - dword 0x00822c88) * 100 (0x0042f00f); bit 0 (0x0042f02d) and bit 1 (0x0042f034) of the dword +0x200 each add 100. d is the smallest of distance 0x0040acd0 over (x-+8, y-+0xc) and (x-+0x18, y-+0x1c), and, when 0x0059aea8[i] (stride 0x18) has x != -1 (0x0042f07d), (x - (.x >> 10), y - (.y >> 10)) (0x0042f092). v is divided by d + 8 (0x0042f097) and kept as the running maximum best (0x0042f0ac). Finally, when the dword 0x00543cd0 (course aura) is nonzero (0x0042f0da) best += 0x00543cd0 * best / 3; the return is best * sum / 40 (0x0042f106). All divisions are signed. Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: rateLot (10 vectors, 8 distinct results, `log/diff/0042ef40_rateLot.path1.csv`); rateLot_aura (10 vectors, 8 distinct results, `log/diff/0042ef40_rateLot_aura.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `?S1rate42ef40@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042f110): callee pops 0 bytes of stack arguments.

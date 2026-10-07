@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 255 bytes, 103 instructions, subsystem `course`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 builds the Scenic ... label for a scenery object (`re/names/exe_0.tsv`)
 
+## Purpose
+sceneryLabel(a, b, text) looks up a scenery object at tile coordinates (a, b). It scans the 100-entry table 0x005689e8 (8-byte records: short a, b, idx) for the record whose a (compared at 0x00407b78) and b (0x00407b92) match. On a match: when text is 0 it returns 1 immediately (the text test at 0x00407bcd); otherwise it strcats the golfer name 0x004d6098 + idx*0x230 (0x00407bb8) and the separator string 0x004c4e34 (0x00407c19) onto the scratch text buffer 0x0051a068, calls decorationName(a, b, -1) 0x00407700 (0x00407c4d) and returns 1. With no matching record: when text is nonzero it strcats the "Scenic" string 0x004c4e38 (0x00407c44) and returns 0; otherwise it returns 0. Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: sceneryLabel (7 vectors, 6 distinct results, 5 changing state, `log/diff/00407b60_sceneryLabel.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?lookup407b60@@YAHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00407bc6, 0x00407bd7, 0x00407c5e): callee pops 0 bytes of stack arguments.

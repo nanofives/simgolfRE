@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 194 bytes, 54 instructions, subsystem `golfer`. Mechani
 spawns an ambient walker entity at a random edge position (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+Claims the first free walker slot in the table at 0x00585850 (stride 0x4c, occupied flag at record+0x12 = 0x00585862 for slot 0; the search loop 0x00402984..0x0040298d increments the index while the flag byte is non-zero), zeroes the 0x4c-byte record (rep stosd of 19 dwords at 0x004029a9) and fills it: world x/y are the placed-object-0 coordinates at 0x0058bcba/0x0058bcbc sign-extended, shifted left 10 and offset 0x600, written at record+0 and record+4 (0x004029d1/0x004029e8); record+0x12 (occupied) = 1 (0x004029f5); record+0x16 (direction) = (byte 0x00575cb9 + Random::range(0x00822d9c, 5) - 2) & 7 (0x004029d4..0x004029fc); record+0x13 = the type argument (0x00402a02); record+0x1e = 0xb; record+0x1a = Random::range(0x00822d9c, 0x20) (0x00402a1d); record+0x10 = 0xff (0x00402a24). It returns the slot index. Matches re/match (golf) small-function set shape; Random::range (0x0045c1e0) runs through its original address. Reimplemented in `shim/src/re/c3af.cpp`; path-1 A/B GREEN: spawnWalker (12 vectors, 12 distinct results, 12 changing state, `log/diff/00402970_spawnWalker.path1.csv`); spawnWalker_occ (12 vectors, 12 distinct results, 12 changing state, `log/diff/00402970_spawnWalker_occ.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small25.cpp` as `?spawnWalker@@YAHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00402a31): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 61 bytes, 21 instructions, subsystem `ui`. Mechanical t
 When active, sets the pressed text colour quad on the font object at this+0x274. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Button::setColorPressed(this, a, b, c, d) sets the button's pressed-state text colour. When the active flag this+0x130 is nonzero (0x004889b8) it calls Widget_applyPalette 0x004789f0 on the font object this+0x274 with the global palette 0x0083ad10 (0x004889c9), then Widget_setQuad74 0x00476370 on this+0x274 with (a, b, c, d) (0x004889e4). It does nothing when the flag is clear. (setQuad74 writes the four components to the font's +0x74/+0x84/+0x94/+0xa4.) Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: Button::setColorPressed (7 vectors, 7 distinct results, 6 changing state, `log/diff/004889b0_Button_setColorPressed.path1.csv`); Button::setColorPressed_off (1 vectors, 1 distinct results, 0 changing state, `log/diff/004889b0_Button_setColorPressed_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_004889b0@C_FUN_004889b0@f_004889b0@@QAEXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x004889ea): callee pops 16 bytes of stack arguments.

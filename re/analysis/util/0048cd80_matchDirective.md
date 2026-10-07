@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 122 bytes, 52 instructions, subsystem `util`. Mechanica
 Matches the leading token of *param_1 against the directive keyword table (0x004e4584..0x004e45db), advances the pointer past it, and returns the matched index. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+matchDirective(pp) matches the leading token of the string *pp against the 22-entry keyword pointer table 0x004e4584. It returns -1 when pp is null (the `if (pp)` guard at 0x0048cd8d). Otherwise, for i in 0..21 while nothing has matched (0x0048cda2), it calls __strnicmp 0x004ad580 of *pp against table[i] over strlen(table[i]) (0x0048cdb7); on a 0 result (0x0048cdc1) it advances *pp by that length (0x0048cdd7), records the index i and calls trimSpaces 0x004925b0 on the advanced *pp (0x0048cdda). The matched index (or -1) is returned. Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: matchDirective (9 vectors, 7 distinct results, 6 changing state, `log/diff/0048cd80_matchDirective.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f48cd80@@YAHPAPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048cdf9): callee pops 0 bytes of stack arguments.

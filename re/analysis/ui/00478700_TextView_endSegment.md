@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 67 bytes, 23 instructions, subsystem `ui`. Mechanical t
 ends a measured text segment: if width accumulated (0x00839aa8) adds it to the pen 0x00839aa0 and increments the segment count at +0x1c, then clears the per-segment fields; returns the pen x (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+TextView_endSegment(this) closes a measured text segment. When the pending-width flag 0x00839aa8 is nonzero (0x0047870d) it adds Widget_value(this) 0x00477580 to the pen x 0x00839aa0 (0x0047871c) and increments the segment count this+0x1c (0x00478726). It then clears 0x00839aa4 (store at 0x00478729) and the per-segment fields this+0x30/0x38/0x34/0x3c (0x0047872f..0x00478738). It returns the pen x 0x00839aa0. Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: TextView_endSegment (1 vectors, 1 distinct results, 1 changing state, `log/diff/00478700_TextView_endSegment.path1.csv`); TextView_endSegment_onneg (1 vectors, 1 distinct results, 1 changing state, `log/diff/00478700_TextView_endSegment_onneg.path1.csv`); TextView_endSegment_off (1 vectors, 1 distinct results, 1 changing state, `log/diff/00478700_TextView_endSegment_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00478700@f_00478700@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00478742): callee pops 0 bytes of stack arguments.

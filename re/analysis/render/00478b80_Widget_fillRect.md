@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 42 bytes, 17 instructions, subsystem `render`. Mechanic
 draws a filled rectangle (x1,y1,x2,y2,colour) via the surface vtbl+0x64 with the fill flag set (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Widget_fillRect(this, p1, p2, p3, p4, p5) forwards a rectangle fill to the widget's surface. When the surface object this+4 is non-null (0x00478b87) it calls that surface's virtual method at vtable+0x64 (slot 25), thiscall, with the five arguments plus a trailing 1 (p1, p2, p3, p4, p5, 1) (0x00478b9a). It does nothing when this+4 is null. Reimplemented in `shim/src/re/c3ae.cpp`; path-1 A/B GREEN: Widget_fillRect (10 vectors, 10 distinct results, 9 changing state, `log/diff/00478b80_Widget_fillRect.path1.csv`); Widget_fillRect_nosurf (1 vectors, 1 distinct results, 0 changing state, `log/diff/00478b80_Widget_fillRect_nosurf.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00478b80@C_FUN_00478b80@f_00478b80@@QAEXIIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00478ba7): callee pops 20 bytes of stack arguments.
