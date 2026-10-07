@@ -1,0 +1,48 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 0,void,void,True,5cac8f19,5cac8f19,True
+0 1,void,void,True,937c029e,937c029e,True
+0 2,void,void,True,597a5825,597a5825,True
+0 3,void,void,True,34cfcaa6,34cfcaa6,True
+0 4,void,void,True,df5d92ed,df5d92ed,True
+0 5,void,void,True,76b22f01,76b22f01,True
+0 6,void,void,True,54ad0633,54ad0633,True
+0 7,void,void,True,3e184752,3e184752,True
+0 8,void,void,True,5cac8f19,5cac8f19,True
+0 -1,void,void,True,5cac8f19,5cac8f19,True
+1 0,void,void,True,5bba687b,5bba687b,True
+1 1,void,void,True,2248bad8,2248bad8,True
+1 2,void,void,True,78095ff3,78095ff3,True
+1 3,void,void,True,82d931f4,82d931f4,True
+1 4,void,void,True,cc4e928f,cc4e928f,True
+1 5,void,void,True,04ca951b,04ca951b,True
+1 6,void,void,True,a44b4149,a44b4149,True
+1 7,void,void,True,c0aca470,c0aca470,True
+1 8,void,void,True,5bba687b,5bba687b,True
+1 -1,void,void,True,5bba687b,5bba687b,True
+2 0,void,void,True,66b34ef5,66b34ef5,True
+2 1,void,void,True,fe91eefa,fe91eefa,True
+2 2,void,void,True,149e7741,149e7741,True
+2 3,void,void,True,7de52ae2,7de52ae2,True
+2 4,void,void,True,df7e7041,df7e7041,True
+2 5,void,void,True,90ba0e1d,90ba0e1d,True
+2 6,void,void,True,563aa627,563aa627,True
+2 7,void,void,True,26cf621a,26cf621a,True
+2 8,void,void,True,66b34ef5,66b34ef5,True
+2 -1,void,void,True,66b34ef5,66b34ef5,True
+3 0,void,void,True,53052deb,53052deb,True
+3 1,void,void,True,19e64948,19e64948,True
+3 2,void,void,True,4d59268b,4d59268b,True
+3 3,void,void,True,37a64b1c,37a64b1c,True
+3 4,void,void,True,c9b98e3f,c9b98e3f,True
+3 5,void,void,True,f1e0a763,f1e0a763,True
+3 6,void,void,True,30bf8391,30bf8391,True
+3 7,void,void,True,00fa4b54,00fa4b54,True
+3 8,void,void,True,53052deb,53052deb,True
+3 -1,void,void,True,53052deb,53052deb,True
+12345 1,void,void,True,0ae12488,0ae12488,True
+-7 2,void,void,True,63f03681,63f03681,True
+state_regions,0x0051a068+0x0:320 0x00824134+0x0:16 0x004c15a0+0x0:440 0x004e3db8+0x0:8 0x00839338+0x0:4 0x008392a4+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7237d4d0,original=0x1440e60,2026-10-07T01:08:48
+distinct_results,34,,
+VERDICT,GREEN,42,

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 18 bytes, 7 instructions, subsystem `util`. Mechanical 
 Constructs a node-list variant with vtable 0x004bb014. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+NodeListC::ctor (0x00487b40) has the same shape as NodeListB::ctor: StrList::ctor (0x00487210) on this (0x00487b43), then the vtable at this+0 becomes 0x004bb014 (0x00487b48), and it returns this (0x00487b4e). Its caller is the static initialiser 0x00483e60 (staticInit_g83af98). Reimplemented in `shim/src/re/c3n.cpp`; path-1 A/B GREEN: NodeListC::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487b40_NodeListC_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487b40@f_00487b40@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487b51): callee pops 0 bytes of stack arguments.

@@ -11,3 +11,7 @@ c3g.cpp
 c3l.cpp
 c3k.cpp
 c3j.cpp
+c3n.cpp
+c3p.cpp
+c3o.cpp
+c3m.cpp

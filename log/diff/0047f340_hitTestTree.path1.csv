@@ -1,0 +1,49 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w0 $px0 $py0,NULL,NULL,True,e9f2cd87,e9f2cd87,False
+$w1 $px1 $py1,NULL,NULL,True,e9f2cd87,e9f2cd87,False
+$w2 $px2 $py2,NULL,NULL,True,873bdd92,873bdd92,True
+$w3 $px3 $py3,obj+0x0,obj+0x0,True,a9b014f0,a9b014f0,True
+$w4 $px4 $py4,obj+0x0,obj+0x0,True,a1fa344e,a1fa344e,True
+$w5 $px5 $py5,obj+0xffffea88,obj+0xffffea88,True,beb295f0,beb295f0,True
+$w6 $px6 $py6,obj+0x0,obj+0x0,True,5fcab112,5fcab112,True
+$w7 $px7 $py7,obj+0x0,obj+0x0,True,185584f6,185584f6,True
+$w8 $px8 $py8,NULL,NULL,True,e9f2cd87,e9f2cd87,False
+$w9 $px9 $py9,NULL,NULL,True,e9f2cd87,e9f2cd87,False
+$w10 $px10 $py10,obj+0x490e80,obj+0x490e80,True,ecbd6d60,ecbd6d60,True
+$w11 $px11 $py11,obj+0x491108,obj+0x491108,True,5d17543f,5d17543f,True
+$w12 $px12 $py12,obj+0x489f00,obj+0x489f00,True,e6b0f786,e6b0f786,True
+$w13 $px13 $py13,obj+0x48a188,obj+0x48a188,True,febb721c,febb721c,True
+$w14 $px14 $py14,obj+0x48a410,obj+0x48a410,True,31791175,31791175,True
+$w15 $px15 $py15,NULL,NULL,True,e9f2cd87,e9f2cd87,False
+$w16 $px16 $py16,obj+0x491870,obj+0x491870,True,94715dc6,94715dc6,True
+$w17 $px17 $py17,obj+0x491870,obj+0x491870,True,8c4e6f52,8c4e6f52,True
+$w18 $px18 $py18,NULL,NULL,True,e9f2cd87,e9f2cd87,False
+$w19 $px19 $py19,obj+0x492008,obj+0x492008,True,f78369f1,f78369f1,True
+$w20 $px20 $py20,obj+0x491d80,obj+0x491d80,True,ddfcbd97,ddfcbd97,True
+$w21 $px21 $py21,NULL,NULL,True,e5193118,e5193118,True
+$w22 $px22 $py22,obj+0x491d80,obj+0x491d80,True,64382579,64382579,True
+$w23 $px23 $py23,NULL,NULL,True,e5193118,e5193118,True
+$w24 $px24 $py24,obj+0x491d80,obj+0x491d80,True,8630a457,8630a457,True
+$w25 $px25 $py25,NULL,NULL,True,e5193118,e5193118,True
+$w26 $px26 $py26,obj+0x491d80,obj+0x491d80,True,708b3518,708b3518,True
+$w27 $px27 $py27,NULL,NULL,True,e5193118,e5193118,True
+$w28 $px28 $py28,obj+0x491d80,obj+0x491d80,True,1acd06bc,1acd06bc,True
+$w29 $px29 $py29,obj+0x491d80,obj+0x491d80,True,04d9ee12,04d9ee12,True
+$w30 $px30 $py30,obj+0x492290,obj+0x492290,True,70d1c953,70d1c953,True
+$w31 $px31 $py31,NULL,NULL,True,e9f2cd87,e9f2cd87,False
+$w32 $px32 $py32,obj+0x491d80,obj+0x491d80,True,0499a793,0499a793,True
+$w33 $px33 $py33,obj+0xffffbb88,obj+0xffffbb88,True,561b8ced,561b8ced,True
+$w34 $px34 $py34,obj+0xffffbe10,obj+0xffffbe10,True,dc33ab38,dc33ab38,True
+$w35 $px35 $py35,obj+0xffffc098,obj+0xffffc098,True,5329adfa,5329adfa,True
+$w36 $px36 $py36,NULL,NULL,True,fe339c3f,fe339c3f,True
+$w37 $px37 $py37,NULL,NULL,True,e5193118,e5193118,True
+$w38 $px38 $py38,NULL,NULL,True,678e1660,678e1660,True
+$w39 $px39 $py39,obj+0x491d80,obj+0x491d80,True,e6086e3f,e6086e3f,True
+$w40 $px40 $py40,NULL,NULL,True,678e1660,678e1660,True
+$w41 $px41 $py41,obj+0x570,obj+0x570,True,cd65925e,cd65925e,True
+$w42 $px42 $py42,obj+0x7f8,obj+0x7f8,True,6b6c3036,6b6c3036,True
+state_regions,$cells+0x0:344 $rec+0x0:772 0x0083ab18+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7237ccf0,original=0xce0dc0,2026-10-07T01:06:43
+distinct_results,32,,
+VERDICT,GREEN,43,

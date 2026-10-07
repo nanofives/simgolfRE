@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 206 bytes, 75 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 mouse handler via callback m_254, hit44/miss84, panels m_30/m_64 (`re/names/exe_3.tsv`)
 
+## Purpose
+Window::mouseDispatch254 (0x0047c430, thiscall, arguments x, y, release; void) routes a mouse event to a window's hot spots. A window with +0x9c bit 0x200000 or +0xa0 bit 0x8 ignores it (0x0047c436 / 0x0047c446). With release non-zero (0x0047c459) it calls the virtual slot 0xb4 (x, y) (0x0047c4e5) and notifies the panel +0x64 through its slot 0x1c (0x0047c4f4). Otherwise it stores the window into g_curWidget 0x0083ab2c (0x0047c45b), calls the cdecl callback +0x254 (x, y) when it is set (0x0047c477), and hit-tests the hot-spot list embedded at +0xbc with HotList::hitTestRect 0x00492b10 (x, y, &x-slot, &y-slot, &rect) (0x0047c47c..0x0047c493). On a hit (index >= 0, 0x0047c49a) it calls the virtual slot 0x44 with the two values hitTestRect wrote into the argument slots and the 16-byte rect (0x0047c49c..0x0047c4af); when there is no hit or slot 0x44 returns 0 (0x0047c4b4) it calls the virtual slot 0x84 (x, y) with the original point (0x0047c4bc). Then it notifies the panel +0x30 (0x0047c4cd). Reimplemented in `shim/src/re/c3o.cpp`; path-1 A/B GREEN: Window::mouseDispatch254 (27 vectors, 24 distinct results, 23 changing state, `log/diff/0047c430_Window_mouseDispatch254.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_win.cpp` as `?mouse47c430@Win47@@QAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0047c4d4, 0x0047c4fb): callee pops 12 bytes of stack arguments.

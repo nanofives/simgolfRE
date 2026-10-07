@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 18 bytes, 7 instructions, subsystem `util`. Mechanical 
 Constructs a node-list variant with vtable 0x004bafb0. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+NodeListB::ctor (0x00487a20) runs the base constructor StrList::ctor (0x00487210) on this (0x00487a23), which stores the vtable 0x004baeac at +0, 0 at +4, 0x7f at +8 and 0 at +0xc, +0x10, +0x14, +0x18 and +0x1c (0x00487215..0x00487234), then overwrites the vtable at this+0 with 0x004bafb0 (0x00487a28) and returns this (0x00487a2e). Its caller is the static initialiser 0x00483e20 (staticInit_g83ad58). Reimplemented in `shim/src/re/c3n.cpp`; path-1 A/B GREEN: NodeListB::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487a20_NodeListB_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487a20@f_00487a20@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487a31): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 231 bytes, 86 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 key handler: Enter closes with -1, Esc with -2, Tab tabs the focus child m_140, else forwards to the child and the m_25c callback plus onKey (`re/names/exe_3.tsv`)
 
+## Purpose
+Window::key (0x0047c5d0, thiscall, arguments a and vk) handles a key for a window and returns how it was handled. A window with +0x9c bit 0x200000 or +0xa0 bit 0x8 returns 0 (0x0047c5d8 / 0x0047c5e8). vk 0x0d or 0x1000d calls the virtual slot 0xd4 with -1 and vk 0x1b calls it with -2 (0x0047c5f9..0x0047c621), then processing continues. When +0x140 is non-zero the focus child (the window at +4 of the node +0x13c) gets the key: vk 9 calls the child's slot 0x128 and continues (0x0047c64c..0x0047c653); any other vk goes to Window::key on the child (0x0047c697), whose non-zero answer returns 1 (0x0047c6a5). Otherwise it stores the window into g_curWidget 0x0083ab2c (0x0047c659), calls the cdecl callback +0x25c (a, vk) when it is set (0x0047c66b), adds the virtual slot 0x8c (a, vk) (0x0047c678), notifies the panel object +0x38 through its slot 0x1c when it is set (0x0047c689) and returns the sum. Reimplemented in `shim/src/re/c3o.cpp`; path-1 A/B GREEN: Window::key (40 vectors, 37 distinct results, 36 changing state, `log/diff/0047c5d0_Window_key.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_47c5d0.cpp` as `?key@C47c5d0@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047c692, 0x0047c6ab, 0x0047c6b4): callee pops 8 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 3 instructions, subsystem `input`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 stores the argument into the drag/capture global g_83ab60 (`re/names/exe_3.tsv`)
 
+## Purpose
+setDragTarget (0x0047d840, cdecl, one pointer argument) stores its argument into the global 0x0083ab60 (0x0047d844) and returns. That global has one reader, currentFocusOwner 0x0047f2f0, which falls back to it when 0x0083ab54 and 0x0083ab38 are both zero (0x0047f312); the only caller is gameMain 0x0045baf0. A leaf. Reimplemented in `shim/src/re/c3o.cpp`; path-1 A/B GREEN: setDragTarget (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047d840_setDragTarget.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_0047d840@f_0047d840@@YAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047d849): callee pops 0 bytes of stack arguments.

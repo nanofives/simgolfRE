@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 15 bytes, 7 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Returns the result of the child object (this+0x14) vtable+0x74 when the child is present, else 0. (`re/names/exe_4.tsv`)
 
+## Purpose
+resourceQuery (0x00487630) forwards a no-argument virtual call to the inner object whose pointer is at this+0x14 (0x00487630): when that pointer is NULL it returns 0 (`test` / `je` at 0x00487633..0x00487635, `xor eax, eax` at 0x0048763c); otherwise it tail-jumps to slot +0x74 of the inner object's vtable with ecx = the inner object (0x00487637..0x00487639), so the slot's return value is returned unchanged. Caller: playAudioFile (0x0043cce0). Reimplemented in `shim/src/re/c3n.cpp`; path-1 A/B GREEN: resourceQuery (12 vectors, 5 distinct results, 8 changing state, `log/diff/00487630_resourceQuery.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487630@f_00487630@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048763e): callee pops 0 bytes of stack arguments.

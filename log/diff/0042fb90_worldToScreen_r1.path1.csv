@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+1079 1985 $sx_in $sy_in 0,1,1,True,8b751126,8b751126,True
+1079 4033 $sx_in $sy_in 0,1,1,True,41c3d761,41c3d761,True
+1079 1985 $sx_xl $sy_xl 0,0,0,True,1cff748d,1cff748d,False
+1079 1985 $sx_xh $sy_xh 0,0,0,True,1cff748d,1cff748d,False
+1079 1985 $sx_yl $sy_yl 0,0,0,True,1cff748d,1cff748d,False
+1079 1985 $sx_yh $sy_yh 0,0,0,True,1cff748d,1cff748d,False
+1079 3009 $sx_in $sy_in 0,1,1,True,1cff748d,1cff748d,False
+1079 10177 $sx_in $sy_in 0,1,1,True,1868df15,1868df15,True
+1079 11201 $sx_in $sy_in 0,1,1,True,41c3d761,41c3d761,True
+1079 13249 $sx_in $sy_in 0,1,1,True,8b751126,8b751126,True
+1079 20417 $sx_in $sy_in 0,1,1,True,1cff748d,1cff748d,False
+22016 28160 $sx_in $sy_in 0,1,1,True,cf549fdc,cf549fdc,True
+6199 3009 $sx_in $sy_in 0,1,1,True,8b751126,8b751126,True
+28160 14848 $sx_in $sy_in 0,1,1,True,1e73ae61,1e73ae61,True
+state_regions,$sx_in+0x0:4 $sx_xl+0x0:4 $sx_xh+0x0:4 $sx_yl+0x0:4 $sx_yh+0x0:4 $sy_in+0x0:4 $sy_xl+0x0:4 $sy_xh+0x0:4 $sy_yl+0x0:4 $sy_yh+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x724bc0e0,original=0x1440e60,2026-10-07T01:00:24
+distinct_results,7,,
+VERDICT,GREEN,14,

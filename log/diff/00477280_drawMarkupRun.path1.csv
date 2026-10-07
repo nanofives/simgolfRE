@@ -1,0 +1,43 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$tplain $s_braces 8,40,40,True,2804bfe2,2804bfe2,True
+$tplain $s_plain 3,15,15,True,89970f2b,89970f2b,True
+$tnofont 0 5,0,0,True,4dac7a14,4dac7a14,True
+$tm $s_plain 8,24,24,True,3cca3d70,3cca3d70,True
+$tm $s_plain 0,0,0,True,d82e36b8,d82e36b8,True
+$tm $s_plain 20,24,24,True,3cca3d70,3cca3d70,True
+$tm $s_braces 8,22,22,True,b4d91f4c,b4d91f4c,True
+$tm $s_braces 3,6,6,True,337f6e2b,337f6e2b,True
+$tm $s_brackets 8,26,26,True,ee639124,ee639124,True
+$tm $s_mixed 9,21,21,True,6770eeb9,6770eeb9,True
+$tm $s_double 12,24,24,True,2dc22e26,2dc22e26,True
+$tm $s_close 4,9,9,True,f4fc423c,f4fc423c,True
+$tm $s_closeb 4,9,9,True,f4fc423c,f4fc423c,True
+$tm $s_dollar 12,33,33,True,ffb6fbe9,ffb6fbe9,True
+$tm $s_link 16,34,34,True,c9b3b1e0,c9b3b1e0,True
+$tm $s_linknogt 15,40,40,True,04e42458,04e42458,True
+$tm $s_dd 17,48,48,True,9a1059c3,9a1059c3,True
+$tm $s_ddend 14,12,12,True,4430b96d,4430b96d,True
+$tm $s_dl 17,64,64,True,6806a874,6806a874,True
+$tm $s_caret 10,30,30,True,f29ec3ef,f29ec3ef,True
+$tm $s_eq 8,24,24,True,3cca3d70,3cca3d70,True
+$tpart $s_mixed 9,19,19,True,25496c53,25496c53,True
+$tpart $s_braces 3,6,6,True,0ab9ddcf,0ab9ddcf,True
+$tpart $s_link 16,18,18,True,d258c03b,d258c03b,True
+$tpart $s_dl 17,48,48,True,9a1059c3,9a1059c3,True
+$tdrop $s_caret 10,57,57,True,091ab198,091ab198,True
+$tdrop $s_plain 8,24,24,True,083cc1d5,083cc1d5,True
+$tdrop $s_ddbrace 17,52,52,True,3f8476d1,3f8476d1,True
+$tm $s_ddbrace 17,76,76,True,d6cd6ad3,d6cd6ad3,True
+$tlink $s_eq 8,28,28,True,d1a7af5a,d1a7af5a,True
+$tlink $s_caret 10,58,58,True,47aed54c,47aed54c,True
+$tlink $s_plain 8,88,88,True,488dfd87,488dfd87,True
+$tnarrow $s_dd 17,43,43,True,9a1059c3,9a1059c3,True
+$tnarrow $s_braces 8,22,22,True,b4d91f4c,b4d91f4c,True
+$tpend $s_plain 8,54,54,True,d832b396,d832b396,True
+$tpend $s_plain 0,30,30,True,aefac3de,aefac3de,True
+$tpend $s_braces 8,52,52,True,f4e12ce2,f4e12ce2,True
+state_regions,$rec+0x0:772 $tm+0x0:128 $tpart+0x0:128 $tplain+0x0:128 $tnofont+0x0:128 $tdrop+0x0:128 $tlink+0x0:128 $tnarrow+0x0:128 $tpend+0x0:128,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7237ca00,original=0xce0e80,2026-10-07T01:06:42
+distinct_results,32,,
+VERDICT,GREEN,37,

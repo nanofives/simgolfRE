@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+12343 23489 $sx $sy 0,1,1,True,6ff6d6b5,6ff6d6b5,True
+36919 29633 $sx $sy 0,0,0,True,7167b8c6,7167b8c6,True
+12225 22583 $sx $sy 64,0,0,True,adc9d910,adc9d910,True
+1079 1985 $sx $sy 0,0,0,True,fc372eca,fc372eca,True
+1079 14273 $sx $sy 0,0,0,True,f72e48fc,f72e48fc,True
+10177 24631 $sx $sy 64,1,1,True,3e27baf6,3e27baf6,True
+10295 24513 $sx $sy 64,1,1,True,886aa195,886aa195,True
+10752 25088 $sx $sy 64,1,1,True,20ca2ad9,20ca2ad9,True
+11319 24513 $sx $sy 64,1,1,True,73d5064a,73d5064a,True
+14273 1079 $sx $sy 0,0,0,True,5f83f590,5f83f590,True
+27136 39424 $sx $sy 0,0,0,True,e197b2ff,e197b2ff,True
+32256 23040 $sx $sy 0,1,1,True,dbf0efb0,dbf0efb0,True
+13824 22016 $sx $sy 0,1,1,True,d8bf9ec2,d8bf9ec2,True
+23489 33847 $sx $sy 0,1,1,True,c789d5e5,c789d5e5,True
+state_regions,$sx+0x0:4 $sy+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x724bc0e0,original=0x1440e60,2026-10-07T01:00:24
+distinct_results,14,,
+VERDICT,GREEN,14,

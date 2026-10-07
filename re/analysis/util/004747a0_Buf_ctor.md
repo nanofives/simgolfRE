@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 18 bytes, 7 instructions, subsystem `util`. Mechanical 
 constructs a Buf object: sets vtable 0x004ba84c and clears its fields via Buf_init (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Buf_ctor (0x004747a0) constructs a Buf: it stores the vtable address 0x004ba84c at this+0 (0x004747a3), calls Buf_init (0x00474780) on the same object (0x004747a9), which zeroes the byte +4 and the dwords +8..+0x14, and returns this (0x004747ae). Callers: KeyTable::ctor 0x004882a0, ListModel::ctor 0x00489150, TextView::ctor 0x0048ce00, allocPairArray 0x0049d050. Reimplemented in `shim/src/re/c3n.cpp`; path-1 A/B GREEN: Buf_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004747a0_Buf_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_004747a0@f_004747a0@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004747b1): callee pops 0 bytes of stack arguments.

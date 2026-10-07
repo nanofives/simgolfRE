@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 66 bytes, 30 instructions, subsystem `util`. Mechanical
 Opens a resource via this vtable+4, loads it via the child (this+0x14) vtable+0x10; on success closes via vtable+8 and clears this+0x14. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+resourceLoadB (0x00487a70, thiscall, (a, b), `ret 8`) runs the same sequence as resourceLoad (0x00487c00): this's slot +4 with b (0x00487a7b), returned when non-zero (`jne` at 0x00487a80); else the inner object's (this+0x14) slot +0x10 with (a, b) (0x00487a8d), 0 returned when it yields 0 (`je` at 0x00487a94); else this's slot +8 with no arguments (0x00487a9a). The one difference: after that slot +8 call it stores 0 into the inner pointer at this+0x14 (0x00487a9f) before returning the slot +0x10 result. Caller: initSound (0x00483e90). Reimplemented in `shim/src/re/c3n.cpp`; path-1 A/B GREEN: resourceLoadB (14 vectors, 14 distinct results, 14 changing state, `log/diff/00487a70_resourceLoadB.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?load2@C487c00@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00487aa8, 0x00487aaf): callee pops 8 bytes of stack arguments.

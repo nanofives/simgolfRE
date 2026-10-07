@@ -4,6 +4,33 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-07  004676e0  buildGolferName  C2->C3  log/diff/004676e0_buildGolferName.path1.csv
+2026-10-07  00460df0  announceHoleType  C2->C3  log/diff/00460df0_announceHoleType.path1.csv
+2026-10-07  00421bc0  updateMembership  C2->C3  log/diff/00421bc0_updateMembership.path1.csv
+2026-10-07  00407700  decorationName  C2->C3  log/diff/00407700_decorationName.path1.csv
+2026-10-07  0047f340  hitTestTree  C2->C3  log/diff/0047f340_hitTestTree.path1.csv
+2026-10-07  0047d840  setDragTarget  C2->C3  log/diff/0047d840_setDragTarget.path1.csv
+2026-10-07  0047c5d0  Window::key  C2->C3  log/diff/0047c5d0_Window_key.path1.csv
+2026-10-07  0047c430  Window::mouseDispatch254  C2->C3  log/diff/0047c430_Window_mouseDispatch254.path1.csv
+2026-10-07  0047bc60  Window::resized  C2->C3  log/diff/0047bc60_Window_resized.path1.csv
+2026-10-07  00477280  drawMarkupRun  C2->C3  log/diff/00477280_drawMarkupRun.path1.csv
+2026-10-07  0040a160  buildToolLabel  C2->C3  log/diff/0040a160_buildToolLabel.path1.csv
+2026-10-07  004837f0  C4837f0::ctor  C2->C3  log/diff/004837f0_C4837f0_ctor.path1.csv
+2026-10-07  00483060  Cache483060::detach  C2->C3  log/diff/00483060_Cache483060_detach.path1.csv
+2026-10-07  00482e10  Link482::data  C2->C3  log/diff/00482e10_Link482_data.path1.csv
+2026-10-07  004826f0  Palette::decodeChunk  C2->C3  log/diff/004826f0_Palette_decodeChunk.path1.csv
+2026-10-07  004796a0  Surface_pixelPtr  C2->C3  log/diff/004796a0_Surface_pixelPtr.path1.csv
+2026-10-07  00430020  screenToTile  C2->C3  log/diff/00430020_screenToTile.path1.csv
+2026-10-07  0042fb90  worldToScreen  C2->C3  log/diff/0042fb90_worldToScreen.path1.csv
+2026-10-07  00487b40  NodeListC::ctor  C2->C3  log/diff/00487b40_NodeListC_ctor.path1.csv
+2026-10-07  00487a70  resourceLoadB  C2->C3  log/diff/00487a70_resourceLoadB.path1.csv
+2026-10-07  00487c00  resourceLoad  C2->C3  log/diff/00487c00_resourceLoad.path1.csv
+2026-10-07  00487a20  NodeListB::ctor  C2->C3  log/diff/00487a20_NodeListB_ctor.path1.csv
+2026-10-07  00487630  resourceQuery  C2->C3  log/diff/00487630_resourceQuery.path1.csv
+2026-10-07  004747a0  Buf_ctor  C2->C3  log/diff/004747a0_Buf_ctor.path1.csv
+2026-10-07  00474780  Buf_init  C2->C3  log/diff/00474780_Buf_init.path1.csv
+2026-10-07  0042f7a0  rebuildHeightfield  C2->C3  log/diff/0042f7a0_rebuildHeightfield.path1.csv
+2026-10-07  00421fa0  scanTileLine  C2->C3  log/diff/00421fa0_scanTileLine.path1.csv
 2026-10-06  00485260  Snd::ctor485260  C2->C3  log/diff/00485260_Snd_ctor485260.path1.csv
 2026-10-06  00485140  Snd::setVolume  C2->C3  log/diff/00485140_Snd_setVolume.path1.csv
 2026-10-06  004846b0  Snd::setField34  C2->C3  log/diff/004846b0_Snd_setField34.path1.csv

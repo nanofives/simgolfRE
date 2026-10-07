@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 472 bytes, 153 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 repositions the scrollbar children m_26c/m_270 after a size change, calls the m_230 resize callback and onSize (`re/names/exe_3.tsv`)
 
+## Purpose
+Window::resized (0x0047bc60, thiscall, arguments a and b; void) re-lays out a window after a size change. It stores the window into g_curWidget 0x0083ab2c (0x0047bc65). Unless +0x9c has bit 0x40 (0x0047bc73) it repositions the optional child windows at +0x26c and +0x270 against the client rect +0x1ac..+0x1b8, sizing them from their surface objects (child +0x278, slot 0xd8 = width, slot 0xdc = height, 0 without one): the +0x26c child is moved to (client width, 0) with Window::moveTo 0x0047b420 (0x0047bc98) and its slot 0xc gets (its surface width, client height minus the +0x270 child's surface height when that child exists, 0, 0) (0x0047bca7..0x0047bd3c); the +0x270 child is moved to (0, client height) (0x0047bd5e) and its slot 0xc gets (client width minus the +0x26c child's surface width when that child exists, its surface height, 0, 0) (0x0047bd73..0x0047be05). Then it calls the cdecl callback +0x230 (a, b) when it is set (0x0047be1c), the virtual slot 0x5c (a, b) (0x0047be27) and Window::layoutScrollbars 0x0047d570 (0x0047be2c). Reimplemented in `shim/src/re/c3o.cpp`; path-1 A/B GREEN: Window::resized (26 vectors, 26 distinct results, 26 changing state, `log/diff/0047bc60_Window_resized.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s2.cpp` as `?resized@S2Win47b@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047be35): callee pops 8 bytes of stack arguments.

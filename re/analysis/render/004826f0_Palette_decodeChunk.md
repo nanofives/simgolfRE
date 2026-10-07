@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 224 bytes, 87 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 decodes a palette chunk (runs of skip,count RGB triples) into a 256-entry table and uploads it to the display palette m_74 (`re/names/exe_3.tsv`)
 
+## Purpose
+Palette::decodeChunk (0x004826f0) applies a chunk of packed three-byte entries to the object reached through this+0x74, and returns 0. It returns at once when this+0x74 is null (0x004826f9..0x00482707). With P = this+0x74, when P+4 holds an object its virtual at +0x10 first copies the current 256 three-byte entries into a local 0x300-byte array (arguments (buf, 0, 0x100), 0x0048271c..0x0048272a). The chunk's packet count is the word at chunk+6 (0x0048272d) and the packets start at chunk+8; each packet is a skip byte added to the running 8-bit entry index (index starts at 0, `xor cl, cl` at 0x00482736, `add cl, dl` at 0x00482753) and a count byte where 0 means 0x100 (0x0048275b..0x0048275f), followed by count three-byte entries stored at local[index*3 .. index*3+2], the index incremented modulo 256 after each (0x0048276e..0x00482798). Afterwards, when P+4 is still null the virtual at P's vtable +0 runs on P (0x004827a5..0x004827ad); then the object at P+4 receives the array through its virtual at +0x14 with (buf, 0, 0x100) (0x004827af..0x004827c0). Its caller decodeImageChunks (0x00482570) dispatches chunk type words 4 and 0xb to it. Reimplemented in `shim/src/re/c3p.cpp`; path-1 A/B GREEN: Palette::decodeChunk (12 vectors, 11 distinct results, 10 changing state, `log/diff/004826f0_Palette_decodeChunk.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_4826f0.cpp` as `?colorChunk@C4826f0@@QAEHPAE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00482707, 0x004827cd): callee pops 4 bytes of stack arguments.
