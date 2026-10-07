@@ -3,10 +3,15 @@
 rpc.exports = {
   run(spec) {
     const shim = Process.getModuleByName('winmm.dll');
-    const find = new NativeFunction(shim.getExportByName('SimGolfShim_FindHook'), 'int',
-      ['uint32', 'pointer', 'pointer', 'pointer'], 'stdcall');
     const pd = Memory.alloc(4), po = Memory.alloc(4), pi = Memory.alloc(4);
-    if (!find(spec.addr, pd, po, pi)) throw new Error('no SG_HOOK registered at 0x' + spec.addr.toString(16));
+    const isExe = (spec.module || 'golf_clean.exe').toLowerCase() === 'golf_clean.exe';
+    // DLL RVAs collide across jgld.dll / sound.dll / Terrain.dll: look DLL hooks up by (module, rva)
+    const found = isExe
+      ? new NativeFunction(shim.getExportByName('SimGolfShim_FindHook'), 'int',
+          ['uint32', 'pointer', 'pointer', 'pointer'], 'stdcall')(spec.addr, pd, po, pi)
+      : new NativeFunction(shim.getExportByName('SimGolfShim_FindHookM'), 'int',
+          ['pointer', 'uint32', 'pointer', 'pointer', 'pointer'], 'stdcall')(Memory.allocUtf8String(spec.module), spec.addr, pd, po, pi);
+    if (!found) throw new Error('no SG_HOOK registered at ' + (spec.module || 'golf_clean.exe') + '+0x' + spec.addr.toString(16));
     const installed = pi.readS32() === 1;
     if (!installed) throw new Error('hook registered but not installed (toggled OFF?)');
     const detour = pd.readPointer(), original = po.readPointer();

@@ -1618,7 +1618,7 @@ addr,module,name,subsystem,confidence,status,note,file,callers,callees,frida_dif
 00006df0,jgld.dll,LinkedList::clear,util,C2,transcribed,re/analysis/util/00006df0_jgld_LinkedList_clear.md,,0x10006cf0,0x1007e780,,,match re/match/jgld_list.cpp
 00006f40,jgld.dll,LinkedList::add,util,C2,transcribed,re/analysis/util/00006f40_jgld_LinkedList_add.md,,0x10006ab0,0x10007370;0x1007e780;0x1007f0f0,,,"match re/match/jgld_list.cpp, string 0x1011d060 (debug warning)"
 00007100,jgld.dll,LinkedList::removeCurrent,util,C2,transcribed,re/analysis/util/00007100_jgld_LinkedList_removeCurrent.md,,0x10006b80,0x1007e780,,,match re/match/jgld_list.cpp
-000072b0,jgld.dll,LinkedList::find,util,C2,transcribed,re/analysis/util/000072b0_jgld_LinkedList_find.md,,0x10006b80,none,,,match re/match/jgld_list.cpp
+000072b0,jgld.dll,LinkedList::find,util,C3,impl,re/analysis/util/000072b0_jgld_LinkedList_find.md,shim/src/re/c3dll.cpp,0x10006b80,none,log/diff/000072b0_jgld_LinkedList_find.path1.csv,,match re/match/jgld_list.cpp
 00007370,jgld.dll,ListNode::ctor,util,C2,transcribed,re/analysis/util/00007370_jgld_ListNode_ctor.md,,0x10006f40,none,,,match re/match/jgld_list.cpp
 000073e0,jgld.dll,ListNode::deletingDtor,util,C2,transcribed,re/analysis/util/000073e0_jgld_ListNode_deletingDtor.md,,none,0x10007450;0x1007e6d0;0x1007e780,,,match re/match/jgld_list.cpp
 00007450,jgld.dll,ListNode::dtor,util,C2,transcribed,re/analysis/util/00007450_jgld_ListNode_dtor.md,,0x100073e0,none,,,match re/match/jgld_list.cpp

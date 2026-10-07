@@ -24,6 +24,6 @@ for i, (_, n) in enumerate(exports):
 
 d = ["LIBRARY winmm", "EXPORTS"]
 d += [f"    {n}=p_{n} @{o}" for o, n in exports]
-d += ["    SimGolfShim_SetVirtualCursor", "    SimGolfShim_ClearVirtualCursor", "    SimGolfShim_GetInfo", "    SimGolfShim_FindHook", "    SimGolfShim_CovPhase", "    SimGolfShim_CovDump", "    SimGolfShim_SetVirtualKey"]
+d += ["    SimGolfShim_SetVirtualCursor", "    SimGolfShim_ClearVirtualCursor", "    SimGolfShim_GetInfo", "    SimGolfShim_FindHook", "    SimGolfShim_FindHookM", "    SimGolfShim_CovPhase", "    SimGolfShim_CovDump", "    SimGolfShim_SetVirtualKey"]
 (HERE / "src" / "winmm.def").write_text("\n".join(d) + "\n")
 print(len(exports), "exports")

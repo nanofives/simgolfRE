@@ -196,6 +196,7 @@ EXPORTS
     SimGolfShim_ClearVirtualCursor
     SimGolfShim_GetInfo
     SimGolfShim_FindHook
+    SimGolfShim_FindHookM
     SimGolfShim_CovPhase
     SimGolfShim_CovDump
     SimGolfShim_SetVirtualKey

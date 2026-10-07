@@ -4,6 +4,7 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-07  jgld.dll:000072b0  LinkedList::find  C2->C3  log/diff/000072b0_jgld_LinkedList_find.path1.csv
 2026-10-07  00427380  matchUpdate  C2->C3  log/diff/00427380_matchUpdate.path1.csv
 2026-10-07  004732d0  addScore  C2->C3  log/diff/004732d0_addScore.path1.csv
 2026-10-07  0040e720  announceBuilding  C2->C3  log/diff/0040e720_announceBuilding.path1.csv

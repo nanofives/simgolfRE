@@ -22,10 +22,10 @@ def keys_of(batch):
     return m.HOOKS
 
 
-def csv_facts(addr, key):
+def csv_facts(spec, key):
     sys.path.insert(0, str(ROOT / "re" / "frida"))
-    from diff_hook import csv_name
-    p = ROOT / "log" / "diff" / f"{addr:08x}_{csv_name(key)}.path1.csv"
+    from diff_hook import csv_path
+    p = csv_path(spec, key, ROOT / "log" / "diff")
     if not p.exists():
         return None
     rows = list(csv.reader(p.open()))
@@ -63,22 +63,24 @@ def main():
     if a.keys:
         print(" ".join(hooks))
         return 0
+    # keyed by (module, addr): DLL RVAs collide across jgld.dll / sound.dll / Terrain.dll
     by_addr = collections.defaultdict(list)
     for k, spec in hooks.items():
-        by_addr[spec["addr"]].append(k)
-    rows = {r["addr"]: r for r in csv.DictReader(open(ROOT / "hooks.csv")) if (r["module"] or "golf_clean.exe") == "golf_clean.exe"}
+        by_addr[(spec.get("module") or "golf_clean.exe", spec["addr"])].append(k)
+    rows = {((r["module"] or "golf_clean.exe"), r["addr"]): r for r in csv.DictReader(open(ROOT / "hooks.csv"))}
     purp = purposes(a.batch)
     ready = []
-    for addr, ks in sorted(by_addr.items()):
-        facts = {k: csv_facts(addr, k) for k in ks}
-        row = rows.get(f"{addr:08x}", {})
+    for (mod, addr), ks in sorted(by_addr.items()):
+        facts = {k: csv_facts(hooks[k], k) for k in ks}
+        row = rows.get((mod, f"{addr:08x}"), {})
         ok = all(f and f["verdict"] == "GREEN" for f in facts.values())
         varied = any(f and (f["distinct"] > 1 or f["changed"]) for f in facts.values())
         status = "READY" if ok and varied and addr in purp else "GREEN-but-single-valued" if ok and not varied else \
             "no-purpose" if ok else "NOT-GREEN"
         if row.get("confidence") in ("C3", "C4"):
             status = "already " + row["confidence"]
-        print(f"0x{addr:08x} {row.get('name', '?'):28} {status}")
+        where = f"0x{addr:08x}" if mod == "golf_clean.exe" else f"{mod}+0x{addr:08x}"
+        print(f"{where} {row.get('name', '?'):28} {status}")
         for k, f in facts.items():
             print(f"    {k:28} " + ("no CSV" if not f else f"{f['verdict']} {f['vectors']} vectors, {f['distinct']} distinct"
                                      + (f", {f['changed']} change state" if f["stateful"] else "")))
@@ -86,10 +88,10 @@ def main():
         if status == "READY" and addr in skip:
             print("    held back by --skip")
         elif status == "READY":
-            ready.append((addr, row, facts))
+            ready.append((mod, addr, row, facts))
     if not a.apply:
         return 0
-    for addr, row, facts in ready:
+    for mod, addr, row, facts in ready:
         note = ROOT / row["note"]
         t = note.read_text(encoding="utf-8")
         if "## Purpose" in t:
@@ -101,7 +103,7 @@ def main():
         text = f"{purp[addr]} Reimplemented in `shim/src/re/{a.batch}.cpp`; path-1 A/B GREEN: {ab}."
         note.write_text(t.replace("## Signature", "## Purpose\n" + text + "\n\n## Signature", 1), encoding="utf-8")
         r = subprocess.run([sys.executable, str(ROOT / "scripts" / "re_classify.py"), "promote", f"{addr:08x}", "--to", "C3",
-                            "--file", f"shim/src/re/{a.batch}.cpp"], capture_output=True, text=True, cwd=ROOT)
+                            "--file", f"shim/src/re/{a.batch}.cpp", "--module", mod], capture_output=True, text=True, cwd=ROOT)
         lines = [l for l in r.stdout.splitlines() if "PROMOTED" in l or "REFUSED" in l or "FAIL" in l]
         print("\n".join(lines))
         if r.returncode != 0:                      # refused: take the Purpose back out so the note stays C2-shaped

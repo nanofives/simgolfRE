@@ -209,3 +209,20 @@ def test_retag_changes_only_the_subsystem_of_tracked_rows(proj):
     row = rc.Project(proj).rows()[("sound.dll", "00002650")]
     assert row["subsystem"] == "net" and row["confidence"] == "C1"
     assert "subsystem util->net" in (proj / "re" / "analysis" / "CHANGELOG.md").read_text()
+
+
+def test_dll_path1_csvs_are_per_module(tmp_path):
+    # DLL RVAs collide across jgld.dll / sound.dll / Terrain.dll: a DLL row reads only its own module's CSVs
+    d = tmp_path / "log" / "diff"
+    d.mkdir(parents=True)
+    for n in ("000072b0_jgld_LinkedList_find", "000072b0_sound_Other", "000072b0_Terrain_Third"):
+        (d / f"{n}.path1.csv").write_text("vector,original,reimpl,match\n")
+    p = rc.Project(tmp_path)
+    assert [x.name for x in p.diff_csvs("000072b0", "path1", "jgld.dll")] == ["000072b0_jgld_LinkedList_find.path1.csv"]
+    assert [x.name for x in p.diff_csvs("000072b0", "path1", "sound.dll")] == ["000072b0_sound_Other.path1.csv"]
+
+
+def test_dll_caller_va_is_matched_to_rva_row(proj):
+    # callers of DLL functions are recorded as VAs (0x10006b80); the tracked row is keyed by RVA (00006b80)
+    rows = {("jgld.dll", "00006b80"): {"addr": "00006b80", "module": "jgld.dll", "confidence": "C2", "name": "Tracked::dtor"}}
+    assert rc._identified(rc.Project(proj), "0x10006b80", rows, "jgld.dll")

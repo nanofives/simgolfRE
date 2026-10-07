@@ -31,6 +31,17 @@ def csv_name(key: str) -> str:
     return key.replace("::", "_").replace("<", "(").replace(">", ")").replace("*", "P")
 
 
+def module_tag(module: str | None) -> str:
+    """'' for golf_clean.exe, else '<stem>_' (jgld_, Terrain_, sound_): DLL RVAs collide across modules, so their
+    CSVs are <rva>_<stem>_<key>.path1.csv (the same scheme as the .match.csv files)."""
+    m = (module or "golf_clean.exe")
+    return "" if m.lower() == "golf_clean.exe" else m.rsplit(".", 1)[0] + "_"
+
+
+def csv_path(spec: dict, key: str, out_dir: pathlib.Path) -> pathlib.Path:
+    return out_dir / f"{spec['addr']:08x}_{module_tag(spec.get('module'))}{csv_name(key)}.path1.csv"
+
+
 def run(names: list[str], override_re: dict[str, int | str] | None = None, out_dir: pathlib.Path = DIFF_DIR) -> dict[str, bool]:
     """override_re (tests only): an address, or "null" for a stub returning NULL/0, called instead of
     the detour to prove a wrong body reads RED."""
@@ -60,7 +71,7 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
             call = {k: spec.get(k) for k in ("module", "addr", "abi", "ret", "args", "fixture", "vectors", "state")}
             if override_re and name in override_re:
                 call["override_re"] = override_re[name]
-            path = out_dir / f"{spec['addr']:08x}_{csv_name(name)}.path1.csv"
+            path = csv_path(spec, name, out_dir)
             try:
                 r = sc.exports_sync.run(call)
             except Exception as e:                 # a bad entry or a crash must not hide the other hooks' results
@@ -78,7 +89,7 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
             same = lambda row: row["orig"] == row["re"] and row.get("state_match", True)
             ok = r["witness"] == 0xE9 and all(same(row) for row in r["rows"])
             stateful = bool(spec["state"])
-            path = out_dir / f"{spec['addr']:08x}_{csv_name(name)}.path1.csv"
+            path = csv_path(spec, name, out_dir)
             with path.open("w", newline="") as f:
                 w = csv.writer(f)
                 w.writerow(["vector", "original", "reimpl", "match"] + (["state_original", "state_reimpl", "state_changed"] if stateful else []))

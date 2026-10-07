@@ -23,6 +23,7 @@ struct SgHook {
     void* detour;
     void** original;
     bool installed;
+    bool tried;           // install attempted (or hook disabled); false = waiting for its DLL to load
     SgHook* next;
     SgHook(const char* m, DWORD a, const char* n, void* d, void** o);
 };
@@ -30,4 +31,5 @@ struct SgHook {
 #define SG_HOOK(module, addr, name, detour, original) \
     static SgHook s_sghook_##name(module, addr, #name, (void*)(detour), (void**)&(original))
 
-void SgHooksInstall();  // called by the shim after its compat hooks
+void SgHooksInstall();         // called by the shim after its compat hooks
+void SgHooksInstallPending();  // called after LoadLibraryA: installs hooks of DLLs loaded since

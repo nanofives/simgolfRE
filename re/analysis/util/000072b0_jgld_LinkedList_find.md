@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000072b0`), 151 bytes, 58 instructions, subsystem `uti
 searches the list for a payload pointer, returns its index/flag. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+LinkedList::find (jgld.dll RVA 0x000072b0, VA 0x100072b0) looks up a data pointer in jgld's circular doubly linked list and makes the matching node current. It returns 0 at once when the list has no head (cmp [this+0x10], 0 at 0x100072d0). Otherwise it walks from the head through each node's prev link (+4) until it is back at the head; the first node whose data (+0xc) equals the argument (cmp at 0x100072f5) becomes the current node (this+0x14, 0x10007300), its data and flag byte are copied to this+4 and this+8 (0x1000730f, 0x1000731e), and it returns 1. No match returns 0 with nothing written. The head's next link is read into an unused local (0x100072e0). Reimplemented in `shim/src/re/c3dll.cpp`; path-1 A/B GREEN: LinkedList::find (12 vectors, 6 distinct results, 5 changing state, `log/diff/000072b0_jgld_LinkedList_find.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `?find@LinkedList@@QAEHPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10007344): callee pops 4 bytes of stack arguments.

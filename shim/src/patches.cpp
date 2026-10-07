@@ -27,6 +27,8 @@
 void ShimLog(const char* fmt, ...);
 const char* ShimDir();
 
+void SgHooksInstallPending();   // re/hooks.cpp: SG_HOOKs whose DLL was not loaded at init
+
 namespace {
 
 struct Patch {
@@ -89,7 +91,10 @@ typedef HMODULE(WINAPI* LoadLibraryA_t)(LPCSTR);
 LoadLibraryA_t o_LoadLibraryA;
 HMODULE WINAPI h_LoadLibraryA(LPCSTR name) {
     HMODULE r = o_LoadLibraryA(name);
-    if (r) ApplyPending();
+    if (r) {
+        ApplyPending();
+        SgHooksInstallPending();   // SG_HOOKs in jgld.dll / sound.dll (re/hooks.cpp)
+    }
     return r;
 }
 
@@ -117,11 +122,9 @@ void PatchesInit() {
     snprintf(pattern, sizeof(pattern), "%s\\*.ini", dir);
     WIN32_FIND_DATAA fd;
     HANDLE h = FindFirstFileA(pattern, &fd);
-    if (h == INVALID_HANDLE_VALUE) {
-        ShimLog("patches: none in %s", dir);
-        return;
-    }
-    do {
+    // no patch files still installs the LoadLibraryA hook below: SG_HOOKs in jgld.dll / sound.dll wait for it
+    if (h == INVALID_HANDLE_VALUE) ShimLog("patches: none in %s", dir);
+    else do {
         char path[MAX_PATH], buf[4096];
         snprintf(path, sizeof(path), "%s\\%s", dir, fd.cFileName);
         Patch p;
@@ -144,7 +147,7 @@ void PatchesInit() {
         if (!p.enabled) ShimLog("patch %s: SKIP disabled", p.name.c_str());
         s_patches.push_back(p);
     } while (FindNextFileA(h, &fd));
-    FindClose(h);
+    if (h != INVALID_HANDLE_VALUE) FindClose(h);
 
     ApplyPending();
     for (auto& p : s_patches)

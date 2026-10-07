@@ -102,8 +102,15 @@ class Project:
         hits = sorted(self.diff_dir.glob(f"{addr}_*.{kind}.csv")) if self.diff_dir.exists() else []
         return hits[0] if hits else None
 
-    def diff_csvs(self, addr: str, kind: str) -> list[pathlib.Path]:
-        return sorted(self.diff_dir.glob(f"{addr}_*.{kind}.csv")) if self.diff_dir.exists() else []
+    def diff_csvs(self, addr: str, kind: str, module: str = "golf_clean.exe") -> list[pathlib.Path]:
+        """Every CSV of one function. DLL RVAs collide across jgld.dll / sound.dll / Terrain.dll, so a DLL's CSVs carry
+        its stem after the address (<rva>_jgld_<key>, as diff_hook.py writes them); exe VAs (>= 0x401000) cannot
+        collide with DLL RVAs."""
+        if not self.diff_dir.exists():
+            return []
+        if (module or "golf_clean.exe").lower() == "golf_clean.exe":
+            return sorted(self.diff_dir.glob(f"{addr}_*.{kind}.csv"))
+        return sorted(self.diff_dir.glob(f"{addr}_{module.rsplit('.', 1)[0]}_*.{kind}.csv"))
 
 
 def norm_addr(a: str) -> str:
@@ -187,7 +194,7 @@ def gates(p: Project, row: dict, target: str, args) -> list[tuple[bool, str]]:
             res.append((p.shim_dll.exists() and p.shim_dll.stat().st_mtime >= src.stat().st_mtime,
                         "shim build is newer than the source (run shim\\build.bat)"))
         # Verified: a GREEN path-1 A/B (hand vectors) or a GREEN replay of >= REPLAY_MIN recorded real calls.
-        ds = p.diff_csvs(addr, "path1")
+        ds = p.diff_csvs(addr, "path1", row.get("module") or "golf_clean.exe")
         d = ds[0] if ds else None
         info = read_path1(ds)
         rp = p.diff_csv(addr, row.get("name", ""), "replay")
@@ -221,6 +228,8 @@ def _identified(p: Project, item: str, rows: dict, module: str = "golf_clean.exe
     item = item.strip()
     if re.fullmatch(r"(0x)?[0-9a-fA-F]{6,8}", item):
         a = norm_addr(item)
+        if module != "golf_clean.exe" and int(a, 16) >= 0x10000000:
+            a = f"{int(a, 16) - 0x10000000:08x}"   # DLL callers are listed as VAs, DLL rows are keyed by RVA
         r = rows.get((module, a))
         if r and LEVELS.index(r.get("confidence") or "C0") >= 2:
             return True
@@ -282,9 +291,9 @@ def cmd_check(p: Project, a, write: bool, rows: dict | None = None, quiet: bool 
     old = row.get("confidence") or "C0"
     row["confidence"] = a.to
     row["status"] = {"C1": "located", "C2": "transcribed", "C3": "impl", "C4": "verified"}[a.to]
-    d = p.diff_csv(addr, row.get("name", ""), "path1")
-    if d:
-        row["frida_diff"] = d.relative_to(p.root).as_posix()
+    ds = p.diff_csvs(addr, "path1", mod)
+    if ds:
+        row["frida_diff"] = ds[0].relative_to(p.root).as_posix()
     s = p.diff_csv(addr, row.get("name", ""), "scenario")
     if s:
         row["scenario"] = s.relative_to(p.root).as_posix()
