@@ -4,6 +4,17 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-07  00427380  matchUpdate  C2->C3  log/diff/00427380_matchUpdate.path1.csv
+2026-10-07  004732d0  addScore  C2->C3  log/diff/004732d0_addScore.path1.csv
+2026-10-07  0040e720  announceBuilding  C2->C3  log/diff/0040e720_announceBuilding.path1.csv
+2026-10-07  0040e400  clearObjectFootprint  C2->C3  log/diff/0040e400_clearObjectFootprint.path1.csv
+2026-10-07  00406670  membershipReport  C2->C3  log/diff/00406670_membershipReport.path1.csv
+2026-10-07  004942f0  expandTextMarkup  C2->C3  log/diff/004942f0_expandTextMarkup.path1.csv
+2026-10-07  004604f0  showTutorialText  C2->C3  log/diff/004604f0_showTutorialText.path1.csv
+2026-10-07  0045fd80  buildScenarioIntro  C2->C3  log/diff/0045fd80_buildScenarioIntro.path1.csv
+2026-10-07  004722c0  LandmarkAvailableNotice  C2->C3  log/diff/004722c0_LandmarkAvailableNotice.path1.csv
+2026-10-07  0045c460  substituteStoryNames  C2->C3  log/diff/0045c460_substituteStoryNames.path1.csv
+2026-10-07  004266b0  patronEvent  C2->C3  log/diff/004266b0_patronEvent.path1.csv
 2026-10-07  0042dea0  holeMagazineEvent  C2->C3  log/diff/0042dea0_holeMagazineEvent.path1.csv
 2026-10-07  0048cd80  matchDirective  C2->C3  log/diff/0048cd80_matchDirective.path1.csv
 2026-10-07  004889b0  Button::setColorPressed  C2->C3  log/diff/004889b0_Button_setColorPressed.path1.csv
