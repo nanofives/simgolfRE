@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 293 bytes, 118 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 appends the course-upgrade description text (`re/names/exe_0.tsv`)
 
+## Purpose
+Appends the course-upgrade notification text to the shared message buffer at 0x0051a068. It strcat's, in order, the literal at 0x004c54cc, the class name at tbl[i], the literal at 0x004c54c4, the class name at tbl[i+1], and the literal at 0x004c5450, where tbl is the string-pointer table at 0x004c2a18 (class names, valid at least through index 12). A trailing clause follows: the string at 0x004c53ec when i == 0 (jne 0x0040e6d6), or the string at 0x004c53a4 when i == 1 (jne 0x0040e6e2); for i >= 2 no trailing clause is added. Match: re/match/golf_hand_r3.cpp (`?r3_upgradeText@@YAXH@Z`). Leaf (strcat/strlen inlined as string ops). Reimplemented in `shim/src/re/c3z.cpp`; path-1 A/B GREEN: appendUpgradeText (10 vectors, 10 distinct results, 10 changing state, `log/diff/0040e5f0_appendUpgradeText.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `?r3_upgradeText@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040e714): callee pops 0 bytes of stack arguments.

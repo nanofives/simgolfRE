@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 183 bytes, 79 instructions, subsystem `economy`. Mechan
 computes the cost to clear/prepare the tiles of a region (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+clearCost(x, y) returns the cost to clear tile (x, y) from its terrain type. It returns 0 when tileBlocked 0x0040bf60 reports the tile blocked (0x0042ee88). Otherwise it reads the type byte at 0x005722e8 + x*50 + y (0x0042ee93): type 4 returns 12 (0x0042ee9f), type 0x14 returns 0 (0x0042eea6, dead — tileBlocked already returns for 0x14), type 0x15 returns -16 (0x0042eeb0). For every other type it uses the 0x30-byte type record at 0x00578370 + type*0x30: when signed byte +2 is <= 0 it returns -8 (0x0042eec1); type 0x11 returns 32 (0x0042eed0); when the course-type byte 0x005a34e0 is 1 and the type is 0x12 it returns 16 (0x0042eedf); when byte +6 is 13 it returns (+3 * 5) / 2 (0x0042eef9); otherwise it returns (+3 * +2) / 2 (0x0042ef10). Divisions are signed and truncate toward zero. Reimplemented in `shim/src/re/c3ab.cpp`; path-1 A/B GREEN: clearCost (10 vectors, 8 distinct results, `log/diff/0042ee80_clearCost.path1.csv`); clearCost_ct0 (10 vectors, 8 distinct results, `log/diff/0042ee80_clearCost_ct0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?cost42ee80@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042ee9c, 0x0042eeb7, 0x0042eec1, 0x0042eece, 0x0042eee6, 0x0042eef3, 0x0042ef0d, 0x0042ef28 (+1 more)): callee pops 0 bytes of stack arguments.

@@ -1,0 +1,10 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj $a0 $b0,void,void,True,ecc8df70,ecc8df70,True
+$obj $a1 $b1,void,void,True,fc400f18,fc400f18,True
+$obj $a2 $b2,void,void,True,757b5c60,757b5c60,True
+$obj $a3 $b3,void,void,True,5edc19a7,5edc19a7,True
+state_regions,$scratch+0x0:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c792060,original=0x15d0e00,2026-10-07T11:17:59
+distinct_results,4,,
+VERDICT,GREEN,4,

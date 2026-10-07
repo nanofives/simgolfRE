@@ -117,6 +117,26 @@ def test_c3_leaf_needs_enough_vectors(proj):
     assert run(proj, "promote", ADDR, "--to", "C3", "--file", f) == 2
 
 
+def test_c3_leaf_summary_rows_are_not_vectors(proj):
+    # diff_hook appends state_regions and distinct_results rows: 8 vectors plus those two must not reach 10
+    to_c1(proj); to_c2(proj)
+    f = _c3_ready(proj, vectors=8)
+    p = proj / "log" / "diff" / "00401000_Foo.path1.csv"
+    p.write_text(p.read_text().replace("install_witness", "state_regions,0x1+0x0:4,,\ndistinct_results,8,,\ninstall_witness"))
+    assert run(proj, "promote", ADDR, "--to", "C3", "--file", f) == 2
+
+
+def test_c3_leaf_vectors_sum_over_keys(proj):
+    # one registry entry per fixture variant: 6 + 6 vectors in two CSVs of one address pass; a RED key fails all
+    to_c1(proj); to_c2(proj, callers="GameTick")
+    f = _c3_ready(proj, vectors=6)
+    d = proj / "log" / "diff"
+    (d / "00401000_Foo_b.path1.csv").write_text((d / "00401000_Foo.path1.csv").read_text())
+    assert run(proj, "check", ADDR, "--to", "C3", "--file", f) == 0
+    (d / "00401000_Foo_c.path1.csv").write_text((d / "00401000_Foo.path1.csv").read_text().replace("GREEN", "RED"))
+    assert run(proj, "check", ADDR, "--to", "C3", "--file", f) == 2
+
+
 def test_c3_anonymous_caller_is_an_island(proj):
     to_c1(proj); to_c2(proj, callers="FUN_00402000")
     f = _c3_ready(proj)

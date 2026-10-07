@@ -1,0 +1,14 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj 10,1110,1110,True,909921b5,909921b5,True
+$obj 20,2120,2120,True,772343c2,772343c2,True
+$obj 30,3130,3130,True,576078bd,576078bd,True
+$obj 40,4140,4140,True,ca2338ce,ca2338ce,True
+$obj 99,0,0,True,71a654ab,71a654ab,True
+$obj 0,0,0,True,71a654ab,71a654ab,True
+$obj -1,0,0,True,71a654ab,71a654ab,True
+$obj 11,0,0,True,71a654ab,71a654ab,True
+state_regions,$obj+0x0:12288,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c792100,original=0x15d0e20,2026-10-07T11:17:59
+distinct_results,5,,
+VERDICT,GREEN,8,

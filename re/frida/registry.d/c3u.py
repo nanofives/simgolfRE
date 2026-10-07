@@ -46,7 +46,8 @@ _HUD_STATE = [(0x0083e8e0, 0, 0xa00), (0x0083e8b8, 0, 0x28), (0x0083d3c8, 0, 0x2
 
 # Button::setMode(this, mode): object o has a parent control (this+0x130), o2 does not (fixture c3u_setmode). Vectors
 # change the mode, repeat the current mode (the no-op branch), and set a mode on the parent-less object.
-_SETMODE = [("$o", 1), ("$o", 2), ("$o", 2), ("$o", 7), ("$o2", 1), ("$o2", 5), ("$o", 0), ("$o2", 0)]
+_SETMODE = [("$o", 1), ("$o", 2), ("$o", 2), ("$o", 7), ("$o2", 1), ("$o2", 5), ("$o", 0), ("$o2", 0),
+            ("$o", 3), ("$o2", 7), ("$o", -1)]   # verifier 2026-10-07: leaf rule needs >= 10
 _SETMODE_STATE = [("$o", 0x578, 4), ("$o2", 0x578, 4), ("$rec", 0, 0x40)]
 
 # Button::setColorHover(this, c0..c3): object o is active (this+0x130 set, font this+0x274 with +4 null so the palette

@@ -1,0 +1,15 @@
+vector,original,reimpl,match
+$obj 1,1,1,True
+$obj 2,2,2,True
+$obj 5,5,5,True
+$obj -3,-3,-3,True
+$obj 100,100,100,True
+$obj 0,0,0,True
+$obj 4096,4096,4096,True
+$obj -1,-1,-1,True
+$obj 7,7,7,True
+$obj 42,42,42,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d460f10,original=0x1440e60,2026-10-07T11:09:39
+distinct_results,10,,
+VERDICT,GREEN,10,

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 186 bytes, 62 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+jpeg_add_quant_table(cinfo, which_tbl, const unsigned* basic, int scale_factor, int force_baseline) fills quant_tbl_ptrs[which_tbl] (cinfo+0x40+which_tbl*4) with 64 quantization values scaled from basic[]: temp = (scale_factor*basic[i] + 50)/100 (0x004ae63a), clamped to [1, 0x7fff] and, when force_baseline, to 0xFF; it then clears that table's sent_table (+0x80). It requires global_state == CSTATE_START (100 at +0x10, 0x004ae60e) and allocates the table (jpeg_alloc_quant_table 0x004afab0) only when the slot is NULL. Matched by re/match/golf_jpeg_cparam.cpp as _jpeg_add_quant_table. Reimplemented in `shim/src/re/c3aa.cpp`; path-1 A/B GREEN: jpeg_add_quant_table (28 vectors, 22 distinct results, 28 changing state, `log/diff/004ae600_jpeg_add_quant_table.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_jpeg_add_quant_table` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae6b9): callee pops 0 bytes of stack arguments.

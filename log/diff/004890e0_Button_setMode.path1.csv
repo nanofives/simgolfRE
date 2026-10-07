@@ -7,8 +7,11 @@ $o2 1,void,void,True,0450bd93,0450bd93,False
 $o2 5,void,void,True,47388590,47388590,True
 $o 0,void,void,True,081aad3d,081aad3d,True
 $o2 0,void,void,True,7b2def54,7b2def54,True
+$o 3,void,void,True,8b9cd526,8b9cd526,True
+$o2 7,void,void,True,3444f105,3444f105,True
+$o -1,void,void,True,ea160ee3,ea160ee3,True
 state_regions,$o+0x578:4 $o2+0x578:4 $rec+0x0:64,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5c670930,original=0xcc0e60,2026-10-07T10:19:07
-distinct_results,6,,
-VERDICT,GREEN,8,
+meta,detour=0x6c150c40,original=0x1440c60,2026-10-07T11:14:50
+distinct_results,9,,
+VERDICT,GREEN,11,

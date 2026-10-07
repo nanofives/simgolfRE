@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 33 bytes, 12 instructions, subsystem `render`. Mechanic
 forwards (param_1,param_2) to the surface vtbl+0x44 fill (returns 7 when this has no surface at +4) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Widget_fillArea(this, param_1, param_2) returns 7 when the surface object this+4 is null (0x00478b55); otherwise it returns the surface's virtual method at vtable+0x44 (slot 17), called thiscall with (param_1, param_2) at 0x00478b6b. The A/B's fake slot-17 callback returns param_1*31 + param_2. Reimplemented in `shim/src/re/c3ab.cpp`; path-1 A/B GREEN: Widget_fillArea (10 vectors, 10 distinct results, `log/diff/00478b50_Widget_fillArea.path1.csv`); Widget_fillArea_nofont (1 vectors, 1 distinct results, `log/diff/00478b50_Widget_fillArea_nofont.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00478b50@C_FUN_00478b50@f_00478b50@@QAEIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00478b5c, 0x00478b6e): callee pops 8 bytes of stack arguments.

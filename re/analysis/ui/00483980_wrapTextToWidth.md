@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 318 bytes, 132 instructions, subsystem `ui`. Mechanical
 greedily word-wraps a string to the width budget *param_2 (splitting on spaces via memchr and measuring each word with measureTextWidth), returning the break point and updating the remaining width (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_3.md`, `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Greedy word-wrap of one run. `this` is a text-layout object whose font is at this+4 (measureTextWidth 0x00483930 reads it). *budget (arg 2) is the remaining pixel width and remain (arg 3) the remaining byte count. It scans words delimited by the space 0x20 (memchr), measures each with measureTextWidth and subtracts the width from the budget, and folds the consumed width into the global accumulator at 0x00839aa8. It returns 0 when the run fits — writing the leftover budget back to *budget and advancing the accumulator — or the start of the word that did not fit otherwise; a first word already wider than the whole budget sets *budget = 0 and returns the next word's start when the accumulator was 0 at that point (else the word's own start). No matched source; transcribed from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x00483980 --list) and the C2 note. Callees measureTextWidth (C2+) and memchr. Reimplemented in `shim/src/re/c3z.cpp`; path-1 A/B GREEN: wrapTextToWidth_acc0 (10 vectors, 10 distinct results, 9 changing state, `log/diff/00483980_wrapTextToWidth_acc0.path1.csv`); wrapTextToWidth_accN (3 vectors, 3 distinct results, 3 changing state, `log/diff/00483980_wrapTextToWidth_accN.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x00483a0d, 0x00483a44, 0x00483a62, 0x00483a78, 0x00483a96, 0x00483ab0, 0x00483abb): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x00483980 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

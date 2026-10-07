@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 264 bytes, 84 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Hit-tests the employee view panel, returning the slot under a point. (`re/names/exe_1.tsv`)
 
+## Purpose
+Maps a screen point (x, y) to the control index under it in the employee-view panel, returning the index or -1. When x >= 0x136 and y >= 0x1f2 the point is inside the slot grid: the result is the row clamp((y-0x1f2)/21, 0, 3) plus the column clamp((x-0x136)/121, 0, 3) times 4 (clamp 0x00467130). Five round buttons then override it with a negative id when approxDistance (0x00467170) from the point to the button centre is below 20: -2 at (0x11d, 0x1ec), -3 at (0x100, 0x1fe), -4 at (0xe8, 0x21a), -5 at (0x14c, y about 0x250 scaled *3), -6 at (0x304, same y). The overrides are applied after the grid, so a button inside the grid rectangle wins. Match: re/match/golf_hand_08_c.cpp (`?hit435570@@YAHHH@Z`). Leaf-free: callees clamp and approxDistance are at C3. Reimplemented in `shim/src/re/c3z.cpp`; path-1 A/B GREEN: hitEmployeeSlot435570 (12 vectors, 10 distinct results, `log/diff/00435570_hitEmployeeSlot435570.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_c.cpp` as `?hit435570@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00435677): callee pops 0 bytes of stack arguments.

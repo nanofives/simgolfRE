@@ -1,0 +1,18 @@
+vector,original,reimpl,match
+0 0,-1,-1,True
+286 492,-2,-2,True
+256 510,-3,-3,True
+270 558,0,0,True
+321 549,2,2,True
+604 549,3,3,True
+647 513,4,4,True
+699 510,5,5,True
+756 513,6,6,True
+368 523,8,8,True
+368 566,9,9,True
+431 523,10,10,True
+557 523,14,14,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x660b1a60,original=0xba0e20,2026-10-07T11:16:16
+distinct_results,13,,
+VERDICT,GREEN,13,

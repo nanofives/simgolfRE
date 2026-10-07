@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 228 bytes, 84 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+emit_buffered_bits(phuff_entropy_ptr entropy, char* bufstart, unsigned nbits) emits `nbits` AC correction bits, the low bit (`*bufstart & 1`, 0x004b280c) of each successive byte, one at a time through the inlined emit_bits(entropy, bit, 1); it is a no-op while gathering statistics (gather_statistics +0xc != 0, re-checked per bit at 0x004b27f4) or when nbits == 0 (0x004b27e7). Each bit updates put_buffer/put_bits (+0x18/+0x1c) and flushes a completed byte (with 0xFF stuffing) to *next_output_byte (+0x10), free_in_buffer at +0x14. Matched by re/match/golf_jpeg_cphuff.cpp as _emit_buffered_bits. Reimplemented in `shim/src/re/c3aa.cpp`; path-1 A/B GREEN: emit_buffered_bits (16 vectors, 15 distinct results, 14 changing state, `log/diff/004b27d0_emit_buffered_bits.path1.csv`); emit_buffered_bits_g1 (1 vectors, 1 distinct results, 0 changing state, `log/diff/004b27d0_emit_buffered_bits_g1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_emit_buffered_bits` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b28b3): callee pops 0 bytes of stack arguments.

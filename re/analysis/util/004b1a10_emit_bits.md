@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 198 bytes, 83 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+emit_bits(working_state* state, unsigned code, int size) appends the low `size` bits of `code` to the bit accumulator state->cur.put_buffer / put_bits (+0x8 / +0xc), then flushes every complete byte, most-significant first, to *state->next_output_byte (+0x0), decrementing state->free_in_buffer (+0x4); after any emitted 0xFF byte it writes a stuffed 0x00 (the JPEG byte-stuffing rule). The incoming bits are masked to `size` with `((1<<size)-1) & code` (0x004b1a47) and aligned by `<< (24 - put_bits)` (0x004b1a53). It returns 1; the size==0 arm reports an invalid Huffman entry through cinfo->err (+0x20, msg_code 0x27 at 0x004b1a28) and the free_in_buffer==0 arm calls dump_buffer (0x004b19e0). Matched by re/match/golf_jpeg_chuff.cpp as _emit_bits. Reimplemented in `shim/src/re/c3aa.cpp`; path-1 A/B GREEN: emit_bits (54 vectors, 44 distinct results, 54 changing state, `log/diff/004b1a10_emit_bits.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_emit_bits` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1ace, 0x004b1ad5): callee pops 0 bytes of stack arguments.

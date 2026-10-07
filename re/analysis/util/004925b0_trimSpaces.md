@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 22 bytes, 9 instructions, subsystem `util`. Mechanical 
 Trims trailing then leading whitespace from string param_1. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+trimSpaces(s) trims the string in place by calling the trailing-space trimmer 0x00492570 (0x004925b6) and then the leading-space trimmer 0x004924e0 (0x004925bc), both on the same pointer. (The two callees classify bytes with 0x004a6598 and are not hooked by any batch, so both A/B arms run the original callees.) Reimplemented in `shim/src/re/c3ab.cpp`; path-1 A/B GREEN: trimSpaces (8 vectors, 7 distinct results, 6 changing state, `log/diff/004925b0_trimSpaces.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small16.cpp` as `?runBoth@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004925c5): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 191 bytes, 74 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+emit_dht (0x004b0120)(cinfo, index, is_ac) writes a DHT marker for one Huffman table: the DC table dc_huff_tbl_ptrs[index] (cinfo+0x50+index*4) when is_ac==0 (je at 0x004b0131), else the AC table ac_huff_tbl_ptrs[index] (cinfo+0x60+index*4) with the table byte made index+0x10. A null table is the ERREXIT at 0x004b0142; it skips a table whose sent_table (+0x114) is already set (jne at 0x004b0162). The byte count is the sum of bits[1..16] (+1..+0x10); it emits marker 0xC4, the length count+0x13, the table byte, bits[1..16] and that many huffval entries (+0x11) through emit_marker/emit_2bytes/emit_byte, then sets sent_table. Matched by re/match/golf_jpeg_cmarker.cpp as _emit_dht. Reimplemented in `shim/src/re/c3aa.cpp`; path-1 A/B GREEN: emit_dht (8 vectors, 8 distinct results, 8 changing state, `log/diff/004b0120_emit_dht.path1.csv`); emit_dht_sent (8 vectors, 1 distinct results, 0 changing state, `log/diff/004b0120_emit_dht_sent.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_dht` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b01de): callee pops 0 bytes of stack arguments.

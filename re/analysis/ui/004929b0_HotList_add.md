@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 223 bytes, 85 instructions, subsystem `ui`. Mechanical 
 Adds a hotspot: stores its rect (x,y,w,h), two payload ids, and an optional duplicated tooltip string. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Appends a hotspot to the list. The object holds the entry array pointer at this+0x50, the capacity at this+0x54 and the live count at this+0x58; each entry is 0x20 bytes {m_0; rect l,t,r,b at +4/+8/+0xc/+0x10; m_14 at +0x14; m_18 at +0x18; char* text at +0x1c}. When count == capacity it grows the array (grow 0x00492690, jl 0x004929be). It takes slot n = count++ (0x004929cf), clears the slot (init / freeEntryTip 0x00492660, which frees any previous text), stores the rect (l=x, t=y, r=x+w, b=y+h), m_18 = a and m_14 = b, and when the tooltip s is non-null (je 0x00492a23) duplicates it into a malloc'd buffer (returning 4 on allocation failure, jne 0x00492a47). It returns the slot index n. Match: re/match/golf_hand_r0.cpp (`?add@R0C4929b0@@QAEHHHHHHHPBD@Z`). Callees grow/freeEntryTip at C2+. Reimplemented in `shim/src/re/c3z.cpp`; path-1 A/B GREEN: HotList::add (12 vectors, 12 distinct results, 12 changing state, `log/diff/004929b0_HotList_add.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?add@R0C4929b0@@QAEHHHHHHHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x1c` (at 0x00492a52, 0x00492a8c): callee pops 28 bytes of stack arguments.

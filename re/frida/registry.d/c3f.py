@@ -47,7 +47,7 @@ HOOKS.update({
     # setField38: v == 0 -> returns 10 (no write); else stores v at +0x38 (state) and returns 0.
     "Snd::setField38": dict(module="golf_clean.exe", addr=0x004846d0, abi="thiscall", ret="int",
                             args=["pointer", "int"], fixture="c3f_snd", state=[("$obj", 0x38, 4)],
-                            vectors=[("$obj", v) for v in (0, 1, 2, -1, 100, -100000, 0x7fffffff, -0x80000000)]),
+                            vectors=[("$obj", v) for v in (0, 1, 2, -1, 100, -100000, 0x7fffffff, -0x80000000, 7, 0x40, 0x1234)]),
     # setMode: ORs a bit into the flags word at +0x44 and stores the mode at +0x54 (both state); jump table
     #          at 0x004842d0, modes 0..8 cover every case plus the default.
     "Snd::setMode": dict(module="golf_clean.exe", addr=0x00484260, abi="thiscall", ret="void",
@@ -85,5 +85,5 @@ HOOKS.update({
                                  fixture="c3f_appendbuffer",
                                  state=[(0x0056fcb0, 0, 0x1002), (0x0059d81c, 0, 0x100), (0x005a46b8, 0, 0x100),
                                         (0x0051a068, 0, 0x400)],   # the input text too (verifier, 2026-10-07)
-                                 vectors=[(id,) for id in (-1, 0, 5, 0x21, 0x22, 0x23, 0x40, 0x7f)]),
+                                 vectors=[(id,) for id in (-1, 0, 5, 0x21, 0x22, 0x23, 0x40, 0x7f, 1, 0x10, 0x30)]),
 })

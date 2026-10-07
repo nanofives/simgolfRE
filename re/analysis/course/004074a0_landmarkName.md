@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 521 bytes, 137 instructions, subsystem `course`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 returns the display name of a landmark by id (`re/names/exe_0.tsv`)
 
+## Purpose
+landmarkName(type, full) appends to the scratch text buffer 0x0051a068 the name of landmark `type` (switch 0..0x12 through the jump table at 0x004076ac; the default at 0x00407679 is the string at 0x004c4980). `full` nonzero selects the long name, zero the short name; case 10 (0x004074ba) has only one name. The names are the binary strings at 0x004c4980..0x004c4c44, and the append is the inlined strcat into 0x0051a068 at 0x0040769d. (Leaf: no callees; 20 vectors.) Reimplemented in `shim/src/re/c3ab.cpp`; path-1 A/B GREEN: landmarkName (20 vectors, 18 distinct results, 20 changing state, `log/diff/004074a0_landmarkName.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s0.cpp` as `?s0_landmarkName4074a0@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004076a8): callee pops 0 bytes of stack arguments.

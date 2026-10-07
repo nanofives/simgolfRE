@@ -4,6 +4,33 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-07  00483980  wrapTextToWidth  C2->C3  log/diff/00483980_wrapTextToWidth_acc0.path1.csv
+2026-10-07  004a2250  viewFieldCtor4a2250  C2->C3  log/diff/004a2250_viewFieldCtor4a2250.path1.csv
+2026-10-07  004940e0  comboFindItem  C2->C3  log/diff/004940e0_comboFindItem.path1.csv
+2026-10-07  00489cb0  ListBox::ctor  C2->C3  log/diff/00489cb0_ListBox_ctor.path1.csv
+2026-10-07  00489150  ListModel::ctor  C2->C3  log/diff/00489150_ListModel_ctor.path1.csv
+2026-10-07  0047ca10  Window::adjustSizeOuter  C2->C3  log/diff/0047ca10_Window_adjustSizeOuter.path1.csv
+2026-10-07  004b0120  emit_dht  C2->C3  log/diff/004b0120_emit_dht.path1.csv
+2026-10-07  004929b0  HotList::add  C2->C3  log/diff/004929b0_HotList_add.path1.csv
+2026-10-07  00436b00  hitEmployee436b00  C2->C3  log/diff/00436b00_hitEmployee436b00.path1.csv
+2026-10-07  00435570  hitEmployeeSlot435570  C2->C3  log/diff/00435570_hitEmployeeSlot435570.path1.csv
+2026-10-07  00434980  pickAmenity434980  C2->C3  log/diff/00434980_pickAmenity434980.path1.csv
+2026-10-07  0040e5f0  appendUpgradeText  C2->C3  log/diff/0040e5f0_appendUpgradeText.path1.csv
+2026-10-07  004b59d0  select_scan_parameters  C2->C3  log/diff/004b59d0_select_scan_parameters.path1.csv
+2026-10-07  004b27d0  emit_buffered_bits  C2->C3  log/diff/004b27d0_emit_buffered_bits.path1.csv
+2026-10-07  004b2510  flush_bits_4b2510  C2->C3  log/diff/004b2510_flush_bits_4b2510.path1.csv
+2026-10-07  004b1a10  emit_bits  C2->C3  log/diff/004b1a10_emit_bits.path1.csv
+2026-10-07  004affa0  emit_sof  C2->C3  log/diff/004affa0_emit_sof.path1.csv
+2026-10-07  004afec0  emit_dqt  C2->C3  log/diff/004afec0_emit_dqt.path1.csv
+2026-10-07  004ae600  jpeg_add_quant_table  C2->C3  log/diff/004ae600_jpeg_add_quant_table.path1.csv
+2026-10-07  004925d0  stripNewline  C2->C3  log/diff/004925d0_stripNewline.path1.csv
+2026-10-07  004925b0  trimSpaces  C2->C3  log/diff/004925b0_trimSpaces.path1.csv
+2026-10-07  00483930  measureTextWidth  C2->C3  log/diff/00483930_measureTextWidth.path1.csv
+2026-10-07  00478b50  Widget_fillArea  C2->C3  log/diff/00478b50_Widget_fillArea.path1.csv
+2026-10-07  004789f0  Widget_applyPalette  C2->C3  log/diff/004789f0_Widget_applyPalette.path1.csv
+2026-10-07  00475b00  Widget_fillRectR  C2->C3  log/diff/00475b00_Widget_fillRectR.path1.csv
+2026-10-07  0042ee80  clearCost  C2->C3  log/diff/0042ee80_clearCost.path1.csv
+2026-10-07  004074a0  landmarkName  C2->C3  log/diff/004074a0_landmarkName.path1.csv
 2026-10-07  004942a0  comboCurrentIndex  C2->C3  log/diff/004942a0_comboCurrentIndex.path1.csv
 2026-10-07  00489950  ListModel::selectedId  C2->C3  log/diff/00489950_ListModel_selectedId.path1.csv
 2026-10-07  004a4890  listFindById  C2->C3  log/diff/004a4890_listFindById.path1.csv

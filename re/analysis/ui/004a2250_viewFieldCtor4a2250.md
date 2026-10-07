@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 213 bytes, 57 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 constructs a sub-field object of the composite view. (`re/names/exe_5.tsv`)
 
+## Purpose
+`viewFieldCtor4a2250(int build)` constructs a dropdown field view over a Widget base (this+0x8c) and a ListModel (this+0x604); when `build` != 0 (0x004a227c) it sets the primary vtable 0x004bc214 at +0 (0x004a2284), runs `View4804a0::ctor` on this+0x8c (0x004a228a) and `ListModel::ctor` on this+0x604 (0x004a22a1). It reads the sub-object offsets o1 = [0x004bc214+4] = 0x8c and o2 = [0x004bc214+8] = 0x604 from +0, installs the secondary vtables 0x004bc0a8 at +o1, 0x004bc094 at +o1+0x274 and 0x004bc088 at +o2, zeroes the two this-adjust slots at +o1-4 and +o2-4, then runs a 10-iteration loop (0x004a22d0..0x004a2302) that clears +0x04..+0x28 and +0x2c..+0x50 and sets +0x54..+0x78 to 10, finishes with +0x84 from 0x008409c4 and returns `this` (caller `viewCtor4a0740` 0x004a0740). Reimplemented in `shim/src/re/c3y.cpp`; path-1 A/B GREEN: viewFieldCtor4a2250 (1 vectors, 1 distinct results, 1 changing state, `log/diff/004a2250_viewFieldCtor4a2250.path1.csv`); viewFieldCtor4a2250_b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/004a2250_viewFieldCtor4a2250_b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_g.cpp` as `??0C4a2250@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a2322): callee pops 4 bytes of stack arguments.

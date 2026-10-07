@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 184 bytes, 75 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+emit_sof(cinfo, code) writes a start-of-frame marker: the marker byte `code`, the segment length (3*num_components + 8, 0x004affb0), the data_precision (+0x30), image_height (+0x1c), image_width (+0x18), num_components (+0x34), then for each component its id (+0), (h_samp_factor<<4)+v_samp_factor (+8/+0xc) and quant_tbl_no (+0x10) from comp_info (+0x3c, stride 0x54), all through emit_marker/emit_2bytes/emit_byte. An image wider or taller than 65535 reports JERR_IMAGE_TOO_BIG (+0x14 msg 0x28). Matched by re/match/golf_jpeg_cmarker.cpp as _emit_sof. Reimplemented in `shim/src/re/c3aa.cpp`; path-1 A/B GREEN: emit_sof (3 vectors, 3 distinct results, 3 changing state, `log/diff/004affa0_emit_sof.path1.csv`); emit_sof_nc1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/004affa0_emit_sof_nc1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_sof` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0057): callee pops 0 bytes of stack arguments.

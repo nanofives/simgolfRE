@@ -102,6 +102,9 @@ class Project:
         hits = sorted(self.diff_dir.glob(f"{addr}_*.{kind}.csv")) if self.diff_dir.exists() else []
         return hits[0] if hits else None
 
+    def diff_csvs(self, addr: str, kind: str) -> list[pathlib.Path]:
+        return sorted(self.diff_dir.glob(f"{addr}_*.{kind}.csv")) if self.diff_dir.exists() else []
+
 
 def norm_addr(a: str) -> str:
     a = a.strip().lower()
@@ -114,9 +117,21 @@ def read_diff(path: pathlib.Path) -> dict:
     rows = list(csv.reader(path.open(newline="")))
     verdict = next((r for r in rows if r and r[0] == "VERDICT"), None)
     witness = next((r for r in rows if r and r[0] == "install_witness"), None)
-    vectors = [r for r in rows[1:] if r and r[0] not in ("VERDICT", "install_witness", "meta")]
+    # summary rows written after the vectors (diff_hook: state_regions, distinct_results) are not vectors
+    vectors = [r for r in rows[1:] if r and r[0] not in ("VERDICT", "install_witness", "meta", "state_regions",
+                                                        "distinct_results")]
     return {"green": bool(verdict and verdict[1] == "GREEN"), "witness": bool(witness and witness[-1] == "True"),
             "vectors": len(vectors)}
+
+
+def read_path1(paths: list[pathlib.Path]) -> dict | None:
+    """All path-1 CSVs of one address (one per registry key: fixture variants, guard-side keys) as one result:
+    GREEN and witnessed only if every key is, vectors summed."""
+    infos = [read_diff(x) for x in paths]
+    if not infos:
+        return None
+    return {"green": all(i["green"] for i in infos), "witness": all(i["witness"] for i in infos),
+            "vectors": sum(i["vectors"] for i in infos)}
 
 
 # ---------------------------------------------------------------- gates
@@ -172,13 +187,14 @@ def gates(p: Project, row: dict, target: str, args) -> list[tuple[bool, str]]:
             res.append((p.shim_dll.exists() and p.shim_dll.stat().st_mtime >= src.stat().st_mtime,
                         "shim build is newer than the source (run shim\\build.bat)"))
         # Verified: a GREEN path-1 A/B (hand vectors) or a GREEN replay of >= REPLAY_MIN recorded real calls.
-        d = p.diff_csv(addr, row.get("name", ""), "path1")
-        info = read_diff(d) if d else None
+        ds = p.diff_csvs(addr, "path1")
+        d = ds[0] if ds else None
+        info = read_path1(ds)
         rp = p.diff_csv(addr, row.get("name", ""), "replay")
         rinfo = read_diff(rp) if rp else None
         replay_ok = bool(rinfo and rinfo["green"] and rinfo["vectors"] >= REPLAY_MIN)
         res.append((bool(info and info["green"]) or replay_ok,
-                    f"verified: path-1 A/B GREEN ({d.name if d else 'none'}) or replay GREEN >= {REPLAY_MIN} real calls "
+                    f"verified: path-1 A/B GREEN ({(d.name + (f' +{len(ds) - 1} keys' if len(ds) > 1 else '')) if d else 'none'}) or replay GREEN >= {REPLAY_MIN} real calls "
                     f"({rp.name + ': ' + str(rinfo['vectors']) if rp else 'none'})"))
         res.append((bool(info and info["witness"]) or bool(rinfo and rinfo["witness"]),
                     "install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV"))

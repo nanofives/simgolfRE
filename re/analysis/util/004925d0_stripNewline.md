@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 23 bytes, 9 instructions, subsystem `util`. Mechanical 
 Truncates string param_1 at the last newline character. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+stripNewline(s) truncates the string at its first newline: it calls strchr(s, '\n') (0x004925d7, the CRT routine at 0x004a6c50) and, when the result is non-null, writes a NUL at that byte (0x004925e3). Reimplemented in `shim/src/re/c3ab.cpp`; path-1 A/B GREEN: stripNewline (8 vectors, 6 distinct results, 5 changing state, `log/diff/004925d0_stripNewline.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small16.cpp` as `?cutLastNewline@@YAXPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004925e6): callee pops 0 bytes of stack arguments.

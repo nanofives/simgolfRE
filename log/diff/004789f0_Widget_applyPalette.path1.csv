@@ -1,0 +1,16 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj $arg0,0,0,True,f591560f,f591560f,True
+$obj $arg1,0,0,True,24425309,24425309,True
+$obj $arg2,0,0,True,0b94e88c,0b94e88c,True
+$obj $arg3,0,0,True,9527e8f5,9527e8f5,True
+$obj $arg4,0,0,True,2039856d,2039856d,True
+$obj $arg5,0,0,True,d8e28070,d8e28070,True
+$obj $arg6,0,0,True,c49e9296,c49e9296,True
+$obj $arg7,0,0,True,d8f734fb,d8f734fb,True
+$obj $arg8,0,0,True,2ab7fe8d,2ab7fe8d,True
+$obj 0,3,3,True,0ff37de5,0ff37de5,False
+state_regions,$obj+0xf0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d460ec0,original=0x1440e40,2026-10-07T11:09:39
+distinct_results,10,,
+VERDICT,GREEN,10,

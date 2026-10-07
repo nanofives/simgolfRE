@@ -1,0 +1,15 @@
+vector,original,reimpl,match
+$obj $s3 3,3,3,True
+$obj $s3 10,5,5,True
+$obj $s3 -1,-1,-1,True
+$obj $s0 0,0,0,True
+$obj $s1 5,1,1,True
+$obj $s2 1,1,1,True
+$obj $s4 4,4,4,True
+$obj $s4 100,10,10,True
+$obj 0 5,0,0,True
+$obj $s4 -5,-5,-5,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d460e30,original=0x1440e20,2026-10-07T11:09:39
+distinct_results,8,,
+VERDICT,GREEN,10,

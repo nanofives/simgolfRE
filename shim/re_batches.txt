@@ -23,3 +23,7 @@ c3w.cpp
 c3x.cpp
 c3v.cpp
 c3u.cpp
+c3ab.cpp
+c3aa.cpp
+c3z.cpp
+c3y.cpp

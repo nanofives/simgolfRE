@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 71 bytes, 35 instructions, subsystem `ui`. Mechanical t
 returns the pixel width of the first param_2 characters of string param_1 (clamped to its length) via the surface font vtbl+0x10 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_3.md`, `re/analysis/systems/exe_6.md`.
 
+## Purpose
+measureTextWidth(this, str, maxlen) returns the width of a text run. It returns 0 when the font object this+4 is null (0x00483936) or `str` is null (0x0048393e). Otherwise length = min(maxlen, strlen(str)) with a signed compare (0x00483951: maxlen < strlen keeps maxlen, else it recomputes strlen); it then returns the font's virtual method at vtable+0x10 (slot 4), called thiscall with (str, length) at 0x00483969. The A/B's fake font returns the length argument it is given, so the return value is exactly the computed min(maxlen, strlen). Reimplemented in `shim/src/re/c3ab.cpp`; path-1 A/B GREEN: measureTextWidth (10 vectors, 8 distinct results, `log/diff/00483930_measureTextWidth.path1.csv`); measureTextWidth_nofont (2 vectors, 1 distinct results, `log/diff/00483930_measureTextWidth_nofont.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0048396e, 0x00483974): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00483931 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

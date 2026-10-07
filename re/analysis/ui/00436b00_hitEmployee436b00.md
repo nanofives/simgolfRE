@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 250 bytes, 89 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Hit-tests the employee detail panel, returning the control under a point. (`re/names/exe_1.tsv`)
 
+## Purpose
+Maps a screen point (x, y) to the control index in the employee detail panel. Two fixed buttons first: local id -2 when approxDistance(x-0x11e, y-0x1ec) < 0x10 (0x00436b23), -3 when approxDistance(x-0x100, y-0x1fe) < 0x10 (0x00436b46). It then walks the 16-entry (short x, short y) table at 0x004c7af0 (4 bytes per entry, terminated by x == -1 at 0x004c7b30) and returns the entry index when the point is inside that entry's hot-spot. The two entries whose address is 0x004c7af8 / 0x004c7afc (indices 2, 3) use a wider test (dx scaled *4, offsets 0x20 and 0x1e, radius 0x1e); every other entry uses offset 0x10 when its index is < 8 and 0x20 otherwise, radius 0x10. When no entry matches it returns the fixed-button result (the fold of a 1 to 0 at 0x00436be6 cannot fire: the fixed buttons only ever set -2 or -3). Match: re/match/golf_raw_13.cpp. Callee approxDistance at C3; the table it reads is constant image data. Reimplemented in `shim/src/re/c3z.cpp`; path-1 A/B GREEN: hitEmployee436b00 (13 vectors, 13 distinct results, `log/diff/00436b00_hitEmployee436b00.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00436b00@f_00436b00@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00436be0, 0x00436bf9): callee pops 0 bytes of stack arguments.

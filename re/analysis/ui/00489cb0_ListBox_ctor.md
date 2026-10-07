@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 293 bytes, 77 instructions, subsystem `ui`. Mechanical 
 Constructs the scrollable list-box control: a Widget window at this+0x5c and a ListModel at this+0x5d4, wiring the multiple-inheritance sub-object vtables. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+`ListBox::ctor(int build)` constructs a ListBox over a Widget base (this+0x5c) and a ListModel (this+0x5d4); when `build` != 0 (0x00489cdc) it sets the Widget sub-vtable 0x004bb3d0 at +4 (0x00489ce1), runs `View4804a0::ctor` on this+0x5c (0x00489ce8) and `ListModel::ctor` on this+0x5d4 (0x00489cff). It then installs the primary vtable 0x004bb3cc at +0 (0x00489d07), reads the sub-object offsets o1 = [0x004bb3d0+4] = 0x58 and o2 = [0x004bb3d0+8] = 0x5d0 from +4, installs the secondary vtables 0x004bb260 at +o1+4, 0x004bb24c at +o1+0x278 and 0x004bb240 at +o2+4, zeroes the two this-adjust slots at +o1 and +o2, fills the scalar fields (constants from 0x004e44xx and 0x0083b648, and +o2+0xbc = 1) and returns `this` (caller `viewCtor4a0740` 0x004a0740). Reimplemented in `shim/src/re/c3y.cpp`; path-1 A/B GREEN: ListBox_ctor (1 vectors, 1 distinct results, 1 changing state, `log/diff/00489cb0_ListBox_ctor.path1.csv`); ListBox_ctor_b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00489cb0_ListBox_ctor_b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `??0R0C489cb0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00489dd2): callee pops 4 bytes of stack arguments.

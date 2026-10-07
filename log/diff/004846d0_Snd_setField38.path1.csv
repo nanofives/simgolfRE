@@ -7,8 +7,11 @@ $obj 100,0,0,True,f591560f,f591560f,True
 $obj -100000,0,0,True,fc52877e,fc52877e,True
 $obj 2147483647,0,0,True,50bc0208,50bc0208,True
 $obj -2147483648,0,0,True,9fdf45dd,9fdf45dd,True
+$obj 7,0,0,True,7a796888,7a796888,True
+$obj 64,0,0,True,7ea44ba1,7ea44ba1,True
+$obj 4660,0,0,True,eef05991,eef05991,True
 state_regions,$obj+0x38:4,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x6d539090,original=0xca0ac0,2026-10-06T18:39:16
-distinct_results,8,,
-VERDICT,GREEN,8,
+meta,detour=0x6c05ab70,original=0x14508c0,2026-10-07T11:14:47
+distinct_results,11,,
+VERDICT,GREEN,11,

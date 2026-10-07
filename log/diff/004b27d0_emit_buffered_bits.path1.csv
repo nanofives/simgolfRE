@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj $bits_alt 0,void,void,True,e3a03467,e3a03467,False
+$obj $bits_alt 1,void,void,True,d235098e,d235098e,True
+$obj $bits_alt 2,void,void,True,05253d49,05253d49,True
+$obj $bits_alt 7,void,void,True,d240c29b,d240c29b,True
+$obj $bits_alt 8,void,void,True,e1fe0231,e1fe0231,True
+$obj $bits_alt 9,void,void,True,afc2f33c,afc2f33c,True
+$obj $bits_alt 16,void,void,True,4a69b9eb,4a69b9eb,True
+$obj $bits_alt 24,void,void,True,f6973a11,f6973a11,True
+$obj $bits_ones 0,void,void,True,e3a03467,e3a03467,False
+$obj $bits_ones 1,void,void,True,0cb5b576,0cb5b576,True
+$obj $bits_ones 2,void,void,True,5d823950,5d823950,True
+$obj $bits_ones 7,void,void,True,c9a51403,c9a51403,True
+$obj $bits_ones 8,void,void,True,47ce4799,47ce4799,True
+$obj $bits_ones 9,void,void,True,a3b5dfcc,a3b5dfcc,True
+$obj $bits_ones 16,void,void,True,12159d65,12159d65,True
+$obj $bits_ones 24,void,void,True,0edeaa49,0edeaa49,True
+state_regions,$obj+0x0:36 $buf+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d461190,original=0x1440de0,2026-10-07T11:13:28
+distinct_results,15,,
+VERDICT,GREEN,16,

@@ -1,0 +1,15 @@
+vector,original,reimpl,match
+1 1,12,12,True
+1 2,-16,-16,True
+1 3,-8,-8,True
+1 4,32,32,True
+1 5,16,16,True
+1 6,10,10,True
+1 7,15,15,True
+5 5,0,0,True
+60 0,0,0,True
+-1 5,0,0,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d460b50,original=0x1440da0,2026-10-07T11:09:39
+distinct_results,8,,
+VERDICT,GREEN,10,

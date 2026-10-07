@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 508 bytes, 103 instructions, subsystem `ui`. Mechanical
 Constructs a list data model (linked list of items plus an embedded sub-object at this+0x30) with default colours from DAT_004e4488 etc. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+`ListModel::ctor()` constructs a ListModel (callers `ListBox::ctor` 0x00489cb0, `viewFieldCtor49d5a0` 0x0049d5a0, `viewCtor4a0740` 0x004a0740, `viewFieldCtor4a2250` 0x004a2250, `panelSubCtor4a3110` 0x004a3110, 0x0049ebb0). It inits the embedded buffer via `Buf_ctor` on this+4 (0x0048915a), installs the primary vtable 0x004bb21c at +0 and the two secondary vtables 0x004bb22c at +0xc0 and 0x004bb228 at +0xe8 (= [0x004bb238] + 0xc4; +0xc4 first holds 0x004bb234 and its +4 slot is read, 0x00489163..0x004891d7), saves the global list cookie at 0x00839650 into +0xec and clears it (0x0048916d..0x00489182), and fills the scalar fields from the constant tables at 0x0083b6xx and 0x004e44xx and the node head/count/index at +0xc8..+0xd8 and +0x20 to 0/-1 (0x004891ac..0x00489340). It is straight-line (no conditional branches) and returns `this`. Reimplemented in `shim/src/re/c3y.cpp`; path-1 A/B GREEN: ListModel_ctor (1 vectors, 1 distinct results, 1 changing state, `log/diff/00489150_ListModel_ctor.path1.csv`); ListModel_ctor_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00489150_ListModel_ctor_b.path1.csv`); ListModel_ctor_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00489150_ListModel_ctor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `??0S1D489150@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048934b): callee pops 0 bytes of stack arguments.

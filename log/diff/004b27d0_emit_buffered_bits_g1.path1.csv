@@ -1,0 +1,7 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj $bits_ones 8,void,void,True,731d4d5f,731d4d5f,False
+state_regions,$obj+0x0:36 $buf+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d461190,original=0x1440de0,2026-10-07T11:13:28
+distinct_results,1,,
+VERDICT,GREEN,1,

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 16 instructions, subsystem `render`. Mechanic
 forwards field +4 of the colour/palette object param_1 to the surface object's vtbl+0xec (returns 7/3 on null surface/arg) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Widget_applyPalette(this, param_1) returns 7 when the object this+4 is null (0x004789f4), 3 when param_1 is null (0x004789fe); otherwise it calls the object's virtual method at vtable+0xec (slot 59), thiscall with the dword *(param_1+4) (0x00478a0c), and returns 0. The A/B's fake slot-59 callback stores its argument into widget+0xf0 (a state region), so a successful call both returns 0 and changes state to *(param_1+4). Reimplemented in `shim/src/re/c3ab.cpp`; path-1 A/B GREEN: Widget_applyPalette (10 vectors, 10 distinct results, 9 changing state, `log/diff/004789f0_Widget_applyPalette.path1.csv`); Widget_applyPalette_nofont (1 vectors, 1 distinct results, 0 changing state, `log/diff/004789f0_Widget_applyPalette_nofont.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_004789f0@C_FUN_004789f0@f_004789f0@@QAEIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004789fc, 0x00478a0c, 0x00478a1d): callee pops 4 bytes of stack arguments.

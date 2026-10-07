@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 214 bytes, 77 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+emit_dqt(cinfo, index) writes the DQT marker for quant_tbl_ptrs[index] (cinfo+0x40+index*4) unless its sent_table (+0x80) is already set, and returns the precision (1 if any of the 64 quantval entries exceeds 255, else 0, decided at 0x004afef9). When it emits, it writes marker 0xDB, the segment length (0x83 for 16-bit, 0x43 for 8-bit), the index|(prec<<4) byte, then the 64 values in zigzag order (jpeg_natural_order at 0x004bd0ac: high byte first when prec), through emit_marker/emit_2bytes/emit_byte, and sets sent_table. Matched by re/match/golf_jpeg_cmarker.cpp as _emit_dqt. Reimplemented in `shim/src/re/c3aa.cpp`; path-1 A/B GREEN: emit_dqt (2 vectors, 2 distinct results, 2 changing state, `log/diff/004afec0_emit_dqt.path1.csv`); emit_dqt_sent (2 vectors, 2 distinct results, 0 changing state, `log/diff/004afec0_emit_dqt_sent.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_dqt` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004aff95): callee pops 0 bytes of stack arguments.

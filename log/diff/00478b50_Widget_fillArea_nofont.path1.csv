@@ -1,0 +1,6 @@
+vector,original,reimpl,match
+$obj 1 2,7,7,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d460ef0,original=0x1440e80,2026-10-07T11:09:39
+distinct_results,1,,
+VERDICT,GREEN,1,
