@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00015460`), 50 bytes, 24 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile::isHidden (Terrain.dll RVA 0x00015460, VA 0x10015460) reports whether the tile's type field is 0x14. It compares the dword at this+0x24 with 0x14 (cmp at 0x10015482) and returns the comparison flag through sete cl / mov al, cl (0x10015486, 0x10015489), so the result is 1 for type 0x14 and 0 for every other type. The test is branchless and the function writes nothing. Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Tile::isHidden (14 vectors, 2 distinct results, `log/diff/00015460_Terrain_Tile_isHidden.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile.cpp` as `?isHidden@Tile@@QAE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10015491): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00037720`), 33 bytes, 9 instructions, subsystem `audi
 Stores the stream source pair param_1/param_2 at +0x13a0/+0x13a4 and clears +0x58 bit2. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Points a channel at a stream source and at the back-pointer cell that owns it: the two stack arguments are stored at `[ecx+0x13a0]` (0x10037728) and `[ecx+0x13a4]` (0x10037733), and bit 2 of the flag dword at `[ecx+0x58]` is cleared (`and al, 0xfb` at 0x10037731, stored back at 0x10037739) while the other 31 bits are kept. Neither argument is dereferenced or validated, and 0 is always returned (`xor eax, eax` at 0x1003773c). `ret 8` at 0x1003773e: __thiscall, two arguments. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: Channel_setStreamSource (12 vectors, 12 distinct results, 12 changing state, `log/diff/00037720_sound_Channel_setStreamSource.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10037720@C_FUN_10037720@f_10037720@@QAEIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1003773e): callee pops 8 bytes of stack arguments.

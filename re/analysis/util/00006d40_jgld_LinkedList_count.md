@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00006d40`), 42 bytes, 21 instructions, subsystem `util
 returns the number of nodes in the list. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+LinkedList::count (VA 0x10006d40, __thiscall, no stack arguments) returns the list's element counter, the dword at this+0xc, loaded straight into the return register at 0x10006d60. It does not walk the list: the head (+0x10) and current (+0x14) node pointers are not read, and nothing is written. The value is returned as stored, including a negative one. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: LinkedList::count (12 vectors, 12 distinct results, `log/diff/00006d40_jgld_LinkedList_count.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `?count@LinkedList@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10006d69): callee pops 0 bytes of stack arguments.

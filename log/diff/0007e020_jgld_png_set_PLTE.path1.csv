@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$png $infoL $pal 0,void,void,True,a8a117c6,a8a117c6,True
+$png $infoL $pal 1,void,void,True,9f6622e9,9f6622e9,True
+$png $infoL $pal 256,void,void,True,8c5ca271,8c5ca271,True
+$png $infoL $pal 65535,void,void,True,6f253e2e,6f253e2e,True
+$png $infoL $pal 65536,void,void,True,a8a117c6,a8a117c6,True
+$png $infoL $pal -1,void,void,True,6f253e2e,6f253e2e,True
+$png $infoL 0 16,void,void,True,55b31727,55b31727,True
+$png $infoL $pal 2147483647,void,void,True,6f253e2e,6f253e2e,True
+$png $infoL $pal 4660,void,void,True,5285167e,5285167e,True
+0 $infoL $pal 4,void,void,True,8324dac5,8324dac5,False
+$png 0 $pal 4,void,void,True,8324dac5,8324dac5,False
+0 0 $pal 4,void,void,True,8324dac5,8324dac5,False
+state_regions,$infoL+0x0:128,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c2c9720,original=0x14607c0,2026-10-07T17:53:04
+distinct_results,7,,
+VERDICT,GREEN,12,

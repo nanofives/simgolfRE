@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007e0d0`), 69 bytes, 29 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_set_sRGB (VA 0x1007e0d0, __cdecl, three arguments, no return value) records the sRGB rendering intent in a png_info: it stores the low byte of argument 3 at +0x2c (0x1007e0f9, 0x1007e0fc) and sets bit 11 of the valid dword at +8 (read at 0x1007e102, `or ah, 8` at 0x1007e105, stored at 0x1007e10b). It returns without writing when argument 1 (0x1007e0e8) or argument 2 (0x1007e0ee) is null, both reaching the jmp at 0x1007e0f4. The intent is not range-checked: only its low byte is kept, so 0x100 stores 0. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_set_sRGB (12 vectors, 10 distinct results, 9 changing state, `log/diff/0007e0d0_jgld_png_set_sRGB.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_sRGB` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007e114): callee pops 0 bytes of stack arguments.

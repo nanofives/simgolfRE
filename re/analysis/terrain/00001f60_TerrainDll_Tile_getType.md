@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00001f60`), 42 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile::getType (Terrain.dll RVA 0x00001f60, VA 0x10001f60) returns the tile's terrain type. It reloads this from its frame slot (0x10001f7d) and returns the dword at this+0x24 (mov eax, [eax+0x24] at 0x10001f80); the rest of the body is the /GZ frame fill and the epilogue, and the function has no branch and no write. The same field is the one Tile::isHidden compares with 0x14 (0x10015482) and the one Tile::setTypeId writes (0x10014020, re/match/terrain_tile2.cpp). Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Tile::getType (14 vectors, 13 distinct results, `log/diff/00001f60_Terrain_Tile_getType.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?getType@Tile@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10001f89): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f0c0`), 27 bytes, 9 instructions, subsystem `audi
 Sets the buffer byte size at +0x78 before the IDirectSoundBuffer is created; returns 0xc if the interface already exists. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Sets the buffer-size field at `+0x78` only while the buffer is unallocated: the dword at `[ecx+0x60]` is tested first (0x1000f0c0, `test` at 0x1000f0c3, `je` at 0x1000f0c5) and, when it is non-zero, the function returns 0xc at 0x1000f0c7 without writing anything, so the size cannot change once that field is set. With it clear, the stack argument is stored at `[ecx+0x78]` (0x1000f0d3) and 0 is returned (0x1000f0d6). The value is not validated: 0 and 0xffffffff are stored unchanged. `ret 4` at 0x1000f0cc and 0x1000f0d8: __thiscall, one argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: DsBuffer::setBufferSize (15 vectors, 6 distinct results, 5 changing state, `log/diff/0000f0c0_sound_DsBuffer_setBufferSize.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1000f0c0@C_FUN_1000f0c0@f_1000f0c0@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000f0cc, 0x1000f0d8): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000e540`), 42 bytes, 19 instructions, subsystem `rend
 extracts the blue channel from a 16-bit pixel. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+blueOf (VA 0x1000e540, __cdecl, one argument, result in eax) expands the five-bit blue channel of a 16-bit pixel to eight bits: it shifts the argument left by 3 (0x1000e55b) and masks the result with 0xf8 (0x1000e55e), so only bits 0..4 of the argument reach the result and the result is always a multiple of 8 in 0..0xf8. The shift is a logical left shift of the whole argument and the mask then discards everything above bit 7, so negative arguments return the same value as their low five bits. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: blueOf (30 vectors, 16 distinct results, `log/diff/0000e540_jgld_blueOf.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_color.cpp` as `?blueOf@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000e569): callee pops 0 bytes of stack arguments.

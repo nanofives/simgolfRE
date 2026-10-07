@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007dfc0`), 87 bytes, 35 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Records a PNG pHYs chunk (physical pixel dimensions) in a png_info. It first rejects null pointers: `cmp [ebp+8],0` / `je` at 0x1007dfd8-0x1007dfdc and `cmp [ebp+0xc],0` / `jne` at 0x1007dfde-0x1007dfe2 both reach the `jmp` to the epilogue at 0x1007dfe4, so the body is skipped when either png_ptr or info_ptr is null. Otherwise it writes res_x at `[info+0x70]` (0x1007dfec), res_y at `[info+0x74]` (0x1007dff5), the low byte of unit_type at `[info+0x78]` (0x1007dffe), and sets bit 7 of the dword at `[info+8]` (`or cl,0x80` at 0x1007e007, stored back as a dword at 0x1007e00d) to mark the chunk valid. png_ptr is only tested for null, never dereferenced. Its caller is png_handle_pHYs 0x1007b380. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: png_set_pHYs (12 vectors, 10 distinct results, 9 changing state, `log/diff/0007dfc0_jgld_png_set_pHYs.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_pHYs` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007e016): callee pops 0 bytes of stack arguments.

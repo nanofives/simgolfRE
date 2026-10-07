@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00001e80`), 60 bytes, 26 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Terrain::getWall (Terrain.dll RVA 0x00001e80, VA 0x10001e80) is the Terrain-level forwarder for a tile's wall flag. It stores this in its frame slot (0x10001e9a) and never reads it again; it pushes its second argument (mov eax, [ebp+0xc] at 0x10001e9d), loads its first argument into ecx (0x10001ea1) and calls Tile::getWall through the incremental-link thunk at 0x100012da (call at 0x10001ea4), returning that byte unchanged. It takes two stack arguments (ret 8 at 0x10001eb9). golf_clean.exe exports its own copy of the same body at 0x00449130, which is dead code (CLAUDE.md, Anchors); the live one is this. Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Terrain::getWall (40 vectors, 12 distinct results, `log/diff/00001e80_Terrain_Terrain_getWall.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain.cpp` as `?getWall@Terrain@@QAE_NPAVTile@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10001eb9): callee pops 8 bytes of stack arguments.

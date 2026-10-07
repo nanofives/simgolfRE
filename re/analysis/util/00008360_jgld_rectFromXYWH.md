@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008360`), 72 bytes, 30 instructions, subsystem `util
 writes a RECT {x, y, x+w, y+h} from (x,y,w,h). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Fills a RECT from an origin and a size: x is stored at `[r]` (0x1000837e), y at `[r+4]` (0x10008386), then `x + w` at `[r+8]` (the add is 0x1000838c, the store 0x10008392) and `y + h` at `[r+0xc]` (add 0x10008398, store 0x1000839e). Both sums are recomputed from the arguments rather than read back from the two fields just written, so the four stores are independent. There is no conditional branch and no return value; the additions wrap modulo 2^32. It is the most used rectangle helper in the module (75 callers, from Surface setup 0x10007e40 to every sprite blitter). Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: rectFromXYWH (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008360_jgld_rectFromXYWH.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10008360@f_10008360@@YAXPAHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100083a7): callee pops 0 bytes of stack arguments.

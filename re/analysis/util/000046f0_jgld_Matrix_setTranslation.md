@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000046f0`), 73 bytes, 31 instructions, subsystem `util
 stores a Vector3 into the translation row at +0x34/+0x38/+0x3c. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Matrix::setTranslation (VA 0x100046f0, __thiscall, one stack argument, no return value) overwrites the translation column of a 4x4 matrix: it copies three dwords from the argument's +0, +4 and +8 (0x10004713, 0x1000471e, 0x1000472a) into this+0x34, this+0x38 and this+0x3c (0x10004715, 0x10004721, 0x1000472d). The values are moved as dwords, with no floating-point instruction and no conversion, and the other thirteen cells of the matrix are left as they were (ret 4 at 0x10004736). Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: Matrix::setTranslation (12 vectors, 12 distinct results, 12 changing state, `log/diff/000046f0_jgld_Matrix_setTranslation.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_100046f0@C_FUN_100046f0@f_100046f0@@QAEXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10004736): callee pops 4 bytes of stack arguments.

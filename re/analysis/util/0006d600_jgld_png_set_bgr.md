@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006d600`), 46 bytes, 21 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_set_bgr (VA 0x1006d600, __cdecl, one argument, no return value) turns on the BGR pixel-order transformation of a png_struct by setting bit 0 of the transformations dword at +0x70: it reads the dword (0x1006d61b), ORs 1 into it (0x1006d61e) and stores it back (0x1006d624). It tests nothing (a null argument would fault) and touches no other field. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_set_bgr (12 vectors, 9 distinct results, 8 changing state, `log/diff/0006d600_jgld_png_set_bgr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_trans.cpp` as `_png_set_bgr` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006d62d): callee pops 0 bytes of stack arguments.

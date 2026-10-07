@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000f6e0`), 84 bytes, 33 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+PathInfo::clear (Terrain.dll RVA 0x0000f6e0, VA 0x1000f6e0) zeroes the seven bytes of a tile's PathInfo block (Tile+0x208). It reloads this before each store and writes 0 to +1, +0, +2, +3, +4, +5 and +6 in that order (0x1000f700, 0x1000f707, 0x1000f70d, 0x1000f714, 0x1000f71b, 0x1000f722, 0x1000f729); it takes no argument (ret at 0x1000f733), has no branch and returns nothing. It is called by PathInfo's constructor (0x1000f690) and by Tile::reset (0x1000c2c0). Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: PathInfo::clear (14 vectors, 14 distinct results, 14 changing state, `log/diff/0000f6e0_Terrain_PathInfo_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile4.cpp` as `?clear@PathInfo@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000f733): callee pops 0 bytes of stack arguments.

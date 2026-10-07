@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006d750`), 72 bytes, 29 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_set_interlace_handling (VA 0x1006d750, __cdecl, one argument, result in eax) reports how many passes a read of the image takes and enables the interlace transformation when there is one. It reads the byte at +0x123 zero-extended (0x1006d76d) and tests it (0x1006d773): non-zero sets bit 1 of the transformations dword at +0x70 (`or al, 2` at 0x1006d77d, stored at 0x1006d782) and returns 7 (0x1006d785), zero returns 1 (0x1006d78c) with nothing written. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_set_interlace_handling (12 vectors, 6 distinct results, 4 changing state, `log/diff/0006d750_jgld_png_set_interlace_handling.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_trans.cpp` as `_png_set_interlace_handling` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006d797): callee pops 0 bytes of stack arguments.

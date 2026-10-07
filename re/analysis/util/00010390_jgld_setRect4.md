@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00010390`), 66 bytes, 28 instructions, subsystem `util
 copies four ints (l,t,r,b) into a RECT. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Copies four argument dwords into the four fields of a RECT in field order: `[r]` (0x100103ae), `[r+4]` (0x100103b6), `[r+8]` (0x100103bf), `[r+0xc]` (0x100103c8). Unlike rectFromXYWH 0x10008360 it does no arithmetic, so it sets left/top/right/bottom literally; it has no conditional branch and no return value. Its one caller is 0x1000f9e0. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: setRect4 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00010390_jgld_setRect4.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10010390@f_10010390@@YAXPAIIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100103d1): callee pops 0 bytes of stack arguments.

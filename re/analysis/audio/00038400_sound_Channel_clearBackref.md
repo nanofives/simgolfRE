@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038400`), 27 bytes, 6 instructions, subsystem `audi
 fastcall(channel): if the back-reference pointer at channel+0x13a4 is set, zeroes the pointee and the pointer. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Detaches a channel from whoever points at it: the back pointer at `[ecx+0x13a4]` is read at 0x10038400 and, when it is null (`test` at 0x10038406, `je` at 0x10038408), the function does nothing, which makes a second call harmless. Otherwise the dword it points at is zeroed first (`mov [eax], 0` at 0x1003840a) and only then the field itself (0x10038410), so the owner's slot is cleared before the channel forgets it. `ret` at 0x1003841a: __thiscall with no argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: Channel_clearBackref (12 vectors, 8 distinct results, 7 changing state, `log/diff/00038400_sound_Channel_clearBackref.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10038400@f_10038400@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1003841a): callee pops 0 bytes of stack arguments.

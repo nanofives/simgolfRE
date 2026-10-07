@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079410`), 83 bytes, 36 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_get_uint_32 (VA 0x10079410, __cdecl, one argument, result in eax) reads a 32-bit big-endian integer out of a byte buffer. It loads the four bytes at +0, +1, +2 and +3 zero-extended one at a time (0x1007942d, 0x10079437, 0x10079444, 0x10079451), shifts them left by 0x18, 0x10 and 8 (0x1007942f, 0x1007943a, 0x10079447) and adds the four parts (0x1007943d, 0x1007944a, 0x10079454), so byte +0 is the most significant. It reads nothing else and writes nothing. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_get_uint_32 (16 vectors, 16 distinct results, `log/diff/00079410_jgld_png_get_uint_32.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_get_uint_32` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10079462): callee pops 0 bytes of stack arguments.

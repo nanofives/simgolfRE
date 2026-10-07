@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000158b0`), 33 bytes, 15 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+iabs (Terrain.dll RVA 0x000158b0, VA 0x100158b0) is the integer absolute value used by the bitmap loaders (callers 0x100016a0, 0x10001900, 0x10005230). It is the first function of the CRT block and is compiled without the /GZ frame fill the rest of Terrain.dll has: it compares the stack argument with 0 (0x100158b4) and jl 0x100158b8 sends negative values to neg ecx (0x100158c5) while zero and positive values are copied unchanged (0x100158ba); both paths go through the local at [ebp-4], which is returned in eax (0x100158ca). neg does not saturate, so 0x80000000 is returned unchanged. __cdecl, one argument (ret at 0x100158d0). Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: iabs (24 vectors, 15 distinct results, `log/diff/000158b0_Terrain_iabs.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_iabs.cpp` as `?iabs@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100158d0): callee pops 0 bytes of stack arguments.

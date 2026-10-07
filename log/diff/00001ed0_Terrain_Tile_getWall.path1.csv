@@ -1,0 +1,47 @@
+vector,original,reimpl,match
+$t0 0,0,0,True
+$t0 1,3,3,True
+$t0 2,6,6,True
+$t0 3,0,0,True
+$t0 4,3,3,True
+$t0 5,6,6,True
+$t0 6,0,0,True
+$t0 7,3,3,True
+$t0 8,6,6,True
+$t1 0,5,5,True
+$t1 1,8,8,True
+$t1 2,2,2,True
+$t1 3,5,5,True
+$t1 4,8,8,True
+$t1 5,2,2,True
+$t1 6,5,5,True
+$t1 7,8,8,True
+$t1 8,2,2,True
+$t2 0,1,1,True
+$t2 1,4,4,True
+$t2 2,7,7,True
+$t2 3,1,1,True
+$t2 4,4,4,True
+$t2 5,7,7,True
+$t2 6,1,1,True
+$t2 7,4,4,True
+$t2 8,7,7,True
+$t3 0,6,6,True
+$t3 1,0,0,True
+$t3 2,3,3,True
+$t3 3,6,6,True
+$t3 4,0,0,True
+$t3 5,3,3,True
+$t3 6,6,6,True
+$t3 7,0,0,True
+$t3 8,3,3,True
+$t4 -32,145,145,True
+$t4 -4,152,152,True
+$t4 -1,0,0,True
+$t4 9,8,8,True
+$t4 16,99,99,True
+$t4 19,138,138,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c289390,original=0xdc0da0,2026-10-07T17:52:10
+distinct_results,13,,
+VERDICT,GREEN,42,

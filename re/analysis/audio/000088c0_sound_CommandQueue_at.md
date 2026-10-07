@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000088c0`), 15 bytes, 4 instructions, subsystem `audi
 Returns the command-ring entry at index i modulo 4096. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Indexes the 0x1000-dword array that starts at the object itself: the stack argument is masked with 0xfff (`and eax, 0xfff` at 0x100088c4) and the dword at `this + index*4` is returned (`mov eax, [ecx+eax*4]` at 0x100088c9). The mask makes the index wrap inside the array instead of being range-checked, so 0x1000 reads slot 0 and 0xffffffff reads slot 0xfff; nothing is written. `ret 4` at 0x100088cc: __thiscall, one argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: CommandQueue::at (16 vectors, 10 distinct results, `log/diff/000088c0_sound_CommandQueue_at.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_100088c0@C_FUN_100088c0@f_100088c0@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100088cc): callee pops 4 bytes of stack arguments.

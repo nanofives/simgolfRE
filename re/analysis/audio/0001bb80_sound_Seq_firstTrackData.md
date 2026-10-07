@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001bb80`), 17 bytes, 8 instructions, subsystem `audi
 ## Role (from the naming pass, not a C3 purpose)
 Returns the data pointer (node+8) of the first node of the track list at param_1+0xc (storing that node at the +0x14 cursor), or 0 if the list is empty. (`re/names/sound_3.tsv`)
 
+## Purpose
+Rewinds the sequencer's track cursor to the head of its list: the head pointer at `[ecx+0xc]` is read at 0x1001bb80 and stored into the cursor field `[ecx+0x14]` at 0x1001bb85 on both paths, because that store is placed before the branch (`test` at 0x1001bb83, `je` at 0x1001bb88). With an empty list the cursor is set to null and 0 is returned (0x1001bb8e); otherwise the head node's payload pointer `[node+8]` is returned (0x1001bb8a) and the node itself is never dereferenced further. `ret` at 0x1001bb8d and 0x1001bb90: __thiscall with no argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: Seq_firstTrackData (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001bb80_sound_Seq_firstTrackData.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001bb80@f_1001bb80@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001bb8d, 0x1001bb90): callee pops 0 bytes of stack arguments.

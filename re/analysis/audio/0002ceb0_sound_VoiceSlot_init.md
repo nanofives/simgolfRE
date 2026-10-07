@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002ceb0`), 31 bytes, 12 instructions, subsystem `aud
 fastcall(slot): zeroes a 0x110-byte sub-voice slot (0x41 dwords from +0xc) and sets slot[0]=0, slot[1]=0, slot[2]=1. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Clears a voice slot record: `rep stosd` with a count of 0x41 from `[edx+0xc]` (`mov ecx, 0x41` at 0x1002ceb3, `lea edi, [edx+0xc]` at 0x1002ceba, `rep stosd` at 0x1002cebd) zeroes bytes 0xc .. 0x10f, then the first three dwords are written explicitly, `+4` at 0x1002cebf and `+0` at 0x1002cec2 to zero and `+8` to 1 at 0x1002cec4, so the record is zeroed everywhere except that one field, which starts at 1. The object pointer is returned (`mov eax, edx` at 0x1002cecb) and nothing at 0x110 or beyond is touched. `ret` at 0x1002cece: __thiscall with no argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: VoiceSlot_init (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002ceb0_sound_VoiceSlot_init.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002ceb0@f_1002ceb0@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002cece): callee pops 0 bytes of stack arguments.

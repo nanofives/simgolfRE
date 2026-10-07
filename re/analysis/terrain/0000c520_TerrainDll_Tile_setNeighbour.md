@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000c520`), 51 bytes, 23 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile::setNeighbour (Terrain.dll RVA 0x0000c520, VA 0x1000c520) stores a tile pointer in one of the four neighbour slots at this+0x34. It loads the first stack argument as the index and the second as the value and writes the dword at this + index*4 + 0x34 (mov [ecx+eax*4+0x34], edx at 0x1000c546); it takes two stack arguments (ret 8 at 0x1000c550), has no branch, no range check and no null check. Its callers are 0x1000a130 and ~Tile 0x1000c3d0, which uses it to clear the reciprocal link of each of the four neighbours. Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Tile::setNeighbour (16 vectors, 16 distinct results, 16 changing state, `log/diff/0000c520_Terrain_Tile_setNeighbour.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?setNeighbour@Tile@@QAEXHPAV1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000c550): callee pops 8 bytes of stack arguments.

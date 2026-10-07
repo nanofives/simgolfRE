@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00024c50`), 79 bytes, 22 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Sets the play-mode bits in +0x214 from param_1 (bit0 -> 0x200, bit1 -> 0x400, bit2 -> 0x800), clearing the other two in the 0x200/0x400/0x800 group. (`re/names/sound_3.tsv`)
 
+## Purpose
+Rewrites the three-bit play-mode field in bits 9..11 of the dword at `[ecx+0x214]` from the low byte of its argument (`mov al, [esp+4]` at 0x10024c50). The three tests form an ordered chain, each arm returning on its own: bit 0 wins first and leaves only bit 9 set (`and ah, 0xf3` at 0x10024c5e clears bits 10 and 11, `or ah, 2` at 0x10024c61), otherwise bit 1 leaves only bit 10 (`and dh, 0xf5` at 0x10024c77, `or dh, 4` at 0x10024c7a), otherwise bit 2 leaves only bit 11 (`and ah, 0xf9` at 0x10024c90, `or ah, 8` at 0x10024c93); with none of the three bits set (`je` at 0x10024c88 falling through to 0x10024c9c) the field is left exactly as it was. The other 29 bits of the dword are preserved on every arm, and bits above 2 of the argument are ignored. `ret 4` at 0x10024c6a, 0x10024c83 and 0x10024c9c: __thiscall, one argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: Voice_setPlayModeBits (24 vectors, 7 distinct results, 18 changing state, `log/diff/00024c50_sound_Voice_setPlayModeBits.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10024c50@C_FUN_10024c50@f_10024c50@@QAEXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10024c6a, 0x10024c83, 0x10024c9c): callee pops 4 bytes of stack arguments.

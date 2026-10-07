@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006d630`), 61 bytes, 26 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_set_swap (VA 0x1006d630, __cdecl, one argument, no return value) turns on 16-bit byte swapping, but only for 16-bit images: it reads the byte at +0x127 zero-extended (0x1006d64d), compares it with 0x10 (0x1006d653) and, only when they are equal, sets bit 4 of the transformations dword at +0x70 (read at 0x1006d65b, `or al, 0x10` at 0x1006d65e, stored at 0x1006d663). Any other value at +0x127 leaves the struct unchanged (jne at 0x1006d656). Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_set_swap (12 vectors, 5 distinct results, 4 changing state, `log/diff/0006d630_jgld_png_set_swap.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_trans.cpp` as `_png_set_swap` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006d66c): callee pops 0 bytes of stack arguments.

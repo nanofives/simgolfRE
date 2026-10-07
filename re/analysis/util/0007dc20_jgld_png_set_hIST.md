@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007dc20`), 68 bytes, 29 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_set_hIST (VA 0x1007dc20, __cdecl, three arguments, no return value) records a histogram in a png_info: it stores argument 3 at +0x7c (0x1007dc4c) and sets bit 6 of the valid dword at +8 (read at 0x1007dc52, `or al, 0x40` at 0x1007dc55, stored at 0x1007dc5a). It does nothing when argument 1 is null (0x1007dc38) or argument 2 is null (0x1007dc3e), both paths reaching the jmp at 0x1007dc44. Argument 1 is only tested, never read, and the pointer it is given is stored as is, without a length or a copy. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_set_hIST (12 vectors, 10 distinct results, 9 changing state, `log/diff/0007dc20_jgld_png_set_hIST.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_hIST` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007dc63): callee pops 0 bytes of stack arguments.

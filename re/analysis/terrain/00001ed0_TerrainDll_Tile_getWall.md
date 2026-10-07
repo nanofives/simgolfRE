@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00001ed0`), 50 bytes, 22 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile::getWall (Terrain.dll RVA 0x00001ed0, VA 0x10001ed0) returns one of the tile's nine wall flags. It adds the stack argument to this as a BYTE offset (add eax, [ebp+8] at 0x10001ef0) and returns the byte at +0x234 of the result (mov al, [eax+0x234] at 0x10001ef3), so the flag array at this+0x234 is indexed by bytes and the function performs no range check and takes no branch. The same byte array is the one Tile::setWall writes (0x10015426) and the one WallInfo::clear zeroes four entries of (0x1000f7c0 onwards, WallInfo being Tile+0x210 and its flags +0x24). Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Tile::getWall (42 vectors, 13 distinct results, `log/diff/00001ed0_Terrain_Tile_getWall.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?getWall@Tile@@QAE_NH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10001eff): callee pops 4 bytes of stack arguments.

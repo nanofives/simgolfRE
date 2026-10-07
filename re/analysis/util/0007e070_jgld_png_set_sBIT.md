@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007e070`), 90 bytes, 37 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_set_sBIT (VA 0x1007e070, __cdecl, three arguments, no return value) copies a five-byte significant-bits record into a png_info: it calls the CRT memcpy 0x1007f3a0 with the png_info plus 0x44 as destination (0x1007e09f), argument 3 as source and the constant length 5 (pushes at 0x1007e096..0x1007e0a3, cdecl cleanup at 0x1007e0a8), then sets bit 1 of the valid dword at +8 (`or al, 2` at 0x1007e0b1, stored at 0x1007e0b6). It returns without writing when argument 1 (0x1007e088) or argument 2 (0x1007e08e) is null, both reaching the jmp at 0x1007e0b9. The length is the constant 5 whatever the image's colour type is. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_set_sBIT (12 vectors, 10 distinct results, 9 changing state, `log/diff/0007e070_jgld_png_set_sBIT.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_sBIT` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007e0c9): callee pops 0 bytes of stack arguments.

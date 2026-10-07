@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008860`), 30 bytes, 11 instructions, subsystem `aud
 Zero-initializes the 4096-entry command ring buffer and its head/tail counters. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Resets the command queue: `rep stosd` with a count of 0x1000 (`mov ecx, 0x1000` at 0x10008863, `xor eax, eax` at 0x10008868, `rep stosd` at 0x1000886c) zeroes bytes 0 .. 0x3fff of the object, then the two dwords that follow the array are zeroed in the order 0x4004 first (0x1000886e) and 0x4000 second (0x10008874), and the object pointer is returned (`mov eax, edx` at 0x1000887a). Nothing beyond 0x4007 is touched. `ret` at 0x1000887d: __thiscall with no argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: CommandQueue::init (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008860_sound_CommandQueue_init.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10008860@f_10008860@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000887d): callee pops 0 bytes of stack arguments.

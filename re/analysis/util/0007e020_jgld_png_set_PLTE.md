@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007e020`), 80 bytes, 32 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Records a PNG palette in a png_info. The same two null tests guard it: `cmp [ebp+8],0` / `je` at 0x1007e038-0x1007e03c and `cmp [ebp+0xc],0` / `jne` at 0x1007e03e-0x1007e042, both reaching the `jmp` to the epilogue at 0x1007e044. Otherwise it stores the palette pointer at `[info+0x10]` (0x1007e04c), the low 16 bits of num_palette as a **word** at `[info+0x14]` (`mov ax,[ebp+0x14]` at 0x1007e052, stored at 0x1007e056) and sets bit 3 of the dword at `[info+8]` (`or edx,8` at 0x1007e060, stored at 0x1007e066). The palette pointer is stored without being read, png_ptr is only tested, and `[info+0x16]` is left untouched by the word store. Its caller is png_handle_PLTE 0x100799e0. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: png_set_PLTE (12 vectors, 7 distinct results, 9 changing state, `log/diff/0007e020_jgld_png_set_PLTE.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_PLTE` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007e06f): callee pops 0 bytes of stack arguments.

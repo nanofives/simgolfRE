@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00007370`), 88 bytes, 32 instructions, subsystem `util
 constructs a ListNode holding a payload pointer and a type byte. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+ListNode::ctor (VA 0x10007370, __thiscall, two stack arguments, returns this) initialises a list node: it stores the ListNode vtable pointer (the relocated operand 0x1011d098 at 0x10007390, RVA 0x11d098), then argument 1 as the payload pointer at +0xc (0x1000739c), the low byte of argument 2 as the flag at +0x10 (0x100073a2, 0x100073a5), 0 into the next link at +8 (0x100073ab) and 0 into the prev link at +4 (0x100073b5), and returns this (0x100073bf, ret 8 at 0x100073c5). The node is born unlinked, and the flag keeps only the low byte of its argument. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: ListNode::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007370_jgld_ListNode_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??0ListNode@@QAE@PAXD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100073c5): callee pops 8 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00015400`), 69 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile::setWall (Terrain.dll RVA 0x00015400, VA 0x10015400) sets one wall flag and its height on a tile. It takes three stack arguments (ret 0xc at 0x10015442): the third is read as a single BYTE from [ebp+0x10] (0x10015423) and stored at this + arg1 + 0x234 with arg1 used as a byte offset (add eax, [ebp+8] at 0x10015420, store at 0x10015426), and the second is stored as a dword at this + arg1*4 + 0x210 (0x10015435). The two indexings differ: the flag array at +0x234 is indexed in bytes and the height array at +0x210 in dwords. The function has no branch, no range check and no return value; its caller is 0x1000a560. Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Tile::setWall (33 vectors, 33 distinct results, 33 changing state, `log/diff/00015400_Terrain_Tile_setWall.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile.cpp` as `?setWall@Tile@@QAEXHH_N@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10015442): callee pops 12 bytes of stack arguments.

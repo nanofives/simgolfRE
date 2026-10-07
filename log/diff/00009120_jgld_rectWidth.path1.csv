@@ -1,0 +1,17 @@
+vector,original,reimpl,match
+$r0,0,0,True
+$r1,1,1,True
+$r2,800,800,True
+$r3,0,0,True
+$r4,-1,-1,True
+$r5,10,10,True
+$r6,50,50,True
+$r7,-10,-10,True
+$r8,1,1,True
+$r9,-1,-1,True
+$r10,2147483647,2147483647,True
+$r11,2,2,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c2c9840,original=0x14606a0,2026-10-07T17:53:04
+distinct_results,9,,
+VERDICT,GREEN,12,

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000075b0`), 81 bytes, 31 instructions, subsystem `util
 returns next() scaled into [0,n). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Returns a pseudo-random integer in [0, (n & 0xffff)). It masks n to its low 16 bits (`and eax,0xffff` at 0x100075d0), loads that as a signed 32-bit integer with `fild dword` (0x100075d8) and spills it as a double (0x100075db) **before** calling Random::next (ecx = this, call at 0x100075e1 through the incremental-link thunk 0x10001091), then multiplies next()'s [0, 1) result by it (`fmul` at 0x100075e6) and truncates the product to int with __ftol (call at 0x100075e9: 64-bit truncation toward zero, low dword kept). `__thiscall` with one stack argument (`ret 4` at 0x100075fe). The mask is the behaviour a caller has to know: `range(0x10000)` and `range(-0x80000000)` always return 0, and `range(-1)` behaves as `range(0xffff)`. Because the multiplier is at most 65535 and the factor below 1, the product never exceeds 65535 and the truncation cannot overflow. There is no conditional branch. Its caller is 0x1006a3d0. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: jgld_Random::range (29 vectors, 18 distinct results, 29 changing state, `log/diff/000075b0_jgld_jgld_Random_range.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_random.cpp` as `?range@Random@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100075fe): callee pops 4 bytes of stack arguments.

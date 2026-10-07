@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000b030`), 10 bytes, 5 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 Returns (+0xc - +8) + 1, the inclusive length of a byte range on the object. (`re/names/sound_2.tsv`)
 
+## Purpose
+Returns the inclusive length of the half-open range held by the object in `ecx`: it loads the end value from `[ecx+0xc]` at 0x1000b030 and the start value from `[ecx+8]` at 0x1000b033, subtracts them (`sub eax, edx` at 0x1000b036) and adds one (`inc eax` at 0x1000b038), so an empty-looking pair (start == end) yields 1 and a reversed pair yields a negative count. Both the subtraction and the increment wrap modulo 2^32 with no saturation or clamp, and the function writes nothing. `ret` at 0x1000b039 pops no stack argument: __thiscall with no argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: getSpanLength (14 vectors, 12 distinct results, `log/diff/0000b030_sound_getSpanLength.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000b030@f_1000b030@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b039): callee pops 0 bytes of stack arguments.

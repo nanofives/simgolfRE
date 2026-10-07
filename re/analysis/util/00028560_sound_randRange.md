@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00028560`), 37 bytes, 10 instructions, subsystem `uti
 Linear-congruential RNG step: state(this+0)=state*0x19660d+0x3c6ef35f, returns (state>>16)*(n&0xffff)>>16 (a random value in [0,n)). (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+One step of the generator whose 32-bit state is the dword at the object itself: the state is replaced by state * 0x19660d + 0x3c6ef35f (`imul` at 0x10028562, `add` at 0x10028568, stored at 0x1002856d), and the result is the top half of the new state (`shr eax, 0x10` at 0x10028573) multiplied by the low 16 bits of the argument (`and ecx, 0xffff` at 0x10028576, `imul eax, ecx` at 0x1002857c keeping only the low dword) and shifted right 16 (0x1002857f), which maps the step to 0 .. n-1 without a division. Only the low 16 bits of the argument take part, so 0x10000 behaves like 0 (result 0) and 0x7fffffff like 0xffff. `ret 4` at 0x10028582: __thiscall, one argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: randRange (24 vectors, 9 distinct results, 24 changing state, `log/diff/00028560_sound_randRange.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10028560@C_FUN_10028560@f_10028560@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10028582): callee pops 4 bytes of stack arguments.

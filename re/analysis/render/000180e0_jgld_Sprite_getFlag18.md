@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000180e0`), 45 bytes, 22 instructions, subsystem `rend
 returns bit 0 of this+0x18; read by every Sprite draw variant (0x10015180..0x100193d0). (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Returns bit 0 of the dword at `[this+0x18]`: the field is loaded at 0x10018100 and masked with 1 at 0x10018103, so the result is 0 or 1 and the other 31 bits of the field are discarded. `__thiscall` with no stack argument (`ret` at 0x1001810c; `this` is spilled to `[ebp-4]` at 0x100180fa). All seventeen Sprite draw variants (0x10015180 through 0x100193d0) read it before drawing. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: Sprite::getFlag18 (12 vectors, 2 distinct results, `log/diff/000180e0_jgld_Sprite_getFlag18.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_100180e0@f_100180e0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001810c): callee pops 0 bytes of stack arguments.

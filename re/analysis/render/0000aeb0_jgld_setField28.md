@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000aeb0`), 47 bytes, 22 instructions, subsystem `rend
 stores arg0 into *(this+0x28); callers Surface::drawTo 0x10009fd0 and Surface::drawToZ 0x1000a330 use it on a Surface, and Sprite_vtable (0x1011d380) +0x18 reuses it on a Sprite. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Stores its single stack argument (read at 0x1000aed0) into `[this+0x28]` (0x1000aed3) and returns nothing. `__thiscall` with one stack argument (`ret 4` at 0x1000aedc). There is no validation and no conditional branch: any value is written through unchanged. Surface::drawTo 0x10009fd0 and Surface::drawToZ 0x1000a330 call it on a Surface, and slot +0x18 of Sprite_vtable 0x1011d380 reuses the same body on a Sprite. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: setField28 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000aeb0_jgld_setField28.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_1000aeb0@C_FUN_1000aeb0@f_1000aeb0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000aedc): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000f7a0`), 64 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+WallInfo::clear (Terrain.dll RVA 0x0000f7a0, VA 0x1000f7a0) zeroes four of the nine wall flags of a tile's WallInfo block (Tile+0x210). It reloads this before each store and writes 0 to +0x24, +0x26, +0x2a and +0x28 in that order (0x1000f7c0, 0x1000f7c7, 0x1000f7ce, 0x1000f7d5), which are flags 0, 2, 6 and 4 of the byte array that Tile::getWall reads at Tile+0x234 (0x10001ef3). The nine heights at +0x00..+0x23 and the flags 1, 3, 5, 7 and 8 are left as they were. It takes no argument (ret at 0x1000f7df), has no branch and returns nothing. It is called by WallInfo's constructor (0x1000f750) and by Tile::reset (0x1000c2c0). Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: WallInfo::clear (14 vectors, 14 distinct results, 14 changing state, `log/diff/0000f7a0_Terrain_WallInfo_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile4.cpp` as `?clear@WallInfo@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000f7df): callee pops 0 bytes of stack arguments.

@@ -64,6 +64,20 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
                         else p.read_text().replace("Memory.alloc(", "__keepAlloc(") for p in parts)
         sc = g.session.create_script(src)
         sc.load()
+        # DLL hooks install when their module loads (jgld.dll, sound.dll come after the window): wait for one
+        # requested hook per DLL to report installed, up to 60 s, so the first keys do not read "not installed"
+        import time
+        waits = {}
+        for n in names:
+            m = (HOOKS[n].get("module") or "golf_clean.exe")
+            if m.lower() != "golf_clean.exe" and m not in waits:
+                waits[m] = {"module": m, "addr": HOOKS[n]["addr"]}
+        for m, spec in waits.items():
+            t0 = time.time()
+            while sc.exports_sync.installed(spec) != 1 and time.time() - t0 < 60:
+                time.sleep(0.25)
+            print(f"{m}: hooks {'installed' if sc.exports_sync.installed(spec) == 1 else 'NOT installed after 60 s'} "
+                  f"({time.time() - t0:.1f} s after the window)")
         for name in names:
             spec = dict(HOOKS[name])
             spec["vectors"] = [list(v) for v in spec["vectors"]]

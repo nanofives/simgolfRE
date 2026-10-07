@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000793b0`), 83 bytes, 36 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng's big-endian 32-bit load: the four bytes at the argument pointer are each zero-extended into eax (`xor eax,eax` then `mov al,[edx+n]`) and accumulated into ecx shifted left by 24, 16, 8 and 0 (the shifts are at 0x100793cf, 0x100793da and 0x100793e7, the last byte is added unshifted at 0x100793f4); the sum is spilled to `[ebp-4]` (0x100793f6) and returned. The buffer is read only, there is no conditional branch, and the result is reinterpreted as signed, so a top byte >= 0x80 gives a negative value. Ten callers read PNG chunk fields with it (png_handle_IHDR 0x100796e0, png_handle_gAMA 0x10079cc0, png_handle_pHYs 0x1007b380, ...). Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: png_get_int_32 (12 vectors, 12 distinct results, `log/diff/000793b0_jgld_png_get_int_32.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_get_int_32` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10079402): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000c3d0`), 52 bytes, 13 instructions, subsystem `aud
 Enqueues a single value into the 4096-entry wave command ring at +0x1d8 without allocating; returns 0x22 when full. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Pushes one dword into the 0x1000-entry ring at `+0x1d8` of a single-producer queue. The next write slot is the write index at `+0x41dc` plus one, wrapped with `and eax, 0xfff` at 0x1000c3dd; when it collides with the read index at `+0x41d8` the ring is treated as full (`cmp` at 0x1000c3e2, `jne` at 0x1000c3e4) and the function returns 0x22 (0x1000c3e6) having written nothing, so the caller's value is dropped rather than overwriting an unread entry. Otherwise the argument is stored at `[ecx+index*4+0x1d8]` (0x1000c3f2), the write index is advanced to that slot (0x1000c3f9) and 0 is returned (0x1000c3ff). `ret 4` at 0x1000c3eb and 0x1000c401: __thiscall, one argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: WaveCmdQueue::pushValue (16 vectors, 9 distinct results, 8 changing state, `log/diff/0000c3d0_sound_WaveCmdQueue_pushValue.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000c3d0@C_FUN_1000c3d0@f_1000c3d0@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000c3eb, 0x1000c401): callee pops 4 bytes of stack arguments.

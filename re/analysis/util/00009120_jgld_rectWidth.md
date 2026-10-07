@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009120`), 42 bytes, 20 instructions, subsystem `util
 returns right-left of a RECT. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Returns the width of a RECT as `right - left`: the argument pointer is loaded twice (0x10009138 and 0x1000913b), the dword at `[eax+8]` is read (0x1000913e) and the dword at `[ecx]` subtracted from it (0x10009141), leaving the difference in eax. Nothing is written and there is no conditional branch, so the result is defined for inverted rectangles too (a negative width) and the subtraction wraps modulo 2^32 at the extremes of int32. Its six callers (0x10008f70, 0x10009320, 0x1000afe0, 0x1000f880, 0x1000f9e0, 0x10066470) use it as the width of a clipping or blit rectangle. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: rectWidth (12 vectors, 9 distinct results, `log/diff/00009120_jgld_rectWidth.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10009120@f_10009120@@YAHPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10009149): callee pops 0 bytes of stack arguments.

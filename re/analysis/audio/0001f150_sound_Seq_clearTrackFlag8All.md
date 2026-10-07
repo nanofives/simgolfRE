@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001f150`), 66 bytes, 24 instructions, subsystem `aud
 walks the reader list at this+0x19c clearing bit3 (&0xf7) of each track node's +0x38 flag byte (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Clears bit 3 of the flag byte of every track record reachable from the sequencer's track list: the head at `[ecx+0x19c]` is loaded at 0x1001f150 and the walk position is kept in the cursor field `[ecx+0x1a4]` (written at 0x1001f159 and at 0x1001f181), so the object is left pointing at the node the walk stopped on. Each node holds its successor at `+4` (0x1001f17c) and its track record at `+8` (0x1001f161 and 0x1001f189), and the loop body is a single byte operation on the record, `mov dl, 0xf7` at 0x1001f168 with the read/AND/store at 0x1001f16a-0x1001f16f, which leaves the other seven bits of the byte alone. The walk is defensive at every step: it stops on an empty list (`je` at 0x1001f15f), on a node without a track record both before the loop (`je` at 0x1001f166) and inside it (`jne` at 0x1001f18e), on a null cursor re-read from the object (`je` at 0x1001f17a) and at the end of the chain (`je` at 0x1001f187). `ret` at 0x1001f191: __thiscall with no argument. Reimplemented in `shim/src/re/c3an.cpp`; path-1 A/B GREEN: Seq_clearTrackFlag8All (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001f150_sound_Seq_clearTrackFlag8All.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_1001f150@f_1001f150@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001f191): callee pops 0 bytes of stack arguments.

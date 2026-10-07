@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007ddb0`), 87 bytes, 35 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_set_oFFs (VA 0x1007ddb0, __cdecl, five arguments, no return value) records an image offset in a png_info: argument 3 goes to the dword at +0x64 (0x1007dddc), argument 4 to the dword at +0x68 (0x1007dde5), the low byte of argument 5 to the byte at +0x6c (0x1007ddeb, 0x1007ddee) and bit 8 of the valid dword at +8 is set (`or ch, 1` at 0x1007ddf7, stored at 0x1007ddfd). Nothing happens when argument 1 (0x1007ddc8) or argument 2 (0x1007ddce) is null, both reaching the jmp at 0x1007ddd4. Only the low byte of argument 5 is kept, so unit types 0x100 and 0 are stored alike. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_set_oFFs (12 vectors, 10 distinct results, 9 changing state, `log/diff/0007ddb0_jgld_png_set_oFFs.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_oFFs` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007de06): callee pops 0 bytes of stack arguments.

@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$n0 0 0,0x3c8b0a8,0x3c8b0a8,True,04f3843a,04f3843a,True
+$n0 287454020 1,0x3c8b0a8,0x3c8b0a8,True,77fe4355,77fe4355,True
+$n0 $data 255,0x3c8b0a8,0x3c8b0a8,True,b86f3078,b86f3078,True
+$n0 305419896 90,0x3c8b0a8,0x3c8b0a8,True,fe41da04,fe41da04,True
+$n1 0 256,0x3a3eb58,0x3a3eb58,True,2f516b51,2f516b51,True
+$n1 2147483632 2,0x3a3eb58,0x3a3eb58,True,be537f66,be537f66,True
+$n1 $data 511,0x3a3eb58,0x3a3eb58,True,2b82e12b,2b82e12b,True
+$n1 3735928544 -1,0x3a3eb58,0x3a3eb58,True,1cbe652b,1cbe652b,True
+$n2 85 127,0x3fa5b68,0x3fa5b68,True,8d025a8f,8d025a8f,True
+$n2 $data 0,0x3fa5b68,0x3fa5b68,True,380dbace,380dbace,True
+$n2 252645132 51,0x3fa5b68,0x3fa5b68,True,55dfaee5,55dfaee5,True
+$n2 2147418112 128,0x3fa5b68,0x3fa5b68,True,a6cea6cd,a6cea6cd,True
+state_regions,$n0+0x0:20 $n1+0x0:20 $n2+0x0:20,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c289b60,original=0x15f07c0,2026-10-07T17:55:16
+distinct_results,12,,
+VERDICT,GREEN,12,

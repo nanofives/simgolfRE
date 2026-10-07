@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00005960`), 42 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile::getX (Terrain.dll RVA 0x00005960, VA 0x10005960) returns the tile's grid column. It reloads this from its frame slot (0x1000597d) and returns the dword at this+0x2c (0x10005980). No branch, no write. The field is the one Tile::reset writes from its first argument (0x1000c2c0, re/match/terrain_tile4.cpp) and that ~Tile sets to -1 (0x1000c3d0). Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Tile::getX (14 vectors, 13 distinct results, `log/diff/00005960_Terrain_Tile_getX.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile.cpp` as `?getX@Tile@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10005989): callee pops 0 bytes of stack arguments.

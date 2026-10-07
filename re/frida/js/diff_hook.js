@@ -1,6 +1,15 @@
 // Path-1 A/B: call the ORIGINAL (MinHook trampoline) and the REIMPLEMENTATION (detour) with identical
 // inputs inside the live game process and report both results. Requires diff_fixtures.js loaded first.
 rpc.exports = {
+  // 1 when the SG_HOOK of a DLL spec is installed. jgld.dll and sound.dll are LoadLibrary'd after the window appears
+  // (sound.dll ~1-10 s later) and their hooks install then, so diff_hook.py polls this before running DLL keys.
+  installed(spec) {
+    const shim = Process.getModuleByName('winmm.dll');
+    const pd = Memory.alloc(4), po = Memory.alloc(4), pi = Memory.alloc(4);
+    const f = new NativeFunction(shim.getExportByName('SimGolfShim_FindHookM'), 'int',
+      ['pointer', 'uint32', 'pointer', 'pointer', 'pointer'], 'stdcall');
+    return f(Memory.allocUtf8String(spec.module), spec.addr, pd, po, pi) ? pi.readS32() : -1;
+  },
   run(spec) {
     const shim = Process.getModuleByName('winmm.dll');
     const pd = Memory.alloc(4), po = Memory.alloc(4), pi = Memory.alloc(4);

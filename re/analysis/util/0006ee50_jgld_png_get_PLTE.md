@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006ee50`), 96 bytes, 39 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_get_PLTE (VA 0x1006ee50, __cdecl, four arguments, result in eax) hands the caller the palette of a png_info and says whether there is one. Four guards jump to the common `xor eax, eax` at 0x1006eea7 (return 0): argument 1 null (0x1006ee68), argument 2 null (0x1006ee6e), bit 3 clear in the png_info valid dword at +8 (`and ecx, 8` at 0x1006ee7a, tested at 0x1006ee7d) and argument 3 null (0x1006ee81). Past them it stores the png_info palette pointer at +0x10 through argument 3 (0x1006ee8d, 0x1006ee90) and the word at +0x14 (num_palette) zero-extended to a dword through argument 4 (0x1006ee97, 0x1006ee9e), then returns 8 (0x1006eea0). Argument 4 is dereferenced without a null test, and argument 1 is only tested, never read. Reimplemented in `shim/src/re/c3al.cpp`; path-1 A/B GREEN: png_get_PLTE (12 vectors, 7 distinct results, 6 changing state, `log/diff/0006ee50_jgld_png_get_PLTE.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_get.cpp` as `_png_get_PLTE` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006eeaf): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00007530`), 91 bytes, 33 instructions, subsystem `util
 advances the LCG seed (seed*0x41c64e6d+0x3039) and returns (seed>>16 & 0x7fff)/32768 as a float in [0,1). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Advances jgld's pseudo-random generator and returns its output as a double in [0, 1). The 4-byte seed at `[this]` is multiplied by 0x41c64e6d (`imul` at 0x10007552) and 0x3039 added (0x10007558) — the ANSI C LCG, wrapping modulo 2^32 — and the new seed is stored back to `[this]` (0x10007561). That seed is shifted right 16 (0x10007568) and masked with 0x7fff (0x1000756b), written as the low dword of a 64-bit local whose high dword is zeroed (0x10007571 and 0x10007574), loaded with `fild qword` (0x1000757b) and divided by the double constant at 0x1011d0a0 (`fdiv` at 0x1000757e), which holds 32768.0. So the result is `((seed >> 16) & 0x7fff) / 32768.0`, a multiple of 1/32768 in [0, 1), returned in st(0); both operands are exact in binary floating point, so the division is exact and the reimplementation's SSE2 arithmetic is bit-identical. There is no conditional branch, and the seed store is the function's whole effect. Its only caller is Random::range 0x100075b0, over the module's global Random at 0x1012844c. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: jgld_Random::next (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007530_jgld_jgld_Random_next.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_random.cpp` as `?next@Random@@QAENXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000758a): callee pops 0 bytes of stack arguments.

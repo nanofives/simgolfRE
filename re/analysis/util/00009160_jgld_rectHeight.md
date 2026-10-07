@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009160`), 43 bytes, 20 instructions, subsystem `util
 returns bottom-top of a RECT. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Returns the height of a RECT as `bottom - top`: the dword at `[eax+0xc]` is read (0x1000917e) and the dword at `[ecx+4]` subtracted from it (0x10009181). Same shape as rectWidth 0x10009120 one field pair over, same six callers, no write and no conditional branch, so an inverted rectangle yields a negative height and the subtraction wraps modulo 2^32. Reimplemented in `shim/src/re/c3ak.cpp`; path-1 A/B GREEN: rectHeight (12 vectors, 9 distinct results, `log/diff/00009160_jgld_rectHeight.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10009160@f_10009160@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000918a): callee pops 0 bytes of stack arguments.

@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $info1 $outp $outn,0,0,True,6650f676,6650f676,False
+$ps0 0 $outp $outn,0,0,True,6650f676,6650f676,False
+0 0 $outp $outn,0,0,True,6650f676,6650f676,False
+$ps0 $info0 $outp $outn,0,0,True,6650f676,6650f676,False
+$ps1 $info2 $outp $outn,0,0,True,6650f676,6650f676,False
+$ps2 $info1 0 $outn,0,0,True,6650f676,6650f676,False
+$ps0 $info1 $outp $outn,8,8,True,c0d9fa6e,c0d9fa6e,True
+$ps1 $info3 $outp $outn,8,8,True,4aeace9b,4aeace9b,True
+$ps2 $info4 $outp $outn,8,8,True,75c71f3e,75c71f3e,True
+$ps3 $info5 $outp $outn,8,8,True,553a3201,553a3201,True
+$ps0 $info1 $outp2 $outn2,8,8,True,96d35c2e,96d35c2e,True
+$ps4 $info3 $outp2 $outn,8,8,True,72c45feb,72c45feb,True
+state_regions,$info0+0x0:256 $info1+0x0:256 $info2+0x0:256 $info3+0x0:256 $info4+0x0:256 $info5+0x0:256 $outp+0x0:8 $outn+0x0:8 $outp2+0x0:8 $outn2+0x0:8,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c289af0,original=0x15f0700,2026-10-07T17:55:16
+distinct_results,7,,
+VERDICT,GREEN,12,
