@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 80 bytes, 30 instructions, subsystem `ui`. Mechanical t
 Copies param_1 into the text buffer at this+0x574 (capped at capacity this+0x578), recomputes length into this+0x5a4, and invalidates via vtable+0x120. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Replaces an edit box's text. When the text buffer +0x574 is non-null (0x0048620a): a null argument clears the buffer to the empty string (0x00486216), otherwise it copies at most the capacity +0x578 characters with strncpy (0x00486229); it then stores the new string length into +0x5a4 (0x0048624e) and calls the box's notify virtual (vtable +0x120, thiscall, 0x0048625c). It returns nothing; the buffer contents, the stored length and the notify call are its output. Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: EditBox::setText (9 vectors, 6 distinct results, 7 changing state, `log/diff/00486200_EditBox_setText.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?setText@C486200@@QAEXPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048624d): callee pops 4 bytes of stack arguments.

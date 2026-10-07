@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 148 bytes, 64 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Returns the character-editor zone/field under a point. (`re/names/exe_1.tsv`)
 
+## Purpose
+charEditorZone (0x004382f0) maps a screen point (x, y) to a character-editor hit zone. It scans the ten (cx, cy) centres in the table at 0x004c7be0 (end 0x004c7c30, 8-byte stride) and returns the index of the first whose metric approxDistance(0x00467170) of (x - cx - 0x3c, y - cy - 0x3c) is below 0x3c (jl at 0x00438323); the loop index is the returned zone (0..9). When no centre matches it returns 10 if approxDistance(x - 0x30a, y - 0x16b) is below 0x3c (jge at 0x0043834a) and otherwise 0xb if approxDistance(x - 0x12, y - 0x1ef) is below 0x3c, or -1 (setge/dec/and 0xc/dec at 0x00438375..0x0043837e). It is pure: it reads only the fixed table and its arguments. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: charEditorZone (17 vectors, 13 distinct results, `log/diff/004382f0_charEditorZone.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?zone4382f0@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00438355, 0x0043835c, 0x00438383): callee pops 0 bytes of stack arguments.

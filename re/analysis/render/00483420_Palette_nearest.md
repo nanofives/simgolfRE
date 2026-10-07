@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 462 bytes, 143 instructions, subsystem `render`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 returns the nearest palette index to an (r,g,b) color by least squared distance over 256 entries, excluding reserved ranges (10..0xf5) when requested (`re/names/exe_3.tsv`)
 
+## Purpose
+Returns the palette index whose RGB is closest (least squared distance) to (r, g, b). m_pal is at this+4; when it is null the function returns 7 (0x00483436/0x00483438). Otherwise it reads 256 palette entries (3 bytes each: r, g, b) through the palette object's virtual slot +0x10 (call at 0x00483458) into a local buffer. With reserved == 0 (0x00483464) it scans all 256 entries, tracking the least `db*db + dr*dr + dg*dg` (compares at 0x004834f2). With reserved != 0 it first marks the indices claimed by up to five range records at this+8 (0x10 bytes each: id +0, start byte +8, count byte +9; a record with id != -1 is active, 0x00483523) and then scans only indices 10..0xf5 (0x0a at 0x00483558, 0xf6 at 0x004835d2) skipping marked ones, returning the least-distance index. Reimplemented in `shim/src/re/c3x.cpp`; path-1 A/B GREEN: Palette::nearest (12 vectors, 11 distinct results, `log/diff/00483420_Palette_nearest.path1.csv`); Palette::nearest_r1 (12 vectors, 11 distinct results, `log/diff/00483420_Palette_nearest_r1.path1.csv`); Palette::nearest_null (2 vectors, 1 distinct results, `log/diff/00483420_Palette_nearest_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `?nearest@S1C483420@@QAEHEEEH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00483444, 0x00483502, 0x004835eb): callee pops 16 bytes of stack arguments.

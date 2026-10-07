@@ -186,7 +186,8 @@ def enabled_batches():
 def _load_fragments():
     import importlib.util, pathlib, sys
     enabled = enabled_batches()
-    for f in sorted((pathlib.Path(__file__).parent / "registry.d").glob("*.py")):
+    # enabled batches first, so an unfinished batch that claims the same function is the one skipped
+    for f in sorted((pathlib.Path(__file__).parent / "registry.d").glob("*.py"), key=lambda p: (p.stem not in enabled, p.stem)):
         spec = importlib.util.spec_from_file_location(f"registry_d_{f.stem}", f)
         mod = importlib.util.module_from_spec(spec)
         try:
@@ -198,6 +199,9 @@ def _load_fragments():
             continue
         dup = set(mod.HOOKS) & set(HOOKS)
         if dup:
+            if f.stem not in enabled:              # two unfinished batches claiming one function must not block others
+                print(f"hooks_registry: skipped {f.name} (not enabled, duplicates {sorted(dup)})", file=sys.stderr)
+                continue
             raise ValueError(f"{f.name}: hook names already registered: {sorted(dup)}")
         HOOKS.update(mod.HOOKS)
 

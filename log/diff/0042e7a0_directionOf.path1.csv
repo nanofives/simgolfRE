@@ -1,0 +1,60 @@
+vector,original,reimpl,match
+-100 -100,0,0,True
+-100 -5,6,6,True
+-100 -1,6,6,True
+-100 0,6,6,True
+-100 1,6,6,True
+-100 5,6,6,True
+-100 100,4,4,True
+-5 -100,0,0,True
+-5 -5,0,0,True
+-5 -1,6,6,True
+-5 0,6,6,True
+-5 1,6,6,True
+-5 5,4,4,True
+-5 100,4,4,True
+-1 -100,0,0,True
+-1 -5,0,0,True
+-1 -1,0,0,True
+-1 0,6,6,True
+-1 1,4,4,True
+-1 5,4,4,True
+-1 100,4,4,True
+0 -100,0,0,True
+0 -5,0,0,True
+0 -1,0,0,True
+0 0,0,0,True
+0 1,4,4,True
+0 5,4,4,True
+0 100,4,4,True
+1 -100,0,0,True
+1 -5,0,0,True
+1 -1,0,0,True
+1 0,2,2,True
+1 1,4,4,True
+1 5,4,4,True
+1 100,4,4,True
+5 -100,0,0,True
+5 -5,0,0,True
+5 -1,2,2,True
+5 0,2,2,True
+5 1,2,2,True
+5 5,4,4,True
+5 100,4,4,True
+100 -100,0,0,True
+100 -5,2,2,True
+100 -1,2,2,True
+100 0,2,2,True
+100 1,2,2,True
+100 5,2,2,True
+100 100,4,4,True
+-2147483648 1,4,4,True
+2147483647 -1,2,2,True
+3 3,4,4,True
+-3 3,4,4,True
+7 -7,0,0,True
+-8 8,4,4,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5d5cf7c0,original=0x1440dc0,2026-10-07T10:08:45
+distinct_results,4,,
+VERDICT,GREEN,55,

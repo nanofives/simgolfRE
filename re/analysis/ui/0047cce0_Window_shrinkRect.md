@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 207 bytes, 63 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 shrinks a RECT inward by the title bar and borders per m_9c flags, subtracting the caption child m_15c height (`re/names/exe_3.tsv`)
 
+## Purpose
+The inverse of growRect: shrinks a RECT by the same frame margins, subtracting where growRect adds. When the rect pointer is non-null (0x0047cce7): bit 4 subtracts the border inset 0x0083ff10 from bottom (0x0047ccef); bit 8 from right (0x0047ccff); bits 0x400 or 0x11 shrink all four sides by +0x184 (0x0047cd18) and, when +0x188 is not -1, set bottom to (+0x184 - +0x188) + (oldBottom - +0x184) (0x0047cd40); bit 0x10 shifts top by +0x180 - +0x184 (0x0047cd5e); and when the caption frame +0x15c is present and bit 0x20000000 is clear it increases top by the frame's height() (virtual +0x170, 0x0047cd7e). It returns nothing. Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: Window::shrinkRect (16 vectors, 14 distinct results, 14 changing state, `log/diff/0047cce0_Window_shrinkRect.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0047cdac): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0047cced before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

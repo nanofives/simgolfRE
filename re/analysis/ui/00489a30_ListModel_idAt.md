@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 128 bytes, 43 instructions, subsystem `ui`. Mechanical 
 Returns the id of the item at index param_1 (supports negative indices from the tail). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Seeks the model's current node +0xcc to the index-th element and returns that node's id (+4), or 0 when the head +0xc8 is null. It acts only when the argument index <= count-1 (0x00489a43): for index >= 0 it steps forward along the next pointer +0xc index times (0x00489a84), and for index < 0 it takes abs(index) = (index ^ (index>>31)) - (index>>31) (0x00489a4c) and, only when abs(index) <= count (0x00489a5c), steps backward along the prev pointer +0x10 that many times from the head and sets index = count + index. It writes the resulting index to +0xd4. When index is out of range it leaves the current node unchanged and still returns the current node's id (or 0 when the head is null). Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: ListModel::idAt (12 vectors, 6 distinct results, 7 changing state, `log/diff/00489a30_ListModel_idAt.path1.csv`); ListModel::idAt_empty (3 vectors, 1 distinct results, 0 changing state, `log/diff/00489a30_ListModel_idAt_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?get@C489a30@@QAEPAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00489aa8, 0x00489aad): callee pops 4 bytes of stack arguments.

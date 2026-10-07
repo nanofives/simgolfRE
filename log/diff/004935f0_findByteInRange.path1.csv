@@ -1,0 +1,17 @@
+vector,original,reimpl,match
+$s0,NULL,NULL,True
+$s1,NULL,NULL,True
+$s2,NULL,NULL,True
+$s3,NULL,NULL,True
+$s4,NULL,NULL,True
+$s5,obj+0xff6b6448,obj+0xff6b6448,True
+$s6,obj+0xff6999ba,obj+0xff6999ba,True
+$s7,obj+0x14c2,obj+0x14c2,True
+$s8,obj+0x30e9,obj+0x30e9,True
+$s9,obj+0x3111,obj+0x3111,True
+$s10,obj+0xfffea488,obj+0xfffea488,True
+0,NULL,NULL,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5d5cf850,original=0x1440de0,2026-10-07T10:08:45
+distinct_results,7,,
+VERDICT,GREEN,12,

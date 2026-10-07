@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 91 bytes, 29 instructions, subsystem `ui`. Mechanical t
 finds a panel entry by its id. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+listFindById (0x004a4890) searches the embedded singly-linked list (head this+0x80, cursor this+0x84, count this+0x88, index this+0x8c) for the node whose id (+0x4) equals the key argument and returns its position. When the head this+0x80 is null it returns the index field this+0x8c unchanged (0x004a48df). Otherwise it resets the index to 0 and the cursor to the head (0x004a48a5/0x004a48ad) and walks at most count nodes (jle at 0x004a48b3, jl at 0x004a48dd), stopping at the first node whose id matches (je at 0x004a489d) while advancing the cursor to +0xc (next) and incrementing the index each miss; the return value is the match position, or count when no node matches. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: listFindById (9 vectors, 6 distinct results, 8 changing state, `log/diff/004a4890_listFindById.path1.csv`); listFindById_empty (2 vectors, 1 distinct results, 0 changing state, `log/diff/004a4890_listFindById_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?find@C4a4890@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a48e8): callee pops 4 bytes of stack arguments.

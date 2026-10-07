@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 61 bytes, 21 instructions, subsystem `ui`. Mechanical t
 When active, sets the hover text colour quad on the font object at this+0x274. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Button::setColorHover (0x00488970) sets the hover-colour quad of a button, but only when the drawing object this+0x130 is non-null (je at 0x00488978). When active it forwards to two helpers on the font sub-object this+0x274: Widget_applyPalette (0x004789f0) with the global dword 0x0083ad10, then Widget_setQuad70 (0x00476340) with the four colour arguments, which stores them at this+0x274+0x70/0x80/0x90/0xa0. It returns nothing. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: Button::setColorHover (5 vectors, 4 distinct results, 3 changing state, `log/diff/00488970_Button_setColorHover.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00488970@C_FUN_00488970@f_00488970@@QAEXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x004889aa): callee pops 16 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 105 bytes, 40 instructions, subsystem `ui`. Mechanical 
 returns whether the flag at a given index is set. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Returns whether flag `id` is set. The object inherits its data virtually: `[this]` is a vbtable pointer and the dword at `[vbtable+8]` (read at 0x0049ef85) is the offset of the data base from `this`. In that base a linked list sits at +0xc0 (head +0xc8, cur +0xcc, count +0xd0, index +0xd4) and a 32-bit mask at +0xf0. When the head is non-null and count > 0 the function walks the list (0x0049ef9d..0x0049efc6), comparing each node's id at +4 (0x0049efb1) and storing the running index into +0xd4 and the current node into +0xcc, stopping at the first match; a missing id leaves the index at count. It then returns `(1 << index) & mask` (shl/and at 0x0049efde..0x0049efe0). With an empty head (0x0049ef9b) the index is left at its previous value; with count <= 0 (0x0049efa8) the index is 0. Reimplemented in `shim/src/re/c3x.cpp`; path-1 A/B GREEN: flagIsSet (10 vectors, 4 distinct results, 8 changing state, `log/diff/0049ef80_flagIsSet.path1.csv`); flagIsSet_empty (2 vectors, 1 distinct results, 0 changing state, `log/diff/0049ef80_flagIsSet_empty.path1.csv`); flagIsSet_zcount (2 vectors, 1 distinct results, 0 changing state, `log/diff/0049ef80_flagIsSet_zcount.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?isSet@C49ef80@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049efe6): callee pops 4 bytes of stack arguments.

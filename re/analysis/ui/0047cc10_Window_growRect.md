@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 205 bytes, 61 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 expands a RECT by the title bar and borders per m_9c flags (inverse of shrinkRect) (`re/names/exe_3.tsv`)
 
+## Purpose
+Enlarges a RECT (left +0, top +4, right +8, bottom +0xc) by the window's frame margins. When the rect pointer is non-null (0x0047cc19): flag bit 4 of +0x9c adds the border inset (dword 0x0083ff10) to bottom (0x0047cc1f); bit 8 adds it to right (0x0047cc2f); bits 0x400 or 0x11 inset all four sides by the margin +0x184 (0x0047cc48) and, when the extra-bottom field +0x188 is not -1, set bottom to (+0x188 - +0x184) + oldBottom + +0x184 (0x0047cc74); bit 0x10 shifts top by +0x184 - +0x180 (0x0047cc8e); and when the caption frame +0x15c is present and bit 0x20000000 is clear it reduces top by the frame's height() (virtual vtable +0x170, 0x0047ccae). It returns nothing; the mutated rect is the output. Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: Window::growRect (16 vectors, 14 distinct results, 14 changing state, `log/diff/0047cc10_Window_growRect.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_b.cpp` as `?grow@Win47b@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047ccda): callee pops 4 bytes of stack arguments.

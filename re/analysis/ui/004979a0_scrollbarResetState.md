@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 88 bytes, 20 instructions, subsystem `ui`. Mechanical t
 resets the scrollbar's internal thumb/position state. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Resets a scrollbar's scroll state. It clears the scroll offset +0x5ac and the step +0x5b0 to 0 and sets the two range fields +0x5b4 and +0x5b8 to the maximum +0x5c0 (0x004979a0..0x004979bd). When the anchor +0x57c is not -1 (0x004979c4) it marks the bar active (+0x5ac = 1), biases both range fields down by one (+0x5b4--, +0x5b8--) and bumps the step +0x5b0 to 1. It returns nothing; the six written fields are its output. Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: scrollbarResetState (12 vectors, 12 distinct results, 11 changing state, `log/diff/004979a0_scrollbarResetState.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?reset@C4979a0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004979f7): callee pops 0 bytes of stack arguments.

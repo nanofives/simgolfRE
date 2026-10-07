@@ -1,0 +1,17 @@
+vector,original,reimpl,match
+$obj 0 0 0 0,0,0,True
+$obj 255 255 255 0,255,255,True
+$obj 128 64 32 0,120,120,True
+$obj 10 200 50 0,212,212,True
+$obj 200 10 150 0,38,38,True
+$obj 50 50 50 0,6,6,True
+$obj 255 0 0 0,47,47,True
+$obj 0 255 0 0,211,211,True
+$obj 0 0 255 0,113,113,True
+$obj 123 45 67 0,77,77,True
+$obj 240 240 10 0,143,143,True
+$obj 5 5 250 0,113,113,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5d5cfcf0,original=0x1440e80,2026-10-07T10:10:31
+distinct_results,11,,
+VERDICT,GREEN,12,

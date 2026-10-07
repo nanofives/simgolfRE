@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 57 bytes, 27 instructions, subsystem `util`. Mechanical
 scans a char buffer returning the first byte whose value falls in a low..high range passed by the caller. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+`findByteInRange(p)` returns a pointer to the first byte of the string `p` that lies in the inclusive signed range [lo, hi], where lo is the signed byte at 0x004bba88 ('0' = 0x30) and hi at 0x004bba89 ('9' = 0x39) (caller `expandTextMarkup` 0x004942f0); that is, it finds the first ASCII digit. A null `p` (`je` at 0x004935fa) and a terminating NUL reached first (`je` at 0x00493610) both return NULL. The two range tests are signed (`jl` at 0x00493614 for byte < lo, `jg` at 0x00493618 for byte > hi); a byte outside the range is skipped. Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: findByteInRange (12 vectors, 7 distinct results, `log/diff/004935f0_findByteInRange.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?findRange@@YAPADPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00493628): callee pops 0 bytes of stack arguments.

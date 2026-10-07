@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 78 bytes, 29 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+`jpeg_suppress_tables(cinfo, suppress)` is the IJG libjpeg routine that marks every defined table for or against re-emission (caller `jpeg_start_compress` 0x004ae380). For each of the four quant-table pointers at cinfo+0x40 it writes `suppress` to table+0x80 when the pointer is non-NULL (`je` skip at 0x004ae236); for each of the four DC huff-table pointers at cinfo+0x50 and four AC huff-table pointers at cinfo+0x60 it writes `suppress` to table+0x114 when non-NULL (`je` at 0x004ae251 for DC, 0x004ae25d for AC). Two `jne` close the 4-iteration loops. Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: jpeg_suppress_tables (12 vectors, 12 distinct results, 12 changing state, `log/diff/004ae220_jpeg_suppress_tables.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_capimin.cpp` as `_jpeg_suppress_tables` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae26d): callee pops 0 bytes of stack arguments.

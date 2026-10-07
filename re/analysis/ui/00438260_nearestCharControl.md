@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 142 bytes, 53 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Hit-tests the character editor, returning the nearest control. (`re/names/exe_1.tsv`)
 
+## Purpose
+Returns the index of the control spot closest to the point (x, y), or -1 when none is within 0x28. It scans the 16-bit coordinate table at 0x004c7b38 (short pairs {x, y}, terminated by a zero x): for the first 8 entries (table address < 0x4c7b58, 0x00438276) the x delta is divided by 3 before measuring (0x0043828c), for later entries it is used directly (0x004382a4); the distance is approxDistance(dx, y - entry.y) (0x00467170). Starting from best = 0x28 and index -1, an entry whose distance is below the running best (0x004382bf) updates best and the index; the loop stops at the zero-x terminator (0x004382d2). Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: nearestCharControl (22 vectors, 15 distinct results, `log/diff/00438260_nearestCharControl.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?nearest438260@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004382ed): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 91 bytes, 29 instructions, subsystem `ui`. Mechanical t
 Returns the index of the first item whose id equals param_1. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Returns the zero-based position of the first node whose id (+4) equals the argument in the model's singly-forward-walked list, or the node count (+0xd0) when no node matches. When the head +0xc8 is non-null it resets the running index +0xd4 to 0 and the current node +0xcc to the head (0x004899e2), then walks up to +0xd0 nodes along the next pointer +0xc (0x004899fb), stopping at the first id match (0x004899ef). It returns the final index +0xd4. Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: ListModel::findId (12 vectors, 7 distinct results, 11 changing state, `log/diff/004899d0_ListModel_findId.path1.csv`); ListModel::findId_empty (3 vectors, 1 distinct results, 0 changing state, `log/diff/004899d0_ListModel_findId_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?find@C4899d0@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00489a28): callee pops 4 bytes of stack arguments.

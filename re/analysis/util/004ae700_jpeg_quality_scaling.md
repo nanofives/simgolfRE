@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 56 bytes, 21 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+`jpeg_quality_scaling(q)` is the IJG libjpeg quality-to-scale-factor map (caller `jpeg_set_quality` 0x004ae740). A quality below 1 (`jg` at 0x004ae706 not taken) returns a fixed 5000; qualities 1..49 (`jge` at 0x004ae72d not taken) return the signed quotient 5000 / q; qualities 50..100 return (100 - q) * 2; a quality above 100 is clamped to 100 (`jle` at 0x004ae719 not taken, store at 0x004ae720) and so returns 0. All three compares are signed. Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: jpeg_quality_scaling (19 vectors, 11 distinct results, `log/diff/004ae700_jpeg_quality_scaling.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_jpeg_quality_scaling` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae715, 0x004ae729, 0x004ae737): callee pops 0 bytes of stack arguments.

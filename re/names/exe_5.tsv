@@ -111,10 +111,10 @@ golf_clean.exe	0x0049ebb0	viewFieldCtor49ebb0	ui	match re/match/golf_hand_06_f.c
 golf_clean.exe	0x0049ec80	viewFieldDtor49ec80	ui	match re/match/golf_hand_02.cpp; callee 0x0049ece0 (viewFieldCleanup49ece0)	destructor for the view sub-field built by viewFieldCtor49ebb0.
 golf_clean.exe	0x0049ece0	viewFieldCleanup49ece0	ui	match re/match/golf_hand_r1.cpp; callee reset 0x004894b0, 0x00480610; callers dispatch 0x004a1250/0x004a12e0	cleans up a view sub-field, resetting its embedded S1D489150 object.
 golf_clean.exe	0x0049ed20	optionDialogBuild	ui	caller 0x004a08a0 (panelDispatch); callee create 0x004806c0, setQuad 0x00476310, 0x0049f050 (optionDialogDraw)	builds the option/checkbox dialog view and its child widgets.
-golf_clean.exe	0x0049ee90	flagToggle49ee90	ui	match re/match/golf_hand_01.cpp; callee setFlag 0x0049eef0, isSet 0x0049ef80	toggles a flag in the flag array (clears if set, sets if clear).
+golf_clean.exe	0x0049ee90	flagToggle49ee90	ui	match re/match/golf_hand_01.cpp; callee setFlag 0x0049eef0, isSet 0x0049ef80	toggles flag id (flagIsSet 0x0049ef80, then flagSet 0x0049eef0 with the opposite value)
 golf_clean.exe	0x0049eec0	flagToggle49eec0	ui	match re/match/golf_hand_01.cpp; callee setBit 0x0049eff0, test 0x0049f030	toggles a bit in the bit array (set/clear based on current state).
-golf_clean.exe	0x0049eef0	flagSet	ui	match re/match/golf_hand_04.cpp; caller flagToggle49ee90	sets or clears a flag at a given index in the flag array.
-golf_clean.exe	0x0049ef80	flagIsSet	ui	match re/match/golf_hand_03.cpp; callers flagToggle49ee90, 0x0049f9a0	returns whether the flag at a given index is set.
+golf_clean.exe	0x0049eef0	flagSet	ui	match re/match/golf_hand_04.cpp; caller flagToggle49ee90	sets or clears flag id: id's position in the linked list at base+0xc0 (node id at +4) selects the bit of the 32-bit mask at base+0xf0
+golf_clean.exe	0x0049ef80	flagIsSet	ui	match re/match/golf_hand_03.cpp; callers flagToggle49ee90, 0x0049f9a0	returns whether flag id is set: id's position in the linked list at base+0xc0 (node id at +4) selects a bit of the 32-bit mask at base+0xf0 (0x0049ef9d..0x0049efc6)
 golf_clean.exe	0x0049eff0	bitSet	ui	match re/match/golf_hand_01.cpp; caller flagToggle49eec0	sets a bit at a given index in the bit array.
 golf_clean.exe	0x0049f030	bitTest	ui	match re/match/golf_hand_00.cpp; callers flagToggle49eec0, 0x0049f9a0, onKey 0x0049fa90	returns whether the bit at a given index is set.
 golf_clean.exe	0x0049f050	optionDialogDraw	ui	caller optionDialogBuild 0x0049ed20, stop 0x004a11c0; callee setQuad 0x00476310, put 0x00477250 (Text477::put)	draws the option dialog body and its labels.

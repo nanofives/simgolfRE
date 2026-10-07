@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 63 bytes, 19 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 when m_a0 bit1 is set, stores the value in m_184 and triggers a resize to the current width/height (`re/names/exe_3.tsv`)
 
+## Purpose
+Sets a widget's value and invalidates its drawn area. It acts only when bit 2 of the flag byte +0xa0 is set (0x0047d027); then it stores the argument at +0x184 (0x0047d034) and calls the widget's invalidate virtual (vtable +0xc, thiscall, 0x0047d058) with the content size (width = +0x1c4 - +0x1bc, height = +0x1c8 - +0x1c0) and two zeros. It returns nothing; the stored value and the invalidate call are its output. Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: Widget::setValue (12 vectors, 11 distinct results, 10 changing state, `log/diff/0047d020_Widget_setValue.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?setValue@C47d020@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047d05c): callee pops 4 bytes of stack arguments.

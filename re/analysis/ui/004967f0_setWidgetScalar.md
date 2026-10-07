@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 102 bytes, 27 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 stores a single scalar value into a widget field. (`re/names/exe_5.tsv`)
 
+## Purpose
+setWidgetScalar (0x004967f0) clamps the value argument into the inclusive range [this+0x580, this+0x584] and stores the result at this+0x58c, first copying the drawing object this+0x130 into the global dword 0x0083ab2c (0x004967fb). It stores the minimum this+0x580 when value is below it (jge at 0x00496808), the maximum this+0x584 when value is above it (jle at 0x0049681a), or value when in range; when the mirror flag this+0x588 is non-zero (je at 0x00496832) it replaces the stored value with (max - stored) + min. It then invokes the object's virtual method at vtable +0x120 with no argument (an invalidate). It returns nothing. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: setWidgetScalar (12 vectors, 5 distinct results, 12 changing state, `log/diff/004967f0_setWidgetScalar.path1.csv`); setWidgetScalar_mirror (12 vectors, 5 distinct results, 12 changing state, `log/diff/004967f0_setWidgetScalar_mirror.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_004967f0@C_FUN_004967f0@f_004967f0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00496853): callee pops 4 bytes of stack arguments.

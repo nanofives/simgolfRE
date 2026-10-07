@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 60 bytes, 32 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 returns the 8-way direction of a delta vector (`re/names/exe_0.tsv`)
 
+## Purpose
+`directionOf(dx, dy)` returns the dominant 4-way axis direction of a delta vector as 0/2/4/6 (caller `pathStep` 0x0042e7e0; role from `re/names/exe_0.tsv`). It compares |dx| against |dy| (signed abs via cdq/xor/sub, `jle` at 0x0042e7bc). When |dx| > |dy| the horizontal axis wins and it returns 6 when dx <= 0 else 2 (`setle` on dx at 0x0042e7c3, `and al,0xfc` / `add 6`); otherwise the vertical axis wins and it returns 0 when dy <= 0 else 4 (`setle` on dy at 0x0042e7d3, `and 4`). The |dx| == |dy| tie takes the vertical branch. Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: directionOf (55 vectors, 4 distinct results, `log/diff/0042e7a0_directionOf.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?dir42e7a0@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0042e7cd, 0x0042e7db): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 127 bytes, 44 instructions, subsystem `ui`. Mechanical 
 Returns the id of the item at the current selection index this+0xf0, walking the list from the head. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+ListModel::selectedId (0x00489950) returns the id of the list node at the current selection index this+0xf0. The list is at this+0xc8 (head), +0xcc (cursor), +0xd0 (count), +0xd4 (stored index). When the selection index is greater than count-1 (jg at 0x00489963) it leaves the cursor untouched; otherwise it sets the cursor to the head (0x0048996d) and, for a negative index, walks the cursor back along +0x10 (prev) abs(index) times and normalises the index to index+count (0x0048998b..0x00489996), returning early without walking when abs(index) exceeds count (jg at 0x00489973); for a non-negative index it walks the cursor forward along +0xc (next) index times (0x004899a5). It then returns 0 when the head this+0xc8 is null (je at 0x004899c0) and the cursor node's id (+0x4) otherwise. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: ListModel::selectedId (11 vectors, 9 distinct results, 7 changing state, `log/diff/00489950_ListModel_selectedId.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?getSel@C489950@@QAEPAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004899cb, 0x004899ce): callee pops 0 bytes of stack arguments.

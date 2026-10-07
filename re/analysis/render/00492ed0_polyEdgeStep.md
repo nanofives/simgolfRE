@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 208 bytes, 82 instructions, subsystem `render`. Mechani
 Sets up a polygon-edge DDA for the scanline filler: finds the next edge spanning the current scanline in the vertex table g_0083d358 and computes its x step/error. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Advances the polygon scanline fill to the next downward edge starting at vertex `idx` and fills the edge record's DDA fields. Globals: end vertex index 0x0083d350, vertex table 0x0083d358 (x at +0, y at +4, 8 bytes per vertex), vertex count 0x0083d378. It returns 0 immediately when idx already equals the end vertex (0x00492edf). Otherwise it adds the edge's direction at edge+0 (0x00492eed) to the index, wrapping to 0 when the result exceeds count-1 (0x00492ef3) or to count-1 when it goes below 0 (0x00492efb). It computes the vertical span dy = y[next] - y[idx] (0x00492f0d) into edge+4; while dy == 0 it steps to the next vertex and loops, returning 0 if that reaches the end vertex (0x00492f1e). For dy < 0 (upward edge) it returns 0 (0x00492f29). For dy > 0 it stores the end vertex into edge+8, the start x into edge+0xc, and the DDA step: with dx >= 0 (0x00492f4f) sign +1 (edge+0x14), x step dx/dy (edge+0x10), error 0 (edge+0x18), error step dx%dy (edge+0x1c); with dx < 0 sign -1, error 1-dy, x step -(|dx|/dy), error step |dx|%dy; error reset = dy (edge+0x20); returns 1. Reimplemented in `shim/src/re/c3x.cpp`; path-1 A/B GREEN: polyEdgeStep (12 vectors, 11 distinct results, 10 changing state, `log/diff/00492ed0_polyEdgeStep.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00492f26, 0x00492f31, 0x00492f9f): callee pops 0 bytes of stack arguments.
 

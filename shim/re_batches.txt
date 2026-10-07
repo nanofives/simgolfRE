@@ -19,3 +19,7 @@ c3s.cpp
 c3q.cpp
 c3r.cpp
 c3t.cpp
+c3w.cpp
+c3x.cpp
+c3v.cpp
+c3u.cpp

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 115 bytes, 36 instructions, subsystem `ui`. Mechanical 
 Walks the item list and records at this+0xf0 the index of the item whose id (+4) equals param_1. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+The void twin of findId that performs the same forward search (head reset at 0x004898e2, walk along +0xc, match at 0x004898ff) and additionally copies the resulting index +0xd4 into the mirror field +0xf0 on both exit paths (store at 0x00489933, reached from the found break and from the loop end). It returns nothing; the index and the mirror are its observable output. Reimplemented in `shim/src/re/c3v.cpp`; path-1 A/B GREEN: ListModel::indexOfId (12 vectors, 7 distinct results, 11 changing state, `log/diff/004898d0_ListModel_indexOfId.path1.csv`); ListModel::indexOfId_empty (3 vectors, 1 distinct results, 0 changing state, `log/diff/004898d0_ListModel_indexOfId_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?select@R2C4898d0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048992e, 0x00489940): callee pops 4 bytes of stack arguments.

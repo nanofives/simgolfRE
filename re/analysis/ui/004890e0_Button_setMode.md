@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 61 bytes, 20 instructions, subsystem `ui`. Mechanical t
 Stores a mode value at this+0x578, invalidates, and notifies the parent control via vtable+0xd8. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Button::setMode (0x004890e0) stores a new mode at this+0x578 and notifies, only when the mode differs from the current value (je at 0x004890ee). It writes the mode (0x004890f2), invokes the object's own virtual at vtable +0x120 with no argument (an invalidate), and, when the parent control this+0x130 is non-null (je at 0x00489106), invokes that parent's virtual at its vtable +0xd8 with (this+0x5e8, mode). It returns nothing. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: Button::setMode (8 vectors, 6 distinct results, 6 changing state, `log/diff/004890e0_Button_setMode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?setMode@C4890e0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048911a): callee pops 4 bytes of stack arguments.

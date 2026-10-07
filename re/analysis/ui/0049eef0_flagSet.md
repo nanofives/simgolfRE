@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 139 bytes, 49 instructions, subsystem `ui`. Mechanical 
 sets or clears a flag at a given index in the flag array. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Sets (value != 0) or clears (value == 0) flag `id`. It walks the same list as flagIsSet (0x0049ef0b..0x0049ef3a, same head/count/found/index logic) to find the flag's bit index, then at 0x0049ef59 either ORs `1 << index` into the mask at base+0xf0 (0x0049ef5d) when value != 0 or ANDs the complement in (0x0049ef6e..0x0049ef72) when value == 0. With an empty head or count <= 0 the index resolves exactly as in flagIsSet before the mask update. Reimplemented in `shim/src/re/c3x.cpp`; path-1 A/B GREEN: flagSet (12 vectors, 8 distinct results, 10 changing state, `log/diff/0049eef0_flagSet.path1.csv`); flagSet_empty (2 vectors, 2 distinct results, 1 changing state, `log/diff/0049eef0_flagSet_empty.path1.csv`); flagSet_zcount (2 vectors, 2 distinct results, 1 changing state, `log/diff/0049eef0_flagSet_zcount.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?setFlag@C49eef0@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0049ef63, 0x0049ef78): callee pops 8 bytes of stack arguments.

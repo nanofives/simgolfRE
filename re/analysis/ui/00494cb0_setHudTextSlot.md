@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 122 bytes, 46 instructions, subsystem `ui`. Mechanical 
 registers a notification text line in one of 10 HUD slots (index 0..9) with its screen x/y and text. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+setHudTextSlot (0x00494cb0) records a HUD notification line in slot idx (0..9). It returns 3 when the text pointer is null (je at 0x00494cb7) or idx is greater than 9 (jg at 0x00494cc0, signed). It stores the x colour at 0x0083e8b8 + idx*4, substituting the default dword at 0x0083f35c when x is negative (jge at 0x00494cc8), and the y colour at 0x0083d3c8 + idx*4, substituting 0x0083f360 when y is negative (jge at 0x00494cdd). It then clears the slot's 0x100-byte text buffer at 0x0083e8e0 + idx*0x100 and copies the source string into it. It returns 0 on success. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: setHudTextSlot (12 vectors, 11 distinct results, 9 changing state, `log/diff/00494cb0_setHudTextSlot.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f494cb0@@YAHHPBDHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00494d22, 0x00494d29): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 70 bytes, 23 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 swaps two table entries (`re/names/exe_2.tsv`)
 
+## Purpose
+`swapTableEntry(a, b)` swaps two 0x100-byte records of the golfer table (base 0x005794b8, stride 0x100 = 0x40 dwords: `shl 8` / `lea +0x5794b8` at 0x0045de35..0x0045de3e) using the 0x100-byte scratch buffer at 0x00582cb8 (0x0045de44); caller `showGolferPairSelect` 0x00459850. Three `rep movsd` of 0x40 dwords move record[a] into the scratch, record[b] over record[a], then the scratch over record[b]. There are no conditional branches. Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: swapTableEntry (12 vectors, 12 distinct results, 12 changing state, `log/diff/0045de30_swapTableEntry.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?swap45de30@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045de75): callee pops 0 bytes of stack arguments.

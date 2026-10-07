@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 92 bytes, 40 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+`expand_right_edge(image_data, num_rows, input_cols, output_cols)` is the IJG libjpeg right-edge padder (caller `fullsize_downsample` 0x004b43f0). The pad count is output_cols - input_cols; when the count is positive and num_rows is positive (`jle` guards at 0x004b439d and 0x004b43a5) each row (row pointer image_data[r]) is filled from column input_cols onward with its last valid pixel row[input_cols - 1] (0x004b43ba) for `count` bytes (dword body + byte tail = memset, 0x004b43c4..0x004b43e4). Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: expand_right_edge (12 vectors, 9 distinct results, 8 changing state, `log/diff/004b4390_expand_right_edge.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_csample.cpp` as `_expand_right_edge` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b43eb): callee pops 0 bytes of stack arguments.

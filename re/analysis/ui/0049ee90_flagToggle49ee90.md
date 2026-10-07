@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 22 instructions, subsystem `ui`. Mechanical t
 toggles a flag in the flag array (clears if set, sets if clear). (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Toggles flag `id`: calls flagIsSet 0x0049ef80(id) (0x0049ee99) and, at the je 0x0049eea0, calls flagSet 0x0049eef0(id, 0) when the flag is set or flagSet(id, 1) when it is clear. `this` is forwarded unchanged in ecx (0x0049ee96 / 0x0049eea5 / 0x0049eeb4). Reimplemented in `shim/src/re/c3x.cpp`; path-1 A/B GREEN: flagToggle49ee90 (12 vectors, 4 distinct results, 12 changing state, `log/diff/0049ee90_flagToggle49ee90.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?toggle@C49ee90@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049eeae, 0x0049eebd): callee pops 4 bytes of stack arguments.

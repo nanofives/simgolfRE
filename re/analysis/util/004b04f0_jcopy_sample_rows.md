@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 70 bytes, 31 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+`jcopy_sample_rows(src, src_row, dst, dst_row, num_rows, num_bytes)` is the IJG libjpeg row-block copier (callers `expand_bottom_edge` 0x004b3d00, `fullsize_downsample` 0x004b43f0). It reads the row-pointer arrays at src + src_row*4 and dst + dst_row*4 and copies num_rows rows of num_bytes bytes each (the `num_bytes >> 2` dword body plus the `num_bytes & 3` byte tail, 0x004b051a..0x004b0540), equivalent to a per-row memcpy. The outer loop is guarded by 0 < num_rows (`jle` at 0x004b050d). Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: jcopy_sample_rows (12 vectors, 12 distinct results, 11 changing state, `log/diff/004b04f0_jcopy_sample_rows.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_utils.cpp` as `_jcopy_sample_rows` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0535): callee pops 0 bytes of stack arguments.

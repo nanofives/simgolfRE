@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 73 bytes, 22 instructions, subsystem `ui`. Mechanical t
 returns the current selection index of the combo. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+comboCurrentIndex (0x004942a0) returns the id of a combo box's current item from one of two embedded lists, chosen by bit 2 of the byte at this+0x4 (test/je at 0x004942a4). With the bit set it reads the virtual-base offset o = *(*(this+0x1488)+8) and takes the S494 record at this+o+0x1548: when its count (this+o+0x1550) is non-zero (je at 0x004942bf) it returns the record's item (this+o+0x1554) ->id (+0x4). With the bit clear it reads o = *(*(this+0x2d98)+8) and takes the S494 at this+o+0x2e58: when its count (+0x8) is non-zero (je at 0x004942dd) it returns the item (+0xc) ->id (+0x4). It returns 0 when the selected list is empty. Reimplemented in `shim/src/re/c3u.cpp`; path-1 A/B GREEN: comboCurrentIndex (11 vectors, 10 distinct results, `log/diff/004942a0_comboCurrentIndex.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?current@C4942a0@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004942c7, 0x004942e5, 0x004942e8): callee pops 0 bytes of stack arguments.

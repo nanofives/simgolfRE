@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 40 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 writes param_1..param_4 into the four ints at this+0x74/0x84/0x94/0xa4 (stride 0x10) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Writes its four dword arguments into this+0x74, +0x84, +0x94, +0xa4 (stores at 0x00476378..0x0047638f). No branches. Reimplemented in `shim/src/re/c3x.cpp`; path-1 A/B GREEN: Widget_setQuad74 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00476370_Widget_setQuad74.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00476370@C_FUN_00476370@f_00476370@@QAEXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00476395): callee pops 16 bytes of stack arguments.

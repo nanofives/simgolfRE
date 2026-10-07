@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 69 bytes, 31 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 rejects/strips characters illegal in a filename (`re/names/exe_0.tsv`)
 
+## Purpose
+`sanitizeFileName(s)` validates and trims a filename in place (callers include `saveGameDialog` 0x00405b10, `mainLoop` 0x0040f5c0, `showSystemMenu` 0x00432720, `promptAndSaveFile` 0x00437910). It returns false when `s` contains any character of the set "*|:<>?/\\" (strpbrk against 0x004c3ee0, `je` at 0x00405ad5 not taken). Otherwise it removes trailing spaces one at a time (last char compared with 0x20 at 0x00405aec, `jne` at 0x00405af1; store of NUL and loop) and returns whether the trimmed string is non-empty; an empty or all-spaces string returns false. Reimplemented in `shim/src/re/c3w.cpp`; path-1 A/B GREEN: sanitizeFileName (10 vectors, 5 distinct results, 3 changing state, `log/diff/00405ac0_sanitizeFileName.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?trimSpaces@@YAHPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00405ada, 0x00405b04): callee pops 0 bytes of stack arguments.

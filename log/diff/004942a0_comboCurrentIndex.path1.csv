@@ -1,0 +1,16 @@
+vector,original,reimpl,match
+$o0,111,111,True
+$o1,0,0,True
+$o2,222,222,True
+$o3,0,0,True
+$o4,333,333,True
+$o5,444,444,True
+$o6,555,555,True
+$o7,666,666,True
+$o8,777,777,True
+$o9,888,888,True
+$o10,999,999,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x67460720,original=0xbf0e00,2026-10-07T10:22:54
+distinct_results,10,,
+VERDICT,GREEN,11,
