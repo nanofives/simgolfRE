@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000036e0`), 64 bytes, 28 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 stores three given floats into +0/+4/+8. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Overwrites a Vector3 with three scalars. The three stack arguments are copied into [this], [this+4] and [this+8] with integer moves (0x10003703, 0x1000370b, 0x10003714), so the stored bits are the argument's bits and no float conversion happens; nothing is read from the object and nothing else is written. __thiscall with three stack arguments, no return value (`ret 0xc` at 0x1000371d). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::set (12 vectors, 12 distinct results, 12 changing state, `log/diff/000036e0_jgld_Vector3_set.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_100036e0@C_FUN_100036e0@f_100036e0@@QAEXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000371d): callee pops 12 bytes of stack arguments.

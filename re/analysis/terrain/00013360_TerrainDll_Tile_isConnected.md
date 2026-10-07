@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00013360`), 45 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the path-connection flag byte of a Tile, the byte at +0x209 (`mov al, [eax+0x209]` at 0x10013380 after the reload of `this` at 0x1001337d). Same shape as Tile::hasPath 0x10013320 one field further on: only al is written, there is no conditional branch, and a value other than 0 or 1 comes back unchanged. Its caller Terrain::hasConnectedPath 0x1000a450 passes the result straight on as the tile's answer, and Tile::setConnected 0x100133a0 is what writes the byte. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::isConnected (16 vectors, 5 distinct results, `log/diff/00013360_Terrain_Tile_isConnected.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?isConnected@Tile@@QAE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001338c): callee pops 0 bytes of stack arguments.

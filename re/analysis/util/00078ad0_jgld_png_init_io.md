@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078ad0`), 40 bytes, 19 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Stores the second argument at [png_ptr+0x54] (loaded 0x10078aeb, stored 0x10078aee). That is the whole body: no guard, no branch, no other field and no return value. Caller: 0x100145a0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_init_io (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078ad0_jgld_png_init_io.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_init_io` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078af7): callee pops 0 bytes of stack arguments.

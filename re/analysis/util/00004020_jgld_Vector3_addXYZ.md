@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00004020`), 81 bytes, 34 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 adds three scalar components to +0/+4/+8 in place. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Adds three scalars to the three components in place. Each component is one `fld <argument>; fadd <field>; fstp <field>` group (0x10004040-0x10004048, 0x1000404d-0x10004056, 0x1000405c-0x10004065): the argument is the operand loaded first and the sum is rounded to float on the way back into the field. __thiscall with three stack arguments, no return value (`ret 0xc` at 0x1000406e). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::addXYZ (12 vectors, 12 distinct results, 12 changing state, `log/diff/00004020_jgld_Vector3_addXYZ.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10004020@C_FUN_10004020@f_10004020@@QAEXMMM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000406e): callee pops 12 bytes of stack arguments.

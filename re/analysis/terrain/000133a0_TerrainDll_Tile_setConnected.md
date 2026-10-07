@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000133a0`), 66 bytes, 26 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Sets or clears the Tile's path-connection flag, the byte at +0x209 that Tile::isConnected 0x10013360 reads. The single stack argument (ret 4 at 0x100133df) is compared with 0 as a full dword (`cmp [ebp+8], 0` / je 0x100133c1): a non-zero argument stores the byte 1 at 0x100133c6, zero stores the byte 0 at 0x100133d2. Because the test is on the whole dword, an argument such as 0x100 whose low byte is zero still stores 1, unlike Tile::layPath 0x10013400, which masks its flag argument first. No other byte of the Tile is touched. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::setConnected (16 vectors, 13 distinct results, 12 changing state, `log/diff/000133a0_Terrain_Tile_setConnected.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?setConnected@Tile@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100133df): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001e9f0`), 49 bytes, 19 instructions, subsystem `aud
 Advances a track read position +0x40 (and byte offset +0x2c) by param_1, returns SNDERR 0x22 on overflow past +0x44, and sets the end flag +0x34 bit1 when the limit is exactly reached. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Advances a track's play position by a delta and refuses to pass the track's end. __thiscall, one stack argument (`ret 4` at 0x1001ea07 and 0x1001ea1e). The position [ecx+0x40] (0x1001e9f0) and the end [ecx+0x44] (0x1001e9f3) are read, the delta is added to the position (`add eax, esi` at 0x1001e9fb) and the sum is compared with the end UNSIGNED (`cmp eax, edx` at 0x1001e9fd, `jbe 0x1001e9ff`): beyond the end the function returns 0x22 (0x1001ea01) and writes nothing at all, which makes it a test-and-commit rather than a clamp. Landing exactly on the end sets bit 1 of [ecx+0x34] (`or dword [ecx+0x34], 2` at 0x1001ea0c, reached only when the `jne 0x1001ea0a` falls through), the end-of-track marker. On both accepted paths the new position is stored (0x1001ea13), the same delta is added to the second counter [ecx+0x2c] (0x1001ea16 and 0x1001ea1a) and 0 is returned (0x1001ea18). Both additions wrap modulo 2^32 with no saturation, so a position of 0xfffffff0 plus 0x10 becomes 0 and is accepted. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: Track_advancePos (18 vectors, 11 distinct results, 9 changing state, `log/diff/0001e9f0_sound_Track_advancePos.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001ea07, 0x1001ea1e): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001e9f0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

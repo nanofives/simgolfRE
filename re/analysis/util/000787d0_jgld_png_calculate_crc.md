@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000787d0`), 157 bytes, 52 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Folds a buffer into the running CRC of the png_struct, unless the chunk's class and the stream's CRC flags say to skip it. A local flag starts at 1 (0x100787e8). The chunk-name byte at [png_ptr+0x11c] is masked with 0x20 (0x100787f4, 0x100787fa): when that bit is set -- the chunk is ancillary -- the dword at [png_ptr+0x6c] masked with 0x300 must equal 0x300 (0x10078804-0x1007880c, jne 0x10078811) for the flag to be cleared (0x10078813); when the bit is clear (je 0x100787ff selects this arm) bit 0x800 of the same dword (0x1007881f, 0x10078822, je 0x1007882a) clears it (0x1007882c). With the flag still set (cmp at 0x10078833, je 0x10078837) the dword at [png_ptr+0x110] is replaced by the result of zlib's crc32 at 0x1009ca70 called with that dword, ptr and length (pushes at 0x1007883c, 0x10078840 and 0x1007884a, call 0x1007884b, store 0x10078856). Nothing else is written and there is no return value. Caller: 0x100794b0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_calculate_crc (22 vectors, 16 distinct results, 15 changing state, `log/diff/000787d0_jgld_png_calculate_crc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_calculate_crc` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007886c): callee pops 0 bytes of stack arguments.

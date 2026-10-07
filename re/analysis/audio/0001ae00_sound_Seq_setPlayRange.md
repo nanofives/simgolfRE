@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001ae00`), 56 bytes, 16 instructions, subsystem `aud
 orders the two args into min/max, stores min at +0x208 and max at +0x204, sets +0x214 bit0 and +0x20c=min (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Stores an ordered play range on a sequence and arms it. __thiscall, two stack arguments (`ret 8` at 0x1001ae35), no return value (eax is left holding the low bound). The two arguments are read at 0x1001ae00 and 0x1001ae04 and compared UNSIGNED (`cmp eax, edx` at 0x1001ae08, `jbe 0x1001ae0b`): when the first is the greater the pair is exchanged through esi at 0x1001ae0d to 0x1001ae11, so the caller may pass the bounds in either order and the lower one always ends in eax. The low bound is written twice, as the range start [ecx+0x208] (0x1001ae19) and as the play cursor [ecx+0x20c] (0x1001ae2e), which is what makes the call a seek as well as a range set; the high bound goes to [ecx+0x204] (0x1001ae22); and bit 0 of [ecx+0x214] is set (`or esi, 1` at 0x1001ae1f, stored at 0x1001ae28) with the other 31 bits preserved. Because the compare is unsigned, 0x80000000 counts as above 0x7fffffff. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: Seq_setPlayRange (16 vectors, 10 distinct results, 16 changing state, `log/diff/0001ae00_sound_Seq_setPlayRange.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x1001ae35): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1001ae13 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003a40`), 88 bytes, 35 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 scales this by a float in place, returns this& (operator*=). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Scales a Vector3 in place by a float and returns this. The counted loop over i = 0..2 (counter [ebp-8], `jge` at 0x10003a73) loads the scalar first (`fld [ebp+8]` at 0x10003a7b), multiplies by the component (0x10003a7e) and stores the product as a float straight back into that component (0x10003a87), so no local copy is kept and each iteration reads only the field it overwrites; the object pointer is returned in eax (0x10003a8c). __thiscall with one stack argument (`ret 4` at 0x10003a95). This is the function Quat::setAxisAngle (0x10004230) calls through the thunk at 0x10001a55 to scale the axis. Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::mulAssignScalar (12 vectors, 12 distinct results, 11 changing state, `log/diff/00003a40_jgld_Vector3_mulAssignScalar.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??XVector3@@QAEAAV0@M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10003a95): callee pops 4 bytes of stack arguments.

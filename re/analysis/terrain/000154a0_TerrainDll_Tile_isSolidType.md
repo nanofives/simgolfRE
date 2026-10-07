@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000154a0`), 69 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile::isSolidType (Terrain.dll RVA 0x000154a0, VA 0x100154a0) classifies a terrain type number as solid or not. It stores this in its frame slot (0x100154ba) and never reads it again, so the result depends only on the stack argument: the argument is compared with 9 (je 0x100154c1) and then with 0 (je 0x100154c7), and both of those jumps reach the store of 0 into the result local (0x100154d2); every other value stores 1 (0x100154c9). The byte of that local is the return value (mov al, [ebp-8] at 0x100154d9). Its only caller is 0x10013670, the face blending walk reached from Tile::setTypeId. Reimplemented in `shim/src/re/c3am.cpp`; path-1 A/B GREEN: Tile::isSolidType (16 vectors, 2 distinct results, `log/diff/000154a0_Terrain_Tile_isSolidType.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?isSolidType@Tile@@QAEDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100154e2): callee pops 4 bytes of stack arguments.

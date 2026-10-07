@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00015500`), 141 bytes, 56 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the largest of a Tile's four corner heights, the dwords at +0x04 (loaded at 0x10015523), +0x1c (0x10015526), +0x0c (0x1001554b) and +0x14 (0x1001554e). The original computes it as three signed two-way maxima through three frame slots: `a` = +0x04 when +0x04 > +0x1c, else +0x1c (jle 0x10015529); `b` = +0x0c when +0x0c > +0x14, else +0x14 (jle 0x10015551); the result is `a` when `a` > `b`, else `b` (jle 0x10015573). All three compares are signed, so negative heights and INT_MIN order normally and equal values take the "else" store. Its caller Terrain::isCulled 0x10006850 uses the value as the tile's top for the view-frustum test. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::maxHeight (16 vectors, 9 distinct results, `log/diff/00015500_Terrain_Tile_maxHeight.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile3.cpp` as `?maxHeight@Tile@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001558c): callee pops 0 bytes of stack arguments.

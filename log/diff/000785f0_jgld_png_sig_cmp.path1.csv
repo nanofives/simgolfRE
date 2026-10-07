@@ -1,0 +1,25 @@
+vector,original,reimpl,match
+$sig_ok 0 8,0,0,True
+$sig_ok 0 1,0,0,True
+$sig_ok 7 1,0,0,True
+$sig_ok 0 9,0,0,True
+$sig_ok 0 0,0,0,True
+$sig_ok 8 1,0,0,True
+$sig_ok 4294967295 1,0,0,True
+$sig_ok 5 8,0,0,True
+$sig_ok 0 2147483647,0,0,True
+$sig_ok 7 2,0,0,True
+$sig_bad0 0 8,1,1,True
+$sig_bad0 1 7,0,0,True
+$sig_bad7 0 8,1,1,True
+$sig_bad7 0 7,0,0,True
+$sig_zero 0 8,-1,-1,True
+$sig_zero 4 4,-1,-1,True
+$sig_zero 7 1,-1,-1,True
+$sig_ff 0 1,1,1,True
+$sig_ff 7 2,1,1,True
+$sig_ff 3 0,0,0,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d35acb0,original=0x1460500,2026-10-07T20:29:01
+distinct_results,3,,
+VERDICT,GREEN,20,

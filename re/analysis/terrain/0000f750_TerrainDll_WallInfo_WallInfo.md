@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000f750`), 57 bytes, 25 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Constructs a WallInfo block by delegating to WallInfo::clear: it loads `this` into ecx at 0x1000f76d and calls it at 0x1000f770 through the incremental-link thunk 0x100011c7 (`jmp 0x1000f7a0`), then returns `this` (`mov eax, [ebp-4]` at 0x1000f775). It has no conditional branch of its own and the /GZ frame check at 0x1000f780; its whole observable effect is the clear's, which zeroes four of the nine wall flag bytes (+0x24, +0x26, +0x2a, +0x28 of the block) and leaves the nine wall heights at +0x00..+0x23 and the flags at +0x25, +0x27, +0x29, +0x2b, +0x2c untouched. It runs as a member-construction step of Tile::Tile 0x1000c210 on the block at Tile+0x210. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: WallInfo::WallInfo (16 vectors, 16 distinct results, 16 changing state, `log/diff/0000f750_Terrain_WallInfo_WallInfo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile6.cpp` as `??0WallInfo@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000f788): callee pops 0 bytes of stack arguments.

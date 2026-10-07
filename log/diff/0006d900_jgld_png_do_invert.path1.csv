@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$inv0 $invrow,void,void,True,e36517b7,e36517b7,True
+$inv1 $invrow,void,void,True,d58942d1,d58942d1,False
+$inv2 $invrow,void,void,True,b85e113d,b85e113d,True
+$inv3 $invrow,void,void,True,ea2fde6d,ea2fde6d,True
+$inv4 $invrow,void,void,True,d58942d1,d58942d1,False
+$inv5 $invrow,void,void,True,d58942d1,d58942d1,False
+$inv6 $invrow,void,void,True,d58942d1,d58942d1,False
+$inv7 $invrow,void,void,True,d58942d1,d58942d1,False
+$inv8 $invrow,void,void,True,d58942d1,d58942d1,False
+$inv9 $invrow,void,void,True,3abc35f4,3abc35f4,True
+$inv10 $invrow,void,void,True,2039b2e8,2039b2e8,True
+$inv11 $invrow,void,void,True,83882cb0,83882cb0,True
+state_regions,$invrow+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d35a9f0,original=0x1460440,2026-10-07T20:29:01
+distinct_results,7,,
+VERDICT,GREEN,12,

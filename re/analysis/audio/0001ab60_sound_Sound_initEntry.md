@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001ab60`), 67 bytes, 20 instructions, subsystem `aud
 Initializes a newly allocated 0x21c-byte named sound entry and returns it. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Clears a sound-table entry and gives one field a non-zero default. __thiscall with no stack argument (`ret` at 0x1001aba2), no conditional branch, returns the object (`mov eax, edx` at 0x1001ab9f). `rep stosd` with a count of 0x80 from the object + 4 (`lea edi, [edx+4]` at 0x1001ab66, `mov ecx, 0x80` at 0x1001ab69, `xor eax, eax` at 0x1001ab6e, `rep stosd` at 0x1001ab72) zeroes bytes 4 .. 0x203, and the dword at offset 0 is zeroed separately at 0x1001ab70. Five more dwords are then zeroed one by one: 0x214 through `lea eax, [edx+0x214]` at 0x1001ab74 and the store at 0x1001ab7b, then 0x204 (0x1001ab7d), 0x208 (0x1001ab83), 0x20c (0x1001ab89) and 0x210 (0x1001ab8f), so bytes 0 .. 0x217 all end as zero. The dword at 0x218 is set to 0xfa (0x1001ab95) and nothing at or beyond 0x21c is touched, so the entry's tail survives the reset. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: Sound_initEntry (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001ab60_sound_Sound_initEntry.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001aba2): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001ab60 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

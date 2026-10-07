@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000f690`), 57 bytes, 25 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Constructs a PathInfo block by delegating to PathInfo::clear: it loads `this` into ecx at 0x1000f6ad and calls it at 0x1000f6b0 through the incremental-link thunk 0x1000105f (`jmp 0x1000f6e0`), then returns `this` (`mov eax, [ebp-4]` at 0x1000f6b5). The constructor has no conditional branch of its own; the whole of its observable effect is the clear's, which zeroes the seven bytes of the block in the order +1, +0, +2, +3, +4, +5, +6. The /GZ frame check is the call at 0x1000f6c0. It runs as a member-construction step of Tile::Tile 0x1000c210 on the block at Tile+0x208, whose first two bytes Tile::hasPath 0x10013320 and Tile::isConnected 0x10013360 read. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: PathInfo::PathInfo (16 vectors, 16 distinct results, 16 changing state, `log/diff/0000f690_Terrain_PathInfo_PathInfo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile6.cpp` as `??0PathInfo@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000f6c8): callee pops 0 bytes of stack arguments.

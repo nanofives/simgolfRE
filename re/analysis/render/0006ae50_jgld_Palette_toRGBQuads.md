@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006ae50`), 137 bytes, 48 instructions, subsystem `ren
 Expands the 256-entry table at this+0xc into a 256-entry RGBQUAD array (B,G,R,0 per 4 bytes) for Surface::setPalette. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Converts the object's 256 palette entries into 256 RGBQUADs, exchanging the first and third byte of each entry. The entries start at this+0xc: the three loads at 0x1006ae94, 0x1006aea8 and 0x1006aebc read [this + i*4 + 0xc], +0xd and +0xe, and they are stored at out[i*4+2] (0x1006ae98), out[i*4+1] (0x1006aeac) and out[i*4] (0x1006aec0); out[i*4+3] is zeroed (0x1006aec9). The counter is a signed int compared with 0x100 (cmp at 0x1006ae7f, jge 0x1006ae86), so the count is fixed at 256 whatever the object holds, and the fourth byte of each entry is never read. __thiscall with one stack argument (`ret 4` at 0x1006aed6). Caller: 0x100089d0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: Palette::toRGBQuads (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006ae50_jgld_Palette_toRGBQuads.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006ae50@C_FUN_1006ae50@f_1006ae50@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006aed6): callee pops 4 bytes of stack arguments.

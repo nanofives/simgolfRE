@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079340`), 58 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Stores the three error-handling fields of a png_struct, with no guard and no branch, in the order the body uses them: the second argument at [png_ptr+0x48] (0x1007935e), the third at [png_ptr+0x40] (0x10079367) and the fourth at [png_ptr+0x44] (0x10079370). Nothing is read back, nothing is called and there is no return value. Caller: 0x1006bac0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_set_error_fn (12 vectors, 12 distinct results, 12 changing state, `log/diff/00079340_jgld_png_set_error_fn.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_error.cpp` as `_png_set_error_fn` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10079379): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006d980`), 134 bytes, 52 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Exchanges the two bytes of every 16-bit sample of a row, converting between big- and little-endian sample order. It returns unless bit_depth is 16 (cmp ecx,0x10 at 0x1006d9a0, jne 0x1006d9a3). The sample count is width * channels (channels loaded at 0x1006d9b0, width at 0x1006d9b6, imul at 0x1006d9b8) and is compared with the counter UNSIGNED (jae at 0x1006d9df). Each step saves the first byte in a one-byte local at [ebp-0x10] (0x1006d9e6), copies the second over the first (0x1006d9f2), writes the saved byte to the second (0x1006d9fa) and advances the cursor by 2 (0x1006d9d3). Neither pointer is tested for null and rowbytes is not read, so a width or channels of 0 leaves the row untouched. Caller: 0x100717d0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_do_swap (12 vectors, 7 distinct results, 7 changing state, `log/diff/0006d980_jgld_png_do_swap.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_trans.cpp` as `_png_do_swap` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006da05): callee pops 0 bytes of stack arguments.

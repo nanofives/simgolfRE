@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000285a0`), 42 bytes, 12 instructions, subsystem `uti
 linear-congruential step (*0x19660d + 0x3c6ef35f) stored back through param_1, returns the mantissa-trick float (bits&0x7fffff | 0x3f800000) minus 1.0 (g_float1) to yield a value in [0,1) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Advances a linear-congruential generator and returns its next value as a float in [0, 1). __thiscall with no stack argument (`ret` at 0x100285c9), returning a float in st(0). The dword at the object itself is the state: state = state * 0x19660d + 0x3c6ef35f (`imul` at 0x100285a3, `add` at 0x100285a9), stored back at 0x100285ae. The low 23 bits of the new state become the mantissa of a float carrying the exponent of 1.0 (`and eax, 0x7fffff` at 0x100285b0, `or eax, 0x3f800000` at 0x100285b5), which is written to the scratch slot that `push ecx` reserved (0x100285ba), loaded as a single (`fld dword [esp]` at 0x100285be) and reduced by the constant at 0x1005b8a8, which the image holds as 1.0f (bytes 00 00 80 3f at RVA 0x5b8a8) (`fsub dword` at 0x100285c2). The intermediate is in [1.0, 2.0) and the subtrahend is 1.0, so the difference is exact at any x87 precision control setting and equals mantissa/2^23; the generator therefore produces one of 2^23 evenly spaced values and takes its randomness from the state's low bits, not its high ones. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: nextRandomFloat (12 vectors, 12 distinct results, 12 changing state, `log/diff/000285a0_sound_nextRandomFloat.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100285c9): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100285a0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

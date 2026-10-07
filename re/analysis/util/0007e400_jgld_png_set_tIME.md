@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007e400`), 107 bytes, 42 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Copies an 8-byte modification time into the png_info and marks it valid, unless the stream is in the mode that forbids it. Three guards share one exit (the jmp at 0x1007e434): png_ptr null (cmp 0x1007e418, je 0x1007e41c), info_ptr null (cmp 0x1007e41e, je 0x1007e422) and bit 0x10000 set in the dword at [png_ptr+0x6c] (load 0x1007e427, and 0x1007e42a, je 0x1007e432 selects the body). Otherwise 8 bytes (push 8 at 0x1007e436) are copied from the third argument to info_ptr+0x3c (0x1007e43f) through the CRT memcpy at 0x1007f3a0 (call 0x1007e443) and bit 9 of the dword at [info_ptr+8] is set (`or dh,2` at 0x1007e451, dword stored at 0x1007e457). Caller: 0x1007b9b0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_set_tIME (12 vectors, 7 distinct results, 7 changing state, `log/diff/0007e400_jgld_png_set_tIME.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_tIME` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007e46a): callee pops 0 bytes of stack arguments.

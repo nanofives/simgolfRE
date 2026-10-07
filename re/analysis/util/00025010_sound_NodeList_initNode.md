@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00025010`), 25 bytes, 6 instructions, subsystem `util
 Initializes a 0xc-byte list node in place: clears next/prev and stores the data pointer param_1 at +8. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Initialises a list node around a payload value. __thiscall, one stack argument (`ret 4` at 0x10025026), no conditional branch. The two link dwords at offsets 0 (0x10025016) and 4 (0x1002501c) are zeroed and the argument is stored as the node's payload at offset 8 (read at 0x10025012, stored at 0x10025023); the node itself is returned (`mov eax, ecx` at 0x10025010). The argument is a plain stored value, never dereferenced, and nothing beyond offset 0xb is touched. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: NodeList_initNode (12 vectors, 12 distinct results, 12 changing state, `log/diff/00025010_sound_NodeList_initNode.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10025026): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10025010 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

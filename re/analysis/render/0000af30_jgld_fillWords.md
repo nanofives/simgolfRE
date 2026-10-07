@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000af30`), 140 bytes, 54 instructions, subsystem `ren
 fills count 16-bit words at a pointer with a value (word memset). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Fills n 16-bit words at dst with the value v, writing them two at a time. The dword constant is built first from v masked to 16 bits, shifted up 16 (0x1000af4b, 0x1000af50) and OR'd with the same masked value (0x1000af5c), so bits above 16 of the argument never reach memory. When n is odd (and edx,1 at 0x1000af64, test at 0x1000af67, je 0x1000af69) one word is written at dst, taken straight from the argument slot (`mov word [eax],cx` at 0x1000af72), and the cursor starts at dst+2 (0x1000af78); otherwise it starts at dst (0x1000af83). The remaining count is n / 2 rounded toward zero (cdq at 0x1000af89, sub at 0x1000af8a, sar at 0x1000af8c) and the loop writes one dword per step while the count is greater than 0 (cmp at 0x1000af9c, jle 0x1000afa0, pointer step at 0x1000afad). n is therefore signed: a negative odd n still writes the single leading word and nothing else, and a negative even n writes nothing at all. Its two callers 0x1000da70 and 0x1000dcf0 fill 16-bit surface spans. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: fillWords (15 vectors, 14 distinct results, 13 changing state, `log/diff/0000af30_jgld_fillWords.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_color.cpp` as `?fillWords@@YAXPAXGH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000afbb): callee pops 0 bytes of stack arguments.

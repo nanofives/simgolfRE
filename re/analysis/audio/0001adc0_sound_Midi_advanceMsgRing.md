@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001adc0`), 40 bytes, 11 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Advances the pending-message ring index at +0x20c, wrapping back to the base +0x208 when it passes the limit +0x204. (`re/names/sound_3.tsv`)
 
+## Purpose
+Advances a MIDI message ring's write index by one and wraps it to the ring's start. __thiscall with no stack argument (`ret` at 0x1001ade7) and no return value (eax holds the pre-increment index). The index [ecx+0x20c] is read at 0x1001adc0, incremented with `lea edx, [eax+1]` at 0x1001adcd and stored unconditionally at 0x1001add2, and only then compared UNSIGNED with the ring's end [ecx+0x204] (read at 0x1001adc7, `cmp edx, esi` at 0x1001add0, `jbe 0x1001add9`); above the end it is replaced with the ring's start [ecx+0x208] at 0x1001addb to 0x1001ade1. The write therefore happens twice on the wrapping path, and because the increment wraps modulo 2^32 an index of 0xffffffff becomes 0, which compares below any end value and is kept instead of reloading the start. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: Midi_advanceMsgRing (12 vectors, 12 distinct results, 11 changing state, `log/diff/0001adc0_sound_Midi_advanceMsgRing.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001ade7): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001adc0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

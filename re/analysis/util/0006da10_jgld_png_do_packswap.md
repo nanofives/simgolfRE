@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006da10`), 169 bytes, 64 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Reverses the order of the sub-byte pixels packed in each byte of a row, by looking every byte up in one of three 256-byte tables held in the module's data. It returns at once when bit_depth is 8 or more (cmp ecx,8 at 0x1006da30, jge 0x1006da33; the compare is signed, but the value is a zero-extended byte, so it is a plain >= 8). The end pointer row + rowbytes is computed before the table choice (add at 0x1006da3b). bit_depth 1 selects the table at 0x10122e6c (0x1006da4e), 2 the one at 0x10122f6c (0x1006da64) and 4 the one at 0x1012306c (0x1006da7a); any other value below 8 falls through to the jmp at 0x1006da83 and writes nothing. The loop then replaces each byte from row up to (not including) end with table[byte] (load at 0x1006daab, store at 0x1006daae), the pointer compare being UNSIGNED (jae at 0x1006da9c). Caller: 0x100717d0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_do_packswap (12 vectors, 7 distinct results, 6 changing state, `log/diff/0006da10_jgld_png_do_packswap.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_trans.cpp` as `_png_do_packswap` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006dab8): callee pops 0 bytes of stack arguments.

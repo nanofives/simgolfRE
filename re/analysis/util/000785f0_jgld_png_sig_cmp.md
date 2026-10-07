@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000785f0`), 126 bytes, 48 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Compares up to 8 bytes of a candidate PNG signature against the module's copy at 0x10123198, after clamping the window. All three comparisons are UNSIGNED. A num_to_check above 8 is clamped to 8 (cmp at 0x10078608, jbe 0x1007860c, store at 0x1007860e); otherwise a num_to_check below 1 returns 0 (cmp at 0x10078617, jae 0x1007861b, xor eax,eax at 0x1007861d). A start above 7 returns 0 (cmp at 0x10078621, jbe 0x10078625, xor eax,eax at 0x10078627). If start + num_to_check exceeds 8 (add at 0x1007862e, cmp at 0x10078631, jbe 0x10078634) the count becomes 8 - start (0x1007863b). The return value is whatever the CRT memcmp at 0x100828b0 returns for sig+start against 0x10123198+start (arguments pushed at 0x10078644, 0x1007864d and 0x10078654, call at 0x10078655), so a matching window gives 0 and a clamped-away window gives 0 as well. Callers: 0x1006be20 and 0x10078670. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_sig_cmp (20 vectors, 3 distinct results, `log/diff/000785f0_jgld_png_sig_cmp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_sig_cmp` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007866d): callee pops 0 bytes of stack arguments.

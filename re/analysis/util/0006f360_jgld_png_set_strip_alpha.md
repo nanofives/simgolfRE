@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006f360`), 49 bytes, 21 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Sets bit 0x40000 of the transformation word of a png_struct: the dword at [png_ptr+0x70] is loaded (0x1006f37b), OR'd with 0x40000 (0x1006f37e) and stored back (0x1006f387). There is no null guard and no conditional branch, nothing else is read or written, and there is no return value, so calling it twice is indistinguishable from calling it once. Caller: 0x100145a0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_set_strip_alpha (12 vectors, 7 distinct results, 6 changing state, `log/diff/0006f360_jgld_png_set_strip_alpha.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rtran.cpp` as `_png_set_strip_alpha` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006f390): callee pops 0 bytes of stack arguments.

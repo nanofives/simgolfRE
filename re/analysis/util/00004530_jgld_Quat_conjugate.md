@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00004530`), 76 bytes, 34 instructions, subsystem `util
 conjugates this quaternion in place (negates x,y,z). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Conjugates a quaternion by negating its vector part only: the three `fld; fchs; fstp` groups cover [this], [this+4] and [this+8] (0x10004550-0x10004557, 0x1000455c-0x10004564, 0x1000456a-0x10004572) and the scalar part at [this+0xc] is left untouched, which is what the A/B's state snapshot shows (the fourth float of each $p object keeps its value). __thiscall, no stack argument, no return value (`ret` at 0x1000457b). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Quat::conjugate (12 vectors, 12 distinct results, 12 changing state, `log/diff/00004530_jgld_Quat_conjugate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `?conjugate@Quat@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000457b): callee pops 0 bytes of stack arguments.

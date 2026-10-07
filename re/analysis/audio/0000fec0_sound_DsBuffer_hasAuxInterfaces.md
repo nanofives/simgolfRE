@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000fec0`), 20 bytes, 10 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Returns true when a 3D-buffer (+0x64) or 3D-listener (+0x68) interface has been obtained. (`re/names/sound_2.tsv`)
 
+## Purpose
+Reports whether a DirectSound buffer wrapper holds either of its two auxiliary interface pointers. __thiscall with no stack argument (`ret` at 0x1000fed0 and 0x1000fed3), read-only. [ecx+0x64] is read at 0x1000fec0 and tested (`jne 0x1000fec5`), then [ecx+0x68] at 0x1000fec7 (`jne 0x1000fecc`); either one non-zero returns 1 in al (`mov al, 1` at 0x1000fed1) and both zero returns 0 (`xor al, al` at 0x1000fece). Only al is defined on return, the two fields are tested for zero and not for sign, and neither is dereferenced, so the function is a pure presence test that cannot touch a COM object. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: DsBuffer::hasAuxInterfaces (12 vectors, 2 distinct results, `log/diff/0000fec0_sound_DsBuffer_hasAuxInterfaces.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000fed0, 0x1000fed3): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000fec0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

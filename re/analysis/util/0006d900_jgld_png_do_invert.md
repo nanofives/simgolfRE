@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006d900`), 122 bytes, 49 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Replaces every byte of a decoded row with its bitwise complement, but only for 1-bit greyscale rows: the body returns unless bit_depth (the byte at row_info+9, read at 0x1006d91d) is 1 (0x1006d920, jne 0x1006d923) and color_type (row_info+8, read at 0x1006d92a) is 0 (test at 0x1006d92d, jne 0x1006d92f). Neither pointer is tested for null. The loop then walks rowbytes bytes (row_info+4, read at 0x1006d93a) from the row pointer, complementing each one in place (`not ecx` at 0x1006d961, byte store at 0x1006d966, pointer step at 0x1006d96b); the counter is compared with rowbytes UNSIGNED (jae at 0x1006d958), so a rowbytes of 0 leaves the row untouched. Its caller 0x100717d0 is libpng's read-transformation dispatcher. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_do_invert (12 vectors, 7 distinct results, 6 changing state, `log/diff/0006d900_jgld_png_do_invert.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_trans.cpp` as `_png_do_invert` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006d979): callee pops 0 bytes of stack arguments.

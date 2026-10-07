@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008810`), 18 bytes, 6 instructions, subsystem `util
 Stores two 32-bit values into a 2-field pair. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Stores a pair of values into the first two dwords of an object and returns the object. __thiscall, two stack arguments (`ret 8` at 0x1000881f), no conditional branch. The first argument is read at 0x10008816 and stored at offset 0 (0x1000881a), the second is read at 0x10008810 and stored at offset 4 (0x1000881c), and `mov eax, ecx` at 0x10008814 returns the object. Neither argument is dereferenced and nothing beyond offset 7 is written. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: pairStore (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008810_sound_pairStore.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x1000881f): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10008814 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00013320`), 45 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the path flag byte of a Tile, the byte at +0x208. `this` is loaded from the frame slot at 0x1001333d and the single load `mov al, [eax+0x208]` at 0x10013340 writes only the low byte of eax, so the upper three bytes of the returned register still hold `this` and only al carries the flag. There is no conditional branch and no masking, so a byte other than 0 or 1 is returned as it stands. The byte is the one Tile::layPath 0x10013400 sets and clears. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::hasPath (16 vectors, 7 distinct results, `log/diff/00013320_Terrain_Tile_hasPath.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile.cpp` as `?hasPath@Tile@@QAE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001334c): callee pops 0 bytes of stack arguments.

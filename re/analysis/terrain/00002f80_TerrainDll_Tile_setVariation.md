@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00002f80`), 50 bytes, 22 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Stores its single stack argument (ret 4 at 0x10002faf) whole as the dword at Tile+0x240 (`mov [eax+0x240], ecx` at 0x10002fa3). That is a different field from the +0x28 one Tile::setRotation 0x10015380 writes, so the two mutators called from the same caller Terrain::setType 0x100032f0 do not overlap. No branch and no other write. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::setVariation (16 vectors, 16 distinct results, 16 changing state, `log/diff/00002f80_Terrain_Tile_setVariation.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile.cpp` as `?setVariation@Tile@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10002faf): callee pops 4 bytes of stack arguments.

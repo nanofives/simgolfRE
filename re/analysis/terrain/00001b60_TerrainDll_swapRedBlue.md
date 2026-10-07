@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00001b60`), 116 bytes, 44 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exchanges the first and third byte of every pixel of a 24-bit image in place, the BGR/RGB swap the texture loader textureLoad 0x1000bbd0 applies after reading a file. __cdecl with two stack arguments: the pixel bytes [ebp+8] and an ImageInfo record [ebp+0xc] whose dword at +4 is the width and dword at +8 the height (`mov edx, [eax+4]` at 0x10001b85, `imul edx, [ecx+8]` at 0x10001b88); the dword at ImageInfo+0 is not read. The pixel counter at [ebp-8] is that signed product and the cursor at [ebp-4] starts at the pixel pointer (0x10001b92). While the counter is greater than 0 (`cmp [ebp-8], 0` / jle 0x10001bad) the first byte is saved in the temporary [ebp-0xc] (0x10001bb2), the third byte is stored over it (0x10001bc0) and the temporary is stored into the third (0x10001bc8); the counter then drops by 1 (0x10001b9a) and the cursor advances by 3 (`add edx, 3` at 0x10001ba3). The middle byte of each pixel is never touched, there is no bounds check beyond the counter, and a width*height that is zero or negative leaves the buffer untouched. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: swapRedBlue (24 vectors, 17 distinct results, 16 changing state, `log/diff/00001b60_Terrain_swapRedBlue.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small2.cpp` as `?swapRedBlue@@YAXPAEPAUImageInfo@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10001bd3): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000ba40`), 89 bytes, 35 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Places one four-byte list element at an address the list already owns: it pushes the first argument and the constant 4 (0x1000ba5b, 0x1000ba5c), calls the placement operator new 0x1000bab0 through the incremental-link thunk 0x10001069 (call at 0x1000ba5e, 8 bytes of arguments removed by the caller at 0x1000ba63), and when the pointer that comes back is not NULL (`cmp [ebp-4], 0` / je 0x1000ba6d) copies one dword from the object the second argument points at into it (load at 0x1000ba75, store at 0x1000ba77). A NULL first argument skips the copy and the second argument is never dereferenced. The function has no return value: the value of the new-expression is written to the frame slot [ebp-8] (0x1000ba7c in the copying path, 0 at 0x1000ba81) and no instruction loads it into eax before the epilogue, so on return eax holds whatever was computed last. An A/B that declared the return as a pointer read that leftover register and came out RED on 19 of 22 vectors with every state hash equal, which is what identified the slot as dead. __cdecl; /GZ frame check at 0x1000ba90. The caller is std::allocator<Tile*>::construct 0x1000b690. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: std::_Construct (22 vectors, 19 distinct results, 18 changing state, `log/diff/0000ba40_Terrain_std__Construct.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Construct@std@@YAXPAPAVTile@@ABQAV2@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000ba98): callee pops 0 bytes of stack arguments.

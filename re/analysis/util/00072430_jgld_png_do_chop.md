@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00072430`), 181 bytes, 67 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Narrows a 16-bit row to 8 bits by keeping the first byte of every big-endian sample, and rewrites the row header to match. It returns unless bit_depth is 16 (cmp ecx,0x10 at 0x10072450, jne 0x10072453). Two cursors start at the row: the source at [ebp-4], advanced by 2 (0x1007248d), and the destination at [ebp-8], advanced by 1 (0x10072499); width * channels samples (imul at 0x10072472, counter compared UNSIGNED, jae at 0x100724a2) are rewritten as destination = *source (load 0x100724aa, store 0x100724ac). After the loop -- also when it ran zero times -- the header is rewritten unconditionally: bit_depth becomes 8 (0x100724b3), pixel_depth becomes channels * 8 truncated to a byte (shl edx,3 at 0x100724bf, store at 0x100724c5) and rowbytes becomes width * channels (imul at 0x100724d5, store at 0x100724db). Caller: 0x100717d0. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_do_chop (12 vectors, 11 distinct results, 10 changing state, `log/diff/00072430_jgld_png_do_chop.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rtran.cpp` as `_png_do_chop` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100724e4): callee pops 0 bytes of stack arguments.

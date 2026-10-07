@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00001e40`), 47 bytes, 22 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns one of the nine dwords at the start of a Tile, selected by the caller's index used as a dword subscript. `this` comes from the frame slot written at 0x10001e5a and reloaded at 0x10001e60, the stack argument is loaded at 0x10001e5d, and the single load `mov eax, [ecx + eax*4]` at 0x10001e63 produces the result. There is no bounds check and no conditional branch, so index 0..8 reads the four corner heights at +0x04, +0x0c, +0x14, +0x1c and the five dwords interleaved with them, and any other index reads outside the Tile. The only caller, Terrain::getElevation 0x10001de0, forwards its own height index unchanged. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::getCorner (168 vectors, 119 distinct results, `log/diff/00001e40_Terrain_Tile_getCorner.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?getCorner@Tile@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10001e6c): callee pops 4 bytes of stack arguments.

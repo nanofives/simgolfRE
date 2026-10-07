@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007dad0`), 90 bytes, 37 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Copies a 10-byte background colour into the png_info and marks it valid. It returns when either pointer is null (cmp at 0x1007dae8 / je 0x1007daec for png_ptr, cmp at 0x1007daee / jne 0x1007daf2 for info_ptr, both reaching the jmp to the epilogue at 0x1007daf4). Otherwise it copies 10 bytes (push 0xa at 0x1007daf6) from the third argument to info_ptr+0x5a (0x1007daff) through the CRT memcpy at 0x1007f3a0 (call 0x1007db03) and sets bit 5 of the dword at [info_ptr+8] (`or al,0x20` at 0x1007db11, the whole dword stored back at 0x1007db16). png_ptr is only tested, never read. Caller: 0x1007ae70. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_set_bKGD (12 vectors, 9 distinct results, 9 changing state, `log/diff/0007dad0_jgld_png_set_bKGD.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_bKGD` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007db29): callee pops 0 bytes of stack arguments.

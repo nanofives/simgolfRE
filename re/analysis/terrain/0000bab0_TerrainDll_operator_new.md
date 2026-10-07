@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000bab0`), 34 bytes, 17 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+The placement form of operator new, `void* operator new(size_t, void*)`. __cdecl with two stack arguments and no call of any kind in the body: it returns the second argument unchanged (`mov eax, [ebp+0xc]` at 0x1000bac8) and never reads the size in [ebp+8]. No conditional branch, no heap and no write. Its only caller, std::_Construct 0x1000ba40, uses it to place a four-byte list element at a node address the list already owns. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: operator_new_placement (22 vectors, 19 distinct results, `log/diff/0000bab0_Terrain_operator_new_placement.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??2@YAPAXIPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000bad1): callee pops 0 bytes of stack arguments.

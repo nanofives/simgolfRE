@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007e470`), 136 bytes, 50 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Records a transparency array, a transparency-value block, or both, in the png_info. It returns when either pointer is null (cmp 0x1007e488 / je 0x1007e48c, cmp 0x1007e48e / jne 0x1007e492, jmp 0x1007e494). A non-null trans (cmp 0x1007e496, je 0x1007e49a) is stored at [info_ptr+0x4c] (0x1007e4a2). A non-null trans_values (cmp 0x1007e4a5, je 0x1007e4a9) makes it copy 10 bytes (push 0xa at 0x1007e4ab) to info_ptr+0x50 (0x1007e4b4) through the CRT memcpy at 0x1007f3a0 (call 0x1007e4b8) and, only on that path, replace a num_trans of 0 by 1 (cmp 0x1007e4c0, jne 0x1007e4c4, store 0x1007e4c6). The low 16 bits of num_trans are then written as a word at [info_ptr+0x16] (0x1007e4d0, 0x1007e4d4) and bit 4 of the dword at [info_ptr+8] is set (`or ecx,0x10` at 0x1007e4de, stored 0x1007e4e4); those last two writes happen on every path that passes the two null guards, even when both data pointers are null. Caller: 0x1007ab40. Reimplemented in `shim/src/re/c3ao.cpp`; path-1 A/B GREEN: png_set_tRNS (13 vectors, 11 distinct results, 10 changing state, `log/diff/0007e470_jgld_png_set_tRNS.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_tRNS` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007e4f7): callee pops 0 bytes of stack arguments.

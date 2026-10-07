@@ -40,3 +40,7 @@ c3am.cpp
 c3ak.cpp
 c3al.cpp
 c3an.cpp
+c3aq.cpp
+c3ao.cpp
+c3ap.cpp
+c3ar.cpp

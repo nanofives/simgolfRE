@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003df0`), 76 bytes, 34 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 negates the three floats at +0/+4/+8 in place. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Flips the sign of the three components in place. Each component is loaded, negated with `fchs` and stored back as a float (0x10003e10-0x10003e17, 0x10003e1c-0x10003e24, 0x10003e2a-0x10003e32); `fchs` only toggles the sign bit, so the store is exact and the result does not depend on the precision control. __thiscall with no stack argument and no return value (`ret` at 0x10003e3b). The body is byte for byte the same as Quat::conjugate (0x10004530). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::negate (12 vectors, 12 distinct results, 12 changing state, `log/diff/00003df0_jgld_Vector3_negate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003df0@f_10003df0@@YIXPAM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003e3b): callee pops 0 bytes of stack arguments.

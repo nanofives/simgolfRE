@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00013400`), 193 bytes, 62 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Lays or removes a path on a Tile, writing the three bytes +0x208 (the flag Tile::hasPath 0x10013320 returns), +0x209 (the flag Tile::isConnected 0x10013360 returns) and +0x20a. Two stack arguments (ret 8 at 0x100134be). The first is masked to its low byte before the test (`and eax, 0xff` at 0x10013420, `test eax, eax` / je 0x10013427), so 0x100 counts as "off" while Tile::setConnected 0x100133a0 would read the same value as "on". The off path (0x1001349a) stores 0 into all three bytes (0x1001349d, 0x100134a7, 0x100134b1). The on path (0x10013429) stores 1 into +0x208 and, when the second argument is non-zero as a full dword (je 0x10013437), also stores 1 into +0x209 (0x1001343c); it never clears +0x209, so an "on" call with a zero second argument leaves the connection flag as it was. It then reads the tile type at +0x24 and compares it with 0x16, 0, 2, 1, 3, 7 and 9 in that order (je 0x1001344a, je 0x10013453, je 0x1001345c, je 0x10013465, je 0x1001346e, je 0x10013477, jne 0x10013480): any of those seven types stores 0 into +0x20a (0x10013485) and every other type stores 1 (0x10013491). The caller is Terrain::layPath 0x1000a3e0. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::layPath (30 vectors, 25 distinct results, 29 changing state, `log/diff/00013400_Terrain_Tile_layPath.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile3.cpp` as `?layPath@Tile@@QAEX_NH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100134be): callee pops 8 bytes of stack arguments.

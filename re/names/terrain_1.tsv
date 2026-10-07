@@ -1,0 +1,2 @@
+module	addr	name	subsystem	evidence	purpose
+Terrain.dll	0x10013670	Tile::blendFaceTextures	terrain	match re/match/terrain_blend.cpp (100%); callees 0x10012ec0 (Tile::setFaceTexture), 0x10015650 (Tile::edgeKind), 0x100154a0 (Tile::isSolidType); g_courseType 0x10070a0c	recomputes the 8 face textures of a tile from the types of its 4 neighbours (+0x34) and 4 diagonals: returns early for type 0x14 (hidden) or a type isSolidType rejects; on course type 1 with tile type 0x11, a face next to an isOpenType neighbour is set with type 0x19

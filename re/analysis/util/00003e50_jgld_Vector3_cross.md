@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00003e50`), 146 bytes, 58 instructions, subsystem `uti
 returns the cross product of this and another Vector3. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Returns the cross product of two Vector3s as a new value. Each component is one expression of two products, finished and stored as a float into a local before the next starts: [ebp-0x10] = this[1]*o[2] - this[2]*o[1] (0x10003e73, 0x10003e76, 0x10003e7f, 0x10003e82, `fsubp` 0x10003e85, store 0x10003e87); [ebp-0xc] = (-this[0])*o[2] + this[2]*o[0] (`fchs` on this[0] at 0x10003e8f before the `fmul` at 0x10003e94, second product at 0x10003e9d/0x10003ea0, `faddp` 0x10003ea2, store 0x10003ea4); [ebp-8] = this[0]*o[1] - this[1]*o[0] (0x10003ead, 0x10003eaf, 0x10003eb8, 0x10003ebb, `fsubp` 0x10003ebd, store 0x10003ebf). The three floats are then copied into the caller's return buffer with integer moves (0x10003ec8, 0x10003ecd, 0x10003ed3) and the buffer is returned in eax. The two products of each component are exact, their difference or sum rounds at 53 bits, and the component rounds to float once more — the double rounding is real here: computing the three expressions in float changes 12 of the 14 registered vectors. Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::cross (14 vectors, 14 distinct results, 14 changing state, `log/diff/00003e50_jgld_Vector3_cross.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `?cross@Vector3@@QBE?AV1@ABV1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10003edf): callee pops 8 bytes of stack arguments.

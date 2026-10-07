@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003930`), 94 bytes, 37 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 subtracts another 3-float vector componentwise, returns this. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Subtracts another Vector3 from this one and returns this. The same counted loop (counter [ebp-8], `jge` at 0x10003963) with `fsub` (0x10003971, 0x10003974, 0x1000397d), so each component is field minus argument in that order, rounded once to float; the object pointer is returned in eax (0x10003982). __thiscall with one stack argument (`ret 4` at 0x1000398b). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::subAssignRet (12 vectors, 12 distinct results, 12 changing state, `log/diff/00003930_jgld_Vector3_subAssignRet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003930@C_FUN_10003930@f_10003930@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000398b): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000038b0`), 94 bytes, 37 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 adds another 3-float vector componentwise, returns this (loop i<3 over +i*4). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Adds another Vector3 into this one and returns this. A counted loop over i = 0..2 (counter at [ebp-8], test `cmp dword [ebp-8], 3` / `jge` at 0x100038df and 0x100038e3) performs `fld [this+i*4]; fadd [o+i*4]; fstp [this+i*4]` (0x100038f1, 0x100038f4, 0x100038fd), so each component is field + argument rounded once to float, and iteration i touches only component i. The object pointer is returned in eax (0x10003902). __thiscall with one stack argument (`ret 4` at 0x1000390b). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::addAssignRet (12 vectors, 12 distinct results, 12 changing state, `log/diff/000038b0_jgld_Vector3_addAssignRet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_100038b0@C_FUN_100038b0@f_100038b0@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000390b): callee pops 4 bytes of stack arguments.

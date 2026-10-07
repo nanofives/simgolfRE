@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00037760`), 51 bytes, 13 instructions, subsystem `aud
 thiscall(idx): sets the loop/active bits of sub-voice idx's flag byte at this+idx*0x110+0x2d4 (|4, clear bit1). (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Rewrites two bits of one voice's flag byte inside a channel. __thiscall, one stack argument (`ret 4` at 0x10037790), no conditional branch. The argument is a voice index: `shl edx, 4` / `add edx, eax` / `shl edx, 4` at 0x10037766 to 0x1003776b multiply it by 0x110, the stride of the voice records, and 0x238 is the array's offset inside the channel (`lea eax, [edx+ecx+0x238]` at 0x1003776e). The flag byte is read from [edx+ecx+0x2d4] at 0x10037775, which is the same address as the [eax+0x9c] the stores use because 0x238 + 0x9c = 0x2d4: bit 2 is set (`or dl, 4` at 0x1003777c) and the byte is stored at 0x10037781, then bit 1 is cleared from that same value (`and cl, 0xfd` at 0x10037787) and it is stored again to the same address at 0x1003778a, so the first store is immediately overwritten and the byte ends as (old | 4) & 0xfd. No bound is checked against the index: the offset 0x2d4 + index*0x110 is used as given. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: Voice_setLoopFlag (16 vectors, 14 distinct results, 13 changing state, `log/diff/00037760_sound_Voice_setLoopFlag.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10037790): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1003776e before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

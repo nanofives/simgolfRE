@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000153c0`), 42 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the address of the Faces block embedded in the Tile, `this + 0x44` (`add eax, 0x44` at 0x100153e0 after the reload of `this` at 0x100153dd). No field is read and there is no conditional branch. The six callers (among them Terrain::buildArrays 0x1000a130 and Tile::smoothNormals 0x10011ef0) use the returned pointer to reach the face list whose first dword is the face count Faces::Faces 0x10001fa0 zeroes. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::getFaces (16 vectors, 16 distinct results, `log/diff/000153c0_Terrain_Tile_getFaces.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile6.cpp` as `?getFaces@Tile@@QAEPAUFaces@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100153e9): callee pops 0 bytes of stack arguments.

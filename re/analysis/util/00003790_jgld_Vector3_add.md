@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003790`), 112 bytes, 43 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 writes out = this + other for the three components to a result pointer. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Returns the component-wise sum of two Vector3s as a new value. The counted loop over i = 0..2 (counter [ebp-0x14], `jge` at 0x100037c3) stores each float sum into a local Vector3 at [ebp-0x10] (0x100037d1, 0x100037d4, 0x100037da) rather than straight into the caller's buffer; the local is then copied into the return buffer with three integer moves (0x100037e6, 0x100037eb, 0x100037f1) and the buffer's address is returned in eax (0x100037f4). The return buffer is the first stack argument and the operand the second (`ret 8` at 0x100037fd). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::add (12 vectors, 12 distinct results, 12 changing state, `log/diff/00003790_jgld_Vector3_add.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003790@C_FUN_10003790@f_10003790@@QAEPAMPAMH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100037fd): callee pops 8 bytes of stack arguments.

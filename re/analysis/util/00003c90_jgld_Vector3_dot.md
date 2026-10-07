@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00003c90`), 76 bytes, 33 instructions, subsystem `util
 returns the dot product of this and another Vector3 (operator*). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Returns the dot product of two Vector3s as a float. The three products are formed in index order and summed left to right entirely on the x87 stack, with no spill in between: `fld [this]; fmul [o]` (0x10003cb3, 0x10003cb5), `fld [this+4]; fmul [o+4]; faddp` (0x10003cbd, 0x10003cc0, 0x10003cc3), `fld [this+8]; fmul [o+8]; faddp` (0x10003ccb, 0x10003cce, 0x10003cd1). Each product of two floats is exact at the measured 53-bit precision but both additions round there, and the result is left in st(0) for the caller, so the single rounding to float happens where the caller stores it. Nothing is written and there is no branch; __thiscall with one stack argument (`ret 4` at 0x10003cd9). Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::dot (14 vectors, 14 distinct results, 0 changing state, `log/diff/00003c90_jgld_Vector3_dot.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `?dot@Vector3@@QBEMABV1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10003cd9): callee pops 4 bytes of stack arguments.

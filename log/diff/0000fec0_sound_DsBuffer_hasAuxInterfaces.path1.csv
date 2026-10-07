@@ -1,0 +1,17 @@
+vector,original,reimpl,match
+$b0,0,0,True
+$b1,1,1,True
+$b2,1,1,True
+$b3,1,1,True
+$b4,1,1,True
+$b5,1,1,True
+$b6,1,1,True
+$b7,1,1,True
+$b8,0,0,True
+$b9,1,1,True
+$b10,0,0,True
+$b11,1,1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d34b9e0,original=0x2bd0ec0,2026-10-07T20:34:49
+distinct_results,2,,
+VERDICT,GREEN,12,

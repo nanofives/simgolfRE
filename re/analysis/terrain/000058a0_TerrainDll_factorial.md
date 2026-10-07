@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000058a0`), 93 bytes, 37 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Computes n! for the Bezier basis of Terrain::bernstein 0x10005750, its only caller. __cdecl with one stack argument (ret at 0x100058fc). n equal to 0 returns 1 at once (`cmp [ebp+8], 0` / jne 0x100058bc, `mov eax, 1` at 0x100058be). Otherwise the running product at [ebp-4] and the counter at [ebp-8] both start at n (0x100058c8, 0x100058ce) and the loop multiplies the product by counter-1 (`sub eax, 1` at 0x100058e5, `imul ecx, eax` at 0x100058eb) while the counter is greater than 2 (`cmp [ebp-8], 2` / jle 0x100058e0), decrementing the counter at the top of each turn (`sub edx, 1` at 0x100058d6). The compare is signed, so every n of 1 or 2 and every negative n is returned unchanged with no multiplication at all, and the products wrap on 32-bit overflow: the A/B shows 13 -> 1932053504, 20 -> -2102132736 and 50 -> 0. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: factorial (25 vectors, 23 distinct results, `log/diff/000058a0_Terrain_factorial.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small2.cpp` as `?factorial@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100058fc): callee pops 0 bytes of stack arguments.

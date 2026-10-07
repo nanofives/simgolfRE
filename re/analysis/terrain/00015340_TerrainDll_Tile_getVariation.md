@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00015340`), 42 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the low byte of the dword field at Tile+0x28 (`mov al, [eax+0x28]` at 0x10015360). The field is written whole by Tile::setRotation 0x10015380, and the caller Tile::edgeKind 0x10015650 sign-extends the result (`movsx eax, al` at 0x100156ae) before comparing it, so the byte is signed. There is no conditional branch and the upper three bytes of the returned register are left holding `this`. Reimplemented in `shim/src/re/c3aq.cpp`; path-1 A/B GREEN: Tile::getVariation (16 vectors, 10 distinct results, `log/diff/00015340_Terrain_Tile_getVariation.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile.cpp` as `?getVariation@Tile@@QAEDXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10015369): callee pops 0 bytes of stack arguments.

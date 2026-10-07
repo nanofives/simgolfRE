@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000039b0`), 106 bytes, 41 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 returns a copy of this scaled by a float (operator*(float) const). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Returns this Vector3 scaled by a float, as a new value. The counted loop over i = 0..2 (counter [ebp-0x14], `jge` at 0x100039e3) loads the scalar first and multiplies by the component (`fld [ebp+0xc]; fmul [this+i*4]` at 0x100039eb and 0x100039ee), stores each product as a float into a local at [ebp-0x10] (0x100039f4), then copies the local into the caller's return buffer with integer moves (0x10003a00, 0x10003a05, 0x10003a0b) and returns that buffer in eax. `ret 8` at 0x10003a17. Reimplemented in `shim/src/re/c3ap.cpp`; path-1 A/B GREEN: Vector3::mulScalar (12 vectors, 12 distinct results, 12 changing state, `log/diff/000039b0_jgld_Vector3_mulScalar.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??DVector3@@QBE?AV0@M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10003a17): callee pops 8 bytes of stack arguments.

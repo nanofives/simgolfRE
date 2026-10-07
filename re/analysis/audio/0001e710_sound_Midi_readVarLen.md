@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001e710`), 40 bytes, 19 instructions, subsystem `aud
 Decodes a MIDI variable-length quantity from param_1: accumulates 7 bits per byte while the high bit is set, writes the consumed byte count to *param_2 and returns the value. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Decodes one MIDI variable-length quantity and reports how many bytes it spans. __cdecl with two stack arguments (`ret` at 0x1001e737 pops nothing): a byte pointer, read at 0x1001e710, and an out counter, read at 0x1001e715 and zeroed at 0x1001e71b before the loop. Each iteration takes the low 7 bits of one byte (`mov dl, [ecx]` at 0x1001e71d, `and edx, 0x7f` at 0x1001e71f, which clears every bit above bit 6 so the previous contents of edx never matter), shifts the accumulator left by 7 (0x1001e722) and ors them in (0x1001e725), increments the out counter in memory (0x1001e727 to 0x1001e72a), then re-reads the same byte and continues while its bit 7 is set (`and dl, 0x80` at 0x1001e72e, `jne 0x1001e734`); the pointer is advanced at 0x1001e731. The accumulator is a 32-bit register and is never checked for overflow, so a quantity of five groups shifts the first group out and returns only the low 32 bits: the five-byte input ff ff ff ff 7f returns 0xffffffff with a count of 5. There is no terminator check and no length limit other than the data: the walk stops at the first byte without bit 7. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: Midi_readVarLen (15 vectors, 15 distinct results, 15 changing state, `log/diff/0001e710_sound_Midi_readVarLen.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001e737): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001e6e0`), 27 bytes, 12 instructions, subsystem `uti
 Reverses the two low bytes of param_1 (a big-endian 16-bit read) and returns the swapped value. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Exchanges the two low bytes of its argument and returns the 16-bit result. __cdecl with one stack argument (`ret` at 0x1001e6fa pops nothing). `push ecx` at 0x1001e6e0 reserves a 4-byte scratch slot, which puts the argument at [esp+8]; `lea ecx, [esp+9]` at 0x1001e6e3 aims the source at the argument's byte 1. The two-pass loop at 0x1001e6e7 to 0x1001e6f2 walks the source down (`dec ecx` at 0x1001e6ee) while the destination walks up (`mov [esp+eax+2], dl` at 0x1001e6e9), so byte 1 of the argument lands at [esp+2] and byte 0 at [esp+3]; reading those back as one little-endian word (`mov ax, [esp+2]` at 0x1001e6f4) yields the swap. Bytes 2 and 3 of the argument are never read, so 0x12340000 and 0xffff0000 both return 0; and because eax holds the loop counter 2 when the word is moved into ax, the high half of eax is zero on return. Reimplemented in `shim/src/re/c3ar.cpp`; path-1 A/B GREEN: byteSwap16 (16 vectors, 12 distinct results, `log/diff/0001e6e0_sound_byteSwap16.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001e6fa): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001e6e0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
