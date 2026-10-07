@@ -1550,7 +1550,7 @@ entry	name	size	callers	callees	ranges
 004adfed	__strdup	43	1	3	004adfed-004ae018
 004ae020	_CreateJPG	293	1	9	004ae020-004ae145
 004ae150	jpeg_CreateCompress	184	1	1	004ae150-004ae208
-004ae210	jpeg_abort_compress	12	1	1	004ae210-004ae21c
+004ae210	jpeg_destroy_compress	12	1	1	004ae210-004ae21c
 004ae220	jpeg_suppress_tables	78	1	0	004ae220-004ae26e
 004ae270	jpeg_finish_compress	258	1	1	004ae270-004ae372
 004ae380	jpeg_start_compress	117	1	2	004ae380-004ae3f5
