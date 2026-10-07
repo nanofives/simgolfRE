@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 60 bytes, 23 instructions, subsystem `economy`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 maps a numeric value to a rank/bucket index (`re/names/exe_0.tsv`)
 
+## Purpose
+rankValue (0x0040e5b0) maps a value to a rank 0..4 by q = v / 200, truncated toward zero (multiply by 0x51eb851f, `sar edx, 6` and add the sign bit, 0x0040e5b4..0x0040e5c3): it returns 0 when q == 0 (`jne` at 0x0040e5c5), 1 when q <= 2 (signed `jg` at 0x0040e5cd, so every negative q as well), 2 when q <= 5 (0x0040e5d8), 3 when q <= 9 and 4 above (`setg` at 0x0040e5e5 plus 3). A __cdecl leaf without memory accesses. Caller: buildSceneSprites (0x00463180). Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: rankValue (26 vectors, 5 distinct results, `log/diff/0040e5b0_rankValue.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?rank40e5b0@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040e5c9, 0x0040e5d4, 0x0040e5df, 0x0040e5eb): callee pops 0 bytes of stack arguments.

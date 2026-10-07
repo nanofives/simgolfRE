@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 27 bytes, 13 instructions, subsystem `util`. Mechanical
 Appends a newline and NUL terminator to string param_1. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+appendNewline (0x004925f0) appends a line feed to a NUL-terminated string. It finds the terminating NUL (`repne scasb` at 0x004925fc, length from `not ecx` / `dec ecx` at 0x004925fe..0x00492600), writes 0x0a there (0x00492604) and a new NUL in the following byte (0x00492607). A cdecl leaf with no result and no bounds check. Its caller is heapAlloc (0x00474860). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: appendNewline (12 vectors, 12 distinct results, 12 changing state, `log/diff/004925f0_appendNewline.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?addNewline@@YAXPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049260a): callee pops 0 bytes of stack arguments.

@@ -1,0 +1,21 @@
+vector,original,reimpl,match
+0 $o20 47,NULL,NULL,True
+$o0 0 47,NULL,NULL,True
+$o10 $o10 47,NULL,NULL,True
+$o0 $o20 47,obj+0x11,obj+0x11,True
+$o0 $o16 47,obj+0x3,obj+0x3,True
+$o0 $o17 47,obj+0x11,obj+0x11,True
+$o0 $o2 47,NULL,NULL,True
+$o0 $o20 90,NULL,NULL,True
+$o40 $o50 81,NULL,NULL,True
+$o39 $o50 81,obj+0x28,obj+0x28,True
+$o0 $o50 122,NULL,NULL,True
+$o0 $o63 0,obj+0x3f,obj+0x3f,True
+$o0 $o40 337,obj+0x28,obj+0x28,True
+$o0 $o40 -175,obj+0x28,obj+0x28,True
+$o4 $o16 46,obj+0x9,obj+0x9,True
+$o9 $o16 46,NULL,NULL,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5d5cefb0,original=0xb90d40,2026-10-07T09:38:24
+distinct_results,6,,
+VERDICT,GREEN,16,

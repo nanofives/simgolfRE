@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 51 bytes, 15 instructions, subsystem `ui`. Mechanical t
 returns the widget's current value depending on its kind at +0x1f4: field via the parent data for kinds 1/2/4/0x10, the +0x118 field for kind 8, else 0 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+getFieldValueByKind (0x004a1370, thiscall, no stack arguments) returns a value selected by the kind dword at this+0x1f4 (0x004a1370). Kinds outside 1..16 return 0 (`dec` / `cmp eax, 0xf` / `ja` at 0x004a1376..0x004a137a, unsigned, so 0 and negative kinds are out of range). Inside, the byte table at 0x004a13b0 (16 entries, read from the binary: 0,0,2,0,2,2,2,1,2,2,2,2,2,2,2,0) selects one of the three targets in the jump table at 0x004a13a4: kinds 1, 2, 4 and 16 (target 0x004a138b) return the dword at this + offset + 0xd4, where offset is the dword at +8 of the table whose address is at this+4 (0x004a138b..0x004a1391); kind 8 (target 0x004a1399) returns the dword at this+0x118; the other kinds 3, 5..7 and 9..15 (target 0x004a13a0) return 0. Its callers are TextView::layout (0x0048e1c0) and TextView::select (0x00490960). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: getFieldValueByKind (21 vectors, 6 distinct results, `log/diff/004a1370_getFieldValueByKind.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a1370@f_004a1370@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a1398, 0x004a139f, 0x004a13a2): callee pops 0 bytes of stack arguments.

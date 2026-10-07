@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 37 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 Stores the content width/height at this+0x1fb8/0x1fbc (ignoring the 0x2000 sentinel). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+TextView::setSize (0x0048e190, thiscall, arguments w, h) stores w at this+0x1fb8 (0x0048e19b) unless w equals 0x2000 (0x0048e194 cmp / 0x0048e199 je), and h at this+0x1fbc (0x0048e1ac) unless h equals 0x2000 (0x0048e1a5 / 0x0048e1aa je): 0x2000 means "keep the current value". eax holds h on return (loaded at 0x0048e1a1). Its callers are TextView::ctor (0x0048ce00), TextView::reset (0x0048d480), TextView::init (0x0048db60), TextView::layout (0x0048e1c0), TextView::build (0x0048e900), TextView::render (0x0048fe60) and comboOpenPopup (0x00493b90). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: TextView::setSize (12 vectors, 12 distinct results, 11 changing state, `log/diff/0048e190_TextView_setSize.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_0048e190@C_FUN_0048e190@f_0048e190@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0048e1b2): callee pops 8 bytes of stack arguments.

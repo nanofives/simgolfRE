@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 16 bytes, 6 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+jdiv_round_up (0x004b04c0) returns (a + b - 1) / b. The sum is formed with `lea eax, [eax+ecx-1]` at 0x004b04c8, so it wraps at 32 bits. The division is signed and truncating (`cdq` / `idiv ecx` at 0x004b04cc..0x004b04cd). A cdecl leaf with no branches. It is libjpeg's division rounding up for non-negative operands. Its callers are initial_setup (0x004b52a0) and per_scan_setup (0x004b5ad0). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: jdiv_round_up (228 vectors, 75 distinct results, `log/diff/004b04c0_jdiv_round_up.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_utils.cpp` as `_jdiv_round_up` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b04cf): callee pops 0 bytes of stack arguments.

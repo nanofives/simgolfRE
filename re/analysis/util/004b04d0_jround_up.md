@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 24 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+jround_up (0x004b04d0) computes c = a + b - 1 (`lea ecx, [eax+esi-1]` at 0x004b04d9, wrapping at 32 bits) and returns c minus the signed remainder of c / b (`cdq` / `idiv esi` at 0x004b04df..0x004b04e0, `sub eax, edx` at 0x004b04e5). For non-negative operands this is a rounded up to a multiple of b. A cdecl leaf with no branches. Its caller is jinit_c_coef_controller (0x004b06f0). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: jround_up (228 vectors, 75 distinct results, `log/diff/004b04d0_jround_up.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_utils.cpp` as `_jround_up` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b04e7): callee pops 0 bytes of stack arguments.

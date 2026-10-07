@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 35 bytes, 15 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+jpeg_abort (0x004afa60) takes a libjpeg object (cinfo). It calls the memory manager's free_pool, the function pointer at +0x24 of the table at cinfo+4, with (cinfo, 1) (`push 1` / `push esi` / `call [eax+0x24]` at 0x004afa65..0x004afa6b, cdecl, `add esp, 8` at 0x004afa71). It then stores 200 at cinfo+0x10 when the dword at cinfo+0xc is non-zero and 100 when it is zero (`neg` / `sbb` / `and 0x64` / `add 0x64` at 0x004afa74..0x004afa7b, store at 0x004afa7e). cinfo+4 is not checked for NULL. No result. Its caller is jpeg_finish_compress (0x004ae270). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: jpeg_abort (12 vectors, 12 distinct results, 12 changing state, `log/diff/004afa60_jpeg_abort.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_comapi.cpp` as `_jpeg_abort` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afa82): callee pops 0 bytes of stack arguments.

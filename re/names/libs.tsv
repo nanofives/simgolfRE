@@ -202,7 +202,7 @@ jgld.dll	0x1009e630	z_error	util	match re/match/jgld_zlib_zutil.cpp; zlib 1.0.2 
 jgld.dll	0x1009e680	zcalloc	util	match re/match/jgld_zlib_zutil.cpp; zlib 1.0.2 release source	symbol of the 100% matched source
 jgld.dll	0x1009e6d0	zcfree	util	match re/match/jgld_zlib_zutil.cpp; zlib 1.0.2 release source	symbol of the 100% matched source
 golf_clean.exe	0x004ae150	jpeg_CreateCompress	util	match re/match/golf_jpeg_capimin.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
-golf_clean.exe	0x004ae210	jpeg_abort_compress	util	match re/match/golf_jpeg_capimin.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
+golf_clean.exe	0x004ae210	jpeg_destroy_compress	util	match re/match/golf_jpeg_capimin.cpp; callee 0x004afa90 (jpeg_destroy, C3)	jpeg_destroy_compress: the matched wrapper compiles identically to jpeg_abort_compress; its callee 0x004afa90 is jpeg_destroy (calls self_destruct, slot +0x28)
 golf_clean.exe	0x004ae220	jpeg_suppress_tables	util	match re/match/golf_jpeg_capimin.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
 golf_clean.exe	0x004ae270	jpeg_finish_compress	util	match re/match/golf_jpeg_capimin.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
 golf_clean.exe	0x004ae380	jpeg_start_compress	util	match re/match/golf_jpeg_capistd.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source

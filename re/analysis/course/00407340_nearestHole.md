@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 189 bytes, 68 instructions, subsystem `course`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 returns the id of the hole nearest a position (`re/names/exe_0.tsv`)
 
+## Purpose
+nearestHole (0x00407340) returns the 1-based number of the hole closest to (x, y), or -1 when no distance is below 0xffff (initial best 0x00407345, initial result -1 at 0x0040734a). For holes h = 1..18 it walks the records r = 0x00575cc0 + (h-1)*0x208 (0x0040735c, step 0x208 below 0x00578150 at 0x004073dd..0x004073ed) and the entries p = 0x0059aea8 + (h-1)*0x18 (0x00407357, step 0x18 at 0x004073e4), and tests up to three distances computed by distance (0x0040acd0): distance(r[+0] - x, r[+4] - y) (0x00407361..0x00407374), distance(r[+0x10] - x, r[+0x14] - y) (0x00407386..0x0040739a) and, unless p[+0] is -1 (0x004073af / 0x004073b2), distance(x - (p[+0] >> 10), y - (p[+4] >> 10)) with arithmetic shifts (0x004073b4..0x004073cb, world units to tiles). A distance replaces the best only when strictly smaller (signed `jge` at 0x0040737e, 0x004073a4, 0x004073d5), so ties keep the earlier hole. __cdecl, read-only. Caller: mainLoop (0x0040f5c0). Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: nearestHole (20 vectors, 9 distinct results, `log/diff/00407340_nearestHole.path1.csv`); nearestHole_far (4 vectors, 2 distinct results, `log/diff/00407340_nearestHole_far.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_k.cpp` as `?nearestHole@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004073fc): callee pops 0 bytes of stack arguments.

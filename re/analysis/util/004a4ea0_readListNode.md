@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 47 bytes, 18 instructions, subsystem `util`. Mechanical
 reads the head node at this+4 into the out-params (*param_1=node[0], *param_2=node[1]) and returns node[2] (0 when the head is null) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+readListNode (0x004a4ea0) reads the node held at this+4 (thiscall, `ret 8`). When that pointer is NULL (`test` / `jne` at 0x004a4ea3..0x004a4ea5) it returns it, that is 0, and writes nothing. Otherwise, when the second argument is non-NULL (0x004a4eae..0x004a4eb0) it stores node[1] (+4) there (0x004a4eb2..0x004a4eb5). Then, when the first argument is non-NULL (0x004a4ebb..0x004a4ebd), it stores node[0] there (0x004a4ebf..0x004a4ec4). It returns node[2] (+8, 0x004a4ec6..0x004a4ec9). The second out-pointer is written before the first, so when both name the same cell it ends up holding node[0]. Its caller is moviePlayFrame (0x0049ccc0). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: readListNode (19 vectors, 15 distinct results, 12 changing state, `log/diff/004a4ea0_readListNode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a4ea0@C_FUN_004a4ea0@f_004a4ea0@@QAEIPAI0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004a4ea7, 0x004a4ecc): callee pops 8 bytes of stack arguments.

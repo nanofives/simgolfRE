@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 22 instructions, subsystem `ui`. Mechanical t
 toggles a bit in the bit array (set/clear based on current state). (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+flagToggle49eec0 (0x0049eec0, thiscall, one argument n) flips bit n of the bit array: it calls bitTest (0x0049f030) with n (0x0049eec9) and, when the result is non-zero (0x0049eece test / 0x0049eed0 je), calls bitSet (0x0049eff0) with (n, 0) (0x0049eed7), otherwise with (n, 1) (0x0049eee6). eax holds bitSet's return (the flag-dword address) on return. Its caller is optionDialogOnKey (0x0049fa90). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: flagToggle49eec0 (36 vectors, 28 distinct results, 36 changing state, `log/diff/0049eec0_flagToggle49eec0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?toggle@C49eec0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049eede, 0x0049eeed): callee pops 4 bytes of stack arguments.

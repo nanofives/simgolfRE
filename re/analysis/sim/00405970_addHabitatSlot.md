@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 134 bytes, 36 instructions, subsystem `sim`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 adds one spawn slot to a habitat (`re/names/exe_0.tsv`)
 
+## Purpose
+addHabitatSlot (0x00405970) claims the first free slot of the 128-entry table of 0x14-byte slots at 0x00572cb0, a slot being free when its byte at +0x12 is 0xff (`cmp` / `je` at 0x00405978 / 0x0040597b, scan 0x0040597d..0x00405986). With no free slot it returns -1 (0x00405988). Otherwise it fills slot i: +0 = (x << 10) + 0x200 and +4 = (y << 10) + 0x200 (0x00405999..0x004059b3, tile to world units), +0x11 = the low byte of Random::range(4) called on the generator object 0x00822d9c (0x004059b9..0x004059c9), the word +0xe = 0x10c (0x004059cf), the dword +8 = -20 (0x004059d8), +0x12 = the low byte of kind (0x004059e2), the word +0xc = 0xffff (0x004059e8); and returns i (0x004059f1). __cdecl. Caller: placeHabitat (0x00405e30). Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: addHabitatSlot (10 vectors, 10 distinct results, 10 changing state, `log/diff/00405970_addHabitatSlot.path1.csv`); addHabitatSlot_0 (10 vectors, 10 distinct results, 10 changing state, `log/diff/00405970_addHabitatSlot_0.path1.csv`); addHabitatSlot_127 (10 vectors, 10 distinct results, 10 changing state, `log/diff/00405970_addHabitatSlot_127.path1.csv`); addHabitatSlot_full (10 vectors, 1 distinct results, 0 changing state, `log/diff/00405970_addHabitatSlot_full.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?addSlot405970@@YAHHHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040598c, 0x004059f5): callee pops 0 bytes of stack arguments.

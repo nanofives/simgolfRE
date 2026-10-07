@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 92 bytes, 19 instructions, subsystem `sim`. Mechanical 
 posts an event/notice into the event queue (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+postEvent (0x0046e7b0) records a game event of type id with two values, once per type until the type's record is cleared. It does nothing when bit 0x4000000 of the flags dword 0x0059e7b8 is set (`test` / `jne` at 0x0046e7b0 / 0x0046e7ba) or when the dword at 0x004c15a0 + id*0x30 is non-zero (0x0046e7c6 / `jne` at 0x0046e7ce). Otherwise it stores id in 0x004e3db8 (0x0046e7d6), the tick dword 0x00834170 into the record at 0x004c15a0 + id*0x30 (0x0046e7e0) and the current-course dword 0x0059bf90 at 0x004c15a4 + id*0x30 (0x0046e7f6), clears the dword 0x00839338 (0x0046e7ec), and stores a in 0x004e3dbc (0x0046e800) and b in 0x008392a4 (0x0046e805). __cdecl, no return value. Its callers (narrateShot 0x00407e00, announceBuilding 0x0040e720, matchUpdate 0x00427380, holeMagazineEvent 0x0042dea0, showCourseReport 0x0044fb30, showTournamentResults 0x0045a090, announceHoleType 0x00460df0) pass constant ids 0..0x15 (and id = a computed value + 0x11 at 0x0045abad) and, at most call sites, a and b as world coordinates (tile << 10) + 0x200. Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: postEvent (16 vectors, 9 distinct results, 8 changing state, `log/diff/0046e7b0_postEvent.path1.csv`); postEvent_off (16 vectors, 1 distinct results, 0 changing state, `log/diff/0046e7b0_postEvent_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?post46e7b0@@YAXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046e80b): callee pops 0 bytes of stack arguments.

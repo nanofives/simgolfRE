@@ -1,0 +1,19 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 0 $ox $oy,void,void,True,22407e0a,22407e0a,True
+1 0 $ox $oy,void,void,True,d402f235,d402f235,True
+0 1 $ox $oy,void,void,True,033b9ece,033b9ece,True
+10 20 $ox $oy,void,void,True,82e91616,82e91616,True
+20 10 $ox $oy,void,void,True,8b0a6760,8b0a6760,True
+-5 7 $ox $oy,void,void,True,73a6c1bb,73a6c1bb,True
+100 -100 $ox $oy,void,void,True,b19d9109,b19d9109,True
+2147483647 1 $ox $oy,void,void,True,fef3f3e3,fef3f3e3,True
+-2147483648 -1 $ox $oy,void,void,True,7be40af0,7be40af0,True
+357913941 357913942 $ox $oy,void,void,True,9eae4aba,9eae4aba,True
+3 3 $ox $oy,void,void,True,554a8cc4,554a8cc4,True
+49 0 $ox $oy,void,void,True,513b15a8,513b15a8,True
+5 9 $ox $ox,void,void,True,0e92c1ea,0e92c1ea,True
+state_regions,$out+0x0:8,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5d5cf390,original=0x1440da0,2026-10-07T09:40:34
+distinct_results,13,,
+VERDICT,GREEN,13,

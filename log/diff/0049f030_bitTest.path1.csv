@@ -1,0 +1,49 @@
+vector,original,reimpl,match
+$o0 0,1,1,True
+$o0 1,0,0,True
+$o0 2,4,4,True
+$o0 5,32,32,True
+$o0 7,128,128,True
+$o0 8,256,256,True
+$o0 15,32768,32768,True
+$o0 31,0,0,True
+$o0 32,1,1,True
+$o0 33,0,0,True
+$o0 -1,0,0,True
+$o1 0,1,1,True
+$o1 1,0,0,True
+$o1 2,0,0,True
+$o1 5,0,0,True
+$o1 7,0,0,True
+$o1 8,0,0,True
+$o1 15,0,0,True
+$o1 31,2147483648,2147483648,True
+$o1 32,1,1,True
+$o1 33,0,0,True
+$o1 -1,2147483648,2147483648,True
+$o2 0,1,1,True
+$o2 1,2,2,True
+$o2 2,4,4,True
+$o2 5,32,32,True
+$o2 7,128,128,True
+$o2 8,256,256,True
+$o2 15,32768,32768,True
+$o2 31,2147483648,2147483648,True
+$o2 32,1,1,True
+$o2 33,2,2,True
+$o2 -1,2147483648,2147483648,True
+$o3 0,0,0,True
+$o3 1,0,0,True
+$o3 2,0,0,True
+$o3 5,0,0,True
+$o3 7,0,0,True
+$o3 8,0,0,True
+$o3 15,0,0,True
+$o3 31,0,0,True
+$o3 32,0,0,True
+$o3 33,0,0,True
+$o3 -1,0,0,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x685ce220,original=0x1440e20,2026-10-07T09:36:31
+distinct_results,9,,
+VERDICT,GREEN,44,

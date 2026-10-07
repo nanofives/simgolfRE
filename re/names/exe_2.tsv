@@ -115,7 +115,7 @@ golf_clean.exe	0x004766a0	Widget_draw2	ui	match re/match/golf_hand_02.cpp	draws 
 golf_clean.exe	0x00476700	drawStringAt	ui	callee 0x00477fc0 (drawStringLeft)	draws a text string at a position (wrapper)
 golf_clean.exe	0x00476750	drawStringAt2	ui	callee 0x00478140 (drawString)	draws a text string at a position (wrapper variant)
 golf_clean.exe	0x004767a0	allocTextBuffer	ui	caller 0x004775b0 (drawRichText); callee _malloc	allocates/grows the working buffer for rich-text layout
-golf_clean.exe	0x00476d80	skipToken	ui	match re/match/golf_hand_01.cpp	skips the next whitespace-delimited markup token
+golf_clean.exe	0x00476d80	skipToken	ui	match re/match/golf_hand_01.cpp	advances over markup text until one of the delimiters { } [ ] $ = or the length runs out (0x00476d92..0x00476dae)
 golf_clean.exe	0x00476dd0	scanToken	ui	match re/match/golf_hand_02.cpp	scans the next markup token
 golf_clean.exe	0x00476e20	wrapText	ui	match re/match/golf_hand_r0.cpp	word-wraps a text line to a pixel width
 golf_clean.exe	0x00476ef0	measureMarkupRun	ui	string 0x004e423c; callee 0x00476d80 (skipToken)	measures a run of marked-up text, handling $DROPLINK/$DROPDOWN/$LINK tokens

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 45 bytes, 13 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Returns the overlay cell character/level at a (x,y) for the routing/aura map. (`re/names/exe_1.tsv`)
 
+## Purpose
+overlayCharAt (0x00456bb0) maps a tile (x, y) to 2 or 3. It takes the tile type as the signed byte at 0x005722e8 + x * 50 + y (`lea` x5 twice, then `movsx eax, byte [ecx+eax*2+0x5722e8]` at 0x00456bb8..0x00456bbe). It returns 3 when the signed byte +2 of that type's 0x30-byte entry in g_typeAttr (0x00578372 + type * 0x30, 0x00456bc6..0x00456bce) is greater than 0 (`test cl, cl` / `setg` at 0x00456bd4..0x00456bd6), and 2 otherwise (`add eax, 2` at 0x00456bd9). A negative type byte indexes entries below 0x00578372. A cdecl leaf without writes and without bounds checks. Its caller is showRoutingMapScreen (0x00456be0). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: overlayCharAt (43 vectors, 2 distinct results, `log/diff/00456bb0_overlayCharAt.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_00456bb0@f_00456bb0@@YADHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00456bdc): callee pops 0 bytes of stack arguments.

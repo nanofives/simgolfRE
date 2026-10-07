@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 44 bytes, 18 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Returns the index of the wrapped line whose start offset is <= byte position param_1. (`re/names/exe_4.tsv`)
 
+## Purpose
+EditBox::lineIndexAt (0x00486330, thiscall, arguments pos, starts, count) computes target = the dword at this+0x574 plus pos (0x00486330 / 0x0048633d) and counts the leading entries of the `starts` array that are <= target, compared unsigned (`cmp ecx, [edx]` / `jb` at 0x0048634b / 0x0048634d), stopping at the first greater entry or after count entries (0x00486353 / 0x00486355 jl, signed); count <= 0 reads no entry (0x00486343 / 0x00486345 jle). It returns that count minus 1 (0x00486357): the index of the last line start at or before the target, or -1 when the first start is already beyond it or count <= 0. Its caller is EditBox::charPosToPixel (0x00486360). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: EditBox::lineIndexAt (16 vectors, 9 distinct results, `log/diff/00486330_EditBox_lineIndexAt.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?find@C486330@@QAEHHPAIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00486359): callee pops 12 bytes of stack arguments.

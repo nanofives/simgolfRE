@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 65 bytes, 31 instructions, subsystem `ui`. Mechanical t
 skips the next whitespace-delimited markup token (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+skipToken (0x00476d80, cdecl `char *(char *text, int *len)`) advances over at most *len characters of markup text and stops on the first of six delimiters: '{' 0x7b, '}' 0x7d, '[' 0x5b, ']' 0x5d, '$' 0x24 and '=' 0x3d (compares at 0x00476d92..0x00476dae). When *len is 0 on entry it returns `text` at once and does not write *len (0x00476d8a / 0x00476d8e je). Otherwise each non-delimiter advances the pointer and decrements the count (0x00476db0 / 0x00476db1), and the scan ends on a delimiter (pointer left on it) or when the count reaches 0 (0x00476db2 jne). The remaining count, the delimiter included, is stored back to *len (0x00476db4) and the stop pointer is returned (0x00476dbb). '^' 0x5e is not a delimiter here (scanToken 0x00476dd0 adds it). The naming pass row calls the token "whitespace-delimited"; the compares contain no whitespace character. Its callers are measureMarkupRun (0x00476ef0), drawMarkupRun (0x00477280, C3) and drawRichText (0x004775b0). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: skipToken (16 vectors, 16 distinct results, 13 changing state, `log/diff/00476d80_skipToken.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?skipToken@@YAPADPADPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00476dc0): callee pops 0 bytes of stack arguments.

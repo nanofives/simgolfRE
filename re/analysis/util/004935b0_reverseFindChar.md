@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 51 bytes, 27 instructions, subsystem `util`. Mechanical
 Searches backward from param_2 down to param_1 for character param_3, returning its address or NULL. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+reverseFindChar (0x004935b0) searches backwards for a byte. Its arguments are (base, p, ch) and it returns the address of the byte or NULL. It returns NULL at once when base is NULL (`and ebx, ebx` / `je` at 0x004935b8..0x004935ba), when p is NULL (0x004935bf..0x004935c1) or when p == base (`sub ecx, ebx` / `je` at 0x004935c5..0x004935c9). Otherwise it compares the bytes at p, p-1, p-2, ... with the low byte of ch (`cmp byte [eax], bl` / `je` at 0x004935ce..0x004935d0). It makes p - base compares (`dec ecx` / `jne` at 0x004935d3..0x004935d4), so the byte at base itself is never compared. No match returns NULL (0x004935d6). A cdecl leaf without writes. When p is below base the count is negative, so the loop runs about 2^32 times. Its caller is measureMarkupRun (0x00476ef0). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: reverseFindChar (16 vectors, 6 distinct results, `log/diff/004935b0_reverseFindChar.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?findBack@@YAPADPAD0D@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004935e2): callee pops 0 bytes of stack arguments.

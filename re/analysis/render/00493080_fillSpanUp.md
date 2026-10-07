@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 115 bytes, 40 instructions, subsystem `render`. Mechani
 Companion span filler for the opposite scan direction. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+fillSpanUp (0x00493080) is the 8-bit twin of fillSpanDown: the same clipping of x0 .. x1-1 against [min, max) with min = the dword at 0x0083d35c and max = the dword at 0x0083d38c (jle at 0x0049308f, jge at 0x0049309a, `sub; jle` at 0x0049309c, clamps at 0x004930a3..0x004930c5, clamped-length test at 0x004930c8), then it stores the low byte of 0x0083d34c (0x004930e2) into the bytes from the low dword of [0x0083d384] * [0x0083d388] (0x004930d1) + x0 + the 8-bit buffer base at 0x0083d380 (0x004930d7..0x004930da) with the loop 0x004930e8..0x004930ec. It returns nothing. Its caller is fillConvexPoly8 (0x00493100). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: fillSpanUp (15 vectors, 8 distinct results, 9 changing state, `log/diff/00493080_fillSpanUp.path1.csv`); fillSpanUp_inv (10 vectors, 1 distinct results, 0 changing state, `log/diff/00493080_fillSpanUp_inv.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f493080@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004930f2): callee pops 0 bytes of stack arguments.

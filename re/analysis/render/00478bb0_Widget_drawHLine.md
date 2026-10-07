@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 40 bytes, 18 instructions, subsystem `render`. Mechanic
 draws a horizontal line at y=param_3 from x=param_1 to param_2 via the surface vtbl+0x64 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Widget_drawHLine (0x00478bb0) draws a horizontal line through the drawing object held at this+4: when that pointer is null it returns at once (je at 0x00478bb5); otherwise it calls the object's virtual method at vtable +0x64 (0x00478bd1) with the six stack arguments (a1, a3, a2, a3, a4, 1) (pushes 0x00478bc2..0x00478bd0), i.e. a line from (a1, a3) to (a2, a3) with a4 as the fifth argument and a constant 1. It returns nothing (ret 0x10). Its caller is Widget_drawBevelBox (0x00479560). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: Widget_drawHLine (15 vectors, 12 distinct results, 11 changing state, `log/diff/00478bb0_Widget_drawHLine.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00478bb0@C_FUN_00478bb0@f_00478bb0@@QAEXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00478bd5): callee pops 16 bytes of stack arguments.

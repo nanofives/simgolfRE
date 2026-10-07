@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 32 bytes, 11 instructions, subsystem `ui`. Mechanical t
 returns whether the bit at a given index is set. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+bitTest (0x0049f030, thiscall, one argument n) reads a bit of a flag dword held in the object's virtual base: the object's first dword points to a table whose dword at +8 is the base offset (0x0049f038 / 0x0049f03a), and the flag dword is at this + offset + 0xf0 (0x0049f043). It returns that dword AND (1 << n) (0x0049f033 / 0x0049f041 / 0x0049f04a), i.e. the bit in place rather than 0/1; `shl esi, cl` uses n modulo 32, so n = 32 tests bit 0 and n = -1 tests bit 31. No branches. Its callers are flagToggle49eec0 (0x0049eec0), optionDialogUpdate (0x0049f9a0) and optionDialogOnKey (0x0049fa90). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: bitTest (44 vectors, 9 distinct results, `log/diff/0049f030_bitTest.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?test@D49fc30@@QAEIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049f04d): callee pops 4 bytes of stack arguments.

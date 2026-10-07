@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 70 bytes, 22 instructions, subsystem `render`. Mechanic
 fills a surface rectangle with a colour (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Surface_fill (0x00475da0) fills a one-row rectangle through the drawing object held at this+4: it returns 7 when that object is null (jne at 0x00475da8 not taken, 0x00475daa); otherwise it builds the local rectangle {a1, a2, a3, a2} (stores 0x00475db9..0x00475dd2; the fourth argument is not read) and returns the object's virtual method at vtable +0x5c (0x00475ddd) called with (&rect, a5). Its callers are Window::paint (0x004808c0) and Window::paintBackground (0x00480a10). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: Surface_fill (12 vectors, 10 distinct results, 9 changing state, `log/diff/00475da0_Surface_fill.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?fill@C475da0@@QAEHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00475db2, 0x00475de3): callee pops 20 bytes of stack arguments.

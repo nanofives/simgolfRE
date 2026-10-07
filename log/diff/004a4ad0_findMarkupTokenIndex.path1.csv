@@ -1,0 +1,19 @@
+vector,original,reimpl,match
+$t1 100,0,0,True
+$t1 115,5,5,True
+$t1 217,39,39,True
+$t1 101,-1,-1,True
+$t1 -1,-1,-1,True
+$t1 500,-1,-1,True
+$t1 4196,-1,-1,True
+$t2 1000,0,0,True
+$t2 1128,128,128,True
+$t2 1255,255,255,True
+$t2 1256,-1,-1,True
+$t2 -1,-1,-1,True
+$t3 100,-1,-1,True
+$t3 -1,-1,-1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x685ce250,original=0x1440dc0,2026-10-07T09:36:30
+distinct_results,6,,
+VERDICT,GREEN,14,

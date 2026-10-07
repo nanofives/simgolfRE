@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 16 bytes, 6 instructions, subsystem `util`. Mechanical 
 returns param_1 unless it is >= the bound param_2, in which case it returns -1 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+boundIndex (0x00463170) returns its first argument i when i < n (the second argument), compared signed (`cmp eax, ecx` / `jl` at 0x00463178..0x0046317a), and -1 otherwise (`or eax, 0xffffffff` at 0x0046317c). A cdecl leaf with no memory access. Its caller is buildSceneSprites (0x00463180). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: boundIndex (63 vectors, 8 distinct results, `log/diff/00463170_boundIndex.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00463170@f_00463170@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046317f): callee pops 0 bytes of stack arguments.

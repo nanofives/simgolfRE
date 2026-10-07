@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 49 bytes, 17 instructions, subsystem `ui`. Mechanical t
 sets a bit at a given index in the bit array. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+bitSet (0x0049eff0, thiscall, arguments n, on) writes bit n of the same flag dword as bitTest (0x0049f030): this + (dword at +8 of the table the first dword points to) + 0xf0 (0x0049eff6..0x0049effb). When on is non-zero (0x0049eff4 test / 0x0049f00b je) it ORs in 1 << n (0x0049f00d / 0x0049f00f); otherwise it ANDs with ~(1 << n) (0x0049f014..0x0049f01c); the shift count is n modulo 32. eax holds the address of the flag dword on return (the `lea` at 0x0049effb). Its caller is flagToggle49eec0 (0x0049eec0). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: bitSet (72 vectors, 20 distinct results, 35 changing state, `log/diff/0049eff0_bitSet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?setBit@C49eff0@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0049f011, 0x0049f01e): callee pops 8 bytes of stack arguments.

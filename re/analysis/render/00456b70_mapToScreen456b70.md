@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 59 bytes, 21 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Converts a map cell to screen pixels for the routing/value overlay maps. (`re/names/exe_1.tsv`)
 
+## Purpose
+mapToScreen456b70 (0x00456b70) turns a pair (a, b) into a screen position (x from a + b, y from b - a): it stores 6 * (a + b) + 0x6a into *outX (lea chain 0x00456b7d..0x00456b88, store at 0x00456b8c) and then 3 * (b - a) + 0x1b8 - d into *outY (0x00456b80, 0x00456b85, 0x00456ba0..0x00456ba8), where d = 1 when the dword at 0x00822b80 is non-zero and -1 when it is zero (neg / sbb / and 2 / dec at 0x00456b93..0x00456b9f, no branch). All arithmetic wraps at 32 bits; when outX == outY the *outY store wins. It returns nothing. Its callers are showRoutingMapScreen (0x00456be0) and showBuyLandScreen (0x004587a0). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: mapToScreen456b70 (13 vectors, 13 distinct results, 13 changing state, `log/diff/00456b70_mapToScreen456b70.path1.csv`); mapToScreen456b70_f1 (13 vectors, 13 distinct results, 13 changing state, `log/diff/00456b70_mapToScreen456b70_f1.path1.csv`); mapToScreen456b70_fneg (13 vectors, 13 distinct results, 13 changing state, `log/diff/00456b70_mapToScreen456b70_fneg.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?toScreen456b70@@YAXHHPAH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00456baa): callee pops 0 bytes of stack arguments.

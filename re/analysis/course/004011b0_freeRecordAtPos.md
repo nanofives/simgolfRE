@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 47 bytes, 16 instructions, subsystem `course`. Mechanic
 scans the record table at 0x0056d1e0 (stride 0x3c) for the entry whose [-1]==param_1 and [0]==param_2 (x,y) and sets its [-4] field to -1 to free it (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+freeRecordAtPos (0x004011b0) marks free every record placed at (x, y) in the table of 100 records of 0x3c bytes at 0x0056d1d8: the pointer p = record + 8 runs from 0x0056d1e0 while below 0x0056e950 (0x004011b9, 0x004011d3..0x004011db), and for each record whose signed word at +6 equals x (`movsx` / `jne` at 0x004011be / 0x004011c4) and signed word at +8 equals y (0x004011c6 / 0x004011cb) it stores 0xffff in the word at +0 (0x004011cd). All matching records are freed, not only the first. __cdecl, no return value. Caller: clearObjectFootprint (0x0040e400). Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: freeRecordAtPos (15 vectors, 11 distinct results, 10 changing state, `log/diff/004011b0_freeRecordAtPos.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_004011b0@f_004011b0@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004011de): callee pops 0 bytes of stack arguments.

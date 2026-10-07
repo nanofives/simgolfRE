@@ -1,0 +1,25 @@
+vector,original,reimpl,match
+0 0,13,13,True
+5 40,1,1,True
+8 6,1,1,True
+17 28,7,7,True
+16 28,7,7,True
+30 44,4,4,True
+31 45,4,4,True
+29 44,4,4,True
+2 3,13,13,True
+3 4,13,13,True
+2 2,13,13,True
+40 5,18,18,True
+40 23,17,17,True
+25 25,10,10,True
+100 100,4,4,True
+-500 -500,13,13,True
+20000 100,18,18,True
+12 30,5,5,True
+39 6,18,18,True
+9 36,3,3,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5d5ce8c0,original=0x15d0e80,2026-10-07T09:37:31
+distinct_results,9,,
+VERDICT,GREEN,20,

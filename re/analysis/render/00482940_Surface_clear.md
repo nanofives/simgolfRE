@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 77 bytes, 36 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 locks the destination surface and zero-fills pitch*height bytes, then unlocks (`re/names/exe_3.tsv`)
 
+## Purpose
+Surface::clear (0x00482940) zeroes the pixel buffer of the surface held at obj+4, where obj is its third stack argument (__stdcall, ret 0xc; ecx and the first two arguments are not read). With no null test of obj+4, it takes the buffer address from the surface's virtual at vtable +0x20 (0x0048294d), the byte count as the product of the virtuals at +0x34 and +0x30 (0x00482959, 0x00482962, imul at 0x00482965), zeroes that many bytes (rep stosd of count >> 2 dwords then rep stosb of count & 3 bytes, 0x00482968..0x0048297a), calls the virtual at +0x24 with the argument 1 on obj+4 re-read (0x0048296e, 0x0048297c..0x00482981) and returns 0 (0x00482987). Its caller is decodeImageChunks (0x00482570). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: Surface::clear (12 vectors, 9 distinct results, 12 changing state, `log/diff/00482940_Surface_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?clear482940@@YGHHHPAUA482@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0048298a): callee pops 12 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 23 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 stores a value at offset 0x5a0 of the child object at +0x270 (`re/names/exe_3.tsv`)
 
+## Purpose
+Window::setField2705a0 (0x0047ba90, thiscall, one argument v) is setField26c5a0 (0x0047ba70) for the child at this+0x270: v is stored at child+0x5a0 (0x0047ba9e) unless the pointer is NULL (0x0047ba96 test / 0x0047ba98 je); eax holds the child pointer. Its callers are ListBox::build (0x0048a5d0) and ListBox::onMouse (0x0048c6e0). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: Window::setField2705a0 (20 vectors, 13 distinct results, 12 changing state, `log/diff/0047ba90_Window_setField2705a0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_0047ba90@C_FUN_0047ba90@f_0047ba90@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047baa4): callee pops 4 bytes of stack arguments.

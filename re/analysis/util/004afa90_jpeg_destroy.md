@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 31 bytes, 15 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+jpeg_destroy (0x004afa90) takes a libjpeg object (cinfo). When the memory-manager pointer at cinfo+4 is non-NULL (`cmp eax, edi` / `je` at 0x004afa9b..0x004afa9d) it calls that manager's self_destruct, the function pointer at +0x28, with (cinfo) (0x004afa9f..0x004afaa0, cdecl, `add esp, 4` at 0x004afaa3). In both cases it then stores 0 at cinfo+4 (0x004afaa6) and at cinfo+0x10 (0x004afaa9). No result. Its callers are 0x004ae210 (named jpeg_abort_compress; see c3r_notes.txt) and error_exit (0x004aecd0). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: jpeg_destroy (12 vectors, 12 distinct results, 12 changing state, `log/diff/004afa90_jpeg_destroy.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_comapi.cpp` as `_jpeg_destroy` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afaae): callee pops 0 bytes of stack arguments.

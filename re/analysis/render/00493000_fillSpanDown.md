@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 121 bytes, 41 instructions, subsystem `render`. Mechani
 Fills a clipped horizontal run of the 16-bit fill colour g_0083d34c into the surface bits for one scanline. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+fillSpanDown (0x00493000) fills one horizontal run of 16-bit pixels of the polygon being drawn: given x0 and x1 it stores the word at 0x0083d34c (g_polyFillColor) into pixels x0 .. x1-1 of the current row, clipped to [min, max) with min = the dword at 0x0083d35c and max = the dword at 0x0083d38c. It returns without drawing when x1 <= min (signed jle at 0x0049300f), x0 >= max (jge at 0x0049301a) or x1 <= x0 (`sub; jle` at 0x0049301c); otherwise x1 is lowered to max when x1 >= max (0x00493023..0x00493031) and x0 raised to min when x0 < min (0x00493037..0x00493045), and nothing is drawn when the clamped length is <= 0 (0x00493048, only possible when min >= max). The first pixel's address is the low dword of [0x0083d384] * [0x0083d388] (imul at 0x00493051) plus 2 * x0 plus the 16-bit buffer base at 0x0083d37c (0x00493057..0x0049305d); the store loop is 0x0049306b..0x00493072. It returns nothing. Its caller is fillConvexPoly16 (0x004932d0). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: fillSpanDown (15 vectors, 8 distinct results, 9 changing state, `log/diff/00493000_fillSpanDown.path1.csv`); fillSpanDown_inv (10 vectors, 1 distinct results, 0 changing state, `log/diff/00493000_fillSpanDown_inv.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f493000@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00493078): callee pops 0 bytes of stack arguments.

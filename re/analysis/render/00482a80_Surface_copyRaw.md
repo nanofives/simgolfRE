@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 82 bytes, 37 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 locks the destination surface and memcpys pitch*height bytes from source+6 into it (`re/names/exe_3.tsv`)
 
+## Purpose
+Surface::copyRaw (0x00482a80) copies raw pixel data into the surface held at obj+4, where obj is its third stack argument (__stdcall, ret 0xc; ecx and the second argument are not read). It follows the same sequence as Surface::clear: buffer from the virtual at vtable +0x20 (0x00482a8d), byte count = virtual +0x34 x virtual +0x30 (0x00482a99, 0x00482aa2, 0x00482aa5), then copies that many bytes from src + 6, src being the first argument (lea esi, [edx+6] at 0x00482ab2; rep movsd / rep movsb at 0x00482ab5..0x00482abf), calls the virtual at +0x24 with 1 (0x00482ab0, 0x00482ac1..0x00482ac6) and returns 0 (0x00482acc). Its caller is decodeImageChunks (0x00482570). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: Surface::copyRaw (12 vectors, 11 distinct results, 12 changing state, `log/diff/00482a80_Surface_copyRaw.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?copy482a80@@YGHPADHPAUA482b@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00482acf): callee pops 12 bytes of stack arguments.

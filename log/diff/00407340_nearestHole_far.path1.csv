@@ -1,0 +1,9 @@
+vector,original,reimpl,match
+0 0,-1,-1,True
+25 25,-1,-1,True
+199990 199990,1,1,True
+-40000 3,-1,-1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5d5ce8c0,original=0x15d0e80,2026-10-07T09:37:31
+distinct_results,2,,
+VERDICT,GREEN,4,

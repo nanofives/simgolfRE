@@ -1,0 +1,42 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o0 0,obj+0x100,obj+0x100,True,05061a3d,05061a3d,True
+$o0 1,obj+0x100,obj+0x100,True,904e85b8,904e85b8,True
+$o0 2,obj+0x100,obj+0x100,True,c9153746,c9153746,True
+$o0 5,obj+0x100,obj+0x100,True,d8dae0bb,d8dae0bb,True
+$o0 8,obj+0x100,obj+0x100,True,5deca331,5deca331,True
+$o0 15,obj+0x100,obj+0x100,True,91cd1de9,91cd1de9,True
+$o0 31,obj+0x100,obj+0x100,True,f77c3df2,f77c3df2,True
+$o0 32,obj+0x100,obj+0x100,True,05061a3d,05061a3d,True
+$o0 -1,obj+0x100,obj+0x100,True,f77c3df2,f77c3df2,True
+$o1 0,obj+0x2f0,obj+0x2f0,True,eaa00d85,eaa00d85,True
+$o1 1,obj+0x2f0,obj+0x2f0,True,1d008c1c,1d008c1c,True
+$o1 2,obj+0x2f0,obj+0x2f0,True,c5ce7b6e,c5ce7b6e,True
+$o1 5,obj+0x2f0,obj+0x2f0,True,29723f68,29723f68,True
+$o1 8,obj+0x2f0,obj+0x2f0,True,b34a18cd,b34a18cd,True
+$o1 15,obj+0x2f0,obj+0x2f0,True,790bdfa2,790bdfa2,True
+$o1 31,obj+0x2f0,obj+0x2f0,True,ba210c22,ba210c22,True
+$o1 32,obj+0x2f0,obj+0x2f0,True,eaa00d85,eaa00d85,True
+$o1 -1,obj+0x2f0,obj+0x2f0,True,ba210c22,ba210c22,True
+$o2 0,obj+0x530,obj+0x530,True,6770d1af,6770d1af,True
+$o2 1,obj+0x530,obj+0x530,True,a035ce64,a035ce64,True
+$o2 2,obj+0x530,obj+0x530,True,50eeca9e,50eeca9e,True
+$o2 5,obj+0x530,obj+0x530,True,dfc82368,dfc82368,True
+$o2 8,obj+0x530,obj+0x530,True,2c5cb4f3,2c5cb4f3,True
+$o2 15,obj+0x530,obj+0x530,True,f1922113,f1922113,True
+$o2 31,obj+0x530,obj+0x530,True,4feef96b,4feef96b,True
+$o2 32,obj+0x530,obj+0x530,True,6770d1af,6770d1af,True
+$o2 -1,obj+0x530,obj+0x530,True,4feef96b,4feef96b,True
+$o3 0,obj+0x710,obj+0x710,True,96f4b0f5,96f4b0f5,True
+$o3 1,obj+0x710,obj+0x710,True,56be4c74,56be4c74,True
+$o3 2,obj+0x710,obj+0x710,True,30f9c29e,30f9c29e,True
+$o3 5,obj+0x710,obj+0x710,True,6a905928,6a905928,True
+$o3 8,obj+0x710,obj+0x710,True,3e91a17d,3e91a17d,True
+$o3 15,obj+0x710,obj+0x710,True,f936ef32,f936ef32,True
+$o3 31,obj+0x710,obj+0x710,True,aea1ddf2,aea1ddf2,True
+$o3 32,obj+0x710,obj+0x710,True,96f4b0f5,96f4b0f5,True
+$o3 -1,obj+0x710,obj+0x710,True,aea1ddf2,aea1ddf2,True
+state_regions,$obj+0x0:2048,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x685ce410,original=0x1440e60,2026-10-07T09:36:31
+distinct_results,28,,
+VERDICT,GREEN,36,

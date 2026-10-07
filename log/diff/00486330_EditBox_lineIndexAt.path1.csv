@@ -1,0 +1,21 @@
+vector,original,reimpl,match
+$e0 0 $A 8,1,1,True
+$e0 -10 $A 8,0,0,True
+$e0 -11 $A 8,7,7,True
+$e0 30 $A 8,3,3,True
+$e0 31 $A 8,4,4,True
+$e0 1000 $A 8,5,5,True
+$e0 0 $A 0,-1,-1,True
+$e0 0 $A -3,-1,-1,True
+$e0 1000 $A 3,2,2,True
+$e1 0 $A 8,0,0,True
+$e1 0 $B 2,-1,-1,True
+$e2 16 $A 8,0,0,True
+$e2 0 $A 8,6,6,True
+$e1 2147483647 $A 8,5,5,True
+$e1 55 $B 2,0,0,True
+$e1 60 $B 2,1,1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x685ce280,original=0x1440de0,2026-10-07T09:36:30
+distinct_results,9,,
+VERDICT,GREEN,16,

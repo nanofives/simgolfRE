@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 87 bytes, 36 instructions, subsystem `render`. Mechanic
 Advances a polygon edge by one scanline, re-setting up at the next vertex when the current span is exhausted. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+polyEdgeAdvance (0x00492fa0) advances one edge record of the polygon filler by one row. The record's dwords are +0 the direction through the vertex list, +4 rows left, +8 the current vertex index, +0xc x, +0x10 x step, +0x14 x sign step, +0x18 error term, +0x1c error step, +0x20 error reset. It decrements +4 (0x00492fa4..0x00492fa8); when that reaches 0 (jne at 0x00492fab) it calls polyEdgeStep 0x00492ed0(edge, [edge+8]) to set the record up for the next edge and returns 1 when that call returned non-zero, else 0 (neg / sbb / neg at 0x00492fba..0x00492fbe). Otherwise it adds the x step to x (0x00492fc1..0x00492fcd) and the error step to the error term (0x00492fca..0x00492fd9); when the new error is > 0 (signed jle at 0x00492fde) it adds the sign step to x (0x00492fe0..0x00492fea) and subtracts the error reset from the error (0x00492fe5..0x00492fed). It then returns 1 (0x00492ff0). Its callers are fillConvexPoly8 (0x00493100) and fillConvexPoly16 (0x004932d0). Reimplemented in `shim/src/re/c3t.cpp`; path-1 A/B GREEN: polyEdgeAdvance (14 vectors, 14 distinct results, 14 changing state, `log/diff/00492fa0_polyEdgeAdvance.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?step492fa0@@YAHPAULine492@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00492fc0, 0x00492ff6): callee pops 0 bytes of stack arguments.

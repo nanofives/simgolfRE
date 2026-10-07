@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 35 bytes, 11 instructions, subsystem `util`. Mechanical
 Returns true if bucket index param_1 is in range and its flag byte at +0x25 is non-zero. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+HashTable::bucketSet (0x004877a0) takes a bucket index (thiscall, `ret 4`) and returns a byte. It returns 1 for an index above 15 (unsigned `jbe` at 0x004877a7, `mov al, 1` at 0x004877a9). Otherwise it returns 1 when the byte at this + 0x25 + index * 0x1c (0x004877ae..0x004877b7) is non-zero and 0 when it is zero (`setne` at 0x004877bd). Only al is defined on return. It reads the byte after the one bucketEmpty (0x00487770) tests. Its caller is Snd::play (0x00484940). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: HashTable::bucketSet (24 vectors, 2 distinct results, `log/diff/004877a0_HashTable_bucketSet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?isSet@C487770@@QAE_NI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004877ab, 0x004877c0): callee pops 4 bytes of stack arguments.

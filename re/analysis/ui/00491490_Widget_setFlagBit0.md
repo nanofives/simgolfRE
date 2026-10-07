@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 27 bytes, 10 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Sets or clears bit0 of the flag word at this+0x24. (`re/names/exe_4.tsv`)
 
+## Purpose
+Widget::setFlagBit0 (0x00491490, thiscall, one argument `on`) sets bit 0 of the flag dword at this+0x24 when `on` is non-zero (0x00491494 test / 0x00491499 je; `or al, 1` at 0x0049149b) and clears it otherwise (`and al, 0xfe` at 0x004914a3), storing the dword back (0x0049149d / 0x004914a5); the other 31 bits are unchanged. eax holds the new flag dword on return. Its caller is TextView::build (0x0048e900). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: Widget::setFlagBit0 (28 vectors, 24 distinct results, 14 changing state, `log/diff/00491490_Widget_setFlagBit0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00491490@C_FUN_00491490@f_00491490@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004914a0, 0x004914a8): callee pops 4 bytes of stack arguments.

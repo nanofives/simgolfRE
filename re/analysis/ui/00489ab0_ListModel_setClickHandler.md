@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 45 bytes, 15 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Stores the click target object (this+0x74) and its two callback slots (this+0x78/0x7c). (`re/names/exe_4.tsv`)
 
+## Purpose
+ListModel::setClickHandler (0x00489ab0, thiscall, arguments target, a, b) returns 3 without writing anything when target is NULL (0x00489ab4 test / 0x00489ab6 jne; `mov eax, 3` at 0x00489ab8). Otherwise it stores target at this+0x74 only when the dword at target+4 is non-zero (0x00489ac0 / 0x00489ac5 je; store 0x00489ac7), then stores a at this+0x78 (0x00489ad2) and b at this+0x7c (0x00489ad5) in either case, and returns 0 (0x00489ad8). Its caller is comboOpenPopup (0x00493b90). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: ListModel::setClickHandler (12 vectors, 10 distinct results, 9 changing state, `log/diff/00489ab0_ListModel_setClickHandler.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00489ab0@C_FUN_00489ab0@f_00489ab0@@QAEIHII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00489abd, 0x00489ada): callee pops 12 bytes of stack arguments.

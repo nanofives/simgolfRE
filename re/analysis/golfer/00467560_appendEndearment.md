@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 90 bytes, 34 instructions, subsystem `golfer`. Mechanic
 appends a gendered endearment suffix to the text buffer (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+appendEndearment (0x00467560) appends one of four fixed strings to the text buffer 0x0051a068, chosen by n & 3 (0x00467565) through the jump table 0x004675bc: 0 -> 0x004e1b78, 1 -> 0x004e1b70, 2 -> 0x004e1b68, 3 -> 0x004e1b5c (0x00467575..0x0046758a). The append is an inline strlen of the source (`repne scasb` at 0x00467594), a scan to the buffer's terminator (0x004675a6) and a `rep movsd` / `rep movsb` copy of the string with its terminator (0x004675ae / 0x004675b5). The bounds test `ja` at 0x0046756c (n & 3 above 3) cannot be taken. __cdecl, no return value. Caller: buildGolferComment (0x00469b00). Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: appendEndearment (16 vectors, 4 distinct results, 16 changing state, `log/diff/00467560_appendEndearment.path1.csv`); appendEndearment_q3 (16 vectors, 4 distinct results, 16 changing state, `log/diff/00467560_appendEndearment_q3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?append467560@@YAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004675b9): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 17 bytes, 8 instructions, subsystem `util`. Mechanical 
 returns the current list node value (*(iter+0xc)+8) when the list count +8 is nonzero, else 0 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+listIterValue (0x00402160) returns the value of a list iterator's current element. The iterator comes in ecx (__fastcall). When the list pointer at it+8 is non-null (`test` / `je` at 0x00402163..0x00402165) the function returns the dword at +8 of the current node, whose pointer is at it+0xc (0x00402167..0x0040216a). Otherwise it returns 0 (0x0040216e) without reading it+0xc. A leaf without writes. Its callers are drawMenuList (0x004763d0) and optionListDraw (0x0049f370). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: listIterValue (12 vectors, 6 distinct results, `log/diff/00402160_listIterValue.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_01.cpp` as `?FUN_00402160@f_00402160@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040216d, 0x00402170): callee pops 0 bytes of stack arguments.

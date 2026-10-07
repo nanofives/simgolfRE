@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 47 bytes, 18 instructions, subsystem `util`. Mechanical
 advances a linked-list iterator: follows node at +0xc to its +0xc (next), increments index +0x14 wrapping at count +0x10, returns the node value at +8 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+listIterNext (0x00402130) advances a list iterator passed in ecx (__fastcall). It returns 0 when the list pointer at it+8 is NULL (`test` / `jne` at 0x00402133..0x00402135, `xor eax, eax` at 0x00402137). Otherwise it does four things. It moves the current node at it+0xc to that node's next pointer at +0xc (0x0040213a..0x00402143). It increments the index at it+0x14 (0x00402149, stored at 0x0040214c). It resets the index to 0 when it equals the count at it+0x10 (`cmp` / `jne` at 0x0040214a..0x0040214f, store at 0x00402151). It then returns the dword at +8 of the new current node (0x00402158..0x0040215b). A leaf. Its caller is drawMenuList (0x004763d0). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: listIterNext (12 vectors, 10 distinct results, 9 changing state, `log/diff/00402130_listIterNext.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_01.cpp` as `?FUN_00402130@f_00402130@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00402139, 0x0040215e): callee pops 0 bytes of stack arguments.

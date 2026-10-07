@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 42 bytes, 16 instructions, subsystem `ui`. Mechanical t
 linear-searches the token table at this+0x580 (stride 6 ints, terminator -1, max 0x100) for the entry equal to param_1 and returns its index (or -1) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+findMarkupTokenIndex (0x004a4ad0, thiscall, one argument key) searches the table of 0x18-byte entries at this+0x580 (0x004a4ad7; stride at 0x004a4ae9) and returns the index of the first entry whose leading dword equals key. Each entry is first compared with the terminator -1 (0x004a4adf / 0x004a4ae2 je), which ends the search with -1, so a key of -1 is never found and entries after the terminator are never reached; a match (0x004a4ae4 / 0x004a4ae6 je) returns its index; after 0x100 entries (0x004a4aec / 0x004a4af1 jl, signed) the result is -1 (`or eax, -1` at 0x004a4af3). Only the leading dword of an entry is compared. Its caller is expandTextMarkup (0x004942f0). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: findMarkupTokenIndex (14 vectors, 6 distinct results, `log/diff/004a4ad0_findMarkupTokenIndex.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_004a4ad0@C_FUN_004a4ad0@f_004a4ad0@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a4af7): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 35 bytes, 11 instructions, subsystem `util`. Mechanical
 Returns true if bucket index param_1 is out of range or its flag byte at +0x24 is zero. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+HashTable::bucketEmpty (0x00487770) takes a bucket index (thiscall, `ret 4`) and returns a byte. It returns 1 for an index above 15 (unsigned `cmp eax, 0xf` / `jbe` at 0x00487774..0x00487777, `mov al, 1` at 0x00487779). Otherwise it returns 1 when the flag byte of that bucket, at this + 0x24 + index * 0x1c (`lea edx, [eax*8]` / `sub edx, eax` / `mov al, [ecx+edx*4+0x24]` at 0x0048777e..0x00487787), is zero, and 0 when it is non-zero (`sete` at 0x0048778d). Only al is defined on return. Its caller is Snd::play (0x00484940). Reimplemented in `shim/src/re/c3r.cpp`; path-1 A/B GREEN: HashTable::bucketEmpty (24 vectors, 2 distinct results, `log/diff/00487770_HashTable_bucketEmpty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?isEmpty@C487770@@QAE_NI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048777b, 0x00487790): callee pops 4 bytes of stack arguments.

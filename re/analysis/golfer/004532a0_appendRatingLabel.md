@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 115 bytes, 43 instructions, subsystem `golfer`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 Appends a parenthesised rating adjective (poor..outstanding) to the text buffer. (`re/names/exe_1.tsv`)
 
+## Purpose
+appendRatingLabel (0x004532a0) appends a label for the value v to the text buffer 0x0051a068. A negative v (`jge` at 0x004532a8 not taken) selects the string at 0x004d3174. Otherwise q = v / 25 (multiply by 0x51eb851f and `sar edx, 3`, 0x004532b1..0x004532c0); q above 3 (unsigned `ja` at 0x004532c5) selects 0x004d3144, and the jump table 0x00453314 maps q 0 -> 0x004d316c, 1 -> 0x004d3164, 2 and 3 -> 0x004d3154. The append is the same inline strlen / `rep movs` copy as appendEndearment (0x004532e8..0x0045330e). __cdecl, no return value. Caller: showHoleStatsScreen (0x00453330). Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: appendRatingLabel (17 vectors, 5 distinct results, 17 changing state, `log/diff/004532a0_appendRatingLabel.path1.csv`); appendRatingLabel_q3 (17 vectors, 5 distinct results, 17 changing state, `log/diff/004532a0_appendRatingLabel_q3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f4532a0@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00453312): callee pops 0 bytes of stack arguments.

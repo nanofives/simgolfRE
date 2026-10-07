@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 52 bytes, 12 instructions, subsystem `sim`. Mechanical 
 appends (param_1,param_2,param_3) to the three parallel arrays at 0x00586b50/0x00586fa8/0x005a8834 indexed by the counter 0x005a9cd4 (capacity 0x100) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+pushTripleEntry (0x00409cb0) appends (a, b, c) to three parallel dword arrays: when the signed count dword 0x005a9cd4 is below 0x100 (`cmp` / `jge` at 0x00409cb5 / 0x00409cba) it stores a at 0x00586b50 + count*4, b at 0x00586fa8 + count*4 and c at 0x005a8834 + count*4 (0x00409cc4..0x00409cd6) and increments the count (0x00409cdd / 0x00409cde); at 0x100 or more it does nothing. __cdecl, no return value. Caller: mainLoop (0x0040f5c0). Reimplemented in `shim/src/re/c3q.cpp`; path-1 A/B GREEN: pushTripleEntry_n0 (10 vectors, 10 distinct results, 10 changing state, `log/diff/00409cb0_pushTripleEntry_n0.path1.csv`); pushTripleEntry_n7 (10 vectors, 10 distinct results, 10 changing state, `log/diff/00409cb0_pushTripleEntry_n7.path1.csv`); pushTripleEntry_n255 (10 vectors, 10 distinct results, 10 changing state, `log/diff/00409cb0_pushTripleEntry_n255.path1.csv`); pushTripleEntry_n256 (10 vectors, 1 distinct results, 0 changing state, `log/diff/00409cb0_pushTripleEntry_n256.path1.csv`); pushTripleEntry_big (10 vectors, 1 distinct results, 0 changing state, `log/diff/00409cb0_pushTripleEntry_big.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_01.cpp` as `?FUN_00409cb0@f_00409cb0@@YAXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00409ce3): callee pops 0 bytes of stack arguments.

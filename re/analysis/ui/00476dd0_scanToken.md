@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 70 bytes, 33 instructions, subsystem `ui`. Mechanical t
 scans the next markup token (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+scanToken (0x00476dd0, cdecl `char *(char *text, int *len)`) is skipToken (0x00476d80) with a seventh delimiter, '^' 0x5e (0x00476e00 / 0x00476e03): it returns `text` without writing *len when *len is 0 (0x00476dda / 0x00476dde je), otherwise advances over non-delimiters while decrementing the count (0x00476e05 / 0x00476e06) until a delimiter among '{' '}' '[' ']' '$' '=' '^' (0x00476de2..0x00476e03) or a zero count (0x00476e07 jne), stores the remaining count to *len (0x00476e09) and returns the stop pointer (0x00476e10). Its callers are measureMarkupRun (0x00476ef0), drawMarkupRun (0x00477280, C3) and drawRichText (0x004775b0). Reimplemented in `shim/src/re/c3s.cpp`; path-1 A/B GREEN: scanToken (16 vectors, 16 distinct results, 12 changing state, `log/diff/00476dd0_scanToken.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?scanToken476dd0@@YAPADPADPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00476e15): callee pops 0 bytes of stack arguments.
