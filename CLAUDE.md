@@ -298,6 +298,7 @@ files (9 promoted; clearBuffers held: its 10 vectors are one argument-free call 
 path still never runs), and c3j/c3k/c3l added 16 (119 at C3; propagateType11 held: one of 7 vectors does anything).
 Verify ONE batch per boot (parallel boots on instances are fine): running five batches' fixtures in one boot crashed
 at appendDate and made appendToBuffer45b8b0 RED once (its input text 0x51a068 is now in its state regions).
+Evidence review (2026-10-07): a GREEN with many distinct results can still miss branches. updateRollingStats (no arguments: one vector is one call over the fixture) never reached its acc <= 0 branch, freeAtTile hit 2 of 42 tiles, appendCourseTitle reached 2 of 4 suffix arms; all three now have fixtures that reach every branch (one registry entry per fixture variant: `_early`/`_late`, `_c`..`_f`) and are still GREEN. Before promoting, check which branches the fixture reaches, not only the spread.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

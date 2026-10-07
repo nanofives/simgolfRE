@@ -37,6 +37,12 @@ HOOKS.update({
     "addGolferPair": dict(module="golf_clean.exe", addr=0x004099F0, abi="default", ret="void", args=["int"],
                           fixture="c3e_addpair", state=[(0x0059FC60, 0, 0x390)],
                           vectors=[(g,) for g in (0, 1, 2, 3, 4, 5, 6, 7)]),
+    # updateRollingStats takes no arguments: one call sweeps 256 records, and the three entries differ only in the
+    # global date, which decides whether the 54 zeroed records are freed (c3e.js _c3e_rolling).
     "updateRollingStats": dict(module="golf_clean.exe", addr=0x00409BF0, abi="default", ret="void", args=[],
-                               fixture="c3e_rolling", state=[(0x005736B8, 0, 0x2410)], vectors=[()]),
+                               fixture="c3e_rolling", state=[(0x005736B0, 0, 0x2400)], vectors=[()]),
+    "updateRollingStats_early": dict(module="golf_clean.exe", addr=0x00409BF0, abi="default", ret="void", args=[],
+                                     fixture="c3e_rolling_early", state=[(0x005736B0, 0, 0x2400)], vectors=[()]),
+    "updateRollingStats_late": dict(module="golf_clean.exe", addr=0x00409BF0, abi="default", ret="void", args=[],
+                                    fixture="c3e_rolling_late", state=[(0x005736B0, 0, 0x2400)], vectors=[()]),
 })

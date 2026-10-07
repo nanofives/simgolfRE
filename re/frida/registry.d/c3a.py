@@ -46,7 +46,11 @@ HOOKS.update({
     # --- writers (state = the regions each one mutates) ---
     "freeAtTile": dict(module="golf_clean.exe", addr=0x00402930, abi="default", ret="void", args=["int", "int"],
                        fixture="c3a_records", state=[(0x005736B0, 0, 256 * 0x24)],
-                       vectors=[(tx, ty) for tx in (0, 1, 2, 7, 24, 48, 49) for ty in (0, 3, 13, 25, 48, 49)]),
+                       # a hit per seeded record tile (x = i % 50, y = 3i % 50: five records share each tile),
+                       # the negative tiles of records 250..255, then misses that match only x or only y
+                       vectors=[(i % 50, (3 * i) % 50) for i in (0, 1, 2, 7, 13, 24, 33, 48, 49, 120)]
+                               + [(-1, 0), (-2, 3), (-6, 15)]
+                               + [(tx, ty) for tx in (0, 7, 49) for ty in (13, 25)] + [(60, 0), (-1, 3)]),
     # c3i fix-up: c3i_raise seeds a uniform non-blocked type, column-parity tile bytes and a non-monotonic level grid
     # so raises actually fire (return 1 + a level-byte write) for most interior cells and the sameByte branch changes
     # the result for cells whose tallest neighbour is horizontal; local maxima still return 0 with no write.

@@ -90,21 +90,29 @@ Object.assign(globalThis.DIFF_FIXTURES, {
   // updateRollingStats 0x00409bf0 sweeps the 256 records at 0x005736b0 (stride 0x24) using fields at base+8..+0x20.
   // Seed live and free records (liveness base+8, -1 on every 7th) with varied accumulators so the fold/abs/decay,
   // the reset-when-<=0 and the free-when-stale (global date 0x00834170) paths all run.
-  c3e_rolling() {
+  // updateRollingStats 0x00409bf0 takes no arguments, so its vectors are the 256 records of one call; each fixture
+  // below is one call. Records cover every branch: i % 7 == 0 dead (skipped); i % 4 == 0 accumulators negative so
+  // acc <= 0 zeroes the record (54 records), freed when the date is past stamp + 0x400 (stamps alternate
+  // date - 0x500 / date); the others keep acc > 0 and take the -0x40 counter step. Counters -80..80 make [+0x10]/32
+  // differ from an arithmetic shift for negatives, and [+0xc] spans negative values for the /16 and >>4 steps.
+  _c3e_rolling(date) {
     const base = ptr('0x005736b0');
     for (let i = 0; i < 256; i++) {
       const r = base.add(i * 0x24);
-      r.add(8).writeS32((i % 7 === 0) ? -1 : (i * 13));  // base+8  = [esi-4] liveness
-      r.add(0xc).writeS32((i * 5) - 300);                // base+0xc  = [esi]
-      r.add(0x10).writeS32((i * 9) + 4);                 // base+0x10 = [esi+4] accumulator
-      r.add(0x14).writeS32((i * 3) & 0xff);              // base+0x14 = [esi+8] fold/abs arg
-      r.add(0x18).writeS32((i * 17) - 500);              // base+0x18 = [esi+0xc]
-      r.add(0x1c).writeS32(((i % 5) * 40) - 80);         // base+0x1c = [esi+0x10] counter
-      r.add(0x20).writeS32(i * 2);                       // base+0x20 = [esi+0x14] date stamp
+      r.add(8).writeS32((i % 7 === 0) ? -1 : (i * 13));     // base+8  = [esi-4] liveness
+      r.add(0xc).writeS32((i * 5) - 300);                    // base+0xc  = [esi]
+      r.add(0x10).writeS32(i % 4 === 0 ? -(i * 3) : (i * 9) + 4);  // base+0x10 = [esi+4] accumulator
+      r.add(0x14).writeS32((i * 3) & 0xff);                  // base+0x14 = [esi+8] fold/abs arg
+      r.add(0x18).writeS32((i * 17) - 500);                  // base+0x18 = [esi+0xc]
+      r.add(0x1c).writeS32(((i % 5) * 40) - 80);             // base+0x1c = [esi+0x10] counter
+      r.add(0x20).writeS32(i % 8 < 4 ? 0x4000 - 0x500 : 0x4000);  // base+0x20 = [esi+0x14] date stamp
     }
-    ptr('0x00834170').writeS32(0x4000);                  // global date
+    ptr('0x00834170').writeS32(date);                        // global date
     return { obj: base };
   },
+  c3e_rolling() { return globalThis.DIFF_FIXTURES._c3e_rolling(0x4000); },        // 27 zeroed records freed, 27 kept
+  c3e_rolling_early() { return globalThis.DIFF_FIXTURES._c3e_rolling(0); },       // none freed
+  c3e_rolling_late() { return globalThis.DIFF_FIXTURES._c3e_rolling(0x10000); },  // all 54 freed
 });
 
 // c3i fix-up (2026-10-06): wider fixtures for two leaves that were held back for too few vectors (the leaf gate needs

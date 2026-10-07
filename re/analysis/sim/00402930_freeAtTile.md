@@ -6,7 +6,7 @@ Module `golf_clean.exe`, 57 bytes, 20 instructions, subsystem `sim`. Mechanical 
 clears the record/occupancy entry at a given tile (`re/names/exe_0.tsv`)
 
 ## Purpose
-freeAtTile (0x00402930), over the 256 records at 0x005736b0 (stride 0x24; x at +0, y at +4, id at +8; loop bound 0x00575ab8 at 0x00402960), sets a live record's id (+8) to -1 when its tile `(x>>10, y>>10)` equals the argument `(tx, ty)` (`sar esi,0xa` at 0x00402946/0x00402950, compares at 0x00402949/0x00402953); records with id == -1 are skipped (0x0040293e). Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: freeAtTile (42 vectors, 3 distinct results, 2 changing state, `log/diff/00402930_freeAtTile.path1.csv`).
+freeAtTile (0x00402930), over the 256 records at 0x005736b0 (stride 0x24; x at +0, y at +4, id at +8; loop bound 0x00575ab8 at 0x00402960), sets a live record's id (+8) to -1 when its tile `(x>>10, y>>10)` equals the argument `(tx, ty)` (`sar esi,0xa` at 0x00402946/0x00402950, compares at 0x00402949/0x00402953); records with id == -1 are skipped (0x0040293e). Reimplemented in `shim/src/re/c3a.cpp`; path-1 A/B GREEN: freeAtTile (21 vectors, 14 distinct results, 13 changing state, `log/diff/00402930_freeAtTile.path1.csv`). Each of the 13 hit vectors frees the five records seeded on one tile (records 250..255 have negative x with a nonzero low part, so the tiles -1..-6 test the arithmetic shift); the other 8 match only x or only y (review 2026-10-07: the first run hit 2 of 42).
 
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?freeAtTile@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).

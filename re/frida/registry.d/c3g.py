@@ -44,6 +44,18 @@ HOOKS = {
     "appendCourseTitle_b": dict(module="golf_clean.exe", addr=0x0040DAA0, abi="default", ret="void", args=["int"],
                                 fixture="c3g_course_b", state=[(0x0051A068, 0, 256)],
                                 vectors=[(-1,), (0,), (1,), (2,)]),
+    "appendCourseTitle_c": dict(module="golf_clean.exe", addr=0x0040DAA0, abi="default", ret="void", args=["int"],
+                                fixture="c3g_course_c", state=[(0x0051A068, 0, 256)],
+                                vectors=[(-1,), (0,), (1,), (2,)]),
+    "appendCourseTitle_d": dict(module="golf_clean.exe", addr=0x0040DAA0, abi="default", ret="void", args=["int"],
+                                fixture="c3g_course_d", state=[(0x0051A068, 0, 256)],
+                                vectors=[(-1,), (0,), (1,), (2,)]),
+    "appendCourseTitle_e": dict(module="golf_clean.exe", addr=0x0040DAA0, abi="default", ret="void", args=["int"],
+                                fixture="c3g_course_e", state=[(0x0051A068, 0, 256)],
+                                vectors=[(-1,), (0,), (1,), (2,)]),
+    "appendCourseTitle_f": dict(module="golf_clean.exe", addr=0x0040DAA0, abi="default", ret="void", args=["int"],
+                                fixture="c3g_course_f", state=[(0x0051A068, 0, 256)],
+                                vectors=[(-1,), (0,), (1,), (2,)]),
     # Window::calcSizeFromCorners 0x00481760: max() over four corner objects into +0x1a4/+0x1a8. c3i fix-up (leaf gate
     # needs >= 10 vectors): ten window objects (alternating flag bit 0x10) with per-window corner sizes, each window's
     # +0x1a4 a region; each vector writes only its own window, so the ten give ten distinct (width, height) pairs.

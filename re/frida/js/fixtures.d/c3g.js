@@ -46,8 +46,23 @@ Object.assign(globalThis.DIFF_FIXTURES, {
     ptr('0x005685f0').writeS32(holes);
     return {};
   },
-  c3g_course_a() { return globalThis.DIFF_FIXTURES._c3g_course(5); },
-  c3g_course_b() { return globalThis.DIFF_FIXTURES._c3g_course(18); },
+  c3g_course_a() { return globalThis.DIFF_FIXTURES._c3g_course(5); },    // bucketValue(4) = 0 -> default arm
+  c3g_course_b() { return globalThis.DIFF_FIXTURES._c3g_course(18); },   // bucketValue(17) = 2
+  // review 2026-10-07: the two fixtures above reached two of the four suffix arms and always appended the site name
+  c3g_course_c() {                                                       // bucketValue(8) = 1, course 1 -> site 2
+    globalThis.DIFF_FIXTURES._c3g_course(9);
+    ptr('0x0059bf90').writeS32(1);
+    ptr('0x00571ff4').add(0x2e).writeU8(2);
+    ptr('0x004c1ea9').add(2 * 0x82).writeUtf8String('c3gSiteTwo');
+    return {};
+  },
+  c3g_course_d() { return globalThis.DIFF_FIXTURES._c3g_course(19); },   // bucketValue(18) = 3
+  c3g_course_e() { return globalThis.DIFF_FIXTURES._c3g_course(30); },   // bucketValue(29) = -1 -> default arm
+  c3g_course_f() {                                                       // appendString(0) returns 1: no site name
+    globalThis.DIFF_FIXTURES._c3g_course(9);
+    ptr('0x0059d81c').writeU16(0);                                       // string 0 at the table's first byte
+    return {};
+  },
 
   // Window::calcSizeFromCorners (0x00481760): four fake corner objects (width at +0x18, height at +0x1c) and four
   // window objects, two with flags byte +0x9c bit 0x10 set (corners +0x52c/+0x534/+0x530/+0x538) and two clear

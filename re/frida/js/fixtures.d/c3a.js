@@ -53,7 +53,9 @@ Object.assign(globalThis.DIFF_FIXTURES, {
     const base = ptr('0x005736b0');
     for (let i = 0; i < 256; i++) {
       const r = base.add(i * 0x24);
-      r.writeS32(((i % 50)) << 10);          // x -> tile i % 50
+      // x -> tile i % 50; records 250..255 get negative x (tile -1..-6 through the arithmetic >> 10) with a
+      // nonzero low part, so a logical shift or a division would select a different tile
+      r.writeS32(i >= 250 ? -((i - 249) << 10) + 5 : ((i % 50)) << 10);
       r.add(4).writeS32(((i * 3) % 50) << 10); // y -> tile (i*3) % 50
       r.add(8).writeS32(i);                   // id (live)
     }
