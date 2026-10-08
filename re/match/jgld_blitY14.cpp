@@ -23,7 +23,7 @@ public:
     virtual void* bits();                    // slot 8 (+0x20)
     virtual void unlock(int flag);           // slot 9 (+0x24)
     virtual void t10(); virtual void t11(); virtual void t12(); virtual void t13(); virtual void t14(); virtual void t15(); virtual void t16(); virtual void t17(); virtual void t18(); virtual void t19(); virtual void t20(); virtual void t21(); virtual void t22(); virtual void t23(); virtual void t24(); virtual void t25(); virtual void t26(); virtual void t27(); virtual void t28(); virtual void t29(); virtual void t30(); virtual void t31(); virtual void t32(); virtual void t33(); virtual void t34(); virtual void t35(); virtual void t36(); virtual void t37(); virtual void t38(); virtual void t39(); virtual void t40(); virtual void t41(); virtual void t42(); virtual void t43(); virtual void t44(); virtual void t45(); virtual void t46(); virtual void t47(); virtual void t48(); virtual void t49(); virtual void t50();
-    virtual RECT* boundsRect();              // slot 51 (+0xcc)
+    virtual RECT* clipRect();              // slot 51 (+0xcc)
     virtual void t52(); virtual void t53(); virtual void t54(); virtual void t55();
     virtual int pitch();                     // slot 56 (+0xe0)
     virtual int* format();                   // slot 57 (+0xe4)
@@ -133,7 +133,7 @@ int Sprite::draw16m_1001df80(Surface* dst, int x, int y, Surface* mask, unsigned
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             mask->unlock(2);
             dst->unlock(1);
             return 0;

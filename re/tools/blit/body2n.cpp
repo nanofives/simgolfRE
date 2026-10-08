@@ -27,7 +27,7 @@ int Sprite::NAME(Surface* dst, int x, int yPARAMS)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -71,7 +71,7 @@ int Sprite::NAME(Surface* dst, int x, int yPARAMS)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }

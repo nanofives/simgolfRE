@@ -77,7 +77,7 @@ int Sprite::NAME(FPARAMS)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             mask->unlock(1);
             dst->unlock(1);
             return 0;

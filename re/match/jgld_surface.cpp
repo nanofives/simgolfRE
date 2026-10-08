@@ -64,9 +64,9 @@ public:
     virtual void v48();
     virtual void v49();
     virtual void getClipRect(RECT* r);       // slot 50 (+0xc8)
-    virtual RECT* boundsRect();              // slot 51 (+0xcc)
+    virtual RECT* clipRect();                // slot 51 (+0xcc): returns this+0x44 (add eax,0x44 at 0x1000a9b0)
     virtual void v52();
-    virtual RECT* clipRect();                // slot 53 (+0xd4)
+    virtual RECT* boundsRect();              // slot 53 (+0xd4): returns this+0x54 (add eax,0x54 at 0x1000aa50)
     virtual int width();                 // slot 54 (+0xd8)
     virtual int height();                // slot 55 (+0xdc)
     virtual int pitch();                     // slot 56 (+0xe0)
@@ -544,7 +544,7 @@ int Surface::fill8(int x, int y, int w, int h, int c1, int c2)
     char* bits;
     int skip;
     setRect(&r, x, y, w, h);
-    if (!intersect(&r, boundsRect(), &r))
+    if (!intersect(&r, clipRect(), &r))
         return 0;
     bits = (char*)lockAt8(r.left, r.top);
     if (bits == 0)
@@ -587,7 +587,7 @@ int Surface::fill16(int x, int y, int w, int h, int c1, int c2)
     short* bits;
     int skip;
     setRect(&r, x, y, w, h);
-    if (!intersect(&r, boundsRect(), &r))
+    if (!intersect(&r, clipRect(), &r))
         return 0;
     bits = (short*)lockAt16(r.left, r.top);
     if (bits == 0)
@@ -633,7 +633,7 @@ int Surface::fill2_8(int l, int t, int r, int b, int lut)
     if (lut == 0)
         return 0x10;
     setRectLTRB(&rc, l, t, r, b);
-    if (!intersect(&rc, &rc, boundsRect()))
+    if (!intersect(&rc, &rc, clipRect()))
         return 0;
     w = rectWidth(&rc);
     h = rectHeight(&rc);
@@ -683,7 +683,7 @@ int Surface::blit16from16(RECT* r, Surface* src, int alpha, int table)
     int tbl;
     shade = (15 - (int)(alpha / 100.0f * 15.0f)) * 0x8000;
     tbl = table;
-    if (!IntersectRect(r, r, clipRect()))
+    if (!IntersectRect(r, r, boundsRect()))
         return 3;
     d = (unsigned short*)lockAt16(r->left, r->top);
     s = (unsigned short*)src->lockAt16(r->left, r->top);
@@ -738,7 +738,7 @@ int Surface::blit16from16(RECT* r, Surface* src, int alpha, int table)
 void Surface::hline(int x1, int x2, int y, int c)
 {
     void* p;
-    if (y < boundsRect()->top || y >= boundsRect()->bottom)
+    if (y < clipRect()->top || y >= clipRect()->bottom)
         return;
     if (x1 == x2)
         return;
@@ -747,12 +747,12 @@ void Surface::hline(int x1, int x2, int y, int c)
         x2 ^= x1;
         x1 ^= x2;
     }
-    if (x1 >= boundsRect()->right || x2 < boundsRect()->left)
+    if (x1 >= clipRect()->right || x2 < clipRect()->left)
         return;
-    if (x1 < boundsRect()->left)
-        x1 = boundsRect()->left;
-    if (x2 >= boundsRect()->right)
-        x2 = boundsRect()->right - 1;
+    if (x1 < clipRect()->left)
+        x1 = clipRect()->left;
+    if (x2 >= clipRect()->right)
+        x2 = clipRect()->right - 1;
     p = lockAt8(x1, y);
     if (p == 0)
         return;
@@ -764,7 +764,7 @@ void Surface::vline(int x, int y1, int y2, int c)
 {
     char* p;
     int step;
-    if (x < boundsRect()->left || x >= boundsRect()->right)
+    if (x < clipRect()->left || x >= clipRect()->right)
         return;
     if (y1 == y2)
         return;
@@ -773,12 +773,12 @@ void Surface::vline(int x, int y1, int y2, int c)
         y2 ^= y1;
         y1 ^= y2;
     }
-    if (y1 >= boundsRect()->bottom || y2 < boundsRect()->top)
+    if (y1 >= clipRect()->bottom || y2 < clipRect()->top)
         return;
-    if (y1 < boundsRect()->top)
-        y1 = boundsRect()->top;
-    if (y2 >= boundsRect()->bottom)
-        y2 = boundsRect()->bottom - 1;
+    if (y1 < clipRect()->top)
+        y1 = clipRect()->top;
+    if (y2 >= clipRect()->bottom)
+        y2 = clipRect()->bottom - 1;
     p = (char*)lockAt8(x, y1);
     if (p == 0)
         return;
@@ -1207,7 +1207,7 @@ done:
 void Surface::dashedHLine8(int x1, int x2, int y, int c1, int c2, int len1, int len2, int phase)
 {
     char* p;
-    if (y < boundsRect()->top || y >= boundsRect()->bottom)
+    if (y < clipRect()->top || y >= clipRect()->bottom)
         return;
     if (x1 == x2)
         return;
@@ -1225,12 +1225,12 @@ void Surface::dashedHLine8(int x1, int x2, int y, int c1, int c2, int len1, int 
         c1 ^= c2;
         phase = len1 + len2 - phase;
     }
-    if (x1 >= boundsRect()->right || x2 < boundsRect()->left)
+    if (x1 >= clipRect()->right || x2 < clipRect()->left)
         return;
-    if (x1 < boundsRect()->left)
-        x1 = boundsRect()->left;
-    if (x2 >= boundsRect()->right)
-        x2 = boundsRect()->right - 1;
+    if (x1 < clipRect()->left)
+        x1 = clipRect()->left;
+    if (x2 >= clipRect()->right)
+        x2 = clipRect()->right - 1;
     p = (char*)lockAt8(x1, y);
     if (p == 0)
         return;
@@ -1348,7 +1348,7 @@ void Surface::dashedVLine8(int x, int y1, int y2, int c1, int c2, int len1, int 
 {
     char* p;
     int step;
-    if (x < boundsRect()->left || x >= boundsRect()->right)
+    if (x < clipRect()->left || x >= clipRect()->right)
         return;
     if (y1 == y2)
         return;
@@ -1366,12 +1366,12 @@ void Surface::dashedVLine8(int x, int y1, int y2, int c1, int c2, int len1, int 
         c1 ^= c2;
         phase = len1 + len2 - phase;
     }
-    if (y1 >= boundsRect()->bottom || y2 < boundsRect()->top)
+    if (y1 >= clipRect()->bottom || y2 < clipRect()->top)
         return;
-    if (y1 < boundsRect()->top)
-        y1 = boundsRect()->top;
-    if (y2 >= boundsRect()->bottom)
-        y2 = boundsRect()->bottom - 1;
+    if (y1 < clipRect()->top)
+        y1 = clipRect()->top;
+    if (y2 >= clipRect()->bottom)
+        y2 = clipRect()->bottom - 1;
     p = (char*)lockAt8(x, y1);
     if (p == 0)
         return;
@@ -1488,12 +1488,12 @@ void Surface::clear8(int c)
     int h;
     unsigned int w;
     void* p;
-    if (!equal(boundsRect(), clipRect()))
-        fillRectC(boundsRect(), c);
+    if (!equal(clipRect(), boundsRect()))
+        fillRectC(clipRect(), c);
     else {
         p = bits();
-        h = clipRect()->bottom;
-        w = clipRect()->right;
+        h = boundsRect()->bottom;
+        w = boundsRect()->right;
     __asm {
         pushf
         push edi
@@ -1537,7 +1537,7 @@ int Surface::op2_8(int* rp, unsigned c)
         return 0;
     }
     rc = *(RECT*)rp;
-    if (!intersect(&rc, &rc, boundsRect()))
+    if (!intersect(&rc, &rc, clipRect()))
         return 0;
     p = (char*)lockAt8(rc.left, rc.top);
     if (p == 0)
@@ -1590,9 +1590,9 @@ int Surface::op2b_8(int* rp, unsigned c)
     RECT rc;
     p = 0;
     if (rp == 0)
-        rp = (int*)clipRect();
+        rp = (int*)boundsRect();
     rc = *(RECT*)rp;
-    if (intersect(&rc, &rc, boundsRect())) {
+    if (intersect(&rc, &rc, clipRect())) {
         p = (char*)lockAt8(rc.left, rc.top);
         if (p) {
             h = rc.bottom - rc.top;
@@ -1675,7 +1675,7 @@ int Surface::blit8from8(Surface* src, int x, int y, int sx, int sy, int w, int h
     if (y + h > height())
         h = height() - y;
     setRect(&rc, sx, sy, w, h);
-    if (!intersect(&rc, &rc, src->boundsRect()))
+    if (!intersect(&rc, &rc, src->clipRect()))
         return 0;
     x += rc.left - sx;
     y += rc.top - sy;

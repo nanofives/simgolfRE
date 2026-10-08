@@ -1,6 +1,6 @@
 // FLAGS jgld.dll: /Od /ZI /GZ
 // jgld.dll 16-bit surface clear (debug build). Surface and its palette are re-declared with only the slots used
-// here (jgld_surface.cpp names: boundsRect +0xcc, clipRect +0xd4, format +0xe4). Names are chosen here.
+// here (jgld_surface.cpp names: clipRect +0xcc, boundsRect +0xd4, format +0xe4). Names are chosen here.
 #include <windows.h>
 class Pal16 {
 public:
@@ -32,9 +32,9 @@ public:
     virtual void t10(); virtual void t11(); virtual void t12(); virtual void t13(); virtual void t14(); virtual void t15(); virtual void t16();
     virtual void fillRectC(RECT* r, int c);  // slot 17 (+0x44)
     virtual void u18(); virtual void u19(); virtual void u20(); virtual void u21(); virtual void u22(); virtual void u23(); virtual void u24(); virtual void u25(); virtual void u26(); virtual void u27(); virtual void u28(); virtual void u29(); virtual void u30(); virtual void u31(); virtual void u32(); virtual void u33(); virtual void u34(); virtual void u35(); virtual void u36(); virtual void u37(); virtual void u38(); virtual void u39(); virtual void u40(); virtual void u41(); virtual void u42(); virtual void u43(); virtual void u44(); virtual void u45(); virtual void u46(); virtual void u47(); virtual void u48(); virtual void u49(); virtual void u50();
-    virtual RECT* boundsRect();              // slot 51 (+0xcc)
+    virtual RECT* clipRect();              // slot 51 (+0xcc)
     virtual void w52();
-    virtual RECT* clipRect();                // slot 53 (+0xd4)
+    virtual RECT* boundsRect();                // slot 53 (+0xd4)
     virtual int width();                     // slot 54 (+0xd8)
     virtual int height();                    // slot 55 (+0xdc)
     virtual int pitch();                     // slot 56 (+0xe0)
@@ -76,14 +76,14 @@ void Surface::clear16(unsigned c)
             }
         }
     }
-    if (!equal(boundsRect(), clipRect())) {
-        fillRectC(boundsRect(), c);
+    if (!equal(clipRect(), boundsRect())) {
+        fillRectC(clipRect(), c);
         return;
     }
     c &= 0xffff;
     bits = lock();
-    h = clipRect()->bottom;
-    w = clipRect()->right;
+    h = boundsRect()->bottom;
+    w = boundsRect()->right;
     fillWords(bits, (unsigned short)c, w * h);
     unlock(1);
 }
@@ -120,7 +120,7 @@ int Surface::fillRect16(const RECT* r, unsigned c)
     }
     c &= 0xffff;
     rc = *r;
-    if (!intersect(&rc, &rc, boundsRect()))
+    if (!intersect(&rc, &rc, clipRect()))
         return 0;
     dst = lockAt16(rc.left, rc.top);
     if (dst == 0)
@@ -168,10 +168,10 @@ int Surface::ditherRect16(const RECT* r, unsigned c)
     if (err == 0) {
         c &= 0xffff;
         if (r == 0)
-            rc = *clipRect();
+            rc = *boundsRect();
         else
             rc = *r;
-        if (intersect(&rc, &rc, boundsRect())) {
+        if (intersect(&rc, &rc, clipRect())) {
             p = (unsigned short*)lockAt16(rc.left, rc.top);
             if (p) {
                 h = rc.bottom - rc.top;
@@ -239,10 +239,10 @@ int Surface::blendRect16(const RECT* r, unsigned c, int alpha)
     if (err == 0) {
         c &= 0xffff;
         if (r == 0)
-            rc = *clipRect();
+            rc = *boundsRect();
         else
             rc = *r;
-        if (intersect(&rc, &rc, boundsRect())) {
+        if (intersect(&rc, &rc, clipRect())) {
             p = (unsigned short*)lockAt16(rc.left, rc.top);
             if (p) {
                 h = rc.bottom - rc.top;
@@ -315,10 +315,10 @@ int Surface::ditherBlendRect16(const RECT* r, unsigned c, int alpha)
     if (err == 0) {
         c &= 0xffff;
         if (r == 0)
-            rc = *clipRect();
+            rc = *boundsRect();
         else
             rc = *r;
-        if (intersect(&rc, &rc, boundsRect())) {
+        if (intersect(&rc, &rc, clipRect())) {
             p = (unsigned short*)lockAt16(rc.left, rc.top);
             if (p) {
                 h = rc.bottom - rc.top;
@@ -362,7 +362,7 @@ void Surface::hline16(int x1, int x2, int y, unsigned c)
     unsigned short* p;
     Pal16* pal;
     int n;
-    if (y < boundsRect()->top || y >= boundsRect()->bottom)
+    if (y < clipRect()->top || y >= clipRect()->bottom)
         return;
     if (x1 == x2)
         return;
@@ -391,12 +391,12 @@ void Surface::hline16(int x1, int x2, int y, unsigned c)
         x2 ^= x1;
         x1 ^= x2;
     }
-    if (x1 >= boundsRect()->right || x2 < boundsRect()->left)
+    if (x1 >= clipRect()->right || x2 < clipRect()->left)
         return;
-    if (x1 < boundsRect()->left)
-        x1 = boundsRect()->left;
-    if (x2 >= boundsRect()->right)
-        x2 = boundsRect()->right - 1;
+    if (x1 < clipRect()->left)
+        x1 = clipRect()->left;
+    if (x2 >= clipRect()->right)
+        x2 = clipRect()->right - 1;
     p = (unsigned short*)lockAt16(x1, y);
     if (p == 0)
         return;
@@ -412,7 +412,7 @@ void Surface::vline16(int x, int y1, int y2, unsigned c)
     unsigned short* p;
     int stride;
     Pal16* pal;
-    if (x < boundsRect()->left || x >= boundsRect()->right)
+    if (x < clipRect()->left || x >= clipRect()->right)
         return;
     if (y1 == y2)
         return;
@@ -441,12 +441,12 @@ void Surface::vline16(int x, int y1, int y2, unsigned c)
         y2 ^= y1;
         y1 ^= y2;
     }
-    if (y1 >= boundsRect()->bottom || y2 < boundsRect()->top)
+    if (y1 >= clipRect()->bottom || y2 < clipRect()->top)
         return;
-    if (y1 < boundsRect()->top)
-        y1 = boundsRect()->top;
-    if (y2 >= boundsRect()->bottom)
-        y2 = boundsRect()->bottom - 1;
+    if (y1 < clipRect()->top)
+        y1 = clipRect()->top;
+    if (y2 >= clipRect()->bottom)
+        y2 = clipRect()->bottom - 1;
     p = (unsigned short*)lockAt16(x, y1);
     if (p == 0)
         return;
@@ -500,7 +500,7 @@ int Surface::blitKey8to16(Surface* dst, int sx, int sy, int dx, int dy, int w, i
     if (sy + h > height())
         h = height() - sy;
     setRect(&rc, dx, dy, w, h);
-    if (!intersect(&rc, &rc, dst->boundsRect()))
+    if (!intersect(&rc, &rc, dst->clipRect()))
         return 0;
     if (m_palette)
         pal = m_palette;

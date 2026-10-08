@@ -32,7 +32,7 @@ int Sprite::NAME(FPARAMS)
     }
     setRect(&rc, x, y, m_width, m_height);
     orig = rc;
-    if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+    if (!IntersectRect(&rc, &rc, dst->clipRect())) {
         dst->unlock(1);
         return 0;
     }

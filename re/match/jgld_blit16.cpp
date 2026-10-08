@@ -23,7 +23,7 @@ public:
     virtual void* bits();                    // slot 8 (+0x20)
     virtual void unlock(int flag);           // slot 9 (+0x24)
     virtual void t10(); virtual void t11(); virtual void t12(); virtual void t13(); virtual void t14(); virtual void t15(); virtual void t16(); virtual void t17(); virtual void t18(); virtual void t19(); virtual void t20(); virtual void t21(); virtual void t22(); virtual void t23(); virtual void t24(); virtual void t25(); virtual void t26(); virtual void t27(); virtual void t28(); virtual void t29(); virtual void t30(); virtual void t31(); virtual void t32(); virtual void t33(); virtual void t34(); virtual void t35(); virtual void t36(); virtual void t37(); virtual void t38(); virtual void t39(); virtual void t40(); virtual void t41(); virtual void t42(); virtual void t43(); virtual void t44(); virtual void t45(); virtual void t46(); virtual void t47(); virtual void t48(); virtual void t49(); virtual void t50();
-    virtual RECT* boundsRect();              // slot 51 (+0xcc)
+    virtual RECT* clipRect();              // slot 51 (+0xcc)
     virtual void t52(); virtual void t53(); virtual void t54(); virtual void t55();
     virtual int pitch();                     // slot 56 (+0xe0)
     virtual int* format();                   // slot 57 (+0xe4)
@@ -140,7 +140,7 @@ int Sprite::draw16_1001bc40(Surface* dst, int x, int y)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -308,7 +308,7 @@ int Sprite::draw16_1001bc40(Surface* dst, int x, int y)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -617,7 +617,7 @@ int Sprite::draw16_1001cde0(Surface* dst, int x, int y)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -785,7 +785,7 @@ int Sprite::draw16_1001cde0(Surface* dst, int x, int y)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -1094,7 +1094,7 @@ int Sprite::draw16_10022a10(Surface* dst, int x, int y, int p4, int p5)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -1426,7 +1426,7 @@ int Sprite::draw16_10022a10(Surface* dst, int x, int y, int p4, int p5)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -1899,7 +1899,7 @@ int Sprite::draw16_10024140(Surface* dst, int x, int y, int p4, int p5)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -2255,7 +2255,7 @@ int Sprite::draw16_10024140(Surface* dst, int x, int y, int p4, int p5)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -2752,7 +2752,7 @@ int Sprite::draw16_1002d890(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -3036,7 +3036,7 @@ int Sprite::draw16_1002d890(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -3461,7 +3461,7 @@ int Sprite::draw16_1002ed60(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -3761,7 +3761,7 @@ int Sprite::draw16_1002ed60(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -4202,7 +4202,7 @@ int Sprite::draw16_10030290(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -4502,7 +4502,7 @@ int Sprite::draw16_10030290(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -4943,7 +4943,7 @@ int Sprite::draw16_100317c0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -5259,7 +5259,7 @@ int Sprite::draw16_100317c0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -5716,7 +5716,7 @@ int Sprite::draw16_10032d60(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -6032,7 +6032,7 @@ int Sprite::draw16_10032d60(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -6489,7 +6489,7 @@ int Sprite::draw16_10034300(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -6805,7 +6805,7 @@ int Sprite::draw16_10034300(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -7262,7 +7262,7 @@ int Sprite::draw16_100358b0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -7578,7 +7578,7 @@ int Sprite::draw16_100358b0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -8035,7 +8035,7 @@ int Sprite::draw16_10036e60(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -8367,7 +8367,7 @@ int Sprite::draw16_10036e60(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -8840,7 +8840,7 @@ int Sprite::draw16_10038460(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -9172,7 +9172,7 @@ int Sprite::draw16_10038460(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -9645,7 +9645,7 @@ int Sprite::draw16_10039a60(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -9977,7 +9977,7 @@ int Sprite::draw16_10039a60(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -10450,7 +10450,7 @@ int Sprite::draw16_1003b060(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -10782,7 +10782,7 @@ int Sprite::draw16_1003b060(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -11255,7 +11255,7 @@ int Sprite::draw16_1003c660(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -11595,7 +11595,7 @@ int Sprite::draw16_1003c660(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -12076,7 +12076,7 @@ int Sprite::draw16_1003dca0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -12416,7 +12416,7 @@ int Sprite::draw16_1003dca0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -12897,7 +12897,7 @@ int Sprite::draw16_1003f2e0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -13237,7 +13237,7 @@ int Sprite::draw16_1003f2e0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -13718,7 +13718,7 @@ int Sprite::draw16_10040930(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -14058,7 +14058,7 @@ int Sprite::draw16_10040930(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -14539,7 +14539,7 @@ int Sprite::draw16_10041f80(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -14819,7 +14819,7 @@ int Sprite::draw16_10041f80(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -15240,7 +15240,7 @@ int Sprite::draw16_10043430(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -15536,7 +15536,7 @@ int Sprite::draw16_10043430(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -15973,7 +15973,7 @@ int Sprite::draw16_10044940(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -16269,7 +16269,7 @@ int Sprite::draw16_10044940(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -16706,7 +16706,7 @@ int Sprite::draw16_10045e50(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -17018,7 +17018,7 @@ int Sprite::draw16_10045e50(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -17471,7 +17471,7 @@ int Sprite::draw16_100473b0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -17783,7 +17783,7 @@ int Sprite::draw16_100473b0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -18236,7 +18236,7 @@ int Sprite::draw16_10048910(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -18548,7 +18548,7 @@ int Sprite::draw16_10048910(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -19001,7 +19001,7 @@ int Sprite::draw16_10049ea0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -19313,7 +19313,7 @@ int Sprite::draw16_10049ea0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -19766,7 +19766,7 @@ int Sprite::draw16_1004b430(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -20094,7 +20094,7 @@ int Sprite::draw16_1004b430(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -20563,7 +20563,7 @@ int Sprite::draw16_1004ca10(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -20891,7 +20891,7 @@ int Sprite::draw16_1004ca10(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -21360,7 +21360,7 @@ int Sprite::draw16_1004dff0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -21688,7 +21688,7 @@ int Sprite::draw16_1004dff0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -22157,7 +22157,7 @@ int Sprite::draw16_1004f5d0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -22485,7 +22485,7 @@ int Sprite::draw16_1004f5d0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -22954,7 +22954,7 @@ int Sprite::draw16_10050bb0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -23290,7 +23290,7 @@ int Sprite::draw16_10050bb0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -23767,7 +23767,7 @@ int Sprite::draw16_100521d0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -24103,7 +24103,7 @@ int Sprite::draw16_100521d0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -24580,7 +24580,7 @@ int Sprite::draw16_100537f0(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -24916,7 +24916,7 @@ int Sprite::draw16_100537f0(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -25393,7 +25393,7 @@ int Sprite::draw16_10054e20(Surface* dst, int x, int y, char flag)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -25729,7 +25729,7 @@ int Sprite::draw16_10054e20(Surface* dst, int x, int y, char flag)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -26206,7 +26206,7 @@ int Sprite::draw16_10056450(Surface* dst, int x, int y)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -26398,7 +26398,7 @@ int Sprite::draw16_10056450(Surface* dst, int x, int y)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -26731,7 +26731,7 @@ int Sprite::draw16_100576a0(Surface* dst, int x, int y)
     if (abs(g_10122dc0) == abs(g_10122dc8) && abs(g_10122dc4) == abs(g_10122dc8)) {
         setRect(&rc, x, y, m_width, m_height);
         orig = rc;
-        if (!IntersectRect(&rc, &rc, dst->boundsRect())) {
+        if (!IntersectRect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
@@ -26939,7 +26939,7 @@ int Sprite::draw16_100576a0(Surface* dst, int x, int y)
     } else {
         setRect(&rc, x + (int)g_1012858c, y + (int)g_10128590, (int)(m_width * g_1012858c), (int)(m_height * g_10128590));
         orig = rc;
-        if (!intersect(&rc, &rc, dst->boundsRect())) {
+        if (!intersect(&rc, &rc, dst->clipRect())) {
             dst->unlock(1);
             return 0;
         }
