@@ -4,6 +4,43 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-08  sound.dll:00041020  codecWindowFeatures  C2->C3  log/diff/00041020_sound_codecWindowFeatures.path1.csv
+2026-10-08  sound.dll:0003f720  codecFeatureDecision  C1->C2  re/analysis/audio/0003f720_sound_codecFeatureDecision.md
+2026-10-08  sound.dll:0003f720  codecFeatureDecision  C0->C1  caller 0x1003c640 (codecStageDispatch); callees 0x10041020 (codecWindowFeatures), 0x1003e400 (floatFloorToInt), 0x10043204 (sqrt); tables 0x10064e10 (row thresholds), 0x10064c7c / 0x10064c54 (bias and 8 weights per 0x28-byte row); constants 0x1005ec68 (63.0), 0x1005ebfc (64.0), 0x1005ec00 (0.0)
+2026-10-08  jgld.dll:000a0340  inflate_fast  C2->C3  log/diff/000a0340_jgld_inflate_fast.path1.csv
+2026-10-08  jgld.dll:0009f370  inflate_codes  C2->C3  log/diff/0009f370_jgld_inflate_codes.path1.csv
+2026-10-08  jgld.dll:0007e120  png_set_sRGB_gAMA_and_cHRM  C2->C3  log/diff/0007e120_jgld_png_set_sRGB_gAMA_and_cHRM.path1.csv
+2026-10-08  jgld.dll:0007c810  png_do_read_interlace  C2->C3  log/diff/0007c810_jgld_png_do_read_interlace.path1.csv
+2026-10-08  jgld.dll:0007c310  png_combine_row  C2->C3  log/diff/0007c310_jgld_png_combine_row.path1.csv
+2026-10-08  jgld.dll:00077300  png_do_expand  C2->C3  log/diff/00077300_jgld_png_do_expand.path1.csv
+2026-10-08  jgld.dll:00076760  png_do_gamma  C2->C3  log/diff/00076760_jgld_png_do_gamma.path1.csv
+2026-10-08  jgld.dll:000736c0  png_do_rgb_to_gray  C2->C3  log/diff/000736c0_jgld_png_do_rgb_to_gray.path1.csv
+2026-10-08  jgld.dll:00072bd0  png_do_read_filler  C2->C3  log/diff/00072bd0_jgld_png_do_read_filler.path1.csv
+2026-10-08  jgld.dll:0006dac0  png_do_strip_filler  C2->C3  log/diff/0006dac0_jgld_png_do_strip_filler.path1.csv
+2026-10-08  sound.dll:000414f0  codecAmdfPitch  C2->C3  log/diff/000414f0_sound_codecAmdfPitch.path1.csv
+2026-10-08  sound.dll:00040ab0  codecMarkCorrelationJumps  C2->C3  log/diff/00040ab0_sound_codecMarkCorrelationJumps.path1.csv
+2026-10-08  sound.dll:0003f310  codecGainSmoother  C2->C3  log/diff/0003f310_sound_codecGainSmoother.path1.csv
+2026-10-08  sound.dll:0003e6d0  gaussSolveClamped  C2->C3  log/diff/0003e6d0_sound_gaussSolveClamped.path1.csv
+2026-10-08  sound.dll:0003bf30  bitPermute  C2->C3  log/diff/0003bf30_sound_bitPermute.path1.csv
+2026-10-08  sound.dll:00024b80  Seq_scheduleEvent  C2->C3  log/diff/00024b80_sound_Seq_scheduleEvent.path1.csv
+2026-10-08  sound.dll:00023a60  Seq_cmdHandler10  C2->C3  log/diff/00023a60_sound_Seq_cmdHandler10.path1.csv
+2026-10-08  sound.dll:000213d0  Midi_Device::setChannelVolume  C2->C3  log/diff/000213d0_sound_Midi_Device_setChannelVolume.path1.csv
+2026-10-08  jgld.dll:0001bae0  Sprite::remap8  C2->C3  log/diff/0001bae0_jgld_Sprite_remap8.path1.csv
+2026-10-08  jgld.dll:00012db0  Surface::blitT_8to16  C2->C3  log/diff/00012db0_jgld_Surface_blitT_8to16.path1.csv
+2026-10-08  jgld.dll:0000ed70  Surface::blitT_16to16  C2->C3  log/diff/0000ed70_jgld_Surface_blitT_16to16.path1.csv
+2026-10-08  jgld.dll:0000afe0  Surface::fill16  C2->C3  log/diff/0000afe0_jgld_Surface_fill16.path1.csv
+2026-10-08  004b5ad0  per_scan_setup  C2->C3  log/diff/004b5ad0_per_scan_setup.path1.csv
+2026-10-08  004b52a0  initial_setup  C2->C3  log/diff/004b52a0_initial_setup.path1.csv
+2026-10-08  004b4a60  jinit_color_converter  C2->C3  log/diff/004b4a60_jinit_color_converter.path1.csv
+2026-10-08  004b4040  jinit_downsampler  C2->C3  log/diff/004b4040_jinit_downsampler.path1.csv
+2026-10-08  004b3f10  create_context_buffer  C2->C3  log/diff/004b3f10_create_context_buffer.path1.csv
+2026-10-08  004b3a80  jinit_c_prep_controller  C2->C3  log/diff/004b3a80_jinit_c_prep_controller.path1.csv
+2026-10-08  004b0560  jinit_c_main_controller  C2->C3  log/diff/004b0560_jinit_c_main_controller.path1.csv
+2026-10-08  004ae990  jpeg_set_colorspace  C2->C3  log/diff/004ae990_jpeg_set_colorspace.path1.csv
+2026-10-08  00487050  BinkPlayer::setTarget  C2->C3  log/diff/00487050_BinkPlayer_setTarget.path1.csv
+2026-10-08  Terrain.dll:00013670  Tile::blendFaceTextures  C2->C3  log/diff/00013670_Terrain_Tile_blendFaceTextures.path1.csv
+2026-10-08  Terrain.dll:00013500  Tile::reblendNeighbourhood  C2->C3  log/diff/00013500_Terrain_Tile_reblendNeighbourhood.path1.csv
+2026-10-08  Terrain.dll:00011ef0  Tile::smoothNormals  C2->C3  log/diff/00011ef0_Terrain_Tile_smoothNormals.path1.csv
 2026-10-08  sound.dll:0003e400  floatFloorToInt  C2->C3  log/diff/0003e400_sound_floatFloorToInt.path1.csv
 2026-10-08  sound.dll:0003e380  floatCopySign  C2->C3  log/diff/0003e380_sound_floatCopySign.path1.csv
 2026-10-08  sound.dll:00041020  codecWindowFeatures  C1->C2  re/analysis/audio/00041020_sound_codecWindowFeatures.md

@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $n10 $pa0 $pb0 $x_ramp $py0 $ctx0,0,0,True,d284929f,d284929f,True
+0 $n10 $pa1 $pb1 $x_max $py1 $ctx0,0,0,True,07a8fcaa,07a8fcaa,True
+2 $n10 $pa2 $pb2 $x_mix $py2 $ctx1,0,0,True,251351c0,251351c0,True
+0 $n4 $pa3 $pb3 $x_ramp $py3 $ctx1,0,0,True,3b985c1f,3b985c1f,True
+0 $n0 $pa4 $pb4 $x_zero $py4 $ctx0,0,0,True,7051d3aa,7051d3aa,True
+0 $n10 $pa5 $pb5 $x_neg $py5 $ctx2,0,0,True,95113696,95113696,True
+1 $n10 $pa6 $pb6 $px6 $b_all1 $ctx0,0,0,True,e39461cf,e39461cf,True
+1 $n10 $pa7 $pb7 $px7 $b_all0 $ctx0,0,0,True,03ae0536,03ae0536,True
+1 $n10 $pa8 $pb8 $px8 $b_alt $ctx0,0,0,True,d1be3ec5,d1be3ec5,True
+1 $n10 $pa9 $pb9 $px9 $b_pat $ctx0,0,0,True,b28651f3,b28651f3,True
+1 $n4 $pa10 $pb10 $px10 $b_all1 $ctx0,0,0,True,ffd5dcf6,ffd5dcf6,True
+1 $n1 $pa11 $pb11 $px11 $b_alt $ctx0,0,0,True,f56a9151,f56a9151,True
+1 $n0 $pa12 $pb12 $px12 $b_pat $ctx0,0,0,True,e308f4f5,e308f4f5,True
+1 $n10 $pa13 $pb13 $px13 $py13 $ctx0,0,0,True,37edb584,37edb584,True
+state_regions,$pa0+0x0:4 $pa1+0x0:4 $pa2+0x0:4 $pa3+0x0:4 $pa4+0x0:4 $pa5+0x0:4 $pa6+0x0:4 $pa7+0x0:4 $pa8+0x0:4 $pa9+0x0:4 $pa10+0x0:4 $pa11+0x0:4 $pa12+0x0:4 $pa13+0x0:4 $pb0+0x0:4 $pb1+0x0:4 $pb2+0x0:4 $pb3+0x0:4 $pb4+0x0:4 $pb5+0x0:4 $pb6+0x0:4 $pb7+0x0:4 $pb8+0x0:4 $pb9+0x0:4 $pb10+0x0:4 $pb11+0x0:4 $pb12+0x0:4 $pb13+0x0:4 $px0+0x0:64 $px1+0x0:64 $px2+0x0:64 $px3+0x0:64 $px4+0x0:64 $px5+0x0:64 $px6+0x0:64 $px7+0x0:64 $px8+0x0:64 $px9+0x0:64 $px10+0x0:64 $px11+0x0:64 $px12+0x0:64 $px13+0x0:64 $py0+0x0:256 $py1+0x0:256 $py2+0x0:256 $py3+0x0:256 $py4+0x0:256 $py5+0x0:256 $py6+0x0:256 $py7+0x0:256 $py8+0x0:256 $py9+0x0:256 $py10+0x0:256 $py11+0x0:256 $py12+0x0:256 $py13+0x0:256 $x_ramp+0x0:64 $x_max+0x0:64 $x_mix+0x0:64 $x_zero+0x0:64 $x_neg+0x0:64 $b_all1+0x0:256 $b_all0+0x0:256 $b_alt+0x0:256 $b_pat+0x0:256 $ctx0+0x2540:4 $ctx1+0x2540:4 $ctx2+0x2540:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903aff0,original=0x3b10c20,2026-10-08T12:32:20
+distinct_results,14,,
+VERDICT,GREEN,14,

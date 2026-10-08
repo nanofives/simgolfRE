@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$vdev_a $ve7_100 0 $vst_on,2,2,True,de988ef3,de988ef3,True
+$vdev_a $ve7_1 0 $vst_on,2,2,True,dea59385,dea59385,True
+$vdev_a $ve7_255 0 $vst_on,2,2,True,8591f4c7,8591f4c7,True
+$vdev_b $ve7_100 3 $vst_ch3,2,2,True,f26e812f,f26e812f,True
+$vdev_b $ve7_255 15 $vst_ch15,2,2,True,cf8fc367,cf8fc367,True
+$vdev_c $ve7_100 0 $vst_on,2,2,True,f11b67fa,f11b67fa,True
+$vdev_a $ve7_100 0 $vst_masked,2,2,True,b7540a43,b7540a43,True
+$vdev_a $ve7_100 0 $vst_other,2,2,True,b7540a43,b7540a43,True
+$vdev_a $ve7_100 0 $vst_empty,2,2,True,b7540a43,b7540a43,True
+$vdev_a $ve7_100 0 $vst_vt,2,2,True,417e28f3,417e28f3,True
+$vdev_a $ve10_64 0 $vst_on,2,2,True,a26f4aed,a26f4aed,True
+$vdev_a $ve10_64 15 $vst_ch15,2,2,True,8f1ae22d,8f1ae22d,True
+$vdev_a $ve1_90 0 $vst_on,2,2,True,674361e9,674361e9,False
+$vdev_a $ve127_5 3 $vst_ch3,2,2,True,674361e9,674361e9,False
+state_regions,$vdev_a+0x254:1248 $vdev_b+0x254:1248 $vdev_c+0x254:1248 $vg_voices+0x2a8:4352 $vg_all+0x2a8:4352 $vg_none+0x2a8:4352 $vg_vt+0x2a8:4352 $log+0x0:16,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903c3d0,original=0x3b10d20,2026-10-08T12:32:22
+distinct_results,11,,
+VERDICT,GREEN,14,

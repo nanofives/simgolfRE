@@ -1,0 +1,19 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$wr_32 $wf_sine $wf_alt $wd_0 $wsub1 $wdit0 $wlag8 $wcr0 $wl10 $wl20 $wsr0 $wlp0 $wcm0 $wcp0,0,0,True,c99f2549,c99f2549,True
+$wr_32 $wf_alt $wf_sine $wd_0 $wsub1 $wdit1 $wlag8 $wcr1 $wl11 $wl21 $wsr1 $wlp1 $wcm1 $wcp1,0,0,True,d0fb6d0b,d0fb6d0b,True
+$wr_32 $wf_zero $wf_zero $wd_0 $wsub1 $wdit2 $wlag8 $wcr2 $wl12 $wl22 $wsr2 $wlp2 $wcm2 $wcp2,0,0,True,409bbf0d,409bbf0d,True
+$wr_32 $wf_huge $wf_sine $wd_0 $wsub1 $wdit3 $wlag8 $wcr3 $wl13 $wl23 $wsr3 $wlp3 $wcm3 $wcp3,0,0,True,d497807d,d497807d,True
+$wr_32 $wf_tiny $wf_tiny $wd_0 $wsub1 $wdit4 $wlag8 $wcr4 $wl14 $wl24 $wsr4 $wlp4 $wcm4 $wcp4,0,0,True,b288a963,b288a963,True
+$wr_32 $wf_ramp $wf_alt $wd_0 $wsub2 $wdit5 $wlag8 $wcr5 $wl15 $wl25 $wsr5 $wlp5 $wcm5 $wcp5,0,0,True,91ac91d4,91ac91d4,True
+$wr_32 $wf_sine $wf_huge $wd_0 $wsub2 $wdit6 $wlag4 $wcr6 $wl16 $wl26 $wsr6 $wlp6 $wcm6 $wcp6,0,0,True,11e553f2,11e553f2,True
+$wr_32 $wf_alt $wf_ramp $wd_0 $wsub1 $wdit7 $wlag4 $wcr7 $wl17 $wl27 $wsr7 $wlp7 $wcm7 $wcp7,0,0,True,fe547b6a,fe547b6a,True
+$wr_8 $wf_sine $wf_alt $wd_0 $wsub1 $wdit8 $wlag4 $wcr8 $wl18 $wl28 $wsr8 $wlp8 $wcm8 $wcp8,0,0,True,67f81fa2,67f81fa2,True
+$wr_8 $wf_zero $wf_sine $wd_0 $wsub2 $wdit9 $wlag4 $wcr9 $wl19 $wl29 $wsr9 $wlp9 $wcm9 $wcp9,0,0,True,c05e3e65,c05e3e65,True
+$wr_1 $wf_sine $wf_alt $wd_0 $wsub1 $wdit10 $wlag4 $wcr10 $wl110 $wl210 $wsr10 $wlp10 $wcm10 $wcp10,0,0,True,1eb28e13,1eb28e13,False
+$wr_1 $wf_huge $wf_huge $wd_0 $wsub1 $wdit11 $wlag4 $wcr11 $wl111 $wl211 $wsr11 $wlp11 $wcm11 $wcp11,0,0,True,1eb28e13,1eb28e13,False
+$wr_32 $wf_tiny $wf_zero $wd_0 $wsub1 $wdit12 $wlag8 $wcr12 $wl112 $wl212 $wsr12 $wlp12 $wcm12 $wcp12,0,0,True,21df41d7,21df41d7,True
+state_regions,$wdit0+0x0:4 $wcr0+0x0:4 $wl10+0x0:4 $wl20+0x0:4 $wsr0+0x0:4 $wlp0+0x0:4 $wcm0+0x0:4 $wcp0+0x0:4 $wdit1+0x0:4 $wcr1+0x0:4 $wl11+0x0:4 $wl21+0x0:4 $wsr1+0x0:4 $wlp1+0x0:4 $wcm1+0x0:4 $wcp1+0x0:4 $wdit2+0x0:4 $wcr2+0x0:4 $wl12+0x0:4 $wl22+0x0:4 $wsr2+0x0:4 $wlp2+0x0:4 $wcm2+0x0:4 $wcp2+0x0:4 $wdit3+0x0:4 $wcr3+0x0:4 $wl13+0x0:4 $wl23+0x0:4 $wsr3+0x0:4 $wlp3+0x0:4 $wcm3+0x0:4 $wcp3+0x0:4 $wdit4+0x0:4 $wcr4+0x0:4 $wl14+0x0:4 $wl24+0x0:4 $wsr4+0x0:4 $wlp4+0x0:4 $wcm4+0x0:4 $wcp4+0x0:4 $wdit5+0x0:4 $wcr5+0x0:4 $wl15+0x0:4 $wl25+0x0:4 $wsr5+0x0:4 $wlp5+0x0:4 $wcm5+0x0:4 $wcp5+0x0:4 $wdit6+0x0:4 $wcr6+0x0:4 $wl16+0x0:4 $wl26+0x0:4 $wsr6+0x0:4 $wlp6+0x0:4 $wcm6+0x0:4 $wcp6+0x0:4 $wdit7+0x0:4 $wcr7+0x0:4 $wl17+0x0:4 $wl27+0x0:4 $wsr7+0x0:4 $wlp7+0x0:4 $wcm7+0x0:4 $wcp7+0x0:4 $wdit8+0x0:4 $wcr8+0x0:4 $wl18+0x0:4 $wl28+0x0:4 $wsr8+0x0:4 $wlp8+0x0:4 $wcm8+0x0:4 $wcp8+0x0:4 $wdit9+0x0:4 $wcr9+0x0:4 $wl19+0x0:4 $wl29+0x0:4 $wsr9+0x0:4 $wlp9+0x0:4 $wcm9+0x0:4 $wcp9+0x0:4 $wdit10+0x0:4 $wcr10+0x0:4 $wl110+0x0:4 $wl210+0x0:4 $wsr10+0x0:4 $wlp10+0x0:4 $wcm10+0x0:4 $wcp10+0x0:4 $wdit11+0x0:4 $wcr11+0x0:4 $wl111+0x0:4 $wl211+0x0:4 $wsr11+0x0:4 $wlp11+0x0:4 $wcm11+0x0:4 $wcp11+0x0:4 $wdit12+0x0:4 $wcr12+0x0:4 $wl112+0x0:4 $wl212+0x0:4 $wsr12+0x0:4 $wlp12+0x0:4 $wcm12+0x0:4 $wcp12+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903ba70,original=0x3b10ca0,2026-10-08T12:32:20
+distinct_results,12,,
+VERDICT,GREEN,13,

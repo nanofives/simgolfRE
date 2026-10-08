@@ -17,3 +17,10 @@ end with `call 0x100431ce` (__chkesp).
   absolute levels scaled by 90/n (0x1005ec30 = 90.0, levels divided by 4.0 at 0x1005ec20, rounded by floatFloorToInt
   and clamped to 0x7fff), sum|dx| / (2 sum|x|), the normalised lag-1 product, and the squared normalised correlations
   of the second array at -lag and +lag (*param_7). Every divisor below 1.0 (0x1005b8a8) is replaced by 1.0.
+- `codecFeatureDecision` 0x1003f720 (direct stage of codecStageDispatch, 13 stack arguments, added 2026-10-08 after
+  round 15 because it is codecWindowFeatures' only caller): per half-window it fills a feature vector through
+  codecWindowFeatures, picks a row of the threshold table 0x10064e10, scores the features against that row's bias
+  (0x10064c7c) and eight weights (0x10064c54, 0x28-byte rows), writes the sign of the score as a 0/1 flag at
+  param_11+0x18+half*4, and on the second half adjusts the four flags +0xc/+0x10/+0x14/+0x18 through a switch on
+  their combined 4-bit value. The name is from that structure (a per-half binary decision over a weighted feature
+  sum); which signal property the flag stands for is not determined by the code.

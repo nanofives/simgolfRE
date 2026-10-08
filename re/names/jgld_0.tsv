@@ -124,7 +124,7 @@ jgld.dll	0x10008830	Surface::pixelAddr	render	match re/match/jgld_surface.cpp	re
 jgld.dll	0x100089d0	Surface::setPalette	render	match re/match/jgld_surface.cpp	installs a Palette pointer for an 8-bit surface.
 jgld.dll	0x10008e50	Surface::blit	render	match re/match/jgld_surface.cpp	copies a rectangle from another Surface (plain blit).
 jgld.dll	0x10008f70	Surface::stretchTo	render	match re/match/jgld_surface.cpp	copies a source rectangle into a destination rectangle with scaling.
-jgld.dll	0x100091a0	Surface::blitT	render	match re/match/jgld_surface.cpp, callee 0x10013c50/0x10012db0/0x1000ed70	transparent blit: dispatches on src depth (+0x24) and dst depth (vtbl+0xe4) to the 8->8, 8->16 or 16->16 routine.
+jgld.dll	0x100091a0	Surface::blitT	render	match re/match/jgld_surface.cpp, callee 0x10013c50/0x10012db0/0x1000ed70	blit (no transparency test in any of its three routines, c3bc/c3bh A/B): dispatches on src depth (+0x24) and dst depth (vtbl+0xe4) to the 8->8, 8->16 or 16->16 routine.
 jgld.dll	0x10009320	Surface::fillRect	render	match re/match/jgld_surface.cpp	fills a rectangle with a color.
 jgld.dll	0x10009440	Surface::fill2	render	match re/match/jgld_surface.cpp	fills a rectangle with a color (second variant).
 jgld.dll	0x100094e0	Surface::drawLine	render	match re/match/jgld_surface.cpp, callee 0x1000fb70 (line8)/0x1000b140 (line16)	draws a line: dispatches on depth to line8 (8-bit) or line16 (16-bit).
@@ -151,9 +151,9 @@ jgld.dll	0x1000dcf0	Surface::fillRect16	render	match re/match/jgld_surface16.cpp
 jgld.dll	0x1000dfc0	Surface::blendRect16	render	match re/match/jgld_surface16.cpp	alpha-blends a 16-bit color into a clipped RECT.
 jgld.dll	0x1000e580	Surface::ditherRect16	render	match re/match/jgld_surface16.cpp	fills a clipped RECT with a 16-bit color using an ordered dither.
 jgld.dll	0x1000e8b0	Surface::ditherBlendRect16	render	match re/match/jgld_surface16.cpp	dithers and alpha-blends a 16-bit color into a clipped RECT.
-jgld.dll	0x1000ed70	Surface::blitT_16to16	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	transparent blit from a 16-bit source to a 16-bit surface (clips via intersect).
-jgld.dll	0x10012db0	Surface::blitT_8to16	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	transparent blit from an 8-bit source to a 16-bit surface.
-jgld.dll	0x10013c50	Surface::blitT_8to8	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	transparent blit from an 8-bit source to an 8-bit surface.
+jgld.dll	0x1000ed70	Surface::blitT_16to16	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	copies every pixel of a 16-bit source rectangle onto a 16-bit surface (clips via intersect; no transparency test, c3bh A/B).
+jgld.dll	0x10012db0	Surface::blitT_8to16	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	copies every pixel of an 8-bit source rectangle onto a 16-bit surface through the palette table (no transparency test, c3bh A/B).
+jgld.dll	0x10013c50	Surface::blitT_8to8	render	caller 0x100091a0 (Surface::blitT), callee 0x10008360/0x10008590	copies every pixel of an 8-bit rectangle of this surface into the argument surface (no transparency test, c3bc A/B).
 jgld.dll	0x1000f6a0	Surface::blit16from16	render	match re/match/jgld_surface.cpp	copies a RECT between two 16-bit surfaces.
 jgld.dll	0x1000f880	Surface::fill8	render	match re/match/jgld_surface.cpp	fills a rectangle with an 8-bit color.
 jgld.dll	0x1000f9e0	Surface::fill2_8	render	match re/match/jgld_surface.cpp	fills a rectangle with an 8-bit color (second variant).

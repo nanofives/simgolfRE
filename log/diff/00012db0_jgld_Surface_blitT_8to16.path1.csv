@@ -1,0 +1,47 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$s8nb $d16a 0 0 0 0 8 8,7,7,True,37ebe4a0,37ebe4a0,False
+$s8a 0 0 0 0 0 8 8,16,16,True,37ebe4a0,37ebe4a0,False
+$s8a $d16a 0 0 0 0 32 16,0,0,True,999785de,999785de,True
+$s8a $d16a 2 3 1 1 16 8,0,0,True,c11ed459,c11ed459,True
+$s8a $d16a -3 0 5 0 10 6,0,0,True,00bdf1dd,00bdf1dd,True
+$s8a $d16a 0 -2 0 4 10 6,0,0,True,96f25642,96f25642,True
+$s8a $d16a -3 -2 5 4 10 6,0,0,True,64c1bb9b,64c1bb9b,True
+$s8a $d16a 40 0 0 0 8 8,0,0,True,37ebe4a0,37ebe4a0,False
+$s8a $d16a 0 20 0 0 8 8,0,0,True,37ebe4a0,37ebe4a0,False
+$s8a $d16a 32 0 0 0 8 8,0,0,True,37ebe4a0,37ebe4a0,False
+$s8a $d16a 28 0 0 0 10 8,0,0,True,b183bc24,b183bc24,True
+$s8a $d16a 0 12 0 0 8 10,0,0,True,b945d79f,b945d79f,True
+$s8a $d16a 0 0 100 100 8 8,0,0,True,37ebe4a0,37ebe4a0,False
+$s8a $d16a 0 0 0 0 0 0,0,0,True,37ebe4a0,37ebe4a0,False
+$s8a $d16b 0 0 0 0 32 16,0,0,True,7a2ce3eb,7a2ce3eb,True
+$s8a $d16b 2 2 4 3 10 5,0,0,True,82202d15,82202d15,True
+$s8np $d16a 0 0 0 0 16 8,0,0,True,46e07449,46e07449,True
+$s8a $d16c 0 0 0 0 19 11,0,0,True,f078f599,f078f599,True
+$s8b $d16c 0 0 0 0 19 11,0,0,True,31e4fff4,31e4fff4,True
+$s8a $d16d 0 0 0 0 16 8,1,1,True,37ebe4a0,37ebe4a0,False
+$s8a $d16f 0 0 0 0 16 8,3,3,True,37ebe4a0,37ebe4a0,False
+$s12 $d16a 0 0 0 0 16 8,3,3,True,0bf6bbaa,0bf6bbaa,True
+$s8a $d16e 0 0 0 0 16 4,0,0,True,838b2871,838b2871,True
+$s8a $d16e 0 0 20 1 8 2,3,3,True,37ebe4a0,37ebe4a0,False
+$s8a $d16a 0 0 0 0 1 1,0,0,True,f814484d,f814484d,True
+$s8b $d16a 0 0 0 0 24 12,0,0,True,03209ba8,03209ba8,True
+$s8b $d16b 1 1 3 2 12 6,0,0,True,910b333a,910b333a,True
+$m1 $m1 12 8 4 2 8 5,0,0,True,731547b4,731547b4,True
+$m1f1 $m1f1 12 8 4 2 8 5,0,0,True,68b8c6c4,68b8c6c4,True
+$m12 $m12 12 8 4 2 8 5,3,3,True,54a16266,54a16266,True
+$m1 $m1 12 2 4 8 8 5,0,0,True,0cd3e97a,0cd3e97a,True
+$m1 $m1 12 4 4 4 8 5,0,0,True,977dcc57,977dcc57,True
+$m12 $m12 12 2 4 8 8 5,3,3,True,54a16266,54a16266,True
+$m1 $m1 0 8 14 2 10 3,0,0,True,8f92519d,8f92519d,True
+$m1 $m1 0 8 14 2 3 3,0,0,True,e8bdfa25,e8bdfa25,True
+$mclip $mclip 0 4 14 0 8 2,3,3,True,dfab1f05,dfab1f05,True
+$mb1 $mb1 0 0 16 4 10 3,0,0,True,5442038e,5442038e,True
+$mb2 $mb2 0 0 16 4 10 3,0,0,True,0ef9ccc6,0ef9ccc6,True
+$mb3 $mb3 0 0 16 4 3 3,0,0,True,ddafcdad,ddafcdad,True
+$mclip $mclip 0 0 14 4 8 2,3,3,True,dfab1f05,dfab1f05,True
+$m12 $m12 0 0 16 4 10 3,3,3,True,262548db,262548db,True
+state_regions,$pix+0x0:90112 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20 $l8+0x0:20 $l9+0x0:20 $l10+0x0:20 $l11+0x0:20 $l12+0x0:20 $l13+0x0:20 $l14+0x0:20 $l15+0x0:20 $l16+0x0:20 $l17+0x0:20 $l18+0x0:20 $l19+0x0:20 $l20+0x0:20 $l21+0x0:20,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903a1e0,original=0x1470dc0,2026-10-08T12:30:40
+distinct_results,34,,
+VERDICT,GREEN,41,

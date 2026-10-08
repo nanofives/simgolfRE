@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+2 1 $ztlA $ztdA $zs0 $zz0,0,0,True,68638a85,68638a85,True
+2 1 $ztlA $ztdA $zs1 $zz1,0,0,True,7308be32,7308be32,True
+2 1 $ztlA $ztdA $zs2 $zz2,0,0,True,2b3dfbfe,2b3dfbfe,True
+2 1 $ztlC $ztdA $zs3 $zz3,0,0,True,b733616e,b733616e,True
+2 1 $ztlA $ztdA $zs4 $zz4,0,0,True,ba88d7c5,ba88d7c5,True
+2 1 $ztlA $ztdA $zs5 $zz5,0,0,True,a5331732,a5331732,True
+2 1 $ztlA $ztdA $zs6 $zz6,1,1,True,3da259db,3da259db,True
+2 1 $ztlB $ztdA $zs7 $zz7,-3,-3,True,0ed97447,0ed97447,True
+2 1 $ztlA $ztdB $zs8 $zz8,-3,-3,True,f3397af6,f3397af6,True
+2 1 $ztlA $ztdC $zs9 $zz9,0,0,True,fb9f2ebb,fb9f2ebb,True
+2 1 $ztlD $ztdD $zs10 $zz10,0,0,True,46905fb9,46905fb9,True
+2 1 $ztlA $ztdA $zs11 $zz11,0,0,True,1a842d98,1a842d98,True
+2 1 $ztlA $ztdA $zs12 $zz12,1,1,True,0a9a05bf,0a9a05bf,True
+2 1 $ztlA $ztdA $zs13 $zz13,0,0,True,4ee783d1,4ee783d1,True
+2 1 $ztlA $ztdA $zs14 $zz14,0,0,True,58e715e7,58e715e7,True
+2 1 $ztlD $ztdA $zs15 $zz15,0,0,True,9a817985,9a817985,True
+state_regions,$tblk+0x0:1024 $zsblk+0x0:2048 $zwblk+0x0:10240,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6912cee0,original=0x1470e00,2026-10-08T12:32:29
+distinct_results,16,,
+VERDICT,GREEN,16,

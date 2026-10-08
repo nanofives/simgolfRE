@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o4 $gm_spd $gr_small $gs0,0,0,True,bccdb2a0,bccdb2a0,True
+$o4 $gm_spd $gr_big $gs1,0,0,True,cee530d3,cee530d3,True
+$o4 $gm_spd $gr_negbig $gs2,0,0,True,58727c1b,58727c1b,True
+$o4 $gm_neg $gr_small $gs3,0,0,True,193f22a1,193f22a1,True
+$o3 $gm_spd $gr_odd $gs4,0,0,True,d3c94dfb,d3c94dfb,True
+$o2 $gm_spd $gr_small $gs5,0,0,True,76b390ed,76b390ed,True
+$o1 $gm_spd $gr_big $gs6,0,0,True,512e7a02,512e7a02,True
+$o4 $gm_sing0 $gr_small $gs7,0,0,True,755f423b,755f423b,False
+$o4 $gm_sing3 $gr_small $gs8,0,0,True,7d634c4a,7d634c4a,True
+$o2 $gm_sing0 $gr_odd $gs9,0,0,True,755f423b,755f423b,False
+$o4 $gm_neg $gr_odd $gs10,0,0,True,3f82208a,3f82208a,True
+$o4 $gm_mix $gr_huge $gs11,0,0,True,f87cd76d,f87cd76d,True
+$o3 $gm_neg $gr_negbig $gs12,0,0,True,49ec85d6,49ec85d6,True
+$o4 $gm_mix $gr_small $gs13,0,0,True,7d5bbdda,7d5bbdda,True
+state_regions,$gs0+0x0:128 $gs1+0x0:128 $gs2+0x0:128 $gs3+0x0:128 $gs4+0x0:128 $gs5+0x0:128 $gs6+0x0:128 $gs7+0x0:128 $gs8+0x0:128 $gs9+0x0:128 $gs10+0x0:128 $gs11+0x0:128 $gs12+0x0:128 $gs13+0x0:128,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903c010,original=0x3b10c40,2026-10-08T12:32:20
+distinct_results,13,,
+VERDICT,GREEN,14,

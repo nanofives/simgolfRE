@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ms_sine $mjidx0 $mjcnt0 $mj_cap8 $mj_off4 $mj_last40 $mj_win32 $mc_warm,0,0,True,255d56c6,255d56c6,True
+$ms_zero $mjidx1 $mjcnt1 $mj_cap8 $mj_off4 $mj_last40 $mj_win32 $mc_zero,0,0,True,3cc3cbc1,3cc3cbc1,False
+$ms_step $mjidx2 $mjcnt2 $mj_cap8 $mj_off4 $mj_last40 $mj_win32 $mc_ring,0,0,True,97490f41,97490f41,True
+$ms_alt $mjidx3 $mjcnt3 $mj_cap8 $mj_off4 $mj_last40 $mj_win32 $mc_lopsided,0,0,True,66f21495,66f21495,True
+$ms_tiny $mjidx4 $mjcnt4 $mj_cap8 $mj_off4 $mj_last40 $mj_win32 $mc_warm,0,0,True,bd501b4d,bd501b4d,True
+$ms_step $mjidx5 $mjcnt5 $mj_cap0 $mj_off4 $mj_last40 $mj_win32 $mc_ring,0,0,True,99f622fa,99f622fa,True
+$ms_sine $mjidx6 $mjcnt6 $mj_cap8 $mj_off4 $mj_last24 $mj_win8 $mc_open,0,0,True,2e0b55f6,2e0b55f6,True
+$ms_step $mjidx7 $mjcnt7 $mj_cap8 $mj_off4 $mj_last40 $mj_win32 $mc_open2,0,0,True,8fa777d2,8fa777d2,True
+$ms_alt $mjidx8 $mjcnt8 $mj_cap8 $mj_off0 $mj_last40 $mj_win32 $mc_warm,0,0,True,61524e59,61524e59,True
+$ms_sine $mjidx9 $mjcnt9 $mj_cap8 $mj_off4 $mj_last40 $mj_win0 $mc_warm,0,0,True,3cc3cbc1,3cc3cbc1,False
+0 $mjidx10 $mjcnt10 $mj_cap8 $mj_off4 $mj_last40 $mj_win0 $mc_zero,0,0,True,3cc3cbc1,3cc3cbc1,False
+$ms_zero 0 $mjcnt11 $mj_cap8 $mj_off4 $mj_last24 $mj_win8 $mc_zero,0,0,True,2232b4c1,2232b4c1,True
+$ms_tiny $mjidx12 $mjcnt12 $mj_cap8 $mj_off4 $mj_last24 $mj_win8 $mc_lopsided,0,0,True,1b0ae619,1b0ae619,True
+$ms_step $mjidx13 $mjcnt13 $mj_cap8 $mj_off4 $mj_last24 $mj_win8 $mc_open,0,0,True,57b83902,57b83902,True
+state_regions,$mc_zero+0x21c4:96 $mc_warm+0x21c4:96 $mc_lopsided+0x21c4:96 $mc_ring+0x21c4:96 $mc_open+0x21c4:96 $mc_open2+0x21c4:96 $mjidx0+0x0:128 $mjidx1+0x0:128 $mjidx2+0x0:128 $mjidx3+0x0:128 $mjidx4+0x0:128 $mjidx5+0x0:128 $mjidx6+0x0:128 $mjidx7+0x0:128 $mjidx8+0x0:128 $mjidx9+0x0:128 $mjidx10+0x0:128 $mjidx11+0x0:128 $mjidx12+0x0:128 $mjidx13+0x0:128 $mjcnt0+0x0:4 $mjcnt1+0x0:4 $mjcnt2+0x0:4 $mjcnt3+0x0:4 $mjcnt4+0x0:4 $mjcnt5+0x0:4 $mjcnt6+0x0:4 $mjcnt7+0x0:4 $mjcnt8+0x0:4 $mjcnt9+0x0:4 $mjcnt10+0x0:4 $mjcnt11+0x0:4 $mjcnt12+0x0:4 $mjcnt13+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903b780,original=0x3b10c80,2026-10-08T12:32:20
+distinct_results,12,,
+VERDICT,GREEN,14,

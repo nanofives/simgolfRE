@@ -57,3 +57,8 @@ c3bb.cpp
 c3bd.cpp
 c3ba.cpp
 c3bc.cpp
+c3bf.cpp
+c3bj.cpp
+c3bh.cpp
+c3bi.cpp
+c3bg.cpp

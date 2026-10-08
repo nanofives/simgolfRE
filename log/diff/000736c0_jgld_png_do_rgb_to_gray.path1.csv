@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ps_nog $gh0 $grow8,1,1,True,aaad2010,aaad2010,True
+$ps_g8 $gh1 $grow8,1,1,True,744ac316,744ac316,True
+$ps_nog $gh2 $grow16,1,1,True,af838636,af838636,True
+$ps_g16 $gh3 $grow16,1,1,True,9837a92b,9837a92b,True
+$ps_nog $gh4 $grow8,1,1,True,ecc03e69,ecc03e69,True
+$ps_g8 $gh5 $grow8,1,1,True,6e8e3ea1,6e8e3ea1,True
+$ps_nog $gh6 $grow16,1,1,True,4f939fa8,4f939fa8,True
+$ps_g16 $gh7 $grow16,1,1,True,1f621191,1f621191,True
+$ps_nog $gh8 $grow8,0,0,True,70df1f7c,70df1f7c,False
+$ps_nog $gh9 $grow8,0,0,True,b962cfe9,b962cfe9,True
+$ps_nog $gh10 $grow8,0,0,True,90372a8d,90372a8d,True
+$ps_half8 $gh11 $grow8,1,1,True,d21e81e4,d21e81e4,True
+$ps_half16 $gh12 $grow16,1,1,True,e159d28e,e159d28e,True
+$ps_half16b $gh13 $grow16,1,1,True,68cb0118,68cb0118,True
+$ps_both $gh14 $grow8,1,1,True,1a3e045f,1a3e045f,True
+$ps_both $gh15 $grow16,1,1,True,5dc8e759,5dc8e759,True
+state_regions,$ghblk+0x0:192 $growblk+0x0:256 $gblk+0x0:4480 $gt1+0x0:256 $gf1+0x0:256 $g16to+0x0:1024 $g16from+0x0:1024 $g16tosub+0x0:4096 $g16fromsub+0x0:4096,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6912e620,original=0x1470d80,2026-10-08T12:32:28
+distinct_results,16,,
+VERDICT,GREEN,16,

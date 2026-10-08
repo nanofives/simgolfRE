@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 135 bytes, 58 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Creates the main controller, the stage that hands whole sample rows to the pre-processor. A 0x40-byte object comes from `cinfo->mem->alloc_small(cinfo, JPOOL_IMAGE, 0x40)` (0x004b0566..0x004b056e), is stored at `cinfo+0x148` (0x004b0570) and its first slot, start_pass, is set to 0x004b05f0 (0x004b0576). With `raw_data_in` (cinfo+0xa8) non-zero the caller feeds the coefficient controller directly and there is nothing else to do (0x004b057c / 0x004b0587); that test comes **before** the need_full_buffer one, so a raw scan never raises the buffered-image error. A non-zero `need_full_buffer` then raises ERREXIT 4 (JERR_BAD_BUFFER_MODE) through `err->msg_code` (err+0x14, 0x004b0594) and `err->error_exit` (err+0, 0x004b059d) and returns (0x004b05a4): this module never allocates a whole-image virtual array. Otherwise one strip buffer per component is allocated with `mem->alloc_sarray(cinfo, JPOOL_IMAGE, width_in_blocks * 8, v_samp_factor * 8)` - comp+0x1c read at 0x004b05bc and comp+0xc at 0x004b05b9, both shifted left by 3 at 0x004b05c1 and 0x004b05c4, so the buffer is one iMCU row of samples wide and tall - and stored in the array at main+0x18 (0x004b05d2). The component cursor advances by 0x54 (0x004b05db) and `num_components` (cinfo+0x34) is re-read at the bottom of every pass (0x004b05d4). Reimplemented in `shim/src/re/c3bj.cpp`; path-1 A/B GREEN: jinit_c_main_controller (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b0560_jinit_c_main_controller.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmainct.cpp` as `_jinit_c_main_controller` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b05a4, 0x004b05e6): callee pops 0 bytes of stack arguments.

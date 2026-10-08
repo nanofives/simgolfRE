@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$rf0 $rfrow 4660 128,void,void,True,2b93d68b,2b93d68b,True
+$rf1 $rfrow 4660 0,void,void,True,1fe176bb,1fe176bb,True
+$rf2 $rfrow 43981 128,void,void,True,bb553c22,bb553c22,True
+$rf3 $rfrow 43981 0,void,void,True,5cc626da,5cc626da,True
+$rf4 $rfrow 255 128,void,void,True,8a0baf9d,8a0baf9d,True
+$rf5 $rfrow 255 0,void,void,True,8c4782fd,8c4782fd,True
+$rf6 $rfrow 65280 128,void,void,True,b447cad7,b447cad7,True
+$rf7 $rfrow 65280 0,void,void,True,3d9372bd,3d9372bd,True
+$rf8 $rfrow 4369 128,void,void,True,c60980f2,c60980f2,False
+$rf9 $rfrow 8738 128,void,void,True,c60980f2,c60980f2,False
+$rf10 $rfrow 13107 0,void,void,True,c60980f2,c60980f2,False
+$rf11 $rfrow 17493 128,void,void,True,6635dc08,6635dc08,True
+$rf12 $rfrow 26231 128,void,void,True,c7d69d58,c7d69d58,True
+$rf13 $rfrow 34969 0,void,void,True,54225cf8,54225cf8,True
+$rf14 $rfrow 43520 0,void,void,True,3782dcde,3782dcde,True
+$rf15 $rfrow 4660 127,void,void,True,94c8edd7,94c8edd7,True
+state_regions,$rfblk+0x0:192 $rfrowblk+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6912de90,original=0x1470d20,2026-10-08T12:32:27
+distinct_results,14,,
+VERDICT,GREEN,16,

@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ex0 $exrow $tv0,void,void,True,b4561f6a,b4561f6a,True
+$ex1 $exrow $tv1,void,void,True,d4880044,d4880044,True
+$ex2 $exrow $tv2,void,void,True,09decc82,09decc82,True
+$ex3 $exrow $tv3,void,void,True,a3c56366,a3c56366,True
+$ex4 $exrow $tv3,void,void,True,90e11fab,90e11fab,True
+$ex5 $exrow $tv4,void,void,True,51e5bd51,51e5bd51,True
+$ex6 $exrow 0,void,void,True,faa86dcb,faa86dcb,False
+$ex7 $exrow 0,void,void,True,616ca35b,616ca35b,True
+$ex8 $exrow $tv3,void,void,True,8ed7f50b,8ed7f50b,True
+$ex9 $exrow $tv0,void,void,True,21b55fe0,21b55fe0,True
+$ex10 $exrow $tv5,void,void,True,7eb02b78,7eb02b78,True
+$ex11 $exrow 0,void,void,True,faa86dcb,faa86dcb,False
+$ex12 $exrow $tv0,void,void,True,51bd0404,51bd0404,True
+$ex13 $exrow $tv0,void,void,True,faa86dcb,faa86dcb,False
+$ex14 $exrow $tv0,void,void,True,faa86dcb,faa86dcb,False
+$ex15 $exrow $tv5,void,void,True,cf4a6dd5,cf4a6dd5,True
+state_regions,$exblk+0x0:192 $exrowblk+0x0:512 $extvblk+0x0:128,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6912d630,original=0x1470d60,2026-10-08T12:32:27
+distinct_results,13,,
+VERDICT,GREEN,16,

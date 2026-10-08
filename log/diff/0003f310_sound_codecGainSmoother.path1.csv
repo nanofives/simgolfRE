@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$gg_flat $gn8 $gi1 $gmode1 $gco0 $gio0 $gc_hi,0,0,True,74210c72,74210c72,True
+$gg_flat $gn8 $gi1 $gmode0 $gco1 $gio1 $gc_hi,0,0,True,726c82f6,726c82f6,True
+$gg_flat $gn8 $gi5 $gmode2 $gco2 $gio2 $gc_hi,0,0,True,0f7f5804,0f7f5804,True
+$gg_ramp $gn8 $gi1 $gmode0 $gco3 $gio3 $gc_lo,0,0,True,93d51280,93d51280,True
+$gg_ramp $gn20 $gi5 $gmode1 $gco4 $gio4 $gc_lo,0,0,True,b0bec338,b0bec338,True
+$gg_dip $gn48 $gi5 $gmode1 $gco5 $gio5 $gc_dip,0,0,True,7c26d6eb,7c26d6eb,True
+$gg_dip $gn48 $gi1 $gmode0 $gco6 $gio6 $gc_dip,0,0,True,fd3e5020,fd3e5020,True
+$gg_dip $gn48 $gi5 $gmode2 $gco7 $gio7 $gc_mix,0,0,True,3dcc603c,3dcc603c,True
+$gg_odd $gn20 $gi1 $gmode1 $gco8 $gio8 $gc_mix,0,0,True,c6aedb76,c6aedb76,True
+$gg_odd $gn2 $gi1 $gmode0 $gco9 $gio9 $gc_zero,0,0,True,288bb061,288bb061,True
+$gg_huge $gn1 $gi1 $gmode1 $gco10 $gio10 $gc_zero,0,0,True,69510ff1,69510ff1,True
+$gg_huge $gn8 $gi1 $gmode0 $gco11 $gio11 $gc_hi,0,0,True,94e627e9,94e627e9,True
+$gg_flat $gn1 $gi1 $gmode2 $gco12 $gio12 $gc_lo,0,0,True,8e2eb42f,8e2eb42f,True
+$gg_dip $gn48 $gi5 $gmode1 $gco13 $gio13 $gc_dip2,0,0,True,ff172eee,ff172eee,True
+state_regions,$gc_hi+0x2268:728 $gc_lo+0x2268:728 $gc_dip+0x2268:728 $gc_dip2+0x2268:728 $gc_mix+0x2268:728 $gc_zero+0x2268:728 $gco0+0x0:4 $gco1+0x0:4 $gco2+0x0:4 $gco3+0x0:4 $gco4+0x0:4 $gco5+0x0:4 $gco6+0x0:4 $gco7+0x0:4 $gco8+0x0:4 $gco9+0x0:4 $gco10+0x0:4 $gco11+0x0:4 $gco12+0x0:4 $gco13+0x0:4 $gio0+0x0:4 $gio1+0x0:4 $gio2+0x0:4 $gio3+0x0:4 $gio4+0x0:4 $gio5+0x0:4 $gio6+0x0:4 $gio7+0x0:4 $gio8+0x0:4 $gio9+0x0:4 $gio10+0x0:4 $gio11+0x0:4 $gio12+0x0:4 $gio13+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903b390,original=0x3b10cc0,2026-10-08T12:32:20
+distinct_results,14,,
+VERDICT,GREEN,14,

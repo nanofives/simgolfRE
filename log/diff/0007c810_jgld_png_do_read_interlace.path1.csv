@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ih0 $irow 0 0,void,void,True,2a69a5ec,2a69a5ec,True
+$ih1 $irow 0 65536,void,void,True,8e386fac,8e386fac,True
+$ih2 $irow 2 0,void,void,True,891a423d,891a423d,True
+$ih3 $irow 2 65536,void,void,True,51643ec7,51643ec7,True
+$ih4 $irow 4 0,void,void,True,d1df5282,d1df5282,True
+$ih5 $irow 4 65536,void,void,True,8005f492,8005f492,True
+$ih6 $irow 1 0,void,void,True,c2498128,c2498128,True
+$ih7 $irow 3 0,void,void,True,1c155a1f,1c155a1f,True
+$ih8 $irow 5 65536,void,void,True,1e13ae33,1e13ae33,True
+$ih9 $irow 6 0,void,void,True,bfe6e326,bfe6e326,False
+$ih10 $irow 6 0,void,void,True,bfe6e326,bfe6e326,False
+$ih11 $irow 0 0,void,void,True,bfe6e326,bfe6e326,False
+$ih12 0 0 0,void,void,True,bfe6e326,bfe6e326,False
+0 $irow 0 0,void,void,True,bfe6e326,bfe6e326,False
+$ih14 $irow 1 65536,void,void,True,f904a0c9,f904a0c9,True
+$ih15 $irow 0 65536,void,void,True,89022119,89022119,True
+state_regions,$ihblk+0x0:192 $irow+0x0:256,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6912e140,original=0x1470da0,2026-10-08T12:32:28
+distinct_results,12,,
+VERDICT,GREEN,16,

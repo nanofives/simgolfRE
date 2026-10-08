@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 3 instructions, subsystem `video`. Mechanical
 Stores the output DIB/window target at this+0xc. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Stores the argument at this+0xc. The value is read from [esp+4] (0x00487050) and written to this+0xc (0x00487054); nothing else in the object is read or written, there is no conditional branch, and the single stack argument is popped on return (ret 4 at 0x00487057). Reimplemented in `shim/src/re/c3bj.cpp`; path-1 A/B GREEN: BinkPlayer::setTarget (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487050_BinkPlayer_setTarget.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487050@C_FUN_00487050@f_00487050@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00487057): callee pops 4 bytes of stack arguments.

@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$q_gate0 1 4369,36,36,True,c7222c4d,c7222c4d,False
+$q_nochain 1 8738,36,36,True,c7222c4d,c7222c4d,False
+$q_nopay 1 13107,36,36,True,87f3334c,87f3334c,True
+$q_short 9 17476,36,36,True,c7222c4d,c7222c4d,False
+$q_bad 5 21845,10,10,True,a1343236,a1343236,True
+$q_overcount 6 26214,10,10,True,3e9785a1,3e9785a1,True
+$q_ok 7 30583,0,0,True,9db2d1e2,9db2d1e2,True
+$q_one 8 34952,0,0,True,cfba3eb6,cfba3eb6,True
+$q_nopay2 9 39313,36,36,True,211d4a69,211d4a69,True
+$q_deep 2 39314,0,0,True,016d8d5f,016d8d5f,True
+$q_deep 3 39315,0,0,True,315b8329,315b8329,True
+$q_long 4 43690,0,0,True,2365dd27,2365dd27,True
+$q_zero 9 48059,0,0,True,453d0ef8,453d0ef8,True
+$q_full 10 52428,0,0,True,f2290b92,f2290b92,True
+state_regions,$arena+0x0:11520 $q_gate0+0x218:16 $q_nochain+0x218:16 $q_nopay+0x218:16 $q_short+0x218:16 $q_bad+0x218:16 $q_overcount+0x218:16 $q_ok+0x218:16 $q_one+0x218:16 $q_deep+0x218:16 $q_long+0x218:16 $q_nopay2+0x218:16 $q_zero+0x218:16 $q_full+0x218:16,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6903c550,original=0x3b10ce0,2026-10-08T12:32:21
+distinct_results,12,,
+VERDICT,GREEN,14,
