@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00013dd0`), 888 bytes, 298 instructions, subsystem `a
 
 ## Role (from the naming pass, not a C3 purpose)
 Outer software-mixer render routine that reads the 16.16 rate fields and renders a voice into short* output (param_5==1 selects the stream/3D voice layout). (`re/names/sound_2.tsv`)
-System writeup: `re/analysis/systems/sound_2.md`.
+System writeup: `re/analysis/systems/sound_2.md`, `re/analysis/systems/terrain_1.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10013ea2, 0x10013ebf, 0x10014119, 0x10014147): callee pops 0 bytes of stack arguments.

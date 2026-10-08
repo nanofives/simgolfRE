@@ -4,6 +4,7 @@ Module `Terrain.dll` (RVA `0x00014020`), 245 bytes, 81 instructions, subsystem `
 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
+System writeup: `re/analysis/systems/terrain_2.md`, `re/analysis/systems/terrain_3.md`.
 
 ## Signature
 - Matched at 100% by `re/match/terrain_tile2.cpp` as `?setTypeId@Tile@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).

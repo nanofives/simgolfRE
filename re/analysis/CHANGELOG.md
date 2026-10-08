@@ -4,6 +4,18 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-08  Terrain.dll:00015230  Tile::resetFaceTextures  C1->C2  re/analysis/terrain/00015230_TerrainDll_Tile_resetFaceTextures.md
+2026-10-08  Terrain.dll:000149e0  Tile::leaveType7  C1->C2  re/analysis/terrain/000149e0_TerrainDll_Tile_leaveType7.md
+2026-10-08  Terrain.dll:00014190  Tile::leaveType6  C1->C2  re/analysis/terrain/00014190_TerrainDll_Tile_leaveType6.md
+2026-10-08  Terrain.dll:0000de60  Tile::enterType6  C1->C2  re/analysis/terrain/0000de60_TerrainDll_Tile_enterType6.md
+2026-10-08  Terrain.dll:0000d540  Tile::enterType7  C1->C2  re/analysis/terrain/0000d540_TerrainDll_Tile_enterType7.md
+2026-10-08  Terrain.dll:0000d480  Tile::setPathFlagForType  C1->C2  re/analysis/terrain/0000d480_TerrainDll_Tile_setPathFlagForType.md
+2026-10-08  Terrain.dll:000149e0  Tile::leaveType7  C0->C1  match re/match/terrain_type6.cpp (100%); caller 0x10014020 (Tile::setTypeId) when the old type is 7; callees 0x10001f60 (Tile::getType), 0x100153c0 (Tile::getFaces); constant 0x1005f518 (13.0)
+2026-10-08  Terrain.dll:00014190  Tile::leaveType6  C0->C1  match re/match/terrain_type6.cpp (100%); caller 0x10014020 (Tile::setTypeId) when the old type is 6; callees 0x10001f60 (Tile::getType), 0x100153c0 (Tile::getFaces); constant 0x1005f51c (20.0)
+2026-10-08  Terrain.dll:0000d540  Tile::enterType7  C0->C1  match re/match/terrain_type6.cpp (100%); caller 0x10014020 (Tile::setTypeId) when the new type is 7; callees 0x10001f60 (Tile::getType), 0x100153c0 (Tile::getFaces), 0x10013500 (Tile::reblendNeighbourhood); constant 0x1005f518 (13.0)
+2026-10-08  Terrain.dll:0000de60  Tile::enterType6  C0->C1  match re/match/terrain_type6.cpp (100%); caller 0x10014020 (Tile::setTypeId) when the new type is 6; callees 0x10001f60 (Tile::getType), 0x100153c0 (Tile::getFaces), 0x10013500 (Tile::reblendNeighbourhood); constant 0x1005f51c (20.0)
+2026-10-08  Terrain.dll:00015230  Tile::resetFaceTextures  C0->C1  match re/match/terrain_tile4.cpp (100%); caller 0x10014020 (Tile::setTypeId) for types 0 and 9; callee 0x10013500 (Tile::reblendNeighbourhood)
+2026-10-08  Terrain.dll:0000d480  Tile::setPathFlagForType  C0->C1  match re/match/terrain_tile3.cpp (100%); caller 0x10014020 (Tile::setTypeId); callee 0x10013500 (Tile::reblendNeighbourhood)
 2026-10-08  sound.dll:00041020  codecWindowFeatures  C2->C3  log/diff/00041020_sound_codecWindowFeatures.path1.csv
 2026-10-08  sound.dll:0003f720  codecFeatureDecision  C1->C2  re/analysis/audio/0003f720_sound_codecFeatureDecision.md
 2026-10-08  sound.dll:0003f720  codecFeatureDecision  C0->C1  caller 0x1003c640 (codecStageDispatch); callees 0x10041020 (codecWindowFeatures), 0x1003e400 (floatFloorToInt), 0x10043204 (sqrt); tables 0x10064e10 (row thresholds), 0x10064c7c / 0x10064c54 (bias and 8 weights per 0x28-byte row); constants 0x1005ec68 (63.0), 0x1005ebfc (64.0), 0x1005ec00 (0.0)

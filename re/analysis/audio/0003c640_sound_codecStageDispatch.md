@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003c640`), 2551 bytes, 582 instructions, subsystem `
 
 ## Role (from the naming pass, not a C3 purpose)
 Dispatcher for the codecProcessResource path: runs the fourteen transform/analysis sub-stages between 0x1003e600 and 0x10040da0. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`, `re/analysis/systems/sound_8.md`.
+System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`, `re/analysis/systems/sound_8.md`, `re/analysis/systems/sound_9.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1003d036): callee pops 0 bytes of stack arguments.
