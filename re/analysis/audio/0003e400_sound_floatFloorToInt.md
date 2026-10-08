@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003e400`), 127 bytes, 45 instructions, subsystem `au
 Rounds a floating-point value toward negative infinity (floor) and converts it to an integer (__ftol); a shared quantization helper in the codec. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+Rounds the float at its pointer argument half away from zero and returns it as an int. The value is compared with the float 0.0 at 0x1005ec00 (0x1003e41b, 0x1003e41d) and bit 0 of the status word, which the compare sets for "below" and for "unordered", selects the arm (`test ah, 1` / `jne 0x1003e448` at 0x1003e425): a non-negative value is floored after adding the double 0.5 at 0x1005b820 (0x1003e42f, call at 0x1003e43b), a negative one is floored after subtracting it from 0.5 and the result negated (0x1003e44d, call at 0x1003e459, `fchs` at 0x1003e461). Either way the double is converted by the CRT's __ftol at 0x10042550 (0x1003e469), which keeps the low dword of a 64-bit `fistp`. Its callers are 0x1003edc0, 0x1003f720 and 0x10041020. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: floatFloorToInt (16 vectors, 9 distinct results, `log/diff/0003e400_sound_floatFloorToInt.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003e47e): callee pops 0 bytes of stack arguments.
 

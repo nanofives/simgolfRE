@@ -4,6 +4,14 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-08  sound.dll:0003e400  floatFloorToInt  C2->C3  log/diff/0003e400_sound_floatFloorToInt.path1.csv
+2026-10-08  sound.dll:0003e380  floatCopySign  C2->C3  log/diff/0003e380_sound_floatCopySign.path1.csv
+2026-10-08  sound.dll:00041020  codecWindowFeatures  C1->C2  re/analysis/audio/00041020_sound_codecWindowFeatures.md
+2026-10-08  sound.dll:00040ab0  codecMarkCorrelationJumps  C1->C2  re/analysis/audio/00040ab0_sound_codecMarkCorrelationJumps.md
+2026-10-08  Terrain.dll:00013500  Tile::reblendNeighbourhood  C1->C2  re/analysis/terrain/00013500_TerrainDll_Tile_reblendNeighbourhood.md
+2026-10-08  sound.dll:00041020  codecWindowFeatures  C0->C1  caller 0x1003f720; callees 0x1003e380 (floatCopySign), 0x1003e400 (floatFloorToInt); constants 0x1005ec30 (90.0), 0x1005ec20 (4.0), 0x1005b8a8 (1.0), 0x10064e40 (1.0)
+2026-10-08  sound.dll:00040ab0  codecMarkCorrelationJumps  C0->C1  caller 0x1003c640 (codecStageDispatch); callee 0x1003e380 (floatCopySign); constants 0x1005ec68 (63.0), 0x1005ebfc (64.0), 0x1005ec00 (0.0), 0x1005ecac (1.7), 0x10064e3c (1.0); state slots param_8+0x21c4..0x2220
+2026-10-08  Terrain.dll:00013500  Tile::reblendNeighbourhood  C0->C1  match re/match/terrain_tile4.cpp (100%); callee 0x10013670 (Tile::blendFaceTextures) x9; callers 0x10014020 (Tile::setTypeId), 0x1000d480, 0x1000d540, 0x1000de60, 0x10015230
 2026-10-08  jgld.dll:00013c50  Surface::blitT_8to8  C2->C3  log/diff/00013c50_jgld_Surface_blitT_8to8.path1.csv
 2026-10-08  jgld.dll:00012900  Surface::blitKey8to16  C2->C3  log/diff/00012900_jgld_Surface_blitKey8to16.path1.csv
 2026-10-08  jgld.dll:00010870  Surface::dashedLine8  C2->C3  log/diff/00010870_jgld_Surface_dashedLine8.path1.csv

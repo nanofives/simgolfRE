@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003e380`), 118 bytes, 47 instructions, subsystem `au
 Returns the magnitude of *param_1 given the sign of *param_2 (copysign): abs(*param_1) negated when *param_2<0 (vs constant 0x1005ec00). (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Returns the magnitude of the first float with the sign of the second, widened to a double. Both floats are compared against the dword at 0x1005ec00, which is 0.0f in the image (bytes 00 00 00 00 at RVA 0x5ec00), with `fcomp` + `fnstsw ax` + `test ah, 1` (0x1003e39d-0x1003e3a8 and 0x1003e3c9-0x1003e3d4): ah bit 0 is the x87 C0 flag, which fcomp sets when st(0) is below the operand AND when the comparison is unordered, so a negative value and a NaN take the same side. A first float that is negative or NaN is negated into the float slot [ebp-0xc] (`fchs` at 0x1003e3b9), otherwise its four bytes are copied there unchanged (0x1003e3ad), which keeps -0.0 as -0.0 because it compares equal to 0.0f. That float is widened to the double slot [ebp-8] (0x1003e3be, exact), and a second float that is negative or NaN negates it into [ebp-0x14] (`fchs` at 0x1003e3e7), otherwise it is copied there as two dwords (0x1003e3d6-0x1003e3df). The result is loaded from that slot (0x1003e3ec). Every step is a sign flip or an exact widening, so the thread's rounding mode cannot change the result. This /Od /GZ body is one of the few in the module without a `__chkesp` call. Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: floatCopySign (18 vectors, 9 distinct results, `log/diff/0003e380_sound_floatCopySign.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003e3f5): callee pops 0 bytes of stack arguments.
 
