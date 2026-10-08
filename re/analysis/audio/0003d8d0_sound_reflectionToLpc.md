@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003d8d0`), 381 bytes, 126 instructions, subsystem `a
 Step-up recursion converting reflection coefficients param_1[1..*param_3] to LPC coefficients param_2[] (a_j -= k_i*a_{i-j}); sets *param_5 = sqrt(product of (1-k_i^2)) * *param_4 as the residual gain. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Converts a reflection-coefficient (lattice) filter into a direct-form LPC filter and returns its gain. The gain cell starts at the immediate 1.0f (0x1003d900) and is multiplied by `1 - k[i]*k[i]` for every coefficient (`fsubr` against the float 1.0f at 0x1005b8a8, 0x1003d93a), which is the residual-energy product of the Levinson recursion; it then becomes `sqrt(gain)` times the amplitude passed at [ebp+0x14] (the amplitude is widened to a qword at 0x1003d951 and the CRT's sqrt is called at 0x1003d95f). The coefficients themselves are built by the standard recursion: a[1] takes k[1] as a raw dword (0x1003d975), and for each further order i the previous solution is reflected, `tmp[j] = a[j] - k[i]*a[i-j]` for j = 1..i-1 (0x1003d9d3-0x1003d9e5), copied back over a[1..i-1] (0x1003da1b) and extended with a[i] = k[i] (0x1003da2f). Both arrays are one-based: the pointers are decremented by one float on entry (0x1003d8ee, 0x1003d8f7). The work array is the frame slot `[ebp + j*4 - 0x34]`, which is also where the loop counter (slot 0), the inner bound [ebp-8] (slot 11) and the cached order [ebp-4] (slot 12) live, so from order 12 upwards the recursion overwrites its own loop bounds. Returns 0 (0x1003da37). Reimplemented in `shim/src/re/c3bn.cpp`; path-1 A/B GREEN: reflectionToLpc (14 vectors, 14 distinct results, 14 changing state, `log/diff/0003d8d0_sound_reflectionToLpc.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003da4c): callee pops 0 bytes of stack arguments.
 

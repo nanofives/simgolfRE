@@ -1,0 +1,11 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$spNP $spW $d0 0 0,16,16,True,66115aff,66115aff,False
+$spNP $spW $d1 4 2,16,16,True,66115aff,66115aff,False
+$spNP $spW $d3 0 0,16,16,True,66115aff,66115aff,False
+$spA $spW $d0 0 0,0,0,True,d2aa1ef9,d2aa1ef9,True
+$spA $spW $d2 1 1,0,0,True,8b21fd87,8b21fd87,True
+state_regions,$pix+0x0:49152 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20 $l8+0x0:20 $l9+0x0:20 $l10+0x0:20 $l11+0x0:20 $spr+0x0:1280,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5eac4b20,original=0x1470c40,2026-10-08T13:21:21
+distinct_results,3,,
+VERDICT,GREEN,5,

@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x000149e0`), 1699 bytes, 453 instructions, subsystem
 Undoes enterType7: adds 13.0 to the centre vertex and every vertex shared with a type-7 neighbour or diagonal and marks the neighbourhood normals dirty (`re/names/terrain_3.tsv`)
 System writeup: `re/analysis/systems/terrain_3.md`.
 
+## Purpose
+Undoes the 13.0 drop Tile::enterType7 applied, for a tile that stops being type 7. It is the same walk over the same 25 vertices with the same thirteen guards, now comparing against 7 (je 0x10014a2e, jne 0x10014a42 and their twins at 0x10014aa6/aba/ad1, 0x10014b8b/b9f/bb6, 0x10014c73/c87, 0x10014ce7/cfb/d12, 0x10014dce/de2/df9, 0x10014eb5/ec5, 0x10014f1f/f2f), and ALL 25 get `+ 13.0f` (fadd dword [0x1005f518], the first at 0x10014a12; the body contains no fsub, so it has no exception like the one Tile::leaveType6 has on face 0 slot 0). Its dirty walk is unconditional on the type (0x10014f88, then je 0x10014f96, 0x10014fac/fb5, 0x10014fce/fd7, 0x10014ff0, 0x10015006, 0x1001501c, 0x10015032/03b, 0x10015054/05d), unlike the type-7 ENTRY, which tests each target's type as well. It does not re-blend and it does not touch the path-type flag the entry clears. Reimplemented in `shim/src/re/c3bk.cpp`; path-1 A/B GREEN: Tile::leaveType7 (15 vectors, 15 distinct results, 15 changing state, `log/diff/000149e0_Terrain_Tile_leaveType7.path1.csv`); Tile::leaveType7_off (15 vectors, 15 distinct results, 15 changing state, `log/diff/000149e0_Terrain_Tile_leaveType7_off.path1.csv`); Tile::leaveType7_b (15 vectors, 15 distinct results, 15 changing state, `log/diff/000149e0_Terrain_Tile_leaveType7_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_type6.cpp` as `?f_100149e0@Tile@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10015082): callee pops 0 bytes of stack arguments.

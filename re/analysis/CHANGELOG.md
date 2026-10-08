@@ -4,6 +4,29 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-08  jgld.dll:00025dd0  Sprite::blitPair1  C2->C3  log/diff/00025dd0_jgld_Sprite_blitPair1.path1.csv
+2026-10-08  jgld.dll:00025900  Sprite::blitPair  C2->C3  log/diff/00025900_jgld_Sprite_blitPair.path1.csv
+2026-10-08  jgld.dll:0001e970  Sprite::draw16m_1001e970  C2->C3  log/diff/0001e970_jgld_Sprite_draw16m_1001e970.path1.csv
+2026-10-08  jgld.dll:0001df80  Sprite::draw16m_1001df80  C2->C3  log/diff/0001df80_jgld_Sprite_draw16m_1001df80.path1.csv
+2026-10-08  jgld.dll:0001b060  Sprite::draw16t_1001b060  C2->C3  log/diff/0001b060_jgld_Sprite_draw16t_1001b060.path1.csv
+2026-10-08  jgld.dll:0001ab40  Sprite::draw16t_1001ab40  C2->C3  log/diff/0001ab40_jgld_Sprite_draw16t_1001ab40.path1.csv
+2026-10-08  004b5810  prepare_for_pass  C2->C3  log/diff/004b5810_prepare_for_pass.path1.csv
+2026-10-08  004b5470  validate_script  C2->C3  log/diff/004b5470_validate_script_prog.path1.csv
+2026-10-08  004b51e0  jinit_c_master_control  C2->C3  log/diff/004b51e0_jinit_c_master_control.path1.csv
+2026-10-08  004b25d0  emit_eobrun  C2->C3  log/diff/004b25d0_emit_eobrun.path1.csv
+2026-10-08  sound.dll:00040000  codecPitchAnalysis  C2->C3  log/diff/00040000_sound_codecPitchAnalysis.path1.csv
+2026-10-08  sound.dll:0003d8d0  reflectionToLpc  C2->C3  log/diff/0003d8d0_sound_reflectionToLpc.path1.csv
+2026-10-08  sound.dll:0003d1d0  lpcSynthesize  C2->C3  log/diff/0003d1d0_sound_lpcSynthesize.path1.csv
+2026-10-08  sound.dll:00023610  Seq_remarkEventRange  C2->C3  log/diff/00023610_sound_Seq_remarkEventRange.path1.csv
+2026-10-08  jgld.dll:00074750  png_do_background  C2->C3  log/diff/00074750_jgld_png_do_background.path1.csv
+2026-10-08  jgld.dll:000717d0  png_do_read_transformations  C2->C3  log/diff/000717d0_jgld_png_do_read_transformations.path1.csv
+2026-10-08  Terrain.dll:00015230  Tile::resetFaceTextures  C2->C3  log/diff/00015230_Terrain_Tile_resetFaceTextures.path1.csv
+2026-10-08  Terrain.dll:000149e0  Tile::leaveType7  C2->C3  log/diff/000149e0_Terrain_Tile_leaveType7.path1.csv
+2026-10-08  Terrain.dll:00014190  Tile::leaveType6  C2->C3  log/diff/00014190_Terrain_Tile_leaveType6.path1.csv
+2026-10-08  Terrain.dll:00014020  Tile::setTypeId  C2->C3  log/diff/00014020_Terrain_Tile_setTypeId.path1.csv
+2026-10-08  Terrain.dll:0000de60  Tile::enterType6  C2->C3  log/diff/0000de60_Terrain_Tile_enterType6.path1.csv
+2026-10-08  Terrain.dll:0000d540  Tile::enterType7  C2->C3  log/diff/0000d540_Terrain_Tile_enterType7.path1.csv
+2026-10-08  Terrain.dll:0000d480  Tile::setPathFlagForType  C2->C3  log/diff/0000d480_Terrain_Tile_setPathFlagForType.path1.csv
 2026-10-08  Terrain.dll:00015230  Tile::resetFaceTextures  C1->C2  re/analysis/terrain/00015230_TerrainDll_Tile_resetFaceTextures.md
 2026-10-08  Terrain.dll:000149e0  Tile::leaveType7  C1->C2  re/analysis/terrain/000149e0_TerrainDll_Tile_leaveType7.md
 2026-10-08  Terrain.dll:00014190  Tile::leaveType6  C1->C2  re/analysis/terrain/00014190_TerrainDll_Tile_leaveType6.md

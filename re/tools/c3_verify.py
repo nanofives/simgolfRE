@@ -57,6 +57,8 @@ def main():
     ap.add_argument("batch")
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--keys", action="store_true")
+    ap.add_argument("--callers", default="", help="addr=caller[;caller] for a function reached only through a stored "
+                    "pointer (no call xref), passed to re_classify promote --callers; cite the store in the Purpose")
     ap.add_argument("--skip", default="", help="comma-separated addresses not to promote (e.g. only guard branches were exercised)")
     a = ap.parse_args()
     hooks = keys_of(a.batch)
@@ -102,8 +104,12 @@ def main():
                        for k, f in facts.items())
         text = f"{purp[addr]} Reimplemented in `shim/src/re/{a.batch}.cpp`; path-1 A/B GREEN: {ab}."
         note.write_text(t.replace("## Signature", "## Purpose\n" + text + "\n\n## Signature", 1), encoding="utf-8")
-        r = subprocess.run([sys.executable, str(ROOT / "scripts" / "re_classify.py"), "promote", f"{addr:08x}", "--to", "C3",
-                            "--file", f"shim/src/re/{a.batch}.cpp", "--module", mod], capture_output=True, text=True, cwd=ROOT)
+        extra = {int(k, 16): v for k, v in (c.split("=", 1) for c in a.callers.split(",") if c.strip())}
+        cmd = [sys.executable, str(ROOT / "scripts" / "re_classify.py"), "promote", f"{addr:08x}", "--to", "C3",
+               "--file", f"shim/src/re/{a.batch}.cpp", "--module", mod]
+        if addr in extra:
+            cmd += ["--callers", extra[addr]]
+        r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
         lines = [l for l in r.stdout.splitlines() if "PROMOTED" in l or "REFUSED" in l or "FAIL" in l]
         print("\n".join(lines))
         if r.returncode != 0:                      # refused: take the Purpose back out so the note stays C2-shaped

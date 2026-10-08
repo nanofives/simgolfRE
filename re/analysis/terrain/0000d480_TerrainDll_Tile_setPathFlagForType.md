@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x0000d480`), 147 bytes, 52 instructions, subsystem `
 When the tile has a path (m_hasPath), sets the byte +0x20a to 0 for the argument types 0x14, 0x11, 0x16, 0, 2, 1, 3, 7, 9 and to 1 for any other type, then calls Tile::reblendNeighbourhood; setTypeId calls it for type 0x11, for 0xd..0x10 (with 0xd) and as its default case (`re/names/terrain_3.tsv`)
 System writeup: `re/analysis/systems/terrain_2.md`, `re/analysis/systems/terrain_3.md`.
 
+## Purpose
+Decides, for a tile that carries a path, whether the new terrain type is one the path can sit on flat or one that lifts it, and records that in a single flag. It does nothing to the flag when the tile has no path (byte [this+0x208] read at 0x1000d4a2, test and je 0x1000d4aa). Otherwise it compares the type it is given against nine values in this order - 0x14 (cmp 0x1000d4ac), 0x11 (0x1000d4b2), 0x16 (0x1000d4b8), 0 (0x1000d4be), 2 (0x1000d4c4), 1 (0x1000d4ca), 3 (0x1000d4d0), 7 (0x1000d4d6) and 9 (0x1000d4dc) - and stores 0 at [this+0x20a] on a match (0x1000d4e5) or 1 on the fall-through (jne 0x1000d4e0, store 0x1000d4f1). It is the same nine-value set and the same two stores as Tile::layPath 0x10013400 uses on its own type (0x10013400 tests m_type, this one tests an argument). It then re-blends the neighbourhood (call 0x1000d4fb of the thunk 0x1000103c = Tile::reblendNeighbourhood 0x10013500), whether or not the flag was touched, and that re-blend is the whole of its effect on a tile with no path. Reimplemented in `shim/src/re/c3bk.cpp`; path-1 A/B GREEN: Tile::setPathFlagForType (78 vectors, 9 distinct results, 78 changing state, `log/diff/0000d480_Terrain_Tile_setPathFlagForType.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile3.cpp` as `?f_1000d480@Tile@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000d510): callee pops 4 bytes of stack arguments.

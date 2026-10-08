@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$s_mark $d_bad,10,10,True,6b5fb5f4,6b5fb5f4,False
+$s_mark_cnt3 $d_over,10,10,True,6b5fb5f4,6b5fb5f4,False
+$s_mark $d_0_3,0,0,True,9e395e47,9e395e47,True
+$s_mark $d_1_1,0,0,True,de8cc562,de8cc562,True
+$s_mark $d_0_7,0,0,True,f1606c01,f1606c01,True
+$s_mark_short $d_0_5,0,0,True,7fcd5485,7fcd5485,True
+$s_sched $d_f1_0_3,0,0,True,6f0bff3b,6f0bff3b,True
+$s_sched $d_f4_0_3,0,0,True,7b0ee0f2,7b0ee0f2,True
+$s_sched $d_f10_2_4,0,0,True,19839451,19839451,True
+$s_sched $d_f0_0_2,0,0,True,26f9344e,26f9344e,True
+$s_sched_short $d_f1_0_5,0,0,True,dbbfeeb5,dbbfeeb5,True
+$s_sched $d_f1_ti2,0,0,True,a01298ff,a01298ff,True
+$s_sched_nocnt $d_f1_0_7,0,0,True,10a31c92,10a31c92,True
+$s_sched_step7 $d_f4_3_6,0,0,True,c11f746f,c11f746f,True
+state_regions,$arena+0x0:11520 $counters+0x0:640 $arena2+0x0:11520 $counters2+0x0:640 $s_mark+0x1f0:64 $s_mark_short+0x1f0:64 $s_mark_cnt3+0x1f0:64 $s_sched+0x1f0:64 $s_sched_short+0x1f0:64 $s_sched_nocnt+0x1f0:64 $s_sched_step7+0x1f0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d0f3f90,original=0x2c10c00,2026-10-08T13:15:20
+distinct_results,13,,
+VERDICT,GREEN,14,

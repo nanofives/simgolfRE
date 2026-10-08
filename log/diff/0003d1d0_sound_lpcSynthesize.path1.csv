@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$A_a $len10 $mode1 $out0 $lvl_1 $lvl2_10 $fb_05 $ctx_a,0,0,True,ab4b4b76,ab4b4b76,True
+$A_a $len10 $mode1 $out1 $lvl_tiny $lvl2_10 $fb_05 $ctx_b,0,0,True,e0dc0dae,e0dc0dae,True
+$A_b $len20 $mode7 $out2 $lvl_1 $lvl2_10 $fb_09 $ctx_c,0,0,True,e93f124b,e93f124b,True
+$A_b $len30 $mode1 $out3 $lvl_1 $lvl2_10 $fb_05 $ctx_d,0,0,True,18c74a00,18c74a00,True
+$A_zero $len10 $mode1 $out4 $lvl_big $lvl2_10 $fb_05 $ctx_e,0,0,True,a962eb62,a962eb62,True
+0 $len0 $mode1 0 $lvl_1 $lvl2_10 $fb_05 $ctx_f,0,0,True,cfedff94,cfedff94,True
+$A_a $len10 $mode0 $out5 $lvl_1 $lvl2_10 $fb_05 $ctx_a,0,0,True,1242f989,1242f989,True
+$A_a $len10 $mode0 $out6 $lvl_1 $lvl2_big $fb_05 $ctx_b,0,0,True,0f4da83b,0f4da83b,True
+$A_b $len20 $mode0 $out7 $lvl_1 $lvl2_small $fb_09 $ctx_c,0,0,True,2b618261,2b618261,True
+$A_b $len4 $mode0 $out8 $lvl_1 $lvl2_10 $fb_05 $ctx_d,0,0,True,a36532ec,a36532ec,True
+$A_a $len1 $mode0 $out9 $lvl_1 $lvl2_10 $fb_05 $ctx_e,0,0,True,7e6ce223,7e6ce223,True
+$A_zero $len10 $mode0 $out10 $lvl_tiny $lvl2_10 $fb_05 $ctx_f,0,0,True,f74f9d73,f74f9d73,True
+$A_a $len20 $mode1 $out11 $lvl_mid $lvl2_10 $fb_01 $ctx_g,0,0,True,5182305f,5182305f,True
+$A_b $len10 $mode0 $out12 $lvl_mid $lvl2_mid $fb_09 $ctx_g,0,0,True,1f3d6856,1f3d6856,True
+state_regions,$ctx_a+0x680:1408 $ctx_b+0x680:1408 $ctx_c+0x680:1408 $ctx_d+0x680:1408 $ctx_e+0x680:1408 $ctx_f+0x680:1408 $ctx_g+0x680:1408 $out0+0x0:256 $out1+0x0:256 $out2+0x0:256 $out3+0x0:256 $out4+0x0:256 $out5+0x0:256 $out6+0x0:256 $out7+0x0:256 $out8+0x0:256 $out9+0x0:256 $out10+0x0:256 $out11+0x0:256 $out12+0x0:256,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d0f3090,original=0x2c10bc0,2026-10-08T13:15:19
+distinct_results,14,,
+VERDICT,GREEN,14,

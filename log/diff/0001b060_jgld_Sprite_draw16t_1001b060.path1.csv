@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$sp16b $d0 0 0 $t32,0,0,True,8ca6d6aa,8ca6d6aa,True
+$sp16b $d0 4 2 $t32,0,0,True,7fdb33de,7fdb33de,True
+$sp16b $d0 -3 -2 $t32,0,0,True,33665624,33665624,True
+$sp16b $d0 24 10 $t32,0,0,True,f4a6b6c8,f4a6b6c8,True
+$sp16b $d0 100 100 $t32,0,0,True,5b2aaf24,5b2aaf24,True
+$sp16b $d1 0 0 $t32,0,0,True,969e7199,969e7199,True
+$sp16b 0 0 0 $t32,3,3,True,514f16c3,514f16c3,False
+$spNB $d0 0 0 $t32,3,3,True,514f16c3,514f16c3,False
+$sp16b $d4 0 0 $t32,3,3,True,514f16c3,514f16c3,False
+$sp16b $d0 31 0 $t32,0,0,True,879daef9,879daef9,True
+$sp16b $d0 0 15 $t32,0,0,True,aa7186cc,aa7186cc,True
+$sp16b $d6 0 0 $t32,0,0,True,28939ca1,28939ca1,True
+state_regions,$pix+0x0:49152 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20 $l8+0x0:20 $l9+0x0:20 $l10+0x0:20 $l11+0x0:20 $spr+0x0:1280 $gdraw16t+0x0:72,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5eac5f70,original=0x1470c80,2026-10-08T13:21:30
+distinct_results,10,,
+VERDICT,GREEN,12,
