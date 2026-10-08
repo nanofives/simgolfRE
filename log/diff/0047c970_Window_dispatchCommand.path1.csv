@@ -1,0 +1,26 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ignA 0,0,0,True,41827cbb,41827cbb,False
+$ignA 5,0,0,True,41827cbb,41827cbb,False
+$ignB 0,0,0,True,41827cbb,41827cbb,False
+$ignB 5,0,0,True,41827cbb,41827cbb,False
+$plain 0,101,101,True,4cc2f1be,4cc2f1be,True
+$plain 1,104,104,True,b7c51e6a,b7c51e6a,True
+$plain 7,122,122,True,830360ce,830360ce,True
+$plain -3,92,92,True,c083eeb2,c083eeb2,True
+$plain 1000,3101,3101,True,962b3e0e,962b3e0e,True
+$bare 0,-7,-7,True,099f09fe,099f09fe,True
+$bare 7,0,0,True,bb3638fd,bb3638fd,True
+$bare 2,-5,-5,True,b776c480,b776c480,True
+$parentYes 0,1,1,True,3ad82d4f,3ad82d4f,True
+$parentYes 4,1,1,True,c04f975f,c04f975f,True
+$parentNo 0,61,61,True,a90885d3,a90885d3,True
+$parentNo 4,73,73,True,b3039023,b3039023,True
+$parentZero 0,71,71,True,67b17d20,67b17d20,True
+$parentZero 3,1,1,True,a6bfffc5,a6bfffc5,True
+$grand 0,1,1,True,a90885d3,a90885d3,True
+$grand 9,1,1,True,0c0d9be7,0c0d9be7,True
+state_regions,$rec+0x0:772 0x0083ab2c+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7237c950,original=0xce0de0,2026-10-07T01:06:42
+distinct_results,17,,
+VERDICT,GREEN,20,

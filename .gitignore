@@ -18,8 +18,11 @@ tools/src/
 simgolf_pool/
 # Build / runtime output
 shim/build/
+shim/build_*/
 log/*
 !log/diff/
+# match.py output is regenerated on demand; committed match CSVs stay tracked
+log/diff/*.match.csv
 re/dumps/
 __pycache__/
 .pytest_cache/
