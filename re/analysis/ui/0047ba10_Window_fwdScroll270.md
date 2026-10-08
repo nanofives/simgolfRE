@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 23 bytes, 7 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 forwards a scroll value to the child object at +0x270 (FUN_004967f0) (`re/names/exe_3.tsv`)
 
+## Purpose
+The same forward as fwdScroll26c 0x0047b9f0 for the second scrollbar child, the one at +0x270. The child is read at 0x0047ba10, a null one returns at 0x0047ba24 (0x0047ba18), and [esp+4] is pushed for setWidgetScalar 0x004967f0 at 0x0047ba1a / 0x0047ba1f; the forwarder writes nothing and pops its one argument (`ret 4` at 0x0047ba24). Reimplemented in `shim/src/re/c3bx.cpp`; path-1 A/B GREEN: Window_fwdScroll270 (14 vectors, 9 distinct results, 12 changing state, `log/diff/0047ba10_Window_fwdScroll270.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_0047ba10@C_FUN_0047ba10@f_0047ba10@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047ba24): callee pops 4 bytes of stack arguments.

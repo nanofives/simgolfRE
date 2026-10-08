@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a3e0`), 84 bytes, 35 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Lays or clears the path on one tile. `this` is stored in the frame slot (0x1000a3fa) and never read. The second argument is tested against 0 (cmp 0x1000a3fd, je 0x1000a401) and both arms call the SAME Tile::layPath through the thunk 0x1000128a with the third argument and a LITERAL flag - 1 on the non-zero side (push 1 at 0x1000a407, call 0x1000a40c), 0 on the zero side (push 0 at 0x1000a417, call 0x1000a41c) - so any non-zero value is collapsed to 1 before the callee sees it. The callee writes Tile+0x208 (has a path), Tile+0x209 (connected, only when the third argument is non-zero) and Tile+0x20a (set unless the tile's own type is one of 0x16, 0, 2, 1, 3, 7 or 9), and clears all three when the flag is 0. The exe calls it through the import slot 0x4ba190 from `rebuildTerrainGrid` 0x00449540 and `togglePath` 0x0044a410. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::layPath (72 vectors, 26 distinct results, 58 changing state, `log/diff/0000a3e0_Terrain_Terrain_layPath.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?layPath@Terrain@@QAEXPAVTile@@HH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000a431): callee pops 12 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 44 bytes, 21 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Refill the Huffman encoder's output window from the client's destination manager. The working state's compress object is read at 0x004b19e6 (working_state+0x20), its destination manager at 0x004b19ea (cinfo+0x14) and the manager's `empty_output_buffer` at 0x004b19ed (dest+0xc); the compress object is the one argument pushed for it at 0x004b19e9 and the caller cleans that dword at 0x004b19f0. A falsy result ends the function at 0x004b19f9 with 0 and leaves the working state untouched, which is how the encoder learns it must suspend. A truthy one copies the manager's refreshed cursor into working_state+0 (0x004b19fa / 0x004b19fc) and its refreshed free count into working_state+4 (0x004b19fe / 0x004b1a01) and returns 1 (0x004b1a05); the put_buffer, put_bits and last_dc_val bytes at +8..+0x1f are not touched. Reimplemented in `shim/src/re/c3bx.cpp`; path-1 A/B GREEN: dump_buffer_4b19e0 (8 vectors, 8 distinct results, 8 changing state, `log/diff/004b19e0_dump_buffer_4b19e0.path1.csv`); dump_buffer_4b19e0_fail (6 vectors, 6 distinct results, 6 changing state, `log/diff/004b19e0_dump_buffer_4b19e0_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_dump_buffer` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b19f9, 0x004b1a0b): callee pops 0 bytes of stack arguments.

@@ -71,3 +71,8 @@ c3bq.cpp
 c3bs.cpp
 c3bp.cpp
 c3br.cpp
+c3bw.cpp
+c3bx.cpp
+c3bt.cpp
+c3bu.cpp
+c3bv.cpp

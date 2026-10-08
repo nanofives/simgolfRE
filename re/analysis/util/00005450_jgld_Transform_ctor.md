@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00005450`), 77 bytes, 30 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 default constructor for Transform. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The default constructor of jgld's Transform, the rotation-plus-position pair, in three steps and in this order: it constructs the quaternion sub-object that starts at this+4 by calling Quat::ctor on that address (`add ecx,4` at 0x10005470, call at 0x10005473 through the thunk 0x100013e8 to 0x10003050), which makes it the identity rotation; it installs the Transform vtable, VA 0x1011d028, in the dword at [this] (0x1000547b) - after the member's constructor, which is the order VC6 emits; and it calls Transform::reset on `this` (0x10005484, thunk 0x100017e9 to 0x10005650), which clears the flags word at [this+0x20]. The position Vector3 at this+0x14 is NOT written by any of the three steps, so a freshly constructed Transform has an identity rotation, a zero flags word and twelve bytes of position that keep whatever the storage held. `this` is returned in eax (0x10005489). Its five callers (Transform::addVector3 0x10005890, subVector3 0x10005a30, mulTransform 0x10005dd0, scaled 0x10005ff0 and mulAssignTransform 0x100060d0) each build a result Transform this way before filling it. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: Transform::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00005450_jgld_Transform_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??0Transform@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000549c): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x0000a620`), 66 bytes, 28 instructions, subsystem `t
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Lowers one corner of a tile, ignoring a null tile; the same shape as Terrain::elevateCorner with Tile::lowerCorner through the thunk 0x100010dc. `this` is stored at 0x1000a63a and never read, the Tile argument is tested at cmp 0x1000a63d / je 0x1000a641, the corner is pushed at 0x1000a646 and the call is at 0x1000a64a. A null tile does nothing. The exe calls it through the import slot 0x4ba154 from `applyTileElevation` 0x00449fa0. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::lowerCorner (34 vectors, 33 distinct results, 32 changing state, `log/diff/0000a620_Terrain_Terrain_lowerCorner.path1.csv`); Terrain::lowerCorner_odd (34 vectors, 33 distinct results, 32 changing state, `log/diff/0000a620_Terrain_Terrain_lowerCorner_odd.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?lowerCorner@Terrain@@QAEXPAVTile@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000a65f): callee pops 8 bytes of stack arguments.

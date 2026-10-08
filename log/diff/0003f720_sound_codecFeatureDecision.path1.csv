@@ -1,0 +1,43 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$drange_h1_big $dctx_h1_big $dctx_h1_big $d_desc $dhalf_h1_big $ddiv_h1_big $dnum_h1_big $dlag_h1_big $dblk_h1_big $dinf_h1_big $dofl_h1_big 0 $dctx_h1_big,0,0,True,b6834c42,b6834c42,True
+$drange_h1_divclamp $dctx_h1_divclamp $dctx_h1_divclamp $d_desc $dhalf_h1_divclamp $ddiv_h1_divclamp $dnum_h1_divclamp $dlag_h1_divclamp $dblk_h1_divclamp $dinf_h1_divclamp $dofl_h1_divclamp 0 $dctx_h1_divclamp,0,0,True,3355596c,3355596c,True
+$drange_h1_band3 $dctx_h1_band3 $dctx_h1_band3 $d_desc $dhalf_h1_band3 $ddiv_h1_band3 $dnum_h1_band3 $dlag_h1_band3 $dblk_h1_band3 $dinf_h1_band3 $dofl_h1_band3 0 $dctx_h1_band3,0,0,True,c0ea6aba,c0ea6aba,True
+$drange_h1_band5 $dctx_h1_band5 $dctx_h1_band5 $d_desc $dhalf_h1_band5 $ddiv_h1_band5 $dnum_h1_band5 $dlag_h1_band5 $dblk_h1_band5 $dinf_h1_band5 $dofl_h1_band5 0 $dctx_h1_band5,0,0,True,c113f104,c113f104,True
+$drange_c0 $dctx_c0 $dctx_c0 $d_desc $dhalf_c0 $ddiv_c0 $dnum_c0 $dlag_c0 $dblk_c0 $dinf_c0 $dofl_c0 0 $dctx_c0,0,0,True,e64e6ca8,e64e6ca8,True
+$drange_c1 $dctx_c1 $dctx_c1 $d_desc $dhalf_c1 $ddiv_c1 $dnum_c1 $dlag_c1 $dblk_c1 $dinf_c1 $dofl_c1 0 $dctx_c1,0,0,True,30a80a39,30a80a39,True
+$drange_c2 $dctx_c2 $dctx_c2 $d_desc $dhalf_c2 $ddiv_c2 $dnum_c2 $dlag_c2 $dblk_c2 $dinf_c2 $dofl_c2 0 $dctx_c2,0,0,True,6476b880,6476b880,True
+$drange_c2b $dctx_c2b $dctx_c2b $d_desc $dhalf_c2b $ddiv_c2b $dnum_c2b $dlag_c2b $dblk_c2b $dinf_c2b $dofl_c2b 0 $dctx_c2b,0,0,True,91485d16,91485d16,True
+$drange_c3 $dctx_c3 $dctx_c3 $d_desc $dhalf_c3 $ddiv_c3 $dnum_c3 $dlag_c3 $dblk_c3 $dinf_c3 $dofl_c3 0 $dctx_c3,0,0,True,26adc8f0,26adc8f0,True
+$drange_c4 $dctx_c4 $dctx_c4 $d_desc $dhalf_c4 $ddiv_c4 $dnum_c4 $dlag_c4 $dblk_c4 $dinf_c4 $dofl_c4 0 $dctx_c4,0,0,True,37b96692,37b96692,True
+$drange_c5 $dctx_c5 $dctx_c5 $d_desc $dhalf_c5 $ddiv_c5 $dnum_c5 $dlag_c5 $dblk_c5 $dinf_c5 $dofl_c5 0 $dctx_c5,0,0,True,39a9087e,39a9087e,True
+$drange_c5b $dctx_c5b $dctx_c5b $d_desc $dhalf_c5b $ddiv_c5b $dnum_c5b $dlag_c5b $dblk_c5b $dinf_c5b $dofl_c5b 0 $dctx_c5b,0,0,True,9a0a71f1,9a0a71f1,True
+$drange_c6 $dctx_c6 $dctx_c6 $d_desc $dhalf_c6 $ddiv_c6 $dnum_c6 $dlag_c6 $dblk_c6 $dinf_c6 $dofl_c6 0 $dctx_c6,0,0,True,15e73837,15e73837,True
+$drange_c6b $dctx_c6b $dctx_c6b $d_desc $dhalf_c6b $ddiv_c6b $dnum_c6b $dlag_c6b $dblk_c6b $dinf_c6b $dofl_c6b 0 $dctx_c6b,0,0,True,ddf80b03,ddf80b03,True
+$drange_c6c $dctx_c6c $dctx_c6c $d_desc $dhalf_c6c $ddiv_c6c $dnum_c6c $dlag_c6c $dblk_c6c $dinf_c6c $dofl_c6c 0 $dctx_c6c,0,0,True,3e5cc555,3e5cc555,True
+$drange_c7 $dctx_c7 $dctx_c7 $d_desc $dhalf_c7 $ddiv_c7 $dnum_c7 $dlag_c7 $dblk_c7 $dinf_c7 $dofl_c7 0 $dctx_c7,0,0,True,500bfdb9,500bfdb9,True
+$drange_c7b $dctx_c7b $dctx_c7b $d_desc $dhalf_c7b $ddiv_c7b $dnum_c7b $dlag_c7b $dblk_c7b $dinf_c7b $dofl_c7b 0 $dctx_c7b,0,0,True,2d867548,2d867548,True
+$drange_c8 $dctx_c8 $dctx_c8 $d_desc $dhalf_c8 $ddiv_c8 $dnum_c8 $dlag_c8 $dblk_c8 $dinf_c8 $dofl_c8 0 $dctx_c8,0,0,True,a56b8255,a56b8255,True
+$drange_c9 $dctx_c9 $dctx_c9 $d_desc $dhalf_c9 $ddiv_c9 $dnum_c9 $dlag_c9 $dblk_c9 $dinf_c9 $dofl_c9 0 $dctx_c9,0,0,True,20c76f3a,20c76f3a,True
+$drange_c10 $dctx_c10 $dctx_c10 $d_desc $dhalf_c10 $ddiv_c10 $dnum_c10 $dlag_c10 $dblk_c10 $dinf_c10 $dofl_c10 0 $dctx_c10,0,0,True,021d73f0,021d73f0,True
+$drange_c10b $dctx_c10b $dctx_c10b $d_desc $dhalf_c10b $ddiv_c10b $dnum_c10b $dlag_c10b $dblk_c10b $dinf_c10b $dofl_c10b 0 $dctx_c10b,0,0,True,c4560894,c4560894,True
+$drange_c11 $dctx_c11 $dctx_c11 $d_desc $dhalf_c11 $ddiv_c11 $dnum_c11 $dlag_c11 $dblk_c11 $dinf_c11 $dofl_c11 0 $dctx_c11,0,0,True,211ccfdb,211ccfdb,True
+$drange_c12 $dctx_c12 $dctx_c12 $d_desc $dhalf_c12 $ddiv_c12 $dnum_c12 $dlag_c12 $dblk_c12 $dinf_c12 $dofl_c12 0 $dctx_c12,0,0,True,bcd5d24a,bcd5d24a,True
+$drange_c13 $dctx_c13 $dctx_c13 $d_desc $dhalf_c13 $ddiv_c13 $dnum_c13 $dlag_c13 $dblk_c13 $dinf_c13 $dofl_c13 0 $dctx_c13,0,0,True,e5c9933e,e5c9933e,True
+$drange_c13b $dctx_c13b $dctx_c13b $d_desc $dhalf_c13b $ddiv_c13b $dnum_c13b $dlag_c13b $dblk_c13b $dinf_c13b $dofl_c13b 0 $dctx_c13b,0,0,True,d3006fe3,d3006fe3,True
+$drange_c14 $dctx_c14 $dctx_c14 $d_desc $dhalf_c14 $ddiv_c14 $dnum_c14 $dlag_c14 $dblk_c14 $dinf_c14 $dofl_c14 0 $dctx_c14,0,0,True,acf7d27f,acf7d27f,True
+$drange_c15 $dctx_c15 $dctx_c15 $d_desc $dhalf_c15 $ddiv_c15 $dnum_c15 $dlag_c15 $dblk_c15 $dinf_c15 $dofl_c15 0 $dctx_c15,0,0,True,376c325d,376c325d,True
+$drange_c2c $dctx_c2c $dctx_c2c $d_desc $dhalf_c2c $ddiv_c2c $dnum_c2c $dlag_c2c $dblk_c2c $dinf_c2c $dofl_c2c 0 $dctx_c2c,0,0,True,9a1f7f9d,9a1f7f9d,True
+$drange_c6d $dctx_c6d $dctx_c6d $d_desc $dhalf_c6d $ddiv_c6d $dnum_c6d $dlag_c6d $dblk_c6d $dinf_c6d $dofl_c6d 0 $dctx_c6d,0,0,True,076e2f06,076e2f06,True
+$drange_c8b $dctx_c8b $dctx_c8b $d_desc $dhalf_c8b $ddiv_c8b $dnum_c8b $dlag_c8b $dblk_c8b $dinf_c8b $dofl_c8b 0 $dctx_c8b,0,0,True,92368b38,92368b38,True
+$drange_c13c $dctx_c13c $dctx_c13c $d_desc $dhalf_c13c $ddiv_c13c $dnum_c13c $dlag_c13c $dblk_c13c $dinf_c13c $dofl_c13c 0 $dctx_c13c,0,0,True,c4712c13,c4712c13,True
+$drange_c14b $dctx_c14b $dctx_c14b $d_desc $dhalf_c14b $ddiv_c14b $dnum_c14b $dlag_c14b $dblk_c14b $dinf_c14b $dofl_c14b 0 $dctx_c14b,0,0,True,c2d26ec5,c2d26ec5,True
+$drange_c14c $dctx_c14c $dctx_c14c $d_desc $dhalf_c14c $ddiv_c14c $dnum_c14c $dlag_c14c $dblk_c14c $dinf_c14c $dofl_c14c 0 $dctx_c14c,0,0,True,417b939e,417b939e,True
+$drange_cdef1 $dctx_cdef1 $dctx_cdef1 $d_desc $dhalf_cdef1 $ddiv_cdef1 $dnum_cdef1 $dlag_cdef1 $dblk_cdef1 $dinf_cdef1 $dofl_cdef1 0 $dctx_cdef1,0,0,True,d3660788,d3660788,True
+$drange_cbig $dctx_cbig $dctx_cbig $d_desc $dhalf_cbig $ddiv_cbig $dnum_cbig $dlag_cbig $dblk_cbig $dinf_cbig $dofl_cbig 0 $dctx_cbig,0,0,True,3b6bbf70,3b6bbf70,True
+$drange_capped $dctx_capped $dctx_capped $d_desc $dhalf_capped $ddiv_capped $dnum_capped $dlag_capped $dblk_capped $dinf_capped $dofl_capped 0 $dctx_capped,0,0,True,7e61da81,7e61da81,True
+$drange_hilevel $dctx_hilevel $dctx_hilevel $d_desc $dhalf_hilevel $ddiv_hilevel $dnum_hilevel $dlag_hilevel $dblk_hilevel $dinf_hilevel $dofl_hilevel 0 $dctx_hilevel,0,0,True,a53c6e44,a53c6e44,True
+state_regions,$dblk_ctx_h1_big+0x0:13824 $dblk_ctx_h1_divclamp+0x0:13824 $dblk_ctx_h1_band3+0x0:13824 $dblk_ctx_h1_band5+0x0:13824 $dblk_ctx_c0+0x0:13824 $dblk_ctx_c1+0x0:13824 $dblk_ctx_c2+0x0:13824 $dblk_ctx_c2b+0x0:13824 $dblk_ctx_c3+0x0:13824 $dblk_ctx_c4+0x0:13824 $dblk_ctx_c5+0x0:13824 $dblk_ctx_c5b+0x0:13824 $dblk_ctx_c6+0x0:13824 $dblk_ctx_c6b+0x0:13824 $dblk_ctx_c6c+0x0:13824 $dblk_ctx_c7+0x0:13824 $dblk_ctx_c7b+0x0:13824 $dblk_ctx_c8+0x0:13824 $dblk_ctx_c9+0x0:13824 $dblk_ctx_c10+0x0:13824 $dblk_ctx_c10b+0x0:13824 $dblk_ctx_c11+0x0:13824 $dblk_ctx_c12+0x0:13824 $dblk_ctx_c13+0x0:13824 $dblk_ctx_c13b+0x0:13824 $dblk_ctx_c14+0x0:13824 $dblk_ctx_c15+0x0:13824 $dblk_ctx_c2c+0x0:13824 $dblk_ctx_c6d+0x0:13824 $dblk_ctx_c8b+0x0:13824 $dblk_ctx_c13c+0x0:13824 $dblk_ctx_c14b+0x0:13824 $dblk_ctx_c14c+0x0:13824 $dblk_ctx_cdef1+0x0:13824 $dblk_ctx_cbig+0x0:13824 $dblk_ctx_capped+0x0:13824 $dblk_ctx_hilevel+0x0:13824 $dofl_h1_big+0x0:64 $dofl_h1_divclamp+0x0:64 $dofl_h1_band3+0x0:64 $dofl_h1_band5+0x0:64 $dofl_c0+0x0:64 $dofl_c1+0x0:64 $dofl_c2+0x0:64 $dofl_c2b+0x0:64 $dofl_c3+0x0:64 $dofl_c4+0x0:64 $dofl_c5+0x0:64 $dofl_c5b+0x0:64 $dofl_c6+0x0:64 $dofl_c6b+0x0:64 $dofl_c6c+0x0:64 $dofl_c7+0x0:64 $dofl_c7b+0x0:64 $dofl_c8+0x0:64 $dofl_c9+0x0:64 $dofl_c10+0x0:64 $dofl_c10b+0x0:64 $dofl_c11+0x0:64 $dofl_c12+0x0:64 $dofl_c13+0x0:64 $dofl_c13b+0x0:64 $dofl_c14+0x0:64 $dofl_c15+0x0:64 $dofl_c2c+0x0:64 $dofl_c6d+0x0:64 $dofl_c8b+0x0:64 $dofl_c13c+0x0:64 $dofl_c14b+0x0:64 $dofl_c14c+0x0:64 $dofl_cdef1+0x0:64 $dofl_cbig+0x0:64 $dofl_capped+0x0:64 $dofl_hilevel+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c7647d0,original=0x2fa0220,2026-10-08T19:45:58
+distinct_results,37,,
+VERDICT,GREEN,37,

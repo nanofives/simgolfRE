@@ -1,0 +1,12 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$terr $p0,void,void,True,5715f29b,5715f29b,True
+$terr $p1,void,void,True,7bd54208,7bd54208,True
+$terr $p2,void,void,True,1499a753,1499a753,False
+$terr $p3,void,void,True,714628ca,714628ca,True
+$terr $p4,void,void,True,b851f73a,b851f73a,True
+$terr $p5,void,void,True,1499a753,1499a753,False
+state_regions,$terr+0x0:15532 $nrm+0x0:7200 $blk+0x0:3552,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6cb31220,original=0x1440e60,2026-10-08T19:18:05
+distinct_results,5,,
+VERDICT,GREEN,6,

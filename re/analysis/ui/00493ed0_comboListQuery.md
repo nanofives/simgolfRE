@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 21 bytes, 7 instructions, subsystem `ui`. Mechanical tr
 returns the result of the virtual call vtbl+0xd8 on the list object at this+0x23b4 (0 when it is null) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Ask the sub-object held at +0x23b4 for a value through its vtable slot +0xd8. The pointer is read at 0x00493ed0 and a null one makes the function return 0 (0x00493ee2). A non-null one is dispatched with a tail jump (0x00493eda / 0x00493edc) with the SUB-OBJECT in ecx and no arguments, so slot +0xd8 supplies this function's return value unchanged. Reimplemented in `shim/src/re/c3bx.cpp`; path-1 A/B GREEN: comboListQuery (12 vectors, 10 distinct results, 9 changing state, `log/diff/00493ed0_comboListQuery.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00493ed0@f_00493ed0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00493ee4): callee pops 0 bytes of stack arguments.

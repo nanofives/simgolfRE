@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 19 bytes, 7 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: if a child handler at field [5] exists, calls its vtable+0x14. (`re/names/exe_4.tsv`)
 
+## Purpose
+Destruct the object down to its base: put the base vtable 0x004baeac back at offset 0 (0x00487260) and release the child held at +0x14 through that child's own vtable slot +0x14. The child is read at 0x00487266 and a null one ends the function at 0x00487272 with the vtable store already done. A non-null child is dispatched with a tail jump (0x0048726d / 0x0048726f) with the child itself in ecx, so the child's slot +0x14 returns straight to this function's caller; the child field at +0x14 is not cleared. Reimplemented in `shim/src/re/c3bx.cpp`; path-1 A/B GREEN: StrList_dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487260_StrList_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487260@f_00487260@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487272): callee pops 0 bytes of stack arguments.

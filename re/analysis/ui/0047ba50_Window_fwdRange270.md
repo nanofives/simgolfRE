@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 28 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 forwards a (pos,range) pair to the child at +0x270 (FUN_00496770) (`re/names/exe_3.tsv`)
 
+## Purpose
+The same forward as fwdRange26c 0x0047ba30 for the second scrollbar child, the one at +0x270. The child is read at 0x0047ba50 and a null one returns at 0x0047ba69 (0x0047ba58); [esp+8] goes to eax and [esp+4] to edx (0x0047ba5a / 0x0047ba5e), eax is pushed first (0x0047ba62 / 0x0047ba63) and orderPair 0x00496770 is called at 0x0047ba64 with [esp+4] as its first argument. The forwarder writes nothing and pops both arguments (`ret 8` at 0x0047ba69). Reimplemented in `shim/src/re/c3bx.cpp`; path-1 A/B GREEN: Window_fwdRange270 (16 vectors, 14 distinct results, 13 changing state, `log/diff/0047ba50_Window_fwdRange270.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_0047ba50@C_FUN_0047ba50@f_0047ba50@@QAEXII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047ba69): callee pops 8 bytes of stack arguments.

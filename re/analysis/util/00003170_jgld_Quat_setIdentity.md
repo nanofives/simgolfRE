@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003170`), 70 bytes, 29 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 resets to the identity quaternion (0,0,0,1). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Resets an existing quaternion to the identity rotation, with byte-for-byte the same body as the constructor at 0x10003050: three pushed zeros (0x1000318d, 0x1000318f, 0x10003191) into Vector3::set on `this` (0x10003196), then the dword 0x3f800000 at [this+0xc] (0x1000319e). The one difference is the epilogue: the constructor reloads `this` into eax at 0x10003085 after the store, this function does not (0x100031a5 pops straight into the epilogue), so it has no declared return value - eax does still hold `this` on return, because 0x1000319b loaded it to address the store, which is why the registry entry declares `ret="void"` and the A/B compares memory only. Its one caller is Transform::setTranslation 0x100054b0 (0x100054dd), which uses it to clear the rotation of a transform while keeping its position. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: Quat::setIdentity (12 vectors, 12 distinct results, 12 changing state, `log/diff/00003170_jgld_Quat_setIdentity.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003170@f_10003170@@YIXPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100031b5): callee pops 0 bytes of stack arguments.

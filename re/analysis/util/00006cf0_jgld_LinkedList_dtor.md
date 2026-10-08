@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00006cf0`), 63 bytes, 26 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 destructor: clears the list. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The virtual destructor of the list: it installs the LinkedList vtable VA 0x1011d05c at [this] (0x10006d10) and calls LinkedList::clear on `this` (0x10006d19, through the incremental-link thunk 0x10001500 to 0x10006df0), which walks the chain, hands the nodes to their own deleting destructors and zeroes m_ordered, m_count, m_head and m_cur. It has no other store, no branch of its own and no return value (0x10006d2e), and it reaches no deallocator for the list OBJECT itself: that is LinkedList::deletingDtor 0x10006d80's job. Its other caller is atexitDestroyGlobalList 0x10006a40, the stub that tears down the module-level tracked-object list. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: LinkedList::dtor (10 vectors, 10 distinct results, 10 changing state, `log/diff/00006cf0_jgld_LinkedList_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??1LinkedList@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10006d2e): callee pops 0 bytes of stack arguments.

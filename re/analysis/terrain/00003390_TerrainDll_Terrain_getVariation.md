@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00003390`), 59 bytes, 25 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Reads back the field Terrain::setType wrote with Tile::setRotation, as a SIGNED BYTE. `this` is stored in the frame slot (0x100033aa) and never read; the Tile argument goes into ecx (0x100033ad) for the call of Tile::getVariation through the thunk 0x100010e6 (0x100033b0), and the byte the callee leaves in al is sign-extended into the return value (movsx eax, al at 0x100033b5), so a stored word of 0x80..0xff comes back as -128..-1 and only the low byte of Tile+0x28 is visible at all. The body has no conditional branch. The exe calls it through the import slot 0x4ba198 from `syncTiles` 0x00449470 and `applyTileVariation` 0x00449f00. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::getVariation (12 vectors, 9 distinct results, 0 changing state, `log/diff/00003390_Terrain_Terrain_getVariation.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?getVariation@Terrain@@QAEHPAVTile@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100033c8): callee pops 4 bytes of stack arguments.

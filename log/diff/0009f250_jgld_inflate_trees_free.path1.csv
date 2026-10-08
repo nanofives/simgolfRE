@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $zStream,0,0,True,454cbd77,454cbd77,False
+$zT1 $zStream,0,0,True,b9dd0968,b9dd0968,True
+$zT2 $zStream,0,0,True,2d7130d7,2d7130d7,True
+$zT3 $zStream,0,0,True,522f1197,522f1197,True
+$zT4 $zStream,0,0,True,120fc31e,120fc31e,True
+$zT5 $zStream,0,0,True,09ff23d3,09ff23d3,True
+$zT6 $zStream,0,0,True,6a956e3e,6a956e3e,True
+$zT7 $zStream,0,0,True,1694bce2,1694bce2,True
+$zT8 $zStream,0,0,True,788d0e7b,788d0e7b,True
+$zT9 $zStream,0,0,True,12687c28,12687c28,True
+$zT10 $zStream,0,0,True,b960e2b1,b960e2b1,True
+$zT11 $zStream,0,0,True,42526437,42526437,True
+state_regions,$zBlk+0x0:6144 $zStream+0x0:64 $zCtr+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6cf40860,original=0x1470be0,2026-10-08T19:11:37
+distinct_results,12,,
+VERDICT,GREEN,12,

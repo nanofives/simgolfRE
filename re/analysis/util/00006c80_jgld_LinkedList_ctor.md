@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00006c80`), 78 bytes, 28 instructions, subsystem `util
 constructs an empty LinkedList. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+The default constructor of jgld's circular doubly linked list. It installs the LinkedList vtable, VA 0x1011d05c, in the dword at [this] (0x10006ca0) and then writes three zeros, in this order: m_head at [this+0x10] (0x10006ca9), m_cur at [this+0x14] (0x10006cb3) and m_count at [this+0xc] (0x10006cbd). The other three fields of the object are deliberately left alone - m_data at [this+4] and m_flag at [this+8], which LinkedList::add 0x10006f40 and removeCurrent 0x10007100 keep as a mirror of the current node's payload, and m_ordered at [this+0x18], which clear 0x10006df0 zeroes - so a new list starts with an empty chain and stale mirror fields. `this` is returned in eax (0x10006cc4). It has no callee of its own. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: LinkedList::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006c80_jgld_LinkedList_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??0LinkedList@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10006ccd): callee pops 0 bytes of stack arguments.

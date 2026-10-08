@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003b150`), 213 bytes, 83 instructions, subsystem `au
 Audio codec block pipeline reached from loadWaveResource: runs bitPack, FUN_1003c220, codecStageDispatch and FUN_1003d040 over the resource buffers. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Encodes one frame of samples into one packed parameter block; it is codecProcessBlock's mirror image. `codecApplyFixedCoeffs` 0x1003d040 (called at 0x1003b19c) pre-filters the samples in place under the descriptor 0x10063ef4 and keeps its four filter states in the first 0x10 bytes of the context (0x10040f2f- 0x10040f4c); `codecStageDispatch` 0x1003c640 (0x1003b1bf) runs the whole analysis and leaves the flag pair [ebp-0xc], the index cell [ebp-0x10], the float level [ebp-0x68] and the float coefficients [ebp-0x3c]; `quantizeParams` 0x1003c220 (0x1003b1e3) turns those four into the class cell [ebp-0x14], the exponent cell [ebp-4] and the ten quantised coefficients [ebp-0x64]; and `bitPack` 0x1003c180 (0x1003b207) writes those three into the caller's words, with the context as the owner of bitPermute's toggle at +0x2540 (0x1003bf76). Both array arguments are moved back one dword on entry (0x1003b177, 0x1003b186) and handed on with `+ 4` (0x1003b198, 0x1003b1bb, 0x1003b1f2). Returns 0 (0x1003b20f). Reimplemented in `shim/src/re/c3bv.cpp`; path-1 A/B GREEN: codecProcessResource (14 vectors, 14 distinct results, 14 changing state, `log/diff/0003b150_sound_codecProcessResource.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003b224): callee pops 0 bytes of stack arguments.
 

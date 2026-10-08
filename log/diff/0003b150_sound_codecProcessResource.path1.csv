@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$samples_ra $bits_ra $ctx_ra,0,0,True,a49c1d3f,a49c1d3f,True
+$samples_rb $bits_rb $ctx_rb,0,0,True,7a920ae8,7a920ae8,True
+$samples_rc $bits_rc $ctx_rc,0,0,True,fec9fb9c,fec9fb9c,True
+$samples_rd $bits_rd $ctx_rd,0,0,True,6a20dfbd,6a20dfbd,True
+$samples_re $bits_re $ctx_re,0,0,True,26aa6060,26aa6060,True
+$samples_rf $bits_rf $ctx_rf,0,0,True,22bfafe7,22bfafe7,True
+$samples_rg $bits_rg $ctx_rg,0,0,True,0dd4cc1a,0dd4cc1a,True
+$samples_rh $bits_rh $ctx_rh,0,0,True,ed5dfc36,ed5dfc36,True
+$samples_ri $bits_ri $ctx_ri,0,0,True,541da4f5,541da4f5,True
+$samples_rj $bits_rj $ctx_rj,0,0,True,68fe4a37,68fe4a37,True
+$samples_rk $bits_rk $ctx_rk,0,0,True,0a1366c2,0a1366c2,True
+$samples_rl $bits_rl $ctx_rl,0,0,True,76ba8362,76ba8362,True
+$samples_rm $bits_rm $ctx_rm,0,0,True,fd487f16,fd487f16,True
+$samples_rn $bits_rn $ctx_rn,0,0,True,bc84c43f,bc84c43f,True
+state_regions,$blk_ra+0x0:13824 $blk_rb+0x0:13824 $blk_rc+0x0:13824 $blk_rd+0x0:13824 $blk_re+0x0:13824 $blk_rf+0x0:13824 $blk_rg+0x0:13824 $blk_rh+0x0:13824 $blk_ri+0x0:13824 $blk_rj+0x0:13824 $blk_rk+0x0:13824 $blk_rl+0x0:13824 $blk_rm+0x0:13824 $blk_rn+0x0:13824 $sblk_ra+0x0:8192 $sblk_rb+0x0:8192 $sblk_rc+0x0:8192 $sblk_rd+0x0:8192 $sblk_re+0x0:8192 $sblk_rf+0x0:8192 $sblk_rg+0x0:8192 $sblk_rh+0x0:8192 $sblk_ri+0x0:8192 $sblk_rj+0x0:8192 $sblk_rk+0x0:8192 $sblk_rl+0x0:8192 $sblk_rm+0x0:8192 $sblk_rn+0x0:8192 $bits_ra+0x0:256 $bits_rb+0x0:256 $bits_rc+0x0:256 $bits_rd+0x0:256 $bits_re+0x0:256 $bits_rf+0x0:256 $bits_rg+0x0:256 $bits_rh+0x0:256 $bits_ri+0x0:256 $bits_rj+0x0:256 $bits_rk+0x0:256 $bits_rl+0x0:256 $bits_rm+0x0:256 $bits_rn+0x0:256,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c765560,original=0x2fa0200,2026-10-08T19:45:03
+distinct_results,14,,
+VERDICT,GREEN,14,

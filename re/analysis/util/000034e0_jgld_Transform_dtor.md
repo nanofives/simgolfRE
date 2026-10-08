@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000034e0`), 63 bytes, 26 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 destructor (??1Transform). (`re/names/jgld_0.tsv`)
 
+## Purpose
+The virtual destructor of the Transform, and like the Matrix one it releases nothing: it installs the Transform vtable VA 0x1011d028 at [this] (0x10003500) and calls Transform::reset on `this` (0x10003509, the thunk 0x100017e9 to 0x10005650), which clears the flags word at [this+0x20]. It does NOT destroy the quaternion sub-object at this+4 that the constructor at 0x10005450 built, because that member has no destructor to call, and it reaches no deallocator: the heap path is Transform::deletingDtor 0x10003670. The epilogue at 0x1000350e does not reload `this` into eax, so there is no return value. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: Transform::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/000034e0_jgld_Transform_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??1Transform@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000351e): callee pops 0 bytes of stack arguments.

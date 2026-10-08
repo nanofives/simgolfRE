@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000032f0`), 63 bytes, 26 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 destructor (??1Matrix); restores vtable. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The virtual destructor of the 4x4 matrix (`??1Matrix@@UAE@XZ`, re/match/jgld_math.cpp), and it releases nothing: it installs the Matrix vtable VA 0x1011d024 at [this] (0x10003310) - the store a destructor makes so that a virtual call during destruction resolves to this class - and then calls Matrix::loadIdentity on `this` (0x10003319, the same thunk 0x100016db), which rewrites the sixteen cells from [this+4] to the identity. No deallocator is reached on any path, so a Matrix's storage is always the caller's: the heap path runs through Matrix::deletingDtor 0x10003600, which calls this body and then operator delete itself. Unlike the constructor at 0x10004590 it does not reload `this` into eax (0x1000331e goes straight into the epilogue), so it has no return value. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: Matrix::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/000032f0_jgld_Matrix_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??1Matrix@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000332e): callee pops 0 bytes of stack arguments.

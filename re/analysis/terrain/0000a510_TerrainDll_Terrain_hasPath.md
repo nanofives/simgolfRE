@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a510`), 56 bytes, 24 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Answers whether a tile carries a path. `this` is stored in the frame slot (0x1000a52a) and never read; the Tile argument goes into ecx (0x1000a52d) and Tile::hasPath is called through the thunk 0x100010eb (0x1000a530). Nothing touches eax afterwards, so the callee's al - the raw byte at Tile+0x208, which Tile::layPath and Tile::setTypeId write - is the return value, and a byte of 0xff comes back as 0xff rather than 1. The body has no conditional branch. The exe calls it through the import slot 0x4ba148 from `togglePath` 0x0044a410. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::hasPath (12 vectors, 3 distinct results, 0 changing state, `log/diff/0000a510_Terrain_Terrain_hasPath.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?hasPath@Terrain@@QAE_NPAVTile@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000a545): callee pops 4 bytes of stack arguments.

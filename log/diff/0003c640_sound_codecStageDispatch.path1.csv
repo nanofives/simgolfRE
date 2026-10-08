@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$samples_sa $pair_sa $idx_sa $lvl_sa $coeff_sa $ctx_sa,0,0,True,b2e02074,b2e02074,True
+$samples_sb $pair_sb $idx_sb $lvl_sb $coeff_sb $ctx_sb,0,0,True,045eac43,045eac43,True
+$samples_sc $pair_sc $idx_sc $lvl_sc $coeff_sc $ctx_sc,0,0,True,c29adb7d,c29adb7d,True
+$samples_sd $pair_sd $idx_sd $lvl_sd $coeff_sd $ctx_sd,0,0,True,8d747854,8d747854,True
+$samples_se $pair_se $idx_se $lvl_se $coeff_se $ctx_se,0,0,True,8c9ab725,8c9ab725,True
+$samples_sf $pair_sf $idx_sf $lvl_sf $coeff_sf $ctx_sf,0,0,True,9be6ff18,9be6ff18,True
+$samples_sg $pair_sg $idx_sg $lvl_sg $coeff_sg $ctx_sg,0,0,True,36055c40,36055c40,True
+$samples_sh $pair_sh $idx_sh $lvl_sh $coeff_sh $ctx_sh,0,0,True,11300d8a,11300d8a,True
+$samples_si $pair_si $idx_si $lvl_si $coeff_si $ctx_si,0,0,True,588594a4,588594a4,True
+$samples_sj $pair_sj $idx_sj $lvl_sj $coeff_sj $ctx_sj,0,0,True,2aa42161,2aa42161,True
+$samples_sk $pair_sk $idx_sk $lvl_sk $coeff_sk $ctx_sk,0,0,True,b3158422,b3158422,True
+$samples_sl $pair_sl $idx_sl $lvl_sl $coeff_sl $ctx_sl,0,0,True,50cb6011,50cb6011,True
+$samples_sm $pair_sm $idx_sm $lvl_sm $coeff_sm $ctx_sm,0,0,True,09f661c0,09f661c0,True
+$samples_sn $pair_sn $idx_sn $lvl_sn $coeff_sn $ctx_sn,0,0,True,e308bad4,e308bad4,True
+state_regions,$blk_sa+0x0:13824 $blk_sb+0x0:13824 $blk_sc+0x0:13824 $blk_sd+0x0:13824 $blk_se+0x0:13824 $blk_sf+0x0:13824 $blk_sg+0x0:13824 $blk_sh+0x0:13824 $blk_si+0x0:13824 $blk_sj+0x0:13824 $blk_sk+0x0:13824 $blk_sl+0x0:13824 $blk_sm+0x0:13824 $blk_sn+0x0:13824 $sblk_sa+0x0:8192 $sblk_sb+0x0:8192 $sblk_sc+0x0:8192 $sblk_sd+0x0:8192 $sblk_se+0x0:8192 $sblk_sf+0x0:8192 $sblk_sg+0x0:8192 $sblk_sh+0x0:8192 $sblk_si+0x0:8192 $sblk_sj+0x0:8192 $sblk_sk+0x0:8192 $sblk_sl+0x0:8192 $sblk_sm+0x0:8192 $sblk_sn+0x0:8192 $pair_sa+0x0:8 $pair_sb+0x0:8 $pair_sc+0x0:8 $pair_sd+0x0:8 $pair_se+0x0:8 $pair_sf+0x0:8 $pair_sg+0x0:8 $pair_sh+0x0:8 $pair_si+0x0:8 $pair_sj+0x0:8 $pair_sk+0x0:8 $pair_sl+0x0:8 $pair_sm+0x0:8 $pair_sn+0x0:8 $idx_sa+0x0:4 $idx_sb+0x0:4 $idx_sc+0x0:4 $idx_sd+0x0:4 $idx_se+0x0:4 $idx_sf+0x0:4 $idx_sg+0x0:4 $idx_sh+0x0:4 $idx_si+0x0:4 $idx_sj+0x0:4 $idx_sk+0x0:4 $idx_sl+0x0:4 $idx_sm+0x0:4 $idx_sn+0x0:4 $lvl_sa+0x0:4 $lvl_sb+0x0:4 $lvl_sc+0x0:4 $lvl_sd+0x0:4 $lvl_se+0x0:4 $lvl_sf+0x0:4 $lvl_sg+0x0:4 $lvl_sh+0x0:4 $lvl_si+0x0:4 $lvl_sj+0x0:4 $lvl_sk+0x0:4 $lvl_sl+0x0:4 $lvl_sm+0x0:4 $lvl_sn+0x0:4 $coeff_sa+0x0:64 $coeff_sb+0x0:64 $coeff_sc+0x0:64 $coeff_sd+0x0:64 $coeff_se+0x0:64 $coeff_sf+0x0:64 $coeff_sg+0x0:64 $coeff_sh+0x0:64 $coeff_si+0x0:64 $coeff_sj+0x0:64 $coeff_sk+0x0:64 $coeff_sl+0x0:64 $coeff_sm+0x0:64 $coeff_sn+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6c765740,original=0x2fa0240,2026-10-08T19:45:13
+distinct_results,14,,
+VERDICT,GREEN,14,

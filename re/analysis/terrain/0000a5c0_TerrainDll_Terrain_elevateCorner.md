@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a5c0`), 66 bytes, 28 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Raises one corner of a tile, ignoring a null tile. `this` is stored in the frame slot (0x1000a5da) and never read; the Tile argument is tested against 0 (cmp 0x1000a5dd, je 0x1000a5ef) and only then is the corner argument pushed (0x1000a5e6) and Tile::elevateCorner called through the thunk 0x100010fa (0x1000a5ea). A null tile does nothing at all, which is the difference between this wrapper and Terrain::setWall and Terrain::hasPath, which dereference their Tile argument with no test. The exe calls it through the import slot 0x4ba184 from `rebuildTerrainGrid` 0x00449540 and `applyTileElevation` 0x00449fa0. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::elevateCorner (34 vectors, 33 distinct results, 32 changing state, `log/diff/0000a5c0_Terrain_Terrain_elevateCorner.path1.csv`); Terrain::elevateCorner_odd (34 vectors, 33 distinct results, 32 changing state, `log/diff/0000a5c0_Terrain_Terrain_elevateCorner_odd.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?elevateCorner@Terrain@@QAEXPAVTile@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000a5ff): callee pops 8 bytes of stack arguments.

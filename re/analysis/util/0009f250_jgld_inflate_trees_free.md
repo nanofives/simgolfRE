@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009f250`), 155 bytes, 58 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Releases the chain of Huffman decoding tables huft_build 0x1009e7a0 allocated, through the z_stream's own deallocator, and returns 0 (`xor eax,eax` at 0x1009f2d8, zlib's Z_OK). zlib links each table into a list through a dummy entry placed just below it, so the table pointer t the caller passes has its link at t-4 and the block that was actually allocated starts at t-8. The body runs that list twice. First it reverses it in place: p = 0 (0x1009f268), q = t (0x1009f272), and while q is not null (`je` 0x1009f279) it reads r from [q-4] (0x1009f27e), writes p into [q-4] (0x1009f28a) and steps p = q, q = r (0x1009f290, 0x1009f296). Then it frees forwards: while p is not null (`je` 0x1009f29f) it steps p back by the eight bytes of the dummy entry to the address that was allocated (`sub ecx,8` at 0x1009f2a4), reads the next block out of [p+4] (0x1009f2ad) BEFORE releasing it, and calls the function pointer at z+0x24 with the opaque at z+0x28 and that address (0x1009f2b9-0x1009f2c3, a __cdecl call whose eight bytes the body pops itself at 0x1009f2c6). The reversal is what makes the frees run in the opposite order to the allocations, and it is also why a null table is a no-op: both loop tests fail immediately and the function returns 0 without touching anything. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: inflate_trees_free (12 vectors, 12 distinct results, 11 changing state, `log/diff/0009f250_jgld_inflate_trees_free.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_inftrees.cpp` as `_inflate_trees_free` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009f2ea): callee pops 0 bytes of stack arguments.

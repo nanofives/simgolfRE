@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a680`), 86 bytes, 36 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Draws a tile's skirt and then lowers one of its corners, ignoring a null tile. The first argument is tested against 0 (cmp 0x1000a69d, je 0x1000a6c3) and, when it is not null, two calls run in order: Terrain::lowerEdge through the thunk 0x10001118 (0x1000a6b2), with the fourth argument pushed first (0x1000a6a6), then the third and then the first (0x1000a6aa, 0x1000a6ae) and `this` in ecx from the frame slot (0x1000a6af), and then Tile::lowerCorner on the FIRST argument through the thunk 0x100010dc (0x1000a6be) with the second argument pushed at 0x1000a6ba. The fourth argument is an angle and is only moved as a dword here, never loaded into the FPU. Terrain::lowerEdge 0x10038900 sets the OpenGL transform for that angle, writes g_viewAngleIndex 0x10070a14 through Terrain::setViewAngle 0x1000adc0 and redraws the tile five times at +-10 and +-20 only when one of three neighbours toward the camera is missing or hidden, so this export is the "the ground drops away at this corner" operation: the geometry change is Tile::lowerCorner's and the skirt is lowerEdge's. The exe calls it through the import slot 0x4ba158 from `applyTileElevation` 0x00449fa0. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::lowerEdgeCorner (22 vectors, 20 distinct results, 20 changing state, `log/diff/0000a680_Terrain_Terrain_lowerEdgeCorner.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?lowerEdgeCorner@Terrain@@QAEXPAVTile@@H0M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x1000a6d3): callee pops 16 bytes of stack arguments.

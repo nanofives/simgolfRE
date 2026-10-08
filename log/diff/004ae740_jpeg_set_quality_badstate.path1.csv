@@ -1,0 +1,7 @@
+vector,original,reimpl,match
+error,RPCException,"Error: access violation accessing 0xfb1e0ff3
+    at run (/script2.js:16315)
+    at call (native)
+    at handleRpcMessage (/frida/runtime/message-dispatcher.js:39)
+    at handleMessage (/frida/runtime/",
+VERDICT,ERROR,0,

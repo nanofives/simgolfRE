@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003a980`), 193 bytes, 77 instructions, subsystem `au
 Audio codec block pipeline reached from openMmioSound: reads the config at 0x10063ef0 then runs bitUnpack -> codecTransformStage -> codecSynthStage, writing the output sample buffer (param_3). (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Decodes one packed parameter block into one frame of samples. It is a three-stage pipeline over eight locals of its own frame and nothing else: `bitUnpack` 0x1003c1d0 (called at 0x1003a9d4) unpacks the caller's words under the count at the descriptor 0x10063ef0 into the class cell [ebp-0x14], the level cell [ebp-4] and the ten quantised coefficients [ebp-0x64]; `codecTransformStage` 0x1003b5a0 (0x1003a9fc) turns those three into the flag pair [ebp-0xc], the sub-frame length [ebp-0x10], the gain [ebp-0x6c] and the float coefficients [ebp-0x3c], using the first 0xa8 bytes of the context as its history record; and `codecSynthStage` 0x1003b230 (0x1003aa23) synthesises from those four into the caller's output array, leaving the produced sample count in [ebp-0x68]. Both array arguments are moved back one dword on entry (0x1003a9a7, 0x1003a9b6) and handed on with `+ 4` (0x1003a9bf, 0x1003aa0f), which is the codec's one-based convention; the int coefficient array [ebp-0x64] and the float coefficient array [ebp-0x3c] sit exactly 0x28 bytes apart, the ten dwords of one order-10 parameter set. The context is one object whose first 0xa8 bytes are the transform stage's record and whose +0xa8..+0xc08 is the synthesis state. Returns 0 (0x1003aa2b). Reimplemented in `shim/src/re/c3bv.cpp`; path-1 A/B GREEN: codecProcessBlock (14 vectors, 14 distinct results, 14 changing state, `log/diff/0003a980_sound_codecProcessBlock.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003aa40): callee pops 0 bytes of stack arguments.
 

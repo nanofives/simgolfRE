@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$terr $t0,0,0,True,e2ad708e,e2ad708e,False
+$terr $t1,1,1,True,e2ad708e,e2ad708e,False
+$terr $t2,127,127,True,e2ad708e,e2ad708e,False
+$terr $t3,-128,-128,True,e2ad708e,e2ad708e,False
+$terr $t4,-1,-1,True,e2ad708e,e2ad708e,False
+$terr $t5,18,18,True,e2ad708e,e2ad708e,False
+$terr $t6,0,0,True,e2ad708e,e2ad708e,False
+$terr $t7,52,52,True,e2ad708e,e2ad708e,False
+$terr $t8,85,85,True,e2ad708e,e2ad708e,False
+$terr $t9,-86,-86,True,e2ad708e,e2ad708e,False
+$terr $t10,-128,-128,True,e2ad708e,e2ad708e,False
+$terr $t11,-1,-1,True,e2ad708e,e2ad708e,False
+state_regions,$blk+0x0:7104,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6cb313c0,original=0x1440d20,2026-10-08T19:17:53
+distinct_results,9,,
+VERDICT,GREEN,12,

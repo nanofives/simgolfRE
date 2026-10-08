@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a560`), 68 bytes, 30 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Sets one of a tile's nine walls and its height. `this` is stored in the frame slot (0x1000a57a) and never read. The fourth argument is loaded as a BYTE into al (mov al, byte [ebp+0x14] at 0x1000a57d) and pushed as a dword (0x1000a580) whose upper three bytes are the /GZ fill constant 0xcccccccc that the frame initialisation at 0x1000a572-0x1000a577 left in eax, so the callee is handed 0xcccccc00 | byte; the other three arguments are pushed unchanged (0x1000a584, 0x1000a588) and the Tile goes into ecx (0x1000a589) for the call of Tile::setWall through the thunk 0x100011d1 (0x1000a58c). The callee reads only the low byte of that slot (mov cl, byte [ebp+0x10] at 0x10015423) and stores it at Tile + side + 0x234, then stores the height dword at Tile + side * 4 + 0x210, with no bounds check on the side. So a flag of 0x100 switches the wall OFF although it is a non-zero dword, which is the opposite of Terrain::updatePath's dword test. The body has no conditional branch. The exe calls it through the import slot 0x4ba18c from `rebuildTerrainGrid` 0x00449540 and `applyTileWalls` 0x0044a380. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::setWall (48 vectors, 48 distinct results, 48 changing state, `log/diff/0000a560_Terrain_Terrain_setWall.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?setWall@Terrain@@QAEXPAVTile@@HH_N@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x1000a5a1): callee pops 16 bytes of stack arguments.

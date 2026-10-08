@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a450`), 71 bytes, 30 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Answers whether the tile at a grid position is marked as connected. The two arguments are pushed second-then-first (0x1000a470, 0x1000a474) so the lookup is Terrain::tileAt(x, y) through the thunk 0x1000108c (0x1000a478); the returned pointer goes straight into ecx (0x1000a47d) and Tile::isConnected is called through the thunk 0x1000132a (0x1000a47f), returning the raw byte at Tile+0x209 in al - not a normalised boolean, so a byte of 0xff comes back as 0xff. There is NO null test between the two calls, and Terrain::tileAt answers 0 for any coordinate outside the grid (xor eax, eax at 0x10001d8f), so an out-of-range call reads through a null pointer at 0x10013380; the vectors therefore stay inside the grid. The exe calls it through the import slot 0x4ba150 from `togglePath` 0x0044a410. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::hasConnectedPath (20 vectors, 3 distinct results, 0 changing state, `log/diff/0000a450_Terrain_Terrain_hasConnectedPath.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?hasConnectedPath@Terrain@@QAE_NHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000a494): callee pops 8 bytes of stack arguments.

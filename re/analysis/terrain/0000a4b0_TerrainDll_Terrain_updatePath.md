@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a4b0`), 75 bytes, 32 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Sets or clears the connected mark of the tile at a grid position. The THIRD argument is pushed first (0x1000a4d0) and stays on the stack across the lookup, because Terrain::tileAt pops only its own two (pushed at 0x1000a4d4 and 0x1000a4d8, `ret 8`), so it is the argument of the second call; the lookup runs through the thunk 0x1000108c (0x1000a4dc), its result goes into ecx (0x1000a4e1) and Tile::setConnected is called through the thunk 0x10001131 (0x1000a4e3). The callee tests the whole dword (cmp dword [ebp+8], 0 at 0x100133c1) and stores the literal 1 or 0 at Tile+0x209, so -1 and 0x100 are both "connected" - unlike Terrain::setWall, whose flag is read as a byte. There is no null test here either, so the vectors stay inside the grid. The exe calls it through the import slot 0x4ba14c from `togglePath` 0x0044a410. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::updatePath (48 vectors, 27 distinct results, 32 changing state, `log/diff/0000a4b0_Terrain_Terrain_updatePath.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?updatePath@Terrain@@QAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000a4f8): callee pops 12 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a6f0`), 62 bytes, 26 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Recomputes one tile's vertex normal, ignoring a null tile. `this` is stored in the frame slot (0x1000a70a) and never read; the Tile argument is tested against 0 (cmp 0x1000a70d, je 0x1000a711) and, when it is not null, goes into ecx (0x1000a713) for the call of Tile::calcNormals through the thunk 0x100010f5 (0x1000a716) with no argument pushed. The callee itself returns at once unless the tile's normals-dirty byte at Tile+0x244 is set (jne 0x10012d1a), so this export does nothing for a clean tile either. The exe calls it through the import slot 0x4ba188 from `rebuildTerrainGrid` 0x00449540. Reimplemented in `shim/src/re/c3bt.cpp`; path-1 A/B GREEN: Terrain::calcNormals (11 vectors, 9 distinct results, 8 changing state, `log/diff/0000a6f0_Terrain_Terrain_calcNormals.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods.cpp` as `?calcNormals@Terrain@@QAEXPAVTile@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000a72b): callee pops 4 bytes of stack arguments.

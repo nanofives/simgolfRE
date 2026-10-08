@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 33 bytes, 14 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Calls the child (field [5]) vtable+0x14 then this vtable+8 and clears field [5]. (`re/names/exe_4.tsv`)
 
+## Purpose
+Hand back the child held at +0x14 and tell this object it is gone. The child is read at 0x00487c43 and a null one leaves the object untouched. Otherwise the child's own vtable slot +0x14 runs first with the child in ecx (0x00487c4a / 0x00487c4c), THEN this object's vtable pointer is re-read at 0x00487c4f - after that call has returned, so a child whose release replaces this->vtbl decides which slot +8 runs - and slot +8 of whatever vtable is there now is called with this in ecx (0x00487c51 / 0x00487c53). Only then is the child field cleared (0x00487c56). The result is 0 on both paths (0x00487c5d). Reimplemented in `shim/src/re/c3bx.cpp`; path-1 A/B GREEN: releaseWithHookC (12 vectors, 10 distinct results, 9 changing state, `log/diff/00487c40_releaseWithHookC.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487c40@f_00487c40@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487c60): callee pops 0 bytes of stack arguments.

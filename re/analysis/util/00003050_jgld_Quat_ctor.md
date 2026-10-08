@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00003050`), 73 bytes, 30 instructions, subsystem `util
 constructs an identity quaternion: x/y/z(+0/+4/+8)=0, w(+0xc)=1.0; returns this. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Builds the identity rotation in place: the default constructor of jgld's quaternion. It pushes three integer zeros (0x1000306d, 0x1000306f, 0x10003071) and calls Vector3::set on `this` (0x10003076, through the incremental-link thunk 0x10001960 to 0x100036e0), which stores those three dwords at [this], [this+4] and [this+8] - the bit pattern 0 is +0.0f, so the vector part becomes (0, 0, 0) - and then writes the dword 0x3f800000, 1.0f as an integer immediate, into the scalar at [this+0xc] (0x1000307e). Nothing in the object is read, there is no branch, and `this` is returned in eax (0x10003085), which is how the five Transform constructors and the three Transform::rotate* helpers that call it get their quaternion back. It differs from Quat::setIdentity 0x10003170 only by that reload of `this` into eax after the store. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: Quat::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00003050_jgld_Quat_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003050@f_10003050@@YIPAXPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003098): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00004590`), 66 bytes, 27 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 default constructor: loads the identity matrix. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The default constructor of jgld's 4x4 matrix, and it does exactly two things: it installs the Matrix vtable, VA 0x1011d024, in the dword at [this] (0x100045b0), and it calls Matrix::loadIdentity on `this` (0x100045b9, through the thunk 0x100016db to 0x100045f0), which zeroes the sixteen cells that start at [this+4] - not at [this], because [this] is the vtable pointer this class carries - and writes 1.0f into the four diagonal ones. `this` is returned in eax (0x100045be). A new matrix is therefore the identity, and its four callers are the arithmetic helpers Matrix::add 0x100048e0, Matrix::mulAssign 0x10004a50, Matrix::mulScalar 0x10004f40 and Matrix::mulMatrix 0x10005030, each of which constructs a result matrix before filling it. Reimplemented in `shim/src/re/c3bw.cpp`; path-1 A/B GREEN: Matrix::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00004590_jgld_Matrix_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??0Matrix@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100045d1): callee pops 0 bytes of stack arguments.
