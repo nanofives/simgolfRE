@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 53 bytes, 19 instructions, subsystem `net`. Mechanical 
 returns the name string for a network peer/host given its index. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Looks up the name of a network slot by its identifier. The 16-entry table starts at this+0x170 (0x0049aa37) with a stride of 0x58 (0x0049aa42); the scan compares each slot's dword +0 with the argument (0x0049aa3d) starting at slot 0 and stops at index 0x10 (0x0049aa45 / 0x0049aa48), so the lowest matching slot wins. Index 0x10 means no slot carries that identifier and the result is NULL (0x0049aa4a / 0x0049aa4e / 0x0049aa50). A hit returns this + index * 0x58 + 0x185 (0x0049aa55..0x0049aa5b compute index * 0xb * 8 and add it to this with the displacement 0x185), i.e. the field at offset 0x15 of the matched slot. Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: netNameOf (20 vectors, 16 distinct results, `log/diff/0049aa30_netNameOf.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?nameOf@C49aa30@@QAEPADH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049aa52, 0x0049aa62): callee pops 4 bytes of stack arguments.

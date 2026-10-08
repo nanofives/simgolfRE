@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00040e30`), 296 bytes, 101 instructions, subsystem `a
 Two cascaded second-order recursive (biquad) sections over the sample buffer with the five coefficients at 0x1005ecc0..0x1005ecb0; filter state is carried in param_4[0..3]. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Runs two cascaded second-order sections over a block of codec samples in place, keeping their four state values in the caller's block. The sample pointer is decremented by one float only when it is non-null (`je 0x10040e57` at 0x10040e4c); the four state values are copied into locals as raw dwords (0x10040e5a-0x10040e77) and both loop bounds are read once through their pointers (0x10040e7d, 0x10040e85, `jg 0x10040f2c` at 0x10040e9b, SIGNED). Each section computes `t = (s0 * KA + sample) - s1 * KB` and then `sample = (t - 2 * s0) + s1` (`fadd st(0), st(0)` at 0x10040eca doubles the state), finally shifting `s1 = s0` and `s0 = t`: the first section uses the constants 1.859076f at 0x1005ecc0 and 0.8648249f at 0x1005ecbc (0x10040ead-0x10040ede) and the second 1.935715f at 0x1005ecb8 and 0.9417004f at 0x1005ecb4 (0x10040ee1-0x10040f12). The sample is then scaled by 0.902428f at 0x1005ecb0 and written back (0x10040f24). After the loop the four locals are written back to the state block (0x10040f32-0x10040f4c) and the function returns 0 (0x10040f4f). Reimplemented in `shim/src/re/c3bd.cpp`; path-1 A/B GREEN: codecBiquadFilter (14 vectors, 13 distinct results, 12 changing state, `log/diff/00040e30_sound_codecBiquadFilter.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10040f57): callee pops 0 bytes of stack arguments.
 

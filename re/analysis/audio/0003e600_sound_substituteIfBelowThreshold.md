@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003e600`), 207 bytes, 76 instructions, subsystem `au
 Scans floats param_3[1..*param_1]; if every abs value is <= threshold 0x1005ebd4 it overwrites param_3 with param_2, otherwise leaves param_3 unchanged. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Replaces a block of codec samples with a second block as soon as one sample of the first block leaves the interval [-0.99, 0.99]. Both block pointers are decremented by one float on entry (0x1003e61b, 0x1003e627) and both loops are one-based (`jg 0x1003e68c` at 0x1003e64a and `jg 0x1003e6c6` at 0x1003e6b0, SIGNED). The scan takes each sample's magnitude by comparing it with the float 0.0f at 0x1005ec00 (`fcomp` at 0x1003e65b, `test ah, 1` at 0x1003e663 tests C0) and negating it with `fchs` (0x1003e673) when it is below zero, copying its raw dword otherwise (0x1003e668). That magnitude is compared with the float 0.99f at 0x1005ebd4 (`fcomp` at 0x1003e67b, `test ah, 0x41` at 0x1003e683 tests C3|C0), and the scan CONTINUES while the magnitude is at or below 0.99f, so the name's "below threshold" is the condition under which nothing happens: the substitution runs only when a magnitude is strictly ABOVE 0.99f. If the scan finishes without one, the function returns 0 having written nothing (0x1003e68c); otherwise the count is re-read through its pointer (0x1003e693) and the scanned block is overwritten element by element with the replacement block as raw dwords (0x1003e6c1). It always returns 0. Reimplemented in `shim/src/re/c3bd.cpp`; path-1 A/B GREEN: substituteIfBelowThreshold (15 vectors, 9 distinct results, 8 changing state, `log/diff/0003e600_sound_substituteIfBelowThreshold.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003e6ce): callee pops 0 bytes of stack arguments.
 

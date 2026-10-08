@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00077a90`), 668 bytes, 227 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Collapses a true-colour row to one palette index per pixel, or remaps an already indexed row through a second table. Three bodies are tried in order, each guarded by a colour type, a non-null lookup pointer and bit_depth 8: color_type 2 (`cmp eax, 2` / `jne 0x10077bb7` at 0x10077ab8-0x10077abb, `cmp dword ptr [ebp+0x10], 0` at 0x10077ac1, `cmp edx, 8` at 0x10077ad3) reads three bytes per pixel and looks the colour up as a 5-5-5 index ((r >> 3 & 0x1f) << 10 | (g >> 3 & 0x1f) << 5 | (b >> 3 & 0x1f), built at 0x10077b3e-0x10077b5e), writing one byte per pixel into the same row (0x10077b63-0x10077b6e); color_type 6 (0x10077bbf, 0x10077bc8, 0x10077bda) does the same and steps the read pointer one extra byte per pixel for the alpha sample (0x10077c49); color_type 3 (0x10077cd0, 0x10077cd5, 0x10077ce3) replaces each byte in place by dither_lookup[byte] (0x10077d11-0x10077d21). The first two bodies rewrite the header afterwards - color_type 3, channels 1, pixel_depth = bit_depth and rowbytes recomputed from the pixel_depth just stored (0x10077b81-0x10077baf and the twin at 0x10077c95-0x10077cc3) - and the third leaves the header alone because the row's shape does not change. The 5-5-5 index means the first lookup table is 0x8000 bytes. png_do_read_transformations 0x100717d0 is the only caller. Reimplemented in `shim/src/re/c3bb.cpp`; path-1 A/B GREEN: png_do_dither (16 vectors, 10 distinct results, 9 changing state, `log/diff/00077a90_jgld_png_do_dither.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rtran.cpp` as `_png_do_dither` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10077d2b): callee pops 0 bytes of stack arguments.

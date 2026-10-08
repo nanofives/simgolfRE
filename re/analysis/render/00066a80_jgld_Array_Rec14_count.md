@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066a80`), 42 bytes, 21 instructions, subsystem `rend
 Returns m_count at this+0xc; used to bound the g_modes iteration in findMode/pickMode/pickModeFreq. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Returns the number of elements currently stored in an `Array<Rec14>`: the whole body is the single load `mov eax, dword ptr [eax+0xc]` at 0x10066aa0 of the count field, reached through the `this` pointer the prologue saved at [ebp-4] (0x10066a9a). It takes no argument (`ret` at 0x10066aa9), has no conditional branch and writes nothing, so the value it returns is whatever the last add or reset left at +0xc; Display::findMode 0x10065c30, Display::pickMode 0x10065ea0 and Display::pickModeFreq 0x10066040 use it to bound their walk over the mode array. Reimplemented in `shim/src/re/c3bb.cpp`; path-1 A/B GREEN: Array_Rec14::count (16 vectors, 16 distinct results, 0 changing state, `log/diff/00066a80_jgld_Array_Rec14_count.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066a80@f_10066a80@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10066aa9): callee pops 0 bytes of stack arguments.

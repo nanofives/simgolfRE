@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003e520`), 218 bytes, 83 instructions, subsystem `au
 Looks up 7-bit code (*param_1&0x7f) in table 0x10064a80, writes low nibble to *param_2; uses the low-byte parity and bit4 to advance the counter *param_3 by 1 or 2 and emit the escape value 0xffffffff. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Splits one packed byte of the codec bitstream into a 4-bit value and a correction to a running counter. The symbol's low byte is folded to its PARITY by three rounds of `x ^= x / 2^k` with k = 4, 2 and 1, written as signed divisions (`cdq` + `and edx, 0xf` + `sar eax, 4` at 0x1003e549-0x1003e54f, `and edx, 3` + `sar eax, 2` at 0x1003e55e-0x1003e563, `sub eax, edx` + `sar eax, 1` at 0x1003e572-0x1003e574) and masked to one bit at 0x1003e581; because the value is masked to 0..255 at 0x1003e53d it is never negative and each division is the plain shift. Independently of that, the symbol's low SEVEN bits index the 128-entry dword table at 0x10064a80 (`and edx, 0x7f` at 0x1003e58c, load at 0x1003e58f), whose entry carries the result in its low nibble (stored through the second argument at 0x1003e5a2) and a selector in bit 4 (`and eax, 0x10` at 0x1003e5a7). With bit 4 set the counter at the third argument is incremented only when the parity is 1 (`je 0x1003e5b7`, increment at 0x1003e5be). With bit 4 clear the counter is always incremented (0x1003e5cd) and, when the parity is 0, incremented a second time and the value replaced by -1 (`jne 0x1003e5f1` at 0x1003e5d9, 0x1003e5e0, 0x1003e5eb). The function always returns 0 (0x1003e5f1), so the counter and the value slot carry the whole result. Reimplemented in `shim/src/re/c3bd.cpp`; path-1 A/B GREEN: decodeTableSymbol (20 vectors, 20 distinct results, 20 changing state, `log/diff/0003e520_sound_decodeTableSymbol.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003e5f9): callee pops 0 bytes of stack arguments.
 

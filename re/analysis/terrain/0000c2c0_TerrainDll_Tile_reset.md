@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000c2c0`), 211 bytes, 60 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Puts a tile back to the state a fresh grid starts from. It stores the two arguments as the tile's grid coordinates at +0x2c and +0x30 (0x1000c2e3, 0x1000c2ec) with no bounds check, zeroes the variation at +0x240 (0x1000c2f6) and the four odd corner height counters at +4, +0x1c, +0xc and +0x14 in that order (0x1000c303, 0x1000c30d, 0x1000c317, 0x1000c321), clears the four neighbour pointers at +0x34 through a counted loop (cmp 4 / jge 0x1000c33e, store 0x1000c346), sets the type at +0x24 to 4 and the sub-type word at +0x28 to 0 (0x1000c353, 0x1000c35d), and calls PathInfo::clear on this+0x208 (0x1000c36d) and WallInfo::clear on this+0x210 (0x1000c37b). A local byte at [ebp-8] is set to 0 at 0x1000c2ef and never read. Nothing is loaded into eax after the last call, and the only conditional branch is the loop. Reimplemented in `shim/src/re/c3ba.cpp`; path-1 A/B GREEN: Tile::reset (16 vectors, 16 distinct results, 16 changing state, `log/diff/0000c2c0_Terrain_Tile_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile4.cpp` as `?reset@Tile@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000c390): callee pops 8 bytes of stack arguments.

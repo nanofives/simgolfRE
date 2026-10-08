@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 146 bytes, 57 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Writes an Adobe APP14 marker. The marker code is 0xEE (emit_marker at 0x004afd25) and the block length 0xE = 14 (emit_2bytes at 0x004afd30); the identifier is 'A' 'd' 'o' 'b' 'e' (0x41, 0x64, 0x6f, 0x62, 0x65, emit_byte at 0x004afd3b..0x004afd5b), the version 0x64 = 100 (0x004afd63) and the two flag words zero (0x004afd6e, 0x004afd76). The last byte is the colour transform, chosen from jpeg_color_space at cinfo+0x38 (0x004afd7b) by a two-step subtract-and-test chain: 1 when the space is 3 (0x004afd81 / 0x004afd84 -> 0x004afda5), 2 when it is 5 (0x004afd86 / 0x004afd89 -> 0x004afd98) and 0 for every other value (0x004afd8b). Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: emit_adobe_app14 (10 vectors, 3 distinct results, 10 changing state, `log/diff/004afd20_emit_adobe_app14.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_adobe_app14` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afd97, 0x004afda4, 0x004afdb1): callee pops 0 bytes of stack arguments.

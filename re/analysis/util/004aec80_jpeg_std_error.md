@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 76 bytes, 16 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Fills a caller-supplied `jpeg_error_mgr` with the library's default error handling and returns the same pointer (eax still holds the argument loaded at 0x004aec80, and nothing overwrites it before the `ret` at 0x004aeccb). The five method slots are set to the library's own routines: error_exit = 0x004aecd0 at +0 (0x004aec86), emit_message = 0x004aed20 at +4 (0x004aec8c), output_message = 0x004aecf0 at +8 (0x004aec93), format_message = 0x004aed60 at +0xc (0x004aec9a) and reset_error_mgr = 0x004aee10 at +0x10 (0x004aeca1). The counters trace_level +0x68, num_warnings +0x6c and msg_code +0x14 are zeroed (0x004aeca8, 0x004aecab, 0x004aecae). The message table pointer +0x70 is the standard table at 0x004bceb8 (0x004aecb1) and last_jpeg_message +0x74 is 0x77 = 119 (0x004aecb8); the add-on table +0x78 and its two message bounds +0x7c and +0x80 are zeroed (0x004aecbf, 0x004aecc2, 0x004aecc5). The msg_parm union at +0x18..+0x64 is not touched. Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: jpeg_std_error (12 vectors, 12 distinct results, 12 changing state, `log/diff/004aec80_jpeg_std_error.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_error.cpp` as `_jpeg_std_error` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004aeccb): callee pops 0 bytes of stack arguments.

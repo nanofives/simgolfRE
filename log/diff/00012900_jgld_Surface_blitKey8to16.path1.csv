@@ -1,0 +1,40 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$s9 $s0 0 0 0 0 32 16 64,0,0,True,965ef349,965ef349,True
+$s9 $s0 0 0 0 0 32 16 67,0,0,True,aa9ca050,aa9ca050,True
+$s9 $s0 0 0 0 0 32 16 70,0,0,True,c485acde,c485acde,True
+$s9 $s0 0 0 0 0 32 16 80,0,0,True,ea717518,ea717518,False
+$s9 $s0 0 0 0 0 16 8 65,0,0,True,ceb4cbc9,ceb4cbc9,True
+$s9 $s0 0 0 0 0 17 8 65,0,0,True,3d72e68c,3d72e68c,True
+$s9 $s0 0 0 0 0 18 8 65,0,0,True,a660979a,a660979a,True
+$s9 $s0 0 0 0 0 19 8 65,0,0,True,1b31e848,1b31e848,True
+$s9 $s0 0 0 0 0 1 1 64,0,0,True,0a6ad55d,0a6ad55d,True
+$s9 $s0 4 3 2 1 16 8 66,0,0,True,66087f9f,66087f9f,True
+$s9 $s0 -3 0 5 0 10 6 66,0,0,True,af5b77e0,af5b77e0,True
+$s9 $s0 0 -2 0 4 10 6 66,0,0,True,3ffcce76,3ffcce76,True
+$s9 $s0 -3 -2 5 4 10 6 66,0,0,True,0d6040a8,0d6040a8,True
+$s9 $s0 40 0 0 0 8 8 66,0,0,True,ea717518,ea717518,False
+$s9 $s0 0 20 0 0 8 8 66,0,0,True,ea717518,ea717518,False
+$s9 $s0 32 0 0 0 8 8 66,0,0,True,ea717518,ea717518,False
+$s9 $s0 28 0 0 0 10 8 66,0,0,True,12acb17a,12acb17a,True
+$s9 $s0 0 12 0 0 8 10 66,0,0,True,c9eac0ab,c9eac0ab,True
+$s9 $s0 0 0 100 100 8 8 66,0,0,True,ea717518,ea717518,False
+$s9 $s0 0 0 0 0 0 0 66,0,0,True,ea717518,ea717518,False
+$s9 $s1 0 0 0 0 32 16 68,0,0,True,8be002bf,8be002bf,True
+$s9 $s1 2 2 4 3 10 5 69,0,0,True,9d3f7e62,9d3f7e62,True
+$s9 $s2 0 0 0 0 19 11 64,0,0,True,4fdc8a6c,4fdc8a6c,True
+$s9 $s2 0 0 0 0 19 11 68,0,0,True,d0068b38,d0068b38,True
+$s9 $s6 0 0 0 0 32 16 64,0,0,True,e64d18c7,e64d18c7,True
+$s9 $s3 0 0 0 0 16 8 66,1,1,True,ea717518,ea717518,False
+$s9 $s4 0 0 0 0 16 8 66,3,3,True,ea717518,ea717518,False
+$s13 $s0 0 0 0 0 16 8 66,3,3,True,c31c6993,c31c6993,True
+$s17 $s0 0 0 0 0 16 8 66,0,0,True,ea717518,ea717518,False
+$s9 $s7 0 0 0 0 16 8 66,0,0,True,f8c63db2,f8c63db2,True
+$s9 $s7 0 0 20 1 8 2 66,3,3,True,ea717518,ea717518,False
+$s9 0 0 0 0 0 8 8 66,3,3,True,ea717518,ea717518,False
+$s10 $s0 0 0 0 0 24 12 65,0,0,True,85d215e0,85d215e0,True
+$s10 $s1 1 1 3 2 12 6 69,0,0,True,ad2f2fff,ad2f2fff,True
+state_regions,$pix+0x0:19456 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20 $l8+0x0:20 $l9+0x0:20 $l10+0x0:20 $l11+0x0:20 $l12+0x0:20 $l13+0x0:20 $l14+0x0:20 $l15+0x0:20 $l16+0x0:20 $l17+0x0:20 $l18+0x0:20 $rects+0x0:160,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5dd459a0,original=0x2a20f20,2026-10-08T11:01:02
+distinct_results,26,,
+VERDICT,GREEN,34,

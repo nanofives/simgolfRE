@@ -1,0 +1,21 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $in0 $ic0,0,0,True,40d4d2a2,40d4d2a2,False
+0 $inm1 $ic1,0,0,True,40d4d2a2,40d4d2a2,False
+$is0 $in0 $ic1,0,0,True,40d4d2a2,40d4d2a2,False
+$is0 $in8 $ic0,0,0,True,695964dc,695964dc,True
+$is0 $in8 $ic1,0,0,True,4c2b0349,4c2b0349,True
+$is1 $in8 $ic2,0,0,True,1eeac157,1eeac157,True
+$is2 $in8 $ic3,0,0,True,1e204f76,1e204f76,True
+$is3 $in8 $ic4,0,0,True,58d4423c,58d4423c,True
+$is4 $in8 $ic5,0,0,True,dcf08865,dcf08865,True
+$is5 $in8 $ic2,0,0,True,4237a256,4237a256,True
+$is1 $in1 $ic3,0,0,True,c8a4784c,c8a4784c,True
+$is2 $in2 $ic4,0,0,True,9fd2e42b,9fd2e42b,True
+$is3 $in4 $ic5,0,0,True,4e4d3fa5,4e4d3fa5,True
+$is4 $in4 $ic0,0,0,True,095e5e45,095e5e45,True
+$is5 $in2 $ic1,0,0,True,35a457be,35a457be,True
+state_regions,$is0+0x0:72 $is1+0x0:72 $is2+0x0:72 $is3+0x0:72 $is4+0x0:72 $is5+0x0:72 $ic0+0xbec:20 $ic1+0xbec:20 $ic2+0xbec:20 $ic3+0xbec:20 $ic4+0xbec:20 $ic5+0xbec:20,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6eab3a70,original=0x2be0160,2026-10-08T10:45:54
+distinct_results,13,,
+VERDICT,GREEN,15,

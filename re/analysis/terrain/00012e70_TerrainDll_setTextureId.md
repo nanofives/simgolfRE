@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00012e70`), 62 bytes, 24 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Writes one GL texture name into the module texture table g_textures 0x100687f8. The first argument is the terrain type and scales by 0x384 (imul 0x10012e8b), the second is the variation and scales by 0x24 (imul 0x10012e94), the third indexes DWORDs inside that row and the fourth is the value stored (0x10012ea4). It is __cdecl, has no callee and no conditional branch, bounds-checks nothing and returns nothing; its only caller is Terrain::relight 0x100076e0, which fills the table after loading each texture. Reimplemented in `shim/src/re/c3ba.cpp`; path-1 A/B GREEN: setTextureId (20 vectors, 20 distinct results, 19 changing state, `log/diff/00012e70_Terrain_setTextureId.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?setTextureId@@YAXHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10012ead): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003d0a0`), 291 bytes, 97 instructions, subsystem `au
 Second-order recursive (IIR) filter over samples param_1[1..*param_2]: y = c*state + two-tap input and two-tap output terms with coefficients 0x1005ebe4/ebe8/ebec/ebf0, keeping the 4-word delay state at param_3+0xbec..0xbfc. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Runs a five-state recursive filter over a block of codec samples in place, keeping its state in the context block at +0xbec..+0xbfc (0x1003d0ca-0x1003d0ff). The sample pointer is decremented by one float only when it is non-null (`je 0x1003d0c7` at 0x1003d0bc), so a null block with a non-positive count is walked over untouched; the loop is one-based (`jg 0x1003d1ba` at 0x1003d122, SIGNED). Each round first computes `(sample - s0 * 1.9998f) + s1` with the constant at 0x1005ebf0 (`fld` / `fmul` / `fsubr` / `fadd` at 0x1003d137-0x1003d14b) and spills it to a float (0x1003d14d), then writes `((s2 * 2.5f + that) - s3 * 2.0925f) + s4 * 0.585f` with the constants at 0x1005ebec, 0x1005ebe8 and 0x1005ebe4 back over the sample (0x1003d153-0x1003d17e). The state is then shifted by raw dword moves (0x1003d181-0x1003d1b3): s1 takes s0, s0 the sample as it was BEFORE the round, s4 takes s3, s3 takes s2 and s2 the sample as it is AFTER the round. The function always returns 0 (0x1003d1ba), so the samples and the five state slots carry the whole result. Reimplemented in `shim/src/re/c3bd.cpp`; path-1 A/B GREEN: applyIir2 (15 vectors, 13 distinct results, 12 changing state, `log/diff/0003d0a0_sound_applyIir2.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003d1c2): callee pops 0 bytes of stack arguments.
 

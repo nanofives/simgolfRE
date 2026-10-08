@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000404d0`), 613 bytes, 184 instructions, subsystem `a
 Linear-phase (symmetric) FIR filter: out[i] = x[i]*c0 + (x[i+1]+x[i-1])*c1 + (x[i+2]+x[i-2])*c2 + ... using the tap coefficients at 0x1005ec6c onward. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Filters a codec window with a 31-tap symmetric FIR whose sixteen distinct coefficients sit in .rdata from 0x1005ec6c (the centre tap, 0.2505360f) up to 0x1005eca8 (the outermost tap, -0.0097202f). Both array pointers are decremented by one float on entry (0x100404eb, 0x100404f7) and the single loop runs from `last + 1 - window` (0x10040502-0x1004050f) to `last` inclusive (`jg 0x1004072c` at 0x10040523, SIGNED). The body is fully unrolled: the first tap is `(in[j] + in[j-30]) * K15` (0x10040535-0x1004053c), the fourteen following ones add `(in[j-t] + in[j-(30-t)]) * K(15-t)` for t = 1..14 with each constant four bytes lower in .rdata (0x10040551-0x10040702), and the centre tap adds `in[j-15] * K0` (0x1004070b-0x10040718); every tap spills the accumulator to the same float slot, so all sixteen rounding points are in the original. The result is copied to the output as a raw dword (0x10040724) and the function returns 0 (0x1004072c). Reimplemented in `shim/src/re/c3bd.cpp`; path-1 A/B GREEN: codecSymmetricFir (14 vectors, 12 distinct results, 11 changing state, `log/diff/000404d0_sound_codecSymmetricFir.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10040734): callee pops 0 bytes of stack arguments.
 

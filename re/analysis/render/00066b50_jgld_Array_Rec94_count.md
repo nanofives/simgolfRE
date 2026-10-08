@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066b50`), 42 bytes, 21 instructions, subsystem `rend
 Returns m_count at this+0xc; setModeIndex reads it to bound-check the g_devmodes index. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+The `Array<Rec94>` instance of the same accessor: one load `mov eax, dword ptr [eax+0xc]` at 0x10066b70 of the count field, no argument (`ret` at 0x10066b79), no branch and no store. The two template instances differ only in the element size their add and clear bodies use, so this body is the same instruction sequence as 0x10066a80 at another address; Display::setModeIndex 0x100662a0 reads it to bound-check the index it is given. Reimplemented in `shim/src/re/c3bb.cpp`; path-1 A/B GREEN: Array_Rec94::count (16 vectors, 16 distinct results, 0 changing state, `log/diff/00066b50_jgld_Array_Rec94_count.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066b50@f_10066b50@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10066b79): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 151 bytes, 54 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Writes a JFIF APP0 marker to the output through the destination manager. The marker code is 0xE0 (emit_marker 0x004afbf0 at 0x004afc85/0x004afc8b) and the block length 0x10 = 16 bytes (emit_2bytes 0x004afc10 at 0x004afc90). The identifier is the five bytes 'J' 'F' 'I' 'F' NUL (0x4a, 0x46, 0x49, 0x46, 0, emit_byte 0x004afbb0 at 0x004afc9b..0x004afcbb) followed by the version 1.01 as the two bytes 1 and 1 (0x004afcc3, 0x004afcce). Three fields of the compress struct follow: the density unit, the BYTE at cinfo+0xcc zero-extended (0x004afcd3 / 0x004afcd5, emitted at 0x004afcdd), the horizontal density, the WORD at cinfo+0xce (0x004afce4, emitted as two bytes at 0x004afced), and the vertical density, the WORD at cinfo+0xd0 (0x004afcf4, 0x004afcfd). Two zero bytes for an absent thumbnail close the block (0x004afd05, 0x004afd0d), making the 18 bytes the length field counts from its own position. Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: emit_jfif_app0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004afc80_emit_jfif_app0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_jfif_app0` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afd16): callee pops 0 bytes of stack arguments.

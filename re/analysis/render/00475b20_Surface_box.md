@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 57 bytes, 18 instructions, subsystem `render`. Mechanic
 draws a rectangle box on a surface (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Turns an origin and a size into a rectangle and hands it to 0x00475b00. The four members are built in the 0x10 bytes reserved at 0x00475b20: left = x at [esp+4] (0x00475b30), top = y at [esp+8] (0x00475b3e), right = x + w at [esp+0xc] (0x00475b34 / 0x00475b36) and bottom = y + h at [esp+0x10] (0x00475b42 / 0x00475b44), so the size arguments are a width and a height, not a second corner. The address of that rectangle is the only argument of the call at 0x00475b4d, made with the unchanged `this` in ecx; 0x00475b00 returns 0x18 when this+4 carries no device and otherwise the result of slot +0x34 of that device's vtable. Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: Surface_box (11 vectors, 10 distinct results, 8 changing state, `log/diff/00475b20_Surface_box.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?box@C475b20@@QAEHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00475b56): callee pops 16 bytes of stack arguments.

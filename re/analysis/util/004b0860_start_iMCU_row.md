@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 78 bytes, 27 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Resets the within-iMCU-row counters of the coefficient controller at cinfo+0x150 (0x004b0870) at the start of an iMCU row. In an interleaved scan, i.e. comps_in_scan (cinfo+0xec, 0x004b086a) greater than 1 under a signed compare (0x004b0876 / 0x004b0878), an MCU row is an iMCU row and MCU_rows_per_iMCU_row (coef+0x14) is 1 (edx is loaded with 1 at 0x004b0865). Otherwise the count comes from the only component of the scan, cur_comp_info[0] = [cinfo+0xf0] (0x004b0883): its v_samp_factor (comp+0xc, 0x004b088e) while iMCU_row_num (coef+8, 0x004b0880) is below total_iMCU_rows - 1 (cinfo+0xe8, decremented at 0x004b0889) under an UNSIGNED compare (0x004b088a / 0x004b088c), and its last_row_height (comp+0x48, 0x004b089e) on the final row, where only part of an iMCU row is left. Both exits clear mcu_ctr (coef+0xc) and MCU_vert_offset (coef+0x10) (0x004b0896/0x004b0899 and 0x004b08a6/0x004b08a9). Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: start_iMCU_row (13 vectors, 13 distinct results, 13 changing state, `log/diff/004b0860_start_iMCU_row.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_ccoefct.cpp` as `_start_iMCU_row` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b089d, 0x004b08ad): callee pops 0 bytes of stack arguments.

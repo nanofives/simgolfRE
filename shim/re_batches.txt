@@ -52,3 +52,8 @@ c3aw.cpp
 c3ax.cpp
 c3az.cpp
 c3ay.cpp
+c3be.cpp
+c3bb.cpp
+c3bd.cpp
+c3ba.cpp
+c3bc.cpp

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066ac0`), 46 bytes, 21 instructions, subsystem `rend
 Sets m_count (this+0xc) to 0; enumModes calls it on g_modes (0x101286c8) before refilling. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Empties an `Array<Rec14>` without touching its buffer: the whole body is the single store `mov dword ptr [eax+0xc], 0` at 0x10066ae0, so the count goes to 0 while the buffer pointer at +4, the capacity at +8 and the growth step at +0x10 keep their values and the allocated memory is kept for the next fill. There is no argument (`ret` at 0x10066aed) and no instruction sets a return value - eax holds `this` only because of the reload at 0x10066add - so the function is void; Display::enumModes 0x10065a90 calls it before refilling the mode array. Reimplemented in `shim/src/re/c3bb.cpp`; path-1 A/B GREEN: Array_Rec14::reset (16 vectors, 16 distinct results, 16 changing state, `log/diff/00066ac0_jgld_Array_Rec14_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066ac0@f_10066ac0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10066aed): callee pops 0 bytes of stack arguments.

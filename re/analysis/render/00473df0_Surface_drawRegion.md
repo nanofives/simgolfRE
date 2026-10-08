@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 109 bytes, 47 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 draws a surface region onto this surface (`re/names/exe_2.tsv`)
 
+## Purpose
+Forwards a blit of a whole source surface to the device surface behind `this`, displaced by this surface's origin. A non-zero this+8 (0x00473df0 / 0x00473df6) means the surface is not available and the result is 0x18 (0x00473df8); a NULL source surface gives 0x10 (0x00473e05 / 0x00473e07 / 0x00473e09); a missing device on either side, this+4 (0x00473e12 / 0x00473e17) or s+4 (0x00473e19 / 0x00473e1e), gives 7 (0x00473e54). With both devices present the call goes through slot +0x5c of the device's vtable (0x00473e3c / 0x00473e4b) with this+4 in ecx and the arguments (s->device, this+0x20 + x, this+0x24 + y, mask->device) pushed in reverse at 0x00473e35..0x00473e48; the optional mask surface is dereferenced only when the argument is non-NULL and contributes 0 otherwise (0x00473e24 / 0x00473e26 / 0x00473e28). The device call's return value is returned unchanged. Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: Surface_drawRegion (14 vectors, 9 distinct results, 6 changing state, `log/diff/00473df0_Surface_drawRegion.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f473df0@Surf473@@QAEHPAU1@HH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00473dfe, 0x00473e0f, 0x00473e51, 0x00473e5a): callee pops 16 bytes of stack arguments.

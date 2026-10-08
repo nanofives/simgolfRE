@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0000aef0`), 45 bytes, 21 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 returns the int at this+0x810; called by Surface::setPalette 0x100089d0. (`re/names/jgld_2.tsv`)
 
+## Purpose
+Returns the dword a Surface keeps 0x810 bytes into itself: the body is the single load `mov eax, dword ptr [eax+0x810]` at 0x1000af10 through the saved `this` (0x1000af0a). No argument (`ret` at 0x1000af1c), no conditional branch and no store, so it is a plain getter; Surface::setPalette 0x100089d0 is its only caller. Reimplemented in `shim/src/re/c3bb.cpp`; path-1 A/B GREEN: Surface::getField810 (12 vectors, 12 distinct results, 0 changing state, `log/diff/0000aef0_jgld_Surface_getField810.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_1000aef0@f_1000aef0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000af1c): callee pops 0 bytes of stack arguments.

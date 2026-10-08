@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00012cf0`), 297 bytes, 90 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Recomputes the smoothed normal of the tile's centre vertex, but only when the tile is marked dirty: the byte at +0x244 is read at 0x10012d12 and the body returns at once when it is clear (test 0x10012d18, jne 0x10012d1a over the jmp at 0x10012d1c). Otherwise it calls Tile::smoothNormals 0x10011ef0 four times, with the neighbour pairs (0,2), (1,2), (0,3) and (1,3) (0x10012d21 to 0x10012d4c; the second argument is pushed first), which refreshes the eight face normals of this tile and of the neighbours around each corner. It then sums the eight face normals component by component (loop cmp 2 / jg 0x10012d67) into g_normals 0x10070a18 at the vertex index stored at Tile+0x50, re-read inside the loop at 0x10012dd1: the eight terms are loaded and added left to right (fld 0x10012d75 then the seven fadd of +0xac, +0xe4, +0x11c, +0x154, +0x18c, +0x1c4 and +0x1fc up to 0x10012dc7) and the sum is rounded to a float once by the fstp at 0x10012dda. Finally normalize 0x10037c80 is called on that normal (0x10012df6) and the dirty byte is cleared (0x10012e01). Reimplemented in `shim/src/re/c3ba.cpp`; path-1 A/B GREEN: Tile::calcNormals (10 vectors, 9 distinct results, 8 changing state, `log/diff/00012cf0_Terrain_Tile_calcNormals.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile4.cpp` as `?calcNormals@Tile@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10012e18): callee pops 0 bytes of stack arguments.

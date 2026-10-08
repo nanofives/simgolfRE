@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$exp0 $exprow $pal 0 0,void,void,True,d4d82f9e,d4d82f9e,False
+$exp1 $exprow $pal 0 0,void,void,True,191d2201,191d2201,True
+$exp2 $exprow $pal $trans 4,void,void,True,805022b9,805022b9,True
+$exp3 $exprow $pal $trans 0,void,void,True,7b52fe2c,7b52fe2c,True
+$exp4 $exprow $pal $trans 256,void,void,True,cac08dc1,cac08dc1,True
+$exp5 $exprow $pal 0 0,void,void,True,331b6d59,331b6d59,True
+$exp6 $exprow $pal $trans 3,void,void,True,39738316,39738316,True
+$exp7 $exprow $pal 0 0,void,void,True,ee4f397d,ee4f397d,True
+$exp8 $exprow $pal $trans 10,void,void,True,5900c732,5900c732,True
+$exp9 $exprow $pal $trans 5,void,void,True,0652d488,0652d488,True
+$exp10 $exprow $pal 0 0,void,void,True,da71c6fa,da71c6fa,True
+$exp11 $exprow $pal $trans 4,void,void,True,d4d82f9e,d4d82f9e,False
+$exp12 $exprow $pal 0 0,void,void,True,eb425b24,eb425b24,True
+$exp13 $exprow $pal $trans 2,void,void,True,e89da9ea,e89da9ea,True
+$exp14 $exprow $pal 0 0,void,void,True,d8072e36,d8072e36,True
+$exp15 $exprow $pal $trans 128,void,void,True,0a43b6bf,0a43b6bf,True
+state_regions,$exp0+0x0:192 $exprow+0x0:128 $pal+0x0:768 $trans+0x0:256,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de82f00,original=0x1470020,2026-10-08T10:44:54
+distinct_results,15,,
+VERDICT,GREEN,16,

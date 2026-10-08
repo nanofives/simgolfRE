@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$dit0 $ditrow $plut $dlut,void,void,True,48440656,48440656,True
+$dit1 $ditrow $plut $dlut,void,void,True,421c9b90,421c9b90,True
+$dit2 $ditrow $plut $dlut,void,void,True,00bfcba3,00bfcba3,True
+$dit3 $ditrow 0 $dlut,void,void,True,e4f15888,e4f15888,False
+$dit4 $ditrow $plut $dlut,void,void,True,e4f15888,e4f15888,False
+$dit5 $ditrow $plut $dlut,void,void,True,38f8c247,38f8c247,True
+$dit6 $ditrow $plut $dlut,void,void,True,97688859,97688859,True
+$dit7 $ditrow $plut $dlut,void,void,True,3325a85a,3325a85a,True
+$dit8 $ditrow 0 $dlut,void,void,True,e4f15888,e4f15888,False
+$dit9 $ditrow $plut $dlut,void,void,True,09d7dea9,09d7dea9,True
+$dit10 $ditrow $plut $dlut,void,void,True,e4f15888,e4f15888,False
+$dit11 $ditrow $plut 0,void,void,True,e4f15888,e4f15888,False
+$dit12 $ditrow $plut $dlut,void,void,True,e4f15888,e4f15888,False
+$dit13 $ditrow $plut $dlut,void,void,True,e4f15888,e4f15888,False
+$dit14 $ditrow $plut $dlut,void,void,True,bf7f42fa,bf7f42fa,True
+$dit15 $ditrow $plut $dlut,void,void,True,6a09bcf1,6a09bcf1,True
+state_regions,$dit0+0x0:192 $ditrow+0x0:128 $plut+0x0:32768 $dlut+0x0:256,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de82d90,original=0x1470040,2026-10-08T10:44:55
+distinct_results,10,,
+VERDICT,GREEN,16,

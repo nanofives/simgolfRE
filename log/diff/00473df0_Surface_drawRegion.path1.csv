@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$t_ok $s_ok 0 0 0,10053,10053,True,3ae6c002,3ae6c002,True
+$t_ok $s_ok 3 5 0,13058,13058,True,ba6564e6,ba6564e6,True
+$t_ok $s_ok -3 -5 $m_ok,7099,7099,True,cbcf9e5a,cbcf9e5a,True
+$t_ok2 $s_ok2 100 200 $m_ok,95304,95304,True,49e2d40c,49e2d40c,True
+$t_ok2 $s_ok 32767 -32768 0,32729272,32729272,True,5e667f7d,5e667f7d,True
+$t_ok $s_ok 1000000 -1000000 $m_ok,999010104,999010104,True,b59e601a,b59e601a,True
+$t_ok $s_nodev 1 2 0,7,7,True,c7d96ac5,c7d96ac5,False
+$t_ok2 $s_nodev 5 6 $m_ok,7,7,True,c7d96ac5,c7d96ac5,False
+$t_nodev $s_ok 1 2 0,7,7,True,c7d96ac5,c7d96ac5,False
+$t_busy $s_ok 1 2 0,24,24,True,c7d96ac5,c7d96ac5,False
+$t_busy2 0 1 2 0,24,24,True,c7d96ac5,c7d96ac5,False
+$t_busy 0 0 0 $m_ok,24,24,True,c7d96ac5,c7d96ac5,False
+$t_ok 0 1 2 0,16,16,True,c7d96ac5,c7d96ac5,False
+$t_nodev 0 0 0 0,16,16,True,c7d96ac5,c7d96ac5,False
+state_regions,$rec+0x0:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de52750,original=0x1440de0,2026-10-08T10:40:27
+distinct_results,9,,
+VERDICT,GREEN,14,

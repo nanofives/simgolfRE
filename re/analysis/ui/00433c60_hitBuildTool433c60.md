@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 193 bytes, 64 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Hit-tests the build-tool toolbar, returning the tool index under a point. (`re/names/exe_1.tsv`)
 
+## Purpose
+Maps a point to a tool of the build palette. Unlike 0x004340a0 it tests every anchor and lets a later hit overwrite an earlier one: the result starts at -1 (0x00433c72) and becomes -2 within 0x10 of (0x10e, 0x1f3) (0x00433c84 / 0x00433c87 / 0x00433c89), 0 within 0x19 of (0x160, 0x223) (0x00433ca5 / 0x00433caa), 1 within 0x19 of (0x1d3, 0x223) (0x00433cbc / 0x00433cc1), 2 within 0x19 of (0x24b, 0x223) (0x00433cd6 / 0x00433cdb) and 3 within 0x10 of (0x2cb, 0x223) (0x00433cf0 / 0x00433cf6). The four middle anchors share one y offset, y - 0x223, held in edi from 0x00433c8f. A sixth anchor overrides all of them: within 0xc of (0x10b, 0x231) the result is -3 (0x00433cfb..0x00433d19); otherwise the value built so far is returned (0x00433d1b). Every distance is approxDistance 0x00467170. Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: hitBuildTool433c60 (20 vectors, 7 distinct results, `log/diff/00433c60_hitBuildTool433c60.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_h.cpp` as `?hit433c60@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00433d20): callee pops 0 bytes of stack arguments.

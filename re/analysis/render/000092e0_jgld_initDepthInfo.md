@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000092e0`), 49 bytes, 22 instructions, subsystem `rend
 sets *(ecx+4)=0 and returns ecx; Surface::ctor calls it with ecx=this+0x24 (the embedded depth descriptor whose +0 is the depth read by blitT), clearing Surface+0x28. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Initialises the two-dword depth descriptor a Surface embeds at +0x24 and hands it back: the body stores 0 in the second dword (`mov dword ptr [eax+4], 0` at 0x10009300), reloads `this` into eax (0x10009307) and returns it (`ret` at 0x10009310), which is the shape VC6 gives a constructor. The first dword at +0 - the depth the blitters read - is deliberately left as it is, so the call only clears the field that follows it. Surface::ctor 0x10007660 and Surface::ctorOwner 0x10007970 call it with ecx = this + 0x24. Reimplemented in `shim/src/re/c3bb.cpp`; path-1 A/B GREEN: initDepthInfo (16 vectors, 16 distinct results, 16 changing state, `log/diff/000092e0_jgld_initDepthInfo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_100092e0@f_100092e0@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10009310): callee pops 0 bytes of stack arguments.

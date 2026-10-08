@@ -1,0 +1,25 @@
+vector,original,reimpl,match
+270 499,-2,-2,True
+352 547,0,0,True
+467 547,1,1,True
+587 547,2,2,True
+715 547,3,3,True
+267 561,-3,-3,True
+274 502,-2,-2,True
+357 550,0,0,True
+472 550,1,1,True
+592 550,2,2,True
+720 549,3,3,True
+270 564,-3,-3,True
+512 547,-1,-1,True
+656 547,-1,-1,True
+288 512,-1,-1,True
+0 0,-1,-1,True
+1024 1024,-1,-1,True
+1000 2000,-1,-1,True
+-100 -200,-1,-1,True
+32767 32767,-1,-1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de52470,original=0x1440e60,2026-10-08T10:40:27
+distinct_results,7,,
+VERDICT,GREEN,20,

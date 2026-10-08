@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 151 bytes, 59 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Hit-tests the building panel, returning the entry under a point. (`re/names/exe_1.tsv`)
 
+## Purpose
+Maps a point to a cell of the building palette. Two fixed anchors come first: a point within 0x10 of (0xec, 0x20e) gives -2 (0x004340ab..0x004340c4, returned at 0x004340c8) and a point within 0xc of (0x115, 0x237) gives -3 (0x004340cf..0x004340e8, returned at 0x004340ec); distances are approxDistance 0x00467170, which is |dx| and |dy| folded into (min + 2 * max) / 2. The nine cells are then walked with a single running offset rather than a table: the first probe is (x - 0x17f, 2 * y - 0x426) (0x004340f5, 0x004340fb; the y axis is doubled, so the cells are twice as tall as they are wide in screen units), and a cell is hit when approxDistance of the current offset is below 0x28 (0x0043410c / 0x0043410f), which returns the cell index (0x00434132). After cells 0..3 and 5..8 the x offset moves by 0x50 (0x00434116); after cell 4 the row changes instead, y by 0x50 and x back by 0x118 (0x00434114, 0x0043411b, 0x0043411e), so the nine cells are a row of five followed by a row of four. Nine probes are made (0x00434125 / 0x00434128) and a point in none of them gives -1 (0x0043412c). Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: hitBuildingTool (24 vectors, 12 distinct results, `log/diff/004340a0_hitBuildingTool.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004340ce, 0x004340f2, 0x00434130, 0x00434136): callee pops 0 bytes of stack arguments.
 

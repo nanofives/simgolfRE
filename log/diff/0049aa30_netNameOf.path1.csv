@@ -1,0 +1,25 @@
+vector,original,reimpl,match
+$obj 10,obj+0x185,obj+0x185,True
+$obj 20,obj+0x1dd,obj+0x1dd,True
+$obj 30,obj+0x235,obj+0x235,True
+$obj 40,obj+0x28d,obj+0x28d,True
+$obj 50,obj+0x2e5,obj+0x2e5,True
+$obj 60,obj+0x33d,obj+0x33d,True
+$obj 70,obj+0x395,obj+0x395,True
+$obj 80,obj+0x3ed,obj+0x3ed,True
+$obj 90,obj+0x445,obj+0x445,True
+$obj 100,obj+0x49d,obj+0x49d,True
+$obj 110,obj+0x4f5,obj+0x4f5,True
+$obj 120,obj+0x54d,obj+0x54d,True
+$obj 130,obj+0x5a5,obj+0x5a5,True
+$obj 140,obj+0x5fd,obj+0x5fd,True
+$obj 150,obj+0x655,obj+0x655,True
+$obj 0,NULL,NULL,True
+$obj -1,NULL,NULL,True
+$obj 15,NULL,NULL,True
+$obj 1000,NULL,NULL,True
+$obj 2147483647,NULL,NULL,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de525d0,original=0x1440dc0,2026-10-08T10:40:27
+distinct_results,16,,
+VERDICT,GREEN,20,

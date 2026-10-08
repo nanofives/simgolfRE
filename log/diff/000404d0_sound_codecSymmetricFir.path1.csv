@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$fi0 $fo0 $flast48 $fwin16,0,0,True,b72fda74,b72fda74,True
+$fi1 $fo1 $flast48 $fwin16,0,0,True,8ec88333,8ec88333,True
+$fi2 $fo2 $flast48 $fwin16,0,0,True,0836d74f,0836d74f,True
+$fi3 $fo3 $flast48 $fwin16,0,0,True,1073ba45,1073ba45,True
+$fi4 $fo4 $flast48 $fwin16,0,0,True,86bf85c5,86bf85c5,False
+$fi0 $fo1 $flast48 $fwin8,0,0,True,75022e34,75022e34,True
+$fi1 $fo2 $flast48 $fwin8,0,0,True,8ba64d5e,8ba64d5e,True
+$fi2 $fo3 $flast48 $fwin1,0,0,True,e4cc2dec,e4cc2dec,True
+$fi3 $fo4 $flast48 $fwin1,0,0,True,4601f508,4601f508,True
+$fi0 $fo0 $flast48 $fwin0,0,0,True,86bf85c5,86bf85c5,False
+$fi1 $fo1 $flast40 $fwin8,0,0,True,0f8526ce,0f8526ce,True
+$fi2 $fo2 $flast40 $fwin8,0,0,True,30c6892f,30c6892f,True
+$fi0 $fo3 $flast40 $fwin1,0,0,True,79f227f5,79f227f5,True
+$fi4 $fo4 $flast40 $fwin8,0,0,True,86bf85c5,86bf85c5,False
+state_regions,$fo0+0x0:256 $fo1+0x0:256 $fo2+0x0:256 $fo3+0x0:256 $fo4+0x0:256,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6eab4210,original=0x2be01c0,2026-10-08T10:45:55
+distinct_results,12,,
+VERDICT,GREEN,14,

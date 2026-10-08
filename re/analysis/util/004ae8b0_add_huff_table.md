@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 93 bytes, 34 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Defines one Huffman table of the compression parameters. When the slot the caller points at is empty (0x004ae8b7 / 0x004ae8ba) a JHUFF_TBL is allocated through jpeg_alloc_huff_table 0x004afad0 (0x004ae8c1) and stored there (0x004ae8c9). The 0x11 bytes of code-length counts are copied from `bits` into the table's bits[] at +0 (four dwords and one byte, 0x004ae8d5..0x004ae8ee) and the 0x100 symbols from `val` into huffval[] at +0x11 (rep movsd with ecx = 0x40, 0x004ae8f6/0x004ae8fb); sent_table at +0x114 is cleared (0x004ae902) so the table is emitted into the JPEG stream even if an earlier image already sent it. The table pointer is re-read from the caller's slot after the allocation (0x004ae8cf) and once more for the sent_table store (0x004ae8fd). Reimplemented in `shim/src/re/c3be.cpp`; path-1 A/B GREEN: add_huff_table (6 vectors, 6 distinct results, 6 changing state, `log/diff/004ae8b0_add_huff_table.path1.csv`); add_huff_table_alloc (6 vectors, 6 distinct results, 6 changing state, `log/diff/004ae8b0_add_huff_table_alloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_add_huff_table` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae90c): callee pops 0 bytes of stack arguments.

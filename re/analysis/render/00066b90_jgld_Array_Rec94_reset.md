@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066b90`), 46 bytes, 21 instructions, subsystem `rend
 Sets m_count (this+0xc) to 0; enumModes calls it on g_devmodes (0x101286f8) before refilling. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+The `Array<Rec94>` instance of the same reset: one store `mov dword ptr [eax+0xc], 0` at 0x10066bb0 and nothing else, so the 0x94-byte element buffer and the capacity survive and only the count is cleared. No argument (`ret` at 0x10066bbd), no branch, no return value; Display::enumModes 0x10065a90 calls it on the device-mode array before refilling it. Reimplemented in `shim/src/re/c3bb.cpp`; path-1 A/B GREEN: Array_Rec94::reset (16 vectors, 16 distinct results, 16 changing state, `log/diff/00066b90_jgld_Array_Rec94_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066b90@f_10066b90@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10066bbd): callee pops 0 bytes of stack arguments.
