@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000045f0`), 116 bytes, 38 instructions, subsystem `uti
 zeroes the 16 floats at +4 and sets the diagonal (+4,+0x18,+0x2c,+0x40)=1.0. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Resets a Matrix to the identity. The sixteen cells are not at the start of the object: the loop zeroes this + i*4 + 4 for i = 0..15 (`cmp [ebp-8], 0x10` / `jge` at 0x1000461f-0x10004623, the store at 0x1000462b), which leaves the dword at this+0 untouched - the class has a vtable pointer there, because its destructor Matrix::dtor 0x100032f0 is matched as `??1Matrix@@UAE@XZ` (`re/match/jgld_math.cpp` line 88) and the `U` of that decorated name is a virtual member - and the four diagonal cells +4, +0x18, +0x2c and +0x40 are then set to 0x3f800000 (0x10004638, 0x10004642, 0x1000464c, 0x10004656). That constant is 1.0f written as an integer immediate, so the whole body is integer stores and there is no x87 rounding question. The layout follows from the four addresses: sixteen cells of four bytes in one run starting at +4, with the diagonal every fifth cell, which is a 4x4 matrix in either row-major or column-major order (the identity cannot tell them apart, and this body does not determine it). Reimplemented in `shim/src/re/c3bq.cpp`; path-1 A/B GREEN: Matrix::loadIdentity (12 vectors, 12 distinct results, 12 changing state, `log/diff/000045f0_jgld_Matrix_loadIdentity.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_100045f0@f_100045f0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10004663): callee pops 0 bytes of stack arguments.

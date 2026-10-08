@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 43 bytes, 13 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+One-shot hook the library calls from jpeg_write_scanlines before the first scanline so the application can insert its own markers between jpeg_start_compress and the write loop. It clears the master object's one-shot flag at cinfo->master+0xc (cinfo+0x144 read at 0x004b5ca6, the store at 0x004b5cac), then dispatches the two marker methods in order with cinfo as their only `__cdecl` argument: write_frame_header through cinfo->marker+8 (0x004b5cb9) and write_scan_header through cinfo->marker+0xc (0x004b5cc3). cinfo->marker (cinfo+0x154) is read again for the second call (0x004b5cb3 and 0x004b5cbc), so a method that replaces it is honoured. The two pushes of cinfo at 0x004b5ca5 and 0x004b5cc2 are released together by the `add esp, 8` at 0x004b5cc6. The function has no call xref anywhere in the image: jinit_c_master_control installs its address in the master object's pass_startup slot with `mov dword ptr [edi + 4], 0x4b5ca0` at 0x004b5202 (edi being the master stored into cinfo+0x144 at 0x004b51f5), which is the only reference to 0x004b5ca0 in golf_clean.exe: a scan of the whole 2,286,953-byte file for the little-endian dword finds exactly one hit, at file offset 0xb5205, that instruction's operand (`log/c3/c3bs_peek.py`). Reimplemented in `shim/src/re/c3bs.cpp`; path-1 A/B GREEN: pass_startup (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b5ca0_pass_startup.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmaster.cpp` as `_pass_startup` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b5cca): callee pops 0 bytes of stack arguments.

@@ -1647,6 +1647,7 @@ entry	name	size	callers	callees	ranges
 004b59d0	select_scan_parameters	255	1	0	004b59d0-004b5acf
 004b5ad0	per_scan_setup	458	1	1	004b5ad0-004b5c9a
 004b5ca0	pass_startup	43	0	0	004b5ca0-004b5ccb
+004b5cd0	FUN_004b5cd0	120	0	0	004b5cd0-004b5d48
 004b65d0	KERNEL32.DLL::RtlUnwind	6	2	0	004b65d0-004b65d6
 004b65d6	_sprintf	82	0	2	004b65d6-004b6628
 004b6628	_sscanf	52	1	2	004b6628-004b665c

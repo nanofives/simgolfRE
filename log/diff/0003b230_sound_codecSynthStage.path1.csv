@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$sfb_0_0 $ssub0 $sgin0 $skin0 $sout0 $scount0 $sctx0,0,0,True,51180a2b,51180a2b,True
+$sfb_1_3 $ssub1 $sgin1 $skin1 $sout1 $scount1 $sctx1,0,0,True,523515b9,523515b9,True
+$sfb_2_1 $ssub2 $sgin2 $skin2 $sout2 $scount2 $sctx2,0,0,True,a4878cd7,a4878cd7,True
+$sfb_0_5 $ssub3 $sgin3 $skin3 $sout3 $scount3 $sctx3,0,0,True,ae8b84ca,ae8b84ca,True
+$sfb_0_0 $ssub4 $sgin4 $skin4 $sout4 $scount4 $sctx4,0,0,True,f293fcfd,f293fcfd,True
+$sfb_0_0 $ssub5 $sgin5 $skin5 $sout5 $scount5 $sctx5,0,0,True,2faf433a,2faf433a,True
+$sfb_4_4 $ssub6 $sgin6 $skin6 $sout6 $scount6 $sctx6,0,0,True,933408a4,933408a4,True
+$sfb_0_5 $ssub7 $sgin7 $skin7 $sout7 $scount7 $sctx7,0,0,True,08cf3e1f,08cf3e1f,True
+$sfb_0_0 $ssub8 $sgin8 $skin8 $sout8 $scount8 $sctx8,0,0,True,e65a01bb,e65a01bb,True
+$sfb_1_0 $ssub9 $sgin9 $skin9 $sout9 $scount9 $sctx9,0,0,True,a9e67a8c,a9e67a8c,True
+$sfb_7_0 $ssub10 $sgin10 $skin10 $sout10 $scount10 $sctx10,0,0,True,435fe1c4,435fe1c4,True
+$sfb_4_4 $ssub11 $sgin11 $skin11 0 $scount11 $sctx11,0,0,True,6f2b3e41,6f2b3e41,True
+$sfb_0_0 $ssub12 $sgin12 $skin12 $sout12 $scount12 $sctx12,0,0,True,c837ccec,c837ccec,True
+$sfb_0_0 $ssub13 $sgin13 $skin13 $sout13 $scount13 $sctx13,0,0,True,66f922d6,66f922d6,True
+state_regions,$sctx0+0xa8:2912 $sctx1+0xa8:2912 $sctx2+0xa8:2912 $sctx3+0xa8:2912 $sctx4+0xa8:2912 $sctx5+0xa8:2912 $sctx6+0xa8:2912 $sctx7+0xa8:2912 $sctx8+0xa8:2912 $sctx9+0xa8:2912 $sctx10+0xa8:2912 $sctx11+0xa8:2912 $sctx12+0xa8:2912 $sctx13+0xa8:2912 $ssub0+0x0:4 $ssub1+0x0:4 $ssub2+0x0:4 $ssub3+0x0:4 $ssub4+0x0:4 $ssub5+0x0:4 $ssub6+0x0:4 $ssub7+0x0:4 $ssub8+0x0:4 $ssub9+0x0:4 $ssub10+0x0:4 $ssub11+0x0:4 $ssub12+0x0:4 $ssub13+0x0:4 $skin0+0x0:64 $skin1+0x0:64 $skin2+0x0:64 $skin3+0x0:64 $skin4+0x0:64 $skin5+0x0:64 $skin6+0x0:64 $skin7+0x0:64 $skin8+0x0:64 $skin9+0x0:64 $skin10+0x0:64 $skin11+0x0:64 $skin12+0x0:64 $skin13+0x0:64 $scount0+0x0:4 $scount1+0x0:4 $scount2+0x0:4 $scount3+0x0:4 $scount4+0x0:4 $scount5+0x0:4 $scount6+0x0:4 $scount7+0x0:4 $scount8+0x0:4 $scount9+0x0:4 $scount10+0x0:4 $scount11+0x0:4 $scount12+0x0:4 $scount13+0x0:4 $sout0+0x0:768 $sout1+0x0:768 $sout2+0x0:768 $sout3+0x0:768 $sout4+0x0:768 $sout5+0x0:768 $sout6+0x0:768 $sout7+0x0:768 $sout8+0x0:768 $sout9+0x0:768 $sout10+0x0:768 $sout12+0x0:768 $sout13+0x0:768,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6bdfe640,original=0x2ba07c0,2026-10-08T17:41:07
+distinct_results,14,,
+VERDICT,GREEN,14,

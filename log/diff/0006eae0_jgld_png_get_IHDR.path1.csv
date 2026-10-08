@@ -1,0 +1,26 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $giI0 $giO0_0 $giO0_1 $giO0_2 $giO0_3 $giO0_4 $giO0_5 $giO0_6,0,0,True,8da3f312,8da3f312,False
+$giPng 0 $giO1_0 $giO1_1 $giO1_2 $giO1_3 $giO1_4 $giO1_5 $giO1_6,0,0,True,8da3f312,8da3f312,False
+$giPng $giI2 0 $giO2_1 $giO2_2 $giO2_3 $giO2_4 $giO2_5 $giO2_6,0,0,True,8da3f312,8da3f312,False
+$giPng $giI3 $giO3_0 0 $giO3_2 $giO3_3 $giO3_4 $giO3_5 $giO3_6,0,0,True,8da3f312,8da3f312,False
+$giPng $giI4 $giO4_0 $giO4_1 0 $giO4_3 $giO4_4 $giO4_5 $giO4_6,0,0,True,8da3f312,8da3f312,False
+$giPng $giI5 $giO5_0 $giO5_1 $giO5_2 0 $giO5_4 $giO5_5 $giO5_6,0,0,True,8da3f312,8da3f312,False
+$giPng $giI6 $giO6_0 $giO6_1 $giO6_2 $giO6_3 0 0 0,1,1,True,bc1f174b,bc1f174b,True
+$giPng $giI7 $giO7_0 $giO7_1 $giO7_2 $giO7_3 $giO7_4 $giO7_5 $giO7_6,1,1,True,2ef0ba99,2ef0ba99,True
+$giPng $giI8 $giO8_0 $giO8_1 $giO8_2 $giO8_3 0 $giO8_5 $giO8_6,1,1,True,93ffa9a1,93ffa9a1,True
+$giPng $giI9 $giO9_0 $giO9_1 $giO9_2 $giO9_3 $giO9_4 0 $giO9_6,1,1,True,3f8c831c,3f8c831c,True
+$giPng $giI10 $giO10_0 $giO10_1 $giO10_2 $giO10_3 $giO10_4 $giO10_5 0,1,1,True,a20c01f4,a20c01f4,True
+$giPng $giI11 $giO11_0 $giO11_1 $giO11_2 $giO11_3 $giO11_4 $giO11_5 $giO11_6,1,1,True,d9472ef1,d9472ef1,True
+$giPng $giI12 $giO12_0 $giO12_1 $giO12_2 $giO12_3 $giO12_4 $giO12_5 $giO12_6,1,1,True,3297e61f,3297e61f,True
+$giPng $giI13 $giO13_0 $giO13_1 $giO13_2 $giO13_3 $giO13_4 $giO13_5 $giO13_6,1,1,True,a44b2d96,a44b2d96,True
+$giPng $giI14 $giO14_0 $giO14_1 $giO14_2 $giO14_3 $giO14_4 $giO14_5 $giO14_6,1,1,True,7e2ff001,7e2ff001,True
+$giPng $giI15 $giO15_0 $giO15_1 $giO15_2 $giO15_3 $giO15_4 $giO15_5 $giO15_6,1,1,True,18fd27bd,18fd27bd,True
+$giPng $giI16 $giO16_0 $giO16_1 $giO16_2 $giO16_3 $giO16_4 $giO16_5 $giO16_6,1,1,True,8f15cf3d,8f15cf3d,True
+$giPng $giI17 $giO17_0 $giO17_1 $giO17_2 $giO17_3 $giO17_4 $giO17_5 $giO17_6,1,1,True,6e90c2f7,6e90c2f7,True
+$giPng $giI18 $giO18_0 $giO18_1 $giO18_2 $giO18_3 $giO18_4 $giO18_5 $giO18_6,1,1,True,305b5e6c,305b5e6c,True
+$giPng $giI19 $giO19_0 $giO19_1 $giO19_2 $giO19_3 $giO19_4 $giO19_5 $giO19_6,1,1,True,f2bf1bb6,f2bf1bb6,True
+state_regions,$giPng+0x0:512 $giInfo+0x0:2560 $giOut+0x0:1280,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6be068c0,original=0x1480c40,2026-10-08T17:08:36
+distinct_results,15,,
+VERDICT,GREEN,20,

@@ -249,6 +249,7 @@ golf_clean.exe	0x004b5810	prepare_for_pass	util	match re/match/golf_jpeg_cmaster
 golf_clean.exe	0x004b59d0	select_scan_parameters	util	match re/match/golf_jpeg_cmaster.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
 golf_clean.exe	0x004b5ad0	per_scan_setup	util	match re/match/golf_jpeg_cmaster.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
 golf_clean.exe	0x004b5ca0	pass_startup	util	match re/match/golf_jpeg_cmaster.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
+golf_clean.exe	0x004b5cd0	finish_pass_master	util	match re/match/golf_jpeg_cmaster.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
 golf_clean.exe	0x004afa60	jpeg_abort	util	match re/match/golf_jpeg_comapi.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
 golf_clean.exe	0x004afa90	jpeg_destroy	util	match re/match/golf_jpeg_comapi.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source
 golf_clean.exe	0x004afab0	jpeg_alloc_quant_table	util	match re/match/golf_jpeg_comapi.cpp; IJG libjpeg 6a release source	symbol of the 100% matched source

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a380`), 62 bytes, 23 instructions, subsystem `rend
 Zeroes the two words at this+0x810 and this+0x814; called from the Palette destructor and as vtable slot 2. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Marks a Palette's two cached 16-bit colour tables as never built, by zeroing both the serial at this+0x810 (0x1006a3a0) and the serial of the last build at this+0x814 (0x1006a3ad). Those are the only two dwords the body touches: the 256 entries at +0xc and the tables at +0x40c and +0x60c are left exactly as they are, and there is no branch and no read of the object. It is the counterpart of Palette::apply 0x1006a4a0, which rebuilds both tables when the two serials differ and skips the work when they are equal, so zeroing them does not force a rebuild - it makes the pair equal, which is what tells apply there is nothing to do. Its only caller is the destructor Palette::~Palette 0x1006a2c0. Reimplemented in `shim/src/re/c3bq.cpp`; path-1 A/B GREEN: Palette::reset (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a380_jgld_Palette_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006a380@f_1006a380@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a3bd): callee pops 0 bytes of stack arguments.

@@ -1,0 +1,38 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$rtiP0 $rtiI0,void,void,True,fc6d08a7,fc6d08a7,True
+$rtiP1 $rtiI1,void,void,True,7e2b2f19,7e2b2f19,True
+$rtiP2 $rtiI2,void,void,True,41ae27f0,41ae27f0,True
+$rtiP3 $rtiI3,void,void,True,8d82cd49,8d82cd49,True
+$rtiP4 $rtiI4,void,void,True,4985331b,4985331b,True
+$rtiP5 $rtiI5,void,void,True,9f34915a,9f34915a,True
+$rtiP6 $rtiI6,void,void,True,e1629101,e1629101,True
+$rtiP7 $rtiI7,void,void,True,205eff23,205eff23,True
+$rtiP8 $rtiI8,void,void,True,0f9ac363,0f9ac363,True
+$rtiP9 $rtiI9,void,void,True,d0ed150b,d0ed150b,True
+$rtiP10 $rtiI10,void,void,True,46c09607,46c09607,True
+$rtiP11 $rtiI11,void,void,True,7e839a01,7e839a01,True
+$rtiP12 $rtiI12,void,void,True,8f51d587,8f51d587,True
+$rtiP13 $rtiI13,void,void,True,67cdfe85,67cdfe85,True
+$rtiP14 $rtiI14,void,void,True,cf9dec1e,cf9dec1e,True
+$rtiP15 $rtiI15,void,void,True,421502f5,421502f5,True
+$rtiP16 $rtiI16,void,void,True,1578745d,1578745d,True
+$rtiP17 $rtiI17,void,void,True,f4e92dbb,f4e92dbb,True
+$rtiP18 $rtiI18,void,void,True,b948f131,b948f131,True
+$rtiP19 $rtiI19,void,void,True,be6bc3cb,be6bc3cb,True
+$rtiP20 $rtiI20,void,void,True,1d2ff01f,1d2ff01f,True
+$rtiP21 $rtiI21,void,void,True,dd2edc81,dd2edc81,True
+$rtiP22 $rtiI22,void,void,True,8c6052e5,8c6052e5,True
+$rtiP23 $rtiI23,void,void,True,876c6aac,876c6aac,True
+$rtiP24 $rtiI24,void,void,True,eee0e80a,eee0e80a,True
+$rtiP25 $rtiI25,void,void,True,344f159e,344f159e,True
+$rtiP26 $rtiI26,void,void,True,e8ea9969,e8ea9969,True
+$rtiP27 $rtiI27,void,void,True,f05203bf,f05203bf,True
+$rtiP28 $rtiI28,void,void,True,16979e82,16979e82,True
+$rtiP29 $rtiI29,void,void,True,724ef698,724ef698,True
+$rtiP30 $rtiI30,void,void,True,3749c4d4,3749c4d4,True
+$rtiP31 $rtiI31,void,void,True,99d504ee,99d504ee,True
+state_regions,$rtiPng+0x0:16384 $rtiInfo+0x0:4096,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6be06ac0,original=0x1480c00,2026-10-08T17:08:36
+distinct_results,32,,
+VERDICT,GREEN,32,

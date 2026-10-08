@@ -67,3 +67,7 @@ c3bl.cpp
 c3bn.cpp
 c3bo.cpp
 c3bm.cpp
+c3bq.cpp
+c3bs.cpp
+c3bp.cpp
+c3br.cpp

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 252 bytes, 84 instructions, subsystem `terrain`. Mechan
 spreads a brightness delta across a tile neighbourhood into the shade maps DAT_00822da0 and DAT_0082376c, clamped 0..255 (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Stamp one shading contribution over the 15x15 block of map cells centred on (row, col), with the contribution falling off by distance. The amount spread is value * 2 / 3, the signed magic-number division `imul 0x55555556` on value + value at 0x004615fa..0x00461627. The two loops walk a row offset and a column offset of -7..+7 (0x00461631 / 0x004616de and 0x00461647 / 0x004616c2) while carrying a weight coordinate of -21..+21 in steps of 3 (0x00461617 / 0x004616cc, 0x00461635 / 0x004616bb) and the grid byte offset 50 * row + column in edi + esi (0x00461613 / 0x00461624 / 0x00461629 / 0x004616d0 / 0x00461644). A cell whose tileBlocked 0x0040bf60 is non-zero is skipped (0x0046164d / 0x00461657), which is also what keeps the stamp inside the 50x50 grid at the map edges. For the other cells the divisor is approxDistance of the two weight coordinates plus 2 (0x0046165f / 0x00461664), and the sign of the amount picks the grid: a strictly positive amount is added to the byte at 0x0082376c + 50 * row + column (0x0046166f / 0x00461671 / 0x0046167a / 0x0046168e), a zero or negative amount is subtracted from the byte at 0x00822da0 + 50 * row + column (0x00461697 / 0x004616a0 / 0x004616a9 / 0x004616b4). Both results pass through clamp(v, 0, 0xff) 0x00467130 (0x00461686 and 0x004616ac), so each grid byte saturates at 0 and at 0xff. Reimplemented in `shim/src/re/c3bs.cpp`; path-1 A/B GREEN: spreadShade (40 vectors, 33 distinct results, 32 changing state, `log/diff/004615f0_spreadShade.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004616eb): callee pops 0 bytes of stack arguments.
 

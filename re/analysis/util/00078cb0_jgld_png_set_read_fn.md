@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078cb0`), 143 bytes, 47 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Installs the callback through which libpng will pull bytes, together with the opaque pointer that callback will be handed, and makes sure the same png_struct is not also set up for writing. The io_ptr is stored first and without any test (0x10078cce); then the callback argument is tested (0x10078cd1) and either stored at +0x50 (0x10078cdd) or replaced by the module's own default reader, the body at RVA 0x78d40, written as the absolute constant 0x10078d40 at 0x10078ce5 - so a caller that passes NULL does not disable reading, it opts into libpng's own. A png_struct that already carries a write_data_fn at +0x4c is a caller mistake: the field is cleared (0x10078cf8) and png_warning 0x10079040 is called twice, with the module strings 0x1011e01c and 0x1011dfe8 (0x10078d08, 0x10078d19), one naming the mistake and the other what was done about it. The last store clears +0x14c on every path (0x10078d24). Unlike the other setters of this library - png_set_pHYs 0x1007dfc0 and png_set_PLTE 0x1007e020 test their png_ptr, and png_set_IHDR 0x1007dc70 tests both of its pointers - this body tests nothing: a null png_ptr faults at the very first store. Reimplemented in `shim/src/re/c3bq.cpp`; path-1 A/B GREEN: png_set_read_fn (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078cb0_jgld_png_set_read_fn.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rio.cpp` as `_png_set_read_fn` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078d3e): callee pops 0 bytes of stack arguments.

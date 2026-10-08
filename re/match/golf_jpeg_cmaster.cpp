@@ -10,3 +10,4 @@
 // MATCH: golf_clean.exe 0x004b59d0 _select_scan_parameters
 // MATCH: golf_clean.exe 0x004b5ad0 _per_scan_setup
 // MATCH: golf_clean.exe 0x004b5ca0 _pass_startup
+// MATCH: golf_clean.exe 0x004b5cd0 _finish_pass_master

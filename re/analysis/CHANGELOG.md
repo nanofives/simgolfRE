@@ -4,6 +4,37 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-08  sound.dll:0003da50  interpSubframeParams  C2->C3  log/diff/0003da50_sound_interpSubframeParams.path1.csv
+2026-10-08  sound.dll:0003c220  quantizeParams  C2->C3  log/diff/0003c220_sound_quantizeParams_mode0.path1.csv
+2026-10-08  sound.dll:0003b5a0  codecTransformStage  C2->C3  log/diff/0003b5a0_sound_codecTransformStage_mode0.path1.csv
+2026-10-08  sound.dll:0003b230  codecSynthStage  C2->C3  log/diff/0003b230_sound_codecSynthStage.path1.csv
+2026-10-08  jgld.dll:000576a0  Sprite::draw16_100576a0  C2->C3  log/diff/000576a0_jgld_Sprite_draw16_100576a0.path1.csv
+2026-10-08  jgld.dll:00056450  Sprite::draw16_10056450  C2->C3  log/diff/00056450_jgld_Sprite_draw16_10056450.path1.csv
+2026-10-08  jgld.dll:0002d890  Sprite::draw16_1002d890  C2->C3  log/diff/0002d890_jgld_Sprite_draw16_1002d890.path1.csv
+2026-10-08  jgld.dll:0002bcf0  Sprite::draw_1002bcf0  C2->C3  log/diff/0002bcf0_jgld_Sprite_draw_1002bcf0.path1.csv
+2026-10-08  jgld.dll:000298b0  Sprite::draw16_100298b0  C2->C3  log/diff/000298b0_jgld_Sprite_draw16_100298b0.path1.csv
+2026-10-08  jgld.dll:00028630  Sprite::draw16_10028630  C2->C3  log/diff/00028630_jgld_Sprite_draw16_10028630.path1.csv
+2026-10-08  jgld.dll:00027430  Sprite::draw16_10027430  C2->C3  log/diff/00027430_jgld_Sprite_draw16_10027430.path1.csv
+2026-10-08  jgld.dll:00026240  Sprite::draw16_10026240  C2->C3  log/diff/00026240_jgld_Sprite_draw16_10026240.path1.csv
+2026-10-08  jgld.dll:0001f2d0  Sprite::draw_1001f2d0  C2->C3  log/diff/0001f2d0_jgld_Sprite_draw_1001f2d0.path1.csv
+2026-10-08  jgld.dll:0001cde0  Sprite::draw16_1001cde0  C2->C3  log/diff/0001cde0_jgld_Sprite_draw16_1001cde0.path1.csv
+2026-10-08  004b5cd0  finish_pass_master  C2->C3  log/diff/004b5cd0_finish_pass.path1.csv
+2026-10-08  004b5ca0  pass_startup  C2->C3  log/diff/004b5ca0_pass_startup.path1.csv
+2026-10-08  00482990  Surface::blitRLE  C2->C3  log/diff/00482990_Surface_blitRLE.path1.csv
+2026-10-08  00467600  pickGolferName  C2->C3  log/diff/00467600_pickGolferName.path1.csv
+2026-10-08  004616f0  spreadAllShade  C2->C3  log/diff/004616f0_spreadAllShade_at10.path1.csv
+2026-10-08  004615f0  spreadShade  C2->C3  log/diff/004615f0_spreadShade.path1.csv
+2026-10-08  004011e0  spawnObject  C2->C3  log/diff/004011e0_spawnObject.path1.csv
+2026-10-08  004b5cd0  finish_pass_master  C1->C2  re/analysis/util/004b5cd0_finish_pass_master.md
+2026-10-08  004b5cd0  finish_pass_master  C0->C1  match re/match/golf_jpeg_cmaster.cpp; IJG libjpeg 6a release source; demoted C1->C0: re-record: the C1 batch wrote hooks.csv but its CHANGELOG append failed (OSError); match re/match/golf_jpeg_cmaster.cpp; IJG libjpeg 6a release source
+2026-10-08  004b5cd0  finish_pass_master  C1<-C0  DEMOTED: re-record: the C1 batch wrote hooks.csv but its CHANGELOG append failed (OSError)
+2026-10-08  jgld.dll:0007dc70  png_set_IHDR  C2->C3  log/diff/0007dc70_jgld_png_set_IHDR.path1.csv
+2026-10-08  jgld.dll:00078cb0  png_set_read_fn  C2->C3  log/diff/00078cb0_jgld_png_set_read_fn.path1.csv
+2026-10-08  jgld.dll:000714c0  png_read_transform_info  C2->C3  log/diff/000714c0_jgld_png_read_transform_info.path1.csv
+2026-10-08  jgld.dll:0006eae0  png_get_IHDR  C2->C3  log/diff/0006eae0_jgld_png_get_IHDR.path1.csv
+2026-10-08  jgld.dll:0006a4a0  Palette::apply  C2->C3  log/diff/0006a4a0_jgld_Palette_apply.path1.csv
+2026-10-08  jgld.dll:0006a380  Palette::reset  C2->C3  log/diff/0006a380_jgld_Palette_reset.path1.csv
+2026-10-08  jgld.dll:000045f0  Matrix::loadIdentity  C2->C3  log/diff/000045f0_jgld_Matrix_loadIdentity.path1.csv
 2026-10-08  jgld.dll:00025dd0  Sprite::blitPair1  C2->C3  log/diff/00025dd0_jgld_Sprite_blitPair1.path1.csv
 2026-10-08  jgld.dll:00025900  Sprite::blitPair  C2->C3  log/diff/00025900_jgld_Sprite_blitPair.path1.csv
 2026-10-08  jgld.dll:0001e970  Sprite::draw16m_1001e970  C2->C3  log/diff/0001e970_jgld_Sprite_draw16m_1001e970.path1.csv
