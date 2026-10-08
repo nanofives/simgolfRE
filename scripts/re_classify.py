@@ -226,6 +226,13 @@ def gates(p: Project, row: dict, target: str, args) -> list[tuple[bool, str]]:
 
 def _identified(p: Project, item: str, rows: dict, module: str = "golf_clean.exe") -> bool:
     item = item.strip()
+    # A caller in another module is written `<module>:0x<addr>` (re/tools/import_callers.py: the exe's callers of a
+    # Terrain.dll export, which xref.py cannot see across the import table). It is looked up in its own module.
+    m = re.fullmatch(r"([A-Za-z0-9_]+\.(?:exe|dll)):((?:0x)?[0-9a-fA-F]{6,8})", item)
+    if m:
+        mods = {r_mod for (r_mod, _a) in rows} | {"golf_clean.exe", "Terrain.dll", "jgld.dll", "sound.dll"}
+        other = next((x for x in mods if x.lower() == m.group(1).lower()), None)
+        return other is not None and _identified(p, m.group(2), rows, other)
     if re.fullmatch(r"(0x)?[0-9a-fA-F]{6,8}", item):
         a = norm_addr(item)
         if module != "golf_clean.exe" and int(a, 16) >= 0x10000000:

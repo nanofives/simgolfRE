@@ -226,3 +226,16 @@ def test_dll_caller_va_is_matched_to_rva_row(proj):
     # callers of DLL functions are recorded as VAs (0x10006b80); the tracked row is keyed by RVA (00006b80)
     rows = {("jgld.dll", "00006b80"): {"addr": "00006b80", "module": "jgld.dll", "confidence": "C2", "name": "Tracked::dtor"}}
     assert rc._identified(rc.Project(proj), "0x10006b80", rows, "jgld.dll")
+
+
+def test_cross_module_caller_is_looked_up_in_its_own_module(proj):
+    # a Terrain.dll export called from the exe (re/tools/import_callers.py): `golf_clean.exe:0x...` resolves in the
+    # exe's rows, not as a Terrain RVA; an unknown or default-named exe caller is still an island
+    rows = {("golf_clean.exe", "00449470"): {"addr": "00449470", "module": "golf_clean.exe", "confidence": "C2",
+                                              "name": "syncTiles"},
+            ("Terrain.dll", "00449470"): {"addr": "00449470", "module": "Terrain.dll", "confidence": "C0", "name": ""}}
+    p = rc.Project(proj)
+    assert rc._identified(p, "golf_clean.exe:0x00449470", rows, "Terrain.dll")
+    assert not rc._identified(p, "0x00449470", rows, "Terrain.dll")
+    assert not rc._identified(p, "golf_clean.exe:0x00412345", rows, "Terrain.dll")
+    assert not rc._identified(p, "nosuch.dll:0x00449470", rows, "Terrain.dll")
