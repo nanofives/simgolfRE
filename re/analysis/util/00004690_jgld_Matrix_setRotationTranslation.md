@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00004690`), 72 bytes, 30 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 sets both rotation (from Quat) and translation (from Vector3). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Fills a matrix from a rotation and a translation with two calls and nothing else: `Matrix::setRotation` with the first stack argument (0x100046b4, through the incremental-link thunk at 0x10001113 to 0x10004750), which writes the nine slots of the 3x3 block from the quaternion, then `Matrix::setTranslation` with the second (0x100046c0, thunk 0x10001a37 to 0x100046f0), which copies three floats into m[12..14] at object offsets +0x34, +0x38 and +0x3c. The four remaining slots (m[3], m[7], m[11], m[15]) and the vtable pointer keep whatever they held, so the result is only a complete transform if the matrix was an identity first. `ret 8` at 0x100046d5. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Matrix::setRotationTranslation (12 vectors, 12 distinct results, 12 changing state, `log/diff/00004690_jgld_Matrix_setRotationTranslation.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10004690@C_FUN_10004690@f_10004690@@QAEXPAMPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100046d5): callee pops 8 bytes of stack arguments.

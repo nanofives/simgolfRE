@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00022280`), 119 bytes, 39 instructions, subsystem `au
 Copies a 0x38-byte channel parameter block (14 fields) from param_1 into the player's per-channel slot at this + param_1[0x28]*0x4c + 0x268. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Copies a channel parameter record into the sequence's own table of 0x4c-byte slots. A null source returns 0xa (0x10022284, 0x10022288). The slot is chosen by the source's own index at +0x28 (0x10022290): `lea esi, [edx+edx*8]` and `lea edx, [edx+esi*2]` (0x10022294, 0x10022297) multiply it by 19 and `lea ecx, [ecx+edx*4+0x264]` (0x1002229b) makes that this + 0x264 + index*0x4c, with no bound check. Thirteen fields are copied to the same offsets inside the slot: the dwords at +4, +8, +0xc, +0x10 and +0x14 (0x100222a2-0x100222bd), the WORD at +0x18 (`mov dx, [eax+0x18]` at 0x100222c0, so the two bytes at +0x1a are left alone) and the dwords at +0x1c, +0x20, +0x24, +0x28, +0x2c, +0x30 and +0x34 (0x100222c8-0x100222ef); offset 0 of the source is never read and offset 0 of the slot never written. Returns 0 (0x100222f2). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: Seq_copyChannelParams (11 vectors, 11 distinct results, 10 changing state, `log/diff/00022280_sound_Seq_copyChannelParams.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002228d, 0x100222f4): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002229b before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

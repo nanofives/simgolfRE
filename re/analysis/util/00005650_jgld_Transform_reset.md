@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00005650`), 46 bytes, 21 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 resets the transform to identity. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Clears the transform's flags word with the single store `mov dword ptr [eax+0x20], 0` at 0x10005670 and nothing else: the quaternion at +4, the position at +0x14 and the vtable pointer keep their previous contents. That is enough to make the object behave as an identity, because the users mask the flags before reading either half (`Transform::apply` 0x10005d10 masks with 0x1c at 0x10005d47 and with 2 at 0x10005d63). It is also the whole body of the destructor `~Transform` (0x100034e0) and the whole body of the default constructor (0x10005450). No argument, `ret` at 0x1000567d. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Transform::reset (16 vectors, 16 distinct results, 16 changing state, `log/diff/00005650_jgld_Transform_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `?reset@Transform@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000567d): callee pops 0 bytes of stack arguments.

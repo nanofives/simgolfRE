@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00035770`), 76 bytes, 28 instructions, subsystem `aud
 Walks the stream-buffer list (head +0x1348, cursor saved to +0x1350) and returns the first-dword payload of the node whose end position (node->+8 entry [1]) covers the current play position +0x16c; returns -1 if none. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Walks the channel's stream-node list and returns the first dword of the last record whose key is at or below the channel's current position, or -1 when there is none (`or eax, 0xffffffff` at 0x10035776). The list head is [this+0x1348] (0x10035770) and is copied into the walk cursor [this+0x1350] (0x1003577d) before anything else; a node holds its successor at +4 (0x100357a5) and its record at +8 (0x10035785, 0x100357b2). Each record's key at +4 is compared UNSIGNED with the position [this+0x16c] (`cmp esi, edi` at 0x10035795, `jb 0x100357b9` at 0x10035797), so a key above the position ends the walk and leaves the previous record's value as the result; an accepted record's first dword is read at 0x10035799. The cursor is rewritten at every step (0x100357aa), so when the function returns it points at the node the walk stopped on, or is null when the chain ran out. Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: Channel_findStreamNode (12 vectors, 12 distinct results, 12 changing state, `log/diff/00035770_sound_Channel_findStreamNode.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100357bb): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10035770 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002ad10`), 109 bytes, 35 instructions, subsystem `au
 thiscall(type): stores the source type at this+0x54 and sets the matching format bits in this+0x44 (type1->4, 2->8, 4->0x10, 5->0x28, 6->0x100, 7->0x80). (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Records a sound object's source type and sets the matching capability bit. `lea edx, [eax-1]` (0x1002ad14) and `cmp edx, 6` / `ja 0x1002ad77` (0x1002ad17) send every type outside 1..7 to the tail that only stores the type at [this+0x54] (0x1002ad77); the jump table at 0x1002ad80 (0x1002ad1c) maps type 1 to bit 2 of [this+0x44] (`or edx, 4` at 0x1002ad47), 2 to bit 3 (0x1002ad38), 3 to the plain tail with no bit at all, 4 to bit 4 (0x1002ad29), 5 to bits 3 and 5 together (`or edx, 0x28` at 0x1002ad56), 6 to bit 8 (`or dh, 1` at 0x1002ad65) and 7 to bit 7 (`or dl, 0x80` at 0x1002ad71), which is the only arm that falls through into the tail instead of returning. The flag bits are only ever set, never cleared, and every arm stores the type. Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: Sound_setSourceType (20 vectors, 20 distinct results, 20 changing state, `log/diff/0002ad10_sound_Sound_setSourceType.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002ad2f, 0x1002ad3e, 0x1002ad4d, 0x1002ad5c, 0x1002ad6b, 0x1002ad7a): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002ad23 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

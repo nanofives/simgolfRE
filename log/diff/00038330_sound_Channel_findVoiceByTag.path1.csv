@@ -1,0 +1,25 @@
+vector,original,reimpl,match
+$v_all 16,0x3f0ac70,0x3f0ac70,True
+$v_all 18,NULL,NULL,True
+$v_all 31,0x3f0bc60,0x3f0bc60,True
+$v_all 65,NULL,NULL,True
+$v_all 153,NULL,NULL,True
+$v_even 16,0x3f0c078,0x3f0c078,True
+$v_even 18,0x3f0c298,0x3f0c298,True
+$v_even 31,NULL,NULL,True
+$v_even 65,NULL,NULL,True
+$v_even 153,NULL,NULL,True
+$v_none 16,NULL,NULL,True
+$v_none 18,NULL,NULL,True
+$v_none 31,NULL,NULL,True
+$v_none 65,NULL,NULL,True
+$v_none 153,NULL,NULL,True
+$v_dup 16,NULL,NULL,True
+$v_dup 18,NULL,NULL,True
+$v_dup 31,NULL,NULL,True
+$v_dup 65,0x401c3a8,0x401c3a8,True
+$v_dup 153,NULL,NULL,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x70b9e850,original=0x35c0880,2026-10-07T23:23:41
+distinct_results,6,,
+VERDICT,GREEN,20,

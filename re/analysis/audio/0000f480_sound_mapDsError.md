@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f480`), 115 bytes, 35 instructions, subsystem `au
 Maps a DirectSound HRESULT (0x8878xxxx range) to the library SNDERR error code (0xb/0xc/0x11/0x1e/0x13 etc.). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Maps a DirectSound or COM result code to this module's own one-byte error numbers. The compare chain at 0x1000f484-0x1000f4ae is SIGNED (`jg` at 0x1000f489 and 0x1000f492), and all of these codes have bit 31 set, so it orders them 0x80004001 < 0x8007000e < 0x80070057 < 0x8878000a < 0x88780064...: E_NOTIMPL 0x80004001 becomes 0xb (0x1000f49d), E_OUTOFMEMORY 0x8007000e becomes 0x11 (0x1000f4a3), E_INVALIDARG 0x80070057 becomes 0xa (0x1000f4b0) and DSERR_ALLOCATED 0x8878000a becomes 0xc (0x1000f4b6). Codes above DSERR_ALLOCATED go through a range test, `add eax, 0x7787ff9c` at 0x1000f4bc (that is eax - 0x88780064) followed by `cmp eax, 0x46` / `ja 0x1000f4ed` at 0x1000f4c1, and then through the 0x47-byte index table at 0x1000f508 and the five-entry jump table at 0x1000f4f4: only four indices are not the default arm, 0 (DSERR_BADFORMAT 0x88780064) -> 0x12 (0x1000f4db), 0x14 (DSERR_NODRIVER 0x88780078) -> 1 (0x1000f4d5), 0x32 (DSERR_BUFFERLOST 0x88780096) -> 0x1e (0x1000f4e7) and 0x46 (DSERR_UNINITIALIZED 0x887800aa) -> 0x13 (0x1000f4e1). Every other code, including every non-negative one (which passes the first signed `jg`), returns 0x2f (0x1000f4ed). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: mapDsError (23 vectors, 9 distinct results, `log/diff/0000f480_sound_mapDsError.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000f4a2, 0x1000f4a8, 0x1000f4b5, 0x1000f4bb, 0x1000f4da, 0x1000f4e0, 0x1000f4e6, 0x1000f4ec (+1 more)): callee pops 0 bytes of stack arguments.
 

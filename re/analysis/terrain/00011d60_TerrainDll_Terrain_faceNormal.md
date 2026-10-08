@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00011d60`), 318 bytes, 102 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Computes and stores the unit normal of one triangle face. The face's three DWORDs at +0, +4 and +8 are vertex indices into the module array at 0x100b28c8 with a stride of 12 bytes and no bounds check (the index is multiplied by 0xc at 0x10011d83 and at every later index, and the address is formed in 32-bit arithmetic). Two edge vectors are built as floats, vertex[face[1]] - vertex[face[0]] (0x10011d8e, 0x10011dae, 0x10011dce) and vertex[face[2]] - vertex[face[1]] (0x10011def, 0x10011e10, 0x10011e31); their cross product in that order is written as three floats into the face at +0x2c, +0x30 and +0x34 (0x10011e51, 0x10011e65, 0x10011e79) and normalize 0x10037c80 is then called on +0x2c (0x10011e83), so the face ends up holding a unit normal whose orientation follows the winding of its three indices. The `this` pointer is stored at 0x10011d7a and never read. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: Terrain::faceNormal (16 vectors, 16 distinct results, 16 changing state, `log/diff/00011d60_Terrain_Terrain_faceNormal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small3.cpp` as `?faceNormal@Terrain@@QAEXPAUFace@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10011e9b): callee pops 4 bytes of stack arguments.

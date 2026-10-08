@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000055c0`), 104 bytes, 41 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 sets both rotation (Quat) and translation (Vector3). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Sets rotation and translation at once, with no call of its own: 0x1e into the flags word at this+0x20 (0x100055e0), the argument quaternion's four dwords into this+4 (0x100055f0-0x10005603) and the argument vector's three dwords into this+0x14 (0x1000560f-0x1000561c), all as integer moves. 0x1e is the union of the translation bit 2 that `Transform::setTranslation` (0x100054b0) stores and the rotation group 0x1c that `Transform::setRotation` (0x10005530) stores, so both halves of the transform count as valid afterwards. Two stack arguments, `ret 8` at 0x10005625; the vtable pointer is not touched. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Transform::set (16 vectors, 16 distinct results, 16 changing state, `log/diff/000055c0_jgld_Transform_set.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `?set@Transform@@QAEXABVQuat@@ABVVector3@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10005625): callee pops 8 bytes of stack arguments.

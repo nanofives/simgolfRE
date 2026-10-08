@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000155b0`), 118 bytes, 44 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Answers whether the tile's type is one of the seven the face-blending code treats as open ground. It reloads `this` from [ebp-4] before each of seven DWORD compares of the type field at +0x24 against 2, 7, 1, 0, 9, 8 and 3 in that order (0x100155d0, 0x100155d9, 0x100155e2, 0x100155eb, 0x100155f4, 0x100155fd, 0x10015606), each `je` reaching the single store of 1 at 0x10015615; falling past all seven stores 0 (0x1001560c). Only al carries the result (mov al, byte [ebp-8] at 0x1001561c): the upper three bytes of eax still hold `this` from the reload at 0x10015603. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: Tile::isOpenType (16 vectors, 2 distinct results, `log/diff/000155b0_Terrain_Tile_isOpenType.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small2.cpp` as `?isOpenType@Tile@@QAEDXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10015625): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00010eb0`), 82 bytes, 29 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Converts a millisecond length into buffer byte offsets using sample rate +0xac and block align +0xb4; stores +0x34/+0x38/+0x3c/+0x40. (`re/names/sound_2.tsv`)
 
+## Purpose
+Turns a duration in milliseconds and a region count into this buffer's region geometry. The byte rate at [this+0xac] (0x10010eb0) is multiplied by the milliseconds (`imul` at 0x10010ebb, truncating to 32 bits) and divided by 1000 by the usual unsigned magic sequence (`mov eax, 0x10624dd3` at 0x10010eb6, `mul edx` at 0x10010ec0, `shr edx, 6` at 0x10010ecd); that quotient times the 16-bit block alignment at [this+0xb4] (zero-extended at 0x10010ec5, `imul esi, edx` at 0x10010ed0) is one region's size, and times the region count (0x10010ed8) is the total. A total above the buffer size [this+0x78] (`cmp eax, edi` / `jbe 0x10010eeb` at 0x10010edd, UNSIGNED) returns 0xa and writes nothing (0x10010ee2). Otherwise the total goes to [this+0x38] (0x10010eeb), the region size to [this+0x40] (0x10010ef2), half of (total - region size) to [this+0x3c] (`sub eax, esi` / `shr eax, 1` at 0x10010eee, stored at 0x10010ef5) and the millisecond quotient to [this+0x34] (0x10010ef9), and 0 is returned (0x10010efc). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: DsBuffer::setRegionMs (24 vectors, 16 distinct results, 18 changing state, `log/diff/00010eb0_sound_DsBuffer_setRegionMs.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10010ee8, 0x10010eff): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10010eb0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007dbd0`), 69 bytes, 29 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's setter for the gAMA chunk. It has the same two null guards as `png_set_cHRM` (0x1007db30): `je` at 0x1007dbec for the png_struct pointer and `jne` at 0x1007dbf2 for the png_info pointer, both failing paths reaching the epilogue through the `jmp` at 0x1007dbf4, and the png_struct pointer is only tested. The body is one conversion of the `double` at [ebp+0x10] into the float at info+0x28 (`fld qword` 0x1007dbf6, `fstp dword` 0x1007dbfc) and then the valid-chunk word at info+8 read, ORed with 1 (`or edx, 1` at 0x1007dc05, this time over the full register) and stored back (0x1007dc0b). No arithmetic, no clamping and no range check on the gamma value. __cdecl, `ret` with no pop at 0x1007dc14. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: png_set_gAMA (16 vectors, 14 distinct results, 13 changing state, `log/diff/0007dbd0_jgld_png_set_gAMA.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_gAMA` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007dc14): callee pops 0 bytes of stack arguments.

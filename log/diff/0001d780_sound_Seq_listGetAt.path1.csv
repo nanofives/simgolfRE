@@ -1,0 +1,24 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$q_none $out 0,36,36,True,375f2ceb,375f2ceb,True
+$q_none $out 1,36,36,True,375f2ceb,375f2ceb,True
+$q_none $out 3,36,36,True,375f2ceb,375f2ceb,True
+$q_nopay $out 0,36,36,True,969798b1,969798b1,True
+$q_nopay $out 1,36,36,True,e3db3fab,e3db3fab,True
+$q_nopay $out 3,36,36,True,e3db3fab,e3db3fab,True
+$q1 $out 0,0,0,True,8a7b4ca5,8a7b4ca5,True
+$q1 $out 1,36,36,True,793a4d3b,793a4d3b,True
+$q1 $out 3,36,36,True,793a4d3b,793a4d3b,True
+$q3 $out 0,0,0,True,50893a4b,50893a4b,True
+$q3 $out 1,0,0,True,d322f793,d322f793,True
+$q3 $out 3,36,36,True,3baafb0b,3baafb0b,True
+$q5 $out 0,0,0,True,b6fda1e9,b6fda1e9,True
+$q5 $out 1,0,0,True,c72757dd,c72757dd,True
+$q5 $out 3,0,0,True,61631a5c,61631a5c,True
+$q_hole $out 0,0,0,True,01ab74e1,01ab74e1,True
+$q_hole $out 1,0,0,True,c04489a6,c04489a6,True
+$q_hole $out 3,36,36,True,86276c16,86276c16,True
+state_regions,$out+0x0:8 $q_none+0x190:32 $q_nopay+0x190:32 $q1+0x190:32 $q3+0x190:32 $q5+0x190:32 $q_hole+0x190:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70b9ed10,original=0x35c0900,2026-10-07T23:23:41
+distinct_results,14,,
+VERDICT,GREEN,18,

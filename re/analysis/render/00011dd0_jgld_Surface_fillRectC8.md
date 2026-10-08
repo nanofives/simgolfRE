@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00011dd0`), 335 bytes, 127 instructions, subsystem `re
 fills a clipped RECT with an 8-bit color (depth-8 impl of fillRectDispatch). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Fills a rectangle of an 8-bit surface with the byte `c` and always returns 0. A null rectangle means the whole surface and is handed to clear8 0x10011c40 by a direct call (0x10011df8 tests it, 0x10011e01 calls). Otherwise the rectangle is copied into a local (0x10011e10..0x10011e24) and intersected with the clip rectangle of slot +0xcc (0x10011e47); an empty intersection returns 0 (0x10011e51), as does a NULL pixel address for the intersection's top-left corner from slot +0x14 (0x10011e7d). The row skip, the stride of slot +0xe0 minus the width, is parked in the module global at 0x1012847c (0x10011eb2) and re-read inside the loop (0x10011ee6). Each of the `bottom - top` rows (0x10011e89) writes `(right - left) >> 2` dwords of the byte repeated four times (0x10011ee0) followed by `(right - left) & 3` single bytes (0x10011ee4); the row counter is the `dec`/`jne` at 0x10011eec. The surface is released through slot +0x24 with the argument 1 (0x10011ef6). Reimplemented in `shim/src/re/c3av.cpp`; path-1 A/B GREEN: Surface::fillRectC8 (20 vectors, 16 distinct results, 15 changing state, `log/diff/00011dd0_jgld_Surface_fillRectC8.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op2_8@Surface@@QAEHPAHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10011f1c): callee pops 8 bytes of stack arguments.

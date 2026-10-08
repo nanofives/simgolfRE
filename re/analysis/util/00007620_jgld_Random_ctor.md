@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00007620`), 48 bytes, 22 instructions, subsystem `util
 constructs a Random with seed (+0) = 0. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+jgld's `Random` constructor: the single store `mov dword ptr [eax], 0` at 0x10007640 zeroes the 32-bit state word at offset 0, the same word `Random::next` (0x00007530) advances and `Random::range` (0x000075b0) reads, and `this` is returned in eax (0x10007646). Nothing else in the object is written, so a freshly constructed `Random` starts every sequence from seed 0 and two of them produce the same stream. No argument, `ret` at 0x1000764f. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: jgld_Random::ctor (16 vectors, 16 distinct results, 16 changing state, `log/diff/00007620_jgld_jgld_Random_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_random.cpp` as `??0Random@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000764f): callee pops 0 bytes of stack arguments.

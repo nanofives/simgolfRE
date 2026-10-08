@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00010620`), 463 bytes, 161 instructions, subsystem `re
 draws a vertical line (8-bit). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Draws one vertical run of the byte `c` down column `x` of an 8-bit surface, clipped to the clip rectangle of vtable slot +0xcc (this+0x44), which it re-fetches before every test. The run is dropped when `x` lies outside [left, right) (0x10010659, 0x10010678), when the two ends are equal (0x10010685), when the span lies entirely at or below `bottom` (0x100106cc) or entirely above `top` (0x100106eb), and when the pixel address is NULL (0x10010790); ends given the wrong way round are swapped at 0x10010694..0x100106ac, `y1` is raised to `top` (0x1001070f) and `y2` lowered to `bottom - 1` (0x1001074b). The inline loop at 0x100107bf writes the low byte of `c` `y2 - y1 + 1` times, stepping by the row stride that slot +0xe0 returns (0x1001079e) after each pixel, and the surface is released through slot +0x24 with the argument 1 (0x100107c8). Reimplemented in `shim/src/re/c3av.cpp`; path-1 A/B GREEN: Surface::vline (18 vectors, 12 distinct results, 11 changing state, `log/diff/00010620_jgld_Surface_vline.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?vline@Surface@@QAEXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x100107ec): callee pops 16 bytes of stack arguments.

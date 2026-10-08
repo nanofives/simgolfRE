@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007db30`), 155 bytes, 50 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's setter for the cHRM chunk, statically linked into jgld.dll. It returns without writing anything if either pointer is null — `cmp dword ptr [ebp+8], 0` / `je` at 0x1007db48-0x1007db4c and `cmp dword ptr [ebp+0xc], 0` / `jne` at 0x1007db4e-0x1007db52, both failing paths meeting at the `jmp` to the epilogue at 0x1007db54. The png_struct pointer is only tested, never dereferenced; everything is written through the png_info pointer. The eight `double` arguments are converted to float one at a time (`fld qword ptr [ebp+N]; fstp dword ptr [info+M]`) into the consecutive fields at +0x80 (0x1007db56), +0x84 (0x1007db62), +0x88 (0x1007db6e), +0x8c (0x1007db7a), +0x90 (0x1007db86), +0x94 (0x1007db92), +0x98 (0x1007db9e) and +0x9c (0x1007dbaa), in argument order and with no arithmetic. Finally the valid-chunk word at info+8 is read, bit 2 is set (`or al, 4` at 0x1007dbbc operates on the low byte of the whole loaded dword) and the word is stored back (0x1007dbc1), so the other chunk bits survive. __cdecl, `ret` with no pop at 0x1007dbca. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: png_set_cHRM (15 vectors, 13 distinct results, 12 changing state, `log/diff/0007db30_jgld_png_set_cHRM.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_cHRM` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007dbca): callee pops 0 bytes of stack arguments.

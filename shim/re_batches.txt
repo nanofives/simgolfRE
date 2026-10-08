@@ -44,3 +44,7 @@ c3aq.cpp
 c3ao.cpp
 c3ap.cpp
 c3ar.cpp
+c3at.cpp
+c3av.cpp
+c3as.cpp
+c3au.cpp

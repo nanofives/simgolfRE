@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00002650`), 78 bytes, 28 instructions, subsystem `util
 constructs a MappedFile: stores vtable 0x1011d01c, view ptr (+4)=0, file handle (+8)=-1, mapping handle (+0xc)=0. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+jgld's `MappedFile` default constructor: four stores and nothing else — the vtable pointer at +0 (0x1011d01c, written at 0x10002670), 0 at +4 (0x10002679), 0xffffffff at +8 (0x10002683, -1 as a signed 32-bit value, the "no handle" marker `MappedFile::dtor` 0x00002820 and the open helpers test) and 0 at +0xc (0x1000268d); `this` is returned in eax (0x10002694). The three ctors that take a name (0x00002730, 0x000027b0) and the object at 0x10012140 all enter through it before opening anything. No argument, `ret` at 0x1000269d. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: jgld_MappedFile::ctor (16 vectors, 16 distinct results, 16 changing state, `log/diff/00002650_jgld_jgld_MappedFile_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10002650@f_10002650@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000269d): callee pops 0 bytes of stack arguments.

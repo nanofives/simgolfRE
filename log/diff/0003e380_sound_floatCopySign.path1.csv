@@ -1,0 +1,23 @@
+vector,original,reimpl,match
+$f2 $f2,1,1,True
+$f2 $f3,-1,-1,True
+$f3 $f2,1,1,True
+$f3 $f3,-1,-1,True
+$f0 $f2,0,0,True
+$f0 $f3,0,0,True
+$f1 $f2,0,0,True
+$f1 $f3,0,0,True
+$f4 $f5,-0.10000000149011612,-0.10000000149011612,True
+$f5 $f4,0.10000000149011612,0.10000000149011612,True
+$f6 $f7,-0.3333333432674408,-0.3333333432674408,True
+$f8 $f9,-3.4028234663852886e+38,-3.4028234663852886e+38,True
+$f10 $f11,-1.401298464324817e-45,-1.401298464324817e-45,True
+$f12 $f13,NaN,NaN,True
+$f13 $f12,NaN,NaN,True
+$f14 $f2,NaN,NaN,True
+$f2 $f14,-1,-1,True
+$f15 $f3,NaN,NaN,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x70b9e9f0,original=0x35c09a0,2026-10-07T23:23:41
+distinct_results,9,,
+VERDICT,GREEN,18,

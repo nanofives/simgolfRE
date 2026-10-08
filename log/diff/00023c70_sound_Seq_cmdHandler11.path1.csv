@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$k_guard 10 2882338826,36,36,True,4a09e9ff,4a09e9ff,False
+$k_none 10 2882338826,36,36,True,c8b0cb07,c8b0cb07,True
+$k_norec 10 2882338826,36,36,True,f41498d8,f41498d8,True
+$k3 10 2882338826,0,0,True,86211818,86211818,True
+$k3 20 2882338836,0,0,True,8d6303c1,8d6303c1,True
+$k3 30 2882338846,0,0,True,6d42c20b,6d42c20b,True
+$k3 99 2882338915,36,36,True,baa22bb7,baa22bb7,True
+$k_hole 10 2882338826,0,0,True,5d3813f2,5d3813f2,True
+$k_hole 30 2882338846,36,36,True,362b5144,362b5144,True
+$k_hole 99 2882338915,36,36,True,362b5144,362b5144,True
+$k_dup 20 2882338836,0,0,True,7d94b8d6,7d94b8d6,True
+$k_dup 10 2882338826,36,36,True,7f7bb3b7,7f7bb3b7,True
+state_regions,$arena+0x0:2048 $k_guard+0x210:32 $k_none+0x210:32 $k_norec+0x210:32 $k3+0x210:32 $k_hole+0x210:32 $k_dup+0x210:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70b9ec20,original=0x35c0940,2026-10-07T23:23:41
+distinct_results,11,,
+VERDICT,GREEN,12,

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000068d0`), 124 bytes, 48 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 copy constructor (??0Transform from const Transform&). (`re/names/jgld_0.tsv`)
 
+## Purpose
+The compiler-generated copy constructor of `Transform`. It makes the same three copies as `operator=` (0x10006840) in the same order — quaternion (0x100068f9-0x1000690c), position (0x1000691b-0x10006928), flags (0x10006931-0x10006934) — and then writes the vtable pointer last, with the `Transform` vtable at 0x1011d028 (0x1000693a), which `operator=` does not do. `this` is returned in eax (0x10006940). Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Transform::copyCtor (16 vectors, 16 distinct results, 16 changing state, `log/diff/000068d0_jgld_Transform_copyCtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??0Transform@@QAE@ABV0@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10006949): callee pops 4 bytes of stack arguments.

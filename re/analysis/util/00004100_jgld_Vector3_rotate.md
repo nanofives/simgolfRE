@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00004100`), 243 bytes, 83 instructions, subsystem `uti
 rotates this vector by a quaternion in place. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Rotates the vector in place by a quaternion given as a pointer, computing `q * (0, v) * conj(q)` and keeping the vector part. A null pointer returns with nothing written: `cmp dword ptr [ebp+8], 0` / `jne 0x1000413e` at 0x10004133-0x10004137 jumps to the epilogue at 0x100041dd. Otherwise the quaternion is copied into a local as four integer moves (0x10004141-0x10004155), a second local is given scalar part 0 (0x10004158, an integer zero, i.e. +0.0f) and the vector as its vector part (0x10004162-0x10004170), and the first product is `copy * pure` with the copy as the left operand (0x1000417e, result copied back over the pure quaternion at 0x10004183-0x10004197). The copy is then conjugated in place (0x1000419d) and the second product is `pure * copy`, in that order (0x100041ad, copied back at 0x100041b2-0x100041c6). Only the vector part of the result reaches the object (0x100041cf-0x100041da); the scalar part is discarded. The two `Quat::Quat()` calls on the locals (0x10004126, 0x1000412b) write only fields that are overwritten before they are read. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Vector3::rotate (26 vectors, 25 distinct results, 24 changing state, `log/diff/00004100_jgld_Vector3_rotate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `?rotate@Vector3@@QAEXPBVQuat@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100041f0): callee pops 4 bytes of stack arguments.

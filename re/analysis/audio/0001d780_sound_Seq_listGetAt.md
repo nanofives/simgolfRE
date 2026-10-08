@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001d780`), 98 bytes, 39 instructions, subsystem `aud
 Returns the element (node+8) at index param_2 of the linked list headed at this+0x19c (cursor this+0x1a4, next-links at node+4); writes the element to *param_1 and returns SNDERR 0x24 when the index is out of range, else 0. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Walks a sequence's track list a given number of steps and writes the payload it lands on into the caller's slot. The head [this+0x19c] (0x1001d780) is copied into the cursor [this+0x1a4] (0x1001d78c) and the head node's payload at +8 (0x1001d794), or 0 when there is no head (0x1001d799), is stored into the out slot (0x1001d7a5) before the loop, which a step count of zero skips entirely (`test edi, edi` / `jbe 0x1001d7d2` at 0x1001d7a3). Each step re-reads the cursor (0x1001d7a9), follows one successor link at +4 (0x1001d7b3), stores it back as the cursor (0x1001d7b8) and writes that node's payload (or 0 when the cursor or the successor is null, 0x1001d7c5) into the out slot (0x1001d7c9); a null payload ends the walk early (`je 0x1001d7d2` at 0x1001d7cb), otherwise it runs until the step counter reaches the count (`cmp esi, edi` / `jb 0x1001d7a9` at 0x1001d7ce, UNSIGNED). The return value is derived from the final out slot by `neg`/`sbb eax, eax`/ `and al, 0xdc`/`add eax, 0x24` (0x1001d7d5-0x1001d7dc): 0 when it is non-null and 0x24 when it is null. Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: Seq_listGetAt (18 vectors, 14 distinct results, 18 changing state, `log/diff/0001d780_sound_Seq_listGetAt.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x1001d7df): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1001d780 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

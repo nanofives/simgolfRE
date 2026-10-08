@@ -1,0 +1,12 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$cnt0 $a0 $b0 $val0 $bits0 $ctx0,0,0,True,c2eda9a6,c2eda9a6,True
+$cnt1 $a1 $b1 $val1 $bits1 $ctx1,0,0,True,9442f759,9442f759,True
+$cnt2 $a2 $b2 $val2 $bits2 $ctx2,0,0,True,fbdb5135,fbdb5135,True
+$cnt3 $a3 $b3 $val3 $bits3 $ctx3,0,0,True,453ac569,453ac569,True
+$cnt4 $a4 $b4 $val4 $bits4 $ctx4,0,0,True,462fe62a,462fe62a,True
+$cnt5 $a5 $b5 $val5 $bits5 $ctx5,0,0,True,b7d42d40,b7d42d40,True
+state_regions,$a0+0x0:4 $b0+0x0:4 $val0+0x0:64 $bits0+0x0:216 $ctx0+0x2540:4 $a1+0x0:4 $b1+0x0:4 $val1+0x0:64 $bits1+0x0:216 $ctx1+0x2540:4 $a2+0x0:4 $b2+0x0:4 $val2+0x0:64 $bits2+0x0:216 $ctx2+0x2540:4 $a3+0x0:4 $b3+0x0:4 $val3+0x0:64 $bits3+0x0:216 $ctx3+0x2540:4 $a4+0x0:4 $b4+0x0:4 $val4+0x0:64 $bits4+0x0:216 $ctx4+0x2540:4 $a5+0x0:4 $b5+0x0:4 $val5+0x0:64 $bits5+0x0:216 $ctx5+0x2540:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70b9e770,original=0x35c09c0,2026-10-07T23:23:41
+distinct_results,6,,
+VERDICT,GREEN,6,

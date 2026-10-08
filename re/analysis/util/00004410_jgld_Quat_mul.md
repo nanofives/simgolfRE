@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00004410`), 222 bytes, 81 instructions, subsystem `uti
 returns the product of this quaternion and another (operator*). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+The same product as `Quat::operator*=` (0x100042f0), instruction for instruction, written into the caller's return buffer instead of the object: the buffer is the first stack argument and the operand the second (`fld dword ptr [eax+0xc]; fmul dword ptr [ecx+0xc]` at 0x10004441-0x10004444 reads `this->w` and `q.w`, `fsubr` at 0x10004456 subtracts `Vector3::dot`'s unrounded st(0) from that float product, and the vector part is `(v.cross(q.v) + q.v*w) + v*q.w` through the calls at 0x1000446a, 0x10004482, 0x10004497, 0x1000449e and 0x100044a5). The four components are copied into the buffer at 0x100044c1-0x100044d2 and the buffer is returned in eax at 0x100044d5. `this` is never written, so the operator can be applied to a temporary. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Quat::mul (38 vectors, 38 distinct results, 38 changing state, `log/diff/00004410_jgld_Quat_mul.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??DQuat@@QAE?AV0@ABV0@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100044eb): callee pops 8 bytes of stack arguments.

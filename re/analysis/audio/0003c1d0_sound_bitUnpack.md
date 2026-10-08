@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003c1d0`), 73 bytes, 33 instructions, subsystem `aud
 SEH-wrapped forward call to bitPermute (mode 1): unpacks the packed input array (param_6) into the bit-field outputs param_3/param_4/param_5. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+The deserialising entry of the same bitPermute 0x1003bf30: a /Od /GZ wrapper that pushes a trailing 0 first (0x1003c1e8), then its five arguments in reverse (0x1003c1ea-0x1003c1fd), then the mode 1 (`push 1` at 0x1003c1fe), and calls it (0x1003c200), returning its 0 (`xor eax, eax` at 0x1003c169). The argument the serialising mode would use as the parity base is passed as NULL, which this mode never reads: the local that holds it is only written at 0x1003bf7b, on the other side of the mode test at 0x1003bf66. Inside, the 13 field slots are cleared (0x1003c06a), the 53 bit slots are consumed from the last to the first and shifted into the field the table at 0x1006447c names (`lea ecx, [eax+edx*2]` at 0x1003c0b0, stored at 0x1003c0c2), each field is then sign-corrected against the per-field mask in the 10-entry table at 0x10064454 (`and` at 0x1003c0f4, `shl eax, 1` + `sub` at 0x1003c109-0x1003c112), and the first two fields go back to the two scalar slots (0x1003c123, 0x1003c12b) while the rest are written into the value array in reverse (0x1003c164). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: bitUnpack (6 vectors, 6 distinct results, 6 changing state, `log/diff/0003c1d0_sound_bitUnpack.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003c218): callee pops 0 bytes of stack arguments.
 

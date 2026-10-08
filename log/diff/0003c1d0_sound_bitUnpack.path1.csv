@@ -1,0 +1,12 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ucnt0 $ua0 $ub0 $uval0 $ubits0,0,0,True,b0bb4151,b0bb4151,True
+$ucnt1 $ua1 $ub1 $uval1 $ubits1,0,0,True,76e48beb,76e48beb,True
+$ucnt2 $ua2 $ub2 $uval2 $ubits2,0,0,True,c84f6883,c84f6883,True
+$ucnt3 $ua3 $ub3 $uval3 $ubits3,0,0,True,935c432b,935c432b,True
+$ucnt4 $ua4 $ub4 $uval4 $ubits4,0,0,True,b82ef32a,b82ef32a,True
+$ucnt5 $ua5 $ub5 $uval5 $ubits5,0,0,True,d3787081,d3787081,True
+state_regions,$ua0+0x0:4 $ub0+0x0:4 $uval0+0x0:64 $ubits0+0x0:216 $ua1+0x0:4 $ub1+0x0:4 $uval1+0x0:64 $ubits1+0x0:216 $ua2+0x0:4 $ub2+0x0:4 $uval2+0x0:64 $ubits2+0x0:216 $ua3+0x0:4 $ub3+0x0:4 $uval3+0x0:64 $ubits3+0x0:216 $ua4+0x0:4 $ub4+0x0:4 $uval4+0x0:64 $ubits4+0x0:216 $ua5+0x0:4 $ub5+0x0:4 $uval5+0x0:64 $ubits5+0x0:216,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70b9e7b0,original=0x35c09e0,2026-10-07T23:23:41
+distinct_results,6,,
+VERDICT,GREEN,6,

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00005750`), 180 bytes, 65 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Evaluates one term of a degree-2 Bernstein polynomial, C(2,i) * t^i * (1-t)^(2-i). The binomial coefficient is built from three calls of factorial 0x100058a0 (0x1000576f, 0x10005784, 0x10005797): factorial(2) becomes the float numerator in [ebp-0x10] (0x1000577d), factorial(i) and factorial(2 - i) are multiplied as SIGNED integers (0x1000579f) and the quotient is rounded to a float in [ebp-8] (`fdivr` at 0x100057a8, `fstp` at 0x100057ab). The two powers go through powf2 0x10005840 with the exponent pushed as a float first and the base second: powf2(t, (float)i) at 0x100057b9, whose unrounded result is multiplied by the coefficient and rounded to a float in [ebp-0x18] (0x100057c1, 0x100057c4), and powf2(1.0f - t, (float)(2 - i)) at 0x100057e6 (the 1.0f is the constant at 0x1005f024, the subtraction at 0x100057df), whose unrounded result is multiplied by that float at 0x100057ee and left in st(0) as the term. Nothing bounds i: outside 0..2 factorial returns its argument for every value <= 2 (0x100058e0), so the coefficient simply changes sign. The `this` pointer is stored at 0x1000576a and never read. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: Terrain::bernstein (27 vectors, 18 distinct results, `log/diff/00005750_Terrain_Terrain_bernstein.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small2.cpp` as `?bernstein@Terrain@@QAEMMH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10005801): callee pops 8 bytes of stack arguments.

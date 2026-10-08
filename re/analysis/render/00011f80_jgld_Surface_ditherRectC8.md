@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00011f80`), 358 bytes, 129 instructions, subsystem `re
 fills a clipped RECT with an 8-bit color using a dither (depth-8 impl of ditherRectDispatch). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Writes the byte `c` over every second pixel of a rectangle of an 8-bit surface, the parity flipping from row to row, and always returns 0. A null rectangle is replaced by the bounds rectangle of slot +0xd4 (0x10011fa8, 0x10011fb4); the rectangle is then copied to a local (0x10011fc7..0x10011fdb) and intersected with the clip rectangle of slot +0xcc (0x10011ffe), and an empty intersection (0x10012008) or a NULL pixel address from slot +0x14 (0x10012031) returns 0. The row skip is the stride of slot +0xe0 minus the width (0x10012060). The inline loop (0x1001206c..0x100120b6) counts the rows down in a register and tests ITS parity, not the row index: on an odd remaining count the cursor first steps one byte forward (0x1001207a, 0x10012082); `width >> 1` bytes are then written two apart (0x1001208d..0x10012092), that run being skipped when the width is 1 (0x1001208b); and the row is closed by stepping one byte back when the remaining count is odd and the width even (0x10012094, 0x1001209c, 0x100120a4) or by writing one more byte when the remaining count is even and the width odd (0x100120ad, 0x100120af), after which the row skip is added (0x100120b2). The surface is released through slot +0x24 with the argument 1 (0x100120bd). Reimplemented in `shim/src/re/c3av.cpp`; path-1 A/B GREEN: Surface::ditherRectC8 (22 vectors, 17 distinct results, 16 changing state, `log/diff/00011f80_jgld_Surface_ditherRectC8.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op2b_8@Surface@@QAEHPAHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100120e3): callee pops 8 bytes of stack arguments.

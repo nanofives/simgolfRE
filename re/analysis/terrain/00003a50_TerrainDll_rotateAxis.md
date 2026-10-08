@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00003a50`), 535 bytes, 172 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Rotates a three-float vector about one of the three coordinate axes by an angle in DEGREES. The angle goes through degToRad (0x10003a6c) and the result is used twice in two different roundings: the unrounded st(0) goes to the CRT cos at 0x10019214 and a float copy kept by `fst dword [ebp-4]` (0x10003a74) goes to the CRT sin at 0x10019164. A 3x3 identity is laid out in nine frame slots (0x10003a9c-0x10003ad4) and the axis argument selects which four of them become cos, sin and -sin: exactly one of the three components must be non-zero (three groups of three x87 compares against the 0.0f at 0x1005f1e0, at 0x10003ae9/0x10003af9/0x10003b09, 0x10003b6c/0x10003b7c/0x10003b8c and 0x10003be9/0x10003bf9/0x10003c09), and an axis with two or three non-zero components, or none, leaves the vector untouched. In each branch the second output component is computed from the component the branch has ALREADY stored (the X branch reloads v[1] at 0x10003b45 after storing it at 0x10003b3c, the Y branch reloads v[0] at 0x10003bc6 after storing it at 0x10003bbe, the Z branch reloads v[0] at 0x10003c43 after storing it at 0x10003c3b), so the rotation is applied to the half-updated vector and is not the plane rotation the matrix describes. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: rotateAxis (22 vectors, 17 distinct results, 16 changing state, `log/diff/00003a50_Terrain_rotateAxis.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_large1.cpp` as `?rotateAxis@@YAXMMMMPAM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003c66): callee pops 0 bytes of stack arguments.

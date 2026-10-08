@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b630`), 37 bytes, 18 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the address of a list node's `prev` link, the node address plus 4 (0x1000b648, 0x1000b64b), so `prev` is the second pointer of the node. The node is never dereferenced. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: std::list<Tile*>::_Acc::_Prev (17 vectors, 17 distinct results, `log/diff/0000b630_Terrain_std_list(TileP)__Acc__Prev.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Prev@_Acc@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@SAAAPAU_Node@23@PAU423@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b654): callee pops 0 bytes of stack arguments.

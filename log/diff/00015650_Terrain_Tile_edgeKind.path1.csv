@@ -1,0 +1,26 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$t10 0,0,0,True,9a286d23,9a286d23,False
+$t16 $t24,1,1,True,9a286d23,9a286d23,False
+$t16 $t11,1,1,True,9a286d23,9a286d23,False
+$t16 $t17,2,2,True,9a286d23,9a286d23,False
+$t16 $t16,0,0,True,9a286d23,9a286d23,False
+$t18 $t19,2,2,True,9a286d23,9a286d23,False
+$t18 $t22,1,1,True,9a286d23,9a286d23,False
+$t18 $t27,0,0,True,9a286d23,9a286d23,False
+$t17 $t23,1,1,True,9a286d23,9a286d23,False
+$t19 $t19,0,0,True,9a286d23,9a286d23,False
+$t20 $t21,0,0,True,9a286d23,9a286d23,False
+$t20 $t19,1,1,True,9a286d23,9a286d23,False
+$t22 $t22,0,0,True,9a286d23,9a286d23,False
+$t23 $t18,1,1,True,9a286d23,9a286d23,False
+$t24 $t24,0,0,True,9a286d23,9a286d23,False
+$t24 $t25,2,2,True,9a286d23,9a286d23,False
+$t24 $t26,1,1,True,9a286d23,9a286d23,False
+$t0 $t0,0,0,True,9a286d23,9a286d23,False
+$t1 $t3,1,1,True,9a286d23,9a286d23,False
+$t26 $t25,1,1,True,9a286d23,9a286d23,False
+state_regions,$collarSlot+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x716ee310,original=0x15d0ce0,2026-10-07T23:21:50
+distinct_results,3,,
+VERDICT,GREEN,20,

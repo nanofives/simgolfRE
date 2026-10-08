@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00023c70`), 106 bytes, 34 instructions, subsystem `au
 Command 0xb (11) handler: finds the track node with id==param_1 in the list at this+0x218 and stores param_2 into node+0x30; returns 0 on success, SNDERR 0x24 if not found. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Finds the sequence's channel record whose key matches the first argument and stores the second argument at +0x30 of that record. A zero guard dword at [this+0x224] returns 0x24 at once (0x10023c70, 0x10023c7a). The list head is [this+0x218] (0x10023c82) and is copied into the cursor [this+0x220] (0x10023c88); a node holds its successor at +4 (0x10023cac) and its record at +8 (0x10023c92, 0x10023cb9); the key is the record's dword at +4 (`cmp [eax+4], edx` at 0x10023c9d). Every way of running out of list — a null head, a null record, a null successor — returns 0x24 (0x10023cc6), and so does a walk that never matches. A match stores the value at +0x30 of the record (0x10023cd2) and returns 0 (0x10023cd5). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: Seq_cmdHandler11 (12 vectors, 11 distinct results, 11 changing state, `log/diff/00023c70_sound_Seq_cmdHandler11.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10023c7f, 0x10023ccb, 0x10023cd7): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10023c70 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00037e10`), 85 bytes, 28 instructions, subsystem `aud
 Initializes an mmio buffer descriptor: copies the 0x48-byte MMIOINFO from param_1 into this+0, zeroes +0x88/+0x8c/+0x90, and copies the 0x12-byte WAVEFORMATEX from param_2 into +0xa0. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Initialises a buffer descriptor from an optional 0x48-byte template and a format record. When the first argument is non-null (`cmp esi, edx` / `je 0x10037e28` at 0x10037e19, edx being the zero set at 0x10037e15) 0x12 dwords are copied from it over the object's first 0x48 bytes (`mov ecx, 0x12` at 0x10037e1e, `rep movsd` at 0x10037e25); when it is null those bytes are left as they were. The three dwords at +0x88, +0x8c and +0x90 are then zeroed (0x10037e2c-0x10037e38), and the second argument, which is dereferenced unconditionally, contributes its four dwords at +0, +4, +8, +0xc and its WORD at +0x10 to the object's +0xa0 .. +0xb1 (0x10037e3e-0x10037e5e), leaving +0xb2 onwards untouched. eax ends as this + 0xa0 (0x10037e40). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: MmioBuffer_init (12 vectors, 12 distinct results, 12 changing state, `log/diff/00037e10_sound_MmioBuffer_init.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10037e62): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10037e17 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

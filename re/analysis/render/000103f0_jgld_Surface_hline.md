@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000103f0`), 437 bytes, 152 instructions, subsystem `re
 draws a horizontal line (8-bit). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Draws one horizontal run of the byte `c` across row `y` of an 8-bit surface, clipped to the clip rectangle that vtable slot +0xcc returns (this+0x44), which it re-fetches before every single test. The run is dropped when `y` lies outside [top, bottom) (0x1001042a, 0x10010449), when the two ends are equal (0x10010456), when the span lies entirely at or right of `right` (0x1001049d) or entirely left of `left` (0x100104bb), and when the pixel address is NULL (0x1001055e); ends given the wrong way round are normalised by the three-xor swap at 0x10010465..0x1001047d, `x1` is raised to `left` (0x100104de) and `x2` lowered to `right - 1` (0x10010519). The pixels are written by the CRT memset at 0x1007e7c0 over `x2 - x1 + 1` bytes (0x10010574) starting at the address slot +0x14 gives for (x1, y), and the surface is released through slot +0x24 with the argument 1 (0x1001057e). Reimplemented in `shim/src/re/c3av.cpp`; path-1 A/B GREEN: Surface::hline (18 vectors, 12 distinct results, 11 changing state, `log/diff/000103f0_jgld_Surface_hline.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?hline@Surface@@QAEXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x100105a2): callee pops 16 bytes of stack arguments.

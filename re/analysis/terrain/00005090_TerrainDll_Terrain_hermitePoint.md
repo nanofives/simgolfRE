@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00005090`), 322 bytes, 102 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Evaluates a 2D cubic Hermite spline at a parameter t from four control points, writing the result into a caller-supplied two-float point. The two powers of t come from the CRT pow with the exponent pushed as a literal double (3.0 at 0x100050ad, 2.0 at 0x100050c8) and each is rounded to a float, t^3 in [ebp-8] (0x100050c5) and t^2 in [ebp-0xc] (0x100050e0). Each component is then one chain of 53-bit operations ending in a single `fstp dword` (0x1000514c for x, 0x100051bc for y), summing the four standard Hermite basis functions against the four control points: (2t^3 - 3t^2 + 1) (0x100050ec-0x10005100, constants 2.0f at 0x1005f028, 3.0f at 0x100613b4, 1.0f at 0x1005f024), (-2t^3 + 3t^2) (0x1000510b-0x1000511d, -2.0f at 0x1005f21c), (t^3 - 2t^2 + t) (0x10005126-0x10005132) and (t^3 - t^2) (0x1000513c-0x10005142). The output slot is set to the integer 0 before its chain is evaluated (0x100050e6 for x, 0x10005151 for y) and overwritten by the store at the end. The `this` pointer is stored at 0x100050aa and never read. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: Terrain::hermitePoint (14 vectors, 14 distinct results, 14 changing state, `log/diff/00005090_Terrain_Terrain_hermitePoint.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small3.cpp` as `?hermitePoint@Terrain@@QAEXPAMM0000@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x100051cf): callee pops 24 bytes of stack arguments.

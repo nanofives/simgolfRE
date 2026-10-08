@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x00013dd0`), 130 bytes, 46 instructions, subsystem `
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Maps a terrain object/texture id to one of nine classes. The single stack argument is bounded UNSIGNED against 0x46 (cmp at 0x10013df3, `ja` 0x10013df7), so every id above 70 and every negative id returns 0 through the default block at 0x10013e47; in range, the byte table of 71 entries at 0x10013e7a picks one of ten targets through the jump table at 0x10013e52 (indexed load at 0x10013dfe, indirect jump at 0x10013e04). The ten targets load 0, 2, 4, 3, 1, 6, 8, 7, 5 and 0 into eax (0x10013e0b, 0x10013e0f, 0x10013e16, 0x10013e1d, 0x10013e24, 0x10013e40, 0x10013e2b, 0x10013e32, 0x10013e39, 0x10013e47), the last being the same default block the out-of-range ids reach, so the in-range ids whose table byte is 9 also return 0. The `this` pointer is stored at 0x10013dea and never read, so the class depends on the argument alone. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: Terrain::idClass (39 vectors, 9 distinct results, `log/diff/00013dd0_Terrain_Terrain_idClass.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small2.cpp` as `?idClass@Terrain@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10013e4f): callee pops 4 bytes of stack arguments.

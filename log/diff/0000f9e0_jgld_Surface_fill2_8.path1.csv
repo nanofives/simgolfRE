@@ -1,0 +1,24 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$s0 0 0 32 16 $lut,0,0,True,283dc618,283dc618,True
+$s0 0 0 32 16 $lut2,0,0,True,b71916c0,b71916c0,True
+$s0 4 2 20 12 $lut,0,0,True,b1e29d42,b1e29d42,True
+$s0 -5 -5 8 6 $lut2,0,0,True,126b08b3,126b08b3,True
+$s0 20 10 40 30 $lut,0,0,True,bbea4abf,bbea4abf,True
+$s0 5 5 6 6 $lut,0,0,True,79bb039c,79bb039c,True
+$s0 0 0 32 16 0,16,16,True,73928f38,73928f38,False
+$s1 0 0 32 16 0,16,16,True,73928f38,73928f38,False
+$s0 100 100 110 110 $lut,0,0,True,73928f38,73928f38,False
+$s0 10 10 10 10 $lut,0,0,True,73928f38,73928f38,False
+$s0 20 20 5 5 $lut,0,0,True,73928f38,73928f38,False
+$s1 0 0 32 16 $lut,0,0,True,33e27662,33e27662,True
+$s2 0 0 19 11 $lut2,0,0,True,df3af277,df3af277,True
+$s3 1 1 31 15 $lut,0,0,True,1d6f3916,1d6f3916,True
+$s5 0 0 16 10 $lut,0,0,True,9f12ec96,9f12ec96,True
+$s6 0 0 32 16 $lut,7,7,True,d1b19b85,d1b19b85,True
+$s4 0 0 32 16 $lut,7,7,True,73928f38,73928f38,False
+$s7 33 2 40 8 $lut,7,7,True,73928f38,73928f38,False
+state_regions,$pix+0x0:10240 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7246d5a0,original=0x14603a0,2026-10-07T23:41:17
+distinct_results,14,,
+VERDICT,GREEN,18,

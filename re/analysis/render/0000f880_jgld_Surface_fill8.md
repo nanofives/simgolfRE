@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000f880`), 276 bytes, 111 instructions, subsystem `re
 fills a rectangle with an 8-bit color. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Inside a rectangle given as (x, y, width, height), replaces every pixel of an 8-bit surface that equals the byte `from` with the byte `to`, returning 0 on success and 7 when the surface gives no pixel address. The rectangle is built by 0x10008360 (0x1000f8b1) and intersected with the clip rectangle of slot +0xcc, which is passed as the SECOND argument with the local as both destination and third (0x1000f8b9..0x1000f8d9); an empty intersection returns 0 (0x1000f8e3). The top-left pixel address comes from slot +0x14 (0x1000f8fe) and a NULL one returns 7 (0x1000f90f). Width and height are then re-read from the intersection through 0x10009120 and 0x10009160 (0x1000f91c, 0x1000f92b), and the row skip is the field at this+0x40 minus the width taken as a direct read, not through the stride virtual (0x1000f939). The inline loop walks height rows of width bytes, comparing each with `from` (0x1000f958) and storing `to` only on a match (0x1000f95c), stepping one byte per pixel (0x1000f95e) and the row skip per row (0x1000f962). The surface is released through slot +0x24 with the argument 1 (0x1000f96b). Reimplemented in `shim/src/re/c3av.cpp`; path-1 A/B GREEN: Surface::fill8 (18 vectors, 14 distinct results, 12 changing state, `log/diff/0000f880_jgld_Surface_fill8.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?fill8@Surface@@QAEHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x1000f991): callee pops 24 bytes of stack arguments.

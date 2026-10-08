@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b380`), 53 bytes, 25 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Compares two const_iterators by the node each holds: it loads this iterator's node (0x1000b3a3), clears eax (0x1000b3a5), compares with the other iterator's node (0x1000b3a7) and sets the low byte from the comparison (`sete al` at 0x1000b3a9). The `xor eax, eax` before the compare makes the whole of eax 0 or 1. Neither node is dereferenced, so two end iterators of the same list compare equal without touching the sentinel. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: std::list<Tile*>::const_iterator::operator== (18 vectors, 2 distinct results, `log/diff/0000b380_Terrain_std_list(TileP)_const_iterator_operator==.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??8const_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBE_NABV012@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b3b2): callee pops 4 bytes of stack arguments.

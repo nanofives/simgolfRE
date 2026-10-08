@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001e230`), 84 bytes, 23 instructions, subsystem `aud
 Resets a track's read state: rewrites flag +0x4c bit1, copies +0x178=+0x17c, and clamps +0x180 to the signed range [-0x40,0x3f]. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Resets a MIDI track's read state. The flag dword [this+0x4c] is zeroed outright (0x1001e233) and then rewritten with only bit 1 of its OLD value kept: the old value is shifted left 30 and arithmetically right 31 (0x1001e23d, 0x1001e240), masked to 1 (0x1001e243) and shifted back up one (0x1001e249), while the re-read of the already-zeroed field at 0x1001e23a contributes nothing (`and edx, 0xfffffffd` at 0x1001e246). The read cursor [this+0x178] is reloaded from its saved copy [this+0x17c] (0x1001e250, 0x1001e256), and the signed value at [this+0x180] is clamped into [-0x40, 0x3f]: below -0x40 it becomes 0xffffffc0 (`cmp eax, -0x40` / `jge 0x1001e273` at 0x1001e262, store at 0x1001e26c), above 0x3f it becomes 0x3f (`cmp eax, 0x3f` / `jle 0x1001e27d` at 0x1001e273, 0x1001e278), in range it is written back unchanged (0x1001e27d). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: Track_resetReadState (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001e230_sound_Track_resetReadState.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001e272, 0x1001e283): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001e230 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

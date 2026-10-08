@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00013f00`), 144 bytes, 54 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Packs three small selectors into one integer by adding a per-argument constant. The accumulator at [ebp-8] starts at 0 (0x10013f1d); the first argument adds 4 when it is 1 and 0x28 when it is 2 (0x10013f2d, 0x10013f3e), the second adds 1 and 0xa (0x10013f4d, 0x10013f5e) and the third adds 2 and 0x14 (0x10013f6d, 0x10013f7e), so the three contributions occupy disjoint ranges and the code can be taken apart again. Each argument's `== 1` arm jumps over its `== 2` test (0x10013f33, 0x10013f53, 0x10013f73), so an argument contributes at most one constant, and every value other than 1 and 2 contributes nothing; the compares are full DWORD compares (0x10013f24, 0x10013f35, 0x10013f44, 0x10013f55, 0x10013f64, 0x10013f75), so 0x101 is not 1. The `this` pointer is stored at 0x10013f1a and never read. The result is returned in eax from [ebp-8] (0x10013f84). Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: Terrain::flagCode (64 vectors, 27 distinct results, `log/diff/00013f00_Terrain_Terrain_flagCode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small2.cpp` as `?flagCode@Terrain@@QAEHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10013f8d): callee pops 12 bytes of stack arguments.

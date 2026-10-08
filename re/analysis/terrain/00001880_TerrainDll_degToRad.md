@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00001880`), 40 bytes, 18 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Converts degrees to radians. The whole body is `fld dword [ebp+8]` (0x10001898) and `fmul dword [0x100613e0]` (0x1000189b) with the constant 0.017453292f = pi/180; nothing is stored, so the 53-bit product is left in st(0) and the caller receives it UNROUNDED — measured in the running game, degToRad(90.0) returns 1.5707963146269321 while the nearest float is 1.5707963705062866. Its only caller rotateAxis 0x10003a50 uses both forms of that value: it keeps a float copy with `fst dword [ebp-4]` (0x10003a74) and passes the unrounded st(0) to cos (0x10003a7a). Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: degToRad (18 vectors, 18 distinct results, `log/diff/00001880_Terrain_degToRad.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?degToRad@@YAMM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100018a7): callee pops 0 bytes of stack arguments.

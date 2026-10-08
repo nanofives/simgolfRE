@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00006790`), 133 bytes, 48 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 copies another matrix's 16 floats (+4) into this, returns this. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The compiler-generated `Matrix::operator=`. It copies the same union as the copy constructor (0x10006720) but as two counted loops rather than two `rep movsd`, one per union member: counter at [ebp-8] with `cmp dword ptr [ebp-8], 0x10` / `jae` at 0x100067bf-0x100067c3 and counter at [ebp-0xc] with `jae` at 0x100067f1, both unsigned, each loop copying the dword at source+4+i*4 to this+4+i*4 (0x100067d1-0x100067d5 and 0x100067ff-0x10006803). The vtable pointer is **not** written, which is the only observable difference from the copy constructor. `this` is returned in eax (0x10006809). Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Matrix::assign (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006790_jgld_Matrix_assign.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10006790@C_FUN_10006790@f_10006790@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10006812): callee pops 4 bytes of stack arguments.

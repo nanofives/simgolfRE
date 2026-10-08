@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00011c40`), 317 bytes, 119 instructions, subsystem `re
 fills the whole 8-bit surface with a color. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Fills a whole 8-bit surface with the byte `c`. When the clip rectangle of vtable slot +0xcc and the bounds rectangle of slot +0xd4 are not equal (the comparison call at 0x10011c8d, tested at 0x10011c95), the whole job is handed to the rectangle-fill virtual at slot +0x44 with the clip rectangle and `c` (0x10011cbf) and nothing else runs. When they are equal the fill is a straight `rep stosd` (0x10011d4e) from the base that slot +0x18 returns, with no null test on it (0x10011cd8), over ((right >> 2) + (right & 3 ? 1 : 0)) * bottom dwords of the byte repeated four times — `right` and `bottom` being read from the bounds rectangle at 0x10011d19 and 0x10011cfc, the row count rounded up by the `and`/`setne` pair at 0x10011d2e-0x10011d31 and the product taken by the unsigned `mul` at 0x10011d3c. Only the low byte of `c` reaches the surface (0x10011d40). The surface is released through slot +0x24 with the argument 1 (0x10011d56). Reimplemented in `shim/src/re/c3av.cpp`; path-1 A/B GREEN: Surface::clear8 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00011c40_jgld_Surface_clear8.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?clear8@Surface@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10011d7a): callee pops 4 bytes of stack arguments.

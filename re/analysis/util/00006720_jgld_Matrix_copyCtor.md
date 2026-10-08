@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00006720`), 88 bytes, 34 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 copy constructor (??0Matrix from const Matrix&). (`re/names/jgld_0.tsv`)
 
+## Purpose
+The compiler-generated copy constructor of `Matrix`. The sixteen floats live in a union of `float m[16]` and `float e[4][4]`, so VC6 emits one `rep movsd` of 0x10 dwords per union member and the same sixteen dwords at source+4 are copied to this+4 twice (0x1000674e and 0x10006761). The vtable pointer is written last, after the data, with the `Matrix` vtable at 0x1011d024 (0x10006766), and `this` is returned in eax (0x1000676c). Nothing outside the 0x44 bytes of the object is touched. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Matrix::copyCtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006720_jgld_Matrix_copyCtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??0Matrix@@QAE@ABV0@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10006775): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000042f0`), 222 bytes, 81 instructions, subsystem `uti
 multiplies this quaternion by another in place, returns this& (operator*=). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Multiplies the quaternion in place by the one passed by reference and returns `this`. The scalar part is `w * q.w - v.dot(q.v)`: the product is computed and rounded to a float at 0x10004321-0x10004327, then `Vector3::dot` is called (0x10004331) and `fsubr dword ptr [ebp-0x54]` at 0x10004336 subtracts its still unrounded result from that float, the difference being stored as a float at 0x10004339. The vector part is `v.cross(q.v) + q.v * w + v * q.w`, whose three operands are built right to left into separate locals - `v * q.w` at 0x1000434a, `q.v * w` at 0x10004362 and the cross product at 0x10004377 - and then added by two chained `Vector3::operator+` calls, each taking the previous result in ecx (0x1000437e and 0x10004385), so the sum is grouped `(cross + q.v*w) + v*q.w`. Only when all four components exist as locals are they copied over the object (vector at 0x100043a1-0x100043ac, scalar at 0x100043af), which is why the argument may be the object itself; `this` is returned in eax at 0x100043b5. The `Quat::Quat()` call on the local result at 0x10004316 writes 0,0,0,1 into fields that are all overwritten before they are read. Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Quat::mulAssign (39 vectors, 39 distinct results, 39 changing state, `log/diff/000042f0_jgld_Quat_mulAssign.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??XQuat@@QAEAAV0@ABV0@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100043cb): callee pops 4 bytes of stack arguments.

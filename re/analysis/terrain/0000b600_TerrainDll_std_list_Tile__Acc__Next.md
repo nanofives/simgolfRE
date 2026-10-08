@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b600`), 34 bytes, 17 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the address of a list node's `next` link, which is the node address itself: the body is `mov eax, [ebp+8]` (0x1000b618) and nothing else, so the `next` pointer is at offset 0 of the node. The node is never dereferenced, which is why the container's code can call it on the list's head sentinel. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: std::list<Tile*>::_Acc::_Next (17 vectors, 17 distinct results, `log/diff/0000b600_Terrain_std_list(TileP)__Acc__Next.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Next@_Acc@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@SAAAPAU_Node@23@PAU423@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b621): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b710`), 41 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the node a const_iterator points at, by reloading `this` from [ebp-4] (0x1000b72d) and returning the DWORD it points at (0x1000b730). The iterator therefore holds exactly one member, the node pointer, at offset 0. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: std::list<Tile*>::const_iterator::_Mynode (21 vectors, 17 distinct results, `log/diff/0000b710_Terrain_std_list(TileP)_const_iterator__Mynode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Mynode@const_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBEPAU_Node@23@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b738): callee pops 0 bytes of stack arguments.

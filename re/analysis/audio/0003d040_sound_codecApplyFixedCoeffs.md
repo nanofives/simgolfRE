@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003d040`), 86 bytes, 35 instructions, subsystem `aud
 Thin wrapper (1-based index fixup) forwarding to 0x10040e30 with the constant coefficient table 0x10064a18, params param_2/param_3. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Runs the fixed-coefficient IIR filter over a block of samples. A /Od /GZ wrapper that always returns 0 (`xor eax, eax` at 0x1003d083): a non-null sample pointer is decremented by 4 (`sub eax, 4` at 0x1003d061, guarded by `cmp [ebp+8], 0` / `je 0x1003d067` at 0x1003d058) and 4 is added back when it is pushed (`add eax, 4` at 0x1003d077), so a non-null pointer is passed through unchanged and a null one is passed as the address 4. The call at 0x1003d07b is the filter at 0x10040e30 with four arguments (0x1003d06a-0x1003d07a): that pointer, the address 0x10064a18, whose first dword is 1 and is read as the first sample index (0x10040e87), this function's second argument, through which the filter reads the last index (0x10040e7f), and its third, the filter's four-float state, read at 0x10040e5a-0x10040e74 and written back at 0x10040f2c-0x10040f4c. The filter subtracts 4 from the sample pointer again (0x10040e51) and indexes it from 1 (0x10040ea7, 0x10040f24), so the samples it rewrites are the caller's [0 .. last-1]; with a last index of 0 the loop never runs (`jg 0x10040f2c` at 0x10040e9b) and only the state block is written back, which is why the null-pointer vector is safe. Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: codecApplyFixedCoeffs (9 vectors, 8 distinct results, 7 changing state, `log/diff/0003d040_sound_codecApplyFixedCoeffs.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003d095): callee pops 0 bytes of stack arguments.
 

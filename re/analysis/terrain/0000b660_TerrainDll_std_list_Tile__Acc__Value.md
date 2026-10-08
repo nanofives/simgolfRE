@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b660`), 37 bytes, 18 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the address of the Tile pointer a list node stores, the node address plus 8 (0x1000b678, 0x1000b67b). With _Next at +0 and _Prev at +4 this fixes the node layout as {next, prev, value} and its size at 12 bytes. The node is never dereferenced. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: std::list<Tile*>::_Acc::_Value (17 vectors, 17 distinct results, `log/diff/0000b660_Terrain_std_list(TileP)__Acc__Value.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Value@_Acc@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@SAAAPAVTile@@PAU_Node@23@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b684): callee pops 0 bytes of stack arguments.

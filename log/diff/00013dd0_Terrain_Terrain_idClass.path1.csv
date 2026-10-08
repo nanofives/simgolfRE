@@ -1,0 +1,44 @@
+vector,original,reimpl,match
+0 0,0,0,True
+0 1,0,0,True
+0 2,0,0,True
+0 3,2,2,True
+0 4,4,4,True
+0 5,3,3,True
+0 6,1,1,True
+0 7,3,3,True
+0 8,0,0,True
+0 9,0,0,True
+0 10,0,0,True
+0 11,0,0,True
+0 12,0,0,True
+0 13,0,0,True
+0 14,4,4,True
+0 16,1,1,True
+0 20,0,0,True
+0 21,0,0,True
+0 24,4,4,True
+0 25,3,3,True
+0 30,6,6,True
+0 34,4,4,True
+0 40,8,8,True
+0 41,8,8,True
+0 42,8,8,True
+0 43,2,2,True
+0 50,7,7,True
+0 52,7,7,True
+0 60,5,5,True
+0 61,8,8,True
+0 70,7,7,True
+0 71,0,0,True
+0 70,7,7,True
+0 71,0,0,True
+0 100,0,0,True
+0 128,0,0,True
+0 -1,0,0,True
+0 2147483647,0,0,True
+0 -2147483648,0,0,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x716edea0,original=0x15d0c80,2026-10-07T23:21:50
+distinct_results,9,,
+VERDICT,GREEN,39,

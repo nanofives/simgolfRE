@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00005840`), 70 bytes, 28 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+The float wrapper around the CRT `pow` that the terrain's spline code calls. Both arguments are widened to double on the stack, the SECOND one first (0x10005858-0x1000585e) and the FIRST after it (0x10005861-0x10005867), so the call at 0x1000586a receives base then exponent in source order. The result is left in st(0) by `fst dword [ebp-4]` (0x10005872), a store into a frame slot that is never read again, so the caller gets `pow`'s unrounded double; Terrain::bernstein 0x10005750 multiplies exactly that value at 0x100057c1. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: powf2 (18 vectors, 16 distinct results, `log/diff/00005840_Terrain_powf2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?powf2@@YAMMM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10005885): callee pops 0 bytes of stack arguments.

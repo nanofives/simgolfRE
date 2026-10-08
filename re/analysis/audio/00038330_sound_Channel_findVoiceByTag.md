@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038330`), 82 bytes, 31 instructions, subsystem `aud
 thiscall(tag): scans the 16 sub-voice slots at this+0x2d4 (stride 0x110) for an armed one (bitmask this+0x58>>12) whose tag field +0x48 equals the argument and that is not stopping (+0 bit3 clear); returns the slot address this+0x238+idx*0x110 or 0. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Returns the address of the channel's first active voice record that carries a given tag, or 0. Bits 12..27 of the channel flag dword are the per-voice active mask (`shr eax, 0xc` at 0x10038333, `and eax, 0xffff` at 0x1003833c, so bits 28..31 are dropped), and the scan runs over all 0x10 voices with a pointer starting at [this+0x2d4] (0x10038343) and a stride of 0x110 (0x1003835a, loop test `cmp edx, 0x10` / `jl 0x10038349` at 0x10038360). A voice is accepted only when its mask bit is set (`test al, 1` at 0x10038349), the dword at +0x48 of the scan pointer equals the argument (`cmp [esi+0x48], edi` at 0x1003834d) and bit 3 of the byte at the scan pointer is CLEAR (`test byte [esi], 8` at 0x10038352, whose `je 0x1003836c` is the jump to the hit). The returned address is the voice record itself, 0x238 + index*0x110 from the channel (0x1003836f-0x10038378), which is 0x9c bytes below the flag byte the scan read. Nothing is written. Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: Channel_findVoiceByTag (20 vectors, 6 distinct results, `log/diff/00038330_sound_Channel_findVoiceByTag.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10038369, 0x1003837f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10038330 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

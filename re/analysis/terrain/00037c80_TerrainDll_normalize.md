@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00037c80`), 139 bytes, 53 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Scales a three-float vector to unit length in place. The squared length is accumulated left to right with no spill — v0*v0 (0x10037c9e), + v1*v1 (0x10037cae), + v2*v2 (0x10037cbc) — so the two additions round to 53 bits; the sum is passed as a double to the CRT sqrt at 0x100192c4 and its result is rounded to a FLOAT in [ebp-4] (0x10037ccc). Each component is then divided by that float and stored back as a float, in order (0x10037cda, 0x10037ce8, 0x10037cf7), so the three divisions all use the same rounded length. There is no length test: a zero-length vector divides by zero. Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: normalize (24 vectors, 24 distinct results, 23 changing state, `log/diff/00037c80_Terrain_normalize.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile5.cpp` as `?normalize@@YAXPAM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10037d0a): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000116a0`), 88 bytes, 38 instructions, subsystem `uti
 Walks the list at +4 (links +0x10, count +0x148) to the given index, caching the node at +8; returns 3/10 on bounds errors. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Parks a list object's cursor on the node at a given index. Three guards run first: a zero count at [this+0x148] returns 3 (0x100116a7, 0x100116ad), an index at or above the count returns 0xa (`cmp edi, esi` / `jb 0x100116c8` at 0x100116ba, UNSIGNED, 0x100116bf) and a cursor already set at [this+8] returns 6 (0x100116cb, 0x100116d0). The walk then starts at the head [this+4] (0x100116d9) and follows each node's successor at +0x10 (0x100116e9); each iteration stores the current node at [this+8] before testing whether the counter has reached the index (`cmp edx, edi` at 0x100116e2, `mov [ecx+8], eax` at 0x100116e4, which does not touch the flags, `je 0x100116f1` at 0x100116e7), so the cursor ends on the node at the index. Returns 0 (0x100116f2). Reimplemented in `shim/src/re/c3au.cpp`; path-1 A/B GREEN: seekListToIndex (12 vectors, 8 distinct results, 5 changing state, `log/diff/000116a0_sound_seekListToIndex.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100116b3, 0x100116c5, 0x100116d6, 0x100116f5): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100116a1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00006840`), 115 bytes, 46 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 copy assignment operator (operator=). (`re/names/jgld_0.tsv`)
 
+## Purpose
+The compiler-generated `Transform::operator=`: the quaternion's four dwords from source+4 to this+4 (0x10006869-0x1000687c), the position's three dwords from source+0x14 to this+0x14 (0x1000688b-0x10006898) and the flags word from source+0x20 to this+0x20 (0x100068a1-0x100068a4), in that order, all as integer moves. The vtable pointer is **not** written, which is the only observable difference from the copy constructor at 0x100068d0. `this` is returned in eax (0x100068a7). Reimplemented in `shim/src/re/c3at.cpp`; path-1 A/B GREEN: Transform::assignOp (16 vectors, 16 distinct results, 16 changing state, `log/diff/00006840_jgld_Transform_assignOp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_math.cpp` as `??4Transform@@QAEAAV0@ABV0@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100068b0): callee pops 4 bytes of stack arguments.

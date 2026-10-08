@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00015650`), 242 bytes, 81 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Classifies the boundary between this tile and a neighbour as 0 (no edge), 1 or 2, and has two unrelated rules. A NULL neighbour is 0 (0x10015671, 0x10015673). For type 0x11 (0x1001567d) the rule is about the tile's own +0x28 field: when it is 0 the neighbour's type must match this one or the answer is 1 (getType through the thunk 0x1000119a at 0x1001568f, compare 0x10015697, `mov eax,1` at 0x1001569c); then the neighbour's variation byte, SIGN-EXTENDED (getVariation through the thunk 0x100010e6 at 0x100156a9, `movsx eax, al` at 0x100156ae), is compared with +0x28: equal is 0 (0x100156e9), a +0x28 of 0 is 2 (0x100156db), a +0x28 of 1 is 2 only when a second read of the neighbour's variation is 2 (0x100156ce, 0x100156d6), and everything else is 1 (0x100156e2). For every other type both tiles' types are mapped through the module table at 0x10106b48 with no bounds check (0x10015707, 0x1001570a): different entries are 1 (0x1001570f), equal entries with different types are 2 (0x10015726) and the same type is 0 (0x1001572d). Reimplemented in `shim/src/re/c3as.cpp`; path-1 A/B GREEN: Tile::edgeKind (20 vectors, 3 distinct results, 0 changing state, `log/diff/00015650_Terrain_Tile_edgeKind.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small3.cpp` as `?edgeKind@Tile@@QAEHPAV1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001573f): callee pops 4 bytes of stack arguments.
