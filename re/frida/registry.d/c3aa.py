@@ -56,6 +56,13 @@ HOOKS = {
                                  args=["pointer", "int", "pointer", "int", "int"], fixture="c3aa_add_quant",
                                  state=_QUANT_STATE, vectors=_ADD_QUANT),
 
+    "jpeg_add_quant_table_badstate": dict(module="golf_clean.exe", addr=0x004AE600, abi="default", ret="void",
+                                          args=["pointer", "int", "pointer", "int", "int"],
+                                          fixture="c3aa_add_quant_badstate",
+                                          state=_QUANT_STATE + [("$err", 0x14, 0x24)],
+                                          vectors=[("$obj", w, "$basic", sc, fb) for w in (0, 1)
+                                                   for sc in (1, 50, 800) for fb in (0, 1)]),
+
     "emit_dqt": dict(module="golf_clean.exe", addr=0x004AFEC0, abi="default", ret="int", args=["pointer", "int"],
                      fixture="c3aa_dqt", state=_DQT_STATE, vectors=[("$obj", 0), ("$obj", 1)]),
     "emit_dqt_sent": dict(module="golf_clean.exe", addr=0x004AFEC0, abi="default", ret="int", args=["pointer", "int"],

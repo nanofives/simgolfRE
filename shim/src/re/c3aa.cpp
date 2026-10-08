@@ -35,7 +35,7 @@ int __cdecl EmitBits_re(void* state, unsigned code, int size) {
     if (size == 0) {                                                      // 0x004b1a1c invalid Huffman entry -> ERREXIT
         void* cinfo = F<void*>(state, 0x20);
         F<int>(F<void*>(cinfo, 0), 0x14) = 0x27;                          // cinfo->err->msg_code = 0x27
-        (*F<void (__cdecl**)(void*)>(F<void*>(cinfo, 0), 0))(cinfo);      // (*cinfo->err->error_exit)(cinfo)
+        F<void (__cdecl*)(void*)>(F<void*>(cinfo, 0), 0)(cinfo);      // (*cinfo->err->error_exit)(cinfo)
     }
     put_bits += size;                                                     // 0x004b1a37
     unsigned put_buffer = (((1u << (size & 0x1f)) - 1u) & code) << ((24 - put_bits) & 0x1f)
@@ -148,7 +148,7 @@ void __cdecl JpegAddQuantTable_re(void* cinfo, int which_tbl, int* basic, int sc
     if (F<int>(cinfo, 0x10) != 100) {                                    // 0x004ae60a global_state != CSTATE_START
         F<int>(F<void*>(cinfo, 0), 0x14) = 0x12;                         // cinfo->err->msg_code = 0x12
         F<int>(F<void*>(cinfo, 0), 0x18) = F<int>(cinfo, 0x10);
-        (*F<void (__cdecl**)(void*)>(F<void*>(cinfo, 0), 0))(cinfo);
+        F<void (__cdecl*)(void*)>(F<void*>(cinfo, 0), 0)(cinfo);
     }
     if (F<int>(cinfo, 0x40 + which_tbl * 4) == 0)                        // quant_tbl_ptrs[which_tbl] == NULL -> alloc (not reached)
         F<int>(cinfo, 0x40 + which_tbl * 4) = kAllocQuantTable(cinfo);
@@ -171,7 +171,7 @@ int __cdecl EmitDqt_re(void* cinfo, int index) {
     if (qtbl == 0) {                                                     // 0x004afecd NULL -> ERREXIT (not reached)
         F<int>(F<void*>(cinfo, 0), 0x14) = 0x33;
         F<int>(F<void*>(cinfo, 0), 0x18) = index;
-        (*F<void (__cdecl**)(void*)>(F<void*>(cinfo, 0), 0))(cinfo);
+        F<void (__cdecl*)(void*)>(F<void*>(cinfo, 0), 0)(cinfo);
     }
     char prec = 0;
     for (int i = 0; i < 64; ++i) if (qtbl[i] > 0xff) prec = 1;           // 0x004afef9
@@ -199,7 +199,7 @@ void __cdecl EmitSof_re(void* cinfo, int code) {
     if (F<int>(cinfo, 0x1c) > 0xffff || F<int>(cinfo, 0x18) > 0xffff) {  // image too big -> ERREXIT (not reached)
         F<int>(F<void*>(cinfo, 0), 0x14) = 0x28;
         F<int>(F<void*>(cinfo, 0), 0x18) = 0xffff;
-        (*F<void (__cdecl**)(void*)>(F<void*>(cinfo, 0), 0))(cinfo);
+        F<void (__cdecl*)(void*)>(F<void*>(cinfo, 0), 0)(cinfo);
     }
     kEmitByte(cinfo, F<int>(cinfo, 0x30));                               // data_precision
     kEmit2bytes(cinfo, F<int>(cinfo, 0x1c));                            // image_height
@@ -228,7 +228,7 @@ void __cdecl EmitDht_re(void* cinfo, int index, int is_ac) {
     if (htbl == 0) {                                                     // 0x004b014f NULL -> ERREXIT (not reached)
         F<int>(F<void*>(cinfo, 0), 0x14) = 0x31;
         F<int>(F<void*>(cinfo, 0), 0x18) = index;
-        (*F<void (__cdecl**)(void*)>(F<void*>(cinfo, 0), 0))(cinfo);
+        F<void (__cdecl*)(void*)>(F<void*>(cinfo, 0), 0)(cinfo);
     }
     if (*reinterpret_cast<int*>(htbl + 0x114) == 0) {                   // sent_table
         kEmitMarker(cinfo, 0xc4);
@@ -266,7 +266,7 @@ void __cdecl SelectScanParameters_re(void* cinfo) {
         F<int>(F<void*>(cinfo, 0), 0x14) = 0x18;
         F<int>(F<void*>(cinfo, 0), 0x18) = nc;
         F<int>(F<void*>(cinfo, 0), 0x1c) = 4;
-        (*F<void (__cdecl**)(void*)>(F<void*>(cinfo, 0), 0))(cinfo);
+        F<void (__cdecl*)(void*)>(F<void*>(cinfo, 0), 0)(cinfo);
     }
     F<int>(cinfo, 0xec) = nc;
     for (int ci = 0; ci < nc; ++ci)                                      // cur_comp_info[ci] = &comp_info[ci]

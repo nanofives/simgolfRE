@@ -4,6 +4,7 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-08  004ae740  jpeg_set_quality  C2->C3  log/diff/004ae740_jpeg_set_quality.path1.csv
 2026-10-08  sound.dll:0003f720  codecFeatureDecision  C2->C3  log/diff/0003f720_sound_codecFeatureDecision.path1.csv
 2026-10-08  sound.dll:0003c640  codecStageDispatch  C2->C3  log/diff/0003c640_sound_codecStageDispatch.path1.csv
 2026-10-08  sound.dll:0003b150  codecProcessResource  C2->C3  log/diff/0003b150_sound_codecProcessResource.path1.csv

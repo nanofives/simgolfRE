@@ -140,6 +140,25 @@
       return { obj: cinfo, q0: q0, q1: q1, basic: basic };
     },
 
+    // jpeg_add_quant_table with global_state 0x63 (not CSTATE_START): the je at 0x004ae612 is not taken, so ERREXIT1
+    // 0x12 runs (0x004ae617 msg_code, 0x004ae623 msg_parm, 0x004ae628 call err->error_exit). This error_exit
+    // records msg_code/msg_parm into err+0x30/+0x34 and RETURNS (libjpeg's own never returns), so the table fill
+    // after it runs in both arms. Added 2026-10-08 after jpeg_set_quality_badstate (c3bx) crashed with this hook on.
+    c3aa_add_quant_badstate() {
+      const f = this.c3aa_add_quant();
+      const ERR = new NativeCallback(function (ci) {
+        const e = ci.readPointer();
+        e.add(0x30).writeU32(e.add(0x14).readU32());
+        e.add(0x34).writeU32(e.add(0x18).readU32());
+      }, 'void', ['pointer']);
+      const err = Memory.alloc(0x84); zero(err, 0x84);
+      err.writePointer(ERR);
+      f.obj.writePointer(err);
+      f.obj.add(0x10).writeS32(0x63);
+      f.err = err; f.errcb = ERR;
+      return f;
+    },
+
     // emit_dqt: quant_tbl_ptrs[0] = 8-bit precision, [1] = 16-bit precision, neither sent.
     c3aa_dqt() {
       const f = cinfoDest();

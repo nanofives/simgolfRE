@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Install the two standard JPEG quantisation tables scaled for a 0..100 user quality rating. The rating is taken from the second stack dword and converted to a percentage scale factor by jpeg_quality_scaling 0x004ae700 (0x004ae740 / 0x004ae745); that scale factor, the compress object from the first dword and the force_baseline flag from the third are then pushed in that order (0x004ae74a..0x004ae755) for jpeg_set_linear_quality 0x004ae6c0, and the four pushed dwords are removed by the caller-pops `add esp, 0x10` at 0x004ae75a. The function has no conditional branch and writes nothing itself: every observable change is the 64 UINT16 entries and the cleared sent_table flag that the two jpeg_add_quant_table 0x004ae600 calls put into cinfo->quant_tbl_ptrs[0] and [1] (cinfo+0x40, cinfo+0x44). Reimplemented in `shim/src/re/c3bx.cpp`; path-1 A/B GREEN: jpeg_set_quality (30 vectors, 12 distinct results, 30 changing state, `log/diff/004ae740_jpeg_set_quality.path1.csv`); jpeg_set_quality_alloc (6 vectors, 6 distinct results, 6 changing state, `log/diff/004ae740_jpeg_set_quality_alloc.path1.csv`); jpeg_set_quality_badstate (4 vectors, 4 distinct results, 4 changing state, `log/diff/004ae740_jpeg_set_quality_badstate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_jpeg_set_quality` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae75d): callee pops 0 bytes of stack arguments.

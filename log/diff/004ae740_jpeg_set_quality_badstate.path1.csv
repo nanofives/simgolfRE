@@ -1,7 +1,10 @@
-vector,original,reimpl,match
-error,RPCException,"Error: access violation accessing 0xfb1e0ff3
-    at run (/script2.js:16315)
-    at call (native)
-    at handleRpcMessage (/frida/runtime/message-dispatcher.js:39)
-    at handleMessage (/frida/runtime/",
-VERDICT,ERROR,0,
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$c 1 0,void,void,True,87d2e7d3,87d2e7d3,True
+$c 50 1,void,void,True,08a78588,08a78588,True
+$c 100 0,void,void,True,0903391c,0903391c,True
+$c -5 1,void,void,True,2888bd1c,2888bd1c,True
+state_regions,$c+0x0:384 $err+0x0:132 $q0+0x0:132 $q1+0x0:132,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6dae1450,original=0x15d0bc0,2026-10-08T20:33:52
+distinct_results,4,,
+VERDICT,GREEN,4,
