@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000af70`), 84 bytes, 35 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Builds the iterator to the first element of a `std::list<Tile*>` and returns it by value. It is `end` with one step more: the head node pointer at +4 (0x1000af8d, 0x1000af90) is passed to `std::list<Tile*>::_Acc::_Next` 0x1000b600 (call at 0x1000af94 through the thunk 0x100010e1, __cdecl, cleaned at 0x1000af99), which returns the address of the node's `next` field (offset 0); that address is dereferenced at 0x1000af9c, giving the node after the head, and the iterator constructor 0x1000b750 is run with it on a four-byte local (0x1000af9e-0x1000afa2). The local's DWORD is copied into the caller's object (0x1000afa7-0x1000afac) and the object's address returned (0x1000afae, `ret 4` at 0x1000afc1). There is no conditional jump and no NULL test: a list whose head pointer is NULL faults at 0x1000af9c. Two of VC6's `list` members compile to these bytes (`re/match/terrain_list.cpp`, "2 names compile identically"). Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::begin (16 vectors, 16 distinct results, 16 changing state, `log/diff/0000af70_Terrain_std_list(TileP)_begin.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?begin@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000afc1): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006e010`), 497 bytes, 174 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Swaps the first and third sample of every pixel of a row (RGB to BGR), in place. Bit 1 of color_type must be set or the function returns at once (`and ecx, 2` / `test` / `je 0x1006e1fa` at 0x1006e030-0x1006e035); neither pointer is tested for null. The width is read once into [ebp-4] before the branches (0x1006e03e) and is the unsigned bound of all four loops (`jae` at 0x1006e088, 0x1006e0de, 0x1006e148, 0x1006e1bc), so width 0 writes nothing. bit_depth 8 (`jne 0x1006e103` at 0x1006e04e) selects the byte loops and bit_depth 16 (`jne 0x1006e1fa` at 0x1006e10e) the 16-bit ones; any other depth returns. Inside each, color_type 2 (`jne` at 0x1006e05f / 0x1006e11f) is the three-sample pixel and color_type 6 (`jne` at 0x1006e0b5 / 0x1006e193) the four-sample one, and any other value with bit 1 set writes nothing. The byte loops exchange rp[0] with rp[2] (0x1006e08d-0x1006e0a3) and step 3 or 4 bytes; the 16-bit loops exchange rp[0] with rp[4] and rp[1] with rp[5] and step 6 or 8 bytes. No field of the header is written. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: png_do_bgr (15 vectors, 7 distinct results, 7 changing state, `log/diff/0006e010_jgld_png_do_bgr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_trans.cpp` as `_png_do_bgr` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006e200): callee pops 0 bytes of stack arguments.

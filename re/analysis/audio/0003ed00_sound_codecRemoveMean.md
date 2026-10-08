@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003ed00`), 177 bytes, 64 instructions, subsystem `au
 Computes the mean of *param_1 samples at param_2 (sum/N) and writes each sample minus that mean to param_3; removes the DC offset. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Subtracts the block mean from a block of floats. The first loop sums *count samples into a float accumulator (`fld`/`fadd`/`fstp dword` at 0x1003ed59-0x1003ed5f), the accumulator is then divided by the count re-read through its pointer and converted with `fild dword` (0x1003ed67, 0x1003ed69) and spilled back as a float (0x1003ed6c), and the second loop writes `in[i] - mean` to the output (0x1003ed97-0x1003eda3). Both sample pointers are biased by one float (0x1003ed1b, 0x1003ed24) and both loops run 1..*count inclusive (`jg` at 0x1003ed51 and 0x1003ed8f), so they cover the caller's elements 0..count-1; the count is re-read for the second loop (0x1003ed72). A count of 0 divides zero by zero and writes nothing. Returns 0 (0x1003eda8). Its caller is codecStageDispatch 0x1003c640. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: codecRemoveMean (14 vectors, 10 distinct results, 9 changing state, `log/diff/0003ed00_sound_codecRemoveMean.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003edb0): callee pops 0 bytes of stack arguments.
 

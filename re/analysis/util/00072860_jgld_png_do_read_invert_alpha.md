@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00072860`), 877 bytes, 300 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Replaces the alpha sample of every pixel of a row with its complement and leaves the colour samples where they are. Same shape as png_do_read_swap_alpha: the width is read into [ebp-4] first, only color_type 6 (`cmp eax, 6` / `jne 0x10072a7d` at 0x10072888-0x1007288b) and color_type 4 (`cmp edx, 4` / `jne 0x10072bc6` at 0x10072a85-0x10072a88) do anything, and inside each, bit_depth 8 (`jne` at 0x1007289c / 0x10072a99) selects the one-byte sample loop and any other depth the two-byte one. Both pointers start at row + rowbytes and the loops step back 4, 8, 2 or 4 bytes per pixel, bounded by the width with unsigned compares (`jae` at 0x100728cc, 0x1007297b, 0x10072ac5 and the fourth loop's). The complement is 255 - alpha on one byte at depth 8 and on each of the two alpha bytes at any other depth; the colour samples are copied unchanged, so at depth 8 the pixel keeps its position. No header field is written. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: png_do_read_invert_alpha (14 vectors, 12 distinct results, 11 changing state, `log/diff/00072860_jgld_png_do_read_invert_alpha.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rtran.cpp` as `_png_do_read_invert_alpha` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10072bcc): callee pops 0 bytes of stack arguments.

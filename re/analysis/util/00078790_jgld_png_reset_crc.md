@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078790`), 64 bytes, 26 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Resets the running CRC of a png_struct: calls zlib's crc32 with three zeros pushed (0x100787a8, 0x100787aa, 0x100787ac, `call 0x1009ca70` at 0x100787ae, arguments popped by the caller at 0x100787b3) and stores the result in the word at png_ptr+0x110 (`mov dword ptr [ecx+0x110], eax` at 0x100787b9). crc32 with a null buffer returns 0 (`xor eax, eax` at 0x1009ca8e), so the stored value is always 0; no other field of the png_struct is read or written and the body has no branch. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: png_reset_crc (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078790_jgld_png_reset_crc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_reset_crc` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100787cf): callee pops 0 bytes of stack arguments.

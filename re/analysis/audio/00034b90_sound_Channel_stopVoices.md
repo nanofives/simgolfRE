@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00034b90`), 180 bytes, 61 instructions, subsystem `au
 Stops all sub-voices (requires +0x58 bit6/bit4 guard): for each armed slot whose volume double +0x54 < 0.0 sets flag bits 0x28 and snapshots the gain fields; if the channel is not playing sets +0x58 bit3 / +0x5c bit3, moves +0x1e0 into +0x210 and clears +0x1e0/+0x1e4. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Stops a multi-sound channel's voices and parks its pending pair. The same two guards as Channel_releaseVoices read the flag word at [ecx+0x58] and return 0x15 (bit 6 clear at 0x10034b94, bit 4 set at 0x10034b9c, both to 0x10034c3d). With bit 0 clear (0x10034ba4) it takes the parking arm at 0x10034c06, which moves [ecx+0x1e0] to [ecx+0x210] and [ecx+0x1e4] to [ecx+0x214], zeroes both sources and sets bit 3 in both flag words [ecx+0x58] and [ecx+0x5c] (0x10034c06-0x10034c33). Otherwise it sweeps the 0x10 voice records from [ecx+0x2d4] exactly as Channel_releaseVoices does (0x10034baf, 0x10034bf7, 0x10034bfd, mask test at 0x10034bc0) and stops each voice whose double at +0x54 compares below the qword 0.0 at 0x1005b498 (0x10034bcc, `test ah, 1` at 0x10034bd4, which also accepts an unordered compare) and whose flag byte has neither bit 3 nor bit 5 set (0x10034bdb): it sets both of those bits and moves the voice's double from -0x44 to -0x3c dword by dword, zeroing the source (0x10034bdf-0x10034bf2). Returns 0 (0x10034c02). Its caller is MultiSound_stop 0x10039c80. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: Channel_stopVoices (12 vectors, 7 distinct results, 5 changing state, `log/diff/00034b90_sound_Channel_stopVoices.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10034c05, 0x10034c3c, 0x10034c43): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10034b90 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

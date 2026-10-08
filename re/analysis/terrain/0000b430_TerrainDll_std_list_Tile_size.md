@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b430`), 42 bytes, 21 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the element count a `std::list<Tile*>` keeps in the DWORD at offset +8 of the list object: `this` is saved at 0x1000b44a, reloaded at 0x1000b44d and the DWORD at +8 is moved into eax at 0x1000b450 and returned unchanged by the `ret` at 0x1000b459. The body contains no call, no conditional jump and no bounds test, so the value returned is exactly whatever is stored in the field, including values no real list can reach; `std::list<Tile*>::empty` 0x1000b040 is the only caller in Terrain.dll and converts it to a 0/1. Three of VC6's `list` members compile to these bytes, so the code alone does not determine which one this is (`re/match/terrain_list.cpp`, "3 names compile identically: name not determined"). Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::size (16 vectors, 14 distinct results, `log/diff/0000b430_Terrain_std_list(TileP)_size.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?size@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBEIXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b459): callee pops 0 bytes of stack arguments.

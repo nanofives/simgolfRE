@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b320`), 75 bytes, 31 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+The postfix increment of a `std::list<Tile*>` iterator: it advances this iterator and returns a copy of the position it had before. `ret 8` at 0x1000b368 says two stack arguments; [ebp+8] is the address of the iterator the caller receives by value and [ebp+0xc] is never loaded by the body (the unused `int` that distinguishes the postfix form). The order is fixed by the code: the current node is saved into a frame slot first (0x1000b340, 0x1000b342), then the prefix `operator++` 0x1000b7a0 is called with `this` in ecx (0x1000b345, call at 0x1000b348 through the thunk 0x10001221), and only then is the SAVED node written into the returned object (0x1000b34d-0x1000b353), whose address is returned (0x1000b355). No conditional jump. Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::iterator::operator++ (22 vectors, 22 distinct results, 22 changing state, `log/diff/0000b320_Terrain_std_list(TileP)_iterator_operator++.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??Eiterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AV012@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000b368): callee pops 8 bytes of stack arguments.

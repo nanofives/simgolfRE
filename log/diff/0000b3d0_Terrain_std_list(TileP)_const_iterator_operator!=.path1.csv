@@ -1,0 +1,25 @@
+vector,original,reimpl,match
+$i0 $i16,0,0,True
+$i1 $i17,0,0,True
+$i2 $i18,0,0,True
+$i3 $i19,0,0,True
+$i6 $i22,0,0,True
+$i7 $i23,0,0,True
+$i5 $i5,0,0,True
+$i20 $i21,0,0,True
+$i0 $i1,1,1,True
+$i4 $i9,1,1,True
+$i15 $i0,1,1,True
+$i7 $i8,1,1,True
+$i10 $i11,1,1,True
+$i12 $i13,1,1,True
+$i6 $i14,1,1,True
+$i0 $i20,1,1,True
+$i20 $i3,1,1,True
+$i23 $i8,1,1,True
+$i16 $i2,1,1,True
+$i19 $i5,1,1,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x7233f560,original=0x15d0d40,2026-10-08T00:13:44
+distinct_results,2,,
+VERDICT,GREEN,20,

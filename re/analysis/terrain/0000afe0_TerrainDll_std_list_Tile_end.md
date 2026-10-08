@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x0000afe0`), 73 bytes, 31 instructions, subsystem `t
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Builds the past-the-end iterator of a `std::list<Tile*>` and returns it by value. The list's head node pointer is read from offset +4 (0x1000affd, 0x1000b000), pushed, and the iterator constructor 0x1000b750 is run on a four-byte local (`lea ecx, [ebp-8]` at 0x1000b004, call at 0x1000b007 through the thunk 0x10001046), which returns the local's address; the local's single DWORD is then copied into the object the caller passed at [ebp+8] (0x1000b00c-0x1000b011) and that object's address is returned (0x1000b013, `ret 4` at 0x1000b026). So the iterator handed back holds the head node itself, which in VC6's circular list representation is the past-the-end position. There is no conditional jump and no NULL test on the head pointer. Two of VC6's `list` members compile to these bytes (`re/match/terrain_list.cpp`, "2 names compile identically"). Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::end (16 vectors, 16 distinct results, 16 changing state, `log/diff/0000afe0_Terrain_std_list(TileP)_end.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?end@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b026): callee pops 4 bytes of stack arguments.

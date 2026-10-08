@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000bde0`), 680 bytes, 225 instructions, subsystem `re
 draws a vertical run of 16-bit pixels. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+The vertical twin of hline16: one column of a colour down a 16-bit surface, clipped to the clip rectangle of slot +0xcc. The column test comes first (0x1000be19 jl, 0x1000be38 jl), then y1 == y2 (0x1000be45), then the colour block (bit-31 test 0x1000be56, surface palette 0x1000be6a, global fallback 0x1000be7e, format switch 0x1000beb7 / 0x1000bebd, unsupported arm leaving at 0x1000bf11). The colour is masked to 16 bits (0x1000bf19), y1 > y2 swapped by three xors at 0x1000bf29 under the `jle` at 0x1000bf27, a span below the rectangle (0x1000bf61) or above it (0x1000bf80) dropped, y1 raised to top (0x1000bfa4) and y2 lowered to bottom - 1 (0x1000bfe0). The pixel address of slot +0x1c (0x1000c014) must be non-NULL (0x1000c025). The pitch of slot +0xe0 is read once (0x1000c033) and the run is an inline `loop` over y2 - y1 + 1 words (0x1000c057..0x1000c05c) whose step is that pitch doubled, the doubling being the `shl ebx, 1` at 0x1000c052 — so the step is in bytes and the cursor lands on the same column of the next row. Slot +0x24 with 1 closes (0x1000c06b). Reimplemented in `shim/src/re/c3ay.cpp`; path-1 A/B GREEN: Surface::vline16 (23 vectors, 16 distinct results, 15 changing state, `log/diff/0000bde0_jgld_Surface_vline16.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface16.cpp` as `?vline16@Surface@@QAEXHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x1000c085): callee pops 16 bytes of stack arguments.

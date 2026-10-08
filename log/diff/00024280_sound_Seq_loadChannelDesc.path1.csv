@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$c_dst0 0,10,10,True,cc42715a,cc42715a,False
+$c_dst0 $c_src0,11,11,True,2378c997,2378c997,True
+$c_dst0 $c_src1,11,11,True,007a612d,007a612d,True
+$c_dst0 $c_src2,11,11,True,e56cc76b,e56cc76b,True
+$c_dst0 $c_src3,11,11,True,550a4c9d,550a4c9d,True
+$c_dst0 $c_src4,11,11,True,5f6d366b,5f6d366b,True
+$c_dst1 $c_src0,11,11,True,c214bbfd,c214bbfd,True
+$c_dst1 $c_src1,11,11,True,e1e85d09,e1e85d09,True
+$c_dst1 $c_src2,11,11,True,c5c30785,c5c30785,True
+$c_dst1 $c_src3,11,11,True,f21badd9,f21badd9,True
+$c_dst1 $c_src4,11,11,True,5dcf9411,5dcf9411,True
+$c_dst2 $c_src0,11,11,True,b241c596,b241c596,True
+$c_dst2 $c_src1,11,11,True,23cc47c0,23cc47c0,True
+$c_dst2 $c_src2,11,11,True,9bba92a3,9bba92a3,True
+$c_dst2 $c_src3,11,11,True,06270613,06270613,True
+$c_dst2 $c_src4,11,11,True,03bf82ea,03bf82ea,True
+state_regions,$c_dst0+0x0:32 $c_dst1+0x0:32 $c_dst2+0x0:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70240fc0,original=0x2bc0640,2026-10-08T00:25:42
+distinct_results,16,,
+VERDICT,GREEN,16,

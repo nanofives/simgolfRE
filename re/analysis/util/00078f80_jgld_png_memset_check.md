@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078f80`), 92 bytes, 37 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng's checked block fill: the same unreachable overflow guard as png_memcpy_check (copy at 0x10078f98-0x10078f9b, `cmp` at 0x10078fa1, `je 0x10078fb7` at 0x10078fa4, png_error with the string at 0x1011e09c called at 0x10078faf), then the CRT memset at 0x1007e7c0 over (destination, value, length) - the pushes at 0x10078fb7, 0x10078fbb and 0x10078fbf put the length first, the value ([ebp+0x10]) second and the destination ([ebp+0xc]) last - whose return value, the destination pointer, is the function's own. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: png_memset_check (20 vectors, 20 distinct results, 19 changing state, `log/diff/00078f80_jgld_png_memset_check.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_mem.cpp` as `_png_memset_check` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078fdb): callee pops 0 bytes of stack arguments.

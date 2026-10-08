@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00024360`), 135 bytes, 49 instructions, subsystem `au
 Merges a channel descriptor into the channel object conditionally on param_1[1] flag bits (1 -> +8/+0xc, 2 -> +0x10/+0x14, bit3 clears +4 bit3). (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Merges only the fields a channel descriptor says it carries into a sequencer channel record. A null source leaves the record untouched (0x10024364). The dword at +0 is always copied (0x10024368), and four bits of the source's byte at +4 drive the rest: bit 0 sets bit 0 of the record's +4 and copies the dwords at +8 and +0xc (0x1002436f-0x10024386), bit 1 sets bit 1 and copies the dwords at +0x10 and +0x14 (0x1002438f-0x100243a5), bit 3 is copied into bit 3 of +4 (set at 0x100243b2, cleared at 0x100243b7) and bit 4 is copied into bit 4 through its complement (`not edx` / `shr edx, 4` / `test dl, 1` / `jne 0x100243d1` at 0x100243bf-0x100243ca, stored at 0x100243d4). A non-null name pointer at the source's +0x1c is finally passed to Sound_setName 0x1001ced0 (0x100243d7, 0x100243df). Nothing is returned. Its callers are Seq_setupChannel 0x10020fe0 and Seq_updateChannel 0x10021fa0. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: Seq_mergeChannelDesc (25 vectors, 25 distinct results, 24 changing state, `log/diff/00024360_sound_Seq_mergeChannelDesc.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100243e4): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002436a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

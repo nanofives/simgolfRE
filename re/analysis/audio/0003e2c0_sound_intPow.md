@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003e2c0`), 184 bytes, 67 instructions, subsystem `au
 Integer exponentiation by squaring: base *param_1, exponent *param_2; returns 0 for negative exponent unless base is +-1, traps 0**0 with a 1/0. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Raises the int at its first pointer argument to the int at its second and returns the 32-bit result, with four special cases for a non-positive exponent. A positive exponent goes straight to a square-and-multiply loop (`jg 0x1003e32f` at 0x1003e2ec) that multiplies the accumulator by the base whenever the low bit of the remaining exponent is set (0x1003e33f, 0x1003e349), shifts that exponent right logically (0x1003e353) and squares the base until it reaches zero (0x1003e35c, 0x1003e361); every multiply is a 32-bit `imul`, so large results wrap. A zero exponent or a base of 1 returns 1 (0x1003e2fa), a base of -1 negates the exponent and runs the same loop (0x1003e32a), any other base returns 0 (0x1003e31b), and a base of 0 reaches `idiv` with a zero divisor (0x1003e313). Its callers are codecTransformStage 0x1003b5a0 and quantizeParams 0x1003c220. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: intPow (19 vectors, 14 distinct results, `log/diff/0003e2c0_sound_intPow.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003e377): callee pops 0 bytes of stack arguments.
 

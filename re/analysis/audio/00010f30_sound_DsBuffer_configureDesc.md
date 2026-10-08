@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00010f30`), 151 bytes, 51 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Fills the DSBUFFERDESC for a primary (param 1: dwSize 0x24, primary flag at +0x0 bit1) or secondary (param 0: lpwfxFormat set to +0xa8) buffer. (`re/names/sound_2.tsv`)
 
+## Purpose
+Fills a DirectSound buffer wrapper's own description block for one of two buffer layouts, without touching DirectSound. A wrapper that already owns an interface at [edx+0x60] is refused with 6 (0x10010f33, 0x10010f36, 0x10010f3a). The argument selects the layout with a two-case chain (0x10010f4c, 0x10010f4f) and anything else returns 0xa (0x10010f51). Both layouts set bit 1 of the wrapper's own first dword to bit 0 of the argument (0x10010f6c-0x10010f7a, 0x10010f8d-0x10010f9b) and return 0. Layout 0 points [edx+0x80] at the wrapper's own +0xa8 and writes the dwords 0x24, 0xe8, 0x10000 and 0 at +0x70, +0x74, +0x78 and +0x7c (0x10010f95-0x10010fba); layout 1 zeroes nine dwords from +0x70 (0x10010f5f, 0x10010f68) and then writes 0x24 at +0x70 and 1 at +0x74 (0x10010f74, 0x10010f80). Its caller is DirectSoundDevice::create 0x10011c60. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: DsBuffer::configureDesc (16 vectors, 8 distinct results, 6 changing state, `log/diff/00010f30_sound_DsBuffer_configureDesc.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10010f40, 0x10010f57, 0x10010f88, 0x10010fc4): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10010f30 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

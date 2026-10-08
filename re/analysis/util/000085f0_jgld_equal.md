@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000085f0`), 64 bytes, 27 instructions, subsystem `util
 returns whether two RECTs are equal. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Thin wrapper over the imported EqualRect: one call through the IAT slot at 0x1012c5e8 (`call dword ptr [0x1012c5e8]` at 0x10008612) with the second rectangle pushed first (0x1000860a) and the first second (0x1000860e). Nothing is written anywhere, and the import's BOOL survives in eax to the `ret` at 0x1000862f for the same reason as in intersect above. __cdecl, no pop. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: equal (20 vectors, 2 distinct results, 0 changing state, `log/diff/000085f0_jgld_equal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?equal@@YAHPBUtagRECT@@0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000862f): callee pops 0 bytes of stack arguments.

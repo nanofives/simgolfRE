@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003e480`), 148 bytes, 63 instructions, subsystem `au
 Returns the median (middle value) of the three ints *param_1,*param_2,*param_3. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Returns the median of the three ints its three pointer arguments address, without writing anything. The result starts as the second value (0x1003e49b) and is only replaced when that value is outside the other two: above both (`jle 0x1003e4d6` at 0x1003e4aa and 0x1003e4b6) selects the larger of the first and third (0x1003e4bb, `jle 0x1003e4d4` at 0x1003e4ca, 0x1003e4cf), below both (`jge 0x1003e50a` at 0x1003e4e0 and 0x1003e4ec) selects the smaller of them (0x1003e4f1, `jge 0x1003e50a` at 0x1003e500, 0x1003e505). All six compares are signed, so the ordering is the signed one, and the two "between" cases leave the second value as the answer (0x1003e50a). Its only caller is codecTransformStage 0x1003b5a0, which uses it to pick a middle value out of three codec parameters. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: medianOfThree (16 vectors, 5 distinct results, `log/diff/0003e480_sound_medianOfThree.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003e513): callee pops 0 bytes of stack arguments.
 

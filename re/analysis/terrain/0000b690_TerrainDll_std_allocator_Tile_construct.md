@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b690`), 64 bytes, 28 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Copy-constructs one `Tile*` at an address the allocator is given. The allocator carries no state: `this` is stored at 0x1000b6aa and never read again. The second argument [ebp+0xc] is pushed first (0x1000b6ad, 0x1000b6b0) and the first [ebp+8] after it (0x1000b6b1, 0x1000b6b4), so the __cdecl call at 0x1000b6b5 (thunk 0x10001320, cleaned by `add esp, 8` at 0x1000b6ba) is `std::_Construct(destination, source)` - destination first, source second. `std::_Construct` 0x1000ba40 runs the PLACEMENT `operator new` 0x1000bab0, which returns the destination unchanged and allocates nothing, and copies one DWORD from the source only when that destination is not NULL (`je 0x1000ba6d`). `construct` itself has no conditional jump and loads nothing into eax after the call (`ret 8` at 0x1000b6cd), and `std::_Construct` keeps the value of its new-expression in the dead frame slot [ebp-8], so the memory written is the whole of the observable behaviour. Its only caller in Terrain.dll is `std::list<Tile*>::insert` 0x1000b100. Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::allocator<Tile*>::construct (19 vectors, 17 distinct results, 16 changing state, `log/diff/0000b690_Terrain_std_allocator(TileP)_construct.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?construct@?$allocator@PAVTile@@@std@@QAEXPAPAVTile@@ABQAV3@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000b6cd): callee pops 8 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00002010`), 55 bytes, 22 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Converts one float to an int, with the single value 0.5f mapped to 2. The argument slot is first compared as a DWORD against 0x3f000000 (`cmp dword ptr [ebp+8], 0x3f000000` at 0x10002028), the IEEE-754 single encoding of 0.5f: on that exact bit pattern eax is set to 2 (0x10002031) and the body jumps to the epilogue (0x10002036). Otherwise (`jne 0x1000202f`) the same slot is loaded as a float (0x10002038) and the CRT `__ftol` at 0x100183ec is called (0x1000203b) with the value in st(0), the epilogue following immediately (`ret` at 0x10002046), so `__ftol`'s eax is the result. `__ftol` saves the x87 control word (0x100183f3), forces rounding toward zero (`or ah, 0xc` at 0x100183fb), stores a 64-BIT integer (`fistp qword ptr [ebp-0xc]` at 0x10018405), restores the control word (0x10018408) and returns the LOW dword (0x1001840b): a value outside the 32-bit range therefore comes back as the low half of the 64-bit truncation and an invalid conversion comes back as 0. Its only caller, `Faces::build` 0x10002060, feeds it i/2.0f and 1.0f - i/2.0f for i in {0, 1, 2} (fdiv of the constant 2.0f at 0x1005f028, e.g. 0x1000214b-0x10002158) and stores the int it returns into the face record it is building (0x10002169), so the three values that reach it there are 0.0f, 0.5f and 1.0f and they map to 0, 2 and 1. Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: roundHalf (23 vectors, 13 distinct results, `log/diff/00002010_Terrain_roundHalf.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small1.cpp` as `?roundHalf@@YAHM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10002046): callee pops 0 bytes of stack arguments.

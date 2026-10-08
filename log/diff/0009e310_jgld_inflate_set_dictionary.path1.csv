@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$st0 $dict 0,void,void,True,1bfd76dc,1bfd76dc,True
+$st0 $dict 1,void,void,True,3d19d417,3d19d417,True
+$st1 $dict 7,void,void,True,2e2b43b5,2e2b43b5,True
+$st1 $dict 16,void,void,True,5fefd1be,5fefd1be,True
+$st2 $dict 33,void,void,True,cf7bfe66,cf7bfe66,True
+$st2 $dict 64,void,void,True,ae4fcba9,ae4fcba9,True
+$st3 $dict 100,void,void,True,63277b71,63277b71,True
+$st3 $dict 255,void,void,True,96f266ac,96f266ac,True
+$st0 $dict8 8,void,void,True,e3d85fd8,e3d85fd8,True
+$st1 $dict8 32,void,void,True,41a69cef,41a69cef,True
+$st2 $dict8 128,void,void,True,451b469a,451b469a,True
+$st3 $dict8 1,void,void,True,fbbf92e0,fbbf92e0,True
+state_regions,$iblk+0x0:2816,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7067fc20,original=0x1460240,2026-10-08T00:18:11
+distinct_results,12,,
+VERDICT,GREEN,12,

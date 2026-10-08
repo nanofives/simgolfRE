@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b7a0`), 70 bytes, 31 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Advances a `std::list<Tile*>` iterator to the next node in place and returns the iterator. The current node is read from the iterator (0x1000b7bd, 0x1000b7c0) and passed to `std::list<Tile*>::_Acc::_Next` 0x1000b600 (call at 0x1000b7c3 through the thunk 0x100010e1, __cdecl, cleaned at 0x1000b7c8), which returns the node's own address because the `next` field is at offset 0; the body dereferences that address at 0x1000b7ce and stores the node it finds back into the iterator (`mov [edx], eax` at 0x1000b7d0, with edx reloaded from the frame slot at 0x1000b7cb), then returns `this` (0x1000b7d2, `ret` at 0x1000b7e5). This is the prefix form: it writes the iterator and hands back the same object. There is no conditional jump and no NULL test, so an iterator holding NULL faults at 0x1000b7ce. Four of VC6's members compile to these bytes (`re/match/terrain_list.cpp`, "4 names compile identically"). Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::const_iterator::operator++ (22 vectors, 22 distinct results, 22 changing state, `log/diff/0000b7a0_Terrain_std_list(TileP)_const_iterator_operator++.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??Econst_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAEAAV012@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b7e5): callee pops 0 bytes of stack arguments.

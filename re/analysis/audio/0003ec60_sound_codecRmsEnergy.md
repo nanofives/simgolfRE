@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003ec60`), 154 bytes, 57 instructions, subsystem `au
 Sums the squares of *param_1 samples at param_2, divides by *param_1 and takes sqrt (0x10043204), writing the RMS value to *param_3. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Computes the root mean square of a block of floats into the caller's accumulator slot. The slot is zeroed through its pointer (0x1003ec84), each round adds one squared sample to it (`fld`/`fmul`/`fadd`/`fstp dword` at 0x1003ecb8-0x1003ecc6) over the index range 1..*count inclusive (`jg 0x1003ecca` at 0x1003ecaa, with the sample pointer biased by one float at 0x1003ec7b), and the sum is then divided by the count converted with `fild dword` (0x1003eccd, 0x1003ecd2), passed as a double to the CRT's sqrt at 0x10043204 (0x1003ecd7, 0x1003ecda) and stored back as a float (0x1003ece5). Returns 0 (0x1003ece7). Its caller is codecStageDispatch 0x1003c640. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: codecRmsEnergy (13 vectors, 13 distinct results, 13 changing state, `log/diff/0003ec60_sound_codecRmsEnergy.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003ecf9): callee pops 0 bytes of stack arguments.
 

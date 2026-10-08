@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b750`), 63 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Constructs a `std::list<Tile*>::iterator` from a node pointer. It adds no field of its own: the argument is pushed again (0x1000b76d, 0x1000b770), `this` is reloaded into ecx (0x1000b771) and the one-DWORD constructor at 0x1000b9b0 is called (0x1000b774 through the thunk 0x10001078, __thiscall, so no stack cleanup here), which stores the node into the first DWORD of the object; `this` is then returned (0x1000b779, `ret 4` at 0x1000b78c). `std::list<Tile*>::begin` 0x1000af70 and `end` 0x1000afe0 are its callers in Terrain.dll, both running it on a four-byte stack local. No conditional jump and no NULL test on `this` (0x1000b9d3 stores through it). Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::iterator::iterator (20 vectors, 20 distinct results, 19 changing state, `log/diff/0000b750_Terrain_std_list(TileP)_iterator_iterator.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??0iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@PAU_Node@12@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b78c): callee pops 4 bytes of stack arguments.

@@ -1,0 +1,24 @@
+vector,original,reimpl,match
+$b2 $e0,1,1,True
+$b2 $e1,2,2,True
+$b2 $e2,4,4,True
+$b2 $e3,8,8,True
+$b2 $e10,1024,1024,True
+$b3 $e5,243,243,True
+$bm2 $e3,-8,-8,True
+$bm2 $e4,16,16,True
+$b7 $e2,49,49,True
+$bbig $e2,131073,131073,True
+$b1 $em3,1,1,True
+$bm1 $em3,-1,-1,True
+$bm1 $em2,1,1,True
+$b2 $em1,0,0,True
+$bm3 $em2,0,0,True
+$b2 $e31,-2147483648,-2147483648,True
+$b3 $e0,1,1,True
+$bm1 $emax,-1,-1,True
+$b7 $e1,7,7,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x70240e90,original=0x2bc04c0,2026-10-08T00:25:36
+distinct_results,14,,
+VERDICT,GREEN,19,

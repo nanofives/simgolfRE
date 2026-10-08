@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00007450`), 65 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 destructor for ListNode. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Destructor of jgld's doubly-linked-list node: three stores and nothing else - the vtable pointer at +0 (VA 0x1011d098, `mov dword ptr [eax], 0x1011d098` at 0x10007470), then 0 at +8 (0x10007479) and 0 at +4 (0x10007483), in that order, so the node's two link words are cleared while the payload beyond +8 is left alone. No argument (`ret` at 0x10007490), no branch, nothing unlinked from any list. eax holds `this` at the `ret` because of the reload at 0x1000746d, but no instruction sets a return value. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: ListNode::dtor (16 vectors, 16 distinct results, 16 changing state, `log/diff/00007450_jgld_ListNode_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??1ListNode@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10007490): callee pops 0 bytes of stack arguments.

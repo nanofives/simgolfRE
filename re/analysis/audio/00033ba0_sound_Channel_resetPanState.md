@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00033ba0`), 146 bytes, 51 instructions, subsystem `au
 rewrites the +0x58 flag bits, copies +0x208/+0x210/+0x214 into +0x1d8/+0x1e0/+0x1e4 and recomputes pan gains via Channel_setPanGains(+0x224) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Resets a channel's pan state to its parked values. It rebuilds the flag word at [ecx+0x58] out of four of its own bits and nothing else: bits 31, 29, 2 and 0 are extracted with `sar`-after-`shl` (0x10033ba9, 0x10033bbf-0x10033bd1, 0x10033bce-0x10033be5, 0x10033be0-0x10033bf0) and recombined by `shl eax, 0x1b` / `or eax, esi` / `shl eax, 2` / `or eax, ebx` (0x10033beb-0x10033bf8), while the word that the mask 0x5ffffffa is applied to is re-read after the pair [ecx+0x58] / [ecx+0x5c] has been zeroed (0x10033bbc, 0x10033bc2, `mov ebx, [edx]` at 0x10033bc9), so that term is 0 and the mask contributes nothing; [ecx+0x5c] is left at zero. It then restores [ecx+0x1e0] from [ecx+0x210], [ecx+0x1d8] from [ecx+0x208] and [ecx+0x1e4] from [ecx+0x214] (0x10033bfc-0x10033c21) and calls Channel_setPanGains 0x10035340 with the pan at [ecx+0x224], read before any of those stores (0x10033c0e, 0x10033c27). The function itself is branch-free. Its callers are Channel_releaseBuffers 0x100340b0, MultiSound_start 0x10039ce0 and Channel_startVoiceTimed 0x10039e70. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: Channel_resetPanState (12 vectors, 12 distinct results, 12 changing state, `log/diff/00033ba0_sound_Channel_resetPanState.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10033c31): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10033ba0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

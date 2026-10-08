@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b3d0`), 70 bytes, 30 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Reports whether two `std::list<Tile*>` iterators stand on different nodes. The argument iterator is pushed (0x1000b3ed, 0x1000b3f0), `this` is put in ecx (0x1000b3f1) and `std::list<Tile*>::const_iterator::operator==` 0x1000b380 is called (0x1000b3f4 through the thunk 0x1000128f, __thiscall, no stack cleanup here); that callee compares the two node pointers and sets its low byte with `sete al` at 0x1000b3a9. The result is narrowed to its low byte (`and eax, 0xff` at 0x1000b3f9) and inverted by the same `neg; sbb eax, eax; inc eax` idiom `empty` uses (0x1000b3fe-0x1000b402), so the whole of eax is 1 for different nodes and 0 for equal ones (`ret 4` at 0x1000b413). The comparison is on the node pointers alone; no node is dereferenced, so two iterators holding NULL compare equal. No conditional jump. Two of VC6's members compile to these bytes (`re/match/terrain_list.cpp`, "2 names compile identically"). Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::const_iterator::operator!= (20 vectors, 2 distinct results, `log/diff/0000b3d0_Terrain_std_list(TileP)_const_iterator_operator!=.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??9const_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBE_NABV012@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b413): callee pops 4 bytes of stack arguments.

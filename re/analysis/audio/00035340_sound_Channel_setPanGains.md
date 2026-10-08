@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00035340`), 215 bytes, 59 instructions, subsystem `au
 thiscall(pan): clamps pan to [-0x40,0x3f], stores it at this+0x224 and derives the left/right fixed-point rates at this+0x1e8/0x1f8 from this+0x1d8 (clamped to 0x10000); at pan 0 both equal this+0x1d8. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Turns a pan position into the channel's two output gains. The argument is clamped to -0x40..0x3f with two signed compares (0x10035348, 0x10035354) and kept at [ecx+0x224] (0x10035364); the base level it splits comes from [ecx+0x1d8] (0x1003535c). A centred pan copies the base level into both gain slots [ecx+0x1e8] and [ecx+0x1f8] and the parked double at [ecx+0x1e0] into both gain doubles [ecx+0x1f0] and [ecx+0x200] (0x10035378-0x10035396). Any other pan divides `base * pan` by 0x3f for a positive pan and 0x40 for a negative one (`setl` + `add eax, 0x3f` at 0x100353a6, `imul` at 0x100353b0, `idiv` at 0x100353b4), adds that share to the base for one side and subtracts it for the other (0x100353b7, 0x100353ba), clamps each to 0x10000 (0x100353ca, 0x100353db) and writes them both as ints and, scaled by the double 1/65536 at 0x1005c5e8, as doubles (0x100353e6-0x1003540d). Nothing is returned. Its callers are rewindChannel 0x100339c0, Channel_resetPanState 0x10033ba0, Channel_setRate 0x100351c0 and renderChannelSingle 0x10036280. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: Channel_setPanGains (60 vectors, 40 distinct results, 60 changing state, `log/diff/00035340_sound_Channel_setPanGains.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1003539e, 0x10035414): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10035340 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

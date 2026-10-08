@@ -48,3 +48,7 @@ c3at.cpp
 c3av.cpp
 c3as.cpp
 c3au.cpp
+c3aw.cpp
+c3ax.cpp
+c3az.cpp
+c3ay.cpp

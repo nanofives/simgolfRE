@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008590`), 68 bytes, 29 instructions, subsystem `util
 computes the intersection of two RECTs, returns whether it is non-empty. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Thin wrapper over the imported IntersectRect: the whole body is one call through the IAT slot at 0x1012c5e4 (`call dword ptr [0x1012c5e4]` at 0x100085b6) with the three arguments pushed in reverse order (0x100085aa, 0x100085ae, 0x100085b2), so the destination rectangle is the first parameter and the two sources follow. The function writes nothing itself, and the BOOL the import leaves in eax is still the value at the `ret` (0x100085d3): the only instructions in between are the two debug stack checks at 0x100085be and 0x100085cb, and __chkesp returns on its first instruction without touching eax when esp matches. __cdecl, no pop. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: intersect (20 vectors, 15 distinct results, 20 changing state, `log/diff/00008590_jgld_intersect.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?intersect@@YAHPAUtagRECT@@PBU1@1@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100085d3): callee pops 0 bytes of stack arguments.

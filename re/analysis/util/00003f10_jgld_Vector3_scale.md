@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003f10`), 85 bytes, 34 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 multiplies the three floats at +0/+4/+8 by a scalar in place. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Multiplies each of the three components of a Vector3 in place by a scalar. The counter at [ebp-8] runs 0, 1, 2 (`cmp dword ptr [ebp-8], 3` / `jge 0x10003f5c` at 0x10003f3f-0x10003f43, signed) and each iteration is `fld dword ptr [ebp+8]` (the scalar, 0x10003f4b), `fmul dword ptr [edx+ecx*4]` (the component, 0x10003f4e) and `fstp dword ptr [ecx+eax*4]` (0x10003f57), so the scalar is the left operand of the product, the result is rounded to float and written back into the same component, and iteration i reads and writes only v[i]. One stack argument (`ret 4` at 0x10003f62), no return value. The body is the instruction sequence of Vector3::operator*=(float) (0x10003a40, at C3) without that function's `mov eax, [ebp-4]` return of `this`. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: Vector3::scale (18 vectors, 18 distinct results, 18 changing state, `log/diff/00003f10_jgld_Vector3_scale.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003f10@C_FUN_10003f10@f_10003f10@@QAEXM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10003f62): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00024280`), 104 bytes, 37 instructions, subsystem `au
 Copies a channel descriptor into the channel object (fields +0,+8,+0xc,+0x10,+0x14 and flag bits from param_1[1]) and sets its name via 0x1001ced0 (param_1[7]); returns 0xb. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Loads a channel descriptor wholesale into a sequencer channel record. A null source is refused with 0xa (0x10024284, 0x10024288). Otherwise five dwords are copied at the same offsets, +0, +8, +0xc, +0x10 and +0x14 (0x10024290-0x100242ad), and bits 0 and 1 of the source's dword at +4 are merged into the destination's with the standard one-bit idiom, so every other bit of the destination's +4 survives (`shl`/`sar`/`xor`/`and 1`/`xor` at 0x100242b3-0x100242be and `shl`/`sar`/`xor`/`and 2`/`xor` at 0x100242c6-0x100242d1). It then hands the source's name pointer at +0x1c to Sound_setName 0x1001ced0 (0x100242d6, 0x100242da), which frees the destination's old name and copies the new one, and returns 0xb (0x100242df). Its caller is Seq_setupChannel 0x10020fe0. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: Seq_loadChannelDesc (16 vectors, 16 distinct results, 15 changing state, `log/diff/00024280_sound_Seq_loadChannelDesc.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002428d, 0x100242e5): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10024293 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

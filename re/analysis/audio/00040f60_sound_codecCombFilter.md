@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00040f60`), 184 bytes, 63 instructions, subsystem `au
 Length-5 circular comb/accumulate stage: adds buf[idx2] into buf[idx4] over a 5-slot ring at param_1+0xbde with the two indices at +0xbd8/+0xbdc wrapping at 5. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Advances a five-tap comb over a codec context: it adds the entry under one cursor into the entry under the other, returns that entry and steps both cursors backwards with a wrap. The two cursors live at +0xbd8 and +0xbdc of the context and the five 16-bit entries at +0xbe0 (0x10040f7b, 0x10040f86, 0x10040f92); both cursors are 1-based, every access being `[base + cursor*2 - 2]`. The sum is formed and stored in 16 bits, so it wraps (`mov cx` at 0x10040fab, `add cx` at 0x10040fb0, `mov [..], cx` at 0x10040fbd), and the stored entry is re-read sign-extended as the return value (`movsx` at 0x10040fca, 0x1004100e). Each cursor is then decremented and reset to 5 when it is not above zero (0x10040fd7-0x10040fea and 0x10040ff5-0x10041008, both signed), so each runs 5, 4, 3, 2, 1, 5, ... Its caller is lpcSynthesize 0x1003d1d0. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: codecCombFilter (12 vectors, 12 distinct results, 12 changing state, `log/diff/00040f60_sound_codecCombFilter.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10041017): callee pops 0 bytes of stack arguments.
 

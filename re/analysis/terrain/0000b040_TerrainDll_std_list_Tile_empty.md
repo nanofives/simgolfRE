@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b040`), 59 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Reports whether a `std::list<Tile*>` holds no elements, by calling `size` 0x1000b430 with the same `this` in ecx (call at 0x1000b060 through the thunk 0x10001005) and turning the count into a 0/1 with `neg eax; sbb eax, eax; inc eax` at 0x1000b065-0x1000b069: `neg` leaves the carry flag clear only for a count of 0, so `sbb eax, eax` produces 0 for a zero count and -1 otherwise, and `inc eax` makes that 1 and 0. The whole of eax is the result (`ret` at 0x1000b07a), and the test is on the stored count alone, so a list whose count field disagrees with its node ring is reported from the field. Its only caller in Terrain.dll is 0x100381a0. Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::empty (16 vectors, 2 distinct results, `log/diff/0000b040_Terrain_std_list(TileP)_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?empty@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b07a): callee pops 0 bytes of stack arguments.

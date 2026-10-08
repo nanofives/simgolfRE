@@ -1,0 +1,26 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$r0 $r0,1,1,True,d8ee34bc,d8ee34bc,False
+$r1 $r1,1,1,True,d8ee34bc,d8ee34bc,False
+$r2 $r2,1,1,True,d8ee34bc,d8ee34bc,False
+$r3 $r3,1,1,True,d8ee34bc,d8ee34bc,False
+$r4 $r4,1,1,True,d8ee34bc,d8ee34bc,False
+$r5 $r5,1,1,True,d8ee34bc,d8ee34bc,False
+$r6 $r6,1,1,True,d8ee34bc,d8ee34bc,False
+$r7 $r7,1,1,True,d8ee34bc,d8ee34bc,False
+$r0 $r1,0,0,True,d8ee34bc,d8ee34bc,False
+$r1 $r2,0,0,True,d8ee34bc,d8ee34bc,False
+$r2 $r3,0,0,True,d8ee34bc,d8ee34bc,False
+$r3 $r4,0,0,True,d8ee34bc,d8ee34bc,False
+$r4 $r5,0,0,True,d8ee34bc,d8ee34bc,False
+$r5 $r6,0,0,True,d8ee34bc,d8ee34bc,False
+$r6 $r7,0,0,True,d8ee34bc,d8ee34bc,False
+$r7 $r8,0,0,True,d8ee34bc,d8ee34bc,False
+$r0 $r2,0,0,True,d8ee34bc,d8ee34bc,False
+$r9 $r11,0,0,True,d8ee34bc,d8ee34bc,False
+$r14 $r14,1,1,True,d8ee34bc,d8ee34bc,False
+$r15 $r14,0,0,True,d8ee34bc,d8ee34bc,False
+state_regions,$jblk+0x0:1536,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7067fbf0,original=0x14600a0,2026-10-08T00:18:10
+distinct_results,2,,
+VERDICT,GREEN,20,

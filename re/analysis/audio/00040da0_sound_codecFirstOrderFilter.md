@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00040da0`), 135 bytes, 52 instructions, subsystem `au
 First-order predictive filter: for each of *param_3 samples writes out[i] = x[i] - (*param_4)*(*param_5) and stores the current sample into the state *param_5. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Runs a one-tap recursive de-emphasis over a block of floats: for each sample it writes `in[i] - coeff * state` to the output and then makes that input sample the new state. Both sample pointers are biased by one float on entry (0x10040dbb, 0x10040dc4) and the loop index runs 1..*count inclusive (0x10040dd2, `jg 0x10040e1e` at 0x10040dea), so it covers the caller's elements 0..count-1. The product and the subtraction are computed with `fld`/`fmul`/`fsubr` (0x10040df2-0x10040dfc) and the result spilled to a float (0x10040dff); the state is replaced with the raw dword of the input sample (0x10040e0b, 0x10040e0e) after it has been read, and the spilled value is stored to the output (0x10040e19). The function always returns 0 (0x10040e1e), so its whole effect is the output block and the state cell. Its caller is codecStageDispatch 0x1003c640. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: codecFirstOrderFilter (14 vectors, 13 distinct results, 12 changing state, `log/diff/00040da0_sound_codecFirstOrderFilter.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10040e26): callee pops 0 bytes of stack arguments.
 

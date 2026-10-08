@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000da70`), 502 bytes, 166 instructions, subsystem `re
 fills the whole 16-bit surface with a color. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Fills a 16-bit surface with one colour. A colour whose bit 31 is clear is an 8-bit palette index: the test is at 0x1000da97, the surface's own Palette (field +0x7c) is preferred at 0x1000daab, the Palette of the module global 0x1012873c is the fallback at 0x1000dabf, and with a Palette in hand the format code of slot +0xe4 element [1] picks the RGB565 table of Palette slot +0x18 (0x1000daf8) or the RGB555 table of slot +0x1c (0x1000dafe); the looked-up word is zero-extended into the colour (0x1000db1f) and any other format code ends the call without drawing (0x1000db00 to 0x1000db52). The surface is then filled in one of two ways: when the clip rectangle of slot +0xcc and the bounds rectangle of slot +0xd4 are not equal, EqualRect 0x100085f0 being called with them in that order at 0x1000db87 and tested at 0x1000db91, the whole job is handed to the depth dispatcher of slot +0x44 with the clip rectangle and the colour (0x1000dbb9); otherwise the colour is masked to 16 bits (0x1000dbcb), the pixel base is taken from slot +0x20 with no null test (0x1000dbdd) and fillWords 0x1000af30 writes bounds.right * bounds.bottom words of it (the `imul` at 0x1000dc27, the call at 0x1000dc35), which is the whole stride-ignoring extent of the surface. Slot +0x24 with the argument 1 closes (0x1000dc49). Reimplemented in `shim/src/re/c3ay.cpp`; path-1 A/B GREEN: Surface::clear16 (19 vectors, 18 distinct results, 18 changing state, `log/diff/0000da70_jgld_Surface_clear16.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface16.cpp` as `?clear16@Surface@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000dc63): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078940`), 60 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Clears a png_info record: one call of the CRT memset at 0x1007e7c0 with the length 0xb8 pushed at 0x10078958, the fill byte 0 at 0x1007895d and the record pointer at 0x1007895f (`call` at 0x10078963), so exactly the first 184 bytes of the record are zeroed and nothing beyond them. No branch, no return value (`ret` at 0x1007897b). Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: png_info_init (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078940_jgld_png_info_init.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_info_init` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007897b): callee pops 0 bytes of stack arguments.

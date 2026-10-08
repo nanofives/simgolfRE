@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000ba90`), 674 bytes, 222 instructions, subsystem `re
 draws a horizontal run of 16-bit pixels. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Draws one horizontal run of a colour across row y of a 16-bit surface, clipped to the clip rectangle of slot +0xcc, which it re-fetches before every test. The row test comes first (0x1000baca jl, 0x1000bae9 jl), then the degenerate span x1 == x2 (0x1000baf6), and only then the colour block (bit-31 test 0x1000bb07, surface palette 0x1000bb1b, global fallback 0x1000bb2f, format switch 0x1000bb68 / 0x1000bb6e, unsupported arm leaving at 0x1000bbc2) — that ordering is the one difference from clear16, so an out-of-range row never touches a Palette. The colour is masked to 16 bits (0x1000bbca) and x1 > x2 is normalised by the three-xor swap at 0x1000bbda under the `jle` at 0x1000bbd8. A span entirely right of the rectangle (0x1000bc12) or entirely left of it (0x1000bc30) is dropped; x1 is raised to the rectangle's left (0x1000bc53) and x2 lowered to right - 1 (0x1000bc8e). The pixel address of slot +0x1c (0x1000bcc2) must be non-NULL (0x1000bcd3), and the loop then stores x2 - x1 + 1 words one after another (0x1000bcee jle, store 0x1000bcfb, `add ecx, 2` 0x1000bd01), so the run is inclusive of both ends. Slot +0x24 with 1 closes (0x1000bd15). Reimplemented in `shim/src/re/c3ay.cpp`; path-1 A/B GREEN: Surface::hline16 (23 vectors, 16 distinct results, 15 changing state, `log/diff/0000ba90_jgld_Surface_hline16.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface16.cpp` as `?hline16@Surface@@QAEXHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x1000bd2f): callee pops 16 bytes of stack arguments.

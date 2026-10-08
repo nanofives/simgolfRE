@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b9b0`), 49 bytes, 23 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+The one-DWORD iterator constructor `std::list<Tile*>::iterator::iterator` 0x1000b750 delegates to: it stores its single stack argument into the first DWORD of `this` (`mov eax, [ebp-4]` at 0x1000b9cd, `mov ecx, [ebp+8]` at 0x1000b9d0, `mov [eax], ecx` at 0x1000b9d3) and returns `this` (0x1000b9d5, `ret 4` at 0x1000b9de). It has no call, no conditional jump and no NULL test, so the whole of its behaviour is that one store. Five of VC6's members compile to these bytes, so the code does not determine which name belongs here (`re/match/terrain_list.cpp` 0x1000b9b0, "5 names compile identically: name not determined"); the heading carries the name hooks.csv records. Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::reverse_bidirectional_iterator<std::list<Tile*>::const_iterator>::ctor (20 vectors, 20 distinct results, 17 changing state, `log/diff/0000b9b0_Terrain_std_reverse_bidirectional_iterator(std_list(TileP)_const_iterator)_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??0?$reverse_bidirectional_iterator@Vconst_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@PAVTile@@ABQAV4@PBQAV4@H@std@@QAE@Vconst_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b9de): callee pops 4 bytes of stack arguments.

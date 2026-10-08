@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$in0 $out0 $n1 $co0 $st0,0,0,True,fa3949e5,fa3949e5,True
+$in0 $out1 $n2 $co1 $st1,0,0,True,cf319fb3,cf319fb3,True
+$in1 $out2 $n4 $co0 $st2,0,0,True,3d831b3c,3d831b3c,True
+$in1 $out3 $n8 $co2 $st3,0,0,True,4f622401,4f622401,True
+$in2 $out4 $n8 $co1 $st4,0,0,True,dd1340c9,dd1340c9,True
+$in2 $out5 $n4 $co3 $st5,0,0,True,286773b6,286773b6,True
+$in3 $out6 $n8 $co0 $st0,0,0,True,8faaeb90,8faaeb90,True
+$in3 $out7 $n2 $co3 $st1,0,0,True,97e43046,97e43046,True
+$in4 $out0 $n8 $co1 $st2,0,0,True,469a1171,469a1171,True
+$in4 $out1 $n1 $co2 $st3,0,0,True,7ce5fcff,7ce5fcff,True
+$in5 $out2 $n8 $co3 $st4,0,0,True,d7e4dc14,d7e4dc14,True
+$in5 $out3 $n0 $co0 $st5,0,0,True,adfddde6,adfddde6,False
+$in6 $out4 $nm1 $co1 $st0,0,0,True,adfddde6,adfddde6,False
+$in6 $out5 $n8 $co2 $st1,0,0,True,a77f41e2,a77f41e2,True
+state_regions,$out0+0x0:72 $out1+0x0:72 $out2+0x0:72 $out3+0x0:72 $out4+0x0:72 $out5+0x0:72 $out6+0x0:72 $out7+0x0:72 $st0+0x0:4 $st1+0x0:4 $st2+0x0:4 $st3+0x0:4 $st4+0x0:4 $st5+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70240a00,original=0x2bc04e0,2026-10-08T00:25:36
+distinct_results,13,,
+VERDICT,GREEN,14,

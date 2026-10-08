@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078f20`), 92 bytes, 37 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng's checked block copy: the length is copied into the local at [ebp-4] (0x10078f38-0x10078f3b) and compared with the argument it was copied from (`cmp ecx, dword ptr [ebp+0x14]` at 0x10078f41); the copy is then the CRT memcpy at 0x1007f3a0 over (destination, source, length) (`call` at 0x10078f63) and memcpy's return value, the destination pointer, is the function's own because nothing writes eax afterwards. The guard exists because the C source narrows png_uint_32 to png_size_t; in this 32-bit build the two operands of the compare are the same dword, so the `je 0x10078f57` at 0x10078f44 is taken for every possible argument and the png_error call at 0x10078f4f (message string at 0x1011e07c) cannot run. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: png_memcpy_check (21 vectors, 21 distinct results, 20 changing state, `log/diff/00078f20_jgld_png_memcpy_check.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_mem.cpp` as `_png_memcpy_check` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078f7b): callee pops 0 bytes of stack arguments.

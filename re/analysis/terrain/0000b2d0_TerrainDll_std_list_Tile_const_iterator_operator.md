@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b2d0`), 60 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the address of the `Tile*` an iterator's node stores. The iterator's single DWORD, the node pointer, is loaded at 0x1000b2ed-0x1000b2f0, pushed and passed to `std::list<Tile*>::_Acc::_Value` 0x1000b660 (call at 0x1000b2f3 through the thunk 0x10001271, __cdecl, cleaned at 0x1000b2f8), which adds 8 to it; that sum is left in eax and returned (`ret` at 0x1000b30b). Neither body dereferences the node, so this is address arithmetic only and an iterator holding NULL returns the constant 8 instead of faulting. No conditional jump. Two of VC6's members compile to these bytes (`re/match/terrain_list.cpp`, "2 names compile identically"). Reimplemented in `shim/src/re/c3aw.cpp`; path-1 A/B GREEN: std::list<Tile*>::const_iterator::operator* (24 vectors, 17 distinct results, `log/diff/0000b2d0_Terrain_std_list(TileP)_const_iterator_operatorP.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??Dconst_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QBEABQAVTile@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b30b): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009e310`), 91 bytes, 37 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Preloads an inflate block state's sliding window with a dictionary: it copies n bytes of the dictionary into the window the state holds at +0x24 through the CRT memcpy at 0x1007f3a0 (window pointer loaded at 0x1009e333, `call` at 0x1009e337), then stores window + n into the field at +0x30 (`add edx, dword ptr [ebp+0x10]` at 0x1009e345, store at 0x1009e34b) and copies that same value into the field at +0x2c (0x1009e354-0x1009e357), so both the read and the write position of the window end up just past the dictionary. No branch, no return value, no other field of the state touched (`ret` at 0x1009e36a). Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: inflate_set_dictionary (12 vectors, 12 distinct results, 12 changing state, `log/diff/0009e310_jgld_inflate_set_dictionary.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_infblock.cpp` as `_inflate_set_dictionary` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009e36a): callee pops 0 bytes of stack arguments.

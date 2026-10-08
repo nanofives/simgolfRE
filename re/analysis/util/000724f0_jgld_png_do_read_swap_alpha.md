@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000724f0`), 865 bytes, 294 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Moves the alpha sample of every pixel of a row from last to first, in place and backwards. The width is read into [ebp-4] first (0x10072511). Only color_type 6 (`cmp eax, 6` / `jne 0x1007270a` at 0x1007251e-0x10072521) and color_type 4 (`cmp edx, 4` / `jne 0x1007284a` at 0x10072712-0x10072715) do anything, and inside each, bit_depth 8 (`jne` at 0x10072532 / 0x10072726) selects the one-byte sample loop while any other depth selects the two-byte one. All four loops start both the read and the write pointer at row + rowbytes (`add ecx, dword ptr [eax+4]` at 0x1007253e and its three twins), so the end of the row comes from the header's rowbytes field and not from the width, and walk back 4, 8, 2 or 4 bytes per pixel for as many pixels as width says (unsigned compares, `jae` at 0x10072562, 0x1007260e, 0x10072752 and the fourth loop's). Each pixel is rewritten with the alpha sample first and the colour samples after it, in their original order. No header field is written. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: png_do_read_swap_alpha (14 vectors, 12 distinct results, 11 changing state, `log/diff/000724f0_jgld_png_do_read_swap_alpha.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rtran.cpp` as `_png_do_read_swap_alpha` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10072850): callee pops 0 bytes of stack arguments.

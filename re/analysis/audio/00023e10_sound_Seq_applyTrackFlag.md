@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00023e10`), 98 bytes, 38 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Looks up the track at index param_1[0x28] via Seq_listGetAt, copies the source +0x2c bit1 into the track's +0x38 bit4 and sets track+0x460 = source+0x30. (`re/names/sound_3.tsv`)
 
+## Purpose
+Applies one descriptor's mute flag and value to the sequencer track it names. A null descriptor is refused with 0xa (0x10023e17), and so is a descriptor whose track index at +0x28 is not below the sequencer's own track count, which is fetched through vtable slot +0xb4 with the sequencer in ecx and nothing pushed (0x10023e1d, 0x10023e22) and compared unsigned (0x10023e28). The track record is then looked up with Seq_listGetAt 0x1001d780 on the list at this+0x60, using the index as the step count and the stack slot that held the descriptor argument as the out pointer (0x10023e2c-0x10023e35, result read back at 0x10023e3a). Bit 1 of the descriptor's byte at +0x2c becomes bit 4 of the record's byte at +0x38, every other bit of that byte being kept (`and dl, 2` at 0x10023e41, `shl dl, 3` at 0x10023e48, `and cl, 0xef` at 0x10023e4b, `or dl, cl` at 0x10023e4e, stored at 0x10023e50), and the descriptor's dword at +0x30 is copied to the record's dword at +0x460 (0x10023e57, 0x10023e5b). Returns 0 (0x10023e61). Its caller is loadSoundFile 0x100041d0. Reimplemented in `shim/src/re/c3az.cpp`; path-1 A/B GREEN: Seq_applyTrackFlag (13 vectors, 8 distinct results, 7 changing state, `log/diff/00023e10_sound_Seq_applyTrackFlag.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10023e64, 0x10023e6f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10023e19 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009ca70`), 501 bytes, 164 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+zlib's table-driven CRC-32 over a byte buffer, continuing the value passed in. A null buffer returns 0 (`cmp dword ptr [ebp+0xc], 0` / `jne 0x1009ca95` at 0x1009ca88-0x1009ca8c, `xor eax, eax` at 0x1009ca8e) whatever the other arguments are. Otherwise the running value is complemented (`xor eax, 0xffffffff` at 0x1009ca98), folded eight bytes at a time while the remaining length is at least 8 (`cmp dword ptr [ebp+0x10], 8` / `jb 0x1009cc16` at 0x1009ca9e-0x1009caa2, the eight copies of the fold ending with `sub ecx, 8` at 0x1009cc0b and the back jump at 0x1009cc11), then one byte at a time for the remainder (`cmp dword ptr [ebp+0x10], 0` / `je 0x1009cc58` at 0x1009cc16-0x1009cc1a, the do-while's `jne` at 0x1009cc56), and complemented again (0x1009cc5b). One fold is crc = table[(crc ^ *buf++) & 0xff] ^ (crc >> 8): the byte is zero-extended (`mov dl, byte ptr [ecx]` at 0x1009caad), the index masked to eight bits (`and eax, 0xff` at 0x1009cab4), the running value shifted right unsigned (`shr ecx, 8` at 0x1009cabc) and the table read at VA 0x10126e18 (0x1009cabf). The table is static data, built into the module and never written. Reimplemented in `shim/src/re/c3ax.cpp`; path-1 A/B GREEN: crc32 (26 vectors, 23 distinct results, `log/diff/0009ca70_jgld_crc32.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_crc32.cpp` as `_crc32` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009cc64): callee pops 0 bytes of stack arguments.
