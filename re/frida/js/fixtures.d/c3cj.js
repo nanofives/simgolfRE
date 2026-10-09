@@ -29,28 +29,11 @@
 // throws, so the A/B is recorded as ERROR instead of running against the live scale words.
 
 (function () {
+  // Shared frozen-thread helper (re/frida/js/freeze.js): suspends the process's first thread at a safe point;
+  // `undo` runs at the flush, before the thread is resumed.
   function freezeFirstThread(undo) {
-    const k32 = Process.getModuleByName('kernel32.dll');
-    const openThread = new NativeFunction(k32.getExportByName('OpenThread'), 'pointer',
-                                          ['uint32', 'int', 'uint32'], 'stdcall');
-    const suspend = new NativeFunction(k32.getExportByName('SuspendThread'), 'uint32', ['pointer'], 'stdcall');
-    const resume = new NativeFunction(k32.getExportByName('ResumeThread'), 'uint32', ['pointer'], 'stdcall');
-    const closeHandle = new NativeFunction(k32.getExportByName('CloseHandle'), 'int', ['pointer'], 'stdcall');
-    // Toolhelp enumerates threads in creation order, so [0] is the process's first thread.
-    const threads = Process.enumerateThreads();
-    const tid = threads.length ? threads[0].id : 0;
-    if (!tid || tid === Process.getCurrentThreadId()) throw new Error('c3cj: no first thread to suspend');
-    const h = openThread(0x0002 /* THREAD_SUSPEND_RESUME */, 0, tid);
-    if (h.isNull()) throw new Error('c3cj: OpenThread failed');
-    const prev = suspend(h);
-    if (prev === 0xffffffff) { closeHandle(h); throw new Error('c3cj: SuspendThread failed'); }
-    if (prev !== 0) { resume(h); closeHandle(h); throw new Error('c3cj: thread already suspended (' + prev + ')'); }
-    globalThis.__c3cjFreeze = { tid: tid, resumed: -1 };
-    setTimeout(function () {
-      undo();
-      globalThis.__c3cjFreeze.resumed = resume(h);
-      closeHandle(h);
-    }, 0);
+    __freeze.thread();
+    __freeze.atFlush(undo);
   }
 
   const fill = (p, n, seed) => { for (let i = 0; i < n; i += 4) p.add(i).writeU32(((seed << 16) + i) >>> 0); };

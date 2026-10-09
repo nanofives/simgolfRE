@@ -269,27 +269,11 @@ const C3CK_DATA = {
   // setTimeout(0), i.e. after diff_hook's run() has returned all of the key's vectors, and the undo
   // runs first so the global is already back when the thread moves again. If the suspend cannot be
   // taken the fixture THROWS, so the A/B is recorded as ERROR instead of running against live state.
+  // Shared frozen-thread helper (re/frida/js/freeze.js): suspends the process's first thread at a safe point;
+  // `undo` runs at the flush, before the thread is resumed.
   function freezeFirstThread(undo) {
-    const k32 = Process.getModuleByName('kernel32.dll');
-    const openThread = new NativeFunction(k32.getExportByName('OpenThread'), 'pointer',
-                                          ['uint32', 'int', 'uint32'], 'stdcall');
-    const suspend = new NativeFunction(k32.getExportByName('SuspendThread'), 'uint32', ['pointer'], 'stdcall');
-    const resume = new NativeFunction(k32.getExportByName('ResumeThread'), 'uint32', ['pointer'], 'stdcall');
-    const closeHandle = new NativeFunction(k32.getExportByName('CloseHandle'), 'int', ['pointer'], 'stdcall');
-    const threads = Process.enumerateThreads();
-    const tid = threads.length ? threads[0].id : 0;
-    if (!tid || tid === Process.getCurrentThreadId()) throw new Error('c3ck: no first thread to suspend');
-    const h = openThread(0x0002 /* THREAD_SUSPEND_RESUME */, 0, tid);
-    if (h.isNull()) throw new Error('c3ck: OpenThread failed');
-    const prev = suspend(h);
-    if (prev === 0xffffffff) { closeHandle(h); throw new Error('c3ck: SuspendThread failed'); }
-    if (prev !== 0) { resume(h); closeHandle(h); throw new Error('c3ck: thread already suspended (' + prev + ')'); }
-    globalThis.__c3ckFreeze = { tid: tid, resumed: -1 };
-    setTimeout(function () {
-      undo();
-      globalThis.__c3ckFreeze.resumed = resume(h);
-      closeHandle(h);
-    }, 0);
+    __freeze.thread();
+    __freeze.atFlush(undo);
   }
 
   // __thiscall recording stub for one event-sink vtable slot (c3cd's): writes `tag` and its `n` dword

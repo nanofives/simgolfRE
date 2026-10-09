@@ -1,24 +1,24 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$s0 0 0 32 16 $lut,0,0,True,e98325ca,e98325ca,True
-$s0 0 0 32 16 $lut2,0,0,True,9d440ef2,9d440ef2,True
-$s0 4 2 20 12 $lut,0,0,True,57deb420,57deb420,True
-$s0 -5 -5 8 6 $lut2,0,0,True,b43bffd9,b43bffd9,True
-$s0 20 10 40 30 $lut,0,0,True,97e200ed,97e200ed,True
-$s0 5 5 6 6 $lut,0,0,True,3f53f7e6,3f53f7e6,True
-$s0 0 0 32 16 0,16,16,True,5b5505ea,5b5505ea,False
-$s1 0 0 32 16 0,16,16,True,5b5505ea,5b5505ea,False
-$s0 100 100 110 110 $lut,0,0,True,5b5505ea,5b5505ea,False
-$s0 10 10 10 10 $lut,0,0,True,5b5505ea,5b5505ea,False
-$s0 20 20 5 5 $lut,0,0,True,5b5505ea,5b5505ea,False
-$s1 0 0 32 16 $lut,0,0,True,aaad55c0,aaad55c0,True
-$s2 0 0 19 11 $lut2,0,0,True,38016785,38016785,True
-$s3 1 1 31 15 $lut,0,0,True,14caf3cc,14caf3cc,True
-$s5 0 0 16 10 $lut,0,0,True,966ea74c,966ea74c,True
-$s6 0 0 32 16 $lut,7,7,True,5cd919f0,5cd919f0,True
-$s4 0 0 32 16 $lut,7,7,True,5b5505ea,5b5505ea,False
-$s7 33 2 40 8 $lut,7,7,True,5b5505ea,5b5505ea,False
+$s0 0 0 32 16 $lut,0,0,True,6695cd2d,6695cd2d,True
+$s0 0 0 32 16 $lut2,0,0,True,6249f225,6249f225,True
+$s0 4 2 20 12 $lut,0,0,True,faa035ab,faa035ab,True
+$s0 -5 -5 8 6 $lut2,0,0,True,0188db5a,0188db5a,True
+$s0 20 10 40 30 $lut,0,0,True,bcb061c6,bcb061c6,True
+$s0 5 5 6 6 $lut,0,0,True,5771bff1,5771bff1,True
+$s0 0 0 32 16 0,16,16,True,e474a44d,e474a44d,False
+$s1 0 0 32 16 0,16,16,True,e474a44d,e474a44d,False
+$s0 100 100 110 110 $lut,0,0,True,e474a44d,e474a44d,False
+$s0 10 10 10 10 $lut,0,0,True,e474a44d,e474a44d,False
+$s0 20 20 5 5 $lut,0,0,True,e474a44d,e474a44d,False
+$s1 0 0 32 16 $lut,0,0,True,9f5b71cb,9f5b71cb,True
+$s2 0 0 19 11 $lut2,0,0,True,dbb93a0e,dbb93a0e,True
+$s3 1 1 31 15 $lut,0,0,True,ea4859ef,ea4859ef,True
+$s5 0 0 16 10 $lut,0,0,True,6bec0d6f,6bec0d6f,True
+$s6 0 0 32 16 $lut,7,7,True,c798d274,c798d274,True
+$s4 0 0 32 16 $lut,7,7,True,e474a44d,e474a44d,False
+$s7 33 2 40 8 $lut,7,7,True,e474a44d,e474a44d,False
 state_regions,$pix+0x0:10240 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5f941210,original=0x2ea0200,2026-10-09T06:35:42
+meta,detour=0x6c1067e0,original=0x2d70ea0,2026-10-09T17:02:47
 distinct_results,14,,
 VERDICT,GREEN,18,

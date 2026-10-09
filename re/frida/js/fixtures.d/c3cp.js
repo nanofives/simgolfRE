@@ -107,22 +107,9 @@
   // ------------------------------------------------------------------ the first thread
   let pending = null;   // the previous key's undo when its timer has not fired yet
   function runPending() { if (pending) { const p = pending; pending = null; p(); } }
+  // Shared frozen-thread helper (re/frida/js/freeze.js): safe-point suspend; returns an idempotent release().
   function freezeFirstThread() {
-    const k32 = Process.getModuleByName('kernel32.dll');
-    const openThread = new NativeFunction(k32.getExportByName('OpenThread'), 'pointer', ['uint32', 'int', 'uint32'], 'stdcall');
-    const suspend = new NativeFunction(k32.getExportByName('SuspendThread'), 'uint32', ['pointer'], 'stdcall');
-    const resume = new NativeFunction(k32.getExportByName('ResumeThread'), 'uint32', ['pointer'], 'stdcall');
-    const closeHandle = new NativeFunction(k32.getExportByName('CloseHandle'), 'int', ['pointer'], 'stdcall');
-    // Toolhelp enumerates threads in creation order, so [0] is the process's first thread.
-    const threads = Process.enumerateThreads();
-    const tid = threads.length ? threads[0].id : 0;
-    if (!tid || tid === Process.getCurrentThreadId()) throw new Error('c3cp: no first thread to suspend');
-    const h = openThread(0x0002 /* THREAD_SUSPEND_RESUME */, 0, tid);
-    if (h.isNull()) throw new Error('c3cp: OpenThread failed');
-    const prev = suspend(h);
-    if (prev === 0xffffffff) { closeHandle(h); throw new Error('c3cp: SuspendThread failed'); }
-    if (prev !== 0) { resume(h); closeHandle(h); throw new Error('c3cp: thread already suspended (' + prev + ')'); }
-    return function () { resume(h); closeHandle(h); };
+    return __freeze.thread();
   }
 
   // ------------------------------------------------------------------ shared code: recording stubs
@@ -300,8 +287,8 @@
       undo();
       throw err;
     }
-    pending = undo;
-    setTimeout(runPending, 0);
+    // run at the shared flush (freeze.js), before the frozen thread is resumed (undo calls resume() itself)
+    __freeze.atFlush(undo);
     out.obj = sink;
     return out;
   }

@@ -215,12 +215,6 @@ Object.assign(globalThis.DIFF_FIXTURES, {
 //   client the pointer to store into 0x1012873c.
 function c3bmFreeze(fx, scale, client) {
   const jgld = Process.getModuleByName('jgld.dll').base;
-  const k32 = Process.getModuleByName('kernel32.dll');
-  const openThread = new NativeFunction(k32.getExportByName('OpenThread'), 'pointer',
-                                        ['uint32', 'int', 'uint32'], 'stdcall');
-  const suspend = new NativeFunction(k32.getExportByName('SuspendThread'), 'uint32', ['pointer'], 'stdcall');
-  const resume = new NativeFunction(k32.getExportByName('ResumeThread'), 'uint32', ['pointer'], 'stdcall');
-  const closeHandle = new NativeFunction(k32.getExportByName('CloseHandle'), 'int', ['pointer'], 'stdcall');
   // Three ranges cover every global these six bodies write, plus the client pointer:
   //   0x101284d0..0x10128598  draw16t's block, draw16m's extras and the seven shared loop globals
   //   0x10122dc0..0x10122dcc  the scale numerators and the denominator
@@ -230,25 +224,15 @@ function c3bmFreeze(fx, scale, client) {
   fx.gmask = jgld.add(0x128530);         // 0x10128530 / 34 / 38, state regions of the draw16m keys
   fx.glevel = jgld.add(0x128568);
   fx.gratio = jgld.add(0x12858c);        // 0x1012858c / 0x10128590
-  const threads = Process.enumerateThreads();
-  const tid = threads.length ? threads[0].id : 0;
-  if (!tid || tid === Process.getCurrentThreadId()) return fx;
-  const h = openThread(0x0002 /* THREAD_SUSPEND_RESUME */, 0, tid);
-  if (h.isNull()) return fx;
-  if (suspend(h) === 0xffffffff) { closeHandle(h); return fx; }
-  const saved = RANGES.map((r) => jgld.add(r[0]).readByteArray(r[1]));
-  globalThis.__c3bmFreeze = { tid: tid, resumed: -1 };
+  // shared frozen-thread helper (re/frida/js/freeze.js): safe-point suspend, saves restored before the resume
+  __freeze.thread();
+  RANGES.forEach((r) => __freeze.save(jgld.add(r[0]), r[1]));
   if (scale) {
     jgld.add(0x122dc0).writeS32(scale[0]);
     jgld.add(0x122dc4).writeS32(scale[1]);
     jgld.add(0x122dc8).writeS32(scale[2]);
   }
   jgld.add(0x12873c).writePointer(client);
-  setTimeout(function () {
-    RANGES.forEach((r, i) => jgld.add(r[0]).writeByteArray(saved[i]));
-    globalThis.__c3bmFreeze.resumed = resume(h);
-    closeHandle(h);
-  }, 0);
   return fx;
 }
 

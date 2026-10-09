@@ -110,29 +110,10 @@ Object.assign(globalThis.DIFF_FIXTURES, {
   // thread is down.
   c3av_surfaces_frozen() {
     const fx = globalThis.DIFF_FIXTURES.c3av_surfaces();
-    const k32 = Process.getModuleByName('kernel32.dll');
-    const openThread = new NativeFunction(k32.getExportByName('OpenThread'), 'pointer',
-                                          ['uint32', 'int', 'uint32'], 'stdcall');
-    const suspend = new NativeFunction(k32.getExportByName('SuspendThread'), 'uint32', ['pointer'], 'stdcall');
-    const resume = new NativeFunction(k32.getExportByName('ResumeThread'), 'uint32', ['pointer'], 'stdcall');
-    const closeHandle = new NativeFunction(k32.getExportByName('CloseHandle'), 'int', ['pointer'], 'stdcall');
-    // Toolhelp enumerates threads in creation order, so [0] is the process's first thread: the one the probe saw
-    // calling fillRectC8. Never the thread running this script.
-    const threads = Process.enumerateThreads();
-    const tid = threads.length ? threads[0].id : 0;
-    if (!tid || tid === Process.getCurrentThreadId()) return fx;
-    const h = openThread(0x0002 /* THREAD_SUSPEND_RESUME */, 0, tid);
-    if (h.isNull()) return fx;
-    if (suspend(h) === 0xffffffff) { closeHandle(h); return fx; }
-    const parked = fx.gskip.readS32();
-    // Status record so a run can be checked afterwards: `resumed` stays -1 until the timer fires and then holds
-    // ResumeThread's return value, which is the thread's suspend count before the resume (1 = it is running again).
-    globalThis.__c3avFreeze = { tid: tid, parked: parked, resumed: -1 };
-    setTimeout(function () {
-      fx.gskip.writeS32(parked);
-      globalThis.__c3avFreeze.resumed = resume(h);
-      closeHandle(h);
-    }, 0);
+    // shared frozen-thread helper (re/frida/js/freeze.js): suspends the process's first thread (the one the probe
+    // saw calling fillRectC8) at a safe point and writes the parked row skip back before resuming it.
+    __freeze.thread();
+    __freeze.save(fx.gskip, 4);
     return fx;
   },
 });

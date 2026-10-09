@@ -1,24 +1,24 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$spA $d0 0 0 $b,0,0,True,ac99afc4,ac99afc4,True
-$spA $d0 4 2 $b2,0,0,True,d253a02d,d253a02d,True
-$spA $d0 -3 -2 $b,0,0,True,124f3161,124f3161,True
-$spA $d0 24 10 $b2,0,0,True,4718d4ac,4718d4ac,True
-$spA $d0 100 100 $b,0,0,True,67254c13,67254c13,True
-$spA $d0 -20 0 $b2,0,0,True,9a8e3ddb,9a8e3ddb,True
-$spA $d1 0 0 $b,0,0,True,7aa7c2ee,7aa7c2ee,True
-$spA $d2 0 0 $b2,0,0,True,b5beb653,b5beb653,True
-$spA $d3 0 0 $b,0,0,True,5feb6465,5feb6465,True
-$spA $d4 0 0 $b2,3,3,True,77a748f5,77a748f5,False
-$spNB $d0 0 0 $b,3,3,True,77a748f5,77a748f5,False
-$spA 0 0 0 $b2,3,3,True,77a748f5,77a748f5,False
-$spNP $d0 0 0 $b,0,0,True,df503232,df503232,True
-$spB $d0 0 0 $b2,0,0,True,2e5aae31,2e5aae31,True
-$spD $d0 5 5 $b,0,0,True,5c5d815d,5c5d815d,True
-$spA $d0 31 0 $b2,0,0,True,b45c225b,b45c225b,True
-$spA $d0 0 15 $b,0,0,True,c689c32e,c689c32e,True
-$spA $d5 0 0 $b2,0,0,True,f1a6d073,f1a6d073,True
+$spA $d0 0 0 $b,0,0,True,7e685623,7e685623,True
+$spA $d0 4 2 $b2,0,0,True,c1b2f1be,c1b2f1be,True
+$spA $d0 -3 -2 $b,0,0,True,d3d76f02,d3d76f02,True
+$spA $d0 24 10 $b2,0,0,True,6007e1cb,6007e1cb,True
+$spA $d0 100 100 $b,0,0,True,3ba0d23c,3ba0d23c,True
+$spA $d0 -20 0 $b2,0,0,True,1892dc64,1892dc64,True
+$spA $d1 0 0 $b,0,0,True,f766e6d5,f766e6d5,True
+$spA $d2 0 0 $b2,0,0,True,901e8eac,901e8eac,True
+$spA $d3 0 0 $b,0,0,True,65f27ed6,65f27ed6,True
+$spA $d4 0 0 $b2,3,3,True,cca1df34,cca1df34,False
+$spNB $d0 0 0 $b,3,3,True,cca1df34,cca1df34,False
+$spA 0 0 0 $b2,3,3,True,cca1df34,cca1df34,False
+$spNP $d0 0 0 $b,0,0,True,66cfa509,66cfa509,True
+$spB $d0 0 0 $b2,0,0,True,53c45bf2,53c45bf2,True
+$spD $d0 5 5 $b,0,0,True,1dcdf99e,1dcdf99e,True
+$spA $d0 31 0 $b2,0,0,True,3260c0e4,3260c0e4,True
+$spA $d0 0 15 $b,0,0,True,cd4b0695,cd4b0695,True
+$spA $d5 0 0 $b2,0,0,True,cbf4974c,cbf4974c,True
 state_regions,$pix+0x0:24576 $spr+0x0:640 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $gvstep+0x0:8 $gtbl+0x0:4 $gpos+0x0:8 $gcols+0x0:8 $gxstep+0x0:20 $growpair+0x0:8 $g8vstep+0x0:8 $g8tbl+0x0:4 $g8pos+0x0:8 $g8cols+0x0:4 $g8colour+0x0:4 $g8pix+0x0:4 $g8step+0x0:8 $g8xstep+0x0:12 $g8rowpair+0x0:8,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5f96e050,original=0x16002a0,2026-10-09T06:40:45
+meta,detour=0x6bff3600,original=0x3000f40,2026-10-09T17:07:17
 distinct_results,16,,
 VERDICT,GREEN,18,

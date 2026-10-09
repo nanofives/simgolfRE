@@ -27,20 +27,9 @@
     return new NativeFunction(Process.getModuleByName('kernel32.dll').getExportByName(name), ret, args, 'stdcall');
   }
   // Suspends the process's first thread (Toolhelp lists threads in creation order); returns its resume function.
+  // Shared frozen-thread helper (re/frida/js/freeze.js): safe-point suspend; returns an idempotent release().
   function freezeFirstThread() {
-    const openThread = k32('OpenThread', 'pointer', ['uint32', 'int', 'uint32']);
-    const suspend = k32('SuspendThread', 'uint32', ['pointer']);
-    const resume = k32('ResumeThread', 'uint32', ['pointer']);
-    const closeHandle = k32('CloseHandle', 'int', ['pointer']);
-    const threads = Process.enumerateThreads();
-    const tid = threads.length ? threads[0].id : 0;
-    if (!tid || tid === Process.getCurrentThreadId()) throw new Error('c3co: no first thread to suspend');
-    const h = openThread(0x0002 /* THREAD_SUSPEND_RESUME */, 0, tid);
-    if (h.isNull()) throw new Error('c3co: OpenThread failed');
-    const prev = suspend(h);
-    if (prev === 0xffffffff) { closeHandle(h); throw new Error('c3co: SuspendThread failed'); }
-    if (prev !== 0) { resume(h); closeHandle(h); throw new Error('c3co: thread already suspended (' + prev + ')'); }
-    return function () { globalThis.__c3coResumed = resume(h); closeHandle(h); };
+    return __freeze.thread();
   }
 
   const ONEXIT = ptr('0x004a5654');
@@ -104,8 +93,8 @@
       }
     }
     if (onexit) undo.unshift(onexit.undo);   // reverted last, after the thread is running again
-    pending = function () { for (let i = undo.length - 1; i >= 0; i--) undo[i](); };
-    setTimeout(flush, 0);
+    // run at the shared flush (freeze.js), newest first, before the frozen thread is resumed
+    __freeze.atFlush(function () { for (let i = undo.length - 1; i >= 0; i--) undo[i](); });
     return out;
   }
 

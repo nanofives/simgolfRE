@@ -17,81 +17,11 @@
 //     the vectors call while the thread is down is plain stores (constructors, the vector iterator) or a heap
 //     stand-in path: no lock, no allocation, no Win32 call.
 
-(function () {
-  const k32 = Process.getModuleByName('kernel32.dll');
-  // 'exclusive': the call keeps Frida's JS lock. A cooperative NativeFunction call releases it, and the first thread,
-  // waiting inside a heap stand-in forwarding callback, then takes the lock just before SuspendThread stops it: the
-  // script thread can never re-acquire the lock (second full run, 2026-10-09: cdb showed the first thread suspended
-  // inside frida-agent's JS engine and gum-js-loop waiting in RtlEnterCriticalSection). Sleep stays cooperative so
-  // that a thread blocked on the lock can finish its callback between attempts.
-  const nf = (name, ret, args) => new NativeFunction(k32.getExportByName(name), ret, args,
-                                                     { abi: 'stdcall', scheduling: 'exclusive' });
-  const nfCoop = (name, ret, args) => new NativeFunction(k32.getExportByName(name), ret, args, 'stdcall');
-  const openThread = nf('OpenThread', 'pointer', ['uint32', 'int', 'uint32']);
-  const suspendThread = nf('SuspendThread', 'uint32', ['pointer']);
-  const resumeThread = nf('ResumeThread', 'uint32', ['pointer']);
-  const closeHandle = nf('CloseHandle', 'int', ['pointer']);
-
-  // Saved bytes and suspended handles waiting for the flush. Saves are restored newest first, so when a second key's
-  // fixture runs before the first key's timer has fired and saves a region the first key had filled, the older
-  // (true) bytes are written last.
-  const pend = { saves: [], handles: [] };
-  globalThis.__c3cqStatus = { freezes: 0, flushes: 0, resumed: [] };
-  function flush() {
-    if (!pend.saves.length && !pend.handles.length) return;
-    for (let i = pend.saves.length - 1; i >= 0; i--) pend.saves[i].p.writeByteArray(pend.saves[i].bytes);
-    pend.saves.length = 0;
-    pend.handles.forEach((h) => { globalThis.__c3cqStatus.resumed.push(resumeThread(h)); closeHandle(h); });
-    pend.handles.length = 0;
-    globalThis.__c3cqStatus.flushes++;
-  }
-  function schedule() { setTimeout(flush, 0); }
-
-  // Suspend the process's first thread (Toolhelp order; never the script's own thread) at a SAFE POINT: its eip must
-  // lie in golf_clean.exe's own code (0x00401000..0x004ba000). A thread stopped inside a system DLL can hold the
-  // process heap's lock (GDI/USER calls allocate there), which the agent thread itself needs to send the rpc reply:
-  // the first full run of this batch hung exactly like that after ~100 keys. When eip is elsewhere the thread is
-  // resumed, the script sleeps 1 ms and tries again (up to 2000 times). With eip in the exe the thread holds no JS
-  // lock: a callback's own NativeFunction calls into exe code are cooperative and release it. Refuses rather than touching live globals
-  // with the game running.
-  const getThreadContext = nf('GetThreadContext', 'int', ['pointer', 'pointer']);
-  const sleep = nfCoop('Sleep', 'void', ['uint32']);
-  const ctx = Memory.alloc(0x2d0);                 // x86 CONTEXT is 0x2cc bytes; Eip at +0xb8
-  function freezeMain() {
-    const threads = Process.enumerateThreads();
-    const tid = threads.length ? threads[0].id : 0;
-    if (!tid || tid === Process.getCurrentThreadId()) throw new Error('c3cq: no first thread to suspend');
-    const h = openThread(0x0002 | 0x0008 /* THREAD_SUSPEND_RESUME | THREAD_GET_CONTEXT */, 0, tid);
-    if (h.isNull()) throw new Error('c3cq: OpenThread failed');
-    for (let tries = 1; tries <= 2000; tries++) {
-      if (suspendThread(h) === 0xffffffff) { closeHandle(h); throw new Error('c3cq: SuspendThread failed'); }
-      ctx.writeU32(0x00010001);                      // ContextFlags = CONTEXT_CONTROL
-      const eip = getThreadContext(h, ctx) ? ctx.add(0xb8).readU32() : 0;
-      if (eip >= 0x00401000 && eip < 0x004ba000) {
-        pend.handles.push(h);
-        globalThis.__c3cqStatus.freezes++;
-        globalThis.__c3cqStatus.lastTries = tries;
-        globalThis.__c3cqStatus.lastEip = eip;
-        schedule();
-        return;
-      }
-      resumeThread(h);
-      sleep(1);
-    }
-    closeHandle(h);
-    throw new Error('c3cq: first thread never stopped inside golf_clean.exe code');
-  }
-  function save(p, n) { pend.saves.push({ p: p, bytes: p.readByteArray(n) }); schedule(); }
-  function fill(p, n, byte) { save(p, n); p.writeByteArray(new Array(n).fill(byte)); }
-  function setU32(p, v) { save(p, 4); p.writeU32(v); }
-
-  // Every c3cq fixture starts with begin(): a previous key's timer may not have fired yet (the next rpc call can
-  // arrive first), and a key that takes a CRT lock while the first thread is still suspended inside that lock would
-  // deadlock the script thread, so whatever is pending is restored and resumed synchronously first.
-  function begin() { flush(); }
-  globalThis.__c3cq = { begin: begin, schedule: schedule, freezeMain: freezeMain, save: save, fill: fill,
-                        setU32: setU32 };
-})();
+// The frozen-thread method these fixtures introduced (exclusive-scheduled Suspend/GetContext/Resume, safe point in
+// golf_clean.exe code, newest-first restore, synchronous flush before the next key) now lives in the shared helper
+// re/frida/js/freeze.js; __c3cq keeps the names the fixtures below use.
+globalThis.__c3cq = { begin: __freeze.begin, schedule: __freeze.schedule, freezeMain: function () { __freeze.thread(); },
+                      save: __freeze.save, fill: __freeze.fill, setU32: __freeze.setU32 };
 
 Object.assign(globalThis.DIFF_FIXTURES, {
   // atexit registrations: room for one more entry in the exit table, the slot at its end returned as $slot.

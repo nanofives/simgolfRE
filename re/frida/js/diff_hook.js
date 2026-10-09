@@ -28,6 +28,9 @@ rpc.exports = {
     const mod = spec.module || 'golf_clean.exe';
     const target = mod.toLowerCase() === 'golf_clean.exe' ? ptr(spec.addr) : Process.getModuleByName(mod).base.add(spec.addr);
     const witness = target.readU8();
+    // A previous key's frozen-thread restore may still be queued (its timer fires after the rpc reply): run it now,
+    // before this key's fixture touches anything (freeze.js).
+    if (globalThis.__freeze) globalThis.__freeze.begin();
     const fx = spec.fixture ? globalThis.DIFF_FIXTURES[spec.fixture]() : {};
     const mk = (p) => new NativeFunction(p, spec.ret, spec.args, spec.abi);
     // override_re: negative control for the test suite only (proves a wrong body reads RED).

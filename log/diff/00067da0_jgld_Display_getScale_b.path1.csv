@@ -13,6 +13,6 @@ $blk $q30 $q31 $q32,void,void,True,03d7801e,03d7801e,True
 $blk $q33 $q34 $q35,void,void,True,d8a13494,d8a13494,True
 state_regions,$g+0x0:12 $blk+0x0:4096,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5f633a10,original=0x2a205e0,2026-10-09T07:59:09
+meta,detour=0x6c0e80c0,original=0x14a0900,2026-10-09T17:04:01
 distinct_results,12,,
 VERDICT,GREEN,12,
