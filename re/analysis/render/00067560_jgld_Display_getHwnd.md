@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067560`), 45 bytes, 21 instructions, subsystem `rend
 Returns the HWND stored at this+0x144 (DisplayBase slot 8 getHwnd override). (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Returns the window handle at [this+0x144]: `mov eax,[this+0x144]` at 0x10067580 and a plain `ret` at 0x1006758c, with no argument, no branch and no write. That field is what Display::createWindow 0x100657e0 stores at 0x1006591f from CreateWindowExA (0x1006590f) and what Display::shutdown 0x100656c0 passes to DestroyWindow (0x1006570d). This is the Display override of slot 8 (+0x20); the DisplayBase body at the same slot, 0x10066d60, returns a constant 0 instead. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getHwnd (16 vectors, 16 distinct results, 0 changing state, `log/diff/00067560_jgld_Display_getHwnd.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10067560@f_10067560@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006758c): callee pops 0 bytes of stack arguments.

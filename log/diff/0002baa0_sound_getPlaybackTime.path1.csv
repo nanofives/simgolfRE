@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$t_dev0,0,0,True,31c1a84c,31c1a84c,True
+$t_dev1,1,1,True,2207ee06,2207ee06,True
+$t_dev2,4660,4660,True,ce9f40f0,ce9f40f0,True
+$t_dev3,-1,-1,True,4d03a7e6,4d03a7e6,True
+$t_off0,0,0,True,be67751d,be67751d,False
+$t_off1,0,0,True,be67751d,be67751d,False
+$t_zero0,0,0,True,be67751d,be67751d,False
+$t_zero1,0,0,True,be67751d,be67751d,False
+$t_past0,0,0,True,be67751d,be67751d,False
+$t_past1,0,0,True,be67751d,be67751d,False
+$t_live0,1,1,True,be67751d,be67751d,False
+$t_live1,1,1,True,be67751d,be67751d,False
+state_regions,$t_dev0+0x0:512 $t_dev1+0x0:512 $t_dev2+0x0:512 $t_dev3+0x0:512 $t_off0+0x0:512 $t_off1+0x0:512 $t_zero0+0x0:512 $t_zero1+0x0:512 $t_past0+0x0:512 $t_past1+0x0:512 $t_live0+0x0:512 $t_live1+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de62e10,original=0x1590400,2026-10-09T07:52:17
+distinct_results,6,,
+VERDICT,GREEN,12,

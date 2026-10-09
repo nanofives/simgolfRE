@@ -64,6 +64,8 @@ def main():
     ap.add_argument("--keys", action="store_true")
     ap.add_argument("--callers", default="", help="addr=caller[;caller] for a function reached only through a stored "
                     "pointer (no call xref), passed to re_classify promote --callers; cite the store in the Purpose")
+    ap.add_argument("--callees", default="", help="addr=callee[;callee] or addr=none, passed to re_classify promote "
+                    "--callees when hooks.csv's callee is not a function entry (a jump into a shared body); cite it")
     ap.add_argument("--skip", default="", help="comma-separated addresses not to promote (e.g. only guard branches were exercised)")
     a = ap.parse_args()
     hooks = keys_of(a.batch)
@@ -116,6 +118,9 @@ def main():
                "--file", f"shim/src/re/{a.batch}.cpp", "--module", mod]
         if addr in extra:
             cmd += ["--callers", extra[addr]]
+        ce = {int(k, 16): v for k, v in (c.split("=", 1) for c in a.callees.split(",") if c.strip())}
+        if addr in ce:
+            cmd += ["--callees", ce[addr]]
         if "--callers" not in cmd and mod == "Terrain.dll" and (row.get("callers") or "none") == "none":
             # an export called only from the exe: its callers come through the exe's import thunks
             r0 = subprocess.run([sys.executable, str(ROOT / "re" / "tools" / "import_callers.py"), "--callers-arg",

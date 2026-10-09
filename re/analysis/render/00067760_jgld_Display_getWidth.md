@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067760`), 45 bytes, 21 instructions, subsystem `rend
 Returns the int at this+0x12c, the width written by setModeIndex from DEVMODEA.dmPelsWidth. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Returns the int at [this+0x12c]: `mov eax,[this+0x12c]` at 0x10067780 and a plain `ret` at 0x1006778c, no argument, no branch, no write. That field is the width Display::createWindow 0x100657e0 stores at 0x1006594f from GetSystemMetrics (0x1006593f) and that Display::setMode 0x10065da0 overwrites at 0x10065df7 on its write arm. Slot 42 (+0xa8) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getWidth (16 vectors, 15 distinct results, 0 changing state, `log/diff/00067760_jgld_Display_getWidth.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10067760@f_10067760@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006778c): callee pops 0 bytes of stack arguments.

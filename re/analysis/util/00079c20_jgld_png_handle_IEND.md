@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079c20`), 145 bytes, 55 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Reads the end-of-stream chunk. It demands that both PNG_HAVE_IHDR (bit 0) and PNG_HAVE_IDAT (bit 2) are already set in the mode at png_struct+0x68 (0x10079c3b and 0x10079c4b) and calls png_error 0x10078fe0 otherwise (0x10079c5b); the `cmp [ebp+0xc], 0` at 0x10079c63 after that call is the compiler's short-circuit tail and would make the rest of the body conditional on the info_ptr if png_error ever returned. It then sets bits 3 and 4 of the mode in one `or al, 0x18` applied to the whole mode dword, so the upper three bytes survive (0x10079c71, 0x10079c76), warns through png_warning 0x10079040 when the chunk carries any payload at all (0x10079c79, 0x10079c88) - IEND is defined to be empty - and hands that same length to png_crc_finish 0x10079510 (0x10079c98), which consumes it in zbuf-sized pieces and then checks the four CRC bytes. The warning does not stop the consumption, and the info_ptr is never read on the path that runs. Reimplemented in `shim/src/re/c3ck.cpp`; path-1 A/B GREEN: png_handle_IEND (12 vectors, 12 distinct results, 12 changing state, `log/diff/00079c20_jgld_png_handle_IEND.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_IEND` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10079cb0): callee pops 0 bytes of stack arguments.

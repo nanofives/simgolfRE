@@ -99,10 +99,10 @@ jgld.dll	0x10065420	Lib::destroyDisplay	render	match re/match/jgld_display_noeh.
 jgld.dll	0x100654b0	Display::Display	render	match re/match/jgld_display.cpp	constructs the Display object: zeroes fields and installs the vtable
 jgld.dll	0x100657e0	Display::createWindow	ui	match re/match/jgld_display.cpp	registers the window class (name string 0x1011d978) and creates the game window, storing the Listener in g_listener (0x1012872c)
 jgld.dll	0x10065a90	Display::enumModes	render	match re/match/jgld_display.cpp	enumerates Windows display modes (EnumDisplaySettingsA) into the mode tables at 0x101286c8/0x101286f8
-jgld.dll	0x10065c30	Display::findMode	render	match re/match/jgld_display.cpp	returns the index of the enumerated display mode matching (w,h,bpp)
-jgld.dll	0x10065da0	Display::setMode	render	match re/match/jgld_display.cpp	selects the display mode matching (w,h,bpp,fullscreen)
-jgld.dll	0x10065ea0	Display::pickMode	render	match re/match/jgld_display.cpp	chooses the best enumerated display mode for (w,h,bpp)
-jgld.dll	0x10066040	Display::pickModeFreq	render	match re/match/jgld_display.cpp	chooses the best enumerated display mode for (w,h,bpp,fullscreen,freq)
+jgld.dll	0x10065c30	Display::findMode	render	match re/match/jgld_display.cpp	walks the enumerated display modes for the first matching (w,h,bpp), passes its index (or -1 when nothing matched) to the virtual at +0x64 (setModeIndex, call at 0x10065d31) and always returns 0 (xor eax,eax at 0x10065d3b) (c3cj A/B)
+jgld.dll	0x10065da0	Display::setMode	render	match re/match/jgld_display.cpp	selects the display mode matching (w,h,bpp,fullscreen); on the zero arm it passes [this+0x134] instead of its depth argument (0x10065dce) (c3cj A/B)
+jgld.dll	0x10065ea0	Display::pickMode	render	match re/match/jgld_display.cpp	chooses the best enumerated display mode for (w,h,bpp); its early exit (rate above 0x4b with a candidate held) calls slot +0x64 with the PREVIOUS candidate's index, not the entry that triggered it (c3cj A/B)
+jgld.dll	0x10066040	Display::pickModeFreq	render	match re/match/jgld_display.cpp	chooses the best enumerated display mode for (w,h,bpp,fullscreen,freq); its `apply` argument reaches slot +0x60 only as CL of an ecx still holding `this` (0x10066079), so the slot receives (this & 0xffffff00) | (apply & 0xff) (c3cj A/B)
 jgld.dll	0x10066200	Display::setDesktopMode	render	match re/match/jgld_display.cpp	records the current desktop display-mode index
 jgld.dll	0x100662a0	Display::setModeIndex	render	match re/match/jgld_display.cpp	applies display mode by index via EnumDisplaySettingsA; if width is 640 shows a MessageBox requiring 800x600 or more (string 0x..)
 jgld.dll	0x10066470	Display::present	render	match re/match/jgld_display.cpp	blits the back-buffer Surface (via this+0x148) to the screen DC (BitBlt rop 0xcc0020), clipped to the dirty rect

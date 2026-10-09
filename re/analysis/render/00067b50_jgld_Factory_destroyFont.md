@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067b50`), 99 bytes, 39 instructions, subsystem `rend
 destroys and frees a Font object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+`delete p` on a polymorphic object, as VC6 /Od writes it: the argument is copied into two frame slots (loaded at 0x10067b6d, stored at 0x10067b70 and 0x10067b76), tested against zero (`je 0x10067b7d`) and, when it is not zero, SLOT 0 OF ITS OWN VTABLE is called with `this` in ecx and a literal 1 pushed (0x10067b81, call at 0x10067b8b) — the scalar deleting destructor with its "free me too" flag set. Nothing is returned: the slot's eax is stored into [ebp-0x10] at 0x10067b94 and never loaded back, and the NULL arm only writes a 0 there (0x10067b99), so the epilogue leaves eax as the call left it. Slot 34 (+0x88) of the Display vtable 0x1011d640, and one of four bodies (0x10067b50, 0x10067bd0, 0x10067c50, 0x10067cd0) that are the same twenty-two instructions at the same offsets, one per object kind the factory creates. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Factory::destroyFont (13 vectors, 13 distinct results, 12 changing state, `log/diff/00067b50_jgld_Factory_destroyFont.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?destroyFont@Factory@@QAEXPAUFont@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10067bb0): callee pops 4 bytes of stack arguments.

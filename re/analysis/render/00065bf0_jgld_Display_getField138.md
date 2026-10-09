@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065bf0`), 45 bytes, 21 instructions, subsystem `rend
 returns the int at this+0x138 (the field onKey 0x10069c70 reads through g_displayLib+0x138). (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Returns the dword at [this+0x138] and nothing else: after the /GZ frame fill the whole body is `mov eax,[this+0x138]` at 0x10065c10 and a plain `ret` at 0x10065c1c (no stack arguments, no branch, no write, not even the debug `cmp ebp,esp` / __chkesp pair its larger siblings carry). That field is the device context Display::createWindow 0x100657e0 stores at 0x10065998 from GetDC (0x10065988) and that Display::present 0x10066470 reads at 0x10066531 and 0x100665ab for its two BitBlt calls (0x10066538, 0x100665b2). It is slot 15 (+0x3c) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getField138 (16 vectors, 16 distinct results, 0 changing state, `log/diff/00065bf0_jgld_Display_getField138.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10065bf0@f_10065bf0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065c1c): callee pops 0 bytes of stack arguments.

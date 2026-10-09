@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065c30`), 288 bytes, 95 instructions, subsystem `ren
 returns the index of the enumerated display mode matching (w,h,bpp) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Picks, out of the display modes the object's own vtable slot +0x68 returns (the call at 0x10065c86; the slot holds Display::enumModes 0x10065a90 in the real table 0x1011d640), the one whose width, height and depth equal the three arguments and whose refresh rate is the highest, and hands that entry's index to vtable slot +0x64 (Display::setModeIndex 0x100662a0, the call at 0x10065d31). The list is an Array<ModeInfo>: the elements start at [list+4] and are 0x14 bytes apart (`imul edx,edx,0x14` at 0x10065cb5), the count comes from Array::count 0x10066a80 through the thunk 0x100013ac called once per iteration (0x10065ca8), and the four fields compared are width at +0x00 (0x10065cc1), height at +0x04 (0x10065cd6), depth at +0x0c (0x10065ceb) and rate at +0x10 (0x10065d00, a SIGNED `jle`); the dword at +0x08 is never read. The running index and rate both start at -1 (0x10065c6e, 0x10065c75), so an empty list or one with no match passes -1 to slot +0x64 rather than skipping the call — the A/B's first vector measures exactly that. The function itself always returns 0 (`xor eax,eax` at 0x10065d3b), so the index it found leaves it only through that call; the rectangle {0, w, 0, h} it builds at [ebp-0x10]..[ebp-0x14] (0x10065c5b-0x10065c6b) and the zero at [ebp-8] (0x10065c4d) are never read again. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::findMode (15 vectors, 15 distinct results, 15 changing state, `log/diff/00065c30_jgld_Display_findMode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?findMode@Display@@QAEHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10065d4d): callee pops 12 bytes of stack arguments.

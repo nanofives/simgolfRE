@@ -4,7 +4,7 @@ Module `jgld.dll` (RVA `0x00006a40`), 80 bytes, 29 instructions, subsystem `crt`
 
 ## Role (from the naming pass, not a C3 purpose)
 once-guarded (flag 0x10128444 bit0) teardown that destroys the global LinkedList at 0x10128428. (`re/names/jgld_0.tsv`)
-System writeup: `re/analysis/systems/jgld_0.md`.
+System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_4.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10006a8f): callee pops 0 bytes of stack arguments.

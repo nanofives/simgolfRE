@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0004a010`), 7 bytes, 3 instructions, subsystem `crt`.
 CRT strcpy: copies the source string including the terminator using the dword zero-byte test. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+Copies the zero-terminated string at `[esp+8]` over the block at `[esp+4]`, terminator included, and returns the destination, which every exit re-reads from the stack (0x1004a0dc, 0x1004a0e5, 0x1004a0f2, 0x1004a0fa). The entry is three instructions, `push edi` / `mov edi, [esp+8]` at 0x1004a011 and a `jmp` at 0x1004a015 into the copy loop at 0x1004a081 that the module shares with _strcat 0x1004a020. Alignment is taken from the SOURCE, not the destination: while its low two bits are set (0x1004a085, 0x1004a097) bytes are copied one at a time at 0x1004a08d, and a zero byte there ends the copy at 0x1004a0f8. The aligned loop reads a source dword (0x1004a0ab and again at 0x1004a0b4), advances by four and tests `eax & 0x81010100` at 0x1004a0b9: with no candidate the whole dword is written and the destination advances by four (0x1004a0a1). With a candidate the four bytes are tested in order and exactly as many bytes as the string needs are written, one byte for a terminator in byte 0 (0x1004a0f8), a word for byte 1 (0x1004a0ef), a word and an explicit zero for byte 2 (0x1004a0e2) and the whole dword for byte 3 (0x1004a0da), so the copy never writes past the terminator; a candidate with no zero byte at all is the top-byte false positive of the carry trick and stores the dword and continues at 0x1004a0d8. Reimplemented in `shim/src/re/c3cm.cpp`; path-1 A/B GREEN: strcpy (16 vectors, 16 distinct results, 15 changing state, `log/diff/0004a010_sound_strcpy.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

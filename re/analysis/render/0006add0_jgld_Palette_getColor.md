@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006add0`), 91 bytes, 32 instructions, subsystem `rend
 Copies one entry's three colour bytes from this+0xc+index*4 into g_rgbScratch (0x10128734) and returns that pointer. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Reads one Palette entry through a shared three-byte scratch: red, green and blue of entry `index` are copied to the module bytes at VA 0x10128734, 0x10128735 and 0x10128736 (0x1006adf7, 0x1006ae07, 0x1006ae17) and the address of the first of them is returned (`mov eax, 0x10128734` at 0x1006ae1d, an operand the module's base relocations fix up at load). The result is therefore not per-call storage: two callers that hold the pointer see the same three bytes, and a third call overwrites them. The index is not checked, the entry's flags byte is not copied, and like Palette::getRGBRange the body has no callee and its epilogue skips __chkesp 0x1007e780 (0x1006ae22-0x1006ae28); it is `ret 4`. Reimplemented in `shim/src/re/c3ck.cpp`; path-1 A/B GREEN: Palette::getColor (14 vectors, 14 distinct results, 14 changing state, `log/diff/0006add0_jgld_Palette_getColor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006add0@C_FUN_1006add0@f_1006add0@@QAEPAEH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006ae28): callee pops 4 bytes of stack arguments.

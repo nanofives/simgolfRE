@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067da0`), 70 bytes, 28 instructions, subsystem `rend
 Reads g_blitScaleX/Y/Den (0x10122dc0/dc4/dc8) back into its three pointer out-params. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Reads the same three module globals back through three caller-supplied int pointers, in the same order: 0x10122dc0 into the first (0x10067dc0, 0x10067dc6), 0x10122dc4 into the second (0x10067dcb, 0x10067dd0) and 0x10122dc8 into the third (0x10067dd5, 0x10067ddb), then `ret 0xc` at 0x10067de3. No pointer is tested, `this` is not read and there is no branch. Slot 40 (+0xa0) of the Display vtable 0x1011d640, the read side of slot 39's write. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getScale (12 vectors, 12 distinct results, 12 changing state, `log/diff/00067da0_jgld_Display_getScale.path1.csv`); Display::getScale_b (12 vectors, 12 distinct results, 12 changing state, `log/diff/00067da0_jgld_Display_getScale_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_09.cpp` as `?FUN_10067da0@C_FUN_10067da0@f_10067da0@@QAEXPAI00@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10067de3): callee pops 12 bytes of stack arguments.

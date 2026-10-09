@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002a000`), 26 bytes, 11 instructions, subsystem `aud
 if the inner device +0x14 exists, calls its vtbl+0x14 (release) and nulls +0x14; returns 0 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+`__thiscall` with no stack argument (`ret` at 0x1002a019), slot 5 (+0x14) of the vtable 0x1005b9e4 that MidiDeviceBase_ctor 0x10029e70 installs; byte for byte the same body as VoiceBase_closeInner 0x10029320 at its own address. The inner device at this+0x14 is read at 0x1002a003 and tested at 0x1002a008 (`je 0x1002a016`); when it is present its own vtable slot +0x14 is called with the inner in ecx and nothing pushed (0x1002a00c) and this+0x14 is cleared after the call (0x1002a00f). Returns 0 (0x1002a016). The A/B is GREEN over 14 vectors, 11 distinct results, 10 changing state. Reimplemented in `shim/src/re/c3cl.cpp`; path-1 A/B GREEN: MidiDeviceBase_closeInner (14 vectors, 11 distinct results, 10 changing state, `log/diff/0002a000_sound_MidiDeviceBase_closeInner.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_1002a000@f_1002a000@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002a019): callee pops 0 bytes of stack arguments.

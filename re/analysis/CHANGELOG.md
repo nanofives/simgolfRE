@@ -4,6 +4,188 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-09  jgld.dll:0007c150  png_handle_unknown  C2->C3  log/diff/0007c150_jgld_png_handle_unknown.path1.csv
+2026-10-09  jgld.dll:0007b9b0  png_handle_tIME  C2->C3  log/diff/0007b9b0_jgld_png_handle_tIME.path1.csv
+2026-10-09  jgld.dll:0007b4d0  png_handle_oFFs  C2->C3  log/diff/0007b4d0_jgld_png_handle_oFFs.path1.csv
+2026-10-09  jgld.dll:0007b380  png_handle_pHYs  C2->C3  log/diff/0007b380_jgld_png_handle_pHYs.path1.csv
+2026-10-09  jgld.dll:00079ec0  png_handle_sBIT  C2->C3  log/diff/00079ec0_jgld_png_handle_sBIT.path1.csv
+2026-10-09  jgld.dll:00079c20  png_handle_IEND  C2->C3  log/diff/00079c20_jgld_png_handle_IEND.path1.csv
+2026-10-09  jgld.dll:000796e0  png_handle_IHDR  C2->C3  log/diff/000796e0_jgld_png_handle_IHDR.path1.csv
+2026-10-09  jgld.dll:0006add0  Palette::getColor  C2->C3  log/diff/0006add0_jgld_Palette_getColor.path1.csv
+2026-10-09  jgld.dll:0006a9a0  Palette::setRGB  C2->C3  log/diff/0006a9a0_jgld_Palette_setRGB.path1.csv
+2026-10-09  jgld.dll:0006a8e0  Palette::getRGBRange  C2->C3  log/diff/0006a8e0_jgld_Palette_getRGBRange.path1.csv
+2026-10-09  jgld.dll:0006a600  Palette::setDefault  C2->C3  log/diff/0006a600_jgld_Palette_setDefault.path1.csv
+2026-10-09  jgld.dll:000692b0  windowProc  C2->C3  log/diff/000692b0_jgld_windowProc.path1.csv
+2026-10-09  jgld.dll:00067da0  Display::getScale  C2->C3  log/diff/00067da0_jgld_Display_getScale.path1.csv
+2026-10-09  jgld.dll:00067d50  Display::setScale  C2->C3  log/diff/00067d50_jgld_Display_setScale.path1.csv
+2026-10-09  jgld.dll:00067cd0  Factory::destroySprite  C2->C3  log/diff/00067cd0_jgld_Factory_destroySprite.path1.csv
+2026-10-09  jgld.dll:00067c50  Factory::destroySurface  C2->C3  log/diff/00067c50_jgld_Factory_destroySurface.path1.csv
+2026-10-09  jgld.dll:00067bd0  Factory::destroyPalette  C2->C3  log/diff/00067bd0_jgld_Factory_destroyPalette.path1.csv
+2026-10-09  jgld.dll:00067b50  Factory::destroyFont  C2->C3  log/diff/00067b50_jgld_Factory_destroyFont.path1.csv
+2026-10-09  jgld.dll:000677e0  Display::getBpp  C2->C3  log/diff/000677e0_jgld_Display_getBpp.path1.csv
+2026-10-09  jgld.dll:000677a0  Display::getHeight  C2->C3  log/diff/000677a0_jgld_Display_getHeight.path1.csv
+2026-10-09  jgld.dll:00067760  Display::getWidth  C2->C3  log/diff/00067760_jgld_Display_getWidth.path1.csv
+2026-10-09  jgld.dll:000675a0  Display::getInstance  C2->C3  log/diff/000675a0_jgld_Display_getInstance.path1.csv
+2026-10-09  jgld.dll:00067560  Display::getHwnd  C2->C3  log/diff/00067560_jgld_Display_getHwnd.path1.csv
+2026-10-09  jgld.dll:000666b0  Display::getField12c130  C2->C3  log/diff/000666b0_jgld_Display_getField12c130.path1.csv
+2026-10-09  jgld.dll:00066040  Display::pickModeFreq  C2->C3  log/diff/00066040_jgld_Display_pickModeFreq.path1.csv
+2026-10-09  jgld.dll:00065ea0  Display::pickMode  C2->C3  log/diff/00065ea0_jgld_Display_pickMode.path1.csv
+2026-10-09  jgld.dll:00065da0  Display::setMode  C2->C3  log/diff/00065da0_jgld_Display_setMode.path1.csv
+2026-10-09  jgld.dll:00065c30  Display::findMode  C2->C3  log/diff/00065c30_jgld_Display_findMode.path1.csv
+2026-10-09  jgld.dll:00065bf0  Display::getField138  C2->C3  log/diff/00065bf0_jgld_Display_getField138.path1.csv
+2026-10-09  sound.dll:00051319  cvtdate  C2->C3  log/diff/00051319_sound_cvtdate.path1.csv
+2026-10-09  sound.dll:0004a010  strcpy  C2->C3  log/diff/0004a010_sound_strcpy.path1.csv
+2026-10-09  sound.dll:00048268  doubleExponentField  C2->C3  log/diff/00048268_sound_doubleExponentField.path1.csv
+2026-10-09  sound.dll:00045680  strchr  C2->C3  log/diff/00045680_sound_strchr.path1.csv
+2026-10-09  sound.dll:00042690  strstr  C2->C3  log/diff/00042690_sound_strstr.path1.csv
+2026-10-09  sound.dll:00041aad  iosResetVtable  C2->C3  log/diff/00041aad_sound_iosResetVtable.path1.csv
+2026-10-09  sound.dll:0002e430  Track_setField8RaisingMax  C2->C3  log/diff/0002e430_sound_Track_setField8RaisingMax.path1.csv
+2026-10-09  sound.dll:0002c040  Channel_applyFlags  C2->C3  log/diff/0002c040_sound_Channel_applyFlags.path1.csv
+2026-10-09  sound.dll:0002baa0  getPlaybackTime  C2->C3  log/diff/0002baa0_sound_getPlaybackTime.path1.csv
+2026-10-09  sound.dll:0002a470  WaveInDeviceBase_closeInner  C2->C3  log/diff/0002a470_sound_WaveInDeviceBase_closeInner.path1.csv
+2026-10-09  sound.dll:0002a420  WaveInDeviceBase_openInner  C2->C3  log/diff/0002a420_sound_WaveInDeviceBase_openInner.path1.csv
+2026-10-09  sound.dll:0002a000  MidiDeviceBase_closeInner  C2->C3  log/diff/0002a000_sound_MidiDeviceBase_closeInner.path1.csv
+2026-10-09  sound.dll:00029f90  MidiDeviceBase_openInner  C2->C3  log/diff/00029f90_sound_MidiDeviceBase_openInner.path1.csv
+2026-10-09  sound.dll:00029320  VoiceBase_closeInner  C2->C3  log/diff/00029320_sound_VoiceBase_closeInner.path1.csv
+2026-10-09  sound.dll:00023080  Seq_findTrackById  C2->C3  log/diff/00023080_sound_Seq_findTrackById.path1.csv
+2026-10-09  sound.dll:00024630  Seq_resetTrackControllers  callers none->0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50  log/restore_callers.tsv
+2026-10-09  sound.dll:000241f0  Seq_getListElementAt  callers none->0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50  log/restore_callers.tsv
+2026-10-09  sound.dll:00023f10  Seq_getTrackFlagHigh  callers none->0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50  log/restore_callers.tsv
+2026-10-09  sound.dll:00023000  Seq_findTrackOrZero  callers none->0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50  log/restore_callers.tsv
+2026-10-09  sound.dll:000227a0  Seq_setField240  callers none->0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50  log/restore_callers.tsv
+2026-10-09  sound.dll:00022240  Seq_reset  callers none->0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50  log/restore_callers.tsv
+2026-10-09  sound.dll:00020f50  Seq_setField730Clamped  callers none->0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50  log/restore_callers.tsv
+2026-10-09  sound.dll:0001c7e0  streamConsumeByte  callers none->0x1001c5c0  log/restore_callers.tsv
+2026-10-09  sound.dll:0001c7a0  streamReadByte  callers none->0x1001c5c0  log/restore_callers.tsv
+2026-10-09  sound.dll:0001c370  Ctrl5b5c0_mapValue  callers none->0x1001bd90;0x1001bee0  log/restore_callers.tsv
+2026-10-09  sound.dll:0001c2f0  CtrlBase_flushElements  callers none->0x1001bd90;0x1001bee0  log/restore_callers.tsv
+2026-10-09  sound.dll:0001c2a0  CtrlBase_resetElements  callers none->0x1001bd90;0x1001bee0  log/restore_callers.tsv
+2026-10-09  sound.dll:00006b00  startStream  callers none->0x10006020;0x10006160  log/restore_callers.tsv
+2026-10-09  jgld.dll:0009f210  falloc  callers none->0x1009f030  log/restore_callers.tsv
+2026-10-09  jgld.dll:00067f10  Lib::setCommandHandler  callers none->0x100654b0;0x10065670  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000ab70  Surface::getField7c  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000ab30  Surface::getDepthPtr  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000aaf0  Surface::getField40  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000aab0  Surface::height  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000aa70  Surface::width  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000aa30  Surface::getBoundsRectPtr  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a9d0  Surface::getBounds  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a990  Surface::getClipRectPtr  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a930  Surface::getClip  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a8d0  Surface::callBounds  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a870  Surface::call3b  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a810  Surface::call3a  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a7b0  Surface::fwdVfn20  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a750  Surface::fwdVfn18  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a620  Surface::getField4d0  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:0000a5d0  Surface::setField4d0  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:00009c50  Surface::ditherRectDispatch  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:000094e0  Surface::drawLine  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:00009440  Surface::fill2  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:00009320  Surface::fillRect  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:00008830  Surface::pixelAddr  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:000087b0  Surface::releaseDC2  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:00008730  Surface::acquireDC2  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:000086b0  Surface::releaseDC  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  jgld.dll:00008640  Surface::acquireDC  callers none->0x10007660;0x10007970;0x10007bf0  log/restore_callers.tsv
+2026-10-09  004b5cd0  finish_pass_master  callers none->0x004b51e0  log/restore_callers.tsv
+2026-10-09  004b5ca0  pass_startup  callers none->0x004b51e0  log/restore_callers.tsv
+2026-10-09  004b5810  prepare_for_pass  callers none->0x004b51e0  log/restore_callers.tsv
+2026-10-09  004b50d0  grayscale_convert  callers none->0x004b4a60  log/restore_callers.tsv
+2026-10-09  004b4eb0  rgb_gray_convert  callers none->0x004b4a60  log/restore_callers.tsv
+2026-10-09  004b43f0  fullsize_downsample  callers none->0x004b4040  log/restore_callers.tsv
+2026-10-09  004b0320  write_tables_only  callers none->0x004afaf0  log/restore_callers.tsv
+2026-10-09  004afdc0  write_frame_header  callers none->0x004afaf0  log/restore_callers.tsv
+2026-10-09  004afc40  write_file_header  callers none->0x004afaf0  log/restore_callers.tsv
+2026-10-09  004afb60  write_any_marker  callers none->0x004afaf0  log/restore_callers.tsv
+2026-10-09  004af340  request_virt_barray  callers none->0x004aee30  log/restore_callers.tsv
+2026-10-09  004af2d0  request_virt_sarray  callers none->0x004aee30  log/restore_callers.tsv
+2026-10-09  00487bd0  closeHookC  callers none->0x00487b40  log/restore_callers.tsv
+2026-10-09  00484ff0  Snd::flags  callers none->0x00484820;0x004848a0  log/restore_callers.tsv
+2026-10-09  0047ed30  Window::hitTestBorder  callers none->0x00404360;0x00424120;0x0043cb50;0x00479c40;0x0047a3c0;0x004804a0;0x004805a0;0x00486070;0x00488500;0x00488650;0x00489cb0;0x00489de0;0x00491410;0x00491500;0x00491680;0x00491710;0x00496030;0x00497a20;0x00499140;0x0049c020;0x0049c780;0x0049d5a0;0x0049ebb0;0x0049ec80;0x004a13f0;0x004a2250;0x004a2330;0x004a3110;0x004a3480  log/restore_callers.tsv
+2026-10-09  0047ae80  setFocusItem  callers none->0x00404360;0x00424120;0x0043cb50;0x00479c40;0x0047a3c0;0x004804a0;0x004805a0;0x00486070;0x00488500;0x00488650;0x00489cb0;0x00489de0;0x0048ce00;0x00491410;0x00491500;0x00491680;0x00491710;0x00496030;0x00497a20;0x00497fc0;0x00499140;0x0049acf0;0x0049c020;0x0049c780;0x0049d5a0;0x0049ebb0;0x0049ec80;0x004a13f0;0x004a2250;0x004a2330;0x004a3110;0x004a3480  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a740  Terrain::calcAllNormals  callers none->golf_clean.exe:0x004498a0  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a6f0  Terrain::calcNormals  callers none->golf_clean.exe:0x00449540  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a680  Terrain::lowerEdgeCorner  callers none->golf_clean.exe:0x00449fa0  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a620  Terrain::lowerCorner  callers none->golf_clean.exe:0x00449fa0  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a5c0  Terrain::elevateCorner  callers none->golf_clean.exe:0x00449540;golf_clean.exe:0x00449fa0  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a560  Terrain::setWall  callers none->golf_clean.exe:0x00449540;golf_clean.exe:0x0044a380  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a510  Terrain::hasPath  callers none->golf_clean.exe:0x0044a410  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a4b0  Terrain::updatePath  callers none->golf_clean.exe:0x0044a410  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a450  Terrain::hasConnectedPath  callers none->golf_clean.exe:0x0044a410  log/restore_callers.tsv
+2026-10-09  Terrain.dll:0000a3e0  Terrain::layPath  callers none->golf_clean.exe:0x00449540;golf_clean.exe:0x0044a410  log/restore_callers.tsv
+2026-10-09  Terrain.dll:00003390  Terrain::getVariation  callers none->golf_clean.exe:0x00449470;golf_clean.exe:0x00449f00  log/restore_callers.tsv
+2026-10-09  Terrain.dll:000032f0  Terrain::setType  callers none->golf_clean.exe:0x00449470;golf_clean.exe:0x00449540;golf_clean.exe:0x00449f00  log/restore_callers.tsv
+2026-10-09  sound.dll:00024630  Seq_resetTrackControllers  callers 0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:000241f0  Seq_getListElementAt  callers 0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:00023f10  Seq_getTrackFlagHigh  callers 0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:00023000  Seq_findTrackOrZero  callers 0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:000227a0  Seq_setField240  callers 0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:00022240  Seq_reset  callers 0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:00020f50  Seq_setField730Clamped  callers 0x10003f30;0x10004000;0x1001f4a0;0x1001f6f0;0x1001ff50->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:0001c7e0  streamConsumeByte  callers 0x1001c5c0->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:0001c7a0  streamReadByte  callers 0x1001c5c0->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:0001c370  Ctrl5b5c0_mapValue  callers 0x1001bd90;0x1001bee0->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:0001c2f0  CtrlBase_flushElements  callers 0x1001bd90;0x1001bee0->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:0001c2a0  CtrlBase_resetElements  callers 0x1001bd90;0x1001bee0->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:00006b00  startStream  callers 0x10006020;0x10006160->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0009f210  falloc  callers 0x1009f030->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:00067f10  Lib::setCommandHandler  callers 0x100654b0;0x10065670->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000ab70  Surface::getField7c  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000ab30  Surface::getDepthPtr  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000aaf0  Surface::getField40  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000aab0  Surface::height  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000aa70  Surface::width  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000aa30  Surface::getBoundsRectPtr  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a9d0  Surface::getBounds  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a990  Surface::getClipRectPtr  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a930  Surface::getClip  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a8d0  Surface::callBounds  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a870  Surface::call3b  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a810  Surface::call3a  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a7b0  Surface::fwdVfn20  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a750  Surface::fwdVfn18  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a620  Surface::getField4d0  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:0000a5d0  Surface::setField4d0  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:00009c50  Surface::ditherRectDispatch  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:000094e0  Surface::drawLine  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:00009440  Surface::fill2  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:00009320  Surface::fillRect  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:00008830  Surface::pixelAddr  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:000087b0  Surface::releaseDC2  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:00008730  Surface::acquireDC2  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:000086b0  Surface::releaseDC  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  jgld.dll:00008640  Surface::acquireDC  callers 0x10007660;0x10007970;0x10007bf0->none  log/c2_refresh.tsv
+2026-10-09  004b5cd0  finish_pass_master  callers 0x004b51e0->none  log/c2_refresh.tsv
+2026-10-09  004b5ca0  pass_startup  callers 0x004b51e0->none  log/c2_refresh.tsv
+2026-10-09  004b5810  prepare_for_pass  callers 0x004b51e0->none  log/c2_refresh.tsv
+2026-10-09  004b50d0  grayscale_convert  callers 0x004b4a60->none  log/c2_refresh.tsv
+2026-10-09  004b4eb0  rgb_gray_convert  callers 0x004b4a60->none  log/c2_refresh.tsv
+2026-10-09  004b43f0  fullsize_downsample  callers 0x004b4040->none  log/c2_refresh.tsv
+2026-10-09  004b0320  write_tables_only  callers 0x004afaf0->none  log/c2_refresh.tsv
+2026-10-09  004afdc0  write_frame_header  callers 0x004afaf0->none  log/c2_refresh.tsv
+2026-10-09  004afc40  write_file_header  callers 0x004afaf0->none  log/c2_refresh.tsv
+2026-10-09  004afb60  write_any_marker  callers 0x004afaf0->none  log/c2_refresh.tsv
+2026-10-09  004af340  request_virt_barray  callers 0x004aee30->none  log/c2_refresh.tsv
+2026-10-09  004af2d0  request_virt_sarray  callers 0x004aee30->none  log/c2_refresh.tsv
+2026-10-09  00487bd0  closeHookC  callers 0x00487b40->none  log/c2_refresh.tsv
+2026-10-09  00484ff0  Snd::flags  callers 0x00484820;0x004848a0->none  log/c2_refresh.tsv
+2026-10-09  0047ed30  Window::hitTestBorder  callers 0x00404360;0x00424120;0x0043cb50;0x00479c40;0x0047a3c0;0x004804a0;0x004805a0;0x00486070;0x00488500;0x00488650;0x00489cb0;0x00489de0;0x00491410;0x00491500;0x00491680;0x00491710;0x00496030;0x00497a20;0x00499140;0x0049c020;0x0049c780;0x0049d5a0;0x0049ebb0;0x0049ec80;0x004a13f0;0x004a2250;0x004a2330;0x004a3110;0x004a3480->none  log/c2_refresh.tsv
+2026-10-09  0047ae80  setFocusItem  callers 0x00404360;0x00424120;0x0043cb50;0x00479c40;0x0047a3c0;0x004804a0;0x004805a0;0x00486070;0x00488500;0x00488650;0x00489cb0;0x00489de0;0x0048ce00;0x00491410;0x00491500;0x00491680;0x00491710;0x00496030;0x00497a20;0x00497fc0;0x00499140;0x0049acf0;0x0049c020;0x0049c780;0x0049d5a0;0x0049ebb0;0x0049ec80;0x004a13f0;0x004a2250;0x004a2330;0x004a3110;0x004a3480->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a740  Terrain::calcAllNormals  callers golf_clean.exe:0x004498a0->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a6f0  Terrain::calcNormals  callers golf_clean.exe:0x00449540->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a680  Terrain::lowerEdgeCorner  callers golf_clean.exe:0x00449fa0->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a620  Terrain::lowerCorner  callers golf_clean.exe:0x00449fa0->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a5c0  Terrain::elevateCorner  callers golf_clean.exe:0x00449540;golf_clean.exe:0x00449fa0->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a560  Terrain::setWall  callers golf_clean.exe:0x00449540;golf_clean.exe:0x0044a380->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a510  Terrain::hasPath  callers golf_clean.exe:0x0044a410->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a4b0  Terrain::updatePath  callers golf_clean.exe:0x0044a410->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a450  Terrain::hasConnectedPath  callers golf_clean.exe:0x0044a410->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:0000a3e0  Terrain::layPath  callers golf_clean.exe:0x00449540;golf_clean.exe:0x0044a410->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:00003390  Terrain::getVariation  callers golf_clean.exe:0x00449470;golf_clean.exe:0x00449f00->none  log/c2_refresh.tsv
+2026-10-09  Terrain.dll:000032f0  Terrain::setType  callers golf_clean.exe:0x00449470;golf_clean.exe:0x00449540;golf_clean.exe:0x00449f00->none  log/c2_refresh.tsv
+2026-10-09  sound.dll:0002e430  Track_setField8RaisingMax  C1->C2  re/analysis/audio/0002e430_sound_Track_setField8RaisingMax.md
+2026-10-09  sound.dll:0002e430  Track_setField8RaisingMax  C0->C1  caller 0x10023080 (Seq_findTrackById, through the incremental-link thunk 0x1000136b at 0x100230e5); no callee; 20 bytes, matched 100% in re/match/sound_raw_04.cpp
 2026-10-09  jgld.dll:0009e7a0  huft_build  C2->C3  log/diff/0009e7a0_jgld_huft_build.path1.csv
 2026-10-09  jgld.dll:0009ce80  inflate_blocks  C2->C3  log/diff/0009ce80_jgld_inflate_blocks.path1.csv
 2026-10-09  jgld.dll:0009c0f0  inflate  C2->C3  log/diff/0009c0f0_jgld_inflate.path1.csv

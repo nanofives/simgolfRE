@@ -1,0 +1,28 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$bA $d0 0 0 $m 0,0,0,True,14ff67df,14ff67df,True
+$bA $d0 4 2 $m2 $pal2,0,0,True,836771fd,836771fd,True
+$bA $d1 -3 -2 $m 0,0,0,True,94c1626e,94c1626e,True
+$bA $d2 0 0 $m 0,0,0,True,0ab9764c,0ab9764c,True
+$bA $d3 0 0 $m 0,1,1,True,b07f9773,b07f9773,True
+$bA $d4 0 0 $m 0,3,3,True,1d178065,1d178065,False
+$bB $d0 1 1 $m2 0,0,0,True,a012bb53,a012bb53,True
+$bNP $d0 0 0 $m 0,0,0,True,0f15e4e5,0f15e4e5,True
+$bA $e0 0 0 $b 0,0,0,True,42188b15,42188b15,True
+$bA $e1 2 2 $b2 0,0,0,True,d4456cf3,d4456cf3,True
+$bA $e2 0 0 $b 0,0,0,True,d0456887,d0456887,True
+$bA $e3 0 0 $b 0,3,3,True,1d178065,1d178065,False
+$bBsy $d0 0 0 $m 0,-858993460,-858993460,True,1d178065,1d178065,False
+$bBsy $e0 0 0 $b 0,-858993460,-858993460,True,1d178065,1d178065,False
+$bA $x0 0 0 $m 0,23,23,True,1d178065,1d178065,False
+$b16 $d0 0 0 $m 0,23,23,True,1d178065,1d178065,False
+$bX $d0 0 0 $m 0,23,23,True,1d178065,1d178065,False
+$bNB $d0 0 0 $m 0,7,7,True,1d178065,1d178065,False
+$bA 0 0 0 $m 0,16,16,True,1d178065,1d178065,False
+$bD $d0 5 5 $m 0,0,0,True,21d809bc,21d809bc,True
+$bA $d0 100 100 $m 0,0,0,True,d3c0d5c6,d3c0d5c6,True
+$bA $d5 0 0 $m2 $pal,0,0,True,7c67659b,7c67659b,True
+state_regions,$pix+0x0:57344 $spr+0x0:3200 $spix+0x0:65536 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20 $l8+0x0:20 $l9+0x0:20 $l10+0x0:20 $l11+0x0:20 $l12+0x0:20 $l13+0x0:20 $gmask+0x0:12 $gvstep+0x0:8 $gtbl+0x0:4 $gpos+0x0:8 $glevel+0x0:4 $gcols+0x0:8 $gxstep+0x0:20 $growpair+0x0:8 $g8vstep+0x0:8 $g8tbl+0x0:4 $g8pos+0x0:8 $g8cols+0x0:4 $g8colour+0x0:4 $g8pix+0x0:4 $g8step+0x0:8 $g8xstep+0x0:12 $g8rowpair+0x0:8,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5f957900,original=0x28f0a40,2026-10-09T08:03:27
+distinct_results,18,,
+VERDICT,GREEN,22,

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002a470`), 33 bytes, 14 instructions, subsystem `aud
 if the inner device exists, calls inner vtbl+0x14 and this vtbl+8, nulls the inner pointer; returns 0 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+`__thiscall` with no stack argument (`ret` at 0x1002a490), slot 5 (+0x14) of the vtable 0x1005ba5c that WaveInDeviceBase_ctor 0x1002a240 installs. It is the close body of 0x10029320 / 0x1002a000 with one extra step: after the inner's vtable slot +0x14 (0x1002a47c) it re-reads THIS object's vtable (0x1002a47f, AFTER the inner call, so a slot the inner call swapped is the one taken) and calls its slot +8 with this in ecx and nothing pushed (0x1002a481, 0x1002a483); this+0x14 is cleared last (0x1002a486). Both calls and the clear are inside the `je 0x1002a48d` at 0x1002a478, so an object with no inner device leaves the body untouched. Returns 0 (0x1002a48d). The A/B is GREEN over 14 vectors, 11 distinct results, 10 changing state. Reimplemented in `shim/src/re/c3cl.cpp`; path-1 A/B GREEN: WaveInDeviceBase_closeInner (14 vectors, 11 distinct results, 10 changing state, `log/diff/0002a470_sound_WaveInDeviceBase_closeInner.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_1002a470@f_1002a470@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002a490): callee pops 0 bytes of stack arguments.

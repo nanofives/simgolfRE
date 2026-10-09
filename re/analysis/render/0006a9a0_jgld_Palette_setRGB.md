@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a9a0`), 163 bytes, 58 instructions, subsystem `ren
 copies count RGB triples from src into the palette entries at +0xc (offset by index), then calls update (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Copies `n` three-byte triples out of the caller's buffer into the Palette entries `first` to `first + n - 1`, red, green then blue (0x1006a9ec, 0x1006aa06, 0x1006aa20), leaving the flags byte of every entry it touches alone, and then re-derives the two 16-bit tables through Palette::update 0x1006a3d0 (0x1006aa29). The loop counter is signed (`jge` at 0x1006a9d5), so a count of zero or less writes nothing; neither `first` nor `n` is checked against the 256 entries, so a range that runs off the end writes straight into the RGB555 table at +0x40c, which Palette::update then overwrites. The destination index is recomputed as `i + first` and the source offset as `i * 3` for each of the three bytes separately (0x1006a9d7, 0x1006a9f0, 0x1006aa0a). The return value is the `xor eax,eax` of 0x1006aa2e. Reimplemented in `shim/src/re/c3ck.cpp`; path-1 A/B GREEN: Palette::setRGB (14 vectors, 14 distinct results, 14 changing state, `log/diff/0006a9a0_jgld_Palette_setRGB.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?setRGB@Palette@@QAEHPBEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1006aa40): callee pops 12 bytes of stack arguments.

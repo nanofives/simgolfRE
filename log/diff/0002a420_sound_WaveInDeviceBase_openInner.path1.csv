@@ -1,0 +1,30 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$a_nullE 286326785 572653570,11,11,True,71d7837b,71d7837b,True
+$a_nullE 0 -1,11,11,True,fec73e89,fec73e89,True
+$a_nullE2 286326785 572653570,36,36,True,0b61066d,0b61066d,True
+$a_nullE2 0 -1,36,36,True,3dbe2517,3dbe2517,True
+$a_ok0 286326785 572653570,0,0,True,ce5cac05,ce5cac05,True
+$a_ok0 0 -1,0,0,True,76591fa4,76591fa4,True
+$a_ok1 286326785 572653570,0,0,True,8b7929ab,8b7929ab,True
+$a_ok1 0 -1,0,0,True,9b68d78c,9b68d78c,True
+$a_ok2 286326785 572653570,0,0,True,0d94000d,0d94000d,True
+$a_ok2 0 -1,0,0,True,39a9d6ac,39a9d6ac,True
+$a_ok3 286326785 572653570,0,0,True,49b3cceb,49b3cceb,True
+$a_ok3 0 -1,0,0,True,de78fff4,de78fff4,True
+$a_fail1 286326785 572653570,11,11,True,60e09744,60e09744,True
+$a_fail1 0 -1,11,11,True,ff1b08ed,ff1b08ed,True
+$a_fail2 286326785 572653570,36,36,True,d1d87f04,d1d87f04,True
+$a_fail2 0 -1,36,36,True,326195fb,326195fb,True
+$a_fail3 286326785 572653570,-1,-1,True,1d47916c,1d47916c,True
+$a_fail3 0 -1,-1,-1,True,5af886c1,5af886c1,True
+$a_fail4 286326785 572653570,2147483647,2147483647,True,446879e8,446879e8,True
+$a_fail4 0 -1,2147483647,2147483647,True,8812bc67,8812bc67,True
+$a_early 286326785 572653570,19,19,True,490c3417,490c3417,True
+$a_early 0 -1,19,19,True,31d43431,31d43431,True
+$a_early2 286326785 572653570,-1,-1,True,582486f1,582486f1,True
+$a_early2 0 -1,-1,-1,True,a8c0e4e3,a8c0e4e3,True
+state_regions,$a_null0+0x0:512 $a_null1+0x0:512 $a_nullE+0x0:512 $a_nullE2+0x0:512 $a_ok0+0x0:512 $a_ok1+0x0:512 $a_ok2+0x0:512 $a_ok3+0x0:512 $a_fail1+0x0:512 $a_fail2+0x0:512 $a_fail3+0x0:512 $a_fail4+0x0:512 $a_early+0x0:512 $a_early2+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de62f70,original=0x15903e0,2026-10-09T07:52:17
+distinct_results,24,,
+VERDICT,GREEN,24,

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067bd0`), 99 bytes, 39 instructions, subsystem `rend
 destroys and frees a Palette object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+The same body as 0x10067b50 at slot 35 (+0x8c) of the Display vtable 0x1011d640: copy the argument (loaded at 0x10067bed, stored at 0x10067bf0 and 0x10067bf6), test it against zero (`je 0x10067bfd`) and, when it is not zero, call slot 0 of its own vtable with a literal 1 (pushed at 0x10067c01, call at 0x10067c0b). The slot's eax is written to [ebp-0x10] at 0x10067c14 and never read back, so the function returns nothing; `ret 4` at 0x10067c30. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Factory::destroyPalette (13 vectors, 13 distinct results, 12 changing state, `log/diff/00067bd0_jgld_Factory_destroyPalette.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?destroyPalette@Factory@@QAEXPAUPalette@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10067c30): callee pops 4 bytes of stack arguments.

@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ofP0 $ofI0 9,void,void,True,bb4df3c6,bb4df3c6,True
+$ofP1 $ofI1 9,void,void,True,40309e98,40309e98,True
+$ofP2 $ofI2 9,void,void,True,af09b145,af09b145,True
+$ofP3 $ofI3 9,void,void,True,5cae8fb9,5cae8fb9,True
+$ofP4 $ofI4 9,void,void,True,8392c9b7,8392c9b7,True
+$ofP5 $ofI5 9,void,void,True,8f7a4c67,8f7a4c67,True
+$ofP6 $ofI6 0,void,void,True,b56e9ccc,b56e9ccc,True
+$ofP7 $ofI7 1,void,void,True,4d042722,4d042722,True
+$ofP8 $ofI8 8,void,void,True,db4504b0,db4504b0,True
+$ofP9 $ofI9 10,void,void,True,fa6c1680,fa6c1680,True
+$ofP10 $ofI10 16,void,void,True,86a5681c,86a5681c,True
+$ofP11 $ofI11 9,void,void,True,a28e86ea,a28e86ea,True
+$ofP12 $ofI12 9,void,void,True,f7df26ce,f7df26ce,True
+$ofP13 $ofI13 4,void,void,True,74a69dbb,74a69dbb,True
+state_regions,$ofPng+0x0:7168 $ofInfo+0x0:3584 $ofCtl+0x0:224,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5e5e4620,original=0x1470560,2026-10-09T08:12:26
+distinct_results,14,,
+VERDICT,GREEN,14,

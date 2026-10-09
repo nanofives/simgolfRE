@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000677e0`), 45 bytes, 21 instructions, subsystem `rend
 Returns the int at this+0x134, the bit depth written by setModeIndex from DEVMODEA.dmBitsPerPel. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Returns the int at [this+0x134]: `mov eax,[this+0x134]` at 0x10067800 and a plain `ret` at 0x1006780c, no argument, no branch, no write. That is the colour depth Display::setMode 0x10065da0 writes at 0x10065e0f on its write arm and reads back at 0x10065dce to pass to vtable slot +0x58 on the other arm. Slot 44 (+0xb0) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getBpp (16 vectors, 12 distinct results, 0 changing state, `log/diff/000677e0_jgld_Display_getBpp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100677e0@f_100677e0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006780c): callee pops 0 bytes of stack arguments.

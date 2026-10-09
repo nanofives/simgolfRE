@@ -1,0 +1,29 @@
+vector,original,reimpl,match
+$h_abcabcabd $n_empty,obj+0x0,obj+0x0,True
+$h_abcabcabd $n_a,obj+0x0,obj+0x0,True
+$h_empty $n_ab,NULL,NULL,True
+$h_abcabcabd $n_ab,obj+0x0,obj+0x0,True
+$h_xx $n_ab,obj+0x9a,obj+0x9a,True
+$h_axbab $n_ab,obj+0x93,obj+0x93,True
+$h_abcabcabd $n_abc,obj+0x0,obj+0x0,True
+$h_abcabcabd $n_abd,obj+0x6,obj+0x6,True
+$h_abcabcabd $n_zzz,NULL,NULL,True
+$h_fox $n_lazydog,obj+0x43,obj+0x43,True
+$h_fox $n_dog,obj+0x48,obj+0x48,True
+$h_abcde $n_abcde,obj+0xa8,obj+0xa8,True
+$h_abcdx $n_abcd,obj+0xb0,obj+0xb0,True
+$h_abcd $n_abcde,NULL,NULL,True
+$h_aaab $n_ab,obj+0x12,obj+0x12,True
+$h_aaab $n_aab,obj+0x11,obj+0x11,True
+$h_abcabd $n_abd,obj+0x8b,obj+0x8b,True
+$h_abcabcabd $n_abcabd,obj+0x3,obj+0x3,True
+$h_empty $n_empty,obj+0x50,obj+0x50,True
+$h_abcabcabd $n_c,obj+0x2,obj+0x2,True
+$h_empty $n_a,NULL,NULL,True
+$h_fox $n_zzz,NULL,NULL,True
+$h_abcxe $n_abcde,NULL,NULL,True
+$h_xx $n_abcdef,obj+0x9a,obj+0x9a,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5f303410,original=0x3750360,2026-10-09T07:57:51
+distinct_results,15,,
+VERDICT,GREEN,24,

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00041aad`), 15 bytes, 4 instructions, subsystem `crt`
 Destructor helper for a std ios object: writes the vtable pointer &PTR_LAB_1005ecd4 into the subobject located through the virtual-base offset at *(*(this-8)+4). (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Restores one vtable pointer in an object with a virtual base. `ecx` is read at 0x10041aad before any write and the `ret` at 0x10041abb pops nothing, so it is a `__thiscall` with no stack argument: the dword eight bytes below the object (0x10041aad) is the object's virtual-base table, its second entry (0x10041ab0) is the byte offset of the virtual base subobject from that point, and the store at 0x10041ab3 writes the address 0x1005ecd4 -- a data address inside the image, so it moves with the load base -- to `[this - 8 + offset]`, which is the first dword of that subobject. The address arithmetic is 32-bit and wraps. eax is left holding the offset loaded at 0x10041ab0, which is the value the only caller, ostreamResetVtable 0x10041c26, sees returned. Reimplemented in `shim/src/re/c3cm.cpp`; path-1 A/B GREEN: iosResetVtable (12 vectors, 12 distinct results, 12 changing state, `log/diff/00041aad_sound_iosResetVtable.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10041abb): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10041aad before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -1,0 +1,31 @@
+vector,original,reimpl,match
+$s_alpha 97,obj+0x0,obj+0x0,True
+$s_alpha 98,obj+0x1,obj+0x1,True
+$s_alpha 99,obj+0x2,obj+0x2,True
+$s_alpha 100,obj+0x3,obj+0x3,True
+$s_alpha 101,obj+0x4,obj+0x4,True
+$s_alpha 112,obj+0xf,obj+0xf,True
+$s_alpha 122,NULL,NULL,True
+$s_alpha 0,obj+0x10,obj+0x10,True
+$s_alpha1 98,obj+0x1,obj+0x1,True
+$s_alpha1 122,NULL,NULL,True
+$s_alpha2 99,obj+0x2,obj+0x2,True
+$s_alpha3 100,obj+0x3,obj+0x3,True
+$s_alpha3 122,NULL,NULL,True
+$s_nul1 97,NULL,NULL,True
+$s_empty 97,NULL,NULL,True
+$s_empty 0,obj+0x40,obj+0x40,True
+$s_fp_c 120,obj+0x27,obj+0x27,True
+$s_fp_z 122,NULL,NULL,True
+$s_z0 113,NULL,NULL,True
+$s_z1 113,NULL,NULL,True
+$s_z2 113,NULL,NULL,True
+$s_z3 128,NULL,NULL,True
+$s_z3 113,NULL,NULL,True
+$s_zz 122,obj+0x90,obj+0x90,True
+$s_fp_c 65,obj+0x20,obj+0x20,True
+$s_fp_c 248,obj+0x23,obj+0x23,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x5f303360,original=0x3750380,2026-10-09T07:57:51
+distinct_results,13,,
+VERDICT,GREEN,26,

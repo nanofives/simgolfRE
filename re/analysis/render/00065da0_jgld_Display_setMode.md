@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065da0`), 199 bytes, 69 instructions, subsystem `ren
 selects the display mode matching (w,h,bpp,fullscreen) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Applies a display mode in one of two ways, chosen by the LOW BYTE of its fourth argument (`and eax,0xff` at 0x10065dc0, `jne 0x10065dc7`), so a caller passing 0x100 takes the same arm as one passing 0. With that byte zero it calls vtable slot +0x58 (Display::pickMode 0x10065ea0 in the real table 0x1011d640) with the width and height it was given and the object's CURRENT depth at [this+0x134] (0x10065dce), dropping the depth argument on that arm. With the byte non-zero it stores the three arguments into [this+0x12c], [this+0x130] and [this+0x134] (0x10065df7, 0x10065e03, 0x10065e0f) and then calls slot +0x00 of the object at [this+0x148] with those three fields read back out of the object (0x10065e30, 0x10065e26, 0x10065e1c) and a literal 1 (0x10065e17), with that object in ecx (0x10065e3a). It returns nothing: the epilogue at 0x10065e54 loads no result. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::setMode (15 vectors, 15 distinct results, 15 changing state, `log/diff/00065da0_jgld_Display_setMode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?setMode@Display@@QAEXHHH_N@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x10065e64): callee pops 16 bytes of stack arguments.

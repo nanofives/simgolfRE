@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007c150`), 149 bytes, 56 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The reader every chunk whose type libpng does not implement ends up in. It first runs png_check_chunk_name 0x1007c1f0 over the four bytes at png_struct+0x11c (0x1007c16b, 0x1007c175), which calls png_chunk_error 0x100790a0 for any byte outside the two letter ranges it accepts. A chunk whose first byte has bit 5 clear is CRITICAL, and an unknown critical chunk is fatal: png_chunk_error again (0x1007c188, 0x1007c198), with the same short-circuit tail on the info_ptr at 0x1007c1a0 that png_handle_IEND has. An ancillary chunk is simply skipped: if PNG_HAVE_IDAT is set the body records that the chunk arrived after the image data by setting bit 3 of the mode (0x1007c1ae-0x1007c1c1), and png_crc_finish 0x10079510 consumes the payload and checks the CRC (0x1007c1cc). Nothing of the chunk is kept and the info_ptr is never read on the path that runs. Reimplemented in `shim/src/re/c3ck.cpp`; path-1 A/B GREEN: png_handle_unknown (12 vectors, 12 distinct results, 12 changing state, `log/diff/0007c150_jgld_png_handle_unknown.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_unknown` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007c1e4): callee pops 0 bytes of stack arguments.

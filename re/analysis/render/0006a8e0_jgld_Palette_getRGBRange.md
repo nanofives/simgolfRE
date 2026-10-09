@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a8e0`), 145 bytes, 53 instructions, subsystem `ren
 Copies param_3 RGB triples (3 bytes each) out of the entry table at this+0xc (4 bytes per entry) starting at index param_2 into the destination buffer. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+The read side of Palette::setRGB: `n` entries from `first` onwards are written into the caller's buffer as three-byte triples (0x1006a92d, 0x1006a946, 0x1006a960), leaving the flags byte behind. The loop test is the same signed one (0x1006a915), there is no range check either, and the body has no callee at all - its epilogue skips even the debug build's __chkesp 0x1007e780 (0x1006a968-0x1006a96e), which only two bodies of this batch do. The return value is the `xor eax,eax` of 0x1006a966. Reimplemented in `shim/src/re/c3ck.cpp`; path-1 A/B GREEN: Palette::getRGBRange (14 vectors, 13 distinct results, 12 changing state, `log/diff/0006a8e0_jgld_Palette_getRGBRange.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006a8e0@C_FUN_1006a8e0@f_1006a8e0@@QAEIHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1006a96e): callee pops 12 bytes of stack arguments.

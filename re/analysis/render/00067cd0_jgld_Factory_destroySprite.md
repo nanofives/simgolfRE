@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067cd0`), 99 bytes, 39 instructions, subsystem `rend
 destroys and frees a Sprite object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+The same body at slot 37 (+0x94) of the Display vtable 0x1011d640: load at 0x10067ced, stores at 0x10067cf0 and 0x10067cf6, test at `je 0x10067cfd`, slot 0 of the argument's own vtable called with a literal 1 (0x10067d01, call at 0x10067d0b), the result stored at 0x10067d14 and never read back, `ret 4` at 0x10067d30. The four destroy slots differ only in their addresses, which is what makes them four separate rows rather than one: each is the factory's counterpart of one of the four create slots 29..32 (0x10067850, 0x10067910, 0x100679d0, 0x10067a90), all of which allocate through operator new 0x1007f0f0 and are out of A/B scope. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Factory::destroySprite (13 vectors, 13 distinct results, 12 changing state, `log/diff/00067cd0_jgld_Factory_destroySprite.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?destroySprite@Factory@@QAEXPAUSprite@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10067d30): callee pops 4 bytes of stack arguments.

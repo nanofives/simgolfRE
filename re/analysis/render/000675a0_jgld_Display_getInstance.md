@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000675a0`), 45 bytes, 21 instructions, subsystem `rend
 Returns the HINSTANCE stored at this+0x140 (the value UnregisterClassA uses in Display teardown). (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Returns the module handle at [this+0x140]: `mov eax,[this+0x140]` at 0x100675c0 and a plain `ret` at 0x100675cc, with no argument, no branch and no write. Display::createWindow 0x100657e0 stores that field at 0x10065811 from GetModuleHandleA (0x10065801) and Display::shutdown 0x100656c0 passes it to UnregisterClassA (0x10065771). This is the Display override of slot 9 (+0x24); DisplayBase's body at the same slot, 0x10066d90, returns 0. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getInstance (16 vectors, 16 distinct results, 0 changing state, `log/diff/000675a0_jgld_Display_getInstance.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100675a0@f_100675a0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100675cc): callee pops 0 bytes of stack arguments.

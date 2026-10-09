@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00048268`), 22 bytes, 7 instructions, subsystem `crt`
 Extracts the IEEE-754 double exponent field: returns param_2 & 0x7ff00000 unless all exponent bits are set (inf/NaN), in which case it returns the raw high word. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Reads the second of its two stack dwords, which for both callers (CIsqrt 0x100431f0 and CIlog 0x100432d0) is the high half of a double, masks it with 0x7ff00000 at 0x1004826c and compares the result with 0x7ff00000 at 0x10048271. When the exponent field is not all ones it returns the masked value, that is the exponent field alone, through the `ret` at 0x10048278; when it is all ones it re-reads the dword at 0x10048279 and returns it unmasked, so the caller also sees the sign bit and the top twenty bits of the mantissa that tell an infinity from a quiet or signalling NaN. The first stack dword, the low half of the double, is never read. Reimplemented in `shim/src/re/c3cm.cpp`; path-1 A/B GREEN: doubleExponentField (20 vectors, 15 distinct results, `log/diff/00048268_sound_doubleExponentField.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10048278, 0x1004827d): callee pops 0 bytes of stack arguments.
 

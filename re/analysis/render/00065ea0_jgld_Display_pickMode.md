@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065ea0`), 325 bytes, 109 instructions, subsystem `re
 chooses the best enumerated display mode for (w,h,bpp) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+The same scan as findMode over the list from vtable slot +0x68 (0x10065ed5), with an early exit and a return value. A matching entry (width at +0x00, height at +0x04, depth at +0x0c — the `jne`s at 0x10065f17, 0x10065f30, 0x10065f45) whose rate at +0x10 beats the best so far (`jle 0x10065f5a`) is taken as the new candidate, EXCEPT that when its rate is above 0x4b = 75 Hz (`cmp ...,0x4b` at 0x10065f68) and a candidate is already held (`cmp [ebp-0x10],-1` at 0x10065f6f), the scan stops there and slot +0x64 is called with the PREVIOUS index (0x10065f83) — not with the entry that triggered the exit, which the `_idx` key measures ($d9's two entries at 76 and 80 Hz end with index 0, and $d14's eight rows end with index 2 on the 90 Hz row). A rate of exactly 75 does not trigger it (`jle` at 0x10065f6d: $d2 runs to the end and picks index 1). If the scan runs out with a candidate, slot +0x64 is called with it (0x10065fc1); with none, the return is the `mov eax,1` at 0x10065fcd. On both calling paths the return value is the slot's own eax: nothing between the call and the epilogue touches it (0x10065f8d, 0x10065fcb). Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::pickMode (15 vectors, 15 distinct results, 15 changing state, `log/diff/00065ea0_jgld_Display_pickMode.path1.csv`); Display::pickMode_idx (15 vectors, 15 distinct results, 15 changing state, `log/diff/00065ea0_jgld_Display_pickMode_idx.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?pickMode@Display@@QAEHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10065fe2): callee pops 12 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000677a0`), 45 bytes, 21 instructions, subsystem `rend
 Returns the int at this+0x130, the height written by setModeIndex from DEVMODEA.dmPelsHeight. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Returns the int at [this+0x130]: `mov eax,[this+0x130]` at 0x100677c0 and a plain `ret` at 0x100677cc, no argument, no branch, no write. Display::createWindow 0x100657e0 writes that field at 0x10065969 and Display::setMode 0x10065da0 at 0x10065e03. Slot 43 (+0xac) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getHeight (16 vectors, 16 distinct results, 0 changing state, `log/diff/000677a0_jgld_Display_getHeight.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100677a0@f_100677a0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100677cc): callee pops 0 bytes of stack arguments.

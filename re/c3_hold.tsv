@@ -8,3 +8,4 @@ jgld.dll	00003600	Matrix::deletingDtor: the operator-delete side is a direct cal
 jgld.dll	00003670	Transform::deletingDtor: the operator-delete side is a direct call, never A/B'd (round 20)
 jgld.dll	00006d80	LinkedList::deletingDtor: the operator-delete side is a direct call, never A/B'd (round 20)
 jgld.dll	000073e0	ListNode::deletingDtor: the operator-delete side is a direct call, never A/B'd (round 20)
+sound.dll	00049604	crtValidatePointer: its result is decided by KERNEL32!IsBadWritePtr; only NULL and one valid pointer are testable without a fault (round 21)

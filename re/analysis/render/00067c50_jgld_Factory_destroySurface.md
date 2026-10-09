@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067c50`), 99 bytes, 39 instructions, subsystem `rend
 destroys and frees a Surface object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+The same body again at slot 36 (+0x90) of the Display vtable 0x1011d640: the argument is loaded at 0x10067c6d and stored at 0x10067c70 and 0x10067c76, tested at `je 0x10067c7d`, and when it is not zero slot 0 of its own vtable is called with a literal 1 (0x10067c81, call at 0x10067c8b); the result is stored at 0x10067c94 and never read back, and the body ends with `ret 4` at 0x10067cb0. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Factory::destroySurface (13 vectors, 13 distinct results, 12 changing state, `log/diff/00067c50_jgld_Factory_destroySurface.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?destroySurface@Factory@@QAEXPAUSurface@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10067cb0): callee pops 4 bytes of stack arguments.

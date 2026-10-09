@@ -416,6 +416,12 @@ def cmd_retag(p: Project, a) -> int:
             where = addr if mod == "golf_clean.exe" else f"{mod}:{addr}"
             for col in ("subsystem", "name", "callers", "callees"):
                 old, new = row.get(col) or "", c.get(col) or ""
+                if col == "callers":
+                    # xref-based refreshes cannot see module-qualified callers (import_callers.py) or stored-pointer
+                    # installers (pointer_callers.py) recorded at promotion: merge, never drop a recorded caller
+                    keep = [x for x in old.split(";") if x and x != "none"]
+                    keep += [x for x in new.split(";") if x and x != "none" and x not in keep]
+                    new = ";".join(keep) or new
                 if not new or old == new:
                     continue
                 row[col] = new

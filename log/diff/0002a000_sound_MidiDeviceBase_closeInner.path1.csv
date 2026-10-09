@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$a_null0,0,0,True,5ae43866,5ae43866,False
+$a_null1,0,0,True,5ae43866,5ae43866,False
+$a_nullE,0,0,True,5ae43866,5ae43866,False
+$a_nullE2,0,0,True,5ae43866,5ae43866,False
+$a_ok0,0,0,True,bfc78bc6,bfc78bc6,True
+$a_ok1,0,0,True,a777c891,a777c891,True
+$a_ok2,0,0,True,d4ffad82,d4ffad82,True
+$a_ok3,0,0,True,3b2e5b8b,3b2e5b8b,True
+$a_fail1,0,0,True,a1122c3f,a1122c3f,True
+$a_fail2,0,0,True,b2f1dbf9,b2f1dbf9,True
+$a_fail3,0,0,True,7d524b96,7d524b96,True
+$a_fail4,0,0,True,2f59716e,2f59716e,True
+$a_early,0,0,True,ce3a4d5c,ce3a4d5c,True
+$a_early2,0,0,True,dc53fa94,dc53fa94,True
+state_regions,$a_null0+0x0:512 $a_null1+0x0:512 $a_nullE+0x0:512 $a_nullE2+0x0:512 $a_ok0+0x0:512 $a_ok1+0x0:512 $a_ok2+0x0:512 $a_ok3+0x0:512 $a_fail1+0x0:512 $a_fail2+0x0:512 $a_fail3+0x0:512 $a_fail4+0x0:512 $a_early+0x0:512 $a_early2+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de62e70,original=0x1590380,2026-10-09T07:52:16
+distinct_results,11,,
+VERDICT,GREEN,14,

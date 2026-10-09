@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00042690`), 128 bytes in 2 address ranges, 69 instruc
 strstr: searches haystack param_1 for needle param_2; single-char needle takes the dword 0x7efefeff zero-byte fast path, multi-char needles do a substring compare, returning the match pointer or null. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Returns a pointer to the first occurrence of the string at `[esp+8]` inside the string at `[esp+4]`, or 0 when there is none. An empty second string returns the first string unchanged (0x1004269f, 0x1004270a) and a one-character second string leaves through the `jmp` at 0x100426fe into the body of strchr at 0x10045686, six bytes past its entry, with the character already in eax and the entry stack frame intact, which is strchr(str1, str2[0]). Otherwise each attempt starts at edi and scans forward for the first character of the second string (0x100426b3 and the byte loop at 0x100426b9); the character that follows the match is compared with the second character (0x100426cf) and a mismatch feeds that same character straight back into the scan at 0x100426bc instead of re-reading it. After two characters match, edi becomes the position after the match (0x100426d1) and the tail loop at 0x100426d4 compares two characters per turn, the even one at 0x100426e0 and the odd one at 0x100426f1, restarting the whole attempt from edi on either mismatch (0x100426e2, 0x100426f5) and returning edi-1, the position where the first character matched, as soon as the second string runs out (0x100426d9 and 0x100426e9, both reaching 0x10042703). Reimplemented in `shim/src/re/c3cm.cpp`; path-1 A/B GREEN: strstr (24 vectors, 15 distinct results, `log/diff/00042690_sound_strstr.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100426c9, 0x10042709, 0x1004270f, 0x10045674): callee pops 0 bytes of stack arguments.
 

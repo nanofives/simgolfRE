@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00045680`), 188 bytes, 86 instructions, subsystem `cr
 CRT strchr: scans for a byte, returning its address or null at end of string. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+Returns a pointer to the first byte of the string at `[esp+4]` whose value equals the low byte of `[esp+8]`, or 0 when the terminating zero is reached first; because the character is compared before the zero test (0x1004569d before 0x100456a1, and 0x100456fb before 0x100456ff), a search for 0 returns the terminator. While the pointer is not dword aligned the scan is a byte loop at 0x10045698, the exit at 0x10045670 returning the matching address; once aligned it reads one dword at a time (0x100456b6) and tests four bytes at once with the 0x7efefeff carry trick, the character candidates in `ecx & 0x81010100` at 0x100456d4 and the zero candidates in `eax & 0x81010100` at 0x100456dc. A set bit is only a candidate: bit 31 also sets when the top byte xored with the character is 0x80, so the character path re-reads the dword at 0x100456f8 and walks its four bytes in order, returning edx-4, edx-3, edx-2 or edx-1 (0x100456fd to 0x10045718), returning 0 at the first zero byte and resuming the loop at 0x1004571e when no byte matched; the zero path rejects the same false positive by testing the carry word at 0x100456ea and only returns 0 when a real zero byte is present (0x100456e3, 0x100456f2). Reimplemented in `shim/src/re/c3cm.cpp`; path-1 A/B GREEN: strchr (26 vectors, 13 distinct results, `log/diff/00045680_sound_strchr.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100456f7, 0x10045726, 0x1004572d, 0x10045734, 0x1004573b): callee pops 0 bytes of stack arguments.
 

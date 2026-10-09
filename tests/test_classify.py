@@ -239,3 +239,26 @@ def test_cross_module_caller_is_looked_up_in_its_own_module(proj):
     assert not rc._identified(p, "0x00449470", rows, "Terrain.dll")
     assert not rc._identified(p, "golf_clean.exe:0x00412345", rows, "Terrain.dll")
     assert not rc._identified(p, "nosuch.dll:0x00449470", rows, "Terrain.dll")
+
+
+def test_retag_never_drops_recorded_callers(proj):
+    # c2_note.py --refresh writes xref-only callers; a caller recorded at promotion (module-qualified exe caller or a
+    # stored-pointer installer) must survive a refresh that reports `none` (2026-10-09: 68 rows lost theirs)
+    (proj / "re" / "functions_ghidra_sound.dll.tsv").write_text("entry\tname\tsize\tcallers\tcallees\n00002650\tFUN_10002650\t78\t1\t0\n")
+    tsv = proj / "names.tsv"
+    tsv.write_text("module\taddr\tname\tsubsystem\tevidence\tpurpose\n"
+                   "sound.dll\t0x10002650\tnetPoll\tutil\timport recv\tpolls\n")
+    assert run(proj, "batch", str(tsv), "--to", "C1") == 0
+    rows = rc.Project(proj).rows()
+    rows[("sound.dll", "00002650")]["callers"] = "golf_clean.exe:0x00449470;0x10001000"
+    rc.Project(proj).save(rows)
+    ref = proj / "refresh.tsv"
+    ref.write_text("module\taddr\tname\tsubsystem\tnote\tcallers\tcallees\n"
+                   "sound.dll\t0x10002650\tnetPoll\tutil\tx\tnone\t\n")
+    assert run(proj, "retag", str(ref)) == 0
+    assert rc.Project(proj).rows()[("sound.dll", "00002650")]["callers"] == "golf_clean.exe:0x00449470;0x10001000"
+    ref.write_text("module\taddr\tname\tsubsystem\tnote\tcallers\tcallees\n"
+                   "sound.dll\t0x10002650\tnetPoll\tutil\tx\t0x10005000\t\n")
+    assert run(proj, "retag", str(ref)) == 0
+    assert rc.Project(proj).rows()[("sound.dll", "00002650")]["callers"] == \
+        "golf_clean.exe:0x00449470;0x10001000;0x10005000"

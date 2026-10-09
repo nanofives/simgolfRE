@@ -1,0 +1,42 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w_zero 0,void,void,True,dee1c040,dee1c040,True
+$w_zero 1,void,void,True,1cc75b60,1cc75b60,True
+$w_zero 5,void,void,True,17249ce0,17249ce0,True
+$w_zero 2147483647,void,void,True,967bfc50,967bfc50,True
+$w_zero 2147483648,void,void,True,f1b5e4c0,f1b5e4c0,True
+$w_zero 4294967295,void,void,True,3f70a640,3f70a640,True
+$w_one 0,void,void,True,12398900,12398900,True
+$w_one 1,void,void,True,0caed0ab,0caed0ab,True
+$w_one 5,void,void,True,648bc02b,648bc02b,True
+$w_one 2147483647,void,void,True,4fc09dbb,4fc09dbb,True
+$w_one 2147483648,void,void,True,d1f0548b,d1f0548b,True
+$w_one 4294967295,void,void,True,3496480b,3496480b,True
+$w_small 0,void,void,True,802bb2e0,802bb2e0,True
+$w_small 1,void,void,True,87c4b0e1,87c4b0e1,True
+$w_small 5,void,void,True,78d0974d,78d0974d,True
+$w_small 2147483647,void,void,True,b92ac39d,b92ac39d,True
+$w_small 2147483648,void,void,True,f3889e6d,f3889e6d,True
+$w_small 4294967295,void,void,True,ff7443cd,ff7443cd,True
+$w_posmax 0,void,void,True,688bc000,688bc000,True
+$w_posmax 1,void,void,True,f21ead37,f21ead37,True
+$w_posmax 5,void,void,True,4a19c00b,4a19c00b,True
+$w_posmax 2147483647,void,void,True,92a15e95,92a15e95,True
+$w_posmax 2147483648,void,void,True,f28cebe5,f28cebe5,True
+$w_posmax 4294967295,void,void,True,ef333065,ef333065,True
+$w_sign 0,void,void,True,e7216ae0,e7216ae0,True
+$w_sign 1,void,void,True,fb03d4c1,fb03d4c1,True
+$w_sign 5,void,void,True,7d250735,7d250735,True
+$w_sign 2147483647,void,void,True,089ad1bf,089ad1bf,True
+$w_sign 2147483648,void,void,True,c0ea8eb8,c0ea8eb8,True
+$w_sign 4294967295,void,void,True,3eb90818,3eb90818,True
+$w_all 0,void,void,True,cc7505a0,cc7505a0,True
+$w_all 1,void,void,True,8b361aab,8b361aab,True
+$w_all 5,void,void,True,88c3ad17,88c3ad17,True
+$w_all 2147483647,void,void,True,eaa48b1d,eaa48b1d,True
+$w_all 2147483648,void,void,True,ec8b9b88,ec8b9b88,True
+$w_all 4294967295,void,void,True,38c1f850,38c1f850,True
+state_regions,$w_zero+0x0:64 $w_one+0x0:64 $w_small+0x0:64 $w_posmax+0x0:64 $w_sign+0x0:64 $w_all+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5de62f50,original=0x1590320,2026-10-09T07:52:13
+distinct_results,36,,
+VERDICT,GREEN,36,

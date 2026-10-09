@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007b4d0`), 331 bytes, 120 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Reads the image-offset chunk into the png_info. Instruction for instruction it is png_handle_pHYs 0x1007b380 with three differences: the duplicate test reads the oFFs valid bit 0x100 rather than 0x80 (0x1007b547), the four message strings are its own (0x1011e8f0 at 0x1007b4fe, 0x1011e8d8 at 0x1007b51e, 0x1011e8c0 at 0x1007b559 and 0x1011e8a4 at 0x1007b585), and the nine bytes go to png_set_oFFs 0x1007ddb0 (0x1007b602), which writes them at info+0x64, +0x68 and +0x6c. The same four early returns are there: no IHDR through png_error 0x10078fe0 (0x1007b4ee, 0x1007b4fe), after IDAT (0x1007b50e), already recorded (0x1007b53b, 0x1007b547) and a payload that is not nine bytes (0x1007b576); the read is at 0x1007b5a9, the close with a skip of zero at 0x1007b5b7 and its test at 0x1007b5bf, and the two big-endian values come out at 0x1007b5c9 and 0x1007b5d8 with the unit byte at 0x1007b5e6. Reimplemented in `shim/src/re/c3ck.cpp`; path-1 A/B GREEN: png_handle_oFFs (14 vectors, 14 distinct results, 14 changing state, `log/diff/0007b4d0_jgld_png_handle_oFFs.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_oFFs` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007b61a): callee pops 0 bytes of stack arguments.

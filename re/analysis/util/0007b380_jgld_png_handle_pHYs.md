@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007b380`), 331 bytes, 120 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Reads the physical-pixel-size chunk into the png_info. Three guards share one shape - warn, consume the whole chunk through png_crc_finish 0x10079510 and return - and the first does not: without PNG_HAVE_IHDR (bit 0 of the mode at png_struct+0x68, 0x1007b39e) it calls png_error 0x10078fe0 (0x1007b3ae) and, were that to return, would jump to the length test (0x1007b3b6) rather than returning. After PNG_HAVE_IDAT the chunk is out of place (0x1007b3be, 0x1007b3ce, 0x1007b3de), a png_info that already carries the pHYs valid bit 0x80 at info+8 makes it a duplicate (0x1007b3eb, 0x1007b3f7, 0x1007b409, 0x1007b419) and a null info_ptr skips the duplicate test altogether (0x1007b3ef). A payload that is not exactly nine bytes is refused the same way (0x1007b426, 0x1007b435, 0x1007b445). Nine bytes are read with png_crc_read 0x100794b0 (0x1007b459) and the chunk closed with a skip of zero (0x1007b467); unlike png_handle_IHDR this caller DOES test png_crc_finish's result and drops the chunk when the CRC disagreed (0x1007b46f, 0x1007b471). The nine bytes are two big-endian 32-bit values (0x1007b479, 0x1007b488) and a unit byte the body loads as a dword masked with 0xff (0x1007b496), which png_set_pHYs 0x1007dfc0 (0x1007b4b2) writes at info+0x70, +0x74 and +0x78. Reimplemented in `shim/src/re/c3ck.cpp`; path-1 A/B GREEN: png_handle_pHYs (14 vectors, 14 distinct results, 14 changing state, `log/diff/0007b380_jgld_png_handle_pHYs.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_pHYs` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007b4ca): callee pops 0 bytes of stack arguments.

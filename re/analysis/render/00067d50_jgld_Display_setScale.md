@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067d50`), 64 bytes, 25 instructions, subsystem `rend
 Stores its three int args into g_blitScaleX/g_blitScaleY/g_blitScaleDen (0x10122dc0/dc4/dc8), the scale factors read by the sprite blitters. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Stores its three int arguments, in order, into the three module globals 0x10122dc0 (0x10067d70), 0x10122dc4 (0x10067d78) and 0x10122dc8 (0x10067d81), and does nothing else: `this` is spilled to the /GZ frame slot at 0x10067d6a and never read, there is no branch and the epilogue at 0x10067d87 loads no result before `ret 0xc` at 0x10067d8d. Those three dwords are the words the sprite blitters read to pick their body and their mirror quadrant — about forty of them, from Sprite::draw16 0x1001cde0 onward (re/names/jgld_1.tsv) — so this slot is the only writer of the sprite scale state in the module. Slot 39 (+0x9c) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::setScale (13 vectors, 13 distinct results, 13 changing state, `log/diff/00067d50_jgld_Display_setScale.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_08.cpp` as `?FUN_10067d50@C_FUN_10067d50@f_10067d50@@QAEXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10067d8d): callee pops 12 bytes of stack arguments.

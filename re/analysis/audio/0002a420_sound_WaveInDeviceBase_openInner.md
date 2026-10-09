@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002a420`), 59 bytes, 29 instructions, subsystem `aud
 opens the inner wave-input device via this vtbl+4 / inner vtbl+0x10 / this vtbl+8 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+`__thiscall(int, int)` with two stack arguments (`ret 8` at 0x1002a451 and 0x1002a458), slot 4 (+0x10) of the vtable 0x1005ba5c; the same sequence as MidiDeviceBase_openInner 0x10029f90 at its own address - this' slot +4 with the second argument (0x1002a42b), a non-zero result returned at once (`jne 0x1002a456` at 0x1002a430), the inner at this+0x14 (0x1002a432) opened through its slot +0x10 with both arguments (0x1002a43d), a zero result returning 0 (`je 0x1002a454` at 0x1002a444) and a non-zero result calling this' slot +8 (0x1002a44a) and returning the code (0x1002a44d) - WITHOUT the clear of this+0x14 that 0x10029f90 makes at 0x10029fbf: there is no store into the object anywhere in this body, which is the one difference between the two and what the A/B's state regions show (the failure vectors of this key leave this+0x14 standing while the same shapes under 0x10029f90 clear it). The A/B is GREEN over 24 vectors, 24 distinct results, all 24 changing state (the records of the three callbacks). Reimplemented in `shim/src/re/c3cl.cpp`; path-1 A/B GREEN: WaveInDeviceBase_openInner (24 vectors, 24 distinct results, 24 changing state, `log/diff/0002a420_sound_WaveInDeviceBase_openInner.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x1002a451, 0x1002a458): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1002a421 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

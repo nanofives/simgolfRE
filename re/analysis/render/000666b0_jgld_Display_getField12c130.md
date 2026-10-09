@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000666b0`), 66 bytes, 27 instructions, subsystem `rend
 copies *(this+0x12c) and *(this+0x130) into the two int* out-params. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Writes the object's width and height into two caller-supplied int pointers: [this+0x12c] through the first argument (read at 0x100666d3, stored at 0x100666d9) and [this+0x130] through the second (0x100666e1, 0x100666e7), then returns with `ret 8` at 0x100666ef. Neither pointer is tested, so a NULL argument faults in the original; neither destination is read first, and nothing else in the object is touched. It is slot 13 (+0x34) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3cj.cpp`; path-1 A/B GREEN: Display::getField12c130 (12 vectors, 12 distinct results, 12 changing state, `log/diff/000666b0_jgld_Display_getField12c130.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_100666b0@C_FUN_100666b0@f_100666b0@@QAEXPAI0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100666ef): callee pops 8 bytes of stack arguments.
