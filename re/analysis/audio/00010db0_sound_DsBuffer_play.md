@@ -33,7 +33,7 @@ Through registers:
 - indirect `call [ecx+0x30]` at 0x10010ddb
 
 ## Callers
-0x1000bf90 `Wave_Device::startOutput`, 0x1000c020 `Wave_Device::restart`, 0x1000c230 `Wave_Device::serviceTick`, 0x10034430 `serviceChannelPlayback`
+0x1000b420 `FUN_1000b420`, 0x1000bf90 `Wave_Device::startOutput`, 0x1000c020 `Wave_Device::restart`, 0x1000c230 `Wave_Device::serviceTick`, 0x10034430 `serviceChannelPlayback`
 
 ## Constants
 - `0x0` at 0x10010dd4, 0x10010dd6, 0x10010dee

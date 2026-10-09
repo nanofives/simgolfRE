@@ -4,7 +4,7 @@ Module `jgld.dll` (RVA `0x00068660`), 193 bytes, 54 instructions, subsystem `ren
 
 ## Role (from the naming pass, not a C3 purpose)
 constructs the Font object and allocates its metrics block (`re/names/jgld_1.tsv`)
-System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
+System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`, `re/analysis/systems/undisc_jgld.md`.
 
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `??0Font@@QAE@PAX@Z` (the decorated name fixes the exact C++ signature and convention).

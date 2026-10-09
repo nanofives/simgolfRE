@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00003f30`), 127 bytes, 36 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a Sound object: base ctor 0x1001f4a0, installs vtable 0x1005b000, clears the chunk list +0xa4c and the 0x40-dword table at +0x948. (`re/names/sound_2.tsv`)
-System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_2.md`.
+System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_2.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10003fae): callee pops 0 bytes of stack arguments.

@@ -38,7 +38,7 @@ Globals:
 - indirect `call ebx` at 0x0045c0ca, 0x0045c0e3
 
 ## Callers
-0x00406c30 `canAfford`, 0x00407e00 `narrateShot`, 0x0040f5c0 `mainLoop`, 0x00422fb0 `simulateBallFlight`, 0x00424120 `simulateShot`, 0x004289e0 `updateGolfers`, 0x0042e7e0 `pathStep`, 0x00433040 `clickSlotPanel`, 0x00433d30 `clickBuildTool433d30`, 0x00434140 `pickBuilding`, 0x00434ac0 `clickAmenityPanel`, 0x0046f550 `courseActionMenu`, 0x00473470 `drawScoreSummary`
+0x00406c30 `canAfford`, 0x00407e00 `narrateShot`, 0x00422fb0 `simulateBallFlight`, 0x00424120 `simulateShot`, 0x004289e0 `updateGolfers`, 0x0042e7e0 `pathStep`, 0x00433040 `clickSlotPanel`, 0x00433d30 `clickBuildTool433d30`, 0x00434140 `pickBuilding`, 0x00434ac0 `clickAmenityPanel`, 0x0046f550 `courseActionMenu`, 0x00473470 `drawScoreSummary`
 
 ## Constants
 - `0x1` at 0x0045c148

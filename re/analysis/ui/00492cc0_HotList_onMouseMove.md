@@ -46,4 +46,4 @@ Through registers:
 - `0x5` at 0x00492cfe, 0x00492d0c
 - `0x14` (20) at 0x00492ce1
 - `0x20` (32) at 0x00492cee, 0x00492d0f
-- `0x492bb0` (4795312) = address in the image (data) at 0x00492d14
+- `0x492bb0` (4795312) = function `FUN_00492bb0` at 0x00492d14

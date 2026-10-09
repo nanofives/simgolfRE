@@ -30,7 +30,7 @@ Through registers:
 - indirect `jmp [edx*4+0x100390d0]` at 0x10039090
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000ea30 `FUN_1000ea30`
 
 ## Constants
 - `0x1` at 0x1003909e

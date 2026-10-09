@@ -29,7 +29,7 @@ Through registers:
 - 0x0047d130 `drawCursor` at 0x0047ab2d
 
 ## Callers
-0x00486110 `EditBox::create`
+0x00486110 `EditBox::create`, 0x004a2010 `FUN_004a2010`
 
 ## Constants
 - `0x1` at 0x0047ab18

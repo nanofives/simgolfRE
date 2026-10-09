@@ -37,7 +37,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00490d60 `FUN_00490d60`
 
 ## Constants
 - `0xffffffff` (-1) at 0x004a48fe

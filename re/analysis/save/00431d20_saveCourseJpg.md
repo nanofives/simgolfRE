@@ -64,7 +64,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xe4]` at 0x00431dec
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00431ee0 `saveThumbAndFull`
+0x00431ee0 `saveThumbAndFull`
 
 ## Constants
 - `0x4` at 0x00431ec7, 0x00431ed0

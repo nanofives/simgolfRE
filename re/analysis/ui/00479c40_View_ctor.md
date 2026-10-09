@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 708 bytes, 127 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 constructor for a view/panel object (sets two vtables and clears its fields) (`re/names/exe_2.tsv`)
-System writeup: `re/analysis/systems/exe_2.md`.
+System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret` (at 0x00479f03): callee pops 0 bytes of stack arguments.

@@ -30,7 +30,7 @@ Through registers:
 - import `KERNEL32.dll!SetThreadPriority` at 0x1002a94e
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000b420 `FUN_1000b420`
 
 ## Constants
 - `0x0` at 0x1002a933, 0x1002a937, 0x1002a94b

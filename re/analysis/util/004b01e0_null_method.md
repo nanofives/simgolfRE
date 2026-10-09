@@ -19,7 +19,7 @@ None.
 None (leaf).
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004b0060 `FUN_004b0060`
 
 ## Constants
 None.

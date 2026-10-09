@@ -31,7 +31,7 @@ Through registers:
 - import `USER32.dll!SetWindowLongA` at 0x100286bd
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x100091f0 `FUN_100091f0`
 
 ## Constants
 - `0x0` at 0x100286c6, 0x100286cf

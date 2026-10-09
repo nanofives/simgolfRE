@@ -25,7 +25,7 @@ None.
 - 0x004b04f0 `jcopy_sample_rows` at 0x004b3d22
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004b3b80 `FUN_004b3b80`, 0x004b3d40 `FUN_004b3d40`
 
 ## Constants
 - `0x1` at 0x004b3d1c

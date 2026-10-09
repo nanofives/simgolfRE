@@ -23,7 +23,7 @@ None.
 - 0x004a4f16 `TERRAIN.DLL::Terrain::drawLine` at 0x004493f9
 
 ## Callers
-0x00406220 `drawMinimapSegment`, 0x0040bf20 `lineTo`, 0x0040f5c0 `mainLoop`, 0x00432620 `drawPanelBackdrop`, 0x00433190 `showInfoCursorPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x00435760 `drawEmployeeViewPanel`
+0x00406220 `drawMinimapSegment`, 0x0040bf20 `lineTo`, 0x00432620 `drawPanelBackdrop`, 0x00433190 `showInfoCursorPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x00435760 `drawEmployeeViewPanel`
 
 ## Constants
 None.

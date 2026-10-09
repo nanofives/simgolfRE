@@ -80,7 +80,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00492850 `HotList::ctor` at 0x00474b0f, 0x00474b1e
 
 ## Callers
-0x004043b0 `staticInit_004043b0`, 0x004058f0 `staticInit_004058f0`, 0x004061b0 `staticInit_004061b0`, 0x004061f0 `staticInit_004061f0`, 0x00406250 `showLoadingScreen`, 0x0040f5c0 `mainLoop`, 0x00437910 `promptAndSaveFile`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043cd70 `showTitleScreen`, 0x0043d640 `staticCtor_43d640`, 0x0043dbe0 `loadWorldAssets`, 0x00442180 `loadInterfaceArt`, 0x0044b9c0 `showCreditsScreen`, 0x0044bde0 `loadInfoScreenArt`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0045baf0 `gameMain` (+16 more)
+0x004043b0 `staticInit_004043b0`, 0x004058f0 `staticInit_004058f0`, 0x004061b0 `staticInit_004061b0`, 0x004061f0 `staticInit_004061f0`, 0x00406250 `showLoadingScreen`, 0x00437910 `promptAndSaveFile`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043cd70 `showTitleScreen`, 0x0043d640 `staticCtor_43d640`, 0x0043dbe0 `loadWorldAssets`, 0x00442180 `loadInterfaceArt`, 0x0044b9c0 `showCreditsScreen`, 0x0044bde0 `loadInfoScreenArt`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0045baf0 `gameMain`, 0x0045f0f0 `skillPointDialog` (+16 more)
 
 ## Constants
 - `0x2` at 0x00474b9d

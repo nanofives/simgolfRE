@@ -82,9 +82,9 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `0x4af2d0` (4911824) = function `request_virt_sarray` at 0x004aee8f
 - `0x4af340` (4911936) = function `request_virt_barray` at 0x004aee96
 - `0x4af3b0` (4912048) = function `realize_virt_arrays` at 0x004aee9d
-- `0x4af540` (4912448) = address in the image (data) at 0x004aeea4
-- `0x4af730` (4912944) = address in the image (data) at 0x004aeeab
+- `0x4af540` (4912448) = function `FUN_004af540` at 0x004aeea4
+- `0x4af730` (4912944) = function `FUN_004af730` at 0x004aeeab
 - `0x4af920` (4913440) = function `free_pool` at 0x004aeeb2
-- `0x4afa20` (4913696) = address in the image (data) at 0x004aeeb9
+- `0x4afa20` (4913696) = function `FUN_004afa20` at 0x004aeeb9
 - `0x4e6cfc` (5139708) = address of a string (text not reproduced) at 0x004aef05
 - `0x4e6d04` (5139716) = address of a string (text not reproduced) at 0x004aeee7

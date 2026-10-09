@@ -19,7 +19,7 @@ None.
 - 0x00482f60 `Cache482f60::ctor` at 0x00482f07
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00482ef0 `FUN_00482ef0`
 
 ## Constants
 - `0x1` at 0x00482f00

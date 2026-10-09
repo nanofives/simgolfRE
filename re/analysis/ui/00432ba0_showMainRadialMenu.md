@@ -69,7 +69,7 @@ Through registers:
 - indirect `jmp [ebp*4+0x432f58]` at 0x00432dfa
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x00432bc0, 0x00432bc7, 0x00432c03, 0x00432c64, 0x00432c96, 0x00432cd7, 0x00432d07, 0x00432d25 (+6 more)

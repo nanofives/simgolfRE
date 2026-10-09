@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 407 bytes, 83 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 constructor for a labeled multi-item control; builds its sub-objects and references the 0x004e4764 label table. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `??0R2C496030@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).

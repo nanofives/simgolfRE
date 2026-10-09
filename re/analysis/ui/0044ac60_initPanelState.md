@@ -19,7 +19,7 @@ None.
 - 0x004837f0 `C4837f0::ctor` at 0x0044ac65, 0x0044ac6f, 0x0044ac79, 0x0044ac83, 0x0044ac8d
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0044ac50 `FUN_0044ac50`
 
 ## Constants
 - `0x821020` (8523808) = address in the image (data) at 0x0044ac60

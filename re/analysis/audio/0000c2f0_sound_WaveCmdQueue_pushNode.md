@@ -44,7 +44,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x100424d7 `operator_new` at 0x1000c33b
 
 ## Callers
-0x100097d0 `delete_sound`, 0x10031080 `Channel_start`, 0x10039bd0 `MultiSound_enqueueCmd3`, 0x10039c40 `MultiSound_release`, 0x10039ce0 `MultiSound_start`
+0x100097d0 `delete_sound`, 0x10031080 `Channel_start`, 0x10039bd0 `MultiSound_enqueueCmd3`, 0x10039c40 `MultiSound_release`, 0x10039ce0 `MultiSound_start`, 0x10039f30 `FUN_10039f30`
 
 ## Constants
 - `0x0` at 0x1000c349

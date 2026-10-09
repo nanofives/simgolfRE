@@ -32,7 +32,7 @@ None.
 - indirect `call [edx+0xf0]` at 0x004a2fb5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004a30a0 `FUN_004a30a0`
 
 ## Constants
 - `0x0` at 0x004a2fd3

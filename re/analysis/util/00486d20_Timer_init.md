@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 54 bytes, 16 instructions, subsystem `util`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 Resets the timer then stores callback/context/flags/interval/resolution into this+0x10..0x28. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret 0x14` (at 0x00486d53): callee pops 20 bytes of stack arguments.
@@ -31,7 +31,7 @@ Through registers:
 - 0x00486f10 `Timer::reset` at 0x00486d23
 
 ## Callers
-0x00483190 `allocColorRange`, 0x00486d60 `Timer::initStartOnce`, 0x00486d90 `Timer::initStartRepeat`, 0x00492cc0 `HotList::onMouseMove`
+0x00483190 `allocColorRange`, 0x00486d60 `Timer::initStartOnce`, 0x00486d90 `Timer::initStartRepeat`, 0x00492cc0 `HotList::onMouseMove`, 0x004a2010 `FUN_004a2010`
 
 ## Constants
 - `0x0` at 0x00486d42

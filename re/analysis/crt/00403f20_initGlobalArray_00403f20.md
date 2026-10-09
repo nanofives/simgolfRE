@@ -19,7 +19,7 @@ None.
 - 0x004a55d2 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x00403f39
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00403f10 `FUN_00403f10`
 
 ## Constants
 - `0x84` (132) at 0x00403f2f

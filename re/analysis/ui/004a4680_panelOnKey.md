@@ -52,7 +52,7 @@ Through registers:
 - indirect `jmp [ecx*4+0x4a4810]` at 0x004a469d
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004a4a40 `FUN_004a4a40`
 
 ## Constants
 - `0x1` at 0x004a46c1, 0x004a46fe, 0x004a4730, 0x004a4737, 0x004a474f, 0x004a4793, 0x004a47b3, 0x004a47d3 (+1 more)

@@ -75,7 +75,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [eax*4+0x401728]` at 0x004013fe
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x00401334, 0x00401372, 0x00401573, 0x004015f3, 0x00401638, 0x00401690

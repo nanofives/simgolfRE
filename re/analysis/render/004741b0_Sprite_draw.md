@@ -41,7 +41,7 @@ None.
 - indirect `call [esi+0x78]` at 0x00474240
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00462be0 `drawQueuedSprite`
+0x00462be0 `drawQueuedSprite`
 
 ## Constants
 - `0x7` at 0x0047424d

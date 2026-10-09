@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00030080`), 147 bytes, 43 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 fastcall(obj): runs the buildVoiceRxName base ctor, installs vtable 0x1005c450 (the Sound class, see Sound5c450_dtor), and zeroes the buffer-list fields (+0x5c..+0x68) and the 0x12-dword MMIOINFO at +0x6c. (`re/names/sound_4.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`.
+System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10030112): callee pops 0 bytes of stack arguments.

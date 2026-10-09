@@ -71,7 +71,7 @@ Through registers:
 - indirect `call [edx+0x1c]` at 0x0049e954
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00491b60 `FUN_00491b60`
 
 ## Constants
 - `0x1` at 0x0049e7d6

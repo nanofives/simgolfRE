@@ -26,7 +26,7 @@ None.
 - 0x004a4ffc `FUN_004a4ffc` at 0x0043cbe0
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0043cbf0 `FUN_0043cbf0`
 
 ## Constants
 - `0x1` at 0x0043cbd8

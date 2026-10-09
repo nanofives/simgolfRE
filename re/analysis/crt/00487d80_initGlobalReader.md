@@ -19,7 +19,7 @@ None.
 - 0x00487ea0 `Reader::ctor` at 0x00487d8a
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00487d70 `FUN_00487d70`
 
 ## Constants
 - `0x200` (512) at 0x00487d80

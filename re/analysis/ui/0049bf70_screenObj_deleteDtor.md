@@ -32,7 +32,7 @@ Through registers:
 - 0x004a5007 `_free` at 0x0049bf99
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0049bfd0 `FUN_0049bfd0`
 
 ## Constants
 - `0x0` at 0x0049bfa1

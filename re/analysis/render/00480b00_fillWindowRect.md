@@ -21,7 +21,7 @@ None.
 - 0x00478af0 `Win_fillRect` at 0x00480b1f
 
 ## Callers
-0x00406250 `showLoadingScreen`, 0x00407e00 `narrateShot`, 0x0040cc00 `drawPanelS2`, 0x0040d0b0 `drawFrameS2`, 0x0040f5c0 `mainLoop`, 0x00435760 `drawEmployeeViewPanel`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x00454c50 `showMembershipRoster`, 0x00455ed0 `showHistographScreen`, 0x00456be0 `showRoutingMapScreen`, 0x00459400 `showHireEmployeeDialog`, 0x0045b2c0 `textInputBox`, 0x0045c560 `drawGolferInfoPanel`, 0x0045f870 `showCourseRanking`, 0x0046d6e0 `showPopup`
+0x00406250 `showLoadingScreen`, 0x00407e00 `narrateShot`, 0x0040cc00 `drawPanelS2`, 0x0040d0b0 `drawFrameS2`, 0x00435760 `drawEmployeeViewPanel`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x00454c50 `showMembershipRoster`, 0x00455ed0 `showHistographScreen`, 0x00456be0 `showRoutingMapScreen`, 0x00459400 `showHireEmployeeDialog`, 0x0045b2c0 `textInputBox`, 0x0045c560 `drawGolferInfoPanel`, 0x0045f870 `showCourseRanking`, 0x0046d6e0 `showPopup`
 
 ## Constants
 - `0x274` (628) at 0x00480b19

@@ -23,7 +23,7 @@ None.
 - 0x004afc10 `emit_2bytes` at 0x004b0203, 0x004b0210
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004b0060 `FUN_004b0060`
 
 ## Constants
 - `0x4` at 0x004b0200

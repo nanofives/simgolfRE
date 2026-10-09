@@ -26,7 +26,7 @@ Through registers:
 - 0x004a57f1 `operator_new` at 0x0044921c
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00449200 `FUN_00449200`
 
 ## Constants
 - `0x0` at 0x0044922b

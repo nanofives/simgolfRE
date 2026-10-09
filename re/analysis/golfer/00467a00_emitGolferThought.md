@@ -152,7 +152,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [ecx*4+0x469934]` at 0x004689c0
 
 ## Callers
-0x00402a40 `updateWalkers`, 0x00407e00 `narrateShot`, 0x00409a90 `scanNearbyGolfers`, 0x0040f5c0 `mainLoop`, 0x00424120 `simulateShot`, 0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`, 0x00430360 `drawWorldObjects`, 0x0045de80 `announceVipGolfer`, 0x00466370 `advanceStory`, 0x00467a00 `emitGolferThought`
+0x00402a40 `updateWalkers`, 0x00407e00 `narrateShot`, 0x00409a90 `scanNearbyGolfers`, 0x00424120 `simulateShot`, 0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`, 0x00430360 `drawWorldObjects`, 0x0045de80 `announceVipGolfer`, 0x00466370 `advanceStory`, 0x00467a00 `emitGolferThought`
 
 ## Constants
 - `0x0` at 0x00467acf, 0x00467b51, 0x00467c74, 0x00467cb7, 0x00467cf7, 0x00467d2b, 0x00467dd4, 0x00467e19 (+30 more)

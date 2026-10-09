@@ -38,7 +38,7 @@ Through registers:
 - 0x004b1b70 `flush_bits` at 0x004b1ae6
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004b1480 `FUN_004b1480`
 
 ## Constants
 - `0x0` at 0x004b1b50

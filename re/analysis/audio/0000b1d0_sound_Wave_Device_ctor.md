@@ -4,6 +4,7 @@ Module `sound.dll` (RVA `0x0000b1d0`), 172 bytes, 39 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a Wave_Device object and records the singleton pointer at g_100b49f0. (`re/names/sound_0.tsv`)
+System writeup: `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1000b27b): callee pops 0 bytes of stack arguments.

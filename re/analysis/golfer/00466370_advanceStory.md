@@ -101,7 +101,7 @@ Through registers:
 - indirect `jmp [eax*4+0x4668e0]` at 0x00466730
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x004289e0 `updateGolfers`
+0x004289e0 `updateGolfers`
 
 ## Constants
 - `0x0` at 0x004663b0, 0x0046648f, 0x0046657a, 0x0046657e, 0x00466584, 0x00466596, 0x0046659b, 0x004665a1 (+18 more)

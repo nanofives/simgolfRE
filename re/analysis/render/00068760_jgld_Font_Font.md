@@ -4,7 +4,7 @@ Module `jgld.dll` (RVA `0x00068760`), 183 bytes, 55 instructions, subsystem `ren
 
 ## Role (from the naming pass, not a C3 purpose)
 destructor for the Font; releases its GDI font and metrics (`re/names/jgld_1.tsv`)
-System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
+System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`, `re/analysis/systems/undisc_jgld.md`.
 
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `??1Font@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).

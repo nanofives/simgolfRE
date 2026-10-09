@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00041c26`), 19 bytes, 4 instructions, subsystem `crt`
 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor helper for a std ostream object: writes vtable &PTR_LAB_1005ece4 into the virtual-base subobject then calls iosResetVtable (0x10041aad). (`re/names/sound_8.tsv`)
-System writeup: `re/analysis/systems/sound_8.md`.
+System writeup: `re/analysis/systems/sound_8.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
@@ -23,7 +23,7 @@ Through registers:
 - 0x10041aad `iosResetVtable` at 0x10041c34
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10041b9d `FUN_10041b9d`
 
 ## Constants
 - `0x1005ece4` (268823780) = address in the image (data) at 0x10041c2c

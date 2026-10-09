@@ -28,7 +28,7 @@ Globals:
 - import `WINMM.dll!mmioClose` at 0x1000877a
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000b170 `FUN_1000b170`
 
 ## Constants
 - `0x0` at 0x10008777

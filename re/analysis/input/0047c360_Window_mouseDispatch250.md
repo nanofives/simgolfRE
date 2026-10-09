@@ -49,7 +49,7 @@ Globals:
 - indirect `call eax` at 0x0047c3a7
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0047f230 `FUN_0047f230`
 
 ## Constants
 - `0x8` at 0x0047c376, 0x0047c3a9

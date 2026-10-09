@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 94 bytes, 23 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs the edit control: Widget base ctor, caret-blink Timer at this+0x16b, sets vtables, calls resetFields. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??0C486070@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).

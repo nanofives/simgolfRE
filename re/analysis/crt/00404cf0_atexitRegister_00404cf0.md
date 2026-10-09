@@ -19,7 +19,7 @@ None.
 - 0x004a56d2 `_atexit` at 0x00404cf5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00404c10 `FUN_00404c10`
 
 ## Constants
 - `0x404d00` (4214016) = address in the image (data) at 0x00404cf0

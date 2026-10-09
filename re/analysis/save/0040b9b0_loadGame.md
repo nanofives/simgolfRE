@@ -63,7 +63,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a5d48 `__open` at 0x0040ba78
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x0043b610 `loadGameBrowserScreen`
+0x0043b610 `loadGameBrowserScreen`
 
 ## Constants
 - `0x0` at 0x0040ba8a, 0x0040bafe, 0x0040bbb8

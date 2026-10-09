@@ -20,7 +20,7 @@ None.
 - 0x004a5007 `_free` at 0x004b0475
 
 ## Callers
-0x004af920 `free_pool`
+0x004af920 `free_pool`, 0x004afa20 `FUN_004afa20`
 
 ## Constants
 None.

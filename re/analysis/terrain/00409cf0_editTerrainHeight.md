@@ -101,7 +101,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00467150 `sign` at 0x00409d1d, 0x00409d3e
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x00409deb, 0x00409e37, 0x00409e52, 0x00409e66, 0x00409efe, 0x00409f1e, 0x0040a00e

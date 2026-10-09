@@ -44,7 +44,7 @@ Through registers:
 - indirect `jmp [ecx*4+0x1003922c]` at 0x100391db
 
 ## Callers
-0x10038710 `WaveInDevice_dtor`
+0x1000eaa0 `FUN_1000eaa0`, 0x10038710 `WaveInDevice_dtor`
 
 ## Constants
 - `0x0` at 0x1003921e

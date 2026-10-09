@@ -34,7 +34,7 @@ Through registers:
 - import `WINMM.dll!timeSetEvent` at 0x10008d21
 
 ## Callers
-0x1000a170 `registerTimerClient`, 0x1000bf90 `Wave_Device::startOutput`, 0x1000c020 `Wave_Device::restart`, 0x10039e70 `Channel_startVoiceTimed`
+0x1000a170 `registerTimerClient`, 0x1000b420 `FUN_1000b420`, 0x1000bf90 `Wave_Device::startOutput`, 0x1000c020 `Wave_Device::restart`, 0x10039e70 `Channel_startVoiceTimed`
 
 ## Constants
 - `0x0` at 0x10008cf0

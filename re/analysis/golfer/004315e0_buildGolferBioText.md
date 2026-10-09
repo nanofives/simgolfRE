@@ -69,7 +69,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [edx*4+0x431ba8]` at 0x004317c5
 
 ## Callers
-0x0040b840 `loadCourse`, 0x0040f5c0 `mainLoop`
+0x0040b840 `loadCourse`
 
 ## Constants
 - `0x0` at 0x00431afc

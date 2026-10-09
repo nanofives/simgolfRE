@@ -34,7 +34,7 @@ None.
 - indirect `call [ebx+0x50]` at 0x00474012
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004a1580 `FUN_004a1580`
 
 ## Constants
 - `0x7` at 0x0047401c

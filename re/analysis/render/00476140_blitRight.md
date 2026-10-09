@@ -59,7 +59,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xc8]` at 0x00476189
 
 ## Callers
-0x004791b0 `drawComposite`, 0x004810d0 `drawPanel4810d0`, 0x00493f50 `comboLayoutItems`, 0x00496fc0 `scrollbarDraw`
+0x004791b0 `drawComposite`, 0x004810d0 `drawPanel4810d0`, 0x00490d60 `FUN_00490d60`, 0x00493f50 `comboLayoutItems`, 0x00496fc0 `scrollbarDraw`, 0x004a1580 `FUN_004a1580`
 
 ## Constants
 - `0x0` at 0x00476289

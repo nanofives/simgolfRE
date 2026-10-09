@@ -60,7 +60,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - import `ole32.dll!CoUninitialize` at 0x10011316
 
 ## Callers
-0x1000b960 `Wave_Device::stop`, 0x1000baa0 `Wave_Device::start`
+0x1000b420 `FUN_1000b420`, 0x1000b960 `Wave_Device::stop`, 0x1000baa0 `Wave_Device::start`
 
 ## Constants
 - `0x1` at 0x10011322

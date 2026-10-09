@@ -34,7 +34,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00483010 `Cache483010::ctorVtbl` at 0x00463156
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x00463128

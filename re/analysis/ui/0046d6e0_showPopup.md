@@ -104,7 +104,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [ecx*4+0x46dd94]` at 0x0046db57
 
 ## Callers
-0x00405b10 `saveGameDialog`, 0x0040a4e0 `demolishObject`, 0x0040f5c0 `mainLoop`, 0x00432560 `showPreferencesMenu`, 0x00432720 `showSystemMenu`, 0x00437910 `promptAndSaveFile`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0045f0f0 `skillPointDialog`, 0x0046d200 `buildTournamentPrep`
+0x00405b10 `saveGameDialog`, 0x0040a4e0 `demolishObject`, 0x00432560 `showPreferencesMenu`, 0x00432720 `showSystemMenu`, 0x00437910 `promptAndSaveFile`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0045f0f0 `skillPointDialog`, 0x0046d200 `buildTournamentPrep`
 
 ## Constants
 - `0x0` at 0x0046d753, 0x0046d7be, 0x0046d7e2, 0x0046d7f9, 0x0046d8e5, 0x0046d957, 0x0046da66, 0x0046da91 (+6 more)

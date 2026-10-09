@@ -229,7 +229,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [ecx*4+0x426634]` at 0x00426245
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x004226a0 `trialShot`, 0x004289e0 `updateGolfers`
+0x004226a0 `trialShot`, 0x004289e0 `updateGolfers`
 
 ## Constants
 - `0x0` at 0x004241f0, 0x00424317, 0x0042453c, 0x00424548, 0x00424565, 0x00424689, 0x0042482a, 0x0042484e (+35 more)

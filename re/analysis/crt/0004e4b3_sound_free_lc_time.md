@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0004e4b3`), 400 bytes, 95 instructions, subsystem `cr
 
 ## Role (from the naming pass, not a C3 purpose)
 CRT locale teardown: frees the per-locale LC_TIME name tables. (`re/names/sound_5.tsv`)
-System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_5.md`.
+System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_5.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1004e642): callee pops 0 bytes of stack arguments.
@@ -67,7 +67,7 @@ None.
 - 0x10042c07 `free` at 0x1004e4c3, 0x1004e4cb, 0x1004e4d3, 0x1004e4db, 0x1004e4e3, 0x1004e4eb, 0x1004e4f2, 0x1004e4fa (+35 more)
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1004e0d4 `FUN_1004e0d4`
 
 ## Constants
 - `0x2c` (44) at 0x1004e63e

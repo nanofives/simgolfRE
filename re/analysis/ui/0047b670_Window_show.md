@@ -75,7 +75,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xf0]` at 0x0047b745
 
 ## Callers
-0x004385d0 `showCharacterEditor`, 0x0045baf0 `gameMain`, 0x0048c6e0 `ListBox::onMouse`
+0x004385d0 `showCharacterEditor`, 0x0045baf0 `gameMain`, 0x0047ef30 `FUN_0047ef30`, 0x0048c6e0 `ListBox::onMouse`
 
 ## Constants
 - `0x1` at 0x0047b67c, 0x0047b6bc, 0x0047b702, 0x0047b743

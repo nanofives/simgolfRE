@@ -27,7 +27,7 @@ None.
 - 0x1000275c -> 0x100110c0 `Ds3DBuffer::setPositionY` (incremental-linking thunk) at 0x10037b92
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1003a630 `FUN_1003a630`
 
 ## Constants
 - `0xb` (11) at 0x10037b9a

@@ -43,7 +43,7 @@ Through registers:
 - 0x004b25d0 `emit_eobrun` at 0x004b2466
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004b2140 `FUN_004b2140`, 0x004b28c0 `FUN_004b28c0`, 0x004b2d30 `FUN_004b2d30`, 0x004b2eb0 `FUN_004b2eb0`
 
 ## Constants
 - `0x0` at 0x004b24de, 0x004b24f5, 0x004b24fc

@@ -55,7 +55,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x78]` at 0x004890cd
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00488e90 `FUN_00488e90`, 0x00488fb0 `FUN_00488fb0`, 0x004a2010 `FUN_004a2010`
 
 ## Constants
 - `0x1` at 0x00489094
@@ -68,4 +68,4 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x1ac` (428) at 0x0048900b
 - `0x57c` (1404) at 0x00488fe5
 - `0x5b4` (1460) at 0x004890b4
-- `0x488fb0` (4755376) = address in the image (data) at 0x004890af
+- `0x488fb0` (4755376) = function `FUN_00488fb0` at 0x004890af

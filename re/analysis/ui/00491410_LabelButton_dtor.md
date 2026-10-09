@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 89 bytes, 21 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor for a Button-derived label control (vtable 0x004bb5b4). (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C491410@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).

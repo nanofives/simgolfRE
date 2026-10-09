@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 92 bytes, 25 instructions, subsystem `render`. Mechanic
 
 ## Role (from the naming pass, not a C3 purpose)
 destructor of a file-scope global Surface array (Surface_free per element) (`re/names/exe_6.tsv`)
+System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C44b690@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
@@ -31,7 +32,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0044b6c2
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0044b680 `FUN_0044b680`
 
 ## Constants
 - `0x0` at 0x0044b6ba

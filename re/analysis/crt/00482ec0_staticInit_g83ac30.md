@@ -19,7 +19,7 @@ None.
 - 0x00482fd0 `Cache482fd0::ctor` at 0x00482ec5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00482eb0 `FUN_00482eb0`
 
 ## Constants
 - `0x83ac30` (8629296) = address in the image (data) at 0x00482ec0

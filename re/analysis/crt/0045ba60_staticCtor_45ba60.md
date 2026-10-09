@@ -19,7 +19,7 @@ None.
 - 0x00488490 `Cursor::ctor` at 0x0045ba65
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0045ba50 `FUN_0045ba50`
 
 ## Constants
 - `0x822cc8` (8531144) = address in the image (data) at 0x0045ba60

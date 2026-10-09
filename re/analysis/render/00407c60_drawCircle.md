@@ -35,7 +35,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004672b0 `absDiff` at 0x00407c9f
 
 ## Callers
-0x004038f0 `drawFlyingBall`, 0x0040f5c0 `mainLoop`, 0x00436e50 `drawEmployeeDetailPanel`
+0x004038f0 `drawFlyingBall`, 0x00436e50 `drawEmployeeDetailPanel`
 
 ## Constants
 - `0x0` at 0x00407cae

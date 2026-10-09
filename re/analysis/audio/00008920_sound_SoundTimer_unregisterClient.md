@@ -42,7 +42,7 @@ Through registers:
 - indirect `call [edx+0xc]` at 0x10008957
 
 ## Callers
-0x1000b960 `Wave_Device::stop`, 0x1000bef0 `Wave_Device::stopOutput`, 0x1000c020 `Wave_Device::restart`, 0x1000ec00 `Wave_In_Device::closeCapture`
+0x10009e40 `FUN_10009e40`, 0x1000b960 `Wave_Device::stop`, 0x1000bef0 `Wave_Device::stopOutput`, 0x1000c020 `Wave_Device::restart`, 0x1000ec00 `Wave_In_Device::closeCapture`
 
 ## Constants
 - `0x0` at 0x10008994

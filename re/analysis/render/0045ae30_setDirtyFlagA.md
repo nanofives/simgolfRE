@@ -23,7 +23,7 @@ Globals:
 None (leaf).
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x0045b2c0 `textInputBox`, 0x0045c0c0 `pumpAndRedraw`, 0x0046d6e0 `showPopup`, 0x0046dea0 `runScrollText`
+0x0045b2c0 `textInputBox`, 0x0045c0c0 `pumpAndRedraw`, 0x0046d6e0 `showPopup`, 0x0046dea0 `runScrollText`
 
 ## Constants
 - `0x0` at 0x0045ae3a

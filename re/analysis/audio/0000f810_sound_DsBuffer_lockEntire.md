@@ -39,7 +39,7 @@ Through registers:
 - indirect `call [ecx+0x2c]` at 0x1000f840
 
 ## Callers
-0x1000c020 `Wave_Device::restart`
+0x1000b420 `FUN_1000b420`, 0x1000c020 `Wave_Device::restart`
 
 ## Constants
 - `0x0` at 0x1000f83d

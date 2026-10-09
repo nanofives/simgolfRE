@@ -19,7 +19,7 @@ None.
 - 0x0049d050 `allocPairArray` at 0x0049d015
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0049d000 `FUN_0049d000`
 
 ## Constants
 - `0x8406e8` (8652520) = address in the image (data) at 0x0049d010

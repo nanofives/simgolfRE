@@ -44,7 +44,7 @@ Through registers:
 - 0x0047e140 `relayoutClip` at 0x0047b4c5
 
 ## Callers
-0x0047b310 `Window::center`, 0x0047bc60 `Window::resized`, 0x0047d570 `Window::layoutScrollbars`, 0x00493b90 `comboOpenPopup`, 0x00494020 `listSetItems`
+0x0047b310 `Window::center`, 0x0047bc60 `Window::resized`, 0x0047d570 `Window::layoutScrollbars`, 0x00490d60 `FUN_00490d60`, 0x00493b90 `comboOpenPopup`, 0x00494020 `listSetItems`
 
 ## Constants
 - `0x2` at 0x0047b427

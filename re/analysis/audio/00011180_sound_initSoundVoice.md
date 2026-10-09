@@ -50,7 +50,7 @@ Through registers:
 - 0x10001c1c -> 0x1000eef0 `DsBuffer::ctor` (incremental-linking thunk) at 0x10011187
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000b420 `FUN_1000b420`
 
 ## Constants
 - `0x2` at 0x10011201

@@ -23,7 +23,7 @@ None.
 - 0x00473cb0 `Surface_drawScaled` at 0x00421b7f
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 None.

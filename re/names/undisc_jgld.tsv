@@ -1,0 +1,2 @@
+module	addr	name	subsystem	evidence	purpose
+jgld.dll	0x10069260	Font::deletingDtor_adj8	render	dword 0x1011da68 slot 0 (+0x0) of the table at 0x1011da68; installed by Font::Font 0x10068660, Font::~Font 0x10068760	this-adjustor thunk: subtracts 0x8 from this and tail-jumps to Font::deletingDtor 0x10001753

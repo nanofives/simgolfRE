@@ -50,7 +50,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `KERNEL32.dll!HeapAlloc` at 0x10045997
 
 ## Callers
-0x10042984 `__beginthread`, 0x100440ec `__mtinit`, 0x10044171 `__getptd`
+0x10042984 `__beginthread`, 0x100440ec `__mtinit`, 0x10044171 `__getptd`, 0x1004e0d4 `FUN_1004e0d4`
 
 ## Constants
 - `0x1` at 0x100458dc, 0x10045958

@@ -40,7 +40,7 @@ Through registers:
 - indirect `call eax` at 0x004a4380
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004a49e0 `FUN_004a49e0`
 
 ## Constants
 - `0x0` at 0x004a435f

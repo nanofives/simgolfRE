@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0000e870`), 52 bytes, 18 instructions, subsystem `aud
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs the Wave_In_Device: base ctor, installs vtable 0x1005b3d4 and sets the default level +0x40=0x7f. (`re/names/sound_2.tsv`)
-System writeup: `re/analysis/systems/sound_2.md`.
+System writeup: `re/analysis/systems/sound_2.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1000e8a3): callee pops 0 bytes of stack arguments.

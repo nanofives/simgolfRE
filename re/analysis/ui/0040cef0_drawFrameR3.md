@@ -39,7 +39,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax+0x9c]` at 0x0040cf02
 
 ## Callers
-0x0040d320 `drawWindow`, 0x0040f5c0 `mainLoop`, 0x00433190 `showInfoCursorPanel`, 0x0045a090 `showTournamentResults`, 0x0045f0f0 `skillPointDialog`, 0x0046f550 `courseActionMenu`
+0x0040d320 `drawWindow`, 0x00433190 `showInfoCursorPanel`, 0x0045a090 `showTournamentResults`, 0x0045f0f0 `skillPointDialog`, 0x0046f550 `courseActionMenu`
 
 ## Constants
 - `0x0` at 0x0040cf8c, 0x0040cfb7, 0x0040cfd5, 0x0040d012, 0x0040d030, 0x0040d060, 0x0040d07d, 0x0040d097

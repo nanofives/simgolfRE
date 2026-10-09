@@ -19,7 +19,7 @@ None.
 - 0x0044ae60 `gSurfaceCtor_44ae60` at 0x0044add5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0044adc0 `FUN_0044adc0`
 
 ## Constants
 - `0x8210c8` (8523976) = address in the image (data) at 0x0044add0

@@ -98,7 +98,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004ad425 `__itoa` at 0x00435aef, 0x00435b73
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x004359db, 0x004359fd, 0x00435a00, 0x00435a9f, 0x00435aa1, 0x00435aa3, 0x00435ac4, 0x00435ae8 (+15 more)

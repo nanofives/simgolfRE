@@ -44,7 +44,7 @@ Through registers:
 - indirect `call [edx+0x120]` at 0x0048cb78
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0048cc70 `FUN_0048cc70`
 
 ## Constants
 - `0x1` at 0x0048cb54

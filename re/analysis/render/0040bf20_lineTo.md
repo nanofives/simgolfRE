@@ -27,7 +27,7 @@ Globals:
 - 0x004493d0 `drawMapLine` at 0x0040bf48
 
 ## Callers
-0x00407c60 `drawCircle`, 0x00407e00 `narrateShot`, 0x0040f5c0 `mainLoop`, 0x00456be0 `showRoutingMapScreen`, 0x004587a0 `showBuyLandScreen`
+0x00407c60 `drawCircle`, 0x00407e00 `narrateShot`, 0x00456be0 `showRoutingMapScreen`, 0x004587a0 `showBuyLandScreen`
 
 ## Constants
 - `0x1c` (28) at 0x0040bf4d

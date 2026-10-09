@@ -41,7 +41,7 @@ Through registers:
 - 0x1003a978 `DSOUND.DLL::DirectSoundEnumerateA` at 0x1001153a
 
 ## Callers
-0x1000baa0 `Wave_Device::start`
+0x1000b420 `FUN_1000b420`, 0x1000baa0 `Wave_Device::start`
 
 ## Constants
 - `0x0` at 0x100114e3

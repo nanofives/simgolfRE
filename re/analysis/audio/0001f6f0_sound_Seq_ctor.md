@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0001f6f0`), 358 bytes, 77 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructor for the sequencer/player object: base ctor 0x1002d450, initializes the embedded reader at +0x60 (0x1001d380) and zeroes the sequencer control region +0x218..+0x22c. (`re/names/sound_3.tsv`)
-System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_6.md`.
+System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_6.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x1001f853): callee pops 4 bytes of stack arguments.

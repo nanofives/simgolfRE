@@ -75,7 +75,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x1000204a -> 0x1001c1e0 `Ctrl5b5c0_transposeTable` (incremental-linking thunk) at 0x1001bfc1
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1001b510 `FUN_1001b510`, 0x1001b6b0 `FUN_1001b6b0`, 0x1001b710 `FUN_1001b710`, 0x1001b770 `FUN_1001b770`, 0x1001b7d0 `FUN_1001b7d0`
 
 ## Constants
 - `0x0` at 0x1001bf16, 0x1001bf44, 0x1001bf4c, 0x1001bfa5, 0x1001bfd1

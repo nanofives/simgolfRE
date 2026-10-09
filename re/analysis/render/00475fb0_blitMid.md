@@ -55,7 +55,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xdc]` at 0x00476058
 
 ## Callers
-0x004791b0 `drawComposite`, 0x0047d850 `drawPanelContents`
+0x004791b0 `drawComposite`, 0x0047d850 `drawPanelContents`, 0x00490d60 `FUN_00490d60`
 
 ## Constants
 - `0x0` at 0x004760fa, 0x004760fc

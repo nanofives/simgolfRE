@@ -62,7 +62,7 @@ Through registers:
 - indirect `call esi` at 0x10037980
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1003a370 `FUN_1003a370`
 
 ## Constants
 - `0x1` at 0x10037931, 0x1003797e, 0x10037a07

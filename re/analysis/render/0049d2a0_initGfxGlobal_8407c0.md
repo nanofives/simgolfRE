@@ -20,7 +20,7 @@ None.
 - 0x00473ab0 `Surface_ctor` at 0x0049d2a5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0049d290 `FUN_0049d290`
 
 ## Constants
 - `0x8407c0` (8652736) = address in the image (data) at 0x0049d2a0

@@ -26,7 +26,7 @@ Through registers:
 - indirect `call [eax+0x120]` at 0x0048cadf
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0048cc90 `FUN_0048cc90`
 
 ## Constants
 - `0xffffffa8` (-88) at 0x0048cadb

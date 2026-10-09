@@ -46,7 +46,7 @@ Through registers:
 - 0x004ad425 `__itoa` at 0x00405bc1
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x00405b15, 0x00405b30, 0x00405b32, 0x00405b34, 0x00405b58

@@ -19,7 +19,7 @@ None.
 - 0x10048225 `__fload_withFB` at 0x10043208
 
 ## Callers
-0x1003d1d0 `lpcSynthesize`, 0x1003d8d0 `reflectionToLpc`, 0x1003ec60 `codecRmsEnergy`, 0x1003f720 `FUN_1003f720`
+0x1003d1d0 `lpcSynthesize`, 0x1003d8d0 `reflectionToLpc`, 0x1003ec60 `codecRmsEnergy`, 0x1003f720 `codecFeatureDecision`
 
 ## Constants
 - `0x4` at 0x10043204

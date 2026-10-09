@@ -48,7 +48,7 @@ None.
 - indirect `call [esi+0x44]` at 0x00473f3f
 
 ## Callers
-0x004012d0 `drawRecords`, 0x00406250 `showLoadingScreen`, 0x0040f5c0 `mainLoop`, 0x00433190 `showInfoCursorPanel`, 0x00433e50 `drawTerrainToolbar`, 0x00434350 `drawBuildingPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x00435760 `drawEmployeeViewPanel`, 0x00436060 `clickGolferPanel`, 0x004362f0 `drawGolferActionPanel`, 0x00438390 `pickCharEditor`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043d740 `loadFlic`, 0x0044b9c0 `showCreditsScreen`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport` (+26 more)
+0x004012d0 `drawRecords`, 0x00406250 `showLoadingScreen`, 0x0040f5c0 `mainLoop`, 0x00433190 `showInfoCursorPanel`, 0x00433e50 `drawTerrainToolbar`, 0x00434350 `drawBuildingPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x00435760 `drawEmployeeViewPanel`, 0x00436060 `clickGolferPanel`, 0x004362f0 `drawGolferActionPanel`, 0x00438390 `pickCharEditor`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0043d740 `loadFlic`, 0x0044b9c0 `showCreditsScreen`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport` (+29 more)
 
 ## Constants
 - `0x0` at 0x00473e6e, 0x00473e77

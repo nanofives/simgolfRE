@@ -42,7 +42,7 @@ Through registers:
 - 0x004ad425 `__itoa` at 0x0040b5e9
 
 ## Callers
-0x00405b10 `saveGameDialog`, 0x0040f5c0 `mainLoop`, 0x0043b610 `loadGameBrowserScreen`, 0x004604f0 `showTutorialText`, 0x0046f550 `courseActionMenu`
+0x00405b10 `saveGameDialog`, 0x0043b610 `loadGameBrowserScreen`, 0x004604f0 `showTutorialText`, 0x0046f550 `courseActionMenu`
 
 ## Constants
 - `0x0` at 0x0040b580, 0x0040b661

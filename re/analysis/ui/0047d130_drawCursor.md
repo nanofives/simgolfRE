@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 901 bytes, 245 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 builds and draws the mouse cursor sprite: creates the cursor widget (FUN_00474dd0), positions it globally (toGlobal), marks it dirty (addDirtyRect) and hit-tests under it (S1hitTest) (`re/names/exe_3.tsv`)
+System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret` (at 0x0047d36d, 0x0047d4b4): callee pops 0 bytes of stack arguments.
@@ -97,7 +98,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [eax*4+0x47d4b8]` at 0x0047d3e1
 
 ## Callers
-0x0047ab00 `EditBox_setCursorChar`
+0x0047ab00 `EditBox_setCursorChar`, 0x004959b0 `FUN_004959b0`
 
 ## Constants
 - `0x1` at 0x0047d291, 0x0047d345, 0x0047d372, 0x0047d382, 0x0047d38a, 0x0047d3e8, 0x0047d3f8, 0x0047d407 (+8 more)

@@ -53,7 +53,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call eax` at 0x0047c930
 
 ## Callers
-0x0047c6c0 `Window::dispatchAccel`
+0x0047c6c0 `Window::dispatchAccel`, 0x0047ee70 `FUN_0047ee70`
 
 ## Constants
 - `0x0` at 0x0047c71e, 0x0047c754, 0x0047c76c, 0x0047c7a6, 0x0047c7f0, 0x0047c830, 0x0047c86a, 0x0047c882 (+2 more)

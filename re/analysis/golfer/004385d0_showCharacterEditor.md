@@ -235,7 +235,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [edx*4+0x43a3f0]` at 0x00439f97
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00436060 `clickGolferPanel`
+0x00436060 `clickGolferPanel`
 
 ## Constants
 - `0x0` at 0x004386a3, 0x00438705, 0x00438709, 0x00438710, 0x00438712, 0x0043877e, 0x0043883e, 0x004388d2 (+53 more)

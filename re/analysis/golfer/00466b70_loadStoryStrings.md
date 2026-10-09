@@ -73,7 +73,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a65ee `_fgets` at 0x00466cf0, 0x00466fe8
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x0044cff0 `showEndOfYearScreen`, 0x0045c560 `drawGolferInfoPanel`, 0x004669f0 `computeStoryReply`, 0x00469b00 `buildGolferComment`
+0x0044cff0 `showEndOfYearScreen`, 0x0045c560 `drawGolferInfoPanel`, 0x004669f0 `computeStoryReply`, 0x00469b00 `buildGolferComment`
 
 ## Constants
 - `0x0` at 0x00466ce4, 0x00466e6a

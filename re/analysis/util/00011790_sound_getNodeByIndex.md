@@ -34,7 +34,7 @@ None.
 - 0x10042710 `_strncpy` at 0x100117e0
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000e260 `FUN_1000e260`
 
 ## Constants
 - `0x3` at 0x100117ad, 0x100117cb

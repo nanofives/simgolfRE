@@ -44,7 +44,7 @@ Through registers:
 - indirect `call [edx+0x9c]` at 0x004740d2
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00421b90 `drawScaledSprite421b90`
+0x00421b90 `drawScaledSprite421b90`
 
 ## Constants
 - `0xc` (12) at 0x00474030, 0x004740de

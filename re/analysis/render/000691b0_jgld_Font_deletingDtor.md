@@ -31,7 +31,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x1007e780 `__chkesp` at 0x100691f6
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10069260 `FUN_10069260`
 
 ## Constants
 - `0x1` at 0x100691d8

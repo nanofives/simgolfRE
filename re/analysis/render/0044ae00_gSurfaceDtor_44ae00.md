@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 88 bytes, 22 instructions, subsystem `render`. Mechanic
 
 ## Role (from the naming pass, not a C3 purpose)
 destructor of a file-scope global Surface object (releases its DIB/palette via Surface_free 0x00473ae0); freed together by resetAllPanels 0x0044cce0 (`re/names/exe_6.tsv`)
-System writeup: `re/analysis/systems/exe_6.md`.
+System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C44ae00@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
@@ -31,7 +31,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00473ae0 `Surface_init` at 0x0044ae2e, 0x0044ae43
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0044adf0 `FUN_0044adf0`, 0x0044aee0 `FUN_0044aee0`, 0x0044af20 `FUN_0044af20`, 0x0044af60 `FUN_0044af60`
 
 ## Constants
 - `0x0` at 0x0044ae20

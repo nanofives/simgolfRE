@@ -37,7 +37,7 @@ None.
 - indirect `call [edi+0x94]` at 0x004744a5
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00430360 `drawWorldObjects`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport`, 0x0044fb30 `showCourseReport`, 0x00453330 `showHoleStatsScreen`, 0x004546b0 `showPlayerCommentsReport`, 0x00454c50 `showMembershipRoster`, 0x00455a30 `showBestScoresScreen`, 0x00455ed0 `showHistographScreen`, 0x00459400 `showHireEmployeeDialog`, 0x00459850 `showGolferPairSelect`, 0x0045a090 `showTournamentResults`, 0x00462be0 `drawQueuedSprite`, 0x00463180 `buildSceneSprites`, 0x0046e810 `showBulletinBoard`, 0x00474380 `Surface_draw`
+0x00430360 `drawWorldObjects`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport`, 0x0044fb30 `showCourseReport`, 0x00453330 `showHoleStatsScreen`, 0x004546b0 `showPlayerCommentsReport`, 0x00454c50 `showMembershipRoster`, 0x00455a30 `showBestScoresScreen`, 0x00455ed0 `showHistographScreen`, 0x00459400 `showHireEmployeeDialog`, 0x00459850 `showGolferPairSelect`, 0x0045a090 `showTournamentResults`, 0x00462be0 `drawQueuedSprite`, 0x00463180 `buildSceneSprites`, 0x0046e810 `showBulletinBoard`, 0x00474380 `Surface_draw`
 
 ## Constants
 - `0x7` at 0x004744b1

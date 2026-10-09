@@ -42,7 +42,7 @@ None.
 - indirect `call [edx+0xe4]` at 0x00478e5d
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x0047f340 `hitTestTree`
+0x0047f340 `hitTestTree`
 
 ## Constants
 - `0x1` at 0x00478e4b

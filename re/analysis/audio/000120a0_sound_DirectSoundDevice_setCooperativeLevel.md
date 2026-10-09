@@ -33,7 +33,7 @@ Globals:
 - indirect `call [ecx+0x18]` at 0x100120c3
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000b140 `FUN_1000b140`
 
 ## Constants
 - `0x3` at 0x100120db

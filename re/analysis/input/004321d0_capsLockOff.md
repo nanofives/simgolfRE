@@ -24,7 +24,7 @@ None.
 - import `USER32.dll!keybd_event` at 0x004321f0
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x004321e8

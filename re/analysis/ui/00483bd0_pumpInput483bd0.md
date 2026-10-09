@@ -25,7 +25,7 @@ Globals:
 - 0x00497b00 `gfxFlushA` at 0x00483c00
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00422fb0 `simulateBallFlight`, 0x0043cce0 `playAudioFile`, 0x0043d740 `loadFlic`, 0x00449470 `syncTiles`, 0x00449540 `rebuildTerrainGrid`, 0x0045baf0 `gameMain`, 0x0045c150 `pumpLight`, 0x0046e810 `showBulletinBoard`
+0x00422fb0 `simulateBallFlight`, 0x0043cce0 `playAudioFile`, 0x0043d740 `loadFlic`, 0x00449470 `syncTiles`, 0x00449540 `rebuildTerrainGrid`, 0x0045baf0 `gameMain`, 0x0045c150 `pumpLight`, 0x0046e810 `showBulletinBoard`
 
 ## Constants
 - `0x0` at 0x00483bf6

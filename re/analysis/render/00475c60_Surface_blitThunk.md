@@ -22,7 +22,7 @@ None.
 - 0x00475d00 `Surface_blit3` at 0x00475c86
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x004498a0 `updateTerrainRender`, 0x0044a6e0 `renderTerrainStrip`, 0x0045f0f0 `skillPointDialog`, 0x0046e810 `showBulletinBoard`, 0x004725b0 `showThemePackSelect`, 0x00475fb0 `blitMid`, 0x0047d060 `addDirtyRect`, 0x0047d130 `drawCursor`, 0x0047f8e0 `redrawDrawList`, 0x004808c0 `Window::paint`, 0x00480a10 `Window::paintBackground`, 0x0049dab0 `listPanelDraw`, 0x0049f370 `optionListDraw`, 0x004a2d50 `panelDrawRow`, 0x004a3f10 `panelDraw4a3f10`
+0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x004498a0 `updateTerrainRender`, 0x0044a6e0 `renderTerrainStrip`, 0x0045f0f0 `skillPointDialog`, 0x0046e810 `showBulletinBoard`, 0x004725b0 `showThemePackSelect`, 0x00475fb0 `blitMid`, 0x0047d060 `addDirtyRect`, 0x0047d130 `drawCursor`, 0x0047f8e0 `redrawDrawList`, 0x004808c0 `Window::paint`, 0x00480a10 `Window::paintBackground`, 0x0049dab0 `listPanelDraw`, 0x0049f370 `optionListDraw`, 0x004a2d50 `panelDrawRow`, 0x004a3f10 `panelDraw4a3f10`
 
 ## Constants
 None.

@@ -53,7 +53,7 @@ None.
 - indirect `call [esi+0x44]` at 0x00473dad
 
 ## Callers
-0x0040d320 `drawWindow`, 0x0040f5c0 `mainLoop`, 0x00421b60 `drawScaledSprite421b60`, 0x00432200 `drawAmenityRow`, 0x00432ba0 `showMainRadialMenu`, 0x00433190 `showInfoCursorPanel`, 0x00434350 `drawBuildingPanel`, 0x00435760 `drawEmployeeViewPanel`, 0x00436e50 `drawEmployeeDetailPanel`, 0x00437910 `promptAndSaveFile`, 0x00438390 `pickCharEditor`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x00459850 `showGolferPairSelect`, 0x0045c200 `drawThoughtBubble`, 0x0045f0f0 `skillPointDialog`, 0x0046d6e0 `showPopup`, 0x004725b0 `showThemePackSelect`
+0x0040d320 `drawWindow`, 0x00421b60 `drawScaledSprite421b60`, 0x00432200 `drawAmenityRow`, 0x00432ba0 `showMainRadialMenu`, 0x00433190 `showInfoCursorPanel`, 0x00434350 `drawBuildingPanel`, 0x00435760 `drawEmployeeViewPanel`, 0x00436e50 `drawEmployeeDetailPanel`, 0x00437910 `promptAndSaveFile`, 0x00438390 `pickCharEditor`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x00459850 `showGolferPairSelect`, 0x0045c200 `drawThoughtBubble`, 0x0045f0f0 `skillPointDialog`, 0x0046d6e0 `showPopup`, 0x004725b0 `showThemePackSelect`
 
 ## Constants
 - `0x0` at 0x00473ce9, 0x00473cf2

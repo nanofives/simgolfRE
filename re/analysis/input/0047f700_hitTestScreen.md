@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 478 bytes, 145 instructions, subsystem `input`. Mechani
 
 ## Role (from the naming pass, not a C3 purpose)
 resolves the window under the pointer: tries the captured/focus windows (g_83ab40/44/30/34) in local coords, else searches the modal/root trees g_83ab54/50 via hitTestTree (`re/names/exe_3.tsv`)
+System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `?S1hitTest47f700@@YAPAUS1W47f700@@PAH0@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -60,7 +61,7 @@ Through registers:
 - 0x0047f340 `hitTestTree` at 0x0047f81d, 0x0047f85c, 0x0047f8ab
 
 ## Callers
-0x0047d130 `drawCursor`
+0x0047d130 `drawCursor`, 0x004959b0 `FUN_004959b0`
 
 ## Constants
 - `0x0` at 0x0047f742, 0x0047f7a9, 0x0047f7d7, 0x0047f889

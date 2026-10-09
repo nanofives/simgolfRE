@@ -19,7 +19,7 @@ None.
 - 0x00487000 `BinkPlayer::ctor` at 0x0043ccb5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0043cca0 `FUN_0043cca0`
 
 ## Constants
 - `0x5aa6d0` (5940944) = address in the image (data) at 0x0043ccb0

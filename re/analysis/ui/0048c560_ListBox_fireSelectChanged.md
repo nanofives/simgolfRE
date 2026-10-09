@@ -43,7 +43,7 @@ Globals:
 - indirect `call [esi-0x8]` at 0x0048c58e
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0048cce0 `FUN_0048cce0`
 
 ## Constants
 - `0x4` at 0x0048c591

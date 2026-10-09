@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 289 bytes, 59 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a push-button control: Widget base, two Timers (press/tooltip) at this+0x15f and 0x16d, default colors from DAT_004e443c etc. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??0R1C488500@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).

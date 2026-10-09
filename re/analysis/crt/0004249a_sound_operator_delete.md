@@ -20,7 +20,7 @@ None.
 - 0x10042c07 `free` at 0x1004249e
 
 ## Callers
-0x10003fd0 `Sound::scalarDeletingDtor`, 0x10004000 `Sound::dtor`, 0x100041d0 `loadSoundFile`, 0x10005740 `ctrlScalarDeletingDtor`, 0x10005a60 `clearNodeListD`, 0x10005b60 `clearNodeListE`, 0x10005c00 `listPopFront`, 0x10005eb0 `unregisterSound`, 0x10006130 `WaveStream::scalarDeletingDtor`, 0x10006160 `WaveStream::destroy`, 0x10006330 `closeMmioNodeList`, 0x100064e0 `Wave_Device::freeBufferList`, 0x10006c70 `clearNodeListF`, 0x10006ec0 `freeDynArray`, 0x10006f00 `resizeDynArray`, 0x10007df0 `writeWaveChunk`, 0x10008070 `writeWaveChunkB`, 0x10008470 `flushSoundList`, 0x10008920 `SoundTimer::unregisterClient`, 0x10008ac0 `SoundTimer::stop` (+188 more)
+0x10003fd0 `Sound::scalarDeletingDtor`, 0x10004000 `Sound::dtor`, 0x100041d0 `loadSoundFile`, 0x10005740 `ctrlScalarDeletingDtor`, 0x10005a60 `clearNodeListD`, 0x10005b60 `clearNodeListE`, 0x10005c00 `listPopFront`, 0x10005eb0 `unregisterSound`, 0x10006130 `WaveStream::scalarDeletingDtor`, 0x10006160 `WaveStream::destroy`, 0x10006330 `closeMmioNodeList`, 0x100064e0 `Wave_Device::freeBufferList`, 0x10006c70 `clearNodeListF`, 0x10006ec0 `freeDynArray`, 0x10006f00 `resizeDynArray`, 0x10007df0 `writeWaveChunk`, 0x10008070 `writeWaveChunkB`, 0x10008470 `flushSoundList`, 0x10008920 `SoundTimer::unregisterClient`, 0x10008ac0 `SoundTimer::stop` (+191 more)
 
 ## Constants
 None.

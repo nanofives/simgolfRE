@@ -32,7 +32,7 @@ None.
 - indirect `call [edi+0x54]` at 0x00473fa5
 
 ## Callers
-0x0040cc00 `drawPanelS2`, 0x0040cdd0 `drawWindowFrame`, 0x0040cef0 `drawFrameR3`, 0x0040d0b0 `drawFrameS2`, 0x0040d320 `drawWindow`, 0x0040f5c0 `mainLoop`, 0x00432200 `drawAmenityRow`, 0x00432ba0 `showMainRadialMenu`, 0x00433190 `showInfoCursorPanel`, 0x00433e50 `drawTerrainToolbar`, 0x00434350 `drawBuildingPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x00435760 `drawEmployeeViewPanel`, 0x004362f0 `drawGolferActionPanel`, 0x00436e50 `drawEmployeeDetailPanel`, 0x0043b610 `loadGameBrowserScreen`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport`, 0x0044fb30 `showCourseReport` (+12 more)
+0x0040cc00 `drawPanelS2`, 0x0040cdd0 `drawWindowFrame`, 0x0040cef0 `drawFrameR3`, 0x0040d0b0 `drawFrameS2`, 0x0040d320 `drawWindow`, 0x00432200 `drawAmenityRow`, 0x00432ba0 `showMainRadialMenu`, 0x00433190 `showInfoCursorPanel`, 0x00433e50 `drawTerrainToolbar`, 0x00434350 `drawBuildingPanel`, 0x00434cf0 `drawAmenitiesPanel`, 0x00435760 `drawEmployeeViewPanel`, 0x004362f0 `drawGolferActionPanel`, 0x00436e50 `drawEmployeeDetailPanel`, 0x0043b610 `loadGameBrowserScreen`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport`, 0x0044fb30 `showCourseReport`, 0x00453330 `showHoleStatsScreen` (+11 more)
 
 ## Constants
 - `0x7` at 0x00473fad

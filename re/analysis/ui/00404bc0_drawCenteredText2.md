@@ -30,7 +30,7 @@ None.
 - 0x00477da0 `drawCentered2` at 0x00404bfe
 
 ## Callers
-0x00405b10 `saveGameDialog`, 0x0040c7a0 `drawLabels`, 0x0040c910 `drawMoneyLabels`, 0x0040f5c0 `mainLoop`, 0x00422fb0 `simulateBallFlight`, 0x00430360 `drawWorldObjects`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x00456be0 `showRoutingMapScreen`, 0x004587a0 `showBuyLandScreen`, 0x0045c560 `drawGolferInfoPanel`, 0x0045f0f0 `skillPointDialog`, 0x0045f870 `showCourseRanking`, 0x00463180 `buildSceneSprites`, 0x0046d6e0 `showPopup`, 0x0046f550 `courseActionMenu`, 0x004725b0 `showThemePackSelect`
+0x00405b10 `saveGameDialog`, 0x0040c7a0 `drawLabels`, 0x0040c910 `drawMoneyLabels`, 0x00422fb0 `simulateBallFlight`, 0x00430360 `drawWorldObjects`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x00456be0 `showRoutingMapScreen`, 0x004587a0 `showBuyLandScreen`, 0x0045c560 `drawGolferInfoPanel`, 0x0045f0f0 `skillPointDialog`, 0x0045f870 `showCourseRanking`, 0x00463180 `buildSceneSprites`, 0x0046d6e0 `showPopup`, 0x0046f550 `courseActionMenu`, 0x004725b0 `showThemePackSelect`
 
 ## Constants
 - `0x0` at 0x00404bcc

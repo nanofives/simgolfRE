@@ -22,7 +22,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004af540 `FUN_004af540`, 0x004af730 `FUN_004af730`, 0x004b08b0 `FUN_004b08b0`, 0x004b0b20 `FUN_004b0b20`
 
 ## Constants
 - `0x2` at 0x004b054d

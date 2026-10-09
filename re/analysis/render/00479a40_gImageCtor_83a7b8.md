@@ -20,7 +20,7 @@ None.
 - 0x00474ae0 `Image_ctor` at 0x00479a45
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00479a30 `FUN_00479a30`
 
 ## Constants
 - `0x83a7b8` (8628152) = address in the image (data) at 0x00479a40

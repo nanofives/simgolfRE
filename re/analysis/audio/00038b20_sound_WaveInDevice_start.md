@@ -22,7 +22,7 @@ None.
 - import `WINMM.dll!waveInStart` at 0x10038b24
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000ea30 `FUN_1000ea30`
 
 ## Constants
 None.

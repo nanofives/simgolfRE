@@ -25,7 +25,7 @@ None.
 - 0x004017d0 `placeAnimal` at 0x00401c10
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x4` at 0x00401c15

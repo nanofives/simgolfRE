@@ -19,7 +19,7 @@ None.
 - 0x00487b40 `NodeListC::ctor` at 0x00483e65
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00483e50 `FUN_00483e50`
 
 ## Constants
 - `0x83af98` (8630168) = address in the image (data) at 0x00483e60

@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x00039690`), 154 bytes, 42 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Default constructor of the multi-channel Sound (vtable 0x1005c7e8): runs the SubChannel base ctor, constructs the embedded Channel at +0x70, zeroes the sub-channel array/counters at +0x1420..+0x1448, and calls Sound_setSourceType(this,1). (`re/names/sound_7.tsv`)
-System writeup: `re/analysis/systems/sound_7.md`.
+System writeup: `re/analysis/systems/sound_7.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Returns with `ret` (at 0x10039729): callee pops 0 bytes of stack arguments.

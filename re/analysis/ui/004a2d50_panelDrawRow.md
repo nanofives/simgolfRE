@@ -88,7 +88,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xdc]` at 0x004a2db2
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004a3090 `FUN_004a3090`, 0x004a3100 `FUN_004a3100`
 
 ## Constants
 - `0x0` at 0x004a2ded, 0x004a2df2, 0x004a2efb

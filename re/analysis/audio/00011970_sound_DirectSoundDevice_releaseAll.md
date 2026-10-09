@@ -48,7 +48,7 @@ Through registers:
 - indirect `call [ecx+0x8]` at 0x10011a27
 
 ## Callers
-0x1000baa0 `Wave_Device::start`, 0x1000c020 `Wave_Device::restart`, 0x10011290 `DirectSoundDevice::close`, 0x10011c60 `DirectSoundDevice::create`, 0x100120a0 `DirectSoundDevice::setCooperativeLevel`
+0x1000b420 `FUN_1000b420`, 0x1000baa0 `Wave_Device::start`, 0x1000c020 `Wave_Device::restart`, 0x10011290 `DirectSoundDevice::close`, 0x10011c60 `DirectSoundDevice::create`, 0x100120a0 `DirectSoundDevice::setCooperativeLevel`
 
 ## Constants
 - `0x2` at 0x100119e1

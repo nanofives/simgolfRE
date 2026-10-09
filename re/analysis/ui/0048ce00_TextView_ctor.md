@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 1658 bytes, 318 instructions, subsystem `ui`. Mechanica
 
 ## Role (from the naming pass, not a C3 purpose)
 Constructs the scrollable formatted-text view (0x2114 bytes): Widget base, span lists at this+0x13e0/0x1410, HotList, and default colours from DAT_004e44e4 etc. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret` (at 0x0048d479): callee pops 0 bytes of stack arguments.

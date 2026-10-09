@@ -28,7 +28,7 @@ None.
 - indirect `call eax` at 0x004a44a0
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004a4a10 `FUN_004a4a10`
 
 ## Constants
 - `0x0` at 0x004a447f

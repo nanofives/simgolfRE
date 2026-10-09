@@ -23,7 +23,7 @@ Through registers:
 - 0x10001e51 -> 0x100326a0 `parseRiffWave` (incremental-linking thunk) at 0x1003399c
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10039980 `FUN_10039980`
 
 ## Constants
 - `0x64` (100) at 0x10033998

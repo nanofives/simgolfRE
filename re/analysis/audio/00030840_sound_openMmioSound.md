@@ -94,7 +94,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - import `WINMM.dll!mmioSetInfo` at 0x100309ca
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x10030710 `FUN_10030710`
 
 ## Constants
 - `0x0` at 0x100308a8, 0x100308dd

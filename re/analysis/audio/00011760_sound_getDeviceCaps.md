@@ -26,7 +26,7 @@ None.
 - indirect `call [ecx+0x10]` at 0x10011770
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x1000e230 `FUN_1000e230`
 
 ## Constants
 - `0xc` (12) at 0x1001176b

@@ -25,7 +25,7 @@ Globals:
 - 0x00431fa0 `writeCourseInfo` at 0x0043217e
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x0` at 0x00432190

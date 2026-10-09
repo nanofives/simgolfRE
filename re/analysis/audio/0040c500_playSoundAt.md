@@ -47,7 +47,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00467130 `clamp` at 0x0040c547, 0x0040c55c
 
 ## Callers
-0x004017d0 `placeAnimal`, 0x00402a40 `updateWalkers`, 0x00405a00 `playHabitatSound`, 0x00405e30 `placeHabitat`, 0x0040f5c0 `mainLoop`, 0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`, 0x00430360 `drawWorldObjects`, 0x00466370 `advanceStory`, 0x00467a00 `emitGolferThought`
+0x004017d0 `placeAnimal`, 0x00402a40 `updateWalkers`, 0x00405a00 `playHabitatSound`, 0x00405e30 `placeHabitat`, 0x00427380 `matchUpdate`, 0x004289e0 `updateGolfers`, 0x00430360 `drawWorldObjects`, 0x00466370 `advanceStory`, 0x00467a00 `emitGolferThought`
 
 ## Constants
 - `0x0` at 0x0040c50b, 0x0040c544, 0x0040c555, 0x0040c64d, 0x0040c6d8

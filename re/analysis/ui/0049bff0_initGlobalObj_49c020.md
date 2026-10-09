@@ -19,7 +19,7 @@ None.
 - 0x0049c020 `ctorGlobalObj49c020` at 0x0049bff5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0049bfe0 `FUN_0049bfe0`
 
 ## Constants
 - `0x8400c8` (8650952) = address in the image (data) at 0x0049bff0

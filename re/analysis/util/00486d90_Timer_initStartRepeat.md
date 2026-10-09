@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 46 bytes, 18 instructions, subsystem `util`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 Initializes the timer fields then arms a periodic timer. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?initB@C486d60@@QAEXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -25,7 +25,7 @@ None.
 - 0x00486e40 `Timer::startRepeat` at 0x00486db5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00488ab0 `FUN_00488ab0`
 
 ## Constants
 None.

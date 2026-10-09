@@ -4,7 +4,7 @@ Module `jgld.dll` (RVA `0x00009e40`), 111 bytes, 44 instructions, subsystem `ren
 
 ## Role (from the naming pass, not a C3 purpose)
 dither+blend a RECT (16-bit path only) via ditherBlendRect16. (`re/names/jgld_0.tsv`)
-System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
+System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`, `re/analysis/systems/undisc_sound.md`.
 
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op3b@Surface@@QAEHPAHIH@Z` (the decorated name fixes the exact C++ signature and convention).

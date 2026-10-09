@@ -23,7 +23,7 @@ None.
 - 0x004493d0 `drawMapLine` at 0x00406243
 
 ## Callers
-0x0040f5c0 `mainLoop`
+None found by direct call (static); indirect callers are not resolved here.
 
 ## Constants
 - `0x1c` (28) at 0x00406248

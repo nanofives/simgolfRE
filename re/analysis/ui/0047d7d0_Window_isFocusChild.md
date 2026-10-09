@@ -29,7 +29,7 @@ None.
 None (leaf).
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004a1580 `FUN_004a1580`
 
 ## Constants
 - `0x1` at 0x0047d7db, 0x0047d806

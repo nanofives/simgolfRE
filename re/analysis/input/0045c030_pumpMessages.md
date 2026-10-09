@@ -32,7 +32,7 @@ Globals:
 - indirect `call esi` at 0x0045c04d, 0x0045c082
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00438390 `pickCharEditor`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0044b9c0 `showCreditsScreen`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport`, 0x0044fb30 `showCourseReport`, 0x00453330 `showHoleStatsScreen`, 0x004546b0 `showPlayerCommentsReport`, 0x00454c50 `showMembershipRoster`, 0x00455a30 `showBestScoresScreen`, 0x00455ed0 `showHistographScreen`, 0x00456be0 `showRoutingMapScreen`, 0x004587a0 `showBuyLandScreen`, 0x00459400 `showHireEmployeeDialog`, 0x00459850 `showGolferPairSelect` (+10 more)
+0x00438390 `pickCharEditor`, 0x004385d0 `showCharacterEditor`, 0x0043a400 `selectDifficultyScreen`, 0x0043a8c0 `pickAProScreen`, 0x0043b610 `loadGameBrowserScreen`, 0x0044b9c0 `showCreditsScreen`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0044f6b0 `showFinancialReport`, 0x0044fb30 `showCourseReport`, 0x00453330 `showHoleStatsScreen`, 0x004546b0 `showPlayerCommentsReport`, 0x00454c50 `showMembershipRoster`, 0x00455a30 `showBestScoresScreen`, 0x00455ed0 `showHistographScreen`, 0x00456be0 `showRoutingMapScreen`, 0x004587a0 `showBuyLandScreen`, 0x00459400 `showHireEmployeeDialog`, 0x00459850 `showGolferPairSelect`, 0x0045a090 `showTournamentResults` (+9 more)
 
 ## Constants
 - `0x0` at 0x0045c04a, 0x0045c07f, 0x0045c094, 0x0045c0a3

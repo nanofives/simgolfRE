@@ -30,7 +30,7 @@ None.
 - indirect `call [eax+0x74]` at 0x0048c62d
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x0048cca0 `FUN_0048cca0`
 
 ## Constants
 None.

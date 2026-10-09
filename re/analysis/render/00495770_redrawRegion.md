@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 26 bytes, 10 instructions, subsystem `render`. Mechanic
 
 ## Role (from the naming pass, not a C3 purpose)
 redraws the draw list and the tooltip within the RECT param_1 (installed invalidation callback) (`re/names/exe_6.tsv`)
-System writeup: `re/analysis/systems/exe_6.md`.
+System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?release495@@YGXH@Z` (the decorated name fixes the exact C++ signature and convention).

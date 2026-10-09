@@ -131,7 +131,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [edx*4+0x46c8b0]` at 0x0046b2cc
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x00453330 `showHoleStatsScreen`, 0x004546b0 `showPlayerCommentsReport`, 0x0045c560 `drawGolferInfoPanel`, 0x00467a00 `emitGolferThought`
+0x004385d0 `showCharacterEditor`, 0x0043a8c0 `pickAProScreen`, 0x00453330 `showHoleStatsScreen`, 0x004546b0 `showPlayerCommentsReport`, 0x0045c560 `drawGolferInfoPanel`, 0x00467a00 `emitGolferThought`
 
 ## Constants
 - `0x0` at 0x00469c0c, 0x0046ad4e, 0x0046b24e, 0x0046b434, 0x0046b436, 0x0046b4ed, 0x0046b4ef, 0x0046b9e0 (+6 more)

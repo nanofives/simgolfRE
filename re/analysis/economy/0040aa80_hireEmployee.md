@@ -70,7 +70,7 @@ Through registers:
 - 0x00483d30 `enterModal483d30` at 0x0040aa89
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00436e50 `drawEmployeeDetailPanel`
+0x00436e50 `drawEmployeeDetailPanel`
 
 ## Constants
 - `0x0` at 0x0040aac2, 0x0040aac4, 0x0040aac6, 0x0040ab13
