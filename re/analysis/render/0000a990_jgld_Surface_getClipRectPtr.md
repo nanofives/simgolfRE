@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a990`), 42 bytes, 21 instructions, subsystem `rend
 vtable +0xcc: returns the address of the clip RECT at this+0x44 (the rect copied out by Surface::getClip 0x1000a930). (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xcc: returns the address of the clip rectangle itself, this+0x44 (VA 0x1000a9b0 add eax, 0x44). This is the slot the module's drawing primitives fetch their clip rectangle through, and the running game enters it 7,705 times in twelve seconds at the menu (log/c3/alt/c3ce_probe.py). Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getClipRectPtr (16 vectors, 16 distinct results, 0 changing state, `log/diff/0000a990_jgld_Surface_getClipRectPtr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_1000a990@f_1000a990@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a9b9): callee pops 0 bytes of stack arguments.

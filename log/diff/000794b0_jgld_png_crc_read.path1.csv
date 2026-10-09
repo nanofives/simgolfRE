@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$crP0 $crD0 $crL0,void,void,True,f2f9c8cd,f2f9c8cd,True
+$crP1 $crD1 $crL1,void,void,True,e308e573,e308e573,True
+$crP2 $crD2 $crL2,void,void,True,932ee71a,932ee71a,True
+$crP3 $crD3 $crL3,void,void,True,af3091b8,af3091b8,True
+$crP4 $crD4 $crL4,void,void,True,0ca95bd1,0ca95bd1,True
+$crP5 $crD5 $crL5,void,void,True,99730e8a,99730e8a,True
+$crP6 $crD6 $crL6,void,void,True,8392f5c2,8392f5c2,True
+$crP7 $crD7 $crL7,void,void,True,5ce6d11e,5ce6d11e,True
+$crP8 $crD8 $crL8,void,void,True,ba66a282,ba66a282,True
+$crP9 $crD9 $crL9,void,void,True,afbd9ae7,afbd9ae7,True
+$crP10 $crD10 $crL10,void,void,True,cae54b84,cae54b84,True
+$crP11 $crD11 $crL11,void,void,True,c467d1df,c467d1df,True
+state_regions,$crPng+0x0:6144 $crDst+0x0:768 $crCtl+0x0:192,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5f5e2b40,original=0x2a20620,2026-10-09T07:19:51
+distinct_results,12,,
+VERDICT,GREEN,12,

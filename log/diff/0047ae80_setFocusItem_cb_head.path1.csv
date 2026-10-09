@@ -1,0 +1,12 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$v0 $it0_1,void,void,True,e92127d3,e92127d3,True
+$v0 $it0_2,void,void,True,10742d91,10742d91,True
+$v0 $it0_3,void,void,True,9dc9ce73,9dc9ce73,True
+$v1 $it1_0,void,void,True,fb3ed1e8,fb3ed1e8,True
+$v1 $it1_3,void,void,True,ca89f7f8,ca89f7f8,True
+$v7 $it7_0,void,void,True,d027b98d,d027b98d,True
+state_regions,$v0+0x0:384 $v1+0x0:384 $v2+0x0:384 $v3+0x0:384 $v4+0x0:384 $v5+0x0:384 $v6+0x0:384 $v7+0x0:384 $nd0_0+0x0:32 $nd0_1+0x0:32 $nd0_2+0x0:32 $nd0_3+0x0:32 $nd1_0+0x0:32 $nd1_1+0x0:32 $nd1_2+0x0:32 $nd1_3+0x0:32 $nd2_0+0x0:32 $nd2_1+0x0:32 $nd2_2+0x0:32 $nd2_3+0x0:32 $nd3_0+0x0:32 $nd3_1+0x0:32 $nd3_2+0x0:32 $nd3_3+0x0:32 $nd4_0+0x0:32 $nd4_1+0x0:32 $nd4_2+0x0:32 $nd4_3+0x0:32 $nd5_0+0x0:32 $nd5_1+0x0:32 $nd5_2+0x0:32 $nd5_3+0x0:32 $nd6_0+0x0:32 $nd6_1+0x0:32 $nd6_2+0x0:32 $nd6_3+0x0:32 $nd7_0+0x0:32 $nd7_1+0x0:32 $nd7_2+0x0:32 $nd7_3+0x0:32 0x0083ab98+0x0:4 $rec+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x706a0f20,original=0xc80e60,2026-10-09T06:42:32
+distinct_results,6,,
+VERDICT,GREEN,6,

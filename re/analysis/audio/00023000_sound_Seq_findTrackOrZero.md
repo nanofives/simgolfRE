@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00023000`), 84 bytes, 28 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Finds the track node whose +4 equals param_1 in the list at this+0x218, returning the node or 0 (and 0 when the player is inactive at +0x224), unlike the SNDERR-0x24 finders. (`re/names/sound_3.tsv`)
 
+## Purpose
+Finds the node of the sequencer's OTHER track list - the one whose head is this+0x218 and whose walk cursor is this+0x220, not the this+0x60 list the Seq_listGetAt family walks - whose dword at +4 equals the argument, and returns it or 0. A zero dword at this+0x224 returns 0 at once, without touching the cursor (`test eax, eax` / `jne 0x1002300f` at 0x10023006, 0x10023008, `xor eax, eax` at 0x1002300a). Otherwise the cursor is seeded with the head (0x1002300f, 0x10023017) and the list is walked with the node layout {+4 next, +8 element}: the matching element is returned (`cmp dword [eax+4], edx` / `je 0x10023051` at 0x1002302a, 0x1002302d), the cursor is advanced and stored back at every step whether or not it is null (0x1002302f-0x1002303e), and a null head, next or element ends the walk with 0 (`je` at 0x1002301d, 0x10023024, 0x10023044, 0x1002304b and `xor eax, eax` at 0x1002304f; the three `je 0x10023051` jumps arrive with eax already 0). Unlike the Seq_listGetAt finders this one reports no SNDERR 0x24: a miss and an inactive list are both the null pointer. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: Seq_findTrackOrZero (44 vectors, 21 distinct results, 40 changing state, `log/diff/00023000_sound_Seq_findTrackOrZero.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002300c, 0x10023051): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10023000 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

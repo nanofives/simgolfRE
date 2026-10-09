@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a010`), 78 bytes, 32 instructions, subsystem `inpu
 WM_RBUTTONDOWN (0x204)/WM_RBUTTONDBLCLK (0x206) handler: forwards a double-click flag (0 or 1) and x,y to g_listener vtable slot 9. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Window-message forwarder: the right-button twin of onWmLButtonDown. windowProc calls it with five arguments at 0x100696e6 (double-click flag 1) and 0x10069711 (flag 0). The body reads the second, third and fourth arguments and pushes them in reverse (0x1006a02a, 0x1006a02e, 0x1006a032), so slot +0x24 (called at 0x1006a043, sink loaded at 0x1006a036 and 0x1006a03d) receives (dbl, x, y); the flag is not tested, the HWND and the fifth argument are not read, and the slot's eax is returned untouched (`ret` at 0x1006a05d pops nothing). Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onWmRButtonDown (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a010_jgld_onWmRButtonDown.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_1006a010@f_1006a010@@YAXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a05d): callee pops 0 bytes of stack arguments.

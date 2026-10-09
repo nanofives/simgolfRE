@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 79 bytes, 35 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Emit one complete JPEG marker segment whose payload is a byte run the caller supplies. The length is tested UNSIGNED against 0xfffd at 0x004afb65 / 0x004afb6c and a longer run emits nothing at all, which is the only guard in the function; otherwise the marker byte goes out through emit_marker 0x004afbf0 (0x004afb78), the two-byte segment length - the payload length plus the two length bytes, computed at 0x004afb7d - through emit_2bytes 0x004afc10 (0x004afb82), and each payload byte zero-extended through emit_byte 0x004afbb0 (0x004afb9b / 0x004afb9f) with the pointer advancing by one at 0x004afba7. The payload loop is a post-decrement count (0x004afb8a / 0x004afb8c / 0x004afb8f), so a zero length still emits the marker and the length and the counter the loop runs on, reloaded at 0x004afb92, is the original length. The function is the `write_any_marker` method of the marker writer: jinit_marker_writer 0x004afaf0 stores 0x004afb60 into the module object at 0x004afb07, and that store is the only reference to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: write_any_marker (12 vectors, 9 distinct results, 8 changing state, `log/diff/004afb60_write_any_marker.path1.csv`); write_any_marker_full (8 vectors, 8 distinct results, 8 changing state, `log/diff/004afb60_write_any_marker_full.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_write_any_marker` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afbae): callee pops 0 bytes of stack arguments.

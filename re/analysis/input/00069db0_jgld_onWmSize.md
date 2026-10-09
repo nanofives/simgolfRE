@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069db0`), 74 bytes, 30 instructions, subsystem `inpu
 WM_SIZE (0x05) handler: forwards LOWORD/HIWORD(lParam) as width,height to g_listener (0x1012872c) vtable slot 0. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Window-message forwarder: hands a WM_SIZE's new client width and height to the event sink at 0x1012872c. windowProc calls it with four arguments at 0x100694c5 (sixteen bytes popped at 0x100694ca; `ret` at 0x10069df9 pops nothing), having split the lParam into its two signed words at 0x100694a8-0x100694bc. The body pushes the fourth argument first (0x10069dca) and the third second (0x10069dce), so slot +0x00 of the sink's vtable (called at 0x10069de0, sink loaded at 0x10069dd2 and 0x10069ddc) receives (cx, cy) in that order; the HWND and the wParam are not read, and the slot's eax is returned untouched. Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onWmSize (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069db0_jgld_onWmSize.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10069db0@f_10069db0@@YAXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069df9): callee pops 0 bytes of stack arguments.

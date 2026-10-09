@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a9d0`), 69 bytes, 30 instructions, subsystem `rend
 copies the surface bounds rectangle into the out parameter. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xd0: the same four-dword copy as getClip, from the bounds rectangle at this+0x54 (VA 0x1000a9f0 add eax, 0x54; the stores at VA 0x1000a9f6, 0x1000a9fa, 0x1000aa00, 0x1000aa06). Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getBounds (18 vectors, 14 distinct results, 18 changing state, `log/diff/0000a9d0_jgld_Surface_getBounds.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?getBounds@Surface@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000aa12): callee pops 4 bytes of stack arguments.

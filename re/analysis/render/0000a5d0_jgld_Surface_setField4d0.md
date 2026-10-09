@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a5d0`), 52 bytes, 23 instructions, subsystem `rend
 vtable +0xbc: stores arg0 into this+0x4d0 and returns 0. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xbc: stores its argument in the spare dword at this+0x4d0 (VA 0x1000a5f3) and returns 0 (VA 0x1000a5f9 xor eax, eax). No branch, no call, no test of the value. What the field means is not determined here; 0x1000a620 reads it back. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::setField4d0 (14 vectors, 14 distinct results, 14 changing state, `log/diff/0000a5d0_jgld_Surface_setField4d0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_1000a5d0@C_FUN_1000a5d0@f_1000a5d0@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000a601): callee pops 4 bytes of stack arguments.

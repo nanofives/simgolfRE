@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a930`), 69 bytes, 30 instructions, subsystem `rend
 copies the current clip rectangle into the out parameter. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xc8: copies the four dwords of the clip rectangle at this+0x44 (VA 0x1000a950 add eax, 0x44) into the rectangle the caller passes, one dword at a time (the loads and stores at VA 0x1000a956, 0x1000a95a, 0x1000a960, 0x1000a966). It returns nothing and does not test the destination pointer. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getClip (18 vectors, 17 distinct results, 18 changing state, `log/diff/0000a930_jgld_Surface_getClip.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?getClip@Surface@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000a972): callee pops 4 bytes of stack arguments.

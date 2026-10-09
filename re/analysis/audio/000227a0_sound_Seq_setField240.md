@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000227a0`), 15 bytes, 4 instructions, subsystem `audi
 stores param at this+0x240 and returns 0 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Stores its argument at this+0x240 and returns 0 (`mov eax, [esp+4]` / `mov [ecx+0x240], eax` / `xor eax, eax` at 0x100227a0, 0x100227a4, 0x100227aa; `ret 4` at 0x100227ac). Fifteen bytes, no callee, no conditional jump, and the only cell it touches is +0x240. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: Seq_setField240 (24 vectors, 22 distinct results, 21 changing state, `log/diff/000227a0_sound_Seq_setField240.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_100227a0@C_FUN_100227a0@f_100227a0@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100227ac): callee pops 4 bytes of stack arguments.

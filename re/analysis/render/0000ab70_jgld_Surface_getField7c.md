@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000ab70`), 42 bytes, 21 instructions, subsystem `rend
 vtable +0xe8: returns the int at this+0x7c. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xe8: returns the Palette pointer at this+0x7c (VA 0x1000ab90), the object the 16-bit primitives take their two colour tables from (slot +0x18 of a Palette returns its RGB565 table, slot +0x1c its RGB555 one). A surface may carry none, in which case this returns NULL and the primitives fall back on the module global at 0x1012873c. The running game enters it 6,605 times in twelve seconds at the menu. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getField7c (16 vectors, 3 distinct results, 0 changing state, `log/diff/0000ab70_jgld_Surface_getField7c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_1000ab70@f_1000ab70@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000ab99): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001c2a0`), 58 bytes, 24 instructions, subsystem `aud
 embedded-base variant of resetElements (this at base+0x2c): walks list at this-0x20 calling element vtbl slot 0x14, sets this-0x28=0x18 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Resets every element of a controller's element list and leaves the code 0x18 behind. The body is entered with ecx pointing at an EMBEDDED BASE sub-object, so it addresses its own fields with negative displacements: the list head is this-0x20, the walk cursor this-0x18 and the result cell this-0x28. The cursor is seeded with the head (0x1001c2a3, 0x1001c2a8) and the list is walked with the node layout {+4 next, +8 element}, the same one Seq_listGetAt 0x1001d780 walks: for every node whose element is non-null (`test ecx, ecx` / `je 0x1001c2d1` at 0x1001c2b0) that element's own vtable slot +0x14 is called with the element in ecx and nothing pushed (0x1001c2b4, `call dword [eax+0x14]` at 0x1001c2b6). The cursor is RE-READ from memory after every call (0x1001c2b9), so an element whose reset clears it ends the walk (`je 0x1001c2d1` at 0x1001c2be); otherwise the walk advances to the node's +4, stores it back whether or not it is null (0x1001c2c0, 0x1001c2c5) and stops at a null next or a null element (0x1001c2c8, 0x1001c2cf). Whatever path is taken, 0x18 is written to this-0x28 last (0x1001c2d1). No value is loaded into eax before the return, so the body has no return value. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: CtrlBase_resetElements (14 vectors, 14 distinct results, 14 changing state, `log/diff/0001c2a0_sound_CtrlBase_resetElements.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001c2a0@f_1001c2a0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001c2d9): callee pops 0 bytes of stack arguments.

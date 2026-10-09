@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078c40`), 99 bytes, 40 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Every byte libpng reads comes through here. The body is one test and two calls: when the `read_data_fn` slot at png_ptr+0x50 is not null (0x10078c5f) it is called as `read_data_fn(png_ptr, data, length)`, an indirect __cdecl call at 0x10078c72 with the three arguments pushed in reverse from the caller's own stack slots, and otherwise `png_error(png_ptr, "Call to NULL read function" 0x1011dfcc)` at 0x10078c8a, which does not return. It tests neither png_ptr - a null one faults at the first read 0x10078c5b - nor the length, and it returns whatever the installed reader left in the buffer without looking at it. The slot it dispatches through is the one `png_set_read_fn` 0x10078cb0 (C3, c3bq) writes at 0x10078cdd, which is what lets the A/B put a reader of its own there. Reimplemented in `shim/src/re/c3ch.cpp`; path-1 A/B GREEN: png_read_data (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078c40_jgld_png_read_data.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rio.cpp` as `_png_read_data` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078ca2): callee pops 0 bytes of stack arguments.

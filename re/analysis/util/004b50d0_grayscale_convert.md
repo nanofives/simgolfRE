@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 103 bytes, 43 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The colour conversion method that extracts the first channel of each input pixel into the single greyscale component. The row length is image_width (cinfo+0x18, 0x004b50d6) and the input stride is input_components (cinfo+0x20, 0x004b50d9), which the inner loop reloads from its frame slot on every pixel (0x004b511b). The row loop is the same pre-decrement SIGNED test as rgb_gray_convert (0x004b50e4 / 0x004b50e5 / 0x004b512a / 0x004b512f), the input row pointer advances by one element per row (0x004b5102 / 0x004b5104) and the output row is output_buf[0][output_row] with the index advancing by one (0x004b5107 / 0x004b510a / 0x004b510c). The column loop is UNSIGNED (0x004b5112 / 0x004b5122 / 0x004b5124): it copies one byte without any table (0x004b5116 / 0x004b5118) and steps the input pointer by the stride (0x004b511f). The function is the `color_convert` method of the colour converter for a single-channel source: jinit_color_converter 0x004b4a60 stores 0x004b50d0 into the module object at 0x004b4b17 and again at 0x004b4b41, the only two references to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: grayscale_convert (15 vectors, 11 distinct results, 10 changing state, `log/diff/004b50d0_grayscale_convert.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_ccolor.cpp` as `_grayscale_convert` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b5136): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000aa30`), 42 bytes, 21 instructions, subsystem `rend
 vtable +0xd4: returns the address of the bounds RECT at this+0x54 (the rect copied out by Surface::getBounds 0x1000a9d0). (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xd4: returns the address of the bounds rectangle, this+0x54 (VA 0x1000aa50 add eax, 0x54). Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getBoundsRectPtr (16 vectors, 16 distinct results, 0 changing state, `log/diff/0000aa30_jgld_Surface_getBoundsRectPtr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_1000aa30@f_1000aa30@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000aa59): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 70 bytes, 28 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The downsampling method installed for a component that is not subsampled: it copies the rows straight through and pads them to the block grid. jcopy_sample_rows 0x004b04f0 copies max_v_samp_factor (cinfo+0xe4) rows of image_width (cinfo+0x18) samples from row 0 of the input array to row 0 of the output array, the six arguments being pushed in reverse at 0x004b4407 to 0x004b440e and the call made at 0x004b440f; expand_right_edge 0x004b4390 then pads each of those rows out to width_in_blocks (compptr+0x1c) times 8 samples (0x004b441b / 0x004b4424 / 0x004b4427 to 0x004b442b), and both cinfo fields are read again for that second call (0x004b4418 / 0x004b441e). The function has no conditional branch of its own and no return value; rows past max_v_samp_factor are left untouched. It is the `downsample` method of a component's downsampler: jinit_downsampler 0x004b4040 stores 0x004b43f0 into the per-component method slot at 0x004b40e7, the only reference to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: fullsize_downsample (10 vectors, 10 distinct results, 10 changing state, `log/diff/004b43f0_fullsize_downsample.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_csample.cpp` as `_fullsize_downsample` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b4435): callee pops 0 bytes of stack arguments.

@@ -52,6 +52,11 @@ def purposes(batch):
     return out
 
 
+# Functions held at C2 by a verifier's judgement that the gate cannot express (the A/B is GREEN but does not reach the
+# behaviour). --apply never promotes them; remove a row once its evidence is redone.
+HOLD = {(r["module"], int(r["addr"], 16)) for r in csv.DictReader(open(ROOT / "re" / "c3_hold.tsv"), delimiter="	")}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("batch")
@@ -87,8 +92,10 @@ def main():
             print(f"    {k:28} " + ("no CSV" if not f else f"{f['verdict']} {f['vectors']} vectors, {f['distinct']} distinct"
                                      + (f", {f['changed']} change state" if f["stateful"] else "")))
         skip = {int(s, 16) for s in a.skip.split(",") if s.strip()}
+        if (mod, addr) in HOLD:                    # re/c3_hold.tsv: held by judgement, never promoted by --apply
+            skip.add(addr)
         if status == "READY" and addr in skip:
-            print("    held back by --skip")
+            print("    held back by --skip or re/c3_hold.tsv")
         elif status == "READY":
             ready.append((mod, addr, row, facts))
     if not a.apply:

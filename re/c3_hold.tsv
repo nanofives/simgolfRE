@@ -1,0 +1,10 @@
+module	addr	reason
+golf_clean.exe	0045b880	clearBuffers: its 10 vectors are one argument-free call repeated; no evidence (round 3)
+golf_clean.exe	00473bf0	Surface_blit: the copy path never runs in the A/B (rounds 2-3)
+golf_clean.exe	0042f1c0	propagateType11: one of 7 vectors does anything (round 3)
+jgld.dll	000681a0	Array_Rec14::add: the operator-new growth branch cannot be A/B'd (round 14)
+jgld.dll	00068400	Array_Rec94::add: the operator-new growth branch cannot be A/B'd (round 14)
+jgld.dll	00003600	Matrix::deletingDtor: the operator-delete side is a direct call, never A/B'd (round 20)
+jgld.dll	00003670	Transform::deletingDtor: the operator-delete side is a direct call, never A/B'd (round 20)
+jgld.dll	00006d80	LinkedList::deletingDtor: the operator-delete side is a direct call, never A/B'd (round 20)
+jgld.dll	000073e0	ListNode::deletingDtor: the operator-delete side is a direct call, never A/B'd (round 20)

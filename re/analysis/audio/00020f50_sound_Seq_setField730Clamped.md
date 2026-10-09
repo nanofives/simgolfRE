@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00020f50`), 60 bytes, 23 instructions, subsystem `aud
 clamps param to 0..0x7f, applies it via 0x1002b260(this,param) and stores it at this+0x730 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Clamps a level to 0..0x7f, applies it to the sequencer and remembers it at this+0x730. Both compares are SIGNED: a value above 0x7f becomes 0x7f (`cmp esi, 0x7f` / `jle 0x10020f73` at 0x10020f56, 0x10020f5b, `mov esi, 0x7f` at 0x10020f5d) and a negative value becomes 0 (`test esi, esi` / `jge 0x10020f79` at 0x10020f73, 0x10020f75, `xor esi, esi` at 0x10020f77). The clamped value is handed to Seq_applyChannelLevel (VA 0x1002b260, through the incremental-link thunk at 0x100025d6) with the sequencer still in ecx, which stores it masked with 0x7f at this+4 and forwards it to the inner device at this+0x40 through that device's vtable slot +0x40, and is then stored at this+0x730 (0x10020f63 + 0x10020f68 on the clamped-high arm, 0x10020f7c + 0x10020f81 on the other). The two arms are separate code paths that differ only in the clamp. No value is loaded into eax after the call, so the body has no return value of its own. The reimplementation calls the original Seq_applyChannelLevel at its own address. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: Seq_setField730Clamped (36 vectors, 18 distinct results, 36 changing state, `log/diff/00020f50_sound_Seq_setField730Clamped.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10020f70, 0x10020f89): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10020f59 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

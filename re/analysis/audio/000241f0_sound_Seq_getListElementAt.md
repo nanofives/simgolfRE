@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000241f0`), 46 bytes, 17 instructions, subsystem `aud
 if param_1==0 and index>=0, returns the element at index in the +0x60 list via Seq_listGetAt, else 0 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Returns the element at an index of the sequencer's this+0x60 list, or 0. The first stack argument is a guard that must be 0 (`test eax, eax` / `jne 0x10024219` at 0x100241f4, 0x100241f6) and the second is the index, rejected when it is NEGATIVE (`test eax, eax` / `jl 0x10024219` at 0x100241fc, 0x100241fe, SIGNED). Seq_listGetAt (VA 0x1001d780, through the incremental-link thunk at 0x10024209) is then called on this+0x60 (`add ecx, 0x60` at 0x10024206) with the index as the step count, and the out pointer it is handed is the CALLER'S OWN first argument slot (`lea eax, [esp+8]` at 0x10024201, which after the `push eax` of 0x10024200 is the stack slot the guard was read from); that slot is read back as the result at 0x10024212. A non-zero return from Seq_listGetAt - the 0x24 it reports for an index past the end or a node with a null element - returns 0 instead (0x1002420e, 0x10024210, 0x10024219). The body never dereferences what it looked up, so an index past the end is harmless here. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: Seq_getListElementAt (35 vectors, 15 distinct results, 25 changing state, `log/diff/000241f0_sound_Seq_getListElementAt.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10024216, 0x1002421b): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10024206 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

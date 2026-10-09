@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 128 bytes, 52 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Emit an abbreviated datastream that carries nothing but the tables. SOI 0xd8 opens it (0x004b0327 / 0x004b032d) and EOI 0xd9 closes it (0x004b038e / 0x004b0394), both through emit_marker 0x004afbf0. In between, the four quant_tbl_ptrs slots from cinfo+0x40 (0x004b0337 / 0x004b033a / 0x004b034a) produce one emit_dqt 0x004afec0 call each for every non-null pointer (0x004b0341), and - only when arith_code (cinfo+0xac) is zero (0x004b0352 / 0x004b035a) - the four DC slots from cinfo+0x50 (addressed as [ebx-0x10] with ebx walking from cinfo+0x60, 0x004b035e / 0x004b0361) and the four AC slots from cinfo+0x60 (0x004b0374) produce an emit_dht 0x004b0120 call each with is_ac 0 (0x004b036c) and 1 (0x004b037d). Both loops run the index 0 to 3 (0x004b034d / 0x004b0389) and the DC and AC tests of one index are independent. The function is the `write_tables_only` method of the marker writer: jinit_marker_writer 0x004afaf0 stores 0x004b0320 into the module object at 0x004afb4c, the only reference to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: write_tables_only (8 vectors, 7 distinct results, 8 changing state, `log/diff/004b0320_write_tables_only.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_write_tables_only` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b039f): callee pops 0 bytes of stack arguments.

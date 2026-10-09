@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001c2f0`), 51 bytes, 23 instructions, subsystem `aud
 walks the list at this-0x20 calling each element's vtbl slot 0x18 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Flushes every element of the same controller list as CtrlBase_resetElements 0x1001c2a0, through the elements' vtable slot +0x18 instead of +0x14 (`call dword [eax+0x18]` at 0x1001c306), and writes nothing but the walk cursor at this-0x18: the head this-0x20 is read at 0x1001c2f3 and copied into the cursor at 0x1001c2f8, the cursor is re-read after every call (0x1001c309) and advanced to the node's +4 and stored back whether or not it is null (0x1001c310, 0x1001c315), and the walk ends on a null head (0x1001c2fb), a null element (0x1001c302), a cursor the callee cleared (0x1001c30e), a null next (0x1001c318) or a null element of the next node (0x1001c31f). Unlike 0x1001c2a0 there is no final store at this-0x28, and no value is loaded into eax before the return (0x1001c322), so the body has no return value. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: CtrlBase_flushElements (14 vectors, 14 distinct results, 14 changing state, `log/diff/0001c2f0_sound_CtrlBase_flushElements.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001c322): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001c2f1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000aab0`), 48 bytes, 23 instructions, subsystem `rend
 vtable +0xdc: returns *(this+0x60) - *(this+0x58), the height of the bounds RECT at this+0x54. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xdc: the height of the bounds rectangle, [this+0x60] - [this+0x58] (VA 0x1000aad3 mov, 0x1000aad6 sub), that is bottom minus top. pixelAddr bounds y by it at VA 0x10008880. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::height (16 vectors, 6 distinct results, 0 changing state, `log/diff/0000aab0_jgld_Surface_height.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_1000aab0@f_1000aab0@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000aadf): callee pops 0 bytes of stack arguments.

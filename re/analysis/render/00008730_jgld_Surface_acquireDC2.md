@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008730`), 96 bytes, 33 instructions, subsystem `rend
 returns a secondary cached DC (+0x4cc=+0x4c0) and, if non-null, increments its use count (+0x4c8). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Hands out the surface's pixel base and counts the loan, but only counts it when there is one. It copies this+0x4c0 into this+0x4cc (VA 0x10008753, 0x10008759); when that is not zero (VA 0x10008762 cmp, 0x10008769 je) it adds one to the count at this+0x4c8 (VA 0x1000876e, 0x10008774, 0x1000877a); and it returns this+0x4cc either way (VA 0x10008783), so a surface with no pixels returns NULL with its count untouched. It is slot +0x10, the one pixelAddr 0x10008830 takes its base from (VA 0x10008896). Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::acquireDC2 (16 vectors, 16 distinct results, 15 changing state, `log/diff/00008730_jgld_Surface_acquireDC2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10008730@f_10008730@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000878f): callee pops 0 bytes of stack arguments.

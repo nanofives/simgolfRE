@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000086b0`), 97 bytes, 31 instructions, subsystem `rend
 decrements the DC use count (+0x4c4); clears the cached DC when it reaches 0. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Gives back n loans of the device context and drops it when none is left. It subtracts the argument from the count at this+0x4c4 (VA 0x100086d0, 0x100086d6, 0x100086dc) and, when what is left is not greater than zero (VA 0x100086e5 cmp, 0x100086ec jg), clears the handed-out context at this+0x4b8 (VA 0x100086f1) and sets the count back to zero (VA 0x100086fe), so an over-release leaves the count at zero rather than negative. The epilogue leaves `this` in eax from VA 0x100086e2 and nothing stores a result. It is slot +0x2c, the one setClip 0x100083c0 calls with 1 at VA 0x10008509. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::releaseDC (14 vectors, 9 distinct results, 10 changing state, `log/diff/000086b0_jgld_Surface_releaseDC.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_100086b0@C_FUN_100086b0@f_100086b0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000870e): callee pops 4 bytes of stack arguments.

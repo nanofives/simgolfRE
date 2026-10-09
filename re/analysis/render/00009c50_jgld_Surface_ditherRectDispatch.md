@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009c50`), 131 bytes, 51 instructions, subsystem `ren
 dithers a RECT with a color: dispatches on depth to ditherRectC8 (8-bit) or ditherRect16. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0x4c: the depth-independent entry to the chequerboard rectangle fill. It calls slot +0xe4 and dereferences it for the depth (VA 0x10009c77, 0x10009c84) and compares it with 8 (VA 0x10009c89, 0x10009c8d je) and with 0x10 (VA 0x10009c8f, 0x10009c93 je); any other depth returns 0x17 (VA 0x10009cbb). Depth 8 goes to ditherRectC8 0x10011f80 (VA 0x10009ca2) and depth 16 to ditherRect16 0x1000e580 (VA 0x10009cb4), both with the rectangle (VA 0x10009c9b, 0x10009cad) and the colour (VA 0x10009c97, 0x10009ca9) unchanged, and the primitive's return value is the function's. The rectangle is not tested for NULL here: the two primitives take the surface's bounds rectangle instead. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::ditherRectDispatch (27 vectors, 18 distinct results, 15 changing state, `log/diff/00009c50_jgld_Surface_ditherRectDispatch.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op2b@Surface@@QAEHPAHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10009cd0): callee pops 8 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a0e0`), 80 bytes, 32 instructions, subsystem `ui`.
 if g_commandHandler (0x10128728) is set, invokes it with the command id (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Calls the command handler the module keeps in the global 0x10128728, if one is installed. windowProc calls it with three arguments at 0x100693eb (twelve bytes popped at 0x100693f0; `ret` at 0x1006a12f pops nothing). It compares the global with zero at 0x1006a0f8 and, when it is zero, returns 0 through the `xor eax,eax` at 0x1006a11d. Otherwise it pushes the third argument then the second (0x1006a103, 0x1006a107), calls the global indirectly at 0x1006a10b, pops the eight bytes itself at 0x1006a111 - so the handler is __cdecl, not __stdcall - and returns the handler's eax untouched. The HWND (first argument) is never read. The global has four references in the image: this test and call, the store at 0x10067f81 in storeCommandHandler 0x10067f60, and the `mov dword ptr [0x10128728], 0` at 0x1006928d that clears it. Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onCommand (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a0e0_jgld_onCommand.path1.csv`); onCommand_null (10 vectors, 1 distinct results, 0 changing state, `log/diff/0006a0e0_jgld_onCommand_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?onCommand@@YAHPAUHWND__@@HH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a12f): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001c7a0`), 44 bytes, 19 instructions, subsystem `aud
 if pos(+0xc)>=size(+0xf) calls refill vtbl+0x14, reads one byte at buffer(+0xb)+pos, advances pos, caches it at +0x19, returns it (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Reads the next byte of the controller's byte stream, refilling it first when the position has reached the end, and caches it. The position is +0x30, the limit +0x3c and the buffer pointer +0x2c (the dword indices 0xc, 0xf and 0xb that re/names/sound_0.tsv quotes). When the position is NOT below the limit (`cmp eax, ecx` / `jb 0x1001c7b4` at 0x1001c7a9, 0x1001c7ab, UNSIGNED) the object's own vtable slot +0x14 is called with the object in ecx and nothing pushed (0x1001c7ad-0x1001c7b1) and its result is ignored; the position and the buffer are then read again (0x1001c7b4, 0x1001c7b7), so the refill is free to move both. The byte at buffer[position] is fetched (0x1001c7ba), the position is incremented and stored (0x1001c7bd, 0x1001c7be), the byte is cached at +0x19 (0x1001c7c3) and returned zero-extended (`xor eax, eax` / `mov al, dl` at 0x1001c7c1, 0x1001c7c6). The one stack argument the `ret 4` at 0x1001c7c9 pops is never read: there is no `[esp+8]` in the 44 bytes of the function. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: streamReadByte (24 vectors, 12 distinct results, 24 changing state, `log/diff/0001c7a0_sound_streamReadByte.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001c7c9): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001c7a1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

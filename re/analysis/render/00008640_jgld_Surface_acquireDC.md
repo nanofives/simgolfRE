@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008640`), 84 bytes, 30 instructions, subsystem `rend
 returns the cached GDI DC (+0x4b8=+0x4bc) and increments its use count (+0x4c4). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Hands out the surface's device context and counts the loan. It copies the context stored at this+0x4bc into this+0x4b8 (VA 0x10008663, 0x10008669), adds one to the count at this+0x4c4 (VA 0x10008672, 0x10008678, 0x1000867e) and returns what it put in this+0x4b8 (VA 0x10008687). There is no branch, no call and no Win32 call: a surface whose stored context is zero hands out zero and still counts the loan. It is slot +0x28 of the Surface vtable, the slot setClip 0x100083c0 calls at VA 0x10008439 before deciding whether to touch the GDI clip region. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::acquireDC (16 vectors, 16 distinct results, 16 changing state, `log/diff/00008640_jgld_Surface_acquireDC.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10008640@f_10008640@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10008693): callee pops 0 bytes of stack arguments.

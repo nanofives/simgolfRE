@@ -81,3 +81,8 @@ c3by.cpp
 c3bz.cpp
 c3cb.cpp
 c3ca.cpp
+c3ce.cpp
+c3cd.cpp
+c3cf.cpp
+c3cg.cpp
+c3ch.cpp

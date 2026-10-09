@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000087b0`), 97 bytes, 31 instructions, subsystem `rend
 decrements the secondary DC use count (+0x4c8); clears it at 0. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Gives back n loans of the pixel base, the same shape as releaseDC on the other pair of fields. It subtracts the argument from this+0x4c8 (VA 0x100087d0, 0x100087d6, 0x100087dc) and, when what is left is not greater than zero (VA 0x100087e5 cmp, 0x100087ec jg), clears the handed-out base at this+0x4cc (VA 0x100087f1) and the count (VA 0x100087fe). It is slot +0x24, the one every drawing primitive of the module calls with 1 when it is done with the pixels. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::releaseDC2 (14 vectors, 11 distinct results, 11 changing state, `log/diff/000087b0_jgld_Surface_releaseDC2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_100087b0@C_FUN_100087b0@f_100087b0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000880e): callee pops 4 bytes of stack arguments.

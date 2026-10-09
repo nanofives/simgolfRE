@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069e70`), 78 bytes, 32 instructions, subsystem `inpu
 WM_MOUSEWHEEL (0x20a) handler: forwards HIWORD(wParam) delta and x,y to g_listener vtable slot 6. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Window-message forwarder: hands a mouse-wheel message's three decoded fields to the event sink at 0x1012872c. windowProc calls it with five arguments at 0x10069608 (twenty bytes popped at 0x1006960d; `ret` at 0x10069ebd pops nothing). The body reads the second, third and fourth arguments and pushes them in reverse (0x10069e8a, 0x10069e8e, 0x10069e92), so slot +0x18 (called at 0x10069ea3, sink loaded at 0x10069e96 and 0x10069e9d) receives (a, b, c); the HWND and the fifth argument are never read, and the slot's eax is returned untouched. Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onWmMouseWheel (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069e70_jgld_onWmMouseWheel.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10069e70@f_10069e70@@YAXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069ebd): callee pops 0 bytes of stack arguments.

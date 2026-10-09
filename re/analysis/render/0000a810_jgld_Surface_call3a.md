@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a810`), 76 bytes, 33 instructions, subsystem `rend
 forwards to a virtual with two int args (vtbl helper). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0x14, which passes its two arguments on to slot +0x0c of the same object: it pushes the second (VA 0x1000a82f, 0x1000a832) then the first (VA 0x1000a833, 0x1000a836), loads the vtable from [this] (VA 0x1000a83a) and calls [vtable+0x0c] (VA 0x1000a83f); eax is not touched before the `ret 8` at VA 0x1000a859. On a Surface slot +0x0c is pixelAddr 0x10008830, so the arguments are a pixel coordinate and the result is a pixel address. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::call3a (16 vectors, 13 distinct results, 12 changing state, `log/diff/0000a810_jgld_Surface_call3a.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?call3a@Surface@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000a859): callee pops 8 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000094e0`), 150 bytes, 62 instructions, subsystem `ren
 draws a line: dispatches on depth to line8 (8-bit) or line16 (16-bit). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0x64: the depth-independent entry to the line drawing. It calls slot +0xe4 and dereferences it for the depth (VA 0x10009507, 0x10009514) and compares it with 8 (VA 0x10009519, 0x1000951d je) and with 0x10 (VA 0x1000951f, 0x10009523 je); any other depth draws nothing. Depth 8 goes to line8 0x1000fb70 (VA 0x1000953e) and depth 16 to line16 0x1000b140 (VA 0x1000955c). Only the first five arguments are forwarded (the pushes at VA 0x10009527..0x1000953a and VA 0x10009545..0x10009558 read [ebp+0x18] down to [ebp+8]); the sixth argument at [ebp+0x1c] is never read, although the `ret 0x18` at VA 0x10009573 pops it. The primitive's return value is discarded and the function always returns 0 (VA 0x10009561 xor eax, eax), so its evidence is the pixels it causes to be written. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::drawLine (25 vectors, 15 distinct results, 15 changing state, `log/diff/000094e0_jgld_Surface_drawLine.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op5@Surface@@QAEHHHHHIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x10009573): callee pops 24 bytes of stack arguments.

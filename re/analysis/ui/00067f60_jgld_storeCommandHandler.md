@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067f60`), 46 bytes, 21 instructions, subsystem `ui`.
 Stores its arg into g_commandHandler (0x10128728), the WM_COMMAND callback read by onCommand 0x1006a0e0. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Installs the command handler onCommand 0x1006a0e0 dispatches through. __thiscall with one stack argument (`ret 4` at 0x10067f8b); the whole body is `mov dword ptr [0x10128728], eax` at 0x10067f80 after loading that argument at 0x10067f7d. `this` is spilled to the /GZ frame slot [ebp-4] at 0x10067f7a and never read, so the function is independent of the object it is called on. It has no branch and no return value - the epilogue at 0x10067f85 does not reload one, and unlike its siblings it ends without the `cmp ebp,esp` / __chkesp 0x1007e780 pair. Its only caller is Lib::setCommandHandler 0x10067f10 (0x10067f37, through the incremental-link thunk 0x100011f9). Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: storeCommandHandler (13 vectors, 13 distinct results, 12 changing state, `log/diff/00067f60_jgld_storeCommandHandler.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_09.cpp` as `?FUN_10067f60@C_FUN_10067f60@f_10067f60@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10067f8b): callee pops 4 bytes of stack arguments.

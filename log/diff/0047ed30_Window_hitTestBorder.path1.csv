@@ -1,0 +1,40 @@
+vector,original,reimpl,match
+$w0 0 0,13,13,True
+$w0 0 55,16,16,True
+$w0 95 0,14,14,True
+$w0 95 55,17,17,True
+$w0 3 30,10,10,True
+$w0 50 2,12,12,True
+$w0 95 30,11,11,True
+$w0 50 55,15,15,True
+$w0 50 30,0,0,True
+$w0 8 8,0,0,True
+$w0 92 52,0,0,True
+$w0 93 52,11,11,True
+$w0 92 53,15,15,True
+$w0 -2147483648 2147483647,16,16,True
+$w0 2147483647 -2147483648,14,14,True
+$w1 0 0,13,13,True
+$w1 3 57,16,16,True
+$w1 97 1,14,14,True
+$w1 97 57,17,17,True
+$w1 50 30,2,2,True
+$w2 0 0,2,2,True
+$w2 0 40,0,0,True
+$w2 -1 29,2,2,True
+$w3 5 10,2,2,True
+$w3 5 30,0,0,True
+$w3 5 25,0,0,True
+$w4 1 1,0,0,True
+$w4 -5 -5,0,0,True
+$w5 0 0,2,2,True
+$w5 -1 -1,13,13,True
+$w5 11 11,17,17,True
+$w5 11 0,11,11,True
+$w5 0 11,15,15,True
+$w6 0 0,13,13,True
+$w6 100 100,17,17,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x706a0c50,original=0xc80e40,2026-10-09T06:42:31
+distinct_results,10,,
+VERDICT,GREEN,35,

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 110 bytes, 38 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Reserve a sample-array control block that is not backed by memory yet and push it onto the memory manager's list of virtual sample arrays. The memory manager is cinfo+4, read before the pool check (0x004af2de). A pool identifier other than 1 raises message code 0xc with the identifier in msg_parm.i[0] and calls err->error_exit (0x004af2db / 0x004af2e1 / 0x004af2e6 / 0x004af2ef / 0x004af2f4); with a handler that returns, the function carries on with that same identifier. The 0x80-byte control block comes from alloc_small 0x004aef70 (0x004af2f9 / 0x004af300) and its fields are written in the order rows_in_array = numrows (0x004af30d), samplesperrow (0x004af314), mem_buffer = NULL (0x004af31b), maxaccess (0x004af321), pre_zero (0x004af324) and b_s_open = 0 (0x004af327); the block is then linked at the head of the list at mem+0x40 (0x004af32e / 0x004af334 / 0x004af337) and returned. The function is the `request_virt_sarray` method of the memory manager: jinit_memory_mgr 0x004aee30 stores 0x004af2d0 into the manager's method table at 0x004aee92, the only reference to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: request_virt_sarray (10 vectors, 10 distinct results, 10 changing state, `log/diff/004af2d0_request_virt_sarray.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_request_virt_sarray` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af33d): callee pops 0 bytes of stack arguments.

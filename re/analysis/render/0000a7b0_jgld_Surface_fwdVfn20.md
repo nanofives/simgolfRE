@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a7b0`), 66 bytes, 29 instructions, subsystem `rend
 vtable +0x20: tail-calls the virtual at vtable +0x10 (Surface::acquireDC2 0x10008730) with this. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0x20, the same body as 0x1000a750 at a second address: it loads the vtable from [this] (VA 0x1000a7d0), calls slot +0x10 (VA 0x1000a7d7) and returns with eax untouched (`ret` at VA 0x1000a7f1). Which source spelling produced each of the two is not determined; the A/B shows the two behave alike on all sixteen surfaces. The running game enters this one 7,705 times in twelve seconds at the menu (log/c3/alt/c3ce_probe.py) and 0x1000a750 not at all. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::fwdVfn20 (16 vectors, 16 distinct results, 15 changing state, `log/diff/0000a7b0_jgld_Surface_fwdVfn20.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_1000a7b0@f_1000a7b0@@YIXPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a7f1): callee pops 0 bytes of stack arguments.

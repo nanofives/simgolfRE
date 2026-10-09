@@ -39,8 +39,8 @@ jgld.dll	0x1000ad70	Surface::unimplVfn98	render	vtable 0x1011d0b0	Surface virtua
 jgld.dll	0x1000adf0	Surface::unimplVfn9c	render	vtable 0x1011d0b0	Surface virtual-slot stub at vtable +0x9c; returns 0x18 (not-this-depth status) (4 args); Surface does not implement this slot.
 jgld.dll	0x1000ae70	Surface::unimplVfna0	render	vtable 0x1011d0b0	Surface virtual-slot stub at vtable +0xa0; returns 0x18 (not-this-depth status) (4 args); Surface does not implement this slot.
 jgld.dll	0x1000ae30	Surface::unimplVfna4	render	vtable 0x1011d0b0	Surface virtual-slot stub at vtable +0xa4; returns 0x18 (not-this-depth status) (4 args); Surface does not implement this slot.
-jgld.dll	0x1000a750	Surface::fwdVfn18	render	vtable 0x1011d0b0	vtable +0x18: tail-calls the virtual at vtable +0x10 (Surface::acquireDC2 0x10008730) with this.
-jgld.dll	0x1000a7b0	Surface::fwdVfn20	render	vtable 0x1011d0b0	vtable +0x20: tail-calls the virtual at vtable +0x10 (Surface::acquireDC2 0x10008730) with this.
+jgld.dll	0x1000a750	Surface::fwdVfn18	render	vtable 0x1011d0b0	vtable +0x18: calls (plain call at 0x1000a777, not a tail call) the virtual at vtable +0x10 (Surface::acquireDC2 0x10008730) with this and returns its result.
+jgld.dll	0x1000a7b0	Surface::fwdVfn20	render	vtable 0x1011d0b0	vtable +0x20: calls (plain call at 0x1000a7d7, not a tail call) the virtual at vtable +0x10 (Surface::acquireDC2 0x10008730) with this and returns its result.
 jgld.dll	0x1000a5d0	Surface::setField4d0	render	vtable 0x1011d0b0	vtable +0xbc: stores arg0 into this+0x4d0 and returns 0.
 jgld.dll	0x1000a620	Surface::getField4d0	render	vtable 0x1011d0b0	vtable +0xc0: returns the pointer at this+0x4d0.
 jgld.dll	0x1000a990	Surface::getClipRectPtr	render	vtable 0x1011d0b0	vtable +0xcc: returns the address of the clip RECT at this+0x44 (the rect copied out by Surface::getClip 0x1000a930).
@@ -49,7 +49,7 @@ jgld.dll	0x1000aa70	Surface::width	render	vtable 0x1011d0b0	vtable +0xd8: return
 jgld.dll	0x1000aab0	Surface::height	render	vtable 0x1011d0b0	vtable +0xdc: returns *(this+0x60) - *(this+0x58), the height of the bounds RECT at this+0x54.
 jgld.dll	0x1000aaf0	Surface::getField40	render	vtable 0x1011d0b0	vtable +0xe0: returns the int at this+0x40.
 jgld.dll	0x1000ab30	Surface::getDepthPtr	render	vtable 0x1011d0b0	vtable +0xe4: returns the address of the depth field at this+0x24; Surface::blitT 0x100091a0 reads the destination depth through this slot and compares the dereferenced value to 8 and 0x10.
-jgld.dll	0x1000ab70	Surface::getField7c	render	vtable 0x1011d0b0	vtable +0xe8: returns the int at this+0x7c.
+jgld.dll	0x1000ab70	Surface::getField7c	render	vtable 0x1011d0b0	vtable +0xe8: returns the dword at this+0x7c, the Palette pointer the 16-bit primitives read (c3ce A/B).
 jgld.dll	0x1000aef0	Surface::getField810	render	match re/match/jgld_raw_03.cpp	returns the int at this+0x810; called by Surface::setPalette 0x100089d0.
 jgld.dll	0x1000aeb0	setField28	render	match re/match/jgld_raw_03.cpp	stores arg0 into *(this+0x28); callers Surface::drawTo 0x10009fd0 and Surface::drawToZ 0x1000a330 use it on a Surface, and Sprite_vtable (0x1011d380) +0x18 reuses it on a Sprite.
 jgld.dll	0x100092e0	initDepthInfo	render	caller 0x10007660 (Surface::ctor)	sets *(ecx+4)=0 and returns ecx; Surface::ctor calls it with ecx=this+0x24 (the embedded depth descriptor whose +0 is the depth read by blitT), clearing Surface+0x28.

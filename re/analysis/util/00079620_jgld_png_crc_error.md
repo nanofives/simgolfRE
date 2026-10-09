@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079620`), 178 bytes, 61 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Reads the four CRC bytes that close a chunk and says whether they disagree with the crc libpng accumulated. Whether it compares at all is decided exactly as `png_calculate_crc` 0x100787d0 decides whether to accumulate, from the same two fields: `need_crc` starts at 1 (0x10079638), an ANCILLARY chunk (chunk_name[0] & 0x20 at 0x1007964f) clears it when both flag bits 0x100 and 0x200 are set (`and 0x300; cmp 0x300` at 0x10079657-0x10079661), and a CRITICAL chunk clears it when flag bit 0x800 is set (0x1007967a). The four bytes are read into a local at [ebp-4] through `png_read_data` 0x10078c40 (0x1007968d) WHATEVER that decision was, so the input is always consumed and only the comparison is skipped (0x10079699); the skipping path reports agreement (0x100796bf). Otherwise `png_get_uint_32` 0x100793b0 turns the four bytes into a big-endian value and the result is `crc != png_ptr->crc` materialised with `setne` (0x100796b8), so the function returns 1 for a corrupt chunk and 0 for a sound one or one nobody wants checked. Reimplemented in `shim/src/re/c3ch.cpp`; path-1 A/B GREEN: png_crc_error (12 vectors, 12 distinct results, 12 changing state, `log/diff/00079620_jgld_png_crc_error.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_crc_error` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100796d1): callee pops 0 bytes of stack arguments.

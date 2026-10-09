@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a080`), 75 bytes, 30 instructions, subsystem `inpu
 WM_RBUTTONUP (0x205) handler: forwards x,y from lParam to g_listener vtable slot 10. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Window-message forwarder: the right-button twin of onWmLButtonUp. windowProc calls it with four arguments at 0x1006973a (sixteen bytes popped at 0x1006973f; `ret` at 0x1006a0ca pops nothing). It pushes the third argument then the second (0x1006a09a, 0x1006a09e), so slot +0x28 (called at 0x1006a0b0, sink loaded at 0x1006a0a2 and 0x1006a0aa) receives (x, y); the HWND and the fourth argument are not read and the slot's eax is returned untouched. Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onWmRButtonUp (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a080_jgld_onWmRButtonUp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_1006a080@f_1006a080@@YAXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a0ca): callee pops 0 bytes of stack arguments.

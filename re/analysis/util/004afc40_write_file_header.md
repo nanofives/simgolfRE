@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 59 bytes, 20 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Open a JPEG datastream. The SOI marker 0xd8 always goes out through emit_marker 0x004afbf0 (0x004afc45 / 0x004afc4b); the JFIF APP0 segment follows only when write_JFIF_header (cinfo+0xc8) is non-zero (0x004afc50 / 0x004afc5b / 0x004afc5e) and the Adobe APP14 segment only when write_Adobe_marker (cinfo+0xd4) is non-zero (0x004afc66 / 0x004afc6e / 0x004afc71). Both flags are read as full dwords and the two tests are independent, so all four combinations occur. The function is the `write_file_header` method of the marker writer: jinit_marker_writer 0x004afaf0 stores 0x004afc40 into the module object at 0x004afb17, the only reference to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: write_file_header (12 vectors, 9 distinct results, 12 changing state, `log/diff/004afc40_write_file_header.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_write_file_header` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afc7a): callee pops 0 bytes of stack arguments.

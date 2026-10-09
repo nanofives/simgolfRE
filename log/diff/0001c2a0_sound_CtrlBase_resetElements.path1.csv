@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$p_empty,void,void,True,6c9bcd58,6c9bcd58,True
+$p_null1,void,void,True,d119bffb,d119bffb,True
+$p_one,void,void,True,2dd72836,2dd72836,True
+$p_two,void,void,True,fb51d0fd,fb51d0fd,True
+$p_three,void,void,True,3b29f8e5,3b29f8e5,True
+$p_four,void,void,True,d354b87a,d354b87a,True
+$p_five,void,void,True,39187132,39187132,True
+$p_six,void,void,True,6f8cf3dd,6f8cf3dd,True
+$p_stop1,void,void,True,780c645d,780c645d,True
+$p_stop2,void,void,True,f8572427,f8572427,True
+$p_stop3,void,void,True,e6fe13da,e6fe13da,True
+$p_stop5,void,void,True,49a43403,49a43403,True
+$p_clear1,void,void,True,1976b32a,1976b32a,True
+$p_clear2,void,void,True,ebc50ea1,ebc50ea1,True
+state_regions,$k_empty+0x0:1024 $k_null1+0x0:1024 $k_one+0x0:1024 $k_two+0x0:1024 $k_three+0x0:1024 $k_four+0x0:1024 $k_five+0x0:1024 $k_six+0x0:1024 $k_stop1+0x0:1024 $k_stop2+0x0:1024 $k_stop3+0x0:1024 $k_stop5+0x0:1024 $k_clear1+0x0:1024 $k_clear2+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70790850,original=0x37103a0,2026-10-09T06:42:27
+distinct_results,14,,
+VERDICT,GREEN,14,

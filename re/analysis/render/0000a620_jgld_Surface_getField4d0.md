@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a620`), 45 bytes, 21 instructions, subsystem `rend
 vtable +0xc0: returns the pointer at this+0x4d0. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xc0: returns the spare dword at this+0x4d0 (VA 0x1000a640), the one 0x1000a5d0 writes. No branch, no call. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getField4d0 (16 vectors, 16 distinct results, 0 changing state, `log/diff/0000a620_jgld_Surface_getField4d0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_1000a620@f_1000a620@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a64c): callee pops 0 bytes of stack arguments.

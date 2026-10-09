@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 174 bytes, 62 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The colour conversion method that turns interleaved three-byte pixels into the single greyscale component. The conversion table is the dword at cconvert+8, cconvert being cinfo+0x158 (0x004b4eb6 / 0x004b4ec7), and the row length is image_width (cinfo+0x18, 0x004b4ebc). The row loop is a pre-decrement SIGNED test (0x004b4eca / 0x004b4ecb), so a row count of zero or less writes nothing; the remaining count is kept in the frame and counted down at 0x004b4f51 / 0x004b4f56. Each pass takes the next input row pointer (0x004b4eef / 0x004b4ef1) and the output row output_buf[0][output_row] (0x004b4ef8 / 0x004b4efc / 0x004b4efe), the output row index advancing by one element per row (0x004b4ee8). The column loop is UNSIGNED against the row length (0x004b4f08 / 0x004b4f45 / 0x004b4f47): each pixel reads three bytes (0x004b4f0e / 0x004b4f17 / 0x004b4f1e), advances the input by three (0x004b4f10), and the output byte is the sum of table[r], table[g] taken 0x400 bytes further in and table[b] 0x800 bytes further in (0x004b4f21 / 0x004b4f28 / 0x004b4f2b / 0x004b4f36 / 0x004b4f38) shifted right ARITHMETICALLY by 16 (0x004b4f3a) and stored at the column index (0x004b4f3d). The function is the `color_convert` method of the colour converter: jinit_color_converter 0x004b4a60 stores 0x004b4eb0 into the module object at 0x004b4b2d, the only reference to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: rgb_gray_convert (15 vectors, 11 distinct results, 10 changing state, `log/diff/004b4eb0_rgb_gray_convert.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_ccolor.cpp` as `_rgb_gray_convert` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b4f5d): callee pops 0 bytes of stack arguments.

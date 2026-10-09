@@ -206,8 +206,8 @@ jgld.dll	0x100165a0	Sprite::drawG	render	match re/match/jgld_sprite.cpp	draws th
 jgld.dll	0x10007e40	allocDrawBuffer	render	string 0x1011d1d0 (fatal error message), string 0x1011d210 (error title), import _exit	allocates the global draw buffer; on failure prints a fatal error and calls _exit.
 jgld.dll	0x100145a0	loadPng	render	import png_create_read_struct/png_read_image/png_get_IHDR, import _fopen, string 0x1011d368 (libpng version string)	loads a PNG image via libpng 1.0.5 (fopen, read IHDR/PLTE, strip alpha, read image) into a jalloc'd buffer.
 jgld.dll	0x100098f0	Surface::blit16	render	match re/match/jgld_surface.cpp	blits a source RECT between two 16-bit surfaces (depth-dispatched, both 16-bit).
-jgld.dll	0x10008730	Surface::acquireDC2	render	match re/match/jgld_raw_02.cpp	returns a secondary cached DC (+0x4cc=+0x4c0) and, if non-null, increments its use count (+0x4c8).
-jgld.dll	0x100087b0	Surface::releaseDC2	render	match re/match/jgld_raw_02.cpp	decrements the secondary DC use count (+0x4c8); clears it at 0.
+jgld.dll	0x10008730	Surface::acquireDC2	render	match re/match/jgld_raw_02.cpp	returns the surface's PIXEL BASE (+0x4cc = +0x4c0; pixelAddr 0x10008830 adds x and y*[+0x40] scaled by the depth to it) and, if non-null, increments its use count (+0x4c8); the device context is the separate triple +0x4bc/+0x4b8/+0x4c4 (acquireDC 0x10008640) (c3ce A/B).
+jgld.dll	0x100087b0	Surface::releaseDC2	render	match re/match/jgld_raw_02.cpp	decrements the pixel-base use count (+0x4c8, the counterpart of acquireDC2 0x10008730); clears it at 0 (c3ce A/B).
 jgld.dll	0x10008ae0	Surface::selectObject	render	match re/match/jgld_raw_02.cpp, import SelectObject	gets the surface DC (vtbl+0x28), selects the GDI object at *(arg+0x18) into it, then releases the DC (vtbl+0x2c).
 jgld.dll	0x10014c00	Sprite::deletingDtor	render	match re/match/jgld_raw_03.cpp, callee 0x10014de0 (Sprite::dtor)	scalar deleting destructor for Sprite.
 jgld.dll	0x10003340	Matrix::reset	util	match re/match/jgld_raw_01.cpp, callee 0x100045f0 (Matrix::loadIdentity)	resets the matrix to identity (loadIdentity wrapper).

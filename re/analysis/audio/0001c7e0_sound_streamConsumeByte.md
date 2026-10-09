@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001c7e0`), 38 bytes, 17 instructions, subsystem `aud
 void form of streamReadByte: refills if needed, caches the byte at +0x19 and advances pos without returning (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+The void form of streamReadByte 0x1001c7a0 over the same stream object: it refills through the object's vtable slot +0x14 when the position at +0x30 is not below the limit at +0x3c (`jb 0x1001c7f4` at 0x1001c7eb, 0x1001c7ed-0x1001c7f1), re-reads the position and the buffer pointer (0x1001c7f4, 0x1001c7f7), caches the byte at buffer[position] at +0x19 and advances the position (0x1001c7fa-0x1001c801). The two final stores are in the OTHER order than in 0x1001c7a0 (the cache at 0x1001c7fe before the position at 0x1001c801), the body takes no stack argument (`ret` at 0x1001c805) and no value is loaded into eax before the return, so it has no return value: eax is left holding the incremented position. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: streamConsumeByte (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001c7e0_sound_streamConsumeByte.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001c805): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001c7e1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

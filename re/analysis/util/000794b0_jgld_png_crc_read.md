@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000794b0`), 81 bytes, 35 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The pair every chunk reader uses: `png_read_data(png_ptr, buf, length)` at 0x100794d4 fills the caller's buffer and `png_calculate_crc(png_ptr, buf, length)` at 0x100794e8 runs the same bytes through the running crc at png_ptr+0x110. The same three arguments are pushed twice, in the same order, from the same stack slots, and nothing between the two calls looks at what arrived - the body has no conditional jump at all (`ret` at 0x10079500). Whether the bytes actually reach the crc is `png_calculate_crc`'s decision, from the chunk name at png_ptr+0x11c and the flags at png_ptr+0x6c, so a chunk the caller has told libpng to ignore is still read and still advances the input. Reimplemented in `shim/src/re/c3ch.cpp`; path-1 A/B GREEN: png_crc_read (12 vectors, 12 distinct results, 12 changing state, `log/diff/000794b0_jgld_png_crc_read.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_crc_read` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10079500): callee pops 0 bytes of stack arguments.

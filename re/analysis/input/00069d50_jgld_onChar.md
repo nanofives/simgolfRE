@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069d50`), 71 bytes, 28 instructions, subsystem `inpu
 forwards a WM_CHAR character to the listener (g_listener 0x1012872c vtable +0x10) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Window-message forwarder: hands the character of a WM_CHAR to the event sink the game installed in the module global 0x1012872c. Called by windowProc 0x100692b0 with three arguments at 0x10069568 (twelve bytes popped at 0x1006956d, so it is __cdecl, and `ret` at 0x10069d96 pops nothing). It reads only the second argument, and only its low byte: `mov al, byte ptr [ebp+0xc]` at 0x10069d6a followed by `push eax` at 0x10069d6d. eax at that point still holds 0xcccccccc - the constant the /GZ frame fill loaded at 0x10069d61, which `rep stosd` and the `mov esi,esp` at 0x10069d68 leave alone - so the dword the sink receives is 0xcccccc00 | (ch & 0xff): the three upper bytes are frame fill, not the caller's wParam, and the A/B's recording slot shows them. It then loads the sink from 0x1012872c twice (0x10069d6e for the vtable, 0x10069d78 for ecx) and calls slot +0x10 of that vtable (0x10069d7c), returning the call's eax untouched. The HWND (first argument) and the repeat count (third) are never read. The sink pointer has exactly one writer in the image, Display::createWindow 0x100657e0 at 0x1006581c. Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onChar (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069d50_jgld_onChar.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?onChar@@YAXPAUHWND__@@D@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069d96): callee pops 0 bytes of stack arguments.

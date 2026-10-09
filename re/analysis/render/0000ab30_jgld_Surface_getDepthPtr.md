@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000ab30`), 42 bytes, 21 instructions, subsystem `rend
 vtable +0xe4: returns the address of the depth field at this+0x24; Surface::blitT 0x100091a0 reads the destination depth through this slot and compares the dereferenced value to 8 and 0x10. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xe4: returns this+0x24 (VA 0x1000ab50 add eax, 0x24), the ADDRESS of the depth, not the depth. Every caller dereferences it to get the depth (fillRect at VA 0x10009364, fill2 at VA 0x10009474, drawLine at VA 0x10009514, ditherRectDispatch at VA 0x10009c84) and the 16-bit primitives read the second dword of the same block, at this+0x28, as the pixel format code. The running game enters it 22,015 times in twelve seconds at the menu. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getDepthPtr (16 vectors, 16 distinct results, 0 changing state, `log/diff/0000ab30_jgld_Surface_getDepthPtr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_1000ab30@f_1000ab30@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000ab59): callee pops 0 bytes of stack arguments.

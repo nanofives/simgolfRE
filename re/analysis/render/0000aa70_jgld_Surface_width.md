@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000aa70`), 48 bytes, 23 instructions, subsystem `rend
 vtable +0xd8: returns *(this+0x5c) - *(this+0x54), the width of the bounds RECT at this+0x54. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0xd8: the width of the bounds rectangle, [this+0x5c] - [this+0x54] (VA 0x1000aa93 mov, 0x1000aa96 sub), that is right minus left. The subtraction is a plain 32-bit one with no clamp, and the clip rectangle plays no part: pixelAddr 0x10008830 bounds x by this value at VA 0x10008864. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::width (16 vectors, 7 distinct results, 0 changing state, `log/diff/0000aa70_jgld_Surface_width.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_1000aa70@f_1000aa70@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000aa9f): callee pops 0 bytes of stack arguments.

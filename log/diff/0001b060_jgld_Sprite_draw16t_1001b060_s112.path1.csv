@@ -1,13 +1,13 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$sp16b $d0 0 0 $t32,0,0,True,842cb62c,842cb62c,True
-$sp16b $d0 4 2 $t32,0,0,True,842cb62c,842cb62c,True
-$sp16b $d0 100 100 $t32,0,0,True,5e84a3a3,5e84a3a3,True
-$sp16b $d1 0 0 $t32,0,0,True,6deca1fe,6deca1fe,True
-$sp16b $d6 2 2 $t32,0,0,True,f2bae6a1,f2bae6a1,True
-$sp16b $d4 0 0 $t32,3,3,True,a826233c,a826233c,False
-$spNB $d0 0 0 $t32,3,3,True,a826233c,a826233c,False
+$sp16b $d0 0 0 $t32,0,0,True,907d409d,907d409d,True
+$sp16b $d0 4 2 $t32,0,0,True,907d409d,907d409d,True
+$sp16b $d0 100 100 $t32,0,0,True,35c96892,35c96892,True
+$sp16b $d1 0 0 $t32,0,0,True,6cd428a7,6cd428a7,True
+$sp16b $d6 2 2 $t32,0,0,True,16fe8c84,16fe8c84,True
+$sp16b $d4 0 0 $t32,3,3,True,952ad382,952ad382,False
+$spNB $d0 0 0 $t32,3,3,True,952ad382,952ad382,False
 state_regions,$pix+0x0:49152 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20 $l8+0x0:20 $l9+0x0:20 $l10+0x0:20 $l11+0x0:20 $spr+0x0:1280 $gdraw16t+0x0:72,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5eac5f70,original=0x1470c80,2026-10-08T13:21:33
+meta,detour=0x64fd7e50,original=0x3b10a20,2026-10-09T06:36:38
 distinct_results,5,,
 VERDICT,GREEN,7,

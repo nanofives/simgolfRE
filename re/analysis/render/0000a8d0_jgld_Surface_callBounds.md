@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a8d0`), 73 bytes, 32 instructions, subsystem `rend
 forwards to a bounds-related virtual (vtbl helper). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Resets the surface's clip rectangle to its bounds. It takes the address of the bounds rectangle at this+0x54 (VA 0x1000a8f0 add eax, 0x54), pushes it (VA 0x1000a8f5), loads the vtable from [this] (VA 0x1000a8f9) and calls slot +0x34 (VA 0x1000a8fe); eax is not touched before the `ret` at VA 0x1000a918. On a Surface slot +0x34 is setClip 0x100083c0, which intersects the bounds rectangle with itself into the clip rectangle at this+0x44 (VA 0x10008419) and returns 0, or returns 1 when the intersection is empty (VA 0x10008423 jne, 0x10008425). The A/B shows exactly that: the eleven surfaces with a non-empty bounds rectangle return 0 and the two whose clip rectangle differed from their bounds (`$s1`, `$s10`) have it rewritten, while `$s13`, whose bounds rectangle is empty, returns 1 and changes nothing. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::callBounds (12 vectors, 4 distinct results, 2 changing state, `log/diff/0000a8d0_jgld_Surface_callBounds.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?callBounds@Surface@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a918): callee pops 0 bytes of stack arguments.

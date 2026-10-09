@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008830`), 287 bytes, 100 instructions, subsystem `re
 returns the address of pixel (x,y) within the surface buffer. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Turns a pixel coordinate into an address, or into NULL when it cannot. It asks slot +0xd8 for the width and returns NULL when x is at or past it (VA 0x10008857 call, 0x10008864 cmp, 0x10008867 jge, 0x10008885 xor eax, eax); only then does it ask slot +0xdc for the height and return NULL when y is at or past it (VA 0x10008873, 0x10008880, 0x10008883); it takes the base from slot +0x10 and returns NULL when that is NULL (VA 0x10008896, 0x100088a3, 0x100088a7). The depth at this+0x24 minus 8 (VA 0x100088b3, 0x100088bc) selects the arm through the jump table at 0x1000894f and the index byte table at 0x10008963; above 0x18 (VA 0x100088c2, 0x100088c6 ja) and for a depth with no case the function falls through to VA 0x1000893a and returns NULL. The four arms are base + x + y * [this+0x40] at depth 8 (VA 0x100088da), the same scaled by two at depth 16 (VA 0x100088ee), by three at depth 24 (VA 0x10008906) and by four at depth 32 (VA 0x10008922). Neither coordinate is tested against the low edge and the row product is a signed imul, so a negative x or y gives an address below the base. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::pixelAddr (28 vectors, 22 distinct results, 21 changing state, `log/diff/00008830_jgld_Surface_pixelAddr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?pixelAddr@Surface@@QAEPAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000894c): callee pops 8 bytes of stack arguments.

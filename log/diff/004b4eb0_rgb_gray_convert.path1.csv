@@ -1,0 +1,21 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$c3 $inRows $image 0 1,void,void,True,168dc342,168dc342,True
+$c3 $inRows $image 0 2,void,void,True,f983a151,f983a151,True
+$c3 $inRows $image 2 3,void,void,True,dae72cd3,dae72cd3,True
+$c3 $inRows $image 5 1,void,void,True,65ad8a42,65ad8a42,True
+$c3 $inRows $image 0 0,void,void,True,1ded91c5,1ded91c5,False
+$c3 $inRows $image 0 -1,void,void,True,1ded91c5,1ded91c5,False
+$c3 $inRows $image 0 -7,void,void,True,1ded91c5,1ded91c5,False
+$c2 $inRows $image 0 1,void,void,True,82a81888,82a81888,True
+$c2 $inRows $image 1 4,void,void,True,1248e6fe,1248e6fe,True
+$c2 $inRows $image 4 2,void,void,True,b3e35d68,b3e35d68,True
+$c1 $inRows $image 0 3,void,void,True,0f7669a9,0f7669a9,True
+$c1 $inRows $image 7 1,void,void,True,fa8ddab4,fa8ddab4,True
+$c0 $inRows $image 0 4,void,void,True,1ded91c5,1ded91c5,False
+$c0 $inRows $image 3 1,void,void,True,1ded91c5,1ded91c5,False
+$c3 $inRows $image 0 8,void,void,True,16f38a2a,16f38a2a,True
+state_regions,$outBuf+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x706a0e70,original=0xc80dc0,2026-10-09T06:42:31
+distinct_results,11,,
+VERDICT,GREEN,15,

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a870`), 76 bytes, 33 instructions, subsystem `rend
 forwards to a virtual with two int args (vtbl helper). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0x1c, byte for byte the same body as 0x1000a810: the two pushes at VA 0x1000a88f and 0x1000a893, the vtable load at VA 0x1000a89a, the call to [vtable+0x0c] at VA 0x1000a89f and the `ret 8` at VA 0x1000a8b9. The matched source re/match/jgld_surface.cpp records that the two spellings compile identically and that which is which is not determined. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::call3b (16 vectors, 14 distinct results, 13 changing state, `log/diff/0000a870_jgld_Surface_call3b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?call3b@Surface@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000a8b9): callee pops 8 bytes of stack arguments.

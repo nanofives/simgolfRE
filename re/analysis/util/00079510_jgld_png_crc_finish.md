@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079510`), 272 bytes, 95 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Swallows the bytes a chunk handler did not want and then checks the chunk's CRC. The skipping is done in zbuf-sized pieces: `istop` is `zbuf_size` from png_ptr+0xb0 (0x1007952b) and the loop `for (i = skip; i > istop; i -= istop)` (0x1007954b) reads a whole zbuf at a time through `png_crc_read` 0x100794b0 (0x10079565), then the remainder, if any, in one more read (0x10079573, 0x10079587) - so a skip equal to `istop` is read once by the remainder read and never by the loop, and a skip of zero reads nothing at all. `png_crc_error` 0x10079620 (0x10079593) then says whether the four CRC bytes disagree. On disagreement the function picks between a warning and a fatal error from the same two fields `png_crc_error` used but with DIFFERENT bits: an ancillary chunk warns unless flag bit 0x200 is set (0x100795af, 0x100795be) and a critical chunk warns only when flag bit 0x400 is set (0x100795d0, 0x100795e0). The warning goes to `png_chunk_warning` 0x10079250 (0x100795eb) and the fatal one to `png_chunk_error` 0x100790a0 (0x100795fe), both with the message "CRC error" 0x1011e0f4; either way the return is 1 (0x10079606), and 0 when the CRC matched or nobody asked for it (0x1007960d). Reimplemented in `shim/src/re/c3ch.cpp`; path-1 A/B GREEN: png_crc_finish (16 vectors, 16 distinct results, 16 changing state, `log/diff/00079510_jgld_png_crc_finish.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_crc_finish` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007961f): callee pops 0 bytes of stack arguments.

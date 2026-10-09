@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00022240`), 39 bytes, 11 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Resets the sequencer: rewinds the +0x60 reader (Seq_rewind), clears +0x740 and clears +0x214 bits 0x18. (`re/names/sound_3.tsv`)
 
+## Purpose
+Resets the sequencer: it rewinds the reader sub-object at this+0x60 and clears two of its own flags. Seq_rewind (VA 0x1001e1c0, through the incremental-link thunk at 0x10022246) is called on this+0x60 (`lea ecx, [esi+0x60]` at 0x10022243); over the reader that is the track list whose head is this+0x1fc and whose walk cursor is this+0x204, and Seq_rewind seeds the cursor from the head, calls Seq_rewindTracks 0x1001e8e0 on every non-null element and clears bits 2, 4, 5 and 7 of the reader's byte at this+0xac (`and al, 0x63` at 0x1001e202). The sequencer's own dword at +0x214 is then read (0x1002224b), the cell at +0x740 is cleared (0x10022251) and bits 3 and 4 of +0x214 are cleared and stored back (`and al, 0xe7` at 0x1002225b, stored at 0x1002225d; al only, so the upper 24 bits survive). Returns 0 (0x10022263). The body has NO conditional jump of its own. The reimplementation calls the original Seq_rewind at its own address. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: Seq_reset (12 vectors, 12 distinct results, 12 changing state, `log/diff/00022240_sound_Seq_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10022240@f_10022240@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10022266): callee pops 0 bytes of stack arguments.

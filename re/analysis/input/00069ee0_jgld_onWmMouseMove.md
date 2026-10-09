@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069ee0`), 75 bytes, 30 instructions, subsystem `inpu
 WM_MOUSEMOVE (0x200) handler: forwards x,y from lParam to g_listener vtable slot 5. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Window-message forwarder: hands a WM_MOUSEMOVE's client position to the event sink at 0x1012872c. windowProc calls it with four arguments at 0x10069632 (sixteen bytes popped at 0x10069637; `ret` at 0x10069f2a pops nothing), the position already split into two signed words at 0x10069619- 0x1006962d. It pushes the third argument then the second (0x10069efa, 0x10069efe), so slot +0x14 (called at 0x10069f10, sink loaded at 0x10069f02 and 0x10069f0a) receives (x, y); the HWND and the fourth argument are not read, and the slot's eax is returned untouched. Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onWmMouseMove (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069ee0_jgld_onWmMouseMove.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10069ee0@f_10069ee0@@YAXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069f2a): callee pops 0 bytes of stack arguments.

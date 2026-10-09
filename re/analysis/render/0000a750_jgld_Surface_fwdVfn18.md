@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a750`), 66 bytes, 29 instructions, subsystem `rend
 vtable +0x18: tail-calls the virtual at vtable +0x10 (Surface::acquireDC2 0x10008730) with this. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0x18 of the Surface vtable, which does nothing but call slot +0x10 of the same object with no argument (VA 0x1000a770 loads the vtable from [this], 0x1000a777 calls [vtable+0x10]). Nothing touches eax between that call and the `ret` at VA 0x1000a791 (the two debug frame checks at VA 0x1000a77c and 0x1000a789 and the three pops preserve it), so what slot +0x10 returned is what the caller sees. On a Surface slot +0x10 is acquireDC2 0x10008730, so the effect is that function's writes to this+0x4c8 and this+0x4cc. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::fwdVfn18 (16 vectors, 16 distinct results, 15 changing state, `log/diff/0000a750_jgld_Surface_fwdVfn18.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_1000a750@f_1000a750@@YIXPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a791): callee pops 0 bytes of stack arguments.

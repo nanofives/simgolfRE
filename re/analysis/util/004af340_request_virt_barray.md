@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 110 bytes, 38 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The same reservation for coefficient blocks instead of samples, linking onto the list at mem+0x44 rather than mem+0x40. The memory manager is read at 0x004af34e, the pool check is 0x004af34b / 0x004af351 with message code 0xc stored at 0x004af356 and the identifier at 0x004af35f before err->error_exit (0x004af364), the 0x80-byte block comes from alloc_small 0x004aef70 at 0x004af370, the six field stores are 0x004af37d (rows_in_array), 0x004af384 (blocksperrow), 0x004af38b (mem_buffer = NULL), 0x004af391 (maxaccess), 0x004af394 (pre_zero) and 0x004af397 (b_s_open = 0), and the list link is 0x004af39e / 0x004af3a4 / 0x004af3a7. The function is the `request_virt_barray` method of the memory manager: jinit_memory_mgr 0x004aee30 stores 0x004af340 into the manager's method table at 0x004aee99, the only reference to the body in the image. Reimplemented in `shim/src/re/c3cg.cpp`; path-1 A/B GREEN: request_virt_barray (10 vectors, 10 distinct results, 10 changing state, `log/diff/004af340_request_virt_barray.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_request_virt_barray` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af3ad): callee pops 0 bytes of stack arguments.

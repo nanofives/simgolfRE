@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069f40`), 78 bytes, 32 instructions, subsystem `inpu
 WM_LBUTTONDOWN (0x201)/WM_LBUTTONDBLCLK (0x203) handler: forwards a double-click flag (0 or 1) and x,y to g_listener vtable slot 7. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Window-message forwarder: hands a left-button press to the event sink at 0x1012872c together with the flag that distinguishes a double click from a single one. windowProc calls it with five arguments from two sites - 0x1006965f with that flag pushed as 1 (WM_LBUTTONDBLCLK) and 0x1006968d with 0 (WM_LBUTTONDOWN) - twenty bytes popped at each. The body reads the second, third and fourth arguments and pushes them in reverse (0x10069f5a, 0x10069f5e, 0x10069f62), so slot +0x1c (called at 0x10069f73, sink loaded at 0x10069f66 and 0x10069f6d) receives (dbl, x, y); it does not test the flag, so any value goes through unchanged. The HWND and the fifth argument are not read and the slot's eax is returned untouched (`ret` at 0x10069f8d pops nothing). Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onWmLButtonDown (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069f40_jgld_onWmLButtonDown.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10069f40@f_10069f40@@YAXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069f8d): callee pops 0 bytes of stack arguments.

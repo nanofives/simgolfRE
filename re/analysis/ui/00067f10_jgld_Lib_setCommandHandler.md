@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067f10`), 63 bytes, 27 instructions, subsystem `ui`.
 stores the command-handler callback in g_commandHandler (0x10128728) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+The Display class's override of the sink-command-handler setter: slot 85 (+0x154) of the Display vtable VA 0x1011d640, which Display::Display 0x100654b0 installs. __thiscall with one stack argument (`ret 4` at 0x10067f4c). It pushes that argument again (0x10067f2d), sets ecx to `this` plus four (`add ecx,4` at 0x10067f34) and calls storeCommandHandler 0x10067f60 (0x10067f37, through the thunk 0x100011f9), which ignores ecx entirely, so the whole observable effect is the store of the argument into 0x10128728. No branch, no return value. The same slot of the DisplayBase vtable VA 0x1011d7dc is DisplayBase::setCommandHandler 0x100674c0, whose body stores nothing at all (its only instruction after the frame fill is the `mov [ebp-4], ecx` at 0x100674da), so the base class drops the handler and Display is the class that keeps it. Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: Lib::setCommandHandler (13 vectors, 13 distinct results, 12 changing state, `log/diff/00067f10_jgld_Lib_setCommandHandler.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?setCommandHandler@Lib@@QAEXP6AHHH@Z@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10067f4c): callee pops 4 bytes of stack arguments.

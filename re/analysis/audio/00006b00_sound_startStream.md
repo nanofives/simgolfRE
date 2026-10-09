@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00006b00`), 52 bytes, 15 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Starts a stream: rejects if +0x58 bit0 set, records param at +0xcc, sets state +0x58 to 3, and calls the virtual start method (vtbl+0x7c). (`re/names/sound_2.tsv`)
 
+## Purpose
+Starts the stream object of the 0x1005b1c0 table (slot 34, +0x88, installed by Wave_Device::ctor 0x1000b1d0 and Wave_Device::dtor 0x1000b2e0) by moving its state word at +0x58 into the running state and handing control to the object's own start method. When bit 0 of +0x58 is already set the request is refused with 0xd and nothing is written (`test al, 1` / `je 0x10006b0f` at 0x10006b03, 0x10006b05, `mov eax, 0xd` at 0x10006b07). Otherwise the caller's value is parked at +0xcc (0x10006b17), the state word is stored back with bit 2 cleared and bits 0 and 1 set (`and al, 0xfb` / `or al, 3` at 0x10006b13, 0x10006b15, stored at 0x10006b1d; both operate on al, so the upper 24 bits of +0x58 survive, which is why the row's "sets state +0x58 to 3" in re/names/sound_0.tsv understates it), the progress cell at +0xc8 is cleared (0x10006b22) and the object's own vtable slot +0x7c is called with the object in ecx and nothing pushed (0x10006b20, `call dword [eax+0x7c]` at 0x10006b2c). Returns 0 (0x10006b2f). The three stores happen BEFORE the call, so the start method sees the already-updated state word. Reimplemented in `shim/src/re/c3cf.cpp`; path-1 A/B GREEN: startStream (18 vectors, 13 distinct results, 12 changing state, `log/diff/00006b00_sound_startStream.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10006b00@C_FUN_10006b00@f_10006b00@@QAEIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10006b0c, 0x10006b31): callee pops 4 bytes of stack arguments.

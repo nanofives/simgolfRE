@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009440`), 127 bytes, 52 instructions, subsystem `ren
 fills a rectangle with a color (second variant). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot +0x5c: the depth-independent entry to the table-mapping fill, which exists for 8-bit surfaces only. It calls slot +0xe4 and dereferences it for the depth (VA 0x10009467, 0x10009474) and compares it with 8 (VA 0x10009479, 0x1000947d je); any other depth returns 0 (VA 0x100094aa xor eax, eax) WITHOUT reading the rectangle at all, so a NULL rectangle is harmless on every surface that is not 8-bit. At depth 8 the four edges are pushed as bottom (VA 0x10009488), right (VA 0x1000948f), top (VA 0x10009496) and left (VA 0x1000949d) under the table pointer (VA 0x10009481), and fill2_8 0x1000f9e0 is called (VA 0x100094a3) as (left, top, right, bottom, table); its return value is the function's. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::fill2 (20 vectors, 10 distinct results, 7 changing state, `log/diff/00009440_jgld_Surface_fill2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?fill2@Surface@@QAEHPBUtagRECT@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100094bc): callee pops 8 bytes of stack arguments.

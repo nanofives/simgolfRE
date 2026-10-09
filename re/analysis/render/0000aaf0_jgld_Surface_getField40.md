@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000aaf0`), 42 bytes, 21 instructions, subsystem `rend
 vtable +0xe0: returns the int at this+0x40. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Slot +0xe0: returns the row stride at this+0x40 (VA 0x1000ab10), the value pixelAddr multiplies the row number by at VA 0x100088e6, 0x100088fd, 0x10008917 and 0x10008931. The running game enters it 7,705 times in twelve seconds at the menu. Reimplemented in `shim/src/re/c3ce.cpp`; path-1 A/B GREEN: Surface::getField40 (16 vectors, 6 distinct results, 0 changing state, `log/diff/0000aaf0_jgld_Surface_getField40.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_1000aaf0@f_1000aaf0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000ab19): callee pops 0 bytes of stack arguments.

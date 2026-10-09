@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 74 bytes, 33 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 builds the public flag word from the device flags (m_40) and the internal config bits m_58 (`re/names/exe_3.tsv`)
 
+## Purpose
+Snd::flags (0x00484ff0) composes a status word: it starts from the device's virtual +0x70 when [this+0x40] is non-null (0x00484ffe) else 0, ORs 2 when the pointer at [this+0x30] is non-null (0x00485008), then from the low byte at [this+0x58] sets bit 0->1, bit 3->0x40, bit 1->4, bit 2->0x10, bit 4->0x80 and bit 5->0x100 (`or al/ah` at 0x00485013..0x00485036), and returns the word. __thiscall, no stack arguments (`ret`); a pure reader. Because every OR writes only AL or AH, the upper half of the device's +0x70 result survives unchanged (key Snd_flags_device, added in round 20 by c3cg with a sub-object on its own vtable: the device call at 0x00484ffe now runs in the A/B). It is slot 28 (+0x70) of the vtable at 0x004bacf8: Snd::ctorDerived 0x00484820 installs that vtable and SndMusic::dtor 0x004848a0 re-installs it; no `call` in the image targets the body. Reimplemented in `shim/src/re/c3f.cpp`; path-1 A/B GREEN: Snd::flags (16 vectors, 16 distinct results, `log/diff/00484ff0_Snd_flags.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?flags@C484ff0@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00485039): callee pops 0 bytes of stack arguments.

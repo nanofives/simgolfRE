@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069e10`), 75 bytes, 30 instructions, subsystem `inpu
 WM_NCHITTEST (0x84) handler: forwards the x,y from lParam to g_listener vtable slot 2. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Window-message forwarder: hands a WM_NCHITTEST's screen position to the event sink at 0x1012872c. windowProc calls it with three arguments at 0x100694ec (twelve bytes popped at 0x100694f1; `ret` at 0x10069e5a pops nothing). It pushes the third argument then the second (0x10069e2a, 0x10069e2e), so slot +0x08 (called at 0x10069e40, sink loaded at 0x10069e32 and 0x10069e3a) receives (x, y); the HWND is not read and the slot's eax is returned untouched - windowProc passes that value on unchanged (`jmp 0x10069765` at 0x100694f4, the common epilogue). Reimplemented in `shim/src/re/c3cd.cpp`; path-1 A/B GREEN: onWmNcHitTest (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069e10_jgld_onWmNcHitTest.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10069e10@f_10069e10@@YAXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069e5a): callee pops 0 bytes of stack arguments.
