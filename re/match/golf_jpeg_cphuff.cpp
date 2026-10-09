@@ -9,3 +9,9 @@
 // MATCH: golf_clean.exe 0x004b2510 _flush_bits
 // MATCH: golf_clean.exe 0x004b25d0 _emit_eobrun
 // MATCH: golf_clean.exe 0x004b27d0 _emit_buffered_bits
+// MATCH: golf_clean.exe 0x004b1f70 _start_pass_phuff
+// MATCH: golf_clean.exe 0x004b2140 _encode_mcu_DC_first
+// MATCH: golf_clean.exe 0x004b28c0 _encode_mcu_AC_first
+// MATCH: golf_clean.exe 0x004b2d30 _encode_mcu_DC_refine
+// MATCH: golf_clean.exe 0x004b2eb0 _encode_mcu_AC_refine
+// MATCH: golf_clean.exe 0x004b33c0 _finish_pass_gather_phuff

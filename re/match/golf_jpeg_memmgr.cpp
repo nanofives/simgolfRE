@@ -15,3 +15,6 @@
 // MATCH: golf_clean.exe 0x004af690 _do_sarray_io
 // MATCH: golf_clean.exe 0x004af880 _do_barray_io
 // MATCH: golf_clean.exe 0x004af920 _free_pool
+// MATCH: golf_clean.exe 0x004af540 _access_virt_sarray
+// MATCH: golf_clean.exe 0x004af730 _access_virt_barray
+// MATCH: golf_clean.exe 0x004afa20 _self_destruct

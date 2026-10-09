@@ -18,3 +18,4 @@
 // MATCH: golf_clean.exe 0x004b01f0 _emit_dri
 // MATCH: golf_clean.exe 0x004b0220 _emit_sos
 // MATCH: golf_clean.exe 0x004b0320 _write_tables_only
+// MATCH: golf_clean.exe 0x004b0060 _write_scan_header

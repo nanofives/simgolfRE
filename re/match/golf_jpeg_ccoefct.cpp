@@ -6,3 +6,5 @@
 // MATCH: golf_clean.exe 0x004b06f0 _jinit_c_coef_controller
 // MATCH: golf_clean.exe 0x004b0860 _start_iMCU_row
 // MATCH: golf_clean.exe 0x004b0d70 _compress_output
+// MATCH: golf_clean.exe 0x004b08b0 _compress_data
+// MATCH: golf_clean.exe 0x004b0b20 _compress_first_pass

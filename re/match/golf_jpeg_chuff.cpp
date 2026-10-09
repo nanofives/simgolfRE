@@ -12,3 +12,7 @@
 // MATCH: golf_clean.exe 0x004b1ae0 _emit_restart
 // MATCH: golf_clean.exe 0x004b1b70 _flush_bits
 // MATCH: golf_clean.exe 0x004b1d80 _htest_one_block
+// MATCH: golf_clean.exe 0x004b12f0 _start_pass_huff
+// MATCH: golf_clean.exe 0x004b1480 _encode_mcu_huff
+// MATCH: golf_clean.exe 0x004b1ca0 _encode_mcu_gather
+// MATCH: golf_clean.exe 0x004b1e20 _finish_pass_gather

@@ -6,3 +6,5 @@
 // MATCH: golf_clean.exe 0x004b3a80 _jinit_c_prep_controller
 // MATCH: golf_clean.exe 0x004b3d00 _expand_bottom_edge
 // MATCH: golf_clean.exe 0x004b3f10 _create_context_buffer
+// MATCH: golf_clean.exe 0x004b3b80 _pre_process_data
+// MATCH: golf_clean.exe 0x004b3d40 _pre_process_context
