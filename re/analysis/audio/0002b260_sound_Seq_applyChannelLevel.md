@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002b260`), 31 bytes, 12 instructions, subsystem `aud
 stores param&0x7f at this+4 and forwards it to the inner device at +0x40 via its vtbl+0x40 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Stores a 7-bit channel level and forwards it to the inner device. __thiscall with one stack argument: the argument is masked with 0x7f (0x1002b264), masked with 0x7f a second time on its way to the record (`and edx, 0x7f` at 0x1002b269) and stored at this+4 (0x1002b26c); the object at this+0x40 (0x1002b26f) is then called through slot 0x40 of its own vtable with that masked value (`mov edx, [ecx]` + `push eax` + `call [edx+0x40]` at 0x1002b276-0x1002b279) unless the pointer is null (`je 0x1002b27c` at 0x1002b274). The call is __thiscall: the inner object stays in ecx, the single argument is the one `push`, nothing is cleaned up after the call and the wrapper ends with `ret 4`. eax at the `ret` is the callee's return value, or the masked argument on the null path, not a return value of this function. Reimplemented in `shim/src/re/c3ca.cpp`; path-1 A/B GREEN: Seq_applyChannelLevel (15 vectors, 14 distinct results, 15 changing state, `log/diff/0002b260_sound_Seq_applyChannelLevel.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002b27c): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002b26c before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

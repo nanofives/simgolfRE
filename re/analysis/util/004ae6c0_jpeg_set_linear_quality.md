@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 52 bytes, 23 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Install both standard JPEG quantisation tables, scaled by one percentage. The compress object is taken from the first stack dword (0x004ae6c1), force_baseline from the third (0x004ae6c6) and the scale factor from the second (0x004ae6cb). jpeg_add_quant_table 0x004ae600 is then called twice with five dwords pushed in reverse order each time: table slot 0 with the 64-entry basic table at 0x004bcb08 (0x004ae6cf..0x004ae6d9) and table slot 1 with the one at 0x004bcc08 (0x004ae6de..0x004ae6e8); `add esp, 0x28` at 0x004ae6ed removes both argument lists. The function has no conditional branch and writes nothing itself: every observable change is the 64 UINT16 entries and the cleared sent_table flag each call puts into cinfo->quant_tbl_ptrs[0] and [1] (cinfo+0x40, cinfo+0x44), allocating the table first when the slot is still null (0x004ae633 / 0x004ae63e). Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: jpeg_set_linear_quality (20 vectors, 10 distinct results, 20 changing state, `log/diff/004ae6c0_jpeg_set_linear_quality.path1.csv`); jpeg_set_linear_quality_alloc (6 vectors, 6 distinct results, 6 changing state, `log/diff/004ae6c0_jpeg_set_linear_quality_alloc.path1.csv`); jpeg_set_linear_quality_badstate (6 vectors, 5 distinct results, 6 changing state, `log/diff/004ae6c0_jpeg_set_linear_quality_badstate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_jpeg_set_linear_quality` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae6f3): callee pops 0 bytes of stack arguments.

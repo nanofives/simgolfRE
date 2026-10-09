@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 12 bytes, 5 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 jpeg_destroy_compress: the matched wrapper compiles identically to jpeg_abort_compress; its callee 0x004afa90 is jpeg_destroy (calls self_destruct, slot +0x28) (`re/names/libs.tsv`)
 
+## Purpose
+Tear a compress object down through the common destructor. The caller's dword is read at 0x004ae210 and pushed as the only argument of jpeg_destroy 0x004afa90 (0x004ae214 / 0x004ae215); this function pops it (0x004ae21a) and adds nothing of its own, so the whole observable effect is the callee's: the memory manager at cinfo+4 is released through its self_destruct at mem+0x28 when it is not null (0x004afa98 / 0x004afa9d / 0x004afaa0, the compress object passed and the dword popped at 0x004afaa3), and cinfo+4 and cinfo+0x10 are then cleared (0x004afaa6 / 0x004afaa9) whether or not a manager was there. Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: jpeg_destroy_compress (10 vectors, 10 distinct results, 10 changing state, `log/diff/004ae210_jpeg_destroy_compress.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_capimin.cpp` as `_jpeg_destroy_compress` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae21b): callee pops 0 bytes of stack arguments.

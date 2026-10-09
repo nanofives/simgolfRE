@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009c0b0`), 63 bytes, 28 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflateInit_ is the default-window front door of the inflate API and has no conditional jump at all: it pushes the caller's stream_size (0x1009c0c8) and version string (0x1009c0cc), the literal 0xf (0x1009c0d0) - DEF_WBITS, a 32 KiB window, the largest deflate allows - and the stream (0x1009c0d5), calls inflateInit2_ (0x1009c0d6), pops its sixteen bytes (0x1009c0db) and returns whatever came back. Every behaviour a caller sees through it, including the version handshake and all three Z_MEM_ERROR paths, is inflateInit2_'s. Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflateInit_ (12 vectors, 9 distinct results, 7 changing state, `log/diff/0009c0b0_jgld_inflateInit_.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_inflate.cpp` as `_inflateInit_` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009c0ee): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f160`), 21 bytes, 9 instructions, subsystem `audi
 Forwards a sample-rate argument to IDirectSoundBuffer::SetFrequency (vtbl+0x44). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Forwards a sample rate to the buffer's interface and does nothing else. __thiscall with one stack argument: it reads the interface pointer at this+0x60 (0x1000f160), returns at once when it is null (`je 0x1000f172` at 0x1000f165) and otherwise calls slot 0x44 of that interface's vtable with the interface and the value pushed in that order (0x1000f16b-0x1000f16f). Nothing is cleaned up after the call and the wrapper ends with `ret 4`, so the callee is a __stdcall taking two arguments. The body writes no field of its own, and eax at the `ret` is the callee's return value or the interface pointer, not a return value of this function. Reimplemented in `shim/src/re/c3ca.cpp`; path-1 A/B GREEN: DsBuffer::setFrequency (16 vectors, 9 distinct results, 8 changing state, `log/diff/0000f160_sound_DsBuffer_setFrequency.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000f172): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1000f160 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

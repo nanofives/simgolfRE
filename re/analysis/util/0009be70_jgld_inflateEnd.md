@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009be70`), 154 bytes, 58 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflateEnd releases everything a stream owns and leaves it unusable. Three guards share one arm: a null stream (0x1009be88), a stream with no internal state at +0x1c (0x1009be91) or a stream with no deallocator at +0x24 (0x1009be9a) return Z_STREAM_ERROR (0x1009bea0). The deallocator test is what makes the rest safe, because everything below it frees. If the internal state has a block state at +0x14 (0x1009bead) it goes through inflate_blocks_free (0x1009bec5) with a local dword for the final check value (0x1009beb3), which releases the current block's trees, the window and the block state. The internal state itself then goes to the deallocator (0x1009bee0) and the stream's pointer to it is zeroed (0x1009bef0), in that order, so a second inflateEnd and any inflateReset on the same stream both take their null-state arm. It returns Z_OK (0x1009bef7). Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflateEnd (12 vectors, 9 distinct results, 8 changing state, `log/diff/0009be70_jgld_inflateEnd.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_inflate.cpp` as `_inflateEnd` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009bf09): callee pops 0 bytes of stack arguments.

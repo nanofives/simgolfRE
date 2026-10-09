@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009e290`), 124 bytes, 51 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflate_blocks_free tears a block-level inflate state down completely and has no conditional jump of its own. It calls inflate_blocks_reset(s, z, c) at 0x1009e2b4 - which is what releases whatever the current block still owns and leaves the final check value in the caller's dword - then hands the sliding window read from +0x24 to the caller's deallocator (0x1009e2c1, call at 0x1009e2cf) and finally the state itself (call at 0x1009e2ec), in that order. It returns Z_OK (0x1009e2f9) on every path; nothing it does can fail. Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflate_blocks_free (12 vectors, 12 distinct results, 12 changing state, `log/diff/0009e290_jgld_inflate_blocks_free.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_infblock.cpp` as `_inflate_blocks_free` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009e30b): callee pops 0 bytes of stack arguments.

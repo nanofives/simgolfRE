@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$bfS0 $bfZs0 $bfC0,0,0,True,cecf8a98,cecf8a98,True
+$bfS1 $bfZs1 $bfC1,0,0,True,d492ffe5,d492ffe5,True
+$bfS2 $bfZs2 $bfC2,0,0,True,7dfa3d93,7dfa3d93,True
+$bfS3 $bfZs3 $bfC3,0,0,True,341b6ed3,341b6ed3,True
+$bfS4 $bfZs4 $bfC4,0,0,True,95de1923,95de1923,True
+$bfS5 $bfZs5 $bfC5,0,0,True,f176814f,f176814f,True
+$bfS6 $bfZs6 $bfC6,0,0,True,30d30fca,30d30fca,True
+$bfS7 $bfZs7 $bfC7,0,0,True,393ac825,393ac825,True
+$bfS8 $bfZs8 $bfC8,0,0,True,6b468180,6b468180,True
+$bfS9 $bfZs9 $bfC9,0,0,True,2e6690cc,2e6690cc,True
+$bfS10 $bfZs10 $bfC10,0,0,True,4ae01b42,4ae01b42,True
+$bfS11 $bfZs11 $bfC11,0,0,True,2f618368,2f618368,True
+state_regions,$bfZ+0x0:768 $bfCtl+0x0:3072 $bfParm+0x0:12288,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x644adbc0,original=0x2a20740,2026-10-09T00:35:20
+distinct_results,12,,
+VERDICT,GREEN,12,

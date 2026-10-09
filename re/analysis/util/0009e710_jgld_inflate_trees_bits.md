@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009e710`), 138 bytes, 52 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflate_trees_bits builds the small Huffman tree that a dynamic deflate block's 19 code-length codes are read with, and turns two of huft_build's four return codes into messages on the stream. It calls huft_build(c, 19, 19, NULL, NULL, tb, bb, z) at 0x1009e740 - the two 19s are the immediates at 0x1009e738 and 0x1009e73a, and both the base and the extra list are the zeros pushed at 0x1009e734 and 0x1009e736, because all 19 values are "simple" and never index a list. Z_DATA_ERROR (0x1009e74b) leaves the module string 0x10120978 in z->msg at +0x18 (0x1009e754) and returns it unchanged. Z_BUF_ERROR (0x1009e75d), which huft_build returns for an incomplete code set after building the table anyway, releases that table with inflate_trees_free(*tb, z) at 0x1009e76d, leaves the string 0x10120954 in z->msg (0x1009e778) and rewrites the result to Z_DATA_ERROR (0x1009e77f), so a caller never sees Z_BUF_ERROR from here. Any other value - Z_OK or the Z_MEM_ERROR of a failed allocation - falls past both compares untouched and is returned as huft_build gave it (0x1009e786). Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflate_trees_bits (11 vectors, 11 distinct results, 11 changing state, `log/diff/0009e710_jgld_inflate_trees_bits.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_inftrees.cpp` as `_inflate_trees_bits` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009e799): callee pops 0 bytes of stack arguments.

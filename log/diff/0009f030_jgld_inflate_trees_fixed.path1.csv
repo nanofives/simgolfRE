@@ -1,0 +1,16 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$fx0bl $fx0bd $fx0tl $fx0td,0,0,True,32f56de1,32f56de1,True
+$fx1bl $fx1bd $fx1tl $fx1td,0,0,True,ad69df41,ad69df41,True
+$fx2bl $fx2bd $fx2tl $fx2td,0,0,True,ac32ed81,ac32ed81,True
+$fx3bl $fx3bd $fx3tl $fx3td,0,0,True,75c507b1,75c507b1,True
+$fx4bl $fx4bd $fx4tl $fx4td,0,0,True,0414c301,0414c301,True
+$fx5bl $fx5bd $fx5tl $fx5td,0,0,True,7f8b9e31,7f8b9e31,True
+$fx6bl $fx6bd $fx6tl $fx6td,0,0,True,586a3fb1,586a3fb1,True
+$fx7bl $fx7bd $fx7tl $fx7td,0,0,True,91122591,91122591,True
+$fx8bl $fx8bd $fx8tl $fx8td,0,0,True,e14b36d1,e14b36d1,True
+$fx9bl $fx9bd $fx9tl $fx9td,0,0,True,5f4537b1,5f4537b1,True
+state_regions,$fixedMod+0x0:4260 $fixedOut+0x0:320,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x644ae310,original=0x2a20640,2026-10-09T00:35:18
+distinct_results,10,,
+VERDICT,GREEN,10,

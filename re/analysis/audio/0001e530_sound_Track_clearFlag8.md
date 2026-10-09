@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001e530`), 11 bytes, 5 instructions, subsystem `audi
 Clears flag bit3 (0x8) at track+0x4c and returns 0. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Clears bit 3 of the track flag dword. __thiscall with no stack argument: it loads the dword at this+0x4c (0x1001e530), applies `and al, 0xf7` to its low byte only (0x1001e533) and stores the whole dword back (0x1001e535), so the upper three bytes are carried through unchanged and 0xf7 is ~0x08 inside the low byte; the result is the dword with bit 3 cleared and nothing else touched. Returns 0 (`xor eax, eax` at 0x1001e538). Reimplemented in `shim/src/re/c3ca.cpp`; path-1 A/B GREEN: Track_clearFlag8 (12 vectors, 8 distinct results, 7 changing state, `log/diff/0001e530_sound_Track_clearFlag8.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001e530@f_1001e530@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001e53a): callee pops 0 bytes of stack arguments.

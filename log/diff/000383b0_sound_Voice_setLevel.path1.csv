@@ -21,6 +21,6 @@ $w_clamp 127,void,void,True,1dd57146,1dd57146,True
 $w_clamp 4294967295,void,void,True,45aedb2b,45aedb2b,True
 state_regions,$w_zero+0x40:80 $w_pos+0x40:80 $w_neg+0x40:80 $w_clamp+0x40:80,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x70b9ee40,original=0x35c0a00,2026-10-07T23:23:41
+meta,detour=0x6e0125f0,original=0x39a0460,2026-10-09T00:39:41
 distinct_results,20,,
 VERDICT,GREEN,20,

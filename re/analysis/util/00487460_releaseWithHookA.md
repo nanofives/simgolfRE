@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 33 bytes, 13 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Calls the child object (this+0x14) vtable+0x14 destroy, then closeHookA, then clears this+0x14. (`re/names/exe_4.tsv`)
 
+## Purpose
+Give up the child object this one owns and then close its own resource. The child pointer at +0x14 is read at 0x00487463 and a null one leaves the object untouched (0x00487468). Otherwise the child's own vtable slot +0x14 runs first, with the CHILD in ecx and its result discarded (0x0048746a / 0x0048746c), then closeHookA 0x00487430 runs with THIS in ecx (0x0048746f / 0x00487471) — and it still finds the child pointer in +0x14, which is the handle it tests at 0x00487433, so the global close hook 0x0083af80 is reached whenever a child was present — and only afterwards is +0x14 cleared (0x00487476). The function returns 0 on both paths (0x0048747d) and touches nothing else in the object. Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: releaseWithHookA_set (8 vectors, 6 distinct results, 5 changing state, `log/diff/00487460_releaseWithHookA_set.path1.csv`); releaseWithHookA_null (8 vectors, 6 distinct results, 5 changing state, `log/diff/00487460_releaseWithHookA_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487460@f_00487460@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487480): callee pops 0 bytes of stack arguments.

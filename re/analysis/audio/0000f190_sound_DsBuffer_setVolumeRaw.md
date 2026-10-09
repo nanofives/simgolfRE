@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f190`), 27 bytes, 10 instructions, subsystem `aud
 Caches a raw DirectSound attenuation at +0xc4 and applies it via SetVolume (vtbl+0x3c). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Caches a raw attenuation and forwards it to the buffer's interface. __thiscall with one stack argument: unlike setFrequency it ALWAYS stores the argument at this+0xc4 (0x1000f199), before the null test on the interface at this+0x60 (`je 0x1000f1a8` at 0x1000f19f), and the vtable slot it calls with (interface, value) is 0x3c (0x1000f1a5), again with no stack cleanup and a `ret 4`, so the callee is a __stdcall taking two arguments. eax at the `ret` is not a return value. Reimplemented in `shim/src/re/c3ca.cpp`; path-1 A/B GREEN: DsBuffer::setVolumeRaw (16 vectors, 16 distinct results, 16 changing state, `log/diff/0000f190_sound_DsBuffer_setVolumeRaw.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000f1a8): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1000f190 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 20 bytes, 8 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Refuse to open a backing-store temporary file. The compress object is read at 0x004b0490 and pushed as the only argument of the error handler (0x004b0494); the error manager is read from cinfo+0 twice (0x004b0495, 0x004b049e), the message code 0x30 is stored in err+0x14 (0x004b0497) and err+0 — error_exit — is called with the compress object (0x004b04a0), this function popping that dword (0x004b04a2). No instruction reads the second or third dword of the argument list and no message parameter is set, so this build always fails the request with the same code whatever backing store and size were asked for — which is the counterpart of jpeg_mem_available 0x004b0480 always granting the maximum. Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: jpeg_open_backing_store (10 vectors, 10 distinct results, 10 changing state, `log/diff/004b0490_jpeg_open_backing_store.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memnobs.cpp` as `_jpeg_open_backing_store` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b04a3): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 39 bytes, 16 instructions, subsystem `util`. Mechanical
 If this+0x14 is set and the global hook g_0083af90 is installed, invokes it and clears this+0x14. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Run the third global close hook for an object that still holds a resource and mark the object closed. The handle at +0x14 is read at 0x00487bd3; a zero handle (0x00487bd8) or a null hook pointer in the global 0x0083af90 (0x00487bda / 0x00487bdf / 0x00487be1) leaves the object alone and yields the failure value 0x14 at 0x00487bf0. When both are set the hook runs with no arguments and no stack cleanup (0x00487be3), the handle is cleared (0x00487be5) and the function returns 0 (0x00487bec). It is the third copy of the body of closeHookA 0x00487430 and closeHookB 0x004879f0, differing only in the global it reads; 0x00487bdb is the only instruction in the image that references 0x0083af90 (a scan of golf_clean.exe for that literal), so the hook is null unless something outside the image installs it. Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: closeHookC_set (6 vectors, 5 distinct results, 4 changing state, `log/diff/00487bd0_closeHookC_set.path1.csv`); closeHookC_null (5 vectors, 1 distinct results, 0 changing state, `log/diff/00487bd0_closeHookC_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?close3@C487430@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487bef, 0x00487bf6): callee pops 0 bytes of stack arguments.

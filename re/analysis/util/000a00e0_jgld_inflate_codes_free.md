@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000a00e0`), 70 bytes, 30 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflate_codes_free releases the decoder state inflate_codes_new allocated, and the whole body is one ZFREE: it pushes the block (0x100a00fd) and the opaque from z+0x28 (0x100a0104), calls z->zfree at z+0x24 (0x100a0108) and pops the eight bytes itself (0x100a010b), so the call is __cdecl. There is no conditional jump and no null test anywhere: a null block is handed to the deallocator like any other pointer, and it is the caller's deallocator that has to tolerate it. Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflate_codes_free (12 vectors, 12 distinct results, 12 changing state, `log/diff/000a00e0_jgld_inflate_codes_free.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_infcodes.cpp` as `_inflate_codes_free` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100a0125): callee pops 0 bytes of stack arguments.

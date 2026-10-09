@@ -1,0 +1,26 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$j_jumps_none_empty $j_count_none_empty $j_unused3_none_empty $j_mode_none_empty $j_bounds_none_empty $j_pn_none_empty $j_flen_none_empty $j_gap_none_empty $j_wlen_none_empty $j_minstart_none_empty $j_unused11_none_empty,0,0,True,e906a822,e906a822,True
+$j_jumps_none_high $j_count_none_high $j_unused3_none_high $j_mode_none_high $j_bounds_none_high $j_pn_none_high $j_flen_none_high $j_gap_none_high $j_wlen_none_high $j_minstart_none_high $j_unused11_none_high,0,0,True,f477e85e,f477e85e,True
+$j_jumps_none_low $j_count_none_low $j_unused3_none_low $j_mode_none_low $j_bounds_none_low $j_pn_none_low $j_flen_none_low $j_gap_none_low $j_wlen_none_low $j_minstart_none_low $j_unused11_none_low,0,0,True,b751a750,b751a750,True
+$j_jumps_none_eqstart $j_count_none_eqstart $j_unused3_none_eqstart $j_mode_none_eqstart $j_bounds_none_eqstart $j_pn_none_eqstart $j_flen_none_eqstart $j_gap_none_eqstart $j_wlen_none_eqstart $j_minstart_none_eqstart $j_unused11_none_eqstart,0,0,True,19ffff86,19ffff86,True
+$j_jumps_m1_single $j_count_m1_single $j_unused3_m1_single $j_mode_m1_single $j_bounds_m1_single $j_pn_m1_single $j_flen_m1_single $j_gap_m1_single $j_wlen_m1_single $j_minstart_m1_single $j_unused11_m1_single,0,0,True,5c0b0964,5c0b0964,True
+$j_jumps_m1_clamped $j_count_m1_clamped $j_unused3_m1_clamped $j_mode_m1_clamped $j_bounds_m1_clamped $j_pn_m1_clamped $j_flen_m1_clamped $j_gap_m1_clamped $j_wlen_m1_clamped $j_minstart_m1_clamped $j_unused11_m1_clamped,0,0,True,1fff19f8,1fff19f8,True
+$j_jumps_m2_back $j_count_m2_back $j_unused3_m2_back $j_mode_m2_back $j_bounds_m2_back $j_pn_m2_back $j_flen_m2_back $j_gap_m2_back $j_wlen_m2_back $j_minstart_m2_back $j_unused11_m2_back,0,0,True,a30f5378,a30f5378,True
+$j_jumps_m2_lo $j_count_m2_lo $j_unused3_m2_lo $j_mode_m2_lo $j_bounds_m2_lo $j_pn_m2_lo $j_flen_m2_lo $j_gap_m2_lo $j_wlen_m2_lo $j_minstart_m2_lo $j_unused11_m2_lo,0,0,True,68ee7f25,68ee7f25,True
+$j_jumps_m3_pair $j_count_m3_pair $j_unused3_m3_pair $j_mode_m3_pair $j_bounds_m3_pair $j_pn_m3_pair $j_flen_m3_pair $j_gap_m3_pair $j_wlen_m3_pair $j_minstart_m3_pair $j_unused11_m3_pair,0,0,True,75ab6471,75ab6471,True
+$j_jumps_m1_far $j_count_m1_far $j_unused3_m1_far $j_mode_m1_far $j_bounds_m1_far $j_pn_m1_far $j_flen_m1_far $j_gap_m1_far $j_wlen_m1_far $j_minstart_m1_far $j_unused11_m1_far,0,0,True,c7139f54,c7139f54,True
+$j_jumps_m1_close $j_count_m1_close $j_unused3_m1_close $j_mode_m1_close $j_bounds_m1_close $j_pn_m1_close $j_flen_m1_close $j_gap_m1_close $j_wlen_m1_close $j_minstart_m1_close $j_unused11_m1_close,0,0,True,e1e5eebe,e1e5eebe,True
+$j_jumps_m3_third $j_count_m3_third $j_unused3_m3_third $j_mode_m3_third $j_bounds_m3_third $j_pn_m3_third $j_flen_m3_third $j_gap_m3_third $j_wlen_m3_third $j_minstart_m3_third $j_unused11_m3_third,0,0,True,1b52afde,1b52afde,True
+$j_jumps_m1_three $j_count_m1_three $j_unused3_m1_three $j_mode_m1_three $j_bounds_m1_three $j_pn_m1_three $j_flen_m1_three $j_gap_m1_three $j_wlen_m1_three $j_minstart_m1_three $j_unused11_m1_three,0,0,True,b6dc30aa,b6dc30aa,True
+$j_jumps_m3_scan $j_count_m3_scan $j_unused3_m3_scan $j_mode_m3_scan $j_bounds_m3_scan $j_pn_m3_scan $j_flen_m3_scan $j_gap_m3_scan $j_wlen_m3_scan $j_minstart_m3_scan $j_unused11_m3_scan,0,0,True,0ab14821,0ab14821,True
+$j_jumps_m3_jscan $j_count_m3_jscan $j_unused3_m3_jscan $j_mode_m3_jscan $j_bounds_m3_jscan $j_pn_m3_jscan $j_flen_m3_jscan $j_gap_m3_jscan $j_wlen_m3_jscan $j_minstart_m3_jscan $j_unused11_m3_jscan,0,0,True,cc6bed88,cc6bed88,True
+$j_jumps_n2 $j_count_n2 $j_unused3_n2 $j_mode_n2 $j_bounds_n2 $j_pn_n2 $j_flen_n2 $j_gap_n2 $j_wlen_n2 $j_minstart_n2 $j_unused11_n2,0,0,True,e0454d25,e0454d25,True
+$j_jumps_n4 $j_count_n4 $j_unused3_n4 $j_mode_n4 $j_bounds_n4 $j_pn_n4 $j_flen_n4 $j_gap_n4 $j_wlen_n4 $j_minstart_n4 $j_unused11_n4,0,0,True,74389124,74389124,True
+$j_jumps_tinyframe $j_count_tinyframe $j_unused3_tinyframe $j_mode_tinyframe $j_bounds_tinyframe $j_pn_tinyframe $j_flen_tinyframe $j_gap_tinyframe $j_wlen_tinyframe $j_minstart_tinyframe $j_unused11_tinyframe,0,0,True,1e961f02,1e961f02,True
+$j_jumps_past_run $j_count_past_run $j_unused3_past_run $j_mode_past_run $j_bounds_past_run $j_pn_past_run $j_flen_past_run $j_gap_past_run $j_wlen_past_run $j_minstart_past_run $j_unused11_past_run,0,0,True,43951732,43951732,True
+$j_jumps_biggap $j_count_biggap $j_unused3_biggap $j_mode_biggap $j_bounds_biggap $j_pn_biggap $j_flen_biggap $j_gap_biggap $j_wlen_biggap $j_minstart_biggap $j_unused11_biggap,0,0,True,fc9dda64,fc9dda64,True
+state_regions,$j_blk_none_empty+0x0:512 $j_blk_none_high+0x0:512 $j_blk_none_low+0x0:512 $j_blk_none_eqstart+0x0:512 $j_blk_m1_single+0x0:512 $j_blk_m1_clamped+0x0:512 $j_blk_m2_back+0x0:512 $j_blk_m2_lo+0x0:512 $j_blk_m3_pair+0x0:512 $j_blk_m1_far+0x0:512 $j_blk_m1_close+0x0:512 $j_blk_m3_third+0x0:512 $j_blk_m1_three+0x0:512 $j_blk_m3_scan+0x0:512 $j_blk_m3_jscan+0x0:512 $j_blk_n2+0x0:512 $j_blk_n4+0x0:512 $j_blk_tinyframe+0x0:512 $j_blk_past_run+0x0:512 $j_blk_biggap+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5ea6eef0,original=0x2ca0a80,2026-10-09T00:39:09
+distinct_results,20,,
+VERDICT,GREEN,20,

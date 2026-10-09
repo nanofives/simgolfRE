@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 93 bytes, 24 instructions, subsystem `util`. Mechanical
 swaps two integers held by the caller so they end up in ascending order. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Store the caller's two scalars in the widget as an ordered (low, high) pair, record whether they had to be exchanged, and redraw. The first scalar is read at 0x00496770 and compared with the second at 0x00496777; the compare is SIGNED (`jge` at 0x0049677b). When the first is strictly the smaller, the flag at +0x588 takes 0 (0x0049677d) and the caller's order is kept. Otherwise +0x588 takes 1 (0x00496793) and swapInts 0x00493580 exchanges the two argument slots in place (0x0049679d), after which the first slot is re-read at 0x004967a2; an equal pair therefore also sets the flag. Either way the first slot goes to +0x580 (0x004967ad) and to +0x58c (0x004967b3) while the second, read at 0x004967a9, goes to +0x584 (0x004967bd), so +0x580 and +0x58c both end on the low value and +0x584 on the high one. The widget's vtable slot +0x120 is then called with the widget in ecx and no arguments (0x004967b9 / 0x004967c3) and its result becomes this function's return value; the caller pops the two dwords (`ret 8`, 0x004967ca). Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: orderPair (18 vectors, 18 distinct results, 18 changing state, `log/diff/00496770_orderPair.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00496770@C_FUN_00496770@f_00496770@@QAEXII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004967ca): callee pops 8 bytes of stack arguments.

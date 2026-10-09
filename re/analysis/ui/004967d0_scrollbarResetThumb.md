@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 18 bytes, 4 instructions, subsystem `ui`. Mechanical tr
 wrapper invoked during scrollbar creation that resets the thumb state. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Record the scrollbar's total span and rebuild the thumb from it. The caller's dword is read at 0x004967d0 and stored in +0x5c0 (0x004967d4), which is the field scrollbarResetState 0x004979a0 reads first (0x004979a0); that callee then runs with the widget still in ecx (0x004967da) and the caller pops the dword (`ret 4`, 0x004967df). The function adds nothing of its own, so the whole observable effect is +0x5c0 plus the four dwords the callee writes: +0x5ac and +0x5b0 cleared and +0x5b4 / +0x5b8 set to the span (0x004979a8.. 0x004979ba), and then, only when +0x57c is not -1 (0x004979c0 / 0x004979c7), +0x5ac and +0x5b0 incremented to 1 and +0x5b4 / +0x5b8 decremented by one (0x004979c9..0x004979f1). Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: scrollbarResetThumb (14 vectors, 14 distinct results, 14 changing state, `log/diff/004967d0_scrollbarResetThumb.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_004967d0@C_FUN_004967d0@f_004967d0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004967df): callee pops 4 bytes of stack arguments.

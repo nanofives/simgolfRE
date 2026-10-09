@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$bnS0 $bnF0 $bnW0,0x59e8e60,0x59e8e60,True,d9f31c60,d9f31c60,True
+$bnS1 $bnF1 $bnW1,0x59e8f60,0x59e8f60,True,768d4e95,768d4e95,True
+$bnS2 $bnF2 $bnW2,0x59e9060,0x59e9060,True,e83ed44e,e83ed44e,True
+$bnS3 $bnF3 $bnW3,0x59e9160,0x59e9160,True,3ce0c909,3ce0c909,True
+$bnS4 $bnF4 $bnW4,0x59e9260,0x59e9260,True,f712bc13,f712bc13,True
+$bnS5 $bnF5 $bnW5,0x59e9360,0x59e9360,True,5f0a2541,5f0a2541,True
+$bnS6 $bnF6 $bnW6,NULL,NULL,True,77b42cd6,77b42cd6,True
+$bnS7 $bnF7 $bnW7,NULL,NULL,True,a3bc032a,a3bc032a,True
+$bnS8 $bnF8 $bnW8,NULL,NULL,True,ef3c1c6e,ef3c1c6e,True
+$bnS9 $bnF9 $bnW9,NULL,NULL,True,30c833cc,30c833cc,True
+$bnS10 $bnF10 $bnW10,NULL,NULL,True,aacce7bb,aacce7bb,True
+$bnS11 $bnF11 $bnW11,NULL,NULL,True,353acdc7,353acdc7,True
+state_regions,$bnZ+0x0:768 $bnCtl+0x0:3072 $bnParm+0x0:3072,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x644adc10,original=0x2a20720,2026-10-09T00:35:19
+distinct_results,12,,
+VERDICT,GREEN,12,

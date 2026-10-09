@@ -24,3 +24,10 @@ end with `call 0x100431ce` (__chkesp).
   param_11+0x18+half*4, and on the second half adjusts the four flags +0xc/+0x10/+0x14/+0x18 through a switch on
   their combined 4-bit value. The name is from that structure (a per-half binary decision over a weighted feature
   sum); which signal property the flag stands for is not determined by the code.
+- `codecSelectWindowFromJumps` 0x10040740 and `codecAlignAnalysisWindow` 0x1003edc0 (added 2026-10-09 from batch c3ca,
+  the last two unnamed stages of codecStageDispatch): a pair. The first finds the run of jump indices (the array
+  codecMarkCorrelationJumps fills at ctx+0x20b4) inside the frame's bounds and writes a window pair plus a 0..3 code
+  into ctx+0x20e8; the second reads that cell as its mode and puts the window on a lattice whose spacing is a step
+  the caller takes from the table 0x10064910, moving it toward the previous window's midpoint (floatFloorToInt) and
+  sliding it inside the frame. Both names are structural: what the jump indices and the step stand for is not
+  determined by either body. codecSelectWindowFromJumps' 3rd and 11th arguments are never read.

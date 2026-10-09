@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003aef0`), 608 bytes, 128 instructions, subsystem `a
 Initializes the 0xc00-byte codec context: calls codecSetParams, sets frame length 0x3c (60) at +0 and +0x10, 0xb4 at +0x648, 1.0f at +0x654, counts 2/5 at +0xbd8/+0xbdc, and seeds the 16-bit constants 0xad57/0x78ac/0x4236 and 0xdee2/0xd818 at +0xbe0..+0xbe8. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Resets the 0xc00-byte decoder context - the object c3br mapped as codecTransformStage's stage record at 0..0xa8 glued to codecSynthStage's state at +0xa8..+0xc00 - to its starting state. It calls the same codecSetParams 0x1003aa50 (0x1003af08), stores 0x3c at +0 and +0x10 and 1 at +4 (0x1003af10, 0x1003af37, 0x1003af19), zeroes +8, +0xc and +0x14 (0x1003af23, 0x1003af2d, 0x1003af41) and the arrays +0x18 for 0x1e dwords (0x1003af66), +0x90 and +0x9c for 3 each (0x1003af8e, 0x1003af9f), +0xa8 for 0x168 (0x1003afcd) and +0x68c and +0x924 for 0xa6 each (0x1003b02f, 0x1003b040), then seeds 0xb4 at +0x648 (0x1003afdd), 1.0f at +0x654 (0x1003afea), 1 at +0x684 and 0 at +0x688 (0x1003aff7, 0x1003b004), zeroes the seven dwords +0xbbc..+0xbd4 (0x1003b050-0x1003b09e), stores the counts 2 and 5 at +0xbd8 / +0xbdc (0x1003b0ab, 0x1003b0b8), the five 16-bit constants 0xad57, 0xdee2, 0x78ac, 0xd818 and 0x4236 at +0xbe0..+0xbe8 (0x1003b0c5-0x1003b0f5) and zeroes +0xbec..+0xbfc (0x1003b101-0x1003b135). Four regions are left untouched: +0x64c, +0x650, +0x658..+0x683 and +0xbea..+0xbeb. eax at the `ret` is the argument (0x1003b132), not a return value. Reimplemented in `shim/src/re/c3ca.cpp`; path-1 A/B GREEN: codecInitContextB (14 vectors, 14 distinct results, 14 changing state, `log/diff/0003aef0_sound_codecInitContextB.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003b14f): callee pops 0 bytes of stack arguments.
 

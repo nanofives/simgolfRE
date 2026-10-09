@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 29 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Raise libjpeg's out-of-memory error, naming the allocator that failed. The compress object is read at 0x004af0a0 and pushed as the only argument of the error handler (0x004af0a4); the error manager is re-read from cinfo+0 before each use (0x004af0a5, 0x004af0ae, 0x004af0b7). The message code 0x35 goes to err+0x14 (0x004af0a7) and the caller's second dword, read at 0x004af0b0, to the first message parameter err+0x18 (0x004af0b4), so the parameter is the only part of the error that varies. err+0 — error_exit — is then called with the compress object (0x004af0b9) and this function pops that dword (0x004af0bb). It has no conditional branch; libjpeg's own error_exit does not return, but no instruction here depends on that. Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: out_of_memory (12 vectors, 12 distinct results, 12 changing state, `log/diff/004af0a0_out_of_memory.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_out_of_memory` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af0bc): callee pops 0 bytes of stack arguments.

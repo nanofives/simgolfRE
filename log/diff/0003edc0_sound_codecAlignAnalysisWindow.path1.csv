@@ -1,0 +1,32 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w_step_allset $w_flags_allset $w_mode_allset $w_pn_allset $w_prev_allset $w_cur_allset $w_out_allset $w_flen_allset $w_wlen_allset,0,0,True,8d9dd577,8d9dd577,True
+$w_step_f1zero $w_flags_f1zero $w_mode_f1zero $w_pn_f1zero $w_prev_f1zero $w_cur_f1zero $w_out_f1zero $w_flen_f1zero $w_wlen_f1zero,0,0,True,2de7fe09,2de7fe09,True
+$w_step_f2zero $w_flags_f2zero $w_mode_f2zero $w_pn_f2zero $w_prev_f2zero $w_cur_f2zero $w_out_f2zero $w_flen_f2zero $w_wlen_f2zero,0,0,True,7d1a6e43,7d1a6e43,True
+$w_step_f3zero $w_flags_f3zero $w_mode_f3zero $w_pn_f3zero $w_prev_f3zero $w_cur_f3zero $w_out_f3zero $w_flen_f3zero $w_wlen_f3zero,0,0,True,8a872a45,8a872a45,True
+$w_step_f4zero $w_flags_f4zero $w_mode_f4zero $w_pn_f4zero $w_prev_f4zero $w_cur_f4zero $w_out_f4zero $w_flen_f4zero $w_wlen_f4zero,0,0,True,fe877baf,fe877baf,True
+$w_step_any_mode0 $w_flags_any_mode0 $w_mode_any_mode0 $w_pn_any_mode0 $w_prev_any_mode0 $w_cur_any_mode0 $w_out_any_mode0 $w_flen_any_mode0 $w_wlen_any_mode0,0,0,True,6dee0bd2,6dee0bd2,True
+$w_step_any_mode1 $w_flags_any_mode1 $w_mode_any_mode1 $w_pn_any_mode1 $w_prev_any_mode1 $w_cur_any_mode1 $w_out_any_mode1 $w_flen_any_mode1 $w_wlen_any_mode1,0,0,True,59e118c6,59e118c6,True
+$w_step_any_mode2 $w_flags_any_mode2 $w_mode_any_mode2 $w_pn_any_mode2 $w_prev_any_mode2 $w_cur_any_mode2 $w_out_any_mode2 $w_flen_any_mode2 $w_wlen_any_mode2,0,0,True,009dd792,009dd792,True
+$w_step_any_mode3 $w_flags_any_mode3 $w_mode_any_mode3 $w_pn_any_mode3 $w_prev_any_mode3 $w_cur_any_mode3 $w_out_any_mode3 $w_flen_any_mode3 $w_wlen_any_mode3,0,0,True,0e46c0e6,0e46c0e6,True
+$w_step_none $w_flags_none $w_mode_none $w_pn_none $w_prev_none $w_cur_none $w_out_none $w_flen_none $w_wlen_none,0,0,True,e8f60cfc,e8f60cfc,True
+$w_step_m2_sub $w_flags_m2_sub $w_mode_m2_sub $w_pn_m2_sub $w_prev_m2_sub $w_cur_m2_sub $w_out_m2_sub $w_flen_m2_sub $w_wlen_m2_sub,0,0,True,e2f114a7,e2f114a7,True
+$w_step_m2_nosub $w_flags_m2_nosub $w_mode_m2_nosub $w_pn_m2_nosub $w_prev_m2_nosub $w_cur_m2_nosub $w_out_m2_nosub $w_flen_m2_nosub $w_wlen_m2_nosub,0,0,True,1f0d8d33,1f0d8d33,True
+$w_step_m1_add $w_flags_m1_add $w_mode_m1_add $w_pn_m1_add $w_prev_m1_add $w_cur_m1_add $w_out_m1_add $w_flen_m1_add $w_wlen_m1_add,0,0,True,26eb20c9,26eb20c9,True
+$w_step_m3_noadd $w_flags_m3_noadd $w_mode_m3_noadd $w_pn_m3_noadd $w_prev_m3_noadd $w_cur_m3_noadd $w_out_m3_noadd $w_flen_m3_noadd $w_wlen_m3_noadd,0,0,True,2aac7617,2aac7617,True
+$w_step_slide_down $w_flags_slide_down $w_mode_slide_down $w_pn_slide_down $w_prev_slide_down $w_cur_slide_down $w_out_slide_down $w_flen_slide_down $w_wlen_slide_down,0,0,True,ba5bc697,ba5bc697,True
+$w_step_slide_up $w_flags_slide_up $w_mode_slide_up $w_pn_slide_up $w_prev_slide_up $w_cur_slide_up $w_out_slide_up $w_flen_slide_up $w_wlen_slide_up,0,0,True,02469be7,02469be7,True
+$w_step_step1 $w_flags_step1 $w_mode_step1 $w_pn_step1 $w_prev_step1 $w_cur_step1 $w_out_step1 $w_flen_step1 $w_wlen_step1,0,0,True,2e2e3508,2e2e3508,True
+$w_step_step34 $w_flags_step34 $w_mode_step34 $w_pn_step34 $w_prev_step34 $w_cur_step34 $w_out_step34 $w_flen_step34 $w_wlen_step34,0,0,True,04ca990d,04ca990d,True
+$w_step_sub0 $w_flags_sub0 $w_mode_sub0 $w_pn_sub0 $w_prev_sub0 $w_cur_sub0 $w_out_sub0 $w_flen_sub0 $w_wlen_sub0,0,0,True,963de2d0,963de2d0,True
+$w_step_posthird $w_flags_posthird $w_mode_posthird $w_pn_posthird $w_prev_posthird $w_cur_posthird $w_out_posthird $w_flen_posthird $w_wlen_posthird,0,0,True,58300179,58300179,True
+$w_step_possmall $w_flags_possmall $w_mode_possmall $w_pn_possmall $w_prev_possmall $w_cur_possmall $w_out_possmall $w_flen_possmall $w_wlen_possmall,0,0,True,6e6207bd,6e6207bd,True
+$w_step_neghalf $w_flags_neghalf $w_mode_neghalf $w_pn_neghalf $w_prev_neghalf $w_cur_neghalf $w_out_neghalf $w_flen_neghalf $w_wlen_neghalf,0,0,True,959da849,959da849,True
+$w_step_negsmall $w_flags_negsmall $w_mode_negsmall $w_pn_negsmall $w_prev_negsmall $w_cur_negsmall $w_out_negsmall $w_flen_negsmall $w_wlen_negsmall,0,0,True,2da946b5,2da946b5,True
+$w_step_n2 $w_flags_n2 $w_mode_n2 $w_pn_n2 $w_prev_n2 $w_cur_n2 $w_out_n2 $w_flen_n2 $w_wlen_n2,0,0,True,ea939ea3,ea939ea3,True
+$w_step_n4 $w_flags_n4 $w_mode_n4 $w_pn_n4 $w_prev_n4 $w_cur_n4 $w_out_n4 $w_flen_n4 $w_wlen_n4,0,0,True,41077f17,41077f17,True
+$w_step_shortframe $w_flags_shortframe $w_mode_shortframe $w_pn_shortframe $w_prev_shortframe $w_cur_shortframe $w_out_shortframe $w_flen_shortframe $w_wlen_shortframe,0,0,True,7aabdd1b,7aabdd1b,True
+state_regions,$w_blk_allset+0x0:512 $w_blk_f1zero+0x0:512 $w_blk_f2zero+0x0:512 $w_blk_f3zero+0x0:512 $w_blk_f4zero+0x0:512 $w_blk_any_mode0+0x0:512 $w_blk_any_mode1+0x0:512 $w_blk_any_mode2+0x0:512 $w_blk_any_mode3+0x0:512 $w_blk_none+0x0:512 $w_blk_m2_sub+0x0:512 $w_blk_m2_nosub+0x0:512 $w_blk_m1_add+0x0:512 $w_blk_m3_noadd+0x0:512 $w_blk_slide_down+0x0:512 $w_blk_slide_up+0x0:512 $w_blk_step1+0x0:512 $w_blk_step34+0x0:512 $w_blk_sub0+0x0:512 $w_blk_posthird+0x0:512 $w_blk_possmall+0x0:512 $w_blk_neghalf+0x0:512 $w_blk_negsmall+0x0:512 $w_blk_n2+0x0:512 $w_blk_n4+0x0:512 $w_blk_shortframe+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5ea6e830,original=0x2ca0a60,2026-10-09T00:39:08
+distinct_results,26,,
+VERDICT,GREEN,26,

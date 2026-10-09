@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009f2f0`), 127 bytes, 48 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflate_codes_new allocates and initialises the per-block decoder state that inflate_blocks hands to inflate_codes once both Huffman trees are ready. It asks the caller's allocator for one 0x1c-byte block (the size and count pushed at 0x1009f30a and 0x1009f30c, the opaque read from z+0x28 at 0x1009f311, the indirect call at 0x1009f318) and, when that returns NULL (0x1009f328), writes nothing at all and hands the NULL straight back. Otherwise it fills five fields and leaves the other 0x14 bytes exactly as the allocator left them: mode = 0 at +0 (0x1009f331, the START state), the literal tree's bit depth as a single BYTE at +0x10 (0x1009f33a reads it, 0x1009f33d stores it), the distance tree's at +0x11 (0x1009f346), and the two tree pointers at +0x14 and +0x18 (0x1009f34f, 0x1009f358). The two byte stores are the only place a bit depth is narrowed: a depth above 255 keeps only its low byte. It returns the block on both paths (0x1009f35b). Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflate_codes_new (12 vectors, 12 distinct results, 12 changing state, `log/diff/0009f2f0_jgld_inflate_codes_new.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_infcodes.cpp` as `_inflate_codes_new` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009f36e): callee pops 0 bytes of stack arguments.

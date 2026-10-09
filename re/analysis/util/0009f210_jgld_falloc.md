@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009f210`), 58 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+falloc is the allocator inflate_trees_fixed installs in its own local z_stream at 0x1009f065 so that the deflate fixed Huffman tables are built out of module storage instead of the heap. It takes a pointer to a counter of remaining inflate_huft entries, subtracts the requested item count from it (0x1009f22e, 0x1009f230, 0x1009f235), re-reads it (0x1009f23a) and returns fixed_mem 0x10128af0 + counter * 8, the `lea eax,[edx*8+0x10128af0]` at 0x1009f23c - eight bytes being one inflate_huft - so the 530 entries are handed out from the top of the array downwards. It has no branch, no bounds check (a count larger than the counter wraps it and returns a pointer outside fixed_mem) and does not read its third argument at all: zlib 1.0.2 writes the subtraction as `n+s-s` to silence an unused-parameter warning and the compiler drops it. Its frame is also the only one in this batch with no `__chkesp` call in the epilogue (0x1009f243). Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: falloc (12 vectors, 12 distinct results, 11 changing state, `log/diff/0009f210_jgld_falloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_inftrees.cpp` as `_falloc` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009f249): callee pops 0 bytes of stack arguments.

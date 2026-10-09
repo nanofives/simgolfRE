@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00035750`), 13 bytes, 3 instructions, subsystem `audi
 Stores the computed pitch rate value at Channel+0x220. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Stores the pitch rate at channel+0x220. __thiscall with one stack argument: it loads the argument (0x10035750), writes it to this+0x220 (0x10035754) and returns with `ret 4` (0x1003575a). It writes nothing else, and eax at the `ret` is the argument itself, not a return value. Reimplemented in `shim/src/re/c3ca.cpp`; path-1 A/B GREEN: Channel_setPitchRate (16 vectors, 8 distinct results, 16 changing state, `log/diff/00035750_sound_Channel_setPitchRate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10035750@C_FUN_10035750@f_10035750@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1003575a): callee pops 4 bytes of stack arguments.

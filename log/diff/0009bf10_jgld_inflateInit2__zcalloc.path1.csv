@@ -1,0 +1,8 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$zcS0 8 $zcVer 56,0,0,True,ca2951e8,ca2951e8,True
+$zcS1 9 $zcVer 56,0,0,True,9f1c800f,9f1c800f,True
+state_regions,$zcBlk+0x0:28 $zcBlk+0x20:32 $zcBlk+0x40:28 $zcBlk+0x60:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x644ade80,original=0x2a207a0,2026-10-09T00:35:21
+distinct_results,2,,
+VERDICT,GREEN,2,

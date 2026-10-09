@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 5 bytes, 2 instructions, subsystem `util`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Report how much memory the allocator may still hand out. The body is one instruction: the THIRD dword of the argument list is loaded into eax (0x004b0480) and returned (0x004b0484), so this build always grants the caller the whole maximum it asked for, whatever the compress object, the minimum it needs and the amount already allocated. Nothing is written, and the companion jpeg_open_backing_store 0x004b0490 is what makes that promise safe: it raises an error instead of ever opening a temporary file. Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: jpeg_mem_available (14 vectors, 14 distinct results, `log/diff/004b0480_jpeg_mem_available.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memnobs.cpp` as `_jpeg_mem_available` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0484): callee pops 0 bytes of stack arguments.

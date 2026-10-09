@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009bdd0`), 145 bytes, 52 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflateReset puts a stream back to the state inflateInit2_ left it in, so the same stream can decode another member without reallocating its window. A null stream (0x1009bde8) or a stream with no internal state at +0x1c (0x1009bdf1) returns Z_STREAM_ERROR through one shared arm (0x1009bdf7). Otherwise it clears total_out at +0x14 BEFORE total_in at +8 (0x1009be01, 0x1009be0b - the inner assignment of `z->total_in = z->total_out = 0` compiled first) and the message pointer at +0x18 (0x1009be15), then sets the stream mode to BLOCKS 7 if the state's nowrap flag at +0xc is set and METHOD 0 otherwise. That choice is compiled WITHOUT a branch at 0x1009be25-0x1009be32: `neg` then `sbb eax,eax` turns any non-zero into -1 and zero into 0, and `and eax,7` selects 7 or 0. It then calls inflate_blocks_reset on the block state at +0x14 (0x1009be46) with a local dword as the check-value sink (0x1009be34), which it ignores, and returns Z_OK (0x1009be4e). Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflateReset (12 vectors, 10 distinct results, 9 changing state, `log/diff/0009bdd0_jgld_inflateReset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_inflate.cpp` as `_inflateReset` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009be60): callee pops 0 bytes of stack arguments.

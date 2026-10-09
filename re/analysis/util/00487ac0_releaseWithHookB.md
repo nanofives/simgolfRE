@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 33 bytes, 13 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Calls the child object (this+0x14) vtable+0x14, then closeHookB, then clears this+0x14. (`re/names/exe_4.tsv`)
 
+## Purpose
+The same body against the second global close hook. The child pointer at +0x14 is read at 0x00487ac3 and a null one ends the function at 0x00487add (0x00487ac8); otherwise the child's vtable slot +0x14 runs with the child in ecx (0x00487aca / 0x00487acc), closeHookB 0x004879f0 runs with this in ecx (0x00487acf / 0x00487ad1) and reaches the global 0x0083af88 because +0x14 still holds the child, and +0x14 is cleared last (0x00487ad6). The return value is 0 on both paths (0x00487add). Reimplemented in `shim/src/re/c3cc.cpp`; path-1 A/B GREEN: releaseWithHookB_set (8 vectors, 6 distinct results, 5 changing state, `log/diff/00487ac0_releaseWithHookB_set.path1.csv`); releaseWithHookB_null (8 vectors, 6 distinct results, 5 changing state, `log/diff/00487ac0_releaseWithHookB_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487ac0@f_00487ac0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487ae0): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009cd90`), 225 bytes, 85 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+inflate_blocks_new allocates a block-level inflate state and its sliding window. The 0x3c-byte state comes from the caller's allocator first (0x1009cdaa, 0x1009cdb8); if that returns NULL (0x1009cdcc) the function returns the NULL it got (0x1009cdce) and nothing has been taken. The window of w bytes comes next, straight into +0x24 (0x1009cde8, 0x1009cdf8); if THAT returns NULL (0x1009cdfe) the state is handed back through the caller's deallocator (0x1009ce14) and the function returns a literal 0 (0x1009ce21) rather than the state pointer - the two failure paths differ only in that one free. On success it sets the window end at +0x28 to window + w (0x1009ce2b, 0x1009ce31), stores the check function at +0x34 (0x1009ce3a), sets mode to TYPE 0 (0x1009ce40) and calls inflate_blocks_reset with the state's own check field at +0x38 as the out-dword (computed at 0x1009ce49, called at 0x1009ce55), which is what initialises the bit buffer, the window cursors and the checksum. It returns the state (0x1009ce5d). Reimplemented in `shim/src/re/c3cb.cpp`; path-1 A/B GREEN: inflate_blocks_new (12 vectors, 12 distinct results, 12 changing state, `log/diff/0009cd90_jgld_inflate_blocks_new.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_infblock.cpp` as `_inflate_blocks_new` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009ce70): callee pops 0 bytes of stack arguments.
