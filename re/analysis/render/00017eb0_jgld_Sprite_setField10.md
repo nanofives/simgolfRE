@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00017eb0`), 47 bytes, 22 instructions, subsystem `rend
 Sprite vtable +0x10: stores arg0 into this+0x10. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Slot 4 (+0x10) of the Sprite vtable at 0x1011d380. Stores its only argument into [this + 0x10], the sprite's Palette pointer, and returns nothing (VA 0x10017ed0 reads the argument, VA 0x10017ed3 stores it). There is no branch, no call and no test of the value: a caller can leave any dword there, which is what the last argument of every dispatcher and forwarder of this class does for the duration of one draw. Sprite::create 0x10014ff0 calls this slot with its sixth argument after create8 or create16 has succeeded (VA 0x100150a6). Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::setField10 (16 vectors, 16 distinct results, 16 changing state, `log/diff/00017eb0_jgld_Sprite_setField10.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10017eb0@C_FUN_10017eb0@f_10017eb0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10017edc): callee pops 4 bytes of stack arguments.

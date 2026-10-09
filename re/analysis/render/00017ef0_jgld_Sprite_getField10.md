@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00017ef0`), 42 bytes, 21 instructions, subsystem `rend
 Sprite vtable +0x14: returns the int at this+0x10. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 5 (+0x14). Returns [this + 0x10], the sprite's Palette pointer, with no branch and no call (VA 0x10017f0d loads `this` from the frame, VA 0x10017f10 loads the field into eax). It is the read side of slot 4. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::getField10 (16 vectors, 16 distinct results, 0 changing state, `log/diff/00017ef0_jgld_Sprite_getField10.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10017ef0@f_10017ef0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10017f19): callee pops 0 bytes of stack arguments.

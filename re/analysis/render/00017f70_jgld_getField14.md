@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00017f70`), 42 bytes, 21 instructions, subsystem `rend
 returns the int field at this+0x14 (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 8 (+0x20). Returns [this + 0x14], the base of the sprite's pixel payload, with no branch and no call (VA 0x10017f90). Every dispatcher of this class calls this slot as its validity test and returns 7 when it gives zero (VA 0x100151ad / 0x100151b9 in draw and its four twins), and Sprite::release 0x10014eb0 frees exactly this pointer and clears the field. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: getField14 (16 vectors, 13 distinct results, 0 changing state, `log/diff/00017f70_jgld_getField14.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_small1.cpp` as `?get14@J17@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10017f99): callee pops 0 bytes of stack arguments.

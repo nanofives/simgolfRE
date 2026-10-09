@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000180a0`), 42 bytes, 21 instructions, subsystem `rend
 Sprite vtable +0x34: returns the int at this+0x34. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 13 (+0x34). Returns [this + 0x34], the payload's height in rows, with no branch and no call (VA 0x100180c0). remap8 0x1001bae0 multiplies it by the pitch at [this + 0x2c] for the payload length. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::getField34 (16 vectors, 10 distinct results, 0 changing state, `log/diff/000180a0_jgld_Sprite_getField34.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_100180a0@f_100180a0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100180c9): callee pops 0 bytes of stack arguments.

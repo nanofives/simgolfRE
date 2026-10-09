@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00017f30`), 42 bytes, 21 instructions, subsystem `rend
 returns the int field at this+0x28 (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 7 (+0x1c). Returns [this + 0x28], with no branch and no call (VA 0x10017f50). That field is the one c3bm identified as the sprite's transparent-colour byte, which Sprite::draw16t_1001ab40 reads at VA 0x1001abbb and Sprite::draw16t_1001b060 overwrites with 0xff at VA 0x1001b0f2; none of the blitters this batch's dispatchers reach reads it. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: getField28 (16 vectors, 16 distinct results, 0 changing state, `log/diff/00017f30_jgld_getField28.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_small1.cpp` as `?get28@J17@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10017f59): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00019900`), 161 bytes, 62 instructions, subsystem `ren
 16-bit block copy of the sprite to a Surface (variant) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 18 (+0x48). blt16a's two guards on the same two slots (VA 0x10019934, VA 0x1001994d) and the same unrestored Palette store (VA 0x10019962 / 0x1001996e), then a forward of (destination, x, y, colour, flag) to Sprite::draw16_10022a10 through the thunk at VA 0x10019989. Its two small arguments reach the blitter inside dwords whose upper bits are leftovers of this frame: `mov cl, byte ptr [ebp + 0x1c]; push ecx` (VA 0x10019971 / 0x10019974) lays the flag byte over the low byte of the Palette pointer loaded at VA 0x1001995c, and `mov dx, word ptr [ebp + 0x14]; push edx` (VA 0x10019975 / 0x10019979) lays the colour word over the high half of edx, which holds `this` when the Palette store ran (VA 0x10019968) and the sprite's vtable pointer when it did not (VA 0x1001993c, preserved across both slot calls and the /GZ frame checks). Nothing observes those upper bits: 0x10022a10 reads the first argument as `mov bp, word ptr [ebp + 0x14]` (VA 0x10022d26) and references the second nowhere. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::blt16b (18 vectors, 14 distinct results, 10 changing state, `log/diff/00019900_jgld_Sprite_blt16b.path1.csv`); Sprite::blt16b_s223 (6 vectors, 6 distinct results, 5 changing state, `log/diff/00019900_jgld_Sprite_blt16b_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?blt16b@Sprite@@QAEHPAVSurface@@HHGHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x1001999e): callee pops 24 bytes of stack arguments.

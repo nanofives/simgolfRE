@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00018020`), 42 bytes, 21 instructions, subsystem `rend
 returns the int field at this+0x2c (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 11 (+0x2c). Returns [this + 0x2c], the payload's row pitch, with no branch and no call (VA 0x10018040). remap8 0x1001bae0 multiplies it by [this + 0x34] to get the payload's length when bit 0 of [this + 0x18] is clear, and every blitter of the family steps its source cursor by it. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: getField2c (16 vectors, 10 distinct results, 0 changing state, `log/diff/00018020_jgld_getField2c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_small1.cpp` as `?get2c@J17@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10018049): callee pops 0 bytes of stack arguments.

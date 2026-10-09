@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00017fe0`), 42 bytes, 21 instructions, subsystem `rend
 returns the int field at this+0x20 (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 10 (+0x28). Returns [this + 0x20], the sprite's bits per pixel, with no branch and no call (VA 0x10018000). It is the value the outer switch of every dispatcher of this class reads directly from the field (VA 0x100151e0 in draw) and the one the five blt forwarders read through this slot and compare with 8 (VA 0x10019873 / 0x1001987d in blt16a). Sprite::create 0x10014ff0 switches on the same value to pick create8 0x1001b690 or create16 0x1001a250. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: getField20 (16 vectors, 9 distinct results, 0 changing state, `log/diff/00017fe0_jgld_getField20.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_small1.cpp` as `?get20@J17@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10018009): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00019b90`), 185 bytes, 71 instructions, subsystem `ren
 blits this sprite into another sprite's pixel buffer (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 20 (+0x50). bltS's three guards on the same three slots (VA 0x10019bc4, VA 0x10019bdd, VA 0x10019bf6), the same unrestored Palette store (VA 0x10019c0b / 0x10019c17) and a forward of (other, destination, destination2, x, y) to blitPair 0x10025900 through the thunk at VA 0x10019c31. The Surface whose depth the guard tests is the SECOND argument, which blitPair only reads (VA 0x10025bb4); the one blitPair writes is the third argument (VA 0x10025c4b / 0x10025c5d), and nothing here tests its depth or its pixel base at all. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::bltS2 (20 vectors, 15 distinct results, 12 changing state, `log/diff/00019b90_jgld_Sprite_bltS2.path1.csv`); Sprite::bltS2_s223 (6 vectors, 6 distinct results, 4 changing state, `log/diff/00019b90_jgld_Sprite_bltS2_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?bltS2@Sprite@@QAEHPAV1@PAVSurface@@HHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x10019c46): callee pops 24 bytes of stack arguments.

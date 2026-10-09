@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00016fc0`), 593 bytes, 194 instructions, subsystem `re
 blits the sprite to a Surface at (x,y) (draw variant J); 100% instruction match (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 26 (+0x68). drawF's frame with a five-argument blitter and a result local cleared to 0 first (VA 0x10016fdd), so its report-only arms return 0 and not the frame fill. The Palette is saved and replaced (VA 0x10016fe7 / 0x10016ff9), a NULL destination gives 0x10 (VA 0x10016ffc / 0x10017002) and an invalid sprite 7 (VA 0x10017016 / 0x10017024), neither restoring it. An 8-bpp sprite on a depth-8 destination (slot +0xe4 at VA 0x10017056) runs Sprite::draw_10062dd0 with (destination, x, y, table, pixels) through the thunk at VA 0x100170d0 unless slot 6 says busy, which reports at line base 0x10122df8 + 0x13 (VA 0x10017085); a 16-bit destination reports at + 0x19 with no result stored (VA 0x100170da) and any other depth at + 0x24 with 0x17 (VA 0x1001710e, VA 0x10017140). A 16-bpp sprite fetches the depth (VA 0x10017156) without testing it, reports at + 0x31 and gives 0x17 (VA 0x10017168, VA 0x1001719a); any other bits-per-pixel value reports at + 0x39 and gives 0x17 (VA 0x100171a3, VA 0x100171d5). The join restores the Palette (VA 0x100171e2), calls slot +0x24 with 1 (VA 0x100171f1) and returns the result (VA 0x100171fb). Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::drawJ (20 vectors, 15 distinct results, 10 changing state, `log/diff/00016fc0_jgld_Sprite_drawJ.path1.csv`); Sprite::drawJ_s223 (6 vectors, 6 distinct results, 5 changing state, `log/diff/00016fc0_jgld_Sprite_drawJ_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?drawJ@Sprite@@QAEHPAVSurface@@HHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x1001720e): callee pops 24 bytes of stack arguments.

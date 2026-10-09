@@ -54,8 +54,8 @@ jgld.dll	0x1000aef0	Surface::getField810	render	match re/match/jgld_raw_03.cpp	r
 jgld.dll	0x1000aeb0	setField28	render	match re/match/jgld_raw_03.cpp	stores arg0 into *(this+0x28); callers Surface::drawTo 0x10009fd0 and Surface::drawToZ 0x1000a330 use it on a Surface, and Sprite_vtable (0x1011d380) +0x18 reuses it on a Sprite.
 jgld.dll	0x100092e0	initDepthInfo	render	caller 0x10007660 (Surface::ctor)	sets *(ecx+4)=0 and returns ecx; Surface::ctor calls it with ecx=this+0x24 (the embedded depth descriptor whose +0 is the depth read by blitT), clearing Surface+0x28.
 jgld.dll	0x10016930	SpriteBase::deletingDtor	render	vtable 0x1011d444, callee 0x100168e0 (SpriteBase::~SpriteBase)	SpriteBase scalar deleting destructor (vtable 0x1011d444 slot 0): runs SpriteBase::~SpriteBase then operator_delete when arg&1.
-jgld.dll	0x10017eb0	Sprite::setField10	render	vtable 0x1011d380	Sprite vtable +0x10: stores arg0 into this+0x10.
-jgld.dll	0x10017ef0	Sprite::getField10	render	vtable 0x1011d380	Sprite vtable +0x14: returns the int at this+0x10.
+jgld.dll	0x10017eb0	Sprite::setField10	render	vtable 0x1011d380	stores its argument as the sprite's PALETTE POINTER at +0x10 (the blitters read their colour tables at [+0x10]+0x40c / +0x60c; the transparent-colour byte is the separate field +0x28) (c3ci A/B)
+jgld.dll	0x10017ef0	Sprite::getField10	render	vtable 0x1011d380	returns the sprite's Palette pointer at +0x10 (not a key colour; the transparent byte is +0x28, returned by slot 7) (c3ci A/B)
 jgld.dll	0x10017fb0	Sprite::emptyVfn24	render	vtable 0x1011d380	Sprite vtable +0x24: empty virtual taking one argument (ignores it, returns void).
 jgld.dll	0x10018060	Sprite::getField30	render	vtable 0x1011d380	Sprite vtable +0x30: returns the int at this+0x30.
 jgld.dll	0x100180a0	Sprite::getField34	render	vtable 0x1011d380	Sprite vtable +0x34: returns the int at this+0x34.

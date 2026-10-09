@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00019830`), 156 bytes, 60 instructions, subsystem `ren
 16-bit block copy of the sprite to a Surface (variant) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 30 (+0x78). Refuses with 0x17 unless the destination's depth, read through slot +0xe4 of the Surface, is 16 (VA 0x10019857 call, VA 0x10019864 compare, VA 0x10019867 branch) and the sprite's own bits per pixel, read through slot +0x28, is 8 (VA 0x10019873 call, VA 0x1001987d compare); the two tests are in that order and the second is skipped when the first fails. It then overwrites [this + 0x10] with its fifth argument when that is not zero (VA 0x10019892 / 0x1001989e) WITHOUT keeping the old Palette for anything (the value loaded at VA 0x1001988c is stored at [ebp - 8] and never read again), and forwards (destination, x, y, table) to Sprite::draw16_100298b0 through the thunk at VA 0x1000114a (VA 0x100198b4), returning its result. The fourth argument is the 16-bit table that blitter parks at 0x10128574 and indexes with a destination pixel. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::blt16a (18 vectors, 14 distinct results, 12 changing state, `log/diff/00019830_jgld_Sprite_blt16a.path1.csv`); Sprite::blt16a_s223 (6 vectors, 6 distinct results, 5 changing state, `log/diff/00019830_jgld_Sprite_blt16a_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?blt16a@Sprite@@QAEHPAVSurface@@HHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x100198c9): callee pops 20 bytes of stack arguments.

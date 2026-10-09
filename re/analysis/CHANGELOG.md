@@ -4,6 +4,26 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-09  jgld.dll:00019b90  Sprite::bltS2  C2->C3  log/diff/00019b90_jgld_Sprite_bltS2.path1.csv
+2026-10-09  jgld.dll:00019aa0  Sprite::bltS  C2->C3  log/diff/00019aa0_jgld_Sprite_bltS.path1.csv
+2026-10-09  jgld.dll:000199d0  Sprite::blt16c  C2->C3  log/diff/000199d0_jgld_Sprite_blt16c.path1.csv
+2026-10-09  jgld.dll:00019900  Sprite::blt16b  C2->C3  log/diff/00019900_jgld_Sprite_blt16b.path1.csv
+2026-10-09  jgld.dll:00019830  Sprite::blt16a  C2->C3  log/diff/00019830_jgld_Sprite_blt16a.path1.csv
+2026-10-09  jgld.dll:000180a0  Sprite::getField34  C2->C3  log/diff/000180a0_jgld_Sprite_getField34.path1.csv
+2026-10-09  jgld.dll:00018060  Sprite::getField30  C2->C3  log/diff/00018060_jgld_Sprite_getField30.path1.csv
+2026-10-09  jgld.dll:00018020  getField2c  C2->C3  log/diff/00018020_jgld_getField2c.path1.csv
+2026-10-09  jgld.dll:00017fe0  getField20  C2->C3  log/diff/00017fe0_jgld_getField20.path1.csv
+2026-10-09  jgld.dll:00017f70  getField14  C2->C3  log/diff/00017f70_jgld_getField14.path1.csv
+2026-10-09  jgld.dll:00017f30  getField28  C2->C3  log/diff/00017f30_jgld_getField28.path1.csv
+2026-10-09  jgld.dll:00017ef0  Sprite::getField10  C2->C3  log/diff/00017ef0_jgld_Sprite_getField10.path1.csv
+2026-10-09  jgld.dll:00017eb0  Sprite::setField10  C2->C3  log/diff/00017eb0_jgld_Sprite_setField10.path1.csv
+2026-10-09  jgld.dll:000178a0  Sprite::drawL  C2->C3  log/diff/000178a0_jgld_Sprite_drawL.path1.csv
+2026-10-09  jgld.dll:000175d0  Sprite::drawQ  C2->C3  log/diff/000175d0_jgld_Sprite_drawQ.path1.csv
+2026-10-09  jgld.dll:00016fc0  Sprite::drawJ  C2->C3  log/diff/00016fc0_jgld_Sprite_drawJ.path1.csv
+2026-10-09  jgld.dll:000169a0  Sprite::drawH  C2->C3  log/diff/000169a0_jgld_Sprite_drawH.path1.csv
+2026-10-09  jgld.dll:00016270  Sprite::drawF  C2->C3  log/diff/00016270_jgld_Sprite_drawF.path1.csv
+2026-10-09  jgld.dll:00015180  Sprite::draw  C2->C3  log/diff/00015180_jgld_Sprite_draw.path1.csv
+2026-10-09  jgld.dll:000150d0  Sprite::remap  C2->C3  log/diff/000150d0_jgld_Sprite_remap.path1.csv
 2026-10-09  jgld.dll:0007c150  png_handle_unknown  C2->C3  log/diff/0007c150_jgld_png_handle_unknown.path1.csv
 2026-10-09  jgld.dll:0007b9b0  png_handle_tIME  C2->C3  log/diff/0007b9b0_jgld_png_handle_tIME.path1.csv
 2026-10-09  jgld.dll:0007b4d0  png_handle_oFFs  C2->C3  log/diff/0007b4d0_jgld_png_handle_oFFs.path1.csv

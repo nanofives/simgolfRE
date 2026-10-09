@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00019aa0`), 181 bytes, 69 instructions, subsystem `ren
 blits this sprite into another sprite's pixel buffer (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 21 (+0x54). Three guards before anything happens: the destination's depth through slot +0xe4 must be 16 (VA 0x10019ac7 call, VA 0x10019ad4 compare), `this`'s bits per pixel through slot +0x28 must be 8 (VA 0x10019ae3, VA 0x10019aed) and the FIRST argument's bits per pixel, read through the same slot on that object, must be 8 as well (VA 0x10019afc, VA 0x10019b06); any of the three failing returns 0x17 (VA 0x10019b0b) and the later tests are skipped. It then overwrites [this + 0x10] with its fifth argument when that is not zero, again without restoring it (VA 0x10019b1b / 0x10019b27), and forwards (other, destination, x, y) to blitPair1 0x10025dd0 through the thunk at VA 0x10019b3d. The pair blitter takes the colour index from `this`'s payload and the per-pixel weight from the other sprite's, read at the same offset with THIS sprite's pitch, and reads and writes the one Surface. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::bltS (19 vectors, 14 distinct results, 11 changing state, `log/diff/00019aa0_jgld_Sprite_bltS.path1.csv`); Sprite::bltS_s223 (6 vectors, 6 distinct results, 4 changing state, `log/diff/00019aa0_jgld_Sprite_bltS_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?bltS@Sprite@@QAEHPAV1@PAVSurface@@HHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x10019b52): callee pops 20 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000150d0`), 138 bytes, 52 instructions, subsystem `ren
 remaps the sprite's palette indices. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 14 (+0x38). Switches on the sprite's bits per pixel at [this + 0x20] (loaded at VA 0x100150f0, compared with 8 at VA 0x100150f6): eight forwards both arguments unchanged to remap8 0x1001bae0 through the thunk at VA 0x1000127b (call at VA 0x10015109) and returns what it returned, which is 7 for a sprite with no payload and 0 otherwise; any other depth writes a debug report at line base 0x10122dd0 + 9 (VA 0x1001511c) and returns 0x17 (VA 0x10015142). The function has no other statement: it neither touches the payload itself nor tests the two colour arguments, which remap8 masks to a byte each. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::remap (14 vectors, 11 distinct results, 9 changing state, `log/diff/000150d0_jgld_Sprite_remap.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?remap@Sprite@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10015157): callee pops 8 bytes of stack arguments.

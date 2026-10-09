@@ -1,21 +1,21 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$spA $d0 1 2 3 4 0,0,0,True,bacb3cc3,bacb3cc3,False
-$spA $d0 1 2 3 4 85,0,0,True,bacb3cc3,bacb3cc3,False
-$spA 0 0 0 0 0 0,16,16,True,bacb3cc3,bacb3cc3,False
-$spA 0 0 0 0 0 102,16,16,True,4723a3b1,4723a3b1,True
-$spNB $d0 0 0 0 0 0,7,7,True,bacb3cc3,bacb3cc3,False
-$spNB $d0 0 0 0 0 17,7,7,True,c4e9d7d7,c4e9d7d7,True
-$sp16 $d0 0 0 0 0 0,23,23,True,bacb3cc3,bacb3cc3,False
-$sp16 $e0 0 0 0 0 0,0,0,True,bacb3cc3,bacb3cc3,False
-$sp16 $x0 0 0 0 0 7,23,23,True,bacb3cc3,bacb3cc3,False
-$sp16 $x1 0 0 0 0 0,23,23,True,bacb3cc3,bacb3cc3,False
-$sp16 $x2 0 0 0 0 0,23,23,True,bacb3cc3,bacb3cc3,False
-$spX $d0 0 0 0 0 0,23,23,True,bacb3cc3,bacb3cc3,False
-$a0 $d0 0 0 0 0 0,23,23,True,bacb3cc3,bacb3cc3,False
-$a3 $e0 0 0 0 0 18,23,23,True,bacb3cc3,bacb3cc3,False
-$spBsy $d0 0 0 0 0 0,0,0,True,bacb3cc3,bacb3cc3,False
+$spA $d0 1 2 3 4 0,0,0,True,df9b8e42,df9b8e42,False
+$spA $d0 1 2 3 4 $pal,0,0,True,df9b8e42,df9b8e42,False
+$spA 0 0 0 0 0 0,16,16,True,df9b8e42,df9b8e42,False
+$spA 0 0 0 0 0 $pal2,16,16,True,e232a0cb,e232a0cb,True
+$spNB $d0 0 0 0 0 0,7,7,True,df9b8e42,df9b8e42,False
+$spNB $d0 0 0 0 0 $pal,7,7,True,2498d17b,2498d17b,True
+$sp16 $d0 0 0 0 0 0,23,23,True,df9b8e42,df9b8e42,False
+$sp16 $e0 0 0 0 0 0,0,0,True,df9b8e42,df9b8e42,False
+$sp16 $x0 0 0 0 0 85,23,23,True,df9b8e42,df9b8e42,False
+$sp16 $x1 0 0 0 0 0,23,23,True,df9b8e42,df9b8e42,False
+$sp16 $x2 0 0 0 0 0,23,23,True,df9b8e42,df9b8e42,False
+$spX $d0 0 0 0 0 0,23,23,True,df9b8e42,df9b8e42,False
+$a0 $d0 0 0 0 0 0,23,23,True,df9b8e42,df9b8e42,False
+$a3 $e0 0 0 0 0 $pal2,23,23,True,df9b8e42,df9b8e42,False
+$spBsy $d0 0 0 0 0 0,0,0,True,df9b8e42,df9b8e42,False
 state_regions,$spr+0x0:3200,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5f407c70,original=0x1340aa0,2026-10-09T07:53:41
+meta,detour=0x5fa35ff0,original=0x1600660,2026-10-09T08:42:47
 distinct_results,6,,
 VERDICT,GREEN,15,

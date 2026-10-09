@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000199d0`), 161 bytes, 62 instructions, subsystem `ren
 16-bit block copy of the sprite to a Surface (variant) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 19 (+0x4c). blt16b's body with the same two guards (VA 0x10019a04, VA 0x10019a1d), the same unrestored Palette store (VA 0x10019a32 / 0x10019a3e) and the same two leftover-filled dwords (VA 0x10019a41 / 0x10019a45), forwarding to Sprite::draw16_10024140 through the thunk at VA 0x10019a59 instead. The only difference from slot 18 is which blitter runs. Reimplemented in `shim/src/re/c3ci.cpp`; path-1 A/B GREEN: Sprite::blt16c (18 vectors, 14 distinct results, 10 changing state, `log/diff/000199d0_jgld_Sprite_blt16c.path1.csv`); Sprite::blt16c_s223 (6 vectors, 6 distinct results, 5 changing state, `log/diff/000199d0_jgld_Sprite_blt16c_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?blt16c@Sprite@@QAEHPAVSurface@@HHGHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x10019a6e): callee pops 24 bytes of stack arguments.
