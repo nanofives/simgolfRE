@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 231 bytes, 61 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 constructs one sub-field of the composite view built at 0x004a0740. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_49d5a0.cpp` as `??0D49d5a0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).

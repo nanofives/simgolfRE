@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 1169 bytes, 426 instructions, subsystem `ui`. Mechanica
 
 ## Role (from the naming pass, not a C3 purpose)
 Keyboard navigation handler that moves the selection (page/arrow) within the list. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x0048ae8e): callee pops 8 bytes of stack arguments.
@@ -94,7 +94,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call ebp` at 0x0048ab84, 0x0048ac1a
 
 ## Callers
-0x0048ccb0 `FUN_0048ccb0`
+0x0048ccb0 `ListBox::onNavKey_vtordisp`, 0x004a0b50 `FUN_004a0b50`
 
 ## Constants
 - `0x0` at 0x0048aafb, 0x0048acd5, 0x0048ad7c, 0x0048ae31

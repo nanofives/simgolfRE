@@ -39,4 +39,4 @@ Through registers:
 - `0xc` (12) at 0x004b1f3f
 - `0x5c` (92) at 0x004b1f4e
 - `0x6c` (108) at 0x004b1f35
-- `0x4b1f70` (4923248) = function `FUN_004b1f70` at 0x004b1f48
+- `0x4b1f70` (4923248) = function `start_pass_phuff` at 0x004b1f48

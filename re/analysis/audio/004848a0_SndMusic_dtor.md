@@ -37,7 +37,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004841e0 `Snd::dtor` at 0x00484906
 - 0x004844e0 `Snd::unlinkFromList` at 0x004848f7
 - 0x004876c0 `HashTable::remove` at 0x004848d9
-- 0x004a4ffc `FUN_004a4ffc` at 0x004848e6
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x004848e6
 
 ## Callers
 0x00484880 `SndMusic::scalarDtor`

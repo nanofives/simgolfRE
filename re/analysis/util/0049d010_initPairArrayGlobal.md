@@ -19,7 +19,7 @@ None.
 - 0x0049d050 `allocPairArray` at 0x0049d015
 
 ## Callers
-0x0049d000 `FUN_0049d000`
+0x0049d000 `dynInit_initPairArrayGlobal`
 
 ## Constants
 - `0x8406e8` (8652520) = address in the image (data) at 0x0049d010

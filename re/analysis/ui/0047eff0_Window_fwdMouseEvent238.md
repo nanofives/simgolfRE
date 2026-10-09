@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 23 bytes, 8 instructions, subsystem `ui`. Mechanical tr
 
 ## Role (from the naming pass, not a C3 purpose)
 forwards its three stack arguments and this to Window::mouseEvent238 0x0047be40 and returns (`re/names/undisc_exe.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0xc` (at 0x0047f004): callee pops 12 bytes of stack arguments.

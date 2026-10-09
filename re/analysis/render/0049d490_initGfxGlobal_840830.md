@@ -20,7 +20,7 @@ None.
 - 0x00473ab0 `Surface_ctor` at 0x0049d495
 
 ## Callers
-0x0049d480 `FUN_0049d480`
+0x0049d480 `dynInit_initGfxGlobal_840830`
 
 ## Constants
 - `0x840830` (8652848) = address in the image (data) at 0x0049d490

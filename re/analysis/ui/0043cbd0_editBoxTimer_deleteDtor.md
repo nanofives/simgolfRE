@@ -23,10 +23,10 @@ None.
 
 ## Callees
 - 0x0043cb50 `editBoxTimer_dtor` at 0x0043cbd3
-- 0x004a4ffc `FUN_004a4ffc` at 0x0043cbe0
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x0043cbe0
 
 ## Callers
-0x0043cbf0 `FUN_0043cbf0`
+0x0043cbf0 `editBoxTimer_deleteDtor_adj274`
 
 ## Constants
 - `0x1` at 0x0043cbd8

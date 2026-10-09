@@ -38,7 +38,7 @@ Through registers:
 - 0x004b1b70 `flush_bits` at 0x004b1ae6
 
 ## Callers
-0x004b1480 `FUN_004b1480`
+0x004b1480 `encode_mcu_huff`
 
 ## Constants
 - `0x0` at 0x004b1b50

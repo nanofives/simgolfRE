@@ -19,7 +19,7 @@ None.
 - 0x00487000 `BinkPlayer::ctor` at 0x0043ccb5
 
 ## Callers
-0x0043cca0 `FUN_0043cca0`
+0x0043cca0 `dynInit_staticCtor_43ccb0`
 
 ## Constants
 - `0x5aa6d0` (5940944) = address in the image (data) at 0x0043ccb0

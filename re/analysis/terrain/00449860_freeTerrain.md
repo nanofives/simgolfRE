@@ -23,7 +23,7 @@ Globals:
 ## Callees
 - 0x004a4f5e `TERRAIN.DLL::Terrain::~Terrain` at 0x00449878
 - 0x004a4f64 `TERRAIN.DLL::Terrain::closeSystem` at 0x00449867
-- 0x004a4ffc `FUN_004a4ffc` at 0x0044987e
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x0044987e
 
 ## Callers
 0x0045baf0 `gameMain`

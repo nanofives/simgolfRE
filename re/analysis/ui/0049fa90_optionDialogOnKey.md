@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 308 bytes, 111 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 handles keyboard input for the option dialog, toggling the current option. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_09_b.cpp` as `?onKey@D49fa90@@UAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -53,7 +53,7 @@ Through registers:
 - indirect `jmp [ecx*4+0x49fbc4]` at 0x0049fadb
 
 ## Callers
-0x0049ffe0 `FUN_0049ffe0`
+0x0049ffe0 `optionDialogOnKey_vtordisp`, 0x004a0bf0 `FUN_004a0bf0`
 
 ## Constants
 - `0x0` at 0x0049fa94

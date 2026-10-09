@@ -25,7 +25,7 @@ None.
 - 0x004b04f0 `jcopy_sample_rows` at 0x004b3d22
 
 ## Callers
-0x004b3b80 `FUN_004b3b80`, 0x004b3d40 `FUN_004b3d40`
+0x004b3b80 `pre_process_data`, 0x004b3d40 `pre_process_context`
 
 ## Constants
 - `0x1` at 0x004b3d1c

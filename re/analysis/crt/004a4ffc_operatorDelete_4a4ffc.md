@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 11 bytes, 4 instructions, subsystem `crt`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 Passes its one argument to _free 0x004a5007 (push [esp+4] at 0x004a4ffc, call at 0x004a5000, pop ecx; ret): the exe CRT operator delete shape; the CRT symbol it was linked from is not determined (no FidDb match) (`re/names/exe_7.tsv`)
-System writeup: `re/analysis/systems/exe_7.md`.
+System writeup: `re/analysis/systems/exe_7.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret` (at 0x004a5006): callee pops 0 bytes of stack arguments.
@@ -20,7 +20,7 @@ None.
 - 0x004a5007 `_free` at 0x004a5000
 
 ## Callers
-0x00404260 `deletingDtor_404260`, 0x004042f0 `FUN_004042f0`, 0x00404380 `deletingDtor_404380`, 0x0043cbd0 `editBoxTimer_deleteDtor`, 0x00449860 `freeTerrain`, 0x0044ac00 `listEraseRange`, 0x0045c000 `Cursor_deleteDtor`, 0x00473ae0 `Surface_init`, 0x004747c0 `Buf_deleteDtor`, 0x00474c20 `Image_deleteDtor`, 0x00474cb0 `Image_releaseAll`, 0x00475410 `flipBmpRows`, 0x00475580 `saveBmp`, 0x00475840 `loadImage`, 0x00479f10 `View_deleteDtor`, 0x0047d810 `View::scalarDtor47d810`, 0x00480410 `BinkFrame::scalarDtor`, 0x00480580 `View4804a0::scalarDtor`, 0x00481ba0 `Flic::reset`, 0x00481e40 `Flic::indexFrames` (+53 more)
+0x00404260 `deletingDtor_404260`, 0x004042f0 `scalarDtor_404280`, 0x00404380 `deletingDtor_404380`, 0x0043cbd0 `editBoxTimer_deleteDtor`, 0x00449860 `freeTerrain`, 0x0044ac00 `listEraseRange`, 0x0045c000 `Cursor_deleteDtor`, 0x00473ae0 `Surface_init`, 0x004747c0 `Buf_deleteDtor`, 0x00474c20 `Image_deleteDtor`, 0x00474cb0 `Image_releaseAll`, 0x00475410 `flipBmpRows`, 0x00475580 `saveBmp`, 0x00475840 `loadImage`, 0x00479f10 `View_deleteDtor`, 0x0047d810 `View::scalarDtor47d810`, 0x00480410 `BinkFrame::scalarDtor`, 0x00480580 `View4804a0::scalarDtor`, 0x00481ba0 `Flic::reset`, 0x00481e40 `Flic::indexFrames` (+59 more)
 
 ## Constants
 None.

@@ -29,7 +29,7 @@ Through registers:
 - 0x00492920 `HotList::alloc` at 0x00478a2b
 
 ## Callers
-0x00474dd0 `Surface_createFull`, 0x00490d60 `FUN_00490d60`
+0x00474dd0 `Surface_createFull`, 0x00490d60 `TextView::drawContents`
 
 ## Constants
 - `0x0` at 0x00478a30, 0x00478a4a, 0x00478a4f

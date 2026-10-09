@@ -26,7 +26,7 @@ Through registers:
 - 0x004a57f1 `operator_new` at 0x0044921c
 
 ## Callers
-0x00449200 `FUN_00449200`
+0x00449200 `dynInit_allocTileBuffer`
 
 ## Constants
 - `0x0` at 0x0044922b

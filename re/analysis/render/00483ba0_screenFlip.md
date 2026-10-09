@@ -24,7 +24,7 @@ None.
 - indirect `jmp [eax+0x124]` at 0x00483ba8
 
 ## Callers
-0x0047bab0 `FUN_0047bab0`
+0x0047bab0 `Window::runModal`
 
 ## Constants
 None.

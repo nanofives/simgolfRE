@@ -69,7 +69,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00492d80 `MappedFile::ctor` at 0x00475865
 - 0x00492dc0 `MappedFile::dtor` at 0x0047588d, 0x004758ca, 0x00475927, 0x00475a4c, 0x00475adb
 - 0x00492dd0 `MappedFile::open` at 0x00475a34
-- 0x004a4ffc `FUN_004a4ffc` at 0x0047595b
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x0047595b
 - 0x004a57f1 `operator_new` at 0x004758e3
 - import `KERNEL32.dll!GetFileSize` at 0x00475a62
 - indirect `call [eax+0xec]` at 0x00475ac6

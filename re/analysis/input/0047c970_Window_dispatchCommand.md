@@ -42,7 +42,7 @@ Globals:
 - indirect `call eax` at 0x0047c9d9
 
 ## Callers
-0x0047c970 `Window::dispatchCommand`, 0x0047ee70 `FUN_0047ee70`
+0x0047c970 `Window::dispatchCommand`, 0x0047ee70 `Window::onCommand`
 
 ## Constants
 - `0x1` at 0x0047c9bf

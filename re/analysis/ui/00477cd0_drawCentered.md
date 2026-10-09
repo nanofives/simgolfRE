@@ -44,7 +44,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004775b0 `drawRichText` at 0x00477d84
 
 ## Callers
-0x0047d850 `drawPanelContents`, 0x0049dab0 `listPanelDraw`, 0x0049f370 `optionListDraw`, 0x004a1580 `FUN_004a1580`, 0x004a2d50 `panelDrawRow`, 0x004a3f10 `panelDraw4a3f10`
+0x0047d850 `drawPanelContents`, 0x0049dab0 `listPanelDraw`, 0x0049f370 `optionListDraw`, 0x004a1580 `LabelButton::drawContents`, 0x004a2d50 `panelDrawRow`, 0x004a3f10 `panelDraw4a3f10`
 
 ## Constants
 - `0x1` at 0x00477d7d

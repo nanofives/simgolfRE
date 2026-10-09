@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 1577 bytes, 532 instructions, subsystem `ui`. Mechanica
 
 ## Role (from the naming pass, not a C3 purpose)
 draws the scrollable option list rows with aligned text. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0xc` (at 0x0049f838, 0x0049f8b9, 0x0049f922, 0x0049f996): callee pops 12 bytes of stack arguments.
@@ -121,7 +121,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x9c]` at 0x0049f3a5
 
 ## Callers
-0x0049f9a0 `optionDialogUpdate`, 0x0049fa90 `optionDialogOnKey`
+0x0049f9a0 `optionDialogUpdate`, 0x0049fa90 `optionDialogOnKey`, 0x0049fc60 `FUN_0049fc60`
 
 ## Constants
 - `0x0` at 0x0049f5bf, 0x0049f72b, 0x0049f75b, 0x0049f83b, 0x0049f902, 0x0049f908, 0x0049f925, 0x0049f94f (+1 more)

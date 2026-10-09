@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jccoefct.c, _compress_data) (`
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_ccoefct.cpp` as `_compress_data` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0b05, 0x004b0b19): callee pops 0 bytes of stack arguments.
 
 ## Reads

@@ -32,7 +32,7 @@ Through registers:
 - 0x004a5007 `_free` at 0x0049bf99
 
 ## Callers
-0x0049bfd0 `FUN_0049bfd0`
+0x0049bfd0 `screenObj_deleteDtor_adj5c`
 
 ## Constants
 - `0x0` at 0x0049bfa1

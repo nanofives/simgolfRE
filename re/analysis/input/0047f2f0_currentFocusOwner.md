@@ -29,7 +29,7 @@ Globals:
 - 0x004801f0 `Window::visible` at 0x0047f32e
 
 ## Callers
-0x00495910 `FUN_00495910`, 0x00495990 `FUN_00495990`
+0x00495910 `uiKeyEvent`, 0x00495990 `uiKeyEvent148`
 
 ## Constants
 None.

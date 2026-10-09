@@ -37,7 +37,7 @@ Through registers:
 - 0x00487460 `releaseWithHookA` at 0x00483f9a
 - 0x00487ac0 `releaseWithHookB` at 0x00483f90
 - 0x00487c40 `releaseWithHookC` at 0x00483fa4
-- 0x004a4ffc `FUN_004a4ffc` at 0x00483f4f
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00483f4f
 - indirect `call [0x0083af78]` at 0x00483f24
 - indirect `call [eax+0x80]` at 0x00483f7b
 

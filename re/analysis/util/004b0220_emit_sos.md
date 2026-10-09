@@ -40,7 +40,7 @@ None.
 - 0x004afc10 `emit_2bytes` at 0x004b023e
 
 ## Callers
-0x004b0060 `FUN_004b0060`
+0x004b0060 `write_scan_header`
 
 ## Constants
 - `0x4` at 0x004b02a6, 0x004b02bc, 0x004b02ea

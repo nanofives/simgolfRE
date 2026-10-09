@@ -42,7 +42,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x004b1ca0 `FUN_004b1ca0`
+0x004b1ca0 `encode_mcu_gather`
 
 ## Constants
 - `0x1` at 0x004b1d9c, 0x004b1dec, 0x004b1dee, 0x004b1df6

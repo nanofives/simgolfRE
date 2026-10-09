@@ -42,7 +42,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [esi+0x34]` at 0x004af6fc
 
 ## Callers
-0x004af540 `FUN_004af540`
+0x004af540 `access_virt_sarray`
 
 ## Constants
 - `0x14` (20) at 0x004af71c

@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jcphuff.c, _finish_pass_gather
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_finish_pass_gather_phuff` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b34aa): callee pops 0 bytes of stack arguments.
 
 ## Reads

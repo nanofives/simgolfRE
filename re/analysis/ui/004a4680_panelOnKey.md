@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 399 bytes, 140 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 handles keyboard navigation for the panel view and redraws. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?onKey@R2C4a4680@@UAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -52,7 +52,7 @@ Through registers:
 - indirect `jmp [ecx*4+0x4a4810]` at 0x004a469d
 
 ## Callers
-0x004a4a40 `FUN_004a4a40`
+0x004a0bf0 `FUN_004a0bf0`, 0x004a4a40 `panelOnKey_vtordisp`
 
 ## Constants
 - `0x1` at 0x004a46c1, 0x004a46fe, 0x004a4730, 0x004a4737, 0x004a474f, 0x004a4793, 0x004a47b3, 0x004a47d3 (+1 more)

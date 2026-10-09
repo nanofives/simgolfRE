@@ -37,7 +37,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00484110 `releaseSoundObj` at 0x0048422a
 - 0x004844e0 `Snd::unlinkFromList` at 0x0048423b
 - 0x004852d0 `Snd::setVtbl4852d0` at 0x0048424a
-- 0x004a4ffc `FUN_004a4ffc` at 0x00484213
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00484213
 
 ## Callers
 0x004841c0 `Snd::scalarDtor4841c0`, 0x004848a0 `SndMusic::dtor`, 0x004853d0 `Screen::dtor`, 0x004b7e20 `Unwind@004b7e20`, 0x004b7e40 `Unwind@004b7e40`, 0x004b7e60 `Unwind@004b7e60`

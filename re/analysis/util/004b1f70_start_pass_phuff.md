@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jcphuff.c, _start_pass_phuff) 
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_start_pass_phuff` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b2135): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -87,9 +88,9 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x101` (257) at 0x004b20bd
 - `0x3e8` (1000) at 0x004b1fdc
 - `0x404` (1028) at 0x004b20a8
-- `0x4b2140` (4923712) = function `FUN_004b2140` at 0x004b1fac
-- `0x4b28c0` (4925632) = function `FUN_004b28c0` at 0x004b1fb5
-- `0x4b2d30` (4926768) = function `FUN_004b2d30` at 0x004b1fc2
-- `0x4b2eb0` (4927152) = function `FUN_004b2eb0` at 0x004b1fce
+- `0x4b2140` (4923712) = function `encode_mcu_DC_first` at 0x004b1fac
+- `0x4b28c0` (4925632) = function `encode_mcu_AC_first` at 0x004b1fb5
+- `0x4b2d30` (4926768) = function `encode_mcu_DC_refine` at 0x004b1fc2
+- `0x4b2eb0` (4927152) = function `encode_mcu_AC_refine` at 0x004b1fce
 - `0x4b3380` (4928384) = address in the image (data) at 0x004b1ff9
-- `0x4b33c0` (4928448) = function `FUN_004b33c0` at 0x004b1ff0
+- `0x4b33c0` (4928448) = function `finish_pass_gather_phuff` at 0x004b1ff0

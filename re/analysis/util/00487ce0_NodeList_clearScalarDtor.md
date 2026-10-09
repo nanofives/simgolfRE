@@ -32,7 +32,7 @@ Through registers:
 - `jne` (equality) at 0x00487d4f
 
 ## Callees
-- 0x004a4ffc `FUN_004a4ffc` at 0x00487d0c, 0x00487d3e, 0x00487d59
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00487d0c, 0x00487d3e, 0x00487d59
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

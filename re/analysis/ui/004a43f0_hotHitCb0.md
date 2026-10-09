@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 57 bytes, 22 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 hot-region hit-test callback (variant 0) forwarding to HotList::hit. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_004a43f0@C_FUN_004a43f0@f_004a43f0@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -29,7 +29,7 @@ None.
 - indirect `call eax` at 0x004a4420
 
 ## Callers
-0x004a49f0 `FUN_004a49f0`
+0x004a0b50 `FUN_004a0b50`, 0x004a49f0 `hotHitCb0_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a43ff

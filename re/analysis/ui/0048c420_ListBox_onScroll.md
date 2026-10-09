@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 198 bytes, 67 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 Scrollbar notification: updates the top row index and re-selects/redraws the list. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x0048c4a0, 0x0048c4e3): callee pops 8 bytes of stack arguments.
@@ -51,7 +51,7 @@ Through registers:
 - indirect `call [edx]` at 0x0048c4bb
 
 ## Callers
-0x0048cd10 `FUN_0048cd10`
+0x0048cd10 `ListBox::onScroll_vtordisp`, 0x004a0ed0 `FUN_004a0ed0`
 
 ## Constants
 - `0x1` at 0x0048c479

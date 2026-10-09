@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jchuff.c, _start_pass_huff) (`
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_start_pass_huff` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b147b): callee pops 0 bytes of stack arguments.
 
 ## Reads
@@ -81,7 +82,7 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0xf0` (240) at 0x004b133c
 - `0x101` (257) at 0x004b13da, 0x004b1403
 - `0x404` (1028) at 0x004b13c5, 0x004b13ee
-- `0x4b1480` (4920448) = function `FUN_004b1480` at 0x004b1319
+- `0x4b1480` (4920448) = function `encode_mcu_huff` at 0x004b1319
 - `0x4b1c20` (4922400) = address in the image (data) at 0x004b1320
-- `0x4b1ca0` (4922528) = function `FUN_004b1ca0` at 0x004b1309
-- `0x4b1e20` (4922912) = function `FUN_004b1e20` at 0x004b1310
+- `0x4b1ca0` (4922528) = function `encode_mcu_gather` at 0x004b1309
+- `0x4b1e20` (4922912) = function `finish_pass_gather` at 0x004b1310

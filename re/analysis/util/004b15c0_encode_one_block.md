@@ -73,7 +73,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x004b17c4, 0x004b18d6
 
 ## Callers
-0x004b1480 `FUN_004b1480`
+0x004b1480 `encode_mcu_huff`
 
 ## Constants
 - `0x0` at 0x004b1687, 0x004b172b, 0x004b1825, 0x004b1937, 0x004b1985

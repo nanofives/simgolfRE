@@ -37,7 +37,7 @@ Through registers:
 - `jne` (equality) at 0x00480429
 
 ## Callees
-- 0x004a4ffc `FUN_004a4ffc` at 0x00480487
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00480487
 - 0x004a5007 `_free` at 0x00480445, 0x0048045b
 
 ## Callers

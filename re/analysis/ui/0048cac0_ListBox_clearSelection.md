@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 40 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 
 ## Role (from the naming pass, not a C3 purpose)
 Clears the selected index (sets to -1) and invalidates the control. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_0048cac0@C_FUN_0048cac0@f_0048cac0@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -26,7 +27,7 @@ Through registers:
 - indirect `call [eax+0x120]` at 0x0048cadf
 
 ## Callers
-0x0048cc90 `FUN_0048cc90`
+0x0048cc90 `ListBox::clearSelection_vtordisp`, 0x004a0a10 `FUN_004a0a10`
 
 ## Constants
 - `0xffffffa8` (-88) at 0x0048cadb

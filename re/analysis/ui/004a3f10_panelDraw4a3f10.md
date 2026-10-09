@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 1065 bytes, 366 instructions, subsystem `ui`. Mechanica
 
 ## Role (from the naming pass, not a C3 purpose)
 draws the interactive panel view (rows, highlight, icons). (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x004a4336): callee pops 4 bytes of stack arguments.
@@ -112,7 +112,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call edx` at 0x004a41c3
 
 ## Callers
-0x004a4350 `panelOnPick`, 0x004a4680 `panelOnKey`
+0x004a4350 `panelOnPick`, 0x004a45b0 `FUN_004a45b0`, 0x004a4680 `panelOnKey`
 
 ## Constants
 - `0x0` at 0x004a414b, 0x004a4198, 0x004a4263

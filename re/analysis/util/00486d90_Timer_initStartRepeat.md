@@ -25,7 +25,7 @@ None.
 - 0x00486e40 `Timer::startRepeat` at 0x00486db5
 
 ## Callers
-0x00488ab0 `FUN_00488ab0`
+0x00488ab0 `Button::beginPress`
 
 ## Constants
 None.

@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 440 bytes, 143 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 reads the current value/selection of the list panel widget. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x0049e923, 0x0049e985): callee pops 8 bytes of stack arguments.
@@ -71,7 +72,7 @@ Through registers:
 - indirect `call [edx+0x1c]` at 0x0049e954
 
 ## Callers
-0x00491b60 `FUN_00491b60`
+0x00491b60 `listPanelReadValue_vtordisp`, 0x004a0ab0 `FUN_004a0ab0`
 
 ## Constants
 - `0x1` at 0x0049e7d6

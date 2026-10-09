@@ -40,7 +40,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00477da0 `drawCentered2` at 0x004785aa
 
 ## Callers
-0x00456be0 `showRoutingMapScreen`, 0x004763d0 `drawMenuList`, 0x004a1580 `FUN_004a1580`
+0x00456be0 `showRoutingMapScreen`, 0x004763d0 `drawMenuList`, 0x004a1580 `LabelButton::drawContents`
 
 ## Constants
 - `0x14` (20) at 0x00478572

@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 70 bytes, 26 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 shows or hides the widget by setting its visibility flag. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?show@C4a2fa0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -32,7 +33,7 @@ None.
 - indirect `call [edx+0xf0]` at 0x004a2fb5
 
 ## Callers
-0x004a30a0 `FUN_004a30a0`
+0x004a0ff0 `FUN_004a0ff0`, 0x004a30a0 `widgetShow_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a2fd3

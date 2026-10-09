@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 541 bytes, 182 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 scroll-event handler for the list panel that redraws its visible rows. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s0.cpp` as `?onScroll@S0D49e230@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -84,7 +85,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call eax` at 0x0049e3e9
 
 ## Callers
-0x00491b80 `FUN_00491b80`
+0x00491b80 `listPanelOnScroll_vtordisp`, 0x004a0b50 `FUN_004a0b50`
 
 ## Constants
 - `0x0` at 0x0049e3bf

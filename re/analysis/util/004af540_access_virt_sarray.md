@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jmemmgr.c, _access_virt_sarray
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_access_virt_sarray` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af664, 0x004af68e): callee pops 0 bytes of stack arguments.
 
 ## Reads

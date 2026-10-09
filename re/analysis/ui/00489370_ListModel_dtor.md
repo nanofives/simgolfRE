@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 305 bytes, 94 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: clears item nodes and runs the embedded sub-object destructor. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??1R1C489370@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
@@ -69,7 +70,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x00489449
 
 ## Callers
-0x00489350 `ListModel::scalarDtor`, 0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`, 0x004b92bd `Unwind@004b92bd`, 0x004b93ad `Unwind@004b93ad`
+0x00489350 `ListModel::scalarDtor`, 0x0048cba0 `FUN_0048cba0`, 0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00491900 `FUN_00491900`, 0x00491ad0 `FUN_00491ad0`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`, 0x0049ff60 `FUN_0049ff60`, 0x004a3050 `FUN_004a3050`, 0x004a4980 `FUN_004a4980`, 0x004b92bd `Unwind@004b92bd`, 0x004b93ad `Unwind@004b93ad`
 
 ## Constants
 - `0x0` at 0x0048942f

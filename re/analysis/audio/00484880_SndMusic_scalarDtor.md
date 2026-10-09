@@ -22,7 +22,7 @@ None.
 
 ## Callees
 - 0x004848a0 `SndMusic::dtor` at 0x00484883
-- 0x004a4ffc `FUN_004a4ffc` at 0x00484890
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00484890
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

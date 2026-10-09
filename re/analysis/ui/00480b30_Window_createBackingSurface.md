@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 237 bytes, 81 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 asks the virtual +0x54 for a size, clamps both axes to at least 1 (and when the caller's flag dword is 0 runs Window::adjustSizeOuter 0x0047ca10 and Window::innerSize 0x0047cb10 over it), raises 0x00839ab0 to 1 around Surface_createFull 0x00474dd0 on the Surface at this+0x274, and on a 0 result calls Window::setSize 0x0047b4e0 with the computed size (`re/names/undisc_exe.tsv`)
-System writeup: `re/analysis/systems/undisc_exe.md`.
+System writeup: `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret 0x10` (at 0x00480c1a): callee pops 16 bytes of stack arguments.

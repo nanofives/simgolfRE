@@ -38,7 +38,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x004841e0 `Snd::dtor` at 0x00485430
-- 0x004a4ffc `FUN_004a4ffc` at 0x00485417
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00485417
 - indirect `call [eax]` at 0x00485406
 
 ## Callers

@@ -44,7 +44,7 @@ Through registers:
 - indirect `call [edx+0x4]` at 0x00474e1e
 
 ## Callers
-0x0040f5c0 `mainLoop`, 0x00437910 `promptAndSaveFile`, 0x0043cd70 `showTitleScreen`, 0x0043dbe0 `loadWorldAssets`, 0x00442180 `loadInterfaceArt`, 0x0044b9c0 `showCreditsScreen`, 0x0044bde0 `loadInfoScreenArt`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0045baf0 `gameMain`, 0x0045f0f0 `skillPointDialog`, 0x00474e70 `Surface_paint`, 0x00475050 `reloadBmp`, 0x00475210 `loadBmpSurface`, 0x0047d130 `drawCursor`, 0x0047d610 `buildControlStrip47d610`, 0x004806c0 `Window::create`, 0x00480b30 `FUN_00480b30`, 0x004a1580 `FUN_004a1580`
+0x0040f5c0 `mainLoop`, 0x00437910 `promptAndSaveFile`, 0x0043cd70 `showTitleScreen`, 0x0043dbe0 `loadWorldAssets`, 0x00442180 `loadInterfaceArt`, 0x0044b9c0 `showCreditsScreen`, 0x0044bde0 `loadInfoScreenArt`, 0x0044cff0 `showEndOfYearScreen`, 0x0044e770 `showShortcutsScreen`, 0x0045baf0 `gameMain`, 0x0045f0f0 `skillPointDialog`, 0x00474e70 `Surface_paint`, 0x00475050 `reloadBmp`, 0x00475210 `loadBmpSurface`, 0x0047d130 `drawCursor`, 0x0047d610 `buildControlStrip47d610`, 0x004806c0 `Window::create`, 0x00480b30 `Window::createBackingSurface`, 0x004a1580 `LabelButton::drawContents`
 
 ## Constants
 - `0x0` at 0x00474e47, 0x00474e49, 0x00474e4b

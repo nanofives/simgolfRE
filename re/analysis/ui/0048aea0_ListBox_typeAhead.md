@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 1271 bytes, 429 instructions, subsystem `ui`. Mechanica
 
 ## Role (from the naming pass, not a C3 purpose)
 Incremental type-to-select: matches typed letters against item text and selects the first match. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x0048af5d, 0x0048b1f0, 0x0048b25e, 0x0048b370, 0x0048b394): callee pops 4 bytes of stack arguments.
@@ -113,7 +113,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [ebx*4+0x48b398]` at 0x0048af46
 
 ## Callers
-0x0048ccd0 `FUN_0048ccd0`
+0x0048ccd0 `ListBox::typeAhead_vtordisp`, 0x004a0bf0 `FUN_004a0bf0`
 
 ## Constants
 - `0x0` at 0x0048af09, 0x0048b319

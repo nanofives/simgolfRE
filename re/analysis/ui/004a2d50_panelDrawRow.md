@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 589 bytes, 190 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 draws one row of the panel view, centering its text. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret` (at 0x004a2f9c): callee pops 0 bytes of stack arguments.
@@ -88,7 +88,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xdc]` at 0x004a2db2
 
 ## Callers
-0x004a3090 `FUN_004a3090`, 0x004a3100 `FUN_004a3100`
+0x004a0d30 `FUN_004a0d30`, 0x004a3090 `panelDrawRow_vtordisp`, 0x004a3100 `panelDrawRow_vtordisp_adj578`
 
 ## Constants
 - `0x0` at 0x004a2ded, 0x004a2df2, 0x004a2efb

@@ -19,7 +19,7 @@ None.
 - 0x004837f0 `C4837f0::ctor` at 0x004837b5
 
 ## Callers
-0x004837a0 `FUN_004837a0`
+0x004837a0 `dynInit_screenMgrCtor4837b0`
 
 ## Constants
 - `0x83ad20` (8629536) = address in the image (data) at 0x004837b0

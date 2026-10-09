@@ -56,7 +56,7 @@ Through registers:
 - indirect `call [edx+0x30]` at 0x0047b8d9
 
 ## Callers
-0x0047ef30 `FUN_0047ef30`, 0x00489120 `FUN_00489120`
+0x0047ef30 `Window::onKeyChar`, 0x00489120 `Button::detach`
 
 ## Constants
 - `0x1` at 0x0047b8a8

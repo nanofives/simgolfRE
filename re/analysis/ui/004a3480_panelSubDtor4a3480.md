@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 343 bytes, 99 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 destructor for the R1X panel sub-view object. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??1R1X4a3480@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
@@ -72,7 +73,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x004a357d
 
 ## Callers
-0x00491500 `Dialog::viewDtor`, 0x004b8134 `Unwind@004b8134`, 0x004b92fe `Unwind@004b92fe`
+0x00491500 `Dialog::viewDtor`, 0x004a4980 `FUN_004a4980`, 0x004b8134 `Unwind@004b8134`, 0x004b92fe `Unwind@004b92fe`
 
 ## Constants
 - `0x1` at 0x004a34ff, 0x004a3557, 0x004a3573

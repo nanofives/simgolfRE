@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 146 bytes, 50 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 Scrolls the list up or down one row (when the scrollbar style bit is set) and invalidates. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?scroll@C48caf0@@UAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -44,7 +44,7 @@ Through registers:
 - indirect `call [edx+0x120]` at 0x0048cb78
 
 ## Callers
-0x0048cc70 `FUN_0048cc70`
+0x0048cc70 `ListBox::scrollBy_vtordisp`, 0x004a13c0 `FUN_004a13c0`
 
 ## Constants
 - `0x1` at 0x0048cb54

@@ -23,7 +23,7 @@ None.
 
 ## Callees
 - 0x0049d040 -> 0x00474810 `Buf_dtor` (incremental-linking thunk) at 0x0049d073
-- 0x004a4ffc `FUN_004a4ffc` at 0x0049d080
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x0049d080
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

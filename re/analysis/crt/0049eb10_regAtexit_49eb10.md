@@ -19,7 +19,7 @@ None.
 - 0x004a56d2 `_atexit` at 0x0049eb15
 
 ## Callers
-0x0049eaf0 `FUN_0049eaf0`
+0x0049eaf0 `dynInit_initGfxGlobal_8408c8`
 
 ## Constants
 - `0x49eb20` (4844320) = address in the image (data) at 0x0049eb10

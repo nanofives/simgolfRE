@@ -31,7 +31,7 @@ None.
 None (leaf).
 
 ## Callers
-0x0047ef30 `FUN_0047ef30`
+0x0047ef30 `Window::onKeyChar`
 
 ## Constants
 - `0x1` at 0x0047ef1a

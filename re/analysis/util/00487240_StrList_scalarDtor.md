@@ -22,7 +22,7 @@ None.
 
 ## Callees
 - 0x00487260 `StrList::dtor` at 0x00487243
-- 0x004a4ffc `FUN_004a4ffc` at 0x00487250
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00487250
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

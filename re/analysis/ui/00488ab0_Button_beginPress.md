@@ -63,5 +63,5 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x4` at 0x00488be9
 - `0x5` at 0x00488b2d, 0x00488bc0
 - `0x5b4` (1460) at 0x00488b38, 0x00488bcb
-- `0x488fb0` (4755376) = function `FUN_00488fb0` at 0x00488b33, 0x00488bc6
+- `0x488fb0` (4755376) = function `Button::timerCallback` at 0x00488b33, 0x00488bc6
 - `0xffffffff` (-1) at 0x00488b24, 0x00488ba4, 0x00488bbb

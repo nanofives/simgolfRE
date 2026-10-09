@@ -98,7 +98,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [eax*4+0x47d4b8]` at 0x0047d3e1
 
 ## Callers
-0x0047ab00 `EditBox_setCursorChar`, 0x004959b0 `FUN_004959b0`
+0x0047ab00 `EditBox_setCursorChar`, 0x004959b0 `uiPointerMove`
 
 ## Constants
 - `0x1` at 0x0047d291, 0x0047d345, 0x0047d372, 0x0047d382, 0x0047d38a, 0x0047d3e8, 0x0047d3f8, 0x0047d407 (+8 more)

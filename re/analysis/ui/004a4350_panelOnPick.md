@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 151 bytes, 51 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 handles a click on the panel: hit-tests the hot regions and redraws. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?onPick@C4a4350@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -40,7 +40,7 @@ Through registers:
 - indirect `call eax` at 0x004a4380
 
 ## Callers
-0x004a49e0 `FUN_004a49e0`
+0x004a0db0 `FUN_004a0db0`, 0x004a49e0 `panelOnPick_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a435f

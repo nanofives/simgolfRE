@@ -38,7 +38,7 @@ Through registers:
 - indirect `call [eax+0x20]` at 0x00486e9c
 
 ## Callers
-0x00486d90 `Timer::initStartRepeat`, 0x00492cc0 `HotList::onMouseMove`, 0x004a2010 `FUN_004a2010`
+0x00486d90 `Timer::initStartRepeat`, 0x00492cc0 `HotList::onMouseMove`, 0x004a2010 `LabelButton::onMouseMove`
 
 ## Constants
 - `0x0` at 0x00486e63

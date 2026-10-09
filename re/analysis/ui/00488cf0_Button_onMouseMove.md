@@ -65,7 +65,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x78]` at 0x00488e0f
 
 ## Callers
-0x004a2010 `FUN_004a2010`
+0x004a2010 `LabelButton::onMouseMove`
 
 ## Constants
 - `0x0` at 0x00488d97
@@ -74,5 +74,5 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `0xc` (12) at 0x00488d04, 0x00488d6a, 0x00488d76, 0x00488ddd, 0x00488de9
 - `0x10` (16) at 0x00488cf0, 0x00488dd7, 0x00488e15, 0x00488e82
 - `0x5b4` (1460) at 0x00488d86, 0x00488e31
-- `0x488fb0` (4755376) = function `FUN_00488fb0` at 0x00488e2c
+- `0x488fb0` (4755376) = function `Button::timerCallback` at 0x00488e2c
 - `0xffffffff` (-1) at 0x00488e21

@@ -52,7 +52,7 @@ Through registers:
 - indirect `call [edx]` at 0x004af94e
 
 ## Callers
-0x004afa20 `FUN_004afa20`
+0x004afa20 `self_destruct_jmemmgr`
 
 ## Constants
 - `0x1` at 0x004af953

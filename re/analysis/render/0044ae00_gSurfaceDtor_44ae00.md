@@ -31,7 +31,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00473ae0 `Surface_init` at 0x0044ae2e, 0x0044ae43
 
 ## Callers
-0x0044adf0 `FUN_0044adf0`, 0x0044aee0 `FUN_0044aee0`, 0x0044af20 `FUN_0044af20`, 0x0044af60 `FUN_0044af60`
+0x0044adf0 `atexitDtor_8210c8`, 0x0044aee0 `atexitDtor_821c60`, 0x0044af20 `atexitDtor_821bf8`, 0x0044af60 `atexitDtor_821070`
 
 ## Constants
 - `0x0` at 0x0044ae20

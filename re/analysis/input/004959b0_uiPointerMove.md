@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 158 bytes, 56 instructions, subsystem `input`. Mechanic
 
 ## Role (from the naming pass, not a C3 purpose)
 with the capture window 0x0083ab20 set, forwards (x, y) to compositeScreen 0x0047fab0; otherwise resolves the window under the point with hitTestScreen 0x0047f700, calls drawCursor 0x0047d130 with (window, 1, -1, -1) and, when the previous window 0x0083aaf0 differs and is not holding the drag 0x0083ab30, calls its virtual +0x70 with (x, y) and HotList::cancelTip 0x00492d40 on its +0xbc; it then records the new window in 0x0083aaf0 and calls its virtual +0x68 with (x, y, 0x0083ab18) (`re/names/undisc_exe.tsv`)
-System writeup: `re/analysis/systems/undisc_exe.md`.
+System writeup: `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x004959cb, 0x00495a4b): callee pops 8 bytes of stack arguments.

@@ -20,7 +20,7 @@ None.
 - 0x00474ae0 `Image_ctor` at 0x00479a45
 
 ## Callers
-0x00479a30 `FUN_00479a30`
+0x00479a30 `dynInit_gImageCtor_83a7b8`
 
 ## Constants
 - `0x83a7b8` (8628152) = address in the image (data) at 0x00479a40

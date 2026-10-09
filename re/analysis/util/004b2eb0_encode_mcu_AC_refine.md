@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jcphuff.c, _encode_mcu_AC_refi
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_encode_mcu_AC_refine` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b3372): callee pops 0 bytes of stack arguments.
 
 ## Reads

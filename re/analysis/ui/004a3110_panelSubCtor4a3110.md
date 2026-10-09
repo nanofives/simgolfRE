@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 593 bytes, 141 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 constructs a panel sub-view, building its child widgets and referencing the 0x004e449c label table. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s0.cpp` as `??0S0C4a3110@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).

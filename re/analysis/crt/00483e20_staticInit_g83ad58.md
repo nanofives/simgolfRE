@@ -19,7 +19,7 @@ None.
 - 0x00487a20 `NodeListB::ctor` at 0x00483e25
 
 ## Callers
-0x00483e10 `FUN_00483e10`
+0x00483e10 `dynInit_staticInit_g83ad58`
 
 ## Constants
 - `0x83ad58` (8629592) = address in the image (data) at 0x00483e20

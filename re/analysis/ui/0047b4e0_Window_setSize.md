@@ -76,7 +76,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xc]` at 0x0047b626
 
 ## Callers
-0x00480b30 `FUN_00480b30`
+0x00480b30 `Window::createBackingSurface`
 
 ## Constants
 - `0x0` at 0x0047b556, 0x0047b61c, 0x0047b61e, 0x0047b657

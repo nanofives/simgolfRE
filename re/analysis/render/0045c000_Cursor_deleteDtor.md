@@ -24,7 +24,7 @@ Through registers:
 
 ## Callees
 - 0x004884b0 `Cursor::destroy` at 0x0045c009
-- 0x004a4ffc `FUN_004a4ffc` at 0x0045c016
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x0045c016
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

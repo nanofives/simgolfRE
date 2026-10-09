@@ -95,7 +95,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00483010 `Cache483010::ctorVtbl` at 0x00482051
 - 0x00492d80 `MappedFile::ctor` at 0x00481f9b
 - 0x00492dd0 `MappedFile::open` at 0x00481fb3
-- 0x004a4ffc `FUN_004a4ffc` at 0x00482057
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00482057
 - 0x004a57f1 `operator_new` at 0x00481f85, 0x00481ff3
 - indirect `call [eax]` at 0x00481f7e, 0x004821a1, 0x00482302
 - indirect `call [edx]` at 0x00482039, 0x0048231e

@@ -20,7 +20,7 @@ None.
 - 0x004a0180 `loggerCtor` at 0x004a013a
 
 ## Callers
-0x004a0120 `FUN_004a0120`
+0x004a0120 `dynInit_initLogFile`
 
 ## Constants
 - `0x4e4a44` (5130820) = address of a string (text not reproduced) at 0x004a0130

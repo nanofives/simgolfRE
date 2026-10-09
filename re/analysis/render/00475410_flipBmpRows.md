@@ -57,7 +57,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jns` (signed) at 0x00475448
 
 ## Callees
-- 0x004a4ffc `FUN_004a4ffc` at 0x00475562
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00475562
 - 0x004a57f1 `operator_new` at 0x00475433
 
 ## Callers

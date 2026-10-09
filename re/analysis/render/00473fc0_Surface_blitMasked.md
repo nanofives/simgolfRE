@@ -34,7 +34,7 @@ None.
 - indirect `call [ebx+0x50]` at 0x00474012
 
 ## Callers
-0x004a1580 `FUN_004a1580`
+0x004a1580 `LabelButton::drawContents`
 
 ## Constants
 - `0x7` at 0x0047401c

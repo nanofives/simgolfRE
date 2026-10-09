@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 277 bytes, 80 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 cycles selection to the next visible child of the container at m_130 via first()/advance()/select() (g_83ab98 saves the start child) (`re/names/exe_3.tsv`)
-System writeup: `re/analysis/systems/exe_3.md`.
+System writeup: `re/analysis/systems/exe_3.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_t_sw2.cpp` as `?cycle@C47af60@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
@@ -48,7 +48,7 @@ Through registers:
 - indirect `call [edx+0xf0]` at 0x0047b046, 0x0047b06d
 
 ## Callers
-0x00486b20 `FUN_00486b20`
+0x00486b20 `EditBox::cycleSelectionIfOwned`, 0x004a1090 `FUN_004a1090`, 0x004a2ff0 `FUN_004a2ff0`
 
 ## Constants
 - `0x0` at 0x0047afdd, 0x0047b042

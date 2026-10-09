@@ -4,6 +4,231 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-09  004a4ffc  operatorDelete_4a4ffc  callers 0x00404260;0x004042f0;0x00404380;0x0043cbd0;0x00449860;0x0044ac00;0x0045c000;0x00473ae0;0x004747c0;0x00474c20;0x00474cb0;0x00475410;0x00475580;0x00475840;0x00479f10;0x0047d810;0x00480410;0x00480580;0x00481ba0;0x00481e40;0x00481f40;0x00483f10;0x004841c0;0x004841e0;0x004842f0;0x00484880;0x004848a0;0x00484b80;0x004852b0;0x004853b0;0x004853d0;0x00485aa0;0x00486cc0;0x00487020;0x00487240;0x004872f0;0x00487310;0x004876c0;0x00487a40;0x00487b60;0x00487ce0;0x004882d0;0x00488460;0x00488630;0x00489350;0x00491470;0x004916f0;0x004928b0;0x00492da0;0x00497a00;0x0049c800;0x0049c8b0;0x0049d070;0x004a0160;0x004b7b9b;0x004b7c30;0x004b7c3b;0x004b7c46;0x004b7c51;0x004b7c5c;0x004b7c67;0x004b7cc0;0x004b7ce0;0x004b7ceb;0x004b7d80;0x004b7da0;0x004b7e80;0x004b8060;0x004b8080;0x004b8260;0x004b82c0;0x004b91c0;0x004b9370->0x00404260;0x004042f0;0x00404380;0x0043cbd0;0x00449860;0x0044ac00;0x0045c000;0x00473ae0;0x004747c0;0x00474c20;0x00474cb0;0x00475410;0x00475580;0x00475840;0x00479f10;0x0047d810;0x00480410;0x00480580;0x00481ba0;0x00481e40;0x00481f40;0x00483f10;0x004841c0;0x004841e0;0x004842f0;0x00484880;0x004848a0;0x00484b80;0x004852b0;0x004853b0;0x004853d0;0x00485aa0;0x00486cc0;0x00487020;0x00487240;0x004872f0;0x00487310;0x004876c0;0x00487a40;0x00487b60;0x00487ce0;0x004882d0;0x00488460;0x00488630;0x00489350;0x00491470;0x004916f0;0x004928b0;0x00492da0;0x00497a00;0x0049c800;0x0049c8b0;0x0049d070;0x004a0160;0x004b7b9b;0x004b7c30;0x004b7c3b;0x004b7c46;0x004b7c51;0x004b7c5c;0x004b7c67;0x004b7cc0;0x004b7ce0;0x004b7ceb;0x004b7d80;0x004b7da0;0x004b7e80;0x004b8060;0x004b8080;0x004b8260;0x004b82c0;0x004b91c0;0x004b9370;0x0048cba0;0x00491900;0x00491ad0;0x0049ff60;0x004a3050;0x004a4980  log/c2_refresh.tsv
+2026-10-09  004a4680  panelOnKey  callers 0x004a4a40->0x004a4a40;0x004a0bf0  log/c2_refresh.tsv
+2026-10-09  004a4570  hotHitCb6  callers 0x004a4a60->0x004a4a60;0x004a0e40  log/c2_refresh.tsv
+2026-10-09  004a4530  hotHitCb5  callers 0x004a4a50->0x004a4a50;0x004a0c90  log/c2_refresh.tsv
+2026-10-09  004a44f0  hotHitCb4  callers 0x004a4a30->0x004a4a30;0x004a0e90  log/c2_refresh.tsv
+2026-10-09  004a44b0  hotHitCb3  callers 0x004a4a20->0x004a4a20;0x004a0e20  log/c2_refresh.tsv
+2026-10-09  004a4470  hotHitCb2  callers 0x004a4a10->0x004a4a10;0x004a0eb0  log/c2_refresh.tsv
+2026-10-09  004a4430  hotHitCb1  callers 0x004a4a00->0x004a4a00;0x004a0e60  log/c2_refresh.tsv
+2026-10-09  004a43f0  hotHitCb0  callers 0x004a49f0->0x004a49f0;0x004a0b50  log/c2_refresh.tsv
+2026-10-09  004a4350  panelOnPick  callers 0x004a49e0->0x004a49e0;0x004a0db0  log/c2_refresh.tsv
+2026-10-09  004a3f10  panelDraw4a3f10  callers 0x004a4350;0x004a4680->0x004a4350;0x004a4680;0x004a45b0  log/c2_refresh.tsv
+2026-10-09  004a3880  panelBuild4a3880  callers 0x004a08a0->0x004a08a0;0x004a4ab0  log/c2_refresh.tsv
+2026-10-09  004a3480  panelSubDtor4a3480  callers 0x00491500;0x004b8134;0x004b92fe->0x00491500;0x004b8134;0x004b92fe;0x004a4980  log/c2_refresh.tsv
+2026-10-09  004a2fa0  widgetShow  callers 0x004a30a0->0x004a30a0;0x004a0ff0  log/c2_refresh.tsv
+2026-10-09  004a2d50  panelDrawRow  callers 0x004a3090;0x004a3100->0x004a3090;0x004a3100;0x004a0d30  log/c2_refresh.tsv
+2026-10-09  004a2400  panelCreate4a2400  callers 0x004a08a0->0x004a08a0;0x004a30f0  log/c2_refresh.tsv
+2026-10-09  004a2330  viewFieldDtor4a2330  callers 0x00491500;0x004b816a->0x00491500;0x004b816a;0x004a3050  log/c2_refresh.tsv
+2026-10-09  0049fda0  optionDialogOnMouse  callers 0x0049ffb0->0x0049ffb0;0x004a0ab0  log/c2_refresh.tsv
+2026-10-09  0049fa90  optionDialogOnKey  callers 0x0049ffe0->0x0049ffe0;0x004a0bf0  log/c2_refresh.tsv
+2026-10-09  0049f9a0  optionDialogUpdate  callers 0x0049ffd0->0x0049ffd0;0x004a0b50  log/c2_refresh.tsv
+2026-10-09  0049f370  optionListDraw  callers 0x0049f9a0;0x0049fa90->0x0049f9a0;0x0049fa90;0x0049fc60  log/c2_refresh.tsv
+2026-10-09  0049f030  bitTest  callers 0x0049eec0;0x0049f9a0;0x0049fa90->0x0049eec0;0x0049f9a0;0x0049fa90;0x0049fc60  log/c2_refresh.tsv
+2026-10-09  0049ed20  optionDialogBuild  callers 0x004a08a0->0x004a08a0;0x004a0040  log/c2_refresh.tsv
+2026-10-09  0049ec80  viewFieldDtor49ec80  callers 0x00491500;0x004b8101;0x004b92f0->0x00491500;0x004b8101;0x004b92f0;0x0049ff60  log/c2_refresh.tsv
+2026-10-09  0049e7d0  listPanelReadValue  callers 0x00491b60->0x00491b60;0x004a0ab0  log/c2_refresh.tsv
+2026-10-09  0049e640  listSelectionChanged  callers 0x00491ba0->0x00491ba0;0x004a0c90  log/c2_refresh.tsv
+2026-10-09  0049e450  listPanelRefresh  callers 0x00491b90->0x00491b90;0x004a0bf0  log/c2_refresh.tsv
+2026-10-09  0049e230  listPanelOnScroll  callers 0x00491b80->0x00491b80;0x004a0b50  log/c2_refresh.tsv
+2026-10-09  0049dab0  listPanelDraw  callers 0x0049e230;0x0049e450->0x0049e230;0x0049e450;0x0049e680  log/c2_refresh.tsv
+2026-10-09  0049d6d0  panelBuildRow  callers 0x004a08a0->0x004a08a0;0x00491bf0  log/c2_refresh.tsv
+2026-10-09  0049d690  viewFieldCleanup49d690  callers 0x0048d480;0x00491500;0x00491680;0x004a1250;0x004a12e0->0x0048d480;0x00491500;0x00491680;0x004a1250;0x004a12e0;0x00491ad0  log/c2_refresh.tsv
+2026-10-09  00491500  Dialog::viewDtor  callers 0x004914d0;0x00491710;0x00497fc0;0x00499140;0x0049acf0->0x004914d0;0x00491710;0x00497fc0;0x00499140;0x0049acf0;0x00491900  log/c2_refresh.tsv
+2026-10-09  0048caf0  ListBox::scrollBy  callers 0x0048cc70->0x0048cc70;0x004a13c0  log/c2_refresh.tsv
+2026-10-09  0048cac0  ListBox::clearSelection  callers 0x0048cc90->0x0048cc90;0x004a0a10  log/c2_refresh.tsv
+2026-10-09  0048c8a0  ListBox::onDrag  callers 0x0048cc80->0x0048cc80;0x004a0ab0  log/c2_refresh.tsv
+2026-10-09  0048c610  ListBox::forwardClick  callers 0x0048cca0->0x0048cca0;0x004a0db0  log/c2_refresh.tsv
+2026-10-09  0048c560  ListBox::fireSelectChanged  callers 0x0048cce0->0x0048cce0;0x004a0c90  log/c2_refresh.tsv
+2026-10-09  0048c420  ListBox::onScroll  callers 0x0048cd10->0x0048cd10;0x004a0ed0  log/c2_refresh.tsv
+2026-10-09  0048aea0  ListBox::typeAhead  callers 0x0048ccd0->0x0048ccd0;0x004a0bf0  log/c2_refresh.tsv
+2026-10-09  0048aa00  ListBox::onNavKey  callers 0x0048ccb0->0x0048ccb0;0x004a0b50  log/c2_refresh.tsv
+2026-10-09  0048a5d0  ListBox::build  callers 0x0048c6e0;0x004a08a0->0x0048c6e0;0x004a08a0;0x0048cd60  log/c2_refresh.tsv
+2026-10-09  00489de0  ListBox::dtor  callers 0x00491500;0x004b80c0;0x004b92da->0x00491500;0x004b80c0;0x004b92da;0x0048cba0  log/c2_refresh.tsv
+2026-10-09  00489370  ListModel::dtor  callers 0x00489350;0x004914d0;0x00491710;0x00497fc0;0x00499140;0x0049acf0;0x004b92bd;0x004b93ad->0x00489350;0x004914d0;0x00491710;0x00497fc0;0x00499140;0x0049acf0;0x004b92bd;0x004b93ad;0x0048cba0;0x00491900;0x00491ad0;0x0049ff60;0x004a3050;0x004a4980  log/c2_refresh.tsv
+2026-10-09  00480ce0  Window::invalidate  callers 0x00480d70;0x0048aea0;0x0048c420;0x0048c8a0;0x00493a60;0x0049e230;0x0049e450;0x0049f9a0;0x0049fa90->0x00480d70;0x0048aea0;0x0048c420;0x0048c8a0;0x00493a60;0x0049e230;0x0049e450;0x0049f9a0;0x0049fa90;0x0049e680  log/c2_refresh.tsv
+2026-10-09  004808c0  Window::paint  callers 0x0043cce0;0x004498a0;0x0045baf0;0x00496fc0;0x00490d60;0x004a1580->0x0043cce0;0x004498a0;0x0045baf0;0x00496fc0;0x00490d60;0x004a1580;0x0048c130  log/c2_refresh.tsv
+2026-10-09  004805a0  Base4805a0::dtor  callers 0x00404380;0x0043cb50;0x00480580;0x00488650;0x004914d0;0x00491710;0x00497a20;0x00497fc0;0x00499140;0x0049acf0;0x0049c780;0x004b7450;0x004b7ea0;0x004b7f00;0x004b7f20;0x004b7fa0;0x004b7fd0;0x004b81b0;0x004b8300;0x004b8320;0x004b836b;0x004b83ce;0x004b8431;0x004b8494;0x004b84f7;0x004b855a;0x004b85bd;0x004b8620;0x004b8683;0x004b86e6;0x004b8749;0x004b87ac;0x004b882b;0x004b888e;0x004b88f1;0x004b8954;0x004b89b7;0x004b8a1a;0x004b8aaf;0x004b8b12;0x004b8b75;0x004b8bd8;0x004b8c3b;0x004b8c9e;0x004b8d17;0x004b8d7a;0x004b8ddd;0x004b8e5b;0x004b8ebe;0x004b8f21;0x004b8f84;0x004b8fe7;0x004b904a;0x004b9180;0x004b91a0;0x004b9200;0x004b9250;0x004b92a0;0x004b9340;0x004b9390->0x00404380;0x0043cb50;0x00480580;0x00488650;0x004914d0;0x00491710;0x00497a20;0x00497fc0;0x00499140;0x0049acf0;0x0049c780;0x004b7450;0x004b7ea0;0x004b7f00;0x004b7f20;0x004b7fa0;0x004b7fd0;0x004b81b0;0x004b8300;0x004b8320;0x004b836b;0x004b83ce;0x004b8431;0x004b8494;0x004b84f7;0x004b855a;0x004b85bd;0x004b8620;0x004b8683;0x004b86e6;0x004b8749;0x004b87ac;0x004b882b;0x004b888e;0x004b88f1;0x004b8954;0x004b89b7;0x004b8a1a;0x004b8aaf;0x004b8b12;0x004b8b75;0x004b8bd8;0x004b8c3b;0x004b8c9e;0x004b8d17;0x004b8d7a;0x004b8ddd;0x004b8e5b;0x004b8ebe;0x004b8f21;0x004b8f84;0x004b8fe7;0x004b904a;0x004b9180;0x004b91a0;0x004b9200;0x004b9250;0x004b92a0;0x004b9340;0x004b9390;0x0048cba0;0x00491900;0x00491ad0;0x0049ff60;0x004a3050;0x004a4980  log/c2_refresh.tsv
+2026-10-09  0047af60  Container::cycleSelection  callers 0x00486b20->0x00486b20;0x004a1090;0x004a2ff0  log/c2_refresh.tsv
+2026-10-09  004795d0  Widget_drawBevelBoxR  callers 0x0047cdb0;0x0047d850;0x00496fc0;0x004a1580->0x0047cdb0;0x0047d850;0x00496fc0;0x004a1580;0x0048c130  log/c2_refresh.tsv
+2026-10-09  004791b0  drawComposite  callers 0x004a1580->0x004a1580;0x0048c130  log/c2_refresh.tsv
+2026-10-09  00475c60  Surface_blitThunk  callers 0x0040f5c0;0x004385d0;0x0043a400;0x0043a8c0;0x0043b610;0x004498a0;0x0044a6e0;0x0045f0f0;0x0046e810;0x004725b0;0x00475fb0;0x0047d060;0x0047d130;0x0047f8e0;0x004808c0;0x00480a10;0x0049dab0;0x0049f370;0x004a2d50;0x004a3f10->0x0040f5c0;0x004385d0;0x0043a400;0x0043a8c0;0x0043b610;0x004498a0;0x0044a6e0;0x0045f0f0;0x0046e810;0x004725b0;0x00475fb0;0x0047d060;0x0047d130;0x0047f8e0;0x004808c0;0x00480a10;0x0049dab0;0x0049f370;0x004a2d50;0x004a3f10;0x0048c130;0x0049e680;0x0049fc60;0x004a45b0  log/c2_refresh.tsv
+2026-10-09  00474aa0  atexitThunk_474aa0  callers none->0x00474a80  log/c2_refresh.tsv
+2026-10-09  00474a90  gSurfaceCtor_839a68  callers none->0x00474a80  log/c2_refresh.tsv
+2026-10-09  004a4ab0  panelBuild4a3880_vtordisp  C1->C2  re/analysis/ui/004a4ab0_panelBuild4a3880_vtordisp.md
+2026-10-09  004a4a70  panelSubSlot60_vtordisp  C1->C2  re/analysis/ui/004a4a70_panelSubSlot60_vtordisp.md
+2026-10-09  004a49d0  panelSubSlot27_vtordisp  C1->C2  re/analysis/ui/004a49d0_panelSubSlot27_vtordisp.md
+2026-10-09  004a49c0  panelSubDrawContents_vtordisp  C1->C2  re/analysis/ui/004a49c0_panelSubDrawContents_vtordisp.md
+2026-10-09  004a4980  panelSubDeletingDtor  C1->C2  re/analysis/ui/004a4980_panelSubDeletingDtor.md
+2026-10-09  004a4970  panelSubDeletingDtor_vtordisp  C1->C2  re/analysis/ui/004a4970_panelSubDeletingDtor_vtordisp.md
+2026-10-09  004a45b0  panelSubDrawContents  C1->C2  re/analysis/ui/004a45b0_panelSubDrawContents.md
+2026-10-09  004a30f0  panelCreate4a2400_vtordisp  C1->C2  re/analysis/ui/004a30f0_panelCreate4a2400_vtordisp.md
+2026-10-09  004a30b0  panelRowCycleSelection_vtordisp  C1->C2  re/analysis/ui/004a30b0_panelRowCycleSelection_vtordisp.md
+2026-10-09  004a3050  panelRowDeletingDtor  C1->C2  re/analysis/ui/004a3050_panelRowDeletingDtor.md
+2026-10-09  004a3040  panelRowDeletingDtor_vtordisp  C1->C2  re/analysis/ui/004a3040_panelRowDeletingDtor_vtordisp.md
+2026-10-09  004a2ff0  panelRowCycleSelection  C1->C2  re/analysis/ui/004a2ff0_panelRowCycleSelection.md
+2026-10-09  004a13c0  viewDispatchScrollBy  C1->C2  re/analysis/ui/004a13c0_viewDispatchScrollBy.md
+2026-10-09  004a1170  viewDispatchSlot7  C1->C2  re/analysis/ui/004a1170_viewDispatchSlot7.md
+2026-10-09  004a1130  viewDispatchSlot6  C1->C2  re/analysis/ui/004a1130_viewDispatchSlot6.md
+2026-10-09  004a1090  viewDispatchCycleSelection  C1->C2  re/analysis/ui/004a1090_viewDispatchCycleSelection.md
+2026-10-09  004a0ff0  viewDispatchSlot60  C1->C2  re/analysis/ui/004a0ff0_viewDispatchSlot60.md
+2026-10-09  004a0ef0  viewDispatchBuild  C1->C2  re/analysis/ui/004a0ef0_viewDispatchBuild.md
+2026-10-09  004a0ed0  viewDispatchOnScroll  C1->C2  re/analysis/ui/004a0ed0_viewDispatchOnScroll.md
+2026-10-09  004a0eb0  viewDispatchSlot32  C1->C2  re/analysis/ui/004a0eb0_viewDispatchSlot32.md
+2026-10-09  004a0e90  viewDispatchSlot34  C1->C2  re/analysis/ui/004a0e90_viewDispatchSlot34.md
+2026-10-09  004a0e60  viewDispatchSlot31  C1->C2  re/analysis/ui/004a0e60_viewDispatchSlot31.md
+2026-10-09  004a0e40  viewDispatchSlot39  C1->C2  re/analysis/ui/004a0e40_viewDispatchSlot39.md
+2026-10-09  004a0e20  viewDispatchSlot33  C1->C2  re/analysis/ui/004a0e20_viewDispatchSlot33.md
+2026-10-09  004a0db0  viewDispatchSlot29  C1->C2  re/analysis/ui/004a0db0_viewDispatchSlot29.md
+2026-10-09  004a0d30  viewDispatchDraw  C1->C2  re/analysis/ui/004a0d30_viewDispatchDraw.md
+2026-10-09  004a0c90  viewDispatchSelectChanged  C1->C2  re/analysis/ui/004a0c90_viewDispatchSelectChanged.md
+2026-10-09  004a0bf0  viewDispatchSlot36  C1->C2  re/analysis/ui/004a0bf0_viewDispatchSlot36.md
+2026-10-09  004a0b50  viewDispatchSlot30  C1->C2  re/analysis/ui/004a0b50_viewDispatchSlot30.md
+2026-10-09  004a0ab0  viewDispatchSlot27  C1->C2  re/analysis/ui/004a0ab0_viewDispatchSlot27.md
+2026-10-09  004a0a10  viewDispatchSlot28  C1->C2  re/analysis/ui/004a0a10_viewDispatchSlot28.md
+2026-10-09  004a0040  optionDialogBuild_vtordisp  C1->C2  re/analysis/ui/004a0040_optionDialogBuild_vtordisp.md
+2026-10-09  004a0000  optionDialogSlot60_vtordisp  C1->C2  re/analysis/ui/004a0000_optionDialogSlot60_vtordisp.md
+2026-10-09  0049fff0  optionDialogSlot38_vtordisp  C1->C2  re/analysis/ui/0049fff0_optionDialogSlot38_vtordisp.md
+2026-10-09  0049ffc0  optionDialogSlot28_vtordisp  C1->C2  re/analysis/ui/0049ffc0_optionDialogSlot28_vtordisp.md
+2026-10-09  0049ffa0  optionDialogDrawContents_vtordisp  C1->C2  re/analysis/ui/0049ffa0_optionDialogDrawContents_vtordisp.md
+2026-10-09  0049ff60  optionDialogDeletingDtor  C1->C2  re/analysis/ui/0049ff60_optionDialogDeletingDtor.md
+2026-10-09  0049ff50  optionDialogDeletingDtor_vtordisp  C1->C2  re/analysis/ui/0049ff50_optionDialogDeletingDtor_vtordisp.md
+2026-10-09  0049fc60  optionDialogDrawContents  C1->C2  re/analysis/ui/0049fc60_optionDialogDrawContents.md
+2026-10-09  0049e680  listPanelDrawContents  C1->C2  re/analysis/ui/0049e680_listPanelDrawContents.md
+2026-10-09  00491bf0  panelBuildRow_vtordisp  C1->C2  re/analysis/ui/00491bf0_panelBuildRow_vtordisp.md
+2026-10-09  00491bb0  listPanelSlot60_vtordisp  C1->C2  re/analysis/ui/00491bb0_listPanelSlot60_vtordisp.md
+2026-10-09  00491b70  listPanelSlot28_vtordisp  C1->C2  re/analysis/ui/00491b70_listPanelSlot28_vtordisp.md
+2026-10-09  00491b50  listPanelDrawContents_vtordisp  C1->C2  re/analysis/ui/00491b50_listPanelDrawContents_vtordisp.md
+2026-10-09  00491ad0  listPanelDeletingDtor  C1->C2  re/analysis/ui/00491ad0_listPanelDeletingDtor.md
+2026-10-09  00491ac0  listPanelDeletingDtor_vtordisp  C1->C2  re/analysis/ui/00491ac0_listPanelDeletingDtor_vtordisp.md
+2026-10-09  00491aa0  viewDispatchBuild_vtordisp  C1->C2  re/analysis/ui/00491aa0_viewDispatchBuild_vtordisp.md
+2026-10-09  00491a60  viewDispatchCycleSelection_vtordisp  C1->C2  re/analysis/ui/00491a60_viewDispatchCycleSelection_vtordisp.md
+2026-10-09  00491a50  viewDispatchSlot60_vtordisp  C1->C2  re/analysis/ui/00491a50_viewDispatchSlot60_vtordisp.md
+2026-10-09  00491a40  viewDispatchOnScroll_vtordisp58  C1->C2  re/analysis/ui/00491a40_viewDispatchOnScroll_vtordisp58.md
+2026-10-09  00491a30  viewDispatchOnScroll_vtordisp57  C1->C2  re/analysis/ui/00491a30_viewDispatchOnScroll_vtordisp57.md
+2026-10-09  00491a20  viewDispatchSlot39_vtordisp  C1->C2  re/analysis/ui/00491a20_viewDispatchSlot39_vtordisp.md
+2026-10-09  00491a10  viewDispatchSelectChanged_vtordisp  C1->C2  re/analysis/ui/00491a10_viewDispatchSelectChanged_vtordisp.md
+2026-10-09  00491a00  viewDispatchSlot36_vtordisp  C1->C2  re/analysis/ui/00491a00_viewDispatchSlot36_vtordisp.md
+2026-10-09  004919f0  viewDispatchSlot34_vtordisp  C1->C2  re/analysis/ui/004919f0_viewDispatchSlot34_vtordisp.md
+2026-10-09  004919e0  viewDispatchSlot33_vtordisp  C1->C2  re/analysis/ui/004919e0_viewDispatchSlot33_vtordisp.md
+2026-10-09  004919d0  viewDispatchSlot32_vtordisp  C1->C2  re/analysis/ui/004919d0_viewDispatchSlot32_vtordisp.md
+2026-10-09  004919c0  viewDispatchSlot31_vtordisp  C1->C2  re/analysis/ui/004919c0_viewDispatchSlot31_vtordisp.md
+2026-10-09  004919b0  viewDispatchSlot30_vtordisp  C1->C2  re/analysis/ui/004919b0_viewDispatchSlot30_vtordisp.md
+2026-10-09  004919a0  viewDispatchSlot29_vtordisp  C1->C2  re/analysis/ui/004919a0_viewDispatchSlot29_vtordisp.md
+2026-10-09  00491990  viewDispatchSlot28_vtordisp  C1->C2  re/analysis/ui/00491990_viewDispatchSlot28_vtordisp.md
+2026-10-09  00491980  viewDispatchSlot27_vtordisp  C1->C2  re/analysis/ui/00491980_viewDispatchSlot27_vtordisp.md
+2026-10-09  00491970  viewDispatchScrollBy_vtordisp  C1->C2  re/analysis/ui/00491970_viewDispatchScrollBy_vtordisp.md
+2026-10-09  00491960  viewDispatchDraw_vtordisp  C1->C2  re/analysis/ui/00491960_viewDispatchDraw_vtordisp.md
+2026-10-09  00491950  viewDispatchSlot7_vtordisp  C1->C2  re/analysis/ui/00491950_viewDispatchSlot7_vtordisp.md
+2026-10-09  00491940  viewDispatchSlot6_vtordisp  C1->C2  re/analysis/ui/00491940_viewDispatchSlot6_vtordisp.md
+2026-10-09  00491900  viewDeletingDtor  C1->C2  re/analysis/ui/00491900_viewDeletingDtor.md
+2026-10-09  004918f0  viewDeletingDtor_vtordisp  C1->C2  re/analysis/ui/004918f0_viewDeletingDtor_vtordisp.md
+2026-10-09  0048cd60  ListBox::build_vtordisp  C1->C2  re/analysis/ui/0048cd60_ListBox_build_vtordisp.md
+2026-10-09  0048cd20  ListBox::Slot60_vtordisp  C1->C2  re/analysis/ui/0048cd20_ListBox_Slot60_vtordisp.md
+2026-10-09  0048cd00  ListBox::fwdOnScroll_vtordisp  C1->C2  re/analysis/ui/0048cd00_ListBox_fwdOnScroll_vtordisp.md
+2026-10-09  0048ccf0  ListBox::fireSelectChangedMarked_vtordisp  C1->C2  re/analysis/ui/0048ccf0_ListBox_fireSelectChangedMarked_vtordisp.md
+2026-10-09  0048ccc0  ListBox::onNavKeyMarked_vtordisp  C1->C2  re/analysis/ui/0048ccc0_ListBox_onNavKeyMarked_vtordisp.md
+2026-10-09  0048cc60  ListBox::drawContents_vtordisp  C1->C2  re/analysis/ui/0048cc60_ListBox_drawContents_vtordisp.md
+2026-10-09  0048cc30  ListBox::fwdInnerVfn24  C1->C2  re/analysis/ui/0048cc30_ListBox_fwdInnerVfn24.md
+2026-10-09  0048cc20  ListBox::fwdInnerVfn24_vtordisp  C1->C2  re/analysis/ui/0048cc20_ListBox_fwdInnerVfn24_vtordisp.md
+2026-10-09  0048cbf0  ListBox::fwdInnerVfn20  C1->C2  re/analysis/ui/0048cbf0_ListBox_fwdInnerVfn20.md
+2026-10-09  0048cbe0  ListBox::fwdInnerVfn20_vtordisp  C1->C2  re/analysis/ui/0048cbe0_ListBox_fwdInnerVfn20_vtordisp.md
+2026-10-09  0048cba0  ListBox::deletingDtor  C1->C2  re/analysis/ui/0048cba0_ListBox_deletingDtor.md
+2026-10-09  0048cb90  ListBox::deletingDtor_vtordisp  C1->C2  re/analysis/ui/0048cb90_ListBox_deletingDtor_vtordisp.md
+2026-10-09  0048c520  ListBox::fireSelectChangedMarked  C1->C2  re/analysis/ui/0048c520_ListBox_fireSelectChangedMarked.md
+2026-10-09  0048c4f0  ListBox::fwdOnScroll  C1->C2  re/analysis/ui/0048c4f0_ListBox_fwdOnScroll.md
+2026-10-09  0048c130  ListBox::drawContents  C1->C2  re/analysis/ui/0048c130_ListBox_drawContents.md
+2026-10-09  0048a9c0  ListBox::onNavKeyMarked  C1->C2  re/analysis/ui/0048a9c0_ListBox_onNavKeyMarked.md
+2026-10-09  004799d0  storeUiEventTable  C1->C2  re/analysis/boot/004799d0_storeUiEventTable.md
+2026-10-09  00474a80  dynInit_gSurfaceCtor_839a68  C1->C2  re/analysis/boot/00474a80_dynInit_gSurfaceCtor_839a68.md
+2026-10-09  004a4ab0  panelBuild4a3880_vtordisp  C0->C1  dword 0x004bc228 slot 1 (+0x004) of the table at 0x004bc224; installed by panelSubCtor4a3110 0x004a3110, panelSubDtor4a3480 0x004a3480
+2026-10-09  004a4a70  panelSubSlot60_vtordisp  C0->C1  dword 0x004bc334 slot 60 (+0x0f0) of the table at 0x004bc244; installed by panelSubCtor4a3110 0x004a3110, panelSubDtor4a3480 0x004a3480
+2026-10-09  004a49d0  panelSubSlot27_vtordisp  C0->C1  dword 0x004bc2b0 slot 27 (+0x06c) of the table at 0x004bc244; dword 0x004bc2b4 slot 28 (+0x070) of the table at 0x004bc244; installed by panelSubCtor4a3110 0x004a3110, panelSubDtor4a3480 0x004a3480
+2026-10-09  004a49c0  panelSubDrawContents_vtordisp  C0->C1  dword 0x004bc29c slot 22 (+0x058) of the table at 0x004bc244; installed by panelSubCtor4a3110 0x004a3110, panelSubDtor4a3480 0x004a3480
+2026-10-09  004a4980  panelSubDeletingDtor  C0->C1  dword 0x004bc244 slot 0 (+0x000) of the table at 0x004bc244, reached through the vtordisp thunk; installed by panelSubCtor4a3110 0x004a3110, panelSubDtor4a3480 0x004a3480
+2026-10-09  004a4970  panelSubDeletingDtor_vtordisp  C0->C1  dword 0x004bc244 slot 0 (+0x000) of the table at 0x004bc244; installed by panelSubCtor4a3110 0x004a3110, panelSubDtor4a3480 0x004a3480
+2026-10-09  004a45b0  panelSubDrawContents  C0->C1  dword 0x004bc29c slot 22 (+0x058) of the table at 0x004bc244, reached through the vtordisp thunk; installed by panelSubCtor4a3110 0x004a3110, panelSubDtor4a3480 0x004a3480
+2026-10-09  004a30f0  panelCreate4a2400_vtordisp  C0->C1  dword 0x004bc08c slot 1 (+0x004) of the table at 0x004bc088; installed by viewFieldCtor4a2250 0x004a2250, viewFieldDtor4a2330 0x004a2330
+2026-10-09  004a30b0  panelRowCycleSelection_vtordisp  C0->C1  dword 0x004bc1d0 slot 74 (+0x128) of the table at 0x004bc0a8; installed by viewFieldCtor4a2250 0x004a2250, viewFieldDtor4a2330 0x004a2330
+2026-10-09  004a3050  panelRowDeletingDtor  C0->C1  dword 0x004bc0a8 slot 0 (+0x000) of the table at 0x004bc0a8, reached through the vtordisp thunk; installed by viewFieldCtor4a2250 0x004a2250, viewFieldDtor4a2330 0x004a2330
+2026-10-09  004a3040  panelRowDeletingDtor_vtordisp  C0->C1  dword 0x004bc0a8 slot 0 (+0x000) of the table at 0x004bc0a8; installed by viewFieldCtor4a2250 0x004a2250, viewFieldDtor4a2330 0x004a2330
+2026-10-09  004a2ff0  panelRowCycleSelection  C0->C1  dword 0x004bc1d0 slot 74 (+0x128) of the table at 0x004bc0a8, reached through the vtordisp thunk; installed by viewFieldCtor4a2250 0x004a2250, viewFieldDtor4a2330 0x004a2330
+2026-10-09  004a13c0  viewDispatchScrollBy  C0->C1  dword 0x004bb934 slot 25 (+0x064) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a1170  viewDispatchSlot7  C0->C1  dword 0x004bb8ec slot 7 (+0x01c) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a1130  viewDispatchSlot6  C0->C1  dword 0x004bb8e8 slot 6 (+0x018) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a1090  viewDispatchCycleSelection  C0->C1  dword 0x004bb9f8 slot 74 (+0x128) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0ff0  viewDispatchSlot60  C0->C1  dword 0x004bb9c0 slot 60 (+0x0f0) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0ef0  viewDispatchBuild  C0->C1  dword 0x004bb8b4 slot 1 (+0x004) of the table at 0x004bb8b0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0ed0  viewDispatchOnScroll  C0->C1  dwords 0x004bb9b4 slot 57 (+0x0e4) and 0x004bb9b8 slot 58 (+0x0e8) of the table at 0x004bb8d0, both reached through a vtordisp thunk of their own (0x00491a30 and 0x00491a40); installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0eb0  viewDispatchSlot32  C0->C1  dword 0x004bb950 slot 32 (+0x080) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0e90  viewDispatchSlot34  C0->C1  dword 0x004bb958 slot 34 (+0x088) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0e60  viewDispatchSlot31  C0->C1  dword 0x004bb94c slot 31 (+0x07c) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0e40  viewDispatchSlot39  C0->C1  dword 0x004bb96c slot 39 (+0x09c) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0e20  viewDispatchSlot33  C0->C1  dword 0x004bb954 slot 33 (+0x084) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0db0  viewDispatchSlot29  C0->C1  dword 0x004bb944 slot 29 (+0x074) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0d30  viewDispatchDraw  C0->C1  dword 0x004bb928 slot 22 (+0x058) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0c90  viewDispatchSelectChanged  C0->C1  dword 0x004bb968 slot 38 (+0x098) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0bf0  viewDispatchSlot36  C0->C1  dword 0x004bb960 slot 36 (+0x090) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0b50  viewDispatchSlot30  C0->C1  dword 0x004bb948 slot 30 (+0x078) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0ab0  viewDispatchSlot27  C0->C1  dword 0x004bb93c slot 27 (+0x06c) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0a10  viewDispatchSlot28  C0->C1  dword 0x004bb940 slot 28 (+0x070) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004a0040  optionDialogBuild_vtordisp  C0->C1  dword 0x004bbe94 slot 1 (+0x004) of the table at 0x004bbe90; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  004a0000  optionDialogSlot60_vtordisp  C0->C1  dword 0x004bbfa0 slot 60 (+0x0f0) of the table at 0x004bbeb0; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  0049fff0  optionDialogSlot38_vtordisp  C0->C1  dword 0x004bbf48 slot 38 (+0x098) of the table at 0x004bbeb0; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  0049ffc0  optionDialogSlot28_vtordisp  C0->C1  dword 0x004bbf20 slot 28 (+0x070) of the table at 0x004bbeb0; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  0049ffa0  optionDialogDrawContents_vtordisp  C0->C1  dword 0x004bbf08 slot 22 (+0x058) of the table at 0x004bbeb0; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  0049ff60  optionDialogDeletingDtor  C0->C1  dword 0x004bbeb0 slot 0 (+0x000) of the table at 0x004bbeb0, reached through the vtordisp thunk; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  0049ff50  optionDialogDeletingDtor_vtordisp  C0->C1  dword 0x004bbeb0 slot 0 (+0x000) of the table at 0x004bbeb0; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  0049fc60  optionDialogDrawContents  C0->C1  dword 0x004bbf08 slot 22 (+0x058) of the table at 0x004bbeb0, reached through the vtordisp thunk; installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80
+2026-10-09  0049e680  listPanelDrawContents  C0->C1  dword 0x004bb79c slot 22 (+0x058) of the table at 0x004bb744, reached through the vtordisp thunk; installed by viewFieldCtor49d5a0 0x0049d5a0, Dialog::viewDtor 0x00491500, Dialog::childDtor 0x00491680, listPanelDeletingDtor 0x00491ad0
+2026-10-09  00491bf0  panelBuildRow_vtordisp  C0->C1  dword 0x004bb728 slot 1 (+0x004) of the table at 0x004bb724; installed by viewFieldCtor49d5a0 0x0049d5a0, Dialog::viewDtor 0x00491500, Dialog::childDtor 0x00491680, listPanelDeletingDtor 0x00491ad0
+2026-10-09  00491bb0  listPanelSlot60_vtordisp  C0->C1  dword 0x004bb834 slot 60 (+0x0f0) of the table at 0x004bb744; installed by viewFieldCtor49d5a0 0x0049d5a0, Dialog::viewDtor 0x00491500, Dialog::childDtor 0x00491680, listPanelDeletingDtor 0x00491ad0
+2026-10-09  00491b70  listPanelSlot28_vtordisp  C0->C1  dword 0x004bb7b4 slot 28 (+0x070) of the table at 0x004bb744; installed by viewFieldCtor49d5a0 0x0049d5a0, Dialog::viewDtor 0x00491500, Dialog::childDtor 0x00491680, listPanelDeletingDtor 0x00491ad0
+2026-10-09  00491b50  listPanelDrawContents_vtordisp  C0->C1  dword 0x004bb79c slot 22 (+0x058) of the table at 0x004bb744; installed by viewFieldCtor49d5a0 0x0049d5a0, Dialog::viewDtor 0x00491500, Dialog::childDtor 0x00491680, listPanelDeletingDtor 0x00491ad0
+2026-10-09  00491ad0  listPanelDeletingDtor  C0->C1  dword 0x004bb744 slot 0 (+0x000) of the table at 0x004bb744, reached through the vtordisp thunk; installed by viewFieldCtor49d5a0 0x0049d5a0, Dialog::viewDtor 0x00491500, Dialog::childDtor 0x00491680, listPanelDeletingDtor 0x00491ad0
+2026-10-09  00491ac0  listPanelDeletingDtor_vtordisp  C0->C1  dword 0x004bb744 slot 0 (+0x000) of the table at 0x004bb744; installed by viewFieldCtor49d5a0 0x0049d5a0, Dialog::viewDtor 0x00491500, Dialog::childDtor 0x00491680, listPanelDeletingDtor 0x00491ad0
+2026-10-09  00491aa0  viewDispatchBuild_vtordisp  C0->C1  dword 0x004bb8b4 slot 1 (+0x004) of the table at 0x004bb8b0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491a60  viewDispatchCycleSelection_vtordisp  C0->C1  dword 0x004bb9f8 slot 74 (+0x128) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491a50  viewDispatchSlot60_vtordisp  C0->C1  dword 0x004bb9c0 slot 60 (+0x0f0) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491a40  viewDispatchOnScroll_vtordisp58  C0->C1  dword 0x004bb9b8 slot 58 (+0x0e8) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491a30  viewDispatchOnScroll_vtordisp57  C0->C1  dword 0x004bb9b4 slot 57 (+0x0e4) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491a20  viewDispatchSlot39_vtordisp  C0->C1  dword 0x004bb96c slot 39 (+0x09c) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491a10  viewDispatchSelectChanged_vtordisp  C0->C1  dword 0x004bb968 slot 38 (+0x098) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491a00  viewDispatchSlot36_vtordisp  C0->C1  dword 0x004bb960 slot 36 (+0x090) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004919f0  viewDispatchSlot34_vtordisp  C0->C1  dword 0x004bb958 slot 34 (+0x088) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004919e0  viewDispatchSlot33_vtordisp  C0->C1  dword 0x004bb954 slot 33 (+0x084) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004919d0  viewDispatchSlot32_vtordisp  C0->C1  dword 0x004bb950 slot 32 (+0x080) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004919c0  viewDispatchSlot31_vtordisp  C0->C1  dword 0x004bb94c slot 31 (+0x07c) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004919b0  viewDispatchSlot30_vtordisp  C0->C1  dword 0x004bb948 slot 30 (+0x078) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004919a0  viewDispatchSlot29_vtordisp  C0->C1  dword 0x004bb944 slot 29 (+0x074) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491990  viewDispatchSlot28_vtordisp  C0->C1  dword 0x004bb940 slot 28 (+0x070) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491980  viewDispatchSlot27_vtordisp  C0->C1  dword 0x004bb93c slot 27 (+0x06c) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491970  viewDispatchScrollBy_vtordisp  C0->C1  dword 0x004bb934 slot 25 (+0x064) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491960  viewDispatchDraw_vtordisp  C0->C1  dword 0x004bb928 slot 22 (+0x058) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491950  viewDispatchSlot7_vtordisp  C0->C1  dword 0x004bb8ec slot 7 (+0x01c) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491940  viewDispatchSlot6_vtordisp  C0->C1  dword 0x004bb8e8 slot 6 (+0x018) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  00491900  viewDeletingDtor  C0->C1  dword 0x004bb8d0 slot 0 (+0x000) of the table at 0x004bb8d0, reached through the vtordisp thunk; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  004918f0  viewDeletingDtor_vtordisp  C0->C1  dword 0x004bb8d0 slot 0 (+0x000) of the table at 0x004bb8d0; installed by viewCtor4a0740 0x004a0740, Dialog::viewDtor 0x00491500
+2026-10-09  0048cd60  ListBox::build_vtordisp  C0->C1  dword 0x004bb244 slot 1 (+0x004) of the table at 0x004bb240; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cd20  ListBox::Slot60_vtordisp  C0->C1  dword 0x004bb350 slot 60 (+0x0f0) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cd00  ListBox::fwdOnScroll_vtordisp  C0->C1  dword 0x004bb344 slot 57 (+0x0e4) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048ccf0  ListBox::fireSelectChangedMarked_vtordisp  C0->C1  dword 0x004bb2fc slot 39 (+0x09c) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048ccc0  ListBox::onNavKeyMarked_vtordisp  C0->C1  dword 0x004bb2e4 slot 33 (+0x084) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cc60  ListBox::drawContents_vtordisp  C0->C1  dword 0x004bb2b8 slot 22 (+0x058) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cc30  ListBox::fwdInnerVfn24  C0->C1  dword 0x004bb27c slot 7 (+0x01c) of the table at 0x004bb260, reached through the vtordisp thunk; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cc20  ListBox::fwdInnerVfn24_vtordisp  C0->C1  dword 0x004bb27c slot 7 (+0x01c) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cbf0  ListBox::fwdInnerVfn20  C0->C1  dword 0x004bb278 slot 6 (+0x018) of the table at 0x004bb260, reached through the vtordisp thunk; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cbe0  ListBox::fwdInnerVfn20_vtordisp  C0->C1  dword 0x004bb278 slot 6 (+0x018) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cba0  ListBox::deletingDtor  C0->C1  dword 0x004bb260 slot 0 (+0x000) of the table at 0x004bb260, reached through the vtordisp thunk; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048cb90  ListBox::deletingDtor_vtordisp  C0->C1  dword 0x004bb260 slot 0 (+0x000) of the table at 0x004bb260; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048c520  ListBox::fireSelectChangedMarked  C0->C1  dword 0x004bb2fc slot 39 (+0x09c) of the table at 0x004bb260, reached through the vtordisp thunk; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048c4f0  ListBox::fwdOnScroll  C0->C1  dword 0x004bb344 slot 57 (+0x0e4) of the table at 0x004bb260, reached through the vtordisp thunk; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048c130  ListBox::drawContents  C0->C1  dword 0x004bb2b8 slot 22 (+0x058) of the table at 0x004bb260, reached through the vtordisp thunk; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  0048a9c0  ListBox::onNavKeyMarked  C0->C1  dword 0x004bb2e4 slot 33 (+0x084) of the table at 0x004bb260, reached through the vtordisp thunk; installed by ListBox::ctor 0x00489cb0, ListBox::dtor 0x00489de0
+2026-10-09  004799d0  storeUiEventTable  C0->C1  reached from slot 0x004c1118 of the C++ dynamic-initializer table 0x004c1004-0x004c1184 through the thunk 0x004799c0; the 13-entry table it stores holds redrawRegion 0x00495770 at slot 1, uiKeyEvent 0x00495910 at slot 3, uiKeyEvent148 0x00495990 at slot 4, uiPointerMove 0x004959b0 at slot 5 and Timer_fire 0x00495cb0 at slot 12
+2026-10-09  004799c0  storeUiEventTable_thunk  C0->C1  slot 0x004c1118 of the C++ dynamic-initializer table 0x004c1004-0x004c1184 (terminators 0x004c1000 and 0x004c1188), whose start 0x004c1000 is loaded at 0x004a50fb inside __cinit 0x004a50db; a single 5-byte jmp
+2026-10-09  00474a80  dynInit_gSurfaceCtor_839a68  C0->C1  slot 0x004c1114 of the C++ dynamic-initializer table 0x004c1004-0x004c1184 (terminators 0x004c1000 and 0x004c1188), whose start 0x004c1000 is loaded at 0x004a50fb inside __cinit 0x004a50db
 2026-10-09  jgld.dll:000073e0  ListNode::deletingDtor  C2->C3  log/diff/000073e0_jgld_ListNode_deletingDtor.path1.csv
 2026-10-09  jgld.dll:00006d80  LinkedList::deletingDtor  C2->C3  log/diff/00006d80_jgld_LinkedList_deletingDtor.path1.csv
 2026-10-09  jgld.dll:00003670  Transform::deletingDtor  C2->C3  log/diff/00003670_jgld_Transform_deletingDtor.path1.csv

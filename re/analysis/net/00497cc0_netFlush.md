@@ -30,7 +30,7 @@ Through registers:
 - indirect `call [eax+0x20]` at 0x00497cd5
 
 ## Callers
-0x0047ee70 `FUN_0047ee70`
+0x0047ee70 `Window::onCommand`
 
 ## Constants
 - `0x0` at 0x00497ce4, 0x00497cf2, 0x00497cf4

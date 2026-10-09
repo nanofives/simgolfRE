@@ -34,7 +34,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0044b412
 
 ## Callers
-0x0044b3d0 `FUN_0044b3d0`
+0x0044b3d0 `atexitDtor_821f48`
 
 ## Constants
 - `0x0` at 0x0044b41a

@@ -19,7 +19,7 @@ None.
 - 0x00482fd0 `Cache482fd0::ctor` at 0x00482e85
 
 ## Callers
-0x00482e70 `FUN_00482e70`
+0x00482e70 `dynInit_staticInit_g83acb0`
 
 ## Constants
 - `0x83acb0` (8629424) = address in the image (data) at 0x00482e80

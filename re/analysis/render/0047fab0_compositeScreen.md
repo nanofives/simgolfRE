@@ -102,7 +102,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [eax*4+0x4801b0]` at 0x0047fbea
 
 ## Callers
-0x004959b0 `FUN_004959b0`
+0x004959b0 `uiPointerMove`
 
 ## Constants
 - `0x0` at 0x0047fd39, 0x0047fd3d, 0x0047fdc8, 0x0047fdca, 0x0047fe30, 0x0047fe32, 0x0047fec4, 0x0047fec6 (+6 more)

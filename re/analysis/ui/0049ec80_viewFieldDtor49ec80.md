@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 83 bytes, 23 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 destructor for the view sub-field built by viewFieldCtor49ebb0. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C49ec80@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
@@ -27,7 +28,7 @@ Through registers:
 - 0x0049ece0 `viewFieldCleanup49ece0` at 0x0049eccc
 
 ## Callers
-0x00491500 `Dialog::viewDtor`, 0x004b8101 `Unwind@004b8101`, 0x004b92f0 `Unwind@004b92f0`
+0x00491500 `Dialog::viewDtor`, 0x0049ff60 `FUN_0049ff60`, 0x004b8101 `Unwind@004b8101`, 0x004b92f0 `Unwind@004b92f0`
 
 ## Constants
 - `0x4bbe90` (4963984) = address in the image (data) at 0x0049eca9

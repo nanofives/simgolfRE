@@ -31,7 +31,7 @@ Through registers:
 - 0x00486f10 `Timer::reset` at 0x00486d23
 
 ## Callers
-0x00483190 `allocColorRange`, 0x00486d60 `Timer::initStartOnce`, 0x00486d90 `Timer::initStartRepeat`, 0x00492cc0 `HotList::onMouseMove`, 0x004a2010 `FUN_004a2010`
+0x00483190 `allocColorRange`, 0x00486d60 `Timer::initStartOnce`, 0x00486d90 `Timer::initStartRepeat`, 0x00492cc0 `HotList::onMouseMove`, 0x004a2010 `LabelButton::onMouseMove`
 
 ## Constants
 - `0x0` at 0x00486d42

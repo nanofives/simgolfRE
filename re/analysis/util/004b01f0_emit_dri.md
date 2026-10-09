@@ -23,7 +23,7 @@ None.
 - 0x004afc10 `emit_2bytes` at 0x004b0203, 0x004b0210
 
 ## Callers
-0x004b0060 `FUN_004b0060`
+0x004b0060 `write_scan_header`
 
 ## Constants
 - `0x4` at 0x004b0200

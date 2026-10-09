@@ -22,10 +22,10 @@ None.
 
 ## Callees
 - 0x004805a0 `Base4805a0::dtor` at 0x00480583
-- 0x004a4ffc `FUN_004a4ffc` at 0x00480590
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00480590
 
 ## Callers
-0x00481b40 `FUN_00481b40`
+0x00481b40 `View4804a0::scalarDtor_adj274`
 
 ## Constants
 - `0x1` at 0x00480588

@@ -80,4 +80,4 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x10` (16) at 0x004a2015, 0x004a203c, 0x004a210a, 0x004a2199, 0x004a21b4
 - `0x57c` (1404) at 0x004a20bf, 0x004a2171
 - `0x7f00` (32512) at 0x004a20b3
-- `0x488fb0` (4755376) = function `FUN_00488fb0` at 0x004a217a
+- `0x488fb0` (4755376) = function `Button::timerCallback` at 0x004a217a

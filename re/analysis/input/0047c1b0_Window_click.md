@@ -49,7 +49,7 @@ Globals:
 - indirect `call eax` at 0x0047c1f8, 0x0047c208
 
 ## Callers
-0x0047f010 `FUN_0047f010`
+0x0047f010 `Window::onPressHot`
 
 ## Constants
 - `0x8` at 0x0047c1c8, 0x0047c1fa, 0x0047c20a

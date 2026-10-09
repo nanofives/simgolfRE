@@ -19,7 +19,7 @@ None.
 - 0x004a56d2 `_atexit` at 0x0044ade5
 
 ## Callers
-0x0044adc0 `FUN_0044adc0`
+0x0044adc0 `dynInit_staticCtor_44add0`
 
 ## Constants
-- `0x44adf0` (4500976) = function `FUN_0044adf0` at 0x0044ade0
+- `0x44adf0` (4500976) = function `atexitDtor_8210c8` at 0x0044ade0

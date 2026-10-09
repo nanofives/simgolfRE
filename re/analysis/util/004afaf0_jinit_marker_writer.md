@@ -40,6 +40,6 @@ Through registers:
 - `0x4afb60` (4914016) = function `write_any_marker` at 0x004afb05
 - `0x4afc40` (4914240) = function `write_file_header` at 0x004afb14
 - `0x4afdc0` (4914624) = function `write_frame_header` at 0x004afb21
-- `0x4b0060` (4915296) = function `FUN_004b0060` at 0x004afb2e
+- `0x4b0060` (4915296) = function `write_scan_header` at 0x004afb2e
 - `0x4b0300` (4915968) = address in the image (data) at 0x004afb3b
 - `0x4b0320` (4916000) = function `write_tables_only` at 0x004afb49

@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 101 bytes, 40 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 timer dispatch: clears +0x24, manages the one-shot flags at +8 (stopping via Timer::stop when already fired) and invokes the registered callbacks at +0x10 and +0x14 with the user data at +0x1c/+0x18 (`re/names/exe_6.tsv`)
-System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc_exe.md`.
+System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f495cb0@@YGXPAUT495@@@Z` (the decorated name fixes the exact C++ signature and convention).

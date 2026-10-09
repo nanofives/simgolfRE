@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 55 bytes, 18 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 list selection handler: stores the model's current id into the context global 0x0083ab2c and, when a callback is present at this-0x10, invokes it with ListModel::selectedId (`re/names/exe_6.tsv`)
-System writeup: `re/analysis/systems/exe_6.md`.
+System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_0049e640@C_FUN_0049e640@f_0049e640@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -31,7 +31,7 @@ Globals:
 - indirect `call [esi-0x10]` at 0x0049e66d
 
 ## Callers
-0x00491ba0 `FUN_00491ba0`
+0x00491ba0 `listSelectionChanged_vtordisp`, 0x004a0c90 `FUN_004a0c90`
 
 ## Constants
 - `0x4` at 0x0049e670

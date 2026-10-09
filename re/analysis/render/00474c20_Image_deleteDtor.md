@@ -23,7 +23,7 @@ None.
 
 ## Callees
 - 0x00474c40 `Image_dtor` at 0x00474c23
-- 0x004a4ffc `FUN_004a4ffc` at 0x00474c30
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00474c30
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -55,7 +55,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xdc]` at 0x0048643f
 
 ## Callers
-0x00486b90 `FUN_00486b90`, 0x00486be0 `FUN_00486be0`, 0x00486c40 `FUN_00486c40`
+0x00486b90 `EditBox::beginCaretDrag`, 0x00486be0 `EditBox::endCaretDrag`, 0x00486c40 `EditBox::updateCaretDrag`
 
 ## Constants
 - `0x1` at 0x004864b7

@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 458 bytes, 151 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 Sets the selected index, scrolls it into view, and fires the selection-changed callbacks on the owner. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s2.cpp` as `?select@S2C489@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).

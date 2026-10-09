@@ -29,7 +29,7 @@ Through registers:
 - `je` (equality) at 0x00484b8a, 0x00484b91
 
 ## Callees
-- 0x004a4ffc `FUN_004a4ffc` at 0x00484b94
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00484b94
 - 0x004a57f1 `operator_new` at 0x00484ba9
 
 ## Callers

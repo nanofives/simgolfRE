@@ -22,7 +22,7 @@ None.
 
 ## Callees
 - 0x00492dc0 `MappedFile::dtor` at 0x00492da3
-- 0x004a4ffc `FUN_004a4ffc` at 0x00492db0
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00492db0
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

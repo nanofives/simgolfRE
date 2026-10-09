@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 93 bytes, 24 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor for the list-box control. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C489de0@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
@@ -27,7 +28,7 @@ Through registers:
 - 0x00489e40 `ListBox::resetFields` at 0x00489e36
 
 ## Callers
-0x00491500 `Dialog::viewDtor`, 0x004b80c0 `Unwind@004b80c0`, 0x004b92da `Unwind@004b92da`
+0x0048cba0 `FUN_0048cba0`, 0x00491500 `Dialog::viewDtor`, 0x004b80c0 `Unwind@004b80c0`, 0x004b92da `Unwind@004b92da`
 
 ## Constants
 - `0x4bb240` (4960832) = address in the image (data) at 0x00489e11

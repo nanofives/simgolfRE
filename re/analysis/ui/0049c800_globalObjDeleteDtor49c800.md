@@ -22,10 +22,10 @@ None.
 
 ## Callees
 - 0x0049c780 `globalObjDtor49c780` at 0x0049c803
-- 0x004a4ffc `FUN_004a4ffc` at 0x0049c810
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x0049c810
 
 ## Callers
-0x0049c820 `FUN_0049c820`
+0x0049c820 `globalObjDeleteDtor49c800_adj274`
 
 ## Constants
 - `0x1` at 0x0049c808

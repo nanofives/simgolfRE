@@ -33,7 +33,7 @@ Through registers:
 - 0x004894b0 `ListModel::clear` at 0x0049d6bc
 
 ## Callers
-0x0048d480 `TextView::reset`, 0x00491500 `Dialog::viewDtor`, 0x00491680 `Dialog::childDtor`, 0x004a1250 `viewDispatchOpen`, 0x004a12e0 `viewDispatchReset`
+0x0048d480 `TextView::reset`, 0x00491500 `Dialog::viewDtor`, 0x00491680 `Dialog::childDtor`, 0x00491ad0 `FUN_00491ad0`, 0x004a1250 `viewDispatchOpen`, 0x004a12e0 `viewDispatchReset`
 
 ## Constants
 None.

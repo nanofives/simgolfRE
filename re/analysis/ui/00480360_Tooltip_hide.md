@@ -26,7 +26,7 @@ Globals:
 - 0x0047f8e0 `redrawDrawList` at 0x0048037c
 
 ## Callers
-0x00479f30 `layoutNode`, 0x0047b820 `Window::detach`, 0x00480220 `Tooltip::show`, 0x00488ab0 `FUN_00488ab0`, 0x00492d40 `HotList::cancelTip`, 0x004a2010 `FUN_004a2010`
+0x00479f30 `layoutNode`, 0x0047b820 `Window::detach`, 0x00480220 `Tooltip::show`, 0x00488ab0 `Button::beginPress`, 0x00492d40 `HotList::cancelTip`, 0x004a2010 `LabelButton::onMouseMove`
 
 ## Constants
 - `0xc` (12) at 0x0048038b

@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 380 bytes, 90 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 Destroys the dialog's embedded formatted-view and its several child widgets. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `??1R0D4a0740@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
@@ -52,7 +53,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a3480 `panelSubDtor4a3480` at 0x004915db
 
 ## Callers
-0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`
+0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00491900 `FUN_00491900`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`
 
 ## Constants
 - `0x0` at 0x004915fd

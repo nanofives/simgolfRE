@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 123 bytes, 44 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 handles mouse input for the option dialog. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?onMouse@C49fda0@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -39,7 +39,7 @@ Through registers:
 - indirect `call [edx+0x120]` at 0x0049fe0e
 
 ## Callers
-0x0049ffb0 `FUN_0049ffb0`
+0x0049ffb0 `optionDialogOnMouse_vtordisp`, 0x004a0ab0 `FUN_004a0ab0`
 
 ## Constants
 - `0x1` at 0x0049fdd2

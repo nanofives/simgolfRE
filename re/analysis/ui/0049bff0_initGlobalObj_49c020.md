@@ -19,7 +19,7 @@ None.
 - 0x0049c020 `ctorGlobalObj49c020` at 0x0049bff5
 
 ## Callers
-0x0049bfe0 `FUN_0049bfe0`
+0x0049bfe0 `dynInit_initGlobalObj_49c020`
 
 ## Constants
 - `0x8400c8` (8650952) = address in the image (data) at 0x0049bff0

@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 248 bytes, 83 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 pushes this on the 4-deep modal stack 0x0083a4e8 (owner argument in the parallel array 0x0083aa88, depth 0x0083ab58, refused above 3 at 0x0047bab9), clears g_focusWin 0x0083ab40 and g_focusWin2 0x0083ab44, makes this the modal top 0x0083ab54, releases a previous g_scrollDragX 0x0083ab30 through its virtual +0x10, shows the owner and this through virtual +0x4 unless bit 1 of the flags argument is set, calls enterModal483d30 0x00483d30, sets the IDC_ARROW cursor with LoadCursorA/SetCursor, then loops the window's virtual +0x114 calling the callback argument and screenFlip 0x00483ba0 until the callback returns 0 or the modal top changes (`re/names/undisc_exe.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0xc` (at 0x0047bac4, 0x0047bb86, 0x0047bba5): callee pops 12 bytes of stack arguments.

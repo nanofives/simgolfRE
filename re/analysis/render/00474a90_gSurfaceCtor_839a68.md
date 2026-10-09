@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `render`. Mechanica
 
 ## Role (from the naming pass, not a C3 purpose)
 constructs the file-scope global Surface object at 0x00839a68 via Surface_ctor (`re/names/exe_6.tsv`)
-System writeup: `re/analysis/systems/exe_6.md`.
+System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00474a90@f_00474a90@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
@@ -20,7 +20,7 @@ None.
 - 0x00473ab0 `Surface_ctor` at 0x00474a95
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00474a80 `FUN_00474a80`
 
 ## Constants
 - `0x839a68` (8624744) = address in the image (data) at 0x00474a90

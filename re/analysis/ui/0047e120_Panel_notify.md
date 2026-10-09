@@ -25,7 +25,7 @@ None.
 - 0x0047e700 `ChildArray::bringToFront` at 0x0047e12d
 
 ## Callers
-0x0047b670 `Window::show`, 0x0047f010 `FUN_0047f010`, 0x0047f1b0 `Window::setFocus`
+0x0047b670 `Window::show`, 0x0047f010 `Window::onPressHot`, 0x0047f1b0 `Window::setFocus`
 
 ## Constants
 None.

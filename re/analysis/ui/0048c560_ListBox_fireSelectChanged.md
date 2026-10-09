@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 170 bytes, 54 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 Invokes the owner's selection-changed callbacks with the currently selected item. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?f@D48c560@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -43,7 +44,7 @@ Globals:
 - indirect `call [esi-0x8]` at 0x0048c58e
 
 ## Callers
-0x0048cce0 `FUN_0048cce0`
+0x0048cce0 `ListBox::fireSelectChanged_vtordisp`, 0x004a0c90 `FUN_004a0c90`
 
 ## Constants
 - `0x4` at 0x0048c591

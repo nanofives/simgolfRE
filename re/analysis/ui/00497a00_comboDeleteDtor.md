@@ -23,10 +23,10 @@ None.
 
 ## Callees
 - 0x00497a20 `comboDtor` at 0x00497a03
-- 0x004a4ffc `FUN_004a4ffc` at 0x00497a10
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00497a10
 
 ## Callers
-0x00497af0 `FUN_00497af0`
+0x00497af0 `comboDeleteDtor_adj274`
 
 ## Constants
 - `0x1` at 0x00497a08

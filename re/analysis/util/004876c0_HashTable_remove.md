@@ -38,7 +38,7 @@ Through registers:
 - `jne` (equality) at 0x004876f9
 
 ## Callees
-- 0x004a4ffc `FUN_004a4ffc` at 0x0048773c
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x0048773c
 
 ## Callers
 0x004848a0 `SndMusic::dtor`

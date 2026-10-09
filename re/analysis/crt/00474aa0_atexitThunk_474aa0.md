@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 12 bytes, 4 instructions, subsystem `crt`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 registers the static destructor at 0x00474ab0 with atexit (`re/names/exe_6.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_00474aa0@f_00474aa0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
@@ -19,7 +20,7 @@ None.
 - 0x004a56d2 `_atexit` at 0x00474aa5
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00474a80 `FUN_00474a80`
 
 ## Constants
 - `0x474ab0` (4672176) = address in the image (data) at 0x00474aa0

@@ -48,7 +48,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x004840e0 `createSound4840e0` at 0x0048431d
-- 0x004a4ffc `FUN_004a4ffc` at 0x004843c2
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x004843c2
 - 0x004a57f1 `operator_new` at 0x0048438c
 - indirect `call [eax+0x60]` at 0x00484332
 - indirect `call [eax+0x7c]` at 0x00484365

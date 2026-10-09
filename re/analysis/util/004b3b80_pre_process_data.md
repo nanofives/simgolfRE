@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jcprepct.c, _pre_process_data)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_cprepct.cpp` as `_pre_process_data` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b3ca8, 0x004b3cfc): callee pops 0 bytes of stack arguments.
 
 ## Reads

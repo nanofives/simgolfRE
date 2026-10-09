@@ -34,7 +34,7 @@ Through registers:
 - indirect `call [edx+0x90]` at 0x00497c58
 
 ## Callers
-0x0047ee70 `FUN_0047ee70`
+0x0047ee70 `Window::onCommand`
 
 ## Constants
 - `0x0` at 0x00497c4b

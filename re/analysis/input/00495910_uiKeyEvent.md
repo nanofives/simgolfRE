@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 117 bytes, 43 instructions, subsystem `input`. Mechanic
 
 ## Role (from the naming pass, not a C3 purpose)
 ORs 0x10000, 0x20000 and 0x40000 into the key code when GetKeyState reports VK_SHIFT, VK_CONTROL and VK_MENU down, passes (code, flag) to the focus owner returned by currentFocusOwner 0x0047f2f0 through its virtual +0x144, then calls the hook 0x0083ab00 with the code when the flag is non-zero and the hook 0x0083aafc unconditionally (`re/names/undisc_exe.tsv`)
-System writeup: `re/analysis/systems/undisc_exe.md`.
+System writeup: `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x00495982): callee pops 8 bytes of stack arguments.

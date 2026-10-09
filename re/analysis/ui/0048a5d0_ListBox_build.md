@@ -90,7 +90,7 @@ Through registers:
 - 0x0048a120 `ListBox::measure` at 0x0048a608
 
 ## Callers
-0x0048c6e0 `ListBox::onMouse`, 0x004a08a0 `panelDispatch`
+0x0048c6e0 `ListBox::onMouse`, 0x0048cd60 `FUN_0048cd60`, 0x004a08a0 `panelDispatch`
 
 ## Constants
 - `0x0` at 0x0048a6e4, 0x0048a6e6, 0x0048a6f6, 0x0048a748, 0x0048a796, 0x0048a7db, 0x0048a93f

@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 83 bytes, 23 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 Destroys one embedded child control group of the dialog. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C491680@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).

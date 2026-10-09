@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 396 bytes, 126 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 refreshes/redraws the list panel. (`re/names/exe_5.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x0049e5cf, 0x0049e5d9): callee pops 4 bytes of stack arguments.
@@ -58,7 +59,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [edx*4+0x49e5dc]` at 0x0049e49e
 
 ## Callers
-0x00491b90 `FUN_00491b90`
+0x00491b90 `listPanelRefresh_vtordisp`, 0x004a0bf0 `FUN_004a0bf0`
 
 ## Constants
 - `0x0` at 0x0049e570, 0x0049e57e

@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 35 bytes, 12 instructions, subsystem `ui`. Mechanical t
 
 ## Role (from the naming pass, not a C3 purpose)
 Forwards a click at param_1,param_2 to the owner object's vtable+0x74. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_0048c610@C_FUN_0048c610@f_0048c610@@QAEXII@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -30,7 +31,7 @@ None.
 - indirect `call [eax+0x74]` at 0x0048c62d
 
 ## Callers
-0x0048cca0 `FUN_0048cca0`
+0x0048cca0 `ListBox::forwardClick_vtordisp`, 0x004a0db0 `FUN_004a0db0`
 
 ## Constants
 None.

@@ -37,7 +37,7 @@ Through registers:
 
 ## Callees
 - 0x00483010 `Cache483010::ctorVtbl` at 0x00473b1d
-- 0x004a4ffc `FUN_004a4ffc` at 0x00473b23
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00473b23
 - 0x004a5007 `_free` at 0x00473b08
 - indirect `call [edx+0x94]` at 0x00473afa
 

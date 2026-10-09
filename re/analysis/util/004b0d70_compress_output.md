@@ -74,7 +74,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x4]` at 0x004b0eed
 
 ## Callers
-0x004b0b20 `FUN_004b0b20`
+0x004b0b20 `compress_first_pass`
 
 ## Constants
 - `0x0` at 0x004b0daa, 0x004b0e3c, 0x004b0f14

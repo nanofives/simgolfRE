@@ -61,7 +61,7 @@ Through registers:
 - 0x0047f340 `hitTestTree` at 0x0047f81d, 0x0047f85c, 0x0047f8ab
 
 ## Callers
-0x0047d130 `drawCursor`, 0x004959b0 `FUN_004959b0`
+0x0047d130 `drawCursor`, 0x004959b0 `uiPointerMove`
 
 ## Constants
 - `0x0` at 0x0047f742, 0x0047f7a9, 0x0047f7d7, 0x0047f889

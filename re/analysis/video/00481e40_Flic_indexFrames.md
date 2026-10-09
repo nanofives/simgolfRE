@@ -42,7 +42,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x00481e4b, 0x00481ec0, 0x00481ef6, 0x00481f0e
 
 ## Callees
-- 0x004a4ffc `FUN_004a4ffc` at 0x00481e61
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00481e61
 - 0x004a57f1 `operator_new` at 0x00481e7b, 0x00481e9c
 
 ## Callers

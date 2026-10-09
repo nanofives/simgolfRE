@@ -57,7 +57,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00486ec0 `Timer::stop` at 0x00492bda
 
 ## Callers
-0x00492bb0 `FUN_00492bb0`
+0x00492bb0 `HotList::tipTimerCallback`
 
 ## Constants
 - `0x0` at 0x00492c2c, 0x00492c34

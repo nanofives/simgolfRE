@@ -19,7 +19,7 @@ None.
 - 0x004a55d2 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x0043cc26
 
 ## Callers
-0x0043cc00 `FUN_0043cc00`
+0x0043cc00 `dynInit_arrayStaticInit_43cc10`
 
 ## Constants
 - `0x58` (88) at 0x0043cc1f

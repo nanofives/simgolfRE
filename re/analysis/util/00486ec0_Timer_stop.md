@@ -39,7 +39,7 @@ Through registers:
 - indirect `call [eax+0x20]` at 0x00486eef
 
 ## Callers
-0x00486b30 `EditBox::setCaretActive`, 0x00486f10 `Timer::reset`, 0x00488cf0 `Button::onMouseMove`, 0x00488fd0 `Button::onTimer`, 0x00492bd0 `HotList::showTip`, 0x00492d40 `HotList::cancelTip`, 0x00495cb0 `Timer_fire`, 0x004a2010 `FUN_004a2010`
+0x00486b30 `EditBox::setCaretActive`, 0x00486f10 `Timer::reset`, 0x00488cf0 `Button::onMouseMove`, 0x00488fd0 `Button::onTimer`, 0x00492bd0 `HotList::showTip`, 0x00492d40 `HotList::cancelTip`, 0x00495cb0 `Timer_fire`, 0x004a2010 `LabelButton::onMouseMove`
 
 ## Constants
 - `0x0` at 0x00483dc1, 0x00486ef9

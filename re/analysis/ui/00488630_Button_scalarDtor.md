@@ -22,10 +22,10 @@ None.
 
 ## Callees
 - 0x00488650 `Button::dtor` at 0x00488633
-- 0x004a4ffc `FUN_004a4ffc` at 0x00488640
+- 0x004a4ffc `operatorDelete_4a4ffc` at 0x00488640
 
 ## Callers
-0x00489140 `FUN_00489140`
+0x00489140 `Button::scalarDtor_adj274`
 
 ## Constants
 - `0x1` at 0x00488638

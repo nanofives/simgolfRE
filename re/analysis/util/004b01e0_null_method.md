@@ -19,7 +19,7 @@ None.
 None (leaf).
 
 ## Callers
-0x004b0060 `FUN_004b0060`
+0x004b0060 `write_scan_header`
 
 ## Constants
 None.

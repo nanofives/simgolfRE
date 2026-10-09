@@ -7,6 +7,7 @@ symbol of the 100% matched source (IJG libjpeg 6a jchuff.c, _encode_mcu_gather) 
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
+- Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_encode_mcu_gather` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1d72, 0x004b1d7b): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004b1ca0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
 

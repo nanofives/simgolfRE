@@ -19,7 +19,7 @@ None.
 - 0x004a56d2 `_atexit` at 0x00404e95
 
 ## Callers
-0x00404df0 `FUN_00404df0`
+0x00404df0 `dynInit_initGlobalArray_00404e00`
 
 ## Constants
 - `0x404ea0` (4214432) = address in the image (data) at 0x00404e90

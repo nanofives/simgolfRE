@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 236 bytes, 90 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 updates the option dialog state (toggling flags for the picked item) and redraws it. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x0049fa89): callee pops 8 bytes of stack arguments.
@@ -51,7 +51,7 @@ Through registers:
 - indirect `call eax` at 0x0049fa50
 
 ## Callers
-0x0049ffd0 `FUN_0049ffd0`
+0x0049ffd0 `optionDialogUpdate_vtordisp`, 0x004a0b50 `FUN_004a0b50`
 
 ## Constants
 - `0x0` at 0x0049fa14

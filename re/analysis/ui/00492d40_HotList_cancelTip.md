@@ -28,7 +28,7 @@ Through registers:
 - 0x00486ec0 `Timer::stop` at 0x00492d54
 
 ## Callers
-0x0047be40 `Window::mouseEvent238`, 0x004959b0 `FUN_004959b0`
+0x0047be40 `Window::mouseEvent238`, 0x004959b0 `uiPointerMove`
 
 ## Constants
 - `0x20` (32) at 0x00492d51

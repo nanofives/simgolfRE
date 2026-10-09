@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 537 bytes, 193 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 Maps a drag position to a row, updates the highlighted/selected row and redraws. (`re/names/exe_4.tsv`)
+System writeup: `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x0048cab6): callee pops 8 bytes of stack arguments.
@@ -82,7 +83,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x0048ca2c, 0x0048ca73
 
 ## Callers
-0x0048cc80 `FUN_0048cc80`
+0x0048cc80 `ListBox::onDrag_vtordisp`, 0x004a0ab0 `FUN_004a0ab0`
 
 ## Constants
 - `0x0` at 0x0048c997

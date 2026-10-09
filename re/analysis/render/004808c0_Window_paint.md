@@ -58,7 +58,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xdc]` at 0x00480964
 
 ## Callers
-0x0043cce0 `playAudioFile`, 0x004498a0 `updateTerrainRender`, 0x0045baf0 `gameMain`, 0x00490d60 `FUN_00490d60`, 0x00496fc0 `scrollbarDraw`, 0x004a1580 `FUN_004a1580`
+0x0043cce0 `playAudioFile`, 0x004498a0 `updateTerrainRender`, 0x0045baf0 `gameMain`, 0x0048c130 `FUN_0048c130`, 0x00490d60 `TextView::drawContents`, 0x00496fc0 `scrollbarDraw`, 0x004a1580 `LabelButton::drawContents`
 
 ## Constants
 - `0x0` at 0x00480989, 0x0048098b, 0x004809d9, 0x004809db
