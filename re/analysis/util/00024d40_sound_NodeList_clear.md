@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00024d40`), 125 bytes, 46 instructions, subsystem `ut
 Pops and frees every node of the doubly-linked list at param_1 (head@0/tail@4/count@0xc), decrementing the count per node. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+The same body, with the empty-list return at 0x10024d48, the peeled block at 0x10024d4a-0x10024d7d and the loop at 0x10024d7f-0x10024db8, both calling operator delete 0x1004249a. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: NodeList_clear (12 vectors, 11 distinct results, 10 changing state, `log/diff/00024d40_sound_NodeList_clear.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10024dbc): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10024d41 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

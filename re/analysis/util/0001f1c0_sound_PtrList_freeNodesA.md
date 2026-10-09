@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001f1c0`), 125 bytes, 46 instructions, subsystem `ut
 frees every node of the list at param_1[0] (operator_delete), leaving head/tail null (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+The same body, with the empty-list return at 0x1001f1c8, the peeled block at 0x1001f1ca-0x1001f1fd and the loop at 0x1001f1ff-0x1001f238, both calling operator delete 0x1004249a. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: PtrList_freeNodesA (12 vectors, 11 distinct results, 10 changing state, `log/diff/0001f1c0_sound_PtrList_freeNodesA.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001f23c): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001f1c1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

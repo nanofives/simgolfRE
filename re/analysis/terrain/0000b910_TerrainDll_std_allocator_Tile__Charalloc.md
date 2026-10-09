@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b910`), 62 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+The allocator's raw-bytes entry point: it returns std::_Allocate 0x1000bae0 of (size, 0) - `push 0` then `push [ebp+8]` at 0x1000b92d-0x1000b932 and the call through the incremental-link thunk 0x10001267 at 0x1000b933, whose target is 0x1000bae0. `this` is not read; `ret 4` at 0x1000b94b. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: std::allocator<Tile*>::_Charalloc (12 vectors, 12 distinct results, 11 changing state, `log/diff/0000b910_Terrain_std_allocator(TileP)__Charalloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Charalloc@?$allocator@PAVTile@@@std@@QAEPADI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b94b): callee pops 4 bytes of stack arguments.

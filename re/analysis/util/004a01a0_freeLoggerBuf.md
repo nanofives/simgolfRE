@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 34 bytes, 12 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 frees the logger's path buffer. (`re/names/exe_5.tsv`)
 
+## Purpose
+The logger object's destructor body: it reads the buffer at +4 (0x004a01a3), stores the vtable 0x004bc034 at +0 (0x004a01a6) whatever happens, and when the buffer is not null (`je 0x004a01c0` at 0x004a01ae) releases it through free 0x004a5007 (0x004a01b1) and clears the field (0x004a01b9). Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: freeLoggerBuf (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a01a0_freeLoggerBuf.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_10.cpp` as `?FUN_004a01a0@f_004a01a0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a01c1): callee pops 0 bytes of stack arguments.

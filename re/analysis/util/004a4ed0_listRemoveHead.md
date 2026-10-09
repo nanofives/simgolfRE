@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 62 bytes, 25 instructions, subsystem `util`. Mechanical
 removes and frees the head node of the list. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Drops the first node of a singly linked list and releases both the node and its payload. An empty list (head at +4) does nothing (`je 0x004a4f0b` at 0x004a4ed9). Otherwise the node's payload at +8 goes to free 0x004a5007 when it is not null (`je 0x004a4ef2` at 0x004a4ee0, call at 0x004a4ee3) and that field is cleared (0x004a4eeb); the list's head is then re-read (0x004a4ef2) and replaced by the node's +0x10 (0x004a4efa); the node itself goes to free (0x004a4f00) and the count at +0xc is decremented (0x004a4f08). The `test esi, esi` at 0x004a4ef5 can only be false there, because a null head already returned. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: listRemoveHead (12 vectors, 11 distinct results, 10 changing state, `log/diff/004a4ed0_listRemoveHead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `?removeHead@List4a4@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a4f0d): callee pops 0 bytes of stack arguments.

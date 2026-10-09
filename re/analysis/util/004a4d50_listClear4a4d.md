@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 84 bytes, 38 instructions, subsystem `util`. Mechanical
 clears a singly-linked list, freeing every node. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Frees every node of that same list and leaves it empty. An empty list jumps straight to the two trailing stores (`je 0x004a4d9b` at 0x004a4d59). Each pass reads the head (0x004a4d5c), keeps its +0x10 as the continue flag (0x004a4d61), releases the payload at +8 when it is not null (0x004a4d67, call at 0x004a4d6c) through a FRESH read of the head for the clearing store (0x004a4d71), releases the head itself when it is not null (0x004a4d82), stores the saved +0x10 as the new head (0x004a4d8c) and loops while that value is not null (0x004a4d8f). Both exits then write 0 to +8 and +0xc (0x004a4d91 and 0x004a4d9b), so the count is zeroed outright rather than decremented. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: listClear4a4d (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a4d50_listClear4a4d.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?clear@List4a4d@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a4d9a, 0x004a4da3): callee pops 0 bytes of stack arguments.

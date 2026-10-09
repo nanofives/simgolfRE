@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 28 bytes, 6 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor for the KeyTable. (`re/names/exe_4.tsv`)
 
+## Purpose
+The KeyTable destructor: it stores the KeyTable vtable 0x004bb088 at +0 (0x004882f2), clears the dword at +0x104 (0x004882f8) and the single BYTE at +4 (0x004882fe) - all three with the zero from the `xor eax, eax` at 0x004882f0 - and then tail-jumps to Buf_dtor 0x00474810 with `this` advanced by 0x108 (`add ecx, 0x108` at 0x00488301), which is where the embedded Buf starts. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: KeyTable::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004882f0_KeyTable_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_004882f0@f_004882f0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 43 bytes, 16 instructions, subsystem `util`. Mechanical
 frees the buffer structure allocated by bufferCopyTo. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Releases the buffer field of a record, but only when the owner allows it. The record is the single stack argument (`mov esi, dword ptr [esp+8]` at 0x004a05d1 behind the pushed esi, `ret 4` at 0x004a05f8). Nothing happens when the buffer at record+4 is null (`je 0x004a05f7` at 0x004a05da) OR when the dword at this+0x18 is not zero (`mov edx, dword ptr [ecx+0x18]` / `jne 0x004a05f7` at 0x004a05dc-0x004a05e1) - and in that second case the field is left set, so the guard skips the clear as well as the free. Otherwise free 0x004a5007 runs (0x004a05e8) and record+4 is cleared (0x004a05f0). The repeated `test eax, eax` at 0x004a05e3 can only be false there. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: bufferFree (12 vectors, 4 distinct results, 3 changing state, `log/diff/004a05d0_bufferFree.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?freeBuf@C4a05d0@@QAEXPAUS4a05d0@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a05f8): callee pops 4 bytes of stack arguments.

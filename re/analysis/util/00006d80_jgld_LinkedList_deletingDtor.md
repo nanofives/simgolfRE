@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00006d80`), 81 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor for LinkedList. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The same `??_G` body for `LinkedList`: `LinkedList::~LinkedList` 0x10006cf0 (vtable dword at +0, then LinkedList::clear 0x10006df0, which walks the ring deleting each node through slot 0 of that node's own vtable and then zeroes m_ordered, m_count, m_head and m_cur), the bit-0 test, the direct operator delete 0x1007e6d0 on `this`, and `this` as the return value (`ret 4` at 0x10006dce). Reimplemented in `shim/src/re/c3cd.cpp`; the operator-new/delete arms are A/B'd under the heap stand-in (re/frida/js/heapstandin.js, batch c3cn); path-1 A/B GREEN: `log/diff\00006d80_jgld_LinkedList_deletingDtor.path1.csv`; `log/diff\00006d80_jgld_LinkedList_deletingDtor_free.path1.csv`.
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??_GLinkedList@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10006dce): callee pops 4 bytes of stack arguments.

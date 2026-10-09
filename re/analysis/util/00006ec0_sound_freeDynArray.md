@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006ec0`), 37 bytes, 14 instructions, subsystem `uti
 Frees a growable array (buffer at +4) and clears its allocated flag +8 bit0. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Releases a dynamic array's storage and marks it unowned: bit 0 of the flag word at +8 is cleared (`and edx, 0xfffffffe` at 0x10006ec9) and written back at 0x10006ece, before the branch; the buffer at +4 goes to operator delete 0x1004249a when it is not null (`je 0x10006edc` at 0x10006ed1, call at 0x10006ed4); and the buffer field is cleared unconditionally (0x10006edc), on both arms. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: freeDynArray (12 vectors, 10 distinct results, 9 changing state, `log/diff/00006ec0_sound_freeDynArray.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10006ec0@f_10006ec0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10006ee4): callee pops 0 bytes of stack arguments.

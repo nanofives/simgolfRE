@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078da0`), 117 bytes, 44 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Allocates one of libpng's two structures by type code: 0xb8 bytes for type 2 (`cmp dword ptr [ebp+8], 2` at 0x10078db8, size stored at 0x10078dbe) and 0x21c bytes for type 1 (`cmp ... 1` at 0x10078dc7, size at 0x10078dcd); any other type returns NULL without allocating (0x10078dd6). The block comes from the CRT malloc 0x1007fb40 (0x10078dde) and, when it is not null (`je 0x10078e01` at 0x10078ded), is zeroed with memset 0x1007e7c0 over that same size (0x10078df9) before being returned. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: png_create_struct (12 vectors, 3 distinct results, 4 changing state, `log/diff/00078da0_jgld_png_create_struct.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_mem.cpp` as `_png_create_struct` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078e14): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003600`), 81 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor for Matrix. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The VC6 scalar deleting destructor of `Matrix`: it runs `Matrix::~Matrix` 0x100032f0 on `this` (`call` at 0x10003620, which rewrites the vtable dword at +0 and runs Matrix::loadIdentity 0x100045f0 over the sixteen cells at +4..+0x40), then tests ONLY bit 0 of its stack argument (`and eax, 1` / `test eax, eax` / `je 0x1000363b` at 0x10003628-0x1000362d - the other 31 bits are discarded) and, when it is set, hands `this` to operator delete 0x1007e6d0 by a direct call with the pointer pushed (0x10003633). It returns `this` (`ret 4` at 0x1000364e). Reimplemented in `shim/src/re/c3cd.cpp`; the operator-new/delete arms are A/B'd under the heap stand-in (re/frida/js/heapstandin.js, batch c3cn); path-1 A/B GREEN: `log/diff\00003600_jgld_Matrix_deletingDtor.path1.csv`; `log/diff\00003600_jgld_Matrix_deletingDtor_free.path1.csv`.
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003600@C_FUN_10003600@f_10003600@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000364e): callee pops 4 bytes of stack arguments.

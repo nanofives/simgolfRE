@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00005e30`), 86 bytes, 32 instructions, subsystem `uti
 Appends a new 3-field list node (value at +8) to the doubly-linked list (head *this, tail +4, count +0xc). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Appends a value to the tail of the list and returns the new count. A 0xc-byte node comes from operator new 0x100424d7 (0x10005e35); when it is not null (`je 0x10005e57` at 0x10005e3f) its +0 and +4 are cleared and the argument is stored at +8 (0x10005e45-0x10005e52). With a non-null tail at +4 (`je 0x10005e76` at 0x10005e5e) the node is linked on: tail->+4 = node (0x10005e60), node->+0 = the tail re-read from the list (0x10005e63-0x10005e66), list->+4 = node (0x10005e68). An empty list gets the node at both +0 and +4 (0x10005e76). Both arms increment the count at +0xc and leave it in eax (0x10005e6b, 0x10005e7b); `ret 4`. The allocation-failure arm would write through a null node pointer in the code that follows, so it is a defect rather than a path. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: appendNodeB (12 vectors, 12 distinct results, 12 changing state, `log/diff/00005e30_sound_appendNodeB.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10005e30@C_FUN_10005e30@f_10005e30@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10005e73, 0x10005e83): callee pops 4 bytes of stack arguments.

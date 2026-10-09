@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039620`), 66 bytes, 27 instructions, subsystem `aud
 Pops the head node of the doubly-linked list, relinks head/tail, decrements the count, operator_delete the node and returns its payload (node+8); returns 0 when empty. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+The same body at another call site: the empty test at 0x10039627, the unlinking at 0x1003962e-0x1003963c, the saved value at 0x1003964a, operator delete 0x1004249a at 0x1003964e, the count at 0x10039659 and the return at 0x1003965d. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: nodeListPopFront (12 vectors, 11 distinct results, 10 changing state, `log/diff/00039620_sound_nodeListPopFront.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003962a, 0x10039661): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10039621 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

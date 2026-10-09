@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00024f90`), 83 bytes, 32 instructions, subsystem `uti
 Allocates a 0xc-byte list node and inserts it at the head (*this) of the doubly-linked list at this, incrementing count +0xc. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+The head-insert member of the same family: the node is built exactly as in appendNodeB 0x10005e30 (operator new 0x100424d7 at 0x10024f95, fields at 0x10024fa5-0x10024fb2), but the five instructions that link it anchor on the HEAD at +0 rather than the tail at +4 - the head is read at 0x10024fb9, head->+0 = node at 0x10024fbf, node->+4 = the head re-read at 0x10024fc1-0x10024fc3 and list->+0 = node at 0x10024fc6. Its empty arm (0x10024fd3) and its count increment are the same as the tail version's. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: NodeList_pushFront (12 vectors, 12 distinct results, 12 changing state, `log/diff/00024f90_sound_NodeList_pushFront.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10024f90@C_FUN_10024f90@f_10024f90@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10024fd0, 0x10024fe0): callee pops 4 bytes of stack arguments.

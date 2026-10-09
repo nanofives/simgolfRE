@@ -1,0 +1,2 @@
+module	addr	name	subsystem	evidence	purpose
+golf_clean.exe	0x004a4ffc	operatorDelete_4a4ffc	crt	callee 0x004a5007 (_free); 11 bytes; about 80 callers, among them the scalar/deleting destructors (Buf_deleteDtor 0x004747c0, NodeList::scalarDtor 0x004872f0, Screen::scalarDtor 0x004853b0) and EH unwind funclets	Passes its one argument to _free 0x004a5007 (push [esp+4] at 0x004a4ffc, call at 0x004a5000, pop ecx; ret): the exe CRT operator delete shape; the CRT symbol it was linked from is not determined (no FidDb match)

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0001a0e0`), 288 bytes, 105 instructions, subsystem `re
 copies the pixel buffer and dimensions from another Sprite into this one (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Makes `this` a copy of another Sprite. It first calls slot 2 of its OWN vtable (`mov edx, dword ptr [eax]` / `call dword ptr [edx+8]` at 0x1001a100-0x1001a107, `this` in ecx and no argument), which releases whatever `this` held, then copies eight dwords from the source in the order +0x10, +0x18, +0x34, +0x30, +0x2c, +0x28, +0x20, +0x24 (0x1001a11d to 0x1001a174). The payload is a fresh jalloc 0x10014a40 of `this`->+0x24 bytes (through the thunk 0x100017c6 at 0x1001a17e) stored at +0x14 (0x1001a189) and filled from the source's +0x14 with the CRT memcpy 0x1007f3a0 (0x1001a1a1). When the SOURCE's +0x1c is not null (`cmp dword ptr [edx+0x1c], 0` / `je 0x1001a1ea` at 0x1001a1ac) a second block of +0x34 * 4 bytes (`shl ecx, 2` at 0x1001a1b8) is allocated, stored at +0x1c (0x1001a1c7) and filled from the source's +0x1c (0x1001a1e2). `this` is returned (`ret 4` at 0x1001a1fd). Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: Sprite::copyFrom (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001a0e0_jgld_Sprite_copyFrom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?copyFrom@Sprite@@QAEAAV1@PAV1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001a1fd): callee pops 4 bytes of stack arguments.

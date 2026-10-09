@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00005c00`), 66 bytes, 27 instructions, subsystem `uti
 Pops the front node of a doubly-linked list (head param[0], links +4/+8, count param[3]) and returns its value field +8. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Removes the first node of the list and returns the value it held. An empty list returns the null head itself (`test eax, eax` / `jne 0x10005c0b` at 0x10005c05, `ret` at 0x10005c0a). Otherwise the node's +4 becomes the new head and that node's +0 is cleared (0x10005c12-0x10005c18), or, when +4 is null, the list's +4 and +0 are both cleared (0x10005c1c); the node's +8 is saved (0x10005c2a), the node goes to operator delete 0x1004249a (0x10005c2e), the count at +0xc is decremented (0x10005c39) and the saved value is returned (`mov eax, edi` at 0x10005c3d). Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: listPopFront (12 vectors, 11 distinct results, 10 changing state, `log/diff/00005c00_sound_listPopFront.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10005c0a, 0x10005c41): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10005c01 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

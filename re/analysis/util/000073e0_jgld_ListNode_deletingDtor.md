@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000073e0`), 81 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor for ListNode. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The same `??_G` body for `ListNode`: `ListNode::~ListNode` 0x10007450 (the ListNode vtable VA 0x1011d098 at +0 at 0x10007470, next = 0 at +8 at 0x10007479 and prev = 0 at +4 at 0x10007483, with the data pointer at +0xc and the flag byte at +0x10 left alone), the bit-0 test of the stack argument, the direct operator delete 0x1007e6d0, and `this` as the return value (`ret 4` at 0x1000742e). Reimplemented in `shim/src/re/c3cd.cpp`; the operator-new/delete arms are A/B'd under the heap stand-in (re/frida/js/heapstandin.js, batch c3cn); path-1 A/B GREEN: `log/diff\000073e0_jgld_ListNode_deletingDtor.path1.csv`; `log/diff\000073e0_jgld_ListNode_deletingDtor_free.path1.csv`.
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??_GListNode@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000742e): callee pops 4 bytes of stack arguments.

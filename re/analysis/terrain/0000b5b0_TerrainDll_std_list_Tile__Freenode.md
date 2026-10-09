@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b5b0`), 62 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Releases one list node: one call, the allocator's deallocate 0x1000b960 with (node, 1) - `push 1` then `push [ebp+8]` at 0x1000b5cd-0x1000b5d2, `this` reloaded into ecx at 0x1000b5d3 and the call through the thunk 0x10001334 at 0x1000b5d6, whose target is 0x1000b960. deallocate cleans its own two arguments (`ret 8`), which is why no `add esp` follows. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: std::list<Tile*>::_Freenode (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b5b0_Terrain_std_list(TileP)__Freenode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Freenode@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@IAEXPAU_Node@12@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b5eb): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00024de0`), 86 bytes, 32 instructions, subsystem `uti
 Allocates a 0xc-byte list node {next@0, prev@4, data@8=param_1} and appends it at the tail (this+4) of the doubly-linked list at this (head@0/tail@4/count@0xc). (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+The same append body: operator new at 0x10024de5, node fields at 0x10024df5-0x10024e02, tail test `je 0x10024e26` at 0x10024e0e, link-on at 0x10024e10-0x10024e18, empty arm at 0x10024e26, count at 0x10024e1b / 0x10024e2b. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: NodeList_pushBack (12 vectors, 12 distinct results, 12 changing state, `log/diff/00024de0_sound_NodeList_pushBack.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10024de0@C_FUN_10024de0@f_10024de0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10024e23, 0x10024e33): callee pops 4 bytes of stack arguments.

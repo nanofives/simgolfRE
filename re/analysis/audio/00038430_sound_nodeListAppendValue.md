@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038430`), 86 bytes, 32 instructions, subsystem `aud
 Appends a new 0xc-byte node {prev,next,value=param_1} to the tail of the doubly-linked list (head this[0], tail this[1], count this+0xc). (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+The same append body: operator new at 0x10038435, node fields at 0x10038445-0x10038452, tail test `je 0x10038476` at 0x1003845e, link-on at 0x10038460-0x10038468, empty arm at 0x10038476, count at 0x1003846b / 0x1003847b. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: nodeListAppendValue (12 vectors, 12 distinct results, 12 changing state, `log/diff/00038430_sound_nodeListAppendValue.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10038430@C_FUN_10038430@f_10038430@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10038473, 0x10038483): callee pops 4 bytes of stack arguments.

@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 16,NULL,NULL,True,6d029f83,6d029f83,False
+$png 0,NULL,NULL,True,6d029f83,6d029f83,False
+0 0,NULL,NULL,True,6d029f83,6d029f83,False
+$png 1,obj+0x10,obj+0x10,True,e6763f6d,e6763f6d,True
+$png 8,obj+0x10,obj+0x10,True,f635c370,f635c370,True
+$png 16,obj+0x10,obj+0x10,True,b2b530d0,b2b530d0,True
+$png 17,obj+0x10,obj+0x10,True,cc8df1f4,cc8df1f4,True
+$png 64,obj+0x10,obj+0x10,True,d31c348f,d31c348f,True
+$png 256,obj+0x10,obj+0x10,True,d12537a2,d12537a2,True
+$png 1024,obj+0x10,obj+0x10,True,2a6a9d47,2a6a9d47,True
+$png 4096,obj+0x10,obj+0x10,True,6eb45ef8,6eb45ef8,True
+$png 6144,obj+0x10,obj+0x10,True,dc4bb1c0,dc4bb1c0,True
+state_regions,$hblk+0x0:24576 $arena+0x0:8208 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6e137290,original=0x2a302a0,2026-10-09T11:58:53
+distinct_results,10,,
+VERDICT,GREEN,12,

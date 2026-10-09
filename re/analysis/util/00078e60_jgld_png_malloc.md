@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078e60`), 98 bytes, 38 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's allocation entry point: it returns NULL when either the png_struct pointer or the byte count is zero (`cmp dword ptr [ebp+8], 0` / `je 0x10078e84` at 0x10078e78 and `cmp dword ptr [ebp+0xc], 0` / `jne 0x10078e88` at 0x10078e7e), otherwise takes the block from the CRT malloc 0x1007fb40 (0x10078e8c) and returns it (0x10078eae). A null block is reported to png_error 0x10078fe0 with the message at 0x1011e06c (0x10078e9d-0x10078ea6). The png_struct pointer is never dereferenced here; it is only tested and passed on to png_error. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: png_malloc (12 vectors, 10 distinct results, 9 changing state, `log/diff/00078e60_jgld_png_malloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_mem.cpp` as `_png_malloc` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078ec1): callee pops 0 bytes of stack arguments.

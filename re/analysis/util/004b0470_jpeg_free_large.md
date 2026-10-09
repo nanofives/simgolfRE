@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 12 bytes, 5 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The libjpeg memory manager's large-object release back end: it hands its SECOND argument to free 0x004a5007 (`mov eax, dword ptr [esp+8]` at 0x004b0470, call at 0x004b0475). The cinfo pointer and the size argument are not read, and there is no null guard, so a null object pointer reaches free. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: jpeg_free_large (12 vectors, 11 distinct results, 12 changing state, `log/diff/004b0470_jpeg_free_large.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memnobs.cpp` as `_jpeg_free_large` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b047b): callee pops 0 bytes of stack arguments.

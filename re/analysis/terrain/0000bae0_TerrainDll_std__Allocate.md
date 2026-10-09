@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000bae0`), 66 bytes, 26 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+VC6's STL allocation helper: a NEGATIVE count is clamped to zero (`cmp dword ptr [ebp+8], 0` / `jge 0x1000bb05` at 0x1000baf8 - a SIGNED test - and the store at 0x1000bafe) and the result is passed unchanged to operator new 0x10018c90 (0x1000bb09), whose block is the return value. The second template argument is never read, so the caller supplies a byte count, not an element count. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: std::_Allocate (12 vectors, 9 distinct results, 8 changing state, `log/diff/0000bae0_Terrain_std__Allocate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Allocate@std@@YAPADHPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000bb21): callee pops 0 bytes of stack arguments.

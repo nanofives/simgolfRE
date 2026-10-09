@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b500`), 138 bytes, 53 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Makes one list node and links it to itself by default. The 0xc bytes come from _Charalloc 0x1000b910 (`push 0xc` at 0x1000b51d, `this` in ecx, the call through the thunk 0x10001276 at 0x1000b522). The node's next field is the FIRST argument when it is not null and the node itself otherwise (`cmp dword ptr [ebp+8], 0` / `je 0x1000b538` at 0x1000b52a, the two stores into [ebp-0xc] at 0x1000b533 and 0x1000b53b), written through _Acc::_Next 0x1000b600 (thunk 0x100010e1 at 0x1000b542), which returns the ADDRESS of the field (`mov dword ptr [eax], ecx` at 0x1000b54d). The prev field is the SECOND argument or the node itself by the same shape (test at 0x1000b54f, _Acc::_Prev 0x1000b630 through the thunk 0x10001159 at 0x1000b567, store at 0x1000b572). The node is returned (`ret 8` at 0x1000b587). Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: std::list<Tile*>::_Buynode (12 vectors, 10 distinct results, 12 changing state, `log/diff/0000b500_Terrain_std_list(TileP)__Buynode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?_Buynode@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@IAEPAU_Node@12@PAU312@0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000b587): callee pops 8 bytes of stack arguments.

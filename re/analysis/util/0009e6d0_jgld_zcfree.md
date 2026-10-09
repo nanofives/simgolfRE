@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009e6d0`), 53 bytes, 23 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+zlib 1.0.2's deallocator: it hands its SECOND argument to the CRT free 0x100806d0 (`mov eax, dword ptr [ebp+0xc]` at 0x1009e6e8, call at 0x1009e6ec) and ignores the opaque pointer. There is no null guard of its own, so a null pointer reaches free. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: zcfree (12 vectors, 11 distinct results, 12 changing state, `log/diff/0009e6d0_jgld_zcfree.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_zutil.cpp` as `_zcfree` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009e704): callee pops 0 bytes of stack arguments.

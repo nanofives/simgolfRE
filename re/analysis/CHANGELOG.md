@@ -4,6 +4,69 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-09  jgld.dll:000073e0  ListNode::deletingDtor  C2->C3  log/diff/000073e0_jgld_ListNode_deletingDtor.path1.csv
+2026-10-09  jgld.dll:00006d80  LinkedList::deletingDtor  C2->C3  log/diff/00006d80_jgld_LinkedList_deletingDtor.path1.csv
+2026-10-09  jgld.dll:00003670  Transform::deletingDtor  C2->C3  log/diff/00003670_jgld_Transform_deletingDtor.path1.csv
+2026-10-09  jgld.dll:00003600  Matrix::deletingDtor  C2->C3  log/diff/00003600_jgld_Matrix_deletingDtor.path1.csv
+2026-10-09  jgld.dll:00068400  Array_Rec94::add  C2->C3  log/diff/00068400_jgld_Array_Rec94_add.path1.csv
+2026-10-09  jgld.dll:000681a0  Array_Rec14::add  C2->C3  log/diff/000681a0_jgld_Array_Rec14_add.path1.csv
+2026-10-09  00487310  NodeList::clear  C2->C3  log/diff/00487310_NodeList_clear.path1.csv
+2026-10-09  004a4ffc  operatorDelete_4a4ffc  C1->C2  re/analysis/crt/004a4ffc_operatorDelete_4a4ffc.md
+2026-10-09  004a4ffc  operatorDelete_4a4ffc  C0->C1  callee 0x004a5007 (_free); 11 bytes; about 80 callers, among them the scalar/deleting destructors (Buf_deleteDtor 0x004747c0, NodeList::scalarDtor 0x004872f0, Screen::scalarDtor 0x004853b0) and EH unwind funclets
+2026-10-09  sound.dll:00039620  nodeListPopFront  C2->C3  log/diff/00039620_sound_nodeListPopFront.path1.csv
+2026-10-09  sound.dll:000385d0  listAppendNodeB  C2->C3  log/diff/000385d0_sound_listAppendNodeB.path1.csv
+2026-10-09  sound.dll:00038550  listAppendNodeA  C2->C3  log/diff/00038550_sound_listAppendNodeA.path1.csv
+2026-10-09  sound.dll:00038430  nodeListAppendValue  C2->C3  log/diff/00038430_sound_nodeListAppendValue.path1.csv
+2026-10-09  sound.dll:00031b60  ResourceList_pushBack  C2->C3  log/diff/00031b60_sound_ResourceList_pushBack.path1.csv
+2026-10-09  sound.dll:00024f90  NodeList_pushFront  C2->C3  log/diff/00024f90_sound_NodeList_pushFront.path1.csv
+2026-10-09  sound.dll:00024de0  NodeList_pushBack  C2->C3  log/diff/00024de0_sound_NodeList_pushBack.path1.csv
+2026-10-09  sound.dll:00024d40  NodeList_clear  C2->C3  log/diff/00024d40_sound_NodeList_clear.path1.csv
+2026-10-09  sound.dll:0001f1c0  PtrList_freeNodesA  C2->C3  log/diff/0001f1c0_sound_PtrList_freeNodesA.path1.csv
+2026-10-09  sound.dll:0001d150  PtrList_pushBack  C2->C3  log/diff/0001d150_sound_PtrList_pushBack.path1.csv
+2026-10-09  sound.dll:000137f0  appendNode  C2->C3  log/diff/000137f0_sound_appendNode.path1.csv
+2026-10-09  sound.dll:00013750  clearNodeListB  C2->C3  log/diff/00013750_sound_clearNodeListB.path1.csv
+2026-10-09  sound.dll:00013620  clearNodeListA  C2->C3  log/diff/00013620_sound_clearNodeListA.path1.csv
+2026-10-09  sound.dll:0000e680  appendNodeC  C2->C3  log/diff/0000e680_sound_appendNodeC.path1.csv
+2026-10-09  sound.dll:0000e5e0  clearNodeListC  C2->C3  log/diff/0000e5e0_sound_clearNodeListC.path1.csv
+2026-10-09  sound.dll:0000ae80  clearNodeListG  C2->C3  log/diff/0000ae80_sound_clearNodeListG.path1.csv
+2026-10-09  sound.dll:00006ec0  freeDynArray  C2->C3  log/diff/00006ec0_sound_freeDynArray.path1.csv
+2026-10-09  sound.dll:00006c70  clearNodeListF  C2->C3  log/diff/00006c70_sound_clearNodeListF.path1.csv
+2026-10-09  sound.dll:00005e30  appendNodeB  C2->C3  log/diff/00005e30_sound_appendNodeB.path1.csv
+2026-10-09  sound.dll:00005c00  listPopFront  C2->C3  log/diff/00005c00_sound_listPopFront.path1.csv
+2026-10-09  sound.dll:00005b60  clearNodeListE  C2->C3  log/diff/00005b60_sound_clearNodeListE.path1.csv
+2026-10-09  sound.dll:00005a60  clearNodeListD  C2->C3  log/diff/00005a60_sound_clearNodeListD.path1.csv
+2026-10-09  jgld.dll:0009e6d0  zcfree  C2->C3  log/diff/0009e6d0_jgld_zcfree.path1.csv
+2026-10-09  jgld.dll:0009e680  zcalloc  C2->C3  log/diff/0009e680_jgld_zcalloc.path1.csv
+2026-10-09  jgld.dll:00078ed0  png_free  C2->C3  log/diff/00078ed0_jgld_png_free.path1.csv
+2026-10-09  jgld.dll:00078e60  png_malloc  C2->C3  log/diff/00078e60_jgld_png_malloc.path1.csv
+2026-10-09  jgld.dll:00078e20  png_destroy_struct  C2->C3  log/diff/00078e20_jgld_png_destroy_struct.path1.csv
+2026-10-09  jgld.dll:00078da0  png_create_struct  C2->C3  log/diff/00078da0_jgld_png_create_struct.path1.csv
+2026-10-09  jgld.dll:00078750  png_zfree  C2->C3  log/diff/00078750_jgld_png_zfree.path1.csv
+2026-10-09  jgld.dll:000786b0  png_zalloc  C2->C3  log/diff/000786b0_jgld_png_zalloc.path1.csv
+2026-10-09  jgld.dll:00068610  Array_Rec94::clearRet  C2->C3  log/diff/00068610_jgld_Array_Rec94_clearRet.path1.csv
+2026-10-09  jgld.dll:00068570  Array_e0::clearRet  C2->C3  log/diff/00068570_jgld_Array_e0_clearRet.path1.csv
+2026-10-09  jgld.dll:00068360  Array_Rec94::clear  C2->C3  log/diff/00068360_jgld_Array_Rec94_clear.path1.csv
+2026-10-09  jgld.dll:00068100  Array_Rec14::clear  C2->C3  log/diff/00068100_jgld_Array_Rec14_clear.path1.csv
+2026-10-09  jgld.dll:00068000  Array_e0::clear  C2->C3  log/diff/00068000_jgld_Array_e0_clear.path1.csv
+2026-10-09  jgld.dll:0001a0e0  Sprite::copyFrom  C2->C3  log/diff/0001a0e0_jgld_Sprite_copyFrom.path1.csv
+2026-10-09  jgld.dll:00014a90  jfree  C2->C3  log/diff/00014a90_jgld_jfree.path1.csv
+2026-10-09  jgld.dll:00014a40  jalloc  C2->C3  log/diff/00014a40_jgld_jalloc.path1.csv
+2026-10-09  004b0470  jpeg_free_large  C2->C3  log/diff/004b0470_jpeg_free_large.path1.csv
+2026-10-09  004b0460  jpeg_get_large  C2->C3  log/diff/004b0460_jpeg_get_large.path1.csv
+2026-10-09  004a4ed0  listRemoveHead  C2->C3  log/diff/004a4ed0_listRemoveHead.path1.csv
+2026-10-09  004a4d50  listClear4a4d  C2->C3  log/diff/004a4d50_listClear4a4d.path1.csv
+2026-10-09  004a05d0  bufferFree  C2->C3  log/diff/004a05d0_bufferFree.path1.csv
+2026-10-09  004a01a0  freeLoggerBuf  C2->C3  log/diff/004a01a0_freeLoggerBuf.path1.csv
+2026-10-09  0049d0e0  strFree  C2->C3  log/diff/0049d0e0_strFree.path1.csv
+2026-10-09  004882f0  KeyTable::dtor  C2->C3  log/diff/004882f0_KeyTable_dtor.path1.csv
+2026-10-09  00474810  Buf_dtor  C2->C3  log/diff/00474810_Buf_dtor.path1.csv
+2026-10-09  004747e0  Buf_releaseData  C2->C3  log/diff/004747e0_Buf_releaseData.path1.csv
+2026-10-09  Terrain.dll:0000bae0  std::_Allocate  C2->C3  log/diff/0000bae0_Terrain_std__Allocate.path1.csv
+2026-10-09  Terrain.dll:0000b960  std::allocator<Tile*>::deallocate  C2->C3  log/diff/0000b960_Terrain_std_allocator(TileP)_deallocate.path1.csv
+2026-10-09  Terrain.dll:0000b910  std::allocator<Tile*>::_Charalloc  C2->C3  log/diff/0000b910_Terrain_std_allocator(TileP)__Charalloc.path1.csv
+2026-10-09  Terrain.dll:0000b5b0  std::list<Tile*>::_Freenode  C2->C3  log/diff/0000b5b0_Terrain_std_list(TileP)__Freenode.path1.csv
+2026-10-09  Terrain.dll:0000b500  std::list<Tile*>::_Buynode  C2->C3  log/diff/0000b500_Terrain_std_list(TileP)__Buynode.path1.csv
+2026-10-09  Terrain.dll:0000ae60  std::list<Tile*>::list  C2->C3  log/diff/0000ae60_Terrain_std_list(TileP)_list.path1.csv
 2026-10-09  sound.dll:0004e4b3  __free_lc_time  callers none->0x1004e0d4  log/c2_refresh.tsv
 2026-10-09  sound.dll:000458a1  calloc  callers 0x10042984;0x100440ec;0x10044171->0x10042984;0x100440ec;0x10044171;0x1004e0d4  log/c2_refresh.tsv
 2026-10-09  sound.dll:00042c07  free  callers 0x10033c70;0x10033f90;0x100340b0;0x10035ca0;0x1004249a;0x10042984;0x10043731;0x100441d8;0x10045252;0x100476a4;0x10047710;0x1004795a;0x100479ae;0x10047cb4;0x1004c287;0x1004c7d1;0x1004ca17;0x1004cb32;0x1004e0a9;0x1004e4b3;0x1004ea73;0x1004eac1;0x100506bb;0x10050ec5;0x10051ab7->0x10033c70;0x10033f90;0x100340b0;0x10035ca0;0x1004249a;0x10042984;0x10043731;0x100441d8;0x10045252;0x100476a4;0x10047710;0x1004795a;0x100479ae;0x10047cb4;0x1004c287;0x1004c7d1;0x1004ca17;0x1004cb32;0x1004e0a9;0x1004e4b3;0x1004ea73;0x1004eac1;0x100506bb;0x10050ec5;0x10051ab7;0x1004e0d4  log/c2_refresh.tsv

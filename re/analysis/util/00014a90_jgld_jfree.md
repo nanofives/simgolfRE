@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00014a90`), 65 bytes, 28 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 frees memory (library free wrapper). (`re/names/jgld_0.tsv`)
 
+## Purpose
+jgld's own release wrapper: a null pointer is dropped without a call (`cmp dword ptr [ebp+8], 0` / `jne 0x10014ab2` at 0x10014aa8-0x10014aac), any other pointer goes to the CRT free 0x100806d0 (0x10014ab6). Both paths put 0 in eax (`xor eax, eax` at 0x10014aae and 0x10014abe), so the return value carries no information and the release is the whole of its behaviour. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: jfree (12 vectors, 12 distinct results, 11 changing state, `log/diff/00014a90_jgld_jfree.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?jfree@@YAHPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10014ad0): callee pops 0 bytes of stack arguments.

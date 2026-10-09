@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00014a40`), 53 bytes, 23 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 allocates memory (library malloc wrapper). (`re/names/jgld_0.tsv`)
 
+## Purpose
+jgld's own allocation wrapper: it passes its single argument straight to the CRT malloc 0x1007fb40 (`mov eax, dword ptr [ebp+8]` / `push eax` / `call` at 0x10014a58-0x10014a5c) and leaves that result in eax for the `ret` at 0x10014a74. It has no branch, does not test the block and stores nothing, so it adds a name to malloc and nothing else. Sprite::create8 0x1001b690, Sprite::copyFrom 0x1001a0e0 and Font::loadFile 0x10068ae0 allocate through it. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: jalloc (12 vectors, 12 distinct results, 11 changing state, `log/diff/00014a40_jgld_jalloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?jalloc@@YAPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10014a74): callee pops 0 bytes of stack arguments.

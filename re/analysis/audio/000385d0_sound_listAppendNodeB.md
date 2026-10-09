@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000385d0`), 86 bytes, 32 instructions, subsystem `aud
 thiscall(val): byte-identical to listAppendNodeA (a second instantiation) - appends a new {prev,next,val} node to the doubly-linked list headed at this. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+The same append body: operator new at 0x100385d5, node fields at 0x100385e5-0x100385f2, tail test `je 0x10038616` at 0x100385fe, link-on at 0x10038600-0x10038608, empty arm at 0x10038616, count at 0x1003860b / 0x1003861b. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: listAppendNodeB (12 vectors, 12 distinct results, 12 changing state, `log/diff/000385d0_sound_listAppendNodeB.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_100385d0@C_FUN_100385d0@f_100385d0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10038613, 0x10038623): callee pops 4 bytes of stack arguments.

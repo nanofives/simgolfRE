@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00068400`), 288 bytes, 99 instructions, subsystem `uti
 appends a fixed-size record to the dynamic array (buffer +0x4, count +0xc, capacity +0x8), growing when full (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+The same template body for a 0x94-byte element: the element size appears as `imul ecx, ecx, 0x94` at 0x10068431 (the room branch) and 0x10068469 (the growth branch), the element is copied with a 0x25-dword `rep movsd` (0x10068447 and 0x100684cf) and the capacity test is the same signed `jge` at 0x10068429. The growth branch takes its buffer from operator new 0x1007f0f0 (0x1006840a - 0x1006846a area, call at 0x1006843a), copies the old buffer with memcpy 0x1007f3a0 only when it is not null, releases the old one through operator delete 0x1007e6d0 and returns count - 1. Reimplemented in `shim/src/re/c3bb.cpp`; the operator-new/delete arms are A/B'd under the heap stand-in (re/frida/js/heapstandin.js, batch c3cn); path-1 A/B GREEN: `log/diff\00068400_jgld_Array_Rec94_add.path1.csv`; `log/diff\00068400_jgld_Array_Rec94_add_grow.path1.csv`.
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `?add@?$Array@URec94@@@@QAEHURec94@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x94` (at 0x1006851d): callee pops 148 bytes of stack arguments.

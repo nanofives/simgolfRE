@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 14 bytes, 5 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The libjpeg memory manager's large-object allocation back end: it returns the malloc 0x004a504f of its SECOND argument (`mov eax, dword ptr [esp+8]` at 0x004b0460, call at 0x004b0465). The cinfo pointer is not read and the block is not tested, so a failed allocation is passed on to the caller unchanged. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: jpeg_get_large (12 vectors, 12 distinct results, 11 changing state, `log/diff/004b0460_jpeg_get_large.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memnobs.cpp` as `_jpeg_get_large` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b046d): callee pops 0 bytes of stack arguments.

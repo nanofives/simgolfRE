@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00031b60`), 86 bytes, 32 instructions, subsystem `uti
 operator_new(0xc) node with value=param, appends it at the list tail (this+4), increments count (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+The same append body: operator new at 0x10031b65, node fields at 0x10031b75-0x10031b82, tail test `je 0x10031ba6` at 0x10031b8e, link-on at 0x10031b90-0x10031b98, empty arm at 0x10031ba6, count at 0x10031b9b / 0x10031bab. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: ResourceList_pushBack (12 vectors, 12 distinct results, 12 changing state, `log/diff/00031b60_sound_ResourceList_pushBack.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10031b60@C_FUN_10031b60@f_10031b60@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10031ba3, 0x10031bb3): callee pops 4 bytes of stack arguments.

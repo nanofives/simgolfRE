@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000786b0`), 151 bytes, 55 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The allocator libpng hands to zlib: the byte count is items * size (`imul eax, dword ptr [ebp+0x10]` at 0x100786cb), the block comes from png_malloc 0x10078e60 (0x100786da) and is then cleared with the CRT memset 0x1007e7c0 - in ONE call of `num` bytes when num <= 0x8000 (the UNSIGNED `jbe 0x10078721` at 0x100786ec, call at 0x1007872b) and in TWO calls otherwise, 0x8000 bytes at the start (0x100786f9) and num - 0x8000 at block + 0x8000 (0x10078717). The block is returned (0x10078733). A zero product makes png_malloc return NULL and the single memset writes nothing. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: png_zalloc (12 vectors, 7 distinct results, 10 changing state, `log/diff/000786b0_jgld_png_zalloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_zalloc` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078746): callee pops 0 bytes of stack arguments.

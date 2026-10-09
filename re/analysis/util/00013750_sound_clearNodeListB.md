@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00013750`), 125 bytes, 46 instructions, subsystem `ut
 Drains and frees every node of a doubly-linked list (head param[0], links +4/+8, count param[3]); second copy of 0x10013620. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+The same body, with the empty-list return at 0x10013758 and the two operator delete 0x1004249a calls in the peeled block and the loop. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: clearNodeListB (12 vectors, 11 distinct results, 10 changing state, `log/diff/00013750_sound_clearNodeListB.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100137cc): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10013751 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

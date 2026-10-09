@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 35 bytes, 13 instructions, subsystem `util`. Mechanical
 frees the Buf's heap buffer at +8 (if any) and re-clears its fields via Buf_init (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Releases a Buf's data and puts the object back in its empty state: the buffer at +8 goes to free 0x004a5007 when it is not null (`mov eax, dword ptr [esi+8]` / `test eax, eax` / `je 0x004747fa` at 0x004747e3-0x004747e8, call at 0x004747eb) and the field is cleared (0x004747f3), then Buf_init 0x00474780 runs on the same object (0x004747fc), zeroing the byte at +4 and the dwords at +0xc, +8, +0x14 and +0x10. The vtable dword at +0 is NOT written, which is what separates it from Buf_dtor 0x00474810. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: Buf_releaseData (12 vectors, 12 distinct results, 12 changing state, `log/diff/004747e0_Buf_releaseData.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `??1C4747e0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00474802): callee pops 0 bytes of stack arguments.

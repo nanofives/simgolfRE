@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000ae60`), 89 bytes, 35 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Constructs an empty list: it copies ONE BYTE of the allocator argument into the list's +0 (`mov cl, byte ptr [eax]` at 0x1000ae80, store at 0x1000ae85 - the allocator is an empty class, so the byte is whatever the caller's object holds), takes the sentinel node from _Buynode 0x1000b500 with both arguments null, i.e. a node pointing at itself (`push 0; push 0` at 0x1000ae87, `this` in ecx, the call through the thunk 0x1000129e at 0x1000ae8e), stores it at +4 (0x1000ae96) and sets the size at +8 to 0 (0x1000ae9c). `this` is returned (`ret 4` at 0x1000aeb6). Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: std::list<Tile*>::list (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000ae60_Terrain_std_list(TileP)_list.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??0?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@ABV?$allocator@PAVTile@@@1@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000aeb6): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x0000b960`), 60 bytes, 26 instructions, subsystem `t
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+The allocator's release entry point: one call, operator delete 0x10018be0 on the FIRST stack argument (`mov eax, dword ptr [ebp+8]` at 0x1000b97d, call at 0x1000b981). The element count and `this` are not read and there is no null guard, so a null block reaches operator delete. `ret 8` at 0x1000b999. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: std::allocator<Tile*>::deallocate (12 vectors, 11 distinct results, 12 changing state, `log/diff/0000b960_Terrain_std_allocator(TileP)_deallocate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?deallocate@?$allocator@PAVTile@@@std@@QAEXPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000b999): callee pops 8 bytes of stack arguments.

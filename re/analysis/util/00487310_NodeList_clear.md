@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 118 bytes, 50 instructions, subsystem `util`. Mechanica
 Walks and frees every node in the list, decrementing the count at this+0x18. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Empties a doubly linked list, releasing every node through operator delete 0x004a4ffc. The dword at +8 is set to 0x004bafac first (0x0048731a) and the head at +0xc is read before it (0x00487317); an empty list stops there (`je 0x00487382`). For each node, its +4 becomes the new head and that node's +0 is cleared (0x0048732c-0x0048732e), or, when +4 is null, both +0x10 and +0xc of the list are cleared (0x00487333); the node's +8 is kept as the continue flag (0x00487339), the node goes to operator delete (0x0048733d) and the count at +0x18 is decremented (0x00487348). The loop then re-reads the head and stops when either the saved +8 or the head is null (0x0048734e, 0x00487355). The first iteration is peeled, so the same block appears twice (0x00487325 and 0x00487357). Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: NodeList::clear (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487310_NodeList_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00487310@f_00487310@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487385): callee pops 0 bytes of stack arguments.

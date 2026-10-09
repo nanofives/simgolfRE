@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00068000`), 116 bytes, 40 instructions, subsystem `ren
 ## Role (from the naming pass, not a C3 purpose)
 Frees the element buffer at this+4 if set and resets m_data/m_cap/m_count to 0 and m_grow to 1. (`re/names/jgld_3.tsv`)
 
+## Purpose
+Empties a `jgld` `Array<e0>`: the buffer at +4 is released through operator delete 0x1007e6d0 when it is not null (`cmp dword ptr [eax+4], 0` / `je 0x1006803b` at 0x10068020-0x10068024, call at 0x10068033), then four fields are written unconditionally - buffer 0 (0x1006803e), capacity 0 (0x10068048), count 0 (0x10068052) and growth step ONE, not zero (0x1006805c). Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: Array_e0::clear (12 vectors, 12 distinct results, 12 changing state, `log/diff/00068000_jgld_Array_e0_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10068000@f_10068000@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10068073): callee pops 0 bytes of stack arguments.

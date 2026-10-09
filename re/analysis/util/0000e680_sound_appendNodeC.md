@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000e680`), 86 bytes, 32 instructions, subsystem `uti
 Appends a new 3-field list node (value at +8) to the doubly-linked list (head *this, tail +4, count +0xc). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+The same append body at another call site: operator new 0x100424d7 at 0x1000e685, the node fields at 0x1000e695-0x1000e6a2, the tail test `je 0x1000e6c6` at 0x1000e6ae, the link-on at 0x1000e6b0-0x1000e6b8, the empty arm at 0x1000e6c6 and the count increment at 0x1000e6bb / 0x1000e6cb. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: appendNodeC (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000e680_sound_appendNodeC.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000e680@C_FUN_1000e680@f_1000e680@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000e6c3, 0x1000e6d3): callee pops 4 bytes of stack arguments.

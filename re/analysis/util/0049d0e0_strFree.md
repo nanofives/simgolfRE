@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 19 bytes, 7 instructions, subsystem `util`. Mechanical 
 frees the heap buffer backing a Str49d string. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Empties a string object built on a Buf: it runs Buf_releaseData 0x004747e0 on `this` (0x0049d0e3), clears the length-like dword at +0x18 (0x0049d0e8) and returns 0 (`xor eax, eax` at 0x0049d0ef). Unlike Buf_dtor it leaves the vtable at +0 alone, so it empties the object without destroying it. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: strFree (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049d0e0_strFree.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_0049d0e0@f_0049d0e0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049d0f2): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00068100`), 116 bytes, 40 instructions, subsystem `ren
 ## Role (from the naming pass, not a C3 purpose)
 Frees the element buffer at this+4 if set and resets m_data/m_cap/m_count to 0 and m_grow to 1. (`re/names/jgld_3.tsv`)
 
+## Purpose
+The same body for `Array<Rec14>`, byte for byte: the guard is at 0x10068120, operator delete 0x1007e6d0 is called at 0x10068133 and the four stores run from 0x1006813b (buffer 0, capacity 0, count 0, growth step 1). That the three instances are instruction-identical is measured in `log/c3/alt/c3cn_twins.txt`. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: Array_Rec14::clear (12 vectors, 12 distinct results, 12 changing state, `log/diff/00068100_jgld_Array_Rec14_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10068100@f_10068100@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10068173): callee pops 0 bytes of stack arguments.

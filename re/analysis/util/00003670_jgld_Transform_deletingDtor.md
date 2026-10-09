@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00003670`), 81 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor for Transform. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The same `??_G` body for `Transform`: `Transform::~Transform` 0x100034e0 (vtable dword at +0, then Transform::reset 0x10005650, which clears the flags word at +0x20 and leaves the quaternion at +4 and the position at +0x14 alone), the bit-0 test of the stack argument, the direct call to operator delete 0x1007e6d0, and `this` as the return value (`ret 4` at 0x100036be). Reimplemented in `shim/src/re/c3cd.cpp`; the operator-new/delete arms are A/B'd under the heap stand-in (re/frida/js/heapstandin.js, batch c3cn); path-1 A/B GREEN: `log/diff\00003670_jgld_Transform_deletingDtor.path1.csv`; `log/diff\00003670_jgld_Transform_deletingDtor_free.path1.csv`.
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10003670@C_FUN_10003670@f_10003670@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100036be): callee pops 4 bytes of stack arguments.

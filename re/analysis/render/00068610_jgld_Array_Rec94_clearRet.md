@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00068610`), 56 bytes, 25 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 Public clear(): calls Array_Rec94::clear 0x10068360 and returns 0. (`re/names/jgld_3.tsv`)
 
+## Purpose
+The same wrapper one instance further on: the thunk at 0x10068630 is 0x100019ba, which reaches Array_Rec94::clear 0x10068360, and `xor eax, eax` at 0x10068635 returns 0. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: Array_Rec94::clearRet (12 vectors, 12 distinct results, 12 changing state, `log/diff/00068610_jgld_Array_Rec94_clearRet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10068610@f_10068610@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10068647): callee pops 0 bytes of stack arguments.

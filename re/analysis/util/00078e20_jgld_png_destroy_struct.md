@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078e20`), 59 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Releases a structure png_create_struct 0x10078da0 made: a null pointer is dropped (`cmp dword ptr [ebp+8], 0` / `je 0x10078e4a` at 0x10078e38), anything else goes to the CRT free 0x100806d0 (0x10078e42). Nothing is written and nothing is returned. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: png_destroy_struct (12 vectors, 12 distinct results, 11 changing state, `log/diff/00078e20_jgld_png_destroy_struct.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_mem.cpp` as `_png_destroy_struct` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078e5a): callee pops 0 bytes of stack arguments.

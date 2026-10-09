@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078750`), 57 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+The deallocator libpng hands to zlib: one call to png_free 0x10078ed0 with the two arguments in the same order (`push [ebp+0xc]` then `push [ebp+8]` at 0x10078768-0x1007876f, call at 0x10078770). It has no branch and no state of its own. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: png_zfree (12 vectors, 10 distinct results, 9 changing state, `log/diff/00078750_jgld_png_zfree.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_zfree` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078788): callee pops 0 bytes of stack arguments.

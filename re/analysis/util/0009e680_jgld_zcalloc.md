@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0009e680`), 77 bytes, 32 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+zlib 1.0.2's allocator: it returns the CRT calloc 0x1007ffa0 of (items, size) (0x1009e6b4). When the opaque pointer is not null (`cmp dword ptr [ebp+8], 0` / `je 0x1009e6ac` at 0x1009e698) it first adds size - size to the item count (0x1009e69e-0x1009e6a9, where `mov eax, [ebp+0x10]` followed by `sub eax, [ebp+0x10]` is zero by construction), which changes nothing: the branch exists to use the opaque argument, not to alter the result. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: zcalloc (12 vectors, 5 distinct results, 10 changing state, `log/diff/0009e680_jgld_zcalloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_zlib_zutil.cpp` as `_zcalloc` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1009e6cc): callee pops 0 bytes of stack arguments.

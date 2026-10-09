@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078ed0`), 67 bytes, 28 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's release entry point: it does nothing when either the png_struct pointer or the block pointer is null (`je 0x10078ef4` at 0x10078eec and `jne 0x10078ef6` at 0x10078ef2) and otherwise hands the SECOND argument to the CRT free 0x100806d0 (0x10078efa). Nothing is written and nothing is returned, so the release is its whole behaviour. Reimplemented in `shim/src/re/c3cn.cpp`; path-1 A/B GREEN: png_free (12 vectors, 10 distinct results, 9 changing state, `log/diff/00078ed0_jgld_png_free.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_mem.cpp` as `_png_free` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078f12): callee pops 0 bytes of stack arguments.
