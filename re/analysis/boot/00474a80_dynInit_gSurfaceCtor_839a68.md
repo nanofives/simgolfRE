@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 C++ dynamic initializer of a file-scope object: calls gSurfaceCtor_839a68 0x00474a90, which constructs the global Surface at 0x00839a68, then jumps to atexitThunk_474aa0 0x00474aa0, which registers the static destructor 0x00474ab0 with atexit 0x004a56d2 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+C++ dynamic initializer of the file-scope object at 0x00839a68: slot 69 (+0x114) of the CRT initializer table 0x004c1000, whose entries __cinit 0x004a50db calls in order (the table start is loaded at 0x004a50fb). The `call` at 0x00474a80 runs gSurfaceCtor_839a68 0x00474a90, which loads ecx = 0x00839a68 (0x00474a90) and tail-jumps to Surface_ctor 0x00473ab0 (0x00474a95). The `jmp` at 0x00474a85 then tail-jumps to atexitThunk_474aa0 0x00474aa0, which pushes 0x00474ab0 (0x00474aa0), calls _atexit 0x004a56d2 (0x00474aa5), pops the argument (0x00474aaa) and returns (0x00474aab), so the exit routine 0x00474ab0 is registered (its first instruction is `mov cl, byte ptr [0x839a58]`) and the value returned is _atexit's eax. The stub itself has no branch and reads or writes no memory. Reimplemented in `shim/src/re/c3cp.cpp`; path-1 A/B GREEN: dynInit_gSurfaceCtor_839a68_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/00474a80_dynInit_gSurfaceCtor_839a68_live.path1.csv`); dynInit_gSurfaceCtor_839a68_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/00474a80_dynInit_gSurfaceCtor_839a68_pat.path1.csv`); dynInit_gSurfaceCtor_839a68_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/00474a80_dynInit_gSurfaceCtor_839a68_zero.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

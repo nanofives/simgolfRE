@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Static teardown: closes the global section reader g_0083b000. (`re/names/exe_4.tsv`)
 
+## Purpose
+Closes the global Reader's file: it loads the Reader 0x0083b000 into ecx (0x00487e60) and tail-jumps to Reader::closeFile 0x00487f80 (0x00487e65), which passes the FILE pointer at +0x158 to fclose 0x004a609f (0x00487f8e) when it is not null (0x00487f8b) and then stores 0 there (0x00487f96). Callers 0x0044b9c0 and 0x0048e1c0. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: destroyGlobalReader_open (3 vectors, 1 distinct results, 3 changing state, `log/diff/00487e60_destroyGlobalReader_open.path1.csv`); destroyGlobalReader_closed (3 vectors, 1 distinct results, 0 changing state, `log/diff/00487e60_destroyGlobalReader_closed.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_00487e60@f_00487e60@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

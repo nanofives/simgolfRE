@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 558 bytes, 183 instructions, subsystem `util`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Turn the 257 symbol counts gathered by the statistics pass into an optimal JHUFF_TBL limited to 16-bit codes. freq[256] is set to 1, reserving one code point (0x004b10aa); codesize[] starts 0 and others[] -1 (0x004b10b4 / 0x004b10c5). Each round picks c1, a non-zero count no larger than every other (`jg` at 0x004b10db, so ties go to the higher index), and c2 the same among the rest (0x004b10fd..0x004b1105); counts above 1000000000 (0x004b10ca / 0x004b10f0) are never picked. Without a c2 (0x004b1119) the tree is complete. Otherwise c2's count joins c1's and is cleared (0x004b1127..0x004b1135), every symbol on c1's chain and then on c2's gains one bit (0x004b1130..0x004b1159, 0x004b116d..0x004b118c) and c2's chain is hung after c1's (0x004b115f). Each used symbol increments bits[codesize] (0x004b11bf..0x004b11c9), with ERREXIT 0x26 for a length above 32 (0x004b11ac..0x004b11ba). Lengths 32..17 are folded down two codes at a time with unsigned byte arithmetic (0x004b11d1..0x004b1228), the reserved code is taken from the longest remaining length (0x004b122a..0x004b1251), bits[0..16] are copied to htbl+0 (0x004b125d..0x004b1274), huffval (htbl+0x11) lists symbols 0..255 by length then value (0x004b1277..0x004b1297) and sent_table (htbl+0x114) is cleared (0x004b1299). Callers: finish_pass_gather 0x004b1e20 and finish_pass_gather_phuff 0x004b33c0. Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: jpeg_gen_optimal_table (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b1080_jpeg_gen_optimal_table.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_jpeg_gen_optimal_table` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b12ad): callee pops 0 bytes of stack arguments.

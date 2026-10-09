@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 190 bytes, 71 instructions, subsystem `util`. Mechanica
 symbol of the 100% matched source (IJG libjpeg 6a jcmarker.c, _write_scan_header) (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Write the markers that precede one scan; the jinit_marker_writer 0x004afaf0 method installed by the store at 0x004afb2e. With arithmetic coding (cinfo+0xac, 0x004b006e) it calls the empty method 0x004b01e0 (0x004b0071, a bare `ret`: this build has no arithmetic coder). Otherwise, per component of the scan (count re-read at 0x004b00ef), it emits Huffman tables with emit_dht 0x004b0120: in sequential mode (progressive_mode cinfo+0xdc re-read each pass, 0x004b009c) the DC table then the AC table (0x004b00db / 0x004b00e7); in progressive mode only the AC table for an AC scan (Ss non-zero, 0x004b00a6 / 0x004b00ca) and only the DC table for a first DC scan (Ah zero, 0x004b00b0 / 0x004b00b9), nothing for a DC refinement. Then emit_dri 0x004b01f0 when restart_interval (cinfo+0xc0) is non-zero (0x004b0107 / 0x004b010a) and always emit_sos 0x004b0220 (0x004b0113). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: write_scan_header (10 vectors, 10 distinct results, 10 changing state, `log/diff/004b0060_write_scan_header.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_write_scan_header` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b011d): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 53 bytes, 12 instructions, subsystem `ui`. Mechanical t
 sets the global 0x0083b654 to 1 (0x0048c522), calls, through the vptr at this + [[this-0x58]+4] - 0x58, the virtual +0x98 (slot 38, ListBox::fireSelectChanged 0x0048c560) with both arguments, then clears it (0x0048c54a) (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The same bracket around slot +0x98: 0x0083b654 = 1 (0x0048c520), slot +0x98 of the Window base with the two stack arguments (0x0048c52a..0x0048c542), 0x0083b654 = 0 (0x0048c548), the slot's result returned. Slot +0x98 of vtable 0x004bb260 is ListBox::fireSelectChanged_vtordisp 0x0048cce0, which reaches fireSelectChanged 0x0048c560, the one reader that passes the flag on (0x0048c5c0). Caller: its thunk 0x0048ccf0. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::fireSelectChangedMarked (16 vectors, 16 distinct results, 16 changing state, `log/diff/0048c520_ListBox_fireSelectChangedMarked.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0048c552): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0048c52a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

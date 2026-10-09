@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 145 bytes, 37 instructions, subsystem `crt`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 constructs a global C++ object array via the vector constructor iterator at static-init time (`re/names/exe_0.tsv`)
 
+## Purpose
+Constructs 6 global arrays for the static initializer dynInit_initGlobalArray_004054e0 0x004054d0 (its only caller, call at 0x004054d0). For each array it pushes the destructor, the constructor, the count, the element size and the first element, and calls the eh vector constructor iterator 0x004a55d2, which calls the constructor with ecx = each element in turn (0x004a560d) and advances by the size (0x004a5610); for each single object it loads ecx with the object and calls its constructor. In order: 0x20 x 0x2c bytes at 0x0053c570 with 0x00473ab0 (Surface_ctor; call at 0x004054f3); 0x20 x 0x2c bytes at 0x005a4138 with 0x00473ab0 (Surface_ctor; call at 0x0040550b); 0x4 x 0x2c bytes at 0x00542f28 with 0x00473ab0 (Surface_ctor; call at 0x00405523); 0x4 x 0x2c bytes at 0x0059ab00 with 0x00473ab0 (Surface_ctor; call at 0x0040553b); 0x4 x 0x2c bytes at 0x00520590 with 0x00473ab0 (Surface_ctor; call at 0x00405553); 0x32 x 0x2c bytes at 0x0059df20 with 0x00473ab0 (Surface_ctor; call at 0x0040556b). It ends with `ret` at 0x00405570. The matching destructors are registered afterwards by atexitRegister_00405580 0x00405580 (the stub's tail jump at 0x004054d5). Reimplemented in `shim/src/re/c3co.cpp`; path-1 A/B GREEN: initGlobalArray_004054e0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/004054e0_initGlobalArray_004054e0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_arrays.cpp` as `_$E71` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x00405570): callee pops 0 bytes of stack arguments.

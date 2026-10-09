@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 33 bytes, 10 instructions, subsystem `ui`. Mechanical t
 tail-forwards both arguments through the vptr at this + [[this-0x58]+4] - 0x58 to the virtual +0xe8 (slot 58, ListBox::onScroll 0x0048c420), with no flag of its own (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Forward a scroll notification to the Window base. It calls slot +0xe8 of the Window base this - 0x58 + vbtable[1] (0x0048c4f0..0x0048c4fa) with its two stack arguments in the same order (pushes at 0x0048c502 / 0x0048c507, call at 0x0048c508) and returns that slot's result (`ret 8` at 0x0048c50e). In vtable 0x004bb260 slot +0xe8 is ListBox::onScroll_vtordisp 0x0048cd10. Caller: its thunk 0x0048cd00. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::fwdOnScroll (16 vectors, 16 distinct results, 16 changing state, `log/diff/0048c4f0_ListBox_fwdOnScroll.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0048c50e): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0048c4f0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

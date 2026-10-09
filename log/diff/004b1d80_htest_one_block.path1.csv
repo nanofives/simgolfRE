@@ -1,0 +1,23 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$k0 0 $dc $ac,void,void,True,8c0c41f7,8c0c41f7,True
+$k1 0 $dc $ac,void,void,True,d5c61a30,d5c61a30,True
+$k1 100 $dc $ac,void,void,True,cabadeb2,cabadeb2,True
+$k2 -5 $dc $ac,void,void,True,92d66f0b,92d66f0b,True
+$k3 0 $dc $ac,void,void,True,b35e7441,b35e7441,True
+$k3 -65536 $dc $ac,void,void,True,54c511a3,54c511a3,True
+$k4 0 $dc $ac,void,void,True,99e6630d,99e6630d,True
+$k4 32767 $dc $ac,void,void,True,99e6630d,99e6630d,True
+$k5 1 $dc $ac,void,void,True,aa8fcf63,aa8fcf63,True
+$k6 -1 $dc $ac,void,void,True,d68659de,d68659de,True
+$k7 1073741824 $dc $ac,void,void,True,743335c3,743335c3,True
+$k8 7 $dc $ac,void,void,True,2cdb82a8,2cdb82a8,True
+$k9 0 $dc $ac,void,void,True,11d48927,11d48927,True
+$k10 -100 $dc $ac,void,void,True,28cc89ab,28cc89ab,True
+$k11 12345 $dc $ac,void,void,True,5dadcb0f,5dadcb0f,True
+$k12 0 $dc $ac,void,void,True,a3e88c23,a3e88c23,True
+$k13 -1073741824 $dc $ac,void,void,True,c41b4a6e,c41b4a6e,True
+state_regions,$dc+0x0:1028 $ac+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d2dcec0,original=0x1440c60,2026-10-09T16:17:18
+distinct_results,16,,
+VERDICT,GREEN,17,

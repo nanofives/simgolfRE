@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 159 bytes, 74 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+do_sarray_io's twin for coefficient-block arrays: identical control flow, with bytesperrow = blocksperrow (ptr+8) << 7 (0x004af88a / 0x004af890, 128 bytes per JBLOCK) and file_offset = bytesperrow * cur_start_row (0x004af899); the chunk loop (0x004af89f / 0x004af918), the three signed limits (0x004af8ae / 0x004af8c0 / 0x004af8cb), the empty-chunk exit (0x004af8d1) and the write / read dispatch through ptr+0x34 / +0x30 (0x004af8de) are the same instructions shifted. Its caller is access_virt_barray 0x004af730. Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: do_barray_io (16 vectors, 13 distinct results, 12 changing state, `log/diff/004af880_do_barray_io.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_do_barray_io` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af91e): callee pops 0 bytes of stack arguments.

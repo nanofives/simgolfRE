@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 C++ dynamic initializer of a file-scope object: calls arrayStaticInit_448160 0x00448160, then jumps to 0x00448180, which pushes 0x00448190 and calls atexit 0x004a56d2 (a wrapper over __onexit 0x004a5654) to register it as the exit destructor (`re/names/undisc_exe.tsv`)
 
+## Purpose
+C++ dynamic initializer of the file-scope object at 0x0080d840: slot 42 (+0xa8) of the CRT initializer table 0x004c1000, whose entries __cinit 0x004a50db calls in order (the table start is loaded at 0x004a50fb). The `call` at 0x00448150 runs arrayStaticInit_448160 0x00448160, which runs the eh vector constructor iterator 0x004a55d2 (0x00448176) over 300 (0x12c) elements of 0x6c bytes at 0x0080d840 with constructor Snd::ctorDerived 0x00484820 and unwind destructor SndMusic::dtor 0x004848a0 (pushed at 0x00448165 / 0x00448160). The `jmp` at 0x00448155 then tail-jumps to registerExit_448180 0x00448180, which pushes 0x00448190 (0x00448180), calls _atexit 0x004a56d2 (0x00448185), pops the argument (0x0044818a) and returns (0x0044818b), so the exit routine 0x00448190 is registered (its first instruction is `push 0x4848a0`) and the value returned is _atexit's eax. The stub itself has no branch and reads or writes no memory. Reimplemented in `shim/src/re/c3cp.cpp`; path-1 A/B GREEN: dynInit_arrayStaticInit_448160_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/00448150_dynInit_arrayStaticInit_448160_live.path1.csv`); dynInit_arrayStaticInit_448160_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/00448150_dynInit_arrayStaticInit_448160_pat.path1.csv`); dynInit_arrayStaticInit_448160_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/00448150_dynInit_arrayStaticInit_448160_zero.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

@@ -1,0 +1,22 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$it0_0,-521142224,-521142224,True,0f1f1856,0f1f1856,True
+$it1_0,-521142224,-521142224,True,2f2f6650,2f2f6650,True
+$it2_0,119654864,119654864,True,f5a85c1a,f5a85c1a,True
+$it3_0,-521142224,-521142224,True,76479858,76479858,True
+$it4_0,119470880,119470880,True,9f2e2e62,9f2e2e62,False
+$it5_0,-521142224,-521142224,True,497f63fe,497f63fe,True
+$it6_0,-521142224,-521142224,True,da63af54,da63af54,True
+$it7_0,120654152,120654152,True,9f2e2e62,9f2e2e62,False
+$it0_2,-521142224,-521142224,True,83e40509,83e40509,True
+$it1_2,-521142224,-521142224,True,0f643f2e,0f643f2e,True
+$it2_2,119654864,119654864,True,f5a85c1a,f5a85c1a,True
+$it3_2,-521142224,-521142224,True,3b149bc8,3b149bc8,True
+$it5_2,-521142224,-521142224,True,87c5c9db,87c5c9db,True
+$it6_2,-521142224,-521142224,True,454c0fdf,454c0fdf,True
+$orph0,0,0,True,9f2e2e62,9f2e2e62,False
+$orph1,0,0,True,9f2e2e62,9f2e2e62,False
+state_regions,$ct0+0x0:512 $ct1+0x0:512 $ct2+0x0:512 $ct3+0x0:512 $ct4+0x0:512 $ct5+0x0:512 $ct6+0x0:512 $ct7+0x0:512 $it0_0+0x0:384 $it0_1+0x0:384 $it0_2+0x0:384 $it0_3+0x0:384 $it1_0+0x0:384 $it1_1+0x0:384 $it1_2+0x0:384 $it1_3+0x0:384 $it2_0+0x0:384 $it2_1+0x0:384 $it2_2+0x0:384 $it2_3+0x0:384 $it3_0+0x0:384 $it3_1+0x0:384 $it3_2+0x0:384 $it3_3+0x0:384 $it4_0+0x0:384 $it4_1+0x0:384 $it4_2+0x0:384 $it4_3+0x0:384 $it5_0+0x0:384 $it5_1+0x0:384 $it5_2+0x0:384 $it5_3+0x0:384 $it6_0+0x0:384 $it6_1+0x0:384 $it6_2+0x0:384 $it6_3+0x0:384 $it7_0+0x0:384 $it7_1+0x0:384 $it7_2+0x0:384 $it7_3+0x0:384 $nd0_0+0x0:32 $nd0_1+0x0:32 $nd0_2+0x0:32 $nd0_3+0x0:32 $nd1_0+0x0:32 $nd1_1+0x0:32 $nd1_2+0x0:32 $nd1_3+0x0:32 $nd2_0+0x0:32 $nd2_1+0x0:32 $nd2_2+0x0:32 $nd2_3+0x0:32 $nd3_0+0x0:32 $nd3_1+0x0:32 $nd3_2+0x0:32 $nd3_3+0x0:32 $nd4_0+0x0:32 $nd4_1+0x0:32 $nd4_2+0x0:32 $nd4_3+0x0:32 $nd5_0+0x0:32 $nd5_1+0x0:32 $nd5_2+0x0:32 $nd5_3+0x0:32 $nd6_0+0x0:32 $nd6_1+0x0:32 $nd6_2+0x0:32 $nd6_3+0x0:32 $nd7_0+0x0:32 $nd7_1+0x0:32 $nd7_2+0x0:32 $nd7_3+0x0:32 $orph0+0x0:384 $orph1+0x0:384 $orph2+0x0:384 $nullhead+0x0:512 $rec+0x0:1024 0x0083ab98+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d29c020,original=0x1440bc0,2026-10-09T16:16:58
+distinct_results,14,,
+VERDICT,GREEN,16,

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 static-object constructor for the sound device singleton g_83ad58 (FUN_00487a20) (`re/names/exe_3.tsv`)
 
+## Purpose
+Static constructor of the global object at 0x0083ad58: it loads 0x0083ad58 into ecx (0x00483e20) and tail-jumps to NodeListB::ctor 0x00487a20 (0x00483e25), which runs StrList::ctor 0x00487210 on this (0x00487a23), stores the vtable 0x004bafb0 at +0 (0x00487a28) and returns this (0x00487a2e); that pointer (0x0083ad58) is the function's return value. Its caller is the CRT initializer-table entry 0x00483e10. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: staticInit_g83ad58 (3 vectors, 1 distinct results, 3 changing state, `log/diff/00483e20_staticInit_g83ad58.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00483e20@f_00483e20@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 C++ dynamic initializer of a file-scope object: calls staticCtor_44b660 0x0044b660, then jumps to 0x0044b670, which pushes 0x0044b680 and calls atexit 0x004a56d2 (a wrapper over __onexit 0x004a5654) to register it as the exit destructor (`re/names/undisc_exe.tsv`)
 
+## Purpose
+C++ dynamic initializer of the file-scope object at 0x00821120: slot 61 (+0xf4) of the CRT initializer table 0x004c1000, whose entries __cinit 0x004a50db calls in order (the table start is loaded at 0x004a50fb). The `call` at 0x0044b650 runs staticCtor_44b660 0x0044b660, which loads ecx = 0x00821120 (0x0044b660) and tail-jumps to gSurfaceCtor_44b6f0 0x0044b6f0 (0x0044b665). The `jmp` at 0x0044b655 then tail-jumps to registerExit_44b670 0x0044b670, which pushes 0x0044b680 (0x0044b670), calls _atexit 0x004a56d2 (0x0044b675), pops the argument (0x0044b67a) and returns (0x0044b67b), so the exit routine 0x0044b680 is registered (it loads ecx = 0x00821120 and tail-jumps to gSurfaceDtor_44b690 0x0044b690) and the value returned is _atexit's eax. The stub itself has no branch and reads or writes no memory. Reimplemented in `shim/src/re/c3cp.cpp`; path-1 A/B GREEN: dynInit_staticCtor_44b660_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/0044b650_dynInit_staticCtor_44b660_live.path1.csv`); dynInit_staticCtor_44b660_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/0044b650_dynInit_staticCtor_44b660_pat.path1.csv`); dynInit_staticCtor_44b660_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/0044b650_dynInit_staticCtor_44b660_zero.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

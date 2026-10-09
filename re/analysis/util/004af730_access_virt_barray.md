@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 330 bytes, 132 instructions, subsystem `util`. Mechanic
 symbol of the 100% matched source (IJG libjpeg 6a jmemmgr.c, _access_virt_barray) (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+access_virt_sarray's twin for coefficient-block arrays, installed by the store at 0x004aeeab in jinit_memory_mgr 0x004aee30: the same checks, window move and pre-zero logic at the shifted addresses 0x004af74c..0x004af854, calling do_barray_io 0x004af880 for the transfers (0x004af79c / 0x004af7c7) and clearing blocksperrow << 7 bytes per row (0x004af80e / 0x004af815) with jzero_far 0x004b0540 (0x004af823). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: access_virt_barray (26 vectors, 26 distinct results, 24 changing state, `log/diff/004af730_access_virt_barray.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_access_virt_barray` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af851, 0x004af879): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 63 bytes, 21 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 returns 1 if m_9c bit 0x1000 is set or this window is the active child of its parent container (m_130->m_13c->m_4) (`re/names/exe_3.tsv`)
 
+## Purpose
+Tell whether a window holds the focus among its parent's children. It returns 1 at once when bit 12 of the flag dword at this+0x9c is set (`test ah, 0x10` at 0x0047d7d6 / 0x0047d7d9 / 0x0047d7db). Otherwise it returns 0 without a parent at this+0x130 (0x0047d7e1 / 0x0047d7e9 / 0x0047d80c); with one, the parent's focused child is the +4 of the node its cursor +0x13c points at, or none when its list head +0x138 is null (0x0047d7eb..0x0047d800), and the result is 1 exactly when that child is this window (0x0047d802 / 0x0047d804 / 0x0047d806). The list fields are the ones setFocusItem 0x0047ae80 and Container::cycleSelection 0x0047af60 move. Caller: LabelButton::drawContents 0x004a1580. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: Window::isFocusChild (35 vectors, 2 distinct results, 0 changing state, `log/diff/0047d7d0_Window_isFocusChild.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_0047d7d0@f_0047d7d0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047d7e0, 0x0047d80b, 0x0047d80e): callee pops 0 bytes of stack arguments.

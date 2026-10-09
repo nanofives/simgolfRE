@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 19 bytes, 7 instructions, subsystem `ui`. Mechanical tr
 timer callback: when the second argument (the Button) is non-zero calls Button::onTimer 0x00488fd0 with the first argument, and otherwise returns (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+The cdecl timer callback of Button: with a non-null second argument (the button, 0x00488fb0 / 0x00488fb4 / 0x00488fb6) it calls Button::onTimer 0x00488fd0 on that button with the first argument (0x00488fb8..0x00488fbd); with a null one it returns without a call. Four instructions push its address as a timer callback: 0x00488bc6 in Button::beginPress 0x00488ab0 and 0x00488e2c in Button::onMouseMove 0x00488cf0 (each right after a push of 1, at 0x00488bc4 / 0x00488e2a), 0x004890af in Button::onTimer 0x00488fd0 (right after a push of 2 at 0x004890ad) and 0x004a217a in LabelButton::onMouseMove 0x004a2010 (right after a push of 0 at 0x004a2178). How the timer later passes its arguments to the callback was not examined; the A/B calls it directly. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: Button::timerCallback (13 vectors, 5 distinct results, 9 changing state, `log/diff/00488fb0_Button_timerCallback.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00488fc2): callee pops 0 bytes of stack arguments.
 

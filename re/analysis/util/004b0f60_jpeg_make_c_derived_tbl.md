@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 282 bytes, 97 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Build the encoder's lookup table (code and length per symbol) from a JHUFF_TBL. A NULL *pdtbl gets a 0x500-byte block from cinfo->mem->alloc_small(cinfo, 1, 0x500) (0x004b0f71..0x004b0f8d). huffsize[] receives bits[l] copies of l for l = 1..16 (bits read as unsigned bytes at 0x004b0fa9; `rep stos` at 0x004b0fcf / 0x004b0fd8; lengths with a zero count skipped at 0x004b0fb1) and a closing 0 (0x004b0fe8). Codes are assigned in order, each new length doubling the running code (0x004b0ff1..0x004b1025: the run at one length 0x004b100c.. 0x004b101a, the shift at 0x004b1020). ehufsi (+0x400) is cleared, 0x40 dwords at 0x004b1032 / 0x004b103a, and for every assigned code p the symbol huffval[p] (htbl+0x11, unsigned) gets ehufco = huffcode[p] and ehufsi = huffsize[p] (0x004b1045..0x004b106d); a symbol listed twice keeps its last code. libjpeg 6a's version, without the table checks later versions add. Callers: start_pass_huff 0x004b12f0 and start_pass_phuff 0x004b1f70. Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: jpeg_make_c_derived_tbl (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b0f60_jpeg_make_c_derived_tbl.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_jpeg_make_c_derived_tbl` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1079): callee pops 0 bytes of stack arguments.

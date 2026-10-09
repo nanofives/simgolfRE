@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 13 bytes, 4 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 static-object initializer calling FUN_00482f60 on g_83ac88 (`re/names/exe_3.tsv`)
 
+## Purpose
+Static constructor of the global at 0x0083ac88: it pushes the flag 1 (0x00482f00), loads 0x0083ac88 into ecx (0x00482f02) and calls Cache482f60::ctor 0x00482f60 (0x00482f07). With the flag nonzero (0x00482f6f not taken) the constructor stores the vbtable 0x004babb4 at +4 (0x00482f71) and the guard vtable 0x004ba278 at +0x20 (0x00482f78), saves the global 0x00839650 into +0x24 (0x00482f85) and clears it (0x00482f88), then stores the vtables 0x004ba2ac / 0x004ba2a8 and zeros +8..+0x18 and finally the vtables 0x004babac at +0 (0x00482fb4) and 0x004baba8 at +0x20 (0x00482fbd, +4 + the vbtable's 0x1c); its eax, this (0x00482f65), is returned. Its caller is the CRT initializer-table entry 0x00482ef0. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: staticInit_g83ac88_g0 (3 vectors, 1 distinct results, 3 changing state, `log/diff/00482f00_staticInit_g83ac88_g0.path1.csv`); staticInit_g83ac88_gset (3 vectors, 1 distinct results, 3 changing state, `log/diff/00482f00_staticInit_g83ac88_gset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00482f00@f_00482f00@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00482f0c): callee pops 0 bytes of stack arguments.

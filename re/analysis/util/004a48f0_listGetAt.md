@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 128 bytes, 43 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 returns the list element at a given index. (`re/names/exe_5.tsv`)
 
+## Purpose
+Position a list's cursor on element `index` and return that element's value (__thiscall, `ret 4`). The list object keeps its head node at this+0x80, the cursor at this+0x84, the element count at this+0x88 and the cursor's index at this+0x8c; a node holds its value at +4 and links forward at +0xc and backward at +0x10. An index above count - 1 (signed, 0x004a48fe / 0x004a4903) leaves cursor and index alone. Otherwise the cursor is reset to the head (0x004a490d); a non-negative index walks forward that many links (0x004a493b..0x004a494b) and becomes the cursor index; a negative one walks |index| links backward (0x004a4922..0x004a4932, the magnitude from cdq / xor / sub at 0x004a4915..0x004a4918, so INT_MIN stays negative and walks nothing) and stores count + index (0x004a4934), unless |index| exceeds the count (0x004a491c), in which case only the reset to the head has happened. The index store is at 0x004a494d. The return is the cursor node's value (0x004a495f / 0x004a4965) or 0 when the head is NULL (0x004a495d / 0x004a496b). Its caller is 0x00490d60. Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: listGetAt (25 vectors, 18 distinct results, 19 changing state, `log/diff/004a48f0_listGetAt.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?get@C4a48f0@@QAEPAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a4968, 0x004a496d): callee pops 4 bytes of stack arguments.

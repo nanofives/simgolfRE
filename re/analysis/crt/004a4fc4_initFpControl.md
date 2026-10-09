@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 56 bytes, 8 instructions, subsystem `crt`. Mechanical t
 initializes the floating-point control/precision globals at startup. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Fills the table of six floating-point conversion routines at 0x004e4b00 that the printf/scanf float paths call through (readers at 0x004aa144, 0x004aa165, 0x004aa17c, 0x004b6a8e): slot 1 = 0x004a7581 (0x004a4fc9), slot 0 = 0x004a78d7 __cfltcvt (loaded into eax at 0x004a4fc4, stored at 0x004a4fd3), slot 2 = 0x004a75e7 __fassign (0x004a4fd8), slot 3 = 0x004a7527 __forcdecpt (0x004a4fe2), slot 4 = 0x004a75cf (0x004a4fec) and slot 5 = 0x004a78d7 again (0x004a4ff6). It is called once from __fpmath 0x004a4fac. It has no callee and no branch. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: initFpControl_zero (4 vectors, 1 distinct results, 4 changing state, `log/diff/004a4fc4_initFpControl_zero.path1.csv`); initFpControl_a5 (4 vectors, 1 distinct results, 4 changing state, `log/diff/004a4fc4_initFpControl_a5.path1.csv`); initFpControl_rot (4 vectors, 1 distinct results, 4 changing state, `log/diff/004a4fc4_initFpControl_rot.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?init4a4fc4@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a4ffb): callee pops 0 bytes of stack arguments.

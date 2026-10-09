@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 40 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 Clears the selected index (sets to -1) and invalidates the control. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Clear the list's selection and let the window react. The function addresses both virtual bases of the ListBox through the vbtable pointer at this-0x58: it writes -1 to the dword at this + vbtable[2] + 0x9c (0x0048cac0 / 0x0048cac3 / 0x0048cac6, the list-model base's +0xf4), then calls slot +0x120 of the Window base this - 0x58 + vbtable[1] with no argument (0x0048cad1..0x0048cadf); its two stack arguments are never read (`ret 8` at 0x0048cae5) and eax is the slot's result. In the ListBox's own Window vtable 0x004bb260 that slot holds 0x00480d70 (Window::doLayout). Callers: its vtordisp thunk 0x0048cc90 and the dispatcher 0x004a0a10. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::clearSelection (16 vectors, 8 distinct results, 16 changing state, `log/diff/0048cac0_ListBox_clearSelection.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_0048cac0@C_FUN_0048cac0@f_0048cac0@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0048cae5): callee pops 8 bytes of stack arguments.

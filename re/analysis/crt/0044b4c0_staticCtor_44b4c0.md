@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Compiler-generated static initializer: constructs one file-scope global object. (`re/names/exe_1.tsv`)
 
+## Purpose
+Static constructor of the global object at 0x008224c8: it loads 0x008224c8 into ecx (0x0044b4c0) and tail-jumps to gSurfaceCtor_44b5a0 0x0044b5a0 (0x0044b4c5), which runs Surface_ctor 0x00473ab0 on +0 (0x0044b5bd), the vector constructor 0x004a55d2 over 4 Surfaces at +0x2c (0x0044b5dc) and 0xc at +0xdc (0x0044b5fb), Surface_ctor on +0x2ec (0x0044b60b) and the vector constructor over 0x15 Surfaces at +0x318 (0x0044b62a), 0x2c bytes each, and returns this (0x0044b633); that pointer (0x008224c8) is the function's return value. Its caller is the CRT initializer-table entry 0x0044b4b0. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: staticCtor_44b4c0 (3 vectors, 1 distinct results, 3 changing state, `log/diff/0044b4c0_staticCtor_44b4c0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_0044b4c0@f_0044b4c0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

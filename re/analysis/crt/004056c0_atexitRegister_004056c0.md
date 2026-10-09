@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 12 bytes, 4 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 compiler thunk that registers a global object destructor with _atexit (`re/names/exe_0.tsv`)
 
+## Purpose
+Registers the static destructor 0x004056d0 with the C runtime: it pushes 0x004056d0 (0x004056c0), calls _atexit 0x004a56d2 (0x004056c5), pops the argument (0x004056ca) and returns _atexit's eax unchanged, which is 0 when _onexit 0x004a5654 returned the pointer and -1 when it returned NULL (0x004a56db..0x004a56e2). Its only caller is dynInit_initGlobalArray_00405620 0x00405610, which reaches it with the tail jump at 0x00405615 after its call at 0x00405610. The registered routine 0x004056d0 runs the eh vector destructor iterator 0x004a5713 over 0x27 elements of 0x2c bytes at 0x0058ccb8 with 0x004041f0 (unwindFree_4041f0, call at 0x004056de) and over 5 more arrays. Reimplemented in `shim/src/re/c3co.cpp`; path-1 A/B GREEN: atexitRegister_004056c0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/004056c0_atexitRegister_004056c0.path1.csv`); atexitRegister_004056c0_fail (1 vectors, 1 distinct results, 1 changing state, `log/diff/004056c0_atexitRegister_004056c0_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_07.cpp` as `?FUN_004056c0@f_004056c0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004056cb): callee pops 0 bytes of stack arguments.

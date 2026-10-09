@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 16 bytes, 4 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Static initializer: constructs the global section reader g_0083b000 with a 0x200-byte buffer. (`re/names/exe_4.tsv`)
 
+## Purpose
+Static constructor of the global Reader at 0x0083b000: it pushes the buffer size 0x200 (0x00487d80), loads 0x0083b000 into ecx (0x00487d85) and calls Reader::ctor 0x00487ea0 (0x00487d8a), which stores byte 0 at +4, 0 at +0x154..+0x160 (0x00487ea5..0x00487eba) and the vtable 0x004bb084 at +0 (0x00487ec5), then calls 0x00487ee0 (0x00487ecb) to allocate the two 0x200-byte buffers into +0x15c and +0x160 with malloc 0x004a504f (0x00487eee / 0x00487f0b) after closing any previous ones; the constructor's return value, this (0x00487ed0), is returned. Its caller is the CRT initializer-table entry 0x00487d70. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: initGlobalReader (3 vectors, 1 distinct results, 3 changing state, `log/diff/00487d80_initGlobalReader.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487d80@f_00487d80@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487d8f): callee pops 0 bytes of stack arguments.

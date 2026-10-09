@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 25 bytes, 7 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Compiler-generated static initializer for a global array of objects. (`re/names/exe_1.tsv`)
 
+## Purpose
+Static constructor of the global array at 0x00820f40: it calls the eh vector constructor iterator 0x004a55d2 (0x0044ad33) with base 0x00820f40, element size 0x2c, count 0x5, element constructor Surface_ctor 0x00473ab0 and unwind destructor unwindFree_4041f0 0x004041f0 (pushed from 0x0044ad20); the iterator runs the constructor with ecx = each element in turn (0x004a560d, stepping by the size at 0x004a5610) and returns with `ret 0x14` (0x004a5639). The function returns nothing of its own (0x0044ad38). Its caller is the CRT initializer-table entry 0x0044ad10. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: arrayStaticInit_44ad20 (3 vectors, 1 distinct results, 3 changing state, `log/diff/0044ad20_arrayStaticInit_44ad20.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_arrays.cpp` as `_$E31` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0044ad38): callee pops 0 bytes of stack arguments.

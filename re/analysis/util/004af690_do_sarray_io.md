@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 154 bytes, 72 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Move a virtual sample array's in-memory rows to or from its backing store. bytesperrow is samplesperrow (ptr+8, 0x004af69a) and file_offset starts at cur_start_row (ptr+0x18) * bytesperrow (0x004af6a3). For i from 0 in steps of rowsperchunk (ptr+0x14, re-read at 0x004af714) while below rows_in_mem (ptr+0x10; 0x004af6a6 / 0x004af723): rows is the smallest of rowsperchunk, rows_in_mem - i, first_undef_row (ptr+0x1c) - (cur_start_row + i) and rows_in_array (ptr+4) - (cur_start_row + i), all signed (0x004af6b4..0x004af6d8); a non-positive count ends the transfer (0x004af6dc). byte_count = rows * bytesperrow (0x004af6de); writing calls write_backing_store (ptr+0x34, 0x004af6fc), reading read_backing_store (ptr+0x30, 0x004af712), each with (cinfo, &b_s_info (ptr+0x30), mem_buffer[i], file_offset, byte_count); file_offset then advances by byte_count (0x004af71f). Its caller is access_virt_sarray 0x004af540 (0x004af5b0 / 0x004af5db). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: do_sarray_io (20 vectors, 17 distinct results, 16 changing state, `log/diff/004af690_do_sarray_io.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_do_sarray_io` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af729): callee pops 0 bytes of stack arguments.

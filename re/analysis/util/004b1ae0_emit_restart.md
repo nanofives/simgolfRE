@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 140 bytes, 58 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Emit a restart marker into the working state and reset the DC predictions. flush_bits 0x004b1b70 pads the pending bits with ones (a 0 return is returned at once, 0x004b1af0); then the bytes 0xff (0x004b1af6) and restart_num - 0x30, i.e. 0xd0 + restart_num as a byte (0x004b1b16..0x004b1b1f), each followed by dump_buffer 0x004b19e0 when free_in_buffer reaches 0 (0x004b1b05 / 0x004b1b2d), whose 0 is returned (0x004b1b12 / 0x004b1b3a). Then last_dc_val[ci] (state+0x10) is cleared for each component of the scan, the count read through state->cinfo on every pass (0x004b1b3e..0x004b1b63), and 1 is returned. Its caller is encode_mcu_huff 0x004b1480 (0x004b14cd). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: emit_restart (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b1ae0_emit_restart.path1.csv`); emit_restart_tight (8 vectors, 8 distinct results, 8 changing state, `log/diff/004b1ae0_emit_restart_tight.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_emit_restart` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1af3, 0x004b1b15, 0x004b1b3d, 0x004b1b6b): callee pops 0 bytes of stack arguments.

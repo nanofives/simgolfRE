@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 170 bytes, 54 instructions, subsystem `ui`. Mechanical 
 Invokes the owner's selection-changed callbacks with the currently selected item. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Announce a selection change. First 0x0083ab2c is set to the parent window at this + vbtable[1] + 0xd8 (the Window base's +0x130, 0x0048c56a / 0x0048c571). When the cdecl callback pointer at this-8 is set (0x0048c577 / 0x0048c57c) it is called with the selected id that ListModel::selectedId 0x00489950 returns for the list-model base this - 0x58 + vbtable[2] (0x0048c584..0x0048c591). The parent is read again (0x0048c59a) and, when it is null, the function returns at 0x0048c5a3 (eax = the vbtable pointer). Otherwise the parent's slot +0x108 gets the selected id (vtable read at 0x0048c5a9 before selectedId runs, call at 0x0048c5b7); then the flag 0x0083b654 is loaded (0x0048c5c0), the parent and its vtable are read again and slot +0x104 gets (selected id, flag) (0x0048c5cd..0x0048c5e2); finally, when the parent's +0x98 child is set (0x0048c5f6 / 0x0048c5fe), that child's slot +0x1c is called with no argument and its result returned, else eax is the parent. selectedId runs once per use (three times when the callback is set), each time from the start. Both stack arguments are unused (`ret 8` at 0x0048c607). Callers: its thunk 0x0048cce0 and the dispatcher 0x004a0c90. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::fireSelectChanged (16 vectors, 8 distinct results, 16 changing state, `log/diff/0048c560_ListBox_fireSelectChanged.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?f@D48c560@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0048c607): callee pops 8 bytes of stack arguments.

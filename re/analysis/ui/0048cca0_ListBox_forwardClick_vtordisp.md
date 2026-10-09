@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to ListBox::forwardClick 0x0048c610 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+Slot 29 (+0x74) of vtable 0x004bb260 (installers 0x00489cb0 / 0x00489de0): `sub ecx, dword ptr [ecx-4]` at 0x0048cca0 and `jmp 0x0048c610` at 0x0048cca3, the vtordisp entry of forwardClick. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::forwardClick_vtordisp (16 vectors, 13 distinct results, 10 changing state, `log/diff/0048cca0_ListBox_forwardClick_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0048cca0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 51 bytes, 12 instructions, subsystem `boot`. Mechanical
 exit destructor of the static object at 0x0083aca8: when bit 0 of the guard byte 0x0083ac28 is clear it sets that bit, calls Cache482f60::dtor 0x004835f0 with 0x0083aca8, writes the base vtable 0x004ba278 back into 0x0083aca8 and copies 0x0083acac into 0x00839650 (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Exit routine registered by atexit_482f20 0x00482f10 (`push 0x00482f20`), the tail of dynInit_staticInit_g83ac88 0x00482ef0, for the object staticInit_g83ac88 0x00482f00 builds at 0x0083ac88 (Cache482f60::ctor 0x00482f60 with 1, which saves the dword 0x00839650 at +0x24 and zeroes 0x00839650, 0x00482f7f..0x00482f88). Bit 0 of the byte 0x0083ac28 makes it run once: the byte is read at 0x00482f20 and tested against 1 (0x00482f26 / 0x00482f28); when the bit is set the routine returns (`jne 0x00482f52`, 0x00482f2a). Otherwise it sets the bit (0x00482f2c / 0x00482f2e, the other bits kept), runs Cache482f60::dtor 0x004835f0 with ecx = 0x0083aca8 (0x00482f34 / 0x00482f39), stores 0x004ba278 at 0x0083aca8 (0x00482f43) and copies the saved dword 0x0083acac (read at 0x00482f3e) back to 0x00839650 (0x00482f4d). Reimplemented in `shim/src/re/c3cp.cpp`; path-1 A/B GREEN: atexitDtor_83aca8_clear (1 vectors, 1 distinct results, 1 changing state, `log/diff/00482f20_atexitDtor_83aca8_clear.path1.csv`); atexitDtor_83aca8_guard (1 vectors, 1 distinct results, 0 changing state, `log/diff/00482f20_atexitDtor_83aca8_guard.path1.csv`); atexitDtor_83aca8_high (1 vectors, 1 distinct results, 1 changing state, `log/diff/00482f20_atexitDtor_83aca8_high.path1.csv`); atexitDtor_83aca8_guardhigh (1 vectors, 1 distinct results, 0 changing state, `log/diff/00482f20_atexitDtor_83aca8_guardhigh.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00482f52): callee pops 0 bytes of stack arguments.
 

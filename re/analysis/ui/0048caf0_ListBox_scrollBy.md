@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 146 bytes, 50 instructions, subsystem `ui`. Mechanical 
 Scrolls the list up or down one row (when the scrollbar style bit is set) and invalidates. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Scroll the list one row. Nothing happens unless bit 3 of the byte at this + vbtable[1] + 0x44 (the Window base's flag dword +0x9c) is set (0x0048caf9 / 0x0048cafe). Only the first of the three stack arguments is read (`ret 0xc` at 0x0048cb38 / 0x0048cb7f). A positive argument (0x0048cb04 / 0x0048cb06, signed) moves up: when the top row at this-0x34 is positive (0x0048cb08..0x0048cb0d) it is decremented and stored (0x0048cb0f / 0x0048cb10). Zero or a negative argument moves down: when the top row is below the row count at this + vbtable[2] + 0x78 minus the visible rows at this + vbtable[2] + 4 (the list-model base's +0xd0 and +0x5c, 0x0048cb3b..0x0048cb52, signed jge) it is incremented and stored (0x0048cb54 / 0x0048cb57). After a change the new top row goes to Window::fwdScroll26c 0x0047b9f0 on the Window base (0x0048cb13..0x0048cb1e and 0x0048cb5a..0x0048cb65) and the Window base's slot +0x120 is called (0x0048cb31 / 0x0048cb78), whose result is returned; the no-change exits return what eax holds there (the vbtable pointer, the top row, or this + vbtable[2]). Callers: its thunk 0x0048cc70 and the dispatcher 0x004a13c0. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::scrollBy (28 vectors, 13 distinct results, 13 changing state, `log/diff/0048caf0_ListBox_scrollBy.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?scroll@C48caf0@@UAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0048cb38, 0x0048cb7f): callee pops 12 bytes of stack arguments.

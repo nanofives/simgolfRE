@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to ListBox::scrollBy 0x0048caf0 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+Slot 25 (+0x64) of vtable 0x004bb260 (installers 0x00489cb0 / 0x00489de0): `sub ecx, dword ptr [ecx-4]` at 0x0048cc70 and `jmp 0x0048caf0` at 0x0048cc73, the vtordisp entry of scrollBy (three stack arguments passed through). Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::scrollBy_vtordisp (28 vectors, 13 distinct results, 13 changing state, `log/diff/0048cc70_ListBox_scrollBy_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0048cc70 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

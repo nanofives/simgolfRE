@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 9 bytes, 3 instructions, subsystem `crt`. Mechanical tr
 returns the address of the per-thread errno value. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Returns the address of the calling thread's errno: it calls __getptd 0x004a8e53 (0x004a910c), which returns the thread's per-thread data block (TlsGetValue of the index at 0x004e4bf0, 0x004a8e63; on a thread without one it allocates 0x74 bytes with calloc 0x004ab534 at 0x004a8e73, stores it with TlsSetValue 0x004a8e87, runs __initptd 0x004a8e92 and writes -1 to +4 and the thread id to +0 at 0x004a8e9e / 0x004a8ea2), and adds 8 (0x004a9111). The CRT's math and conversion routines call it to set errno (callers 0x004a583a .. 0x004b716a). Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: errnoPtr_installed (3 vectors, 1 distinct results, 0 changing state, `log/diff/004a910c_errnoPtr_installed.path1.csv`); errnoPtr_fresh (3 vectors, 1 distinct results, 3 changing state, `log/diff/004a910c_errnoPtr_fresh.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a910c@f_004a910c@@YAPAKXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a9114): callee pops 0 bytes of stack arguments.

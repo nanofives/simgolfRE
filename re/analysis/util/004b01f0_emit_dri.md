@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 42 bytes, 15 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Write the JPEG DRI (define restart interval) marker segment: emit_marker(cinfo, 0xdd) (0x004b01f5 / 0x004b01fb), the segment length emit_2bytes(cinfo, 4) (0x004b0200 / 0x004b0203) and the interval, emit_2bytes(cinfo, restart_interval) with restart_interval read from cinfo+0xc0 (0x004b0208 / 0x004b0210), so only its low 16 bits reach the file. No branch of its own. Its caller is write_scan_header 0x004b0060 (0x004b010a). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: emit_dri (8 vectors, 5 distinct results, 8 changing state, `log/diff/004b01f0_emit_dri.path1.csv`); emit_dri_tight (4 vectors, 4 distinct results, 4 changing state, `log/diff/004b01f0_emit_dri_tight.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_dri` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0219): callee pops 0 bytes of stack arguments.

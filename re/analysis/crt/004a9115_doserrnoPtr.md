@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 9 bytes, 3 instructions, subsystem `crt`. Mechanical tr
 returns the address of the per-thread _doserrno value. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Returns the address of the calling thread's _doserrno: __getptd 0x004a8e53 (0x004a9115), as described for errnoPtr 0x004a910c, plus 0xc (0x004a911a). The CRT's OS-error mapping calls it next to errnoPtr (callers 0x004a583a .. 0x004b716a). Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: doserrnoPtr_installed (3 vectors, 1 distinct results, 0 changing state, `log/diff/004a9115_doserrnoPtr_installed.path1.csv`); doserrnoPtr_fresh (3 vectors, 1 distinct results, 3 changing state, `log/diff/004a9115_doserrnoPtr_fresh.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a9115@f_004a9115@@YAPAKXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a911d): callee pops 0 bytes of stack arguments.

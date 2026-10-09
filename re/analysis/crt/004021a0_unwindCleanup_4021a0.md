@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 15 bytes, 4 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 exception-unwind cleanup helper (`re/names/exe_0.tsv`)
 
+## Purpose
+Destructor of the heap-scope guard that Cache482f60::ctor 0x00482f60 builds at its +0x20: the ctor stores the guard vtable 0x004ba278 (0x00482f78), saves the allocator global 0x00839650 (setNewHeap 0x004823c0 stores an allocator object there at 0x004823d9) into the guard's +4 (0x00482f7f / 0x00482f85) and clears the global (0x00482f88). This function reads the saved value from this+4 (0x004021a0), stores the vtable 0x004ba278 at this+0 (0x004021a3) and writes the saved value back to 0x00839650 (0x004021a9). It is reached from the exception-unwind funclets (`jmp 0x4021a0` at 0x004b90e8 with ecx = frame object + 0x5c; callers 0x004b90d4, 0x004b90ff, 0x004b912d, 0x004b9158). No callee, no branch. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: unwindCleanup_4021a0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004021a0_unwindCleanup_4021a0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_01.cpp` as `?FUN_004021a0@f_004021a0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004021ae): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 160 bytes, 69 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Count the Huffman symbols one 8x8 block of quantised coefficients would emit, for the optimisation pass. The DC difference block[0] - last_dc_val (0x004b1d8c / 0x004b1d8f) is made non-negative (0x004b1d91 / 0x004b1d93), its bit count found by arithmetic right shifts (0x004b1d95..0x004b1d9e), and dc_counts[nbits] incremented (0x004b1dad..0x004b1db1). The 63 AC coefficients are read in the order of the dword table at 0x004bd0b0..0x004bd1ab (0x004b1da8 / 0x004b1db6 / 0x004b1db8 / 0x004b1e0d). A zero extends the run r (0x004b1dc0); a non-zero coefficient first spends a run above 15 (0x004b1dc6) as r >> 4 increments of ac_counts[0xf0] (+0x3c0, 0x004b1dca..0x004b1de0, leaving r & 15), then increments ac_counts[(r << 4) + nbits], nbits being the bit count of |coef| starting from 1 (0x004b1de6..0x004b1e08), and clears r (0x004b1e06). A run still open after the last coefficient counts one end-of-block symbol, ac_counts[0] (0x004b1e15 / 0x004b1e19). Its caller is encode_mcu_gather 0x004b1ca0. Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: htest_one_block (17 vectors, 16 distinct results, 17 changing state, `log/diff/004b1d80_htest_one_block.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_htest_one_block` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1e1f): callee pops 0 bytes of stack arguments.

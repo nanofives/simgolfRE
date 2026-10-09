@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 16 bytes, 5 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 when the owner pointer at this+0x130 is non-zero tail-jumps to Container::cycleSelection 0x0047af60 with this, and otherwise returns (`re/names/undisc_exe.tsv`)
 
+## Purpose
+Slot 74 (+0x128) of the EditBox vtable 0x004ba4a8 (installed by EditBox::ctor 0x00486070 and editBoxTimer_dtor 0x0043cb50): when the edit box has a parent at this+0x130 (0x00486b20 / 0x00486b26 / 0x00486b28) it tail-jumps to Container::cycleSelection 0x0047af60 with the same this (0x00486b2a); without one it returns at 0x00486b2f with eax = 0, the parent it just loaded. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: EditBox::cycleSelectionIfOwned (18 vectors, 14 distinct results, 12 changing state, `log/diff/00486b20_EditBox_cycleSelectionIfOwned.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00486b2f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00486b20 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

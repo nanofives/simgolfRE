@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 C++ dynamic initializer of a file-scope object: calls initKeyTableArray 0x00487e10, then jumps to 0x00487e30, which pushes 0x00487e40 and calls atexit 0x004a56d2 (a wrapper over __onexit 0x004a5654) to register it as the exit destructor (`re/names/undisc_exe.tsv`)
 
+## Purpose
+C++ dynamic initializer of the file-scope object at 0x0083b170: slot 83 (+0x14c) of the CRT initializer table 0x004c1000, whose entries __cinit 0x004a50db calls in order (the table start is loaded at 0x004a50fb). The `call` at 0x00487e00 runs initKeyTableArray 0x00487e10, which runs the eh vector constructor iterator 0x004a55d2 (0x00487e26) over 4 (0x4) elements of 0x120 bytes at 0x0083b170 with constructor KeyTable::ctor 0x004882a0 and unwind destructor KeyTable::dtor 0x004882f0 (pushed at 0x00487e15 / 0x00487e10). The `jmp` at 0x00487e05 then tail-jumps to registerKeyTableAtexit 0x00487e30, which pushes 0x00487e40 (0x00487e30), calls _atexit 0x004a56d2 (0x00487e35), pops the argument (0x00487e3a) and returns (0x00487e3b), so the exit routine 0x00487e40 is registered (its first instruction is `push 0x4882f0`) and the value returned is _atexit's eax. The stub itself has no branch and reads or writes no memory. Reimplemented in `shim/src/re/c3cp.cpp`; path-1 A/B GREEN: dynInit_initKeyTableArray_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/00487e00_dynInit_initKeyTableArray_live.path1.csv`); dynInit_initKeyTableArray_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/00487e00_dynInit_initKeyTableArray_pat.path1.csv`); dynInit_initKeyTableArray_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/00487e00_dynInit_initKeyTableArray_zero.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

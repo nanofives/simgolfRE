@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 35 bytes, 12 instructions, subsystem `ui`. Mechanical t
 Forwards a click at param_1,param_2 to the owner object's vtable+0x74. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Forward a click to the parent window. It reads the parent at this + vbtable[1] + 0xd8 (the Window base's +0x130, 0x0048c610..0x0048c616); when it is set (0x0048c61d / 0x0048c61f) the parent's slot +0x74 gets the two stack arguments in order (0x0048c621..0x0048c62d) and eax is that result; when it is null eax still holds the vbtable pointer loaded at 0x0048c610. Callers: its thunk 0x0048cca0 and the dispatcher 0x004a0db0. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::forwardClick (16 vectors, 13 distinct results, 10 changing state, `log/diff/0048c610_ListBox_forwardClick.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_0048c610@C_FUN_0048c610@f_0048c610@@QAEXII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0048c630): callee pops 8 bytes of stack arguments.

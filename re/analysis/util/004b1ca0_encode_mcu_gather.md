@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 220 bytes, 74 instructions, subsystem `util`. Mechanica
 symbol of the 100% matched source (IJG libjpeg 6a jchuff.c, _encode_mcu_gather) (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+The statistics-pass counterpart of encode_mcu_huff; the entropy method start_pass_huff installs when gathering (store at 0x004b1309). With a restart interval (cinfo+0xc0, 0x004b1cb5) and no MCUs left (entropy+0x24 zero, 0x004b1cbc) every component's last_dc_val (entropy+0x14) is cleared (0x004b1ccd; count re-read at 0x004b1cd3) and the counter reloaded from the interval (0x004b1ce1 / 0x004b1ce7); the counter is then decremented (0x004b1cea). Each block of the MCU (count re-read at 0x004b1d50) goes to htest_one_block 0x004b1d80 with its component's last_dc_val and the count arrays entropy+0x4c / +0x5c selected by the dc / ac table numbers (0x004b1d0f..0x004b1d35), and last_dc_val takes block[0] (0x004b1d45 / 0x004b1d48). Returns 1 (0x004b1d6b / 0x004b1d74). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: encode_mcu_gather (10 vectors, 10 distinct results, 9 changing state, `log/diff/004b1ca0_encode_mcu_gather.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_encode_mcu_gather` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1d72, 0x004b1d7b): callee pops 0 bytes of stack arguments.

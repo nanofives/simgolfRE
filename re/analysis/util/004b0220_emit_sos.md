@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 221 bytes, 77 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Write the JPEG SOS (start of scan) marker segment: emit_marker 0xda (0x004b0227 / 0x004b022d), the length comps_in_scan * 2 + 6 (cinfo+0xec, 0x004b0238 / 0x004b023e) and comps_in_scan (0x004b024b). For each component of the scan (cur_comp_info cinfo+0xf0; the count re-read at 0x004b02b2) its component_id (+0, 0x004b026c) and the table selector byte (td << 4) + ta (0x004b02a6..0x004b02ad), td / ta being the DC / AC table numbers (+0x14 / +0x18) except in progressive mode (cinfo+0xdc, 0x004b0282): an AC scan (Ss cinfo+0x134 non-zero, 0x004b028c) sends td = 0 (0x004b02a4), a DC scan sends ta = 0 (0x004b0294) and also td = 0 when it is a refinement (Ah cinfo+0x13c non-zero, 0x004b0298) without arithmetic coding (cinfo+0xac, 0x004b02a2). Then Ss (0x004b02cc), Se (cinfo+0x138, 0x004b02d9) and (Ah << 4) + Al (cinfo+0x140, 0x004b02ea..0x004b02f1). Every value goes through emit_byte 0x004afbb0, which keeps its low 8 bits. Its caller is write_scan_header 0x004b0060 (0x004b0113). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: emit_sos (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b0220_emit_sos.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_emit_sos` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b02fc): callee pops 0 bytes of stack arguments.

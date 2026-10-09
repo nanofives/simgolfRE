@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 static-object constructor building the screen manager singleton at g_83acb0 (`re/names/exe_3.tsv`)
 
+## Purpose
+Static constructor of the global object at 0x0083acb0: it loads 0x0083acb0 into ecx (0x00482e80) and tail-jumps to Cache482fd0::ctor 0x00482fd0 (0x00482e85), which stores 0 at +4 (0x00482fda) and the vtable 0x004babbc at +0 (0x00482fdd), then fills five 0x10-byte records from +8 (loop 0x00482fe6..0x00482ffc, count 5 at 0x00482fd5) with -1, 0, byte 0, byte 0, 0, stores 0 at +4 again (0x00482ffe) and returns this (0x00482fd1); that pointer (0x0083acb0) is the function's return value. Its caller is the CRT initializer-table entry 0x00482e70. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: staticInit_g83acb0 (3 vectors, 1 distinct results, 3 changing state, `log/diff/00482e80_staticInit_g83acb0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00482e80@f_00482e80@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 12 bytes, 4 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Compiler-generated thunk that registers a file-scope object's destructor via atexit. (`re/names/exe_1.tsv`)
 
+## Purpose
+Static-initialisation step that registers the exit routine 0x0044afa0 (atexitDtor_821200) with the CRT exit list: it pushes 0x0044afa0 (0x0044af90) and calls atexit 0x004a56d2 (0x0044af95), which passes it to _onexit 0x004a5654; _onexit stores the pointer through the table's end pointer 0x0084216c (0x004a56be) and advances that pointer by 4 (0x004a56c0), first growing the table whose start pointer is 0x00842170 with realloc 0x004a6980 (0x004a568d) when _msize 0x004a9054 of the start (0x004a5660) leaves no room (0x004a567b); the FidDb names atexit, _onexit, _msize and realloc are those of the master. atexit's result (0, or -1 when the table could not grow: 0x004a56db..0x004a56e2) is returned unchanged (`pop ecx` 0x0044af9a, `ret` 0x0044af9b). Its caller is the CRT initializer-table entry 0x0044af70. Reimplemented in `shim/src/re/c3cq.cpp`; path-1 A/B GREEN: registerExit_44af90 (3 vectors, 1 distinct results, 3 changing state, `log/diff/0044af90_registerExit_44af90.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_0044af90@f_0044af90@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044af9b): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 28 bytes, 7 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 constructs a global C++ object array via the vector constructor iterator at static-init time (`re/names/exe_0.tsv`)
 
+## Purpose
+Constructs 1 global array for the static initializer dynInit_initGlobalArray_00403f80 0x00403f70 (its only caller, call at 0x00403f70). For each array it pushes the destructor, the constructor, the count, the element size and the first element, and calls the eh vector constructor iterator 0x004a55d2, which calls the constructor with ecx = each element in turn (0x004a560d) and advances by the size (0x004a5610); for each single object it loads ecx with the object and calls its constructor. In order: 0x24f x 0x44 bytes at 0x0050fc20 with 0x00482b60 (Flic::ctorBase482b60; call at 0x00403f96). It ends with `ret` at 0x00403f9b. The matching destructors are registered afterwards by atexitRegister_00403fa0 0x00403fa0 (the stub's tail jump at 0x00403f75). Reimplemented in `shim/src/re/c3co.cpp`; path-1 A/B GREEN: initGlobalArray_00403f80 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00403f80_initGlobalArray_00403f80.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_arrays.cpp` as `_$E6` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x00403f9b): callee pops 0 bytes of stack arguments.

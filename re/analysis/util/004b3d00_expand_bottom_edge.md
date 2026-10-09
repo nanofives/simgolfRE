@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 52 bytes, 27 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Pad an image strip at the bottom by replicating its last real row: for each row from input_rows up to output_rows - 1 (signed compares, 0x004b3d0a / 0x004b3d2b) it calls jcopy_sample_rows 0x004b04f0(image_data, input_rows - 1, image_data, row, 1, num_cols) (0x004b3d14..0x004b3d22). Callers: pre_process_data 0x004b3b80 and pre_process_context 0x004b3d40. Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: expand_bottom_edge (10 vectors, 7 distinct results, 6 changing state, `log/diff/004b3d00_expand_bottom_edge.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cprepct.cpp` as `_expand_bottom_edge` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b3d33): callee pops 0 bytes of stack arguments.

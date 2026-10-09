@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 C++ dynamic initializer of a file-scope object: calls initGfxGlobal_840890 0x0049d4f0, then jumps to 0x0049d500, which pushes 0x0049d510 and calls atexit 0x004a56d2 (a wrapper over __onexit 0x004a5654) to register it as the exit destructor (`re/names/undisc_exe.tsv`)
 
+## Purpose
+C++ dynamic initializer of the file-scope object at 0x00840890: slot 93 (+0x174) of the CRT initializer table 0x004c1000, whose entries __cinit 0x004a50db calls in order (the table start is loaded at 0x004a50fb). The `call` at 0x0049d4e0 runs initGfxGlobal_840890 0x0049d4f0, which loads ecx = 0x00840890 (0x0049d4f0) and tail-jumps to Surface_ctor 0x00473ab0 (0x0049d4f5). The `jmp` at 0x0049d4e5 then tail-jumps to regAtexit_49d500 0x0049d500, which pushes 0x0049d510 (0x0049d500), calls _atexit 0x004a56d2 (0x0049d505), pops the argument (0x0049d50a) and returns (0x0049d50b), so the exit routine 0x0049d510 is registered (its first instruction is `mov cl, byte ptr [0x840828]`) and the value returned is _atexit's eax. The stub itself has no branch and reads or writes no memory. Reimplemented in `shim/src/re/c3cp.cpp`; path-1 A/B GREEN: dynInit_initGfxGlobal_840890_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d4e0_dynInit_initGfxGlobal_840890_live.path1.csv`); dynInit_initGfxGlobal_840890_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d4e0_dynInit_initGfxGlobal_840890_pat.path1.csv`); dynInit_initGfxGlobal_840890_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d4e0_dynInit_initGfxGlobal_840890_zero.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

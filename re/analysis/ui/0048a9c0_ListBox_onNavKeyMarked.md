@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 50 bytes, 12 instructions, subsystem `ui`. Mechanical t
 sets the global 0x0083b654 to 1 (0x0048a9c2), calls, through the vptr at this + [[this-0x58]+4] - 0x58, the virtual +0x78 (slot 30, ListBox::onNavKey 0x0048aa00) with both arguments, then clears 0x0083b654 (0x0048a9e7); that global is the second argument ListBox::setSelection 0x00489f50 and ListBox::fireSelectChanged 0x0048c560 hand to the owner's virtual +0xfc / +0x104 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Run the Window base's navigation-key handler with the "marked" flag raised. It stores 1 in 0x0083b654 (0x0048a9c0), calls slot +0x78 of the Window base this - 0x58 + vbtable[1] with its two stack arguments in order (0x0048a9ca..0x0048a9e2), stores 0 back (0x0048a9e5) and returns the slot's result. Every recorded call carries the flag value 1, so the store before the call is checked; the state comparison after the call checks the 0. Slot +0x78 of vtable 0x004bb260 is ListBox::onNavKey_vtordisp 0x0048ccb0. 0x0083b654 is read elsewhere only at 0x0048a0c0 and 0x0048c5c0 (fireSelectChanged). Caller: its thunk 0x0048ccc0. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::onNavKeyMarked (16 vectors, 16 distinct results, 16 changing state, `log/diff/0048a9c0_ListBox_onNavKeyMarked.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0048a9ef): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0048a9ca before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 36 bytes, 13 instructions, subsystem `ui`. Mechanical t
 adds the displacement at [[this-0x58]+4] to this (0x58 through the virtual-base table 0x004bb3d0 that ListBox::ctor stores at 0x00489ce4) and works on that base; when bit 0x40 of the byte at +0x44 is set (0x0048cbfd) and the child window pointer at +0xd8 is non-NULL it returns that child's virtual +0x20, otherwise 0 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Ask the parent window through its slot +0x20 when the Window base allows it: when bit 0x40 of the byte at this + vbtable[1] + 0x44 (the Window base's flag dword +0x9c) is set (0x0048cbf9 / 0x0048cbfd / 0x0048cc00) and the parent at this + vbtable[1] + 0xd8 is not null (0x0048cc02 / 0x0048cc08 / 0x0048cc0a), it tail-jumps to the parent's slot +0x20 with ecx = the parent (0x0048cc0c / 0x0048cc0e); otherwise it returns 0 (0x0048cc11). Caller: its thunk 0x0048cbe0. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::fwdInnerVfn20 (11 vectors, 5 distinct results, 7 changing state, `log/diff/0048cbf0_ListBox_fwdInnerVfn20.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0048cc13): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0048cbf0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

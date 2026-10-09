@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `boot`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 C++ dynamic initializer of a file-scope object: calls staticInit_004043b0 0x004043b0, then jumps to 0x004043c0, which pushes 0x004043d0 and calls atexit 0x004a56d2 (a wrapper over __onexit 0x004a5654) to register it as the exit destructor (`re/names/undisc_exe.tsv`)
 
+## Purpose
+C++ dynamic initializer in slot 6 (+0x18) of the table at 0x004c1000, which __cinit 0x004a50db walks at start-up: it calls staticInit 0x004043b0 (0x004043a0), which loads ecx = 0x0051b068 and tail-jumps to the constructor 0x00474ae0 (Image_ctor) (0x004043b0 / 0x004043b5); Image_ctor builds two HotLists (0x00474b0f, 0x00474b1e), each of which reaches 0x00483da0 (HotList::ctor 0x00492850 -> 0x00492800 -> Timer::reset 0x00486f10 -> Timer::stop 0x00486ec0, `jmp 0x483da0` at 0x00486f06), which calls [0x0083ad50] vtable +0x150 (0x00483dbb), then tail-jumps to atexitRegister_004043c0 0x004043c0 (0x004043a5), so it returns that registrar's result, _atexit's 0 or -1. Reimplemented in `shim/src/re/c3co.cpp`; path-1 A/B GREEN: dynInit_staticInit_004043b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/004043a0_dynInit_staticInit_004043b0.path1.csv`); dynInit_staticInit_004043b0_fail (1 vectors, 1 distinct results, 1 changing state, `log/diff/004043a0_dynInit_staticInit_004043b0_fail.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

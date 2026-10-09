@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 16 instructions, subsystem `ui`. Mechanical t
 same guard as ListBox::fwdInnerVfn20 0x0048cbf0 (bit 0x40 of +0x44 at 0x0048cc3d, child at +0xd8): forwards its single argument to the child's virtual +0x24 and returns that result, otherwise returns the argument unchanged (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The one-argument sibling of fwdInnerVfn20: with the same two tests (0x0048cc39 / 0x0048cc3d / 0x0048cc40 on bit 0x40 of this + vbtable[1] + 0x44, 0x0048cc42 / 0x0048cc48 / 0x0048cc4a on the parent at this + vbtable[1] + 0xd8) it passes its argument to the parent's slot +0x24 (0x0048cc4c..0x0048cc53) and returns that result; when either test fails it returns the argument itself (0x0048cc59). Caller: its thunk 0x0048cc20. Reimplemented in `shim/src/re/c3cr.cpp`; path-1 A/B GREEN: ListBox::fwdInnerVfn24 (16 vectors, 13 distinct results, 8 changing state, `log/diff/0048cc30_ListBox_fwdInnerVfn24.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0048cc56, 0x0048cc5d): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0048cc30 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

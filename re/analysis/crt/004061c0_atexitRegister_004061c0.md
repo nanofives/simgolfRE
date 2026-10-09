@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 12 bytes, 4 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 compiler thunk that registers a global object destructor with _atexit (`re/names/exe_0.tsv`)
 
+## Purpose
+The registration half of a C++ dynamic initializer: pushes the exit routine 0x004061d0 (0x004061c0), calls _atexit 0x004a56d2 (0x004061c5), pops the argument (0x004061ca) and returns _atexit's eax (0x004061cb). It is reached by the tail jump at 0x004061a5 of dynInit_staticInit_004061b0 0x004061a0. The routine registered: 0x004061d0 loads ecx = 0x00568d10 and tail-jumps to Image_dtor 0x00474c40. Reimplemented in `shim/src/re/c3cp.cpp`; path-1 A/B GREEN: atexitRegister_004061c0_ok (1 vectors, 1 distinct results, 1 changing state, `log/diff/004061c0_atexitRegister_004061c0_ok.path1.csv`); atexitRegister_004061c0_fail (1 vectors, 1 distinct results, 1 changing state, `log/diff/004061c0_atexitRegister_004061c0_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_07.cpp` as `?FUN_004061c0@f_004061c0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004061cb): callee pops 0 bytes of stack arguments.

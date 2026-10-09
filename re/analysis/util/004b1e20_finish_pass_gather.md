@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 264 bytes, 83 instructions, subsystem `util`. Mechanica
 symbol of the 100% matched source (IJG libjpeg 6a jchuff.c, _finish_pass_gather) (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+End the statistics pass by building each Huffman table the scan used, once; the method start_pass_huff installs when gathering (store at 0x004b1310). Two four-entry flag arrays did_dc / did_ac start cleared (0x004b1e32..0x004b1e5e). Per component of the scan (count re-read at 0x004b1f06): a DC table number not yet done (0x004b1e8b) gets a JHUFF_TBL from jpeg_alloc_huff_table 0x004afad0 when its slot cinfo+0x50 is NULL (0x004b1e93 / 0x004b1e96 / 0x004b1e9e), then jpeg_gen_optimal_table 0x004b1080 with the entropy coder's dc count array (entropy+0x4c, 0x004b1ea2..0x004b1eb1), and is marked done (0x004b1eb9); the AC table the same with cinfo+0x60 and entropy+0x5c (0x004b1ec0..0x004b1ef8). Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: finish_pass_gather (8 vectors, 8 distinct results, 7 changing state, `log/diff/004b1e20_finish_pass_gather.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_finish_pass_gather` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1f27): callee pops 0 bytes of stack arguments.

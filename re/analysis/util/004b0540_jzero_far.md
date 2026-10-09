@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 27 bytes, 12 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Zero a byte range: jzero_far(target, bytes) stores eax = 0 (0x004b054b) over bytes >> 2 dwords with `rep stosd` (0x004b054d / 0x004b0550) and then over bytes & 3 single bytes with `rep stosb` (0x004b0554 / 0x004b0557), starting at target and preserving edi. It is libjpeg's FMEMZERO; its callers in this batch are the pre-zero loops of access_virt_sarray 0x004af540 and access_virt_barray 0x004af730. Reimplemented in `shim/src/re/c3cs.cpp`; path-1 A/B GREEN: jzero_far (16 vectors, 16 distinct results, 15 changing state, `log/diff/004b0540_jzero_far.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_utils.cpp` as `_jzero_far` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b055a): callee pops 0 bytes of stack arguments.
