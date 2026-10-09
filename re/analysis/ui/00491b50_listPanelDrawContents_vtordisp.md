@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0049e680 `FUN_0049e680` at 0x00491b53
+- 0x0049e680 `listPanelDrawContents` at 0x00491b53
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -65,4 +65,4 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `0x68` (104) at 0x004b06f7
 - `0x80` (128) at 0x004b079c
 - `0x500` (1280) at 0x004b0781
-- `0x4b07b0` (4917168) = address in the image (data) at 0x004b0714
+- `0x4b07b0` (4917168) = function `start_pass_coef` at 0x004b0714

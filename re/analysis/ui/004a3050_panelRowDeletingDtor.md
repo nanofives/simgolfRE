@@ -27,7 +27,7 @@ None.
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x004a307f
 
 ## Callers
-0x004a3040 `FUN_004a3040`
+0x004a3040 `panelRowDeletingDtor_vtordisp`
 
 ## Constants
 - `0x1` at 0x004a3077

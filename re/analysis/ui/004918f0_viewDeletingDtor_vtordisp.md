@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x00491900 `FUN_00491900` at 0x004918f3
+- 0x00491900 `viewDeletingDtor` at 0x004918f3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

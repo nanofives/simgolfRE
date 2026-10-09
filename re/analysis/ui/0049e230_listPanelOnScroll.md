@@ -85,7 +85,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call eax` at 0x0049e3e9
 
 ## Callers
-0x00491b80 `listPanelOnScroll_vtordisp`, 0x004a0b50 `FUN_004a0b50`
+0x00491b80 `listPanelOnScroll_vtordisp`, 0x004a0b50 `viewDispatchSlot30`
 
 ## Constants
 - `0x0` at 0x0049e3bf

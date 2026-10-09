@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x004a45b0 `FUN_004a45b0` at 0x004a49c3
+- 0x004a45b0 `panelSubDrawContents` at 0x004a49c3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

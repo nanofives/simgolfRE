@@ -27,7 +27,7 @@ Through registers:
 - indirect `call [eax+0x120]` at 0x0048cadf
 
 ## Callers
-0x0048cc90 `ListBox::clearSelection_vtordisp`, 0x004a0a10 `FUN_004a0a10`
+0x0048cc90 `ListBox::clearSelection_vtordisp`, 0x004a0a10 `viewDispatchSlot28`
 
 ## Constants
 - `0xffffffa8` (-88) at 0x0048cadb

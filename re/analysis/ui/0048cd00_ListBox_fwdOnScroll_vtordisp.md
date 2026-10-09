@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0048c4f0 `FUN_0048c4f0` at 0x0048cd03
+- 0x0048c4f0 `ListBox::fwdOnScroll` at 0x0048cd03
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

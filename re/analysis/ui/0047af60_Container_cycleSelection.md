@@ -48,7 +48,7 @@ Through registers:
 - indirect `call [edx+0xf0]` at 0x0047b046, 0x0047b06d
 
 ## Callers
-0x00486b20 `EditBox::cycleSelectionIfOwned`, 0x004a1090 `FUN_004a1090`, 0x004a2ff0 `FUN_004a2ff0`
+0x00486b20 `EditBox::cycleSelectionIfOwned`, 0x004a1090 `viewDispatchCycleSelection`, 0x004a2ff0 `panelRowCycleSelection`
 
 ## Constants
 - `0x0` at 0x0047afdd, 0x0047b042

@@ -88,7 +88,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xdc]` at 0x004a2db2
 
 ## Callers
-0x004a0d30 `FUN_004a0d30`, 0x004a3090 `panelDrawRow_vtordisp`, 0x004a3100 `panelDrawRow_vtordisp_adj578`
+0x004a0d30 `viewDispatchDraw`, 0x004a3090 `panelDrawRow_vtordisp`, 0x004a3100 `panelDrawRow_vtordisp_adj578`
 
 ## Constants
 - `0x0` at 0x004a2ded, 0x004a2df2, 0x004a2efb

@@ -31,7 +31,7 @@ None.
 - indirect `call [eax+0x24]` at 0x0048cc53
 
 ## Callers
-0x0048cc20 `FUN_0048cc20`
+0x0048cc20 `ListBox::fwdInnerVfn24_vtordisp`
 
 ## Constants
 - `0x40` (64) at 0x0048cc3d

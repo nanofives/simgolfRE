@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0048a9c0 `FUN_0048a9c0` at 0x0048ccc3
+- 0x0048a9c0 `ListBox::onNavKeyMarked` at 0x0048ccc3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

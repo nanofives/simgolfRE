@@ -150,7 +150,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x9c]` at 0x0049dae5
 
 ## Callers
-0x0049e230 `listPanelOnScroll`, 0x0049e450 `listPanelRefresh`, 0x0049e680 `FUN_0049e680`
+0x0049e230 `listPanelOnScroll`, 0x0049e450 `listPanelRefresh`, 0x0049e680 `listPanelDrawContents`
 
 ## Constants
 - `0x0` at 0x0049ddbf, 0x0049df33, 0x0049df81, 0x0049dfaa, 0x0049e094, 0x0049e151, 0x0049e157, 0x0049e16c (+2 more)

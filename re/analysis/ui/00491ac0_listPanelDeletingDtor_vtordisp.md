@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x00491ad0 `FUN_00491ad0` at 0x00491ac3
+- 0x00491ad0 `listPanelDeletingDtor` at 0x00491ac3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

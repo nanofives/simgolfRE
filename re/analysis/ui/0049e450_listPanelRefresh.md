@@ -59,7 +59,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [edx*4+0x49e5dc]` at 0x0049e49e
 
 ## Callers
-0x00491b90 `listPanelRefresh_vtordisp`, 0x004a0bf0 `FUN_004a0bf0`
+0x00491b90 `listPanelRefresh_vtordisp`, 0x004a0bf0 `viewDispatchSlot36`
 
 ## Constants
 - `0x0` at 0x0049e570, 0x0049e57e

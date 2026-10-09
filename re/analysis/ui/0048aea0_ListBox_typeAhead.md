@@ -113,7 +113,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [ebx*4+0x48b398]` at 0x0048af46
 
 ## Callers
-0x0048ccd0 `ListBox::typeAhead_vtordisp`, 0x004a0bf0 `FUN_004a0bf0`
+0x0048ccd0 `ListBox::typeAhead_vtordisp`, 0x004a0bf0 `viewDispatchSlot36`
 
 ## Constants
 - `0x0` at 0x0048af09, 0x0048b319

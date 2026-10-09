@@ -26,7 +26,7 @@ None.
 - indirect `call [eax+0xe8]` at 0x0048c508
 
 ## Callers
-0x0048cd00 `FUN_0048cd00`
+0x0048cd00 `ListBox::fwdOnScroll_vtordisp`
 
 ## Constants
 - `0xffffffa8` (-88) at 0x0048c4fa

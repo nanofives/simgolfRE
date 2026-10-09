@@ -27,7 +27,7 @@ None.
 - 0x0048caf0 `ListBox::scrollBy` at 0x004a13dd
 
 ## Callers
-0x00491970 `FUN_00491970`
+0x00491970 `viewDispatchScrollBy_vtordisp`
 
 ## Constants
 - `0x2` at 0x004a13c3

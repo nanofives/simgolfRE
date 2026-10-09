@@ -40,7 +40,7 @@ Through registers:
 - indirect `call eax` at 0x004a4380
 
 ## Callers
-0x004a0db0 `FUN_004a0db0`, 0x004a49e0 `panelOnPick_vtordisp`
+0x004a0db0 `viewDispatchSlot29`, 0x004a49e0 `panelOnPick_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a435f

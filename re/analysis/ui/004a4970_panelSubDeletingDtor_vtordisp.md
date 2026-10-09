@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x004a4980 `FUN_004a4980` at 0x004a4973
+- 0x004a4980 `panelSubDeletingDtor` at 0x004a4973
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

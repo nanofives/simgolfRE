@@ -23,15 +23,15 @@ None.
 - `ja` (unsigned) at 0x004a0d37
 
 ## Callees
-- 0x0048c130 `FUN_0048c130` at 0x004a0d59
-- 0x0049e680 `FUN_0049e680` at 0x004a0d4e
-- 0x0049fc60 `FUN_0049fc60` at 0x004a0d64
+- 0x0048c130 `ListBox::drawContents` at 0x004a0d59
+- 0x0049e680 `listPanelDrawContents` at 0x004a0d4e
+- 0x0049fc60 `optionDialogDrawContents` at 0x004a0d64
 - 0x004a2d50 `panelDrawRow` at 0x004a0d77
-- 0x004a45b0 `FUN_004a45b0` at 0x004a0d6f
+- 0x004a45b0 `panelSubDrawContents` at 0x004a0d6f
 - indirect `jmp [edx*4+0x4a0d80]` at 0x004a0d41
 
 ## Callers
-0x00491960 `FUN_00491960`
+0x00491960 `viewDispatchDraw_vtordisp`
 
 ## Constants
 - `0xf` (15) at 0x004a0d34

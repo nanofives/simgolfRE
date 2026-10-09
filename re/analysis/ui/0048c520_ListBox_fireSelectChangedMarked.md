@@ -27,7 +27,7 @@ Globals:
 - indirect `call [eax+0x98]` at 0x0048c542
 
 ## Callers
-0x0048ccf0 `FUN_0048ccf0`
+0x0048ccf0 `ListBox::fireSelectChangedMarked_vtordisp`
 
 ## Constants
 - `0x0` at 0x0048c548

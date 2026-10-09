@@ -53,7 +53,7 @@ Through registers:
 - indirect `jmp [ecx*4+0x49fbc4]` at 0x0049fadb
 
 ## Callers
-0x0049ffe0 `optionDialogOnKey_vtordisp`, 0x004a0bf0 `FUN_004a0bf0`
+0x0049ffe0 `optionDialogOnKey_vtordisp`, 0x004a0bf0 `viewDispatchSlot36`
 
 ## Constants
 - `0x0` at 0x0049fa94

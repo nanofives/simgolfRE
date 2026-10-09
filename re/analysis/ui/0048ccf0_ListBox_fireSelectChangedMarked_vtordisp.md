@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0048c520 `FUN_0048c520` at 0x0048ccf3
+- 0x0048c520 `ListBox::fireSelectChangedMarked` at 0x0048ccf3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

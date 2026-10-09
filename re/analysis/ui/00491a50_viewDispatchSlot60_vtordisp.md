@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x004a0ff0 `FUN_004a0ff0` at 0x00491a53
+- 0x004a0ff0 `viewDispatchSlot60` at 0x00491a53
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

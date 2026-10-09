@@ -5,3 +5,4 @@
 #include "vendor/jpeg-6a/jcmainct.c"
 // MATCH: golf_clean.exe 0x004b0560 _jinit_c_main_controller
 // MATCH: golf_clean.exe 0x004b0640 _process_data_simple_main
+// MATCH: golf_clean.exe 0x004b05f0 _start_pass_main

@@ -121,7 +121,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x9c]` at 0x0049f3a5
 
 ## Callers
-0x0049f9a0 `optionDialogUpdate`, 0x0049fa90 `optionDialogOnKey`, 0x0049fc60 `FUN_0049fc60`
+0x0049f9a0 `optionDialogUpdate`, 0x0049fa90 `optionDialogOnKey`, 0x0049fc60 `optionDialogDrawContents`
 
 ## Constants
 - `0x0` at 0x0049f5bf, 0x0049f72b, 0x0049f75b, 0x0049f83b, 0x0049f902, 0x0049f908, 0x0049f925, 0x0049f94f (+1 more)

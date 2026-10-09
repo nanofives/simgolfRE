@@ -28,7 +28,7 @@ Through registers:
 - 0x0049ece0 `viewFieldCleanup49ece0` at 0x0049eccc
 
 ## Callers
-0x00491500 `Dialog::viewDtor`, 0x0049ff60 `FUN_0049ff60`, 0x004b8101 `Unwind@004b8101`, 0x004b92f0 `Unwind@004b92f0`
+0x00491500 `Dialog::viewDtor`, 0x0049ff60 `optionDialogDeletingDtor`, 0x004b8101 `Unwind@004b8101`, 0x004b92f0 `Unwind@004b92f0`
 
 ## Constants
 - `0x4bbe90` (4963984) = address in the image (data) at 0x0049eca9

@@ -27,7 +27,7 @@ None.
 - 0x0048c420 `ListBox::onScroll` at 0x004a0ee8
 
 ## Callers
-0x00491a30 `FUN_00491a30`, 0x00491a40 `FUN_00491a40`
+0x00491a30 `viewDispatchOnScroll_vtordisp57`, 0x00491a40 `viewDispatchOnScroll_vtordisp58`
 
 ## Constants
 - `0x2` at 0x004a0ed3

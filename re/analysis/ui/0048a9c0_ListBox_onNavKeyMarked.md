@@ -27,7 +27,7 @@ Globals:
 - indirect `call [eax+0x78]` at 0x0048a9e2
 
 ## Callers
-0x0048ccc0 `FUN_0048ccc0`
+0x0048ccc0 `ListBox::onNavKeyMarked_vtordisp`
 
 ## Constants
 - `0x0` at 0x0048a9e5

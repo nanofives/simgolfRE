@@ -70,7 +70,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x00489449
 
 ## Callers
-0x00489350 `ListModel::scalarDtor`, 0x0048cba0 `FUN_0048cba0`, 0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00491900 `FUN_00491900`, 0x00491ad0 `FUN_00491ad0`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`, 0x0049ff60 `FUN_0049ff60`, 0x004a3050 `FUN_004a3050`, 0x004a4980 `FUN_004a4980`, 0x004b92bd `Unwind@004b92bd`, 0x004b93ad `Unwind@004b93ad`
+0x00489350 `ListModel::scalarDtor`, 0x0048cba0 `ListBox::deletingDtor`, 0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00491900 `viewDeletingDtor`, 0x00491ad0 `listPanelDeletingDtor`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`, 0x0049ff60 `optionDialogDeletingDtor`, 0x004a3050 `panelRowDeletingDtor`, 0x004a4980 `panelSubDeletingDtor`, 0x004b92bd `Unwind@004b92bd`, 0x004b93ad `Unwind@004b93ad`
 
 ## Constants
 - `0x0` at 0x0048942f

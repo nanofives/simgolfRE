@@ -29,7 +29,7 @@ None.
 - indirect `call eax` at 0x004a4520
 
 ## Callers
-0x004a0e90 `FUN_004a0e90`, 0x004a4a30 `hotHitCb4_vtordisp`
+0x004a0e90 `viewDispatchSlot34`, 0x004a4a30 `hotHitCb4_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a44ff

@@ -20,7 +20,7 @@ None.
 - 0x004a56d2 `_atexit` at 0x00474aa5
 
 ## Callers
-0x00474a80 `FUN_00474a80`
+0x00474a80 `dynInit_gSurfaceCtor_839a68`
 
 ## Constants
 - `0x474ab0` (4672176) = address in the image (data) at 0x00474aa0

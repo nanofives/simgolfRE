@@ -31,7 +31,7 @@ None.
 - indirect `call [eax+0x74]` at 0x0048c62d
 
 ## Callers
-0x0048cca0 `ListBox::forwardClick_vtordisp`, 0x004a0db0 `FUN_004a0db0`
+0x0048cca0 `ListBox::forwardClick_vtordisp`, 0x004a0db0 `viewDispatchSlot29`
 
 ## Constants
 None.

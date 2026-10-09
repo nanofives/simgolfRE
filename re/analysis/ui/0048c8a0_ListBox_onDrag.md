@@ -83,7 +83,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x0048ca2c, 0x0048ca73
 
 ## Callers
-0x0048cc80 `ListBox::onDrag_vtordisp`, 0x004a0ab0 `FUN_004a0ab0`
+0x0048cc80 `ListBox::onDrag_vtordisp`, 0x004a0ab0 `viewDispatchSlot27`
 
 ## Constants
 - `0x0` at 0x0048c997

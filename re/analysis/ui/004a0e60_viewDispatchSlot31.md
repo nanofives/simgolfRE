@@ -28,7 +28,7 @@ None.
 - 0x004a4430 `hotHitCb1` at 0x004a0e7d
 
 ## Callers
-0x004919c0 `FUN_004919c0`
+0x004919c0 `viewDispatchSlot31_vtordisp`
 
 ## Constants
 - `0x4` at 0x004a0e63

@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0048cc30 `FUN_0048cc30` at 0x0048cc23
+- 0x0048cc30 `ListBox::fwdInnerVfn24` at 0x0048cc23
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

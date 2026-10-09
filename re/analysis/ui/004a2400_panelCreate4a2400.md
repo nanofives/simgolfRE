@@ -136,7 +136,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x004a2659
 
 ## Callers
-0x004a08a0 `panelDispatch`, 0x004a30f0 `FUN_004a30f0`
+0x004a08a0 `panelDispatch`, 0x004a30f0 `panelCreate4a2400_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a2475, 0x004a2477, 0x004a2488, 0x004a2553, 0x004a2588, 0x004a2619, 0x004a266e, 0x004a272e (+2 more)

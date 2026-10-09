@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0048cba0 `FUN_0048cba0` at 0x0048cb93
+- 0x0048cba0 `ListBox::deletingDtor` at 0x0048cb93
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

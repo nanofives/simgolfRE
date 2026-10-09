@@ -39,7 +39,7 @@ Through registers:
 - indirect `call [edx+0x120]` at 0x0049fe0e
 
 ## Callers
-0x0049ffb0 `optionDialogOnMouse_vtordisp`, 0x004a0ab0 `FUN_004a0ab0`
+0x0049ffb0 `optionDialogOnMouse_vtordisp`, 0x004a0ab0 `viewDispatchSlot27`
 
 ## Constants
 - `0x1` at 0x0049fdd2

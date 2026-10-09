@@ -46,7 +46,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0xdc]` at 0x004a45ff
 
 ## Callers
-0x004a0d30 `FUN_004a0d30`, 0x004a49c0 `FUN_004a49c0`
+0x004a0d30 `viewDispatchDraw`, 0x004a49c0 `panelSubDrawContents_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a462e, 0x004a4633

@@ -44,7 +44,7 @@ Through registers:
 - indirect `call [edx+0x120]` at 0x0048cb78
 
 ## Callers
-0x0048cc70 `ListBox::scrollBy_vtordisp`, 0x004a13c0 `FUN_004a13c0`
+0x0048cc70 `ListBox::scrollBy_vtordisp`, 0x004a13c0 `viewDispatchScrollBy`
 
 ## Constants
 - `0x1` at 0x0048cb54

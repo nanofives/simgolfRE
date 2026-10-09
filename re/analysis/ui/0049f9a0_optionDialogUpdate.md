@@ -51,7 +51,7 @@ Through registers:
 - indirect `call eax` at 0x0049fa50
 
 ## Callers
-0x0049ffd0 `optionDialogUpdate_vtordisp`, 0x004a0b50 `FUN_004a0b50`
+0x0049ffd0 `optionDialogUpdate_vtordisp`, 0x004a0b50 `viewDispatchSlot30`
 
 ## Constants
 - `0x0` at 0x0049fa14

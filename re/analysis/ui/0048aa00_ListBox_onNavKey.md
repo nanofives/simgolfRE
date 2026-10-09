@@ -94,7 +94,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call ebp` at 0x0048ab84, 0x0048ac1a
 
 ## Callers
-0x0048ccb0 `ListBox::onNavKey_vtordisp`, 0x004a0b50 `FUN_004a0b50`
+0x0048ccb0 `ListBox::onNavKey_vtordisp`, 0x004a0b50 `viewDispatchSlot30`
 
 ## Constants
 - `0x0` at 0x0048aafb, 0x0048acd5, 0x0048ad7c, 0x0048ae31

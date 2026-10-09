@@ -43,7 +43,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x30]` at 0x00480d64
 
 ## Callers
-0x00480d70 `Window::doLayout`, 0x0048aea0 `ListBox::typeAhead`, 0x0048c420 `ListBox::onScroll`, 0x0048c8a0 `ListBox::onDrag`, 0x00493a60 `comboRefresh`, 0x0049e230 `listPanelOnScroll`, 0x0049e450 `listPanelRefresh`, 0x0049e680 `FUN_0049e680`, 0x0049f9a0 `optionDialogUpdate`, 0x0049fa90 `optionDialogOnKey`
+0x00480d70 `Window::doLayout`, 0x0048aea0 `ListBox::typeAhead`, 0x0048c420 `ListBox::onScroll`, 0x0048c8a0 `ListBox::onDrag`, 0x00493a60 `comboRefresh`, 0x0049e230 `listPanelOnScroll`, 0x0049e450 `listPanelRefresh`, 0x0049e680 `listPanelDrawContents`, 0x0049f9a0 `optionDialogUpdate`, 0x0049fa90 `optionDialogOnKey`
 
 ## Constants
 - `0x0` at 0x00480d12, 0x00480d1a

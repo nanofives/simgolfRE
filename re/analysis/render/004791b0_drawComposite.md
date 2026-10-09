@@ -67,7 +67,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax+0x9c]` at 0x004791e1
 
 ## Callers
-0x0048c130 `FUN_0048c130`, 0x004a1580 `LabelButton::drawContents`
+0x0048c130 `ListBox::drawContents`, 0x004a1580 `LabelButton::drawContents`
 
 ## Constants
 - `0x0` at 0x004791f6, 0x00479241, 0x0047928b, 0x004792d9, 0x00479357, 0x00479359, 0x004793d1, 0x004793d3 (+4 more)

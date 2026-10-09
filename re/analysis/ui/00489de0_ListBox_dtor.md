@@ -28,7 +28,7 @@ Through registers:
 - 0x00489e40 `ListBox::resetFields` at 0x00489e36
 
 ## Callers
-0x0048cba0 `FUN_0048cba0`, 0x00491500 `Dialog::viewDtor`, 0x004b80c0 `Unwind@004b80c0`, 0x004b92da `Unwind@004b92da`
+0x0048cba0 `ListBox::deletingDtor`, 0x00491500 `Dialog::viewDtor`, 0x004b80c0 `Unwind@004b80c0`, 0x004b92da `Unwind@004b92da`
 
 ## Constants
 - `0x4bb240` (4960832) = address in the image (data) at 0x00489e11

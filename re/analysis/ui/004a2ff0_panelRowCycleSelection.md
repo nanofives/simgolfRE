@@ -32,7 +32,7 @@ None.
 - indirect `jmp [edx+0x128]` at 0x004a3020
 
 ## Callers
-0x004a1090 `FUN_004a1090`, 0x004a30b0 `FUN_004a30b0`
+0x004a1090 `viewDispatchCycleSelection`, 0x004a30b0 `panelRowCycleSelection_vtordisp`
 
 ## Constants
 - `0xffffff74` (-140) at 0x004a3026

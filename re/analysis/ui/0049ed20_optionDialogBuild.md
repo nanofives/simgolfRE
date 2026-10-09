@@ -65,7 +65,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0049f050 `optionDialogDraw` at 0x0049ed41
 
 ## Callers
-0x004a0040 `FUN_004a0040`, 0x004a08a0 `panelDispatch`
+0x004a0040 `optionDialogBuild_vtordisp`, 0x004a08a0 `panelDispatch`
 
 ## Constants
 - `0x0` at 0x0049ed7b, 0x0049ed7d, 0x0049ed8e, 0x0049ee56

@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0049fc60 `FUN_0049fc60` at 0x0049ffa3
+- 0x0049fc60 `optionDialogDrawContents` at 0x0049ffa3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

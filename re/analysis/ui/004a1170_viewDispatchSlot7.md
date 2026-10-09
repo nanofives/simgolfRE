@@ -33,7 +33,7 @@ None.
 - indirect `call [eax+0x24]` at 0x004a11a5
 
 ## Callers
-0x00491950 `FUN_00491950`
+0x00491950 `viewDispatchSlot7_vtordisp`
 
 ## Constants
 - `0x2` at 0x004a1173

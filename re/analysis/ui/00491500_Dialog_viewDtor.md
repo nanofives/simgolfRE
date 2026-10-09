@@ -53,7 +53,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a3480 `panelSubDtor4a3480` at 0x004915db
 
 ## Callers
-0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00491900 `FUN_00491900`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`
+0x004914d0 `Dialog::subDtor`, 0x00491710 `Dialog::dtor`, 0x00491900 `viewDeletingDtor`, 0x00497fc0 `netService`, 0x00499140 `netSendMessages`, 0x0049acf0 `netHandleControl`
 
 ## Constants
 - `0x0` at 0x004915fd

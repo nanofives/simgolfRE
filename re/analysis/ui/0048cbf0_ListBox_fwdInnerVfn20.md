@@ -29,7 +29,7 @@ None.
 - indirect `jmp [eax+0x20]` at 0x0048cc0e
 
 ## Callers
-0x0048cbe0 `FUN_0048cbe0`
+0x0048cbe0 `ListBox::fwdInnerVfn20_vtordisp`
 
 ## Constants
 - `0x40` (64) at 0x0048cbfd

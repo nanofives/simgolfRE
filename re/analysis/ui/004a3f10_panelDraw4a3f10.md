@@ -112,7 +112,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call edx` at 0x004a41c3
 
 ## Callers
-0x004a4350 `panelOnPick`, 0x004a45b0 `FUN_004a45b0`, 0x004a4680 `panelOnKey`
+0x004a4350 `panelOnPick`, 0x004a45b0 `panelSubDrawContents`, 0x004a4680 `panelOnKey`
 
 ## Constants
 - `0x0` at 0x004a414b, 0x004a4198, 0x004a4263

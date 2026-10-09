@@ -33,7 +33,7 @@ None.
 - indirect `call [edx+0xf0]` at 0x004a2fb5
 
 ## Callers
-0x004a0ff0 `FUN_004a0ff0`, 0x004a30a0 `widgetShow_vtordisp`
+0x004a0ff0 `viewDispatchSlot60`, 0x004a30a0 `widgetShow_vtordisp`
 
 ## Constants
 - `0x0` at 0x004a2fd3

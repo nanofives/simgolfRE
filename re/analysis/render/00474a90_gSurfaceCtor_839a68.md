@@ -20,7 +20,7 @@ None.
 - 0x00473ab0 `Surface_ctor` at 0x00474a95
 
 ## Callers
-0x00474a80 `FUN_00474a80`
+0x00474a80 `dynInit_gSurfaceCtor_839a68`
 
 ## Constants
 - `0x839a68` (8624744) = address in the image (data) at 0x00474a90

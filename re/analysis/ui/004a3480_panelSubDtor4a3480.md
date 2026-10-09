@@ -73,7 +73,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx]` at 0x004a357d
 
 ## Callers
-0x00491500 `Dialog::viewDtor`, 0x004a4980 `FUN_004a4980`, 0x004b8134 `Unwind@004b8134`, 0x004b92fe `Unwind@004b92fe`
+0x00491500 `Dialog::viewDtor`, 0x004a4980 `panelSubDeletingDtor`, 0x004b8134 `Unwind@004b8134`, 0x004b92fe `Unwind@004b92fe`
 
 ## Constants
 - `0x1` at 0x004a34ff, 0x004a3557, 0x004a3573

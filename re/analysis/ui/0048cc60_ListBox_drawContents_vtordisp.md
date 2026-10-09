@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0048c130 `FUN_0048c130` at 0x0048cc63
+- 0x0048c130 `ListBox::drawContents` at 0x0048cc63
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

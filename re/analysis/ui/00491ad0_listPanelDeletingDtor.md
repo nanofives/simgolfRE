@@ -35,7 +35,7 @@ Through registers:
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x00491b40
 
 ## Callers
-0x00491ac0 `FUN_00491ac0`
+0x00491ac0 `listPanelDeletingDtor_vtordisp`
 
 ## Constants
 - `0x1` at 0x00491b38

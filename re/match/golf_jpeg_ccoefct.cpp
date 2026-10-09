@@ -8,3 +8,4 @@
 // MATCH: golf_clean.exe 0x004b0d70 _compress_output
 // MATCH: golf_clean.exe 0x004b08b0 _compress_data
 // MATCH: golf_clean.exe 0x004b0b20 _compress_first_pass
+// MATCH: golf_clean.exe 0x004b07b0 _start_pass_coef

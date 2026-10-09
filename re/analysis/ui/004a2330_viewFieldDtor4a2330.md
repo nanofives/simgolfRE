@@ -28,7 +28,7 @@ Through registers:
 - 0x004a23a0 `viewFieldReset4a23a0` at 0x004a2391
 
 ## Callers
-0x00491500 `Dialog::viewDtor`, 0x004a3050 `FUN_004a3050`, 0x004b816a `Unwind@004b816a`
+0x00491500 `Dialog::viewDtor`, 0x004a3050 `panelRowDeletingDtor`, 0x004b816a `Unwind@004b816a`
 
 ## Constants
 - `0x4bc088` (4964488) = address in the image (data) at 0x004a2362

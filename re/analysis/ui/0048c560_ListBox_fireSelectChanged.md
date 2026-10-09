@@ -44,7 +44,7 @@ Globals:
 - indirect `call [esi-0x8]` at 0x0048c58e
 
 ## Callers
-0x0048cce0 `ListBox::fireSelectChanged_vtordisp`, 0x004a0c90 `FUN_004a0c90`
+0x0048cce0 `ListBox::fireSelectChanged_vtordisp`, 0x004a0c90 `viewDispatchSelectChanged`
 
 ## Constants
 - `0x4` at 0x0048c591

@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x004a2ff0 `FUN_004a2ff0` at 0x004a30b3
+- 0x004a2ff0 `panelRowCycleSelection` at 0x004a30b3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

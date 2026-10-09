@@ -27,7 +27,7 @@ None.
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x0048cbc9
 
 ## Callers
-0x0048cb90 `FUN_0048cb90`
+0x0048cb90 `ListBox::deletingDtor_vtordisp`
 
 ## Constants
 - `0x1` at 0x0048cbc1

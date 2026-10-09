@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0049ff60 `FUN_0049ff60` at 0x0049ff53
+- 0x0049ff60 `optionDialogDeletingDtor` at 0x0049ff53
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

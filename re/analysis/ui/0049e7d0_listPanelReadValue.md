@@ -72,7 +72,7 @@ Through registers:
 - indirect `call [edx+0x1c]` at 0x0049e954
 
 ## Callers
-0x00491b60 `listPanelReadValue_vtordisp`, 0x004a0ab0 `FUN_004a0ab0`
+0x00491b60 `listPanelReadValue_vtordisp`, 0x004a0ab0 `viewDispatchSlot27`
 
 ## Constants
 - `0x1` at 0x0049e7d6

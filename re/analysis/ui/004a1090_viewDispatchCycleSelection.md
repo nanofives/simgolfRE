@@ -26,11 +26,11 @@ None.
 
 ## Callees
 - 0x0047af60 `Container::cycleSelection` at 0x004a10b8, 0x004a10cd, 0x004a10e2, 0x004a10f7
-- 0x004a2ff0 `FUN_004a2ff0` at 0x004a10ff
+- 0x004a2ff0 `panelRowCycleSelection` at 0x004a10ff
 - indirect `jmp [edx*4+0x4a1108]` at 0x004a10a1
 
 ## Callers
-0x00491a60 `FUN_00491a60`
+0x00491a60 `viewDispatchCycleSelection_vtordisp`
 
 ## Constants
 - `0xf` (15) at 0x004a1094

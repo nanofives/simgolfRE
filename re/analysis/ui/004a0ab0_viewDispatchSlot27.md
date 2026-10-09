@@ -33,7 +33,7 @@ None.
 - indirect `jmp [edx*4+0x4a0b28]` at 0x004a0ac1
 
 ## Callers
-0x00491980 `FUN_00491980`
+0x00491980 `viewDispatchSlot27_vtordisp`
 
 ## Constants
 - `0xf` (15) at 0x004a0ab4

@@ -42,7 +42,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0049d770 `panelBuildText` at 0x0049d6f0
 
 ## Callers
-0x00491bf0 `FUN_00491bf0`, 0x004a08a0 `panelDispatch`
+0x00491bf0 `panelBuildRow_vtordisp`, 0x004a08a0 `panelDispatch`
 
 ## Constants
 - `0x0` at 0x0049d72f, 0x0049d731, 0x0049d755
