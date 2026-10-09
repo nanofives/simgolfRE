@@ -4,6 +4,7 @@ Module `sound.dll` (RVA `0x0003a0d0`), 79 bytes, 32 instructions, subsystem `aud
 
 ## Role (from the naming pass, not a C3 purpose)
 clamps the argument to 0..0x7f, stores it through the thunk 0x100026ee, calls Channel_setVolume 0x100015aa on this+0x70 when the virtual +0xcc is non-zero, and finally Channel_setRate 0x100024f0 on this+0x70 with (value + 1) << 9 for a non-zero value and 0 otherwise (`re/names/undisc_sound.tsv`)
+System writeup: `re/analysis/systems/sound_11.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x1003a11c): callee pops 4 bytes of stack arguments.
@@ -27,7 +28,7 @@ None.
 ## Callees
 - 0x100015aa -> 0x10035150 `Channel_setVolume` (incremental-linking thunk) at 0x1003a104
 - 0x100024f0 -> 0x100351c0 `Channel_setRate` (incremental-linking thunk) at 0x1003a115
-- 0x100026ee -> 0x1002c370 `FUN_1002c370` (incremental-linking thunk) at 0x1003a0ed
+- 0x100026ee -> 0x1002c370 `Channel_setField4Masked7f` (incremental-linking thunk) at 0x1003a0ed
 - indirect `call [eax+0xcc]` at 0x1003a0f6
 
 ## Callers

@@ -27,7 +27,7 @@ None.
 - 0x10002522 -> 0x10011160 `stubReturnBC` (incremental-linking thunk) at 0x10037c12
 
 ## Callers
-0x1003a600 `FUN_1003a600`
+0x1003a600 `MultiSound::set3DBuffer`
 
 ## Constants
 - `0xb` (11) at 0x10037c1a

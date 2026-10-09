@@ -23,7 +23,7 @@ Through registers:
 - 0x10041aad `iosResetVtable` at 0x10041c34
 
 ## Callers
-0x10041b9d `FUN_10041b9d`
+0x10041b9d `ostream::scalarDtorAdj8`
 
 ## Constants
 - `0x1005ece4` (268823780) = address in the image (data) at 0x10041c2c

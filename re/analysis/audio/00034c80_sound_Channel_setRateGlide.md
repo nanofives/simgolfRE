@@ -47,7 +47,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 None (leaf).
 
 ## Callers
-0x1003a140 `FUN_1003a140`
+0x1003a140 `MultiSound::setRateGlide`
 
 ## Constants
 - `0x0` at 0x10034ced

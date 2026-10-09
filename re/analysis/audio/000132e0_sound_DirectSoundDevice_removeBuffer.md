@@ -43,7 +43,7 @@ Through registers:
 - 0x1004249a `operator_delete` at 0x10013389
 
 ## Callers
-0x1000b420 `FUN_1000b420`, 0x1000b960 `Wave_Device::stop`, 0x1000baa0 `Wave_Device::start`, 0x1000be00 `Wave_Device::closeOutput`, 0x1000c020 `Wave_Device::restart`, 0x10032130 `beginDecodeStreamA`, 0x10032290 `beginDecodeStreamB`, 0x100340b0 `Channel_releaseBuffers`
+0x1000b420 `Wave_Device::open`, 0x1000b960 `Wave_Device::stop`, 0x1000baa0 `Wave_Device::start`, 0x1000be00 `Wave_Device::closeOutput`, 0x1000c020 `Wave_Device::restart`, 0x10032130 `beginDecodeStreamA`, 0x10032290 `beginDecodeStreamB`, 0x100340b0 `Channel_releaseBuffers`
 
 ## Constants
 - `0x0` at 0x10013350, 0x1001335a

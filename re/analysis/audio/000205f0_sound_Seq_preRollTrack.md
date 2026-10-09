@@ -41,7 +41,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax+0xb4]` at 0x100205fa
 
 ## Callers
-0x1001f8c0 `Voice::update`, 0x10020290 `FUN_10020290`, 0x10020360 `Midi_loadMemoryAndPreRoll`, 0x100207f0 `Seq_preRollAllTracks`, 0x10020be0 `Voice_startPlayback`, 0x10024500 `Seq_selectTrack`
+0x1001f8c0 `Voice::update`, 0x10020290 `Seq::loadFile`, 0x10020360 `Midi_loadMemoryAndPreRoll`, 0x100207f0 `Seq_preRollAllTracks`, 0x10020be0 `Voice_startPlayback`, 0x10024500 `Seq_selectTrack`
 
 ## Constants
 - `0x2` at 0x10020636

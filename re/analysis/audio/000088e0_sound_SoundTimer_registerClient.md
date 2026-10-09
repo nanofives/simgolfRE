@@ -24,7 +24,7 @@ None.
 - import `KERNEL32.dll!LeaveCriticalSection` at 0x10008900
 
 ## Callers
-0x10009da0 `Midi_Device::openOutput`, 0x1000a170 `registerTimerClient`, 0x1000b420 `FUN_1000b420`, 0x1000bf90 `Wave_Device::startOutput`, 0x1000c020 `Wave_Device::restart`
+0x10009da0 `Midi_Device::openOutput`, 0x1000a170 `registerTimerClient`, 0x1000b420 `Wave_Device::open`, 0x1000bf90 `Wave_Device::startOutput`, 0x1000c020 `Wave_Device::restart`
 
 ## Constants
 - `0x4c` (76) at 0x100088f2

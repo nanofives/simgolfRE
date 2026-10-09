@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003a560`), 22 bytes, 9 instructions, subsystem `audi
 
 ## Role (from the naming pass, not a C3 purpose)
 Returns the base status word (from 0x1002c0d0) with bit3 (0x8) set when +0x228 is non-zero. (`re/names/sound_7.tsv`)
-System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
+System writeup: `re/analysis/systems/sound_11.md`, `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1003a575): callee pops 0 bytes of stack arguments.
@@ -21,7 +21,7 @@ None.
 - `je` (equality) at 0x1003a571
 
 ## Callees
-- 0x1000245a -> 0x1002c0d0 `FUN_1002c0d0` (incremental-linking thunk) at 0x1003a563
+- 0x1000245a -> 0x1002c0d0 `Channel_collectFlagBits` (incremental-linking thunk) at 0x1003a563
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

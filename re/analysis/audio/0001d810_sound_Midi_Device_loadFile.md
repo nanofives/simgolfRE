@@ -118,7 +118,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call esi` at 0x1001d83c, 0x1001d848
 
 ## Callers
-0x10020290 `FUN_10020290`
+0x10020290 `Seq::loadFile`
 
 ## Constants
 - `0x1` at 0x1001d84a, 0x1001d941

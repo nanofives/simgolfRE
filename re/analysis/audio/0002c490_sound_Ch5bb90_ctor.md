@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0002c490`), 214 bytes, 65 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005bb90, references 0x1005bcb4 (MixerVoiceArray), sets the Sound source type (SEH frame) (`re/names/sound_6.tsv`)
-System writeup: `re/analysis/systems/sound_6.md`.
+System writeup: `re/analysis/systems/sound_11.md`, `re/analysis/systems/sound_6.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1002c565): callee pops 0 bytes of stack arguments.

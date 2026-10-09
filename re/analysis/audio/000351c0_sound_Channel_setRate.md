@@ -61,7 +61,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x40]` at 0x1003527c
 
 ## Callers
-0x1003a0d0 `FUN_1003a0d0`
+0x1003a0d0 `MultiSound::setVolume`
 
 ## Constants
 - `0x1` at 0x1003522c

@@ -33,7 +33,7 @@ Globals:
 - indirect `call [ecx+0x18]` at 0x100120c3
 
 ## Callers
-0x1000b140 `FUN_1000b140`
+0x1000b140 `Wave_Device::setCooperativeLevel`
 
 ## Constants
 - `0x3` at 0x100120db

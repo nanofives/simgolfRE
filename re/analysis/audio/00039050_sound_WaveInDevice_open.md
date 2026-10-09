@@ -30,7 +30,7 @@ Through registers:
 - indirect `jmp [edx*4+0x100390d0]` at 0x10039090
 
 ## Callers
-0x1000ea30 `FUN_1000ea30`
+0x1000ea30 `Wave_In_Device::start`
 
 ## Constants
 - `0x1` at 0x1003909e

@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0049e7b0 `FUN_0049e7b0` at 0x00491bb3
+- 0x0049e7b0 `listPanelSlot60` at 0x00491bb3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

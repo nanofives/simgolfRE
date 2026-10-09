@@ -28,7 +28,7 @@ Globals:
 - import `WINMM.dll!mmioClose` at 0x1000877a
 
 ## Callers
-0x1000b170 `FUN_1000b170`
+0x1000b170 `Wave_Device::closeStream`
 
 ## Constants
 - `0x0` at 0x10008777

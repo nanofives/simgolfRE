@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0049fd80 `FUN_0049fd80` at 0x004a0003
+- 0x0049fd80 `optionDialogSlot60` at 0x004a0003
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

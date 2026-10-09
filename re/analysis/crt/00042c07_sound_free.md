@@ -46,7 +46,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - import `KERNEL32.dll!HeapFree` at 0x10042cdb
 
 ## Callers
-0x10033c70 `Channel_closeAndFree`, 0x10033f90 `Channel_closeStreamList`, 0x100340b0 `Channel_releaseBuffers`, 0x10035ca0 `closeMmioSound`, 0x1004249a `operator_delete`, 0x10042984 `__beginthread`, 0x10043731 `~type_info`, 0x100441d8 `__freeptd`, 0x10045252 `crtRealloc`, 0x100476a4 `__mtdeletelocks`, 0x10047710 `__lock`, 0x1004795a `__ioterm`, 0x100479ae `__setenvp`, 0x10047cb4 `___crtGetEnvironmentStringsA`, 0x1004c287 `__fclose_lk`, 0x1004c7d1 `_setlocale`, 0x1004ca17 `__setlocale_set_cat`, 0x1004cb32 `__setlocale_get_all`, 0x1004e0a9 `__freebuf`, 0x1004e0d4 `FUN_1004e0d4` (+6 more)
+0x10033c70 `Channel_closeAndFree`, 0x10033f90 `Channel_closeStreamList`, 0x100340b0 `Channel_releaseBuffers`, 0x10035ca0 `closeMmioSound`, 0x1004249a `operator_delete`, 0x10042984 `__beginthread`, 0x10043731 `~type_info`, 0x100441d8 `__freeptd`, 0x10045252 `crtRealloc`, 0x100476a4 `__mtdeletelocks`, 0x10047710 `__lock`, 0x1004795a `__ioterm`, 0x100479ae `__setenvp`, 0x10047cb4 `___crtGetEnvironmentStringsA`, 0x1004c287 `__fclose_lk`, 0x1004c7d1 `_setlocale`, 0x1004ca17 `__setlocale_set_cat`, 0x1004cb32 `__setlocale_get_all`, 0x1004e0a9 `__freebuf`, 0x1004e0d4 `__init_time` (+6 more)
 
 ## Constants
 - `0x0` at 0x10042c47, 0x10042c6b, 0x10042cbe, 0x10042cd3

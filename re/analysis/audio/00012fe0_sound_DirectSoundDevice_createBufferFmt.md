@@ -81,7 +81,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x100424d7 `operator_new` at 0x1001313b
 
 ## Callers
-0x1000b420 `FUN_1000b420`, 0x1000baa0 `Wave_Device::start`, 0x10032130 `beginDecodeStreamA`, 0x10032290 `beginDecodeStreamB`, 0x100326a0 `parseRiffWave`
+0x1000b420 `Wave_Device::open`, 0x1000baa0 `Wave_Device::start`, 0x10032130 `beginDecodeStreamA`, 0x10032290 `beginDecodeStreamB`, 0x100326a0 `parseRiffWave`
 
 ## Constants
 - `0x1` at 0x1001311e

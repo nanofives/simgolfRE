@@ -17,7 +17,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x00487af0 `FUN_00487af0` at 0x0048cd23
+- 0x00487af0 `ListBox::Slot60` at 0x0048cd23
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

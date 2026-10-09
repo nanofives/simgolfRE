@@ -4,7 +4,7 @@ Module `sound.dll` (RVA `0x0003a210`), 262 bytes, 85 instructions, subsystem `au
 
 ## Role (from the naming pass, not a C3 purpose)
 Sets pitch from a +-1200 cents value (wrapped mod 1200): splits into semitones (/100) and cents (%100), indexes the per-semitone rate tables 0x1005c608/0x1005c66c and ratio table 0x1005c6d0 (offset +0xc), linearly interpolates by cents*0.01, and applies the result through Channel_setPitchRate, storing the ratio double at +0x13f8. (`re/names/sound_7.tsv`)
-System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_7.md`.
+System writeup: `re/analysis/systems/sound_11.md`, `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_7.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x1003a313): callee pops 4 bytes of stack arguments.
@@ -47,7 +47,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 
 ## Callees
 - 0x100016f9 -> 0x10035750 `Channel_setPitchRate` (incremental-linking thunk) at 0x1003a2f4
-- 0x10001924 -> 0x1002bff0 `FUN_1002bff0` (incremental-linking thunk) at 0x1003a23c
+- 0x10001924 -> 0x1002bff0 `Channel_setField5cClamped1200` (incremental-linking thunk) at 0x1003a23c
 - 0x10042550 `__ftol` at 0x1003a2e9
 - indirect `call [edx+0xcc]` at 0x1003a277
 

@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 116 bytes, 32 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 selects on the 32-bit tag at this-8 and calls the matching sub-view's slot-60 method: 1 -> the unnamed 0x0049fd80 (this-0x168), 2 -> the unnamed 0x00487af0 (this-0x1a0), 4 -> widgetShow 0x004a2fa0 (this-0x4) with the single argument, 8 -> the unnamed 0x004a4870 (this-0x8c), 0x10 -> the unnamed 0x0049e7b0 (this-0x180); every other tag returns (`re/names/undisc2_exe.tsv`)
-System writeup: `re/analysis/systems/undisc2_exe.md`.
+System writeup: `re/analysis/systems/exe_8.md`, `re/analysis/systems/undisc2_exe.md`.
 
 ## Signature
 - Returns with `ret 0x4` (at 0x004a1018, 0x004a102b, 0x004a103e, 0x004a1051, 0x004a1061): callee pops 4 bytes of stack arguments.
@@ -25,11 +25,11 @@ None.
 - `ja` (unsigned) at 0x004a0ff7
 
 ## Callees
-- 0x00487af0 `FUN_00487af0` at 0x004a1026
-- 0x0049e7b0 `FUN_0049e7b0` at 0x004a1013
-- 0x0049fd80 `FUN_0049fd80` at 0x004a1039
+- 0x00487af0 `ListBox::Slot60` at 0x004a1026
+- 0x0049e7b0 `listPanelSlot60` at 0x004a1013
+- 0x0049fd80 `optionDialogSlot60` at 0x004a1039
 - 0x004a2fa0 `widgetShow` at 0x004a105c
-- 0x004a4870 `FUN_004a4870` at 0x004a104c
+- 0x004a4870 `panelSubSlot60` at 0x004a104c
 - indirect `jmp [edx*4+0x4a1064]` at 0x004a1001
 
 ## Callers

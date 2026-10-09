@@ -26,7 +26,7 @@ None.
 - indirect `call [ecx+0x10]` at 0x10011770
 
 ## Callers
-0x1000e230 `FUN_1000e230`
+0x1000e230 `Wave_Device::caps`
 
 ## Constants
 - `0xc` (12) at 0x1001176b

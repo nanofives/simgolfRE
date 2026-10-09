@@ -23,7 +23,7 @@ None.
 - import `WINMM.dll!waveInStop` at 0x10038f17
 
 ## Callers
-0x1000eaa0 `FUN_1000eaa0`
+0x1000eaa0 `Wave_In_Device::stop`
 
 ## Constants
 None.

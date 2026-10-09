@@ -30,7 +30,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x10005d80 `FUN_10005d80`
+0x10005d80 `Sound::scaleTickRate`
 
 ## Constants
 None.

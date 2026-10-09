@@ -1015,7 +1015,7 @@ entry	name	size	callers	callees	ranges
 00487a60	NodeListB::dtor	11	1	1	00487a60-00487a6b
 00487a70	resourceLoadB	66	1	0	00487a70-00487ab2
 00487ac0	releaseWithHookB	33	1	1	00487ac0-00487ae1
-00487af0	FUN_00487af0	3	2	0	00487af0-00487af3
+00487af0	ListBox::Slot60	3	2	0	00487af0-00487af3
 00487b00	FUN_00487b00	5	1	0	00487b00-00487b05
 00487b40	NodeListC::ctor	18	1	1	00487b40-00487b52
 00487b60	NodeListC::scalarDtor	30	0	2	00487b60-00487b7e
@@ -1365,7 +1365,7 @@ entry	name	size	callers	callees	ranges
 0049e450	listPanelRefresh	396	2	2	0049e450-0049e5dc
 0049e640	listSelectionChanged	55	2	1	0049e640-0049e677
 0049e680	listPanelDrawContents	290	0	3	0049e680-0049e7a2
-0049e7b0	FUN_0049e7b0	23	2	0	0049e7b0-0049e7c7
+0049e7b0	listPanelSlot60	23	2	0	0049e7b0-0049e7c7
 0049e7d0	listPanelReadValue	440	2	1	0049e7d0-0049e988
 0049e990	FUN_0049e990	52	2	0	0049e990-0049e9c4
 0049e9d0	loadCursors	248	1	4	0049e9d0-0049eac8
@@ -1392,7 +1392,7 @@ entry	name	size	callers	callees	ranges
 0049fa90	optionDialogOnKey	308	2	4	0049fa90-0049fbc4
 0049fc30	FUN_0049fc30	45	2	0	0049fc30-0049fc5d
 0049fc60	optionDialogDrawContents	277	0	3	0049fc60-0049fd75
-0049fd80	FUN_0049fd80	23	2	0	0049fd80-0049fd97
+0049fd80	optionDialogSlot60	23	2	0	0049fd80-0049fd97
 0049fda0	optionDialogOnMouse	123	2	0	0049fda0-0049fe1b
 0049fe20	FUN_0049fe20	40	2	0	0049fe20-0049fe48
 0049fe50	loadFonts	221	1	4	0049fe50-0049ff2d
@@ -1494,7 +1494,7 @@ entry	name	size	callers	callees	ranges
 004a4570	hotHitCb6	57	2	1	004a4570-004a45a9
 004a45b0	panelSubDrawContents	198	0	2	004a45b0-004a4676
 004a4680	panelOnKey	399	2	1	004a4680-004a480f
-004a4870	FUN_004a4870	32	2	0	004a4870-004a4890
+004a4870	panelSubSlot60	32	2	0	004a4870-004a4890
 004a4890	listFindById	91	1	0	004a4890-004a48eb
 004a48f0	listGetAt	128	1	0	004a48f0-004a4970
 004a4970	panelSubDeletingDtor_vtordisp	8	0	0	004a4970-004a4978

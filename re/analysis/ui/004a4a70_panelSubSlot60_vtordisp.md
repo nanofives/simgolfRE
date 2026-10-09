@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x004a4870 (`re/names/undisc2_exe.tsv`)
+System writeup: `re/analysis/systems/exe_8.md`.
 
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
@@ -17,7 +18,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x004a4870 `FUN_004a4870` at 0x004a4a73
+- 0x004a4870 `panelSubSlot60` at 0x004a4a73
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

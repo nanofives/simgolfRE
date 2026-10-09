@@ -32,7 +32,7 @@ None.
 - indirect `call edi` at 0x10028832, 0x10028866
 
 ## Callers
-0x100041d0 `loadSoundFile`, 0x1000a1b0 `Midi_Device::enableOutput`, 0x10020290 `FUN_10020290`
+0x100041d0 `loadSoundFile`, 0x1000a1b0 `Midi_Device::enableOutput`, 0x10020290 `Seq::loadFile`
 
 ## Constants
 - `0x1` at 0x10028820, 0x10028854

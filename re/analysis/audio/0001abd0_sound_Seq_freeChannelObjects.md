@@ -32,7 +32,7 @@ Through registers:
 - indirect `call [eax]` at 0x1001abf8
 
 ## Callers
-0x10009e40 `FUN_10009e40`, 0x100204e0 `Sound_reapIdle`, 0x10021fa0 `Seq_updateChannel`, 0x10022320 `Sound_lookupOrCreate`
+0x10009e40 `Midi_Device::shutdown`, 0x100204e0 `Sound_reapIdle`, 0x10021fa0 `Seq_updateChannel`, 0x10022320 `Sound_lookupOrCreate`
 
 ## Constants
 - `0x0` at 0x1001abe2, 0x1001ac12

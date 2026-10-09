@@ -31,7 +31,7 @@ Through registers:
 - import `USER32.dll!SetWindowLongA` at 0x10028707
 
 ## Callers
-0x1000b420 `FUN_1000b420`
+0x1000b420 `Wave_Device::open`
 
 ## Constants
 - `0x4` at 0x10028724

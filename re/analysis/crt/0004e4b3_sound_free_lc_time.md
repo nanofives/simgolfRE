@@ -67,7 +67,7 @@ None.
 - 0x10042c07 `free` at 0x1004e4c3, 0x1004e4cb, 0x1004e4d3, 0x1004e4db, 0x1004e4e3, 0x1004e4eb, 0x1004e4f2, 0x1004e4fa (+35 more)
 
 ## Callers
-0x1004e0d4 `FUN_1004e0d4`
+0x1004e0d4 `__init_time`
 
 ## Constants
 - `0x2c` (44) at 0x1004e63e

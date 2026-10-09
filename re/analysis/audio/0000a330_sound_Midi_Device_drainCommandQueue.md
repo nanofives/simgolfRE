@@ -76,7 +76,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `jmp [eax*4+0x1000a588]` at 0x1000a3a8
 
 ## Callers
-0x10009e40 `FUN_10009e40`
+0x10009e40 `Midi_Device::shutdown`
 
 ## Constants
 - `0x1` at 0x1000a4cc, 0x1000a559

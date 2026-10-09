@@ -34,7 +34,7 @@ None.
 - 0x10042710 `_strncpy` at 0x100117e0
 
 ## Callers
-0x1000e260 `FUN_1000e260`
+0x1000e260 `Wave_Device::deviceName`
 
 ## Constants
 - `0x3` at 0x100117ad, 0x100117cb

@@ -43,7 +43,7 @@ Through registers:
 - 0x100424d7 `operator_new` at 0x10006e21
 
 ## Callers
-0x1000b420 `FUN_1000b420`
+0x1000b420 `Wave_Device::open`
 
 ## Constants
 - `0x1` at 0x10006e53

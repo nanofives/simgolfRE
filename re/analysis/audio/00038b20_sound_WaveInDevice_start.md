@@ -22,7 +22,7 @@ None.
 - import `WINMM.dll!waveInStart` at 0x10038b24
 
 ## Callers
-0x1000ea30 `FUN_1000ea30`
+0x1000ea30 `Wave_In_Device::start`
 
 ## Constants
 None.

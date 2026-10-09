@@ -4,6 +4,20 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-09  sound.dll:0002c370  Channel_setField4Masked7f  C1->C2  re/analysis/audio/0002c370_sound_Channel_setField4Masked7f.md
+2026-10-09  sound.dll:0002c0d0  Channel_collectFlagBits  C1->C2  re/analysis/audio/0002c0d0_sound_Channel_collectFlagBits.md
+2026-10-09  sound.dll:0002bff0  Channel_setField5cClamped1200  C1->C2  re/analysis/audio/0002bff0_sound_Channel_setField5cClamped1200.md
+2026-10-09  004a4870  panelSubSlot60  C1->C2  re/analysis/ui/004a4870_panelSubSlot60.md
+2026-10-09  0049fd80  optionDialogSlot60  C1->C2  re/analysis/ui/0049fd80_optionDialogSlot60.md
+2026-10-09  0049e7b0  listPanelSlot60  C1->C2  re/analysis/ui/0049e7b0_listPanelSlot60.md
+2026-10-09  00487af0  ListBox::Slot60  C1->C2  re/analysis/ui/00487af0_ListBox_Slot60.md
+2026-10-09  sound.dll:0002bff0  Channel_setField5cClamped1200  C0->C1  table slot 39 (+0x9c) of the channel vtable 0x1005bb90 (0x1005bc2c) and of 0x1005bcb4 (0x1005bd50), installers 0x1002b4e0 SubChannel_ctor, 0x1002c490 Ch5bb90_ctor (re/tools/pointer_callers.py); caller 0x1003a210 (MultiSound_setPitchCents, through the thunk 0x10001924 at 0x1003a23c); its only call is the +0x40 object's own slot +0x9c (0x1002c01b); matched 100% in re/match/sound_raw_04.cpp
+2026-10-09  sound.dll:0002c0d0  Channel_collectFlagBits  C0->C1  table slot 28 (+0x70) of the channel vtable 0x1005bb90 (0x1005bc00) and of 0x1005bcb4 (0x1005bd24), installers 0x1002b4e0 SubChannel_ctor, 0x1002c490 Ch5bb90_ctor (re/tools/pointer_callers.py); caller 0x1003a560 (MultiSound_getStatus, through the thunk 0x1000245a at 0x1003a563); its only call is the +0x40 object's own slot +0x70 (0x1002c0de)
+2026-10-09  sound.dll:0002c370  Channel_setField4Masked7f  C0->C1  table slot 16 (+0x40) of the channel vtable 0x1005bb90 (0x1005bbd0) and of 0x1005bcb4 (0x1005bcf4), installers 0x1002b4e0 SubChannel_ctor, 0x1002c490 Ch5bb90_ctor (re/tools/pointer_callers.py); caller 0x1003a0d0 (MultiSound::setVolume, through the thunk 0x100026ee at 0x1003a0ed); no callee; matched 100% in re/match/sound_raw_04.cpp
+2026-10-09  00487af0  ListBox::Slot60  C0->C1  tail-jump target of ListBox::Slot60_vtordisp 0x0048cd20 (slot 60 of the table 0x004bb260); call at 0x004a1026 in viewDispatchSlot60 0x004a0ff0 (tag 2, this-0x1a0); 3 bytes
+2026-10-09  0049fd80  optionDialogSlot60  C0->C1  tail-jump target of optionDialogSlot60_vtordisp 0x004a0000 (slot 60 of the table 0x004bbeb0); call at 0x004a1039 in viewDispatchSlot60 0x004a0ff0 (tag 1, this-0x168); 0x17 bytes (0x0049fd80..0x0049fd96)
+2026-10-09  0049e7b0  listPanelSlot60  C0->C1  tail-jump target of listPanelSlot60_vtordisp 0x00491bb0 (slot 60 of the table 0x004bb744); call at 0x004a1013 in viewDispatchSlot60 0x004a0ff0 (tag 0x10, this-0x180); 0x17 bytes (0x0049e7b0..0x0049e7c6)
+2026-10-09  004a4870  panelSubSlot60  C0->C1  tail-jump target of panelSubSlot60_vtordisp 0x004a4a70 (jmp at 0x004a4a73, slot 60 of the table 0x004bc244); call at 0x004a104c in viewDispatchSlot60 0x004a0ff0 (tag 8, this-0x8c); 0x20 bytes (0x004a4870..0x004a488f)
 2026-10-09  00497c70  netBeginOp1  C1->C2  re/analysis/net/00497c70_netBeginOp1.md
 2026-10-09  00497c20  netBeginOp0  C1->C2  re/analysis/net/00497c20_netBeginOp0.md
 2026-10-09  00483010  Cache483010::dtor  C1->C2  re/analysis/render/00483010_Cache483010_dtor.md

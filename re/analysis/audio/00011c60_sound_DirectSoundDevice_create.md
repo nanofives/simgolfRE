@@ -92,7 +92,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [edx+0x10]` at 0x10011d67
 
 ## Callers
-0x1000b420 `FUN_1000b420`, 0x1000baa0 `Wave_Device::start`, 0x1000c020 `Wave_Device::restart`
+0x1000b420 `Wave_Device::open`, 0x1000baa0 `Wave_Device::start`, 0x1000c020 `Wave_Device::restart`
 
 ## Constants
 - `0x1` at 0x10011c95, 0x10011ccf, 0x10011cf1, 0x10011dbb, 0x10011e3a

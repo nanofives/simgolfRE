@@ -94,7 +94,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - import `WINMM.dll!mmioSetInfo` at 0x100309ca
 
 ## Callers
-0x10030710 `FUN_10030710`
+0x10030710 `Sound5c450::openMmio`
 
 ## Constants
 - `0x0` at 0x100308a8, 0x100308dd
