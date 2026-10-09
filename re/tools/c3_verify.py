@@ -109,13 +109,20 @@ def main():
                "--file", f"shim/src/re/{a.batch}.cpp", "--module", mod]
         if addr in extra:
             cmd += ["--callers", extra[addr]]
-        elif mod == "Terrain.dll" and (row.get("callers") or "none") == "none":
+        if "--callers" not in cmd and mod == "Terrain.dll" and (row.get("callers") or "none") == "none":
             # an export called only from the exe: its callers come through the exe's import thunks
             r0 = subprocess.run([sys.executable, str(ROOT / "re" / "tools" / "import_callers.py"), "--callers-arg",
                                  f"0x{addr:x}"], capture_output=True, text=True, cwd=ROOT)
             if r0.stdout.strip():
                 cmd += ["--callers", r0.stdout.strip()]
                 print(f"0x{addr:08x}: callers from the exe import table: {r0.stdout.strip()}")
+        if "--callers" not in cmd and (row.get("callers") or "none") == "none":
+            # reached only through a stored pointer (vtable slot, callback field): the installers are the callers
+            r1 = subprocess.run([sys.executable, str(ROOT / "re" / "tools" / "pointer_callers.py"), mod,
+                                 "--callers-arg", f"0x{addr:x}"], capture_output=True, text=True, cwd=ROOT)
+            if r1.stdout.strip():
+                cmd += ["--callers", r1.stdout.strip()]
+                print(f"0x{addr:08x}: callers from stored-pointer installers: {r1.stdout.strip()}")
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
         lines = [l for l in r.stdout.splitlines() if "PROMOTED" in l or "REFUSED" in l or "FAIL" in l]
         print("\n".join(lines))
