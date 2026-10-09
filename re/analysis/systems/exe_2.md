@@ -65,7 +65,7 @@ A Surface/Image/device-context class family wrapping a backing device object
 (`this+4`, called through its vtable). 100% matched in `re/match/golf_hand_0*.cpp`.
 
 - Lifecycle: `Surface_ctor` 0x00473ab0, `Surface_create` 0x00474550 /
-  `Surface_createFull` 0x00474dd0 / `Surface_init` 0x00473ae0, `Surface_open`
+  `Surface_createFull` 0x00474dd0 / `Surface_free` 0x00473ae0 (releases the handle, buffer and cache; renamed from Surface_init 2026-10-09), `Surface_open`
   0x00473b50; `Image_ctor` 0x00474ae0 / `Image_dtor` 0x00474c40;
   `initGlobalImage` 0x00473a70 constructs the global image object 0x00839348.
 - Blits / draws: `Surface_blit`/`blit2`/`blit3` (0x00473bf0, 0x004740f0, 0x00475d00),

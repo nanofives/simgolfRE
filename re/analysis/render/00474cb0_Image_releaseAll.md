@@ -73,7 +73,7 @@ Through registers:
 - `jne` (equality) at 0x00474cd4, 0x00474d20
 
 ## Callees
-- 0x00483010 `Cache483010::ctorVtbl` at 0x00474ce2
+- 0x00483010 `Cache483010::dtor` at 0x00474ce2
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x00474ce8
 - 0x004a5007 `_free` at 0x00474d08
 - indirect `call [edx+0x8c]` at 0x00474cc8

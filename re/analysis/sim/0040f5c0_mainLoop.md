@@ -341,7 +341,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00478b80 `Widget_fillRect` at 0x004106e7, 0x0041073c
 - 0x00480c80 `Window::refreshFull` at 0x0040f928
 - 0x00482fd0 `Cache482fd0::ctor` at 0x0040f663
-- 0x00483010 `Cache483010::ctorVtbl` at 0x0040fae7
+- 0x00483010 `Cache483010::dtor` at 0x0040fae7
 - 0x004845e0 `Snd::status` at 0x004104fc
 - 0x004a5a78 `__close` at 0x0040fa8e
 - 0x004a5b58 `__write` at 0x0040fa82

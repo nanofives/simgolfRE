@@ -39,7 +39,7 @@ Through registers:
 - `je` (equality) at 0x004745cc, 0x00474621
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x004745c5
+- 0x00473ae0 `Surface_free` at 0x004745c5
 - 0x00492450 `blitErrorPtr` at 0x00474603
 - indirect `call [eax+0x4]` at 0x0047461c
 - indirect `call [edx+0x18]` at 0x004745f2

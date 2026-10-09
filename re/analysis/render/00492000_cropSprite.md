@@ -82,7 +82,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x004920e0, 0x00492134, 0x00492165, 0x00492196, 0x004921cf, 0x004921f1, 0x00492235, 0x0049225c (+8 more)
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x0049202c, 0x00492333, 0x004923ea
+- 0x00473ae0 `Surface_free` at 0x0049202c, 0x00492333, 0x004923ea
 - 0x004a5007 `_free` at 0x004923f9
 - 0x004a504f `_malloc` at 0x0049231f
 - indirect `call [eax+0x10]` at 0x0049201f

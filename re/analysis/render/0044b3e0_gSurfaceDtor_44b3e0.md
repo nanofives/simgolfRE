@@ -30,7 +30,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0x4]` dword at 0x0044b3f9
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x0044b425, 0x0044b43a
+- 0x00473ae0 `Surface_free` at 0x0044b425, 0x0044b43a
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0044b412
 
 ## Callers

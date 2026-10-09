@@ -92,7 +92,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00482b20 `Decoder482b20::ctor` at 0x0048216e, 0x004822d3
 - 0x00482b90 `Flic::createStream` at 0x00482399
 - 0x00482fd0 `Cache482fd0::ctor` at 0x0048200d
-- 0x00483010 `Cache483010::ctorVtbl` at 0x00482051
+- 0x00483010 `Cache483010::dtor` at 0x00482051
 - 0x00492d80 `MappedFile::ctor` at 0x00481f9b
 - 0x00492dd0 `MappedFile::open` at 0x00481fb3
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x00482057

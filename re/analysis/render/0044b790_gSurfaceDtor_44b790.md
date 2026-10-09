@@ -29,7 +29,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0x4]` dword at 0x0044b7a9
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x0044b7c1, 0x0044b7d7, 0x0044b7ed, 0x0044b803, 0x0044b819, 0x0044b82f, 0x0044b845, 0x0044b85b (+4 more)
+- 0x00473ae0 `Surface_free` at 0x0044b7c1, 0x0044b7d7, 0x0044b7ed, 0x0044b803, 0x0044b819, 0x0044b82f, 0x0044b845, 0x0044b85b (+4 more)
 
 ## Callers
 0x0044b780 `atexitDtor_821cb8`

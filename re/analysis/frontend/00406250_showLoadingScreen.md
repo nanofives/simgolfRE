@@ -47,7 +47,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0045c1e0 `Random::range` at 0x00406297, 0x004063e8
 - 0x00467130 `clamp` at 0x004064a7
 - 0x00473ab0 `Surface_ctor` at 0x0040626f
-- 0x00473ae0 `Surface_init` at 0x00406510, 0x0040653d
+- 0x00473ae0 `Surface_free` at 0x00406510, 0x0040653d
 - 0x00473bf0 `Surface_blit` at 0x004063bc
 - 0x00473e60 `Image_draw` at 0x004063d5
 - 0x00474ae0 `Image_ctor` at 0x00406283

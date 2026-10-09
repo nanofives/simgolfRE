@@ -78,7 +78,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0045bf80 `waitTicks` at 0x0044bd30
 - 0x0045c030 `pumpMessages` at 0x0044bcf8
 - 0x00473ab0 `Surface_ctor` at 0x0044b9e3, 0x0044b9f5
-- 0x00473ae0 `Surface_init` at 0x0044bd67, 0x0044bd70, 0x0044bd9e, 0x0044bdb6
+- 0x00473ae0 `Surface_free` at 0x0044bd67, 0x0044bd70, 0x0044bd9e, 0x0044bdb6
 - 0x00473c60 `Surface_blitTakeDirty` at 0x0044ba6f, 0x0044bad0
 - 0x00473df0 `Surface_drawRegion` at 0x0044bcb0
 - 0x00473e60 `Image_draw` at 0x0044bc0b

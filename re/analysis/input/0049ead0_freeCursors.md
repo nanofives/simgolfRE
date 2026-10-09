@@ -17,7 +17,7 @@ None.
 None.
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x0049ead5, 0x0049eadf, 0x0049eae9
+- 0x00473ae0 `Surface_free` at 0x0049ead5, 0x0049eadf, 0x0049eae9
 
 ## Callers
 0x00485740 `engineShutdown`

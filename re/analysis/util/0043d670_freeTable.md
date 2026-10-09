@@ -32,7 +32,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 
 ## Callees
 - 0x0043d520 `freeBlock` at 0x0043d6a0
-- 0x00473ae0 `Surface_init` at 0x0043d6c5
+- 0x00473ae0 `Surface_free` at 0x0043d6c5
 
 ## Callers
 0x0043dbe0 `loadWorldAssets`

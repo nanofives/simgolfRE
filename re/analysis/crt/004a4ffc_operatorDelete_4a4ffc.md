@@ -20,7 +20,7 @@ None.
 - 0x004a5007 `_free` at 0x004a5000
 
 ## Callers
-0x00404260 `deletingDtor_404260`, 0x004042f0 `scalarDtor_404280`, 0x00404380 `deletingDtor_404380`, 0x0043cbd0 `editBoxTimer_deleteDtor`, 0x00449860 `freeTerrain`, 0x0044ac00 `listEraseRange`, 0x0045c000 `Cursor_deleteDtor`, 0x00473ae0 `Surface_init`, 0x004747c0 `Buf_deleteDtor`, 0x00474c20 `Image_deleteDtor`, 0x00474cb0 `Image_releaseAll`, 0x00475410 `flipBmpRows`, 0x00475580 `saveBmp`, 0x00475840 `loadImage`, 0x00479f10 `View_deleteDtor`, 0x0047d810 `View::scalarDtor47d810`, 0x00480410 `BinkFrame::scalarDtor`, 0x00480580 `View4804a0::scalarDtor`, 0x00481ba0 `Flic::reset`, 0x00481e40 `Flic::indexFrames` (+59 more)
+0x00404260 `deletingDtor_404260`, 0x004042f0 `scalarDtor_404280`, 0x00404380 `deletingDtor_404380`, 0x0043cbd0 `editBoxTimer_deleteDtor`, 0x00449860 `freeTerrain`, 0x0044ac00 `listEraseRange`, 0x0045c000 `Cursor_deleteDtor`, 0x00473ae0 `Surface_free`, 0x004747c0 `Buf_deleteDtor`, 0x00474c20 `Image_deleteDtor`, 0x00474cb0 `Image_releaseAll`, 0x00475410 `flipBmpRows`, 0x00475580 `saveBmp`, 0x00475840 `loadImage`, 0x00479f10 `View_deleteDtor`, 0x0047d810 `View::scalarDtor47d810`, 0x00480410 `BinkFrame::scalarDtor`, 0x00480580 `View4804a0::scalarDtor`, 0x00481ba0 `Flic::reset`, 0x00481e40 `Flic::indexFrames` (+59 more)
 
 ## Constants
 None.

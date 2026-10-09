@@ -193,7 +193,7 @@ SG_HOOK("golf_clean.exe", 0x00403fe0, initGlobalArray_00403fe0, InitGlobalArray_
 // 0x00404040  initGlobalArray_00404040: 1 step(s)
 namespace {
 const InitStep kSteps_00404040[] = {
-    {0x00404056, 0x004e9aa0, 0x58, 0x24f, 0x00482fd0, 0x00483010},  // Cache482fd0::ctor / Cache483010::ctorVtbl
+    {0x00404056, 0x004e9aa0, 0x58, 0x24f, 0x00482fd0, 0x00483010},  // Cache482fd0::ctor / Cache483010::dtor
 };
 void(__cdecl* InitGlobalArray_00404040_orig)();
 void __cdecl InitGlobalArray_00404040_re() { runSteps(kSteps_00404040, 1); }  // `ret` at 0x0040405b

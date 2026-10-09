@@ -122,7 +122,7 @@ golf_clean.exe	0x00482f00	staticInit_g83ac88	crt	match re/match/golf_raw_03.cpp	
 golf_clean.exe	0x00482f10	atexit_482f20	crt	match re/match/golf_raw_09.cpp	registers the static destructor LAB_00482f20 with _atexit
 golf_clean.exe	0x00482f60	Cache482f60::ctor	render	match re/match/golf_hand_r1.cpp	constructs the resource/palette cache object (empty body)
 golf_clean.exe	0x00482fd0	Cache482fd0::ctor	render	match re/match/golf_hand_01.cpp	constructs a 5-slot resource cache, each slot id set to -1 with cleared object/buffer pointers
-golf_clean.exe	0x00483010	Cache483010::ctorVtbl	render	match re/match/golf_raw_03.cpp	sets the cache vtable PTR_004babbc and calls reset (FUN_00483070)
+golf_clean.exe	0x00483010	Cache483010::dtor	render	match re/match/golf_raw_03.cpp; stores its own vtable 0x004babbc at 0x00483010 then tail-jumps to the release body 0x00483070; called before operator delete by freeCacheField 0x0049c8b0 and Surface_free 0x00473ae0 (0x00473b1d then 0x00473b23)	destructor: restores the class vtable 0x004babbc and runs the release body 0x00483070 (frees the display handle at +4 through display slot +0x90, then five entries from +0xc)
 golf_clean.exe	0x00483030	Cache483030::attach	render	match re/match/golf_raw_03.cpp	resets the cache then obtains a device object from the screen manager g_83ad50 (vtable f30) into m_4 and initializes it
 golf_clean.exe	0x00483060	Cache483060::detach	render	match re/match/golf_raw_03.cpp	releases the cache device object m_4 via vtable slot f3
 golf_clean.exe	0x00483070	Cache483070::reset	render	match re/match/golf_classes.cpp	releases the cache: returns m_4 to the manager g_mgr and, per slot, destroys the object, frees the buffer and clears the id
@@ -207,3 +207,4 @@ golf_clean.exe	0x00485260	Snd::ctor485260	audio	Ghidra decompilation of 0x004852
 golf_clean.exe	0x004852b0	Snd::scalarDtor4852b0	audio	match re/match/golf_raw_09.cpp	scalar deleting destructor wrapper (FUN_004852d0 + conditional free)
 golf_clean.exe	0x004852d0	Snd::setVtbl4852d0	audio	match re/match/golf_raw_04.cpp	sets the sound-object vtable pointer PTR_004badec
 golf_clean.exe	0x004852e0	VoiceRx::ctor	audio	match re/match/golf_hand_05.cpp;string 0x004e43c8	constructs the named (string in the binary) sound object: setKind(6) and copies the 10-char name into m_50
+golf_clean.exe	0x00483da0	pumpInputDisplay483da0	ui	tail jmp from Timer::stop at 0x00486f06; ORs 0x3f into g_inputPhase 0x0083ad4c at 0x00483da6, calls [[0x0083ad50]+0x150] at 0x00483dbb, stores 0 at 0x00483dc1	sets the low six bits of the input phase 0x0083ad4c, calls display slot +0x150 when the display 0x0083ad50 exists, then sets the phase to 0 (sibling of pumpInput483bd0/483c90/483cf0)

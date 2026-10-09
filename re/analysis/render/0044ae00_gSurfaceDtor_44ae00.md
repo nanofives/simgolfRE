@@ -28,7 +28,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0x4]` dword at 0x0044ae19
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x0044ae2e, 0x0044ae43
+- 0x00473ae0 `Surface_free` at 0x0044ae2e, 0x0044ae43
 
 ## Callers
 0x0044adf0 `atexitDtor_8210c8`, 0x0044aee0 `atexitDtor_821c60`, 0x0044af20 `atexitDtor_821bf8`, 0x0044af60 `atexitDtor_821070`

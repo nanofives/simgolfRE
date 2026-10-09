@@ -31,7 +31,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x00462be0 `drawQueuedSprite` at 0x00463136
 - 0x00482fd0 `Cache482fd0::ctor` at 0x0046311d
-- 0x00483010 `Cache483010::ctorVtbl` at 0x00463156
+- 0x00483010 `Cache483010::dtor` at 0x00463156
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

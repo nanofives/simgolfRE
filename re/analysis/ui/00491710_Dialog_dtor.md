@@ -44,7 +44,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x00401c70 `List401c70_dtor` at 0x004917bf, 0x00491810
 - 0x004026a0 `List402_clear` at 0x004917ab, 0x004917fc
-- 0x00473ae0 `Surface_init` at 0x00491835
+- 0x00473ae0 `Surface_free` at 0x00491835
 - 0x00474810 `Buf_dtor` at 0x004918a6
 - 0x004805a0 `Base4805a0::dtor` at 0x0049177d, 0x004918b5
 - 0x00488650 `Button::dtor` at 0x00491868, 0x00491896

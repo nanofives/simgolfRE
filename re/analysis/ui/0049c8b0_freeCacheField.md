@@ -23,7 +23,7 @@ Through registers:
 - `je` (equality) at 0x0049c8bb
 
 ## Callees
-- 0x00483010 `Cache483010::ctorVtbl` at 0x0049c8bf
+- 0x00483010 `Cache483010::dtor` at 0x0049c8bf
 - 0x004a4ffc `operatorDelete_4a4ffc` at 0x0049c8c5
 
 ## Callers

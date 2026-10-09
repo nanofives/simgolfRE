@@ -66,7 +66,7 @@ golf_clean.exe	0x004732d0	addScore	course	match re/match/golf_hand_r1.cpp; strin
 golf_clean.exe	0x00473470	drawScoreSummary	ui	string 0x004e4148; string 0x004e4170; caller 0x0044cff0 (showEndOfYearScreen)	draws the score summary panel (Total Score, Fun, Skill, Cash, Top-10 trophies)
 golf_clean.exe	0x00473a70	initGlobalImage	crt	match re/match/golf_raw_02.cpp; callee 0x00474ae0 (Image_ctor); operates on DAT_00839348	static initializer that constructs the global image object at DAT_00839348
 golf_clean.exe	0x00473ab0	Surface_ctor	render	match re/match/golf_hand_00.cpp; __fastcall ctor	constructs a graphics surface wrapper object
-golf_clean.exe	0x00473ae0	Surface_init	render	match re/match/golf_raw_11.cpp	initialises surface fields
+golf_clean.exe	0x00473ae0	Surface_free	render	match re/match/golf_raw_11.cpp; display slot +0x94 at 0x00473afa, free 0x004a5007 at 0x00473b08, Cache483010::dtor + operator delete at 0x00473b1d/0x00473b23	releases a Surface when the display 0x0083ad50 exists: its handle at +4 through display slot +0x94, the buffer at +8 (free), the cache at +0xc (dtor + delete), then zeroes +0x10..+0x24
 golf_clean.exe	0x00473b50	Surface_open	render	match re/match/golf_hand_04.cpp; __thiscall(char* name)	opens/loads a named surface resource
 golf_clean.exe	0x00473bf0	Surface_blit	render	match re/match/golf_hand_03.cpp	blits a source surface region onto this surface
 golf_clean.exe	0x00473c60	Surface_blitTakeDirty	render	callee 0x00473bf0 (Surface_blit)	blits a surface then takes over its dirty-rect field (+0xac)

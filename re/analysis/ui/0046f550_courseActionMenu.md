@@ -133,7 +133,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0047ab50 `View_toLocal` at 0x0047016d, 0x004703de
 - 0x00480c80 `Window::refreshFull` at 0x004703b5, 0x00470708, 0x00470832
 - 0x00482fd0 `Cache482fd0::ctor` at 0x0046f5a4
-- 0x00483010 `Cache483010::ctorVtbl` at 0x004708d0, 0x0047097d
+- 0x00483010 `Cache483010::dtor` at 0x004708d0, 0x0047097d
 - 0x00483d30 `enterModal483d30` at 0x0047089e, 0x0047094b
 - 0x004a55d2 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x0046f58d
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x004708ee, 0x0047099b

@@ -85,7 +85,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004762d0 `setDrawTarget` at 0x00462dfa
 - 0x00478b80 `Widget_fillRect` at 0x00462f1c, 0x00462f44
 - 0x00482fd0 `Cache482fd0::ctor` at 0x00462c00
-- 0x00483010 `Cache483010::ctorVtbl` at 0x004630e2
+- 0x00483010 `Cache483010::dtor` at 0x004630e2
 - 0x004ad425 `__itoa` at 0x00462d84
 - indirect `call [eax+0x9c]` at 0x00462ca5
 - indirect `call [edx+0x9c]` at 0x00462c81, 0x004630d0

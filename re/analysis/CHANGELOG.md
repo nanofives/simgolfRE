@@ -4,6 +4,21 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-09  00497c70  netBeginOp1  C1->C2  re/analysis/net/00497c70_netBeginOp1.md
+2026-10-09  00497c20  netBeginOp0  C1->C2  re/analysis/net/00497c20_netBeginOp0.md
+2026-10-09  00483010  Cache483010::dtor  C1->C2  re/analysis/render/00483010_Cache483010_dtor.md
+2026-10-09  00473ae0  Surface_free  C1->C2  re/analysis/render/00473ae0_Surface_free.md
+2026-10-09  00497c70  netBeginOp1  C2<-C1  DEMOTED: re-record: renamed 2026-10-09 (Surface_init->Surface_free, Cache483010::ctorVtbl->Cache483010::dtor, netTimerReadA/B->netBeginOp0/1); note regenerated under the new name
+2026-10-09  00497c20  netBeginOp0  C2<-C1  DEMOTED: re-record: renamed 2026-10-09 (Surface_init->Surface_free, Cache483010::ctorVtbl->Cache483010::dtor, netTimerReadA/B->netBeginOp0/1); note regenerated under the new name
+2026-10-09  00483010  Cache483010::dtor  C2<-C1  DEMOTED: re-record: renamed 2026-10-09 (Surface_init->Surface_free, Cache483010::ctorVtbl->Cache483010::dtor, netTimerReadA/B->netBeginOp0/1); note regenerated under the new name
+2026-10-09  00473ae0  Surface_free  C2<-C1  DEMOTED: re-record: renamed 2026-10-09 (Surface_init->Surface_free, Cache483010::ctorVtbl->Cache483010::dtor, netTimerReadA/B->netBeginOp0/1); note regenerated under the new name
+2026-10-09  00497c70  netBeginOp1  name netTimerReadB->netBeginOp1  log/n_renames.tsv
+2026-10-09  00497c20  netBeginOp0  name netTimerReadA->netBeginOp0  log/n_renames.tsv
+2026-10-09  00483010  Cache483010::dtor  name Cache483010::ctorVtbl->Cache483010::dtor  log/n_renames.tsv
+2026-10-09  00473ae0  Surface_free  name Surface_init->Surface_free  log/n_renames.tsv
+2026-10-09  00486ec0  Timer::stop  callees none->0x00483da0  log/c2_refresh.tsv
+2026-10-09  00483da0  pumpInputDisplay483da0  C1->C2  re/analysis/ui/00483da0_pumpInputDisplay483da0.md
+2026-10-09  00483da0  pumpInputDisplay483da0  C0->C1  tail jmp from Timer::stop at 0x00486f06; ORs 0x3f into g_inputPhase 0x0083ad4c at 0x00483da6, calls [[0x0083ad50]+0x150] at 0x00483dbb, stores 0 at 0x00483dc1
 2026-10-09  0049eb50  dynInit_initGfxGlobal_8408f8  C2->C3  log/diff/0049eb50_dynInit_initGfxGlobal_8408f8_live.path1.csv
 2026-10-09  0049eaf0  dynInit_initGfxGlobal_8408c8  C2->C3  log/diff/0049eaf0_dynInit_initGfxGlobal_8408c8_live.path1.csv
 2026-10-09  0049d540  dynInit_initGfxGlobal_840860  C2->C3  log/diff/0049d540_dynInit_initGfxGlobal_840860_live.path1.csv

@@ -65,7 +65,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00402280 `S3List_add2` at 0x00475975
 - 0x00478cd0 `loadImageData` at 0x00475a81
 - 0x00482fd0 `Cache482fd0::ctor` at 0x004758fd
-- 0x00483010 `Cache483010::ctorVtbl` at 0x00475955
+- 0x00483010 `Cache483010::dtor` at 0x00475955
 - 0x00492d80 `MappedFile::ctor` at 0x00475865
 - 0x00492dc0 `MappedFile::dtor` at 0x0047588d, 0x004758ca, 0x00475927, 0x00475a4c, 0x00475adb
 - 0x00492dd0 `MappedFile::open` at 0x00475a34

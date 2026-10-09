@@ -16,7 +16,7 @@
 #             allocator is heapstandin.js's arena for the A/B thread
 #   atexitdtor  the exit routine on an object built by the game's own constructor stub and then seeded: _full (every
 #             Surface member has a display handle at +4, a buffer at +8 and the first three a cache at +0xc), _mixed
-#             (one field per member, by member index mod 4), _nodisplay (_full with 0x0083ad50 = NULL: Surface_init
+#             (one field per member, by member index mod 4), _nodisplay (_full with 0x0083ad50 = NULL: Surface_free
 #             0x00473ae0 returns at 0x00473aee), _empty (as constructed); _free 0x004a5007 and operator delete
 #             0x004a4ffc only record into $freelog, display slots +0x90 / +0x94 record into $sink, and the caches'
 #             entry objects' deleting destructors (slot 0) record into $caches

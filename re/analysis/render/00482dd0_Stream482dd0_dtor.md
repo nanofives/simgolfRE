@@ -28,7 +28,7 @@ Through registers:
 - `je` (equality) at 0x00482deb
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x00482df9
+- 0x00473ae0 `Surface_free` at 0x00482df9
 - indirect `call [eax]` at 0x00482df1
 
 ## Callers

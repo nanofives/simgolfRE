@@ -76,7 +76,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x00474e70 `Surface_paint` at 0x00495568
 - 0x00482fd0 `Cache482fd0::ctor` at 0x00495449
-- 0x00483010 `Cache483010::ctorVtbl` at 0x00495582, 0x00495605, 0x004956f1, 0x00495713, 0x0049572b
+- 0x00483010 `Cache483010::dtor` at 0x00495582, 0x00495605, 0x004956f1, 0x00495713, 0x0049572b
 - 0x00483020 `FUN_00483020` at 0x004956ff
 - 0x00493630 `fill16` at 0x00495672
 - 0x004a6ad0 `_strncmp` at 0x004954bc

@@ -41,7 +41,7 @@ Through registers:
 - `jne` (equality) at 0x004745a6
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x00474555
+- 0x00473ae0 `Surface_free` at 0x00474555
 - indirect `call [eax+0x4]` at 0x004745a1
 - indirect `call [edx+0x18]` at 0x00474582
 - indirect `call [edx+0x80]` at 0x00474570

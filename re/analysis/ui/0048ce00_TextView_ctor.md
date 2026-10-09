@@ -257,7 +257,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x00473ab0 `Surface_ctor` at 0x0048ce67
-- 0x00473ae0 `Surface_init` at 0x0048d0f7
+- 0x00473ae0 `Surface_free` at 0x0048d0f7
 - 0x004747a0 `Buf_ctor` at 0x0048ce37
 - 0x004804a0 `View4804a0::ctor` at 0x0048ce28
 - 0x0048e0b0 `TextView::setLineSpacing` at 0x0048d42e

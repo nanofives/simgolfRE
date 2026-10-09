@@ -249,7 +249,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x0048d609, 0x0048d790, 0x0048d86f
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x0048d611
+- 0x00473ae0 `Surface_free` at 0x0048d611
 - 0x004747e0 `Buf_releaseData` at 0x0048db55
 - 0x00480610 `Window::ctorInit` at 0x0048d5f6
 - 0x00489e40 `ListBox::resetFields` at 0x0048d5c3

@@ -80,9 +80,10 @@ control messages — (string in the binary) (0x004e4824), (string in the binary)
 (string in the binary) — and edits the peer list via `netListRemove` (0x0049bec0).
 `netNameOf` (0x0049aa30) returns a peer name. `netHeapAlloc` (0x0049b970)
 allocates net objects and aborts on failure ((string in the binary)
-0x004c1434). `netSendShutdown` (0x00497d10) clears the send buffers. Timing
-counter `g_netTimer` (0x008400b0) is read by `netTimerReadA`/`netTimerReadB`
-(0x00497c20 / 0x00497c70). This stack is inherited from the Jackal/SMAC
+0x004c1434). `netSendShutdown` (0x00497d10) clears the send buffers. The net state
+`g_netState` (0x008400b0) gates `netBeginOp0`/`netBeginOp1` (0x00497c20 / 0x00497c70), which store 0 or 1 at
+this+0x60 and call slot +0x90 of the sub-object at this+0x64 (renamed 2026-10-09 from g_netTimer and
+netTimerReadA/B: the code reads no timer). This stack is inherited from the Jackal/SMAC
 multiplayer lineage.
 
 ## 6. Movie / FMV player (video) — 0x0049c8e0 .. 0x0049cf50

@@ -15,4 +15,4 @@ golf_clean.exe	0x0083e8e0	g_hudTextBuf	char[10][0x100] text	written by setHudTex
 golf_clean.exe	0x008406e8	g_pairArray	int-pair array ptr	initialized by initPairArrayGlobal 0x0049d010 via allocPairArray 0x0049d050
 golf_clean.exe	0x0083ab30	g_scrollDragX	int drag anchor	written by scrollbarOnDown 0x00496c30; read by scrollbarOnDrag 0x00496d20
 golf_clean.exe	0x0083ab34	g_scrollDragY	int drag anchor	written by scrollbarOnDown 0x00496c30; read by scrollbarOnDrag 0x00496d20
-golf_clean.exe	0x008400b0	g_netTimer	int timing counter	read/updated by netTimerReadA 0x00497c20, netTimerReadB 0x00497c70, and net service routines
+golf_clean.exe	0x008400b0	g_netState	int (net state; nonzero)	nonzero gates netBeginOp0/1 0x00497c20/0x00497c70; zeroed by netSendShutdown at 0x00497d7a; loaded into ecx by netSendMessages at 0x0049a6f6

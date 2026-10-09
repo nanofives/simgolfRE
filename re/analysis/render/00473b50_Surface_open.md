@@ -41,7 +41,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x00473b5b, 0x00473b88
 
 ## Callees
-- 0x00473ae0 `Surface_init` at 0x00473b6a
+- 0x00473ae0 `Surface_free` at 0x00473b6a
 - 0x004a504f `_malloc` at 0x00473b7b
 
 ## Callers
