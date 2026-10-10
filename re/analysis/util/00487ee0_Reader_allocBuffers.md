@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 71 bytes, 26 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Allocates the two param_1-byte line buffers at this+0x15c and this+0x160. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00487ee0 Reader::allocBuffers(this, n): Reader::free 0x00487f30 (call 0x00487ee4), then malloc 0x004a504f of n bytes (call 0x00487eee) into +0x15c (0x00487ef6); NULL returns 4 (`mov eax, 4` 0x00487f01). A second malloc of n bytes (call 0x00487f0b) goes into +0x160 (0x00487f13); the result is 0 for a block and 4 for NULL (`neg eax; sbb eax, eax; and al, 0xfc; add eax, 4` 0x00487f19-0x00487f21). Callers (hooks.csv): 0x00487ea0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Reader::allocBuffers (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487ee0_Reader_allocBuffers.path1.csv`); Reader::allocBuffers_f0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487ee0_Reader_allocBuffers_f0.path1.csv`); Reader::allocBuffers_f1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487ee0_Reader_allocBuffers_f1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small8.cpp` as `?alloc2@Res487b@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00487f07, 0x00487f24): callee pops 4 bytes of stack arguments.

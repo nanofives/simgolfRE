@@ -1,0 +1,21 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$h0 0,2054815744,2054815744,True,1ad6584c,1ad6584c,True
+$h0 2,2054815744,2054815744,True,e28cfd40,e28cfd40,True
+$h1 1,0,0,True,8bb7415d,8bb7415d,True
+$h2 0,2054815744,2054815744,True,40aa2552,40aa2552,True
+$h3 2,2054815744,2054815744,True,a0f1878a,a0f1878a,True
+$h4 0,0,0,True,287d3130,287d3130,True
+$h5 1,0,0,True,3fc6071a,3fc6071a,False
+$h6 4,2054815744,2054815744,True,d281e8ce,d281e8ce,True
+$h7 0,2054815744,2054815744,True,f7672bf0,f7672bf0,True
+$h8 1,2054815744,2054815744,True,af627fd1,af627fd1,True
+$h9 3,2054815744,2054815744,True,cb1e3c58,cb1e3c58,True
+$h10 2,0,0,True,3fc6071a,3fc6071a,False
+$h11 0,0,0,True,e6afcee0,e6afcee0,True
+$h3 0,0,0,True,74590f8e,74590f8e,True
+$h6 2,2054815744,2054815744,True,f8b685a5,f8b685a5,True
+state_regions,$tblk+0x0:65536 $tapool+0x0:16384 $tiplog+0x0:528 $rec+0x0:1024 0x0083aac8+0x0:4 0x0083aad8+0x0:4 0x004e42c4+0x0:4 0x0083ad44+0x0:4 0x0083d348+0x0:4 $implog+0x0:1024 $disp+0x4:12 0x0083ad4c+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x67a8b2a0,original=0x15d0980,2026-10-10T19:15:21
+distinct_results,14,,
+VERDICT,GREEN,15,

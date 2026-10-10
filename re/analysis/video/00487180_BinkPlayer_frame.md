@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 133 bytes, 53 instructions, subsystem `video`. Mechanic
 Decodes one Bink frame into the buffer and blits it; advances to the next frame, returning false at the last frame. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00487180 BinkPlayer::frame(this): _BinkDoFrame [0x4ba228] on the Bink handle +4 (push 0x00487186, call 0x00487187), then _BinkBufferLock [0x4ba22c] on the buffer +8 (0x00487190 / 0x00487191); a non-zero result (`test eax, eax; je` 0x00487197 / 0x00487199) runs _BinkCopyToBuffer [0x4ba230] with (bink, buf+0x14, buf+0x18, buf+4, 0, 0, buf+0x10) (pushes 0x0048719e- 0x004871b5, call 0x004871b6) and _BinkBufferUnlock [0x4ba234] (0x004871bc-0x004871c0). _BinkGetRects [0x4ba238] gets (bink, buf+0x10) (0x004871c6-0x004871d1) and _BinkBufferBlit [0x4ba23c] (buf, bink+0x34, rects) (0x004871d7-0x004871e3). Bink +0xc against +8 (`cmp edx, eax; jne` 0x004871f2 / 0x004871f4): equal returns false (`xor al, al` 0x004871f6); else _BinkNextFrame [0x4ba240] on the Bink handle (call 0x004871fb) and true (`mov al, 1` 0x00487201). Only al is defined. Callers (hooks.csv): 0x00487090. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: BinkPlayer::frame (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487180_BinkPlayer_frame.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?frame@C487180@@QAE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004871f9, 0x00487204): callee pops 0 bytes of stack arguments.

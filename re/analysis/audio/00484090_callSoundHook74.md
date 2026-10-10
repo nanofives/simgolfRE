@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 35 bytes, 12 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 calls the sound.dll hook g_fn83af74(a,b) when the library is loaded (g_hook83afc0), else returns 4 (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00484090 callSoundHook74(a, b): the module handle 0x0083afc0 at zero returns 4 (0x00484099). Otherwise the function pointer in 0x0083af74 (table entry 1) is called with (a, b) as pushed (pushes 0x004840a7 / 0x004840a8, call [0x83af74] 0x004840a9, caller-cleaned `add esp, 8` 0x004840af) and its result is returned. Callers (hooks.csv): 0x00483e90. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: callSoundHook74 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00484090_callSoundHook74.path1.csv`); callSoundHook74_off (3 vectors, 1 distinct results, 0 changing state, `log/diff/00484090_callSoundHook74_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small18.cpp` as `?callHook83a@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048409e, 0x004840b2): callee pops 0 bytes of stack arguments.

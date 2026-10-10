@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 68 bytes, 19 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Closes the file and frees both line buffers. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00487f30 Reader::free(this): Reader::closeFile 0x00487f80 (call 0x00487f33); a block at +0x15c (0x00487f38 / 0x00487f3e) goes to the CRT free 0x004a5007 (call 0x00487f43) and +0x15c is cleared (0x00487f4b); the same for +0x160 (0x00487f55-0x00487f68). The callers (Reader::allocBuffers 0x00487ee4, Reader::scalarDtor 0x00488469) overwrite eax afterwards. Callers (hooks.csv): 0x00487ee0;0x00488460. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Reader::free (12 vectors, 12 distinct results, 11 changing state, `log/diff/00487f30_Reader_free.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small7.cpp` as `?free487f30@Res487@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487f73): callee pops 0 bytes of stack arguments.

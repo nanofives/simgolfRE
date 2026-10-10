@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 94 bytes, 23 instructions, subsystem `ui`. Mechanical t
 Constructs the edit control: Widget base ctor, caret-blink Timer at this+0x16b, sets vtables, calls resetFields. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+0x00486070 EditBox::ctor(this): View4804a0::ctor 0x004804a0 on this (call 0x0048608d), Timer::ctor 0x00486c90 on this + 0x5ac (`lea ecx, [esi + 0x5ac]` 0x00486092, call 0x004860a0), the vtables 0x004ba4a8 at +0 (0x004860a7) and 0x004ba494 at +0x274 (0x004860ad), then EditBox::resetFields 0x00485ff0 (call 0x004860b7). Returns this (`mov eax, esi` 0x004860c0). Callers (hooks.csv): 0x004385a0;0x004a2400. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: EditBox::ctor_s0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486070_EditBox_ctor_s0.path1.csv`); EditBox::ctor_s1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486070_EditBox_ctor_s1.path1.csv`); EditBox::ctor_s2 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486070_EditBox_ctor_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??0C486070@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004860cd): callee pops 0 bytes of stack arguments.

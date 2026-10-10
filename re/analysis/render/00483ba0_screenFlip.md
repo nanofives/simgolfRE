@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 14 bytes, 3 instructions, subsystem `render`. Mechanica
 calls the screen manager g_83ad50 present/flip (vtable f73) (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_3.md`.
 
+## Purpose
+0x00483ba0 screenFlip(): `mov ecx, [0x0083ad50]` (0x00483ba0), `mov eax, [ecx]` (0x00483ba6) and a tail `jmp [eax + 0x124]` (0x00483ba8): the display's virtual slot +0x124 with the display as this, no arguments; its result is the result. Callers (hooks.csv): 0x0047bab0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: screenFlip_v0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v0.path1.csv`); screenFlip_v1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v1.path1.csv`); screenFlip_v2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v2.path1.csv`); screenFlip_v3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v3.path1.csv`); screenFlip_v4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v4.path1.csv`); screenFlip_v5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v5.path1.csv`); screenFlip_v6 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v6.path1.csv`); screenFlip_v7 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v7.path1.csv`); screenFlip_v8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v8.path1.csv`); screenFlip_v9 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483ba0_screenFlip_v9.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00483ba0@f_00483ba0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

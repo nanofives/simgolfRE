@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 78 bytes, 20 instructions, subsystem `net`. Mechanical 
 twin of netBeginOp0 0x00497c20 that stores 1 at this+0x60 (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00497c70 netBeginOp1(this, a): the same as netBeginOp0 with +0x60 = 1 (0x00497c9b); the tests are at 0x00497c70-0x00497c8f, the slot call at 0x00497ca8, the flag at 0x00497cae and the result at 0x00497cb8. Callers (hooks.csv): 0x0047ee70. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: netBeginOp1 (12 vectors, 8 distinct results, 7 changing state, `log/diff/00497c70_netBeginOp1.path1.csv`); netBeginOp1_off (5 vectors, 1 distinct results, 0 changing state, `log/diff/00497c70_netBeginOp1_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_00497c70@C_FUN_00497c70@f_00497c70@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00497c82, 0x00497cbb): callee pops 4 bytes of stack arguments.

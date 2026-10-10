@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 40 bytes, 13 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a container object (vtable 0x004baeac), default field [2]=0x7f. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00487210 StrList::ctor(this): the vtable 0x004baeac into +0 (0x00487215), +4 = 0 (`lea ecx, [eax + 4]` 0x00487212, store 0x0048721f), +8 = 0x7f (0x00487221), +0xc = 0 (0x00487228), +0x18 = 0 (0x0048722b), +0x1c = 0 (0x0048722e), +0x10 = 0 (0x00487231), +0x14 = 0 (0x00487234). Returns this (`mov eax, ecx` 0x00487210). Callers (hooks.csv): 0x00487280;0x00487a20;0x00487b40. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: StrList::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487210_StrList_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00487237): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00487210 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 6 instructions, subsystem `input`. Mechanical
 releases the cursor surface globals. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x0049ead0 freeCursors(): Surface_free 0x00473ae0 on the global Surfaces 0x00840860 (`mov ecx, 0x00840860` 0x0049ead0, call 0x0049ead5), 0x00840890 (0x0049eada / 0x0049eadf) and, as a tail jump, 0x00840830 (0x0049eae4 / 0x0049eae9). Its caller (0x00485740 shutdown) ignores eax. Callers (hooks.csv): 0x00485740. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: freeCursors_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ead0_freeCursors_a.path1.csv`); freeCursors_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ead0_freeCursors_b.path1.csv`); freeCursors_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ead0_freeCursors_c.path1.csv`); freeCursors_d (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ead0_freeCursors_d.path1.csv`); freeCursors_e (1 vectors, 1 distinct results, 0 changing state, `log/diff/0049ead0_freeCursors_e.path1.csv`); freeCursors_f (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ead0_freeCursors_f.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_0049ead0@f_0049ead0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

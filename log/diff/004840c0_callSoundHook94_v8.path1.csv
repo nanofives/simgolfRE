@@ -1,0 +1,7 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+,3087,3087,True,500f389f,500f389f,True
+state_regions,$hookrec+0x0:16 0x0083afc0+0x0:4 0x0083af94+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x67a8b070,original=0x1440ce0,2026-10-10T19:14:06
+distinct_results,1,,
+VERDICT,GREEN,1,

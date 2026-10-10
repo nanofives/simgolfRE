@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 32 bytes, 10 instructions, subsystem `util`. Mechanical
 constructs the logger object and sets its path. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a0180 loggerCtor(this, path): the logger vtable 0x004bc034 into +0 (0x004a0188), +4 = 0 (0x004a018e), then loggerSetPath 0x004a01d0 with the path (push 0x004a0187, call 0x004a0195). Returns this (`mov eax, esi` 0x004a019a). Callers (hooks.csv): 0x004a0130. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: loggerCtor (14 vectors, 14 distinct results, 14 changing state, `log/diff/004a0180_loggerCtor.path1.csv`); loggerCtor_f0 (14 vectors, 12 distinct results, 14 changing state, `log/diff/004a0180_loggerCtor_f0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a0180@C_FUN_004a0180@f_004a0180@@QAEPAIPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a019d): callee pops 4 bytes of stack arguments.

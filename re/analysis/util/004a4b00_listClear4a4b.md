@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 96 bytes, 41 instructions, subsystem `util`. Mechanical
 clears a singly-linked list, freeing every node. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a4b00 listClear4a4b(this): EnterCriticalSection [0x4ba0e8] on this + 0x10 (`lea ebp, [esi + 0x10]` 0x004a4b05, call 0x004a4b09). While the head +4 is non-NULL (0x004a4b0f-0x004a4b16, and the loop test `cmp edi, ebx` 0x004a4b47) the head node's next (+0x14) is saved (0x004a4b1e), its data block +0xc, when non-NULL, goes to free 0x004a5007 (call 0x004a4b29) and +0xc becomes 0 (0x004a4b34), the node goes to free (0x004a4b3f) and +4 takes the saved next (0x004a4b4c). Then tail +8 and count +0xc are cleared (0x004a4b50 / 0x004a4b53); LeaveCriticalSection [0x4ba0e0] (call 0x004a4b56) and its result stays in eax. Callers (hooks.csv): 0x00497d10. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: listClear4a4b (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a4b00_listClear4a4b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `?clear@List4a4b@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a4b5f): callee pops 0 bytes of stack arguments.

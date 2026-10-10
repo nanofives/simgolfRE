@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts 0x274 from this and tail-jumps to View4804a0::scalarDtor 0x00480580 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+This-adjustor in slot 3 of the Image sub-object's vtable 0x004baa1c (0x004baa28; installed by View4804a0::ctor 0x004804a0 and Base4805a0::dtor 0x004805a0 at 0x004805c9): `sub ecx, 0x274` (0x00481b40) turns the sub-object pointer into the whole object and `jmp 0x00480580` (0x00481b46) runs View4804a0::scalarDtor with the caller's flags; returns what that returns (the whole object's address). Reimplemented in `shim/src/re/c3di.cpp`; path-1 A/B GREEN: View4804a0::scalarDtor_adj274 (46 vectors, 30 distinct results, 46 changing state, `log/diff/00481b40_View4804a0_scalarDtor_adj274.path1.csv`); View4804a0::scalarDtor_adj274_n (46 vectors, 30 distinct results, 46 changing state, `log/diff/00481b40_View4804a0_scalarDtor_adj274_n.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00481b40 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor wrapper for View4804a0 (FUN_004805a0 + conditional free) (`re/names/exe_3.tsv`)
 
+## Purpose
+Deleting destructor of the View4804a0 class (slot 0 of 0x004baa30): runs Base4805a0::dtor 0x004805a0 (call 0x00480583) and, when bit 0 of the flags is set (0x00480588, `je` 0x0048058d), passes this to operator delete 0x004a4ffc (call 0x00480590); returns this (0x00480598, `ret 4`). Reimplemented in `shim/src/re/c3di.cpp`; path-1 A/B GREEN: View4804a0::scalarDtor (46 vectors, 30 distinct results, 46 changing state, `log/diff/00480580_View4804a0_scalarDtor.path1.csv`); View4804a0::scalarDtor_n (46 vectors, 30 distinct results, 46 changing state, `log/diff/00480580_View4804a0_scalarDtor_n.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00480580@C_FUN_00480580@f_00480580@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048059b): callee pops 4 bytes of stack arguments.

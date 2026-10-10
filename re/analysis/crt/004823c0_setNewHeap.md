@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 91 bytes, 31 instructions, subsystem `crt`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 installs a custom allocator (g_839650) when given one, or falls back to malloc; on allocator failure shows a MessageBox and _exit(3) (`re/names/exe_3.tsv`)
 
+## Purpose
+0x004823c0 setNewHeap(size, heap): a heap object (`mov esi, [esp + 0xc]` 0x004823c1, `test esi, esi; je` 0x004823c5 / 0x004823c7) gets heapAlloc 0x00474860 (this = heap, the size pushed 0x004823cf, call 0x004823d0); a result of 0 shows MessageBoxA [0x4ba1f4] (text 0x004c1434, caption 0x004c1458: pushes 0x004823e1-0x004823ed, call 0x004823ef) and exit(3) (0x004a5108, call 0x004823f7). Otherwise the global 0x00839650 = the heap (0x004823d9) and the block is returned. Without a heap malloc 0x004a504f gets the size (call 0x00482401); NULL returns 0 (0x0048240d), else 0x00839650 = 0 (0x0048240f) and the block is returned. Callers (hooks.csv): 0x00481f40. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: setNewHeap (16 vectors, 16 distinct results, 16 changing state, `log/diff/004823c0_setNewHeap.path1.csv`); setNewHeap_f0 (4 vectors, 1 distinct results, 4 changing state, `log/diff/004823c0_setNewHeap_f0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?setHeap4823c0@@YAHIPAUR1H4823c0@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004823e0, 0x0048240e, 0x0048241a): callee pops 0 bytes of stack arguments.

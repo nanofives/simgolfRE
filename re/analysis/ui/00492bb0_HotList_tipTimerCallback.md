@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 19 bytes, 7 instructions, subsystem `ui`. Mechanical tr
 timer callback: when the second argument (the HotList) is non-zero calls HotList::showTip 0x00492bd0 with the first argument, and otherwise returns (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+0x00492bb0 HotList::tipTimerCallback(index, hotlist): a non-NULL second argument (`mov ecx, [esp + 8]; test ecx, ecx; je` 0x00492bb0 / 0x00492bb4 / 0x00492bb6) runs HotList::showTip 0x00492bd0 on it with the first argument (push 0x00492bbc, call 0x00492bbd); the plain `ret` (0x00492bc2) leaves cleanup to the caller. eax on the NULL path is the caller's; Timer_fire 0x00495cb0 returns the callback's eax to the timer machinery, which ignores it, so the registry declares the function void. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: HotList::tipTimerCallback (12 vectors, 11 distinct results, 10 changing state, `log/diff/00492bb0_HotList_tipTimerCallback.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00492bc2): callee pops 0 bytes of stack arguments.
 

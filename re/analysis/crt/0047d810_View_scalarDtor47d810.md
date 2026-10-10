@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 36 bytes, 12 instructions, subsystem `crt`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor: sets vtable PTR_004baa14, cleans up (FUN_00495eb0) and frees when flag bit0 is set (`re/names/exe_3.tsv`)
 
+## Purpose
+Deleting destructor of the base class whose vtable is 0x004baa14 (slot 0; installed by View_dtor 0x0047a3c0 at 0x0047a4a2, View::ctorVtbl47d7c0 0x0047d7c0 and initWidgetTable 0x00495d30): stores 0x004baa14 (0x0047d813), resets the widget table (resetWidgetTable 0x00495eb0, call 0x0047d819) and, when bit 0 of the flags is set (0x0047d81e, `je` 0x0047d823), passes this to operator delete 0x004a4ffc (call 0x0047d826); returns this (0x0047d82e, `ret 4`). Reimplemented in `shim/src/re/c3di.cpp`; path-1 A/B GREEN: View::scalarDtor47d810 (46 vectors, 30 distinct results, 46 changing state, `log/diff/0047d810_View_scalarDtor47d810.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_0047d810@C_FUN_0047d810@f_0047d810@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047d831): callee pops 4 bytes of stack arguments.

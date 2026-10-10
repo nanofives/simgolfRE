@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor of a View object: runs View_dtor then frees it when the flag low bit is set (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Deleting destructor of View, slot 0 of the vtable 0x004ba8b4 (installed by View_ctor 0x00479c40 and View_dtor 0x0047a3c0): runs View_dtor 0x0047a3c0 (call 0x00479f13) and, when bit 0 of the flags is set (`test byte ptr [esp + 8], 1` at 0x00479f18, `je` 0x00479f1d), passes this to operator delete 0x004a4ffc (call 0x00479f20); returns this (0x00479f28, `ret 4`). Reimplemented in `shim/src/re/c3di.cpp`; path-1 A/B GREEN: View_deleteDtor (46 vectors, 30 distinct results, 46 changing state, `log/diff/00479f10_View_deleteDtor.path1.csv`); View_deleteDtor_n (46 vectors, 30 distinct results, 46 changing state, `log/diff/00479f10_View_deleteDtor_n.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_00479f10@C_FUN_00479f10@f_00479f10@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00479f2b): callee pops 4 bytes of stack arguments.

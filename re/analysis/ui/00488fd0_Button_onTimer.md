@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 264 bytes, 85 instructions, subsystem `ui`. Mechanical 
 Timer-driven handler: on fire 0 draws the tooltip bitmap; on fire 1 re-arms the press timer; otherwise invokes the click vtable slot. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00488fd0 Button::onTimer(this, arg): arg 0 (`cmp eax, edi; jne` 0x00488fdd / 0x00488fdf): Timer::stop on this + 0x57c (call 0x00488feb); Window::visible 0x004801f0 (call 0x00488ff2) zero returns 0 (0x00488ff9); a zero text pointer +0x5f8 (0x00488fff) returns visible's result. Otherwise the rect +0x1ac .. +0x1b8 (0x0048900b-0x00489031) is moved so that its top-left becomes View::toParent 0x0047b170's conversion of (0, 0) (call 0x00489040): left' = x, top' = y, right' = right + (x - left), bottom' = bottom + (y - top) (0x00489045-0x0048907b); Tooltip::show runs on this with (text +0x5f8, rect) (call 0x00489087) and its result is returned. arg 1 (`cmp eax, 1` 0x00489094): the interval is +0x5b0 when above 0 (signed `jg` 0x004890a1), else +0x5ac (0x004890a3); Timer::initStartMmPeriodic 0x00486d60 on this + 0x5b4 with (the callback 0x00488fb0, 2, this, the interval, 5) (pushes 0x004890a9-0x004890af, call 0x004890ba) and its result is returned. Any other arg calls the object's virtual slot +0x78 with (0, 0) (`mov edx, [esi]` 0x004890c7, call [edx + 0x78] 0x004890cd) and returns its result. Callers (hooks.csv): 0x00488e90;0x00488fb0;0x004a2010. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Button::onTimer (17 vectors, 17 distinct results, 16 changing state, `log/diff/00488fd0_Button_onTimer.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_d.cpp` as `?onEvent@C488fd0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00489091, 0x004890c4, 0x004890d5): callee pops 4 bytes of stack arguments.

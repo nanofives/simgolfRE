@@ -115,3 +115,5 @@ c3dh.cpp
 c3dj.cpp
 c3dk.cpp
 c3dm.cpp
+c3di.cpp
+c3dl.cpp

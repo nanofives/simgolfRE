@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 708 bytes, 127 instructions, subsystem `ui`. Mechanical
 constructor for a view/panel object (sets two vtables and clears its fields) (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+0x00479c40 View_ctor(this): initWidgetTable 0x00495d30 on this (call 0x00479c5e), HotList::ctor on this + 0xbc (call 0x00479c6f), then the field stores below: the vtable 0x004ba8b4 at +0 (0x00479c9c), +0x134 = the vtable 0x004baa10 (0x00479c74), +0xb0 = this (0x00479ca2), constants 0 / 1 / 2, and copies of the globals 0x0083ab64 / 0x0083ab68 / 0x0083ab6c / 0x0083ab70 and the dwords 0x004e42c8-0x004e42e8 (0x00479d31-0x00479dc1). Returns this (`mov eax, esi` 0x00479ef5). Callers (hooks.csv): 0x004804a0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: View_ctor_s0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00479c40_View_ctor_s0.path1.csv`); View_ctor_s1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00479c40_View_ctor_s1.path1.csv`); View_ctor_s2 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00479c40_View_ctor_s2.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00479f03): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00479c55 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

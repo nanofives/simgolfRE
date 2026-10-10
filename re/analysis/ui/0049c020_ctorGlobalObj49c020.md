@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 113 bytes, 25 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 constructs a composite global UI object from three sub-object constructors. (`re/names/exe_5.tsv`)
 
+## Purpose
+0x0049c020 ctorGlobalObj49c020(this): View4804a0::ctor 0x004804a0 on this (call 0x0049c03d), the constructor 0x004837f0 on this + 0x574 (`lea ecx, [esi + 0x574]` 0x0049c042, call 0x0049c050), Timer::ctor on this + 0x598 (call 0x0049c060), the vtables 0x004bbcf4 at +0 (0x0049c069) and 0x004bbce0 at +0x274 (0x0049c06f), +0x594 = 0 (0x0049c079). Returns this (`mov eax, esi` 0x0049c083). Callers (hooks.csv): 0x0049bff0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: ctorGlobalObj49c020_s0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c020_ctorGlobalObj49c020_s0.path1.csv`); ctorGlobalObj49c020_s1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c020_ctorGlobalObj49c020_s1.path1.csv`); ctorGlobalObj49c020_s2 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c020_ctorGlobalObj49c020_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??0R1C49c020@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049c090): callee pops 0 bytes of stack arguments.

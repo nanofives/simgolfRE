@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 99 bytes, 23 instructions, subsystem `render`. Mechanic
 destroys an image object (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Destructor of the Image class: stores the vtable 0x004ba858 (0x00474c5d), releases everything the Image holds (Image_releaseAll 0x00474cb0, call 0x00474c6b: the display's slot +0x8c on +4, the free slots +0x1b4.., the field reset) and destroys its two HotLists, the one at +0x254 first, then the one at +0xb4 (HotList::dtor 0x004928d0, calls 0x00474c7b and 0x00474c8e). No branch of its own. eax at the return is the second HotList::dtor's, 0 (Timer::reset 0x00486f10 ends with `xor eax, eax` at 0x00486f18 and the epilogues keep it); 0x0043a31e, 0x0043d261 and 0x0044210a make it their last call before `ret` and 0x00473aa9, 0x00479a29, 0x00479a79 tail-jump to it, so the reimplementation returns it and the keys compare it. Reimplemented in `shim/src/re/c3di.cpp`; path-1 A/B GREEN: Image_dtor (6 vectors, 6 distinct results, 6 changing state, `log/diff/00474c40_Image_dtor.path1.csv`); Image_dtor_n (6 vectors, 6 distinct results, 6 changing state, `log/diff/00474c40_Image_dtor_n.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `??1R0C474c40@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00474ca2): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 34 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Closes the FILE* at this+0x158 if open. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00487f80 Reader::closeFile(this): a FILE* at +0x158 (`mov eax, [esi + 0x158]` 0x00487f83, `je` 0x00487f8b) goes to the CRT fclose 0x004a609f (push 0x00487f8d, call 0x00487f8e) and +0x158 is cleared (0x00487f96). eax at the `ret` (0x00487fa1) is fclose's result, or the zero field value. Callers (hooks.csv): 0x00487e60;0x00487f30;0x00487fb0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Reader::closeFile (12 vectors, 8 distinct results, 7 changing state, `log/diff/00487f80_Reader_closeFile.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small18.cpp` as `?close@File487@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487fa1): callee pops 0 bytes of stack arguments.

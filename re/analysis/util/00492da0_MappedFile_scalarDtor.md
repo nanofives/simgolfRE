@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the MappedFile. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00492da0 MappedFile::scalarDtor(this, flags): MappedFile::dtor 0x00492dc0 (call 0x00492da3); bit 0 of flags (`test byte ptr [esp + 8], 1` 0x00492da8, `je` 0x00492dad) hands the object to operator delete 0x004a4ffc (push 0x00492daf, call 0x00492db0); returns this (`mov eax, esi` 0x00492db8); `ret 4` (0x00492dbb). Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: MappedFile::scalarDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00492da0_MappedFile_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small18.cpp` as `??_GObj492@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00492dbb): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 306 bytes, 80 instructions, subsystem `render`. Mechani
 constructs an image object (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/exe_6.md`.
 
+## Purpose
+0x00474ae0 Image_ctor(this): the vtable 0x004ba86c into +0 (0x00474b00) and +4 = 0 (0x00474b0c), HotList::ctor 0x00492850 on this + 0xb4 (call 0x00474b0f) and this + 0x254 (call 0x00474b1e), the final vtable 0x004ba858 into +0 (0x00474b23), +4 = 0 (0x00474b29), the byte +0x28 = 0 (0x00474b2c), forty dwords: +0x1b4 + 4k = 0 and +0x114 + 4k = -2 (the loop 0x00474b3a-0x00474b4a, ecx = 0x28 at 0x00474b35), then the field resets listed below; +0x40 takes the dword at 0x004e4210 (0x00474b7c / 0x00474b82) and +0x5c the global 0x0083ad44 (0x00474b97 / 0x00474bf4). Returns this (`mov eax, esi` 0x00474c03). The SEH frame (0x00474ae0-0x00474aee) only matters if a callee throws. Callers (hooks.csv): 0x004043b0;0x004058f0;0x004061b0;0x004061f0;0x00406250;0x0040f5c0;0x00437910;0x004385d0;0x0043a400;0x0043a8c0;0x0043b610;0x0043cd70;0x0043d640;0x0043dbe0;0x00442180;0x0044b9c0;0x0044bde0;0x0044cff0;0x0044e770;0x0045baf0;0x0045f0f0;0x0046de40;0x0046e810;0x0046f550;0x004725b0;0x00473470;0x00473a70;0x004799f0;0x00479a40;0x0047a4c0;0x0047cfd0;0x004804a0;0x004806c0;0x0049d1b0;0x0049e9d0;0x0049fe50;0x004a1580. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Image_ctor_s0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00474ae0_Image_ctor_s0.path1.csv`); Image_ctor_s1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00474ae0_Image_ctor_s1.path1.csv`); Image_ctor_s2 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00474ae0_Image_ctor_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_09_a.cpp` as `??0C474ae0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00474c11): callee pops 0 bytes of stack arguments.

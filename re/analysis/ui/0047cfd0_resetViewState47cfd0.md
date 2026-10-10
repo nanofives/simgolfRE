@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 60 bytes, 14 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 constructs a temporary C474ae0 view, zeros globals g_83a4e8..g_83a4f4, calls FUN_004a0890 and destroys it (`re/names/exe_3.tsv`)
 
+## Purpose
+0x0047cfd0 resetViewState47cfd0(): an Image of 0x2b8 bytes on the stack (`sub esp, 0x2b8` 0x0047cfd0) is built with Image_ctor 0x00474ae0 (call 0x0047cfda), the globals 0x0083a4e8 / 0x0083a4ec / 0x0083a4f0 / 0x0083a4f4 are cleared (0x0047cfe1-0x0047cff0), the empty function 0x004a0890 runs (call 0x0047cff5) and the Image is destroyed with Image_dtor 0x00474c40 (call 0x0047cffe). The result is 0 (`xor eax, eax` 0x0047d003). Callers (hooks.csv): 0x004855b0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: resetViewState47cfd0_s0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047cfd0_resetViewState47cfd0_s0.path1.csv`); resetViewState47cfd0_s1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047cfd0_resetViewState47cfd0_s1.path1.csv`); resetViewState47cfd0_s2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047cfd0_resetViewState47cfd0_s2.path1.csv`); resetViewState47cfd0_s3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047cfd0_resetViewState47cfd0_s3.path1.csv`); resetViewState47cfd0_s4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047cfd0_resetViewState47cfd0_s4.path1.csv`); resetViewState47cfd0_s5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047cfd0_resetViewState47cfd0_s5.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0047d00b): callee pops 0 bytes of stack arguments.
 

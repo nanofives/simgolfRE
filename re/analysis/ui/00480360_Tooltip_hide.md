@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 47 bytes, 13 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 if a tooltip is shown (g_83aac4) clears it and repaints the covered area g_83a2c8 (redrawDrawList + drawTooltip) (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00480360 Tooltip::hide(): the visible-tip global 0x0083aac4 at zero returns 0 (`mov ecx, [0x0083aac4]; xor eax, eax; cmp ecx, eax; je` 0x00480360-0x0048036a). Otherwise 0x0083aac0 and 0x0083aac4 are cleared (0x00480372 / 0x00480377), redrawDrawList 0x0047f8e0 runs with (0x0083a2c8, 0) (pushes 0x0048036c / 0x0048036d, call 0x0048037c) and drawTooltip 0x0047cdb0 with 0x0083a2c8 (push 0x00480381, call 0x00480386); its result is returned (`add esp, 0xc; ret` 0x0048038b). Callers (hooks.csv): 0x00479f30;0x0047b820;0x00480220;0x00492d40;0x00488ab0;0x004a2010. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Tooltip::hide_v0 (1 vectors, 1 distinct results, 0 changing state, `log/diff/00480360_Tooltip_hide_v0.path1.csv`); Tooltip::hide_v1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00480360_Tooltip_hide_v1.path1.csv`); Tooltip::hide_v2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00480360_Tooltip_hide_v2.path1.csv`); Tooltip::hide_v3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00480360_Tooltip_hide_v3.path1.csv`); Tooltip::hide_v4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00480360_Tooltip_hide_v4.path1.csv`); Tooltip::hide_v5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00480360_Tooltip_hide_v5.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00480360@f_00480360@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048038e): callee pops 0 bytes of stack arguments.

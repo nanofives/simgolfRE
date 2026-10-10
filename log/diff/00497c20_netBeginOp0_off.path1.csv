@@ -1,0 +1,11 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$n0 3,7,7,True,01855a23,01855a23,False
+$n1 2,7,7,True,01855a23,01855a23,False
+$n2 9,7,7,True,01855a23,01855a23,False
+$n3 0,7,7,True,01855a23,01855a23,False
+$n4 7,7,7,True,01855a23,01855a23,False
+state_regions,$blk+0x0:65536 $rec+0x0:1024 0x008400b0+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x67a8b820,original=0x1440c00,2026-10-10T19:14:19
+distinct_results,1,,
+VERDICT,GREEN,5,

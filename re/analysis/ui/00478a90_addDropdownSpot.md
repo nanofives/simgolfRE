@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 87 bytes, 27 instructions, subsystem `ui`. Mechanical t
 registers a dropdown hit-spot, warning if the maximum is exceeded (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x00478a90 addDropdownSpot(this, a1 .. a6): the counter +0x2b4 is incremented and stored (`inc edx` 0x00478a98, store 0x00478a9b); a result above 0x14 (signed: `cmp eax, 0x14; jle` 0x00478aa1 / 0x00478aa4) shows MessageBoxA [0x4ba1f4] (hwnd 0, text 0x004e428c, caption 0x004e4280, type 0: pushes 0x00478a96-0x00478ab0, call 0x00478ab2) and returns its result. Otherwise HotList::add 0x004929b0 runs on this + 0x254 (`add ecx, 0x254` 0x00478ad9) with (a1 .. a6, 0) (the pushes 0x00478ac3-0x00478ad8 reverse the argument order into the callee's) and its result is returned. Callers (hooks.csv): 0x004775b0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: addDropdownSpot (12 vectors, 12 distinct results, 12 changing state, `log/diff/00478a90_addDropdownSpot.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00478a90@C_FUN_00478a90@f_00478a90@@QAEXIIHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x00478ab8, 0x00478ae4): callee pops 24 bytes of stack arguments.

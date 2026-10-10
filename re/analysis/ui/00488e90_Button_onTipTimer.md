@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 20 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 when the dword at this+0x5f8 is non-zero calls Button::onTimer 0x00488fd0 with 0, and otherwise returns (`re/names/undisc_exe.tsv`)
 
+## Purpose
+0x00488e90 Button::onTipTimer(this, a, b): a non-zero text pointer +0x5f8 (`mov eax, [ecx + 0x5f8]; test eax, eax; je` 0x00488e90 / 0x00488e96 / 0x00488e98) runs Button::onTimer 0x00488fd0 with 0 (push 0x00488e9a, call 0x00488e9c) and its result is returned; otherwise eax is the zero just loaded. `ret 8` (0x00488ea1) drops the two arguments, which are not read. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Button::onTipTimer (12 vectors, 9 distinct results, 8 changing state, `log/diff/00488e90_Button_onTipTimer.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00488ea1): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00488e90 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

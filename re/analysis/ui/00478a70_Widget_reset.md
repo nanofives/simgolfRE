@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 28 bytes, 8 instructions, subsystem `ui`. Mechanical tr
 resets a widget to defaults (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x00478a70 Widget_reset(this): HotList::alloc 0x00492920 on this + 0x254 (`lea ecx, [esi + 0x254]` 0x00478a75) with n = 10 (`push 0xa` 0x00478a73, call 0x00478a7b); +0x2b4 = 0 (0x00478a80). eax at the `ret` (0x00478a8b) is alloc's result. Callers (hooks.csv): 0x00474dd0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Widget_reset (12 vectors, 12 distinct results, 12 changing state, `log/diff/00478a70_Widget_reset.path1.csv`); Widget_reset_fail (12 vectors, 12 distinct results, 12 changing state, `log/diff/00478a70_Widget_reset_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small2.cpp` as `?reset478a70@Widget@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00478a8b): callee pops 0 bytes of stack arguments.

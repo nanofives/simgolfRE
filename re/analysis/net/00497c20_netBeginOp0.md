@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 78 bytes, 20 instructions, subsystem `net`. Mechanical 
 returns 7 when 0x008400b0 is 0; otherwise, unless this+0xe8 has a bit of 0x60000000 set, stores 0 at this+0x60 and the argument at this+0xe4, calls slot +0x90 of the sub-object at this+0x64 and sets bit 0x20000000 of this+0xe8; returns 0 (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00497c20 netBeginOp0(this, a): the net object global 0x008400b0 at zero returns 7 (`mov eax, [0x008400b0]` 0x00497c20, `mov eax, 7` 0x00497c2c). Otherwise, with none of the bits 0x60000000 set in +0xe8 (`test dword ptr [esi + 0xe8], 0x60000000` 0x00497c35, `jne` 0x00497c3f): +0x60 = 0 (0x00497c4b), +0xe4 = a (0x00497c52), the sub-object at this + 0x64 (`lea ecx, [esi + 0x64]` 0x00497c48) gets its virtual slot +0x90 (`mov edx, [esi + 0x64]` 0x00497c45, call [edx + 0x90] 0x00497c58) with no arguments, and +0xe8 |= 0x20000000 (0x00497c5e). The result is 0 (`xor eax, eax` 0x00497c68). Callers (hooks.csv): 0x0047ee70. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: netBeginOp0 (12 vectors, 8 distinct results, 7 changing state, `log/diff/00497c20_netBeginOp0.path1.csv`); netBeginOp0_off (5 vectors, 1 distinct results, 0 changing state, `log/diff/00497c20_netBeginOp0_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_00497c20@C_FUN_00497c20@f_00497c20@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00497c32, 0x00497c6b): callee pops 4 bytes of stack arguments.

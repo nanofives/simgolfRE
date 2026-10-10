@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 43 bytes, 19 instructions, subsystem `video`. Mechanica
 Closes the Bink handle (this+4) and Bink buffer (this+8) if open. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00487060 BinkPlayer::close(this): a Bink handle at +4 (`mov eax, [esi + 4]` 0x00487066, `je` 0x0048706b) goes to _BinkClose [0x4ba260] (push 0x0048706d, call 0x0048706e); a buffer handle at +8 (0x00487074 / 0x00487079) goes to _BinkBufferClose [0x4ba224] (0x0048707c). Then +4 and +8 are cleared (0x00487082 / 0x00487085). eax at the `ret` (0x0048708a) is the last call's result, or +8 read as zero. Callers (hooks.csv): 0x0043cce0;0x00487040. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: BinkPlayer::close (12 vectors, 11 distinct results, 10 changing state, `log/diff/00487060_BinkPlayer_close.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0048708a): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00487061 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

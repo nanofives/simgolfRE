@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 167 bytes, 37 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 constructor body zeroing a window: base init (FUN_00479f30), cursor sub-object init (FUN_00474cb0) and clearing many fields (m_15c, m_69/m_6a, m_14b..) (`re/names/exe_3.tsv`)
 
+## Purpose
+Puts a window back to its constructed state: runs layoutNode on it (call 0x00480614) and Image_releaseAll 0x00474cb0 on its Image sub-object at +0x274 (call 0x0048061f), reads +0x568 (0x00480624), zeroes +0x570, +0x1a4, +0x1a8 and +0x52c..+0x564 (0x0048062c..0x00480692), stores the global 0x0083ac18 into +0x56c (0x00480698 / 0x0048069f) and, when +0x568 held an object (0x004806a5), calls that object's vtable slot +0xc with 1 (0x004806a9 / 0x004806ab) and clears +0x568 (0x004806ae). eax at the return is the slot's result when it ran, else the 0x0083ac18 value; four callers return it (`call 0x480610; pop esi; ret` at 0x004860fa, 0x00496326, 0x0049d6c8, 0x0049ed12), so the reimplementation returns it too. Reimplemented in `shim/src/re/c3di.cpp`; path-1 A/B GREEN: Window::ctorInit (26 vectors, 26 distinct results, 26 changing state, `log/diff/00480610_Window_ctorInit.path1.csv`); Window::ctorInit_b (26 vectors, 26 distinct results, 26 changing state, `log/diff/00480610_Window_ctorInit_b.path1.csv`); Window::ctorInit_n (26 vectors, 26 distinct results, 26 changing state, `log/diff/00480610_Window_ctorInit_n.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00480610@f_00480610@@YIXPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004806b6): callee pops 0 bytes of stack arguments.

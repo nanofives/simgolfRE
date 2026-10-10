@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 22 instructions, subsystem `ui`. Mechanical t
 Destroys the HCURSOR at this+4 and releases the bitmap object at this+8. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x004884b0 Cursor::destroy(this): a cursor handle at +4 (`mov eax, [esi + 4]` 0x004884b6, `je` 0x004884bb) goes to DestroyCursor [0x4ba1b0] (push 0x004884bd, call 0x004884be) and +4 is cleared (0x004884c4). An object at +8 (0x004884c7 / 0x004884cc) gets its virtual slot 0 with the argument 1 (`mov eax, [ecx]` 0x004884ce, `push 1` 0x004884d0, call [eax] 0x004884d2: the scalar deleting destructor) and +8 is cleared (0x004884d4). +0xc and +0x10 are cleared (0x004884d7 / 0x004884da). eax at the `ret` (0x004884df) is the last call's result, or +4 / +8 read as zero. Callers (hooks.csv): 0x0045c000. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Cursor::destroy (12 vectors, 12 distinct results, 12 changing state, `log/diff/004884b0_Cursor_destroy.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_004884b0@f_004884b0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004884df): callee pops 0 bytes of stack arguments.

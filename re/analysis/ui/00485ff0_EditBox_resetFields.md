@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 119 bytes, 22 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Clears the text-control state at this+0x574..0x5a8 (text ptr, capacity, length, focus) and loads default colors/padding from DAT_004e43f0 etc. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00485ff0 EditBox::resetFields(this): +0x574, +0x580, +0x57c, +0x578, +0x5a8, +0x5a4 = 0 (0x00485ff2-0x00486010), then copies of the dwords 0x004e43f0 / 0x004e440c / 0x004e4408 / 0x004e43f8 and the globals 0x0083afd8 / 0x0083afdc and the dword 0x004e43f4 into +0x584 / +0x588 / +0x58c / +0x59c / +0x590 / +0x594 / +0x598 (0x00486016-0x00486060). eax at the `ret` (0x00486066) is the last value loaded, the dword 0x004e43f4. Callers (hooks.csv): 0x00486070;0x004860d0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: EditBox::resetFields_s0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00485ff0_EditBox_resetFields_s0.path1.csv`); EditBox::resetFields_s1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00485ff0_EditBox_resetFields_s1.path1.csv`); EditBox::resetFields_s2 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00485ff0_EditBox_resetFields_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small11.cpp` as `?reset485ff0@Cfg485@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00486066): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `render`. Mechanic
 scalar deleting destructor of an Image object: runs Image_dtor then frees it when the flag low bit is set (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Deleting destructor of Image, slot 3 of the vtable 0x004ba858 (0x004ba864; installed by Image_ctor 0x00474ae0 and Image_dtor 0x00474c40): runs Image_dtor 0x00474c40 (call 0x00474c23) and, when bit 0 of the flags is set (0x00474c28, `je` 0x00474c2d), passes this to operator delete 0x004a4ffc (call 0x00474c30); returns this (0x00474c38, `ret 4`). Reimplemented in `shim/src/re/c3di.cpp`; path-1 A/B GREEN: Image_deleteDtor (24 vectors, 12 distinct results, 24 changing state, `log/diff/00474c20_Image_deleteDtor.path1.csv`); Image_deleteDtor_n (24 vectors, 12 distinct results, 24 changing state, `log/diff/00474c20_Image_deleteDtor_n.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_00474c20@C_FUN_00474c20@f_00474c20@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00474c3b): callee pops 4 bytes of stack arguments.

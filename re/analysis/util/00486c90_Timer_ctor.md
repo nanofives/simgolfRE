@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 15 instructions, subsystem `util`. Mechanical
 Constructs a multimedia timer object, clearing its fields and defaulting the resolution field [10] to 5. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00486c90 Timer::ctor(this): the Timer vtable 0x004baea0 into +0 (0x00486c94), +0xc .. +0x24 (seven dwords, 0x0c..0x24) = 0 (0x00486c9a-0x00486cac), +0x28 = 5 (0x00486caf), +0x2c = 0 (0x00486cb6), +8 = 0 (0x00486cb9), +4 = 0 (0x00486cbc). Returns this (`mov eax, ecx` 0x00486c90). Callers (hooks.csv): 0x00483190;0x00486070;0x00488500;0x00492850;0x0049c020. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Timer::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486c90_Timer_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `??0C486c90@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00486cbf): callee pops 0 bytes of stack arguments.

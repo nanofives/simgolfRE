@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 192 bytes, 79 instructions, subsystem `util`. Mechanica
 pops the head item off a queue, returning its payload and freeing the node. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a4c70 queuePop(this, dst, outA, outB, outSize): EnterCriticalSection on this + 0x10 (0x004a4c76 / 0x004a4c7e). With the head +4 NULL (0x004a4c84 / 0x004a4c87 / 0x004a4c89) the section is left (call 0x004a4c8c) and the result is 0 (0x004a4c94). Otherwise: a non-NULL outSize receives the head's +0x10 (0x004a4c9b-0x004a4ca6); a head data block +0xc with a non-NULL dst (0x004a4ca9-0x004a4cb6) is copied into dst (the head's +0x10 bytes, `rep movsd / movsb` 0x004a4cc2 / 0x004a4cc9), freed (call 0x004a4cd3) and its field cleared (0x004a4cdf); the head becomes the node's next +0x14 (0x004a4ce9-0x004a4cf2); a non-NULL outA receives the node's +4 (0x004a4cf7 / 0x004a4cfa) and a non-NULL outB its +0 (0x004a4d04 / 0x004a4d06); the result is the node's +8 (0x004a4d08); the node goes to free (call 0x004a4d10); the count +0xc is decremented (0x004a4d1d); the section is left (call 0x004a4d20). The tail +8 is not touched. Callers (hooks.csv): 0x0049b7b0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: queuePop (14 vectors, 14 distinct results, 14 changing state, `log/diff/004a4c70_queuePop.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_k.cpp` as `?pop@Queue4a4c@@QAEHPAXPAH11@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x004a4c98, 0x004a4d2d): callee pops 16 bytes of stack arguments.

@@ -13,6 +13,6 @@ $b10,obj+0x168,obj+0x168,True,1deb4780,1deb4780,True
 $b11,obj+0x18c,obj+0x18c,True,cb9f8688,cb9f8688,True
 state_regions,$obj+0x0:432,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x70d8b300,original=0xce0e00,2026-10-07T00:59:13
+meta,detour=0x67a2f5c0,original=0x2b70520,2026-10-10T19:18:21
 distinct_results,12,,
 VERDICT,GREEN,12,

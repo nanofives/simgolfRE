@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 67 bytes, 18 instructions, subsystem `ui`. Mechanical t
 clears a list widget's items (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x00478a20 List_reset(this): HotList::alloc 0x00492920 on this + 0xb4 (`lea ecx, [esi + 0xb4]` 0x00478a25) with n = 0x50 (`push 0x50` 0x00478a23, call 0x00478a2b); +0xb0 = 0 (0x00478a30). Then 0x28 dwords from +0x1b4 (`lea eax, [esi + 0x1b4]` 0x00478a3a, ecx = 0x28 0x00478a40): a non-zero one is cleared (`cmp [eax], 0; je` 0x00478a4a / 0x00478a4d, store 0x00478a4f) and the dword 0xa0 below it (+0x114 + 4 * k) is set to -2 (`mov edx, 0xfffffffe` 0x00478a45, store 0x00478a55). eax at the `ret` (0x00478a62) is the loop pointer, this + 0x254. Callers (hooks.csv): 0x00474dd0;0x00490d60. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: List_reset (12 vectors, 12 distinct results, 12 changing state, `log/diff/00478a20_List_reset.path1.csv`); List_reset_fail (12 vectors, 12 distinct results, 12 changing state, `log/diff/00478a20_List_reset_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small7.cpp` as `?reset478a20@List478@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00478a62): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 176 bytes, 75 instructions, subsystem `util`. Mechanica
 sets/opens the logger's output file path. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a01d0 loggerSetPath(this, path): a NULL path returns 0x10 (0x004a01d7 / 0x004a01db / 0x004a01df). An existing block at +4 goes to free 0x004a5007 (call 0x004a01f0) and +4 is cleared (0x004a01f8). A block of strlen(path) + 1 bytes (`repne scasb` 0x004a0206 / 0x004a0208, push 0x004a020a) from malloc 0x004a504f (call 0x004a020b) goes to +4 (0x004a0213); NULL returns 4 (0x004a021c). The block's first byte is 0 (0x004a0225) and the path is appended to it with the inlined strcat (0x004a0228-0x004a0255: find the end of the destination, copy the source with its NUL). The function 0x004a00f0 (path, the string 0x004c7924: call 0x004a0257) is the path opener; its result 0 returns 6 (0x004a025f / 0x004a0262 / 0x004a0266), any other value goes to fclose 0x004a609f (call 0x004a0270) and the result is 0 (`xor eax, eax` 0x004a0278). Callers (hooks.csv): 0x004a0180. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: loggerSetPath (14 vectors, 14 distinct results, 13 changing state, `log/diff/004a01d0_loggerSetPath.path1.csv`); loggerSetPath_f0 (14 vectors, 6 distinct results, 13 changing state, `log/diff/004a01d0_loggerSetPath_f0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?setPath@C4a01d0@@QAEHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a01e5, 0x004a0222, 0x004a026c, 0x004a027d): callee pops 4 bytes of stack arguments.

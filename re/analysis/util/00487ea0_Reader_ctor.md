@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 54 bytes, 15 instructions, subsystem `util`. Mechanical
 Constructs a text section reader and allocates its two line buffers. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00487ea0 Reader::ctor(this, n): +4 (a byte) = 0 (0x00487ea5), +0x154 .. +0x160 = 0 (0x00487ea8-0x00487eba), the vtable 0x004bb084 into +0 (0x00487ec5), then Reader::allocBuffers 0x00487ee0 with n (push 0x00487ec4, call 0x00487ecb). Returns this (`mov eax, esi` 0x00487ed2); `ret 4` (0x00487ed3). Callers (hooks.csv): 0x00487d80. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: Reader::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487ea0_Reader_ctor.path1.csv`); Reader::ctor_f0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487ea0_Reader_ctor_f0.path1.csv`); Reader::ctor_f1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487ea0_Reader_ctor_f1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487ea0@C_FUN_00487ea0@f_00487ea0@@QAEPAII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00487ed3): callee pops 4 bytes of stack arguments.

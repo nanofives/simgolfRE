@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 229 bytes, 67 instructions, subsystem `ui`. Mechanical 
 Stops the tip timer and draws the tooltip text for hotspot index param_1 near its rect. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00492bd0 HotList::showTip(this, index): Timer::stop 0x00486ec0 on this + 0x20 (call 0x00492bda). With no owner window at +0xc (`mov ecx, [esi + 0xc]; test ecx, ecx; je` 0x00492bdf / 0x00492be2 / 0x00492be4) the result is Timer::stop's. The entry index * 0x20 (`shl eax, 5` 0x00492bf1) into the array +0x50 (0x00492bee) gives the entry; a zero text +0x1c (0x00492bf7 / 0x00492bfb / 0x00492bfd) returns 0 (the text just loaded). Otherwise the entry's rect +4 .. +0x10 is copied to a local rect (0x00492c03-0x00492c23) and the point (0, 0) (0x00492c2c / 0x00492c34) is converted by View::toParent 0x0047b170 on the owner (call 0x00492c3c); the rect is moved by that point (0x00492c41-0x00492c72). The tooltip globals are set: 0x0083aac8 from this + 0x10, or from 0x0083ad44 when that is zero (0x00492c69-0x00492c86), 0x0083aad8 from this + 0x18 (0x00492c8b / 0x00492c92) and 0x004e42c4 from this + 0x1c (0x00492c98 / 0x00492c9b). Tooltip::show 0x00480220 runs on the owner with (the entry's text, the rect) (pushes 0x00492ca3 / 0x00492ca7, call 0x00492ca8) and its result is returned. Callers (hooks.csv): 0x00492bb0. Reimplemented in `shim/src/re/c3dl.cpp`; path-1 A/B GREEN: HotList::showTip (15 vectors, 14 distinct results, 13 changing state, `log/diff/00492bd0_HotList_showTip.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?showTip@R2C492bd0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00492cb2): callee pops 4 bytes of stack arguments.
