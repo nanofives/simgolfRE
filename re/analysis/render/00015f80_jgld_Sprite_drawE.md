@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00015f80`), 590 bytes, 200 instructions, subsystem `re
 ## Role (from the naming pass, not a C3 purpose)
 draws the sprite onto a Surface (variant E). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Sprite vtable slot 29: the Palette word is saved and replaced first (0x10015fa3 / 0x10015fb2); a NULL destination (0x10015fb9) or an invalid sprite (0x10015fd1) returns 0x10 (0x10015fd3) leaving it replaced. 8 bpp onto 8-bit: busy reports (0x10122de4 + 0x10), else 0x1005fd20(dst, x, y, z) (0x1001607b); onto 16-bit: busy -> drawRle16c 0x1005bac0 (0x100160a4), else 0x1001f2d0 (0x100160c1); other depth reports (+0x1f), 0x17. 16 bpp: the depth is fetched (0x10016113) and never tested; reports (+0x2d), 0x17. Other bpp: report (+0x35), 0x17. The fourth argument is the colour the three blitters take. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Sprite::drawE_s111 (20 vectors, 14 distinct results, 11 changing state, `log/diff/00015f80_jgld_Sprite_drawE_s111.path1.csv`); Sprite::drawE_s223 (20 vectors, 14 distinct results, 11 changing state, `log/diff/00015f80_jgld_Sprite_drawE_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?drawE@Sprite@@QAEHPAVSurface@@HHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x100161cb): callee pops 20 bytes of stack arguments.

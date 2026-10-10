@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 40 bytes, 14 instructions, subsystem `render`. Mechanic
 forwards (surface,x1,y1,x2,y2,flag) to Widget_fillRect 0x00478b80 to draw a line/edge on the given surface (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Cdecl (widget, a, b, c, d, colour), no branch. Calls Widget_fillRect 0x00478b80 on the first argument (`mov ecx, [esp+0x18]` 0x004049be) with (a, b, c, d, colour & 0xff) (0x004049ac `and eax, 0xff`) and returns its eax; Widget_fillRect passes those five plus 1 to slot +0x64 of the widget's m_4 (0x00478ba4). Caller drawRectScaled 0x0046e710. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: drawLineOnSurface (8 vectors, 8 distinct results, 8 changing state, `log/diff/004049a0_drawLineOnSurface.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_01.cpp` as `?FUN_004049a0@f_004049a0@@YAXPAXIIIIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004049c7): callee pops 0 bytes of stack arguments.

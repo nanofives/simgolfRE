@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $I0 $T0 3,void,void,True,2531c2d4,2531c2d4,False
+$png 0 $T0 3,void,void,True,2531c2d4,2531c2d4,False
+$png $I1 $T0 0,void,void,True,2531c2d4,2531c2d4,False
+$png $I0 $T0 3,void,void,True,c380d0cf,c380d0cf,True
+$png $I0 $T2 5,void,void,True,f7aa0e1f,f7aa0e1f,True
+$png $I1 $T0 3,void,void,True,d5f268a4,d5f268a4,True
+$png $I1 $T1 1,void,void,True,ce5eb094,ce5eb094,True
+$png $I1 $T3 2,void,void,True,9d6850b1,9d6850b1,True
+$png $I2 $T2 5,void,void,True,509becab,509becab,True
+$png $I3 $T2 5,void,void,True,46c24493,46c24493,True
+$png $I3 $T1 1,void,void,True,f3d1a316,f3d1a316,True
+$png $I2 $T0 -1,void,void,True,2531c2d4,2531c2d4,False
+$png $I0 $T3 2,void,void,True,cc9ed1c2,cc9ed1c2,True
+$png $I3 $T0 2,void,void,True,9e01f1eb,9e01f1eb,True
+state_regions,$blk+0x0:4096 $arena+0x0:2064 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6ec19280,original=0x14b04e0,2026-10-10T02:53:12
+distinct_results,11,,
+VERDICT,GREEN,14,

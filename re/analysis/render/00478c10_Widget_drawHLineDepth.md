@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 96 bytes, 38 instructions, subsystem `render`. Mechanic
 draws a horizontal coloured run, dispatching on the surface depth descriptor (vtbl+0xe4): Image::hline for 8bpp, drawColorRunA for 16bpp (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Picks the horizontal dotted-line body by the bit depth of the Surface at this+4 (the dword slot +0xe4 points at, 0x00478c1c / 0x00478c26): depth 8 calls Image::hline 0x00485d40 (0x00478c67), depth 16 calls drawColorRunA 0x00494d30 (0x00478c48), with the same four arguments; any other depth does nothing (0x00478c30 jne). A null Surface makes the original read address 0 (0x00478c24 xor, 0x00478c26), so it is not offered. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Widget_drawHLineDepth (28 vectors, 14 distinct results, 13 changing state, `log/diff/00478c10_Widget_drawHLineDepth.path1.csv`); Widget_drawHLineDepth_nopal (28 vectors, 16 distinct results, 15 changing state, `log/diff/00478c10_Widget_drawHLineDepth_nopal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00478c10@C_FUN_00478c10@f_00478c10@@QAEXHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00478c4e, 0x00478c6d): callee pops 16 bytes of stack arguments.

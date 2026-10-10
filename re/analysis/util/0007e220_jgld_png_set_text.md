@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007e220`), 480 bytes, 159 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's png_set_text: returns at once for a NULL png_ptr, a NULL info_ptr or a zero count (0x1007e238 / 0x1007e23e / 0x1007e244). When info->num_text (+0x30) + count exceeds info->max_text (+0x34; signed cmp 0x1007e25b) it grows the 16-byte png_text array at +0x38: with an existing array to num_text + count + 8 entries (0x1007e27f), png_malloc 0x10078e60 (0x1007e2a0), memcpy 0x1007f3a0 of the old max_text entries (0x1007e2c0), png_free 0x10078ed0 of the old array (0x1007e2d0); without one to count + 8 entries with num_text reset to 0 (0x1007e2dd / 0x1007e2e9, png_malloc 0x1007e2fe). Then for each caller entry: a NULL text pointer is replaced IN THE CALLER'S ARRAY by the module's empty string 0x1011df00 (0x1007e357); an empty text stores length 0 and compression -1 (0x1007e376 / 0x1007e380), otherwise strlen 0x1007f6e0 (0x1007e396) and the caller's compression; text and key are copied (0x1007e3c5 / 0x1007e3d8) and num_text rises (0x1007e3e7). No return value. Called by png_handle_tEXt 0x1007baf0 and png_handle_zTXt 0x1007bc40. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: png_set_text (14 vectors, 11 distinct results, 10 changing state, `log/diff/0007e220_jgld_png_set_text.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_text` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007e3ff): callee pops 0 bytes of stack arguments.

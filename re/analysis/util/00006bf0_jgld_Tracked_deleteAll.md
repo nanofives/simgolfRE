@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00006bf0`), 110 bytes, 41 instructions, subsystem `uti
 static: deletes every object currently in the global tracked list. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Deletes every object registered in the tracked-object list 0x10128428: while LinkedList::count 0x10006d40 (0x10006c0d) is not zero (test 0x10006c12), it reads the list's current data word 0x1012842c (0x10006c16) and, when not NULL (cmp 0x10006c24), calls slot 0 of that object's vtable with 1 (0x10006c36), the scalar deleting destructor, whose Tracked::dtor 0x10006b80 removes the object from the list. No argument, no return value. Called by Lib::destroyDisplay 0x1006543d. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Tracked::deleteAll_empty (1 vectors, 1 distinct results, 0 changing state, `log/diff/00006bf0_jgld_Tracked_deleteAll_empty.path1.csv`); Tracked::deleteAll_one (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006bf0_jgld_Tracked_deleteAll_one.path1.csv`); Tracked::deleteAll_three (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006bf0_jgld_Tracked_deleteAll_three.path1.csv`); Tracked::deleteAll_five (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006bf0_jgld_Tracked_deleteAll_five.path1.csv`); Tracked::deleteAll_fivecur3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006bf0_jgld_Tracked_deleteAll_fivecur3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `?deleteAll@Tracked@@SAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10006c5d): callee pops 0 bytes of stack arguments.

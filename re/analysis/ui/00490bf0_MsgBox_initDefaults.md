@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 51 bytes, 12 instructions, subsystem `ui`. Mechanical t
 Initializes message-box defaults: sets the two default button labels (Cancel plus DAT_004e3db0) and clears the callback globals. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Resets the message box globals: copies the dword 0x0083ad44 into 0x0083b9b4 and 0x0083b9c4 (0x00490bf0-0x00490bff), sets label B from the string at 0x004c8590 through setLabelB 0x0048de90 (0x00490c04) and label A from the string at 0x004e3db0 through setLabelA 0x0048de00 (0x00490c0e), ignoring both results, clears 0x0083b99c and 0x0083b9a0 (0x00490c18 / 0x00490c1d) and returns 0 (0x00490c13). Caller: engineInit 0x004855b0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: MsgBox::initDefaults_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00490bf0_MsgBox_initDefaults_a.path1.csv`); MsgBox::initDefaults_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00490bf0_MsgBox_initDefaults_b.path1.csv`); MsgBox::initDefaults_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00490bf0_MsgBox_initDefaults_c.path1.csv`); MsgBox::initDefaults_d (1 vectors, 1 distinct results, 1 changing state, `log/diff/00490bf0_MsgBox_initDefaults_d.path1.csv`); MsgBox::initDefaults_e (1 vectors, 1 distinct results, 1 changing state, `log/diff/00490bf0_MsgBox_initDefaults_e.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00490c22): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000674f0`), 81 bytes, 33 instructions, subsystem `rend
 Slot-0 scalar deleting destructor of DisplayBase: runs the destructor 0x10066d20 then operator delete when bit0 of the flag is set. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Scalar deleting destructor of DisplayBase, slot 0 of its vtable 0x1011d7dc: runs DisplayBase::dtor 0x10066d20 (0x10067510), then hands the object to operator delete 0x1007e6d0 (0x10067523) when bit 0 of the flags is set (`and eax, 1` 0x10067518), and returns the object (0x1006752b, `ret 4`). Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: DisplayBase::deletingDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/000674f0_jgld_DisplayBase_deletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_100674f0@C_FUN_100674f0@f_100674f0@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006753e): callee pops 4 bytes of stack arguments.

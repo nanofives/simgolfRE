@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 65 bytes, 28 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 returns 1 while a fire-and-forget sound is still within its duration (m_64 vs timeGetTime-m_68), else delegates to busy2 (`re/names/exe_3.tsv`)
 
+## Purpose
+Reports whether a sound object is still playing. With a device object at +0x40 (`jne` 0x00484b38) or bit 4 of the flags at +0x58 clear (`shr eax, 4; test al, 1` 0x00484b3d / 0x00484b40, `je` 0x00484b42) the answer comes from Snd::queryDevice4845d0 0x004845d0 (0x00484b6a), which returns the device's vtable slot +0x5c or 0 without a device. Otherwise a zero start time at +0x68 (`je` 0x00484b49) gives 0, and a set one compares the elapsed time timeGetTime() (slot 0x004ba21c, 0x00484b4b) - [+0x68] with the duration at +0x64, unsigned: duration > elapsed gives 1 (`cmp ecx, eax; jbe` 0x00484b59 / 0x00484b5b), else 0. Reached as slot 23 (+0x5c) of the table 0x004bacf8, installed by Snd::ctorDerived 0x00484820 and SndMusic::dtor 0x004848a0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Snd::busy_t100k (12 vectors, 4 distinct results, 7 changing state, `log/diff/00484b30_Snd_busy_t100k.path1.csv`); Snd::busy_t5 (12 vectors, 4 distinct results, 7 changing state, `log/diff/00484b30_Snd_busy_t5.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?busy@C484b30@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00484b63, 0x00484b67, 0x00484b70): callee pops 0 bytes of stack arguments.

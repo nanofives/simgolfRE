@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 20 bytes, 4 instructions, subsystem `ui`. Mechanical tr
 releases the font surface globals. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Releases the two global font Surfaces: Surface_free 0x00473ae0 on 0x008408c8 (0x0049ff30 / 0x0049ff35) and, as a tail jump, on 0x008408f8 (0x0049ff3a / 0x0049ff3f). Caller: engineShutdown 0x00485740. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: freeFonts_disp_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ff30_freeFonts_disp_a.path1.csv`); freeFonts_disp_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ff30_freeFonts_disp_b.path1.csv`); freeFonts_disp_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049ff30_freeFonts_disp_c.path1.csv`); freeFonts_nodisp (1 vectors, 1 distinct results, 0 changing state, `log/diff/0049ff30_freeFonts_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_0049ff30@f_0049ff30@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

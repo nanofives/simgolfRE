@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 137 bytes, 42 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 inserts a child window into this container array at +0x224 (count +0x22c), growing it (FUN_00479b40), front/back ordered by flag 0x2000000 (`re/names/exe_3.tsv`)
 
+## Purpose
+Adds a child window to the array of ChildArray_grow. A null child returns (0x0047e5fa). When count + 1 exceeds the capacity (signed `jle` at 0x0047e60b) ChildArray_grow 0x00479b40 runs (0x0047e60f). A child whose flag word +0x9c has bit 0x2000000 (0x0047e614) goes at items[count] (0x0047e620-0x0047e62c); any other child goes first: the items move up one slot from the top down (0x0047e64b-0x0047e65d) and items[0] gets the child (0x0047e665). Either way the count goes up by one (0x0047e637 / 0x0047e66e). Caller: layoutViewTree 0x0047a4c0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: ChildArray::insert (13 vectors, 13 distinct results, 12 changing state, `log/diff/0047e5f0_ChildArray_insert.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_0047e5f0@C_FUN_0047e5f0@f_0047e5f0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047e63e, 0x0047e676): callee pops 4 bytes of stack arguments.

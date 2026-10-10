@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 169 bytes, 68 instructions, subsystem `render`. Mechani
 draws a sprite structure at x,y (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, five arguments (`ret 0x14`). Surface_blit2's body without the m_8 test: 0x10 when dst is null (0x004741bd), 7 when this->m_4 or dst->m_4 is null (0x004741d1 / 0x004741d8), otherwise the same scaled offset from g_graphicsDevice slot +0xa0 (0x004741f2, 0x004741f8..0x00474212) and a call to slot +0x78 of this->m_4 (0x00474240) with (dst->m_4, x', y', a4, a5 ? a5->m_4 : 0); returns its eax. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Sprite_draw_s1 (11 vectors, 8 distinct results, 6 changing state, `log/diff/004741b0_Sprite_draw_s1.path1.csv`); Sprite_draw_s2 (11 vectors, 8 distinct results, 6 changing state, `log/diff/004741b0_Sprite_draw_s2.path1.csv`); Sprite_draw_s3 (11 vectors, 8 distinct results, 6 changing state, `log/diff/004741b0_Sprite_draw_s3.path1.csv`); Sprite_draw_s4 (11 vectors, 8 distinct results, 6 changing state, `log/diff/004741b0_Sprite_draw_s4.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?draw@C4741b0@@QAEHPAUS4741b0@@HHH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x004741c9, 0x00474249, 0x00474256): callee pops 20 bytes of stack arguments.

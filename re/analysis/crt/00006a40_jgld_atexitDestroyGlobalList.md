@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00006a40`), 80 bytes, 29 instructions, subsystem `crt`
 once-guarded (flag 0x10128444 bit0) teardown that destroys the global LinkedList at 0x10128428. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_4.md`.
 
+## Purpose
+Module-exit teardown of the tracked-object list: when bit 0 of the byte 0x10128444 is clear (0x10006a5a, and/test 0x10006a5f) it sets that bit (0x10006a6c / 0x10006a6f, other bits kept) and runs LinkedList::dtor 0x10006cf0 on 0x10128428 (0x10006a7a), which writes the LinkedList vtable 0x1011d05c over the header and clears the list; when the bit is set it does nothing. Registered with _atexit by 0x100069f0 (push at 0x10006a08). Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: atexitDestroyGlobalList_set_five (1 vectors, 1 distinct results, 0 changing state, `log/diff/00006a40_jgld_atexitDestroyGlobalList_set_five.path1.csv`); atexitDestroyGlobalList_setff_one (1 vectors, 1 distinct results, 0 changing state, `log/diff/00006a40_jgld_atexitDestroyGlobalList_setff_one.path1.csv`); atexitDestroyGlobalList_clear_empty (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006a40_jgld_atexitDestroyGlobalList_clear_empty.path1.csv`); atexitDestroyGlobalList_clear_one (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006a40_jgld_atexitDestroyGlobalList_clear_one.path1.csv`); atexitDestroyGlobalList_clear_five (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006a40_jgld_atexitDestroyGlobalList_clear_five.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10006a8f): callee pops 0 bytes of stack arguments.
 

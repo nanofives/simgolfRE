@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 98 bytes, 32 instructions, subsystem `ui`. Mechanical t
 grows the child-pointer array at this+0x224 by 10 entries: allocates the larger buffer, copies the existing count (+0x22c) pointers, frees the old buffer and updates capacity (+0x228) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Grows a window's child pointer array {items +0x224, capacity +0x228, count +0x22c} by 10 slots: the new capacity is stored first (0x00479b44-0x00479b4d), a block of capacity*4 bytes comes from malloc 0x004a504f (0x00479b53 / 0x00479b57) and is used without a null test, the `count` items are copied by a loop that re-reads the count every pass (0x00479b6d-0x00479b84), the old array is freed when not null (0x00479b8e / 0x00479b91) and the new one stored (0x00479b99). Its only caller is ChildArray::insert 0x0047e60f. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: ChildArray_grow (16 vectors, 16 distinct results, 16 changing state, `log/diff/00479b40_ChildArray_grow.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_00479b40@f_00479b40@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00479ba1): callee pops 0 bytes of stack arguments.

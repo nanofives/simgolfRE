@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 448 bytes, 155 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 draws a bordered frame (R3 style) around a rectangle (`re/names/exe_0.tsv`)
 
+## Purpose
+Cdecl (x, y, w, h, fill). Same frame as drawPanelS2 (display triple (1, 1, 1) at 0x0040cf02 when g_graphicsDevice is set, 16-rounding 0x0040cf0f..0x0040cf6c) but the interior is drawn by blitPanel(x, y, w, h, 1) 0x0040ca10 when fill != 0 (0x0040cf76 / 0x0040cf7e) instead of fillWindowRect, and the eight pieces come from the Surfaces 0x005a53c8.. with first arguments 0x0058b680.. (0x0040cf86..0x0040d0a6). Callers drawWindow 0x0040d320, mainLoop 0x0040f5c0, showInfoCursorPanel 0x00433190, showTournamentResults 0x0045a090. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: drawFrameR3 (9 vectors, 9 distinct results, 9 changing state, `log/diff/0040cef0_drawFrameR3.path1.csv`); drawFrameR3_nodisp (4 vectors, 4 distinct results, 4 changing state, `log/diff/0040cef0_drawFrameR3_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `?r3_frame@@YAXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040d0af): callee pops 0 bytes of stack arguments.

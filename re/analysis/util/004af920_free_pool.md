@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 241 bytes, 98 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's free_pool: ERREXIT1(0xc, id) for an id outside 0..1 (0x004af933-0x004af94e), then used as it is. For pool 1 (0x004af953) every virtual sample array (mem+0x40, linked through +0x2c) and then every virtual block array (mem+0x44) whose b_s_open +0x28 is set gets it cleared and its close_backing_store (+0x38) called with (cinfo, &info +0x30) (0x004af95f-0x004af990); both list heads are cleared (0x004af97c / 0x004af9a1). Then large_list[id] and small_list[id] are detached and every header handed to jpeg_free_large 0x004b0470 with bytes_left + bytes_used + 0x10, total_space_allocated dropping by the same amount (0x004af9a4-0x004afa0a). Installed as mem->free_pool; caller self_destruct_jmemmgr 0x004afa2d. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: free_pool (16 vectors, 16 distinct results, 15 changing state, `log/diff/004af920_free_pool.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_free_pool` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afa10): callee pops 0 bytes of stack arguments.

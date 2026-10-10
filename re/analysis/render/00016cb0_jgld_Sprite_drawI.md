@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00016cb0`), 623 bytes, 207 instructions, subsystem `re
 blits the sprite to a Surface at (x,y) (draw variant I); 100% instruction match (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Sprite vtable slot 15: result local cleared (0x10016ccd); Palette word saved and replaced (0x10016cdd); NULL destination -> 0x10 (0x10016cf2), invalid sprite -> 7. 8 bpp onto 8-bit reports (0x10122df4 + 0x11, 0x1011d56c); onto 16-bit: busy -> drawRle16p 0x10058970 (0x10016db9), else 0x10027430 (0x10016dd6), with (dst, x, y, table); other depth reports (+0x1d), 0x17. 16 bpp onto 8-bit reports (+0x26, 0x1011d56c), result 0; any other depth reports (+0x2c), 0x17. Other bpp reports (+0x34), 0x17. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Sprite::drawI_s111 (20 vectors, 13 distinct results, 10 changing state, `log/diff/00016cb0_jgld_Sprite_drawI_s111.path1.csv`); Sprite::drawI_s223 (20 vectors, 13 distinct results, 10 changing state, `log/diff/00016cb0_jgld_Sprite_drawI_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?drawI@Sprite@@QAEHPAVSurface@@HHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x10016f1c): callee pops 20 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 96 bytes, 34 instructions, subsystem `ui`. Mechanical t
 Reallocates the text buffer at this+0x574 to param_1 bytes, copying the old contents, and stores the new capacity at this+0x578. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Resizes an edit box's text buffer (+0x574, size +0x578) to n characters. The same size returns (0x0048625e). Otherwise a block of n + 1 bytes from malloc 0x004a504f (0x00486260-0x00486265), used without a null test, gets a NUL at [n] and at [0] (0x0048626f / 0x00486273); an old buffer is copied in with the CRT strncpy 0x004a6c80 (new, old, n) (0x00486280-0x00486283) and freed (0x00486296), and the new buffer and size are stored (0x0048629e / 0x004862a4). Callers: 0x004385d0, EditBox::init 0x00486110, 0x004a2400. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: EditBox::resizeBuffer (12 vectors, 11 distinct results, 10 changing state, `log/diff/00486250_EditBox_resizeBuffer.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00486250@C_FUN_00486250@f_00486250@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004862ad): callee pops 4 bytes of stack arguments.

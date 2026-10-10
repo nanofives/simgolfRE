@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 133 bytes, 49 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 initialises a created surface (`re/names/exe_2.tsv`)
 
+## Purpose
+Thiscall (w, h) (`ret 8`), always returns 0 (0x0047463f). Surface_create's sequence (0x004745c5.. 0x004745f2) with slot +4 called as (0, w, h, *(int*)blitErrorPtr(), 1, *0x0083acb4): the last two are pushed before the call to blitErrorPtr 0x00492450 (0x004745fe / 0x004745ff), which returns 0x0083c310 (g_blitError). The fields are written when slot +4 returns NON-zero (`je` 0x00474621), the opposite of Surface_create. Caller loadPcxSurface 0x0049d1b0. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_init2_r0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/004745c0_Surface_init2_r0.path1.csv`); Surface_init2_r9 (6 vectors, 6 distinct results, 6 changing state, `log/diff/004745c0_Surface_init2_r9.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?init@C4745c0@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00474642): callee pops 8 bytes of stack arguments.

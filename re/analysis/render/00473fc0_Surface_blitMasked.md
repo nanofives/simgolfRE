@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 111 bytes, 50 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 masked blit of a surface region (`re/names/exe_2.tsv`)
 
+## Purpose
+Thiscall, six arguments (`ret 0x18`). Returns 0x10 when a2 (0x00473fc8) or a1 (0x00473fd0) is null; 7 when this->m_4 (0x00473fd7), a2->m_4 (0x00473fde), a1->m_4 (0x00473fe5) or a3->m_4 (0x00473ff0) is null (a3 itself is dereferenced without a test at 0x00473feb, but only after the earlier tests pass); otherwise calls slot +0x50 of this->m_4 (0x00474012) with (a1->m_4, a2->m_4, a3->m_4, a4, a5, a6 ? a6->m_4 : 0) and returns its eax. Caller LabelButton::drawContents 0x004a1580. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_blitMasked (13 vectors, 7 distinct results, 5 changing state, `log/diff/00473fc0_Surface_blitMasked.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f473fc0@Surf473@@QAEHPAU1@00HH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x00474018, 0x00474022, 0x0047402c): callee pops 24 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 25 bytes, 8 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 allocates and returns the int-pair array used by the global at 0x008406e8. (`re/names/exe_5.tsv`)
 
+## Purpose
+Constructs a pair array on top of a Buf: Buf_ctor 0x004747a0 (0x0049d053), then the vtable 0x004bbe6c over the one Buf_ctor stored (0x0049d058) and +0x18 = 0 (0x0049d05e); returns `this` (0x0049d065). Caller: initPairArrayGlobal 0x0049d010. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: allocPairArray (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049d050_allocPairArray.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_0049d050@f_0049d050@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049d068): callee pops 0 bytes of stack arguments.

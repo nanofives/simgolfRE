@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00002820`), 63 bytes, 26 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 destructor: restores vtable 0x1011d01c and calls close. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Destructor of jgld's MappedFile: stores the MappedFile vtable 0x1011d01c at +0 (0x10002840) and calls MappedFile::close 0x10002e10 through its incremental-link thunk 0x100018bb (0x10002849). Callers MappedFile::deletingDtor 0x100026c0, 0x10002730, 0x100027b0, 0x10012140. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: MappedFile::dtor_jgld (12 vectors, 12 distinct results, 12 changing state, `log/diff/00002820_jgld_MappedFile_dtor_jgld.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10002820@f_10002820@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000285e): callee pops 0 bytes of stack arguments.

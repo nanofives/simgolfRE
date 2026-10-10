@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 90 bytes, 29 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's std_huff_tables: add_huff_table 0x004ae8b0 four times with the standard tables in the exe: DC luminance into dc_huff_tbl_ptrs[0] (cinfo+0x50, bits 0x004bcd08, values 0x004bcd1c; 0x004ae864), AC luminance into ac_huff_tbl_ptrs[0] (+0x60, 0x004bcd48, 0x004bcd5c; 0x004ae878), DC chrominance (+0x54, 0x004bcd28, 0x004bcd3c; 0x004ae88c) and AC chrominance (+0x64, 0x004bce00, 0x004bce14; 0x004ae8a0). Caller: jpeg_set_defaults 0x004ae760. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: std_huff_tables (12 vectors, 12 distinct results, 12 changing state, `log/diff/004ae850_std_huff_tables.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_std_huff_tables` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae8a9): callee pops 0 bytes of stack arguments.

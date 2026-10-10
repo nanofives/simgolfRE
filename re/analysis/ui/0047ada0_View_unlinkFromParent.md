@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 213 bytes, 61 instructions, subsystem `ui`. Mechanical 
 removes this view from its parent's child list (doubly-linked list at parent+0x138/0x13c, count +0x140), freeing the node unless the parent is iterating (+0x148) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Detaches a view from its parent's attachment ring. The parent (+0x130) keeps {head +0x138, cursor +0x13c, count +0x140, last index +0x144, keep-blocks flag +0x148}, a node {view +4, data +8, next +0xc, prev +0x10}. No parent or no head returns (0x0047ada9 / 0x0047adb7). Starting at the CURSOR, up to `count` nodes are visited and the cursor advances with each miss (0x0047adce-0x0047ade5). The node whose +4 is this view is unlinked (0x0047adef-0x0047ae04), the head moves on when it was the head (0x0047ae0d-0x0047ae18), the cursor moves to the next node (0x0047ae29), and unless +0x148 is set (0x0047ae2f) the data block is freed when not null (0x0047ae39), +8 cleared (0x0047ae43) and the node freed (0x0047ae4d); the count drops (0x0047ae55). Found or not, a count of 0 clears the head (0x0047ae66) and the last index becomes count - 1 (0x0047ae6d). Caller: View_dtor 0x00479f30. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: View_unlinkFromParent (15 vectors, 14 distinct results, 13 changing state, `log/diff/0047ada0_View_unlinkFromParent.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_14.cpp` as `?FUN_0047ada0@f_0047ada0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047ae74): callee pops 0 bytes of stack arguments.

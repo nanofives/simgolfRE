@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 497 bytes, 184 instructions, subsystem `render`. Mechan
 draws a run of 16-bit pixels into a surface via the widget palette (companion of drawColorRunA). (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+The 16-bit counterpart of Image::vline: a dotted vertical line of one 16-bit colour at column x. Null Surface (0x00494f0e), x outside [left, right) (0x00494f23, 0x00494f3f) and y0 == y1 (0x00494f4d) return; the same colour lookup as drawColorRunA (bit 31 0x00494f56, [0x0083ad0c] 0x00494f66, format switch 0x00494f7b..0x00494f84, tables 0x00494f93 / 0x00494fa1, word 0x00494fb0), & 0xffff (0x00494fbc); swap (0x00494fc7), y0 >= bottom (0x00494ff0) and y1 < top (0x00495011) return, clamps (0x00495032, 0x00495068); address from slot +0x1c (x, y0) (0x00495095, NULL at 0x0049509d), step = pitch (slot +0xe0, 0x004950a8) * 4 bytes (0x004950ce), every second row, then slot +0x24 (1). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: drawColorRunB (30 vectors, 16 distinct results, 15 changing state, `log/diff/00494f00_drawColorRunB.path1.csv`); drawColorRunB_nopal (30 vectors, 17 distinct results, 16 changing state, `log/diff/00494f00_drawColorRunB_nopal.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x004950ee): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x00494f03 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000096f0`), 63 bytes, 26 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 destructor of Surface's base class; restores vtable 0x1011d220 and runs the Tracked dtor. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Destructor of jgld's SurfaceBase: writes the SurfaceBase vtable 0x1011d220 at [this] (0x10009710) and runs Tracked::dtor 0x10006b80 on the same object (0x10009719), which unregisters it from the tracked-object list. Returns nothing. Called by Surface::dtor 0x10007bf0, SurfaceBase::deletingDtor 0x1000a4e0 and EH unwind funclets. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: SurfaceBase::dtor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/000096f0_jgld_SurfaceBase_dtor_empty.path1.csv`); SurfaceBase::dtor_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/000096f0_jgld_SurfaceBase_dtor_one.path1.csv`); SurfaceBase::dtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/000096f0_jgld_SurfaceBase_dtor_five.path1.csv`); SurfaceBase::dtor_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/000096f0_jgld_SurfaceBase_dtor_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_100096f0@f_100096f0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000972e): callee pops 0 bytes of stack arguments.

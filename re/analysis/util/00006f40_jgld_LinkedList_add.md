@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00006f40`), 349 bytes, 113 instructions, subsystem `ut
 inserts a payload pointer as a new ListNode (ordered/unordered per flag; warns on misuse). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Appends a node holding `data` and a flag byte to a jgld LinkedList (`this`). If the list already holds nodes and its +0x18 "ordered" word is set (cmp 0x10006f75 / 0x10006f7e) it first sends the debug text 0x1011d060 ("BAD USE OF LINKED LIST - Ordered or unordered") through the import OutputDebugStringA at [0x1012c42c] (call 0x10006f8b); either way +0x18 is cleared (0x10006f9b). A 0x14-byte node comes from operator new 0x1007f0f0 (0x10006fa4) and is built by ListNode::ctor 0x10007370 (0x10006fc7, data and flag byte); it is linked in before the head (0x10007000..0x10007024) or becomes a self-linked head (0x1000702f..0x1000704d); the count rises (0x1000705c), the node becomes current (0x10007065), and the list's +4 / +8 take the data and the node's flag byte (0x1000706e, 0x1000707d). No return value (`ret 8` 0x1000709a). Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: LinkedList::add (14 vectors, 14 distinct results, 14 changing state, `log/diff/00006f40_jgld_LinkedList_add.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `?add@LinkedList@@QAEXPAXD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000709a): callee pops 8 bytes of stack arguments.

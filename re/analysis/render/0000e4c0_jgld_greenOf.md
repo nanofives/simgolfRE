@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000e4c0`), 98 bytes, 35 instructions, subsystem `rend
 extracts the green channel from a 16-bit pixel. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Extracts the green channel scaled to 8 bits: slot +0xb4 of the Display 0x10128420 (0x1000e4e7) returning 1 (cmp 0x1000e4f4) means RGB565, (colour sar 3) & 0xfc (0x1000e4fc); otherwise RGB555, (colour sar 2) & 0xf8 (0x1000e509). cdecl, one argument. Same callers as redOf. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: greenOf_fmt1 (14 vectors, 6 distinct results, 14 changing state, `log/diff/0000e4c0_jgld_greenOf_fmt1.path1.csv`); greenOf_fmt0 (14 vectors, 4 distinct results, 14 changing state, `log/diff/0000e4c0_jgld_greenOf_fmt0.path1.csv`); greenOf_fmt2 (14 vectors, 4 distinct results, 14 changing state, `log/diff/0000e4c0_jgld_greenOf_fmt2.path1.csv`); greenOf_fmtm1 (14 vectors, 4 distinct results, 14 changing state, `log/diff/0000e4c0_jgld_greenOf_fmtm1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_color.cpp` as `?greenOf@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000e521): callee pops 0 bytes of stack arguments.

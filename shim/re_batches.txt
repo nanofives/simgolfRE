@@ -102,3 +102,8 @@ c3cu.cpp
 c3cv.cpp
 c3cw.cpp
 c3cx.cpp
+c3cy.cpp
+c3cz.cpp
+c3da.cpp
+c3db.cpp
+c3dc.cpp

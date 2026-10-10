@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 140 bytes, 55 instructions, subsystem `render`. Mechani
 copies source Surface param_1 into this: frees this, copies fields +8..+0x28, recreates the DIB through g_graphicsDevice vtbl+0x80, sets alpha 0xff and blits the source bitmap (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Thiscall, one argument (`ret 4`), returns this. When src->m_4 is null it returns at once (0x004744cd). Otherwise Surface_free 0x00473ae0 releases this (0x004744d8; through g_graphicsDevice slot +0x94 when this->m_4 is set), src's +8 and +0x10..+0x28 are copied into this (0x004744dd..0x0047450c), g_graphicsDevice slot +0x80 is called with (&this->m_4, src->m_28) (0x00474523) and its result stored in this->m_4 (0x00474529), then the new object's slot +0x18 with 0xff (0x00474535) and its slot +0xc with src->m_4 (0x00474541). The `this == 0` test at 0x0047450f follows Surface_free's dereference of this, so its null arm cannot run without a fault. Caller decodeImageChunks 0x00482570. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_copyFrom_r0 (8 vectors, 8 distinct results, 6 changing state, `log/diff/004744c0_Surface_copyFrom_r0.path1.csv`); Surface_copyFrom_r9 (8 vectors, 8 distinct results, 6 changing state, `log/diff/004744c0_Surface_copyFrom_r9.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_004744c0@C_FUN_004744c0@f_004744c0@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004744d3, 0x00474549): callee pops 4 bytes of stack arguments.

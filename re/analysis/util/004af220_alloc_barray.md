@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 176 bytes, 71 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's alloc_barray, alloc_sarray's twin over coefficient blocks: rows per chunk = 0xffe0 / (blocksperrow << 7) (0x004af225-0x004af22f), ERREXIT(0x45) for <= 0 (0x004af241-0x004af24d), the cap and last_rowsperchunk (0x004af258 / 0x004af26b), the row array from alloc_small 0x004aef70 (0x004af271), chunks of chunk * blocksperrow << 7 bytes from alloc_large 0x004af0c0 (0x004af28d-0x004af2a2), rows (blocksperrow << 7) bytes apart (0x004af2be). Caller: realize_virt_arrays 0x004af50a. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: alloc_barray (12 vectors, 12 distinct results, 12 changing state, `log/diff/004af220_alloc_barray.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_alloc_barray` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af2cf): callee pops 0 bytes of stack arguments.

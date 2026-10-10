@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 dynamic-initializer thunk for the global int-pair array at 0x008406e8. (`re/names/exe_5.tsv`)
 
+## Purpose
+The static construction of the global pair array 0x008406e8: `mov ecx, 0x008406e8; jmp 0x0049d050`, i.e. allocPairArray on it, returning the object. Caller: dynInit_initPairArrayGlobal 0x0049d000. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: initPairArrayGlobal_0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d010_initPairArrayGlobal_0.path1.csv`); initPairArrayGlobal_1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d010_initPairArrayGlobal_1.path1.csv`); initPairArrayGlobal_2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d010_initPairArrayGlobal_2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_0049d010@f_0049d010@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

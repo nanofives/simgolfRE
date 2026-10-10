@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 137 bytes, 54 instructions, subsystem `ui`. Mechanical 
 Duplicates the tooltip string param_1 into this+0x5f8 (freeing any previous one). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Replaces a button's tooltip text (+0x5f8): an old text is freed and the field cleared (0x00488a2d- 0x00488a38); a null text then returns 0 (0x00488a48); otherwise a block of strlen + 1 bytes (0x00488a4c-0x00488a56) is stored in the field (0x00488a5e), NULL returns 4 (0x00488a6a), else its first byte is zeroed (0x00488a73) and the text copied in (0x00488a76-0x00488a9f), result 0. Caller: TextView::build 0x0048e900. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: Button::setTooltip (12 vectors, 12 distinct results, 11 changing state, `log/diff/00488a20_Button_setTooltip.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?setText@C488a20@@QAEHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00488a70, 0x00488aa6): callee pops 4 bytes of stack arguments.

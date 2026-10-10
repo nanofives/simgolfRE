@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 69 bytes, 25 instructions, subsystem `util`. Mechanical
 Unmaps the view and closes the mapping and file handles. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Releases what a mapped-file object holds, view first. A non-null view at +4 (tested 0x00492e89) is passed to UnmapViewOfFile through the IAT slot 0x004ba0d0 (0x00492e8c) and +4 is cleared (0x00492e92); a non-null mapping handle at +0xc (0x00492ea4) is passed to CloseHandle 0x004ba0cc (slot loaded at 0x00492e9c, call 0x00492ea7) and cleared (0x00492ea9); a file handle at +8 other than INVALID_HANDLE_VALUE (`cmp eax, -1` 0x00492eb3) is passed to the same CloseHandle (0x00492eb9) and +8 becomes -1 (0x00492ebb). No return value is set. Called by MappedFile::dtor 0x00492dc0, MappedFile::open 0x00492dd0 and 0x00478f50. The A/B ran under the import stand-in: both imports recorded, their call sequence compared state. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: MappedFile::close_exe (12 vectors, 11 distinct results, 10 changing state, `log/diff/00492e80_MappedFile_close_exe.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small7.cpp` as `?close@Mapping@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00492ec4): callee pops 0 bytes of stack arguments.

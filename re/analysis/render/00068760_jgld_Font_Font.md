@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00068760`), 183 bytes, 55 instructions, subsystem `ren
 destructor for the Font; releases its GDI font and metrics (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`, `re/analysis/systems/undisc_jgld.md`.
 
+## Purpose
+Destructor of jgld's Font: stores the Font vtable 0x1011da6c at +0 (0x10068795) and the vtable 0x1011da68 of its Tracked sub-object at +8 (0x1006879e); when +4 holds a pointer (`je` 0x100687b3) the dword it points at is cleared (0x100687bb). Then Font::release 0x10068da0 (thunk 0x10001014, 0x100687c4), Tracked::dtor 0x10006b80 on this+8 (`je` 0x100687d1 chooses this+8 or NULL; thunk 0x1000195b, 0x100687e8), which unregisters the sub-object from the tracked-object list 0x10128428, and FontBase::~FontBase 0x10069010 (thunk 0x1000108c, 0x100687f7). Caller Font::deletingDtor 0x100691b0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Font::~Font_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/00068760_jgld_Font_~Font_one.path1.csv`); Font::~Font_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00068760_jgld_Font_~Font_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `??1Font@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10068816): callee pops 0 bytes of stack arguments.

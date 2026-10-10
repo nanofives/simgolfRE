@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000091a0`), 246 bytes, 98 instructions, subsystem `ren
 blit (no transparency test in any of its three routines, c3bc/c3bh A/B): dispatches on src depth (+0x24) and dst depth (vtbl+0xe4) to the 8->8, 8->16 or 16->16 routine. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Surface vtable slot 15: block-copy dispatcher on `this`'s depth field +0x24 read directly (0x100091c0). Depth 8 (cmp 0x100091c6) looks at the destination's depth through its slot +0xe4 (0x100091e5): 8 -> blitT_8to8 0x10013c50 (0x10009224), 0x10 -> blitT_8to16 0x10012db0 (0x1000924a), else 0x17 (0x10009251). Depth 0x10 (cmp 0x100091cc) -> blitT_16to16 0x1000ed70 (0x10009277) without looking at the destination. Anything else 0x17 (0x1000927e). The seven stack arguments are forwarded unchanged (`ret 0x1c`). Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Surface::blitT (19 vectors, 14 distinct results, 11 changing state, `log/diff/000091a0_jgld_Surface_blitT.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?blitT@Surface@@QAEHPAV1@HHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x1c` (at 0x10009293): callee pops 28 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00006ab0`), 74 bytes, 30 instructions, subsystem `util
 constructs a Tracked base object and links it into the global tracked list. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Constructor of jgld's Tracked base class: writes the Tracked vtable 0x1011d058 at [this] (0x10006ad0) and registers the object in the module's tracked-object list 0x10128428 with LinkedList::add 0x10006f40 (`mov ecx, 0x10128428` 0x10006adc, call 0x10006ae1, arguments this and 0); returns this (0x10006ae6). Called by 0x10009690, SpriteBase::ctor 0x10014c70, 0x10068660 and 0x1006a260. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Tracked::ctor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006ab0_jgld_Tracked_ctor_empty.path1.csv`); Tracked::ctor_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006ab0_jgld_Tracked_ctor_one.path1.csv`); Tracked::ctor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006ab0_jgld_Tracked_ctor_five.path1.csv`); Tracked::ctor_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006ab0_jgld_Tracked_ctor_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??0Tracked@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10006af9): callee pops 0 bytes of stack arguments.

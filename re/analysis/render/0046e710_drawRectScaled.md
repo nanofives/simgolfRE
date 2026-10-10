@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 150 bytes, 65 instructions, subsystem `render`. Mechani
 draws a rectangle outline on the surface PTR 0x004c1570 by scaling the four coordinates through scaleX and drawing the four edges via drawLineOnSurface (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Cdecl (x, y, w, h, colour), no branch. sx, sy, sw, sh = scaleX 0x00404970 of x, y, w, h (0x0046e719 / 0x0046e725 / 0x0046e731 / 0x0046e73d), x2 = sx + sw (0x0046e74c), y2 = sy + sh (0x0046e765), then four drawLineOnSurface 0x004049a0 calls on *0x004c1570, re-read before each: (sx, sy, x2, sy) 0x0046e756, (sx, y2, x2, y2) 0x0046e76d, (x2, sy, x2, y2) 0x0046e784, (sx, sy, sx, y2) 0x0046e799: the outline of the scaled rect. Returns the last call's eax. Caller drawScrollText 0x0046e260. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: drawRectScaled (9 vectors, 9 distinct results, 9 changing state, `log/diff/0046e710_drawRectScaled.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_0046e710@f_0046e710@@YAXHHHHE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046e7a5): callee pops 0 bytes of stack arguments.

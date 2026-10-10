@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 578 bytes, 193 instructions, subsystem `render`. Mechan
 Scanline-fills a convex polygon into a 16-bit surface using the polygon edge DDA. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+The 16-bit polygon fill: NULL verts (0x004932dd) or holder (0x004932e9) returns 0x10; the 16-bit base from slot +0x20 (0x004932fc) goes to 0x0083d37c (0x00493301), NULL skips to the release. The colour goes through the same lookup as drawColorRunA (bit 31 0x00493316, [0x0083ad0c] 0x00493320, format code 0x00493335, tables 0x00493364 / 0x00493356, word 0x00493373) except that an unknown format returns 1 at once WITHOUT releasing the base it acquired (0x0049333e je, 0x00493343). Then 0x0083d358 = verts (0x00493379), 0x0083d378 = count (0x00493389), 0x0083d34c = colour & 0xffff (0x0049338f), 0x0083d388 = pitch * 2 bytes (0x004933a8), and fillConvexPoly8's clip, scan and row loop (0x004933ba..0x004934e7) with fillSpanDown 0x00493000; release (0x004934f8), returns 0. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: fillConvexPoly16 (30 vectors, 28 distinct results, 26 changing state, `log/diff/004932d0_fillConvexPoly16.path1.csv`); fillConvexPoly16_nopal (30 vectors, 27 distinct results, 26 changing state, `log/diff/004932d0_fillConvexPoly16_nopal.path1.csv`); fillConvexPoly16_stale (10 vectors, 10 distinct results, 10 changing state, `log/diff/004932d0_fillConvexPoly16_stale.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s0.cpp` as `?s0_fillPoly4932d0@@YAHPAUS0Surf4932d0@@PAUtagPOINT@@HI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049334c, 0x00493504, 0x00493511): callee pops 0 bytes of stack arguments.

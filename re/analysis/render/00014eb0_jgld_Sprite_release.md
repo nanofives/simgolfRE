@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00014eb0`), 248 bytes, 77 instructions, subsystem `ren
 frees the sprite's pixel/line data. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Frees a Sprite's pixel data and zeroes its geometry. With a payload at +0x14 (cmp 0x10014ed0) it lowers the module counter 0x101284c8 by width * height (0x10014f18..0x10014f24) and, for the span (run-length) form (bit 0 of +0x18, 0x10014edc), the counter 0x101284cc by width * height - [+0x24] - height * 4 (0x10014eec..0x10014f09), then jfree 0x10014a90 the payload (0x10014f31) and clears +0x14. A non-NULL +0x1c block (the row table, cmp 0x10014f46) is jfree'd (0x10014f53) and cleared. Finally +0x2c, +0x30, +0x34, +0x18 and +0x24 are zeroed (0x10014f68..0x10014f90). No return value. Called by Sprite::dtor 0x10014e50. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Sprite::release (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014eb0_jgld_Sprite_release.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?release@Sprite@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10014fa7): callee pops 0 bytes of stack arguments.

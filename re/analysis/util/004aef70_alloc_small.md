@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 303 bytes, 110 instructions, subsystem `util`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+IJG libjpeg 6a's alloc_small (jmemmgr.c), installed as mem->alloc_small by jinit_memory_mgr: a size over 0xffe0 calls out_of_memory 0x004af0a0 with 1 (0x004aef8e); the size is rounded up to 8 (0x004aef96-0x004aefa6); a pool id outside 0..1 is ERREXIT1(0xc, id) and then used as it is (0x004aefb0-0x004aefc8). The chain small_list[id] (mem+0x30) is searched for the first header with bytes_left >= size (0x004aefde), remembering the last one passed. Found: carved from it. Not found: a new pool of size + 0x10 + slop (first_pool_slop 0x004bd09c for an empty chain, extra_pool_slop 0x004bd0a4 otherwise, capped at 0xfff0 - minimum, 0x004aeff2-0x004af014) from jpeg_get_large 0x004b0460; NULL halves the slop and, once it is below 50, calls out_of_memory with 2 before retrying (0x004af027- 0x004af048); total_space_allocated += the request (0x004af05c), the header is {0, 0, size + slop} and is linked after the last header or as the chain's first (0x004af071-0x004af07d). The object is header + 0x10 + bytes_used, after which bytes_used += size and bytes_left -= size (0x004af084-0x004af097). Callers: alloc_sarray 0x004af1be, alloc_barray 0x004af271, request_virt_sarray 0x004af2d0, request_virt_barray 0x004af340. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: alloc_small (15 vectors, 15 distinct results, 15 changing state, `log/diff/004aef70_alloc_small.path1.csv`); alloc_small_fail (10 vectors, 10 distinct results, 10 changing state, `log/diff/004aef70_alloc_small_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_alloc_small` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af09e): callee pops 0 bytes of stack arguments.

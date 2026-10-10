@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 161 bytes, 60 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's alloc_large: out_of_memory 0x004af0a0 with 3 for a size over 0xffe0 (0x004af0da), rounding to 8 (0x004af0e2-0x004af0f0), ERREXIT1(0xc, id) for an id outside 0..1 (0x004af0ff-0x004af113); a header of size + 0x10 bytes from jpeg_get_large 0x004b0460 (0x004af11d); NULL calls out_of_memory with 4 (0x004af12e) and goes on with the NULL header; total_space_allocated += size + 0x10 (0x004af13e); the header gets next = large_list[id], bytes_used = size, bytes_left = 0 and becomes large_list[id] (0x004af145-0x004af155); the object is header + 0x10. Callers: alloc_sarray 0x004af1ea, alloc_barray 0x004af2a2. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: alloc_large (14 vectors, 14 distinct results, 14 changing state, `log/diff/004af0c0_alloc_large.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_alloc_large` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af160): callee pops 0 bytes of stack arguments.

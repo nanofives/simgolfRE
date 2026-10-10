@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 105 bytes, 48 instructions, subsystem `render`. Mechani
 draws a two-colour bevelled rectangle outline (param_5 top/left, param_6 bottom/right) using horizontal and vertical lines (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Draws a solid two-colour (bevel) rectangle outline (l, t, r, b, light, dark) with the Surface's drawLine slot through Widget_drawHLine 0x00478bb0 and Widget_drawVLine 0x00478be0: top edge l + 1 .. r on row t in `light` (0x00479578 lea, 0x0047957f), bottom edge l .. r - 1 on row b in `dark` (0x0047958d, 0x00479595), left edge at column l from t to b - 1 in `light` (0x004795a2 dec, 0x004795a9), right edge at column r from t + 1 to b in `dark` (0x004795b7 inc, 0x004795bd). Returns nothing. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Widget_drawBevelBox (48 vectors, 31 distinct results, 30 changing state, `log/diff/00479560_Widget_drawBevelBox.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00479560@C_FUN_00479560@f_00479560@@QAEXHHHHII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x004795c6): callee pops 24 bytes of stack arguments.

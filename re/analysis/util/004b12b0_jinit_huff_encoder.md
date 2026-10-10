@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 59 bytes, 22 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's jinit_huff_encoder: a 0x6c-byte encoder from alloc_small (cinfo, 1, 0x6c) (0x004b12bd) becomes cinfo->entropy (+0x164) with start_pass 0x004b12f0 (0x004b12c8), and for i = 0..3 dc_derived_tbls +0x2c, ac_derived_tbls +0x3c, dc_count_ptrs +0x4c and ac_count_ptrs +0x5c get NULL (0x004b12d9-0x004b12e8). Caller: jinit_compress_master 0x004b03a0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: jinit_huff_encoder (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b12b0_jinit_huff_encoder.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_chuff.cpp` as `_jinit_huff_encoder` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b12ea): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a660`), 188 bytes, 59 instructions, subsystem `ren
 packs (r,g,b) into a 16-bit pixel value. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Packs 8-bit red, green and blue into a 16-bit pixel word for the module Display's format: asks the Display at 0x10128420 through slot +0xb4 of its vtable (0x1000a687); when that returns exactly 1 (cmp 0x1000a694) it builds RGB565 ((b>>3) | (g>>2)<<5 | (r>>3)<<11, 0x1000a699..0x1000a6cc), otherwise RGB555 ((b>>3) | (g>>3)<<5 | (r>>3)<<10, 0x1000a6d3..0x1000a706), each channel masked to 8 bits first and the result OR'd with 0x80000000. cdecl (r, g, b). Called by Surface::ctor 0x10007660, Surface::ctorOwner 0x10007970, blendRect16 0x1000dfc0, ditherBlendRect16 0x1000e8b0 and 0x10019c80. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: makeColor_fmt1 (12 vectors, 10 distinct results, 12 changing state, `log/diff/0000a660_jgld_makeColor_fmt1.path1.csv`); makeColor_fmt0 (12 vectors, 10 distinct results, 12 changing state, `log/diff/0000a660_jgld_makeColor_fmt0.path1.csv`); makeColor_fmt2 (12 vectors, 10 distinct results, 12 changing state, `log/diff/0000a660_jgld_makeColor_fmt2.path1.csv`); makeColor_fmtm1 (12 vectors, 10 distinct results, 12 changing state, `log/diff/0000a660_jgld_makeColor_fmtm1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?makeColor@@YAHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a71b): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069260`), 13 bytes in 2 address ranges, 3 instructio
 this-adjustor thunk: subtracts 0x8 from this and tail-jumps to Font::deletingDtor 0x10001753 (`re/names/undisc_jgld.tsv`)
 System writeup: `re/analysis/systems/undisc_jgld.md`.
 
+## Purpose
+Slot 0 of the vtable 0x1011da68 that Font::Font 0x10068660 and Font::~Font 0x10068760 store at +8 (the Tracked sub-object): moves `this` back to the Font (`sub ecx, 8` 0x10069260) and jumps into Font::deletingDtor 0x100691b0 through its thunk 0x10001753 (0x10069263) with flags still on the stack, so deleting a Font through its Tracked base runs the whole Font destructor and returns the Font's address. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Font::deletingDtor_adj8_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069260_jgld_Font_deletingDtor_adj8_one.path1.csv`); Font::deletingDtor_adj8_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069260_jgld_Font_deletingDtor_adj8_five.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x10069260 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

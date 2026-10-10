@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 226 bytes, 78 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 blits a panel/background bitmap region to a surface (`re/names/exe_0.tsv`)
 
+## Purpose
+Cdecl (x, y, w, h, style). Covers the rect with 16x16 tiles: columns from x while < x + w (0x0040ca1b / 0x0040ca25, step 0x0040cae1), rows from y while < y + h (0x0040ca35 / 0x0040ca44, step 0x0040cad2), each tile one Surface_blit2 0x004740f0 call with (*0x004c1570, xi, yi, *0x00824148 g_color16Lut, 0). Style 0 (0x0040ca50) always uses the Surface 0x005a5554 (0x0040ca63); any other style picks one of nine Surfaces at 0x00541580 + 0x2c * (cx + 3 * cy) (`lea ecx, [ecx + eax*2]` 0x0040caa9, `add eax, ecx` 0x0040cab4), cx / cy being 0 on the first column / row, 2 on the last (a tile whose end reaches x + w / y + h, tested after the first-tile test, 0x0040ca7f / 0x0040ca9a), else 1: a nine-patch. eax at return is x + w. Callers drawWindowFrame 0x0040cdd0, drawFrameR3 0x0040cef0, loadGameBrowserScreen 0x0043b610, showThemePackSelect 0x004725b0. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: blitPanel (12 vectors, 10 distinct results, 9 changing state, `log/diff/0040ca10_blitPanel.path1.csv`); blitPanel_busy (5 vectors, 5 distinct results, 5 changing state, `log/diff/0040ca10_blitPanel_busy.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0040caf1): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0040ca10 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

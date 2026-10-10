@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 225 bytes, 87 instructions, subsystem `util`. Mechanica
 pushes a node onto the (bounded) FIFO, dropping the head if the capacity is exceeded. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Appends a node {a +0, b +4, data +8, size +0xc, next +0x10} to a list {head +4, tail +8, count +0xc, limit +0x10} and hands back its data block. A null `out` returns 3 (0x004a4dbd); *out = 0 (0x004a4dc8); a full list (count == limit) returns 0x12 (0x004a4dd4). The 0x14-byte node from malloc 0x004a504f becomes the head of an empty list (0x004a4df2) or the old tail's next (0x004a4e0f); NULL returns 4 (0x004a4dfb / 0x004a4e1e). The node becomes the tail with next 0, b and a (0x004a4e2f-0x004a4e48). A size of 0 skips the data block (0x004a4e4a); otherwise a block of `size` bytes goes to +8 (0x004a4e58), and when it is NULL listRemoveHead 0x004a4ed0 removes the list's HEAD (0x004a4e67), not the node just added, and 4 is returned; else +0xc = size (0x004a4e77). Then the count goes up (0x004a4e7f), *out = the data pointer (0x004a4e8b) and the result is 0. Caller: 0x0049cb90. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: listPush (12 vectors, 11 distinct results, 11 changing state, `log/diff/004a4db0_listPush.path1.csv`); listPush_failnode (12 vectors, 3 distinct results, 11 changing state, `log/diff/004a4db0_listPush_failnode.path1.csv`); listPush_faildata (12 vectors, 11 distinct results, 11 changing state, `log/diff/004a4db0_listPush_faildata.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_4a4db0.cpp` as `?push@L4a4db0@@QAEHPAPAXIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x004a4dc5, 0x004a4dde, 0x004a4e01, 0x004a4e24, 0x004a4e74, 0x004a4e8e): callee pops 16 bytes of stack arguments.

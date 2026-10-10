@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 168 bytes, 73 instructions, subsystem `render`. Mechani
 draws a horizontal pixel line on a surface (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Despite its name, READS one pixel: returns the value at (x, y) of the Surface at this+4. It returns 0 for a null Surface (0x00478dfa), x < 0 (0x00478e06), y < 0 (0x00478e12), x >= width (slot +0xd8, 0x00478e1e) or y >= height (slot +0xdc, 0x00478e35). The address comes from Surface_pixelPtr 0x004796a0 (0x00478e3b); slot +0x24 is then called with 1 (0x00478e4d) BEFORE the pixel is read; a NULL address returns 0 (0x00478e52). Depth 8 returns the byte (0x00478e6c, 0x00478e88), depth 16 the word (0x00478e71, 0x00478e7d), any other depth the dword (0x00478e73). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: drawLineH (72 vectors, 24 distinct results, 0 changing state, `log/diff/00478df0_drawLineH.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00478e78, 0x00478e83, 0x00478e8d, 0x00478e95): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00478df2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

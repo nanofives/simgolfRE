@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 76 bytes, 29 instructions, subsystem `util`. Mechanical
 Cancels the running timer (timeKillEvent or KillTimer) and clears the id; on a one-shot path pokes the app redraw flag g_0083ad4c. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Stops a timer. Bit 0 of the flags +8 is sampled first (`not esi; and esi, 1` 0x00486ec4-0x00486ecc). A non-zero id at +0xc (`je` 0x00486ed1) is killed: an interval +0x20 below 0x32 (`jae` 0x00486ed7, unsigned) calls timeKillEvent(id) through 0x004ba214 (0x00486eda); otherwise, when the display 0x0083ad50 is not NULL (`je` 0x00486eea), KillTimer(display->slot+0x20(), id) through 0x004ba1b4 (0x00486eef / 0x00486ef3). The id becomes 0 either way (0x00486ef9). When bit 0 was clear the function tail-jumps to pumpInputDisplay483da0 0x00483da0 (0x00486f04 / 0x00486f06), which ORs 0x3f into 0x0083ad4c, calls the display's slot +0x150 and clears 0x0083ad4c. Callers include EditBox::setCaretActive 0x00486b30, Timer::reset 0x00486f10, Button::onMouseMove 0x00488cf0 and Timer_fire 0x00495cb0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::stop (12 vectors, 11 distinct results, 10 changing state, `log/diff/00486ec0_Timer_stop.path1.csv`); Timer::stop_nodisp (12 vectors, 10 distinct results, 9 changing state, `log/diff/00486ec0_Timer_stop_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0_d.cpp` as `?stop@R0C486ec0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00486f0b): callee pops 0 bytes of stack arguments.

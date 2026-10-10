@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 62 bytes, 20 instructions, subsystem `ui`. Mechanical t
 fills a rectangle within a window (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Fills a rectangle given as x, y, width, height: builds the RECT {x, y, x + w, y + h} on the stack (0x00478b00..0x00478b14) and returns Widget_fillArea 0x00478b50 (this, &rect, colour) (0x00478b22), which returns 7 for a null Surface and otherwise the Surface's fillRectDispatch slot +0x44 (jgld fills 8 and 16-bit Surfaces, ignores other depths and returns 0). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Win_fillRect (48 vectors, 22 distinct results, 20 changing state, `log/diff/00478af0_Win_fillRect.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small6.cpp` as `?fillRect@Win478@@QAEHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00478b2b): callee pops 20 bytes of stack arguments.

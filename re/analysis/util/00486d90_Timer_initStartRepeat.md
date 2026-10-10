@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 46 bytes, 18 instructions, subsystem `util`. Mechanical
 Initializes the timer fields then arms a periodic timer. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Timer::init 0x00486d20 (0x00486dae) followed by Timer::startRepeat 0x00486e40 (0x00486db5), whose result it returns; `ret 0x14` (0x00486dbb). Caller Button::beginPress 0x00488ab0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::initStartRepeat (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486d90_Timer_initStartRepeat.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?initB@C486d60@@QAEXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00486dbb): callee pops 20 bytes of stack arguments.

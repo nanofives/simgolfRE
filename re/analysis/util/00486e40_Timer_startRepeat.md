@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 116 bytes, 47 instructions, subsystem `util`. Mechanica
 Arms a periodic timer (timeSetEvent or SetTimer); sets the repeat flag at this+8. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Starts a timer like startOnce with two differences: the multimedia path passes 0 (TIME_ONESHOT) to timeSetEvent (`push 0` 0x00486e63, call 0x00486e6d through 0x004ba218) and leaves the flags alone, and the window path first clears bit 1 and sets bit 0 of the flags +8 (0x00486e81-0x00486e91) before SetTimer(display->slot +0x20(), this, interval, 0x00486f40) through 0x004ba1b8 (0x00486ea0). Two zero targets return 7 (`jne` 0x00486e48 / 0x00486e4f, 0x00486e51); the id goes to +0xc (0x00486e73 / 0x00486ea6) and the result is 0 / 2 as in startOnce. Callers Timer::initStartRepeat 0x00486d90, HotList::onMouseMove 0x00492cc0, LabelButton::onMouseMove 0x004a2010. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::startRepeat (12 vectors, 10 distinct results, 9 changing state, `log/diff/00486e40_Timer_startRepeat.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?resume@Timer486@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00486e57, 0x00486e80, 0x00486eb3): callee pops 0 bytes of stack arguments.

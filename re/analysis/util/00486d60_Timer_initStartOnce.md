@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 46 bytes, 18 instructions, subsystem `util`. Mechanical
 Initializes the timer fields then arms a one-shot timer. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Timer::init 0x00486d20 with its five arguments re-pushed (0x00486d60-0x00486d7b, call 0x00486d7e) followed by Timer::startOnce 0x00486dc0 (0x00486d85), whose result it returns; `ret 0x14` (0x00486d8b). Callers Button::onMouseMove 0x00488cf0, Button::onTimer 0x00488fd0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::initStartOnce (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486d60_Timer_initStartOnce.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?initA@C486d60@@QAEXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00486d8b): callee pops 20 bytes of stack arguments.

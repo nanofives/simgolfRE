@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 280 bytes, 99 instructions, subsystem `render`. Mechani
 draws a scaled sprite structure (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, nine arguments (`ret 0x24`). 0x10 when dst is null (0x0047426c), 7 when this->m_4 or dst->m_4 is null (0x0047427f / 0x0047428a). Otherwise saves the display's triple (slot +0xa0, 0x004742aa), installs (a5, a6, a7) (slot +0x9c, 0x004742c7), stores m_20 * a5 / a7 and m_24 * a6 / a7 into m_20 / m_24 (0x004742cd..0x004742f4), calls slot +0x4c of this->m_4 (0x00474338) with (dst->m_4, x + m_20', y + m_24', a4, a8 ? a8->m_4 : 0, a9), puts the old m_20 / m_24 back (0x00474346 / 0x00474349), reinstalls the saved triple (slot +0x9c, 0x0047435a) and returns the slot +0x4c result. Callers drawQueuedSprite 0x00462be0. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Sprite_drawScaled_s1 (10 vectors, 9 distinct results, 7 changing state, `log/diff/00474260_Sprite_drawScaled_s1.path1.csv`); Sprite_drawScaled_s3 (10 vectors, 9 distinct results, 7 changing state, `log/diff/00474260_Sprite_drawScaled_s3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_h.cpp` as `?drawScaled@C474260@@QAEHPAUS474260@@HHHHHH0H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x24` (at 0x00474277, 0x00474369, 0x00474375): callee pops 36 bytes of stack arguments.

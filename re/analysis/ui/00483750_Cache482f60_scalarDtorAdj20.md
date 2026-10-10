@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 72 bytes, 24 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 deleting destructor of a Cache482f60 sub-object that sits 0x20 bytes into its object: calls Cache482f60::dtor 0x004835f0 with this, writes the base vtable 0x004ba278 into [this], copies [this+4] into 0x00839650, and when bit 0 of the byte argument is set and 0x00839650 is 0 passes this-0x20 to _free 0x004a5007; returns this-0x20 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+The scalar deleting destructor reached through the virtual base (slot 0 of 0x004baba8, installed by Cache482f60::ctor 0x00482fbd): `this` is the base at +0x20, the full object this - 0x20 (0x00483752). Cache482f60::dtor 0x004835f0 runs on the base (0x0048375a); the base's vtable becomes 0x004ba278 (0x00483763) and the global 0x00839650 gets the dword at base + 4 (0x00483769 / 0x0048376e). With flags bit 0 and a non-null full object (0x00483774 / 0x00483778) the full object is freed only when that dword is 0 (0x0048377c / 0x0048377f) and the global is cleared (0x00483787). Returns the full object. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: Cache482f60::scalarDtorAdj20_g0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00483750_Cache482f60_scalarDtorAdj20_g0.path1.csv`); Cache482f60::scalarDtorAdj20_g1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00483750_Cache482f60_scalarDtorAdj20_g1.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00483795): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00483752 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

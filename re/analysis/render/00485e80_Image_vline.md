@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 354 bytes, 134 instructions, subsystem `render`. Mechan
 Draws a clipped vertical line of 16-bit color param_4 at x param_1 from y param_2..param_3 on the surface at this+4, stepping by the surface stride. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+The vertical twin of Image::hline: a dotted vertical line of one byte colour at column x on the 8-bit Surface at this+4. Null Surface returns (0x00485e8e); x < left (0x00485ea3 jl), x >= right (0x00485ebf jge) and y0 == y1 (0x00485ecd) return; y0 > y1 swaps (0x00485ed3); y0 >= bottom (0x00485ef7) and y1 < top (0x00485f13) return; y0 is raised to top (0x00485f2f) and y1 lowered to bottom - 1 (0x00485f60 / 0x00485f78). The pixel address is slot +0x14 (x, y0) (0x00485f8a; NULL returns at 0x00485f92); the step is the row pitch of slot +0xe0 (0x00485f9d) times 2 bytes (0x00485fc2), so every second row is written (y1 - y0 + 1) >> 1 times (0x00485fc4..0x00485fc8), then slot +0x24 (1) (0x00485fd6). Same one-pixel wrap as hline. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Image::vline (33 vectors, 18 distinct results, 17 changing state, `log/diff/00485e80_Image_vline.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?vline@R0C485e80@@QAEXHHHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00485fdf): callee pops 16 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 27 bytes, 6 instructions, subsystem `input`. Mechanical
 when the detaching window param_1 owns the cursor clip (0x0083aa98), calls ClipCursor(NULL) and clears the owner global (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Releases the cursor clip when the detaching window owns it: when g_cursorClipOwner 0x0083aa98 equals this (`cmp [0x83aa98], ecx` 0x00479b20, `jne` 0x00479b26), ClipCursor(NULL) through the slot 0x004ba1d0 (0x00479b28 / 0x00479b2a) and the owner is cleared (0x00479b30); any other window changes nothing. A NULL owner and a NULL this also compare equal, so that call releases the clip too. Caller Window::detach 0x0047b820. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: releaseCursorClip_w0 (5 vectors, 2 distinct results, 1 changing state, `log/diff/00479b20_releaseCursorClip_w0.path1.csv`); releaseCursorClip_w3 (4 vectors, 2 distinct results, 1 changing state, `log/diff/00479b20_releaseCursorClip_w3.path1.csv`); releaseCursorClip_null (3 vectors, 2 distinct results, 1 changing state, `log/diff/00479b20_releaseCursorClip_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00479b20@f_00479b20@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00479b3a): callee pops 0 bytes of stack arguments.

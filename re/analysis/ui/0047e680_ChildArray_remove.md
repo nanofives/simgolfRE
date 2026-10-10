@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 121 bytes, 42 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 removes a child from the container array m_data (count m_count), releasing it, compacting and shrinking when slack reaches 10 (`re/names/exe_3.tsv`)
 
+## Purpose
+Removes a child window from the array. A null child returns (0x0047e689). The items are searched from index 0 (0x0047e69e-0x0047e6a8). When found, the count drops by one first (0x0047e6ae / 0x0047e6af), the child's vtable slot 2 runs with no argument (0x0047e6b5 / 0x0047e6b7), and the items above it move down one slot (0x0047e6c2-0x0047e6d8). Found or not, when count <= capacity - 10 (signed `jg` at 0x0047e6ec) Vec_release 0x00479bb0 shrinks the array (0x0047e6f0). Caller: View_dtor 0x00479f30. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: ChildArray::remove (13 vectors, 12 distinct results, 11 changing state, `log/diff/0047e680_ChildArray_remove.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?remove@C47e700@@QAEXPAUObj47e@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047e6f6): callee pops 4 bytes of stack arguments.

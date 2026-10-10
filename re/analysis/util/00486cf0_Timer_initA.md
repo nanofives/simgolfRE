@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 16 instructions, subsystem `util`. Mechanical
 Resets the timer then stores callback (this+0x10), context (0x1c), interval (0x20), resolution (0x28). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Configures a timer with its first target: Timer::reset 0x00486f10 (0x00486cf3), then +0x10 = a1 (0x00486d04), +0x1c = a2 (0x00486d09), +0x14 = +0x18 = 0 (0x00486d0c / 0x00486d0f), +0x20 = a3 (0x00486d16), +0x28 = a4 (0x00486d19); `ret 0x10` (0x00486d1d). Caller 0x00486110. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::initA (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486cf0_Timer_initA.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00486cf0@C_FUN_00486cf0@f_00486cf0@@QAEXIIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00486d1d): callee pops 16 bytes of stack arguments.

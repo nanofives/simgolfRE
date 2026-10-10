@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 68 bytes, 30 instructions, subsystem `util`. Mechanical
 unlinks and deletes the doubly-linked list nodes in [param_2,param_3) (fixing each node's prev/next at +0/+4), decrementing the list count at this+8 and writing the end into *param_1 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+A std::list erase(first, last) over nodes {next +0, prev +4}: each node from first up to, not including, last is unlinked (prev->next = next at 0x0044ac1b, next->prev = prev at 0x0044ac22), given to operator delete 0x004a4ffc (0x0044ac25), and the list's size +8 drops by one (0x0044ac30 / 0x0044ac33). *out = last (0x0044ac3d) and `out` is returned. Caller: 0x004498a0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: listEraseRange (12 vectors, 12 distinct results, 12 changing state, `log/diff/0044ac00_listEraseRange.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x0044ac41): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x0044ac0d before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

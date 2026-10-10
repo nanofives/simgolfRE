@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078870`), 85 bytes, 34 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's png_create_info_struct: returns NULL for a NULL png_ptr (0x10078888 / 0x1007888e); otherwise allocates an info struct with png_create_struct 0x10078da0 (type 2, 0x10078894), clears it with png_info_init 0x10078940 (0x100788a9) when the block is not NULL (cmp 0x1007889f), and returns the block (0x100788b1). png_ptr is only tested for NULL. Called by loadPng 0x100145a0. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: png_create_info_struct (12 vectors, 2 distinct results, 8 changing state, `log/diff/00078870_jgld_png_create_info_struct.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_create_info_struct` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100788c4): callee pops 0 bytes of stack arguments.

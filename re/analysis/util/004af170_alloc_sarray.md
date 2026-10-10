@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 168 bytes, 69 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's alloc_sarray: rows per chunk = 0xffe0 / samplesperrow (unsigned `div` at 0x004af17c); a quotient <= 0 is ERREXIT(0x45) (0x004af18e-0x004af19a); capped at numrows (0x004af1a5) and stored in mem->last_rowsperchunk (0x004af1b8); the row array comes from alloc_small 0x004aef70 (numrows * 4 bytes, 0x004af1be); then while rows remain (unsigned, 0x004af1ce / 0x004af20d) the chunk is capped at the rows left (0x004af1d4), alloc_large 0x004af0c0 gives chunk * samplesperrow bytes (0x004af1ea) and each row of the chunk gets its pointer, samplesperrow bytes apart (0x004af1f6-0x004af209). Returns the row array. Caller: realize_virt_arrays 0x004af493. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: alloc_sarray (12 vectors, 12 distinct results, 12 changing state, `log/diff/004af170_alloc_sarray.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_alloc_sarray` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004af217): callee pops 0 bytes of stack arguments.

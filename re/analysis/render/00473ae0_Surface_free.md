@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 100 bytes, 40 instructions, subsystem `render`. Mechani
 releases a Surface when the display 0x0083ad50 exists: its handle at +4 through display slot +0x94, the buffer at +8 (free), the cache at +0xc (dtor + delete), then zeroes +0x10..+0x24 (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Releases what a Surface owns, through the live display object 0x0083ad50: nothing happens when there is no display (0x00473aee). Otherwise a handle at +4 is released through the display's vtable slot +0x94 (0x00473af5- 0x00473afa; +4 itself is left), a name block at +8 is freed and cleared (0x00473b05-0x00473b10), a colour cache at +0xc is destroyed by Cache483010::dtor 0x00483010 (0x00473b1d), given to operator delete 0x004a4ffc (0x00473b23) and cleared (0x00473b2b), and +0x10 .. +0x24 are cleared (0x00473b2e-0x00473b3d). 31 callers (Surface_open, freeFonts, the gSurfaceDtor_* exit routines c3cu promoted). Live: 54,738 entries in the smoke run. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: Surface_free_disp (16 vectors, 16 distinct results, 16 changing state, `log/diff/00473ae0_Surface_free_disp.path1.csv`); Surface_free_nodisp (16 vectors, 1 distinct results, 0 changing state, `log/diff/00473ae0_Surface_free_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_00473ae0@f_00473ae0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00473b43): callee pops 0 bytes of stack arguments.

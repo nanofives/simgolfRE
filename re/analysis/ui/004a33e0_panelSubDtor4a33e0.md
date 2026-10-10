@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 147 bytes, 63 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 destructor body for the panel sub-view, freeing its allocated tables. (`re/names/exe_5.tsv`)
 
+## Purpose
+Destructor of a node list seen from +0x28: the list (this - 0x28) gets the vtable 0x004ba2c4 (0x004a33e7) and its virtual base 0x004ba2c0 (0x004a33f3). An empty list only clears +0x14 (0x004a3400 -> 0x004a346d). Otherwise the node loop runs through the new vtable, whose slot 1 is 0x00402190, a bare `ret 4` (0x004a340d-0x004a345a), and +0x14, +8, +0x10, +0x14 are cleared (0x004a345d-0x004a3466). Caller: 0x004a3370. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: panelSubDtor4a33e0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a33e0_panelSubDtor4a33e0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `??1C4a33e0@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a346c, 0x004a3472): callee pops 0 bytes of stack arguments.

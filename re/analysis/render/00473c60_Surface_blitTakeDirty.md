@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 70 bytes, 25 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 blits a surface then takes over its dirty-rect field (+0xac) (`re/names/exe_2.tsv`)
 
+## Purpose
+Thiscall, seven arguments (`ret 0x1c`). Calls Surface_blit 0x00473bf0 on this with its seven arguments unchanged (0x00473c74..0x00473c89), then moves the first argument's +0xac into this->m_c (0x00473c8e / 0x00473c94) and clears the argument's +0xac (0x00473c97); eax is not written after the call, so Surface_blit's result is returned. The argument is dereferenced at 0x00473c8e without a null test (Surface_blit itself returns 0x10 for null at 0x00473bfa), so callers never pass null. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_blitTakeDirty (8 vectors, 8 distinct results, 8 changing state, `log/diff/00473c60_Surface_blitTakeDirty.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x1c` (at 0x00473ca3): callee pops 28 bytes of stack arguments.
 - `ecx` is read at 0x00473c69 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

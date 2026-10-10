@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 110 bytes, 48 instructions, subsystem `render`. Mechani
 writes a run of pixels via Surface_pixelPtr (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Despite its name, returns the BLUE component of the pixel at (x, y): depth 16 gives the pixel's first byte shifted left by 3 and kept to 8 bits (0x0047999d..0x0047999f), depth 24 or 32 byte 0 of the pixel (0x00479999), other depths def (0x004799a4); NULL address returns def (0x00479969); release at 0x004799b3. No display call. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: drawPixelRun (58 vectors, 23 distinct results, 5 changing state, `log/diff/00479950_drawPixelRun.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x00479971, 0x004799bb): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x00479956 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

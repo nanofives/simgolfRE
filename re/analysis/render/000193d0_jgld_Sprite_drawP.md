@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000193d0`), 890 bytes, 300 instructions, subsystem `re
 blits the sprite to a Surface at (x,y) (draw variant P); 100% instruction match (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Sprite vtable slot 38: result local cleared (0x100193ed); Palette word saved and replaced (0x100193fd); NULL destination -> 0x10 (0x10019412), invalid sprite -> 7. 8 bpp onto 8-bit reports (0x10122e18 + 0x1b, 0x1011d56c); onto 16-bit: busy reports (+0x20), else a switch on the percentage argument (0x10019506 / 0x1001950c / 0x10019512): 100 calls slot +0x44 of the sprite's own vtable (drawB) with (dst, x, y, pal) (0x10019534), 50 calls 0x10056450 (0x10019552), 25 calls 0x100576a0 (0x1001956b), anything else gives 3 (0x10019575); other depth reports (+0x38), 0x17. 16 bpp onto 16-bit: busy reports (+0x44), else the same switch with 0x1001b610 / 0x1001b650 (bodies returning 0) for 50 / 25 (0x10019675 / 0x1001968e); other depth reports (+0x5d), 0x17. Other bpp reports (+0x65), 0x17. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Sprite::drawP_s111 (32 vectors, 16 distinct results, 15 changing state, `log/diff/000193d0_jgld_Sprite_drawP_s111.path1.csv`); Sprite::drawP_s223 (32 vectors, 15 distinct results, 15 changing state, `log/diff/000193d0_jgld_Sprite_drawP_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?drawP@Sprite@@QAEHPAVSurface@@HHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x10019747): callee pops 20 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 95 bytes, 41 instructions, subsystem `render`. Mechanic
 stretch-blits one surface onto another through the backing-device vtable (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, five arguments (`ret 0x14`). Returns 0x10 when the second argument (0x00473f67) or the first (0x00473f6f) is null; 7 when the m_4 handle of this (0x00473f76), of the second argument (0x00473f7d) or of the first (0x00473f84) is null; otherwise calls slot +0x54 of this->m_4 (0x00473fa5) with (first->m_4, second->m_4, a3, a4, a5 ? a5->m_4 : 0) and returns its eax. drawPanelS2 / drawFrameR3 / drawFrameS2 call it with this = a border Surface, first = the matching record of a second table, second = *0x004c1570 and a5 = 0 (0x0040cc9f..0x0040ccb4). Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_stretchBlit (12 vectors, 7 distinct results, 5 changing state, `log/diff/00473f60_Surface_stretchBlit.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x00473faa, 0x00473fb3, 0x00473fbc): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x00473f71 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

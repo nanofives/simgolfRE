@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000026c0`), 81 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor: runs MappedFile::dtor then operator_delete when flag&1. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Scalar deleting destructor of MappedFile, slot 0 of its vtable 0x1011d01c: MappedFile::dtor 0x10002820 through the thunk 0x100012c1 (0x100026e0), then operator delete 0x1007e6d0 of the object when bit 0 of flags is set (`and eax, 1` 0x100026e8, `je` 0x100026ed, call 0x100026f3); returns this (0x100026fb), `ret 4` (0x1000270e). Installed in the vtable by MappedFile::ctor 0x10002650, ctorNameFlag 0x10002730, ctorName 0x100027b0 and dtor 0x10002820. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: MappedFile::deletingDtor_jgld (12 vectors, 12 distinct results, 12 changing state, `log/diff/000026c0_jgld_MappedFile_deletingDtor_jgld.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_100026c0@C_FUN_100026c0@f_100026c0@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000270e): callee pops 4 bytes of stack arguments.

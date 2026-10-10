@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066d20`), 45 bytes, 21 instructions, subsystem `rend
 DisplayBase destructor: stores the DisplayBase vtable 0x1011d7dc into this[0]. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Destructor of jgld's DisplayBase: one store of the DisplayBase vtable 0x1011d7dc at [this] (0x10066d40); no call (no __chkesp either), nothing else touched, no return value. Called by 0x10065670 and DisplayBase::deletingDtor 0x10067510. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: DisplayBase::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066d20_jgld_DisplayBase_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066d20@f_10066d20@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10066d4c): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 187 bytes, 69 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 draws a surface rectangle with full source/dest coords (`re/names/exe_2.tsv`)
 
+## Purpose
+Thiscall, nine arguments (`ret 0x24`). Surface_drawScaled2's frame around Surface_drawSprite 0x00474440: m_20 / m_24 read first (0x00474398 / 0x0047439b), the triple saved (0x004743a6) and (a5, a6, a7) installed (0x004743c3), m_20 = a5 * m_20 / a7 and m_24 = m_24 * a6 / a7 (0x004743c9..0x004743ea), Surface_drawSprite(a1, a2, a3, a4, a8, a9) (0x00474405), m_20 / m_24 put back (0x0047440e / 0x00474416), the triple reinstalled (0x00474429); returns Surface_drawSprite's result. Surface_drawSprite does not read the display, so the installed triple only affects m_20 / m_24. Caller showGolferPairSelect 0x00459850. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_draw_s1 (9 vectors, 9 distinct results, 9 changing state, `log/diff/00474380_Surface_draw_s1.path1.csv`); Surface_draw_s3 (9 vectors, 9 distinct results, 9 changing state, `log/diff/00474380_Surface_draw_s3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_j.cpp` as `?draw@Surf474@@QAEHHHHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x24` (at 0x00474438): callee pops 36 bytes of stack arguments.

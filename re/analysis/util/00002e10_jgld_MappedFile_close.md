@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00002e10`), 169 bytes, 58 instructions, subsystem `uti
 unmaps the view(+4), closes the mapping handle(+0xc) and file handle(+8), resetting them to 0/-1. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+jgld's copy of the mapped-file close (debug build). A non-null view at +4 (`cmp [eax+4], 0` 0x10002e30) goes to UnmapViewOfFile through the IAT slot 0x1012c430 (0x10002e3f) and +4 is cleared (0x10002e4f); a non-null mapping at +0xc (0x10002e59) goes to CloseHandle 0x1012c428 (0x10002e68) and is cleared (0x10002e78); a file handle at +8 other than -1 (0x10002e82) goes to CloseHandle (0x10002e91) and +8 becomes -1 (0x10002ea1). Each import call is checked by __chkesp 0x1007e780 (0x10002e47 / 0x10002e70 / 0x10002e99), which the stand-in's stdcall stubs pass. Callers MappedFile::dtor 0x10002820, 0x10002870, MappedFile::openWrite 0x10002a20, MappedFile::create 0x10002bd0, MappedFile::closeTruncate 0x10002ef0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: MappedFile::close_jgld (12 vectors, 11 distinct results, 10 changing state, `log/diff/00002e10_jgld_MappedFile_close_jgld.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10002e10@f_10002e10@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10002eb8): callee pops 0 bytes of stack arguments.

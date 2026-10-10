@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 41 bytes, 11 instructions, subsystem `terrain`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 Allocates the exe-side tile buffer used when syncing tiles to Terrain.dll. (`re/names/exe_1.tsv`)
 
+## Purpose
+The static construction of a std::list held in globals, called from dynInit_allocTileBuffer 0x00449200: the allocator byte 0x00820f18 gets the HIGH byte of ecx (`push ecx` at 0x00449210, `mov al, [esp+3]` at 0x00449211, store at 0x00449217 - the caller never sets ecx for it), a 0xc-byte head node from operator new 0x004a57f1 (0x0044921c) is linked to itself (0x00449221 / 0x00449223) without a null test, 0x00820f1c = the head (0x00449226) and the size 0x00820f20 = 0 (0x0044922b). eax is left holding the head. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: allocTileBuffer (12 vectors, 10 distinct results, 12 changing state, `log/diff/00449210_allocTileBuffer.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00449238): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00449210 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

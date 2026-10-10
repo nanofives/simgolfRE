@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00068da0`), 143 bytes, 51 instructions, subsystem `ren
 selects out and deletes the Font's GDI font object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Releases a Font's system resources: a GDI font handle at +0x18 (`cmp [eax+0x18], 0` 0x10068dc0) goes to DeleteObject through the slot 0x1012c370 (0x10068dcf) and +0x18 is cleared (0x10068ddf); a font-file name at +0x20 (0x10068de9) is removed with RemoveFontResourceA through 0x1012c3c0 (0x10068df8), the string is freed with jfree 0x10014a90 (thunk 0x100017b7, call 0x10068e0c) and +0x20 is cleared (0x10068e17). Caller Font::~Font 0x10068760. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Font::release_jgld (12 vectors, 11 distinct results, 10 changing state, `log/diff/00068da0_jgld_Font_release_jgld.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `?release@Font@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10068e2e): callee pops 0 bytes of stack arguments.

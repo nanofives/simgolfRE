@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 146 bytes, 62 instructions, subsystem `render`. Mechani
 opens/loads a named surface resource (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Names a Surface and sets its two size pairs: a null name returns 0x10 (0x00473b5f). Otherwise Surface_free 0x00473ae0 runs (0x00473b6a), a block of strlen + 1 bytes (0x00473b7b) is stored at +8 (0x00473b83), NULL returns 4 (0x00473b8c), else NUL first byte and the name copied in (0x00473b95-0x00473bbe), +0x20 / +0x24 = 0 (0x00473bc4 / 0x00473bc7), +0x10 = +0x18 = a and +0x14 = +0x1c = b (0x00473bcf-0x00473bd8), result 0. Caller: TextView::layout 0x0048e1c0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: Surface_open_disp (12 vectors, 12 distinct results, 11 changing state, `log/diff/00473b50_Surface_open_disp.path1.csv`); Surface_open_nodisp (12 vectors, 12 distinct results, 11 changing state, `log/diff/00473b50_Surface_open_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?open@C473b50@@QAEHPBDHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00473b65, 0x00473b92, 0x00473bdf): callee pops 12 bytes of stack arguments.

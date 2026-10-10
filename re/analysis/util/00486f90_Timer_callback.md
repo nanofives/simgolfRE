@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 79 bytes, 29 instructions, subsystem `util`. Mechanical
 timeSetEvent callback: invokes the timer's direct callback if set, else posts message 0x401 with the timer as wParam to the app window. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+The multimedia-timer procedure Timer::startOnce and Timer::startRepeat hand to timeSetEvent (`push 0x486f90` at 0x00486def and 0x00486e66); stdcall with five arguments, `ret 0x14` (0x00486fdc). The Timer is the third argument (0x00486f91); NULL does nothing (`je` 0x00486f97). A callback at Timer+4 (`je` 0x00486f9e) is called with no arguments (0x00486fa0) and nothing else happens. Otherwise, when the global 0x0083aff0 is set (`je` 0x00486fad) and is another Timer (`jne` 0x00486fb1), nothing; when the posted flag +0x24 is already set (`jne` 0x00486fb8), nothing; else PostMessageA(display->slot+0x20(), 0x401, timer, 0) through 0x004ba1e4 (0x00486fce) and +0x24 = 1 (0x00486fd4). Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::callback (13 vectors, 10 distinct results, 10 changing state, `log/diff/00486f90_Timer_callback.path1.csv`); Timer::callback_own3 (13 vectors, 2 distinct results, 2 changing state, `log/diff/00486f90_Timer_callback_own3.path1.csv`); Timer::callback_own1 (13 vectors, 3 distinct results, 3 changing state, `log/diff/00486f90_Timer_callback_own1.path1.csv`); Timer::callback_other (13 vectors, 2 distinct results, 2 changing state, `log/diff/00486f90_Timer_callback_other.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_00486f90@f_00486f90@@YGXIIIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00486fa3, 0x00486fdc): callee pops 20 bytes of stack arguments.

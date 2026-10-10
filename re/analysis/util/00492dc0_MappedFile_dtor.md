@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: unmaps the view and closes the handles. (`re/names/exe_4.tsv`)
 
+## Purpose
+Destructor of the exe's MappedFile: stores the class vtable 0x004bba78 at +0 (0x00492dc0) and tail-jumps into MappedFile::close 0x00492e80 (0x00492dc6), so the view, the mapping and the file handle are released in that order. Callers 0x00475840, 0x00478f50, 0x00492da0 and the unwind funclets 0x004b7b90 / 0x004b7bc0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: MappedFile::dtor_exe (12 vectors, 12 distinct results, 12 changing state, `log/diff/00492dc0_MappedFile_dtor_exe.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00492dc0@f_00492dc0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

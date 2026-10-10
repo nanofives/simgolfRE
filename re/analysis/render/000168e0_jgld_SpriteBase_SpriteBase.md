@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000168e0`), 63 bytes, 26 instructions, subsystem `rend
 destructor for the sprite base object; releases the pixel buffer (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Destructor of jgld's SpriteBase: writes the SpriteBase vtable 0x1011d444 at [this] (0x10016900) and runs Tracked::dtor 0x10006b80 (0x10016909). Returns nothing. Called by Sprite::dtor 0x10014de0 and SpriteBase::deletingDtor 0x10016930. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: SpriteBase::~SpriteBase_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/000168e0_jgld_SpriteBase_~SpriteBase_empty.path1.csv`); SpriteBase::~SpriteBase_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/000168e0_jgld_SpriteBase_~SpriteBase_one.path1.csv`); SpriteBase::~SpriteBase_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/000168e0_jgld_SpriteBase_~SpriteBase_five.path1.csv`); SpriteBase::~SpriteBase_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/000168e0_jgld_SpriteBase_~SpriteBase_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite_dtor.cpp` as `??1SpriteBase@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001691e): callee pops 0 bytes of stack arguments.

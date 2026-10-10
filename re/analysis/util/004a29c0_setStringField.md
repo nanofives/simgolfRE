@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 152 bytes, 68 instructions, subsystem `util`. Mechanica
 replaces a heap-allocated string field with a copy of the given string. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Sets string field `index` (this + 4*index + 0x2c) to a copy of `text`. A null text empties an existing string in place (`mov byte ptr [ebx], 0` at 0x004a29dc) and returns 0. Otherwise an old string is freed (0x004a29ee-0x004a29f3) without clearing the field, a block of strlen + 1 bytes from malloc 0x004a504f (0x004a2a07) is stored in it (0x004a2a0f), NULL returns 4 (0x004a2a1a), else NUL first byte (0x004a2a23), the copy (0x004a2a26-0x004a2a4d) and 0. Caller: TextView::layout 0x0048e1c0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: setStringField (13 vectors, 13 distinct results, 12 changing state, `log/diff/004a29c0_setStringField.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?setStr@C4a29c0@@QAEHPBDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004a29e3, 0x004a2a20, 0x004a2a55): callee pops 8 bytes of stack arguments.

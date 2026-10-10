@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 64 bytes, 24 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 progressive Huffman encoder finish_pass: copies the destination manager's output pointer and free count ([cinfo+0x14]+0/+4) into the encoder (0x004b3392/0x004b339b), calls emit_eobrun 0x004b25d0 and flush_bits 0x004b2510, then stores both back (0x004b33b2/0x004b33bb) (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's finish_pass_phuff (jcphuff.c), installed as entropy->finish_pass by start_pass_phuff (`mov [ebx+8], 0x4b3380` at 0x004b1ff9): the encoder (cinfo+0x164) loads next_output_byte and free_in_buffer from the destination manager cinfo->dest (+0x14) (0x004b3386-0x004b339b), emit_eobrun 0x004b25d0 (0x004b339e) and flush_bits_4b2510 0x004b2510 (0x004b33a4) run on it, and the two fields go back to the destination (0x004b33a9-0x004b33bb). Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: finish_pass_phuff (14 vectors, 14 distinct results, 14 changing state, `log/diff/004b3380_finish_pass_phuff.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_finish_pass_phuff` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b33bf): callee pops 0 bytes of stack arguments.

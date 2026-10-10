@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 54 bytes, 16 instructions, subsystem `util`. Mechanical
 Resets the timer then stores callback/context/flags/interval/resolution into this+0x10..0x28. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Configures a timer with its second target: Timer::reset 0x00486f10 (0x00486d23), then +0x14 = a1 (0x00486d34), +0x18 = a3 (0x00486d3b), +0x10 = 0 (0x00486d42), +0x1c = a2 (0x00486d49), +0x20 = a4 (0x00486d4c) and +0x28 = a5 (0x00486d4f); `ret 0x14` (0x00486d53). Callers include Timer::initStartOnce 0x00486d60 and Timer::initStartRepeat 0x00486d90. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::init (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486d20_Timer_init.path1.csv`); Timer::init_nodisp (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486d20_Timer_init_nodisp.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x00486d53): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x00486d21 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008e50`), 225 bytes, 89 instructions, subsystem `ren
 copies a rectangle from another Surface (plain blit). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Surface vtable slot 14: keyed copy dispatcher. Only an 8-bit surface (`this`'s depth through slot +0xe4, 0x10008e77, cmp 8 at 0x10008e89) copies: the argument's depth (slot +0xe4, 0x10008e9e) selects blit8from8 0x10013800 for 8 (0x10008ee1) or blitKey8to16 0x10012900 for 0x10 (0x10008f0b), each handed all eight stack arguments unchanged; any other depth on either side returns 0x17 (0x10008f12 / 0x10008f19). The blitter's result is returned (`ret 0x20`). Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Surface::blit (19 vectors, 11 distinct results, 7 changing state, `log/diff/00008e50_jgld_Surface_blit.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?blit@Surface@@QAEHPAV1@HHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x20` (at 0x10008f2e): callee pops 32 bytes of stack arguments.

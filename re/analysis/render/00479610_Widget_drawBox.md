@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 96 bytes, 45 instructions, subsystem `render`. Mechanic
 draws a single-colour rectangle outline using the depth-dispatched horizontal and vertical line helpers (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Draws a dotted rectangle outline (l, t, r, b, colour) through the depth dispatchers: horizontal from l + 1 to r on row t (0x00479626 inc eax, call 0x0047962b), horizontal from l to r - 1 on row b (0x00479639 lea, 0x00479641), vertical at column l from t to b (0x00479654), vertical at column r from t + 1 to b (0x0047965e inc, 0x00479664). Returns nothing (eax is whatever the last callee left). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Widget_drawBox (40 vectors, 31 distinct results, 30 changing state, `log/diff/00479610_Widget_drawBox.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00479610@C_FUN_00479610@f_00479610@@QAEXHHHII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x0047966d): callee pops 20 bytes of stack arguments.

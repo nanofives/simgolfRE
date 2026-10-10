@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 24 bytes, 6 instructions, subsystem `util`. Mechanical 
 seeds the RNG state from the system time (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Seeds the game's RNG from the clock: t = timeGetTime() through the slot 0x004ba21c (0x00467110) is stored at 0x0051b380 (0x00467119), and t * 37 (`lea ecx, [eax+eax*8]` 0x00467116, `lea edx, [eax+ecx*4]` 0x0046711e) becomes the RNG seed 0x00822d9c (0x00467121); eax still holds t at the `ret` (0x00467127). Caller 0x0045baf0. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: seedFromTime_v0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v0.path1.csv`); seedFromTime_v1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v1.path1.csv`); seedFromTime_v2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v2.path1.csv`); seedFromTime_v3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v3.path1.csv`); seedFromTime_v4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v4.path1.csv`); seedFromTime_v5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v5.path1.csv`); seedFromTime_v6 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v6.path1.csv`); seedFromTime_v7 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v7.path1.csv`); seedFromTime_v8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v8.path1.csv`); seedFromTime_v9 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00467110_seedFromTime_v9.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small.cpp` as `?seedFromTime@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00467127): callee pops 0 bytes of stack arguments.

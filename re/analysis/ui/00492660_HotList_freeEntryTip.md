@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 37 bytes, 14 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Frees an entry's tooltip string at +0x1c (guarded by g_0083d348). (`re/names/exe_4.tsv`)
 
+## Purpose
+Frees a hot-list entry's tip text (+0x1c) and clears the field, but only while the global 0x0083d348 is 0 (0x00492660 / 0x0049266a; HotList::grow 0x00492690 sets it to 1 around its array delete at 0x00492766 / 0x00492781, so entries destroyed there keep their tips) and the tip is not null (0x00492671 / 0x00492674 / 0x0049267c). Caller: HotList::add 0x004929b0. Live: entered 27,720 times in the smoke run. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: HotList::freeEntryTip_g0 (12 vectors, 9 distinct results, 8 changing state, `log/diff/00492660_HotList_freeEntryTip_g0.path1.csv`); HotList::freeEntryTip_g1 (12 vectors, 1 distinct results, 0 changing state, `log/diff/00492660_HotList_freeEntryTip_g1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small18.cpp` as `?release@Buf492@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00492684): callee pops 0 bytes of stack arguments.

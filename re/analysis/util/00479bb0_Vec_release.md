@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 142 bytes, 47 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 decrements a vector's refcount and frees its backing buffer when it reaches zero (`re/names/exe_2.tsv`)
 
+## Purpose
+Shrinks the same child array by 10 slots. A capacity that is not 0 and below 10 (signed, 0x00479bbb / 0x00479bc0) returns at once. Otherwise the capacity drops by 10 (0x00479bc2 / 0x00479bc7). A result of 0 frees the array when not null (0x00479bd7 / 0x00479bda) and clears the pointer (0x00479be2). Any other result, including -10 from a capacity of 0, gets a fresh block of capacity*4 bytes (0x00479bee-0x00479bf3; for -10 that is 0xffffffd8 bytes, which the CRT refuses), the `count` items copied (0x00479c09-0x00479c20), the old block freed when not null (0x00479c2a / 0x00479c2d) and the new pointer stored (0x00479c35). Its only caller is ChildArray::remove 0x0047e6f0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: Vec_release (16 vectors, 13 distinct results, 12 changing state, `log/diff/00479bb0_Vec_release.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `?shrink@Vec479@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00479bed, 0x00479c3d): callee pops 0 bytes of stack arguments.

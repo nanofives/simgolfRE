@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 55 bytes, 22 instructions, subsystem `util`. Mechanical
 symbol of the 100% matched source (IJG libjpeg 6a jmemmgr.c, _self_destruct) (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+libjpeg's self_destruct, installed as mem->self_destruct by jinit_memory_mgr (the store whose immediate is at 0x004aeebc): free_pool 0x004af920 for pool 1 then pool 0 (`dec esi; jns` at 0x004afa35 / 0x004afa36), jpeg_free_small (0x004b0470) of the manager itself with size 0x50 (0x004afa3f), cinfo->mem = 0 (0x004afa45) and jpeg_mem_term 0x004a0890 (a bare `ret`, 0x004afa4c). Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: self_destruct_jmemmgr (12 vectors, 12 distinct results, 12 changing state, `log/diff/004afa20_self_destruct_jmemmgr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_memmgr.cpp` as `_self_destruct` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afa56): callee pops 0 bytes of stack arguments.

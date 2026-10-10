@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000098f0`), 158 bytes, 60 instructions, subsystem `ren
 blits a source RECT between two 16-bit surfaces (depth-dispatched, both 16-bit). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Surface vtable slot 21: shade-blend dispatcher. When both `this` (slot +0xe4, 0x10009917, cmp 0x10 at 0x10009929) and the SECOND argument, the source surface (slot +0xe4, 0x1000993b, cmp 0x1000994d), are 16-bit, it calls blit16from16 0x1000f6a0 (0x10009968) with the four arguments (rect, source, alpha, table); otherwise it returns 0x17 (0x1000996f / 0x10009976). The first argument is not dereferenced here (`ret 0x10`). Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Surface::blit16 (15 vectors, 10 distinct results, 9 changing state, `log/diff/000098f0_jgld_Surface_blit16.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?blit16@Surface@@QAEHPAUtagRECT@@PAV1@HH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x1000998b): callee pops 16 bytes of stack arguments.

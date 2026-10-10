@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 187 bytes, 78 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's jinit_c_coef_controller: a 0x68-byte controller from alloc_small (cinfo, 1, 0x68) (0x004b06ff) becomes cinfo->coef (+0x150) with start_pass 0x004b07b0 (0x004b0714). With need_full_buffer (0x004b071a), for each of num_components (+0x34) components (+0x3c, 0x54 bytes each) whole_image[ci] = (*mem->request_virt_barray)(cinfo, 1, FALSE, jround_up(width_in_blocks, h_samp_factor), jround_up(height_in_blocks, v_samp_factor), v_samp_factor) (0x004b0731-0x004b075e, jround_up 0x004b04d0). Otherwise one 0x500-byte buffer from (*mem->alloc_large)(cinfo, 1, 0x500) (0x004b0789) is split into the ten MCU_buffer pointers 0x80 bytes apart (0x004b0792-0x004b07a2) and whole_image[0] = NULL (0x004b07a4). Caller: jinit_compress_master 0x004b03a0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: jinit_c_coef_controller (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b06f0_jinit_c_coef_controller.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_ccoefct.cpp` as `_jinit_c_coef_controller` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b077d, 0x004b07aa): callee pops 0 bytes of stack arguments.

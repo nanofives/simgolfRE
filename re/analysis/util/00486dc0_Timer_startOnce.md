@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 113 bytes, 46 instructions, subsystem `util`. Mechanica
 Arms a one-shot timer: uses timeSetEvent for intervals < 50 ms, otherwise SetTimer on the app window; stores the id at this+0xc. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Starts a timer. With both targets +0x10 and +0x14 zero (`jne` 0x00486dc8, `jne` 0x00486dcf) it returns 7 (0x00486dd1). Otherwise bit 0 of the flags +8 is cleared (0x00486dde / 0x00486de4); an interval +0x20 below 0x32 (`jae` 0x00486de7) calls timeSetEvent(interval, resolution +0x28, Timer::callback 0x00486f90, this, 1) through 0x004ba218 (0x00486df6; 1 is TIME_PERIODIC), otherwise SetTimer(display->slot+0x20(), this, interval, 0x00486f40) through 0x004ba1b8 (0x00486e1d), the display 0x0083ad50 read without a NULL test. The id is stored at +0xc (0x00486dfc / 0x00486e23) and the result is 0 for a non-zero id, 2 for 0 (`neg / sbb / and 0xfe / add 2` 0x00486e00-0x00486e06). Callers EditBox::setCaretActive 0x00486b30, startColorCycle 0x004832e0, Timer::initStartOnce 0x00486d60. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::startOnce (12 vectors, 10 distinct results, 9 changing state, `log/diff/00486dc0_Timer_startOnce.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?start@Timer486@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00486dd7, 0x00486e09, 0x00486e30): callee pops 0 bytes of stack arguments.

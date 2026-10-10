@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 189 bytes, 76 instructions, subsystem `render`. Mechani
 blits a surface at an offset (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, five arguments (`ret 0x14`). Returns 0x18 when this->m_8 is non-zero (0x004740fc), 0x10 when dst is null (0x00474111), 7 when this->m_4 or dst->m_4 is null (0x00474125 / 0x0047412c). Otherwise reads the display's three ints through g_graphicsDevice slot +0xa0 (0x00474146; the first out-pointer is the caller's own dst stack slot, 0x00474141), offsets x by m_20 * out1 / out3 and y by m_24 * out2 / out3 (imul / cdq / idiv, 0x0047414c..0x00474166) and calls slot +0x6c of this->m_4 (0x00474194) with (dst->m_4, x', y', a4, a5 ? a5->m_4 : 0), returning its eax. blitPanel passes g_color16Lut 0x00824148 as a4 (0x0040ca52). Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_blit2_s1 (11 vectors, 8 distinct results, 5 changing state, `log/diff/004740f0_Surface_blit2_s1.path1.csv`); Surface_blit2_s2 (11 vectors, 8 distinct results, 5 changing state, `log/diff/004740f0_Surface_blit2_s2.path1.csv`); Surface_blit2_s3 (11 vectors, 8 distinct results, 5 changing state, `log/diff/004740f0_Surface_blit2_s3.path1.csv`); Surface_blit2_s4 (11 vectors, 8 distinct results, 5 changing state, `log/diff/004740f0_Surface_blit2_s4.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_j.cpp` as `?blit@Surf474@@QAEHPAU1@HHH0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00474108, 0x0047411d, 0x0047419d, 0x004741aa): callee pops 20 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 39 bytes, 13 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 fills a rectangle in the current window surface via Window::fillRect (FUN_00478af0) (`re/names/exe_3.tsv`)
 
+## Purpose
+Window-level fill: calls Win_fillRect 0x00478af0 on this + 0x274 (0x00480b19, the Surface sub-object every Window class carries) with its five arguments unchanged (0x00480b08..0x00480b18) and returns the result. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: fillWindowRect (32 vectors, 12 distinct results, 10 changing state, `log/diff/00480b00_fillWindowRect.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x00480b24): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x00480b19 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

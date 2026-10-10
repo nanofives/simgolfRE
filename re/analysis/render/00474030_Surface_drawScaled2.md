@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 180 bytes, 67 instructions, subsystem `render`. Mechani
 draws a scaled rectangle region (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, eight arguments (`ret 0x20`), no tests of its own. Saves the display triple (slot +0xa0, 0x00474050), installs (a5, a6, a7) (slot +0x9c, 0x0047406d), stores m_20 * a5 / a7 and m_24 * a6 / a7 into m_20 / m_24 (0x00474073..0x00474098), calls Surface_blit2 0x004740f0 on this with (a1, a2, a3, a4, a8) (0x004740ae), puts m_20 / m_24 back (0x004740be / 0x004740c1), reinstalls the saved triple (0x004740d2) and returns Surface_blit2's result; Surface_blit2 therefore scales by the triple just installed. Caller drawScaledSprite421b90 0x00421b90. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_drawScaled2_s1 (9 vectors, 9 distinct results, 9 changing state, `log/diff/00474030_Surface_drawScaled2_s1.path1.csv`); Surface_drawScaled2_s3 (9 vectors, 9 distinct results, 9 changing state, `log/diff/00474030_Surface_drawScaled2_s3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?drawScaled@C474030@@QAEHHHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x20` (at 0x004740e1): callee pops 32 bytes of stack arguments.

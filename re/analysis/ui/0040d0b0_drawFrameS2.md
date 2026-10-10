@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 618 bytes, 199 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 draws a bordered frame (S2 style) (`re/names/exe_0.tsv`)
 
+## Purpose
+Cdecl (x, y, w, h, fill). The same frame again: triple (1, 1, 1) when g_graphicsDevice is set (0x0040d0b8 / 0x0040d0c2), 16-rounding, fillWindowRect(0x00519a60; x + 2, y + 2, w - 4, h - 4, 0x80007fdc) when fill != 0 (0x0040d136 / 0x0040d152), and eight pieces whose Surfaces depend on the signed style byte 0x005a34e0, read before each piece (0x0040d157 and twins): the Surface 0x00562394 + 0x160 * s.. with first argument 0x0059d94c + 0x160 * s.. (`lea; lea; shl eax, 5` = s * 0x160). initGlobalArray_00404e00 builds 0x20 records at each of 0x00562368 and 0x0059d920 (0x00404e0a..0x00404e2b): four styles of eight. Callers drawWindow 0x0040d320, drawBuildingPanel 0x00434350, drawScrollText 0x0046e260. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: drawFrameS2 (9 vectors, 9 distinct results, 9 changing state, `log/diff/0040d0b0_drawFrameS2.path1.csv`); drawFrameS2_st2 (5 vectors, 5 distinct results, 5 changing state, `log/diff/0040d0b0_drawFrameS2_st2.path1.csv`); drawFrameS2_st3 (5 vectors, 5 distinct results, 5 changing state, `log/diff/0040d0b0_drawFrameS2_st3.path1.csv`); drawFrameS2_nodisp (5 vectors, 5 distinct results, 5 changing state, `log/diff/0040d0b0_drawFrameS2_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s2.cpp` as `?S2_frame40d0b0@@YAXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040d319): callee pops 0 bytes of stack arguments.

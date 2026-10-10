@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 43 bytes, 15 instructions, subsystem `util`. Mechanical
 Stops the timer and zeroes its fields, defaulting resolution [0x28] to 5. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Resets a timer: Timer::stop 0x00486ec0 (0x00486f13), then the resolution +0x28 = 5 (0x00486f1a) and +0x10, +8, +0x14, +0x18, +0x1c, +0x20, +0x24 and +0x2c = 0 (0x00486f21-0x00486f36); returns 0 (0x00486f18). Callers include Timer::dtor 0x00486ce0, Timer::init 0x00486d20, Timer::initA 0x00486cf0 and HotList::resetFields 0x00492800. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::reset (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486f10_Timer_reset.path1.csv`); Timer::reset_nodisp (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486f10_Timer_reset_nodisp.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00486f3a): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00486f11 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

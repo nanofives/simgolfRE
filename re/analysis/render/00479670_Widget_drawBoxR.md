@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 20 instructions, subsystem `render`. Mechanic
 draws a single-colour rectangle outline from a rect int[4] (returns 0x10 when the rect pointer is null) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Widget_drawBox from a RECT: a null RECT returns 0x10 (0x00479676 jne / 0x00479678); otherwise it draws (left, top, right - 1, bottom - 1, colour) (0x00479685..0x00479696, the right and bottom edges are exclusive) and returns 0 (0x0047969b). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Widget_drawBoxR (20 vectors, 16 distinct results, 14 changing state, `log/diff/00479670_Widget_drawBoxR.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00479670@C_FUN_00479670@f_00479670@@QAEIPAHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047967d, 0x0047969d): callee pops 8 bytes of stack arguments.

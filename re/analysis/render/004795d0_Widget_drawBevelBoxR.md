@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 53 bytes, 22 instructions, subsystem `render`. Mechanic
 draws a bevelled rectangle outline from a rect int[4] (returns 3 when the rect pointer is null) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Widget_drawBevelBox from a RECT: NULL returns 3 (0x004795d6 jne / 0x004795d8); otherwise (left, top, right - 1, bottom - 1, light, dark) (0x004795e0..0x004795fb) and returns 0 (0x00479600). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Widget_drawBevelBoxR (30 vectors, 20 distinct results, 18 changing state, `log/diff/004795d0_Widget_drawBevelBoxR.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_004795d0@C_FUN_004795d0@f_004795d0@@QAEIPAHII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x004795dd, 0x00479602): callee pops 12 bytes of stack arguments.

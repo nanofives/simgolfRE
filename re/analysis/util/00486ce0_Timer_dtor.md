@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: kills any running timer and resets fields. (`re/names/exe_4.tsv`)
 
+## Purpose
+Destructor of Timer: stores the Timer vtable 0x004baea0 at +0 (0x00486ce0) and tail-jumps into Timer::reset 0x00486f10 (0x00486ce6), whose 0 is what the caller sees; the reset stops a running timer first. Callers include 0x0043cb50, 0x00486cc0, 0x00488650, 0x004928d0 and unwind funclets. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Timer::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486ce0_Timer_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00486ce0@f_00486ce0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

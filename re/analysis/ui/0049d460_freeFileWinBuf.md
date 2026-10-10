@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 29 bytes, 8 instructions, subsystem `ui`. Mechanical tr
 frees the FILEWIN resource buffer at 0x00840820. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Frees the global block 0x00840820 when it is not null (0x0049d465 / 0x0049d46a) and clears the global (0x0049d472). Callers: engineShutdown 0x00485740, loadFileWinResource 0x0049d3b0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: freeFileWinBuf_block (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d460_freeFileWinBuf_block.path1.csv`); freeFileWinBuf_odd (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d460_freeFileWinBuf_odd.path1.csv`); freeFileWinBuf_null (1 vectors, 1 distinct results, 0 changing state, `log/diff/0049d460_freeFileWinBuf_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small18.cpp` as `?freeBuf840820@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049d47c): callee pops 0 bytes of stack arguments.

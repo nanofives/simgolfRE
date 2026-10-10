@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 132 bytes, 53 instructions, subsystem `ui`. Mechanical 
 Duplicates label string param_1 into the global g_0083b994. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Sets the message box's label A, the global string 0x0083b994, to a copy of `text`. A null text returns 3 (0x0048de0b). An old label is freed and the global cleared (0x0048de19-0x0048de24); a block of strlen + 1 bytes (0x0048de3a) is stored in the global (0x0048de42); NULL returns 5 (0x0048de4c), else NUL first byte and the copy (0x0048de53-0x0048de7f), and the result is the 0 the copy left in eax (0x0048de5b). Callers: gameMain 0x0045baf0, MsgBox::initDefaults 0x00490bf0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: MsgBox::setLabelA_old (7 vectors, 7 distinct results, 6 changing state, `log/diff/0048de00_MsgBox_setLabelA_old.path1.csv`); MsgBox::setLabelA_null (7 vectors, 7 distinct results, 6 changing state, `log/diff/0048de00_MsgBox_setLabelA_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small13.cpp` as `?setPath83b994@@YAHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048de11, 0x0048de52, 0x0048de83): callee pops 0 bytes of stack arguments.

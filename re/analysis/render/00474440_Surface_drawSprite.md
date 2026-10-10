@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 122 bytes, 51 instructions, subsystem `render`. Mechani
 draws a sprite onto this surface at the surface origin offset (+0x20,+0x24) (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, six arguments (`ret 0x18`), no display access. 0x18 when this->m_8 is non-zero (0x00474446, tested before dst), 0x10 when dst is null (0x00474457), 7 when this->m_4 or dst->m_4 is null (0x00474467 / 0x0047446e); otherwise slot +0x94 of this->m_4 (0x004744a5) with (dst->m_4, m_20 + x, m_24 + y, a4, a5 ? a5->m_4 : 0, a6) (0x00474470..0x004744a2), returning its eax. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_drawSprite (11 vectors, 8 distinct results, 5 changing state, `log/diff/00474440_Surface_drawSprite.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x18` (at 0x0047444e, 0x0047445f, 0x004744ae, 0x004744b7): callee pops 24 bytes of stack arguments.
 - `ecx` is read at 0x00474440 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

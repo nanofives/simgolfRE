@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 144 bytes, 58 instructions, subsystem `render`. Mechani
 blends the green channel of a 16-bit pixel (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+As blendRed for the GREEN component: depth 16 gives (word >> 3) & 0xfc when the display's slot +0xb4 returns 1 (0x00479926..0x00479929) and (word >> 2) & 0xf8 otherwise (0x0047992e..0x00479931); depth 24 or 32 returns byte 1 of the pixel (0x00479909); NULL address returns def (0x004798d9); release at 0x00479945. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: blendGreen (58 vectors, 23 distinct results, 15 changing state, `log/diff/004798c0_blendGreen.path1.csv`); blendGreen_fmt0 (58 vectors, 23 distinct results, 15 changing state, `log/diff/004798c0_blendGreen_fmt0.path1.csv`); blendGreen_fmt2 (58 vectors, 23 distinct results, 15 changing state, `log/diff/004798c0_blendGreen_fmt2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?green@C479830@@QAEEHHE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x004798e1, 0x0047994d): callee pops 12 bytes of stack arguments.

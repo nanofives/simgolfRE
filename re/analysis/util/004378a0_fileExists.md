@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 39 bytes, 12 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Returns whether a file path exists (reads g_4ba090). (`re/names/exe_1.tsv`)
 
+## Purpose
+Tests whether a path matches a file: FindFirstFileA(name, &data) through the slot 0x004ba090 (0x004378b0) with a 0x140-byte WIN32_FIND_DATAA on the stack (`sub esp, 0x140` 0x004378a4); returns 1 when the handle is not INVALID_HANDLE_VALUE (`cmp eax, -1` / `setne dl` 0x004378b8 / 0x004378bb), else 0. The handle is never passed to FindClose, so every successful call leaks one find handle. Callers 0x00405b10, mainLoop 0x0040f5c0, 0x00437910, 0x0043cce0, 0x0043d740. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: fileExists (13 vectors, 13 distinct results, 13 changing state, `log/diff/004378a0_fileExists.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small3.cpp` as `?fileExists@@YAHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004378c6): callee pops 0 bytes of stack arguments.

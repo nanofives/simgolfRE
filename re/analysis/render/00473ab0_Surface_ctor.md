@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 38 bytes, 13 instructions, subsystem `render`. Mechanic
 constructs a graphics surface wrapper object (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/exe_5.md`, `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Constructs a Surface: +0 = its vtable 0x004ba2d8 (0x00473ab7) and the dwords +4 .. +0x24 = 0 (0x00473ab4-0x00473ad2); returns `this` (0x00473ab0). 30 callers, among them the static constructors c3co / c3cq promoted (initGlobalArray_00404c20, staticCtor_43d4e0) and TextView::ctor 0x0048ce00. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: Surface_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00473ab0_Surface_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `??0C473ab0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00473ad5): callee pops 0 bytes of stack arguments.

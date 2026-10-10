@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 96 bytes, 38 instructions, subsystem `render`. Mechanic
 draws a vertical coloured run, dispatching on the surface depth descriptor (vtbl+0xe4): Image::vline for 8bpp, drawColorRunB for 16bpp (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+The vertical counterpart: depth 8 -> Image::vline 0x00485e80 (0x00478cc7), depth 16 -> drawColorRunB 0x00494f00 (0x00478ca8), anything else nothing (0x00478c90 jne), depth read through slot +0xe4 (0x00478c7c). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Widget_drawVLineDepth (28 vectors, 12 distinct results, 11 changing state, `log/diff/00478c70_Widget_drawVLineDepth.path1.csv`); Widget_drawVLineDepth_nopal (28 vectors, 14 distinct results, 13 changing state, `log/diff/00478c70_Widget_drawVLineDepth_nopal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00478c70@C_FUN_00478c70@f_00478c70@@QAEXHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00478cae, 0x00478ccd): callee pops 16 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 29 bytes, 8 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 frees the g_83ac10 work buffer allocated by allocResampleTable (`re/names/exe_3.tsv`)
 
+## Purpose
+The same body over the global 0x0083ac10 (the table allocResampleTable 0x00481870 stores at 0x004818c0): freed when not null (0x00481b25 / 0x00481b2a), then cleared (0x00481b32). Caller: gameMain 0x0045baf0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: freeResampleTable_block (1 vectors, 1 distinct results, 1 changing state, `log/diff/00481b20_freeResampleTable_block.path1.csv`); freeResampleTable_odd (1 vectors, 1 distinct results, 1 changing state, `log/diff/00481b20_freeResampleTable_odd.path1.csv`); freeResampleTable_null (1 vectors, 1 distinct results, 0 changing state, `log/diff/00481b20_freeResampleTable_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_00481b20@f_00481b20@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00481b3c): callee pops 0 bytes of stack arguments.

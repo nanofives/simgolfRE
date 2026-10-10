@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000691b0`), 81 bytes, 33 instructions, subsystem `rend
 Slot-0 scalar deleting destructor of Font: runs Font::~Font 0x10068760 then operator delete when bit0 is set. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Scalar deleting destructor of Font: Font::~Font 0x10068760 (thunk 0x1000180c, 0x100691d0), then operator delete 0x1007e6d0 of the object when bit 0 of flags is set (`and eax, 1` 0x100691d8, `je` 0x100691dd, call 0x100691e3); returns this (0x100691eb), `ret 4` (0x100691fe). Caller Font::deletingDtor_adj8 0x10069260. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: Font::deletingDtor_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/000691b0_jgld_Font_deletingDtor_one.path1.csv`); Font::deletingDtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/000691b0_jgld_Font_deletingDtor_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100691b0@C_FUN_100691b0@f_100691b0@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100691fe): callee pops 4 bytes of stack arguments.

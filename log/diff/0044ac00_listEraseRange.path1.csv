@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$L $out $n1 $n0,obj+0x70,obj+0x70,True,a6688174,a6688174,True
+$L $out $n2 $n4,obj+0x70,obj+0x70,True,38fa812d,38fa812d,True
+$L $out $n3 $n3,obj+0x70,obj+0x70,True,a8271a50,a8271a50,True
+$L $out $n1 $n2,obj+0x70,obj+0x70,True,d15cb5fc,d15cb5fc,True
+$L $out $n5 $n0,obj+0x70,obj+0x70,True,26dcdb3c,26dcdb3c,True
+$L $out $n4 $n1,obj+0x70,obj+0x70,True,3f1952ee,3f1952ee,True
+$L $out $n0 $n0,obj+0x70,obj+0x70,True,d8986ab3,d8986ab3,True
+$L $out $n2 $n0,obj+0x70,obj+0x70,True,d7e583f5,d7e583f5,True
+$L $out $n1 $n5,obj+0x70,obj+0x70,True,52abd40e,52abd40e,True
+$L $out $n3 $n5,obj+0x70,obj+0x70,True,b634a5ac,b634a5ac,True
+$L $out $n5 $n2,obj+0x70,obj+0x70,True,65acfbe4,65acfbe4,True
+$L $out $n2 $n3,obj+0x70,obj+0x70,True,41d80c0e,41d80c0e,True
+state_regions,$blk+0x0:65536 $arena+0x0:16400 $freelog+0x0:1028 $rec+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71b65ee0,original=0x15d04a0,2026-10-10T02:56:14
+distinct_results,12,,
+VERDICT,GREEN,12,

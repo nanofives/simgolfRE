@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 11 bytes, 4 instructions, subsystem `crt`. Mechanical t
 Passes its one argument to _free 0x004a5007 (push [esp+4] at 0x004a4ffc, call at 0x004a5000, pop ecx; ret): the exe CRT operator delete shape; the CRT symbol it was linked from is not determined (no FidDb match) (`re/names/exe_7.tsv`)
 System writeup: `re/analysis/systems/exe_7.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The exe's operator delete: it pushes its argument again (`push dword ptr [esp+4]` at 0x004a4ffc), calls the CRT free 0x004a5007 (0x004a5000) and pops it (0x004a5005). There is no null test, so a NULL pointer reaches free as well. It is the deallocation behind every scalar deleting destructor of the exe (77 callers, e.g. NodeList::clear 0x00487310, Surface_free 0x00473b23, listEraseRange 0x0044ac25). Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: operatorDelete_4a4ffc (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a4ffc_operatorDelete_4a4ffc.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a5006): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 460 bytes, 172 instructions, subsystem `render`. Mechan
 draws a run of 16-bit pixels into a surface, looking the color up through the owning widget's palette. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+The 16-bit counterpart of Image::hline: a dotted horizontal line of one 16-bit colour on the Surface at this+4. Null Surface returns (0x00494d3d); y outside [top, bottom) (0x00494d53 jl, 0x00494d6f jge) or x0 == x1 (0x00494d7d) returns. Then the colour lookup: when bit 31 of the colour is clear (0x00494d86) and the object at [0x0083ad0c] exists (0x00494d96), the Surface's 16-bit format code (element [1] of slot +0xe4, 0x00494dab) picks the Palette at [object + 4]: code 0 its slot +0x18 table (0x00494dd1), code 1 its slot +0x1c table (0x00494dc3), any other code returns without drawing (0x00494db4 jne); the colour becomes the table word at its low byte (0x00494de0). The colour is then masked to 16 bits (0x00494dec). Swap (0x00494df7), x0 >= right (0x00494e20) and x1 < left (0x00494e40) return, x0/x1 are clamped (0x00494e60, 0x00494e95). The pixel address is slot +0x1c (call3b, 0x00494ec2; NULL returns at 0x00494eca); the word is stored every 4 bytes (0x00494edd..0x00494ee4) (x1 - x0 + 1) >> 1 times, then slot +0x24 (1). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: drawColorRunA (30 vectors, 16 distinct results, 15 changing state, `log/diff/00494d30_drawColorRunA.path1.csv`); drawColorRunA_nopal (30 vectors, 17 distinct results, 16 changing state, `log/diff/00494d30_drawColorRunA_nopal.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x00494ef9): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x00494d34 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

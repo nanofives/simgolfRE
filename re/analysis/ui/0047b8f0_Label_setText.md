@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 161 bytes, 61 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 frees and reallocates the label text at m_14c (malloc+strcat); if visible, triggers relayout (v77) and repaint (v79) (`re/names/exe_3.tsv`)
 
+## Purpose
+Replaces a label's text (+0x14c) and asks it to redraw. The old text is freed and the field cleared (0x0047b8fd-0x0047b908). A text gets a copy: a block of strlen + 1 bytes (0x0047b926) stored at +0x14c (0x0047b92e); NULL returns at once (0x0047b936), else NUL first byte and the copy (0x0047b938-0x0047b964). Then, with or without a text, when Window::visible 0x004801f0 says so (0x0047b96f) the label's vtable slot 0x134 runs with 0 (0x0047b977) and slot 0x13c with (0, 0) (0x0047b985). Callers: layoutViewTree 0x0047a4c0, TextView::build 0x0048e900. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: Label::setText (12 vectors, 11 distinct results, 12 changing state, `log/diff/0047b8f0_Label_setText.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?setText@C47b8f0@@QAEXPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047b98e): callee pops 4 bytes of stack arguments.

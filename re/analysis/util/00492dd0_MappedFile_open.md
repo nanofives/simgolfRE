@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 172 bytes, 66 instructions, subsystem `util`. Mechanica
 Opens param_1 read-only and maps it, storing the view/handles/size; param_2 selects random-access flags. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Maps a file read-only and returns the view. The second argument selects the CreateFileA flags (`neg / sbb / and 0xf8000000 / add 0x10000080` 0x00492dd5-0x00492de2): 0x08000080 (FILE_FLAG_SEQUENTIAL_SCAN) when non-zero, 0x10000080 (FILE_FLAG_RANDOM_ACCESS) when 0. MappedFile::close 0x00492e80 runs first (0x00492de8). CreateFileA(name, GENERIC_READ 0x80000000, FILE_SHARE_READ 1, NULL, OPEN_EXISTING 3, flags, NULL) through the slot 0x004ba0c0 (0x00492e00) is stored at +8 (0x00492e09); INVALID_HANDLE_VALUE (`jne` 0x00492e0c) calls GetLastError 0x004ba02c and discards the result (0x00492e0e) and returns 0. CreateFileMappingA(file, NULL, PAGE_READONLY 2, 0, 0, NULL) (0x00492e26) goes to +0xc, and NULL (`jne` 0x00492e31) closes the object again (0x00492e35) and returns 0; MapViewOfFile(mapping, FILE_MAP_READ 4, 0, 0, 0) (0x00492e4a) goes to +4, and NULL (`jne` 0x00492e55) closes and returns 0. Otherwise GetFileSize(file, NULL) (0x00492e6b) is stored at +0x10 (0x00492e71) and the view is returned (0x00492e74); `ret 8` (0x00492e79). Callers 0x00475840, 0x00478f50, 0x00481f40. Reimplemented in `shim/src/re/c3cy.cpp`; path-1 A/B GREEN: MappedFile::open (12 vectors, 12 distinct results, 12 changing state, `log/diff/00492dd0_MappedFile_open.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small19.cpp` as `?open@MappedFile@@QAEPAXPBDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00492e18, 0x00492e3e, 0x00492e62, 0x00492e79): callee pops 8 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 305 bytes, 94 instructions, subsystem `ui`. Mechanical 
 Destructor: clears item nodes and runs the embedded sub-object destructor. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The list model destructor: vtable 0x004bb21c (0x00489391), ListModel::clear 0x004894b0 (0x0048939f); the node list at +0xc0 gets the vtable 0x004bb22c and its virtual base (+0xc4 + [[+0xc4]+4]) 0x004bb228 (0x004893b1 / 0x004893bd), List402_clear 0x004026a0 runs on it (0x004893cc) and its +0x14 is cleared (0x004893d3); then 0x004ba270 / 0x004ba26c (0x004893dd / 0x004893e9), an inlined node loop that runs only while +8 is still non-zero (0x004893f6), +0x14 cleared (0x0048946d), the dword at +0xec goes to the global 0x00839650 and +0xe8 = 0x004ba278 (0x00489470- 0x00489479), and Buf_dtor 0x00474810 on +4 (0x0048948a). 14 callers (ListBox::deletingDtor 0x0048cba0, viewDeletingDtor 0x00491900, netService 0x00497fc0, ...). Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: ListModel::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00489370_ListModel_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??1R1C489370@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004894a0): callee pops 0 bytes of stack arguments.

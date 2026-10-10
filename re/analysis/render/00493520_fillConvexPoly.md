@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 95 bytes, 39 instructions, subsystem `render`. Mechanic
 Dispatches polygon fill to the 8-bit or 16-bit routine based on the target surface bit depth (vtable 0xe4). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Chooses the polygon filler by the depth of holder+4 (slot +0xe4, 0x0049352e): 8 -> fillConvexPoly8 0x00493100 (0x0049353d, 0x00493575), 16 -> fillConvexPoly16 0x004932d0 (0x00493542, 0x0049355b), returning its result; any other depth returns 0x17 (0x00493544). A null holder or Surface faults in the original (0x00493525 / 0x00493538). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: fillConvexPoly (30 vectors, 21 distinct results, 20 changing state, `log/diff/00493520_fillConvexPoly.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00493520@f_00493520@@YAIHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049354a, 0x00493564, 0x0049357e): callee pops 0 bytes of stack arguments.

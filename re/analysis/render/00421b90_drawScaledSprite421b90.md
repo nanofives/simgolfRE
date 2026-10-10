@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 44 bytes, 17 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 thin wrapper that draws a scaled sprite (variant) (`re/names/exe_0.tsv`)
 
+## Purpose
+Seven stack arguments (`ret 0x1c`); ecx is passed through untouched to Surface_drawScaled2 0x00474030 (call 0x00421bb4), so it is a method of the Surface in ecx. The pushes 0x00421b98..0x00421bb3 give Surface_drawScaled2(a1, a2, a3, a4, a5, a5, a6, a7): the same factor for x and y, a6 the divisor, a7 passed as Surface_drawScaled2's last argument. Returns Surface_drawScaled2's eax. Caller mainLoop 0x0040f5c0. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: drawScaledSprite421b90_s1 (8 vectors, 8 distinct results, 8 changing state, `log/diff/00421b90_drawScaledSprite421b90_s1.path1.csv`); drawScaledSprite421b90_s3 (8 vectors, 8 distinct results, 8 changing state, `log/diff/00421b90_drawScaledSprite421b90_s3.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x1c` (at 0x00421bb9): callee pops 28 bytes of stack arguments.
 

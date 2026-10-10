@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 97 bytes, 22 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libjpeg's jinit_marker_writer: a 0x18-byte object from (*cinfo->mem->alloc_small)(cinfo, 1, 0x18) (0x004afafd) becomes cinfo->marker (+0x154, 0x004afaff) and gets its six methods write_file_header 0x004afb60, write_frame_header 0x004afc40, write_scan_header 0x004afdc0, write_file_trailer 0x004b0060, write_tables_only 0x004b0300, write_marker_header 0x004b0320 (0x004afb05-0x004afb49). Caller: jinit_compress_master 0x004b03a0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: jinit_marker_writer (12 vectors, 12 distinct results, 12 changing state, `log/diff/004afaf0_jinit_marker_writer.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmarker.cpp` as `_jinit_marker_writer` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004afb50): callee pops 0 bytes of stack arguments.

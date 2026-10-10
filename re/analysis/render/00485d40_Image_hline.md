@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 318 bytes, 122 instructions, subsystem `render`. Mechan
 Draws a clipped horizontal line of 16-bit color param_4 from x param_1..param_2 at y param_3 on the surface at this+4. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Draws a dotted horizontal line (every second pixel) of one byte colour on the 8-bit jgld Surface held at this+4, clipped to the Surface's clip rectangle. A null Surface returns at 0x00485d4d. With the clip RECT from Surface slot +0xcc, the line is dropped when y is above the top (0x00485d63 jl) or at/below the bottom (0x00485d7f jge) or when x0 == x1 (0x00485d8d je); x0 > x1 swaps the ends (0x00485d93 jle, xor swap 0x00485d95..0x00485d9e); the line is dropped when x0 >= right (0x00485db7) or x1 < left (0x00485dd2); x0 is raised to left (0x00485ded) and x1 lowered to right - 1 (0x00485e1d / 0x00485e35). The first pixel address comes from Surface slot +0x14 (call3a -> pixelAddr, 0x00485e47); NULL returns (0x00485e4f). The loop stores the colour's low byte (0x00485e59) at every second byte (0x00485e61..0x00485e66) (x1 - x0 + 1) >> 1 times (unsigned shr 0x00485e5f, `loop`), then calls slot +0x24 with 1 (releaseDC2, 0x00485e74). A span that clips down to one pixel gives a count of 0, which `loop` wraps to 2^32 iterations (no vector takes it). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: Image::hline (33 vectors, 18 distinct results, 17 changing state, `log/diff/00485d40_Image_hline.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_09_j.cpp` as `?hline@C485d40@@QAEXHHHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00485e7b): callee pops 16 bytes of stack arguments.

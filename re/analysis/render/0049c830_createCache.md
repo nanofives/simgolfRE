@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 119 bytes, 36 instructions, subsystem `render`. Mechani
 allocates a 0x58-byte cache object with operator new and constructs it via Cache482fd0::ctor, storing it at *(param_1+4) and this+0x1c (returns 4 on allocation failure) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Slot 0 of the vtable 0x004babac (installed by Cache482f60::ctor at 0x00482fb4 and Cache482f60::dtor 0x004835f0): a 0x58-byte block from operator new 0x004a57f1 (push 0x58 at 0x0049c849) is constructed by Cache482fd0::ctor 0x00482fd0 (0x0049c865), which returns it; a NULL block skips the constructor (0x0049c861). The holder's +4 gets the pointer either way (0x0049c874); NULL returns 4 (0x0049c879), else this->+0x1c = the cache (0x0049c894) and the result is 0. Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: createCache (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c830_createCache.path1.csv`); createCache_fail (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c830_createCache_fail.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0049c88d, 0x0049c8a4): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0049c845 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

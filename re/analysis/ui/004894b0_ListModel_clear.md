@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 502 bytes, 135 instructions, subsystem `ui`. Mechanical
 Frees every item node (walking next pointer +0xc), resets head/tail/count, and reloads default colours. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Empties a list model: its node list at +0xc0 is cleared exactly as List402_clear does (0x004894be- 0x00489532) and its +0x14 cleared again either way (0x00489538); the Buf at +4 is released through Buf_releaseData 0x004747e0 (0x0048953b); then the model's fields are reset: zeros at +0x1c, +0x28, +0x2c, +0xf0, +0x3c, +0x40, +0x58..+0x6c, -1 at +0xf4, +0x4c and +0x20, and 28 fields copied from the defaults 0x004e4488..0x004e44cc and 0x0083b61c..0x0083b640 (0x00489540-0x0048969f). Eight callers (ListModel::dtor, ::append 0x004896b0, ::reset 0x004897f0, ...). Reimplemented in `shim/src/re/c3cz.cpp`; path-1 A/B GREEN: ListModel::clear (12 vectors, 12 distinct results, 12 changing state, `log/diff/004894b0_ListModel_clear.path1.csv`); ListModel::clear_realvt (12 vectors, 12 distinct results, 12 changing state, `log/diff/004894b0_ListModel_clear_realvt.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `?reset@S1D489150@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004896a5): callee pops 0 bytes of stack arguments.

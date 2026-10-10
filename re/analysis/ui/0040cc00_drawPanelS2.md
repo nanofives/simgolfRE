@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 455 bytes, 156 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 draws an S2 panel background (`re/names/exe_0.tsv`)
 
+## Purpose
+Cdecl (x, y, w, h), draws a panel with a border. Installs the display triple (1, 1, 1) when g_graphicsDevice is set (0x0040cc08 / 0x0040cc12); grows w and h to multiples of 16 by r = 15 - (size & 15), moving x / y back by r / 2 (0x0040cc22..0x0040cc7c); fills (x + 4, y + 4, w - 8, h - 8) with 0x80004e79 through fillWindowRect 0x00480b00 on the window 0x00519a60 (0x0040cc9a); then blits eight border pieces with Surface_stretchBlit 0x00473f60 onto *0x004c1570: top-left 0x00561810, top edge 0x0056183c and bottom edge 0x00561944 every 16 pixels while w - 16 > 16 ((w - 17) >> 4 times, 0x0040ccbf / 0x0040cd09), left 0x00561894 / right 0x005618ec edges the same way for h (0x0040cd19 / 0x0040cd63), then top-right 0x00561868, bottom-right 0x00561970, bottom-left 0x00561918; each with the record at the same index of 0x0058d1e0.. as its first argument. Callers saveGameDialog 0x00405b10, showCharacterEditor 0x004385d0, showPopup 0x0046d6e0, courseActionMenu 0x0046f550. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: drawPanelS2 (9 vectors, 9 distinct results, 9 changing state, `log/diff/0040cc00_drawPanelS2.path1.csv`); drawPanelS2_nodisp (5 vectors, 5 distinct results, 5 changing state, `log/diff/0040cc00_drawPanelS2_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s2.cpp` as `?S2_panel40cc00@@YAXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040cdc6): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 86 bytes, 35 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 removes a window from the global window list g_list47e (count g_count47e), releasing it and compacting the array (`re/names/exe_3.tsv`)
 
+## Purpose
+Removes a pointer from the window array at 0x0083a2d8 (count at 0x0083ab94) and releases it. NULL (0x0047e527) or a count <= 0 (0x0047e532 jle, signed) returns. The array is scanned from index 0 for the first equal entry (0x0047e539..0x0047e543); none found returns (0x0047e545). Otherwise the count is decremented (0x0047e54c), the object's slot +8 is called with no stack arguments (0x0047e553), and the entries after it move down one place up to the new count (0x0047e569..0x0047e572; skipped when the removed entry was the last, 0x0047e55e jge). Only the first of two equal entries is removed. Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: listRemove (11 vectors, 6 distinct results, 5 changing state, `log/diff/0047e520_listRemove.path1.csv`); listRemove_dup (11 vectors, 9 distinct results, 8 changing state, `log/diff/0047e520_listRemove_dup.path1.csv`); listRemove_empty (11 vectors, 1 distinct results, 0 changing state, `log/diff/0047e520_listRemove_empty.path1.csv`); listRemove_neg (11 vectors, 1 distinct results, 0 changing state, `log/diff/0047e520_listRemove_neg.path1.csv`); listRemove_one (11 vectors, 2 distinct results, 1 changing state, `log/diff/0047e520_listRemove_one.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?remove47e520@@YAXPAUV47e@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047e546, 0x0047e575): callee pops 0 bytes of stack arguments.

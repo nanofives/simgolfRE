@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 112 bytes, 44 instructions, subsystem `render`. Mechani
 creates a surface of the given dimensions (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall (w, h) (`ret 8`). Surface_free on this (0x00474555), a new object from g_graphicsDevice slot +0x80 with (&this->m_4, 1) (0x00474570) stored in this->m_4 (0x00474576), its slot +0x18 with 0xff (0x00474582) and its slot +4 with (0, w, h, 8, 1, *0x0083acb4) (0x004745a1). When slot +4 returns 0 (0x004745a6) it stores m_10 = m_18 = w, m_14 = m_1c = h, m_20 = m_24 = 0 (0x004745a8..0x004745b7); returns slot +4's eax. Caller Flic::createStream 0x00482b90. Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_create_r0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00474550_Surface_create_r0.path1.csv`); Surface_create_r9 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00474550_Surface_create_r9.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?create@C474550@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004745bd): callee pops 8 bytes of stack arguments.

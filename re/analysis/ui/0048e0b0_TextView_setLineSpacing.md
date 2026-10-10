@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 105 bytes, 31 instructions, subsystem `ui`. Mechanical 
 Sets the line-spacing field at [0x1498]; scales it by 3/2 when the screen width is >= 1024. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Stores a line-spacing value into the dword at this + 0x1498 + [[this+0x1464] + 8] (0x0048e0f6 / 0x0048e10e). The value is stored as given unless all of these hold: [this+0x590] is 0 (0x0048e0bb), bit 0x400 of [this+0x1f68] is clear (0x0048e0c3 `test ah, 4`), the display object [0x0083ad50] exists (0x0048e0d0) and its slot +0xa8 returns at least 0x400 (0x0048e0da, signed jl); then it stores v * 3 / 2 (0x0048e0eb lea, the product wrapping to 32 bits; cdq / sub / sar at 0x0048e0ee..0x0048e0f4 halve toward zero). Reimplemented in `shim/src/re/c3db.cpp`; path-1 A/B GREEN: TextView::setLineSpacing (72 vectors, 69 distinct results, 72 changing state, `log/diff/0048e0b0_TextView_setLineSpacing.path1.csv`); TextView::setLineSpacing_narrow (72 vectors, 72 distinct results, 72 changing state, `log/diff/0048e0b0_TextView_setLineSpacing_narrow.path1.csv`); TextView::setLineSpacing_wide (72 vectors, 69 distinct results, 72 changing state, `log/diff/0048e0b0_TextView_setLineSpacing_wide.path1.csv`); TextView::setLineSpacing_nodisp (72 vectors, 72 distinct results, 72 changing state, `log/diff/0048e0b0_TextView_setLineSpacing_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_0048e0b0@C_FUN_0048e0b0@f_0048e0b0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048e0fe, 0x0048e116): callee pops 4 bytes of stack arguments.

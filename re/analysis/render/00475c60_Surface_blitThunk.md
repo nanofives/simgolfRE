@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 47 bytes, 20 instructions, subsystem `render`. Mechanic
 thunk forwarding to the surface blit at 0x475d00 (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Seven stack arguments (`ret 0x1c`); ecx passed through to Surface_blit3 0x00475d00 (call 0x00475c86). The pushes 0x00475c6d..0x00475c85 give Surface_blit3(a1, a2, a3, a6, a7, a4, a5, a6, a7); Surface_blit3 builds {a2, a3, a2 + a6, a3 + a7} and {a4, a5, a4 + a6, a5 + a7} (0x00475d26..0x00475d6f) and passes both rects to slot +0x40 of this->m_4 (0x00475d7c), so the thunk takes (dst, x1, y1, x2, y2, w, h) with one shared width and height. Returns Surface_blit3's eax (0x10 / 7 / slot result). Reimplemented in `shim/src/re/c3da.cpp`; path-1 A/B GREEN: Surface_blitThunk (8 vectors, 7 distinct results, 5 changing state, `log/diff/00475c60_Surface_blitThunk.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x1c` (at 0x00475c8c): callee pops 28 bytes of stack arguments.
 

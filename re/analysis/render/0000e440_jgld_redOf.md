@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000e440`), 98 bytes, 35 instructions, subsystem `rend
 extracts the red channel from a 16-bit pixel. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Extracts the red channel, scaled to 8 bits with the low three bits clear, from a 16-bit pixel word in the module Display's format: slot +0xb4 of the Display 0x10128420 (0x1000e467) returning 1 (cmp 0x1000e474) means RGB565, (colour sar 8) & 0xf8 (0x1000e47c); otherwise RGB555, (colour sar 7) & 0xf8 (0x1000e489). cdecl, one argument. Called by blendRect16 0x1000dfc0, ditherBlendRect16 0x1000e8b0 and 0x10019c80. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: redOf_fmt1 (14 vectors, 6 distinct results, 14 changing state, `log/diff/0000e440_jgld_redOf_fmt1.path1.csv`); redOf_fmt0 (14 vectors, 6 distinct results, 14 changing state, `log/diff/0000e440_jgld_redOf_fmt0.path1.csv`); redOf_fmt2 (14 vectors, 6 distinct results, 14 changing state, `log/diff/0000e440_jgld_redOf_fmt2.path1.csv`); redOf_fmtm1 (14 vectors, 6 distinct results, 14 changing state, `log/diff/0000e440_jgld_redOf_fmtm1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_color.cpp` as `?redOf@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000e4a1): callee pops 0 bytes of stack arguments.

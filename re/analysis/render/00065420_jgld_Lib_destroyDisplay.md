@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065420`), 104 bytes, 40 instructions, subsystem `ren
 destroys and frees the global Display object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 3 (+0xc) of the Display vtable 0x1011d640: deletes every tracked object with Tracked::deleteAll 0x10006bf0 (0x1006543d), then, when the module's Display pointer 0x1012870c is not NULL (cmp 0x10065450), calls slot 0 of its vtable with 1 (0x10065462), the scalar deleting destructor. `this` is stored (0x1006543a) and never read; 0x1012870c is not cleared. Returns nothing. Reimplemented in `shim/src/re/c3dc.cpp`; path-1 A/B GREEN: Lib::destroyDisplay_null_empty (3 vectors, 1 distinct results, 0 changing state, `log/diff/00065420_jgld_Lib_destroyDisplay_null_empty.path1.csv`); Lib::destroyDisplay_base_empty (3 vectors, 1 distinct results, 3 changing state, `log/diff/00065420_jgld_Lib_destroyDisplay_base_empty.path1.csv`); Lib::destroyDisplay_base_three (3 vectors, 1 distinct results, 3 changing state, `log/diff/00065420_jgld_Lib_destroyDisplay_base_three.path1.csv`); Lib::destroyDisplay_null_five (3 vectors, 1 distinct results, 3 changing state, `log/diff/00065420_jgld_Lib_destroyDisplay_null_five.path1.csv`); Lib::destroyDisplay_stub_one (3 vectors, 1 distinct results, 3 changing state, `log/diff/00065420_jgld_Lib_destroyDisplay_stub_one.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display_noeh.cpp` as `?destroyDisplay@Lib@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065487): callee pops 0 bytes of stack arguments.
