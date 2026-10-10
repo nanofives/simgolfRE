@@ -4,6 +4,8 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-10  jgld.dll:000069f0  registerTrackedListTeardown  C1->C2  re/analysis/crt/000069f0_jgld_registerTrackedListTeardown.md
+2026-10-10  jgld.dll:000069f0  registerTrackedListTeardown  C0->C1  match re/match/jgld_list.cpp (100%, compiler-generated _$E3); push 0x10006a40 (atexitDestroyGlobalList) at 0x10006a08; callee 0x1007f080 (_atexit, re/fid/jgld.dll.fid_applied.tsv) at 0x10006a0d; caller 0x10006970
 2026-10-10  004b3380  finish_pass_phuff  C1->C2  re/analysis/util/004b3380_finish_pass_phuff.md
 2026-10-10  004b3380  finish_pass_phuff  C0->C1  match re/match/golf_jpeg_cphuff.cpp (IJG libjpeg 6a, vendor/jpeg-6a/jcphuff.c, /O2) 100%; installed by start_pass_phuff 0x004b1f70 with the store at 0x004b1ff9 (created 2026-10-09: no function in the master before)
 2026-10-09  004a0ab0  viewDispatchSlot27  C2->C3  log/diff/004a0ab0_viewDispatchSlot27.path1.csv
