@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069010`), 45 bytes, 21 instructions, subsystem `rend
 destructor for the FontBase (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Destructor of the FontBase base class: its whole body is the store of the FontBase vtable 0x1011da90 into [this] (0x10069030); no other field is touched, nothing is called (not even __chkesp: `mov esp, ebp` follows at 0x10069039) and nothing is returned. Called from FontBase::deletingDtor 0x10069160 and Font::~Font 0x100687f7. Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: FontBase::~FontBase (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069010_jgld_FontBase_~FontBase.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `??1FontBase@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006903c): callee pops 0 bytes of stack arguments.

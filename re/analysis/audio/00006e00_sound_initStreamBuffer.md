@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006e00`), 132 bytes, 39 instructions, subsystem `au
 Initializes a streaming buffer object: allocates a 0x20000-byte block at +4, sets capacity +3=0x4000 and type +4=2. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+`__thiscall` with nothing pushed (`ret` at 0x10006e83), called by Wave_Device::open 0x1000b420; returns this (0x10006e7f). It stores +0 = +4 = 0 (0x10006e0b, 0x10006e0d), +0x10 = 2 (0x10006e10), +0x14 = 0 (0x10006e17) and +0xc = 0x4000 (0x10006e1a); allocates 0x20000 bytes with operator new 0x100424d7 (0x20000 pushed at 0x10006e06, `call` at 0x10006e21, cdecl, `add esp, 4` at 0x10006e43) and stores the block at +4 (0x10006e26); clears bit 0 of +8 (`and al, 0xfe` at 0x10006e2c); stores +0x18 = +0x30 = +0x38 = +0x34 = 0 (0x10006e38..0x10006e3e, 0x10006e5c); clears the 18 bytes at +0x1c (0x10006e41..0x10006e4f) and fills them with word 1, word 2, 0x5622, 0x15888, word 4, word 0x10 and word 0 (0x10006e53..0x10006e79): the field order and values of a WAVEFORMATEX for 2-channel 16-bit PCM at 22050 Hz. No conditional branch. The A/B replaces operator new with the heap stand-in (re/frida/js/heapstandin.js) for the key, so both arms receive the same block from the fixture arena whose cursor is in the state region; the stored +4 is equal in both arms on every vector, which would not hold if either arm had reached the real allocator. GREEN over 10 vectors, 10 distinct, all changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: initStreamBuffer (10 vectors, 10 distinct results, 10 changing state, `log/diff/00006e00_sound_initStreamBuffer.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10006e83): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10006e02 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

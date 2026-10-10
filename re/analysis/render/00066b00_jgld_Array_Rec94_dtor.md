@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00066b00`), 63 bytes, 26 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 Array<DEVMODEA> destructor: sets vtable 0x1011da60 and calls the clear helper 0x10068360. (`re/names/jgld_3.tsv`)
 
+## Purpose
+Destructor of Array<Rec94>: vtable 0x1011da60 at [this] (0x10066b20), then Array_Rec94::clear 0x10068360 (0x10066b29, thunk 0x100019ba). Returns nothing. Called from Array_Rec94::deletingDtor 0x10066cd0 and 0x100652c0. Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: Array_Rec94::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066b00_jgld_Array_Rec94_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066b00@f_10066b00@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10066b3e): callee pops 0 bytes of stack arguments.

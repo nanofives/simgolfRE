@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 120 bytes, 35 instructions, subsystem `ui`. Mechanical 
 selects on the 32-bit tag at this-8: 1 -> the unnamed 0x0049fc30 (this-0x168), 2 -> ListBox::fireSelectChanged 0x0048c560 (this-0x1a0), 8 -> hotHitCb5 0x004a4530 (this-0x8c) with the two arguments, 0x10 -> listSelectionChanged 0x0049e640 (this-0x180); every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 38 of the composite view (viewCtor4a0740's table 0x004bb8d0, entered through viewDispatchSelectChanged_vtordisp 0x00491a10): route the call to the selection handler of the sub-object the tag at this-8 names. u = tag - 1 (0x004a0c90 / 0x004a0c93); u above 15 unsigned (0x004a0c94 / 0x004a0c97) or a byte-map entry of 4 (map 0x004a0d1c, jump table 0x004a0d08) returns u. Tag 1 calls 0x0049fc30 on this-0x168 (0x004a0ce2 / 0x004a0ce8), tag 2 ListBox::fireSelectChanged 0x0048c560 on this-0x1a0 (0x004a0cca / 0x004a0cd0), tag 8 hotHitCb5 0x004a4530 on this-0x8c (0x004a0cfa / 0x004a0d00) and tag 0x10 listSelectionChanged 0x0049e640 on this-0x180 (0x004a0cb2 / 0x004a0cb8), each with the two stack arguments in order, returning the callee's eax (`ret 8`). Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchSelectChanged (81 vectors, 30 distinct results, 34 changing state, `log/diff/004a0c90_viewDispatchSelectChanged.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0cbd, 0x004a0cd5, 0x004a0ced, 0x004a0d05): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0c90 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

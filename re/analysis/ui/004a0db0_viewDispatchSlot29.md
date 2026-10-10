@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 72 bytes, 21 instructions, subsystem `ui`. Mechanical t
 selects on the 32-bit tag at this-8: 2 -> ListBox::forwardClick 0x0048c610 (this-0x1a0), 8 -> panelOnPick 0x004a4350 (this-0x8c), both with the two arguments; every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 29 of the composite view (table 0x004bb8d0, through viewDispatchSlot29_vtordisp 0x004919a0): tag 2 calls ListBox::forwardClick 0x0048c610 on this-0x1a0 (0x004a0dd2 / 0x004a0dd8) and tag 8 calls panelOnPick 0x004a4350 on this-0x8c (0x004a0dea / 0x004a0df0), each with the two stack arguments; every other tag returns tag - 1 (`dec eax` at 0x004a0db3; the `ja` at 0x004a0db7 and the byte map 0x004a0e08 send them all to the `ret 8` at 0x004a0df5). Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchSlot29 (61 vectors, 23 distinct results, 10 changing state, `log/diff/004a0db0_viewDispatchSlot29.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0ddd, 0x004a0df5): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0db0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

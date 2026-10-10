@@ -97,3 +97,8 @@ c3cp.cpp
 c3cq.cpp
 c3cr.cpp
 c3cs.cpp
+c3ct.cpp
+c3cu.cpp
+c3cv.cpp
+c3cw.cpp
+c3cx.cpp

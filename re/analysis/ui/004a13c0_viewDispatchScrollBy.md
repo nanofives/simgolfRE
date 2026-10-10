@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 37 bytes, 12 instructions, subsystem `ui`. Mechanical t
 runs only for tag 2, calling ListBox::scrollBy 0x0048caf0 with this-0x1a0 and the single argument (0x004a13dd); every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 25 of the composite view (table 0x004bb8d0, through viewDispatchScrollBy_vtordisp 0x00491970): only the ListBox sub-object scrolls. Any tag other than 2 returns tag - 2 (`sub eax, 2` at 0x004a13c3, `jne` at 0x004a13c6, `ret 0xc` at 0x004a13e2); tag 2 calls ListBox::scrollBy 0x0048caf0 on this-0x1a0 with the three stack arguments in order (pushes 0x004a13d0 / 0x004a13d5 / 0x004a13d6, call 0x004a13dd) and returns its eax. Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchScrollBy (54 vectors, 23 distinct results, 14 changing state, `log/diff/004a13c0_viewDispatchScrollBy.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x004a13e2): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x004a13c0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

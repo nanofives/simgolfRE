@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 165 bytes, 58 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Write a restart marker for the progressive encoder (jcphuff.c emit_restart). It calls emit_eobrun 0x004b25d0 (0x004b2466); unless gathering (+0xc, 0x004b2473) it calls flush_bits_4b2510 0x004b2510 (0x004b2476) and stores 0xff (0x004b2481) and restart_num - 0x30 as a byte, i.e. 0xd0 + restart_num (0x004b24a4 / 0x004b24a7), each followed by dump_buffer_4b2420 0x004b2420 when free_in_buffer (+0x14) reaches 0 (0x004b2492 / 0x004b24b7). Then, through entropy->cinfo (+0x20), a DC band (Ss cinfo+0x134 == 0, 0x004b24cd) clears last_dc_val[ci] (+0x24) for every scan component (count re-read each pass: 0x004b24d9 / 0x004b24f1), an AC band clears EOBRUN (+0x38) and BE (+0x3c) (0x004b24f5 / 0x004b24fc). Called by encode_mcu_DC_first 0x004b2140, encode_mcu_AC_first 0x004b28c0, encode_mcu_DC_refine 0x004b2d30 and encode_mcu_AC_refine 0x004b2eb0. Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: emit_restart_4b2460 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b2460_emit_restart_4b2460.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_emit_restart` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b24f4, 0x004b2504): callee pops 0 bytes of stack arguments.

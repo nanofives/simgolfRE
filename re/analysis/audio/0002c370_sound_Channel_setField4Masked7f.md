@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002c370`), 13 bytes, 4 instructions, subsystem `audi
 thiscall(uint value): stores value & 0x7f (0x1002c374) at this+4 (0x1002c377) and leaves it in eax; nothing else. What +4 holds is not determined by this body; the MultiSound override of the same slot (MultiSound::setVolume 0x1003a0d0) calls it first with its argument clamped to 0..0x7f. (`re/names/sound_11.tsv`)
 System writeup: `re/analysis/systems/sound_11.md`.
 
+## Purpose
+(name proposed in log/c3/c3cx_names.tsv) Slot 16 (+0x40) of the channel vtable 0x1005bb90 (and of 0x1005bcb4), `__thiscall(unsigned value)` (`ret 4` at 0x1002c37a) with no callee: value & 0x7f (0x1002c374) is stored at this+4 (0x1002c377) and left in eax. Called first by its MultiSound override MultiSound::setVolume 0x1003a0d0 (through the thunk 0x100026ee at 0x1003a0ed). GREEN over 20 vectors (the leaf rule), 10 distinct, all changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: Channel_setField4Masked7f (20 vectors, 10 distinct results, 20 changing state, `log/diff/0002c370_sound_Channel_setField4Masked7f.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002c370@C_FUN_1002c370@f_1002c370@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002c37a): callee pops 4 bytes of stack arguments.

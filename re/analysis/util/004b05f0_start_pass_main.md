@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 78 bytes, 21 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 main controller start_pass: returns at once when raw_data_in [cinfo+0xa8] is set (0x004b0602); else zeroes three counters, stores pass_mode, installs process_data_simple_main for pass_mode 0 (JBUF_PASS_THRU) and calls error_exit with code 4 otherwise (`re/names/libs.tsv`)
 
+## Purpose
+Start a pass of the compressor's main controller (jcmainct.c). With raw_data_in (cinfo+0xa8) set it does nothing (0x004b0602). Otherwise it clears cur_iMCU_row, rowgroup_ctr and suspended of the controller at cinfo+0x148 (+8, +0xc, +0x10: 0x004b0608..0x004b0618) and stores the pass mode at +0x14 (0x004b061f); mode 0 installs process_data_simple_main 0x004b0640 as process_data (+4, 0x004b0636), any other mode raises ERREXIT 4 (msg_code at cinfo->err+0x14, then error_exit: 0x004b0627 / 0x004b0630) and returns without installing anything. Installed by jinit_c_main_controller 0x004b0560 (`mov [eax], 0x4b05f0` at 0x004b0576). Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: start_pass_main (12 vectors, 10 distinct results, 9 changing state, `log/diff/004b05f0_start_pass_main.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmainct.cpp` as `_start_pass_main` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0635, 0x004b063d): callee pops 0 bytes of stack arguments.

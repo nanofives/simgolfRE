@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 486 bytes, 158 instructions, subsystem `util`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Emit one buffered iMCU row (jccoefct.c, the later passes of multi-pass compression and the end of compress_first_pass). Per scan component (0x004b0d8f / 0x004b0de9) the virtual array whole_image[component_index] (coef+0x40, comp+4) is aligned at row iMCU_row_num * v_samp_factor, v_samp_factor rows, read-only, through access_virt_barray (mem+0x20, 0x004b0dc2) into a local buffer[4]. For yoffset from MCU_vert_offset below MCU_rows_per_iMCU_row (signed, re-read: 0x004b0df7 / 0x004b0f1f) and each column from mcu_ctr below MCUs_per_row (cinfo+0x100, unsigned: 0x004b0e0c / 0x004b0f04), MCU_buffer (coef+0x18) is refilled with consecutive block pointers: per component (0x004b0e20 / 0x004b0ed8), MCU_height rows (0x004b0e53 / 0x004b0ea8) of MCU_width blocks (0x004b0e76 / 0x004b0e91) from buffer[ci][yindex + yoffset] + column * MCU_width blocks of 0x80 bytes (0x004b0e4e..0x004b0e89). encode_mcu (0x004b0eed) gets (cinfo, coef+0x18); a 0 return stores the column and yoffset (0x004b0f46 / 0x004b0f49) and returns 0. mcu_ctr is cleared after each MCU row (0x004b0f14); the end increments iMCU_row_num (0x004b0f2a), calls start_iMCU_row 0x004b0860 (0x004b0f2d) and returns 1. Called by compress_first_pass 0x004b0b20 (0x004b0d55) and installed by start_pass_coef 0x004b07b0 (`mov [edi+4], 0x4b0d70` at 0x004b082b). Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: compress_output (11 vectors, 11 distinct results, 11 changing state, `log/diff/004b0d70_compress_output.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_ccoefct.cpp` as `_compress_output` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0f41, 0x004b0f55): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00011180`), 203 bytes, 47 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a playback voice embedding a DsBuffer at +0x70 and a default master level 0x7f at +0x188. (`re/names/sound_2.tsv`)
 
+## Purpose
+`__thiscall` with nothing pushed (`ret` at 0x1001124a), called by Wave_Device::open 0x1000b420; returns this (0x10011246). It runs DsBuffer::ctor 0x1000eef0 on this+0x70 (`call 0x10001c1c` at 0x10011187, a thunk), which with its callee DsBuffer::initDesc 0x1000f590 writes only inside this+0x70..this+0x143; then stores 0 at +0x168..+0x184 and +0x18c (0x10011191..0x100111c1), at +0, +4, +8 (0x100111c7..0x100111cc), in the byte +0x6c (0x100111cf), at +0x148, +0x158, +0x15c, +0x154, +0x14c, +0x194, +0x198, +0x1ac, +0x1b0, +0x1b4 and the four dwords +0x19c..+0x1a8 (0x100111d9..0x10011234), stores +0x188 = 0x7f (0x100111df) and +0x160 = 2 (0x10011201), clears the 0x18 dwords +0xc..+0x6b with `rep stosd` (0x1001122b..0x1001123e) and stores +0x144 = 0 (0x10011240). None of these ranges overlap. No conditional branch. GREEN over 10 vectors, 10 distinct, all changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: initSoundVoice (10 vectors, 10 distinct results, 10 changing state, `log/diff/00011180_sound_initSoundVoice.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001124a): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10011181 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

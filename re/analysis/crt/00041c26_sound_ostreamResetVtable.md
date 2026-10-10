@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00041c26`), 19 bytes, 4 instructions, subsystem `crt`
 Destructor helper for a std ostream object: writes vtable &PTR_LAB_1005ece4 into the virtual-base subobject then calls iosResetVtable (0x10041aad). (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`, `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+`__thiscall` with nothing pushed, called by ostream::scalarDtorAdj8 0x10041b9d. The dword eight bytes below `this` is the virtual-base table pointer (0x10041c26) and its second dword the virtual base's offset (0x10041c29); the store at 0x10041c2c writes 0x1005ece4 to [this - 8 + offset]. The body then tail-jumps to iosResetVtable 0x10041aad (`jmp` at 0x10041c34) with ecx unchanged, which re-reads both pointers and overwrites the same dword with 0x1005ecd4, returning the offset. GREEN over 12 vectors, 12 distinct, all changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: ostreamResetVtable (12 vectors, 12 distinct results, 12 changing state, `log/diff/00041c26_sound_ostreamResetVtable.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x10041c26 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003a5b0`), 26 bytes, 9 instructions, subsystem `audi
 Forwards (x,y,z) to Channel_set3DPosition on the embedded Channel (+0x70). (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Slot 54 (+0xd8) of the MultiSound vtable 0x1005c7e8, `__thiscall` with three stack arguments (`ret 0xc` at 0x1003a5c7). The three are re-pushed in the same order (0x1003a5b0..0x1003a5be), ecx moves to the channel at this+0x70 (0x1003a5bf) and `call 0x10001974` (0x1003a5c2, a thunk to Channel_set3DPosition 0x10037b00) is made; its eax is the result. The callee applies the same flag / buffer tests as the single-axis setters and, through Ds3DBuffer::setPosition 0x10011000, stores all three coordinates and returns 0x1f when the interface slot +0x4c returns non-zero (`neg`/`sbb`/`and 0x1f` at 0x10011040..0x10011044), which the shapes with codes 0x88780096 and -1 show. No conditional branch of its own. GREEN over 28 vectors, 13 distinct results, 12 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound_set3DPosition (28 vectors, 13 distinct results, 12 changing state, `log/diff/0003a5b0_sound_MultiSound_set3DPosition.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_1003a5b0@C_FUN_1003a5b0@f_1003a5b0@@QAEXIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1003a5c7): callee pops 12 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00006b80`), 79 bytes, 30 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 destructor: unlinks this object from the global tracked list. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Destructor of jgld's Tracked base, which unregisters an object from the module's tracked-object list 0x10128428: it writes the Tracked vtable 0x1011d058 into [this] (0x10006ba0), calls LinkedList::find(this) on the list (`mov ecx, 0x10128428` 0x10006baa, call 0x10006baf) and then LinkedList::removeCurrent on it (0x10006bb4, 0x10006bb9). find's result is not tested, so when the object is not in the list removeCurrent still unlinks and deletes whichever node is current (or nothing if the list is empty). Returns nothing. Called from Tracked::deletingDtor 0x10006b30, PaletteBase::dtor 0x1006af29, Font::~Font 0x100687e8 and SurfaceBase::dtor 0x100096f0. Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: Tracked::dtor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b80_jgld_Tracked_dtor_empty.path1.csv`); Tracked::dtor_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b80_jgld_Tracked_dtor_one.path1.csv`); Tracked::dtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b80_jgld_Tracked_dtor_five.path1.csv`); Tracked::dtor_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b80_jgld_Tracked_dtor_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??1Tracked@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10006bce): callee pops 0 bytes of stack arguments.

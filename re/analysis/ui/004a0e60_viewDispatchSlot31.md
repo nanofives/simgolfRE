@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 37 bytes, 12 instructions, subsystem `ui`. Mechanical t
 tests the tag at this-8 against 4 and then 8 (0x004a0e63, 0x004a0e68) and calls hotHitCb1 0x004a4430 with this-0x8c and the two arguments for tag 8 only; every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 31 of the composite view (table 0x004bb8d0, through viewDispatchSlot31_vtordisp 0x004919c0): loads the tag (0x004a0e60); tag 4 (0x004a0e63 / 0x004a0e66) and any tag other than 8 (0x004a0e68 / 0x004a0e6b) return the tag itself, tag 8 calls hotHitCb1 0x004a4430 on this-0x8c with the two stack arguments (0x004a0e6d..0x004a0e7d) and returns its eax. Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchSlot31 (53 vectors, 18 distinct results, 6 changing state, `log/diff/004a0e60_viewDispatchSlot31.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0e82): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0e60 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

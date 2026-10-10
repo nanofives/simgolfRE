@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 235 bytes, 76 instructions, subsystem `util`. Mechanica
 symbol of the 100% matched source (IJG libjpeg 6a jcphuff.c, _finish_pass_gather_phuff) (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Finish a statistics-gathering progressive scan (jcphuff.c): build the Huffman tables the scan counted. It calls emit_eobrun 0x004b25d0 (0x004b33d3) on the encoder (cinfo+0x164) so a pending EOB run is counted, takes is_DC_band = (Ss == 0) (0x004b33e5) and clears four did flags (0x004b33ee..0x004b33fa). Per scan component (0x004b340a / 0x004b349d): a DC band uses dc_tbl_no (comp+0x14) unless Ah (cinfo+0x13c, re-read) is set, which skips the component (0x004b3425 / 0x004b342f); an AC band uses ac_tbl_no (+0x18). A table not done yet (0x004b3443) takes the dc or ac huff_tbl_ptrs slot (cinfo+0x50 / +0x60, 0x004b344b), gets a table from jpeg_alloc_huff_table 0x004afad0 when the slot is NULL (0x004b3454 / 0x004b3457), is built by jpeg_gen_optimal_table 0x004b1080 from count_ptrs[tbl] (+0x5c, 0x004b346e) and marked done (0x004b347a). Installed by start_pass_phuff 0x004b1f70 (`mov [ebx+8], 0x4b33c0` at 0x004b1ff0). Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: finish_pass_gather_phuff (8 vectors, 7 distinct results, 6 changing state, `log/diff/004b33c0_finish_pass_gather_phuff.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_finish_pass_gather_phuff` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b34aa): callee pops 0 bytes of stack arguments.

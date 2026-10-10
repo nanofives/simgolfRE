@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003a080`), 28 bytes, 9 instructions, subsystem `audi
 When the embedded Channel is open (+0xc8 bit1) sets voice flag bit1 on all its voices via Channel_broadcastVoiceBit1(+0x70,1); returns SNDERR 0x14 otherwise. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Slot 14 (+0x38) of the MultiSound vtable 0x1005c7e8, `__thiscall` with nothing pushed. When bit 1 of the byte at this+0xc8 is clear (`test byte ptr [ecx + 0xc8], 2` / `jne` at 0x1003a080, 0x1003a087) it returns 0x14 (0x1003a089); otherwise it pushes 1 (0x1003a08f) and calls `0x10002117` (0x1003a094, a thunk to Channel_broadcastVoiceBit1 0x100377f0) on the channel at this+0x70 (0x1003a091), then returns 0 (0x1003a099). The callee sets bit 1 of every voice's flag byte when the channel's +0x58 bit 0 is set, else bit 7 of +0x58; the A/B covers both. GREEN over 8 vectors, 6 distinct, 4 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound_setVoiceBit1On (8 vectors, 6 distinct results, 4 changing state, `log/diff/0003a080_sound_MultiSound_setVoiceBit1On.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_1003a080@f_1003a080@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1003a08e, 0x1003a09b): callee pops 0 bytes of stack arguments.

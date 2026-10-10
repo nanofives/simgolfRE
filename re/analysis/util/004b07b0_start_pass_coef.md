@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 167 bytes, 63 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 coefficient controller start_pass: pass_mode 0 installs compress_data (needs whole_image [coef+0x40] NULL), 2 compress_output and 3 compress_first_pass (both need it non-NULL); any other mode or a mismatch calls error_exit with code 4 (`re/names/libs.tsv`)
 
+## Purpose
+Start a pass of the coefficient controller (jccoefct.c). It clears iMCU_row_num (coef+8, coef = cinfo+0x150, 0x004b07bd), calls start_iMCU_row 0x004b0860 (0x004b07c4), then selects compress_data by pass mode (0x004b07d0..0x004b07db): mode 0 installs compress_data 0x004b08b0 (0x004b084d) and requires whole_image[0] (coef+0x40) to be NULL, modes 2 and 3 install compress_output 0x004b0d70 (0x004b082b) and compress_first_pass 0x004b0b20 (0x004b0809) and require it non-NULL; a violated requirement raises ERREXIT 4 before the install (0x004b083a, 0x004b0818, 0x004b07f6), and any other mode raises ERREXIT 4 and installs nothing (0x004b07dd.. 0x004b07e9). Installed by jinit_c_coef_controller 0x004b06f0 (`mov [ebx], 0x4b07b0` at 0x004b0714). Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: start_pass_coef (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b07b0_start_pass_coef.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_ccoefct.cpp` as `_start_pass_coef` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b07f0, 0x004b0812, 0x004b0834, 0x004b0856): callee pops 0 bytes of stack arguments.

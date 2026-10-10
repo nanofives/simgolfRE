@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 305 bytes, 62 instructions, subsystem `render`. Mechani
 destructor of a file-scope global Surface object/array (Surface_free) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Destructor of a file-scope aggregate of 0x2c-byte Surfaces, registered for program exit by 0x0044b780 (re/names/undisc_exe.tsv). Inside an SEH frame (fs:[0] at 0x0044b797), it destroys the members in reverse declaration order: +0x1e4 at 0x0044b7ad, +0x1b8 at 0x0044b7c6, +0x18c at 0x0044b7dc, +0x160 at 0x0044b7f2, +0x134 at 0x0044b808, +0x108 at 0x0044b81e, +0xdc at 0x0044b834, +0xb0 at 0x0044b84a, +0x84 at 0x0044b860, +0x58 at 0x0044b876, +0x2c at 0x0044b889, +0x0 at 0x0044b89c. A single member gets the Surface vtable 0x004ba2d8 stored at its +0 and then Surface_free 0x00473ae0; an array goes to the CRT vector destructor iterator 0x004a5713 (stdcall: base, 0x2c, count, unwindFree_4041f0 0x004041f0), which runs the same two steps on each element from the last to the first (0x004a574a..0x004a5758). Surface_free returns at once while the display pointer 0x0083ad50 is null (0x00473aee); otherwise it releases a non-zero +4 handle through the display's slot +0x94 (0x00473af0..0x00473afa) and clears +0x10..+0x24 (0x00473b2e..0x00473b3d). The destructor has no branch of its own. Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: gSurfaceDtor_44b790 (3 vectors, 3 distinct results, 3 changing state, `log/diff/0044b790_gSurfaceDtor_44b790.path1.csv`); gSurfaceDtor_44b790_nodisp (3 vectors, 3 distinct results, 3 changing state, `log/diff/0044b790_gSurfaceDtor_44b790_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `??1r3_C44b790@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044b8c0): callee pops 0 bytes of stack arguments.

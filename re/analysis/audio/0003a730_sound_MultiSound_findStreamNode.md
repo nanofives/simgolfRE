@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003a730`), 8 bytes, 2 instructions, subsystem `audio
 Forwards to Channel_findStreamNode on the embedded Channel (+0x70). (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Slot 47 (+0xbc) of the MultiSound vtable 0x1005c7e8: `add ecx, 0x70` (0x1003a730) and a tail `jmp 0x100020b8` (0x1003a733), a thunk to Channel_findStreamNode 0x10035770, whose eax is the result. No conditional branch of its own. Through the callee the A/B shows the cursor this+0x13c0 (channel+0x1350) rewritten from the list head this+0x13b8 and the walk returning the value of each element whose threshold is at or below the position this+0x1dc, stopping at the first element above it (the result is the last value taken, -1 when none was). GREEN over 7 vectors, 7 distinct, 7 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound_findStreamNode (7 vectors, 7 distinct results, 7 changing state, `log/diff/0003a730_sound_MultiSound_findStreamNode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_1003a730@f_1003a730@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

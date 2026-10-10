@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003a800`), 27 bytes, 8 instructions, subsystem `audi
 Returns 1 when the embedded Channel is open (+0xc8 bit1) and 3D is enabled (+0xcc bit5), else 0. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Slot 58 (+0xe8) of the MultiSound vtable 0x1005c7e8, `__thiscall` with nothing pushed and no callee. Returns 1 (0x1003a812) only when bit 5 of the byte at this+0xcc is set (`test byte ptr [ecx + 0xcc], 0x20` / `je` at 0x1003a800, 0x1003a807) and bit 1 of the byte at this+0xc8 is set (`test byte ptr [ecx + 0xc8], 2` / `je` at 0x1003a809, 0x1003a810); otherwise 0 (0x1003a818). Those two words are the embedded channel's +0x5c (whose bit 5 the channel's 3D setters test) and +0x58. GREEN over 12 vectors (the leaf rule), results 0 and 1. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound_is3DEnabled (12 vectors, 2 distinct results, 0 changing state, `log/diff/0003a800_sound_MultiSound_is3DEnabled.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_1003a800@f_1003a800@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1003a817, 0x1003a81a): callee pops 0 bytes of stack arguments.

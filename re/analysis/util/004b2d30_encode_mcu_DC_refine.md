@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 375 bytes, 127 instructions, subsystem `util`. Mechanic
 symbol of the 100% matched source (IJG libjpeg 6a jcphuff.c, _encode_mcu_DC_refine) (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Code one MCU of a progressive DC refinement scan (jcphuff.c): the common head (destination copy, restart at 0x004b2d62 / 0x004b2d69 / 0x004b2d70), then for each block (blocks_in_MCU re-read: 0x004b2d88 / 0x004b2e62) one bit, (block[0] >> Al) & 1 (signed word, Al's low byte as count: 0x004b2db1..0x004b2dbd), merged into put_buffer and flushed as whole bytes with 0xff stuffing and dump_buffer_4b2420 0x004b2420 refills (0x004b2dc7..0x004b2e43), skipped entirely while gathering (0x004b2d9d); then the common tail (0x004b2e6a..0x004b2e99) and returns 1. Installed by start_pass_phuff 0x004b1f70 (`mov [ebx+4], 0x4b2d30` at 0x004b1fc2). Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: encode_mcu_DC_refine (12 vectors, 11 distinct results, 10 changing state, `log/diff/004b2d30_encode_mcu_DC_refine.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_encode_mcu_DC_refine` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b2ea6): callee pops 0 bytes of stack arguments.

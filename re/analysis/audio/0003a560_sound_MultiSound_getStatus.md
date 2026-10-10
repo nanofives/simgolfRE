@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003a560`), 22 bytes, 9 instructions, subsystem `audi
 Returns the base status word (from 0x1002c0d0) with bit3 (0x8) set when +0x228 is non-zero. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_11.md`, `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Slot 28 (+0x70) of the MultiSound vtable 0x1005c7e8, `__thiscall` with nothing pushed (`ret` at 0x1003a575). It calls Channel_collectFlagBits 0x1002c0d0 with the same `this` (`call 0x1000245a` at 0x1003a563) and ORs bit 3 into the result's low byte when the dword at this+0x228 is non-zero (`je` at 0x1003a571, `or al, 8` at 0x1003a573). GREEN over 12 vectors, 12 distinct, 7 changing state; GREEN with the callee's hook off. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound_getStatus (12 vectors, 12 distinct results, 7 changing state, `log/diff/0003a560_sound_MultiSound_getStatus.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003a575): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1003a561 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

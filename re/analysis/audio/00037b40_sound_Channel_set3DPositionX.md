@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00037b40`), 34 bytes, 11 instructions, subsystem `aud
 Forwards param_1 to Ds3DBuffer::setPositionX on buffer +0x54 under the same +0x5c bit5 / non-null guard; else SNDERR 0xb. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+`__thiscall(float x)` (`ret 4` at 0x10037b57 / 0x10037b5f) on a channel object; the float is only moved as a dword. The 3D flag, bit 5 of the byte at this+0x5c, is tested first (`test byte ptr [ecx + 0x5c], 0x20` / `je 0x10037b5a` at 0x10037b40, 0x10037b44), then the Ds3DBuffer pointer at this+0x54 (0x10037b46, `je` at 0x10037b4b); when both pass, the argument is pushed (0x10037b51) and `call 0x10001f05` (0x10037b52, an incremental-link thunk to Ds3DBuffer::setPositionX 0x10011070) runs with that pointer in ecx, and its eax is returned unchanged. Either test failing returns 0xb (0x10037b5a). Its one caller is MultiSound::set3DPositionX 0x1003a5e0. Through the callee the A/B shows the new X stored at buffer+0xc8 and the interface at buffer+0x64 receiving (x, buffer+0xcc, buffer+0xd0, 0) through its slot +0x4c; the callee returns 0 whatever that slot returns. GREEN over 42 vectors, 19 distinct results, 18 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: Channel_set3DPositionX (42 vectors, 19 distinct results, 18 changing state, `log/diff/00037b40_sound_Channel_set3DPositionX.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10037b40@C_FUN_10037b40@f_10037b40@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10037b57, 0x10037b5f): callee pops 4 bytes of stack arguments.

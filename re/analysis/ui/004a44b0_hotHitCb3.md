@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 57 bytes, 22 instructions, subsystem `ui`. Mechanical t
 hot-region hit-test callback (variant 3) forwarding to HotList::hit. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Hit-test a point against a panelSub's hot list and hand the hit entry's value to the callback in slot P-0x14. With P = this, the function calls HotList::hitTest 0x00492a90 on the list at P-0xd0 (0x004a44c4, call 0x004a44ca) with the two stack arguments (x, y), aOut = the address of y's own stack slot and bOut = 0 (pushes 0x004a44bf..0x004a44c3), so a hit overwrites y with the entry's +0x18 dword. A miss (-1, 0x004a44cf / 0x004a44d2) returns -1. On a hit the cdecl callback pointer at P-0x14 is loaded (0x004a44d4); a null pointer returns 0 (0x004a44d7 / 0x004a44d9), otherwise the callback is called with the overwritten y (0x004a44db.. 0x004a44e0) and its eax is returned (`ret 8` at 0x004a44e6). The seven hotHitCb0..6 bodies are identical except for the callback slot (P-0x20, -0x1c, -0x18, -0x14, -0x10, -0xc, -0x8). Reached from its vtordisp thunk 0x004a4a20 (slot 33 of panelSub's table 0x004bc244) and the view dispatcher 0x004a0e20 (tag 8). What the callback does with the value is up to the code that installs it and is not determined here. Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: hotHitCb3 (55 vectors, 11 distinct results, 11 changing state, `log/diff/004a44b0_hotHitCb3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_004a44b0@C_FUN_004a44b0@f_004a44b0@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004a44e6): callee pops 8 bytes of stack arguments.

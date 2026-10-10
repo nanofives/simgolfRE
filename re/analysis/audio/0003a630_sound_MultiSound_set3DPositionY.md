@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0003a630`), 16 bytes, 5 instructions, subsystem `audi
 ## Role (from the naming pass, not a C3 purpose)
 forwards its argument to Channel_set3DPositionY 0x10001eb0 on this+0x70 and returns (`re/names/undisc_sound.tsv`)
 
+## Purpose
+Slot 56 (+0xe0) of the MultiSound vtable 0x1005c7e8: `add ecx, 0x70` (0x1003a634), the argument pushed (0x1003a637) and `call 0x10001eb0` (0x1003a638, a thunk to Channel_set3DPositionY 0x10037b80), whose eax `ret 4` at 0x1003a63d returns. No conditional branch. GREEN over 42 vectors, 19 distinct results, 18 changing state; GREEN with the callee's hook off. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound::set3DPositionY (42 vectors, 19 distinct results, 18 changing state, `log/diff/0003a630_sound_MultiSound_set3DPositionY.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1003a63d): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1003a634 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

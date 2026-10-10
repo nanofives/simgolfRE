@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0004e4b3`), 400 bytes, 95 instructions, subsystem `cr
 CRT locale teardown: frees the per-locale LC_TIME name tables. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_5.md`, `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+`__cdecl(struct *)` of the statically linked CRT (after `push esi` the argument is read from [esp+8] at 0x1004e4b4; `ret` at 0x1004e642 pops nothing), called by __init_time 0x1004e0d4. A null pointer returns at once (`test esi, esi` / `je 0x1004e641` at 0x1004e4b8, 0x1004e4ba). Otherwise free 0x10042c07 is called once on each of 43 dwords of the struct, in this order: +4, +8, +0xc, +0x10, +0x14, +0x18, +0, +0x20, +0x24, +0x28, +0x2c, +0x30, +0x34, +0x1c, +0x38, then +0x3c to +0xa8 in steps of 4 (0x1004e4c0..0x1004e639), the arguments popped by `add esp, 0x40` at 0x1004e53f and 0x1004e5c2 and `add esp, 0x2c` at 0x1004e63e. Nothing is loaded into eax for a return value, so the registry declares ret="void". The A/B replaces free with the heap stand-in's recording deallocator (re/frida/js/heapstandin.js) for the key: nothing is released and the log of the 43 pointers, in order, is compared. GREEN over 7 vectors, 6 changing state (the null pointer writes nothing). Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: __free_lc_time (7 vectors, 7 distinct results, 6 changing state, `log/diff/0004e4b3_sound___free_lc_time.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1004e642): callee pops 0 bytes of stack arguments.
 

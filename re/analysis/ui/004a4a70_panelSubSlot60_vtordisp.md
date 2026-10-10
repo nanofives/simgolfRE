@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x004a4870 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/exe_8.md`.
 
+## Purpose
+The vtordisp this-adjustor in slot 60 of panelSub's table 0x004bc244 (installed by panelSubCtor4a3110 0x004a3110 and panelSubDtor4a3480 0x004a3480): `sub ecx, dword ptr [ecx-4]` (0x004a4a70) then `jmp 0x004a4870` (0x004a4a73). The body 0x004a4870 reads the vbtable at this-0xe0, adds its entry +4 (0x004a4870 / 0x004a4876) and calls slot +0x120 of the base found there with no argument (0x004a4879..0x004a4887); its one stack argument is never read (`ret 4` at 0x004a488d). The same body is viewDispatchSlot60's tag-8 case (0x004a104c). Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: panelSubSlot60_vtordisp (15 vectors, 5 distinct results, 15 changing state, `log/diff/004a4a70_panelSubSlot60_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x004a4a70 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

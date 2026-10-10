@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000669e0`), 63 bytes, 26 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 Array<T> destructor for g_arrayE0: sets vtable 0x1011da58 and calls the clear helper 0x10068000. (`re/names/jgld_3.tsv`)
 
+## Purpose
+Destructor of jgld's Array<e0> container: it writes the Array<e0> vtable 0x1011da58 into the object (0x10066a00) and calls Array_e0::clear 0x10068000 (0x10066a09, through the incremental-link thunk 0x100019f1), which hands the element buffer at +4 to operator delete 0x1007e6d0 when it is not null and leaves buffer 0, capacity 0, count 0 and growth step 1. It returns nothing. Called from Array_e0::deletingDtor 0x10066bf0 and 0x100650a0. Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: Array_e0::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/000669e0_jgld_Array_e0_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_100669e0@f_100669e0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10066a1e): callee pops 0 bytes of stack arguments.

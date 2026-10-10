@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006af00`), 63 bytes, 26 instructions, subsystem `rend
 PaletteBase destructor: sets vtable 0x1011db3c and calls base dtor 0x10006b80. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Destructor of PaletteBase: writes the PaletteBase vtable 0x1011db3c into [this] (0x1006af20) and runs Tracked::dtor 0x10006b80 on the same object (0x1006af29, thunk 0x1000195b), so a palette unregisters itself from the tracked-object list 0x10128428 and the vtable it leaves is Tracked's 0x1011d058. Returns nothing. Called from PaletteBase::deletingDtor 0x1006af70 and Palette::~Palette 0x1006a330. Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: PaletteBase::dtor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af00_jgld_PaletteBase_dtor_empty.path1.csv`); PaletteBase::dtor_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af00_jgld_PaletteBase_dtor_one.path1.csv`); PaletteBase::dtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af00_jgld_PaletteBase_dtor_five.path1.csv`); PaletteBase::dtor_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af00_jgld_PaletteBase_dtor_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006af00@f_1006af00@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006af3e): callee pops 0 bytes of stack arguments.

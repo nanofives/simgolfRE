@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00006b10`), 81 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor for Tracked. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Scalar deleting destructor of Tracked, slot 0 of its vtable 0x1011d058: Tracked::dtor 0x10006b80 (0x10006b30, thunk 0x1000195b), operator delete of the object when flags bit 0 is set (`and eax,1` 0x10006b38, `je` 0x10006b3d, call 0x10006b43), returns the object (`ret 4` 0x10006b5e). Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: Tracked::deletingDtor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b10_jgld_Tracked_deletingDtor_empty.path1.csv`); Tracked::deletingDtor_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b10_jgld_Tracked_deletingDtor_one.path1.csv`); Tracked::deletingDtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b10_jgld_Tracked_deletingDtor_five.path1.csv`); Tracked::deletingDtor_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006b10_jgld_Tracked_deletingDtor_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `??_GTracked@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10006b5e): callee pops 4 bytes of stack arguments.

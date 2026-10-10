@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002bff0`), 54 bytes, 17 instructions, subsystem `aud
 thiscall(int value): clamps value signed to -1200..1200 (0x1002bff4-0x1002c009), stores it at this+0x5c (0x1002c00e), forwards it to the object at this+0x40's own vtable slot +0x9c when that pointer is non-null (0x1002c014-0x1002c01b, result discarded) and returns 0 (0x1002c021). The MultiSound override of the same slot (MultiSound_setPitchCents 0x1003a210) treats the value as a cent offset (it divides by 100 and indexes semitone tables with it); this body only clamps and stores. (`re/names/sound_11.tsv`)
 System writeup: `re/analysis/systems/sound_11.md`.
 
+## Purpose
+(name proposed in log/c3/c3cx_names.tsv) Slot 39 (+0x9c) of the channel vtable 0x1005bb90 (and of 0x1005bcb4), `__thiscall(int value)` (`ret 4` at 0x1002c023). The value is clamped SIGNED to -1200..1200 (`jge` at 0x1002bff9, `jle` at 0x1002c007), stored at this+0x5c (0x1002c00e) and passed to the object at this+0x40's own vtable slot +0x9c when that pointer is non-null (`je` at 0x1002c016, call at 0x1002c01b), whose result is discarded; returns 0 (0x1002c021). Called first by its MultiSound override MultiSound_setPitchCents 0x1003a210. GREEN over 22 vectors (the leaf rule), 14 distinct, all changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: Channel_setField5cClamped1200 (22 vectors, 14 distinct results, 22 changing state, `log/diff/0002bff0_sound_Channel_setField5cClamped1200.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002bff0@C_FUN_1002bff0@f_1002bff0@@QAEIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002c023): callee pops 4 bytes of stack arguments.

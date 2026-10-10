@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 56 bytes, 21 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Create the progressive Huffman entropy encoder (jcphuff.c): allocate its 0x6c bytes through cinfo->mem->alloc_small(cinfo, 1, 0x6c) (0x004b1f35..0x004b1f3d), store the pointer at cinfo+0x164 (0x004b1f42), install start_pass_phuff 0x004b1f70 as start_pass (+0, 0x004b1f48), and clear derived_tbls[0..3] (+0x4c) and count_ptrs[0..3] (+0x5c) in four passes (0x004b1f58..0x004b1f61) and bit_buffer (+0x40, 0x004b1f63); no other field is written. Called by jinit_compress_master 0x004b03a0. Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: jinit_phuff_encoder (10 vectors, 10 distinct results, 10 changing state, `log/diff/004b1f30_jinit_phuff_encoder.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cphuff.cpp` as `_jinit_phuff_encoder` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b1f67): callee pops 0 bytes of stack arguments.

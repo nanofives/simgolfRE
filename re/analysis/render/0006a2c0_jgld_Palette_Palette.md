@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a2c0`), 144 bytes, 43 instructions, subsystem `ren
 destructor for the Palette (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Destructor of Palette: writes the Palette vtable 0x1011db10 into [this] (0x1006a2f5); when the pointer at +0x80c is not null (cmp 0x1006a305, `je` 0x1006a30c) it clears the dword at +4 of the object that pointer names (0x1006a317); then Palette::reset 0x1006a380 (0x1006a321: +0x810 and +0x814 to 0) and PaletteBase::dtor 0x1006af00 (0x1006a330), which unregisters it from the tracked-object list. The body also builds a C++ EH frame (fs:[0], 0x1006a2ca-0x1006a2d1, state 0 at 0x1006a2fb and -1 at 0x1006a326) that the reimplementation does not. Returns nothing. Called from Palette::deletingDtor 0x1006a210. Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: Palette::~Palette_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a2c0_jgld_Palette_~Palette_empty.path1.csv`); Palette::~Palette_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a2c0_jgld_Palette_~Palette_one.path1.csv`); Palette::~Palette_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a2c0_jgld_Palette_~Palette_five.path1.csv`); Palette::~Palette_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a2c0_jgld_Palette_~Palette_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `??1Palette@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a34f): callee pops 0 bytes of stack arguments.

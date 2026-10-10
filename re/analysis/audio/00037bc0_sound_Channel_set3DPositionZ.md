@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00037bc0`), 34 bytes, 11 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Forwards param_1 to Ds3DBuffer::setPositionZ on buffer +0x54 under the +0x5c bit5 / non-null guard; else SNDERR 0xb. (`re/names/sound_7.tsv`)
 
+## Purpose
+The Z twin: flag test at 0x10037bc0 (`je` at 0x10037bc4), buffer test at 0x10037bc6 (`je` at 0x10037bcb), `call 0x100014e2` (0x10037bd2, a thunk to Ds3DBuffer::setPositionZ 0x10011110), else 0xb (0x10037bda). The callee stores Z at buffer+0xd0 and passes (buffer+0xc8, buffer+0xcc, z, 0) to the interface slot +0x4c. Its one caller is MultiSound::set3DPositionZ 0x1003a650. GREEN over 42 vectors, 19 distinct results, 18 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: Channel_set3DPositionZ (42 vectors, 19 distinct results, 18 changing state, `log/diff/00037bc0_sound_Channel_set3DPositionZ.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10037bc0@C_FUN_10037bc0@f_10037bc0@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10037bd7, 0x10037bdf): callee pops 4 bytes of stack arguments.

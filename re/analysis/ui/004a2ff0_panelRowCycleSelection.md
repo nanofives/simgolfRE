@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 65 bytes, 17 instructions, subsystem `ui`. Mechanical t
 when the fields at +0xb4 and +0xac of the base this + [[this-0x8c]+4] are both non-zero and the object at [+0xb0]+4 is non-NULL, tail-calls that object's virtual +0x128 (slot 74); otherwise calls Container::cycleSelection 0x0047af60 with the object address minus 0x8c (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Pass focus cycling on to a panelRow's linked item, or fall back to the container's own cycling. With R = this, the vbtable at R-0x8c gives d = entry +4 (0x004a2ff0 / 0x004a2ff6) and X = R + d (0x004a2ff9). When the dwords X+0xb4 (0x004a2ffc..0x004a3005) and X+0xac (0x004a3007..0x004a300f) are both non-zero and the object Z = [[X+0xb0]+4] (0x004a3011 / 0x004a3017) is not null (0x004a301a / 0x004a301c), it tail-jumps to Z's slot +0x128 (0x004a3020), the slot index (74) it occupies itself. Otherwise it tail-jumps to Container::cycleSelection 0x0047af60 with this = X-0x8c (0x004a3026 / 0x004a302c). Reached from slot 74 of 0x004bc0a8 (through panelRowCycleSelection_vtordisp 0x004a30b0) and viewDispatchCycleSelection's tag-4 case (0x004a10ff). Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: panelRowCycleSelection (6 vectors, 6 distinct results, 2 changing state, `log/diff/004a2ff0_panelRowCycleSelection.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x004a2ff0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

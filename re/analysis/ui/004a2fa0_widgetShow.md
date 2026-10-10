@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 70 bytes, 26 instructions, subsystem `ui`. Mechanical t
 shows or hides the widget by setting its visibility flag. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Show or hide a panelRow's child widgets through their slot +0xf0. With R = this, the ten child pointers sit at R-0x88 .. R-0x64 (`lea esi, [ecx-0x88]` at 0x004a2fc0, count 0xa at 0x004a2fc6). A non-zero argument (0x004a2fa4 / 0x004a2fa6) goes only to the first child [R-0x88] (0x004a2fa8): when it is set (0x004a2fae / 0x004a2fb0) its slot +0xf0 is called with the argument and that result returned (0x004a2fb2..0x004a2fb5); when it is null the argument itself is returned (eax loaded at 0x004a2fa0). A zero argument calls slot +0xf0 with 0 on every non-null child (0x004a2fcb..0x004a2fd5, step 4 at 0x004a2fdb) and returns the last call's eax, or 0 when no child is set. It is slot 60 of panelRow's table 0x004bc0a8 (through widgetShow_vtordisp 0x004a30a0) and viewDispatchSlot60's tag-4 case (0x004a105c). Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: widgetShow (24 vectors, 15 distinct results, 11 changing state, `log/diff/004a2fa0_widgetShow.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?show@C4a2fa0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a2fbb, 0x004a2fe3): callee pops 4 bytes of stack arguments.

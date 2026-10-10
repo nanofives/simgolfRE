@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 calls hotHitCb3 0x004a44b0 with this-0x8c and the two arguments when the tag at this-8 is 8 (0x004a0e20); every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 33 of the composite view (table 0x004bb8d0, through viewDispatchSlot33_vtordisp 0x004919e0): only the panelSub sub-object acts on it. When the tag at this-8 is 8 (`cmp dword ptr [ecx-8], 8` at 0x004a0e20, `jne` at 0x004a0e24) it calls hotHitCb3 0x004a44b0 on this-0x8c with the two stack arguments (0x004a0e30 / 0x004a0e36); any other tag returns at once (`ret 8` at 0x004a0e3b) with eax as the caller left it, so the registry declares it void and the A/B compares the recorded calls. Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchSlot33 (53 vectors, 7 distinct results, 6 changing state, `log/diff/004a0e20_viewDispatchSlot33.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0e3b): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0e20 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 176 bytes, 69 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Feed the compressor one iMCU row at a time (jcmainct.c, single-pass mode). While cur_iMCU_row (main+8, main = cinfo+0x148) is below total_iMCU_rows (cinfo+0xe8, unsigned: 0x004b0659 / 0x004b06d2), it calls prep->pre_process_data (cinfo+0x14c slot +4, 0x004b0684) with (cinfo, input_buf, in_row_ctr, in_rows_avail, main+0x18, &rowgroup_ctr, 8) unless rowgroup_ctr (main+0xc) is already 8 or more (unsigned, 0x004b0669), and returns unless rowgroup_ctr is then exactly 8 (0x004b068f). coef->compress_data (cinfo+0x150 slot +4, 0x004b069c) gets (cinfo, main+0x18): a 0 return moves *in_row_ctr back by one and sets suspended (main+0x10) unless it was already set (0x004b06db..0x004b06e4) and returns; a success after a suspension moves *in_row_ctr forward again and clears the flag (0x004b06ab..0x004b06b4); then rowgroup_ctr is cleared and cur_iMCU_row incremented (0x004b06be / 0x004b06c5). Installed by start_pass_main 0x004b05f0 (`mov [eax+4], 0x4b0640` at 0x004b0636). Reimplemented in `shim/src/re/c3cv.cpp`; path-1 A/B GREEN: process_data_simple_main (14 vectors, 12 distinct results, 11 changing state, `log/diff/004b0640_process_data_simple_main.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cmainct.cpp` as `_process_data_simple_main` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b06d8, 0x004b06ef): callee pops 0 bytes of stack arguments.

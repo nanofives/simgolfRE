@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006af50`), 81 bytes, 33 instructions, subsystem `rend
 Slot-0 scalar deleting destructor of PaletteBase. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Scalar deleting destructor of PaletteBase, slot 0 of its vtable 0x1011db3c: PaletteBase::dtor 0x1006af00 (0x1006af70, thunk 0x100019b0), operator delete of the object when flags bit 0 is set (`and eax,1` 0x1006af78, `je` 0x1006af7d, call 0x1006af83), returns the object (`ret 4` 0x1006af9e). Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: PaletteBase::deletingDtor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af50_jgld_PaletteBase_deletingDtor_empty.path1.csv`); PaletteBase::deletingDtor_one (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af50_jgld_PaletteBase_deletingDtor_one.path1.csv`); PaletteBase::deletingDtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af50_jgld_PaletteBase_deletingDtor_five.path1.csv`); PaletteBase::deletingDtor_fivehead (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006af50_jgld_PaletteBase_deletingDtor_fivehead.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006af50@C_FUN_1006af50@f_1006af50@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006af9e): callee pops 4 bytes of stack arguments.

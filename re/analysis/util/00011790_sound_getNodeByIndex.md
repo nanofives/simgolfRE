@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00011790`), 93 bytes, 34 instructions, subsystem `uti
 Returns the list node at the given index by walking the list at +4 (links +0x10); returns 10 past the count +0x148. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+`__thiscall(unsigned index, char *dst, unsigned count)` (`ret 0xc` at every exit), called by Wave_Device::deviceName 0x1000e260. The index is compared UNSIGNED with the node count at this+0x148 (`jb` at 0x1001179c); at or above it returns 0xa (0x1001179e). A null list head at this+4 returns 3 (0x100117a9, 0x100117ad). The walk follows the link at node+0x10 index times (0x100117b5..0x100117c5, skipped for index 0 by `jbe` at 0x100117b9) and returns 3 when it meets a null node (`je` at 0x100117bd) or ends on one (`jne` at 0x100117c9). The node's first dword, a string, is copied with `call 0x10042710` (0x100117e0, _strncpy(dst, string, count), cdecl) and 0 is returned (0x100117e8). GREEN over 108 vectors, 21 distinct, 18 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: getNodeByIndex (108 vectors, 21 distinct results, 18 changing state, `log/diff/00011790_sound_getNodeByIndex.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x100117a3, 0x100117b2, 0x100117d0, 0x100117ea): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10011794 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

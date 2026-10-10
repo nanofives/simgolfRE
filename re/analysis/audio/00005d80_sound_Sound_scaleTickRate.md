@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00005d80`), 18 bytes, 6 instructions, subsystem `audi
 calls Seq_scaleTickRate 0x1000269e with this+0x60 and the argument, then returns 0 (`re/names/undisc_sound.tsv`)
 System writeup: `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+Slot 1 (+0x4) of the Sound vtable 0x1005b000 (installers Sound::ctor 0x10003f30, Sound::dtor 0x10004000). `__thiscall(unsigned rate)` (`ret 4` at 0x10005d8f): the argument is pushed (0x10005d87) with ecx = this+0x60 (0x10005d84) for `call 0x1000269e` (0x10005d88, a thunk to Seq_scaleTickRate 0x1001e630), then `xor eax, eax` (0x10005d8d) returns 0 whatever the callee did. The A/B shows the sequencer at this+0x60 rescaled: +0x1d4 (= Seq+0x174) written from +0x1dc (= Seq+0x17c). No conditional branch of its own. GREEN with periods 10 (30 vectors, 12 distinct (result, state) pairs), 4096 (8) and 1 (18), every vector changing state; the null key writes nothing; all four GREEN with the callee's hook off. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: Sound::scaleTickRate (30 vectors, 12 distinct results, 30 changing state, `log/diff/00005d80_sound_Sound_scaleTickRate.path1.csv`); Sound::scaleTickRate_p4096 (30 vectors, 8 distinct results, 30 changing state, `log/diff/00005d80_sound_Sound_scaleTickRate_p4096.path1.csv`); Sound::scaleTickRate_p1 (30 vectors, 18 distinct results, 30 changing state, `log/diff/00005d80_sound_Sound_scaleTickRate_p1.path1.csv`); Sound::scaleTickRate_null (30 vectors, 1 distinct results, 0 changing state, `log/diff/00005d80_sound_Sound_scaleTickRate_null.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10005d8f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10005d84 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

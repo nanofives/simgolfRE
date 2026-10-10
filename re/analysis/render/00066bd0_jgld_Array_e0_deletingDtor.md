@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00066bd0`), 81 bytes, 33 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 Slot-0 scalar deleting destructor: runs Array_e0::dtor then operator delete when bit0 is set. (`re/names/jgld_3.tsv`)
 
+## Purpose
+Scalar deleting destructor of Array<e0>, slot 0 of its vtable 0x1011da58: it runs Array_e0::dtor 0x100669e0 (call 0x10066bf0, thunk 0x10001771), then, when bit 0 of its flags argument is set (`and eax,1` 0x10066bf8, `je` 0x10066bfd), hands the object itself to operator delete 0x1007e6d0 (0x10066c03), and returns the object pointer (0x10066c0b, `ret 4`). The other 31 flag bits are not read. Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: Array_e0::deletingDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066bd0_jgld_Array_e0_deletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066bd0@C_FUN_10066bd0@f_10066bd0@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10066c1e): callee pops 4 bytes of stack arguments.

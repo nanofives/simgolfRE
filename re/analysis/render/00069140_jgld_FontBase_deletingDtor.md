@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069140`), 81 bytes, 33 instructions, subsystem `rend
 Slot-0 scalar deleting destructor of FontBase. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Scalar deleting destructor of FontBase, slot 0 of its vtable 0x1011da90: FontBase::~FontBase 0x10069010 (0x10069160, thunk 0x1000108c), operator delete of the object when flags bit 0 is set (`and eax,1` 0x10069168, `je` 0x1006916d, call 0x10069173), returns the object (`ret 4` 0x1006918e). Reimplemented in `shim/src/re/c3cw.cpp`; path-1 A/B GREEN: FontBase::deletingDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069140_jgld_FontBase_deletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10069140@C_FUN_10069140@f_10069140@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006918e): callee pops 4 bytes of stack arguments.

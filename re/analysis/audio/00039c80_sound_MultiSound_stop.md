@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039c80`), 8 bytes, 2 instructions, subsystem `audio
 Stops the embedded Channel voices (+0x70). (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Slot 12 (+0x30) of the MultiSound vtable 0x1005c7e8: `add ecx, 0x70` (0x10039c80) and a tail `jmp 0x100024d7` (0x10039c83), a thunk to Channel_stopVoices 0x10034b90; the channel's result is the result. No conditional branch of its own. The A/B exercises the callee's three outcomes through the channel's +0x58 (this+0xc8): 0x15 without bit 6 or with bit 4 (0x10034b96, 0x10034b9e), the per-voice loop with bit 0 (0x10034ba4..0x10034bfe) and the arm without bit 0 that ORs 8 into +0x58 / +0x5c and moves +0x1e0 / +0x1e4 to +0x210 / +0x214 (0x10034c06..0x10034c33). GREEN over 7 vectors, 6 distinct, 4 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound_stop (7 vectors, 6 distinct results, 4 changing state, `log/diff/00039c80_sound_MultiSound_stop.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10039c80@f_10039c80@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

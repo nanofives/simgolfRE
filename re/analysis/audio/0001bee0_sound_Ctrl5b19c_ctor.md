@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001bee0`), 295 bytes, 74 instructions, subsystem `au
 installs base vtable 0x1005b19c at +0x2c, a 4cc tag at +0x30, inits embedded PtrList at +0xc, stores 12 bytes of params at +0x5c..+0x67 (SEH frame) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+`__thiscall` with thirteen stack arguments (`ret 0x34` at 0x1001c004), called by the five dynamic initializers 0x1001b510, 0x1001b6b0, 0x1001b710, 0x1001b770 and 0x1001b7d0; returns this (0x1001bff6). It calls PtrList_init 0x1001d130 on this+0xc (`call 0x10001235` at 0x1001bf01), which zeroes four dwords; stores +4 = 0x18, +8 = +0x20 = +0x3c = +0x58 = 0x44444444, +0x28 = 0, +0x1c = 0xc, +0x40 = +0x4c = +0x50 = -1, +0x30 = 0x6c727463, the word +0x44 = 0, +0x38 = 0x18 (0x1001bf10..0x1001bf54); copies the low bytes of arguments 1..12 to +0x5c..+0x67 (0x1001bf57..0x1001bfbe); sets the vtable +0 = 0x1005b5c0 (0x1001bfae) and +0x2c = 0x1005b59c (0x1001bfb4, over the 0x1005b19c it wrote at 0x1001bf2a); calls Ctrl5b5c0_transposeTable 0x1001c1e0 with 0 (`call 0x1000204a` at 0x1001bfc1), whose body (0x1001c1e0..0x1001c23b) fills +0x68..+0xdb from the twelve bytes; then +0x48 = 3, +0xe0 = 0, +0x34 = 0xe4, +0xdc = argument 13 and +0x54 = 0x8c (0x1001bfca..0x1001bfef). The SEH frame set up at 0x1001bee0..0x1001beee is unlinked at 0x1001bffa; neither callee raises. GREEN over 10 vectors, 10 distinct, all changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: Ctrl5b19c_ctor (10 vectors, 10 distinct results, 10 changing state, `log/diff/0001bee0_sound_Ctrl5b19c_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x34` (at 0x1001c004): callee pops 52 bytes of stack arguments.
 - `ecx` is read at 0x1001bef5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

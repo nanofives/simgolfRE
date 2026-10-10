@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to hotHitCb6 0x004a4570 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+The vtordisp this-adjustor that enters hotHitCb6 from slot 39 of panelSub's table 0x004bc244: `sub ecx, dword ptr [ecx-4]` at 0x004a4a60 subtracts the displacement stored just below the received sub-object, then `jmp 0x004a4570` at 0x004a4a63 enters hotHitCb6 with the stack arguments untouched. The table is installed by panelSubCtor4a3110 0x004a3110 and panelSubDtor4a3480 0x004a3480 (re/tools/pointer_callers.py). Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: hotHitCb6_vtordisp (55 vectors, 14 distinct results, 14 changing state, `log/diff/004a4a60_hotHitCb6_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x004a4a60 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

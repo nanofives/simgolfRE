@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 117 bytes, 26 instructions, subsystem `ui`. Mechanical 
 for tags 1, 2, 8 and 0x10 calls Container::cycleSelection 0x0047af60 with the address this + [[this-0x1f8]+4] - 0x1f8; tag 4 is an inline copy of panelRowCycleSelection 0x004a2ff0 at this-0x4, which tail-calls the virtual +0x128 of the object at [+0xb0]+4 when the fields at +0xb4 and +0xac are non-zero and otherwise calls Container::cycleSelection; every other tag returns. Slot 74 of the base table is Container::cycleSelection itself (0x004bb388 in the ListBox table 0x004bb260) (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 74 of the composite view (table 0x004bb8d0, through viewDispatchCycleSelection_vtordisp 0x00491a60): cycle focus in the sub-object the tag names (byte map 0x004a1120, jump table 0x004a1108). Tags 1, 2, 8 and 0x10 reach four identical blocks (0x004a10d2, 0x004a10bd, 0x004a10e7, 0x004a10a8) that read the vbtable at this-0x1f8, add its entry +4 and tail-jump to Container::cycleSelection 0x0047af60 on this-0x1f8+entry (0x004a10a8..0x004a10b8); tag 4 tail-jumps to panelRowCycleSelection 0x004a2ff0 on this-4 (0x004a10fc / 0x004a10ff); every other tag returns tag - 1 (0x004a1104). Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchCycleSelection (33 vectors, 27 distinct results, 2 changing state, `log/diff/004a1090_viewDispatchCycleSelection.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a1104): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004a1090 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00047103`), 69 bytes, 19 instructions, subsystem `crt
 Marks a region-heap block free: adds its size back into the page-group free count, sets the entry to 0xf1, and when a 4 KB page becomes fully free bumps g_sbhFreePageCount and triggers a 0x10-page decommit once it reaches 0x20. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+`__cdecl(region, page, map byte)` of the old small-block heap, called by free 0x10042c07 and crtRealloc 0x10045252. The page entry (computed as in sbhResizeBlock, 0x10047103..0x10047111) gains the map byte's length in its free count (0x10047119, 0x1004711c), the map byte is cleared (0x1004711e) and entry+4 = 0xf1 (0x10047127). When the count is then exactly 0xf0 (`jne` at 0x1004712e not taken) the module counter 0x100b5590 is incremented (0x10047130), and when that reaches exactly 0x20 (`jne` at 0x1004713d not taken) sbhRegionDecommit 0x10046fea runs with 0x10 (0x1004713f, 0x10047141). Nothing is loaded into eax for a return value (it keeps the entry address from 0x10047111), so the registry declares ret="void". In the A/B the decommit call reads the old heap's static region 0x100653d8, whose page base 0x100653e8 is 0xffffffff (`je 0x10047095` at 0x10046ffb) and whose next pointer is itself, so it returns without a write. GREEN over 10 + 10 vectors, 10 distinct each, all changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: sbhPageFree (10 vectors, 10 distinct results, 10 changing state, `log/diff/00047103_sound_sbhPageFree.path1.csv`); sbhPageFree_c1f (10 vectors, 10 distinct results, 10 changing state, `log/diff/00047103_sound_sbhPageFree_c1f.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10047147): callee pops 0 bytes of stack arguments.
 

@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00011760`), 28 bytes, 16 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Calls IDirectSound::GetCaps (vtbl+0x10) into +0xc and returns the stored result field +0x54. (`re/names/sound_2.tsv`)
 
+## Purpose
+`__thiscall` with nothing pushed (`ret` at 0x10011777, 0x1001177b), called by Wave_Device::caps 0x1000e230 on the DirectSound device object. The interface pointer at this+0 is tested (0x10011765, `je` at 0x10011767): null returns 0 (0x10011778). Otherwise the interface's vtable slot +0x10 is called COM-style with the interface and the address this+0xc pushed (0x1001176b..0x10011770), its result is not read, and the dword at this+0x54 is returned, read after the call (0x10011773), i.e. whatever the slot left at offset 0x48 of the caps block that starts at this+0xc. GREEN over 12 vectors (the leaf rule), 10 distinct, 9 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: getDeviceCaps (12 vectors, 10 distinct results, 9 changing state, `log/diff/00011760_sound_getDeviceCaps.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10011777, 0x1001177b): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10011761 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

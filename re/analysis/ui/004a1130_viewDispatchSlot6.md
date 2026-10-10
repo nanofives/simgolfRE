@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 55 bytes, 17 instructions, subsystem `ui`. Mechanical t
 runs only for tag 2: an inline copy of ListBox::fwdInnerVfn20 0x0048cbf0 with every offset shifted by -0x1a0 (vbtable pointer at this-0x1f8, flag byte at this-0x15c tested for 0x40 at 0x004a114f, child at this-0xc8), returning the child's virtual +0x20; every other tag returns 0 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 6 of the composite view (table 0x004bb8d0, through viewDispatchSlot6_vtordisp 0x00491940): only the ListBox sub-object answers, with ListBox::fwdInnerVfn20 0x0048cbf0 written in place at offsets shifted by -0x1a0. Any tag other than 2 returns 0 (0x004a1133 / 0x004a1136 / 0x004a1164). For tag 2 the vbtable at this-0x1f8 gives d (entry +4, 0x004a1138 / 0x004a113e); when bit 0x40 of the byte at this+d-0x15c is set (0x004a1148 / 0x004a114f / 0x004a1152) and the pointer at this+d-0x1a0+0xd8 is not null (0x004a1141 / 0x004a1154 / 0x004a115c), that object's slot +0x20 is called and its eax returned (0x004a115e / 0x004a1160); otherwise 0. Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchSlot6 (33 vectors, 4 distinct results, 3 changing state, `log/diff/004a1130_viewDispatchSlot6.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a1163, 0x004a1166): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004a1130 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

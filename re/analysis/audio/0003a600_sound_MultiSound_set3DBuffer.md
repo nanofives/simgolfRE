@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0003a600`), 28 bytes, 12 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 stores its argument through the thunk 0x10001e7e, then calls Channel_set3DBufferStub 0x100025c7 on this+0x70 (`re/names/undisc_sound.tsv`)
 
+## Purpose
+Slot 59 (+0xec) of the MultiSound vtable 0x1005c7e8, `__thiscall` with one stack argument (`ret 4` at 0x1003a619). The argument (read at 0x1003a602) is pushed twice: first for `call 0x10001e7e` (0x1003a609, a thunk to 0x1002c270) with ecx still `this`, which stores it at this+0x60 (0x1002c274) and forwards it to the object at this+0x40 through that object's vtable slot +0xec (0x1002c281) when the pointer is non-null; then for `call 0x100025c7` (0x1003a612, a thunk to Channel_set3DBufferStub 0x10037c00) on the channel at this+0x70 (0x1003a60f). The first call's eax is discarded and the second call's is returned; Channel_set3DBufferStub returns 0xb on every path (directly at 0x10037c1a, or through stubReturnBC 0x10011160, `mov eax, 0xb`), so the result is always 0xb and the evidence is this+0x60 and the device's call record. No conditional branch of its own. GREEN over 35 vectors, 35 distinct (result, state) pairs, all 35 changing state. Reimplemented in `shim/src/re/c3cx.cpp`; path-1 A/B GREEN: MultiSound::set3DBuffer (35 vectors, 35 distinct results, 35 changing state, `log/diff/0003a600_sound_MultiSound_set3DBuffer.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1003a619): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1003a606 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

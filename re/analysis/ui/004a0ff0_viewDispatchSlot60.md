@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 116 bytes, 32 instructions, subsystem `ui`. Mechanical 
 selects on the 32-bit tag at this-8 and calls the matching sub-view's slot-60 method: 1 -> the unnamed 0x0049fd80 (this-0x168), 2 -> the unnamed 0x00487af0 (this-0x1a0), 4 -> widgetShow 0x004a2fa0 (this-0x4) with the single argument, 8 -> the unnamed 0x004a4870 (this-0x8c), 0x10 -> the unnamed 0x0049e7b0 (this-0x180); every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/exe_8.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 60 of the composite view (table 0x004bb8d0, through viewDispatchSlot60_vtordisp 0x00491a50): route the one-argument call to the sub-object the tag names (byte map 0x004a107c, jump table 0x004a1064). Tag 1 calls 0x0049fd80 on this-0x168 (0x004a1032 / 0x004a1039), tag 4 widgetShow 0x004a2fa0 on this-4 (0x004a1058 / 0x004a105c), tag 8 0x004a4870 on this-0x8c (0x004a1045 / 0x004a104c), tag 0x10 0x0049e7b0 on this-0x180 (0x004a100c / 0x004a1013), each returning the callee's eax. Tag 2 calls 0x00487af0 on this-0x1a0 (0x004a101f / 0x004a1026), a single `ret 4`, so eax keeps u = tag - 1 = 1 from 0x004a0ff3. Every other tag returns tag - 1 (0x004a1061). The 0x0049fd80, 0x004a4870 and 0x0049e7b0 bodies each call slot +0x120 of the base their vbtable's entry +4 points at, without reading the argument. Reimplemented in `shim/src/re/c3cu.cpp`; path-1 A/B GREEN: viewDispatchSlot60 (99 vectors, 32 distinct results, 45 changing state, `log/diff/004a0ff0_viewDispatchSlot60.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004a1018, 0x004a102b, 0x004a103e, 0x004a1051, 0x004a1061): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004a0ff0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
