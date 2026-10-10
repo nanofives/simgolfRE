@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 161 bytes, 72 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 fetches a surface/object by descriptor (`re/names/exe_2.tsv`)
 
+## Purpose
+The same record copy for the string at +0x20 (the dword at +0x1c is a plain value): dst+4 takes +0x1c (0x00474659 / 0x0047465c). A NULL string stores NULL in dst+8 and +0x24 in dst+0xc and returns 0 (0x00474662-0x00474673). Otherwise strlen + 1 bytes come from heapAlloc 0x00474860 when +0x18 is set (0x00474677-0x0047468a) else from malloc 0x004a504f (0x00474691-0x0047469b), are stored in dst+8 even when NULL (0x004746a5), NULL returns 4 (0x004746ac), else the block gets a NUL and the string (0x004746b5-0x004746e0), dst+0xc takes +0x24 (0x004746e2 / 0x004746e7) and the result is 0. No static caller; the gate takes the installer of the slot-0 table at 0x004bc3b4 (`pointer_callers.py`: panelSubCtor4a3110 0x004a3110). Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: Surface_get (16 vectors, 16 distinct results, 16 changing state, `log/diff/00474650_Surface_get.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?get@C474650@@QAEHPAUO474650@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00474674, 0x004746b2, 0x004746ee): callee pops 4 bytes of stack arguments.

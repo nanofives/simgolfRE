@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000a170`), 36 bytes, 10 instructions, subsystem `aud
 Stores g_soundTimer at obj+0x2c, registers the object as a timer client and starts the multimedia timer. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+0x0000a170 registerTimerClient (VA 0x1000a170). The module pointer g_soundTimer 0x100b49ec (0x1000a170): NULL returns 0 (the value in eax, 0x1000a193). Otherwise it is stored at this+0x2c (0x1000a179), SoundTimer::registerClient 0x100088e0 (thunk 0x1000227a, ecx = the timer, argument = this, 0x1000a183) runs, the global is read again (0x1000a188) and SoundTimer::start 0x10008ce0 (thunk 0x10001dfc) is reached by a tail jump (0x1000a18e), so its result is the result. Reached from: no call xref; reached through a stored pointer: 0x1005b2dc table slot 20 (+0x50) of the table at 0x1005b28c; installers: 0x10009a90 Dll_Midi_Device::create_device, 0x10009be0 Midi_Device::ctor, 0x10009cb0 Midi_Device::dtor. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: registerTimerClient_ok (6 vectors, 6 distinct results, 6 changing state, `log/diff/0000a170_sound_registerTimerClient_ok.path1.csv`); registerTimerClient_busy (6 vectors, 6 distinct results, 6 changing state, `log/diff/0000a170_sound_registerTimerClient_busy.path1.csv`); registerTimerClient_null (6 vectors, 1 distinct results, 0 changing state, `log/diff/0000a170_sound_registerTimerClient_null.path1.csv`); registerTimerClient_bp61 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0000a170_sound_registerTimerClient_bp61.path1.csv`); registerTimerClient_se61 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0000a170_sound_registerTimerClient_se61.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_07.cpp` as `?FUN_1000a170@f_1000a170@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a193): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038fd0`), 89 bytes, 26 instructions, subsystem `aud
 if message==0x3c0, posts WIM_DATA (0x7f0) either to window g_100b49c0 (when the engine g_100b4a20 flag bit5 set) or to the sound thread via postSoundThreadMessage(g_100b5038) (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x00038fd0 onWaveInCallbackMessage (VA 0x10038fd0). stdcall, five stack arguments (`ret 0x14`). Only the low word of the second argument is compared with 0x3c0 (WIM_DATA, `cmp word ptr [esp+8], 0x3c0` 0x10038fd0); any other message returns at once (0x10039026), leaving eax as it was. With 0x3c0 and an engine whose flag word +0x1a4 has bit 5 set (0x10038fd9-0x10038feb): PostMessageA [0x100b85a0] (the window word 0x100b49c0, 0x7f0, the fourth argument, the third) (0x10038fef-0x10039004); its result is the function's. Without that bit the sound-thread post on 0x100b5038 runs (0x1003900d-0x10039021). The A/B covers the PostMessageA arm (live engine flag word 0x20), as for postMidiNotification. Reached from: no call xref; reached through a stored pointer: 0x1003906e store target 0x1000179e written by code; installers: 0x10039050 WaveInDevice_open. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: onWaveInCallbackMessage (16 vectors, 3 distinct results, 4 changing state, `log/diff/00038fd0_sound_onWaveInCallbackMessage.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x1003900a, 0x10039026): callee pops 20 bytes of stack arguments.
 

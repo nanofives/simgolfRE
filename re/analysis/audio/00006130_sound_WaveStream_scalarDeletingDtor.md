@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006130`), 30 bytes, 11 instructions, subsystem `aud
 Scalar deleting destructor: calls WaveStream::destroy and frees the object when the low bit of the flag is set. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00006130 WaveStream::scalarDeletingDtor (VA 0x10006130). WaveStream::destroy 0x10006160 (thunk 0x10002518, 0x10006133); when bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x10006138) is set operator delete releases the object (0x10006140); returns this (0x10006148). Reached from: no call xref; reached through a stored pointer: 0x1005b1c0 table slot 0 (+0x0) of the table at 0x1005b1c0; installers: 0x10006020 WaveStream::ctor, 0x10006160 WaveStream::destroy. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: WaveStream::scalarDeletingDtor (39 vectors, 26 distinct results, 39 changing state, `log/diff/00006130_sound_WaveStream_scalarDeletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10006130@C_FUN_10006130@f_10006130@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000614b): callee pops 4 bytes of stack arguments.

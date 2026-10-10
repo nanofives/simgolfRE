@@ -1,0 +1,8 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0,obj+0xff80da20,obj+0xff80da20,True,7b560db5,7b560db5,True
+$mdata,obj+0xff80da20,obj+0xff80da20,True,7b560db5,7b560db5,True
+state_regions,$g14+0x0:20 $g94+0x0:20 $mdata+0x0:2048 $arena+0x0:8208 $freelog+0x0:1028 $implog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71e5e000,original=0x14b0060,2026-10-10T12:15:33
+distinct_results,1,,
+VERDICT,GREEN,2,

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 49 bytes, 20 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 destructor: resets fields (m_38/m_3c=0, m_40=-1) and frees the buffer m_34 (`re/names/exe_3.tsv`)
 
+## Purpose
+Resets a stream: +4, +0x38 and +0x3c are cleared and +0x40 becomes -1 (0x00482dd9 / 0x00482dde / 0x00482de1 / 0x00482de4); an object at +0x34 (0x00482dd6 / 0x00482deb) is destroyed through its vtable slot 0 with the argument 3 (0x00482ded-0x00482df1) and the field cleared (0x00482df3); Surface_free 0x00473ae0 then runs on the Surface at +8 (0x00482df6 / 0x00482df9). Callers: R2C404280_dtor 0x00404280, C404200_dtor 0x00404200, resetPair 0x004041c0, 0x00482b90. Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: Stream482dd0::dtor (16 vectors, 16 distinct results, 16 changing state, `log/diff/00482dd0_Stream482dd0_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `??1C482dd0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00482e00): callee pops 0 bytes of stack arguments.

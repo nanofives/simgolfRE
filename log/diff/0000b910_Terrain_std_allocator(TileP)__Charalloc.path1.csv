@@ -13,6 +13,6 @@ $tl0 7,obj+0x10,obj+0x10,True,f6ab4bc2,f6ab4bc2,True
 $tl0 1024,obj+0x10,obj+0x10,True,2f2ba5f8,2f2ba5f8,True
 state_regions,$tblk+0x0:4096 $arena+0x0:4112 $freelog+0x0:1028,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x71e4e010,original=0x14701c0,2026-10-10T10:59:27
+meta,detour=0x71e4f7f0,original=0x2a30b00,2026-10-10T12:22:07
 distinct_results,12,,
 VERDICT,GREEN,12,

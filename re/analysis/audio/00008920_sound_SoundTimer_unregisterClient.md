@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008920`), 147 bytes, 57 instructions, subsystem `au
 Under g_100b4990, unlinks a client object from the timer's client list. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00008920 SoundTimer::unregisterClient (VA 0x10008920). EnterCriticalSection (0x10008929), then the client list is walked from the front at this+0x4c (0x1000892f) through the nodes' +4 links (0x1000893f) for the node whose +8 equals the stack argument (0x1000893a). Found: the node is unlinked (previous +0 (0x1000896e): the previous node's +4 takes the node's +4 (0x10008977), or the front at +0x4c takes it (0x1000897f); next +4 (0x10008982): that node's +0 takes the node's +0 and the cursor at +0x54 becomes it (0x1000898b / 0x1000898d), or with no next the cursor +0x54 is cleared and the back at +0x50 takes the node's +0 (0x10008994 / 0x1000899b)), the node is released by operator delete 0x1004249a (0x100089a3) and the count at +0x58 is decremented (0x100089ab). LeaveCriticalSection (0x1000894d), then the client's own virtual slot +0xc is called with the client in ecx (`mov edx, [ebx]` 0x10008953, `call [edx+0xc]` 0x10008957) whether or not the client was found. The result is 0 when a node was found (esi = the node's +8, never 0 here) and 0x14 otherwise (`neg eax; sbb eax, eax; and al, 0xec; add eax, 0x14` 0x1000895d-0x10008964). Reached from: static callers 0x1000b960, 0x1000bef0, 0x1000c020, 0x1000ec00, 0x10009e40. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: SoundTimer::unregisterClient (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008920_sound_SoundTimer_unregisterClient.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10008967): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10008922 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

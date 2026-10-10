@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067e80`), 64 bytes, 28 instructions, subsystem `rend
 Virtual wrapper that forwards its two pointer args to createPalette 0x1006aa70. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Slot 48 (+0xc0) of the Display vtable 0x1011d640: forwards its two arguments to createPalette 0x1006aa70 (thunk 0x100019d3, 0x10067ea5) and returns that result, still in eax at the `ret 8` (0x10067ebd). `this` is not read. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Display::createPalette_ok (4 vectors, 4 distinct results, 4 changing state, `log/diff/00067e80_jgld_Display_createPalette_ok.path1.csv`); Display::createPalette_null (4 vectors, 1 distinct results, 4 changing state, `log/diff/00067e80_jgld_Display_createPalette_null.path1.csv`); Display::createPalette_oom (4 vectors, 1 distinct results, 4 changing state, `log/diff/00067e80_jgld_Display_createPalette_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10067e80@C_FUN_10067e80@f_10067e80@@QAEXPAI0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10067ebd): callee pops 8 bytes of stack arguments.

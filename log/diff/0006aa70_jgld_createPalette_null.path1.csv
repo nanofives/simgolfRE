@@ -1,0 +1,12 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$c0 $c1,1,1,True,06a01b17,06a01b17,True
+$c2 $c3,1,1,True,06a01b17,06a01b17,True
+$c4 $c4,1,1,True,06a01b17,06a01b17,True
+$c7 $c0,1,1,True,06a01b17,06a01b17,True
+$c5 $c6,1,1,True,06a01b17,06a01b17,True
+$c1 $c2,1,1,True,06a01b17,06a01b17,True
+state_regions,$clients+0x0:512 $gpal+0x0:12 $arena+0x0:1072 $freelog+0x0:1028 $implog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71e0dab0,original=0x2ef0f60,2026-10-10T12:15:24
+distinct_results,1,,
+VERDICT,GREEN,6,

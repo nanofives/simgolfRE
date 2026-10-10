@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 49 bytes, 19 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 finds the color range in Table483 and starts its cycling timer (Timer486::start) (`re/names/exe_3.tsv`)
 
+## Purpose
+Starts the multimedia timer of one colour-cycle record. The id's slot among the five 16-byte records at this + 8 comes from 0x004833f0 (`push edi` 0x004832e8, call 0x004832e9; the scan stops at the first matching id (`je` 0x004833fe), at an id of -1 (`je` 0x00483403) or after five records (`jl` 0x0048340c)). The record is this + 16 * index (`shl eax, 4; add eax, esi` 0x004832ee / 0x004832f1); an id other than the argument (`cmp ecx, edi` 0x004832f6, `je` 0x004832fa) returns 0xb (0x004832fc). A match runs Timer::startMmPeriodic 0x00486dc0 on the Timer pointer at the record's +0xc (0x00483304 / 0x00483307) and returns 0 (0x0048330c); `ret 4` (0x0048330e). Caller: gameMain 0x0045baf0 (call 0x0045bf3d). Vectors: one key, 22 vectors over eight 0x80-byte tables (ids with and without a -1 sentinel, an id found only at the sixth record, ids absent, id -1 matching the sentinel) and eight Timers (intervals 10, 1000, 13, 0x32, 49, 777, 0x31, 10; two with both targets zero so the start returns 7 without an import). Branches: 0x004832fa `je` taken 17 / not 5; the callee's 0x004833fe taken 13 / not 57, 0x00483403 taken 2 / not 55, 0x0048340c taken 48 / not 7. Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: startColorCycle (22 vectors, 7 distinct results, 14 changing state, `log/diff/004832e0_startColorCycle.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00483301, 0x0048330e): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004832e6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

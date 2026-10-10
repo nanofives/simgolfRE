@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 80 bytes, 20 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: releases the rect array and destroys the tooltip Timer. (`re/names/exe_4.tsv`)
 
+## Purpose
+Destroys a HotList. It stores the HotList vtable 0x004bba74 at +0 (0x004928ed), calls HotList::releaseArray 0x00492830 (call 0x004928fb) and then Timer::dtor 0x00486ce0 on this + 0x20 (`lea ecx, [esi + 0x20]` 0x00492900, call 0x0049290b), whose result (0) is eax at the `ret` (0x0049291f). The SEH frame (0x004928d0-0x004928de, states at 0x004928f3 / 0x00492903) only matters when a callee throws. Callers include HotList::scalarDtor (call 0x004928b3), Image_dtor (calls 0x00474c7b / 0x00474c8e) and View_dtor (call 0x0047a493). Vectors: `HotList::dtor` and `_nodisp`, 12 vectors each, fixture `c3de_hl_arrays` (as releaseArray; the Timer rows add the KillTimer / timeKillEvent calls Timer::dtor -> Timer::reset -> Timer::stop makes). Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: HotList::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004928d0_HotList_dtor.path1.csv`); HotList::dtor_nodisp (12 vectors, 12 distinct results, 12 changing state, `log/diff/004928d0_HotList_dtor_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C492850@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049291f): callee pops 0 bytes of stack arguments.

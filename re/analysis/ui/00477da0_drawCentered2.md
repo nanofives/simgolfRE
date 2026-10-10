@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 192 bytes, 91 instructions, subsystem `ui`. Mechanical 
 draws centered text within x,y,w,h (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, five stack arguments (`ret 0x14`: 0x00477db6, 0x00477e1d, 0x00477e51, 0x00477e5d): text, x, y, width, len. A NULL text returns x (0x00477dac). A NULL base font +0x5c (0x00477dbe) or a font whose +4 is NULL (0x00477dc9) returns 3. The length is min(strlen(text), len) with strlen recomputed for each signed compare (0x00477ddf..0x00477e0f); a negative or zero result returns x (0x00477df3, 0x00477e13). Otherwise it measures the run with drawMarkupRun 0x00477280 (0x00477e24) and returns drawRichText 0x004775b0 (0x00477e48) at x + (width - w) / 2, the division truncating toward zero (cdq / sub / sar, 0x00477e36..0x00477e40). Callers: drawCenteredText 0x00404b70 / drawCenteredText2 0x00404bc0, Widget_draw2 0x004766a0, measureText3 0x00478530, drawTooltip 0x0047cdb0. Reimplemented in `shim/src/re/c3df.cpp`; path-1 A/B GREEN: drawCentered2 (98 vectors, 69 distinct results, 84 changing state, `log/diff/00477da0_drawCentered2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?drawCentered@R2C477da0@@QAEHPBDHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00477db6, 0x00477e1d, 0x00477e51, 0x00477e5d): callee pops 20 bytes of stack arguments.

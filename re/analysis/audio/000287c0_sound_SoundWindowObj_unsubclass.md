@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000287c0`), 55 bytes, 20 instructions, subsystem `aud
 fastcall(obj): if subclassed (flag obj+4 bit2) restores the saved WNDPROC via SetWindowLongA(obj+8,-4,obj+0xc) and clears obj+8/0xc and the flag bit. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x000287c0 SoundWindowObj_unsubclass (VA 0x100287c0). `this` holds a window handle at +8 (0x100287c3) and a saved window procedure at +0xc (0x100287d0); bit 2 of the flag byte at +4 says the window is subclassed (0x100287ca). With a handle and the bit set, SetWindowLongA [0x100b85a4] (hwnd, -4 GWL_WNDPROC, the saved procedure) restores it (pushes 0x100287d3-0x100287d6, call 0x100287d7); then +0xc and +8 are cleared and bit 2 of the byte at +4 (read again after the call, 0x100287dd) is cleared with a byte store (0x100287e7 / 0x100287f0). Returns 0 (0x100287f3). Reached from: static callers 0x1000b960. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: SoundWindowObj_unsubclass (12 vectors, 8 distinct results, 7 changing state, `log/diff/000287c0_sound_SoundWindowObj_unsubclass.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_100287c0@f_100287c0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100287f6): callee pops 0 bytes of stack arguments.

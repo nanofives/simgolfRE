@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067a90`), 145 bytes, 47 instructions, subsystem `ren
 allocates and constructs a Sprite object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 32 (+0x80) of the Display vtable 0x1011d640: allocates a 0x50-byte Sprite with operator new 0x1007f0f0 (0x10067ac4) and, when that succeeds (0x10067ad6 / 0x10067ada), constructs it with Sprite::ctorN 0x10014cd0 (thunk 0x100018de, 0x10067ae3) and its first argument as the owner; returns the sprite or 0 (0x10067aed). The second argument is popped (`ret 8` 0x10067b1e) and never read. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Factory::createSprite_new (4 vectors, 4 distinct results, 4 changing state, `log/diff/00067a90_jgld_Factory_createSprite_new.path1.csv`); Factory::createSprite_new_oom (4 vectors, 1 distinct results, 4 changing state, `log/diff/00067a90_jgld_Factory_createSprite_new_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?createSprite@Factory@@QAEPAUSprite@@PAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10067b1e): callee pops 8 bytes of stack arguments.

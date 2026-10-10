@@ -15,6 +15,6 @@ $b_ctx12,void,void,True,626cfdc1,626cfdc1,True
 $b_ctx13,void,void,True,4dee07bd,4dee07bd,True
 state_regions,$b_blk0+0x0:4096 $b_blk1+0x0:4096 $b_blk2+0x0:4096 $b_blk3+0x0:4096 $b_blk4+0x0:4096 $b_blk5+0x0:4096 $b_blk6+0x0:4096 $b_blk7+0x0:4096 $b_blk8+0x0:4096 $b_blk9+0x0:4096 $b_blk10+0x0:4096 $b_blk11+0x0:4096 $b_blk12+0x0:4096 $b_blk13+0x0:4096,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5ea6ed60,original=0x2ca0ac0,2026-10-09T00:39:17
+meta,detour=0x71d09240,original=0x3f20c20,2026-10-10T12:19:58
 distinct_results,14,,
 VERDICT,GREEN,14,

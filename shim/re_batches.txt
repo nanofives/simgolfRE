@@ -107,3 +107,8 @@ c3cz.cpp
 c3da.cpp
 c3db.cpp
 c3dc.cpp
+c3dd.cpp
+c3de.cpp
+c3df.cpp
+c3dg.cpp
+c3dh.cpp

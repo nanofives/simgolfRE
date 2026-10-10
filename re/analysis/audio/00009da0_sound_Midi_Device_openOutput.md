@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00009da0`), 72 bytes, 27 instructions, subsystem `aud
 Opens the MIDI output device (midiOutOpen, HMIDIOUT at +0x3c) when flag bit1 is set, and registers the device with the timer g_100b49ec. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00009da0 Midi_Device::openOutput (VA 0x10009da0). Two stack arguments (`ret 8`); bit 1 of the low byte of the second (`mov al, [esp+8]` 0x10009da0, `test al, 2` 0x10009da5) selects midiOutOpen [0x100b85f8] (&this[0x3c], -1, 0, 0, 0) (pushes 0x10009dab-0x10009db6, call 0x10009db7); a non-zero result returns 7 (0x10009dc1). Then, as registerTimerClient does, a non-NULL g_soundTimer (0x10009dca / 0x10009dcf) is stored at this+0x2c (0x10009dd3) and SoundTimer::registerClient (thunk 0x1000227a, ecx = the timer read again, argument = this, 0x10009ddd) runs. Returns 0 (0x10009de2). Reached from: no call xref; reached through a stored pointer: 0x1005b29c table slot 4 (+0x10) of the table at 0x1005b28c; installers: 0x10009a90 Dll_Midi_Device::create_device, 0x10009be0 Midi_Device::ctor, 0x10009cb0 Midi_Device::dtor. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Midi_Device::openOutput_ok (6 vectors, 6 distinct results, 6 changing state, `log/diff/00009da0_sound_Midi_Device_openOutput_ok.path1.csv`); Midi_Device::openOutput_fail (6 vectors, 3 distinct results, 6 changing state, `log/diff/00009da0_sound_Midi_Device_openOutput_fail.path1.csv`); Midi_Device::openOutput_null (6 vectors, 5 distinct results, 4 changing state, `log/diff/00009da0_sound_Midi_Device_openOutput_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_07.cpp` as `?FUN_10009da0@C_FUN_10009da0@f_10009da0@@QAEIIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10009dc7, 0x10009de5): callee pops 8 bytes of stack arguments.

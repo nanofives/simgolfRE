@@ -3,3 +3,5 @@ golf_clean.exe	0045b880	clearBuffers: its 10 vectors are one argument-free call 
 golf_clean.exe	00473bf0	Surface_blit: the copy path never runs in the A/B (rounds 2-3)
 golf_clean.exe	0042f1c0	propagateType11: one of 7 vectors does anything (round 3)
 sound.dll	00049604	crtValidatePointer: its result is decided by KERNEL32!IsBadWritePtr; only NULL and one valid pointer are testable without a fault (round 21)
+golf_clean.exe	00473cb0	Surface_drawScaled: GREEN, but its this+8 != 0 arm (loadImage, file I/O) never runs in the A/B (round 25, c3df)
+golf_clean.exe	00473e60	Image_draw: GREEN, but its this+8 != 0 arm (loadImage, file I/O) never runs in the A/B (round 25, c3df)

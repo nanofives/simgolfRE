@@ -91,6 +91,10 @@
     Memory.protect(e.slot, 4, e.prot);
   }
   function flush() { Object.keys(live).forEach(unpatch); }
+  // A key's own timer only reverts the patches that key made (token): otherwise key N's timer, firing after key N+1
+  // installed its stand-in, would unpatch key N+1's slots mid-run (the race c3dd found in the heap stand-in, 2026-10-10).
+  let nextToken = 1;
+  function flushToken(token) { Object.keys(live).forEach(function (k) { if (live[k].token === token) unpatch(k); }); }
 
   // The IAT slot of dll!name, read from the module's own import descriptors in memory: entry i of the name table
   // (OriginalFirstThunk) names slot i of the address table (FirstThunk). Frida's Module.enumerateImports() is not
@@ -144,6 +148,7 @@
 
   globalThis.__importStandIn = function (opts) {
     flush();                                                        // a previous key's timer may not have fired yet
+    const token = nextToken++;
     const tid = Process.getCurrentThreadId();
     const logSize = opts.logSize || 0x400;
     const log = __keepAlloc(logSize);
@@ -208,10 +213,10 @@
       Memory.protect(slot, 4, 'rw-');
       slot.writePointer(stub);
       Memory.protect(slot, 4, prot);
-      live[k] = { slot: slot, prev: prev, prot: prot };
+      live[k] = { slot: slot, prev: prev, prot: prot, token: token };
     });
     // opts.keep (live checks only, never in a fixture): stay installed until __importStandIn.flush()
-    if (!opts.keep) setTimeout(flush, 0);
+    if (!opts.keep) setTimeout(function () { flushToken(token); }, 0);
     return {
       log: log, logSize: logSize,
       // calls other threads made through the stubs while installed (the live check reads these)

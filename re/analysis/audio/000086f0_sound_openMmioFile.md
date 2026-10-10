@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000086f0`), 96 bytes, 30 instructions, subsystem `aud
 Opens a file by name via mmioOpenA; increments g_100b4a08. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x000086f0 openMmioFile (VA 0x100086f0). One stack argument (the file name, `ret 4`). A 0x48-byte MMIOINFO is zeroed (`rep stosd` 0x12 dwords, 0x100086f7-0x10008702) with fccIOProc = 0x204d454d ("MEM ", +4, 0x1000871b) and cchBuffer = 0x1000 (+0x14, 0x10008713); mmioOpenA [0x100b8660] (name, &info, 0x11001) (pushes 0x1000870c-0x10008712, call 0x10008723) is stored at this+0x30 (0x10008729). A zero result returns 8 (0x10008732); otherwise the module counter 0x100b4a08 is incremented (0x1000873d-0x10008743) and 0 is returned (0x10008748). Reached from: static callers 0x1000b110. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: openMmioFile (12 vectors, 12 distinct results, 12 changing state, `log/diff/000086f0_sound_openMmioFile.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_100086f0@C_FUN_100086f0@f_100086f0@@QAEIPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000873a, 0x1000874d): callee pops 4 bytes of stack arguments.

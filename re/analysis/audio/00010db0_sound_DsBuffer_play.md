@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00010db0`), 85 bytes, 34 instructions, subsystem `aud
 Records the start time at +0x54, plays the buffer (Play vtbl+0x30) and reads its format via GetFormat (vtbl+0x14) into +0xa8. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00010db0 DsBuffer::play (VA 0x10010db0). One stack argument (`ret 4`). No interface at +0x60 (0x10010db3) returns 0x14. Otherwise timeGetTime is stored at +0x54 (0x10010dc3 / 0x10010dcd) and Play(interface, 0, 0, the argument) (pushes 0x10010dd3-0x10010dda, `call [ecx+0x30]` 0x10010ddb) runs; a non-zero result returns 0x1c (0x10010de2); else the +0x14 slot is called (interface, this+0xa8, 0x12, 0) (0x10010dfc) and 0 is returned (0x10010dff). Reached from: static callers 0x1000bf90, 0x1000c020, 0x1000c230, 0x10034430, 0x1000b420. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: DsBuffer::play (36 vectors, 31 distinct results, 30 changing state, `log/diff/00010db0_sound_DsBuffer_play.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10010dc0, 0x10010de8, 0x10010e02): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10010db1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

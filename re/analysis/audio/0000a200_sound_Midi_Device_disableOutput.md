@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000a200`), 43 bytes, 16 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 When flag +9 bit0 is set, clears g_100b49bc bit1, calls the virtual close method (vtbl+0x50) and clears +9 bit0. (`re/names/sound_2.tsv`)
 
+## Purpose
+0x0000a200 Midi_Device::disableOutput (VA 0x1000a200). Bit 0 of the dword at +0x24 (`test byte ptr [esi+0x24], 1` 0x1000a203) clear returns 0 (0x1000a227). Set: bit 1 of the module byte 0x100b49bc is cleared (`and cl, 0xfd` 0x1000a20f, stored 0x1000a212); the object's virtual slot +0x50 is called with the object in ecx (`call [eax+0x50]` 0x1000a21c); bit 0 of +0x24 is cleared with a dword store of the value read after the call (0x1000a21f-0x1000a224); returns 0. Reached from: no call xref; reached through a stored pointer: 0x1005b2e4 table slot 22 (+0x58) of the table at 0x1005b28c; installers: 0x10009a90 Dll_Midi_Device::create_device, 0x10009be0 Midi_Device::ctor, 0x10009cb0 Midi_Device::dtor. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Midi_Device::disableOutput_ff (12 vectors, 8 distinct results, 7 changing state, `log/diff/0000a200_sound_Midi_Device_disableOutput_ff.path1.csv`); Midi_Device::disableOutput_02 (12 vectors, 8 distinct results, 7 changing state, `log/diff/0000a200_sound_Midi_Device_disableOutput_02.path1.csv`); Midi_Device::disableOutput_00 (12 vectors, 8 distinct results, 7 changing state, `log/diff/0000a200_sound_Midi_Device_disableOutput_00.path1.csv`); Midi_Device::disableOutput_04 (12 vectors, 8 distinct results, 7 changing state, `log/diff/0000a200_sound_Midi_Device_disableOutput_04.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000a200@f_1000a200@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a22a): callee pops 0 bytes of stack arguments.

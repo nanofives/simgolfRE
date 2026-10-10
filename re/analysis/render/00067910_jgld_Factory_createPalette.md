@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067910`), 148 bytes, 47 instructions, subsystem `ren
 allocates and constructs a Palette object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 30 (+0x78) of the Display vtable 0x1011d640: allocates a 0x820-byte Palette with operator new 0x1007f0f0 (0x10067947) and, when that succeeds (0x10067959 / 0x1006795d), constructs it with Palette::ctor 0x1006a150 (thunk 0x1000191a, 0x10067966; PaletteBase::ctor registers it in the tracked list, the owner goes to +0x80c); returns the palette or 0 (0x10067970). Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Factory::createPalette_new (4 vectors, 4 distinct results, 4 changing state, `log/diff/00067910_jgld_Factory_createPalette_new.path1.csv`); Factory::createPalette_new_oom (4 vectors, 1 distinct results, 4 changing state, `log/diff/00067910_jgld_Factory_createPalette_new_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?createPalette@Factory@@QAEPAUPalette@@PAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100679a1): callee pops 4 bytes of stack arguments.

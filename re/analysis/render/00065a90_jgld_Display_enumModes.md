@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065a90`), 280 bytes, 72 instructions, subsystem `ren
 enumerates Windows display modes (EnumDisplaySettingsA) into the mode tables at 0x101286c8/0x101286f8 (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 26 (+0x68) of the Display vtable 0x1011d640: rebuilds the module's list of display modes. A DEVMODEA local gets dmSize 0x94, dmDriverExtra 0 and dmFields 0 (0x10065ab3..0x10065ac0) and nothing else. Array_Rec14::reset (VA 0x101286c8, 0x10065acb) and Array_Rec94::reset (VA 0x101286f8, 0x10065ad5) empty the two arrays; then EnumDisplaySettingsA (NULL, i, &devmode) for i = 0, 1, ... (call 0x10065b11) until it returns 0 (0x10065b1e). Each mode appends a 5-dword record {dmPelsWidth, dmPelsHeight, dmPelsWidth again, dmBitsPerPel, dmDisplayFrequency} (0x10065b22..0x10065b49) to the first array (Array_Rec14::add, by value, 0x10065b66) and the whole DEVMODE to the second (Array_Rec94::add, by value, 0x10065b85). Returns VA 0x101286c8 (0x10065b8f). The third dword repeats the width (`mov edx, [ebp-0x2c]` at 0x10065b3d reads dmPelsWidth +0x6c again). Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Display::enumModes_0 (2 vectors, 1 distinct results, 2 changing state, `log/diff/00065a90_jgld_Display_enumModes_0.path1.csv`); Display::enumModes_1 (2 vectors, 1 distinct results, 2 changing state, `log/diff/00065a90_jgld_Display_enumModes_1.path1.csv`); Display::enumModes_3grow (2 vectors, 1 distinct results, 2 changing state, `log/diff/00065a90_jgld_Display_enumModes_3grow.path1.csv`); Display::enumModes_7null (2 vectors, 1 distinct results, 2 changing state, `log/diff/00065a90_jgld_Display_enumModes_7null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?enumModes@Display@@UAEPAV?$Array@UModeInfo@@@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065ba7): callee pops 0 bytes of stack arguments.

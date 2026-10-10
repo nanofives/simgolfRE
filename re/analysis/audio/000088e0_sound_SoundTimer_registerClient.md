@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000088e0`), 42 bytes, 12 instructions, subsystem `aud
 Under g_100b4990, links a client object into the timer's client list via 0x10009040. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x000088e0 SoundTimer::registerClient (VA 0x100088e0). `this` is the sound timer. EnterCriticalSection [0x100b83f4] on the timer's critical section 0x100b4990 (0x100088e3 / 0x100088e8); linkClient 0x10009040 (thunk 0x10001ac3, 0x100088f6) on the list at this+0x4c with the stack argument; LeaveCriticalSection [0x100b84e0] (0x100088fb / 0x10008900). The value in eax at `ret 4` (0x10008907) is what LeaveCriticalSection left there (nothing in between writes it). Reached from: static callers 0x10009da0, 0x1000a170, 0x1000bf90, 0x1000c020, 0x1000b420. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: SoundTimer::registerClient (24 vectors, 24 distinct results, 24 changing state, `log/diff/000088e0_sound_SoundTimer_registerClient.path1.csv`); SoundTimer::registerClient_z (16 vectors, 16 distinct results, 16 changing state, `log/diff/000088e0_sound_SoundTimer_registerClient_z.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_100088e0@C_FUN_100088e0@f_100088e0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10008907): callee pops 4 bytes of stack arguments.

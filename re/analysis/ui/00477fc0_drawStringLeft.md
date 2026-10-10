@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 177 bytes, 86 instructions, subsystem `ui`. Mechanical 
 draws left-aligned (markup-aware) text (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, four stack arguments (`ret 0x10`: 0x00477fd6, 0x00478039, 0x00478062, 0x0047806e): text, x, y, len. Same prologue and length rule as drawCentered2 (0x00477fcc NULL text returns x, 0x00477fde / 0x00477fe9 a missing font returns 3, 0x00477ffb..0x0047802f a non-positive length returns x). Otherwise drawMarkupRun (0x00478040) gives the run width w and it returns drawRichText (0x00478059) at x - (w >> 1) (sar, 0x00478050): the run is centred on x, not left-aligned (name to revisit). Caller: drawStringAt 0x00476700. Reimplemented in `shim/src/re/c3df.cpp`; path-1 A/B GREEN: drawStringLeft (88 vectors, 65 distinct results, 74 changing state, `log/diff/00477fc0_drawStringLeft.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x00477fd6, 0x00478039, 0x00478062, 0x0047806e): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x00477fca before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

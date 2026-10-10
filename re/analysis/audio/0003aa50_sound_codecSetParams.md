@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003aa50`), 63 bytes, 20 instructions, subsystem `aud
 Sets the codec configuration globals: order g_100b58a0=10, frame length g_100b58a4=0xb4 (180), mode g_100b58a8=1. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x0003aa50 codecSetParams (VA 0x1003aa50). cdecl, no arguments. Writes the constants 0xa, 0xb4 and 1 into the module words 0x100b58a0, 0x100b58a4 and 0x100b58a8 (0x1003aa68, 0x1003aa72, 0x1003aa7c) and returns 0 (0x1003aa86). Reached from: static callers 0x1003aae0, 0x1003aef0. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: codecSetParams_v0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v0.path1.csv`); codecSetParams_v1 (1 vectors, 1 distinct results, 0 changing state, `log/diff/0003aa50_sound_codecSetParams_v1.path1.csv`); codecSetParams_v2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v2.path1.csv`); codecSetParams_v3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v3.path1.csv`); codecSetParams_v4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v4.path1.csv`); codecSetParams_v5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v5.path1.csv`); codecSetParams_v6 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v6.path1.csv`); codecSetParams_v7 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v7.path1.csv`); codecSetParams_v8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v8.path1.csv`); codecSetParams_v9 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa50_sound_codecSetParams_v9.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003aa8e): callee pops 0 bytes of stack arguments.
 

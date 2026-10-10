@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 536 bytes, 207 instructions, subsystem `util`. Mechanic
 block-heap allocator that warns on oversized requests (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+A bump allocator over a block that grows on demand: `this` holds a flag byte (+4), the block (+8), the bump pointer (+0xc), the capacity (+0x10) and the free count (+0x14). While the free count is below the request (signed compare, 0x0047486c `cmp [ebp+0x14], ebx` / 0x0047486f `jge`, re-tested by 0x004748a9 `jl`), bit 0 of the flag byte returns NULL (0x00474876 / 0x0047487a); otherwise the block is resized to capacity + 0x400 through `_realloc` 0x004a6980 (0x0047487c-0x00474886) and, when that returns a block, the block, capacity and free count take the new values (0x0047489a / 0x004748a3 / 0x004748a6). The bump pointer is not moved to the new block. A NULL from `_realloc` (0x00474890) builds a text in 0x0083c340 and shows a message box, then exits with 3 (0x004748d0-0x00474a72). The request is then served from the bump pointer, which advances by it while the free count drops by it (0x004748ab-0x004748ba). Callers: S3List_add 0x00401d10, S3List_add2 0x00402280, Surface_get 0x00474650, View_attach 0x0047abe0, setNewHeap 0x004823c0, netHeapAlloc 0x0049b970, strDup 0x0049d100, bufferCopyTo 0x004a0540. Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: heapAlloc (20 vectors, 18 distinct results, 15 changing state, `log/diff/00474860_heapAlloc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s0_k.cpp` as `?alloc@S0Heap474860@@QAEPADH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004748c2, 0x004748cd): callee pops 4 bytes of stack arguments.

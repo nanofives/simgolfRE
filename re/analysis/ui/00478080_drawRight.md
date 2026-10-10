@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 179 bytes, 86 instructions, subsystem `ui`. Mechanical 
 draws right-aligned text within x,y,w,h (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, five stack arguments (`ret 0x14`: 0x00478096, 0x004780f9, 0x00478124, 0x00478130): text, x, y, width, len. Same prologue and length rule (0x0047808c NULL text returns x, 0x0047809e / 0x004780a9 a missing font returns 3, 0x004780bb..0x004780ef a non-positive length returns x). Otherwise drawMarkupRun (0x00478100) gives w and it returns drawRichText (0x0047811b) at x + (width - w) (0x00478105..0x00478113): the right edge of the run lands at x + width. Caller: showBuyLandScreen 0x004587a0. Reimplemented in `shim/src/re/c3df.cpp`; path-1 A/B GREEN: drawRight (98 vectors, 75 distinct results, 84 changing state, `log/diff/00478080_drawRight.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?drawRight@C478080@@QAEHPBDHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00478096, 0x004780f9, 0x00478124, 0x00478130): callee pops 20 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000dbe0`), 194 bytes, 56 instructions, subsystem `au
 Posts a notification (message 0x7ee) with PostMessageA to the window handle at [esi+0x1420] when the engine flag [edi+0x1a4] is set, otherwise through postSoundThreadMessage 0x1002aa90 on g_soundThreadState 0x100b5038. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x0000dbe0 postNotification (VA 0x1000dbe0). Wrapped in a C++ frame (0x1000dbe0-0x1000dbee) that no path uses. Two stack arguments (`ret 8`): a record pointer (esi, 0x1000dbf6) and a value. A NULL record returns 0xa (0x1000dbff / 0x1000dc01). A 0x10-byte node comes from operator new (0x1000dc19 / 0x1000dc1b), is constructed by 0x100087f0 (thunk 0x10002031, 0x1000dc35) and gets the record pointer at +4 (0x1000dc42) and the value at +0 (0x1000dc45); bit 0 of the record's byte +0x1428 is set (0x1000dc47-0x1000dc51). Bit 5 of this+0x1a4 (0x1000dc57-0x1000dc60) set: PostMessageA [0x100b85a0] (the record's window at +0x1420, 0x7ee, 0, the node) (0x1000dc6d-0x1000dc7b); clear: postSoundThreadMessage 0x1002aa90 (thunk 0x100011d6) on the module object 0x100b5038 with (0x7ee, 0, the node) (0x1000dc83-0x1000dc88). Returns 0 (0x1000dc92). Reached from: static callers 0x10008470, 0x1001ac40. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: postNotification (16 vectors, 7 distinct results, 12 changing state, `log/diff/0000dbe0_sound_postNotification.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x1000dc16, 0x1000dc9f): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1000dbfd before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

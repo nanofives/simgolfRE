@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$t0 $d0,72134160,72134160,True,36092632,36092632,True
+$t1 $d1,72134160,72134160,True,f9989b25,f9989b25,True
+$t2 $d2,72134160,72134160,True,9d37d657,9d37d657,True
+$t3 $d3,20,20,True,078a1948,078a1948,True
+$t4 $d4,72134160,72134160,True,47ac23f3,47ac23f3,True
+$t5 $d5,72134160,72134160,True,4130dc99,4130dc99,True
+$t6 $d6,72134160,72134160,True,366e824f,366e824f,True
+$t7 $d7,72134160,72134160,True,dfafceca,dfafceca,True
+$t8 $d8,72134160,72134160,True,de9907b7,de9907b7,True
+$t9 $d9,72134160,72134160,True,1acc5b21,1acc5b21,True
+$t10 $d10,72134160,72134160,True,f78f4a4f,f78f4a4f,True
+$t11 $d11,28,28,True,464e0d4a,464e0d4a,True
+state_regions,$b0+0x0:1024 $b1+0x0:1024 $b2+0x0:1024 $b3+0x0:1024 $b4+0x0:1024 $b5+0x0:1024 $b6+0x0:1024 $b7+0x0:1024 $b8+0x0:1024 $b9+0x0:1024 $b10+0x0:1024 $b11+0x0:1024 $arena+0x0:320 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71e0ef90,original=0x2dd0d40,2026-10-10T12:19:04
+distinct_results,12,,
+VERDICT,GREEN,12,

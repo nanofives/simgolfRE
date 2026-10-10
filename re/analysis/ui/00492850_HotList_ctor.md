@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 83 bytes, 22 instructions, subsystem `ui`. Mechanical t
 Constructs the tooltip hotspot list with a tooltip Timer at this+8 and default delay 1000 ms at [0x17]. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Constructs a HotList in place. It runs Timer::ctor 0x00486c90 on this + 0x20 (`lea ecx, [esi + 0x20]` 0x0049286d, call 0x00492870), stores the vtable 0x004bba74 at +0 (0x0049287f) and the tip delay 0x3e8 at +0x5c (0x00492885), then HotList::resetFields 0x00492800 (call 0x0049288c) and returns this (`mov eax, esi` 0x00492895). Callers: Image_ctor (calls 0x00474b0f / 0x00474b1e), View_ctor (0x00479c6f), TextView::ctor (0x0048cf7c), panelSubCtor4a3110 (0x004a3177). Vectors: `HotList::ctor` and `_nodisp`, 12 vectors each over junk-filled objects (every field the constructor sets differs from the junk). No jcc. Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: HotList::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00492850_HotList_ctor.path1.csv`); HotList::ctor_nodisp (12 vectors, 12 distinct results, 12 changing state, `log/diff/00492850_HotList_ctor_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??0C492850@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004928a2): callee pops 0 bytes of stack arguments.

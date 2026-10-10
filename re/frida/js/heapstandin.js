@@ -41,16 +41,21 @@
   // after the rpc call that ran the key; when the next key's fixture runs before that timer fires,
   // Interceptor.replace would throw "already replaced this function" and the key would be recorded as
   // ERROR. Installing through here reverts a leftover replacement first, so the race is harmless.
+  // Each install gets a token, and a key's revert timer only undoes its OWN install: without the token, key N's timer
+  // could revert the replacement key N+1 had just installed at the same address (c3dd saw it once as a false RED on a
+  // failure-schedule key whose stand-in was gone, 2026-10-10).
   const live = {};
+  let nextToken = 1;
   function install(at, cb) {
     const k = at.toString();
     if (live[k]) { Interceptor.revert(at); delete live[k]; }
     Interceptor.replace(at, cb);
-    live[k] = true;
+    live[k] = nextToken++;
+    return live[k];
   }
-  function uninstall(at) {
+  function uninstall(at, token) {
     const k = at.toString();
-    if (!live[k]) return;
+    if (live[k] !== token) return;
     Interceptor.revert(at);
     delete live[k];
   }
@@ -107,8 +112,7 @@
         return carve(size, byte);
       }, 'pointer', argt);
       __diffKeepAlive.push(cb, orig);
-      install(at, cb);
-      reverts.push(at);
+      reverts.push([at, install(at, cb)]);
     });
     (opts.free || []).forEach(function (spec) {
       const rva = typeof spec === 'number' ? spec : spec.rva;
@@ -121,8 +125,7 @@
         recordFree(arguments[0]);
       }, 'void', argt);
       __diffKeepAlive.push(cb, orig);
-      install(at, cb);
-      reverts.push(at);
+      reverts.push([at, install(at, cb)]);
     });
     (opts.realloc || []).forEach(function (spec) {
       const rva = typeof spec === 'number' ? spec : spec.rva;
@@ -147,11 +150,10 @@
         return p;
       }, 'pointer', argt);
       __diffKeepAlive.push(cb, orig);
-      install(at, cb);
-      reverts.push(at);
+      reverts.push([at, install(at, cb)]);
     });
     Interceptor.flush();
-    setTimeout(function () { reverts.forEach(uninstall); Interceptor.flush(); }, 0);
+    setTimeout(function () { reverts.forEach(function (r) { uninstall(r[0], r[1]); }); Interceptor.flush(); }, 0);
     return { arena: arena, log: log, arenaSize: arenaSize,
              register: function (p, size) { sizes.set(ptr(p).toString(), size >>> 0); } };
   };

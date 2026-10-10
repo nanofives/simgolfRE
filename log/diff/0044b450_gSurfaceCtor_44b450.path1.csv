@@ -1,0 +1,10 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$g0,obj+0x0,obj+0x0,True,3ddeeb8a,3ddeeb8a,True
+$g1,obj+0x900,obj+0x900,True,a237115a,a237115a,True
+$g2,obj+0x1200,obj+0x1200,True,6eaac70a,6eaac70a,True
+$g3,obj+0x1b00,obj+0x1b00,True,e1247f3a,e1247f3a,True
+state_regions,$blk+0x0:131072 $arena+0x0:32784 $freelog+0x0:1028 $rec+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7001b3c0,original=0x1440a40,2026-10-10T12:12:28
+distinct_results,4,,
+VERDICT,GREEN,4,

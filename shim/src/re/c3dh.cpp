@@ -1,0 +1,1798 @@
+// C3 batch c3dh (round 25, 2026-10-10) of sound.dll: C2 rows earlier batches dropped for winmm / KERNEL32 / USER32 imports,
+// COM calls, the CRT heap or live state (log/c3/c3dh_candidates.tsv). Their A/B runs under the heap stand-in
+// (re/frida/js/heapstandin.js: operator new 0x100424d7 carves fixture-arena blocks, operator delete 0x1004249a only
+// records the pointer) and the import stand-in (re/frida/js/importstandin.js: the DLL's IAT slots point at recording
+// stubs on the A/B thread; the call sequence is compared state), over fixture-owned objects only.
+// Addresses in SG_HOOK and in the `// 0x...` comment lines are RVAs; the instruction addresses quoted inside each body are
+// VAs (VA = 0x10000000 + RVA), which is how re/tools/asm2inline.py prints sound.dll.
+// Hand-written from the disassembly (py -3.12 re/tools/asm2inline.py sound.dll 0x<va> --list). sound.dll is LoadLibrary'd
+// after the shim starts, so these hooks install from the LoadLibraryA hook (SgHooksInstallPending, re/hooks.cpp).
+//
+// RULES (log/c3/c3cy_notes.txt): every import is called through the SAME IAT slot the original reads (module base + slot
+// RVA), never through the shim's own import table, so the stand-in sees the call; allocation and release go through
+// the DLL's own operator new / operator delete at their original addresses. __thiscall is emulated with __fastcall
+// (ecx = this, edx unused). Callees run through their original addresses (an incremental-link thunk's target is named in
+// the comment).
+//
+// Groups:
+//   A. ring queues and the node lists: CommandQueue::push, WaveCmdQueue::pushNode, SoundTimer::linkClient,
+//      SoundTimer::registerClient / unregisterClient (critical-section imports), NodeList_insert
+//   B. ... (see below)
+#include "hooks.h"
+#include <stdint.h>
+
+namespace {
+
+template <typename T> T& fat(void* base, int off) {
+    return *reinterpret_cast<T*>(reinterpret_cast<char*>(base) + off);
+}
+
+// sound.dll has base relocations: every original callee, module global and IAT slot is addressed through the loaded base,
+// never through the 0x10000000-based VA the disassembly prints.
+char* c3dh_sound(unsigned rva) {
+    static HMODULE m = 0;
+    if (!m) m = GetModuleHandleA("sound.dll");
+    return reinterpret_cast<char*>(m) + rva;
+}
+template <typename F> F c3dh_fn(unsigned rva) { return reinterpret_cast<F>(c3dh_sound(rva)); }
+// The import whose IAT slot is at RVA `slotRva` (`call dword ptr [0x100b....]` in the original).
+template <typename F> F c3dh_imp(unsigned slotRva) { return *reinterpret_cast<F*>(c3dh_sound(slotRva)); }
+
+// IAT slots (pefile over original\sound.dll)
+const unsigned kIatEnterCriticalSection = 0x000b83f4;
+const unsigned kIatLeaveCriticalSection = 0x000b84e0;
+
+// The sound timer's critical section (sound.dll data 0x100b4990, 0x18 bytes). The imports are stood in for the key, so the
+// address is only an argument that is logged.
+void* c3dh_timerCs() { return c3dh_sound(0x000b4990); }
+
+typedef unsigned(__stdcall* CsFn_t)(void*);                                   // EnterCriticalSection / LeaveCriticalSection
+typedef void*(__cdecl* OpNew_t)(unsigned);                                    // operator new 0x100424d7
+typedef void(__cdecl* OpDelete_t)(void*);                                     // operator delete 0x1004249a
+typedef void*(__fastcall* Th0p_t)(void*, void*);                              // thiscall, nothing pushed, returns a pointer
+typedef unsigned(__fastcall* Th1_t)(void*, void*, unsigned);                  // thiscall, one stack argument
+typedef void(__fastcall* Th0v_t)(void*, void*);                               // thiscall, no result used
+
+void* c3dh_new(unsigned n) { return c3dh_fn<OpNew_t>(0x000424d7)(n); }
+void c3dh_delete(void* p) { c3dh_fn<OpDelete_t>(0x0004249a)(p); }
+
+// =====================================================================================================================
+// A. Ring queues and node lists
+// =====================================================================================================================
+
+// 0x0000a240  CommandQueue::push (VA 0x1000a240). __thiscall, four stack arguments (`ret 0x10` 0x1000a2f1), wrapped in a
+// C++ frame (fs:[0] chain 0x1000a247-0x1000a24e) that no path of the body uses. The queue object holds a ring of 0x1000
+// node pointers from +0x50, the read index at +0x4050 (read at 0x1000a260) and the write index at +0x4054 (0x1000a25a).
+// next = (write + 1) & 0xfff (0x1000a266 / 0x1000a267); next == read (raw dword, 0x1000a26d) returns 0x22 without any
+// change (0x1000a272). Otherwise operator new 0x100424d7 allocates a 0x10-byte node (0x1000a289 / 0x1000a28b) whose three
+// dwords at +0..+8 are zeroed by the constructor thunk 0x10002031 (0x1000a2a5, a thunk to 0x100087f0) when the allocation
+// succeeded; the node pointer is stored at ring[next] (0x1000a2b2) and the four arguments go into the node: the SECOND
+// stack argument at +0 (0x1000a2b6, [esp+0x20]), the first at +4 (0x1000a2c0, [esp+0x1c]), the third at +8 (0x1000a2cb) and
+// the fourth at +0xc (0x1000a2d6). The write index becomes next (0x1000a2dd) and 0 is returned (0x1000a2e4). A failed
+// allocation stores NULL in the ring and faults on the next store (`mov [eax], ecx` 0x1000a2b6 with eax = 0): not covered.
+typedef unsigned(__fastcall* CmdPush_t)(void*, void*, unsigned, unsigned, unsigned, unsigned);
+CmdPush_t CmdPush_orig;
+unsigned __fastcall CmdPush_re(void* self, void*, unsigned a1, unsigned a2, unsigned a3, unsigned a4) {
+    unsigned next = (fat<unsigned>(self, 0x4054) + 1) & 0xfff;                // 0x1000a25a / 0x1000a266 / 0x1000a267
+    if (next == fat<unsigned>(self, 0x4050)) return 0x22;                     // 0x1000a260 / 0x1000a26d / 0x1000a272
+    void* node = c3dh_new(0x10);                                              // 0x1000a28b
+    if (node) node = c3dh_fn<Th0p_t>(0x000087f0)(node, 0);                    // 0x1000a2a5 -> 0x100087f0
+    fat<void*>(self, 0x50 + 4 * next) = node;                                 // 0x1000a2b2
+    fat<unsigned>(node, 0) = a2;                                              // 0x1000a2b6
+    fat<unsigned>(node, 4) = a1;                                              // 0x1000a2c0
+    fat<unsigned>(node, 8) = a3;                                              // 0x1000a2cb
+    fat<unsigned>(node, 0xc) = a4;                                            // 0x1000a2d6
+    fat<unsigned>(self, 0x4054) = next;                                       // 0x1000a2dd
+    return 0;                                                                 // 0x1000a2e4
+}
+
+// 0x0000c2f0  WaveCmdQueue::pushNode (VA 0x1000c2f0). The same shape over a ring of 0x1000 node pointers from +0x1d8,
+// read index +0x41d8 (0x1000c310), write index +0x41dc (0x1000c30a); two stack arguments (`ret 8` 0x1000c391). Full ring:
+// 0x22 (0x1000c322). Node of 0x10 bytes (0x1000c339 / 0x1000c33b) constructed by 0x10002031 -> 0x100087f0 (0x1000c355); the
+// SECOND stack argument is stored at +0 (0x1000c369, [esp+0x20]) and the first at +4 (0x1000c37a, [esp+0x1c]); only
+// the first two node dwords are written, +8 and +0xc keep the constructor's zero for +8 and the allocator's bytes for +0xc.
+typedef unsigned(__fastcall* WcqPush_t)(void*, void*, unsigned, unsigned);
+WcqPush_t WcqPush_orig;
+unsigned __fastcall WcqPush_re(void* self, void*, unsigned a1, unsigned a2) {
+    unsigned next = (fat<unsigned>(self, 0x41dc) + 1) & 0xfff;                // 0x1000c30a / 0x1000c316 / 0x1000c317
+    if (next == fat<unsigned>(self, 0x41d8)) return 0x22;                     // 0x1000c310 / 0x1000c31d / 0x1000c322
+    void* node = c3dh_new(0x10);                                              // 0x1000c33b
+    if (node) node = c3dh_fn<Th0p_t>(0x000087f0)(node, 0);                    // 0x1000c355 -> 0x100087f0
+    fat<void*>(self, 0x1d8 + 4 * next) = node;                                // 0x1000c362
+    fat<unsigned>(node, 0) = a2;                                              // 0x1000c369
+    fat<unsigned>(node, 4) = a1;                                              // 0x1000c37a
+    fat<unsigned>(self, 0x41dc) = next;                                       // 0x1000c37d
+    return 0;                                                                 // 0x1000c384
+}
+
+// 0x00009040  SoundTimer::linkClient (VA 0x10009040). `this` is the client list header embedded in the sound timer at
+// +0x4c (registerClient's `lea ecx, [esi+0x4c]` 0x100088f2): +0 front node, +4 back node, +0xc count. A 12-byte node is
+// allocated (0x10009043 / 0x10009045) and, when the allocation succeeded, initialised {+0 = 0, +4 = 0, +8 = the stack
+// argument} (0x10009055-0x10009062); a NULL allocation leaves eax = 0 (0x10009067). With a front node (`test ecx, ecx` 0x1000906b)
+// the front's +0 points at the new node (0x1000906f), the new node's +4 at the old front (0x10009076) and the header's
+// front becomes the new node (0x10009076); with no front both header words +0 and +4 become the node (0x10009083 /
+// 0x10009085). The count at +0xc is incremented (0x10009078-0x1000907c, 0x10009088-0x1000908c) and returned (`ret 4`).
+typedef unsigned(__fastcall* LinkClient_t)(void*, void*, unsigned);
+LinkClient_t LinkClient_orig;
+unsigned __fastcall LinkClient_re(void* self, void*, unsigned client) {
+    char* node = static_cast<char*>(c3dh_new(0xc));                           // 0x10009045
+    if (node) {                                                               // 0x1000904d
+        fat<unsigned>(node, 0) = 0;                                           // 0x10009055
+        fat<unsigned>(node, 4) = 0;                                           // 0x1000905b
+        fat<unsigned>(node, 8) = client;                                      // 0x10009062
+    }
+    void* front = fat<void*>(self, 0);                                        // 0x10009069
+    if (front) {                                                              // 0x1000906b
+        fat<void*>(front, 0) = node;                                          // 0x1000906f
+        fat<void*>(node, 4) = fat<void*>(self, 0);                            // 0x10009071 / 0x10009073
+        fat<void*>(self, 0) = node;                                           // 0x10009076
+    } else {
+        fat<void*>(self, 0) = node;                                           // 0x10009083
+        fat<void*>(self, 4) = node;                                           // 0x10009085
+    }
+    unsigned n = fat<unsigned>(self, 0xc) + 1;                                // 0x10009078 / 0x10009088
+    fat<unsigned>(self, 0xc) = n;                                             // 0x1000907c / 0x1000908c
+    return n;
+}
+
+// 0x000088e0  SoundTimer::registerClient (VA 0x100088e0). `this` is the sound timer. EnterCriticalSection [0x100b83f4] on the
+// timer's critical section 0x100b4990 (0x100088e3 / 0x100088e8); linkClient 0x10009040 (thunk 0x10001ac3, 0x100088f6) on the
+// list at this+0x4c with the stack argument; LeaveCriticalSection [0x100b84e0] (0x100088fb / 0x10008900). The value in eax at
+// `ret 4` (0x10008907) is what LeaveCriticalSection left there (nothing in between writes it).
+typedef unsigned(__fastcall* RegClient_t)(void*, void*, unsigned);
+RegClient_t RegClient_orig;
+unsigned __fastcall RegClient_re(void* self, void*, unsigned client) {
+    c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(c3dh_timerCs());               // 0x100088e8
+    c3dh_fn<Th1_t>(0x00009040)(static_cast<char*>(self) + 0x4c, 0, client);   // 0x100088f6 -> 0x10009040
+    return c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(c3dh_timerCs());        // 0x10008900
+}
+
+// 0x00008920  SoundTimer::unregisterClient (VA 0x10008920). EnterCriticalSection (0x10008929), then the client list is
+// walked from the front at this+0x4c (0x1000892f) through the nodes' +4 links (0x1000893f) for the node whose +8 equals the
+// stack argument (0x1000893a). Found: the node is unlinked (previous +0 (0x1000896e): the previous node's +4 takes the node's
+// +4 (0x10008977), or the front at +0x4c takes it (0x1000897f); next +4 (0x10008982): that node's +0 takes the node's +0 and
+// the cursor at +0x54 becomes it (0x1000898b / 0x1000898d), or with no next the cursor +0x54 is cleared and the back at +0x50
+// takes the node's +0 (0x10008994 / 0x1000899b)), the node is released by operator delete 0x1004249a (0x100089a3) and the
+// count at +0x58 is decremented (0x100089ab). LeaveCriticalSection (0x1000894d), then the client's own virtual slot +0xc is
+// called with the client in ecx (`mov edx, [ebx]` 0x10008953, `call [edx+0xc]` 0x10008957) whether or not the client was
+// found. The result is 0 when a node was found (esi = the node's +8, never 0 here) and 0x14 otherwise
+// (`neg eax; sbb eax, eax; and al, 0xec; add eax, 0x14` 0x1000895d-0x10008964).
+typedef unsigned(__fastcall* UnregClient_t)(void*, void*, void*);
+UnregClient_t UnregClient_orig;
+unsigned __fastcall UnregClient_re(void* self, void*, void* client) {
+    c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(c3dh_timerCs());               // 0x10008929
+    void* node = fat<void*>(self, 0x4c);                                      // 0x1000892f
+    while (node && fat<void*>(node, 8) != client) node = fat<void*>(node, 4); // 0x10008938-0x10008944
+    bool found = false;
+    if (node) {                                                               // 0x1000896a
+        void* prev = fat<void*>(node, 0);                                     // 0x1000896e
+        if (prev) fat<void*>(prev, 4) = fat<void*>(node, 4);                  // 0x10008977
+        else fat<void*>(self, 0x4c) = fat<void*>(node, 4);                    // 0x1000897f
+        void* next = fat<void*>(node, 4);                                     // 0x10008982
+        if (next) {
+            fat<void*>(next, 0) = fat<void*>(node, 0);                        // 0x1000898b
+            fat<void*>(self, 0x54) = next;                                    // 0x1000898d
+        } else {
+            void* p = fat<void*>(node, 0);                                    // 0x10008992
+            fat<unsigned>(self, 0x54) = 0;                                    // 0x10008994
+            fat<void*>(self, 0x50) = p;                                       // 0x1000899b
+        }
+        found = fat<void*>(node, 8) != 0;                                     // 0x1000899f
+        c3dh_delete(node);                                                    // 0x100089a3
+        fat<unsigned>(self, 0x58) -= 1;                                       // 0x100089ab
+    }
+    c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(c3dh_timerCs());               // 0x1000894d
+    void* vtbl = fat<void*>(client, 0);                                       // 0x10008953
+    reinterpret_cast<Th0v_t>(fat<void*>(vtbl, 0xc))(client, 0);               // 0x10008957
+    return found ? 0u : 0x14u;                                                // 0x1000895d-0x10008964
+}
+
+// 0x00024e60  NodeList_insert (VA 0x10024e60). `this` is a list header {+0 front, +4 back, +8 cursor, +0xc count}; nodes
+// are {+0 previous, +4 next, +8 value}; one stack argument, the value (`ret 4`). Three cases, each allocating a 12-byte node
+// {0, 0, value} with operator new 0x100424d7 (a NULL allocation leaves 0, 0x10024e87 / 0x10024edd / 0x10024f22):
+//  - front == 0 (`cmp [esi], ebx` 0x10024e67) -> append at the back (0x10024e6b..0x10024eb7): with a back node (0x10024e89)
+//    the back's +4 takes the node, the node's +0 the back, and the back becomes the node (0x10024e90-0x10024e98); with no back
+//    both header words become the node (0x10024ea8 / 0x10024eaa);
+//  - front != 0 and cursor == 0 (`mov eax, [esi+8]` 0x10024eba, `jne` 0x10024ebf) -> insert at the front (0x10024ec1..):
+//    the old front's +0 takes the node (0x10024ee5), the node's +4 the old front (0x10024ee9), the front becomes the node
+//    (0x10024eec); a front that tests as 0 here goes to 0x10024ea8 (0x10024ee3: never taken, the front was tested non-zero);
+//  - cursor != 0: edi = cursor->next (0x10024efb); next == 0 -> the append path at 0x10024e6d (0x10024f02); otherwise the node
+//    goes between cursor and next (0x10024f24-0x10024f32): cursor->next = node, next->prev = node, node->next = next,
+//    node->prev = cursor.
+// The count at +0xc is incremented and returned in all three cases.
+typedef unsigned(__fastcall* NodeIns_t)(void*, void*, unsigned);
+NodeIns_t NodeIns_orig;
+static char* nl_newnode(unsigned value) {
+    char* n = static_cast<char*>(c3dh_new(0xc));
+    if (n) {
+        fat<unsigned>(n, 0) = 0;
+        fat<unsigned>(n, 4) = 0;
+        fat<unsigned>(n, 8) = value;
+    }
+    return n;
+}
+static unsigned nl_append(void* self, unsigned value) {
+    char* n = nl_newnode(value);                                              // 0x10024e6d
+    void* back = fat<void*>(self, 4);                                         // 0x10024e89
+    if (back) {                                                               // 0x10024e8e
+        fat<void*>(back, 4) = n;                                              // 0x10024e90
+        fat<void*>(n, 0) = fat<void*>(self, 4);                               // 0x10024e93 / 0x10024e96
+        fat<void*>(self, 4) = n;                                              // 0x10024e98
+    } else {
+        fat<void*>(self, 0) = n;                                              // 0x10024ea8
+        fat<void*>(self, 4) = n;                                              // 0x10024eaa
+    }
+    unsigned c = fat<unsigned>(self, 0xc) + 1;
+    fat<unsigned>(self, 0xc) = c;                                             // 0x10024ea0 / 0x10024eb2
+    return c;
+}
+unsigned __fastcall NodeIns_re(void* self, void*, unsigned value) {
+    if (fat<void*>(self, 0) == 0) return nl_append(self, value);              // 0x10024e67 / 0x10024e69
+    void* cursor = fat<void*>(self, 8);                                       // 0x10024eba
+    if (cursor == 0) {                                                        // 0x10024ebf
+        char* n = nl_newnode(value);                                          // 0x10024ec3
+        void* front = fat<void*>(self, 0);                                    // 0x10024edf
+        if (front == 0) {                                                     // 0x10024ee3 (never taken: front tested non-zero above)
+            fat<void*>(self, 0) = n;                                          // 0x10024ea8
+            fat<void*>(self, 4) = n;                                          // 0x10024eaa
+        } else {
+            fat<void*>(front, 0) = n;                                         // 0x10024ee5
+            fat<void*>(n, 4) = fat<void*>(self, 0);                           // 0x10024ee7 / 0x10024ee9
+            fat<void*>(self, 0) = n;                                          // 0x10024eec
+        }
+        unsigned c = fat<unsigned>(self, 0xc) + 1;
+        fat<unsigned>(self, 0xc) = c;                                         // 0x10024ef3 / 0x10024eb2
+        return c;
+    }
+    char* next = fat<char*>(cursor, 4);                                       // 0x10024efb
+    if (next == 0) return nl_append(self, value);                             // 0x10024f00 / 0x10024f02 -> 0x10024e6d
+    char* n = nl_newnode(value);                                              // 0x10024f08
+    fat<void*>(fat<void*>(self, 8), 4) = n;                                   // 0x10024f24 / 0x10024f27
+    fat<void*>(next, 0) = n;                                                  // 0x10024f2a
+    fat<void*>(n, 4) = next;                                                  // 0x10024f2f
+    fat<void*>(n, 0) = fat<void*>(self, 8);                                   // 0x10024f2c / 0x10024f32
+    unsigned c = fat<unsigned>(self, 0xc) + 1;
+    fat<unsigned>(self, 0xc) = c;                                             // 0x10024f39
+    return c;
+}
+
+
+// =====================================================================================================================
+// B. Functions over one or two imports or COM-shaped interface calls (fixture objects; imports stood in for the key)
+// =====================================================================================================================
+
+typedef unsigned(__stdcall* Imp0_t)();
+typedef unsigned(__stdcall* Imp1_t)(unsigned);
+typedef unsigned(__stdcall* Imp3_t)(void*, int, void*);
+typedef unsigned(__stdcall* Imp4_t)(unsigned, unsigned, unsigned, unsigned);
+typedef unsigned(__stdcall* Imp5_t)(unsigned, unsigned, unsigned, unsigned, unsigned);
+typedef unsigned(__stdcall* Com1_t)(void*);
+typedef unsigned(__stdcall* Com4_t)(void*, unsigned, unsigned, unsigned);
+typedef unsigned(__stdcall* Com5_t)(void*, unsigned, unsigned, unsigned, unsigned);
+typedef unsigned(__cdecl* Cdecl1_t)(unsigned);
+typedef unsigned(__fastcall* Th0u_t)(void*, void*);
+
+const unsigned kIatOutputDebugStringA = 0x000b83e8;
+const unsigned kIatSleep = 0x000b840c;
+const unsigned kIatSetWindowLongA = 0x000b85a4;
+const unsigned kIatPostThreadMessageA = 0x000b85b0;
+const unsigned kIatMidiOutOpen = 0x000b85f8;
+const unsigned kIatTimeBeginPeriod = 0x000b8640;
+const unsigned kIatTimeSetEvent = 0x000b8644;
+const unsigned kIatTimeKillEvent = 0x000b8648;
+const unsigned kIatTimeEndPeriod = 0x000b864c;
+const unsigned kIatTimeGetTime = 0x000b8654;
+
+// A virtual slot of a COM-shaped object: [[obj] + off].
+static inline void* c3dh_slot(void* obj, unsigned off) { return fat<void*>(fat<void*>(obj, 0), off); }
+
+// g_soundTimer 0x100b49ec (a pointer to the sound timer; swapped for a fixture timer by the fixtures that need it) and the
+// timer's re-entrancy word 0x100b49a8 (0 when no tick is running).
+static inline void*& c3dh_gSoundTimer() { return *reinterpret_cast<void**>(c3dh_sound(0x000b49ec)); }
+static inline unsigned& c3dh_gTick() { return *reinterpret_cast<unsigned*>(c3dh_sound(0x000b49a8)); }
+
+// 0x000287c0  SoundWindowObj_unsubclass (VA 0x100287c0). `this` holds a window handle at +8 (0x100287c3) and a saved window
+// procedure at +0xc (0x100287d0); bit 2 of the flag byte at +4 says the window is subclassed (0x100287ca). With a handle and
+// the bit set, SetWindowLongA [0x100b85a4] (hwnd, -4 GWL_WNDPROC, the saved procedure) restores it (pushes 0x100287d3-0x100287d6,
+// call 0x100287d7); then +0xc and +8 are cleared and bit 2 of the byte at +4 (read again after the call, 0x100287dd) is cleared
+// with a byte store (0x100287e7 / 0x100287f0). Returns 0 (0x100287f3).
+typedef unsigned(__fastcall* Unsub_t)(void*, void*);
+Unsub_t Unsub_orig;
+unsigned __fastcall Unsub_re(void* self, void*) {
+    void* hwnd = fat<void*>(self, 8);                                         // 0x100287c3
+    if (hwnd != 0 && (fat<unsigned char>(self, 4) & 4) != 0) {                // 0x100287c6 / 0x100287ca
+        c3dh_imp<Imp3_t>(kIatSetWindowLongA)(hwnd, -4, fat<void*>(self, 0xc)); // 0x100287d7
+        unsigned char flags = fat<unsigned char>(self, 4);                    // 0x100287dd
+        fat<unsigned>(self, 0xc) = 0;                                         // 0x100287e0
+        flags = static_cast<unsigned char>(flags & 0xfb);                     // 0x100287e7
+        fat<unsigned>(self, 8) = 0;                                           // 0x100287e9
+        fat<unsigned char>(self, 4) = flags;                                  // 0x100287f0
+    }
+    return 0;                                                                 // 0x100287f3
+}
+
+// 0x0002aa90  postSoundThreadMessage (VA 0x1002aa90). `this` has a flag byte at +0 (bit 0 = the sound thread is running,
+// `test byte ptr [esi], 1` 0x1002aa93; clear returns 0x15, 0x1002aa98) and the thread id at +0x1c (0x1002aaa1). Three stack
+// arguments (`ret 0xc`): PostThreadMessageA [0x100b85b0] (thread id, a1, a2, a3) (pushes 0x1002aab3-0x1002aab6, call 0x1002aab7).
+// A zero result retries in a loop: OutputDebugStringA [0x100b83e8] with the string at 0x10063e68 (0x1002aac1 / 0x1002aac6),
+// Sleep(0x64) [0x100b840c] (0x1002aacc / 0x1002aace), the thread id read again (0x1002aad4) and the same post (0x1002aadb)
+// until it returns non-zero (0x1002aae3). Returns 0 (0x1002aae8).
+typedef unsigned(__fastcall* PostThr_t)(void*, void*, unsigned, unsigned, unsigned);
+PostThr_t PostThr_orig;
+unsigned __fastcall PostThr_re(void* self, void*, unsigned a1, unsigned a2, unsigned a3) {
+    if ((fat<unsigned char>(self, 0) & 1) == 0) return 0x15;                  // 0x1002aa93 / 0x1002aa98
+    Imp4_t post = c3dh_imp<Imp4_t>(kIatPostThreadMessageA);
+    if (post(fat<unsigned>(self, 0x1c), a1, a2, a3) == 0) {                   // 0x1002aab7 / 0x1002aabd
+        do {
+            c3dh_imp<Imp1_t>(kIatOutputDebugStringA)(reinterpret_cast<unsigned>(c3dh_sound(0x00063e68)));   // 0x1002aac6
+            c3dh_imp<Imp1_t>(kIatSleep)(0x64);                                // 0x1002aace
+        } while (post(fat<unsigned>(self, 0x1c), a1, a2, a3) == 0);           // 0x1002aadb / 0x1002aae3
+    }
+    return 0;                                                                 // 0x1002aae8
+}
+
+// ---- DirectSound buffer object (DsBuffer): COM-shaped playback interface at +0x60 (a pointer to an object whose first dword
+// is its vtable), position bookkeeping at +0x48 / +0x4c / +0x50 / +0x54 / +0x58 / +0x78, the WAVEFORMATEX at +0xa8.
+
+// 0x0000f020  DsBuffer::restartPlayback (VA 0x1000f020). +0x4c and +0x48 are cleared (0x1000f026 / 0x1000f02f); an interface at +0x60
+// (0x1000f023) gets Stop (`call [ecx+0x48]` 0x1000f03b); the interface is read again (0x1000f03e); with one, timeGetTime
+// is stored at +0x54 (0x1000f045 / 0x1000f04b), Play(interface, 0, 0, 1) (`call [edx+0x30]` 0x1000f05a, pushes 0x1000f051-0x1000f057),
+// and a zero Play result calls the +0x14 slot (interface, this+0xa8, 0x12, 0) (0x1000f072). eax at `ret` (0x1000f076) is the last
+// call's result, or 0 when there is no interface.
+typedef unsigned(__fastcall* Restart_t)(void*, void*);
+Restart_t Restart_orig;
+unsigned __fastcall Restart_re(void* self, void*) {
+    void* com = fat<void*>(self, 0x60);                                       // 0x1000f023
+    fat<unsigned>(self, 0x4c) = 0;                                            // 0x1000f026
+    fat<unsigned>(self, 0x48) = 0;                                            // 0x1000f02f
+    if (com != 0) reinterpret_cast<Com1_t>(c3dh_slot(com, 0x48))(com);        // 0x1000f03b
+    com = fat<void*>(self, 0x60);                                             // 0x1000f03e
+    if (com == 0) return 0;                                                   // 0x1000f043
+    fat<unsigned>(self, 0x54) = c3dh_imp<Imp0_t>(kIatTimeGetTime)();          // 0x1000f045 / 0x1000f04b
+    com = fat<void*>(self, 0x60);                                             // 0x1000f04e
+    unsigned r = reinterpret_cast<Com4_t>(c3dh_slot(com, 0x30))(com, 0, 0, 1);   // 0x1000f05a
+    if (r != 0) return r;                                                     // 0x1000f05f
+    com = fat<void*>(self, 0x60);                                             // 0x1000f061
+    return reinterpret_cast<Com4_t>(c3dh_slot(com, 0x14))(com, reinterpret_cast<unsigned>(static_cast<char*>(self) + 0xa8), 0x12, 0);   // 0x1000f072
+}
+
+// 0x00010db0  DsBuffer::play (VA 0x10010db0). One stack argument (`ret 4`). No interface at +0x60 (0x10010db3) returns 0x14. Otherwise
+// timeGetTime is stored at +0x54 (0x10010dc3 / 0x10010dcd) and Play(interface, 0, 0, the argument) (pushes 0x10010dd3-0x10010dda,
+// `call [ecx+0x30]` 0x10010ddb) runs; a non-zero result returns 0x1c (0x10010de2); else the +0x14 slot is called (interface,
+// this+0xa8, 0x12, 0) (0x10010dfc) and 0 is returned (0x10010dff).
+typedef unsigned(__fastcall* Play_t)(void*, void*, unsigned);
+Play_t Play_orig;
+unsigned __fastcall Play_re(void* self, void*, unsigned flags) {
+    void* com = fat<void*>(self, 0x60);                                       // 0x10010db3
+    if (com == 0) return 0x14;                                                // 0x10010db6 / 0x10010dba
+    fat<unsigned>(self, 0x54) = c3dh_imp<Imp0_t>(kIatTimeGetTime)();          // 0x10010dc3 / 0x10010dcd
+    com = fat<void*>(self, 0x60);                                             // 0x10010dd0
+    if (reinterpret_cast<Com4_t>(c3dh_slot(com, 0x30))(com, 0, 0, flags) != 0) return 0x1c;   // 0x10010ddb / 0x10010de0
+    com = fat<void*>(self, 0x60);                                             // 0x10010deb
+    reinterpret_cast<Com4_t>(c3dh_slot(com, 0x14))(com, reinterpret_cast<unsigned>(static_cast<char*>(self) + 0xa8), 0x12, 0);   // 0x10010dfc
+    return 0;                                                                 // 0x10010dff
+}
+
+// 0x00010be0  DsBuffer::getTimedPosition (VA 0x10010be0). Three stack arguments (`ret 0xc`): out1, out2 (pointers) and a3. +0xac
+// is the sample rate of the WAVEFORMATEX at +0xa8, +0xb4 its block alignment (word), +0x50 the lead, +0x4c the elapsed time
+// (0 = not started), +0x48 the position, +0x58 a mask, +0x78 the length. Both divisions by 1000 are the compiler's multiply
+// by 0x10624dd3 and shift (`mul` + `shr edx, 6`), the other is `mul` by 0xbe37c63b and `shr edx, 0xe`.
+//  - +0x4c == 0 (0x10010bee): elapsed = timeGetTime() - [+0x54] (0x10010bf2 / 0x10010bfa), stored at +0x4c (0x10010c02); the
+//    position +0x48 = ((elapsed + 2*[+0x50]) * rate) / 1000 (0x10010c05-0x10010c1f); edx = (rate * a3) / 1000 (0x10010c10 /
+//    0x10010c22 / 0x10010c24);
+//  - otherwise: edx = hi32(0xbe37c63b * ([+0x48] * 1000)) >> 14 (0x10010c29-0x10010c48); +0x4c = a3 + [+0x4c] (0x10010c43 /
+//    0x10010c4e); edx = ((10 * [+0x50] - edx + new +0x4c) * rate) / 1000 (0x10010c4b-0x10010c65).
+// then *out1 = word[+0xb4] * edx (0x10010c72-0x10010c7e); *out2 = (word[+0xb4] * [+0x48]) & [+0x58] (0x10010c80-0x10010c94);
+// +0x48 += edx (0x10010c96-0x10010c9e). *out1 not above +0x78 (unsigned, 0x10010ca3 / 0x10010ca5) returns 0 (0x10010d06). Above it:
+// +0x4c and +0x48 are cleared, the interface at +0x60 gets Stop, timeGetTime/Play/format as in restartPlayback (0x10010cb3-0x10010cf2),
+// *out1 = 0 (0x10010cf5) and 0x27 is returned (0x10010cfd).
+typedef unsigned(__fastcall* TimedPos_t)(void*, void*, unsigned*, unsigned*, unsigned);
+TimedPos_t TimedPos_orig;
+static inline unsigned c3dh_div1000(unsigned x) {                             // mov eax, 0x10624dd3; mul x; shr edx, 6
+    return static_cast<unsigned>((static_cast<unsigned long long>(0x10624dd3u) * x) >> 32) >> 6;
+}
+unsigned __fastcall TimedPos_re(void* self, void*, unsigned* out1, unsigned* out2, unsigned a3) {
+    unsigned edx;
+    unsigned rate = fat<unsigned>(self, 0xac);
+    if (fat<unsigned>(self, 0x4c) == 0) {                                     // 0x10010beb / 0x10010bf0
+        unsigned now = c3dh_imp<Imp0_t>(kIatTimeGetTime)();                   // 0x10010bf2
+        unsigned elapsed = now - fat<unsigned>(self, 0x54);                   // 0x10010bfa
+        rate = fat<unsigned>(self, 0xac);                                     // 0x10010bfc
+        fat<unsigned>(self, 0x4c) = elapsed;                                  // 0x10010c02
+        unsigned x = (elapsed + fat<unsigned>(self, 0x50) * 2) * rate;        // 0x10010c05 / 0x10010c0d
+        unsigned y = rate * a3;                                               // 0x10010c10
+        fat<unsigned>(self, 0x48) = c3dh_div1000(x);                          // 0x10010c15-0x10010c1f
+        edx = c3dh_div1000(y);                                                // 0x10010c22 / 0x10010c24
+    } else {
+        unsigned t = fat<unsigned>(self, 0x48) * 5 * 5 * 5 * 8;               // 0x10010c29-0x10010c3a
+        unsigned hi = static_cast<unsigned>((static_cast<unsigned long long>(0xbe37c63bu) * t) >> 32);   // 0x10010c3d
+        unsigned q = hi >> 14;                                                // 0x10010c48
+        unsigned cur = a3 + fat<unsigned>(self, 0x4c);                        // 0x10010c3f / 0x10010c43
+        fat<unsigned>(self, 0x4c) = cur;                                      // 0x10010c4e
+        unsigned lead = fat<unsigned>(self, 0x50) * 10;                       // 0x10010c4b / 0x10010c51
+        unsigned z = (lead - q + cur) * fat<unsigned>(self, 0xac);            // 0x10010c53-0x10010c5c
+        edx = c3dh_div1000(z);                                                // 0x10010c63 / 0x10010c65
+    }
+    unsigned align = fat<unsigned short>(self, 0xb4);                         // 0x10010c72
+    *out1 = align * edx;                                                      // 0x10010c7b / 0x10010c7e
+    unsigned align2 = fat<unsigned short>(self, 0xb4);                        // 0x10010c80
+    *out2 = (align2 * fat<unsigned>(self, 0x48)) & fat<unsigned>(self, 0x58); // 0x10010c87-0x10010c94
+    unsigned len = fat<unsigned>(self, 0x78);                                 // 0x10010c99
+    fat<unsigned>(self, 0x48) = fat<unsigned>(self, 0x48) + edx;              // 0x10010c96 / 0x10010c9c / 0x10010c9e
+    if (*out1 <= len) return 0;                                               // 0x10010ca1 / 0x10010ca3 / 0x10010ca5
+    void* com = fat<void*>(self, 0x60);                                       // 0x10010ca7
+    fat<unsigned>(self, 0x4c) = 0;                                            // 0x10010caa
+    fat<unsigned>(self, 0x48) = 0;                                            // 0x10010cb3
+    if (com != 0) reinterpret_cast<Com1_t>(c3dh_slot(com, 0x48))(com);        // 0x10010cbf
+    if (fat<void*>(self, 0x60) != 0) {                                        // 0x10010cc2 / 0x10010cc7
+        fat<unsigned>(self, 0x54) = c3dh_imp<Imp0_t>(kIatTimeGetTime)();      // 0x10010cc9 / 0x10010ccb
+        com = fat<void*>(self, 0x60);                                         // 0x10010cce
+        if (reinterpret_cast<Com4_t>(c3dh_slot(com, 0x30))(com, 0, 0, 1) == 0) {   // 0x10010cda / 0x10010cdd
+            com = fat<void*>(self, 0x60);                                     // 0x10010ce1
+            reinterpret_cast<Com4_t>(c3dh_slot(com, 0x14))(com, reinterpret_cast<unsigned>(static_cast<char*>(self) + 0xa8), 0x12, 0);   // 0x10010cf2
+        }
+    }
+    *out1 = 0;                                                                // 0x10010cf5
+    return 0x27;                                                              // 0x10010cfd
+}
+
+// 0x000135a0  Ds3DListener::setPosition (VA 0x100135a0). Three stack arguments, the position floats as raw dwords (`ret 0xc`
+// 0x100135f6). A COM-shaped 3D listener interface at +0xd8 (0x100135a3 / 0x100135ab): SetPosition (vtable +0x38: interface, a1,
+// a2, a3, 0) (pushes 0x100135b3-0x100135c0, `call [ecx+0x38]` 0x100135c1). A non-zero result is mapped by mapDsError
+// 0x1000f480 (thunk 0x1000268a, cdecl, 0x100135c9) and returned (0x100135d2). No interface, or a zero result, stores the three
+// dwords at +0x1ac / +0x1b0 / +0x1b4 (0x100135e1-0x100135ed) and returns 0 (0x100135f3).
+typedef unsigned(__fastcall* ListenerPos_t)(void*, void*, unsigned, unsigned, unsigned);
+ListenerPos_t ListenerPos_orig;
+unsigned __fastcall ListenerPos_re(void* self, void*, unsigned a1, unsigned a2, unsigned a3) {
+    void* com = fat<void*>(self, 0xd8);                                       // 0x100135a3
+    if (com != 0) {                                                           // 0x100135ab
+        unsigned r = reinterpret_cast<Com5_t>(c3dh_slot(com, 0x38))(com, a1, a2, a3, 0);   // 0x100135c1
+        if (r != 0) return c3dh_fn<Cdecl1_t>(0x0000f480)(r);                  // 0x100135c9 -> 0x1000f480
+    }
+    fat<unsigned>(self, 0x1ac) = a1;                                          // 0x100135e1
+    fat<unsigned>(self, 0x1b0) = a2;                                          // 0x100135e7
+    fat<unsigned>(self, 0x1b4) = a3;                                          // 0x100135ed
+    return 0;                                                                 // 0x100135f3
+}
+
+// 0x0000a200  Midi_Device::disableOutput (VA 0x1000a200). Bit 0 of the dword at +0x24 (`test byte ptr [esi+0x24], 1` 0x1000a203)
+// clear returns 0 (0x1000a227). Set: bit 1 of the module byte 0x100b49bc is cleared (`and cl, 0xfd` 0x1000a20f, stored 0x1000a212);
+// the object's virtual slot +0x50 is called with the object in ecx (`call [eax+0x50]` 0x1000a21c); bit 0 of +0x24 is cleared with a
+// dword store of the value read after the call (0x1000a21f-0x1000a224); returns 0.
+typedef unsigned(__fastcall* MidiOff_t)(void*, void*);
+MidiOff_t MidiOff_orig;
+unsigned __fastcall MidiOff_re(void* self, void*) {
+    if ((fat<unsigned char>(self, 0x24) & 1) == 0) return 0;                  // 0x1000a203 / 0x1000a207
+    unsigned char* g = reinterpret_cast<unsigned char*>(c3dh_sound(0x000b49bc));
+    unsigned char cl = *g;                                                    // 0x1000a209
+    cl = static_cast<unsigned char>(cl & 0xfd);                               // 0x1000a20f
+    *g = cl;                                                                  // 0x1000a212
+    reinterpret_cast<Th0v_t>(c3dh_slot(self, 0x50))(self, 0);                 // 0x1000a21c
+    unsigned f = fat<unsigned>(self, 0x24);                                   // 0x1000a21f
+    f = (f & ~0xffu) | static_cast<unsigned char>(f & 0xfe);                  // 0x1000a222 (and al, 0xfe)
+    fat<unsigned>(self, 0x24) = f;                                            // 0x1000a224
+    return 0;                                                                 // 0x1000a227
+}
+
+// 0x00008ce0  SoundTimer::start (VA 0x10008ce0). Bit 2 of the flag dword at +0x3c set returns 0xd (0x10008ce3 / 0x10008ce9). Otherwise
+// the module re-entrancy word 0x100b49a8 becomes 0 (0x10008cf0); timeBeginPeriod [0x100b8640] (the resolution at +0x18,
+// 0x10008cfa / 0x10008cfe) returning 0x61 returns 0xb (0x10008d04 / 0x10008d09); timeSetEvent [0x100b8644] (delay [+0],
+// resolution [+0x18], callback 0x1000128a (a thunk to SoundTimer::onTick 0x10008ed0), user data = this, flags [+0x1c]; pushes
+// 0x10008d18-0x10008d20, call 0x10008d21) is stored at +0x40 (0x10008d2a); 0x61 returns 0xb (0x10008d27 / 0x10008d2f);
+// else the low three bits of +0x3c are set (`or al, 7` 0x10008d39) and 0 is returned (0x10008d3e).
+typedef unsigned(__fastcall* TimerStart_t)(void*, void*);
+TimerStart_t TimerStart_orig;
+unsigned __fastcall TimerStart_re(void* self, void*) {
+    if ((fat<unsigned char>(self, 0x3c) & 4) != 0) return 0xd;                // 0x10008ce3 / 0x10008ce7 / 0x10008ce9
+    c3dh_gTick() = 0;                                                         // 0x10008cf0
+    if (c3dh_imp<Imp1_t>(kIatTimeBeginPeriod)(fat<unsigned>(self, 0x18)) == 0x61) return 0xb;   // 0x10008cfe / 0x10008d04
+    unsigned id = c3dh_imp<Imp5_t>(kIatTimeSetEvent)(fat<unsigned>(self, 0), fat<unsigned>(self, 0x18),
+        reinterpret_cast<unsigned>(c3dh_sound(0x0000128a)), reinterpret_cast<unsigned>(self), fat<unsigned>(self, 0x1c));   // 0x10008d21
+    fat<unsigned>(self, 0x40) = id;                                           // 0x10008d2a
+    if (id == 0x61) return 0xb;                                               // 0x10008d27 / 0x10008d2f
+    unsigned f = fat<unsigned>(self, 0x3c);                                   // 0x10008d36
+    f = (f & ~0xffu) | static_cast<unsigned char>(f | 7);                     // 0x10008d39 (or al, 7)
+    fat<unsigned>(self, 0x3c) = f;                                            // 0x10008d3b
+    return 0;                                                                 // 0x10008d3e
+}
+
+// 0x00008d70  SoundTimer::killEvent (VA 0x10008d70). Bit 0 of +0x3c clear returns 0x15 (0x10008d73 / 0x10008d79). Otherwise the
+// re-entrancy word 0x100b49a8 is incremented (0x10008d80 / 0x10008d8b / 0x10008d8c), bit 2 of +0x3c is cleared (0x10008d92-
+// 0x10008d98), EnterCriticalSection and LeaveCriticalSection run back to back on 0x100b4990 (0x10008d9b / 0x10008da6), +8 and +4
+// are cleared (0x10008dae / 0x10008db1), timeKillEvent [0x100b8648] gets the id at +0x40 (0x10008db8), timeEndPeriod [0x100b864c]
+// gets the resolution at +0x18 (0x10008dc2), bit 0 of +0x3c is cleared with the value read after the calls (0x10008dc8-0x10008dcd)
+// and 0 is returned (0x10008dd0).
+typedef unsigned(__fastcall* KillEvent_t)(void*, void*);
+KillEvent_t KillEvent_orig;
+unsigned __fastcall KillEvent_re(void* self, void*) {
+    if ((fat<unsigned char>(self, 0x3c) & 1) == 0) return 0x15;               // 0x10008d73 / 0x10008d77 / 0x10008d79
+    c3dh_gTick() = c3dh_gTick() + 1;                                          // 0x10008d80 / 0x10008d8b / 0x10008d8c
+    fat<unsigned>(self, 0x3c) = fat<unsigned>(self, 0x3c) & 0xfffffffbu;      // 0x10008d92-0x10008d98
+    c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(c3dh_timerCs());               // 0x10008d9b
+    c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(c3dh_timerCs());               // 0x10008da6
+    fat<unsigned>(self, 8) = 0;                                               // 0x10008dae
+    fat<unsigned>(self, 4) = 0;                                               // 0x10008db1
+    c3dh_imp<Imp1_t>(kIatTimeKillEvent)(fat<unsigned>(self, 0x40));           // 0x10008db8
+    c3dh_imp<Imp1_t>(kIatTimeEndPeriod)(fat<unsigned>(self, 0x18));           // 0x10008dc2
+    unsigned f = fat<unsigned>(self, 0x3c);                                   // 0x10008dc8
+    f = (f & ~0xffu) | static_cast<unsigned char>(f & 0xfe);                  // 0x10008dcb (and al, 0xfe)
+    fat<unsigned>(self, 0x3c) = f;                                            // 0x10008dcd
+    return 0;                                                                 // 0x10008dd0
+}
+
+// 0x0000a170  registerTimerClient (VA 0x1000a170). The module pointer g_soundTimer 0x100b49ec (0x1000a170): NULL returns 0 (the
+// value in eax, 0x1000a193). Otherwise it is stored at this+0x2c (0x1000a179), SoundTimer::registerClient 0x100088e0 (thunk
+// 0x1000227a, ecx = the timer, argument = this, 0x1000a183) runs, the global is read again (0x1000a188) and SoundTimer::start
+// 0x10008ce0 (thunk 0x10001dfc) is reached by a tail jump (0x1000a18e), so its result is the result.
+typedef unsigned(__fastcall* RegTimer_t)(void*, void*);
+RegTimer_t RegTimer_orig;
+unsigned __fastcall RegTimer_re(void* self, void*) {
+    void* t = c3dh_gSoundTimer();                                             // 0x1000a170
+    if (t == 0) return 0;                                                     // 0x1000a175 / 0x1000a177
+    fat<void*>(self, 0x2c) = t;                                               // 0x1000a179
+    c3dh_fn<Th1_t>(0x000088e0)(t, 0, reinterpret_cast<unsigned>(self));       // 0x1000a183 -> 0x100088e0
+    return c3dh_fn<Th0u_t>(0x00008ce0)(c3dh_gSoundTimer(), 0);                // 0x1000a188 / 0x1000a18e -> 0x10008ce0
+}
+
+// 0x00009da0  Midi_Device::openOutput (VA 0x10009da0). Two stack arguments (`ret 8`); bit 1 of the low byte of the second
+// (`mov al, [esp+8]` 0x10009da0, `test al, 2` 0x10009da5) selects midiOutOpen [0x100b85f8] (&this[0x3c], -1, 0, 0, 0)
+// (pushes 0x10009dab-0x10009db6, call 0x10009db7); a non-zero result returns 7 (0x10009dc1). Then, as registerTimerClient
+// does, a non-NULL g_soundTimer (0x10009dca / 0x10009dcf) is stored at this+0x2c (0x10009dd3) and SoundTimer::registerClient
+// (thunk 0x1000227a, ecx = the timer read again, argument = this, 0x10009ddd) runs. Returns 0 (0x10009de2).
+typedef unsigned(__fastcall* OpenOut_t)(void*, void*, unsigned, unsigned);
+OpenOut_t OpenOut_orig;
+unsigned __fastcall OpenOut_re(void* self, void*, unsigned a1, unsigned a2) {
+    (void)a1;
+    if ((a2 & 2) != 0) {                                                      // 0x10009da5
+        unsigned r = c3dh_imp<Imp5_t>(kIatMidiOutOpen)(reinterpret_cast<unsigned>(static_cast<char*>(self) + 0x3c),
+                                                       0xffffffffu, 0, 0, 0); // 0x10009db7
+        if (r != 0) return 7;                                                 // 0x10009dbd / 0x10009dc1
+    }
+    if (c3dh_gSoundTimer() != 0) {                                            // 0x10009dca / 0x10009dcf
+        fat<void*>(self, 0x2c) = c3dh_gSoundTimer();                          // 0x10009dd3
+        c3dh_fn<Th1_t>(0x000088e0)(c3dh_gSoundTimer(), 0, reinterpret_cast<unsigned>(self));   // 0x10009ddd
+    }
+    return 0;                                                                 // 0x10009de2
+}
+
+
+// =====================================================================================================================
+// C. mmio handles, wave-in devices, MIDI files, handle lists (WINMM imports stood in; list nodes and elements released
+//    through the recording operator delete)
+// =====================================================================================================================
+
+typedef unsigned(__stdcall* MmClose_t)(unsigned hmmio, unsigned flags);
+typedef unsigned(__stdcall* MmOpen_t)(const char* name, void* info, unsigned flags);
+typedef unsigned(__stdcall* MmGetInfo_t)(unsigned hmmio, void* info, unsigned flags);
+typedef unsigned(__stdcall* WaveInDevCaps_t)(unsigned id, void* caps, unsigned size);
+typedef unsigned(__stdcall* WaveInUnprep_t)(unsigned h, void* hdr, unsigned size);
+
+const unsigned kIatSetEvent = 0x000b83fc;
+const unsigned kIatWaveInClose = 0x000b85fc;
+const unsigned kIatWaveInStop = 0x000b8614;
+const unsigned kIatWaveInReset = 0x000b8618;
+const unsigned kIatWaveInUnprepareHeader = 0x000b8608;
+const unsigned kIatWaveInGetNumDevs = 0x000b861c;
+const unsigned kIatWaveInGetDevCapsA = 0x000b8620;
+const unsigned kIatMmioOpenA = 0x000b8660;
+const unsigned kIatMmioGetInfo = 0x000b8668;
+const unsigned kIatMmioClose = 0x000b8670;
+
+// The module counter of open mmio handles 0x100b4a08 and the CS of the wave-in device 0x100b503c.
+static inline unsigned& c3dh_gMmioCount() { return *reinterpret_cast<unsigned*>(c3dh_sound(0x000b4a08)); }
+
+// Pops the front node of a node list embedded in an object (front pointer at self+frontOff, back at +backOff, count at +countOff;
+// nodes {+0 previous, +4 next, +8 element}): the next node's +0 is cleared and becomes the front, or both header pointers
+// are cleared when it was the last (0x100061a2-0x100061ac); the node is released by operator delete 0x1004249a (0x100061b3) and the
+// count is decremented from a read made after the call (0x100061b8 / 0x100061be). Returns the element.
+static void* c3dh_popFront(void* self, unsigned frontOff, unsigned backOff, unsigned countOff, char* node) {
+    char* next = fat<char*>(node, 4);
+    if (next) {
+        fat<unsigned>(next, 0) = 0;
+        fat<void*>(self, frontOff) = next;
+    } else {
+        fat<unsigned>(self, backOff) = 0;
+        fat<unsigned>(self, frontOff) = 0;
+    }
+    void* elem = fat<void*>(node, 8);
+    c3dh_delete(node);
+    fat<unsigned>(self, countOff) = fat<unsigned>(self, countOff) - 1;
+    return elem;
+}
+
+// 0x000086f0  openMmioFile (VA 0x100086f0). One stack argument (the file name, `ret 4`). A 0x48-byte MMIOINFO is zeroed (`rep stosd`
+// 0x12 dwords, 0x100086f7-0x10008702) with fccIOProc = 0x204d454d ("MEM ", +4, 0x1000871b) and cchBuffer = 0x1000 (+0x14,
+// 0x10008713); mmioOpenA [0x100b8660] (name, &info, 0x11001) (pushes 0x1000870c-0x10008712, call 0x10008723) is stored at this+0x30
+// (0x10008729). A zero result returns 8 (0x10008732); otherwise the module counter 0x100b4a08 is incremented (0x1000873d-0x10008743)
+// and 0 is returned (0x10008748).
+typedef unsigned(__fastcall* OpenMmioFile_t)(void*, void*, const char*);
+OpenMmioFile_t OpenMmioFile_orig;
+unsigned __fastcall OpenMmioFile_re(void* self, void*, const char* name) {
+    unsigned info[0x12];
+    for (int i = 0; i < 0x12; i++) info[i] = 0;                                // 0x100086fc-0x10008702
+    info[1] = 0x204d454d;                                                      // 0x1000871b
+    info[5] = 0x1000;                                                          // 0x10008713
+    unsigned h = c3dh_imp<MmOpen_t>(kIatMmioOpenA)(name, info, 0x11001);       // 0x10008723
+    fat<unsigned>(self, 0x30) = h;                                             // 0x10008729
+    if (h == 0) return 8;                                                      // 0x1000872d / 0x10008730 / 0x10008732
+    c3dh_gMmioCount() = c3dh_gMmioCount() + 1;                                 // 0x1000873d-0x10008743
+    return 0;                                                                  // 0x10008748
+}
+
+// 0x00006420  Wave_Device::openMemoryMmio (VA 0x10006420). One stack argument, the size (`ret 4`). A non-zero handle at this+0xb0
+// (0x10006426) returns 0 at once (0x10006430). Otherwise a zeroed MMIOINFO gets fccIOProc "MEM " (+4, 0x1000644b), cchBuffer =
+// the argument, or this+0xb8 when the argument is 0 (0x10006453-0x1000645e, stored 0x1000646a) and adwInfo[0] = 0x64 (+0x30,
+// 0x1000646e); mmioOpenA [0x100b8660] (NULL, &info, 0x1000) (pushes 0x10006462-0x10006468, call 0x10006476). A zero result returns 0
+// (0x10006480). Otherwise the module counter 0x100b4a08 is incremented (0x10006487 / 0x10006492 / 0x10006495), mmioGetInfo
+// [0x100b8668] (handle, this+0x6c, 0) copies the info into the object (0x1000648d-0x1000649b) and this+0x6c is returned (0x100064a1).
+typedef unsigned(__fastcall* OpenMemMmio_t)(void*, void*, unsigned);
+OpenMemMmio_t OpenMemMmio_orig;
+unsigned __fastcall OpenMemMmio_re(void* self, void*, unsigned size) {
+    if (fat<unsigned>(self, 0xb0) != 0) return 0;                              // 0x10006426 / 0x1000642c / 0x10006430
+    unsigned info[0x12];
+    for (int i = 0; i < 0x12; i++) info[i] = 0;                                // 0x1000643a-0x10006445
+    info[1] = 0x204d454d;                                                      // 0x1000644b
+    unsigned len = size;                                                       // 0x10006447
+    if (len == 0) len = fat<unsigned>(self, 0xb8);                             // 0x10006453 / 0x10006456 / 0x10006458
+    info[5] = len;                                                             // 0x1000646a
+    info[12] = 0x64;                                                           // 0x1000646e
+    unsigned h = c3dh_imp<MmOpen_t>(kIatMmioOpenA)(0, info, 0x1000);           // 0x10006476
+    if (h == 0) return 0;                                                      // 0x1000647c / 0x1000647e
+    c3dh_gMmioCount() = c3dh_gMmioCount() + 1;                                 // 0x10006487-0x10006495
+    char* dst = static_cast<char*>(self) + 0x6c;                               // 0x1000648d
+    c3dh_imp<MmGetInfo_t>(kIatMmioGetInfo)(h, dst, 0);                         // 0x1000649b
+    return reinterpret_cast<unsigned>(dst);                                    // 0x100064a1
+}
+
+// 0x00038650  WaveInDevice_ctor (VA 0x10038650). Fields +0x5c / +0x60 / +0x64 / +0x68 cleared (0x10038659-0x10038662), the vtable 0x1005c604
+// stored at +0 (0x10038665), +4 cleared (0x1003866b); waveInGetNumDevs [0x100b861c] is stored at +0x38 (0x1003866d / 0x1003867b);
+// +0x40 cleared (0x1003867e); waveInGetDevCapsA [0x100b8620] (-1, this+8, 0x30) (pushes 0x10038676-0x10038679, call 0x10038681), result
+// unused; word stores +0x58 = 0 (0x1003868c), +0x48 = 1 and +0x4a = 1 (0x10038690 / 0x10038694); +0x44 = 0 (0x10038698), +0x4c = 0x1f40
+// (0x1003869b), +0x50 = 0x3e80 (0x100386a2), words +0x54 = 2 and +0x56 = 0x10 (0x100386a9 / 0x100386af). Returns this (0x100386b5).
+typedef void*(__fastcall* WaveInCtor_t)(void*, void*);
+WaveInCtor_t WaveInCtor_orig;
+void* __fastcall WaveInCtor_re(void* self, void*) {
+    fat<unsigned>(self, 0x5c) = 0;                                             // 0x10038659
+    fat<unsigned>(self, 0x60) = 0;                                             // 0x1003865c
+    fat<unsigned>(self, 0x64) = 0;                                             // 0x1003865f
+    fat<unsigned>(self, 0x68) = 0;                                             // 0x10038662
+    fat<void*>(self, 0) = c3dh_sound(0x0005c604);                              // 0x10038665
+    fat<unsigned>(self, 4) = 0;                                                // 0x1003866b
+    unsigned n = c3dh_imp<Imp0_t>(kIatWaveInGetNumDevs)();                     // 0x1003866d
+    fat<unsigned>(self, 0x38) = n;                                             // 0x1003867b
+    fat<unsigned>(self, 0x40) = 0;                                             // 0x1003867e
+    c3dh_imp<WaveInDevCaps_t>(kIatWaveInGetDevCapsA)(0xffffffffu, static_cast<char*>(self) + 8, 0x30);   // 0x10038681
+    fat<unsigned short>(self, 0x58) = 0;                                       // 0x1003868c
+    fat<unsigned short>(self, 0x48) = 1;                                       // 0x10038690
+    fat<unsigned short>(self, 0x4a) = 1;                                       // 0x10038694
+    fat<unsigned>(self, 0x44) = 0;                                             // 0x10038698
+    fat<unsigned>(self, 0x4c) = 0x1f40;                                        // 0x1003869b
+    fat<unsigned>(self, 0x50) = 0x3e80;                                        // 0x100386a2
+    fat<unsigned short>(self, 0x54) = 2;                                       // 0x100386a9
+    fat<unsigned short>(self, 0x56) = 0x10;                                    // 0x100386af
+    return self;                                                               // 0x100386b5
+}
+
+// 0x0002a8a0  stopSoundThreadFull (VA 0x1002a8a0). `this` has a flag byte at +0 (bit 0 = running, `test al, 1` 0x1002a8a5; clear: nothing
+// is done and eax is left as the caller had it, 0x1002a8ef), the critical section at +4 (`lea edi, [esi+4]` 0x1002a8b2) and the
+// event handle at +0x24. Running: bit 0 is cleared (0x1002a8b5 / 0x1002a8b8); EnterCriticalSection (0x1002a8ba); the flag byte is
+// read again and bit 0 cleared (0x1002a8bc-0x1002a8c7); SetEvent [0x100b83fc] (+0x24) (0x1002a8c7); LeaveCriticalSection (0x1002a8d4);
+// Sleep(0) [0x100b840c] (0x1002a8d8); EnterCriticalSection and LeaveCriticalSection again (0x1002a8df / 0x1002a8e2); +0x20 and +0x1c are
+// cleared (0x1002a8e8 / 0x1002a8eb).
+typedef void(__fastcall* StopThr_t)(void*, void*);
+StopThr_t StopThr_orig;
+void __fastcall StopThr_re(void* self, void*) {
+    unsigned char al = fat<unsigned char>(self, 0);                            // 0x1002a8a3
+    if ((al & 1) == 0) return;                                                 // 0x1002a8a5 / 0x1002a8a7
+    void* cs = static_cast<char*>(self) + 4;                                   // 0x1002a8b2
+    al = static_cast<unsigned char>(al & 0xfe);                                // 0x1002a8b5
+    fat<unsigned char>(self, 0) = al;                                          // 0x1002a8b8
+    c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(cs);                            // 0x1002a8ba
+    unsigned char dl = fat<unsigned char>(self, 0);                            // 0x1002a8bc
+    dl = static_cast<unsigned char>(dl & 0xfe);                                // 0x1002a8c1
+    fat<unsigned char>(self, 0) = dl;                                          // 0x1002a8c5
+    c3dh_imp<Imp1_t>(kIatSetEvent)(fat<unsigned>(self, 0x24));                 // 0x1002a8c7
+    c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(cs);                            // 0x1002a8d4
+    c3dh_imp<Imp1_t>(kIatSleep)(0);                                            // 0x1002a8d8
+    c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(cs);                            // 0x1002a8df
+    c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(cs);                            // 0x1002a8e2
+    fat<unsigned>(self, 0x20) = 0;                                             // 0x1002a8e8
+    fat<unsigned>(self, 0x1c) = 0;                                             // 0x1002a8eb
+}
+
+// 0x00039140  WaveInDevice_close (VA 0x10039140). A zero wave-in handle at +0x44 returns 0x13 (0x10039146 / 0x1003914a). Otherwise
+// EnterCriticalSection on the module section 0x100b503c (0x10039152 / 0x10039157); bit 1 of the flag dword at +4 is cleared (low byte
+// and 0xfd, 0x10039160); waveInStop [0x100b8614] and waveInReset [0x100b8618] on the handle (0x10039169 / 0x10039173); the buffer list
+// at +0x5c is walked from its front with the cursor +0x64 (0x10039179): while the node's header pointer (+8) is non-null and the handle
+// is still non-zero, waveInUnprepareHeader [0x100b8608] (handle, header, 0x20) (0x1003919e) runs, stopping at the first non-zero result
+// (0x100391a2) and moving on through the nodes' +4 links (0x100391ab-0x100391ba); waveInClose [0x100b85fc] (0x100391c0). A non-zero
+// result is mapped (0x100391cb-0x100391db: result - 2 above 0x1f gives 0xb; otherwise the byte table 0x10039248 picks one of seven
+// returns through the jump table 0x1003922c: 0xa, 0xc, 1, 0x11, 0x12, 0xe, 0xb) and returned with the section still entered. A zero
+// result leaves the section (0x10039213 / 0x10039218), clears +0x44 (0x1003921e) and returns 0 (0x10039225).
+typedef unsigned(__fastcall* WaveInClose_t)(void*, void*);
+WaveInClose_t WaveInClose_orig;
+static unsigned c3dh_waveInErr(unsigned r) {
+    static const unsigned char idx[0x20] = {0, 6, 1, 0, 2, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 5};   // 0x10039248
+    static const unsigned val[7] = {0xa, 0xc, 1, 0x11, 0x12, 0xe, 0xb};      // jump table 0x1003922c: 0x100391e2, 0x100391f7, 0x100391e9, 0x100391fe, 0x10039205, 0x100391f0, 0x1003920c
+    unsigned e = r - 2;                                                        // 0x100391cb
+    if (e > 0x1f) return 0xb;                                                  // 0x100391ce / 0x100391d1 / 0x1003920c
+    return val[idx[e]];                                                        // 0x100391d5 / 0x100391db
+}
+unsigned __fastcall WaveInClose_re(void* self, void*) {
+    if (fat<unsigned>(self, 0x44) == 0) return 0x13;                           // 0x10039143 / 0x10039146 / 0x1003914a
+    void* cs = c3dh_sound(0x000b503c);
+    c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(cs);                            // 0x10039157
+    unsigned f = fat<unsigned>(self, 4);                                       // 0x1003915d
+    f = (f & ~0xffu) | static_cast<unsigned char>(f & 0xfd);                   // 0x10039160
+    fat<unsigned>(self, 4) = f;                                                // 0x10039162
+    c3dh_imp<Imp1_t>(kIatWaveInStop)(fat<unsigned>(self, 0x44));               // 0x10039169
+    c3dh_imp<Imp1_t>(kIatWaveInReset)(fat<unsigned>(self, 0x44));              // 0x10039173
+    char* node = fat<char*>(self, 0x5c);                                       // 0x10039179
+    fat<void*>(self, 0x64) = node;                                             // 0x1003917e
+    if (node) {                                                                // 0x1003917c
+        void* hdr = fat<void*>(node, 8);                                       // 0x10039183
+        if (hdr && fat<unsigned>(self, 0x44) != 0) {                           // 0x10039186 / 0x1003918d
+            for (;;) {
+                if (c3dh_imp<WaveInUnprep_t>(kIatWaveInUnprepareHeader)(fat<unsigned>(self, 0x44), hdr, 0x20) != 0) break;   // 0x1003919e / 0x100391a2
+                char* cur = fat<char*>(self, 0x64);                            // 0x100391a4
+                if (!cur) break;                                               // 0x100391a7
+                cur = fat<char*>(cur, 4);                                      // 0x100391ab
+                fat<void*>(self, 0x64) = cur;                                  // 0x100391b0
+                if (!cur) break;                                               // 0x100391b3
+                hdr = fat<void*>(cur, 8);                                      // 0x100391b5
+                if (!hdr) break;                                               // 0x100391ba
+            }
+        }
+    }
+    unsigned r = c3dh_imp<Imp1_t>(kIatWaveInClose)(fat<unsigned>(self, 0x44)); // 0x100391c0
+    if (r != 0) return c3dh_waveInErr(r);                                      // 0x100391c6 / 0x100391c9
+    c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(cs);                            // 0x10039218
+    fat<unsigned>(self, 0x44) = 0;                                             // 0x1003921e
+    return 0;                                                                  // 0x10039225
+}
+
+// 0x00038890  WaveInDevice_allocCaptureBuffers (VA 0x10038890). Two stack arguments, count and size (`ret 8`). The cursor +0x64 takes the front
+// of the buffer list at +0x5c (0x1003889b / 0x100388a0); a front node whose header pointer (+8) is non-zero returns 0x10 (0x100388a5 /
+// 0x100388ad). Per iteration (count times, unsigned `jbe` 0x100388c1 / `jae` 0x10038960): a 0x20-byte header is allocated (0x100388c7) and
+// initialised {+0 0, +4 0, +8 0, +0xc itself, +0x10..+0x1c 0} (0x100388d5-0x100388e9); a non-zero +0 returns 0x10 (0x100388f2 / 0x100388f4);
+// size 0 returns 0xa (0x100388fa / 0x100388fc / 0x1003896a); +0 gets a new block of `size` bytes (0x100388fe / 0x10038904) and +4 the
+// size (0x1003890f); the previous header (ebp) gets this one at +0x18 (0x10038914); a 12-byte list node {0, 0, header} (0x10038917-0x1003892c)
+// is appended at the back (+0x60: its +4 and the node's +0, or the front +0x5c when empty, 0x1003933a-0x10038944), the back becomes the node
+// and the node count at +0x68 is incremented (0x10038947-0x10038959). After the loop (0x10038974) the last header (the back node's +8) gets
+// the first header (the front node's +8) at +0x18, or 0 when the front is NULL (0x10038992 / 0x100389a4), and 0 is returned. A count of 0 on
+// an empty list stores through the NULL last header: not covered.
+typedef unsigned(__fastcall* AllocCap_t)(void*, void*, unsigned, unsigned);
+AllocCap_t AllocCap_orig;
+unsigned __fastcall AllocCap_re(void* self, void*, unsigned count, unsigned size) {
+    char* front = fat<char*>(self, 0x5c);                                      // 0x1003889b
+    fat<void*>(self, 0x64) = front;                                            // 0x100388a0
+    if (front != 0 && fat<unsigned>(front, 8) != 0) return 0x10;               // 0x100388a3 / 0x100388a5 / 0x100388a8 / 0x100388ad
+    char* prev = 0;                                                            // ebp
+    unsigned i = 0;                                                            // 0x100388bb
+    if (count != 0) {                                                          // 0x100388bf / 0x100388c1
+        for (;;) {
+            char* hdr = static_cast<char*>(c3dh_new(0x20));                    // 0x100388c9
+            if (hdr) {                                                         // 0x100388d1
+                fat<unsigned>(hdr, 0) = 0;                                     // 0x100388d5
+                fat<unsigned>(hdr, 4) = 0;                                     // 0x100388d7
+                fat<unsigned>(hdr, 8) = 0;                                     // 0x100388da
+                fat<void*>(hdr, 0xc) = hdr;                                    // 0x100388dd
+                fat<unsigned>(hdr, 0x10) = 0;                                  // 0x100388e0
+                fat<unsigned>(hdr, 0x14) = 0;                                  // 0x100388e3
+                fat<unsigned>(hdr, 0x18) = 0;                                  // 0x100388e6
+                fat<unsigned>(hdr, 0x1c) = 0;                                  // 0x100388e9
+            }
+            if (fat<unsigned>(hdr, 0) != 0) return 0x10;                       // 0x100388f2 / 0x100388f4
+            if (size == 0) return 0xa;                                         // 0x100388fa / 0x100388fc
+            fat<void*>(hdr, 0) = c3dh_new(size);                               // 0x100388ff / 0x10038904
+            fat<unsigned>(hdr, 4) = size;                                      // 0x1003890f
+            if (prev != 0) fat<void*>(prev, 0x18) = hdr;                       // 0x1003890d / 0x10038914
+            prev = hdr;                                                        // 0x10038919
+            char* node = static_cast<char*>(c3dh_new(0xc));                    // 0x1003891b
+            if (node) {                                                        // 0x10038923
+                fat<unsigned>(node, 0) = 0;                                    // 0x10038927
+                fat<unsigned>(node, 4) = 0;                                    // 0x10038929
+                fat<void*>(node, 8) = hdr;                                     // 0x1003892c
+            }
+            char* back = fat<char*>(self, 0x60);                               // 0x10038933
+            if (back) {                                                        // 0x10038936
+                fat<void*>(back, 4) = node;                                    // 0x1003893a
+                fat<void*>(node, 0) = fat<void*>(self, 0x60);                  // 0x1003893d / 0x10038940
+            } else {
+                fat<void*>(self, 0x5c) = node;                                 // 0x10038944
+            }
+            unsigned n = fat<unsigned>(self, 0x68) + 1;                        // 0x10038947 / 0x10038955
+            fat<void*>(self, 0x60) = node;                                     // 0x1003894e
+            i = i + 1;                                                         // 0x10038956
+            fat<unsigned>(self, 0x68) = n;                                     // 0x10038959
+            if (i >= count) break;                                             // 0x10038957 / 0x10038960
+        }
+    }
+    char* lastNode = fat<char*>(self, 0x60);                                   // 0x10038974
+    fat<void*>(self, 0x64) = lastNode;                                         // 0x10038979
+    char* lastHdr = lastNode ? fat<char*>(lastNode, 8) : 0;                    // 0x1003897e / 0x10038983
+    char* firstNode = fat<char*>(self, 0x5c);                                  // 0x10038985
+    fat<void*>(self, 0x64) = firstNode;                                        // 0x1003898a
+    char* firstHdr = firstNode ? fat<char*>(firstNode, 8) : 0;                 // 0x1003898f / 0x100389a2
+    fat<void*>(lastHdr, 0x18) = firstHdr;                                      // 0x10038994 / 0x100389a4
+    return 0;                                                                  // 0x10038998
+}
+
+// 0x0001d4a0  Midi_resetFileState (VA 0x1001d4a0). A non-zero mmio handle at +0 (0x1001d4a7) is closed with mmioClose [0x100b8670] (handle, 0)
+// (0x1001d4af) and the module counter 0x100b4a08 is decremented (0x1001d4b5). +0 is cleared and the 0x12 dwords from +4 are zeroed
+// (`rep stosd` 0x1001d4c2-0x1001d4c7); +0x4c, +0x160..+0x170 cleared (0x1001d4d1-0x1001d4eb); +0x178 and +0x17c = 0x10000 (0x1001d4f1 / 0x1001d4f7).
+// With g_soundTimer 0x100b49ec non-NULL (0x1001d4fd / 0x1001d504): its period (first dword, 0x1001d506) at or above 1000 stores 0x10000 at
+// +0x174 (0x1001d529), below stores 0x10000 / (1000 / period) (two unsigned divides, 0x1001d510-0x1001d521; period 0 faults at 0x1001d517).
+// +0x180..+0x190 and +0x198 are cleared (0x1001d52f-0x1001d54d).
+typedef void(__fastcall* MidiReset_t)(void*, void*);
+MidiReset_t MidiReset_orig;
+void __fastcall MidiReset_re(void* self, void*) {
+    unsigned h = fat<unsigned>(self, 0);                                       // 0x1001d4a7
+    if (h != 0) {                                                              // 0x1001d4ab
+        c3dh_imp<MmClose_t>(kIatMmioClose)(h, 0);                              // 0x1001d4af
+        c3dh_gMmioCount() = c3dh_gMmioCount() - 1;                             // 0x1001d4b5
+    }
+    fat<unsigned>(self, 0) = 0;                                                // 0x1001d4c5
+    for (int i = 0; i < 0x12; i++) fat<unsigned>(self, 4 + 4 * i) = 0;         // 0x1001d4c2-0x1001d4c7
+    fat<unsigned>(self, 0x4c) = 0;                                             // 0x1001d4d1
+    fat<unsigned>(self, 0x160) = 0;                                            // 0x1001d4d3
+    fat<unsigned>(self, 0x164) = 0;                                            // 0x1001d4d9
+    fat<unsigned>(self, 0x168) = 0;                                            // 0x1001d4df
+    fat<unsigned>(self, 0x16c) = 0;                                            // 0x1001d4e5
+    fat<unsigned>(self, 0x170) = 0;                                            // 0x1001d4eb
+    fat<unsigned>(self, 0x178) = 0x10000;                                      // 0x1001d4f1
+    fat<unsigned>(self, 0x17c) = 0x10000;                                      // 0x1001d4f7
+    unsigned* timer = static_cast<unsigned*>(c3dh_gSoundTimer());              // 0x1001d4fd
+    if (timer != 0) {                                                          // 0x1001d504
+        unsigned period = *timer;                                              // 0x1001d506
+        if (period >= 0x3e8) {                                                 // 0x1001d50e
+            fat<unsigned>(self, 0x174) = 0x10000;                              // 0x1001d529
+        } else {
+            unsigned q = 0x3e8 / period;                                       // 0x1001d517
+            fat<unsigned>(self, 0x174) = 0x10000 / q;                          // 0x1001d51f / 0x1001d521
+        }
+    }
+    fat<unsigned>(self, 0x180) = 0;                                            // 0x1001d52f
+    fat<unsigned>(self, 0x184) = 0;                                            // 0x1001d535
+    fat<unsigned>(self, 0x188) = 0;                                            // 0x1001d53b
+    fat<unsigned>(self, 0x18c) = 0;                                            // 0x1001d541
+    fat<unsigned>(self, 0x190) = 0;                                            // 0x1001d547
+    fat<unsigned>(self, 0x198) = 0;                                            // 0x1001d54d
+}
+
+// 0x0001e3d0  Midi_Device::closeFile (VA 0x1001e3d0). With bit 0 of the flag dword at +0x4c set and a non-zero handle at +0 (0x1001e3d7 / 0x1001e3dd
+// / 0x1001e3df): mmioClose [0x100b8670] (handle, 0) (0x1001e3e5) and the module counter 0x100b4a08 is decremented (0x1001e3eb). The reader list at +0x19c
+// (front), +0x1a0 (back), +0x1a8 (count) is emptied element by element (pop as in c3dh_popFront, 0x1001e3ff-0x1001e429); an element
+// (non-null: a null one ends the loop, 0x1001e437 / 0x1001e4a3) whose +0x3c is non-zero while bit 2 of its flag byte +0x34 is clear has
+// +0x3c, +0x2c and +0x40 cleared (0x1001e439-0x1001e44a); then the element's destructor MidiReader_dtor 0x1001e7d0 (thunk 0x1000129e,
+// 0x1001e453) and operator delete (0x1001e459). Finally +0 and +0x164 and +0x16c are cleared and bit 0 of +0x4c cleared with the dword read
+// before (0x1001e4a5-0x1001e4b8, `and al, 0xfe`). Returns 0 (0x1001e4bd).
+typedef unsigned(__fastcall* MidiClose_t)(void*, void*);
+MidiClose_t MidiClose_orig;
+unsigned __fastcall MidiClose_re(void* self, void*) {
+    if ((fat<unsigned char>(self, 0x4c) & 1) != 0 && fat<unsigned>(self, 0) != 0) {   // 0x1001e3d7 / 0x1001e3dd / 0x1001e3df
+        c3dh_imp<MmClose_t>(kIatMmioClose)(fat<unsigned>(self, 0), 0);         // 0x1001e3e5
+        c3dh_gMmioCount() = c3dh_gMmioCount() - 1;                             // 0x1001e3eb
+    }
+    char* node = fat<char*>(self, 0x19c);                                      // 0x1001e3f1
+    if (node) {                                                                // 0x1001e3f9
+        void* elem = c3dh_popFront(self, 0x19c, 0x1a0, 0x1a8, node);           // 0x1001e3ff-0x1001e431
+        while (elem) {                                                         // 0x1001e437 / 0x1001e4a3
+            if (fat<unsigned>(elem, 0x3c) != 0 && (fat<unsigned char>(elem, 0x34) & 4) == 0) {   // 0x1001e439 / 0x1001e43e
+                fat<unsigned>(elem, 0x3c) = 0;                                 // 0x1001e444
+                fat<unsigned>(elem, 0x2c) = 0;                                 // 0x1001e447
+                fat<unsigned>(elem, 0x40) = 0;                                 // 0x1001e44a
+            }
+            c3dh_fn<Th0v_t>(0x0001e7d0)(elem, 0);                              // 0x1001e453 -> 0x1001e7d0
+            c3dh_delete(elem);                                                 // 0x1001e459
+            node = fat<char*>(self, 0x19c);                                    // 0x1001e461
+            if (!node) break;                                                  // 0x1001e467 / 0x1001e469
+            elem = c3dh_popFront(self, 0x19c, 0x1a0, 0x1a8, node);             // 0x1001e46b-0x1001e49d
+        }
+    }
+    unsigned f = fat<unsigned>(self, 0x4c);                                    // 0x1001e4a5
+    fat<unsigned>(self, 0) = 0;                                                // 0x1001e4a8
+    f = (f & ~0xffu) | static_cast<unsigned char>(f & 0xfe);                   // 0x1001e4aa
+    fat<unsigned>(self, 0x164) = 0;                                            // 0x1001e4ac
+    fat<unsigned>(self, 0x16c) = 0;                                            // 0x1001e4b2
+    fat<unsigned>(self, 0x4c) = f;                                             // 0x1001e4b8
+    return 0;                                                                  // 0x1001e4bd
+}
+
+// ---- handle lists (an object with a node list at +0x5c front / +0x60 back / +0x68 count; elements are mmio-owning records)
+
+// The three bodies below close each element's handle and release it; the shape is Sound::stop / Sound::freeBufferList /
+// closeMmioNodeList. Element release: MidiReader-like destructor thunk 0x10001b45 (a bare `ret` body 0x10037df0), operator delete.
+static void c3dh_dtorThunk(void* elem) { c3dh_fn<Th0v_t>(0x00037df0)(elem, 0); }   // 0x10001b45 -> 0x10037df0
+
+// 0x00006330  closeMmioNodeList (VA 0x10006330). The object's virtual slot +0x20 runs (`call [eax+0x20]` 0x10006335). Bit 1 of the byte at
+// +0x44 set: bit 3 is set in the dword at +0x58 (0x1000633e-0x10006343) and 0 is returned (0x10006348). Otherwise the list is popped from
+// the front (0x1000634a-0x10006383); for each non-null element: a non-zero handle at +0x44 is closed with mmioClose (handle, 0)
+// (0x10006394) and the module counter 0x100b4a08 decremented (0x10006396), the element's destructor thunk 0x10001b45 runs
+// (0x100063a2) and operator delete releases it (0x100063a8), then the next node is popped (0x100063b0-0x100063e0). Returns 0.
+typedef unsigned(__fastcall* CloseMmioList_t)(void*, void*);
+CloseMmioList_t CloseMmioList_orig;
+unsigned __fastcall CloseMmioList_re(void* self, void*) {
+    reinterpret_cast<Th0v_t>(c3dh_slot(self, 0x20))(self, 0);                  // 0x10006335
+    if ((fat<unsigned char>(self, 0x44) & 2) != 0) {                           // 0x10006338
+        fat<unsigned>(self, 0x58) = fat<unsigned>(self, 0x58) | 8;             // 0x1000633e-0x10006343
+        return 0;                                                              // 0x10006348
+    }
+    char* node = fat<char*>(self, 0x5c);                                       // 0x1000634a
+    if (node) {                                                                // 0x10006354
+        void* elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);              // 0x1000635a-0x10006380
+        while (elem) {                                                         // 0x10006383 / 0x100063e0
+            unsigned h = fat<unsigned>(elem, 0x44);                            // 0x1000638b
+            if (h) {                                                           // 0x10006390
+                c3dh_imp<MmClose_t>(kIatMmioClose)(h, 0);                      // 0x10006394
+                c3dh_gMmioCount() = c3dh_gMmioCount() - 1;                     // 0x10006396
+            }
+            c3dh_dtorThunk(elem);                                              // 0x100063a2
+            c3dh_delete(elem);                                                 // 0x100063a8
+            node = fat<char*>(self, 0x5c);                                     // 0x100063b0
+            if (!node) break;                                                  // 0x100063b5
+            elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);                // 0x100063b7-0x100063db
+        }
+    }
+    return 0;                                                                  // 0x100063e5
+}
+
+// 0x00031490  freeMmioHandleList (VA 0x10031490). The list at +0x5c / +0x60 / +0x68 is popped (0x10031498-0x100314c5); for each non-null
+// element the handle stored in its FIRST dword is closed with mmioClose (handle, 0) with no test (0x100314d0-0x100314d4), the module
+// counter 0x100b4a08 is decremented (0x100314d6-0x100314de) and operator delete releases the element (0x100314e4); then the next node is
+// popped (0x100314e9-0x10031519). +0x74 is cleared (0x1003151e) and 0 returned (0x10031524).
+typedef unsigned(__fastcall* FreeMmioList_t)(void*, void*);
+FreeMmioList_t FreeMmioList_orig;
+unsigned __fastcall FreeMmioList_re(void* self, void*) {
+    char* node = fat<char*>(self, 0x5c);                                       // 0x10031498
+    if (node) {                                                                // 0x1003149d
+        void* elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);              // 0x1003149f-0x100314c5
+        while (elem) {                                                         // 0x100314c8 / 0x1003151c
+            c3dh_imp<MmClose_t>(kIatMmioClose)(fat<unsigned>(elem, 0), 0);     // 0x100314d4
+            c3dh_gMmioCount() = c3dh_gMmioCount() - 1;                         // 0x100314d6-0x100314de
+            c3dh_delete(elem);                                                 // 0x100314e4
+            node = fat<char*>(self, 0x5c);                                     // 0x100314e9
+            if (!node) break;                                                  // 0x100314f1
+            elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);                // 0x100314f3-0x10031519
+        }
+    }
+    fat<unsigned>(self, 0x74) = 0;                                             // 0x1003151e
+    return 0;                                                                  // 0x10031524
+}
+
+// The shared element release of Sound_stop and Sound_freeBufferList. A non-zero handle at +0x44 (0x1003044f / 0x10030454) is closed with
+// mmioClose (handle, 0) (0x10030458); the module's live handle-record list (front 0x100b49c8, back 0x100b49cc, cursor 0x100b49d0, count
+// 0x100b49d4) is searched from the front through the +4 links for the node whose +8 is this element (0x10030463-0x1003046b) and, when found, unlinked
+// as in c3dh_popFront's counterpart (0x10030475-0x1003049d: previous.next = next or the front = next; next.previous = previous with the cursor
+// = next, or cursor = 0 and back = previous), released with operator delete (0x100304ae) and the list count decremented (0x100304b3-0x100304bc).
+// Then, handle or not, the module counter 0x100b4a08 is decremented (0x100304c1-0x100304ca) and the element is released through its destructor
+// thunk 0x10001b45 (0x100304d4) and operator delete (0x100304da).
+static void c3dh_releaseSoundElem(void* elem) {
+    unsigned h = fat<unsigned>(elem, 0x44);                                    // 0x1003044f
+    if (h) {                                                                   // 0x10030454
+        c3dh_imp<MmClose_t>(kIatMmioClose)(h, 0);                              // 0x10030458
+        char* node = *reinterpret_cast<char**>(c3dh_sound(0x000b49c8));        // 0x1003045a
+        while (node && fat<void*>(node, 8) != elem) node = fat<char*>(node, 4);   // 0x10030463-0x1003046d
+        if (node) {                                                            // 0x10030473
+            char* prev = fat<char*>(node, 0);                                  // 0x10030475
+            if (prev) fat<void*>(prev, 4) = fat<void*>(node, 4);               // 0x1003047e
+            else *reinterpret_cast<void**>(c3dh_sound(0x000b49c8)) = fat<void*>(node, 4);   // 0x10030486
+            char* next = fat<char*>(node, 4);                                  // 0x1003048c
+            if (next) {
+                fat<void*>(next, 0) = fat<void*>(node, 0);                     // 0x10030495
+                *reinterpret_cast<void**>(c3dh_sound(0x000b49d0)) = next;      // 0x10030497
+            } else {
+                void* p = fat<void*>(node, 0);                                 // 0x1003049f
+                *reinterpret_cast<unsigned*>(c3dh_sound(0x000b49d0)) = 0;      // 0x100304a1
+                *reinterpret_cast<void**>(c3dh_sound(0x000b49cc)) = p;         // 0x100304a7
+            }
+            c3dh_delete(node);                                                 // 0x100304ae
+            *reinterpret_cast<unsigned*>(c3dh_sound(0x000b49d4)) = *reinterpret_cast<unsigned*>(c3dh_sound(0x000b49d4)) - 1;   // 0x100304b3-0x100304bc
+        }
+    }
+    c3dh_gMmioCount() = c3dh_gMmioCount() - 1;                                 // 0x100304c1-0x100304ca
+    c3dh_dtorThunk(elem);                                                      // 0x100304d4
+    c3dh_delete(elem);                                                         // 0x100304da
+}
+
+// 0x00030570  Sound_freeBufferList (VA 0x10030570). The list at +0x5c / +0x60 / +0x68 is popped from the front (0x10030578-0x100305ac) and each
+// non-null element released as above; returns 0 (0x10030684).
+typedef unsigned(__fastcall* FreeBufList_t)(void*, void*);
+FreeBufList_t FreeBufList_orig;
+unsigned __fastcall FreeBufList_re(void* self, void*) {
+    char* node = fat<char*>(self, 0x5c);                                       // 0x10030578
+    if (node) {                                                                // 0x1003057d
+        void* elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);              // 0x10030583-0x100305a9
+        while (elem) {                                                         // 0x100305ac / 0x1003067b
+            c3dh_releaseSoundElem(elem);                                       // 0x100305b2-0x10030648
+            node = fat<char*>(self, 0x5c);                                     // 0x1003064b
+            if (!node) break;                                                  // 0x10030650
+            elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);                // 0x10030652-0x10030678
+        }
+    }
+    return 0;                                                                  // 0x10030684
+}
+
+// 0x000303f0  Sound_stop (VA 0x100303f0). Bit 1 of the byte at +0x44 set: the object's virtual slot +0x20 runs (`call [eax+0x20]` 0x100303fb),
+// bit 3 is set in +0x58 (0x100303fe-0x10030403) and 0 is returned (0x10030406). Otherwise the same list release as Sound_freeBufferList
+// (0x1003040a-0x1003051d).
+typedef unsigned(__fastcall* SoundStop_t)(void*, void*);
+SoundStop_t SoundStop_orig;
+unsigned __fastcall SoundStop_re(void* self, void*) {
+    if ((fat<unsigned char>(self, 0x44) & 2) != 0) {                           // 0x100303f3
+        reinterpret_cast<Th0v_t>(c3dh_slot(self, 0x20))(self, 0);              // 0x100303fb
+        fat<unsigned>(self, 0x58) = fat<unsigned>(self, 0x58) | 8;             // 0x100303fe-0x10030403
+        return 0;                                                              // 0x10030406
+    }
+    char* node = fat<char*>(self, 0x5c);                                       // 0x1003040a
+    if (node) {                                                                // 0x10030411
+        void* elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);              // 0x1003041a-0x1003043e
+        while (elem) {                                                         // 0x10030443 / 0x10030512
+            c3dh_releaseSoundElem(elem);                                       // 0x10030449-0x100304df
+            node = fat<char*>(self, 0x5c);                                     // 0x100304e2
+            if (!node) break;                                                  // 0x100304e7
+            elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);                // 0x100304e9-0x1003050f
+        }
+    }
+    return 0;                                                                  // 0x1003051d
+}
+
+// 0x00006160  WaveStream::destroy (VA 0x10006160). Wrapped in a C++ frame (0x10006160-0x1000616e) that no path uses. The vtable 0x1005b1c0 is stored
+// at +0 (0x10006180). The list at +0x5c / +0x60 / +0x68 is popped from the front; for each non-null element (0x100061c4 / 0x10006221): a
+// non-zero handle at +0x44 is closed with mmioClose (handle, 0) (0x100061d5) and the module counter 0x100b4a08 decremented (0x100061d7),
+// then its destructor thunk 0x10001b45 and operator delete (0x100061e3 / 0x100061e9), and the next node is popped (0x100061f1-0x1000621e).
+// Then the list is walked again, as the compiler's inlined member destructor (0x10006223-0x10006289): each remaining node is popped and
+// deleted without touching its element, up to the first node with a NULL element. The base destructor 0x1002ea30 (thunk 0x10001a78) runs last
+// (0x10006295). eax at the `ret` is that call's leftover.
+typedef void(__fastcall* WsDestroy_t)(void*, void*);
+WsDestroy_t WsDestroy_orig;
+void __fastcall WsDestroy_re(void* self, void*) {
+    fat<void*>(self, 0) = c3dh_sound(0x0005b1c0);                              // 0x10006180
+    char* node = fat<char*>(self, 0x5c);                                       // 0x10006186
+    if (node) {                                                                // 0x1000618b / 0x10006195
+        void* elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);              // 0x1000619b-0x100061c1
+        while (elem) {                                                         // 0x100061c4 / 0x10006221
+            unsigned h = fat<unsigned>(elem, 0x44);                            // 0x100061cc
+            if (h) {                                                           // 0x100061d1
+                c3dh_imp<MmClose_t>(kIatMmioClose)(h, 0);                      // 0x100061d5
+                c3dh_gMmioCount() = c3dh_gMmioCount() - 1;                     // 0x100061d7
+            }
+            c3dh_dtorThunk(elem);                                              // 0x100061e3
+            c3dh_delete(elem);                                                 // 0x100061e9
+            node = fat<char*>(self, 0x5c);                                     // 0x100061f1
+            if (!node) break;                                                  // 0x100061f6
+            elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);                // 0x100061f8-0x1000621e
+        }
+    }
+    node = fat<char*>(self, 0x5c);                                             // 0x10006223
+    if (node) {                                                                // 0x1000622c
+        void* elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);              // 0x1000622e-0x10006254
+        while (elem) {                                                         // 0x10006257 / 0x10006289
+            node = fat<char*>(self, 0x5c);                                     // 0x10006259
+            if (!node) break;                                                  // 0x1000625e
+            elem = c3dh_popFront(self, 0x5c, 0x60, 0x68, node);                // 0x10006260-0x10006286
+        }
+    }
+    c3dh_fn<Th0v_t>(0x0002ea30)(self, 0);                                      // 0x10006295 -> 0x1002ea30
+}
+
+// 0x00006130  WaveStream::scalarDeletingDtor (VA 0x10006130). WaveStream::destroy 0x10006160 (thunk 0x10002518, 0x10006133); when bit 0 of the
+// stack flags (`test byte ptr [esp+8], 1` 0x10006138) is set operator delete releases the object (0x10006140); returns this (0x10006148).
+typedef void*(__fastcall* WsDelDtor_t)(void*, void*, unsigned);
+WsDelDtor_t WsDelDtor_orig;
+void* __fastcall WsDelDtor_re(void* self, void*, unsigned flags) {
+    c3dh_fn<Th0v_t>(0x00006160)(self, 0);                                      // 0x10006133 -> 0x10006160
+    if (flags & 1) c3dh_delete(self);                                          // 0x10006138 / 0x10006140
+    return self;                                                               // 0x10006148
+}
+
+
+// =====================================================================================================================
+// E. Functions over module globals a fixture swaps (frozen first thread, restored at the flush), the codec allocators and
+//    the CRT's per-thread data
+// =====================================================================================================================
+
+typedef unsigned(__stdcall* MidiShort_t)(unsigned handle, unsigned msg);
+typedef unsigned(__cdecl* Malloc_t)(unsigned);
+typedef unsigned(__cdecl* Cdecl1p_t)(unsigned);
+typedef unsigned(__cdecl* Cdecl0_t)();
+typedef unsigned(__fastcall* Th2_t)(void*, void*, unsigned, unsigned);
+typedef unsigned(__fastcall* Th5_t)(void*, void*, unsigned, unsigned, unsigned, unsigned);
+typedef unsigned(__fastcall* ListGetAt_t)(void*, void*, void*, unsigned);
+
+const unsigned kIatMidiOutShortMsg = 0x000b8638;
+
+// 0x00021240  Sound_findByName (VA 0x10021240). One stack argument, the name (`ret 4`); the result is the byte in al (1 found, 0 not;
+// the rest of eax is left as it was). The module list head 0x100b4fe8 (read 0x10021240) is walked through the nodes' +4 links
+// {+0 previous, +4 next, +8 sound}; the walk cursor 0x100b4ff0 is written with the head before the first test (0x1002124d) and with
+// each next node before its test (0x1002129a), so it ends at the matching node or at 0. A NULL node (0x10021253 / 0x100212a0) or a node
+// whose sound pointer +8 is NULL (0x10021258 / 0x1002125a / 0x100212a7) ends the walk with 0 (`xor al, al` 0x100212ac). The sound's
+// first dword (0x10021260) is the name pointer; it is compared byte-wise with the argument, two bytes per step (0x10021264-0x10021286): a
+// difference continues with the next node (0x10021295), both strings ending together returns 1 (0x100212b5).
+typedef unsigned char(__stdcall* FindByName_t)(const char*);
+FindByName_t FindByName_orig;
+unsigned char __stdcall FindByName_re(const char* name) {
+    char* node = *reinterpret_cast<char**>(c3dh_sound(0x000b4fe8));            // 0x10021240
+    *reinterpret_cast<char**>(c3dh_sound(0x000b4ff0)) = node;                  // 0x1002124d
+    while (node != 0) {                                                        // 0x10021253
+        char* sound = fat<char*>(node, 8);                                     // 0x10021255
+        if (sound == 0) break;                                                 // 0x1002125a
+        const char* a = fat<const char*>(sound, 0);                            // 0x10021260
+        const char* b = name;                                                  // 0x10021262
+        bool equal;
+        for (;;) {
+            unsigned char x = static_cast<unsigned char>(a[0]);                // 0x10021264
+            unsigned char y = static_cast<unsigned char>(b[0]);                // 0x10021266
+            if (x != y) { equal = false; break; }                              // 0x1002126a / 0x1002126c
+            if (x == 0) { equal = true; break; }                               // 0x1002126e / 0x10021270
+            x = static_cast<unsigned char>(a[1]);                              // 0x10021272
+            y = static_cast<unsigned char>(b[1]);                              // 0x10021275
+            if (x != y) { equal = false; break; }                              // 0x1002127a / 0x1002127c
+            a += 2; b += 2;                                                    // 0x1002127e / 0x10021281
+            if (x == 0) { equal = true; break; }                               // 0x10021284 / 0x10021286
+        }
+        if (equal) return 1;                                                   // 0x10021293 / 0x100212b5
+        node = fat<char*>(node, 4);                                            // 0x10021295
+        *reinterpret_cast<char**>(c3dh_sound(0x000b4ff0)) = node;              // 0x1002129a
+    }
+    return 0;                                                                  // 0x100212ac
+}
+
+// 0x0001ef10  Midi_Device::flushMessages (VA 0x1001ef10). The MIDI device pointer g_midiDevice 0x100b4a1c is read (0x1001ef10) and its
+// handle at +0x3c (0x1001ef15); a zero handle returns at once (0x1001ef18 / 0x1001ef1a). Otherwise midiOutShortMsg [0x100b8638] is loaded
+// once (0x1001ef1d) and the 0x80 pending-message dwords from this+0x258 (0x1001ef25 / 0x1001ef2b, `dec edi` 0x1001ef51) are scanned: an
+// entry whose low byte is non-zero (`cmp byte ptr [esi], 0` 0x1001ef30) has its byte 2 cleared (0x1001ef35), the device read again
+// (0x1001ef39), midiOutShortMsg(handle, entry dword) called (pushes 0x1001ef44 / 0x1001ef45, call 0x1001ef46) and the entry cleared
+// (0x1001ef48). eax at `ret` is not set.
+typedef void(__fastcall* FlushMsg_t)(void*, void*);
+FlushMsg_t FlushMsg_orig;
+void __fastcall FlushMsg_re(void* self, void*) {
+    char* dev = *reinterpret_cast<char**>(c3dh_sound(0x000b4a1c));            // 0x1001ef10
+    if (fat<unsigned>(dev, 0x3c) == 0) return;                                 // 0x1001ef15 / 0x1001ef18
+    MidiShort_t shortMsg = c3dh_imp<MidiShort_t>(kIatMidiOutShortMsg);         // 0x1001ef1d
+    char* p = static_cast<char*>(self) + 0x258;                                // 0x1001ef25
+    for (int i = 0; i < 0x80; i++, p += 4) {                                   // 0x1001ef2b / 0x1001ef51 / 0x1001ef52
+        if (*reinterpret_cast<unsigned char*>(p) == 0) continue;               // 0x1001ef30 / 0x1001ef33
+        p[2] = 0;                                                              // 0x1001ef35
+        char* d2 = *reinterpret_cast<char**>(c3dh_sound(0x000b4a1c));          // 0x1001ef39
+        unsigned msg = *reinterpret_cast<unsigned*>(p);                        // 0x1001ef3f
+        shortMsg(fat<unsigned>(d2, 0x3c), msg);                                // 0x1001ef46
+        *reinterpret_cast<unsigned*>(p) = 0;                                   // 0x1001ef48
+    }
+}
+
+// 0x00023ea0  Voice_requestCmd12 (VA 0x10023ea0). Two stack arguments (`ret 8`). The object's virtual slot +0xb4 (thiscall, no arguments,
+// `call [eax+0xb4]` 0x10023ea5) gives a limit; an argument above it (unsigned, `jbe` 0x10023eb1) returns 0xa (0x10023eb3). Otherwise the
+// module pointer g_midiDevice 0x100b4a1c (0x10023ebc): NULL returns 0x13 (0x10023edd). With one, CommandQueue::push 0x1000a240 (thunk
+// 0x100015e1, ecx = the device) is called with (this, 0xc, first argument, second argument & 0xff) (pushes 0x10023ecf-0x10023ed3,
+// call 0x10023ed4) and its result is returned (0x10023eda).
+typedef unsigned(__fastcall* VoiceReq12_t)(void*, void*, unsigned, unsigned);
+VoiceReq12_t VoiceReq12_orig;
+unsigned __fastcall VoiceReq12_re(void* self, void*, unsigned a1, unsigned a2) {
+    unsigned limit = reinterpret_cast<Th0u_t>(c3dh_slot(self, 0xb4))(self, 0);   // 0x10023ea5
+    if (a1 > limit) return 0xa;                                                // 0x10023eaf / 0x10023eb1 / 0x10023eb3
+    void* dev = *reinterpret_cast<void**>(c3dh_sound(0x000b4a1c));            // 0x10023ebc
+    if (dev == 0) return 0x13;                                                 // 0x10023ec2 / 0x10023ec4 / 0x10023edd
+    return c3dh_fn<Th5_t>(0x0000a240)(dev, 0, reinterpret_cast<unsigned>(self), 0xc, a1, a2 & 0xff);   // 0x10023ed4 -> 0x1000a240
+}
+
+// 0x00023c20  Seq_cmdHandler12 (VA 0x10023c20). Two stack arguments, an index and a flag (`ret 8`). Seq_listGetAt 0x1001d780 (thunk 0x100015fa,
+// ecx = this+0x60 (0x10023c2a), pushes the index and the address of the first argument's own stack slot, 0x10023c28 / 0x10023c29)
+// stores the element there (the slot is the pointer the code uses afterwards, `mov esi, [esp+8]` 0x10023c3b). A non-zero result
+// is returned unchanged (0x10023c34 / 0x10023c51). On 0 bit 4 of the element's byte +0x38 takes bit 0 of the flag byte (second argument,
+// `and cl, 1; shl cl, 4` 0x10023c3f / 0x10023c42; `and dl, 0xef; or cl, dl` 0x10023c48 / 0x10023c4b; stored 0x10023c4d); returns 0 (the
+// result in eax).
+typedef unsigned(__fastcall* SeqCmd12_t)(void*, void*, unsigned, unsigned);
+SeqCmd12_t SeqCmd12_orig;
+unsigned __fastcall SeqCmd12_re(void* self, void*, unsigned index, unsigned flag) {
+    void* slotValue = reinterpret_cast<void*>(static_cast<uintptr_t>(index));  // the stack slot of the first argument
+    unsigned r = c3dh_fn<ListGetAt_t>(0x0001d780)(static_cast<char*>(self) + 0x60, 0, &slotValue, index);   // 0x10023c2d -> 0x1001d780
+    if (r != 0) return r;                                                      // 0x10023c32 / 0x10023c34
+    unsigned char cl = static_cast<unsigned char>(flag & 1);                   // 0x10023c36 / 0x10023c3f
+    cl = static_cast<unsigned char>(cl << 4);                                  // 0x10023c42
+    unsigned char dl = fat<unsigned char>(slotValue, 0x38);                    // 0x10023c45
+    dl = static_cast<unsigned char>(dl & 0xef);                                // 0x10023c48
+    fat<unsigned char>(slotValue, 0x38) = static_cast<unsigned char>(cl | dl); // 0x10023c4b / 0x10023c4d
+    return r;
+}
+
+// 0x0003aa50  codecSetParams (VA 0x1003aa50). cdecl, no arguments. Writes the constants 0xa, 0xb4 and 1 into the module words 0x100b58a0,
+// 0x100b58a4 and 0x100b58a8 (0x1003aa68, 0x1003aa72, 0x1003aa7c) and returns 0 (0x1003aa86).
+typedef unsigned(__cdecl* CodecSet_t)();
+CodecSet_t CodecSet_orig;
+unsigned __cdecl CodecSet_re() {
+    *reinterpret_cast<unsigned*>(c3dh_sound(0x000b58a0)) = 0xa;                // 0x1003aa68
+    *reinterpret_cast<unsigned*>(c3dh_sound(0x000b58a4)) = 0xb4;               // 0x1003aa72
+    *reinterpret_cast<unsigned*>(c3dh_sound(0x000b58a8)) = 1;                  // 0x1003aa7c
+    return 0;                                                                  // 0x1003aa86
+}
+
+// 0x0003aa90  codecAllocContextA (VA 0x1003aa90). cdecl, no arguments. malloc 0x10042acd (the CRT's malloc: it pushes the new-handler mode and
+// calls 0x10042adf) is asked for 0x2544 bytes (0x1003aaa8 / 0x1003aaad); a non-NULL block is passed to codecInitContextA 0x1003aae0
+// (`push eax; call` 0x1003aac1 / 0x1003aac2) and the block pointer, NULL included, is returned (0x1003aaca). The debug frame's esp
+// check (0x1003aad3 / 0x1003aad5) is not part of the result.
+typedef unsigned(__cdecl* AllocCtx_t)();
+AllocCtx_t AllocCtxA_orig;
+unsigned __cdecl AllocCtxA_re() {
+    unsigned p = c3dh_fn<Malloc_t>(0x00042acd)(0x2544);                        // 0x1003aaad
+    if (p != 0) c3dh_fn<Cdecl1p_t>(0x0003aae0)(p);                             // 0x1003aac2
+    return p;                                                                  // 0x1003aaca
+}
+
+// 0x0003aea0  codecAllocContextB (VA 0x1003aea0). The same with 0xc00 bytes (0x1003aeb8 / 0x1003aebd) and codecInitContextB 0x1003aef0
+// (0x1003aed2).
+AllocCtx_t AllocCtxB_orig;
+unsigned __cdecl AllocCtxB_re() {
+    unsigned p = c3dh_fn<Malloc_t>(0x00042acd)(0xc00);                         // 0x1003aebd
+    if (p != 0) c3dh_fn<Cdecl1p_t>(0x0003aef0)(p);                             // 0x1003aed2
+    return p;                                                                  // 0x1003aeda
+}
+
+// 0x00030fb0  Channel_setFormat (VA 0x10030fb0). Three stack arguments (`ret 0xc`; the third is never read). A NULL first argument returns 0xa
+// (0x10030fb3 / 0x10030fb9 / 0x10030fbb). The 18-byte format at +0xbc (4 dwords and a word, 0x10030fcd-0x10030ff6 / 0x10030ffd-0x10031027) is
+// copied from the second argument when it is non-NULL (0x10030fc4 / 0x10030fca), else from the module defaults at 0x10063ea0, 0x10063ea4,
+// 0x10063ea8, 0x10063eac and the word 0x10063eb0. The first argument is stored at +0xb4 (0x1003102b), codecAllocContextB 0x1003aea0 (0x10031031) is
+// called and its result stored at +0xd4 (0x10031036). Returns 0 (0x1003103c).
+typedef unsigned(__fastcall* SetFormat_t)(void*, void*, unsigned, unsigned, unsigned);
+SetFormat_t SetFormat_orig;
+unsigned __fastcall SetFormat_re(void* self, void*, unsigned a1, unsigned a2, unsigned a3) {
+    (void)a3;
+    if (a1 == 0) return 0xa;                                                   // 0x10030fb7 / 0x10030fb9
+    char* dst = static_cast<char*>(self) + 0xbc;                               // 0x10030fcf / 0x10030ffd
+    const char* src = a2 != 0 ? reinterpret_cast<const char*>(static_cast<uintptr_t>(a2)) : c3dh_sound(0x00063ea0);   // 0x10030fc4 / 0x10030ff8
+    for (int i = 0; i < 4; i++) fat<unsigned>(dst, 4 * i) = *reinterpret_cast<const unsigned*>(src + 4 * i);   // 0x10030fd5-0x10030fea / 0x10031003-0x1003101e
+    fat<unsigned short>(dst, 0x10) = *reinterpret_cast<const unsigned short*>(src + 0x10);   // 0x10030fed / 0x10030ff2 / 0x10031021 / 0x10031027
+    fat<unsigned>(self, 0xb4) = a1;                                            // 0x1003102b
+    fat<unsigned>(self, 0xd4) = c3dh_fn<Cdecl0_t>(0x0003aea0)();               // 0x10031031 / 0x10031036
+    return 0;                                                                  // 0x1003103c
+}
+
+// 0x0004588f  _errno (VA 0x1004588f) and 0x00045898  __doserrno: `call 0x10044171` (the per-thread data lookup _getptd) and the block pointer plus 8
+// (0x10045894) / plus 0xc (0x1004589d) is returned. cdecl, no arguments.
+typedef unsigned(__cdecl* Errno_t)();
+Errno_t Errno_orig;
+unsigned __cdecl Errno_re() { return c3dh_fn<Cdecl0_t>(0x00044171)() + 8; }    // 0x1004588f / 0x10045894
+Errno_t DosErrno_orig;
+unsigned __cdecl DosErrno_re() { return c3dh_fn<Cdecl0_t>(0x00044171)() + 0xc; }   // 0x10045898 / 0x1004589d
+
+// 0x000470ac  sbhRegionLocate (VA 0x100470ac). cdecl, three stack arguments: a pointer and two output cells. The circular list of regions
+// starts at the static node 0x100653d8 (0x100470b0) and follows each node's +0 link (0x100470c2) until it returns to the head (0x100470c4 /
+// 0x100470c6 -> 0). A region holds the pointer when it is above the region's +0x10 (unsigned, `jbe` 0x100470bb) and below its +0x14
+// (0x100470bd / 0x100470c0). Found: a pointer that is not 16-byte aligned (`test al, 0xf` 0x100470ca) or whose offset in its 4 KB page is
+// below 0x100 (0x100470d5 / 0x100470db) gives 0. Otherwise the first output gets the region (0x100470e3) and the second the page base
+// (the pointer with the low 12 bits cleared, 0x100470e9-0x100470f2); the result is ((pointer - page - 0x100) >> 4, arithmetic) + page + 8
+// (0x100470f4-0x100470fa).
+typedef unsigned(__cdecl* SbhLocate_t)(unsigned, unsigned*, unsigned*);
+SbhLocate_t SbhLocate_orig;
+unsigned __cdecl SbhLocate_re(unsigned p, unsigned* outRegion, unsigned* outPage) {
+    char* head = c3dh_sound(0x000653d8);                                       // 0x100470b0
+    char* r = head;                                                            // 0x100470b6
+    for (;;) {
+        if (p > fat<unsigned>(r, 0x10) && p < fat<unsigned>(r, 0x14)) break;   // 0x100470b8-0x100470c0
+        r = fat<char*>(r, 0);                                                  // 0x100470c2
+        if (r == head) return 0;                                               // 0x100470c4 / 0x100470c6
+    }
+    if ((p & 0xf) != 0) return 0;                                              // 0x100470ca / 0x100470cc
+    if ((p & 0xfff) < 0x100) return 0;                                         // 0x100470d5 / 0x100470db / 0x100470dd
+    *outRegion = reinterpret_cast<unsigned>(r);                                // 0x100470e3
+    unsigned page = p & 0xfffff000u;                                           // 0x100470e9 / 0x100470eb
+    unsigned off = p - page;                                                   // 0x100470f0
+    *outPage = page;                                                           // 0x100470f2
+    int d = static_cast<int>(off - 0x100) >> 4;                                // 0x100470f4 / 0x100470f7
+    return static_cast<unsigned>(d) + page + 8;                                // 0x100470fa
+}
+
+
+// =====================================================================================================================
+// F. Wave-in device destructor (drives WaveInDevice_close, the element destructor and the list pop helper)
+// =====================================================================================================================
+
+// 0x00038710  WaveInDevice_dtor (VA 0x10038710). Wrapped in a C++ frame (0x10038710-0x1003871e) that no path uses. The vtable 0x1005c604 is stored at +0
+// (0x10038730). waveInStop and waveInReset are loaded from their IAT slots [0x100b8614] / [0x100b8618] once (0x10038739 / 0x1003873f). Bit 1 of
+// the flag byte at +4 (0x10038736 / 0x10038747): waveInStop(handle +0x44), waveInReset(handle) (0x10038753 / 0x10038759) and WaveInDevice_close
+// 0x10039140 (thunk 0x100024aa, 0x1003875d). Then bit 0 of the byte read again (0x10038762): waveInStop and waveInReset on the handle read again
+// (0x1003876c / 0x10038772). The buffer list at +0x5c (front +0x5c, back +0x60, count +0x68; ecx moves to the header at +0x5c, 0x10038777) is emptied:
+// the front node is popped (0x1003877e-0x100387a2: next.prev = 0 and front = next, or both header pointers cleared) and released by operator delete
+// (0x10038794); a non-null element is destroyed through its deleting destructor 0x10038ae0 (thunk 0x10002469, argument 1, 0x100387ad-0x100387b1) and
+// the next element comes from the list's pop helper 0x10039620 (thunk 0x10001dcf, ecx = the header, 0x100387b8), repeated while the helper returns
+// non-zero (0x100387bf). Last, the compiler's inlined member-list destruction pops and deletes the remaining nodes without touching their elements,
+// stopping at the first node with a NULL element (0x100387c1-0x10038825).
+typedef void(__fastcall* WaveInDtor_t)(void*, void*);
+WaveInDtor_t WaveInDtor_orig;
+static void* c3dh_popNode(char* list, char* node) {
+    char* next = fat<char*>(node, 4);
+    if (next) {
+        fat<unsigned>(next, 0) = 0;
+        fat<void*>(list, 0) = next;
+    } else {
+        fat<unsigned>(list, 4) = 0;
+        fat<unsigned>(list, 0) = 0;
+    }
+    void* elem = fat<void*>(node, 8);
+    c3dh_delete(node);
+    fat<unsigned>(list, 0xc) = fat<unsigned>(list, 0xc) - 1;
+    return elem;
+}
+void __fastcall WaveInDtor_re(void* self, void*) {
+    fat<void*>(self, 0) = c3dh_sound(0x0005c604);                              // 0x10038730
+    unsigned char al = fat<unsigned char>(self, 4);                            // 0x10038736
+    Imp1_t stop = c3dh_imp<Imp1_t>(kIatWaveInStop);                            // 0x10038739
+    Imp1_t reset = c3dh_imp<Imp1_t>(kIatWaveInReset);                          // 0x1003873f
+    if ((al & 2) != 0) {                                                       // 0x10038747
+        stop(fat<unsigned>(self, 0x44));                                       // 0x10038753
+        reset(fat<unsigned>(self, 0x44));                                      // 0x10038759
+        c3dh_fn<Th0u_t>(0x00039140)(self, 0);                                  // 0x1003875d -> 0x10039140
+    }
+    if ((fat<unsigned char>(self, 4) & 1) != 0) {                              // 0x10038762
+        stop(fat<unsigned>(self, 0x44));                                       // 0x1003876c
+        reset(fat<unsigned>(self, 0x44));                                      // 0x10038772
+    }
+    char* list = static_cast<char*>(self) + 0x5c;                              // 0x10038777
+    char* node = fat<char*>(list, 0);                                          // 0x10038774
+    if (node) {                                                                // 0x1003877c
+        void* elem = c3dh_popNode(list, node);                                 // 0x1003877e-0x100387a2
+        while (elem) {                                                         // 0x100387a7 / 0x100387bf
+            c3dh_fn<Th1_t>(0x00038ae0)(elem, 0, 1);                            // 0x100387b1 -> 0x10038ae0
+            elem = reinterpret_cast<void*>(static_cast<uintptr_t>(c3dh_fn<Th0u_t>(0x00039620)(list, 0)));   // 0x100387b8 -> 0x10039620
+        }
+    }
+    node = fat<char*>(list, 0);                                                // 0x100387c1
+    if (node) {                                                                // 0x100387cd
+        void* elem = c3dh_popNode(list, node);                                 // 0x100387cf-0x100387f3
+        while (elem) {                                                         // 0x100387f6 / 0x10038825
+            node = fat<char*>(list, 0);                                        // 0x100387f8
+            if (!node) break;                                                  // 0x100387fc
+            elem = c3dh_popNode(list, node);                                   // 0x100387fe-0x10038822
+        }
+    }
+}
+
+
+// =====================================================================================================================
+// G. Heap-only functions: string/list bookkeeping over fixture objects (operator new / operator delete stood in)
+// =====================================================================================================================
+
+// 0x0001ced0  Sound_setName (VA 0x1001ced0). One stack argument, the new name (`ret 4`). A non-NULL name pointer at this+0x1c (0x1001cedd /
+// 0x1001cee0) is released with operator delete (0x1001cee5) and +0x1c cleared (0x1001cef4). A NULL argument (0x1001ceed / 0x1001cef7) ends there
+// with +0x1c = 0 (0x1001cefb; eax is left as it was). Otherwise a 0x100-byte stack buffer is built (0x1001cf10): with a path prefix at +0x20
+// (0x1001cf0b / 0x1001cf0e) the prefix is copied (`repne scasb` length, `rep movsd` / `rep movsb`, 0x1001cf16-0x1001cf34), strrchr 0x100424b0
+// (the CRT's last-occurrence search, 0x1001cf36) looks for a backslash (0x5c, pushed 0x1001cf21) in the argument and what follows it (the whole
+// argument when there is none, 0x1001cf3e-0x1001cf47) is appended (0x1001cf47-0x1001cf6d); without a prefix the argument is copied (0x1001cf6f-0x1001cf8e).
+// A block of strlen + 1 bytes comes from operator new (0x1001cf9c), is stored at +0x1c (0x1001cfaf) and receives the buffer (0x1001cfb2-0x1001cfc8).
+typedef void(__fastcall* SetName_t)(void*, void*, const char*);
+SetName_t SetName_orig;
+void __fastcall SetName_re(void* self, void*, const char* name) {
+    char buf[0x100];
+    if (fat<void*>(self, 0x1c) != 0) c3dh_delete(fat<void*>(self, 0x1c));      // 0x1001cee0 / 0x1001cee5
+    fat<void*>(self, 0x1c) = 0;                                                // 0x1001cef4
+    if (name == 0) return;                                                     // 0x1001cef7 / 0x1001cef9 / 0x1001cefb
+    const char* prefix = fat<const char*>(self, 0x20);                         // 0x1001cf0b
+    if (prefix != 0) {                                                         // 0x1001cf0e
+        unsigned n = 0;
+        while (prefix[n]) { buf[n] = prefix[n]; n++; }                         // 0x1001cf16-0x1001cf34
+        buf[n] = 0;
+        const char* slash = strrchr(name, '\\');                               // 0x1001cf36 (strrchr 0x100424b0)
+        const char* src = slash != 0 ? slash + 1 : name;                       // 0x1001cf3e-0x1001cf47
+        unsigned m = 0;
+        while (src[m]) { buf[n + m] = src[m]; m++; }                           // 0x1001cf47-0x1001cf6d
+        buf[n + m] = 0;
+    } else {
+        unsigned n = 0;
+        while (name[n]) { buf[n] = name[n]; n++; }                             // 0x1001cf6f-0x1001cf8e
+        buf[n] = 0;
+    }
+    unsigned len = 0;
+    while (buf[len]) len++;                                                    // 0x1001cf90-0x1001cf9b
+    char* p = static_cast<char*>(c3dh_new(len + 1));                           // 0x1001cf9c
+    fat<void*>(self, 0x1c) = p;                                                // 0x1001cfaf
+    for (unsigned i = 0; i <= len; i++) p[i] = buf[i];                         // 0x1001cfb2-0x1001cfc8
+}
+
+// 0x0002d100  allocVoiceSlot (VA 0x1002d100). One stack argument, a descriptor {+0 last index, +4 first index, +8 value, +0xc name} (`ret 4`);
+// `this` is a table of slot pointers indexed from +4 (entry i at this + 4*i + 4). A 0x110-byte slot comes from operator new (0x1002d114 /
+// 0x1002d11d), its bytes +0xc..+0x10f are zeroed (`rep stosd` 0x41 dwords, 0x1002d12b-0x1002d139), +0 and +4 cleared and +8 set to 1 (0x1002d13b-0x1002d140);
+// the descriptor's name is copied to slot+0xc (0x1002d155-0x1002d17c). slot+4 = the first index, replaced by the last index when the first is above
+// it (0x1002d184-0x1002d18b); slot+0 = the last index (0x1002d192); slot+8 = the descriptor's +8 (0x1002d198 / 0x1002d19b). A first index above the last
+// returns the descriptor's +8 (0x1002d19e). Otherwise every index from the first to the last (unsigned, 0x1002d1da / 0x1002d1dc) whose entry holds a slot
+// releases that old slot: its +4 and +0 give its own range, the entry at its first index is handed to operator delete (0x1002d1bd), the entries from its first
+// to its last index are zeroed when that range is non-empty (0x1002d1c5-0x1002d1cf) and the scan resumes at the old last index + 2 (0x1002d1af /
+// 0x1002d1b3 add one, 0x1002d1d9 adds another). Finally entries first..last all point at the new slot (`rep stosd`, 0x1002d1e2-0x1002d1f1) and the slot is returned.
+typedef unsigned(__fastcall* AllocSlot_t)(void*, void*, void*);
+AllocSlot_t AllocSlot_orig;
+unsigned __fastcall AllocSlot_re(void* table, void*, void* desc) {
+    unsigned hi = fat<unsigned>(desc, 0);                                      // 0x1002d10f
+    unsigned lo = fat<unsigned>(desc, 4);                                      // 0x1002d111
+    char* slot = static_cast<char*>(c3dh_new(0x110));                          // 0x1002d11d
+    if (slot) {                                                                // 0x1002d127 / 0x1002d129
+        for (unsigned k = 0xc; k < 0x110; k += 4) fat<unsigned>(slot, k) = 0;  // 0x1002d139
+        fat<unsigned>(slot, 4) = 0;                                            // 0x1002d13b
+        fat<unsigned>(slot, 0) = 0;                                            // 0x1002d13e
+        fat<unsigned>(slot, 8) = 1;                                            // 0x1002d140
+    }
+    const char* nm = static_cast<const char*>(desc) + 0xc;                     // 0x1002d155
+    unsigned n = 0;
+    while (nm[n]) n++;
+    for (unsigned i = 0; i <= n; i++) slot[0xc + i] = nm[i];                   // 0x1002d160-0x1002d17c
+    if (fat<unsigned>(slot, 0) < lo) fat<unsigned>(slot, 0) = lo;              // 0x1002d17e / 0x1002d180 / 0x1002d182
+    fat<unsigned>(slot, 4) = lo;                                               // 0x1002d186
+    if (lo > hi) fat<unsigned>(slot, 4) = hi;                                  // 0x1002d189 / 0x1002d18b
+    fat<unsigned>(slot, 0) = hi;                                               // 0x1002d192
+    unsigned value = fat<unsigned>(desc, 8);                                   // 0x1002d198
+    fat<unsigned>(slot, 8) = value;                                            // 0x1002d19b
+    if (lo > hi) return value;                                                 // 0x1002d194 / 0x1002d19e
+    unsigned i = lo;                                                           // 0x1002d196
+    do {
+        char* old = fat<char*>(table, 4 * i + 4);                              // 0x1002d1a4
+        if (old != 0) {                                                        // 0x1002d1a8 / 0x1002d1aa
+            unsigned oldLo = fat<unsigned>(old, 4);                            // 0x1002d1ac
+            unsigned oldHi1 = fat<unsigned>(old, 0) + 1;                       // 0x1002d1af / 0x1002d1b3
+            void* entry = fat<void*>(table, 4 * oldLo + 4);                    // 0x1002d1b4
+            c3dh_delete(entry);                                                // 0x1002d1bd
+            if (oldLo < oldHi1)                                                // 0x1002d1c5 / 0x1002d1c7
+                for (unsigned k = 0; k < oldHi1 - oldLo; k++) fat<unsigned>(table, 4 * (oldLo + k) + 4) = 0;   // 0x1002d1cf
+            i = oldHi1;
+        }
+        i = i + 1;                                                             // 0x1002d1d9
+    } while (i <= hi);                                                         // 0x1002d1da / 0x1002d1dc
+    // 0x1002d1de / 0x1002d1e0 compare the first index with the last again: the operands are unchanged since 0x1002d194 (ebp, and ebx restored at
+    // 0x1002d1d1), so that jump is never taken here and has no counterpart.
+    for (unsigned k = lo; k <= hi; k++) fat<void*>(table, 4 * k + 4) = slot;   // 0x1002d1e8-0x1002d1f1
+    return reinterpret_cast<unsigned>(slot);                                   // 0x1002d1e6
+}
+
+// 0x0002ed50  buildVoiceRxName (VA 0x1002ed50). Wrapped in a C++ frame (0x1002ed50-0x1002ed5e) that no path uses. `this` is initialised:
+// +4 = 0x7f, +8 = 0, +0xc..+0x2f zeroed (`rep stosd` 9 dwords, 0x1002ed6f-0x1002ed83), +0x30 = 0, vtable 0x1005bae0 at +0, +0x48 = +0x4c = +0x40 =
+// +0x50 = 0 (0x1002ed8e-0x1002ed9d), +0x44 = 0 (0x1002eda3 / 0x1002eda6), +0x38 = 0x3e8 (0x1002edb2), a non-NULL +0x40 would be released through
+// its virtual slot +4 (0x1002edbb-0x1002edc2; +0x40 was just cleared, so that call is not reached), +0x54 = 0, the vtable 0x1005c234 at +0 (0x1002edc8).
+// The nine bytes at the module constant 0x10063e80 are copied to the stack (0x1002edce-0x1002eddf), Sound_setSourceType 0x1002ad10 (thunk
+// 0x100018a2) is called with 6 (0x1002ede3-0x1002edf7), operator new takes 0xa bytes (0x1002edfc / 0x1002edfe) stored at +0x50 (0x1002ee11) and receives
+// the copied string (0x1002ee14-0x1002ee2c). Returns this (0x1002ee27).
+typedef void*(__fastcall* BuildRx_t)(void*, void*);
+BuildRx_t BuildRx_orig;
+void* __fastcall BuildRx_re(void* self, void*) {
+    fat<unsigned>(self, 4) = 0x7f;                                             // 0x1002ed79
+    fat<unsigned>(self, 8) = 0;                                                // 0x1002ed80
+    for (unsigned k = 0xc; k < 0x30; k += 4) fat<unsigned>(self, k) = 0;       // 0x1002ed83
+    fat<unsigned>(self, 0x30) = 0;                                             // 0x1002ed89
+    fat<void*>(self, 0) = c3dh_sound(0x0005bae0);                              // 0x1002ed8e
+    fat<unsigned>(self, 0x48) = 0;                                             // 0x1002ed94
+    fat<unsigned>(self, 0x4c) = 0;                                             // 0x1002ed97
+    fat<unsigned>(self, 0x40) = 0;                                             // 0x1002ed9a
+    fat<unsigned>(self, 0x50) = 0;                                             // 0x1002ed9d
+    fat<unsigned>(self, 0x44) = 0;                                             // 0x1002eda6
+    fat<unsigned>(self, 0x38) = 0x3e8;                                         // 0x1002edb2
+    fat<unsigned>(self, 0x54) = 0;                                             // 0x1002edc5
+    fat<void*>(self, 0) = c3dh_sound(0x0005c234);                              // 0x1002edc8
+    char buf[9];
+    for (int k = 0; k < 9; k++) buf[k] = c3dh_sound(0x00063e80)[k];            // 0x1002edce-0x1002eddf
+    c3dh_fn<Th1_t>(0x0002ad10)(self, 0, 6);                                    // 0x1002edf7 -> 0x1002ad10
+    char* p = static_cast<char*>(c3dh_new(0xa));                               // 0x1002edfe
+    fat<void*>(self, 0x50) = p;                                                // 0x1002ee11
+    unsigned n = 0;
+    while (buf[n]) n++;
+    for (unsigned i = 0; i <= n; i++) p[i] = buf[i];                           // 0x1002ee14-0x1002ee2c
+    return self;                                                               // 0x1002ee27
+}
+
+
+// =====================================================================================================================
+// H. Notification posts (PostMessageA stood in; the sound-thread post goes to the module object 0x100b5038, which is only read)
+// =====================================================================================================================
+
+const unsigned kIatPostMessageA = 0x000b85a0;
+typedef unsigned(__stdcall* PostMsg_t)(unsigned hwnd, unsigned msg, unsigned wp, unsigned lp);
+typedef unsigned(__fastcall* Th3p_t)(void*, void*, unsigned, unsigned, unsigned);
+
+// 0x0000dbe0  postNotification (VA 0x1000dbe0). Wrapped in a C++ frame (0x1000dbe0-0x1000dbee) that no path uses. Two stack arguments (`ret 8`): a record
+// pointer (esi, 0x1000dbf6) and a value. A NULL record returns 0xa (0x1000dbff / 0x1000dc01). A 0x10-byte node comes from operator new (0x1000dc19 /
+// 0x1000dc1b), is constructed by 0x100087f0 (thunk 0x10002031, 0x1000dc35) and gets the record pointer at +4 (0x1000dc42) and the value at +0 (0x1000dc45);
+// bit 0 of the record's byte +0x1428 is set (0x1000dc47-0x1000dc51). Bit 5 of this+0x1a4 (0x1000dc57-0x1000dc60) set: PostMessageA [0x100b85a0] (the record's
+// window at +0x1420, 0x7ee, 0, the node) (0x1000dc6d-0x1000dc7b); clear: postSoundThreadMessage 0x1002aa90 (thunk 0x100011d6) on the module object 0x100b5038 with
+// (0x7ee, 0, the node) (0x1000dc83-0x1000dc88). Returns 0 (0x1000dc92).
+typedef unsigned(__fastcall* PostNote_t)(void*, void*, void*, unsigned);
+PostNote_t PostNote_orig;
+unsigned __fastcall PostNote_re(void* self, void*, void* rec, unsigned value) {
+    if (rec == 0) return 0xa;                                                  // 0x1000dbff / 0x1000dc01
+    char* node = static_cast<char*>(c3dh_new(0x10));                           // 0x1000dc1b
+    if (node) node = static_cast<char*>(c3dh_fn<Th0p_t>(0x000087f0)(node, 0)); // 0x1000dc35 -> 0x100087f0
+    fat<void*>(node, 4) = rec;                                                 // 0x1000dc42
+    fat<unsigned>(node, 0) = value;                                            // 0x1000dc45
+    fat<unsigned char>(rec, 0x1428) = static_cast<unsigned char>(fat<unsigned char>(rec, 0x1428) | 1);   // 0x1000dc47-0x1000dc51
+    if (((fat<unsigned>(self, 0x1a4) >> 5) & 1) != 0) {                        // 0x1000dc57 / 0x1000dc5d / 0x1000dc60
+        c3dh_imp<PostMsg_t>(kIatPostMessageA)(fat<unsigned>(rec, 0x1420), 0x7ee, 0, reinterpret_cast<unsigned>(node));   // 0x1000dc7b
+    } else {
+        c3dh_fn<Th3p_t>(0x0002aa90)(c3dh_sound(0x000b5038), 0, 0x7ee, 0, reinterpret_cast<unsigned>(node));   // 0x1000dc88
+    }
+    return 0;                                                                  // 0x1000dc92
+}
+
+// 0x00020b60  postMidiNotification (VA 0x10020b60). Bit 8 of the dword at this+0xac (`test ah, 1` 0x10020b66) set returns 0 at once (0x10020bb9). Otherwise bit 4 of
+// this+0x214 is set (0x10020b6b-0x10020b73) and the engine pointer g_soundEngine 0x100b4a20 is read (0x10020b79): with an engine whose flag word +0x1a4 has bit 5
+// set (0x10020b82-0x10020b8d), PostMessageA [0x100b85a0] (this+0x210, 0x7ec, 0, this) runs (pushes 0x10020b8f-0x10020b98, call 0x10020b9e) and 0 is returned;
+// without an engine or with the bit clear, postSoundThreadMessage 0x1002aa90 (thunk 0x100011d6) is called on the module object 0x100b5038 with (0x7ec, 0, this)
+// (0x10020ba7-0x10020bb4). The A/B runs under the live engine, whose flag word is 0x20 at the menu (log/c3/alt/c3dh_probe2.py), so only the PostMessageA arm is
+// covered; the other arm needs a different engine pointer, which the mixer threads read (0x100b4a20 has 67 references).
+typedef unsigned(__fastcall* PostMidi_t)(void*, void*);
+PostMidi_t PostMidi_orig;
+unsigned __fastcall PostMidi_re(void* self, void*) {
+    if ((fat<unsigned>(self, 0xac) & 0x100) != 0) return 0;                    // 0x10020b60 / 0x10020b66 / 0x10020b69
+    fat<unsigned>(self, 0x214) = fat<unsigned>(self, 0x214) | 0x10;            // 0x10020b6b-0x10020b73
+    char* eng = *reinterpret_cast<char**>(c3dh_sound(0x000b4a20));             // 0x10020b79
+    if (eng != 0 && ((fat<unsigned>(eng, 0x1a4) >> 5) & 1) != 0) {            // 0x10020b7e / 0x10020b82 / 0x10020b8b
+        c3dh_imp<PostMsg_t>(kIatPostMessageA)(fat<unsigned>(self, 0x210), 0x7ec, 0, reinterpret_cast<unsigned>(self));   // 0x10020b9e
+        return 0;                                                              // 0x10020ba4
+    }
+    c3dh_fn<Th3p_t>(0x0002aa90)(c3dh_sound(0x000b5038), 0, 0x7ec, 0, reinterpret_cast<unsigned>(self));   // 0x10020bb4
+    return 0;                                                                  // 0x10020bb9
+}
+
+// 0x00038fd0  onWaveInCallbackMessage (VA 0x10038fd0). stdcall, five stack arguments (`ret 0x14`). Only the low word of the second argument is compared with
+// 0x3c0 (WIM_DATA, `cmp word ptr [esp+8], 0x3c0` 0x10038fd0); any other message returns at once (0x10039026), leaving eax as it was. With 0x3c0 and an engine whose
+// flag word +0x1a4 has bit 5 set (0x10038fd9-0x10038feb): PostMessageA [0x100b85a0] (the window word 0x100b49c0, 0x7f0, the fourth argument, the third)
+// (0x10038fef-0x10039004); its result is the function's. Without that bit the sound-thread post on 0x100b5038 runs (0x1003900d-0x10039021). The A/B covers the
+// PostMessageA arm (live engine flag word 0x20), as for postMidiNotification.
+typedef void(__stdcall* WaveInCb_t)(unsigned, unsigned, unsigned, unsigned, unsigned);
+WaveInCb_t WaveInCb_orig;
+void __stdcall WaveInCb_re(unsigned a1, unsigned msg, unsigned inst, unsigned p1, unsigned p2) {
+    (void)a1; (void)p2;
+    if ((msg & 0xffff) != 0x3c0) return;                                       // 0x10038fd0 / 0x10038fd7
+    char* eng = *reinterpret_cast<char**>(c3dh_sound(0x000b4a20));             // 0x10038fd9
+    if (eng != 0 && ((fat<unsigned>(eng, 0x1a4) >> 5) & 1) != 0) {            // 0x10038fde / 0x10038fe2 / 0x10038feb
+        c3dh_imp<PostMsg_t>(kIatPostMessageA)(*reinterpret_cast<unsigned*>(c3dh_sound(0x000b49c0)), 0x7f0, p1, inst);   // 0x10039004
+        return;                                                                // 0x1003900a
+    }
+    c3dh_fn<Th3p_t>(0x0002aa90)(c3dh_sound(0x000b5038), 0, 0x7f0, p1, inst);   // 0x10039021
+}
+
+
+// =====================================================================================================================
+// I. The CRT's heap selection (GetVersionExA / GetEnvironmentVariableA / GetModuleFileNameA / GetModuleHandleA stood in)
+// =====================================================================================================================
+
+const unsigned kIatGetModuleHandleA = 0x000b8510;
+const unsigned kIatGetVersionExA = 0x000b8500;
+const unsigned kIatGetEnvironmentVariableA = 0x000b852c;
+const unsigned kIatGetModuleFileNameA = 0x000b8528;
+typedef unsigned(__stdcall* GetModuleHandle_t)(const char*);
+typedef unsigned(__stdcall* GetVersionEx_t)(void*);
+typedef unsigned(__stdcall* GetEnvVar_t)(const char*, char*, unsigned);
+typedef unsigned(__stdcall* GetModuleFileName_t)(unsigned, char*, unsigned);
+typedef int(__cdecl* Strncmp_t)(const char*, const char*, unsigned);
+typedef char*(__cdecl* Strstr_t)(const char*, const char*);
+typedef char*(__cdecl* Strchr_t)(const char*, int);
+typedef long(__cdecl* Strtol_t)(const char*, char**, int);
+
+// 0x00045b9b  getModuleLinkerVersion (VA 0x10045b9b). cdecl, one stack argument: a pointer to two bytes. The dword there is cleared (`and dword ptr [esi], 0`
+// 0x10045ba2); GetModuleHandleA(NULL) [0x100b8510] (0x10045ba0 / 0x10045ba5) gives the host image. When it starts with "MZ" (0x5a4d, `cmp word ptr [eax],
+// 0x5a4d` 0x10045bab) and the dword at +0x3c is non-zero (0x10045bb2 / 0x10045bb7), the two bytes at that offset + 0x1a and + 0x1b (the PE optional
+// header's linker version, 0x10045bbb-0x10045bc3) are stored at the argument and the argument + 1.
+typedef void(__cdecl* LinkerVer_t)(unsigned char*);
+LinkerVer_t LinkerVer_orig;
+void __cdecl LinkerVer_re(unsigned char* out) {
+    *reinterpret_cast<unsigned*>(out) = 0;                                     // 0x10045ba2
+    char* image = reinterpret_cast<char*>(static_cast<uintptr_t>(c3dh_imp<GetModuleHandle_t>(kIatGetModuleHandleA)(0)));   // 0x10045ba5
+    if (*reinterpret_cast<unsigned short*>(image) == 0x5a4d) {                 // 0x10045bab / 0x10045bb0
+        unsigned e = *reinterpret_cast<unsigned*>(image + 0x3c);               // 0x10045bb2
+        if (e != 0) {                                                          // 0x10045bb5 / 0x10045bb7
+            out[0] = static_cast<unsigned char>(image[e + 0x1a]);              // 0x10045bbb / 0x10045bbe
+            out[1] = static_cast<unsigned char>(image[e + 0x1b]);              // 0x10045bc0 / 0x10045bc3
+        }
+    }
+}
+
+// 0x00045bc8  crtHeapSelect (VA 0x10045bc8). cdecl, no arguments; the CRT's heap-type choice, called once by crtHeapInit at start-up. A 0x122c-byte frame
+// (__alloca_probe 0x1004aa10, 0x10045bd0). GetVersionExA [0x100b8500] (an OSVERSIONINFO of size 0x94, major version at +4, platform at +0x10, 0x10045bdd-0x10045be7):
+// a success with platform 2 and major version >= 5 returns 1 (0x10045bef-0x10045c06). Otherwise GetEnvironmentVariableA [0x100b852c]
+// ("__MSVCRT_HEAP_SELECT" at 0x1005ef10, a 0x1090-byte buffer, 0x10045c11-0x10045c1c): 0 skips to the linker-version rule (0x10045c24). The value is upper-cased in
+// place (0x10045c32-0x10045c4b); the 0x16 bytes "__GLOBAL_HEAP_SELECTED" (0x1005eef8) compared with strncmp 0x1004a9d0 (0x10045c5b) selecting the whole value
+// when they match (0x10045c67), else the host module's file name (GetModuleFileNameA [0x100b8528], 0x104 bytes, upper-cased, 0x10045c75-0x10045ca1) is searched in the
+// value with strstr 0x10042690 (0x10045cb1; NULL skips to the linker-version rule). strchr 0x10045680 finds the first comma (0x10045cbf; NULL skips), the text after it is cut
+// at its first ';' (0x10045cca-0x10045cdd), converted with strtol 0x1004a795 in base 10 (0x10045ce3) and a result of 1, 2 or 3 is returned (0x10045ceb-0x10045cf8).
+// The linker-version rule (0x10045cfa): getModuleLinkerVersion 0x10045b9b fills a byte pair; the major version below 6 returns 2, else 3 (`cmp byte ptr [ebp-4], 6;
+// sbb eax, eax; add eax, 3` 0x10045d03-0x10045d0a).
+typedef unsigned(__cdecl* HeapSel_t)();
+HeapSel_t HeapSel_orig;
+static void c3dh_upper(char* p) {
+    while (*p) {                                                               // 0x10045c32 / 0x10045c38 / 0x10045c49 / 0x10045c4b
+        char c = *p;
+        if (c >= 0x61 && c <= 0x7a) *p = static_cast<char>(c - 0x20);          // 0x10045c3c-0x10045c46
+        p++;
+    }
+}
+unsigned __cdecl HeapSel_re() {
+    struct { unsigned size, major, minor, build, platform; char rest[0x94 - 20]; } vi;
+    for (unsigned k = 0; k < sizeof vi / 4; k++) reinterpret_cast<unsigned*>(&vi)[k] = 0;
+    vi.size = 0x94;                                                            // 0x10045bdd
+    unsigned okVer = c3dh_imp<GetVersionEx_t>(kIatGetVersionExA)(&vi);         // 0x10045be7
+    if (okVer != 0 && vi.platform == 2 && vi.major >= 5) return 1;             // 0x10045bed-0x10045c01
+    char buf1[0x1090];
+    char buf2[0x104];
+    unsigned n = c3dh_imp<GetEnvVar_t>(kIatGetEnvironmentVariableA)(c3dh_sound(0x0005ef10), buf1, 0x1090);   // 0x10045c1c
+    if (n != 0) {                                                              // 0x10045c22 / 0x10045c24
+        c3dh_upper(buf1);                                                      // 0x10045c32-0x10045c4b
+        const char* val;
+        if (c3dh_fn<Strncmp_t>(0x0004a9d0)(c3dh_sound(0x0005eef8), buf1, 0x16) == 0) {   // 0x10045c5b
+            val = buf1;                                                        // 0x10045c67
+        } else {
+            c3dh_imp<GetModuleFileName_t>(kIatGetModuleFileNameA)(0, buf2, 0x104);   // 0x10045c7c
+            c3dh_upper(buf2);                                                  // 0x10045c82-0x10045ca1
+            val = c3dh_fn<Strstr_t>(0x00042690)(buf1, buf2);                   // 0x10045cb1
+        }
+        if (val != 0) {                                                        // 0x10045cb8 / 0x10045cba
+            char* comma = c3dh_fn<Strchr_t>(0x00045680)(val, 0x2c);            // 0x10045cbf
+            if (comma != 0) {                                                  // 0x10045cc5 / 0x10045cc8
+                char* p = comma + 1;                                           // 0x10045cca
+                for (char* q = p; *q != 0;) {                                  // 0x10045ccd / 0x10045ccf / 0x10045cdb / 0x10045cdd
+                    if (*q == 0x3b) *q = 0; else q++;                          // 0x10045cd1-0x10045cda
+                }
+                long r = c3dh_fn<Strtol_t>(0x0004a795)(p, 0, 10);              // 0x10045ce3
+                if (r == 2 || r == 3 || r == 1) return static_cast<unsigned>(r);   // 0x10045ceb-0x10045cf8
+            }
+        }
+    }
+    unsigned char lv[2];
+    c3dh_fn<LinkerVer_t>(0x00045b9b)(lv);                                      // 0x10045cfe
+    return lv[0] < 6 ? 2u : 3u;                                                // 0x10045d03-0x10045d0a
+}
+
+
+// 0x00008bf0  SoundTimer::stopKeepLock (VA 0x10008bf0). The module re-entrancy word 0x100b49a8 is incremented (0x10008bf4-0x10008c02); EnterCriticalSection
+// [0x100b83f4] and LeaveCriticalSection [0x100b84e0] run back to back on 0x100b4990 (0x10008c0e / 0x10008c1b). With bit 0 of the byte at this+0x3c set
+// (0x10008c1d / 0x10008c22): the word is incremented again (0x10008c26-0x10008c31), bit 2 of +0x3c cleared (0x10008c36-0x10008c3c), Enter and Leave again
+// (0x10008c3f / 0x10008c46), +8 and +4 cleared (0x10008c4b / 0x10008c4f), timeKillEvent [0x100b8648] (the id at +0x40, 0x10008c52), timeEndPeriod [0x100b864c]
+// (the resolution at +0x18, 0x10008c5c) and bit 0 of +0x3c cleared (0x10008c62-0x10008c67). Then the client list (front +0x4c, back +0x50, count +0x58) is
+// drained: the front node is popped (next.prev = 0 and front = next, or both header pointers cleared, 0x10008c71-0x10008c82), released by operator delete
+// (0x10008c89), the count decremented (0x10008c91-0x10008c97), and a non-NULL client gets its virtual slot +0xc (`call [edx+0xc]` 0x10008ca0) before the next
+// node. Unlike SoundTimer::stop it does not touch the critical section's memory. eax at `ret` is not set.
+typedef void(__fastcall* StopKeep_t)(void*, void*);
+StopKeep_t StopKeep_orig;
+void __fastcall StopKeep_re(void* self, void*) {
+    c3dh_gTick() = c3dh_gTick() + 1;                                           // 0x10008bf4-0x10008c02
+    c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(c3dh_timerCs());                // 0x10008c0e
+    c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(c3dh_timerCs());                // 0x10008c1b
+    if ((fat<unsigned char>(self, 0x3c) & 1) != 0) {                           // 0x10008c1d / 0x10008c22 / 0x10008c24
+        c3dh_gTick() = c3dh_gTick() + 1;                                       // 0x10008c26-0x10008c31
+        fat<unsigned>(self, 0x3c) = fat<unsigned>(self, 0x3c) & 0xfffffffbu;   // 0x10008c36-0x10008c3c
+        c3dh_imp<CsFn_t>(kIatEnterCriticalSection)(c3dh_timerCs());            // 0x10008c3f
+        c3dh_imp<CsFn_t>(kIatLeaveCriticalSection)(c3dh_timerCs());            // 0x10008c46
+        fat<unsigned>(self, 8) = 0;                                            // 0x10008c4b
+        fat<unsigned>(self, 4) = 0;                                            // 0x10008c4f
+        c3dh_imp<Imp1_t>(kIatTimeKillEvent)(fat<unsigned>(self, 0x40));        // 0x10008c52
+        c3dh_imp<Imp1_t>(kIatTimeEndPeriod)(fat<unsigned>(self, 0x18));        // 0x10008c5c
+        unsigned f = fat<unsigned>(self, 0x3c);                                // 0x10008c62
+        f = (f & ~0xffu) | static_cast<unsigned char>(f & 0xfe);               // 0x10008c65 (and al, 0xfe)
+        fat<unsigned>(self, 0x3c) = f;                                         // 0x10008c67
+    }
+    for (;;) {
+        char* node = fat<char*>(self, 0x4c);                                   // 0x10008c6a
+        if (node == 0) break;                                                  // 0x10008c6d / 0x10008c6f
+        char* next = fat<char*>(node, 4);                                      // 0x10008c71
+        if (next != 0) {                                                       // 0x10008c76
+            fat<unsigned>(next, 0) = 0;                                        // 0x10008c78
+            fat<void*>(self, 0x4c) = next;                                     // 0x10008c7a
+        } else {
+            fat<unsigned>(self, 0x50) = 0;                                     // 0x10008c7f
+            fat<unsigned>(self, 0x4c) = 0;                                     // 0x10008c82
+        }
+        void* client = fat<void*>(node, 8);                                    // 0x10008c85
+        c3dh_delete(node);                                                     // 0x10008c89
+        fat<unsigned>(self, 0x58) = fat<unsigned>(self, 0x58) - 1;             // 0x10008c8e-0x10008c97
+        if (client == 0) break;                                                // 0x10008c95 / 0x10008c97
+        reinterpret_cast<Th0v_t>(c3dh_slot(client, 0xc))(client, 0);           // 0x10008ca0
+    }
+}
+
+}  // namespace
+
+// 0x0000a240  CommandQueue::push
+SG_HOOK("sound.dll", 0x0000a240, CommandQueue_push, CmdPush_re, CmdPush_orig);
+// 0x0000c2f0  WaveCmdQueue::pushNode
+SG_HOOK("sound.dll", 0x0000c2f0, WaveCmdQueue_pushNode, WcqPush_re, WcqPush_orig);
+// 0x00009040  SoundTimer::linkClient
+SG_HOOK("sound.dll", 0x00009040, SoundTimer_linkClient, LinkClient_re, LinkClient_orig);
+// 0x000088e0  SoundTimer::registerClient
+SG_HOOK("sound.dll", 0x000088e0, SoundTimer_registerClient, RegClient_re, RegClient_orig);
+// 0x00008920  SoundTimer::unregisterClient
+SG_HOOK("sound.dll", 0x00008920, SoundTimer_unregisterClient, UnregClient_re, UnregClient_orig);
+// 0x00024e60  NodeList_insert
+SG_HOOK("sound.dll", 0x00024e60, NodeList_insert, NodeIns_re, NodeIns_orig);
+
+// 0x000287c0  SoundWindowObj_unsubclass
+SG_HOOK("sound.dll", 0x000287c0, SoundWindowObj_unsubclass, Unsub_re, Unsub_orig);
+// 0x0002aa90  postSoundThreadMessage
+SG_HOOK("sound.dll", 0x0002aa90, postSoundThreadMessage, PostThr_re, PostThr_orig);
+// 0x0000f020  DsBuffer::restartPlayback
+SG_HOOK("sound.dll", 0x0000f020, DsBuffer_restartPlayback, Restart_re, Restart_orig);
+// 0x00010db0  DsBuffer::play
+SG_HOOK("sound.dll", 0x00010db0, DsBuffer_play, Play_re, Play_orig);
+// 0x00010be0  DsBuffer::getTimedPosition
+SG_HOOK("sound.dll", 0x00010be0, DsBuffer_getTimedPosition, TimedPos_re, TimedPos_orig);
+// 0x000135a0  Ds3DListener::setPosition
+SG_HOOK("sound.dll", 0x000135a0, Ds3DListener_setPosition, ListenerPos_re, ListenerPos_orig);
+// 0x0000a200  Midi_Device::disableOutput
+SG_HOOK("sound.dll", 0x0000a200, Midi_Device_disableOutput, MidiOff_re, MidiOff_orig);
+// 0x00008ce0  SoundTimer::start
+SG_HOOK("sound.dll", 0x00008ce0, SoundTimer_start, TimerStart_re, TimerStart_orig);
+// 0x00008d70  SoundTimer::killEvent
+SG_HOOK("sound.dll", 0x00008d70, SoundTimer_killEvent, KillEvent_re, KillEvent_orig);
+// 0x0000a170  registerTimerClient
+SG_HOOK("sound.dll", 0x0000a170, registerTimerClient, RegTimer_re, RegTimer_orig);
+// 0x00009da0  Midi_Device::openOutput
+SG_HOOK("sound.dll", 0x00009da0, Midi_Device_openOutput, OpenOut_re, OpenOut_orig);
+
+// 0x000086f0  openMmioFile
+SG_HOOK("sound.dll", 0x000086f0, openMmioFile, OpenMmioFile_re, OpenMmioFile_orig);
+// 0x00006420  Wave_Device::openMemoryMmio
+SG_HOOK("sound.dll", 0x00006420, Wave_Device_openMemoryMmio, OpenMemMmio_re, OpenMemMmio_orig);
+// 0x00038650  WaveInDevice_ctor
+SG_HOOK("sound.dll", 0x00038650, WaveInDevice_ctor, WaveInCtor_re, WaveInCtor_orig);
+// 0x0002a8a0  stopSoundThreadFull
+SG_HOOK("sound.dll", 0x0002a8a0, stopSoundThreadFull, StopThr_re, StopThr_orig);
+// 0x00039140  WaveInDevice_close
+SG_HOOK("sound.dll", 0x00039140, WaveInDevice_close, WaveInClose_re, WaveInClose_orig);
+// 0x00038890  WaveInDevice_allocCaptureBuffers
+SG_HOOK("sound.dll", 0x00038890, WaveInDevice_allocCaptureBuffers, AllocCap_re, AllocCap_orig);
+// 0x0001d4a0  Midi_resetFileState
+SG_HOOK("sound.dll", 0x0001d4a0, Midi_resetFileState, MidiReset_re, MidiReset_orig);
+// 0x0001e3d0  Midi_Device::closeFile
+SG_HOOK("sound.dll", 0x0001e3d0, Midi_Device_closeFile, MidiClose_re, MidiClose_orig);
+// 0x00006330  closeMmioNodeList
+SG_HOOK("sound.dll", 0x00006330, closeMmioNodeList, CloseMmioList_re, CloseMmioList_orig);
+// 0x00031490  freeMmioHandleList
+SG_HOOK("sound.dll", 0x00031490, freeMmioHandleList, FreeMmioList_re, FreeMmioList_orig);
+// 0x00030570  Sound_freeBufferList
+SG_HOOK("sound.dll", 0x00030570, Sound_freeBufferList, FreeBufList_re, FreeBufList_orig);
+// 0x000303f0  Sound_stop
+SG_HOOK("sound.dll", 0x000303f0, Sound_stop, SoundStop_re, SoundStop_orig);
+// 0x00006160  WaveStream::destroy
+SG_HOOK("sound.dll", 0x00006160, WaveStream_destroy, WsDestroy_re, WsDestroy_orig);
+// 0x00006130  WaveStream::scalarDeletingDtor
+SG_HOOK("sound.dll", 0x00006130, WaveStream_scalarDeletingDtor, WsDelDtor_re, WsDelDtor_orig);
+
+// 0x00021240  Sound_findByName
+SG_HOOK("sound.dll", 0x00021240, Sound_findByName, FindByName_re, FindByName_orig);
+// 0x0001ef10  Midi_Device::flushMessages
+SG_HOOK("sound.dll", 0x0001ef10, Midi_Device_flushMessages, FlushMsg_re, FlushMsg_orig);
+// 0x00023ea0  Voice_requestCmd12
+SG_HOOK("sound.dll", 0x00023ea0, Voice_requestCmd12, VoiceReq12_re, VoiceReq12_orig);
+// 0x00023c20  Seq_cmdHandler12
+SG_HOOK("sound.dll", 0x00023c20, Seq_cmdHandler12, SeqCmd12_re, SeqCmd12_orig);
+// 0x0003aa50  codecSetParams
+SG_HOOK("sound.dll", 0x0003aa50, codecSetParams, CodecSet_re, CodecSet_orig);
+// 0x0003aa90  codecAllocContextA
+SG_HOOK("sound.dll", 0x0003aa90, codecAllocContextA, AllocCtxA_re, AllocCtxA_orig);
+// 0x0003aea0  codecAllocContextB
+SG_HOOK("sound.dll", 0x0003aea0, codecAllocContextB, AllocCtxB_re, AllocCtxB_orig);
+// 0x00030fb0  Channel_setFormat
+SG_HOOK("sound.dll", 0x00030fb0, Channel_setFormat, SetFormat_re, SetFormat_orig);
+// 0x0004588f  _errno
+SG_HOOK("sound.dll", 0x0004588f, _errno, Errno_re, Errno_orig);
+// 0x00045898  __doserrno
+SG_HOOK("sound.dll", 0x00045898, __doserrno, DosErrno_re, DosErrno_orig);
+// 0x000470ac  sbhRegionLocate
+SG_HOOK("sound.dll", 0x000470ac, sbhRegionLocate, SbhLocate_re, SbhLocate_orig);
+
+// 0x00038710  WaveInDevice_dtor
+SG_HOOK("sound.dll", 0x00038710, WaveInDevice_dtor, WaveInDtor_re, WaveInDtor_orig);
+
+// 0x0001ced0  Sound_setName
+SG_HOOK("sound.dll", 0x0001ced0, Sound_setName, SetName_re, SetName_orig);
+// 0x0002d100  allocVoiceSlot
+SG_HOOK("sound.dll", 0x0002d100, allocVoiceSlot, AllocSlot_re, AllocSlot_orig);
+// 0x0002ed50  buildVoiceRxName
+SG_HOOK("sound.dll", 0x0002ed50, buildVoiceRxName, BuildRx_re, BuildRx_orig);
+
+// 0x0000dbe0  postNotification
+SG_HOOK("sound.dll", 0x0000dbe0, postNotification, PostNote_re, PostNote_orig);
+// 0x00020b60  postMidiNotification
+SG_HOOK("sound.dll", 0x00020b60, postMidiNotification, PostMidi_re, PostMidi_orig);
+// 0x00038fd0  onWaveInCallbackMessage
+SG_HOOK("sound.dll", 0x00038fd0, onWaveInCallbackMessage, WaveInCb_re, WaveInCb_orig);
+
+// 0x00045b9b  getModuleLinkerVersion
+SG_HOOK("sound.dll", 0x00045b9b, getModuleLinkerVersion, LinkerVer_re, LinkerVer_orig);
+// 0x00045bc8  crtHeapSelect
+SG_HOOK("sound.dll", 0x00045bc8, crtHeapSelect, HeapSel_re, HeapSel_orig);
+
+// 0x00008bf0  SoundTimer::stopKeepLock
+SG_HOOK("sound.dll", 0x00008bf0, SoundTimer_stopKeepLock, StopKeep_re, StopKeep_orig);

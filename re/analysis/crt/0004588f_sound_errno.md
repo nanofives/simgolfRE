@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0004588f`), 9 bytes, 3 instructions, subsystem `crt`.
 Returns the address of the per-thread errno in the thread data block. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+0x0004588f _errno (VA 0x1004588f) and 0x00045898 __doserrno: `call 0x10044171` (the per-thread data lookup _getptd) and the block pointer plus 8 (0x10045894) / plus 0xc (0x1004589d) is returned. cdecl, no arguments. Reached from: static callers 0x1004581c, 0x100487ea, 0x1004883e, 0x10048f2d, 0x100491f7, 0x1004928a, 0x100492ef, 0x1004a161, 0x1004a1c6, 0x1004a2ff, 0x1004a7ac, 0x1004bff1, 0x1004c06d, 0x1004c0ec, 0x1004c12e, 0x1004c2d3, 0x1004dfc9. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: _errno_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/0004588f_sound__errno_a.path1.csv`); _errno_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/0004588f_sound__errno_b.path1.csv`); _errno_new (1 vectors, 1 distinct results, 1 changing state, `log/diff/0004588f_sound__errno_new.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_1004588f@f_1004588f@@YAPAKXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10045897): callee pops 0 bytes of stack arguments.

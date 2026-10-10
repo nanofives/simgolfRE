@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 220 bytes, 87 instructions, subsystem `util`. Mechanica
 adds a string entry (copied to the heap) to a list. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Stores an entry in the first free of ten slots and appends the slot number to a list. The object's virtual base sits at the offset in [[this] + 8] (0x004a28a6-0x004a28a9); the slot index is the dword at base + 0xd0, which is the count of the list at base + 0xc0 (0x004a28ac); 10 returns 1 (0x004a28b3-0x004a28bb). A string argument (0x004a28c8) replaces the owned copy at this + index*4 + 0x2c: an old copy is freed through free 0x004a5007 (0x004a28cc-0x004a28d5), strlen + 1 bytes come from malloc 0x004a504f (0x004a28e4-0x004a28e9) and are stored even when NULL (0x004a28f1); NULL returns 4 (0x004a28fc), else the block gets a NUL and a copy (0x004a2905-0x004a292f). The base + 0xdc / 0xe0 take the first argument and 0 (0x004a293e / 0x004a2945), the list's +0x24 is cleared (0x004a2953) and S3List_add 0x00401d10 appends the slot index (0x004a2956); a non-zero result returns 4 (0x004a2962). Otherwise this + index*4 + 0x54 takes the third argument (0x004a296f / 0x004a2970) and the result is 0. Caller: 0x0048e1c0. Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: listAddEntry (10 vectors, 10 distinct results, 9 changing state, `log/diff/004a28a0_listAddEntry.path1.csv`); listAddEntry_fail0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a28a0_listAddEntry_fail0.path1.csv`); listAddEntry_fail1 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a28a0_listAddEntry_fail1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_4a28a0.cpp` as `?add@D4a28a0@@QAEHHPBDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x004a28c1, 0x004a2902, 0x004a2968, 0x004a2979): callee pops 12 bytes of stack arguments.

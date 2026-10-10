@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003aea0`), 78 bytes, 30 instructions, subsystem `aud
 Allocates the 0xc00-byte codec context B and initializes it with codecInitContextB. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x0003aea0 codecAllocContextB (VA 0x1003aea0). The same with 0xc00 bytes (0x1003aeb8 / 0x1003aebd) and codecInitContextB 0x1003aef0 (0x1003aed2). Reached from: static callers 0x10030fb0. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: codecAllocContextB (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aea0_sound_codecAllocContextB.path1.csv`); codecAllocContextB_5a (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aea0_sound_codecAllocContextB_5a.path1.csv`); codecAllocContextB_oom (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aea0_sound_codecAllocContextB_oom.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003aeed): callee pops 0 bytes of stack arguments.
 

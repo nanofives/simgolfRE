@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008bf0`), 186 bytes, 68 instructions, subsystem `au
 Stops the timer under g_100b4990 without deleting the critical section. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00008bf0 SoundTimer::stopKeepLock (VA 0x10008bf0). The module re-entrancy word 0x100b49a8 is incremented (0x10008bf4-0x10008c02); EnterCriticalSection [0x100b83f4] and LeaveCriticalSection [0x100b84e0] run back to back on 0x100b4990 (0x10008c0e / 0x10008c1b). With bit 0 of the byte at this+0x3c set (0x10008c1d / 0x10008c22): the word is incremented again (0x10008c26-0x10008c31), bit 2 of +0x3c cleared (0x10008c36-0x10008c3c), Enter and Leave again (0x10008c3f / 0x10008c46), +8 and +4 cleared (0x10008c4b / 0x10008c4f), timeKillEvent [0x100b8648] (the id at +0x40, 0x10008c52), timeEndPeriod [0x100b864c] (the resolution at +0x18, 0x10008c5c) and bit 0 of +0x3c cleared (0x10008c62-0x10008c67). Then the client list (front +0x4c, back +0x50, count +0x58) is drained: the front node is popped (next.prev = 0 and front = next, or both header pointers cleared, 0x10008c71-0x10008c82), released by operator delete (0x10008c89), the count decremented (0x10008c91-0x10008c97), and a non-NULL client gets its virtual slot +0xc (`call [edx+0xc]` 0x10008ca0) before the next node. Unlike SoundTimer::stop it does not touch the critical section's memory. eax at `ret` is not set. Reached from: static callers 0x10009390. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: SoundTimer::stopKeepLock (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008bf0_sound_SoundTimer_stopKeepLock.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10008bf0@f_10008bf0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10008ca9): callee pops 0 bytes of stack arguments.

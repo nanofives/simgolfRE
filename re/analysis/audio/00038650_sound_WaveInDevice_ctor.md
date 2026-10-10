@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038650`), 106 bytes, 32 instructions, subsystem `au
 installs vtable 0x1005c604 at this+0; stores waveInGetNumDevs() at this+0x38; waveInGetDevCapsA(-1, this+0x8, 0x30); fills a WAVEFORMATEX at this+0x48 (wFormatTag=1 at +0x48, nChannels=1 at +0x4a, nSamplesPerSec=8000 at +0x4c, nAvgBytesPerSec=16000 at +0x50, nBlockAlign=2 at +0x54, wBitsPerSample=0x10 at +0x56); zeroes this+0x4/+0x40/+0x44/+0x58/+0x5c/+0x60/+0x64/+0x68 (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x00038650 WaveInDevice_ctor (VA 0x10038650). Fields +0x5c / +0x60 / +0x64 / +0x68 cleared (0x10038659-0x10038662), the vtable 0x1005c604 stored at +0 (0x10038665), +4 cleared (0x1003866b); waveInGetNumDevs [0x100b861c] is stored at +0x38 (0x1003866d / 0x1003867b); +0x40 cleared (0x1003867e); waveInGetDevCapsA [0x100b8620] (-1, this+8, 0x30) (pushes 0x10038676-0x10038679, call 0x10038681), result unused; word stores +0x58 = 0 (0x1003868c), +0x48 = 1 and +0x4a = 1 (0x10038690 / 0x10038694); +0x44 = 0 (0x10038698), +0x4c = 0x1f40 (0x1003869b), +0x50 = 0x3e80 (0x100386a2), words +0x54 = 2 and +0x56 = 0x10 (0x100386a9 / 0x100386af). Returns this (0x100386b5). Reached from: static callers 0x1000ead0. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: WaveInDevice_ctor_n3 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00038650_sound_WaveInDevice_ctor_n3.path1.csv`); WaveInDevice_ctor_n0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00038650_sound_WaveInDevice_ctor_n0.path1.csv`); WaveInDevice_ctor_nbig (12 vectors, 12 distinct results, 12 changing state, `log/diff/00038650_sound_WaveInDevice_ctor_nbig.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100386b9): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10038651 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

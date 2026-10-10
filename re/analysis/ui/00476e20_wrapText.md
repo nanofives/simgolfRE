@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 200 bytes, 76 instructions, subsystem `ui`. Mechanical 
 word-wraps a text line to a pixel width (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, four stack arguments (`ret 0x10`: 0x00476e38, 0x00476ee5): text, pixel width, a table of line starts (or NULL) and a pointer to the line count (or NULL). Returns the sum of the line heights. A NULL text returns 0 (0x00476e2f). It clears the line counter +0x1c and the accumulator 0x00839aa8 and copies the first-line indent +0x14 to +0x18 (0x00476e3f..0x00476e51). For each line it stores the line start in the table when one is given (0x00476e60..0x00476e78), calls measureMarkupRun 0x00476ef0 with (this, text, &width_copy, strlen) (0x00476e95), clears the accumulator (0x00476e9e), adds Widget_value 0x00477580 to the total (0x00476ea4), counts the line in +0x1c (0x00476eb9) and, when +0x18 is non-zero, subtracts it from the width of the following lines and clears it (0x00476ebf..0x00476ec5). It ends when measureMarkupRun returns NULL (0x00476eca), storing the number of recorded lines through the count pointer when it is non-NULL (0x00476ed4..0x00476eda). Reimplemented in `shim/src/re/c3df.cpp`; path-1 A/B GREEN: wrapText (46 vectors, 45 distinct results, 45 changing state, `log/diff/00476e20_wrapText.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?wrap@R0C476e20@@QAEHPADHPAPADPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00476e38, 0x00476ee5): callee pops 16 bytes of stack arguments.

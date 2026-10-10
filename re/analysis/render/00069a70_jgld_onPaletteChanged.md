@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069a70`), 61 bytes, 26 instructions, subsystem `rend
 WM_PALETTECHANGED (0x311) handler: if the changed HWND is not our window, call realizePalette 0x100699c0. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+The WM_PALETTECHANGED handler (windowProc 0x100692b0 passes hwnd and wParam, the window that changed the palette): when that window is another one (`cmp eax, [ebp+0xc]` / `je` 0x10069a8b / 0x10069a8e) it re-realizes the module palette in hwnd through realizePalette 0x100699c0 (thunk 0x10001028, 0x10069a94); a palette change made by hwnd itself is ignored. No return value is set. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: onPaletteChanged_pal0 (12 vectors, 8 distinct results, 7 changing state, `log/diff/00069a70_jgld_onPaletteChanged_pal0.path1.csv`); onPaletteChanged_palX (12 vectors, 8 distinct results, 7 changing state, `log/diff/00069a70_jgld_onPaletteChanged_palX.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10069a70@f_10069a70@@YAXPAUHWND__@@0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069aac): callee pops 0 bytes of stack arguments.

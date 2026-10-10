@@ -1,0 +1,46 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$tm 0,0,0,True,23b1d368,23b1d368,False
+$tplain 0,0,0,True,23b1d368,23b1d368,False
+$tm $s_plain,78,78,True,23b1d368,23b1d368,False
+$tm $s_one,36,36,True,23b1d368,23b1d368,False
+$tm $s_braces,67,67,True,23b1d368,23b1d368,False
+$tm $s_brackets,78,78,True,23b1d368,23b1d368,False
+$tm $s_mixed,50,50,True,23b1d368,23b1d368,False
+$tm $s_double,54,54,True,23b1d368,23b1d368,False
+$tm $s_close,46,46,True,23b1d368,23b1d368,False
+$tm $s_closeb,46,46,True,23b1d368,23b1d368,False
+$tm $s_dollar,46,46,True,23b1d368,23b1d368,False
+$tm $s_link,72,72,True,23b1d368,23b1d368,False
+$tm $s_linknogt,80,80,True,23b1d368,23b1d368,False
+$tm $s_dd,87,87,True,23b1d368,23b1d368,False
+$tm $s_ddend,22,22,True,23b1d368,23b1d368,False
+$tm $s_dl,110,110,True,23b1d368,23b1d368,False
+$tm $s_ddbrace,139,139,True,9de1e86d,9de1e86d,True
+$tm $s_caret,71,71,True,23b1d368,23b1d368,False
+$tm $s_eq,60,60,True,23b1d368,23b1d368,False
+$tm $s_long,249,249,True,23b1d368,23b1d368,False
+$tm $s_spaces,66,66,True,23b1d368,23b1d368,False
+$tm $s_brace2,133,133,True,23b1d368,23b1d368,False
+$tm $s_open1,61,61,True,9de1e86d,9de1e86d,True
+$tm $s_open2,50,50,True,800299aa,800299aa,True
+$tm $s_dl2,119,119,True,8a49532f,8a49532f,True
+$tm $s_open3,67,67,True,9de1e86d,9de1e86d,True
+$tm $s_empty,0,0,True,23b1d368,23b1d368,False
+$tpart $s_mixed,46,46,True,23b1d368,23b1d368,False
+$tpart $s_link,56,56,True,23b1d368,23b1d368,False
+$tpart $s_dl,86,86,True,23b1d368,23b1d368,False
+$tpart $s_plain,78,78,True,23b1d368,23b1d368,False
+$tplain $s_plain,116,116,True,23b1d368,23b1d368,False
+$tplain $s_braces,99,99,True,23b1d368,23b1d368,False
+$tplain $s_empty,0,0,True,23b1d368,23b1d368,False
+$tdrop $s_caret,71,71,True,23b1d368,23b1d368,False
+$tlink $s_eq,60,60,True,23b1d368,23b1d368,False
+$tpend $s_plain,78,78,True,23b1d368,23b1d368,False
+$tneg $s_mixed,50,50,True,23b1d368,23b1d368,False
+$tnomeas $s_plain,0,0,True,23b1d368,23b1d368,False
+$tnocbm $s_braces,67,67,True,23b1d368,23b1d368,False
+state_regions,$tm+0x0:768 $tpart+0x0:768 $tplain+0x0:768 $tnofont+0x0:768 $tnofont1+0x0:768 $tdrop+0x0:768 $tlink+0x0:768 $tpend+0x0:768 $tind+0x0:768 $tneg+0x0:768 $tnomeas+0x0:768 $tnocb+0x0:768 $tnocbm+0x0:768 $rec+0x0:4096,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7015d340,original=0x1440d40,2026-10-10T12:07:26
+distinct_results,26,,
+VERDICT,GREEN,40,

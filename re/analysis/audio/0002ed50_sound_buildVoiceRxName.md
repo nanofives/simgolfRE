@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002ed50`), 240 bytes, 75 instructions, subsystem `au
 constructor: sets field[1]=0x7f (default level) and copies the literal name (string in the binary) into the object's std::string at this+3 (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x0002ed50 buildVoiceRxName (VA 0x1002ed50). Wrapped in a C++ frame (0x1002ed50-0x1002ed5e) that no path uses. `this` is initialised: +4 = 0x7f, +8 = 0, +0xc..+0x2f zeroed (`rep stosd` 9 dwords, 0x1002ed6f-0x1002ed83), +0x30 = 0, vtable 0x1005bae0 at +0, +0x48 = +0x4c = +0x40 = +0x50 = 0 (0x1002ed8e-0x1002ed9d), +0x44 = 0 (0x1002eda3 / 0x1002eda6), +0x38 = 0x3e8 (0x1002edb2), a non-NULL +0x40 would be released through its virtual slot +4 (0x1002edbb-0x1002edc2; +0x40 was just cleared, so that call is not reached), +0x54 = 0, the vtable 0x1005c234 at +0 (0x1002edc8). The nine bytes at the module constant 0x10063e80 are copied to the stack (0x1002edce-0x1002eddf), Sound_setSourceType 0x1002ad10 (thunk 0x100018a2) is called with 6 (0x1002ede3-0x1002edf7), operator new takes 0xa bytes (0x1002edfc / 0x1002edfe) stored at +0x50 (0x1002ee11) and receives the copied string (0x1002ee14-0x1002ee2c). Returns this (0x1002ee27). Reached from: static callers 0x10030080. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: buildVoiceRxName (10 vectors, 10 distinct results, 10 changing state, `log/diff/0002ed50_sound_buildVoiceRxName.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002ee3f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002ed69 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

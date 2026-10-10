@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008d70`), 100 bytes, 32 instructions, subsystem `au
 Under g_100b4990, kills the running timeSetEvent timer and ends the timer period. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00008d70 SoundTimer::killEvent (VA 0x10008d70). Bit 0 of +0x3c clear returns 0x15 (0x10008d73 / 0x10008d79). Otherwise the re-entrancy word 0x100b49a8 is incremented (0x10008d80 / 0x10008d8b / 0x10008d8c), bit 2 of +0x3c is cleared (0x10008d92- 0x10008d98), EnterCriticalSection and LeaveCriticalSection run back to back on 0x100b4990 (0x10008d9b / 0x10008da6), +8 and +4 are cleared (0x10008dae / 0x10008db1), timeKillEvent [0x100b8648] gets the id at +0x40 (0x10008db8), timeEndPeriod [0x100b864c] gets the resolution at +0x18 (0x10008dc2), bit 0 of +0x3c is cleared with the value read after the calls (0x10008dc8-0x10008dcd) and 0 is returned (0x10008dd0). Reached from: static callers 0x1000b960, 0x1000be00, 0x1000bef0, 0x1000c020, 0x1000ec00, 0x10009e40. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: SoundTimer::killEvent (12 vectors, 9 distinct results, 8 changing state, `log/diff/00008d70_sound_SoundTimer_killEvent.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10008d70@f_10008d70@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10008d7f, 0x10008dd3): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002aa90`), 94 bytes, 39 instructions, subsystem `aud
 PostThreadMessageA to the worker thread id at this+0x1c, retrying with OutputDebugStringA((string in the binary)) + Sleep(100) until it succeeds; returns 0x15 if the thread flag is clear (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x0002aa90 postSoundThreadMessage (VA 0x1002aa90). `this` has a flag byte at +0 (bit 0 = the sound thread is running, `test byte ptr [esi], 1` 0x1002aa93; clear returns 0x15, 0x1002aa98) and the thread id at +0x1c (0x1002aaa1). Three stack arguments (`ret 0xc`): PostThreadMessageA [0x100b85b0] (thread id, a1, a2, a3) (pushes 0x1002aab3-0x1002aab6, call 0x1002aab7). A zero result retries in a loop: OutputDebugStringA [0x100b83e8] with the string at 0x10063e68 (0x1002aac1 / 0x1002aac6), Sleep(0x64) [0x100b840c] (0x1002aacc / 0x1002aace), the thread id read again (0x1002aad4) and the same post (0x1002aadb) until it returns non-zero (0x1002aae3). Returns 0 (0x1002aae8). Reached from: static callers 0x1000a670, 0x1000cd80, 0x1000dbe0, 0x10020b60, 0x10036280, 0x10036660, 0x10038fd0. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: postSoundThreadMessage_ok (12 vectors, 9 distinct results, 8 changing state, `log/diff/0002aa90_sound_postSoundThreadMessage_ok.path1.csv`); postSoundThreadMessage_r1 (12 vectors, 9 distinct results, 8 changing state, `log/diff/0002aa90_sound_postSoundThreadMessage_r1.path1.csv`); postSoundThreadMessage_r3 (12 vectors, 9 distinct results, 8 changing state, `log/diff/0002aa90_sound_postSoundThreadMessage_r3.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x1002aa9e, 0x1002aaeb): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x1002aa91 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

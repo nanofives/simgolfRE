@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 68 bytes, 19 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 shared constructor body for four file-scope global Surface objects (initialises each via Surface_ctor 0x00473ab0, vtable 0x004ba2d8) (`re/names/exe_6.tsv`)
 
+## Purpose
+Members at +0 and +0x2c (0x0044ae7d / 0x0044ae8d). Each constructor builds the Surface arrays of a global object in place: Surface_ctor 0x00473ab0 (vtable 0x004ba2d8 at +0 and zero in +4 .. +0x24 of each 0x2c-byte element) on single members and the eh vector constructor iterator 0x004a55d2 (first, element size 0x2c, count, ctor 0x00473ab0, dtor 0x004041f0) on runs; the result is this. The exception registration it builds (fs:[0]) matters only when a constructor throws. Callers: the staticCtor thunks 0x0044add0 / 0x0044aec0 / 0x0044af00 / 0x0044af40 (staticCtor thunks; the staticCtor family is at C3, c3cq). Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: gSurfaceCtor_44ae60 (4 vectors, 4 distinct results, 4 changing state, `log/diff/0044ae60_gSurfaceCtor_44ae60.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0044aea3): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0044ae75 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

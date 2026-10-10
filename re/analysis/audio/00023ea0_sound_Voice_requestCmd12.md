@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00023ea0`), 70 bytes, 25 instructions, subsystem `aud
 Enqueues command 0xc (handled by 0x10023c20) with (index param_1, byte param_2) on g_midiDevice; returns 10 if param_1 exceeds the track count (vtbl+0xb4), 0x13 if no device. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x00023ea0 Voice_requestCmd12 (VA 0x10023ea0). Two stack arguments (`ret 8`). The object's virtual slot +0xb4 (thiscall, no arguments, `call [eax+0xb4]` 0x10023ea5) gives a limit; an argument above it (unsigned, `jbe` 0x10023eb1) returns 0xa (0x10023eb3). Otherwise the module pointer g_midiDevice 0x100b4a1c (0x10023ebc): NULL returns 0x13 (0x10023edd). With one, CommandQueue::push 0x1000a240 (thunk 0x100015e1, ecx = the device) is called with (this, 0xc, first argument, second argument & 0xff) (pushes 0x10023ecf-0x10023ed3, call 0x10023ed4) and its result is returned (0x10023eda). Reached from: no call xref; reached through a stored pointer: 0x1005b0ac table slot 43 (+0xac) of the table at 0x1005b000; installers: 0x10003f30 Sound::ctor, 0x10004000 Sound::dtor. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Voice_requestCmd12_q (24 vectors, 24 distinct results, 24 changing state, `log/diff/00023ea0_sound_Voice_requestCmd12_q.path1.csv`); Voice_requestCmd12_full (24 vectors, 15 distinct results, 24 changing state, `log/diff/00023ea0_sound_Voice_requestCmd12_full.path1.csv`); Voice_requestCmd12_null (24 vectors, 15 distinct results, 24 changing state, `log/diff/00023ea0_sound_Voice_requestCmd12_null.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10023eb9, 0x10023eda, 0x10023ee3): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10023ea1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

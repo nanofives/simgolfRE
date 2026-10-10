@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+4611 65 1 5 6,void,void,True,1c8044d0,1c8044d0,True
+4613 96 1 0 0,void,void,True,9c2af2bd,9c2af2bd,True
+4610 111 1 1 1,void,void,True,bdabd638,bdabd638,True
+4608 101 1 2 2,void,void,True,470c8b3a,470c8b3a,True
+4615 95 1 3 3,void,void,True,9d78fa10,9d78fa10,True
+4611 112 1 4 4,void,void,True,b193ca64,b193ca64,True
+4612 96 0 5 5,void,void,True,9cf5627b,9cf5627b,True
+4609 65 0 6 6,void,void,True,d7f1e13a,d7f1e13a,True
+4623 106 1 7 7,void,void,True,b524e5a4,b524e5a4,True
+4611 4294967295 1 8 8,void,void,True,324819ff,324819ff,True
+4611 2147483744 2 9 9,void,void,True,7e09146c,7e09146c,True
+4614 0 -1 0 1,void,void,True,9d13293c,9d13293c,True
+state_regions,$sink+0x0:256 $disp+0x0:64 $implog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71e5e680,original=0x14b0040,2026-10-10T12:15:30
+distinct_results,12,,
+VERDICT,GREEN,12,

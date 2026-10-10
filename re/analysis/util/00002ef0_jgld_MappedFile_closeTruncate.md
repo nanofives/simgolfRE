@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00002ef0`), 274 bytes, 92 instructions, subsystem `uti
 if the final size < mapped size, truncates the file to (size-mappedSize) via SetFilePointer/SetEndOfFile then closes; else closes normally. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Closes a mapped file and cuts it at a pointer into its view (caller Surface::writePcx8 0x10012140, which writes the PCX into the view first). An end pointer below the view (unsigned `jae` 0x10002f16) only closes the object (0x10002f1b). Otherwise the length is end - view (0x10002f2b); the view is unmapped (UnmapViewOfFile 0x10002f43, +4 = 0) and the mapping closed (CloseHandle 0x10002f6c, +0xc = 0) when present; SetFilePointer (file, length, NULL, FILE_BEGIN) 0x10002f94 returning -1 (0x10002fa1) closes the object and stops; otherwise SetEndOfFile 0x10002fb9, and a file handle that is not ZERO (`cmp [edx+8], 0` 0x10002fc9) is closed (CloseHandle 0x10002fd8) and +8 becomes 0 (0x10002fe8). Everywhere else in the class "no file" is -1 (MappedFile::close 0x10002e82 tests -1 and stores -1), so this body closes a -1 handle and leaves 0, which a later close would hand to CloseHandle. No return value is set; `ret 4`. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: MappedFile::closeTruncate (12 vectors, 12 distinct results, 12 changing state, `log/diff/00002ef0_jgld_MappedFile_closeTruncate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_01.cpp` as `?FUN_10002ef0@C_FUN_10002ef0@f_10002ef0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10002fff): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 43 bytes, 14 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Resets the hotspot list fields and its embedded tooltip Timer at this+0x20. (`re/names/exe_4.tsv`)
 
+## Purpose
+Returns a HotList (a 0x60-byte object with a Timer at +0x20) to its idle state. It clears +0x54, +0x58, +0x50, +0xc, +0x10 and +0x14 (0x00492805-0x00492814), sets +0x18 and the hovered key pair +4 / +8 to -1 (`or edx, -1` 0x00492802, stores 0x00492817, 0x0049281d, 0x00492820), clears +0x1c (0x0049281a) and tail-jumps to Timer::reset 0x00486f10 on this + 0x20 (`add ecx, 0x20` 0x00492823, `jmp` 0x00492826), whose 0 (0x00486f18) is the return value. Callers: HotList::releaseArray (call 0x00492849) and HotList::ctor (call 0x0049288c). Vectors: keys `HotList::resetFields` and `HotList::resetFields_nodisp`, 12 vectors each over junk-filled lists whose Timer rows cover ids zero and non-zero, flags bit 0 set and clear and intervals on both sides of 0x32; the second key runs with the display global 0 (Timer::stop then skips KillTimer and the display pump). The imports Timer::reset reaches (timeKillEvent 0x4ba214, KillTimer 0x4ba1b4) and the display slot +0x150 call are compared through `$implog` and `$disp`. No jcc of its own. Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: HotList::resetFields (12 vectors, 12 distinct results, 12 changing state, `log/diff/00492800_HotList_resetFields.path1.csv`); HotList::resetFields_nodisp (12 vectors, 12 distinct results, 12 changing state, `log/diff/00492800_HotList_resetFields_nodisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00492805 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f020`), 87 bytes, 34 instructions, subsystem `aud
 Resets the timing fields +0x48/+0x4c, stops the buffer, re-plays it (Play vtbl+0x30) and re-reads its format into +0xa8. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000f020 DsBuffer::restartPlayback (VA 0x1000f020). +0x4c and +0x48 are cleared (0x1000f026 / 0x1000f02f); an interface at +0x60 (0x1000f023) gets Stop (`call [ecx+0x48]` 0x1000f03b); the interface is read again (0x1000f03e); with one, timeGetTime is stored at +0x54 (0x1000f045 / 0x1000f04b), Play(interface, 0, 0, 1) (`call [edx+0x30]` 0x1000f05a, pushes 0x1000f051-0x1000f057), and a zero Play result calls the +0x14 slot (interface, this+0xa8, 0x12, 0) (0x1000f072). eax at `ret` (0x1000f076) is the last call's result, or 0 when there is no interface. Reached from: static callers 0x1000bf90. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: DsBuffer::restartPlayback (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000f020_sound_DsBuffer_restartPlayback.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000f076): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000f021 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

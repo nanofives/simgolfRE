@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+65793 65793,void,void,True,0e44baa8,0e44baa8,False
+65793 65794,void,void,True,8a44d148,8a44d148,True
+0 0,void,void,True,0e44baa8,0e44baa8,False
+0 1,void,void,True,286f249d,286f249d,True
+172275 0,void,void,True,829bc36a,829bc36a,True
+4294967295 4294967295,void,void,True,0e44baa8,0e44baa8,False
+4294967295 0,void,void,True,8788d430,8788d430,True
+256 512,void,void,True,25d5d0fd,25d5d0fd,True
+2147418178 2147418178,void,void,True,0e44baa8,0e44baa8,False
+305419776 305419777,void,void,True,0882a995,0882a995,True
+2147483648 2147483648,void,void,True,0e44baa8,0e44baa8,False
+11259375 28036591,void,void,True,c7f342d8,c7f342d8,True
+state_regions,$gpal+0x0:12 $implog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71e0e760,original=0x2ef0f20,2026-10-10T12:15:19
+distinct_results,8,,
+VERDICT,GREEN,12,

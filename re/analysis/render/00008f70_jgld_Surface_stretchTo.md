@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008f70`), 334 bytes, 122 instructions, subsystem `re
 copies a source rectangle into a destination rectangle with scaling. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Slot 16 (+0x40) of the Surface vtable 0x1011d0b0: stretches a rectangle of this surface into a rectangle of another through GDI. Any NULL argument (destination surface, source RECT, destination RECT: 0x10008f93 / 0x10008f99 / 0x10008f9f) returns 0x10. The destination's DC comes from its slot +0x28 (0x10008fb9); NULL returns 7. This surface's DC from its slot +0x28 (0x10008fe0); NULL releases the destination's DC (slot +0x2c with 1, 0x10008fff) and returns 7. Otherwise StretchBlt 0x10009070 (destination DC, destination left, top, width, height, source DC, source left, top, width, height, SRCCOPY 0xcc0020), widths and heights from rectWidth 0x10009120 / rectHeight 0x10009160 (each rect's height computed before its width, 0x1000901e / 0x1000902b / 0x10009049 / 0x10009056); both DCs are released (0x10009089 / 0x1000909f) and 0 is returned (0x100090a9). Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Surface::stretchTo (12 vectors, 10 distinct results, 9 changing state, `log/diff/00008f70_jgld_Surface_stretchTo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?stretchTo@Surface@@QAEHPAV1@PBUtagRECT@@1@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x100090bb): callee pops 12 bytes of stack arguments.

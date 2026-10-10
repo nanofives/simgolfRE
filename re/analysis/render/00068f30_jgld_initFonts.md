@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00068f30`), 86 bytes, 31 instructions, subsystem `rend
 creates the shared font memory DC g_fontDC (CreateCompatibleDC) at 0x10128724 (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+(Re)creates the memory DC jgld draws text through: initFontTable 0x10068fa0 (thunk 0x10001217, 0x10068f48) deletes a previous DC at VA 0x10128724 with DeleteDC and clears it; CreateCompatibleDC (NULL) 0x10068f51 goes to VA 0x10128724 (0x10068f5e); a NULL DC (0x10068f63) returns 2 (0x10068f6c), otherwise 0 (0x10068f73). Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: initFonts_0_0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00068f30_jgld_initFonts_0_0.path1.csv`); initFonts_0_dc (1 vectors, 1 distinct results, 1 changing state, `log/diff/00068f30_jgld_initFonts_0_dc.path1.csv`); initFonts_dc_0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00068f30_jgld_initFonts_dc_0.path1.csv`); initFonts_dc_dc (1 vectors, 1 distinct results, 1 changing state, `log/diff/00068f30_jgld_initFonts_dc_dc.path1.csv`); initFonts_m1_1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00068f30_jgld_initFonts_m1_1.path1.csv`); initFonts_1_m1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00068f30_jgld_initFonts_1_m1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `?initFonts@@YAHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10068f85): callee pops 0 bytes of stack arguments.

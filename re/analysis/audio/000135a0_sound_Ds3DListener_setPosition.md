@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000135a0`), 89 bytes, 31 instructions, subsystem `aud
 Sets the 3D listener position (x/y/z cached at +0x1ac/+0x1b0/+0x1b4) through the IDirectSound3DListener interface at +0xd8. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x000135a0 Ds3DListener::setPosition (VA 0x100135a0). Three stack arguments, the position floats as raw dwords (`ret 0xc` 0x100135f6). A COM-shaped 3D listener interface at +0xd8 (0x100135a3 / 0x100135ab): SetPosition (vtable +0x38: interface, a1, a2, a3, 0) (pushes 0x100135b3-0x100135c0, `call [ecx+0x38]` 0x100135c1). A non-zero result is mapped by mapDsError 0x1000f480 (thunk 0x1000268a, cdecl, 0x100135c9) and returned (0x100135d2). No interface, or a zero result, stores the three dwords at +0x1ac / +0x1b0 / +0x1b4 (0x100135e1-0x100135ed) and returns 0 (0x100135f3). Reached from: static callers 0x1000baa0, 0x1000b420. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Ds3DListener::setPosition (24 vectors, 24 distinct results, 24 changing state, `log/diff/000135a0_sound_Ds3DListener_setPosition.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x100135d2, 0x100135f6): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x100135a1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

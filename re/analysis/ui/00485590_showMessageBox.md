@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 21 bytes, 8 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 Shows a modal Win32 message box with text param_1 and caption param_2. (`re/names/exe_4.tsv`)
 
+## Purpose
+Shows a message box and returns the user's answer. It re-pushes its two cdecl arguments (text at [esp + 4], caption at [esp + 8]; 0x00485594 / 0x00485590) and calls MessageBoxA(NULL, text, caption, 0) [0x4ba1f4] (pushes 0x00485598-0x0048559c, call 0x0048559e); the result stays in eax and the caller pops the arguments (`ret` 0x004855a4). Its caller soundVersionCheck 0x00483fc0 calls it at 0x00484037 with the strings at 0x4babd0 / 0x4bac50 unless the value from 0x004840c0 masked with 0xff00 equals 0xc00 (0x00484021-0x0048402b). Vectors: one key, 12 vectors over six fixture strings and NULL in both positions, including (NULL, NULL). The stand-in returns first char of the text plus 0x100 times the first char of the caption (0x1ff / 0x2ff for NULL), so all 12 results are distinct and a swapped or dropped argument changes the return and the recorded call. No jcc. Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: showMessageBox (12 vectors, 12 distinct results, 12 changing state, `log/diff/00485590_showMessageBox.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00485590@f_00485590@@YAXPBD0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004855a4): callee pops 0 bytes of stack arguments.

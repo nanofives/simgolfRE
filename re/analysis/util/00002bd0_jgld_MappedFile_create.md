@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00002bd0`), 458 bytes, 157 instructions, subsystem `ut
 creates a file of a given size and maps a writable view. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Creates (or truncates) a file of a given size, maps it and zeroes the view; it backs the PCX writer (caller Surface::writePcx8 0x10012140). Flags as openWrite from the fourth argument (0x10002bf4..0x10002c0a); the object is closed (0x10002c16) and +0x10 = size (0x10002c21) before anything can fail. CreateFileA (name, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS 2, flags) 0x10002c3b goes to +8; -1 (0x10002c51) calls GetLastError 0x10002c59 and returns 0 (both arms of `cmp [ebp-0xc], 2` 0x10002c69). SetFilePointer (file, size, NULL, FILE_BEGIN) 0x10002c8e, SetEndOfFile 0x10002cb8 (result unused) and SetFilePointer (file, 0, NULL, FILE_BEGIN) 0x10002cd4 set the length; a -1 from either SetFilePointer (0x10002c9b / 0x10002ce1) closes and returns 0. CreateFileMappingA 0x10002d08 -> +0xc and MapViewOfFile 0x10002d44 -> +4 as in openWrite (NULL closes and returns 0). Otherwise memset 0x1007e7c0 (view, 0, size) 0x10002d79 and the view is returned (0x10002d84); `ret 0xc`. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: MappedFile::create (12 vectors, 12 distinct results, 12 changing state, `log/diff/00002bd0_jgld_MappedFile_create.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_mappedfile.cpp` as `?create@MappedFile@@QAEPAXPBDKH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10002d97): callee pops 12 bytes of stack arguments.

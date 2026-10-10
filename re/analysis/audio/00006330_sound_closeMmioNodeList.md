@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006330`), 185 bytes, 77 instructions, subsystem `au
 Walks a node list, closing each mmio handle and decrementing g_100b4a08, then frees the nodes. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00006330 closeMmioNodeList (VA 0x10006330). The object's virtual slot +0x20 runs (`call [eax+0x20]` 0x10006335). Bit 1 of the byte at +0x44 set: bit 3 is set in the dword at +0x58 (0x1000633e-0x10006343) and 0 is returned (0x10006348). Otherwise the list is popped from the front (0x1000634a-0x10006383); for each non-null element: a non-zero handle at +0x44 is closed with mmioClose (handle, 0) (0x10006394) and the module counter 0x100b4a08 decremented (0x10006396), the element's destructor thunk 0x10001b45 runs (0x100063a2) and operator delete releases it (0x100063a8), then the next node is popped (0x100063b0-0x100063e0). Returns 0. Reached from: no call xref; reached through a stored pointer: 0x1005b1f8 table slot 14 (+0x38) of the table at 0x1005b1c0; installers: 0x10006020 WaveStream::ctor, 0x10006160 WaveStream::destroy. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: closeMmioNodeList (13 vectors, 13 distinct results, 13 changing state, `log/diff/00006330_sound_closeMmioNodeList.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10006349, 0x100063e8): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10006331 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

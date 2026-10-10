@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00030fb0`), 146 bytes, 42 instructions, subsystem `au
 returns SNDERR 10 if param_1==0; with no explicit format copies the default WAVEFORMATEX (g_defaultWaveFormat) into this+0xbc, otherwise allocates a codec context for the given format (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x00030fb0 Channel_setFormat (VA 0x10030fb0). Three stack arguments (`ret 0xc`; the third is never read). A NULL first argument returns 0xa (0x10030fb3 / 0x10030fb9 / 0x10030fbb). The 18-byte format at +0xbc (4 dwords and a word, 0x10030fcd-0x10030ff6 / 0x10030ffd-0x10031027) is copied from the second argument when it is non-NULL (0x10030fc4 / 0x10030fca), else from the module defaults at 0x10063ea0, 0x10063ea4, 0x10063ea8, 0x10063eac and the word 0x10063eb0. The first argument is stored at +0xb4 (0x1003102b), codecAllocContextB 0x1003aea0 (0x10031031) is called and its result stored at +0xd4 (0x10031036). Returns 0 (0x1003103c). Reached from: no call xref; reached through a stored pointer: 0x1005c4d4 table slot 33 (+0x84) of the table at 0x1005c450; installers: 0x10030080 Sound5c450_ctor, 0x10030180 Sound5c450_dtor. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Channel_setFormat_ok (12 vectors, 10 distinct results, 9 changing state, `log/diff/00030fb0_sound_Channel_setFormat_ok.path1.csv`); Channel_setFormat_oom (12 vectors, 10 distinct results, 9 changing state, `log/diff/00030fb0_sound_Channel_setFormat_oom.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x10030fc1, 0x1003103f): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10030fb1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

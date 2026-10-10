@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000c2f0`), 164 bytes, 47 instructions, subsystem `au
 Allocates a 0x10-byte command node and enqueues it in the 4096-entry wave command ring at +0x1d8 (head +0x41dc mask 0xfff); returns 0x22 when full. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x0000c2f0 WaveCmdQueue::pushNode (VA 0x1000c2f0). The same shape over a ring of 0x1000 node pointers from +0x1d8, read index +0x41d8 (0x1000c310), write index +0x41dc (0x1000c30a); two stack arguments (`ret 8` 0x1000c391). Full ring: 0x22 (0x1000c322). Node of 0x10 bytes (0x1000c339 / 0x1000c33b) constructed by 0x10002031 -> 0x100087f0 (0x1000c355); the SECOND stack argument is stored at +0 (0x1000c369, [esp+0x20]) and the first at +4 (0x1000c37a, [esp+0x1c]); only the first two node dwords are written, +8 and +0xc keep the constructor's zero for +8 and the allocator's bytes for +0xc. Reached from: static callers 0x100097d0, 0x10031080, 0x10039bd0, 0x10039c40, 0x10039ce0, 0x10039f30. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: WaveCmdQueue::pushNode (27 vectors, 19 distinct results, 18 changing state, `log/diff/0000c2f0_sound_WaveCmdQueue_pushNode.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x1000c336, 0x1000c391): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1000c305 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

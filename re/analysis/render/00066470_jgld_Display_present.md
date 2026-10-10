@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066470`), 378 bytes, 136 instructions, subsystem `re
 blits the back-buffer Surface (via this+0x148) to the screen DC (BitBlt rop 0xcc0020), clipped to the dirty rect (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 41 (+0xa4) of the Display vtable 0x1011d640: copies the back surface to the window. The surface is [[this+0x148]+4] (0x10066490 / 0x10066496); its DC comes from its slot +0x28 (0x100664a6) and its slot +0xec receives the +4 field of the palette client at VA 0x1012873c (0x100664b5 / 0x100664c6). A NULL rectangle (0x100664d3) blits the whole surface: BitBlt 0x10066538 (this+0x138, 0, 0, width, height, surface DC, 0, 0, SRCCOPY) with the size from two calls of the surface's slot +0xd4 (its bounds RECT; height first, 0x100664f2 / 0x10066500, then width, 0x10066513 / 0x10066521). Otherwise intersect 0x10008590 (thunk 0x10001087: a local RECT, the rectangle, the bounds; 0x10066567) and, when it is non-empty (`test eax, eax` 0x1006656f), BitBlt 0x100665b2 of the intersection at the same position in both DCs. The surface's DC is released (slot +0x2c with 1, 0x100665cb) and 0 is returned (0x100665d5). Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Display::present (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066470_jgld_Display_present.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?present@Display@@QAEHPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100665e7): callee pops 4 bytes of stack arguments.

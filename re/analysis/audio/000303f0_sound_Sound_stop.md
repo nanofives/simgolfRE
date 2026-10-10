@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000303f0`), 303 bytes, 114 instructions, subsystem `a
 thiscall: if the Sound is playing (flag this+0x44 bit1) calls its virtual stop (vtbl+0x20) and sets this+0x58 bit3; otherwise frees the buffer-node list at this+0x5c (closing each node's mmio +0x44, unlinking from g_100b49c8) and decrements this+0x68. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x000303f0 Sound_stop (VA 0x100303f0). Bit 1 of the byte at +0x44 set: the object's virtual slot +0x20 runs (`call [eax+0x20]` 0x100303fb), bit 3 is set in +0x58 (0x100303fe-0x10030403) and 0 is returned (0x10030406). Otherwise the same list release as Sound_freeBufferList (0x1003040a-0x1003051d). Reached from: no call xref; reached through a stored pointer: 0x1005c488 table slot 14 (+0x38) of the table at 0x1005c450; installers: 0x10030080 Sound5c450_ctor, 0x10030180 Sound5c450_dtor. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Sound_stop_empty (13 vectors, 13 distinct results, 12 changing state, `log/diff/000303f0_sound_Sound_stop_empty.path1.csv`); Sound_stop_live (13 vectors, 13 distinct results, 12 changing state, `log/diff/000303f0_sound_Sound_stop_live.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10030409, 0x1003051e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100303f1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

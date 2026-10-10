@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000699c0`), 138 bytes, 50 instructions, subsystem `ren
 selects and realizes the GDI palette g_logPalette (0x10128738) into the window DC (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Selects and realizes the module palette (VA 0x10128738) in a window's DC: GetDC (hwnd) 0x100699de, SelectPalette (dc, palette, FALSE) 0x100699fd, RealizePalette (dc) 0x10069a10, ReleaseDC (hwnd, dc) 0x10069a27, and returns 1 (0x10069a34) without testing any result. windowProc 0x100692b0 calls it for message 0x30f (WM_QUERYNEWPALETTE) and returns the low 16 bits of the result; onPaletteChanged 0x10069a70 and onActivate 0x10069b90 also call it. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: realizePalette_pal0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/000699c0_jgld_realizePalette_pal0.path1.csv`); realizePalette_palX (12 vectors, 12 distinct results, 12 changing state, `log/diff/000699c0_jgld_realizePalette_palX.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?realizePalette@@YAHPAUHWND__@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069a49): callee pops 0 bytes of stack arguments.

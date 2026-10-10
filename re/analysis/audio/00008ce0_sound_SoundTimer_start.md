@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008ce0`), 98 bytes, 37 instructions, subsystem `aud
 Starts the periodic multimedia timer with callback 0x1000128a, storing the timer id at +0x40; returns 0xb on failure, clears g_100b49a8. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00008ce0 SoundTimer::start (VA 0x10008ce0). Bit 2 of the flag dword at +0x3c set returns 0xd (0x10008ce3 / 0x10008ce9). Otherwise the module re-entrancy word 0x100b49a8 becomes 0 (0x10008cf0); timeBeginPeriod [0x100b8640] (the resolution at +0x18, 0x10008cfa / 0x10008cfe) returning 0x61 returns 0xb (0x10008d04 / 0x10008d09); timeSetEvent [0x100b8644] (delay [+0], resolution [+0x18], callback 0x1000128a (a thunk to SoundTimer::onTick 0x10008ed0), user data = this, flags [+0x1c]; pushes 0x10008d18-0x10008d20, call 0x10008d21) is stored at +0x40 (0x10008d2a); 0x61 returns 0xb (0x10008d27 / 0x10008d2f); else the low three bits of +0x3c are set (`or al, 7` 0x10008d39) and 0 is returned (0x10008d3e). Reached from: static callers 0x1000a170, 0x1000bf90, 0x1000c020, 0x10039e70, 0x1000b420. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: SoundTimer::start_ok (12 vectors, 9 distinct results, 8 changing state, `log/diff/00008ce0_sound_SoundTimer_start_ok.path1.csv`); SoundTimer::start_bp61 (12 vectors, 7 distinct results, 8 changing state, `log/diff/00008ce0_sound_SoundTimer_start_bp61.path1.csv`); SoundTimer::start_se61 (12 vectors, 9 distinct results, 8 changing state, `log/diff/00008ce0_sound_SoundTimer_start_se61.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10008cef, 0x10008d0f, 0x10008d35, 0x10008d41): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10008ce1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

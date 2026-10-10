@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00031490`), 152 bytes, 64 instructions, subsystem `au
 Frees a singly-linked list of mmio-handle nodes at this+0x5c: mmioClose each node's handle (node+0), decrement g_100b4a08, free the node; clears this+0x74. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00031490 freeMmioHandleList (VA 0x10031490). The list at +0x5c / +0x60 / +0x68 is popped (0x10031498-0x100314c5); for each non-null element the handle stored in its FIRST dword is closed with mmioClose (handle, 0) with no test (0x100314d0-0x100314d4), the module counter 0x100b4a08 is decremented (0x100314d6-0x100314de) and operator delete releases the element (0x100314e4); then the next node is popped (0x100314e9-0x10031519). +0x74 is cleared (0x1003151e) and 0 returned (0x10031524). Reached from: no call xref; reached through a stored pointer: 0x1005c560 table slot 14 (+0x38) of the table at 0x1005c528; installers: 0x10031200 StreamReader_ctor, 0x100312a0 streamReaderDtor. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: freeMmioHandleList (13 vectors, 13 distinct results, 13 changing state, `log/diff/00031490_sound_freeMmioHandleList.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10031527): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10031493 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

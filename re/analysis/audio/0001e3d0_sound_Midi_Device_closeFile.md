@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001e3d0`), 241 bytes, 79 instructions, subsystem `au
 Closes the MIDI file's mmio handle and frees track buffers; decrements g_100b4a08. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x0001e3d0 Midi_Device::closeFile (VA 0x1001e3d0). With bit 0 of the flag dword at +0x4c set and a non-zero handle at +0 (0x1001e3d7 / 0x1001e3dd / 0x1001e3df): mmioClose [0x100b8670] (handle, 0) (0x1001e3e5) and the module counter 0x100b4a08 is decremented (0x1001e3eb). The reader list at +0x19c (front), +0x1a0 (back), +0x1a8 (count) is emptied element by element (pop as in c3dh_popFront, 0x1001e3ff-0x1001e429); an element (non-null: a null one ends the loop, 0x1001e437 / 0x1001e4a3) whose +0x3c is non-zero while bit 2 of its flag byte +0x34 is clear has +0x3c, +0x2c and +0x40 cleared (0x1001e439-0x1001e44a); then the element's destructor MidiReader_dtor 0x1001e7d0 (thunk 0x1000129e, 0x1001e453) and operator delete (0x1001e459). Finally +0 and +0x164 and +0x16c are cleared and bit 0 of +0x4c cleared with the dword read before (0x1001e4a5-0x1001e4b8, `and al, 0xfe`). Returns 0 (0x1001e4bd). Reached from: static callers 0x1001d810, 0x1001dce0, 0x1001e2b0, 0x1001ff50, 0x100204b0. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Midi_Device::closeFile (10 vectors, 10 distinct results, 10 changing state, `log/diff/0001e3d0_sound_Midi_Device_closeFile.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001e3d0@f_1001e3d0@@YIIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001e4c0): callee pops 0 bytes of stack arguments.

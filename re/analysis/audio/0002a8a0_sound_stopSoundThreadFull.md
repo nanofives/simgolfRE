@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002a8a0`), 81 bytes, 37 instructions, subsystem `aud
 Stops the worker thread on a g_soundThreadState-layout struct: under the critical section (param+4) clears the running bit, SetEvent(param+0x24), Sleep(0) to yield, then clears both the thread-handle (param+0x20) and thread-id (param+0x1c) fields. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x0002a8a0 stopSoundThreadFull (VA 0x1002a8a0). `this` has a flag byte at +0 (bit 0 = running, `test al, 1` 0x1002a8a5; clear: nothing is done and eax is left as the caller had it, 0x1002a8ef), the critical section at +4 (`lea edi, [esi+4]` 0x1002a8b2) and the event handle at +0x24. Running: bit 0 is cleared (0x1002a8b5 / 0x1002a8b8); EnterCriticalSection (0x1002a8ba); the flag byte is read again and bit 0 cleared (0x1002a8bc-0x1002a8c7); SetEvent [0x100b83fc] (+0x24) (0x1002a8c7); LeaveCriticalSection (0x1002a8d4); Sleep(0) [0x100b840c] (0x1002a8d8); EnterCriticalSection and LeaveCriticalSection again (0x1002a8df / 0x1002a8e2); +0x20 and +0x1c are cleared (0x1002a8e8 / 0x1002a8eb). Reached from: static callers 0x1000b960. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: stopSoundThreadFull (12 vectors, 9 distinct results, 8 changing state, `log/diff/0002a8a0_sound_stopSoundThreadFull.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002a8f0): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002a8a1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

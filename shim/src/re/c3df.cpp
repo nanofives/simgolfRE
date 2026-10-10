@@ -1,0 +1,635 @@
+// C3 batch c3df (round 25, 2026-10-10) of golf_clean.exe: the text measurement / drawing leads c3da listed as doable
+// next (log/c3/c3da_notes.txt, log/c3/c3df_candidates.tsv). Every body is hand-written from the disassembly
+// (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list) and cites the instructions it reproduces.
+// __thiscall is emulated with __fastcall (ecx = this, edx unused). Callees are reached through their original
+// addresses (a hooked callee runs its reimplementation on both arms); game strings are never reproduced here.
+//
+// The rich-text object these functions share carries THREE separate state sets over one record (read from the
+// instructions): measureMarkupRun 0x00476ef0 keeps its style at +0x34 and its dropdown state at +0x48; drawMarkupRun
+// 0x00477280 at +0x38 / +0x4c (0x004772cf, 0x004772bc); drawRichText 0x004775b0 at +0x30 / +0x50 (0x00477611,
+// 0x004775fe). The link state +0x3c, the markup flag +0x40 and the font table +0x5c + 4 * style are shared (+0x5c is the
+// base font, filled from the default font 0x0083ad44 when zero: 0x00476f09, 0x00477567, 0x00477587). A font object
+// has the measurer at +4 (measureTextWidth 0x00483930), and Widget_value 0x00477580 / Widget_get 0x00477560 read its
+// +8 / +0xc / +0x10.
+#include "hooks.h"
+#include <string.h>
+
+namespace {
+
+template <typename T> inline T& Fld(void* o, int off) { return *reinterpret_cast<T*>(reinterpret_cast<char*>(o) + off); }
+inline int& AccWidth() { return *reinterpret_cast<int*>(0x00839aa8); }   // wrapTextToWidth's consumed-width accumulator
+
+// ---------------------------------------------------------------------------------------------------------------
+// Callees
+// ---------------------------------------------------------------------------------------------------------------
+typedef char*(__fastcall* WrapToWidth_t)(void* font, void*, char* text, int* budget, int remain);   // 0x00483980, ret 0xc
+typedef char*(__cdecl* Scan_t)(char* text, int* remain);                                           // 0x00476d40/d80/dd0
+typedef char*(__cdecl* ReverseFind_t)(char* base, char* from, int ch);                             // 0x004935b0
+typedef int(__cdecl* StrNCmp_t)(const char*, const char*, unsigned);                               // 0x004a6ad0
+typedef char*(__cdecl* StrChr_t)(const char*, int);                                                // 0x004a6170
+typedef int(__fastcall* Value_t)(void* self, void*);                                               // 0x00477580/0x00477560
+typedef char*(__fastcall* Measure3_t)(void* self, void*, char* text, int* width, int len);         // 0x00476ef0, ret 0xc
+typedef int(__fastcall* MarkupRun_t)(void* self, void*, const char* text, int len);                // 0x00477280, ret 8
+typedef int(__fastcall* RichText_t)(void* self, void*, const char* text, int x, int y, int len);   // 0x004775b0, ret 0x10
+
+const WrapToWidth_t kWrapToWidth = reinterpret_cast<WrapToWidth_t>(0x00483980);
+const Scan_t kScanMarkupText = reinterpret_cast<Scan_t>(0x00476d40);
+const Scan_t kSkipToken = reinterpret_cast<Scan_t>(0x00476d80);
+const Scan_t kScanToken = reinterpret_cast<Scan_t>(0x00476dd0);
+const ReverseFind_t kReverseFindChar = reinterpret_cast<ReverseFind_t>(0x004935b0);
+const StrNCmp_t kStrNCmp = reinterpret_cast<StrNCmp_t>(0x004a6ad0);
+const StrChr_t kStrChr = reinterpret_cast<StrChr_t>(0x004a6170);
+const Value_t kWidgetValue = reinterpret_cast<Value_t>(0x00477580);
+const Value_t kWidgetGet = reinterpret_cast<Value_t>(0x00477560);
+const Measure3_t kMeasureMarkupRun = reinterpret_cast<Measure3_t>(0x00476ef0);
+const MarkupRun_t kDrawMarkupRun = reinterpret_cast<MarkupRun_t>(0x00477280);
+const RichText_t kDrawRichText = reinterpret_cast<RichText_t>(0x004775b0);
+
+// The image addresses of the three link / dropdown tokens compared with _strncmp (0x00476fad, 0x00476fcf, 0x00476fec).
+inline const char* TokLink() { return reinterpret_cast<const char*>(0x004e4254); }       // 6 bytes
+inline const char* TokDropdown() { return reinterpret_cast<const char*>(0x004e4248); }   // 9 bytes
+inline const char* TokDroplink() { return reinterpret_cast<const char*>(0x004e423c); }   // 9 bytes
+
+// ---------------------------------------------------------------------------------------------------------------
+// 0x00476ef0  measureMarkupRun(text, width*, len): how much of `text` (len bytes) fits in *width pixels, walking the
+// markup. Returns the break point (the start of the line that continues) or NULL when the whole run fits. Fields:
+// +0x34 style, +0x3c link state, +0x40 markup on, +0x48 dropdown state, +0x5c + 4 * style the fonts.
+//  * width == NULL returns NULL (0x00476efc). The base font +0x5c is filled from 0x0083ad44 when zero (0x00476f07).
+//    +0x48 == 2 becomes 1 (0x00476f15). Markup off (+0x40 == 0, 0x00476f27): wrapTextToWidth on the base font over the
+//    whole run, returned directly (0x00476f33).
+//  * The scanner is scanToken while +0x48 == 1 (0x00476f43), skipToken while the style is 3 (0x00476f52), else
+//    scanMarkupText; each returns the next delimiter and leaves the remaining count (delimiter included) in len.
+//  * len == 0 after the scan (0x00476f7b): the last piece is wrapped on the font of the current style (the base font
+//    when that slot is zero, 0x00477143 / 0x0047717d); NULL from it clears +0x3c and +0x48 and returns NULL (0x004771ba).
+//  * Otherwise the delimiter selects the new style (jump table 0x004771cc over bytes 0x4771ec for characters 0x24..0x7d):
+//    '$' (0x00476fab): the 6-byte token at 0x4e4254 sets +0x3c = 1 and style 3; the 9-byte token at 0x4e4248 sets
+//    +0x48 = 1 (style kept); the 9-byte token at 0x4e423c sets +0x48 = 1 and style 3; anything else keeps the style.
+//    '=' sets +0x3c = 2 (0x00476f9f, style kept). '^' sets +0x48 = 2, style 0 (0x0047700c). '{' is style 1, '[' style 2
+//    and '}' / ']' style 0, but a doubled brace or bracket skips one character and keeps the style (0x0047703f).
+//  * The text before the delimiter is wrapped on the font of the CURRENT style (base font when that slot is zero). A
+//    non-NULL break clears +0x3c and is returned (the start of the last word: reverseFindChar back to a space when the
+//    break is not already after a space or at the piece start, 0x0047710a / 0x0047718e). A NULL break goes on: link
+//    state 1 skips 5 more bytes, else dropdown state 1 skips 9, else dropdown state 2 is cleared (0x0047708c..0x004770c1);
+//    link state 2 skips to the next '>' (strchr, 0x004770d0) and resets the style to 0; the style is stored to +0x34
+//    (0x004770f9) and the loop continues one byte further.
+// ---------------------------------------------------------------------------------------------------------------
+// The original has three copies of the "move a mid-word break back to a space" tail, each with its own jcc pair:
+//   A 0x0047710a: after the text before a delimiter was wrapped on a style font (je 0x00477117 / 0x0047711f),
+//   B 0x00477157: after the last piece was wrapped on a style font (je 0x00477160 / 0x00477164),
+//   C 0x0047718e: after a wrap on the base font, from either path (je 0x0047719b / 0x0047719f).
+// Each returns the break itself when it follows a space or equals the piece start, else reverseFindChar back to a space.
+inline char* TidyA(char* brk, char* pieceStart, char* runStart) {
+    if (brk[-1] == ' ') return brk;                                                // 0x00477117
+    if (brk == pieceStart) return brk;                                             // 0x0047711f
+    return kReverseFindChar(runStart, brk, ' ');                                   // 0x0047712d
+}
+inline char* TidyB(char* brk, char* pieceStart, char* runStart) {
+    if (brk[-1] == ' ') return brk;                                                // 0x00477160
+    if (brk == pieceStart) return brk;                                             // 0x00477164
+    return kReverseFindChar(runStart, brk, ' ');                                   // 0x0047716e
+}
+inline char* TidyC(char* brk, char* pieceStart, char* runStart) {
+    if (brk[-1] == ' ') return brk;                                                // 0x0047719b
+    if (brk == pieceStart) return brk;                                             // 0x0047719f
+    return kReverseFindChar(runStart, brk, ' ');                                   // 0x004771a9
+}
+
+Measure3_t MeasureMarkupRun_orig;
+char* __fastcall MeasureMarkupRun_re(void* self, void*, char* text, int* width, int len) {
+    if (width == nullptr) return nullptr;                                          // 0x00476efc
+    if (Fld<void*>(self, 0x5c) == nullptr) Fld<void*>(self, 0x5c) = *reinterpret_cast<void**>(0x0083ad44);   // 0x00476f09
+    if (Fld<int>(self, 0x48) == 2) Fld<int>(self, 0x48) = 1;                      // 0x00476f17
+    char* start = text;                                                            // ebx
+    if (Fld<int>(self, 0x40) == 0) return kWrapToWidth(Fld<void*>(self, 0x5c), nullptr, start, width, len);   // 0x00476f33
+    for (;;) {
+        char* p;                                                                   // esi
+        if (Fld<int>(self, 0x48) == 1) p = kScanToken(start, &len);                // 0x00476f4b
+        else if (Fld<int>(self, 0x34) == 3) p = kSkipToken(start, &len);           // 0x00476f5e
+        else p = kScanMarkupText(start, &len);                                     // 0x00476f6b
+
+        if (len == 0) {                                                            // 0x00476f7b -> 0x0047713c
+            void* font = Fld<void*>(self, 0x5c + Fld<int>(self, 0x34) * 4);
+            char* brk;
+            if (font != nullptr) {                                                 // 0x00477145
+                brk = kWrapToWidth(font, nullptr, start, width, static_cast<int>(p - start));   // 0x0047714c
+                if (brk != nullptr) {                                              // 0x00477155
+                    Fld<int>(self, 0x3c) = 0;                                      // 0x00477157
+                    return TidyB(brk, start, text);
+                }
+            } else {
+                brk = kWrapToWidth(Fld<void*>(self, 0x5c), nullptr, start, width, static_cast<int>(p - start));   // 0x00477185
+                if (brk != nullptr) {                                              // 0x0047718c
+                    Fld<int>(self, 0x3c) = 0;                                      // 0x0047718e
+                    return TidyC(brk, start, text);
+                }
+            }
+            Fld<int>(self, 0x3c) = 0;                                              // 0x004771ba
+            Fld<int>(self, 0x48) = 0;
+            return nullptr;
+        }
+
+        int style = Fld<int>(self, 0x34);                                          // 0x00477049: kept unless a case sets it
+        switch (static_cast<unsigned char>(*p)) {
+        case '$':
+            if (kStrNCmp(p, TokLink(), 6) == 0) {                                  // 0x00476fb3
+                Fld<int>(self, 0x3c) = 1;
+                style = 3;
+            } else if (kStrNCmp(p, TokDropdown(), 9) == 0) {                       // 0x00476fd5
+                Fld<int>(self, 0x48) = 1;
+            } else if (kStrNCmp(p, TokDroplink(), 9) == 0) {                       // 0x00476ff2
+                Fld<int>(self, 0x48) = 1;
+                style = 3;
+            }
+            break;
+        case '=':                                                                  // 0x00476f9f
+            Fld<int>(self, 0x3c) = 2;
+            break;
+        case '^':                                                                  // 0x0047700c
+            Fld<int>(self, 0x48) = 2;
+            style = 0;
+            break;
+        case '{':                                                                  // 0x00477017
+            if (p[1] == '{') { ++p; --len; } else style = 1;
+            break;
+        case '[':                                                                  // 0x0047702c
+            if (p[1] == '[') { ++p; --len; } else style = 2;
+            break;
+        case '}':                                                                  // 0x00477024
+            if (p[1] == '}') { ++p; --len; } else style = 0;
+            break;
+        case ']':                                                                  // 0x00477039
+            if (p[1] == ']') { ++p; --len; } else style = 0;
+            break;
+        default:
+            break;
+        }
+
+        // 0x0047704c: wrap the text before the delimiter on the font of the style that was current
+        void* font = Fld<void*>(self, 0x5c + Fld<int>(self, 0x34) * 4);
+        if (font != nullptr) {                                                     // 0x00477055
+            char* brk = kWrapToWidth(font, nullptr, start, width, static_cast<int>(p - start));   // 0x00477062
+            if (brk != nullptr) {                                                  // 0x00477069
+                Fld<int>(self, 0x3c) = 0;                                          // 0x0047710a
+                return TidyA(brk, start, text);
+            }
+        } else {
+            char* brk = kWrapToWidth(Fld<void*>(self, 0x5c), nullptr, start, width, static_cast<int>(p - start));   // 0x0047707f
+            if (brk != nullptr) {                                                  // 0x00477086
+                Fld<int>(self, 0x3c) = 0;                                          // 0x0047718e
+                return TidyC(brk, start, text);
+            }
+        }
+        const int link = Fld<int>(self, 0x3c);                                     // 0x0047708c
+        if (link == 1) {
+            p += 5;
+            len -= 5;
+        } else if (Fld<int>(self, 0x48) == 1) {                                    // 0x004770a4
+            p += 9;
+            len -= 9;
+        } else if (Fld<int>(self, 0x48) == 2) {                                    // 0x004770bc
+            Fld<int>(self, 0x48) = 0;
+        }
+        start = p + 1;                                                             // 0x004770cb
+        if (link == 2) {                                                           // 0x004770c8
+            char* gt = kStrChr(start, 0x3e);
+            style = 0;
+            if (gt != nullptr) {
+                len = len + static_cast<int>(start - gt) - 1;                      // 0x004770e7
+                start = gt + 1;                                                    // 0x004770eb
+            }
+            Fld<int>(self, 0x3c) = 0;                                              // 0x004770f2
+        }
+        Fld<int>(self, 0x34) = style;                                              // 0x004770f9
+        --len;                                                                     // 0x00477101
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// 0x00476e20  wrapText(text, width, lines, count*): word-wraps text to `width` pixels; returns the summed line heights.
+// NULL text returns 0 (0x00476e2f). +0x1c (line counter) = 0, the accumulator 0x00839aa8 = 0, +0x18 = +0x14 (the
+// first-line indent, 0x00476e48..0x00476e51). Per line: when `lines` is non-NULL the line start is stored at the
+// cursor and counted (0x00476e66..0x00476e78); measureMarkupRun(text, &width_copy, strlen) gives the next line start
+// (0x00476e95); the accumulator is reset (0x00476e9e); Widget_value(this) is added to the total (0x00476ea4); +0x1c
+// counts the line (0x00476eb9); a non-zero +0x18 is subtracted from the width of the following lines and cleared
+// (0x00476ebc..0x00476ec5). A NULL next line ends: *count (when non-NULL) gets the number of recorded lines
+// (0x00476eda) and the total is returned.
+// ---------------------------------------------------------------------------------------------------------------
+typedef int(__fastcall* WrapText_t)(void* self, void*, char* text, int width, char** lines, int* count);
+WrapText_t WrapText_orig;
+int __fastcall WrapText_re(void* self, void*, char* text, int width, char** lines, int* count) {
+    if (text == nullptr) return 0;                                                 // 0x00476e2f
+    Fld<int>(self, 0x1c) = 0;
+    AccWidth() = 0;
+    Fld<int>(self, 0x18) = Fld<int>(self, 0x14);
+    int total = 0;
+    int recorded = 0;
+    char** cursor = lines;
+    for (;;) {
+        if (lines != nullptr) {                                                    // 0x00476e60
+            ++recorded;
+            *cursor++ = text;
+        }
+        int budget = width;                                                        // 0x00476e91: ebx into the local
+        char* next = kMeasureMarkupRun(self, nullptr, text, &budget, static_cast<int>(strlen(text)));
+        AccWidth() = 0;
+        total += kWidgetValue(self, nullptr);
+        Fld<int>(self, 0x1c) += 1;
+        if (Fld<int>(self, 0x18) != 0) {                                           // 0x00476ebf
+            width -= Fld<int>(self, 0x18);
+            Fld<int>(self, 0x18) = 0;
+        }
+        text = next;
+        if (text == nullptr) {                                                     // 0x00476eca
+            if (count != nullptr) *count = recorded;
+            return total;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// 0x00477250  Text_put(text): NULL returns 0 (0x00477259); else drawMarkupRun(this, text, strlen(text)) (0x00477272)
+// and its width is returned.
+// ---------------------------------------------------------------------------------------------------------------
+typedef int(__fastcall* TextPut_t)(void* self, void*, const char* text);
+TextPut_t TextPut_orig;
+int __fastcall TextPut_re(void* self, void*, const char* text) {
+    if (text == nullptr) return 0;
+    return kDrawMarkupRun(self, nullptr, text, static_cast<int>(strlen(text)));
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// The five aligned-draw wrappers share one prologue (0x00477db9.. / 0x00477fd9.. / 0x00478099.. / 0x00478159.. /
+// 0x00478213..): NULL text returns the x argument (0x00477dae etc.; drawRight2 returns 0), a NULL base font +0x5c or a
+// font whose +4 is NULL returns 3, and the length is min(strlen(text), len) with both a negative and a zero result
+// returning x (0x00477de1..0x00477e13: strlen is recomputed for each signed compare). They then measure the run with
+// drawMarkupRun and hand the shifted x to drawRichText 0x004775b0 (the text drawn through the callback at +0xc or the
+// buffer routine 0x004767a0), returning its result.
+// ---------------------------------------------------------------------------------------------------------------
+inline bool FontReady(void* self) {
+    void* font = Fld<void*>(self, 0x5c);
+    return font != nullptr && Fld<void*>(font, 4) != nullptr;
+}
+// the length that is drawn, or <= 0 when the wrapper returns early
+inline int DrawLen(const char* text, int len) {
+    const int s = static_cast<int>(strlen(text));
+    return s < len ? s : len;
+}
+
+// 0x00477da0  drawCentered2(text, x, y, width, len): centred in `width`: x + (width - w) / 2 (cdq / sub / sar,
+// 0x00477e2e..0x00477e42: signed division truncating toward zero).
+typedef int(__fastcall* Draw5_t)(void* self, void*, const char* text, int x, int y, int w, int len);
+Draw5_t DrawCentered2_orig;
+int __fastcall DrawCentered2_re(void* self, void*, const char* text, int x, int y, int w, int len) {
+    if (text == nullptr) return x;                                                 // 0x00477dac
+    if (!FontReady(self)) return 3;                                                // 0x00477dbe, 0x00477dc9
+    const int n = DrawLen(text, len);
+    if (n <= 0) return x;                                                          // 0x00477df3, 0x00477e13
+    const int run = kDrawMarkupRun(self, nullptr, text, n);                        // 0x00477e24
+    const int half = (w - run) / 2;
+    return kDrawRichText(self, nullptr, text, x + half, y, n);                     // 0x00477e48
+}
+
+// 0x00477fc0  drawStringLeft(text, x, y, len): x - (w >> 1) (sar, 0x00478050..0x00478052: floor division by 2).
+typedef int(__fastcall* Draw4_t)(void* self, void*, const char* text, int x, int y, int len);
+Draw4_t DrawStringLeft_orig;
+int __fastcall DrawStringLeft_re(void* self, void*, const char* text, int x, int y, int len) {
+    if (text == nullptr) return x;                                                 // 0x00477fcc
+    if (!FontReady(self)) return 3;                                                // 0x00477fde, 0x00477fe9
+    const int n = DrawLen(text, len);
+    if (n <= 0) return x;                                                          // 0x0047800f, 0x0047802f
+    const int run = kDrawMarkupRun(self, nullptr, text, n);                        // 0x00478040
+    return kDrawRichText(self, nullptr, text, x - (run >> 1), y, n);               // 0x00478059
+}
+
+// 0x00478080  drawRight(text, x, y, width, len): x + (width - w) (0x00478105..0x00478113).
+Draw5_t DrawRight_orig;
+int __fastcall DrawRight_re(void* self, void*, const char* text, int x, int y, int w, int len) {
+    if (text == nullptr) return x;                                                 // 0x0047808c
+    if (!FontReady(self)) return 3;                                                // 0x0047809e, 0x004780a9
+    const int n = DrawLen(text, len);
+    if (n <= 0) return x;                                                          // 0x004780cf, 0x004780ef
+    const int run = kDrawMarkupRun(self, nullptr, text, n);                        // 0x00478100
+    return kDrawRichText(self, nullptr, text, x + (w - run), y, n);                // 0x0047811b
+}
+
+// 0x00478140  drawString(text, x, y, len): x - w (0x004781c1..0x004781c6).
+Draw4_t DrawString_orig;
+int __fastcall DrawString_re(void* self, void*, const char* text, int x, int y, int len) {
+    if (text == nullptr) return x;                                                 // 0x0047814c
+    if (!FontReady(self)) return 3;                                                // 0x0047815e, 0x00478163
+    const int n = DrawLen(text, len);
+    if (n <= 0) return x;                                                          // 0x00478189, 0x004781a9
+    const int run = kDrawMarkupRun(self, nullptr, text, n);                        // 0x004781bc
+    return kDrawRichText(self, nullptr, text, x - run, y, n);                      // 0x004781d1
+}
+
+// 0x004781f0  drawRight2(text, rect*, len): right-aligned in rect (l, t, r, b at +0, +4, +8, +0xc) and centred
+// vertically: x = r - w, y = t + ((b - t) - height) / 2 with height = Widget_get(this) (0x00478288) and the same
+// truncating division. NULL text or NULL rect returns 0 (0x00478201, 0x0047820d) as do a negative or zero length.
+typedef int(__fastcall* DrawRect_t)(void* self, void*, const char* text, const int* rect, int len);
+DrawRect_t DrawRight2_orig;
+int __fastcall DrawRight2_re(void* self, void*, const char* text, const int* rect, int len) {
+    if (text == nullptr || rect == nullptr) return 0;
+    if (!FontReady(self)) return 3;                                                // 0x00478218, 0x00478223
+    const int n = DrawLen(text, len);
+    if (n <= 0) return 0;                                                          // 0x0047824d, 0x0047826d
+    const int run = kDrawMarkupRun(self, nullptr, text, n);                        // 0x00478273
+    const int x = rect[2] - run;                                                   // 0x00478278..0x0047827f
+    const int top = rect[1];
+    const int height = kWidgetGet(self, nullptr);                                  // 0x00478288
+    const int y = ((rect[3] - top) - height) / 2 + top;                            // 0x00478292..0x004782a4
+    return kDrawRichText(self, nullptr, text, x, y, n);                            // 0x004782a9
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// 0x0046f2b0  seedCourseTable(): fills the 16 course-slot records at 0x00571fd8 (stride 0x2e, 17 slots are cleared)
+// from the static course table at 0x004c1e90 (stride 0x82; name string at +0, word +0x3a, word +0x3c, bytes +0x3e,
+// +0x3f, +0x40, read at 0x0046f31a..0x0046f4f3). Random::range(0x00822d9c, 16) picks the table index each time
+// (0x0046f2f0, 0x0046f406; only ax is kept: `and edx, 0xffff`).
+//  * Clear 0xc3 dwords + one word from 0x00571fd8 (0x0046f2b5..0x0046f2c3), then set the bytes at +0x1c and +0x20 of
+//    every slot (0x00571ff4 + n * 0x2e, n = 0..15, 0x0046f2ca..0x0046f2d9) to 0xff.
+//  * Slots 12..15 first (counter 12.., 0x0046f2db): a pick is redrawn while a previous slot of this phase already holds
+//    the same table byte +0x3e (compare of [0x00572220 + 0x2e * j], 0x0046f321; skipped for slot 12, 0x0046f303).
+//  * Slots 0..11 second (counter 0.., 0x0046f3f9): a pick is redrawn while any slot's id byte (0x00571ff4 + 0x2e * n,
+//    sign-extended, 0x0046f41e) equals it, and for slot 0 also while the table byte +0x3e is non-zero (0x0046f431..
+//    0x0046f448; the test is `counter < 4 && counter == 0`).
+//  * A slot: id byte at +0x1c, a byte at +0x1d = ((counter + 4) * 10) & 0xff, adjusted by the table byte +0x3f: 0 adds,
+//    2 subtracts (counter >= 4 ? 20 : 10, 0x0046f352..0x0046f35f, 0x0046f36d..0x0046f379); forced to 0xfa while
+//    0x0059e7b8 bit 0x1000000 is set (0x0046f37c). Bytes +0x1e, +0x1f, +0x20 get table bytes +0x40, +0x3f, +0x3e;
+//    words at +0x18 and +0x1a get the table words +0x3a and +0x3c; +0x22 and +0x23 are 0xff; the name (strlen + 1
+//    bytes) is copied to the start of the slot LAST (0x0046f3df, 0x0046f530).
+// ---------------------------------------------------------------------------------------------------------------
+typedef int(__fastcall* RandomRange_t)(void* self, void*, int n);
+const RandomRange_t kRandomRange = reinterpret_cast<RandomRange_t>(0x0045c1e0);
+inline unsigned char* CourseTab(int id) { return reinterpret_cast<unsigned char*>(0x004c1e90 + id * 0x82); }
+unsigned char* const kIdFirst = reinterpret_cast<unsigned char*>(0x00571ff4);      // slot 0's id byte (+0x1c)
+unsigned char* const kIdEnd = reinterpret_cast<unsigned char*>(0x005722d4);        // loop bound at 0x0046f2d4 / 0x0046f42a
+unsigned char* const kPhase1First = reinterpret_cast<unsigned char*>(0x0057221d);  // slot 12's byte +0x1d (0x0046f2e0)
+unsigned char* const kPhase1End = reinterpret_cast<unsigned char*>(0x005722d5);    // 0x0046f3e7
+inline int SlotDelta(int counter) {                                        // setge / dec / and 0xf6 / add 0x14
+    if (counter >= 4) return 0x14;
+    return 0x0a;
+}
+inline int PickIndex() { return kRandomRange(reinterpret_cast<void*>(0x00822d9c), nullptr, 0x10) & 0xffff; }
+
+typedef void(__cdecl* SeedCourse_t)();
+SeedCourse_t SeedCourseTable_orig;
+void __cdecl SeedCourseTable_re() {
+    unsigned char* const base = reinterpret_cast<unsigned char*>(0x00571fd8);
+    memset(base, 0, 0xc3 * 4 + 2);                                                       // 0x0046f2c1, 0x0046f2c3
+    for (unsigned char* p = kIdFirst; p < kIdEnd; p += 0x2e) {
+        p[4] = 0xff;                                                                     // 0x0046f2ca
+        p[0] = 0xff;                                                                     // 0x0046f2ce
+    }
+    const unsigned flagsWord = 0x0059e7b8;
+
+    // slots 12..15 (ebp = slot base + 0x1d, 0x0046f2e0)
+    int counter = 12;
+    for (unsigned char* ep = kPhase1First; ep < kPhase1End; ep += 0x2e, ++counter) {
+        int id;
+        for (;;) {
+            id = PickIndex();                                                            // 0x0046f2f0
+            bool free = true;
+            if (ep > kPhase1First) {                     // 0x0046f303
+                const unsigned char cl = CourseTab(id)[0x3e];                            // 0x0046f31a
+                const unsigned char* q = reinterpret_cast<unsigned char*>(0x00572220);
+                for (int n = counter - 12; n != 0; --n, q += 0x2e) {                     // 0x0046f317, 0x0046f32a
+                    if (*q == cl) free = false;                                          // 0x0046f321
+                }
+            }
+            if (free) break;                                                             // 0x0046f32d
+        }
+        const unsigned char* t = CourseTab(id);
+        const unsigned char al = static_cast<unsigned char>((counter + 4) * 10);        // 0x0046f331..0x0046f33a
+        ep[-1] = static_cast<unsigned char>(id);                                         // 0x0046f337
+        ep[0] = al;                                                                      // 0x0046f33e
+        const unsigned char kind = t[0x3f];                                              // 0x0046f348
+        if (kind == 0) ep[0] = static_cast<unsigned char>(al + SlotDelta(counter));      // 0x0046f350
+        if (kind == 2) ep[0] = static_cast<unsigned char>(ep[0] - SlotDelta(counter));   // 0x0046f36b
+        if ((*reinterpret_cast<const unsigned*>(flagsWord) & 0x1000000u) != 0) ep[0] = 0xfa;   // 0x0046f37c
+        ep[2] = kind;                                                                    // 0x0046f392
+        ep[1] = t[0x40];                                                                 // 0x0046f3a1
+        ep[3] = t[0x3e];                                                                 // 0x0046f3ab
+        *reinterpret_cast<unsigned short*>(ep - 5) = *reinterpret_cast<const unsigned short*>(t + 0x3a);   // 0x0046f3b5
+        *reinterpret_cast<unsigned short*>(ep - 3) = *reinterpret_cast<const unsigned short*>(t + 0x3c);   // 0x0046f3b9
+        ep[6] = 0xff;                                                                    // 0x0046f3cf
+        ep[5] = 0xff;                                                                    // 0x0046f3d8
+        memcpy(ep - 0x1d, t, strlen(reinterpret_cast<const char*>(t)) + 1);              // 0x0046f3df, 0x0046f3f1
+    }
+
+    // slots 0..11 (counter 0.., 0x0046f3f9)
+    for (counter = 0; counter < 12; ++counter) {                                         // 0x0046f541
+        int id;
+        for (;;) {
+            id = PickIndex();                                                            // 0x0046f406
+            bool free = true;
+            for (const unsigned char* p = kIdFirst; p < kIdEnd; p += 0x2e) {
+                if (static_cast<int>(static_cast<signed char>(*p)) == id) free = false;  // 0x0046f41e
+            }
+            if (counter < 4 && counter == 0 && CourseTab(id)[0x3e] != 0) continue;       // 0x0046f434..0x0046f448
+            if (free) break;                                                             // 0x0046f44a
+        }
+        const unsigned char* t = CourseTab(id);
+        unsigned char* r = reinterpret_cast<unsigned char*>(0x00571ff4) + counter * 0x2e;
+        const unsigned char al = static_cast<unsigned char>((counter + 4) * 10);        // 0x0046f451..0x0046f45e
+        r[0] = static_cast<unsigned char>(id);                                           // 0x0046f46d
+        r[1] = al;                                                                       // 0x0046f473
+        const unsigned char kind = t[0x3f];                                              // 0x0046f479
+        if (kind == 0) r[1] = static_cast<unsigned char>(al + SlotDelta(counter));       // 0x0046f481
+        if (kind == 2) r[1] = static_cast<unsigned char>(r[1] - SlotDelta(counter));     // 0x0046f4a0
+        if ((*reinterpret_cast<const unsigned*>(flagsWord) & 0x1000000u) != 0) r[1] = 0xfa;   // 0x0046f4b5
+        r[3] = kind;                                                                     // 0x0046f4ce
+        r[2] = t[0x40];                                                                  // 0x0046f4e0
+        r[4] = t[0x3e];                                                                  // 0x0046f4ed
+        *reinterpret_cast<unsigned short*>(r - 4) = *reinterpret_cast<const unsigned short*>(t + 0x3a);   // 0x0046f4fa
+        *reinterpret_cast<unsigned short*>(r - 2) = *reinterpret_cast<const unsigned short*>(t + 0x3c);   // 0x0046f504
+        r[7] = 0xff;                                                                     // 0x0046f50b
+        r[6] = 0xff;                                                                     // 0x0046f511
+        memcpy(base + counter * 0x2e, t, strlen(reinterpret_cast<const char*>(t)) + 1);  // 0x0046f530, 0x0046f53f
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// 0x00462a30  enqueueSprite(p1..p8): appends a sprite to the draw queue and links it into the depth-sorted list.
+// Queue size n = [0x00838200]; n >= 0x3ff returns at once (0x00462a3d). The divisor d is 0x10, 0xd when [0x00822c8c]
+// > 0x3e8 and 0xa when it is >= 0x4b0 (0x00462a4b..0x00462a63), and 0x10 again when p8 has bit 0x100 (0x00462a6c).
+// K = [0x004c2844]. Screen position by p7 (0x00462a7a): 0: x = p1 - K*p4/4 and y = p2 - K*p5/4 (division by 4 truncates
+// toward zero: cdq / and 3 / add / sar 2); > 0: x = p1 - K*p4*p7/d, y = p2 - K*p5*p7/d; < 0: x = K*p4*p7/(2d) + p1,
+// y = K*p5*p7/(2d) + p2 (0x00462ac6, 0x00462b06). Entry n gets: x at 0x00830164, y at 0x00831164, p7 at 0x0082915c,
+// p2 at 0x0082c164, p8 at 0x0082815c, p6 at 0x0082a15c, p1 at 0x0082b160, p3 (the depth key) at 0x0082415c. The
+// list (head 0x0082c160, next links at 0x008361f4) is walked from the head while the node's depth is below p3
+// (signed, 0x00462b89..0x00462b9e); the new node goes before the first node whose depth is >= p3, at the head when that
+// node is the head (or the list is empty, 0x00462ba4), after the last node when none is (0x00462bb3). Then n + 1 is
+// stored and, below 0x400, the word at 0x00834174 + 4 * (n + 1) is cleared (0x00462bd3).
+// ---------------------------------------------------------------------------------------------------------------
+inline int& Glob(unsigned va) { return *reinterpret_cast<int*>(va); }
+inline int& Arr(unsigned base, int i) { return reinterpret_cast<int*>(base)[i]; }
+inline int Mul(int a, int b) { return static_cast<int>(static_cast<unsigned>(a) * static_cast<unsigned>(b)); }
+
+typedef void(__cdecl* Enqueue_t)(int, int, int, int, int, int, int, int);
+Enqueue_t EnqueueSprite_orig;
+void __cdecl EnqueueSprite_re(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
+    const int n = Glob(0x00838200);
+    if (n >= 0x3ff) return;                                                              // 0x00462a3d
+    const int pivot = Glob(0x00822c8c);
+    int d = 0x10;
+    if (pivot > 0x3e8) d = 0xd;                                                          // 0x00462a4b
+    if (pivot >= 0x4b0) d = 0xa;                                                         // 0x00462a5c
+    if ((p8 & 0x100) != 0) d = 0x10;                                                     // 0x00462a6c
+    const int k = Glob(0x004c2844);
+    int x, y;
+    if (p7 == 0) {                                                                       // 0x00462a7a
+        const int ax = Mul(k, p4), ay = Mul(k, p5);
+        x = p1 - ((ax + ((ax >> 31) & 3)) >> 2);                                         // 0x00462a8f..0x00462a9a
+        y = p2 - ((ay + ((ay >> 31) & 3)) >> 2);                                         // 0x00462aaa..0x00462ab9
+    } else if (p7 > 0) {                                                                 // 0x00462ac4
+        x = p1 - Mul(Mul(k, p4), p7) / d;                                                // 0x00462ad2..0x00462adf
+        y = p2 - Mul(Mul(k, p5), p7) / d;                                                // 0x00462ae3..0x00462afb
+    } else {
+        x = Mul(Mul(k, p4), p7) / (d + d) + p1;                                          // 0x00462b0c..0x00462b1f
+        y = Mul(Mul(k, p5), p7) / (d + d) + p2;                                          // 0x00462b2a..0x00462b39
+    }
+    Arr(0x00830164, n) = x;                                                              // 0x00462aa3 / 0x00462aeb / 0x00462b21
+    Arr(0x00831164, n) = y;                                                              // 0x00462abb / 0x00462afd / 0x00462b3b
+    Arr(0x0082915c, n) = p7;                                                             // 0x00462b46
+    Arr(0x0082c164, n) = p2;                                                             // 0x00462b51
+    Arr(0x0082815c, n) = p8;                                                             // 0x00462b5c
+    Arr(0x0082a15c, n) = p6;                                                             // 0x00462b69
+    Arr(0x0082b160, n) = p1;                                                             // 0x00462b73
+    Arr(0x0082415c, n) = p3;                                                             // 0x00462b7a
+    const int head = Glob(0x0082c160);
+    int node = head, prev = p4;                                                          // esi starts as p4 (0x00462b85)
+    bool atHead = true;
+    if (head != -1) {                                                                    // 0x00462b83
+        for (;;) {
+            if (Arr(0x0082415c, node) >= p3) break;                                      // 0x00462b89
+            prev = node;
+            node = Arr(0x008361f4, node);                                                // 0x00462b94
+            if (node == -1) break;                                                       // 0x00462b9b
+        }
+        atHead = (node == head);                                                         // 0x00462ba0
+        if (!atHead) {
+            Arr(0x008361f4, n) = node;                                                   // 0x00462bb3
+            Arr(0x008361f4, prev) = n;                                                   // 0x00462bba
+        }
+    }
+    if (atHead) {
+        Arr(0x008361f4, n) = head;                                                       // 0x00462ba4
+        Glob(0x0082c160) = n;                                                            // 0x00462bab
+    }
+    Glob(0x00838200) = n + 1;                                                            // 0x00462bca
+    if (n + 1 < 0x400) Arr(0x00834174, n + 1) = 0;                                       // 0x00462bd3
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Surface_drawScaled 0x00473cb0 and Image_draw 0x00473e60: draw `surf` onto this Surface's handle through the handle's
+// virtual slot +0x44 at (this + hot spot * scale + position). The display is g_graphicsDevice 0x0083ad50 (read in the
+// running game as jgld's Display, vtable 0x1011d640, whose slots +0x9c / +0xa0 are Display::setScale / getScale: they
+// store / read back the triple (x factor, y factor, divisor)). Fields: +4 the handle object, +8 a file-name pointer
+// (non-zero selects the load arm), +0x20 / +0x24 the hot spot added to the position.
+// The load arm (this+8 != 0, 0x00473ce7 / 0x00473e6c) calls loadImage 0x00475840 (file I/O) on the global image
+// object 0x00839348 with (name, 0, 10, 0xec, 0); a non-zero result is returned; else DC_call84 0x00475b60 draws `surf`
+// at (x, y) and Image_releaseAll 0x00474cb0 clears the object. It is written from the instructions but NOT run by the
+// A/B (file I/O): the keys use surfaces whose +8 is zero.
+// ---------------------------------------------------------------------------------------------------------------
+typedef int(__fastcall* LoadImage_t)(void* self, void*, const char* name, int a, int b, int c, int d);   // 0x00475840, ret 0x14
+typedef int(__fastcall* DcCall84_t)(void* self, void*, void* surf, int x, int y);                        // 0x00475b60, ret 0xc
+typedef void(__fastcall* ReleaseAll_t)(void* self, void*);                                              // 0x00474cb0
+typedef int(__fastcall* Slot3_t)(void* self, void*, int a, int b, int c);
+typedef int(__fastcall* Slot4_t)(void* self, void*, void* a, int b, int c, void* d);
+typedef int(__fastcall* SlotOut_t)(void* self, void*, int* a, int* b, int* c);
+const LoadImage_t kLoadImage = reinterpret_cast<LoadImage_t>(0x00475840);
+const DcCall84_t kDcCall84 = reinterpret_cast<DcCall84_t>(0x00475b60);
+const ReleaseAll_t kReleaseAll = reinterpret_cast<ReleaseAll_t>(0x00474cb0);
+inline void* GlobalImage() { return reinterpret_cast<void*>(0x00839348); }
+inline void* Display() { return *reinterpret_cast<void**>(0x0083ad50); }
+template <typename T> inline T VSlot(void* obj, int off) {
+    return *reinterpret_cast<T*>(*reinterpret_cast<char**>(obj) + off);
+}
+inline int IdivMul(int a, int b, int d) {
+    return static_cast<int>(static_cast<long long>(static_cast<int>(static_cast<unsigned>(a) * static_cast<unsigned>(b))) / d);
+}
+
+// 0x00473cb0  Surface_drawScaled(surf, x, y, nx, ny, den, mask): NULL surf returns 0x10 (0x00473cbd); a NULL handle
+// in this (+4, 0x00473ccf) or in surf (0x00473cd7) returns 7. m_8 == 0: the display's triple is read through slot +0xa0
+// (0x00473d4b), replaced by (nx, ny, den) through slot +0x9c (0x00473d68), the handle slot +0x44 is called with
+// (surf->m_4, x + m_24... see below, mask ? mask->m_4 : 0) where the position is (m_20 * nx / den + x, m_24 * ny / den + y)
+// with signed truncating division (0x00473d6e..0x00473da6), and the saved triple is written back through slot +0x9c
+// (0x00473dc7). Returns 0 on that arm.
+typedef int(__fastcall* DrawScaled_t)(void* self, void*, void* surf, int x, int y, int nx, int ny, int den, void* mask);
+DrawScaled_t SurfaceDrawScaled_orig;
+int __fastcall SurfaceDrawScaled_re(void* self, void*, void* surf, int x, int y, int nx, int ny, int den, void* mask) {
+    if (surf == nullptr) return 0x10;
+    if (Fld<void*>(self, 4) == nullptr || Fld<void*>(surf, 4) == nullptr) return 7;
+    if (Fld<void*>(self, 8) != nullptr) {                                         // 0x00473ce7: the load arm
+        int r = kLoadImage(GlobalImage(), nullptr, Fld<const char*>(self, 8), 0, 10, 0xec, 0);
+        if (r != 0) return r;
+        r = kDcCall84(GlobalImage(), nullptr, surf, x, y);
+        kReleaseAll(GlobalImage(), nullptr);
+        return r;
+    }
+    int saved[3];
+    VSlot<SlotOut_t>(Display(), 0xa0)(Display(), nullptr, &saved[0], &saved[1], &saved[2]);   // 0x00473d4b
+    VSlot<Slot3_t>(Display(), 0x9c)(Display(), nullptr, nx, ny, den);                          // 0x00473d68
+    const int px = IdivMul(Fld<int>(self, 0x20), nx, den) + x;                                 // 0x00473d6e..0x00473da6
+    const int py = IdivMul(Fld<int>(self, 0x24), ny, den) + y;
+    void* maskHandle = nullptr;                                                                // 0x00473d86..0x00473d8d
+    if (mask != nullptr) maskHandle = Fld<void*>(mask, 4);
+    void* handle = Fld<void*>(self, 4);
+    VSlot<Slot4_t>(handle, 0x44)(handle, nullptr, Fld<void*>(surf, 4), px, py, maskHandle);   // 0x00473dad
+    VSlot<Slot3_t>(Display(), 0x9c)(Display(), nullptr, saved[0], saved[1], saved[2]);         // 0x00473dc7
+    return 0;
+}
+
+// 0x00473e60  Image_draw(surf, x, y, mask): m_8 != 0 is the load arm (first test, 0x00473e6c); else NULL surf returns
+// 0x10 (0x00473ec1) and a NULL handle in this (0x00473ed3) or surf (0x00473edc) returns 7. The display's triple is read
+// through slot +0xa0 (0x00473ef6) and the handle slot +0x44 gets (surf->m_4, m_20 * t0 / t2 + x, m_24 * t1 / t2 + y,
+// mask ? mask->m_4 : 0) (0x00473f3f); its result is returned. The display's triple is not written back.
+typedef int(__fastcall* ImageDraw_t)(void* self, void*, void* surf, int x, int y, void* mask);
+ImageDraw_t ImageDraw_orig;
+int __fastcall ImageDraw_re(void* self, void*, void* surf, int x, int y, void* mask) {
+    if (Fld<void*>(self, 8) != nullptr) {                                         // 0x00473e6c: the load arm
+        int r = kLoadImage(GlobalImage(), nullptr, Fld<const char*>(self, 8), 0, 10, 0xec, 0);
+        if (r != 0) return r;
+        r = kDcCall84(GlobalImage(), nullptr, surf, x, y);
+        kReleaseAll(GlobalImage(), nullptr);
+        return r;
+    }
+    if (surf == nullptr) return 0x10;                                             // 0x00473ec1
+    if (Fld<void*>(self, 4) == nullptr || Fld<void*>(surf, 4) == nullptr) return 7;
+    int t[3];
+    VSlot<SlotOut_t>(Display(), 0xa0)(Display(), nullptr, &t[0], &t[1], &t[2]);   // 0x00473ef6
+    const int px = IdivMul(Fld<int>(self, 0x20), t[0], t[2]) + x;                  // 0x00473eff..0x00473f3b
+    const int py = IdivMul(Fld<int>(self, 0x24), t[1], t[2]) + y;
+    void* maskHandle = nullptr;                                                    // 0x00473f1c..0x00473f23
+    if (mask != nullptr) maskHandle = Fld<void*>(mask, 4);
+    void* handle = Fld<void*>(self, 4);
+    return VSlot<Slot4_t>(handle, 0x44)(handle, nullptr, Fld<void*>(surf, 4), px, py, maskHandle);   // 0x00473f3f
+}
+
+}  // namespace
+
+// 0x00476ef0  measureMarkupRun
+SG_HOOK("golf_clean.exe", 0x00476ef0, measureMarkupRun, MeasureMarkupRun_re, MeasureMarkupRun_orig);
+// 0x00476e20  wrapText
+SG_HOOK("golf_clean.exe", 0x00476e20, wrapText, WrapText_re, WrapText_orig);
+// 0x00477250  Text_put
+SG_HOOK("golf_clean.exe", 0x00477250, Text_put, TextPut_re, TextPut_orig);
+// 0x00477da0  drawCentered2
+SG_HOOK("golf_clean.exe", 0x00477da0, drawCentered2, DrawCentered2_re, DrawCentered2_orig);
+// 0x00477fc0  drawStringLeft
+SG_HOOK("golf_clean.exe", 0x00477fc0, drawStringLeft, DrawStringLeft_re, DrawStringLeft_orig);
+// 0x00478080  drawRight
+SG_HOOK("golf_clean.exe", 0x00478080, drawRight, DrawRight_re, DrawRight_orig);
+// 0x00478140  drawString
+SG_HOOK("golf_clean.exe", 0x00478140, drawString, DrawString_re, DrawString_orig);
+// 0x004781f0  drawRight2
+SG_HOOK("golf_clean.exe", 0x004781f0, drawRight2, DrawRight2_re, DrawRight2_orig);
+// 0x0046f2b0  seedCourseTable
+SG_HOOK("golf_clean.exe", 0x0046f2b0, seedCourseTable, SeedCourseTable_re, SeedCourseTable_orig);
+// 0x00462a30  enqueueSprite
+SG_HOOK("golf_clean.exe", 0x00462a30, enqueueSprite, EnqueueSprite_re, EnqueueSprite_orig);
+// 0x00473cb0  Surface_drawScaled
+SG_HOOK("golf_clean.exe", 0x00473cb0, Surface_drawScaled, SurfaceDrawScaled_re, SurfaceDrawScaled_orig);
+// 0x00473e60  Image_draw
+SG_HOOK("golf_clean.exe", 0x00473e60, Image_draw, ImageDraw_re, ImageDraw_orig);

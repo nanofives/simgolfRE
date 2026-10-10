@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00023c20`), 52 bytes, 19 instructions, subsystem `aud
 Command 0xc (12) handler: looks up the track node at index param_1 (list this+0x60 via Seq_listGetAt) and sets node+0x38 bit4 (0x10) from param_2&1 (a per-track enable/mute toggle). (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x00023c20 Seq_cmdHandler12 (VA 0x10023c20). Two stack arguments, an index and a flag (`ret 8`). Seq_listGetAt 0x1001d780 (thunk 0x100015fa, ecx = this+0x60 (0x10023c2a), pushes the index and the address of the first argument's own stack slot, 0x10023c28 / 0x10023c29) stores the element there (the slot is the pointer the code uses afterwards, `mov esi, [esp+8]` 0x10023c3b). A non-zero result is returned unchanged (0x10023c34 / 0x10023c51). On 0 bit 4 of the element's byte +0x38 takes bit 0 of the flag byte (second argument, `and cl, 1; shl cl, 4` 0x10023c3f / 0x10023c42; `and dl, 0xef; or cl, dl` 0x10023c48 / 0x10023c4b; stored 0x10023c4d); returns 0 (the result in eax). Reached from: static callers 0x1000a670. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Seq_cmdHandler12 (36 vectors, 14 distinct results, 36 changing state, `log/diff/00023c20_sound_Seq_cmdHandler12.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10023c51): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10023c2a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

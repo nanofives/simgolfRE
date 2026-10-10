@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003aa90`), 78 bytes, 30 instructions, subsystem `aud
 Allocates the 0x2544-byte codec context A and initializes it with codecInitContextA. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x0003aa90 codecAllocContextA (VA 0x1003aa90). cdecl, no arguments. malloc 0x10042acd (the CRT's malloc: it pushes the new-handler mode and calls 0x10042adf) is asked for 0x2544 bytes (0x1003aaa8 / 0x1003aaad); a non-NULL block is passed to codecInitContextA 0x1003aae0 (`push eax; call` 0x1003aac1 / 0x1003aac2) and the block pointer, NULL included, is returned (0x1003aaca). The debug frame's esp check (0x1003aad3 / 0x1003aad5) is not part of the result. Reached from: static callers 0x100319e0. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: codecAllocContextA (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa90_sound_codecAllocContextA.path1.csv`); codecAllocContextA_5a (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa90_sound_codecAllocContextA_5a.path1.csv`); codecAllocContextA_oom (1 vectors, 1 distinct results, 1 changing state, `log/diff/0003aa90_sound_codecAllocContextA_oom.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003aadd): callee pops 0 bytes of stack arguments.
 

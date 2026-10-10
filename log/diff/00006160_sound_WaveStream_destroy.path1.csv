@@ -1,0 +1,19 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$h0,void,void,True,48d04148,48d04148,True
+$h1,void,void,True,117ccabb,117ccabb,True
+$h2,void,void,True,73e4d1c8,73e4d1c8,True
+$h3,void,void,True,f15c0c4d,f15c0c4d,True
+$h4,void,void,True,af91b2d0,af91b2d0,True
+$h5,void,void,True,fba39e1f,fba39e1f,True
+$h6,void,void,True,63bc7e4a,63bc7e4a,True
+$h7,void,void,True,d4a20e86,d4a20e86,True
+$h8,void,void,True,b9271f4d,b9271f4d,True
+$h9,void,void,True,4d405ea2,4d405ea2,True
+$h10,void,void,True,dc14c8a1,dc14c8a1,True
+$h11,void,void,True,87bb6878,87bb6878,True
+$h12,void,void,True,92d8f9dc,92d8f9dc,True
+state_regions,$h0+0x0:1024 $h1+0x0:1024 $h2+0x0:1024 $h3+0x0:1024 $h4+0x0:1024 $h5+0x0:1024 $h6+0x0:1024 $h7+0x0:1024 $h8+0x0:1024 $h9+0x0:1024 $h10+0x0:1024 $h11+0x0:1024 $h12+0x0:1024 $gcnt+0x0:4 $implog+0x0:1024 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71e11790,original=0x3870b60,2026-10-10T12:18:51
+distinct_results,13,,
+VERDICT,GREEN,13,

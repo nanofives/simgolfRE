@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 243 bytes, 97 instructions, subsystem `video`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 releases a FLC object: destroys sub-objects m_54/m_6c/m_70 (vtable destroy) and clears its frame pointers (`re/names/exe_3.tsv`)
 
+## Purpose
+Releases the owned objects of an animation: +0x74 is cleared (0x00481ba9). An object at +0x54 is destroyed through vtable slot 0 with 1 (0x00481bb0-0x00481bb4) and +0x54 and +0x44 are cleared (0x00481bb6 / 0x00481bb9; the block at +0x44 is not freed on this path). Objects at +0x6c and +0x70 go through vtable slot 3 (+0xc) with 1 (0x00481bc7 / 0x00481bd8) and are cleared. The caches at +0x64 and +0x68 run Cache483010::dtor 0x00483010 and operator delete 0x004a4ffc and are cleared (0x00481be8-0x00481bf6, 0x00481c02-0x00481c10). Objects at +0x5c and +0x60 go through slot 0 with 1 (0x00481c1e / 0x00481c2e). The cache at +0x78 is released like +0x64 (0x00481c3c-0x00481c4a). The blocks at +0x44, +0x48 and +0x4c, read after the clears above, go to operator delete and are cleared (0x00481c4d-0x00481c84); +0x50, +0x58 and +0x7c are cleared (0x00481c87-0x00481c8d). Callers: R2C404280_dtor 0x00404280, resetPair 0x004041c0, Flic::buildFrameTable 0x00481ca0, 0x00481f40. Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: Flic::reset (16 vectors, 16 distinct results, 16 changing state, `log/diff/00481ba0_Flic_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_00481ba0@f_00481ba0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00481c92): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000470ac`), 87 bytes, 34 instructions, subsystem `crt
 Finds which region-heap region owns pointer param_1: walks g_sbhRegionList checking region[4]<p<region[5], verifies 16-byte alignment and page offset, and returns the block descriptor index with the region in *param_2 and the page base in *param_3. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+0x000470ac sbhRegionLocate (VA 0x100470ac). cdecl, three stack arguments: a pointer and two output cells. The circular list of regions starts at the static node 0x100653d8 (0x100470b0) and follows each node's +0 link (0x100470c2) until it returns to the head (0x100470c4 / 0x100470c6 -> 0). A region holds the pointer when it is above the region's +0x10 (unsigned, `jbe` 0x100470bb) and below its +0x14 (0x100470bd / 0x100470c0). Found: a pointer that is not 16-byte aligned (`test al, 0xf` 0x100470ca) or whose offset in its 4 KB page is below 0x100 (0x100470d5 / 0x100470db) gives 0. Otherwise the first output gets the region (0x100470e3) and the second the page base (the pointer with the low 12 bits cleared, 0x100470e9-0x100470f2); the result is ((pointer - page - 0x100) >> 4, arithmetic) + page + 8 (0x100470f4-0x100470fa). Reached from: static callers 0x10042c07, 0x10045252, 0x10045581. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: sbhRegionLocate (16 vectors, 7 distinct results, 6 changing state, `log/diff/000470ac_sound_sbhRegionLocate.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100470fe, 0x10047102): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00045b9b`), 45 bytes, 17 instructions, subsystem `crt
 Reads the main module's PE optional-header MajorLinkerVersion/MinorLinkerVersion: GetModuleHandleA(0), checks the MZ 0x5a4d signature, follows e_lfanew at base+0x3c and copies the two linker-version bytes to param_1. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+0x00045b9b getModuleLinkerVersion (VA 0x10045b9b). cdecl, one stack argument: a pointer to two bytes. The dword there is cleared (`and dword ptr [esi], 0` 0x10045ba2); GetModuleHandleA(NULL) [0x100b8510] (0x10045ba0 / 0x10045ba5) gives the host image. When it starts with "MZ" (0x5a4d, `cmp word ptr [eax], 0x5a4d` 0x10045bab) and the dword at +0x3c is non-zero (0x10045bb2 / 0x10045bb7), the two bytes at that offset + 0x1a and + 0x1b (the PE optional header's linker version, 0x10045bbb-0x10045bc3) are stored at the argument and the argument + 1. Reached from: static callers 0x10045bc8, 0x10045e34. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: getModuleLinkerVersion_6 (2 vectors, 2 distinct results, 2 changing state, `log/diff/00045b9b_sound_getModuleLinkerVersion_6.path1.csv`); getModuleLinkerVersion_5 (2 vectors, 2 distinct results, 2 changing state, `log/diff/00045b9b_sound_getModuleLinkerVersion_5.path1.csv`); getModuleLinkerVersion_badmz (2 vectors, 2 distinct results, 2 changing state, `log/diff/00045b9b_sound_getModuleLinkerVersion_badmz.path1.csv`); getModuleLinkerVersion_nolfanew (2 vectors, 2 distinct results, 2 changing state, `log/diff/00045b9b_sound_getModuleLinkerVersion_nolfanew.path1.csv`); getModuleLinkerVersion_7 (2 vectors, 2 distinct results, 2 changing state, `log/diff/00045b9b_sound_getModuleLinkerVersion_7.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10045bc7): callee pops 0 bytes of stack arguments.
 

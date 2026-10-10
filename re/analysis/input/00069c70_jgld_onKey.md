@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069c70`), 171 bytes, 61 instructions, subsystem `inp
 forwards a key event to the listener (g_listener +0xc); on key-down drains the display message queue or peeks WM_CHAR for VK 0x60-0x6f (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+The key handler windowProc 0x100692b0 calls for WM_KEYDOWN / WM_KEYUP / WM_SYSKEYDOWN / WM_SYSKEYUP (arguments hwnd, virtual key, down flag; the body reads only those three of the five pushed). It always forwards (key, down) to slot +0xc of the event sink at VA 0x1012872c (0x10069ca0). On a key release (0x10069caa) that is all. On a key press, a key in 0x60..0x6f (VK_NUMPAD0 .. VK_DIVIDE; unsigned `jb` 0x10069cb4 and `jbe` 0x10069cba) drains the WM_CHAR messages the keypad key generated with PeekMessageA (&msg, hwnd, WM_CHAR, WM_CHAR, PM_REMOVE) 0x10069cf7 until it returns 0; any other key runs slot +0x138 of the display at VA 0x10128420 (0x10069ccc) until it returns 0. No return value. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: onKey_d0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069c70_jgld_onKey_d0.path1.csv`); onKey_d3 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069c70_jgld_onKey_d3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?onKey@@YAXPAUHWND__@@IH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069d1a): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00030570`), 280 bytes, 104 instructions, subsystem `a
 Frees the Sound's buffer-node list at this+0x5c: for each node mmioClose's the sub-object's handle (+0x44), unlinks it from g_100b49c8 (g_100b49cc/d0/d4), decrements g_100b4a08 and this+0x68. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00030570 Sound_freeBufferList (VA 0x10030570). The list at +0x5c / +0x60 / +0x68 is popped from the front (0x10030578-0x100305ac) and each non-null element released as above; returns 0 (0x10030684). Reached from: static callers 0x1000c420, 0x1000cd80. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Sound_freeBufferList_empty (13 vectors, 12 distinct results, 11 changing state, `log/diff/00030570_sound_Sound_freeBufferList_empty.path1.csv`); Sound_freeBufferList_live (13 vectors, 12 distinct results, 11 changing state, `log/diff/00030570_sound_Sound_freeBufferList_live.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10030687): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10030574 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

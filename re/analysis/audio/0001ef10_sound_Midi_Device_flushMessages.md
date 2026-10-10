@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001ef10`), 72 bytes, 27 instructions, subsystem `aud
 Sends every pending MIDI short message in the 128-entry table at +600 through g_100b4a1c's HMIDIOUT (+0x3c), then clears the table. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x0001ef10 Midi_Device::flushMessages (VA 0x1001ef10). The MIDI device pointer g_midiDevice 0x100b4a1c is read (0x1001ef10) and its handle at +0x3c (0x1001ef15); a zero handle returns at once (0x1001ef18 / 0x1001ef1a). Otherwise midiOutShortMsg [0x100b8638] is loaded once (0x1001ef1d) and the 0x80 pending-message dwords from this+0x258 (0x1001ef25 / 0x1001ef2b, `dec edi` 0x1001ef51) are scanned: an entry whose low byte is non-zero (`cmp byte ptr [esi], 0` 0x1001ef30) has its byte 2 cleared (0x1001ef35), the device read again (0x1001ef39), midiOutShortMsg(handle, entry dword) called (pushes 0x1001ef44 / 0x1001ef45, call 0x1001ef46) and the entry cleared (0x1001ef48). eax at `ret` is not set. Reached from: static callers 0x10020d80. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Midi_Device::flushMessages_h (10 vectors, 10 distinct results, 9 changing state, `log/diff/0001ef10_sound_Midi_Device_flushMessages_h.path1.csv`); Midi_Device::flushMessages_h0 (10 vectors, 1 distinct results, 0 changing state, `log/diff/0001ef10_sound_Midi_Device_flushMessages_h0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_1001ef10@f_1001ef10@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001ef57): callee pops 0 bytes of stack arguments.

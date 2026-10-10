@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 75 bytes, 26 instructions, subsystem `ui`. Mechanical t
 Adds an image/icon node param_1 to the image span list at this+0x13e0 and bumps the line count. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Adds an image to a text view's image list. A NULL image returns 3 (0x0048dfc7-0x0048dfcd). The list embedded at this+0x13e0 takes the image at +0x1c and zero in +0x20 / +0x24 (0x0048dfd6-0x0048dfe3) and S3List_add 0x00401d10 appends item 0 to it (0x0048dfdc / 0x0048dfe6); a non-zero result returns 1 (0x0048dfeb-0x0048dfef), otherwise the counter at +0x137c is incremented (0x0048dff8-0x0048e005) and the result is 0. Caller: 0x0048e1c0. Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: TextView::addImage (8 vectors, 7 distinct results, 6 changing state, `log/diff/0048dfc0_TextView_addImage.path1.csv`); TextView::addImage_fail (4 vectors, 4 distinct results, 4 changing state, `log/diff/0048dfc0_TextView_addImage_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?start@C48dfc0@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048dfd3, 0x0048dff5, 0x0048e008): callee pops 4 bytes of stack arguments.

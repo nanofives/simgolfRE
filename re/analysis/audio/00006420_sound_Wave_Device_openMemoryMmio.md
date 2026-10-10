@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006420`), 138 bytes, 45 instructions, subsystem `au
 Opens an in-memory MMIO buffer ((string in the binary) IOProc, fcc 0x204d454d), storing the MMIOINFO at +0x6c and the handle at +0xb0; increments g_100b4a08. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00006420 Wave_Device::openMemoryMmio (VA 0x10006420). One stack argument, the size (`ret 4`). A non-zero handle at this+0xb0 (0x10006426) returns 0 at once (0x10006430). Otherwise a zeroed MMIOINFO gets fccIOProc "MEM " (+4, 0x1000644b), cchBuffer = the argument, or this+0xb8 when the argument is 0 (0x10006453-0x1000645e, stored 0x1000646a) and adwInfo[0] = 0x64 (+0x30, 0x1000646e); mmioOpenA [0x100b8660] (NULL, &info, 0x1000) (pushes 0x10006462-0x10006468, call 0x10006476). A zero result returns 0 (0x10006480). Otherwise the module counter 0x100b4a08 is incremented (0x10006487 / 0x10006492 / 0x10006495), mmioGetInfo [0x100b8668] (handle, this+0x6c, 0) copies the info into the object (0x1000648d-0x1000649b) and this+0x6c is returned (0x100064a1). Reached from: no call xref; reached through a stored pointer: 0x1005b24c table slot 35 (+0x8c) of the table at 0x1005b1c0; installers: 0x10006020 WaveStream::ctor, 0x10006160 WaveStream::destroy. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Wave_Device::openMemoryMmio (32 vectors, 15 distinct results, 20 changing state, `log/diff/00006420_sound_Wave_Device_openMemoryMmio.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10006436, 0x10006484, 0x100064a7): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10006424 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

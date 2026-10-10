@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00014cd0`), 209 bytes, 59 instructions, subsystem `ren
 ## Role (from the naming pass, not a C3 purpose)
 Sprite constructor storing an initial value into member [3]; sets vtable 0x1011d380. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The Sprite constructor that Factory::createSprite 0x10067a90 and the stack sprites of Surface::drawTo 0x10009fd0 / drawToZ 0x1000a330 use: SpriteBase::ctor 0x10014c70 (thunk 0x100017c1, 0x10014cf0; registers the object in the tracked-object list 0x10128428 through Tracked::ctor), then the Sprite vtable 0x1011d380 at +0 (0x10014cf8), the owner pointer at +0xc (0x10014d04), zero at +8 and +0x10..+0x24 (0x10014d0a..0x10014d46), 0xff at +0x28 (the key colour, 0x10014d50), zero at +0x2c..+0x34 (0x10014d5a..0x10014d6e), InitializeCriticalSection (this + 0x38) 0x10014d7e; returns this. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Sprite::ctorN_empty (6 vectors, 6 distinct results, 6 changing state, `log/diff/00014cd0_jgld_Sprite_ctorN_empty.path1.csv`); Sprite::ctorN_five (6 vectors, 6 distinct results, 6 changing state, `log/diff/00014cd0_jgld_Sprite_ctorN_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10014cd0@C_FUN_10014cd0@f_10014cd0@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10014d9e): callee pops 4 bytes of stack arguments.

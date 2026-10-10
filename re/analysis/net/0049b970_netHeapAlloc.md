@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 1346 bytes, 375 instructions, subsystem `net`. Mechanic
 allocates a network object from the heap, aborting the process if allocation fails. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+S3List_add's list append with a different payload. The ring, the allocation sequence (own heap +0x18, else the virtual-base heap, else malloc: 0x0049b9a6-0x0049ba8d, 0x0049bc0c-0x0049bcf3), the slot-0 call (0x0049bbff / 0x0049be8f) and the count / last update (0x0049be91-0x0049be98) are those of S3List_add; the payload is a 0x64-byte object (0x0049bab8, 0x0049bd45): vbptr 0x004bbcd4 at +0x58, base vptr 0x004ba278 at +0x5c, saved heap at +0x60 (0x0049badd-0x0049baf0), VoiceRx::ctor 0x004852e0 on it (0x0049bbbb), the vtable 0x004bbc3c at +0 (0x0049bbc3) and the final vptr 0x004bbc38 at +0x58 + [[obj+0x58]+4] (0x0049bbc9-0x0049bbcc). Results 0 or 4. Caller: 0x0049b690. Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: netHeapAlloc (14 vectors, 14 distinct results, 14 changing state, `log/diff/0049b970_netHeapAlloc.path1.csv`); netHeapAlloc_fail0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049b970_netHeapAlloc_fail0.path1.csv`); netHeapAlloc_fail1 (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049b970_netHeapAlloc_fail1.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0049beaf): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0049b98b before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

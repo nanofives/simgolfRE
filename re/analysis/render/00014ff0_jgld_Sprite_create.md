@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00014ff0`), 169 bytes, 70 instructions, subsystem `ren
 creates sprite storage: dispatches on depth to create8 or create16, then calls vtbl+0x10 on failure. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Slot 1 (+4) of the Sprite vtable 0x1011d380: dispatches on the bit depth (fourth argument): 8 calls Sprite::create8 0x1001b690 (thunk 0x10001825, 0x10015038), 0x10 Sprite::create16 0x1001a250 (thunk 0x100015be, 0x10015059), each with (bits, w, h, bpp, e). A non-zero result is returned (0x10015061 / 0x10015065); zero calls slot +0x10 of the vtable (Sprite::setField10 0x10017eb0, the key colour argument) with the sixth argument (0x1001507a) and returns 0. Any other depth calls neither body and the result local [ebp-8] keeps the debug prologue's fill 0xcccccccc, which is then returned as an error code (the switch in re/match/jgld_sprite.cpp has no default). Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Sprite::create_span (12 vectors, 9 distinct results, 8 changing state, `log/diff/00014ff0_jgld_Sprite_create_span.path1.csv`); Sprite::create_oom (12 vectors, 9 distinct results, 8 changing state, `log/diff/00014ff0_jgld_Sprite_create_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?create@Sprite@@QAEHPAXIHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x10015096): callee pops 24 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 158 bytes, 50 instructions, subsystem `audio`. Mechanic
 constructs the named (string in the binary) sound object: setKind(6) and copies the 10-char name into m_50 (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_3.md`.
 
+## Purpose
+Constructs a receive-voice object: the base constructor 0x00484150 runs on it (0x004852fa-0x00485301), its vtable becomes 0x004badf8 (0x00485306), the nine bytes at 0x004e43c8 / 0x004e43cc / 0x004e43d0 (an 8-character name and its NUL) are copied to the stack (0x0048530c-0x00485331), 0x00484260 gets this and 6 (0x00485321 / 0x00485335), operator new 0x004a57f1 returns a 10-byte block stored at +0x50 without a null test (0x0048533a-0x0048534f) and the name is copied into it with its NUL (0x00485352-0x0048536a). The result is this. Caller: netHeapAlloc 0x0049b970 (0x0049bbbb). Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: VoiceRx::ctor (6 vectors, 6 distinct results, 6 changing state, `log/diff/004852e0_VoiceRx_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `??0C4852e0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048537d): callee pops 0 bytes of stack arguments.

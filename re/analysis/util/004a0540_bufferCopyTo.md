@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 144 bytes, 64 instructions, subsystem `util`. Mechanica
 copies a source buffer into a freshly allocated output structure. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Copies a record into another one, duplicating its string: the source string is +0x1c, the allocator is the heap object at +0x18. A string present (0x004a054c / 0x004a054e) gets strlen + 1 bytes from heapAlloc 0x00474860 when the heap is set (0x004a0553-0x004a0563) else from malloc 0x004a504f (0x004a056a-0x004a0574); the block is stored in dst+4 even when NULL (0x004a057e) and NULL returns 4 (0x004a0581-0x004a058a); otherwise the block gets a NUL and the string (0x004a058e-0x004a05b9). dst+8 and dst+0xc then take +0x20 and +0x24 (0x004a05bc-0x004a05c6) and the result is 0. No static caller; the gate takes the installer of the slot-0 table at 0x004bb22c (`pointer_callers.py`: ListModel::ctor 0x00489150, TextView::ctor 0x0048ce00, ...). Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: bufferCopyTo (16 vectors, 16 distinct results, 16 changing state, `log/diff/004a0540_bufferCopyTo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?copyTo@C4a0540@@QAEHPAUOut4a0@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a058b, 0x004a05cd): callee pops 4 bytes of stack arguments.

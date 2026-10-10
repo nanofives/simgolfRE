@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00020b60`), 92 bytes, 28 instructions, subsystem `aud
 Posts a MIDI-related notification with PostMessageA, or through postSoundThreadMessage 0x1002aa90 on g_soundThreadState 0x100b5038 (both paths present). (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00020b60 postMidiNotification (VA 0x10020b60). Bit 8 of the dword at this+0xac (`test ah, 1` 0x10020b66) set returns 0 at once (0x10020bb9). Otherwise bit 4 of this+0x214 is set (0x10020b6b-0x10020b73) and the engine pointer g_soundEngine 0x100b4a20 is read (0x10020b79): with an engine whose flag word +0x1a4 has bit 5 set (0x10020b82-0x10020b8d), PostMessageA [0x100b85a0] (this+0x210, 0x7ec, 0, this) runs (pushes 0x10020b8f-0x10020b98, call 0x10020b9e) and 0 is returned; without an engine or with the bit clear, postSoundThreadMessage 0x1002aa90 (thunk 0x100011d6) is called on the module object 0x100b5038 with (0x7ec, 0, this) (0x10020ba7-0x10020bb4). The A/B runs under the live engine, whose flag word is 0x20 at the menu (log/c3/alt/c3dh_probe2.py), so only the PostMessageA arm is covered; the other arm needs a different engine pointer, which the mixer threads read (0x100b4a20 has 67 references). Reached from: static callers 0x1000a670. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: postMidiNotification (8 vectors, 6 distinct results, 5 changing state, `log/diff/00020b60_sound_postMidiNotification.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10020ba6, 0x10020bbb): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10020b60 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

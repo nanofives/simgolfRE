@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 39 bytes, 16 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Stops the tooltip timer and resets the active-hotspot fields. (`re/names/exe_4.tsv`)
 
+## Purpose
+Cancels the pending tip. With both +4 and +8 equal to -1 (`or edi, -1` 0x00492d44, `cmp [esi + 4], edi` 0x00492d47 / `jne` 0x00492d4a, `cmp [esi + 8], edi` 0x00492d4c / `je` 0x00492d4f) nothing happens. Otherwise Timer::stop 0x00486ec0 runs on this + 0x20 (call 0x00492d54), Tooltip::hide 0x00480360 (call 0x00492d59) and +4 = +8 = -1 (0x00492d5e / 0x00492d61). No caller uses eax: the call at 0x0047bf08 is followed by `jmp 0x0047bee7` (0x0047bf0d) and the one at 0x00495a28 by `mov eax, [0x83ab18]` (0x00495a2d), so the registry compares no return value. Vectors: `HotList::cancelTip` and `_nodisp`, 12 vectors each: (-1, -1) three times, (-1, x), (x, -1), both set, 0, 0xffffffff / 0x7fffffff, -2. Tooltip::hide returns at its first test when the tip rectangle global 0x0083aac4 is 0 (`xor eax, eax; cmp ecx, eax; je` 0x00480366-0x0048036a); the fixture sets it to 0 under the freeze, so the drawing arm of Tooltip::hide (0x0048036c-0x0048038b) is NOT covered by this batch. Branches: 0x00492d4a `jne` taken 12 / not 12; 0x00492d4f `je` taken 6 / not 6 over the two keys. Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: HotList::cancelTip (12 vectors, 10 distinct results, 9 changing state, `log/diff/00492d40_HotList_cancelTip.path1.csv`); HotList::cancelTip_nodisp (12 vectors, 10 distinct results, 9 changing state, `log/diff/00492d40_HotList_cancelTip_nodisp.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00492d66): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00492d41 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

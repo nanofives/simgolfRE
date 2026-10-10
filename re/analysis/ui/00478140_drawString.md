@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 169 bytes, 84 instructions, subsystem `ui`. Mechanical 
 draws a text string (markup-aware) (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, four stack arguments (`ret 0x10`: 0x00478156, 0x004781b5, 0x004781da, 0x004781e6): text, x, y, len. Same prologue and length rule (0x0047814c NULL text returns x, 0x0047815e / 0x00478163 a missing font returns 3, 0x00478177..0x004781ab a non-positive length returns x). Otherwise drawMarkupRun (0x004781bc) gives w and it returns drawRichText (0x004781d1) at x - w (0x004781c1, 0x004781c6): the right edge of the run lands at x (name to revisit). Callers: showTournamentResults 0x0045a090, drawStringAt2 0x00476750. Reimplemented in `shim/src/re/c3df.cpp`; path-1 A/B GREEN: drawString (88 vectors, 65 distinct results, 74 changing state, `log/diff/00478140_drawString.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x00478156, 0x004781b5, 0x004781da, 0x004781e6): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x0047814a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

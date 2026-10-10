@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00009040`), 83 bytes, 32 instructions, subsystem `aud
 Inserts a client node into the timer's doubly-linked client list. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00009040 SoundTimer::linkClient (VA 0x10009040). `this` is the client list header embedded in the sound timer at +0x4c (registerClient's `lea ecx, [esi+0x4c]` 0x100088f2): +0 front node, +4 back node, +0xc count. A 12-byte node is allocated (0x10009043 / 0x10009045) and, when the allocation succeeded, initialised {+0 = 0, +4 = 0, +8 = the stack argument} (0x10009055-0x10009062); a NULL allocation leaves eax = 0 (0x10009067). With a front node (`test ecx, ecx` 0x1000906b) the front's +0 points at the new node (0x1000906f), the new node's +4 at the old front (0x10009076) and the header's front becomes the new node (0x10009076); with no front both header words +0 and +4 become the node (0x10009083 / 0x10009085). The count at +0xc is incremented (0x10009078-0x1000907c, 0x10009088-0x1000908c) and returned (`ret 4`). Reached from: static callers 0x100088e0. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: SoundTimer::linkClient (32 vectors, 32 distinct results, 32 changing state, `log/diff/00009040_sound_SoundTimer_linkClient.path1.csv`); SoundTimer::linkClient_oom (8 vectors, 2 distinct results, 8 changing state, `log/diff/00009040_sound_SoundTimer_linkClient_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10009040@C_FUN_10009040@f_10009040@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10009080, 0x10009090): callee pops 4 bytes of stack arguments.

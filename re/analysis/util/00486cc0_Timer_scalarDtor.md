@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the Timer. (`re/names/exe_4.tsv`)
 
+## Purpose
+Slot 0 of the Timer vtable 0x004baea0 (stored by Timer::ctor 0x00486c94 and Timer::dtor 0x00486ce0). It runs Timer::dtor 0x00486ce0 (call 0x00486cc3), deletes the object with operator delete 0x004a4ffc when bit 0 of the flags is set (`test byte ptr [esp + 8], 1` 0x00486cc8, `je` 0x00486ccd, call 0x00486cd0), returns this (0x00486cd8) and pops 4 bytes (`ret 4` 0x00486cdb). allocColorRange reaches it through `call [eax]` with flags 1 (0x00483214-0x00483218). Vectors: one key, 12 vectors over the twelve Timer rows of the fixture (ids, flags and intervals on both sides of 0x32) with the same flag values as HotList::scalarDtor; Timer::dtor -> Timer::reset -> Timer::stop's imports and the display pump are compared state. Branch 0x00486ccd taken 5 / not taken 7. Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: Timer::scalarDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00486cc0_Timer_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small18.cpp` as `??_GObj486@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00486cdb): callee pops 4 bytes of stack arguments.

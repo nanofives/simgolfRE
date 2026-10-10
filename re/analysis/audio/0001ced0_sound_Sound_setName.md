@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001ced0`), 263 bytes, 111 instructions, subsystem `a
 ## Role (from the naming pass, not a C3 purpose)
 Stores a name/path string into the object's +0x1c buffer: frees the previous buffer (0x1004249a), copies param_1 into a freshly allocated buffer (filename split via strrchr), or clears +0x1c when param_1 is null. (`re/names/sound_3.tsv`)
 
+## Purpose
+0x0001ced0 Sound_setName (VA 0x1001ced0). One stack argument, the new name (`ret 4`). A non-NULL name pointer at this+0x1c (0x1001cedd / 0x1001cee0) is released with operator delete (0x1001cee5) and +0x1c cleared (0x1001cef4). A NULL argument (0x1001ceed / 0x1001cef7) ends there with +0x1c = 0 (0x1001cefb; eax is left as it was). Otherwise a 0x100-byte stack buffer is built (0x1001cf10): with a path prefix at +0x20 (0x1001cf0b / 0x1001cf0e) the prefix is copied (`repne scasb` length, `rep movsd` / `rep movsb`, 0x1001cf16-0x1001cf34), strrchr 0x100424b0 (the CRT's last-occurrence search, 0x1001cf36) looks for a backslash (0x5c, pushed 0x1001cf21) in the argument and what follows it (the whole argument when there is none, 0x1001cf3e-0x1001cf47) is appended (0x1001cf47-0x1001cf6d); without a prefix the argument is copied (0x1001cf6f-0x1001cf8e). A block of strlen + 1 bytes comes from operator new (0x1001cf9c), is stored at +0x1c (0x1001cfaf) and receives the buffer (0x1001cfb2-0x1001cfc8). Reached from: static callers 0x100041d0, 0x10020fe0, 0x10024280, 0x10024360. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: Sound_setName (28 vectors, 26 distinct results, 26 changing state, `log/diff/0001ced0_sound_Sound_setName.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001cf07, 0x1001cfd4): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001ced8 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

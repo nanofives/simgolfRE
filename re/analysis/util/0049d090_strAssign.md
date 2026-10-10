@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 65 bytes, 22 instructions, subsystem `util`. Mechanical
 assigns a C string into the Str49d string object, substituting (string in the binary) for a null source. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Resets a buffer object to the constant string at 0x004e49f4 inside a block of the given size: a non-zero flag at +0x18 first releases the buffer through strFree 0x0049d0e0 (0x0049d096-0x0049d09a); Buf_alloc 0x00474820 (this, size) returning non-zero makes the result 1 (0x0049d0ab / 0x0049d0af); otherwise strDup 0x0049d100 copies the constant into the new block through the buffer's own bump allocator (0x0049d0b8-0x0049d0bf; its result is dropped), +0x18 becomes 1 (0x0049d0c4) and the result is 0. It takes a size, not a string. Its caller is 0x004855b0. Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: strAssign (16 vectors, 16 distinct results, 16 changing state, `log/diff/0049d090_strAssign.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small7.cpp` as `?assign@Str49d@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049d0b5, 0x0049d0ce): callee pops 4 bytes of stack arguments.

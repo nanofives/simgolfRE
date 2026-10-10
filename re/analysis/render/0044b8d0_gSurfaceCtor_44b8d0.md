@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 225 bytes, 49 instructions, subsystem `render`. Mechani
 constructor of a file-scope global Surface object/array (Surface_ctor) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Twelve members from +0 step 0x2c (0x0044b8ed-0x0044b99a). Each constructor builds the Surface arrays of a global object in place: Surface_ctor 0x00473ab0 (vtable 0x004ba2d8 at +0 and zero in +4 .. +0x24 of each 0x2c-byte element) on single members and the eh vector constructor iterator 0x004a55d2 (first, element size 0x2c, count, ctor 0x00473ab0, dtor 0x004041f0) on runs; the result is this. The exception registration it builds (fs:[0]) matters only when a constructor throws. Callers: 0x0044b760 (staticCtor thunks; the staticCtor family is at C3, c3cq). Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: gSurfaceCtor_44b8d0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/0044b8d0_gSurfaceCtor_44b8d0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_44b8d0.cpp` as `??0C44b8d0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044b9b0): callee pops 0 bytes of stack arguments.

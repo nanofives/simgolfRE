@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006160`), 333 bytes, 122 instructions, subsystem `a
 Destructor: sets vtable 0x1005b1c0 and closes/frees every mmio node in the list, decrementing g_100b4a08. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00006160 WaveStream::destroy (VA 0x10006160). Wrapped in a C++ frame (0x10006160-0x1000616e) that no path uses. The vtable 0x1005b1c0 is stored at +0 (0x10006180). The list at +0x5c / +0x60 / +0x68 is popped from the front; for each non-null element (0x100061c4 / 0x10006221): a non-zero handle at +0x44 is closed with mmioClose (handle, 0) (0x100061d5) and the module counter 0x100b4a08 decremented (0x100061d7), then its destructor thunk 0x10001b45 and operator delete (0x100061e3 / 0x100061e9), and the next node is popped (0x100061f1-0x1000621e). Then the list is walked again, as the compiler's inlined member destructor (0x10006223-0x10006289): each remaining node is popped and deleted without touching its element, up to the first node with a NULL element. The base destructor 0x1002ea30 (thunk 0x10001a78) runs last (0x10006295). eax at the `ret` is that call's leftover. Reached from: static callers 0x10006130. Reimplemented in `shim/src/re/c3dh.cpp`; path-1 A/B GREEN: WaveStream::destroy (13 vectors, 13 distinct results, 13 changing state, `log/diff/00006160_sound_WaveStream_destroy.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100062ac): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10006175 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the HotList. (`re/names/exe_4.tsv`)
 
+## Purpose
+Slot 0 of the HotList vtable 0x004bba74 (stored by HotList::ctor at 0x0049287f and HotList::dtor at 0x004928ed). It runs HotList::dtor 0x004928d0 (call 0x004928b3); bit 0 of the flags argument (`test byte ptr [esp + 8], 1` 0x004928b8, `je` 0x004928bd) hands the object to operator delete 0x004a4ffc (`push esi` 0x004928bf, call 0x004928c0); it returns this (`mov eax, esi` 0x004928c8) and pops 4 bytes (`ret 4` 0x004928cb). Vectors: one key, 12 vectors with flags {1, 0, 3, 2, 1, 0, 0xffffffff, 0xfffffffe, 0x101, 0x80000000, 1, 5}; the delete is recorded in `$freelog`. Branch 0x004928bd `je` taken 5 (flags bit 0 clear) / not taken 7. Reimplemented in `shim/src/re/c3de.cpp`; path-1 A/B GREEN: HotList::scalarDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004928b0_HotList_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_004928b0@C_FUN_004928b0@f_004928b0@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004928cb): callee pops 4 bytes of stack arguments.

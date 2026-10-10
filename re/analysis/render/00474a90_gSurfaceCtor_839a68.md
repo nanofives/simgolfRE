@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `render`. Mechanica
 constructs the file-scope global Surface object at 0x00839a68 via Surface_ctor (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+`mov ecx, 0x839a68; jmp 0x473ab0` (0x00474a90 / 0x00474a95): Surface_ctor on the global Surface at 0x00839a68, result its address. Caller: the dynamic initializer 0x00474a80 (`call 0x474a90`). Reimplemented in `shim/src/re/c3dd.cpp`; path-1 A/B GREEN: gSurfaceCtor_839a68_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00474a90_gSurfaceCtor_839a68_a.path1.csv`); gSurfaceCtor_839a68_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00474a90_gSurfaceCtor_839a68_b.path1.csv`); gSurfaceCtor_839a68_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00474a90_gSurfaceCtor_839a68_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00474a90@f_00474a90@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

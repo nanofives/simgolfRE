@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00002a20`), 344 bytes, 118 instructions, subsystem `ut
 opens/creates a file for write and maps a view. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Opens an existing file for reading and writing and maps all of it (the read/write counterpart of MappedFile::open; callers MappedFile::ctorNameFlag 0x10002730 and MappedFile::ctorName 0x100027b0). The CreateFileA flags start at FILE_ATTRIBUTE_NORMAL 0x80 (0x10002a3d) and gain FILE_FLAG_SEQUENTIAL_SCAN 0x08000000 when the third argument is non-zero (0x10002a44 / 0x10002a4d) or FILE_FLAG_RANDOM_ACCESS 0x10000000 otherwise (0x10002a5a). Whatever the object held is closed first (MappedFile::close through thunk 0x100018bb, 0x10002a66). CreateFileA (name, GENERIC_READ | GENERIC_WRITE, share 0, OPEN_EXISTING 3, flags) 0x10002a88 goes to +8; INVALID_HANDLE_VALUE (0x10002a9e) calls GetLastError 0x10002aa6 and returns 0 whatever it reports (both arms of the `cmp [ebp-0x10], 2` at 0x10002ab6 are `xor eax, eax`). CreateFileMappingA (file, NULL, PAGE_READWRITE, 0, 0, NULL) 0x10002add goes to +0xc and MapViewOfFile (mapping, FILE_MAP_ALL_ACCESS 0xf001f, 0, 0, 0) 0x10002b19 to +4; either NULL closes the object (0x10002afc / 0x10002b38) and returns 0. Otherwise GetFileSize (file, NULL) 0x10002b4c goes to +0x10 and the view is returned (0x10002b62); `ret 8`. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: MappedFile::openWrite (12 vectors, 12 distinct results, 12 changing state, `log/diff/00002a20_jgld_MappedFile_openWrite.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_mappedfile.cpp` as `?openWrite@MappedFile@@QAEPAXPBDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10002b75): callee pops 8 bytes of stack arguments.

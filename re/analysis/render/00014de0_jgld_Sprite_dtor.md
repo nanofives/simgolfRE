@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00014de0`), 159 bytes, 50 instructions, subsystem `ren
 ## Role (from the naming pass, not a C3 purpose)
 destructor: deletes the critical section at +0x38, calls release, then the SpriteBase dtor. (`re/names/jgld_0.tsv`)
 
+## Purpose
+The Sprite destructor: the Sprite vtable 0x1011d380 at +0 (0x10014e15); when the owner pointer at +0xc is set (0x10014e25 / 0x10014e29) the dword it points to is cleared (0x10014e31), so the owner's reference to the sprite goes; DeleteCriticalSection (this + 0x38) 0x10014e40; Sprite::release 0x10014eb0 (thunk 0x100015c3, 0x10014e50; frees the payload and span table and lowers the sprite memory counters); SpriteBase::~SpriteBase 0x100168e0 (thunk 0x100017df, 0x10014e5f; unregisters the object from the tracked list). Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Sprite::dtor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014de0_jgld_Sprite_dtor_empty.path1.csv`); Sprite::dtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014de0_jgld_Sprite_dtor_five.path1.csv`); Sprite::dtor_all (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014de0_jgld_Sprite_dtor_all.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite_dtor.cpp` as `??1Sprite@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10014e7e): callee pops 0 bytes of stack arguments.

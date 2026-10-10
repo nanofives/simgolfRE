@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067e00`), 51 bytes, 23 instructions, subsystem `rend
 Virtual wrapper that calls initFonts 0x10068f30. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Slot 46 (+0xb8) of the Display vtable 0x1011d640: calls initFonts 0x10068f30 through its thunk 0x10001659 (0x10067e1d) and returns with initFonts' result still in eax (nothing between the call and the `ret` at 0x10067e32 writes eax). `this` is not read. Reimplemented in `shim/src/re/c3dg.cpp`; path-1 A/B GREEN: Display::initFonts_0_0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00067e00_jgld_Display_initFonts_0_0.path1.csv`); Display::initFonts_0_dc (1 vectors, 1 distinct results, 1 changing state, `log/diff/00067e00_jgld_Display_initFonts_0_dc.path1.csv`); Display::initFonts_dc_0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00067e00_jgld_Display_initFonts_dc_0.path1.csv`); Display::initFonts_dc_dc (1 vectors, 1 distinct results, 1 changing state, `log/diff/00067e00_jgld_Display_initFonts_dc_dc.path1.csv`); Display::initFonts_m1_1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00067e00_jgld_Display_initFonts_m1_1.path1.csv`); Display::initFonts_1_m1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00067e00_jgld_Display_initFonts_1_m1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10067e00@C_FUN_10067e00@f_10067e00@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10067e32): callee pops 0 bytes of stack arguments.

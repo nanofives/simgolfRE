@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 221 bytes, 98 instructions, subsystem `ui`. Mechanical 
 draws right-aligned text within a rect structure (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, three stack arguments (`ret 0xc`: 0x004782b3, 0x004782c0, 0x004782ca): text, a rectangle pointer (left, top, right, bottom at +0, +4, +8, +0xc) and len. A NULL text (0x00478201) or NULL rectangle (0x0047820d) returns 0, a missing font 3 (0x00478218, 0x00478223), a non-positive length 0 (0x0047824d, 0x0047826d). It measures with drawMarkupRun (0x00478273) and returns drawRichText (0x004782a9) at x = right - w (0x00478278..0x0047827f) and y = top + ((bottom - top) - h) / 2, h being Widget_get 0x00477560 (the font height, 0x00478288) and the division truncating toward zero (cdq / sub / sar, 0x0047829f..0x004782a2). Callers: drawPanelContents 0x0047d850, listPanelDraw 0x0049dab0, optionListDraw 0x0049f370. Reimplemented in `shim/src/re/c3df.cpp`; path-1 A/B GREEN: drawRight2 (92 vectors, 62 distinct results, 76 changing state, `log/diff/004781f0_drawRight2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_4781f0.cpp` as `?drawRight@C4781f0@@QAEHPBDPAUR4781@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x004782b3, 0x004782c0, 0x004782ca): callee pops 12 bytes of stack arguments.
