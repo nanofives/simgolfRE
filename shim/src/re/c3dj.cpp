@@ -1,0 +1,1650 @@
+// C3 batch c3dj (round 26, 2026-10-10) of sound.dll: C2 rows earlier batches judged and dropped before the heap stand-in
+// (realloc, scheduled failures), the import stand-in and the shared freeze helper existed (log/c3/c3dj_candidates.tsv).
+// Every function here runs on fixture-owned objects: a vtable store, a field initialiser, a constructor, a destructor or a
+// thin wrapper over COM-shaped interface calls that the fixtures answer with recording stubs. Allocation and release go
+// through the DLL's own operator new / operator delete at their original addresses (heap stand-in for the keys that need it).
+// Addresses in SG_HOOK and in the `// 0x...` comment lines are RVAs; the instruction addresses quoted inside each body are
+// VAs (VA = 0x10000000 + RVA), which is how re/tools/asm2inline.py prints sound.dll.
+// Hand-written from the disassembly (py -3.12 re/tools/asm2inline.py sound.dll 0x<va> --list; log/c3/alt/c3dj/rawdis.py for
+// bytes past a function's recorded extent). sound.dll is LoadLibrary'd after the shim starts, so these hooks install from
+// the LoadLibraryA hook (SgHooksInstallPending, re/hooks.cpp).
+//
+// RULES (log/c3/c3cy_notes.txt, c3dh): __thiscall is emulated with __fastcall (ecx = this, edx unused). The DLL has base
+// relocations, so every vtable address, callee and global is addressed through the loaded base, never through the
+// 0x10000000-based VA the disassembly prints. Callees run through their original addresses (an incremental-link thunk's
+// target is named in the comment).
+//
+// Groups:
+//   A. vtable-store leaves (initCtrlVtable, CtrlObject_dtorA..D) and zeroing leaves (listNode3Init, pairClear, PtrList_init,
+//      CommandQueue::clear)
+//   B. control-object constructors and Ctrl5b5c0_transposeTable
+//   C. ... (see below)
+#include "hooks.h"
+#include <stdint.h>
+
+namespace {
+
+template <typename T> T& fat(void* base, int off) {
+    return *reinterpret_cast<T*>(reinterpret_cast<char*>(base) + off);
+}
+
+char* c3dj_sound(unsigned rva) {
+    static HMODULE m = 0;
+    if (!m) m = GetModuleHandleA("sound.dll");
+    return reinterpret_cast<char*>(m) + rva;
+}
+template <typename F> F c3dj_fn(unsigned rva) { return reinterpret_cast<F>(c3dj_sound(rva)); }
+
+typedef void*(__fastcall* Th0p_t)(void*, void*);                    // thiscall, nothing pushed, returns a pointer
+typedef unsigned(__fastcall* Th0u_t)(void*, void*);                 // thiscall, nothing pushed, returns an int
+typedef void(__fastcall* Th0v_t)(void*, void*);                     // thiscall, no result used
+typedef unsigned(__fastcall* Th1_t)(void*, void*, unsigned);        // thiscall, one stack argument
+typedef void(__cdecl* OpDelete_t)(void*);                           // operator delete 0x1004249a
+void c3dj_delete(void* p) { c3dj_fn<OpDelete_t>(0x0004249a)(p); }
+
+// =====================================================================================================================
+// A. Vtable-store leaves and zeroing leaves
+// =====================================================================================================================
+
+// 0x00005720 initCtrlVtable and the four CtrlObject destructor bodies 0x0001c560 / 0x0001c710 / 0x0001cbd0 / 0x0001ccd0
+// (VAs 0x10005720 / 0x1001c560 / 0x1001c710 / 0x1001cbd0 / 0x1001ccd0) are the same two instructions:
+// `mov dword ptr [ecx], 0x1005b19c` (0x10005720, 0x1001c560, 0x1001c710, 0x1001cbd0, 0x1001ccd0) and `ret`. They store the
+// base Ctrl vtable address 0x1005b19c (relocated) at this+0 and leave eax as the caller had it (no result).
+#define C3DJ_VTSTORE(NAME, VT_RVA)                                                                      \
+    Th0v_t NAME##_orig;                                                                                  \
+    void __fastcall NAME##_re(void* self, void*) { fat<void*>(self, 0) = c3dj_sound(VT_RVA); }
+
+C3DJ_VTSTORE(initCtrlVtable, 0x0005b19c)
+C3DJ_VTSTORE(CtrlObject_dtorA, 0x0005b19c)
+C3DJ_VTSTORE(CtrlObject_dtorB, 0x0005b19c)
+C3DJ_VTSTORE(CtrlObject_dtorC, 0x0005b19c)
+C3DJ_VTSTORE(CtrlObject_dtorD, 0x0005b19c)
+
+// 0x000087f0  listNode3Init (VA 0x100087f0). `mov eax, ecx; xor ecx, ecx` (0x100087f0 / 0x100087f2), then zero stores at +0, +4
+// and +8 (0x100087f4 / 0x100087f6 / 0x100087f9); returns this (eax, 0x100087fc). The constructor of the 12-byte list nodes and
+// the first three dwords of the 16-byte command-queue nodes (reached through the thunk 0x10002031).
+Th0p_t listNode3Init_orig;
+void* __fastcall listNode3Init_re(void* self, void*) {
+    fat<unsigned>(self, 0) = 0;                                               // 0x100087f4
+    fat<unsigned>(self, 4) = 0;                                               // 0x100087f6
+    fat<unsigned>(self, 8) = 0;                                               // 0x100087f9
+    return self;                                                              // 0x100087f0 / 0x100087fc
+}
+
+// 0x00008840  pairClear (VA 0x10008840). Two immediate stores: +4 = 0 (0x10008840), +0 = 0 (0x10008847); `ret` with eax as the
+// caller left it (no result). It is the body the cmdNode scalar-deleting destructor 0x1000cc40 calls (thunk 0x10001816).
+Th0v_t pairClear_orig;
+void __fastcall pairClear_re(void* self, void*) {
+    fat<unsigned>(self, 4) = 0;                                               // 0x10008840
+    fat<unsigned>(self, 0) = 0;                                               // 0x10008847
+}
+
+// 0x0001d130  PtrList_init (VA 0x1001d130). `mov eax, ecx; xor ecx, ecx` (0x1001d130 / 0x1001d132), zero stores at +0, +4, +8 and
+// +0xc (0x1001d134 / 0x1001d136 / 0x1001d139 / 0x1001d13c); returns this (0x1001d13f). The list header of the pointer lists
+// (front +0, back +4, cursor +8, count +0xc) that PtrList_pushBack 0x1001d150 appends to.
+Th0p_t PtrList_init_orig;
+void* __fastcall PtrList_init_re(void* self, void*) {
+    fat<unsigned>(self, 0) = 0;                                               // 0x1001d134
+    fat<unsigned>(self, 4) = 0;                                               // 0x1001d136
+    fat<unsigned>(self, 8) = 0;                                               // 0x1001d139
+    fat<unsigned>(self, 0xc) = 0;                                             // 0x1001d13c
+    return self;                                                              // 0x1001d130 / 0x1001d13f
+}
+
+// 0x00008890  CommandQueue::clear (VA 0x10008890). edx = this (0x10008890); `rep stosd` of 0x1000 zero dwords from this+0
+// (ecx = 0x1000, eax = 0, edi = this: 0x10008893-0x1000889c) then +0x4004 = 0 (0x1000889e) and +0x4000 = 0 (0x100088a4).
+// eax is zero at `ret` (0x100088ab), so the function returns 0. The ring of 0x1000 node pointers sits at +0 here (the
+// queue clearer addresses it as a bare array).
+Th0u_t CmdClear_orig;
+unsigned __fastcall CmdClear_re(void* self, void*) {
+    unsigned* p = static_cast<unsigned*>(self);
+    for (int i = 0; i < 0x1000; i++) p[i] = 0;                                // 0x1000889c (rep stosd)
+    fat<unsigned>(self, 0x4004) = 0;                                          // 0x1000889e
+    fat<unsigned>(self, 0x4000) = 0;                                          // 0x100088a4
+    return 0;                                                                 // 0x10008898 (xor eax, eax) .. 0x100088ab
+}
+
+// =====================================================================================================================
+// B. Control-object constructors and the octave transposition of the control table
+// =====================================================================================================================
+
+// 0x0001bc50  CtrlObject::ctor (VA 0x1001bc50). eax = this (0x1001bc50), ecx = -1 (0x1001bc52): +0x14, +0x20 and +0x24 = -1
+// (0x1001bc55 / 0x1001bc58 / 0x1001bc5b); the vtable 0x1005b19c (relocated) at +0 (0x1001bc61); the tag 0x6c727463 at +4
+// (0x1001bc67); the WORD at +0x18 = 0 (`mov word ptr [ecx], 0` with ecx = this+0x18, 0x1001bc5e / 0x1001bc6e); +0xc = 0x18
+// (0x1001bc73); +0x10 = 0x44444444 (0x1001bc7a). Returns this.
+Th0p_t CtrlObject_ctor_orig;
+void* __fastcall CtrlObject_ctor_re(void* self, void*) {
+    fat<unsigned>(self, 0x14) = 0xffffffffu;                                  // 0x1001bc55
+    fat<unsigned>(self, 0x20) = 0xffffffffu;                                  // 0x1001bc58
+    fat<unsigned>(self, 0x24) = 0xffffffffu;                                  // 0x1001bc5b
+    fat<void*>(self, 0) = c3dj_sound(0x0005b19c);                             // 0x1001bc61
+    fat<unsigned>(self, 4) = 0x6c727463u;                                     // 0x1001bc67
+    fat<unsigned short>(self, 0x18) = 0;                                      // 0x1001bc6e
+    fat<unsigned>(self, 0xc) = 0x18;                                          // 0x1001bc73
+    fat<unsigned>(self, 0x10) = 0x44444444u;                                  // 0x1001bc7a
+    return self;                                                              // 0x1001bc50 / 0x1001bc81
+}
+
+// 0x0001bca0  CtrlObject2_ctor (VA 0x1001bca0). eax = this, edx = 0x44444444, ecx = 0 (0x1001bca0-0x1001bca7): +0xc, +0x10,
+// +0x14 and +0x18 = 0 (0x1001bca9 / 0x1001bcac / 0x1001bcaf / 0x1001bcb2); +4 = 0x18 (0x1001bcb5); +8 = 0x44444444 (0x1001bcbc);
+// the vtable 0x1005b590 (relocated) at +0 (0x1001bcbf); +0x28 = 0 (0x1001bcc5); +0x1c = 0xc (0x1001bcc8); +0x20 = 0x44444444
+// (0x1001bccf). Returns this.
+Th0p_t CtrlObject2_ctor_orig;
+void* __fastcall CtrlObject2_ctor_re(void* self, void*) {
+    fat<unsigned>(self, 0xc) = 0;                                             // 0x1001bca9
+    fat<unsigned>(self, 0x10) = 0;                                            // 0x1001bcac
+    fat<unsigned>(self, 0x14) = 0;                                            // 0x1001bcaf
+    fat<unsigned>(self, 0x18) = 0;                                            // 0x1001bcb2
+    fat<unsigned>(self, 4) = 0x18;                                            // 0x1001bcb5
+    fat<unsigned>(self, 8) = 0x44444444u;                                     // 0x1001bcbc
+    fat<void*>(self, 0) = c3dj_sound(0x0005b590);                             // 0x1001bcbf
+    fat<unsigned>(self, 0x28) = 0;                                            // 0x1001bcc5
+    fat<unsigned>(self, 0x1c) = 0xc;                                          // 0x1001bcc8
+    fat<unsigned>(self, 0x20) = 0x44444444u;                                  // 0x1001bccf
+    return self;                                                              // 0x1001bcd2
+}
+
+// 0x0001cbf0  Ctrl5b668_ctor (VA 0x1001cbf0). The CtrlObject::ctor stores (+0x14 / +0x20 / +0x24 = -1 at 0x1001cbf5 / 0x1001cbf8 /
+// 0x1001cbfb, +4 = 0x6c727463 at 0x1001cc05, the word at +0x18 = 0 at 0x1001cc0c, +0xc = 0x18 at 0x1001cc0f, +0x10 = 0x44444444
+// at 0x1001cc16) with the vtable 0x1005b668 (relocated, 0x1001cc1d), +0x2c = 0 and +0x30 = 0 (0x1001cc23 / 0x1001cc26),
+// +0x1c = 1 (0x1001cc29) and +8 = 0x34 (0x1001cc30). Returns this.
+Th0p_t Ctrl5b668_ctor_orig;
+void* __fastcall Ctrl5b668_ctor_re(void* self, void*) {
+    fat<unsigned>(self, 0x14) = 0xffffffffu;                                  // 0x1001cbf5
+    fat<unsigned>(self, 0x20) = 0xffffffffu;                                  // 0x1001cbf8
+    fat<unsigned>(self, 0x24) = 0xffffffffu;                                  // 0x1001cbfb
+    fat<unsigned>(self, 4) = 0x6c727463u;                                     // 0x1001cc05
+    fat<unsigned short>(self, 0x18) = 0;                                      // 0x1001cc0c
+    fat<unsigned>(self, 0xc) = 0x18;                                          // 0x1001cc0f
+    fat<unsigned>(self, 0x10) = 0x44444444u;                                  // 0x1001cc16
+    fat<void*>(self, 0) = c3dj_sound(0x0005b668);                             // 0x1001cc1d
+    fat<unsigned>(self, 0x2c) = 0;                                            // 0x1001cc23
+    fat<unsigned>(self, 0x30) = 0;                                            // 0x1001cc26
+    fat<unsigned>(self, 0x1c) = 1;                                            // 0x1001cc29
+    fat<unsigned>(self, 8) = 0x34;                                            // 0x1001cc30
+    return self;                                                              // 0x1001cbf0 / 0x1001cc37
+}
+
+// 0x0001caf0  CtrlObject3_ctor (VA 0x1001caf0). The same prefix (0x1001caf5 / 0x1001caf8 / 0x1001cafb: -1 at +0x14 / +0x20 /
+// +0x24; 0x1001cb05: +4 = 0x6c727463; 0x1001cb0c: the word at +0x18 = 0; 0x1001cb12: +0xc = 0x18; 0x1001cb19: +0x10 =
+// 0x44444444) with the vtable 0x1005b644 (relocated, 0x1001cb20), +0x2c = 0 (edx = this+0x2c, 0x1001cb26), +0x28, +0x30 and
+// +0x34 = 0 (0x1001cb28 / 0x1001cb2b / 0x1001cb2e), +0x1c = 2 (0x1001cb31) and +8 = 0x38 (0x1001cb38). Returns this.
+Th0p_t CtrlObject3_ctor_orig;
+void* __fastcall CtrlObject3_ctor_re(void* self, void*) {
+    fat<unsigned>(self, 0x14) = 0xffffffffu;                                  // 0x1001caf5
+    fat<unsigned>(self, 0x20) = 0xffffffffu;                                  // 0x1001caf8
+    fat<unsigned>(self, 0x24) = 0xffffffffu;                                  // 0x1001cafb
+    fat<unsigned>(self, 4) = 0x6c727463u;                                     // 0x1001cb05
+    fat<unsigned short>(self, 0x18) = 0;                                      // 0x1001cb0c
+    fat<unsigned>(self, 0xc) = 0x18;                                          // 0x1001cb12
+    fat<unsigned>(self, 0x10) = 0x44444444u;                                  // 0x1001cb19
+    fat<void*>(self, 0) = c3dj_sound(0x0005b644);                             // 0x1001cb20
+    fat<unsigned>(self, 0x2c) = 0;                                            // 0x1001cb26
+    fat<unsigned>(self, 0x28) = 0;                                            // 0x1001cb28
+    fat<unsigned>(self, 0x30) = 0;                                            // 0x1001cb2b
+    fat<unsigned>(self, 0x34) = 0;                                            // 0x1001cb2e
+    fat<unsigned>(self, 0x1c) = 2;                                            // 0x1001cb31
+    fat<unsigned>(self, 8) = 0x38;                                            // 0x1001cb38
+    return self;                                                              // 0x1001caf0 / 0x1001cb3f
+}
+
+// 0x00024460  ChannelDesc_ctor (VA 0x10024460). CtrlObject3_ctor 0x1001caf0 (thunk 0x10002644, call at 0x10024466) on this+0x14
+// (`lea ecx, [esi+0x14]` 0x10024463); then +4 = 0x7f (0x1002446d), +0 = 0 (0x10024474), +8 = 0 (0x10024476), +0xc = 0
+// (0x10024479) and +0x10 = 0x40 (0x1002447c). Returns this (0x10024483).
+Th0p_t ChannelDesc_ctor_orig;
+void* __fastcall ChannelDesc_ctor_re(void* self, void*) {
+    c3dj_fn<Th0p_t>(0x0001caf0)(static_cast<char*>(self) + 0x14, 0);        // 0x10024466 -> 0x1001caf0
+    fat<unsigned>(self, 4) = 0x7f;                                            // 0x1002446d
+    fat<unsigned>(self, 0) = 0;                                               // 0x10024474
+    fat<unsigned>(self, 8) = 0;                                               // 0x10024476
+    fat<unsigned>(self, 0xc) = 0;                                             // 0x10024479
+    fat<unsigned>(self, 0x10) = 0x40;                                         // 0x1002447c
+    return self;                                                              // 0x10024483 / 0x10024486
+}
+
+// 0x0001c1e0  Ctrl5b5c0_transposeTable (VA 0x1001c1e0, body to 0x1001c23b: Ghidra ends the function at the first `ret 4`
+// 0x1001c1f2; the `jbe` at 0x1001c1ea jumps into the rest). One stack argument n (`ret 4`). n above 9 (unsigned, `cmp ecx, 9`
+// / `jbe` 0x1001c1e7 / 0x1001c1ea) returns 0xa (0x1001c1ec). Otherwise the 0x80-byte table at this+0x5c is rewritten in place by
+// the loop 0x1001c202-0x1001c233: edi = 12 * n (0x1001c1f8 / 0x1001c1fb), esi = destination index = 0 and edx = index inside
+// the 12-entry group = 0 (0x1001c1fe / 0x1001c200); each pass first checks esi == edi (0x1001c202 / 0x1001c204), in which case
+// esi = edi + 12 and ecx (the octave counter, = n) is decremented (0x1001c206 / 0x1001c209); bl = low byte of the SIGNED byte
+// product cl * 12 (`mov al, cl; mov bl, 0xc; imul bl; mov bl, al` 0x1001c20a-0x1001c210); al = table[edi + edx]
+// (0x1001c212 / 0x1001c216) minus bl, masked with 0x7f (0x1001c219 / 0x1001c21b) is stored at table[esi] (0x1001c220); edx
+// advances 0..11 and, after 11, goes back to 0 and decrements ecx (0x1001c21d-0x1001c22b); esi increments (0x1001c22c) and the
+// loop repeats while esi < 0x80 (signed `jl`, 0x1001c22d / 0x1001c233). Returns 0 (0x1001c238). The table is read and written
+// in place: destination indices below edi read the unmodified group at edi..edi+11, indices from edi + 12 up read it too.
+Th1_t Transpose_orig;
+unsigned __fastcall Transpose_re(void* self, void*, unsigned n) {
+    if (n > 9) return 0xa;                                                    // 0x1001c1ea (jbe not taken) / 0x1001c1ec
+    unsigned char* tbl = reinterpret_cast<unsigned char*>(static_cast<char*>(self) + 0x5c);
+    int ecx = static_cast<int>(n);
+    int edi = ecx * 12;                                                       // 0x1001c1f8 / 0x1001c1fb
+    int esi = 0, edx = 0;
+    do {
+        if (esi == edi) {                                                     // 0x1001c202 / 0x1001c204
+            esi = edi + 12;                                                   // 0x1001c206
+            ecx -= 1;                                                         // 0x1001c209
+        }
+        unsigned char bl = static_cast<unsigned char>((static_cast<signed char>(static_cast<unsigned char>(ecx)) * 12) & 0xff);   // 0x1001c20a-0x1001c210
+        unsigned char al = tbl[edi + edx];                                    // 0x1001c212 / 0x1001c216
+        al = static_cast<unsigned char>(al - bl) & 0x7f;                      // 0x1001c219 / 0x1001c21b
+        tbl[esi] = al;                                                        // 0x1001c220
+        if (edx == 0xb) {                                                     // 0x1001c21d / 0x1001c224
+            edx = 0;                                                          // 0x1001c226
+            ecx -= 1;                                                         // 0x1001c228
+        } else {
+            edx += 1;                                                         // 0x1001c22b
+        }
+        esi += 1;                                                             // 0x1001c22c
+    } while (esi < 0x80);                                                     // 0x1001c22d / 0x1001c233
+    return 0;                                                                 // 0x1001c238
+}
+
+// =====================================================================================================================
+// C. Destructor bodies of the device base classes and the scalar-deleting wrappers around them
+// =====================================================================================================================
+
+// A virtual slot of an object: [[obj] + off].
+static inline void* c3dj_slot(void* obj, unsigned off) { return fat<void*>(fat<void*>(obj, 0), off); }
+
+// 0x00028ff0 DeviceBase_dtorA, 0x00029f60 DeviceBase_dtorB, 0x0002a3b0 DeviceBase_dtorC (VAs 0x10028ff0 / 0x10029f60 / 0x1002a3b0)
+// are one body three times: the vtable 0x1005b8b0 (relocated) is stored at this+0 (`mov dword ptr [ecx], 0x1005b8b0` 0x10028ff0,
+// 0x10029f60, 0x1002a3b0); ecx becomes the object at this+0x14 (0x10028ff6 etc.); NULL ends the function (`test ecx, ecx` /
+// `je` 0x10028ff9 / 0x10028ffb, `ret` 0x10029002); otherwise the slot at +0x14 of that object's vtable is JUMPED to with the
+// sub-object in ecx (`mov eax, [ecx]` / `jmp dword ptr [eax + 0x14]` 0x10028ffd / 0x10028fff), so its result is the function's.
+// With a NULL sub-object eax is whatever the caller left.
+#define C3DJ_DEVBASE_DTOR(NAME, VT_RVA)                                                                  \
+    Th0v_t NAME##_orig;                                                                                  \
+    void __fastcall NAME##_re(void* self, void*) {                                                       \
+        fat<void*>(self, 0) = c3dj_sound(VT_RVA);                                                        \
+        void* sub = fat<void*>(self, 0x14);                                                              \
+        if (sub == 0) return;                                                                            \
+        reinterpret_cast<Th0v_t>(c3dj_slot(sub, 0x14))(sub, 0);                                          \
+    }
+C3DJ_DEVBASE_DTOR(DeviceBase_dtorA, 0x0005b8b0)
+C3DJ_DEVBASE_DTOR(DeviceBase_dtorB, 0x0005b8b0)
+C3DJ_DEVBASE_DTOR(DeviceBase_dtorC, 0x0005b8b0)
+
+// 0x0000e8f0  Wave_In_Device::dtor (VA 0x1000e8f0). The vtable 0x1005b3d4 (relocated) is stored at this+0 (0x1000e8f0) and the
+// base destructor is JUMPED to: `jmp 0x10001e06` (0x1000e8f6), a thunk to DeviceBase_dtorC 0x1002a3b0. Its result is the
+// function's.
+Th0v_t WaveInDtor_orig;
+void __fastcall WaveInDtor_re(void* self, void*) {
+    fat<void*>(self, 0) = c3dj_sound(0x0005b3d4);                             // 0x1000e8f0
+    c3dj_fn<Th0v_t>(0x00001e06)(self, 0);                                     // 0x1000e8f6 -> 0x1002a3b0
+}
+
+// 0x00028fb0  DeviceBase_scalarDtor (VA 0x10028fb0). The DeviceBase destructor body inline: ecx = the sub-object at +0x14
+// (0x10028fb3), the vtable 0x1005b8b0 (relocated) stored at this+0 (0x10028fb6), the sub-object's slot +0x14 CALLED with it in
+// ecx when non-NULL (0x10028fbc / 0x10028fbe / 0x10028fc0 / 0x10028fc2); then bit 0 of the stack flags (`test byte ptr
+// [esp+8], 1` 0x10028fc5) set -> operator delete 0x1004249a (0x10028fcd). Returns this (`ret 4` 0x10028fd8).
+Th1_t DeviceBaseScalar_orig;
+void* __fastcall DeviceBaseScalar_re(void* self, void*, unsigned flags) {
+    void* sub = fat<void*>(self, 0x14);                                       // 0x10028fb3
+    fat<void*>(self, 0) = c3dj_sound(0x0005b8b0);                             // 0x10028fb6
+    if (sub != 0) reinterpret_cast<Th0v_t>(c3dj_slot(sub, 0x14))(sub, 0);     // 0x10028fbe-0x10028fc2
+    if (flags & 1) c3dj_delete(self);                                         // 0x10028fc5 / 0x10028fca / 0x10028fcd
+    return self;                                                              // 0x10028fd5 / 0x10028fd8
+}
+
+// The 30-byte scalar-deleting destructors `push esi; mov esi, ecx; call <thunk>; test byte ptr [esp+8], 1; je; push esi; call
+// 0x1004249a; add esp, 4; mov eax, esi; pop esi; ret 4` (e.g. 0x10005740-0x1000575b): the destructor body is called through an
+// incremental-link thunk with this in ecx; bit 0 of the stack flags set -> operator delete; returns this.
+#define C3DJ_SCALAR(NAME, THUNK_RVA)                                                                     \
+    Th1_t NAME##_orig;                                                                                   \
+    void* __fastcall NAME##_re(void* self, void*, unsigned flags) {                                      \
+        c3dj_fn<Th0v_t>(THUNK_RVA)(self, 0);                                                             \
+        if (flags & 1) c3dj_delete(self);                                                                \
+        return self;                                                                                     \
+    }
+C3DJ_SCALAR(ctrlScalarDeletingDtor, 0x000014f1)          // 0x10005743: thunk 0x100014f1 -> initCtrlVtable 0x10005720
+C3DJ_SCALAR(cmdNodeScalarDeletingDtor, 0x00001816)       // 0x1000cc43: thunk 0x10001816 -> pairClear 0x10008840
+C3DJ_SCALAR(WaveInScalarDeletingDtor, 0x0000232e)        // 0x1000e8c3: thunk 0x1000232e -> Wave_In_Device::dtor 0x1000e8f0
+C3DJ_SCALAR(CtrlObject_scalarDtorB, 0x00001041)          // 0x1001c6e3: thunk 0x10001041 -> CtrlObject_dtorB 0x1001c710
+C3DJ_SCALAR(CtrlObject_scalarDtorC, 0x00001ab9)          // 0x1001cba3: thunk 0x10001ab9 -> CtrlObject_dtorC 0x1001cbd0
+C3DJ_SCALAR(CtrlObject_scalarDtorD, 0x000024af)          // 0x1001cca3: thunk 0x100024af -> CtrlObject_dtorD 0x1001ccd0
+C3DJ_SCALAR(MidiDeviceBase_scalarDtor, 0x00001b22)       // 0x10029f33: thunk 0x10001b22 -> DeviceBase_dtorB 0x10029f60
+C3DJ_SCALAR(WaveInDeviceBase_scalarDtor, 0x00001e06)     // 0x1002a383: thunk 0x10001e06 -> DeviceBase_dtorC 0x1002a3b0
+
+// 0x00038ae0  MemBlock_deleteDtor (VA 0x10038ae0). One stack argument, the flags (`ret 4` 0x10038b0c). The pointer at this+0
+// (0x10038ae3) non-NULL (`test eax, eax` / `je` 0x10038ae5 / 0x10038ae7) is released by operator delete 0x1004249a
+// (0x10038aea); the flags byte is read from the stack AFTER that call (`mov al, [esp+8]` 0x10038af2); +0 is cleared
+// (0x10038af6); bit 0 of the flags set (`test al, 1` 0x10038afc) -> operator delete of this (0x10038b01). Returns this.
+Th1_t MemBlockDtor_orig;
+void* __fastcall MemBlockDtor_re(void* self, void*, unsigned flags) {
+    void* data = fat<void*>(self, 0);                                         // 0x10038ae3
+    if (data != 0) c3dj_delete(data);                                         // 0x10038ae7 / 0x10038aea
+    fat<unsigned>(self, 0) = 0;                                               // 0x10038af6
+    if (flags & 1) c3dj_delete(self);                                         // 0x10038afc / 0x10038afe / 0x10038b01
+    return self;                                                              // 0x10038b09 / 0x10038b0c
+}
+
+// =====================================================================================================================
+// D. The channel/voice destructor family: SubChannel_dtor, Ch5bb90_dtor, destroyMixerVoices, Mixer_dtor, Ch5be88_dtorA/B,
+//    Ch5c178_dtor, Ch5c234_dtor, Ch5c2ec_dtor, unlinkFromActiveList and their scalar-deleting wrappers
+// =====================================================================================================================
+// Shared layout (every body reads the same fields): +0x40 a sound object released by delete_sound 0x100097d0 through the thunk
+// 0x10001a87 (cdecl, one stack argument, `push eax; call 0x10001a87; add esp, 4`); +0x44 a flag dword whose bit 1 says the object is
+// linked into the module's doubly linked ACTIVE LIST; +0x48 the previous object, +0x4c the next object; +0x50 a buffer released
+// by operator delete 0x1004249a. The list ends are the module globals 0x100b5070 (head: the object whose previous is NULL) and
+// 0x100b506c (tail). Every body also stores a chain of vtables at this+0; the intermediate ones are overwritten before anything
+// reads them, so only the last one (0x1005bb80 for all of these) is observable. Each body runs inside a C++ frame (fs:[0] chain)
+// that no path of the body uses.
+
+void c3dj_deleteSound(void* p) { reinterpret_cast<OpDelete_t>(c3dj_sound(0x00001a87))(p); }   // thunk 0x10001a87 -> 0x100097d0
+static inline unsigned& c3dj_listHead() { return *reinterpret_cast<unsigned*>(c3dj_sound(0x000b5070)); }   // 0x100b5070
+static inline unsigned& c3dj_listTail() { return *reinterpret_cast<unsigned*>(c3dj_sound(0x000b506c)); }   // 0x100b506c
+
+// The unlink block, e.g. 0x1002ac56-0x1002ac91 in SubChannel_dtor: eax = the previous object (+0x48). With a previous object its
+// +0x4c takes this->+0x4c (0x1002ac5d / 0x1002ac60); without one the global head 0x100b5070 takes this->+0x4c (0x1002ac65 /
+// 0x1002ac68). eax = the next object (+0x4c, 0x1002ac6e): with one its +0x48 takes this->+0x48 (0x1002ac75 / 0x1002ac78); without
+// one the global tail 0x100b506c takes this->+0x48 (0x1002ac7d / 0x1002ac80). The flag dword is read (0x1002ac86) after those writes,
+// bit 1 of its low byte is cleared (`and al, 0xfd` 0x1002ac8c), and +0x4c = 0 (0x1002ac89), +0x48 = 0 (0x1002ac8e), +0x44 = the
+// flag dword (0x1002ac91) are stored.
+static void c3dj_unlinkActive(char* self) {
+    char* prev = fat<char*>(self, 0x48);
+    if (prev != 0) fat<unsigned>(prev, 0x4c) = fat<unsigned>(self, 0x4c);
+    else c3dj_listHead() = fat<unsigned>(self, 0x4c);
+    char* next = fat<char*>(self, 0x4c);
+    if (next != 0) fat<unsigned>(next, 0x48) = fat<unsigned>(self, 0x48);
+    else c3dj_listTail() = fat<unsigned>(self, 0x48);
+    unsigned flags = fat<unsigned>(self, 0x44);
+    flags = (flags & ~0xffu) | static_cast<unsigned char>(flags & 0xfd);
+    fat<unsigned>(self, 0x4c) = 0;
+    fat<unsigned>(self, 0x48) = 0;
+    fat<unsigned>(self, 0x44) = flags;
+}
+
+// 0x0002b090  unlinkFromActiveList (VA 0x1002b090). Bit 1 of the flag byte at +0x44 clear returns 0 (`test byte ptr [ecx+0x44], 2`
+// 0x1002b090 / `jne` 0x1002b094, `xor eax, eax` 0x1002b096). Otherwise the unlink block (previous object +0x48 at 0x1002b099 ->
+// its +0x4c at 0x1002b0a6, or the head 0x100b5070 at 0x1002b0ae; next object +0x4c at 0x1002b0b3 -> its +0x48 at 0x1002b0bd, or
+// the tail 0x100b506c at 0x1002b0d6; flags and links cleared at 0x1002b0c5-0x1002b0cb / 0x1002b0e0-0x1002b0e6) and returns 0.
+Th0u_t UnlinkActive_orig;
+unsigned __fastcall UnlinkActive_re(void* self, void*) {
+    if ((fat<unsigned char>(self, 0x44) & 2) == 0) return 0;                   // 0x1002b090 / 0x1002b094 / 0x1002b096
+    c3dj_unlinkActive(static_cast<char*>(self));                               // 0x1002b099-0x1002b0eb
+    return 0;
+}
+
+// 0x0002ac00  SubChannel_dtor (VA 0x1002ac00). Transient vtable 0x1005bae0 (0x1002ac1e). The buffer at +0x50 (0x1002ac24) non-NULL
+// is released with operator delete (0x1002ac32) and +0x50 cleared (0x1002ac3a); the sound object at +0x40 (0x1002ac3d) non-NULL is
+// released with delete_sound (thunk 0x10001a87, 0x1002ac45) and +0x40 cleared (0x1002ac4d); bit 1 of the byte at +0x44 (0x1002ac50)
+// set -> the unlink block (0x1002ac56-0x1002ac91); the final vtable 0x1005bb80 (relocated) is stored at +0 (0x1002ac98). No result.
+Th0v_t SubChannelDtor_orig;
+void __fastcall SubChannelDtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    void* p = fat<void*>(o, 0x50);                                             // 0x1002ac24
+    if (p != 0) { c3dj_delete(p); fat<unsigned>(o, 0x50) = 0; }               // 0x1002ac29 / 0x1002ac32 / 0x1002ac3a
+    void* q = fat<void*>(o, 0x40);                                             // 0x1002ac3d
+    if (q != 0) { c3dj_deleteSound(q); fat<unsigned>(o, 0x40) = 0; }          // 0x1002ac42 / 0x1002ac45 / 0x1002ac4d
+    if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                // 0x1002ac50 / 0x1002ac54
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002ac98
+}
+
+// 0x0002b620  Ch5bb90_dtor (VA 0x1002b620). First stage (vtable 0x1005bb90, 0x1002b63e): the buffer at +0x50 (0x1002b644) non-NULL is
+// released with operator delete (0x1002b652); the flag byte at +0x44 is read (0x1002b65a), +0x50 is cleared whether or not there was a
+// buffer (0x1002b65d), and bit 1 of the byte read -> the unlink block (0x1002b664-0x1002b69f). Second stage (vtable 0x1005bae0,
+// 0x1002b6a2): +0x50 is zero here, so 0x1002b6b5 is never taken; the sound object at +0x40 (0x1002b6c3) non-NULL is released with
+// delete_sound (0x1002b6cb) and +0x40 cleared (0x1002b6d3); bit 1 of the byte at +0x44 (0x1002b6d6) -> a second unlink block
+// (0x1002b6dc-0x1002b717), which the first block already made unreachable (it cleared that bit). Final vtable 0x1005bb80 at +0
+// (0x1002b71e). No result.
+Th0v_t Ch5bb90Dtor_orig;
+void __fastcall Ch5bb90Dtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    void* p = fat<void*>(o, 0x50);                                             // 0x1002b644
+    if (p != 0) c3dj_delete(p);                                                // 0x1002b649 / 0x1002b652
+    unsigned char fl = fat<unsigned char>(o, 0x44);                            // 0x1002b65a
+    fat<unsigned>(o, 0x50) = 0;                                                // 0x1002b65d
+    if (fl & 2) c3dj_unlinkActive(o);                                          // 0x1002b660 / 0x1002b662
+    void* p2 = fat<void*>(o, 0x50);                                            // 0x1002b6a8
+    if (p2 != 0) { c3dj_delete(p2); fat<unsigned>(o, 0x50) = 0; }             // 0x1002b6b3 / 0x1002b6b5 (dead: +0x50 is 0)
+    void* q = fat<void*>(o, 0x40);                                             // 0x1002b6c3
+    if (q != 0) { c3dj_deleteSound(q); fat<unsigned>(o, 0x40) = 0; }          // 0x1002b6c6 / 0x1002b6cb / 0x1002b6d3
+    if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                // 0x1002b6d6 / 0x1002b6da (dead after the first block)
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002b71e
+}
+
+// 0x0002c5e0  destroyMixerVoices (VA 0x1002c5e0). Vtable 0x1005bcb4 (0x1002c600). A loop of 0x28 pointers from +0x6c (edi = this+0x6c
+// 0x1002c608, ebx = 0x28 0x1002c60f, back edge `jne` 0x1002c629): each non-NULL pointer is released with operator delete (0x1002c61b)
+// and its slot cleared (0x1002c623). Vtable 0x1005bb90 (0x1002c62b); +0x50 non-NULL (0x1002c631) -> operator delete (0x1002c641);
+// +0x50 = 0 (0x1002c653, unconditional); bit 1 of the byte at +0x44 (`test bl, al` with bl = 2, 0x1002c651) -> the unlink block
+// (0x1002c65d-0x1002c698, mask 0xfffffffd in edi). Vtable 0x1005bae0 (0x1002c69b); +0x50 is zero (0x1002c6a1, dead 0x1002c6ac); the
+// sound object at +0x40 (0x1002c6b8) non-NULL -> delete_sound (0x1002c6c0) and +0x40 = 0 (0x1002c6c8); bit 1 (0x1002c6cb) -> a second
+// unlink block (0x1002c6d0-0x1002c70b), unreachable after the first. Final vtable 0x1005bb80 (0x1002c712). No result.
+Th0v_t MixerVoicesDtor_orig;
+void __fastcall MixerVoicesDtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    for (int i = 0; i < 0x28; i++) {                                           // 0x1002c60f / 0x1002c628 / 0x1002c629
+        void* e = fat<void*>(o, 0x6c + 4 * i);                                 // 0x1002c614
+        if (e != 0) { c3dj_delete(e); fat<unsigned>(o, 0x6c + 4 * i) = 0; }   // 0x1002c616 / 0x1002c61b / 0x1002c623
+    }
+    void* p = fat<void*>(o, 0x50);                                             // 0x1002c631
+    if (p != 0) c3dj_delete(p);                                                // 0x1002c63c / 0x1002c641
+    unsigned char fl = fat<unsigned char>(o, 0x44);                            // 0x1002c649
+    fat<unsigned>(o, 0x50) = 0;                                                // 0x1002c653
+    if (fl & 2) c3dj_unlinkActive(o);                                          // 0x1002c651 / 0x1002c65b
+    void* p2 = fat<void*>(o, 0x50);                                            // 0x1002c6a1
+    if (p2 != 0) { c3dj_delete(p2); fat<unsigned>(o, 0x50) = 0; }             // 0x1002c6a8 / 0x1002c6ac (dead)
+    void* q = fat<void*>(o, 0x40);                                             // 0x1002c6b8
+    if (q != 0) { c3dj_deleteSound(q); fat<unsigned>(o, 0x40) = 0; }          // 0x1002c6bb / 0x1002c6c0 / 0x1002c6c8
+    if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                // 0x1002c6cb / 0x1002c6ce (dead after the first block)
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002c712
+}
+
+// 0x0002cb00  Mixer_dtor (VA 0x1002cb00). Vtable 0x1005bdd8 (0x1002cb20); a loop of 0x28 pointers from +0x58 (edi = this+0x58
+// 0x1002cb28, ebx = 0x28 0x1002cb2f, back edge 0x1002cb49): each non-NULL pointer -> operator delete (0x1002cb3b), slot cleared
+// (0x1002cb43). Vtable 0x1005bae0 (0x1002cb4b); +0x50 non-NULL (0x1002cb51) -> operator delete (0x1002cb61) and +0x50 = 0
+// (0x1002cb69); +0x40 non-NULL (0x1002cb6c) -> delete_sound (0x1002cb74) and +0x40 = 0 (0x1002cb7c); bit 1 of the byte at +0x44
+// (0x1002cb7f) -> the unlink block (0x1002cb85-0x1002cbc0). Final vtable 0x1005bb80 (0x1002cbc7). No result.
+Th0v_t MixerDtor_orig;
+void __fastcall MixerDtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    for (int i = 0; i < 0x28; i++) {                                           // 0x1002cb2f / 0x1002cb48 / 0x1002cb49
+        void* e = fat<void*>(o, 0x58 + 4 * i);                                 // 0x1002cb34
+        if (e != 0) { c3dj_delete(e); fat<unsigned>(o, 0x58 + 4 * i) = 0; }   // 0x1002cb36 / 0x1002cb3b / 0x1002cb43
+    }
+    void* p = fat<void*>(o, 0x50);                                             // 0x1002cb51
+    if (p != 0) { c3dj_delete(p); fat<unsigned>(o, 0x50) = 0; }               // 0x1002cb5c / 0x1002cb61 / 0x1002cb69
+    void* q = fat<void*>(o, 0x40);                                             // 0x1002cb6c
+    if (q != 0) { c3dj_deleteSound(q); fat<unsigned>(o, 0x40) = 0; }          // 0x1002cb6f / 0x1002cb74 / 0x1002cb7c
+    if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                // 0x1002cb7f / 0x1002cb83
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002cbc7
+}
+
+// 0x0002d560  Ch5be88_dtorA and 0x0002e660 Ch5be88_dtorB (VAs 0x1002d560 / 0x1002e660; the same body 0x1100 bytes apart, only the
+// exception-table pointer differs). Vtable 0x1005be88 (0x1002d57e). +0x50 non-NULL (0x1002d584) -> operator delete (0x1002d592);
+// +0x40 is read (0x1002d59a) and +0x50 = 0 is stored whether or not there was a buffer (0x1002d59d); a non-NULL +0x40 -> delete_sound
+// (0x1002d5a5); +0x40 = 0 (0x1002d5ad) and +0x5c = 0 (0x1002d5b0) unconditionally. Vtable 0x1005bae0 (0x1002d5b3); +0x50 and +0x40 are
+// zero here (the tests at 0x1002d5c4 / 0x1002d5d7 are dead); bit 1 of the byte at +0x44 (0x1002d5e7) -> the unlink block
+// (0x1002d5ed-0x1002d628). Final vtable 0x1005bb80 (0x1002d62f). No result.
+#define C3DJ_BE88_DTOR(NAME)                                                                             \
+    Th0v_t NAME##_orig;                                                                                  \
+    void __fastcall NAME##_re(void* self, void*) {                                                       \
+        char* o = static_cast<char*>(self);                                                              \
+        void* p = fat<void*>(o, 0x50);                                                                   \
+        if (p != 0) c3dj_delete(p);                                                                      \
+        void* q = fat<void*>(o, 0x40);                                                                   \
+        fat<unsigned>(o, 0x50) = 0;                                                                      \
+        if (q != 0) c3dj_deleteSound(q);                                                                 \
+        fat<unsigned>(o, 0x40) = 0;                                                                      \
+        fat<unsigned>(o, 0x5c) = 0;                                                                      \
+        if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                                       \
+        fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                                       \
+    }
+C3DJ_BE88_DTOR(Ch5be88_dtorA)
+C3DJ_BE88_DTOR(Ch5be88_dtorB)
+
+// 0x0002ea30  Ch5c178_dtor (VA 0x1002ea30). Vtable 0x1005c178 (0x1002ea4e). The object at +0x40 (0x1002ea54) non-NULL: its first
+// vtable slot is CALLED with it in ecx and the argument 1 (`mov eax, [ecx]; push 1; call [eax]` 0x1002ea61-0x1002ea65: a deleting
+// destructor) and +0x40 = 0 (0x1002ea67). Vtable 0x1005bae0 (0x1002ea6a); +0x50 non-NULL (0x1002ea70) -> operator delete (0x1002ea80)
+// and +0x50 = 0 (0x1002ea88); +0x40 is zero here (the delete_sound test at 0x1002ea8e is dead); bit 1 of the byte at +0x44
+// (0x1002ea9e) -> the unlink block (0x1002eaa4-0x1002eadf). Final vtable 0x1005bb80 (0x1002eae6). No result.
+Th0v_t Ch5c178Dtor_orig;
+void __fastcall Ch5c178Dtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    void* sub = fat<void*>(o, 0x40);                                           // 0x1002ea54
+    if (sub != 0) {                                                            // 0x1002ea59 / 0x1002ea5f
+        reinterpret_cast<Th1_t>(fat<void*>(fat<void*>(sub, 0), 0))(sub, 0, 1); // 0x1002ea61-0x1002ea65
+        fat<unsigned>(o, 0x40) = 0;                                            // 0x1002ea67
+    }
+    void* p = fat<void*>(o, 0x50);                                             // 0x1002ea70
+    if (p != 0) { c3dj_delete(p); fat<unsigned>(o, 0x50) = 0; }               // 0x1002ea7b / 0x1002ea80 / 0x1002ea88
+    void* q = fat<void*>(o, 0x40);                                             // 0x1002ea8b
+    if (q != 0) { c3dj_deleteSound(q); fat<unsigned>(o, 0x40) = 0; }          // 0x1002ea8e / 0x1002ea93 / 0x1002ea9b (dead: +0x40 is 0)
+    if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                // 0x1002ea9e / 0x1002eaa2
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002eae6
+}
+
+// 0x0002ef40  Ch5c234_dtor (VA 0x1002ef40). Vtable 0x1005c234 (0x1002ef5e). The object at +0x40 (0x1002ef64) non-NULL: its first vtable
+// slot is called with it in ecx and the argument 1 (0x1002ef71-0x1002ef75) and +0x40 = 0 (0x1002ef77). +0x50 non-NULL (0x1002ef7a) ->
+// operator delete (0x1002ef82) and +0x50 = 0 (0x1002ef8a). Vtable 0x1005bae0 (0x1002ef8d); +0x50 is zero (0x1002ef93, dead 0x1002ef9e);
+// +0x40 is zero (0x1002efae, dead 0x1002efb3: the delete_sound call); bit 1 of the byte at +0x44 (0x1002efc1) -> the unlink block
+// (0x1002efc7-0x1002f002). Final vtable 0x1005bb80 (0x1002f009). No result.
+Th0v_t Ch5c234Dtor_orig;
+void __fastcall Ch5c234Dtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    void* sub = fat<void*>(o, 0x40);                                           // 0x1002ef64
+    if (sub != 0) {                                                            // 0x1002ef69 / 0x1002ef6f
+        reinterpret_cast<Th1_t>(fat<void*>(fat<void*>(sub, 0), 0))(sub, 0, 1); // 0x1002ef71-0x1002ef75
+        fat<unsigned>(o, 0x40) = 0;                                            // 0x1002ef77
+    }
+    void* p = fat<void*>(o, 0x50);                                             // 0x1002ef7a
+    if (p != 0) { c3dj_delete(p); fat<unsigned>(o, 0x50) = 0; }               // 0x1002ef7d / 0x1002ef82 / 0x1002ef8a
+    if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                // 0x1002efc1 / 0x1002efc5
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002f009
+}
+
+// 0x0002f3f0  Ch5c2ec_dtor (VA 0x1002f3f0). Vtable 0x1005c2ec (0x1002f40e). +0x40 (0x1002f414) non-NULL -> delete_sound (0x1002f422);
+// +0x50 is read (0x1002f42a) and +0x40 = 0 is stored whether or not there was a sound object (0x1002f42d); +0x50 non-NULL ->
+// operator delete (0x1002f435) and +0x50 = 0 (0x1002f43d). Vtable 0x1005bae0 (0x1002f440); +0x50 and +0x40 are zero (0x1002f446 /
+// 0x1002f461: the tests at 0x1002f451 / 0x1002f464 are dead); bit 1 of the byte at +0x44 (0x1002f474) -> the unlink block
+// (0x1002f47a-0x1002f4b5). Final vtable 0x1005bb80 (0x1002f4bc). No result.
+Th0v_t Ch5c2ecDtor_orig;
+void __fastcall Ch5c2ecDtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    void* q = fat<void*>(o, 0x40);                                             // 0x1002f414
+    if (q != 0) c3dj_deleteSound(q);                                           // 0x1002f419 / 0x1002f41f / 0x1002f422
+    void* p = fat<void*>(o, 0x50);                                             // 0x1002f42a
+    fat<unsigned>(o, 0x40) = 0;                                                // 0x1002f42d
+    if (p != 0) { c3dj_delete(p); fat<unsigned>(o, 0x50) = 0; }               // 0x1002f430 / 0x1002f435 / 0x1002f43d
+    if (fat<unsigned char>(o, 0x44) & 2) c3dj_unlinkActive(o);                // 0x1002f474 / 0x1002f478
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb80);                                // 0x1002f4bc
+}
+
+// The 30-byte scalar-deleting wrappers of this family (see the C3DJ_SCALAR comment above): thunk -> destructor body.
+C3DJ_SCALAR(SubChannel_scalarDtor, 0x00001eb5)           // 0x1002abd3: thunk 0x10001eb5 -> SubChannel_dtor 0x1002ac00
+C3DJ_SCALAR(Ch5bb90_scalarDtor, 0x00002108)              // 0x1002b5f3: thunk 0x10002108 -> Ch5bb90_dtor 0x1002b620
+C3DJ_SCALAR(MixerVoiceArray_scalarDtor, 0x00001f1e)      // 0x1002c5b3: thunk 0x10001f1e -> destroyMixerVoices 0x1002c5e0
+C3DJ_SCALAR(Mixer_scalarDtor, 0x00001e92)                // 0x1002cad3: thunk 0x10001e92 -> Mixer_dtor 0x1002cb00
+C3DJ_SCALAR(Ch5be88_scalarDtorA, 0x00001cc1)             // 0x1002d533: thunk 0x10001cc1 -> Ch5be88_dtorA 0x1002d560
+C3DJ_SCALAR(Ch5be88_scalarDtorB, 0x00001c94)             // 0x1002e633: thunk 0x10001c94 -> Ch5be88_dtorB 0x1002e660
+C3DJ_SCALAR(Ch5c178_scalarDtor, 0x00001a78)              // 0x1002ea03: thunk 0x10001a78 -> Ch5c178_dtor 0x1002ea30
+C3DJ_SCALAR(Ch5c234_scalarDtor, 0x00001cc6)              // 0x1002ef13: thunk 0x10001cc6 -> Ch5c234_dtor 0x1002ef40
+C3DJ_SCALAR(Ch5c2ec_scalarDtor, 0x00002612)              // 0x1002f3c3: thunk 0x10002612 -> Ch5c2ec_dtor 0x1002f3f0
+
+// =====================================================================================================================
+// E. DsBuffer / Ds3DBuffer: thin methods over the COM-shaped interfaces they hold (+0x60 the buffer, +0x64 the 3D buffer,
+//    +0x68 the notify source, +0x6c the notify interface). The fixtures answer every vtable slot with a recording stdcall stub.
+// =====================================================================================================================
+typedef unsigned(__stdcall* Com1_t)(void*);
+typedef unsigned(__stdcall* Com2_t)(void*, unsigned);
+typedef unsigned(__stdcall* Com3_t)(void*, unsigned, unsigned);
+typedef unsigned(__stdcall* Com5_t)(void*, unsigned, unsigned, unsigned, unsigned);
+
+// A COM-shaped call: the interface is the first argument, the slot is [[com] + off].
+static inline unsigned c3dj_com1(void* com, unsigned off) { return reinterpret_cast<Com1_t>(c3dj_slot(com, off))(com); }
+static inline unsigned c3dj_com2(void* com, unsigned off, unsigned a) { return reinterpret_cast<Com2_t>(c3dj_slot(com, off))(com, a); }
+static inline unsigned c3dj_com3(void* com, unsigned off, unsigned a, unsigned b) {
+    return reinterpret_cast<Com3_t>(c3dj_slot(com, off))(com, a, b);
+}
+static inline unsigned c3dj_com5(void* com, unsigned off, unsigned a, unsigned b, unsigned c, unsigned d) {
+    return reinterpret_cast<Com5_t>(c3dj_slot(com, off))(com, a, b, c, d);
+}
+
+// 0x0000f760  DsBuffer::stop (VA 0x1000f760). The interface at +0x60 (0x1000f760); NULL returns 2 (`test eax, eax` / `jne` 0x1000f763 /
+// 0x1000f765, `mov eax, 2` 0x1000f767). Otherwise its slot +0x48 is called with the interface as the only argument (`mov ecx, [eax];
+// push eax; call [ecx+0x48]` 0x1000f76d-0x1000f770) and 0 is returned whatever it returned (`xor eax, eax` 0x1000f773).
+Th0u_t DsStop_orig;
+unsigned __fastcall DsStop_re(void* self, void*) {
+    void* com = fat<void*>(self, 0x60);                                        // 0x1000f760
+    if (com == 0) return 2;                                                    // 0x1000f765 / 0x1000f767
+    c3dj_com1(com, 0x48);                                                      // 0x1000f770
+    return 0;                                                                  // 0x1000f773
+}
+
+// 0x00010370  DsBuffer::unlock (VA 0x10010370). Four stack arguments (`ret 0x10` 0x10010397). The interface at +0x60 (0x10010370);
+// NULL returns 0 (`je` 0x10010375 -> `xor eax, eax` 0x10010395). Otherwise slot +0x4c is called with (interface, a1, a2, a3, a4)
+// (the pushes at 0x10010382 / 0x1001038c push a4, a3, a2, a1 in that order, then the interface 0x1001038d, call 0x1001038e); its
+// result is stored into the caller's argument slot (0x10010391) and 0 is returned (0x10010395).
+typedef unsigned(__fastcall* DsUnlock_t)(void*, void*, unsigned, unsigned, unsigned, unsigned);
+DsUnlock_t DsUnlock_orig;
+unsigned __fastcall DsUnlock_re(void* self, void*, unsigned a1, unsigned a2, unsigned a3, unsigned a4) {
+    void* com = fat<void*>(self, 0x60);                                        // 0x10010370
+    if (com == 0) return 0;                                                    // 0x10010375 / 0x10010395
+    c3dj_com5(com, 0x4c, a1, a2, a3, a4);                                      // 0x1001038e
+    return 0;                                                                  // 0x10010395
+}
+
+// 0x00010e30  DsBuffer::isBusy (VA 0x10010e30). The interface at +0x60 (0x10010e34); NULL returns it, 0 (`jne` 0x10010e39 not taken,
+// eax = 0 at `ret` 0x10010e3d). Otherwise slot +0x24 is called with (interface, &local) (`lea edx, [esp+4]` 0x10010e40; push edx;
+// push eax; call [ecx+0x24] 0x10010e46) and local is the status dword it wrote; a non-zero dword at +0x44 (0x10010e49 / 0x10010e4c)
+// returns 1 (0x10010e50); otherwise the result is bit 0 of the status (`and eax, 1` 0x10010e5d).
+Th0u_t DsIsBusy_orig;
+unsigned __fastcall DsIsBusy_re(void* self, void*) {
+    void* com = fat<void*>(self, 0x60);                                        // 0x10010e34
+    if (com == 0) return 0;                                                    // 0x10010e37 / 0x10010e39
+    unsigned status = 0;
+    c3dj_com2(com, 0x24, reinterpret_cast<unsigned>(&status));                 // 0x10010e46
+    if (fat<unsigned>(self, 0x44) != 0) return 1;                              // 0x10010e49 / 0x10010e4c / 0x10010e50
+    return status & 1;                                                         // 0x10010e58 / 0x10010e5d
+}
+
+// 0x0000ff60  DsBuffer::queryNotify (VA 0x1000ff60). QueryInterface (slot +0 of the interface's vtable, `call [ecx]` 0x1000ff74 /
+// 0x1000ff8b) with (interface, the identifier at 0x1005d52c (relocated), &this->+0x6c). The interface at +0x68 is tried first
+// (0x1000ff60 / 0x1000ff66 / 0x1000ff68-0x1000ff74); with +0x68 NULL the one at +0x64 is used (0x1000ff78 / 0x1000ff7d /
+// 0x1000ff7f-0x1000ff8b); with both NULL the function returns 0 without a call (0x1000ff7d -> 0x1000ff91). A non-negative result
+// (`test eax, eax` / `jl` 0x1000ff8d / 0x1000ff8f) returns 0 (0x1000ff91); a negative one clears +0x6c (0x1000ff95) and returns 0xb
+// (0x1000ff9b).
+Th0u_t DsQueryNotify_orig;
+unsigned __fastcall DsQueryNotify_re(void* self, void*) {
+    void* com = fat<void*>(self, 0x68);                                        // 0x1000ff60
+    if (com == 0) {                                                            // 0x1000ff66
+        com = fat<void*>(self, 0x64);                                          // 0x1000ff78
+        if (com == 0) return 0;                                                // 0x1000ff7d
+    }
+    int hr = static_cast<int>(c3dj_com3(com, 0, reinterpret_cast<unsigned>(c3dj_sound(0x0005d52c)),
+                                        reinterpret_cast<unsigned>(static_cast<char*>(self) + 0x6c)));   // 0x1000ff74 / 0x1000ff8b
+    if (hr >= 0) return 0;                                                     // 0x1000ff8f / 0x1000ff91
+    fat<unsigned>(self, 0x6c) = 0;                                             // 0x1000ff95
+    return 0xb;                                                                // 0x1000ff9b
+}
+
+// 0x0000fef0  DsBuffer::query3D (VA 0x1000fef0). The interface at +0x60 (0x1000fef3); NULL returns 0x14 (0x1000fefa). Otherwise
+// QueryInterface (slot +0, `call [ecx]` 0x1000ff1d) with (interface, an identifier, an output pointer): bit 1 of the byte at +0
+// (`test byte ptr [esi], 2` 0x1000ff01) selects the identifier at 0x1005d58c (relocated) with the output &this->+0x68
+// (0x1000ff08-0x1000ff0c), otherwise the identifier at 0x1005d57c with &this->+0x64 (0x1000ff13-0x1000ff17). A non-negative
+// result (`jl` 0x1000ff21) returns 0 (0x1000ff23); a negative one clears +0x68 and +0x64 (0x1000ff27 / 0x1000ff2e) and returns
+// 0xb (0x1000ff35).
+Th0u_t DsQuery3D_orig;
+unsigned __fastcall DsQuery3D_re(void* self, void*) {
+    void* com = fat<void*>(self, 0x60);                                        // 0x1000fef3
+    if (com == 0) return 0x14;                                                 // 0x1000fef8 / 0x1000fefa
+    unsigned iid, out;
+    if (fat<unsigned char>(self, 0) & 2) {                                     // 0x1000ff01 / 0x1000ff06
+        out = reinterpret_cast<unsigned>(static_cast<char*>(self) + 0x68);     // 0x1000ff08
+        iid = reinterpret_cast<unsigned>(c3dj_sound(0x0005d58c));              // 0x1000ff0c
+    } else {
+        out = reinterpret_cast<unsigned>(static_cast<char*>(self) + 0x64);     // 0x1000ff13
+        iid = reinterpret_cast<unsigned>(c3dj_sound(0x0005d57c));              // 0x1000ff17
+    }
+    int hr = static_cast<int>(c3dj_com3(com, 0, iid, out));                    // 0x1000ff1d
+    if (hr >= 0) return 0;                                                     // 0x1000ff21 / 0x1000ff23
+    fat<unsigned>(self, 0x68) = 0;                                             // 0x1000ff27
+    fat<unsigned>(self, 0x64) = 0;                                             // 0x1000ff2e
+    return 0xb;                                                                // 0x1000ff35
+}
+
+// 0x00011070 / 0x000110c0 / 0x00011110  Ds3DBuffer::setPositionX / Y / Z (VAs 0x10011070 / 0x100110c0 / 0x10011110). One stack
+// argument (`ret 4`), the new coordinate (a float passed as its raw dword). The 3D interface at +0x64 (0x10011070 etc.); NULL
+// returns 0xb (0x10011077). Otherwise the coordinate is stored at +0xc8 (X, 0x1001108a) / +0xcc (Y, 0x100110e1) / +0xd0 (Z,
+// 0x10011131), and slot +0x4c of the interface is called with (interface, x, y, z, 0) where the other two coordinates are read
+// from +0xc8 / +0xcc / +0xd0 (0x10011090-0x100110a2, 0x100110e7-0x100110f2, 0x10011137-0x10011142). Returns 0 whatever it
+// returned (`xor eax, eax` 0x100110a5 / 0x100110f5 / 0x10011145).
+typedef unsigned(__fastcall* Th1u_t)(void*, void*, unsigned);
+Th1u_t Ds3DSetX_orig;
+Th1u_t Ds3DSetY_orig;
+Th1u_t Ds3DSetZ_orig;
+unsigned __fastcall Ds3DSetX_re(void* self, void*, unsigned x) {
+    void* com = fat<void*>(self, 0x64);                                        // 0x10011070
+    if (com == 0) return 0xb;                                                  // 0x10011075 / 0x10011077
+    unsigned z = fat<unsigned>(self, 0xd0);                                    // 0x10011084
+    fat<unsigned>(self, 0xc8) = x;                                             // 0x1001108a
+    unsigned y = fat<unsigned>(self, 0xcc);                                    // 0x10011090
+    c3dj_com5(com, 0x4c, x, y, z, 0);                                          // 0x100110a2
+    return 0;                                                                  // 0x100110a5
+}
+unsigned __fastcall Ds3DSetY_re(void* self, void*, unsigned y) {
+    void* com = fat<void*>(self, 0x64);                                        // 0x100110c0
+    if (com == 0) return 0xb;                                                  // 0x100110c5 / 0x100110c7
+    unsigned z = fat<unsigned>(self, 0xd0);                                    // 0x100110d4
+    fat<unsigned>(self, 0xcc) = y;                                             // 0x100110e1
+    unsigned x = fat<unsigned>(self, 0xc8);                                    // 0x100110e7
+    c3dj_com5(com, 0x4c, x, y, z, 0);                                          // 0x100110f2
+    return 0;                                                                  // 0x100110f5
+}
+unsigned __fastcall Ds3DSetZ_re(void* self, void*, unsigned z) {
+    void* com = fat<void*>(self, 0x64);                                        // 0x10011110
+    if (com == 0) return 0xb;                                                  // 0x10011115 / 0x10011117
+    unsigned y = fat<unsigned>(self, 0xcc);                                    // 0x1001112b
+    fat<unsigned>(self, 0xd0) = z;                                             // 0x10011131
+    unsigned x = fat<unsigned>(self, 0xc8);                                    // 0x10011137
+    c3dj_com5(com, 0x4c, x, y, z, 0);                                          // 0x10011142
+    return 0;                                                                  // 0x10011145
+}
+
+// 0x00011000  Ds3DBuffer::setPosition (VA 0x10011000). Three stack arguments x, y, z (`ret 0xc` 0x10011047). The 3D interface at +0x64
+// (0x10011000); NULL returns 0xb (0x10011007). Otherwise +0xc8 = x, +0xcc = y, +0xd0 = z (0x10011015 / 0x1001101f / 0x10011029),
+// and slot +0x4c is called with (interface, x, y, z, 0) (pushes 0x10011013, 0x10011031-0x1001103c, call 0x1001103d). A zero
+// result returns 0, any other result returns 0x1f (`neg eax; sbb eax, eax; and eax, 0x1f` 0x10011040-0x10011044).
+typedef unsigned(__fastcall* Th3_t)(void*, void*, unsigned, unsigned, unsigned);
+Th3_t Ds3DSetPos_orig;
+unsigned __fastcall Ds3DSetPos_re(void* self, void*, unsigned x, unsigned y, unsigned z) {
+    void* com = fat<void*>(self, 0x64);                                        // 0x10011000
+    if (com == 0) return 0xb;                                                  // 0x10011005 / 0x10011007
+    fat<unsigned>(self, 0xc8) = x;                                             // 0x10011015
+    fat<unsigned>(self, 0xcc) = y;                                             // 0x1001101f
+    fat<unsigned>(self, 0xd0) = z;                                             // 0x10011029
+    unsigned r = c3dj_com5(com, 0x4c, x, y, z, 0);                             // 0x1001103d
+    return r != 0 ? 0x1f : 0;                                                  // 0x10011040-0x10011044
+}
+
+// 0x0000f790  DsBuffer::setPosition (VA 0x1000f790). The interface at +0x60 (0x1000f799) non-NULL: slot +0x34 is called with
+// (interface, 0) (`push edi` with edi = 0, `call [ecx+0x34]` 0x1000f7a2-0x1000f7a4), then slot +0x10 with (interface, &local1,
+// &local2) (the pointers to two stack dwords, 0x1000f7aa-0x1000f7b7; the interface is read again from +0x60 at 0x1000f7a7). Then,
+// whether or not there was an interface: the byte at +4 is read (0x1000f7ba); +0x24, +0x28, +0x2c, +0x30, +0xc, +0x10, +0x14,
+// +0x18, +0x1c, +0x48 and +0x4c are cleared (0x1000f7bd-0x1000f7dd) and bit 0 of the byte read is set and stored back at +4
+// (`or al, 1` 0x1000f7c0, `mov byte ptr [esi+4], al` 0x1000f7e0). Returns 0 (0x1000f7e4).
+Th0u_t DsSetPosition_orig;
+unsigned __fastcall DsSetPosition_re(void* self, void*) {
+    void* com = fat<void*>(self, 0x60);                                        // 0x1000f799
+    if (com != 0) {                                                            // 0x1000f79c / 0x1000f79e
+        c3dj_com2(com, 0x34, 0);                                               // 0x1000f7a4
+        unsigned l1 = 0, l2 = 0;
+        com = fat<void*>(self, 0x60);                                          // 0x1000f7a7
+        c3dj_com3(com, 0x10, reinterpret_cast<unsigned>(&l1), reinterpret_cast<unsigned>(&l2));   // 0x1000f7b7
+    }
+    unsigned char b = fat<unsigned char>(self, 4);                             // 0x1000f7ba
+    fat<unsigned>(self, 0x24) = 0;                                             // 0x1000f7bd
+    fat<unsigned>(self, 0x28) = 0;                                             // 0x1000f7c2
+    fat<unsigned>(self, 0x2c) = 0;                                             // 0x1000f7c5
+    fat<unsigned>(self, 0x30) = 0;                                             // 0x1000f7c8
+    fat<unsigned>(self, 0xc) = 0;                                              // 0x1000f7cb
+    fat<unsigned>(self, 0x10) = 0;                                             // 0x1000f7ce
+    fat<unsigned>(self, 0x14) = 0;                                             // 0x1000f7d1
+    fat<unsigned>(self, 0x18) = 0;                                             // 0x1000f7d4
+    fat<unsigned>(self, 0x1c) = 0;                                             // 0x1000f7d7
+    fat<unsigned>(self, 0x48) = 0;                                             // 0x1000f7da
+    fat<unsigned>(self, 0x4c) = 0;                                             // 0x1000f7dd
+    fat<unsigned char>(self, 4) = static_cast<unsigned char>(b | 1);          // 0x1000f7c0 / 0x1000f7e0
+    return 0;                                                                  // 0x1000f7e4
+}
+
+// The release block shared by DsBuffer::destroy (0x1000ef6d-0x1000efe2), DsBuffer::release (0x1000f8fd-0x1000f95d) and
+// DsBuffer::releaseIfOwned (0x1000ff7a-0x100100ea): slot +0x48 (Stop) of the interface at +0x60 is called with it (0x1000ef75 /
+// 0x1000f900 / 0x1001007d). A non-NULL interface at +0x64 (`cmp eax, edi` / `jne` 0x1000ef7b / 0x1000ef7d; the second test
+// 0x1000ef7f-0x1000ef86 can only branch the same way) first releases the one at +0x6c when non-NULL (slot +8 with it, 0x1000ef92,
+// then +0x6c = 0, 0x1000ef95) and then itself (slot +8, 0x1000ef9e, +0x64 = 0, 0x1000efa1). The interface at +0x60 is then
+// released (slot +8, 0x1000efaa), the five dwords at +0x94 are cleared (0x1000efb7-0x1000efc2, 0x1000efc5-0x1000efd0, the same
+// stores twice), and +8, +0xc, +0x60, +0x4c, +0x48 are cleared (0x1000efd3-0x1000efdf).
+static void c3dj_dsReleaseBlock(char* o) {
+    void* com = fat<void*>(o, 0x60);
+    c3dj_com1(com, 0x48);                                                      // Stop
+    void* c64 = fat<void*>(o, 0x64);
+    if (c64 != 0) {
+        void* c6c = fat<void*>(o, 0x6c);
+        if (c6c != 0) { c3dj_com1(c6c, 8); fat<unsigned>(o, 0x6c) = 0; }
+        c3dj_com1(fat<void*>(o, 0x64), 8);
+        fat<unsigned>(o, 0x64) = 0;
+    }
+    c3dj_com1(fat<void*>(o, 0x60), 8);                                         // Release
+    for (int i = 0; i < 5; i++) fat<unsigned>(o, 0x94 + 4 * i) = 0;
+    fat<unsigned>(o, 8) = 0;
+    fat<unsigned>(o, 0xc) = 0;
+    fat<unsigned>(o, 0x60) = 0;
+    fat<unsigned>(o, 0x4c) = 0;
+    fat<unsigned>(o, 0x48) = 0;
+}
+
+// 0x0000ef60  DsBuffer::destroy (VA 0x1000ef60). No result is used (eax is whatever the last load left). The interface at +0x60 NULL,
+// or the dword at +0x5c zero, ends the function (0x1000ef69 / 0x1000ef6b, 0x1000ef6d / 0x1000ef70); otherwise the release block.
+Th0v_t DsDestroy_orig;
+void __fastcall DsDestroy_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    if (fat<void*>(o, 0x60) == 0) return;                                      // 0x1000ef69 / 0x1000ef6b
+    if (fat<unsigned>(o, 0x5c) == 0) return;                                   // 0x1000ef6d / 0x1000ef70
+    c3dj_dsReleaseBlock(o);                                                    // 0x1000ef72-0x1000efdf
+}
+
+// 0x0000f8f0  DsBuffer::release (VA 0x1000f8f0). The interface at +0x60 NULL returns 0 (0x1000f8fb -> 0x1000f95d, `xor eax, eax`
+// 0x1000f95e); otherwise the release block (no test of +0x5c) and 0 is returned.
+Th0u_t DsRelease_orig;
+unsigned __fastcall DsRelease_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    if (fat<void*>(o, 0x60) == 0) return 0;                                    // 0x1000f8f9 / 0x1000f8fb
+    c3dj_dsReleaseBlock(o);                                                    // 0x1000f8fd-0x1000f957
+    return 0;                                                                  // 0x1000f95e
+}
+
+// 0x00010060  DsBuffer::releaseIfOwned (VA 0x10010060). The dword at +0x5c zero returns 1 (`cmp [esi+0x5c], edi` / `jne` 0x10010066 /
+// 0x10010069, `mov eax, 1` 0x1001006c); the interface at +0x60 NULL returns 0 (0x10010076 / 0x10010078 -> 0x100100ea);
+// otherwise the release block and 0.
+Th0u_t DsReleaseIfOwned_orig;
+unsigned __fastcall DsReleaseIfOwned_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    if (fat<unsigned>(o, 0x5c) == 0) return 1;                                 // 0x10010066 / 0x10010069 / 0x1001006c
+    if (fat<void*>(o, 0x60) == 0) return 0;                                    // 0x10010076 / 0x10010078 / 0x100100eb
+    c3dj_dsReleaseBlock(o);                                                    // 0x1001007a-0x100100e7
+    return 0;                                                                  // 0x100100eb
+}
+
+C3DJ_SCALAR(DsBuffer_scalarDtor, 0x00001910)             // 0x10012b83: thunk 0x10001910 -> DsBuffer::destroy 0x1000ef60
+
+// =====================================================================================================================
+// F. Small forwarders over objects and lists (callees run through their original addresses)
+// =====================================================================================================================
+
+// 0x00032640  closeDecoder (VA 0x10032640). The object at +0x54 (`mov ecx, [ecx+0x54]` 0x10032640); non-NULL -> DsBuffer::stop
+// 0x1000f760 (thunk 0x10001a2d, call at 0x10032647) is called with it in ecx; the result is dropped and 0 is returned
+// (`xor eax, eax` 0x1003264c).
+Th0u_t CloseDecoder_orig;
+unsigned __fastcall CloseDecoder_re(void* self, void*) {
+    void* buf = fat<void*>(self, 0x54);                                        // 0x10032640
+    if (buf != 0) c3dj_fn<Th0u_t>(0x00001a2d)(buf, 0);                         // 0x10032643 / 0x10032645 / 0x10032647
+    return 0;                                                                  // 0x1003264c
+}
+
+// 0x0001b9a0  Ctrl_appendIfAccepted (VA 0x1001b9a0). One stack argument (`ret 4` 0x1001b9b8 / 0x1001b9c8). The object's own vtable slot
+// 0 is called with the argument and this in ecx (`mov eax, [esi]; push edi; call [eax]` 0x1001b9a8-0x1001b9ab); a result whose low
+// byte is zero (`test al, al` 0x1001b9ad / `jne` 0x1001b9af) returns 0x21 (0x1001b9b2). Otherwise PtrList_pushBack 0x1001d150 (thunk
+// 0x100022f7, call at 0x1001b9bf) is called on the list header at this+0xc with the argument and 0 is returned (0x1001b9c5).
+Th1_t CtrlAppend_orig;
+unsigned __fastcall CtrlAppend_re(void* self, void*, unsigned arg) {
+    unsigned r = reinterpret_cast<Th1_t>(c3dj_slot(self, 0))(self, 0, arg);   // 0x1001b9ab
+    if ((r & 0xff) == 0) return 0x21;                                          // 0x1001b9ad / 0x1001b9af / 0x1001b9b2
+    c3dj_fn<Th1_t>(0x000022f7)(static_cast<char*>(self) + 0xc, 0, arg);        // 0x1001b9bf
+    return 0;                                                                  // 0x1001b9c5
+}
+
+// 0x00032410  DsDevice_registerBuffer (VA 0x10032410). One stack argument, a buffer (`ret 4` 0x10032427). The argument zero
+// (`test eax, eax` / `je` 0x10032414 / 0x10032416) returns it (eax = 0). Otherwise the buffer's +0x20 takes the device (`mov [eax+0x20],
+// ecx` 0x10032418) and nodeListAppendValue 0x10038430 (thunk 0x100016ae, call at 0x10032422) is called on the list header at
+// this+0x1338 with the buffer; its result is the function's (the list count after the append).
+Th1_t DsRegister_orig;
+unsigned __fastcall DsRegister_re(void* self, void*, unsigned buf) {
+    if (buf == 0) return 0;                                                    // 0x10032414 / 0x10032416
+    fat<void*>(reinterpret_cast<void*>(buf), 0x20) = self;                     // 0x10032418
+    return c3dj_fn<Th1_t>(0x000016ae)(static_cast<char*>(self) + 0x1338, 0, buf);   // 0x10032422
+}
+
+// 0x0000e120  addToSoundList (VA 0x1000e120). One stack argument, a sound object (`ret 4` 0x1000e140). appendNodeC 0x1000e680 (thunk
+// 0x10002351, call at 0x1000e12c) is called on the list header at this+0x1c8 (`add ecx, 0x1c8` 0x1000e126) with the argument; then
+// bit 6 of the low byte of the dword at +0xc8 of the argument is set (`mov eax, [esi+0xc8]; or al, 0x40; mov [esi+0xc8], eax`
+// 0x1000e131-0x1000e139) and that dword is the result.
+Th1_t AddToSoundList_orig;
+unsigned __fastcall AddToSoundList_re(void* self, void*, unsigned obj) {
+    c3dj_fn<Th1_t>(0x00002351)(static_cast<char*>(self) + 0x1c8, 0, obj);      // 0x1000e12c
+    unsigned f = fat<unsigned>(reinterpret_cast<void*>(obj), 0xc8);            // 0x1000e131
+    f = (f & ~0xffu) | static_cast<unsigned char>((f & 0xff) | 0x40);          // 0x1000e137
+    fat<unsigned>(reinterpret_cast<void*>(obj), 0xc8) = f;                     // 0x1000e139
+    return f;                                                                  // 0x1000e13f
+}
+
+// =====================================================================================================================
+// G. Voice stop requests: queue a command on the MIDI device's command queue (g_midiDevice 0x100b4a1c)
+// =====================================================================================================================
+typedef unsigned(__fastcall* CmdPush4_t)(void*, void*, void*, unsigned, unsigned, unsigned);   // CommandQueue::push 0x1000a240
+static inline void*& c3dj_gMidiDevice() { return *reinterpret_cast<void**>(c3dj_sound(0x000b4a1c)); }   // 0x100b4a1c
+
+// 0x00020ea0  Voice_requestStop (VA 0x10020ea0). Bit 0 of the flag byte at +0xac clear returns 0x14 (`test byte ptr [ecx+0xac], 1` /
+// `jne` 0x10020ea0 / 0x10020ea7, `mov eax, 0x14` 0x10020ea9). Otherwise g_midiDevice 0x100b4a1c is loaded (0x10020eaf); non-NULL ->
+// CommandQueue::push 0x1000a240 (thunk 0x100015e1, call at 0x10020ec1) on it with (voice = this, 2, 0, 0) (pushes 0 / 0 / 2 /
+// ecx at 0x10020eb8-0x10020ebe; the queue is ecx); the result is dropped and 0 is returned (`xor eax, eax` 0x10020ec6).
+Th0u_t VoiceReqStop_orig;
+unsigned __fastcall VoiceReqStop_re(void* self, void*) {
+    if ((fat<unsigned char>(self, 0xac) & 1) == 0) return 0x14;                // 0x10020ea0 / 0x10020ea7 / 0x10020ea9
+    void* dev = c3dj_gMidiDevice();                                            // 0x10020eaf
+    if (dev != 0) c3dj_fn<CmdPush4_t>(0x000015e1)(dev, 0, self, 2, 0, 0);      // 0x10020eb4 / 0x10020eb6 / 0x10020ec1
+    return 0;                                                                  // 0x10020ec6
+}
+
+// 0x00020ee0  Voice_requestStopDrain (VA 0x10020ee0). Bit 2 of the flag byte at +0xac set returns 0 (`test byte ptr [esi+0xac], 4`
+// 0x10020ee3 / `jne` 0x10020eea -> 0x10020f25). Otherwise the object's own vtable slot +0x5c is called with this in ecx (`mov eax,
+// [esi]; call [eax+0x5c]` 0x10020eec / 0x10020eee); a zero result (`test eax, eax` / `je` 0x10020ef1 / 0x10020ef3) returns 0.
+// Otherwise the flag dword at +0xac gets bit 2 (0x10020ef5-0x10020f00) and then bit 3 (0x10020f06 / 0x10020f09), and
+// g_midiDevice 0x100b4a1c (0x10020f0f), when non-NULL (0x10020f15 / 0x10020f17), takes CommandQueue::push 0x1000a240 (thunk
+// 0x100015e1, call at 0x10020f20) with (this, 2, 0, 0) (pushes 0x10020f19-0x10020f1f); 0 is returned (0x10020f25).
+Th0u_t VoiceReqDrain_orig;
+unsigned __fastcall VoiceReqDrain_re(void* self, void*) {
+    if (fat<unsigned char>(self, 0xac) & 4) return 0;                          // 0x10020ee3 / 0x10020eea
+    unsigned r = reinterpret_cast<Th0u_t>(c3dj_slot(self, 0x5c))(self, 0);     // 0x10020eee
+    if (r == 0) return 0;                                                      // 0x10020ef1 / 0x10020ef3
+    unsigned f = fat<unsigned>(self, 0xac);                                    // 0x10020ef5
+    f |= 4;                                                                    // 0x10020efb
+    fat<unsigned>(self, 0xac) = f;                                             // 0x10020f00
+    f |= 8;                                                                    // 0x10020f06
+    fat<unsigned>(self, 0xac) = f;                                             // 0x10020f09
+    void* dev = c3dj_gMidiDevice();                                            // 0x10020f0f
+    if (dev != 0) c3dj_fn<CmdPush4_t>(0x000015e1)(dev, 0, self, 2, 0, 0);      // 0x10020f15 / 0x10020f17 / 0x10020f20
+    return 0;                                                                  // 0x10020f25
+}
+
+// =====================================================================================================================
+// H. Node lists cleared from the front (operator delete per node)
+// =====================================================================================================================
+// PtrList_freeNodesB 0x00031ac0 (VA 0x10031ac0), nodeListClear2 0x000384b0 (0x100384b0) and nodeListClear 0x00039580 (0x10039580) are the
+// same body, and VoiceBase_clearList 0x00029170 (0x10029170) is that body over a header that starts 8 bytes later. `this` is a list
+// header {front, back, (cursor), count}; the nodes are {previous, next, value}. The first node (`mov eax, [esi]` 0x10031ac4; the
+// function returns when it is NULL, `je` 0x10031ac8) is popped: with a next node that node's previous becomes 0 and the front
+// moves to it (0x10031aca-0x10031ad7); without one back and front become 0 (0x10031adb-0x10031ae2). The popped node's value
+// is read (0x10031ae8) and the node released with operator delete 0x1004249a (0x10031aec), the count is decremented (0x10031af1,
+// 0x10031af7, 0x10031afa); a NULL value ends the function (`test edi, edi` / `je` 0x10031af8 / 0x10031afd). Otherwise the same
+// pop repeats (0x10031aff-0x10031b38) until the list is empty (`je` 0x10031b03) or a popped node's value is NULL (`jne` 0x10031b38).
+static void c3dj_popFrontAll(char* hdr, int fo, int bo, int co) {
+    char* node = fat<char*>(hdr, fo);                                          // 0x10031ac4
+    if (node == 0) return;                                                     // 0x10031ac6 / 0x10031ac8
+    for (;;) {
+        char* next = fat<char*>(node, 4);                                      // 0x10031aca
+        if (next != 0) {                                                       // 0x10031acd / 0x10031acf
+            fat<unsigned>(next, 0) = 0;                                        // 0x10031ad1
+            fat<char*>(hdr, fo) = next;                                        // 0x10031ad7
+        } else {
+            fat<unsigned>(hdr, bo) = 0;                                        // 0x10031adb
+            fat<unsigned>(hdr, fo) = 0;                                        // 0x10031ae2
+        }
+        void* value = fat<void*>(node, 8);                                     // 0x10031ae8
+        c3dj_delete(node);                                                     // 0x10031aec
+        fat<unsigned>(hdr, co) = fat<unsigned>(hdr, co) - 1;                   // 0x10031af1 / 0x10031af7 / 0x10031afa
+        if (value == 0) return;                                                // 0x10031af8 / 0x10031afd
+        node = fat<char*>(hdr, fo);                                            // 0x10031aff
+        if (node == 0) return;                                                 // 0x10031b01 / 0x10031b03
+    }
+}
+
+Th0v_t PtrListFreeB_orig;
+void __fastcall PtrListFreeB_re(void* self, void*) { c3dj_popFrontAll(static_cast<char*>(self), 0, 4, 0xc); }       // 0x10031ac0
+Th0v_t NodeListClear2_orig;
+void __fastcall NodeListClear2_re(void* self, void*) { c3dj_popFrontAll(static_cast<char*>(self), 0, 4, 0xc); }     // 0x100384b0
+Th0v_t NodeListClear_orig;
+void __fastcall NodeListClear_re(void* self, void*) { c3dj_popFrontAll(static_cast<char*>(self), 0, 4, 0xc); }      // 0x10039580
+Th0v_t VoiceBaseClearList_orig;
+void __fastcall VoiceBaseClearList_re(void* self, void*) { c3dj_popFrontAll(static_cast<char*>(self), 8, 0xc, 0x14); }   // 0x10029170
+
+// =====================================================================================================================
+// I. Channel_set3DPosition: forwards to the DsBuffer held at +0x54 when the channel is 3D-enabled
+// =====================================================================================================================
+// 0x00037b00  Channel_set3DPosition (VA 0x10037b00). Three stack arguments x, y, z (`ret 0xc` 0x10037b21 / 0x10037b29). Bit 5 of the flag
+// byte at +0x5c clear (`test byte ptr [ecx+0x5c], 0x20` / `je` 0x10037b00 / 0x10037b04) returns 0xb (0x10037b24); the object at
+// +0x54 (`mov ecx, [ecx+0x54]` 0x10037b06) NULL returns 0xb too (`je` 0x10037b0b). Otherwise Ds3DBuffer::setPosition 0x10011000 (thunk
+// 0x10001889, call at 0x10037b1c) is called on that object with (x, y, z) (pushes z 0x10037b15, y 0x10037b1a, x 0x10037b1b) and its
+// result is the function's.
+Th3_t Ch3DSetPos_orig;
+unsigned __fastcall Ch3DSetPos_re(void* self, void*, unsigned x, unsigned y, unsigned z) {
+    if ((fat<unsigned char>(self, 0x5c) & 0x20) == 0) return 0xb;              // 0x10037b00 / 0x10037b04 / 0x10037b24
+    void* ds = fat<void*>(self, 0x54);                                         // 0x10037b06
+    if (ds == 0) return 0xb;                                                   // 0x10037b09 / 0x10037b0b
+    return c3dj_fn<Th3_t>(0x00001889)(ds, 0, x, y, z);                         // 0x10037b1c
+}
+
+// =====================================================================================================================
+// J. Object-held lists, name copies and virtual forwarders
+// =====================================================================================================================
+typedef void(__fastcall* Th1v_t)(void*, void*, unsigned);
+typedef unsigned(__fastcall* Th2_t)(void*, void*, unsigned, unsigned);
+typedef void*(__cdecl* OpNew_t)(unsigned);                                   // operator new 0x100424d7
+static void* c3dj_new(unsigned n) { return reinterpret_cast<OpNew_t>(c3dj_sound(0x000424d7))(n); }
+
+// 0x000292d0  VoiceBase_openInner (VA 0x100292d0). Two stack arguments a1, a2 (`ret 8` 0x10029308 / 0x10029301). The object's own vtable
+// slot +4 is called with a2 (`mov eax, [esi]; push edi; call [eax+4]` 0x100292d8-0x100292db); a non-zero result is returned at once
+// (`jne` 0x100292e0 -> 0x10029306). Otherwise the sub-object at +0x14 (0x100292e2) has its vtable slot +0x10 called with (a1, a2)
+// (pushes a2 0x100292e9, a1 0x100292ea; `call [edx+0x10]` 0x100292ed); a zero result returns 0 (`je` 0x100292f4 -> `xor eax, eax`
+// 0x10029304). Otherwise the object's own slot +8 is called with no arguments (`mov edx, [esi]; mov ecx, esi; call [edx+8]`
+// 0x100292f6-0x100292fa) and the sub-object's result is returned (0x100292fd).
+Th2_t VoiceOpenInner_orig;
+unsigned __fastcall VoiceOpenInner_re(void* self, void*, unsigned a1, unsigned a2) {
+    unsigned r = reinterpret_cast<Th1_t>(c3dj_slot(self, 4))(self, 0, a2);     // 0x100292db
+    if (r != 0) return r;                                                      // 0x100292de / 0x100292e0
+    void* sub = fat<void*>(self, 0x14);                                        // 0x100292e2
+    unsigned v = reinterpret_cast<Th2_t>(c3dj_slot(sub, 0x10))(sub, 0, a1, a2);   // 0x100292ed
+    if (v == 0) return 0;                                                      // 0x100292f2 / 0x100292f4 / 0x10029304
+    reinterpret_cast<Th0v_t>(c3dj_slot(self, 8))(self, 0);                     // 0x100292fa
+    return v;                                                                  // 0x100292fd
+}
+
+// 0x0001abd0  Seq_freeChannelObjects (VA 0x1001abd0). No result is used. A loop over 0x80 object pointers at this+4 (esi = the index,
+// `cmp esi, 0x80` / `jl` 0x1001abfb / 0x1001ac01). A non-NULL slot (0x1001abd6 / 0x1001abde / 0x1001abe0) is cleared (0x1001abe2) and so
+// is every directly following slot that holds the same pointer (edx = the next slot, read before eax moves on: 0x1001abe8 /
+// 0x1001abef / 0x1001abf1; the slot after the last array entry is the dword at this+0x204); the object is then deleted ONCE
+// through its own vtable slot 0 called with 1 in the argument (`mov eax, [ecx]; push 1; call [eax]` 0x1001abf3-0x1001abf8), after
+// which the scan resumes at the slot after the last one cleared (`dec esi` 0x1001abf7, `inc esi` 0x1001abfa). After the loop the
+// pointer at this+0 (0x1001ac03) non-NULL is released with operator delete (0x1001ac0a) and +0 = 0 (0x1001ac12).
+Th0v_t SeqFreeChan_orig;
+void __fastcall SeqFreeChan_re(void* self, void*) {
+    int esi = 0;
+    do {
+        unsigned* slot = &fat<unsigned>(self, 4 + 4 * esi);                    // 0x1001abd6 / 0x1001abda
+        void* obj = reinterpret_cast<void*>(*slot);
+        if (obj != 0) {                                                        // 0x1001abde / 0x1001abe0
+            unsigned* eax = slot;
+            unsigned edx;
+            do {
+                *eax = 0;                                                      // 0x1001abe2
+                edx = eax[1];                                                  // 0x1001abe8
+                eax += 1;                                                      // 0x1001abeb
+                esi += 1;                                                      // 0x1001abee
+            } while (reinterpret_cast<void*>(edx) == obj);                     // 0x1001abef / 0x1001abf1
+            esi -= 1;                                                          // 0x1001abf7
+            reinterpret_cast<Th1v_t>(c3dj_slot(obj, 0))(obj, 0, 1);            // 0x1001abf8
+        }
+        esi += 1;                                                              // 0x1001abfa
+    } while (esi < 0x80);                                                      // 0x1001abfb / 0x1001ac01
+    void* buf = fat<void*>(self, 0);                                           // 0x1001ac03
+    if (buf != 0) c3dj_delete(buf);                                            // 0x1001ac07 / 0x1001ac0a
+    fat<unsigned>(self, 0) = 0;                                                // 0x1001ac12
+}
+
+// 0x0001ad30  Sound_anyChannelActive (VA 0x1001ad30). Result in al (1 / 0, `mov al, 1` 0x1001ad9b, `xor al, al` 0x1001ad94). A loop over 0x80
+// object pointers at this+4 (ebx, `cmp ebx, 0x80` 0x1001ad89). A non-NULL object (0x1001ad38 / 0x1001ad3c) has an element count at
+// +0x1438 (0x1001ad40): a non-zero count n (0x1001ad46) walks the n - 1 element pointers at +0x1440 (`dec ecx; test ecx, ecx; jle`
+// 0x1001ad4c-0x1001ad4f, the signed bound re-read from the object every pass: 0x1001ad70-0x1001ad79); each non-NULL element has its vtable
+// slot +0x5c called with it in ecx (0x1001ad5d-0x1001ad61) and a non-zero result returns 1 (0x1001ad64 / 0x1001ad66 -> 0x1001ad98). After
+// the elements (also for a zero count, `je` 0x1001ad48 -> 0x1001ad7b) the object's own slot +0x5c is called (0x1001ad7f-0x1001ad81) and a
+// non-zero result returns 1 (0x1001ad84 / 0x1001ad86).
+typedef unsigned char(__fastcall* ThByte_t)(void*, void*);
+ThByte_t SoundAnyActive_orig;
+unsigned char __fastcall SoundAnyActive_re(void* self, void*) {
+    for (int ebx = 0; ebx < 0x80; ebx++) {                                     // 0x1001ad36 / 0x1001ad88 / 0x1001ad89 / 0x1001ad8f
+        char* obj = fat<char*>(self, 4 + 4 * ebx);                             // 0x1001ad38
+        if (obj == 0) continue;                                                // 0x1001ad3c / 0x1001ad3e
+        int n = fat<int>(obj, 0x1438);                                         // 0x1001ad40
+        if (n != 0) {                                                          // 0x1001ad46 / 0x1001ad48
+            int esi = 0;
+            int bound = n - 1;                                                 // 0x1001ad4c
+            if (bound > 0) {                                                   // 0x1001ad4d / 0x1001ad4f
+                int edi = 0x1440;
+                for (;;) {
+                    void* elem = fat<void*>(obj, edi);                         // 0x1001ad56
+                    if (elem != 0) {                                           // 0x1001ad59 / 0x1001ad5b
+                        unsigned r = reinterpret_cast<Th0u_t>(c3dj_slot(elem, 0x5c))(elem, 0);   // 0x1001ad61
+                        if (r != 0) return 1;                                  // 0x1001ad64 / 0x1001ad66
+                    }
+                    obj = fat<char*>(self, 4 + 4 * ebx);                       // 0x1001ad68
+                    esi += 1;                                                  // 0x1001ad6c
+                    edi += 4;                                                  // 0x1001ad6d
+                    bound = fat<int>(obj, 0x1438) - 1;                         // 0x1001ad70 / 0x1001ad76
+                    if (!(esi < bound)) break;                                 // 0x1001ad77 / 0x1001ad79
+                }
+            }
+        }
+        obj = fat<char*>(self, 4 + 4 * ebx);                                   // 0x1001ad7b
+        unsigned r2 = reinterpret_cast<Th0u_t>(c3dj_slot(obj, 0x5c))(obj, 0);  // 0x1001ad81
+        if (r2 != 0) return 1;                                                 // 0x1001ad84 / 0x1001ad86
+    }
+    return 0;                                                                  // 0x1001ad94
+}
+
+// 0x000136c0  findAndUnlinkNode (VA 0x100136c0) and 0x0000e700 findAndUnlinkNodeB (VA 0x1000e700): the same body. One stack argument, a value
+// (`ret 4`). `this` is a list header {+0 front, +4 back, +8 cursor, +0xc count} of nodes {previous, next, value}. The front node is
+// loaded (0x100136c3; NULL returns 0, `je` 0x100136c7 -> `xor eax, eax` 0x100136d9) and the chain is followed through the next links
+// (0x100136d2-0x100136d7) to the first node whose value (+8) equals the argument (0x100136cd / 0x100136d0); none returns 0. The found
+// node is unlinked: with a previous node its next takes the node's next (0x100136e9-0x100136ec), otherwise the front takes it
+// (0x100136f1-0x100136f4); with a next node its previous takes the node's previous and the CURSOR (+8) becomes that next node
+// (0x100136fd-0x10013701), otherwise the cursor is cleared and the back takes the node's previous (0x10013706-0x1001370f). The
+// node's value is kept (0x10013713), the node released with operator delete (0x10013717), the count decremented (0x1001371c-0x10013723)
+// and the value returned (0x10013726).
+static unsigned c3dj_findUnlink(char* hdr, unsigned value) {
+    char* node = fat<char*>(hdr, 0);                                           // 0x100136c3
+    if (node == 0) return 0;                                                   // 0x100136c5 / 0x100136c7
+    while (fat<unsigned>(node, 8) != value) {                                  // 0x100136cd / 0x100136d0
+        node = fat<char*>(node, 4);                                            // 0x100136d2
+        if (node == 0) return 0;                                               // 0x100136d5 / 0x100136d7
+    }
+    char* prev = fat<char*>(node, 0);                                          // 0x100136e3
+    if (prev != 0) fat<unsigned>(prev, 4) = fat<unsigned>(node, 4);            // 0x100136e5 / 0x100136e7 / 0x100136ec
+    else fat<unsigned>(hdr, 0) = fat<unsigned>(node, 4);                       // 0x100136f4
+    char* next = fat<char*>(node, 4);                                          // 0x100136f6
+    if (next != 0) {                                                           // 0x100136f9 / 0x100136fb
+        fat<unsigned>(next, 0) = fat<unsigned>(node, 0);                       // 0x100136ff
+        fat<char*>(hdr, 8) = next;                                             // 0x10013701
+    } else {
+        unsigned back = fat<unsigned>(node, 0);                                // 0x10013706
+        fat<unsigned>(hdr, 8) = 0;                                             // 0x10013708
+        fat<unsigned>(hdr, 4) = back;                                          // 0x1001370f
+    }
+    unsigned v = fat<unsigned>(node, 8);                                       // 0x10013713
+    c3dj_delete(node);                                                         // 0x10013717
+    fat<unsigned>(hdr, 0xc) = fat<unsigned>(hdr, 0xc) - 1;                     // 0x1001371c / 0x10013722 / 0x10013723
+    return v;                                                                  // 0x10013726
+}
+Th1_t FindUnlink_orig;
+unsigned __fastcall FindUnlink_re(void* self, void*, unsigned value) { return c3dj_findUnlink(static_cast<char*>(self), value); }   // 0x100136c0
+Th1_t FindUnlinkB_orig;
+unsigned __fastcall FindUnlinkB_re(void* self, void*, unsigned value) { return c3dj_findUnlink(static_cast<char*>(self), value); }   // 0x1000e700
+
+// The name setters: a string argument is copied into a fresh operator-new block (strlen + 1 bytes, `repne scasb` / `not ecx` e.g.
+// 0x1002bb2d-0x1002bb36, copied with `rep movsd` + `rep movsb`) whose pointer replaces a field after the old block was released.
+static unsigned c3dj_dupInto(char* field, const char* name) {
+    unsigned len = 0;
+    while (name[len] != 0) len++;
+    len += 1;                                                                  // strlen + 1 (ecx after `not ecx`)
+    char* p = static_cast<char*>(c3dj_new(len));                               // operator new 0x100424d7
+    *reinterpret_cast<char**>(field) = p;
+    for (unsigned i = 0; i < len; i++) p[i] = name[i];                         // rep movsd + rep movsb
+    return len;
+}
+
+// 0x0002bb10  Object_setName (VA 0x1002bb10). One stack argument, a string (`ret 4`). NULL returns 0xa (`test ebx, ebx` / `je` 0x1002bb18 /
+// 0x1002bb1a, `mov eax, 0xa` 0x1002bb6e). Otherwise a non-NULL pointer at +0x50 (0x1002bb1c) is released with operator delete
+// (0x1002bb24) and +0x50 takes a fresh copy of the string (0x1002bb39 operator new, 0x1002bb4a store, copy to 0x1002bb65); returns 0
+// (`xor eax, eax` 0x1002bb63).
+Th1_t ObjectSetName_orig;
+unsigned __fastcall ObjectSetName_re(void* self, void*, const char* name) {
+    if (name == 0) return 0xa;                                                 // 0x1002bb18 / 0x1002bb1a / 0x1002bb6e
+    void* old = fat<void*>(self, 0x50);                                        // 0x1002bb1c
+    if (old != 0) c3dj_delete(old);                                            // 0x1002bb21 / 0x1002bb24
+    c3dj_dupInto(static_cast<char*>(self) + 0x50, name);                       // 0x1002bb39-0x1002bb65
+    return 0;                                                                  // 0x1002bb63
+}
+
+// 0x0002ddf0  Sound_assignName (VA 0x1002ddf0). The same as Object_setName with +0x50 cleared right after the old block was released
+// (`mov dword ptr [esi+0x50], 0` 0x1002de14, before the copy): NULL returns 0xa (0x1002ddf8 / 0x1002ddfa / 0x1002de55); the old +0x50
+// block is released (0x1002de04); the new copy (0x1002de20 operator new, 0x1002de31 store) is kept at +0x50; returns 0 (0x1002de4a).
+Th1_t SoundAssignName_orig;
+unsigned __fastcall SoundAssignName_re(void* self, void*, const char* name) {
+    if (name == 0) return 0xa;                                                 // 0x1002ddf8 / 0x1002ddfa / 0x1002de55
+    void* old = fat<void*>(self, 0x50);                                        // 0x1002ddfc
+    if (old != 0) c3dj_delete(old);                                            // 0x1002de01 / 0x1002de04
+    fat<unsigned>(self, 0x50) = 0;                                             // 0x1002de14
+    c3dj_dupInto(static_cast<char*>(self) + 0x50, name);                       // 0x1002de20-0x1002de4c
+    return 0;                                                                  // 0x1002de4a
+}
+
+// 0x0002d240  Voice_setName (VA 0x1002d240). One stack argument, a string (`ret 4`); NO NULL test (a NULL string faults in `repne scasb`
+// 0x1002d263). The pointer at +0x204 (0x1002d245) non-NULL is released with operator delete (0x1002d250); +0x204 takes a fresh copy
+// (0x1002d268 operator new, 0x1002d279 store, copy to 0x1002d295). The result is the copied length including the terminator
+// (`mov eax, ecx` 0x1002d285 with ecx = strlen + 1; nothing writes eax afterwards).
+Th1_t VoiceSetName_orig;
+unsigned __fastcall VoiceSetName_re(void* self, void*, const char* name) {
+    void* old = fat<void*>(self, 0x204);                                       // 0x1002d245
+    if (old != 0) c3dj_delete(old);                                            // 0x1002d24b / 0x1002d250
+    return c3dj_dupInto(static_cast<char*>(self) + 0x204, name);               // 0x1002d268-0x1002d295
+}
+
+// 0x0001d0a0  Sound_setAltName (VA 0x1001d0a0). One stack argument, a string or NULL (`ret 4`). The pointer at +0x24 (0x1001d0a4) non-NULL is
+// released with operator delete (0x1001d0ac). A NULL string (`test ebx, ebx` / `je` 0x1001d0b8 / 0x1001d0ba) stores +0x24 = 0 (0x1001d0fb)
+// and returns with eax as the operator delete call (or the old pointer when there was none) left it; otherwise +0x24 takes a fresh copy
+// (0x1001d0c9 operator new, 0x1001d0da store, copy to 0x1001d0f3) and the result is the copied length including the terminator (`mov
+// eax, ecx` 0x1001d0e3).
+Th1_t SoundSetAltName_orig;
+unsigned __fastcall SoundSetAltName_re(void* self, void*, const char* name) {
+    void* old = fat<void*>(self, 0x24);                                        // 0x1001d0a4
+    if (old != 0) c3dj_delete(old);                                            // 0x1001d0a9 / 0x1001d0ac
+    if (name == 0) {                                                           // 0x1001d0b8 / 0x1001d0ba
+        fat<unsigned>(self, 0x24) = 0;                                         // 0x1001d0fb
+        return 0;                                                              // eax is not defined here: the NULL-name key compares memory only
+    }
+    return c3dj_dupInto(static_cast<char*>(self) + 0x24, name);                // 0x1001d0c9-0x1001d0f3
+}
+
+// 0x0002dff0  Channel_releaseSound (VA 0x1002dff0). The sound object at +0x40 (0x1002dff6) non-NULL: the channel's own vtable slot +0x5c is
+// called with no arguments (`mov eax, [esi]; call [eax+0x5c]` 0x1002dffd / 0x1002dfff); +0x40 is read again (0x1002e002). A zero result
+// calls the object's vtable slot +0x14 (`call [edx+0x14]` 0x1002e00b, result dropped) and then delete_sound 0x100097d0 (thunk
+// 0x10001a87, 0x1002e012) on it; a non-zero result calls slot +0x14 (0x1002e01c) and keeps its result for the return (edi, 0x1002e01f).
+// +0x40 = 0 (0x1002e021). Whether or not there was an object, the channel's slot +0x80 is called (0x1002e028-0x1002e02c) and bit 0 of the
+// flag dword at +0x44 is cleared (`and al, 0xfe` 0x1002e035). The result is edi (0x1002e03a): 0, or slot +0x14's result.
+Th0u_t ChanReleaseSound_orig;
+unsigned __fastcall ChanReleaseSound_re(void* self, void*) {
+    unsigned result = 0;
+    void* q = fat<void*>(self, 0x40);                                          // 0x1002dff6
+    if (q != 0) {                                                              // 0x1002dff9 / 0x1002dffb
+        unsigned r = reinterpret_cast<Th0u_t>(c3dj_slot(self, 0x5c))(self, 0); // 0x1002dfff
+        q = fat<void*>(self, 0x40);                                            // 0x1002e002
+        if (r == 0) {                                                          // 0x1002e005 / 0x1002e009
+            reinterpret_cast<Th0u_t>(c3dj_slot(q, 0x14))(q, 0);                // 0x1002e00b
+            c3dj_deleteSound(fat<void*>(self, 0x40));                          // 0x1002e012
+        } else {
+            result = reinterpret_cast<Th0u_t>(c3dj_slot(q, 0x14))(q, 0);       // 0x1002e01c
+        }
+        fat<unsigned>(self, 0x40) = 0;                                         // 0x1002e021
+    }
+    reinterpret_cast<Th0u_t>(c3dj_slot(self, 0x80))(self, 0);                  // 0x1002e02c
+    unsigned fl = fat<unsigned>(self, 0x44);                                   // 0x1002e032
+    fl = (fl & ~0xffu) | static_cast<unsigned char>(fl & 0xfe);                // 0x1002e035
+    fat<unsigned>(self, 0x44) = fl;                                            // 0x1002e037
+    return result;                                                             // 0x1002e03a
+}
+
+// 0x000134e0  unlinkDsBuffer (VA 0x100134e0). One stack argument, a buffer (`ret 4`). NULL returns 0xa (`test edx, edx` / `jne` 0x100134e4 /
+// 0x100134e6, `mov eax, 0xa` 0x100134e8). The buffer's previous (+0xbc, 0x100134f0) and next (+0xc0, 0x100134f6) neighbours: a previous
+// buffer has its +0xc0 set to the next (0x10013500), otherwise the module's DirectSound buffer list head 0x100b4a34 takes the next
+// (0x10013508); a next buffer has its +0xbc set to the previous (0x10013512), otherwise the list tail 0x100b4a38 takes the previous
+// (0x1001351a); the buffer's +0xbc and +0xc0 are cleared (0x1001351f / 0x10013529); returns 0 (0x10013533).
+Th1_t UnlinkDs_orig;
+unsigned __fastcall UnlinkDs_re(void* self, void*, void* buf) {
+    (void)self;
+    if (buf == 0) return 0xa;                                                  // 0x100134e4 / 0x100134e6 / 0x100134e8
+    void* prev = fat<void*>(buf, 0xbc);                                        // 0x100134f0
+    void* next = fat<void*>(buf, 0xc0);                                        // 0x100134f6
+    if (prev != 0) fat<void*>(prev, 0xc0) = next;                              // 0x100134fc / 0x100134fe / 0x10013500
+    else *reinterpret_cast<void**>(c3dj_sound(0x000b4a34)) = next;             // 0x10013508
+    if (next != 0) fat<void*>(next, 0xbc) = prev;                              // 0x1001350e / 0x10013510 / 0x10013512
+    else *reinterpret_cast<void**>(c3dj_sound(0x000b4a38)) = prev;             // 0x1001351a
+    fat<unsigned>(buf, 0xbc) = 0;                                              // 0x1001351f
+    fat<unsigned>(buf, 0xc0) = 0;                                              // 0x10013529
+    return 0;                                                                  // 0x10013533
+}
+
+// =====================================================================================================================
+// K. VoiceBase_dtor and Midi_Device::dtor (their member lists and the device-base release) and the scalar-deleting wrappers
+// =====================================================================================================================
+typedef unsigned(__stdcall* EhVecDtor_t)(void*, unsigned, unsigned, void*);   // the CRT's __ehvec_dtor 0x1004280e (`ret 0x10`)
+
+// 0x00029200  VoiceBase_dtor (VA 0x10029200). Wrapped in a C++ frame (0x10029200-0x1002920e) that no path uses. The vtable 0x1005b914 is stored at
+// +0 (0x1002921d), then the CRT's vector-destructor iterator 0x1004280e (call at 0x10029238, `ret 0x10`) runs the element destructor
+// thunk 0x1000256d (-> VoiceBase_clearList 0x10029170; the relocated address is pushed at 0x10029223) over 0x10 elements of 0x18 bytes
+// from this+0x24 (pushes 0x10029228 / 0x1002922d / 0x1002922f), last element first. Then the vtable 0x1005b8b0 is stored (0x10029240)
+// and the sub-object at +0x14 (0x1002923d), when non-NULL (0x10029246 / 0x10029251), has its vtable slot +0x14 CALLED with it in ecx
+// (0x10029253 / 0x10029255). No result.
+Th0v_t VoiceBaseDtor_orig;
+void __fastcall VoiceBaseDtor_re(void* self, void*) {
+    fat<void*>(self, 0) = c3dj_sound(0x0005b914);                              // 0x1002921d
+    reinterpret_cast<EhVecDtor_t>(c3dj_sound(0x0004280e))(static_cast<char*>(self) + 0x24, 0x18, 0x10, c3dj_sound(0x0000256d));   // 0x10029238
+    void* sub = fat<void*>(self, 0x14);                                        // 0x1002923d
+    fat<void*>(self, 0) = c3dj_sound(0x0005b8b0);                              // 0x10029240
+    if (sub != 0) reinterpret_cast<Th0v_t>(c3dj_slot(sub, 0x14))(sub, 0);      // 0x10029246 / 0x10029251 / 0x10029255
+}
+
+// 0x00009cb0  Midi_Device::dtor (VA 0x10009cb0). Wrapped in a C++ frame (0x10009cb0-0x10009cbe) that no path uses. The vtable 0x1005b28c is stored
+// at +0 (0x10009ccf); CommandQueue::clear 0x10008890 (thunk 0x100019a1, call at 0x10009ce0) runs on the ring at this+0x50 (`lea ecx, [esi+0x50]`
+// 0x10009cd5); the node list whose front is +0x40, back +0x44 and count +0x4c is popped from the front (0x10009ce5-0x10009d4d: the same
+// pop loop as PtrList_freeNodesB, stopping at an empty list or after a node whose value is NULL); the device-base destructor
+// DeviceBase_dtorB 0x10029f60 (thunk 0x10001b22, call at 0x10009d59) runs last. No result.
+Th0v_t MidiDtor_orig;
+void __fastcall MidiDtor_re(void* self, void*) {
+    fat<void*>(self, 0) = c3dj_sound(0x0005b28c);                              // 0x10009ccf
+    c3dj_fn<Th0u_t>(0x000019a1)(static_cast<char*>(self) + 0x50, 0);           // 0x10009ce0
+    c3dj_popFrontAll(static_cast<char*>(self), 0x40, 0x44, 0x4c);              // 0x10009ce5-0x10009d4d
+    c3dj_fn<Th0v_t>(0x00001b22)(self, 0);                                      // 0x10009d59
+}
+
+C3DJ_SCALAR(VoiceBase_scalarDtor2, 0x00001dac)           // 0x10029143: thunk 0x10001dac -> VoiceBase_dtor 0x10029200
+C3DJ_SCALAR(MidiDevice_scalarDtor, 0x000019e2)           // 0x10009c83: thunk 0x100019e2 -> Midi_Device::dtor 0x10009cb0
+
+// =====================================================================================================================
+// L. Constructors of the channel / voice / device-base objects
+// =====================================================================================================================
+// The channel constructors SubChannel_ctor 0x0002b4e0, Ch5bb90_ctor 0x0002c490, Mixer_ctor 0x0002c9f0, Ch5be88_ctor 0x0002d450 and
+// Ch5c178_ctor 0x0002e930 (VAs 0x1002b4e0 / 0x1002c490 / 0x1002c9f0 / 0x1002d450 / 0x1002e930) open with the same base initialisation (the
+// addresses below are SubChannel_ctor's; the others are the same instructions): +4 = 0x7f (0x1002b507), +8 = 0 (0x1002b50e), the nine dwords
+// +0xc..+0x2f cleared by `rep stosd` (ecx = 9, eax = 0, edi = this+0xc: 0x1002b4fd-0x1002b511), +0x30 = 0 (0x1002b517), the transient vtable
+// 0x1005bae0 (0x1002b51c), +0x48, +0x4c, +0x40 and +0x50 = 0 (0x1002b522-0x1002b52b), +0x44 = 0 stored twice (0x1002b531 / 0x1002b534, the
+// second value is 0 & 0xfffffffe), +0x38 = 0x3e8 (0x1002b540). The object at +0x40 was just cleared, so the virtual call `call [eax+4]` with 0x3e8 at
+// 0x1002b54b-0x1002b550 (taken only for a non-NULL +0x40) is never reached.
+static void c3dj_channelBase(char* o) {
+    fat<unsigned>(o, 4) = 0x7f;                                                // 0x1002b507
+    fat<unsigned>(o, 8) = 0;                                                   // 0x1002b50e
+    for (int i = 0; i < 9; i++) fat<unsigned>(o, 0xc + 4 * i) = 0;             // 0x1002b511
+    fat<unsigned>(o, 0x30) = 0;                                                // 0x1002b517
+    fat<unsigned>(o, 0x48) = 0;                                                // 0x1002b522
+    fat<unsigned>(o, 0x4c) = 0;                                                // 0x1002b525
+    fat<unsigned>(o, 0x40) = 0;                                                // 0x1002b528
+    fat<unsigned>(o, 0x50) = 0;                                                // 0x1002b52b
+    fat<unsigned>(o, 0x44) = 0;                                                // 0x1002b531 / 0x1002b534
+    fat<unsigned>(o, 0x38) = 0x3e8;                                            // 0x1002b540
+    void* sub = fat<void*>(o, 0x40);                                           // 0x1002b537
+    if (sub != 0) reinterpret_cast<Th1v_t>(c3dj_slot(sub, 4))(sub, 0, 0x3e8);  // 0x1002b53a / 0x1002b547 / 0x1002b550 (never taken)
+}
+static void c3dj_setSourceType(char* o, unsigned t) { c3dj_fn<Th1v_t>(0x000018a2)(o, 0, t); }   // thunk 0x100018a2 -> Sound_setSourceType 0x1002ad10
+
+// 0x0002b4e0  SubChannel_ctor (VA 0x1002b4e0): the base initialisation, then +0x54 = 0 (0x1002b556), the vtable 0x1005bb90 (0x1002b559), +0x58 = 0
+// (0x1002b561), bit 2 of +0x44 set (0x1002b563-0x1002b569), Sound_setSourceType 0x1002ad10 (thunk 0x100018a2, call at 0x1002b56e) with this in ecx
+// and the argument 1 (push at 0x1002b55f), +0x5c = 0 (0x1002b577), +0x60 = 0x3f800000 (1.0f, 0x1002b57a), +0x3c = 0x10 (0x1002b581), +0x64 = 0 and
+// +0x68 = 0 (0x1002b588 / 0x1002b58b). Returns this (0x1002b58e).
+Th0p_t SubChannelCtor_orig;
+void* __fastcall SubChannelCtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    c3dj_channelBase(o);
+    fat<unsigned>(o, 0x54) = 0;                                                // 0x1002b556
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb90);                                 // 0x1002b559
+    fat<unsigned>(o, 0x58) = 0;                                                // 0x1002b561
+    fat<unsigned>(o, 0x44) = fat<unsigned>(o, 0x44) | 4;                       // 0x1002b563-0x1002b569
+    c3dj_setSourceType(o, 1);                                                  // 0x1002b56e
+    fat<unsigned>(o, 0x5c) = 0;                                                // 0x1002b577
+    fat<unsigned>(o, 0x60) = 0x3f800000u;                                      // 0x1002b57a
+    fat<unsigned>(o, 0x3c) = 0x10;                                             // 0x1002b581
+    fat<unsigned>(o, 0x64) = 0;                                                // 0x1002b588
+    fat<unsigned>(o, 0x68) = 0;                                                // 0x1002b58b
+    return self;                                                               // 0x1002b58e
+}
+
+// 0x0002c490  Ch5bb90_ctor (VA 0x1002c490): the same instructions as SubChannel_ctor up to Sound_setSourceType(1) (0x1002c4b2-0x1002c51e), then
+// +0x6c.. cleared by `rep stosd` over 0x28 dwords (ecx = 0x28, edi = this+0x6c: 0x1002c523-0x1002c54a), +0x5c = 0 (0x1002c52d), +0x60 = 0x3f800000
+// (0x1002c530), +0x3c = 0x10 (0x1002c537), +0x64 and +0x68 = 0 (0x1002c53e / 0x1002c541), the vtable 0x1005bcb4 (0x1002c544) and +0x10c = 0
+// (0x1002c550). Returns this (0x1002c556).
+Th0p_t Ch5bb90Ctor_orig;
+void* __fastcall Ch5bb90Ctor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    c3dj_channelBase(o);
+    fat<unsigned>(o, 0x54) = 0;                                                // 0x1002c506
+    fat<void*>(o, 0) = c3dj_sound(0x0005bb90);                                 // 0x1002c509
+    fat<unsigned>(o, 0x58) = 0;                                                // 0x1002c511
+    fat<unsigned>(o, 0x44) = fat<unsigned>(o, 0x44) | 4;                       // 0x1002c513-0x1002c519
+    c3dj_setSourceType(o, 1);                                                  // 0x1002c51e
+    fat<unsigned>(o, 0x5c) = 0;                                                // 0x1002c52d
+    fat<unsigned>(o, 0x60) = 0x3f800000u;                                      // 0x1002c530
+    fat<unsigned>(o, 0x3c) = 0x10;                                             // 0x1002c537
+    fat<unsigned>(o, 0x64) = 0;                                                // 0x1002c53e
+    fat<unsigned>(o, 0x68) = 0;                                                // 0x1002c541
+    fat<void*>(o, 0) = c3dj_sound(0x0005bcb4);                                 // 0x1002c544
+    for (int i = 0; i < 0x28; i++) fat<unsigned>(o, 0x6c + 4 * i) = 0;         // 0x1002c54a
+    fat<unsigned>(o, 0x10c) = 0;                                               // 0x1002c550
+    return self;                                                               // 0x1002c556
+}
+
+// 0x0002c9f0  Mixer_ctor (VA 0x1002c9f0): the base initialisation, then +0x54 = 0 (0x1002ca6d), the vtable 0x1005bdd8 (0x1002ca70), the 0x28 dwords
+// from +0x58 cleared by `rep stosd` (ecx = 0x28, edi = this+0x58: 0x1002ca63-0x1002ca78) and Sound_setSourceType (call at 0x1002ca7c) with the
+// argument 8 (push at 0x1002ca76). Returns this (0x1002ca85).
+Th0p_t MixerCtor_orig;
+void* __fastcall MixerCtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    c3dj_channelBase(o);
+    fat<unsigned>(o, 0x54) = 0;                                                // 0x1002ca6d
+    fat<void*>(o, 0) = c3dj_sound(0x0005bdd8);                                 // 0x1002ca70
+    for (int i = 0; i < 0x28; i++) fat<unsigned>(o, 0x58 + 4 * i) = 0;         // 0x1002ca78
+    c3dj_setSourceType(o, 8);                                                  // 0x1002ca7c
+    return self;                                                               // 0x1002ca85
+}
+
+// 0x0002d450  Ch5be88_ctor (VA 0x1002d450): the base initialisation, then +0x54 = 0 (0x1002d4c3), the vtable 0x1005be88 (0x1002d4c6), the BYTE at
+// +0x58 = 0 (0x1002d4cc) and then 1 (`or cl, 1` 0x1002d4d7, byte store 0x1002d4dc: the upper three bytes of that dword are not touched), +0x5c = 0
+// (0x1002d4d4), bit 3 of the low byte of +0x44 set (`or al, 8` 0x1002d4da, dword store 0x1002d4e3). Returns this (0x1002d4e6).
+Th0p_t Ch5be88Ctor_orig;
+void* __fastcall Ch5be88Ctor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    c3dj_channelBase(o);
+    fat<unsigned>(o, 0x54) = 0;                                                // 0x1002d4c3
+    fat<void*>(o, 0) = c3dj_sound(0x0005be88);                                 // 0x1002d4c6
+    fat<unsigned char>(o, 0x58) = 0;                                           // 0x1002d4cc
+    unsigned f = fat<unsigned>(o, 0x44);                                       // 0x1002d4cf
+    fat<unsigned>(o, 0x5c) = 0;                                                // 0x1002d4d4
+    f = (f & ~0xffu) | static_cast<unsigned char>((f & 0xff) | 8);            // 0x1002d4da
+    fat<unsigned char>(o, 0x58) = 1;                                           // 0x1002d4dc
+    fat<unsigned>(o, 0x44) = f;                                                // 0x1002d4e3
+    return self;                                                               // 0x1002d4e6
+}
+
+// 0x0002e930  Ch5c178_ctor (VA 0x1002e930): the base initialisation, then +0x54 = 0 (0x1002e9a7), the vtable 0x1005c178 (0x1002e9aa) and
+// Sound_setSourceType (call at 0x1002e9b0) with the argument 4 (push at 0x1002e9a3). Returns this (0x1002e9b9).
+Th0p_t Ch5c178Ctor_orig;
+void* __fastcall Ch5c178Ctor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    c3dj_channelBase(o);
+    fat<unsigned>(o, 0x54) = 0;                                                // 0x1002e9a7
+    fat<void*>(o, 0) = c3dj_sound(0x0005c178);                                 // 0x1002e9aa
+    c3dj_setSourceType(o, 4);                                                  // 0x1002e9b0
+    return self;                                                               // 0x1002e9b9
+}
+
+// 0x0002f740  Ch5c3a4_ctor (VA 0x1002f740): Mixer_ctor 0x1002c9f0 (thunk 0x1000183e, call at 0x1002f75d) on this, then the vtable 0x1005c3a4
+// (0x1002f76c), +0xf8, +0xfc, +0x100 and +0x104 = 0 (0x1002f772-0x1002f784), +0x108 = 0x7f (0x1002f78a) and Sound_setSourceType (call at
+// 0x1002f794) with the argument 8 (push at 0x1002f764). Returns this (0x1002f79d).
+Th0p_t Ch5c3a4Ctor_orig;
+void* __fastcall Ch5c3a4Ctor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    c3dj_fn<Th0p_t>(0x0000183e)(o, 0);                                         // 0x1002f75d -> Mixer_ctor 0x1002c9f0
+    fat<void*>(o, 0) = c3dj_sound(0x0005c3a4);                                 // 0x1002f76c
+    fat<unsigned>(o, 0xf8) = 0;                                                // 0x1002f772
+    fat<unsigned>(o, 0xfc) = 0;                                                // 0x1002f778
+    fat<unsigned>(o, 0x100) = 0;                                               // 0x1002f77e
+    fat<unsigned>(o, 0x104) = 0;                                               // 0x1002f784
+    fat<unsigned>(o, 0x108) = 0x7f;                                            // 0x1002f78a
+    c3dj_setSourceType(o, 8);                                                  // 0x1002f794
+    return self;                                                               // 0x1002f79d
+}
+
+// 0x0001bd90  Ctrl5b5c0_ctor (VA 0x1001bd90): +0xc, +0x10, +0x14 and +0x18 = 0 (0x1001bd9a-0x1001bda3), +4 = 0x18 (0x1001bda9), +8 = 0x44444444 (0x1001bdb0),
+// +0x28 = 0 (0x1001bdb3), +0x1c = 0xc (0x1001bdb6), +0x20 = 0x44444444 (0x1001bdbd), +0x40, +0x4c and +0x50 = -1 (0x1001bdc0-0x1001bdc6), the WORD at
+// +0x44 = 0 (0x1001bdda), the tag 0x6c727463 at +0x30 (0x1001bdd3), +0x38 = 0x18 (0x1001bddd), +0x3c = 0x44444444 (0x1001bde4), the vtables 0x1005b5c0
+// at +0 (0x1001bde7) and 0x1005b59c at +0x2c (0x1001bded; 0x1005b19c stored there first, 0x1001bdcc); the 0x80 bytes at +0x5c become 0, 1, 2 .. 0x7f
+// (`mov [eax+ecx+0x5c], cl`, loop 0x1001bdf6-0x1001be01); +0x48 = 3 (0x1001be03), the BYTE at +0x44 = 1 (0x1001be0a), +0xe0 = 0 (0x1001be0e),
+// +0x34 = 0xe4 (0x1001be14), +0x58 = 0x44444444 (0x1001be1b), +0x54 = 0x8c (0x1001be1e). Returns this (0x1001bd90 / 0x1001be26).
+Th0p_t Ctrl5b5c0Ctor_orig;
+void* __fastcall Ctrl5b5c0Ctor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    fat<unsigned>(o, 0xc) = 0;                                                 // 0x1001bd9a
+    fat<unsigned>(o, 0x10) = 0;                                                // 0x1001bd9d
+    fat<unsigned>(o, 0x14) = 0;                                                // 0x1001bda0
+    fat<unsigned>(o, 0x18) = 0;                                                // 0x1001bda3
+    fat<unsigned>(o, 4) = 0x18;                                                // 0x1001bda9
+    fat<unsigned>(o, 8) = 0x44444444u;                                         // 0x1001bdb0
+    fat<unsigned>(o, 0x28) = 0;                                                // 0x1001bdb3
+    fat<unsigned>(o, 0x1c) = 0xc;                                              // 0x1001bdb6
+    fat<unsigned>(o, 0x20) = 0x44444444u;                                      // 0x1001bdbd
+    fat<unsigned>(o, 0x40) = 0xffffffffu;                                      // 0x1001bdc0
+    fat<unsigned>(o, 0x4c) = 0xffffffffu;                                      // 0x1001bdc3
+    fat<unsigned>(o, 0x50) = 0xffffffffu;                                      // 0x1001bdc6
+    fat<unsigned>(o, 0x30) = 0x6c727463u;                                      // 0x1001bdd3
+    fat<unsigned short>(o, 0x44) = 0;                                          // 0x1001bdda
+    fat<unsigned>(o, 0x38) = 0x18;                                             // 0x1001bddd
+    fat<unsigned>(o, 0x3c) = 0x44444444u;                                      // 0x1001bde4
+    fat<void*>(o, 0) = c3dj_sound(0x0005b5c0);                                 // 0x1001bde7
+    fat<void*>(o, 0x2c) = c3dj_sound(0x0005b59c);                              // 0x1001bded
+    for (int i = 0; i < 0x80; i++) fat<unsigned char>(o, 0x5c + i) = static_cast<unsigned char>(i);   // 0x1001bdf6-0x1001be01
+    fat<unsigned>(o, 0x48) = 3;                                                // 0x1001be03
+    fat<unsigned char>(o, 0x44) = 1;                                           // 0x1001be0a
+    fat<unsigned>(o, 0xe0) = 0;                                                // 0x1001be0e
+    fat<unsigned>(o, 0x34) = 0xe4;                                             // 0x1001be14
+    fat<unsigned>(o, 0x58) = 0x44444444u;                                      // 0x1001be1b
+    fat<unsigned>(o, 0x54) = 0x8c;                                             // 0x1001be1e
+    return self;                                                               // 0x1001be26
+}
+
+// 0x00029e70  MidiDeviceBase_ctor (VA 0x10029e70): +4 = 0 (0x10029e79), +8 = 0x7f (0x10029e7b), +0xc, +0x18, +0x1c, +0x10 and +0x14 = 0
+// (0x10029e82-0x10029e8e), the vtable 0x1005b9e4 (0x10029e91). Returns this (0x10029e70 / 0x10029e97).
+Th0p_t MidiBaseCtor_orig;
+void* __fastcall MidiBaseCtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    fat<unsigned>(o, 4) = 0;                                                   // 0x10029e79
+    fat<unsigned>(o, 8) = 0x7f;                                                // 0x10029e7b
+    fat<unsigned>(o, 0xc) = 0;                                                 // 0x10029e82
+    fat<unsigned>(o, 0x18) = 0;                                                // 0x10029e85
+    fat<unsigned>(o, 0x1c) = 0;                                                // 0x10029e88
+    fat<unsigned>(o, 0x10) = 0;                                                // 0x10029e8b
+    fat<unsigned>(o, 0x14) = 0;                                                // 0x10029e8e
+    fat<void*>(o, 0) = c3dj_sound(0x0005b9e4);                                 // 0x10029e91
+    return self;                                                               // 0x10029e97
+}
+
+// 0x00009be0  Midi_Device::ctor (VA 0x10009be0): MidiDeviceBase_ctor 0x10029e70 (thunk 0x1000260d, call at 0x10009bfe) on this, +0x40, +0x44, +0x48 and
+// +0x4c = 0 (0x10009c09-0x10009c12), CommandQueue::init 0x10008860 (thunk 0x100010aa, call at 0x10009c1d) on this+0x50, the vtable 0x1005b28c (0x10009c29),
+// +0x24, +0x28, +0x2c, +0x34 and +0x3c = 0 (0x10009c2f-0x10009c3a), +0x38 = 0x7f (0x10009c3d) and +0x30 = 0xf (0x10009c44). Returns this (0x10009c4b).
+Th0p_t MidiCtor_orig;
+void* __fastcall MidiCtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    c3dj_fn<Th0p_t>(0x0000260d)(o, 0);                                         // 0x10009bfe -> 0x10029e70
+    fat<unsigned>(o, 0x40) = 0;                                                // 0x10009c09
+    fat<unsigned>(o, 0x44) = 0;                                                // 0x10009c0c
+    fat<unsigned>(o, 0x48) = 0;                                                // 0x10009c0f
+    fat<unsigned>(o, 0x4c) = 0;                                                // 0x10009c12
+    c3dj_fn<Th0p_t>(0x000010aa)(o + 0x50, 0);                                  // 0x10009c1d -> 0x10008860
+    fat<void*>(o, 0) = c3dj_sound(0x0005b28c);                                 // 0x10009c29
+    fat<unsigned>(o, 0x24) = 0;                                                // 0x10009c2f
+    fat<unsigned>(o, 0x28) = 0;                                                // 0x10009c31
+    fat<unsigned>(o, 0x2c) = 0;                                                // 0x10009c34
+    fat<unsigned>(o, 0x34) = 0;                                                // 0x10009c37
+    fat<unsigned>(o, 0x3c) = 0;                                                // 0x10009c3a
+    fat<unsigned>(o, 0x38) = 0x7f;                                             // 0x10009c3d
+    fat<unsigned>(o, 0x30) = 0xf;                                              // 0x10009c44
+    return self;                                                               // 0x10009c4b
+}
+
+// 0x00029020  VoiceBase_ctor (VA 0x10029020): the vtable 0x1005b8b0 (0x1002903f), +4 = 0 (0x10029049), +8 = 0x7f (0x1002904b), +0xc, +0x18, +0x1c,
+// +0x10 and +0x14 = 0 (0x10029052-0x1002905e), then the CRT's vector-constructor iterator 0x10042902 (call at 0x10029077, `ret 0x14`) runs the element
+// constructor thunk 0x100020db (-> 0x10029b80: byte 1 at +0, +4 = 0x7f, +8 .. +0x14 = 0) over 0x10 elements of 0x18 bytes from this+0x24 with
+// VoiceBase_clearList's thunk 0x1000256d as the unwinding destructor (pushes 0x10029061-0x10029072), the vtable 0x1005b914 (0x10029083) and +0x20 = 0
+// (0x1002908b). Returns this (0x10029089 / 0x1002908d).
+typedef unsigned(__stdcall* EhVecCtor_t)(void*, unsigned, unsigned, void*, void*);
+Th0p_t VoiceBaseCtor_orig;
+void* __fastcall VoiceBaseCtor_re(void* self, void*) {
+    char* o = static_cast<char*>(self);
+    fat<void*>(o, 0) = c3dj_sound(0x0005b8b0);                                 // 0x1002903f
+    fat<unsigned>(o, 4) = 0;                                                   // 0x10029049
+    fat<unsigned>(o, 8) = 0x7f;                                                // 0x1002904b
+    fat<unsigned>(o, 0xc) = 0;                                                 // 0x10029052
+    fat<unsigned>(o, 0x18) = 0;                                                // 0x10029055
+    fat<unsigned>(o, 0x1c) = 0;                                                // 0x10029058
+    fat<unsigned>(o, 0x10) = 0;                                                // 0x1002905b
+    fat<unsigned>(o, 0x14) = 0;                                                // 0x1002905e
+    reinterpret_cast<EhVecCtor_t>(c3dj_sound(0x00042902))(o + 0x24, 0x18, 0x10, c3dj_sound(0x000020db), c3dj_sound(0x0000256d));   // 0x10029077
+    fat<void*>(o, 0) = c3dj_sound(0x0005b914);                                 // 0x10029083
+    fat<unsigned>(o, 0x20) = 0;                                                // 0x1002908b
+    return self;                                                               // 0x10029089
+}
+
+}  // namespace
+
+// 0x00005720  initCtrlVtable
+SG_HOOK("sound.dll", 0x00005720, initCtrlVtable, initCtrlVtable_re, initCtrlVtable_orig);
+// 0x0001c560  CtrlObject_dtorA
+SG_HOOK("sound.dll", 0x0001c560, CtrlObject_dtorA, CtrlObject_dtorA_re, CtrlObject_dtorA_orig);
+// 0x0001c710  CtrlObject_dtorB
+SG_HOOK("sound.dll", 0x0001c710, CtrlObject_dtorB, CtrlObject_dtorB_re, CtrlObject_dtorB_orig);
+// 0x0001cbd0  CtrlObject_dtorC
+SG_HOOK("sound.dll", 0x0001cbd0, CtrlObject_dtorC, CtrlObject_dtorC_re, CtrlObject_dtorC_orig);
+// 0x0001ccd0  CtrlObject_dtorD
+SG_HOOK("sound.dll", 0x0001ccd0, CtrlObject_dtorD, CtrlObject_dtorD_re, CtrlObject_dtorD_orig);
+// 0x000087f0  listNode3Init
+SG_HOOK("sound.dll", 0x000087f0, listNode3Init, listNode3Init_re, listNode3Init_orig);
+// 0x00008840  pairClear
+SG_HOOK("sound.dll", 0x00008840, pairClear, pairClear_re, pairClear_orig);
+// 0x0001d130  PtrList_init
+SG_HOOK("sound.dll", 0x0001d130, PtrList_init, PtrList_init_re, PtrList_init_orig);
+// 0x00008890  CommandQueue::clear
+SG_HOOK("sound.dll", 0x00008890, CommandQueue_clear, CmdClear_re, CmdClear_orig);
+// 0x0001bc50  CtrlObject::ctor
+SG_HOOK("sound.dll", 0x0001bc50, CtrlObject_ctor, CtrlObject_ctor_re, CtrlObject_ctor_orig);
+// 0x0001bca0  CtrlObject2_ctor
+SG_HOOK("sound.dll", 0x0001bca0, CtrlObject2_ctor, CtrlObject2_ctor_re, CtrlObject2_ctor_orig);
+// 0x0001cbf0  Ctrl5b668_ctor
+SG_HOOK("sound.dll", 0x0001cbf0, Ctrl5b668_ctor, Ctrl5b668_ctor_re, Ctrl5b668_ctor_orig);
+// 0x0001caf0  CtrlObject3_ctor
+SG_HOOK("sound.dll", 0x0001caf0, CtrlObject3_ctor, CtrlObject3_ctor_re, CtrlObject3_ctor_orig);
+// 0x00024460  ChannelDesc_ctor
+SG_HOOK("sound.dll", 0x00024460, ChannelDesc_ctor, ChannelDesc_ctor_re, ChannelDesc_ctor_orig);
+// 0x0001c1e0  Ctrl5b5c0_transposeTable
+SG_HOOK("sound.dll", 0x0001c1e0, Ctrl5b5c0_transposeTable, Transpose_re, Transpose_orig);
+// 0x00028ff0  DeviceBase_dtorA
+SG_HOOK("sound.dll", 0x00028ff0, DeviceBase_dtorA, DeviceBase_dtorA_re, DeviceBase_dtorA_orig);
+// 0x00029f60  DeviceBase_dtorB
+SG_HOOK("sound.dll", 0x00029f60, DeviceBase_dtorB, DeviceBase_dtorB_re, DeviceBase_dtorB_orig);
+// 0x0002a3b0  DeviceBase_dtorC
+SG_HOOK("sound.dll", 0x0002a3b0, DeviceBase_dtorC, DeviceBase_dtorC_re, DeviceBase_dtorC_orig);
+// 0x0000e8f0  Wave_In_Device::dtor
+SG_HOOK("sound.dll", 0x0000e8f0, Wave_In_Device_dtor, WaveInDtor_re, WaveInDtor_orig);
+// 0x00028fb0  DeviceBase_scalarDtor
+SG_HOOK("sound.dll", 0x00028fb0, DeviceBase_scalarDtor, DeviceBaseScalar_re, DeviceBaseScalar_orig);
+// 0x00005740  ctrlScalarDeletingDtor
+SG_HOOK("sound.dll", 0x00005740, ctrlScalarDeletingDtor, ctrlScalarDeletingDtor_re, ctrlScalarDeletingDtor_orig);
+// 0x0000cc40  cmdNode::scalarDeletingDtor
+SG_HOOK("sound.dll", 0x0000cc40, cmdNode_scalarDeletingDtor, cmdNodeScalarDeletingDtor_re, cmdNodeScalarDeletingDtor_orig);
+// 0x0000e8c0  Wave_In_Device::scalarDeletingDtor
+SG_HOOK("sound.dll", 0x0000e8c0, Wave_In_Device_scalarDeletingDtor, WaveInScalarDeletingDtor_re, WaveInScalarDeletingDtor_orig);
+// 0x0001c6e0  CtrlObject_scalarDtorB
+SG_HOOK("sound.dll", 0x0001c6e0, CtrlObject_scalarDtorB, CtrlObject_scalarDtorB_re, CtrlObject_scalarDtorB_orig);
+// 0x0001cba0  CtrlObject_scalarDtorC
+SG_HOOK("sound.dll", 0x0001cba0, CtrlObject_scalarDtorC, CtrlObject_scalarDtorC_re, CtrlObject_scalarDtorC_orig);
+// 0x0001cca0  CtrlObject_scalarDtorD
+SG_HOOK("sound.dll", 0x0001cca0, CtrlObject_scalarDtorD, CtrlObject_scalarDtorD_re, CtrlObject_scalarDtorD_orig);
+// 0x00029f30  MidiDeviceBase_scalarDtor
+SG_HOOK("sound.dll", 0x00029f30, MidiDeviceBase_scalarDtor, MidiDeviceBase_scalarDtor_re, MidiDeviceBase_scalarDtor_orig);
+// 0x0002a380  WaveInDeviceBase_scalarDtor
+SG_HOOK("sound.dll", 0x0002a380, WaveInDeviceBase_scalarDtor, WaveInDeviceBase_scalarDtor_re, WaveInDeviceBase_scalarDtor_orig);
+// 0x00038ae0  MemBlock_deleteDtor
+SG_HOOK("sound.dll", 0x00038ae0, MemBlock_deleteDtor, MemBlockDtor_re, MemBlockDtor_orig);
+// 0x0002b090  unlinkFromActiveList
+SG_HOOK("sound.dll", 0x0002b090, unlinkFromActiveList, UnlinkActive_re, UnlinkActive_orig);
+// 0x0002ac00  SubChannel_dtor
+SG_HOOK("sound.dll", 0x0002ac00, SubChannel_dtor, SubChannelDtor_re, SubChannelDtor_orig);
+// 0x0002b620  Ch5bb90_dtor
+SG_HOOK("sound.dll", 0x0002b620, Ch5bb90_dtor, Ch5bb90Dtor_re, Ch5bb90Dtor_orig);
+// 0x0002c5e0  destroyMixerVoices
+SG_HOOK("sound.dll", 0x0002c5e0, destroyMixerVoices, MixerVoicesDtor_re, MixerVoicesDtor_orig);
+// 0x0002cb00  Mixer_dtor
+SG_HOOK("sound.dll", 0x0002cb00, Mixer_dtor, MixerDtor_re, MixerDtor_orig);
+// 0x0002d560  Ch5be88_dtorA
+SG_HOOK("sound.dll", 0x0002d560, Ch5be88_dtorA, Ch5be88_dtorA_re, Ch5be88_dtorA_orig);
+// 0x0002e660  Ch5be88_dtorB
+SG_HOOK("sound.dll", 0x0002e660, Ch5be88_dtorB, Ch5be88_dtorB_re, Ch5be88_dtorB_orig);
+// 0x0002ea30  Ch5c178_dtor
+SG_HOOK("sound.dll", 0x0002ea30, Ch5c178_dtor, Ch5c178Dtor_re, Ch5c178Dtor_orig);
+// 0x0002ef40  Ch5c234_dtor
+SG_HOOK("sound.dll", 0x0002ef40, Ch5c234_dtor, Ch5c234Dtor_re, Ch5c234Dtor_orig);
+// 0x0002f3f0  Ch5c2ec_dtor
+SG_HOOK("sound.dll", 0x0002f3f0, Ch5c2ec_dtor, Ch5c2ecDtor_re, Ch5c2ecDtor_orig);
+// 0x0002abd0  SubChannel_scalarDtor
+SG_HOOK("sound.dll", 0x0002abd0, SubChannel_scalarDtor, SubChannel_scalarDtor_re, SubChannel_scalarDtor_orig);
+// 0x0002b5f0  Ch5bb90_scalarDtor
+SG_HOOK("sound.dll", 0x0002b5f0, Ch5bb90_scalarDtor, Ch5bb90_scalarDtor_re, Ch5bb90_scalarDtor_orig);
+// 0x0002c5b0  MixerVoiceArray_scalarDtor
+SG_HOOK("sound.dll", 0x0002c5b0, MixerVoiceArray_scalarDtor, MixerVoiceArray_scalarDtor_re, MixerVoiceArray_scalarDtor_orig);
+// 0x0002cad0  Mixer_scalarDtor
+SG_HOOK("sound.dll", 0x0002cad0, Mixer_scalarDtor, Mixer_scalarDtor_re, Mixer_scalarDtor_orig);
+// 0x0002d530  Ch5be88_scalarDtorA
+SG_HOOK("sound.dll", 0x0002d530, Ch5be88_scalarDtorA, Ch5be88_scalarDtorA_re, Ch5be88_scalarDtorA_orig);
+// 0x0002e630  Ch5be88_scalarDtorB
+SG_HOOK("sound.dll", 0x0002e630, Ch5be88_scalarDtorB, Ch5be88_scalarDtorB_re, Ch5be88_scalarDtorB_orig);
+// 0x0002ea00  Ch5c178_scalarDtor
+SG_HOOK("sound.dll", 0x0002ea00, Ch5c178_scalarDtor, Ch5c178_scalarDtor_re, Ch5c178_scalarDtor_orig);
+// 0x0002ef10  Ch5c234_scalarDtor
+SG_HOOK("sound.dll", 0x0002ef10, Ch5c234_scalarDtor, Ch5c234_scalarDtor_re, Ch5c234_scalarDtor_orig);
+// 0x0002f3c0  Ch5c2ec_scalarDtor
+SG_HOOK("sound.dll", 0x0002f3c0, Ch5c2ec_scalarDtor, Ch5c2ec_scalarDtor_re, Ch5c2ec_scalarDtor_orig);
+// 0x0000f760  DsBuffer::stop
+SG_HOOK("sound.dll", 0x0000f760, DsBuffer_stop, DsStop_re, DsStop_orig);
+// 0x00010370  DsBuffer::unlock
+SG_HOOK("sound.dll", 0x00010370, DsBuffer_unlock, DsUnlock_re, DsUnlock_orig);
+// 0x00010e30  DsBuffer::isBusy
+SG_HOOK("sound.dll", 0x00010e30, DsBuffer_isBusy, DsIsBusy_re, DsIsBusy_orig);
+// 0x0000ff60  DsBuffer::queryNotify
+SG_HOOK("sound.dll", 0x0000ff60, DsBuffer_queryNotify, DsQueryNotify_re, DsQueryNotify_orig);
+// 0x0000fef0  DsBuffer::query3D
+SG_HOOK("sound.dll", 0x0000fef0, DsBuffer_query3D, DsQuery3D_re, DsQuery3D_orig);
+// 0x00011070  Ds3DBuffer::setPositionX
+SG_HOOK("sound.dll", 0x00011070, Ds3DBuffer_setPositionX, Ds3DSetX_re, Ds3DSetX_orig);
+// 0x000110c0  Ds3DBuffer::setPositionY
+SG_HOOK("sound.dll", 0x000110c0, Ds3DBuffer_setPositionY, Ds3DSetY_re, Ds3DSetY_orig);
+// 0x00011110  Ds3DBuffer::setPositionZ
+SG_HOOK("sound.dll", 0x00011110, Ds3DBuffer_setPositionZ, Ds3DSetZ_re, Ds3DSetZ_orig);
+// 0x00011000  Ds3DBuffer::setPosition
+SG_HOOK("sound.dll", 0x00011000, Ds3DBuffer_setPosition, Ds3DSetPos_re, Ds3DSetPos_orig);
+// 0x0000f790  DsBuffer::setPosition
+SG_HOOK("sound.dll", 0x0000f790, DsBuffer_setPosition, DsSetPosition_re, DsSetPosition_orig);
+// 0x0000ef60  DsBuffer::destroy
+SG_HOOK("sound.dll", 0x0000ef60, DsBuffer_destroy, DsDestroy_re, DsDestroy_orig);
+// 0x0000f8f0  DsBuffer::release
+SG_HOOK("sound.dll", 0x0000f8f0, DsBuffer_release, DsRelease_re, DsRelease_orig);
+// 0x00010060  DsBuffer::releaseIfOwned
+SG_HOOK("sound.dll", 0x00010060, DsBuffer_releaseIfOwned, DsReleaseIfOwned_re, DsReleaseIfOwned_orig);
+// 0x00012b80  DsBuffer::scalarDeletingDtor
+SG_HOOK("sound.dll", 0x00012b80, DsBuffer_scalarDeletingDtor, DsBuffer_scalarDtor_re, DsBuffer_scalarDtor_orig);
+// 0x00032640  closeDecoder
+SG_HOOK("sound.dll", 0x00032640, closeDecoder, CloseDecoder_re, CloseDecoder_orig);
+// 0x0001b9a0  Ctrl_appendIfAccepted
+SG_HOOK("sound.dll", 0x0001b9a0, Ctrl_appendIfAccepted, CtrlAppend_re, CtrlAppend_orig);
+// 0x00032410  DsDevice_registerBuffer
+SG_HOOK("sound.dll", 0x00032410, DsDevice_registerBuffer, DsRegister_re, DsRegister_orig);
+// 0x0000e120  addToSoundList
+SG_HOOK("sound.dll", 0x0000e120, addToSoundList, AddToSoundList_re, AddToSoundList_orig);
+// 0x00020ea0  Voice_requestStop
+SG_HOOK("sound.dll", 0x00020ea0, Voice_requestStop, VoiceReqStop_re, VoiceReqStop_orig);
+// 0x00020ee0  Voice_requestStopDrain
+SG_HOOK("sound.dll", 0x00020ee0, Voice_requestStopDrain, VoiceReqDrain_re, VoiceReqDrain_orig);
+// 0x00031ac0  PtrList_freeNodesB
+SG_HOOK("sound.dll", 0x00031ac0, PtrList_freeNodesB, PtrListFreeB_re, PtrListFreeB_orig);
+// 0x000384b0  nodeListClear2
+SG_HOOK("sound.dll", 0x000384b0, nodeListClear2, NodeListClear2_re, NodeListClear2_orig);
+// 0x00039580  nodeListClear
+SG_HOOK("sound.dll", 0x00039580, nodeListClear, NodeListClear_re, NodeListClear_orig);
+// 0x00029170  VoiceBase_clearList
+SG_HOOK("sound.dll", 0x00029170, VoiceBase_clearList, VoiceBaseClearList_re, VoiceBaseClearList_orig);
+// 0x00037b00  Channel_set3DPosition
+SG_HOOK("sound.dll", 0x00037b00, Channel_set3DPosition, Ch3DSetPos_re, Ch3DSetPos_orig);
+// 0x000292d0  VoiceBase_openInner
+SG_HOOK("sound.dll", 0x000292d0, VoiceBase_openInner, VoiceOpenInner_re, VoiceOpenInner_orig);
+// 0x0001abd0  Seq_freeChannelObjects
+SG_HOOK("sound.dll", 0x0001abd0, Seq_freeChannelObjects, SeqFreeChan_re, SeqFreeChan_orig);
+// 0x0001ad30  Sound_anyChannelActive
+SG_HOOK("sound.dll", 0x0001ad30, Sound_anyChannelActive, SoundAnyActive_re, SoundAnyActive_orig);
+// 0x000136c0  findAndUnlinkNode
+SG_HOOK("sound.dll", 0x000136c0, findAndUnlinkNode, FindUnlink_re, FindUnlink_orig);
+// 0x0000e700  findAndUnlinkNodeB
+SG_HOOK("sound.dll", 0x0000e700, findAndUnlinkNodeB, FindUnlinkB_re, FindUnlinkB_orig);
+// 0x0002bb10  Object_setName
+SG_HOOK("sound.dll", 0x0002bb10, Object_setName, ObjectSetName_re, ObjectSetName_orig);
+// 0x0002ddf0  Sound_assignName
+SG_HOOK("sound.dll", 0x0002ddf0, Sound_assignName, SoundAssignName_re, SoundAssignName_orig);
+// 0x0002d240  Voice_setName
+SG_HOOK("sound.dll", 0x0002d240, Voice_setName, VoiceSetName_re, VoiceSetName_orig);
+// 0x0001d0a0  Sound_setAltName
+SG_HOOK("sound.dll", 0x0001d0a0, Sound_setAltName, SoundSetAltName_re, SoundSetAltName_orig);
+// 0x0002dff0  Channel_releaseSound
+SG_HOOK("sound.dll", 0x0002dff0, Channel_releaseSound, ChanReleaseSound_re, ChanReleaseSound_orig);
+// 0x000134e0  unlinkDsBuffer
+SG_HOOK("sound.dll", 0x000134e0, unlinkDsBuffer, UnlinkDs_re, UnlinkDs_orig);
+// 0x00029200  VoiceBase_dtor
+SG_HOOK("sound.dll", 0x00029200, VoiceBase_dtor, VoiceBaseDtor_re, VoiceBaseDtor_orig);
+// 0x00009cb0  Midi_Device::dtor
+SG_HOOK("sound.dll", 0x00009cb0, Midi_Device_dtor, MidiDtor_re, MidiDtor_orig);
+// 0x00029140  VoiceBase_scalarDtor
+SG_HOOK("sound.dll", 0x00029140, VoiceBase_scalarDtor, VoiceBase_scalarDtor2_re, VoiceBase_scalarDtor2_orig);
+// 0x00009c80  Midi_Device::scalarDeletingDtor
+SG_HOOK("sound.dll", 0x00009c80, Midi_Device_scalarDeletingDtor, MidiDevice_scalarDtor_re, MidiDevice_scalarDtor_orig);
+// 0x0002b4e0  SubChannel_ctor
+SG_HOOK("sound.dll", 0x0002b4e0, SubChannel_ctor, SubChannelCtor_re, SubChannelCtor_orig);
+// 0x0002c490  Ch5bb90_ctor
+SG_HOOK("sound.dll", 0x0002c490, Ch5bb90_ctor, Ch5bb90Ctor_re, Ch5bb90Ctor_orig);
+// 0x0002c9f0  Mixer_ctor
+SG_HOOK("sound.dll", 0x0002c9f0, Mixer_ctor, MixerCtor_re, MixerCtor_orig);
+// 0x0002d450  Ch5be88_ctor
+SG_HOOK("sound.dll", 0x0002d450, Ch5be88_ctor, Ch5be88Ctor_re, Ch5be88Ctor_orig);
+// 0x0002e930  Ch5c178_ctor
+SG_HOOK("sound.dll", 0x0002e930, Ch5c178_ctor, Ch5c178Ctor_re, Ch5c178Ctor_orig);
+// 0x0002f740  Ch5c3a4_ctor
+SG_HOOK("sound.dll", 0x0002f740, Ch5c3a4_ctor, Ch5c3a4Ctor_re, Ch5c3a4Ctor_orig);
+// 0x0001bd90  Ctrl5b5c0_ctor
+SG_HOOK("sound.dll", 0x0001bd90, Ctrl5b5c0_ctor, Ctrl5b5c0Ctor_re, Ctrl5b5c0Ctor_orig);
+// 0x00029e70  MidiDeviceBase_ctor
+SG_HOOK("sound.dll", 0x00029e70, MidiDeviceBase_ctor, MidiBaseCtor_re, MidiBaseCtor_orig);
+// 0x00009be0  Midi_Device::ctor
+SG_HOOK("sound.dll", 0x00009be0, Midi_Device_ctor, MidiCtor_re, MidiCtor_orig);
+// 0x00029020  VoiceBase_ctor
+SG_HOOK("sound.dll", 0x00029020, VoiceBase_ctor, VoiceBaseCtor_re, VoiceBaseCtor_orig);

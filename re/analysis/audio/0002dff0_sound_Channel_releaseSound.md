@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002dff0`), 79 bytes, 32 instructions, subsystem `aud
 if the Sound at +0x40 exists and this vtbl+0x5c returns 0, releases the Sound (its vtbl+0x14 then delete_sound) and nulls the slot (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002dff0 Channel_releaseSound (VA 0x1002dff0). The sound object at +0x40 (0x1002dff6) non-NULL: the channel's own vtable slot +0x5c is called with no arguments (`mov eax, [esi]; call [eax+0x5c]` 0x1002dffd / 0x1002dfff); +0x40 is read again (0x1002e002). A zero result calls the object's vtable slot +0x14 (`call [edx+0x14]` 0x1002e00b, result dropped) and then delete_sound 0x100097d0 (thunk 0x10001a87, 0x1002e012) on it; a non-zero result calls slot +0x14 (0x1002e01c) and keeps its result for the return (edi, 0x1002e01f). +0x40 = 0 (0x1002e021). Whether or not there was an object, the channel's slot +0x80 is called (0x1002e028-0x1002e02c) and bit 0 of the flag dword at +0x44 is cleared (`and al, 0xfe` 0x1002e035). The result is edi (0x1002e03a): 0, or slot +0x14's result. Reached from: no call xref; reached through a stored pointer: 0x1005be9c table slot 5 (+0x14) of the table at 0x1005be88; installers: 0x1002d450 Ch5be88_ctor, 0x1002d560 Ch5be88_dtorA, 0x1002e660 Ch5be88_dtorB. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Channel_releaseSound (8 vectors, 8 distinct results, 8 changing state, `log/diff/0002dff0_sound_Channel_releaseSound.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002e03e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002dff1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

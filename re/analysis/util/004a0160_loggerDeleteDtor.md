@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor for the logger object. (`re/names/exe_5.tsv`)
 
+## Purpose
+Deleting destructor of the logger class: freeLoggerBuf 0x004a01a0 on this (call 0x004a0163), operator delete 0x004a4ffc (call 0x004a0170) when bit 0 of the flags byte is set (test 0x004a0168, `je` 0x004a016d), returns this (0x004a0178, `ret 4` 0x004a017b). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: loggerDeleteDtor (24 vectors, 18 distinct results, 24 changing state, `log/diff/004a0160_loggerDeleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_10.cpp` as `?FUN_004a0160@C_FUN_004a0160@f_004a0160@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a017b): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00037b00`), 44 bytes, 15 instructions, subsystem `aud
 Forwards (x,y,z) to Ds3DBuffer::setPosition on the 3D buffer +0x54 when +0x5c bit5 is set and the buffer is non-null; otherwise returns SNDERR 0xb. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x00037b00 Channel_set3DPosition (VA 0x10037b00). Three stack arguments x, y, z (`ret 0xc` 0x10037b21 / 0x10037b29). Bit 5 of the flag byte at +0x5c clear (`test byte ptr [ecx+0x5c], 0x20` / `je` 0x10037b00 / 0x10037b04) returns 0xb (0x10037b24); the object at +0x54 (`mov ecx, [ecx+0x54]` 0x10037b06) NULL returns 0xb too (`je` 0x10037b0b). Otherwise Ds3DBuffer::setPosition 0x10011000 (thunk 0x10001889, call at 0x10037b1c) is called on that object with (x, y, z) (pushes z 0x10037b15, y 0x10037b1a, x 0x10037b1b) and its result is the function's. Reached from: static callers 0x1003a5b0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Channel_set3DPosition (30 vectors, 19 distinct results, 18 changing state, `log/diff/00037b00_sound_Channel_set3DPosition.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x10037b21, 0x10037b29): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10037b00 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

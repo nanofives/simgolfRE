@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00020ea0`), 41 bytes, 15 instructions, subsystem `aud
 Enqueues command 2 (stop) for the voice on g_midiDevice when the voice is active (+0xac bit0); returns SNDERR 0x14 otherwise. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x00020ea0 Voice_requestStop (VA 0x10020ea0). Bit 0 of the flag byte at +0xac clear returns 0x14 (`test byte ptr [ecx+0xac], 1` / `jne` 0x10020ea0 / 0x10020ea7, `mov eax, 0x14` 0x10020ea9). Otherwise g_midiDevice 0x100b4a1c is loaded (0x10020eaf); non-NULL -> CommandQueue::push 0x1000a240 (thunk 0x100015e1, call at 0x10020ec1) on it with (voice = this, 2, 0, 0) (pushes 0 / 0 / 2 / ecx at 0x10020eb8-0x10020ebe; the queue is ecx); the result is dropped and 0 is returned (`xor eax, eax` 0x10020ec6). Reached from: no call xref; reached through a stored pointer: 0x1005b020 table slot 8 (+0x20) of the table at 0x1005b000; installers: 0x10003f30 Sound::ctor, 0x10004000 Sound::dtor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Voice_requestStop_q (12 vectors, 5 distinct results, 4 changing state, `log/diff/00020ea0_sound_Voice_requestStop_q.path1.csv`); Voice_requestStop_full (12 vectors, 2 distinct results, 0 changing state, `log/diff/00020ea0_sound_Voice_requestStop_full.path1.csv`); Voice_requestStop_null (12 vectors, 2 distinct results, 0 changing state, `log/diff/00020ea0_sound_Voice_requestStop_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_07.cpp` as `?FUN_10020ea0@f_10020ea0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10020eae, 0x10020ec8): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the 0x004baeac container. (`re/names/exe_4.tsv`)
 
+## Purpose
+Scalar deleting destructor of StrList: StrList::dtor 0x00487260 on this (call 0x00487243), operator delete 0x004a4ffc (call 0x00487250) when bit 0 of the flags byte is set (test 0x00487248, `je` 0x0048724d), returns this (0x00487258, `ret 4` 0x0048725b). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: StrList::scalarDtor (24 vectors, 18 distinct results, 24 changing state, `log/diff/00487240_StrList_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00487240@C_FUN_00487240@f_00487240@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048725b): callee pops 4 bytes of stack arguments.

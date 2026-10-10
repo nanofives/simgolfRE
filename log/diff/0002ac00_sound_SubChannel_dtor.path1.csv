@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$c0,void,void,True,5d85a042,5d85a042,True
+$c1,void,void,True,491a56e1,491a56e1,True
+$c2,void,void,True,01106aef,01106aef,True
+$c3,void,void,True,753d0751,753d0751,True
+$c4,void,void,True,90ad677d,90ad677d,True
+$c5,void,void,True,c567c8fd,c567c8fd,True
+$c6,void,void,True,93bb5570,93bb5570,True
+$c7,void,void,True,077e451e,077e451e,True
+$c8,void,void,True,4629d621,4629d621,True
+$c9,void,void,True,38cc38c1,38cc38c1,True
+$c10,void,void,True,699581ce,699581ce,True
+$c11,void,void,True,7adf0e0f,7adf0e0f,True
+state_regions,$c0+0x0:288 $c1+0x0:288 $c2+0x0:288 $c3+0x0:288 $c4+0x0:288 $c5+0x0:288 $c6+0x0:288 $c7+0x0:288 $c8+0x0:288 $c9+0x0:288 $c10+0x0:288 $c11+0x0:288 $n0+0x0:96 $n1+0x0:96 $n2+0x0:96 $n3+0x0:96 $gHead+0x0:4 $gTail+0x0:4 $freelog+0x0:1028 $dslog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71ce55e0,original=0x3ee0e40,2026-10-10T17:31:05
+distinct_results,12,,
+VERDICT,GREEN,12,

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 19 bytes, 7 instructions, subsystem `util`. Mechanical 
 thin wrapper that clears the list at 0x004a4d50. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Clears the singly linked list at this with listClear4a4d 0x004a4d50 (call 0x004a4d33), then stores its stack argument at +0x10 (0x004a4d38-0x004a4d3c); `ret 4` (0x004a4d40). Declared void: its only caller 0x0049ccc0 (call at 0x0049ce7e) compares memory next (0x0049ce83) and does not read eax. Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: listClearThunk (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a4d30_listClearThunk.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a4d30@C_FUN_004a4d30@f_004a4d30@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a4d40): callee pops 4 bytes of stack arguments.

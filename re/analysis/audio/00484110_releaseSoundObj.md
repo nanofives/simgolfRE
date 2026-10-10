@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 10 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 calls the sound.dll release hook g_83af70(obj) when installed (g_83afc4), else returns 1 (`re/names/exe_3.tsv`)
 
+## Purpose
+Releases a sound object through the sound library's function table: without the library (g_soundLib 0x0083afc4 zero, test 0x00484115, `jne` 0x00484117) it returns 1 (`mov eax, 1` 0x00484119); otherwise the cdecl function stored at 0x0083af70 (table entry 1) runs with the argument (call [0x83af70] 0x00484124, `add esp, 4` 0x0048412a) and its result is returned (`ret` 0x0048412d). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: releaseSoundObj (8 vectors, 8 distinct results, 8 changing state, `log/diff/00484110_releaseSoundObj.path1.csv`); releaseSoundObj_nolib (4 vectors, 1 distinct results, 0 changing state, `log/diff/00484110_releaseSoundObj_nolib.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?call484110@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048411e, 0x0048412d): callee pops 0 bytes of stack arguments.

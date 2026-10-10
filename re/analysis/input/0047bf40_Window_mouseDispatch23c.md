@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 206 bytes, 75 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 mouse-button handler: sets g_83ab2c, calls m_23c, hit-tests m_bc to dispatch hit34 or miss98, notifies panels m_44/m_6c (`re/names/exe_3.tsv`)
 
+## Purpose
+Mouse dispatcher of a Window (same instruction sequence as Window::mouseDispatch254 0x0047c430, c3o): a window whose flags dword +0x9c has bit 0x200000 or whose byte +0xa0 has bit 8 ignores the event (0x0047bf46-0x0047bf5d); with release (third argument) non-zero (test 0x0047bf67, `jne` 0x0047bfe7) virtual slot 0xbc runs with (x, y) (call 0x0047bff5) and the panel at +0x6c is notified through its slot 0x1c (0x0047bffb-0x0047c004); otherwise g_curWidget 0x0083ab2c = this (0x0047bf6b), the cdecl callback at +0x23c runs with (x, y) when set (0x0047bf71-0x0047bf87), HotList::hitTestRect 0x00492b10 runs on the hot-spot list at +0xbc with x and y passed by address (0x0047bf8c-0x0047bfa3); a hit (index >= 0, `jl` 0x0047bfaa) calls virtual slot 0x34 with (a, b, &rect) (call 0x0047bfbf); no hit or a zero answer (test 0x0047bfc2, `jne` 0x0047bfc4) calls virtual slot 0x98 with the original x and y (call 0x0047bfcc); the panel at +0x44 is notified (0x0047bfd2-0x0047bfdd). Returns nothing (the original is matched as a void method). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Window::mouseDispatch23c (35 vectors, 31 distinct results, 30 changing state, `log/diff/0047bf40_Window_mouseDispatch23c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_win.cpp` as `?mouse47bf40@Win47@@QAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0047bfe4, 0x0047c00b): callee pops 12 bytes of stack arguments.

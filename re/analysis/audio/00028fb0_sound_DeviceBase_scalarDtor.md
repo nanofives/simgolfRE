@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00028fb0`), 43 bytes, 16 instructions, subsystem `aud
 scalar deleting destructor of the shared device base: installs intermediate vtable 0x1005b8b0, releases the inner device at +0x14 (vtbl+0x14), operator_delete when param&1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00028fb0 DeviceBase_scalarDtor (VA 0x10028fb0). The DeviceBase destructor body inline: ecx = the sub-object at +0x14 (0x10028fb3), the vtable 0x1005b8b0 (relocated) stored at this+0 (0x10028fb6), the sub-object's slot +0x14 CALLED with it in ecx when non-NULL (0x10028fbc / 0x10028fbe / 0x10028fc0 / 0x10028fc2); then bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x10028fc5) set -> operator delete 0x1004249a (0x10028fcd). Returns this (`ret 4` 0x10028fd8). Reached from: no call xref; reached through a stored pointer: 0x1005b8b0 table slot 0 (+0x0) of the table at 0x1005b8b0; installers: 0x10028fb0 DeviceBase_scalarDtor, 0x10028ff0 DeviceBase_dtorA, 0x10029020 VoiceBase_ctor, 0x10029200 VoiceBase_dtor, 0x10029f60 DeviceBase_dtorB, 0x1002a3b0 DeviceBase_dtorC. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DeviceBase_scalarDtor (50 vectors, 10 distinct results, 50 changing state, `log/diff/00028fb0_sound_DeviceBase_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10028fb0@C_FUN_10028fb0@f_10028fb0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10028fd8): callee pops 4 bytes of stack arguments.

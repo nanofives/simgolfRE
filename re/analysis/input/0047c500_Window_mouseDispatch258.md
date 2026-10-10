@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 206 bytes, 75 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 mouse handler via callback m_258, hit4c/miss88, panels m_34/m_68 (`re/names/exe_3.tsv`)
 
+## Purpose
+Mouse dispatcher with the instruction sequence of 0x0047bf40: callback +0x258 (0x0047c531), hit slot 0x4c (call [eax + 0x4c] 0x0047c57f), miss slot 0x88 (0x0047c58c), release slot 0xb8 (0x0047c5b5), panels +0x34 (0x0047c592) and +0x68 (0x0047c5bb); ignore bits at 0x0047c506-0x0047c51d, release test 0x0047c523-0x0047c529. Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Window::mouseDispatch258 (35 vectors, 31 distinct results, 30 changing state, `log/diff/0047c500_Window_mouseDispatch258.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_win.cpp` as `?mouse47c500@Win47@@QAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0047c5a4, 0x0047c5cb): callee pops 12 bytes of stack arguments.

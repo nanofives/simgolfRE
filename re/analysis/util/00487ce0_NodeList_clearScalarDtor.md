@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 137 bytes, 56 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Clears the list and runs the scalar-deleting destructor (vtable 0x004bafac). (`re/names/exe_4.tsv`)
 
+## Purpose
+Scalar deleting destructor of a doubly linked list object (head +4, tail +8, count +0x10): stores the vtable 0x004bafac into +0 (0x00487cea), then empties the list like NodeList::clear 0x00487310 does for its own layout: an empty head ends the loop (`cmp eax, ebx / je 0x00487d51` at 0x00487cf0-0x00487cf2); for each node its +4 (next) becomes the new head and that node's +0 is cleared (0x00487cf4-0x00487cfd), or with no next node both +8 and +4 of the list are cleared (0x00487d02-0x00487d05); the node's +8 is kept as the continue flag (0x00487d08), the node goes to operator delete 0x004a4ffc (0x00487d0c) and the count at +0x10 is decremented (0x00487d11-0x00487d1a); the loop ends when the flag was 0 (`je 0x00487d51` at 0x00487d1d) or the head is null (0x00487d22-0x00487d24). Then the flag test (0x00487d51) deletes this (call 0x00487d59) and the function returns this (0x00487d61, `ret 4` 0x00487d66). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: NodeList::clearScalarDtor (24 vectors, 18 distinct results, 24 changing state, `log/diff/00487ce0_NodeList_clearScalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00487ce0@C_FUN_00487ce0@f_00487ce0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00487d66): callee pops 4 bytes of stack arguments.

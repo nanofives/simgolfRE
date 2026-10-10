@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00029170`), 111 bytes, 49 instructions, subsystem `au
 frees every node of the VoiceBase list at this+8 via operator_delete (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+PtrList_freeNodesB 0x00031ac0 (VA 0x10031ac0), nodeListClear2 0x000384b0 (0x100384b0) and nodeListClear 0x00039580 (0x10039580) are the same body, and VoiceBase_clearList 0x00029170 (0x10029170) is that body over a header that starts 8 bytes later. `this` is a list header {front, back, (cursor), count}; the nodes are {previous, next, value}. The first node (`mov eax, [esi]` 0x10031ac4; the function returns when it is NULL, `je` 0x10031ac8) is popped: with a next node that node's previous becomes 0 and the front moves to it (0x10031aca-0x10031ad7); without one back and front become 0 (0x10031adb-0x10031ae2). The popped node's value is read (0x10031ae8) and the node released with operator delete 0x1004249a (0x10031aec), the count is decremented (0x10031af1, 0x10031af7, 0x10031afa); a NULL value ends the function (`test edi, edi` / `je` 0x10031af8 / 0x10031afd). Otherwise the same pop repeats (0x10031aff-0x10031b38) until the list is empty (`je` 0x10031b03) or a popped node's value is NULL (`jne` 0x10031b38). Reached from: no call xref; reached through a stored pointer: 0x10029062 store target 0x1000256d written by code; installers: 0x10029020 VoiceBase_ctor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: VoiceBase_clearList (12 vectors, 12 distinct results, 11 changing state, `log/diff/00029170_sound_VoiceBase_clearList.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10029170@f_10029170@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100291de): callee pops 0 bytes of stack arguments.

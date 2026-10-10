@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00009c80`), 30 bytes, 11 instructions, subsystem `aud
 Scalar deleting destructor: calls Midi_Device::dtor and frees the object when the low bit of the flag is set. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00009c80 Midi_Device::scalarDeletingDtor (VA 0x10009c80). The destructor body is called through the incremental-link thunk 0x100019e2 with this in ecx (`push esi; mov esi, ecx` 0x10009c80, `call` 0x10009c83); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x10009c88) set -> operator delete 0x1004249a releases the object (`push esi` 0x10009c8f, `call` 0x10009c90); returns this (`mov eax, esi` 0x10009c98, `ret 4` 0x10009c9b). Target: Midi_Device::dtor 0x10009cb0. Reached from: no call xref; reached through a stored pointer: 0x1005b28c table slot 0 (+0x0) of the table at 0x1005b28c; installers: 0x10009a90 Dll_Midi_Device::create_device, 0x10009be0 Midi_Device::ctor, 0x10009cb0 Midi_Device::dtor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Midi_Device::scalarDeletingDtor (24 vectors, 16 distinct results, 24 changing state, `log/diff/00009c80_sound_Midi_Device_scalarDeletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10009c80@C_FUN_10009c80@f_10009c80@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10009c9b): callee pops 4 bytes of stack arguments.

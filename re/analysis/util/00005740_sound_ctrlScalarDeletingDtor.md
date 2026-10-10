@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00005740`), 30 bytes, 11 instructions, subsystem `uti
 Scalar deleting destructor for a CtrlObject-derived object; frees it when the low bit of the flag is set. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00005740 ctrlScalarDeletingDtor (VA 0x10005740). The destructor body is called through the incremental-link thunk 0x100014f1 with this in ecx (`push esi; mov esi, ecx` 0x10005740, `call` 0x10005743); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x10005748) set -> operator delete 0x1004249a releases the object (`push esi` 0x1000574f, `call` 0x10005750); returns this (`mov eax, esi` 0x10005758, `ret 4` 0x1000575b). Target: initCtrlVtable 0x10005720. Reached from: no call xref; reached through a stored pointer: 0x1005b178 table slot 0 (+0x0) of the table at 0x1005b178; installers: 0x10005440 Wave_Device::readFmtChunk. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: ctrlScalarDeletingDtor (50 vectors, 10 distinct results, 50 changing state, `log/diff/00005740_sound_ctrlScalarDeletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10005740@C_FUN_10005740@f_10005740@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000575b): callee pops 4 bytes of stack arguments.

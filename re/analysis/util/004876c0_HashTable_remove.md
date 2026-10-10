@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 162 bytes, 57 instructions, subsystem `util`. Mechanica
 Unlinks the node param_1 from its bucket (16 buckets of 0x1c bytes at this+0x30) and frees it, fixing up the bucket head/tail and count. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Removes an item from the 16-bucket table (buckets of 0x1c bytes from this + 0x2c, head at +0x30 + 0x1c * b): a null item (test 0x004876c5) or a bucket index at item + 0x3c of 0x10 or more (cmp 0x004876d0, `jae` 0x004876d3, unsigned) returns 0xa (0x00487759); a bucket without a head (test 0x004876e7) or a chain without the item (0x004876ef-0x004876f9) stores 0x10 at item + 0x3c and returns 0 (0x004876fb, 0x0048774b); a matching node (+8 == item) is unlinked: with a previous node prev[4] = next (0x00487711-0x00487714), else the bucket head = next (0x00487719-0x0048771c); with a next node next[0] = prev and the bucket dword at +0x14 = next (0x00487726-0x0048772a), else that dword = 0 and the bucket tail at +0x10 = prev (0x0048772f-0x00487738); the node goes to operator delete (0x0048773c), the count at bucket + 0x18 is decremented (0x00487741-0x00487748), item + 0x3c = 0x10 (0x0048774b) and 0 is returned. Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: HashTable::remove (18 vectors, 16 distinct results, 15 changing state, `log/diff/004876c0_HashTable_remove.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?remove@C4876c0@@QAEHPAUO4876c0@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00487704, 0x00487756, 0x0048775f): callee pops 4 bytes of stack arguments.

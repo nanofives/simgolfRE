@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00011110`), 59 bytes, 21 instructions, subsystem `aud
 Updates z (+0xd0) and re-applies SetPosition with the cached x/y. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00011070 / 0x000110c0 / 0x00011110 Ds3DBuffer::setPositionX / Y / Z (VAs 0x10011070 / 0x100110c0 / 0x10011110). One stack argument (`ret 4`), the new coordinate (a float passed as its raw dword). The 3D interface at +0x64 (0x10011070 etc.); NULL returns 0xb (0x10011077). Otherwise the coordinate is stored at +0xc8 (X, 0x1001108a) / +0xcc (Y, 0x100110e1) / +0xd0 (Z, 0x10011131), and slot +0x4c of the interface is called with (interface, x, y, z, 0) where the other two coordinates are read from +0xc8 / +0xcc / +0xd0 (0x10011090-0x100110a2, 0x100110e7-0x100110f2, 0x10011137-0x10011142). Returns 0 whatever it returned (`xor eax, eax` 0x100110a5 / 0x100110f5 / 0x10011145). Reached from: static callers 0x10037bc0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ds3DBuffer::setPositionZ (40 vectors, 36 distinct results, 35 changing state, `log/diff/00011110_sound_Ds3DBuffer_setPositionZ.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001111c, 0x10011148): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10011110 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

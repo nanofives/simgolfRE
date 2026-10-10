@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00005720`), 7 bytes, 2 instructions, subsystem `util`
 ## Role (from the naming pass, not a C3 purpose)
 Installs the CtrlObject base vtable (0x1005b19c) into the object. (`re/names/sound_2.tsv`)
 
+## Purpose
+0x00005720 initCtrlVtable and the four CtrlObject destructor bodies 0x0001c560 / 0x0001c710 / 0x0001cbd0 / 0x0001ccd0 (VAs 0x10005720 / 0x1001c560 / 0x1001c710 / 0x1001cbd0 / 0x1001ccd0) are the same two instructions: `mov dword ptr [ecx], 0x1005b19c` (0x10005720, 0x1001c560, 0x1001c710, 0x1001cbd0, 0x1001ccd0) and `ret`. They store the base Ctrl vtable address 0x1005b19c (relocated) at this+0 and leave eax as the caller had it (no result). Reached from: static callers 0x10005740, 0x10058560. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: initCtrlVtable (12 vectors, 12 distinct results, 12 changing state, `log/diff/00005720_sound_initCtrlVtable.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10005720@f_10005720@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10005726): callee pops 0 bytes of stack arguments.

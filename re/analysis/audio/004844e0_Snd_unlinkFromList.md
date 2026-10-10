@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 92 bytes, 37 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 unlinks a sound object from the active list (head g_83af68 / tail g_83af64) by relinking m_prev/m_next, clearing flag bit1 (`re/names/exe_3.tsv`)
 
+## Purpose
+Removes a sound object from the global doubly linked list (prev +0x48, next +0x4c; head 0x0083af68, tail 0x0083af64). An object whose flag bit 2 is clear (`test byte ptr [ecx + 0x44], 2` 0x004844e0, `jne` 0x004844e4) returns 0 (0x004844e6). Otherwise: with a previous node that node's next = this next (0x004844ee-0x004844f6), else the head = this next (0x004844fb-0x004844fe); with a next node that node's prev = this prev (0x0048450a-0x0048450d), else the tail = this prev (0x00484522-0x00484526); bit 2 is cleared in the low byte of +0x44 only (`and al, 0xfd` 0x00484513 / 0x0048452e) and +0x4c and +0x48 are zeroed (0x00484515, 0x0048451b, 0x00484530, 0x00484536). Returns 0 on every path (`xor eax, eax` 0x0048451e / 0x00484539). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Snd::unlinkFromList (7 vectors, 6 distinct results, 5 changing state, `log/diff/004844e0_Snd_unlinkFromList.path1.csv`); Snd::unlinkFromList_two (2 vectors, 2 distinct results, 2 changing state, `log/diff/004844e0_Snd_unlinkFromList_two.path1.csv`); Snd::unlinkFromList_one (2 vectors, 2 distinct results, 1 changing state, `log/diff/004844e0_Snd_unlinkFromList_one.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?unlink@C4844e0@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004844e8, 0x00484521, 0x0048453b): callee pops 0 bytes of stack arguments.

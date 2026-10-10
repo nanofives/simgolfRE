@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 28 bytes, 7 instructions, subsystem `audio`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Starts/primes a sound channel slot. (`re/names/exe_1.tsv`)
 
+## Purpose
+Starts a sound slot: Snd::applyField484750 0x00484750 on the slot object at 0x0080d840 + 108 i (`lea eax, [eax + eax*2]` 0x00448209, `lea eax, [eax + eax*8]` 0x0044820c: i * 27, `lea ecx, [eax*4 + 0x80d840]` 0x0044820f) with 0x3e8 (push 0x3e8 0x00448204, call 0x00448216); its result is returned (`ret` 0x0044821b). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: startSoundSlot (12 vectors, 12 distinct results, 12 changing state, `log/diff/00448200_startSoundSlot.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?startSlot@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044821b): callee pops 0 bytes of stack arguments.

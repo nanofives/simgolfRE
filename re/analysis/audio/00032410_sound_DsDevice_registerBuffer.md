@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00032410`), 26 bytes, 8 instructions, subsystem `audi
 back-links the buffer (param+0x20=this) and appends it to the device buffer list at this+0x1338 via nodeListAppendValue (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00032410 DsDevice_registerBuffer (VA 0x10032410). One stack argument, a buffer (`ret 4` 0x10032427). The argument zero (`test eax, eax` / `je` 0x10032414 / 0x10032416) returns it (eax = 0). Otherwise the buffer's +0x20 takes the device (`mov [eax+0x20], ecx` 0x10032418) and nodeListAppendValue 0x10038430 (thunk 0x100016ae, call at 0x10032422) is called on the list header at this+0x1338 with the buffer; its result is the function's (the list count after the append). Reached from: static callers 0x10012260. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsDevice_registerBuffer (30 vectors, 25 distinct results, 24 changing state, `log/diff/00032410_sound_DsDevice_registerBuffer.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10032410@C_FUN_10032410@f_10032410@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10032427): callee pops 4 bytes of stack arguments.

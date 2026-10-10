@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006d250`), 893 bytes, 286 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's teardown of a read png_struct (cdecl, plain `ret` at 0x1006d5cc; caller png_destroy_read_struct 0x1006d150): (png_ptr, info_ptr, end_info_ptr). png_info_destroy 0x10078980 on each non-NULL info (0x1006d272 / 0x1006d288); png_free of +0xac, +0xec, +0xe8, +0x1ec, +0x1f0, +0x164, +0x168, +0x16c in that order (0x1006d2a8..0x1006d342); by the flags word +0x6c: 0x1000 png_zfree(+0x114), 0x2000 png_free(+0x188), 0x4000 png_free(+0x1f4) (0x1006d358 / 0x1006d37e / 0x1006d3a3). Each of the arrays +0x170, +0x174, +0x178 that is not NULL has its first (1 << (8 - +0x158)) entries freed (`shl eax, cl`, count mod 32, signed loop: a shift of 9 gives 0x80000000 and frees no entry) and then itself. png_free(+0x210), inflateEnd(+0x74) 0x1006d52e, png_free(+0x1b0); the 0x40-byte jmp_buf at +0 and the words +0x40 / +0x44 / +0x48 survive a memset of the 0x21c-byte struct (0x1006d556..0x1006d5b1). Reimplemented in `shim/src/re/c3dk.cpp`; path-1 A/B GREEN: png_read_destroy (10 vectors, 10 distinct results, 10 changing state, `log/diff/0006d250_jgld_png_read_destroy.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_read.cpp` as `_png_read_destroy` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006d5cc): callee pops 0 bytes of stack arguments.

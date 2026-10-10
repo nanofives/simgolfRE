@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f8f0`), 114 bytes, 49 instructions, subsystem `au
 Stops and releases the buffer and its aux interfaces (+0x60/+0x64/+0x6c); returns 0. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000f8f0 DsBuffer::release (VA 0x1000f8f0). The interface at +0x60 NULL returns 0 (0x1000f8fb -> 0x1000f95d, `xor eax, eax` 0x1000f95e); otherwise the release block (no test of +0x5c) and 0 is returned. Reached from: static callers 0x10011a80. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::release (12 vectors, 11 distinct results, 10 changing state, `log/diff/0000f8f0_sound_DsBuffer_release.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000f961): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000f8f1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

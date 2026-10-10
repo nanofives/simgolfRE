@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000292d0`), 59 bytes, 29 instructions, subsystem `aud
 opens the inner device: calls this vtbl+4(arg); on 0 forwards to inner(+0x14) vtbl+0x10 and on success calls this vtbl+8 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x000292d0 VoiceBase_openInner (VA 0x100292d0). Two stack arguments a1, a2 (`ret 8` 0x10029308 / 0x10029301). The object's own vtable slot +4 is called with a2 (`mov eax, [esi]; push edi; call [eax+4]` 0x100292d8-0x100292db); a non-zero result is returned at once (`jne` 0x100292e0 -> 0x10029306). Otherwise the sub-object at +0x14 (0x100292e2) has its vtable slot +0x10 called with (a1, a2) (pushes a2 0x100292e9, a1 0x100292ea; `call [edx+0x10]` 0x100292ed); a zero result returns 0 (`je` 0x100292f4 -> `xor eax, eax` 0x10029304). Otherwise the object's own slot +8 is called with no arguments (`mov edx, [esi]; mov ecx, esi; call [edx+8]` 0x100292f6-0x100292fa) and the sub-object's result is returned (0x100292fd). Reached from: no call xref; reached through a stored pointer: 0x1005b924 table slot 4 (+0x10) of the table at 0x1005b914; installers: 0x10029020 VoiceBase_ctor, 0x10029200 VoiceBase_dtor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: VoiceBase_openInner (30 vectors, 30 distinct results, 30 changing state, `log/diff/000292d0_sound_VoiceBase_openInner.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10029301, 0x10029308): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x100292d1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 15 bytes, 7 instructions, subsystem `audio`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 forwards to the device object m_40 vtable f23, returning 0 when no device (`re/names/exe_3.tsv`)
 
+## Purpose
+Returns the answer of the sound object's device (this + 0x40): a null device returns 0 (`xor eax, eax` 0x004845dc); otherwise a tail jump into the device's virtual slot 0x5c (`jmp [eax + 0x5c]` 0x004845d9) returns its result. Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Snd::queryDevice4845d0 (12 vectors, 10 distinct results, 9 changing state, `log/diff/004845d0_Snd_queryDevice4845d0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004845d0@f_004845d0@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004845de): callee pops 0 bytes of stack arguments.

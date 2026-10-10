@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 scalar deleting destructor of a Buf-backed object: runs Buf_dtor then frees it when the flag low bit is set (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Deleting destructor of the pair-array class: calls the thunk at 0x0049d040 (a single `jmp 0x00474810`, i.e. Buf_dtor) at 0x0049d073, then operator delete 0x004a4ffc (call 0x0049d080) when bit 0 of the flags byte is set (test 0x0049d078, `je` 0x0049d07d); returns this (0x0049d088, `ret 4` 0x0049d08b). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: pairArray_deleteDtor (24 vectors, 18 distinct results, 24 changing state, `log/diff/0049d070_pairArray_deleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_0049d070@C_FUN_0049d070@f_0049d070@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049d08b): callee pops 4 bytes of stack arguments.

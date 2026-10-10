@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 134 bytes, 54 instructions, subsystem `video`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor of the Bink video frame wrapper (C480410) (`re/names/exe_3.tsv`)
 
+## Purpose
+Scalar deleting destructor sharing List480::dtor's body (0x00480410-0x00480477 against 0x00480390-0x004803fa, vtable 0x004baa10): the same record-list teardown, then `mov [esi + 0x10], edi` (0x0048047f), the flag byte test at [esp + 0xc] (0x0048047b, 0x00480482) and operator delete 0x004a4ffc on this (call 0x00480487); returns this (0x00480491, `ret 4` 0x00480493). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: BinkFrame::scalarDtor (24 vectors, 18 distinct results, 24 changing state, `log/diff/00480410_BinkFrame_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `??_GC480410@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00480493): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001bc50`), 50 bytes, 12 instructions, subsystem `uti
 Constructs the (string in the binary) base object (debug block header): vtable 0x1005b19c, 4cc tag (string in the binary), declared size 0x18, 0x44444444 guard fill. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x0001bc50 CtrlObject::ctor (VA 0x1001bc50). eax = this (0x1001bc50), ecx = -1 (0x1001bc52): +0x14, +0x20 and +0x24 = -1 (0x1001bc55 / 0x1001bc58 / 0x1001bc5b); the vtable 0x1005b19c (relocated) at +0 (0x1001bc61); the tag 0x6c727463 at +4 (0x1001bc67); the WORD at +0x18 = 0 (`mov word ptr [ecx], 0` with ecx = this+0x18, 0x1001bc5e / 0x1001bc6e); +0xc = 0x18 (0x1001bc73); +0x10 = 0x44444444 (0x1001bc7a). Returns this. Reached from: static callers 0x10005440. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: CtrlObject::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001bc50_sound_CtrlObject_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001bc81): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001bc50 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

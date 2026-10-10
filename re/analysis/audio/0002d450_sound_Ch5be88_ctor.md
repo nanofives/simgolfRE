@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002d450`), 166 bytes, 54 instructions, subsystem `au
 installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005be88, sets +4=0x7f; embedded in a Sound by Sound5b6a8_ctor 0x1001f4a0 and in the player by Seq_ctor 0x1001f6f0 (SEH frame) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002d450 Ch5be88_ctor (VA 0x1002d450): the base initialisation, then +0x54 = 0 (0x1002d4c3), the vtable 0x1005be88 (0x1002d4c6), the BYTE at +0x58 = 0 (0x1002d4cc) and then 1 (`or cl, 1` 0x1002d4d7, byte store 0x1002d4dc: the upper three bytes of that dword are not touched), +0x5c = 0 (0x1002d4d4), bit 3 of the low byte of +0x44 set (`or al, 8` 0x1002d4da, dword store 0x1002d4e3). Returns this (0x1002d4e6). Reached from: static callers 0x1001f4a0, 0x1001f6f0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ch5be88_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002d450_sound_Ch5be88_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002d4f5): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002d465 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

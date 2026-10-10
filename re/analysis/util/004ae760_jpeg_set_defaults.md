@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 239 bytes, 69 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Sets the default compression parameters: a global_state other than 0x64 (cmp 0x004ae766) raises msg_code 0x12 with the state as parameter (0x004ae76f-0x004ae780) and goes on; a null comp_info (+0x3c, test 0x004ae78a) is allocated through mem->alloc_small(cinfo, 0, 0x348) (0x004ae791-0x004ae798); data_precision (+0x30) = 8 (0x004ae7a6); jpeg_set_quality(cinfo, 0x4b, 1) (0x004ae7a1-0x004ae7ad); std_huff_tables 0x004ae850 (0x004ae7b3); the three 16-byte arithmetic tables +0x70 = 0, +0x80 = 1, +0x90 = 5 (0x004ae7ca-0x004ae7da); num_scans, scan_info, raw_data_in, arith_code and optimize_coding cleared (0x004ae7df-0x004ae7fa; +0xb0 is set to 1 only when the precision re-read at 0x004ae7dc exceeds 8, `jle` 0x004ae801, which 0x004ae7a6 makes impossible); +0xb4, +0xb8, +0xbc, +0xc0, +0xc4 cleared (0x004ae80e-0x004ae826), byte +0xcc cleared (0x004ae82c), words +0xce and +0xd0 set to 1 (0x004ae832, 0x004ae83b); jpeg_default_colorspace 0x004ae910 closes the function (0x004ae844). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: jpeg_set_defaults (16 vectors, 16 distinct results, 16 changing state, `log/diff/004ae760_jpeg_set_defaults.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_jpeg_set_defaults` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae84e): callee pops 0 bytes of stack arguments.

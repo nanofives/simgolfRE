@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001bd90`), 151 bytes, 38 instructions, subsystem `au
 installs vtable 0x1005b5c0 (and embedded base 0x1005b59c at +0x2c), writes a 4cc tag at +0x30, fills a 128-byte identity table at +0x5c (0..0x7f), inits embedded PtrList, size +0x34=0xe4 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0001bd90 Ctrl5b5c0_ctor (VA 0x1001bd90): +0xc, +0x10, +0x14 and +0x18 = 0 (0x1001bd9a-0x1001bda3), +4 = 0x18 (0x1001bda9), +8 = 0x44444444 (0x1001bdb0), +0x28 = 0 (0x1001bdb3), +0x1c = 0xc (0x1001bdb6), +0x20 = 0x44444444 (0x1001bdbd), +0x40, +0x4c and +0x50 = -1 (0x1001bdc0-0x1001bdc6), the WORD at +0x44 = 0 (0x1001bdda), the tag 0x6c727463 at +0x30 (0x1001bdd3), +0x38 = 0x18 (0x1001bddd), +0x3c = 0x44444444 (0x1001bde4), the vtables 0x1005b5c0 at +0 (0x1001bde7) and 0x1005b59c at +0x2c (0x1001bded; 0x1005b19c stored there first, 0x1001bdcc); the 0x80 bytes at +0x5c become 0, 1, 2 .. 0x7f (`mov [eax+ecx+0x5c], cl`, loop 0x1001bdf6-0x1001be01); +0x48 = 3 (0x1001be03), the BYTE at +0x44 = 1 (0x1001be0a), +0xe0 = 0 (0x1001be0e), +0x34 = 0xe4 (0x1001be14), +0x58 = 0x44444444 (0x1001be1b), +0x54 = 0x8c (0x1001be1e). Returns this (0x1001bd90 / 0x1001be26). Reached from: static callers 0x10005440. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ctrl5b5c0_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001bd90_sound_Ctrl5b5c0_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001be26): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001bd90 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

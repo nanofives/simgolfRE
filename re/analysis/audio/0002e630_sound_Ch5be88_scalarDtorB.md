@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002e630`), 30 bytes, 11 instructions, subsystem `aud
 scalar deleting destructor: calls Ch5be88_dtorB then operator_delete when param&1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002e630 Ch5be88_scalarDtorB (VA 0x1002e630). The destructor body is called through the incremental-link thunk 0x10001c94 with this in ecx (`push esi; mov esi, ecx` 0x1002e630, `call` 0x1002e633); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x1002e638) set -> operator delete 0x1004249a releases the object (`push esi` 0x1002e63f, `call` 0x1002e640); returns this (`mov eax, esi` 0x1002e648, `ret 4` 0x1002e64b). Target: Ch5be88_dtorB 0x1002e660. Reached from: no call xref; reached through a stored pointer: 0x1005c000 table slot 0 (+0x0) of the table at 0x1005c000; installers: 0x1002e550 Ch5c000_ctor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ch5be88_scalarDtorB (40 vectors, 20 distinct results, 40 changing state, `log/diff/0002e630_sound_Ch5be88_scalarDtorB.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002e630@C_FUN_1002e630@f_1002e630@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002e64b): callee pops 4 bytes of stack arguments.

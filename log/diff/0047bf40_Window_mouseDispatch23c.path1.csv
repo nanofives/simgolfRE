@@ -1,0 +1,41 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ignA 10 10 0,void,void,True,177ac955,177ac955,False
+$ignA 10 10 1,void,void,True,177ac955,177ac955,False
+$ignB 60 60 0,void,void,True,177ac955,177ac955,False
+$ignB 60 60 1,void,void,True,177ac955,177ac955,False
+$both 5 5 0,void,void,True,177ac955,177ac955,False
+$plain 10 10 0,void,void,True,20998be5,20998be5,True
+$plain 60 60 0,void,void,True,1c4611cc,1c4611cc,True
+$plain 120 120 0,void,void,True,361493f0,361493f0,True
+$plain 200 200 0,void,void,True,4bc460ce,4bc460ce,True
+$plain 100 10 0,void,void,True,c2e67a0a,c2e67a0a,True
+$plain -1 5 0,void,void,True,3256f93a,3256f93a,True
+$plain 99 99 0,void,void,True,ac816ccc,ac816ccc,True
+$plain 149 50 0,void,void,True,d0aeccc9,d0aeccc9,True
+$miss 10 10 0,void,void,True,63cde80a,63cde80a,True
+$miss 60 60 0,void,void,True,fbc56dab,fbc56dab,True
+$miss 120 120 0,void,void,True,ed387eab,ed387eab,True
+$miss 200 200 0,void,void,True,650fd12c,650fd12c,True
+$miss 100 10 0,void,void,True,f20729c4,f20729c4,True
+$miss -1 5 0,void,void,True,580d9f28,580d9f28,True
+$miss 99 99 0,void,void,True,da7cecbb,da7cecbb,True
+$miss 149 50 0,void,void,True,939d082f,939d082f,True
+$bare 10 10 0,void,void,True,a63d00f0,a63d00f0,True
+$bare 60 60 0,void,void,True,d706677c,d706677c,True
+$bare 120 120 0,void,void,True,376c6cb0,376c6cb0,True
+$plain 10 10 1,void,void,True,61e9fdd3,61e9fdd3,True
+$plain 7 8 2,void,void,True,c1415148,c1415148,True
+$bare 5 6 1,void,void,True,fb82e38f,fb82e38f,True
+$miss 60 60 -1,void,void,True,0eb6e4a3,0eb6e4a3,True
+$onlyCb 10 10 0,void,void,True,acd4e805,acd4e805,True
+$onlyCb 10 10 1,void,void,True,023a170f,023a170f,True
+$onlyPanel 10 10 0,void,void,True,fdf41a6a,fdf41a6a,True
+$onlyPanel 120 120 0,void,void,True,0e820e8f,0e820e8f,True
+$onlyPanel 10 10 1,void,void,True,7c1e85e3,7c1e85e3,True
+$plain 2147483647 -2147483648 0,void,void,True,132b06f6,132b06f6,True
+$plain 3 4 2147483648,void,void,True,42c7ec00,42c7ec00,True
+state_regions,$rec+0x0:772 0x0083ab2c+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71ce9270,original=0x1440ba0,2026-10-10T17:22:48
+distinct_results,31,,
+VERDICT,GREEN,35,

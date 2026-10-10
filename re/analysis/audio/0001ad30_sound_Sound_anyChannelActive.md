@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001ad30`), 111 bytes, 52 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Returns non-zero if any channel (array param_1+4, per-channel sub-objects at +0x1440, count +0x1438) reports active via its virtual method vtbl+0x5c; the idle predicate for Sound_reapIdle. (`re/names/sound_3.tsv`)
 
+## Purpose
+0x0001ad30 Sound_anyChannelActive (VA 0x1001ad30). Result in al (1 / 0, `mov al, 1` 0x1001ad9b, `xor al, al` 0x1001ad94). A loop over 0x80 object pointers at this+4 (ebx, `cmp ebx, 0x80` 0x1001ad89). A non-NULL object (0x1001ad38 / 0x1001ad3c) has an element count at +0x1438 (0x1001ad40): a non-zero count n (0x1001ad46) walks the n - 1 element pointers at +0x1440 (`dec ecx; test ecx, ecx; jle` 0x1001ad4c-0x1001ad4f, the signed bound re-read from the object every pass: 0x1001ad70-0x1001ad79); each non-NULL element has its vtable slot +0x5c called with it in ecx (0x1001ad5d-0x1001ad61) and a non-zero result returns 1 (0x1001ad64 / 0x1001ad66 -> 0x1001ad98). After the elements (also for a zero count, `je` 0x1001ad48 -> 0x1001ad7b) the object's own slot +0x5c is called (0x1001ad7f-0x1001ad81) and a non-zero result returns 1 (0x1001ad84 / 0x1001ad86). Reached from: static callers 0x100204e0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Sound_anyChannelActive (11 vectors, 11 distinct results, 10 changing state, `log/diff/0001ad30_sound_Sound_anyChannelActive.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001ad97, 0x1001ad9e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001ad34 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

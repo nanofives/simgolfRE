@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0002f740`), 107 bytes, 27 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 constructs a Mixer-derived channel: runs Mixer_ctor 0x1002c9f0 then installs vtable 0x1005c3a4 and sets the Sound source type (SEH frame) (`re/names/sound_6.tsv`)
 
+## Purpose
+0x0002f740 Ch5c3a4_ctor (VA 0x1002f740): Mixer_ctor 0x1002c9f0 (thunk 0x1000183e, call at 0x1002f75d) on this, then the vtable 0x1005c3a4 (0x1002f76c), +0xf8, +0xfc, +0x100 and +0x104 = 0 (0x1002f772-0x1002f784), +0x108 = 0x7f (0x1002f78a) and Sound_setSourceType (call at 0x1002f794) with the argument 8 (push at 0x1002f764). Returns this (0x1002f79d). Reached from: static callers 0x100093e0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ch5c3a4_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002f740_sound_Ch5c3a4_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002f7aa): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002f755 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

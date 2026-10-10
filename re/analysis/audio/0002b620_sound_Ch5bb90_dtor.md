@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002b620`), 273 bytes, 90 instructions, subsystem `au
 installs the SubChannel-derived vtable 0x1005bb90, frees its Sound (delete_sound) and owned blocks (operator_delete) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x0002b620 Ch5bb90_dtor (VA 0x1002b620). First stage (vtable 0x1005bb90, 0x1002b63e): the buffer at +0x50 (0x1002b644) non-NULL is released with operator delete (0x1002b652); the flag byte at +0x44 is read (0x1002b65a), +0x50 is cleared whether or not there was a buffer (0x1002b65d), and bit 1 of the byte read -> the unlink block (0x1002b664-0x1002b69f). Second stage (vtable 0x1005bae0, 0x1002b6a2): +0x50 is zero here, so 0x1002b6b5 is never taken; the sound object at +0x40 (0x1002b6c3) non-NULL is released with delete_sound (0x1002b6cb) and +0x40 cleared (0x1002b6d3); bit 1 of the byte at +0x44 (0x1002b6d6) -> a second unlink block (0x1002b6dc-0x1002b717), which the first block already made unreachable (it cleared that bit). Final vtable 0x1005bb80 at +0 (0x1002b71e). No result. Reached from: static callers 0x1002b5f0, 0x10039870, 0x10058e80, 0x100592e0, 0x10059310, 0x10059340, 0x1005939b. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ch5bb90_dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002b620_sound_Ch5bb90_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002b730): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002b635 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

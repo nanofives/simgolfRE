@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002ac00`), 171 bytes, 57 instructions, subsystem `au
 installs vtable 0x1005bae0, frees the object at +0x50 (operator_delete) and the Sound at +0x40 (delete_sound), unlinks from its owner (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002ac00 SubChannel_dtor (VA 0x1002ac00). Transient vtable 0x1005bae0 (0x1002ac1e). The buffer at +0x50 (0x1002ac24) non-NULL is released with operator delete (0x1002ac32) and +0x50 cleared (0x1002ac3a); the sound object at +0x40 (0x1002ac3d) non-NULL is released with delete_sound (thunk 0x10001a87, 0x1002ac45) and +0x40 cleared (0x1002ac4d); bit 1 of the byte at +0x44 (0x1002ac50) set -> the unlink block (0x1002ac56-0x1002ac91); the final vtable 0x1005bb80 (relocated) is stored at +0 (0x1002ac98). No result. Reached from: static callers 0x1002abd0, 0x10058e40, 0x10058e88, 0x10058ed0, 0x10058f10, 0x10058f50, 0x10058f90, 0x10058fb8, 0x10058fd0, 0x10058ff8, 0x10059010. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: SubChannel_dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002ac00_sound_SubChannel_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002acaa): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002ac15 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

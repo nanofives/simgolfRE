@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000fef0`), 76 bytes, 30 instructions, subsystem `aud
 QueryInterfaces IDirectSound3DBuffer (into +0x64 for a secondary buffer) or IDirectSound3DListener (into +0x68 for a primary buffer). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000fef0 DsBuffer::query3D (VA 0x1000fef0). The interface at +0x60 (0x1000fef3); NULL returns 0x14 (0x1000fefa). Otherwise QueryInterface (slot +0, `call [ecx]` 0x1000ff1d) with (interface, an identifier, an output pointer): bit 1 of the byte at +0 (`test byte ptr [esi], 2` 0x1000ff01) selects the identifier at 0x1005d58c (relocated) with the output &this->+0x68 (0x1000ff08-0x1000ff0c), otherwise the identifier at 0x1005d57c with &this->+0x64 (0x1000ff13-0x1000ff17). A non-negative result (`jl` 0x1000ff21) returns 0 (0x1000ff23); a negative one clears +0x68 and +0x64 (0x1000ff27 / 0x1000ff2e) and returns 0xb (0x1000ff35). Reached from: static callers 0x10012260. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::query3D (13 vectors, 12 distinct results, 11 changing state, `log/diff/0000fef0_sound_DsBuffer_query3D.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000ff00, 0x1000ff26, 0x1000ff3b): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000fef1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00029e70`), 40 bytes, 13 instructions, subsystem `aud
 Constructs the Midi_Device base sub-object: default level this[2]=0x7f, zeroes this[1..7], installs vtable 0x1005b9e4. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00029e70 MidiDeviceBase_ctor (VA 0x10029e70): +4 = 0 (0x10029e79), +8 = 0x7f (0x10029e7b), +0xc, +0x18, +0x1c, +0x10 and +0x14 = 0 (0x10029e82-0x10029e8e), the vtable 0x1005b9e4 (0x10029e91). Returns this (0x10029e70 / 0x10029e97). Reached from: static callers 0x10009a90, 0x10009be0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: MidiDeviceBase_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00029e70_sound_MidiDeviceBase_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10029e97): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10029e70 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$d0,0,0,True,52ed33e2,52ed33e2,True
+$d1,0,0,True,71b75bc8,71b75bc8,True
+$d2,0,0,True,76b63c8a,76b63c8a,True
+$d3,0,0,True,416eb114,416eb114,True
+$d4,0,0,True,bd6ab37e,bd6ab37e,True
+$d5,0,0,True,7db86a0e,7db86a0e,True
+$d6,0,0,True,6182840e,6182840e,True
+$d7,0,0,True,758050c7,758050c7,True
+$d8,0,0,True,7c561c1b,7c561c1b,True
+$d9,0,0,True,2903f66b,2903f66b,True
+$d10,0,0,True,e0cd16ca,e0cd16ca,True
+$d11,0,0,True,13dfe466,13dfe466,True
+state_regions,$d0+0x0:256 $d1+0x0:256 $d2+0x0:256 $d3+0x0:256 $d4+0x0:256 $d5+0x0:256 $d6+0x0:256 $d7+0x0:256 $d8+0x0:256 $d9+0x0:256 $d10+0x0:256 $d11+0x0:256 $a0+0x0:768 $b0+0x0:768 $e0+0x0:768 $c0+0x0:768 $a1+0x0:768 $b1+0x0:768 $e1+0x0:768 $c1+0x0:768 $a2+0x0:768 $b2+0x0:768 $e2+0x0:768 $c2+0x0:768 $a3+0x0:768 $b3+0x0:768 $e3+0x0:768 $c3+0x0:768 $a4+0x0:768 $b4+0x0:768 $e4+0x0:768 $c4+0x0:768 $a5+0x0:768 $b5+0x0:768 $e5+0x0:768 $c5+0x0:768 $a6+0x0:768 $b6+0x0:768 $e6+0x0:768 $c6+0x0:768 $a7+0x0:768 $b7+0x0:768 $e7+0x0:768 $c7+0x0:768 $a8+0x0:768 $b8+0x0:768 $e8+0x0:768 $c8+0x0:768 $a9+0x0:768 $b9+0x0:768 $e9+0x0:768 $c9+0x0:768 $a10+0x0:768 $b10+0x0:768 $e10+0x0:768 $c10+0x0:768 $a11+0x0:768 $b11+0x0:768 $e11+0x0:768 $c11+0x0:768,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71ce4bd0,original=0x37b01c0,2026-10-10T17:31:53
+distinct_results,12,,
+VERDICT,GREEN,12,

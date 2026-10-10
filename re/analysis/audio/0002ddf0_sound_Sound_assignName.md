@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002ddf0`), 110 bytes, 47 instructions, subsystem `au
 returns SNDERR 10 if the name pointer is null, else copies the name string into a freshly allocated buffer owned by the Sound (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002ddf0 Sound_assignName (VA 0x1002ddf0). The same as Object_setName with +0x50 cleared right after the old block was released (`mov dword ptr [esi+0x50], 0` 0x1002de14, before the copy): NULL returns 0xa (0x1002ddf8 / 0x1002ddfa / 0x1002de55); the old +0x50 block is released (0x1002de04); the new copy (0x1002de20 operator new, 0x1002de31 store) is kept at +0x50; returns 0 (0x1002de4a). Reached from: static callers 0x100093e0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Sound_assignName (40 vectors, 37 distinct results, 36 changing state, `log/diff/0002ddf0_sound_Sound_assignName.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002de51, 0x1002de5b): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002ddf6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002b4e0`), 190 bytes, 59 instructions, subsystem `au
 fastcall(obj): constructs a sub-channel/mixer-voice object (vtable 0x1005bae0): sets default level obj[1]=0x7f, zeroes the descriptor fields obj[3..] and list fields obj+0x40..0x4c. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_11.md`, `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x0002b4e0 SubChannel_ctor (VA 0x1002b4e0): the base initialisation, then +0x54 = 0 (0x1002b556), the vtable 0x1005bb90 (0x1002b559), +0x58 = 0 (0x1002b561), bit 2 of +0x44 set (0x1002b563-0x1002b569), Sound_setSourceType 0x1002ad10 (thunk 0x100018a2, call at 0x1002b56e) with this in ecx and the argument 1 (push at 0x1002b55f), +0x5c = 0 (0x1002b577), +0x60 = 0x3f800000 (1.0f, 0x1002b57a), +0x3c = 0x10 (0x1002b581), +0x64 = 0 and +0x68 = 0 (0x1002b588 / 0x1002b58b). Returns this (0x1002b58e). Reached from: static callers 0x10039690, 0x10039790, 0x100399a0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: SubChannel_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002b4e0_sound_SubChannel_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002b59d): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002b4f5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002cb00`), 220 bytes, 75 instructions, subsystem `au
 Destructor (vtable 0x1005bdd8 then base 0x1005bae0): frees the 0x28 voice-pointer slots at this+0x16 and the sub-object at this+0x14. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002cb00 Mixer_dtor (VA 0x1002cb00). Vtable 0x1005bdd8 (0x1002cb20); a loop of 0x28 pointers from +0x58 (edi = this+0x58 0x1002cb28, ebx = 0x28 0x1002cb2f, back edge 0x1002cb49): each non-NULL pointer -> operator delete (0x1002cb3b), slot cleared (0x1002cb43). Vtable 0x1005bae0 (0x1002cb4b); +0x50 non-NULL (0x1002cb51) -> operator delete (0x1002cb61) and +0x50 = 0 (0x1002cb69); +0x40 non-NULL (0x1002cb6c) -> delete_sound (0x1002cb74) and +0x40 = 0 (0x1002cb7c); bit 1 of the byte at +0x44 (0x1002cb7f) -> the unlink block (0x1002cb85-0x1002cbc0). Final vtable 0x1005bb80 (0x1002cbc7). No result. Reached from: static callers 0x1002cad0, 0x10059030. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Mixer_dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002cb00_sound_Mixer_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002cbdb): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002cb15 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

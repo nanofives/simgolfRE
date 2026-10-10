@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001abd0`), 75 bytes, 31 instructions, subsystem `aud
 destroys each distinct non-null object in the slot array param_1[1..0x80] via its vtbl slot0(1) deleting destructor, then frees the block at param_1[0] (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0001abd0 Seq_freeChannelObjects (VA 0x1001abd0). No result is used. A loop over 0x80 object pointers at this+4 (esi = the index, `cmp esi, 0x80` / `jl` 0x1001abfb / 0x1001ac01). A non-NULL slot (0x1001abd6 / 0x1001abde / 0x1001abe0) is cleared (0x1001abe2) and so is every directly following slot that holds the same pointer (edx = the next slot, read before eax moves on: 0x1001abe8 / 0x1001abef / 0x1001abf1; the slot after the last array entry is the dword at this+0x204); the object is then deleted ONCE through its own vtable slot 0 called with 1 in the argument (`mov eax, [ecx]; push 1; call [eax]` 0x1001abf3-0x1001abf8), after which the scan resumes at the slot after the last one cleared (`dec esi` 0x1001abf7, `inc esi` 0x1001abfa). After the loop the pointer at this+0 (0x1001ac03) non-NULL is released with operator delete (0x1001ac0a) and +0 = 0 (0x1001ac12). Reached from: static callers 0x100204e0, 0x10021fa0, 0x10022320, 0x10009e40. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Seq_freeChannelObjects (10 vectors, 10 distinct results, 9 changing state, `log/diff/0001abd0_sound_Seq_freeChannelObjects.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001ac1a): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001abd2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000136c0`), 109 bytes, 46 instructions, subsystem `ut
 Finds the list node whose value field (+8) equals the argument in the list headed at *this and unlinks it (links *node/+4, head +4, tail +8). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x000136c0 findAndUnlinkNode (VA 0x100136c0) and 0x0000e700 findAndUnlinkNodeB (VA 0x1000e700): the same body. One stack argument, a value (`ret 4`). `this` is a list header {+0 front, +4 back, +8 cursor, +0xc count} of nodes {previous, next, value}. The front node is loaded (0x100136c3; NULL returns 0, `je` 0x100136c7 -> `xor eax, eax` 0x100136d9) and the chain is followed through the next links (0x100136d2-0x100136d7) to the first node whose value (+8) equals the argument (0x100136cd / 0x100136d0); none returns 0. The found node is unlinked: with a previous node its next takes the node's next (0x100136e9-0x100136ec), otherwise the front takes it (0x100136f1-0x100136f4); with a next node its previous takes the node's previous and the CURSOR (+8) becomes that next node (0x100136fd-0x10013701), otherwise the cursor is cleared and the back takes the node's previous (0x10013706-0x1001370f). The node's value is kept (0x10013713), the node released with operator delete (0x10013717), the count decremented (0x1001371c-0x10013723) and the value returned (0x10013726). Reached from: static callers 0x100128b0, 0x10012d10, 0x10012fe0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: findAndUnlinkNode (70 vectors, 18 distinct results, 17 changing state, `log/diff/000136c0_sound_findAndUnlinkNode.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100136dc, 0x1001372a): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100136c1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

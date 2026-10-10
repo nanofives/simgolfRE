@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001d0a0`), 103 bytes, 45 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Stores a secondary string into the object's +0x24 buffer: frees the previous buffer and copies param_1 into a new allocation, or clears +0x24 when param_1 is null. (`re/names/sound_3.tsv`)
 
+## Purpose
+0x0001d0a0 Sound_setAltName (VA 0x1001d0a0). One stack argument, a string or NULL (`ret 4`). The pointer at +0x24 (0x1001d0a4) non-NULL is released with operator delete (0x1001d0ac). A NULL string (`test ebx, ebx` / `je` 0x1001d0b8 / 0x1001d0ba) stores +0x24 = 0 (0x1001d0fb) and returns with eax as the operator delete call (or the old pointer when there was none) left it; otherwise +0x24 takes a fresh copy (0x1001d0c9 operator new, 0x1001d0da store, copy to 0x1001d0f3) and the result is the copied length including the terminator (`mov eax, ecx` 0x1001d0e3). Reached from: static callers 0x100041d0, 0x10020fe0, 0x10021fa0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Sound_setAltName (36 vectors, 36 distinct results, 36 changing state, `log/diff/0001d0a0_sound_Sound_setAltName.path1.csv`); Sound_setAltName_null (4 vectors, 3 distinct results, 2 changing state, `log/diff/0001d0a0_sound_Sound_setAltName_null.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001d0f8, 0x1001d104): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001d0a2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

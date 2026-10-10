@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00015bb0`), 772 bytes, 254 instructions, subsystem `re
 ## Role (from the naming pass, not a C3 purpose)
 draws the sprite onto a Surface with extra byte param (variant D). (`re/names/jgld_0.tsv`)
 
+## Purpose
+Sprite::drawC's twin without the colour argument, Sprite vtable 0x1011d380 slot 40 (+0xa0); arguments (dst, x, y, mask, level, pal), `ret 0x18` at 0x10015eb1. The same frame instruction for instruction (line-base word 0x10122de0, Palette override from the sixth argument at 0x10015bfe); the 8 bpp onto 16-bit arm calls drawRle16m 0x1005a790 through 0x100019b5 (run-length, 0x10015cfd) or draw16m_1001e970 through 0x10001a78 (0x10015d1e) with (dst, x, y, mask, level), `level` pushed from a byte load (0x10015ce6 / 0x10015d07) and read masked to a byte by both callees (0x1005ac22). Reimplemented in `shim/src/re/c3dk.cpp`; path-1 A/B GREEN: Sprite::drawD_s111 (23 vectors, 14 distinct results, 10 changing state, `log/diff/00015bb0_jgld_Sprite_drawD_s111.path1.csv`); Sprite::drawD_s223 (23 vectors, 12 distinct results, 10 changing state, `log/diff/00015bb0_jgld_Sprite_drawD_s223.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?drawD@Sprite@@QAEHPAVSurface@@HHHDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x10015eb1): callee pops 24 bytes of stack arguments.

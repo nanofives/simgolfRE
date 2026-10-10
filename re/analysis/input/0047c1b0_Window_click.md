@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 219 bytes, 86 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 click handler: sets g_83ab2c, calls m_248 and the global click hook g_83ab04, hit-tests m_bc to dispatch hit()/miss(), notifies panel m_24 or (alt) m_58 (`re/names/exe_3.tsv`)
 
+## Purpose
+Click dispatcher: the ignore bits at 0x0047c1b8-0x0047c1cf; on a press (release == 0, test ebp 0x0047c1e2, `jne` 0x0047c1e4) g_curWidget = this (0x0047c1e6) and the cdecl callback at +0x248 runs with (x, y) when set (0x0047c1ec-0x0047c1f8); then, on a press or a release, the global cdecl callback at 0x0083ab04 runs with (x, y) when non-null (0x0047c1fd-0x0047c207); a release (`jne` 0x0047c210) calls virtual slot 0xa8 with (x, y) (0x0047c270) and notifies the panel at +0x58 (0x0047c276-0x0047c27f); a press runs HotList::hitTestRect 0x00492b10 (0x0047c223), calls virtual slot 0x40 with (a, b, &rect) on a hit (call 0x0047c245), virtual slot 0x78 with (x, y) when there is no hit or the answer is 0 (0x0047c252) and notifies the panel at +0x24 (0x0047c255-0x0047c25e). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Window::click (35 vectors, 31 distinct results, 30 changing state, `log/diff/0047c1b0_Window_click.path1.csv`); Window::click_noglobal (32 vectors, 28 distinct results, 27 changing state, `log/diff/0047c1b0_Window_click_noglobal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_47c1b0.cpp` as `?click@C47c1b0@@QAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0047c267, 0x0047c288): callee pops 12 bytes of stack arguments.

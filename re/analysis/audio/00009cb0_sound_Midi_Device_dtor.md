@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00009cb0`), 192 bytes, 67 instructions, subsystem `au
 Destructor: re-installs vtable 0x1005b28c, clears the command ring at +0x14 and frees its nodes. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00009cb0 Midi_Device::dtor (VA 0x10009cb0). Wrapped in a C++ frame (0x10009cb0-0x10009cbe) that no path uses. The vtable 0x1005b28c is stored at +0 (0x10009ccf); CommandQueue::clear 0x10008890 (thunk 0x100019a1, call at 0x10009ce0) runs on the ring at this+0x50 (`lea ecx, [esi+0x50]` 0x10009cd5); the node list whose front is +0x40, back +0x44 and count +0x4c is popped from the front (0x10009ce5-0x10009d4d: the same pop loop as PtrList_freeNodesB, stopping at an empty list or after a node whose value is NULL); the device-base destructor DeviceBase_dtorB 0x10029f60 (thunk 0x10001b22, call at 0x10009d59) runs last. No result. Reached from: static callers 0x10009c80. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Midi_Device::dtor (8 vectors, 8 distinct results, 8 changing state, `log/diff/00009cb0_sound_Midi_Device_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10009d6f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10009cc5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

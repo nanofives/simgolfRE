@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00010060`), 143 bytes, 61 instructions, subsystem `au
 Stops and releases the buffer interfaces only when the owner back-pointer +0x5c is set; returns 1 when not owned. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00010060 DsBuffer::releaseIfOwned (VA 0x10010060). The dword at +0x5c zero returns 1 (`cmp [esi+0x5c], edi` / `jne` 0x10010066 / 0x10010069, `mov eax, 1` 0x1001006c); the interface at +0x60 NULL returns 0 (0x10010076 / 0x10010078 -> 0x100100ea); otherwise the release block and 0. Reached from: static callers 0x10011970, 0x10011a80, 0x100124c0, 0x10012690, 0x100128b0, 0x10012d10, 0x10012fe0, 0x100132e0, 0x100133d0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::releaseIfOwned (12 vectors, 10 distinct results, 8 changing state, `log/diff/00010060_sound_DsBuffer_releaseIfOwned.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10010072, 0x100100ee): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10010061 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

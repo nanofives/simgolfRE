@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 92 bytes, 25 instructions, subsystem `util`. Mechanical
 Destructor: clears all nodes and runs the array destructor. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Destructor of the 16-bucket hash table class: stores the vtable 0x004baf00 into +0 (`mov dword ptr [esi], 0x4baf00` at 0x004873ad), runs the CRT eh vector destructor iterator 0x004a5713 (call 0x004873c8; arguments pushed at 0x004873b3-0x004873bf: destructor NodeList::clear 0x00487310, count 0x10, element size 0x1c, array this + 0x24) which walks the elements from the last to the first, then StrList::dtor 0x00487260 on the same object (call 0x004873d7). The SEH frame (0x004873a5-0x004873e8) has no effect on a call that does not throw. The vtable store is overwritten by StrList::dtor's own store of 0x004baeac, so it is not observable. Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: NodeList::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487390_NodeList_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C487390@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004873eb): callee pops 0 bytes of stack arguments.

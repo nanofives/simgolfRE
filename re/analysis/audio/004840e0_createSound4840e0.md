@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 40 bytes, 14 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 creates a sound object via the sound.dll factory hook g_83af6c(a,b,c); returns 1 when sound is not initialized (g_83afc4) (`re/names/exe_3.tsv`)
 
+## Purpose
+Creates a sound object through the library's function table: without the library (g_soundLib zero, test 0x004840e5, `jne` 0x004840e7) it returns 1 (0x004840e9); otherwise the cdecl function at 0x0083af6c (table entry 0) runs with the three arguments in their original order (loads 0x004840ef-0x004840f7, pushes 0x004840fb-0x004840fd, call [0x83af6c] 0x004840fe, `add esp, 0xc` 0x00484104) and its result is returned (`ret` 0x00484107). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: createSound4840e0 (8 vectors, 8 distinct results, 8 changing state, `log/diff/004840e0_createSound4840e0.path1.csv`); createSound4840e0_nolib (4 vectors, 1 distinct results, 0 changing state, `log/diff/004840e0_createSound4840e0_nolib.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004840ee, 0x00484107): callee pops 0 bytes of stack arguments.
 

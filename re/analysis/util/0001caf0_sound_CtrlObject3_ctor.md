@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001caf0`), 80 bytes, 21 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a debug-header object: vtable 0x1005b644, 4cc tag 0x6c727463 at +1, declared size 0x38 at +2, nested size 0x18 at +3, 0x44444444 guard at +4, type 2 at +7. (`re/names/sound_3.tsv`)
 
+## Purpose
+0x0001caf0 CtrlObject3_ctor (VA 0x1001caf0). The same prefix (0x1001caf5 / 0x1001caf8 / 0x1001cafb: -1 at +0x14 / +0x20 / +0x24; 0x1001cb05: +4 = 0x6c727463; 0x1001cb0c: the word at +0x18 = 0; 0x1001cb12: +0xc = 0x18; 0x1001cb19: +0x10 = 0x44444444) with the vtable 0x1005b644 (relocated, 0x1001cb20), +0x2c = 0 (edx = this+0x2c, 0x1001cb26), +0x28, +0x30 and +0x34 = 0 (0x1001cb28 / 0x1001cb2b / 0x1001cb2e), +0x1c = 2 (0x1001cb31) and +8 = 0x38 (0x1001cb38). Returns this. Reached from: static callers 0x100041d0, 0x10024460. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: CtrlObject3_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001caf0_sound_CtrlObject3_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001cb3f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001caf0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

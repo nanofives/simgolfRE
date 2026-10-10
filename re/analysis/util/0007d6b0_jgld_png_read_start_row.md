@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007d6b0`), 1054 bytes, 309 instructions, subsystem `u
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's per-image row setup (cdecl, plain `ret` at 0x1007dacd; callers png_read_row 0x1006c3f0, png_start_read_image 0x1006c3a0, png_read_update_info 0x1006c340). It clears zstream.avail_in +0x78 and runs png_init_read_transformations 0x100702a0; for an interlaced image (+0x123, 0x1007d6eb) num_rows +0xd0 is the height +0xcc, or (height + yinc[0] - 1 - ystart[0]) / yinc[0] when transformations & 2 is clear (unsigned `div` 0x1007d719), iwidth +0xe0 = (width + inc[pass] - 1 - start[pass]) / inc[pass] with the Adam7 tables 0x10123228 / 0x10123244 / 0x10123260 / 0x1012327c, and irowbytes +0xdc = ((iwidth * pixel_depth + 7) >> 3) + 1; otherwise num_rows = height, iwidth = width, irowbytes = rowbytes + 1. The largest pixel depth starts at +0x129 and is raised by PACK 4, EXPAND 0x1000, FILLER 0x8000, GRAY_TO_RGB 0x4000 and USER_TRANSFORM 0x100000 by colour type +0x126, bit depth +0x127, num_trans +0x11a and the user depth/channels +0x64 / +0x65 (0x1007d82e..0x1007da17, the RGB-with-tRNS case a signed `idiv` by 3); row_buf +0xec = png_malloc((((width + 7) & ~7) * max + 7 >> 3) + (max + 7 >> 3) + 1) (0x1007da56), prev_row +0xe8 = png_malloc(rowbytes + 1) cleared by png_memset_check 0x10078f80, and flags +0x6c |= 0x40. The png_error at 0x1007d7d2 needs a 32-bit value to differ from itself read back (0x1007d7c4) and cannot run. Reimplemented in `shim/src/re/c3dk.cpp`; path-1 A/B GREEN: png_read_start_row (27 vectors, 27 distinct results, 27 changing state, `log/diff/0007d6b0_jgld_png_read_start_row.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_read_start_row` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007dacd): callee pops 0 bytes of stack arguments.

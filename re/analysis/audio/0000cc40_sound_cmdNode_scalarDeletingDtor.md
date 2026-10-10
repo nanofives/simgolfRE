@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000cc40`), 30 bytes, 11 instructions, subsystem `aud
 Scalar deleting destructor of a 2-field command node: clears the pair and frees the object when the low bit of the flag is set. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000cc40 cmdNode::scalarDeletingDtor (VA 0x1000cc40). The destructor body is called through the incremental-link thunk 0x10001816 with this in ecx (`push esi; mov esi, ecx` 0x1000cc40, `call` 0x1000cc43); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x1000cc48) set -> operator delete 0x1004249a releases the object (`push esi` 0x1000cc4f, `call` 0x1000cc50); returns this (`mov eax, esi` 0x1000cc58, `ret 4` 0x1000cc5b). Target: pairClear 0x10008840. Reached from: static callers 0x1000c420. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: cmdNode::scalarDeletingDtor (50 vectors, 5 distinct results, 50 changing state, `log/diff/0000cc40_sound_cmdNode_scalarDeletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000cc40@C_FUN_1000cc40@f_1000cc40@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000cc5b): callee pops 4 bytes of stack arguments.

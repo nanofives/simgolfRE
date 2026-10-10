@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 95 bytes, 37 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Picks the JPEG colour space for the input colour space at cinfo + 0x24 (unsigned, `cmp ecx, 5 / ja 0x004ae95f` at 0x004ae917-0x004ae91a, jump table 0x004ae970): 0 -> jpeg_set_colorspace 0x004ae990 with 0 (0x004ae953), 1 -> 1 (0x004ae923), 2 and 3 -> 3 (0x004ae92f), 4 -> 4 (0x004ae93b), 5 -> 5 (0x004ae947); any other value stores msg_code 7 (0x004ae962; no parameter) and calls err->error_exit (0x004ae96b). Returns nothing the callers read (jpeg_set_defaults 0x004ae844, the CreateJPG function 0x004ae0d4). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: jpeg_default_colorspace (12 vectors, 12 distinct results, 12 changing state, `log/diff/004ae910_jpeg_default_colorspace.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cparam.cpp` as `_jpeg_default_colorspace` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae92e, 0x004ae93a, 0x004ae946, 0x004ae952, 0x004ae95e, 0x004ae96e): callee pops 0 bytes of stack arguments.

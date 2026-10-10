@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$D0,obj+0x10,obj+0x10,True,2ce0979b,2ce0979b,True
+$D1,obj+0x171,obj+0x171,True,2ce0979b,2ce0979b,True
+$D2,obj+0x2d2,obj+0x2d2,True,2ce0979b,2ce0979b,True
+$D3,obj+0x433,obj+0x433,True,2ce0979b,2ce0979b,True
+$D4,obj+0x590,obj+0x590,True,2ce0979b,2ce0979b,True
+$D5,obj+0x6f1,obj+0x6f1,True,2ce0979b,2ce0979b,True
+$D6,obj+0x852,obj+0x852,True,2ce0979b,2ce0979b,True
+$D7,obj+0x9b3,obj+0x9b3,True,2ce0979b,2ce0979b,True
+$D8,obj+0xb10,obj+0xb10,True,2ce0979b,2ce0979b,True
+$D9,obj+0xc71,obj+0xc71,True,2ce0979b,2ce0979b,True
+$D10,obj+0xdd2,obj+0xdd2,True,2ce0979b,2ce0979b,True
+$D11,obj+0xf33,obj+0xf33,True,2ce0979b,2ce0979b,True
+state_regions,$blk+0x0:5120 $gcmd+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71ce7010,original=0x14c0a20,2026-10-10T17:24:22
+distinct_results,12,,
+VERDICT,GREEN,12,

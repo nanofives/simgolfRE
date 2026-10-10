@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00012b80`), 30 bytes, 11 instructions, subsystem `aud
 Scalar deleting destructor: calls DsBuffer::destroy and frees the object when the low bit of the flag is set. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00012b80 DsBuffer::scalarDeletingDtor (VA 0x10012b80). The destructor body is called through the incremental-link thunk 0x10001910 with this in ecx (`push esi; mov esi, ecx` 0x10012b80, `call` 0x10012b83); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x10012b88) set -> operator delete 0x1004249a releases the object (`push esi` 0x10012b8f, `call` 0x10012b90); returns this (`mov eax, esi` 0x10012b98, `ret 4` 0x10012b9b). Target: DsBuffer::destroy 0x1000ef60. Reached from: static callers 0x100128b0, 0x10012d10, 0x10012fe0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::scalarDeletingDtor (48 vectors, 24 distinct results, 40 changing state, `log/diff/00012b80_sound_DsBuffer_scalarDeletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_10012b80@C_FUN_10012b80@f_10012b80@@QAEPAEE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10012b9b): callee pops 4 bytes of stack arguments.

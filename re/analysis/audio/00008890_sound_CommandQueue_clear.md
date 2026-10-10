@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008890`), 28 bytes, 10 instructions, subsystem `aud
 Clears the 4096-entry command ring buffer and its head/tail counters. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00008890 CommandQueue::clear (VA 0x10008890). edx = this (0x10008890); `rep stosd` of 0x1000 zero dwords from this+0 (ecx = 0x1000, eax = 0, edi = this: 0x10008893-0x1000889c) then +0x4004 = 0 (0x1000889e) and +0x4000 = 0 (0x100088a4). eax is zero at `ret` (0x100088ab), so the function returns 0. The ring of 0x1000 node pointers sits at +0 here (the queue clearer addresses it as a bare array). Reached from: static callers 0x10009cb0, 0x1000b2e0, 0x10058806. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: CommandQueue::clear (10 vectors, 10 distinct results, 9 changing state, `log/diff/00008890_sound_CommandQueue_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10008890@f_10008890@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100088ab): callee pops 0 bytes of stack arguments.

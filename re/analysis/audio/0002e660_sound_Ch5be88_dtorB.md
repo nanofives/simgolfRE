@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002e660`), 226 bytes, 74 instructions, subsystem `au
 second destructor emission installing vtable 0x1005be88, frees its Sound (delete_sound) and owned blocks (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002d560 Ch5be88_dtorA and 0x0002e660 Ch5be88_dtorB (VAs 0x1002d560 / 0x1002e660; the same body 0x1100 bytes apart, only the exception-table pointer differs). Vtable 0x1005be88 (0x1002d57e). +0x50 non-NULL (0x1002d584) -> operator delete (0x1002d592); +0x40 is read (0x1002d59a) and +0x50 = 0 is stored whether or not there was a buffer (0x1002d59d); a non-NULL +0x40 -> delete_sound (0x1002d5a5); +0x40 = 0 (0x1002d5ad) and +0x5c = 0 (0x1002d5b0) unconditionally. Vtable 0x1005bae0 (0x1002d5b3); +0x50 and +0x40 are zero here (the tests at 0x1002d5c4 / 0x1002d5d7 are dead); bit 1 of the byte at +0x44 (0x1002d5e7) -> the unlink block (0x1002d5ed-0x1002d628). Final vtable 0x1005bb80 (0x1002d62f). No result. Reached from: static callers 0x1002e630. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ch5be88_dtorB (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002e660_sound_Ch5be88_dtorB.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002e741): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002e675 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

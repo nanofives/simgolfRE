@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000e8f0`), 11 bytes, 2 instructions, subsystem `audi
 Destructor: installs vtable 0x1005b3d4 and calls the base destructor 0x1002a3b0. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000e8f0 Wave_In_Device::dtor (VA 0x1000e8f0). The vtable 0x1005b3d4 (relocated) is stored at this+0 (0x1000e8f0) and the base destructor is JUMPED to: `jmp 0x10001e06` (0x1000e8f6), a thunk to DeviceBase_dtorC 0x1002a3b0. Its result is the function's. Reached from: static callers 0x1000e8c0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Wave_In_Device::dtor (10 vectors, 10 distinct results, 10 changing state, `log/diff/0000e8f0_sound_Wave_In_Device_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1000e8f0@f_1000e8f0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

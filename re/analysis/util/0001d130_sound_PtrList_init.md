@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001d130`), 16 bytes, 7 instructions, subsystem `util
 zeroes the 4-dword list header {head@0,tail@4,cursor@8,count@0xc} (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0001d130 PtrList_init (VA 0x1001d130). `mov eax, ecx; xor ecx, ecx` (0x1001d130 / 0x1001d132), zero stores at +0, +4, +8 and +0xc (0x1001d134 / 0x1001d136 / 0x1001d139 / 0x1001d13c); returns this (0x1001d13f). The list header of the pointer lists (front +0, back +4, cursor +8, count +0xc) that PtrList_pushBack 0x1001d150 appends to. Reached from: static callers 0x1001bee0, 0x1001c870. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: PtrList_init (12 vectors, 12 distinct results, 11 changing state, `log/diff/0001d130_sound_PtrList_init.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001d13f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001d130 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

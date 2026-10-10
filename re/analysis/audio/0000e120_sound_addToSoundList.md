@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000e120`), 35 bytes, 10 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Appends the object to the engine sound list at +0x1c8 and sets its +0xc8 bit6. (`re/names/sound_2.tsv`)
 
+## Purpose
+0x0000e120 addToSoundList (VA 0x1000e120). One stack argument, a sound object (`ret 4` 0x1000e140). appendNodeC 0x1000e680 (thunk 0x10002351, call at 0x1000e12c) is called on the list header at this+0x1c8 (`add ecx, 0x1c8` 0x1000e126) with the argument; then bit 6 of the low byte of the dword at +0xc8 of the argument is set (`mov eax, [esi+0xc8]; or al, 0x40; mov [esi+0xc8], eax` 0x1000e131-0x1000e139) and that dword is the result. Reached from: static callers 0x10036660. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: addToSoundList (36 vectors, 36 distinct results, 36 changing state, `log/diff/0000e120_sound_addToSoundList.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000e120@C_FUN_1000e120@f_1000e120@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000e140): callee pops 4 bytes of stack arguments.

@@ -1,0 +1,15 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$png $I0 $sP 1 2 0 0 $sU $A0,void,void,True,f4b18099,f4b18099,True
+$png $I1 $sP2 -5 7 1 1 $sU $A1,void,void,True,8709c893,8709c893,True
+$png $I2 $sE 2147483647 -1 2 3 $sE $A3,void,void,True,f7e92394,f7e92394,True
+$png $I3 $sP 3 4 259 2 $sU2 $A2,void,void,True,736dc62b,736dc62b,True
+$png $I0 $sU2 0 0 3 5 $sP2 $A5,void,void,True,fa48fe17,fa48fe17,True
+$png $I1 $sP -1 -2 255 4 $sU $A4,void,void,True,bad30eed,bad30eed,True
+0 $I0 $sP 1 2 0 0 $sU $A0,void,void,True,c6c3ebe2,c6c3ebe2,False
+$png 0 $sP 1 2 0 0 $sU $A0,void,void,True,c6c3ebe2,c6c3ebe2,False
+0 0 $sP 1 2 0 1 $sU $A1,void,void,True,c6c3ebe2,c6c3ebe2,False
+state_regions,$blk+0x0:4096 $arena+0x0:2064 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71ce7d60,original=0x2a40b00,2026-10-10T17:26:37
+distinct_results,7,,
+VERDICT,GREEN,9,

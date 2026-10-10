@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 170 bytes, 61 instructions, subsystem `render`. Mechani
 copies BITMAPINFO RGBQUAD entries [first,first+count) into an RGB triple buffer and uploads them to the hardware palette m_4 (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Hands palette entries to the device: a null table returns 3 (test 0x004830f1, `jne` 0x004830f7, `mov eax, 3` 0x004830fa); a null device at +4 (test 0x0048310c) is created by the palette's own virtual slot 0 (call [eax] 0x00483114); for each of `count` entries from index `start` (loop bound `cmp ebp, edx / jge` 0x00483128-0x0048312a, so count <= 0 copies nothing) three bytes are copied to a 0x300-byte local buffer (esp + 0x14 at the stores, 0x00483143 / 0x0048314e / 0x0048315d) in reverse order from the four-byte entry at table + 0x28 + 4 * index (bytes 2, 1, 0); then the device's virtual slot 0x14 runs with (local buffer, start, count) (call [edx + 0x14] 0x0048317b) and its result is returned (`ret 0xc` 0x00483187). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Palette::setEntries (15 vectors, 14 distinct results, 13 changing state, `log/diff/004830e0_Palette_setEntries.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?setPalette@C4830e0@@QAEHPAUtagBITMAPINFO@@HH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00483106, 0x00483187): callee pops 12 bytes of stack arguments.

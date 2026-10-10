@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002c5e0`), 327 bytes, 110 instructions, subsystem `a
 destructor (vtable 0x1005bcb4): frees 0x28 dword slots starting at this+0x6c (operator_delete each non-null, then NULLs it); frees this+0x50 (operator_delete) and this+0x40 (delete_sound); when this+0x44 bit1 is set unlinks itself from the voice list via this+0x48/this+0x4c (list heads g_100b506c/g_100b5070); steps vtables 0x1005bcb4 to 0x1005bb90 to 0x1005bae0 to 0x1005bb80 (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x0002c5e0 destroyMixerVoices (VA 0x1002c5e0). Vtable 0x1005bcb4 (0x1002c600). A loop of 0x28 pointers from +0x6c (edi = this+0x6c 0x1002c608, ebx = 0x28 0x1002c60f, back edge `jne` 0x1002c629): each non-NULL pointer is released with operator delete (0x1002c61b) and its slot cleared (0x1002c623). Vtable 0x1005bb90 (0x1002c62b); +0x50 non-NULL (0x1002c631) -> operator delete (0x1002c641); +0x50 = 0 (0x1002c653, unconditional); bit 1 of the byte at +0x44 (`test bl, al` with bl = 2, 0x1002c651) -> the unlink block (0x1002c65d-0x1002c698, mask 0xfffffffd in edi). Vtable 0x1005bae0 (0x1002c69b); +0x50 is zero (0x1002c6a1, dead 0x1002c6ac); the sound object at +0x40 (0x1002c6b8) non-NULL -> delete_sound (0x1002c6c0) and +0x40 = 0 (0x1002c6c8); bit 1 (0x1002c6cb) -> a second unlink block (0x1002c6d0-0x1002c70b), unreachable after the first. Final vtable 0x1005bb80 (0x1002c712). No result. Reached from: static callers 0x1002c5b0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: destroyMixerVoices (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002c5e0_sound_destroyMixerVoices.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002c726): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002c5f5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

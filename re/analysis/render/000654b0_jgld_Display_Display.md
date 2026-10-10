@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000654b0`), 213 bytes, 53 instructions, subsystem `ren
 constructs the Display object: zeroes fields and installs the vtable (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Constructor of the module's Display object (thiscall, no stack argument, plain `ret` at 0x10065584; caller createDisplay 0x10065390, which allocates the 0x14c-byte object). It runs DisplayBase::ctor 0x10065630 on `this` through the thunk 0x100019dd (0x100654e5) and DisplayMember::ctor 0x10069270 on `this + 4` through the thunk 0x1000122b (0x100654f4 / 0x100654f7), stores the Display vtable 0x1011d640 into this[0] (0x100654ff), then clears +0x12c, +0x130, +0x134, +0x138, +0x140, +0x144 and +0x148 (0x10065508..0x10065549; +0x13c is not written) and returns `this` (0x10065567). The SEH frame (0x100654b3..0x100654c1) only brackets the member construction. Reimplemented in `shim/src/re/c3dk.cpp`; path-1 A/B GREEN: Display::Display (12 vectors, 12 distinct results, 12 changing state, `log/diff/000654b0_jgld_Display_Display.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `??0Display@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065584): callee pops 0 bytes of stack arguments.

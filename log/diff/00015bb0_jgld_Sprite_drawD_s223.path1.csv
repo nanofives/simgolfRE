@@ -1,0 +1,29 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$bA $d0 0 0 $e0 128 0,0,0,True,c82068fe,c82068fe,True
+$bA $d1 3 2 $e1 64 $pal2,0,0,True,520f1b7a,520f1b7a,True
+$bB $d2 -2 -1 $e0 128 0,0,0,True,c82068fe,c82068fe,True
+$bW $d5 12 8 $e2 16 0,0,0,True,ff9359b0,ff9359b0,True
+$bNP $d0 1 1 $e0 192 0,0,0,True,4eb16e63,4eb16e63,True
+$bA $d0 0 0 $e0 0 0,0,0,True,77c6e446,77c6e446,True
+$bA $d0 0 0 $e1 384 0,0,0,True,c82068fe,c82068fe,True
+$bA $d0 0 0 0 128 0,3,3,True,90df37b4,90df37b4,False
+$bA $d0 0 0 $e3 128 0,3,3,True,90df37b4,90df37b4,False
+$bA $d4 0 0 $e0 128 0,3,3,True,90df37b4,90df37b4,False
+$bBsy $d0 0 0 $e0 128 0,0,0,True,9a4db58e,9a4db58e,True
+$bBsy2 $d1 2 1 $e1 64 $pal,0,0,True,bda324f2,bda324f2,True
+$bBnp $d0 0 0 $e0 32 0,0,0,True,ec4200db,ec4200db,True
+$bA $e0 0 0 $e1 128 0,23,23,True,90df37b4,90df37b4,False
+$bBsy $e1 1 1 $e0 128 0,-858993460,-858993460,True,90df37b4,90df37b4,False
+$bA $x0 0 0 $e0 128 0,23,23,True,90df37b4,90df37b4,False
+$b16w $d0 0 0 $e0 128 0,23,23,True,90df37b4,90df37b4,False
+$b16Bsy $d0 0 0 $e0 128 $pal2,-858993460,-858993460,True,90df37b4,90df37b4,False
+$b16w $e0 0 0 $e1 128 0,23,23,True,90df37b4,90df37b4,False
+$b16w $x1 0 0 $e0 128 0,23,23,True,90df37b4,90df37b4,False
+$bX $d0 0 0 $e0 128 0,23,23,True,90df37b4,90df37b4,False
+$bA 0 0 0 $e0 128 $pal2,7,7,True,90df37b4,90df37b4,False
+$bNB $d0 0 0 $e0 128 $pal2,7,7,True,90df37b4,90df37b4,False
+state_regions,$pix+0x0:57344 $spr+0x0:1920 $spix+0x0:98304 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $l6+0x0:20 $l7+0x0:20 $l8+0x0:20 $l9+0x0:20 $l10+0x0:20 $l11+0x0:20 $l12+0x0:20 $l13+0x0:20 $gmask+0x0:12 $gvstep+0x0:8 $gtbl+0x0:4 $gpos+0x0:8 $glevel+0x0:4 $gcols+0x0:8 $gxstep+0x0:20 $grle+0x0:92 $growpair+0x0:8 $g8vstep+0x0:8 $g8tbl+0x0:4 $g8pos+0x0:8 $g8cols+0x0:4 $g8colour+0x0:4 $g8pix+0x0:4 $g8step+0x0:8 $g8xstep+0x0:12 $g8rowpair+0x0:8,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71ce7300,original=0x14c0a60,2026-10-10T17:25:56
+distinct_results,12,,
+VERDICT,GREEN,23,

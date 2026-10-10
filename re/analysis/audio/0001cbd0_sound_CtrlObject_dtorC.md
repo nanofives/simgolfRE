@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001cbd0`), 7 bytes, 2 instructions, subsystem `audio
 base CtrlObject destructor (identical copy): resets the vtable pointer to 0x1005b19c (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00005720 initCtrlVtable and the four CtrlObject destructor bodies 0x0001c560 / 0x0001c710 / 0x0001cbd0 / 0x0001ccd0 (VAs 0x10005720 / 0x1001c560 / 0x1001c710 / 0x1001cbd0 / 0x1001ccd0) are the same two instructions: `mov dword ptr [ecx], 0x1005b19c` (0x10005720, 0x1001c560, 0x1001c710, 0x1001cbd0, 0x1001ccd0) and `ret`. They store the base Ctrl vtable address 0x1005b19c (relocated) at this+0 and leave eax as the caller had it (no result). Reached from: static callers 0x100041d0, 0x1001cba0, 0x100244a0, 0x100584e0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: CtrlObject_dtorC (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001cbd0_sound_CtrlObject_dtorC.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001cbd0@f_1001cbd0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001cbd6): callee pops 0 bytes of stack arguments.

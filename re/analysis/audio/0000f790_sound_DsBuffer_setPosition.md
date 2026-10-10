@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f790`), 91 bytes, 39 instructions, subsystem `aud
 Sets the buffer play cursor via SetCurrentPosition (vtbl+0x34). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000f790 DsBuffer::setPosition (VA 0x1000f790). The interface at +0x60 (0x1000f799) non-NULL: slot +0x34 is called with (interface, 0) (`push edi` with edi = 0, `call [ecx+0x34]` 0x1000f7a2-0x1000f7a4), then slot +0x10 with (interface, &local1, &local2) (the pointers to two stack dwords, 0x1000f7aa-0x1000f7b7; the interface is read again from +0x60 at 0x1000f7a7). Then, whether or not there was an interface: the byte at +4 is read (0x1000f7ba); +0x24, +0x28, +0x2c, +0x30, +0xc, +0x10, +0x14, +0x18, +0x1c, +0x48 and +0x4c are cleared (0x1000f7bd-0x1000f7dd) and bit 0 of the byte read is set and stored back at +4 (`or al, 1` 0x1000f7c0, `mov byte ptr [esi+4], al` 0x1000f7e0). Returns 0 (0x1000f7e4). Reached from: static callers 0x1000cd80. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::setPosition (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000f790_sound_DsBuffer_setPosition.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000f7ea): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000f794 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

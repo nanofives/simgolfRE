@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 258 bytes, 95 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Finishes a compression cycle: global_state 0x65 or 0x66 (cmp 0x004ae278 / 0x004ae27d) with next_scanline below image_height (unsigned `jae` 0x004ae2aa) raises msg_code 0x42 (0x004ae2af), then master->finish_pass (+8, call 0x004ae2c4); state 0x67 (cmp 0x004ae282) skips to the pass loop; any other state raises msg_code 0x12 with the state (0x004ae289-0x004ae29b) and goes to the loop; while master->is_last_pass (+0x10, test 0x004ae2d5 / 0x004ae352) is 0 the loop runs prepare_for_pass (0x004ae2df) and total_iMCU_rows iMCU rows (+0xe8, re-read at 0x004ae32f; a non-null progress monitor gets the row and the limit and its callback runs, 0x004ae2f0-0x004ae30c; coef->compress_data (coef +0x150, slot +4) with (cinfo, NULL), 0x004ae30f-0x004ae318; a zero result raises msg_code 0x16, 0x004ae325), then master->finish_pass (0x004ae341); finally marker->write_file_trailer (marker +0x154, slot +0x10, 0x004ae35d), dest->term_destination (slot +0x10, 0x004ae364) and jpeg_abort 0x004afa60 (0x004ae368). Returns nothing the caller reads (0x004ae116-0x004ae11b). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: jpeg_finish_compress (12 vectors, 12 distinct results, 12 changing state, `log/diff/004ae270_jpeg_finish_compress.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_capimin.cpp` as `_jpeg_finish_compress` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae371): callee pops 0 bytes of stack arguments.

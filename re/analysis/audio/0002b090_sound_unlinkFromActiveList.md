@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002b090`), 92 bytes, 37 instructions, subsystem `aud
 unlinks the node from its intrusive list using +0x48 (prev) / +0x4c (next): updates the predecessor's +0x4c or the global head g_activeListHead when it was first; gated on +0x44 bit1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002b090 unlinkFromActiveList (VA 0x1002b090). Bit 1 of the flag byte at +0x44 clear returns 0 (`test byte ptr [ecx+0x44], 2` 0x1002b090 / `jne` 0x1002b094, `xor eax, eax` 0x1002b096). Otherwise the unlink block (previous object +0x48 at 0x1002b099 -> its +0x4c at 0x1002b0a6, or the head 0x100b5070 at 0x1002b0ae; next object +0x4c at 0x1002b0b3 -> its +0x48 at 0x1002b0bd, or the tail 0x100b506c at 0x1002b0d6; flags and links cleared at 0x1002b0c5-0x1002b0cb / 0x1002b0e0-0x1002b0e6) and returns 0. Reached from: static callers 0x10006310 (an unnamed wrapper: `call 0x10002419` 0x10006310, `xor eax, eax` 0x10006315), and as slot 32 (+0x80) of the vtables 0x1005c234, 0x1005c2ec and 0x1005c528 (slot dwords 0x1005c2b4 / 0x1005c36c / 0x1005c5a8 hold the thunk 0x10002419), which buildVoiceRxName 0x1002ed50, buildVoiceTxName 0x1002f220 and StreamReader_ctor 0x10031200 install. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: unlinkFromActiveList (12 vectors, 10 distinct results, 9 changing state, `log/diff/0002b090_sound_unlinkFromActiveList.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002b098, 0x1002b0d1, 0x1002b0eb): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002b090 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

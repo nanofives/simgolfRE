@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00010370`), 42 bytes, 17 instructions, subsystem `aud
 Forwards its four arguments to IDirectSoundBuffer::Unlock (vtbl+0x4c). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00010370 DsBuffer::unlock (VA 0x10010370). Four stack arguments (`ret 0x10` 0x10010397). The interface at +0x60 (0x10010370); NULL returns 0 (`je` 0x10010375 -> `xor eax, eax` 0x10010395). Otherwise slot +0x4c is called with (interface, a1, a2, a3, a4) (the pushes at 0x10010382 / 0x1001038c push a4, a3, a2, a1 in that order, then the interface 0x1001038d, call 0x1001038e); its result is stored into the caller's argument slot (0x10010391) and 0 is returned (0x10010395). Reached from: static callers 0x10007010, 0x100075e0, 0x10007df0, 0x10008070, 0x10032130, 0x10032290, 0x10036660. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::unlock (36 vectors, 34 distinct results, 33 changing state, `log/diff/00010370_sound_DsBuffer_unlock.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x10010397): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x10010370 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

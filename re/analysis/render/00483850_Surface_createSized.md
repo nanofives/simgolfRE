@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 88 bytes, 39 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 creates a w*h display surface via the screen manager g_83ad50 and initializes it, returning 0x10 on zero dimensions (`re/names/exe_3.tsv`)
 
+## Purpose
+Creates a surface backing of a given size: a zero width (test 0x00483857, `je` 0x0048385b) or a zero height (test 0x00483861, `je` 0x00483863) returns 0x10 (`mov eax, 0x10` 0x0048389f); otherwise releaseBacking (call 0x00483865), the display's virtual slot 0x74 with this + 4 (call 0x0048387e), the handle stored at +4 (0x00483885) and its virtual slot 4 with (w, h, a, b) (push ecx / push ecx / push edi / push ebx, call [edx + 4] 0x00483894); its result is returned (`ret 0x10` 0x0048389a). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Surface::createSized (14 vectors, 12 distinct results, 11 changing state, `log/diff/00483850_Surface_createSized.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00483850@C_FUN_00483850@f_00483850@@QAEIHHIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x0048389a, 0x004838a5): callee pops 16 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008840`), 14 bytes, 3 instructions, subsystem `util
 Zero-initializes a 2-field pair/node. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00008840 pairClear (VA 0x10008840). Two immediate stores: +4 = 0 (0x10008840), +0 = 0 (0x10008847); `ret` with eax as the caller left it (no result). It is the body the cmdNode scalar-deleting destructor 0x1000cc40 calls (thunk 0x10001816). Reached from: static callers 0x1000a330, 0x1000a670, 0x1000aaf0, 0x1000c420, 0x1000cc40, 0x1000cc70, 0x1000cd80, 0x1000dcf0, 0x100288a0, 0x10028b70. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: pairClear (12 vectors, 12 distinct results, 11 changing state, `log/diff/00008840_sound_pairClear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10008840@f_10008840@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000884d): callee pops 0 bytes of stack arguments.

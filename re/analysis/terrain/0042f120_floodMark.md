@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 147 bytes, 48 instructions, subsystem `terrain`. Mechan
 flood-fills the connected region of qualifying tiles, setting the 0x40 visited flag (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+Recursive flood fill over the word grid 0x0053caf0 (index 50 x + y, two bytes per cell): a cell with bit 0x40 set returns at once (test cl, 0x40 at 0x0042f13d, `jne` 0x0042f140); otherwise bit 0x40 is set (0x0042f14a-0x0042f150) and the signed byte at 0x00578372 + 0x30 * type (type = signed byte at 0x005722e8 + index, movsx 0x0042f142) ends the call when 0 or less (test / `jle` 0x0042f161-0x0042f163); otherwise the four neighbours k = 0..3 (esi steps by 8 bytes, `cmp esi, 0x20` 0x0042f1a9: entries 0, 2, 4, 6 of the dword tables 0x004c2878 for x and 0x004c2898 for y) are tested without a bounds check: a word with bit 0x20 or 0x400 (and ebp, 0x420 / test bp, bp 0x0042f18c-0x0042f192) and without bit 0x40 (test dl, 0x40 0x0042f197) is passed to floodMark through its own address (push ecx / push eax / call 0x0042f120 at 0x0042f19c-0x0042f19e). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: floodMark (18 vectors, 8 distinct results, 16 changing state, `log/diff/0042f120_floodMark.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0042f1b2): callee pops 0 bytes of stack arguments.
 

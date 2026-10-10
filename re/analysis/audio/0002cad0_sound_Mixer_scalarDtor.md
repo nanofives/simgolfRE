@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002cad0`), 30 bytes, 11 instructions, subsystem `aud
 scalar deleting destructor: calls Mixer_dtor then operator_delete when param&1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002cad0 Mixer_scalarDtor (VA 0x1002cad0). The destructor body is called through the incremental-link thunk 0x10001e92 with this in ecx (`push esi; mov esi, ecx` 0x1002cad0, `call` 0x1002cad3); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x1002cad8) set -> operator delete 0x1004249a releases the object (`push esi` 0x1002cadf, `call` 0x1002cae0); returns this (`mov eax, esi` 0x1002cae8, `ret 4` 0x1002caeb). Target: Mixer_dtor 0x1002cb00. Reached from: no call xref; reached through a stored pointer: 0x1005bdd8 table slot 0 (+0x0) of the table at 0x1005bdd8; installers: 0x1002c9f0 Mixer_ctor, 0x1002cb00 Mixer_dtor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Mixer_scalarDtor (40 vectors, 20 distinct results, 40 changing state, `log/diff/0002cad0_sound_Mixer_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002cad0@C_FUN_1002cad0@f_1002cad0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002caeb): callee pops 4 bytes of stack arguments.

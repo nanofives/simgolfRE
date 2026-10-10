@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002e930`), 153 bytes, 49 instructions, subsystem `au
 installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005c178, sets the Sound source type (SEH frame) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002e930 Ch5c178_ctor (VA 0x1002e930): the base initialisation, then +0x54 = 0 (0x1002e9a7), the vtable 0x1005c178 (0x1002e9aa) and Sound_setSourceType (call at 0x1002e9b0) with the argument 4 (push at 0x1002e9a3). Returns this (0x1002e9b9). Reached from: static callers 0x10006020. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ch5c178_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002e930_sound_Ch5c178_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002e9c8): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002e945 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

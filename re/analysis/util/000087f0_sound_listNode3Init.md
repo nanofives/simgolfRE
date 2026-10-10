@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000087f0`), 13 bytes, 6 instructions, subsystem `util
 Zero-initializes a 3-field list node. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x000087f0 listNode3Init (VA 0x100087f0). `mov eax, ecx; xor ecx, ecx` (0x100087f0 / 0x100087f2), then zero stores at +0, +4 and +8 (0x100087f4 / 0x100087f6 / 0x100087f9); returns this (eax, 0x100087fc). The constructor of the 12-byte list nodes and the first three dwords of the 16-byte command-queue nodes (reached through the thunk 0x10002031). Reached from: static callers 0x1000a240, 0x1000c2f0, 0x1000cd80, 0x1000dbe0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: listNode3Init (12 vectors, 12 distinct results, 11 changing state, `log/diff/000087f0_sound_listNode3Init.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100087fc): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100087f0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000ef60`), 133 bytes, 56 instructions, subsystem `au
 Stops the buffer (vtbl+0x48) and releases the IDirectSoundBuffer and its 3D/Notify interfaces (+0x60/+0x64/+0x6c), clearing the slots. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000ef60 DsBuffer::destroy (VA 0x1000ef60). No result is used (eax is whatever the last load left). The interface at +0x60 NULL, or the dword at +0x5c zero, ends the function (0x1000ef69 / 0x1000ef6b, 0x1000ef6d / 0x1000ef70); otherwise the release block. Reached from: static callers 0x10011290, 0x10011970, 0x10011a80, 0x10012120, 0x10012260, 0x100124c0, 0x10012690, 0x100128b0, 0x10012b80, 0x10012bb0, 0x10012d10, 0x10012fe0, 0x100132e0, 0x100133d0, 0x10058910. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::destroy (12 vectors, 9 distinct results, 8 changing state, `log/diff/0000ef60_sound_DsBuffer_destroy.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000efe4): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000ef61 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

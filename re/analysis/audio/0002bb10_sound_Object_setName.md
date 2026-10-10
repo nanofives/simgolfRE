@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002bb10`), 103 bytes, 46 instructions, subsystem `au
 thiscall(str): frees the old name at this+0x50 and stores a heap copy (strlen+new+strcpy) of str there; returns 10 when str is null. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x0002bb10 Object_setName (VA 0x1002bb10). One stack argument, a string (`ret 4`). NULL returns 0xa (`test ebx, ebx` / `je` 0x1002bb18 / 0x1002bb1a, `mov eax, 0xa` 0x1002bb6e). Otherwise a non-NULL pointer at +0x50 (0x1002bb1c) is released with operator delete (0x1002bb24) and +0x50 takes a fresh copy of the string (0x1002bb39 operator new, 0x1002bb4a store, copy to 0x1002bb65); returns 0 (`xor eax, eax` 0x1002bb63). Reached from: static callers 0x100093e0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Object_setName (40 vectors, 37 distinct results, 36 changing state, `log/diff/0002bb10_sound_Object_setName.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002bb6a, 0x1002bb74): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002bb16 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

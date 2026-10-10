@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f760`), 22 bytes, 10 instructions, subsystem `aud
 Stops the buffer via IDirectSoundBuffer::Stop (vtbl+0x48); returns 2 when no interface is present. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000f760 DsBuffer::stop (VA 0x1000f760). The interface at +0x60 (0x1000f760); NULL returns 2 (`test eax, eax` / `jne` 0x1000f763 / 0x1000f765, `mov eax, 2` 0x1000f767). Otherwise its slot +0x48 is called with the interface as the only argument (`mov ecx, [eax]; push eax; call [ecx+0x48]` 0x1000f76d-0x1000f770) and 0 is returned whatever it returned (`xor eax, eax` 0x1000f773). Reached from: static callers 0x1000bef0, 0x10032640, 0x10035fc0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::stop (12 vectors, 12 distinct results, 11 changing state, `log/diff/0000f760_sound_DsBuffer_stop.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000f76c, 0x1000f775): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000f760 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000134e0`), 88 bytes, 21 instructions, subsystem `aud
 Unlinks a buffer node (links +0xbc/+0xc0) from g_dsBufferList, fixing the head/tail pointers. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x000134e0 unlinkDsBuffer (VA 0x100134e0). One stack argument, a buffer (`ret 4`). NULL returns 0xa (`test edx, edx` / `jne` 0x100134e4 / 0x100134e6, `mov eax, 0xa` 0x100134e8). The buffer's previous (+0xbc, 0x100134f0) and next (+0xc0, 0x100134f6) neighbours: a previous buffer has its +0xc0 set to the next (0x10013500), otherwise the module's DirectSound buffer list head 0x100b4a34 takes the next (0x10013508); a next buffer has its +0xbc set to the previous (0x10013512), otherwise the list tail 0x100b4a38 takes the previous (0x1001351a); the buffer's +0xbc and +0xc0 are cleared (0x1001351f / 0x10013529); returns 0 (0x10013533). Reached from: static callers 0x100128b0, 0x10012d10, 0x10012fe0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: unlinkDsBuffer (11 vectors, 11 distinct results, 10 changing state, `log/diff/000134e0_sound_unlinkDsBuffer.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100134ed, 0x10013535): callee pops 4 bytes of stack arguments.
 

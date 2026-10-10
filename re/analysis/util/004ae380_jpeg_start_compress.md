@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 117 bytes, 41 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Starts a compression cycle: a global_state other than 0x64 (cmp 0x004ae385) raises msg_code 0x12 with the state (0x004ae38b-0x004ae39f) and goes on; a non-zero write_all_tables (test 0x004ae3a8) calls jpeg_suppress_tables 0x004ae220 with FALSE (0x004ae3ac-0x004ae3af); then err->reset_error_mgr (+0x10, call 0x004ae3ba), dest->init_destination (dest +0x14, slot +8, 0x004ae3c1), jinit_compress_master 0x004b03a0 (0x004ae3c5), master->prepare_for_pass (master +0x144, slot +0, 0x004ae3d1), next_scanline (+0xd8) = 0 (0x004ae3de) and global_state = 0x65 + (raw_data_in != 0) (setne / add 0x65 at 0x004ae3ea-0x004ae3f0). Returns nothing the caller reads (0x004ae0eb-0x004ae0f0). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: jpeg_start_compress (18 vectors, 16 distinct results, 18 changing state, `log/diff/004ae380_jpeg_start_compress.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_capistd.cpp` as `_jpeg_start_compress` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae3f4): callee pops 0 bytes of stack arguments.

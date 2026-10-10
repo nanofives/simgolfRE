@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002a3b0`), 19 bytes, 7 instructions, subsystem `audi
 shared device-base destructor (identical copy): resets the vtable pointer to 0x1005b8b0 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00028ff0 DeviceBase_dtorA, 0x00029f60 DeviceBase_dtorB, 0x0002a3b0 DeviceBase_dtorC (VAs 0x10028ff0 / 0x10029f60 / 0x1002a3b0) are one body three times: the vtable 0x1005b8b0 (relocated) is stored at this+0 (`mov dword ptr [ecx], 0x1005b8b0` 0x10028ff0, 0x10029f60, 0x1002a3b0); ecx becomes the object at this+0x14 (0x10028ff6 etc.); NULL ends the function (`test ecx, ecx` / `je` 0x10028ff9 / 0x10028ffb, `ret` 0x10029002); otherwise the slot at +0x14 of that object's vtable is JUMPED to with the sub-object in ecx (`mov eax, [ecx]` / `jmp dword ptr [eax + 0x14]` 0x10028ffd / 0x10028fff), so its result is the function's. With a NULL sub-object eax is whatever the caller left. Reached from: static callers 0x1000e8f0, 0x1002a380. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DeviceBase_dtorC (10 vectors, 10 distinct results, 10 changing state, `log/diff/0002a3b0_sound_DeviceBase_dtorC.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_1002a3b0@f_1002a3b0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002a3c2): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038ae0`), 47 bytes, 18 instructions, subsystem `aud
 Deleting destructor for the MemBlock_alloc block: operator_delete the buffer *this, null it, and operator_delete this when param_1 bit0 is set. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x00038ae0 MemBlock_deleteDtor (VA 0x10038ae0). One stack argument, the flags (`ret 4` 0x10038b0c). The pointer at this+0 (0x10038ae3) non-NULL (`test eax, eax` / `je` 0x10038ae5 / 0x10038ae7) is released by operator delete 0x1004249a (0x10038aea); the flags byte is read from the stack AFTER that call (`mov al, [esp+8]` 0x10038af2); +0 is cleared (0x10038af6); bit 0 of the flags set (`test al, 1` 0x10038afc) -> operator delete of this (0x10038b01). Returns this. Reached from: static callers 0x10038710. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: MemBlock_deleteDtor (48 vectors, 16 distinct results, 42 changing state, `log/diff/00038ae0_sound_MemBlock_deleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10038ae0@C_FUN_10038ae0@f_10038ae0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10038b0c): callee pops 4 bytes of stack arguments.

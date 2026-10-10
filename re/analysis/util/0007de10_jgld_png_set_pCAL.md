@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007de10`), 431 bytes, 140 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's setter of the pCAL chunk data (cdecl, plain `ret` at 0x1007dfbe; caller png_handle_pCAL 0x1007b620): (png_ptr, info_ptr, purpose, X0, X1, type, nparams, units, params). png_ptr or info_ptr NULL returns at once (0x1007de2c / 0x1007de32). Otherwise info+0xa0 = png_malloc(strlen(purpose) + 1) with purpose copied (0x1007de53 / 0x1007de76), +0xa4 = X0, +0xa8 = X1, the bytes +0xb4 = type and +0xb5 = nparams (0x1007de9c / 0x1007dea8), +0xac = a copy of units (0x1007dec8 / 0x1007deeb), +0xb0 = png_malloc(nparams * 4 + 4) from the whole int (`lea edx, [ecx*4+4]` 0x1007def6) with entry [nparams] NULL (0x1007df1f) and entries 0..nparams-1 (signed loop, 0x1007df3e) copies of params[i] (0x1007df60 / 0x1007df95), and info+0x8 |= 0x400 (0x1007dfa5). Reimplemented in `shim/src/re/c3dk.cpp`; path-1 A/B GREEN: png_set_pCAL (9 vectors, 7 distinct results, 6 changing state, `log/diff/0007de10_jgld_png_set_pCAL.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_set.cpp` as `_png_set_pCAL` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007dfbe): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 22 bytes, 9 instructions, subsystem `render`. Mechanica
 fills the surface at this+4 via its vtbl+0x44 with first argument 0 and colour param_1 (background clear) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Forwards to the device object at this + 4 (`mov ecx, [ecx + 4]` 0x00478b30): a null device returns at once (test 0x00478b33, `je` 0x00478b35); otherwise the device's virtual slot 0x44 runs with (0, v) (push edx = v, push 0, call [eax + 0x44] at 0x00478b3b-0x00478b40); `ret 4` (0x00478b43). Declared void: the callers 0x0047d610, 0x0047d850, 0x004808c0 and 0x004810d0 call it as a statement. Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Widget_clearArea (12 vectors, 10 distinct results, 9 changing state, `log/diff/00478b30_Widget_clearArea.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00478b30@C_FUN_00478b30@f_00478b30@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00478b43): callee pops 4 bytes of stack arguments.

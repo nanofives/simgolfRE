@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001b9a0`), 43 bytes, 20 instructions, subsystem `aud
 calls this vtbl slot0(param); returns SNDERR 0x21 if it returns 0, else pushBack(this+0xc,param) and returns 0 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0001b9a0 Ctrl_appendIfAccepted (VA 0x1001b9a0). One stack argument (`ret 4` 0x1001b9b8 / 0x1001b9c8). The object's own vtable slot 0 is called with the argument and this in ecx (`mov eax, [esi]; push edi; call [eax]` 0x1001b9a8-0x1001b9ab); a result whose low byte is zero (`test al, al` 0x1001b9ad / `jne` 0x1001b9af) returns 0x21 (0x1001b9b2). Otherwise PtrList_pushBack 0x1001d150 (thunk 0x100022f7, call at 0x1001b9bf) is called on the list header at this+0xc with the argument and 0 is returned (0x1001b9c5). Reached from: static callers 0x10005770, 0x10024040. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ctrl_appendIfAccepted (30 vectors, 30 distinct results, 30 changing state, `log/diff/0001b9a0_sound_Ctrl_appendIfAccepted.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001b9b8, 0x1001b9c8): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001b9a1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

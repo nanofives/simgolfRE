@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001bca0`), 51 bytes, 14 instructions, subsystem `uti
 Constructs a debug-header base object: installs vtable 0x1005b590, declared size 0x18 at +1, 0x44444444 guard at +2 and +8, nested size 0xc at +7, zeroing the body fields. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x0001bca0 CtrlObject2_ctor (VA 0x1001bca0). eax = this, edx = 0x44444444, ecx = 0 (0x1001bca0-0x1001bca7): +0xc, +0x10, +0x14 and +0x18 = 0 (0x1001bca9 / 0x1001bcac / 0x1001bcaf / 0x1001bcb2); +4 = 0x18 (0x1001bcb5); +8 = 0x44444444 (0x1001bcbc); the vtable 0x1005b590 (relocated) at +0 (0x1001bcbf); +0x28 = 0 (0x1001bcc5); +0x1c = 0xc (0x1001bcc8); +0x20 = 0x44444444 (0x1001bccf). Returns this. Reached from: static callers 0x1001d810, 0x1001dce0, 0x1001e750. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: CtrlObject2_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001bca0_sound_CtrlObject2_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001bcd2): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001bca0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

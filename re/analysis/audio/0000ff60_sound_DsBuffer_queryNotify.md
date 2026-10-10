@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000ff60`), 66 bytes, 29 instructions, subsystem `aud
 QueryInterfaces IDirectSoundNotify into +0x6c. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000ff60 DsBuffer::queryNotify (VA 0x1000ff60). QueryInterface (slot +0 of the interface's vtable, `call [ecx]` 0x1000ff74 / 0x1000ff8b) with (interface, the identifier at 0x1005d52c (relocated), &this->+0x6c). The interface at +0x68 is tried first (0x1000ff60 / 0x1000ff66 / 0x1000ff68-0x1000ff74); with +0x68 NULL the one at +0x64 is used (0x1000ff78 / 0x1000ff7d / 0x1000ff7f-0x1000ff8b); with both NULL the function returns 0 without a call (0x1000ff7d -> 0x1000ff91). A non-negative result (`test eax, eax` / `jl` 0x1000ff8d / 0x1000ff8f) returns 0 (0x1000ff91); a negative one clears +0x6c (0x1000ff95) and returns 0xb (0x1000ff9b). Reached from: static callers 0x10012260. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::queryNotify (12 vectors, 12 distinct results, 11 changing state, `log/diff/0000ff60_sound_DsBuffer_queryNotify.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000ff94, 0x1000ffa1): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000ff60 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

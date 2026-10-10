@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00020ee0`), 73 bytes, 25 instructions, subsystem `aud
 Sets the voice's stop/drain flags (+0x2b bits 2 and 3) and enqueues command 2 (stop) on g_midiDevice. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x00020ee0 Voice_requestStopDrain (VA 0x10020ee0). Bit 2 of the flag byte at +0xac set returns 0 (`test byte ptr [esi+0xac], 4` 0x10020ee3 / `jne` 0x10020eea -> 0x10020f25). Otherwise the object's own vtable slot +0x5c is called with this in ecx (`mov eax, [esi]; call [eax+0x5c]` 0x10020eec / 0x10020eee); a zero result (`test eax, eax` / `je` 0x10020ef1 / 0x10020ef3) returns 0. Otherwise the flag dword at +0xac gets bit 2 (0x10020ef5-0x10020f00) and then bit 3 (0x10020f06 / 0x10020f09), and g_midiDevice 0x100b4a1c (0x10020f0f), when non-NULL (0x10020f15 / 0x10020f17), takes CommandQueue::push 0x1000a240 (thunk 0x100015e1, call at 0x10020f20) with (this, 2, 0, 0) (pushes 0x10020f19-0x10020f1f); 0 is returned (0x10020f25). Reached from: no call xref; reached through a stored pointer: 0x1005b028 table slot 10 (+0x28) of the table at 0x1005b000; installers: 0x10003f30 Sound::ctor, 0x10004000 Sound::dtor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Voice_requestStopDrain_q (12 vectors, 8 distinct results, 7 changing state, `log/diff/00020ee0_sound_Voice_requestStopDrain_q.path1.csv`); Voice_requestStopDrain_full (12 vectors, 8 distinct results, 7 changing state, `log/diff/00020ee0_sound_Voice_requestStopDrain_full.path1.csv`); Voice_requestStopDrain_null (12 vectors, 8 distinct results, 7 changing state, `log/diff/00020ee0_sound_Voice_requestStopDrain_null.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10020f28): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10020ee1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

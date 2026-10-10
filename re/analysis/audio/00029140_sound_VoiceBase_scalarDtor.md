@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00029140`), 30 bytes, 11 instructions, subsystem `aud
 scalar deleting destructor: calls VoiceBase_dtor then operator_delete when param&1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00029140 VoiceBase_scalarDtor (VA 0x10029140). The destructor body is called through the incremental-link thunk 0x10001dac with this in ecx (`push esi; mov esi, ecx` 0x10029140, `call` 0x10029143); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x10029148) set -> operator delete 0x1004249a releases the object (`push esi` 0x1002914f, `call` 0x10029150); returns this (`mov eax, esi` 0x10029158, `ret 4` 0x1002915b). Target: VoiceBase_dtor 0x10029200. Reached from: no call xref; reached through a stored pointer: 0x1005b914 table slot 0 (+0x0) of the table at 0x1005b914; installers: 0x10029020 VoiceBase_ctor, 0x10029200 VoiceBase_dtor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: VoiceBase_scalarDtor (24 vectors, 16 distinct results, 24 changing state, `log/diff/00029140_sound_VoiceBase_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10029140@C_FUN_10029140@f_10029140@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002915b): callee pops 4 bytes of stack arguments.

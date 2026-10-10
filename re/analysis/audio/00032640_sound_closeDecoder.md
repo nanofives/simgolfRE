@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00032640`), 15 bytes, 6 instructions, subsystem `audi
 fastcall(sound): if the decoder at sound+0x54 is present, closes it via 0x1000f760. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00032640 closeDecoder (VA 0x10032640). The object at +0x54 (`mov ecx, [ecx+0x54]` 0x10032640); non-NULL -> DsBuffer::stop 0x1000f760 (thunk 0x10001a2d, call at 0x10032647) is called with it in ecx; the result is dropped and 0 is returned (`xor eax, eax` 0x1003264c). Reached from: static callers 0x1000cd80. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: closeDecoder (12 vectors, 11 distinct results, 10 changing state, `log/diff/00032640_sound_closeDecoder.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10032640@f_10032640@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1003264e): callee pops 0 bytes of stack arguments.

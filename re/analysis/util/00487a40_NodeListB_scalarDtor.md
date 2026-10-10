@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the 0x004bafb0 list. (`re/names/exe_4.tsv`)
 
+## Purpose
+Scalar deleting destructor of NodeListB: NodeListB::dtor 0x00487a60 on this (call 0x00487a43; that body stores the vtable 0x004bafb0 and jumps to StrList::dtor 0x00487260, 0x00487a60-0x00487a66), operator delete 0x004a4ffc (call 0x00487a50) when bit 0 of the flags byte is set (test 0x00487a48, `je` 0x00487a4d), returns this (0x00487a58, `ret 4` 0x00487a5b). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: NodeListB::scalarDtor (24 vectors, 18 distinct results, 24 changing state, `log/diff/00487a40_NodeListB_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00487a40@C_FUN_00487a40@f_00487a40@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00487a5b): callee pops 4 bytes of stack arguments.

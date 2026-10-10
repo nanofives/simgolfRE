@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 50 bytes, 19 instructions, subsystem `render`. Mechanic
 releases the display surface backing object m_4 (screen manager g_83ad50 vtable f34) and clears its state fields (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_3.md`.
 
+## Purpose
+Releases the surface's backing handle (this + 4, 0x004838b6): a non-null handle (cmp 0x004838b9, `je` 0x004838bb) is passed to the display g_graphicsDevice 0x0083ad50 (`mov ecx, [0x83ad50]` 0x004838bd) through its virtual slot 0x88 (call 0x004838c6); then +0x10, +0xc, +0x18 and +0x1c are cleared (0x004838cc-0x004838d5) and +8 = -1 (0x004838d8). Returns nothing the callers read (Surface::createFromId 0x00483818, Surface::createSized 0x00483865). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Surface::releaseBacking (12 vectors, 12 distinct results, 12 changing state, `log/diff/004838b0_Surface_releaseBacking.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004838b0@f_004838b0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004838e1): callee pops 0 bytes of stack arguments.

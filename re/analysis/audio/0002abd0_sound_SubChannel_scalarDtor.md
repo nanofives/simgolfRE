@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002abd0`), 30 bytes, 11 instructions, subsystem `aud
 scalar deleting destructor: calls SubChannel_dtor then operator_delete when param&1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002abd0 SubChannel_scalarDtor (VA 0x1002abd0). The destructor body is called through the incremental-link thunk 0x10001eb5 with this in ecx (`push esi; mov esi, ecx` 0x1002abd0, `call` 0x1002abd3); bit 0 of the stack flags (`test byte ptr [esp+8], 1` 0x1002abd8) set -> operator delete 0x1004249a releases the object (`push esi` 0x1002abdf, `call` 0x1002abe0); returns this (`mov eax, esi` 0x1002abe8, `ret 4` 0x1002abeb). Target: SubChannel_dtor 0x1002ac00. Reached from: no call xref; reached through a stored pointer: 0x1005bae0 table slot 0 (+0x0) of the table at 0x1005bae0; installers: 0x1002ab10 FUN_1002ab10, 0x1002ac00 SubChannel_dtor, 0x1002b4e0 SubChannel_ctor, 0x1002b620 Ch5bb90_dtor, 0x1002c490 Ch5bb90_ctor, 0x1002c5e0 destroyMixerVoices, 0x1002c9f0 Mixer_ctor, 0x1002cb00 Mixer_dtor, 0x1002d450 Ch5be88_ctor, 0x1002d560 Ch5be88_dtorA, 0x1002e550 Ch5c000_ctor, 0x1002e660 Ch5be88_dtorB, 0x1002e930 Ch5c178_ctor, 0x1002ea30 Ch5c178_dtor, 0x1002ed50 buildVoiceRxName, 0x1002ef40 Ch5c234_dtor, 0x1002f220 buildVoiceTxName, 0x1002f3f0 Ch5c2ec_dtor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: SubChannel_scalarDtor (40 vectors, 20 distinct results, 40 changing state, `log/diff/0002abd0_sound_SubChannel_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002abd0@C_FUN_1002abd0@f_1002abd0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002abeb): callee pops 4 bytes of stack arguments.

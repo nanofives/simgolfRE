@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 59 bytes, 19 instructions, subsystem `crt`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor thunk (`re/names/exe_0.tsv`)
 
+## Purpose
+Deleting destructor of a small class: reads the dword at this + 4 (0x00401c37), stores the vtable 0x004ba278 into +0 (0x00401c3a), writes that dword to the global 0x00839650 (0x00401c43); when bit 0 of the flags byte is set (test 0x00401c40, `je` 0x00401c65) and this is non-null (0x00401c4a), a zero dword sends this to free 0x004a5007 (test 0x00401c4e, `jne` 0x00401c5b, call 0x00401c53); the global is then set to 0 (0x00401c5b). Returns this (0x00401c65, `ret 4` 0x00401c68). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: deletingDtor_401c30 (24 vectors, 18 distinct results, 24 changing state, `log/diff/00401c30_deletingDtor_401c30.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_14.cpp` as `?FUN_00401c30@C_FUN_00401c30@f_00401c30@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00401c68): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00024460`), 39 bytes, 13 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 constructs a channel-descriptor with an embedded CtrlObject3 base at +0x14, default level +4=0x7f and +0x10=0x40 (`re/names/sound_6.tsv`)
 
+## Purpose
+0x00024460 ChannelDesc_ctor (VA 0x10024460). CtrlObject3_ctor 0x1001caf0 (thunk 0x10002644, call at 0x10024466) on this+0x14 (`lea ecx, [esi+0x14]` 0x10024463); then +4 = 0x7f (0x1002446d), +0 = 0 (0x10024474), +8 = 0 (0x10024476), +0xc = 0 (0x10024479) and +0x10 = 0x40 (0x1002447c). Returns this (0x10024483). Reached from: no call xref; reached through a stored pointer: 0x1001f50a store target 0x10002667 written by code; installers: 0x1001f4a0 Sound5b6a8_ctor. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: ChannelDesc_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00024460_sound_ChannelDesc_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10024460@f_10024460@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10024486): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002c9f0`), 165 bytes, 53 instructions, subsystem `au
 installs base vtable 0x1005bae0 (SubChannel) then derived 0x1005bdd8 (Mixer); counterpart of Mixer_dtor 0x1002cb00 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002c9f0 Mixer_ctor (VA 0x1002c9f0): the base initialisation, then +0x54 = 0 (0x1002ca6d), the vtable 0x1005bdd8 (0x1002ca70), the 0x28 dwords from +0x58 cleared by `rep stosd` (ecx = 0x28, edi = this+0x58: 0x1002ca63-0x1002ca78) and Sound_setSourceType (call at 0x1002ca7c) with the argument 8 (push at 0x1002ca76). Returns this (0x1002ca85). Reached from: static callers 0x1002f740. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Mixer_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002c9f0_sound_Mixer_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002ca94): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002ca05 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

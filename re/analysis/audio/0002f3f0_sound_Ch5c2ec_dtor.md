@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002f3f0`), 223 bytes, 73 instructions, subsystem `au
 installs vtable 0x1005c2ec, frees its Sound (delete_sound) and owned blocks (operator_delete) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0002f3f0 Ch5c2ec_dtor (VA 0x1002f3f0). Vtable 0x1005c2ec (0x1002f40e). +0x40 (0x1002f414) non-NULL -> delete_sound (0x1002f422); +0x50 is read (0x1002f42a) and +0x40 = 0 is stored whether or not there was a sound object (0x1002f42d); +0x50 non-NULL -> operator delete (0x1002f435) and +0x50 = 0 (0x1002f43d). Vtable 0x1005bae0 (0x1002f440); +0x50 and +0x40 are zero (0x1002f446 / 0x1002f461: the tests at 0x1002f451 / 0x1002f464 are dead); bit 1 of the byte at +0x44 (0x1002f474) -> the unlink block (0x1002f47a-0x1002f4b5). Final vtable 0x1005bb80 (0x1002f4bc). No result. Reached from: static callers 0x1002f3c0, 0x100312a0, 0x10059170. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ch5c2ec_dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002f3f0_sound_Ch5c2ec_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002f4ce): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002f405 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

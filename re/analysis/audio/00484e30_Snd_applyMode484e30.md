@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 51 bytes, 22 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 applies a mode to the device (vtable f34) and queries status (vtable f35) unless flag bit2 is set (`re/names/exe_3.tsv`)
 
+## Purpose
+Applies a value and a mode: the object's virtual slot 0x88 runs with (a, mode) (push ebx / push ecx / call [eax + 0x88] 0x00484e3c-0x00484e42); a mode whose low byte has bit 2 (`test bl, 4` 0x00484e48, `je` 0x00484e4b) returns 0 (0x00484e4e); otherwise virtual slot 0x8c runs (call [edx + 0x8c] 0x00484e58) and its result is returned (`ret 8` 0x00484e60). The caller loadSoundTable 0x00448220 calls it with mode 4 (push 4 at 0x00448220). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Snd::applyMode484e30 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00484e30_Snd_applyMode484e30.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00484e30@C_FUN_00484e30@f_00484e30@@QAEIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00484e51, 0x00484e60): callee pops 8 bytes of stack arguments.

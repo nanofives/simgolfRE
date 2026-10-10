@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 14 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 sets a field on the device (vtable f21) and, if it returned 0, calls vtable f10 (`re/names/exe_3.tsv`)
 
+## Purpose
+The same shape through the object's virtual slot 0x54 (call [eax + 0x54] 0x004847bc) with the fallback slot 0x28 (call [edx + 0x28] 0x004847c7); the result is returned (`ret 4` 0x004847cb). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Snd::applyField4847b0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004847b0_Snd_applyField4847b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004847b0@C_FUN_004847b0@f_004847b0@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004847cb): callee pops 4 bytes of stack arguments.

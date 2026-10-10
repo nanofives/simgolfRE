@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00011000`), 74 bytes, 24 instructions, subsystem `aud
 Stores x/y/z at +0xc8/+0xcc/+0xd0 and calls IDirectSound3DBuffer::SetPosition (vtbl+0x4c) on the +0x64 interface. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00011000 Ds3DBuffer::setPosition (VA 0x10011000). Three stack arguments x, y, z (`ret 0xc` 0x10011047). The 3D interface at +0x64 (0x10011000); NULL returns 0xb (0x10011007). Otherwise +0xc8 = x, +0xcc = y, +0xd0 = z (0x10011015 / 0x1001101f / 0x10011029), and slot +0x4c is called with (interface, x, y, z, 0) (pushes 0x10011013, 0x10011031-0x1001103c, call 0x1001103d). A zero result returns 0, any other result returns 0x1f (`neg eax; sbb eax, eax; and eax, 0x1f` 0x10011040-0x10011044). Reached from: static callers 0x10034430, 0x10037b00. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: Ds3DBuffer::setPosition (24 vectors, 22 distinct results, 21 changing state, `log/diff/00011000_sound_Ds3DBuffer_setPosition.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x1001100c, 0x10011047): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10011000 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

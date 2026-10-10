@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00029200`), 103 bytes, 29 instructions, subsystem `au
 installs vtbl_VoiceBase then the intermediate 0x1005b8b0, destructs the embedded array at +0x24 via the vector dtor iterator (SEH frame) (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00029200 VoiceBase_dtor (VA 0x10029200). Wrapped in a C++ frame (0x10029200-0x1002920e) that no path uses. The vtable 0x1005b914 is stored at +0 (0x1002921d), then the CRT's vector-destructor iterator 0x1004280e (call at 0x10029238, `ret 0x10`) runs the element destructor thunk 0x1000256d (-> VoiceBase_clearList 0x10029170; the relocated address is pushed at 0x10029223) over 0x10 elements of 0x18 bytes from this+0x24 (pushes 0x10029228 / 0x1002922d / 0x1002922f), last element first. Then the vtable 0x1005b8b0 is stored (0x10029240) and the sub-object at +0x14 (0x1002923d), when non-NULL (0x10029246 / 0x10029251), has its vtable slot +0x14 CALLED with it in ecx (0x10029253 / 0x10029255). No result. Reached from: static callers 0x1000b2e0, 0x10029140, 0x100587c0, 0x100587f0. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: VoiceBase_dtor (8 vectors, 8 distinct results, 8 changing state, `log/diff/00029200_sound_VoiceBase_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10029266): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10029215 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

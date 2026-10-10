@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 196 bytes, 66 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Passes scanlines to the main controller and returns the number taken: a global_state other than 0x65 (cmp 0x004ae405) raises msg_code 0x12 with the state (0x004ae40b-0x004ae41f); next_scanline (+0xd8) not below image_height (+0x1c) (unsigned `jb` 0x004ae42f) stores msg_code 0x77 and calls err->emit_message(cinfo, -1) (push -1 / push esi / call [eax + 4], 0x004ae433-0x004ae442); a non-null progress monitor (+8, test 0x004ae448) gets pass_counter = next_scanline and pass_limit = image_height and its callback runs (0x004ae44c-0x004ae464); the master's flag at +0xc (0x004ae46d-0x004ae472) calls its pass_startup (+4, 0x004ae475); num_lines is clamped to image_height - next_scanline (unsigned `jbe` 0x004ae48c, clamp 0x004ae48e); main->process_data (main = +0x148, slot +4) gets (cinfo, scanlines, &row_ctr, num_lines) with row_ctr 0 (0x004ae496-0x004ae4aa); next_scanline += row_ctr (0x004ae4ba-0x004ae4bc); row_ctr is returned (0x004ae4ad). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: jpeg_write_scanlines (22 vectors, 22 distinct results, 22 changing state, `log/diff/004ae400_jpeg_write_scanlines.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_capistd.cpp` as `_jpeg_write_scanlines` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae4c3): callee pops 0 bytes of stack arguments.

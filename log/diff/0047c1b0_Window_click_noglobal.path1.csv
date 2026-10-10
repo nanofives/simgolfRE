@@ -1,0 +1,38 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$ignA 10 10 0,void,void,True,9f03cdeb,9f03cdeb,False
+$ignA 10 10 1,void,void,True,9f03cdeb,9f03cdeb,False
+$ignB 60 60 0,void,void,True,9f03cdeb,9f03cdeb,False
+$ignB 60 60 1,void,void,True,9f03cdeb,9f03cdeb,False
+$both 5 5 0,void,void,True,9f03cdeb,9f03cdeb,False
+$plain 10 10 0,void,void,True,954bc7de,954bc7de,True
+$plain 60 60 0,void,void,True,9a77c871,9a77c871,True
+$plain 120 120 0,void,void,True,38224305,38224305,True
+$plain 200 200 0,void,void,True,8850a975,8850a975,True
+$plain 100 10 0,void,void,True,fac58c8d,fac58c8d,True
+$plain -1 5 0,void,void,True,bf417a85,bf417a85,True
+$plain 99 99 0,void,void,True,c86d8d81,c86d8d81,True
+$plain 149 50 0,void,void,True,6e774baa,6e774baa,True
+$miss 10 10 0,void,void,True,5f5b1804,5f5b1804,True
+$miss 60 60 0,void,void,True,650b83b7,650b83b7,True
+$miss 120 120 0,void,void,True,003a7cdf,003a7cdf,True
+$miss 200 200 0,void,void,True,e4a2087e,e4a2087e,True
+$miss 100 10 0,void,void,True,37fda5d2,37fda5d2,True
+$miss -1 5 0,void,void,True,05c31f1e,05c31f1e,True
+$miss 99 99 0,void,void,True,84dae4b7,84dae4b7,True
+$miss 149 50 0,void,void,True,119a625f,119a625f,True
+$bare 10 10 0,void,void,True,564739f9,564739f9,True
+$bare 60 60 0,void,void,True,6de51055,6de51055,True
+$bare 120 120 0,void,void,True,b1781a79,b1781a79,True
+$miss 60 60 -1,void,void,True,84ee6185,84ee6185,True
+$onlyCb 10 10 0,void,void,True,a705dfbd,a705dfbd,True
+$onlyCb 10 10 1,void,void,True,95c3a7fb,95c3a7fb,True
+$onlyPanel 10 10 0,void,void,True,1fcc7806,1fcc7806,True
+$onlyPanel 120 120 0,void,void,True,a205e4c5,a205e4c5,True
+$onlyPanel 10 10 1,void,void,True,f857dc59,f857dc59,True
+$plain 2147483647 -2147483648 0,void,void,True,66f1abe5,66f1abe5,True
+$plain 3 4 2147483648,void,void,True,01abd34c,01abd34c,True
+state_regions,$rec+0x0:772 0x0083ab2c+0x0:4 0x0083ab04+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x71ce9170,original=0x1440c00,2026-10-10T17:22:50
+distinct_results,28,,
+VERDICT,GREEN,32,

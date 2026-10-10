@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `util`. Mechanical
 scalar deleting destructor of a Buf object: runs Buf_dtor then frees it when the flag low bit is set (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Scalar deleting destructor of the Buf class: calls Buf_dtor 0x00474810 on this (call 0x004747c3), then, when bit 0 of the flags byte is set (`test byte ptr [esp + 8], 1` at 0x004747c8, `je` 0x004747cd), passes this to operator delete 0x004a4ffc (call 0x004747d0); returns this (`mov eax, esi` 0x004747d8, `ret 4` 0x004747db). Reimplemented in `shim/src/re/c3dm.cpp`; path-1 A/B GREEN: Buf_deleteDtor (24 vectors, 18 distinct results, 24 changing state, `log/diff/004747c0_Buf_deleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_004747c0@C_FUN_004747c0@f_004747c0@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004747db): callee pops 4 bytes of stack arguments.

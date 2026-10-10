@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00010e30`), 50 bytes, 26 instructions, subsystem `aud
 Calls IDirectSoundBuffer::GetStatus (vtbl+0x24) and returns 1 when the busy flag +0x44 is set. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00010e30 DsBuffer::isBusy (VA 0x10010e30). The interface at +0x60 (0x10010e34); NULL returns it, 0 (`jne` 0x10010e39 not taken, eax = 0 at `ret` 0x10010e3d). Otherwise slot +0x24 is called with (interface, &local) (`lea edx, [esp+4]` 0x10010e40; push edx; push eax; call [ecx+0x24] 0x10010e46) and local is the status dword it wrote; a non-zero dword at +0x44 (0x10010e49 / 0x10010e4c) returns 1 (0x10010e50); otherwise the result is bit 0 of the status (`and eax, 1` 0x10010e5d). Reached from: static callers 0x10007010, 0x100075e0, 0x100124c0, 0x10012690, 0x100128b0, 0x10012d10, 0x10012fe0, 0x10034430, 0x10035f80. Reimplemented in `shim/src/re/c3dj.cpp`; path-1 A/B GREEN: DsBuffer::isBusy (14 vectors, 13 distinct results, 12 changing state, `log/diff/00010e30_sound_DsBuffer_isBusy.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10010e3d, 0x10010e57, 0x10010e61): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10010e30 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
