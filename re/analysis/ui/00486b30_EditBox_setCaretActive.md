@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 51 bytes, 17 instructions, subsystem `ui`. Mechanical t
 Starts or stops the caret-blink timer at this+0x5ac depending on param_1 and stores the focus flag at this+0x5a8. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Switch the caret blink on or off. A nonzero argument calls Timer::startOnce 0x00486dc0 and zero calls Timer::stop 0x00486ec0, both on the Timer at this+0x5ac (0x00486b38..0x00486b49); the argument is stored at +0x5a8 (0x00486b52) and eax is this's slot +0x120 (0x00486b58). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: EditBox::setCaretActive (24 vectors, 24 distinct results, 24 changing state, `log/diff/00486b30_EditBox_setCaretActive.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?setOn@C486b30@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00486b60): callee pops 4 bytes of stack arguments.

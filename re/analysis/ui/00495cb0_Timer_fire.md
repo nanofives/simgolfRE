@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 101 bytes, 40 instructions, subsystem `ui`. Mechanical 
 timer dispatch: clears +0x24, manages the one-shot flags at +8 (stopping via Timer::stop when already fired) and invokes the registered callbacks at +0x10 and +0x14 with the user data at +0x1c/+0x18 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Timer tick dispatcher (stdcall, slot 12 (+0x30) of the table 0x004ba87c installed by storeUiEventTable 0x004799d0). It clears timer+0x24 (0x00495cb5); while 0x0083ad4c is nonzero it returns that value (0x00495cc3). With bit 0 of the flags +8 set, a set bit 1 stops the timer through Timer::stop 0x00486ec0 and returns (0x00495cd2), a clear bit 1 is set (0x00495cdd). When 0x0083aff0 holds another timer it returns that value (0x00495ceb). Otherwise the cdecl callback +0x10 gets (+0x1c) and the cdecl callback +0x14 gets (+0x1c, +0x18), each when set (0x00495cf8 / 0x00495d0c); eax is the second callback's result, or 0 without one. Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: Timer_fire (6 vectors, 6 distinct results, 6 changing state, `log/diff/00495cb0_Timer_fire.path1.csv`); Timer_fire_busy (6 vectors, 6 distinct results, 6 changing state, `log/diff/00495cb0_Timer_fire_busy.path1.csv`); Timer_fire_owner0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00495cb0_Timer_fire_owner0.path1.csv`); Timer_fire_owner3 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00495cb0_Timer_fire_owner3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f495cb0@@YGXPAUT495@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00495cd8, 0x00495d12): callee pops 4 bytes of stack arguments.

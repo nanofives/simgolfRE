@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 259 bytes, 86 instructions, subsystem `ui`. Mechanical 
 Maps a pixel x,y to the nearest character byte offset within the wrapped text. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Map a point in the edit box to a text offset. The point loses the margins +0x598 + +0x59c (0x00486413 / 0x00486415); x is clamped to [0, child width - 2*margins - 1] (0x00486445..0x0048644f; the width is the child +0x278's slot +0xd8, 0 without a child, and the child's slot +0xdc is called with its result dropped at 0x0048643f). Without a caller line table it wraps the text into a 32-entry local table with wrapToLines 0x004862b0 (0x0048645a..0x00486471). The line is y / Widget_value(widget) + the first visible line +0x57c (0x00486476.. 0x0048648d), 0 when negative (0x00486493) and n-1 when at or past n (0x004864a0 / 0x004864a2). From that line's start it subtracts drawMarkupRun(widget, p, 1) per character while x stays positive and p is below the next line's start (0x004864ad..0x004864c6) and returns p - text (0x004864c8..0x004864d7). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: EditBox::pixelToCharPos (144 vectors, 67 distinct results, 144 changing state, `log/diff/004863e0_EditBox_pixelToCharPos.path1.csv`); EditBox::pixelToCharPos_b (72 vectors, 30 distinct results, 72 changing state, `log/diff/004863e0_EditBox_pixelToCharPos_b.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x004864e0): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x004863ef before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

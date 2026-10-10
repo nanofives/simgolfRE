@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 69 bytes, 21 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 claims the drag owner 0x0083ab30 for this and clears 0x0083ab34 when no owner is set, stores EditBox::pixelToCharPos 0x004863e0 of (x, y) in this+0x5a4, then calls the virtual +0x120 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+Start a caret drag. When no drag owns the capture 0x0083ab30 (0x00486b90..0x00486b9a) this takes it and clears 0x0083ab34 (0x00486b9c / 0x00486ba2); the caret +0x5a4 becomes pixelToCharPos(x, y, NULL, 1) (0x00486bac.. 0x00486bc5) and eax is this's slot +0x120 (0x00486bcb). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: EditBox::beginCaretDrag (16 vectors, 13 distinct results, 16 changing state, `log/diff/00486b90_EditBox_beginCaretDrag.path1.csv`); EditBox::beginCaretDrag_own (16 vectors, 13 distinct results, 16 changing state, `log/diff/00486b90_EditBox_beginCaretDrag_own.path1.csv`); EditBox::beginCaretDrag_second (16 vectors, 13 distinct results, 16 changing state, `log/diff/00486b90_EditBox_beginCaretDrag_second.path1.csv`); EditBox::beginCaretDrag_secondonly (16 vectors, 13 distinct results, 16 changing state, `log/diff/00486b90_EditBox_beginCaretDrag_secondonly.path1.csv`); EditBox::beginCaretDrag_both (16 vectors, 10 distinct results, 16 changing state, `log/diff/00486b90_EditBox_beginCaretDrag_both.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00486bd2): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00486b98 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 23 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 listPanel's slot-60 body, thiscall(int unused): the vbtable at this-0x24 and its entry +4 (0x0049e7b0 / 0x0049e7b3), then slot +0x120 of the base at this-0x24+entry with no argument (0x0049e7b6..0x0049e7be); the stack argument is never read (ret 4 at 0x0049e7c4). (`re/names/exe_8.tsv`)
 System writeup: `re/analysis/systems/exe_8.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot-60 body of the list panel: with the vbtable at Y-0x24 it calls slot +0x120 of the Window base Y - 0x24 + vbt[1] and returns its eax (0x0049e7b0..0x0049e7be); its argument is unused (`ret 4`). Reached through the thunk 0x00491bb0 and from viewDispatchSlot60 0x004a0ff0 (call at 0x004a1013). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: listPanelSlot60 (15 vectors, 5 distinct results, 15 changing state, `log/diff/0049e7b0_listPanelSlot60.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_0049e7b0@C_FUN_0049e7b0@f_0049e7b0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049e7c4): callee pops 4 bytes of stack arguments.

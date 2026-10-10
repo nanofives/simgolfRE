@@ -4,6 +4,10 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to the unnamed function 0x0049fe20 (`re/names/undisc2_exe.tsv`)
+System writeup: `re/analysis/systems/exe_9.md`.
+
+## Purpose
+vtordisp thunk in slot 28 (+0x70) of the table 0x004bbeb0: `sub ecx, [ecx-4]` (0x0049ffc0) then `jmp 0x0049fe20` (0x0049ffc3). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: optionDialogSlot28_vtordisp (15 vectors, 5 distinct results, 15 changing state, `log/diff/0049ffc0_optionDialogSlot28_vtordisp.path1.csv`).
 
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
@@ -17,7 +21,7 @@ Through registers:
 None.
 
 ## Callees
-- 0x0049fe20 `FUN_0049fe20` at 0x0049ffc3
+- 0x0049fe20 `optionDialogSlot28` at 0x0049ffc3
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

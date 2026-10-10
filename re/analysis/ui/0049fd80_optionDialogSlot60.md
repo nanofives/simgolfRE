@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 23 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 optionDialog's slot-60 body, thiscall(int unused): the vbtable at this-0x1c and its entry +4 (0x0049fd80 / 0x0049fd83), then slot +0x120 of the base at this-0x1c+entry with no argument (0x0049fd86..0x0049fd8e); the stack argument is never read (ret 4 at 0x0049fd94). (`re/names/exe_8.tsv`)
 System writeup: `re/analysis/systems/exe_8.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot-60 body of the option dialog: with the vbtable at X-0x1c it calls slot +0x120 of the Window base X - 0x1c + vbt[1] and returns its eax (0x0049fd80..0x0049fd8e); its argument is unused (`ret 4`). Reached through the thunk 0x004a0000 and from viewDispatchSlot60 0x004a0ff0 (call at 0x004a1039). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: optionDialogSlot60 (15 vectors, 5 distinct results, 15 changing state, `log/diff/0049fd80_optionDialogSlot60.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_0049fd80@C_FUN_0049fd80@f_0049fd80@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049fd94): callee pops 4 bytes of stack arguments.

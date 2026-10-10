@@ -4,7 +4,7 @@ Module `golf_clean.exe`, 120 bytes, 35 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 selects on the 32-bit tag at this-8 and tail-calls the matching sub-view's slot-28 method: 1 -> the unnamed 0x0049fe20 (this-0x168), 2 -> ListBox::clearSelection 0x0048cac0 (this-0x1a0), 8 -> the unnamed 0x004a4340, 0x10 -> the unnamed 0x0049e990 (this-0x180); every other tag returns (`re/names/undisc2_exe.tsv`)
-System writeup: `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
+System writeup: `re/analysis/systems/exe_9.md`, `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0a3d, 0x004a0a55, 0x004a0a6d, 0x004a0a85): callee pops 8 bytes of stack arguments.
@@ -28,7 +28,7 @@ None.
 ## Callees
 - 0x0048cac0 `ListBox::clearSelection` at 0x004a0a50
 - 0x0049e990 `FUN_0049e990` at 0x004a0a38
-- 0x0049fe20 `FUN_0049fe20` at 0x004a0a68
+- 0x0049fe20 `optionDialogSlot28` at 0x004a0a68
 - 0x004a4340 `FUN_004a4340` at 0x004a0a80
 - indirect `jmp [edx*4+0x4a0a88]` at 0x004a0a21
 

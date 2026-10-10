@@ -4,6 +4,37 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-09  004a0ab0  viewDispatchSlot27  C2->C3  log/diff/004a0ab0_viewDispatchSlot27.path1.csv
+2026-10-09  004a0000  optionDialogSlot60_vtordisp  C2->C3  log/diff/004a0000_optionDialogSlot60_vtordisp.path1.csv
+2026-10-09  0049fff0  optionDialogSlot38_vtordisp  C2->C3  log/diff/0049fff0_optionDialogSlot38_vtordisp.path1.csv
+2026-10-09  0049ffc0  optionDialogSlot28_vtordisp  C2->C3  log/diff/0049ffc0_optionDialogSlot28_vtordisp.path1.csv
+2026-10-09  0049ffb0  optionDialogOnMouse_vtordisp  C2->C3  log/diff/0049ffb0_optionDialogOnMouse_vtordisp.path1.csv
+2026-10-09  0049fe20  optionDialogSlot28  C2->C3  log/diff/0049fe20_optionDialogSlot28.path1.csv
+2026-10-09  0049fda0  optionDialogOnMouse  C2->C3  log/diff/0049fda0_optionDialogOnMouse.path1.csv
+2026-10-09  0049fd80  optionDialogSlot60  C2->C3  log/diff/0049fd80_optionDialogSlot60.path1.csv
+2026-10-09  0049fc30  optionDialogSlot38  C2->C3  log/diff/0049fc30_optionDialogSlot38.path1.csv
+2026-10-09  0049e7b0  listPanelSlot60  C2->C3  log/diff/0049e7b0_listPanelSlot60.path1.csv
+2026-10-09  0049e640  listSelectionChanged  C2->C3  log/diff/0049e640_listSelectionChanged.path1.csv
+2026-10-09  00496d20  scrollbarOnDrag  C2->C3  log/diff/00496d20_scrollbarOnDrag.path1.csv
+2026-10-09  00495cb0  Timer_fire  C2->C3  log/diff/00495cb0_Timer_fire.path1.csv
+2026-10-09  00491bb0  listPanelSlot60_vtordisp  C2->C3  log/diff/00491bb0_listPanelSlot60_vtordisp.path1.csv
+2026-10-09  00491ba0  listSelectionChanged_vtordisp  C2->C3  log/diff/00491ba0_listSelectionChanged_vtordisp.path1.csv
+2026-10-09  00491980  viewDispatchSlot27_vtordisp  C2->C3  log/diff/00491980_viewDispatchSlot27_vtordisp.path1.csv
+2026-10-09  0048ccb0  ListBox::onNavKey_vtordisp  C2->C3  log/diff/0048ccb0_ListBox_onNavKey_vtordisp.path1.csv
+2026-10-09  0048cc80  ListBox::onDrag_vtordisp  C2->C3  log/diff/0048cc80_ListBox_onDrag_vtordisp.path1.csv
+2026-10-09  0048c8a0  ListBox::onDrag  C2->C3  log/diff/0048c8a0_ListBox_onDrag.path1.csv
+2026-10-09  0048aa00  ListBox::onNavKey  C2->C3  log/diff/0048aa00_ListBox_onNavKey.path1.csv
+2026-10-09  00489f50  ListBox::setSelection  C2->C3  log/diff/00489f50_ListBox_setSelection.path1.csv
+2026-10-09  00486c40  EditBox::updateCaretDrag  C2->C3  log/diff/00486c40_EditBox_updateCaretDrag_both.path1.csv
+2026-10-09  00486be0  EditBox::endCaretDrag  C2->C3  log/diff/00486be0_EditBox_endCaretDrag.path1.csv
+2026-10-09  00486b90  EditBox::beginCaretDrag  C2->C3  log/diff/00486b90_EditBox_beginCaretDrag.path1.csv
+2026-10-09  00486b30  EditBox::setCaretActive  C2->C3  log/diff/00486b30_EditBox_setCaretActive.path1.csv
+2026-10-09  004863e0  EditBox::pixelToCharPos  C2->C3  log/diff/004863e0_EditBox_pixelToCharPos.path1.csv
+2026-10-09  004862b0  EditBox::wrapToLines  C2->C3  log/diff/004862b0_EditBox_wrapToLines.path1.csv
+2026-10-09  0049fe20  optionDialogSlot28  C1->C2  re/analysis/ui/0049fe20_optionDialogSlot28.md
+2026-10-09  0049fc30  optionDialogSlot38  C1->C2  re/analysis/ui/0049fc30_optionDialogSlot38.md
+2026-10-09  0049fc30  optionDialogSlot38  C0->C1  jump target of the vtordisp thunk optionDialogSlot38_vtordisp 0x0049fff0 (`jmp 0x0049fc30` at 0x0049fff3; slot 38 (+0x98) of the table 0x004bbeb0, installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80) and called by viewDispatchSelectChanged 0x004a0c90 (call at 0x004a0ce8, on this-0x168); 45 bytes ending `ret 8` at 0x0049fc5a; FUN_ in the master (re/functions_ghidra.tsv), no hooks.csv row
+2026-10-09  0049fe20  optionDialogSlot28  C0->C1  jump target of the vtordisp thunk optionDialogSlot28_vtordisp 0x0049ffc0 (`jmp 0x0049fe20` at 0x0049ffc3; slot 28 (+0x70) of the table 0x004bbeb0, installed by viewFieldCtor49ebb0 0x0049ebb0, viewFieldDtor49ec80 0x0049ec80) and called by viewDispatchSlot28 0x004a0a10 (call at 0x004a0a68, on this-0x168); 40 bytes ending `ret 8` at 0x0049fe45; FUN_ in the master (re/functions_ghidra.tsv), no hooks.csv row
 2026-10-09  sound.dll:0004e4b3  __free_lc_time  C2->C3  log/diff/0004e4b3_sound___free_lc_time.path1.csv
 2026-10-09  sound.dll:00047474  sbhResizeBlock  C2->C3  log/diff/00047474_sound_sbhResizeBlock.path1.csv
 2026-10-09  sound.dll:00047103  sbhPageFree  C2->C3  log/diff/00047103_sound_sbhPageFree.path1.csv

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 55 bytes, 18 instructions, subsystem `ui`. Mechanical t
 list selection handler: stores the model's current id into the context global 0x0083ab2c and, when a callback is present at this-0x10, invokes it with ListModel::selectedId (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Report a list panel's selection change. It sets 0x0083ab2c to the dword at Y + vbt[1] + 0x10c, the vbtable being at Y-0x24 (0x0049e643..0x0049e650); when the cdecl callback at Y-0x10 is set (0x0049e65b) it is given ListModel::selectedId(Y - 0x24 + vbt[2]) (0x0049e65d..0x0049e66d) and eax is its result, otherwise eax is 0. Both stack arguments are unused (`ret 8`). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: listSelectionChanged (15 vectors, 5 distinct results, 15 changing state, `log/diff/0049e640_listSelectionChanged.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_0049e640@C_FUN_0049e640@f_0049e640@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0049e674): callee pops 8 bytes of stack arguments.

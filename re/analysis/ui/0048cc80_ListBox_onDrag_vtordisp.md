@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to ListBox::onDrag 0x0048c8a0 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+vtordisp thunk in slot 27 (+0x6c) of the ListBox table 0x004bb260 (installed by ListBox::ctor 0x00489cb0 and ListBox::dtor 0x00489de0): `sub ecx, [ecx-4]` (0x0048cc80) turns the Window base into the ListBox this and `jmp 0x0048c8a0` (0x0048cc83) enters ListBox::onDrag with the stack arguments untouched. Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: ListBox::onDrag_vtordisp (96 vectors, 91 distinct results, 90 changing state, `log/diff/0048cc80_ListBox_onDrag_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0048cc80 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

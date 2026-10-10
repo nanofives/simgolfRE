@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 537 bytes, 193 instructions, subsystem `ui`. Mechanical
 Maps a drag position to a row, updates the highlighted/selected row and redraws. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Track the hover row while the pointer moves over the list. With rows present (0x0048c8b6) it saves the hover row R+0x9c, stores the point at T-0x3c / T-0x38 and finds the row under it like onNavKey (0x0048c8d0.. 0x0048c9da); r = row + top, and r at or past the count ends the call (0x0048c9ef). When r is the selected index R+0x98 the hover row is cleared to -1 (unless it already is) and slot 0 of the object at T-0x5c redraws the old one with 0x0083b650 = old - top (0x0048c9fd..0x0048ca2c); otherwise the hover row becomes r, setSelection(T-0x5c, r, 1) runs when bit 0 of T-0x54 is set (0x0048ca36..0x0048ca43), and when the hover row changed the old row (unless -1) and the new one are redrawn through slot 0 with 0x0083b650 = row - top (0x0048ca5b..0x0048caa0). It ends with Window::invalidate on the Window base (0x0048caac). `ret 8`; callers (thunk 0x0048cc80, viewDispatchSlot27 0x004a0af0) do not read eax: declared void. Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: ListBox::onDrag (560 vectors, 526 distinct results, 525 changing state, `log/diff/0048c8a0_ListBox_onDrag.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0048cab6): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0048c8a0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

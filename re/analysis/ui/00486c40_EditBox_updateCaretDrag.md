@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 71 bytes, 26 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 only when this owns the drag through 0x0083ab30, or owns 0x0083ab34 while both globals are non-zero, stores EditBox::pixelToCharPos 0x004863e0 of (x, y) in this+0x5a4 and calls the virtual +0x120 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+Follow the pointer during a caret drag. When this owns 0x0083ab30 (0x00486c48 / 0x00486c4a), or when 0x0083ab34 is this and both captures are nonzero (0x00486c4c..0x00486c5c), the caret +0x5a4 becomes pixelToCharPos(x, y, NULL, 1) and eax is this's slot +0x120 (0x00486c5e..0x00486c7d); otherwise nothing changes and eax is the value of 0x0083ab30 (0x00486c40). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: EditBox::updateCaretDrag_own (16 vectors, 5 distinct results, 4 changing state, `log/diff/00486c40_EditBox_updateCaretDrag_own.path1.csv`); EditBox::updateCaretDrag_second (16 vectors, 8 distinct results, 8 changing state, `log/diff/00486c40_EditBox_updateCaretDrag_second.path1.csv`); EditBox::updateCaretDrag_secondonly (16 vectors, 1 distinct results, 0 changing state, `log/diff/00486c40_EditBox_updateCaretDrag_secondonly.path1.csv`); EditBox::updateCaretDrag_both (16 vectors, 4 distinct results, 4 changing state, `log/diff/00486c40_EditBox_updateCaretDrag_both.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00486c84): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00486c46 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

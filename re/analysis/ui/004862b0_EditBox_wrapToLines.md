@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 124 bytes, 44 instructions, subsystem `ui`. Mechanical 
 Word-wraps the text buffer to the control width using the font object at this+0x274, filling the caller's line-pointer array and count. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Split the edit box's text into display lines for its current width. It sets the caller's count to 1 and the first line pointer to the text at this+0x574 (0x004862bd / 0x004862ca), computes the width as the child +0x278's slot +0xd8 (0 without a child, 0x004862e1..0x004862ef) minus twice the margins +0x598 + +0x59c (0x004862cd.. 0x004862fb), lets wrapText 0x00476e20 fill the line table and count on the text widget at this+0x274 (0x00486306), then stores the end of the text (text + strlen, 0x0048630b..0x00486323) after the last line and returns the count read after the wrap (0x0048631a). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: EditBox::wrapToLines (6 vectors, 6 distinct results, 6 changing state, `log/diff/004862b0_EditBox_wrapToLines.path1.csv`); EditBox::wrapToLines_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/004862b0_EditBox_wrapToLines_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?layout@C4862b0@@QAEXPAPADPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00486329): callee pops 8 bytes of stack arguments.

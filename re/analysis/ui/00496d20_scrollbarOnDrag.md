@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 59 bytes, 16 instructions, subsystem `ui`. Mechanical t
 handles the drag update for the scrollbar using the anchor saved by scrollbarOnDown. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+End a scrollbar thumb drag (slot 31 (+0x7c) of the table 0x004bbac8). It calls this's slot +0x120 first (0x00496d25); when this owns the capture 0x0083ab30 it releases it and calls slot +0x10 (0x00496d2b..0x00496d41); when 0x0083ab34 is this it is cleared (0x00496d44..0x00496d4e). Both stack arguments are unused (`ret 8`); eax is the value read from 0x0083ab34 (0x00496d44). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: scrollbarOnDrag (12 vectors, 4 distinct results, 12 changing state, `log/diff/00496d20_scrollbarOnDrag.path1.csv`); scrollbarOnDrag_own (12 vectors, 4 distinct results, 12 changing state, `log/diff/00496d20_scrollbarOnDrag_own.path1.csv`); scrollbarOnDrag_second (12 vectors, 4 distinct results, 12 changing state, `log/diff/00496d20_scrollbarOnDrag_second.path1.csv`); scrollbarOnDrag_both (12 vectors, 4 distinct results, 12 changing state, `log/diff/00496d20_scrollbarOnDrag_both.path1.csv`); scrollbarOnDrag_other (12 vectors, 4 distinct results, 12 changing state, `log/diff/00496d20_scrollbarOnDrag_other.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_00496d20@C_FUN_00496d20@f_00496d20@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00496d58): callee pops 8 bytes of stack arguments.

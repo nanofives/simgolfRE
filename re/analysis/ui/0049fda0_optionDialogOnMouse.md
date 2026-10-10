@@ -4,7 +4,10 @@ Module `golf_clean.exe`, 123 bytes, 44 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 handles mouse input for the option dialog. (`re/names/exe_5.tsv`)
-System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
+System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/exe_9.md`, `re/analysis/systems/undisc2_exe.md`.
+
+## Purpose
+Track the hovered cell of an option grid. With the vbtable at X-0x1c and the grid s = X + vbt[2], the cell index is (x / (s+0x4c + s+0x2c)) * s+0x40 + y / (s+0x50 + s+0x2c) (idiv at 0x0049fdc3 / 0x0049fdd0, imul at 0x0049fdcc); when bit (index & 31) of the disabled mask s+0xd4 is set (0x0049fddf..0x0049fde3) the hover index s+0xd8 becomes -1, or nothing happens and eax = -1 when it already is -1 (0x0049fde5..0x0049fdf2); otherwise the hover index becomes the cell (0x0049fdfa). After a change eax is slot +0x120 of the Window base X - 0x1c + vbt[1] (0x0049fe0e). Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: optionDialogOnMouse (180 vectors, 55 distinct results, 162 changing state, `log/diff/0049fda0_optionDialogOnMouse.path1.csv`).
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?onMouse@C49fda0@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).

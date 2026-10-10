@@ -1390,11 +1390,11 @@ entry	name	size	callers	callees	ranges
 0049f370	optionListDraw	1577	3	9	0049f370-0049f999
 0049f9a0	optionDialogUpdate	236	2	7	0049f9a0-0049fa8c
 0049fa90	optionDialogOnKey	308	2	4	0049fa90-0049fbc4
-0049fc30	FUN_0049fc30	45	2	0	0049fc30-0049fc5d
+0049fc30	optionDialogSlot38	45	2	0	0049fc30-0049fc5d
 0049fc60	optionDialogDrawContents	277	0	3	0049fc60-0049fd75
 0049fd80	optionDialogSlot60	23	2	0	0049fd80-0049fd97
 0049fda0	optionDialogOnMouse	123	2	0	0049fda0-0049fe1b
-0049fe20	FUN_0049fe20	40	2	0	0049fe20-0049fe48
+0049fe20	optionDialogSlot28	40	2	0	0049fe20-0049fe48
 0049fe50	loadFonts	221	1	4	0049fe50-0049ff2d
 0049ff30	freeFonts	20	1	1	0049ff30-0049ff44
 0049ff50	optionDialogDeletingDtor_vtordisp	8	0	0	0049ff50-0049ff58

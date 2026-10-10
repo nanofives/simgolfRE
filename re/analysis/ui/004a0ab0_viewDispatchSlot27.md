@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 120 bytes, 35 instructions, subsystem `ui`. Mechanical 
 selects on the 32-bit tag at this-8 and tail-calls the matching sub-view's slot-27 method with both arguments: 1 -> optionDialogOnMouse 0x0049fda0 (this-0x168), 2 -> ListBox::onDrag 0x0048c8a0 (this-0x1a0), 8 -> the unnamed 0x004a4340 (this-0x8c), 0x10 -> listPanelReadValue 0x0049e7d0 (this-0x180); every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Route a view's slot-27 call (point argument pair) to the sub-view named by the tag at V-8. tag-1 above 15 (unsigned, 0x004a0ab7) or a tag whose byte in the index table 0x004a0b3c is 4 returns eax = tag-1 (0x004a0b25); tag 1 (byte 0 at 0x004a0b3c) enters optionDialogOnMouse 0x0049fda0 on V-0x168 (0x004a0af8..0x004a0b08), tag 2 (0x004a0b3d) ListBox::onDrag 0x0048c8a0 on V-0x1a0 (0x004a0ae0..0x004a0af0), tag 8 (0x004a0b43) the bare `ret 8` at 0x004a4340 on V-0x8c (0x004a0b10..0x004a0b20) and tag 0x10 (0x004a0b4b) listPanelReadValue 0x0049e7d0 on V-0x180 (0x004a0ac8.. 0x004a0ad8), each with (a, b) and with eax = b, edx = a at the call (the reimplementation reproduces that register state with inline asm, because the tag-8 target returns eax unchanged); eax is the target's. Reimplemented in `shim/src/re/c3ct.cpp`; path-1 A/B GREEN: viewDispatchSlot27 (231 vectors, 164 distinct results, 164 changing state, `log/diff/004a0ab0_viewDispatchSlot27.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0add, 0x004a0af5, 0x004a0b0d, 0x004a0b25): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0ab0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
