@@ -61,6 +61,6 @@ $q5 100000,89478485,89478485,True,6e355555,6e355555,True
 $q5 4294967295,2048,2048,True,8a383a08,8a383a08,True
 state_regions,$q0+0x0:1024 $q1+0x0:1024 $q2+0x0:1024 $q3+0x0:1024 $q4+0x0:1024 $q5+0x0:1024,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x6b8e2da0,original=0x3790620,2026-10-09T21:09:54
+meta,detour=0x71294790,original=0x3900460,2026-10-10T11:07:02
 distinct_results,15,,
 VERDICT,GREEN,60,
