@@ -4,6 +4,12 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-10  004a0540  recordCopyStr1c  name bufferCopyTo->recordCopyStr1c  log/n_renames25.tsv
+2026-10-10  0049d090  strBufReset  name strAssign->strBufReset  log/n_renames25.tsv
+2026-10-10  0049b970  S3List_addVoiceRx  name netHeapAlloc->S3List_addVoiceRx  log/n_renames25.tsv
+2026-10-10  00478140  drawStringRightAt  name drawString->drawStringRightAt  log/n_renames25.tsv
+2026-10-10  00477fc0  drawStringCentered  name drawStringLeft->drawStringCentered  log/n_renames25.tsv
+2026-10-10  00474650  recordCopyStr20  name Surface_get->recordCopyStr20  log/n_renames25.tsv
 2026-10-10  sound.dll:000470ac  sbhRegionLocate  C2->C3  log/diff/000470ac_sound_sbhRegionLocate.path1.csv
 2026-10-10  sound.dll:00045bc8  crtHeapSelect  C2->C3  log/diff/00045bc8_sound_crtHeapSelect_exe2.path1.csv
 2026-10-10  sound.dll:00045b9b  getModuleLinkerVersion  C2->C3  log/diff/00045b9b_sound_getModuleLinkerVersion_5.path1.csv

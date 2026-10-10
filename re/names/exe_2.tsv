@@ -83,7 +83,7 @@ golf_clean.exe	0x00474380	Surface_draw	render	match re/match/golf_hand_06_j.cpp	
 golf_clean.exe	0x00474440	Surface_drawSprite	render	calls backing-surface vtable +0x94	draws a sprite onto this surface at the surface origin offset (+0x20,+0x24)
 golf_clean.exe	0x00474550	Surface_create	render	match re/match/golf_hand_03.cpp; __fastcall	creates a surface of the given dimensions
 golf_clean.exe	0x004745c0	Surface_init2	render	match re/match/golf_hand_04.cpp	initialises a created surface
-golf_clean.exe	0x00474650	Surface_get	render	match re/match/golf_hand_05.cpp	fetches a surface/object by descriptor
+golf_clean.exe	0x00474650	recordCopyStr20	render	match re/match/golf_hand_05.cpp	copies a record into dst: dst+4 = +0x1c (0x0047465c); the string at +0x20 is duplicated with heapAlloc 0x00474860 or malloc into dst+8 (NULL string -> NULL and returns 0, failed allocation returns 4). Renamed from Surface_get 2026-10-10
 golf_clean.exe	0x00474820	Buf_alloc	util	match re/match/golf_small6.cpp	allocates a buffer of the requested size
 golf_clean.exe	0x00474860	heapAlloc	util	match re/match/golf_hand_s0_k.cpp; string 0x004e41b0	block-heap allocator that warns on oversized requests
 golf_clean.exe	0x00474ae0	Image_ctor	render	match re/match/golf_hand_09_a.cpp; __fastcall ctor	constructs an image object
@@ -112,8 +112,8 @@ golf_clean.exe	0x004762d0	setDrawTarget	render	writes this+0x5c/0x60/0x64/0x68	s
 golf_clean.exe	0x00476310	Widget_setQuad	ui	match re/match/golf_small2.cpp; 40 callers	sets a widget's rectangle (x,y,w,h)
 golf_clean.exe	0x00476650	Widget_draw	ui	match re/match/golf_hand_02.cpp	draws a simple widget element
 golf_clean.exe	0x004766a0	Widget_draw2	ui	match re/match/golf_hand_02.cpp	draws a widget element (5-arg variant)
-golf_clean.exe	0x00476700	drawStringAt	ui	callee 0x00477fc0 (drawStringLeft)	draws a text string at a position (wrapper)
-golf_clean.exe	0x00476750	drawStringAt2	ui	callee 0x00478140 (drawString)	draws a text string at a position (wrapper variant)
+golf_clean.exe	0x00476700	drawStringAt	ui	callee 0x00477fc0 (drawStringCentered)	draws a text string at a position (wrapper)
+golf_clean.exe	0x00476750	drawStringAt2	ui	callee 0x00478140 (drawStringRightAt)	draws a text string at a position (wrapper variant)
 golf_clean.exe	0x004767a0	allocTextBuffer	ui	caller 0x004775b0 (drawRichText); callee _malloc	allocates/grows the working buffer for rich-text layout
 golf_clean.exe	0x00476d80	skipToken	ui	match re/match/golf_hand_01.cpp	advances over markup text until one of the delimiters { } [ ] $ = or the length runs out (0x00476d92..0x00476dae)
 golf_clean.exe	0x00476dd0	scanToken	ui	match re/match/golf_hand_02.cpp	scans the next markup token
@@ -129,9 +129,9 @@ golf_clean.exe	0x00477cd0	drawCentered	ui	match re/match/golf_hand_r1.cpp; char*
 golf_clean.exe	0x00477da0	drawCentered2	ui	match re/match/golf_hand_r2.cpp	draws centered text within x,y,w,h
 golf_clean.exe	0x00477e60	drawBox	ui	match re/match/golf_hand_01.cpp	draws a bordered box
 golf_clean.exe	0x00477eb0	drawCentered3	ui	match re/match/golf_hand_08_e.cpp	draws centered text within a rect structure
-golf_clean.exe	0x00477fc0	drawStringLeft	ui	callee 0x00477280 (drawMarkupRun)	draws left-aligned (markup-aware) text
+golf_clean.exe	0x00477fc0	drawStringCentered	ui	callee 0x00477280 (drawMarkupRun)	draws text centred on x: NULL text returns x (0x00477fcc), a missing font 3, a non-positive length x; otherwise drawMarkupRun 0x00477280 measures the run width w and drawRichText draws at x - (w >> 1) (sar at 0x00478050). Renamed from drawStringLeft 2026-10-10: it is not left-aligned
 golf_clean.exe	0x00478080	drawRight	ui	match re/match/golf_hand_05.cpp	draws right-aligned text within x,y,w,h
-golf_clean.exe	0x00478140	drawString	ui	callee 0x00477280 (drawMarkupRun)	draws a text string (markup-aware)
+golf_clean.exe	0x00478140	drawStringRightAt	ui	callee 0x00477280 (drawMarkupRun)	draws text whose right edge lands at x: same prologue as drawStringCentered 0x00477fc0, then drawRichText at x - w (0x004781c6). Renamed from drawString 2026-10-10
 golf_clean.exe	0x004781f0	drawRight2	ui	match re/match/golf_hand_07_4781f0.cpp	draws right-aligned text within a rect structure
 golf_clean.exe	0x004782d0	measureText	ui	callee 0x00476ef0 (measureMarkupRun); callee 0x00477c30 (drawText)	measures and draws a block of wrapped text
 golf_clean.exe	0x00478430	measureText2	ui	callee 0x00476ef0 (measureMarkupRun)	measures/draws a wrapped text block (variant)

@@ -78,7 +78,7 @@ are queued via `netQueueMessage` (0x0049b690) / `netSendList` (0x00497b40) /
 queue with `queuePop` (0x004a4c70). `netHandleControl` (0x0049acf0) processes
 control messages — (string in the binary) (0x004e4824), (string in the binary),
 (string in the binary) — and edits the peer list via `netListRemove` (0x0049bec0).
-`netNameOf` (0x0049aa30) returns a peer name. `netHeapAlloc` (0x0049b970)
+`netNameOf` (0x0049aa30) returns a peer name. `S3List_addVoiceRx` (0x0049b970)
 allocates net objects and aborts on failure ((string in the binary)
 0x004c1434). `netSendShutdown` (0x00497d10) clears the send buffers. The net state
 `g_netState` (0x008400b0) gates `netBeginOp0`/`netBeginOp1` (0x00497c20 / 0x00497c70), which store 0 or 1 at
@@ -112,7 +112,7 @@ resource object into `g_graphsyObject` (0x0084092c).
 
 ## 8. String class Str49d (util) — 0x0049d090, 0x0049d100, 0x0049d0e0
 
-Small heap-backed string. `strAssign` (0x0049d090) copies a C string (substituting
+Small heap-backed string. `strBufReset` (0x0049d090) copies a C string (substituting
 (string in the binary) 0x004e49f4 for null), `strDup` (0x0049d100) duplicates, `strFree`
 (0x0049d0e0) releases.
 
@@ -173,7 +173,7 @@ Singly-linked list / bounded FIFO / queue used by the network and movie systems:
 (0x004a4c70), `listClear4a4d` (0x004a4d50, thunk 0x004a4d30), `listPush`
 (0x004a4db0), `listRemoveHead` (0x004a4ed0). `listAddEntry` (0x004a28a0) and
 `setStringField` (0x004a29c0) manage heap-copied string entries;
-`bufferCopyTo`/`bufferFree` (0x004a0540 / 0x004a05d0) copy and free buffers.
+`recordCopyStr1c`/`bufferFree` (0x004a0540 / 0x004a05d0) copy and free buffers.
 
 ## 14. CRT tail (crt) — 0x004a4fc4, 0x004a512a, 0x004a910c, 0x004a9115, 0x004abe6b
 

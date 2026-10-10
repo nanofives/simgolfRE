@@ -100,8 +100,8 @@ Text layout with an inline markup language and simple widgets/windows.
   `measureMarkupRun` 0x00476ef0, `drawMarkupRun` 0x00477280. Core renderer
   `drawRichText` 0x004775b0 (8 alignment-wrapper callers) with buffer from
   `allocTextBuffer` 0x004767a0.
-- Alignment wrappers: `drawText` 0x00477c30, `drawStringLeft` 0x00477fc0,
-  `drawString` 0x00478140, `drawCentered`/2/3 (0x00477cd0, 0x00477da0, 0x00477eb0),
+- Alignment wrappers: `drawText` 0x00477c30, `drawStringCentered` 0x00477fc0,
+  `drawStringRightAt` 0x00478140, `drawCentered`/2/3 (0x00477cd0, 0x00477da0, 0x00477eb0),
   `drawRight`/2 (0x00478080, 0x004781f0), `drawBox` 0x00477e60, and the
   measure+draw block helpers 0x004782d0/0x00478430/0x00478530/0x00478610/0x004787a0.
   `Text_put` 0x00477250 / `Text_flush` 0x00478970 accumulate into a text object.
