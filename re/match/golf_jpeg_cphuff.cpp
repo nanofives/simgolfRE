@@ -15,3 +15,4 @@
 // MATCH: golf_clean.exe 0x004b2d30 _encode_mcu_DC_refine
 // MATCH: golf_clean.exe 0x004b2eb0 _encode_mcu_AC_refine
 // MATCH: golf_clean.exe 0x004b33c0 _finish_pass_gather_phuff
+// MATCH: golf_clean.exe 0x004b3380 _finish_pass_phuff

@@ -4,6 +4,8 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-10  004b3380  finish_pass_phuff  C1->C2  re/analysis/util/004b3380_finish_pass_phuff.md
+2026-10-10  004b3380  finish_pass_phuff  C0->C1  match re/match/golf_jpeg_cphuff.cpp (IJG libjpeg 6a, vendor/jpeg-6a/jcphuff.c, /O2) 100%; installed by start_pass_phuff 0x004b1f70 with the store at 0x004b1ff9 (created 2026-10-09: no function in the master before)
 2026-10-09  004a0ab0  viewDispatchSlot27  C2->C3  log/diff/004a0ab0_viewDispatchSlot27.path1.csv
 2026-10-09  004a0000  optionDialogSlot60_vtordisp  C2->C3  log/diff/004a0000_optionDialogSlot60_vtordisp.path1.csv
 2026-10-09  0049fff0  optionDialogSlot38_vtordisp  C2->C3  log/diff/0049fff0_optionDialogSlot38_vtordisp.path1.csv

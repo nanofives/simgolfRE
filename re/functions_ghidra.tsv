@@ -1893,12 +1893,13 @@ entry	name	size	callers	callees	ranges
 004b2140	encode_mcu_DC_first	734	0	2	004b2140-004b241e
 004b2420	dump_buffer_4b2420	60	8	0	004b2420-004b245c
 004b2460	emit_restart_4b2460	165	4	3	004b2460-004b2505
-004b2510	flush_bits_4b2510	190	1	1	004b2510-004b25ce
-004b25d0	emit_eobrun	498	4	2	004b25d0-004b27c2
+004b2510	flush_bits_4b2510	190	2	1	004b2510-004b25ce
+004b25d0	emit_eobrun	498	5	2	004b25d0-004b27c2
 004b27d0	emit_buffered_bits	228	2	1	004b27d0-004b28b4
 004b28c0	encode_mcu_AC_first	1128	0	3	004b28c0-004b2d28
 004b2d30	encode_mcu_DC_refine	375	0	2	004b2d30-004b2ea7
 004b2eb0	encode_mcu_AC_refine	1219	0	4	004b2eb0-004b3373
+004b3380	finish_pass_phuff	64	0	2	004b3380-004b33c0
 004b33c0	finish_pass_gather_phuff	235	0	3	004b33c0-004b34ab
 004b34b0	jinit_forward_dct	145	1	0	004b34b0-004b3541
 004b3a80	jinit_c_prep_controller	172	1	1	004b3a80-004b3b2c
