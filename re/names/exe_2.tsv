@@ -144,14 +144,14 @@ golf_clean.exe	0x00478a70	Widget_reset	ui	match re/match/golf_small2.cpp	resets 
 golf_clean.exe	0x00478a90	addDropdownSpot	ui	match re/match/golf_raw_13.cpp; string 0x004e428c	registers a dropdown hit-spot, warning if the maximum is exceeded
 golf_clean.exe	0x00478af0	Win_fillRect	ui	match re/match/golf_small6.cpp	fills a rectangle within a window
 golf_clean.exe	0x00478cd0	loadImageData	render	match re/match/golf_hand_r3.cpp; string 0x004e4218	decodes signature-tagged image data into a surface buffer
-golf_clean.exe	0x00478df0	drawLineH	render	callee 0x004796a0 (Surface_pixelPtr)	draws a horizontal pixel line on a surface
-golf_clean.exe	0x00478ea0	drawLineV	render	callee 0x004796a0 (Surface_pixelPtr)	draws a vertical pixel line on a surface
+golf_clean.exe	0x00478df0	Widget_readPixel	render	callee 0x004796a0 (Surface_pixelPtr)	returns the pixel at (x, y) of the Surface at this+4 (address from Surface_pixelPtr 0x004796a0 at 0x00478e3b): byte at depth 8 (0x00478e6c), word at depth 16 (0x00478e71), dword otherwise; 0 for a null Surface or out-of-range coordinates. Renamed from drawLineH 2026-10-10
+golf_clean.exe	0x00478ea0	Widget_writePixel	render	callee 0x004796a0 (Surface_pixelPtr)	stores one pixel at (x, y) of the Surface at this+4 (address from Surface_pixelPtr 0x004796a0 at 0x00478ef2): the low byte at depth 8 (0x00478f35), the low word at depth 16 (0x00478f2c), returns 0x17 for any other depth (0x00478f1e) and 0 after a store. Renamed from drawLineV 2026-10-10
 golf_clean.exe	0x00478f50	openImageAsset	render	string 0x004e4234; string 0x004e42b0; string 0x004e42b8	opens an image asset by extension (.pcx/.pcf/.pcg) with a signature check
 golf_clean.exe	0x004791b0	drawComposite	render	callee 0x00475e10/0x00475fb0/0x00476140	draws a 3-part (left/mid/right) composite image such as a stretched bar
 golf_clean.exe	0x004796a0	Surface_pixelPtr	render	match re/match/golf_hand_r0.cpp	returns a pointer to a pixel at (x,y) on a surface
-golf_clean.exe	0x00479830	blendRed	render	match re/match/golf_hand_04.cpp	blends the red channel of a 16-bit pixel
-golf_clean.exe	0x004798c0	blendGreen	render	match re/match/golf_hand_04.cpp	blends the green channel of a 16-bit pixel
-golf_clean.exe	0x00479950	drawPixelRun	render	callee 0x004796a0 (Surface_pixelPtr)	writes a run of pixels via Surface_pixelPtr
+golf_clean.exe	0x00479830	pixelRed	render	match re/match/golf_hand_04.cpp	returns the 8-bit red component of the pixel at (x, y), or def when there is no pixel: depth 16 decodes RGB565 or RGB555 by the display format (slot +0xb4 at 0x0047988b), depth 24/32 returns byte 2 (0x00479879). Renamed from blendRed 2026-10-10
+golf_clean.exe	0x004798c0	pixelGreen	render	match re/match/golf_hand_04.cpp	returns the 8-bit green component of the pixel at (x, y) like pixelRed 0x00479830 (RGB565 0x00479926, RGB555 0x0047992e, byte 1 at depth 24/32 0x00479909). Renamed from blendGreen 2026-10-10
+golf_clean.exe	0x00479950	pixelBlue	render	callee 0x004796a0 (Surface_pixelPtr)	returns the 8-bit blue component of the pixel at (x, y): depth 16 shifts the first byte left by 3 (0x0047999d), depth 24/32 returns byte 0 (0x00479999), other depths def. Renamed from drawPixelRun 2026-10-10
 golf_clean.exe	0x00479a80	Surface_clip	render	match re/match/golf_hand_05.cpp; tagRECT	clips a rectangle to the surface bounds
 golf_clean.exe	0x00479bb0	Vec_release	util	match re/match/golf_classes.cpp; field +0x224 buffer, +0x228 refcount; callee _free	decrements a vector's refcount and frees its backing buffer when it reaches zero
 golf_clean.exe	0x00479c40	View_ctor	ui	installs vtables 0x4ba8b4 and 0x4baa10	constructor for a view/panel object (sets two vtables and clears its fields)

@@ -88,7 +88,7 @@ pressed flag at `this+0x614`. Note that `g_scrollDragX` / `g_scrollDragY` are ty
 
 `Button::timerCallback` 0x00488fb0 and `HotList::tipTimerCallback` 0x00492bb0 are the only two reached from a
 store rather than a vtable: five and one `push <addr>` sites hand them to `Timer::init` 0x00486d20 /
-`Timer::initStartRepeat` 0x00486d90.
+`Timer::initStartMmOneShot` 0x00486d90.
 
 ## 5. The UI event table 0x004ba87c (3 rows)
 

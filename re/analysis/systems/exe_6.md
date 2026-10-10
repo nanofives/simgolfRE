@@ -17,7 +17,7 @@ here are leaf helpers of the panel/tooltip/scrollbar/list draw code:
 - `Widget_fillRect` 0x00478b80 — filled rect (x1,y1,x2,y2,colour) via vtbl+0x64, fill flag.
 - `Widget_drawHLine` 0x00478bb0 / `Widget_drawVLine` 0x00478be0 — single lines via vtbl+0x64.
 - `Widget_drawHLineDepth` 0x00478c10 / `Widget_drawVLineDepth` 0x00478c70 — depth-dispatched
-  (surface descriptor at vtbl+0xe4: 8 -> Image::hline/vline, 0x10 -> drawColorRunA/B).
+  (surface descriptor at vtbl+0xe4: 8 -> Image::dottedHLine/vline, 0x10 -> dottedHLine16/B).
 - `Widget_drawBevelBox` 0x00479560 (+ `...R` 0x004795d0 from a rect) — two-colour bevel
   outline, built from the HLine/VLine helpers (top/left = param_5, bottom/right = param_6).
 - `Widget_drawBox` 0x00479610 (+ `...R` 0x00479670 from a rect) — single-colour outline

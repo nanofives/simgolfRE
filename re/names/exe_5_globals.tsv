@@ -12,7 +12,7 @@ golf_clean.exe	0x0083fe78	g_widgetTable	0x60-entry table	initialized by initWidg
 golf_clean.exe	0x0083e8b8	g_hudTextX	int[10] x coords	written by setHudTextSlot 0x00494cb0 (one slot per text item)
 golf_clean.exe	0x0083d3c8	g_hudTextY	int[10] y coords	written by setHudTextSlot 0x00494cb0 (one slot per text item)
 golf_clean.exe	0x0083e8e0	g_hudTextBuf	char[10][0x100] text	written by setHudTextSlot 0x00494cb0 (slot index * 0x100)
-golf_clean.exe	0x008406e8	g_pairArray	int-pair array ptr	initialized by initPairArrayGlobal 0x0049d010 via allocPairArray 0x0049d050
+golf_clean.exe	0x008406e8	g_pairArray	int-pair array ptr	initialized by initPairArrayGlobal 0x0049d010 via PairArray::ctor 0x0049d050
 golf_clean.exe	0x0083ab30	g_scrollDragX	int drag anchor	written by scrollbarOnDown 0x00496c30; read by scrollbarOnDrag 0x00496d20
 golf_clean.exe	0x0083ab34	g_scrollDragY	int drag anchor	written by scrollbarOnDown 0x00496c30; read by scrollbarOnDrag 0x00496d20
 golf_clean.exe	0x008400b0	g_netState	int (net state; nonzero)	nonzero gates netBeginOp0/1 0x00497c20/0x00497c70; zeroed by netSendShutdown at 0x00497d7a; loaded into ecx by netSendMessages at 0x0049a6f6

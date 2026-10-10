@@ -43,7 +43,7 @@ custom image format guarded by the signature string (string in the binary)
 (0x004e472c / 0x004e4748). Both are called from `load@r3_C478cd0` (0x00478cd0),
 read a 0x80-byte header, then either install a palette (`setPalette` 0x004830e0)
 or fill 16-bit pixels (`fill16` 0x00493630) and paint (`paint` 0x00474e70).
-`drawColorRunA`/`drawColorRunB` (0x00494d30 / 0x00494f00) draw runs of 16-bit
+`dottedHLine16`/`dottedVLine16` (0x00494d30 / 0x00494f00) draw runs of 16-bit
 pixels into a surface, looking colors up through the owning widget's palette
 (virtual calls at vtbl +0xcc / +0xe4).
 

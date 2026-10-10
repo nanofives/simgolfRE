@@ -45,7 +45,7 @@ plain offset accessors rather than as methods of an invented class.
 
 `createDisplay` (0x10065390) is the singleton constructor: it `operator new`s 0x14c bytes, runs
 `Display::Display` (0x100654b0), and stores the pointer in both **g_display** (0x1012870c) and
-**g_displayLib** (0x10128420). `Lib::destroyDisplay` (0x10065420) tears it down.
+**g_displayLib** (0x10128420). `Display::destroyAll` (0x10065420) tears it down.
 
 Display-mode management (all render): `enumModes` (0x10065a90, EnumDisplaySettingsA into the mode
 tables at 0x101286c8/0x101286f8), `findMode` (0x10065c30), `setMode` (0x10065da0), `pickMode`

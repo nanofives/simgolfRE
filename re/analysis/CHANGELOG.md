@@ -4,6 +4,23 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-10  00449200  dynInit_initList820f18  name dynInit_allocTileBuffer->dynInit_initList820f18  log/n_renames24.tsv
+2026-10-10  jgld.dll:00065420  Display::destroyAll  name Lib::destroyDisplay->Display::destroyAll  log/n_renames24.tsv
+2026-10-10  0049d050  PairArray::ctor  name allocPairArray->PairArray::ctor  log/n_renames24.tsv
+2026-10-10  00494f00  dottedVLine16  name drawColorRunB->dottedVLine16  log/n_renames24.tsv
+2026-10-10  00494d30  dottedHLine16  name drawColorRunA->dottedHLine16  log/n_renames24.tsv
+2026-10-10  00486e40  Timer::startMmOneShot  name Timer::startRepeat->Timer::startMmOneShot  log/n_renames24.tsv
+2026-10-10  00486dc0  Timer::startMmPeriodic  name Timer::startOnce->Timer::startMmPeriodic  log/n_renames24.tsv
+2026-10-10  00486d90  Timer::initStartMmOneShot  name Timer::initStartRepeat->Timer::initStartMmOneShot  log/n_renames24.tsv
+2026-10-10  00486d60  Timer::initStartMmPeriodic  name Timer::initStartOnce->Timer::initStartMmPeriodic  log/n_renames24.tsv
+2026-10-10  00485e80  Image::dottedVLine  name Image::vline->Image::dottedVLine  log/n_renames24.tsv
+2026-10-10  00485d40  Image::dottedHLine  name Image::hline->Image::dottedHLine  log/n_renames24.tsv
+2026-10-10  00479950  pixelBlue  name drawPixelRun->pixelBlue  log/n_renames24.tsv
+2026-10-10  004798c0  pixelGreen  name blendGreen->pixelGreen  log/n_renames24.tsv
+2026-10-10  00479830  pixelRed  name blendRed->pixelRed  log/n_renames24.tsv
+2026-10-10  00478ea0  Widget_writePixel  name drawLineV->Widget_writePixel  log/n_renames24.tsv
+2026-10-10  00478df0  Widget_readPixel  name drawLineH->Widget_readPixel  log/n_renames24.tsv
+2026-10-10  00449210  initList820f18  name allocTileBuffer->initList820f18  log/n_renames24.tsv
 2026-10-10  0044b190  registerExit_44b190  C2->C3  log/diff/0044b190_registerExit_44b190.path1.csv
 2026-10-10  0044b190  registerExit_44b190  C3<-C2  DEMOTED: re-record: the round-22 C3 promotion wrote hooks.csv but no CHANGELOG line (found by a C3-vs-CHANGELOG scan, 2026-10-10)
 2026-10-10  00492dc0  MappedFile::dtor  C2->C3  log/diff/00492dc0_MappedFile_dtor_exe.path1.csv

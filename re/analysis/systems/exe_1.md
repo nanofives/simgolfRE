@@ -34,7 +34,7 @@ Write side (into Terrain.dll, via imports at 0x4a4f28+): `syncTiles` 0x449470, `
 Per-tile appliers driven by `rebuildTileData` 0x44a5b0: `applyTileVariation` 0x449f00,
 `applyTileElevation` 0x449fa0, `applyTileWalls` 0x44a380, `togglePath` 0x44a410.
 Render driver `updateTerrainRender` 0x4498a0 calls render/localRender/setZoomLevel/calcAllNormals;
-`renderTerrainStrip` 0x44a6e0 calls stripRender. `allocTileBuffer` 0x449210 allocates the exe-side
+`renderTerrainStrip` 0x44a6e0 calls stripRender. `initList820f18` 0x449210 allocates the exe-side
 tile buffer g_820f18. `drawMapLine` 0x4493d0 wraps the jgld `drawLine` export.
 
 ## 3. In-game UI panels and menus (subsystem: ui)

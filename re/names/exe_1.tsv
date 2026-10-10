@@ -67,7 +67,7 @@ golf_clean.exe	0x004490d0	Terrain::tileAt	terrain	match re/match/terrain.cpp	Exp
 golf_clean.exe	0x00449110	Terrain::getElevation	terrain	match re/match/terrain.cpp	Exported accessor returning a tile corner elevation; dead code in the exe.
 golf_clean.exe	0x00449130	Terrain::getWall	terrain	match re/match/terrain.cpp	Exported accessor returning a tile wall flag; dead code in the exe.
 golf_clean.exe	0x00449150	Terrain::getType	terrain	match re/match/terrain.cpp	Exported accessor returning a tile type id; dead code in the exe.
-golf_clean.exe	0x00449210	allocTileBuffer	terrain	callee operator_new; writes g_820f18/g_820f1c/g_820f20 read by 0x44a5b0 (rebuildTileData)	Allocates the exe-side tile buffer used when syncing tiles to Terrain.dll.
+golf_clean.exe	0x00449210	initList820f18	terrain	callee operator_new; writes g_820f18/g_820f1c/g_820f20 read by 0x44a5b0 (rebuildTileData)	static construction of a std::list held in globals: allocator byte 0x00820f18 (0x00449217), a self-linked 0xc-byte head node from operator new 0x004a57f1 (0x0044921c) at 0x00820f1c (0x00449226), size 0x00820f20 = 0 (0x0044922b). Renamed from allocTileBuffer 2026-10-10: it allocates no tile buffer
 golf_clean.exe	0x004492d0	tileType	terrain	match re/match/golf_small.cpp; callers 0x449470/0x449540	Returns the type id of a tile from the exe tile array.
 golf_clean.exe	0x004492f0	tileByte	terrain	match re/match/golf_small.cpp; callers 0x449470/0x449540	Returns a raw byte of a tile from the exe tile array.
 golf_clean.exe	0x00449310	tileQuery449310	terrain	match re/match/golf_small.cpp; callee 0x40bfe0; callers 0x449540/0x449fa0	Returns a per-tile value used by terrain elevation/wall sync.

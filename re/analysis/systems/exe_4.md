@@ -27,7 +27,7 @@ Base facts verified from the decompilation:
 `Image` wraps a surface at `this+4` and owns a palette at `this+0xac`.
 - `Image::loadPcx` 0x00485790 / `Image::savePcx` 0x00485aa0 are a PCX codec (0x80-byte header,
   signature byte 0x0a, 8-bit RLE, 256-colour palette after marker 0x0c).
-- `Image::hline` 0x00485d40 / `Image::vline` 0x00485e80 draw clipped 16-bit lines.
+- `Image::dottedHLine` 0x00485d40 / `Image::dottedVLine` 0x00485e80 draw clipped 16-bit lines.
 - `cropSprite` 0x00492000 trims a sprite's transparent (0xff) border into a fresh surface.
 - Convex-polygon scanline fill: `polyEdgeStep` 0x00492ed0 / `polyEdgeAdvance` 0x00492fa0 run the edge
   DDA over the vertex table `g_polyVerts` (0x0083d358); `fillSpanDown/Up` 0x00493000/0x00493080 write

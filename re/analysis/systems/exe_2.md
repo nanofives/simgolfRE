@@ -76,8 +76,8 @@ A Surface/Image/device-context class family wrapping a backing device object
   0x004791b0 (left/mid/right via blitLeft/Mid/Right 0x00475e10/0x00475fb0/0x00476140).
 - Primitives: `Surface_box` 0x00475b20, `Surface_fill` 0x00475da0 / `Surface_fillRegion`
   0x00475c90, `Surface_paint` 0x00474e70, `Surface_clip` 0x00479a80, `Surface_pixelPtr`
-  0x004796a0, `drawPixelRun` 0x00479950, `drawLineH/V` 0x00478df0/0x00478ea0,
-  `blendRed/Green` 0x00479830/0x004798c0. `DC_call84/90/a0/a4` (0x00475b60..0x00475c20)
+  0x004796a0, `pixelBlue` 0x00479950, `Widget_readPixel/V` 0x00478df0/0x00478ea0,
+  `pixelRed/Green` 0x00479830/0x004798c0. `DC_call84/90/a0/a4` (0x00475b60..0x00475c20)
   forward to fixed device-context vtable slots.
 - Image files: `loadBmp` 0x00474ee0, `flipBmpRows` 0x00475410, `loadBmpSurface`
   0x00475210, `saveBmp` 0x00475580, `loadImage` 0x00475840 (22 callers),
