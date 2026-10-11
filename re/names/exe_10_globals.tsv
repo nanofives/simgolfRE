@@ -1,0 +1,2 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x00834170	g_date	int	the game date: appendDate 0x0040d7b0 decodes year = date / 8192 (+2001, 0x0040d7d2 / 0x0040d7fc) and month = date / 1024 % 8 (0x0040d7cf / 0x0040d7d5); drawEmployeeDetailPanel passes [0x834170] to it (0x00436e50); logTick 0x0040c6f0 writes it; under SIMGOLF_TIMEWARP=32 it rose 0x0e97 -> 0x2b0a in 45 s (2026-10-11)

@@ -262,6 +262,10 @@ class Game:
     def shim_info(self):
         return self.harness.shim_info()
 
+    def read_u32(self, addr: int) -> int:
+        """The dword at a golf_clean.exe VA (the image has no relocations)."""
+        return self.harness.read_u32(addr)
+
     def move(self, x, y):
         """Point the shim's virtual cursor at (x, y) in game space; the real mouse is untouched."""
         self.harness.set_cursor(int(x), int(y))

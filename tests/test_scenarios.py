@@ -10,6 +10,10 @@ from game import Game
 
 pytestmark = [pytest.mark.runtime, pytest.mark.slow]
 DATE_LINE = (90, 18, 210, 34)   # the "Month Year" line under the course name
+# The game date (g_date): appendDate 0x0040d7b0 decodes year = date / 8192 (+2001) and month = date / 1024 % 8;
+# drawEmployeeDetailPanel passes this dword to it (0x00436e50) and logTick 0x0040c6f0 writes it.
+GAME_DATE = 0x00834170
+MONTH = 1024
 LEADERBOARD = (4, 2, 140, 22)
 
 
@@ -25,13 +29,15 @@ def test_time_warp_moves_the_calendar():
         g.wait_window()
         scenario.to_sandbox(g)
         scenario.build_first_hole(g)
-        start = g.shot().crop(DATE_LINE)
+        start = g.read_u32(GAME_DATE)
         scenario.run_season(g, 45)
-        end = g.shot().crop(DATE_LINE)
+        end = g.read_u32(GAME_DATE)
         assert g.alive
-    # Mean grayscale distance diluted a real change (June 2001 -> April 2002 scored 2.9); count strongly
-    # changed pixels instead. Measured: 0 for identical frames, several percent for a new month/year.
-    assert imgcmp.changed_fraction(start, end) > 0.02, "date text did not change"
+    # Read the date instead of comparing the date line's pixels: an exact one-year advance (June 2001 -> June 2002)
+    # changes one digit, which scored ~0.012 against the old 0.02 changed-pixel threshold and failed 1-3 runs in 8
+    # with or without hooks (rounds 22 and 27, log/c3/alt/timewarp_bisect*.py). 45 s at x32 advanced ~1.4 years
+    # (0x0e97 -> 0x2b0a, 2026-10-11); require at least three game months.
+    assert end - start >= 3 * MONTH, f"date moved from {start:#x} to {end:#x}"
 
 
 def test_championship_round_is_played_to_the_results():

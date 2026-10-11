@@ -27,4 +27,5 @@ rpc.exports = {
   covPhase(n) { return bind().covPhase(n); },
   vkey(vk, state) { bind().vkey(vk, state); },
   covDump(path) { return bind().covDump(Memory.allocAnsiString(path)); },
+  readU32(addr) { return ptr(addr).readU32(); },
 };
