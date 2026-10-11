@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 117 bytes, 42 instructions, subsystem `sim`. Mechanical
 initializes the record/object banks at startup (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+0x00401750 initRecords(): every 0x3c-byte slot of the position-record table 0x0056d1d8 .. 0x0056e948 gets the word 0xffff (0x00401750..0x00401762, signed compare with the end), then for the banks 0, 1, 2 (0x0040176c.. 0x004017a1) and 3, 4, 5 (the loop 0x004017a9..0x004017c1) resetRecordBank 0x00401000(bank) runs and placeRecord 0x00401040 is called with (bank, bank, 0, 0). eax is the last placeRecord result (bank 5). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: initRecords_p0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00401750_initRecords_p0.path1.csv`); initRecords_p1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00401750_initRecords_p1.path1.csv`); initRecords_p2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00401750_initRecords_p2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small10.cpp` as `?initRecords@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004017c4): callee pops 0 bytes of stack arguments.

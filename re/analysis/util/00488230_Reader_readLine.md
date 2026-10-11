@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 110 bytes, 34 instructions, subsystem `util`. Mechanica
 Reads the next line into this+0x15c, strips the newline and trims whitespace, and records it at this+0x154. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00488230 Reader::readLine(this): the FILE at +0x158 with bit 0x10 set in its flag word +0xc (`test byte ptr [eax + 0xc], 0x10` 0x00488239) ends the line buffer +0x15c with a NUL (0x00488246) and returns 0 (0x00488249). Otherwise fgets 0x004a65ee (buffer, 0x1ff, FILE) (pushes 0x00488252..0x00488258, call 0x00488259): NULL ends the buffer (0x0048826b) and returns it (0x0048826d); a line goes through 0x004925d0 and 0x004925b0 (calls 0x0048827c, 0x00488288), +0x154 takes the buffer pointer (0x00488296) and the buffer is returned. Callers (hooks.csv): 0x00487e90. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: Reader::readLine (12 vectors, 12 distinct results, 12 changing state, `log/diff/00488230_Reader_readLine.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0048824b, 0x00488274, 0x0048829d): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00488231 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

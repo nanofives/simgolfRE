@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 238 bytes, 72 instructions, subsystem `ui`. Mechanical 
 handles a mouse-button-down on the scrollbar, recording the drag anchor in 0x0083ab30/0x0083ab34. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00496c30 scrollbarOnDown(this, x, y): `ret 8`. The child's slot +0xd8 (width) is compared with slot +0xdc (height) as signed values (0x00496c65 / 0x00496c67). Width above height: x is tested against the dword at this+0x5ac (jge at 0x00496c75) and this+0x5b4 (jle at 0x00496c9c); height not above: y against this+0x5b0 (0x00496cc7) and this+0x5b8 (0x00496cf0). Below the low bound the part code this+0x5a4 becomes -1, above the high bound 1, and in both cases this+0x598 is cleared and slot +0x6c of this is called with (x, y) (0x00496c91, 0x00496cb8, 0x00496ce5). Between the bounds this+0x5a4 becomes 0 and nothing is called (0x00496cfe). Then, when the drag-capture global 0x0083ab30 is NULL (0x00496d04 / 0x00496d0a), it takes this and 0x0083ab34 is cleared (0x00496d0c / 0x00496d12). eax at the return is slot +0x6c's result on the two call paths, x in the in-range arm of the width-above-height side (0x00496c69) and y in the in-range arm of the other (0x00496cbd). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: scrollbarOnDown (80 vectors, 80 distinct results, 80 changing state, `log/diff/00496c30_scrollbarOnDown.path1.csv`); scrollbarOnDown_held (80 vectors, 80 distinct results, 80 changing state, `log/diff/00496c30_scrollbarOnDown_held.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_496c30.cpp` as `?down@C496c30@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00496d1b): callee pops 8 bytes of stack arguments.

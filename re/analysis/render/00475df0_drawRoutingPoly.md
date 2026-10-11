@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 27 bytes, 10 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 forwards to fillConvexPoly 0x00493520 to fill a routing-map polygon (`re/names/exe_6.tsv`)
 
+## Purpose
+Thiscall `(this, verts, count, colour)`, ret 0xc. A plain forwarder: fillConvexPoly 0x00493520(this, verts, count, colour) (cdecl; pushes 0x00475df8..0x00475dff, call 0x00475e00, add esp, 0x10); eax is its result. Key `drawRoutingPoly`: 30 vectors on c3db's 8-bit and 16-bit synthetic jgld Surfaces (six holders, five polygons, plain and palette colours, `fillConvexPoly` reads the vertex table and writes pixels, which the arena state compares). Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: drawRoutingPoly (30 vectors, 21 distinct results, 20 changing state, `log/diff/00475df0_drawRoutingPoly.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_00475df0@C_FUN_00475df0@f_00475df0@@QAEXHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00475e08): callee pops 12 bytes of stack arguments.

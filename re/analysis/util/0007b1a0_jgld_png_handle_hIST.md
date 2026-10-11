@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007b1a0`), 465 bytes, 161 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads a hIST chunk (one uint16 per palette entry). No IHDR -> png_error 0x1011e820 (jne 0x1007b1c3); after IDAT -> warning 0x1011e808, finish, return (je 0x1007b1e6); no PLTE -> warning 0x1011e7ec, finish, return (jne 0x1007b219); a non-NULL info with hIST valid -> warning 0x1011e7d4, finish, return (0x1007b245 / 0x1007b252). length != 2 * num_palette -> warning 0x1011e7b8, finish, return (je 0x1007b28b). num = (int) length / 2; hist +0x1f4 = png_malloc (num * 2) (0x1007b2c8); flags |= 0x4000 (0x1007b2df); num times two bytes read and hist[i] = png_get_uint_16 (signed `jge` 0x1007b300); png_crc_finish (0) nonzero -> return (je 0x1007b342); png_set_hIST 0x1007dc20 (0x1007b358). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_handle_hIST (12 vectors, 12 distinct results, 12 changing state, `log/diff/0007b1a0_jgld_png_handle_hIST.path1.csv`); png_handle_hIST_oom (3 vectors, 3 distinct results, 3 changing state, `log/diff/0007b1a0_jgld_png_handle_hIST_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_hIST` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007b370): callee pops 0 bytes of stack arguments.

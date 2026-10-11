@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00042cc9`), 9 bytes, 4 instructions, subsystem `crt`.
 __finally funclet releasing CRT heap lock 9 for the region-heap free path (sbhRegionLocate+sbhPageFree at 0x10042c97-0x10042cb9). (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+0x00042cc9 freeUnlockFunclet2 (VA 0x10042cc9). cdecl, no arguments, plain `ret` (0x10042cd1). `push 9; call 0x10047771` (_unlock with the heap lock number, 0x10042cc9 / 0x10042ccb) and `pop ecx` (0x10042cd0); _unlock's result is returned. Reached from: static callers 0x10042c07. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: freeUnlockFunclet2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00042cc9_sound_freeUnlockFunclet2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10042cc9@f_10042cc9@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10042cd1): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006cc50`), 171 bytes, 61 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads the whole image (cdecl, png_ptr, image = an array of row pointers). pass = png_set_interlace_handling 0x1006d750 (png_ptr) (0x1006cc6c: 7 for an interlaced image, which also sets PNG_INTERLACE, else 1); height +0xcc read once and stored into num_rows +0xd0 (0x1006cc89); for each pass (signed `jge` 0x1006cca7) and each row (unsigned `jae` 0x1006ccc7): png_read_row 0x1006c3f0 (png_ptr, image[i], NULL) (0x1006ccd5). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_read_image (6 vectors, 6 distinct results, 6 changing state, `log/diff/0006cc50_jgld_png_read_image.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_read.cpp` as `_png_read_image` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006ccfa): callee pops 0 bytes of stack arguments.

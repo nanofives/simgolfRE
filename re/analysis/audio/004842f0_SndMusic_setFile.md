@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 236 bytes, 106 instructions, subsystem `audio`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 assigns a music/stream file: opens the device (createSound), loads the file, marks playing (m_44 bit0) and stores the name m_50 (`re/names/exe_3.tsv`)
 
+## Purpose
+0x004842f0 SndMusic::setFile(this, name): `ret 4`. Without the sound library (the dword 0x0083afc4 is 0, 0x004842f1 / 0x004842f9) it returns 1. The sound object pointer is the dword this+0x40 (0x0048430b): when it is NULL createSound4840e0 runs with (this+0x40, name, 1) and a non-zero result is returned (0x00484319..0x00484329); otherwise slot +0x60 of the object is called and a non-zero result returns 0xf (0x00484330..0x0048433b). Slot +0x10 of the object then runs with name (0x00484345..0x0048434a) and its result r is kept. r == 0: with bit 0 of this+0x44 clear the bit is set, slot +0x7c of this runs and, when this+0x30 is non-zero, slot +0x48 of the sound object runs with 1 (0x00484358..0x00484378); r != 0 clears bit 0 (0x0048437a / 0x0048437c). The name is then copied into operator new 0x004a57f1 memory of strlen + 1 bytes (0x00484380..0x004843b7), the previous this+0x50, when non-NULL, is released through operator delete 0x004a4ffc (0x004843b9..0x004843c2), the copy is stored at this+0x50 (0x004843d3) and r is returned (0x004843ce). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: SndMusic::setFile (26 vectors, 23 distinct results, 24 changing state, `log/diff/004842f0_SndMusic_setFile.path1.csv`); SndMusic::setFile_fail (26 vectors, 23 distinct results, 24 changing state, `log/diff/004842f0_SndMusic_setFile_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_4842f0.cpp` as `?setFile@C4842f0@@QAEHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00484308, 0x0048432d, 0x00484342, 0x004843d9): callee pops 4 bytes of stack arguments.

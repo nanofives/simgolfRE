@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 180 bytes, 60 instructions, subsystem `ui`. Mechanical 
 installs an item array into the list sub-view and repositions its window. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Thiscall `(this, items)`, ret 4. The three dwords at items are copied to this+0x3474 (0x00494035..0x00494042) and, as (dword0, dword1, dword2), to this+0x26c4+0x650 / +0x654 / +0x658 (0x00494044..0x00494064). h = slot +0xdc of the handle at this+0x23b4 (0 without a handle, 0x00494074..0x0049408a) and w = its slot +0xd8 (0x00494095..0x004940a7) are read around ebp = dword0->+0x1c (0x0049408c); y = (h - ebp) / 2 and x = w - dword0->+0x18 - 4 (0x004940a7..0x004940bb; `cdq; sub eax, edx; sar eax, 1` divides by two toward zero). Window::moveTo 0x0047b420 runs on the sub-window at this+0x26c4 with (x, y) (0x004940be), then its vtable slot +0x120 (0x004940c3..0x004940c7), whose result is returned. Keys `listSetItems_a` (200 x 100 handle), `_odd` (201 x 101), `_noh` (no handle), `_hidden` (sub-window flags 2): five item triples each (heights above, below and equal to the handle's, a negative one), 20 vectors. Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: listSetItems_a (5 vectors, 5 distinct results, 5 changing state, `log/diff/00494020_listSetItems_a.path1.csv`); listSetItems_odd (5 vectors, 5 distinct results, 5 changing state, `log/diff/00494020_listSetItems_odd.path1.csv`); listSetItems_noh (5 vectors, 5 distinct results, 5 changing state, `log/diff/00494020_listSetItems_noh.path1.csv`); listSetItems_hidden (5 vectors, 5 distinct results, 5 changing state, `log/diff/00494020_listSetItems_hidden.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?setItems@R0C494020@@QAEXPAPAUR0S494020@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004940d1): callee pops 4 bytes of stack arguments.

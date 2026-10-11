@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 95 bytes, 31 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 offsets the dirty rect to global space (offsetRect) and redraws it when the window is visible (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00480c20 Window::refreshRect(this, a1, a2, a3, a4, a5) (ret 0x14): Window::visible 0x004801f0 (call 0x00480c26); zero returns zero (0x00480c2d `je` 0x00480c78). Otherwise a RECT {a1, a2, a1 + a3, a2 + a4} is built on the stack (0x00480c2f..0x00480c53; a5 is not read) and passed to 0x0047fa30 (this, rect; call 0x00480c5a), 0x0047b0d0 (this, rect; call 0x00480c66) and the plain drawTooltip 0x0047cdb0 (rect; call 0x00480c70), whose result is returned. Callers (hooks.csv): 0x00480c80. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: Window::refreshRect (12 vectors, 7 distinct results, 6 changing state, `log/diff/00480c20_Window_refreshRect.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x00480c7c): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x00480c24 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

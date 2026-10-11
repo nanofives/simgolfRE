@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000650e0`), 51 bytes, 21 instructions, subsystem `crt`
 ## Role (from the naming pass, not a C3 purpose)
 C++ dynamic-initializer stub for g_modes 0x101286c8: calls constructModes 0x10065120 (0x100650f8), then 0x10065160 (0x100650fd); no argument, no return value. (`re/names/jgld_7.tsv`)
 
+## Purpose
+constructModes 0x10065120 (0x100650f8), then 0x10065160 (0x100650fd), its teardown registration. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: dynInit_modes_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/000650e0_jgld_dynInit_modes_a.path1.csv`); dynInit_modes_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/000650e0_jgld_dynInit_modes_b.path1.csv`); dynInit_modes_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/000650e0_jgld_dynInit_modes_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_100650e0@f_100650e0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065112): callee pops 0 bytes of stack arguments.

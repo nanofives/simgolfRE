@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 105 bytes, 31 instructions, subsystem `ui`. Mechanical 
 Sets the font-size field at [0x1494]; scales it by 3/2 when the screen width is >= 1024. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x0048e120 TextView::setFontSize(this, size) (ret 4). The scaled branch needs +0x590 == 0 (0x0048e123..0x0048e12b), bit 0x400 of +0x1f68 clear (`test ah, 4` 0x0048e133), a display (0x0048e138..0x0048e13e) whose virtual slot +0xa8 returns >= 0x400 (signed, 0x0048e144..0x0048e14f): then value = size * 3 / 2, truncating toward zero (0x0048e15b..0x0048e164). Otherwise value = size (0x0048e17b). Either way it is stored at [[this + 0x1464] + 8 + this + 0x1494] (0x0048e161..0x0048e166, 0x0048e17b..0x0048e17e). eax = the stored value in the scaled branch, [this + 0x1464] in the other. Callers (hooks.csv): 0x0048ce00;0x0048d480;0x0048db60;0x0048e1c0;0x0048e900;0x0048fe60. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: TextView::setFontSize (12 vectors, 12 distinct results, 12 changing state, `log/diff/0048e120_TextView_setFontSize.path1.csv`); TextView::setFontSize_nodisp (12 vectors, 12 distinct results, 11 changing state, `log/diff/0048e120_TextView_setFontSize_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_0048e120@C_FUN_0048e120@f_0048e120@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048e16e, 0x0048e186): callee pops 4 bytes of stack arguments.

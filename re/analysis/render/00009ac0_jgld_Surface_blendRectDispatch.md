@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009ac0`), 111 bytes, 44 instructions, subsystem `ren
 alpha-blends a RECT (16-bit path only) via blendRect16. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+routes a blend rectangle by depth (thiscall, rect, colour, alpha; `ret 0xc`): the depth word slot +0xe4 points at (0x10009ae7, `mov eax, [eax]`) equal to 16 (je 0x10009afd) -> blendRect16 through its thunk 0x10001537 and its result; any other depth -> 0x17 (0x10009b17). Keys _565 / _555 (22 vectors: sixteen 16-bit vectors and the 8-, 24-, 32-, 48- and 4-bit surfaces s0 / s7 / s8 / s9 / s14 / s15). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: Surface::blendRectDispatch_565 (22 vectors, 15 distinct results, 13 changing state, `log/diff/00009ac0_jgld_Surface_blendRectDispatch_565.path1.csv`); Surface::blendRectDispatch_555 (22 vectors, 15 distinct results, 13 changing state, `log/diff/00009ac0_jgld_Surface_blendRectDispatch_555.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op3a@Surface@@QAEHPAHIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10009b2c): callee pops 12 bytes of stack arguments.

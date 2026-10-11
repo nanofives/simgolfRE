@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 146 bytes, 58 instructions, subsystem `ui`. Mechanical 
 Duplicates the name/key string param_1 into this+0x5c8. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x0048e010 TextView::setName(this, name): `ret 4`. A NULL name returns 3 (0x0048e017..0x0048e025). A non-NULL pointer at this+0x5c8 is released through free 0x004a5007 and cleared (0x0048e028..0x0048e045). The copy is malloc 0x004a504f of strlen(name) + 1 bytes stored at this+0x5c8 (0x0048e045..0x0048e059); a NULL result returns 4 (0x0048e061..0x0048e06b). Otherwise the copy is terminated (0x0048e06e) and the name appended to it (0x0048e071..0x0048e09a); the result is 0 (eax stays 0 from the `xor eax, eax` at 0x0048e076). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: TextView::setName (30 vectors, 25 distinct results, 24 changing state, `log/diff/0048e010_TextView_setName.path1.csv`); TextView::setName_fail0 (18 vectors, 5 distinct results, 12 changing state, `log/diff/0048e010_TextView_setName_fail0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?setName@C48e010@@QAEHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048e025, 0x0048e06b, 0x0048e09f): callee pops 4 bytes of stack arguments.

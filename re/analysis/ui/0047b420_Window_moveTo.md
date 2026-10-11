@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 179 bytes, 46 instructions, subsystem `ui`. Mechanical 
 moves the window rect (m_rc2 or m_rc per m_flags bit2) to (x,y) via offsetRect then relayouts children (clip47e140) (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Thiscall `(this, x, y)`, ret 8. With bit 1 of the byte at this+0xa0 set (0x0047b420 / 0x0047b427) the RECT at +0x1bc moves so that its left / top become x / y: dx = x - [+0x1bc], dy = y - [+0x1c0] (0x0047b42f..0x0047b441), [+0x1bc] = x, [+0x1c4] += dx, [+0x1c0] = y, [+0x1c8] += dy (0x0047b443..0x0047b46f). Otherwise the same on the RECT at +0x1ac (0x0047b477..0x0047b4b7). Then relayoutClip 0x0047e140(this, this+0x1dc) (cdecl, 0x0047b4bd..0x0047b4c5; it recurses over the child array, so the clip RECTs of the descendants are state) and eax = 0 (0x0047b4cd). Key `Window::moveTo`: six windows (only window 0 and 4 have bit 1 set), three (x, y) each plus two that leave the RECT where it is: 20 vectors. Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: Window::moveTo (20 vectors, 20 distinct results, 20 changing state, `log/diff/0047b420_Window_moveTo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small19.cpp` as `?moveTo@Win47b@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047b4d0): callee pops 8 bytes of stack arguments.

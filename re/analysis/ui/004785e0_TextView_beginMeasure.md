@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 47 bytes, 13 instructions, subsystem `ui`. Mechanical t
 resets the text pen (this+0x18=this+0x14, this+0x1c=0, globals 0x00839aa0/aa8=0, 0x00839aa4=param_2) and measures the run via measureText4 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+0x004785e0 TextView_beginMeasure(this, a1, a2) (ret 8): +0x1c = 0 (0x004785e5), +0x18 = +0x14 (0x004785e0, 0x004785e8), +0x3c = 0 (0x004785ef), [0x00839aa0] = 0 (0x004785f2), [0x00839aa8] = 0 (0x004785f7), [0x00839aa4] = a2 (0x00478600); then the text worker 0x00478610(a1) (push 0x00478606, call 0x00478607, ret 4); eax = its result. Callers (hooks.csv): 0x0048fe60. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: TextView_beginMeasure (12 vectors, 12 distinct results, 12 changing state, `log/diff/004785e0_TextView_beginMeasure.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_004785e0@C_FUN_004785e0@f_004785e0@@QAEXPADI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0047860c): callee pops 8 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 36 bytes, 13 instructions, subsystem `util`. Mechanical
 convenience wrapper that formats and emits one debug log line. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a0320 logLine(a1, a2, a3, a4, a5) (cdecl): the five arguments are pushed in order (0x004a032c..0x004a0338) behind ecx = the logger 0x00840930 (0x004a0339) for logWrite 0x004a0280 (call 0x004a033e, ret 0x14); eax = its result. Callers (hooks.csv): 0x00487fb0;0x0049c940;0x0049cae0;0x0049cb20;0x0049cb90;0x0049ccc0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: logLine (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a0320_logLine.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a0320@f_004a0320@@YAXIHIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a0343): callee pops 0 bytes of stack arguments.

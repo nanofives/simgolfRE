@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039c10`), 26 bytes, 12 instructions, subsystem `aud
 fastcall(group): calls the group's virtual reset (vtbl+0x40, arg this[1]) then rewinds the embedded channel at this+0x1c via rewindChannel. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00039c10 SoundGroup_rewind (VA 0x10039c10). Plain `ret`. The dword at this+4 is pushed and the virtual slot +0x40 of the object's vtable (the dword at this+0) is called with ecx = this (0x10039c13-0x10039c1b; the callee pops the argument); `call 0x10001de8` (thunk to rewindChannel 0x100339c0) runs with ecx = this+0x70 (0x10039c1e / 0x10039c21); 0 is returned (0x10039c26). Reached from: static callers 0x10008470, 0x1000c420, 0x1001ac40, 0x100288a0, 0x10028b70. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: SoundGroup_rewind (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039c10_sound_SoundGroup_rewind.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10039c10@f_10039c10@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10039c29): callee pops 0 bytes of stack arguments.

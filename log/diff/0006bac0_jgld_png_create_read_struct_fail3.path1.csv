@@ -1,0 +1,9 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$v0 $eptr $ejump $ewarn,NULL,NULL,True,995386dc,995386dc,True
+$v1 0 $ejump 0,NULL,NULL,True,f93e9250,f93e9250,True
+$v0 0 0 0,NULL,NULL,True,dcaae112,dcaae112,True
+state_regions,$blk+0x3400:0 $blk+0x4600:0 $blk+0x4800:0 $blk+0xb000:4096 $hlog+0x0:608 $giob+0x0:32 $gbuf+0x0:4096 $implog+0x0:4096 $arena+0x0:16 $arena+0x50:65472 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d5f3080,original=0x2b90a20,2026-10-11T11:16:48
+distinct_results,3,,
+VERDICT,GREEN,3,

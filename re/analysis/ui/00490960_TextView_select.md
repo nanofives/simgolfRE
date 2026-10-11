@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 215 bytes, 57 instructions, subsystem `ui`. Mechanical 
 Sets the current selection (from a row index or sentinel) and triggers a redraw/notify. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00490960 TextView::select(this, which): `ret 4`. this+0x5c0 is cleared (0x0049096c); when getFieldValueByKind(this+0x1460) is not 0 (0x00490972 / 0x00490977) it takes the current id (0x0049097b..0x004909b1). which == -2 (0x004909bb / 0x004909be): flag bit 0x40 of this+0x1f68 set (byte test at 0x004909cd) -> this+0x5c0 = -1, this+0x1fc0 = 0 (0x004909d6, 0x004909f1); clear and kind -1 (0x004909e2) -> this+0x5c0 = 0, this+0x1fc0 = 0 (0x004909eb, 0x004909f1); clear and any other kind -> returns at once with eax = which (0x00490a32). which == -1 (0x004909c0): this+0x1fc0 = 0. Any other value is stored to this+0x1fc0 (0x004909c5). Then, unless flag bit 0x100 of this+0x1f68 is set (test ah, 1 at 0x004909fd), slot +0x110 is called on the object at this+0x590 when it is not NULL (0x00490a0e) and on this otherwise (0x00490a1a); finally slot +8 of this when bit 0x4000 is set (0x00490a26..0x00490a2f). eax is slot +8's result in that case and the dword this+0x1f68 otherwise (0x00490a20). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: TextView::select (65 vectors, 50 distinct results, 65 changing state, `log/diff/00490960_TextView_select.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?select@R2C490960@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00490a34): callee pops 4 bytes of stack arguments.

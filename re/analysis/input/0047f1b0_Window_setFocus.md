@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 126 bytes, 45 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 gives this window keyboard focus: notifies the parent (vtable f75) and stores itself in g_83ab40 or g_83ab44 per the last argument (`re/names/exe_3.tsv`)
 
+## Purpose
+0x0047f1b0 Window::setFocus(this, a1, a2, a3, a4) (ret 0x10): Panel::notify 0x0047e120 (call 0x0047f1b6); a parent at +0x130 (0x0047f1bb..0x0047f1c3) gets its virtual slot +0x12c with this (0x0047f1c9, 0x0047f1ca). a4 != 0 (0x0047f1d4): [0x0083ab44] = this and [0x0083ab40] = 0 (0x0047f1d8, 0x0047f1de), else the reverse (0x0047f1e6, 0x0047f1ec); [0x0083ab48] = 0 (0x0047f1fa). a1 != 0 and bit 0x200 of +0x9c clear (0x0047f200..0x0047f20e, `test ah, 2`) call 0x0047c010(a2, a3, a4) (pushes 0x0047f213..0x0047f215, call 0x0047f218); then 0x0047c430(a2, a3, a4) (0x0047f21d..0x0047f222), whose result is returned. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: Window::setFocus (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047f1b0_Window_setFocus.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_0047f1b0@C_FUN_0047f1b0@f_0047f1b0@@QAEXHIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x0047f22b): callee pops 16 bytes of stack arguments.

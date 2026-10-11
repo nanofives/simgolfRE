@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 47 bytes, 17 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Draws a line on the map surface via the jgld drawLine export (g_820ed0). (`re/names/exe_1.tsv`)
 
+## Purpose
+0x004493d0 drawMapLine(a1..a7): the seven stack arguments are pushed in the same order (0x004493dc..0x004493f8) behind ecx = [0x00820ed0] (0x004493f1) for Terrain::drawLine through the thunk 0x004a4f16 (call 0x004493f9); ret (0x004493fe) with the callee's eax. Callers (hooks.csv): 0x00406220;0x0040bf20;0x0040f5c0;0x00432620;0x00433190;0x00434cf0;0x00435760. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: drawMapLine (12 vectors, 12 distinct results, 12 changing state, `log/diff/004493d0_drawMapLine.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004493fe): callee pops 0 bytes of stack arguments.
 

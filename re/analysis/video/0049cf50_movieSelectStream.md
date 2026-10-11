@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 173 bytes, 68 instructions, subsystem `video`. Mechanic
 selects/advances the active movie stream buffer. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x0049cf50 movieSelectStream(this, n): `ret 4`; returns the stream index or -1. -1 when the dword this+0xbc is 0 (0x0049cf50..0x0049cf59), the record array pointer this+0x948 is NULL (0x0049cf5f..0x0049cf67), or n is not inside 0 .. this+0x938 - 1 (signed compares at 0x0049cf77 / 0x0049cf79 and 0x0049cf7b / 0x0049cf7d). The array holds 0x10-byte records whose first dword is a stream type; only records whose type equals the dword this+0x1a4 count (the scans at 0x0049cf87..0x0049cf95, 0x0049cf9d..0x0049cfab, 0x0049cfbb..0x0049cfc7 step over the others without a bound). The cursor starts on the first matching record, moves to the next matching record n times (0x0049cf97..0x0049cfac), then, while the index is below count-1 and the byte at record+4 has bit 0x10 clear (test at 0x0049cfb5), moves on and counts the index up (0x0049cfbb..0x0049cfcc). With index == count-1 the result needs bit 0x10 of the final record (0x0049cfd5..0x0049cfdc, else -1); otherwise (index != count, 0x0049cfe8..0x0049cfea) the record address is stored in this+0x94c (0x0049cfde / 0x0049cfec) and the index returned. Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: movieSelectStream (104 vectors, 12 distinct results, 20 changing state, `log/diff/0049cf50_movieSelectStream.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?select@C49cf50@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049cfe5, 0x0049cff3, 0x0049cffa): callee pops 4 bytes of stack arguments.

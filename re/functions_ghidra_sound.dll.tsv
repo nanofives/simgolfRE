@@ -46,7 +46,7 @@ entry	name	size	callers	callees	ranges
 0000123f	Ctrl5b19c_ctor	5	5	0	0000123f-00001244
 00001249	Seq_applyTrackFlag	5	1	0	00001249-0000124e
 0000124e	Midi_Device::handleMetaEvent	5	1	0	0000124e-00001253
-00001253	thunk_FUN_10039470	5	1	0	00001253-00001258
+00001253	clearField6cReturn0	5	1	0	00001253-00001258
 00001258	clearNodeListG	5	3	0	00001258-0000125d
 0000125d	Ch5c178_ctor	5	1	0	0000125d-00001262
 00001262	Channel_set3DPositionZ	5	1	0	00001262-00001267
@@ -93,7 +93,7 @@ entry	name	size	callers	callees	ranges
 000015a0	findAndUnlinkNode	5	3	0	000015a0-000015a5
 000015a5	writeWaveFileB	5	1	0	000015a5-000015aa
 000015aa	Channel_setVolume	5	2	0	000015aa-000015af
-000015b4	Wave_In_Device::op1	5	2	0	000015b4-000015b9
+000015b4	Wave_In_Device::setStream	5	2	0	000015b4-000015b9
 000015c8	thunk_FUN_1002b4a0	5	0	0	000015c8-000015cd
 000015cd	clearNodeListC	5	2	0	000015cd-000015d2
 000015d2	Seq_loadChannelDesc	5	1	0	000015d2-000015d7
@@ -107,7 +107,7 @@ entry	name	size	callers	callees	ranges
 00001640	streamRenderBlock	5	1	0	00001640-00001645
 0000164a	Ds3DListener::setPosition	5	2	0	0000164a-0000164f
 00001654	Ctrl_appendIfAccepted	5	2	0	00001654-00001659
-00001672	thunk_FUN_10012040	5	1	0	00001672-00001677
+00001672	return0Pop4	5	1	0	00001672-00001677
 00001677	DirectSoundDevice::removeBuffer	5	8	0	00001677-0000167c
 00001681	appendNode	5	1	0	00001681-00001686
 0000168b	updateVoiceRate	5	1	0	0000168b-00001690
@@ -126,7 +126,7 @@ entry	name	size	callers	callees	ranges
 0000175d	NodeList_clear	5	6	0	0000175d-00001762
 00001762	DsBuffer::queryNotify	5	1	0	00001762-00001767
 0000176c	loadWaveResource	5	1	0	0000176c-00001771
-0000177b	thunk_FUN_10039450	5	1	0	0000177b-00001780
+0000177b	setField6cReturn0	5	1	0	0000177b-00001780
 00001780	soundWindowProc	5	1	0	00001780-00001785
 0000179e	WaveInDeviceMgr::call_back	5	0	0	0000179e-000017a3
 000017a8	MmioBuffer_init	5	2	0	000017a8-000017ad
@@ -197,7 +197,7 @@ entry	name	size	callers	callees	ranges
 00001b7c	beginDecodeStreamB	5	1	0	00001b7c-00001b81
 00001b81	DirectSoundDevice::close	5	3	0	00001b81-00001b86
 00001b9f	DsBuffer::isBusy	5	9	0	00001b9f-00001ba4
-00001ba4	Wave_In_Device::op2	5	2	0	00001ba4-00001ba9
+00001ba4	Wave_In_Device::clearStream	5	2	0	00001ba4-00001ba9
 00001bb8	listAppendNodeB	5	1	0	00001bb8-00001bbd
 00001bbd	Midi_Device::flushMessages	5	1	0	00001bbd-00001bc2
 00001bcc	Seq_buildPlayOrder	5	1	0	00001bcc-00001bd1
@@ -394,7 +394,7 @@ entry	name	size	callers	callees	ranges
 0000270c	Midi_Device::loadFile	5	1	0	0000270c-00002711
 00002711	Seq_copyChannelParams	5	1	0	00002711-00002716
 00002716	Channel_stepVolumeFade	5	1	0	00002716-0000271b
-0000272a	Voice_stopAndFlag	5	2	0	0000272a-0000272f
+0000272a	Channel_recomputeGainsSetBit3	5	2	0	0000272a-0000272f
 0000272f	processWaveChunks	5	1	0	0000272f-00002734
 00002757	stopSoundThreadFull	5	1	0	00002757-0000275c
 0000275c	Ds3DBuffer::setPositionY	5	1	0	0000275c-00002761
@@ -545,8 +545,8 @@ entry	name	size	callers	callees	ranges
 0000ec00	Wave_In_Device::closeCapture	57	0	2	0000ec00-0000ec39
 0000ed00	FUN_1000ed00	18	0	0	0000ed00-0000ed12
 0000ed50	FUN_1000ed50	5	0	0	0000ed50-0000ed55
-0000ed70	Wave_In_Device::op1	31	0	1	0000ed70-0000ed8f
-0000eda0	Wave_In_Device::op2	21	0	1	0000eda0-0000edb5
+0000ed70	Wave_In_Device::setStream	31	0	1	0000ed70-0000ed8f
+0000eda0	Wave_In_Device::clearStream	21	0	1	0000eda0-0000edb5
 0000edf0	FUN_1000edf0	8	0	0	0000edf0-0000edf8
 0000ee10	FUN_1000ee10	8	0	0	0000ee10-0000ee18
 0000eef0	DsBuffer::ctor	78	0	1	0000eef0-0000ef3e
@@ -599,7 +599,7 @@ entry	name	size	callers	callees	ranges
 00011970	DirectSoundDevice::releaseAll	208	0	3	00011970-00011a40
 00011a80	DirectSoundDevice::stopAll	382	0	6	00011a80-00011bfe
 00011c60	DirectSoundDevice::create	756	0	9	00011c60-00011f54
-00012040	FUN_10012040	5	0	0	00012040-00012045
+00012040	return0Pop4	5	0	0	00012040-00012045
 000120a0	DirectSoundDevice::setCooperativeLevel	81	0	2	000120a0-000120f1
 00012120	DirectSoundDevice::createPoolBuffer	250	0	5	00012120-0001221a
 00012260	DirectSoundDevice::duplicateBuffer	470	0	9	00012260-00012436
@@ -1047,7 +1047,7 @@ entry	name	size	callers	callees	ranges
 00034ac0	Channel_releaseVoices	145	0	0	00034ac0-00034b51
 00034b90	Channel_stopVoices	180	0	0	00034b90-00034c44
 00034c80	Channel_setRateGlide	227	0	0	00034c80-00034d63
-00034db0	Voice_stopAndFlag	27	0	1	00034db0-00034dcb
+00034db0	Channel_recomputeGainsSetBit3	27	0	1	00034db0-00034dcb
 00034fb0	serviceDecodeRing	19	0	1	00034fb0-00034fc3
 00034fe0	mmioReadBuffered	105	0	3	00034fe0-00035049
 000350e0	mmioSeekToSample	67	0	2	000350e0-00035123
@@ -1110,8 +1110,8 @@ entry	name	size	callers	callees	ranges
 00039050	WaveInDevice_open	125	0	1	00039050-000390cd
 00039140	WaveInDevice_close	233	0	6	00039140-00039229
 000393d0	WaveInDevice_requeueBuffer	88	0	4	000393d0-00039428
-00039450	FUN_10039450	12	0	0	00039450-0003945c
-00039470	FUN_10039470	10	0	0	00039470-0003947a
+00039450	setField6cReturn0	12	0	0	00039450-0003945c
+00039470	clearField6cReturn0	10	0	0	00039470-0003947a
 000394c0	freePointerAndClear	26	0	1	000394c0-000394da
 000394f0	MemBlock_alloc	58	0	1	000394f0-0003952a
 00039580	nodeListClear	125	0	1	00039580-000395fd

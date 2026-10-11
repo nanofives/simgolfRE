@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000286a0`), 59 bytes, 20 instructions, subsystem `aud
 Non-deleting destructor for the sound message-window object (vtable 0x1005b8ac): if subclassed (flag this+4 bit2) restores the saved WNDPROC via SetWindowLongA(hwnd this+8,-4,this+0xc) and clears those fields. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x000286a0 SoundWindowObj_dtor (VA 0x100286a0). __thiscall, `ret`. eax = the window handle at this+8 (0x100286a3); the vtable pointer 0x1005b8ac is stored at this+0 (0x100286a6). With a handle (0x100286ac) and bit 2 of the byte at this+4 set (0x100286b0 / 0x100286b4): SetWindowLongA [0x100b85a4] (handle, -4 (GWL_WNDPROC), the dword at this+0xc) (0x100286bd), the dword +0xc is cleared (0x100286c6), the byte at +4 is read into al (0x100286c3), masked with 0xfb (0x100286cd), the dword +8 is cleared (0x100286cf) and the byte stored back (0x100286d6). The value left in eax is the handle when the branch is skipped (0x100286d9) and, on the taken path, SetWindowLongA's result with its low byte replaced by the new flag byte (`mov al, [esi+4]` 0x100286c3). Reached from: static callers 0x100091f0. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: SoundWindowObj_dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/000286a0_sound_SoundWindowObj_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_100286a0@f_100286a0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100286da): callee pops 0 bytes of stack arguments.

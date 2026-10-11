@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 44 bytes, 15 instructions, subsystem `save`. Mechanical
 reads or writes one field to/from the open save-file descriptor (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+0x0040af70 saveFieldIo(buf, n) (cdecl): fd = [0x00568d08] (0x0040af79); a non-zero mode [0x0053e638] (0x0040af70, 0x0040af7f) calls __read 0x004a583a(fd, buf, n) (call 0x0040af8a), zero calls __write 0x004a5b58(fd, buf, n) (call 0x0040af95); eax = the call's. Callers (hooks.csv): 0x0040afa0;0x0040bbf0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: saveFieldIo (12 vectors, 12 distinct results, 12 changing state, `log/diff/0040af70_saveFieldIo.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0040af92, 0x0040af9b): callee pops 0 bytes of stack arguments.
 

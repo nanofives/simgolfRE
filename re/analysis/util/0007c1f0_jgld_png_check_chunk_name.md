@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007c1f0`), 282 bytes, 104 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+rejects a chunk name with a byte outside the PNG letter ranges (cdecl, png_ptr and a pointer to four bytes). Each byte, read unsigned, must be >= 0x29 and <= 0x7a and not in 0x5b..0x60: per byte `jl` against 0x29, `jg` against 0x7a, then `jle` 0x5a accepts and `jl` 0x61 rejects (byte 0 at 0x1007c20f..0x1007c23e, byte 1 at 0x1007c24c..0x1007c27e, byte 2 at 0x1007c288..0x1007c2b2, byte 3 at 0x1007c2bc..0x1007c2e6, its last test `jge 0x1007c2f9`). The first failing byte sends it to png_chunk_error 0x100790a0 (png_ptr, the module string 0x1011ea9c "invalid chunk type") (0x1007c2f1), which longjmps; a valid name returns with eax left from the last compare (callers ignore it: png_handle_unknown 0x1007c150 continues with png_crc_finish). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_check_chunk_name (46 vectors, 9 distinct results, 24 changing state, `log/diff/0007c1f0_jgld_png_check_chunk_name.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_check_chunk_name` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007c309): callee pops 0 bytes of stack arguments.

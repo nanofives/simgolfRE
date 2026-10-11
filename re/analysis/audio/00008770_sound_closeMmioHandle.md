@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008770`), 30 bytes, 11 instructions, subsystem `aud
 Closes an mmio handle and decrements g_100b4a08. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x00008770 closeMmioHandle (VA 0x10008770). __thiscall, `ret`. A non-zero mmio handle at this+0x30 (0x10008770 / 0x10008773) is closed with mmioClose [0x100b8670] (handle, 0) (0x10008777-0x1000877a); the module counter 0x100b4a08 is decremented whether or not a handle was closed (0x10008780-0x1000878b); 0 is returned (0x1000878d). Reached from: static callers 0x1000b170. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: closeMmioHandle (12 vectors, 11 distinct results, 12 changing state, `log/diff/00008770_sound_closeMmioHandle.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10008770@f_10008770@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000878d): callee pops 0 bytes of stack arguments.

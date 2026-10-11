@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 151 bytes, 51 instructions, subsystem `ui`. Mechanical 
 handles a click on the panel: hit-tests the hot regions and redraws. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Thiscall `(this = P, x, y)`, ret 8; P = Q + 0xe0. HotList::hitTest 0x00492a90(P-0xd0; x, y, &a, 0) (a starts as y; 0x004a4357..0x004a436a); -1 returns it (0x004a436f / 0x004a4372). The callback at P-0x24, when set, runs cdecl with a (0x004a4374..0x004a4382). old = the selection b+0xf0 (P + vt[2] + 0x10); b+0xf0 = listFindById 0x004a4890(Q; a) (0x004a4385..0x004a43ac); panelDraw 0x004a3f10(Q; old) and (Q; the new selection) follow (0x004a43b0..0x004a43c3), then slot +0x124 of the window base W = Q + vt[1] runs and its result is returned (0x004a43c8..0x004a43e1). Key `panelOnPick`: ten panelSub objects x six points (hits of entries 0, 1, 2 and 3 with the overlap, a miss and a point inside two entries) = 60 vectors; the entry values a are node ids (found) or 7777777 (not found: listFindById returns the count). Callers: the vtordisp thunk 0x004a49e0 and viewDispatchSlot29 0x004a0db0. Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: panelOnPick (60 vectors, 36 distinct results, 50 changing state, `log/diff/004a4350_panelOnPick.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?onPick@C4a4350@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004a43e4): callee pops 8 bytes of stack arguments.

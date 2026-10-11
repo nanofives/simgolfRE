@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006cd00`), 1097 bytes, 377 instructions, subsystem `u
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads the chunks after the image data up to IEND (cdecl, png_ptr, info_ptr). png_crc_finish (0) first (the CRC of the IDAT in progress, 0x1006cd1e); then until mode has PNG_HAVE_IEND 0x10 (`je 0x1006cd26` at 0x1006d132): a chunk header as png_read_info's; IHDR -> png_handle_IHDR; IDAT (jne 0x1006cdbc): length > 0 (unsigned `ja` 0x1006cdc2) or PNG_AFTER_IDAT already set (je 0x1006cdcf) -> png_error 0x1011dcdc ("too many IDATs"), else png_crc_finish (0); PLTE -> png_handle_PLTE; IEND -> png_handle_IEND; the ancillary names in the same order as png_read_info's (0x1006ce65..0x1006d109), anything else png_handle_unknown (0x1006d11f). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_read_end (13 vectors, 13 distinct results, 13 changing state, `log/diff/0006cd00_jgld_png_read_end.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_read.cpp` as `_png_read_end` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006d148): callee pops 0 bytes of stack arguments.

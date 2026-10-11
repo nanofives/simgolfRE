@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00041e64`), 11 bytes, 3 instructions, subsystem `crt`
 ## Role (from the naming pass, not a C3 purpose)
 One-call wrapper forwarding its argument to LeaveCriticalSection. (`re/names/sound_8.tsv`)
 
+## Purpose
+0x00041e64 leaveCriticalSection (VA 0x10041e64). cdecl, one argument (the critical section), plain `ret` (0x10041e6e). The argument is pushed again (`push dword ptr [esp+4]` 0x10041e64) and LeaveCriticalSection [0x100b84e0] is called (0x10041e68); the import's result is the function's. Reached from: static callers 0x100417a4, 0x10041818, 0x100418f1. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: leaveCriticalSection (12 vectors, 12 distinct results, 12 changing state, `log/diff/00041e64_sound_leaveCriticalSection.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10041e6e): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00022750`), 60 bytes, 16 instructions, subsystem `aud
 Sets the play-order mode (0..2) into +0x214 bits 7-8 and rebuilds the play order via Seq_buildPlayOrder; returns SNDERR 10 when the mode exceeds 2. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x00022750 Seq_setPlayOrderMode (VA 0x10022750). __thiscall, `ret 4`, one argument (the mode). A mode above 2 (unsigned compare, 0x10022754 / 0x10022757) returns 0xa (0x10022759). Otherwise the two bits of the mode move to bits 7 and 8 of the dword at this+0x214 (`and eax, 3`, `shl eax, 7`, old value `and 0xfffffe7f` 0x10022761-0x10022775); the dword at this+0x238 is pushed and `call 0x10001bcc` (thunk to Seq_buildPlayOrder 0x10023d00) runs with ecx = this (0x1002277b-0x10022782); its result is dropped and 0 is returned (0x10022787). Reached from: no call xref; reached through a stored pointer: 0x1005b0e0 table slot 56 (+0xe0) of the table at 0x1005b000; installers: 0x10003f30 Sound::ctor, 0x10004000 Sound::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Seq_setPlayOrderMode (12 vectors, 8 distinct results, 7 changing state, `log/diff/00022750_sound_Seq_setPlayOrderMode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10022750@C_FUN_10022750@f_10022750@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002275e, 0x10022789): callee pops 4 bytes of stack arguments.

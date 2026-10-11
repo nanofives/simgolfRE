@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001bc00`), 51 bytes, 23 instructions, subsystem `aud
 thiscall(void): calls the virtual slot +0x18 of every value of the list headed at this+0xc, moving the cursor at this+0x14 along the list; the first NULL node or NULL value ends the walk (`re/names/sound_12.tsv`)
 System writeup: `re/analysis/systems/sound_12.md`.
 
+## Purpose
+0x0001bc00 ListValues_callSlot18 (VA 0x1001bc00). __thiscall, plain `ret`. The list head at this+0xc is copied to the cursor this+0x14 (0x1001bc03 / 0x1001bc08); a NULL head returns 0 (0x1001bc06 / 0x1001bc0b). The node's value pointer (+8) NULL returns the node (0x1001bc0d / 0x1001bc10 / 0x1001bc12). Otherwise the value's vtable slot +0x18 runs with ecx = the value (0x1001bc14 / 0x1001bc16); then the cursor is read again (0x1001bc19): NULL returns 0 (0x1001bc1c / 0x1001bc1e); its next link (+4) becomes the cursor (0x1001bc20-0x1001bc25) and NULL returns 0 (0x1001bc28); a NULL value (+8) at that node returns the node (0x1001bc2a-0x1001bc2f); otherwise the loop repeats. Reached from: static callers 0x1001e8e0. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: ListValues_callSlot18 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001bc00_sound_ListValues_callSlot18.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001bc32): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001bc01 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

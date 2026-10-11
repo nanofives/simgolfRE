@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 46 bytes, 14 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Waits until the redraw/drain pipeline reports ready. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045aed0 waitRedrawReady: drainAndRedraw (call 0x0045aed1); esi = 0 (xor 0x0045aed6). A non-zero result skips the loop (jne 0x0045aef1). Otherwise [0x00822b9c] = [0x00822b98] = 0 (0x0045aedc, 0x0045aee2), drainAndRedraw again (0x0045aee8) until it returns non-zero (je 0x0045aedc). Then frameTickLoop 0x00483cf0 (call 0x0045aef1), [0x00822d68] = 0 (0x0045aef6) and eax = the result of 0x00483cf0 at the ret (0x0045aefd). Callers (hooks.csv): 0x0045bf80. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: waitRedrawReady_t0 (12 vectors, 6 distinct results, 12 changing state, `log/diff/0045aed0_waitRedrawReady_t0.path1.csv`); waitRedrawReady_t2 (12 vectors, 6 distinct results, 12 changing state, `log/diff/0045aed0_waitRedrawReady_t2.path1.csv`); waitRedrawReady_rep (12 vectors, 3 distinct results, 12 changing state, `log/diff/0045aed0_waitRedrawReady_rep.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_0045aed0@f_0045aed0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045aefd): callee pops 0 bytes of stack arguments.

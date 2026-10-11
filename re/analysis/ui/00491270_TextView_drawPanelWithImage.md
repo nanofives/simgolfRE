@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 146 bytes, 50 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 calls drawPanel4810d0 0x004810d0 with this and the argument, then, when this+0x11c and this+0x13cc are both non-zero and the argument is -1 or 0, reads the owner's rectangle through the virtual +0xd0, insets it by this+0x194 on each side and draws the image this+0x13cc into this+0x11c with Image_draw 0x00473e60 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+Thiscall `(this, index)`, ret 4. drawPanel4810d0 0x004810d0(this, index) first (0x00491279..0x0049127c; with bit 1 of this+0xa0 clear it returns at 0x004810e0); a NULL surface at this+0x11c returns 0 (0x00491281..0x00491289, eax is that dword); an index other than -1 and 0 returns the surface (0x0049128b..0x00491292); a NULL image at this+0x13cc returns the surface (0x00491294..0x0049129c). Otherwise the surface's handle (surface+4) fills a RECT through its slot +0xd0 (0x0049129e..0x004912ae) and Image_draw 0x00473e60(image; surface, left + m, top + m, 0) draws the image, m = this+0x194 (0x004912b4..0x004912f5); eax is its result. A NULL handle would leave the RECT uninitialised in the original (not run). Reached through slot 77 (+0x134) of the table 0x004bb3f8 (dword 0x004bb52c, installed by TextView::ctor 0x0048ce00 among others). Key `TextView::drawPanelWithImage`: six panels x five indexes (0, -1, 2, -5, 1), 30 vectors. Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: TextView::drawPanelWithImage (30 vectors, 10 distinct results, 8 changing state, `log/diff/00491270_TextView_drawPanelWithImage.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004912ff): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00491279 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

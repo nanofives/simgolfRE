@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 53 bytes, 10 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 sets input phase g_83ad4c=0x3f and pumps events (f483bb0) until drained, then phase 0 and f497b00 (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00483bd0 pumpInput483bd0: [0x0083ad4c] = 0x3f (0x00483bd0); showScreen 0x00483bb0 (0x00483bda); a zero result jumps to 0x00483bf6. A non-zero result loops: [0x0083ad4c] = 0x3f (0x00483be3), showScreen (0x00483bed) while non-zero (0x00483bf2/0x00483bf4). [0x0083ad4c] = 0 (0x00483bf6), then a tail jmp to gfxFlushA 0x00497b00 (0x00483c00) with eax = 0. Callers (hooks.csv): 0x0040f5c0;0x00422fb0;0x0043cce0;0x0043d740;0x00449470;0x00449540;0x0045baf0;0x0045c150;0x0046e810. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: pumpInput483bd0_s0 (4 vectors, 1 distinct results, 4 changing state, `log/diff/00483bd0_pumpInput483bd0_s0.path1.csv`); pumpInput483bd0_s1 (4 vectors, 1 distinct results, 4 changing state, `log/diff/00483bd0_pumpInput483bd0_s1.path1.csv`); pumpInput483bd0_s3 (4 vectors, 1 distinct results, 4 changing state, `log/diff/00483bd0_pumpInput483bd0_s3.path1.csv`); pumpInput483bd0_n0 (4 vectors, 1 distinct results, 4 changing state, `log/diff/00483bd0_pumpInput483bd0_n0.path1.csv`); pumpInput483bd0_n1 (4 vectors, 1 distinct results, 4 changing state, `log/diff/00483bd0_pumpInput483bd0_n1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small5.cpp` as `?drain483bd0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

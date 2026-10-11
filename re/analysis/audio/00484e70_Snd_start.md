@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 143 bytes, 65 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 starts a loaded sound: creates the device if absent (createSound4840e0), applies flags, runs it (m_40->run) and marks state m_44 bit0 (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00484e70 Snd::start(this): returns 8 when the name dword this+0x50 is 0 (0x00484e77..0x00484e7c, 0x00484ef4). The sound object pointer is the dword at this+0x40 (0x00484e7e); when it is NULL createSound4840e0 0x004840e0 runs with (this+0x40, this+0x50, 1) (0x00484e88..0x00484e8c) and a non-zero result is returned as it is (0x00484e96, 0x00484efb). Then bit 0 of the byte this+0x58 (0x00484e98) and the result of slot +0x58 of this (0x00484ea7; non-zero or's in 2, 0x00484eae) form the mask handed to slot +0x6c of the sound object (0x00484eb6). Slot +0x84 of the sound object is called next (0x00484ebd) and a non-zero result is returned (0x00484ec7 -> 0x00484ef9). Otherwise, with bit 0 of this+0x44 clear (0x00484ecc), the bit is set (0x00484ed2..0x00484ed6), slot +0x7c of this runs (0x00484ed9) and, when this+0x30 is non-zero (0x00484edf), slot +0x48 of the sound object runs with 1 (0x00484ee5..0x00484eeb). The result is 0 on those paths (ebx, 0x00484eef). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: Snd::start (10 vectors, 9 distinct results, 8 changing state, `log/diff/00484e70_Snd_start.path1.csv`); Snd::start_fail (10 vectors, 9 distinct results, 8 changing state, `log/diff/00484e70_Snd_start_fail.path1.csv`); Snd::start_nolib (10 vectors, 7 distinct results, 5 changing state, `log/diff/00484e70_Snd_start_nolib.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?start@C484e70@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00484ef3, 0x00484efe): callee pops 0 bytes of stack arguments.

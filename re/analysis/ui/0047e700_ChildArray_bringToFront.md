@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 98 bytes, 35 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 moves a child to the front of the container array m_data and refreshes, skipping back-layer windows (`re/names/exe_3.tsv`)
 
+## Purpose
+0x0047e700 ChildArray::bringToFront(this, win) (ret 4): a NULL win (0x0047e705 / 0x0047e707) or a win whose flag word +0x9c has bit 0x2000000 (0x0047e709 / 0x0047e713) leaves at once (`pop edi; ret 4`, eax untouched: the only caller, Panel::notify, enters with eax = win, which this body returns; NULL returns 0). The array pointer is +0x224 and the count +0x22c (0x0047e715, 0x0047e722). The index of win in the array is searched from 0 (loop 0x0047e728..0x0047e732, none when the count is <= 0, 0x0047e71e/0x0047e720); an index below the count (0x0047e734/0x0047e736) shifts entries 0..index-1 up by one (0x0047e73c..0x0047e74e, `jle` 0x0047e73a skips it for index 0) and stores win at [0] (0x0047e756). relayoutAll 0x0047e450 follows in every non-early path (0x0047e758); eax is its result. Callers (hooks.csv): 0x0047e120. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: ChildArray::bringToFront (12 vectors, 6 distinct results, 12 changing state, `log/diff/0047e700_ChildArray_bringToFront.path1.csv`); ChildArray::bringToFront_early (8 vectors, 3 distinct results, 2 changing state, `log/diff/0047e700_ChildArray_bringToFront_early.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?bringToFront@C47e700@@QAEXPAUObj47e@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047e75f): callee pops 4 bytes of stack arguments.

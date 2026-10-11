@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000b170`), 21 bytes, 6 instructions, subsystem `audi
 ## Role (from the naming pass, not a C3 purpose)
 returns 3 when the global stream 0x100b49f4 is null, and otherwise tail-jumps to closeMmioHandle 0x100024be with it (`re/names/undisc_sound.tsv`)
 
+## Purpose
+0x0000b170 Wave_Device::closeStream (VA 0x1000b170). Plain `ret`, a tail jump. The module global 0x100b49f4 (the stream device) is loaded into ecx (0x1000b170); NULL returns 3 (0x1000b176 / 0x1000b178 / 0x1000b17f); otherwise `jmp 0x100024be` (the thunk to closeMmioHandle 0x10008770) with ecx = that object (0x1000b17a), so the result is the callee's. Reached from: no call xref; reached through a stored pointer: 0x1005b35c table slot 22 (+0x58) of the table at 0x1005b304; installers: 0x1000b1d0 Wave_Device::ctor, 0x1000b2e0 Wave_Device::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Wave_Device::closeStream_null (1 vectors, 1 distinct results, 0 changing state, `log/diff/0000b170_sound_Wave_Device_closeStream_null.path1.csv`); Wave_Device::closeStream_h0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000b170_sound_Wave_Device_closeStream_h0.path1.csv`); Wave_Device::closeStream_h1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000b170_sound_Wave_Device_closeStream_h1.path1.csv`); Wave_Device::closeStream_h2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000b170_sound_Wave_Device_closeStream_h2.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000b184): callee pops 0 bytes of stack arguments.
 

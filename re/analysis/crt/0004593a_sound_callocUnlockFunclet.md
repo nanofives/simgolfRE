@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0004593a`), 9 bytes, 4 instructions, subsystem `crt`.
 SEH __finally funclet that releases the heap lock on exit from calloc. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+0x0004593a callocUnlockFunclet (VA 0x1004593a). cdecl, no arguments, plain `ret` (0x10045942). `push 9; call 0x10047771` (_unlock with the heap lock number, 0x1004593a / 0x1004593c) and `pop ecx` (0x10045941); _unlock's result is returned. Reached from: static callers 0x100458a1. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: callocUnlockFunclet (1 vectors, 1 distinct results, 1 changing state, `log/diff/0004593a_sound_callocUnlockFunclet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_1004593a@f_1004593a@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10045942): callee pops 0 bytes of stack arguments.

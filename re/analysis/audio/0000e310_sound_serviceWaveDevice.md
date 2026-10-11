@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000e310`), 34 bytes, 11 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 If the wave device is open and flag +0x6c bit4 is set, forwards to 0x10012040. (`re/names/sound_2.tsv`)
 
+## Purpose
+0x0000e310 serviceWaveDevice (VA 0x1000e310). `ret 4`. ecx = g_waveDevice (0x1000e310); with a device (0x1000e316 / 0x1000e318) whose byte at +0x6c has bit 4 set (0x1000e31a / 0x1000e31e), the argument is pushed and `call 0x10001672` (the thunk to 0x10012040) runs with ecx = the device (0x1000e320-0x1000e325); its result is returned. Otherwise 0 (0x1000e32d). Reached from: no call xref; reached through a stored pointer: 0x1005b384 table slot 32 (+0x80) of the table at 0x1005b304; installers: 0x1000b1d0 Wave_Device::ctor, 0x1000b2e0 Wave_Device::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: serviceWaveDevice_null (12 vectors, 1 distinct results, 0 changing state, `log/diff/0000e310_sound_serviceWaveDevice_null.path1.csv`); serviceWaveDevice_clear (12 vectors, 1 distinct results, 0 changing state, `log/diff/0000e310_sound_serviceWaveDevice_clear.path1.csv`); serviceWaveDevice_set (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000e310_sound_serviceWaveDevice_set.path1.csv`); serviceWaveDevice_setall (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000e310_sound_serviceWaveDevice_setall.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000e32a, 0x1000e32f): callee pops 4 bytes of stack arguments.
 

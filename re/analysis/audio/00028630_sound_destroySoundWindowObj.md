@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00028630`), 79 bytes, 26 instructions, subsystem `aud
 scalar deleting destructor: sets vtable 0x1005b8ac, if subclassed (this+4 bit2) restores the saved WNDPROC via SetWindowLongA(hwnd,-4,this+0xc), clears this+8/0xc, frees via 0x1004249a when arg&1 (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x00028630 destroySoundWindowObj (VA 0x10028630). The same body inlined (0x10028631-0x10028666) followed by the deleting-destructor tail: `ret 4`, bit 0 of the flags argument (`test byte ptr [esp+8], 1` 0x10028669 / 0x1002866e) calls operator delete 0x1004249a with `this` (0x10028671); the result is `this`. Reached from: no call xref; reached through a stored pointer: 0x1005b8ac table slot 0 (+0x0) of the table at 0x1005b8ac; installers: 0x10028630 destroySoundWindowObj, 0x100286a0 SoundWindowObj_dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: destroySoundWindowObj (24 vectors, 22 distinct results, 24 changing state, `log/diff/00028630_sound_destroySoundWindowObj.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10028630@C_FUN_10028630@f_10028630@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002867c): callee pops 4 bytes of stack arguments.

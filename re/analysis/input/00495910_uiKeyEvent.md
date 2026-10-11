@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 117 bytes, 43 instructions, subsystem `input`. Mechanic
 ORs 0x10000, 0x20000 and 0x40000 into the key code when GetKeyState reports VK_SHIFT, VK_CONTROL and VK_MENU down, passes (code, flag) to the focus owner returned by currentFocusOwner 0x0047f2f0 through its virtual +0x144, then calls the hook 0x0083ab00 with the code when the flag is non-zero and the hook 0x0083aafc unconditionally (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+0x00495910 uiKeyEvent(a1, a2) (ret 8): GetKeyState [0x4ba1a8] for VK 0x10, 0x11, 0x12 (calls 0x0049591a, 0x0049592d, 0x0049593c); bit 15 of each (`test ah, 0x80`) adds 0x10000 / 0x20000 / 0x40000 to a1 (0x00495925, 0x00495934, 0x00495943). currentFocusOwner (call 0x00495949): an owner gets virtual slot +0x144 with (a1 | modifiers, a2) (pushes 0x00495958, 0x00495959, call 0x0049595c). Then, when a2 != 0 (0x0049596b) and the pointer [0x0083ab00] is non-NULL (0x00495962), that cdecl callback runs with the modifier-extended a1 (0x0049596f..0x00495970); finally a non-NULL [0x0083aafc] (0x00495975..0x0049597b) runs with no arguments and its result is returned, otherwise 0. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: uiKeyEvent (12 vectors, 12 distinct results, 12 changing state, `log/diff/00495910_uiKeyEvent.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00495982): callee pops 8 bytes of stack arguments.
 

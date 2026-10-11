@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `util`. Mechanical 
 Reads the next trimmed line from the global section reader g_0083b000. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00487e90 readLineGlobal(): ecx = the global reader 0x0083b000 (0x00487e90) and a tail jmp to Reader::readLine 0x00488230 (0x00487e95); eax = its result. Callers (hooks.csv): 0x0044b9c0;0x0048e1c0;0x0049d3b0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: readLineGlobal (12 vectors, 11 distinct results, 12 changing state, `log/diff/00487e90_readLineGlobal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_00487e90@f_00487e90@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

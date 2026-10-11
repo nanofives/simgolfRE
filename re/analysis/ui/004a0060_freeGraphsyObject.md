@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 52 bytes, 13 instructions, subsystem `ui`. Mechanical t
 frees the (string in the binary) resource object global at 0x0084092c. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a0060 freeGraphsyObject: a display takes virtual slot +0xc (0x004a006c, no arguments); eax = [0x0084092c] (0x004a006f); non-zero: FreeLibrary [0x4ba0ac] (push 0x004a0078, call 0x004a0079) and [0x0084092c] = 0 (0x004a007f); [0x0083ad50] = 0 (0x004a0089). eax = FreeLibrary's result, or 0 when the handle was 0. Callers (hooks.csv): 0x00485740;0x004a00a0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: freeGraphsyObject (12 vectors, 9 distinct results, 12 changing state, `log/diff/004a0060_freeGraphsyObject.path1.csv`); freeGraphsyObject_nodisp (12 vectors, 9 distinct results, 8 changing state, `log/diff/004a0060_freeGraphsyObject_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_004a0060@f_004a0060@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a0093): callee pops 0 bytes of stack arguments.

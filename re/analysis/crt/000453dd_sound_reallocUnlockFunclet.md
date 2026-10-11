@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000453dd`), 9 bytes, 4 instructions, subsystem `crt`.
 SEH __finally funclet that releases the heap lock on exit from realloc. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+0x000453dd reallocUnlockFunclet (VA 0x100453dd). cdecl, no arguments, plain `ret` (0x100453e5). `push 9; call 0x10047771` (_unlock with the heap lock number, 0x100453dd / 0x100453df) and `pop ecx` (0x100453e4); _unlock's result is returned. Reached from: static callers 0x10045252. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: reallocUnlockFunclet (1 vectors, 1 distinct results, 1 changing state, `log/diff/000453dd_sound_reallocUnlockFunclet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_100453dd@f_100453dd@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100453e5): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078fe0`), 92 bytes, 38 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng's fatal-error entry (cdecl, png_ptr and a message). When the caller installed an error function at png_ptr + 0x40 (`cmp [eax+0x40], 0; je 0x1007901b` at 0x10078ffb) it is called with (png_ptr, message) (0x1007900e); whether or not that returns, png_default_error 0x100792b0 (png_ptr, message) follows (0x10079023), which prints "libpng error: %s" to jgld's stderr 0x101233f0 (fprintf 0x10083010 at 0x100792d6) and longjmps through the jmp_buf at png_ptr + 0 with value 1 (0x100792e4). The function therefore never returns to its caller. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_error_jump (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078fe0_jgld_png_error_jump.path1.csv`); png_error_ret (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078fe0_jgld_png_error_ret.path1.csv`); png_error_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/00078fe0_jgld_png_error_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_error.cpp` as `_png_error` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007903b): callee pops 0 bytes of stack arguments.

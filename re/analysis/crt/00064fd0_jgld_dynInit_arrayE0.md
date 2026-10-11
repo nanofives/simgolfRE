@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00064fd0`), 51 bytes, 21 instructions, subsystem `crt`
 ## Role (from the naming pass, not a C3 purpose)
 C++ dynamic-initializer stub for g_arrayE0 0x101286e0: calls constructArrayE0 0x10065010 (0x10064fe8), then 0x10065050 (0x10064fed); no argument, no return value. (`re/names/jgld_7.tsv`)
 
+## Purpose
+constructArrayE0 0x10065010 (0x10064fe8), then 0x10065050 (0x10064fed), which passes 0x100650a0 to _atexit; eax is the latter's. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: dynInit_arrayE0_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00064fd0_jgld_dynInit_arrayE0_a.path1.csv`); dynInit_arrayE0_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00064fd0_jgld_dynInit_arrayE0_b.path1.csv`); dynInit_arrayE0_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00064fd0_jgld_dynInit_arrayE0_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10064fd0@f_10064fd0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065002): callee pops 0 bytes of stack arguments.

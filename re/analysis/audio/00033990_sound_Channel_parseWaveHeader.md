@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00033990`), 18 bytes, 7 instructions, subsystem `audi
 clears +0x58 bit1 and parses the RIFF/WAVE header of the buffer at this+0x64 via parseRiffWave (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00033990 Channel_parseWaveHeader (VA 0x10033990). __thiscall, plain `ret`. Bit 1 of the dword at this+0x58 is cleared (`and al, 0xfd` on the low byte, 0x10033990-0x10033998); the address this+0x64 is pushed (0x10033998 / 0x1003399b) and `call 0x10001e51` (thunk to parseRiffWave 0x100326a0) runs with ecx = this; its result is returned (0x1003399c / 0x100339a1). Reached from: static callers 0x10039980. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Channel_parseWaveHeader (12 vectors, 12 distinct results, 12 changing state, `log/diff/00033990_sound_Channel_parseWaveHeader.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10033990@f_10033990@@YIXPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100339a1): callee pops 0 bytes of stack arguments.

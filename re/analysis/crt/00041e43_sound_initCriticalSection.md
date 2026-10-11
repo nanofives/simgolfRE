@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00041e43`), 11 bytes, 3 instructions, subsystem `crt`
 One-call wrapper forwarding its argument to InitializeCriticalSection. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+0x00041e43 initCriticalSection (VA 0x10041e43). cdecl, one argument (the critical section), plain `ret` (0x10041e4d). The argument is pushed again (`push dword ptr [esp+4]` 0x10041e43) and InitializeCriticalSection [0x100b83f0] is called (0x10041e47); the import's result is the function's. Reached from: static callers 0x10041e6f, 0x10041f52. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: initCriticalSection (12 vectors, 12 distinct results, 12 changing state, `log/diff/00041e43_sound_initCriticalSection.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10041e4d): callee pops 0 bytes of stack arguments.
 

@@ -1,0 +1,43 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 10 20 -2147450881,590,590,True,e5c2b80d,e5c2b80d,True
+0 10 20 4660,590,590,True,ecf91b5c,ecf91b5c,True
+0 10 20 -1,590,590,True,7b4f9b74,7b4f9b74,True
+0 3 560 -2147450881,590,590,True,9f354b80,9f354b80,True
+0 3 560 4660,590,590,True,82f40e3d,82f40e3d,True
+0 3 560 -1,590,590,True,68c897f1,68c897f1,True
+2 10 20 -2147450881,50,50,True,18c18375,18c18375,True
+2 10 20 4660,50,50,True,921c2e94,921c2e94,True
+2 10 20 -1,50,50,True,7b4741cc,7b4741cc,True
+2 3 560 -2147450881,590,590,True,9c13e11b,9c13e11b,True
+2 3 560 4660,590,590,True,28241aea,28241aea,True
+2 3 560 -1,590,590,True,b7b2acea,b7b2acea,True
+5 10 20 -2147450881,30,30,True,0d8997e5,0d8997e5,True
+5 10 20 4660,30,30,True,83edd1e4,83edd1e4,True
+5 10 20 -1,30,30,True,2e83df9c,2e83df9c,True
+5 3 560 -2147450881,570,570,True,fb1cb263,fb1cb263,True
+5 3 560 4660,570,570,True,6ed6dd62,6ed6dd62,True
+5 3 560 -1,570,570,True,a7cf4402,a7cf4402,True
+12 10 20 -2147450881,30,30,True,0d8997e5,0d8997e5,True
+12 10 20 4660,30,30,True,83edd1e4,83edd1e4,True
+12 10 20 -1,30,30,True,2e83df9c,2e83df9c,True
+12 3 560 -2147450881,570,570,True,fb1cb263,fb1cb263,True
+12 3 560 4660,570,570,True,6ed6dd62,6ed6dd62,True
+12 3 560 -1,570,570,True,a7cf4402,a7cf4402,True
+40 10 20 -2147450881,30,30,True,0d8997e5,0d8997e5,True
+40 10 20 4660,30,30,True,83edd1e4,83edd1e4,True
+40 10 20 -1,30,30,True,2e83df9c,2e83df9c,True
+40 3 560 -2147450881,570,570,True,fb1cb263,fb1cb263,True
+40 3 560 4660,570,570,True,6ed6dd62,6ed6dd62,True
+40 3 560 -1,570,570,True,a7cf4402,a7cf4402,True
+2 4 576 -2147450881,586,586,True,515bd533,515bd533,True
+2 4 584 7,594,594,True,f0f6dc8b,f0f6dc8b,True
+3 4 592 -2147450881,602,602,True,eb60b47e,eb60b47e,True
+1 0 768 5,778,778,True,527ef7bd,527ef7bd,True
+40 4 592 7,592,592,True,29846a48,29846a48,False
+40 4 585 -2147450881,585,585,True,29846a48,29846a48,False
+40 4 584 9,594,594,True,a44cd54b,a44cd54b,True
+state_regions,$rec+0x0:8192 $tnoh+0x0:768 $tm+0x0:768 $tind+0x0:768 $tplain+0x0:768 $tneg+0x0:768 $tbig+0x0:768 $tmid+0x0:768 $tmcb+0x0:768 $tsmall+0x0:768 0x0051a068+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x729d9850,original=0xd90ba0,2026-10-11T11:59:34
+distinct_results,25,,
+VERDICT,GREEN,37,

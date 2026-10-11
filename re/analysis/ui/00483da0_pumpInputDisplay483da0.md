@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 44 bytes, 10 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 sets the low six bits of the input phase 0x0083ad4c, calls display slot +0x150 when the display 0x0083ad50 exists, then sets the phase to 0 (sibling of pumpInput483bd0/483c90/483cf0) (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00483da0 pumpInputDisplay483da0: [0x0083ad4c] |= 0x3f (0x00483da0..0x00483da9); a display takes virtual slot +0x150 (0x00483dbb, no arguments); [0x0083ad4c] = 0 (0x00483dc1). eax = the slot's result; without a display eax is untouched (Timer::stop 0x00486ec0 reaches this function by a tail jump and passes its own eax through): the naked entry hands the entry eax to the body. Callers (hooks.csv): 0x00486ec0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: pumpInputDisplay483da0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00483da0_pumpInputDisplay483da0.path1.csv`); pumpInputDisplay483da0_nodisp (12 vectors, 11 distinct results, 12 changing state, `log/diff/00483da0_pumpInputDisplay483da0_nodisp.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00483dcb): callee pops 0 bytes of stack arguments.
 

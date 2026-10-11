@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000120a0`), 81 bytes, 33 instructions, subsystem `aud
 Calls IDirectSound::SetCooperativeLevel (vtbl+0x18) with the window at +0x190, records the level in g_dsCoopLevel, and releases all on failure. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x000120a0 DirectSoundDevice::setCooperativeLevel (VA 0x100120a0). __thiscall, `ret 4`, one argument a. The IDirectSound pointer at this+0 (0x100120a4): NULL returns 0x13 (0x100120a6 / 0x100120a8 / 0x100120ab). Otherwise the level dword at this+0x190 (0x100120b4) and the argument are passed to the interface's vtable slot +0x18 (`call [ecx+0x18]` 0x100120c3; stdcall: the interface, a, the level, pushed in the order level, a, interface 0x100120c0-0x100120c2). A non-zero result r runs `call 0x1000268a` (thunk to 0x1000f480, cdecl, r pushed) and `call 0x1000104b` (thunk to DirectSoundDevice::releaseAll 0x10011970) with ecx = this, and returns 3 (0x100120c6-0x100120db); zero stores a at the module word 0x100b4a3c (0x100120e4) and returns 0 (0x100120ed). Reached from: static callers 0x1000b140. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: DirectSoundDevice::setCooperativeLevel (12 vectors, 11 distinct results, 10 changing state, `log/diff/000120a0_sound_DirectSoundDevice_setCooperativeLevel.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100120b1, 0x100120e1, 0x100120ee): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100120a1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

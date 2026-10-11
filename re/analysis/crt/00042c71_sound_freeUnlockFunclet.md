@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00042c71`), 9 bytes, 4 instructions, subsystem `crt`.
 SEH __finally funclet that releases the heap lock on exit from free. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+0x00042c71 freeUnlockFunclet (VA 0x10042c71). cdecl, no arguments, plain `ret` (0x10042c79). `push 9; call 0x10047771` (_unlock with the heap lock number, 0x10042c71 / 0x10042c73) and `pop ecx` (0x10042c78); _unlock's result is returned. Reached from: static callers 0x10042c07. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: freeUnlockFunclet (1 vectors, 1 distinct results, 1 changing state, `log/diff/00042c71_sound_freeUnlockFunclet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10042c71@f_10042c71@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10042c79): callee pops 0 bytes of stack arguments.

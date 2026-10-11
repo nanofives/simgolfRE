@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 183 bytes, 63 instructions, subsystem `ui`. Mechanical 
 returns the currently selected row index of the list sub-view. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004941e0 listCurrentIndex(this): bit 2 of the byte this+4 (test at 0x004941e0) picks the list. Set: the model is at this + d + 0x1548 with d the dword at [this+0x1488]+8 (0x004941ea..0x004941f7); head m+8, cursor m+0xc, count m+0x10, index m+0x14, each node's key at node+4, next at +0xc, item at +8. With a head (test at 0x00494205) the key of the cursor node is remembered (0x00494209 / 0x0049420c), else 0 (0x00494211). With a head again (0x00494213..0x00494218) the index is reset to 0 and the cursor to the head (0x00494221, 0x00494228) and, for count > 0 (0x0049422b), the ring is walked until a node's key equals the remembered one (0x00494230 / 0x00494233), counting the index up and moving the cursor on each miss (0x00494235..0x00494245), at most count steps. The result is the dword at item+4 of the cursor node (0x00494266..0x0049426c); a model without a head reads address 4 (xor eax, eax; mov eax, [eax+4] at 0x00494291 / 0x00494293) and faults. Clear: the model is at this + d + 0x2e58 with d at [this+0x2d98]+8 (0x00494270..0x00494279), and the result is read from its cursor node's item the same way (0x00494283..0x00494290), faulting for an empty head as well. Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: listCurrentIndex (12 vectors, 12 distinct results, 8 changing state, `log/diff/004941e0_listCurrentIndex.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?current@C4941e0@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049426f, 0x00494290, 0x00494296): callee pops 0 bytes of stack arguments.

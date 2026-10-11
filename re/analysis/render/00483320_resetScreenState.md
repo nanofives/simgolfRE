@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 7 instructions, subsystem `render`. Mechanica
 reconstructs the screen managers g_83acb0/g_83ac30 and reattaches them to g_83ad50 (vtable f48) after clearScreenObjects (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00483320 resetScreenState: the list reset 0x00483340 (call 0x00483320), then display virtual slot +0xc0 with (0x0083acb0, 0x0083ac30) pushed in that order (0x0048332b, 0x00483330, call 0x0048333d: the slot pops them); eax = its result. The display is not tested for NULL. Callers (hooks.csv): 0x004855b0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: resetScreenState (12 vectors, 12 distinct results, 12 changing state, `log/diff/00483320_resetScreenState.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00483320@f_00483320@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048333d): callee pops 0 bytes of stack arguments.

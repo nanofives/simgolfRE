@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 36 bytes, 15 instructions, subsystem `util`. Mechanical
 resolves a path and opens the file for the logger/reader. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a00f0 resolveAndOpenFile(path, mode) (cdecl): resolveDataPath 0x00491da0(path) (call 0x004a00f6); a zero result keeps the original path (0x004a0102); fopen 0x004a614d(that path, mode) (pushes 0x004a0108, 0x004a0109, call 0x004a010a); eax = its result. Callers (hooks.csv): 0x00487fb0;0x004a01d0;0x004a0280. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: resolveAndOpenFile (12 vectors, 6 distinct results, 12 changing state, `log/diff/004a00f0_resolveAndOpenFile.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_10.cpp` as `?FUN_004a00f0@f_004a00f0@@YAXPADI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a0113): callee pops 0 bytes of stack arguments.

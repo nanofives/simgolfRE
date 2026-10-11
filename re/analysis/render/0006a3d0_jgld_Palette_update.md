@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a3d0`), 159 bytes, 50 instructions, subsystem `ren
 seeds a Random from QueryPerformanceCounter (+0x818), loops a random 16-bit value into the dirty counter (+0x810), then calls apply (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+gives a palette a fresh nonzero generation id and rebuilds its tables (thiscall, plain `ret`). A local Random (Random::ctor through the thunk 0x1000154b, 0x1006a3f0: seed 0); id +0x810 = 0 (0x1006a3f8); QueryPerformanceCounter (this + 0x818) (IAT 0x1012c414, 0x1006a40e); Random::seed (thunk 0x100014e7) with the counter's low dword (0x1006a428); while id is 0 (jne 0x1006a437): id = Random::range (thunk 0x100016f4) (0xffff) & 0xffff; then Palette::apply (thunk 0x100018fc), which returns at once when the applied id +0x814 already equals the new id. eax is apply's (callers reach update through the Palette vtable; c3bq's apply is void, so ret is declared void here). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: Palette::update (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a3d0_jgld_Palette_update.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?update@Palette@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a46e): callee pops 0 bytes of stack arguments.

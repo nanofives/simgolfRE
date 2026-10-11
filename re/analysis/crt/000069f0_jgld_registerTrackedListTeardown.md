@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000069f0`), 54 bytes, 22 instructions, subsystem `crt`
 Static initializer that registers atexitDestroyGlobalList 0x10006a40 with _atexit 0x1007f080 (push at 0x10006a08, call at 0x10006a0d), so the tracked-object list 0x10128428 is torn down at module exit; no argument, no return value. (`re/names/jgld_5.tsv`)
 System writeup: `re/analysis/systems/jgld_4.md`, `re/analysis/systems/jgld_5.md`.
 
+## Purpose
+registers the tracked list's teardown: _atexit 0x1007f080 (atexitDestroyGlobalList 0x10006a40) (`push 0x10006a40` 0x10006a08, call 0x10006a0d); returns _atexit's result. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: registerTrackedListTeardown_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/000069f0_jgld_registerTrackedListTeardown_a.path1.csv`); registerTrackedListTeardown_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/000069f0_jgld_registerTrackedListTeardown_b.path1.csv`); registerTrackedListTeardown_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/000069f0_jgld_registerTrackedListTeardown_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `_$E3` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10006a25): callee pops 0 bytes of stack arguments.

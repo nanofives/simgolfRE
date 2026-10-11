@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 21 bytes, 7 instructions, subsystem `util`. Mechanical 
 Opens a named [section] in a file on the global section reader g_0083b000. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00487e70 readSectionGlobal(a1, a2) (cdecl): Reader::open 0x00487fb0 on the global reader 0x0083b000 with (a1, a2) (pushes 0x00487e78, 0x00487e79, ecx 0x00487e7a, call 0x00487e7f, ret 8 in the callee); eax = its result. Callers (hooks.csv): 0x0044b9c0;0x0048e1c0;0x0049d3b0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: readSectionGlobal (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487e70_readSectionGlobal.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small16.cpp` as `?mgrSet@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00487e84): callee pops 0 bytes of stack arguments.

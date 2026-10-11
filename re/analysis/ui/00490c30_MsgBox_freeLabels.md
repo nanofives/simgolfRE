@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 65 bytes, 20 instructions, subsystem `ui`. Mechanical t
 Clears the message-box callback globals and frees the two label strings g_0083b994/g_0083b998. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00490c30 MsgBox::freeLabels(): [0x0083b9b4] = 0 and [0x0083b9c4] = 0 (0x00490c3a, 0x00490c40); a non-zero [0x0083b994] (0x00490c30, 0x00490c38) goes to the CRT free 0x004a5007 (call 0x00490c49) and is cleared (0x00490c51); the same for [0x0083b998] (0x00490c57..0x00490c69). (eax at the ret is free's: the registry compares memory only.) Callers (hooks.csv): 0x00485740. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: MsgBox::freeLabels (12 vectors, 9 distinct results, 12 changing state, `log/diff/00490c30_MsgBox_freeLabels.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_00490c30@f_00490c30@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00490c70): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 125 bytes, 44 instructions, subsystem `ui`. Mechanical 
 flushes the accumulated text layout (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x00478970 Text_flush(this): [0x00839658] is a NUL-terminated line buffer (byte 0 tested at 0x00478970/0x00478979). A non-empty buffer is measured (repne scasb 0x00478990) and drawn through drawText 0x00477c30(this; buffer, [0x00839a9c], [0x00839aa0], length) (pushes 0x0047899b..0x004789a4, call 0x004789ab); then widgetValue 0x00477580 (call 0x004789b3) is added to [0x00839aa0] (0x004789b8..0x004789c0) and +0x1c is incremented (0x004789c6..0x004789ca). Always: [0x00839658] = 0 (0x004789cd), [0x00839aa4] = 0 (0x004789d3), +0x30, +0x38, +0x34, +0x3c = 0 (0x004789d9..0x004789e2). eax = [0x00839aa0]. Callers (hooks.csv): 0x004763d0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: Text_flush (12 vectors, 12 distinct results, 12 changing state, `log/diff/00478970_Text_flush.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?flush@C478970@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004789ec): callee pops 0 bytes of stack arguments.

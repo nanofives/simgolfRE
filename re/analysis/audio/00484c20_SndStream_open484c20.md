@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 90 bytes, 45 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 opens a streaming sound from an id: creates the device (createSound), sets its source (get) and refreshes (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00484c20 SndStream::open484c20(this, name): `ret 4`. A sound object already at this+0x40 returns 0xc (0x00484c2b..0x00484c2d, 0x00484c69). Otherwise createSound4840e0 runs with (this+0x40, name, 1) (0x00484c2f..0x00484c37) and a non-zero result is returned (0x00484c43, 0x00484c72). The vtable of the new object is read first (0x00484c4a), slot +0x70 of this gives a value (0x00484c4e) that is passed to that vtable's slot +0x6c with ecx = the object (0x00484c51..0x00484c54), then slot +0x7c of this runs (0x00484c5b); the result is 0. Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: SndStream::open484c20 (30 vectors, 13 distinct results, 12 changing state, `log/diff/00484c20_SndStream_open484c20.path1.csv`); SndStream::open484c20_fail (30 vectors, 13 distinct results, 12 changing state, `log/diff/00484c20_SndStream_open484c20_fail.path1.csv`); SndStream::open484c20_nolib (30 vectors, 2 distinct results, 0 changing state, `log/diff/00484c20_SndStream_open484c20_nolib.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?open@R0C484c20@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00484c64, 0x00484c6f, 0x00484c77): callee pops 4 bytes of stack arguments.

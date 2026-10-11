@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 88 bytes, 21 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Flushes pending input/events and redraws the whole screen. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045ae70 flushRedraw: [0x004d3834] non-zero (0x0045ae70/0x0045ae75/0x0045ae77): cleared (0x0045ae79), redrawAll (0x0045ae83), [0x00822b9c] = [0x00822b98] = 0 (0x0045ae88, 0x0045ae92); zero: redrawAll (0x0045ae9e). Then pumpInput483c30 (0x0045aea3). A non-zero [0x00822b98] (0x0045aea8..0x0045aeaf) or [0x00822b9c] (0x0045aeb1..0x0045aeb8) returns 1 with [0x004d3834] = 1 (0x0045aebd, 0x0045aec2, 0x0045aec7); both zero returns 0 (0x0045aeba). Callers (hooks.csv): 0x0043a400;0x0043a8c0;0x0043b610;0x0044b9c0;0x0044cff0;0x0044e770;0x0044f6b0;0x0044fb30;0x00453330;0x004546b0;0x00454c50;0x00455a30;0x00455ed0;0x00456be0;0x00459400;0x00459850;0x0045a090;0x0045b2c0;0x0045c0c0;0x0045c150;0x0045f0f0;0x0046d6e0;0x0046dea0;0x0046e810;0x004725b0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: flushRedraw_h0 (12 vectors, 6 distinct results, 12 changing state, `log/diff/0045ae70_flushRedraw_h0.path1.csv`); flushRedraw_h2 (12 vectors, 6 distinct results, 12 changing state, `log/diff/0045ae70_flushRedraw_h2.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0045aebc, 0x0045aec7): callee pops 0 bytes of stack arguments.
 

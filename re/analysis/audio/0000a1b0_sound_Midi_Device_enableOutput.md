@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000a1b0`), 51 bytes, 17 instructions, subsystem `aud
 When flag +9 bit0 is clear, calls the virtual open method (vtbl+0x4c), arms 0x10028810(g_100b49b8), sets g_100b49bc bit1 and marks +9 bit0. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+0x0000a1b0 Midi_Device::enableOutput (VA 0x1000a1b0). __thiscall, plain `ret`. With bit 0 of the byte at this+0x24 clear (0x1000a1b3 / 0x1000a1b7): the virtual slot +0x4c of this's vtable runs with ecx = this (0x1000a1b9 / 0x1000a1bb); `call 0x10001997` (thunk to pumpWaveMessages 0x10028810) runs with ecx = the module object 0x100b49b8 (0x1000a1be / 0x1000a1c3); bit 1 of the byte 0x100b49bc is set (0x1000a1c8-0x1000a1d1); bit 0 of the dword at this+0x24 is set (0x1000a1d7-0x1000a1dc). 0 is returned (0x1000a1df). Reached from: no call xref; reached through a stored pointer: 0x1005b2e8 table slot 23 (+0x5c) of the table at 0x1005b28c; installers: 0x10009a90 Dll_Midi_Device::create_device, 0x10009be0 Midi_Device::ctor, 0x10009cb0 Midi_Device::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Midi_Device::enableOutput (12 vectors, 8 distinct results, 7 changing state, `log/diff/0000a1b0_sound_Midi_Device_enableOutput.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000a1b0@f_1000a1b0@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a1e2): callee pops 0 bytes of stack arguments.

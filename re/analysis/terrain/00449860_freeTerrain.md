@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 50 bytes, 14 instructions, subsystem `terrain`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 Destroys the Terrain.dll instance and closes its system at shutdown. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x00449860 freeTerrain: Terrain::closeSystem through 0x004a4f64 with ecx = [0x00820ed0] (0x00449860, 0x00449867); the pointer is read again (0x0044986c); non-NULL: ~Terrain through 0x004a4f5e (ecx = it, 0x00449876/0x00449878), operator delete 0x004a4ffc (push 0x0044987d, call 0x0044987e); [0x00820ed0] = 0 (0x00449886). The delete result is not meaningful (void), so the registry compares memory only. Callers (hooks.csv): 0x0045baf0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: freeTerrain (1 vectors, 1 distinct results, 1 changing state, `log/diff/00449860_freeTerrain.path1.csv`); freeTerrain_none (1 vectors, 1 distinct results, 1 changing state, `log/diff/00449860_freeTerrain_none.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?free449860@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00449891): callee pops 0 bytes of stack arguments.

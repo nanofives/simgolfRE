@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 798 bytes, 265 instructions, subsystem `ui`. Mechanical
 draws the option dialog body and its labels. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Thiscall `(this)`, no stack arguments; b = this + [vt+8]. b+0xd0 == 0 returns 7 (0x0049f05a..0x0049f069). The text object gets setQuad 0x00476310(b+0x80, +0x8c, +0x98, +0xa4) (0x0049f091), setQuad70 0x00476340(b+0x84, +0x90, +0x9c, +0xa8) (0x0049f0c4), setQuad74 0x00476370(b+0x88, +0x94, +0xa0, +0xac) (0x0049f0f7) and setDrawTarget 0x004762d0(b+0x74, +0x78, +0x7c, 0) (0x0049f11c). b+0x38 == 0 with the image records at this+0x14 and +0x10 set becomes the wider of the two +0x18 widths (0x0049f126..0x0049f14c); b+0x4c == -1 makes b+0x6c the taller of the two +0x1c heights (0 when one is missing) and otherwise copies b+0x4c (0x0049f150..0x0049f182). b+0x5c = count (0x0049f197). For each item the cursor moves and Text_put measures its text (0x0049f1b1..0x0049f23a; a NULL cursor gives a NULL text and Text_put returns 0, 0x00477250..0x0047725e); b+0x68 = b+0x48 + b+0x38 + widest (0x0049f240..0x0049f254), b+0x6c = max(b+0x6c, Widget_get) (0x0049f257..0x0049f28d) and the tail shared with panelBuildText (0x0049f291..0x0049f36d). Returns 0. Key `optionDialogDraw`: 15 layout objects (setDrawTarget's surface b+0x74 is a font record, a record with +4 = 0, or NULL). Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: optionDialogDraw (15 vectors, 15 distinct results, 14 changing state, `log/diff/0049f050_optionDialogDraw.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0049f06a, 0x0049f35a, 0x0049f36d): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0049f051 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

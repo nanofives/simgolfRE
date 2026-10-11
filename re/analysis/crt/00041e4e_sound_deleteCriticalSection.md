@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00041e4e`), 11 bytes, 3 instructions, subsystem `crt`
 ## Role (from the naming pass, not a C3 purpose)
 One-call wrapper forwarding its argument to DeleteCriticalSection. (`re/names/sound_8.tsv`)
 
+## Purpose
+0x00041e4e deleteCriticalSection (VA 0x10041e4e). cdecl, one argument (the critical section), plain `ret` (0x10041e58). The argument is pushed again (`push dword ptr [esp+4]` 0x10041e4e) and DeleteCriticalSection [0x100b83e4] is called (0x10041e52); the import's result is the function's. Reached from: static callers 0x10041f9a. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: deleteCriticalSection (12 vectors, 12 distinct results, 12 changing state, `log/diff/00041e4e_sound_deleteCriticalSection.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10041e58): callee pops 0 bytes of stack arguments.
 

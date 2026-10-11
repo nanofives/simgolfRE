@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007ae70`), 816 bytes, 244 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads a bKGD chunk into png_ptr->background +0x138 and the info. No IHDR -> png_error 0x1011e79c (jne 0x1007ae93); after IDAT -> warning 0x1011e784, finish, return (je 0x1007aeb6); colour type 3 without PLTE -> warning 0x1011e768, finish, return (0x1007aeec / 0x1007aef9); a non-NULL info with bKGD valid -> warning 0x1011e750, finish, return (0x1007af25 / 0x1007af32). The expected length is 1 for type 3 (jne 0x1007af68), 6 when the colour bit 2 is set (je 0x1007af83), else 2; a different length -> warning 0x1011e734, finish, return (je 0x1007af9b). Bytes read, png_crc_finish (0) nonzero -> return (0x1007afe7). Type 3 (jne 0x1007affc): index byte +0x138 = buf[0]; when the info's num_palette +0x14 is nonzero (je 0x1007b019): buf[0] > num_palette (signed, jle 0x1007b033) -> warning 0x1011e710, png_crc_finish (length) again, return; otherwise red / green / blue +0x13a / +0x13c / +0x13e = the bytes of png_ptr->palette +0x114 entry buf[0] (an index equal to num_palette is read: the test is `>`, not `>=`). Gray (colour bit clear, jne 0x1007b0dd): gray +0x140 = png_get_uint_16 (buf), then blue, green, red copied from it in that order. Colour: red, green, blue from the three pairs. png_set_bKGD 0x1007dad0 (png_ptr, info_ptr, png_ptr + 0x138) (0x1007b187). The info is read without a NULL test on the paletted path. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_handle_bKGD (20 vectors, 20 distinct results, 20 changing state, `log/diff/0007ae70_jgld_png_handle_bKGD.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_bKGD` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007b19f): callee pops 0 bytes of stack arguments.

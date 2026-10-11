@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000459c3`), 9 bytes, 4 instructions, subsystem `crt`.
 __finally funclet releasing CRT heap lock 9 for the calloc new-handler retry path (__callnewh at 0x100459ae). (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+0x000459c3 callocUnlockFunclet2 (VA 0x100459c3). cdecl, no arguments, plain `ret` (0x100459cb). `push 9; call 0x10047771` (_unlock with the heap lock number, 0x100459c3 / 0x100459c5) and `pop ecx` (0x100459ca); _unlock's result is returned. Reached from: static callers 0x100458a1. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: callocUnlockFunclet2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/000459c3_sound_callocUnlockFunclet2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_100459c3@f_100459c3@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100459cb): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 23 bytes, 8 instructions, subsystem `ui`. Mechanical tr
 forwards its three stack arguments and this to Window::mouseEvent238 0x0047be40 and returns (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+0x0047eff0 Window::fwdMouseEvent238(this, a1, a2, a3) (ret 0xc): the three arguments are pushed in order (0x0047eff4.. 0x0047effe) and mouseEvent238 0x0047be40 is called with ecx still this (call 0x0047efff); eax = its result. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: Window::fwdMouseEvent238 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047eff0_Window_fwdMouseEvent238.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x0047f004): callee pops 12 bytes of stack arguments.
 

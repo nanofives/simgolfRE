@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 23 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 enters the modal pump then clears the scroll-text state globals 0x00822d68, 0x00822b9c and 0x00822b98 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+0x00465560 resetScrollText: enterModal483d30 0x00483d30 (call 0x00465560), then [0x00822d68], [0x00822b9c], [0x00822b98] = 0 (xor eax, eax 0x00465565; stores 0x00465567, 0x0046556c, 0x00465571). eax = 0 at the ret (0x00465576). Callers (hooks.csv): 0x0046dea0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: resetScrollText (12 vectors, 1 distinct results, 12 changing state, `log/diff/00465560_resetScrollText.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00465560@f_00465560@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00465576): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000e230`), 18 bytes, 6 instructions, subsystem `audi
 ## Role (from the naming pass, not a C3 purpose)
 returns 0 when the global device 0x100b49f0 is null, and otherwise tail-jumps to getDeviceCaps 0x10001c26 with it (`re/names/undisc_sound.tsv`)
 
+## Purpose
+0x0000e230 Wave_Device::caps (VA 0x1000e230). Plain `ret`. ecx = g_waveDevice (0x1000e230); NULL returns 0 (0x1000e236 / 0x1000e238 / 0x1000e23f); otherwise `jmp 0x10001c26` (the thunk to 0x10011760) with ecx = the device (0x1000e23a), so the callee's result is the result. Reached from: no call xref; reached through a stored pointer: 0x1005b360 table slot 23 (+0x5c) of the table at 0x1005b304; installers: 0x1000b1d0 Wave_Device::ctor, 0x1000b2e0 Wave_Device::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Wave_Device::caps_null (1 vectors, 1 distinct results, 0 changing state, `log/diff/0000e230_sound_Wave_Device_caps_null.path1.csv`); Wave_Device::caps_dev (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000e230_sound_Wave_Device_caps_dev.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000e241): callee pops 0 bytes of stack arguments.
 

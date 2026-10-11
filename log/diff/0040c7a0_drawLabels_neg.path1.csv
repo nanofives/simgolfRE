@@ -1,0 +1,7 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+,-1009188623,-1009188623,True,05e212b1,05e212b1,True
+state_regions,$rec+0x0:8192 $tnoh+0x0:768 $tm+0x0:768 $tind+0x0:768 $tplain+0x0:768 $tneg+0x0:768 $tbig+0x0:768 $tmid+0x0:768 $tmcb+0x0:768 $tsmall+0x0:768 0x0056a924+0x0:32 0x0056a794+0x0:32 0x0056c570+0x0:580 0x0051a068+0x0:512 0x0051b360+0x0:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x72e69190,original=0x1440bc0,2026-10-11T11:59:40
+distinct_results,1,,
+VERDICT,GREEN,1,

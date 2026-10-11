@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 67 bytes, 22 instructions, subsystem `ui`. Mechanical t
 draws a bordered box (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00477e60 drawBox(a1, a2, a3, a4, a5, a6) (ret 0x18): a RECT {a2, a3, a2 + a4, a3 + a5} (stores 0x00477e70, 0x00477e7e, 0x00477e76, 0x00477e84) and the call 0x00477eb0(a1, &rect, a6) (pushes 0x00477e8c, 0x00477e95, 0x00477e96, call 0x00477e97, ret 0xc); eax = its result. Callers (hooks.csv): 0x00493a60. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: drawBox (12 vectors, 12 distinct results, 12 changing state, `log/diff/00477e60_drawBox.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?drawBox@C477e60@@QAEHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x00477ea0): callee pops 24 bytes of stack arguments.

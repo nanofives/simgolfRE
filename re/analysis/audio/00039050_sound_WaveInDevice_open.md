@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039050`), 125 bytes, 49 instructions, subsystem `au
 opens the capture device with waveInOpen(this+0x44, format this+0x48, callback 0x1000179e), translating MMRESULT into SNDERR codes (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x00039050 WaveInDevice_open (VA 0x10039050). __thiscall, `ret`. A non-zero handle at +0x44 returns 0xc (0x10039053 / 0x1003905b / 0x1003905d). Otherwise waveInOpen [0x100b8600] (&this[+0x44], -1, &this[+0x48], callback 0x1000179e, this, 0x30000) (0x10039064-0x10039076; the callback is the thunk to onWaveInCallbackMessage 0x10038fd0); a zero result sets bit 1 of the flag dword at +4 (0x100390c1-0x100390c6) and returns 0 (0x100390c9); a non-zero result goes through c3dt_waveInErr (0x10039080-0x100390ba). Reached from: static callers 0x1000ea30. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInDevice_open (14 vectors, 14 distinct results, 13 changing state, `log/diff/00039050_sound_WaveInDevice_open.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10039063, 0x1003909d, 0x100390a4, 0x100390ab, 0x100390b2, 0x100390b9, 0x100390c0, 0x100390cc): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10039051 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

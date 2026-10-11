@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000b140`), 31 bytes, 9 instructions, subsystem `audi
 returns 0x13 when the global device 0x100b49f0 is null, and otherwise the result of DirectSoundDevice::setCooperativeLevel 0x100010a0 on it with the argument (`re/names/undisc_sound.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+0x0000b140 Wave_Device::setCooperativeLevel (VA 0x1000b140). `ret 4`. ecx = g_waveDevice (0x1000b140); NULL returns 0x13 (0x1000b146 / 0x1000b148 / 0x1000b14a); otherwise the argument is pushed and `call 0x100010a0` (the thunk to DirectSoundDevice::setCooperativeLevel 0x100120a0) runs with ecx = the device (0x1000b152-0x1000b157); its result is returned. Reached from: no call xref; reached through a stored pointer: 0x1005b374 table slot 28 (+0x70) of the table at 0x1005b304; installers: 0x1000b1d0 Wave_Device::ctor, 0x1000b2e0 Wave_Device::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Wave_Device::setCooperativeLevel_null (12 vectors, 1 distinct results, 0 changing state, `log/diff/0000b140_sound_Wave_Device_setCooperativeLevel_null.path1.csv`); Wave_Device::setCooperativeLevel_dev (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b140_sound_Wave_Device_setCooperativeLevel_dev.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000b14f, 0x1000b15c): callee pops 4 bytes of stack arguments.
 

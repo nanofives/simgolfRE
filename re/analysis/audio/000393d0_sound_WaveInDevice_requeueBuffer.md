@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000393d0`), 88 bytes, 35 instructions, subsystem `aud
 waveInUnprepareHeader then waveInPrepareHeader + waveInAddBuffer to recycle a WAVEHDR back into the capture queue (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x000393d0 WaveInDevice_requeueBuffer (VA 0x100393d0). __thiscall, one stack argument (`ret 4`). A NULL header returns 0xa (0x100393d8 / 0x100393da / 0x100393dd). Otherwise waveInUnprepareHeader [0x100b8608] (handle at +0x44, header, 0x20) (0x100393ed), the header's dword +0x10 is cleared (0x100393f3), and a non-zero object pointer at this+0x6c (0x100393fa / 0x100393fd) receives `call 0x1000176c` (thunk to loadWaveResource 0x100316c0, ecx = that object, the header pushed, 0x10039401 / 0x10039402); then waveInPrepareHeader [0x100b860c] (0x1003940e) and waveInAddBuffer [0x100b8604] (0x1003941b), both (handle, header, 0x20); the three import results are dropped and 0 is returned (0x10039422). Reached from: static callers 0x100288a0, 0x10028b70. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInDevice_requeueBuffer (12 vectors, 11 distinct results, 10 changing state, `log/diff/000393d0_sound_WaveInDevice_requeueBuffer.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_100393d0@C_FUN_100393d0@f_100393d0@@QAEIPAUwavehdr_tag@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100393e3, 0x10039425): callee pops 4 bytes of stack arguments.

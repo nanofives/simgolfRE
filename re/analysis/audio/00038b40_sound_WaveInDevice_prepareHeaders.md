@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038b40`), 171 bytes, 77 instructions, subsystem `au
 Walks the WAVEHDR list at this+0x5c calling waveInPrepareHeader(this+0x44, hdr, 0x20) on each, translating MMRESULT into SNDERR codes; returns 0x13 when no list or no device handle. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00038b40 WaveInDevice_prepareHeaders (VA 0x10038b40) and 0x00038da0 WaveInDevice_addBuffer (VA 0x10038da0) share one shape and differ in the import: waveInPrepareHeader [0x100b860c] (edi at 0x10038b6c) and waveInAddBuffer [0x100b8604] (0x10038dcc). __thiscall, `ret`. The buffer list head at this+0x5c is copied to the cursor this+0x64 (0x10038b44 / 0x10038b49); no head, or a head whose header pointer (+8) is NULL, returns 0x13 (0x10038b4c / 0x10038b53 / 0x10038b56), and so does a zero handle at +0x44 (0x10038b5d / 0x10038b62 / 0x10038b65). Then, for each node, import(handle, header, 0x20) (0x10038b72-0x10038b79): a non-zero result is mapped by c3dt_waveInErr (0x10038b9c-0x10038be4) and returned; zero advances the cursor through the node's +4 link (0x10038b7f-0x10038b8e) until the link or the next header pointer (+8) is NULL (0x10038b84 / 0x10038b89 / 0x10038b8e / 0x10038b95) and returns 0. Reached from: static callers 0x1000ea30. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInDevice_prepareHeaders (21 vectors, 21 distinct results, 21 changing state, `log/diff/00038b40_sound_WaveInDevice_prepareHeaders.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10038b5c, 0x10038b6b, 0x10038b9b, 0x10038bba, 0x10038bc2, 0x10038bca, 0x10038bd2, 0x10038bda (+2 more)): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10038b41 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

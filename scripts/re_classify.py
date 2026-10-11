@@ -17,9 +17,11 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime
+import io
 import pathlib
 import re
 import sys
+import time
 
 DEFAULT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 LEVELS = ["C0", "C1", "C2", "C3", "C4"]
@@ -31,6 +33,21 @@ NOTE_SECTIONS_C2 = ["## Signature", "## Reads", "## Writes", "## Callees", "## C
 BANNED = re.compile(r"\b(probably|likely|seems to|appears to|I think|presumably|might be|maybe)\b", re.I)
 DEFAULT_NAME = re.compile(r"^(FUN_|thunk_FUN_|LAB_|SUB_|sub_)", re.I)
 MARKER = "<!-- ENTRIES -->"
+
+
+def _write_retry(path: pathlib.Path, text: str, newline: str | None = None, tries: int = 10) -> None:
+    """Write a tracker file, retrying a transient open failure. Opening CHANGELOG.md for writing sometimes fails on this
+    machine with OSError [Errno 22] (seen 2026-10-11 while promoting zRaise 0x47e580); hooks.csv had already been written,
+    so the row reached C3 without its CHANGELOG line (the same half-written promotions in rounds 24 and 27)."""
+    for i in range(tries):
+        try:
+            with path.open("w", encoding=None, newline=newline) as f:
+                f.write(text)
+            return
+        except OSError:
+            if i == tries - 1:
+                raise
+            time.sleep(0.2 * (i + 1))
 MIN_LEAF_VECTORS = 10
 REPLAY_MIN = 100  # recorded real calls for replay to count as C3 verification (scripts/scoreboard.py agrees)
 
@@ -59,18 +76,19 @@ class Project:
             return {(r.get("module") or "golf_clean.exe", r["addr"]): r for r in csv.DictReader(f)}
 
     def save(self, rows: dict[str, dict]):
-        with self.hooks.open("w", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=COLUMNS)
-            w.writeheader()
-            for k in sorted(rows):
-                w.writerow({c: rows[k].get(c, "") for c in COLUMNS})
+        buf = io.StringIO(newline="")
+        w = csv.DictWriter(buf, fieldnames=COLUMNS)
+        w.writeheader()
+        for k in sorted(rows):
+            w.writerow({c: rows[k].get(c, "") for c in COLUMNS})
+        _write_retry(self.hooks, buf.getvalue(), newline="")
 
     def log(self, line: str):
         text = self.changelog.read_text() if self.changelog.exists() else f"# CHANGELOG (newest first)\n\n{MARKER}\n"
         if MARKER not in text:
             raise SystemExit(f"{self.changelog} lost its {MARKER} marker; refusing to write")
         self.changelog.parent.mkdir(parents=True, exist_ok=True)
-        self.changelog.write_text(text.replace(MARKER, f"{MARKER}\n{line}", 1))
+        _write_retry(self.changelog, text.replace(MARKER, f"{MARKER}\n{line}", 1))
 
     # ---------- lookups ----------
     def ghidra_name(self, addr: str, module: str = "golf_clean.exe") -> str | None:
@@ -386,7 +404,7 @@ def _flush_log(p: Project) -> None:
     text = p.changelog.read_text() if p.changelog.exists() else "# CHANGELOG (newest first)\n\n" + MARKER + "\n"
     if MARKER not in text:
         raise SystemExit(f"{p.changelog} lost its {MARKER} marker; refusing to write")
-    p.changelog.write_text(text.replace(MARKER, MARKER + "\n" + "\n".join(reversed(p.pending_log)), 1))
+    _write_retry(p.changelog, text.replace(MARKER, MARKER + "\n" + "\n".join(reversed(p.pending_log)), 1))
 
 
 def cmd_retag(p: Project, a) -> int:

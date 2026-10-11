@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 80 bytes, 25 instructions, subsystem `ui`. Mechanical t
 appends a command string to the outgoing command buffer. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a09a0 sendCommand(this, a, b): `ret 8`. The kind dword this+0x1f4 minus 1, unsigned above 15 (0x004a09aa) or an entry of the byte table 0x004a09fc selects: kinds 1, 4, 8 and 16 call ListModel::append 0x00489890 on this + dm + 4 (dm = entry +8 of the table at this+4) with (a, b) (0x004a09cf..0x004a09e3); kind 2 calls ListBox::addItem 0x0048c640 on this with (a, b, 0) (0x004a09bb..0x004a09c7); every other kind returns 0 (0x004a09eb). The callee's result is returned. Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: sendCommand (36 vectors, 18 distinct results, 16 changing state, `log/diff/004a09a0_sendCommand.path1.csv`); sendCommand_fail0 (4 vectors, 4 distinct results, 3 changing state, `log/diff/004a09a0_sendCommand_fail0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?send@C4a09a0@@QAEHPBDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x004a09cc, 0x004a09e8, 0x004a09ed): callee pops 8 bytes of stack arguments.

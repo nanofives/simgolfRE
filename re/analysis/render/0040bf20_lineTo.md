@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 63 bytes, 23 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 draws a line from the stored point to (x,y) (`re/names/exe_0.tsv`)
 
+## Purpose
+0x0040bf20 lineTo(a1..a5): drawMapLine 0x004493d0 (call 0x0040bf48) with (a1, a2, [0x005a412c], [0x005a4130], a3, a4, a5) (pushes 0x0040bf36..0x0040bf47: edi = a1, esi = a2 are the last two pushed); then [0x005a412c] = a1 (0x0040bf50) and [0x005a4130] = a2 (0x0040bf56). eax = drawMapLine's. Callers (hooks.csv): 0x00407c60;0x00407e00;0x0040f5c0;0x00456be0;0x004587a0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: lineTo (12 vectors, 12 distinct results, 12 changing state, `log/diff/0040bf20_lineTo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small6.cpp` as `?lineTo40bf20@@YAXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040bf5e): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 69 bytes, 22 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 runs the one-shot layout pass guarded by m_88 bit0: sets g_83ab2c, calls the m_15c layout callback and vtable f22, then invalidate (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00480d70 Window::doLayout(this): with bit 0 of the dword this+0x220 already set (0x00480d73..0x00480d7b) nothing happens. Otherwise the bit is set (0x00480d7d / 0x00480d7f), 0x0083ab2c takes this (0x00480d85), a non-NULL function pointer at this+0x570 is called with no arguments (0x00480d8b..0x00480d95), slot +0x58 of this runs (0x00480d97..0x00480d9b), the bit is cleared again (0x00480d9e..0x00480da8) and Window::invalidate 0x00480ce0 runs on this (0x00480dae). eax is the dword this+0x220 on the early exit (0x00480d73) and invalidate's result otherwise. Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: Window::doLayout (10 vectors, 10 distinct results, 7 changing state, `log/diff/00480d70_Window_doLayout.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00480d70@f_00480d70@@YIXPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00480db4): callee pops 0 bytes of stack arguments.

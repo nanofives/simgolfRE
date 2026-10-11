@@ -62,6 +62,7 @@ def main():
     ap.add_argument("batch")
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--keys", action="store_true")
+    ap.add_argument("--keys-lines", action="store_true", help="print the registry keys one per line")
     ap.add_argument("--callers", default="", help="addr=caller[;caller] for a function reached only through a stored "
                     "pointer (no call xref), passed to re_classify promote --callers; cite the store in the Purpose")
     ap.add_argument("--callees", default="", help="addr=callee[;callee] or addr=none, passed to re_classify promote "
@@ -71,6 +72,9 @@ def main():
     hooks = keys_of(a.batch)
     if a.keys:
         print(" ".join(hooks))
+        return 0
+    if a.keys_lines:                           # one key per line: some keys contain spaces (ifstream::{vbase dtor})
+        print("\n".join(hooks))
         return 0
     # keyed by (module, addr): DLL RVAs collide across jgld.dll / sound.dll / Terrain.dll
     by_addr = collections.defaultdict(list)

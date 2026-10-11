@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00065120`), 51 bytes, 21 instructions, subsystem `crt`
 ## Role (from the naming pass, not a C3 purpose)
 Constructs the global g_modes 0x101286c8: ecx = 0x101286c8 (0x10065138) and a call of Array_Rec14::ctor 0x100680a0 through its thunk 0x10001055 (0x1006513d); no argument, no return value. (`re/names/jgld_7.tsv`)
 
+## Purpose
+constructs g_modes 0x101286c8 in place: Array_Rec14::ctor through the thunk 0x10001055 (0x10065138). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: constructModes_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065120_jgld_constructModes_a.path1.csv`); constructModes_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065120_jgld_constructModes_b.path1.csv`); constructModes_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065120_jgld_constructModes_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10065120@f_10065120@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065152): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 85 bytes, 34 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 recomputes the full content size from the backing object m_278 and refreshes the whole rect (refreshRect) (`re/names/exe_3.tsv`)
 
+## Purpose
+Thiscall `(this, unused)`, ret 4. Size A = the surface handle at this+0x278's slot +0xd4() read as a RECT (0x00480c84..0x00480c96) and size B the same call again (0x00480c9c..0x00480cae); a NULL handle gives a NULL RECT that the original then dereferences at 0x00480cb2 (not reproduced: no fixture lacks a handle). refreshRect 0x00480c20(0, 0, B.right - B.left, A.bottom - A.top, 0) (thiscall, ret 0x14; 0x00480cb2..0x00480ccb) runs and its eax is returned. refreshRect calls Window::visible, redrawWindow, View::offsetRectToParent and drawTooltip 0x0047cdb0 (whose closing call of the display slot +0xa4 at 0x0047cfb9 is a recording stub here). Keys `Window::refreshFull_a` / `_focus` / `_focus4` / `_empty` (the four draw lists of redrawWindow): 12 vectors each (six windows x two ignored arguments). Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: Window::refreshFull_a (12 vectors, 5 distinct results, 8 changing state, `log/diff/00480c80_Window_refreshFull_a.path1.csv`); Window::refreshFull_focus (12 vectors, 5 distinct results, 8 changing state, `log/diff/00480c80_Window_refreshFull_focus.path1.csv`); Window::refreshFull_focus4 (12 vectors, 5 distinct results, 8 changing state, `log/diff/00480c80_Window_refreshFull_focus4.path1.csv`); Window::refreshFull_empty (12 vectors, 5 distinct results, 8 changing state, `log/diff/00480c80_Window_refreshFull_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00480c80@C_FUN_00480c80@f_00480c80@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00480cd2): callee pops 4 bytes of stack arguments.

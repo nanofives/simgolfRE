@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 26 bytes, 10 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 notifies the panel owner m_owner, or the default handler, that the panel changed (`re/names/exe_3.tsv`)
 
+## Purpose
+0x0047e120 Panel::notify(this): a parent at +0x130 (`mov ecx, [eax + 0x130]` 0x0047e123, `je` 0x0047e12b) takes ChildArray::bringToFront 0x0047e700 with this as its argument (push 0x0047e122, call 0x0047e12d: its `ret 4` pops it); without a parent zRaise 0x0047e580 gets this on the stack (call 0x0047e133, then `pop ecx`). eax = the callee's. Callers (hooks.csv): 0x0047b670;0x0047f1b0;0x0047f010. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: Panel::notify (10 vectors, 7 distinct results, 8 changing state, `log/diff/0047e120_Panel_notify.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?notify@Panel47e@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047e132, 0x0047e139): callee pops 0 bytes of stack arguments.

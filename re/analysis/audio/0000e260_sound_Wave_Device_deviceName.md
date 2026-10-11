@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000e260`), 48 bytes, 15 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 with the global device 0x100b49f0 set, returns getNodeByIndex 0x1000222f of (index, buffer, length); otherwise writes a 0 byte at the buffer and returns 3 (`re/names/undisc_sound.tsv`)
 
+## Purpose
+0x0000e260 Wave_Device::deviceName (VA 0x1000e260). `ret 0xc`, three stack arguments (a1, a2, a3). ecx = g_waveDevice (0x1000e260). NULL: the byte at the address in a2 (`mov ecx, [esp+8]` 0x1000e281) is set to 0 (0x1000e28a) and 3 is returned (0x1000e285 / 0x1000e28d). Otherwise `call 0x1000222f` (the thunk to 0x10011790) with ecx = the device and the arguments pushed a3, a2, a1 (0x1000e26a-0x1000e279); the callee pops them (`ret 0xc`) and its result is returned. Reached from: no call xref; reached through a stored pointer: 0x1005b324 table slot 8 (+0x20) of the table at 0x1005b304; installers: 0x1000b1d0 Wave_Device::ctor, 0x1000b2e0 Wave_Device::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Wave_Device::deviceName_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000e260_sound_Wave_Device_deviceName_null.path1.csv`); Wave_Device::deviceName_dev (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000e260_sound_Wave_Device_deviceName_dev.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x1000e27e, 0x1000e28d): callee pops 12 bytes of stack arguments.
 

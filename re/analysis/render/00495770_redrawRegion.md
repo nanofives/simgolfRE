@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 26 bytes, 10 instructions, subsystem `render`. Mechanic
 redraws the draw list and the tooltip within the RECT param_1 (installed invalidation callback) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`, `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Stdcall `(rect)`, ret 4, no this (called through the slot-1 pointer of the table stored by storeUiEventTable 0x004799d0, whose 13 pointers include redrawRegion 0x00495770). redrawDrawList 0x0047f8e0(rect, NULL) (0x00495775..0x00495778), then drawTooltip 0x0047cdb0(rect) (0x0049577d..0x0049577e); eax is drawTooltip's (0x00495783 only pops). Keys `redrawRegion_a` / `_focus` / `_focus4` / `_empty`: five rectangles each (NULL included), 20 vectors. Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: redrawRegion_a (5 vectors, 4 distinct results, 5 changing state, `log/diff/00495770_redrawRegion_a.path1.csv`); redrawRegion_focus (5 vectors, 4 distinct results, 5 changing state, `log/diff/00495770_redrawRegion_focus.path1.csv`); redrawRegion_focus4 (5 vectors, 4 distinct results, 5 changing state, `log/diff/00495770_redrawRegion_focus4.path1.csv`); redrawRegion_empty (5 vectors, 4 distinct results, 5 changing state, `log/diff/00495770_redrawRegion_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?release495@@YGXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00495787): callee pops 4 bytes of stack arguments.

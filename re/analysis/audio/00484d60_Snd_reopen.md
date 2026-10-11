@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 206 bytes, 86 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 re-opens the current sound (m_name): recreates the device, reapplies config flags and reloads the file (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00484d60 Snd::reopen(this): no stack argument, the name is the dword this+0x50: NULL returns 8 (0x00484d65..0x00484d6d, 0x00484e22). A NULL sound object at this+0x40 runs createSound4840e0 and returns a non-zero result (0x00484d73..0x00484d8b, 0x00484e29). The mask for slot +0x6c: state bit 1 -> 1 (0x00484d91..0x00484d97), a non-zero slot +0x58 of this -> 2 (0x00484d9c..0x00484da7), state bit 4 -> 0x11 (0x00484daa..0x00484db1), bit 8 -> 0x40 and also 1 when bit 0x20 is clear (0x00484db4..0x00484dbf), bit 0x10 -> 0x80, bit 0x20 -> 0x100, bit 0x40 -> 0x400 (0x00484dc2..0x00484dda); the slot runs (0x00484de0..0x00484de5). SndMusic::setFile runs with the name (0x00484de8..0x00484df0): a non-zero result releases the sound object through releaseSoundObj, clears this+0x40 and is returned (0x00484df2..0x00484e0d); otherwise this+0x64 takes slot +0xc8 of the sound object and the result is 0 (0x00484e0e..0x00484e21). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: Snd::reopen (12 vectors, 11 distinct results, 10 changing state, `log/diff/00484d60_Snd_reopen.path1.csv`); Snd::reopen_fail (12 vectors, 11 distinct results, 10 changing state, `log/diff/00484d60_Snd_reopen_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_n.cpp` as `?reopen@C484c80@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00484e0d, 0x00484e21, 0x00484e2d): callee pops 0 bytes of stack arguments.

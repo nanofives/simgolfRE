@@ -1,0 +1,1548 @@
+// Batch c3ds (round 28, jgld.dll): libpng 1.0.5's error path and chunk readers, Surface blend dispatchers and the
+// remaining module-global methods. Purposes and per-jcc tables: log/c3/c3ds_purpose.md; registry:
+// re/frida/registry.d/c3ds.py; fixtures: re/frida/js/fixtures.d/c3ds.js; what was not taken: log/c3/c3ds_notes.txt.
+//
+// SG_HOOK addresses are RVAs; every instruction cited in a comment is a VA (0x10000000 + RVA), the form the debug
+// build's disassembly prints. jgld.dll is relocated at run time, so every module address is resolved against the
+// running base. __thiscall is emulated with __fastcall (ecx = this, edx unused). Callees are called at the
+// addresses the originals call.
+//
+// png_error never returns: png_default_error 0x100792b0 ends in longjmp (png_ptr->jmpbuf, 1) (0x100792e4), and the
+// error function a caller installs at png_ptr + 0x40 may longjmp itself. The bodies below therefore have no code
+// after a png_error / png_chunk_error call that a returning png_error would need; the A/B fixture catches the
+// longjmp (log/c3/c3ds_purpose.md, "the longjmp catcher").
+#include "hooks.h"
+
+namespace {
+
+char* JgldBase() {
+    static char* base = 0;
+    if (!base) base = reinterpret_cast<char*>(GetModuleHandleA("jgld.dll"));
+    return base;
+}
+void* JgldVA(unsigned va) { return JgldBase() + (va - 0x10000000); }
+template <class T> T& G(unsigned va) { return *static_cast<T*>(JgldVA(va)); }
+template <class T> T& F(void* obj, unsigned off) { return *reinterpret_cast<T*>(static_cast<char*>(obj) + off); }
+template <class Fn> Fn At(unsigned va) { return reinterpret_cast<Fn>(JgldVA(va)); }
+
+typedef unsigned char byte;
+
+// =====================================================================================================================
+// group E - libpng's error entry points
+// =====================================================================================================================
+typedef void(__cdecl* PngMsg_t)(void*, const char*);
+typedef void(__cdecl* PngFormat_t)(void*, char*, const char*);
+
+const unsigned kPngError = 0x10078fe0, kPngChunkError = 0x100790a0, kPngDefaultError = 0x100792b0,
+               kPngFormatBuffer = 0x10079100, kPngWarning = 0x10079040, kPngChunkWarning = 0x10079250;
+
+// 0x00078fe0  png_error(png_ptr, message) (cdecl): the error function at png_ptr + 0x40, when non-NULL
+// (`cmp [eax+0x40], 0; je 0x1007901b` at 0x10078ffb), is called cdecl with (png_ptr, message) (0x1007900e); then,
+// whatever it did, png_default_error 0x100792b0 (png_ptr, message) (0x10079023), which prints "libpng error: %s" to
+// jgld's stderr 0x101233f0 (fprintf 0x10083010 at 0x100792d6) and longjmps through png_ptr->jmpbuf (longjmp
+// 0x10082f90 with value 1 at 0x100792e4).
+PngMsg_t PngError_orig;
+void __cdecl PngError_re(void* png, const char* msg) {
+    if (PngMsg_t fn = F<PngMsg_t>(png, 0x40))
+        fn(png, msg);
+    At<PngMsg_t>(kPngDefaultError)(png, msg);
+}
+
+// 0x000790a0  png_chunk_error(png_ptr, message) (cdecl): png_format_buffer 0x10079100 (png_ptr, buffer, message)
+// into an 80-byte local buffer at ebp-0x50 (0x100790ca), then png_error 0x10078fe0 (png_ptr, buffer) (0x100790da).
+// The buffer here is 0x80 bytes; the fixture's chunk names never carry four non-letter bytes, the case where
+// png_format_buffer writes past the original's 80 bytes (log/c3/c3dn_notes.txt).
+PngMsg_t PngChunkError_orig;
+void __cdecl PngChunkError_re(void* png, const char* msg) {
+    char buf[0x80];
+    At<PngFormat_t>(kPngFormatBuffer)(png, buf, msg);
+    At<PngMsg_t>(kPngError)(png, buf);
+}
+
+// 0x0007c1f0  png_check_chunk_name(png_ptr, chunk_name) (cdecl): each of the four bytes, read unsigned, must lie in
+// [0x29, 0x7a] and not in [0x5b, 0x60] (per byte: `jl` 0x29, `jg` 0x7a, then `jle` 0x5a accepts, `jl` 0x61 rejects;
+// byte 0 at 0x1007c20f..0x1007c23e, byte 1 at 0x1007c24c..0x1007c27e, byte 2 at 0x1007c288..0x1007c2b2, byte 3 at
+// 0x1007c2bc..0x1007c2e6, the last as `jge 0x1007c2f9`); the first byte that fails sends it to png_chunk_error
+// 0x100790a0 (png_ptr, the module string 0x1011ea9c) (0x1007c2f1).
+typedef void(__cdecl* PngCheckName_t)(void*, const byte*);
+PngCheckName_t PngCheckChunkName_orig;
+bool NonAlpha(int c) { return c < 0x29 || c > 0x7a || (c > 0x5a && c < 0x61); }
+void __cdecl PngCheckChunkName_re(void* png, const byte* name) {
+    if (NonAlpha(name[0]) || NonAlpha(name[1]) || NonAlpha(name[2]) || NonAlpha(name[3]))
+        At<PngMsg_t>(kPngChunkError)(png, static_cast<const char*>(JgldVA(0x1011ea9c)));
+}
+
+// =====================================================================================================================
+// group C - libpng's chunk readers png_handle_XXXX(png_ptr, info_ptr, length) (cdecl, plain `ret`). Common shape:
+// png_ptr->mode +0x68 (PNG_HAVE_IHDR 1, PNG_HAVE_PLTE 2, PNG_HAVE_IDAT 4, PNG_AFTER_IDAT 8), info_ptr->valid +8,
+// png_crc_read 0x100794b0 (png_ptr, buffer, n), png_crc_finish 0x10079510 (png_ptr, skip) -> nonzero on a CRC
+// error, png_warning 0x10079040, png_error 0x10078fe0. Messages are jgld's own strings, passed by address.
+// =====================================================================================================================
+typedef void(__cdecl* CrcRead_t)(void*, byte*, unsigned);
+typedef int(__cdecl* CrcFinish_t)(void*, unsigned);
+typedef unsigned(__cdecl* GetU32_t)(const byte*);
+typedef unsigned short(__cdecl* GetU16_t)(const byte*);
+typedef double(__cdecl* Fabs_t)(double);
+typedef int(__cdecl* Fprintf_t)(void*, const char*, ...);
+typedef void*(__cdecl* PngMalloc_t)(void*, unsigned);
+typedef void*(__cdecl* PngZalloc_t)(void*, unsigned, unsigned);
+typedef void(__cdecl* PngFree_t)(void*, void*);
+typedef void(__cdecl* PngHandle_t)(void*, void*, unsigned);
+
+const char* S(unsigned va) { return static_cast<const char*>(JgldVA(va)); }
+void Warn(void* png, unsigned msg) { At<PngMsg_t>(kPngWarning)(png, S(msg)); }
+[[noreturn]] void Fail(void* png, unsigned msg) {
+    At<PngMsg_t>(kPngError)(png, S(msg));
+    __assume(0);   // png_error longjmps (0x100792e4)
+}
+void CrcRead(void* png, byte* buf, unsigned n) { At<CrcRead_t>(0x100794b0)(png, buf, n); }
+int CrcFinish(void* png, unsigned skip) { return At<CrcFinish_t>(0x10079510)(png, skip); }
+unsigned GetU32(const byte* b) { return At<GetU32_t>(0x100793b0)(b); }   // 0x100793b0, the uint/int twin
+unsigned short GetU16(const byte* b) { return At<GetU16_t>(0x10079470)(b); }
+double Fabs(double v) { return At<Fabs_t>(0x10082960)(v); }             // jgld's _fabs
+void* Stderr() { return JgldVA(0x101233f0); }
+Fprintf_t Fprintf() { return At<Fprintf_t>(0x10083010); }
+unsigned& Mode(void* png) { return F<unsigned>(png, 0x68); }
+unsigned Valid(void* info) { return F<unsigned>(info, 8); }
+// value / 100000.0f as the readers compute it: fild qword (the unsigned value, exact), fdiv dword [0x1011e2d4]
+// at the A/B thread's 53-bit precision, fstp dword (a float spill).
+float Per100k(unsigned v) {
+    return static_cast<float>(static_cast<double>(v) / static_cast<double>(G<float>(0x1011e2d4)));
+}
+
+// 0x00079cc0  png_handle_gAMA. Mode tests: no IHDR -> png_error "Missing IHDR" 0x1011e394 (jne 0x10079ce3,
+// 0x10079cee); IDAT -> warning 0x1011e37c, png_crc_finish (length), return (je 0x10079d06); PLTE -> warning
+// 0x1011e364 and carry on (je 0x10079d39); else info non-NULL with gAMA valid (1) and not sRGB (0x800) -> warning
+// 0x1011e34c, png_crc_finish (length), return (0x10079d52 / 0x10079d5f / 0x10079d6f). length != 4 -> warning
+// 0x1011e330, finish, return (je 0x10079d9b). png_crc_read 4 bytes, png_crc_finish (0) nonzero -> return
+// (0x10079de5). igamma = png_get_uint_32 (0x10079df0); 0 -> return (jne 0x10079dff). info sRGB-valid (je 0x10079e14):
+// |(double)igamma - 45455.0 [0x1011e328]| (_fabs 0x10082960) > 500.0 [0x1011e320] (`test ah, 0x41; jne`
+// 0x10079e45) -> warning 0x1011e2e8, fprintf (stderr, 0x1011e2d8, igamma), return. Else file_gamma = igamma /
+// 100000.0f as a float (0x10079e7d..0x10079e86), stored at png_ptr + 0x15c (0x10079e8f), png_set_gAMA 0x1007dbd0
+// (png_ptr, info_ptr, (double) file_gamma) (0x10079ea6).
+PngHandle_t PngHandleGAMA_orig;
+void __cdecl PngHandleGAMA_re(void* png, void* info, unsigned length) {
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e394);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e37c);
+        CrcFinish(png, length);
+        return;
+    } else if (Mode(png) & 2)
+        Warn(png, 0x1011e364);
+    else if (info && (Valid(info) & 1) && !(Valid(info) & 0x800)) {
+        Warn(png, 0x1011e34c);
+        CrcFinish(png, length);
+        return;
+    }
+    if (length != 4) {
+        Warn(png, 0x1011e330);
+        CrcFinish(png, length);
+        return;
+    }
+    byte buf[4];
+    CrcRead(png, buf, 4);
+    if (CrcFinish(png, 0))
+        return;
+    const unsigned igamma = GetU32(buf);
+    if (igamma == 0)
+        return;
+    if (Valid(info) & 0x800) {
+        if (Fabs(static_cast<double>(igamma) - G<double>(0x1011e328)) > G<double>(0x1011e320)) {
+            Warn(png, 0x1011e2e8);
+            Fprintf()(Stderr(), S(0x1011e2d8), igamma);
+            return;
+        }
+    }
+    const float g = Per100k(igamma);
+    F<float>(png, 0x15c) = g;
+    At<void(__cdecl*)(void*, void*, double)>(0x1007dbd0)(png, info, static_cast<double>(g));
+}
+
+// 0x0007a7d0  png_handle_sRGB. Mode tests as gAMA's (error 0x1011e62c jne 0x1007a7f3; IDAT warning 0x1011e614 je
+// 0x1007a816; PLTE warning 0x1011e5fc je 0x1007a849; info non-NULL with sRGB valid 0x800 -> warning 0x1011e5e4,
+// finish, return, 0x1007a862 / 0x1007a871). length != 1 -> warning 0x1011e5c8, finish, return (je 0x1007a89d). One
+// byte read, png_crc_finish (0) nonzero -> return (0x1007a8e7). intent = the byte; >= 4 -> warning 0x1011e5b4,
+// return (jl 0x1007a8fe). info gAMA-valid (je 0x1007a921): t = gamma [png+0x15c] * 100000.0f [0x1011e2d4] + 0.5
+// [0x1011d5f0] - 45455.0 [0x1011e328] (fmul / fadd / fsub, 53-bit), |t| > 500.0 (0x1007a957) -> warning 0x1011e2e8
+// and fprintf (stderr, 0x1011e5a8, (double) gamma). info cHRM-valid (je 0x1007a996): the eight floats at info +0x80
+// .. +0x9c minus the floats 0x1011e4c8, 0x1011e4b8, 0x1011e4b4, 0x1011e4b0, 0x1011e4ac, 0x1011e4a8, 0x1011e4a4,
+// 0x1011e4a0, each |difference| > 0.001 [0x1011e4c0] (`je 0x1007aafc` at 0x1007a9c4 .. 0x1007aad0, the last `jne
+// 0x1007ab0d`) -> warning 0x1011e468 once. Then png_set_sRGB_gAMA_and_cHRM 0x1007e120 (png_ptr, info_ptr, intent).
+PngHandle_t PngHandleSRGB_orig;
+void __cdecl PngHandleSRGB_re(void* png, void* info, unsigned length) {
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e62c);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e614);
+        CrcFinish(png, length);
+        return;
+    } else if (Mode(png) & 2)
+        Warn(png, 0x1011e5fc);
+    else if (info && (Valid(info) & 0x800)) {
+        Warn(png, 0x1011e5e4);
+        CrcFinish(png, length);
+        return;
+    }
+    if (length != 1) {
+        Warn(png, 0x1011e5c8);
+        CrcFinish(png, length);
+        return;
+    }
+    byte buf[4];
+    CrcRead(png, buf, 1);
+    if (CrcFinish(png, 0))
+        return;
+    const int intent = buf[0];
+    if (intent >= 4) {
+        Warn(png, 0x1011e5b4);
+        return;
+    }
+    if (Valid(info) & 1) {
+        double t = static_cast<double>(F<float>(png, 0x15c)) * static_cast<double>(G<float>(0x1011e2d4));
+        t = t + G<double>(0x1011d5f0);
+        t = t - G<double>(0x1011e328);
+        if (Fabs(t) > G<double>(0x1011e320)) {
+            Warn(png, 0x1011e2e8);
+            Fprintf()(Stderr(), S(0x1011e5a8), static_cast<double>(F<float>(png, 0x15c)));
+        }
+    }
+    if (Valid(info) & 4) {
+        static const unsigned kRef[8] = {0x1011e4c8, 0x1011e4b8, 0x1011e4b4, 0x1011e4b0,
+                                         0x1011e4ac, 0x1011e4a8, 0x1011e4a4, 0x1011e4a0};
+        for (int k = 0; k < 8; k++) {
+            const double d = static_cast<double>(F<float>(info, 0x80 + 4 * k)) - static_cast<double>(G<float>(kRef[k]));
+            if (Fabs(d) > G<double>(0x1011e4c0)) {
+                Warn(png, 0x1011e468);
+                break;
+            }
+        }
+    }
+    At<void(__cdecl*)(void*, void*, int)>(0x1007e120)(png, info, intent);
+}
+
+// 0x0007a0d0  png_handle_cHRM. Mode tests (error 0x1011e414 jne 0x1007a0f9; IDAT warning 0x1011e590 je 0x1007a11c;
+// PLTE warning 0x1011e574 je 0x1007a14f; info non-NULL, cHRM valid 4 and not sRGB 0x800 -> warning 0x1011e55c,
+// finish, return, 0x1007a168 / 0x1007a175 / 0x1007a185). length != 32 -> warning 0x1011e540, finish, return (je
+// 0x1007a1b1). Then four points, each two png_crc_read (4) + png_get_uint_32 + / 100000.0f float spills, each
+// rejected when x < 0.0f [0x1011d054] (`test ah, 1; jne`), x > max, y < 0, y > max, or x + y (fadd, 53-bit) > sum:
+// white / red / green with max 0.8 [qword 0x1011e538] and sum 1.0 [qword 0x1011d030] (0x1007a25b..0x1007a29e,
+// 0x1007a346..0x1007a389, 0x1007a431..0x1007a474), blue with max 0.8f [dword 0x1011e4e4] and sum 1.0f [dword
+// 0x1011d050] (0x1007a511..0x1007a55f). A rejected point: warning (0x1011e51c, 0x1011e504, 0x1011e4e8, 0x1011e4cc),
+// png_crc_finish of the bytes left (24, 16, 8, 0), return. png_crc_finish (0) nonzero -> return (0x1007a595).
+// info sRGB-valid (je 0x1007a5a9): any of the eight |point - reference| > 0.001 (the sRGB table above, 0x1007a5d1 ..
+// 0x1007a6dd) -> warning 0x1011e468 and two fprintf (stderr, 0x1011e44c, wx, wy, rx, ry) / (0x1011e430, gx, gy, bx,
+// by); either way return without storing. Otherwise png_set_cHRM 0x1007db30 (png_ptr, info_ptr, eight doubles).
+PngHandle_t PngHandleCHRM_orig;
+float ReadPoint(void* png) {
+    byte buf[4];
+    CrcRead(png, buf, 4);
+    return Per100k(GetU32(buf));
+}
+bool BadPoint(float x, float y, double maxv, double sum) {
+    const double zero = static_cast<double>(G<float>(0x1011d054));
+    return static_cast<double>(x) < zero || static_cast<double>(x) > maxv || static_cast<double>(y) < zero ||
+           static_cast<double>(y) > maxv || static_cast<double>(x) + static_cast<double>(y) > sum;
+}
+void __cdecl PngHandleCHRM_re(void* png, void* info, unsigned length) {
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e414);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e590);
+        CrcFinish(png, length);
+        return;
+    } else if (Mode(png) & 2)
+        Warn(png, 0x1011e574);
+    else if (info && (Valid(info) & 4) && !(Valid(info) & 0x800)) {
+        Warn(png, 0x1011e55c);
+        CrcFinish(png, length);
+        return;
+    }
+    if (length != 32) {
+        Warn(png, 0x1011e540);
+        CrcFinish(png, length);
+        return;
+    }
+    const double max8 = G<double>(0x1011e538), one = G<double>(0x1011d030);
+    float p[8];
+    static const unsigned kMsg[4] = {0x1011e51c, 0x1011e504, 0x1011e4e8, 0x1011e4cc};
+    for (int k = 0; k < 4; k++) {
+        p[2 * k] = ReadPoint(png);
+        p[2 * k + 1] = ReadPoint(png);
+        const bool bad = k < 3 ? BadPoint(p[2 * k], p[2 * k + 1], max8, one)
+                               : BadPoint(p[6], p[7], static_cast<double>(G<float>(0x1011e4e4)),
+                                          static_cast<double>(G<float>(0x1011d050)));
+        if (bad) {
+            Warn(png, kMsg[k]);
+            CrcFinish(png, 24 - 8 * k);
+            return;
+        }
+    }
+    if (CrcFinish(png, 0))
+        return;
+    if (Valid(info) & 0x800) {
+        static const unsigned kRef[8] = {0x1011e4c8, 0x1011e4b8, 0x1011e4b4, 0x1011e4b0,
+                                         0x1011e4ac, 0x1011e4a8, 0x1011e4a4, 0x1011e4a0};
+        for (int k = 0; k < 8; k++) {
+            if (Fabs(static_cast<double>(p[k]) - static_cast<double>(G<float>(kRef[k]))) > G<double>(0x1011e4c0)) {
+                Warn(png, 0x1011e468);
+                Fprintf()(Stderr(), S(0x1011e44c), static_cast<double>(p[0]), static_cast<double>(p[1]),
+                          static_cast<double>(p[2]), static_cast<double>(p[3]));
+                Fprintf()(Stderr(), S(0x1011e430), static_cast<double>(p[4]), static_cast<double>(p[5]),
+                          static_cast<double>(p[6]), static_cast<double>(p[7]));
+                break;
+            }
+        }
+        return;
+    }
+    At<void(__cdecl*)(void*, void*, double, double, double, double, double, double, double, double)>(0x1007db30)(
+        png, info, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
+}
+
+// 0x000799e0  png_handle_PLTE. No IHDR -> png_error 0x1011e288 (jne 0x10079a03); IDAT -> warning 0x1011e270,
+// finish (length), return (je 0x10079a23); PLTE already -> png_error "Duplicate" 0x1011e258 (je 0x10079a56). mode
+// |= 2 (0x10079a6f). length % 3 (unsigned div, 0x10079a81) nonzero (je 0x10079a85): colour type +0x126 != 3 ->
+// warning 0x1011e240, finish (length), return (je 0x10079a95); == 3 -> png_error 0x1011e240 (0x10079ac6). num =
+// (int) length / 3 (idiv, 0x10079ad7); palette = png_zalloc 0x100786b0 (png_ptr, num, 3) (0x10079ae6); flags +0x6c
+// |= 0x1000 (0x10079af7); num times png_crc_read 3 bytes and copy red/green/blue (loop 0x10079b12..0x10079b5b,
+// signed `jge`); png_crc_finish (0) with its result ignored (0x10079b63); png_ptr->palette +0x114 = palette,
+// num_palette +0x118 = (u16) num; png_set_PLTE 0x1007e020 (png_ptr, info_ptr, palette, num) (0x10079b95). Colour
+// type 3 (jne 0x10079bab), info non-NULL (je 0x10079bb1) with tRNS valid 0x10 (je 0x10079bbe) and num_trans +0x11a
+// > num_palette (signed compare of the zero-extended words, jle 0x10079bda) -> warning 0x1011e218 and num_trans =
+// num_palette.
+PngHandle_t PngHandlePLTE_orig;
+void __cdecl PngHandlePLTE_re(void* png, void* info, unsigned length) {
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e288);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e270);
+        CrcFinish(png, length);
+        return;
+    } else if (Mode(png) & 2)
+        Fail(png, 0x1011e258);
+    Mode(png) |= 2;
+    if (length % 3) {
+        if (F<byte>(png, 0x126) != 3) {
+            Warn(png, 0x1011e240);
+            CrcFinish(png, length);
+            return;
+        }
+        Fail(png, 0x1011e240);
+    }
+    const int num = static_cast<int>(length) / 3;
+    byte* const pal = static_cast<byte*>(At<PngZalloc_t>(0x100786b0)(png, num, 3));
+    F<unsigned>(png, 0x6c) |= 0x1000;
+    for (int i = 0; i < num; i++) {
+        byte buf[3];
+        CrcRead(png, buf, 3);
+        pal[i * 3] = buf[0];
+        pal[i * 3 + 1] = buf[1];
+        pal[i * 3 + 2] = buf[2];
+    }
+    CrcFinish(png, 0);
+    F<byte*>(png, 0x114) = pal;
+    F<unsigned short>(png, 0x118) = static_cast<unsigned short>(num);
+    At<void(__cdecl*)(void*, void*, void*, int)>(0x1007e020)(png, info, pal, num);
+    if (F<byte>(png, 0x126) == 3 && info && (Valid(info) & 0x10) &&
+        static_cast<int>(F<unsigned short>(png, 0x11a)) > static_cast<int>(F<unsigned short>(png, 0x118))) {
+        Warn(png, 0x1011e218);
+        F<unsigned short>(png, 0x11a) = F<unsigned short>(png, 0x118);
+    }
+}
+
+// 0x0007ab40  png_handle_tRNS. No IHDR -> png_error 0x1011e6f4 (jne 0x1007ab63); IDAT -> warning 0x1011e6dc, finish,
+// return (je 0x1007ab83); info non-NULL with tRNS valid 0x10 -> warning 0x1011e6c4, finish, return (0x1007abaf /
+// 0x1007abbc). Colour type 3 (jne 0x1007abf2): no PLTE -> warning 0x1011e6a8 and carry on (jne 0x1007ac03), else
+// length > num_palette (unsigned, jbe 0x1007ac27) -> warning 0x1011e68c, finish, return; length 0 -> warning
+// 0x1011e674, finish, return (jne 0x1007ac53); trans +0x188 = png_malloc 0x10078e60 (length), flags |= 0x2000,
+// png_crc_read (trans, length), num_trans +0x11a = length. Colour type 2 (jne 0x1007acde): length != 6 -> warning
+// 0x1011e68c, finish, return (je 0x1007ace8); read 6, num_trans = 1, trans_values red/green/blue +0x18e/+0x190/+0x192
+// = png_get_uint_16 of each pair. Colour type 0 (jne 0x1007ad84): length != 2 -> same warning, finish, return (je
+// 0x1007ad8a); read 2, num_trans = 1, gray +0x194. Any other type -> warning 0x1011e648, finish, return. Then
+// png_crc_finish (0) nonzero -> return (je 0x1007ae1b); png_set_tRNS 0x1007e470 (png_ptr, info_ptr, trans,
+// num_trans, png_ptr + 0x18c) (0x1007ae48).
+PngHandle_t PngHandleTRNS_orig;
+void __cdecl PngHandleTRNS_re(void* png, void* info, unsigned length) {
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e6f4);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e6dc);
+        CrcFinish(png, length);
+        return;
+    } else if (info && (Valid(info) & 0x10)) {
+        Warn(png, 0x1011e6c4);
+        CrcFinish(png, length);
+        return;
+    }
+    const int ct = F<byte>(png, 0x126);
+    if (ct == 3) {
+        if (!(Mode(png) & 2))
+            Warn(png, 0x1011e6a8);
+        else if (length > F<unsigned short>(png, 0x118)) {
+            Warn(png, 0x1011e68c);
+            CrcFinish(png, length);
+            return;
+        }
+        if (length == 0) {
+            Warn(png, 0x1011e674);
+            CrcFinish(png, length);
+            return;
+        }
+        F<void*>(png, 0x188) = At<PngMalloc_t>(0x10078e60)(png, length);
+        F<unsigned>(png, 0x6c) |= 0x2000;
+        CrcRead(png, F<byte*>(png, 0x188), length);
+        F<unsigned short>(png, 0x11a) = static_cast<unsigned short>(length);
+    } else if (ct == 2) {
+        byte buf[6];
+        if (length != 6) {
+            Warn(png, 0x1011e68c);
+            CrcFinish(png, length);
+            return;
+        }
+        CrcRead(png, buf, length);
+        F<unsigned short>(png, 0x11a) = 1;
+        F<unsigned short>(png, 0x18e) = GetU16(buf);
+        F<unsigned short>(png, 0x190) = GetU16(buf + 2);
+        F<unsigned short>(png, 0x192) = GetU16(buf + 4);
+    } else if (ct == 0) {
+        byte buf[6];
+        if (length != 2) {
+            Warn(png, 0x1011e68c);
+            CrcFinish(png, length);
+            return;
+        }
+        CrcRead(png, buf, 2);
+        F<unsigned short>(png, 0x11a) = 1;
+        F<unsigned short>(png, 0x194) = GetU16(buf);
+    } else {
+        Warn(png, 0x1011e648);
+        CrcFinish(png, length);
+        return;
+    }
+    if (CrcFinish(png, 0))
+        return;
+    At<void(__cdecl*)(void*, void*, void*, int, void*)>(0x1007e470)(
+        png, info, F<void*>(png, 0x188), F<unsigned short>(png, 0x11a), static_cast<char*>(png) + 0x18c);
+}
+
+// 0x0007ae70  png_handle_bKGD. No IHDR -> png_error 0x1011e79c (jne 0x1007ae93); IDAT -> warning 0x1011e784, finish,
+// return (je 0x1007aeb6); colour type 3 without PLTE -> warning 0x1011e768, finish, return (0x1007aeec / 0x1007aef9);
+// info non-NULL with bKGD valid 0x20 -> warning 0x1011e750, finish, return (0x1007af25 / 0x1007af32). truelen = 1 for
+// type 3 (jne 0x1007af68), 6 when the colour bit 2 is set (je 0x1007af83), else 2; length != truelen -> warning
+// 0x1011e734, finish, return (je 0x1007af9b). Read truelen bytes, png_crc_finish (0) nonzero -> return (0x1007afe7).
+// Type 3 (jne 0x1007affc): background index byte +0x138 = buf[0]; when info->num_palette +0x14 is nonzero (je
+// 0x1007b019): buf[0] > num_palette (signed, jle 0x1007b033) -> warning 0x1011e710, png_crc_finish (length), return;
+// else red/green/blue +0x13a/+0x13c/+0x13e = the palette +0x114 entry's bytes. Gray (colour bit clear, jne
+// 0x1007b0dd): gray +0x140 = png_get_uint_16 (buf), then blue, green, red copied from it in that order. Colour: red,
+// green, blue from the three pairs. png_set_bKGD 0x1007dad0 (png_ptr, info_ptr, png_ptr + 0x138) (0x1007b187).
+PngHandle_t PngHandleBKGD_orig;
+void __cdecl PngHandleBKGD_re(void* png, void* info, unsigned length) {
+    const int ct = F<byte>(png, 0x126);
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e79c);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e784);
+        CrcFinish(png, length);
+        return;
+    } else if (ct == 3 && !(Mode(png) & 2)) {
+        Warn(png, 0x1011e768);
+        CrcFinish(png, length);
+        return;
+    } else if (info && (Valid(info) & 0x20)) {
+        Warn(png, 0x1011e750);
+        CrcFinish(png, length);
+        return;
+    }
+    unsigned truelen = ct == 3 ? 1 : (ct & 2) ? 6 : 2;
+    if (length != truelen) {
+        Warn(png, 0x1011e734);
+        CrcFinish(png, length);
+        return;
+    }
+    byte buf[6];
+    CrcRead(png, buf, truelen);
+    if (CrcFinish(png, 0))
+        return;
+    if (ct == 3) {
+        F<byte>(png, 0x138) = buf[0];
+        if (const int np = F<unsigned short>(info, 0x14)) {
+            if (static_cast<int>(buf[0]) > np) {
+                Warn(png, 0x1011e710);
+                CrcFinish(png, length);
+                return;
+            }
+            const byte* const e = F<byte*>(png, 0x114) + buf[0] * 3;
+            F<unsigned short>(png, 0x13a) = e[0];
+            F<unsigned short>(png, 0x13c) = e[1];
+            F<unsigned short>(png, 0x13e) = e[2];
+        }
+    } else if (!(ct & 2)) {
+        F<unsigned short>(png, 0x140) = GetU16(buf);
+        F<unsigned short>(png, 0x13e) = F<unsigned short>(png, 0x140);
+        F<unsigned short>(png, 0x13c) = F<unsigned short>(png, 0x13e);
+        F<unsigned short>(png, 0x13a) = F<unsigned short>(png, 0x13c);
+    } else {
+        F<unsigned short>(png, 0x13a) = GetU16(buf);
+        F<unsigned short>(png, 0x13c) = GetU16(buf + 2);
+        F<unsigned short>(png, 0x13e) = GetU16(buf + 4);
+    }
+    At<void(__cdecl*)(void*, void*, void*)>(0x1007dad0)(png, info, static_cast<char*>(png) + 0x138);
+}
+
+// 0x0007b1a0  png_handle_hIST. No IHDR -> png_error 0x1011e820 (jne 0x1007b1c3); IDAT -> warning 0x1011e808, finish,
+// return (je 0x1007b1e6); no PLTE -> warning 0x1011e7ec, finish, return (jne 0x1007b219); info non-NULL with hIST
+// valid 0x40 -> warning 0x1011e7d4, finish, return (0x1007b245 / 0x1007b252). length != 2 * num_palette -> warning
+// 0x1011e7b8, finish, return (je 0x1007b28b). num = (int) length / 2; hist +0x1f4 = png_malloc 0x10078e60 (num * 2)
+// (0x1007b2c8); flags |= 0x4000 (0x1007b2df); num times png_crc_read 2 bytes and hist[i] = png_get_uint_16 (loop
+// 0x1007b2fd, signed `jge`); png_crc_finish (0) nonzero -> return (je 0x1007b342); png_set_hIST 0x1007dc20 (png_ptr,
+// info_ptr, hist) (0x1007b358).
+PngHandle_t PngHandleHIST_orig;
+void __cdecl PngHandleHIST_re(void* png, void* info, unsigned length) {
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e820);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e808);
+        CrcFinish(png, length);
+        return;
+    } else if (!(Mode(png) & 2)) {
+        Warn(png, 0x1011e7ec);
+        CrcFinish(png, length);
+        return;
+    } else if (info && (Valid(info) & 0x40)) {
+        Warn(png, 0x1011e7d4);
+        CrcFinish(png, length);
+        return;
+    }
+    if (length != static_cast<unsigned>(2 * F<unsigned short>(png, 0x118))) {
+        Warn(png, 0x1011e7b8);
+        CrcFinish(png, length);
+        return;
+    }
+    const int num = static_cast<int>(length) / 2;
+    F<void*>(png, 0x1f4) = At<PngMalloc_t>(0x10078e60)(png, num * 2);
+    F<unsigned>(png, 0x6c) |= 0x4000;
+    for (int i = 0; i < num; i++) {
+        byte buf[2];
+        CrcRead(png, buf, 2);
+        F<unsigned short*>(png, 0x1f4)[i] = GetU16(buf);
+    }
+    if (CrcFinish(png, 0))
+        return;
+    At<void(__cdecl*)(void*, void*, void*)>(0x1007dc20)(png, info, F<void*>(png, 0x1f4));
+}
+
+// 0x0007baf0  png_handle_tEXt. No IHDR -> png_error 0x1011ea10 (jne 0x1007bb1a); IDAT set -> mode |= 8 (je
+// 0x1007bb38, `or al, 8`). key = png_malloc 0x10078e60 (length + 1) (0x1007bb53); png_crc_read (key, length);
+// png_crc_finish (0) nonzero (je 0x1007bb8a) -> png_free 0x10078ed0 (key), return. key[length] = 0; text = the first
+// NUL from key (loop 0x1007bbb2..0x1007bbc5); if text != key + length (je 0x1007bbd0) step past it. A 16-byte
+// png_text from png_malloc (`push 0x10`, 0x1007bbe1): compression -1, key, text (text_length left as allocated);
+// png_set_text 0x1007e220 (png_ptr, info_ptr, text_ptr, 1) (0x1007bc15); png_free (text_ptr) (0x1007bc25).
+PngHandle_t PngHandleTEXT_orig;
+void __cdecl PngHandleTEXT_re(void* png, void* info, unsigned length) {
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011ea10);
+    if (Mode(png) & 4)
+        Mode(png) |= 8;
+    char* const key = static_cast<char*>(At<PngMalloc_t>(0x10078e60)(png, length + 1));
+    CrcRead(png, reinterpret_cast<byte*>(key), length);
+    if (CrcFinish(png, 0)) {
+        At<PngFree_t>(0x10078ed0)(png, key);
+        return;
+    }
+    key[length] = 0;
+    char* text = key;
+    while (*text)
+        text++;
+    if (text != key + length)
+        text++;
+    int* const t = static_cast<int*>(At<PngMalloc_t>(0x10078e60)(png, 0x10));
+    t[0] = -1;
+    reinterpret_cast<char**>(t)[1] = key;
+    reinterpret_cast<char**>(t)[2] = text;
+    At<void(__cdecl*)(void*, void*, void*, int)>(0x1007e220)(png, info, t, 1);
+    At<PngFree_t>(0x10078ed0)(png, t);
+}
+
+// 0x0007bc40  png_handle_zTXt. comp_type starts at -1 (0x1007bc5e). No IHDR -> png_error 0x1011ea68 (jne 0x1007bc70);
+// IDAT set -> mode |= 8 (je 0x1007bc8e). key = png_malloc (length + 1) (0x1007bca9), png_crc_read (key, length),
+// png_crc_finish (0) nonzero -> png_free (key), return (je 0x1007bcde). key[length] = 0; text = first NUL (loop
+// 0x1007bd0f, `movsx` test). text == key + length (jne 0x1007bd24) -> warning "Zero length" 0x1011ea50, then the
+// png_text below with comp_type -1. Else comp_type = the signed byte after the NUL (`movsx` 0x1007bd48); nonzero (jne
+// 0x1007bd52) -> sprintf (a 50-byte local, 0x1011ea2c, comp_type) (0x10082c80 at 0x1007c08f), png_warning (it),
+// n = length - (text - key) - 1 capped at 0x1a (unsigned `jae` 0x1007c0bc), memcpy (text, the module message
+// 0x101232d0, n + 1). Zero: text++; zstream (+0x74) next_in = text, avail_in +0x78 = length - (text - key), next_out
+// +0x80 = zbuf, avail_out +0x84 = zbuf_size; key_size = text - key; text = NULL. While avail_in (je 0x1007bdbd):
+// ret = inflate 0x1009c0f0 (&zstream, 1). ret not 0 / 1 (0x1007bddb / 0x1007bde5): warning with zstream.msg +0x8c
+// when non-NULL (je 0x1007bdf5) else the module message; inflateReset 0x1009bdd0; avail_in = 0; text NULL (jne
+// 0x1007be3d) -> text_size = key_size + 0x1b, text = png_malloc (text_size), memcpy (text, key, key_size);
+// text[text_size - 1] = 0; n = length - (text - key) - 1 (two different blocks) capped at 0x1a (`jae` 0x1007be8e);
+// memcpy (text + key_size, message, n + 1); leave the loop. Otherwise when avail_out is 0 or ret is 1 (0x1007becf /
+// 0x1007bed5): first output (jne 0x1007bedf) -> text = png_malloc (zbuf_size - avail_out + key_size + 1), copy the
+// output after key_size and the key before it, text_size = key_size + output, NUL; later output -> a new block of
+// text_size + output + 1, copy the old text, png_free (old), append, NUL. ret 1 (je 0x1007c019) leaves the loop, else
+// next_out / avail_out reset. After the loop: inflateReset, avail_in = 0, png_free (key), key = text, text += key_size.
+// Last: a 16-byte png_text (png_malloc 0x10 at 0x1007c0f1): comp_type, key, text; png_set_text (png_ptr, info_ptr,
+// it, 1) (0x1007c124); png_free (it) (0x1007c134).
+typedef int(__cdecl* Inflate_t)(void*, int);
+typedef int(__cdecl* InflateReset_t)(void*);
+typedef void*(__cdecl* Memcpy_t)(void*, const void*, unsigned);
+typedef int(__cdecl* Sprintf_t)(char*, const char*, ...);
+PngHandle_t PngHandleZTXT_orig;
+void __cdecl PngHandleZTXT_re(void* png, void* info, unsigned length) {
+    const PngMalloc_t pngMalloc = At<PngMalloc_t>(0x10078e60);
+    const PngFree_t pngFree = At<PngFree_t>(0x10078ed0);
+    const Memcpy_t memcpyJ = At<Memcpy_t>(0x1007f3a0);
+    char* const msg = static_cast<char*>(JgldVA(0x101232d0));
+    void* const zs = static_cast<char*>(png) + 0x74;
+    int compType = -1;
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011ea68);
+    if (Mode(png) & 4)
+        Mode(png) |= 8;
+    char* key = static_cast<char*>(pngMalloc(png, length + 1));
+    const unsigned slength = length;
+    CrcRead(png, reinterpret_cast<byte*>(key), slength);
+    if (CrcFinish(png, 0)) {
+        pngFree(png, key);
+        return;
+    }
+    key[slength] = 0;
+    char* text = key;
+    while (*text)
+        text++;
+    if (text == key + slength) {
+        Warn(png, 0x1011ea50);
+    } else if ((compType = *++text) == 0) {
+        text++;
+        F<char*>(png, 0x74) = text;
+        F<unsigned>(png, 0x78) = length - static_cast<unsigned>(text - key);
+        F<void*>(png, 0x80) = F<void*>(png, 0xac);
+        F<unsigned>(png, 0x84) = F<unsigned>(png, 0xb0);
+        const unsigned keySize = static_cast<unsigned>(text - key);
+        unsigned textSize = 0;
+        text = 0;
+        while (F<unsigned>(png, 0x78)) {
+            const int ret = At<Inflate_t>(0x1009c0f0)(zs, 1);
+            if (ret != 0 && ret != 1) {
+                if (const char* zmsg = F<const char*>(png, 0x8c))
+                    At<PngMsg_t>(kPngWarning)(png, zmsg);
+                else
+                    At<PngMsg_t>(kPngWarning)(png, msg);
+                At<InflateReset_t>(0x1009bdd0)(zs);
+                F<unsigned>(png, 0x78) = 0;
+                if (!text) {
+                    textSize = keySize + 0x1b;
+                    text = static_cast<char*>(pngMalloc(png, textSize));
+                    memcpyJ(text, key, keySize);
+                }
+                text[textSize - 1] = 0;
+                textSize = slength - static_cast<unsigned>(text - key) - 1;
+                textSize = textSize < 0x1a ? textSize : 0x1a;
+                memcpyJ(text + keySize, msg, textSize + 1);
+                break;
+            }
+            if (!F<unsigned>(png, 0x84) || ret == 1) {
+                const unsigned out = F<unsigned>(png, 0xb0) - F<unsigned>(png, 0x84);
+                if (!text) {
+                    text = static_cast<char*>(pngMalloc(png, out + keySize + 1));
+                    memcpyJ(text + keySize, F<void*>(png, 0xac), out);
+                    memcpyJ(text, key, keySize);
+                    textSize = keySize + F<unsigned>(png, 0xb0) - F<unsigned>(png, 0x84);
+                    text[textSize] = 0;
+                } else {
+                    char* const tmp = text;
+                    text = static_cast<char*>(pngMalloc(png, textSize + out + 1));
+                    memcpyJ(text, tmp, textSize);
+                    pngFree(png, tmp);
+                    memcpyJ(text + textSize, F<void*>(png, 0xac), F<unsigned>(png, 0xb0) - F<unsigned>(png, 0x84));
+                    textSize += F<unsigned>(png, 0xb0) - F<unsigned>(png, 0x84);
+                    text[textSize] = 0;
+                }
+                if (ret == 1)
+                    break;
+                F<void*>(png, 0x80) = F<void*>(png, 0xac);
+                F<unsigned>(png, 0x84) = F<unsigned>(png, 0xb0);
+            }
+        }
+        At<InflateReset_t>(0x1009bdd0)(zs);
+        F<unsigned>(png, 0x78) = 0;
+        pngFree(png, key);
+        key = text;
+        text += keySize;
+    } else {
+        char umsg[0x40];
+        At<Sprintf_t>(0x10082c80)(umsg, S(0x1011ea2c), compType);
+        At<PngMsg_t>(kPngWarning)(png, umsg);
+        unsigned n = slength - static_cast<unsigned>(text - key) - 1;
+        n = n < 0x1a ? n : 0x1a;
+        memcpyJ(text, msg, n + 1);
+    }
+    int* const t = static_cast<int*>(pngMalloc(png, 0x10));
+    t[0] = compType;
+    reinterpret_cast<char**>(t)[1] = key;
+    reinterpret_cast<char**>(t)[2] = text;
+    At<void(__cdecl*)(void*, void*, void*, int)>(0x1007e220)(png, info, t, 1);
+    pngFree(png, t);
+}
+
+// 0x0007b620  png_handle_pCAL. No IHDR -> png_error 0x1011e9a8 (jne 0x1007b643); after IDAT -> warning 0x1011e990,
+// finish, return (je 0x1007b663); a non-NULL info with pCAL valid 0x400 -> warning 0x1011e978, finish, return
+// (0x1007b68f / 0x1007b69e). purpose = png_malloc (length + 1) (0x1007b6d1), png_crc_read (purpose, length),
+// png_crc_finish (0) nonzero (je 0x1007b706) -> png_free (purpose), return. purpose[length] = 0; buf = the first NUL
+// (loop 0x1007b72e..0x1007b741); endptr = purpose + length; endptr <= buf + 12 (unsigned `ja` 0x1007b755) -> warning
+// 0x1011e964, png_free (purpose), return. X0 / X1 = png_get_uint_32 0x10079410 (buf + 1 / buf + 5); type = buf[9],
+// nparams = buf[10], units = buf + 11. Type 0 with nparams != 2, type 1 or 2 with nparams != 3, type 3 with nparams
+// != 4 (0x1007b7c6..0x1007b826) -> warning 0x1011e938, png_free (purpose), return; type >= 4 (`jl` 0x1007b85a) ->
+// warning 0x1011e90c and carry on. buf = the end of units; params = png_malloc (nparams * 4) (0x1007b89b); for i <
+// nparams (signed, `jge` 0x1007b8c4): buf++, params[i] = buf, advance while *buf and buf <= endptr (0x1007b8ee /
+// unsigned `ja` 0x1007b8f6); buf > endptr (jbe 0x1007b900) -> warning 0x1011e964, png_free (purpose), png_free
+// (params), return. png_set_pCAL 0x1007de10 (png_ptr, info_ptr, purpose, X0, X1, type, nparams, units, params)
+// (0x1007b96a); png_free (purpose), png_free (params).
+PngHandle_t PngHandlePCAL_orig;
+void __cdecl PngHandlePCAL_re(void* png, void* info, unsigned length) {
+    const PngMalloc_t pngMalloc = At<PngMalloc_t>(0x10078e60);
+    const PngFree_t pngFree = At<PngFree_t>(0x10078ed0);
+    if (!(Mode(png) & 1))
+        Fail(png, 0x1011e9a8);
+    else if (Mode(png) & 4) {
+        Warn(png, 0x1011e990);
+        CrcFinish(png, length);
+        return;
+    } else if (info && (Valid(info) & 0x400)) {
+        Warn(png, 0x1011e978);
+        CrcFinish(png, length);
+        return;
+    }
+    char* const purpose = static_cast<char*>(pngMalloc(png, length + 1));
+    CrcRead(png, reinterpret_cast<byte*>(purpose), length);
+    if (CrcFinish(png, 0)) {
+        pngFree(png, purpose);
+        return;
+    }
+    purpose[length] = 0;
+    char* buf = purpose;
+    while (*buf)
+        buf++;
+    char* const endptr = purpose + length;
+    if (endptr <= buf + 12) {
+        Warn(png, 0x1011e964);
+        pngFree(png, purpose);
+        return;
+    }
+    const unsigned x0 = At<GetU32_t>(0x10079410)(reinterpret_cast<byte*>(buf) + 1);
+    const unsigned x1 = At<GetU32_t>(0x10079410)(reinterpret_cast<byte*>(buf) + 5);
+    const int type = static_cast<byte>(buf[9]), nparams = static_cast<byte>(buf[10]);
+    char* const units = buf + 11;
+    if ((type == 0 && nparams != 2) || (type == 1 && nparams != 3) || (type == 2 && nparams != 3) ||
+        (type == 3 && nparams != 4)) {
+        Warn(png, 0x1011e938);
+        pngFree(png, purpose);
+        return;
+    } else if (type >= 4) {
+        Warn(png, 0x1011e90c);
+    }
+    for (buf = units; *buf; buf++) {
+    }
+    char** const params = static_cast<char**>(pngMalloc(png, nparams * 4));
+    for (int i = 0; i < nparams; i++) {
+        buf++;
+        for (params[i] = buf; *buf != 0 && buf <= endptr; buf++) {
+        }
+        if (buf > endptr) {
+            Warn(png, 0x1011e964);
+            pngFree(png, purpose);
+            pngFree(png, params);
+            return;
+        }
+    }
+    At<void(__cdecl*)(void*, void*, char*, unsigned, unsigned, int, int, char*, char**)>(0x1007de10)(
+        png, info, purpose, x0, x1, type, nparams, units, params);
+    pngFree(png, purpose);
+    pngFree(png, params);
+}
+
+// =====================================================================================================================
+// group R - libpng's chunk loops. The chunk name read into png_ptr + 0x11c is compared with jgld's chunk-name byte
+// arrays by memcmp 0x100828b0 (n = 4) in a fixed order; the first match calls its reader (png_ptr, info_ptr, length).
+// =====================================================================================================================
+typedef void(__cdecl* ReadData_t)(void*, byte*, unsigned);
+typedef int(__cdecl* Memcmp_t)(const void*, const void*, unsigned);
+struct ChunkReader { unsigned name, handler; };
+// png_read_info's order after IHDR / PLTE / IEND / IDAT (0x1006c060 .. 0x1006c304), also png_read_end's after its
+// IHDR / IDAT / PLTE / IEND (0x1006ce65 .. 0x1006d109): bKGD, cHRM, gAMA, hIST, oFFs, pCAL, pHYs, sBIT, sRGB, tEXt,
+// tIME, tRNS, zTXt; anything else png_handle_unknown 0x1007c150.
+const ChunkReader kAncillary[] = {
+    {0x101231c0, 0x1007ae70}, {0x101231c8, 0x1007a0d0}, {0x101231d0, 0x10079cc0}, {0x101231d8, 0x1007b1a0},
+    {0x101231e0, 0x1007b4d0}, {0x101231e8, 0x1007b620}, {0x101231f0, 0x1007b380}, {0x101231f8, 0x10079ec0},
+    {0x10123200, 0x1007a7d0}, {0x10123208, 0x1007baf0}, {0x10123210, 0x1007b9b0}, {0x10123218, 0x1007ab40},
+    {0x10123220, 0x1007bc40}};
+const unsigned kIHDR = 0x101231a0, kIDAT = 0x101231a8, kIEND = 0x101231b0, kPLTE = 0x101231b8;
+bool IsChunk(void* png, unsigned name) {
+    return At<Memcmp_t>(0x100828b0)(static_cast<char*>(png) + 0x11c, JgldVA(name), 4) == 0;
+}
+// One chunk header: png_read_data 0x10078c40 (4 bytes), png_get_uint_32 0x100793b0, png_reset_crc 0x10078790,
+// png_crc_read (the name into png_ptr + 0x11c, 4).
+unsigned ReadChunkHeader(void* png) {
+    byte len[4];
+    At<ReadData_t>(0x10078c40)(png, len, 4);
+    const unsigned length = GetU32(len);
+    At<void(__cdecl*)(void*)>(0x10078790)(png);
+    CrcRead(png, static_cast<byte*>(png) + 0x11c, 4);
+    return length;
+}
+void DispatchAncillary(void* png, void* info, unsigned length) {
+    for (const ChunkReader& r : kAncillary)
+        if (IsChunk(png, r.name)) {
+            At<PngHandle_t>(r.handler)(png, info, length);
+            return;
+        }
+    At<PngHandle_t>(0x1007c150)(png, info, length);
+}
+
+// 0x0006be20  png_read_info(png_ptr, info_ptr) (cdecl). sig_bytes (byte +0x12c) < 8 (signed `jge` 0x1006be46):
+// png_read_data (info_ptr + 0x20 + sig_bytes, 8 - sig_bytes) (0x1006be78), sig_bytes = 8 (0x1006be83), png_sig_cmp
+// 0x100785f0 (info + 0x20, checked, 8 - checked) nonzero (je 0x1006bea3) -> png_error 0x1011dc64 "Not a PNG file"
+// when checked < 4 (unsigned `jae` 0x1006bea9) and png_sig_cmp (.., checked, 4 - checked) is nonzero too (je
+// 0x1006bec7), else png_error 0x1011dc3c. Then forever: a chunk header; IHDR -> png_handle_IHDR 0x100796e0, PLTE ->
+// png_handle_PLTE 0x100799e0, IEND -> png_handle_IEND 0x10079c20; IDAT (jne 0x1006bfee): no IHDR -> png_error
+// 0x1011dc20 (jne 0x1006bffb); colour type 3 without PLTE -> png_error 0x1011dc04 (0x1006c01e / 0x1006c02b); idat_size
+// +0x10c = length, mode |= 4, return (0x1006c059); any other name through the table above.
+typedef void(__cdecl* PngReadInfo_t)(void*, void*);
+PngReadInfo_t PngReadInfo_orig;
+void __cdecl PngReadInfo_re(void* png, void* info) {
+    typedef int(__cdecl* SigCmp_t)(const byte*, unsigned, unsigned);
+    const int checked = F<byte>(png, 0x12c);
+    if (checked < 8) {
+        byte* const sig = static_cast<byte*>(info) + 0x20;
+        At<ReadData_t>(0x10078c40)(png, sig + checked, 8 - checked);
+        F<byte>(png, 0x12c) = 8;
+        if (At<SigCmp_t>(0x100785f0)(sig, checked, 8 - checked)) {
+            if (static_cast<unsigned>(checked) < 4 && At<SigCmp_t>(0x100785f0)(sig, checked, 4 - checked))
+                Fail(png, 0x1011dc64);
+            else
+                Fail(png, 0x1011dc3c);
+        }
+    }
+    for (;;) {
+        const unsigned length = ReadChunkHeader(png);
+        if (IsChunk(png, kIHDR))
+            At<PngHandle_t>(0x100796e0)(png, info, length);
+        else if (IsChunk(png, kPLTE))
+            At<PngHandle_t>(0x100799e0)(png, info, length);
+        else if (IsChunk(png, kIEND))
+            At<PngHandle_t>(0x10079c20)(png, info, length);
+        else if (IsChunk(png, kIDAT)) {
+            if (!(Mode(png) & 1))
+                Fail(png, 0x1011dc20);
+            else if (F<byte>(png, 0x126) == 3 && !(Mode(png) & 2))
+                Fail(png, 0x1011dc04);
+            F<unsigned>(png, 0x10c) = length;
+            Mode(png) |= 4;
+            return;
+        } else
+            DispatchAncillary(png, info, length);
+    }
+}
+
+// 0x0006cd00  png_read_end(png_ptr, info_ptr) (cdecl). png_crc_finish (0) first (0x1006cd1e), then until mode has
+// PNG_HAVE_IEND 0x10 (`je 0x1006cd26` at 0x1006d132): a chunk header; IHDR -> png_handle_IHDR; IDAT (jne 0x1006cdbc):
+// length > 0 (unsigned `ja` 0x1006cdc2) or mode & PNG_AFTER_IDAT 8 (je 0x1006cdcf) -> png_error 0x1011dcdc, else
+// png_crc_finish (0); PLTE -> png_handle_PLTE; IEND -> png_handle_IEND; any other name through the table above.
+PngReadInfo_t PngReadEnd_orig;
+void __cdecl PngReadEnd_re(void* png, void* info) {
+    CrcFinish(png, 0);
+    do {
+        const unsigned length = ReadChunkHeader(png);
+        if (IsChunk(png, kIHDR))
+            At<PngHandle_t>(0x100796e0)(png, info, length);
+        else if (IsChunk(png, kIDAT)) {
+            if (length > 0 || (Mode(png) & 8))
+                Fail(png, 0x1011dcdc);
+            else
+                CrcFinish(png, 0);
+        } else if (IsChunk(png, kPLTE))
+            At<PngHandle_t>(0x100799e0)(png, info, length);
+        else if (IsChunk(png, kIEND))
+            At<PngHandle_t>(0x10079c20)(png, info, length);
+        else
+            DispatchAncillary(png, info, length);
+    } while (!(Mode(png) & 0x10));
+}
+
+// 0x0007d280  png_read_finish_row(png_ptr) (cdecl). row_number +0xe4 += 1; still < num_rows +0xd0 (unsigned `jae`
+// 0x1007d2bf) -> return. Interlaced (byte +0x123, je 0x1007d2d3): row_number = 0; png_memset_check 0x10078f80
+// (png_ptr, prev_row +0xe8, 0, rowbytes +0xd8 + 1); then do { pass (byte +0x124) += 1; pass >= 7 (signed `jl`
+// 0x1007d32d) -> leave; iwidth +0xe0 = (width +0xc8 + inc[pass] - 1 - start[pass]) / inc[pass] (unsigned div,
+// png_pass_inc 0x10123244, png_pass_start 0x10123228); irowbytes +0xdc = ((iwidth * pixel_depth byte +0x129 + 7)
+// >> 3) + 1; transformations +0x70 & PNG_INTERLACE 2 (jne 0x1007d3b8) -> leave; else num_rows = (height +0xcc +
+// yinc[pass] - 1 - ystart[pass]) / yinc[pass] (0x1012327c, 0x10123260) } while (iwidth == 0) (je 0x1007d426); pass
+// < 7 (signed, `jge` 0x1007d43a) -> return. Then unless flags +0x6c has PNG_FLAG_ZLIB_FINISHED 0x20 (jne 0x1007d44c):
+// zstream next_out +0x80 = a one-byte local, avail_out +0x84 = 1; loop: avail_in +0x78 zero (jne 0x1007d472) -> while
+// idat_size +0x10c is zero (jne 0x1007d482): png_crc_finish (0), a chunk header, idat_size = its length, name not IDAT
+// (memcmp 0x100828b0 with 0x101231a8, je 0x1007d4fb) -> png_error 0x1011dca0; then avail_in = zbuf_size +0xb0,
+// next_in = zbuf, capped at idat_size (unsigned `jbe` 0x1007d543), png_crc_read (zbuf, avail_in), idat_size -=
+// avail_in. ret = inflate (&zstream, 1) (0x1007d592). ret 1 (jne 0x1007d5a1): avail_out 0, avail_in or idat_size
+// nonzero (0x1007d5ad / 0x1007d5b6 / 0x1007d5c2) -> png_error 0x1011dc88; mode |= 8, flags |= 0x20, leave. ret
+// nonzero (je 0x1007d5f9) -> png_error (zstream.msg +0x8c, or 0x1011eaec when NULL, je 0x1007d605). avail_out 0 (jne
+// 0x1007d636) -> png_error 0x1011dc88. After the loop avail_out = 0. Finally idat_size or avail_in nonzero
+// (0x1007d665 / 0x1007d66e) -> png_error 0x1011ead4; inflateReset 0x1009bdd0 (&zstream); mode |= 8.
+typedef void(__cdecl* PngRow_t)(void*);
+PngRow_t PngReadFinishRow_orig;
+void __cdecl PngReadFinishRow_re(void* png) {
+    const unsigned* const passStart = static_cast<const unsigned*>(JgldVA(0x10123228));
+    const unsigned* const passInc = static_cast<const unsigned*>(JgldVA(0x10123244));
+    const unsigned* const passYStart = static_cast<const unsigned*>(JgldVA(0x10123260));
+    const unsigned* const passYInc = static_cast<const unsigned*>(JgldVA(0x1012327c));
+    if (++F<unsigned>(png, 0xe4) < F<unsigned>(png, 0xd0))
+        return;
+    if (F<byte>(png, 0x123)) {
+        F<unsigned>(png, 0xe4) = 0;
+        At<void(__cdecl*)(void*, void*, int, unsigned)>(0x10078f80)(png, F<void*>(png, 0xe8), 0,
+                                                                   F<unsigned>(png, 0xd8) + 1);
+        do {
+            F<byte>(png, 0x124)++;
+            const int pass = F<byte>(png, 0x124);
+            if (pass >= 7)
+                break;
+            F<unsigned>(png, 0xe0) =
+                (F<unsigned>(png, 0xc8) + passInc[pass] - 1 - passStart[pass]) / passInc[pass];
+            F<unsigned>(png, 0xdc) = ((F<unsigned>(png, 0xe0) * F<byte>(png, 0x129) + 7) >> 3) + 1;
+            if (F<unsigned>(png, 0x70) & 2)
+                break;
+            F<unsigned>(png, 0xd0) =
+                (F<unsigned>(png, 0xcc) + passYInc[pass] - 1 - passYStart[pass]) / passYInc[pass];
+        } while (F<unsigned>(png, 0xe0) == 0);
+        if (F<byte>(png, 0x124) < 7)
+            return;
+    }
+    if (!(F<unsigned>(png, 0x6c) & 0x20)) {
+        char extra;
+        F<char*>(png, 0x80) = &extra;
+        F<unsigned>(png, 0x84) = 1;
+        for (;;) {
+            if (!F<unsigned>(png, 0x78)) {
+                while (!F<unsigned>(png, 0x10c)) {
+                    CrcFinish(png, 0);
+                    F<unsigned>(png, 0x10c) = ReadChunkHeader(png);
+                    if (!IsChunk(png, kIDAT))
+                        Fail(png, 0x1011dca0);
+                }
+                F<unsigned>(png, 0x78) = F<unsigned>(png, 0xb0);
+                F<void*>(png, 0x74) = F<void*>(png, 0xac);
+                if (F<unsigned>(png, 0xb0) > F<unsigned>(png, 0x10c))
+                    F<unsigned>(png, 0x78) = F<unsigned>(png, 0x10c);
+                CrcRead(png, F<byte*>(png, 0xac), F<unsigned>(png, 0x78));
+                F<unsigned>(png, 0x10c) -= F<unsigned>(png, 0x78);
+            }
+            const int ret = At<Inflate_t>(0x1009c0f0)(static_cast<char*>(png) + 0x74, 1);
+            if (ret == 1) {
+                if (!F<unsigned>(png, 0x84) || F<unsigned>(png, 0x78) || F<unsigned>(png, 0x10c))
+                    Fail(png, 0x1011dc88);
+                Mode(png) |= 8;
+                F<unsigned>(png, 0x6c) |= 0x20;
+                break;
+            }
+            if (ret != 0) {
+                const char* const zmsg = F<const char*>(png, 0x8c);
+                At<PngMsg_t>(kPngError)(png, zmsg ? zmsg : S(0x1011eaec));
+            }
+            if (!F<unsigned>(png, 0x84))
+                Fail(png, 0x1011dc88);
+        }
+        F<unsigned>(png, 0x84) = 0;
+    }
+    if (F<unsigned>(png, 0x10c) || F<unsigned>(png, 0x78))
+        Fail(png, 0x1011ead4);
+    At<InflateReset_t>(0x1009bdd0)(static_cast<char*>(png) + 0x74);
+    Mode(png) |= 8;
+}
+
+// 0x0006c3f0  png_read_row(png_ptr, row, dsp_row) (cdecl). flags +0x6c without PNG_FLAG_ROW_INIT 0x40 (jne
+// 0x1006c413) -> png_read_start_row 0x1007d6b0. Interlaced (byte +0x123, je 0x1006c42e) with transformations +0x70 &
+// PNG_INTERLACE 2 (je 0x1006c43f): switch on pass (table 0x1006cafc, `ja` 0x1006c457 past 6) decides whether this
+// call only combines and advances: pass 0 row_number & 7 (je 0x1006c475); 1 row & 7 or width < 5 (0x1006c4c4 /
+// 0x1006c4d0); 2 (row & 7) != 4 (je 0x1006c520), combining only when row & 4 (je 0x1006c536); 3 row & 3 or width < 3
+// (0x1006c57f / 0x1006c58b); 4 (row & 3) != 2 (je 0x1006c5db), combining only when row & 2 (je 0x1006c5f1); 5 row & 1
+// or width < 2 (0x1006c637 / 0x1006c643); 6 !(row & 1) (jne 0x1006c68f), never combining. Combining is png_combine_row
+// 0x1007c310 (png_ptr, dsp_row, png_pass_dsp_mask[pass] 0x101232b4) when dsp_row is non-NULL; then
+// png_read_finish_row 0x1007d280 and return. Otherwise: mode without IDAT 4 (jne 0x1006c6ad) -> png_error
+// 0x1011dcb8; zstream next_out +0x80 = row_buf +0xec, avail_out +0x84 = irowbytes +0xdc; do { refill exactly as
+// png_read_finish_row (0x1006c6e7 .. 0x1006c7e2, png_error 0x1011dca0); ret = inflate (&zstream, 1) (0x1006c80b);
+// ret 1 (jne 0x1006c81a): avail_out, avail_in or idat_size nonzero -> png_error 0x1011dc88, mode |= 8, flags |= 0x20,
+// leave; ret nonzero (je 0x1006c872) -> png_error (msg +0x8c or 0x1011dc74) } while avail_out (jne 0x1006c8af).
+// row_info +0x100: width = iwidth +0xe0, colour type, channels, bit depth, pixel depth copied, rowbytes = (width *
+// pixel_depth + 7) >> 3; png_read_filter_row 0x1007ce80 (png_ptr, &row_info, row_buf + 1, prev_row +0xe8 + 1,
+// row_buf[0]); png_memcpy_check 0x10078f20 (png_ptr, prev_row, row_buf, rowbytes +0xd8 + 1); transformations nonzero
+// (je 0x1006c9a7) -> png_do_read_transformations 0x100717d0. Interlaced with PNG_INTERLACE (0x1006c9c2 / 0x1006c9d3):
+// pass < 6 (`jge` 0x1006c9e7) -> png_do_read_interlace 0x1007c810 (&row_info, row_buf + 1, pass, transformations);
+// combine dsp_row with png_pass_dsp_mask[pass], row with png_pass_mask[pass] 0x10123298; else combine row then dsp_row
+// with 0xff. png_read_finish_row; read_row_fn +0x198 non-NULL (je 0x1006caba) -> it (png_ptr, row_number, pass).
+typedef void(__cdecl* PngReadRow_t)(void*, byte*, byte*);
+typedef void(__cdecl* Combine_t)(void*, byte*, int);
+PngReadRow_t PngReadRow_orig;
+void __cdecl PngReadRow_re(void* png, byte* row, byte* dsp) {
+    const Combine_t combine = At<Combine_t>(0x1007c310);
+    const PngRow_t finishRow = At<PngRow_t>(0x1007d280);
+    const int* const dspMask = static_cast<const int*>(JgldVA(0x101232b4));
+    const int* const passMask = static_cast<const int*>(JgldVA(0x10123298));
+    if (!(F<unsigned>(png, 0x6c) & 0x40))
+        At<PngRow_t>(0x1007d6b0)(png);
+    if (F<byte>(png, 0x123) && (F<unsigned>(png, 0x70) & 2)) {
+        const unsigned rn = F<unsigned>(png, 0xe4), width = F<unsigned>(png, 0xc8);
+        const int pass = F<byte>(png, 0x124);
+        bool skip = false, comb = dsp != 0;
+        switch (pass) {
+        case 0: skip = (rn & 7) != 0; break;
+        case 1: skip = (rn & 7) || width < 5; break;
+        case 2: skip = (rn & 7) != 4; comb = comb && (rn & 4); break;
+        case 3: skip = (rn & 3) || width < 3; break;
+        case 4: skip = (rn & 3) != 2; comb = comb && (rn & 2); break;
+        case 5: skip = (rn & 1) || width < 2; break;
+        case 6: skip = !(rn & 1); comb = false; break;
+        }
+        if (skip) {
+            if (comb)
+                combine(png, dsp, dspMask[pass]);
+            finishRow(png);
+            return;
+        }
+    }
+    if (!(Mode(png) & 4))
+        Fail(png, 0x1011dcb8);
+    F<void*>(png, 0x80) = F<void*>(png, 0xec);
+    F<unsigned>(png, 0x84) = F<unsigned>(png, 0xdc);
+    do {
+        if (!F<unsigned>(png, 0x78)) {
+            while (!F<unsigned>(png, 0x10c)) {
+                CrcFinish(png, 0);
+                F<unsigned>(png, 0x10c) = ReadChunkHeader(png);
+                if (!IsChunk(png, kIDAT))
+                    Fail(png, 0x1011dca0);
+            }
+            F<unsigned>(png, 0x78) = F<unsigned>(png, 0xb0);
+            F<void*>(png, 0x74) = F<void*>(png, 0xac);
+            if (F<unsigned>(png, 0xb0) > F<unsigned>(png, 0x10c))
+                F<unsigned>(png, 0x78) = F<unsigned>(png, 0x10c);
+            CrcRead(png, F<byte*>(png, 0xac), F<unsigned>(png, 0x78));
+            F<unsigned>(png, 0x10c) -= F<unsigned>(png, 0x78);
+        }
+        const int ret = At<Inflate_t>(0x1009c0f0)(static_cast<char*>(png) + 0x74, 1);
+        if (ret == 1) {
+            if (F<unsigned>(png, 0x84) || F<unsigned>(png, 0x78) || F<unsigned>(png, 0x10c))
+                Fail(png, 0x1011dc88);
+            Mode(png) |= 8;
+            F<unsigned>(png, 0x6c) |= 0x20;
+            break;
+        }
+        if (ret != 0) {
+            const char* const zmsg = F<const char*>(png, 0x8c);
+            At<PngMsg_t>(kPngError)(png, zmsg ? zmsg : S(0x1011dc74));
+        }
+    } while (F<unsigned>(png, 0x84));
+    F<byte>(png, 0x108) = F<byte>(png, 0x126);
+    F<unsigned>(png, 0x100) = F<unsigned>(png, 0xe0);
+    F<byte>(png, 0x10a) = F<byte>(png, 0x12a);
+    F<byte>(png, 0x109) = F<byte>(png, 0x127);
+    F<byte>(png, 0x10b) = F<byte>(png, 0x129);
+    F<unsigned>(png, 0x104) = (F<unsigned>(png, 0x100) * F<byte>(png, 0x10b) + 7) >> 3;
+    byte* const rowBuf = F<byte*>(png, 0xec);
+    At<void(__cdecl*)(void*, void*, byte*, byte*, int)>(0x1007ce80)(
+        png, static_cast<char*>(png) + 0x100, rowBuf + 1, F<byte*>(png, 0xe8) + 1, rowBuf[0]);
+    At<void(__cdecl*)(void*, void*, void*, unsigned)>(0x10078f20)(png, F<void*>(png, 0xe8), F<void*>(png, 0xec),
+                                                                 F<unsigned>(png, 0xd8) + 1);
+    if (F<unsigned>(png, 0x70))
+        At<PngRow_t>(0x100717d0)(png);
+    if (F<byte>(png, 0x123) && (F<unsigned>(png, 0x70) & 2)) {
+        const int pass = F<byte>(png, 0x124);
+        if (pass < 6)
+            At<void(__cdecl*)(void*, byte*, int, unsigned)>(0x1007c810)(
+                static_cast<char*>(png) + 0x100, F<byte*>(png, 0xec) + 1, pass, F<unsigned>(png, 0x70));
+        if (dsp)
+            combine(png, dsp, dspMask[F<byte>(png, 0x124)]);
+        if (row)
+            combine(png, row, passMask[F<byte>(png, 0x124)]);
+    } else {
+        if (row)
+            combine(png, row, 0xff);
+        if (dsp)
+            combine(png, dsp, 0xff);
+    }
+    finishRow(png);
+    if (void(__cdecl* fn)(void*, unsigned, int) = F<void(__cdecl*)(void*, unsigned, int)>(png, 0x198))
+        fn(png, F<unsigned>(png, 0xe4), F<byte>(png, 0x124));
+}
+
+// 0x0006cc50  png_read_image(png_ptr, image) (cdecl). pass = png_set_interlace_handling 0x1006d750 (png_ptr); height
+// +0xcc read once and stored to num_rows +0xd0; for j < pass (signed), for i < height (unsigned): png_read_row 0x1006c3f0
+// (png_ptr, image[i], NULL).
+typedef void(__cdecl* PngReadImage_t)(void*, byte**);
+PngReadImage_t PngReadImage_orig;
+void __cdecl PngReadImage_re(void* png, byte** image) {
+    const int pass = At<int(__cdecl*)(void*)>(0x1006d750)(png);
+    const unsigned height = F<unsigned>(png, 0xcc);
+    F<unsigned>(png, 0xd0) = height;
+    for (int j = 0; j < pass; j++) {
+        byte** rp = image;
+        for (unsigned i = 0; i < height; i++)
+            At<PngReadRow_t>(0x1006c3f0)(png, *rp++, 0);
+    }
+}
+
+// 0x0006bac0  png_create_read_struct(user_png_ver, error_ptr, error_fn, warn_fn) (cdecl, plain `ret`; no /GZ
+// prologue and no __chkesp: the function calls setjmp). png = png_create_struct 0x10078da0 (1) (0x1006bada); NULL
+// (jne 0x1006bae9) -> return 0. _setjmp3 0x1007fab8 (png->jmpbuf, 0) (0x1006baf8); a nonzero return, i.e. a longjmp
+// back (je 0x1006bb02) -> png_free 0x10078ed0 (png, zbuf +0xac), png_destroy_struct 0x10078e20 (png), return 0.
+// png_set_error_fn 0x10079340 (png, error_ptr, error_fn, warn_fn) (0x1006bb3d). user_png_ver NULL (je 0x1006bb49),
+// or its first char (signed) != the module version string's 0x1012318c (jne 0x1006bb5a), or that char is '0' (jne
+// 0x1006bb65) and the third char < '9' (`jge` 0x1006bb71) -> png_error 0x1011dbb0 (0x1006bb7c). zbuf_size +0xb0 =
+// 0x2000; zbuf = png_malloc 0x10078e60 (png, 0x2000); zstream zalloc +0x94 = png_zalloc 0x100786b0, zfree +0x98 =
+// png_zfree 0x10078750, opaque +0x9c = png; switch (inflateInit_ 0x1009c0b0 (&zstream, the module string 0x1011dba8,
+// 0x38) + 6) over the table 0x1006bc7f (`ja` 0x1006bbfc): Z_OK nothing; Z_MEM_ERROR / Z_STREAM_ERROR -> png_error
+// 0x1011db94; Z_VERSION_ERROR -> png_error 0x1011db80; anything else -> png_error 0x1011db6c. next_out +0x80 = zbuf,
+// avail_out +0x84 = zbuf_size; png_set_read_fn 0x10078cb0 (png, NULL, NULL); return png.
+typedef void*(__cdecl* PngCreateRead_t)(const char*, void*, void*, void*);
+typedef int(__cdecl* Setjmp3_t)(void*, int);
+PngCreateRead_t PngCreateReadStruct_orig;
+void* __cdecl PngCreateReadStruct_re(const char* ver, void* errPtr, void* errFn, void* warnFn) {
+    void* volatile png = At<void*(__cdecl*)(int)>(0x10078da0)(1);
+    if (!png)
+        return 0;
+    if (At<Setjmp3_t>(0x1007fab8)(png, 0)) {
+        At<PngFree_t>(0x10078ed0)(png, F<void*>(png, 0xac));
+        At<void(__cdecl*)(void*)>(0x10078e20)(png);
+        return 0;
+    }
+    At<void(__cdecl*)(void*, void*, void*, void*)>(0x10079340)(png, errPtr, errFn, warnFn);
+    const signed char* const lib = static_cast<const signed char*>(JgldVA(0x1012318c));
+    if (!ver || static_cast<signed char>(ver[0]) != lib[0] ||
+        (ver[0] == '0' && static_cast<signed char>(ver[2]) < '9'))
+        At<PngMsg_t>(kPngError)(png, S(0x1011dbb0));
+    F<unsigned>(png, 0xb0) = 0x2000;
+    F<void*>(png, 0xac) = At<PngMalloc_t>(0x10078e60)(png, F<unsigned>(png, 0xb0));
+    F<void*>(png, 0x94) = JgldVA(0x100786b0);
+    F<void*>(png, 0x98) = JgldVA(0x10078750);
+    F<void*>(png, 0x9c) = png;
+    switch (At<int(__cdecl*)(void*, const char*, int)>(0x1009c0b0)(static_cast<char*>(png) + 0x74, S(0x1011dba8), 0x38)) {
+    case 0:
+        break;
+    case -4:
+    case -2:
+        At<PngMsg_t>(kPngError)(png, S(0x1011db94));
+        break;
+    case -6:
+        At<PngMsg_t>(kPngError)(png, S(0x1011db80));
+        break;
+    default:
+        At<PngMsg_t>(kPngError)(png, S(0x1011db6c));
+    }
+    F<void*>(png, 0x80) = F<void*>(png, 0xac);
+    F<unsigned>(png, 0x84) = F<unsigned>(png, 0xb0);
+    At<void(__cdecl*)(void*, void*, void*)>(0x10078cb0)(png, 0, 0);
+    return png;
+}
+
+// =====================================================================================================================
+// group S - Surface blend rectangles. A Surface's vtable slots used here (jgld's Surface vtable 0x1011d0b0): +0xe4
+// the format pair {depth, layout}, +0xd4 bounds rect, +0xcc clip rect, +0x1c lockAt16 (x, y), +0xe0 pitch in pixels,
+// +0x24 unlock (flag). A Palette's +0x18 / +0x1c return its 565 / 555 word tables (Palette vtable 0x1011db10).
+// redOf 0x1000e440, greenOf 0x1000e4c0, blueOf 0x1000e540 and makeColor 0x1000a660 ask the module Display
+// 0x10128420 for its pixel layout (slot +0xb4); intersect 0x10008590 (out, a, b).
+// =====================================================================================================================
+template <class Fn> Fn Slot(void* obj, unsigned off) { return reinterpret_cast<Fn>(F<void*>(*static_cast<void**>(obj), off)); }
+typedef int*(__fastcall* SurfPtr_t)(void*, void*);
+typedef RECT*(__fastcall* SurfRect_t)(void*, void*);
+typedef unsigned short*(__fastcall* LockAt_t)(void*, void*, int, int);
+typedef int(__fastcall* SurfInt_t)(void*, void*);
+typedef void(__fastcall* Unlock_t)(void*, void*, int);
+typedef unsigned short*(__fastcall* PalTable_t)(void*, void*);
+typedef int(__cdecl* Chan_t)(int);
+typedef int(__cdecl* Make_t)(int, int, int);
+
+// The palette step both bodies share (0x1000dff4..0x1000e0ad / its ditherBlend twin): colour without bit 31 (jne
+// 0x1000dff4) is a palette index when a palette is found: the surface's +0x7c (je 0x1000e008), else the module
+// palette client 0x1012873c's +4 (je 0x1000e01c, 0x1000e024); then format layout (+4 of slot +0xe4's pair) 0 -> 565 table
+// (palette slot +0x18), 1 -> 555 table (+0x1c), anything else -> error 0x18 (0x1000e055 / 0x1000e05b).
+int PaletteColour(void* self, unsigned& c) {
+    if (c & 0x80000000)
+        return 0;
+    void* pal = 0;
+    if (F<void*>(self, 0x7c))
+        pal = F<void*>(self, 0x7c);
+    else if (void* client = G<void*>(0x1012873c))
+        pal = F<void*>(client, 4);
+    if (!pal)
+        return 0;
+    switch (Slot<SurfPtr_t>(self, 0xe4)(self, 0)[1]) {
+    case 0: c = Slot<PalTable_t>(pal, 0x18)(pal, 0)[c & 0xff]; return 0;
+    case 1: c = Slot<PalTable_t>(pal, 0x1c)(pal, 0)[c & 0xff]; return 0;
+    default: return 0x18;
+    }
+}
+// One blended pixel: (s * (256 - a) >> 8) + (d * a >> 8) per channel, packed by makeColor (low 16 bits stored).
+unsigned short BlendPixel(unsigned short d, int sr, int sg, int sb, int inv, int a) {
+    const Chan_t redOf = At<Chan_t>(0x1000e440), greenOf = At<Chan_t>(0x1000e4c0), blueOf = At<Chan_t>(0x1000e540);
+    const int dr = redOf(d) & 0xff, dg = greenOf(d) & 0xff, db = blueOf(d) & 0xff;
+    const int rr = (sr * inv >> 8) + (dr * a >> 8), gg = (sg * inv >> 8) + (dg * a >> 8), bb = (sb * inv >> 8) + (db * a >> 8);
+    return static_cast<unsigned short>(At<Make_t>(0x1000a660)(rr & 0xff, gg & 0xff, bb & 0xff));
+}
+// 0x0000dfc0  Surface::blendRect16(rect, colour, alpha) (thiscall, `ret 0xc`). Palette step above; error -> return
+// it (jne 0x1000e0ba). colour &= 0xffff; rc = *rect, or *bounds (slot +0xd4) when rect is NULL (jne 0x1000e0cf);
+// intersect (&rc, &rc, clip (slot +0xcc)) zero (je 0x1000e145) -> return 0. p = lockAt16 (rc.left, rc.top) (slot
+// +0x1c); NULL (je 0x1000e16e) -> return 0. alpha clamped to [0, 100] (signed `jge` 0x1000e18a, `jle` 0x1000e199),
+// alpha = (alpha << 8) / 100 (idiv, 0x1000e1c2), inv = 256 - alpha; sr/sg/sb = redOf/greenOf/blueOf (colour) & 0xff;
+// for each of the rc.bottom - rc.top rows (`je 0x1000e323` on h-- reaching it) for each of rc.right - rc.left pixels
+// (signed `jle` 0x1000e237): the blended pixel; then p += pitch (slot +0xe0) - w. unlock (1) (slot +0x24); return 0.
+typedef int(__fastcall* BlendRect_t)(void*, void*, const RECT*, unsigned, int);
+BlendRect_t BlendRect16_orig, DitherBlendRect16_orig, BlendRectDispatch_orig, DitherBlendRectDispatch_orig;
+int BlendRectBody(void* self, const RECT* r, unsigned c, int alpha, bool dither) {
+    const int err = PaletteColour(self, c);
+    if (err)
+        return err;
+    c &= 0xffff;
+    RECT rc = r ? *r : *Slot<SurfRect_t>(self, 0xd4)(self, 0);
+    if (!At<int(__cdecl*)(RECT*, const RECT*, const RECT*)>(0x10008590)(&rc, &rc, Slot<SurfRect_t>(self, 0xcc)(self, 0)))
+        return 0;
+    unsigned short* p = Slot<LockAt_t>(self, 0x1c)(self, 0, rc.left, rc.top);
+    if (!p)
+        return 0;
+    int h = rc.bottom - rc.top;
+    const int w = rc.right - rc.left;
+    alpha = alpha < 0 ? 0 : (alpha > 100 ? 100 : alpha);
+    alpha = (alpha << 8) / 100;
+    const int inv = 256 - alpha;
+    const int sr = At<Chan_t>(0x1000e440)(c) & 0xff, sg = At<Chan_t>(0x1000e4c0)(c) & 0xff,
+              sb = At<Chan_t>(0x1000e540)(c) & 0xff;
+    while (h--) {
+        if (!dither) {
+            for (int n = w; n > 0; n--, p++)
+                *p = BlendPixel(*p, sr, sg, sb, inv, alpha);
+            p += Slot<SurfInt_t>(self, 0xe0)(self, 0) - w;
+        } else {
+            int n = w, odd = 0;
+            if (h % 2) {
+                p++;
+                odd = 1;
+                n--;
+            }
+            for (; n > 0; n -= 2, p += 2)
+                *p = BlendPixel(*p, sr, sg, sb, inv, alpha);
+            p += Slot<SurfInt_t>(self, 0xe0)(self, 0) - w - odd;
+        }
+    }
+    Slot<Unlock_t>(self, 0x24)(self, 0, 1);
+    return 0;
+}
+int __fastcall BlendRect16_re(void* self, void*, const RECT* r, unsigned c, int alpha) {
+    return BlendRectBody(self, r, c, alpha, false);
+}
+// 0x0000e8b0  Surface::ditherBlendRect16(rect, colour, alpha) (thiscall, `ret 0xc`): blendRect16's steps, but each
+// row starts one pixel in when the rows still to go after it (h after the decrement) are odd (`h % 2`), and blends
+// every second pixel (n -= 2, p += 2); the row end subtracts that extra pixel again (p += pitch - w - odd).
+int __fastcall DitherBlendRect16_re(void* self, void*, const RECT* r, unsigned c, int alpha) {
+    return BlendRectBody(self, r, c, alpha, true);
+}
+// 0x00009ac0  Surface::blendRectDispatch(rect, colour, alpha) (thiscall, `ret 0xc`): the depth word slot +0xe4
+// points at (0x10009ae7, `mov eax, [eax]`) is 16 (je 0x10009afd) -> blendRect16 through its thunk 0x10001537 and its
+// result; otherwise 0x17 (0x10009b17).
+int __fastcall BlendRectDispatch_re(void* self, void*, const RECT* r, unsigned c, int alpha) {
+    if (*Slot<SurfPtr_t>(self, 0xe4)(self, 0) == 16)
+        return At<BlendRect_t>(0x10001537)(self, 0, r, c, alpha);
+    return 0x17;
+}
+// 0x00009e40  Surface::ditherBlendRectDispatch(rect, colour, alpha): the same test (je 0x10009e7d) and
+// ditherBlendRect16 through its thunk 0x1000115e (0x10009e90), else 0x17.
+int __fastcall DitherBlendRectDispatch_re(void* self, void*, const RECT* r, unsigned c, int alpha) {
+    if (*Slot<SurfPtr_t>(self, 0xe4)(self, 0) == 16)
+        return At<BlendRect_t>(0x1000115e)(self, 0, r, c, alpha);
+    return 0x17;
+}
+
+// 0x000083c0  Surface::setClip(rect) (thiscall, `ret 4`). NULL rect (jne 0x100083e1) -> 3. rc = *rect; intersect
+// (thunk 0x10001087) (clip +0x44, bounds +0x54, &rc) zero (jne 0x10008423) -> 1. dc = slot +0x28 (acquireDC); zero (je
+// 0x1000844a) -> straight to the release. The clip region +0x4ac non-NULL (je 0x1000845a) -> DeleteObject (it) through
+// the IAT slot 0x1012c370 and +0x4ac = 0. equal (thunk 0x100016d6) (clip, bounds) nonzero (je 0x1000849a) ->
+// SelectClipRgn (dc, 0) (IAT 0x1012c390); else +0x4ac = CreateRectRgnIndirect (clip) (IAT 0x1012c398), NULL (jne
+// 0x100084dc) -> return 1 without the release; SelectClipRgn (dc, region). Slot +0x2c (releaseDC) (1); return 0.
+typedef int(__fastcall* SetClip_t)(void*, void*, const RECT*);
+typedef HDC(__fastcall* GetDC_t)(void*, void*);
+typedef void(__fastcall* RelDC_t)(void*, void*, int);
+SetClip_t SetClip_orig;
+template <class Fn> Fn Iat(unsigned slot) { return *static_cast<Fn*>(JgldVA(slot)); }
+int __fastcall SetClip_re(void* self, void*, const RECT* r) {
+    if (!r)
+        return 3;
+    RECT rc = *r;
+    RECT* const clip = reinterpret_cast<RECT*>(static_cast<char*>(self) + 0x44);
+    RECT* const bounds = reinterpret_cast<RECT*>(static_cast<char*>(self) + 0x54);
+    if (!At<int(__cdecl*)(RECT*, const RECT*, const RECT*)>(0x10001087)(clip, bounds, &rc))
+        return 1;
+    if (HDC dc = Slot<GetDC_t>(self, 0x28)(self, 0)) {
+        if (F<HGDIOBJ>(self, 0x4ac)) {
+            Iat<BOOL(WINAPI*)(HGDIOBJ)>(0x1012c370)(F<HGDIOBJ>(self, 0x4ac));
+            F<HGDIOBJ>(self, 0x4ac) = 0;
+        }
+        if (At<int(__cdecl*)(const RECT*, const RECT*)>(0x100016d6)(clip, bounds)) {
+            Iat<int(WINAPI*)(HDC, HRGN)>(0x1012c390)(dc, 0);
+        } else {
+            F<HRGN>(self, 0x4ac) = Iat<HRGN(WINAPI*)(const RECT*)>(0x1012c398)(clip);
+            if (!F<HRGN>(self, 0x4ac))
+                return 1;
+            Iat<int(WINAPI*)(HDC, HRGN)>(0x1012c390)(dc, F<HRGN>(self, 0x4ac));
+        }
+    }
+    Slot<RelDC_t>(self, 0x2c)(self, 0, 1);
+    return 0;
+}
+
+// =====================================================================================================================
+// group M - module-global methods
+// =====================================================================================================================
+// 0x0006a3d0  Palette::update() (thiscall, plain `ret`). A local Random (Random::ctor through the thunk 0x1000154b,
+// 0x1006a3f0: seed 0); id +0x810 = 0 (0x1006a3f8); QueryPerformanceCounter (this + 0x818) through the IAT slot
+// 0x1012c414 (0x1006a40e); Random::seed (thunk 0x100014e7) with the counter's low dword (0x1006a428); while id is 0
+// (jne 0x1006a437): id = Random::range (thunk 0x100016f4) (0xffff) & 0xffff; then Palette::apply (thunk 0x100018fc).
+// eax is apply's.
+typedef void(__fastcall* Method_t)(void*, void*);
+Method_t PaletteUpdate_orig;
+void __fastcall PaletteUpdate_re(void* self, void*) {
+    unsigned rng;
+    At<Method_t>(0x1000154b)(&rng, 0);
+    F<unsigned>(self, 0x810) = 0;
+    Iat<BOOL(WINAPI*)(LARGE_INTEGER*)>(0x1012c414)(reinterpret_cast<LARGE_INTEGER*>(static_cast<char*>(self) + 0x818));
+    At<void(__fastcall*)(void*, void*, unsigned)>(0x100014e7)(&rng, 0, F<unsigned>(self, 0x818));
+    while (F<unsigned>(self, 0x810) == 0)
+        F<unsigned>(self, 0x810) = At<int(__fastcall*)(void*, void*, int)>(0x100016f4)(&rng, 0, 0xffff) & 0xffff;
+    At<Method_t>(0x100018fc)(self, 0);
+}
+
+// 0x000662a0  Display::setModeIndex(index) (thiscall, `ret 4`). EnumDisplaySettingsA (NULL, ENUM_CURRENT_SETTINGS -1,
+// this + 4) through the IAT slot 0x1012c60c (0x100662da). The current width (this + 0x70, the DEVMODE's dmPelsWidth)
+// == 640 (jne 0x100662f1) -> MessageBoxA (the module Display 0x10128420's slot +0x20 result, 0x1011d988, 0x1011da48, 0)
+// (IAT 0x1012c5dc, 0x1006631c) and return 2. index >= g_devmodes 0x101286f8's count (Array_Rec94::count through the
+// thunk 0x10001609; signed `jl` 0x10066340) -> 3. A local copy of the 0x94-byte record at [0x101286fc] + index *
+// 0x94 (`imul` 0x1006634f, `rep movsd` 0x25 dwords), dmSize = 0x94, dmFields = 0x5c0000; ChangeDisplaySettingsA
+// (&copy, CDS_FULLSCREEN 4) (IAT 0x1012c5f4) nonzero (je 0x10066391) -> 2. Width +0x12c, height +0x130 and bits +0x134
+// from the copy's dmPelsWidth / dmPelsHeight / dmBitsPerPel; return the object at +0x148's slot 0 (width, height,
+// bits, 1) (thiscall, 0x100663f4).
+typedef int(__fastcall* SetModeIndex_t)(void*, void*, int);
+SetModeIndex_t SetModeIndex_orig;
+int __fastcall SetModeIndex_re(void* self, void*, int index) {
+    Iat<BOOL(WINAPI*)(LPCSTR, DWORD, DEVMODEA*)>(0x1012c60c)(0, static_cast<DWORD>(-1),
+                                                              reinterpret_cast<DEVMODEA*>(static_cast<char*>(self) + 4));
+    if (F<int>(self, 0x70) == 0x280) {
+        void* const disp = G<void*>(0x10128420);
+        HWND hwnd = Slot<HWND(__fastcall*)(void*, void*)>(disp, 0x20)(disp, 0);
+        Iat<int(WINAPI*)(HWND, LPCSTR, LPCSTR, UINT)>(0x1012c5dc)(hwnd, S(0x1011d988), S(0x1011da48), 0);
+        return 2;
+    }
+    if (index >= At<int(__fastcall*)(void*, void*)>(0x10001609)(JgldVA(0x101286f8), 0))
+        return 3;
+    DEVMODEA dm;
+    memcpy(&dm, G<char*>(0x101286fc) + static_cast<unsigned>(index) * 0x94u, 0x94);   // 32-bit imul wrap
+    dm.dmSize = 0x94;
+    dm.dmFields = 0x5c0000;
+    if (Iat<LONG(WINAPI*)(DEVMODEA*, DWORD)>(0x1012c5f4)(&dm, 4))
+        return 2;
+    F<int>(self, 0x12c) = static_cast<int>(dm.dmPelsWidth);
+    F<int>(self, 0x130) = static_cast<int>(dm.dmPelsHeight);
+    F<int>(self, 0x134) = static_cast<int>(dm.dmBitsPerPel);
+    void* const obj = F<void*>(self, 0x148);
+    return Slot<int(__fastcall*)(void*, void*, int, int, int, int)>(obj, 0)(obj, 0, F<int>(self, 0x12c),
+                                                                          F<int>(self, 0x130), F<int>(self, 0x134), 1);
+}
+
+// 0x00068850  Font::create(face, size, style) (thiscall, `ret 0xc`). NULL face (jne 0x10068877) -> 3. Flags +0x14 bit
+// 0 clear (jne 0x1006888e) -> the font's slot +0xc (reset) (0x1006889a); set -> the metrics object at +4: +0xc, +8,
+// +0x14, +0x18 = 0, and a font handle +0x18 (je 0x100688e1) goes to DeleteObject (IAT 0x1012c370) and is cleared. A
+// LOGFONTA on the stack: height -size (0x10068906), width / escapement / orientation 0, weight 700 when style bit 0
+// (`neg; sbb; and 0x2bc` 0x10068926..0x1006892a), italic style bit 1, underline style bit 2, strike-out 0, charset 0,
+// out precision 7, clip / quality / pitch 0; face copied with strcpy 0x1007f760 (0x10068971). +0x18 =
+// CreateFontIndirectA (IAT 0x1012c3cc); NULL (jne 0x10068999) -> 0xd. SelectObject (the font DC 0x10128724, font)
+// (IAT 0x1012c378), GetTextMetricsA (font DC, &tm) (IAT 0x1012c3ac); metrics +8 = tmHeight + tmExternalLeading, +0xc =
+// tmAscent - tmInternalLeading, +0x10 = tmInternalLeading, +0x14 = tmAscent, +0x18 = tmDescent (0x100689db..
+// 0x10068a1a); SelectObject (font DC, GetStockObject (SYSTEM_FONT 0xd) (IAT 0x1012c3a4)); return 0.
+typedef int(__fastcall* FontCreate_t)(void*, void*, const char*, int, unsigned);
+FontCreate_t FontCreate_orig;
+int __fastcall FontCreate_re(void* self, void*, const char* face, int size, unsigned style) {
+    if (!face)
+        return 3;
+    char* const m = F<char*>(self, 4);
+    if (!(F<unsigned>(self, 0x14) & 1)) {
+        Slot<Method_t>(self, 0xc)(self, 0);
+    } else {
+        F<int>(m, 0xc) = 0;
+        F<int>(m, 8) = 0;
+        F<int>(m, 0x14) = 0;
+        F<int>(m, 0x18) = 0;
+        if (F<HGDIOBJ>(self, 0x18)) {
+            Iat<BOOL(WINAPI*)(HGDIOBJ)>(0x1012c370)(F<HGDIOBJ>(self, 0x18));
+            F<HGDIOBJ>(self, 0x18) = 0;
+        }
+    }
+    LOGFONTA lf;
+    lf.lfHeight = -size;
+    lf.lfWidth = 0;
+    lf.lfEscapement = 0;
+    lf.lfOrientation = 0;
+    lf.lfWeight = (style & 1) ? 700 : 0;
+    lf.lfItalic = (style & 2) != 0;
+    lf.lfUnderline = (style & 4) != 0;
+    lf.lfStrikeOut = 0;
+    lf.lfCharSet = 0;
+    lf.lfOutPrecision = 7;
+    lf.lfClipPrecision = 0;
+    lf.lfQuality = 0;
+    lf.lfPitchAndFamily = 0;
+    At<char*(__cdecl*)(char*, const char*)>(0x1007f760)(lf.lfFaceName, face);
+    F<HFONT>(self, 0x18) = Iat<HFONT(WINAPI*)(const LOGFONTA*)>(0x1012c3cc)(&lf);
+    if (!F<HFONT>(self, 0x18))
+        return 0xd;
+    const HDC dc = G<HDC>(0x10128724);
+    Iat<HGDIOBJ(WINAPI*)(HDC, HGDIOBJ)>(0x1012c378)(dc, F<HFONT>(self, 0x18));
+    TEXTMETRICA tm;
+    Iat<BOOL(WINAPI*)(HDC, TEXTMETRICA*)>(0x1012c3ac)(G<HDC>(0x10128724), &tm);
+    F<int>(m, 8) = tm.tmHeight + tm.tmExternalLeading;
+    F<int>(m, 0xc) = tm.tmAscent - tm.tmInternalLeading;
+    F<int>(m, 0x10) = tm.tmInternalLeading;
+    F<int>(m, 0x14) = tm.tmAscent;
+    F<int>(m, 0x18) = tm.tmDescent;
+    const HGDIOBJ stock = Iat<HGDIOBJ(WINAPI*)(int)>(0x1012c3a4)(0xd);
+    Iat<HGDIOBJ(WINAPI*)(HDC, HGDIOBJ)>(0x1012c378)(G<HDC>(0x10128724), stock);
+    return 0;
+}
+
+// 0x0007f760  strcpy(dst, src) (cdecl): VC6's strcat.asm entry `push edi; mov edi, [esp+8]; jmp 0x1007f7d1` into
+// _strcat 0x1007f770's copy loop, which copies src up to and including its NUL (a dword at a time while no byte of
+// the dword is zero, then the bytes up to the NUL) and returns dst in eax.
+typedef char*(__cdecl* Strcpy_t)(char*, const char*);
+Strcpy_t Strcpy_orig;
+char* __cdecl Strcpy_re(char* dst, const char* src) {
+    char* d = dst;
+    while ((*d++ = *src++) != 0) {
+    }
+    return dst;
+}
+
+// =====================================================================================================================
+// group I - C++ static initialisation (jgld's CRT walks the initializer table __xc_a 0x10122000 from __cinit
+// 0x1007f160; pointer_callers.py lists these stubs as its slots). Each dynInit_* stub calls a constructor of a module
+// global and then a function that registers the global's teardown with _atexit 0x1007f080. eax is the last call's.
+// =====================================================================================================================
+typedef int(__cdecl* Void_t)();
+typedef int(__fastcall* Ctor_t)(void*, void*);
+// 0x000069f0  registerTrackedListTeardown(): _atexit 0x1007f080 (atexitDestroyGlobalList 0x10006a40) (`push
+// 0x10006a40` 0x10006a08, call 0x10006a0d); its result.
+Void_t RegisterTrackedListTeardown_orig;
+int __cdecl RegisterTrackedListTeardown_re() {
+    return At<int(__cdecl*)(void*)>(0x1007f080)(JgldVA(0x10006a40));
+}
+// 0x00006970  dynInit_trackedList(): constructTrackedList 0x100069b0 (0x10006988), then registerTrackedListTeardown
+// 0x100069f0 (0x1000698d).
+Void_t DynInitTrackedList_orig;
+int __cdecl DynInitTrackedList_re() {
+    At<Void_t>(0x100069b0)();
+    return At<Void_t>(0x100069f0)();
+}
+// 0x00065010  constructArrayE0(): Array_e0::ctor (thunk 0x100017a8) on g_arrayE0 0x101286e0 (`mov ecx` 0x10065028).
+Void_t ConstructArrayE0_orig;
+int __cdecl ConstructArrayE0_re() { return At<Ctor_t>(0x100017a8)(JgldVA(0x101286e0), 0); }
+// 0x00064fd0  dynInit_arrayE0(): constructArrayE0 0x10065010 (0x10064fe8), then 0x10065050 (0x10064fed), which passes
+// 0x100650a0 to _atexit.
+Void_t DynInitArrayE0_orig;
+int __cdecl DynInitArrayE0_re() {
+    At<Void_t>(0x10065010)();
+    return At<Void_t>(0x10065050)();
+}
+// 0x00065120  constructModes(): Array_Rec14::ctor (thunk 0x10001055) on 0x101286c8 (`mov ecx` 0x10065138).
+Void_t ConstructModes_orig;
+int __cdecl ConstructModes_re() { return At<Ctor_t>(0x10001055)(JgldVA(0x101286c8), 0); }
+// 0x000650e0  dynInit_modes(): constructModes 0x10065120 (0x100650f8), then 0x10065160 (0x100650fd).
+Void_t DynInitModes_orig;
+int __cdecl DynInitModes_re() {
+    At<Void_t>(0x10065120)();
+    return At<Void_t>(0x10065160)();
+}
+// 0x00065230  constructDevmodes(): Array_Rec94::ctor (thunk 0x1000153c) on g_devmodes 0x101286f8 (0x10065248).
+Void_t ConstructDevmodes_orig;
+int __cdecl ConstructDevmodes_re() { return At<Ctor_t>(0x1000153c)(JgldVA(0x101286f8), 0); }
+// 0x000651f0  dynInit_devmodes(): constructDevmodes 0x10065230 (0x10065208), then 0x10065270 (0x1006520d).
+Void_t DynInitDevmodes_orig;
+int __cdecl DynInitDevmodes_re() {
+    At<Void_t>(0x10065230)();
+    return At<Void_t>(0x10065270)();
+}
+
+}  // namespace
+
+// 0x00078fe0  png_error
+SG_HOOK("jgld.dll", 0x00078FE0, png_error, PngError_re, PngError_orig);
+// 0x000790a0  png_chunk_error
+SG_HOOK("jgld.dll", 0x000790A0, png_chunk_error, PngChunkError_re, PngChunkError_orig);
+// 0x0007c1f0  png_check_chunk_name
+SG_HOOK("jgld.dll", 0x0007C1F0, png_check_chunk_name, PngCheckChunkName_re, PngCheckChunkName_orig);
+// 0x00079cc0  png_handle_gAMA
+SG_HOOK("jgld.dll", 0x00079CC0, png_handle_gAMA, PngHandleGAMA_re, PngHandleGAMA_orig);
+// 0x0007a7d0  png_handle_sRGB
+SG_HOOK("jgld.dll", 0x0007A7D0, png_handle_sRGB, PngHandleSRGB_re, PngHandleSRGB_orig);
+// 0x0007a0d0  png_handle_cHRM
+SG_HOOK("jgld.dll", 0x0007A0D0, png_handle_cHRM, PngHandleCHRM_re, PngHandleCHRM_orig);
+// 0x000799e0  png_handle_PLTE
+SG_HOOK("jgld.dll", 0x000799E0, png_handle_PLTE, PngHandlePLTE_re, PngHandlePLTE_orig);
+// 0x0007ab40  png_handle_tRNS
+SG_HOOK("jgld.dll", 0x0007AB40, png_handle_tRNS, PngHandleTRNS_re, PngHandleTRNS_orig);
+// 0x0007ae70  png_handle_bKGD
+SG_HOOK("jgld.dll", 0x0007AE70, png_handle_bKGD, PngHandleBKGD_re, PngHandleBKGD_orig);
+// 0x0007b1a0  png_handle_hIST
+SG_HOOK("jgld.dll", 0x0007B1A0, png_handle_hIST, PngHandleHIST_re, PngHandleHIST_orig);
+// 0x0007baf0  png_handle_tEXt
+SG_HOOK("jgld.dll", 0x0007BAF0, png_handle_tEXt, PngHandleTEXT_re, PngHandleTEXT_orig);
+// 0x0007bc40  png_handle_zTXt
+SG_HOOK("jgld.dll", 0x0007BC40, png_handle_zTXt, PngHandleZTXT_re, PngHandleZTXT_orig);
+// 0x0006be20  png_read_info
+SG_HOOK("jgld.dll", 0x0006BE20, png_read_info, PngReadInfo_re, PngReadInfo_orig);
+// 0x0006cd00  png_read_end
+SG_HOOK("jgld.dll", 0x0006CD00, png_read_end, PngReadEnd_re, PngReadEnd_orig);
+// 0x0007d280  png_read_finish_row
+SG_HOOK("jgld.dll", 0x0007D280, png_read_finish_row, PngReadFinishRow_re, PngReadFinishRow_orig);
+// 0x0006c3f0  png_read_row
+SG_HOOK("jgld.dll", 0x0006C3F0, png_read_row, PngReadRow_re, PngReadRow_orig);
+// 0x0006cc50  png_read_image
+SG_HOOK("jgld.dll", 0x0006CC50, png_read_image, PngReadImage_re, PngReadImage_orig);
+// 0x0006bac0  png_create_read_struct
+SG_HOOK("jgld.dll", 0x0006BAC0, png_create_read_struct, PngCreateReadStruct_re, PngCreateReadStruct_orig);
+// 0x0000dfc0  Surface::blendRect16
+SG_HOOK("jgld.dll", 0x0000DFC0, Surface_blendRect16, BlendRect16_re, BlendRect16_orig);
+// 0x0000e8b0  Surface::ditherBlendRect16
+SG_HOOK("jgld.dll", 0x0000E8B0, Surface_ditherBlendRect16, DitherBlendRect16_re, DitherBlendRect16_orig);
+// 0x00009ac0  Surface::blendRectDispatch
+SG_HOOK("jgld.dll", 0x00009AC0, Surface_blendRectDispatch, BlendRectDispatch_re, BlendRectDispatch_orig);
+// 0x00009e40  Surface::ditherBlendRectDispatch
+SG_HOOK("jgld.dll", 0x00009E40, Surface_ditherBlendRectDispatch, DitherBlendRectDispatch_re, DitherBlendRectDispatch_orig);
+// 0x000083c0  Surface::setClip
+SG_HOOK("jgld.dll", 0x000083C0, Surface_setClip, SetClip_re, SetClip_orig);
+// 0x0006a3d0  Palette::update
+SG_HOOK("jgld.dll", 0x0006A3D0, Palette_update, PaletteUpdate_re, PaletteUpdate_orig);
+// 0x000662a0  Display::setModeIndex
+SG_HOOK("jgld.dll", 0x000662A0, Display_setModeIndex, SetModeIndex_re, SetModeIndex_orig);
+// 0x00068850  Font::create
+SG_HOOK("jgld.dll", 0x00068850, Font_create, FontCreate_re, FontCreate_orig);
+// 0x0007f760  strcpy
+SG_HOOK("jgld.dll", 0x0007F760, jgld_strcpy, Strcpy_re, Strcpy_orig);
+// 0x000069f0  registerTrackedListTeardown
+SG_HOOK("jgld.dll", 0x000069F0, registerTrackedListTeardown, RegisterTrackedListTeardown_re, RegisterTrackedListTeardown_orig);
+// 0x00006970  dynInit_trackedList
+SG_HOOK("jgld.dll", 0x00006970, dynInit_trackedList, DynInitTrackedList_re, DynInitTrackedList_orig);
+// 0x00065010  constructArrayE0
+SG_HOOK("jgld.dll", 0x00065010, constructArrayE0, ConstructArrayE0_re, ConstructArrayE0_orig);
+// 0x00064fd0  dynInit_arrayE0
+SG_HOOK("jgld.dll", 0x00064FD0, dynInit_arrayE0, DynInitArrayE0_re, DynInitArrayE0_orig);
+// 0x00065120  constructModes
+SG_HOOK("jgld.dll", 0x00065120, constructModes, ConstructModes_re, ConstructModes_orig);
+// 0x000650e0  dynInit_modes
+SG_HOOK("jgld.dll", 0x000650E0, dynInit_modes, DynInitModes_re, DynInitModes_orig);
+// 0x00065230  constructDevmodes
+SG_HOOK("jgld.dll", 0x00065230, constructDevmodes, ConstructDevmodes_re, ConstructDevmodes_orig);
+// 0x000651f0  dynInit_devmodes
+SG_HOOK("jgld.dll", 0x000651F0, dynInit_devmodes, DynInitDevmodes_re, DynInitDevmodes_orig);
+// 0x0007b620  png_handle_pCAL
+SG_HOOK("jgld.dll", 0x0007B620, png_handle_pCAL, PngHandlePCAL_re, PngHandlePCAL_orig);

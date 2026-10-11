@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 77 bytes, 28 instructions, subsystem `input`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 returns the +0xb0 owner of the current focus/hover window (from g_83ab54/g_83b990/g_83ab38/g_83ab60) when it is visible (`re/names/exe_3.tsv`)
 
+## Purpose
+0x0047f2f0 currentFocusOwner(): esi = [0x0083ab54] (0x0047f2f1). Non-zero: [0x0083b990] when non-zero replaces it (0x0047f2fb..0x0047f304). Zero: [0x0083ab38], and when that is zero [0x0083ab60] (0x0047f308..0x0047f312). The chosen window is stored in [0x0083ab3c] (0x0047f31a). NULL returns 0 (0x0047f320 `je` 0x0047f339 with eax = esi = 0). Otherwise esi = [esi + 0xb0] (0x0047f322); NULL returns 0; else Window::visible(esi) (call 0x0047f32e): non-zero returns esi, zero returns 0 (the ret at 0x0047f338 with eax = visible's 0). Callers (hooks.csv): 0x00495910;0x00495990. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: currentFocusOwner (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047f2f0_currentFocusOwner.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0047f338, 0x0047f33c): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00006970`), 51 bytes, 21 instructions, subsystem `crt`
 C++ dynamic-initializer stub for the tracked-object list g_trackedList 0x10128428: constructs it through constructTrackedList 0x100069b0 (0x10006988) and registers its teardown through registerTrackedListTeardown 0x100069f0 (0x1000698d); no argument, no return value (/GZ frame, __chkesp at 0x1000699a). (`re/names/jgld_7.tsv`)
 System writeup: `re/analysis/systems/jgld_4.md`, `re/analysis/systems/jgld_5.md`, `re/analysis/systems/jgld_7.md`.
 
+## Purpose
+the tracked list's static initialiser: constructTrackedList 0x100069b0 (0x10006988), then registerTrackedListTeardown 0x100069f0 (0x1000698d); eax is the latter's. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: dynInit_trackedList_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006970_jgld_dynInit_trackedList_a.path1.csv`); dynInit_trackedList_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006970_jgld_dynInit_trackedList_b.path1.csv`); dynInit_trackedList_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00006970_jgld_dynInit_trackedList_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `_$E4` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100069a2): callee pops 0 bytes of stack arguments.

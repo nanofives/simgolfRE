@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00030710`), 13 bytes, 4 instructions, subsystem `audi
 forwards this and its single argument to openMmioSound 0x1000259f and returns (`re/names/undisc_sound.tsv`)
 System writeup: `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+0x00030710 Sound5c450::openMmio (VA 0x10030710). __thiscall, `ret 4`, one argument. The argument is loaded and pushed (0x10030714 / 0x10030715) and `call 0x1000259f` (thunk to openMmioSound 0x10030840) runs with ecx unchanged (this); its result is returned (0x1003071a). Reached from: no call xref; reached through a stored pointer: 0x1005c4dc table slot 35 (+0x8c) of the table at 0x1005c450; installers: 0x10030080 Sound5c450_ctor, 0x10030180 Sound5c450_dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Sound5c450::openMmio (12 vectors, 12 distinct results, 12 changing state, `log/diff/00030710_sound_Sound5c450_openMmio.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1003071a): callee pops 4 bytes of stack arguments.
 

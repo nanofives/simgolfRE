@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 166 bytes, 67 instructions, subsystem `net`. Mechanical
 removes the node at a given index from a network peer/message linked list. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x0049bec0 netListRemove(this, key): `ret 4`, no value (eax is scratch). A list with a non-NULL head this+8 (0x0049bec3 / 0x0049bec8): the ring of this+0x10 nodes (count) is walked from the cursor this+0xc (0x0049bedd), each node's key being the dword at node+4 (cmp at 0x0049bee0); on a miss the cursor moves to node+0xc and the index counter advances (0x0049bee5..0x0049beee), so a full miss leaves the cursor where it started. On a hit the node is unlinked (next.prev = prev at 0x0049bef5..0x0049befb, prev.next = next at 0x0049befe..0x0049bf07), the head moves to the next node when it was the head (0x0049bf0d..0x0049bf15), the cursor moves to the next node (0x0049bf1d), slot +4 of this is called with the node's item node+8 (0x0049bf26), the item, when not NULL, gets its slot 0 called with 1 (0x0049bf33), the item field is cleared (0x0049bf37), the node is deleted through DeleteNode and the count drops by one (0x0049bf4f). Afterwards an empty list clears the head (0x0049bf5b) and this+0x14 becomes count - 1 (0x0049bf5e). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: netListRemove (38 vectors, 27 distinct results, 36 changing state, `log/diff/0049bec0_netListRemove.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?remove@L49bec0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049bf63): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 158 bytes, 58 instructions, subsystem `ui`. Mechanical 
 Adds a text span, decoding a leading '^' escape (alignment/colour code) and appending the span node to this+0x1410. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x0048df20 TextView::addText(this, text, flag): `ret 8`. A NULL text returns 3 (0x0048df26..0x0048df2f). The marker prefix '^' (0x5e, cmp at 0x0048df35) sets the kind and skips characters: "^" alone is kind 3 and skips one (0x0048df3e.. 0x0048df40, 0x0048df65, 0x0048df6a); "^^^" is kind 2 and skips three (0x0048df42..0x0048df5e); "^^" followed by another character is kind 2 and skips two (0x0048df60); "^" followed by any other character is kind 1 and skips one (0x0048df47..0x0048df4c, 0x0048df6a); a text that does not start with '^' is kind 0 and skipped none. The low byte of flag (0x0048df6b) picks the route: non-zero calls postMessageLine 0x004a0600 on this+0x1410 with (text, 0, kind, 0) (0x0048df75..0x0048df7f); zero stores text, kind and 0 in this+0x1410+0x1c / +0x20 / +0x24 (0x0048df94..0x0048dfa2) and calls S3List_add with 0 (0x0048df9a..0x0048dfa9). The result is 1 when the callee returned non-zero, else 0 (0x0048df84..0x0048df88, 0x0048dfae..0x0048dfb2, 0x0048dfb7). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: TextView::addText (86 vectors, 75 distinct results, 80 changing state, `log/diff/0048df20_TextView_addText.path1.csv`); TextView::addText_fail0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/0048df20_TextView_addText_fail0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?say@C48df20@@QAEHPADD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0048df2f, 0x0048df91, 0x0048dfbb): callee pops 8 bytes of stack arguments.

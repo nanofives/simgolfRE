@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 67 bytes, 17 instructions, subsystem `ui`. Mechanical t
 initialises the text-draw state (pen this+0x18=this+0x14, globals 0x00839a9c/aa0/aa4) and draws the run via drawTextBlock (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Thiscall `(this, text, x, y, width)`, ret 0x10. this+0x18 = this+0x14 (0x00478750 / 0x00478755), this+0x1c = 0 (0x0047875c), [0x00839a9c] = x, [0x00839aa8] = 0, [0x00839aa0] = y, [0x00839aa4] = width (0x0047875f..0x00478778), this+0x3c = 0 (0x0047877e), buffer 0x00839658[0] = 0 (0x00478781); drawTextBlock 0x004787a0(this, text) (0x0047878b) is called and its result returned. Keys `TextView_beginDrawRun` (the fixture pre-loads the pending buffer with "ab") and `_base` (empty buffer): 52 vectors each (four text objects x four texts x three (x, y, width), plus a NULL text, an empty text, a zero width and a spaces-only text). Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: TextView_beginDrawRun (52 vectors, 40 distinct results, 52 changing state, `log/diff/00478750_TextView_beginDrawRun.path1.csv`); TextView_beginDrawRun_base (52 vectors, 40 distinct results, 52 changing state, `log/diff/00478750_TextView_beginDrawRun_base.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_00478750@C_FUN_00478750@f_00478750@@QAEXPADIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00478790): callee pops 16 bytes of stack arguments.

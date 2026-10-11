@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 32 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 panelSub's slot-60 body, thiscall(int unused): reads the vbtable at this-0xe0 and its entry +4 (0x004a4870 / 0x004a4876), then calls slot +0x120 of the base at this-0xe0+entry with no argument (0x004a4879..0x004a4887) and returns its eax; the stack argument is never read (ret 4 at 0x004a488d). What slot +0x120 does is not determined by this body. (`re/names/exe_8.tsv`)
 System writeup: `re/analysis/systems/exe_8.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+0x004a4870 panelSubSlot60(ecx): `mov eax, [ecx-0xe0]` is a virtual-base table pointer (0x004a4870), its entry +4 the offset of the target (0x004a4876), the target is ecx - 0xe0 + offset (0x004a4880) and its vtable slot +0x120 runs on it (0x004a4879 / 0x004a4887); the result of that call is returned (0x004a488d). `ret 4` (0x004a488d): one stack argument, never read (viewDispatchSlot60 0x004a1045..0x004a104c and panelSubSlot60_vtordisp pass one). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: panelSubSlot60 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a4870_panelSubSlot60.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_004a4870@C_FUN_004a4870@f_004a4870@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a488d): callee pops 4 bytes of stack arguments.

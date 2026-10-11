@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 270 bytes, 74 instructions, subsystem `ui`. Mechanical 
 scrolls the scrollbar position by a signed delta. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004973c0 scrollbarScrollBy(this, dir): `ret 4`. this+0x598 is cleared (0x004973c9), 0x0083ab2c takes the parent this+0x130 (0x004973d3) and 0x0083ff18 is cleared (0x004973dd). dir 1 (`dec` at 0x004973dc, je at 0x004973e7) lowers this+0x58c by one when it is above this+0x580 (cmp at 0x00497405, jle at 0x0049740d); dir 2 (second `dec`, jne at 0x004973ea) raises it by one when it is below this+0x584 (cmp at 0x004973f8, jge at 0x004973fa); any other dir changes nothing. The shared tail follows. Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: scrollbarScrollBy (40 vectors, 19 distinct results, 40 changing state, `log/diff/004973c0_scrollbarScrollBy.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_f.cpp` as `?scroll@C4973c0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004974cb): callee pops 4 bytes of stack arguments.

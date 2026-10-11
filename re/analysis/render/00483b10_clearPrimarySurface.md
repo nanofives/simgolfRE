@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 29 bytes, 7 instructions, subsystem `render`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 resets the screen manager g_83ad50 (vtable f47) and clears the primary surface global g_83ad44 (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00483b10 clearPrimarySurface: a display (0x00483b10 `mov ecx, [0x0083ad50]`, 0x00483b16 test) takes its virtual slot +0xbc (0x00483b1c, no arguments); then [0x0083ad44] = 0 (0x00483b22). eax = the slot's result; without a display eax is untouched (the caller's): the naked entry hands the entry eax to the body, so a caller that passes it on sees the same value. Callers (hooks.csv): 0x00483ac0;0x00485740. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: clearPrimarySurface (12 vectors, 11 distinct results, 12 changing state, `log/diff/00483b10_clearPrimarySurface.path1.csv`); clearPrimarySurface_nodisp (12 vectors, 11 distinct results, 12 changing state, `log/diff/00483b10_clearPrimarySurface_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_00483b10@f_00483b10@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00483b2c): callee pops 0 bytes of stack arguments.

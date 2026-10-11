@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00031450`), 36 bytes, 11 instructions, subsystem `aud
 stores param at this+0x6c, returns SNDERR 0x13 if the global wave-in device is absent, else starts capture via Wave_In_Device::op1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x00031450 WaveInStream_start (VA 0x10031450). __thiscall, `ret 0xc`, three stack arguments. The first argument is stored at this+0x6c (0x10031452-0x10031456). ecx = the module word 0x100b4a24 (0x10031459); zero returns 0x13 (0x1003145f / 0x10031461 / 0x10031463). Otherwise `this` is pushed and `call 0x100015b4` (thunk to Wave_In_Device::op1 0x1000ed70) runs with ecx = that word's object (0x1003146b-0x1003146c); its result is returned. Reached from: no call xref; reached through a stored pointer: 0x1005c5ac table slot 33 (+0x84) of the table at 0x1005c528; installers: 0x10031200 StreamReader_ctor, 0x100312a0 streamReaderDtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInStream_start_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/00031450_sound_WaveInStream_start_null.path1.csv`); WaveInStream_start_dev (12 vectors, 12 distinct results, 12 changing state, `log/diff/00031450_sound_WaveInStream_start_dev.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x10031468, 0x10031471): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10031450 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

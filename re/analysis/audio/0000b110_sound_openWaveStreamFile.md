@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000b110`), 31 bytes, 9 instructions, subsystem `audi
 ## Role (from the naming pass, not a C3 purpose)
 Opens a file by name through openMmioFile for the active wave stream g_waveStream; returns 3 when no stream is open. (`re/names/sound_2.tsv`)
 
+## Purpose
+0x0000b110 openWaveStreamFile (VA 0x1000b110). `ret 4`, one stack argument (the file name). The module global 0x100b49f4 is loaded into ecx (0x1000b110); NULL returns 3 (0x1000b116 / 0x1000b118 / 0x1000b127 / 0x1000b12c); otherwise the argument is pushed and `call 0x10002211` (the thunk to openMmioFile 0x100086f0) runs with ecx = that object (0x1000b11a-0x1000b11f); its result is returned. Reached from: no call xref; reached through a stored pointer: 0x1005b358 table slot 21 (+0x54) of the table at 0x1005b304; installers: 0x1000b1d0 Wave_Device::ctor, 0x1000b2e0 Wave_Device::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: openWaveStreamFile_null (12 vectors, 1 distinct results, 0 changing state, `log/diff/0000b110_sound_openWaveStreamFile_null.path1.csv`); openWaveStreamFile_dev (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b110_sound_openWaveStreamFile_dev.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_08.cpp` as `?FUN_1000b110@f_1000b110@@YGIPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b124, 0x1000b12c): callee pops 4 bytes of stack arguments.

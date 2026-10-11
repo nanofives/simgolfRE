@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039c40`), 43 bytes, 17 instructions, subsystem `aud
 Releases the embedded Channel voices (+0x70) and, if +0xcc bit2 is set, enqueues WaveCmdQueue command 6 to g_soundEngine. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x00039c40 MultiSound_release (VA 0x10039c40). __thiscall, plain `ret`. `call 0x10001bf4` (thunk to 0x10034ac0) runs with ecx = this+0x70 (0x10039c44 / 0x10039c47); its result is kept (edi, 0x10039c4c). With bit 2 of the byte at this+0xcc set (0x10039c4e / 0x10039c54), ecx = g_soundEngine (0x10039c58, not tested for NULL), 6 and this are pushed and `call 0x100020b3` (thunk to WaveCmdQueue::pushNode) runs (0x10039c5e-0x10039c61); its result is dropped. The kept result is returned (0x10039c66). Reached from: no call xref; reached through a stored pointer: 0x1005c810 table slot 10 (+0x28) of the table at 0x1005c7e8; installers: 0x10039690 MultiSound_ctor, 0x10039790 MultiSound_ctorWithType, 0x10039870 MultiSound_dtor, 0x100399a0 loadMultiChannel. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: MultiSound_release (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039c40_sound_MultiSound_release.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10039c6a): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10039c41 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

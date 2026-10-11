@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 356 bytes, 125 instructions, subsystem `render`. Mechan
 flips the rows of a top-down/bottom-up DIB (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x00475410 flipBmpRows(pixels, header): `ret 8` (stdcall), no value. The header's word at +0xe (0x0047541a) is the bit count: 0x18 gives 3 bytes per pixel, any other value 1 (0x00475420..0x00475427, so 16 and 32 bit images are treated as 8 bit). A scratch row of bytes-per-pixel * the dword width at header+4 is allocated through operator new 0x004a57f1 (0x0047542c..0x00475433). The dword height at header+8 is used by magnitude; an odd height (the test at 0x00475442.. 0x0047544e is a signed remainder) skips the middle row: j = |h|/2 + 1, i = |h|/2 - 1, an even one starts at j = |h|/2, i = j - 1 (0x0047545d..0x00475468, 0x00475477..0x00475485). While j < |h| (cmp at 0x00475489, re-read from the header at 0x00475549..0x00475559) the rows i and j (offset width * row * bytes-per-pixel from the pixels, 0x004754a0..0x004754ae) swap their bytes through the scratch row, one pixel at a time (0x004754d2..0x00475525; a 3-byte pixel swaps its bytes k, k+1 and k+2), for width * bytes-per-pixel bytes, but only when that count is above 0 (0x004754b1 / 0x004754b3); then j grows and i drops by one (0x00475547 / 0x00475548). The scratch row is released through operator delete 0x004a4ffc (0x00475561 / 0x00475562). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: flipBmpRows (18 vectors, 17 distinct results, 18 changing state, `log/diff/00475410_flipBmpRows.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `?r3_flipRows@@YGXPAEPAUtagBITMAPINFOHEADER@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00475571): callee pops 8 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 40 bytes, 10 instructions, subsystem `save`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 When dirty flag g_587da0 is set, writes the course thumbnails and the course info file. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x00432170 flushCourseInfo(): a non-zero first byte of the course-info buffer 0x00587da0 (0x00432170, 0x00432175) runs writeCourseInfo 0x00431fa0(0x00587da0) (call 0x0043217e) and saveThumbAndFull 0x00431ee0(0x00587da0) (call 0x00432188), then clears that byte (0x00432190). Without it nothing runs. (eax at the ret is not defined by the body: the registry compares memory only.) Callers (hooks.csv): 0x0040f5c0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: flushCourseInfo (12 vectors, 12 distinct results, 9 changing state, `log/diff/00432170_flushCourseInfo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small3.cpp` as `?flush587da0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00432197): callee pops 0 bytes of stack arguments.

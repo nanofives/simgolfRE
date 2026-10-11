@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00003fd0`), 30 bytes, 11 instructions, subsystem `aud
 Scalar deleting destructor: calls Sound::dtor and frees the object when the low bit of the flag is set. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00003fd0 Sound::scalarDeletingDtor (VA 0x10003fd0). __thiscall, one stack argument (`ret 4` 0x10003feb); esi = this (0x10003fd1). The member destructor runs through the thunk 0x10002446 (Sound::dtor 0x10004000) with ecx = this (0x10003fd3); bit 0 of the flags argument (`test byte ptr [esp+8], 1` 0x10003fd8 / 0x10003fdd) calls operator delete 0x1004249a with this (cdecl, `add esp, 4`, 0x10003fdf-0x10003fe5); the result is this (0x10003fe8). Reached from: no call xref; reached through a stored pointer: 0x1005b000 table slot 0 (+0x0) of the table at 0x1005b000; installers: 0x10003f30 Sound::ctor, 0x10004000 Sound::dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Sound::scalarDeletingDtor (24 vectors, 22 distinct results, 24 changing state, `log/diff/00003fd0_sound_Sound_scalarDeletingDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10003fd0@C_FUN_10003fd0@f_10003fd0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10003feb): callee pops 4 bytes of stack arguments.

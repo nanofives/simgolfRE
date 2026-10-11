@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 181 bytes, 78 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 configures a sound from a flag word: sets the name, maps flags into m_58 and opens/loops the device accordingly (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00484a40 Snd::configure(this, name, flags): `ret 8`, no value (eax is whatever the last instruction left). With bit 4 of flags set and bit 0x80 as well (test at 0x00484a4a..0x00484a54) nothing happens. Otherwise Snd::setName 0x00484b80 runs with name (0x00484a5a..0x00484a61) and the state dword this+0x58 is cleared (0x00484a6b); bit 4 sets state bit 2, opens the stream through SndStream::open484c20 when this+0x40 is NULL and hands flags to slot +0x6c of the sound object when it is not NULL (0x00484a73..0x00484a97); flags bit 1 sets state bit 1 (0x00484a9a..0x00484aa3); bit 0x10 without bit 4 sets state bit 4 (0x00484aa5..0x00484ab2); bit 2 calls slot +0x48 of this with 1 (0x00484ab4..0x00484abf); bit 0x40 sets state bit 8 (0x00484ac2..0x00484acb), bit 0x80 state bit 0x10 (0x00484acd..0x00484ad6), bit 0x100 state bit 0x20 (0x00484ad8.. 0x00484ae1), bit 0x400 state bit 0x40 (0x00484ae3..0x00484aec). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: Snd::configure (174 vectors, 148 distinct results, 147 changing state, `log/diff/00484a40_Snd_configure.path1.csv`); Snd::configure_fail (174 vectors, 144 distinct results, 147 changing state, `log/diff/00484a40_Snd_configure_fail.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00484af2): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00484a4d before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

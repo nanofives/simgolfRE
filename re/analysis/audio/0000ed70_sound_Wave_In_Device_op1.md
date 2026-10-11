@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000ed70`), 31 bytes, 9 instructions, subsystem `audi
 Forwards a call to the active wave-in object g_100b4a04 (0x10039450); returns 0x13 when none is open. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/sound_0.md`.
 
+## Purpose
+0x0000ed70 Wave_In_Device::op1 (VA 0x1000ed70). `ret 4`. ecx = g_waveIn 0x100b4a04 (0x1000ed70); NULL returns 0x13 (0x1000ed76 / 0x1000ed78 / 0x1000ed7a); otherwise the argument is pushed and `call 0x1000177b` (thunk to 0x10039450) runs with ecx = the object (0x1000ed82-0x1000ed87). Reached from: static callers 0x10031450, 0x100319e0. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Wave_In_Device::op1_null (12 vectors, 1 distinct results, 0 changing state, `log/diff/0000ed70_sound_Wave_In_Device_op1_null.path1.csv`); Wave_In_Device::op1_dev (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000ed70_sound_Wave_In_Device_op1_dev.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_08.cpp` as `?FUN_1000ed70@f_1000ed70@@YGII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000ed7f, 0x1000ed8c): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00034fb0`), 19 bytes, 8 instructions, subsystem `audi
 fastcall(channel): if flag this+0x58 bit1 is set and bits 0x21 are clear, refills the decode ring via fillDecodeRing. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00034fb0 serviceDecodeRing (VA 0x10034fb0). __thiscall, plain `ret`. The flag dword at this+0x58 is loaded (0x10034fb0); with bit 1 set (0x10034fb3 / 0x10034fb5) and neither bit 0 nor bit 5 set (`test al, 0x21` 0x10034fb7 / 0x10034fb9), `call 0x10002022` (thunk to fillDecodeRing 0x10033300) runs with ecx = this (0x10034fbb); its result is dropped. 0 is returned (0x10034fc0). Reached from: static callers 0x100288a0, 0x10028b70. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: serviceDecodeRing (12 vectors, 4 distinct results, 3 changing state, `log/diff/00034fb0_sound_serviceDecodeRing.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10034fb0@f_10034fb0@@YIIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10034fc2): callee pops 0 bytes of stack arguments.

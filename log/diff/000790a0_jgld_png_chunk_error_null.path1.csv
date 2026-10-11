@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$P0 $m0,1,1,True,56203041,56203041,True
+$P3 $m5,1,1,True,a2834ab4,a2834ab4,True
+$P6 $m10,1,1,True,db273eb4,db273eb4,True
+$P1 $m3,1,1,True,3c4eb9bc,3c4eb9bc,True
+$P4 $m8,1,1,True,cd8ce948,cd8ce948,True
+$P7 $m1,1,1,True,c8822587,c8822587,True
+$P2 $m6,1,1,True,78e4dbd3,78e4dbd3,True
+$P5 $m11,1,1,True,5cde6524,5cde6524,True
+$P0 $m4,1,1,True,f92f7b60,f92f7b60,True
+$P3 $m9,1,1,True,3e5c70e4,3e5c70e4,True
+$P6 $m2,1,1,True,d287f520,d287f520,True
+$P1 $m7,1,1,True,6ecf73ab,6ecf73ab,True
+state_regions,$blk+0x40:480 $blk+0x260:480 $blk+0x480:480 $blk+0x6a0:480 $blk+0x8c0:480 $blk+0xae0:480 $blk+0xd00:480 $blk+0xf20:480 $blk+0x3400:1536 $blk+0x4600:128 $blk+0x4800:512 $blk+0xb000:4096 $hlog+0x0:608 $giob+0x0:32 $gbuf+0x0:4096 $implog+0x0:4096,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6d5b2ff0,original=0x2ba0820,2026-10-11T11:15:28
+distinct_results,12,,
+VERDICT,GREEN,12,

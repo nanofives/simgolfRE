@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038b20`), 13 bytes, 5 instructions, subsystem `audi
 starts capture via waveInStart on the device handle (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x00038b20 WaveInDevice_start (VA 0x10038b20). __thiscall, no stack arguments (`ret` 0x10038b2c). waveInStart [0x100b8610] on the handle at this+0x44 (`mov eax, [ecx+0x44]` 0x10038b20, `call [0x100b8610]` 0x10038b24); the result is dropped and 0 is returned (`xor eax, eax` 0x10038b2a). Reached from: static callers 0x1000ea30. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInDevice_start (12 vectors, 12 distinct results, 12 changing state, `log/diff/00038b20_sound_WaveInDevice_start.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10038b20@f_10038b20@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10038b2c): callee pops 0 bytes of stack arguments.

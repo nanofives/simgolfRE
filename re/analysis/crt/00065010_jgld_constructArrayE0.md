@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00065010`), 51 bytes, 21 instructions, subsystem `crt`
 ## Role (from the naming pass, not a C3 purpose)
 Constructs the global g_arrayE0 0x101286e0: ecx = 0x101286e0 (0x10065028) and a call of Array_e0::ctor 0x10067fa0 through its thunk 0x100017a8 (0x1006502d); no argument, no return value. (`re/names/jgld_7.tsv`)
 
+## Purpose
+constructs g_arrayE0 0x101286e0 in place: Array_e0::ctor through its thunk 0x100017a8 with ecx = 0x101286e0 (0x10065028); returns the constructor's eax (the object). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: constructArrayE0_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065010_jgld_constructArrayE0_a.path1.csv`); constructArrayE0_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065010_jgld_constructArrayE0_b.path1.csv`); constructArrayE0_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065010_jgld_constructArrayE0_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10065010@f_10065010@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065042): callee pops 0 bytes of stack arguments.

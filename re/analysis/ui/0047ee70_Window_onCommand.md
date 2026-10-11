@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 109 bytes, 37 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 with the net session 0x008400b8 non-null, a command id equal to its +0x54 or +0x58 and a non-zero second argument calls netBeginOp0 0x00497c20 or netBeginOp1 0x00497c70 with the session field +0x5c or +0x60, and otherwise netFlush 0x00497cc0; with no session the second argument 0 calls Window::dispatchCommand 0x0047c970 with the id, and non-zero stores the id in 0x0083ab88 and calls Window::dispatchAccel 0x0047c6c0 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+0x0047ee70 Window::onCommand(this, a, b) (ret 8): net object ecx = [0x008400b8] (0x0047ee76). With it, a == [net + 0x54] (0x0047ee80) calls netBeginOp0 0x00497c20 with [net + 0x5c] when b is non-zero (0x0047ee8d..0x0047ee91) and the argument-free netOp0 0x00497cc0 when b is zero (0x0047eeb2); a == [net + 0x58] (0x0047ee99) the same with netBeginOp1 0x00497c70 and [net + 0x60] (0x0047eea6..0x0047eeaa). Every other case (and no net object): b == 0 (0x0047eebe..0x0047eec0) calls dispatchCommand 0x0047c970(a) on this (0x0047eec5); otherwise [0x0083ab88] = a (0x0047eed0) and dispatchAccel 0x0047c6c0(a) (0x0047eed5). eax = the callee's. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: Window::onCommand (12 vectors, 9 distinct results, 12 changing state, `log/diff/0047ee70_Window_onCommand.path1.csv`); Window::onCommand_nonet (12 vectors, 10 distinct results, 12 changing state, `log/diff/0047ee70_Window_onCommand_nonet.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0047ee96, 0x0047eeaf, 0x0047eeb7, 0x0047eeca, 0x0047eeda): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0047ee74 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

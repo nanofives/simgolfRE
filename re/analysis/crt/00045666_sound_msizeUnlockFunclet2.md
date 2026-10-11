@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00045666`), 9 bytes, 4 instructions, subsystem `crt`.
 __finally funclet releasing CRT heap lock 9 for the region-heap (mode 2) path of _msize. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+0x00045666 msizeUnlockFunclet2 (VA 0x10045666). cdecl, no arguments, plain `ret` (0x1004566e). `push 9; call 0x10047771` (_unlock with the heap lock number, 0x10045666 / 0x10045668) and `pop ecx` (0x1004566d); _unlock's result is returned. Reached from: static callers 0x10045581. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: msizeUnlockFunclet2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00045666_sound_msizeUnlockFunclet2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10045666@f_10045666@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1004566e): callee pops 0 bytes of stack arguments.

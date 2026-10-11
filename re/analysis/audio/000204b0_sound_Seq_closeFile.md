@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x000204b0`), 28 bytes, 10 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 When the player is active (+0xac bit0), closes the open SMF (closeFile on the +0x60 sub-object) and clears +0x44 bit0. (`re/names/sound_3.tsv`)
 
+## Purpose
+0x000204b0 Seq_closeFile (VA 0x100204b0). __thiscall, `ret`. eax starts as 0 (0x100204b3). When bit 0 of the byte at this+0xac is set (0x100204b5 / 0x100204bc), `call 0x10001014` (the thunk to Midi_Device::closeFile 0x1001e3d0) runs with ecx = this+0x60 (0x100204be- 0x100204c1) and bit 0 of the dword at this+0x44 is cleared (0x100204c6); the function returns eax as the callee left it, 0 otherwise (0x100204ca / 0x100204cb). Reached from: static callers 0x1000a330. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Seq_closeFile (12 vectors, 8 distinct results, 7 changing state, `log/diff/000204b0_sound_Seq_closeFile.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100204cb): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100204b1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

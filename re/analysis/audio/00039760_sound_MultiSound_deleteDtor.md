@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039760`), 30 bytes, 11 instructions, subsystem `aud
 Deleting destructor: runs MultiSound_dtor then operator_delete this when param_1 bit0 is set. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x00039760 MultiSound_deleteDtor (VA 0x10039760). __thiscall, one stack argument (`ret 4` 0x1003977b); esi = this (0x10039761). The member destructor runs through the thunk 0x10001d39 (MultiSound_dtor 0x10039870) with ecx = this (0x10039763); bit 0 of the flags argument (`test byte ptr [esp+8], 1` 0x10039768 / 0x1003976d) calls operator delete 0x1004249a with this (0x1003976f-0x10039775); the result is this (0x10039778). Reached from: no call xref; reached through a stored pointer: 0x1005c7e8 table slot 0 (+0x0) of the table at 0x1005c7e8; installers: 0x10039690 MultiSound_ctor, 0x10039790 MultiSound_ctorWithType, 0x10039870 MultiSound_dtor, 0x100399a0 loadMultiChannel. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: MultiSound_deleteDtor (24 vectors, 22 distinct results, 24 changing state, `log/diff/00039760_sound_MultiSound_deleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10039760@C_FUN_10039760@f_10039760@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1003977b): callee pops 4 bytes of stack arguments.

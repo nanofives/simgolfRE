@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000790a0`), 86 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+png_error with the current chunk's name in front of the message (cdecl): png_format_buffer 0x10079100 (png_ptr, an 80-byte local at ebp-0x50, message) (0x100790ca), then png_error 0x10078fe0 (png_ptr, that buffer) (0x100790da). No branch of its own; png_format_buffer writes the four name bytes (letters as they are, anything else as "[XX]") and ": " and copies 64 message bytes, so a name of four non-letters writes two bytes past the buffer (c3dn's finding): the fixture's names carry at most three. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_chunk_error_jump (12 vectors, 12 distinct results, 12 changing state, `log/diff/000790a0_jgld_png_chunk_error_jump.path1.csv`); png_chunk_error_ret (12 vectors, 12 distinct results, 12 changing state, `log/diff/000790a0_jgld_png_chunk_error_ret.path1.csv`); png_chunk_error_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/000790a0_jgld_png_chunk_error_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_error.cpp` as `_png_chunk_error` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100790f5): callee pops 0 bytes of stack arguments.

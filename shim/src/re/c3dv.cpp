@@ -1,0 +1,1397 @@
+// C3 batch c3dv (round 28, 2026-10-11) of golf_clean.exe: drawing rows earlier batches dropped.
+//
+//   text widgets:  TextView_beginDrawRun 0x00478750, drawTextBlock 0x004787a0, renderTextWidget45af30 0x0045af30,
+//                  drawValueWidget 0x0045b0d0, drawLabels 0x0040c7a0, drawMoneyLabels 0x0040c910
+//
+// Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list) and
+// cites the instructions it reproduces. __thiscall is emulated with __fastcall (ecx = this, edx unused). Callees run
+// through their original addresses (a hooked callee runs its reimplementation).
+#include "hooks.h"
+#include <string.h>
+
+namespace {
+
+static inline char* B(void* p) { return reinterpret_cast<char*>(p); }
+static inline int& I(void* base, int off) { return *reinterpret_cast<int*>(B(base) + off); }
+static inline void*& Pp(void* base, int off) { return *reinterpret_cast<void**>(B(base) + off); }
+template <typename T> static inline T& G(unsigned addr) { return *reinterpret_cast<T*>(addr); }
+template <typename T> static inline T vslot(void* obj, int off) {
+    return *reinterpret_cast<T*>(*reinterpret_cast<char**>(obj) + off);
+}
+static inline int add(int a, int b) { return static_cast<int>(static_cast<unsigned>(a) + static_cast<unsigned>(b)); }
+static inline int mul(int a, int b) { return static_cast<int>(static_cast<unsigned>(a) * static_cast<unsigned>(b)); }
+static inline int slen(const char* s) { return static_cast<int>(strlen(s)); }
+
+typedef int(__fastcall* V0_t)(void* ecx, void* edx);
+typedef int(__fastcall* V1_t)(void* ecx, void* edx, int a);
+typedef int(__cdecl* C0_t)();
+
+void** const kTextTarget = reinterpret_cast<void**>(0x004c1570);   // the current text object
+
+// ---- text callees (signatures read from their `ret N` and the pushes of their callers) ----
+typedef int(__fastcall* TextPut_t)(void* self, void*, const char* text);                                 // 0x00477250, ret 4
+typedef int(__fastcall* Draw4_t)(void* self, void*, const char* text, int x, int y, int len);            // 0x00477c30, ret 0x10
+typedef int(__fastcall* Value_t)(void* self, void*);                                                     // 0x00477580
+typedef char*(__fastcall* MeasureRun_t)(void* self, void*, const char* text, int* budget, int len);      // 0x00476ef0, ret 0xc
+typedef int(__cdecl* TextOut_t)(const char* text, int x, int y, int colour);                             // 0x004049d0 / 0x00404ad0 / 0x00404bc0
+typedef int(__cdecl* WorldToScreen_t)(int wx, int wy, int* sx, int* sy, int margin);                     // 0x0042fb90
+typedef int(__fastcall* SetDrawTarget_t)(void* self, void*, unsigned surf, unsigned a, unsigned b, unsigned c);   // 0x004762d0, ret 0x10
+typedef void(__cdecl* AppendNumber_t)(int n);                                                            // 0x0042dc00
+
+const TextPut_t kTextPut = reinterpret_cast<TextPut_t>(0x00477250);
+const Draw4_t kDrawText = reinterpret_cast<Draw4_t>(0x00477c30);
+const Value_t kWidgetValue = reinterpret_cast<Value_t>(0x00477580);
+const MeasureRun_t kMeasureMarkupRun = reinterpret_cast<MeasureRun_t>(0x00476ef0);
+const TextOut_t kDrawText4049d0 = reinterpret_cast<TextOut_t>(0x004049d0);
+const TextOut_t kDrawTextSurface = reinterpret_cast<TextOut_t>(0x00404ad0);
+const TextOut_t kDrawCenteredText2 = reinterpret_cast<TextOut_t>(0x00404bc0);
+const WorldToScreen_t kWorldToScreen = reinterpret_cast<WorldToScreen_t>(0x0042fb90);
+const SetDrawTarget_t kSetDrawTarget = reinterpret_cast<SetDrawTarget_t>(0x004762d0);
+const AppendNumber_t kAppendNumber = reinterpret_cast<AppendNumber_t>(0x0042dc00);
+
+char* const kRunBuf = reinterpret_cast<char*>(0x00839658);        // drawTextBlock's pending line buffer
+const char* const kSpaceStr = reinterpret_cast<const char*>(0x004c3f70);   // the one-character string drawTextBlock appends
+char* const kMsgBuf = reinterpret_cast<char*>(0x0051a068);        // the shared message / label buffer
+
+}  // namespace
+
+// ================================================================================================================
+// Rich-text block layout (this = a text object; globals 0x00839a9c x cursor, 0x00839aa0 y, 0x00839aa4 width limit,
+// 0x00839aa8 accumulated width, 0x00839658 pending line buffer)
+// ================================================================================================================
+
+// 0x004787a0  drawTextBlock(this, text): ret 4. lim = [0x00839aa4]; 0 returns 0 (0x004787a8..0x004787b4); a NULL text
+// (0x004787bb) or an empty one (0x004787ca) returns [0x00839aa0] (0x004787bf / 0x004787d0).
+// Loop (0x004787dd): a non-empty pending buffer [0x00839658] gets the one-character string 0x004c3f70 appended
+// (0x004787e6..0x00478816) and its width, Text_put 0x00477250(this, 0x004c3f70) (0x00478818), added to [0x00839aa8]
+// (0x0047881f..0x0047882d). With [0x00839aa8] < lim (0x00478839) next = measureMarkupRun 0x00476ef0(this, cur, &budget,
+// strlen(cur)) with budget = lim - [0x00839aa8] (0x00478844..0x00478858); otherwise next = cur (0x00478865). next != 0:
+// the next - cur bytes of cur are appended to the buffer (0x00478873..0x004788a5), the buffer is drawn with drawText
+// 0x00477c30(this, buf, [0x00839a9c], [0x00839aa0], strlen(buf)) (0x004788b9..0x004788d4), then buffer[0] = 0 and
+// [0x00839aa8] = 0 (0x004788db / 0x004788e2), this+0x1c++ (0x004788e8..0x004788ee), [0x00839aa0] += Widget_value(this)
+// (0x004788f1..0x004788fe); a non-zero this+0x18 (the indent) is taken off [0x00839aa4], added to [0x00839a9c] and cleared
+// (0x00478904..0x0047892a); the walk continues from next. next == 0 (0x00478938): the rest of cur, terminator included,
+// is appended to the buffer (0x00478938..0x00478959) and [0x00839aa0] is returned.
+int __fastcall DrawTextBlock_re(void* self, void*, const char* text) {
+    int lim = G<int>(0x00839aa4);
+    if (lim == 0) return 0;
+    if (text == 0) return G<int>(0x00839aa0);
+    if (*text == 0) return G<int>(0x00839aa0);
+    const char* cur = text;
+    for (;;) {
+        if (kRunBuf[0] != 0) {
+            strcpy(kRunBuf + strlen(kRunBuf), kSpaceStr);
+            const int w = kTextPut(self, 0, kSpaceStr);
+            G<int>(0x00839aa8) = add(G<int>(0x00839aa8), w);
+            lim = G<int>(0x00839aa4);
+        }
+        const int acc = G<int>(0x00839aa8);
+        const char* next;
+        if (acc < lim) {
+            int budget = lim - acc;
+            next = kMeasureMarkupRun(self, 0, cur, &budget, slen(cur));
+        } else {
+            next = cur;
+        }
+        if (next == 0) break;
+        const int n = static_cast<int>(next - cur);
+        const int have = slen(kRunBuf);
+        memcpy(kRunBuf + have, cur, static_cast<size_t>(n));
+        kRunBuf[have + n] = 0;
+        kDrawText(self, 0, kRunBuf, G<int>(0x00839a9c), G<int>(0x00839aa0), slen(kRunBuf));
+        kRunBuf[0] = 0;
+        G<int>(0x00839aa8) = 0;
+        I(self, 0x1c) = I(self, 0x1c) + 1;
+        G<int>(0x00839aa0) = add(G<int>(0x00839aa0), kWidgetValue(self, 0));
+        const int ind = I(self, 0x18);
+        if (ind != 0) {
+            G<int>(0x00839aa4) = G<int>(0x00839aa4) - ind;
+            G<int>(0x00839a9c) = add(G<int>(0x00839a9c), I(self, 0x18));
+            I(self, 0x18) = 0;
+        }
+        lim = G<int>(0x00839aa4);
+        cur = next;
+    }
+    strcpy(kRunBuf + strlen(kRunBuf), cur);
+    return G<int>(0x00839aa0);
+}
+typedef int(__fastcall* Block_t)(void* self, void*, const char* text);
+Block_t DrawTextBlock_orig;
+
+// 0x00478750  TextView_beginDrawRun(this, text, x, y, width): ret 0x10. this+0x18 = this+0x14 (0x00478750 / 0x00478755),
+// this+0x1c = 0 (0x0047875c), [0x00839a9c] = x, [0x00839aa8] = 0, [0x00839aa0] = y, [0x00839aa4] = width (0x0047875f..
+// 0x00478778), this+0x3c = 0 (0x0047877e), buffer[0] = 0 (0x00478781); then drawTextBlock 0x004787a0(this, text)
+// (0x0047878b); its result is returned.
+int __fastcall TextViewBeginDrawRun_re(void* self, void*, const char* text, int x, int y, int width) {
+    I(self, 0x18) = I(self, 0x14);
+    I(self, 0x1c) = 0;
+    G<int>(0x00839a9c) = x;
+    G<int>(0x00839aa8) = 0;
+    G<int>(0x00839aa0) = y;
+    G<int>(0x00839aa4) = width;
+    I(self, 0x3c) = 0;
+    kRunBuf[0] = 0;
+    return reinterpret_cast<Block_t>(0x004787a0)(self, 0, text);
+}
+typedef int(__fastcall* Begin_t)(void* self, void*, const char* text, int x, int y, int width);
+Begin_t TextViewBeginDrawRun_orig;
+
+// ================================================================================================================
+// Word wrap of the shared message buffer 0x0051a068 and the value widget that draws it
+// ================================================================================================================
+
+// 0x0045af30  renderTextWidget45af30(cols): cdecl, one argument. Walks the NUL-terminated buffer 0x0051a068 with index i
+// and four locals: S = start of the current line (0x0045af49: 0), count = newline count (0x0045af52: 0), F = flag
+// (0x0045af5a: written -1 or 0 only), L = last break position (0x0045af5a: -1). An empty buffer returns 0 (0x0045af5e).
+//  * '^' (0x0045af71): buf[i] = ' ', S = i + 2, count++, buf[i + 1] = 0x0a, F = -1 (0x0045af73..0x0045af8f);
+//  * 0x0a (0x0045af93): count++, F = -1, S = i + 1 (0x0045af98..0x0045afa8);
+//  * i > S (0x0045afb2): the text from S is copied (0x0045afb8..0x0045afe2), cut at i (0x0045afed) and measured with
+//    Text_put 0x00477250 on the current text object [0x004c1570] (0x0045aff2..0x0045aff8); when the width exceeds cols * 8
+//    (0x0045b004..0x0045b00d, signed) and L != -1 (0x0045b013) the line breaks at L: i = L, count++, F = 0, buf[L] = 0x0a,
+//    S = L + 1, L = -1 (0x0045b018..0x0045b03f);
+//  * '_' becomes ' ' (0x0045b043..0x0045b048); a ' ' sets L = i (0x0045b04b..0x0045b050); i++ while i < strlen
+//    (0x0045b054..0x0045b068, unsigned).
+// F is never positive (-1 or 0), so the jle at 0x0045b075 always returns count (0x0045b0b2); the append of the string at
+// 0x004d3880 (0x0045b077..0x0045b0ab) cannot run.
+int __cdecl RenderTextWidget_re(int cols) {
+    char* buf = kMsgBuf;
+    int count = 0, F = 0, S = 0, L = -1;
+    unsigned i = 0;
+    if (strlen(buf) == 0) return 0;
+    do {
+        char* p = buf + i;
+        if (*p == '^') {
+            *p = ' ';
+            S = static_cast<int>(i) + 2;
+            count++;
+            buf[i + 1] = 0x0a;
+            F = -1;
+        }
+        if (*p == 0x0a) {
+            count++;
+            F = -1;
+            S = static_cast<int>(i) + 1;
+        }
+        if (static_cast<int>(i) > S) {
+            char tmp[0x500];
+            strcpy(tmp, buf + S);
+            tmp[static_cast<int>(i) - S] = 0;
+            const int w = kTextPut(*kTextTarget, 0, tmp);
+            if (w > cols * 8 && L != -1) {
+                i = static_cast<unsigned>(L);
+                count++;
+                F = 0;
+                p = buf + i;
+                L = -1;
+                *p = 0x0a;
+                S = static_cast<int>(i) + 1;
+            }
+        }
+        if (*p == '_') *p = ' ';
+        if (*p == ' ') L = static_cast<int>(i);
+        i++;
+    } while (i < strlen(buf));
+    (void)F;
+    return count;
+}
+typedef int(__cdecl* Render1_t)(int cols);
+Render1_t RenderTextWidget_orig;
+
+// 0x0045b0d0  drawValueWidget(cols, x, y, colour): cdecl, four arguments. The buffer 0x0051a068 is drawn word by word on
+// the current text object [0x004c1570]. tmp = the two-byte word at 0x004c3f70 plus a NUL (0x0045b0d3 / 0x0045b0e5..
+// 0x0045b0ea); H = Widget_value(target) - 4, at least 10 (0x0045b0f7..0x0045b108, signed). Empty buffer: returns y
+// (0x0045b2ab). Per character i: tmp[0] = buf[i], the running width acc += Text_put(target, tmp) (0x0045b12b..0x0045b153);
+// ' ', 0x0a and '^' set the break index e = i (0x0045b151..0x0045b161). A break is taken at 0x0a and '^' always
+// (0x0045b163..0x0045b169) or when acc > cols * 8 (0x0045b16b..0x0045b17c, signed): buf[e] is cut to NUL (0x0045b182..
+// 0x0045b194), the line from the start index st is drawn at (x, y) - drawTextSurface 0x00404ad0 when H > 0x10 (signed) and
+// colour == 0x80007fff (0x0045b19b..0x0045b1bd), else drawText4049d0 0x004049d0 (0x0045b1c4..0x0045b1d9) - buf[e] is
+// restored (0x0045b1df..0x0045b1e6), y += H, acc = 0, st = e + 1 (e + 2 when buf[i] is '^'), i = e (0x0045b1f2..0x0045b214);
+// y > 0x248 (signed) returns y (0x0045b20e..0x0045b216). After the last character a pending line (acc > 0, y <= 0x248) is
+// drawn the same way, y += H (0x0045b234..0x0045b29f) and y is returned.
+int __cdecl DrawValueWidget_re(int cols, int x, int y, int colour) {
+    char* buf = kMsgBuf;
+    char tmp[3];
+    tmp[0] = static_cast<char>(G<unsigned short>(0x004c3f70) & 0xff);
+    tmp[1] = static_cast<char>(G<unsigned short>(0x004c3f70) >> 8);
+    tmp[2] = 0;
+    int st = 0, acc = 0;
+    int H = kWidgetValue(*kTextTarget, 0) - 4;
+    if (H < 10) H = 10;
+    unsigned i = 0;
+    int e = 0;     // esi
+    if (strlen(buf) == 0) return y;
+    do {
+        tmp[0] = buf[i];
+        acc = add(acc, kTextPut(*kTextTarget, 0, tmp));
+        const char c = buf[i];
+        if (c == ' ' || c == 0x0a || c == '^') e = static_cast<int>(i);
+        if (c == 0x0a || c == '^' || acc > cols * 8) {
+            const char saved = buf[e];
+            buf[e] = 0;
+            if (H > 0x10 && colour == static_cast<int>(0x80007fff)) kDrawTextSurface(buf + st, x, y, static_cast<int>(0x80007fff));
+            else kDrawText4049d0(buf + st, x, y, colour);
+            buf[e] = saved;
+            y = add(y, H);
+            acc = 0;
+            st = e + 1;
+            if (buf[i] == '^') st = e + 2;
+            i = static_cast<unsigned>(e);
+            if (y > 0x248) return y;
+        }
+        i++;
+    } while (i < strlen(buf));
+    if (acc > 0 && y <= 0x248) {
+        if (H > 0x10 && colour == static_cast<int>(0x80007fff)) {
+            kDrawTextSurface(buf + st, x, y, static_cast<int>(0x80007fff));
+            return add(y, H);
+        }
+        kDrawText4049d0(buf + st, x, y, colour);
+        return add(y, H);
+    }
+    return y;
+}
+typedef int(__cdecl* Value4_t)(int cols, int x, int y, int colour);
+Value4_t DrawValueWidget_orig;
+
+// ================================================================================================================
+// Floating labels (eight slots each; the text object [0x004c1570] draws them)
+// ================================================================================================================
+
+// 0x0040c7a0  drawLabels: for k = 0..7 (ebp = 0x0056c570 + 0x40 * k, 0x0040c7a7 / 0x0040c83f / 0x0040c845): n = [0x0056a924 +
+// 4k]; 0 skips (0x0040c7b6). Otherwise [0x0056a924 + 4k] = n - 1 (0x0040c7c3) and worldToScreen 0x0042fb90([0x0056c770 + 4k],
+// [0x0056c794 + 4k], &sx, &sy, 0) (0x0040c7dd); 0 skips (0x0040c7e7). The label string at 0x0056c570 + 0x40k is copied to
+// 0x0051a068 (0x0040c7e9..0x0040c811), setDrawTarget 0x004762d0([0x004c1570], 0x0051b360, 0, 0, 0) (0x0040c819), then
+// drawCenteredText2 0x00404bc0(0x0051a068, sx, sy - 4, [0x0056a794 + 4k]) (0x0040c837). The result in eax at the end is
+// the last slot's: 0 for a skip (0x0040c7b6 / 0x0040c7e7), drawCenteredText2's result otherwise.
+int __cdecl DrawLabels_re() {
+    int eax = 0;
+    for (int k = 0; k < 8; k++) {
+        eax = G<int>(0x0056a924 + 4 * k);
+        if (eax == 0) continue;
+        const int wy = G<int>(0x0056c794 + 4 * k);
+        G<int>(0x0056a924 + 4 * k) = eax - 1;
+        int sx = 0, sy = 0;
+        eax = kWorldToScreen(G<int>(0x0056c770 + 4 * k), wy, &sx, &sy, 0);
+        if (eax == 0) continue;
+        strcpy(kMsgBuf, reinterpret_cast<const char*>(0x0056c570 + 0x40 * k));
+        kSetDrawTarget(*kTextTarget, 0, 0x0051b360, 0, 0, 0);
+        eax = kDrawCenteredText2(kMsgBuf, sx, sy - 4, G<int>(0x0056a794 + 4 * k));
+    }
+    return eax;
+}
+C0_t DrawLabels_orig;
+
+// 0x0040c910  drawMoneyLabels: for k = 0..7 (ebx = 4k, 0x0040c916 / 0x0040c9f8 / 0x0040c9fe): n = [0x00542f00 + 4k]; 0
+// skips (0x0040c920); a set bit 0x1000000 in [0x0059e7b8] skips with eax = n (0x0040c926 / 0x0040c930). Otherwise
+// [0x00542f00 + 4k] = n - 1 (0x0040c93d) and worldToScreen([0x00542fd8 + 4k], [0x00542ff8 + 4k], &sx, &sy, 0)
+// (0x0040c957); 0 skips with eax = 0 (0x0040c95f). amount = [0x00542dd8 + 4k] (0x0040c967): the prefix string is 0x004c5340
+// for amount > 0 (0x0040c972 / 0x0040c974) and 0x004e9a84 otherwise (0x0040c976), copied to 0x0051a068 (0x0040c97b..
+// 0x0040c99c); appendNumber 0x0042dc00(amount * 100) (0x0040c99e..0x0040c9a5; amount * 5 * 5 * 4); setDrawTarget([0x004c1570],
+// 0x0051b360, 0, 0, 0) (0x0040c9be); the amount is read again (0x0040c9c3): colour 0x80007d08 for amount <= 0 and 0x800023e8
+// otherwise (0x0040c9d3..0x0040c9e2); drawCenteredText2(0x0051a068, sx, sy - 4, colour) (0x0040c9f0).
+int __cdecl DrawMoneyLabels_re() {
+    int eax = 0;
+    for (int k = 0; k < 8; k++) {
+        eax = G<int>(0x00542f00 + 4 * k);
+        if (eax == 0) continue;
+        if ((G<unsigned>(0x0059e7b8) & 0x1000000u) != 0) continue;
+        const int wy = G<int>(0x00542ff8 + 4 * k);
+        G<int>(0x00542f00 + 4 * k) = eax - 1;
+        int sx = 0, sy = 0;
+        eax = kWorldToScreen(G<int>(0x00542fd8 + 4 * k), wy, &sx, &sy, 0);
+        if (eax == 0) continue;
+        const int amount = G<int>(0x00542dd8 + 4 * k);
+        const char* prefix = reinterpret_cast<const char*>(amount > 0 ? 0x004c5340 : 0x004e9a84);
+        strcpy(kMsgBuf, prefix);
+        kAppendNumber(mul(amount, 100));
+        kSetDrawTarget(*kTextTarget, 0, 0x0051b360, 0, 0, 0);
+        const int again = G<int>(0x00542dd8 + 4 * k);
+        const int colour = again <= 0 ? static_cast<int>(0x80007d08) : static_cast<int>(0x800023e8);
+        eax = kDrawCenteredText2(kMsgBuf, sx, sy - 4, colour);
+    }
+    return eax;
+}
+C0_t DrawMoneyLabels_orig;
+
+// ================================================================================================================
+// Window refresh family (a Window keeps two RECTs at +0x1ac and +0x1bc, the clip RECT at +0x1dc, its surface handle at
+// +0x278; flag byte +0xa0 bit 1 selects the +0x1bc RECT)
+// ================================================================================================================
+namespace {
+typedef int(__cdecl* RelayoutClip_t)(void* win, void* rect);                                       // 0x0047e140
+typedef int(__cdecl* RedrawDrawList_t)(const int* rect, void* win);                                // 0x0047f8e0
+typedef int(__fastcall* ToParent_t)(void* self, void*, int* x, int* y);                            // 0x0047b170, ret 8
+typedef int(__cdecl* DrawTooltip_t)(const int* rect);                                              // 0x0047cdb0
+typedef int(__fastcall* RefreshRect_t)(void* self, void*, int a, int b, int c, int d, int e);     // 0x00480c20, ret 0x14
+const RelayoutClip_t kRelayoutClip = reinterpret_cast<RelayoutClip_t>(0x0047e140);
+const RedrawDrawList_t kRedrawDrawList = reinterpret_cast<RedrawDrawList_t>(0x0047f8e0);
+const ToParent_t kToParent = reinterpret_cast<ToParent_t>(0x0047b170);
+const DrawTooltip_t kDrawTooltip = reinterpret_cast<DrawTooltip_t>(0x0047cdb0);
+const RefreshRect_t kRefreshRect = reinterpret_cast<RefreshRect_t>(0x00480c20);
+}  // namespace
+
+// 0x0047b420  Window::moveTo(this, x, y): ret 8. With bit 1 of the byte at this+0xa0 set (0x0047b420 / 0x0047b427) the RECT at
+// +0x1bc moves so that its left/top become x/y: dx = x - [+0x1bc], dy = y - [+0x1c0] (0x0047b42f..0x0047b441), [+0x1bc] = x,
+// [+0x1c4] += dx, [+0x1c0] = y, [+0x1c8] += dy (0x0047b443..0x0047b46f). Otherwise the same on the RECT at +0x1ac
+// (0x0047b477..0x0047b4b7). Then relayoutClip 0x0047e140(this, this+0x1dc) (0x0047b4bd..0x0047b4c5) and eax = 0
+// (0x0047b4cd).
+int __fastcall WindowMoveTo_re(void* self, void*, int x, int y) {
+    const int off = (*reinterpret_cast<unsigned char*>(B(self) + 0xa0) & 2) ? 0x1bc : 0x1ac;
+    const int dy = y - I(self, off + 4);
+    const int dx = x - I(self, off);
+    I(self, off) = add(I(self, off), dx);
+    I(self, off + 8) = add(I(self, off + 8), dx);
+    I(self, off + 4) = add(I(self, off + 4), dy);
+    I(self, off + 12) = add(I(self, off + 12), dy);
+    kRelayoutClip(self, B(self) + 0x1dc);
+    return 0;
+}
+typedef int(__fastcall* MoveTo_t)(void* self, void*, int x, int y);
+MoveTo_t WindowMoveTo_orig;
+
+// 0x0047fa30  redrawWindow(this, rect): ret 4. A NULL rect calls redrawDrawList 0x0047f8e0(NULL, this) (0x0047fa3b..0x0047fa48).
+// Otherwise (ox, oy) = (0, 0) is offset by View::toParent 0x0047b170(this, &ox, &oy) (0x0047fa53..0x0047fa68) and
+// redrawDrawList({l + ox, t + oy, r + ox, b + oy}, this) follows (0x0047fa6d..0x0047fa9e). eax is redrawDrawList's.
+int __fastcall RedrawWindow_re(void* self, void*, const int* rect) {
+    if (rect == 0) return kRedrawDrawList(0, self);
+    int ox = 0, oy = 0;
+    kToParent(self, 0, &ox, &oy);
+    const int nr[4] = {add(rect[0], ox), add(rect[1], oy), add(rect[2], ox), add(rect[3], oy)};
+    return kRedrawDrawList(nr, self);
+}
+typedef int(__fastcall* RedrawWindow_t)(void* self, void*, const int* rect);
+RedrawWindow_t RedrawWindow_orig;
+
+// 0x00495770  redrawRegion(rect): stdcall, ret 4 (no this). redrawDrawList 0x0047f8e0(rect, NULL) (0x00495775..0x00495778),
+// then drawTooltip 0x0047cdb0(rect) (0x0049577d..0x0049577e); eax is drawTooltip's (0x00495783 only pops).
+int __stdcall RedrawRegion_re(const int* rect) {
+    kRedrawDrawList(rect, 0);
+    return kDrawTooltip(rect);
+}
+typedef int(__stdcall* Region_t)(const int* rect);
+Region_t RedrawRegion_orig;
+
+// 0x00480c80  Window::refreshFull(this, unused): ret 4. size A = the surface handle at this+0x278 (when set) slot +0xd4() as a
+// RECT (0x00480c84..0x00480c96); size B the same call again (0x00480c9c..0x00480cae). A null handle gives a null RECT,
+// which the original then reads (0x00480cb2: not reproduced, a fixture always has a handle). refreshRect 0x00480c20(0, 0,
+// B.right - B.left, A.bottom - A.top, 0) (0x00480cb2..0x00480ccb); eax is refreshRect's.
+int __fastcall WindowRefreshFull_re(void* self, void*, int) {
+    void* h1 = Pp(self, 0x278);
+    const int* a = h1 ? reinterpret_cast<const int*>(vslot<V0_t>(h1, 0xd4)(h1, 0)) : 0;
+    void* h2 = Pp(self, 0x278);
+    const int* b = h2 ? reinterpret_cast<const int*>(vslot<V0_t>(h2, 0xd4)(h2, 0)) : 0;
+    const int h = a[3] - a[1];
+    const int w = b[2] - b[0];
+    return kRefreshRect(self, 0, 0, 0, w, h, 0);
+}
+typedef int(__fastcall* Full_t)(void* self, void*, int);
+Full_t WindowRefreshFull_orig;
+
+// ================================================================================================================
+// List and button widgets
+// ================================================================================================================
+
+// 0x00494020  listSetItems(this, items*): ret 4. The three dwords at items are copied to this+0x3474 (0x00494035..0x00494042)
+// and, as (dword0, dword1, dword2), to this+0x26c4+0x650 / +0x654 / +0x658 (0x00494044..0x00494064). h = slot +0xdc of the
+// handle at this+0x23b4 (0 without a handle, 0x0049406a..0x0049408a) and w = its slot +0xd8 (0x00494095..0x004940a7) are
+// read around ebp = dword0->+0x1c (0x0049408c); y = (h - ebp) / 2 and x = w - dword0->+0x18 - 4 (0x004940a7..0x004940bb;
+// `cdq; sub eax, edx; sar eax, 1` divides by two toward zero). Window::moveTo 0x0047b420 runs on the sub-window at
+// this+0x26c4 with (x, y) (0x004940be), then its vtable slot +0x120 (0x004940c3..0x004940c7), whose result is returned.
+int __fastcall ListSetItems_re(void* self, void*, const int* items) {
+    int* dst = reinterpret_cast<int*>(B(self) + 0x3474);
+    dst[0] = items[0];
+    dst[1] = items[1];
+    dst[2] = items[2];
+    void* win = B(self) + 0x26c4;
+    I(win, 0x650) = dst[0];
+    I(win, 0x654) = dst[1];
+    I(win, 0x658) = dst[2];
+    void* hh = Pp(self, 0x23b4);
+    const int h = hh ? vslot<V0_t>(hh, 0xdc)(hh, 0) : 0;
+    void* img = reinterpret_cast<void*>(dst[0]);
+    const int ebp = I(img, 0x1c);
+    hh = Pp(self, 0x23b4);
+    const int w = hh ? vslot<V0_t>(hh, 0xd8)(hh, 0) : 0;
+    const int d = h - ebp;
+    const int y = (d - (d >> 31)) >> 1;
+    const int x = w - I(reinterpret_cast<void*>(dst[0]), 0x18) - 4;
+    reinterpret_cast<int(__fastcall*)(void*, void*, int, int)>(0x0047b420)(win, 0, x, y);
+    return vslot<V0_t>(win, 0x120)(win, 0);
+}
+typedef int(__fastcall* SetItems_t)(void* self, void*, const int* items);
+SetItems_t ListSetItems_orig;
+
+// 0x00488eb0  Button::endPress(this, a, b): ret 8 (both arguments unused). When [0x0083ab30] is this (0x00488eb8) it is cleared
+// and slot +0x10 of this runs (0x00488ebc..0x00488ec8); [0x0083ab34] == this is cleared (0x00488ecb..0x00488edd);
+// [0x0083ab2c] = this+0x130 (0x00488edd..0x00488ee3). With this+0x624 == 0 (0x00488eef): id = this+0x5e8; -1 calls the
+// callback [0x0083ab0c] when set, -2 the callback [0x0083ab10] (0x00488ef3..0x00488f17, cdecl, no arguments); the object
+// at parent->+0x80 gets its slot +0x1c (0x00488f19..0x00488f2b); a group at this+0x620 runs radioSelect 0x004a0350(group,
+// id) (0x00488f34..0x00488f3f; its result decides: 0 jumps to 0x00488f5d, which radioSelect always returns); with no group
+// (0x00488f36) the parent's slot +0xd4(id) runs (0x00488f48..0x00488f57). The callback at this+0x628, when set, runs with
+// id (cdecl, 0x00488f5d..0x00488f70). this+0x614 == 1 is cleared and slot +0x120 of this runs (0x00488f73..0x00488f8a). eax at the
+// return is the callback pointer (0 when none: 0x00488f5d), replaced by the callback's result and then by slot +0x120's.
+typedef int(__fastcall* RadioSelect_t)(void* group, void*, int id);
+const RadioSelect_t kRadioSelect = reinterpret_cast<RadioSelect_t>(0x004a0350);
+int __fastcall ButtonEndPress_re(void* self, void*, int, int) {
+    if (G<void*>(0x0083ab30) == self) {
+        G<int>(0x0083ab30) = 0;
+        vslot<V0_t>(self, 0x10)(self, 0);
+    }
+    if (G<void*>(0x0083ab34) == self) G<int>(0x0083ab34) = 0;
+    G<void*>(0x0083ab2c) = Pp(self, 0x130);
+    if (I(self, 0x624) == 0) {
+        const int id = I(self, 0x5e8);
+        if (id == -1) {
+            typedef void(__cdecl * Cb_t)();
+            Cb_t cb = G<Cb_t>(0x0083ab0c);
+            if (cb) cb();
+        } else if (id == -2) {
+            typedef void(__cdecl * Cb_t)();
+            Cb_t cb = G<Cb_t>(0x0083ab10);
+            if (cb) cb();
+        }
+        void* parent = Pp(self, 0x130);
+        void* sub = Pp(parent, 0x80);
+        if (sub) vslot<V0_t>(sub, 0x1c)(sub, 0);
+        void* group = Pp(self, 0x620);
+        bool callParent = true;
+        if (group) {
+            const int r = kRadioSelect(group, 0, I(self, 0x5e8));
+            callParent = (r != 0);
+        }
+        if (callParent) {
+            void* p2 = Pp(self, 0x130);
+            vslot<V1_t>(p2, 0xd4)(p2, 0, I(self, 0x5e8));
+        }
+    }
+    typedef int(__cdecl * IdCb_t)(int);
+    IdCb_t cb2 = *reinterpret_cast<IdCb_t*>(B(self) + 0x628);
+    int eax = reinterpret_cast<int>(cb2);                      // mov eax, [esi + 0x628] (0x00488f5d)
+    if (cb2) eax = cb2(I(self, 0x5e8));                        // eax = the callback's result (0x00488f6e)
+    if (I(self, 0x614) == 1) {
+        I(self, 0x614) = 0;
+        eax = vslot<V0_t>(self, 0x120)(self, 0);               // eax = slot +0x120's result (0x00488f8a)
+    }
+    return eax;
+}
+typedef int(__fastcall* EndPress_t)(void* self, void*, int, int);
+EndPress_t ButtonEndPress_orig;
+
+// ================================================================================================================
+// Panel layout builders. `this` (esi) has a vtable whose dword [+4] is the offset of the text sub-object (the text
+// widget lives at this + [vt+4] + 0x274) and dword [+8] the offset of the base record b (this + [vt+8]) holding the layout
+// fields; the item list is a circular list of nodes (+8 item, +0xc next) headed by b+0xc8 with the cursor at b+0xcc, the
+// count at b+0xd0 and the cursor index at b+0xd4.
+// ================================================================================================================
+namespace {
+typedef int(__fastcall* Quad_t)(void* self, void*, int a, int b, int c, int d);   // 0x00476310 / 0x00476340 / 0x00476370, ret 0x10
+typedef int(__fastcall* Get_t)(void* self, void*);                                // 0x00477560
+const Quad_t kSetQuadP = reinterpret_cast<Quad_t>(0x00476310);
+const Quad_t kSetQuad70P = reinterpret_cast<Quad_t>(0x00476340);
+const Quad_t kSetQuad74P = reinterpret_cast<Quad_t>(0x00476370);
+const Get_t kWidgetGetP = reinterpret_cast<Get_t>(0x00477560);
+static inline char* pbase(void* self) { return B(self) + reinterpret_cast<int*>(Pp(self, 0))[2]; }
+static inline void* ptext(void* self) { return B(self) + reinterpret_cast<int*>(Pp(self, 0))[1] + 0x274; }
+// the cursor advance of the item list at b (0x0049d8ce..0x0049d906 and its twins): head != 0 moves the cursor to the next
+// node and the index forward, wrapping to 0 at the count
+static inline void advanceCursor(char* b) {
+    if (I(b, 0xc8) != 0) {
+        I(b, 0xcc) = I(reinterpret_cast<void*>(I(b, 0xcc)), 0xc);
+        const int idx = I(b, 0xd4) + 1;
+        I(b, 0xd4) = idx;
+        if (idx == I(b, 0xd0)) I(b, 0xd4) = 0;
+    }
+}
+// the text of the current item: cursor == 0 -> NULL; head == 0 with a cursor dereferences NULL in the original
+static inline const char* cursorText(char* b) {
+    void* cur = reinterpret_cast<void*>(I(b, 0xcc));
+    if (cur == 0) return 0;
+    void* item = Pp(cur, 8);
+    return reinterpret_cast<const char*>(Pp(item, 4));
+}
+// the common tail of panelBuildText 0x0049d9..0x0049daa9 and optionDialogDraw 0x0049f291..0x0049f36d
+static void layoutTail(char* b) {
+    if ((*reinterpret_cast<unsigned char*>(b + 0x24) & 2) && I(b, 0x30) != 0) {
+        I(b, 0x60) = I(b, 0x30);
+        I(b, 0x68) = (I(b, 0x30) - 2 * I(b, 0x44)) / I(b, 0x50) - I(b, 0x48);
+    } else {
+        int edx = add(mul(I(b, 0x68), I(b, 0x50)), 2 * I(b, 0x44));
+        int ecx = add(2 * I(b, 0x44), I(b, 0x30));
+        if (!(ecx > edx)) ecx = edx;
+        I(b, 0x60) = ecx;
+        I(b, 0x68) = (I(b, 0x60) - 2 * I(b, 0x44)) / I(b, 0x50) - I(b, 0x48);
+        I(b, 0x60) = I(b, 0x60) - I(b, 0x48);
+    }
+    I(b, 0x58) = I(b, 0x50);
+    if ((*reinterpret_cast<unsigned char*>(b + 0x24) & 1) && I(b, 0x34) != 0) {
+        I(b, 0x64) = I(b, 0x34);
+        I(b, 0x5c) = I(b, 0x34) / I(b, 0x6c);
+    } else {
+        I(b, 0x64) = mul(add(I(b, 0x6c), I(b, 0x48)), I(b, 0x5c));
+    }
+}
+}  // namespace
+
+// 0x0049d770  panelBuildText(this): thiscall, no stack arguments. b = this + [vt+8]. An empty list (b+0xd0 == 0) returns 7
+// (0x0049d77c..0x0049d792). b+0x38 == 0 with the three image records at this+4 / +8 / +0xc all set becomes the largest of
+// their +0x18 widths (0x0049d793..0x0049d7cd); b+0x4c == -1 makes b+0x6c the largest +0x1c height of the same three (0 when
+// one is missing) and otherwise copies b+0x4c (0x0049d7d8..0x0049d820). b+0x5c = min(count, b+0x54) (0x0049d82f..0x0049d839).
+// With b+0x5c < count: b+0x50 = count / b+0x5c + 1, b+0x5c = count / b+0x50, plus one when b+0x50 * b+0x5c < count
+// (0x0049d84d..0x0049d88b). ebp = (b+0x30) / b+0x50 - 2 * b+0x44 - b+0x38 when bit 1 of the byte b+0x24 and b+0x30 are
+// set, else 100000 (0x0049d894..0x0049d8b9). For each of count items: the list cursor moves (0x0049d8ce..0x0049d906), Text_put
+// 0x00477250 on the text sub-object measures the item text (0x0049d932), the widest result is kept and item+8 = width / ebp +
+// 1 (0x0049d95e..0x0049d963). Then b+0x68 = b+0x48 + b+0x38 + widest (0x0049d97c..0x0049d98d), b+0x6c = max(b+0x6c,
+// Widget_get 0x00477560) (0x0049d99a..0x0049d9c6) and layoutTail (0x0049d9ca..0x0049daa9). Returns 0.
+int __fastcall PanelBuildText_re(void* self, void*) {
+    char* b = pbase(self);
+    if (I(b, 0xd0) == 0) return 7;
+    if (I(b, 0x38) == 0) {
+        void* c1 = Pp(self, 4);
+        if (c1 != 0) {
+            void* c2 = Pp(self, 8);
+            if (c2 != 0) {
+                void* c3 = Pp(self, 0xc);
+                if (c3 != 0) {
+                    const int w2 = I(c2, 0x18), w1 = I(c1, 0x18);
+                    int v = w1 > w2 ? w1 : w2;
+                    const int w3 = I(c3, 0x18);
+                    if (w3 > v) v = w3;
+                    I(b, 0x38) = v;
+                }
+            }
+        }
+    }
+    if (I(b, 0x4c) == -1) {
+        void* c1 = Pp(self, 4);
+        void* c2 = c1 ? Pp(self, 8) : 0;
+        void* c3 = c2 ? Pp(self, 0xc) : 0;
+        if (c1 == 0 || c2 == 0 || c3 == 0) {
+            I(b, 0x6c) = 0;
+        } else {
+            const int h2 = I(c2, 0x1c), h1 = I(c1, 0x1c);
+            int v = h1 > h2 ? h1 : h2;
+            const int h3 = I(c3, 0x1c);
+            if (h3 > v) v = h3;
+            I(b, 0x6c) = v;
+        }
+    } else {
+        I(b, 0x6c) = I(b, 0x4c);
+    }
+    {
+        const int cnt = I(b, 0xd0), e54 = I(b, 0x54);
+        I(b, 0x5c) = cnt < e54 ? cnt : e54;
+    }
+    {
+        const int edi = I(b, 0x5c);
+        const int cnt = I(b, 0xd0);
+        if (edi < cnt) {
+            I(b, 0x50) = cnt / edi + 1;
+            I(b, 0x5c) = I(b, 0xd0) / I(b, 0x50);
+            const int ecx = I(b, 0x5c);
+            if (mul(I(b, 0x50), ecx) < I(b, 0xd0)) I(b, 0x5c) = ecx + 1;
+        }
+    }
+    int ebp;
+    if ((*reinterpret_cast<unsigned char*>(b + 0x24) & 2) && I(b, 0x30) != 0) ebp = I(b, 0x30) / I(b, 0x50) - 2 * I(b, 0x44) - I(b, 0x38);
+    else ebp = 100000;
+    int widest = 0;
+    if (I(b, 0xd0) > 0) {
+        for (int i = 0; i < I(b, 0xd0); i++) {
+            advanceCursor(b);
+            const int w = kTextPut(ptext(self), 0, cursorText(b));
+            if (w > widest) widest = w;
+            void* item = I(b, 0xc8) != 0 ? Pp(reinterpret_cast<void*>(I(b, 0xcc)), 8) : 0;
+            I(item, 8) = w / ebp + 1;
+        }
+    }
+    I(b, 0x68) = add(add(I(b, 0x48), I(b, 0x38)), widest);
+    {
+        const int e6c = I(b, 0x6c);
+        int g = kWidgetGetP(ptext(self), 0);
+        if (e6c > g) g = e6c;
+        else g = kWidgetGetP(ptext(self), 0);
+        I(b, 0x6c) = g;
+    }
+    layoutTail(b);
+    return 0;
+}
+typedef int(__fastcall* Build0_t)(void* self, void*);
+Build0_t PanelBuildText_orig;
+
+// 0x0049f050  optionDialogDraw(this): thiscall, no stack arguments. b = this + [vt+8]. b+0xd0 == 0 returns 7 (0x0049f05a..
+// 0x0049f069). The text sub-object gets setQuad(b+0x80, +0x8c, +0x98, +0xa4) (0x0049f091), setQuad70(b+0x84, +0x90, +0x9c,
+// +0xa8) (0x0049f0c4), setQuad74(b+0x88, +0x94, +0xa0, +0xac) (0x0049f0f7) and setDrawTarget(b+0x74, +0x78, +0x7c, 0)
+// (0x0049f11c). b+0x38 == 0 with the image records at this+0x14 and +0x10 set becomes the wider of the two +0x18 widths
+// (0x0049f126..0x0049f14c); b+0x4c == -1 makes b+0x6c the taller of the two +0x1c heights (0 when one is missing) and
+// otherwise copies b+0x4c (0x0049f150..0x0049f182). b+0x5c = count (0x0049f197). For each item the cursor moves and Text_put
+// measures its text (0x0049f1b1..0x0049f23a); b+0x68 = b+0x48 + b+0x38 + widest (0x0049f240..0x0049f254), b+0x6c = max(b+0x6c,
+// Widget_get) (0x0049f257..0x0049f28d) and layoutTail (0x0049f291..0x0049f36d). Returns 0.
+int __fastcall OptionDialogDraw_re(void* self, void*) {
+    char* b = pbase(self);
+    if (I(b, 0xd0) == 0) return 7;
+    void* t = ptext(self);
+    kSetQuadP(t, 0, I(b, 0x80), I(b, 0x8c), I(b, 0x98), I(b, 0xa4));
+    kSetQuad70P(t, 0, I(b, 0x84), I(b, 0x90), I(b, 0x9c), I(b, 0xa8));
+    kSetQuad74P(t, 0, I(b, 0x88), I(b, 0x94), I(b, 0xa0), I(b, 0xac));
+    reinterpret_cast<int(__fastcall*)(void*, void*, int, int, int, int)>(0x004762d0)(t, 0, I(b, 0x74), I(b, 0x78), I(b, 0x7c), 0);
+    if (I(b, 0x38) == 0) {
+        void* c1 = Pp(self, 0x14);
+        if (c1 != 0) {
+            void* c0 = Pp(self, 0x10);
+            if (c0 != 0) {
+                int v = I(c1, 0x18);
+                const int w0 = I(c0, 0x18);
+                if (w0 > v) v = w0;
+                I(b, 0x38) = v;
+            }
+        }
+    }
+    int e4c = I(b, 0x4c);
+    if (e4c == -1) {
+        void* c0 = Pp(self, 0x10);
+        void* c1 = c0 ? Pp(self, 0x14) : 0;
+        if (c0 == 0 || c1 == 0) {
+            I(b, 0x6c) = 0;
+        } else {
+            int v = I(c1, 0x1c);
+            const int h0 = I(c0, 0x1c);
+            if (h0 > v) v = h0;
+            I(b, 0x6c) = v;
+        }
+    } else {
+        I(b, 0x6c) = e4c;
+    }
+    int widest = 0;
+    I(b, 0x5c) = I(b, 0xd0);
+    if (I(b, 0xd0) > 0) {
+        int i = 0;
+        do {
+            advanceCursor(b);
+            const int w = kTextPut(t, 0, cursorText(b));
+            if (w > widest) widest = w;
+            i++;
+        } while (i < I(b, 0xd0));
+    }
+    I(b, 0x68) = add(add(I(b, 0x48), I(b, 0x38)), widest);
+    {
+        const int e6c = I(b, 0x6c);
+        int g = kWidgetGetP(t, 0);
+        if (e6c > g) g = e6c;
+        else g = kWidgetGetP(t, 0);
+        I(b, 0x6c) = g;
+    }
+    layoutTail(b);
+    return 0;
+}
+Build0_t OptionDialogDraw_orig;
+
+// 0x004a3be0  panelBuildText4a3be0(this): thiscall, no stack arguments. This record's own list (head this+0x80, cursor +0x84,
+// count +0x88, index +0x8c) holds image records; count 0 returns 7 (0x004a3be7..0x004a3bf7). The text sub-object gets the
+// same four calls as optionDialogDraw with b = this + [vt+8] (0x004a3c27, 0x004a3c5a, 0x004a3c8d, 0x004a3cb1 with ebp = 0 as
+// the last argument). this+0xb0 = this+0xa8 = this+0xac = 0 (0x004a3cb6..0x004a3cc2). For each of count items: the own list
+// cursor moves (0x004a3cde..0x004a3d10) and gives the image record ebx (0x004a3d16..0x004a3d33); the second list at b+0xc0
+// (head b+0xc8, cursor +0xcc, count +0xd0, index +0xd4) moves (0x004a3d35..0x004a3d66) and gives the text (0x004a3d66..0x004a3d7b);
+// this+0xa8 = max(this+0xa8, ebx->+0x18 * this+0x70 / this+0x74) and this+0xac = max(this+0xac, ebx->+0x1c * this+0x70 /
+// this+0x74) (0x004a3d7b..0x004a3db1), this+0xb0 = max(this+0xb0, Text_put(text)) (0x004a3db7..0x004a3dd5). Then this+0xb4 =
+// Widget_value 0x00477580 (0x004a3df8..0x004a3e03), b+0x6c = b+0x48 + max(Widget_value, this+0xac) (0x004a3e09..0x004a3e1c),
+// b+0x68 = this+0xb0 + 2 * b+0x44 + this+0xa8 (0x004a3e21..0x004a3e3c), b+0x5c = min(count, b+0x54) (0x004a3e41..0x004a3e57); with
+// bit 0 of the byte b+0x24 and b+0x34 set b+0x5c = b+0x34 / b+0x6c and b+0x64 = b+0x34 (0x004a3e62..0x004a3e88), else b+0x64 =
+// b+0x6c * b+0x5c + b+0x48 (0x004a3e8a..0x004a3e96); with bit 1 and b+0x30 set b+0x58 = b+0x30 / b+0x68 and b+0x60 = b+0x30 (0x004a3e9e..
+// 0x004a3ec7), else b+0x58 = (b+0x5c + count - 1) / b+0x5c and b+0x60 = max(b+0x30, (b+0x68 + b+0x48) * b+0x58 - b+0x48)
+// (0x004a3ecb..0x004a3f07). Returns 0.
+int __fastcall PanelBuildText4a3be0_re(void* self, void*) {
+    if (I(self, 0x88) == 0) return 7;
+    char* b = pbase(self);
+    void* t = ptext(self);
+    kSetQuadP(t, 0, I(b, 0x80), I(b, 0x8c), I(b, 0x98), I(b, 0xa4));
+    kSetQuad70P(t, 0, I(b, 0x84), I(b, 0x90), I(b, 0x9c), I(b, 0xa8));
+    kSetQuad74P(t, 0, I(b, 0x88), I(b, 0x94), I(b, 0xa0), I(b, 0xac));
+    reinterpret_cast<int(__fastcall*)(void*, void*, int, int, int, int)>(0x004762d0)(t, 0, I(b, 0x74), I(b, 0x78), I(b, 0x7c), 0);
+    I(self, 0xb0) = 0;
+    I(self, 0xa8) = 0;
+    I(self, 0xac) = 0;
+    if (I(self, 0x88) > 0) {
+        int counter = I(self, 0x88);
+        do {
+            void* ebx;
+            int head = I(self, 0x80);
+            if (head != 0) {
+                I(self, 0x84) = I(reinterpret_cast<void*>(I(self, 0x84)), 0xc);
+                const int idx = I(self, 0x8c) + 1;
+                I(self, 0x8c) = idx;
+                if (idx == I(self, 0x88)) I(self, 0x8c) = 0;
+            }
+            void* cur = reinterpret_cast<void*>(I(self, 0x84));
+            if (cur != 0) ebx = Pp(Pp(cur, 8), 4);
+            else ebx = 0;
+            advanceCursor(b);
+            const char* text = cursorText(b);
+            const int num = I(self, 0x70);
+            const int den = I(self, 0x74);
+            int w = mul(I(ebx, 0x18), num) / den;
+            if (I(self, 0xa8) > w) w = I(self, 0xa8);
+            I(self, 0xa8) = w;
+            int h = mul(I(ebx, 0x1c), num) / den;
+            if (I(self, 0xac) > h) h = I(self, 0xac);
+            I(self, 0xac) = h;
+            int tw = kTextPut(t, 0, text);
+            if (I(self, 0xb0) > tw) tw = I(self, 0xb0);
+            I(self, 0xb0) = tw;
+            counter--;
+        } while (counter != 0);
+    }
+    const int val = kWidgetValue(t, 0);
+    I(self, 0xb4) = val;
+    int ecx = I(self, 0xac);
+    if (val > ecx) ecx = val;
+    I(b, 0x6c) = add(I(b, 0x48), ecx);
+    I(b, 0x68) = add(add(I(self, 0xb0), 2 * I(b, 0x44)), I(self, 0xa8));
+    {
+        const int cnt = I(self, 0x88), c54 = I(b, 0x54);
+        I(b, 0x5c) = cnt < c54 ? cnt : c54;
+    }
+    if ((*reinterpret_cast<unsigned char*>(b + 0x24) & 1) && I(b, 0x34) != 0) {
+        I(b, 0x5c) = I(b, 0x34) / I(b, 0x6c);
+        I(b, 0x64) = I(b, 0x34);
+    } else {
+        I(b, 0x64) = add(mul(I(b, 0x6c), I(b, 0x5c)), I(b, 0x48));
+    }
+    if ((*reinterpret_cast<unsigned char*>(b + 0x24) & 2) && I(b, 0x30) != 0) {
+        I(b, 0x58) = I(b, 0x30) / I(b, 0x68);
+        I(b, 0x60) = I(b, 0x30);
+        return 0;
+    }
+    const int edi = I(b, 0x5c);
+    I(b, 0x58) = (edi + I(self, 0x88) - 1) / edi;
+    int eax = add(I(b, 0x68), I(b, 0x48));
+    eax = mul(eax, I(b, 0x58));
+    eax = eax - I(b, 0x48);
+    const int e30 = I(b, 0x30);
+    if (!(e30 <= eax)) eax = e30;
+    I(b, 0x60) = eax;
+    return 0;
+}
+Build0_t PanelBuildText4a3be0_orig;
+
+// 0x0047b420
+SG_HOOK("golf_clean.exe", 0x0047b420, Window__moveTo, WindowMoveTo_re, WindowMoveTo_orig);
+// 0x0047fa30
+SG_HOOK("golf_clean.exe", 0x0047fa30, redrawWindow, RedrawWindow_re, RedrawWindow_orig);
+// 0x00495770
+SG_HOOK("golf_clean.exe", 0x00495770, redrawRegion, RedrawRegion_re, RedrawRegion_orig);
+// 0x00480c80
+SG_HOOK("golf_clean.exe", 0x00480c80, Window__refreshFull, WindowRefreshFull_re, WindowRefreshFull_orig);
+// 0x00478750
+SG_HOOK("golf_clean.exe", 0x00478750, TextView_beginDrawRun, TextViewBeginDrawRun_re, TextViewBeginDrawRun_orig);
+// 0x004787a0
+SG_HOOK("golf_clean.exe", 0x004787a0, drawTextBlock, DrawTextBlock_re, DrawTextBlock_orig);
+// 0x0045af30
+SG_HOOK("golf_clean.exe", 0x0045af30, renderTextWidget45af30, RenderTextWidget_re, RenderTextWidget_orig);
+// 0x0045b0d0
+SG_HOOK("golf_clean.exe", 0x0045b0d0, drawValueWidget, DrawValueWidget_re, DrawValueWidget_orig);
+// 0x0040c7a0
+SG_HOOK("golf_clean.exe", 0x0040c7a0, drawLabels, DrawLabels_re, DrawLabels_orig);
+// 0x0040c910
+SG_HOOK("golf_clean.exe", 0x0040c910, drawMoneyLabels, DrawMoneyLabels_re, DrawMoneyLabels_orig);
+// 0x00494020
+SG_HOOK("golf_clean.exe", 0x00494020, listSetItems, ListSetItems_re, ListSetItems_orig);
+// 0x00488eb0
+SG_HOOK("golf_clean.exe", 0x00488eb0, Button__endPress, ButtonEndPress_re, ButtonEndPress_orig);
+// 0x0049d770
+SG_HOOK("golf_clean.exe", 0x0049d770, panelBuildText, PanelBuildText_re, PanelBuildText_orig);
+// 0x0049f050
+SG_HOOK("golf_clean.exe", 0x0049f050, optionDialogDraw, OptionDialogDraw_re, OptionDialogDraw_orig);
+// 0x004a3be0
+SG_HOOK("golf_clean.exe", 0x004a3be0, panelBuildText4a3be0, PanelBuildText4a3be0_re, PanelBuildText4a3be0_orig);
+
+// ================================================================================================================
+// Forwarders
+// ================================================================================================================
+
+// 0x00475df0  drawRoutingPoly(this, verts, count, colour): ret 0xc. A plain forwarder: fillConvexPoly 0x00493520(this, verts,
+// count, colour) (cdecl, pushes 0x00475df8..0x00475dff, call 0x00475e00, add esp, 0x10); eax is its result.
+typedef int(__cdecl* FillConvexPoly_t)(void* holder, const int* verts, int count, int colour);
+int __fastcall DrawRoutingPoly_re(void* self, void*, const int* verts, int count, int colour) {
+    return reinterpret_cast<FillConvexPoly_t>(0x00493520)(self, verts, count, colour);
+}
+typedef int(__fastcall* Routing_t)(void* self, void*, const int* verts, int count, int colour);
+Routing_t DrawRoutingPoly_orig;
+// 0x00475df0
+SG_HOOK("golf_clean.exe", 0x00475df0, drawRoutingPoly, DrawRoutingPoly_re, DrawRoutingPoly_orig);
+
+// ================================================================================================================
+// ListBox scrolling
+// ================================================================================================================
+
+// 0x0048c420  ListBox::onScroll(this, kind, value): ret 8. this = P + 0x58 where P holds the vbtable pointer (vbt[1] = d1 offsets
+// the Window base W = P + d1, vbt[2] = d2 the list model M = P + d2). [0x0083ab2c] = the parent W+0x130 (this + d1 + 0xd8,
+// 0x0048c425..0x0048c432). old top = this-0x34, old selection = M+0xf0 (this + d2 + 0x98, 0x0048c43b..0x0048c441). kind -2
+// sets the top to M+0x5c * value (this + d2 + 4, 0x0048c462..0x0048c46a), kind -1 to value (0x0048c459..0x0048c45d), any other
+// kind leaves it. With [0x0083ff18] != 0 ListBox::setSelection 0x00489f50(this-0x5c, top, 1) runs (0x0048c46d..0x0048c47f).
+// A changed top calls slot +0x120 of W and returns its result (0x0048c484..0x0048c49f). Otherwise, when the selection
+// changed, slot 0 of the object at this-0x5c runs with the old and then the new selection (0x0048c4a3..0x0048c4cf), and
+// Window::invalidate 0x00480ce0(W) closes (0x0048c4d1..0x0048c4e3); eax is its result.
+typedef int(__fastcall* SetSel_t)(void* self, void*, int index, int notify);
+int __fastcall ListBoxOnScroll_re(void* self, void*, int kind, int value) {
+    int* vbt = reinterpret_cast<int*>(Pp(self, -0x58));
+    G<void*>(0x0083ab2c) = Pp(B(self) + vbt[1], 0xd8);
+    const int oldTop = I(self, -0x34);
+    const int oldSel = I(B(self) + vbt[2], 0x98);
+    if (kind == -2) I(self, -0x34) = mul(I(B(self) + vbt[2], 4), value);
+    else if (kind == -1) I(self, -0x34) = value;
+    if (G<int>(0x0083ff18) != 0) reinterpret_cast<SetSel_t>(0x00489f50)(B(self) - 0x5c, 0, I(self, -0x34), 1);
+    if (I(self, -0x34) != oldTop) {
+        int* v2 = reinterpret_cast<int*>(Pp(self, -0x58));
+        void* w = B(self) - 0x58 + v2[1];
+        return vslot<V0_t>(w, 0x120)(w, 0);
+    }
+    int* v3 = reinterpret_cast<int*>(Pp(self, -0x58));
+    if (oldSel != I(B(self) + v3[2], 0x98)) {
+        void* obj = B(self) - 0x5c;
+        vslot<V1_t>(obj, 0)(obj, 0, oldSel);
+        int* v4 = reinterpret_cast<int*>(Pp(self, -0x58));
+        vslot<V1_t>(obj, 0)(obj, 0, I(B(self) + v4[2], 0x98));
+    }
+    int* v5 = reinterpret_cast<int*>(Pp(self, -0x58));
+    void* w2 = B(self) - 0x58 + v5[1];
+    return reinterpret_cast<V0_t>(0x00480ce0)(w2, 0);
+}
+typedef int(__fastcall* Scroll2_t)(void* self, void*, int kind, int value);
+Scroll2_t ListBoxOnScroll_orig;
+// 0x0048c420
+SG_HOOK("golf_clean.exe", 0x0048c420, ListBox__onScroll, ListBoxOnScroll_re, ListBoxOnScroll_orig);
+
+// ================================================================================================================
+// Combo box piece layout
+// ================================================================================================================
+
+// 0x00493f50  comboLayoutItems(this): thiscall, no stack arguments. The three piece images are at this+0x3468 (left), +0x346c
+// (middle) and +0x3470 (right); the drawing Surface is the record at this+0x23b0 (its handle is this+0x23b4: the same dword).
+// Image_draw 0x00473e60 draws the left image on it at (0, 0) (0x00493f70..0x00493f77). width = slot +0xd8 of the handle (0
+// without one, 0x00493f7c..0x00493f98); when width > left.+0x18 + right.+0x18 (0x00493f9e..0x00493fae) the middle image is
+// tiled by blitRight 0x00476140(surface; middle, 0, 0, 2, 0, width' - 4, middle.+0x1c) with width' read again (0x00493fb0..
+// 0x00493fe2). Finally Image_draw draws the right image at (width'' - right.+0x18, 0) (0x00493fe7..0x00494011) and its result
+// is returned.
+typedef int(__fastcall* ImgDraw_t)(void* self, void*, void* surf, int x, int y, void* mask);   // 0x00473e60, ret 0x10
+typedef int(__fastcall* BlitRight_t)(void* self, void*, void* tile, int ox, int oy, int x, int y, int w, int h);   // 0x00476140, ret 0x1c
+int __fastcall ComboLayoutItems_re(void* self, void*) {
+    void* dst = B(self) + 0x23b0;
+    reinterpret_cast<ImgDraw_t>(0x00473e60)(Pp(self, 0x3468), 0, dst, 0, 0, 0);
+    void* h = Pp(self, 0x23b4);
+    const int width = h ? vslot<V0_t>(h, 0xd8)(h, 0) : 0;
+    if (width > add(I(Pp(self, 0x3468), 0x18), I(Pp(self, 0x3470), 0x18))) {
+        void* mid = Pp(self, 0x346c);
+        const int mh = I(mid, 0x1c);
+        void* h2 = Pp(dst, 4);
+        const int w2 = h2 ? vslot<V0_t>(h2, 0xd8)(h2, 0) : 0;
+        reinterpret_cast<BlitRight_t>(0x00476140)(dst, 0, mid, 0, 0, 2, 0, w2 - 4, mh);
+    }
+    void* h3 = Pp(dst, 4);
+    const int w3 = h3 ? vslot<V0_t>(h3, 0xd8)(h3, 0) : 0;
+    void* right = Pp(self, 0x3470);
+    return reinterpret_cast<ImgDraw_t>(0x00473e60)(right, 0, dst, w3 - I(right, 0x18), 0, 0);
+}
+typedef int(__fastcall* Combo0_t)(void* self, void*);
+Combo0_t ComboLayoutItems_orig;
+// 0x00493f50
+SG_HOOK("golf_clean.exe", 0x00493f50, comboLayoutItems, ComboLayoutItems_re, ComboLayoutItems_orig);
+
+// ================================================================================================================
+// Menu list drawing (this = a text object; the model is a circular list: +8 head, +0xc cursor, +0x10 count, +0x14 index;
+// nodes: +4 id, +8 item, +0xc next; items: +4 text, +8 kind)
+// ================================================================================================================
+namespace {
+typedef int(__fastcall* Iter0_t)(void* model, void*);                                              // 0x00402130 / 0x00402160
+typedef int(__fastcall* Measure3b_t)(void* self, void*, const char* text, int x, int y, int width);   // 0x00478530, ret 0x10
+typedef int(__fastcall* Begin4_t)(void* self, void*, const char* text, int x, int y, int width);       // 0x00478750, ret 0x10
+typedef int(__fastcall* Flush0_t)(void* self, void*);                                              // 0x00478970
+typedef void(__cdecl* MenuCb_t)(int id, int kind);
+const Iter0_t kListIterNext = reinterpret_cast<Iter0_t>(0x00402130);
+const Iter0_t kListIterValue = reinterpret_cast<Iter0_t>(0x00402160);
+const Measure3b_t kMeasureText3 = reinterpret_cast<Measure3b_t>(0x00478530);
+const Begin4_t kBeginDrawRun = reinterpret_cast<Begin4_t>(0x00478750);
+const Flush0_t kTextFlush = reinterpret_cast<Flush0_t>(0x00478970);
+// cursor node of the model, its item, the item kind (+8) and the node id (+4); 0 / NULL when the list has no head
+static inline void* cursorNode(void* model) { return Pp(model, 0xc); }
+static inline void* cursorItem(void* model) { return Pp(cursorNode(model), 8); }
+}  // namespace
+
+// 0x004763d0  drawMenuList(this, model, x, y, width, flags): ret 0x14. A NULL model returns y (0x004763d5..0x004763e2).
+// Without bit 1 of flags and with count - 1 >= 0 the iteration restarts: index 0, cursor = head (0x004763e5..0x004763fc).
+// kind = the cursor item's +8 (0 without a head, 0x00476407..0x00476412); the callback this+0x10, when set, runs cdecl with
+// (cursor node +4 or 0, kind) (0x00476414..0x0047642d). The first entry: kind 3 draws nothing but advances y by Widget_value
+// 0x00477580 (beginDrawRun(NULL, x, y + value, width), 0x00476430..0x00476450), kind 2 lays the text out with measureText3
+// 0x00478530 and begins a run at the resulting y (0x00476452..0x0047648d), any other kind begins a run on the item text
+// (0x0047648f..0x004764b0); the running value esi is y + value, measureText3's result or y itself (0x004764a4). Then, while index <
+// count - 1 (0x004764b7..0x004764c0, signed) and esi is not below the handle height (slot +0xdc of this+4, 0 without one,
+// 0x004764c6..0x004764db): listIterNext 0x00402130 moves the cursor (0x004764e1); a non-zero kind of a non-empty list
+// (0x00476506..0x00476519) flushes the pending text with Text_flush 0x00478970 (ebp), runs the callback, esi = max(esi, ebp)
+// (0x0047654b..0x0047654f) and begins the next run by kind (3: esi += value; 2: esi = measureText3; else a run on the text,
+// 0x00476551..0x004765e0); a zero kind runs the callback and drawTextBlock 0x004787a0 on the listIterValue 0x00402160 item's
+// text (0x004765e2..0x0047661a). The loop repeats, height test included (0x004764c6), while index < count - 1
+// (0x0047661f..0x00476628). The result is
+// max(Text_flush(this), esi) (0x0047662e..0x0047663c).
+int __fastcall DrawMenuList_re(void* self, void*, void* model, int x, int y, int width, int flags) {
+    if (model == 0) return y;
+    if (!(flags & 2)) {
+        if (I(model, 0x10) - 1 >= 0) {
+            I(model, 0x14) = 0;
+            I(model, 0xc) = I(model, 8);
+        }
+    }
+    const bool head0 = I(model, 8) != 0;
+    int kind = head0 ? I(cursorItem(model), 8) : 0;
+    MenuCb_t cb = reinterpret_cast<MenuCb_t>(Pp(self, 0x10));
+    if (cb) cb(head0 ? I(cursorNode(model), 4) : 0, kind);
+    int esi;
+    if (kind == 3) {
+        esi = add(y, kWidgetValue(self, 0));
+        kBeginDrawRun(self, 0, 0, x, esi, width);
+    } else if (kind == 2) {
+        const char* text = head0 ? reinterpret_cast<const char*>(Pp(cursorItem(model), 4)) : 0;
+        esi = kMeasureText3(self, 0, text, x, y, width);
+        kBeginDrawRun(self, 0, 0, x, esi, width);
+    } else {
+        const char* text = head0 ? reinterpret_cast<const char*>(Pp(cursorItem(model), 4)) : 0;
+        kBeginDrawRun(self, 0, text, x, y, width);
+        esi = y;                                               // mov esi, [esp + 0x1c] (0x004764a4)
+    }
+    if (I(model, 0x14) < I(model, 0x10) - 1) {
+        for (;;) {
+            void* h = Pp(self, 4);
+            const int height = h ? vslot<V0_t>(h, 0xdc)(h, 0) : 0;
+            if (esi > height) break;
+            kListIterNext(model, 0);
+            const bool head1 = I(model, 8) != 0;
+            const int kind2 = head1 ? I(cursorItem(model), 8) : 0;
+            if (head1 && I(cursorItem(model), 8) != 0) {
+                const int ebp = kTextFlush(self, 0);
+                MenuCb_t cb2 = reinterpret_cast<MenuCb_t>(Pp(self, 0x10));
+                if (cb2) cb2(I(cursorNode(model), 4), kind2);
+                if (!(ebp < esi)) esi = ebp;
+                if (kind2 == 3) {
+                    esi = add(esi, kWidgetValue(self, 0));
+                    kBeginDrawRun(self, 0, 0, x, esi, width);
+                } else if (kind2 == 2) {
+                    const char* text = reinterpret_cast<const char*>(Pp(cursorItem(model), 4));
+                    esi = kMeasureText3(self, 0, text, x, esi, width);
+                    kBeginDrawRun(self, 0, 0, x, esi, width);
+                } else {
+                    const char* text = reinterpret_cast<const char*>(Pp(cursorItem(model), 4));
+                    kBeginDrawRun(self, 0, text, x, esi, width);
+                }
+            } else {
+                MenuCb_t cb3 = reinterpret_cast<MenuCb_t>(Pp(self, 0x10));
+                if (cb3) cb3(head1 ? I(cursorNode(model), 4) : 0, kind2);
+                const char* text = 0;
+                if (I(model, 8) != 0) text = reinterpret_cast<const char*>(Pp(reinterpret_cast<void*>(kListIterValue(model, 0)), 4));
+                reinterpret_cast<Block_t>(0x004787a0)(self, 0, text);
+            }
+            if (!(I(model, 0x14) < I(model, 0x10) - 1)) break;
+        }
+    }
+    const int f = kTextFlush(self, 0);
+    if (!(f < esi)) esi = f;
+    return esi;
+}
+typedef int(__fastcall* Menu5_t)(void* self, void*, void* model, int x, int y, int width, int flags);
+Menu5_t DrawMenuList_orig;
+// 0x004763d0
+SG_HOOK("golf_clean.exe", 0x004763d0, drawMenuList, DrawMenuList_re, DrawMenuList_orig);
+
+// ================================================================================================================
+// Panel with a corner image
+// ================================================================================================================
+
+// 0x00491270  TextView::drawPanelWithImage(this, index): ret 4. drawPanel4810d0(this, index) first (0x00491279..0x0049127c); a
+// NULL surface at this+0x11c returns 0 (0x00491281..0x00491289, eax is that dword); an index other than -1 and 0 returns the
+// surface (0x0049128b..0x00491292); a NULL image at this+0x13cc returns the surface (0x00491294..0x0049129c). Otherwise the
+// surface's handle (surface+4, when set) fills a RECT through its slot +0xd0 (0x0049129e..0x004912ae) and Image_draw
+// 0x00473e60(image; surface, left + m, top + m, 0) draws the image, m = this+0x194 (0x004912b4..0x004912f5); eax is its result.
+typedef int(__fastcall* Panel1_t)(void* self, void*, int index);
+int __fastcall DrawPanelWithImage_re(void* self, void*, int index) {
+    reinterpret_cast<Panel1_t>(0x004810d0)(self, 0, index);
+    void* surf = Pp(self, 0x11c);
+    if (surf == 0) return 0;
+    const int ret = reinterpret_cast<int>(surf);
+    if (index != -1 && index != 0) return ret;
+    void* image = Pp(self, 0x13cc);
+    if (image == 0) return ret;
+    int rect[4] = {0, 0, 0, 0};
+    void* h = Pp(surf, 4);
+    if (h) vslot<int(__fastcall*)(void*, void*, int*)>(h, 0xd0)(h, 0, rect);
+    const int m = I(self, 0x194);
+    return reinterpret_cast<ImgDraw_t>(0x00473e60)(image, 0, surf, add(rect[0], m), add(rect[1], m), 0);
+}
+Panel1_t DrawPanelWithImage_orig;
+// 0x00491270
+SG_HOOK("golf_clean.exe", 0x00491270, TextView__drawPanelWithImage, DrawPanelWithImage_re, DrawPanelWithImage_orig);
+
+// ================================================================================================================
+// Panel item drawing (the panelSub class: `this` Q has a vtable whose dwords [+4] / [+8] are the offsets of the window base W
+// (parent at W+0x130, text / Surface sub-object at W+0x274) and of the record b; the item list hangs off Q+0x80 (head), +0x84
+// (cursor), +0x88 (count), +0x8c (index); nodes: +4 id, +8 item, +0xc next, +0x10 prev; item +4 the image record)
+// ================================================================================================================
+namespace {
+typedef int(__fastcall* BlitThunk7_t)(void* self, void*, void* dst, int dx, int dy, int sx, int sy, int w, int h);   // 0x00475c60, ret 0x1c
+typedef int(__cdecl* PanelCb_t)(void* image, void* win, int id, int x, int y);
+typedef void(__fastcall* Bevel6_t)(void* self, void*, int x, int y, int x2, int y2, int c1, int c2);                  // 0x00479560, ret 0x18
+typedef int(__fastcall* Centered_t)(void* self, void*, const char* text, const int* rect, int len);                      // 0x00477cd0, ret 0xc
+typedef int(__fastcall* ImgDrawP_t)(void* self, void*, void* surf, int x, int y, void* mask);                           // 0x00473e60, ret 0x10
+typedef void(__fastcall* Slot3i_t)(void* self, void*, int a, int b, int c);
+const BlitThunk7_t kBlitThunk7 = reinterpret_cast<BlitThunk7_t>(0x00475c60);
+const Bevel6_t kBevel6 = reinterpret_cast<Bevel6_t>(0x00479560);
+const Centered_t kDrawCenteredP = reinterpret_cast<Centered_t>(0x00477cd0);
+const ImgDrawP_t kImageDrawP = reinterpret_cast<ImgDrawP_t>(0x00473e60);
+// the text / Surface sub-object of the panel's window base: this + vt[1] + 0x274
+static inline void* panelText(void* self) { return B(self) + reinterpret_cast<int*>(Pp(self, 0))[1] + 0x274; }
+static inline char* panelB(void* self) { return B(self) + reinterpret_cast<int*>(Pp(self, 0))[2]; }
+// `cdq; sub eax, edx; sar eax, 1`: divide by two toward zero
+static inline int half(int v) { return (v - (v >> 31)) >> 1; }
+// image of the cursor node: node->+8->+4 (NULL when the list has no head)
+static inline void* cursorImage(void* self) {
+    if (I(self, 0x80) == 0) return 0;
+    return Pp(Pp(Pp(self, 0x84), 8), 4);
+}
+}  // namespace
+
+// 0x004a3f10  panelDraw4a3f10(this, index): ret 4; eax at the return is path dependent and no caller reads it. W = this + vt[1],
+// b = this + vt[2]. The parent W+0x130 NULL returns (0x004a3f1e..0x004a3f2b). The display slot +0x9c gets (this+0x70, this+0x70,
+// this+0x74) (0x004a3f31..0x004a3f46). cols = b+0x5c, row = index / cols, y0 = (b+0x68 + b+0x48) * row, x0 = (index - cols *
+// row) * b+0x6c + (b+0x48 >> 1) (0x004a3f4c..0x004a3f7f). index > count - 1 (count = this+0x88) returns (0x004a3f83..0x004a3f88).
+// The cursor this+0x84 starts at the head this+0x80 and walks index steps along +0xc (index > 0) or |index| steps along +0x10
+// (index < 0, |index| > count returns), this+0x8c = index or count + index (0x004a3f8e..0x004a3fdc); the second list at b+0xc0
+// (head +0xc8, cursor +0xcc, count +0xd0, index +0xd4) does the same, index > its count - 1 returning (0x004a3fe2..0x004a4041).
+// rect = {y0 + this+0xa8 + 4, x0, b+0x68 + y0, b+0x6c + x0} (0x004a4044..0x004a406d). Surface_blitThunk 0x00475c60 on parent+0x274:
+// (W+0x274; b+0x28 + y0, b+0x2c + x0, y0, x0, b+0x68, b+0x6c) (0x004a4071..0x004a40a7). The item image (cursor node->+8->+4):
+// x0 += (b+0x6c - image.h * this+0x70 / this+0x74) / 2 and y0 += (this+0xa8 - image.w * this+0x70 / this+0x74) / 2 (0x004a40ac..
+// 0x004a4121). this+0xb8 == 0: Image_draw 0x00473e60 on W+0x274 at (y0, x0) (0x004a4123..0x004a416b); otherwise the cdecl callback
+// this+0xb8 runs with (image, W, node id, y0, x0) (0x004a4170..0x004a41c3) and setQuad / setQuad70 / setQuad74 / setDrawTarget
+// re-arm the text object from b+0x80.. and b+0x74.. (0x004a41c5..0x004a4281). When b+0xf0 equals the index and this+4 is non-zero a
+// bevel box (this+8 twice) frames the item (0x004a4286..0x004a42e4). Finally the second list's cursor text, when set, is drawn
+// with drawCentered 0x00477cd0 into the rect (0x004a42e9..0x004a432a).
+void __fastcall PanelDraw_re(void* self, void*, int index) {
+    char* W = B(self) + reinterpret_cast<int*>(Pp(self, 0))[1];
+    char* b = panelB(self);
+    void* parent = Pp(W, 0x130);
+    if (parent == 0) return;
+    void* d = G<void*>(0x0083ad50);
+    const int s70 = I(self, 0x70);
+    if (d) vslot<Slot3i_t>(d, 0x9c)(d, 0, s70, s70, I(self, 0x74));
+    const int cols = I(b, 0x5c);
+    const int row = index / cols;
+    int y0 = mul(add(I(b, 0x68), I(b, 0x48)), row);
+    int x0 = add(mul(index - mul(cols, row), I(b, 0x6c)), I(b, 0x48) >> 1);
+    const int count = I(self, 0x88);
+    if (index > count - 1) return;
+    I(self, 0x84) = I(self, 0x80);
+    int e;
+    if (index < 0) {
+        const int a = -index;
+        if (a > count) return;
+        for (int k = a; k > 0; k--) I(self, 0x84) = I(reinterpret_cast<void*>(I(self, 0x84)), 0x10);
+        e = add(count, index);
+    } else {
+        for (int k = index; k > 0; k--) I(self, 0x84) = I(reinterpret_cast<void*>(I(self, 0x84)), 0xc);
+        e = index;
+    }
+    I(self, 0x8c) = e;
+    char* c = b + 0xc0;
+    if (index > I(b, 0xd0) - 1) return;
+    I(c, 0xc) = I(c, 8);
+    if (index < 0) {
+        const int a = -index;
+        if (a > I(c, 0x10)) return;
+        for (int k = a; k > 0; k--) I(c, 0xc) = I(reinterpret_cast<void*>(I(c, 0xc)), 0x10);
+        e = add(index, I(c, 0x10));
+    } else {
+        for (int k = index; k > 0; k--) I(c, 0xc) = I(reinterpret_cast<void*>(I(c, 0xc)), 0xc);
+        e = index;
+    }
+    I(c, 0x14) = e;
+    const int rect[4] = {add(add(y0, I(self, 0xa8)), 4), x0, add(I(b, 0x68), y0), add(I(b, 0x6c), x0)};
+    void* text = W + 0x274;
+    kBlitThunk7(B(parent) + 0x274, 0, text, add(I(b, 0x28), y0), add(I(b, 0x2c), x0), y0, x0, I(b, 0x68), I(b, 0x6c));
+    void* imgA = cursorImage(self);
+    const int den = I(self, 0x74);
+    {
+        const int sh = mul(I(imgA, 0x1c), s70) / den;
+        x0 = add(x0, half(I(b, 0x6c) - sh));
+    }
+    void* imgB = cursorImage(self);
+    {
+        const int sw = mul(I(imgB, 0x18), s70) / den;
+        y0 = add(y0, half(I(self, 0xa8) - sw));
+    }
+    PanelCb_t cb = reinterpret_cast<PanelCb_t>(Pp(self, 0xb8));
+    if (cb == 0) {
+        kImageDrawP(cursorImage(self), 0, text, y0, x0, 0);
+    } else {
+        const int id = I(self, 0x80) ? I(Pp(self, 0x84), 4) : 0;
+        cb(cursorImage(self), W, id, y0, x0);
+        kSetQuadP(text, 0, I(b, 0x80), I(b, 0x8c), I(b, 0x98), I(b, 0xa4));
+        kSetQuad70P(text, 0, I(b, 0x84), I(b, 0x90), I(b, 0x9c), I(b, 0xa8));
+        kSetQuad74P(text, 0, I(b, 0x88), I(b, 0x94), I(b, 0xa0), I(b, 0xac));
+        reinterpret_cast<int(__fastcall*)(void*, void*, int, int, int, int)>(0x004762d0)(text, 0, I(b, 0x74), I(b, 0x78), I(b, 0x7c), 0);
+    }
+    if (I(b, 0xf0) == index && I(self, 4) != 0) {
+        void* im = cursorImage(self);
+        const int c8 = I(self, 8);
+        const int xe = add(mul(I(im, 0x18), s70) / den, y0) - 1;
+        kBevel6(text, 0, y0, add(x0, 1), xe, add(add(I(b, 0x6c), x0), 1 - 3), c8, c8);
+    }
+    if (I(b, 0xc8) != 0) {
+        void* node = reinterpret_cast<void*>(I(b, 0xcc));
+        const char* t = reinterpret_cast<const char*>(Pp(Pp(node, 8), 4));
+        if (t != 0) kDrawCenteredP(text, 0, t, rect, slen(t));
+    }
+}
+typedef void(__fastcall* PanelDraw_t)(void* self, void*, int index);
+PanelDraw_t PanelDraw_orig;
+// 0x004a3f10
+SG_HOOK("golf_clean.exe", 0x004a3f10, panelDraw4a3f10, PanelDraw_re, PanelDraw_orig);
+
+// ----------------------------------------------------------------------------------------------------------------
+// Handlers on the panelSub sub-object P = Q + 0xe0 (Q is panelDraw's `this`): count at P-0x58, selection b+0xf0 (P + vt[2] + 0x10)
+// ----------------------------------------------------------------------------------------------------------------
+namespace {
+typedef int(__fastcall* HitTest_t)(void* hot, void*, int x, int y, int* aOut, int* bOut);   // 0x00492a90, ret 0x10
+typedef int(__fastcall* FindById_t)(void* list, void*, int id);                              // 0x004a4890, ret 4
+typedef int(__cdecl* ValueCb_t)(int value);
+const HitTest_t kHitTest = reinterpret_cast<HitTest_t>(0x00492a90);
+const FindById_t kListFindById = reinterpret_cast<FindById_t>(0x004a4890);
+const PanelDraw_t kPanelDraw = reinterpret_cast<PanelDraw_t>(0x004a3f10);
+static inline void* panelQ(void* P) { return B(P) - 0xe0; }
+static inline char* panelBofP(void* P) { return B(P) + reinterpret_cast<int*>(Pp(panelQ(P), 0))[2]; }   // b + 0xe0
+}  // namespace
+
+// 0x004a4350  panelOnPick(this = P, x, y): ret 8. HotList::hitTest 0x00492a90(P-0xd0; x, y, &a, 0) (a starts as y) (0x004a4357..
+// 0x004a436a); -1 returns (0x004a436f / 0x004a4372). The callback at P-0x24, when set, runs cdecl with a (0x004a4374..0x004a4382).
+// old = the selection b+0xf0 (P + vt[2] + 0x10); b+0xf0 = listFindById 0x004a4890(Q; a) (0x004a4385..0x004a43ac); panelDraw
+// 0x004a3f10(Q; old) and (Q; the new selection) follow (0x004a43b0..0x004a43c3), then slot +0x124 of the window base W =
+// Q + vt[1] runs and its result is returned (0x004a43c8..0x004a43e1).
+int __fastcall PanelOnPick_re(void* P, void*, int x, int y) {
+    int a = y;
+    const int r = kHitTest(B(P) - 0xd0, 0, x, y, &a, 0);
+    if (r == -1) return r;                               // eax = -1 stays (0x004a436f / 0x004a4372 -> 0x004a43e3)
+    ValueCb_t cb = reinterpret_cast<ValueCb_t>(Pp(P, -0x24));
+    if (cb) cb(a);
+    void* Q = panelQ(P);
+    int* selp = reinterpret_cast<int*>(panelBofP(P) + 0x10);
+    const int old = *selp;
+    *selp = kListFindById(Q, 0, a);
+    kPanelDraw(Q, 0, old);
+    kPanelDraw(Q, 0, *selp);
+    void* W = B(Q) + reinterpret_cast<int*>(Pp(Q, 0))[1];
+    return vslot<V0_t>(W, 0x124)(W, 0);
+}
+typedef int(__fastcall* PanelOnPick_t)(void* P, void*, int x, int y);
+PanelOnPick_t PanelOnPick_orig;
+// 0x004a4350
+SG_HOOK("golf_clean.exe", 0x004a4350, panelOnPick, PanelOnPick_re, PanelOnPick_orig);
+
+// the shared tail of panelOnKey (0x004a4760..0x004a4798): panelDraw(Q; old), panelDraw(Q; the selection now), slot +0x124 of W
+static void panelRedraw(void* P, int old) {
+    void* Q = panelQ(P);
+    kPanelDraw(Q, 0, old);
+    kPanelDraw(Q, 0, *reinterpret_cast<int*>(panelBofP(P) + 0x10));
+    void* W = B(Q) + reinterpret_cast<int*>(Pp(Q, 0))[1];
+    vslot<V0_t>(W, 0x124)(W, 0);
+}
+
+// 0x004a4680  panelOnKey(this = P, key): ret 4; returns 1 for a handled key and 0 otherwise. key - 0x25 above 0x43 returns 0
+// (0x004a4685..0x004a468f); the byte map at 0x004a4824 selects a case of the jump table 0x004a4810: 0 left (0x004a4717), 1 up
+// (0x004a46a4), 2 right (0x004a479c), 3 down (0x004a46dd), 4 none (0x004a4807 -> 0). With b = P + vt[2] - 0xe0 (so b+0xf0 is
+// the selection, b+0x58 the row count, b+0x5c the column count, P-0x58 the item count):
+//  up: selection 0 returns 1, else it moves down by one and the old index is redrawn (0x004a46a4..0x004a46d8, 0x004a4760);
+//  down: selection == count - 1 returns 1, else it moves up by one (0x004a46dd..0x004a4715);
+//  left: b+0x58 == 1 or selection < b+0x5c (signed) returns 1, else selection -= b+0x5c (0x004a4717..0x004a475f);
+//  right: b+0x58 == 1 returns 1; selection < (b+0x58 - 1) * b+0x5c adds b+0x5c, kept only when <= count - 1 (else the old value
+//  is restored, 0x004a47fb), otherwise returns 1 (0x004a479c..0x004a47fe).
+// Every moved case then redraws old and new through panelRedraw and returns 1 (0x004a4793).
+int __fastcall PanelOnKey_re(void* P, void*, int key) {
+    const int m = key - 0x25;
+    if (static_cast<unsigned>(m) > 0x43u) return 0;
+    const int kind = G<unsigned char>(0x004a4824 + m);
+    char* bb = panelBofP(P);                      // b + 0xe0 ... the code addresses it as P + vt[2]
+    int* selp = reinterpret_cast<int*>(bb + 0x10);
+    switch (kind) {
+        case 1: {                                 // up
+            const int sel = *selp;
+            if (sel == 0) return 1;
+            *selp = sel - 1;
+            panelRedraw(P, *selp + 1);
+            return 1;
+        }
+        case 3: {                                 // down
+            const int sel = *selp;
+            if (sel == I(P, -0x58) - 1) return 1;
+            *selp = sel + 1;
+            panelRedraw(P, *selp - 1);
+            return 1;
+        }
+        case 0: {                                 // left
+            const int mode = I(bb, -0x88);
+            if (mode == 1) return 1;
+            const int sel = *selp;
+            const int cols = I(bb, -0x84);
+            if (sel < cols) return 1;
+            *selp = sel - cols;
+            panelRedraw(P, sel);
+            return 1;
+        }
+        case 2: {                                 // right
+            const int mode = I(bb, -0x88);
+            if (mode == 1) return mode;
+            const int cols = I(bb, -0x84);
+            const int lim = mul(mode - 1, cols);
+            const int sel = *selp;
+            if (!(sel < lim)) return 1;
+            *selp = add(cols, sel);
+            if (*selp <= I(P, -0x58) - 1) {
+                panelRedraw(P, sel);
+            } else {
+                *selp = sel;
+            }
+            return 1;
+        }
+        default:
+            return 0;
+    }
+}
+typedef int(__fastcall* PanelOnKey_t)(void* P, void*, int key);
+PanelOnKey_t PanelOnKey_orig;
+// 0x004a4680
+SG_HOOK("golf_clean.exe", 0x004a4680, panelOnKey, PanelOnKey_re, PanelOnKey_orig);
+
+// 0x004a45b0  panelSubDrawContents(this = P): no stack arguments; eax is P + vt[1] when the parent is NULL and the item count otherwise. W = P - 0xe0 + vt[1]; parent = P + vt[1] + 0x50
+// (W+0x130) NULL returns (0x004a45cc..0x004a45d1). Otherwise the text object P + vt[1] + 0x194 (W+0x274) and its handle (P + vt[1] +
+// 0x198) give height (slot +0xdc) and width (slot +0xd8), 0 without a handle (0x004a45ed..0x004a462a); Surface_blitThunk
+// 0x00475c60 on parent+0x274 copies (b+0x28, b+0x2c) <- (0, 0) size width x height into the text object (0x004a462a..0x004a4652).
+// Then panelDraw(Q; i) runs for i = 0 .. count-1, count = P-0x58 (0x004a4657..0x004a466e).
+int __fastcall PanelSubDrawContents_re(void* P, void*) {
+    void* Q = panelQ(P);
+    int* vt = reinterpret_cast<int*>(Pp(Q, 0));
+    void* parent = Pp(B(P) + vt[1], 0x50);
+    if (parent == 0) return reinterpret_cast<int>(B(P) + vt[1]);          // eax = P + vt[1] (lea eax, [ecx + esi], 0x004a45cc)
+    void* text = B(P) + vt[1] + 0x194;
+    void* h = Pp(B(P) + vt[1], 0x198);
+    int height = 0;
+    if (h) height = vslot<V0_t>(h, 0xdc)(h, 0);
+    void* h2 = Pp(B(P) + vt[1], 0x198);
+    const int width = h2 ? vslot<V0_t>(h2, 0xd8)(h2, 0) : 0;
+    char* bb = panelBofP(P);
+    kBlitThunk7(B(parent) + 0x274, 0, text, I(bb, -0xb8), I(bb, -0xb4), 0, 0, width, height);
+    for (int i = 0; I(P, -0x58) > 0 && i < I(P, -0x58); i++) kPanelDraw(Q, 0, i);
+    return I(P, -0x58);                                                   // eax = the count read last (0x004a4657 / 0x004a4668)
+}
+typedef int(__fastcall* PanelSub0_t)(void* P, void*);
+PanelSub0_t PanelSubDrawContents_orig;
+// 0x004a45b0
+SG_HOOK("golf_clean.exe", 0x004a45b0, panelSubDrawContents, PanelSubDrawContents_re, PanelSubDrawContents_orig);
+
+// The vtordisp thunks: `sub ecx, dword ptr [ecx - 4]` then a jump to the body with the arguments untouched.
+// 0x004a49e0  panelOnPick_vtordisp -> panelOnPick 0x004a4350 (0x004a49e0 sub, 0x004a49e3 jmp).
+int __fastcall PanelOnPickVd_re(void* T, void*, int x, int y) {
+    return reinterpret_cast<PanelOnPick_t>(0x004a4350)(B(T) - I(T, -4), 0, x, y);
+}
+PanelOnPick_t PanelOnPickVd_orig;
+// 0x004a4a40  panelOnKey_vtordisp -> panelOnKey 0x004a4680.
+int __fastcall PanelOnKeyVd_re(void* T, void*, int key) {
+    return reinterpret_cast<PanelOnKey_t>(0x004a4680)(B(T) - I(T, -4), 0, key);
+}
+PanelOnKey_t PanelOnKeyVd_orig;
+// 0x004a49c0  panelSubDrawContents_vtordisp -> panelSubDrawContents 0x004a45b0.
+int __fastcall PanelSubDrawContentsVd_re(void* T, void*) {
+    return reinterpret_cast<PanelSub0_t>(0x004a45b0)(B(T) - I(T, -4), 0);
+}
+PanelSub0_t PanelSubDrawContentsVd_orig;
+// ----------------------------------------------------------------------------------------------------------------
+// panelRow (tag 4): `this` P2 = Q2 + 0x8c; Q2's vtable dwords [+4] / [+8] give the window base (parent at P2 + vt[1] + 0xa4, the text object at
+// P2 + vt[1] + 0x1e8) and the record bb = P2 + vt[2]
+// ----------------------------------------------------------------------------------------------------------------
+// 0x004a2d50  panelDrawRow(this): no stack arguments; eax is the vtable pointer (NULL parent), the row count (no rows) or vt[2] (0x004a2f89). parent = P2 + vt[1] + 0xa4; NULL returns (0x004a2d69 /
+// 0x004a2d6b); [0x0083ab2c] = parent (0x004a2d77). The text object's handle (P2 + vt[1] + 0x1ec) gives height (slot +0xdc) and width (slot
+// +0xd8), 0 without one (0x004a2d9e..0x004a2de5); Surface_blitThunk 0x00475c60 on parent+0x274 copies (bb-0x64, bb-0x60) <- (0, 0) size
+// width x height into the text object (0x004a2deb..0x004a2e07). x0 = bb-0x54 + bb-0x48, right = bb-0x24 + x0, half = bb-0x44 >> 1, bottom =
+// bb-0x20 - bb-0x44 + half (0x004a2e0c..0x004a2e46). With count = bb+0x44 >= 0 the cursor bb+0x40 = head bb+0x3c, and for count >= 1
+// it steps once along +0x10 (to the last node) with index bb+0x48 = count - 1 (0x004a2e4a..0x004a2e76). Rows = bb-0x34 (<= 0 returns,
+// 0x004a2e8e..0x004a2e90); row r draws bb-0x30 cells into rect {x0 + r * bb-0x24, half, right + r * bb-0x24, bottom}, each cell advancing
+// the cursor along +0xc with the index wrapping at count (head set, 0x004a2edd..0x004a2efb) and drawing the cursor item's text (item = node
+// ->+8, text = item->+4) with drawCentered 0x00477cd0 (0x004a2f02..0x004a2f3e); then top and bottom grow by bb-0x20 (0x004a2f43..0x004a2f64).
+int __fastcall PanelDrawRow_re(void* P, void*) {
+    int* vt = reinterpret_cast<int*>(Pp(P, -0x8c));
+    char* bb = B(P) + vt[2];
+    char* wb = B(P) + vt[1];
+    void* parent = Pp(wb, 0xa4);
+    if (parent == 0) return reinterpret_cast<int>(vt);                    // eax = the vtable pointer loaded at 0x004a2d59
+    G<void*>(0x0083ab2c) = parent;
+    void* text = wb + 0x1e8;
+    void* h = Pp(wb, 0x1ec);
+    const int height = h ? vslot<V0_t>(h, 0xdc)(h, 0) : 0;
+    void* h2 = Pp(wb, 0x1ec);
+    const int width = h2 ? vslot<V0_t>(h2, 0xd8)(h2, 0) : 0;
+    kBlitThunk7(B(parent) + 0x274, 0, text, I(bb, -0x64), I(bb, -0x60), 0, 0, width, height);
+    const int x0 = add(I(bb, -0x54), I(bb, -0x48));
+    const int right = add(I(bb, -0x24), x0);
+    const int ebp = I(bb, -0x44);
+    const int halfv = ebp >> 1;
+    const int bottom = add(I(bb, -0x20) - ebp, halfv);
+    const int count = I(bb, 0x44);
+    if (!(count - 1 < -1)) {
+        I(bb, 0x40) = I(bb, 0x3c);
+        if (!(1 > count)) {
+            I(bb, 0x40) = I(reinterpret_cast<void*>(I(bb, 0x40)), 0x10);
+            I(bb, 0x48) = count - 1;
+        }
+    }
+    if (I(bb, -0x34) <= 0) return I(bb, -0x34);                           // eax = the row count (0x004a2e8a)
+    int r = 0;
+    for (;;) {
+        const int off = mul(I(bb, -0x24), r);
+        int rect[4] = {add(x0, off), halfv, add(right, off), bottom};
+        if (I(bb, -0x30) > 0) {
+            for (int c = 0; c < I(bb, -0x30); c++) {
+                const int head = I(bb, 0x3c);
+                if (head != 0) {
+                    I(bb, 0x40) = I(reinterpret_cast<void*>(I(bb, 0x40)), 0xc);
+                    const int idx = I(bb, 0x48) + 1;
+                    I(bb, 0x48) = idx;
+                    if (idx == I(bb, 0x44)) I(bb, 0x48) = 0;
+                }
+                void* cur = reinterpret_cast<void*>(I(bb, 0x40));
+                if (cur != 0) {
+                    void* item = head != 0 ? Pp(cur, 8) : 0;
+                    const char* t = reinterpret_cast<const char*>(Pp(item, 4));
+                    if (t != 0) kDrawCenteredP(text, 0, t, rect, slen(t));
+                }
+                rect[1] = add(rect[1], I(bb, -0x20));
+                rect[3] = add(rect[3], I(bb, -0x20));
+            }
+        }
+        r++;
+        if (!(r < I(bb, -0x34))) break;
+    }
+    return vt[2];                                                         // eax = vt[2], loaded at 0x004a2f89 for the last compare
+}
+PanelSub0_t PanelDrawRow_orig;
+// 0x004a2d50
+SG_HOOK("golf_clean.exe", 0x004a2d50, panelDrawRow, PanelDrawRow_re, PanelDrawRow_orig);
+
+// 0x004a3090  panelDrawRow_vtordisp: sub ecx, [ecx-4] (0x004a3090), jmp panelDrawRow 0x004a2d50 (0x004a3093).
+int __fastcall PanelDrawRowVd_re(void* T, void*) { return reinterpret_cast<PanelSub0_t>(0x004a2d50)(B(T) - I(T, -4), 0); }
+PanelSub0_t PanelDrawRowVd_orig;
+// 0x004a3100  panelDrawRow_vtordisp_adj578: sub ecx, [ecx-4] (0x004a3100), sub ecx, 0x578 (0x004a3103), jmp 0x004a2d50 (0x004a3109).
+int __fastcall PanelDrawRowVdAdj_re(void* T, void*) { return reinterpret_cast<PanelSub0_t>(0x004a2d50)(B(T) - I(T, -4) - 0x578, 0); }
+PanelSub0_t PanelDrawRowVdAdj_orig;
+// 0x004a3090
+SG_HOOK("golf_clean.exe", 0x004a3090, panelDrawRow_vtordisp, PanelDrawRowVd_re, PanelDrawRowVd_orig);
+// 0x004a3100
+SG_HOOK("golf_clean.exe", 0x004a3100, panelDrawRow_vtordisp_adj578, PanelDrawRowVdAdj_re, PanelDrawRowVdAdj_orig);
+
+// 0x004a49e0
+SG_HOOK("golf_clean.exe", 0x004a49e0, panelOnPick_vtordisp, PanelOnPickVd_re, PanelOnPickVd_orig);
+// 0x004a4a40
+SG_HOOK("golf_clean.exe", 0x004a4a40, panelOnKey_vtordisp, PanelOnKeyVd_re, PanelOnKeyVd_orig);
+// 0x004a49c0
+SG_HOOK("golf_clean.exe", 0x004a49c0, panelSubDrawContents_vtordisp, PanelSubDrawContentsVd_re, PanelSubDrawContentsVd_orig);

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 48 bytes, 14 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+0x004aecf0 output_message(cinfo) (cdecl; the IJG message printer): err = [cinfo] (0x004aecfe); err->format_message, the pointer at [err + 0xc] (0x004aed02), is called with (cinfo, buffer) (pushes 0x004aed00, 0x004aed01) into a 200-byte stack buffer (sub esp, 0xc8 0x004aecf4); fprintf 0x004a622c (0x004e4dc8, 0x004e6cf8, buffer) (pushes 0x004aed09..0x004aed0f, call 0x004aed14); eax = fprintf's. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: output_message (12 vectors, 12 distinct results, 12 changing state, `log/diff/004aecf0_output_message.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_error.cpp` as `_output_message` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004aed1f): callee pops 0 bytes of stack arguments.

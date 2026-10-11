@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 60 bytes, 23 instructions, subsystem `util`. Mechanical
 Scans the global KeyTable array g_0083b170..g_0083b5ef for one whose find() matches, returning its file offset. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00488420 KeyTable::lookup(a1, a2) (cdecl): four 0x120-byte tables from 0x0083b170 (loop 0x00488430..0x00488453, end 0x0083b5f0). A table whose word +0x104 is non-zero (0x00488430..0x00488438) is asked KeyTable::find 0x00488310(a1, a2) (pushes 0x0048843a, 0x0048843b, call 0x0048843e, ret 8 in the callee); a non-negative result (0x00488445 `jge`) is returned. No table answers: -1 (0x00488455). Callers (hooks.csv): 0x00487fb0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: KeyTable::lookup_a (12 vectors, 12 distinct results, 11 changing state, `log/diff/00488420_KeyTable_lookup_a.path1.csv`); KeyTable::lookup_b (12 vectors, 12 distinct results, 11 changing state, `log/diff/00488420_KeyTable_lookup_b.path1.csv`); KeyTable::lookup_c (12 vectors, 12 distinct results, 11 changing state, `log/diff/00488420_KeyTable_lookup_c.path1.csv`); KeyTable::lookup_d (12 vectors, 12 distinct results, 11 changing state, `log/diff/00488420_KeyTable_lookup_d.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small6.cpp` as `?dispatch488420@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048845b): callee pops 0 bytes of stack arguments.

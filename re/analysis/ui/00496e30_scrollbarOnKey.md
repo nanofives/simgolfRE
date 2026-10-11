@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 400 bytes, 115 instructions, subsystem `ui`. Mechanical
 handles keyboard input (line/page up-down) for the scrollbar. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00496e30 scrollbarOnKey(this, unused, key): `ret 8`; the first argument is never read, the key is the dword at [esp+0x14] (0x00496e71). 0x0083ff18 is set to 1 (0x00496e34). The extents are compared as in scrollbarOnDown (0x00496e6f / 0x00496e75). Width above height: key 0x23 sets this+0x58c to this+0x584 (0x00496e8b..0x00496e91) and key 0x24 to this+0x580 (0x00496e83 / 0x00496ee7) with no clamp; any other key returns 0 (0x00496e7d, 0x00496fb8). Height not above: key 0x21 subtracts this+0x5a0 from this+0x58c (0x00496ec7..0x00496edd) and raises the result to this+0x580 when it is below (jge at 0x00496ee5, store at 0x00496ee7); key 0x22 adds this+0x5a0 (0x00496ea5..0x00496ebb) and lowers it to this+0x584 when above (jle at 0x00496ec3, jmp at 0x00496ec5); any other key returns 0. A handled key sets 0x0083ab2c to the parent (0x00496eed..0x00496ef8), runs the shared tail and returns 1 (0x00496fb0). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: scrollbarOnKey (64 vectors, 23 distinct results, 64 changing state, `log/diff/00496e30_scrollbarOnKey.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?key@R0C496e30@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00496fb5, 0x00496fbd): callee pops 8 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039980`), 13 bytes in 2 address ranges, 3 instructi
 this-adjustor thunk: adds 112 (0x70) from this and tail-jumps to Channel_parseWaveHeader 0x10001b04 (`re/names/undisc_sound.tsv`)
 System writeup: `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+0x00039980 Channel_parseWaveHeader_adjPlus70 (VA 0x10039980). Plain `ret`, a this-adjusting thunk: ecx is advanced by 0x70 (0x10039980) and `jmp 0x10001b04` (thunk to Channel_parseWaveHeader 0x10033990) returns that function's result (0x10039983). Reached from: no call xref; reached through a stored pointer: 0x1005c86c table slot 33 (+0x84) of the table at 0x1005c7e8; installers: 0x10039690 MultiSound_ctor, 0x10039790 MultiSound_ctorWithType, 0x10039870 MultiSound_dtor, 0x100399a0 loadMultiChannel. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Channel_parseWaveHeader_adjPlus70 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039980_sound_Channel_parseWaveHeader_adjPlus70.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x10039980 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

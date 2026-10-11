@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 107 bytes, 32 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Pushes the current course-type/collar settings to Terrain.dll. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x00449400 applyCourseType(arg): dl = byte [0x005a34e0] (0x00449400). For the 23 records at 0x00578372 + k * 0x30 (loop 0x00449413..0x00449442, 23 iterations until the address reaches 0x005787c2): table[k] = the signed byte at +4 (movsx 0x00449413); when dl == 1 (0x00449417) and the signed byte at +0 is > 0 (0x0044941e / 0x00449421 `jle`) and the record is neither 0x00578462 nor 0x005784c2 (0x00449423, 0x0044942a) table[k] = 4 (0x00449431). Then Terrain::passCollarInfo(table, 0x17) through 0x004a4f22 (pushes 0x0044944e, 0x00449450) and Terrain::loadNewCourseType(arg) through 0x004a4f1c (0x0044945a..0x00449461), both with ecx = [0x00820ed0]. eax = the last call's. Callers (hooks.csv): 0x0040b9b0;0x0040f5c0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: applyCourseType (12 vectors, 12 distinct results, 12 changing state, `log/diff/00449400_applyCourseType.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0044946a): callee pops 0 bytes of stack arguments.
 

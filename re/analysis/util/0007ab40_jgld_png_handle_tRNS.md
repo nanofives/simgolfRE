@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007ab40`), 801 bytes, 258 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads a tRNS chunk. No IHDR -> png_error 0x1011e6f4 (jne 0x1007ab63); after IDAT -> warning 0x1011e6dc, finish, return (je 0x1007ab83); a non-NULL info with tRNS valid -> warning 0x1011e6c4, finish, return (0x1007abaf / 0x1007abbc). Colour type 3 (jne 0x1007abf2): no PLTE yet -> warning 0x1011e6a8 and carry on (jne 0x1007ac03), else length > num_palette (unsigned, jbe 0x1007ac27) -> warning 0x1011e68c, finish, return; length 0 -> warning 0x1011e674, finish, return (jne 0x1007ac53); trans +0x188 = png_malloc (length) (0x1007ac83), flags |= 0x2000, png_crc_read (trans, length), num_trans +0x11a = length. Type 2 (jne 0x1007acde): length other than 6 -> warning 0x1011e68c, finish, return (je 0x1007ace8); six bytes, num_trans = 1, trans_values red / green / blue +0x18e / +0x190 / +0x192 by png_get_uint_16 0x10079470. Type 0 (jne 0x1007ad84): length other than 2 -> the same warning (je 0x1007ad8a); two bytes, num_trans = 1, gray +0x194. Any other type -> warning 0x1011e648, finish, return. png_crc_finish (0) nonzero -> return (je 0x1007ae1b); png_set_tRNS 0x1007e470 (png_ptr, info_ptr, trans, num_trans, png_ptr + 0x18c) (0x1007ae48). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_handle_tRNS (19 vectors, 19 distinct results, 19 changing state, `log/diff/0007ab40_jgld_png_handle_tRNS.path1.csv`); png_handle_tRNS_oom (4 vectors, 4 distinct results, 4 changing state, `log/diff/0007ab40_jgld_png_handle_tRNS_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_tRNS` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007ae60): callee pops 0 bytes of stack arguments.

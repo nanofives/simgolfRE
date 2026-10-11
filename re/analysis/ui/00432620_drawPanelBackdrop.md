@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 120 bytes, 46 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Draws the shared build-panel backdrop (border line plus a label) used by the tool panels. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x00432620 drawPanelBackdrop(a1, a2) (cdecl): setDrawTarget 0x004762d0 on ecx = [0x004c1570] with (0x00519fd8, 0, 0, 0) (pushes 0x00432628..0x0043262e, call 0x00432633); len = strlen of the text buffer 0x0051a068 (0x00432638..0x0043264a), w = len * 3 (0x0043264b); half = a1 raised to w when below it (0x0043264e..0x00432652, signed) and lowered to 0x320 - w when above it (0x00432654..0x0043265f, signed); drawMapLine 0x004493d0(half - w, a2, w + half, a2, 0x80000000, 0xa, 5) (0x00432665..0x00432679), then drawStringAt 0x00404b70(0x0051a068, half, a2 - 5, 0x80007fff) (0x00432681..0x0043268d, cdecl, add esp 0x2c). eax = drawStringAt's. Callers (hooks.csv): 0x004038f0;0x00432ba0;0x00433e50;0x00434350;0x00434cf0;0x004362f0;0x00436e50;0x004385d0;0x0043a400;0x0045c560. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: drawPanelBackdrop (12 vectors, 12 distinct results, 12 changing state, `log/diff/00432620_drawPanelBackdrop.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00432697): callee pops 0 bytes of stack arguments.
 

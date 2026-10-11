@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00035f80`), 46 bytes, 20 instructions, subsystem `aud
 Per-tick buffer service: if the DS buffer +0x54 is no longer busy marks the channel stopped (+0x58 bit4); otherwise, when a fade is in progress (+0x58 bit3) steps the volume ramp via Channel_stepVolumeFade. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x00035f80 Channel_serviceBuffer (VA 0x10035f80). __thiscall, plain `ret`. With a buffer object at this+0x54 (0x10035f83 / 0x10035f86), `call 0x10001b9f` (thunk to DsBuffer::isBusy 0x10010e30) runs with ecx = the buffer (0x10035f8a); a zero result sets bit 4 of the dword at this+0x58 (0x10035f93-0x10035f98) and returns 0 (0x10035f9b). Otherwise, with bit 3 of the byte at this+0x58 set (0x10035f9f / 0x10035fa3), `call 0x10002716` (thunk to Channel_stepVolumeFade 0x10035fc0) runs with ecx = this and its result is returned (0x10035fa7 / 0x10035fac); with the bit clear the result is 0 (0x10035f9b). Reached from: static callers 0x10007010. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Channel_serviceBuffer (12 vectors, 11 distinct results, 10 changing state, `log/diff/00035f80_sound_Channel_serviceBuffer.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10035f9e, 0x10035fad): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10035f81 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

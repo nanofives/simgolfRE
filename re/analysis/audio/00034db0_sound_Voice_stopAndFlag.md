@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00034db0`), 27 bytes, 11 instructions, subsystem `aud
 thiscall(arg): calls 0x10035460(this,arg) then sets this+0x58 bit3 (stop requested). (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00034db0 Voice_stopAndFlag (VA 0x10034db0). __thiscall, `ret 4`. The argument is pushed and `call 0x10001efb` (thunk to Channel_recomputeVoiceGains 0x10035460) runs with ecx = this (0x10034db7 / 0x10034db8); its result is dropped. Bit 3 of the dword at this+0x58 is set (0x10034dbd-0x10034dc2) and 0 is returned (0x10034dc5). Reached from: static callers 0x1000cd80, 0x10021a90. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Voice_stopAndFlag (12 vectors, 12 distinct results, 12 changing state, `log/diff/00034db0_sound_Voice_stopAndFlag.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10034db0@C_FUN_10034db0@f_10034db0@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10034dc8): callee pops 4 bytes of stack arguments.

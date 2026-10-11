@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 103 bytes, 46 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 replaces the sound name string m_50 (delete[]+new) or returns 10 on a null name (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00484b80 Snd::setName(this, name): `ret 4`. A NULL name returns 0xa (0x00484b88 / 0x00484b8a, 0x00484bdd..0x00484be4). A non-NULL pointer at this+0x50 is released through operator delete 0x004a4ffc (0x00484b8c..0x00484b94; the field is not cleared). The copy is operator new 0x004a57f1 of strlen(name) + 1 bytes (0x00484b9d..0x00484ba9), stored at this+0x50 (0x00484bba), with no NULL check, and filled by a string copy (0x00484bbd..0x00484bd5); the result is 0 (0x00484bd3). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: Snd::setName (30 vectors, 25 distinct results, 24 changing state, `log/diff/00484b80_Snd_setName.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small10.cpp` as `?setName@Snd484@@QAEHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00484bda, 0x00484be4): callee pops 4 bytes of stack arguments.

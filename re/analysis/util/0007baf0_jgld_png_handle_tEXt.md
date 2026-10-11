@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0007baf0`), 334 bytes, 123 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads a tEXt chunk (keyword, NUL, text). No IHDR -> png_error 0x1011ea10 (jne 0x1007bb1a); after IDAT the mode gains PNG_AFTER_IDAT (je 0x1007bb38, `or al, 8`). key = png_malloc (length + 1) (0x1007bb53), png_crc_read (key, length); png_crc_finish (0) nonzero (je 0x1007bb8a) -> png_free 0x10078ed0 (key), return. key[length] = 0; text = the first NUL from key (0x1007bbb2..0x1007bbc5); unless that is key + length (je 0x1007bbd0) text steps past it. A 16-byte png_text from png_malloc (`push 0x10`, 0x1007bbe1): compression -1, key, text (its text_length word is left as allocated); png_set_text 0x1007e220 (png_ptr, info_ptr, it, 1) (0x1007bc15); png_free (it) (0x1007bc25). There is no 64 KB limit in this build (PNG_MAX_MALLOC_64K is not defined: no such branch in the body). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_handle_tEXt (14 vectors, 14 distinct results, 14 changing state, `log/diff/0007baf0_jgld_png_handle_tEXt.path1.csv`); png_handle_tEXt_oom (5 vectors, 5 distinct results, 5 changing state, `log/diff/0007baf0_jgld_png_handle_tEXt_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_tEXt` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007bc3d): callee pops 0 bytes of stack arguments.

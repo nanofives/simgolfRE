@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 39 bytes, 10 instructions, subsystem `input`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Lightweight message pump plus a drain, used inside report screens. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045c150 pumpLight: [0x00822d68] = 0 (0x0045c150). Loop: pumpInput483bd0 (0x0045c15a), pumpMessages 0x0045c030 (0x0045c15f); a non-zero [0x00822d68] repeats (0x0045c164..0x0045c16b); flushRedraw 0x0045ae70 (0x0045c16d); a non-zero result repeats (0x0045c172/0x0045c174). eax = 0 at the ret (0x0045c176). Callers (hooks.csv): 0x0040f5c0;0x0044cff0;0x0044e770;0x0044f6b0;0x0044fb30;0x00453330;0x004546b0;0x00454c50;0x00455a30;0x00455ed0;0x00459400;0x0045a090. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: pumpLight_a (6 vectors, 2 distinct results, 6 changing state, `log/diff/0045c150_pumpLight_a.path1.csv`); pumpLight_b (6 vectors, 2 distinct results, 6 changing state, `log/diff/0045c150_pumpLight_b.path1.csv`); pumpLight_c (6 vectors, 2 distinct results, 6 changing state, `log/diff/0045c150_pumpLight_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small3.cpp` as `?pump45c150@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045c176): callee pops 0 bytes of stack arguments.

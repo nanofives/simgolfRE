@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 126 bytes, 33 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Recomputes and stores the current selection value at this+0x5c0. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00490a40 TextView::updateSelection(this): `ret 4`, the argument is never read. Flag bit 0x4000 of this+0x1f68 (test ah, 0x40 at 0x00490a49) set: returns 0. Otherwise this+0x5c0 is cleared (0x00490a5a); when the kind dword this+0x1654 is not -1 (0x00490a64) and the model's count (this + d + 0x1534) is not 0 (0x00490a7c) this+0x5c0 takes the current id (kind 1: the dword at this + e + 0x15c8, returning 1 at 0x00490a8e; otherwise selectedId's result); every path that gets past the flag returns 1 (0x00490ab5). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: TextView::updateSelection (26 vectors, 11 distinct results, 20 changing state, `log/diff/00490a40_TextView_updateSelection.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?update@C490a40@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00490a51, 0x00490aa1, 0x00490abb): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039bd0`), 41 bytes, 19 instructions, subsystem `aud
 If the virtual method at vtable+0x60 returns non-zero, enqueues WaveCmdQueue command 3 to g_soundEngine (SNDERR 0x13 when the engine is absent); returns 0 otherwise. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x00039bd0 MultiSound_enqueueCmd3 (VA 0x10039bd0). __thiscall, plain `ret`. The virtual slot +0x60 of this's vtable runs with ecx = this (0x10039bd3 / 0x10039bd5); a zero result returns 0 (0x10039bd8 / 0x10039bda / 0x10039bdc). Otherwise ecx = g_soundEngine 0x100b4a20 (0x10039bde); NULL returns 0x13 (0x10039be4 / 0x10039be6 / 0x10039bf2); else 3 and this are pushed and `call 0x100020b3` (thunk to WaveCmdQueue::pushNode 0x1000c2f0) runs with ecx = the engine (0x10039be8-0x10039beb); its result is returned. Reached from: no call xref; reached through a stored pointer: 0x1005c7fc table slot 5 (+0x14) of the table at 0x1005c7e8; installers: 0x10039690 MultiSound_ctor, 0x10039790 MultiSound_ctorWithType, 0x10039870 MultiSound_dtor, 0x100399a0 loadMultiChannel. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: MultiSound_enqueueCmd3_eng (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039bd0_sound_MultiSound_enqueueCmd3_eng.path1.csv`); MultiSound_enqueueCmd3_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039bd0_sound_MultiSound_enqueueCmd3_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_07.cpp` as `?FUN_10039bd0@f_10039bd0@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10039bdd, 0x10039bf1, 0x10039bf8): callee pops 0 bytes of stack arguments.

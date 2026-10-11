@@ -262,3 +262,22 @@ def test_retag_never_drops_recorded_callers(proj):
     assert run(proj, "retag", str(ref)) == 0
     assert rc.Project(proj).rows()[("sound.dll", "00002650")]["callers"] == \
         "golf_clean.exe:0x00449470;0x10001000;0x10005000"
+
+
+def test_tracker_write_retries_a_transient_open_failure(tmp_path, monkeypatch):
+    # 2026-10-11: opening CHANGELOG.md for writing failed once with OSError 22 after hooks.csv was written, leaving a C3 row
+    # without its CHANGELOG line. _write_retry must survive a failure on the first open and write the full text.
+    target = tmp_path / "CHANGELOG.md"
+    real_open = pathlib.Path.open
+    calls = {"n": 0}
+
+    def flaky_open(self, *args, **kwargs):
+        if self == target and calls["n"] == 0:
+            calls["n"] += 1
+            raise OSError(22, "Invalid argument")
+        return real_open(self, *args, **kwargs)
+
+    monkeypatch.setattr(pathlib.Path, "open", flaky_open)
+    monkeypatch.setattr(rc.time, "sleep", lambda s: None)
+    rc._write_retry(target, "line\n")
+    assert calls["n"] == 1 and target.read_text() == "line\n"

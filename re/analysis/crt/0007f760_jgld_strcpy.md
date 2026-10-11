@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007f760`), 7 bytes, 3 instructions, subsystem `crt`. 
 CRT strcpy(dst, src), cdecl: starts _strcat's copy loop (0x1007f7d1, source from [esp+0xc]) with edi = dst instead of the end of dst, so it copies src including its terminator to dst with the dword zero-byte test 0x7efefeff (0x1007f7f6) and returns dst ([esp+8] at 0x1007f82c / 0x1007f835 / 0x1007f842 / 0x1007f84a). (`re/names/jgld_6.tsv`)
 System writeup: `re/analysis/systems/jgld_6.md`.
 
+## Purpose
+jgld's CRT strcpy (cdecl, dst, src): the strcat.asm entry `push edi; mov edi, [esp+8]; jmp 0x1007f7d1` (0x1007f760..0x1007f765) into _strcat 0x1007f770's copy loop, which copies src up to and including its NUL and returns dst. The loop belongs to strcat's body, so the function has no branch of its own and no callee (the jump is the body's tail). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: strcpy_jgld (14 vectors, 14 distinct results, 14 changing state, `log/diff/0007f760_jgld_strcpy_jgld.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 

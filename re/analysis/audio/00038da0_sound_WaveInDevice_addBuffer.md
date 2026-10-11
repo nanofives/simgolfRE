@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038da0`), 171 bytes, 77 instructions, subsystem `au
 submits a WAVEHDR to the capture device via waveInAddBuffer (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x00038da0 WaveInDevice_addBuffer (VA 0x10038da0). __thiscall, plain `ret`. The same walk as WaveInDevice_prepareHeaders with waveInAddBuffer [0x100b8604] (edi at 0x10038dcc): the buffer list head at this+0x5c is copied to the cursor this+0x64 (0x10038da4 / 0x10038da9); no head, or a head whose header pointer (+8) is NULL, returns 0x13 (0x10038dac / 0x10038db3 / 0x10038db6) and so does a zero handle at +0x44 (0x10038dbd / 0x10038dc2 / 0x10038dc5). For each node waveInAddBuffer(handle, header, 0x20) runs (0x10038dd2-0x10038dd9); a non-zero result is mapped (0x10038dfc-0x10038e44: result - 2 above 0x1f gives 0xb; otherwise the byte table 0x10038e68 picks one of seven jump-table targets 0x10038e4c, which return 0xa, 0xc, 1, 0x11, 0x12, 0xe, 0xb) and returned; a zero result advances the cursor through the node's +4 link (0x10038ddf-0x10038dee) until the link or the next header pointer (+8) is NULL (0x10038de4 / 0x10038de9 / 0x10038dee / 0x10038df5) and returns 0 (0x10038df8). Reached from: static callers 0x1000ea30. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInDevice_addBuffer (21 vectors, 21 distinct results, 21 changing state, `log/diff/00038da0_sound_WaveInDevice_addBuffer.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10038dbc, 0x10038dcb, 0x10038dfb, 0x10038e1a, 0x10038e22, 0x10038e2a, 0x10038e32, 0x10038e3a (+2 more)): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10038da1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

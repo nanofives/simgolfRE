@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000386e0`), 30 bytes, 11 instructions, subsystem `aud
 Deleting destructor: runs WaveInDevice_dtor then operator_delete this when param_1 bit0 is set. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+0x000386e0 WaveInDevice_deleteDtor (VA 0x100386e0). __thiscall, one stack argument (`ret 4` 0x100386fb); esi = this (0x100386e1). The member destructor runs through the thunk 0x1000113b (WaveInDevice_dtor 0x10038710) with ecx = this (0x100386e3); bit 0 of the flags argument (`test byte ptr [esp+8], 1` 0x100386e8 / 0x100386ed) calls operator delete 0x1004249a with this (0x100386ef-0x100386f5); the result is this (0x100386f8). Reached from: no call xref; reached through a stored pointer: 0x1005c604 table slot 0 (+0x0) of the table at 0x1005c604; installers: 0x10038650 WaveInDevice_ctor, 0x10038710 WaveInDevice_dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInDevice_deleteDtor (24 vectors, 22 distinct results, 24 changing state, `log/diff/000386e0_sound_WaveInDevice_deleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_100386e0@C_FUN_100386e0@f_100386e0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100386fb): callee pops 4 bytes of stack arguments.

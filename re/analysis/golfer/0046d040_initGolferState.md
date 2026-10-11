@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 128 bytes, 38 instructions, subsystem `golfer`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 initialises golfer subsystem state (`re/names/exe_2.tsv`)
 
+## Purpose
+0x0046d040 initGolferState(): the byte at +0xd9 of the 152 golfer records (0x100 each from 0x005794d9, loop 0x0046d045..0x0046d052) is cleared; [0x0056a51c] = [0x0059ae7c] = 0 (0x0046d059, 0x0046d05e). For the 19 course records 0x00577f40 down to 0x00575ab0 in steps of 0x208 (0x0046d0ad..0x0046d0b4; bl counts 0x12 down to 0) whose first byte is non-zero (0x0046d06d), twice (esi = 2): r = 0x00421bc0(1) (call 0x0046d079); record r: byte +0xd9 = bl (0x0046d08f), word +0x579576 (offset 0x9d) = [0x0056a51c] (0x0046d095), [0x0056a51c] += 1 (0x0046d09e), word +0x57955a (offset 0x81) = r ^ 1 (0x0046d0a4). Callers (hooks.csv): 0x0046d0c0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: initGolferState (12 vectors, 10 distinct results, 12 changing state, `log/diff/0046d040_initGolferState.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?init46d040@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046d0bf): callee pops 0 bytes of stack arguments.

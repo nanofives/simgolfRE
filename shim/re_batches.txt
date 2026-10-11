@@ -122,3 +122,8 @@ c3dr.cpp
 c3dq.cpp
 c3do.cpp
 c3dp.cpp
+c3dt.cpp
+c3dw.cpp
+c3ds.cpp
+c3dx.cpp
+c3dv.cpp

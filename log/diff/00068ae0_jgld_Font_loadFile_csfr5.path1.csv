@@ -1,13 +1,13 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$F0 $f0 $n0 1 2,1,1,True,535b0543,535b0543,True
-$F1 $f1 $n1 0 0,1,1,True,b4998d80,b4998d80,True
-$F2 $f2 $n0 -1 7,1,1,True,87678042,87678042,True
-$F3 $f3 $n0 3 3,1,1,True,e83de6ac,e83de6ac,True
-$F0 $f4 $n1 9 0,1,1,True,44b579b1,44b579b1,True
-$F1 0 $n0 1 1,16,16,True,eb0e07ad,eb0e07ad,True
-$F2 $f0 0 1 1,16,16,True,f007bb90,f007bb90,True
+$F0 $f0 $n0 1 2,1,1,True,dfd81640,dfd81640,True
+$F1 $f1 $n1 0 0,1,1,True,120f1066,120f1066,True
+$F2 $f2 $n0 -1 7,1,1,True,4d6cb6e5,4d6cb6e5,True
+$F3 $f3 $n0 3 3,1,1,True,ca81a3a6,ca81a3a6,True
+$F0 $f4 $n1 9 0,1,1,True,5a99ffc2,5a99ffc2,True
+$F1 0 $n0 1 1,16,16,True,27a7ebab,27a7ebab,True
+$F2 $f0 0 1 1,16,16,True,ee954417,ee954417,True
 state_regions,$blk+0x0:1024 $fontlog+0x0:256 $implog+0x0:2048 $arena+0x0:1040 $freelog+0x0:1028,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x71ce7710,original=0x2a40ae0,2026-10-10T17:26:36
+meta,detour=0x72e4d550,original=0x38b0860,2026-10-11T12:10:11
 distinct_results,7,,
 VERDICT,GREEN,7,

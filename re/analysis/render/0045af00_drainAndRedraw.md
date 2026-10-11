@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 37 bytes, 12 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Drains events and redraws, returning the pipeline state. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045af00 drainAndRedraw: redrawAll 0x00483c70 (call 0x0045af00), pumpInput483c30 0x00483c30 (call 0x0045af05); a non-zero [0x00822b9c] (0x0045af0a/0x0045af0f/0x0045af11) or [0x00822b98] (0x0045af13/0x0045af18/0x0045af1a) returns 0 (xor eax, eax 0x0045af22); both zero returns 1 (0x0045af1c). Callers (hooks.csv): 0x0045aed0;0x0045bf80. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: drainAndRedraw_h0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0045af00_drainAndRedraw_h0.path1.csv`); drainAndRedraw_h1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0045af00_drainAndRedraw_h1.path1.csv`); drainAndRedraw_h3 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0045af00_drainAndRedraw_h3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_0045af00@f_0045af00@@YAIXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045af21, 0x0045af24): callee pops 0 bytes of stack arguments.

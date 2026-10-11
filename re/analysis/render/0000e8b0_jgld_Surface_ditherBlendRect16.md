@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000e8b0`), 970 bytes, 307 instructions, subsystem `re
 dithers and alpha-blends a 16-bit color into a clipped RECT. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+blendRect16's steps (the same palette, clip, lock and alpha arms: jne 0x1000e8e4, je 0x1000e8f8 / 0x1000e90c, 0x1000e945 / 0x1000e94b, jne 0x1000e9aa, 0x1000e9bf, je 0x1000ea35 / 0x1000ea5e, `jge` 0x1000ea7a, `jle` 0x1000ea89) on a checkerboard: each row starts one pixel in when the rows still to go after it (h after the decrement) are odd (`and eax, 0x80000001` 0x1000eb1b, je 0x1000eb29), blends every second pixel (n -= 2, p += 2; signed `jle` 0x1000eb5c), and ends with p += pitch - w - odd. The `jns 0x1000eb27` at 0x1000eb20 is the negative-remainder fixup of h % 2 and cannot run: h is the count of rows left, never negative. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: Surface::ditherBlendRect16_565 (25 vectors, 18 distinct results, 19 changing state, `log/diff/0000e8b0_jgld_Surface_ditherBlendRect16_565.path1.csv`); Surface::ditherBlendRect16_555 (25 vectors, 18 distinct results, 19 changing state, `log/diff/0000e8b0_jgld_Surface_ditherBlendRect16_555.path1.csv`); Surface::ditherBlendRect16_client (25 vectors, 18 distinct results, 19 changing state, `log/diff/0000e8b0_jgld_Surface_ditherBlendRect16_client.path1.csv`); Surface::ditherBlendRect16_noclient (25 vectors, 18 distinct results, 19 changing state, `log/diff/0000e8b0_jgld_Surface_ditherBlendRect16_noclient.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface16.cpp` as `?ditherBlendRect16@Surface@@QAEHPBUtagRECT@@IH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000ec77): callee pops 12 bytes of stack arguments.

@@ -1,0 +1,4 @@
+module	addr	name	subsystem	evidence	purpose
+sound.dll	0x10012040	return0Pop4	audio	5 bytes: xor eax, eax (0x10012040); ret 4 (0x10012042); caller 0x1000e310 (serviceWaveDevice)	Returns 0 and pops one stack argument (ret 4 at 0x10012042); serviceWaveDevice 0x1000e310 returns its result, so serviceWaveDevice always returns 0 on that path.
+sound.dll	0x10039450	setField6cReturn0	audio	thiscall: mov eax, [esp+4] (0x10039450); mov [ecx+0x6c], eax (0x10039454); xor eax, eax (0x10039457); ret 4 (0x10039459); caller 0x1000ed70 (Wave_In_Device::op1)	Stores its one argument into this+0x6c (0x10039454) and returns 0 (0x10039457); called by Wave_In_Device::op1 0x1000ed70.
+sound.dll	0x10039470	clearField6cReturn0	audio	thiscall: mov dword ptr [ecx+0x6c], 0 (0x10039470); xor eax, eax (0x10039477); ret (0x10039479); caller 0x1000eda0 (Wave_In_Device::op2)	Clears this+0x6c (0x10039470) and returns 0 (0x10039477); called by Wave_In_Device::op2 0x1000eda0.

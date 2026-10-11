@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000083c0`), 365 bytes, 121 instructions, subsystem `re
 sets the clip rectangle, intersecting with the surface bounds. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+sets a surface's clip rectangle and its DC clip region (thiscall, rect; `ret 4`). NULL rect (jne 0x100083e1) -> 3. rc = *rect; intersect 0x10008590 (through the thunk 0x10001087) (clip +0x44, bounds +0x54, &rc) zero (jne 0x10008423) -> 1 (the clip already written by intersect). dc = slot +0x28 (acquireDC); a zero DC (je 0x1000844a) goes straight to the release. With a DC: the old clip region +0x4ac (je 0x1000845a) is deleted (DeleteObject, IAT 0x1012c370) and cleared; equal 0x100085f0 (thunk 0x100016d6) (clip, bounds) nonzero (je 0x1000849a) -> SelectClipRgn (dc, NULL) (IAT 0x1012c390); else +0x4ac = CreateRectRgnIndirect (clip) (IAT 0x1012c398), NULL (jne 0x100084dc) -> return 1 without releasing the DC, else SelectClipRgn (dc, region). Slot +0x2c (releaseDC) (1); return 0. The game calls it at the menu (allocDrawBuffer 0x10007e40 through slot +0x34). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: Surface::setClip_ok (16 vectors, 14 distinct results, 15 changing state, `log/diff/000083c0_jgld_Surface_setClip_ok.path1.csv`); Surface::setClip_fail (16 vectors, 14 distinct results, 15 changing state, `log/diff/000083c0_jgld_Surface_setClip_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?setClip@Surface@@QAEHPBUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000852a): callee pops 4 bytes of stack arguments.

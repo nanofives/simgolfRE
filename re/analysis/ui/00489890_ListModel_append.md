@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 52 bytes, 13 instructions, subsystem `ui`. Mechanical t
 Appends item param_1 to the list via the embedded node allocator. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x00489890 ListModel::append(this, text, x): `ret 8`. A NULL text returns 3 (0x00489894..0x0048989d). Otherwise the list embedded at this+0xc0 (0x004898a0) gets +0x1c = text (0x004898a6), +0x20 = 0 (0x004898ae), +0x24 = 1 (0x004898b5) and S3List_add 0x00401d10 runs on it with x (0x004898a9..0x004898bc); its result is returned (0x004898c1). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: ListModel::append (72 vectors, 49 distinct results, 48 changing state, `log/diff/00489890_ListModel_append.path1.csv`); ListModel::append_fail0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489890_ListModel_append_fail0.path1.csv`); ListModel::append_fail1 (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489890_ListModel_append_fail1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?begin@C489890@@QAEHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0048989d, 0x004898c1): callee pops 8 bytes of stack arguments.

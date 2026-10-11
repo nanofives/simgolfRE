@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079cc0`), 511 bytes, 167 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads a gAMA chunk into png_ptr->gamma and the info. No IHDR yet (`jne 0x10079ce3`) -> png_error "Missing IHDR" 0x1011e394 (0x10079cee); after IDAT (je 0x10079d06) -> warning 0x1011e37c, png_crc_finish (length), return; after PLTE (je 0x10079d39) -> warning 0x1011e364 and carry on; else a non-NULL info with gAMA valid and not sRGB (0x10079d52 / 0x10079d5f / 0x10079d6f) -> warning 0x1011e34c, finish, return. A length other than 4 (je 0x10079d9b) -> warning 0x1011e330, finish, return. Four bytes read; png_crc_finish (0) nonzero -> return (0x10079de5); igamma = png_get_uint_32 (0x10079df0), zero -> return (jne 0x10079dff). With sRGB valid in the info (je 0x10079e14): |igamma - 45455.0| (0x1011e328, _fabs 0x10082960) > 500.0 (0x1011e320; `test ah, 0x41; jne` 0x10079e45) -> warning 0x1011e2e8 and fprintf (stderr, 0x1011e2d8, igamma), return. Otherwise file_gamma = igamma / 100000.0f (fild qword, fdiv dword 0x1011e2d4 at the thread's 53-bit precision, fstp dword: a float) is stored at png_ptr + 0x15c (0x10079e8f) and passed as a double to png_set_gAMA 0x1007dbd0 (0x10079ea6). The info is read without a NULL test from the sRGB test on, so a NULL info is only safe on the paths that return before it. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_handle_gAMA (22 vectors, 22 distinct results, 22 changing state, `log/diff/00079cc0_jgld_png_handle_gAMA.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_gAMA` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10079ebe): callee pops 0 bytes of stack arguments.

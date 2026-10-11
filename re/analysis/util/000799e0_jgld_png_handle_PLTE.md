@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000799e0`), 562 bytes, 189 instructions, subsystem `ut
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+reads a PLTE chunk into a png_zalloc'd palette. No IHDR -> png_error 0x1011e288 (jne 0x10079a03); after IDAT -> warning 0x1011e270, finish (length), return (je 0x10079a23); PLTE already seen -> png_error 0x1011e258 (je 0x10079a56). mode |= PNG_HAVE_PLTE (0x10079a6f). length % 3 nonzero (unsigned div 0x10079a81, je 0x10079a85): colour type +0x126 other than 3 -> warning 0x1011e240, finish, return (je 0x10079a95); type 3 -> png_error 0x1011e240 (0x10079ac6). num = (int) length / 3 (idiv 0x10079ad7); palette = png_zalloc 0x100786b0 (png_ptr, num, 3); flags |= PNG_FLAG_FREE_PALETTE 0x1000 (0x10079af7); num times png_crc_read 3 bytes into the entry (loop 0x10079b12, signed `jge` 0x10079b18); png_crc_finish (0) with its result ignored (0x10079b63) (this build has PNG_READ_OPT_PLTE: the ancillary-PLTE CRC branch of the source is not compiled); palette +0x114, num_palette +0x118 (u16); png_set_PLTE 0x1007e020 (0x10079b95). Colour type 3 (jne 0x10079bab) with a non-NULL info (je 0x10079bb1) that has tRNS valid (je 0x10079bbe) and num_trans +0x11a > num_palette (signed compare of the zero-extended words, jle 0x10079bda) -> warning 0x1011e218 and num_trans = num_palette. Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: png_handle_PLTE (17 vectors, 17 distinct results, 17 changing state, `log/diff/000799e0_jgld_png_handle_PLTE.path1.csv`); png_handle_PLTE_oom (4 vectors, 4 distinct results, 4 changing state, `log/diff/000799e0_jgld_png_handle_PLTE_oom.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rutil.cpp` as `_png_handle_PLTE` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10079c11): callee pops 0 bytes of stack arguments.

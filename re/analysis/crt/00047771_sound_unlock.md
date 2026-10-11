@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00047771`), 21 bytes, 7 instructions, subsystem `crt`
 LeaveCriticalSection on the CRITICAL_SECTION at g_crtLockTable[index] (0x10067400 + index*4); called by the heap and CRT unlock paths (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`, `re/analysis/systems/sound_5.md`, `re/analysis/systems/sound_8.md`.
 
+## Purpose
+0x00047771 _unlock (VA 0x10047771). cdecl, one argument n (`mov eax, [ebp+8]` 0x10047774). The dword at 0x10067400 + 4 n (the lock table entry, a pointer to a critical section; `push dword ptr [eax*4 + 0x10067400]` 0x10047777) is the argument of LeaveCriticalSection [0x100b84e0] (0x1004777e); the import's result is returned (0x10047785). Reached from: static callers 0x10042b72, 0x10042bd1, 0x10042c71, 0x10042cc9, 0x1004352d, 0x100436df, 0x1004370e, 0x10043731, 0x1004522f, 0x100453dd, 0x1004552b, 0x100455eb, 0x10045666, 0x1004593a, 0x100459c3, 0x10047710, 0x100498b9, 0x1004a2a6, 0x1004aa3f, 0x1004bece, 0x1004c1d5, 0x1004c2d3, 0x1004c4b7, 0x1004c7d1, 0x1004d9e2, 0x1004fe24, 0x10050b60, 0x10050c30, 0x10050e81, 0x10050ec5, 0x10051cfd. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: _unlock (12 vectors, 5 distinct results, 12 changing state, `log/diff/00047771_sound__unlock.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10047785): callee pops 0 bytes of stack arguments.
 

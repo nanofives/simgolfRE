@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 129 bytes, 42 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Runs the Windows message pump once (g_822d68/g_822d74). (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045c030 pumpMessages: PeekMessageA [0x4ba1d8] (msg, 0, 0x200, 0x200, 1) (pushes 0x0045c03e..0x0045c04d); while it returns non-zero (0x0045c04f/0x0045c051, loop test 0x0045c084/0x0045c086) TranslateMessage [0x4ba1e0] (call 0x0045c066) and DispatchMessageA [0x4ba1dc] (call 0x0045c06d) on the message, then Peek again (0x0045c082). Then a zero [0x00822d74] (0x0045c08a..0x0045c092) clears [0x00822d68] (0x0045c094); frameTick483cd0 0x00483cd0 (0x0045c09e); [0x00822d74] = 0 (0x0045c0a3); eax = frameTick's result (ret 0x0045c0b0). Callers (hooks.csv): 0x0040f5c0;0x00438390;0x004385d0;0x0043a400;0x0043a8c0;0x0043b610;0x0044b9c0;0x0044cff0;0x0044e770;0x0044f6b0;0x0044fb30;0x00453330;0x004546b0;0x00454c50;0x00455a30;0x00455ed0;0x00456be0;0x004587a0;0x00459400;0x00459850;0x0045a090;0x0045b2c0;0x0045bf80;0x0045c0c0;0x0045c150;0x0045f0f0;0x0046d6e0;0x0046dea0;0x0046f550;0x004725b0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: pumpMessages_k0 (8 vectors, 3 distinct results, 8 changing state, `log/diff/0045c030_pumpMessages_k0.path1.csv`); pumpMessages_k1 (8 vectors, 3 distinct results, 8 changing state, `log/diff/0045c030_pumpMessages_k1.path1.csv`); pumpMessages_k3 (8 vectors, 3 distinct results, 8 changing state, `log/diff/0045c030_pumpMessages_k3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small12.cpp` as `?pumpMessages@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045c0b0): callee pops 0 bytes of stack arguments.

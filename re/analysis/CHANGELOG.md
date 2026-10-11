@@ -4,6 +4,237 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-11  jgld.dll:000792b0  png_default_error  C1->C2  re/analysis/util/000792b0_jgld_png_default_error.md
+2026-10-11  jgld.dll:00065270  registerDevmodesTeardown  C1->C2  re/analysis/crt/00065270_jgld_registerDevmodesTeardown.md
+2026-10-11  jgld.dll:00065160  registerModesTeardown  C1->C2  re/analysis/crt/00065160_jgld_registerModesTeardown.md
+2026-10-11  jgld.dll:00065050  registerArrayE0Teardown  C1->C2  re/analysis/crt/00065050_jgld_registerArrayE0Teardown.md
+2026-10-11  jgld.dll:00065270  registerDevmodesTeardown  C0->C1  match re/match/jgld_raw_10.cpp (100%); push 0x100652c0 at 0x10065288; callee 0x1007f080 (_atexit) at 0x1006528d; caller 0x100651f0 (dynInit_devmodes, call at 0x1006520d)
+2026-10-11  jgld.dll:00065160  registerModesTeardown  C0->C1  match re/match/jgld_raw_10.cpp (100%); push 0x100651b0 at 0x10065178; callee 0x1007f080 (_atexit) at 0x1006517d; caller 0x100650e0 (dynInit_modes, call at 0x100650fd)
+2026-10-11  jgld.dll:00065050  registerArrayE0Teardown  C0->C1  match re/match/jgld_raw_10.cpp (100%); push 0x100650a0 at 0x10065068; callee 0x1007f080 (_atexit) at 0x1006506d; caller 0x10064fd0 (dynInit_arrayE0, call at 0x10064fed)
+2026-10-11  jgld.dll:000792b0  png_default_error  C0->C1  caller 0x10078fe0 (png_error, call at 0x10079023); string 0x1011e0cc pushed at 0x100792cc with the stream 0x101233f0 for _fprintf 0x10083010 (call at 0x100792d6); callee 0x10082f90 (longjmp, call at 0x100792e4 with png_ptr and 1)
+2026-10-11  004a2d50  panelDrawGrid  name panelDrawRow->panelDrawGrid  log/c3/round28_renamed.tsv
+2026-10-11  004a3f10  panelDrawItem  name panelDraw4a3f10->panelDrawItem  log/c3/round28_renamed.tsv
+2026-10-11  00493f50  comboDrawFrame  name comboLayoutItems->comboDrawFrame  log/c3/round28_renamed.tsv
+2026-10-11  004a3be0  panelLayoutIconText  name panelBuildText4a3be0->panelLayoutIconText  log/c3/round28_renamed.tsv
+2026-10-11  0049d770  panelLayoutText  name panelBuildText->panelLayoutText  log/c3/round28_renamed.tsv
+2026-10-11  0049f050  optionDialogLayout  name optionDialogDraw->optionDialogLayout  log/c3/round28_renamed.tsv
+2026-10-11  0045b0d0  drawMessageBuffer  name drawValueWidget->drawMessageBuffer  log/c3/round28_renamed.tsv
+2026-10-11  0045af30  wrapMessageBuffer  name renderTextWidget45af30->wrapMessageBuffer  log/c3/round28_renamed.tsv
+2026-10-11  004a09a0  viewAddEntry  name sendCommand->viewAddEntry  log/c3/round28_renamed.tsv
+2026-10-11  0049e7d0  listPanelHoverAt  name listPanelReadValue->listPanelHoverAt  log/c3/round28_renamed.tsv
+2026-10-11  004941e0  listCurrentItemValue  name listCurrentIndex->listCurrentItemValue  log/c3/round28_renamed.tsv
+2026-10-11  sound.dll:00034db0  Channel_recomputeGainsSetBit3  name Voice_stopAndFlag->Channel_recomputeGainsSetBit3  log/c3/round28_renamed.tsv
+2026-10-11  sound.dll:0000eda0  Wave_In_Device::clearStream  name Wave_In_Device::op2->Wave_In_Device::clearStream  log/c3/round28_renamed.tsv
+2026-10-11  sound.dll:0000ed70  Wave_In_Device::setStream  name Wave_In_Device::op1->Wave_In_Device::setStream  log/c3/round28_renamed.tsv
+2026-10-11  004a4a40  panelOnKey_vtordisp  C2->C3  log/diff/004a4a40_panelOnKey_vtordisp.path1.csv
+2026-10-11  004a49e0  panelOnPick_vtordisp  C2->C3  log/diff/004a49e0_panelOnPick_vtordisp.path1.csv
+2026-10-11  004a49c0  panelSubDrawContents_vtordisp  C2->C3  log/diff/004a49c0_panelSubDrawContents_vtordisp.path1.csv
+2026-10-11  004a4680  panelOnKey  C2->C3  log/diff/004a4680_panelOnKey.path1.csv
+2026-10-11  004a45b0  panelSubDrawContents  C2->C3  log/diff/004a45b0_panelSubDrawContents.path1.csv
+2026-10-11  004a4350  panelOnPick  C2->C3  log/diff/004a4350_panelOnPick.path1.csv
+2026-10-11  004a3f10  panelDraw4a3f10  C2->C3  log/diff/004a3f10_panelDraw4a3f10.path1.csv
+2026-10-11  004a3be0  panelBuildText4a3be0  C2->C3  log/diff/004a3be0_panelBuildText4a3be0.path1.csv
+2026-10-11  004a3100  panelDrawRow_vtordisp_adj578  C2->C3  log/diff/004a3100_panelDrawRow_vtordisp_adj578.path1.csv
+2026-10-11  004a3090  panelDrawRow_vtordisp  C2->C3  log/diff/004a3090_panelDrawRow_vtordisp.path1.csv
+2026-10-11  004a2d50  panelDrawRow  C2->C3  log/diff/004a2d50_panelDrawRow.path1.csv
+2026-10-11  0049f050  optionDialogDraw  C2->C3  log/diff/0049f050_optionDialogDraw.path1.csv
+2026-10-11  0049d770  panelBuildText  C2->C3  log/diff/0049d770_panelBuildText.path1.csv
+2026-10-11  00495770  redrawRegion  C2->C3  log/diff/00495770_redrawRegion_a.path1.csv
+2026-10-11  00494020  listSetItems  C2->C3  log/diff/00494020_listSetItems_a.path1.csv
+2026-10-11  00493f50  comboLayoutItems  C2->C3  log/diff/00493f50_comboLayoutItems.path1.csv
+2026-10-11  00491270  TextView::drawPanelWithImage  C2->C3  log/diff/00491270_TextView_drawPanelWithImage.path1.csv
+2026-10-11  0048c420  ListBox::onScroll  C2->C3  log/diff/0048c420_ListBox_onScroll.path1.csv
+2026-10-11  00488eb0  Button::endPress  C2->C3  log/diff/00488eb0_Button_endPress_a.path1.csv
+2026-10-11  00480c80  Window::refreshFull  C2->C3  log/diff/00480c80_Window_refreshFull_a.path1.csv
+2026-10-11  0047fa30  redrawWindow  C2->C3  log/diff/0047fa30_redrawWindow_a.path1.csv
+2026-10-11  0047b420  Window::moveTo  C2->C3  log/diff/0047b420_Window_moveTo.path1.csv
+2026-10-11  004787a0  drawTextBlock  C2->C3  log/diff/004787a0_drawTextBlock_acc.path1.csv
+2026-10-11  00478750  TextView_beginDrawRun  C2->C3  log/diff/00478750_TextView_beginDrawRun.path1.csv
+2026-10-11  004763d0  drawMenuList  C2->C3  log/diff/004763d0_drawMenuList.path1.csv
+2026-10-11  00475df0  drawRoutingPoly  C2->C3  log/diff/00475df0_drawRoutingPoly.path1.csv
+2026-10-11  0045b0d0  drawValueWidget  C2->C3  log/diff/0045b0d0_drawValueWidget_big_caret.path1.csv
+2026-10-11  0045af30  renderTextWidget45af30  C2->C3  log/diff/0045af30_renderTextWidget45af30_caret.path1.csv
+2026-10-11  0040c910  drawMoneyLabels  C2->C3  log/diff/0040c910_drawMoneyLabels_a.path1.csv
+2026-10-11  0040c7a0  drawLabels  C2->C3  log/diff/0040c7a0_drawLabels_a.path1.csv
+2026-10-11  004a4870  panelSubSlot60  C2->C3  log/diff/004a4870_panelSubSlot60.path1.csv
+2026-10-11  004a09a0  sendCommand  C2->C3  log/diff/004a09a0_sendCommand.path1.csv
+2026-10-11  004a0350  radioSelect  C2->C3  log/diff/004a0350_radioSelect.path1.csv
+2026-10-11  0049e7d0  listPanelReadValue  C2->C3  log/diff/0049e7d0_listPanelReadValue.path1.csv
+2026-10-11  0049cf50  movieSelectStream  C2->C3  log/diff/0049cf50_movieSelectStream.path1.csv
+2026-10-11  0049bec0  netListRemove  C2->C3  log/diff/0049bec0_netListRemove.path1.csv
+2026-10-11  004974d0  scrollbarThumbRect  C2->C3  log/diff/004974d0_scrollbarThumbRect.path1.csv
+2026-10-11  004973c0  scrollbarScrollBy  C2->C3  log/diff/004973c0_scrollbarScrollBy.path1.csv
+2026-10-11  00496e30  scrollbarOnKey  C2->C3  log/diff/00496e30_scrollbarOnKey.path1.csv
+2026-10-11  00496c30  scrollbarOnDown  C2->C3  log/diff/00496c30_scrollbarOnDown.path1.csv
+2026-10-11  004941e0  listCurrentIndex  C2->C3  log/diff/004941e0_listCurrentIndex.path1.csv
+2026-10-11  00491b60  listPanelReadValue_vtordisp  C2->C3  log/diff/00491b60_listPanelReadValue_vtordisp.path1.csv
+2026-10-11  00490a40  TextView::updateSelection  C2->C3  log/diff/00490a40_TextView_updateSelection.path1.csv
+2026-10-11  00490960  TextView::select  C2->C3  log/diff/00490960_TextView_select.path1.csv
+2026-10-11  0048e010  TextView::setName  C2->C3  log/diff/0048e010_TextView_setName.path1.csv
+2026-10-11  0048df20  TextView::addText  C2->C3  log/diff/0048df20_TextView_addText.path1.csv
+2026-10-11  0048c640  ListBox::addItem  C2->C3  log/diff/0048c640_ListBox_addItem.path1.csv
+2026-10-11  00489ed0  ListBox::selectById  C2->C3  log/diff/00489ed0_ListBox_selectById.path1.csv
+2026-10-11  00489890  ListModel::append  C2->C3  log/diff/00489890_ListModel_append.path1.csv
+2026-10-11  00484e70  Snd::start  C2->C3  log/diff/00484e70_Snd_start.path1.csv
+2026-10-11  00484d60  Snd::reopen  C2->C3  log/diff/00484d60_Snd_reopen.path1.csv
+2026-10-11  00484c80  Snd::open  C2->C3  log/diff/00484c80_Snd_open.path1.csv
+2026-10-11  00484c20  SndStream::open484c20  C2->C3  log/diff/00484c20_SndStream_open484c20.path1.csv
+2026-10-11  00484b80  Snd::setName  C2->C3  log/diff/00484b80_Snd_setName.path1.csv
+2026-10-11  00484a40  Snd::configure  C2->C3  log/diff/00484a40_Snd_configure.path1.csv
+2026-10-11  004842f0  SndMusic::setFile  C2->C3  log/diff/004842f0_SndMusic_setFile.path1.csv
+2026-10-11  00481e40  Flic::indexFrames  C2->C3  log/diff/00481e40_Flic_indexFrames.path1.csv
+2026-10-11  00480d70  Window::doLayout  C2->C3  log/diff/00480d70_Window_doLayout.path1.csv
+2026-10-11  00475410  flipBmpRows  C2->C3  log/diff/00475410_flipBmpRows.path1.csv
+2026-10-11  00462800  snapshotTables  C2->C3  log/diff/00462800_snapshotTables_p0.path1.csv
+2026-10-11  0040e000  stampCourseTiles  C2->C3  log/diff/0040e000_stampCourseTiles.path1.csv
+2026-10-11  00406d50  buildStatusText  C2->C3  log/diff/00406d50_buildStatusText.path1.csv
+2026-10-11  004021e0  C4021e0_dtor  C2->C3  log/diff/004021e0_C4021e0_dtor.path1.csv
+2026-10-11  00401c70  List401c70_dtor  C2->C3  log/diff/00401c70_List401c70_dtor.path1.csv
+2026-10-11  00401750  initRecords  C2->C3  log/diff/00401750_initRecords_p0.path1.csv
+2026-10-11  jgld.dll:0007f760  strcpy  C2->C3  log/diff/0007f760_jgld_strcpy_jgld.path1.csv
+2026-10-11  jgld.dll:0007d280  png_read_finish_row  C2->C3  log/diff/0007d280_jgld_png_read_finish_row.path1.csv
+2026-10-11  jgld.dll:0007c1f0  png_check_chunk_name  C2->C3  log/diff/0007c1f0_jgld_png_check_chunk_name.path1.csv
+2026-10-11  jgld.dll:0007bc40  png_handle_zTXt  C2->C3  log/diff/0007bc40_jgld_png_handle_zTXt.path1.csv
+2026-10-11  jgld.dll:0007baf0  png_handle_tEXt  C2->C3  log/diff/0007baf0_jgld_png_handle_tEXt.path1.csv
+2026-10-11  jgld.dll:0007b620  png_handle_pCAL  C2->C3  log/diff/0007b620_jgld_png_handle_pCAL.path1.csv
+2026-10-11  jgld.dll:0007b1a0  png_handle_hIST  C2->C3  log/diff/0007b1a0_jgld_png_handle_hIST.path1.csv
+2026-10-11  jgld.dll:0007ae70  png_handle_bKGD  C2->C3  log/diff/0007ae70_jgld_png_handle_bKGD.path1.csv
+2026-10-11  jgld.dll:0007ab40  png_handle_tRNS  C2->C3  log/diff/0007ab40_jgld_png_handle_tRNS.path1.csv
+2026-10-11  jgld.dll:0007a7d0  png_handle_sRGB  C2->C3  log/diff/0007a7d0_jgld_png_handle_sRGB.path1.csv
+2026-10-11  jgld.dll:0007a0d0  png_handle_cHRM  C2->C3  log/diff/0007a0d0_jgld_png_handle_cHRM.path1.csv
+2026-10-11  jgld.dll:00079cc0  png_handle_gAMA  C2->C3  log/diff/00079cc0_jgld_png_handle_gAMA.path1.csv
+2026-10-11  jgld.dll:000799e0  png_handle_PLTE  C2->C3  log/diff/000799e0_jgld_png_handle_PLTE.path1.csv
+2026-10-11  jgld.dll:000790a0  png_chunk_error  C2->C3  log/diff/000790a0_jgld_png_chunk_error_jump.path1.csv
+2026-10-11  jgld.dll:00078fe0  png_error  C2->C3  log/diff/00078fe0_jgld_png_error_jump.path1.csv
+2026-10-11  jgld.dll:0006cd00  png_read_end  C2->C3  log/diff/0006cd00_jgld_png_read_end.path1.csv
+2026-10-11  jgld.dll:0006cc50  png_read_image  C2->C3  log/diff/0006cc50_jgld_png_read_image.path1.csv
+2026-10-11  jgld.dll:0006c3f0  png_read_row  C2->C3  log/diff/0006c3f0_jgld_png_read_row.path1.csv
+2026-10-11  jgld.dll:0006be20  png_read_info  C2->C3  log/diff/0006be20_jgld_png_read_info.path1.csv
+2026-10-11  jgld.dll:0006bac0  png_create_read_struct  C2->C3  log/diff/0006bac0_jgld_png_create_read_struct.path1.csv
+2026-10-11  jgld.dll:0006a3d0  Palette::update  C2->C3  log/diff/0006a3d0_jgld_Palette_update.path1.csv
+2026-10-11  jgld.dll:00068850  Font::create  C2->C3  log/diff/00068850_jgld_Font_create_fail.path1.csv
+2026-10-11  jgld.dll:000662a0  Display::setModeIndex  C2->C3  log/diff/000662a0_jgld_Display_setModeIndex_640.path1.csv
+2026-10-11  jgld.dll:00065230  constructDevmodes  C2->C3  log/diff/00065230_jgld_constructDevmodes_a.path1.csv
+2026-10-11  jgld.dll:000651f0  dynInit_devmodes  C2->C3  log/diff/000651f0_jgld_dynInit_devmodes_a.path1.csv
+2026-10-11  jgld.dll:00065120  constructModes  C2->C3  log/diff/00065120_jgld_constructModes_a.path1.csv
+2026-10-11  jgld.dll:000650e0  dynInit_modes  C2->C3  log/diff/000650e0_jgld_dynInit_modes_a.path1.csv
+2026-10-11  jgld.dll:00065010  constructArrayE0  C2->C3  log/diff/00065010_jgld_constructArrayE0_a.path1.csv
+2026-10-11  jgld.dll:00064fd0  dynInit_arrayE0  C2->C3  log/diff/00064fd0_jgld_dynInit_arrayE0_a.path1.csv
+2026-10-11  jgld.dll:0000e8b0  Surface::ditherBlendRect16  C2->C3  log/diff/0000e8b0_jgld_Surface_ditherBlendRect16_555.path1.csv
+2026-10-11  jgld.dll:0000dfc0  Surface::blendRect16  C2->C3  log/diff/0000dfc0_jgld_Surface_blendRect16_555.path1.csv
+2026-10-11  jgld.dll:00009e40  Surface::ditherBlendRectDispatch  C2->C3  log/diff/00009e40_jgld_Surface_ditherBlendRectDispatch_555.path1.csv
+2026-10-11  jgld.dll:00009ac0  Surface::blendRectDispatch  C2->C3  log/diff/00009ac0_jgld_Surface_blendRectDispatch_555.path1.csv
+2026-10-11  jgld.dll:000083c0  Surface::setClip  C2->C3  log/diff/000083c0_jgld_Surface_setClip_fail.path1.csv
+2026-10-11  jgld.dll:000069f0  registerTrackedListTeardown  C2->C3  log/diff/000069f0_jgld_registerTrackedListTeardown_a.path1.csv
+2026-10-11  jgld.dll:00006970  dynInit_trackedList  C2->C3  log/diff/00006970_jgld_dynInit_trackedList_a.path1.csv
+2026-10-11  0047e580  zRaise  C2->C3  log/diff/0047e580_zRaise.path1.csv
+2026-10-11  0047e580  zRaise  C3<-C2  DEMOTED: re-record: the C3 promotion of 2026-10-11 wrote hooks.csv but opening CHANGELOG.md failed (OSError 22), so no C2->C3 line; re_classify now retries the write
+2026-10-11  004aecf0  output_message  C2->C3  log/diff/004aecf0_output_message.path1.csv
+2026-10-11  004ae590  term_destination  C2->C3  log/diff/004ae590_term_destination.path1.csv
+2026-10-11  004a0320  logLine  C2->C3  log/diff/004a0320_logLine.path1.csv
+2026-10-11  004a00f0  resolveAndOpenFile  C2->C3  log/diff/004a00f0_resolveAndOpenFile.path1.csv
+2026-10-11  004a0060  freeGraphsyObject  C2->C3  log/diff/004a0060_freeGraphsyObject.path1.csv
+2026-10-11  00495990  uiKeyEvent148  C2->C3  log/diff/00495990_uiKeyEvent148.path1.csv
+2026-10-11  00495910  uiKeyEvent  C2->C3  log/diff/00495910_uiKeyEvent.path1.csv
+2026-10-11  00490c30  MsgBox::freeLabels  C2->C3  log/diff/00490c30_MsgBox_freeLabels.path1.csv
+2026-10-11  0048e120  TextView::setFontSize  C2->C3  log/diff/0048e120_TextView_setFontSize.path1.csv
+2026-10-11  00488420  KeyTable::lookup  C2->C3  log/diff/00488420_KeyTable_lookup_a.path1.csv
+2026-10-11  00488230  Reader::readLine  C2->C3  log/diff/00488230_Reader_readLine.path1.csv
+2026-10-11  00487e90  readLineGlobal  C2->C3  log/diff/00487e90_readLineGlobal.path1.csv
+2026-10-11  00487e70  readSectionGlobal  C2->C3  log/diff/00487e70_readSectionGlobal.path1.csv
+2026-10-11  00483da0  pumpInputDisplay483da0  C2->C3  log/diff/00483da0_pumpInputDisplay483da0.path1.csv
+2026-10-11  00483c30  pumpInput483c30  C2->C3  log/diff/00483c30_pumpInput483c30_n0.path1.csv
+2026-10-11  00483bd0  pumpInput483bd0  C2->C3  log/diff/00483bd0_pumpInput483bd0_n0.path1.csv
+2026-10-11  00483b10  clearPrimarySurface  C2->C3  log/diff/00483b10_clearPrimarySurface.path1.csv
+2026-10-11  00483320  resetScreenState  C2->C3  log/diff/00483320_resetScreenState.path1.csv
+2026-10-11  00483030  Cache483030::attach  C2->C3  log/diff/00483030_Cache483030_attach.path1.csv
+2026-10-11  00480c20  Window::refreshRect  C2->C3  log/diff/00480c20_Window_refreshRect.path1.csv
+2026-10-11  0047f2f0  currentFocusOwner  C2->C3  log/diff/0047f2f0_currentFocusOwner.path1.csv
+2026-10-11  0047f1b0  Window::setFocus  C2->C3  log/diff/0047f1b0_Window_setFocus.path1.csv
+2026-10-11  0047eff0  Window::fwdMouseEvent238  C2->C3  log/diff/0047eff0_Window_fwdMouseEvent238.path1.csv
+2026-10-11  0047ee70  Window::onCommand  C2->C3  log/diff/0047ee70_Window_onCommand.path1.csv
+2026-10-11  0047e700  ChildArray::bringToFront  C2->C3  log/diff/0047e700_ChildArray_bringToFront.path1.csv
+2026-10-11  0047e120  Panel::notify  C2->C3  log/diff/0047e120_Panel_notify.path1.csv
+2026-10-11  00478970  Text_flush  C2->C3  log/diff/00478970_Text_flush.path1.csv
+2026-10-11  004785e0  TextView_beginMeasure  C2->C3  log/diff/004785e0_TextView_beginMeasure.path1.csv
+2026-10-11  00477e60  drawBox  C2->C3  log/diff/00477e60_drawBox.path1.csv
+2026-10-11  0046d040  initGolferState  C2->C3  log/diff/0046d040_initGolferState.path1.csv
+2026-10-11  00465560  resetScrollText  C2->C3  log/diff/00465560_resetScrollText.path1.csv
+2026-10-11  0045c150  pumpLight  C2->C3  log/diff/0045c150_pumpLight_a.path1.csv
+2026-10-11  0045c030  pumpMessages  C2->C3  log/diff/0045c030_pumpMessages_k0.path1.csv
+2026-10-11  0045af00  drainAndRedraw  C2->C3  log/diff/0045af00_drainAndRedraw_h0.path1.csv
+2026-10-11  0045aed0  waitRedrawReady  C2->C3  log/diff/0045aed0_waitRedrawReady_rep.path1.csv
+2026-10-11  0045ae70  flushRedraw  C2->C3  log/diff/0045ae70_flushRedraw_h0.path1.csv
+2026-10-11  00449860  freeTerrain  C2->C3  log/diff/00449860_freeTerrain.path1.csv
+2026-10-11  00449520  refreshTerrain  C2->C3  log/diff/00449520_refreshTerrain.path1.csv
+2026-10-11  00449400  applyCourseType  C2->C3  log/diff/00449400_applyCourseType.path1.csv
+2026-10-11  004493d0  drawMapLine  C2->C3  log/diff/004493d0_drawMapLine.path1.csv
+2026-10-11  00432620  drawPanelBackdrop  C2->C3  log/diff/00432620_drawPanelBackdrop.path1.csv
+2026-10-11  00432170  flushCourseInfo  C2->C3  log/diff/00432170_flushCourseInfo.path1.csv
+2026-10-11  0040bf20  lineTo  C2->C3  log/diff/0040bf20_lineTo.path1.csv
+2026-10-11  0040af70  saveFieldIo  C2->C3  log/diff/0040af70_saveFieldIo.path1.csv
+2026-10-11  sound.dll:00047771  _unlock  C2->C3  log/diff/00047771_sound__unlock.path1.csv
+2026-10-11  sound.dll:000459c3  callocUnlockFunclet2  C2->C3  log/diff/000459c3_sound_callocUnlockFunclet2.path1.csv
+2026-10-11  sound.dll:0004593a  callocUnlockFunclet  C2->C3  log/diff/0004593a_sound_callocUnlockFunclet.path1.csv
+2026-10-11  sound.dll:00045666  msizeUnlockFunclet2  C2->C3  log/diff/00045666_sound_msizeUnlockFunclet2.path1.csv
+2026-10-11  sound.dll:000455eb  msizeUnlockFunclet  C2->C3  log/diff/000455eb_sound_msizeUnlockFunclet.path1.csv
+2026-10-11  sound.dll:000453dd  reallocUnlockFunclet  C2->C3  log/diff/000453dd_sound_reallocUnlockFunclet.path1.csv
+2026-10-11  sound.dll:00042cc9  freeUnlockFunclet2  C2->C3  log/diff/00042cc9_sound_freeUnlockFunclet2.path1.csv
+2026-10-11  sound.dll:00042c71  freeUnlockFunclet  C2->C3  log/diff/00042c71_sound_freeUnlockFunclet.path1.csv
+2026-10-11  sound.dll:00042bd1  heapAllocUnlockFunclet2  C2->C3  log/diff/00042bd1_sound_heapAllocUnlockFunclet2.path1.csv
+2026-10-11  sound.dll:00042b72  heapAllocUnlockFunclet  C2->C3  log/diff/00042b72_sound_heapAllocUnlockFunclet.path1.csv
+2026-10-11  sound.dll:00041e64  leaveCriticalSection  C2->C3  log/diff/00041e64_sound_leaveCriticalSection.path1.csv
+2026-10-11  sound.dll:00041e59  enterCriticalSection  C2->C3  log/diff/00041e59_sound_enterCriticalSection.path1.csv
+2026-10-11  sound.dll:00041e4e  deleteCriticalSection  C2->C3  log/diff/00041e4e_sound_deleteCriticalSection.path1.csv
+2026-10-11  sound.dll:00041e43  initCriticalSection  C2->C3  log/diff/00041e43_sound_initCriticalSection.path1.csv
+2026-10-11  sound.dll:0000eda0  Wave_In_Device::op2  C2->C3  log/diff/0000eda0_sound_Wave_In_Device_op2_dev.path1.csv
+2026-10-11  sound.dll:0000ed70  Wave_In_Device::op1  C2->C3  log/diff/0000ed70_sound_Wave_In_Device_op1_dev.path1.csv
+2026-10-11  sound.dll:0000e310  serviceWaveDevice  C2->C3  log/diff/0000e310_sound_serviceWaveDevice_clear.path1.csv
+2026-10-11  sound.dll:00039470  clearField6cReturn0  C1->C2  re/analysis/audio/00039470_sound_clearField6cReturn0.md
+2026-10-11  sound.dll:00039450  setField6cReturn0  C1->C2  re/analysis/audio/00039450_sound_setField6cReturn0.md
+2026-10-11  sound.dll:00012040  return0Pop4  C1->C2  re/analysis/audio/00012040_sound_return0Pop4.md
+2026-10-11  sound.dll:00039470  clearField6cReturn0  C0->C1  thiscall: mov dword ptr [ecx+0x6c], 0 (0x10039470); xor eax, eax (0x10039477); ret (0x10039479); caller 0x1000eda0 (Wave_In_Device::op2)
+2026-10-11  sound.dll:00039450  setField6cReturn0  C0->C1  thiscall: mov eax, [esp+4] (0x10039450); mov [ecx+0x6c], eax (0x10039454); xor eax, eax (0x10039457); ret 4 (0x10039459); caller 0x1000ed70 (Wave_In_Device::op1)
+2026-10-11  sound.dll:00012040  return0Pop4  C0->C1  5 bytes: xor eax, eax (0x10012040); ret 4 (0x10012042); caller 0x1000e310 (serviceWaveDevice)
+2026-10-11  sound.dll:00039c40  MultiSound_release  C2->C3  log/diff/00039c40_sound_MultiSound_release.path1.csv
+2026-10-11  sound.dll:00039c10  SoundGroup_rewind  C2->C3  log/diff/00039c10_sound_SoundGroup_rewind.path1.csv
+2026-10-11  sound.dll:00039bd0  MultiSound_enqueueCmd3  C2->C3  log/diff/00039bd0_sound_MultiSound_enqueueCmd3_eng.path1.csv
+2026-10-11  sound.dll:00039980  Channel_parseWaveHeader_adjPlus70  C2->C3  log/diff/00039980_sound_Channel_parseWaveHeader_adjPlus70.path1.csv
+2026-10-11  sound.dll:00039760  MultiSound_deleteDtor  C2->C3  log/diff/00039760_sound_MultiSound_deleteDtor.path1.csv
+2026-10-11  sound.dll:000393d0  WaveInDevice_requeueBuffer  C2->C3  log/diff/000393d0_sound_WaveInDevice_requeueBuffer.path1.csv
+2026-10-11  sound.dll:00039050  WaveInDevice_open  C2->C3  log/diff/00039050_sound_WaveInDevice_open.path1.csv
+2026-10-11  sound.dll:00038f10  WaveInDevice_reset  C2->C3  log/diff/00038f10_sound_WaveInDevice_reset.path1.csv
+2026-10-11  sound.dll:00038da0  WaveInDevice_addBuffer  C2->C3  log/diff/00038da0_sound_WaveInDevice_addBuffer.path1.csv
+2026-10-11  sound.dll:00038b40  WaveInDevice_prepareHeaders  C2->C3  log/diff/00038b40_sound_WaveInDevice_prepareHeaders.path1.csv
+2026-10-11  sound.dll:00038b20  WaveInDevice_start  C2->C3  log/diff/00038b20_sound_WaveInDevice_start.path1.csv
+2026-10-11  sound.dll:000386e0  WaveInDevice_deleteDtor  C2->C3  log/diff/000386e0_sound_WaveInDevice_deleteDtor.path1.csv
+2026-10-11  sound.dll:00035f80  Channel_serviceBuffer  C2->C3  log/diff/00035f80_sound_Channel_serviceBuffer.path1.csv
+2026-10-11  sound.dll:00034fb0  serviceDecodeRing  C2->C3  log/diff/00034fb0_sound_serviceDecodeRing.path1.csv
+2026-10-11  sound.dll:00034db0  Voice_stopAndFlag  C2->C3  log/diff/00034db0_sound_Voice_stopAndFlag.path1.csv
+2026-10-11  sound.dll:00033990  Channel_parseWaveHeader  C2->C3  log/diff/00033990_sound_Channel_parseWaveHeader.path1.csv
+2026-10-11  sound.dll:00031450  WaveInStream_start  C2->C3  log/diff/00031450_sound_WaveInStream_start_dev.path1.csv
+2026-10-11  sound.dll:00031270  StreamReader_scalarDtor  C2->C3  log/diff/00031270_sound_StreamReader_scalarDtor.path1.csv
+2026-10-11  sound.dll:00030710  Sound5c450::openMmio  C2->C3  log/diff/00030710_sound_Sound5c450_openMmio.path1.csv
+2026-10-11  sound.dll:00030150  Sound5c450_scalarDtor  C2->C3  log/diff/00030150_sound_Sound5c450_scalarDtor.path1.csv
+2026-10-11  sound.dll:000286a0  SoundWindowObj_dtor  C2->C3  log/diff/000286a0_sound_SoundWindowObj_dtor.path1.csv
+2026-10-11  sound.dll:00028630  destroySoundWindowObj  C2->C3  log/diff/00028630_sound_destroySoundWindowObj.path1.csv
+2026-10-11  sound.dll:00022750  Seq_setPlayOrderMode  C2->C3  log/diff/00022750_sound_Seq_setPlayOrderMode.path1.csv
+2026-10-11  sound.dll:000204e0  Sound_reapIdle  C2->C3  log/diff/000204e0_sound_Sound_reapIdle_s0.path1.csv
+2026-10-11  sound.dll:000204b0  Seq_closeFile  C2->C3  log/diff/000204b0_sound_Seq_closeFile.path1.csv
+2026-10-11  sound.dll:0001f6c0  Sound5b6a8_scalarDtor  C2->C3  log/diff/0001f6c0_sound_Sound5b6a8_scalarDtor.path1.csv
+2026-10-11  sound.dll:0001c530  CtrlObject_scalarDtorA  C2->C3  log/diff/0001c530_sound_CtrlObject_scalarDtorA.path1.csv
+2026-10-11  sound.dll:0001bc00  ListValues_callSlot18  C2->C3  log/diff/0001bc00_sound_ListValues_callSlot18.path1.csv
+2026-10-11  sound.dll:000120a0  DirectSoundDevice::setCooperativeLevel  C2->C3  log/diff/000120a0_sound_DirectSoundDevice_setCooperativeLevel.path1.csv
+2026-10-11  sound.dll:0000eaa0  Wave_In_Device::stop  C2->C3  log/diff/0000eaa0_sound_Wave_In_Device_stop_err.path1.csv
+2026-10-11  sound.dll:0000e260  Wave_Device::deviceName  C2->C3  log/diff/0000e260_sound_Wave_Device_deviceName_dev.path1.csv
+2026-10-11  sound.dll:0000e230  Wave_Device::caps  C2->C3  log/diff/0000e230_sound_Wave_Device_caps_dev.path1.csv
+2026-10-11  sound.dll:0000b2b0  Wave_Device::scalarDeletingDtor  C2->C3  log/diff/0000b2b0_sound_Wave_Device_scalarDeletingDtor.path1.csv
+2026-10-11  sound.dll:0000b170  Wave_Device::closeStream  C2->C3  log/diff/0000b170_sound_Wave_Device_closeStream_h0.path1.csv
+2026-10-11  sound.dll:0000b140  Wave_Device::setCooperativeLevel  C2->C3  log/diff/0000b140_sound_Wave_Device_setCooperativeLevel_dev.path1.csv
+2026-10-11  sound.dll:0000b110  openWaveStreamFile  C2->C3  log/diff/0000b110_sound_openWaveStreamFile_dev.path1.csv
+2026-10-11  sound.dll:0000a1b0  Midi_Device::enableOutput  C2->C3  log/diff/0000a1b0_sound_Midi_Device_enableOutput.path1.csv
+2026-10-11  sound.dll:00008770  closeMmioHandle  C2->C3  log/diff/00008770_sound_closeMmioHandle.path1.csv
+2026-10-11  sound.dll:00003fd0  Sound::scalarDeletingDtor  C2->C3  log/diff/00003fd0_sound_Sound_scalarDeletingDtor.path1.csv
 2026-10-11  Terrain.dll:000037e0  Terrain::initLighting  name Terrain::initLists->Terrain::initLighting  log/c3/round27_renamed.tsv
 2026-10-11  Terrain.dll:00003830  Terrain::enableBlackLight1  name Terrain::light1Off->Terrain::enableBlackLight1  log/c3/round27_renamed.tsv
 2026-10-11  Terrain.dll:00038900  Terrain::renderTileAtFiveOffsets  name Terrain::lowerEdge->Terrain::renderTileAtFiveOffsets  log/c3/round27_renamed.tsv

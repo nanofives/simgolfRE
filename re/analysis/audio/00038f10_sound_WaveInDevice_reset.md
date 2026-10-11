@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00038f10`), 27 bytes, 11 instructions, subsystem `aud
 stops and resets the capture device (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+0x00038f10 WaveInDevice_reset (VA 0x10038f10). __thiscall, `ret`. The first call is [0x100b8614] (waveInStop) on the handle at +0x44 (0x10038f13-0x10038f17), the second [0x100b8618] (waveInReset) on the same handle (0x10038f1d-0x10038f21); both results are dropped; 0 is returned (0x10038f27). Reached from: static callers 0x1000eaa0. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: WaveInDevice_reset (12 vectors, 12 distinct results, 12 changing state, `log/diff/00038f10_sound_WaveInDevice_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10038f10@f_10038f10@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10038f2a): callee pops 0 bytes of stack arguments.

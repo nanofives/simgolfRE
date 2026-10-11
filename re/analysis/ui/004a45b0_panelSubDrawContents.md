@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 198 bytes, 70 instructions, subsystem `ui`. Mechanical 
 returns when the field at +0x50 of the base this + [[this-0xe0]+4] is 0; otherwise blits the surface at +0x194 through Surface_blitThunk with the extents from the object at +0x198 (virtuals +0xdc and +0xd8), then calls panelDraw4a3f10 0x004a3f10 once per row of the count at this-0x58 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Thiscall `(this = P)`, no stack arguments, no caller reads eax. W = P - 0xe0 + vt[1]; parent = P + vt[1] + 0x50 (W+0x130) NULL returns (0x004a45cc..0x004a45d1). Otherwise the text object P + vt[1] + 0x194 (W+0x274) and its handle (P + vt[1] + 0x198) give height (slot +0xdc) and width (slot +0xd8), 0 without a handle (0x004a45ed..0x004a462a); Surface_blitThunk 0x00475c60 on parent+0x274 copies (b+0x28, b+0x2c) <- (0, 0) size width x height into the text object (0x004a462a..0x004a4652). Then panelDraw(Q; i) runs for i = 0 .. count-1, count = P-0x58 (0x004a4657..0x004a466e). Key `panelSubDrawContents`: the ten panelSub objects. Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: panelSubDrawContents (10 vectors, 10 distinct results, 9 changing state, `log/diff/004a45b0_panelSubDrawContents.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a4675): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004a45b0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

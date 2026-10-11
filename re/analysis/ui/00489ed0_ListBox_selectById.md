@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 117 bytes, 47 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Finds the item whose id equals param_1 and selects it (or clears selection). (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00489ed0 ListBox::selectById(this, id): `ret 4`. The model's ring is at L = this + d + 0xc4 with d the entry +8 of the virtual-base table at this+4 (0x00489ed0..0x00489edc): head L+8, cursor L+0xc, count L+0x10, index L+0x14, nodes with the key at +4 and next at +0xc. A NULL head (0x00489eea / 0x00489eec) or a count of 0 or less (0x00489ef4 / 0x00489ef9) selects row -1. Otherwise the index is cleared and the cursor put on the head (0x00489eee..0x00489ef6), and the nodes are walked (0x00489eff..0x00489f17) counting the index up until a key equals id (0x00489f02 / 0x00489f05); then ListBox::setSelection 0x00489f50 runs with (the index dword this + d + 0xd8, 1) (0x00489f29..0x00489f39). A miss runs it with (-1, 1) (0x00489f19..0x00489f1d). The result is setSelection's (0x00489f3e..0x00489f42, 0x00489f22..0x00489f26). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: ListBox::selectById (37 vectors, 26 distinct results, 35 changing state, `log/diff/00489ed0_ListBox_selectById.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?selectId@C489ed0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00489f26, 0x00489f42): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00030150`), 30 bytes, 11 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor: calls Sound5c450_dtor then operator_delete when param&1 (`re/names/sound_6.tsv`)
 
+## Purpose
+0x00030150 Sound5c450_scalarDtor (VA 0x10030150). __thiscall, one stack argument (`ret 4` 0x1003016b); esi = this (0x10030151). The member destructor runs through the thunk 0x100019c4 (Sound5c450_dtor 0x10030180) with ecx = this (0x10030153); bit 0 of the flags argument (`test byte ptr [esp+8], 1` 0x10030158 / 0x1003015d) calls operator delete 0x1004249a with this (0x1003015f-0x10030165); the result is this (0x10030168). Reached from: no call xref; reached through a stored pointer: 0x1005c450 table slot 0 (+0x0) of the table at 0x1005c450; installers: 0x10030080 Sound5c450_ctor, 0x10030180 Sound5c450_dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Sound5c450_scalarDtor (24 vectors, 22 distinct results, 24 changing state, `log/diff/00030150_sound_Sound5c450_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_10030150@C_FUN_10030150@f_10030150@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1003016b): callee pops 4 bytes of stack arguments.

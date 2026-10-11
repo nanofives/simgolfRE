@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 24 bytes, 5 instructions, subsystem `terrain`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Resets and rebuilds the Terrain.dll grid from the exe tiles. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x00449520 refreshTerrain: Terrain::resetTerrain through the thunk 0x004a4f34 with ecx = [0x00820ed0] (0x00449520, 0x00449526), rebuildTerrainGrid 0x00449540 (call 0x0044952b), [0x00820f2a] = 1 (byte store 0x00449530). eax = rebuild's. Callers (hooks.csv): 0x0040b9b0;0x0040f5c0. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: refreshTerrain (8 vectors, 1 distinct results, 8 changing state, `log/diff/00449520_refreshTerrain.path1.csv`); refreshTerrain_noterrain (8 vectors, 1 distinct results, 8 changing state, `log/diff/00449520_refreshTerrain_noterrain.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small16.cpp` as `?refresh820@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00449537): callee pops 0 bytes of stack arguments.

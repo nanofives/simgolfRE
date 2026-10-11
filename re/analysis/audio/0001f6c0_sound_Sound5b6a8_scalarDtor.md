@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001f6c0`), 30 bytes, 11 instructions, subsystem `aud
 scalar deleting destructor: calls Sound5b6a8_dtor then operator_delete when param&1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0001f6c0 Sound5b6a8_scalarDtor (VA 0x1001f6c0). __thiscall, one stack argument (`ret 4` 0x1001f6db); esi = this (0x1001f6c1). The member destructor runs through the thunk 0x10001893 (Sound5b6a8_dtor 0x1001ff50) with ecx = this (0x1001f6c3); bit 0 of the flags argument (`test byte ptr [esp+8], 1` 0x1001f6c8 / 0x1001f6cd) calls operator delete 0x1004249a with this (0x1001f6cf-0x1001f6d5); the result is this (0x1001f6d8). Reached from: no call xref; reached through a stored pointer: 0x1005b6a8 table slot 0 (+0x0) of the table at 0x1005b6a8; installers: 0x1001f4a0 Sound5b6a8_ctor, 0x1001f6f0 Seq_ctor, 0x1001ff50 Sound5b6a8_dtor. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Sound5b6a8_scalarDtor (24 vectors, 22 distinct results, 24 changing state, `log/diff/0001f6c0_sound_Sound5b6a8_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_1001f6c0@C_FUN_1001f6c0@f_1001f6c0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001f6db): callee pops 4 bytes of stack arguments.

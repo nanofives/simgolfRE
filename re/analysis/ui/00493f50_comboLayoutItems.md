@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 201 bytes, 74 instructions, subsystem `ui`. Mechanical 
 positions each list item and draws its icon/row within the combo body. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Thiscall `(this)`, no stack arguments. The three piece images are at this+0x3468 (left), +0x346c (middle) and +0x3470 (right); the drawing Surface is the record at this+0x23b0 whose handle is this+0x23b4. Image_draw 0x00473e60 draws the left image on it at (0, 0) (0x00493f70..0x00493f77). width = slot +0xd8 of the handle (0 without one, 0x00493f7c..0x00493f98); when width > left.+0x18 + right.+0x18 (0x00493f9e..0x00493fae) the middle image is tiled by blitRight 0x00476140(surface; middle, 0, 0, 2, 0, width' - 4, middle.+0x1c) (0x00493fb0..0x00493fe2). Finally Image_draw draws the right image at (width'' - right.+0x18, 0) (0x00493fe7..0x00494011) and its result is returned. Key `comboLayoutItems`: six combo objects (wide, exactly 17 = 8 + 9 so the middle is skipped, 18 so it is drawn, a zero-width middle, hot spots, and one without a handle that makes Image_draw return 7), 6 vectors. Reimplemented in `shim/src/re/c3dv.cpp`; path-1 A/B GREEN: comboLayoutItems (6 vectors, 6 distinct results, 5 changing state, `log/diff/00493f50_comboLayoutItems.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_o.cpp` as `?layout@C493f50@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00494018): callee pops 0 bytes of stack arguments.

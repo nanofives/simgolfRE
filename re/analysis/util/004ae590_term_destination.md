@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 102 bytes, 41 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+0x004ae590 term_destination(cinfo) (cdecl; the IJG stdio destination): dest = [cinfo + 0x14] (0x004ae59c); the unwritten count is 0x1000 - [dest + 4] (0x004ae597, 0x004ae59f); a non-zero count is written with fwrite 0x004a6268 (buffer [dest + 0x18], 1, count, FILE [dest + 0x14]) (pushes 0x004ae5aa..0x004ae5ae, call 0x004ae5af); a short count sets err->msg_code ([err + 0x14]) = 0x24 (0x004ae5be) and calls err->error_exit, the pointer at [err + 0] (0x004ae5c7) with cinfo. fflush 0x004a9943 on the FILE (call 0x004ae5d0); a FILE with bit 0x20 of its flag word +0xc (0x004ae5db) sets msg_code = 0x24 again (0x004ae5e4) and calls error_exit (0x004ae5ed). eax = fflush's result, or error_exit's when the last test failed. Callers (hooks.csv): none. Reimplemented in `shim/src/re/c3dw.cpp`; path-1 A/B GREEN: term_destination (12 vectors, 12 distinct results, 12 changing state, `log/diff/004ae590_term_destination.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_datadst.cpp` as `_term_destination` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae5f5): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 157 bytes, 52 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Adds a text item to the list, measuring its width and growing the content height. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x0048c640 ListBox::addItem(this, text, x, flag): `ret 0xc`. A NULL text returns 3 (0x0048c648..0x0048c653). With the virtual-base table at this+4 (entry +4 = the window base offset dw, entry +8 = the model offset dm): the room room = dword[this+dm+0x34] - dword[0x0083ff10] (0x0048c659..0x0048c667); a positive room wraps the text through wrapText 0x00476e20 at this+dw+0x278 (0x0048c66d..0x0048c67d; it is the only path that reaches the font and is not A/B'd here). A room of 0 adds 1 to this+0x30 (0x0048c696, 0x0048c69b..0x0048c6a6), any other room adds the dword this+dw+0x294 (0x0048c687..0x0048c694). A non-zero low byte of flag (0x0048c69e / 0x0048c6a4) makes the row weight 1 (0x0048c6ab). The text goes to this+dm+0xe0 (0x0048c6bb), the list at this+dm+0xc4 gets +0x20 = 0 and +0x24 = the weight (0x0048c6c9 / 0x0048c6d0), and S3List_add runs on it with x; the result is returned (0x0048c6d3 / 0x0048c6da). Reimplemented in `shim/src/re/c3dx.cpp`; path-1 A/B GREEN: ListBox::addItem (36 vectors, 25 distinct results, 24 changing state, `log/diff/0048c640_ListBox_addItem.path1.csv`); ListBox::addItem_fail0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/0048c640_ListBox_addItem_fail0.path1.csv`); ListBox::addItem_fail1 (4 vectors, 4 distinct results, 4 changing state, `log/diff/0048c640_ListBox_addItem_fail1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?add@D48c640@@QAEHPADHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0048c653, 0x0048c6da): callee pops 12 bytes of stack arguments.

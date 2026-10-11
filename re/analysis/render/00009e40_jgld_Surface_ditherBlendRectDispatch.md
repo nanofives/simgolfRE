@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009e40`), 111 bytes, 44 instructions, subsystem `ren
 dither+blend a RECT (16-bit path only) via ditherBlendRect16. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`, `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+the same routing for ditherBlendRect16 (je 0x10009e7d; thunk 0x1000115e at 0x10009e90), 0x17 for any depth other than 16 (0x10009e97). Keys _565 / _555 (22 vectors). Reimplemented in `shim/src/re/c3ds.cpp`; path-1 A/B GREEN: Surface::ditherBlendRectDispatch_565 (22 vectors, 15 distinct results, 13 changing state, `log/diff/00009e40_jgld_Surface_ditherBlendRectDispatch_565.path1.csv`); Surface::ditherBlendRectDispatch_555 (22 vectors, 15 distinct results, 13 changing state, `log/diff/00009e40_jgld_Surface_ditherBlendRectDispatch_555.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op3b@Surface@@QAEHPAHIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10009eac): callee pops 12 bytes of stack arguments.

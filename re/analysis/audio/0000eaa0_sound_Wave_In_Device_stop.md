@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000eaa0`), 32 bytes, 8 instructions, subsystem `audi
 ## Role (from the naming pass, not a C3 purpose)
 returns 3 when the capture object 0x100b4a04 is null, and otherwise calls WaveInDevice_reset 0x10001109 and returns WaveInDevice_close 0x100024aa (`re/names/undisc_sound.tsv`)
 
+## Purpose
+0x0000eaa0 Wave_In_Device::stop (VA 0x1000eaa0). Plain `ret`. ecx = g_waveIn (0x1000eaa0); NULL returns 3 (0x1000eaa6 / 0x1000eaa8 / 0x1000eaaa). Otherwise `call 0x10001109` (thunk to WaveInDevice_reset 0x10038f10) with ecx = the object (0x1000eab0); its result is dropped; g_waveIn is loaded again (0x1000eab5) and `jmp 0x100024aa` (thunk to WaveInDevice_close 0x10039140) returns that call's result (0x1000eabb). Reached from: no call xref; reached through a stored pointer: 0x1005b434 table slot 24 (+0x60) of the table at 0x1005b3d4; installers: 0x1000e870 Wave_In_Device::ctor, 0x1000e8f0 Wave_In_Device::dtor, 0x1000e910 Dll_Wave_In_Device::create_device. Reimplemented in `shim/src/re/c3dt.cpp`; path-1 A/B GREEN: Wave_In_Device::stop_null (1 vectors, 1 distinct results, 0 changing state, `log/diff/0000eaa0_sound_Wave_In_Device_stop_null.path1.csv`); Wave_In_Device::stop_noh (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000eaa0_sound_Wave_In_Device_stop_noh.path1.csv`); Wave_In_Device::stop_ok (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000eaa0_sound_Wave_In_Device_stop_ok.path1.csv`); Wave_In_Device::stop_hdr (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000eaa0_sound_Wave_In_Device_stop_hdr.path1.csv`); Wave_In_Device::stop_hdrbad (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000eaa0_sound_Wave_In_Device_stop_hdrbad.path1.csv`); Wave_In_Device::stop_err (1 vectors, 1 distinct results, 1 changing state, `log/diff/0000eaa0_sound_Wave_In_Device_stop_err.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000eaaf): callee pops 0 bytes of stack arguments.
 
