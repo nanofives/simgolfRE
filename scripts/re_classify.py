@@ -355,6 +355,56 @@ def cmd_demote(p: Project, a) -> int:
     return 0
 
 
+END_STATES = ("dead", "trivial")
+
+
+def cmd_mark(p: Project, a) -> int:
+    """Record a C2 end state (decided 2026-10-11, re/CONFIDENCE.md "C2 end states"): the level stays C2, the status column
+    says why the row will not reach C3, and re/tools/endstate.py's checks must pass. `--status transcribed` (unmark)
+    puts a row back in the work pool and needs --reason."""
+    sys.path.insert(0, str(DEFAULT_ROOT / "re" / "tools"))   # the binaries and tools of this checkout
+    import endstate
+    mod = getattr(a, "module", None) or "golf_clean.exe"
+    rows = p.rows()
+    pending, done = [], 0
+    for raw in a.addr:
+        addr = norm_addr(raw)
+        row = rows.get((mod, addr))
+        if row is None:
+            print(f"{mod} {addr} not in hooks.csv"); return 1
+        if row.get("confidence") != "C2":
+            print(f"REFUSED {mod} {addr}: only C2 rows take an end state (row is {row.get('confidence')})"); continue
+        old = row.get("status") or ""
+        if a.status == "transcribed":
+            if old not in END_STATES or not a.reason:
+                print(f"REFUSED {mod} {addr}: unmark needs a marked row and --reason"); continue
+            ev = f"UNMARKED {old}: {a.reason}"
+        else:
+            if old != "transcribed":
+                print(f"REFUSED {mod} {addr}: status is {old!r}, not 'transcribed'"); continue
+            if a.status == "dead" and (row.get("callers") or "none") != "none":
+                print(f"REFUSED {mod} {addr}: hooks.csv records callers ({row.get('callers')})"); continue
+            ok, checks = endstate.run(mod, addr, a.status)
+            for name, good, detail in checks:
+                if not good:
+                    print(f"  [FAIL] {name}" + (f" ({detail})" if detail else ""))
+            if not ok:
+                print(f"REFUSED {mod} {addr}: not {a.status}"); continue
+            ev = f"{a.status.upper()}: " + "; ".join(n for n, _, _ in checks) + " (re/tools/endstate.py)"
+        row["status"] = a.status
+        row["notes"] = (row.get("notes", "") + "; " if row.get("notes") else "") + ev
+        where = addr if mod == "golf_clean.exe" else f"{mod}:{addr}"
+        pending.append(f"{datetime.date.today()}  {where}  {row.get('name')}  C2 status {old}->{a.status}  {ev}")
+        print(f"MARKED {where} {row.get('name')}: {old} -> {a.status}")
+        done += 1
+    if done:
+        p.save(rows)
+        p.pending_log = pending
+        _flush_log(p)
+    print(f"mark {a.status}: {done} of {len(a.addr)}")
+    return 0 if done == len(a.addr) else 2
+
+
 def cmd_status(p: Project, a) -> int:
     rows = p.rows()
     from collections import Counter
@@ -365,6 +415,12 @@ def cmd_status(p: Project, a) -> int:
     by_mod = Counter((r.get("module") or "golf_clean.exe", r.get("confidence") or "C0") for r in rows.values())
     for m in sorted({k[0] for k in by_mod}):
         print(f"  {m}: " + ", ".join(f"{lvl}={by_mod.get((m, lvl), 0)}" for lvl in LEVELS))
+    ends = Counter((r.get("module") or "golf_clean.exe", r.get("status")) for r in rows.values()
+                   if r.get("status") in END_STATES)
+    if ends:
+        print("C2 end states: " + ", ".join(f"{m} {s}={n}" for (m, s), n in sorted(ends.items())))
+        open_c2 = sum(1 for r in rows.values() if r.get("confidence") == "C2" and r.get("status") not in END_STATES)
+        print(f"C2 still open: {open_c2}")
     if not getattr(a, "summary", False):
         for r in sorted(rows.values(), key=lambda r: (r.get("module") or "", r["addr"])):
             print(f"  {r.get('module', ''):14} {r['addr']}  {r.get('confidence'):3}  {r.get('subsystem', ''):9} {r.get('name', '')}")
@@ -475,6 +531,12 @@ def main(argv=None) -> int:
     b.add_argument("--to", required=True, choices=LEVELS[1:])
     rt = sub.add_parser("retag", help="update the subsystem and name of tracked rows from names TSVs")
     rt.add_argument("tsv", nargs="+")
+    mk = sub.add_parser("mark", help="record a C2 end state (dead / trivial) after re/tools/endstate.py's checks, or "
+                                     "--status transcribed with --reason to reopen")
+    mk.add_argument("addr", nargs="+")
+    mk.add_argument("--module")
+    mk.add_argument("--status", required=True, choices=END_STATES + ("transcribed",))
+    mk.add_argument("--reason")
     a = ap.parse_args(argv)
     p = Project(a.root)
     if a.cmd == "check":
@@ -487,6 +549,8 @@ def main(argv=None) -> int:
         return cmd_batch(p, a)
     if a.cmd == "retag":
         return cmd_retag(p, a)
+    if a.cmd == "mark":
+        return cmd_mark(p, a)
     return cmd_status(p, a)
 
 

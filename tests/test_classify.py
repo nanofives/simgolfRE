@@ -281,3 +281,35 @@ def test_tracker_write_retries_a_transient_open_failure(tmp_path, monkeypatch):
     monkeypatch.setattr(rc.time, "sleep", lambda s: None)
     rc._write_retry(target, "line\n")
     assert calls["n"] == 1 and target.read_text() == "line\n"
+
+
+def _c2_row(root, module, addr, name, callers="none"):
+    row = {c: "" for c in rc.COLUMNS}
+    row.update(addr=addr, module=module, name=name, subsystem="util", confidence="C2", status="transcribed",
+               callers=callers, callees="none")
+    with (root / "hooks.csv").open("a") as f:
+        f.write(",".join(row[c] for c in rc.COLUMNS) + "\n")
+
+
+def test_mark_dead_and_trivial_end_states(proj):
+    # C2 end states (2026-10-11): re/tools/endstate.py's checks run against this checkout's binaries
+    _c2_row(proj, "sound.dll", "00007bd0", "mixAddSamples")                    # no reference anywhere
+    _c2_row(proj, "golf_clean.exe", "00475c20", "DC_calla0")                   # called from 0x480f30, outside any function
+    _c2_row(proj, "jgld.dll", "00009870", "SurfaceBase::blitT_default", callers="0x10001000")   # constant stub
+    _c2_row(proj, "sound.dll", "000481f5", "fpuSetControlWord")                # fldcw: an observable FPU write
+    root = ["--root", str(proj)]
+    assert rc.main(root + ["mark", "00007bd0", "--module", "sound.dll", "--status", "dead"]) == 0
+    assert rc.main(root + ["mark", "00475c20", "--status", "dead"]) == 2
+    assert rc.main(root + ["mark", "00009870", "--module", "jgld.dll", "--status", "dead"]) == 2   # has a caller
+    assert rc.main(root + ["mark", "00009870", "--module", "jgld.dll", "--status", "trivial"]) == 0
+    assert rc.main(root + ["mark", "000481f5", "--module", "sound.dll", "--status", "trivial"]) == 2
+    rows = rc.Project(proj).rows()
+    assert rows[("sound.dll", "00007bd0")]["status"] == "dead" and rows[("sound.dll", "00007bd0")]["confidence"] == "C2"
+    assert rows[("golf_clean.exe", "00475c20")]["status"] == "transcribed"
+    assert rows[("jgld.dll", "00009870")]["status"] == "trivial"
+    log = (proj / "re" / "analysis" / "CHANGELOG.md").read_text()
+    assert "status transcribed->dead" in log and "status transcribed->trivial" in log
+    # reopening needs a reason
+    assert rc.main(root + ["mark", "00007bd0", "--module", "sound.dll", "--status", "transcribed"]) == 2
+    assert rc.main(root + ["mark", "00007bd0", "--module", "sound.dll", "--status", "transcribed", "--reason", "x"]) == 0
+    assert rc.Project(proj).rows()[("sound.dll", "00007bd0")]["status"] == "transcribed"
