@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b090`), 79 bytes, 34 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Appends one element: end() 0x1000afe0 fills the slot [ebp-8] (call 0x1000b0b8) and insert 0x1000b100 runs on (this, slot [ebp-0xc], that position, the value reference [ebp+8]) (call 0x1000b0c7); `ret 4` at 0x1000b0dc, no branch. Caller: Terrain::drawTile 0x100381a0 (hooks.csv callers). The 12 vectors append to lists of 0, 1, 2, 3, 4, 5, 6 and 9 nodes. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::list<Tile*>::push_back (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b090_Terrain_std_list(TileP)_push_back.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?push_back@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAEXABQAVTile@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000b0dc): callee pops 4 bytes of stack arguments.

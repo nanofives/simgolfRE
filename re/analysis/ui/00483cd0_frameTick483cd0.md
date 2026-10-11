@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 24 bytes, 5 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 runs one display tick: pre49c8e0, pre497b20 and screen manager g_83ad50 vtable f79 (`re/names/exe_3.tsv`)
 
+## Purpose
+Argument-free (cdecl). The same body as redrawAll with display slot +0x13c (`jmp [eax + 0x13c]`, 0x00483ce2). Keys `frameTick483cd0`, `_b8`, `_b0`. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: frameTick483cd0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483cd0_frameTick483cd0.path1.csv`); frameTick483cd0_b8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483cd0_frameTick483cd0_b8.path1.csv`); frameTick483cd0_b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483cd0_frameTick483cd0_b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00483cd0@f_00483cd0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

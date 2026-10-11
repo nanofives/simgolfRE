@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001e7d0`), 103 bytes, 28 instructions, subsystem `au
 Destructor matching MidiReader_ctor: installs vtable 0x1005b68c, frees the buffer at +0xf when +0xd bit2 is set, then clears the node list via 0x1001b870. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x0001e7d0 MidiReader_dtor (VA 0x1001e7d0). vtable 0x1005b68c at +0 (0x1001e7ed); eax = [this + 0x3c] (0x1001e7f3); when it is non-NULL AND bit 2 (value 4) of the byte at +0x34 is set (`test byte ptr [esi + 0x34], 4` 0x1001e802), operator delete(eax) (0x1001e809); then +0x3c = 0 (0x1001e813) and MidiReader_freeContent on this (thunk 0x100018ca -> 0x1001b870, call 0x1001e822). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: MidiReader_dtor (10 vectors, 10 distinct results, 10 changing state, `log/diff/0001e7d0_sound_MidiReader_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001e836): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001e7e5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

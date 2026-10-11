@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067700`), 73 bytes, 30 instructions, subsystem `rend
 Calls ShowWindow(this+0x144, SW_MAXIMIZE=3). (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Maximizes the Display's window: ShowWindow ([this+0x144], SW_MAXIMIZE = 3) (`push 3` 0x1006771f, call 0x1006772b), ShowWindow's result left in eax. Slot 7 (+0x1c) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::maximizeWindow (12 vectors, 11 distinct results, 12 changing state, `log/diff/00067700_jgld_Display_maximizeWindow.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10067700@f_10067700@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10067748): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 36 bytes, 12 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the section reader. (`re/names/exe_4.tsv`)
 
+## Purpose
+Scalar deleting destructor of the Reader class: stores the vtable 0x004bb084 at [this] (0x00488463), calls Reader::free 0x00487f30 (0x00488469), and, when bit 0 of the flags byte is set (`test byte ptr [esp + 8], 1` 0x0048846e, `je` 0x00488473 not taken), passes this to operator delete 0x004a4ffc (0x00488476); returns this (`mov eax, esi` 0x0048847e, `ret 4` 0x00488481). Slot 0 of the Reader vtable 0x004bb084 (stored by Reader::ctor 0x00487ea0 and by this function). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: Reader_scalarDtor (32 vectors, 16 distinct results, 32 changing state, `log/diff/00488460_Reader_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00488460@C_FUN_00488460@f_00488460@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00488481): callee pops 4 bytes of stack arguments.

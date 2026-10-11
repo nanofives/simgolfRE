@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f810`), 163 bytes, 68 instructions, subsystem `au
 Locks the whole buffer (size +0x78) via Lock and immediately releases it via Unlock; returns 0x1a on Lock failure. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000f810 DsBuffer::lockEntire (VA 0x1000f810). No interface at +0x60 returns 0x24 (0x1000f816-0x1000f81b, 0x1000f8a9). The interface's Lock (slot +0x2c, `call [ecx + 0x2c]` 0x1000f840) is called for offset 0, the byte count of the dword at +0x78 and the flag 2, with four local out slots for the two regions. A non-zero result returns 0x1a (0x1000f845 / 0x1000f89f). Otherwise the first region is zeroed (rep stosd of bytes1 / 4 dwords, then rep stosb of the remaining bytes1 & 3: 0x1000f847-0x1000f85c), the second region too when its byte count is non-zero (0x1000f85e-0x1000f87a), and the interface's Unlock (slot +0x4c, 0x1000f894) gets (ptr1, bytes1, ptr2, bytes2); its result is ignored and the function returns 0 (0x1000f898-0x1000f89e). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: DsBuffer::lockEntire (13 vectors, 13 distinct results, 12 changing state, `log/diff/0000f810_sound_DsBuffer_lockEntire.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000f89e, 0x1000f8a8, 0x1000f8b2): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000f814 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

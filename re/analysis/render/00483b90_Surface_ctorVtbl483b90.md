@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `render`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 sets the surface vtable PTR_004ba468 and calls releaseBacking to zero its state (`re/names/exe_3.tsv`)
 
+## Purpose
+Thiscall, no stack arguments. `mov dword ptr [ecx], 0x4ba468` (0x00483b90) stores the vtable pointer, then jmp Surface::releaseBacking 0x004838b0 (0x00483b96) with the same ecx: a handle at +4 is released through display slot +0x88 (0x004838c6), +0x10 / +0xc / +0x18 / +0x1c are cleared and +8 = -1 (0x004838cc..0x004838d8). Five fixture objects (handle set / NULL, different junk fields); installed in the vtables at 0x004b9188 / 0x004b91a8 (pointer_callers). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: Surface::ctorVtbl483b90 (5 vectors, 5 distinct results, 5 changing state, `log/diff/00483b90_Surface_ctorVtbl483b90.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00483b90@f_00483b90@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

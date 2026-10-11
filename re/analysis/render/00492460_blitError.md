@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 15 bytes, 5 instructions, subsystem `render`. Mechanica
 Returns the blitter error code g_0083c310, defaulting to 8 when zero. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Returns the dword at 0x0083c310 (0x00492460), or 8 when it is 0 (`test eax, eax` 0x00492465, `jne` 0x00492467 not taken, `mov eax, 8` 0x00492469); `ret` at 0x0049246e. No argument. The only caller 0x00478cd0 compares the result with 8 (0x00478d8c). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: blitError (12 vectors, 12 distinct results, 0 changing state, `log/diff/00492460_blitError.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?get492460@@YAHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049246e): callee pops 0 bytes of stack arguments.

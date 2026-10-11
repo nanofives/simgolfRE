@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066810`), 93 bytes, 39 instructions, subsystem `rend
 Calls SetWindowPos on the window handle at this+0x144 with the four int args as x,y,cx,cy and flags 0. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+SetWindowPos ([this+0x144], NULL, x, y, cx, cy, 0) (pushes 0x1006682f..0x10066846, call 0x1006684d): moves and sizes the Display's window with z-order and flags 0; the import's result is left in eax; `ret 0x10` at 0x1006686a. Slot 10 (+0x28) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::setWindowPos (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066810_jgld_Display_setWindowPos.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066810@C_FUN_10066810@f_10066810@@QAEXHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x1006686a): callee pops 16 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000108f0`), 2836 bytes, 792 instructions, subsystem
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Draws the blended path bands of a tile with the byte +0x20a set (it returns at once otherwise). w = 16.67f; the neighbour flags are the byte +0x208 of neighbours 0, 2, 3 and 1 (null-tested); the texture type is 0x21 when the byte +0x209 is set and 0x20 otherwise. glEnable(0x0be2), glBlendFunc(0x302, 0x303), glBindTexture(0x0de1, g_textures[type][0][0]); then one GL_TRIANGLE_FAN (6) of four vertices per flagged neighbour in the order 0 (mask += 1), 1 (+= 2), 3 (+= 4), 2 (+= 8), each vertex a glNormal3fv of a g_normals entry, a glTexCoord2f and a glVertex3f whose coordinates are g_vertices entries of the tile's faces with +-w on one axis; then drawCornerOverlays(mask, type) and glDisable(0x0be2). Callers: Tile::render 0x1000e6c0 (call 0x1000e957). The float arithmetic (x - w, w + x) is a single rounding to float in both builds. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Tile::drawPaths (40 vectors, 31 distinct results, 30 changing state, `log/diff/000108f0_Terrain_Tile_drawPaths.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_paths.cpp` as `?drawPaths@Tile@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10011403): callee pops 0 bytes of stack arguments.

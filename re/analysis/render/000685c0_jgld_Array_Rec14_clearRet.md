@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000685c0`), 56 bytes, 25 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 Public clear(): calls Array_Rec14::clear 0x10068100 and returns 0. (`re/names/jgld_3.tsv`)
 
+## Purpose
+Clears an Array_Rec14 and returns 0: Array_Rec14::clear 0x10068100 through 0x1000194c (0x100685e0; it frees the element block +4 with operator delete when non-NULL and sets +4, +8, +0xc = 0, +0x10 = 1), then `xor eax, eax` (0x100685e5). Thiscall, plain `ret` at 0x100685f7. Caller Array_Rec14::ctor 0x100680a0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Array_Rec14::clearRet (12 vectors, 12 distinct results, 12 changing state, `log/diff/000685c0_jgld_Array_Rec14_clearRet.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100685c0@f_100685c0@@YIHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100685f7): callee pops 0 bytes of stack arguments.

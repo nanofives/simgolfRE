@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009690`), 66 bytes, 27 instructions, subsystem `rend
 constructs the Tracked-derived base of Surface, setting vtable 0x1011d220. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Constructor of the SurfaceBase sub-object (thiscall, no stack argument, plain `ret` at 0x100096d1): Tracked::ctor 0x10006ab0 through the thunk 0x100013e3 (0x100096b0; stores the Tracked vtable 0x1011d058 and registers the object in the module's tracked list 0x10128428 with LinkedList::add, which allocates a node), then the SurfaceBase vtable 0x1011d220 into this[0] (0x100096b8); returns this (0x100096be). Callers Surface::ctor 0x10007660 and Surface::ctorOwner 0x10007970. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: SurfaceBase::ctor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00009690_jgld_SurfaceBase_ctor_empty.path1.csv`); SurfaceBase::ctor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00009690_jgld_SurfaceBase_ctor_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10009690@f_10009690@@YIPAXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100096d1): callee pops 0 bytes of stack arguments.

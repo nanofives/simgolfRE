@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079250`), 86 bytes, 33 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Warning prefixed with the current chunk name: png_format_buffer 0x10079100 (png_ptr, buffer, message) into the 80-byte local at ebp-0x50 (0x1007927a; the chunk name +0x11c with each non-letter byte as "[XX]", ": ", then 64 bytes copied from the message), then png_warning (png_ptr, buffer) (0x1007928a); eax is png_warning's. cdecl, plain `ret` at 0x100792a5. Callers png_crc_finish 0x10079510 and others. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: png_chunk_warning (12 vectors, 12 distinct results, 12 changing state, `log/diff/00079250_jgld_png_chunk_warning.path1.csv`); png_chunk_warning_default (4 vectors, 4 distinct results, 4 changing state, `log/diff/00079250_jgld_png_chunk_warning_default.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_error.cpp` as `_png_chunk_warning` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100792a5): callee pops 0 bytes of stack arguments.

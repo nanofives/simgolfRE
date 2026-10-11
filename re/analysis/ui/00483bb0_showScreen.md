@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 29 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 brings the screen online: pre49c8e0, flushes queues A/B and shows the screen object g_screen83a (`re/names/exe_3.tsv`)
 
+## Purpose
+Argument-free (cdecl). Calls serviceMovie 0x0049c8e0 (call at 0x00483bb0), gfxFlushA 0x00497b00 (call at 0x00483bb5) and gfxFlushB 0x00497b20 (call at 0x00483bba), then tail-jumps to slot +0x128 of the display object [0x0083ad50] (`mov ecx, [0x0083ad50]; mov eax, [ecx]; jmp [eax + 0x128]`, 0x00483bbf..0x00483bc7); the display is not tested for NULL, and the slot's result is the function's result. Callers: the screen functions that open a screen (0x004385d0, 0x00483bd0 pumpInput483bd0). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: showScreen (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483bb0_showScreen.path1.csv`); showScreen_b8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483bb0_showScreen_b8.path1.csv`); showScreen_b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483bb0_showScreen_b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?showScreen@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

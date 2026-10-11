@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000228d0`), 214 bytes, 67 instructions, subsystem `au
 walks the track list at this+0x218 for a node whose +4 id equals param, returns SNDERR 0x24 if not found, otherwise unlinks and frees it (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x000228d0 Seq_removeTrackById (VA 0x100228d0). One stack argument, a track id (`ret 4`). The sequencer's track list has its head at +0x218, back +0x21c, cursor +0x220, count +0x224. The cursor takes the head (0x100228d3 / 0x100228db); an empty list or a NULL value ends with 0x24 (0x100228e1 / 0x100228ec -> 0x1002299d). The walk compares the dword at track+4 with the id (0x100228f6 / 0x100228f9) and advances the cursor along next, ending with 0x24 on a NULL cursor, NULL next node or NULL value (0x10022903, 0x1002290c-0x10022914, 0x1002291d-0x1002291f). The found track is looked up again by value from the head (0x10022927-0x1002293b; the walk cannot fail, its two exits would return 0), unlinked as in listUnlink (0x10022945-0x10022981, header +0x218) and its node released with operator delete (0x10022982); the count drops (0x10022987-0x10022991). The result is 0 (0x10022997). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: Seq_removeTrackById (45 vectors, 24 distinct results, 45 changing state, `log/diff/000228d0_sound_Seq_removeTrackById.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002293e, 0x1002299a, 0x100229a3): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100228d1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

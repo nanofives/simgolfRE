@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008ae0`), 129 bytes, 51 instructions, subsystem `ren
 gets the surface DC (vtbl+0x28), selects the GDI object at *(arg+0x18) into it, then releases the DC (vtbl+0x2c). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Selects a Font into the Surface's DC: the argument points at a Font pointer (`mov ecx, [eax]` 0x10008b17), SelectObject (dc, [font+0x18]) (0x10008b21, call 0x10008b29) with the DC from slot +0x28, slot +0x2c with 1, returns 0; `ret 4` at 0x10008b5e. +0x18 is the Font's HFONT (zeroed by Font::Font 0x100686e6). Slot 42 (+0xa8) of the Surface vtable 0x1011d0b0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::selectObject (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008ae0_jgld_Surface_selectObject.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10008ae0@C_FUN_10008ae0@f_10008ae0@@QAEHPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10008b5e): callee pops 4 bytes of stack arguments.

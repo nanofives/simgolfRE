@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `render`. Mechanica
 dynamic initializer that constructs the font surface global at 0x008408c8. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Static constructor of the global object at 0x008408c8: `mov ecx, 0x008408c8` at 0x0049eb00 and a tail `jmp` to Surface_ctor 0x00473ab0 at 0x0049eb05, so the constructor's return (this = 0x008408c8) is the function's return; it takes no argument and has no other instruction. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: initGfxGlobal_8408c8_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049eb00_initGfxGlobal_8408c8_live.path1.csv`); initGfxGlobal_8408c8_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049eb00_initGfxGlobal_8408c8_pat.path1.csv`); initGfxGlobal_8408c8_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049eb00_initGfxGlobal_8408c8_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_0049eb00@f_0049eb00@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

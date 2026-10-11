@@ -127,7 +127,7 @@ jgld.dll	0x10068ae0	Font::loadFile	render	match re/match/jgld_font.cpp	loads a (
 jgld.dll	0x10068da0	Font::release	render	match re/match/jgld_font.cpp	selects out and deletes the Font's GDI font object
 jgld.dll	0x10068e60	Font::textWidth	render	match re/match/jgld_font.cpp	measures a string's pixel width via GetTextExtentPoint32A on the shared DC g_fontDC (0x10128724)
 jgld.dll	0x10068f30	initFonts	render	match re/match/jgld_font.cpp	creates the shared font memory DC g_fontDC (CreateCompatibleDC) at 0x10128724
-jgld.dll	0x10068fa0	initFontTable	render	match re/match/jgld_font.cpp	deletes the shared font DC g_fontDC (0x10128724) if present
+jgld.dll	0x10068fa0	deleteFontDC	render	match re/match/jgld_font.cpp; DeleteDC (IAT 0x1012c380) of g_fontDC 0x10128724 at 0x10068fc9 after cmp/je 0x10068fb8/0x10068fbf, store 0 at 0x10068fd6; callers Display::shutdownFonts 0x10067e40, initFonts 0x10068f30; A/B log/c3/c3dn_purpose.md	Deletes the shared font DC g_fontDC 0x10128724 and clears it when it is non-zero; nothing else. Replaces initFontTable (the body creates nothing). eax is DeleteDC's result, or the /GZ fill 0xcccccccc when the global is 0.
 jgld.dll	0x10069010	FontBase::~FontBase	render	match re/match/jgld_font.cpp	destructor for the FontBase
 jgld.dll	0x10069220	FontBase::FontBase	render	match re/match/jgld_font.cpp	constructs the FontBase; installs the vtable
 jgld.dll	0x100692b0	windowProc	ui	callee 0x10069ac0 (onPaint), callee 0x10069c70 (onKey), callee 0x1006a0e0 (onCommand)	the game window procedure: dispatches window messages to realizePalette/onPaint/onActivate/onKey/onChar/onCommand and the mouse-event handlers (0x10069db0-0x1006a080)

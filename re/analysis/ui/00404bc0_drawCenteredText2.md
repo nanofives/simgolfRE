@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 69 bytes, 28 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 second centered-text drawer variant used by HUD labels (`re/names/exe_0.tsv`)
 
+## Purpose
+As drawCenteredText with setQuad(target, colour, 1, 0, 1) (pushes 1, 0, 1, colour, 0x00404bc0..0x00404bd1); a NULL text returns 0 (setQuad's third argument, 0x0047631b); otherwise drawCentered2(target, text, x, y, 0, strlen(text)) (0x00404bfe). Keys `drawCenteredText2`, `_nofont`. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: drawCenteredText2 (15 vectors, 15 distinct results, 15 changing state, `log/diff/00404bc0_drawCenteredText2.path1.csv`); drawCenteredText2_nofont (15 vectors, 6 distinct results, 15 changing state, `log/diff/00404bc0_drawCenteredText2_nofont.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small7.cpp` as `?text404bc0@@YAXPBDHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00404c04): callee pops 0 bytes of stack arguments.

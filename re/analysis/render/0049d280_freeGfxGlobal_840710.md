@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `render`. Mechanica
 releases the graphics surface global at 0x00840710. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+`mov ecx, 0x840710; jmp 0x00473ae0` (0x0049d280 / 0x0049d285): Surface_free on the global Surface record at 0x00840710. Keys `_h`, `_h2` (handle +4 set; Surface_free calls display slot +0x94(handle) at 0x00473afa and clears +0x10..+0x24, 0x00473b2e..0x00473b3d), `_nohandle` (+4 = 0). +8 and +0xc are 0, so no free runs (those arms are Surface_free's own, covered by c3cz). The 0x28-byte record at 0x00840710 and the recorder are compared state. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: freeGfxGlobal_840710_h (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d280_freeGfxGlobal_840710_h.path1.csv`); freeGfxGlobal_840710_h2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d280_freeGfxGlobal_840710_h2.path1.csv`); freeGfxGlobal_840710_nohandle (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049d280_freeGfxGlobal_840710_nohandle.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_0049d280@f_0049d280@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

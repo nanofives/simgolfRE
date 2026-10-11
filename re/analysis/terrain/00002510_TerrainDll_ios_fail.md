@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00002510`), 45 bytes, 22 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns the stream state word masked with 6 (mov eax, [eax+8] at 0x10002530, and eax, 6 at 0x10002533; plain `ret` at 0x1000253c): the mask keeps the two bits that mean failure, so the result is 0, 2, 4 or 6, not a bool. No branch. Caller (hooks.csv): Terrain::loadLighting 0x10006dd0. A leaf with 16 vectors over state words 0, 1, 2, 3, 4, 5, 6, 7, 8, 0x16, 0xfffffff9, 0x80000006, 0x40, 0x0f, 0xffffffff and 0x10. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: ios::fail (16 vectors, 4 distinct results, `log/diff/00002510_Terrain_ios_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_iostream.cpp` as `?fail@ios@@QBEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000253c): callee pops 0 bytes of stack arguments.

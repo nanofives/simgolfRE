@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 80 bytes, 35 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 draws a text string at a position (wrapper variant) (`re/names/exe_2.tsv`)
 
+## Purpose
+As drawStringAt around drawStringRightAt 0x00478140 (0x0047678c). Key `drawStringAt2`, 80 vectors. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: drawStringAt2 (80 vectors, 6 distinct results, 36 changing state, `log/diff/00476750_drawStringAt2.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x0047679d): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x00476753 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

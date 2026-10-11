@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000c210`), 133 bytes, 41 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Tile constructor: three member constructors run in this order on `this` + offset: Faces::Faces 0x10001fa0 at +0x44 (thunk 0x100011a4, call 0x1000c248), PathInfo::PathInfo 0x1000f690 at +0x208 (thunk 0x1000113b, call 0x1000c25d) and WallInfo::WallInfo 0x1000f750 at +0x210 (thunk 0x100011ae, call 0x1000c26b); the frame carries an SEH record (handler 0x1004119c pushed at 0x1000c215, link stored at 0x1000c221) and `this` is returned (0x1000c277, ret at 0x1000c294). Every other byte of the tile keeps what the allocation left. No caller by call: Terrain::Terrain 0x10002ae0 stores the address as the element constructor of the 2500-tile vector (hooks.csv installers 0x10002ae0). The 12 tiles are pattern-filled, so the bytes the constructors rewrite and the ones they leave are both compared. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Tile::Tile (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000c210_Terrain_Tile_Tile.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile6.cpp` as `??0Tile@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000c294): callee pops 0 bytes of stack arguments.

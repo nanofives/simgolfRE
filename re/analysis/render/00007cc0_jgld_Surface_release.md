@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00007cc0`), 299 bytes, 79 instructions, subsystem `ren
 frees the surface's pixel buffer / GDI resources. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Releases a Surface's GDI objects (thiscall, plain `ret` at 0x10007dea; nothing returned): when the memory DC +0x4bc is non-zero (je 0x10007ce7) the DC counters +0x4c4 and +0x4c8 = 0 (0x10007cf0 / 0x10007cfd), the bitmap the DC held before (+0x4b0, je 0x10007d11) is selected back (SelectObject 0x10007d29) and cleared, DeleteDC (0x10007d4f), +0x4b8 = +0x4bc = 0 (0x10007d5f / 0x10007d6c); then the DIB section +0x4b4 (je 0x10007d80) and the clip region +0x4ac (je 0x10007db2) are each DeleteObject'ed (0x10007d8e / 0x10007dc0) and cleared. Slot 2 (+0x8) of the Surface vtable 0x1011d0b0; called by Surface::dtor 0x10007c67 and allocDrawBuffer 0x10007e40 through that slot. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::release (12 vectors, 11 distinct results, 10 changing state, `log/diff/00007cc0_jgld_Surface_release.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?release@Surface@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10007dea): callee pops 0 bytes of stack arguments.

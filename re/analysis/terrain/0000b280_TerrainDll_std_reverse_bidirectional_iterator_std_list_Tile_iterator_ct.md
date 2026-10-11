@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b280`), 57 bytes, 25 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Default constructor of the reverse iterator wrapper: it calls const_iterator::const_iterator 0x1000b6e0 on the same `this` (mov ecx, [ebp-4] at 0x1000b29d, call 0x100011fe at 0x1000b2a0, whose thunk target is 0x1000b6e0) and returns `this` (mov eax, [ebp-4] at 0x1000b2a5, ret at 0x1000b2b8). Called from Terrain::drawTile 0x100381a0 (hooks.csv callers). 16 vectors vary `this`; the result is that pointer. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::reverse_bidirectional_iterator<std::list<Tile*>::iterator>::ctor (16 vectors, 16 distinct results, 0 changing state, `log/diff/0000b280_Terrain_std_reverse_bidirectional_iterator(std_list(TileP)_iterator)_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??0?$reverse_bidirectional_iterator@Viterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@PAVTile@@AAPAV4@PAPAV4@H@std@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b2b8): callee pops 0 bytes of stack arguments.

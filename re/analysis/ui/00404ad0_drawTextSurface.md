@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 154 bytes, 56 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 draws text onto a caller-supplied surface (`re/names/exe_0.tsv`)
 
+## Purpose
+Cdecl `(text, x, y, colour)`. setQuad(target, colour, 1, 0, 1) (0x00404ad0..0x00404ae3); h and v as drawTextScaled (0x00404ae8..0x00404b0e); eax = v + y (0x00404b12); when eax >= h (jl at 0x00404b16 not taken) the clamp y = h' - v' - 1 runs and eax = v' (0x00404b18..0x00404b3d). A NULL text returns eax as it stands (0x00404b44 / 0x00404b46: v + y without the clamp, v' with it); otherwise drawText(target, text, x, y, strlen(text)) with x unscaled (0x00404b48..0x00404b62). Keys `drawTextSurface`, `_h0`, `_noh`; the first body returned v for a NULL text and the A/B showed 4 of 30 vectors RED; fixed to the eax rule above. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: drawTextSurface (30 vectors, 30 distinct results, 30 changing state, `log/diff/00404ad0_drawTextSurface.path1.csv`); drawTextSurface_h0 (30 vectors, 30 distinct results, 30 changing state, `log/diff/00404ad0_drawTextSurface_h0.path1.csv`); drawTextSurface_noh (30 vectors, 30 distinct results, 30 changing state, `log/diff/00404ad0_drawTextSurface_noh.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?text404ad0@@YAXPBDPAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00404b69): callee pops 0 bytes of stack arguments.

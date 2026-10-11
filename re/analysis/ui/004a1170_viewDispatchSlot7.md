@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 66 bytes, 19 instructions, subsystem `ui`. Mechanical t
 runs only for tag 2: an inline copy of ListBox::fwdInnerVfn24 0x0048cc30 with every offset shifted by -0x1a0, forwarding its single argument to the child's virtual +0x24; every other tag returns the argument unchanged (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Reads the tag at D - 8 (0x004a1170); tag 2 (`sub eax, 2` 0x004a1173, `jne` 0x004a1176 not taken) selects the ListBox part: the vbtable at D - 0x1f8 (0x004a1178) supplies e from its entry +4 (0x004a117e), base = D + e - 0x1a0 (`lea` 0x004a1181); the byte at D + e - 0x15c (0x004a1188) needs bit 0x40 (`test` 0x004a118f, `je` 0x004a1192 not taken) and the dword at base + 0xd8 (0x004a1194) must be non-null (`test` 0x004a119a, `je` 0x004a119c not taken); then slot +0x24 of that object's vtable runs with the argument (0x004a119e-0x004a11a5) and its eax is the result; every other path returns the argument (`mov eax, [esp + 4]` 0x004a11ab, `ret 4`). Its caller is the thunk 0x00491950. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: viewDispatchSlot7 (54 vectors, 17 distinct results, 12 changing state, `log/diff/004a1170_viewDispatchSlot7.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004a11a8, 0x004a11af): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004a1170 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

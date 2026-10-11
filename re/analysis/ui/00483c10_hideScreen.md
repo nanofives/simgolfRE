@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 29 bytes, 6 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 takes the screen offline: pre49c8e0, flushes queues B/A and hides the screen object g_screen83a (`re/names/exe_3.tsv`)
 
+## Purpose
+Argument-free (cdecl). serviceMovie 0x0049c8e0 (0x00483c10), gfxFlushB 0x00497b20 (0x00483c15), gfxFlushA 0x00497b00 (0x00483c1a), then tail jmp to display slot +0x12c (`jmp [eax + 0x12c]`, 0x00483c27); the slot's result is returned. Keys `hideScreen`, `hideScreen_b8`, `hideScreen_b0` as showScreen. Wrong slot offset (0x128) reads RED (log/c3/alt/c3dq_negctl). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: hideScreen (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483c10_hideScreen.path1.csv`); hideScreen_b8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483c10_hideScreen_b8.path1.csv`); hideScreen_b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483c10_hideScreen_b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?hideScreen@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

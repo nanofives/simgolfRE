@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000037e0`), 56 bytes, 25 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+bool __thiscall, no stack argument (plain `ret` at 0x10003817): Terrain::rebuild 0x10003980 (thunk 0x1000130c at 0x10003800) on `this`, then `mov al, 1` (0x10003805). It touches no list. Caller (hooks.csv): Terrain::initSystem 0x10009c80. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::initLists (1 vectors, 1 distinct results, 1 changing state, `log/diff/000037e0_Terrain_Terrain_initLists.path1.csv`); Terrain::initLists_t3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/000037e0_Terrain_Terrain_initLists_t3.path1.csv`); Terrain::initLists_t4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/000037e0_Terrain_Terrain_initLists_t4.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile3.cpp` as `?initLists@Terrain@@QAE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003817): callee pops 0 bytes of stack arguments.

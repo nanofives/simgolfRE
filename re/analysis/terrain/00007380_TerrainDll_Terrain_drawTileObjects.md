@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00007380`), 853 bytes, 290 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Queues the wall neighbours of a tile that face the camera (`ret 0xc`). By angle kind it asks Terrain::getWall 0x10001e80 for wall 6 then 4 (kind 0, 0x100073c8-0x1000746d), 6 then 0 (kind 1), 2 then 0 (kind 2) or 2 then 4 (kind 3) and looks the neighbours up with tileAt: kind 0 n0 = (x-1, y), n1 = (x, y+1), n2 = (x-1, y+1); kind 1 n0 = (x-1, y), n1 = (x, y-1), n2 = (x-1, y-1); kind 2 n0 = (x+1, y), n1 = (x, y-1), n2 = (x+1, y-1); kind 3 n0 = (x+1, y), n1 = (x, y+1), n2 = (x+1, y+1). Each non-NULL, non-hidden neighbour for which isCulled is false goes to Terrain::drawTile and then drawTileObjects (recursion). Callers (hooks.csv): Terrain::pathUpdateRender, localRender, stripRender. State: the 8 x 8 grid, the draw list, its head node, the arena and the free log. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::drawTileObjects (104 vectors, 27 distinct results, 56 changing state, `log/diff/00007380_Terrain_Terrain_drawTileObjects.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_draw.cpp` as `?drawTileObjects@Terrain@@QAEXPAVTile@@0M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x100076d2): callee pops 12 bytes of stack arguments.

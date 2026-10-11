@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 227 bytes, 82 instructions, subsystem `ui`. Mechanical 
 measures a wrapped text block into a text object (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall `(this, text)`, ret 4. lim = [0x00839aa4]; 0 returns 0 (0x0047861b..0x00478625); a NULL text returns [0x00839aa0] (0x00478631); a NULL base font +0x5c is filled from [0x0083ad44] (0x0047863c..0x00478649); an empty text returns [0x00839aa0] (0x00478654). Per piece: budget = lim - [0x00839aa8]; next = measureMarkupRun(this, cur, &budget, strlen(cur)) (0x00478680); next != 0: this+0x1c++ (0x00478691), v = Widget_value (0x00478694), [0x00839aa8] = 0, [0x00839aa0] += v (0x00478699..0x004786a7), a non-zero indent this+0x18 is taken off [0x00839aa4] and cleared (0x004786ad..0x004786c2), lim is re-read (0x004786c5) and the walk continues from next; next == 0: w = Text_put 0x00477250(this, 0x004c3f70) (0x004786d4), [0x00839aa8] += w (0x004786e0..0x004786e9), returns [0x00839aa0]. Keys `measureText4_base` / `_lim0` (limit 0: the guard) / `_wide` / `_pre`, 24 vectors each. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: measureText4_base (24 vectors, 16 distinct results, 18 changing state, `log/diff/00478610_measureText4_base.path1.csv`); measureText4_lim0 (24 vectors, 1 distinct results, 0 changing state, `log/diff/00478610_measureText4_lim0.path1.csv`); measureText4_wide (24 vectors, 13 distinct results, 18 changing state, `log/diff/00478610_measureText4_wide.path1.csv`); measureText4_pre (24 vectors, 16 distinct results, 18 changing state, `log/diff/00478610_measureText4_pre.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00478626, 0x00478639, 0x0047865c, 0x004786f0): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0047861d before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000048a0`), 734 bytes, 219 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exported 2-D line overlay (`ret 0x1c`; exe caller 0x004493d0). r, g, b are ((color >> 7) & 0xf8), ((color >> 2) & 0xf8), ((color << 3) & 0xf8) divided by 255.0 (0x100048bd-0x1000490a). glMatrixMode(0x1701), glPushMatrix, glLoadIdentity, glOrtho(0, W, 0, H, -1, 1) when the byte +0x28 is set or glOrtho(0, W, H, 0, -1, 1) otherwise (0x1000493f-0x100049ba), glMatrixMode(0x1700), glPushMatrix, glLoadIdentity, glDisable(0xb50), glDisable(0xde1), glEnable(0xbe2), glBlendFunc(0x302, 0x303), glLineWidth((float)width) (0x10004a4e), glColor4f(r, g, b, alpha / 10.0) (0x10004a64-0x10004a7f), glBegin(1), two glVertex2i, glEnd, then the state is undone in reverse and glFlush. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::drawLine (48 vectors, 48 distinct results, 48 changing state, `log/diff/000048a0_Terrain_Terrain_drawLine.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_drawline.cpp` as `?drawLine@Terrain@@QAEXHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x1c` (at 0x10004b7b): callee pops 28 bytes of stack arguments.

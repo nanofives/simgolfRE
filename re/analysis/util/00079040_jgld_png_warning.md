@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079040`), 94 bytes, 39 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng's warning dispatcher (cdecl (png_ptr, message), plain `ret` at 0x1007909d): when the warning function at png_ptr + 0x44 is non-NULL (cmp / je 0x1007905b / 0x1007905f) it is called with (png_ptr, message) (0x1007906e, `add esp, 8`); otherwise png_default_warning 0x10079300 (0x10079085). eax is the called function's. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: png_warning (12 vectors, 12 distinct results, 12 changing state, `log/diff/00079040_jgld_png_warning.path1.csv`); png_warning_default (6 vectors, 6 distinct results, 6 changing state, `log/diff/00079040_jgld_png_warning_default.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_error.cpp` as `_png_warning` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007909d): callee pops 0 bytes of stack arguments.

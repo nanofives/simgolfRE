@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$qP0 $qJ0 $qJ1,void,void,True,fb29925a,fb29925a,True
+$qP1 0 0,void,void,True,62d88c52,62d88c52,True
+$qP2 $qJ2 0,void,void,True,b6c81b58,b6c81b58,True
+$qP3 0 $qJ3,void,void,True,774a696d,774a696d,True
+$qP4 $qJ1 $qJ2,void,void,True,5c055006,5c055006,True
+$qP5 $qJ3 $qJ0,void,void,True,5cd22ddb,5cd22ddb,True
+$qP0 $qN $qN,void,void,True,3d963ee0,3d963ee0,True
+$qP2 $qJ1 $qJ3,void,void,True,97706c9e,97706c9e,True
+$qP5 0 $qJ2,void,void,True,719cecb8,719cecb8,True
+$qP3 $qJ0 0,void,void,True,6a49c7a4,6a49c7a4,True
+$qP1 $qJ2 $qN,void,void,True,16f2be2f,16f2be2f,True
+$qP4 $qN $qJ1,void,void,True,a4dcf5ff,a4dcf5ff,True
+state_regions,$blk+0x0:8192 $arena+0x0:272 $freelog+0x0:1028 $hlog+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6b32e260,original=0x2b80dc0,2026-10-11T04:02:21
+distinct_results,12,,
+VERDICT,GREEN,12,

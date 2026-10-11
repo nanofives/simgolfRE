@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00005eb0`), 109 bytes, 37 instructions, subsystem `au
 Unlinks the sound object (node value +8) from the global sound registry list g_100b5000, fixing head/tail g_100b5000/g_100b5008. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00005eb0 unregisterSound (VA 0x10005eb0). No stack argument: ecx is the value to remove from the module list at 0x100b5000 (head) / 0x100b5004 (back) / 0x100b5008 (cursor) / 0x100b500c (count) (0x10005eb0-0x10005f15). An empty list (0x10005eb5 / 0x10005eb7) or a value not found (0x10005eb9-0x10005ec3) returns at once; the result is 0 on every path (the empty-list jump reaches `xor eax, eax` 0x10005f1a, the walk ends with eax = 0). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: unregisterSound_s3 (5 vectors, 4 distinct results, 3 changing state, `log/diff/00005eb0_sound_unregisterSound_s3.path1.csv`); unregisterSound_s1 (5 vectors, 2 distinct results, 1 changing state, `log/diff/00005eb0_sound_unregisterSound_s1.path1.csv`); unregisterSound_s0 (5 vectors, 1 distinct results, 0 changing state, `log/diff/00005eb0_sound_unregisterSound_s0.path1.csv`); unregisterSound_sn (5 vectors, 4 distinct results, 3 changing state, `log/diff/00005eb0_sound_unregisterSound_sn.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10005ec5, 0x10005f1c): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10005eb9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

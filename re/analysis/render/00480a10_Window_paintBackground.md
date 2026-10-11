@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 238 bytes, 78 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 paints the window background: if a backing window m_130 is set blits it (FUN_00475c60) and optionally fills with g_83abe0, else the default paint (`re/names/exe_3.tsv`)
 
+## Purpose
+Thiscall `(this, rect*, colour)`, ret 8. The same gate as Window::paint (0x00480a13..0x00480a39). Passing: Surface_blitThunk on parent + 0x274 (0x00480aa0 / 0x00480aa6) with (this + 0x274 or 0 for a NULL this, 0x00480a60..0x00480a70; r.left + B.left + A.left, r.top + B.top + A.top, r.left, r.top, r.right - r.left, r.bottom - r.top); then, with [0x0083abe0] set (0x00480ab1), Surface_fill on this + 0x274 (r.left, r.top, r.right - 1, r.bottom - 1, colour) (0x00480ad7); the return value 0 (`xor eax, eax`, 0x00480adf). Not passing: Widget_fillArea 0x00478b50 on this + 0x274 with (rect, colour) and its result (0x00480af5). Keys `Window::paintBackground` and `_nocolour`, 32 vectors each (8 windows x 4 rectangles). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: Window::paintBackground (32 vectors, 29 distinct results, 28 changing state, `log/diff/00480a10_Window_paintBackground.path1.csv`); Window::paintBackground_nocolour (32 vectors, 29 distinct results, 28 changing state, `log/diff/00480a10_Window_paintBackground_nocolour.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00480ae2, 0x00480afb): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x00480a11 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00031200`), 73 bytes, 21 instructions, subsystem `aud
 fastcall(obj): runs the buildVoiceTxName base ctor, installs vtable 0x1005c528 (the streaming-reader class, see streamReaderDtor) and zeroes its buffer-list and ring fields (+0x5c..+0x90). (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00031200 StreamReader_ctor (VA 0x10031200). Base constructor buildVoiceTxName 0x1002f220 (thunk 0x10002036, call 0x10031203) on this; then +0x5c, +0x60, +0x64, +0x68 = 0 (0x1003120d-0x10031216); the vtable 0x1005c528 at +0 (0x10031219); +0x70, +0x7c, +0x74, +0x90, +0x84, +0x88, +0x80, +0x8c = 0 (0x1003121f-0x1003123f). Returns this (0x10031245). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: StreamReader_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00031200_sound_StreamReader_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10031248): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10031201 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

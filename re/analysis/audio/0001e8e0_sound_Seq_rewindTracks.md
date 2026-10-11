@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001e8e0`), 133 bytes, 54 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Rewinds a sequence: resets the read pointer (+0x2c=+0x3c), clears +0x40/+0x50 and flags +0x34 bit1/+0x38 bit2, sets +0x48=0x10, then walks the track node list at +0xc setting loop flag +0x38 bit0 from type-5 nodes. (`re/names/sound_3.tsv`)
 
+## Purpose
+0x0001e8e0 Seq_rewindTracks (VA 0x1001e8e0). eax = dword +0x3c (0x1001e8ed); +0x34 loses bit 1 (`and edi, 0xfffffffd` 0x1001e8f0, stored 0x1001e8ff); the byte at +0x38 loses bit 2 (`and dl, 0xfb` 0x1001e8f3, stored 0x1001e902); +0x2c = eax (0x1001e8f6); +0x40, +0x50, +0x4c = 0 (0x1001e8f9 / 0x1001e8fc / 0x1001e905); +0x48 = 0x10 (0x1001e908); the byte at +0x30 = 0 (0x1001e90f). FUN_1001bc00 (thunk 0x100022ed, call 0x1001e912) then calls the slot +0x18 of every list value. The cursor +0x14 takes the head +0xc (0x1001e917 / 0x1001e91c); a NULL head or NULL value ends the function (0x1001e91f / 0x1001e926). A value whose dword at +0x1c is 5 (`cmp dword ptr [edi + 0x1c], 5` 0x1001e928) gets its vtable slot +0x10 called with 0 (`push ebx; call [edx + 0x10]` 0x1001e930-0x1001e933); then the byte at +0x38 gets bit 0 set when the value's byte at +0x19 (read AFTER the call) is 1 and cleared otherwise (0x1001e936-0x1001e946). The cursor advances through next (0x1001e949-0x1001e955) until it, the next node or its value is NULL (0x1001e94e, 0x1001e958, 0x1001e95f). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: Seq_rewindTracks (10 vectors, 10 distinct results, 10 changing state, `log/diff/0001e8e0_sound_Seq_rewindTracks.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001e964): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001e8e2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

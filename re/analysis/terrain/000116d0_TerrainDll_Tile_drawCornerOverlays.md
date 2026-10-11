@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000116d0`), 1270 bytes, 333 instructions, subsystem
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Draws up to four corner triangles over a path tile. Four counters a, b, c, d start at 0 and a switch on the mask (jump table) sets them: 0 gives all 3, 1 gives c = d = 3, 2 a = b = 3, 4 a = c = 3, 8 b = d = 3, 5 c = 3 and b = 2, 9 d = 3 and a = 2, 7 b = d = 2, 11 a = c = 2, 13 a = b = 2, 6 a = 3 and d = 2, 10 b = 3 and c = 2, 14 c = d = 2, 15 all 2; any other mask returns at once. Each non-zero counter, in the order a, b, c, d, binds g_textures[type][0][counter] (glBindTexture(0x0de1, ...), call [0x10113624]) and draws one GL_TRIANGLES with three (glTexCoord2f, glArrayElement) pairs over face vertices: a = (0, .5) f0.v1, (.5, .5) f0.v2, (.5, 1) f1.v2; b = (.5, 1) f1.v2, (.5, .5) f0.v2, (1, .5) f3.v1; c = (.5, 0) f5.v1, (.5, .5) f4.v2, (0, .5) f4.v0; d = (1, .5) f3.v1, (.5, .5) f4.v2, (.5, 0) f5.v1. `ret 8`. Caller: Tile::drawPaths 0x100108f0 (hooks.csv). The OPENGL32 import stand-in compares every call and argument. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Tile::drawCornerOverlays (26 vectors, 19 distinct results, 18 changing state, `log/diff/000116d0_Terrain_Tile_drawCornerOverlays.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_corneroverlay.cpp` as `?drawCornerOverlays@Tile@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10011bc3): callee pops 8 bytes of stack arguments.

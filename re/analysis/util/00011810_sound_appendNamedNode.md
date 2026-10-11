@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00011810`), 259 bytes, 103 instructions, subsystem `u
 Allocates a 0x14-byte list node, copies the caller string into it, appends it to the list at +4 (links +0x10) and increments the count +0x148. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00011810 appendNamedNode (VA 0x10011810): a DirectSoundEnumerate callback (installer 0x100114e0). `ret 0x10`: four stack arguments (guid pointer, description string, module string, owner). A 0x14-byte node comes from operator new (0x10011814-0x10011816); the owner's counter at +0x148 is incremented (0x10011824-0x10011830); the node becomes the owner's head at +4 when it is NULL (0x10011838), otherwise the walk along the next pointer at +0x10 (0x1001183d-0x1001184d) ends at the last node, which gets the new node as next. The node then holds a copy of the description (strlen + 1 bytes from operator new, copied with rep movsd/movsb, stored at +0: 0x10011850-0x1001187f), a copy of the module string (stored at +4: 0x1001188a-0x100118c2), a 0x10-byte copy of the guid at +8 when the guid pointer is non-NULL (0x100118ca-0x100118eb) or NULL at +8 (0x100118f3), the owner at +0xc (0x100118f6) and NULL at +0x10 (0x100118f9). The module global 0x100b4a44 is incremented (0x100118fc-0x10011904) and the function returns 1 (0x1001190a). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: appendNamedNode (36 vectors, 36 distinct results, 36 changing state, `log/diff/00011810_sound_appendNamedNode.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x10011910): callee pops 16 bytes of stack arguments.
 

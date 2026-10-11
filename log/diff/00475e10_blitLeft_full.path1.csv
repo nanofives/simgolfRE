@@ -1,0 +1,41 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$D $T0 0 0 10 10 20 12 0,0,0,True,f355b068,f355b068,True
+$D $T0 3 2 10 10 20 12 1,0,0,True,e6749476,e6749476,True
+$D $T0 -3 -2 5 5 17 13 127,0,0,True,208ed3eb,208ed3eb,True
+$D $T0 13 7 -6 -4 40 30 -1,0,0,True,a40e4f19,a40e4f19,True
+$D $T0 0 0 300 200 50 50 0,0,0,True,1e8486c6,1e8486c6,True
+$D $T0 1 1 10 10 0 0 1,0,0,True,b2b88541,b2b88541,True
+$D $T0 2 2 10 10 -5 7 127,0,0,True,b2b88541,b2b88541,True
+$D $T0 7 9 0 0 16 12 -1,0,0,True,640d807c,640d807c,True
+$D $T0 0 0 315 235 20 20 0,0,0,True,5e739904,5e739904,True
+$D $T0 1000 1000 31 17 23 29 1,0,0,True,9f1d0902,9f1d0902,True
+$D $T1 0 0 10 10 20 12 0,0,0,True,54bc8c3f,54bc8c3f,True
+$D $T1 3 2 10 10 20 12 1,0,0,True,88448b51,88448b51,True
+$D $T1 -3 -2 5 5 17 13 127,0,0,True,152ad7c0,152ad7c0,True
+$D $T1 13 7 -6 -4 40 30 -1,0,0,True,2f656339,2f656339,True
+$D $T1 0 0 300 200 50 50 0,0,0,True,a142e6ed,a142e6ed,True
+$D $T1 1 1 10 10 0 0 1,0,0,True,b2b88541,b2b88541,True
+$D $T1 2 2 10 10 -5 7 127,0,0,True,b2b88541,b2b88541,True
+$D $T1 7 9 0 0 16 12 -1,0,0,True,a50e2640,a50e2640,True
+$D $T1 0 0 315 235 20 20 0,0,0,True,d2866fea,d2866fea,True
+$D $T1 1000 1000 31 17 23 29 1,0,0,True,ab8912ea,ab8912ea,True
+$D $T5 0 0 10 10 20 12 0,0,0,True,839f755e,839f755e,True
+$D $T5 3 2 10 10 20 12 1,0,0,True,e1e3c95c,e1e3c95c,True
+$D $T5 -3 -2 5 5 17 13 127,0,0,True,f2d9dc79,f2d9dc79,True
+$D $T5 13 7 -6 -4 40 30 -1,0,0,True,ddef3544,ddef3544,True
+$D $T5 0 0 300 200 50 50 0,0,0,True,ffd0d949,ffd0d949,True
+$D $T5 1 1 10 10 0 0 1,0,0,True,b2b88541,b2b88541,True
+$D $T5 2 2 10 10 -5 7 127,0,0,True,b2b88541,b2b88541,True
+$D $T5 7 9 0 0 16 12 -1,0,0,True,b9d12c9f,b9d12c9f,True
+$D $T5 0 0 315 235 20 20 0,0,0,True,de9e928e,de9e928e,True
+$D $T5 1000 1000 31 17 23 29 1,0,0,True,839eb0ea,839eb0ea,True
+$D $T2 0 0 10 10 20 12 1,0,0,True,d28af7b3,d28af7b3,True
+$D $T3 0 0 10 10 20 12 1,0,0,True,d28af7b3,d28af7b3,True
+$D $T6 3 2 10 10 20 12 0,0,0,True,d28af7b3,d28af7b3,True
+$D2 $T0 0 0 10 10 20 12 1,7,7,True,1cce8fbe,1cce8fbe,False
+$D $T4 0 0 10 10 20 12 2,0,0,True,6c6b27ae,6c6b27ae,True
+state_regions,$rec+0x0:65536 $disp+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70c2fe20,original=0x1440d00,2026-10-11T05:16:48
+distinct_results,28,,
+VERDICT,GREEN,35,

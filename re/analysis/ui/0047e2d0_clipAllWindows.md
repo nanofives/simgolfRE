@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 88 bytes, 32 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 clips every shown top-level window in the z-list g_83a2d8[g_83ab94] against the screen rect via relayoutClip (`re/names/exe_3.tsv`)
 
+## Purpose
+Argument-free (cdecl). With [0x0083a7bc] set, its slot +0xd0 fills a local RECT (0x0047e2dd..0x0047e2e4); then for i in [0, [0x0083ab94]) over the window array: when array[i].byte[+0xa0] & 1 (0x0047e2fe) relayoutClip 0x0047e140(array[i], &RECT) (0x0047e30d). Keys `clipAllWindows_a1` .. `_a5` (the arrays of rebuildDrawList). relayoutClip runs ORIGINAL in both arms: it writes each visible window's +0x1dc RECT (compared state). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: clipAllWindows_a1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047e2d0_clipAllWindows_a1.path1.csv`); clipAllWindows_a2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047e2d0_clipAllWindows_a2.path1.csv`); clipAllWindows_a3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047e2d0_clipAllWindows_a3.path1.csv`); clipAllWindows_a4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047e2d0_clipAllWindows_a4.path1.csv`); clipAllWindows_a5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0047e2d0_clipAllWindows_a5.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_0047e2d0@f_0047e2d0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047e327): callee pops 0 bytes of stack arguments.

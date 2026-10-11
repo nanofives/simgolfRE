@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009770`), 126 bytes, 50 instructions, subsystem `ren
 fills a RECT with a color: dispatches on depth to fillRectC8 (8-bit) or fillRect16. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Fills a rectangle with a colour by surface depth (Surface vtable slot 17, +0x44 of 0x1011d0b0; `ret 8` at 0x100097eb): the depth from slot +0xe4 (0x10009797); 8 (je 0x100097ad) -> fillRectC8 0x10011dd0 (rect, colour) through 0x100011f4 (0x100097c2); 0x10 (je 0x100097b3) -> fillRect16 0x1000dcf0 (rect, colour) through 0x100013de (0x100097d4); any other depth draws nothing. Always returns 0 (0x100097d9). Reached by clear8 0x10011c40 and clear16 0x1000da70 through that slot. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::fillRectDispatch (16 vectors, 12 distinct results, 11 changing state, `log/diff/00009770_jgld_Surface_fillRectDispatch.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op2@Surface@@QAEHPAHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100097eb): callee pops 8 bytes of stack arguments.

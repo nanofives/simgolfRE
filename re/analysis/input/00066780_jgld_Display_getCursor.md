@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066780`), 112 bytes, 43 instructions, subsystem `inp
 reads the current mouse cursor position into the two out-parameters (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Reads the mouse position in client coordinates: GetCursorPos into a local POINT (0x100667a3), ScreenToClient ([this+0x144], &pt) (0x100667c0), then *px = pt.x (0x100667d3) and *py = pt.y (0x100667db); the last store leaves py in eax (`mov eax, [ebp+0xc]` 0x100667d5); `ret 8` at 0x100667ed. Slot 11 (+0x2c) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::getCursor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066780_jgld_Display_getCursor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?getCursor@Display@@QAEXPAJ0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x100667ed): callee pops 8 bytes of stack arguments.

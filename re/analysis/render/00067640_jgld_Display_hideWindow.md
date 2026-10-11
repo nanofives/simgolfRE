@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067640`), 73 bytes, 30 instructions, subsystem `rend
 Calls ShowWindow(this+0x144, SW_HIDE=0). (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Hides the Display's window: ShowWindow ([this+0x144], SW_HIDE = 0) (`push 0` 0x1006765f, call 0x1006766b), ShowWindow's result left in eax. Slot 5 (+0x14) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::hideWindow (12 vectors, 11 distinct results, 12 changing state, `log/diff/00067640_jgld_Display_hideWindow.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10067640@f_10067640@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10067688): callee pops 0 bytes of stack arguments.

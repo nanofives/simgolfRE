@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 85 bytes, 37 instructions, subsystem `ui`. Mechanical t
 draws a widget element (5-arg variant) (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall `(this, font, text, x, y, w, len)`, ret 0x18: the same font swap (0x004766a3..0x004766c5) around drawCentered2 0x00477da0(this, text, x, y, w, len) (0x004766e1). Key `Widget_draw2`, 80 vectors. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: Widget_draw2 (80 vectors, 6 distinct results, 36 changing state, `log/diff/004766a0_Widget_draw2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?draw@C4766a0@@QAEXPAUP4766@@HHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x004766f2): callee pops 24 bytes of stack arguments.

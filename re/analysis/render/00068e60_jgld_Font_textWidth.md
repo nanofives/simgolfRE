@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00068e60`), 163 bytes, 60 instructions, subsystem `ren
 measures a string's pixel width via GetTextExtentPoint32A on the shared DC g_fontDC (0x10128724) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Width in pixels of `length` characters of `text` in this Font: a NULL text returns 0 (jne 0x10068e81 not taken, `xor eax, eax` 0x10068e83); otherwise, on the module's font DC 0x10128724, SelectObject (dc, [this+0x18]) (0x10068e97), GetTextExtentPoint32A (dc, text, length, &size) (0x10068eb8), SelectObject (dc, GetStockObject (SYSTEM_FONT 0xd)) (0x10068ec9 / 0x10068ee0), and size.cx is returned (0x10068eed). `ret 8` at 0x10068f00. Slot 4 (+0x10) of the Font vtable 0x1011da6c. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Font::textWidth (12 vectors, 11 distinct results, 10 changing state, `log/diff/00068e60_jgld_Font_textWidth.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `?textWidth@Font@@QAEHPBDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10068f00): callee pops 8 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00014c00`), 81 bytes, 33 instructions, subsystem `rend
 scalar deleting destructor for Sprite. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Scalar deleting destructor of Sprite (`ret 4` at 0x10014c4e): Sprite::dtor 0x10014de0 through 0x10001735 (0x10014c20), operator delete (this) (0x10014c33) when flags bit 0 is set (je 0x10014c2d); returns this. Slot 0 of the Sprite vtable 0x1011d380. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Sprite::deletingDtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014c00_jgld_Sprite_deletingDtor_five.path1.csv`); Sprite::deletingDtor_all (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014c00_jgld_Sprite_deletingDtor_all.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10014c00@C_FUN_10014c00@f_10014c00@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10014c4e): callee pops 4 bytes of stack arguments.

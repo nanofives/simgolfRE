@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x0006d150`), 243 bytes, 83 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng's teardown of a read struct and its info structs (cdecl (png_ptr_ptr, info_ptr_ptr, end_info_ptr_ptr), plain `ret` at 0x1006d242): each pointer-to-pointer is read only when non-NULL (je 0x1006d181 / 0x1006d18f / 0x1006d19d); png_read_destroy 0x1006d250 (png, info, end) (0x1006d1b3); a non-NULL info (je 0x1006d1bf) gets png_free (png, info->text +0x38) (0x1006d1cc), png_destroy_struct 0x10078e20 (0x1006d1d8) and *info_ptr_ptr = NULL (0x1006d1e3); end info the same (je 0x1006d1ed; 0x1006d1fa / 0x1006d206 / 0x1006d211); a non-NULL png (je 0x1006d21b) gets png_destroy_struct (0x1006d221) and *png_ptr_ptr = NULL (0x1006d22c). Caller loadPng 0x100145a0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: png_destroy_read_struct (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006d150_jgld_png_destroy_read_struct.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_read.cpp` as `_png_destroy_read_struct` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1006d242): callee pops 0 bytes of stack arguments.

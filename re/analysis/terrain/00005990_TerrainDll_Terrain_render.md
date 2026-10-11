@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x00005990`), 1279 bytes, 399 instructions, subsystem
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Exported full-scene renderer (`ret 8`, bool in al; exe caller 0x004498a0). up = down = left = right = 16 << zoom (0x100059b3-0x100059d9); glLoadIdentity, glPushMatrix, glRotated(g_screenScale), glRotatef(45 + angle), the translate when pTile is non-NULL (0x10005a49), setViewAngle (0x10005aa5). With no pTile it renders tileAt(x, y) for y 10..39 and x 40 down to 11 with no test (0x10005ab0-0x10005af7); otherwise the window is clamped to the 50-tile map (up = min(up, Y), down = min(down, 50 - Y), left = min(left, X), right = min(right, 50 - X), 0x10005b00-0x10005b7c) and walked in an order set by the angle kind (kind 0 y ascending / x descending; kind 1 x descending / y descending; kind 2 y descending / x ascending; kind 3 y ascending / x ascending), each non-NULL, non-hidden, non-culled tile going to Tile::render; then glPopMatrix, glFlush and `mov al, 1`. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::render (26 vectors, 26 distinct results, 26 changing state, `log/diff/00005990_Terrain_Terrain_render.path1.csv`); Terrain::render_z1 (26 vectors, 26 distinct results, 26 changing state, `log/diff/00005990_Terrain_Terrain_render_z1.path1.csv`); Terrain::render_z2 (26 vectors, 26 distinct results, 26 changing state, `log/diff/00005990_Terrain_Terrain_render_z2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_render.cpp` as `?render@Terrain@@QAE_NPAVTile@@M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10005e8c): callee pops 8 bytes of stack arguments.

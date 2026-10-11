@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008d00`), 128 bytes, 49 instructions, subsystem `ren
 sets the GDI text color from a 16-bit color value on the surface DC. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Sets the text colour of the Surface's DC to a 16-bit colour value: DC from slot +0x28 (Surface::acquireDC 0x10008640, 0x10008d27), SetTextColor (dc, (colour & 0xffff) | 0x10ff0000) (0x10008d37 / 0x10008d3c, call 0x10008d48), slot +0x2c (releaseDC) with 1 (0x10008d61), returns 0 (0x10008d6b); `ret 4` at 0x10008d7d. Slot 44 (+0xb0) of the Surface vtable 0x1011d0b0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::setTextColor16 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008d00_jgld_Surface_setTextColor16.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10008d00@C_FUN_10008d00@f_10008d00@@QAEHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10008d7d): callee pops 4 bytes of stack arguments.

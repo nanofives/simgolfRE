@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000f7f0`), 3476 bytes, 945 instructions, subsystem
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Draws the wall strips of a tile. The normal row is 0 for view index 0 and 2 and 1 otherwise (g_viewAngleIndex 0x10070a14). Four edges are tried in the order (flag byte +0x234 + k, neighbour n): (0, n0), (6, n2), (2, n3), (4, n1); an edge is drawn when its flag byte is non-zero AND the neighbour exists. The texture is the one at 0x10070304 when the wall kind dword +0x210 + 4k is 1, else the one at 0x1006ff80; the strip is one GL_TRIANGLES of twelve (glTexCoord2f, glVertex3fv) pairs between this tile's face vertices and the neighbour's, with glNormal3fv of the edge's normal row (0x10063c40 / 0x10063c70 / 0x10063c88 / 0x10063c58 + row * 12). Plain `ret`. Caller: Tile::render (thunk 0x100012b2, call 0x1000e95f). Fixture variants _v1.._v3 repeat the 40 tiles under view indices 1, 2, 3. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Tile::drawWalls (40 vectors, 40 distinct results, 40 changing state, `log/diff/0000f7f0_Terrain_Tile_drawWalls.path1.csv`); Tile::drawWalls_v1 (40 vectors, 40 distinct results, 40 changing state, `log/diff/0000f7f0_Terrain_Tile_drawWalls_v1.path1.csv`); Tile::drawWalls_v2 (40 vectors, 40 distinct results, 40 changing state, `log/diff/0000f7f0_Terrain_Tile_drawWalls_v2.path1.csv`); Tile::drawWalls_v3 (40 vectors, 40 distinct results, 40 changing state, `log/diff/0000f7f0_Terrain_Tile_drawWalls_v3.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_walls.cpp` as `?drawWalls@Tile@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10010583): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000aa10`), 224 bytes, 76 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exported grid reset (plain `ret` at 0x1000aaef; exe caller 0x00449520): Tile::reset(x, y) 0x1000c2c0 on every tile x + y * width of the array at +0x3a4 (x outer, y inner, bounds re-read at every test, 0x1000aa45 / 0x1000aa62; thunk 0x1000119f), then the same tail as initTerrain: buildArrays, glVertexPointer(3, 0x1406, 0, g_vertices) and glNormalPointer(0x1406, 0, g_normals) (0x1000aa97-0x1000aadf). Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::resetTerrain (11 vectors, 9 distinct results, 11 changing state, `log/diff/0000aa10_Terrain_Terrain_resetTerrain.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods2.cpp` as `?resetTerrain@Terrain@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000aaef): callee pops 0 bytes of stack arguments.

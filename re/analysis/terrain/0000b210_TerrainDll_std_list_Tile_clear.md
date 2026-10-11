@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b210`), 88 bytes, 38 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Empties the list: end() 0x1000afe0 is read into [ebp-8] (call 0x1000b234), begin() 0x1000af70 into [ebp-0xc] (call 0x1000b243) and the range erase 0x1000b470 runs on (begin, end) (call 0x1000b252); the head node stays and its count ends at zero through the erases. No branch, plain `ret` at 0x1000b267. Callers (hooks.csv): Terrain::pathUpdateRender 0x10006410, localRender 0x100089e0 and stripRender 0x10009270, each of which clears the draw list after rendering it. The A/B lists of 0..9 nodes run under the heap stand-in; the freed nodes are recorded in order. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::list<Tile*>::clear (8 vectors, 8 distinct results, 7 changing state, `log/diff/0000b210_Terrain_std_list(TileP)_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?clear@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b267): callee pops 0 bytes of stack arguments.

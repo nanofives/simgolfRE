@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006f00`), 137 bytes, 54 instructions, subsystem `ut
 Reallocates a growable array to hold param 8-byte elements (buffer +4, count +0xc), zero-filling each. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00006f00 resizeDynArray (VA 0x10006f00). One stack argument n (`ret 4`). n equal to the count at +0xc returns 0 (0x10006f08-0x10006f11). edi = bit 0 of the dword at +8 sign-extended to 0 or -1 (`shl edi, 0x1f; sar edi, 0x1f` 0x10006f1a / 0x10006f1d); `cmp edi, 1` can never be equal, so the bit-clearing store at 0x10006f25-0x10006f27 is dead. A non-NULL data pointer at +4 is released with operator delete (0x10006f2a-0x10006f32); +4 = 0 (0x10006f41); operator new (RVA 0x424d7, call 0x10006f49) of n * 8 bytes becomes +4 (0x10006f4e); +0xc = n (0x10006f5a); the n pairs of zero dwords are written (loop 0x10006f5f-0x10006f70, skipped for n == 0 by `jbe` 0x10006f5d); the dword at +8 gets bit 0 of edi (0x10006f72-0x10006f81), which equals its old bit 0, so +8 keeps its value; returns 0 (0x10006f7f). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: resizeDynArray (60 vectors, 44 distinct results, 43 changing state, `log/diff/00006f00_sound_resizeDynArray.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10006f11, 0x10006f86): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10006f06 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

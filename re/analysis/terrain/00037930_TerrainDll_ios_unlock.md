@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00037930`), 67 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+The same shape as ios::lock with the wrapper 0x10034a80 (`push [ebp+8]; call [0x10113514]`, KERNEL32 LeaveCriticalSection): signed test of +0x34 at 0x1003794b-0x1003794f, lockptr through the thunk 0x1000110e at 0x10037954, wrapper call at 0x1003795a, plain `ret` at 0x10037972. Callers (hooks.csv): istream::getline 0x10010590 and the iostream internals 0x10033d70, 0x10034a00, 0x10035440, 0x10036790, 0x10036840. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: ios::unlock (16 vectors, 9 distinct results, 8 changing state, `log/diff/00037930_Terrain_ios_unlock.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_iostream.cpp` as `?unlock@ios@@QAAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10037972): callee pops 0 bytes of stack arguments.

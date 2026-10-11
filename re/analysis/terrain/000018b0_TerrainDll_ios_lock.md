@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000018b0`), 67 bytes, 27 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Static function taking the ios pointer (mov eax, [ebp+8] at 0x100018c8). The lock is taken only when the lock count at +0x34 is negative (cmp dword ptr [eax+0x34], 0 / jge 0x100018e2 at 0x100018cb-0x100018cf, a signed test): ios::lockptr 0x10003f80 (thunk 0x1000110e at 0x100018d4) gives the section address and the CRT wrapper 0x10034a70 (call 0x100018da) enters it, which is `push [ebp+8]; call [0x10113510]`, an indirect call through Terrain.dll's import slot for KERNEL32 EnterCriticalSection. Callers (hooks.csv): istream::getline 0x10010590 and the iostream internals 0x10033d70, 0x10035440, 0x10036790, 0x100369a0. The A/B puts the import stand-in on that slot: the pointer passed to EnterCriticalSection is recorded and compared. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: ios::lock (16 vectors, 9 distinct results, 8 changing state, `log/diff/000018b0_Terrain_ios_lock.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_iostream.cpp` as `?lock@ios@@QAAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100018f2): callee pops 0 bytes of stack arguments.

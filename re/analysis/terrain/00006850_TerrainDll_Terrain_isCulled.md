@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x00006850`), 1005 bytes, 311 instructions, subsystem
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Screen-space visibility test of a tile against the view centre for a camera angle (`ret 0xc`, bool in al). Zoom dword +0x1c equal to 2 returns false (cmp [eax+0x1c], 2 / jne at 0x10006870-0x10006874). halfW = (dword +0x20 >> 1) * zoom and halfH = (dword +0x24 >> 1) * zoom (0x10006883-0x1000689e); dy = getY(t) - getY(center), dx = getX(t) - getX(center) (0x100068a4-0x100068cc). The window sizes 800x600, 1024x768 and 1280x1024 (0x100068d2-0x10006951) set the footprints A, B, C, D to 0x40,0x28,0x20,0x14 / 0x50,0x34,0x28,0x1a / 0x68,0x44,0x34,0x22; any other size leaves them as the frame fill 0xcccccccc. The four angle kinds (fcomp [0x1005f368] = 0.0 at 0x10006972, 90.0 at 0x10006a24, 180.0 at 0x10006ad9, else) compute sx = W/2 +- dy*C +- dx*C and sy = H/2 +- dy*D +- dx*D - maxHeight(t) * 5 and return sx > W + a + halfW || sx < -b - halfW || sy > H + c + halfH || sy < -d - halfH with the kind's own terms (0x100069d3-0x10006a07, 0x10006a85-0x10006abc, 0x10006b3a-0x10006b71, 0x10006bdb-0x10006c15); all arithmetic wraps in 32 bits. Callers (hooks.csv): Terrain::render, pathUpdateRender, drawTileObjects, stripRender. 608 vectors: 36 tiles around (25, 25) x 4 angles under 10 window/zoom objects, plus NaN, -0.0, 270, 360, 90 and 180 +- 1 ulp. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::isCulled (608 vectors, 2 distinct results, `log/diff/00006850_Terrain_Terrain_isCulled.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_culled.cpp` as `?isCulled@Terrain@@QAE_NPAVTile@@0M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10006c3a): callee pops 12 bytes of stack arguments.

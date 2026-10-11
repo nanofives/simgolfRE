@@ -1,0 +1,10 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$p10,0,0,True,8d5b0945,8d5b0945,True
+$p11,0,0,True,8d5b0945,8d5b0945,True
+$p12,0,0,True,8d5b0945,8d5b0945,True
+$p14,0,0,True,8d5b0945,8d5b0945,True
+state_regions,$arena+0x0:65552 $freelog+0x0:1028 $implog+0x0:4096,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x729dab10,original=0x1440cc0,2026-10-11T06:10:38
+distinct_results,1,,
+VERDICT,GREEN,4,

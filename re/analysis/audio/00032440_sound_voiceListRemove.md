@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00032440`), 131 bytes, 48 instructions, subsystem `au
 thiscall(voice): zeroes voice+0x20 and unlinks the list node whose value (+0x8) equals voice from the list at this+0x1338, freeing the node. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+0x00032440 voiceListRemove (VA 0x10032440). One stack argument (`ret 4`), the value to remove; the list header sits at this+0x1338. A NULL argument ends at once (0x10032449 / 0x1003244c, eax untouched); otherwise the dword at arg+0x20 is cleared first (0x1003244e), also when the value is not in the list; an empty list (0x10032457 / 0x10032459) or a value not found (the walk along next: 0x1003245b-0x10032465 -> 0x10032467) ends there; the found node is unlinked as above (0x1003246c-0x100324b7, header offsets +0x1338 head, +0x133c back, +0x1340 cursor, +0x1344 count). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: voiceListRemove (25 vectors, 19 distinct results, 18 changing state, `log/diff/00032440_sound_voiceListRemove.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10032469, 0x100324c0): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10032441 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -65,14 +65,17 @@ int __cdecl SetButtonA_re(void* p, int a, int b, int c) {
 
 // 0x00476310  Widget_setQuad(a, b, c, d): stores the four args to the dwords at this+0x6c, this+0x7c, this+0x8c,
 // this+0x9c (0x00476318, 0x0047631f, 0x00476326, 0x0047632c).
-typedef void(__fastcall* SetQuad_t)(void*, void*, int, int, int, int);
+// eax at the `ret 0x10` (0x00476332) is the third argument, loaded at 0x0047631b for the +0x8c store; callers return it
+// (drawCenteredText2 0x00404bc0 on NULL text), so the reimplementation returns it too (was void until 2026-10-11).
+typedef int(__fastcall* SetQuad_t)(void*, void*, int, int, int, int);
 SetQuad_t SetQuad_orig;
-void __fastcall SetQuad_re(void* self, void*, int a, int b, int c, int d) {
+int __fastcall SetQuad_re(void* self, void*, int a, int b, int c, int d) {
     const unsigned t = reinterpret_cast<unsigned>(self);
     at<int>(t + 0x6c) = a;
     at<int>(t + 0x7c) = b;
     at<int>(t + 0x8c) = c;
     at<int>(t + 0x9c) = d;
+    return c;                                                                // 0x0047631b
 }
 
 // 0x004801f0  Window::visible(): 0 when bit 0 of the byte at this+0xa0 is clear (0x004801f0); else, with a parent

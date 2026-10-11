@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006020`), 194 bytes, 54 instructions, subsystem `au
 Constructs a WaveStream: base ctor 0x1002e930, installs vtable 0x1005b1c0 and zeroes the stream fields. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00006020 WaveStream::ctor (VA 0x10006020). Base constructor Ch5c178_ctor 0x1002e930 (thunk 0x1000125d, call 0x1000603f) on this; +0x5c, +0x60, +0x64, +0x68 = 0 (0x1000604a-0x10006053); the vtable 0x1005b1c0 at +0 (0x10006059); +0xc8 = 0 (0x1000605f); +0x58 = 0 (0x10006056 / 0x1000606a); 0x12 zero dwords from +0x6c (rep stosd 0x1000606e-0x10006083); +0xb8, +0xbc, +0xb4 = 0 (0x10006071 / 0x10006077 / 0x1000607d); +0xc4 and +0xc0 = 0 (0x1000608e / 0x10006094); Sound_setSourceType 0x1002ad10 (thunk 0x100018a2) with the argument 4 (0x10006085-0x1000609a); +0xd4 = 0, +0xc0 = 0, +0xcc = 0, +0xd0 = 0 (0x100060a7-0x100060b9); +0xd8, +0xdc, +0xe0, +0xe4 = 0 (0x100060bf-0x100060cc) and the word at +0xe8 = 0 (0x100060cf). Returns this (0x100060c1). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: WaveStream::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006020_sound_WaveStream_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100060e1): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10006035 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

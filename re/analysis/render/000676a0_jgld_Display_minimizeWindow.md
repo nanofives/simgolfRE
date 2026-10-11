@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000676a0`), 73 bytes, 30 instructions, subsystem `rend
 Calls ShowWindow(this+0x144, SW_MINIMIZE=6). (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Minimizes the Display's window: ShowWindow ([this+0x144], SW_MINIMIZE = 6) (`push 6` 0x100676bf, call 0x100676cb), ShowWindow's result left in eax. Slot 6 (+0x18) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::minimizeWindow (12 vectors, 11 distinct results, 12 changing state, `log/diff/000676a0_jgld_Display_minimizeWindow.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100676a0@f_100676a0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100676e8): callee pops 0 bytes of stack arguments.

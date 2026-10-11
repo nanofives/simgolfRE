@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000046a0`), 68 bytes, 28 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+void __thiscall, no stack argument (plain `ret` at 0x100046e3). Two calls on `this` + 0xc (add ecx, 0xc at 0x100046c0 and 0x100046cb): the fstreambase destructor 0x10033cd0 (call 0x100046c3) and the ios destructor 0x10034cd0 (call 0x100046ce). Callers: loadLighting 0x10006dd0 (thunk 0x10001019 at 0x100072cc and 0x10006e4e) and two atexit-style stubs (hooks.csv: 0x10033940, 0x10041170). Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: ifstream::{vbase dtor} (4 vectors, 4 distinct results, 4 changing state, `log/diff/000046a0_Terrain_ifstream_{vbase dtor}.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_iostream.cpp` as `??_Difstream@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100046e3): callee pops 0 bytes of stack arguments.

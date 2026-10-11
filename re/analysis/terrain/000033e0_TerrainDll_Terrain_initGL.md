@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000033e0`), 272 bytes, 81 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Sets the fixed-function state: glHint(0x0c50, 0x1101) (call [0x101135d8] at 0x10003409), glEnable(0x0b20) (0x10003418), glHint(0x0c52, 0x1102), glEnable(0x0de1), glEnable(0x0b50), then the front face from the BYTE at this+0x28 (xor ecx, ecx / mov cl, [eax+0x28] / test ecx, ecx / je 0x1000348d at 0x1000346e-0x10003475): non-zero gives glFrontFace(0x0900) (0x10003479-0x1000347e), zero glFrontFace(0x0901) (0x1000348f-0x10003494), then glEnable(0x0b44), glEnableClientState(0x8074) and glEnableClientState(0x8075) (0x100034b7, 0x100034cb); `mov al, 1` (0x100034dd) returns true. Caller: Terrain::initSystem 0x10009c80 (hooks.csv). The A/B puts the import stand-in on the OPENGL32 slots, so the ten calls (import, arguments, order) are compared state. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::initGL (8 vectors, 2 distinct results, 8 changing state, `log/diff/000033e0_Terrain_Terrain_initGL.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile4.cpp` as `?initGL@Terrain@@QAE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100034ef): callee pops 0 bytes of stack arguments.

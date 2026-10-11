@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000679d0`), 148 bytes, 47 instructions, subsystem `ren
 allocates and constructs a Surface object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Display factory slot 31 (+0x7c of the vtable 0x1011d640) that makes a Surface: operator new (0x4d4) (0x10067a07); a non-NULL block (je 0x10067a1d) is constructed by Surface::ctorOwner (owner) through 0x100017d0 (0x10067a26), NULL returns 0 (0x10067a30). The second argument and `this` are never read; `ret 8` at 0x10067a61. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Factory::createSurface_new (4 vectors, 4 distinct results, 4 changing state, `log/diff/000679d0_jgld_Factory_createSurface_new.path1.csv`); Factory::createSurface_oom (4 vectors, 1 distinct results, 4 changing state, `log/diff/000679d0_jgld_Factory_createSurface_oom.path1.csv`); Factory::createSurface_empty (4 vectors, 4 distinct results, 4 changing state, `log/diff/000679d0_jgld_Factory_createSurface_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?createSurface@Factory@@QAEPAUSurface@@PAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10067a61): callee pops 8 bytes of stack arguments.

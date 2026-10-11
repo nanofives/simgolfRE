@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 261 bytes, 85 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 centers the window in the screen (g_83ad50 width/height) using m_1bc or m_1ac per m_a0 bit2, adjusts via m_130 then moveTo (`re/names/exe_3.tsv`)
 
+## Purpose
+Thiscall, no stack arguments. W = display slot +0xa8 and H = slot +0xac (0 without a display, 0x0047b32a / 0x0047b38b), read in that order. With byte[+0xa0] & 2 clear (0x0047b31d / 0x0047b324) x = ((A.left - A.right) + W) / 2 and y = ((A.top - A.bottom) + H) / 2 from the RECT A at +0x1ac (0x0047b39f..0x0047b3d8); with it set the RECT B at +0x1bc (0x0047b33e..0x0047b385); the divisions truncate toward zero (`cdq; sub eax, edx; sar eax, 1`, 0x0047b34e..0x0047b353). A parent at +0x130 (0x0047b3dc) converts the pair through View::fromParent 0x0047b200 (0x0047b3f9); then Window::moveTo 0x0047b420(this, x, y) (0x0047b40a), whose result 0 is returned. Keys `Window::center_big` (display 640 x 480), `_odd` (3 x 5: negative odd sums, truncation versus floor), `_nodisp`; 8 windows each. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: Window::center_big (8 vectors, 8 distinct results, 8 changing state, `log/diff/0047b310_Window_center_big.path1.csv`); Window::center_odd (8 vectors, 8 distinct results, 8 changing state, `log/diff/0047b310_Window_center_odd.path1.csv`); Window::center_nodisp (8 vectors, 8 distinct results, 8 changing state, `log/diff/0047b310_Window_center_nodisp.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_b.cpp` as `?center@C47b310@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047b414): callee pops 0 bytes of stack arguments.

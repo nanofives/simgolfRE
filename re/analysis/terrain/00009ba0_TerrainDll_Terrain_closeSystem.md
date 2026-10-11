@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00009ba0`), 179 bytes, 63 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+void __thiscall, no stack argument (plain `ret` at 0x10009c52). The GL context handle is the dword at this+0 (cmp dword ptr [eax], 0 / jne at 0x10009bc0-0x10009bc3): zero returns at once (jmp 0x10009c42). Otherwise wglMakeCurrent(0, 0) (call [0x10113618] at 0x10009bcd); a zero result shows MessageBoxA(0, 0x1005f404, 0x1005f420, 0x40) (call [0x101136d8] at 0x10009bee). wglDeleteContext(this[0]) (call [0x1011361c] at 0x10009c03); a zero result shows MessageBoxA(0, 0x1005f3e8, 0x1005f420, 0x40) (0x10009c24). The handle is zeroed (0x10009c34) and Terrain::reloadTextures 0x100380a0 runs (thunk 0x100012ee at 0x10009c3d). Caller: exe 0x00449860. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::closeSystem (4 vectors, 3 distinct results, 2 changing state, `log/diff/00009ba0_Terrain_Terrain_closeSystem.path1.csv`); Terrain::closeSystem_mc0 (4 vectors, 3 distinct results, 2 changing state, `log/diff/00009ba0_Terrain_Terrain_closeSystem_mc0.path1.csv`); Terrain::closeSystem_del0 (4 vectors, 3 distinct results, 2 changing state, `log/diff/00009ba0_Terrain_Terrain_closeSystem_del0.path1.csv`); Terrain::closeSystem_both0 (4 vectors, 3 distinct results, 2 changing state, `log/diff/00009ba0_Terrain_Terrain_closeSystem_both0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small2.cpp` as `?closeSystem@Terrain@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10009c52): callee pops 0 bytes of stack arguments.

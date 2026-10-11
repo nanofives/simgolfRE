@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00010860`), 131 bytes, 53 instructions, subsystem `au
 Reads the capture cursor (GetCurrentPosition vtbl+0x10) and sets the lock pointers +0x24/+0x28 for the next capture read. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00010860 DsBuffer::lockCaptureRegion (VA 0x10010860). Two stack arguments (a1 = a byte count, a2 = a result cell; `ret 8`). The interface's slot +0x10 (GetCurrentPosition, `call [ecx + 0x10]` 0x10010881) gets two local cursors (both zeroed first: 0x10010875 / 0x10010879), the first of which (the write cursor) is used; a non-zero result returns 6 (0x10010884 / 0x1001088f). Bit 0 of the byte at +4 set: it is cleared (0x1001089e-0x100108a5), the start is dword +0x40 + the cursor wrapped at the size in +0x78 (0x100108a8-0x100108b9) and +0x28 / +0x24 take the cursor (0x100108ad / 0x100108b2); clear: the start is dword +0x30 (0x100108bb). The end a1 + start is wrapped at +0x78 as well (0x100108c2-0x100108cb), +0x24 takes the cursor again (0x100108cd), +0x30 takes the end (0x100108d4), *a2 takes the start (0x100108d8) and the result is 0 (0x100108da). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: DsBuffer::lockCaptureRegion (60 vectors, 45 distinct results, 60 changing state, `log/diff/00010860_sound_DsBuffer_lockCaptureRegion.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10010892, 0x100108e0): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x10010864 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

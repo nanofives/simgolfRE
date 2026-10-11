@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000089e0`), 1200 bytes, 380 instructions, subsystem
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exported local renderer (`ret 0xc`; exe caller 0x004498a0). A NULL pTile would reach the debug CRT assert. glLoadIdentity, glPushMatrix, glRotated, glRotatef, the translate (gated on pTile, the pivot's coordinates), setViewAngle; then a 5 x 5 window around pTile in an order set by the angle kind (kind 0 y ascending / x descending; kind 1 x descending / y descending; kind 2 y descending / x ascending; kind 3 y ascending / x ascending): every tileAt result that is non-NULL and not hidden goes to drawTile and drawTileObjects with the centre pTile; afterwards the draw list is rendered in order, cleared, glPopMatrix, glFlush. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::localRender (48 vectors, 48 distinct results, 48 changing state, `log/diff/000089e0_Terrain_Terrain_localRender.path1.csv`); Terrain::localRender_z1 (48 vectors, 48 distinct results, 48 changing state, `log/diff/000089e0_Terrain_Terrain_localRender_z1.path1.csv`); Terrain::localRender_z2 (48 vectors, 48 distinct results, 48 changing state, `log/diff/000089e0_Terrain_Terrain_localRender_z2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_localrender.cpp` as `?localRender@Terrain@@QAEXPAVTile@@0M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10008e8d): callee pops 12 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000380a0`), 244 bytes, 76 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Frees the texture table when the loaded flag (byte this+0x29, test at 0x100380c0-0x100380c7) is set; clear returns at once (jmp 0x10038183). Otherwise for each of the 0x25 types (cmp [ebp-8], 0x25 at 0x100380e0) and 0x19 variations (cmp [ebp-0xc], 0x19 at 0x100380fc) glDeleteTextures(9, &g_textures[type][variation]) with the row at 0x100687f8 + type * 0x384 + variation * 0x24 (0x10038105-0x1003811d, call [0x10113674]) and the nine dwords of that row are set to 0 (0x1003812a-0x1003815b); each type's `loaded` dword at this + type * 0x18 + 0x40 is zeroed (0x10038166-0x10038177) and the flag byte is cleared (0x1003817f). Callers (hooks.csv): Terrain::loadNewCourseType 0x10001af0, ~Terrain 0x10003090, relight 0x100076e0, closeSystem 0x10009ba0. The import stand-in records 925 glDeleteTextures calls with the nine ids each reads; g_textures is state. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::reloadTextures (8 vectors, 6 distinct results, 5 changing state, `log/diff/000380a0_Terrain_Terrain_reloadTextures.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile4.cpp` as `?reloadTextures@Terrain@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10038193): callee pops 0 bytes of stack arguments.

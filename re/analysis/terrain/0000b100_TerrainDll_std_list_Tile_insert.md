@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b100`), 209 bytes, 79 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Inserts one element before `pos` and returns the new position through the return slot (`ret 0xc` at 0x1000b1ce; slot [ebp+8], pos [ebp+0xc], value reference [ebp+0x10]). A node is bought with _Buynode(next = pos node, prev = pos node's prev) 0x1000b500 (0x1000b12c-0x1000b13e), pos->prev = new (0x1000b143-0x1000b151), new->prev->next = new (0x1000b164-0x1000b17e), the element is copied to new + 8 by allocator::construct 0x1000b690 (0x1000b194), the count at +8 is incremented (0x1000b199-0x1000b1a5) and the new node goes to the slot through iterator::iterator 0x1000b750 (0x1000b1af). No branch. Callers: push_back 0x1000b090 (call 0x1000b0c7) and Terrain::drawTile 0x100381a0. The node comes from operator new 0x10018c90, i.e. from the stand-in's arena. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::list<Tile*>::insert (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b100_Terrain_std_list(TileP)_insert.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?insert@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@V312@ABQAVTile@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000b1ce): callee pops 12 bytes of stack arguments.

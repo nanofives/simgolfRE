@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a860`), 93 bytes, 36 instructions, subsystem `rend
 if g_logPalette (0x10128738) exists, AnimatePalette entries 10..0xec from this+0x34 (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Pushes the Palette's entries to the GDI palette: when the module palette 0x10128738 is non-zero (cmp 0x1006a87d, jne 0x1006a884), AnimatePalette (it, 10, 0xec, this + 0x34) (pushes 0x1006a890..0x1006a898, call 0x1006a89f): entries 10..245 from the PALETTEENTRY array at +0x34, leaving the static colours 0..9 and 246..255 alone. eax: AnimatePalette's result, or the /GZ fill 0xcccccccc when the palette is 0. Slot 3 (+0xc) of the Palette vtable 0x1011db10. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Palette::animate (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a860_jgld_Palette_animate.path1.csv`); Palette::animate_zero (3 vectors, 1 distinct results, 0 changing state, `log/diff/0006a860_jgld_Palette_animate_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?animate@Palette@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a8bc): callee pops 0 bytes of stack arguments.

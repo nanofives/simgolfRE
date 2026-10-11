@@ -34,3 +34,12 @@ def test_unreferenced_global_has_no_installer():
     # TextView::create's only reference is the global 0x4e44ec, which no instruction addresses
     refs = pc.references(pc.mod("golf_clean.exe"), 0x00491310)
     assert refs and not any(inst for *_, inst in refs)
+
+
+def test_misaligned_bytes_in_code_are_not_a_store():
+    # simulateShot 0x424120 holds the bytes 04 b9 4b 00 (= 0x004bb904) at 0x004242ef: the last byte of `test byte ptr
+    # [esi + 0x5794d1], 4` and the first three of `mov ecx, 0x4b` (0x004242f0), not an operand.
+    # Before the operand check (round 27) that made it the "installer" of a table at 0x004bb904 for the view thunks;
+    # thunk 0x491940 is slot 6 of the vtable 0x4bb8d0 that viewCtor4a0740 and Dialog::viewDtor install.
+    found = installers("golf_clean.exe", "0x491940")
+    assert {0x004a0740, 0x00491500} <= found and 0x00424120 not in found

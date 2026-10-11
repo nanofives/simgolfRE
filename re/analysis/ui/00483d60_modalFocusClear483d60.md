@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 31 bytes, 7 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 clears focus (g_83ab40/44=0) via screen manager g_83ad50 vtable f83 and finish497b20 (`re/names/exe_3.tsv`)
 
+## Purpose
+Argument-free (cdecl). Calls display slot +0x14c (0x00483d68), clears [0x0083ab40] and [0x0083ab44] (`xor eax, eax; mov [0x0083ab40], eax; mov [0x0083ab44], eax`, 0x00483d6e..0x00483d75) and jmps gfxFlushB (0x00483d7a) with eax = 0. Keys as modalPush483d40; the state regions include the two cleared dwords (preset to junk). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: modalFocusClear483d60 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483d60_modalFocusClear483d60.path1.csv`); modalFocusClear483d60_b8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483d60_modalFocusClear483d60_b8.path1.csv`); modalFocusClear483d60_b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483d60_modalFocusClear483d60_b0.path1.csv`); modalFocusClear483d60_both (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483d60_modalFocusClear483d60_both.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00483d60@f_00483d60@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

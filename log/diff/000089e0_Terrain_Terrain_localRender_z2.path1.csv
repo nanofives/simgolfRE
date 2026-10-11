@@ -1,0 +1,54 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj $tile1275 $tile1275 0,void,void,True,1b5cece8,1b5cece8,True
+$obj $tile1275 $tile1275 90,void,void,True,4fa5d829,4fa5d829,True
+$obj $tile1275 $tile1275 180,void,void,True,29baffe1,29baffe1,True
+$obj $tile1275 $tile1275 45,void,void,True,ed5fd9c6,ed5fd9c6,True
+$obj $tile1275 $tile51 0,void,void,True,fa80e0e8,fa80e0e8,True
+$obj $tile1275 $tile51 90,void,void,True,1affed39,1affed39,True
+$obj $tile1275 $tile51 180,void,void,True,73e9ebb1,73e9ebb1,True
+$obj $tile1275 $tile51 45,void,void,True,33d8f0f6,33d8f0f6,True
+$obj $tile51 $tile1275 0,void,void,True,8b8426da,8b8426da,True
+$obj $tile51 $tile1275 90,void,void,True,bf58e269,bf58e269,True
+$obj $tile51 $tile1275 180,void,void,True,9b76700b,9b76700b,True
+$obj $tile51 $tile1275 45,void,void,True,04d8b5ca,04d8b5ca,True
+$obj $tile51 $tile51 0,void,void,True,30a49f0a,30a49f0a,True
+$obj $tile51 $tile51 90,void,void,True,77c94179,77c94179,True
+$obj $tile51 $tile51 180,void,void,True,4ad5093b,4ad5093b,True
+$obj $tile51 $tile51 45,void,void,True,a80f083a,a80f083a,True
+$obj $tile2448 $tile1275 0,void,void,True,73df8d19,73df8d19,True
+$obj $tile2448 $tile1275 90,void,void,True,ebc8ae46,ebc8ae46,True
+$obj $tile2448 $tile1275 180,void,void,True,5bc8307c,5bc8307c,True
+$obj $tile2448 $tile1275 45,void,void,True,5a0e2676,5a0e2676,True
+$obj $tile2448 $tile51 0,void,void,True,c691b149,c691b149,True
+$obj $tile2448 $tile51 90,void,void,True,9f0a30d6,9f0a30d6,True
+$obj $tile2448 $tile51 180,void,void,True,876f70ec,876f70ec,True
+$obj $tile2448 $tile51 45,void,void,True,85a25906,85a25906,True
+$obj $tile0 $tile1275 0,void,void,True,314a028d,314a028d,True
+$obj $tile0 $tile1275 90,void,void,True,9c5a6ac9,9c5a6ac9,True
+$obj $tile0 $tile1275 180,void,void,True,8564ef2c,8564ef2c,True
+$obj $tile0 $tile1275 45,void,void,True,43aa9568,43aa9568,True
+$obj $tile0 $tile51 0,void,void,True,a32c84dd,a32c84dd,True
+$obj $tile0 $tile51 90,void,void,True,655121d9,655121d9,True
+$obj $tile0 $tile51 180,void,void,True,acc7b82c,acc7b82c,True
+$obj $tile0 $tile51 45,void,void,True,eae02a78,eae02a78,True
+$obj $tile125 $tile1275 0,void,void,True,220811aa,220811aa,True
+$obj $tile125 $tile1275 90,void,void,True,51a9d8a7,51a9d8a7,True
+$obj $tile125 $tile1275 180,void,void,True,095ada8a,095ada8a,True
+$obj $tile125 $tile1275 45,void,void,True,e10a1448,e10a1448,True
+$obj $tile125 $tile51 0,void,void,True,3a1f7eea,3a1f7eea,True
+$obj $tile125 $tile51 90,void,void,True,7df17bb7,7df17bb7,True
+$obj $tile125 $tile51 180,void,void,True,8668491a,8668491a,True
+$obj $tile125 $tile51 45,void,void,True,62e797d8,62e797d8,True
+$obj $tile1224 $tile1275 0,void,void,True,b577bb65,b577bb65,True
+$obj $tile1224 $tile1275 90,void,void,True,c6f8a20f,c6f8a20f,True
+$obj $tile1224 $tile1275 180,void,void,True,1dfbee53,1dfbee53,True
+$obj $tile1224 $tile1275 45,void,void,True,cb098ea1,cb098ea1,True
+$obj $tile1224 $tile51 0,void,void,True,4829afb5,4829afb5,True
+$obj $tile1224 $tile51 90,void,void,True,9332959f,9332959f,True
+$obj $tile1224 $tile51 180,void,void,True,beca1b23,beca1b23,True
+$obj $tile1224 $tile51 45,void,void,True,d0d42ce1,d0d42ce1,True
+state_regions,$list+0x0:12 $head+0x0:12 $arena+0x0:32784 $freelog+0x0:1028 $implog+0x0:196608 $view+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x729dae20,original=0x1440c60,2026-10-11T06:09:59
+distinct_results,48,,
+VERDICT,GREEN,48,

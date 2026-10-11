@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00003830`), 257 bytes, 68 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Switches from light 0 to a black light 1: glDisable(0x4000) (push 0x4000 at 0x1000384f, call [0x10113680] at 0x10003854), three float4 arrays of zeros built on the stack (0x10003861-0x100038b0) passed to glLightfv(0x4001, 0x1200 / 0x1201 / 0x1202, array) (ambient, diffuse, specular; call [0x10113684] at 0x100038c5, 0x100038e2, 0x100038ff), then glEnable(0x4001) (0x1000390e). Plain `ret` at 0x10003930, `this` unused. Caller: Terrain::lowerEdge 0x10038900 (hooks.csv). The stand-in records each glLightfv's four floats by content, not the stack pointer. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::light1Off (4 vectors, 1 distinct results, 4 changing state, `log/diff/00003830_Terrain_Terrain_light1Off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small3.cpp` as `?light1Off@Terrain@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003930): callee pops 0 bytes of stack arguments.

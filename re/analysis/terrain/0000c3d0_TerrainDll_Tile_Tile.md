@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x0000c3d0`), 267 bytes, 80 instructions, subsystem `
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Tile destructor: +0x2c and +0x30 are set to -1 (0x1000c40c, 0x1000c416), +0, +4, +8 and +0xc to 0 (0x1000c420-0x1000c43d) and the byte +0x244 to 0 (0x1000c447). Each non-NULL neighbour pointer then gets Tile::setNeighbour 0x1000c520 (thunk 0x10001113) with the side that points back and a NULL tile: [+0x34] side 1 (test 0x1000c451 / je 0x1000c466, call 0x1000c461), [+0x38] side 0 (0x1000c469 / 0x1000c46d, 0x1000c479), [+0x3c] side 3 (0x1000c481 / 0x1000c485, 0x1000c491) and [+0x40] side 2 (0x1000c499 / 0x1000c49d, 0x1000c4a9); finally Faces::~Faces 0x10001fe0 on +0x44 (thunk 0x10001348, call 0x1000c4bb). Plain `ret` at 0x1000c4da with an SEH frame. No caller by call (hooks.csv installers: Terrain::Terrain 0x10002ae0, Terrain::~Terrain 0x10003090 and the atexit stubs). The 12 subject tiles carry every neighbour subset (masks 15, 1, 2, 4, 8, 3, 12, 5, 10, 0, 9, 6) and the neighbours are tiles of their own, so the cleared back pointers are compared. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Tile::~Tile (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000c3d0_Terrain_Tile_~Tile.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile6.cpp` as `??1Tile@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000c4da): callee pops 0 bytes of stack arguments.

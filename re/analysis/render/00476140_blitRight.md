@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 399 bytes, 144 instructions, subsystem `render`. Mechan
 blit helper used by the composite drawer (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall `(this, tile, ox, oy, x, y, w, h)`, ret 0x1c. this+4 NULL returns 7 (0x00476150..0x00476160); the display (when present) gets slot +0x9c(1, 1, 1) (0x00476163..0x00476175); the head as blitLeft (0x0047617b..0x004761e1); tw / th = tile+0x18 / tile+0x1c (the record fields, 0x004761ea / 0x004761ed); either 0 returns 0 with the clip left set (0x004761f0..0x004761fe); the same counts; each cell is Image_draw 0x00473e60 on the tile (ecx = tile): (this, cx, cy, 0) (call at 0x00476292); the clip is restored (0x004762be). Keys `blitRight_full`, `_small`, `_nodispnone` (no display, clip outside: only vectors that return before an Image_draw, which dereferences [0x0083ad50] without a test); 64 vectors each. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: blitRight_full (64 vectors, 52 distinct results, 63 changing state, `log/diff/00476140_blitRight_full.path1.csv`); blitRight_small (64 vectors, 14 distinct results, 63 changing state, `log/diff/00476140_blitRight_small.path1.csv`); blitRight_nodispnone (64 vectors, 2 distinct results, 63 changing state, `log/diff/00476140_blitRight_nodispnone.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x1c` (at 0x00476160, 0x004762cc): callee pops 28 bytes of stack arguments.
 - `ecx` is read at 0x00476147 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

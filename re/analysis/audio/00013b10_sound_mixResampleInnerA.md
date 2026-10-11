@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00013b10`), 549 bytes, 185 instructions, subsystem `a
 Rate-converting PCM render/mix inner loop writing short* output; one format variant of the software mixer family (specific bit depth/channel count not individually determined). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00013b10 mixResampleInnerA (VA 0x10013b10): stereo 16-bit frames with a gain per channel, added with saturation. The gains are the dwords +0x1e8 (left) and +0x1f8 (right) of the voice in mode 1 (0x10013b36-0x10013b48) and +0x78 / +0x68 otherwise (0x10013b63-0x10013b6c); the sample record, the flags and the chain are mixRenderA's (0x10013b4b-0x10013b61, 0x10013b6f-0x10013bcd). A frame adds the low dword of (short)in[0] * gainL and of (short)in[1] * gainR to two consecutive dwords (0x10013be2-0x10013c2c, `imul edx` 0x10013be8 / 0x10013c0f), esi += 4 (0x10013c2f), limit test (0x10013c32 / 0x10013c35). The wrap handler is mixRenderA's except that a NON-chained looping voice stores 0 at [ebx + 4] (0x10013c4f), where ebx is the chained flag (0 on that path): the original faults there, so no vector takes that arm. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: mixResampleInnerA (38 vectors, 30 distinct results, 38 changing state, `log/diff/00013b10_sound_mixResampleInnerA.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10013d0e, 0x10013d34): callee pops 0 bytes of stack arguments.
 

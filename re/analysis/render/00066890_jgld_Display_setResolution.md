@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066890`), 171 bytes, 56 instructions, subsystem `ren
 sets the target display resolution (width,height) (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Switches the screen to w x h at the current depth: EnumDisplaySettingsA (NULL, ENUM_CURRENT_SETTINGS = -1, this + 0x98) (0x100668c2; result not tested), a copy of the 0x94-byte DEVMODE into a local by memcpy 0x1007f3a0 (0x100668e5), dmPelsWidth +0x6c = w (0x100668f0), dmPelsHeight +0x70 = h (0x100668f6), dmFields +0x28 = 0x1c0000 (DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT, 0x100668f9), ChangeDisplaySettingsA (&copy, 4) (0x1006690b); non-zero returns 2, zero 0. `ret 8` at 0x10066938. Slot 27 (+0x6c) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::setResolution_ok (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066890_jgld_Display_setResolution_ok.path1.csv`); Display::setResolution_fail (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066890_jgld_Display_setResolution_fail.path1.csv`); Display::setResolution_mix (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066890_jgld_Display_setResolution_mix.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?setResolution@Display@@QAEHKK@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10066938): callee pops 8 bytes of stack arguments.

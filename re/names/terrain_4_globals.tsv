@@ -1,0 +1,2 @@
+module	addr	name	type	evidence
+Terrain.dll	0x10106b4c	g_terrain	Terrain*	Terrain::getInstance 0x100031a0 tests it (cmp at 0x100031cd), stores the new Terrain there (0x1000321b) and returns it (0x10003221); ~Terrain 0x10003090 clears it (0x1000310e); read at the main menu as a live heap pointer (0x03800040 on 2026-10-11)

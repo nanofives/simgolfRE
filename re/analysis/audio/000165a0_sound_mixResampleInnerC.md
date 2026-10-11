@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000165a0`), 537 bytes, 186 instructions, subsystem `a
 Partial-rate PCM resample path for the C group (used when the sample-rate ratio +0x220 is unity). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x000165a0 mixResampleInnerC (VA 0x100165a0): mixResampleInnerB with plain stores (no accumulation, no saturation: 0x10016699 / 0x100166a4) and without the wrap counter for a NON-chained looping voice (0x100166dd-0x100166f0 has no `inc [ebp - 0x10]`); a chained wrap counts (0x100166f2). The prologue (0x100165ac-0x1001667b) differs from InnerB's only in the fade-step floor. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: mixResampleInnerC (46 vectors, 41 distinct results, 46 changing state, `log/diff/000165a0_sound_mixResampleInnerC.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10016792, 0x100167b8): callee pops 0 bytes of stack arguments.
 

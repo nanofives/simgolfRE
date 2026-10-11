@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 51 bytes, 18 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 constructs a 5-slot resource cache, each slot id set to -1 with cleared object/buffer pointers (`re/names/exe_3.tsv`)
 
+## Purpose
+Initialises a cache of five entries: [this + 4] = 0 (0x00482fda) and the vtable 0x004babbc at [this] (0x00482fdd); entries of 0x10 bytes from this + 8 (edx = this + 0xc 0x00482fe3, ecx = 5 at 0x00482fd5): -1 at edx - 4 (0x00482fe6), 0 at edx (0x00482fed), bytes 0 at edx + 4 and edx + 5 (0x00482fef / 0x00482ff2), 0 at edx + 8 (0x00482ff5), edx += 0x10 (0x00482ff8), loop (`dec ecx` 0x00482ffb, `jne` 0x00482ffc); [this + 4] = 0 again (0x00482ffe); returns this (0x00482fd1 / 0x00483002). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: Cache482fd0_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00482fd0_Cache482fd0_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `??0C482fd0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00483002): callee pops 0 bytes of stack arguments.

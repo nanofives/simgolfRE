@@ -1,0 +1,25 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 0,void,void,True,0ff37de5,0ff37de5,False
+0 0,void,void,True,0ff37de5,0ff37de5,False
+0 90,void,void,True,58b158aa,58b158aa,True
+0 180,void,void,True,b27174af,b27174af,True
+0 270,void,void,True,fb38ae14,fb38ae14,True
+0 360,void,void,True,fb38ae14,fb38ae14,True
+0 45,void,void,True,fb38ae14,fb38ae14,True
+0 90.00000762939453,void,void,True,fb38ae14,fb38ae14,True
+0 89.99999237060547,void,void,True,fb38ae14,fb38ae14,True
+0 180.00001525878906,void,void,True,fb38ae14,fb38ae14,True
+0 179.99998474121094,void,void,True,fb38ae14,fb38ae14,True
+0 $nan,void,void,True,0ff37de5,0ff37de5,False
+0 $pinf,void,void,True,0ff37de5,0ff37de5,False
+0 $ninf,void,void,True,0ff37de5,0ff37de5,False
+0 -90,void,void,True,fb38ae14,fb38ae14,True
+0 1e+30,void,void,True,fb38ae14,fb38ae14,True
+0 0.5,void,void,True,fb38ae14,fb38ae14,True
+0 1e-40,void,void,True,fb38ae14,fb38ae14,True
+0 -180,void,void,True,fb38ae14,fb38ae14,True
+state_regions,0x10070a14+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x729dca30,original=0x14409c0,2026-10-11T05:56:13
+distinct_results,4,,
+VERDICT,GREEN,19,

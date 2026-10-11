@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069b90`), 171 bytes, 62 instructions, subsystem `ui`
 on WM_ACTIVATE invalidates the window, realizes the palette on activate, forwards to the listener (+0x2c), DefWindowProc (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+windowProc 0x100692b0's WM_ACTIVATE handler (cdecl (hwnd, active, lparam, minimized), plain `ret` at 0x10069c3a): InvalidateRect (hwnd, NULL, FALSE) (0x10069bb2); when active != 0 (je 0x10069bc3) and minimized == 0 (jne 0x10069bc9) realizePalette 0x100699c0 (hwnd) through the thunk 0x10001028 (0x10069bcf); the event sink's slot +0x2c with (active, minimized) (0x10069bef); then DefWindowProcA (hwnd, WM_ACTIVATE = 6, (active & 0xffff) | (minimized << 16), lparam) (0x10069c1d), whose result is left in eax. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: onActivate (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069b90_jgld_onActivate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?onActivate@@YAXPAUHWND__@@I0H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069c3a): callee pops 0 bytes of stack arguments.

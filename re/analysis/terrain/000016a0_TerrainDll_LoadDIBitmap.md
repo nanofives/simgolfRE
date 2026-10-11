@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000016a0`), 480 bytes, 173 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+GLubyte* __cdecl LoadDIBitmap(const char* filename, BITMAPINFO** info), the OpenGL SuperBible bitmap loader. fopen(filename, "rb") (mode string 0x1005f01c; call 0x100016c1): NULL returns 0 (0x100016d0). fread(&header, 0xe, 1, fp) must return 1 or more (cmp eax, 1 / jae at 0x100016ed-0x100016f0), else fclose and 0; bfType (word at header+0) must be 0x4d42 (0x10001708-0x10001714). infosize = bfOffBits (header+0xa) - 14 (0x10001729-0x1000172f); *info = malloc(infosize) (call 0x10001736, the store at 0x10001741 happens before the NULL test at 0x10001746); a NULL block closes the file and returns 0. fread(*info, 1, infosize, fp) below infosize (unsigned, jae at 0x10001779) frees *info, closes and returns 0. bitsize = (*info)->biSizeImage (+0x14, 0x1000179c-0x100017a4); zero is replaced by ((biWidth * biBitCount + 7) / 8) * abs(biHeight) with a signed division by 8 and the CRT abs 0x100158b0 (0x100017ad-0x100017e5). bits = malloc(bitsize) (0x100017ec); NULL frees *info, closes, returns 0. fread(bits, 1, bitsize, fp) below bitsize (unsigned, jae at 0x10001834) frees both, closes, returns 0. Otherwise fclose and bits. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: LoadDIBitmap (16 vectors, 13 distinct results, 12 changing state, `log/diff/000016a0_Terrain_LoadDIBitmap.path1.csv`); LoadDIBitmap_f1 (8 vectors, 8 distinct results, 7 changing state, `log/diff/000016a0_Terrain_LoadDIBitmap_f1.path1.csv`); LoadDIBitmap_f2 (8 vectors, 8 distinct results, 7 changing state, `log/diff/000016a0_Terrain_LoadDIBitmap_f2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_bitmap.cpp` as `_LoadDIBitmap` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1000187f): callee pops 0 bytes of stack arguments.

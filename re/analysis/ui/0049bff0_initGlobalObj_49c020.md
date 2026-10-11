@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 dynamic-initializer thunk that constructs the global object built by ctorGlobalObj49c020. (`re/names/exe_5.tsv`)
 
+## Purpose
+Static constructor of the global object at 0x008400c8: `mov ecx, 0x008400c8` at 0x0049bff0 and a tail `jmp` to ctorGlobalObj49c020 0x0049c020 at 0x0049bff5, so the constructor's return (this = 0x008400c8) is the function's return; it takes no argument and has no other instruction. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: initGlobalObj_49c020_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049bff0_initGlobalObj_49c020_live.path1.csv`); initGlobalObj_49c020_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049bff0_initGlobalObj_49c020_pat.path1.csv`); initGlobalObj_49c020_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049bff0_initGlobalObj_49c020_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_0049bff0@f_0049bff0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

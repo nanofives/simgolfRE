@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00006410`), 757 bytes, 239 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exported renderer for path tiles (`ret 8`; exe caller 0x004498a0). top = bottom = left = right = 15 << zoom; glLoadIdentity, glPushMatrix, glRotated, glRotatef, the translate when pivot is non-NULL; no setViewAngle. The window is clamped (top = min(top, Y), bottom = min(bottom, 50 - Y), left = X + 1 when X < left, right = 49 - X when 49 - X < right) and walked y ascending / x descending; a tile with Tile::hasPath 0x10013320 true, not hidden and not culled goes to drawTile and drawTileObjects; then the list is rendered, cleared, glPopMatrix, glFlush. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::pathUpdateRender (24 vectors, 24 distinct results, 24 changing state, `log/diff/00006410_Terrain_Terrain_pathUpdateRender.path1.csv`); Terrain::pathUpdateRender_z1 (24 vectors, 24 distinct results, 24 changing state, `log/diff/00006410_Terrain_Terrain_pathUpdateRender_z1.path1.csv`); Terrain::pathUpdateRender_z2 (24 vectors, 24 distinct results, 24 changing state, `log/diff/00006410_Terrain_Terrain_pathUpdateRender_z2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_pathrender.cpp` as `?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10006702): callee pops 8 bytes of stack arguments.

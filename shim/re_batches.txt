@@ -117,3 +117,8 @@ c3dk.cpp
 c3dm.cpp
 c3di.cpp
 c3dl.cpp
+c3dn.cpp
+c3dr.cpp
+c3dq.cpp
+c3do.cpp
+c3dp.cpp

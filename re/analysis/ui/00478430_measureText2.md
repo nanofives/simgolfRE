@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 256 bytes, 98 instructions, subsystem `ui`. Mechanical 
 measures/draws a wrapped text block (variant) (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall `(this, text, x, y, width)`, ret 0x10. A NULL text (0x0047843b) or width 0 (0x00478443) returns y (0x00478526). The walk of measureText without the lines array and count (0x00478453..0x00478515): the line budget is `width` again at each line (0x0047845d); drawText(this, cur, x, y, len) (0x004784a7 / 0x004784cf) and its result in [0x00839a5c] (0x004784ac / 0x004784d6); y += Widget_value; this+0x1c++; a non-zero indent shrinks width, moves x and is cleared (0x004784f3..0x00478510). Returns y. Keys `measureText2_base` / `_wide` / `_pre`, 23 vectors each (widths 100, 40, 1, 0, 300 and short pieces). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: measureText2_base (23 vectors, 21 distinct results, 17 changing state, `log/diff/00478430_measureText2_base.path1.csv`); measureText2_wide (23 vectors, 21 distinct results, 17 changing state, `log/diff/00478430_measureText2_wide.path1.csv`); measureText2_pre (23 vectors, 21 distinct results, 17 changing state, `log/diff/00478430_measureText2_pre.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x00478523, 0x0047852d): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x00478439 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

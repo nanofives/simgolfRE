@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 42 bytes, 14 instructions, subsystem `video`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 constructs the FLC object base sub-object (C473ab0 ctor), called from Flic::ctor481b50 (`re/names/exe_3.tsv`)
 
+## Purpose
+Surface_ctor 0x00473ab0 on this + 8 (`lea` 0x00482b63, call 0x00482b66), the vtable 0x004ba2dc at [this] (0x00482b6d), zeros at +4 (0x00482b73), +0x38 (0x00482b76), +0x3c (0x00482b79), +0x34 (0x00482b7c), -1 at +0x40 (0x00482b7f); returns this (0x00482b86). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: Flic_ctorBase482b60 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00482b60_Flic_ctorBase482b60.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00482b89): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x00482b61 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

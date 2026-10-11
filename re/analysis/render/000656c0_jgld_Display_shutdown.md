@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000656c0`), 220 bytes, 66 instructions, subsystem `ren
 restores the display mode (ChangeDisplaySettingsA(this+4,0)), destroys the window (DestroyWindow(this+0x144)) and destroys the back-buffer Surface at this+0x148 through its vtable +8, zeroing both handles. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Tears the Display's window down: ChangeDisplaySettingsA (this + 4, 0) (0x100656e8, result not tested); when the window handle +0x144 is non-zero (je 0x100656ff) DestroyWindow (it) (0x1006570d) and +0x144 = 0 (0x1006571d); when +0x148 is non-zero (je 0x10065731) that object's vtable slot +8 is called with ecx = the object and no stack argument (0x10065749) and +0x148 = 0 (0x10065756); then UnregisterClassA (the class name 0x1011d978, +0x140) (0x10065771) and +0x140 = 0 (0x10065781). eax is `this` on return (`mov eax, [ebp-4]` 0x1006577e). Slot 2 (+0x8) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::shutdown (12 vectors, 12 distinct results, 12 changing state, `log/diff/000656c0_jgld_Display_shutdown.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_100656c0@f_100656c0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006579b): callee pops 0 bytes of stack arguments.

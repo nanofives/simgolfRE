@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 56 bytes, 14 instructions, subsystem `render`. Mechanic
 Flushes and releases the global blit surface objects g_0083c328/g_0083c330 and clears the context. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Argument-free (cdecl). flushBlitSurface 0x004924b0 (0x00492470); obj = [0x0083c328]; when set (0x00492475..0x0049247c): obj->slot +0x4c(obj) (0x00492481), obj re-read (0x00492484), obj->slot +8(obj) (0x0049248c) and [0x0083c328] = 0 (0x0049248f); [0x0083c32c] = 0 (0x00492499); jmp 0x004a0890 (a bare `ret`, 0x004a0890). eax is 0 when [0x0083c328] was NULL (0x00492475) and the slot +8 result otherwise. The in-batch callee flushBlitSurface is hooked in the same batch. Keys `shutdownBlitter_obj`, `_noctx`, `_n32c`, `_n328`, `_only328`, `_none`. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: shutdownBlitter_obj (1 vectors, 1 distinct results, 1 changing state, `log/diff/00492470_shutdownBlitter_obj.path1.csv`); shutdownBlitter_noctx (1 vectors, 1 distinct results, 1 changing state, `log/diff/00492470_shutdownBlitter_noctx.path1.csv`); shutdownBlitter_n32c (1 vectors, 1 distinct results, 1 changing state, `log/diff/00492470_shutdownBlitter_n32c.path1.csv`); shutdownBlitter_n328 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00492470_shutdownBlitter_n328.path1.csv`); shutdownBlitter_only328 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00492470_shutdownBlitter_only328.path1.csv`); shutdownBlitter_none (1 vectors, 1 distinct results, 0 changing state, `log/diff/00492470_shutdownBlitter_none.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?close492470@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

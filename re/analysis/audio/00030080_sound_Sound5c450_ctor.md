@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00030080`), 147 bytes, 43 instructions, subsystem `au
 fastcall(obj): runs the buildVoiceRxName base ctor, installs vtable 0x1005c450 (the Sound class, see Sound5c450_dtor), and zeroes the buffer-list fields (+0x5c..+0x68) and the 0x12-dword MMIOINFO at +0x6c. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+0x00030080 Sound5c450_ctor (VA 0x10030080). Base constructor buildVoiceRxName 0x1002ed50 (thunk 0x10001230, call 0x1003009f) on this; then +0x5c, +0x60, +0x64, +0x68 = 0 (0x100300aa-0x100300b3); the vtable 0x1005c450 at +0 (0x100300b9); +0xb8 = 0 and +0xb4 = 0 (0x100300bf / 0x100300c5); +0x58 = 0 (0x100300b6 / 0x100300cb); 0x12 zero dwords from +0x6c (rep stosd 0x100300cd-0x100300d7); Sound_setSourceType 0x1002ad10 (thunk 0x100018a2) with the argument 6 (0x100300d9-0x100300e2); +0xd4, +0xe4, +0xd8, +0xe0 = 0 (0x100300eb-0x100300fd). Returns this (0x10030103). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: Sound5c450_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00030080_sound_Sound5c450_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10030112): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10030095 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

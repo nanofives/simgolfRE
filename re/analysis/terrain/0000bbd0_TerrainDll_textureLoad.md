@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000bbd0`), 483 bytes, 160 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+GLuint __cdecl textureLoad(char* filename, GLboolean alpha, GLenum minfilter, GLenum magfilter, GLenum wrap): the SuperBible texture loader. The bitmap comes from LoadDIBitmap 0x100016a0 (thunk 0x100012df at 0x1000bbf0, call with (filename, &info)); NULL returns 0 (0x1000bbff). swapRedBlue 0x10001b60 (thunk 0x10001109, called with (bits, info) at 0x1000bc10) swaps the colour order. The target is 0x0de0 (1D) when the bitmap's height dword (+8) is 1 and 0x0de1 otherwise (0x1000bc1b-0x1000bc2a). glGenTextures(1, &texture), glBindTexture(target, texture), glTexParameteri(target, 0x2800, 0x2600), (target, 0x2801, 0x2601), (target, 0x2802, wrap), (target, 0x2803, wrap) and glTexEnvi(target, 0x2200, 0x1e01) (0x1000bc33-0x1000bcdf). When minfilter is 0x2601 or 0x2600 (cmp [ebp+0x10] at 0x1000bcec / 0x1000bcf5): glTexImage2D(target, 0, 3, width (+4), height (+8), 0, 0x1907, 0x1401, bits) (0x1000bd00-0x1000bd26). Otherwise a 1D target calls gluBuild1DMipmaps(target, 3, width, 0x1908, 0x1401, bits) (through the import thunk 0x10015784, 0x1000bd3e-0x1000bd59) and a 2D target gluBuild2DMipmaps(target, 3, width, height, 0x1907, 0x1401, bits) (thunk 0x1001577e, 0x1000bd60-0x1000bd82). Then free(info) and free(bits) (0x1000bd8b, 0x1000bd97) and `texture` is returned. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: textureLoad (17 vectors, 13 distinct results, 15 changing state, `log/diff/0000bbd0_Terrain_textureLoad.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_large1.cpp` as `?textureLoad@@YAIPADEIII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000bdb2): callee pops 0 bytes of stack arguments.

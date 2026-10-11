@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066200`), 120 bytes, 47 instructions, subsystem `ren
 records the current desktop display-mode index (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Switches the Display to the desktop's resolution: GetSystemMetrics (SM_CXSCREEN = 0) (0x10066221) and (SM_CYSCREEN = 1) (0x10066235), then this's own vtable slot +0x58 (Display slot 22, setMode) with (cx, cy, flag) (0x1006625b), whose result is left in eax; `ret 4` at 0x10066275. Slot 21 (+0x54) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::setDesktopMode (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066200_jgld_Display_setDesktopMode.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?setDesktopMode@Display@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10066275): callee pops 4 bytes of stack arguments.

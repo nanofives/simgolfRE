@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000e050`), 156 bytes, 54 instructions, subsystem `ut
 Finds the node whose value field +8 equals the argument in the list headed at +0x1c8 and unlinks and frees it. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000e050 removeSoundNode (VA 0x1000e050). One stack argument (`ret 4`), the value to remove; the list header is this+0x1c8. An empty list (0x1000e054 / 0x1000e05c) or a value not found (walk 0x1000e062-0x1000e06c) returns 0x24 (0x1000e06f). The found node is unlinked (0x1000e07c-0x1000e0cb, header +0x1c8 / +0x1cc / +0x1d0 / +0x1d4) and its value (always the argument) is kept in edi (0x1000e0b9): a NULL value returns 0x24 (0x1000e0cc / 0x1000e0d5), anything else clears bit 6 (0x40) of the dword at value+0xc8 (0x1000e0d7-0x1000e0e0) and returns 0 (0x1000e0e6). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: removeSoundNode (25 vectors, 15 distinct results, 14 changing state, `log/diff/0000e050_sound_removeSoundNode.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000e075, 0x1000e0e9): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1000e052 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

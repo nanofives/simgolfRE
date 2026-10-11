@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066650`), 77 bytes, 31 instructions, subsystem `ui`.
 calls GetWindowRect(this+0x144, arg0) to copy the game window rect into the caller's RECT. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+GetWindowRect ([this+0x144], rect) for the caller's RECT (`mov eax, [ebp+8]` 0x1006666f, call 0x1006667d), the import's result left in eax; `ret 4` at 0x1006669a. Slot 14 (+0x38) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::getWindowRect (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066650_jgld_Display_getWindowRect.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066650@C_FUN_10066650@f_10066650@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006669a): callee pops 4 bytes of stack arguments.

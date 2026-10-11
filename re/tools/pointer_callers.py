@@ -24,6 +24,7 @@ reachable, not that it runs; the Purpose of a function promoted this way cites t
 """
 import argparse, bisect, csv, pathlib, struct, sys
 
+import capstone
 import pefile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -70,12 +71,35 @@ class Module:
                     o += 1
         self.ranges.sort()
         self._starts = [r[0] for r in self.ranges]
+        self._decoded = {}
 
     def function_at(self, va):
         i = bisect.bisect_right(self._starts, va) - 1
         if i >= 0 and self.ranges[i][0] <= va < self.ranges[i][1]:
             return self.ranges[i][2]
         return None
+
+    def code_ref(self, va):
+        """The function whose code holds `va` as the immediate or displacement of a decoded instruction, else None.
+        A dword that only matches across instruction bytes (simulateShot 0x424120 holds 0x004bb904 at 0x004242ef,
+        across `test` and `mov ecx, 0x4b`, round 27) is not a store. The function's range is decoded linearly from its start."""
+        i = bisect.bisect_right(self._starts, va) - 1
+        if i < 0 or not (self.ranges[i][0] <= va < self.ranges[i][1]):
+            return None
+        lo, hi, entry = self.ranges[i]
+        if (lo, hi) not in self._decoded:
+            md = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
+            md.detail = True
+            md.skipdata = True
+            ops = {}
+            for ins in md.disasm(self.img[lo - self.base:hi - self.base], lo):
+                if ins.id == 0:          # skipdata
+                    continue
+                for off in (ins.imm_offset, ins.disp_offset):
+                    if off:
+                        ops[ins.address + off] = ins.address
+            self._decoded[(lo, hi)] = ops
+        return entry if va in self._decoded[(lo, hi)] else None
 
     def in_code(self, v):
         return any(lo <= v < hi for lo, hi in self.text)
@@ -105,20 +129,31 @@ def references(m, body):
         for ref in m.find_all(t):
             owner = m.function_at(ref)
             if owner is not None:
-                out.append((ref, "store", f"target 0x{t:08x} written by code", [owner]))
-                continue
+                if m.code_ref(ref) is not None:
+                    out.append((ref, "store", f"target 0x{t:08x} written by code", [owner]))
+                continue            # bytes inside code that are not an operand: a coincidental match
             # walk back through slots that point into code; the table starts at the nearest address that code
             # itself stores (a constructor's `mov [reg], <table>`), so a neighbouring table is never crossed
             start, installers = ref, []
             while m.dword(start) is not None and m.in_code(m.dword(start)):
-                installers = sorted({m.function_at(r) for r in m.find_all(start) if m.function_at(r) is not None})
+                installers = sorted({f for f in map(m.code_ref, m.find_all(start)) if f is not None})
                 if installers:
                     break
                 start -= 4
             if not installers and m.dword(start) == 0:
                 # a NULL-delimited table such as the CRT's C++ dynamic-initializer table (__xc_a 0x4c1000 .. __xc_z
-                # 0x4c1188 in the exe): its first slot follows a NULL whose address the walker (__cinit) loads
-                installers = sorted({m.function_at(r) for r in m.find_all(start) if m.function_at(r) is not None})
+                # 0x4c1188 in the exe): its first slot follows a NULL whose address the walker (__cinit) loads. In the
+                # debug DLLs the .CRT$XC* groups leave runs of NULL slots between __xc_a and the first initializer
+                # (jgld: __cinit 0x1007f160 loads __xc_a 0x10122000, the first slot is 0x10122104), so keep walking back
+                # through NULL and code-pointer slots, at most 0x400 bytes, to the first address code loads.
+                probe = start
+                while not installers and start - probe < 0x400 and m.dword(probe) is not None \
+                        and (m.dword(probe) == 0 or m.in_code(m.dword(probe))):
+                    installers = sorted({f for f in map(m.code_ref, m.find_all(probe)) if f is not None})
+                    if installers:
+                        start = probe
+                        break
+                    probe -= 4
             if not installers:
                 out.append((ref, "table", "in data; no code stores the address of any slot at or before it", []))
                 continue

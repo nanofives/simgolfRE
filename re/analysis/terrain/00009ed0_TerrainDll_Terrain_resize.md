@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x00009ed0`), 487 bytes, 150 instructions, subsystem 
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Sets the viewport and the orthographic projection for a window size (`ret 8` at 0x1000a0b4; width [ebp+8], height [ebp+0xc]). A zero height becomes 1 (0x10009eed-0x10009ef3), then a zero width becomes 1 (0x10009efa-0x10009f00); glViewport(0, 0, width, height) (call [0x10113610] at 0x10009f15), glMatrixMode(0x1701), glLoadIdentity(). Three sizes are replaced by fixed extents (compares at 0x10009f45-0x10009f9b): 800 x 600 gives 1767 x 1325, 1024 x 768 gives 1810 x 1303 and 1280 x 1024 gives 1740 x 1392. The byte this+0x28 (test at 0x10009fb3) selects glOrtho(-w >> 1, w >> 1, h >> 1, -h >> 1, 5000, -5000) when non-zero (0x10009fb5-0x1000a00d) or glOrtho(-w >> 1, w >> 1, -h >> 1, h >> 1, 5000, -5000) when zero (0x1000a01c-0x1000a074), with arithmetic shifts of the negated value; then glMatrixMode(0x1700) and glLoadIdentity(). Callers (hooks.csv): Terrain::setZoomLevel 0x10008fc0 and initSystem 0x10009c80. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::resize (22 vectors, 19 distinct results, 22 changing state, `log/diff/00009ed0_Terrain_Terrain_resize.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_system.cpp` as `?resize@Terrain@@QAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000a0b4): callee pops 8 bytes of stack arguments.

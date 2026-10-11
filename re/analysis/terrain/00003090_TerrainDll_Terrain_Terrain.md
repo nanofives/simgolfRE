@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00003090`), 226 bytes, 60 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Destructor of the 0x164ad0-byte Terrain object (plain `ret` at 0x10003171, an SEH frame with handler 0x1004112d). Width (+0x14) and height (+0x18) are set to -1 (0x100030cc, 0x100030d6). A non-NULL g_collarInfo 0x10106b48 (cmp at 0x100030dd) is released with operator delete 0x10018be0 (call 0x100030f3) and zeroed (0x100030fb); a non-zero dword 0x10106b4c (cmp at 0x10003105) is zeroed (0x1000310e). Terrain::reloadTextures (thunk 0x100012ee at 0x1000311b), then the draw list at +0x164ac4 is destroyed with std::list<Tile*>::~list 0x1000aed0 (thunk 0x10001280 at 0x1000312d), then the CRT vector destructor 0x10018420 runs Tile::~Tile (thunk 0x1000100a pushed at 0x10003139) over the 0x9c4 tiles of 0x248 bytes at +0x3a4 (pushes 0x9c4 and 0x248 at 0x1000313e-0x10003143, call at 0x10003152; the callee removes its own 0x10 argument bytes: no `add esp` follows the call, so it is called as __stdcall). Callers: the exe through the import slot 0x4ba178 (0x00449860) and an atexit stub. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::~Terrain (2 vectors, 2 distinct results, 2 changing state, `log/diff/00003090_Terrain_Terrain_~Terrain.path1.csv`); Terrain::~Terrain_set (2 vectors, 2 distinct results, 2 changing state, `log/diff/00003090_Terrain_Terrain_~Terrain_set.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_small3.cpp` as `??1Terrain@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003171): callee pops 0 bytes of stack arguments.

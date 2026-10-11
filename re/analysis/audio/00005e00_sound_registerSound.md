@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00005e00`), 32 bytes, 11 instructions, subsystem `aud
 Appends the sound object to the global sound registry list g_100b5000 and sets its +0x214 bit1. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00005e00 registerSound (VA 0x10005e00). appendNodeB 0x10005e30 (thunk 0x100026c1, call 0x10005e09) appends this to the module list at 0x100b5000 (ecx = the list header, the sound pushed: 0x10005e03-0x10005e09); then bit 1 (value 2) of the dword at this+0x214 is set (0x10005e0e-0x10005e16); the result is 0 (0x10005e1c). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: registerSound_s0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/00005e00_sound_registerSound_s0.path1.csv`); registerSound_s1 (4 vectors, 4 distinct results, 4 changing state, `log/diff/00005e00_sound_registerSound_s1.path1.csv`); registerSound_s2 (4 vectors, 4 distinct results, 4 changing state, `log/diff/00005e00_sound_registerSound_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_10005e00@f_10005e00@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10005e1f): callee pops 0 bytes of stack arguments.

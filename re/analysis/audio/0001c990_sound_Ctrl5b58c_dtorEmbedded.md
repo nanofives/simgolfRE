@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001c990`), 245 bytes, 92 instructions, subsystem `au
 embedded-base variant of Ctrl5b58c_dtor (this passed as base+0x2c), installs 0x1005b19c/0x1005b58c and clears the list at this-0x20 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_6.md`.
 
+## Purpose
+The four bodies 0x0001b570 ChainObject_dtor, 0x0001c990 Ctrl5b58c_dtorEmbedded, 0x0001c080 Ctrl5b58c_dtor and 0x0001b870 MidiReader_freeContent (VAs 0x1001b570 / 0x1001c990 / 0x1001c080 / 0x1001b870) end in the same two loops over a list whose header sits in the object: head +0xc, tail +0x10, count +0x18; a node is { prev +0, next +4, value +8 }. Popping the head (0x1001b5ab-0x1001b5c6): next = node->next (0x1001b5b2); when next != NULL, next->prev = 0 and head = next (0x1001b5b9 / 0x1001b5bb); otherwise tail = head = 0 (0x1001b5c0 / 0x1001b5c3); value = node->value (0x1001b5c6); operator delete(node) (0x1001b5ca); count -= 1 (0x1001b5cf-0x1001b5d8). Loop 1 (0x1001b5ab-0x1001b5e5): pops while the head is non-NULL; a popped NULL value ends the loop (0x1001b5d6 / 0x1001b5db), a non-NULL value gets its virtual slot 0 called with ecx = value and the argument 1 (`push 1; call [eax]` 0x1001b5df / 0x1001b5e3). Loop 2 (0x1001b5e7-0x1001b651, the compiler's copy for the unwind path): pops while the head is non-NULL WITHOUT calling the value; a popped NULL value ends it (0x1001b61a / 0x1001b61f, 0x1001b64c / 0x1001b651). The count is decremented once per popped node, also when the list ends on a NULL value. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: Ctrl5b58c_dtorEmbedded (10 vectors, 10 distinct results, 10 changing state, `log/diff/0001c990_sound_Ctrl5b58c_dtorEmbedded.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001ca84): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001c9a5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

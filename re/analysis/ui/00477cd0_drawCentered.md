@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 206 bytes, 86 instructions, subsystem `ui`. Mechanical 
 draws centered text within a RECT (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall `(this, text, rect*, len)`, ret 0xc. A NULL text (0x00477cda), NULL rect (0x00477cea), NULL base font +0x5c (0x00477cf7) or a font with no measurer at +4 (0x00477d02) returns 0 (0x00477d93..0x00477d97). The length is clamped: len < 0 returns 0 (0x00477d2a / 0x00477d2c), len = min(len, strlen(text)) and 0 returns 0 (0x00477d3a..0x00477d4c). Otherwise drawRichText 0x004775b0(this, text, rect[0], (rect[3] - rect[1] - Widget_get(this)) / 2 + rect[1], len) (0x00477d84): the vertical centring truncates toward zero (`cdq; sub eax, edx; sar eax, 1`, 0x00477d76..0x00477d7d). Key `drawCentered`: 62 vectors (3 objects x 3 strings x 6 rects/lengths plus the NULL / no-font / no-measurer / empty / over-long cases). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: drawCentered (62 vectors, 29 distinct results, 39 changing state, `log/diff/00477cd0_drawCentered.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?drawCentered@R1C477cd0@@QAEHPBDPAUtagRECT@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00477d90, 0x00477d9b): callee pops 12 bytes of stack arguments.

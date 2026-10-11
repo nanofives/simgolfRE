@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f990`), 333 bytes, 120 instructions, subsystem `a
 When the object is a primary buffer (+0x0 bit1), sets its WAVEFORMATEX via SetFormat (vtbl+0x38) and caches it at +0xa8. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000f990 DsBuffer::setPrimaryFormat (VA 0x1000f990). One stack argument, a WAVEFORMATEX pointer (`ret 4`). The interface pointer at +0x60 and bit 1 of the dword at +0 decide (0x1000f994-0x1000f9d7): interface + bit clear -> 6 (0x1000f9a3 / 0x1000f9a6); no interface + bit set -> 6 (0x1000f9bb / 0x1000f9be); no interface + bit clear -> the format is copied into this+0xa8 (four dwords and a word: 0x1000faae-0x1000fad4) and the result is 0; interface + bit set -> the interface's slot +0x38 (SetFormat, `call [edx + 0x38]` 0x1000f9e5) is called with the format; a zero result copies the format (0x1000fa83-0x1000faa7) and returns 0, a non-zero one is mapped by dsErrorCode. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: DsBuffer::setPrimaryFormat (26 vectors, 25 distinct results, 24 changing state, `log/diff/0000f990_sound_DsBuffer_setPrimaryFormat.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000f9ac, 0x1000f9c4, 0x1000fa10, 0x1000fa1a, 0x1000fa2b, 0x1000fa35, 0x1000fa58, 0x1000fa62 (+5 more)): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1000f992 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

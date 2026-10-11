@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000095a0`), 182 bytes, 78 instructions, subsystem `ren
 draws a dashed line: dispatches on depth to dashedLine8 or dashedLine16. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Draws a dashed line by surface depth (Surface vtable slot 24, +0x60 of 0x1011d0b0; `ret 0x24` at 0x10009653): depth 8 (je 0x100095dd) -> dashedLine8 0x10010870 through 0x10001901 (0x1000960e); 0x10 (je 0x100095e3) -> dashedLine16 0x1000c140 through 0x10001258 (0x1000963c); both with the nine arguments (x1, y1, x2, y2, c1, c2, len1, len2, phase) in order; any other depth draws nothing. Always returns 0 (0x10009641). Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::drawDashedLine (13 vectors, 11 distinct results, 10 changing state, `log/diff/000095a0_jgld_Surface_drawDashedLine.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op9@Surface@@QAEHHHHHIIHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x24` (at 0x10009653): callee pops 36 bytes of stack arguments.

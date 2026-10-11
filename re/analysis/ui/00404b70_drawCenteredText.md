@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 69 bytes, 28 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 draws a horizontally centered text string (`re/names/exe_0.tsv`)
 
+## Purpose
+Cdecl `(text, x, y, colour)`. setQuad 0x00476310(target = [0x004c1570], colour, -1, 2, 2) (pushes 2, 2, -1, colour, 0x00404b7a..0x00404b81) stores colour at target+0x6c, -1 at +0x7c, 2 at +0x8c and +0x9c (0x00476318..0x0047632c). A NULL text returns at once with eax = setQuad's last load, 2 (0x00404b8a / 0x00404b8c, 0x0047631b). Otherwise drawCentered2 0x00477da0(target, text, x, y, 0, strlen(text)) (pushes at 0x00404b9b..0x00404bad, call 0x00404bae) and its result is returned. Keys `drawCenteredText` (target with fonts and draw callback, handle height 100), `_nofont` (target without fonts: drawCentered2 returns 3 at 0x00477e57); 15 vectors each (5 strings including NULL and empty x 3 positions); the target object (0x300 bytes, setQuad fields) and the callback recorder are compared state. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: drawCenteredText (15 vectors, 15 distinct results, 15 changing state, `log/diff/00404b70_drawCenteredText.path1.csv`); drawCenteredText_nofont (15 vectors, 6 distinct results, 15 changing state, `log/diff/00404b70_drawCenteredText_nofont.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small7.cpp` as `?text404b70@@YAXPBDHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00404bb4): callee pops 0 bytes of stack arguments.

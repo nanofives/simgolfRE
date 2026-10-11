@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000675e0`), 73 bytes, 30 instructions, subsystem `rend
 Calls ShowWindow(this+0x144, SW_SHOWNORMAL=1). (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Shows the Display's window: ShowWindow ([this+0x144], SW_SHOWNORMAL = 1) (`push 1` 0x100675ff, call 0x1006760b), leaving ShowWindow's result in eax (thiscall, no stack argument, plain `ret` at 0x10067628). +0x144 is the window handle Display::createWindow stores at 0x1006591f. Slot 4 (+0x10) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::showWindow (12 vectors, 11 distinct results, 12 changing state, `log/diff/000675e0_jgld_Display_showWindow.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100675e0@f_100675e0@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10067628): callee pops 0 bytes of stack arguments.

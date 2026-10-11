@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00001af0`), 91 bytes, 33 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+void __thiscall (int type), `ret 4`. g_courseType 0x10070a0c is compared with the argument (cmp eax, [ebp+8] / je 0x10001b38 at 0x10001b12-0x10001b15): when they differ the global is set to the argument (0x10001b1a) and Terrain::rebuild 0x10003980 (thunk 0x1000130c), Terrain::reloadTextures 0x100380a0 (thunk 0x100012ee) and Terrain::relight 0x100076e0 (thunk 0x1000122b) run on `this` in that order (0x10001b20-0x10001b33). Caller: the exe at 0x00449400. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::loadNewCourseType (12 vectors, 11 distinct results, 10 changing state, `log/diff/00001af0_Terrain_Terrain_loadNewCourseType.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods2.cpp` as `?loadNewCourseType@Terrain@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10001b48): callee pops 4 bytes of stack arguments.

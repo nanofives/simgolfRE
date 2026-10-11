@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00014c70`), 66 bytes, 27 instructions, subsystem `rend
 constructs the Tracked-derived sprite base, setting vtable 0x1011d444. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Constructor of the SpriteBase sub-object, SurfaceBase::ctor's shape: Tracked::ctor through 0x100013e3 (0x10014c90), the SpriteBase vtable 0x1011d444 into this[0] (0x10014c98), returns this (0x10014c9e). Callers Sprite::ctor 0x10014af0 and Sprite::ctorN 0x10014cd0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: SpriteBase::ctor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014c70_jgld_SpriteBase_ctor_empty.path1.csv`); SpriteBase::ctor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014c70_jgld_SpriteBase_ctor_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10014c70@f_10014c70@@YIPAXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10014cb1): callee pops 0 bytes of stack arguments.

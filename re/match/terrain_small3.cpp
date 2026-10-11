@@ -29,7 +29,7 @@ class Terrain {
 public:
     ~Terrain();
     void reloadTextures();                       // 0x100380a0
-    void light1Off();
+    void enableBlackLight1();
     void faceNormal(struct Face* f);
     void hermitePoint(float* out, float t, float* p0, float* p1, float* t0, float* t1);
     int      m_0;
@@ -181,8 +181,8 @@ void Terrain::hermitePoint(float* out, float t, float* p0, float* p1, float* t0,
 }
 
 // Turns light 0 off and light 1 on with black ambient, diffuse and specular.
-// MATCH: Terrain.dll 0x10003830 ?light1Off@Terrain@@QAEXXZ
-void Terrain::light1Off()
+// MATCH: Terrain.dll 0x10003830 ?enableBlackLight1@Terrain@@QAEXXZ
+void Terrain::enableBlackLight1()
 {
     glDisable(GL_LIGHT0);
     float ambient[] = {0.0f, 0.0f, 0.0f, 0.0f};

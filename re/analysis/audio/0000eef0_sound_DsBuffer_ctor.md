@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000eef0`), 78 bytes, 28 instructions, subsystem `aud
 Zero-initializes a 0xd4-byte DirectSound buffer wrapper (clears the interface slots at +0x60/+0x64/+0x68/+0x6c) and fills its DSBUFFERDESC through 0x1000f590. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000eef0 DsBuffer::ctor (VA 0x1000eef0). The dword at +0 loses bit 0 (`and ecx, 0xfffffffe` 0x1000eefb, stored 0x1000ef00) and the byte at +4 gains bit 0 (`or al, 1` 0x1000eefe, stored 0x1000ef04); +0x5c = 0 and +0x44 = 0 (0x1000ef07 / 0x1000ef0a); DsBuffer::initDesc 0x1000f590 (thunk 0x10001505, call 0x1000ef0d) on this; +0xc8, +0xcc, +0xd0, +0x64, +0x68, +0x4c, +0x48, +0x50, +0x54, +0x58 = 0 (0x1000ef12-0x1000ef36). Returns this (0x1000ef39). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: DsBuffer::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000eef0_sound_DsBuffer_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1000eef0@f_1000eef0@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000ef3d): callee pops 0 bytes of stack arguments.

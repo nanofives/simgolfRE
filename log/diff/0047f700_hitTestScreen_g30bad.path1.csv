@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$px0 $py0,obj+0x600,obj+0x600,True,d7a706db,d7a706db,True
+$px1 $py1,obj+0x600,obj+0x600,True,800f5fb0,800f5fb0,True
+$px2 $py2,obj+0x600,obj+0x600,True,9a6cc5cb,9a6cc5cb,True
+$px3 $py3,obj+0x600,obj+0x600,True,361bcd52,361bcd52,True
+$px4 $py4,obj+0x600,obj+0x600,True,af1a0ef3,af1a0ef3,True
+$px5 $py5,obj+0x600,obj+0x600,True,27ad407b,27ad407b,True
+$px6 $py6,obj+0x600,obj+0x600,True,cb19b913,cb19b913,True
+$px7 $py7,obj+0x600,obj+0x600,True,c246e7e3,c246e7e3,True
+$px8 $py8,obj+0x600,obj+0x600,True,01a9676f,01a9676f,True
+$px9 $py9,obj+0x600,obj+0x600,True,32440ec5,32440ec5,True
+$px10 $py10,obj+0x600,obj+0x600,True,7f96d007,7f96d007,True
+$px11 $py11,obj+0x600,obj+0x600,True,bef4da76,bef4da76,True
+state_regions,$rec+0x0:8192 $wins+0x0:6144 $pcells+0x0:128 0x0083ab18+0x0:68 0x00839ab8+0x0:8,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x70c310a0,original=0x1440e60,2026-10-11T05:18:27
+distinct_results,12,,
+VERDICT,GREEN,12,

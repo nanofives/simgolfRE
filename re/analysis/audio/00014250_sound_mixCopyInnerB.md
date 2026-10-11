@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00014250`), 549 bytes, 186 instructions, subsystem `a
 Unity-rate PCM copy/mix path taken by the B-group rated renderers when all 16.16 ratios equal 0x10000; writes short* output. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00014250 mixCopyInnerB (VA 0x10014250): mixCopyInnerC with additions. The prologue (0x10014261-0x10014303) and epilogue (0x10014404-0x10014474) are mixCopyInnerC's. A frame adds (short)in[0] << 16 into two consecutive dwords (0x10014318-0x1001435a): the first add (0x1001431e) saturates by loading 0x7fffffff / 0x80000000 into eax (0x10014329 / 0x10014332), and the second add (0x1001433c) uses that eax. esi += 2 (0x1001435c), limit test (0x1001435f / 0x10014362). The wrap handler (0x1001436c-0x10014401) is mixCopyInnerC's. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: mixCopyInnerB (47 vectors, 46 distinct results, 47 changing state, `log/diff/00014250_sound_mixCopyInnerB.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001444e, 0x10014474): callee pops 0 bytes of stack arguments.
 

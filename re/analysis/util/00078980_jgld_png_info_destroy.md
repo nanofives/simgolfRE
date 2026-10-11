@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078980`), 283 bytes, 97 instructions, subsystem `uti
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+Frees what a png_info owns and clears it (cdecl (png_ptr, info_ptr), plain `ret` at 0x10078a9a): when the text array +0x38 is non-NULL (je 0x1007899f), png_free 0x10078ed0 on the key (+4) of each of the num_text (+0x30) 16-byte entries (signed `jge` 0x100789bc) and on the array (0x100789e8); png_free on +0xa0 and +0xac (pCAL purpose and units, 0x100789fe / 0x10078a14); when the pCAL parameter array +0xb0 is non-NULL (je 0x10078a26) png_free on each of its byte +0xb5 entries (signed `jge` 0x10078a48) and on the array (0x10078a76); then png_info_init 0x10078940 (memset (info, 0, 0xb8), 0x10078a82). Callers png_read_destroy 0x1006d250 and 0x100788d0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: png_info_destroy (12 vectors, 6 distinct results, 10 changing state, `log/diff/00078980_jgld_png_info_destroy.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_png.cpp` as `_png_info_destroy` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078a9a): callee pops 0 bytes of stack arguments.

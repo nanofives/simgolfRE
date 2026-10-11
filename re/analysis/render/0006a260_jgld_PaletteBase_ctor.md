@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a260`), 66 bytes, 27 instructions, subsystem `rend
 PaletteBase constructor: calls base ctor 0x10006ab0 and sets vtable 0x1011db3c. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Constructor of the PaletteBase sub-object, the same shape: Tracked::ctor through 0x100013e3 (0x1006a280), the PaletteBase vtable 0x1011db3c into this[0] (0x1006a288), returns this (0x1006a28e). Caller Palette::ctor 0x1006a150. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: PaletteBase::ctor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a260_jgld_PaletteBase_ctor_empty.path1.csv`); PaletteBase::ctor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a260_jgld_PaletteBase_ctor_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006a260@f_1006a260@@YIPAXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006a2a1): callee pops 0 bytes of stack arguments.

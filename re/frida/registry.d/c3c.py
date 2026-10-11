@@ -29,7 +29,7 @@ HOOKS = {
                                             (42, 0, -42)])]),
 
     # Thiscall field writer: 6 garbage-filled widget slots; state is the whole arena.
-    "Widget_setQuad": dict(module="golf_clean.exe", addr=0x00476310, abi="thiscall", ret="void",
+    "Widget_setQuad": dict(module="golf_clean.exe", addr=0x00476310, abi="thiscall", ret="int",
                            args=["pointer", "int", "int", "int", "int"], fixture="c3c_widgets_quad",
                            state=[("$obj", 0, 0x100 * 10)],
                            vectors=[(f"$w{i}",) + q for i, q in enumerate(_QUADS)]),

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001b710`), 48 bytes, 19 instructions, subsystem `boo
 C++ dynamic initializer of the static object at 0x100b4d20: calls Ctrl5b19c_ctor 0x1000123f with the twelve constants 5, 5, 7, 7, 9, 0xb, 0xb, 0xc, 0xc, 0xe, 0xe, 0x10 and the index 2, then registers its destructor with atexit 0x10042647 (`re/names/undisc_sound.tsv`)
 System writeup: `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+0x0001b510 / 0x0001b6b0 / 0x0001b710 / 0x0001b770 / 0x0001b7d0 dynInit_ctrl100b4b50 / ..4c38 / ..4d20 / ..4a68 / ..4e08 (VAs the same plus 0x10000000): static-initializer stubs. Each pushes 13 constants (the first is the last argument pushed: 0x1001b51c etc.), loads the object address (0x100b4b50 / 0x100b4c38 / 0x100b4d20 / 0x100b4a68 / 0x100b4e08, `mov ecx, imm` 0x1001b52a / 0x1001b6ca / 0x1001b72a / 0x1001b78a / 0x1001b7ea) and calls Ctrl5b19c_ctor 0x1001bee0 (thunk 0x1000123f, `ret 0x34`: call 0x1001b52f etc.), then registers the destructor stub (pushed 0x1001b534 / 0x1001b6d4 / 0x1001b734 / 0x1001b794 / 0x1001b7f4: 0x1001b550 / 0x1001b6f0 / 0x1001b750 / 0x1001b7b0 / 0x1001b810) with _atexit 0x10042647 (call 0x1001b539 etc., cdecl, `pop ecx`) whose result (0 or -1) is the stub's. The five objects are 0xe8 bytes apart in .data and no instruction of the DLL addresses them besides these stubs and the destructor stubs (the log/c3/alt/c3dh_globrefs.py scan). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: dynInit_ctrl100b4d20_ok (1 vectors, 1 distinct results, 1 changing state, `log/diff/0001b710_sound_dynInit_ctrl100b4d20_ok.path1.csv`); dynInit_ctrl100b4d20_fail (1 vectors, 1 distinct results, 1 changing state, `log/diff/0001b710_sound_dynInit_ctrl100b4d20_fail.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001b73f): callee pops 0 bytes of stack arguments.
 

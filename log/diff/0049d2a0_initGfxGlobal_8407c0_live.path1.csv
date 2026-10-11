@@ -1,0 +1,7 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+,obj+0x0,obj+0x0,True,e0b63ffc,e0b63ffc,False
+state_regions,0x008407c0+0x0:40,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6b1af470,original=0x15d0d60,2026-10-11T03:58:04
+distinct_results,1,,
+VERDICT,GREEN,1,

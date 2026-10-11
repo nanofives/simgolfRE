@@ -6,6 +6,9 @@ Module `Terrain.dll` (RVA `0x00003f80`), 42 bytes, 21 instructions, subsystem `t
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`.
 
+## Purpose
+Returns the address of the stream's critical section, `this` + 0x38 (add eax, 0x38 at 0x10003fa0; plain `ret` at 0x10003fa9); it reads nothing. Callers (hooks.csv): ios::lock 0x100018b0 and ios::unlock 0x10037930 among others. A leaf with 16 vectors over distinct objects. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: ios::lockptr (16 vectors, 16 distinct results, `log/diff/00003f80_Terrain_ios_lockptr.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_iostream.cpp` as `?lockptr@ios@@IAEPAU_CRT_CRITICAL_SECTION@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003fa9): callee pops 0 bytes of stack arguments.

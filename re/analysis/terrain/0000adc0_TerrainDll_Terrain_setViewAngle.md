@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000adc0`), 118 bytes, 35 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Maps a camera angle to the view index g_viewAngleIndex 0x10070a14: 0 when the float compares equal to 0.0f or is unordered (fld / fcomp [0x1005f1e0] / fnstsw ax / test ah, 0x40 / je 0x1000adf9 at 0x1000addd-0x1000adeb tests the x87 C3 flag, which equal AND unordered both set, so a NaN gives 0), 1 when the argument's bits are 0x42b40000 (cmp dword ptr [ebp+8], 0x42b40000 / jne 0x1000ae0e at 0x1000adf9-0x1000ae00), 2 when they are 0x43340000 (0x1000ae0e-0x1000ae15), otherwise 3 (0x1000ae23). `ret 4` at 0x1000ae33. Callers (hooks.csv): Terrain::render 0x10005990, localRender 0x100089e0, stripRender 0x10009270 and lowerEdge 0x10038900. The 19 vectors include 0.0, -0.0, NaN, +-infinity, 90, 180, their neighbours in the last mantissa bit, 270, 360 and denormals; the global is a state region. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::setViewAngle (19 vectors, 4 distinct results, 14 changing state, `log/diff/0000adc0_Terrain_Terrain_setViewAngle.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile3.cpp` as `?setViewAngle@Terrain@@QAEXM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000ae33): callee pops 4 bytes of stack arguments.

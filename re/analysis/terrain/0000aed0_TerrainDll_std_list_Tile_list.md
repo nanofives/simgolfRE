@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000aed0`), 123 bytes, 47 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Destructor: clear's three calls (end 0x1000aef4, begin 0x1000af03, range erase 0x1000af12), then the head node [this+4] (mov eax, [edx+4] at 0x1000af1a) is released with _Freenode 0x1000b5b0 (call 0x1000af21) and the head pointer and the count are zeroed (mov dword ptr [ecx+4], 0 at 0x1000af29 and mov dword ptr [edx+8], 0 at 0x1000af33). Plain `ret` at 0x1000af4a, no branch. Callers (hooks.csv): Terrain::~Terrain 0x10003090 and two atexit stubs (0x100410ce, 0x1004111e). The freed pointers (nodes then head) are the recorded evidence. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::list<Tile*>::~list (8 vectors, 8 distinct results, 8 changing state, `log/diff/0000aed0_Terrain_std_list(TileP)_~list.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??1?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000af4a): callee pops 0 bytes of stack arguments.

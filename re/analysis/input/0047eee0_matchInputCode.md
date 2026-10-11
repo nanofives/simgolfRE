@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 65 bytes, 29 instructions, subsystem `input`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 compares the tail of the circular keystroke buffer g_83aba4..g_83abad backward against the code string at 0x4e42ec, returning 1 on a full match (`re/names/exe_3.tsv`)
 
+## Purpose
+matchInputCode (0x0047eee0) compares `len` bytes of the 10-byte circular keystroke buffer 0x0083aba4..0x0083abad against the string at `codePtr`. The buffer cursor is the pointer at 0x004e42ec (0x0047eeee); it is read backward from that cursor, decrementing and wrapping to 0x0083abad once it falls below 0x0083aba4 (0x0047ef01/0x0047ef03/0x0047ef0a). The code pointer `edx` starts at `codePtr + len - 1` and decrements in step (0x0047eeea/0x0047ef02). It returns 1 on the first byte that differs (`jne` -> `mov eax,1` at 0x0047eeff/0x0047ef1a) and 0 when all `len` bytes are equal, or when len <= 0 (`jle` at 0x0047eef7 and `xor eax,eax` at 0x0047ef15). Reimplemented in `shim/src/re/c3e.cpp`; path-1 A/B GREEN: matchInputCode (7 vectors, 2 distinct results, `log/diff/0047eee0_matchInputCode.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0047ef18, 0x0047ef20): callee pops 0 bytes of stack arguments.
 

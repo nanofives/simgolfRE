@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0006a150`), 116 bytes, 36 instructions, subsystem `ren
 Palette constructor: calls PaletteBase::ctor 0x1006a260, sets vtable 0x1011db10, stores its arg at this[0x203] and zeroes this[2]/this[0x204]/this[0x205]. (`re/names/jgld_3.tsv`)
 System writeup: `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Constructor of a Palette for an owner (`ret 4` at 0x1006a1c1): PaletteBase::ctor through 0x10001555 (0x1006a170), the Palette vtable 0x1011db10 (0x1006a178), +0x80c = owner (0x1006a184), +8 = 0 (0x1006a18d), +0x810 = 0 (0x1006a197), +0x814 = 0 (0x1006a1a4); returns this (0x1006a1ae). Caller Factory::createPalette 0x10067910. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Palette::ctor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a150_jgld_Palette_ctor_empty.path1.csv`); Palette::ctor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/0006a150_jgld_Palette_ctor_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_1006a150@C_FUN_1006a150@f_1006a150@@QAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006a1c1): callee pops 4 bytes of stack arguments.

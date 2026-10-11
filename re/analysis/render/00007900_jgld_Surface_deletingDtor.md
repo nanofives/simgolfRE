@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00007900`), 81 bytes, 33 instructions, subsystem `rend
 scalar deleting destructor for Surface. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+VC6 scalar deleting destructor of Surface (`ret 4` at 0x1000794e): Surface::dtor through 0x1000125d (0x10007920), then operator delete 0x1007e6d0 (this) (0x10007933) when bit 0 of the flags is set (`and eax, 1; test; je` 0x10007928..0x1000792d); returns this (0x1000793b). Slot 0 of the Surface vtable 0x1011d0b0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::deletingDtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007900_jgld_Surface_deletingDtor_five.path1.csv`); Surface::deletingDtor_all (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007900_jgld_Surface_deletingDtor_all.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `??_GSurface@@UAEPAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000794e): callee pops 4 bytes of stack arguments.

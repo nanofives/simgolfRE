@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o0,obj+0x0,obj+0x0,True,fea95cf3,fea95cf3,True
+$o1,obj+0x600,obj+0x600,True,7239899f,7239899f,True
+$o2,obj+0xc00,obj+0xc00,True,75cb55a6,75cb55a6,True
+$o3,obj+0x1200,obj+0x1200,True,cd843a38,cd843a38,True
+$o4,obj+0x1800,obj+0x1800,True,2ccb71be,2ccb71be,True
+$o5,obj+0x1e00,obj+0x1e00,True,022b1a23,022b1a23,True
+$o6,obj+0x2400,obj+0x2400,True,a674dea5,a674dea5,True
+$o7,obj+0x2a00,obj+0x2a00,True,b0e80df2,b0e80df2,True
+$o8,obj+0x3000,obj+0x3000,True,fb9862d0,fb9862d0,True
+$o9,obj+0x3600,obj+0x3600,True,3c1bc3f0,3c1bc3f0,True
+$o10,obj+0x3c00,obj+0x3c00,True,bd970901,bd970901,True
+$o11,obj+0x4200,obj+0x4200,True,dbec7d00,dbec7d00,True
+state_regions,$blk+0x0:32768 $glist+0x0:28 $arena+0x0:4112 $freelog+0x0:1028 $implog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x6b32d810,original=0x1190b80,2026-10-11T04:01:02
+distinct_results,12,,
+VERDICT,GREEN,12,

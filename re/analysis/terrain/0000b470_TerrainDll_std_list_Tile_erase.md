@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b470`), 111 bytes, 45 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Removes the nodes from `first` up to (not including) `last` and returns `first` after the loop through the return slot (`ret 0xc` at 0x1000b4dc; slot [ebp+8], first [ebp+0xc], last [ebp+0x10]). The loop head 0x1000b48d calls const_iterator::operator!= 0x1000b3d0 on (&first, &last) (0x1000b494) and leaves when the result byte is zero (and eax, 0xff / test / je 0x1000b4c1 at 0x1000b499-0x1000b4a0); the body runs the postfix operator++ 0x1000b320 on `first` (0x1000b4ab) and erases the old position with the single-position erase 0x1000b800 (0x1000b4ba). Callers: ~list 0x1000aed0 (call 0x1000af12) and clear 0x1000b210 (call 0x1000b252). An empty range (the empty list's head to head, or an equal pair inside a list) runs the loop zero times. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::list<Tile*>::erase (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b470_Terrain_std_list(TileP)_erase.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?erase@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@V312@0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000b4dc): callee pops 12 bytes of stack arguments.

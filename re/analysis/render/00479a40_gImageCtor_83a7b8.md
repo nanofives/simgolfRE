@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `render`. Mechanica
 constructs the file-scope global Image object at 0x0083a7b8 via Image_ctor (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Static constructor of the global object at 0x0083a7b8: `mov ecx, 0x0083a7b8` at 0x00479a40 and a tail `jmp` to Image_ctor 0x00474ae0 at 0x00479a45, so the constructor's return (this = 0x0083a7b8) is the function's return; it takes no argument and has no other instruction. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: gImageCtor_83a7b8_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/00479a40_gImageCtor_83a7b8_live.path1.csv`); gImageCtor_83a7b8_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/00479a40_gImageCtor_83a7b8_pat.path1.csv`); gImageCtor_83a7b8_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/00479a40_gImageCtor_83a7b8_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00479a40@f_00479a40@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

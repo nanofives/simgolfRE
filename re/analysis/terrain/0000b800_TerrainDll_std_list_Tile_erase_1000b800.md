@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b800`), 213 bytes, 80 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Removes one node from the std::list<Tile*> and returns the position after it through the return slot (`ret 8` at 0x1000b8d2, slot [ebp+8], position [ebp+0xc]). The postfix iterator::operator++ 0x1000b320 runs on the argument (0x1000b826): the argument becomes the next node and the node to remove is the old value (_Mynode 0x1000b710 into [ebp-8], 0x1000b82d-0x1000b832). The node is unlinked with prev->next = node->next (0x1000b838-0x1000b85c) and next->prev = node->prev (0x1000b861-0x1000b885), the element is destroyed through allocator::destroy 0x1000b9f0 (0x1000b897), the node is released with _Freenode 0x1000b5b0 (0x1000b8a3) which reaches operator delete 0x10018be0, the count at +8 is decremented (0x1000b8ab-0x1000b8b4) and the advanced position is stored in the slot (0x1000b8bd). There is no branch. Called by the range erase 0x1000b470 (call 0x1000b4ba). The A/B runs under the heap stand-in over Terrain.dll's operator new 0x10018c90 / delete 0x10018be0: the freed node pointers are compared state. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::list<Tile*>::erase_1000b800 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b800_Terrain_std_list(TileP)_erase_1000b800.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?erase@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE?AViterator@12@V312@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000b8d2): callee pops 8 bytes of stack arguments.

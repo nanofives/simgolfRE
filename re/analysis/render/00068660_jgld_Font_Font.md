@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00068660`), 193 bytes, 54 instructions, subsystem `ren
 constructs the Font object and allocates its metrics block (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_3.md`, `re/analysis/systems/undisc_jgld.md`.
 
+## Purpose
+Constructor of a Font for an owner (`ret 4` at 0x1006871e; the SEH frame 0x10068663..0x10068671 only brackets the member construction): FontBase::FontBase on this through 0x10001898 (0x10068695), Tracked::ctor on this + 8 (0x100686a7; the Font's tracked sub-object is at +8), the Font vtable 0x1011da6c into this[0] (0x100686af), the vtable 0x1011da68 into this[2] (0x100686b8, over the Tracked one), +4 = owner (0x100686c5), 0 into +0x10, +0x14, +0x18 (the HFONT), +0x1c, +0x20 (0x100686cb..0x100686f3); returns this (0x10068701). Caller Factory::createFont 0x10067850. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Font::Font_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00068660_jgld_Font_Font_empty.path1.csv`); Font::Font_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00068660_jgld_Font_Font_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `??0Font@@QAE@PAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006871e): callee pops 4 bytes of stack arguments.

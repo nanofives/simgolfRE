@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00003980`), 143 bytes, 47 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+void __thiscall, no stack argument (plain `ret` at 0x10003a0e). The lighting file depends on g_courseType 0x10070a0c, tested UNSIGNED (cmp [ebp-8], 3 / ja 0x100039f1 at 0x100039a5-0x100039a9) and dispatched through a four-entry jump table at 0x10003a0f: 0 -> "ParklandLighting.txt" (0x1005f1c4, push at 0x100039b5), 1 -> "DesertLighting.txt" (0x1005f190, 0x100039d3), 2 -> "TropicalLighting.txt" (0x1005f1a8, 0x100039c4), 3 -> "LinksLighting.txt" (0x1005f178, 0x100039e2), anything else -> "lighting.txt" (0x1005f168, 0x100039f1). The name goes to Terrain::loadLighting 0x10006dd0 (thunk 0x100012fd) on `this`. Callers (hooks.csv): Terrain::initLists 0x100037e0 and loadNewCourseType 0x10001af0. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::rebuild (1 vectors, 1 distinct results, 1 changing state, `log/diff/00003980_Terrain_Terrain_rebuild.path1.csv`); Terrain::rebuild_t1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00003980_Terrain_Terrain_rebuild_t1.path1.csv`); Terrain::rebuild_t2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00003980_Terrain_Terrain_rebuild_t2.path1.csv`); Terrain::rebuild_t3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00003980_Terrain_Terrain_rebuild_t3.path1.csv`); Terrain::rebuild_t4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00003980_Terrain_Terrain_rebuild_t4.path1.csv`); Terrain::rebuild_tneg (1 vectors, 1 distinct results, 1 changing state, `log/diff/00003980_Terrain_Terrain_rebuild_tneg.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile3.cpp` as `?rebuild@Terrain@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10003a0e): callee pops 0 bytes of stack arguments.

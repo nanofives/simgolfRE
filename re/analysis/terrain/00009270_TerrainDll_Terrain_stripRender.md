@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00009270`), 1840 bytes, 592 instructions, subsystem
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exported strip renderer (`ret 0xc`; pivot [ebp+8], direction [ebp+0xc], angle [ebp+0x10]; exe caller 0x0044a6e0). glLoadIdentity, glPushMatrix, glRotated(g_screenScale 0x10070a10), glRotatef(45 + angle), glTranslatef((25 - X) * 100, 0, (25 - Y) * 100) when the pivot is non-NULL (0x100092b0-0x1000935c), Terrain::setViewAngle; then a switch on the direction: 1, 3, 5, 7 call this function for two neighbouring even directions; 2, 4, 6, 8 walk diagonal strips (windows 15 << zoom, 3 << zoom, (zoom << zoom) + 5 ... per direction) and for every tile fetched with tileAt that is inside 0..49 on both axes, not hidden and not culled call drawTile and drawTileObjects; directions outside 1..8 do nothing. Afterwards the draw list is rendered in order with Tile::render, cleared, glPopMatrix and glFlush. Fixture variants _z1 and _z2 run the zoom shifts 1 and 2. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::stripRender (200 vectors, 168 distinct results, 200 changing state, `log/diff/00009270_Terrain_Terrain_stripRender.path1.csv`); Terrain::stripRender_z1 (200 vectors, 168 distinct results, 200 changing state, `log/diff/00009270_Terrain_Terrain_stripRender_z1.path1.csv`); Terrain::stripRender_z2 (200 vectors, 160 distinct results, 200 changing state, `log/diff/00009270_Terrain_Terrain_stripRender_z2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_strip.cpp` as `?stripRender@Terrain@@QAEXPAVTile@@HM@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000999d): callee pops 12 bytes of stack arguments.

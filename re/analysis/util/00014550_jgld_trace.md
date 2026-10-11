@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00014550`), 60 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 debug trace helper (level, format string). (`re/names/jgld_0.tsv`)
 
+## Purpose
+libpng error and warning callback that sends the message to the debugger: OutputDebugStringA (message) (`mov eax, [ebp+0xc]` 0x1001456a, call 0x1001456e); the png_ptr argument is not read. cdecl, plain `ret` at 0x1001458b; eax is the import's. loadPng 0x100145a0 passes it (through the thunk 0x1000117c) as both the error and the warning function of png_create_read_struct 0x1006bac0 (`push 0x1000117c` twice, 0x100145ee / 0x100145f3; call 0x100145ff). Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: trace (12 vectors, 12 distinct results, 12 changing state, `log/diff/00014550_jgld_trace.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?trace@@YAXHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001458b): callee pops 0 bytes of stack arguments.

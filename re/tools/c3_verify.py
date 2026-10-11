@@ -137,6 +137,10 @@ def main():
                 print(f"0x{addr:08x}: callers from stored-pointer installers: {r1.stdout.strip()}")
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
         lines = [l for l in r.stdout.splitlines() if "PROMOTED" in l or "REFUSED" in l or "FAIL" in l]
+        if not lines:
+            # neither verdict: re_classify failed outside the gate (an exception); the blank line rounds 24 and 27 saw
+            lines = [f"ERROR: re_classify exited {r.returncode} without a verdict for {mod} {addr:08x}:"] + \
+                    ["    " + l for l in (r.stderr or r.stdout).strip().splitlines()[-6:]]
         print("\n".join(lines))
         if r.returncode != 0:                      # refused: take the Purpose back out so the note stays C2-shaped
             note.write_text(t, encoding="utf-8")

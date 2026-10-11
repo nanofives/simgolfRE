@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000231e0`), 141 bytes, 55 instructions, subsystem `au
 Command 7 handler: scans the track list this[0x86] for the node whose +4 matches this[0x1ce], then invokes virtual methods vtbl+0x84 and vtbl+0x94 on its data; returns SNDERR 0x24 if not found. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+0x000231e0 Seq_cmdHandler7 (VA 0x100231e0). No stack argument (plain `ret` 0x1002326c). A zero dword at +0x224 returns 0x24 (0x100231e4-0x100231f5). Otherwise the cursor +0x220 takes the list head +0x218 (0x100231f6 / 0x100231fe) and walks the list {prev +0, next +4, value +8}: a NULL head or a NULL value ends the walk with 0x24 (0x10023204 / 0x1002320b -> 0x1002323e); a value whose dword at +4 equals the dword at this+0x738 is the track (0x10023210 / 0x10023216 -> 0x1002323a); any other value advances the cursor (0x1002321a- 0x10023238: a NULL cursor, NULL next node or NULL next value end the walk with 0x24). The track's dword at +0x1c, when non-zero (0x10023246 / 0x10023249), is passed to the sequencer's own vtable slot +0x84 (`call [edx + 0x84]` 0x10023252); then slot +0x94 gets the track's dwords at +8 and +0xc (pushed +0xc then +8, so the first argument is +8: 0x10023258-0x10023264) and its result is the function's. `test esi, esi` at 0x1002323a can never see zero (the walk only continues with a non-NULL value), so the `jne` is always taken. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: Seq_cmdHandler7 (12 vectors, 12 distinct results, 11 changing state, `log/diff/000231e0_sound_Seq_cmdHandler7.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100231f5, 0x10023245, 0x1002326c): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100231e2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

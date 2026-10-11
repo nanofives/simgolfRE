@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 21 bytes, 6 instructions, subsystem `render`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Sets screen-dirty flag A (g_822b98). (`re/names/exe_1.tsv`)
 
+## Purpose
+Reads the dword at 0x00822b98 (0x0045ae30); when it is non-zero (`test` 0x0045ae35, `jne` 0x0045ae37) clears it (0x0045ae3a); eax keeps the value read (`ret` 0x0045ae39 / 0x0045ae44). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: setDirtyFlagA_v0 (1 vectors, 1 distinct results, 0 changing state, `log/diff/0045ae30_setDirtyFlagA_v0.path1.csv`); setDirtyFlagA_v1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v1.path1.csv`); setDirtyFlagA_v2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v2.path1.csv`); setDirtyFlagA_v3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v3.path1.csv`); setDirtyFlagA_v4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v4.path1.csv`); setDirtyFlagA_v5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v5.path1.csv`); setDirtyFlagA_v6 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v6.path1.csv`); setDirtyFlagA_v7 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v7.path1.csv`); setDirtyFlagA_v8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v8.path1.csv`); setDirtyFlagA_v9 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v9.path1.csv`); setDirtyFlagA_v10 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v10.path1.csv`); setDirtyFlagA_v11 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae30_setDirtyFlagA_v11.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0045ae39, 0x0045ae44): callee pops 0 bytes of stack arguments.
 

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a970`), 118 bytes, 43 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exported grid initialiser (plain `ret` at 0x1000a9e5; exe caller 0x00449790): Terrain::buildArrays (thunk 0x10001181 at 0x1000a990), glVertexPointer(3, 0x1406, 0, Terrain::vertexArray) (call [0x10113608] at 0x1000a9a9; the getter, thunk 0x100011d6, returns g_vertices 0x100b28c8) and glNormalPointer(0x1406, 0, Terrain::normalArray) (call [0x1011360c] at 0x1000a9c8; thunk 0x10001163, g_normals 0x10070a18). Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::initTerrain (11 vectors, 9 distinct results, 11 changing state, `log/diff/0000a970_Terrain_Terrain_initTerrain.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods2.cpp` as `?initTerrain@Terrain@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a9e5): callee pops 0 bytes of stack arguments.

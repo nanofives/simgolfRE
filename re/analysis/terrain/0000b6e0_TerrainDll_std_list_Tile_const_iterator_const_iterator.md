@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b6e0`), 39 bytes, 20 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Default constructor of the list's const_iterator class, which holds one dword (the node pointer). The body stores `this` in [ebp-4] (mov dword ptr [ebp-4], ecx at 0x1000b6fa), reloads it into eax (0x1000b6fd) and returns it (ret at 0x1000b706); it writes nothing into the object and calls nothing. Its one caller is the reverse_bidirectional_iterator constructor 0x1000b280 (call 0x1000b2a0 through the thunk 0x100011fe), which Terrain::drawTile 0x100381a0 reaches (hooks.csv callers). A leaf: the 16 vectors vary `this` (14 fixture addresses, NULL and 1), the returned pointer is the only observable, and no state region changes. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: std::list<Tile*>::const_iterator::const_iterator (16 vectors, 16 distinct results, 0 changing state, `log/diff/0000b6e0_Terrain_std_list(TileP)_const_iterator_const_iterator.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `??0const_iterator@?$list@PAVTile@@V?$allocator@PAVTile@@@std@@@std@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b706): callee pops 0 bytes of stack arguments.

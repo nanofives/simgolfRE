@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00010590`), 131 bytes, 51 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+istream* __thiscall getline(char* buf, int len, char delim), `ret 0xc` (buf [ebp+8], len [ebp+0xc], delim [ebp+0x10]). The ios virtual base is this + the second dword of the vbtable (mov eax, [ebp-4] / mov ecx, [eax] / add edx, [ecx+4] at 0x100105ad-0x100105b5); ios::lock 0x100018b0 (thunk 0x1000127b at 0x100105b9) runs on it, the dword at this+4 is incremented (0x100105c4-0x100105cd), the line reader 0x100348a0 runs with (buf, len, delim & 0xff) and ecx = this (0x100105d0-0x100105e4), ios::unlock 0x10037930 (thunk 0x10001172 at 0x100105f5) runs on the same base, and `this` is returned (0x100105fd). No branch. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: istream::getline (80 vectors, 25 distinct results, 80 changing state, `log/diff/00010590_Terrain_istream_getline.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_iostream.cpp` as `?getline@istream@@QAEAAV1@PADHD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10010610): callee pops 12 bytes of stack arguments.

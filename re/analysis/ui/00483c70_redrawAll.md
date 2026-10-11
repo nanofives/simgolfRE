@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 24 bytes, 5 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 full redraw: pre49c8e0, pre497b20 and screen redraw g_screen83a->redraw (`re/names/exe_3.tsv`)
 
+## Purpose
+Argument-free (cdecl). serviceMovie 0x0049c8e0 (0x00483c70), gfxFlushB 0x00497b20 (0x00483c75), then tail jmp to display slot +0x134 (0x00483c82); the slot's result is returned. Keys `redrawAll`, `redrawAll_b8`, `redrawAll_b0`. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: redrawAll (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483c70_redrawAll.path1.csv`); redrawAll_b8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483c70_redrawAll_b8.path1.csv`); redrawAll_b0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00483c70_redrawAll_b0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small16.cpp` as `?redrawAll@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

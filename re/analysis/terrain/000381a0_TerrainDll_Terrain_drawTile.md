@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000381a0`), 1877 bytes, 566 instructions, subsystem
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Inserts a tile into the sorted draw list (std::list<Tile*> at this+0x164ac4) unless a tile with the same (x, y) is already there. x = getX(t), y = getY(t) first. An empty list gets push_back (0x1000b090). Otherwise the walk from begin() depends on the angle kind (fcomp [0x1005f1e0] at 0x100381e4 for 0.0, `cmp [ebp+0x10], 0x42b40000` at 0x100383a5 for 90.0, `0x43340000` at 0x10038562 for 180.0): kind 0 advances while x < it.x, inserts before the node when it is the end or it.x < x, else advances while y > it.y and it.x == x, returns on a match and otherwise inserts; kind 1 swaps the keys (y, then x with x < it.x); kind 2 mirrors kind 0 (x > it.x, then y < it.y); kind 3 advances while y > it.y and inserts when the node is the end or it.y < y (a condition the advance loop makes false for a real node), then advances while x > it.x and it.y == y. `ret 0xc`. Callers: Terrain::pathUpdateRender, drawTileObjects, localRender and stripRender. The A/B runs under the heap stand-in: the inserted node comes from the arena. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::drawTile (640 vectors, 368 distinct results, 593 changing state, `log/diff/000381a0_Terrain_Terrain_drawTile.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_drawtile.cpp` as `?drawTile@Terrain@@QAEXPAVTile@@0M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x100388f2): callee pops 12 bytes of stack arguments.

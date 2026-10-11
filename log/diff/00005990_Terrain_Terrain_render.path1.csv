@@ -1,0 +1,32 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj 0 0,1,1,True,5c865dd7,5c865dd7,True
+$obj 0 45,1,1,True,b0acb00d,b0acb00d,True
+$obj $tile1275 0,1,1,True,f16c5e7c,f16c5e7c,True
+$obj $tile1275 90,1,1,True,13cb7c41,13cb7c41,True
+$obj $tile1275 180,1,1,True,2e835287,2e835287,True
+$obj $tile1275 45,1,1,True,d59140ea,d59140ea,True
+$obj $tile153 0,1,1,True,31bc170c,31bc170c,True
+$obj $tile153 90,1,1,True,c6afd82b,c6afd82b,True
+$obj $tile153 180,1,1,True,08591d84,08591d84,True
+$obj $tile153 45,1,1,True,0a05238a,0a05238a,True
+$obj $tile2346 0,1,1,True,bee677a5,bee677a5,True
+$obj $tile2346 90,1,1,True,4d6c52ff,4d6c52ff,True
+$obj $tile2346 180,1,1,True,4b2a0e5f,4b2a0e5f,True
+$obj $tile2346 45,1,1,True,11333aa4,11333aa4,True
+$obj $tile0 0,1,1,True,8bc636ba,8bc636ba,True
+$obj $tile0 90,1,1,True,2cb185ca,2cb185ca,True
+$obj $tile0 180,1,1,True,b885c2d6,b885c2d6,True
+$obj $tile0 45,1,1,True,10e083b0,10e083b0,True
+$obj $tile125 0,1,1,True,58389543,58389543,True
+$obj $tile125 90,1,1,True,3c30e54e,3c30e54e,True
+$obj $tile125 180,1,1,True,91beb2e7,91beb2e7,True
+$obj $tile125 45,1,1,True,b9efac29,b9efac29,True
+$obj $tile2010 0,1,1,True,e10d572e,e10d572e,True
+$obj $tile2010 90,1,1,True,f1534b1b,f1534b1b,True
+$obj $tile2010 180,1,1,True,e4f3e0ea,e4f3e0ea,True
+$obj $tile2010 45,1,1,True,b61307b4,b61307b4,True
+state_regions,$list+0x0:12 $head+0x0:12 $arena+0x0:32784 $freelog+0x0:1028 $implog+0x0:196608 $view+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x729dda50,original=0x1440c40,2026-10-11T06:07:27
+distinct_results,26,,
+VERDICT,GREEN,26,

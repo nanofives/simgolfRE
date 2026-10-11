@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066710`), 79 bytes, 32 instructions, subsystem `ui`.
 calls InvalidateRect(this+0x144, arg0, FALSE) to invalidate a rect of the game window. (`re/names/jgld_2.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+InvalidateRect ([this+0x144], rect, FALSE) (`push 0` 0x1006672f, call 0x1006673f): marks the caller's rectangle (NULL = the whole client area) for repaint without erasing; the import's result is left in eax; `ret 4` at 0x1006675c. Slot 12 (+0x30) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::invalidate (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066710_jgld_Display_invalidate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_03.cpp` as `?FUN_10066710@C_FUN_10066710@f_10066710@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1006675c): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot39 0x004a0e40 (`re/names/undisc2_exe.tsv`)
 
+## Purpose
+vtordisp thunk of the composite view's table-C slot: `sub ecx, dword ptr [ecx - 4]` at 0x00491a20 (this minus the displacement stored just below it) and `jmp 0x004a0e40` at 0x00491a23, the dispatcher viewDispatchSlot39 (ret 8); the stack arguments pass untouched and the dispatcher's eax is the thunk's eax. Reached through slot 39 (+0x9c) of the vtable at 0x004bb8d0 (the dword at 0x004bb96c), whose installers are 0x00491500 Dialog::viewDtor and 0x004a0740 viewCtor4a0740 (re/tools/pointer_callers.py). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: viewDispatchSlot39_vtordisp (53 vectors, 9 distinct results, 8 changing state, `log/diff/00491a20_viewDispatchSlot39_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00491a20 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

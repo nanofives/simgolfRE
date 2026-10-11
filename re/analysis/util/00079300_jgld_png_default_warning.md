@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00079300`), 63 bytes, 25 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's default warning handler: fprintf 0x10083010 (stderr 0x101233f0, "libpng warning: %s\n" 0x1011e0e0, message) (0x10079326); png_ptr is not read; cdecl, plain `ret` at 0x1007933e; eax is fprintf's (the character count). Caller png_warning 0x10079040 (0x10079085). Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: png_default_warning (12 vectors, 8 distinct results, 12 changing state, `log/diff/00079300_jgld_png_default_warning.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_error.cpp` as `_png_default_warning` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x1007933e): callee pops 0 bytes of stack arguments.

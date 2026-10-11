@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 61 bytes, 17 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 empty constructor of an image-decoder dispatch object (virtual base) (`re/names/exe_3.tsv`)
 
+## Purpose
+The same shape with the vtable 0x004ba2b8 (0x00482b31), 0x004ba278 at +8 (0x00482b37), the dword 0x00839650 copied to +0xc (0x00482b3e / 0x00482b44) and cleared (0x00482b47); the final store (0x00482b52) writes 0x004ba2b4 at the vtable's +4 offset; returns this (`ret 4` 0x00482b5a). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: Decoder482b20_ctor_g0 (10 vectors, 9 distinct results, 10 changing state, `log/diff/00482b20_Decoder482b20_ctor_g0.path1.csv`); Decoder482b20_ctor_g1 (10 vectors, 10 distinct results, 10 changing state, `log/diff/00482b20_Decoder482b20_ctor_g1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `??0D482b20@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00482b5a): callee pops 4 bytes of stack arguments.

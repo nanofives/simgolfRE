@@ -28,7 +28,7 @@ class Terrain {
 public:
     void setViewAngle(float angle);      // 0x1000adc0
     void rebuild();                      // 0x10003980
-    bool initLists();                    // 0x100037e0 (returns true: mov al,1)
+    bool initLighting();                    // 0x100037e0 (returns true: mov al,1)
     void loadLighting(const char* file); // 0x10006dd0 (name from its argument)
 };
 
@@ -108,8 +108,8 @@ void Terrain::rebuild()
     }
 }
 
-// MATCH: Terrain.dll 0x100037e0 ?initLists@Terrain@@QAE_NXZ
-bool Terrain::initLists()
+// MATCH: Terrain.dll 0x100037e0 ?initLighting@Terrain@@QAE_NXZ
+bool Terrain::initLighting()
 {
     rebuild();
     return true;

@@ -14,7 +14,7 @@ Terrain.dll	0x1000e6c0	Tile::render	terrain	match re/match/terrain_draw.cpp	symb
 Terrain.dll	0x10007380	Terrain::drawTileObjects	terrain	match re/match/terrain_draw.cpp	symbol of the 100% matched source
 Terrain.dll	0x100048a0	Terrain::drawLine	terrain	match re/match/terrain_drawline.cpp	symbol of the 100% matched source
 Terrain.dll	0x100381a0	Terrain::drawTile	terrain	match re/match/terrain_drawtile.cpp	symbol of the 100% matched source
-Terrain.dll	0x10038900	Terrain::lowerEdge	terrain	match re/match/terrain_edge.cpp	symbol of the 100% matched source
+Terrain.dll	0x10038900	Terrain::renderTileAtFiveOffsets	terrain	match re/match/terrain_edge.cpp	symbol of the 100% matched source
 Terrain.dll	0x10012ec0	Tile::setFaceTexture	terrain	match re/match/terrain_face.cpp	symbol of the 100% matched source
 Terrain.dll	0x10002060	Faces::build	terrain	match re/match/terrain_faces.cpp	symbol of the 100% matched source
 Terrain.dll	0x100158b0	iabs	terrain	match re/match/terrain_iabs.cpp	symbol of the 100% matched source
@@ -114,7 +114,7 @@ Terrain.dll	0x10015650	Tile::edgeKind	terrain	match re/match/terrain_small3.cpp	
 Terrain.dll	0x10011d60	Terrain::faceNormal	terrain	match re/match/terrain_small3.cpp	symbol of the 100% matched source
 Terrain.dll	0x10001c00	flipVertical	terrain	match re/match/terrain_small3.cpp	symbol of the 100% matched source
 Terrain.dll	0x10005090	Terrain::hermitePoint	terrain	match re/match/terrain_small3.cpp	symbol of the 100% matched source
-Terrain.dll	0x10003830	Terrain::light1Off	terrain	match re/match/terrain_small3.cpp	symbol of the 100% matched source
+Terrain.dll	0x10003830	Terrain::enableBlackLight1	terrain	match re/match/terrain_small3.cpp	symbol of the 100% matched source
 Terrain.dll	0x1000c560	initGrid	terrain	match re/match/terrain_small4.cpp	symbol of the 100% matched source
 Terrain.dll	0x10002900	Tile::minHeight	terrain	match re/match/terrain_small4.cpp	symbol of the 100% matched source
 Terrain.dll	0x10011ef0	Tile::smoothNormals	terrain	match re/match/terrain_smooth.cpp	symbol of the 100% matched source
@@ -143,7 +143,7 @@ Terrain.dll	0x10015500	Tile::maxHeight	terrain	match re/match/terrain_tile3.cpp	
 Terrain.dll	0x10013400	Tile::layPath	terrain	match re/match/terrain_tile3.cpp	symbol of the 100% matched source
 Terrain.dll	0x1000adc0	Terrain::setViewAngle	terrain	match re/match/terrain_tile3.cpp	symbol of the 100% matched source
 Terrain.dll	0x10003980	Terrain::rebuild	terrain	match re/match/terrain_tile3.cpp	symbol of the 100% matched source
-Terrain.dll	0x100037e0	Terrain::initLists	terrain	match re/match/terrain_tile3.cpp	symbol of the 100% matched source
+Terrain.dll	0x100037e0	Terrain::initLighting	terrain	match re/match/terrain_tile3.cpp	symbol of the 100% matched source
 Terrain.dll	0x1000c2c0	Tile::reset	terrain	match re/match/terrain_tile4.cpp	symbol of the 100% matched source
 Terrain.dll	0x1000f6e0	PathInfo::clear	terrain	match re/match/terrain_tile4.cpp	symbol of the 100% matched source
 Terrain.dll	0x1000f7a0	WallInfo::clear	terrain	match re/match/terrain_tile4.cpp	symbol of the 100% matched source

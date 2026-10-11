@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a130`), 549 bytes, 174 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Builds the tile grid: initGrid 0x1000c560 (thunk 0x100010d7) with (width [this+0x14], height [this+0x18]) (0x1000a150-0x1000a15b, cdecl: add esp, 8 at 0x1000a160); then for x in 0..width-1 and y in 0..height-1 (bounds re-read from the object at every test, 0x1000a175 / 0x1000a17e / 0x1000a196 / 0x1000a19f): Tile::reset(x, y) 0x1000c2c0 on tile x + y * width of the array at +0x3a4 (stride 0x248), then Tile::getFaces 0x100153c0 and Faces::build(x, y, width) 0x10002060 on its result (0x1000a1d0-0x1000a207); a second pass over the same ranges (0x1000a20e-0x1000a33d) stores the four neighbours with Tile::setNeighbour 0x1000c520: side 2 <- tileAt(x-1, y), side 0 <- tileAt(x, y-1), side 3 <- tileAt(x+1, y), side 1 <- tileAt(x, y+1); `mov al, 1` (0x1000a342) returns true. Callers (hooks.csv): Terrain::initTerrain 0x1000a970 and resetTerrain 0x1000aa10. The state regions are the Terrain stand-in block and the first 0x2000 bytes of g_vertices 0x100b28c8 and g_normals 0x10070a18, which initGrid fills. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::buildArrays (11 vectors, 9 distinct results, 8 changing state, `log/diff/0000a130_Terrain_Terrain_buildArrays.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile5.cpp` as `?buildArrays@Terrain@@QAE_NXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000a354): callee pops 0 bytes of stack arguments.

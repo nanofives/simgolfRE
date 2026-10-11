@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000089d0`), 213 bytes, 71 instructions, subsystem `ren
 installs a Palette pointer for an 8-bit surface. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`, `re/analysis/systems/jgld_3.md`.
 
+## Purpose
+Attaches a Palette to a Surface and loads its colours into the DIB section (Surface vtable slot 59, +0xec of 0x1011d0b0; `ret 4` at 0x10008aa2): a NULL palette returns 0 (jne 0x100089fd not taken). Otherwise +0x7c = palette (0x10008a0a); Palette::getField810 0x1000aef0 through 0x100012cb (0x10008a10) is compared with +0x78 (0x10008a18): equal returns that value (je 0x10008a1b). Different: +0x78 = getField810 again (0x10008a20 / 0x10008a28), Palette::toRGBQuads 0x1006ae50 into a 0x400-byte local through 0x100013c0 (0x10008a35), the DC from slot +0x28 (0x10008a44): NULL returns 0 (je 0x10008a50); else SetDIBColorTable ([this+0x4b8], 0, 0x100, quads) (0x10008a6c) and slot +0x2c with 1 (0x10008a85), whose eax (`this`, from Surface::releaseDC) is returned. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::setPalette (12 vectors, 11 distinct results, 10 changing state, `log/diff/000089d0_jgld_Surface_setPalette.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?setPalette@Surface@@QAEXPAUPalette@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10008aa2): callee pops 4 bytes of stack arguments.

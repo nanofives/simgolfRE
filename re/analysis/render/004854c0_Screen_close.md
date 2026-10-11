@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 59 bytes, 23 instructions, subsystem `render`. Mechanic
 Releases the device object at field [0x10] (vtable 0x5c query, 0x38/0x484110 destroy) and calls this vtable+0x80. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Thiscall, no stack arguments. obj = this+0x40; when set (0x004854c3..0x004854c8): r = obj->slot +0x5c() (0x004854cc), obj is read again (0x004854cf), r == 0 calls releaseSoundObj 0x00484110(obj) (0x004854d6 / 0x004854d7; with [0x0083afc4] = 0 it returns 1 at 0x00484119, with it set it calls the pointer [0x0083af70](obj) at 0x00484124) else obj->slot +0x38() (0x004854e3); this+0x40 = 0 (0x004854e6). Then this->slot +0x80() (0x004854ef..0x004854f1) and the return value 0 (`xor eax, eax`, 0x004854f7). Keys `Screen::close_nolib` and `_lib` (the library function pointer is a cdecl recorder); 5 vectors each (sound object with slot +0x5c results 0, 1, 0x55, none, 0). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: Screen::close_nolib (5 vectors, 5 distinct results, 5 changing state, `log/diff/004854c0_Screen_close_nolib.path1.csv`); Screen::close_lib (5 vectors, 5 distinct results, 5 changing state, `log/diff/004854c0_Screen_close_lib.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_004854c0@f_004854c0@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004854fa): callee pops 0 bytes of stack arguments.

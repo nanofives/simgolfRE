@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00007970`), 508 bytes, 113 instructions, subsystem `re
 ## Role (from the naming pass, not a C3 purpose)
 constructs a Surface bound to an Owner pointer. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Constructor of a Surface for an owner (`ret 4` at 0x10007b69; the SEH frame brackets the members): SurfaceBase::ctor through 0x10001492 (0x100079a5), initDepthInfo 0x100092e0 on this + 0x24 through 0x100014dd (0x100079b7), the Surface vtable 0x1011d0b0 (0x100079bf), +0x80 = owner (0x100079cb), zero into +8, +0x38, +0x3c, +0x40, the byte +0x74, +0x7c and the DC / handle words +0x4ac..+0x4c8 (0x100079d4..0x10007a68), the BITMAPINFOHEADER-shaped block +0x84 = 0x28, +0x88 = +0x8c = 0, word +0x90 = 1, word +0x92 = 8, +0x94..+0xa0 = 0, +0xa4 = 0x100, +0xa8 = 0 (0x10007a75..0x10007af5), memset (this + 0x54, 0, 0x10) through 0x1007e7c0 (0x10007b0a), InitializeCriticalSection (this + 0xc) (0x10007b1b), +0x4d0 = makeColor 0x1000a660 (0xff, 0, 0xff) through 0x10001582 (0x10007b34 / 0x10007b3f); returns this (0x10007b4c). Caller Factory::createSurface 0x100679d0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::ctorOwner_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007970_jgld_Surface_ctorOwner_empty.path1.csv`); Surface::ctorOwner_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007970_jgld_Surface_ctorOwner_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `??0Surface@@QAE@PAUOwner@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10007b69): callee pops 4 bytes of stack arguments.

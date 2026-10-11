@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00014510`), 615 bytes, 209 instructions, subsystem `a
 Rate-converting PCM render/mix inner loop for the B format group; writes short* output. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00014510 mixResampleInnerB (VA 0x10014510): mono 16-bit samples added with saturation to a left and a right dword, each with its own gain, the gains fading by the step per frame. A frame (0x10014600-0x1001462d): eax = (short)in[0]; the low dword of eax * gainL (`imul edx` 0x10014607) is added to the dword at edi (0x10014609-0x10014624), the SAME sample times gainR (0x1001462d) to the next (0x1001462f-0x1001464a); esi += 2 (0x1001464f). Past the limit (0x10014652 / 0x10014655) the wrap handler (0x1001467f-0x10014703) is mixRenderA's with no ring. Otherwise gainR and gainL each drop by the step, to 0 when that would go below 0 (0x10014657-0x10014674), and the loop continues while the count is non-zero (0x10014677 / 0x10014678). The prologue (0x10014521-0x100145eb) and epilogue (0x10014706-0x10014776) are described above. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: mixResampleInnerB (46 vectors, 41 distinct results, 46 changing state, `log/diff/00014510_sound_mixResampleInnerB.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10014750, 0x10014776): callee pops 0 bytes of stack arguments.
 

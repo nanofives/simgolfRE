@@ -40,23 +40,26 @@ void __fastcall FlagToggle_re(void* self, void*, int id) {
 
 // --- Widget quad setters (ui). Each writes its four dword arguments into four fields spaced 0x10 apart, starting at
 // this+BASE (0x70 / 0x74 / 0x78). Arg order from the reads [esp+4..+0x10] and the stores at 0x00476348.. ---
-typedef void(__fastcall* SetQuad_t)(void*, void*, unsigned, unsigned, unsigned, unsigned);
+// eax at each `ret 0x10` is the third argument (loaded for the BASE+0x20 store at 0x0047634b / 0x0047637b / 0x004763ab);
+// the reimplementations return it (they were void until 2026-10-11, the Widget_setQuad defect drawCenteredText2 exposed).
+typedef unsigned(__fastcall* SetQuad_t)(void*, void*, unsigned, unsigned, unsigned, unsigned);
 template <unsigned BASE>
-void setQuad(void* self, unsigned a, unsigned b, unsigned c, unsigned d) {
+unsigned setQuad(void* self, unsigned a, unsigned b, unsigned c, unsigned d) {
     setField<unsigned>(self, BASE + 0x00, a);
     setField<unsigned>(self, BASE + 0x10, b);
     setField<unsigned>(self, BASE + 0x20, c);
     setField<unsigned>(self, BASE + 0x30, d);
+    return c;
 }
 // 0x00476340  Widget_setQuad70: a->+0x70, b->+0x80, c->+0x90, d->+0xa0.
 SetQuad_t SetQuad70_orig;
-void __fastcall SetQuad70_re(void* self, void*, unsigned a, unsigned b, unsigned c, unsigned d) { setQuad<0x70>(self, a, b, c, d); }
+unsigned __fastcall SetQuad70_re(void* self, void*, unsigned a, unsigned b, unsigned c, unsigned d) { return setQuad<0x70>(self, a, b, c, d); }
 // 0x00476370  Widget_setQuad74: a->+0x74, b->+0x84, c->+0x94, d->+0xa4.
 SetQuad_t SetQuad74_orig;
-void __fastcall SetQuad74_re(void* self, void*, unsigned a, unsigned b, unsigned c, unsigned d) { setQuad<0x74>(self, a, b, c, d); }
+unsigned __fastcall SetQuad74_re(void* self, void*, unsigned a, unsigned b, unsigned c, unsigned d) { return setQuad<0x74>(self, a, b, c, d); }
 // 0x004763a0  Widget_setQuad78: a->+0x78, b->+0x88, c->+0x98, d->+0xa8.
 SetQuad_t SetQuad78_orig;
-void __fastcall SetQuad78_re(void* self, void*, unsigned a, unsigned b, unsigned c, unsigned d) { setQuad<0x78>(self, a, b, c, d); }
+unsigned __fastcall SetQuad78_re(void* self, void*, unsigned a, unsigned b, unsigned c, unsigned d) { return setQuad<0x78>(self, a, b, c, d); }
 
 // --- polyEdgeStep (render). Finds the next edge of the polygon that spans a scanline, starting at vertex `idx`, and
 // fills the edge record's DDA fields. Globals: end vertex index g_0083d350, vertex table g_0083d358 (x at +0, y at +4,

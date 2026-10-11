@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00008fc0`), 543 bytes, 157 instructions, subsystem 
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Exported zoom setter (`ret 4`; exe caller 0x004498a0). glMatrixMode(0x1701) and glLoadIdentity() (0x10008fe4, 0x10008ff3); the extent (w, h) comes from the screen size dwords +0x20 / +0x24: 800 x 600 gives bits 0x44dcf88b / 0x44a5ba68 (0x10009018), 1024 x 768 gives 0x44e24630 / 0x44a9b4a4 (0x10009040), 1280 x 1024 gives 0x44d99242 / 0x44ae0e9b (0x10009068); other sizes leave the frame fill. Level 1 multiplies both by 4.0 (0x1005f3e4, 0x100090ce) and stores zoom 2 at +0x1c; level 2 doubles both (fadd st(0), st(0) at 0x100090b5) and stores zoom 1; level 4 calls Terrain::resize 0x10009ed0 (thunk 0x100012f8 at 0x100090a1) and stores zoom 0; any other level changes nothing. glOrtho(-w/2, w/2, h/2, -h/2, 5000, -5000) when the byte +0x28 is set, glOrtho(-w/2, w/2, -h/2, h/2, 5000, -5000) otherwise (0x1005f3e0 = 0.5, 0x1000910c-0x100091ab); finally glMatrixMode(0x1700) (0x100091bf). Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::setZoomLevel (84 vectors, 44 distinct results, 84 changing state, `log/diff/00008fc0_Terrain_Terrain_setZoomLevel.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_large1.cpp` as `?setZoomLevel@Terrain@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100091dc): callee pops 4 bytes of stack arguments.

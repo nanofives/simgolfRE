@@ -13,7 +13,7 @@ public:
     void resize(int width, int height);
 
     void initGL();                       // 0x100033e0 (unexported; GL state setup, matched in terrain_tile4.cpp)
-    void initLists();                    // 0x100037e0 (unexported; name tentative)
+    void initLighting();                 // 0x100037e0 (unexported; loads the lighting file, round 27)
     void relight();                      // 0x100076e0 (unexported; also called by loadNewCourseType)
 
     HGLRC m_glrc;                        // +0x00
@@ -46,7 +46,7 @@ void Terrain::initSystem(int width, int height, HDC dc, bool flipY)
     }
     m_flipY = flipY;
     initGL();
-    initLists();
+    initLighting();
     relight();
     resize(width, height);
     m_screenW = width;

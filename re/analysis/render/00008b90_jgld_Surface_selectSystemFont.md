@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008b90`), 130 bytes, 51 instructions, subsystem `ren
 gets the surface DC (vtbl+0x28), selects GetStockObject(SYSTEM_FONT), then releases the DC (vtbl+0x2c). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Selects the stock SYSTEM_FONT into the Surface's DC: SelectObject (dc, GetStockObject (0xd)) (0x10008bc6 / 0x10008bdc), DC from slot +0x28, slot +0x2c with 1, returns 0; plain `ret` at 0x10008c11. Slot 43 (+0xac) of the Surface vtable 0x1011d0b0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::selectSystemFont (12 vectors, 11 distinct results, 12 changing state, `log/diff/00008b90_jgld_Surface_selectSystemFont.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10008b90@f_10008b90@@YIHPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10008c11): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `crt`. Mechanical t
 static initializer that constructs the global image object at DAT_00839348 (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Static constructor of the global object at 0x00839348: `mov ecx, 0x00839348` at 0x00473a70 and a tail `jmp` to Image_ctor 0x00474ae0 at 0x00473a75, so the constructor's return (this = 0x00839348) is the function's return; it takes no argument and has no other instruction. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: initGlobalImage_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/00473a70_initGlobalImage_live.path1.csv`); initGlobalImage_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/00473a70_initGlobalImage_pat.path1.csv`); initGlobalImage_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/00473a70_initGlobalImage_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_02.cpp` as `?FUN_00473a70@f_00473a70@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00016340`), 471 bytes, 166 instructions, subsystem `a
 Unity-rate PCM copy/mix path for the C format group; writes short* output. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00016340 mixCopyInnerC (VA 0x10016340): mono 16-bit samples stored twice (a left/right pair) per frame, one frame per sample. The mode-1 prologue (0x10016363-0x1001639b) also computes eof = (limit == the sample record's +0x24) (`cmp ecx, [eax + 0x24]` 0x10016381 / `sete bl` 0x10016387) into loopFlag and a second flag, set (0x10016398) when the voice's byte +0x58 has bit 5 (0x20: `test cl, 0x20` 0x1001638c) and eof is set (0x10016394). Other modes: mixRenderA's prologue (0x1001639d-0x100163f3). A frame stores (short)in[0] << 16 twice (0x10016408-0x10016415), esi += 2 (0x10016418), limit test (0x1001641b / 0x1001641e), count -= 1 (0x10016420 / 0x10016425). The wrap handler is mixRenderA's except that after a looping restart (0x10016432-0x1001643b) loopFlag is cleared when the second flag is set (0x1001643d / 0x10016441 / 0x10016443). Result: frames consumed. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: mixCopyInnerC (47 vectors, 46 distinct results, 47 changing state, `log/diff/00016340_sound_mixCopyInnerC.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100164f0, 0x10016516): callee pops 0 bytes of stack arguments.
 

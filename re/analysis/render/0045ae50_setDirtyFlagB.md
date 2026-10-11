@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 21 bytes, 6 instructions, subsystem `render`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Sets screen-dirty flag B (g_822b9c). (`re/names/exe_1.tsv`)
 
+## Purpose
+The same over the dword at 0x00822b9c (`mov` 0x0045ae50, `test` 0x0045ae55, `jne` 0x0045ae57, clear 0x0045ae5a, `ret` 0x0045ae59 / 0x0045ae64). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: setDirtyFlagB_v0 (1 vectors, 1 distinct results, 0 changing state, `log/diff/0045ae50_setDirtyFlagB_v0.path1.csv`); setDirtyFlagB_v1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v1.path1.csv`); setDirtyFlagB_v2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v2.path1.csv`); setDirtyFlagB_v3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v3.path1.csv`); setDirtyFlagB_v4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v4.path1.csv`); setDirtyFlagB_v5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v5.path1.csv`); setDirtyFlagB_v6 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v6.path1.csv`); setDirtyFlagB_v7 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v7.path1.csv`); setDirtyFlagB_v8 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v8.path1.csv`); setDirtyFlagB_v9 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v9.path1.csv`); setDirtyFlagB_v10 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v10.path1.csv`); setDirtyFlagB_v11 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0045ae50_setDirtyFlagB_v11.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0045ae59, 0x0045ae64): callee pops 0 bytes of stack arguments.
 

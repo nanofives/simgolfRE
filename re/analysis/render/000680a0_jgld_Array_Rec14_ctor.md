@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x000680a0`), 76 bytes, 29 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 Array<ModeInfo> constructor for g_modes: sets vtable 0x1011da5c, this[1]=0, calls clear helper 0x100685c0. (`re/names/jgld_3.tsv`)
 
+## Purpose
+Constructor of the 0x14-byte-record array, Array_e0::ctor's shape: vtable 0x1011da5c (0x100680c0), +4 = 0 (0x100680c9), Array_Rec14::clearRet 0x100685c0 through 0x100019ce (0x100680d3); returns this. Caller 0x10065120. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Array_Rec14::ctor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/000680a0_jgld_Array_Rec14_ctor_empty.path1.csv`); Array_Rec14::ctor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/000680a0_jgld_Array_Rec14_ctor_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_100680a0@f_100680a0@@YIPAXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100680eb): callee pops 0 bytes of stack arguments.

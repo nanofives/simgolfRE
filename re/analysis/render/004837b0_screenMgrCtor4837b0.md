@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 10 bytes, 2 instructions, subsystem `render`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 constructs the screen manager singleton at g_83ad20 (FUN_004837f0) (`re/names/exe_3.tsv`)
 
+## Purpose
+Static constructor of the global object at 0x0083ad20: `mov ecx, 0x0083ad20` at 0x004837b0 and a tail `jmp` to C4837f0::ctor 0x004837f0 at 0x004837b5, so the constructor's return (this = 0x0083ad20) is the function's return; it takes no argument and has no other instruction. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: screenMgrCtor4837b0_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/004837b0_screenMgrCtor4837b0_live.path1.csv`); screenMgrCtor4837b0_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/004837b0_screenMgrCtor4837b0_pat.path1.csv`); screenMgrCtor4837b0_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/004837b0_screenMgrCtor4837b0_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004837b0@f_004837b0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

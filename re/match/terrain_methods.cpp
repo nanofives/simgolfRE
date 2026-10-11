@@ -26,7 +26,7 @@ public:
     void setWall(Tile* t, int a, int b, bool on);
     void layPath(Tile* t, int on, int dir);
     void lowerEdgeCorner(Tile* t, int corner, Tile* other, float amount);
-    void lowerEdge(Tile* t, Tile* other, float amount);  // 0x10038900, matched in terrain_edge.cpp (draws, does not lower)
+    void renderTileAtFiveOffsets(Tile* t, Tile* other, float amount);  // 0x10038900, matched in terrain_edge.cpp (draws, does not lower)
 };
 
 // MATCH: Terrain.dll 0x1000a510 ?hasPath@Terrain@@QAE_NPAVTile@@@Z
@@ -81,7 +81,7 @@ void Terrain::layPath(Tile* t, int on, int dir)
 void Terrain::lowerEdgeCorner(Tile* t, int corner, Tile* other, float amount)
 {
     if (t != 0) {
-        lowerEdge(t, other, amount);   // ecx = this (0x1000a6af), t/other/amount pushed
+        renderTileAtFiveOffsets(t, other, amount);   // ecx = this (0x1000a6af), t/other/amount pushed
         t->lowerCorner(corner);        // ecx = t (0x1000a6bb)
     }
 }

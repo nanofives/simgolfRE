@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00007bf0`), 166 bytes, 50 instructions, subsystem `ren
 ## Role (from the naming pass, not a C3 purpose)
 destructor: releases surface resources. (`re/names/jgld_0.tsv`)
 
+## Purpose
+Destructor of a Surface (thiscall, plain `ret` at 0x10007c95; the SEH frame brackets the body): the Surface vtable 0x1011d0b0 into this[0] (0x10007c25); when the owner +0x80 is non-zero (je 0x10007c3c) the owner's +4 = 0 (0x10007c47); DeleteCriticalSection (this + 0xc) (0x10007c57); Surface::release through 0x100010aa (0x10007c67); SurfaceBase::dtor 0x100096f0 through 0x1000149c (0x10007c76), which unregisters the object from the tracked list. Caller Surface::deletingDtor 0x10007900. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::dtor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007bf0_jgld_Surface_dtor_five.path1.csv`); Surface::dtor_all (12 vectors, 12 distinct results, 12 changing state, `log/diff/00007bf0_jgld_Surface_dtor_all.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `??1Surface@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10007c95): callee pops 0 bytes of stack arguments.

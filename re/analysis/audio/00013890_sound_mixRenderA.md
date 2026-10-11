@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00013890`), 500 bytes, 171 instructions, subsystem `a
 PCM render/mix inner loop writing short* output from a voice's sample buffer; one format variant. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x00013890 mixRenderA (VA 0x10013890): stereo 16-bit frames added into the accumulators. Each frame adds (short)in[0] << 16 and (short)in[1] << 16 to two consecutive dwords with saturation (0x10013939-0x10013960 / 0x1001395d-0x10013982), esi moves on by 4 bytes (0x10013982) and the frame ends the buffer when esi >= limit (signed, 0x10013985 / 0x10013988). The loop is a do-while: the count is decremented after the frame (0x1001398a); a count of 0 therefore wraps. Past the limit (0x10013992: count -= 1): a voice that is not chained and does not loop is done (0x10013993-0x1001399d); a looping one restarts at the loop start (wraps += 1, *ppIn = loop start: 0x1001399f-0x100139af) and continues while the count is non-zero (0x100139b1); a chained one also restarts at the loop start (0x100139b6-0x100139c6), then takes the chain voice's end +0xd4 as the limit (0x100139cb-0x100139d1), moves to the next chain voice +0xb4 (0x100139d4-0x100139da) and, when there is one, its loop start +0xd8 (0x100139e2-0x100139e8), when there is none clears chained and loopFlag (0x100139f6 / 0x100139fd). Result: frames consumed. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: mixRenderA (48 vectors, 36 distinct results, 48 changing state, `log/diff/00013890_sound_mixRenderA.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10013a5d, 0x10013a83): callee pops 0 bytes of stack arguments.
 

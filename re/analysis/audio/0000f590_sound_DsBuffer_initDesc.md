@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f590`), 309 bytes, 87 instructions, subsystem `au
 Initializes the embedded DSBUFFERDESC at +0x70: dwSize 0x24, dwFlags 0xe8, dwBufferBytes 0x10000, lpwfxFormat set to +0xa8. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+0x0000f590 DsBuffer::initDesc (VA 0x1000f590). Every value after the first store is an immediate or derived from one, so only the dword at +0 (bit 1 cleared: `and ebx, 0xfffffffd` 0x1000f5a1, stored 0x1000f5a6) depends on the object. Nine zero dwords from +0x70 (rep stosd 0x1000f5a8), then +0x70 = 0x24 (0x1000f5b0), +0x74 = 0xe8, +0x78 = 0x10000, +0x7c = 0, +0x80 = &this[0xa8] (0x1000f5ba-0x1000f5cd); the block at +0xa8 (four zero dwords and a zero word at +0xb8: 0x1000f5d3-0x1000f5de) gets the word 1 at +0xa8 (0x1000f5e2); the five dwords at +0x94 are zeroed (0x1000f637-0x1000f644); the words/dwords +0xaa = 2, +0xac = 0x5622, +0xb0 = 0x15888, +0xb4 = 4, +0xb6 = 0x10, +0xb8 = 0 (0x1000f5ef-0x1000f61e); +0x40, +0x14, +0x18, +0x1c, +0xc, +0x44 = 0 (0x1000f625-0x1000f634). Then edx = (0x5622 * 3 * 5 * 2) * 0x10624dd3 >> 32 >> 6 (0x1000f647-0x1000f66f, i.e. 661), edi = word[+0xb4] * edx (0x1000f672), eax = edi * 18 (0x1000f67b / 0x1000f685); +0x34 = 0x295 (0x1000f67e); when eax <= dword[+0x78] (`ja` 0x1000f689 not taken): +0x38 = eax, +0x40 = edi, +0x34 = edx, +0x3c = (eax - edi) >> 1 (0x1000f68b-0x1000f698). The remaining zero stores (0x1000f69b-0x1000f6bc, among them +0x3c = 0) follow; the return value is 0 (0x1000f6c1). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: DsBuffer::initDesc (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000f590_sound_DsBuffer_initDesc.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000f6c4): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000f592 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

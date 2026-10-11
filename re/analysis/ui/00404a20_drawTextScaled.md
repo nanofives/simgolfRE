@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 175 bytes, 65 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 draws a text string scaled to the current zoom (`re/names/exe_0.tsv`)
 
+## Purpose
+Cdecl `(text, x, y, colour)`. setQuad(target, colour, -1, 2, 2) (0x00404a20..0x00404a34). h = target handle's slot +0xdc (0 without a handle, 0x00404a3f..0x00404a54), v = Widget_value 0x00477580(target) (0x00404a5a); when v + y >= h (the `jl` at 0x00404a67 not taken) y = h' - v' - 1 with both read again (0x00404a69..0x00404a90). sy = scaleX 0x00404970(y) (0x00404a92), sx = scaleX(x) (0x00404a9e); NULL text returns sx (0x00404aac / 0x00404aae); otherwise drawText(target, text, sx, sy, strlen(text)) (0x00404ab0..0x00404ac6). Keys `drawTextScaled` (handle height 100, scale 800), `_s1000` (scale numerator [0x00822c8c] = 1000), `_h0` (handle height 0: always clamps), `_noh` (no handle: h = 0); 30 vectors each (y around the clamp threshold: 10, 87, 88, 200, -50, -12). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: drawTextScaled (30 vectors, 24 distinct results, 30 changing state, `log/diff/00404a20_drawTextScaled.path1.csv`); drawTextScaled_s1000 (30 vectors, 24 distinct results, 30 changing state, `log/diff/00404a20_drawTextScaled_s1000.path1.csv`); drawTextScaled_h0 (30 vectors, 24 distinct results, 30 changing state, `log/diff/00404a20_drawTextScaled_h0.path1.csv`); drawTextScaled_noh (30 vectors, 24 distinct results, 30 changing state, `log/diff/00404a20_drawTextScaled_noh.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?text404a20@@YAXPBDHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00404ace): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000a880`), 182 bytes, 62 instructions, subsystem `
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+void __thiscall (int* info, int n), `ret 8` (info [ebp+8], n [ebp+0xc]; `this` unused). g_collarInfo 0x10106b48: when it is NULL (cmp at 0x1000a89d / jne 0x1000a8c3) a new table of n << 2 bytes is made with operator new 0x10018c90 (shl eax, 2 at 0x1000a8a9, call 0x1000a8ad) and stored at 0x1000a8bb; otherwise the old table is released with operator delete 0x10018be0 (call 0x1000a8d0) and a new one made and stored (0x1000a8df, 0x1000a8ed). Then for i in 0..n-1 (signed `jge` at 0x1000a90b) g_collarInfo[i] = info[i] (0x1000a90d-0x1000a91e). The caller (exe 0x00449400, 0x00449790) passes the collar array of the course. Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::passCollarInfo (10 vectors, 10 distinct results, 10 changing state, `log/diff/0000a880_Terrain_Terrain_passCollarInfo.path1.csv`); Terrain::passCollarInfo_set (10 vectors, 10 distinct results, 10 changing state, `log/diff/0000a880_Terrain_Terrain_passCollarInfo_set.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_methods2.cpp` as `?passCollarInfo@Terrain@@QAEXQAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x1000a933): callee pops 8 bytes of stack arguments.

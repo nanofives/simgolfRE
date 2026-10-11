@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 35 bytes, 11 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Constructs a key/value lookup table (embedded string map at field [0x42]). (`re/names/exe_4.tsv`)
 
+## Purpose
+Constructs a key table: Buf_ctor 0x004747a0 on this + 0x108 (`lea` 0x004882a3, call 0x004882a9), the vtable 0x004bb088 at [this] (0x004882b0), [this + 0x104] = 0 (0x004882b6), the byte at this + 4 = 0 (0x004882bc); returns this (0x004882bf). Stored as the element constructor of the key-table array's eh vector constructor. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: KeyTable_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004882a0_KeyTable_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_004882a0@f_004882a0@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004882c2): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00008da0`), 130 bytes, 53 instructions, subsystem `ren
 draws a text string at (x,y) on the surface DC via TextOutA. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Draws text on the Surface's DC: TextOutA (dc, x, y, text, length) (pushes 0x10008dd6..0x10008de5, call 0x10008dea), DC from slot +0x28, slot +0x2c with 1, returns 0; `ret 0x10` at 0x10008e1f. Slot 46 (+0xb8) of the Surface vtable 0x1011d0b0. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Surface::textOut (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008da0_jgld_Surface_textOut.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_02.cpp` as `?FUN_10008da0@C_FUN_10008da0@f_10008da0@@QAEHHHPBDH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x10008e1f): callee pops 16 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 39 bytes, 15 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 thin wrapper that draws a scaled sprite (`re/names/exe_0.tsv`)
 
+## Purpose
+Thiscall `(this, surf, x, y, n, den, mask)`, ret 0x18. Forwards to Surface_drawScaled 0x00473cb0 with the same ecx and (surf, x, y, n, n, den, mask) (the pushes at 0x00421b64..0x00421b7e: mask, den, n, n, y, x, surf; call 0x00421b7f). Key `drawScaledSprite421b60`: 12 vectors (images with and without a handle, NULL and handle-less destination, hot-spot images, negative factors); Surface_drawScaled runs ORIGINAL in both arms, on images whose file name (+8) is NULL, so its loadImage arm never runs. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: drawScaledSprite421b60 (12 vectors, 11 distinct results, 9 changing state, `log/diff/00421b60_drawScaledSprite421b60.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `?draw@C421b60@@QAEXHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x00421b84): callee pops 24 bytes of stack arguments.

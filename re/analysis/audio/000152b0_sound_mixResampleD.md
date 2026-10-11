@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000152b0`), 797 bytes, 257 instructions, subsystem `a
 Rate-converting PCM render/mix routine, one format variant of the software mixer family (bit depth/channel count not individually determined). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Member of the rated-mixer family (8/16-bit x mono/stereo x add/store; one templated kernel in shim/src/re/c3do.cpp): the 48-bit position ring (dword +2 = fraction word + low integer word, dword +4 = integer part) advances by the rate each output frame (carry into the word at +6), the input position is *ppIn + (integer part << log2 of the frame bytes), a sample is cur + ((next - cur) * fraction >> 16) times the channel gain (low dword of imul), a mono frame feeds both output dwords (left gain, then right gain), next is 0 at or past the limit or the first sample of the loop start while loopFlag is set, the output dword is added with saturation or stored, the wrap handler of mixRenderA also zeroes the integer part, and the epilogue adds the integer part to voice+0x16c / +0x88 and the wraps to voice+0x1360 / +0xcc and returns count - remaining. This member: 0x000152b0 mixResampleD (VA 0x100152b0): 8-bit stereo, add; no eof flag. Prologue 0x100152b6-0x10015391 (mode 1: gains 0x1e8 / 0x1f8, rate 0x220, ring 0x1358; other modes 0x78 / 0x68 / 0x4c / 0xb8). Frame loop 0x100153a6-0x1001549f, wrap handler 0x100154ab-0x10015545, epilogue 0x10015564-0x100155cc. Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: mixResampleD (64 vectors, 60 distinct results, 64 changing state, `log/diff/000152b0_sound_mixResampleD.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001559d, 0x100155cc): callee pops 0 bytes of stack arguments.
 

@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00067fa0`), 76 bytes, 29 instructions, subsystem `rend
 ## Role (from the naming pass, not a C3 purpose)
 Array<T> constructor for the instance at g_arrayE0: sets vtable 0x1011da58, this[1]=0, calls the clear helper 0x10068570. (`re/names/jgld_3.tsv`)
 
+## Purpose
+Constructor of the 0xe0-element array (thiscall, plain `ret` at 0x10067feb): vtable 0x1011da58 into this[0] (0x10067fc0), the element block +4 = 0 (0x10067fc9), then Array_e0::clearRet 0x10068570 through 0x100013cf (0x10067fd3), which with +4 = 0 frees nothing and resets the count words; returns this (0x10067fd8). Caller Display::Display's member set 0x10065010. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Array_e0::ctor_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00067fa0_jgld_Array_e0_ctor_empty.path1.csv`); Array_e0::ctor_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00067fa0_jgld_Array_e0_ctor_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_04.cpp` as `?FUN_10067fa0@f_10067fa0@@YIPAXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10067feb): callee pops 0 bytes of stack arguments.

@@ -1,5 +1,5 @@
-// Terrain 0x10038900, called by Terrain::lowerEdgeCorner as `lowerEdge(t, other, amount)` (that name is
-// kept from terrain_methods.cpp; the body does not lower anything). Same transform setup as localRender
+// Terrain 0x10038900, called by Terrain::lowerEdgeCorner as `renderTileAtFiveOffsets(t, other, amount)` (named
+// lowerEdge until round 27, 2026-10-11; the body does not lower anything). Same transform setup as localRender
 // (assert at base+1, 0x10063e44 = 1520), then, when a neighbour toward the camera is missing or hidden, draws
 // the tile five times at +-10/20 offsets (0x41200000 = 10.0, 0x41a00000 = 20.0) after 0x10003830, and switches
 // GL_LIGHT1 (0x4001) off and GL_LIGHT0 (0x4000) on.
@@ -18,7 +18,7 @@ public:
 
 class Terrain {
 public:
-    void  lowerEdge(Tile* pTile, Tile* pivot, float angle);
+    void  renderTileAtFiveOffsets(Tile* pTile, Tile* pivot, float angle);
     Tile* tileAt(int x, int y);
     void  setViewAngle(float angle);     // 0x1000adc0
     void  f_10003830();                  // 0x10003830
@@ -26,8 +26,8 @@ public:
 
 extern float g_screenScale;              // 0x10070a10
 
-// MATCH: Terrain.dll 0x10038900 ?lowerEdge@Terrain@@QAEXPAVTile@@0M@Z
-void Terrain::lowerEdge(Tile* pTile, Tile* pivot, float angle)
+// MATCH: Terrain.dll 0x10038900 ?renderTileAtFiveOffsets@Terrain@@QAEXPAVTile@@0M@Z
+void Terrain::renderTileAtFiveOffsets(Tile* pTile, Tile* pivot, float angle)
 {
     assert(pTile != NULL);
     bool draw = false;

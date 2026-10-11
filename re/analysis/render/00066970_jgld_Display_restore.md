@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00066970`), 85 bytes, 35 instructions, subsystem `rend
 restores the saved display mode (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Restores a display mode from the DEVMODE kept at this+0x98: ChangeDisplaySettingsA (this + 0x98, CDS_FULLSCREEN = 4) (0x1006699a); a non-zero result (anything but DISP_CHANGE_SUCCESSFUL) returns 2 (0x100669ab), zero returns 0 (0x100669b2). Thiscall, no stack argument. Slot 28 (+0x70) of the Display vtable 0x1011d640. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Display::restore_ok (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066970_jgld_Display_restore_ok.path1.csv`); Display::restore_fail (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066970_jgld_Display_restore_fail.path1.csv`); Display::restore_mix (12 vectors, 12 distinct results, 12 changing state, `log/diff/00066970_jgld_Display_restore_mix.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `?restore@Display@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100669c4): callee pops 0 bytes of stack arguments.

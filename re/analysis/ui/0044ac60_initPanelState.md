@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 50 bytes, 10 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Constructs the global panel/widget state objects at startup. (`re/names/exe_1.tsv`)
 
+## Purpose
+Constructs five C4837f0 objects in place: 0x00821020 (`mov ecx` 0x0044ac60, call 0x0044ac65), 0x00821f08 (0x0044ac6a / 0x0044ac6f), 0x00821ec8 (0x0044ac74 / 0x0044ac79), 0x00821f28 (0x0044ac7e / 0x0044ac83) and, as the tail `jmp 0x004837f0` at 0x0044ac8d, 0x00821ee8 (0x0044ac88); the return is the last constructor's this. Keys `initPanelState_live`, `_pat`, `_zero` over the regions 0x00821020 (8 bytes) and 0x00821ec8 (0x68 bytes). No conditional jump. Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: initPanelState_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/0044ac60_initPanelState_live.path1.csv`); initPanelState_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/0044ac60_initPanelState_pat.path1.csv`); initPanelState_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/0044ac60_initPanelState_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small4.cpp` as `?reset44ac60@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

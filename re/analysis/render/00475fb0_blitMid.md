@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 400 bytes, 149 instructions, subsystem `render`. Mechan
 blit helper used by the composite drawer (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall `(this, tile, ox, oy, x, y, w, h)`, ret 0x1c. The same walk as blitLeft (0x00475fb3..0x00476134) with the cell call Surface_blitThunk 0x00475c60 on the tile (ecx = tile): (this, 0, 0, cx, cy, tw, th) (0x00476099..0x004760ff region: call at 0x004760ff). Keys `blitMid_full`, `_small`, `_none`; 35 vectors each. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: blitMid_full (35 vectors, 28 distinct results, 34 changing state, `log/diff/00475fb0_blitMid_full.path1.csv`); blitMid_small (35 vectors, 8 distinct results, 34 changing state, `log/diff/00475fb0_blitMid_small.path1.csv`); blitMid_none (35 vectors, 2 distinct results, 34 changing state, `log/diff/00475fb0_blitMid_none.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x1c` (at 0x00475fd0, 0x0047613d): callee pops 28 bytes of stack arguments.
 - `ecx` is read at 0x00475fb7 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

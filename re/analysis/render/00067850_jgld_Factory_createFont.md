@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00067850`), 145 bytes, 47 instructions, subsystem `ren
 allocates and constructs a Font object (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Display factory slot 29 (+0x74 of the Display vtable 0x1011d640) that makes a Font: operator new 0x1007f0f0 (0x24) (0x10067884); a non-NULL block (je 0x1006789a) is constructed by Font::Font (owner) through 0x1000101e (0x100678a3) and returned, NULL returns 0 (0x100678ad). `this` (the factory) is never read; `ret 4` at 0x100678de. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: Factory::createFont_new (4 vectors, 4 distinct results, 4 changing state, `log/diff/00067850_jgld_Factory_createFont_new.path1.csv`); Factory::createFont_oom (4 vectors, 1 distinct results, 4 changing state, `log/diff/00067850_jgld_Factory_createFont_oom.path1.csv`); Factory::createFont_empty (4 vectors, 4 distinct results, 4 changing state, `log/diff/00067850_jgld_Factory_createFont_empty.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_factory.cpp` as `?createFont@Factory@@QAEPAUFont@@PAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x100678de): callee pops 4 bytes of stack arguments.

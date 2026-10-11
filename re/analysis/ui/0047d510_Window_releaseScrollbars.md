@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 83 bytes, 25 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 releases the scrollbar children m_150/m_154/m_158 (vtable destroy) and nulls them (`re/names/exe_3.tsv`)
 
+## Purpose
+For each of the child pointers at +0x150 (0x0047d513), +0x154 (0x0047d52d) and +0x158 (0x0047d547): when it is non-null (`test` / `je` at 0x0047d519 / 0x0047d535 / 0x0047d54f) slot 0 of its vtable (the deleting destructor: `mov eax, [ecx]` / `push 1` / `call [eax]` at 0x0047d51d-0x0047d521, 0x0047d537-0x0047d53b, 0x0047d551-0x0047d555) is called and the pointer is cleared (0x0047d523, 0x0047d53d, 0x0047d557). eax is the last call's result (layoutViewTree overwrites it at 0x0047aab7). Reimplemented in `shim/src/re/c3dr.cpp`; path-1 A/B GREEN: Window_releaseScrollbars (16 vectors, 15 distinct results, 14 changing state, `log/diff/0047d510_Window_releaseScrollbars.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_0047d510@f_0047d510@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047d562): callee pops 0 bytes of stack arguments.

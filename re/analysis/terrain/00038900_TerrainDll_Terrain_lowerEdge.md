@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00038900`), 1638 bytes, 486 instructions, subsystem
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Draws the tile five times at offsets when a neighbour toward the camera is missing or hidden (`ret 0xc`; pTile [ebp+8], pivot [ebp+0xc], angle [ebp+0x10]). A NULL pTile would reach the debug CRT assert (0x10038921-0x10038938). glLoadIdentity, glPushMatrix, glRotated, glRotatef(45 + angle), the translate (gated on pTile at 0x100389b1, using the pivot's coordinates), Terrain::setViewAngle. `draw` is true when any of three positions around pTile is NULL or hidden: kind 0 (x+1,y) (x,y-1) (x+1,y-1); kind 1 (x+1,y) (x,y+1) (x+1,y+1); kind 2 (x-1,y) (x,y+1) (x-1,y+1); kind 3 (x-1,y) (x,y-1) (x-1,y-1). When true: Terrain::light1Off 0x10003830, then glTranslatef (10,0,-10), Tile::render, (-20,0,0), render, (0,0,20), render, (20,0,0), render, (-10,0,-10), render, glDisable(0x4001), glEnable(0x4000). Always glPopMatrix; glFlush. Caller: Terrain::lowerEdgeCorner 0x1000a680 (hooks.csv). Reimplemented in `shim/src/re/c3dp.cpp`; path-1 A/B GREEN: Terrain::lowerEdge (72 vectors, 33 distinct results, 72 changing state, `log/diff/00038900_Terrain_Terrain_lowerEdge.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_edge.cpp` as `?lowerEdge@Terrain@@QAEXPAVTile@@0M@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x10038f63): callee pops 12 bytes of stack arguments.

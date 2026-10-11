@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069ac0`), 161 bytes, 56 instructions, subsystem `ui`
 BeginPaint the window, forwards the paint rect to the listener (g_listener 0x1012872c vtable +4), EndPaint (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+windowProc 0x100692b0's WM_PAINT handler (cdecl (hwnd), plain `ret` at 0x10069b60): BeginPaint (hwnd, &ps) (0x10069ae8); a NULL DC (jne 0x10069afc not taken) jumps to the end with eax = 0; otherwise ps.rcPaint (ps + 8 .. + 0x14) is copied into a local RECT (0x10069b00..0x10069b15), the event sink 0x1012872c's vtable slot +4 is called with that RECT's address (0x10069b2c), and EndPaint (hwnd, &ps) (0x10069b40) leaves its result in eax. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: onPaint (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069ac0_jgld_onPaint.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_app.cpp` as `?onPaint@@YAXPAUHWND__@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10069b60): callee pops 0 bytes of stack arguments.

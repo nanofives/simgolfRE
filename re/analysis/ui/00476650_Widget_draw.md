@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 80 bytes, 35 instructions, subsystem `ui`. Mechanical t
 draws a simple widget element (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall `(this, font, text, x, y, len)`, ret 0x14. Saves this+0x5c / +0x60 / +0x64 (0x00476653..0x00476660), replaces the base font by `font` and clears +0x60 / +0x64 when font is non-NULL and font+4 (the measurer) is non-NULL (0x00476663..0x00476675), calls drawText 0x00477c30(this, text, x, y, len) (0x0047668c), restores the three words (0x00476691..0x00476699) and returns drawText's result. Key `Widget_draw`: 80 vectors (4 objects with and without fonts / markup, 5 font arguments incl. NULL, a font without measurer and a font with a negative +8, 4 strings incl. NULL and empty). Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: Widget_draw (80 vectors, 4 distinct results, 36 changing state, `log/diff/00476650_Widget_draw.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?draw@C476650@@QAEXPAUP476@@HHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x0047669d): callee pops 20 bytes of stack arguments.

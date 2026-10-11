@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 76 bytes, 27 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 installs a display surface as the primary (g_83ad44) after reset, creating its default backing (createFromId with 0x4e43ac) (`re/names/exe_3.tsv`)
 
+## Purpose
+Cdecl `(surf)`. NULL returns 3 (0x00483ac5..0x00483ace). clearPrimarySurface 0x00483b10 (0x00483ad0); r = display slot +0xb8 (0x00483add) and a non-zero r is returned (0x00483ae3 / 0x00483ae5); [0x0083ad44] = surf (0x00483ae7); a Surface with a handle (+4 != 0, 0x00483aed..0x00483af2) returns 0 (0x00483b08); otherwise Surface::createFromId 0x00483800(surf, 0x004e43ac, 0xc, 0) (0x00483aff) and a non-zero result is returned (0x00483b04 / 0x00483b06), else 0. Keys `setPrimarySurface_ok` (slot +0xb8 = 0, createFromId's handle slot returns 0x33), `_r0` (returns 0), `_b8` (slot +0xb8 = 0x77); 5 vectors each (NULL, a Surface with a handle, three without). The default-font global [0x0083ad44] is saved and restored under the freeze. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: setPrimarySurface_ok (5 vectors, 5 distinct results, 4 changing state, `log/diff/00483ac0_setPrimarySurface_ok.path1.csv`); setPrimarySurface_r0 (5 vectors, 5 distinct results, 4 changing state, `log/diff/00483ac0_setPrimarySurface_r0.path1.csv`); setPrimarySurface_b8 (5 vectors, 2 distinct results, 4 changing state, `log/diff/00483ac0_setPrimarySurface_b8.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00483ac0@f_00483ac0@@YAHPAX@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00483acf, 0x00483b0b): callee pops 0 bytes of stack arguments.

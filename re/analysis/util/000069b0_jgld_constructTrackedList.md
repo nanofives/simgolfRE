@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000069b0`), 51 bytes, 21 instructions, subsystem `util
 Static initializer of the module global g_trackedList 0x10128428: constructs it with LinkedList::ctor; called by the initializer 0x10006970, which also registers the destroy stub atexitDestroyGlobalList 0x10006a40 (`re/names/jgld_4.tsv`)
 System writeup: `re/analysis/systems/jgld_4.md`.
 
+## Purpose
+C++ dynamic initializer of the module's tracked-object list: LinkedList::ctor 0x10006c80 through the thunk 0x100013a7 on the global 0x10128428 (`mov ecx, 0x10128428` 0x100069c8, call 0x100069cd); eax is the callee's (its `this`). cdecl, no argument, plain `ret` at 0x100069e2. Caller 0x10006970 (the module's initializer stub). Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: constructTrackedList_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/000069b0_jgld_constructTrackedList_live.path1.csv`); constructTrackedList_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/000069b0_jgld_constructTrackedList_pat.path1.csv`); constructTrackedList_five (1 vectors, 1 distinct results, 1 changing state, `log/diff/000069b0_jgld_constructTrackedList_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_list.cpp` as `_$E1` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x100069e2): callee pops 0 bytes of stack arguments.

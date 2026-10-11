@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001bea0`), 34 bytes, 12 instructions, subsystem `aud
 scalar deleting destructor: calls ChainObject_dtor then operator_delete(this-0x2c) when param&1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+0x0001bea0 ChainObject_scalarDtor and 0x0001c950 Ctrl5b58c_scalarDtor (VAs 0x1001bea0 / 0x1001c950). ecx is the sub-object at +0x2c; the destructor body runs on it (thunk 0x1000156e -> 0x1001b570, resp. 0x10002595 -> 0x1001c990, call at 0x1001bea3 / 0x1001c953); bit 0 of the stack argument (`test byte ptr [esp + 8], 1` 0x1001bea8) then calls operator delete on the object start (ecx - 0x2c, 0x1001bead / 0x1001beb3). Returns the object start (`lea eax, [esi - 0x2c]` 0x1001bebb), also when the bit is clear (0x1001bead). Reimplemented in `shim/src/re/c3do.cpp`; path-1 A/B GREEN: ChainObject_scalarDtor (40 vectors, 20 distinct results, 40 changing state, `log/diff/0001bea0_sound_ChainObject_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001bea0@C_FUN_1001bea0@f_1001bea0@@QAEHE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001bebf): callee pops 4 bytes of stack arguments.

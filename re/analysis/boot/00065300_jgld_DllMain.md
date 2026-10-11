@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065300`), 110 bytes, 38 instructions, subsystem `boo
 DLL entry point; dispatches process/thread attach and detach (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+jgld.dll's entry point: reason DLL_PROCESS_DETACH 0 (je 0x10065322) -> DeleteCriticalSection (0x101286b0) (0x10065349); DLL_PROCESS_ATTACH 1 (je 0x10065328) -> InitializeCriticalSection (0x101286b0) (0x10065333); any other reason calls nothing. Always returns 1 (0x10065356); stdcall, `ret 0xc` at 0x1006536b. Called by the CRT's DLL startup 0x10082770. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: DllMain (12 vectors, 3 distinct results, 5 changing state, `log/diff/00065300_jgld_DllMain.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display.cpp` as `_DllMain@12` (C linkage: the source declares the signature).
 - Returns with `ret 0xc` (at 0x1006536b): callee pops 12 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 324 bytes, 109 instructions, subsystem `render`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 paints the window: if flag 0x80000 and backing window m_130 are set blits m_130 and optional fill g_83abe0, else the base paint (`re/names/exe_3.tsv`)
 
+## Purpose
+Thiscall `(this, colour)`, ret 4. The paint-through-parent gate: byte flag 0x80000 in +0x9c (0x004808c7), a parent at +0x130 (0x004808d7) and the parent's vtable slot +0x11c non-zero (0x004808e7). Passing it, Surface_blitThunk 0x00475c60 runs on parent + 0x274 (0x00480990 / 0x00480996) with (this + 0x274, A.left + B.left, A.top + B.top, 0, 0, width, height) where A is the RECT at +0x1ac (0x00480912), B the RECT at +0x1bc (0x004808f5) and width / height the handle's (this+0x278) slots +0xd8 / +0xdc (0 without a handle: ebx = 0 at 0x00480938, 0x0048097d); then, when [0x0083abe0] is non-zero (0x0048099b), Surface_fill 0x00475da0 on this + 0x274 (0, 0, w - 1, h - 1, [0x0083abe0]) with w and h read again (0x004809a6..0x004809df). Not passing, Widget_clearArea 0x00478b30 on this + 0x274 with the argument (0x004809f6). Keys `Window::paint` ([0x0083abe0] = 0x1234) and `Window::paint_nocolour` (0); 16 vectors each (8 windows: through a parent, a parent with slot result 0 or 0x55, no flag, no parent, no handle, all-bits flags, large handle; two colours). Void: the clear path leaves a caller-dependent eax. Reimplemented in `shim/src/re/c3dq.cpp`; path-1 A/B GREEN: Window::paint (16 vectors, 12 distinct results, 14 changing state, `log/diff/004808c0_Window_paint.path1.csv`); Window::paint_nocolour (16 vectors, 12 distinct results, 14 changing state, `log/diff/004808c0_Window_paint_nocolour.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?paint@R2C4808c0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004809e9, 0x00480a01): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00069220`), 48 bytes, 22 instructions, subsystem `rend
 constructs the FontBase; installs the vtable (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Constructor of the FontBase sub-object: only the FontBase vtable 0x1011da90 into this[0] (0x10069240); returns this (0x10069246). FontBase is not registered in the tracked list (no Tracked::ctor call). Thiscall, no stack argument, plain `ret` at 0x1006924f. Caller Font::Font 0x10068660. Reimplemented in `shim/src/re/c3dn.cpp`; path-1 A/B GREEN: FontBase::FontBase_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069220_jgld_FontBase_FontBase_empty.path1.csv`); FontBase::FontBase_five (12 vectors, 12 distinct results, 12 changing state, `log/diff/00069220_jgld_FontBase_FontBase_five.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_font.cpp` as `??0FontBase@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1006924f): callee pops 0 bytes of stack arguments.
