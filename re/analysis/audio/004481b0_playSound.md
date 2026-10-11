@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 80 bytes, 27 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Plays a sound effect on a channel (volume/pan/pitch args). (`re/names/exe_1.tsv`)
 
+## Purpose
+0x004481b0 playSound(idx, volume, pan, pitch, field34): cdecl, plain `ret`. idx == -1 (cmp 0x004481b4, je 0x004481b7) returns eax = idx = -1 (0x004481ff). Otherwise the Snd object is 0x0080d840 + idx * 108 (lea x3, x9, x4 + 0x80d840 at 0x004481b9..0x004481c0, 32-bit wrap) and, in this order: Snd::setPitch(pitch) (0x004481ce), Snd::setVolume(volume) (0x004481da), Snd::setPan(pan) (0x004481e6), Snd::setField34(field34) (0x004481f2), then Snd::play (0x004481f9) whose eax is the return value. Reimplemented in `shim/src/re/c3dy.cpp`; path-1 A/B GREEN: playSound (13 vectors, 13 distinct results, 12 changing state, `log/diff/004481b0_playSound.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small8.cpp` as `?playSound@@YAXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004481ff): callee pops 0 bytes of stack arguments.

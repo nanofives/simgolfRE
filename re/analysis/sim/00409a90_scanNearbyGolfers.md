@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 345 bytes, 104 instructions, subsystem `sim`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 scans golfers near a point for interactions (`re/names/exe_0.tsv`)
 
+## Purpose
+0x00409a90 scanNearbyGolfers(g): cdecl, plain `ret`. Record base s = g << 8 (0x00409a9a); fields x = [s+0x57958c], y = [s+0x579590]. For each of the 256 entries (stride 0x24 from 0x005736b0; ebx = entry + 4, 0x00409a9d / 0x00409b3f / 0x00409b42): an entry whose dword +8 is not -1 (0x00409aa2) draws Random::range(0x00822d9c, ([0x00822c88] << 10) / 4 + 0x600) (0x00409aa8..0x00409ac4) and calls distance(entry.x - x, entry.y - y) (0x00409acf..0x00409ae9); the comparison only feeds a register nothing reads. A non-zero bit 0 of [0x0056c7b4] (0x00409af6) is cleared (0x00409aff..0x00409b14) and emitGolferThought(g, 0x18, 0x14) is called (0x00409b19). Every entry calls holeQuadrants(x, y, 6) (0x00409b21..0x00409b31). Afterwards the first entry whose dword +8 is -1 (0x00409b4e..0x00409b66) receives {+0 x, +4 y, +8 x, +0xc y, +0x10 [s+0x579594], +0x14 [s+0x579598], +0x18 [s+0x57959c] / 2, +0x1c [s+0x5795a0] / 3, +0x20 [0x00834170]} (0x00409b6b..0x00409bdb). eax at the ret is the entry count scanned (256) when none was free (0x00409b5d), else the sign bit of the high word of [s+0x5795a0] * 0x55555556 (shr 31 at 0x00409bcf). Reimplemented in `shim/src/re/c3dy.cpp`; path-1 A/B GREEN: scanNearbyGolfers (12 vectors, 12 distinct results, 12 changing state, `log/diff/00409a90_scanNearbyGolfers.path1.csv`); scanNearbyGolfers_real (12 vectors, 12 distinct results, 12 changing state, `log/diff/00409a90_scanNearbyGolfers_real.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00409b6a, 0x00409be8): callee pops 0 bytes of stack arguments.
 

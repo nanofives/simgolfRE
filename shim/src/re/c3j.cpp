@@ -110,26 +110,50 @@ void __cdecl FindNearestTargetTile_re(int px, int py, int maxDist) {
 
 // ---- Snd field writers (thiscall) ----------------------------------------------------------------
 
-// 0x00485140  Snd::setVolume(v): stores v & 0x7f at this+4 (0x00485147, 0x00485156). When this+0x3c < 0x10
-// unsigned (0x0048515c) it scales v through a table at 0x0083ada8 and __ftol, but that value is consumed only by
-// the device object at this+0x40 (indirect call [vtbl+0x40] at 0x0048519d). The A/B holds this+0x40 == 0 and
-// this+0x3c >= 0x10, so neither the float block nor the device call runs and the only observable effect is the
-// store at this+4.
-typedef void(__fastcall* SetVol_t)(void*, void*, unsigned);
+// Device virtual call: [[this+0x40] + slot] as thiscall with one stack argument, returning its eax.
+typedef unsigned(__fastcall* SndDev1_t)(void*, void*, unsigned);
+static unsigned sndDevCall(void* dev, unsigned slot, unsigned arg) {
+    const unsigned vt = at<unsigned>(reinterpret_cast<unsigned>(dev));
+    return at<SndDev1_t>(vt + slot)(dev, 0, arg);
+}
+
+// 0x00485140  Snd::setVolume(v): m = v & 0x7f (0x00485147) is stored at this+4 (0x00485156). eax starts as m.
+// When this+0x3c (key) < 0x10 unsigned (0x0048515c) eax becomes __ftol 0x4a6030 of
+// (double)m * [0x4bacf0] (1/127, 0x0048517d) * (double)(unsigned)[0x83ada8 + key*0x1c] (fild qword of the zero-
+// extended dword, 0x00485187). When the device this+0x40 is non-null (0x00485196) eax is passed to its virtual
+// +0x40 (0x0048519d) and the call's eax is left; `ret 4` at 0x004851a3. Fixed 2026-10-11 after c3dy's device
+// probe: the first body wrote only this+4 (its A/B held the device null and key >= 0x10).
+typedef unsigned(__fastcall* SetVol_t)(void*, void*, unsigned);
 SetVol_t SetVolume_orig;
-void __fastcall SetVolume_re(void* self, void*, unsigned v) {
+unsigned __fastcall SetVolume_re(void* self, void*, unsigned v) {
     const unsigned t = reinterpret_cast<unsigned>(self);
-    at<unsigned>(t + 4) = v & 0x7f;
+    const unsigned m = v & 0x7f;
+    at<unsigned>(t + 4) = m;
+    unsigned eax = m;
+    const unsigned key = at<unsigned>(t + 0x3c);
+    if (key < 0x10) {
+        const double scale = at<double>(0x004BACF0);
+        const double tab = static_cast<double>(static_cast<long long>(at<unsigned>(0x0083ADA8 + key * 0x1c)));
+        const double r = (static_cast<double>(static_cast<int>(m)) * scale) * tab;
+        eax = static_cast<unsigned>(static_cast<long long>(r));
+    }
+    void* dev = at<void*>(t + 0x40);
+    if (dev) eax = sndDevCall(dev, 0x40, eax);
+    return eax;
 }
 
 // 0x004846b0  Snd::setField34(v): stores v at this+0x34 (0x004846b4); if the device object at this+0x40 is
-// non-null it also forwards v to it (indirect call [vtbl+0x4c] at 0x004846c1). The A/B holds this+0x40 == 0, so
-// only the store at this+0x34 runs.
-typedef void(__fastcall* SetF34_t)(void*, void*, unsigned);
+// non-null (0x004846ba) it forwards v to the device virtual +0x4c (0x004846c1) and leaves that call's eax,
+// otherwise eax is still v; `ret 4` at 0x004846c4. Fixed 2026-10-11 after c3dy's device probe (the first body
+// dropped the forward).
+typedef unsigned(__fastcall* SetF34_t)(void*, void*, unsigned);
 SetF34_t SetField34_orig;
-void __fastcall SetField34_re(void* self, void*, unsigned v) {
+unsigned __fastcall SetField34_re(void* self, void*, unsigned v) {
     const unsigned t = reinterpret_cast<unsigned>(self);
     at<unsigned>(t + 0x34) = v;
+    void* dev = at<void*>(t + 0x40);
+    if (dev) return sndDevCall(dev, 0x4c, v);
+    return v;
 }
 
 // ---- Snd base constructor (thiscall, returns this) -----------------------------------------------

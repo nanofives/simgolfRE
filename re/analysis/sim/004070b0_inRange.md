@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 448 bytes, 125 instructions, subsystem `sim`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 range/area test over the tile grid (`re/names/exe_0.tsv`)
 
+## Purpose
+0x004070b0 inRange(type, dist, row, col): cdecl, plain `ret`, returns 1 when lo < dist < hi (signed; `jge` 0x00407261 / `jle` 0x00407265 give 0), else 0. Initial window (hi = eax, lo = ecx): type 0x16 or 0x15 (0x004070b5..0x004070bd) reads the low byte of the tile word at 0x0053caf0 + 2 * (col + 50 * row) (0x004070bf..0x004070d9), masks it with 0x1f and gives hi = 0xc8 when (value - 1) > 3 signed (dec / cmp 3 / jg 0x004070e7) else 0, lo = 0; any other type gives hi = lo = type (0x004070ed..0x004070f1). The signed byte [0x005a34e0] (0x004070f5) above 3 unsigned (ja 0x004070ff) keeps that window; 0..3 jump through the table 0x00407270 = {0x0040710c, 0x0040715a, 0x004071a6, 0x0040722b}. Arms (r = Random::range(0x00822d9c, n) & 0xffff, 0x00407121 etc.): A 0x004071c9: hi = r(100) + 0x190, lo = 0x32 B 0x0040712e/0x00407255: hi = r(100) + 0x64, lo = 0x14 C 0x00407143: hi = r(100) + 0x64, lo = 0x32 D 0x00407192: hi = r(100) + 0x12c, lo = 0x64 E 0x00407206: type 0x10: hi = r(200) + 0x190, lo = 0x4b F 0x0040723f: hi = r(100) + 0x190, lo = 0x14 mode 0 (0x0040710c): 0xd A, 0xe B, 0xf C, 0x10 E. mode 1 (0x0040715a): 0xd A, 0xe B, 0xf D, 0x10 E. mode 2 (0x004071a6): 0xd B, 0xe A, 0xf C, 0x10 E. mode 3 (0x0040722b): 0xd..0x10 F. Types outside 0xd..0x10 keep the initial window. Reimplemented in `shim/src/re/c3dy.cpp`; path-1 A/B GREEN: inRange (214 vectors, 214 distinct results, 112 changing state, `log/diff/004070b0_inRange.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?inRange4070b0@@YAHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040726c, 0x0040726f): callee pops 0 bytes of stack arguments.

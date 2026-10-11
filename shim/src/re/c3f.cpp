@@ -97,15 +97,20 @@ int __fastcall SetPitch_re(void* self, void*, int p) {
 }
 
 // 0x004847f0  Snd::setPan(p): clamps p to [-0x40, 0x3f] (0x004847f4..0x00484805), stores it at [this+8]
-// (0x0048480a), notifies the device virtual +0x44 when [this+0x40] is set (0x00484817), and returns the clamped
-// value in eax (left from the clamp; `ret 4`).
+// (0x0048480a), notifies the device virtual +0x44 when [this+0x40] is set (0x00484817), and returns eax (`ret 4`
+// at 0x0048481a): the clamped value with no device, the device virtual's own eax with one (fixed 2026-10-11 after
+// c3dy's device probe: the first body returned the clamped value on both paths).
 Snd1_t SetPan_orig;
 int __fastcall SetPan_re(void* self, void*, int p) {
     if (p < -0x40) p = -0x40;
     else if (p > 0x3f) p = 0x3f;
     *reinterpret_cast<int*>(reinterpret_cast<char*>(self) + 8) = p;
     void* dev = sndDevice(self);
-    if (dev) sndNotify(dev, 0x44, p);
+    if (dev) {
+        void* vtbl = *reinterpret_cast<void**>(dev);
+        Snd1_t fn = *reinterpret_cast<Snd1_t*>(reinterpret_cast<char*>(vtbl) + 0x44);
+        return fn(dev, 0, p);
+    }
     return p;
 }
 

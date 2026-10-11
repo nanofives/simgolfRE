@@ -87,4 +87,43 @@ Object.assign(globalThis.DIFF_FIXTURES, {
   c3j_snd_ctor() {
     return globalThis.DIFF_FIXTURES._c3jSndArena(10, null);
   },
+
+  // Device arm (added 2026-10-11 after c3dy's probe found both bodies dropped it). Ten Snd slots: even slots carry a
+  // recording device at +0x40, odd ones NULL; slot i has key (+0x3c) i (< 0x10, the scaled path of setVolume) for
+  // i < 6 and 0x20 + i otherwise. The device's virtuals +0x40/+0x44/+0x4c are native thiscall stubs that append
+  // {tag, ecx, arg} to $log (cursor at $log+0) and return cursor ^ tag, so the forwarded value and the returned eax
+  // are both compared. setVolume's scale table 0x83ada8 + key*0x1c gets distinct values for keys 0..15 under a frozen
+  // first thread (restored at the flush).
+  _c3jSndDev(n) {
+    const log = Memory.alloc(0x400);
+    for (let i = 0; i < 0x400; i += 4) log.add(i).writeU32(0);
+    log.writeU32(0x10);
+    const code = Memory.alloc(Process.pageSize);
+    Memory.protect(code, Process.pageSize, 'rwx');
+    const u32 = v => { v >>>= 0; return [v & 0xff, (v >>> 8) & 0xff, (v >>> 16) & 0xff, (v >>> 24) & 0xff]; };
+    const R = u32(log.toUInt32());
+    const vt = Memory.alloc(0x60);
+    for (let off = 0; off < 0x60; off += 4) {
+      const tag = (0xDE5A0000 + off) >>> 0;
+      const b = [0x53, 0x8B, 0x1D, ...R, 0x81, 0xC3, ...R, 0xC7, 0x03, ...u32(tag), 0x89, 0x4B, 0x04,
+                 0x8B, 0x44, 0x24, 0x08, 0x89, 0x43, 0x08, 0x81, 0x05, ...R, ...u32(12),
+                 0xA1, ...R, 0x35, ...u32(tag), 0x5B, 0xC2, 0x04, 0x00];
+      const p = code.add(off * 16);
+      p.writeByteArray(b);
+      vt.add(off).writePointer(p);
+    }
+    const dev = Memory.alloc(0x20);
+    dev.writePointer(vt);
+    __freeze.thread();
+    for (let k = 0; k < 16; k++) __freeze.setU32(ptr(0x0083ada8 + k * 0x1c), 0x40 + k * 0x9d);
+    const fx = globalThis.DIFF_FIXTURES._c3jSndArena(n, null);
+    for (let i = 0; i < n; i++) {
+      const o = fx['o' + i];
+      o.add(0x40).writePointer((i & 1) ? ptr(0) : dev);
+      o.add(0x3c).writeU32(i < 6 ? i : 0x20 + i);
+    }
+    fx.log = log;
+    return fx;
+  },
+  c3j_snd_dev() { return globalThis.DIFF_FIXTURES._c3jSndDev(10); },
 });

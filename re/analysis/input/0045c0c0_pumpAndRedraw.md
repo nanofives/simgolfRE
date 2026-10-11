@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 142 bytes, 46 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Pumps messages, marks the screen dirty, and redraws. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045c0c0 pumpAndRedraw(limit): cdecl, `ret`, always returns 1 (mov eax, 1 at 0x0045c148). start = timeGetTime() (call ebx 0x0045c0ca); [0x00822d94] = [0x00822d68] = 0 (0x0045c0d4 / 0x0045c0d9). Loop: pumpMessages (0x0045c0de), now = timeGetTime() (0x0045c0e3); a non-zero [0x00822d68] (0x0045c0e7..0x0045c0ee), a non-zero flushRedraw (0x0045c0f0..0x0045c0f7) or a non-zero [0x0083afcc] (0x0045c0f9..0x0045c100) leaves the loop; limit == 0 repeats (0x0045c104); now - start (signed) below limit repeats (0x0045c106..0x0045c10a). After the loop [0x00822d94] = [0x00822b9c] and [0x00822d7c] = [0x00822b98] (reads 0x0045c10c / 0x0045c111, stores 0x0045c117 / 0x0045c11c); flushRedraw again (0x0045c122); a non-zero result sets [0x00822d94] = setDirtyFlagB() and [0x00822d7c] = setDirtyFlagA() (0x0045c12f..0x0045c13e); enterModal483d30 (0x0045c143). Reimplemented in `shim/src/re/c3dy.cpp`; path-1 A/B GREEN: pumpAndRedraw (10 vectors, 10 distinct results, 10 changing state, `log/diff/0045c0c0_pumpAndRedraw.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0045c14d): callee pops 0 bytes of stack arguments.
 

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 127 bytes, 53 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Pumps messages until a tick deadline, returning elapsed ticks. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045bf80 waitTicks(ticks, pump): cdecl, `ret`. ticks == 0 returns 0 (test 0x0045bf87, je 0x0045bf8a -> xor eax, eax 0x0045bfec). Otherwise limit = (ticks * 1000) / 100 as the 32-bit signed product and the magic-number division by 100 (lea x5 three times 0x0045bf8c..0x0045bf98, shl 3 at 0x0045bfa0, imul by 0x51eb851f at 0x0045bfa3, sar 5 at 0x0045bfa5, plus the sign bit at 0x0045bfaa..0x0045bfad), start = timeGetTime() (call edi 0x0045bfb1), elapsed = timeGetTime() - start (0x0045bfb5 / 0x0045bfb7); an elapsed time that is not below limit (unsigned `jae` 0x0045bfbb) returns 0. Otherwise the loop: pumpInput483c30 (0x0045bfc1); with pump != 0 (0x0045bfc6/0x0045bfc8) pumpMessages (0x0045bfca), then drainAndRedraw (0x0045bfcf): a zero result (0x0045bfd4/0x0045bfd6) or a non-zero [0x00822d68] (0x0045bfd8..0x0045bfdf) leaves through waitRedrawReady (0x0045bff0) and returns 1 (0x0045bff8); the loop ends with 0 once timeGetTime() - start is not below limit (unsigned `jb` 0x0045bfe7). Reimplemented in `shim/src/re/c3dy.cpp`; path-1 A/B GREEN: waitTicks (16 vectors, 10 distinct results, 14 changing state, `log/diff/0045bf80_waitTicks.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small12.cpp` as `?waitTicks@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0045bfef, 0x0045bffe): callee pops 0 bytes of stack arguments.

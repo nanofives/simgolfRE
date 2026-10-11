@@ -38,13 +38,13 @@ HOOKS = {
 
     # 0x00485140 Snd::setVolume(v): stores v & 0x7f at this+4; the fixture holds the device (this+0x40) null and
     # this+0x3c >= 0x10, so the float scale and device forward do not run. Arena is the state region.
-    "Snd::setVolume": dict(module="golf_clean.exe", addr=0x00485140, abi="thiscall", ret="void",
+    "Snd::setVolume": dict(module="golf_clean.exe", addr=0x00485140, abi="thiscall", ret="int",
                            args=["pointer", "int"], fixture="c3j_snd_vol", state=[("$obj", 0, 0x80 * 10)],
                            vectors=[(f"$o{i}", v) for i, v in enumerate(_VOLS)]),
 
     # 0x004846b0 Snd::setField34(v): stores v at this+0x34; the fixture holds the device (this+0x40) null so the
     # forward does not run. Arena is the state region. No callees -> 10 vectors.
-    "Snd::setField34": dict(module="golf_clean.exe", addr=0x004846B0, abi="thiscall", ret="void",
+    "Snd::setField34": dict(module="golf_clean.exe", addr=0x004846B0, abi="thiscall", ret="int",
                             args=["pointer", "int"], fixture="c3j_snd_f34", state=[("$obj", 0, 0x80 * 10)],
                             vectors=[(f"$o{i}", v) for i, v in enumerate(_VOLS)]),
 
@@ -53,4 +53,15 @@ HOOKS = {
     "Snd::ctor485260": dict(module="golf_clean.exe", addr=0x00485260, abi="thiscall", ret="pointer",
                             args=["pointer"], fixture="c3j_snd_ctor", state=[("$obj", 0, 0x80 * 10)],
                             vectors=[(f"$o{i}",) for i in range(10)]),
+
+    # Device arm (2026-10-11, c3dy's probe): even slots carry a recording device, slots 0..5 have key < 0x10 (setVolume's
+    # scaled path through 0x83ada8). $log holds every forwarded {tag, ecx, arg}; the returned eax is compared.
+    "Snd::setVolume_dev": dict(module="golf_clean.exe", addr=0x00485140, abi="thiscall", ret="int",
+                               args=["pointer", "int"], fixture="c3j_snd_dev",
+                               state=[("$obj", 0, 0x80 * 10), ("$log", 0, 0x100)],
+                               vectors=[(f"$o{i}", v) for i, v in enumerate(_VOLS)] + [(f"$o{i}", 0x7f) for i in range(6)]),
+    "Snd::setField34_dev": dict(module="golf_clean.exe", addr=0x004846B0, abi="thiscall", ret="int",
+                                args=["pointer", "int"], fixture="c3j_snd_dev",
+                                state=[("$obj", 0, 0x80 * 10), ("$log", 0, 0x100)],
+                                vectors=[(f"$o{i}", v) for i, v in enumerate(_VOLS)] + [(f"$o{i}", -5) for i in range(4)]),
 }

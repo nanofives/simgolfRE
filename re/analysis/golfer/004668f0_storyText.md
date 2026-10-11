@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 254 bytes, 95 instructions, subsystem `golfer`. Mechani
 generates a story chapter's text line for a golfer pair (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x004668f0 storyText(a, i, g): cdecl, plain `ret`; returns the first character (sign-extended) of the text buffer 0x0051a068. Record s = g << 8; f = [s+0x5794c8] & 0x100000 (0x004668fc / 0x00466902). f != 0: key = byte [s + i + 0x579502] (0x00466910); f == 0: key = byte [(short [s+0x57955a]) * 256 + i + 0x579502] (0x00466919..0x00466929). key == 0 returns 0 (0x00466934 / 0x00466936 / 0x0046693a). Else computeStoryReply(a, key, i, f ? g : g ^ 1) (0x00466942..0x0046694d) fills the buffer; len = strlen(buffer) (repne scasb, 0x00466952..0x00466969). f != 0 (0x0046696a): every '\n' within len becomes NUL (0x00466977..0x0046698a). f == 0: the text after the first '\n' within len moves to the buffer start including its NUL (0x0046699f..0x004669e1); with no '\n' the buffer becomes empty (0x004669ac). The return is the signed byte at 0x0051a068 (0x0046698c / 0x004669b2 / 0x004669e3). Reimplemented in `shim/src/re/c3dy.cpp`; path-1 A/B GREEN: storyText (19 vectors, 18 distinct results, 17 changing state, `log/diff/004668f0_storyText.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_story.cpp` as `?storyText@@YAHHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046693d, 0x00466996, 0x004669bc, 0x004669ed): callee pops 0 bytes of stack arguments.

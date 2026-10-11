@@ -44,6 +44,12 @@ HOOKS.update({
     "Snd::setPan": dict(module="golf_clean.exe", addr=0x004847f0, abi="thiscall", ret="int",
                         args=["pointer", "int"], fixture="c3f_snd", state=[("$obj", 8, 4)],
                         vectors=[("$obj", p) for p in (-1000, -0x41, -0x40, -0x3f, -1, 0, 1, 0x3e, 0x3f, 0x40, 1000)]),
+    # setPan device arm (2026-10-11, c3dy's probe): c3j's c3j_snd_dev slots (even ones carry a recording device at
+    # +0x40 whose virtual +0x44 logs to $log and returns cursor ^ tag); with a device the returned eax is the device's.
+    "Snd::setPan_dev": dict(module="golf_clean.exe", addr=0x004847f0, abi="thiscall", ret="int",
+                            args=["pointer", "int"], fixture="c3j_snd_dev",
+                            state=[("$obj", 0, 0x80 * 10), ("$log", 0, 0x100)],
+                            vectors=[(f"$o{i % 10}", p) for i, p in enumerate((-1000, -0x41, -0x40, -1, 0, 1, 0x3f, 0x40, 1000, 7, 0x20, -0x20))]),
     # setField38: v == 0 -> returns 10 (no write); else stores v at +0x38 (state) and returns 0.
     "Snd::setField38": dict(module="golf_clean.exe", addr=0x004846d0, abi="thiscall", ret="int",
                             args=["pointer", "int"], fixture="c3f_snd", state=[("$obj", 0x38, 4)],

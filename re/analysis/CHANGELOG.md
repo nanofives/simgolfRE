@@ -4,6 +4,17 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-11  00409a90  addGolferToTable  name scanNearbyGolfers->addGolferToTable  log/c3/sim_renamed.tsv
+2026-10-11  00484940  Snd::play  C2->C3  log/diff/00484940_Snd_play.path1.csv
+2026-10-11  004668f0  storyText  C2->C3  log/diff/004668f0_storyText.path1.csv
+2026-10-11  0045c0c0  pumpAndRedraw  C2->C3  log/diff/0045c0c0_pumpAndRedraw.path1.csv
+2026-10-11  0045bf80  waitTicks  C2->C3  log/diff/0045bf80_waitTicks.path1.csv
+2026-10-11  004481b0  playSound  C2->C3  log/diff/004481b0_playSound.path1.csv
+2026-10-11  0042f340  rebuildTileCoverage  C2->C3  log/diff/0042f340_rebuildTileCoverage.path1.csv
+2026-10-11  0040c500  playSoundAt  C2->C3  log/diff/0040c500_playSoundAt.path1.csv
+2026-10-11  00409a90  scanNearbyGolfers  C2->C3  log/diff/00409a90_scanNearbyGolfers.path1.csv
+2026-10-11  00409620  scanShotArea  C2->C3  log/diff/00409620_scanShotArea.path1.csv
+2026-10-11  004070b0  inRange  C2->C3  log/diff/004070b0_inRange.path1.csv
 2026-10-11  sound.dll:00035f60  Channel_stubReturnB  C2 status transcribed->trivial  TRIVIAL: body <= 64 bytes in one range; no call except __chkesp; no memory write outside the stack frame; eax at ret is an immediate or unset; only frame, stack, immediate and return instructions (no branch, FPU, I/O) (re/tools/endstate.py)
 2026-10-11  sound.dll:00011160  stubReturnBC  C2 status transcribed->trivial  TRIVIAL: body <= 64 bytes in one range; no call except __chkesp; no memory write outside the stack frame; eax at ret is an immediate or unset; only frame, stack, immediate and return instructions (no branch, FPU, I/O) (re/tools/endstate.py)
 2026-10-11  sound.dll:0000e570  stubReturnBB  C2 status transcribed->trivial  TRIVIAL: body <= 64 bytes in one range; no call except __chkesp; no memory write outside the stack frame; eax at ret is an immediate or unset; only frame, stack, immediate and return instructions (no branch, FPU, I/O) (re/tools/endstate.py)
