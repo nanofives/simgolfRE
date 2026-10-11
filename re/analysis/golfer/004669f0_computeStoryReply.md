@@ -8,6 +8,9 @@ System writeup: `re/analysis/systems/exe_2.md`.
 
 Hand-written analysis of this function: `re/analysis/golfers/004669f0_story_reply.md`.
 
+## Purpose
+0x004669f0 computeStoryReply(file, key, hole, g): cdecl, plain `ret`. r = clamp(byte [0x005794ef + ((g ^ 1) << 8) + hole] >> 3, 0, key) (0x004669ff..0x00466a17). p = (short)[0x0057955a + (g << 8)] (the partner, 0x00466a22). When the partner's signed byte [p*256 + 0x005794d9] equals hole (0x00466a32..0x00466a3b) and its byte [p*256 + hole + 0x005794ef] is 0 (0x00466a41..0x00466a4a): n = the run of 0x13 bytes from [p*256 + 0x00579528], at most 4 (0x00466a50..0x00466a71); v = (clamp(short [p*256 + 0x0057955c], short [p*256 + 0x0057956c], 0x63) - 1) / 2 (signed, 0x00466a73..0x00466a97); key >= 2 caps v at key - 1 (0x00466a99..0x00466aa3); the top bits t = word [p*256 + 2n + 0x00579540] & 0xc000 (0x00466aa5..0x00466ab8): 0x4000 adds 1 (0x00466ac2); else a non-zero v drops by 1 when t != 0 and again when it is still non-zero and t == 0xc000 (0x00466ac5..0x00466ad9); holeQuadrants([p*256 + 0x005794b8], [p*256 + 0x005794bc], 8) != 0 sets v = key (0x00466aed..0x00466af9); r = clamp(v, 0, key) (0x00466b05). Either way word [p*256 + 0x0057956a] = r and byte [p*256 + hole + 0x005794ef] = r * 8 + 1 (0x00466b15..0x00466b29, 0x00466b34..0x00466b48), [0x00838a94] = r (0x00466b55), and the result is loadStoryStrings(file, key, r, -1)'s (0x00466b61). Reimplemented in `shim/src/re/c3dz.cpp`; path-1 A/B GREEN: computeStoryReply (62 vectors, 62 distinct results, 62 changing state, `log/diff/004669f0_computeStoryReply.path1.csv`); computeStoryReply_chain (62 vectors, 56 distinct results, 62 changing state, `log/diff/004669f0_computeStoryReply_chain.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00466b6c): callee pops 0 bytes of stack arguments.
 

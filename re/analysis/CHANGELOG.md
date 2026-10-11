@@ -4,6 +4,13 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-11  0045de80  pairGolfersWithStory  name announceVipGolfer->pairGolfersWithStory  log/c3/sim_renamed.tsv
+2026-10-11  00469b00  buildGolferComment  C2->C3  log/diff/00469b00_buildGolferComment.path1.csv
+2026-10-11  00467a00  emitGolferThought  C2->C3  log/diff/00467a00_emitGolferThought.path1.csv
+2026-10-11  00466b70  loadStoryStrings  C2->C3  log/diff/00466b70_loadStoryStrings.path1.csv
+2026-10-11  004669f0  computeStoryReply  C2->C3  log/diff/004669f0_computeStoryReply.path1.csv
+2026-10-11  00466370  advanceStory  C2->C3  log/diff/00466370_advanceStory.path1.csv
+2026-10-11  0045de80  announceVipGolfer  C2->C3  log/diff/0045de80_announceVipGolfer.path1.csv
 2026-10-11  00409a90  addGolferToTable  name scanNearbyGolfers->addGolferToTable  log/c3/sim_renamed.tsv
 2026-10-11  00484940  Snd::play  C2->C3  log/diff/00484940_Snd_play.path1.csv
 2026-10-11  004668f0  storyText  C2->C3  log/diff/004668f0_storyText.path1.csv

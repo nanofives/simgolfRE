@@ -20,6 +20,6 @@ $r17 $p17 $q17,120,120,True,2cc69358,2cc69358,True
 $r18 $p18 $q18,121,121,True,3242a4f8,3242a4f8,True
 state_regions,$clog+0x0:1024 0x0051a068+0x0:512,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x6ff4bd80,original=0x1340e60,2026-10-11T15:40:05
+meta,detour=0x7197bed0,original=0xbe0da0,2026-10-11T18:37:11
 distinct_results,18,,
 VERDICT,GREEN,19,

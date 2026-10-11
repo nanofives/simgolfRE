@@ -128,3 +128,4 @@ c3ds.cpp
 c3dx.cpp
 c3dv.cpp
 c3dy.cpp
+c3dz.cpp
