@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 56 bytes, 19 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor of the sub-field built by viewFieldCtor49ebb0 0x0049ebb0: calls viewFieldDtor49ec80 0x0049ec80 with this, ListModel::dtor 0x00489370 with this+0x578 and Base4805a0::dtor 0x004805a0 with this, calls operatorDelete_4a4ffc 0x004a4ffc with this-0x1c when bit 0 of the byte argument is set (0x0049ff81), and returns this-0x1c (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Deleting destructor of the optionDialog part (`ret 4`, X = part+0x1c, flags): viewFieldDtor49ec80(X) (0x0049ff6a), ListModel::dtor on part+0x594 (0x0049ff75), Base4805a0::dtor(X) (0x0049ff7c); with bit 0 of flags the block is released through operator delete 0x004a4ffc (0x0049ff89); eax = part (0x0049ff91). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: optionDialogDeletingDtor (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049ff60_optionDialogDeletingDtor.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0049ff95): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0049ff61 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -1,0 +1,34 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w0 0 0,0,0,True,d1e4ec3c,d1e4ec3c,True
+$w0 5 7,0,0,True,d1e4ec3c,d1e4ec3c,True
+$w3 0 0,0,0,True,d4a87b86,d4a87b86,False
+$w3 5 7,7,7,True,d4a87b86,d4a87b86,False
+$w6 0 0,2,2,True,d4a87b86,d4a87b86,False
+$w6 5 7,2,2,True,d4a87b86,d4a87b86,False
+$w9 0 0,-842150452,-842150452,True,d4a87b86,d4a87b86,False
+$w9 5 7,-842150452,-842150452,True,d4a87b86,d4a87b86,False
+$pw0 0 0,0,0,True,d1e4ec3c,d1e4ec3c,True
+$pw0 5 7,0,0,True,d1e4ec3c,d1e4ec3c,True
+$pw1 0 0,101596107,101596107,True,d4a87b86,d4a87b86,False
+$pw1 5 7,101596269,101596269,True,d4a87b86,d4a87b86,False
+$pw2 0 0,3,3,True,d4a87b86,d4a87b86,False
+$pw2 5 7,3,3,True,d4a87b86,d4a87b86,False
+$pw3 0 0,0,0,True,d4a87b86,d4a87b86,False
+$pw3 5 7,7,7,True,d4a87b86,d4a87b86,False
+$pw4 0 0,0,0,True,4d8a0640,4d8a0640,True
+$pw4 5 7,0,0,True,4d8a0640,4d8a0640,True
+$pw5 0 0,-1,-1,True,d4a87b86,d4a87b86,False
+$pw5 5 7,-1,-1,True,d4a87b86,d4a87b86,False
+$pw6 0 0,2,2,True,d4a87b86,d4a87b86,False
+$pw6 5 7,2,2,True,d4a87b86,d4a87b86,False
+$pw7 0 0,16,16,True,d4a87b86,d4a87b86,False
+$pw7 5 7,16,16,True,d4a87b86,d4a87b86,False
+$pw8 0 0,65536,65536,True,d4a87b86,d4a87b86,False
+$pw8 5 7,65536,65536,True,d4a87b86,d4a87b86,False
+$pw9 0 0,-842150452,-842150452,True,d4a87b86,d4a87b86,False
+$pw9 5 7,-842150452,-842150452,True,d4a87b86,d4a87b86,False
+state_regions,$heap+0x0:98320 $freelog+0x0:1028 $implog+0x0:1024 $rec+0x0:4096 0x0083ab94+0x0:4 0x0083ab90+0x0:4 0x0083aae0+0x0:4 0x0083aaec+0x0:4 0x0083aaa0+0x0:4 0x0083aabc+0x0:4 0x0083aac0+0x0:4 0x0083aac4+0x0:4 0x0083aa98+0x0:4 0x0083aaf0+0x0:4 0x0083ab30+0x0:4 0x0083ab34+0x0:4 0x0083ab40+0x0:4 0x0083ab44+0x0:4 0x0083ab54+0x0:4 0x0083ac18+0x0:4 0x00839650+0x0:4 0x0083ab2c+0x0:4 0x0083aa9c+0x0:4 0x0083a2c8+0x0:4 0x0083a2cc+0x0:4 0x0083a2d0+0x0:4 0x0083a2d4+0x0:4 0x0083ad50+0x0:4 0x0083ad4c+0x0:4 0x0083a2d8+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105c4e0,original=0x1440b00,2026-10-12T16:58:02
+distinct_results,12,,
+VERDICT,GREEN,28,

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 277 bytes, 100 instructions, subsystem `ui`. Mechanical
 returns when the child pointer at +0x114 of the base this + [[this-0x1c]+4] is NULL; otherwise stores it in g_curWidget 0x0083ab2c, calls its virtual +0x28 and, when that returns 0, blits the surface at +0x258 through Surface_blitThunk with the extents from the object at +0x25c (virtuals +0xdc and +0xd8); it then calls bitTest 0x0049f030 and optionListDraw 0x0049f370 once per row of the count at +0xb4 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 22 body of the optionDialog part (plain `ret`): as listPanelDrawContents (0x0049fc70..0x0049fd2d), then optionListDraw(i, bitTest(i), [part+4] == i) for every row (0x0049fd44..0x0049fd6d); eax = vbt after the loop, the count when it is not positive (0x0049fd39..0x0049fd42), vbt without a child (0x0049fc67). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: optionDialogDrawContents_a (7 vectors, 7 distinct results, 6 changing state, `log/diff/0049fc60_optionDialogDrawContents_a.path1.csv`); optionDialogDrawContents_b (7 vectors, 7 distinct results, 6 changing state, `log/diff/0049fc60_optionDialogDrawContents_b.path1.csv`); optionDialogDrawContents_c (7 vectors, 7 distinct results, 6 changing state, `log/diff/0049fc60_optionDialogDrawContents_c.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0049fd74): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0049fc60 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

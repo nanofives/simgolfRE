@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 396 bytes, 126 instructions, subsystem `ui`. Mechanical
 refreshes/redraws the list panel. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 36 body of the listPanel part (`ret 4`, key): g_curWidget = [W+0x130] (0x0049e467); key - 0x25 above 0x43 returns 0 (0x0049e490). The byte table 0x0049e5f0 maps 0x25 / 0x64 to case 0 (cursor [L+0xf0] += cols, undone at the count: 0x0049e4fc..0x0049e521), 0x26 / 0x68 to case 1 (cursor - 1 clamped at 0: 0x0049e4a5..0x0049e4cb), 0x27 / 0x66 to case 2 (cursor - cols, +cols when negative: 0x0049e52c..0x0049e54b), 0x28 / 0x62 to case 3 (cursor + 1 clamped at count-1: 0x0049e4d0..0x0049e4f4); every other key returns 0 (0x0049e5d2). Then [L+0xf4] = [L+0xf8] = -1 (0x0049e55b, 0x0049e567), the previously selected row (when not -1) and the old cursor row are redrawn unselected (0x0049e575, 0x0049e583), the callback at Y-0x14 gets the new cursor (0x0049e58d..0x0049e59e), the new row is drawn selected (0x0049e5b2), Window::invalidate runs and eax = 1 (0x0049e5c8). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: listPanelRefresh_a (44 vectors, 17 distinct results, 44 changing state, `log/diff/0049e450_listPanelRefresh_a.path1.csv`); listPanelRefresh_b (44 vectors, 17 distinct results, 44 changing state, `log/diff/0049e450_listPanelRefresh_b.path1.csv`); listPanelRefresh_c (44 vectors, 17 distinct results, 44 changing state, `log/diff/0049e450_listPanelRefresh_c.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0049e5cf, 0x0049e5d9): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0049e450 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

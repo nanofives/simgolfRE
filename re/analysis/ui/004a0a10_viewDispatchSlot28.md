@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 120 bytes, 35 instructions, subsystem `ui`. Mechanical 
 selects on the 32-bit tag at this-8 and tail-calls the matching sub-view's slot-28 method: 1 -> the unnamed 0x0049fe20 (this-0x168), 2 -> ListBox::clearSelection 0x0048cac0 (this-0x1a0), 8 -> the unnamed 0x004a4340, 0x10 -> the unnamed 0x0049e990 (this-0x180); every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/exe_9.md`, `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Slot 28 (+0x70) of the composite's Window table 0x004bb940 (reached through the vtordisp thunk 0x00491990, installed by viewCtor4a0740). It reads the tag dword at V-8 (0x004a0a10), maps tag-1 through the byte table 0x004a0aa0 (tag 1, 2, 4, 8, 0x10 -> cases 0..4, every other value case 5; `ja 0x004a0a85` above 15) and jumps through the table 0x004a0a88. Cases 0, 1, 3, 4 push (b, a) so the callee sees (a, b) and call optionDialogSlot28 0x0049fe20 on V-0x168 (0x004a0a58..0x004a0a68), ListBox::clearSelection 0x0048cac0 on V-0x1a0 (0x004a0a40..0x004a0a50), the bare `ret 8` 0x004a4340 on V-0x8c (0x004a0a70..0x004a0a80; it returns the eax the arm loaded, b) and listPanelSlot28 0x0049e990 on V-0x180 (0x004a0a28..0x004a0a38). Case 2 (tag 4) and the default return eax = tag - 1 (`dec eax` 0x004a0a13, `ret 8` 0x004a0a85). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchSlot28 (30 vectors, 14 distinct results, 6 changing state, `log/diff/004a0a10_viewDispatchSlot28.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0a3d, 0x004a0a55, 0x004a0a6d, 0x004a0a85): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0a10 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

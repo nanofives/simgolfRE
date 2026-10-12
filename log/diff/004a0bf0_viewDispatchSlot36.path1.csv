@@ -1,0 +1,36 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w0 37,1,1,True,50e6b535,50e6b535,True
+$w0 40,1,1,True,ce220c6e,ce220c6e,True
+$w0 32,1,1,True,c6ac24ab,c6ac24ab,True
+$w1 37,150119066,150119066,True,d4d7a614,d4d7a614,False
+$w1 40,150119069,150119069,True,d4d7a614,d4d7a614,False
+$w1 32,150119061,150119061,True,d4d7a614,d4d7a614,False
+$w2 37,0,0,True,d4d7a614,d4d7a614,False
+$w2 40,0,0,True,d4d7a614,d4d7a614,False
+$w2 32,0,0,True,d4d7a614,d4d7a614,False
+$w3 37,150135374,150135374,True,d4d7a614,d4d7a614,False
+$w3 40,150135377,150135377,True,d4d7a614,d4d7a614,False
+$w3 32,150135369,150135369,True,d4d7a614,d4d7a614,False
+$w4 37,1,1,True,0d461010,0d461010,True
+$w4 40,1,1,True,a38da574,a38da574,True
+$w4 32,0,0,True,3e19b5ed,3e19b5ed,True
+$w5 37,0,0,True,d4d7a614,d4d7a614,False
+$w5 40,0,0,True,d4d7a614,d4d7a614,False
+$w5 32,0,0,True,d4d7a614,d4d7a614,False
+$w6 37,0,0,True,d4d7a614,d4d7a614,False
+$w6 40,0,0,True,d4d7a614,d4d7a614,False
+$w6 32,0,0,True,d4d7a614,d4d7a614,False
+$w7 37,0,0,True,d4d7a614,d4d7a614,False
+$w7 40,0,0,True,d4d7a614,d4d7a614,False
+$w7 32,0,0,True,d4d7a614,d4d7a614,False
+$w8 37,0,0,True,d4d7a614,d4d7a614,False
+$w8 40,0,0,True,d4d7a614,d4d7a614,False
+$w8 32,0,0,True,d4d7a614,d4d7a614,False
+$w9 37,0,0,True,d4d7a614,d4d7a614,False
+$w9 40,0,0,True,d4d7a614,d4d7a614,False
+$w9 32,0,0,True,d4d7a614,d4d7a614,False
+state_regions,$heap+0x0:98320 $freelog+0x0:1028 $implog+0x0:1024 $rec+0x0:4096 0x0083ab94+0x0:4 0x0083ab90+0x0:4 0x0083aae0+0x0:4 0x0083aaec+0x0:4 0x0083aaa0+0x0:4 0x0083aabc+0x0:4 0x0083aac0+0x0:4 0x0083aac4+0x0:4 0x0083aa98+0x0:4 0x0083aaf0+0x0:4 0x0083ab30+0x0:4 0x0083ab34+0x0:4 0x0083ab40+0x0:4 0x0083ab44+0x0:4 0x0083ab54+0x0:4 0x0083ac18+0x0:4 0x00839650+0x0:4 0x0083ab2c+0x0:4 0x0083aa9c+0x0:4 0x0083a2c8+0x0:4 0x0083a2cc+0x0:4 0x0083a2d0+0x0:4 0x0083a2d4+0x0:4 0x0083ad50+0x0:4 0x0083ad4c+0x0:4 0x0083a2d8+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105c6d0,original=0x1440a00,2026-10-12T16:56:44
+distinct_results,13,,
+VERDICT,GREEN,30,

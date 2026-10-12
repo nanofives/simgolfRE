@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 308 bytes, 111 instructions, subsystem `ui`. Mechanical
 handles keyboard input for the option dialog, toggling the current option. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 36 body of the optionDialog part (`ret 4`, key): the current row [part+4] is redrawn (0x0049fabe); key - 0x20 above 0x48 returns 0 (0x0049facd). Byte table 0x0049fbdc: 0x20 toggles the current row's bit (flagToggle49eec0, 0x0049fb6e), 0x25 / 0x64 cursor + cols (0x0049fb19), 0x26 / 0x68 cursor - 1 clamped at 0 (0x0049fae2), 0x27 / 0x66 cursor - cols (0x0049fb45), 0x28 / 0x62 cursor + 1 clamped at count-1 (0x0049fafa); every other key returns 0 (0x0049fbbd). Then the callback at part+8 gets [L+0xf0] (0x0049fb73..0x0049fb89), the row is drawn (cur, bitTest(cur), 1), Window::invalidate runs and eax = 1 (0x0049fbb4). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: optionDialogOnKey_a (51 vectors, 21 distinct results, 51 changing state, `log/diff/0049fa90_optionDialogOnKey_a.path1.csv`); optionDialogOnKey_b (51 vectors, 21 distinct results, 51 changing state, `log/diff/0049fa90_optionDialogOnKey_b.path1.csv`); optionDialogOnKey_c (51 vectors, 21 distinct results, 51 changing state, `log/diff/0049fa90_optionDialogOnKey_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_09_b.cpp` as `?onKey@D49fa90@@UAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049fbba, 0x0049fbc1): callee pops 4 bytes of stack arguments.

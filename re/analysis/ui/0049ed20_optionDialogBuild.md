@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 363 bytes, 111 instructions, subsystem `ui`. Mechanical
 builds the option/checkbox dialog view and its child widgets. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Build slot of the optionDialog part through the ListModel table (`ret 0x10`, T = part+0x594, a = parent window, b / c = position, d = flags): a = NULL returns 3 (0x0049ed27..0x0049ed35); optionDialogLayout(part) runs, L+0x28 = b and L+0x2c = c (0x0049ed4f, 0x0049ed5f), d gets 0x100000 when bit 12 of [a+0x9c] is clear (0x0049ed66..0x0049ed71), Window::create(W; b, c, [L+0x60], [L+0x64], 0, d, a, 0, 0) runs (0x0049edad) and a non-zero result is returned (0x0049edb5); otherwise the three quad sets L+0x80.. and the draw target L+0x74.. go to W's drawing object (0x0049ede9, 0x0049ee1c, 0x0049ee4f, 0x0049ee7e) and eax = 0. Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: optionDialogBuild (5 vectors, 5 distinct results, 4 changing state, `log/diff/0049ed20_optionDialogBuild.path1.csv`); optionDialogBuild_f (2 vectors, 2 distinct results, 2 changing state, `log/diff/0049ed20_optionDialogBuild_f.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x0049ed35, 0x0049ee88): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x0049ed29 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

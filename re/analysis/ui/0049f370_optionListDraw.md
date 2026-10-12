@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 1577 bytes, 532 instructions, subsystem `ui`. Mechanica
 draws the scrollable option list rows with aligned text. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Draws row `index` of an optionDialog part (`ret 0xc`; the third argument is never read). The listPanelDraw algorithm without the quad sets and the draw target: parent [W+0x130] (0x0049f380), display slot +0x9c (0x0049f3a5), seek to the last node and skip rows (0x0049f3b4..0x0049f4e8, the line-count test through listIterValue 0x00402160 at 0x0049f43b), cell X / Y / height (0x0049f4ee..0x0049f625), the parent's slot +0x2c (0x0049f6a8), the blit (0x0049f6ed), the image [part+0x14] (state != 0) or [part+0x10] (0x0049f6f2..0x0049f764), Y += [[W+0x2d0]+0x1c] (0x0049f772..0x0049f77e) and the row text (0x0049f785..0x0049f98f); no frame. Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: optionListDraw_a (52 vectors, 45 distinct results, 50 changing state, `log/diff/0049f370_optionListDraw_a.path1.csv`); optionListDraw_b (52 vectors, 45 distinct results, 50 changing state, `log/diff/0049f370_optionListDraw_b.path1.csv`); optionListDraw_c (52 vectors, 45 distinct results, 50 changing state, `log/diff/0049f370_optionListDraw_c.path1.csv`); optionListDraw_d (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049f370_optionListDraw_d.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x0049f838, 0x0049f8b9, 0x0049f922, 0x0049f996): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x0049f376 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

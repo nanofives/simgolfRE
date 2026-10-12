@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to viewDispatchSlot28 0x004a0a10 (`re/names/undisc2_exe.tsv`)
 
+## Purpose
+this-adjustor thunk of slot 28: `sub ecx, [ecx-4]` (0x00491990), `jmp 0x004a0a10` (0x00491993); the stack arguments reach the body unchanged. Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchSlot28_vtordisp (28 vectors, 12 distinct results, 6 changing state, `log/diff/00491990_viewDispatchSlot28_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00491990 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

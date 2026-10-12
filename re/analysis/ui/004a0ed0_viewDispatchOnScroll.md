@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 32 bytes, 10 instructions, subsystem `ui`. Mechanical t
 calls ListBox::onScroll 0x0048c420 with this-0x1a0 and the two arguments when the tag at this-8 is 2 (0x004a0ed0); every other tag returns. The same body fills both slot 57 and slot 58, which in the ListBox table 0x004bb260 hold ListBox::fwdOnScroll 0x0048c4f0 and ListBox::onScroll 0x0048c420 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slots 57 / 58 (+0xe4 / +0xe8), `ret 8`: eax = tag - 2 (`sub eax, 2` 0x004a0ed3); a tag other than 2 returns that (`jne 0x004a0eed`); tag 2 calls ListBox::onScroll 0x0048c420 on V-0x1a0 with (a, b) (0x004a0ed8..0x004a0ee8) and returns its eax. Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchOnScroll (40 vectors, 13 distinct results, 0 changing state, `log/diff/004a0ed0_viewDispatchOnScroll.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0eed): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0ed0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

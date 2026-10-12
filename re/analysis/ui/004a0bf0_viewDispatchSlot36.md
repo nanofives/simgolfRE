@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 105 bytes, 29 instructions, subsystem `ui`. Mechanical 
 selects on the 32-bit tag at this-8 and returns the matching sub-view's slot-36 result for its single argument: 1 -> optionDialogOnKey 0x0049fa90 (this-0x168), 2 -> ListBox::typeAhead 0x0048aea0 (this-0x1a0), 8 -> panelOnKey 0x004a4680 (this-0x8c), 0x10 -> listPanelRefresh 0x0049e450 (this-0x180); every other tag returns 0 (0x004a0c54) (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 36 (+0x90), one argument (`ret 4`): the tag at V-8 (0x004a0bf0) selects through the byte table 0x004a0c74 and the jump table 0x004a0c5c: tag 1 optionDialogOnKey 0x0049fa90 on V-0x168 (0x004a0c2e..0x004a0c38), tag 2 0x0048aea0 on V-0x1a0 (0x004a0c1b..0x004a0c25), tag 8 0x004a4680 on V-0x8c (0x004a0c41..0x004a0c4b), tag 0x10 listPanelRefresh 0x0049e450 on V-0x180 (0x004a0c08..0x004a0c13); tag 4 and every other value `xor eax, eax; ret 4` (0x004a0c54). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchSlot36 (30 vectors, 13 distinct results, 6 changing state, `log/diff/004a0bf0_viewDispatchSlot36.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004a0c18, 0x004a0c2b, 0x004a0c3e, 0x004a0c51, 0x004a0c56): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004a0bf0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

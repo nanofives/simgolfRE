@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 236 bytes, 90 instructions, subsystem `ui`. Mechanical 
 updates the option dialog state (toggling flags for the picked item) and redraws it. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 30 body of the optionDialog part (`ret 8`, X = part+0x1c, pixel (a, b)): g_curWidget = [W+0x130] (0x0049f9b6); idx = (a / (cellW + spacing)) * cols + b / (rowH + spacing) (0x0049f9c8..0x0049f9e9); id = idAt(idx); flagToggle49ee90(part, id) (0x0049f9f6). When idAt([part+4]) differs from id the old row is redrawn with (cur, bitTest(cur), 0) and [part+4] = findId(id) (0x0049fa08..0x0049fa39). The callback at part+8 gets [L+0xf0] (0x0049fa43..0x0049fa52); the row of id is drawn with (findId(id), flagIsSet(id), 1) and Window::invalidate ends it (0x0049fa5a..0x0049fa80). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: optionDialogUpdate_a (32 vectors, 16 distinct results, 32 changing state, `log/diff/0049f9a0_optionDialogUpdate_a.path1.csv`); optionDialogUpdate_b (32 vectors, 16 distinct results, 32 changing state, `log/diff/0049f9a0_optionDialogUpdate_b.path1.csv`); optionDialogUpdate_c (32 vectors, 16 distinct results, 32 changing state, `log/diff/0049f9a0_optionDialogUpdate_c.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0049fa89): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0049f9a3 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

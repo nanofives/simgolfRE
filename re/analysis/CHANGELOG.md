@@ -4,6 +4,68 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  004a12e0  viewDispatchReset  C2->C3  log/diff/004a12e0_viewDispatchReset.path1.csv
+2026-10-12  004a1250  viewDispatchOpen  C2->C3  log/diff/004a1250_viewDispatchOpen.path1.csv
+2026-10-12  004a0ef0  viewDispatchBuild  C2->C3  log/diff/004a0ef0_viewDispatchBuild.path1.csv
+2026-10-12  004a0ed0  viewDispatchOnScroll  C2->C3  log/diff/004a0ed0_viewDispatchOnScroll.path1.csv
+2026-10-12  004a0d30  viewDispatchDraw  C2->C3  log/diff/004a0d30_viewDispatchDraw.path1.csv
+2026-10-12  004a0bf0  viewDispatchSlot36  C2->C3  log/diff/004a0bf0_viewDispatchSlot36.path1.csv
+2026-10-12  004a0b50  viewDispatchSlot30  C2->C3  log/diff/004a0b50_viewDispatchSlot30.path1.csv
+2026-10-12  004a0a10  viewDispatchSlot28  C2->C3  log/diff/004a0a10_viewDispatchSlot28.path1.csv
+2026-10-12  004a0040  optionDialogBuild_vtordisp  C2->C3  log/diff/004a0040_optionDialogBuild_vtordisp.path1.csv
+2026-10-12  0049ffe0  optionDialogOnKey_vtordisp  C2->C3  log/diff/0049ffe0_optionDialogOnKey_vtordisp_a.path1.csv
+2026-10-12  0049ffd0  optionDialogUpdate_vtordisp  C2->C3  log/diff/0049ffd0_optionDialogUpdate_vtordisp_a.path1.csv
+2026-10-12  0049ffa0  optionDialogDrawContents_vtordisp  C2->C3  log/diff/0049ffa0_optionDialogDrawContents_vtordisp_a.path1.csv
+2026-10-12  0049ff60  optionDialogDeletingDtor  C2->C3  log/diff/0049ff60_optionDialogDeletingDtor.path1.csv
+2026-10-12  0049ff50  optionDialogDeletingDtor_vtordisp  C2->C3  log/diff/0049ff50_optionDialogDeletingDtor_vtordisp.path1.csv
+2026-10-12  0049fc60  optionDialogDrawContents  C2->C3  log/diff/0049fc60_optionDialogDrawContents_a.path1.csv
+2026-10-12  0049fa90  optionDialogOnKey  C2->C3  log/diff/0049fa90_optionDialogOnKey_a.path1.csv
+2026-10-12  0049f9a0  optionDialogUpdate  C2->C3  log/diff/0049f9a0_optionDialogUpdate_a.path1.csv
+2026-10-12  0049f370  optionListDraw  C2->C3  log/diff/0049f370_optionListDraw_a.path1.csv
+2026-10-12  0049ed20  optionDialogBuild  C2->C3  log/diff/0049ed20_optionDialogBuild.path1.csv
+2026-10-12  0049e990  listPanelSlot28  C2->C3  log/diff/0049e990_listPanelSlot28.path1.csv
+2026-10-12  0049e680  listPanelDrawContents  C2->C3  log/diff/0049e680_listPanelDrawContents_a.path1.csv
+2026-10-12  0049e450  listPanelRefresh  C2->C3  log/diff/0049e450_listPanelRefresh_a.path1.csv
+2026-10-12  0049e230  listPanelOnScroll  C2->C3  log/diff/0049e230_listPanelOnScroll_a.path1.csv
+2026-10-12  0049dab0  listPanelDraw  C2->C3  log/diff/0049dab0_listPanelDraw_a.path1.csv
+2026-10-12  004959b0  uiPointerMove  C2->C3  log/diff/004959b0_uiPointerMove_a.path1.csv
+2026-10-12  00491b90  listPanelRefresh_vtordisp  C2->C3  log/diff/00491b90_listPanelRefresh_vtordisp_a.path1.csv
+2026-10-12  00491b80  listPanelOnScroll_vtordisp  C2->C3  log/diff/00491b80_listPanelOnScroll_vtordisp_a.path1.csv
+2026-10-12  00491b70  listPanelSlot28_vtordisp  C2->C3  log/diff/00491b70_listPanelSlot28_vtordisp.path1.csv
+2026-10-12  00491b50  listPanelDrawContents_vtordisp  C2->C3  log/diff/00491b50_listPanelDrawContents_vtordisp_a.path1.csv
+2026-10-12  00491ac0  listPanelDeletingDtor_vtordisp  C2->C3  log/diff/00491ac0_listPanelDeletingDtor_vtordisp.path1.csv
+2026-10-12  00491aa0  viewDispatchBuild_vtordisp  C2->C3  log/diff/00491aa0_viewDispatchBuild_vtordisp.path1.csv
+2026-10-12  00491a40  viewDispatchOnScroll_vtordisp58  C2->C3  log/diff/00491a40_viewDispatchOnScroll_vtordisp58.path1.csv
+2026-10-12  00491a30  viewDispatchOnScroll_vtordisp57  C2->C3  log/diff/00491a30_viewDispatchOnScroll_vtordisp57.path1.csv
+2026-10-12  00491a00  viewDispatchSlot36_vtordisp  C2->C3  log/diff/00491a00_viewDispatchSlot36_vtordisp.path1.csv
+2026-10-12  004919b0  viewDispatchSlot30_vtordisp  C2->C3  log/diff/004919b0_viewDispatchSlot30_vtordisp.path1.csv
+2026-10-12  00491990  viewDispatchSlot28_vtordisp  C2->C3  log/diff/00491990_viewDispatchSlot28_vtordisp.path1.csv
+2026-10-12  00491960  viewDispatchDraw_vtordisp  C2->C3  log/diff/00491960_viewDispatchDraw_vtordisp.path1.csv
+2026-10-12  0047fab0  compositeScreen  C2->C3  log/diff/0047fab0_compositeScreen_m10.path1.csv
+2026-10-12  0049e990  listPanelSlot28  C1->C2  re/analysis/ui/0049e990_listPanelSlot28.md
+2026-10-12  00465840  rootWin_onPress2b  C1->C2  re/analysis/input/00465840_rootWin_onPress2b.md
+2026-10-12  004657e0  rootWin_onPress1b  C1->C2  re/analysis/input/004657e0_rootWin_onPress1b.md
+2026-10-12  004657d0  rootWin_onChar0  C1->C2  re/analysis/input/004657d0_rootWin_onChar0.md
+2026-10-12  004657b0  rootWin_onChar  C1->C2  re/analysis/input/004657b0_rootWin_onChar.md
+2026-10-12  00465750  rootWin_onKey  C1->C2  re/analysis/input/00465750_rootWin_onKey.md
+2026-10-12  00465740  rootWin_onUnpoint2  C1->C2  re/analysis/input/00465740_rootWin_onUnpoint2.md
+2026-10-12  00465720  rootWin_onPoint2  C1->C2  re/analysis/input/00465720_rootWin_onPoint2.md
+2026-10-12  00465680  rootWin_onPress2  C1->C2  re/analysis/input/00465680_rootWin_onPress2.md
+2026-10-12  00465650  rootWin_onUnpoint  C1->C2  re/analysis/input/00465650_rootWin_onUnpoint.md
+2026-10-12  00465610  rootWin_onPoint  C1->C2  re/analysis/input/00465610_rootWin_onPoint.md
+2026-10-12  00465580  rootWin_onPress1  C1->C2  re/analysis/input/00465580_rootWin_onPress1.md
+2026-10-12  0049e990  listPanelSlot28  C0->C1  slot 28 (+0x70) of the listPanel part's table 0x004bb744, reached through listPanelSlot28_vtordisp 0x00491b70 (`jmp 0x0049e990` 0x00491b73) and called by viewDispatchSlot28 0x004a0a10 for tag 0x10 on V-0x180 (0x004a0a28..0x004a0a38); writes -1 to [Y+vbt[2]+0xd0] (0x0049e999) and [Y+vbt[2]+0xd4] (0x0049e9a6), the words listPanelDraw reads as selected row (0x0049de5e, L+0xf4) and returns slot +0x120 of the Window base (0x0049e9bb)
+2026-10-12  00465840  rootWin_onPress2b  C0->C1  slot 39 (+0x9c) of 0x004ba2fc; writes 0x00822d68 at 0x0046587d
+2026-10-12  004657e0  rootWin_onPress1b  C0->C1  slot 38 (+0x98) of 0x004ba2fc; writes 0x00822d68 at 0x00465828
+2026-10-12  004657d0  rootWin_onChar0  C0->C1  slot 37 (+0x94) of 0x004ba2fc; writes 0x0083821c at 0x004657d0
+2026-10-12  004657b0  rootWin_onChar  C0->C1  slot 36 (+0x90) of 0x004ba2fc; writes 0x00822b98 at 0x004657b4
+2026-10-12  00465750  rootWin_onKey  C0->C1  slot 35 (+0x8c) of 0x004ba2fc, the slot Window::key 0x0047c5d0 calls at 0x0047c678 with (its first, its second argument); writes 0x00822b98 at 0x00465776
+2026-10-12  00465740  rootWin_onUnpoint2  C0->C1  slot 34 (+0x88) of 0x004ba2fc; writes 0x00822d8c at 0x00465740
+2026-10-12  00465720  rootWin_onPoint2  C0->C1  slot 33 (+0x84) of 0x004ba2fc; writes 0x00822d8c at 0x00465728
+2026-10-12  00465680  rootWin_onPress2  C0->C1  slot 32 (+0x80) of 0x004ba2fc; writes 0x00822d68 at 0x004656c4
+2026-10-12  00465650  rootWin_onUnpoint  C0->C1  slot 31 (+0x7c) of 0x004ba2fc; writes 0x00822d8c at 0x00465655
+2026-10-12  00465610  rootWin_onPoint  C0->C1  slot 30 (+0x78) of 0x004ba2fc; writes 0x00822d8c at 0x00465618
+2026-10-12  00465580  rootWin_onPress1  C0->C1  slot 29 (+0x74) of the vtable 0x004ba2fc (installer staticInit_404360 0x00404360, pointer_callers.py); not a function in the master (0x00465577..0x004658b0 lies outside every listed function); writes 0x00822d58 at 0x00465597, 0x00822d68 at 0x004655ef
 2026-10-12  00462020  composeGolferSprite  name formatGolferTitle->composeGolferSprite  log/c3/round30_renamed.tsv
 2026-10-12  0049fe50  loadFonts  C2->C3  log/diff/0049fe50_loadFonts.path1.csv
 2026-10-12  0049e9d0  loadCursors  C2->C3  log/diff/0049e9d0_loadCursors.path1.csv

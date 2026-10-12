@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 290 bytes, 102 instructions, subsystem `ui`. Mechanical
 sets g_curWidget 0x0083ab2c from the child pointer at +0x10c of the base this + [[this-0x24]+4] and returns when it is NULL; otherwise calls that child's virtual +0x28 and, when it returns 0, blits the surface at +0x250 through Surface_blitThunk with the extents taken from the object at +0x254 (virtuals +0xdc and +0xd8); it then calls listPanelDraw 0x0049dab0 once per row of the count at +0xac, passing 1 for the row equal to the selection at +0xcc, and finishes with Window::invalidate 0x00480ce0 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 22 body of the listPanel part (plain `ret`, Y = part+0x24): g_curWidget = child [W+0x130] (0x0049e698); no child returns with eax = vbt (the dword read at 0x0049e686). The child's slot +0x28 gets W (0x0049e6bf); a zero result blits W's drawing object onto the child with extents from the object at [W+0x278] (slots +0xdc / +0xd8, 0x0049e6fd / 0x0049e722) through Surface_blitThunk (0x0049e74e). Then listPanelDraw(part, i, [L+0xf0] == i) runs for i in 0..[L+0xd0]-1 (0x0049e75d..0x0049e78c, bound re-read each round) and Window::invalidate(W) ends it (0x0049e797). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: listPanelDrawContents_a (7 vectors, 7 distinct results, 6 changing state, `log/diff/0049e680_listPanelDrawContents_a.path1.csv`); listPanelDrawContents_b (7 vectors, 7 distinct results, 6 changing state, `log/diff/0049e680_listPanelDrawContents_b.path1.csv`); listPanelDrawContents_c (7 vectors, 7 distinct results, 6 changing state, `log/diff/0049e680_listPanelDrawContents_c.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0049e7a1): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0049e680 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

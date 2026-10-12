@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 541 bytes, 182 instructions, subsystem `ui`. Mechanical
 scroll-event handler for the list panel that redraws its visible rows. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 30 body of the listPanel part (`ret 8`, Y = part+0x24, a, b): g_curWidget = the child [W+0x130] (0x0049e24f). The list cursor is seeked to the last node (0x0049e25a..0x0049e292), then while b > 0 it advances one node per round (the first round always runs, later ones stop when the cursor index equals count-1, 0x0049e2a1..0x0049e2c1) and b drops by max(H*lines, spacing + rowH) (0x0049e2fd..0x0049e339). target = (a / (cellW + spacing)) * cols + [L+0xd4] (0x0049e343..0x0049e36e). When it equals the cursor row [L+0xf0] the cdecl callback at Y-0x10 gets ListModel::selectedId(L) (0x0049e374..0x0049e387); otherwise the old row is redrawn unselected, [L+0xf0] = target, the callback at Y-0x14 gets it, the target row is drawn selected, [L+0xf4] = [L+0xf8] = -1 and Window::invalidate runs (0x0049e3bf..0x0049e41c). With bit 2 of the byte at L+0x24 and a child, the child's slot +0xd4 gets -1 (0x0049e3b1, 0x0049e43f); eax follows the exits (0x0049e2b7 leaves L+0x24 in eax). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: listPanelOnScroll_a (32 vectors, 25 distinct results, 32 changing state, `log/diff/0049e230_listPanelOnScroll_a.path1.csv`); listPanelOnScroll_b (32 vectors, 25 distinct results, 32 changing state, `log/diff/0049e230_listPanelOnScroll_b.path1.csv`); listPanelOnScroll_c (32 vectors, 26 distinct results, 32 changing state, `log/diff/0049e230_listPanelOnScroll_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s0.cpp` as `?onScroll@S0D49e230@@UAEXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x0049e3bc, 0x0049e44a): callee pops 8 bytes of stack arguments.

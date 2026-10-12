@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 120 bytes, 35 instructions, subsystem `ui`. Mechanical 
 selects on the 32-bit tag at this-8 and tail-calls the matching sub-view's slot-30 method with both arguments: 1 -> optionDialogUpdate 0x0049f9a0 (this-0x168), 2 -> ListBox::onNavKey 0x0048aa00 (this-0x1a0), 8 -> hotHitCb0 0x004a43f0 (this-0x8c), 0x10 -> listPanelOnScroll 0x0049e230 (this-0x180); every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 30 (+0x78), same two-level switch (tag at V-8 0x004a0b50, byte table 0x004a0be0, jump table 0x004a0bc8): tag 1 optionDialogUpdate 0x0049f9a0 on V-0x168 (0x004a0b98..0x004a0ba8), tag 2 ListBox::onNavKey 0x0048aa00 on V-0x1a0 (0x004a0b80..0x004a0b90), tag 8 0x004a43f0 on V-0x8c (0x004a0bb0..0x004a0bc0), tag 0x10 listPanelOnScroll 0x0049e230 on V-0x180 (0x004a0b68..0x004a0b78), each with (a, b) pushed from [esp+8] / [esp+4] and `ret 8`; tag 4 and every other value return tag - 1 (0x004a0bc5). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchSlot30 (30 vectors, 17 distinct results, 6 changing state, `log/diff/004a0b50_viewDispatchSlot30.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004a0b7d, 0x004a0b95, 0x004a0bad, 0x004a0bc5): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x004a0b50 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

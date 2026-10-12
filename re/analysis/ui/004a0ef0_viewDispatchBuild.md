@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 39 bytes in 2 address ranges, 9 instructions, subsystem
 selects on the 32-bit tag at this-0x580 and tail-calls the matching sub-view's build method: 1 -> optionDialogBuild 0x0049ed20 (this-0x168), 2 -> ListBox::build 0x0048a5d0 (this-0x1a0), 4 -> panelCreate4a2400 0x004a2400 (this-0x4), 8 -> panelBuild4a3880 0x004a3880 (this-0x8c), 0x10 -> panelBuildRow 0x0049d6d0 (this-0x180); every other tag returns 7 (0x004a0fb6). The five targets are the slot-1 entries of the five sub-views' own tables 0x004bbe90, 0x004bb240, 0x004bc088, 0x004bc224 and 0x004bb724 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot of the ListModel table 0x004bb8b0 (`ret 0x10`, four arguments): the tag is read at V-0x580 (0x004a0ef0) and mapped through the byte table 0x004a0fd8 / jump table 0x004a0fc0 to optionDialogBuild 0x0049ed20 on V-0x168 (0x004a0f53), 0x0048a5d0 on V-0x1a0 (0x004a0f31), 0x004a2400 on V-4 (0x004a0f97), 0x004a3880 on V-0x8c (0x004a0f75) and panelBuildRow 0x0049d6d0 on V-0x180 (0x004a0f0f), re-pushing the four arguments in their order; every other tag returns 7 (`mov eax, 7; ret 0x10`, 0x004a0fb6). Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchBuild (30 vectors, 16 distinct results, 0 changing state, `log/diff/004a0ef0_viewDispatchBuild.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x004a0fbb): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x004a0ef0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -1,0 +1,36 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$l0 0 0 0 0,156871451,156871451,True,bc07a5b4,bc07a5b4,False
+$l0 1 2 3 4,156903261,156903261,True,bc07a5b4,bc07a5b4,False
+$l0 -1 64 7 0,156903381,156903381,True,bc07a5b4,bc07a5b4,False
+$l1 0 0 0 0,156879843,156879843,True,bc07a5b4,bc07a5b4,False
+$l1 1 2 3 4,156911653,156911653,True,bc07a5b4,bc07a5b4,False
+$l1 -1 64 7 0,156911773,156911773,True,bc07a5b4,bc07a5b4,False
+$l2 0 0 0 0,156888415,156888415,True,bc07a5b4,bc07a5b4,False
+$l2 1 2 3 4,156920225,156920225,True,bc07a5b4,bc07a5b4,False
+$l2 -1 64 7 0,156920345,156920345,True,bc07a5b4,bc07a5b4,False
+$l3 0 0 0 0,156896151,156896151,True,bc07a5b4,bc07a5b4,False
+$l3 1 2 3 4,156927961,156927961,True,bc07a5b4,bc07a5b4,False
+$l3 -1 64 7 0,156928081,156928081,True,bc07a5b4,bc07a5b4,False
+$l4 0 0 0 0,156904355,156904355,True,bc07a5b4,bc07a5b4,False
+$l4 1 2 3 4,156936165,156936165,True,bc07a5b4,bc07a5b4,False
+$l4 -1 64 7 0,156936285,156936285,True,bc07a5b4,bc07a5b4,False
+$l5 0 0 0 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l5 1 2 3 4,7,7,True,bc07a5b4,bc07a5b4,False
+$l5 -1 64 7 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l6 0 0 0 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l6 1 2 3 4,7,7,True,bc07a5b4,bc07a5b4,False
+$l6 -1 64 7 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l7 0 0 0 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l7 1 2 3 4,7,7,True,bc07a5b4,bc07a5b4,False
+$l7 -1 64 7 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l8 0 0 0 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l8 1 2 3 4,7,7,True,bc07a5b4,bc07a5b4,False
+$l8 -1 64 7 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l9 0 0 0 0,7,7,True,bc07a5b4,bc07a5b4,False
+$l9 1 2 3 4,7,7,True,bc07a5b4,bc07a5b4,False
+$l9 -1 64 7 0,7,7,True,bc07a5b4,bc07a5b4,False
+state_regions,$heap+0x0:98320 $freelog+0x0:1028 $implog+0x0:1024 $rec+0x0:4096 0x0083ab94+0x0:4 0x0083ab90+0x0:4 0x0083aae0+0x0:4 0x0083aaec+0x0:4 0x0083aaa0+0x0:4 0x0083aabc+0x0:4 0x0083aac0+0x0:4 0x0083aac4+0x0:4 0x0083aa98+0x0:4 0x0083aaf0+0x0:4 0x0083ab30+0x0:4 0x0083ab34+0x0:4 0x0083ab40+0x0:4 0x0083ab44+0x0:4 0x0083ab54+0x0:4 0x0083ac18+0x0:4 0x00839650+0x0:4 0x0083ab2c+0x0:4 0x0083aa9c+0x0:4 0x0083a2c8+0x0:4 0x0083a2cc+0x0:4 0x0083a2d0+0x0:4 0x0083a2d4+0x0:4 0x0083ad50+0x0:4 0x0083ad4c+0x0:4 0x0083a2d8+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105c130,original=0x1440a60,2026-10-12T16:57:22
+distinct_results,16,,
+VERDICT,GREEN,30,

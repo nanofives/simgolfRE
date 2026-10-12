@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 77 bytes, 18 instructions, subsystem `ui`. Mechanical t
 selects on the 32-bit tag at this-8 and runs the matching sub-view's slot-22 body: 1 is an inline copy of optionDialogDrawContents 0x0049fc60 at this-0x168, 2 of ListBox::drawContents 0x0048c130 at this-0x1a0, 8 of panelSubDrawContents 0x004a45b0 at this-0x8c and 0x10 of listPanelDrawContents 0x0049e680 at this-0x180; tag 4 calls panelDrawRow 0x004a2d50 with this-0x4; every other tag returns (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 22 (+0x58), plain `ret`. Same tag switch (V-8 at 0x004a0d30, byte table 0x004a0d98, jump table 0x004a0d80); each case is `add ecx, k; jmp target`: tag 1 optionDialogDrawContents 0x0049fc60 on V-0x168 (0x004a0d5e), tag 2 ListBox::drawContents 0x0048c130 on V-0x1a0 (0x004a0d53), tag 4 panelDrawRow 0x004a2d50 on V-4 (0x004a0d74), tag 8 panelSubDrawContents 0x004a45b0 on V-0x8c (0x004a0d69), tag 0x10 listPanelDrawContents 0x0049e680 on V-0x180 (0x004a0d48); other values `ret` (0x004a0d7c) with eax = tag - 1. Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchDraw (10 vectors, 10 distinct results, 2 changing state, `log/diff/004a0d30_viewDispatchDraw.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a0d7c): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004a0d30 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

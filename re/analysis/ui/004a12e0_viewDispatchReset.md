@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 138 bytes, 51 instructions, subsystem `ui`. Mechanical 
 second view-init dispatcher variant that resets the view's sub-fields. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+The same walk with ListModel::reset 0x004897f0 instead of setKey (0x004a12fb, 0x004a1316, 0x004a1331, 0x004a135f) and panelReset4a3860(c+0x90, k) (0x004a1341) instead of panelOpenReset4a3790. Reimplemented in `shim/src/re/c3ej.cpp`; path-1 A/B GREEN: viewDispatchReset (30 vectors, 30 distinct results, 30 changing state, `log/diff/004a12e0_viewDispatchReset.path1.csv`); viewDispatchReset_f0 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a12e0_viewDispatchReset_f0.path1.csv`); viewDispatchReset_f1 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a12e0_viewDispatchReset_f1.path1.csv`); viewDispatchReset_f2 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a12e0_viewDispatchReset_f2.path1.csv`); viewDispatchReset_f3 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a12e0_viewDispatchReset_f3.path1.csv`); viewDispatchReset_f4 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a12e0_viewDispatchReset_f4.path1.csv`); viewDispatchReset_f5 (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a12e0_viewDispatchReset_f5.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?dispatch2@C4a1250@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a1367): callee pops 4 bytes of stack arguments.

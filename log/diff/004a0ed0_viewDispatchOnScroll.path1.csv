@@ -1,0 +1,46 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w0 -2 3,-1,-1,True,f4bc943a,f4bc943a,False
+$w0 -1 9,-1,-1,True,f4bc943a,f4bc943a,False
+$w0 0 4,-1,-1,True,f4bc943a,f4bc943a,False
+$w0 2 0,-1,-1,True,f4bc943a,f4bc943a,False
+$w1 -2 3,150322136,150322136,True,f4bc943a,f4bc943a,False
+$w1 -1 9,150322173,150322173,True,f4bc943a,f4bc943a,False
+$w1 0 4,150322199,150322199,True,f4bc943a,f4bc943a,False
+$w1 2 0,150322257,150322257,True,f4bc943a,f4bc943a,False
+$w2 -2 3,2,2,True,f4bc943a,f4bc943a,False
+$w2 -1 9,2,2,True,f4bc943a,f4bc943a,False
+$w2 0 4,2,2,True,f4bc943a,f4bc943a,False
+$w2 2 0,2,2,True,f4bc943a,f4bc943a,False
+$w3 -2 3,6,6,True,f4bc943a,f4bc943a,False
+$w3 -1 9,6,6,True,f4bc943a,f4bc943a,False
+$w3 0 4,6,6,True,f4bc943a,f4bc943a,False
+$w3 2 0,6,6,True,f4bc943a,f4bc943a,False
+$w4 -2 3,14,14,True,f4bc943a,f4bc943a,False
+$w4 -1 9,14,14,True,f4bc943a,f4bc943a,False
+$w4 0 4,14,14,True,f4bc943a,f4bc943a,False
+$w4 2 0,14,14,True,f4bc943a,f4bc943a,False
+$w5 -2 3,-2,-2,True,f4bc943a,f4bc943a,False
+$w5 -1 9,-2,-2,True,f4bc943a,f4bc943a,False
+$w5 0 4,-2,-2,True,f4bc943a,f4bc943a,False
+$w5 2 0,-2,-2,True,f4bc943a,f4bc943a,False
+$w6 -2 3,1,1,True,f4bc943a,f4bc943a,False
+$w6 -1 9,1,1,True,f4bc943a,f4bc943a,False
+$w6 0 4,1,1,True,f4bc943a,f4bc943a,False
+$w6 2 0,1,1,True,f4bc943a,f4bc943a,False
+$w7 -2 3,15,15,True,f4bc943a,f4bc943a,False
+$w7 -1 9,15,15,True,f4bc943a,f4bc943a,False
+$w7 0 4,15,15,True,f4bc943a,f4bc943a,False
+$w7 2 0,15,15,True,f4bc943a,f4bc943a,False
+$w8 -2 3,65535,65535,True,f4bc943a,f4bc943a,False
+$w8 -1 9,65535,65535,True,f4bc943a,f4bc943a,False
+$w8 0 4,65535,65535,True,f4bc943a,f4bc943a,False
+$w8 2 0,65535,65535,True,f4bc943a,f4bc943a,False
+$w9 -2 3,-842150453,-842150453,True,f4bc943a,f4bc943a,False
+$w9 -1 9,-842150453,-842150453,True,f4bc943a,f4bc943a,False
+$w9 0 4,-842150453,-842150453,True,f4bc943a,f4bc943a,False
+$w9 2 0,-842150453,-842150453,True,f4bc943a,f4bc943a,False
+state_regions,$heap+0x0:98320 $freelog+0x0:1028 $implog+0x0:1024 $rec+0x0:4096 0x0083ab94+0x0:4 0x0083ab90+0x0:4 0x0083aae0+0x0:4 0x0083aaec+0x0:4 0x0083aaa0+0x0:4 0x0083aabc+0x0:4 0x0083aac0+0x0:4 0x0083aac4+0x0:4 0x0083aa98+0x0:4 0x0083aaf0+0x0:4 0x0083ab30+0x0:4 0x0083ab34+0x0:4 0x0083ab40+0x0:4 0x0083ab44+0x0:4 0x0083ab54+0x0:4 0x0083ac18+0x0:4 0x00839650+0x0:4 0x0083ab2c+0x0:4 0x0083aa9c+0x0:4 0x0083a2c8+0x0:4 0x0083a2cc+0x0:4 0x0083a2d0+0x0:4 0x0083a2d4+0x0:4 0x0083ad50+0x0:4 0x0083ad4c+0x0:4 0x0083a2d8+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105c340,original=0x1440a40,2026-10-12T16:57:08
+distinct_results,13,,
+VERDICT,GREEN,40,
