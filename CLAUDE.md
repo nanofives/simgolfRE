@@ -380,6 +380,9 @@ the disassembly, characters as hex). ApplyNames counted a name already equal as 
 (the demangled exe exports 0x4490d0..0x449150), so every overwrite run re-renamed them; it now keeps an equal name
 whatever its source (overwrite on the exe: renamed=0). The two C0 sound rows were named from their vtable slots
 (re/names/sound_14.tsv: Ch5c2ec_forwardSlot37 0x1002f680, enqueueWaveCmd10 0x1002fc10) and are C2.
+UI / drawing plan (2026-10-12): re/C3_UI_PLAN.md. Round 29 = four batches by blocker (log/c3/round29_candidates.py,
+round29_brief.md): c3ee image pipeline + shared filestandin.js (Opus; releases Image_draw / Surface_drawScaled from hold),
+c3ef widget lifecycle + shared uitree.js (Opus), c3eg window plumbing with a user32 import preset, c3eh drawing bodies.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
