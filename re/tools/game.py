@@ -59,6 +59,34 @@ def _enum_windows(pid: int, cls: str | None = None):
     return out
 
 
+def purge_frida_temp(min_age_s: float = 600) -> tuple[int, int]:
+    """Delete leaked Frida agent dirs (%TEMP%\\frida-<hash>, 22-50 MB each). frida-core unpacks one per Python process
+    and removes it only on a clean exit, so every runner killed on a timeout leaks one; on 2026-10-12 6,461 of them
+    (326 GB) filled C: during round 29. A dir still in use holds open files and cannot be renamed, so each dir is
+    renamed first and only a dir that moved is deleted: a live session (ours or another project's) is never touched.
+    Returns (dirs removed, bytes freed)."""
+    import shutil, tempfile
+    tmp = pathlib.Path(os.environ.get("TEMP") or tempfile.gettempdir())
+    now = time.time()
+    removed = freed = 0
+    for d in tmp.glob("frida-*"):
+        try:
+            if not d.is_dir() or now - d.stat().st_mtime < min_age_s:
+                continue
+            gone = d.with_name("gone-" + d.name)
+            d.rename(gone)  # fails while any file inside is open
+        except OSError:
+            continue
+        size = sum(f.stat().st_size for f in gone.rglob("*") if f.is_file())
+        shutil.rmtree(gone, ignore_errors=True)
+        if not gone.exists():
+            removed += 1
+            freed += size
+    for g in tmp.glob("gone-frida-*"):  # leftovers of an earlier interrupted purge
+        shutil.rmtree(g, ignore_errors=True)
+    return removed, freed
+
+
 class Game:
     """One spawned game process. Context manager kills it on exit."""
 
@@ -114,6 +142,10 @@ class Game:
         # (HKCU/HKLM AppCompatFlags\Layers, keyed by its path); a copy at any other path does not, its 16-bit mode
         # set fails and the game exits with code 0 right after creating its window. Passing the layer in the
         # environment applies it to the spawned process wherever the install lives (2026-10-07).
+        try:
+            purge_frida_temp()
+        except Exception:
+            pass  # housekeeping must never stop a boot
         env = {"SIMGOLF_WINDOWED": "1" if self.windowed else "0", "SIMGOLF_VCURSOR": "2,2",
                "__COMPAT_LAYER": "DWM8And16BitMitigation", **self.env}
         self.pid = frida.spawn([str(GAME_DIR / self.exe), *self.args], cwd=str(GAME_DIR), env=env)
