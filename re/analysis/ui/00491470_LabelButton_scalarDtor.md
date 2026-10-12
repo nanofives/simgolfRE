@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the 0x004bb5b4 control. (`re/names/exe_4.tsv`)
 
+## Purpose
+0x00491470 LabelButton::scalarDtor (ret 4): LabelButton::dtor (0x00491473); when bit 0 of the argument is set (`test byte ptr [esp+8], 1` 0x00491478) operator delete of this (0x00491480). Returns this (0x00491488). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: LabelButton::scalarDtor_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491470_LabelButton_scalarDtor_a.path1.csv`); LabelButton::scalarDtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491470_LabelButton_scalarDtor_b.path1.csv`); LabelButton::scalarDtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491470_LabelButton_scalarDtor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00491470@C_FUN_00491470@f_00491470@@QAEPAHE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049148b): callee pops 4 bytes of stack arguments.

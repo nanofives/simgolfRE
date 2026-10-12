@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 290 bytes, 104 instructions, subsystem `ui`. Mechanical
 redraws the combo: lays out items, draws its box and highlights the current selection. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00493a60 comboRefresh (this = the combo object; `ret`): the current text t = listCurrentItemValue 0x004941e0 (0x00493a69), +0x1c = comboCurrentIndex 0x004942a0 (0x00493a76 / 0x00493a7d), comboDrawFrame 0x00493f50 (0x00493a80). With bit 0 of the byte at +4 (0x00493a85): the live display's slot +0xb4 (0x00493a93), Widget_setQuad on this+0x23b0 with (0x8000001f, -1, 2, 2) (0x00493aac) and setDrawTarget on it with ([0x0083b9c0], 0, 0, 0) (0x00493ac0). The rectangle at +0x22e8 is read (x0, y0, x1, y1 = +0x22e8 / +0x22ec / +0x22f0 / +0x22f4, 0x00493acb..0x00493ae7); the object at +0x293c answers its virtual +0xd4 with a pointer r (0 when +0x293c is NULL, which the next two reads then fault on, 0x00493af6 / 0x00493af8) and x1 += [r] - [r+8] (0x00493af8..0x00493b02). With bit 3 of the byte at +4 (0x00493b04): a non-NULL t goes to drawText on this+0x23b0 with (t, 4, 4, strlen t) (0x00493b26); otherwise (bit 3 clear) a non-NULL t goes to drawBox with (t, 0, 0, x1 - x0, y1 - y0, strlen t) (0x00493b6a). Last: Window::invalidate on this+0x213c (0x00493b31 / 0x00493b75), whose eax is returned; a NULL t skips the draw and still invalidates (0x00493b0a / 0x00493b40 -> 0x00493b6f). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: comboRefresh (8 vectors, 8 distinct results, 8 changing state, `log/diff/00493a60_comboRefresh.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?refresh@R2C493a60@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00493b3d, 0x00493b81): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts 0x274 from this and tail-jumps to comboDeleteDtor 0x00497a00 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+0x00497af0 comboDeleteDtor_adj274: `sub ecx, 0x274; jmp 0x00497a00` (0x00497af0 / 0x00497af6). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: comboDeleteDtor_adj274_a (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497af0_comboDeleteDtor_adj274_a.path1.csv`); comboDeleteDtor_adj274_b (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497af0_comboDeleteDtor_adj274_b.path1.csv`); comboDeleteDtor_adj274_c (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497af0_comboDeleteDtor_adj274_c.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00497af0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

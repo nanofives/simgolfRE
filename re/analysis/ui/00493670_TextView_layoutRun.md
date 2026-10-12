@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 35 bytes, 13 instructions, subsystem `ui`. Mechanical t
 forwards its six arguments plus a trailing 0 to TextView::layout 0x0048e1c0 (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+0x00493670 TextView_layoutRun(a1, a2, a3, a4, a5), ret 0x14: `push 0` then the five arguments in the same order, and TextView::layout 0x0048e1c0 (ret 0x18) on the unchanged ecx (0x00493678..0x0049368b); its eax is returned. Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: TextView_layoutRun (8 vectors, 8 distinct results, 8 changing state, `log/diff/00493670_TextView_layoutRun.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00493670@C_FUN_00493670@f_00493670@@QAEXPAEHH0I@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00493690): callee pops 20 bytes of stack arguments.

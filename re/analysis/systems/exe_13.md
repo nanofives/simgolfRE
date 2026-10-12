@@ -18,3 +18,11 @@ CreateFunctions.java (2026-10-12) and named from what each slot writes (rows in 
 `listPanelSlot28` 0x0049e990 is slot 28 (+0x70) of the listPanel part's table 0x004bb744, reached through
 listPanelSlot28_vtordisp 0x00491b70 and called by viewDispatchSlot28 0x004a0a10 for tag 0x10: it writes -1 to the two
 selected-row words listPanelDraw reads.
+
+## TextView and LabelButton (batch c3ek)
+- `LabelButton::reset` 0x004a14c0 (was resetMsgObject) puts a LabelButton back in the state ctorObj4a13f0 0x004a13f0
+  builds: default repeat delay, no selection, no running timer, the three-column colour block copied again from the
+  global table. LabelButton::dtor and comboDtor call it.
+- `TextView::loadScript` 0x0048e1c0 (was TextView::layout) builds the TextView from a script section: a line-by-line
+  interpreter whose directives set fonts, sizes, names, images and the layout slots at +0x1cd0, and whose other lines
+  become text rows (log/c3/c3ek_purpose.md has the directive table with instruction addresses).

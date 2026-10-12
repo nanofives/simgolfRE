@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 44 bytes, 13 instructions, subsystem `ui`. Mechanical t
 thin wrapper that forwards to comboRefresh. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00493a30 comboRefreshThunk: comboRefresh (0x00493a33), then the virtual slot +4 (argument 0) of the sub-object at this+0x213c (0x00493a38..0x00493a46) and of the one at this+0x26c4 (0x00493a49..0x00493a57); the second call's eax is returned (nothing writes eax afterwards). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: comboRefreshThunk (6 vectors, 6 distinct results, 6 changing state, `log/diff/00493a30_comboRefreshThunk.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00493a30@f_00493a30@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00493a5b): callee pops 0 bytes of stack arguments.

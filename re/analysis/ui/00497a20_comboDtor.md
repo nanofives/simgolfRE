@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 193 bytes, 43 instructions, subsystem `ui`. Mechanical 
 destructor for the combo/control object; tears down its sub-objects and buffers. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00497a20 comboDtor (this = the buildLabeledControl class, 0x13b4 bytes): the vtables 0x004bbac8 at +0 (0x00497a40) and 0x004bbab4 at +0x274 (0x00497a46), controlInitBase (0x00497a58), then the embedded LabelButtons at +0xcdc (0x00497a5d) and +0x60c (0x00497a8f), each: vtables 0x004bb5b4 / 0x004bb5a0 (0x00497a67 / 0x00497a6d, 0x00497a99 / 0x00497a9f), resetMsgObject (0x00497a7e / 0x00497ab0), Button::dtor (0x00497a8a / 0x00497abc); last Base4805a0::dtor on this (0x00497acb), whose eax it returns. Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: comboDtor_a (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497a20_comboDtor_a.path1.csv`); comboDtor_b (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497a20_comboDtor_b.path1.csv`); comboDtor_c (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497a20_comboDtor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_e.cpp` as `??1C497a20@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00497ae0): callee pops 0 bytes of stack arguments.

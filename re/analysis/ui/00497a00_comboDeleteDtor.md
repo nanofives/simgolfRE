@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor for the combo object. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00497a00 comboDeleteDtor (ret 4): comboDtor (0x00497a03); with bit 0 of the argument set (0x00497a08) operator delete of this (0x00497a10). Returns this (0x00497a18). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: comboDeleteDtor_a (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497a00_comboDeleteDtor_a.path1.csv`); comboDeleteDtor_b (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497a00_comboDeleteDtor_b.path1.csv`); comboDeleteDtor_c (4 vectors, 4 distinct results, 4 changing state, `log/diff/00497a00_comboDeleteDtor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00497a00@C_FUN_00497a00@f_00497a00@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00497a1b): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 153 bytes, 74 instructions, subsystem `ui`. Mechanical 
 forwarder that renders a plain text string via drawRichText (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x00477c30 drawText(text, a2, a3, limit), ret 0x10 (this in ecx): a NULL text returns a2 (0x00477c3d); this+0x5c == 0 or [this+0x5c]+4 == 0 returns 3 (0x00477c47..0x00477c53 -> 0x00477cc0); n = min(strlen(text), limit) signed (0x00477c55..0x00477c75, 0x00477c7b..0x00477c95); n <= 0 returns a2 (0x00477c79 / 0x00477c99 -> 0x00477c9b); otherwise drawRichText 0x004775b0 (text, a2, a3, n) on this (0x00477cb3), whose eax is returned. Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: drawText (12 vectors, 8 distinct results, 6 changing state, `log/diff/00477c30_drawText.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x00477c44, 0x00477ca2, 0x00477cbb, 0x00477cc6): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x00477c39 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -4,6 +4,30 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  0048e1c0  TextView::loadScript  name TextView::layout->TextView::loadScript  log/c3/round30_renamed.tsv
+2026-10-12  004a14c0  LabelButton::reset  name resetMsgObject->LabelButton::reset  log/c3/round30_renamed.tsv
+2026-10-12  004a2010  LabelButton::onMouseMove  C2->C3  log/diff/004a2010_LabelButton_onMouseMove.path1.csv
+2026-10-12  004a14c0  resetMsgObject  C2->C3  log/diff/004a14c0_resetMsgObject_a.path1.csv
+2026-10-12  004a11c0  panelStop  C2->C3  log/diff/004a11c0_panelStop.path1.csv
+2026-10-12  00497af0  comboDeleteDtor_adj274  C2->C3  log/diff/00497af0_comboDeleteDtor_adj274_a.path1.csv
+2026-10-12  00497a20  comboDtor  C2->C3  log/diff/00497a20_comboDtor_a.path1.csv
+2026-10-12  00497a00  comboDeleteDtor  C2->C3  log/diff/00497a00_comboDeleteDtor_a.path1.csv
+2026-10-12  00493b90  comboOpenPopup  C2->C3  log/diff/00493b90_comboOpenPopup_a.path1.csv
+2026-10-12  00493a60  comboRefresh  C2->C3  log/diff/00493a60_comboRefresh.path1.csv
+2026-10-12  00493a30  comboRefreshThunk  C2->C3  log/diff/00493a30_comboRefreshThunk.path1.csv
+2026-10-12  004936a0  comboInit  C2->C3  log/diff/004936a0_comboInit_g.path1.csv
+2026-10-12  00493670  TextView_layoutRun  C2->C3  log/diff/00493670_TextView_layoutRun.path1.csv
+2026-10-12  004918e0  LabelButton::scalarDtor_adj274  C2->C3  log/diff/004918e0_LabelButton_scalarDtor_adj274_a.path1.csv
+2026-10-12  00491470  LabelButton::scalarDtor  C2->C3  log/diff/00491470_LabelButton_scalarDtor_a.path1.csv
+2026-10-12  00491410  LabelButton::dtor  C2->C3  log/diff/00491410_LabelButton_dtor_a.path1.csv
+2026-10-12  00490d60  TextView::drawContents  C2->C3  log/diff/00490d60_TextView_drawContents.path1.csv
+2026-10-12  0048e1c0  TextView::layout  C2->C3  log/diff/0048e1c0_TextView_layout_a.path1.csv
+2026-10-12  0048db60  TextView::init  C2->C3  log/diff/0048db60_TextView_init.path1.csv
+2026-10-12  0048ce00  TextView::ctor  C2->C3  log/diff/0048ce00_TextView_ctor_s0.path1.csv
+2026-10-12  004887c0  Button::create  C2->C3  log/diff/004887c0_Button_create.path1.csv
+2026-10-12  00480870  Window::createFromRect  C2->C3  log/diff/00480870_Window_createFromRect.path1.csv
+2026-10-12  00477c30  drawText  C2->C3  log/diff/00477c30_drawText.path1.csv
+2026-10-12  004775b0  drawRichText  C2->C3  log/diff/004775b0_drawRichText.path1.csv
 2026-10-12  004a12e0  viewDispatchReset  C2->C3  log/diff/004a12e0_viewDispatchReset.path1.csv
 2026-10-12  004a1250  viewDispatchOpen  C2->C3  log/diff/004a1250_viewDispatchOpen.path1.csv
 2026-10-12  004a0ef0  viewDispatchBuild  C2->C3  log/diff/004a0ef0_viewDispatchBuild.path1.csv

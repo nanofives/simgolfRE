@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 72 bytes, 31 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 creates a window from a RECT argument by forwarding its left/top/width/height to Window::create, returning 0x10 on null rect (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00480870 Window::createFromRect(rect, label, flags, parent, owner, border), ret 0x18 (this in ecx, passed on unchanged): a NULL rect returns 0x10 (0x00480878); otherwise Window::create 0x004806c0 (ret 0x24) with (rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, label, flags, parent, owner, border): left = [rect] (0x00480893), top = [rect+4] (0x00480886), width = [rect+8] - left (0x004808a3 / 0x004808a8), height = [rect+0xc] - top (0x004808a0 / 0x004808a6); the five stack arguments after the rectangle are pushed in order (0x00480889..0x0048089f, last argument first). Window::create's eax is returned. Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: Window::createFromRect (11 vectors, 10 distinct results, 9 changing state, `log/diff/00480870_Window_createFromRect.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_00480870@C_FUN_00480870@f_00480870@@QAEHPAHPADPAIH00@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x0048087d, 0x004808b5): callee pops 24 bytes of stack arguments.

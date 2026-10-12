@@ -1,34 +1,34 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$tm $s_plain,7,7,True,736526de,736526de,True
-$tm $s_long,7,7,True,23bc2075,23bc2075,True
-$tm $s_one,7,7,True,4b62d84e,4b62d84e,True
-$tm $s_braces,7,7,True,d82c8829,d82c8829,True
-$tm $s_spaces,7,7,True,ed39b49a,ed39b49a,True
-$tm $s_empty,7,7,True,cb6758cc,cb6758cc,False
-$tm 0,7,7,True,cb6758cc,cb6758cc,False
-$tind $s_plain,7,7,True,736526de,736526de,True
-$tind $s_long,7,7,True,23bc2075,23bc2075,True
-$tind $s_one,7,7,True,4b62d84e,4b62d84e,True
-$tind $s_braces,7,7,True,d82c8829,d82c8829,True
-$tind $s_spaces,7,7,True,ed39b49a,ed39b49a,True
-$tind $s_empty,7,7,True,cb6758cc,cb6758cc,False
-$tind 0,7,7,True,cb6758cc,cb6758cc,False
-$tplain $s_plain,7,7,True,80f321c2,80f321c2,True
-$tplain $s_long,7,7,True,292cd820,292cd820,True
-$tplain $s_one,7,7,True,98f28863,98f28863,True
-$tplain $s_braces,7,7,True,b42656fb,b42656fb,True
-$tplain $s_spaces,7,7,True,524d30c9,524d30c9,True
-$tplain $s_empty,7,7,True,cb6758cc,cb6758cc,False
-$tplain 0,7,7,True,cb6758cc,cb6758cc,False
-$tneg $s_plain,7,7,True,736526de,736526de,True
-$tneg $s_long,7,7,True,23bc2075,23bc2075,True
-$tneg $s_one,7,7,True,4b62d84e,4b62d84e,True
-$tneg $s_braces,7,7,True,d82c8829,d82c8829,True
-$tneg $s_spaces,7,7,True,ed39b49a,ed39b49a,True
-$tneg $s_empty,7,7,True,cb6758cc,cb6758cc,False
-$tneg 0,7,7,True,cb6758cc,cb6758cc,False
+$tm $s_plain,7,7,True,8459eb7f,8459eb7f,True
+$tm $s_long,7,7,True,72168aec,72168aec,True
+$tm $s_one,7,7,True,fba713f7,fba713f7,True
+$tm $s_braces,7,7,True,b71646a8,b71646a8,True
+$tm $s_spaces,7,7,True,ad47ad9b,ad47ad9b,True
+$tm $s_empty,7,7,True,682ff2fd,682ff2fd,False
+$tm 0,7,7,True,682ff2fd,682ff2fd,False
+$tind $s_plain,7,7,True,8459eb7f,8459eb7f,True
+$tind $s_long,7,7,True,72168aec,72168aec,True
+$tind $s_one,7,7,True,fba713f7,fba713f7,True
+$tind $s_braces,7,7,True,b71646a8,b71646a8,True
+$tind $s_spaces,7,7,True,ad47ad9b,ad47ad9b,True
+$tind $s_empty,7,7,True,682ff2fd,682ff2fd,False
+$tind 0,7,7,True,682ff2fd,682ff2fd,False
+$tplain $s_plain,7,7,True,519a9c5f,519a9c5f,True
+$tplain $s_long,7,7,True,6c989db1,6c989db1,True
+$tplain $s_one,7,7,True,464af872,464af872,True
+$tplain $s_braces,7,7,True,66ac2892,66ac2892,True
+$tplain $s_spaces,7,7,True,3fdb5678,3fdb5678,True
+$tplain $s_empty,7,7,True,682ff2fd,682ff2fd,False
+$tplain 0,7,7,True,682ff2fd,682ff2fd,False
+$tneg $s_plain,7,7,True,8459eb7f,8459eb7f,True
+$tneg $s_long,7,7,True,72168aec,72168aec,True
+$tneg $s_one,7,7,True,fba713f7,fba713f7,True
+$tneg $s_braces,7,7,True,b71646a8,b71646a8,True
+$tneg $s_spaces,7,7,True,ad47ad9b,ad47ad9b,True
+$tneg $s_empty,7,7,True,682ff2fd,682ff2fd,False
+$tneg 0,7,7,True,682ff2fd,682ff2fd,False
 state_regions,$rec+0x0:8192 $tnoh+0x0:768 $tm+0x0:768 $tind+0x0:768 $tplain+0x0:768 $tneg+0x0:768 $tbig+0x0:768 $tmid+0x0:768 $tmcb+0x0:768 $tsmall+0x0:768 0x00839a9c+0x0:16 0x00839a5c+0x0:4 0x00839658+0x0:1028,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x729d96a0,original=0x15d0b60,2026-10-11T11:59:02
+meta,detour=0x6efbbaf0,original=0x14503a0,2026-10-12T17:33:45
 distinct_results,11,,
 VERDICT,GREEN,28,

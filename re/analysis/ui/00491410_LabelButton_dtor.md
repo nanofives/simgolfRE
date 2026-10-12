@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 89 bytes, 21 instructions, subsystem `ui`. Mechanical t
 Destructor for a Button-derived label control (vtable 0x004bb5b4). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+0x00491410 LabelButton::dtor: the LabelButton vtables 0x004bb5b4 at +0 (0x0049142d) and 0x004bb5a0 at +0x274 (0x00491433), resetMsgObject (0x00491445), Button::dtor (0x00491454), whose eax it returns (nothing writes eax after 0x00491454). The SEH frame (fs:[0], 0x00491417..0x0049141e / 0x0049145e) only unwinds a throw out of the callees. Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: LabelButton::dtor_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491410_LabelButton_dtor_a.path1.csv`); LabelButton::dtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491410_LabelButton_dtor_b.path1.csv`); LabelButton::dtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491410_LabelButton_dtor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C491410@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00491468): callee pops 0 bytes of stack arguments.

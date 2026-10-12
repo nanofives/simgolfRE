@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 93 bytes, 24 instructions, subsystem `ui`. Mechanical t
 tears down the panel, finalizing its sub-views. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x004a11c0 panelStop (this = the TextView composite viewCtor4a0740 builds): the mode word at +0x1f4 minus one (0x004a11c0..0x004a11c6) selects through the byte table 0x004a1238 (16 entries: 0 1 5 2 5 5 5 3 5 5 5 5 5 5 5 4) and the dword table 0x004a1220 (cases 0..4 = 0x004a11e8 / 0x004a11e3 / 0x004a11fb / 0x004a11f0 / 0x004a11db, case 5 = the default 0x004a1206) a tail jump: mode 1 -> 0x0049f050 on this+0x78, mode 2 -> ListBox::measure 0x0048a120 on this, mode 4 -> 0x004a2a60 on this+0x16c, mode 8 -> 0x004a3be0 on this+0x90, mode 16 -> panelBuildText 0x0049d770 on this+0x58. Any other mode (the unsigned compare with 0xf at 0x004a11c7, so also 0 and above 16) clears the two dwords at [vbptr+8] + this + 0x64 / 0x68 (0x004a1206..0x004a1218) and returns 0 (0x004a120c). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: panelStop (15 vectors, 15 distinct results, 15 changing state, `log/diff/004a11c0_panelStop.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?stop@C4a11c0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a121c): callee pops 0 bytes of stack arguments.

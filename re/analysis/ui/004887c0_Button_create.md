@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 355 bytes, 129 instructions, subsystem `ui`. Mechanical
 Creates the button window, duplicates the label into this+0x5f4, stores the command id at this+0x5e8, and sets its colour quads. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+0x004887c0 Button::create(label, id, x, y, w, h, parent, flag), `ret 0x20` (this in ecx): the virtual reset slot +0x16c (0x004887c8); a NULL parent returns 3 (0x004887d2 / 0x004887d9). A non-NULL label is copied into a _malloc block of strlen + 1 bytes stored at +0x5f4 (0x004887f6 / 0x004887fe), NULL there returns 4 (0x00488806 / 0x0048880b). Window::create on this with (x, y, w, h, 0, 0x1000220 | (flag ? 0x8000 : 0), parent, 0, 0) (0x00488850..0x00488872: neg / sbb / and 0x8000 / or 0x1000220); a non-zero result is returned (0x00488877). Otherwise +0x5e8 = id (0x00488889), Widget_setQuad / Widget_setQuad70 / Widget_setQuad74 on this+0x274 with the word triples 0x004e4450.. (0x004888ab / 0x004888cd / 0x004888ef), setDrawTarget on this+0x274 with ([0x0083b60c], [0x0083b610], [0x0083b614], 0) (0x0048890c), the virtual slot +4 with 0 (0x00488917) and 0 is returned (0x0048891a). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: Button::create (8 vectors, 8 distinct results, 8 changing state, `log/diff/004887c0_Button_create.path1.csv`); Button::create_fail (8 vectors, 8 distinct results, 8 changing state, `log/diff/004887c0_Button_create_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?create@R1C4887c0@@QAEHPBDHHHHHPAUR1W4887c0@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x20` (at 0x004887df, 0x00488811, 0x00488920): callee pops 32 bytes of stack arguments.

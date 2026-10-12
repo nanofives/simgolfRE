@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 183 bytes, 43 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 resets a message/buffer object back to empty. (`re/names/exe_5.tsv`)
 
+## Purpose
+0x004a14c0 resetMsgObject (this = a ButtonObj, the 0x6d0-byte class ctorObj4a13f0 0x004a13f0 builds; callees of LabelButton::dtor 0x00491445 and comboDtor 0x00497a7e / 0x00497ab0): +0x630 = 0x3e8 (0x004a14ca), Timer::reset on this+0x57c (0x004a14d4), +0x578 = +0x574 = 0 (0x004a14dd / 0x004a14e3), +0x634 = -1 (0x004a14e9), Button::resetFields (0x004a14f3), then the three columns i = 0..2 of the block at +0x638 + 4i (`cmp ecx, 0xc` 0x004a156f): +0xc from 0x00840948 + 4i (0x004a1500), -1 at +0, and the nine words +0x2c .. +0x8c (step 0xc) from 0x00840954 + 4i .. 0x008409b4 + 4i (ecx is incremented at 0x004a1506 before the later loads), 0 at +0x18 (0x004a1569). Returns this + 0x644 (the last `lea eax, [esi + 0x638]` plus three `add eax, 4`). Reimplemented in `shim/src/re/c3ek.cpp`; path-1 A/B GREEN: resetMsgObject_a (14 vectors, 14 distinct results, 14 changing state, `log/diff/004a14c0_resetMsgObject_a.path1.csv`); resetMsgObject_b (14 vectors, 14 distinct results, 14 changing state, `log/diff/004a14c0_resetMsgObject_b.path1.csv`); resetMsgObject_c (14 vectors, 14 distinct results, 14 changing state, `log/diff/004a14c0_resetMsgObject_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?reset@C4a14c0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a1576): callee pops 0 bytes of stack arguments.
