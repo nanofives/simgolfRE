@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 66 bytes, 19 instructions, subsystem `input`. Mechanica
 if param_1 is a valid special-key code (0x7f00..0x7f8a) stores it at this+0x218, resets the selection fields +0x208/+0x214 and redraws the cursor (returns 3 otherwise) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+0x0047ab00 EditBox_setCursorChar(this, c) (ret 4): c below 0x7f00 (cmp 0x0047ab04, `jl` 0x0047ab06) or above 0x7f8a (cmp 0x0047ab0b, `jg` 0x0047ab10), signed, returns 3 (mov 0x0047ab3a). Otherwise [this+0x208] = 0, [this+0x218] = c, [this+0x214] = 0 (stores 0x0047ab1b, 0x0047ab21, 0x0047ab27) and drawCursor 0x0047d130 (cdecl) gets (0, 1, -1, -1) (pushes 0x0047ab12..0x0047ab1a; `add esp, 0x10`); eax = 0 (xor 0x0047ab35). Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: EditBox_setCursorChar (15 vectors, 8 distinct results, 8 changing state, `log/diff/0047ab00_EditBox_setCursorChar.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_0047ab00@C_FUN_0047ab00@f_0047ab00@@QAEIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047ab37, 0x0047ab3f): callee pops 4 bytes of stack arguments.

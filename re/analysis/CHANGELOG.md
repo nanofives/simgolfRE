@@ -4,6 +4,25 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  0048aea0  ListBox::onKey  name ListBox::typeAhead->ListBox::onKey  log/c3/round29_renamed.tsv
+2026-10-12  0048c6e0  ListBox::onMouse  C2->C3  log/diff/0048c6e0_ListBox_onMouse.path1.csv
+2026-10-12  0048aea0  ListBox::typeAhead  C2->C3  log/diff/0048aea0_ListBox_typeAhead.path1.csv
+2026-10-12  00480ce0  Window::invalidate  C2->C3  log/diff/00480ce0_Window_invalidate.path1.csv
+2026-10-12  0047f8e0  redrawDrawList  C2->C3  log/diff/0047f8e0_redrawDrawList.path1.csv
+2026-10-12  0047f230  Window::onReleaseInner158  C2->C3  log/diff/0047f230_Window_onReleaseInner158.path1.csv
+2026-10-12  0047f0f0  Window::onReleaseInner150  C2->C3  log/diff/0047f0f0_Window_onReleaseInner150.path1.csv
+2026-10-12  0047f010  Window::onPressHot  C2->C3  log/diff/0047f010_Window_onPressHot.path1.csv
+2026-10-12  0047ef30  Window::onKeyChar  C2->C3  log/diff/0047ef30_Window_onKeyChar.path1.csv
+2026-10-12  0047e140  relayoutClip  C2->C3  log/diff/0047e140_relayoutClip.path1.csv
+2026-10-12  0047d570  Window::layoutScrollbars  C2->C3  log/diff/0047d570_Window_layoutScrollbars.path1.csv
+2026-10-12  0047d130  drawCursor  C2->C3  log/diff/0047d130_drawCursor.path1.csv
+2026-10-12  0047d060  addDirtyRect  C2->C3  log/diff/0047d060_addDirtyRect.path1.csv
+2026-10-12  0047cdb0  drawTooltip  C2->C3  log/diff/0047cdb0_drawTooltip.path1.csv
+2026-10-12  0047c6c0  Window::dispatchAccel  C2->C3  log/diff/0047c6c0_Window_dispatchAccel.path1.csv
+2026-10-12  0047be40  Window::mouseEvent238  C2->C3  log/diff/0047be40_Window_mouseEvent238.path1.csv
+2026-10-12  0047b670  Window::show  C2->C3  log/diff/0047b670_Window_show.path1.csv
+2026-10-12  0047ab00  EditBox_setCursorChar  C2->C3  log/diff/0047ab00_EditBox_setCursorChar.path1.csv
+2026-10-12  00479a80  Surface_clip  C2->C3  log/diff/00479a80_Surface_clip.path1.csv
 2026-10-12  004860d0  EditBox::releaseState  name EditBox::dtor->EditBox::releaseState  log/c3/round29_renamed.tsv
 2026-10-12  0043cb50  EditBox::dtor  name editBoxTimer_dtor->EditBox::dtor  log/c3/round29_renamed.tsv
 2026-10-12  00491680  viewFieldDtor49d5a0  name Dialog::childDtor->viewFieldDtor49d5a0  log/c3/round29_renamed.tsv

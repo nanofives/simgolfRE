@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 187 bytes, 59 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 writes the character argument through the rolling pointer 0x004e42ec, calls matchInputCode 0x0047eee0 with (0x004e4324, 6) and on a 0 result toggles the window 0x008400c8 with Window::visible 0x004801f0 and Window::show 0x0047b670 / Window::detach 0x0047b820; advances the pointer, wrapping past 0x0083abad back to g_codeBuf 0x0083aba4; then offers (character, 0x0083ab88) to the objects at this+0x26c and this+0x270 through their virtual +0x8c and, when both return 0, calls Window::key 0x0047c5d0 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+0x0047ef30 Window::onKeyChar(this, c) (ret 4; c's low byte at [esp+8], 0x0047ef36): the byte is stored at the key ring pointer [0x004e42ec] (0x0047ef44). matchInputCode(0x004e4324, 6) (cdecl, call 0x0047ef46) zero (`jne` 0x0047ef50): the fixed object 0x008400c8 gets Window::visible (call 0x0047ef57); visible calls Window::detach (call 0x0047ef65), else Window::show(0) (push 0 0x0047ef6c, call 0x0047ef73). The ring pointer advances by one (0x0047ef78..0x0047ef83) and wraps to 0x0083aba4 when it reaches 0x0083abae (unsigned `jb` 0x0047ef88). The objects at +0x26c and +0x270 (`test` 0x0047ef9a, 0x0047efba) take virtual slot +0x8c with (movsx c, [0x0083ab88]) (calls 0x0047efaa, 0x0047efca): a non-zero result is returned. Last, Window::key(this, movsx c, [0x0083ab88]) (call 0x0047efe1) and its result. Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: Window::onKeyChar (12 vectors, 12 distinct results, 12 changing state, `log/diff/0047ef30_Window_onKeyChar.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0047efe8): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0047ef3d before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

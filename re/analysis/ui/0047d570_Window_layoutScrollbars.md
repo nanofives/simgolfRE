@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 145 bytes, 50 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 moves the scrollbar/corner children m_150/m_154/m_158 to the bottom-right inner edge using their extent, via moveTo (`re/names/exe_3.tsv`)
 
+## Purpose
+0x0047d570 Window::layoutScrollbars(this) (plain ret): n = [+0x194] (ebx, 0x0047d575), y = [+0x1c4] - 2n - [+0x1bc] - [+0x184] - [+0x180] - 2 (esi, 0x0047d57b..0x0047d5a4). A child at +0x158 (test 0x0047d5a7) is moved to (y, n) (Window::moveTo(child, y, n): push ebx, push esi, call 0x0047d5ad); then y += -3 - w where w = the slot +0xd8 of the object at [[+0x158] + 0x278] (0x0047d5b2..0x0047d5c8) or 0 without that object (0x0047d5d0). The children at +0x154 and +0x150 are moved to (y, n) (0x0047d5db..0x0047d5f8). eax at the ret (0x0047d600): the last moveTo's result; without a moveTo the slot call's result (or 0) when +0x158 was set, else [+0x184] (mov 0x0047d592). Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: Window::layoutScrollbars (12 vectors, 12 distinct results, 11 changing state, `log/diff/0047d570_Window_layoutScrollbars.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0047d600): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0047d573 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

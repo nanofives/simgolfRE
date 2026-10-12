@@ -46,3 +46,8 @@ renamed five rows from what they do:
 - `EditBox::dtor` 0x0043cb50 (was editBoxTimer_dtor) and `EditBox::releaseState` 0x004860d0 (was EditBox::dtor):
   EditBox::create calls the latter on a live object first (0x00486114) and then sizes its buffer, so it is a reset, not
   the destructor.
+
+## Window plumbing (batch c3eg)
+Round 29's window batch c3eg renamed one row: `ListBox::onKey` 0x0048aea0 (was ListBox::typeAhead) handles the arrow keys
+0x25..0x28 and keypad 0x62 / 0x64 / 0x66 / 0x68 through the byte table 0x0048b3ac and dword table 0x0048b398 as well as
+type-ahead characters, so the name covers the whole key handler.

@@ -1,0 +1,1186 @@
+// C3 batch c3eg (round 29, 2026-10-12) of golf_clean.exe: window plumbing (invalidate, clip, scrollbar layout, dirty
+// rectangles, the cursor-character setter). Fixtures: re/frida/js/fixtures.d/c3eg.js. Registry: re/frida/registry.d/c3eg.py.
+// Purposes and per-jcc tables: log/c3/c3eg_purpose.md.
+//
+// Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list) and cites
+// the instructions it reproduces. __thiscall is emulated with __fastcall (ecx = this, edx unused). Callees run through their
+// original addresses; an import is called through the IAT slot the original reads, never the shim's own import table.
+#include "hooks.h"
+
+namespace {
+
+template <typename T> static inline T& G(unsigned addr) { return *reinterpret_cast<T*>(addr); }
+template <typename T> static inline T Imp(unsigned slot) { return *reinterpret_cast<T*>(slot); }
+static inline char* B(void* p) { return reinterpret_cast<char*>(p); }
+template <typename T> static inline T& At(void* p, unsigned off) { return *reinterpret_cast<T*>(B(p) + off); }
+
+typedef int(__cdecl* C0_t)();
+typedef int(__cdecl* C1_t)(int a);
+typedef int(__cdecl* C4_t)(int a, int b, int c, int d);
+typedef int(__fastcall* T0_t)(void* ecx, void* edx);
+typedef int(__fastcall* T1_t)(void* ecx, void* edx, int a);
+typedef int(__fastcall* T2_t)(void* ecx, void* edx, int a, int b);
+typedef int(__fastcall* T7_t)(void* ecx, void* edx, int a, int b, int c, int d, int e, int f, int g);
+
+const T0_t kVisible = reinterpret_cast<T0_t>(0x004801f0);              // Window::visible (plain ret)
+const T2_t kToParent = reinterpret_cast<T2_t>(0x0047b170);             // View::toParent(this, int* x, int* y), ret 8
+const T1_t kOffsetRectToParent = reinterpret_cast<T1_t>(0x0047b0d0);   // View::offsetRectToParent(this, RECT*), ret 4
+const T2_t kMoveTo = reinterpret_cast<T2_t>(0x0047b420);               // Window::moveTo(this, x, y), ret 8
+const T7_t kBlitThunk = reinterpret_cast<T7_t>(0x00475c60);            // Surface_blitThunk(this, 7 stack arguments)
+const C1_t kDrawTooltip = reinterpret_cast<C1_t>(0x0047cdb0);          // drawTooltip(RECT*), plain ret
+const C4_t kDrawCursor = reinterpret_cast<C4_t>(0x0047d130);           // drawCursor(a0..a3), plain ret
+
+static inline int vcall0(void* obj, unsigned off) {
+    return reinterpret_cast<T0_t>(*reinterpret_cast<void**>(*reinterpret_cast<char**>(obj) + off))(obj, 0);
+}
+static inline int vcall1(void* obj, unsigned off, int a) {
+    return reinterpret_cast<T1_t>(*reinterpret_cast<void**>(*reinterpret_cast<char**>(obj) + off))(obj, 0, a);
+}
+
+// USER32 import slots (pefile over original\golf_clean.exe)
+const unsigned kIatUnionRect = 0x004ba1a4;
+const unsigned kIatGetForegroundWindow = 0x004ba1cc;
+const unsigned kIatClipCursor = 0x004ba1d0;
+typedef int(__stdcall* Union_t)(void* dst, const void* src1, const void* src2);
+typedef int(__stdcall* Gfw_t)();
+typedef int(__stdcall* Clip_t)(const void* rect);
+
+}  // namespace
+
+// 0x00480ce0  Window::invalidate(this) (plain ret): Window::visible 0x004801f0 with ecx = this (call 0x00480ce6); zero returns
+// zero (test 0x00480ceb, `je` 0x00480ced -> 0x00480d67; eax stays 0). The surface handle at +0x278 (mov 0x00480cef,
+// `je` 0x00480cf7) writes the window's size RECT {l, t, r, b} into the local at esp+0xc through its slot +0xd0 (call
+// 0x00480d00, one argument). View::toParent(this, &x, &y) with x = y = 0 (stores 0x00480d12, 0x00480d1a; call 0x00480d22)
+// gives the offset to the parent chain; l += x, r += x (0x00480d37, 0x00480d39), t += y, b += y (0x00480d47, 0x00480d49);
+// the RECT goes to the live display's slot +0x30 ([0x0083ad50], call 0x00480d64) and eax = its result (ret 0x00480d6b).
+// A window without a handle (+0x278 == 0) leaves the local RECT as stack garbage in the original; this body zeroes it, a
+// case no fixture compares (Purpose).
+int __fastcall WindowInvalidate_re(void* self, void*) {
+    if (kVisible(self, 0) == 0) return 0;                                         // 0x00480ce6..0x00480ced
+    int r[4] = {0, 0, 0, 0};
+    void* handle = At<void*>(self, 0x278);                                        // 0x00480cef
+    if (handle != 0) vcall1(handle, 0xd0, reinterpret_cast<int>(r));              // 0x00480d00
+    int x = 0, y = 0;                                                             // 0x00480d12, 0x00480d1a
+    kToParent(self, 0, reinterpret_cast<int>(&x), reinterpret_cast<int>(&y));     // 0x00480d22
+    r[0] += x;                                                                    // 0x00480d37
+    r[2] += x;                                                                    // 0x00480d39
+    r[1] += y;                                                                    // 0x00480d47
+    r[3] += y;                                                                    // 0x00480d49
+    return vcall1(G<void*>(0x0083ad50), 0x30, reinterpret_cast<int>(r));          // 0x00480d64
+}
+T0_t WindowInvalidate_orig;
+// 0x00480ce0
+SG_HOOK("golf_clean.exe", 0x00480ce0, Window_invalidate, WindowInvalidate_re, WindowInvalidate_orig);
+
+// 0x00479a80  Surface_clip(this, RECT* r) (ret 4): r != 0 (test 0x00479a85, `je` 0x00479a89) copies its four dwords to
+// 0x0083aa78..0x0083aa84 (0x00479a8b..0x00479aa8); r == 0 copies this+0x1ac..+0x1b8 (lea 0x00479ab0, copies 0x00479abb..
+// 0x00479ada) and calls View::offsetRectToParent(this, 0x0083aa78) (push 0x00479ab6, call 0x00479ae0). Then [0x0083aa98] =
+// this (0x00479ae7); Window::visible(this) (call 0x00479aed) zero returns zero (0x00479af4). Otherwise the live display's
+// slot +0x20 (call 0x00479afe) is compared (cmp 0x00479b09, `jne` 0x00479b0b) with GetForegroundWindow ([0x004ba1cc], call
+// 0x00479b03): different returns the foreground window; equal returns ClipCursor ([0x004ba1d0], push 0x00479b0d,
+// call 0x00479b12) of 0x0083aa78.
+int __fastcall SurfaceClip_re(void* self, void*, const int* r) {
+    if (r != 0) {                                                                 // 0x00479a85
+        G<int>(0x0083aa78) = r[0];                                                // 0x00479a8d
+        G<int>(0x0083aa7c) = r[1];                                                // 0x00479a96
+        G<int>(0x0083aa80) = r[2];                                                // 0x00479a9f
+        G<int>(0x0083aa84) = r[3];                                                // 0x00479aa8
+    } else {
+        const int* s = reinterpret_cast<const int*>(B(self) + 0x1ac);             // 0x00479ab0
+        G<int>(0x0083aa78) = s[0];                                                // 0x00479abd
+        G<int>(0x0083aa7c) = s[1];                                                // 0x00479ac6
+        G<int>(0x0083aa80) = s[2];                                                // 0x00479acf
+        G<int>(0x0083aa84) = s[3];                                                // 0x00479ada
+        kOffsetRectToParent(self, 0, 0x0083aa78);                                 // 0x00479ae0
+    }
+    G<void*>(0x0083aa98) = self;                                                  // 0x00479ae7
+    if (kVisible(self, 0) == 0) return 0;                                         // 0x00479aed..0x00479af4
+    const int display = vcall0(G<void*>(0x0083ad50), 0x20);                       // 0x00479afe
+    const int fg = Imp<Gfw_t>(kIatGetForegroundWindow)();                         // 0x00479b03
+    if (fg != display) return fg;                                                 // 0x00479b09..0x00479b0b
+    return Imp<Clip_t>(kIatClipCursor)(reinterpret_cast<void*>(0x0083aa78));      // 0x00479b12
+}
+typedef int(__fastcall* SurfaceClip_t)(void*, void*, const int*);
+SurfaceClip_t SurfaceClip_orig;
+// 0x00479a80
+SG_HOOK("golf_clean.exe", 0x00479a80, Surface_clip, SurfaceClip_re, SurfaceClip_orig);
+
+// 0x0047d570  Window::layoutScrollbars(this) (plain ret): n = [+0x194] (ebx, 0x0047d575), y = [+0x1c4] - 2n - [+0x1bc] -
+// [+0x184] - [+0x180] - 2 (esi, 0x0047d57b..0x0047d5a4). A child at +0x158 (test 0x0047d5a7) is moved to (y, n)
+// (Window::moveTo(child, y, n): push ebx, push esi, call 0x0047d5ad); then y += -3 - w where w = the slot +0xd8 of the
+// object at [[+0x158] + 0x278] (0x0047d5b2..0x0047d5c8) or 0 without that object (0x0047d5d0). The children at +0x154 and
+// +0x150 are moved to (y, n) (0x0047d5db..0x0047d5f8). eax at the ret (0x0047d600): the last moveTo's result; without a
+// moveTo the slot call's result (or 0) when +0x158 was set, else [+0x184] (mov 0x0047d592).
+int __fastcall WindowLayoutScrollbars_re(void* self, void*) {
+    const int n = At<int>(self, 0x194);                                           // 0x0047d575
+    int y = At<int>(self, 0x1c4) - 2 * n - At<int>(self, 0x1bc) - At<int>(self, 0x184) - At<int>(self, 0x180) - 2;   // 0x0047d57b..0x0047d5a4
+    int eax = At<int>(self, 0x184);                                               // 0x0047d592
+    void* c158 = At<void*>(self, 0x158);                                          // 0x0047d59a
+    if (c158 != 0) {                                                              // 0x0047d5a7
+        eax = kMoveTo(c158, 0, y, n);                                             // 0x0047d5ad
+        void* h = At<void*>(At<void*>(self, 0x158), 0x278);                       // 0x0047d5b2..0x0047d5bd
+        if (h != 0) eax = vcall0(h, 0xd8);                                        // 0x0047d5c8
+        else eax = 0;                                                             // 0x0047d5d0
+        y += static_cast<int>(0xfffffffd) - eax;                                  // 0x0047d5d2..0x0047d5d9
+    }
+    void* c154 = At<void*>(self, 0x154);                                          // 0x0047d5db
+    if (c154 != 0) eax = kMoveTo(c154, 0, y, n);                                  // 0x0047d5e7
+    void* c150 = At<void*>(self, 0x150);                                          // 0x0047d5ec
+    if (c150 != 0) eax = kMoveTo(c150, 0, y, n);                                  // 0x0047d5f8
+    return eax;
+}
+T0_t WindowLayoutScrollbars_orig;
+// 0x0047d570
+SG_HOOK("golf_clean.exe", 0x0047d570, Window_layoutScrollbars, WindowLayoutScrollbars_re, WindowLayoutScrollbars_orig);
+
+// 0x0047ab00  EditBox_setCursorChar(this, c) (ret 4): c below 0x7f00 (cmp 0x0047ab04, `jl` 0x0047ab06) or above 0x7f8a
+// (cmp 0x0047ab0b, `jg` 0x0047ab10), signed, returns 3 (mov 0x0047ab3a). Otherwise [this+0x208] = 0, [this+0x218] = c,
+// [this+0x214] = 0 (stores 0x0047ab1b, 0x0047ab21, 0x0047ab27) and drawCursor 0x0047d130 (cdecl) gets (0, 1, -1, -1)
+// (pushes 0x0047ab12..0x0047ab1a; `add esp, 0x10`); eax = 0 (xor 0x0047ab35).
+int __fastcall EditBoxSetCursorChar_re(void* self, void*, int c) {
+    if (c < 0x7f00 || c > 0x7f8a) return 3;                                       // 0x0047ab04..0x0047ab10
+    At<int>(self, 0x208) = 0;                                                     // 0x0047ab1b
+    At<int>(self, 0x218) = c;                                                     // 0x0047ab21
+    At<int>(self, 0x214) = 0;                                                     // 0x0047ab27
+    kDrawCursor(0, 1, -1, -1);                                                    // 0x0047ab2d
+    return 0;                                                                     // 0x0047ab35
+}
+T1_t EditBoxSetCursorChar_orig;
+// 0x0047ab00
+SG_HOOK("golf_clean.exe", 0x0047ab00, EditBox_setCursorChar, EditBoxSetCursorChar_re, EditBoxSetCursorChar_orig);
+
+// 0x0047d060  addDirtyRect(f) (cdecl, the argument is read at 0x0047d0dd): [0x0083aaa0] == 0 (cursor image pointer, test
+// 0x0047d068, `je` 0x0047d06a -> 0x0047d11e) returns 0 (eax = the zero it loaded). Otherwise Surface_blitThunk with ecx =
+// 0x0083a500 and seven stack arguments (0x0083a7b8, 0, 0, [0x0083aaa4], [0x0083aaa8], [0x0083aab4], [0x0083aab8]) (pushes
+// 0x0047d081..0x0047d08e, call 0x0047d098), then UnionRect(0x0083a4d8, 0x0083a4d8, &{[aa4], [aa8], [aa4] + [ab4], [aa8] +
+// [ab8]}) (locals 0x0047d0a3..0x0047d0d3, call [0x004ba1a4] at 0x0047d0d7; its result is overwritten). f == 0 (mov 0x0047d0dd,
+// test 0x0047d0e1, `je` 0x0047d11e) returns f. Otherwise [0x0083aaa0] is parked in esi and cleared (0x0047d0e6, 0x0047d0f1),
+// drawTooltip(0x0083a4d8) runs (call 0x0047d0fb), the pointer is restored (0x0047d103), [0x0083a4d8] and [0x0083a4e0] are
+// cleared (0x0047d109, 0x0047d113) and eax = drawTooltip's result.
+int __cdecl AddDirtyRect_re(int f) {
+    const int cursorImage = G<int>(0x0083aaa0);                                   // 0x0047d065
+    if (cursorImage == 0) return 0;                                               // 0x0047d068
+    const int aa4 = G<int>(0x0083aaa4), aa8 = G<int>(0x0083aaa8);                 // 0x0047d075..0x0047d082
+    const int ab4 = G<int>(0x0083aab4), ab8 = G<int>(0x0083aab8);
+    kBlitThunk(reinterpret_cast<void*>(0x0083a500), 0, 0x0083a7b8, 0, 0, aa4, aa8, ab4, ab8);   // 0x0047d098
+    int local[4];
+    local[0] = aa4;                                                               // 0x0047d0b4
+    local[2] = ab4 + aa4;                                                         // 0x0047d0b0, 0x0047d0ae
+    local[1] = aa8;                                                               // 0x0047d0cf
+    local[3] = ab8 + aa8;                                                         // 0x0047d0d3
+    Imp<Union_t>(kIatUnionRect)(reinterpret_cast<void*>(0x0083a4d8), reinterpret_cast<void*>(0x0083a4d8), local);   // 0x0047d0d7
+    if (f == 0) return f;                                                         // 0x0047d0e1
+    const int parked = G<int>(0x0083aaa0);                                        // 0x0047d0e6
+    G<int>(0x0083aaa0) = 0;                                                       // 0x0047d0f1
+    const int r = kDrawTooltip(0x0083a4d8);                                       // 0x0047d0fb
+    G<int>(0x0083aaa0) = parked;                                                  // 0x0047d103
+    G<int>(0x0083a4d8) = 0;                                                       // 0x0047d109
+    G<int>(0x0083a4e0) = 0;                                                       // 0x0047d113
+    return r;
+}
+typedef int(__cdecl* C1_fn)(int);
+C1_fn AddDirtyRect_orig;
+// 0x0047d060
+SG_HOOK("golf_clean.exe", 0x0047d060, addDirtyRect, AddDirtyRect_re, AddDirtyRect_orig);
+
+// ====================================================================================================================
+// Mouse and key handlers, clip relayout, draw-list redraw
+// ====================================================================================================================
+
+namespace {
+typedef int(__fastcall* T3_t)(void* ecx, void* edx, int a, int b, int c);
+typedef int(__fastcall* T4_t)(void* ecx, void* edx, int a, int b, int c, int d);
+typedef int(__cdecl* C2_t)(int a, int b);
+typedef int(__cdecl* C3_t)(int a, int b, int c);
+const T0_t kPanelNotify = reinterpret_cast<T0_t>(0x0047e120);          // Panel::notify(this), plain ret
+const T3_t kMouseDispatch23c = reinterpret_cast<T3_t>(0x0047bf40);     // ret 0xc
+const T4_t kHotHitTest = reinterpret_cast<T4_t>(0x00492a90);           // HotList::hitTest(this, x, y, int* out, 0), ret 0x10
+const T3_t kClick = reinterpret_cast<T3_t>(0x0047c1b0);                // Window::click(this, x, y, d), ret 0xc
+const T3_t kMouseDispatch244 = reinterpret_cast<T3_t>(0x0047c0e0);     // ret 0xc
+const T3_t kMouseDispatch24c = reinterpret_cast<T3_t>(0x0047c290);     // ret 0xc
+const T3_t kMouseDispatch250 = reinterpret_cast<T3_t>(0x0047c360);     // ret 0xc
+const T3_t kMouseDispatch258 = reinterpret_cast<T3_t>(0x0047c500);     // ret 0xc
+const C3_t kPointInRect = reinterpret_cast<C3_t>(0x00492610);          // pointInRect(x, y, RECT*), plain ret
+const C2_t kMatchInputCode = reinterpret_cast<C2_t>(0x0047eee0);       // matchInputCode(table, n), plain ret
+const T0_t kDetach = reinterpret_cast<T0_t>(0x0047b820);               // Window::detach(this), plain ret
+const T1_t kShow = reinterpret_cast<T1_t>(0x0047b670);                 // Window::show(this, flags), ret 4
+const T2_t kKey = reinterpret_cast<T2_t>(0x0047c5d0);                  // Window::key(this, c, mods), ret 8
+const T1_t kOffsetRectToLocal = reinterpret_cast<T1_t>(0x0047b120);    // View::offsetRectToLocal(this, RECT*), ret 4
+const unsigned kIatIntersectRect = 0x004ba1d4;
+typedef int(__stdcall* Isect_t)(void* dst, const void* src1, const void* src2);
+static inline int vcall2(void* obj, unsigned off, int a, int b) {
+    return reinterpret_cast<T2_t>(*reinterpret_cast<void**>(*reinterpret_cast<char**>(obj) + off))(obj, 0, a, b);
+}
+}  // namespace
+
+// 0x0047f010  Window::onPressHot(this, a0, x, y, d) (ret 0x10; args at [esp+0x18]..[esp+0x24]): Panel::notify(this) (call
+// 0x0047f017); a parent at +0x130 (0x0047f01c, `je` 0x0047f026) takes its virtual slot +0x12c with this (0x0047f02b).
+// d != 0 (`cmp ebp, edi` 0x0047f035, `je` 0x0047f037): [0x0083ab44] = this, [0x0083ab40] = 0 (0x0047f039, 0x0047f03f); d == 0:
+// the reverse (0x0047f047, 0x0047f04d). [0x0083ab48] = 1 (0x0047f061). a0 != 0 (`je` 0x0047f06b) and bit 0x200 of +0x9c clear
+// (`test ah, 2` 0x0047f073, `jne` 0x0047f076) call mouseDispatch23c(x, y, d) (0x0047f07d). Own slot +0x11c (call 0x0047f086) zero
+// jumps to the click below (`je` 0x0047f08e -> 0x0047f0db). Otherwise HotList::hitTest(this + 0x328, x, y, &idx, 0) (call
+// 0x0047f09f): negative (`jl` 0x0047f0a6) clicks; else the word at +0x388 + 4 idx (0x0047f0ae): -1 (`cmp` 0x0047f0b5, `jne`
+// 0x0047f0b8) takes slot +0x160 (idx, the word at +0x428 + 4 idx; call 0x0047f0c5), any other value takes slot +0x15c (idx, the
+// word; call 0x0047f0d1). That slot's result zero (`je` 0x0047f0d9) returns zero; non-zero falls into Window::click(x, y, d)
+// (0x0047f0db..0x0047f0de), whose result is returned.
+int __fastcall WindowOnPressHot_re(void* self, void*, int a0, int x, int y, int d) {
+    kPanelNotify(self, 0);                                                        // 0x0047f017
+    void* parent = At<void*>(self, 0x130);                                        // 0x0047f01c
+    if (parent != 0) vcall1(parent, 0x12c, reinterpret_cast<int>(self));          // 0x0047f02b
+    if (d != 0) {                                                                 // 0x0047f035
+        G<void*>(0x0083ab44) = self;                                              // 0x0047f039
+        G<int>(0x0083ab40) = 0;                                                   // 0x0047f03f
+    } else {
+        G<void*>(0x0083ab40) = self;                                              // 0x0047f047
+        G<int>(0x0083ab44) = 0;                                                   // 0x0047f04d
+    }
+    G<int>(0x0083ab48) = 1;                                                       // 0x0047f061
+    if (a0 != 0 && (At<unsigned>(self, 0x9c) & 0x200) == 0)                       // 0x0047f05b, 0x0047f076
+        kMouseDispatch23c(self, 0, x, y, d);                                      // 0x0047f07d
+    if (vcall0(self, 0x11c) != 0) {                                               // 0x0047f08e
+        int idx = 0;
+        const int hit = kHotHitTest(B(self) + 0x328, 0, x, y, reinterpret_cast<int>(&idx), 0);   // 0x0047f09f
+        if (hit >= 0) {                                                           // 0x0047f0a6
+            const int word = At<int>(self, 0x388 + 4 * idx);                      // 0x0047f0ae
+            int r;
+            if (word == -1) r = vcall2(self, 0x160, idx, At<int>(self, 0x428 + 4 * idx));   // 0x0047f0c5
+            else r = vcall2(self, 0x15c, idx, word);                              // 0x0047f0d1
+            if (r == 0) return 0;                                                 // 0x0047f0d9
+        }
+    }
+    return kClick(self, 0, x, y, d);                                              // 0x0047f0de
+}
+typedef int(__fastcall* Press_t)(void*, void*, int, int, int, int);
+Press_t WindowOnPressHot_orig;
+// 0x0047f010
+SG_HOOK("golf_clean.exe", 0x0047f010, Window_onPressHot, WindowOnPressHot_re, WindowOnPressHot_orig);
+
+// The two release handlers share a gate: the window holding the press is [0x0083ab40], or [0x0083ab44] when that is zero
+// (0x0047f0f3..0x0047f108 / 0x0047f233..0x0047f248). It is not this: both words are cleared (0x0047f114, 0x0047f11a) and the
+// release goes on with (a0, a1). It is this: both words are cleared (0x0047f128, 0x0047f12e), a local RECT {0, 0, w, h} is built
+// from the window's +0x1ac rectangle (0x0047f122..0x0047f16b: w = right - left, h = bottom - top) and pointInRect(a0, a1, rect)
+// (cdecl, call 0x0047f16f / 0x0047f2af) decides.
+static inline bool releaseGate(void* self, int a0, int a1) {
+    void* held = G<void*>(0x0083ab40);                                            // 0x0047f0f3
+    if (held == 0) held = G<void*>(0x0083ab44);                                   // 0x0047f103
+    if (held != self) {                                                           // 0x0047f10a
+        G<int>(0x0083ab40) = 0;                                                   // 0x0047f114
+        G<int>(0x0083ab44) = 0;                                                   // 0x0047f11a
+        return false;
+    }
+    G<int>(0x0083ab40) = 0;                                                       // 0x0047f128
+    G<int>(0x0083ab44) = 0;                                                       // 0x0047f12e
+    const int* r = reinterpret_cast<const int*>(B(self) + 0x1ac);                 // 0x0047f122
+    int local[4] = {0, 0, r[2] - r[0], r[3] - r[1]};                              // 0x0047f13c..0x0047f16b
+    return kPointInRect(a0, a1, reinterpret_cast<int>(local)) != 0;               // 0x0047f16f
+}
+
+// 0x0047f0f0  Window::onReleaseInner150(this, a0, a1, a2) (ret 0xc): the shared gate; a hit calls mouseDispatch244(a0, a1, a2)
+// (call 0x0047f185). Window::visible(this) (call 0x0047f18c) zero returns zero (eax = 0, `je` 0x0047f193); otherwise
+// mouseDispatch24c(a0, a1, a2) (call 0x0047f19e) and its result.
+int __fastcall WindowOnReleaseInner150_re(void* self, void*, int a0, int a1, int a2) {
+    if (releaseGate(self, a0, a1)) kMouseDispatch244(self, 0, a0, a1, a2);        // 0x0047f185
+    if (kVisible(self, 0) == 0) return 0;                                         // 0x0047f193
+    return kMouseDispatch24c(self, 0, a0, a1, a2);                                // 0x0047f19e
+}
+typedef int(__fastcall* Rel_t)(void*, void*, int, int, int);
+Rel_t WindowOnReleaseInner150_orig;
+// 0x0047f0f0
+SG_HOOK("golf_clean.exe", 0x0047f0f0, Window_onReleaseInner150, WindowOnReleaseInner150_re, WindowOnReleaseInner150_orig);
+
+// 0x0047f230  Window::onReleaseInner158(this, a0, a1, a2) (ret 0xc): the shared gate; a hit calls mouseDispatch250(a0, a1, a2)
+// (call 0x0047f2c5); mouseDispatch258(a0, a1, a2) (call 0x0047f2d3) always runs and its result is returned.
+int __fastcall WindowOnReleaseInner158_re(void* self, void*, int a0, int a1, int a2) {
+    if (releaseGate(self, a0, a1)) kMouseDispatch250(self, 0, a0, a1, a2);        // 0x0047f2c5
+    return kMouseDispatch258(self, 0, a0, a1, a2);                                // 0x0047f2d3
+}
+Rel_t WindowOnReleaseInner158_orig;
+// 0x0047f230
+SG_HOOK("golf_clean.exe", 0x0047f230, Window_onReleaseInner158, WindowOnReleaseInner158_re, WindowOnReleaseInner158_orig);
+
+// 0x0047ef30  Window::onKeyChar(this, c) (ret 4; c's low byte at [esp+8], 0x0047ef36): the byte is stored at the key ring pointer
+// [0x004e42ec] (0x0047ef44). matchInputCode(0x004e4324, 6) (cdecl, call 0x0047ef46) zero (`jne` 0x0047ef50): the fixed object
+// 0x008400c8 gets Window::visible (call 0x0047ef57); visible calls Window::detach (call 0x0047ef65), else Window::show(0)
+// (push 0 0x0047ef6c, call 0x0047ef73). The ring pointer advances by one (0x0047ef78..0x0047ef83) and wraps to 0x0083aba4 when it
+// reaches 0x0083abae (unsigned `jb` 0x0047ef88). The objects at +0x26c and +0x270 (`test` 0x0047ef9a, 0x0047efba) take virtual
+// slot +0x8c with (movsx c, [0x0083ab88]) (calls 0x0047efaa, 0x0047efca): a non-zero result is returned. Last, Window::key(this,
+// movsx c, [0x0083ab88]) (call 0x0047efe1) and its result.
+int __fastcall WindowOnKeyChar_re(void* self, void*, int c) {
+    const signed char ch = static_cast<signed char>(c);                           // 0x0047ef36
+    *G<unsigned char*>(0x004e42ec) = static_cast<unsigned char>(c);               // 0x0047ef44
+    if (kMatchInputCode(0x004e4324, 6) == 0) {                                    // 0x0047ef46
+        if (kVisible(reinterpret_cast<void*>(0x008400c8), 0) != 0)                // 0x0047ef57
+            kDetach(reinterpret_cast<void*>(0x008400c8), 0);                      // 0x0047ef65
+        else
+            kShow(reinterpret_cast<void*>(0x008400c8), 0, 0);                     // 0x0047ef73
+    }
+    unsigned p = G<unsigned>(0x004e42ec) + 1;                                     // 0x0047ef78
+    G<unsigned>(0x004e42ec) = p;                                                  // 0x0047ef83
+    if (p >= 0x0083abae) G<unsigned>(0x004e42ec) = 0x0083aba4;                    // 0x0047ef88
+    void* o = At<void*>(self, 0x26c);                                             // 0x0047ef94
+    if (o != 0) {                                                                 // 0x0047ef9a
+        const int r = vcall2(o, 0x8c, ch, G<int>(0x0083ab88));                    // 0x0047efaa
+        if (r != 0) return r;                                                     // 0x0047efb2
+    }
+    o = At<void*>(self, 0x270);                                                   // 0x0047efb4
+    if (o != 0) {                                                                 // 0x0047efbc
+        const int r = vcall2(o, 0x8c, ch, G<int>(0x0083ab88));                    // 0x0047efca
+        if (r != 0) return r;                                                     // 0x0047efd2
+    }
+    return kKey(self, 0, ch, G<int>(0x0083ab88));                                 // 0x0047efe1
+}
+T1_t WindowOnKeyChar_orig;
+// 0x0047ef30
+SG_HOOK("golf_clean.exe", 0x0047ef30, Window_onKeyChar, WindowOnKeyChar_re, WindowOnKeyChar_orig);
+
+// 0x0047e140  relayoutClip(win, rect) (cdecl; win at [esp+0x30], rect at [esp+0x38] after the prologue pushes): the client
+// rectangle at win+0x1bc becomes the local RECT {0, 0, right - left, bottom - top} (0x0047e14b..0x0047e17f) and View::
+// offsetRectToLocal(win, local1) (call 0x0047e187) translates it; the rectangle at win+0x1ac becomes {0, 0, right - left,
+// bottom - top} (0x0047e18c..0x0047e1c2) and View::offsetRectToParent(win, local2) (call 0x0047e1c6) translates it. IntersectRect
+// ([0x004ba1d4], saved in edi 0x0047e1cf) clips local2 (call 0x0047e1e0) and then local1 (call 0x0047e1ed) against rect. Each child
+// of the array at +0x224 (count re-read from +0x22c, `jle` 0x0047e1f9, loop 0x0047e200..0x0047e23e) that is visible (call
+// 0x0047e209) is relaid out with local1 when bit 0x8000 of its +0x9c is set (test 0x0047e21b, `jne` 0x0047e225) and with local2
+// otherwise (call 0x0047e22d, recursion). A window that is not visible (call 0x0047e242, `je` 0x0047e249) returns 0. Bit 0x20 of
+// its own +0x9c (test byte 0x0047e24b) copies rect to win+0x1dc..+0x1e8 (0x0047e254..0x0047e271) and returns rect[1] (eax =
+// [ebx+4], 0x0047e25f). Otherwise the object [0x0083a7bc] (test 0x0047e27e): none returns 1 (visible's eax); its slot +0xd4
+// (call 0x0047e284) giving zero returns 0 (`je` 0x0047e28c); else the slot is called again (call 0x0047e29a) and the RECT it
+// returns is copied to win+0x1dc..+0x1e8 (0x0047e2a4..0x0047e2bd) and returned.
+int __cdecl RelayoutClip_re(void* win, int* rect) {
+    const int* b = reinterpret_cast<const int*>(B(win) + 0x1bc);                  // 0x0047e14b
+    int local1[4] = {0, 0, b[2] - b[0], b[3] - b[1]};                             // 0x0047e151..0x0047e17f
+    kOffsetRectToLocal(win, 0, reinterpret_cast<int>(local1));                    // 0x0047e187
+    const int* a = reinterpret_cast<const int*>(B(win) + 0x1ac);                  // 0x0047e18c
+    int local2[4] = {0, 0, a[2] - a[0], a[3] - a[1]};                             // 0x0047e194..0x0047e1c2
+    kOffsetRectToParent(win, 0, reinterpret_cast<int>(local2));                   // 0x0047e1c6
+    Imp<Isect_t>(kIatIntersectRect)(local2, local2, rect);                        // 0x0047e1e0
+    Imp<Isect_t>(kIatIntersectRect)(local1, local1, rect);                        // 0x0047e1ed
+    for (int i = 0; At<int>(win, 0x22c) > i; i++) {                               // 0x0047e1f9, 0x0047e23e
+        void* child = At<void**>(win, 0x224)[i];                                  // 0x0047e200..0x0047e206
+        if (kVisible(child, 0) != 0) {                                            // 0x0047e209
+            int* use = ((At<unsigned>(child, 0x9c) & 0x8000) != 0) ? local1 : local2;   // 0x0047e21b..0x0047e225
+            RelayoutClip_re(child, use);                                          // 0x0047e22d
+        }
+    }
+    if (kVisible(win, 0) == 0) return 0;                                          // 0x0047e242..0x0047e249
+    int* dst = reinterpret_cast<int*>(B(win) + 0x1dc);
+    if ((At<unsigned char>(win, 0x9c) & 0x20) != 0) {                             // 0x0047e24b
+        dst[0] = rect[0];                                                         // 0x0047e25d
+        dst[1] = rect[1];                                                         // 0x0047e262
+        dst[2] = rect[2];                                                         // 0x0047e268
+        dst[3] = rect[3];                                                         // 0x0047e271
+        return rect[1];                                                           // 0x0047e25f
+    }
+    void* obj = G<void*>(0x0083a7bc);                                             // 0x0047e278
+    if (obj == 0) return 1;                                                       // 0x0047e280
+    if (vcall0(obj, 0xd4) == 0) return 0;                                         // 0x0047e284..0x0047e28c
+    obj = G<void*>(0x0083a7bc);                                                   // 0x0047e28e
+    int* src = 0;                                                                 // 0x0047e2a2
+    if (obj != 0) src = reinterpret_cast<int*>(vcall0(obj, 0xd4));               // 0x0047e29a
+    dst[0] = src[0];                                                              // 0x0047e2ac
+    dst[1] = src[1];                                                              // 0x0047e2b1
+    dst[2] = src[2];                                                              // 0x0047e2b4
+    dst[3] = src[3];                                                              // 0x0047e2bd
+    return reinterpret_cast<int>(src);                                            // 0x0047e2a4 eax = the RECT pointer
+}
+typedef int(__cdecl* C2p_t)(void*, int*);
+C2p_t RelayoutClip_orig;
+// 0x0047e140
+SG_HOOK("golf_clean.exe", 0x0047e140, relayoutClip, RelayoutClip_re, RelayoutClip_orig);
+
+// 0x0047f8e0  redrawDrawList(rect, w) (cdecl; rect at [esp+0x24], w at [esp+0x28]). The draw list is the array at 0x00839ac0
+// with its count at [0x0083ab90] (0x0047f8e0). Count zero returns with eax untouched (the caller's: the naked entry hands the
+// entry eax to the body, 0x0047f8ef). The focus word [0x0083aae0] zero (test 0x0047f8fa) clears w (xor 0x0047f8fe, store
+// 0x0047f900); otherwise w stays. w == 0 starts at the last entry (lea 0x0047f90c, count - 1); w != 0 starts at its index in the
+// list (search 0x0047f911..0x0047f926) and returns the count (eax = ecx, `je` 0x0047f92a) when it is not there. From that index
+// down to entry 0 (negative start skipped, `jl` 0x0047f936): a window that is visible (call 0x0047f944) with bit 2 of +0xa0
+// (test byte 0x0047f94f) takes its virtual slot +0x13c with (rect, -1) (call 0x0047f95f); and w == 0 or w == [w+0xb0] (cmp
+// 0x0047f96d) sends the window's owner (+0xb0) its slot +0x138 with rect (call 0x0047f980). Then the cursor image [0x0083aaa0]
+// (test 0x0047f993) zero returns zero. The image rectangle {aa4, aa8, aa4 + ab4, aa8 + ab8} (0x0047f999..0x0047f9c6) is clipped
+// by IntersectRect ([0x004ba1d4], call 0x0047f9d7) against rect when rect != 0 (test 0x0047f9ca); an empty result returns zero
+// (`je` 0x0047f9df). Surface_blitThunk with ecx = 0x0083a7b8 and (0x0083a500, left, top, left - aa4, top - aa8, right - left,
+// bottom - top) (pushes 0x0047f9ff..0x0047fa0f, call 0x0047fa19) and its result.
+static int __cdecl RedrawDrawListBody(int eaxIn, int* rect, void* w) {
+    const int count = G<int>(0x0083ab90);                                         // 0x0047f8e0
+    if (count == 0) return eaxIn;                                                 // 0x0047f8ef
+    void** list = reinterpret_cast<void**>(0x00839ac0);
+    if (G<int>(0x0083aae0) == 0) w = 0;                                           // 0x0047f8fa..0x0047f900
+    int idx;
+    if (w == 0) {
+        idx = count - 1;                                                          // 0x0047f90c
+    } else {
+        idx = 0;                                                                  // 0x0047f911
+        if (count > 0) {                                                          // 0x0047f915
+            while (list[idx] != w) {                                              // 0x0047f91c..0x0047f91e
+                idx++;                                                            // 0x0047f920
+                if (!(idx < count)) break;                                        // 0x0047f926
+            }
+        }
+        if (idx == count) return count;                                           // 0x0047f92a
+    }
+    if (idx >= 0) {                                                               // 0x0047f936
+        int n = idx + 1;                                                          // 0x0047f93f
+        void** p = &list[idx];                                                    // 0x0047f938
+        do {
+            if (kVisible(*p, 0) != 0) {                                           // 0x0047f94b
+                void* win = *p;                                                   // 0x0047f94d
+                if ((At<unsigned char>(win, 0xa0) & 2) != 0)                      // 0x0047f956
+                    vcall2(win, 0x13c, reinterpret_cast<int>(rect), -1);          // 0x0047f95f
+                if (w == 0 || w == At<void*>(w, 0xb0))                            // 0x0047f96b, 0x0047f973
+                    vcall1(At<void*>(win, 0xb0), 0x138, reinterpret_cast<int>(rect));   // 0x0047f980
+            }
+            p--;                                                                  // 0x0047f986
+        } while (--n != 0);                                                       // 0x0047f98a
+    }
+    if (G<int>(0x0083aaa0) == 0) return 0;                                        // 0x0047f993
+    const int aa4 = G<int>(0x0083aaa4), aa8 = G<int>(0x0083aaa8);                 // 0x0047f999, 0x0047f9a4
+    int r[4] = {aa4, aa8, G<int>(0x0083aab4) + aa4, G<int>(0x0083aab8) + aa8};    // 0x0047f9ac..0x0047f9c6
+    if (rect != 0) {                                                              // 0x0047f9ca
+        if (Imp<Isect_t>(kIatIntersectRect)(r, r, rect) == 0) return 0;           // 0x0047f9d7, 0x0047f9df
+    }
+    const int dx = r[0] - G<int>(0x0083aaa4), dy = r[1] - G<int>(0x0083aaa8);    // 0x0047fa03..0x0047fa0b
+    return kBlitThunk(reinterpret_cast<void*>(0x0083a7b8), 0, 0x0083a500, r[0], r[1], dx, dy, r[2] - r[0], r[3] - r[1]);   // 0x0047fa19
+}
+__declspec(naked) int __cdecl RedrawDrawList_re(int* rect, void* w) {
+    __asm {
+        push dword ptr [esp + 8]
+        push dword ptr [esp + 8]
+        push eax
+        call RedrawDrawListBody
+        add esp, 12
+        ret
+    }
+}
+typedef int(__cdecl* C2w_t)(int*, void*);
+C2w_t RedrawDrawList_orig;
+// 0x0047f8e0
+SG_HOOK("golf_clean.exe", 0x0047f8e0, redrawDrawList, RedrawDrawList_re, RedrawDrawList_orig);
+
+// 0x0047b670  Window::show(this, f) (ret 4; f's low byte at [esp+0x1c] after the pushes, 0x0047b6b8): flags = [this+0xa0]
+// (0x0047b676); bit 0 set (`jne` 0x0047b67e) or bit 2 clear (`je` 0x0047b686) returns with eax = flags. Otherwise [this+0x220]
+// |= 2 (0x0047b68c..0x0047b69d); bit 1 of byte +0x9c clear (`jne` 0x0047b6a3) zeroes [0x0083ab40] and [0x0083ab44] (0x0047b6a7,
+// 0x0047b6ac); [this+0xa0] |= 1 (0x0047b6bc..0x0047b6c4). f bit 2 clear (test bl 0x0047b6c1, `jne` 0x0047b6ca) calls
+// Panel::notify(this) (call 0x0047b6ce); rebuildDrawList 0x0047e450 runs (call 0x0047b6d3). f bit 1 clear (0x0047b6d8) calls
+// Window::resized(this, right - left, bottom - top) of the +0x1ac rectangle (pushes 0x0047b6f9, 0x0047b6fa, call 0x0047b6fd).
+// f bit 0 clear (0x0047b702) calls own virtual slot +0x58 (call 0x0047b70b). The object at +0x15c (0x0047b70e) takes slot +0x120
+// (call 0x0047b71a). When +0x140, +0x138 and the word [[+0x13c] + 4] are all non-zero (0x0047b720..0x0047b73f) that object takes
+// slot +0xf0 with 1 (push 0x0047b743, call 0x0047b745). A local RECT {0, 0, w, h} (the +0x1bc rectangle when bit 1 of +0xa0 is set,
+// 0x0047b74b, else the +0x1ac one: 0x0047b754..0x0047b7d1) goes through View::offsetRectToLocal (call 0x0047b790) or View::
+// offsetRectToParent (call 0x0047b7d1) and then to the live display's slot +0x30 ([0x0083ad50], 0x0047b7d6..0x0047b7ea; no
+// display skips it). The object at +0xc (0x0047b7ed) takes slot +0x1c (call 0x0047b7f6). [0x0083aa98] == this (cmp 0x0047b7f9)
+// calls Surface_clip(this, 0x0083aa78) (push 0x0047b801, call 0x0047b808). eax at the ret (0x0047b811) is the last call's.
+int __fastcall WindowShow_re(void* self, void*, int f) {
+    const unsigned flags = At<unsigned>(self, 0xa0);                              // 0x0047b676
+    if ((flags & 1) != 0) return static_cast<int>(flags);                         // 0x0047b67c..0x0047b67e
+    if ((flags & 4) == 0) return static_cast<int>(flags);                         // 0x0047b684..0x0047b686
+    At<unsigned>(self, 0x220) |= 2;                                               // 0x0047b698
+    if ((At<unsigned char>(self, 0x9c) & 2) == 0) {                               // 0x0047b69b..0x0047b69d
+        G<int>(0x0083ab40) = 0;                                                   // 0x0047b6a7
+        G<int>(0x0083ab44) = 0;                                                   // 0x0047b6ac
+    }
+    At<unsigned>(self, 0xa0) |= 1;                                                // 0x0047b6c4
+    const unsigned char bl = static_cast<unsigned char>(f);                       // 0x0047b6b8
+    int eax = 0;
+    if ((bl & 4) == 0) eax = kPanelNotify(self, 0);                               // 0x0047b6ce
+    eax = reinterpret_cast<C0_t>(0x0047e450)();                                   // 0x0047b6d3
+    if ((bl & 2) == 0) {                                                          // 0x0047b6d8
+        const int* r = reinterpret_cast<const int*>(B(self) + 0x1ac);             // 0x0047b6dd..0x0047b6ef
+        eax = reinterpret_cast<T2_t>(0x0047bc60)(self, 0, r[2] - r[0], r[3] - r[1]);   // 0x0047b6fd
+    }
+    if ((bl & 1) == 0) eax = vcall0(self, 0x58);                                  // 0x0047b70b
+    void* o = At<void*>(self, 0x15c);                                             // 0x0047b70e
+    if (o != 0) eax = vcall0(o, 0x120);                                           // 0x0047b71a
+    if (At<int>(self, 0x140) != 0 && At<int>(self, 0x138) != 0) {                 // 0x0047b728, 0x0047b732
+        void* p = At<void**>(self, 0x13c)[1];                                     // 0x0047b73a
+        if (p != 0) eax = vcall1(p, 0xf0, 1);                                     // 0x0047b745
+    }
+    int local[4];
+    if ((At<unsigned char>(self, 0xa0) & 2) != 0) {                               // 0x0047b74b
+        const int* r = reinterpret_cast<const int*>(B(self) + 0x1bc);             // 0x0047b754
+        local[0] = 0; local[1] = 0; local[2] = r[2] - r[0]; local[3] = r[3] - r[1];   // 0x0047b75a..0x0047b78c
+        eax = kOffsetRectToLocal(self, 0, reinterpret_cast<int>(local));          // 0x0047b790
+    } else {
+        const int* r = reinterpret_cast<const int*>(B(self) + 0x1ac);             // 0x0047b797
+        local[0] = 0; local[1] = 0; local[2] = r[2] - r[0]; local[3] = r[3] - r[1];   // 0x0047b79f..0x0047b7cd
+        eax = kOffsetRectToParent(self, 0, reinterpret_cast<int>(local));         // 0x0047b7d1
+    }
+    void* d = G<void*>(0x0083ad50);                                               // 0x0047b7d6
+    if (d != 0) eax = vcall1(d, 0x30, reinterpret_cast<int>(local));              // 0x0047b7ea
+    void* c = At<void*>(self, 0xc);                                               // 0x0047b7ed
+    if (c != 0) eax = vcall0(c, 0x1c);                                            // 0x0047b7f6
+    if (G<void*>(0x0083aa98) == self) eax = reinterpret_cast<T1_t>(0x00479a80)(self, 0, 0x0083aa78);   // 0x0047b808
+    return eax;
+}
+T1_t WindowShow_orig;
+// 0x0047b670
+SG_HOOK("golf_clean.exe", 0x0047b670, Window_show, WindowShow_re, WindowShow_orig);
+
+// 0x0047be40  Window::mouseEvent238(this, x, y, up) (ret 0xc; x at [esp+0x18], y at [esp+0x1c], up at [esp+0x20]): bit 0x200000
+// of +0x9c (test 0x0047be46, `jne` 0x0047be50) or bit 8 of byte +0xa0 (0x0047be56, `jne` 0x0047be5d) returns with eax untouched
+// (the caller's: the naked entry hands the entry eax to the body). up != 0 (test 0x0047be67, `jne` 0x0047be69): own slot +0xa0
+// with (x, y) (call 0x0047bf1d); the object at +0x50 (0x0047bf23) takes slot +0x1c (call 0x0047bf2c); eax is the last call's.
+// up == 0: [0x0083ab2c] = this (0x0047be6f); the callback at +0x238 (`test` 0x0047be85) is called cdecl with (x, y) (push
+// 0x0047be8a, 0x0047be8b, call 0x0047be8c). HotList::hitTestRect(this + 0xbc, x, y, &a, &b, &rect) (call 0x0047beaa; the two
+// words are the original's own argument slots) negative (`jl` 0x0047beb1) runs HotList::cancelTip(this + 0xbc) (call 0x0047bf08);
+// otherwise slot +0x50 with (a, b, &rect) (call 0x0047bec6) and HotList::onMouseMove(this + 0xbc, a, b, this) (call 0x0047beda).
+// A zero slot result (eax = the slot result, 0x0047bedf..0x0047bee3), or the negative path, then calls own slot +0x6c with (x, y)
+// (call 0x0047beed; `jne` 0x0047bee5 skips it for a non-zero result and eax stays the slot result). The object at +0x1c (0x0047bef0) takes slot +0x1c (call 0x0047befc); eax is the last call's.
+typedef int(__fastcall* T5_t)(void* ecx, void* edx, int a, int b, int c, int d, int e);
+typedef int(__cdecl* Cb2_t)(int, int);
+static int __cdecl MouseEvent238Body(int eaxIn, void* self, int x, int y, int up) {
+    if ((At<unsigned>(self, 0x9c) & 0x200000) != 0) return eaxIn;                 // 0x0047be46
+    if ((At<unsigned char>(self, 0xa0) & 8) != 0) return eaxIn;                   // 0x0047be56
+    if (up != 0) {                                                                // 0x0047be67
+        int r = vcall2(self, 0xa0, x, y);                                         // 0x0047bf1d
+        void* o = At<void*>(self, 0x50);                                          // 0x0047bf23
+        if (o != 0) r = vcall0(o, 0x1c);                                          // 0x0047bf2c
+        return r;
+    }
+    G<void*>(0x0083ab2c) = self;                                                  // 0x0047be6f
+    Cb2_t cb = At<Cb2_t>(self, 0x238);                                            // 0x0047be75
+    if (cb != 0) cb(x, y);                                                        // 0x0047be8c
+    int a = 0, b = 0, rect[4] = {0, 0, 0, 0};
+    void* list = B(self) + 0xbc;                                                  // 0x0047be9f
+    int eax;
+    const int hit = reinterpret_cast<T5_t>(0x00492b10)(list, 0, x, y, reinterpret_cast<int>(&a), reinterpret_cast<int>(&b), reinterpret_cast<int>(rect));   // 0x0047beaa
+    if (hit < 0) {                                                                // 0x0047beb1
+        eax = reinterpret_cast<T0_t>(0x00492d40)(list, 0);                        // 0x0047bf08
+        eax = vcall2(self, 0x6c, x, y);                                           // 0x0047bf0d -> 0x0047bee7
+    } else {
+        const int s = reinterpret_cast<T3_t>(*reinterpret_cast<void**>(*reinterpret_cast<char**>(self) + 0x50))(self, 0, a, b, reinterpret_cast<int>(rect));   // 0x0047bec6
+        eax = reinterpret_cast<T3_t>(0x00492cc0)(list, 0, a, b, reinterpret_cast<int>(self));   // 0x0047beda
+        eax = s;                                                                  // 0x0047bedf (mov eax, [esp + 0x2c])
+        if (s == 0) eax = vcall2(self, 0x6c, x, y);                               // 0x0047beed
+    }
+    void* o = At<void*>(self, 0x1c);                                              // 0x0047bef0
+    if (o != 0) eax = vcall0(o, 0x1c);                                            // 0x0047befc
+    return eax;
+}
+__declspec(naked) int __fastcall MouseEvent238_re(void* self, void*, int x, int y, int up) {
+    __asm {
+        push dword ptr [esp + 0xc]
+        push dword ptr [esp + 0xc]
+        push dword ptr [esp + 0xc]
+        push ecx
+        push eax
+        call MouseEvent238Body
+        add esp, 20
+        ret 0xc
+    }
+}
+Rel_t MouseEvent238_orig;
+// 0x0047be40
+SG_HOOK("golf_clean.exe", 0x0047be40, Window_mouseEvent238, MouseEvent238_re, MouseEvent238_orig);
+
+// 0x0048c6e0  ListBox::onMouse(this) (plain ret): a ListBox has two virtual bases found through the table at [this + 4]: vb[1]
+// (0x0048c6e9) and vb[2] (0x0048c6fa) are the offsets of the window part A (A4 = this + vb[1] + 4) and of the list-model part
+// B (B4 = this + vb[2] + 4). Window::visible(A4) is kept for later (ebp, call 0x0048c6f0); ListModel::selectedId(B4) runs and is
+// ignored (call 0x0048c701); the word [B + 0xf4] is kept (ebx, 0x0048c711); [this + 0x14] is read (edi, 0x0048c709) and ListBox::
+// measure(this) runs (call 0x0048c718). Unchanged [this + 0x14] (cmp 0x0048c71d, `je` 0x0048c720) calls setSelection(this, word,
+// 1) (call 0x0048c78e). Changed: ListBox::build(this + 0x5d4, [A + 0x134], [B + 0x2c], [B + 0x30], [A + 0xa0]) (pushes
+// 0x0048c73b..0x0048c744, call 0x0048c74b) non-zero returns that value (`jne` 0x0048c752); zero calls setSelection(this, -1 for a
+// word of -1 else 0, 1) (pushes 0x0048c75b..0x0048c761, call 0x0048c767), ReleaseCapture ([0x004ba1ac], call 0x0048c76c) and,
+// when the window was visible (test 0x0048c772), Window::show(A4, 0) (push 0x0048c779, call 0x0048c782). Byte [A + 0xa0]:
+// bit 8 (test 0x0048c7a1) calls fwdRange26c(A4, 0, [B + 0xd4] - 1) (call 0x0048c7b7) and setField26c5a0(A4, [B + 0x60] - 1)
+// (call 0x0048c7cf); else bit 4 (test 0x0048c7d6) calls fwdRange270(A4, 0, [B + 0xd4] / [B + 0x60] - 1) (signed idiv 0x0048c7ec,
+// call 0x0048c7f3) and setField2705a0(A4, [B + 0x5c]) (call 0x0048c80a). A callback at [this + 0x50] (test 0x0048c812) gets
+// selectedId(B4) cdecl (call 0x0048c826). The object at [A + 0x134] (0x0048c832) takes slot +0x100 with selectedId(B4) (call
+// 0x0048c84e) and then its object at +0x94 (0x0048c865) takes slot +0x1c (call 0x0048c873). A visible window takes A4's slot
+// +0x120 (call 0x0048c888). eax = 0 (xor 0x0048c88e).
+namespace {
+const T0_t kSelectedId = reinterpret_cast<T0_t>(0x00489950);           // ListModel::selectedId(this), plain ret
+const T0_t kMeasure = reinterpret_cast<T0_t>(0x0048a120);              // ListBox::measure(this), plain ret
+typedef int(__fastcall* T4a_t)(void* ecx, void* edx, int a, int b, int c, int d);
+const T4a_t kBuild = reinterpret_cast<T4a_t>(0x0048a5d0);              // ListBox::build(this, 4 arguments), ret 0x10
+const T2_t kSetSelection = reinterpret_cast<T2_t>(0x00489f50);         // setSelection(this, a, b), ret 8
+const T2_t kFwdRange26c = reinterpret_cast<T2_t>(0x0047ba30);          // ret 8
+const T1_t kSetField26c = reinterpret_cast<T1_t>(0x0047ba70);          // ret 4
+const T2_t kFwdRange270 = reinterpret_cast<T2_t>(0x0047ba50);          // ret 8
+const T1_t kSetField270 = reinterpret_cast<T1_t>(0x0047ba90);          // ret 4
+typedef void(__stdcall* Void0_t)();
+typedef int(__cdecl* Cb1_t)(int);
+}  // namespace
+int __fastcall ListBoxOnMouse_re(void* self, void*) {
+    const int* vb = At<const int*>(self, 4);                                      // 0x0048c6e6
+    char* a = B(self) + vb[1];                                                    // 0x0048c6e9
+    char* b = B(self) + vb[2];                                                    // 0x0048c6fa
+    void* a4 = a + 4;
+    void* b4 = b + 4;
+    const int visible = kVisible(a4, 0);                                          // 0x0048c6f0
+    kSelectedId(b4, 0);                                                           // 0x0048c701
+    const int before = At<int>(self, 0x14);                                       // 0x0048c709
+    const int word = At<int>(b, 0xf4);                                            // 0x0048c711
+    kMeasure(self, 0);                                                            // 0x0048c718
+    if (before == At<int>(self, 0x14)) {                                          // 0x0048c71d
+        kSetSelection(self, 0, word, 1);                                          // 0x0048c78e
+    } else {
+        const int r = kBuild(B(self) + 0x5d4, 0, At<int>(a, 0x134), At<int>(b, 0x2c), At<int>(b, 0x30), At<int>(a, 0xa0));   // 0x0048c74b
+        if (r != 0) return r;                                                     // 0x0048c752
+        const int wsel = (word == -1) ? -1 : 0;                                   // 0x0048c758..0x0048c763
+        kSetSelection(self, 0, wsel, 1);                                          // 0x0048c767
+        Imp<Void0_t>(0x004ba1ac)();                                               // 0x0048c76c
+        if (visible != 0) kShow(a4, 0, 0);                                        // 0x0048c782
+    }
+    const unsigned char dl = At<unsigned char>(a, 0xa0);                          // 0x0048c79b
+    if ((dl & 8) != 0) {                                                          // 0x0048c7a1
+        kFwdRange26c(a4, 0, 0, At<int>(b, 0xd4) - 1);                             // 0x0048c7b7
+        kSetField26c(a4, 0, At<int>(b, 0x60) - 1);                                // 0x0048c7cf
+    } else if ((dl & 4) != 0) {                                                   // 0x0048c7d6
+        kFwdRange270(a4, 0, 0, At<int>(b, 0xd4) / At<int>(b, 0x60) - 1);          // 0x0048c7f3
+        kSetField270(a4, 0, At<int>(b, 0x5c));                                    // 0x0048c80a
+    }
+    Cb1_t cb = At<Cb1_t>(self, 0x50);                                             // 0x0048c80f
+    if (cb != 0) cb(kSelectedId(b4, 0));                                          // 0x0048c826
+    void* parent = At<void*>(a, 0x134);                                           // 0x0048c832
+    if (parent != 0) vcall1(parent, 0x100, kSelectedId(b4, 0));                   // 0x0048c84e
+    parent = At<void*>(a, 0x134);                                                 // 0x0048c85a
+    if (parent != 0) {                                                            // 0x0048c863
+        void* o = At<void*>(parent, 0x94);                                        // 0x0048c865
+        if (o != 0) vcall0(o, 0x1c);                                              // 0x0048c873
+    }
+    if (visible != 0) vcall0(a4, 0x120);                                          // 0x0048c888
+    return 0;                                                                     // 0x0048c88e
+}
+T0_t ListBoxOnMouse_orig;
+// 0x0048c6e0
+SG_HOOK("golf_clean.exe", 0x0048c6e0, ListBox_onMouse, ListBoxOnMouse_re, ListBoxOnMouse_orig);
+
+// 0x0047cdb0  drawTooltip(rect) (plain ret; rect at [esp+8] after the push of esi, 0x0047cdc1): the callback pointer [0x0083aabc]
+// (test 0x0047cdb7) is called with no arguments (call 0x0047cdb9). The text pointer [0x0083aac4] (test 0x0047cdc5, `je` 0x0047cdc7)
+// zero skips to the cursor image below. A text with a non-NULL rect (test 0x0047cdcd) calls Widget_fillRectR(0x0083a7b8, rect)
+// (call 0x0047cdd7). Widget_drawBevelBoxR(0x0083a7b8, 0x0083a2c8, [0x004e42c4], [0x004e42c4]) (call 0x0047cdf0) is followed by the
+// shrink of the box at 0x0083a2c8 (left + 1, top + 1, right - 1, bottom - 1: 0x0047ce0c..0x0047ce31) and Widget_fillArea(0x0083a7b8,
+// 0x0083a2c8, [0x0083aad8]) (call 0x0047ce37), setDrawTarget(0x0083a7b8, [0x0083aac8], 0, 0, 0) (call 0x0047ce4e) and setQuad
+// (0x0083a7b8, [0x004e42c0], -1, 2, 2) (call 0x0047ce65). strchr(text, 0x5e) (call 0x0047ce72) non-zero: y = top + 1 (0x0047ce8a);
+// per piece (loop 0x0047ce8d..0x0047cef1): the next '^' is cut to NUL (0x0047ce9e), a piece pointer that is not NULL (test 0x0047cea1)
+// is drawn with drawCentered2(0x0083a7b8, piece, left, y, right - left, strlen) (call 0x0047cec8), y grows by the font line height
+// (record [0x0083aac8]: +8 negative takes +0xc, else +0x10 + +8; 0x0047ced2..0x0047cee3), the '^' is restored (0x0047cee9) and
+// the next piece starts after it; the loop ends when no '^' was found (`jne` 0x0047cef1). Without a '^' the whole text goes to
+// drawCentered3(0x0083a7b8, text, 0x0083a2c8, strlen) (call 0x0047cf1b; text NULL skips it, 0x0047cf01). The box grows back by one
+// on each side (0x0047cf20..0x0047cf52). A non-NULL rect (test 0x0047cf4a) with an object at [0x0083a7bc] (0x0047cf5b) calls
+// that object's slot +0xc4 (call 0x0047cf67). A cursor image [0x0083aaa0] (test 0x0047cf72) first gives the live display slot +0x9c
+// with (1, 1, 1) (call 0x0047cf88; no display skips it, 0x0047cf7e) and then Image_draw(image, 0x0083a7b8, [0x0083aaa4], [0x0083aaa8],
+// 0) (call 0x0047cfa8). A display ([0x0083ad50], 0x0047cfad) takes slot +0xa4 with the rect (call 0x0047cfba). eax at the ret is the
+// last call's: the display slot's result, else Image_draw's (image set) or zero.
+namespace {
+typedef char*(__cdecl* Strchr_t)(const char*, int);
+const T1_t kFillRectR = reinterpret_cast<T1_t>(0x00475b00);
+const T3_t kBevelBoxR = reinterpret_cast<T3_t>(0x004795d0);
+const T2_t kFillArea = reinterpret_cast<T2_t>(0x00478b50);
+const T4_t kSetDrawTarget2 = reinterpret_cast<T4_t>(0x004762d0);
+const T4_t kSetQuad2 = reinterpret_cast<T4_t>(0x00476310);
+const T5_t kDrawCentered2 = reinterpret_cast<T5_t>(0x00477da0);
+const T3_t kDrawCentered3 = reinterpret_cast<T3_t>(0x00477eb0);
+const T4_t kImageDraw = reinterpret_cast<T4_t>(0x00473e60);
+const Strchr_t kStrchr = reinterpret_cast<Strchr_t>(0x004a6170);
+static inline int vcall3(void* obj, unsigned off, int a, int b, int c) {
+    return reinterpret_cast<T3_t>(*reinterpret_cast<void**>(*reinterpret_cast<char**>(obj) + off))(obj, 0, a, b, c);
+}
+static inline int cstrlen(const char* s) { int n = 0; while (s[n] != 0) n++; return n; }
+}  // namespace
+int __cdecl DrawTooltip_re(int* rect) {
+    typedef void(__cdecl* V0_t)();
+    V0_t cbk = G<V0_t>(0x0083aabc);                                               // 0x0047cdb0
+    if (cbk != 0) cbk();                                                          // 0x0047cdb9
+    char* text = G<char*>(0x0083aac4);                                            // 0x0047cdbb
+    void* surf = reinterpret_cast<void*>(0x0083a7b8);
+    int* r = reinterpret_cast<int*>(0x0083a2c8);
+    if (text != 0) {                                                              // 0x0047cdc5
+        if (rect != 0) kFillRectR(surf, 0, reinterpret_cast<int>(rect));         // 0x0047cdd7
+        const int e = G<int>(0x004e42c4);                                         // 0x0047cddc
+        kBevelBoxR(surf, 0, 0x0083a2c8, e, e);                                    // 0x0047cdf0
+        r[0] = r[0] + 1;                                                          // 0x0047ce0e
+        r[2] = r[2] - 1;                                                          // 0x0047ce25
+        r[1] = r[1] + 1;                                                          // 0x0047ce2b
+        r[3] = r[3] - 1;                                                          // 0x0047ce31
+        kFillArea(surf, 0, 0x0083a2c8, G<int>(0x0083aad8));                       // 0x0047ce37
+        kSetDrawTarget2(surf, 0, G<int>(0x0083aac8), 0, 0, 0);                    // 0x0047ce4e
+        kSetQuad2(surf, 0, G<int>(0x004e42c0), -1, 2, 2);                         // 0x0047ce65
+        if (kStrchr(G<char*>(0x0083aac4), 0x5e) != 0) {                           // 0x0047ce72, 0x0047ce7c
+            int y = r[1] + 1;                                                     // 0x0047ce8a
+            char* piece = G<char*>(0x0083aac4);                                   // 0x0047ce84
+            char* cut;
+            do {
+                cut = kStrchr(piece, 0x5e);                                       // 0x0047ce90
+                if (cut != 0) *cut = 0;                                           // 0x0047ce9e
+                if (piece != 0)                                                   // 0x0047cea1
+                    kDrawCentered2(surf, 0, reinterpret_cast<int>(piece), r[0], y, r[2] - r[0], cstrlen(piece));   // 0x0047cec8
+                const int* font = G<const int*>(0x0083aac8);                      // 0x0047cecd
+                const int h8 = font[2];                                           // 0x0047ced2
+                y += (h8 < 0) ? font[3] : font[4] + h8;                           // 0x0047ced7..0x0047cee3
+                if (cut != 0) *cut = 0x5e;                                        // 0x0047cee9
+                piece = cut + 1;                                                  // 0x0047ceee
+            } while (cut != 0);                                                   // 0x0047cef1
+        } else {
+            char* t = G<char*>(0x0083aac4);                                       // 0x0047cef9
+            if (t != 0) kDrawCentered3(surf, 0, reinterpret_cast<int>(t), 0x0083a2c8, cstrlen(t));   // 0x0047cf1b
+        }
+        r[0] = r[0] - 1;                                                          // 0x0047cf43
+        r[2] = r[2] + 1;                                                          // 0x0047cf3a
+        r[1] = r[1] - 1;                                                          // 0x0047cf4c
+        r[3] = r[3] + 1;                                                          // 0x0047cf52
+        if (rect != 0) {                                                          // 0x0047cf4a
+            void* obj = G<void*>(0x0083a7bc);                                     // 0x0047cf5b
+            if (obj != 0) vcall0(obj, 0xc4);                                      // 0x0047cf67
+        }
+    }
+    int eax = 0;
+    const int image = G<int>(0x0083aaa0);                                         // 0x0047cf6d
+    if (image != 0) {                                                             // 0x0047cf74
+        void* d0 = G<void*>(0x0083ad50);                                          // 0x0047cf76
+        if (d0 != 0) vcall3(d0, 0x9c, 1, 1, 1);                                   // 0x0047cf88
+        eax = kImageDraw(reinterpret_cast<void*>(image), 0, 0x0083a7b8, G<int>(0x0083aaa4), G<int>(0x0083aaa8), 0);   // 0x0047cfa8
+    }
+    void* d = G<void*>(0x0083ad50);                                               // 0x0047cfad
+    if (d != 0) eax = vcall1(d, 0xa4, reinterpret_cast<int>(rect));               // 0x0047cfba
+    return eax;
+}
+C1_fn DrawTooltip_orig;
+// 0x0047cdb0
+SG_HOOK("golf_clean.exe", 0x0047cdb0, drawTooltip, DrawTooltip_re, DrawTooltip_orig);
+
+// 0x0047c6c0  Window::dispatchAccel(this, key) (ret 4; key at [esp+0x14] after the pushes, 0x0047c6ec): bit 0x200000 of +0x9c
+// (test 0x0047c6ce) or bit 8 of byte +0xa0 (0x0047c6d9) returns 0 (`xor eax, eax` 0x0047c95c). `needKey` is the repeated test
+// (0x0047c72e..0x0047c751 and its copies): a key in 0x60..0x69 (signed `cmp`/`jl`/`jle` 0x0047c72e..0x0047c736) or one whose
+// MapVirtualKeyA(key & 0xfff8ffff, 2) & 0xffff ([0x004ba1c0], push 2 / call 0x0047c73a..0x0047c742, `and` 0x0047c748) is zero
+// (`jne` 0x0047c751 not taken) takes the Window::key(w, 0, key) call (0x0047c758). A word +0x140 (test 0x0047c6f2) starts the
+// child section: the child is [[this + 0x13c] + 4] when +0x138 is set (0x0047c6fa..0x0047c70d; it is read through without
+// a NULL test, so the original faults on a zero +0x138). The objects at child +0x26c and +0x270 take slot +0x8c with (0, key)
+// (calls 0x0047c720, 0x0047c76e): a non-zero result returns 1 (`jne` 0x0047c728 -> 0x0047c913). Each runs needKey for ebp = Window::key
+// (the +0x270 test also needs ebp == 0, 0x0047c77c). With neither object and ebp == 0 (0x0047c7b1..0x0047c7c7) a needKey child is
+// asked once more (call 0x0047c7f4): non-zero returns 1 (0x0047c7fb..0x0047c800). The child is then dispatched recursively (call
+// 0x0047c80c); a non-zero result returns 1 (0x0047c813..0x0047c81a). The same three steps run on this (0x0047c823..0x0047c915). The
+// zero-result tail: [0x0083ab2c] = this (0x0047c91f); the callback at +0x260 (test 0x0047c92b) is called cdecl with key (call
+// 0x0047c930) and its result is kept (edi); slot +0x90 with key (call 0x0047c93c) is added; the object at +0x3c (0x0047c942) takes
+// slot +0x1c (call 0x0047c94d); eax = edi.
+namespace {
+typedef int(__stdcall* MapVk_t)(unsigned code, unsigned type);
+static bool needKey(int key) {
+    if (key >= 0x60 && key <= 0x69) return true;                                  // 0x0047c72e..0x0047c736
+    return (Imp<MapVk_t>(0x004ba1c0)(static_cast<unsigned>(key) & 0xfff8ffffu, 2) & 0xffff) == 0;   // 0x0047c742..0x0047c751
+}
+}  // namespace
+int __fastcall WindowDispatchAccel_re(void* self, void*, int key) {
+    if ((At<unsigned>(self, 0x9c) & 0x200000) != 0) return 0;                     // 0x0047c6ce
+    if ((At<unsigned char>(self, 0xa0) & 8) != 0) return 0;                       // 0x0047c6d9
+    int ebp = 0;                                                                  // 0x0047c6f0
+    int edi = 0;                                                                  // 0x0047c6cc
+    if (At<int>(self, 0x140) != 0) {                                              // 0x0047c6f2
+        void* c = 0;                                                              // 0x0047c70f
+        if (At<int>(self, 0x138) != 0) c = At<void**>(self, 0x13c)[1];            // 0x0047c6fa..0x0047c70d
+        void* o = At<void*>(c, 0x26c);                                            // 0x0047c711
+        if (o != 0) {                                                             // 0x0047c717
+            if (vcall2(o, 0x8c, 0, key) != 0) return 1;                           // 0x0047c720, 0x0047c728
+            if (needKey(key)) ebp = kKey(c, 0, 0, key);                           // 0x0047c758
+        }
+        o = At<void*>(c, 0x270);                                                  // 0x0047c75f
+        if (o != 0) {                                                             // 0x0047c765
+            if (vcall2(o, 0x8c, 0, key) != 0) return 1;                           // 0x0047c76e, 0x0047c776
+            if (ebp == 0 && needKey(key)) ebp = kKey(c, 0, 0, key);               // 0x0047c77c, 0x0047c7aa
+        }
+        if (At<void*>(c, 0x270) == 0 && At<void*>(c, 0x26c) == 0 && ebp == 0 && needKey(key)) {   // 0x0047c7b1..0x0047c7ed
+            if (kKey(c, 0, 0, key) != 0) return 1;                                // 0x0047c7f4, 0x0047c7fb
+        }
+        edi = reinterpret_cast<T1_t>(0x0047c6c0)(c, 0, key);                      // 0x0047c80c
+        if (edi != 0) return 1;                                                   // 0x0047c813
+    }
+    void* o = At<void*>(self, 0x26c);                                             // 0x0047c823
+    if (o != 0) {                                                                 // 0x0047c82b
+        if (vcall2(o, 0x8c, 0, key) != 0) return 1;                               // 0x0047c832, 0x0047c83a
+        if (ebp == 0 && needKey(key)) ebp = kKey(self, 0, 0, key);                // 0x0047c840, 0x0047c86e
+    }
+    o = At<void*>(self, 0x270);                                                   // 0x0047c875
+    if (o != 0) {                                                                 // 0x0047c87d
+        if (vcall2(o, 0x8c, 0, key) != 0) return 1;                               // 0x0047c884, 0x0047c88c
+        if (ebp == 0 && needKey(key)) ebp = kKey(self, 0, 0, key);                // 0x0047c892, 0x0047c8c0
+    }
+    if (At<void*>(self, 0x270) == 0 && At<void*>(self, 0x26c) == 0 && ebp == 0 && needKey(key)) {   // 0x0047c8c7..0x0047c903
+        if (kKey(self, 0, 0, key) != 0) return 1;                                 // 0x0047c90a, 0x0047c911
+    }
+    G<void*>(0x0083ab2c) = self;                                                  // 0x0047c91f
+    typedef int(__cdecl* Cb1x_t)(int);
+    Cb1x_t cb = At<Cb1x_t>(self, 0x260);                                          // 0x0047c925
+    if (cb != 0) edi = cb(key);                                                   // 0x0047c930
+    edi += vcall1(self, 0x90, key);                                               // 0x0047c93c
+    void* t = At<void*>(self, 0x3c);                                              // 0x0047c942
+    if (t != 0) vcall0(t, 0x1c);                                                  // 0x0047c94d
+    return edi;                                                                   // 0x0047c950
+}
+T1_t WindowDispatchAccel_orig;
+// 0x0047c6c0
+SG_HOOK("golf_clean.exe", 0x0047c6c0, Window_dispatchAccel, WindowDispatchAccel_re, WindowDispatchAccel_orig);
+
+// 0x0048aea0  ListBox::typeAhead(this = ListBox + 0x5c, key) (ret 4; key at [esp+0x28] after the prologue pushes, 0x0048af16): the
+// virtual-base table is at [this - 0x58] (V, 0x0048aeac); a = V[1] (0x0048aeaf) and b = V[2] (0x0048aeb2) locate the window part
+// (Ap = this + a) and the list-model part (Bp = this + b). N = [Bp + 0x78] (ebx, 0x0048aebc); [0x0083ab2c] = [Ap + 0xd8] (the parent
+// window, 0x0048aec0); [this - 0x3c] and [this - 0x38] = -1 (0x0048aec5, 0x0048aec8). rows = ceil(N / [Bp + 4]) (signed idiv
+// 0x0048aedf, `imul` 0x0048aee1, `jge` 0x0048aeea); lastVis = [this - 0x30] + [this - 0x34] - 1 (0x0048aef7); a selection of -1
+// ([Bp + 0x98], cmp 0x0048af01) becomes 0 (0x0048af09). top = [this - 0x34], vis = [this - 0x30], sel = [Bp + 0x98], M = [Bp],
+// S = [Bp + 4]. The key minus 0x25 (lea 0x0048af20, `ja` 0x0048af38 above 0x43) indexes the byte table 0x0048b3ac whose entries pick
+// the targets of the dword table 0x0048b398: 0 left (0x0048b039), 1 up (0x0048af4d), 2 right (0x0048b082), 3 down (0x0048af9e),
+// 4 type-ahead (0x0048b261); the keys 0x25..0x28 and the keypad keys 0x64 / 0x68 / 0x66 / 0x62 take the arrow cases. The arrow
+// cases move sel and top (arithmetic transcribed below) and meet at 0x0048b111: top = sel when sel left the window of vis rows
+// (cmp 0x0048b121, 0x0048b12a), the forwarders 0x0047b9f0(top) and 0x0047ba10(top / M) (calls 0x0048b13f, 0x0048b159), the callback
+// at [this - 0xc] with selectedId (call 0x0048b175), the parent's slot +0x100 with selectedId (call 0x0048b19d) and its object's slot
+// +0x1c (call 0x0048b1c2). A changed top calls the window part's slot +0x120 and returns 1 (call 0x0048b1de); otherwise a changed
+// sel calls the ListBox's slot 0 twice with the old and the new selection while [0x0083b650] holds sel - top (calls 0x0048b215,
+// 0x0048b241), then Window::invalidate(window part) (call 0x0048b24d) and returns 1. The type-ahead case returns 0 for the keypad
+// digit keys 0x60..0x69 (0x0048b261..0x0048b269) and for a key whose MapVirtualKeyA(key & 0xfff8ffff, 2) low byte is zero
+// (0x0048b278..0x0048b289); otherwise the model's cursor node ([Bp + 0x74], list head [Bp + 0x70], next +0xc, prev +0x10) is moved
+// to the selection (0x0048b2a6..0x0048b2e3), then up to N nodes are visited in turn (loop 0x0048b2f9..0x0048b365; the node's
+// item at +8 and its text pointer at +4): the first whose first character equals the typed one, or its tolower (CRT 0x004a71d2),
+// calls setSelection(ListBox, index [Bp + 0x7c], 1) (call 0x0048b383) and returns 1; none returns 0.
+namespace {
+typedef int(__cdecl* Tolower_t)(int);
+}  // namespace
+int __fastcall ListBoxTypeAhead_re(void* self, void*, int key) {
+    char* esi = B(self);
+    const int* V = At<const int*>(self, -0x58);                                   // 0x0048aeac
+    const int a = V[1], b = V[2];                                                 // 0x0048aeaf, 0x0048aeb2
+    char* Ap = esi + a;
+    char* Bp = esi + b;
+    void* A2 = esi + a - 0x58;                                                    // window part (call targets, 0x0048b13b)
+    void* B2 = esi + b - 0x58;                                                    // list-model part (selectedId targets)
+    void* L = esi - 0x5c;
+    const int N = At<int>(Bp, 0x78);                                              // 0x0048aebc
+    G<int>(0x0083ab2c) = At<int>(Ap, 0xd8);                                       // 0x0048aec0
+    At<int>(self, -0x3c) = -1;                                                    // 0x0048aec5
+    At<int>(self, -0x38) = -1;                                                    // 0x0048aec8
+    const int S0 = At<int>(Bp, 4);                                                // 0x0048aed7
+    const int q = N / S0;                                                         // 0x0048aedf
+    int rows = q;                                                                 // 0x0048aee6
+    if (S0 * q < N) rows = q + 1;                                                 // 0x0048aee4, 0x0048aeea
+    const int lastVis = At<int>(self, -0x30) + At<int>(self, -0x34) - 1;         // 0x0048aef7
+    if (At<int>(Bp, 0x98) == -1) At<int>(Bp, 0x98) = 0;                           // 0x0048af01, 0x0048af09
+    const int topEntry = At<int>(self, -0x34);                                    // 0x0048af1a
+    const int selEntry = At<int>(Bp, 0x98);                                       // 0x0048af2d
+    const unsigned idx = static_cast<unsigned>(key) - 0x25;                       // 0x0048af20
+    int kase = 4;
+    if (idx <= 0x43) {                                                            // 0x0048af23, 0x0048af38
+        if (idx <= 3) kase = static_cast<int>(idx);                               // table 0x0048b3ac
+        else if (idx == 0x3d) kase = 3;                                           // 0x0048b3e9 (table 0x0048b3ac + 0x3d)
+        else if (idx == 0x3f) kase = 0;                                           // 0x0048b3eb
+        else if (idx == 0x41) kase = 2;                                           // 0x0048b3ed
+        else if (idx == 0x43) kase = 1;                                           // 0x0048b3ef
+    }
+    int sel = selEntry;
+    switch (kase) {
+        case 1:                                                                   // up, 0x0048af4d
+            if (sel == 0) return 1;                                               // 0x0048af4d..0x0048af54
+            sel -= 1;                                                             // 0x0048af60
+            At<int>(Bp, 0x98) = sel;                                              // 0x0048af61
+            if (At<int>(self, -0x30) >= N) goto end;                              // 0x0048af6b
+            {
+                const int top = At<int>(self, -0x34);                             // 0x0048af7a
+                const int s2 = At<int>(Bp, 0x98);                                 // 0x0048af7f
+                if (s2 >= top) goto end;                                          // 0x0048af87
+                if (At<int>(Bp, 0) != 1) { At<int>(self, -0x34) = top - At<int>(Bp, 4); goto end; }   // 0x0048af90, 0x0048b07a
+                At<int>(self, -0x34) = s2;                                        // 0x0048af96
+            }
+            goto end;
+        case 3: {                                                                 // down, 0x0048af9e
+            int top = topEntry;
+            if (At<int>(self, -0x30) >= N) goto l016;                             // 0x0048afa5
+            if (At<int>(Bp, 0) == 1) {                                            // 0x0048afa9
+                const int lim = At<int>(Bp, 4) + top - 1;                         // 0x0048afb1
+                if (sel + 1 <= lim) {                                             // 0x0048afb5..0x0048afba
+                    if (sel != N - 1) goto l016;                                  // 0x0048afbc..0x0048afc1
+                }
+                if (top >= N - 1) goto l016;                                      // 0x0048afc6
+                top++;                                                            // 0x0048afca
+                At<int>(self, -0x34) = top;                                       // 0x0048afcb
+                goto l016;
+            }
+            if (sel + 1 > lastVis) {                                              // 0x0048afd4..0x0048afd7
+                const int t2 = top + At<int>(Bp, 4);                              // 0x0048afdf
+                if (!(t2 > N - 1)) At<int>(self, -0x34) = t2;                     // 0x0048afe1..0x0048afe5
+            }
+            if (At<int>(Bp, 0x98) != N - 1) goto l016;                            // 0x0048affb
+            {
+                const int s = At<int>(Bp, 4);                                     // 0x0048b003
+                const int t3 = At<int>(self, -0x34);                              // 0x0048b007
+                if (t3 >= (rows - 1) * s) goto l016;                              // 0x0048b00a..0x0048b00f
+                At<int>(self, -0x34) = t3 + s;                                    // 0x0048b013
+            }
+        l016:
+            {
+                const int s = At<int>(Bp, 0x98);                                  // 0x0048b024
+                if (s >= N - 1) goto end;                                         // 0x0048b02d
+                At<int>(Bp, 0x98) = s + 1;                                        // 0x0048b10f
+            }
+            goto end;
+        }
+        case 0:                                                                   // left, 0x0048b039
+            if (At<int>(Bp, 0) == 1) return 0;                                    // 0x0048b039..0x0048b03c
+            {
+                const int s = At<int>(Bp, 4);                                     // 0x0048b042
+                if (sel >= s) { sel -= s; At<int>(Bp, 0x98) = sel; }              // 0x0048b045..0x0048b04b
+                if (At<int>(self, -0x30) >= N) goto end;                          // 0x0048b058
+                const int top = At<int>(self, -0x34);                             // 0x0048b066
+                if (At<int>(Bp, 0x98) >= top) goto end;                           // 0x0048b06b
+                At<int>(self, -0x34) = top - At<int>(Bp, 4);                      // 0x0048b077
+            }
+            goto end;
+        case 2: {                                                                 // right, 0x0048b082
+            const int M = At<int>(Bp, 0);                                         // 0x0048b082
+            if (M == 1) return 0;                                                 // 0x0048b087
+            const int s = At<int>(Bp, 4);                                         // 0x0048b098
+            if (At<int>(self, -0x30) < N) {                                       // 0x0048b094
+                if (sel < (M - 1) * s + topEntry) {                               // 0x0048b0a1
+                    const int lim = (rows - 1) * s;                               // 0x0048b0b7..0x0048b0ba
+                    if (!(sel < topEntry + lim) && topEntry < lim) At<int>(self, -0x34) = topEntry + s;   // 0x0048b0c0..0x0048b0ca
+                } else {
+                    const int t2 = s + topEntry;                                  // 0x0048b0a5
+                    if (!(t2 > N - 1)) At<int>(self, -0x34) = t2;                 // 0x0048b0aa..0x0048b0ae
+                }
+            }
+            {
+                const int s2 = At<int>(Bp, 4);                                    // 0x0048b0d8
+                const int cur = At<int>(Bp, 0x98);                                // 0x0048b0e2
+                if (!(cur >= (rows - 1) * s2)) At<int>(Bp, 0x98) = cur + s2;      // 0x0048b0e8..0x0048b0ee
+                if (At<int>(Bp, 0x98) > N - 1) At<int>(Bp, 0x98) = N - 1;         // 0x0048b0fa..0x0048b10f
+            }
+            goto end;
+        }
+        default:
+            goto typeahead;
+    }
+end:                                                                              // 0x0048b111
+    {
+        const int top = At<int>(self, -0x34);                                     // 0x0048b114
+        const int s = At<int>(Bp, 0x98);                                          // 0x0048b11a
+        if (s < top || !(s < At<int>(self, -0x30) + top)) At<int>(self, -0x34) = s;   // 0x0048b123..0x0048b12e
+    }
+    reinterpret_cast<T1_t>(0x0047b9f0)(A2, 0, At<int>(self, -0x34));              // 0x0048b13f
+    reinterpret_cast<T1_t>(0x0047ba10)(A2, 0, At<int>(self, -0x34) / At<int>(Bp, 0));   // 0x0048b159 (idiv 0x0048b14e)
+    {
+        Cb1_t cb = At<Cb1_t>(self, -0xc);                                         // 0x0048b15e
+        if (cb != 0) cb(kSelectedId(B2, 0));                                      // 0x0048b175
+    }
+    {
+        void* P = At<void*>(Ap, 0xd8);                                            // 0x0048b181
+        if (P != 0) vcall1(P, 0x100, kSelectedId(B2, 0));                         // 0x0048b19d
+        P = At<void*>(Ap, 0xd8);                                                  // 0x0048b1a9
+        if (P != 0) {                                                             // 0x0048b1b2
+            void* o = At<void*>(P, 0x94);                                         // 0x0048b1b4
+            if (o != 0) vcall0(o, 0x1c);                                          // 0x0048b1c2
+        }
+    }
+    if (At<int>(self, -0x34) != topEntry) {                                       // 0x0048b1cc
+        vcall0(A2, 0x120);                                                        // 0x0048b1de
+        return 1;                                                                 // 0x0048b1e7
+    }
+    if (selEntry != At<int>(Bp, 0x98)) {                                          // 0x0048b1fa
+        G<int>(0x0083b650) = selEntry - At<int>(self, -0x34);                     // 0x0048b20b
+        vcall1(L, 0, selEntry);                                                   // 0x0048b215
+        G<int>(0x0083b650) = At<int>(Bp, 0x98) - At<int>(self, -0x34);            // 0x0048b229
+        vcall1(L, 0, At<int>(Bp, 0x98));                                          // 0x0048b241
+    }
+    reinterpret_cast<T0_t>(0x00480ce0)(A2, 0);                                    // 0x0048b24d
+    return 1;                                                                     // 0x0048b255
+typeahead:                                                                        // 0x0048b261
+    if (key >= 0x60 && key <= 0x69) return 0;                                     // 0x0048b261..0x0048b269
+    {
+        const unsigned m = Imp<MapVk_t>(0x004ba1c0)(static_cast<unsigned>(key) & 0xfff8ffffu, 2) & 0xffff;   // 0x0048b278
+        if ((m & 0xff) == 0) return 0;                                            // 0x0048b283..0x0048b289
+        const unsigned char ch = static_cast<unsigned char>(m);                   // 0x0048b33e
+        int sel2 = At<int>(Bp, 0x98);                                             // 0x0048b299
+        const int n2 = At<int>(Bp, 0x78);                                         // 0x0048b295
+        if (!(sel2 > n2 - 1)) {                                                   // 0x0048b2a6
+            At<int>(Bp, 0x74) = At<int>(Bp, 0x70);                                // 0x0048b2af
+            if (sel2 >= 0) {                                                      // 0x0048b2b2
+                if (sel2 > 0) {                                                   // 0x0048b2d3
+                    int k = sel2;
+                    do { At<int>(Bp, 0x74) = At<int*>(Bp, 0x74)[3]; } while (--k != 0);   // 0x0048b2d7..0x0048b2e1
+                }
+                At<int>(Bp, 0x7c) = sel2;                                         // 0x0048b2e3
+            } else {
+                int ab = sel2 < 0 ? -sel2 : sel2;                                 // 0x0048b2b4..0x0048b2b9
+                if (!(ab > n2)) {                                                 // 0x0048b2bb
+                    if (ab > 0) {                                                 // 0x0048b2bf
+                        do { At<int>(Bp, 0x74) = At<int*>(Bp, 0x74)[4]; } while (--ab != 0);   // 0x0048b2c3..0x0048b2cd
+                    }
+                    sel2 += n2;                                                   // 0x0048b2cf
+                    At<int>(Bp, 0x7c) = sel2;                                     // 0x0048b2d1 -> 0x0048b2e3
+                }
+            }
+        }
+        int i = 0;                                                                // 0x0048b2e9
+        if (At<int>(Bp, 0x78) <= 0) return 0;                                     // 0x0048b2f5
+        do {
+            const int head = At<int>(Bp, 0x70);                                   // 0x0048b2f9
+            if (head != 0) {                                                      // 0x0048b2fe
+                const int cur = At<int>(Bp, 0x74);                                // 0x0048b300
+                const int ip = At<int>(Bp, 0x7c) + 1;                             // 0x0048b303, 0x0048b309
+                const int nn = At<int>(Bp, 0x78);                                 // 0x0048b306
+                At<int>(Bp, 0x7c) = ip;                                           // 0x0048b30d
+                At<int>(Bp, 0x74) = reinterpret_cast<const int*>(cur)[3];         // 0x0048b30a, 0x0048b310
+                if (ip == nn) At<int>(Bp, 0x7c) = 0;                              // 0x0048b317, 0x0048b319
+            }
+            const int* node = At<const int*>(Bp, 0x74);                           // 0x0048b320
+            const unsigned char* text = 0;
+            if (node != 0) text = reinterpret_cast<const unsigned char*>(reinterpret_cast<const int*>(node[2])[1]);   // 0x0048b32b..0x0048b32e
+            const unsigned char bl = text[0];                                     // 0x0048b33c
+            if (bl != ch) {                                                       // 0x0048b342
+                const int lo = reinterpret_cast<Tolower_t>(0x004a71d2)(static_cast<signed char>(ch));   // 0x0048b34a
+                if (static_cast<signed char>(bl) != lo) {                         // 0x0048b355
+                    i++;                                                          // 0x0048b35c
+                    if (i < At<int>(Bp, 0x78)) continue;                          // 0x0048b362..0x0048b365
+                    return 0;                                                     // 0x0048b36a
+                }
+            }
+            break;                                                                // 0x0048b373
+        } while (true);
+        reinterpret_cast<T2_t>(0x00489f50)(L, 0, At<int>(Bp, 0x7c), 1);          // 0x0048b383
+        return 1;                                                                 // 0x0048b38b
+    }
+}
+T1_t ListBoxTypeAhead_orig;
+// 0x0048aea0
+SG_HOOK("golf_clean.exe", 0x0048aea0, ListBox_typeAhead, ListBoxTypeAhead_re, ListBoxTypeAhead_orig);
+
+// 0x0047d130  drawCursor(w, a1, x, y) (plain ret; w at [esp+0x28], a1 at [esp+0x2c], x at [esp+0x30], y at [esp+0x34] after the
+// prologue pushes; a1 is read once, at 0x0047d330): the cursor position (lx, ly) is x and y when neither is -1 (cmp 0x0047d13b,
+// 0x0047d145, stores 0x0047d14a, 0x0047d14e); otherwise the live display's slot +0x2c fills them (&lx, &ly; call 0x0047d16a; no
+// display leaves the two stack words unset). The window is w, or, when w is 0, hitTestScreen(&px, &py) 0x0047f700 (cdecl, call
+// 0x0047d18f) on copies of the position; a given w gets View::toGlobal(w, &px, &py) 0x0047b2d0 (call 0x0047d1a7). No window
+// (0x0047d1ae) takes the default cursor below. [0x0083ab18] non-zero or bit 0x4000000 of w+0x9c (0x0047d1b4, 0x0047d1c0) ask the
+// window's slot +0x140 with (px, py) (call 0x0047d3cf) and index the jump table 0x0047d4b8 with the result + 2 (above 0x13,
+// unsigned, `ja` 0x0047d3db: default): indices 0, 1 and 3 return the index, the slot's result + 2 (0x0047d3d5, 0x0047d4ae); 2 and 4 clear the cursor image
+// pointer and set [0x0083aba0] = 1 (0x0047d3e8..0x0047d417) with cursor 0x7f00; 12 and 13 use 0x7f84, 14 and 17 0x7f85, 16 and 18
+// 0x7f83, 15 and 19 0x7f82 (0x0047d407..0x0047d46a); 5..11 the default (0x0047d48b). Otherwise a window image at w+0x208 (test
+// 0x0047d1d6): with no cursor image yet ([0x0083aaa0] zero) ShowCursor(0) runs until it returns a negative value (call 0x0047d1ee,
+// loop 0x0047d1f4..0x0047d1f9), else addDirtyRect(0) (call 0x0047d1fd). A new image (cmp 0x0047d211) stores its width and height
+// (w+0x208's +0x18, +0x1c) in [0x0083aab4] / [0x0083aab8] and the hot spot (w+0x20c, w+0x210) in [0x0083aaac] / [0x0083aab0], asks
+// the surface object [0x0083a504] for its width and height (slots +0xd8 / +0xdc; none reads 0, 0x0047d24d..0x0047d27b) and calls
+// Surface_createFull(0x0083a500, w, h, 0, 1, 0, 0) when either differs (call 0x0047d29b). The image position (lx - hot x, ly - hot
+// y) goes to [0x0083aaa4] / [0x0083aaa8], the image to [0x0083aaa0] (0x0047d2b8..0x0047d2c9), Surface_blitThunk(0x0083a7b8,
+// 0x0083a500, ...) draws it (call 0x0047d2eb) and UnionRect (call [0x004ba1a4], 0x0047d32a) grows the dirty box 0x0083a4d8; a1 zero
+// returns UnionRect's result (cmp 0x0047d330, `je` 0x0047d334 -> 0x0047d4ae), otherwise [0x0083ab4c] is set to 1 around
+// drawTooltip(0x0083a4d8) (call 0x0047d34f), [0x0083a4d8] = [0x0083a4e0] (0x0047d362) and eax = [0x0083a4e0]. A window without an
+// image (0x0047d36e): an existing cursor image takes addDirtyRect(1) (call 0x0047d374) and ShowCursor(1) until it returns a
+// positive value (loop 0x0047d38a..0x0047d390); [0x0083aaa0] = 0 (0x0047d392); a cursor object at w+0x214 whose +4 word is
+// non-zero is set with SetCursor ([0x004ba1f8], 0x0047d4a8); otherwise LoadCursorA(0, w+0x218, or 0x7f00 when that is 0) is set
+// ([0x004ba1c4], 0x0047d4a1). eax is the last import's result.
+namespace {
+typedef int(__fastcall* T6_t)(void* ecx, void* edx, int a, int b, int c, int d, int e, int f);
+typedef int(__stdcall* Show_t)(int);
+typedef int(__stdcall* LoadCur_t)(int, int);
+typedef int(__stdcall* SetCur_t)(int);
+const C2_t kHitTestScreen = reinterpret_cast<C2_t>(0x0047f700);         // hitTestScreen(&px, &py), plain ret
+const T2_t kToGlobal = reinterpret_cast<T2_t>(0x0047b2d0);              // View::toGlobal(this, &x, &y), ret 8
+const T6_t kCreateFull = reinterpret_cast<T6_t>(0x00474dd0);            // Surface_createFull(this, 6 arguments), ret 0x18
+const C1_t kAddDirtyRect = reinterpret_cast<C1_t>(0x0047d060);          // addDirtyRect(f), plain ret
+static const unsigned char kCursorKind[20] = {0, 0, 1, 0, 1, 5, 5, 5, 5, 5, 5, 5, 2, 2, 3, 6, 4, 3, 4, 6};   // table 0x0047d4b8
+static const int kCursorId[7] = {0x7f00, 0x7f00, 0x7f84, 0x7f85, 0x7f83, 0x7f00, 0x7f82};
+}  // namespace
+int __cdecl DrawCursor_re(void* w, int a1, int x, int y) {
+    int lx = 0, ly = 0;
+    if (x != -1 && y != -1) {                                                     // 0x0047d13b, 0x0047d145
+        lx = x;                                                                   // 0x0047d14a
+        ly = y;                                                                   // 0x0047d14e
+    } else {
+        void* d = G<void*>(0x0083ad50);                                           // 0x0047d154
+        if (d != 0) vcall2(d, 0x2c, reinterpret_cast<int>(&lx), reinterpret_cast<int>(&ly));   // 0x0047d16a
+    }
+    int px = lx, py = ly;                                                         // 0x0047d17b, 0x0047d17f
+    if (w == 0) w = reinterpret_cast<void*>(kHitTestScreen(reinterpret_cast<int>(&px), reinterpret_cast<int>(&py)));   // 0x0047d18f
+    else kToGlobal(w, 0, reinterpret_cast<int>(&px), reinterpret_cast<int>(&py)); // 0x0047d1a7
+    int cursor = 0x7f00;
+    if (w == 0) goto dflt;                                                        // 0x0047d1ae
+    if (G<int>(0x0083ab18) != 0) goto flagged;                                    // 0x0047d1b4
+    if ((At<unsigned>(w, 0x9c) & 0x4000000) != 0) goto flagged;                   // 0x0047d1c0
+    {
+        void* img = At<void*>(w, 0x208);                                          // 0x0047d1d0
+        const int cur = G<int>(0x0083aaa0);                                       // 0x0047d1d8
+        if (img == 0) goto noimage;                                               // 0x0047d1dd
+        if (cur == 0) {                                                           // 0x0047d1e3
+            int r = Imp<Show_t>(0x004ba200)(0);                                   // 0x0047d1ee
+            if (!(r < 0)) {                                                       // 0x0047d1f2
+                do { r = Imp<Show_t>(0x004ba200)(0); } while (r >= 0);            // 0x0047d1f5, 0x0047d1f9
+            }
+        } else {
+            kAddDirtyRect(0);                                                     // 0x0047d1fd
+        }
+        if (At<int>(w, 0x208) != G<int>(0x0083aaa0)) {                            // 0x0047d205..0x0047d213
+            G<int>(0x0083aab4) = At<int>(At<void*>(w, 0x208), 0x18);              // 0x0047d219..0x0047d21c
+            G<int>(0x0083aab8) = At<int>(At<void*>(w, 0x208), 0x1c);              // 0x0047d227..0x0047d22a
+            G<int>(0x0083aaac) = At<int>(w, 0x20c);                               // 0x0047d230..0x0047d236
+            G<int>(0x0083aab0) = At<int>(w, 0x210);                               // 0x0047d23b..0x0047d241
+            void* so = G<void*>(0x0083a504);                                      // 0x0047d247
+            int sw = 0;
+            if (so != 0) sw = vcall0(so, 0xd8);                                   // 0x0047d253
+            so = G<void*>(0x0083a504);                                            // 0x0047d259
+            bool differ = (sw != G<int>(0x0083aab4));                             // 0x0047d263..0x0047d269
+            if (!differ) {
+                int sh = 0;
+                if (so != 0) sh = vcall0(so, 0xdc);                               // 0x0047d271
+                differ = (sh != G<int>(0x0083aab8));                              // 0x0047d27b..0x0047d281
+            }
+            if (differ) kCreateFull(reinterpret_cast<void*>(0x0083a500), 0, G<int>(0x0083aab4), G<int>(0x0083aab8), 0, 1, 0, 0);   // 0x0047d29b
+        }
+        G<int>(0x0083aaa4) = lx - G<int>(0x0083aaac);                             // 0x0047d2b8
+        G<int>(0x0083aaa8) = ly - G<int>(0x0083aab0);                             // 0x0047d2bd
+        G<int>(0x0083aaa0) = At<int>(w, 0x208);                                   // 0x0047d2c9
+        kBlitThunk(reinterpret_cast<void*>(0x0083a7b8), 0, 0x0083a500, G<int>(0x0083aaa4), G<int>(0x0083aaa8), 0, 0, G<int>(0x0083aab4), G<int>(0x0083aab8));   // 0x0047d2eb
+        int local[4];
+        local[0] = G<int>(0x0083aaa4);                                            // 0x0047d303
+        local[1] = G<int>(0x0083aaa8);                                            // 0x0047d322
+        local[2] = G<int>(0x0083aab4) + G<int>(0x0083aaa4);                       // 0x0047d30d
+        local[3] = G<int>(0x0083aab8) + G<int>(0x0083aaa8);                       // 0x0047d326
+        const int ur = Imp<Union_t>(kIatUnionRect)(reinterpret_cast<void*>(0x0083a4d8), local, reinterpret_cast<void*>(0x0083a4d8));   // 0x0047d32a
+        if (a1 == 0) return ur;                                                   // 0x0047d330
+        const int saved = G<int>(0x0083ab4c);                                     // 0x0047d33a
+        G<int>(0x0083ab4c) = 1;                                                   // 0x0047d345
+        kDrawTooltip(0x0083a4d8);                                                 // 0x0047d34f
+        const int e = G<int>(0x0083a4e0);                                         // 0x0047d354
+        G<int>(0x0083ab4c) = saved;                                               // 0x0047d35c
+        G<int>(0x0083a4d8) = e;                                                   // 0x0047d362
+        return e;                                                                 // 0x0047d354 eax
+    }
+noimage:                                                                          // 0x0047d36e
+    if (G<int>(0x0083aaa0) != 0) {                                                // 0x0047d36e..0x0047d370
+        kAddDirtyRect(1);                                                         // 0x0047d374
+        int r = Imp<Show_t>(0x004ba200)(1);                                       // 0x0047d384
+        if (!(r > 0)) {                                                           // 0x0047d388
+            do { r = Imp<Show_t>(0x004ba200)(1); } while (r <= 0);                // 0x0047d38c, 0x0047d390
+        }
+    }
+    G<int>(0x0083aaa0) = 0;                                                       // 0x0047d392
+    {
+        int* hc = At<int*>(w, 0x214);                                             // 0x0047d398
+        if (hc != 0) {                                                            // 0x0047d39e
+            const int h = hc[1];                                                  // 0x0047d3a2
+            if (h != 0) return Imp<SetCur_t>(0x004ba1f8)(h);                      // 0x0047d3a5, 0x0047d4a8
+        }
+        const int id = At<int>(w, 0x218);                                         // 0x0047d3ad
+        cursor = (id != 0) ? id : 0x7f00;                                         // 0x0047d3b5, 0x0047d49b
+    }
+    goto load;
+flagged:                                                                          // 0x0047d3c1
+    {
+        const int r = vcall2(w, 0x140, px, py);                                   // 0x0047d3cf
+        const unsigned idx = static_cast<unsigned>(r + 2);                        // 0x0047d3d5
+        if (idx > 0x13) goto dflt;                                                // 0x0047d3d8, 0x0047d3db
+        const int kind = kCursorKind[idx];                                        // jump table 0x0047d4b8
+        if (kind == 0) return static_cast<int>(idx);                              // 0x0047d4ae (eax = result + 2, 0x0047d3d5)
+        if (kind == 5) goto dflt;                                                 // 0x0047d3e1 (indices 5..11 -> 0x0047d48b)
+        kAddDirtyRect(1);                                                         // 0x0047d3ea ...
+        G<int>(0x0083aaa0) = 0;                                                   // 0x0047d3f2 ...
+        G<int>(0x0083aba0) = 1;                                                   // 0x0047d3f8 ...
+        cursor = kCursorId[kind];                                                 // 0x0047d421 / 0x0047d442 / 0x0047d463 / 0x0047d484
+        goto load;
+    }
+dflt:                                                                             // 0x0047d48b
+    kAddDirtyRect(1);                                                             // 0x0047d48d
+    G<int>(0x0083aaa0) = 0;                                                       // 0x0047d495
+    cursor = 0x7f00;                                                              // 0x0047d49b
+load:                                                                             // 0x0047d4a0
+    {
+        const int hcur = Imp<LoadCur_t>(0x004ba1c4)(0, cursor);                   // 0x0047d4a1
+        return Imp<SetCur_t>(0x004ba1f8)(hcur);                                   // 0x0047d4a8
+    }
+}
+typedef int(__cdecl* C4v_t)(void*, int, int, int);
+C4v_t DrawCursor_orig;
+// 0x0047d130
+SG_HOOK("golf_clean.exe", 0x0047d130, drawCursor, DrawCursor_re, DrawCursor_orig);

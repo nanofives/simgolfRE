@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 156 bytes, 42 instructions, subsystem `render`. Mechani
 clips a rectangle to the surface bounds (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x00479a80 Surface_clip(this, RECT* r) (ret 4): r != 0 (test 0x00479a85, `je` 0x00479a89) copies its four dwords to 0x0083aa78..0x0083aa84 (0x00479a8b..0x00479aa8); r == 0 copies this+0x1ac..+0x1b8 (lea 0x00479ab0, copies 0x00479abb.. 0x00479ada) and calls View::offsetRectToParent(this, 0x0083aa78) (push 0x00479ab6, call 0x00479ae0). Then [0x0083aa98] = this (0x00479ae7); Window::visible(this) (call 0x00479aed) zero returns zero (0x00479af4). Otherwise the live display's slot +0x20 (call 0x00479afe) is compared (cmp 0x00479b09, `jne` 0x00479b0b) with GetForegroundWindow ([0x004ba1cc], call 0x00479b03): different returns the foreground window; equal returns ClipCursor ([0x004ba1d0], push 0x00479b0d, call 0x00479b12) of 0x0083aa78. Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: Surface_clip (18 vectors, 18 distinct results, 18 changing state, `log/diff/00479a80_Surface_clip.path1.csv`); Surface_clip_fg (18 vectors, 18 distinct results, 18 changing state, `log/diff/00479a80_Surface_clip_fg.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?clip@C479a80@@QAEXPAUtagRECT@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00479b19): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 194 bytes, 47 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 blits the saved buffer g_83a7b8 and unions the pending rect (g_83aaa4/aaa8/aab4/aab8) into the dirty region g_83a4d8, optionally flushing (`re/names/exe_3.tsv`)
 
+## Purpose
+0x0047d060 addDirtyRect(f) (cdecl, the argument is read at 0x0047d0dd): [0x0083aaa0] == 0 (cursor image pointer, test 0x0047d068, `je` 0x0047d06a -> 0x0047d11e) returns 0 (eax = the zero it loaded). Otherwise Surface_blitThunk with ecx = 0x0083a500 and seven stack arguments (0x0083a7b8, 0, 0, [0x0083aaa4], [0x0083aaa8], [0x0083aab4], [0x0083aab8]) (pushes 0x0047d081..0x0047d08e, call 0x0047d098), then UnionRect(0x0083a4d8, 0x0083a4d8, &{[aa4], [aa8], [aa4] + [ab4], [aa8] + [ab8]}) (locals 0x0047d0a3..0x0047d0d3, call [0x004ba1a4] at 0x0047d0d7; its result is overwritten). f == 0 (mov 0x0047d0dd, test 0x0047d0e1, `je` 0x0047d11e) returns f. Otherwise [0x0083aaa0] is parked in esi and cleared (0x0047d0e6, 0x0047d0f1), drawTooltip(0x0083a4d8) runs (call 0x0047d0fb), the pointer is restored (0x0047d103), [0x0083a4d8] and [0x0083a4e0] are cleared (0x0047d109, 0x0047d113) and eax = drawTooltip's result. Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: addDirtyRect (12 vectors, 12 distinct results, 10 changing state, `log/diff/0047d060_addDirtyRect.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_b.cpp` as `?addDirty3@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0047d121): callee pops 0 bytes of stack arguments.

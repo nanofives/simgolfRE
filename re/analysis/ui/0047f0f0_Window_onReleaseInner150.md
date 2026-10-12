@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 188 bytes, 69 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 takes the focus owner from g_focusWin 0x0083ab40 or, when that is 0, g_focusWin2 0x0083ab44; when it is this it clears both and, if pointInRect 0x00492610 places the point inside the rectangle (0, 0, this+0x1b4 - this+0x1ac, this+0x1b8 - this+0x1b0), calls Window::mouseDispatch244 0x0047c0e0; otherwise it only clears both; then calls Window::mouseDispatch24c 0x0047c290 when Window::visible 0x004801f0 is non-zero (`re/names/undisc_exe.tsv`)
 
+## Purpose
+0x0047f0f0 Window::onReleaseInner150(this, a0, a1, a2) (ret 0xc): the shared gate; a hit calls mouseDispatch244(a0, a1, a2) (call 0x0047f185). Window::visible(this) (call 0x0047f18c) zero returns zero (eax = 0, `je` 0x0047f193); otherwise mouseDispatch24c(a0, a1, a2) (call 0x0047f19e) and its result. Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: Window::onReleaseInner150 (15 vectors, 15 distinct results, 15 changing state, `log/diff/0047f0f0_Window_onReleaseInner150.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x0047f1a9): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x0047f0fb before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

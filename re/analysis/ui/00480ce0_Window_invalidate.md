@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 140 bytes, 43 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 computes the window rect in screen coords (getOrigin) and invalidates it on the screen manager g_83ad50d (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00480ce0 Window::invalidate(this) (plain ret): Window::visible 0x004801f0 with ecx = this (call 0x00480ce6); zero returns zero (test 0x00480ceb, `je` 0x00480ced -> 0x00480d67; eax stays 0). The surface handle at +0x278 (mov 0x00480cef, `je` 0x00480cf7) writes the window's size RECT {l, t, r, b} into the local at esp+0xc through its slot +0xd0 (call 0x00480d00, one argument). View::toParent(this, &x, &y) with x = y = 0 (stores 0x00480d12, 0x00480d1a; call 0x00480d22) gives the offset to the parent chain; l += x, r += x (0x00480d37, 0x00480d39), t += y, b += y (0x00480d47, 0x00480d49); the RECT goes to the live display's slot +0x30 ([0x0083ad50], call 0x00480d64) and eax = its result (ret 0x00480d6b). A window without a handle (+0x278 == 0) leaves the local RECT as stack garbage in the original; this body zeroes it, a case no fixture compares (Purpose). Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: Window::invalidate (12 vectors, 11 distinct results, 10 changing state, `log/diff/00480ce0_Window_invalidate.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `?refresh@C480ce0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00480d6b): callee pops 0 bytes of stack arguments.

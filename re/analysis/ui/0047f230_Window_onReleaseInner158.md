@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 177 bytes, 65 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 same focus and pointInRect 0x00492610 test as Window::onReleaseInner150 0x0047f0f0 over the rectangle (0, 0, this+0x1b4 - this+0x1ac, this+0x1b8 - this+0x1b0), calling Window::mouseDispatch250 0x0047c360 on a hit, and then Window::mouseDispatch258 0x0047c500 unconditionally (`re/names/undisc_exe.tsv`)
 
+## Purpose
+0x0047f230 Window::onReleaseInner158(this, a0, a1, a2) (ret 0xc): the shared gate; a hit calls mouseDispatch250(a0, a1, a2) (call 0x0047f2c5); mouseDispatch258(a0, a1, a2) (call 0x0047f2d3) always runs and its result is returned. Reimplemented in `shim/src/re/c3eg.cpp`; path-1 A/B GREEN: Window::onReleaseInner158 (15 vectors, 15 distinct results, 15 changing state, `log/diff/0047f230_Window_onReleaseInner158.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x0047f2de): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x0047f23b before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
