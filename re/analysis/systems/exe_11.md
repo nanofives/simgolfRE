@@ -15,3 +15,10 @@ x * 50 + y) is cleared at 0x0042e7f3..0x0042e7ff, the start cell set to 1 at 0x0
 position +0x10 / +0x14, heading +0x18, steps +0x19, frame +0x1a). placeAnimal 0x004017d0 writes the cell it computes into
 `g_animalCell` 0x004e9a80 (0x004018c8) before passing it to enqueueSprite, and formats numbers with itoa into
 `g_itoaBuf4e9a70` 0x004e9a70 (0x0040192a, 0x00401997) before appending them to the text buffer 0x0051a068.
+
+## Golfer update (c3ec, updateGolfers 0x004289e0)
+`g_shotStartDate` 0x0056962c (int per golfer, 152) takes the game date when the club meets the ball. `g_ballStopCount`
+0x0053ea24 (byte per tile, x * 50 + y) counts balls that stop on each tile. `g_holes` 0x00575ab0 holds 20 hole records of
+0x208 bytes indexed by a golfer's hole byte +0x21 (+0 par). `g_golferStats` 0x0056ae70 is a record of 0xb8 bytes of shot
+statistics (+0 sum of first-shot distances) indexed through +0xba + 4 * (+0x19 & 7). Evidence addresses per row in
+`re/names/exe_11_globals.tsv`.
