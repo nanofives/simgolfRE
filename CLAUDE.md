@@ -345,6 +345,35 @@ with reach, drop reason and size. Plan for the large simulation functions: re/C3
 playSound, playSoundAt, pumpAndRedraw, storyText, inRange, rebuildTileCoverage, scanShotArea, scanNearbyGolfers; then the
 golfer text chain through a stood-in story file, the simulateShot/simulateBallFlight/trialShot cycle as one batch,
 movement, updateGolfers alone, terrain editing; mainLoop and the asset loaders out of scope).
+Simulation plan done (2026-10-11/12, claude3, one child per phase, verifier notes log/c3/sim_verifier_notes.md, runner
+log/c3/alt/sim_main.py, children log/c3/sim_children.tsv): phase 0 c3dy 10 (the shared leaves plus Snd::play;
+scanNearbyGolfers renamed addGolferToTable), phase 1 c3dz 6 (loadStoryStrings, computeStoryReply, advanceStory,
+emitGolferThought, buildGolferComment, pairGolfersWithStory = announceVipGolfer), phase 5 c3ed 2 (stepCourseEditQueue =
+editTerrainHeight, generateRandomCourse = applyTerrainEdit), phase 2 c3ea 4 (trialShot, chooseShotTarget =
+simulateBallFlight, prepareShot = simulateShot, saveBmp), phase 3 c3eb 3 (pathStep, updateWalkers, placeAnimal), phase 4
+c3ec 1 (updateGolfers, 12 keys, 734 mutants) promoted: 26 functions, C3 2,303 (exe 1,222). Dropped: narrateShot 0x407e00
+and drawWindow 0x40d320 (drawWindow calls Surface_drawScaled, held in re/c3_hold.tsv; drawWindowFrame 0x40cdd0 and
+drawThoughtBubble 0x45c200 are C2). Methods: the story file served by stand-ins for the static CRT's fopen/fgets/fclose
+with the file cursor compared (c3dz; the KERNEL32 path mallocs a stream buffer and takes locks); calleeStand recording
+stand-ins for every non-subject callee with their calls compared; uninitialised stack reads of the original reproduced by a
+naked entry that rebuilds the original's frame, plus a thread-checked stub over __alloca_probe 0x4a6070 that seeds the slots
+alike in both arms (c3ea); the three-cycle verified with each function's two partners off (log/c3/alt/sim_c3ea_cycle.py);
+updateGolfers as one key per golfer state, each vector a whole call over all 152 golfer records. Every batch: all keys
+GREEN with every hook on and with other batches' callees off; existing C3 callers re-run both ways (log/c3/alt/
+sim_callers_of.py, sim_callers_rerun.py; matchUpdate and the round-9 event writers flake in both modes and pass on
+single-key re-runs). Defects fixed in earlier C3 hooks: Snd::setVolume / Snd::setField34 (c3j) dropped the device forward
+(and setVolume the scaled __ftol path), Snd::setPan (c3f) returned the clamped pan instead of the device call's eax; device
+keys on fixture c3j_snd_dev. TOOL DEFECT (c3ea): shim/src/re/hooks.cpp read SIMGOLF_HOOKS_OFF into 2,048 bytes and a
+longer list left every hook ON; fixed (any length, tests/test_runtime_hooks_off.py). It voided the callers-off passes of
+rounds 22, 26, 27, 28 and c3dp's callees-off pass (2,244 characters); no gate depended on them. Windows Defender flags
+negctl DLLs with a fixed-address flag page as Trojan:Win32/Bearfoos.B!ml (c3ec rebuilt its control with an exported
+switch). Findings in the original: generateRandomCourse fills the tile-type table from an uninitialised stack slot for
+course type 4 / types > 4 and has two unbounded searches; its river and smoothing loops step one row outside the grid;
+placeAnimal's idiv by the frame count (0x0040189a) and updateGolfers' idiv by word +0xb2 + 6 (0x00428c38) fault at 0 / -6;
+updateWalkers' list scan subtracts x in the y expression (0x00402ec1); updateGolfers plays the water sound at (ball x,
+golfer y) (0x0042d7ff). updateGolfers' only call (0x00417609, mainLoop) lies outside mainLoop's recorded ranges.
+names_sanitize.py rewrites jgld_0.tsv's trace row and exe_10.md on every run (reverted each time, not fixed). ApplyNames
+overwrite re-renames the four Terrain accessors 0x4490d0..0x449150 on every run. Slow suite 13 passed with every sim hook.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
