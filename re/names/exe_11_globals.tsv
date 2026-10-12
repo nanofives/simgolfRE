@@ -1,0 +1,7 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x0058d370	g_pathGrid	byte[50][50] (x * 50 + y)	cleared by pathStep 0x0042e7e0 (0x0042e7f3..0x0042e7ff), start cell 1 (0x0042e93f), cell costs stored at 0x0042eb10 and read at 0x0042ecc8
+golf_clean.exe	0x005a7404	g_pathQueueX	short[0x400]	pathStep wave queue, x of each queued cell (store 0x0042eb16, read 0x0042e972, wrap 0x0042e987 / 0x0042eb27)
+golf_clean.exe	0x005a8028	g_pathQueueY	short[0x400]	pathStep wave queue, y of each queued cell (store 0x0042eb1e, read 0x0042e97a)
+golf_clean.exe	0x0056d1d8	g_animals	struct[100] (0x3c stride: short type, map, ..., +6 / +8 tile x / y, +0xa wait, +0xc state, int +0x10 / +0x14 sub-tile, byte +0x18 heading, +0x19 steps, +0x1a frame)	iterated by tickAnimals 0x00401c00 (0x00401c04..0x00401c22, 100 records) and updated by placeAnimal 0x004017d0 (0x004017da..0x00401bda)
+golf_clean.exe	0x004e9a80	g_animalCell	int	written by placeAnimal 0x004017d0 at 0x004018c8 with the cellAt result passed to enqueueSprite
+golf_clean.exe	0x004e9a70	g_itoaBuf4e9a70	char[]	itoa destination of placeAnimal 0x004017d0 (0x0040192a, 0x00401997); the text it appends goes to 0x0051a068
