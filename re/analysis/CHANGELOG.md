@@ -4,6 +4,12 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-11  00424120  prepareShot  name simulateShot->prepareShot  log/c3/sim_renamed.tsv
+2026-10-11  00422fb0  chooseShotTarget  name simulateBallFlight->chooseShotTarget  log/c3/sim_renamed.tsv
+2026-10-11  00475580  saveBmp  C2->C3  log/diff/00475580_saveBmp.path1.csv
+2026-10-11  00424120  simulateShot  C2->C3  log/diff/00424120_simulateShot_mode.path1.csv
+2026-10-11  00422fb0  simulateBallFlight  C2->C3  log/diff/00422fb0_simulateBallFlight.path1.csv
+2026-10-11  004226a0  trialShot  C2->C3  log/diff/004226a0_trialShot.path1.csv
 2026-10-11  00470a60  generateRandomCourse  name applyTerrainEdit->generateRandomCourse  log/c3/sim_renamed.tsv
 2026-10-11  00409cf0  stepCourseEditQueue  name editTerrainHeight->stepCourseEditQueue  log/c3/sim_renamed.tsv
 2026-10-11  00470a60  applyTerrainEdit  C2->C3  log/diff/00470a60_applyTerrainEdit.path1.csv

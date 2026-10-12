@@ -15,20 +15,35 @@ SgHook::SgHook(const char* m, DWORD a, const char* n, void* d, void** o)
 }
 
 static bool Disabled(const SgHook& h) {
-    char key[16], v[2048];
+    char key[16];
     snprintf(key, sizeof(key), "%08lx", h.addr);
-    if (GetEnvironmentVariableA("SIMGOLF_HOOKS_OFF", v, sizeof(v))) {
-        if (_stricmp(v, "all") == 0) return true;
-        // a token is an address, or module:address (DLL RVAs collide across jgld.dll, sound.dll and Terrain.dll)
-        for (char* t = strtok(v, ","); t; t = strtok(nullptr, ",")) {
-            char* colon = strchr(t, ':');
-            if (colon) {
-                *colon = 0;
-                if (_stricmp(t, h.module) == 0 && strtoul(colon + 1, nullptr, 16) == h.addr) return true;
-            } else if (strtoul(t, nullptr, 16) == h.addr) {
-                return true;
+    // SIMGOLF_HOOKS_OFF of any length. Until 2026-10-11 the value was read into a fixed 2,048-byte buffer: a longer list
+    // made GetEnvironmentVariableA return the size it needed and write nothing, so every hook stayed ON (found by c3ea).
+    const DWORD need = GetEnvironmentVariableA("SIMGOLF_HOOKS_OFF", nullptr, 0);
+    if (need) {
+        char* v = static_cast<char*>(malloc(need));
+        bool off = false;
+        if (v && GetEnvironmentVariableA("SIMGOLF_HOOKS_OFF", v, need) == need - 1) {
+            if (_stricmp(v, "all") == 0) {
+                off = true;
+            } else {
+                // a token is an address, or module:address (DLL RVAs collide across jgld.dll, sound.dll and Terrain.dll)
+                char* ctx = nullptr;
+                for (char* t = strtok_s(v, ",", &ctx); t && !off; t = strtok_s(nullptr, ",", &ctx)) {
+                    char* colon = strchr(t, ':');
+                    if (colon) {
+                        *colon = 0;
+                        if (_stricmp(t, h.module) == 0 && strtoul(colon + 1, nullptr, 16) == h.addr) off = true;
+                    } else if (strtoul(t, nullptr, 16) == h.addr) {
+                        off = true;
+                    }
+                }
             }
+        } else {
+            ShimLog("SIMGOLF_HOOKS_OFF: could not read %lu bytes", need);
         }
+        free(v);
+        if (off) return true;
     }
     char ini[MAX_PATH];
     snprintf(ini, sizeof(ini), "%s\\simgolf_shim.ini", ShimDir());
