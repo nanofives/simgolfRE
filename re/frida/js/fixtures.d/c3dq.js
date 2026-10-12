@@ -98,7 +98,7 @@
     fx.net = net;
     fx.obj = rec;
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : fx.disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : __recDisplay.guard(fx.disp).toUInt32());
     __freeze.save(ptr('0x008400b0'), 0x18);
     ptr('0x008400b8').writePointer(opts.b8 ? net : ptr(0));
     ptr('0x008400b0').writeU32((opts.b0 || 0) >>> 0);
@@ -132,7 +132,7 @@
     fx.objs = objs;
     fx.obj = objs;
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), fx.disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), __recDisplay.guard(fx.disp).toUInt32());
     if (opts.global) {
       __freeze.save(ptr('0x00840710'), 0x28);
       const g = ptr('0x00840710');
@@ -304,7 +304,7 @@
     fx.n0 = n[0];
     fx.obj = nodes;
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : makeDisplay(emit, rec).toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : __recDisplay.guard(makeDisplay(emit, rec)).toUInt32());
     __freeze.save(ptr('0x0083ac88'), 0x20);
     ptr('0x0083ac88').writePointer(gvt);
     ptr('0x0083ac90').writePointer(opts.head === false ? ptr(0) : n[0]);
@@ -337,7 +337,7 @@
     fx.surfs = surfs;
     fx.obj = surfs;
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), __recDisplay.guard(disp).toUInt32());
     __freeze.save(ptr('0x0083ad44'), 4);
     ptr('0x0083ad44').writeU32(0x4444);
     return fx;
@@ -429,7 +429,7 @@
     fx.R0 = rect(10, 10, 110, 90); fx.R1 = rect(0, 0, 40, 30); fx.R2 = rect(-5, -5, 60, 50);
     fx.R3 = rect(20, 20, 20, 20); fx.R4 = rect(5, 5, 30, 12); fx.R5 = rect(400, 300, 500, 400);
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : __recDisplay.guard(disp).toUInt32());
     return fx;
   }
 
@@ -579,7 +579,7 @@
     fx.pcells = pcells;
     fx.obj = wins;
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : fx.disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), opts.disp === false ? 0 : __recDisplay.guard(fx.disp).toUInt32());
     __freeze.save(ptr('0x0083a7bc'), 4);
     ptr('0x0083a7bc').writePointer(robj);
     const focus = opts.focus === undefined ? ptr(0) : (opts.focus < 0 ? fx.stray : fx['w' + opts.focus]);

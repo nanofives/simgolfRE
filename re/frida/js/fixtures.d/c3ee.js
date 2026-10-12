@@ -270,7 +270,7 @@
     d.writePointer(vt);
     return d;
   }
-  function swapDisplay(d) { saveRange(G_DISPLAY, 4); ptr(G_DISPLAY).writePointer(d); }
+  function swapDisplay(d) { saveRange(G_DISPLAY, 4); ptr(G_DISPLAY).writePointer(__recDisplay.guard(d)); }
 
   // ---- exe Image objects (0x300 each: the 0x2c0 the class uses, +0x2c0 the sub-object slot +0x10 of IMG_SUB returns)
   const IMG = 0x300;

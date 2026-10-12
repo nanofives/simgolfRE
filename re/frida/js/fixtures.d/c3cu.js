@@ -332,7 +332,7 @@
     __freeze.thread();
     const slot = ptr('0x0083ad50');
     __freeze.save(slot, 4);
-    slot.writePointer(mode === 'disp' ? disp : ptr(0));
+    slot.writePointer(mode === 'disp' ? __recDisplay.guard(disp) : ptr(0));
     return fx;
   }
 

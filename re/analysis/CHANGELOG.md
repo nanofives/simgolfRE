@@ -4,6 +4,13 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  00497b00  gfxFlushA  C2->C3  log/diff/00497b00_gfxFlushA.path1.csv
+2026-10-12  00483cf0  pumpInput483cf0  C2->C3  log/diff/00483cf0_pumpInput483cf0.path1.csv
+2026-10-12  00483c90  pumpInput483c90  C2->C3  log/diff/00483c90_pumpInput483c90.path1.csv
+2026-10-12  0047bab0  Window::runModal  C2->C3  log/diff/0047bab0_Window_runModal.path1.csv
+2026-10-12  0046dea0  runScrollText  C2->C3  log/diff/0046dea0_runScrollText.path1.csv
+2026-10-12  0046de70  scrollTextWindow  C2->C3  log/diff/0046de70_scrollTextWindow.path1.csv
+2026-10-12  0045b2c0  textInputBox  C2->C3  log/diff/0045b2c0_textInputBox.path1.csv
 2026-10-12  0048aea0  ListBox::onKey  name ListBox::typeAhead->ListBox::onKey  log/c3/round29_renamed.tsv
 2026-10-12  0048c6e0  ListBox::onMouse  C2->C3  log/diff/0048c6e0_ListBox_onMouse.path1.csv
 2026-10-12  0048aea0  ListBox::typeAhead  C2->C3  log/diff/0048aea0_ListBox_typeAhead.path1.csv

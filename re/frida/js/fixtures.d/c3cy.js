@@ -301,7 +301,7 @@
       'USER32.dll!PostMessageA': { args: 4, ret: 1 } } });
     out.implog = s.log;
     __freeze.thread();
-    __freeze.setU32(ptr(0x0083ad50), display === 'fake' ? disp.toUInt32() : 0);
+    __freeze.setU32(ptr(0x0083ad50), display === 'fake' ? __recDisplay.guard(disp).toUInt32() : 0);
     __freeze.save(ptr(0x0083ad4c), 4);
     __freeze.setU32(ptr(0x0083aff0), owner === -1 ? 0 : owner === 'other' ? 0x0abc0000 : out['t' + owner].toUInt32());
     return out;

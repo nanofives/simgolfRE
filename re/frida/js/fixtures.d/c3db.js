@@ -208,7 +208,7 @@
     __freeze.save(ptr('0x0083d34c'), 0x48);
     if (opts.g350 !== undefined) ptr('0x0083d350').writeS32(opts.g350);
     __freeze.setU32(ptr('0x0083ad0c'), opts.pal ? holder.toUInt32() : 0);
-    __freeze.setU32(ptr('0x0083ad50'), opts.disp ? disp.toUInt32() : 0);
+    __freeze.setU32(ptr('0x0083ad50'), opts.disp ? __recDisplay.guard(disp).toUInt32() : 0);
     const arr = ptr('0x0083a2d8');
     __freeze.save(arr, 0x40);
     for (let i = 0; i < 16; i++) {

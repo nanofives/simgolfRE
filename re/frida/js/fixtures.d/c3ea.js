@@ -718,7 +718,7 @@
     fx.rect = alloc(0x10);
     fx.fakeFile = alloc(0x40);
     __freeze.save(ptr(0x0083ad50), 4);
-    ptr(0x0083ad50).writePointer(disp);
+    ptr(0x0083ad50).writePointer(__recDisplay.guard(disp));
     const h = __heapStandIn({ module: 'golf_clean.exe', alloc: [0xa57f1], free: [0xa4ffc], arenaSize: 0x4000 });
     fx.arena = h.arena; fx.freelog = h.log;
     const rows = bmpRows();

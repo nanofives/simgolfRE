@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 53 bytes, 10 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 sets phase g_83ad4c=8, pumps poll483cd0 until drained, returns finish497b00 (`re/names/exe_3.tsv`)
 
+## Purpose
+0x00483cf0 pumpInput483cf0(): the shape of pumpInput483c90 with [0x0083ad4c] = 8 (0x00483cf0, 0x00483d03) and frameTick483cd0 0x00483cd0 (0x00483cfa, 0x00483d0d; tests 0x00483cff / 0x00483d01 and 0x00483d12 / 0x00483d14): it repeats frameTick while that returns non-zero, then [0x0083ad4c] = 0 (0x00483d16) and a tail jmp to gfxFlushA (0x00483d20) with eax = 0. frameTick reaches the display's slot +0x13c (0x00483ce2), whose jgld body (0x1006b7e0) peeks and dispatches window messages. Reimplemented in `shim/src/re/c3el.cpp`; path-1 A/B GREEN: pumpInput483cf0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00483cf0_pumpInput483cf0.path1.csv`); pumpInput483cf0_n0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00483cf0_pumpInput483cf0_n0.path1.csv`); pumpInput483cf0_n1 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00483cf0_pumpInput483cf0_n1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?drain483cf0@@YAHXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

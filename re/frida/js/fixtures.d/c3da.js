@@ -213,7 +213,7 @@
       __freeze.thread();
       if (opt.display) {
         __freeze.save(ptr('0x0083ad50'), 4);
-        ptr('0x0083ad50').writePointer(opt.display === 'null' ? ptr(0) : disp);
+        ptr('0x0083ad50').writePointer(opt.display === 'null' ? ptr(0) : __recDisplay.guard(disp));
       }
       if (opt.statics || opt.target) {
         __freeze.save(ptr('0x004c1570'), 4);

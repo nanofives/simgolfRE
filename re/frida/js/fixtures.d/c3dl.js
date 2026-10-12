@@ -441,7 +441,7 @@
       disp.writePointer(E.vt([[0x124, 0xF11F0000 + v * 0x111, 0]]));
       standInGuard();
       __freeze.save(ptr(0x0083ad50), 4);
-      __freeze.setU32(ptr(0x0083ad50), disp.toUInt32());
+      __freeze.setU32(ptr(0x0083ad50), __recDisplay.guard(disp).toUInt32());
       return E.fx;
     };
   }
@@ -499,7 +499,7 @@
     disp.writePointer(E.vt([[0x90, 0xD1590000, 1], [0x94, 0xD1594000, 1]]));
     standInGuard();
     __freeze.save(ptr(0x0083ad50), 4);
-    ptr(0x0083ad50).writePointer(withDisplay ? disp : ptr(0));
+    ptr(0x0083ad50).writePointer(withDisplay ? __recDisplay.guard(disp) : ptr(0));
     __freeze.save(ptr(0x00840830), 0x90);
     ptr(0x00840830).writeByteArray(bytes[2]);
     ptr(0x00840860).writeByteArray(bytes[0]);
@@ -628,7 +628,7 @@
     Object.keys(extraImports || {}).forEach(function (k) { imports[k] = extraImports[k]; });
     out.implog = importOn({ module: 'golf_clean.exe', imports: imports }).log;
     standInGuard();
-    __freeze.setU32(ptr(0x0083ad50), display === 'fake' ? disp.toUInt32() : 0);
+    __freeze.setU32(ptr(0x0083ad50), display === 'fake' ? __recDisplay.guard(disp).toUInt32() : 0);
     __freeze.save(ptr(0x0083ad4c), 4);
     __freeze.setU32(ptr(0x0083d348), 0);
     return out;
@@ -1121,7 +1121,7 @@
     });
     standInGuard();
     __freeze.save(ptr(0x0083ad50), 4);
-    ptr(0x0083ad50).writePointer(o.display === false ? ptr(0) : disp);
+    ptr(0x0083ad50).writePointer(o.display === false ? ptr(0) : __recDisplay.guard(disp));
     __freeze.save(ptr(0x0083aac8), 4);
     ptr(0x0083aac8).writePointer(font);
     __freeze.save(ptr(0x0083aac0), 8);

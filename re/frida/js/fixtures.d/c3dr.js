@@ -66,7 +66,7 @@
     if (disp) {
       __freeze.save(DISPLAY, 4);
       __freeze.save(ptr('0x0083ad4c'), 4);
-      DISPLAY.writePointer(variant === 'zero' ? ptr(0) : d);
+      DISPLAY.writePointer(variant === 'zero' ? ptr(0) : __recDisplay.guard(d));
       ptr('0x0083ad4c').writeU32(0);
     }
     out.obj = ptr(regions[0][0]);

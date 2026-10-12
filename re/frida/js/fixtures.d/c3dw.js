@@ -119,7 +119,7 @@
     const rets = typeof o.rets === 'function' ? o.rets(emit, rec, cnt, fx) : o.rets;
     fx.disp = makeDisplay(emit, rec, cnt, rets, o.args);
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), o.disp === false ? 0 : fx.disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), o.disp === false ? 0 : __recDisplay.guard(fx.disp).toUInt32());
     __freeze.save(ptr('0x008400b0'), 0x18);
     ptr('0x008400b8').writePointer(ptr(0));
     ptr('0x008400b0').writeU32(0);

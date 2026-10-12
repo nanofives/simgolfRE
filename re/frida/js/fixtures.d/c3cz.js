@@ -453,7 +453,7 @@
   }
   function swapDisplay(d, mode) {           // first thread frozen
     __freeze.save(ptr(0x0083ad50), 4);
-    ptr(0x0083ad50).writePointer(mode === 'disp' ? d : ptr(0));
+    ptr(0x0083ad50).writePointer(mode === 'disp' ? __recDisplay.guard(d) : ptr(0));
   }
   // Surfaces {vtable +0, handle +4, name block +8, cache +0xc, +0x10 .. +0x24}: 12 combinations.
   function surface(E, i) {

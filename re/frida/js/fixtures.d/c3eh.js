@@ -478,7 +478,7 @@
       fx.obj = fx.rec;
       fx.disp = makeDisplay(emit, fx.rec, fx.cnt, {}, { 0x9c: 3 });
       freezeNow();
-      __freeze.setU32(ptr('0x0083ad50'), noDisp ? 0 : fx.disp.toUInt32());
+      __freeze.setU32(ptr('0x0083ad50'), noDisp ? 0 : __recDisplay.guard(fx.disp).toUInt32());
       __freeze.setU32(ptr('0x004c1570'), 0x5ec1570);
       calleeStand(fx, 0, 0x0040ca10, 5, 'default', [0x91, 0x92, 0x93], undefined);
       calleeStand(fx, 1, 0x00473f60, 6, 'thiscall', [0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf], undefined);

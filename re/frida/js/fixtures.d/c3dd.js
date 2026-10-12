@@ -454,7 +454,7 @@
   }
   function swapDisplay(d, mode) {
     __freeze.save(ptr(0x0083ad50), 4);
-    ptr(0x0083ad50).writePointer(mode === 'disp' ? d : ptr(0));
+    ptr(0x0083ad50).writePointer(mode === 'disp' ? __recDisplay.guard(d) : ptr(0));
   }
 
   // R2C / Flic / Stream objects (0x100 bytes): see the bit list in the registry. The Surface sub-object at +8 has its

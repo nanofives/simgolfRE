@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 45 bytes, 11 instructions, subsystem `ui`. Mechanical t
 entry point that opens the scrolling text window (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x0046de70 scrollTextWindow(text, x, y) (cdecl): [0x00839260] = x (0x0046de7f), [0x00839264] = y (0x0046de84), [0x00839278] = 1 (0x0046de8a), and returns runScrollText 0x0046dea0 (text, 1) (pushes 0x0046de7c / 0x0046de7e, call 0x0046de94). Reimplemented in `shim/src/re/c3el.cpp`; path-1 A/B GREEN: scrollTextWindow (12 vectors, 12 distinct results, 12 changing state, `log/diff/0046de70_scrollTextWindow.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_0046de70@f_0046de70@@YAXPADII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0046de9c): callee pops 0 bytes of stack arguments.

@@ -733,7 +733,7 @@
       fx.obj = fx.sblk;
       __freeze.thread();
       __freeze.save(ptr(0x0083ad50), 4);
-      ptr(0x0083ad50).writePointer(disp);
+      ptr(0x0083ad50).writePointer(__recDisplay.guard(disp));
       return fx;
     },
   });

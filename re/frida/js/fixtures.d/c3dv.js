@@ -504,7 +504,7 @@
     dvt.add(0xa4).writePointer(emit(stubK(rec, 0xD15A00A4, 'n')));
     const disp = alloc(0x40);
     disp.writePointer(dvt);
-    __freeze.setU32(ptr('0x0083ad50'), disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), __recDisplay.guard(disp).toUInt32());
     return fx;
   }
   F.c3dv_rw_a = function () { return buildRW({ list: [0, 1, 2, 4] }); };
@@ -830,7 +830,7 @@
       fx['c' + k] = c;
     });
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), __recDisplay.guard(disp).toUInt32());
     return fx;
   }
   F.c3dv_cl_a = function () { return buildCL(); };
@@ -933,7 +933,7 @@
       fx['p' + k] = p;
     });
     freezeNow();
-    __freeze.setU32(ptr('0x0083ad50'), disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), __recDisplay.guard(disp).toUInt32());
     return fx;
   }
   F.c3dv_dp_a = function () { return buildDP(); };
@@ -1049,7 +1049,7 @@
       b.add(0xd0).writeS32(sp.n2 !== undefined ? sp.n2 : n2);
       fx['q' + k] = Q; fx['p' + k] = Q.add(0xe0); fx['t' + k] = Q.add(0xe0 + 0x40); fx['w' + k] = W; fx['b' + k] = b;
     });
-    __freeze.setU32(ptr('0x0083ad50'), opts.nodisp ? 0 : disp.toUInt32());      // buildText has frozen the first thread
+    __freeze.setU32(ptr('0x0083ad50'), opts.nodisp ? 0 : __recDisplay.guard(disp).toUInt32());      // buildText has frozen the first thread
     return fx;
   }
   const IMS = [[20, 12], [30, 14], [16, 10], [24, 18], [8, 40], [50, 6]];

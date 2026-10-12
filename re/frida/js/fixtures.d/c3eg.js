@@ -275,7 +275,7 @@
   function swapDisplay(fx, spec, defKinds) {
     freezeNow();
     fx.disp = makeObj(fx.emit, fx.rec, spec, 0x40, defKinds);
-    __freeze.setU32(ptr('0x0083ad50'), fx.disp.toUInt32());
+    __freeze.setU32(ptr('0x0083ad50'), __recDisplay.guard(fx.disp).toUInt32());
   }
 
   // ---- Window::invalidate 0x00480ce0: display slot +0x30 (RECT*) records the four dwords and returns cursor ^ tag
@@ -707,7 +707,7 @@
       set[A(0xc)] = r[5] ? oC.toUInt32() : 0;
       set[0x0083aa98] = r[6] ? fx.W(r[0]).toUInt32() : 0x12345678;
       set[0x0083ab40] = 0x77; set[0x0083ab44] = 0x78;
-      set[0x0083ad50] = r[7] ? fx.disp.toUInt32() : 0;
+      set[0x0083ad50] = r[7] ? __recDisplay.guard(fx.disp).toUInt32() : 0;
       return { w: r[0], set: set };
     }));
     calleeStand(fx, 0, 0x0047e120, 1, 'thiscall', 0x61);
@@ -883,7 +883,7 @@
       set[0x0083aac8] = fonts[r[1]].toUInt32();
       set[0x0083aad8] = r[12];
       set[0x0083aaa0] = r[4]; set[0x0083aaa4] = r[5]; set[0x0083aaa8] = r[6];
-      set[0x0083ad50] = r[7] ? dobj.toUInt32() : 0;
+      set[0x0083ad50] = r[7] ? __recDisplay.guard(dobj).toUInt32() : 0;
       set[0x0083a7bc] = r[8] ? sobj.toUInt32() : 0;
       for (let i = 0; i < 4; i++) set[0x0083a2c8 + 4 * i] = r[9][i];
       set[0x004e42c4] = r[10]; set[0x004e42c0] = r[11];
@@ -1148,7 +1148,7 @@
       set[0x0083ab4c] = 0x1234 + i;
       set[0x0083aba0] = 0;
       set[0x0083a504] = r.sw === 0 && r.sh === 0 ? 0 : surf.toUInt32();
-      set[0x0083ad50] = r.disp ? disp.toUInt32() : 0;
+      set[0x0083ad50] = r.disp ? __recDisplay.guard(disp).toUInt32() : 0;
       set[fx.cell(1)] = r.hit < 0 ? 0 : fx.W(r.hit).toUInt32();
       set[fx.cell(2)] = r.sf; set[fx.cell(3)] = r.sn; set[fx.cell(9)] = r.sn2 === -9 ? r.sn : r.sn2;
       set[fx.cell(4)] = r.sw; set[fx.cell(5)] = r.sh; set[fx.cell(6)] = r.v140;

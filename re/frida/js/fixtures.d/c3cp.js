@@ -266,7 +266,7 @@
         if (variant === 'pat') e.r.forEach((r) => pattern(ptr(r[0]), r[1], 0x5EED0000));
         if (variant === 'zero') e.r.forEach((r) => zero(ptr(r[0]), r[1]));
         undos.push(atexitStandIn(out.atexitlog, ATEXIT_RET[variant]));
-        if (e.k === 'disp') DISPLAY.writePointer(variant === 'zero' ? ptr(0) : sink);
+        if (e.k === 'disp') DISPLAY.writePointer(variant === 'zero' ? ptr(0) : __recDisplay.guard(sink));
         if (e.k === 'heap_new' || e.k === 'heap_malloc') {
           const h = __heapStandIn({ module: 'golf_clean.exe', alloc: [e.k === 'heap_new' ? 0xa57f1 : 0xa504f],
                                     free: [0xa5007, 0xa4ffc], arenaSize: 0x1000, fill: 0xcd });
@@ -276,7 +276,7 @@
         seedSurfaces(e, variant, caches);
         const h = __heapStandIn({ module: 'golf_clean.exe', free: [0xa5007, 0xa4ffc] });
         out.freelog = h.log;
-        DISPLAY.writePointer(variant === 'nodisplay' ? ptr(0) : sink);
+        DISPLAY.writePointer(variant === 'nodisplay' ? ptr(0) : __recDisplay.guard(sink));
       } else if (e.k === 'cachedtor') {
         new NativeFunction(ptr(e.s), 'int', [])();
         ptr('0x0083ac28').writeU8(GUARD[variant]);

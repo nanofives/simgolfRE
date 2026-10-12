@@ -318,7 +318,7 @@ globalThis.__c3di.IMGS = [
     __freeze.setU32(ptr(0x0083aae0), 0);
     __freeze.setU32(ptr(0x0083aaa0), 0);
     __freeze.save(ptr(0x0083ad4c), 4);
-    __freeze.setU32(ptr(0x0083ad50), opts.disp ? fx.disp.toUInt32() : 0);
+    __freeze.setU32(ptr(0x0083ad50), opts.disp ? __recDisplay.guard(fx.disp).toUInt32() : 0);
     __freeze.setU32(ptr(0x0083aabc), opts.cb ? C.TIP_CB.toUInt32() : 0);
     __freeze.setU32(ptr(0x0083aac4), opts.text ? fx.tipText.toUInt32() : 0);
     __freeze.setU32(ptr(0x0083aac0), G(opts.tipOwner));

@@ -88,7 +88,7 @@
       if (disp) {
         const slot = ptr('0x0083ad50');
         const real = slot.readPointer();
-        slot.writePointer(disp);
+        slot.writePointer(__recDisplay.guard(disp));
         undo.push(function () { slot.writePointer(real); });
       }
     }

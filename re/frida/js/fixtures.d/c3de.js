@@ -127,7 +127,7 @@
     const s = __importStandIn({ module: 'golf_clean.exe', imports: imports });
     out.implog = s.log;
     __freeze.thread();
-    __freeze.setU32(ptr(0x0083ad50), display === 'fake' ? disp.toUInt32() : 0);
+    __freeze.setU32(ptr(0x0083ad50), display === 'fake' ? __recDisplay.guard(disp).toUInt32() : 0);
     __freeze.save(ptr(0x0083ad4c), 4);
     return out;
   }

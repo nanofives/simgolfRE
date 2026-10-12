@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 25 bytes, 8 instructions, subsystem `render`. Mechanica
 screen-flush helper that also pumps the network layer once. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x00497b00 gfxFlushA(): ecx = [0x008400b8] (the net session object, 0x00497b00); zero returns with eax untouched (test 0x00497b06, je 0x00497b08 -> ret 0x00497b18). eax = [0x008400b0] (0x00497b0a); zero returns 0 (test 0x00497b0f, je 0x00497b11). Otherwise a tail jmp to netPump 0x0049aa70 (0x00497b13) with ecx = the net object, so the result is netPump's. Its callers (pumpInput483bd0 0x00483c00, pumpInput483c30 0x00483c60, pumpInput483c90 0x00483cc0, pumpInput483cf0 0x00483d20, showScreen 0x00483bb5, hideScreen 0x00483c1a) reach it with eax = 0 or call it. Reimplemented in `shim/src/re/c3el.cpp`; path-1 A/B GREEN: gfxFlushA (12 vectors, 12 distinct results, 7 changing state, `log/diff/00497b00_gfxFlushA.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?gfxFlushA@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00497b18): callee pops 0 bytes of stack arguments.
