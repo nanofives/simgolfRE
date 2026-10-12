@@ -4,6 +4,10 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  sound.dll:0002fc10  enqueueWaveCmd10  C1->C2  re/analysis/audio/0002fc10_sound_enqueueWaveCmd10.md
+2026-10-12  sound.dll:0002f680  Ch5c2ec_forwardSlot37  C1->C2  re/analysis/audio/0002f680_sound_Ch5c2ec_forwardSlot37.md
+2026-10-12  sound.dll:0002fc10  enqueueWaveCmd10  C0->C1  string 0x10063e98; demoted C1->C0: round-1 name createBlankVoice unsupported: string 0x10063e98 is not referenced by the function; table slot 10 (+0x28) of vtbl_Ch5c3a4 0x1005c3a4 (installer 0x1002f740 Ch5c3a4_ctor); reads g_soundEngine 0x100b4a20 (0x1002fc26); operator_new 0x100424d7 (0x1002fc5f); callee 0x10008810 pairStore via thunk 0x10001299 (0x1002fc7c, args 0x10, this); callee 0x1000c3d0 WaveCmdQueue::pushValue via thunk 0x100011c7 (0x1002fc94, ecx = g_soundEngine); sibling of enqueueWaveCmdE 0x1002fb70
+2026-10-12  sound.dll:0002f680  Ch5c2ec_forwardSlot37  C0->C1  import MessageBoxA; demoted C1->C0: round-1 name stopEngineVoices unsupported: cited imports are not called (re/tools/names_check_evidence.py, re/names/withdrawn.tsv); table slot 37 (+0x94) of vtbl_Ch5c2ec 0x1005c2ec (installers 0x1002f220 buildVoiceTxName, 0x1002f3f0 Ch5c2ec_dtor); thiscall: mov ecx, [ecx+0x40] (0x1002f680); test/je (0x1002f683..0x1002f685); jmp [[ecx]+0x94] (0x1002f689); xor eax, eax; ret (0x1002f68f)
 2026-10-12  004289e0  updateGolfers  C2->C3  log/diff/004289e0_updateGolfers_draw.path1.csv
 2026-10-11  0042e7e0  pathStep  C2->C3  log/diff/0042e7e0_pathStep.path1.csv
 2026-10-11  00402a40  updateWalkers  C2->C3  log/diff/00402a40_updateWalkers.path1.csv

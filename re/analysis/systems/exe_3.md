@@ -95,7 +95,7 @@ and `decodeSprite4827d0` (0x4827d0, transparency/run compressed sprite with 0xc0
 objects `Decoder482ae0/482b20::ctor` (0x482ae0/0x482b20) and the link/target plumbing
 `Link482::resolve/data` (0x482e20/0x482e10), `Link482b::send` (0x482e40) wire chunks to their targets.
 Resource caches are 5-slot: `Cache482fd0::ctor` (0x482fd0), `Cache483070::reset` (0x483070),
-`Cache483010/483030/483060` (ctorVtbl/attach/detach).
+`Cache483010/483030/483060` (dtor/attach/detach; 0x483010 was named ctorVtbl until 2026-10-09).
 
 ### Palette
 `Palette::setEntries` (0x4830e0) uploads BITMAPINFO RGBQUADs to the hardware palette; `Palette::nearest`

@@ -85,6 +85,12 @@ public class ApplyNames extends GhidraScript {
 					continue;
 				}
 				SourceType src = fn.getSymbol().getSource();
+				if (fn.getName(true).equals(c[2])) {
+					// Already the name (any source). Renaming to the same name and namespace is a no-op that keeps an
+					// ANALYSIS source (the demangled exe exports 0x4490d0..0x449150), so it was reported every run.
+					kept++;
+					continue;
+				}
 				if (src == SourceType.IMPORTED || (src == SourceType.USER_DEFINED && !(overwrite && !fn.getName(true).equals(c[2])))) {
 					if (!fn.getName(true).equals(c[2])) {
 						println("KEEP " + addr + " " + fn.getName(true) + " (" + src + ") over " + c[2]);
