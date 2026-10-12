@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 338 bytes, 123 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Destructor helper that frees all nodes twice through the two embedded vtables (0x004bb22c then 0x004ba270). (`re/names/exe_4.tsv`)
 
+## Purpose
+Destroys a ListModel node list (the list embedded at ListModel+0xc0 and the lists of the same class) given its list-heap base (this = list + 0x28, 0x00489b4d): the list's two destructor levels inlined. First level: vtable 0x004bb22c and 0x004bb228 at its base (0x00489b55 / 0x00489b61); when the head +8 is set (0x00489b74), for each of the count +0x10 nodes (re-read every step, signed, 0x00489b7f / 0x00489bd7) the cursor takes head->next, the payload goes to the list's slot +4 (bufferFree 0x004a05d0 for 0x004bb22c, 0x00489b92), the payload's and the node's virtual bases are deleted through their slot 0 with 1 (0x00489ba6 / 0x00489bc1) and head = cursor; head, last and count end 0, and last is cleared again (0x00489be2). Second level: 0x004ba270 / 0x004ba26c (0x00489bf0 / 0x00489bfc) and the same loop when the head is still set (0x00489c09; the first level always leaves it 0). Returns the head read at 0x00489c04 (0). Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ListModel::destroyNodes (7 vectors, 7 distinct results, 7 changing state, `log/diff/00489b30_ListModel_destroyNodes.path1.csv`); ListModel::destroyNodes_b (7 vectors, 7 distinct results, 7 changing state, `log/diff/00489b30_ListModel_destroyNodes_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `??1R2List489@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00489c81): callee pops 0 bytes of stack arguments.

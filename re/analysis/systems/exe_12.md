@@ -35,3 +35,14 @@ Round 29's drawing batch c3eh renamed three rows from their instructions:
   0x0047df47).
 - `panelLayoutLabeledText` 0x004a2a60 (was panelBuildChildren) lays out records like panelBuildText 0x0049d770 but also
   measures a second string array at this+0x2c with Text_put (0x004a2c24) and keeps the widest item and label.
+
+## Widget lifecycle (batch c3ef)
+Round 29's widget batch c3ef ran the window-tree constructors and destructors on real objects (re/frida/js/uitree.js) and
+renamed five rows from what they do:
+- `widgetTableDtor` 0x0047d7c0 (was View::ctorVtbl47d7c0): stores a vtable and tail-jumps into the widget-table reset.
+- `modelListDtor489c90` 0x00489c90 (was ListBox::subDtor): it only tears down the model's node list.
+- `viewFieldDtor49d5a0` 0x00491680 (was Dialog::childDtor): the destructor of the field viewFieldCtor49d5a0 builds, a sibling
+  of viewFieldDtor49ec80 and viewFieldDtor4a2330.
+- `EditBox::dtor` 0x0043cb50 (was editBoxTimer_dtor) and `EditBox::releaseState` 0x004860d0 (was EditBox::dtor):
+  EditBox::create calls the latter on a live object first (0x00486114) and then sizes its buffer, so it is a reset, not
+  the destructor.

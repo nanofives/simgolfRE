@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 350 bytes, 71 instructions, subsystem `ui`. Mechanical 
 base field initializer for the control, referencing the 0x004e4764 label table and globals 0x0083ff1c/0x0083ff58. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Resets an object of the class buildLabeledControl 0x00496030 constructs (a window with two ctorObj4a13f0 buttons at +0x60c and +0xcdc; layoutViewTree builds its +0x270 / +0x26c objects with it, 0x0047a98e / 0x0047aa3e, and comboDtor 0x00497a20 also calls this function): the field block +0x574..+0x5d0 from the globals 0x0083ff1c / 0x0083ff20 and the dwords 0x004e4764..0x004e478c with zeros and -1 at +0x59c (0x004961db..0x004962a5), three columns i = 0..2 (`cmp eax, 0xc; jl` 0x004962dc) of +0x5dc / +0x5e8 / +0x5f4 / +0x600 + 4i from 0x0083ff24 / 0x0083ff30 / 0x0083ff3c / 0x0083ff48 + 4i, +0x5d4 / +0x5d8 from 0x0083ff58 / 0x0083ff5c, +0x13ac = +0x13b0 = 0, the virtual reset (slot +0x16c) of both buttons (0x0049630c / 0x0049631e) and Window::ctorInit (0x00496326), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: controlInitBase_a (4 vectors, 1 distinct results, 4 changing state, `log/diff/004961d0_controlInitBase_a.path1.csv`); controlInitBase_b (4 vectors, 4 distinct results, 4 changing state, `log/diff/004961d0_controlInitBase_b.path1.csv`); controlInitBase_c (4 vectors, 4 distinct results, 4 changing state, `log/diff/004961d0_controlInitBase_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `?init@r3_C4961d0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049632d): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 343 bytes, 99 instructions, subsystem `ui`. Mechanical 
 destructor for the R1X panel sub-view object. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The panel part's destructor, called with this = the part + 0xe0 (Dialog::viewDtor 0x004915d5 / 0x004915db): with P = this - 0xe0, the panel's vtables 0x004bc244 / 0x004bc230 / 0x004bc224 and the vtordisps against 0xe0 / 0x658 (0x004a34a1..0x004a34f8), panelSubReset4a35e0 on P (0x004a3507); the +0x78 list's base-class vtables 0x004ba2c4 / 0x004ba2c0 (0x004a3515 / 0x004a3521), its node loop when the head is set (0x004a352e; panelSubReset4a35e0 always leaves it 0), last = 0 (0x004a359f); the list-heap base +0xa0 = 0x004ba278 and its saved pointer +0xa4 back into 0x00839650 (0x004a35a5 / 0x004a35ac); HotList::dtor on +0x10 (0x004a35c0), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: panelSubDtor4a3480_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a3480_panelSubDtor4a3480_a.path1.csv`); panelSubDtor4a3480_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a3480_panelSubDtor4a3480_b.path1.csv`); panelSubDtor4a3480_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a3480_panelSubDtor4a3480_c.path1.csv`); panelSubDtor4a3480_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a3480_panelSubDtor4a3480_tva.path1.csv`); panelSubDtor4a3480_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a3480_panelSubDtor4a3480_tvb.path1.csv`); panelSubDtor4a3480_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a3480_panelSubDtor4a3480_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??1R1X4a3480@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a35d6): callee pops 0 bytes of stack arguments.

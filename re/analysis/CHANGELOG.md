@@ -4,6 +4,49 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  004860d0  EditBox::releaseState  name EditBox::dtor->EditBox::releaseState  log/c3/round29_renamed.tsv
+2026-10-12  0043cb50  EditBox::dtor  name editBoxTimer_dtor->EditBox::dtor  log/c3/round29_renamed.tsv
+2026-10-12  00491680  viewFieldDtor49d5a0  name Dialog::childDtor->viewFieldDtor49d5a0  log/c3/round29_renamed.tsv
+2026-10-12  00489c90  modelListDtor489c90  name ListBox::subDtor->modelListDtor489c90  log/c3/round29_renamed.tsv
+2026-10-12  0047d7c0  widgetTableDtor  name View::ctorVtbl47d7c0->widgetTableDtor  log/c3/round29_renamed.tsv
+2026-10-12  00490cf0  MsgBox::setButtonB  C2->C3  log/diff/00490cf0_MsgBox_setButtonB.path1.csv
+2026-10-12  004889f0  setButtonDefaults  C2->C3  log/diff/004889f0_setButtonDefaults.path1.csv
+2026-10-12  004a3860  panelReset4a3860  C2->C3  log/diff/004a3860_panelReset4a3860.path1.csv
+2026-10-12  004a3790  panelOpenReset4a3790  C2->C3  log/diff/004a3790_panelOpenReset4a3790_a.path1.csv
+2026-10-12  004a35e0  panelSubReset4a35e0  C2->C3  log/diff/004a35e0_panelSubReset4a35e0_a.path1.csv
+2026-10-12  004a3480  panelSubDtor4a3480  C2->C3  log/diff/004a3480_panelSubDtor4a3480_a.path1.csv
+2026-10-12  004a3370  panelSubDtor4a3370  C2->C3  log/diff/004a3370_panelSubDtor4a3370.path1.csv
+2026-10-12  004a3110  panelSubCtor4a3110  C2->C3  log/diff/004a3110_panelSubCtor4a3110_s0.path1.csv
+2026-10-12  004a23a0  viewFieldReset4a23a0  C2->C3  log/diff/004a23a0_viewFieldReset4a23a0_a.path1.csv
+2026-10-12  004a2330  viewFieldDtor4a2330  C2->C3  log/diff/004a2330_viewFieldDtor4a2330_a.path1.csv
+2026-10-12  004a13f0  ctorObj4a13f0  C2->C3  log/diff/004a13f0_ctorObj4a13f0_s0.path1.csv
+2026-10-12  004a0740  viewCtor4a0740  C2->C3  log/diff/004a0740_viewCtor4a0740_s0.path1.csv
+2026-10-12  0049ece0  viewFieldCleanup49ece0  C2->C3  log/diff/0049ece0_viewFieldCleanup49ece0_a.path1.csv
+2026-10-12  0049ec80  viewFieldDtor49ec80  C2->C3  log/diff/0049ec80_viewFieldDtor49ec80_a.path1.csv
+2026-10-12  0049ebb0  viewFieldCtor49ebb0  C2->C3  log/diff/0049ebb0_viewFieldCtor49ebb0_s0.path1.csv
+2026-10-12  0049d690  viewFieldCleanup49d690  C2->C3  log/diff/0049d690_viewFieldCleanup49d690_a.path1.csv
+2026-10-12  0049d5a0  viewFieldCtor49d5a0  C2->C3  log/diff/0049d5a0_viewFieldCtor49d5a0_s0.path1.csv
+2026-10-12  0049c8b0  freeCacheField  C2->C3  log/diff/0049c8b0_freeCacheField.path1.csv
+2026-10-12  004961d0  controlInitBase  C2->C3  log/diff/004961d0_controlInitBase_a.path1.csv
+2026-10-12  00491ad0  listPanelDeletingDtor  C2->C3  log/diff/00491ad0_listPanelDeletingDtor_a.path1.csv
+2026-10-12  00491680  Dialog::childDtor  C2->C3  log/diff/00491680_Dialog_childDtor_a.path1.csv
+2026-10-12  0048d480  TextView::reset  C2->C3  log/diff/0048d480_TextView_reset_a.path1.csv
+2026-10-12  00489e40  ListBox::resetFields  C2->C3  log/diff/00489e40_ListBox_resetFields_a.path1.csv
+2026-10-12  00489de0  ListBox::dtor  C2->C3  log/diff/00489de0_ListBox_dtor_a.path1.csv
+2026-10-12  00489c90  ListBox::subDtor  C2->C3  log/diff/00489c90_ListBox_subDtor.path1.csv
+2026-10-12  00489b30  ListModel::destroyNodes  C2->C3  log/diff/00489b30_ListModel_destroyNodes.path1.csv
+2026-10-12  004897f0  ListModel::reset  C2->C3  log/diff/004897f0_ListModel_reset.path1.csv
+2026-10-12  004896b0  ListModel::setKey  C2->C3  log/diff/004896b0_ListModel_setKey.path1.csv
+2026-10-12  00489350  ListModel::scalarDtor  C2->C3  log/diff/00489350_ListModel_scalarDtor.path1.csv
+2026-10-12  00489120  Button::detach  C2->C3  log/diff/00489120_Button_detach_a.path1.csv
+2026-10-12  004886d0  Button::resetFields  C2->C3  log/diff/004886d0_Button_resetFields_a.path1.csv
+2026-10-12  00488650  Button::dtor  C2->C3  log/diff/00488650_Button_dtor_a.path1.csv
+2026-10-12  00488500  Button::ctor  C2->C3  log/diff/00488500_Button_ctor_s0.path1.csv
+2026-10-12  004860d0  EditBox::dtor  C2->C3  log/diff/004860d0_EditBox_dtor_a.path1.csv
+2026-10-12  004806c0  Window::create  C2->C3  log/diff/004806c0_Window_create_a.path1.csv
+2026-10-12  0047d7c0  View::ctorVtbl47d7c0  C2->C3  log/diff/0047d7c0_View_ctorVtbl47d7c0_s0.path1.csv
+2026-10-12  0047a4c0  layoutViewTree  C2->C3  log/diff/0047a4c0_layoutViewTree_a.path1.csv
+2026-10-12  0043cb50  editBoxTimer_dtor  C2->C3  log/diff/0043cb50_editBoxTimer_dtor_a.path1.csv
 2026-10-12  004a2a60  panelLayoutLabeledText  name panelBuildChildren->panelLayoutLabeledText  log/c3/round29_renamed.tsv
 2026-10-12  0047d850  drawFramePieces  name drawPanelContents->drawFramePieces  log/c3/round29_renamed.tsv
 2026-10-12  0047d610  rebuildFramePieces  name buildControlStrip47d610->rebuildFramePieces  log/c3/round29_renamed.tsv

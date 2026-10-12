@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 422 bytes, 133 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 resets the panel sub-view, rebuilding its child widgets from the label table. (`re/names/exe_5.tsv`)
 
+## Purpose
+Resets the panel part: Window::ctorInit on the Window base (0x004a35ed), ListModel::clear on the ListModel base (0x004a35f9), +4 = 0, +0x70 = +0x74 = 1, +0xa8..+0xd8 = 0 (0x004a3608..0x004a3659); on the node list +0x78 the node loop when its head is set (0x004a3664..0x004a36d1), last = 0 (0x004a36d7); HotList::releaseArray on +0x10 (0x004a36da), +8 = the global 0x008409cc (0x004a36e5), the three Image quads from the dword columns 0x004e449c.. (0x004a370f, 0x004a373b, 0x004a3767) and setDrawTarget with 0, 0, 0, 0 (0x004a377c), whose eax (3 for a NULL surface, 0x004762d3) it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: panelSubReset4a35e0_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a35e0_panelSubReset4a35e0_a.path1.csv`); panelSubReset4a35e0_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a35e0_panelSubReset4a35e0_b.path1.csv`); panelSubReset4a35e0_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a35e0_panelSubReset4a35e0_c.path1.csv`); panelSubReset4a35e0_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a35e0_panelSubReset4a35e0_tva.path1.csv`); panelSubReset4a35e0_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a35e0_panelSubReset4a35e0_tvb.path1.csv`); panelSubReset4a35e0_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a35e0_panelSubReset4a35e0_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?reset@R0C4a35e0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a3785): callee pops 0 bytes of stack arguments.

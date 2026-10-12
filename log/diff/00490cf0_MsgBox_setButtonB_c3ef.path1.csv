@@ -1,0 +1,12 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$obj 19 20,0,0,True,44a68153,44a68153,True
+$obj2 -1 2147483647,0,0,True,a666a286,a666a286,True
+$objz 256 -256,0,0,True,858673ec,858673ec,True
+0 5 6,3,3,True,a4e6a582,a4e6a582,False
+$obj 0 -1,0,0,True,5816b0b2,5816b0b2,True
+$objz 2147483647 0,0,0,True,2e06f54e,2e06f54e,True
+state_regions,0x0083b9c4+0x0:12,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x63d450c0,original=0x14f07c0,2026-10-12T06:45:06
+distinct_results,6,,
+VERDICT,GREEN,6,

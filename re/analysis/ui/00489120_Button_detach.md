@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 25 bytes, 5 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 clears the pressed flag this+0x614 when this+0x620 is 0, then tail-jumps to Window::detach 0x0047b820 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+Slot +8 of the Button vtables 0x004bb0a8 and 0x004bb5b4 (the slot layoutNode calls, 0x00479fba): when +0x620 is 0 (0x00489126 / 0x00489128) the pressed flag +0x614 is cleared (0x0048912a); then a tail jump to Window::detach 0x0047b820 (0x00489134), whose eax it leaves. No instruction in the function list writes a non-zero value to +0x620 (only the zero stores 0x0048859e / 0x004887b5). Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: Button::detach_a (12 vectors, 1 distinct results, 0 changing state, `log/diff/00489120_Button_detach_a.path1.csv`); Button::detach_b (12 vectors, 6 distinct results, 5 changing state, `log/diff/00489120_Button_detach_b.path1.csv`); Button::detach_c (12 vectors, 6 distinct results, 5 changing state, `log/diff/00489120_Button_detach_c.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00489120 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

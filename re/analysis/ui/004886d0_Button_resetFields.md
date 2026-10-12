@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 238 bytes, 52 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Resets the button state and reloads default colors from DAT_004e443c etc, freeing label/tooltip buffers at [0x17d]/[0x17e]. (`re/names/exe_4.tsv`)
 
+## Purpose
+Slot +0x16c of the Button vtable 0x004bb0a8 (the class's virtual reset): Window::ctorInit (0x004886d4), then the field values Button::ctor gives (0x004886d9..0x00488785: +0x5ec / +0x5f0, zeros, -1 at +0x5ac / +0x5b0, the 0x0083b604 / 0x004e443c..0x004e4448 / 0x0083b608 / 0x004e444c copies), the label block +0x5f4 and the tooltip block +0x5f8 freed and cleared when set (0x0048878b / 0x004887a4) and +0x620 = 0 (0x004887b5). eax at the return is the +0x5f8 value or free's, not a result. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: Button::resetFields_a (12 vectors, 1 distinct results, 12 changing state, `log/diff/004886d0_Button_resetFields_a.path1.csv`); Button::resetFields_b (12 vectors, 12 distinct results, 12 changing state, `log/diff/004886d0_Button_resetFields_b.path1.csv`); Button::resetFields_c (12 vectors, 12 distinct results, 12 changing state, `log/diff/004886d0_Button_resetFields_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_004886d0@f_004886d0@@YIXPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004887bd): callee pops 0 bytes of stack arguments.

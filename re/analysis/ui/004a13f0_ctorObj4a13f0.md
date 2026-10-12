@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 200 bytes, 45 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 constructs a small embedded object (R1C488500 sub-object) used by several views. (`re/names/exe_5.tsv`)
 
+## Purpose
+Constructs the Button subclass whose vtable is 0x004bb5b4 (Image vtable 0x004bb5a0, 0x004a13fb / 0x004a1401) on top of Button::ctor (0x004a13f4): +0x630 = 1000, +0x578 = +0x574 = 0, +0x634 = -1, +0x65c = +0x660 = 0 (0x004a140b..0x004a1431), then a 3 x 11 block over three columns i = 0..2 (`cmp ecx, 0xc; jl` 0x004a14ae): with b = this + 0x638 + 4i, b+0 = -1, b+0xc = the dword 0x00840948 + 4i, b+0x18 = 0 and b+0x2c, +0x38, ... +0x8c (12 apart) = the dwords 0x00840954 + 4i, 0x00840960 + 4i, ... 0x008409b4 + 4i (0x004a143f..0x004a14a8). Returns this (0x004a14b3). TextView::ctor builds two of these (0x0048ce47 / 0x0048ce57) and buildLabeledControl two more (0x0049605f / 0x0049606f); its virtual reset (slot +0x16c) is resetMsgObject 0x004a14c0. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ctorObj4a13f0_s0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a13f0_ctorObj4a13f0_s0.path1.csv`); ctorObj4a13f0_s1 (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a13f0_ctorObj4a13f0_s1.path1.csv`); ctorObj4a13f0_s2 (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a13f0_ctorObj4a13f0_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_e.cpp` as `??0C4a13f0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a14b7): callee pops 0 bytes of stack arguments.

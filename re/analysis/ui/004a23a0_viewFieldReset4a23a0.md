@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 96 bytes, 34 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 resets the C4a23a0 view sub-field, freeing its contents. (`re/names/exe_5.tsv`)
 
+## Purpose
+Resets the 4a2250 dropdown field part: ten slots k = 0..9 (`dec ebx; jne` 0x004a23e0); an object at +4 + 4k is destroyed through its vtable slot 0 with 1 (0x004a23b5 / 0x004a23b7), the slot cleared and +0x54 + 4k = 10 (0x004a23bf); a block at +0x2c + 4k is freed and cleared (0x004a23cb..0x004a23d6). Then +0x84 = the global 0x008409c4 (0x004a23ec) and ListModel::clear on the ListModel base (0x004a23f7), whose eax it leaves. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: viewFieldReset4a23a0_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a23a0_viewFieldReset4a23a0_a.path1.csv`); viewFieldReset4a23a0_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a23a0_viewFieldReset4a23a0_b.path1.csv`); viewFieldReset4a23a0_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a23a0_viewFieldReset4a23a0_c.path1.csv`); viewFieldReset4a23a0_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a23a0_viewFieldReset4a23a0_tva.path1.csv`); viewFieldReset4a23a0_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a23a0_viewFieldReset4a23a0_tvb.path1.csv`); viewFieldReset4a23a0_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a23a0_viewFieldReset4a23a0_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?reset@C4a23a0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a23ff): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 27 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 destructor wrapper for the panel sub-view object. (`re/names/exe_5.tsv`)
 
+## Purpose
+The complete destructor of the panel's node list (the class panelSubCtor4a3110 builds at panel+0x78): panelSubDtor4a33e0 on this + 0x28 (0x004a3376), the base's vtable 0x004ba278 (0x004a337e) and the saved list-heap pointer (+0x2c) back into 0x00839650 (0x004a3384), which it also returns (0x004a337b). Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: panelSubDtor4a3370 (7 vectors, 7 distinct results, 7 changing state, `log/diff/004a3370_panelSubDtor4a3370.path1.csv`); panelSubDtor4a3370_b (7 vectors, 7 distinct results, 7 changing state, `log/diff/004a3370_panelSubDtor4a3370_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `??1C4a3370@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a338a): callee pops 0 bytes of stack arguments.

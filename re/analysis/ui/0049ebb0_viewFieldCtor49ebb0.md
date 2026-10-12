@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 197 bytes, 53 instructions, subsystem `ui`. Mechanical 
 constructs another sub-field of the composite view built at 0x004a0740. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/exe_9.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Constructs the field-view part viewCtor4a0740 builds at +0x78 (0x004a07f3). With a non-zero build argument (0x0049ebd4): vbptr 0x004bc01c (0x0049ebe1), View4804a0::ctor on +0x1c (0x0049ebe7), ListModel::ctor on +0x594 (0x0049ebfe). Then through the vbptr: Window vtable 0x004bbeb0, its Image 0x004bbe9c, ListModel vtable 0x004bbe90 and the vtordisps offset - 0x1c / offset - 0x594 (0x0049ec03..0x0049ec42); +4 = +8 = +0xc = 0, +0x14 / +0x10 = the dwords 0x004e4a28 / 0x004e4a24 (0x0049ec4a..0x0049ec61). Returns this; `ret 4`. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: viewFieldCtor49ebb0_s0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049ebb0_viewFieldCtor49ebb0_s0.path1.csv`); viewFieldCtor49ebb0_s1 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049ebb0_viewFieldCtor49ebb0_s1.path1.csv`); viewFieldCtor49ebb0_s2 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049ebb0_viewFieldCtor49ebb0_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_f.cpp` as `??0C49ebb0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049ec72): callee pops 4 bytes of stack arguments.

@@ -1,0 +1,1247 @@
+// C3 batch c3ef (round 29, 2026-10-12, tooling pilot): the widget lifecycle of golf_clean.exe. Constructors, resets and
+// destructors of the Window classes (Button, its ctorObj4a13f0 subclass, EditBox) and of the TextView composite: a
+// ListBox, three field views and a panel over ONE shared Window virtual base and ONE shared ListModel virtual base
+// (viewCtor4a0740 0x004a0740, built at TextView+0x1460 by TextView::ctor 0x0048cf6c).
+//
+// The A/B builds REAL objects with the game's own constructors (re/frida/js/uitree.js): every object lives in a heap
+// stand-in arena that is a compared state region, frees are recorded, the window-tree globals point at the tree (or are
+// zeroed) while the game's first thread is frozen, and the live display is replaced by a recording one.
+//
+// Virtual inheritance: each part keeps a vbtable pointer (vbptr) whose entries +4 / +8 are the offsets from the vbptr to
+// the Window base and the ListModel base. The part destructors take `this` = part + the Window offset of the class
+// standing alone (the offset its own build = 1 constructor uses), as Dialog::viewDtor 0x00491500 passes them.
+//
+// Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list) and
+// cites the instructions it reproduces. __thiscall is emulated with __fastcall (ecx = this, edx unused). Callees run
+// through their original addresses, so a callee another batch hooks runs its reimplementation (the verifier re-runs
+// these keys with those hooks off; list in log/c3/c3ef_notes.txt).
+#include "hooks.h"
+
+namespace {
+
+static inline char* B(void* p) { return reinterpret_cast<char*>(p); }
+static inline void*& P(void* base, int off) { return *reinterpret_cast<void**>(B(base) + off); }
+static inline int& I(void* base, int off) { return *reinterpret_cast<int*>(B(base) + off); }
+static inline unsigned& U(void* base, int off) { return *reinterpret_cast<unsigned*>(B(base) + off); }
+template <typename T> static inline T& G(unsigned addr) { return *reinterpret_cast<T*>(addr); }
+
+// thiscall shapes (ecx = this)
+typedef unsigned(__fastcall* T0_t)(void* self, void* edx);
+typedef unsigned(__fastcall* T1_t)(void* self, void* edx, unsigned a);
+typedef unsigned(__fastcall* T4_t)(void* self, void* edx, unsigned a, unsigned b, unsigned c, unsigned d);
+typedef void(__cdecl* C1_t)(void* p);
+
+// Virtual calls. `mov eax, [obj]; call [eax + slot]`.
+static inline T0_t VSlot0(void* obj, int slot) { return *reinterpret_cast<T0_t*>(B(P(obj, 0)) + slot); }
+static inline T1_t VSlot1(void* obj, int slot) { return *reinterpret_cast<T1_t*>(B(P(obj, 0)) + slot); }
+
+// The deleting destructor of a virtual-base object at p: `mov ecx, [p]; mov edx, [ecx + 4]; mov eax, [edx + p];
+// lea ecx, [edx + p]; push 1; call [eax]` (the vbptr at p+0, its entry +4 = offset of the base whose vtable slot 0 is
+// the deleting destructor). Used on every list node and payload (0x00489b99..0x00489ba6, 0x00489bb5..0x00489bc1).
+static inline void DeleteVBase(void* p) {
+    void* base = B(p) + I(P(p, 0), 4);
+    VSlot1(base, 0)(base, 0, 1);
+}
+
+// exe callees (original addresses)
+const T0_t kViewCtor          = reinterpret_cast<T0_t>(0x004804a0);   // View4804a0::ctor
+const T0_t kTimerCtor         = reinterpret_cast<T0_t>(0x00486c90);   // Timer::ctor
+const T0_t kButtonCtor        = reinterpret_cast<T0_t>(0x00488500);   // Button::ctor (this batch)
+const T0_t kListModelCtor     = reinterpret_cast<T0_t>(0x00489150);   // ListModel::ctor
+const T1_t kListBoxCtor       = reinterpret_cast<T1_t>(0x00489cb0);   // ListBox::ctor(build), ret 4
+const T1_t kField49d5a0Ctor   = reinterpret_cast<T1_t>(0x0049d5a0);   // viewFieldCtor49d5a0 (this batch)
+const T1_t kField49ebb0Ctor   = reinterpret_cast<T1_t>(0x0049ebb0);   // viewFieldCtor49ebb0 (this batch)
+const T1_t kPanelSubCtor      = reinterpret_cast<T1_t>(0x004a3110);   // panelSubCtor4a3110 (this batch)
+const T1_t kField4a2250Ctor   = reinterpret_cast<T1_t>(0x004a2250);   // viewFieldCtor4a2250
+const T0_t kHotListCtor       = reinterpret_cast<T0_t>(0x00492850);   // HotList::ctor
+const T4_t kWidgetSetQuad     = reinterpret_cast<T4_t>(0x00476310);   // ret 0x10
+const T4_t kWidgetSetQuad70   = reinterpret_cast<T4_t>(0x00476340);   // ret 0x10
+const T4_t kWidgetSetQuad74   = reinterpret_cast<T4_t>(0x00476370);   // ret 0x10
+const T4_t kSetDrawTarget     = reinterpret_cast<T4_t>(0x004762d0);   // ret 0x10
+const T0_t kListModelDtor     = reinterpret_cast<T0_t>(0x00489370);   // ListModel::dtor
+const T0_t kListModelClear    = reinterpret_cast<T0_t>(0x004894b0);   // ListModel::clear
+const T1_t kListModelReset    = reinterpret_cast<T1_t>(0x004897f0);   // ListModel::reset (this batch), ret 4
+const T1_t kBufAlloc          = reinterpret_cast<T1_t>(0x00474820);   // Buf_alloc, ret 4
+const T0_t kDestroyNodes      = reinterpret_cast<T0_t>(0x00489b30);   // ListModel::destroyNodes (this batch)
+const T0_t kPanelListDestroy  = reinterpret_cast<T0_t>(0x004a33e0);   // panelSubDtor4a33e0
+const T0_t kCacheDtor         = reinterpret_cast<T0_t>(0x00483010);   // Cache483010::dtor
+const T0_t kPanelSubReset     = reinterpret_cast<T0_t>(0x004a35e0);   // panelSubReset4a35e0 (this batch)
+const C1_t kOperatorDelete    = reinterpret_cast<C1_t>(0x004a4ffc);
+
+// The node loop every list teardown here inlines (ListModel::reset 0x00489819..0x00489877, setKey 0x004896fb..
+// 0x0048975d, destroyNodes 0x00489b76..0x00489bdf, panelSubReset4a35e0 0x004a3666..0x004a36d1). The list L is
+// {vtable +0, vbptr +4, head +8, cursor +0xc, count +0x10, last +0x14, ...}; nodes are {item +4, payload +8, next +0xc}.
+// For i < count (both re-read every step, signed): cursor = head->next, the payload goes to the list's vtable slot 4,
+// the payload's and then the node's virtual base are deleted (`push 1; call [vtable]`), head->payload = 0, head =
+// cursor. The caller has checked head != 0; afterwards head, last and count are 0. Returns the count read last, which
+// is what eax holds at the loop's exit in destroyNodes' second copy (0x00489c55 / 0x00489c0b).
+static int NodeLoop(void* L) {
+    int n = I(L, 0x10);
+    if (n > 0) {                                                         // jle past the loop
+        int i = 0;
+        do {
+            void* head = P(L, 8);
+            P(L, 0xc) = P(head, 0xc);                                    // cursor = head->next
+            void* payload = P(head, 8);
+            VSlot1(L, 4)(L, 0, reinterpret_cast<unsigned>(payload));    // `push edi; call [eax + 4]`
+            if (payload) DeleteVBase(payload);
+            P(P(L, 8), 8) = 0;                                           // head->payload = 0
+            void* node = P(L, 8);
+            if (node) DeleteVBase(node);
+            n = I(L, 0x10);                                              // re-read before the compare
+            P(L, 8) = P(L, 0xc);
+            i++;
+        } while (i < n);
+    }
+    I(L, 8) = 0;
+    I(L, 0x14) = 0;
+    I(L, 0x10) = 0;
+    return n;
+}
+
+// =====================================================================================================================
+// Constructors
+// =====================================================================================================================
+
+// 0x00488500  Button::ctor
+// View4804a0::ctor on this (0x0048851e), Timer::ctor on this+0x57c (0x0048852f) and this+0x5b4 (0x0048853f), the vtables
+// 0x004bb0a8 at +0 (0x00488544) and 0x004bb094 at +0x274 (0x0048854a), then the button fields: +0x5ec / +0x5f0 copies of
+// 0x004e4480 / 0x004e4484, zeros at +0x574 +0x5e4 +0x5e8 +0x614 +0x5f4 +0x5f8 +0x620..+0x62c +0x61c, -1 at +0x5ac and
+// +0x5b0, +0x60c = 0x0083b604, +0x5fc..+0x608 = 0x004e443c..0x004e4448, +0x610 = 0x0083b608, +0x618 = 0x004e444c
+// (0x00488554..0x0048860c). Returns this (`mov eax, esi` 0x00488612).
+T0_t ButtonCtor_orig;
+unsigned __fastcall ButtonCtor_re(void* self, void*) {
+    kViewCtor(self, 0);                                                  // 0x0048851e
+    kTimerCtor(B(self) + 0x57c, 0);                                      // 0x0048852f
+    kTimerCtor(B(self) + 0x5b4, 0);                                      // 0x0048853f
+    U(self, 0) = 0x004bb0a8;                                             // 0x00488544
+    U(self, 0x274) = 0x004bb094;                                         // 0x0048854a
+    U(self, 0x5ec) = G<unsigned>(0x004e4480);                            // 0x00488559
+    U(self, 0x5f0) = G<unsigned>(0x004e4484);                            // 0x00488568
+    I(self, 0x574) = 0;                                                  // 0x0048856e
+    I(self, 0x5e4) = 0;
+    I(self, 0x5ac) = -1;                                                 // 0x0048857a
+    I(self, 0x5b0) = -1;
+    I(self, 0x5e8) = 0;
+    I(self, 0x614) = 0;
+    I(self, 0x5f4) = 0;
+    I(self, 0x5f8) = 0;
+    I(self, 0x620) = 0;                                                  // 0x0048859e..0x004885b0
+    I(self, 0x624) = 0;
+    I(self, 0x628) = 0;
+    I(self, 0x62c) = 0;
+    U(self, 0x60c) = G<unsigned>(0x0083b604);                            // 0x004885bc
+    U(self, 0x5fc) = G<unsigned>(0x004e443c);                            // 0x004885c7
+    U(self, 0x600) = G<unsigned>(0x004e4440);
+    U(self, 0x604) = G<unsigned>(0x004e4444);
+    U(self, 0x608) = G<unsigned>(0x004e4448);                            // 0x004885ea
+    U(self, 0x610) = G<unsigned>(0x0083b608);                            // 0x004885f6
+    I(self, 0x61c) = 0;                                                  // 0x00488600
+    U(self, 0x618) = G<unsigned>(0x004e444c);                            // 0x0048860c
+    return reinterpret_cast<unsigned>(self);                             // 0x00488612
+}
+
+// 0x004a13f0  ctorObj4a13f0
+// Button::ctor (0x004a13f4), the vtables 0x004bb5b4 at +0 and 0x004bb5a0 at +0x274 (0x004a13fb / 0x004a1401), +0x630 =
+// 1000 (0x004a140b), +0x578 = +0x574 = 0, +0x634 = -1, +0x65c = +0x660 = 0 (0x004a1415..0x004a1431). Then three columns
+// i = 0..2 (`cmp ecx, 0xc` 0x004a14ae): with b = this + 0x638 + 4*i, b+0 = -1, b+0xc = [0x00840948 + 4i], b+0x18 = 0,
+// and b+0x2c, +0x38, ... +0x8c (12 apart) = the dwords 0x00840954 + 4i, 0x00840960 + 4i, ... 0x008409b4 + 4i
+// (0x004a143f..0x004a14a8). Returns this (0x004a14b3).
+T0_t CtorObj4a13f0_orig;
+unsigned __fastcall CtorObj4a13f0_re(void* self, void*) {
+    kButtonCtor(self, 0);                                                // 0x004a13f4
+    U(self, 0) = 0x004bb5b4;                                             // 0x004a13fb
+    U(self, 0x274) = 0x004bb5a0;                                         // 0x004a1401
+    I(self, 0x630) = 0x3e8;                                              // 0x004a140b
+    I(self, 0x578) = 0;
+    I(self, 0x574) = 0;
+    I(self, 0x634) = -1;                                                 // 0x004a1421
+    I(self, 0x65c) = 0;
+    I(self, 0x660) = 0;                                                  // 0x004a1431
+    for (int i = 0; i < 3; i++) {                                        // ecx = 4*i, 0x004a14ae `cmp ecx, 0xc; jl`
+        char* b = B(self) + 0x638 + 4 * i;                               // eax, `add eax, 4` 0x004a14ab
+        U(b, 0xc) = G<unsigned>(0x00840948 + 4 * i);                     // 0x004a143f / 0x004a1448
+        I(b, 0) = -1;                                                    // 0x004a144b
+        for (int k = 0; k < 9; k++)                                      // 0x004a1451..0x004a14a2
+            U(b, 0x2c + 0xc * k) = G<unsigned>(0x00840954 + 0xc * k + 4 * i);
+        I(b, 0x18) = 0;                                                  // 0x004a14a8
+    }
+    return reinterpret_cast<unsigned>(self);                             // 0x004a14b3
+}
+
+// The five part constructors share one tail: with the vbptr re-read from the part each time (`mov eax, [esi]`), the
+// Window base (vbptr + [vbptr+4]) gets the part's Window vtable at +0 and its Image vtable at +0x274, the ListModel base
+// (vbptr + [vbptr+8]) its ListModel vtable, and the two dwords before the bases the vtordisp values (offset - the
+// stand-alone offset). Offsets are relative to the vbptr's own position `vb` in the part (0 for the field views and the
+// panel, 4 for the ListBox).
+static void PartBases(void* self, int vb, unsigned winVt, unsigned imgVt, unsigned lmVt, int winAlone, int lmAlone) {
+    I(self, vb + I(P(self, vb), 4)) = static_cast<int>(winVt);
+    I(self, vb + I(P(self, vb), 4) + 0x274) = static_cast<int>(imgVt);
+    I(self, vb + I(P(self, vb), 8)) = static_cast<int>(lmVt);
+    int o1 = I(P(self, vb), 4);
+    I(self, vb + o1 - 4) = o1 - winAlone;
+    int o2 = I(P(self, vb), 8);
+    I(self, vb + o2 - 4) = o2 - lmAlone;
+}
+
+// 0x0049d5a0  viewFieldCtor49d5a0(int build), `ret 4`
+// With build != 0 (0x0049d5c4): vbptr 0x004bbe7c at +0 (0x0049d5d1), View4804a0::ctor on +0x24 (0x0049d5d7),
+// ListModel::ctor on +0x59c (0x0049d5ee). Then the bases: Window vtable 0x004bb744, Image vtable 0x004bb730, ListModel
+// vtable 0x004bb724, vtordisps against 0x24 / 0x59c (0x0049d5f3..0x0049d632); +0x10 = +0x14 = 0, +8 / +0xc / +4 =
+// 0x004e4a14 / 0x004e4a18 / 0x004e4a10, and +0x18 and +0x1c both = the ListModel base's dword +0x80 (0x0049d659 /
+// 0x0049d666). Returns this (0x0049d677).
+T1_t Field49d5a0Ctor_orig;
+unsigned __fastcall Field49d5a0Ctor_re(void* self, void*, unsigned build) {
+    if (build) {                                                         // 0x0049d5c2 / 0x0049d5cc
+        U(self, 0) = 0x004bbe7c;                                         // 0x0049d5d1
+        kViewCtor(B(self) + 0x24, 0);                                    // 0x0049d5d7
+        kListModelCtor(B(self) + 0x59c, 0);                              // 0x0049d5ee
+    }
+    PartBases(self, 0, 0x004bb744, 0x004bb730, 0x004bb724, 0x24, 0x59c);
+    I(self, 0x10) = 0;                                                   // 0x0049d636
+    I(self, 0x14) = 0;
+    U(self, 8) = G<unsigned>(0x004e4a14);                                // 0x0049d642
+    U(self, 0xc) = G<unsigned>(0x004e4a18);                              // 0x0049d64a
+    U(self, 4) = G<unsigned>(0x004e4a10);                                // 0x0049d655
+    U(self, 0x18) = U(self, I(P(self, 0), 8) + 0x80);                    // 0x0049d659..0x0049d663
+    U(self, 0x1c) = U(self, I(P(self, 0), 8) + 0x80);                    // 0x0049d666..0x0049d674
+    return reinterpret_cast<unsigned>(self);
+}
+
+// 0x0049ebb0  viewFieldCtor49ebb0(int build), `ret 4`
+// With build != 0 (0x0049ebd4): vbptr 0x004bc01c (0x0049ebe1), View4804a0::ctor on +0x1c (0x0049ebe7), ListModel::ctor
+// on +0x594 (0x0049ebfe). Bases: 0x004bbeb0 / 0x004bbe9c / 0x004bbe90, vtordisps against 0x1c / 0x594 (0x0049ec03..
+// 0x0049ec42); +4 = +8 = +0xc = 0, +0x14 / +0x10 = 0x004e4a28 / 0x004e4a24 (0x0049ec4a..0x0049ec61). Returns this.
+T1_t Field49ebb0Ctor_orig;
+unsigned __fastcall Field49ebb0Ctor_re(void* self, void*, unsigned build) {
+    if (build) {                                                         // 0x0049ebd2 / 0x0049ebdc
+        U(self, 0) = 0x004bc01c;                                         // 0x0049ebe1
+        kViewCtor(B(self) + 0x1c, 0);                                    // 0x0049ebe7
+        kListModelCtor(B(self) + 0x594, 0);                              // 0x0049ebfe
+    }
+    PartBases(self, 0, 0x004bbeb0, 0x004bbe9c, 0x004bbe90, 0x1c, 0x594);
+    I(self, 4) = 0;                                                      // 0x0049ec4a
+    I(self, 8) = 0;
+    I(self, 0xc) = 0;
+    U(self, 0x14) = G<unsigned>(0x004e4a28);                             // 0x0049ec59
+    U(self, 0x10) = G<unsigned>(0x004e4a24);                             // 0x0049ec61
+    return reinterpret_cast<unsigned>(self);
+}
+
+// The node list embedded in a panel (+0x78) and the list-cookie base: [base + 0] = 0x004ba278, +4 = the cookie
+// 0x00839650, which is then cleared (0x004a3187..0x004a319c).
+// 0x004a3110  panelSubCtor4a3110(int build), `ret 4`
+// With build != 0 (0x004a3135): vbptr 0x004bc3c4 (0x004a314a), View4804a0::ctor on +0xe0, ListModel::ctor on +0x658.
+// HotList::ctor on +0x10 (0x004a3177). The node list at +0x78: vbptr 0x004bc3bc at +0x7c, its cookie base +0xa0 =
+// 0x004ba278 with +0xa4 = the cookie (cleared), vtable 0x004ba2c4 at +0x78 and 0x004ba2c0 at the list's base, +0x80..
+// +0x90 = 0, then the list vtables 0x004bc3b4 / 0x004bc3b0 (0x004a3180..0x004a31f1). Bases 0x004bc244 / 0x004bc230 /
+// 0x004bc224, vtordisps against 0xe0 / 0x658 (0x004a31f9..0x004a3240). +4 = 0, +0x70 = +0x74 = 1, +0xa8..+0xd8 = 0,
+// +8 = 0x008409cc (0x004a3244..0x004a32a1). Then on the Window base's Image (+0x274): Widget_setQuad with 0x004e449c /
+// 44a8 / 44b4 / 44c0, Widget_setQuad70 with 44a0 / 44ac / 44b8 / 44c4, Widget_setQuad74 with 44a4 / 44b0 / 44bc / 44c8
+// and setDrawTarget with 0x0083b628 / 0x0083b62c / 0x0083b630 / 0 (0x004a32ca, 0x004a32f5, 0x004a3320, 0x004a3346).
+// Returns this (0x004a334f).
+T1_t PanelSubCtor_orig;
+unsigned __fastcall PanelSubCtor_re(void* self, void*, unsigned build) {
+    if (build) {                                                         // 0x004a3133 / 0x004a3142
+        U(self, 0) = 0x004bc3c4;                                         // 0x004a314a
+        kViewCtor(B(self) + 0xe0, 0);                                    // 0x004a3150
+        kListModelCtor(B(self) + 0x658, 0);                              // 0x004a3163
+    }
+    kHotListCtor(B(self) + 0x10, 0);                                     // 0x004a3177
+    U(self, 0x7c) = 0x004bc3bc;                                          // 0x004a3180
+    U(self, 0xa0) = 0x004ba278;                                          // 0x004a3187
+    U(self, 0xa4) = G<unsigned>(0x00839650);                             // 0x004a3196
+    G<unsigned>(0x00839650) = 0;                                         // 0x004a319c
+    U(self, 0x78) = 0x004ba2c4;                                          // 0x004a31ac
+    U(self, 0x7c + I(P(self, 0x7c), 4)) = 0x004ba2c0;                    // 0x004a31b3 / 0x004a31be
+    void* vb = P(self, 0x7c);                                            // 0x004a31c6 (read after that store)
+    I(self, 0x80) = 0;                                                   // 0x004a31c9..0x004a31e1
+    I(self, 0x84) = 0;
+    I(self, 0x88) = 0;
+    I(self, 0x8c) = 0;
+    I(self, 0x90) = 0;
+    U(self, 0x78) = 0x004bc3b4;                                          // 0x004a31e7
+    U(self, 0x7c + I(vb, 4)) = 0x004bc3b0;                               // 0x004a31ee / 0x004a31f1
+    PartBases(self, 0, 0x004bc244, 0x004bc230, 0x004bc224, 0xe0, 0x658);
+    I(self, 4) = 0;                                                      // 0x004a3244
+    I(self, 0x70) = 1;
+    I(self, 0x74) = 1;
+    for (int off = 0xa8; off <= 0xd8; off += 4) I(self, off) = 0;        // 0x004a324d..0x004a3295
+    U(self, 8) = G<unsigned>(0x008409cc);                                // 0x004a32a1
+    kWidgetSetQuad(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x004e449c), G<unsigned>(0x004e44a8),
+                   G<unsigned>(0x004e44b4), G<unsigned>(0x004e44c0));   // 0x004a32ca
+    kWidgetSetQuad70(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x004e44a0), G<unsigned>(0x004e44ac),
+                     G<unsigned>(0x004e44b8), G<unsigned>(0x004e44c4)); // 0x004a32f5
+    kWidgetSetQuad74(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x004e44a4), G<unsigned>(0x004e44b0),
+                     G<unsigned>(0x004e44bc), G<unsigned>(0x004e44c8)); // 0x004a3320
+    kSetDrawTarget(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x0083b628), G<unsigned>(0x0083b62c),
+                   G<unsigned>(0x0083b630), 0);                          // 0x004a3346
+    return reinterpret_cast<unsigned>(self);                             // 0x004a334f
+}
+
+// 0x004a0740  viewCtor4a0740(int build), `ret 4`: the TextView composite
+// With build != 0 (0x004a0767): the five vbptrs 0x004bc074 (+4, the ListBox's), 0x004bc068 (+0x58), 0x004bc05c
+// (+0x78), 0x004bc050 (+0x90), 0x004bc044 (+0x16c) (0x004a0775..0x004a0794), View4804a0::ctor on +0x1fc (0x004a079e),
+// ListModel::ctor on +0x774 (0x004a07b9). Then the parts with build = 0: ListBox::ctor (this), viewFieldCtor49d5a0
+// (+0x58), viewFieldCtor49ebb0 (+0x78), panelSubCtor4a3110 (+0x90), viewFieldCtor4a2250 (+0x16c) (0x004a07d2..
+// 0x004a0817); the composite's vtable 0x004bba3c at +0 (0x004a081f) and, through the ListBox vbptr at +4, its Window
+// vtable 0x004bb8d0, Image vtable 0x004bb8bc, ListModel vtable 0x004bb8b0 and the vtordisps against 0x1f8 / 0x770
+// (0x004a081c..0x004a086a). Returns this (0x004a0871).
+T1_t ViewCtor4a0740_orig;
+unsigned __fastcall ViewCtor4a0740_re(void* self, void*, unsigned build) {
+    if (build) {                                                         // 0x004a0767 / 0x004a076d
+        U(self, 4) = 0x004bc074;                                         // 0x004a0775
+        U(self, 0x58) = 0x004bc068;
+        U(self, 0x78) = 0x004bc05c;
+        U(self, 0x90) = 0x004bc050;
+        U(self, 0x16c) = 0x004bc044;                                     // 0x004a0794
+        kViewCtor(B(self) + 0x1fc, 0);                                   // 0x004a079e
+        kListModelCtor(B(self) + 0x774, 0);                              // 0x004a07b9
+    }
+    kListBoxCtor(self, 0, 0);                                            // 0x004a07d2
+    kField49d5a0Ctor(B(self) + 0x58, 0, 0);                              // 0x004a07e4
+    kField49ebb0Ctor(B(self) + 0x78, 0, 0);                              // 0x004a07f3
+    kPanelSubCtor(B(self) + 0x90, 0, 0);                                 // 0x004a0805
+    kField4a2250Ctor(B(self) + 0x16c, 0, 0);                             // 0x004a0817
+    U(self, 0) = 0x004bba3c;                                             // 0x004a081f
+    U(self, 4 + I(P(self, 4), 4)) = 0x004bb8d0;                          // 0x004a0828
+    U(self, 4 + I(P(self, 4), 4) + 0x274) = 0x004bb8bc;                  // 0x004a0836
+    U(self, 4 + I(P(self, 4), 8)) = 0x004bb8b0;                          // 0x004a0847
+    int o1 = I(P(self, 4), 4);                                           // 0x004a0852
+    I(self, o1) = o1 - 0x1f8;                                            // 0x004a085b ([esi + eax], vbptr at +4)
+    int o2 = I(P(self, 4), 8);                                           // 0x004a0861
+    I(self, o2) = o2 - 0x770;                                            // 0x004a086a
+    return reinterpret_cast<unsigned>(self);                             // 0x004a0871
+}
+
+// =====================================================================================================================
+// Node lists and the ListModel
+// =====================================================================================================================
+
+// 0x00489b30  ListModel::destroyNodes (this = the list's cookie base, list + 0x28)
+// The complete teardown of a node list L = this - 0x28 (0x00489b4d) as its two destructor levels: vtable 0x004bb22c at
+// L+0 and 0x004bb228 at its base (0x00489b55 / 0x00489b61); when the head is set (0x00489b74) the node loop through
+// slot 4 (0x00489b76..0x00489bdf); last = 0 (0x00489be2). Then the base level: 0x004ba270 / 0x004ba26c (0x00489bf0 /
+// 0x00489bfc) and the same loop again when the head is still set (0x00489c09; the first level always left it 0), and
+// last = 0 (0x00489c70). eax at the return: the head read at 0x00489c04 (0) or that loop's last count.
+T0_t DestroyNodes_orig;
+unsigned __fastcall DestroyNodes_re(void* self, void*) {
+    void* L = B(self) - 0x28;                                            // 0x00489b4d
+    U(L, 0) = 0x004bb22c;                                                // 0x00489b55
+    U(L, 4 + I(P(L, 4), 4)) = 0x004bb228;                                // 0x00489b5b..0x00489b61
+    if (P(L, 8)) NodeLoop(L);                                            // 0x00489b74
+    I(L, 0x14) = 0;                                                      // 0x00489be2
+    U(L, 0) = 0x004ba270;                                                // 0x00489bf0
+    U(L, 4 + I(P(L, 4), 4)) = 0x004ba26c;                                // 0x00489bf6..0x00489bfc
+    unsigned r = reinterpret_cast<unsigned>(P(L, 8));                    // 0x00489c04
+    if (r) r = static_cast<unsigned>(NodeLoop(L));                       // 0x00489c09
+    I(L, 0x14) = 0;                                                      // 0x00489c70
+    return r;
+}
+
+// 0x00489c90  ListBox::subDtor (this = a node list whose cookie base is at +0x28; ListModel+0xc0 is one)
+// ListModel::destroyNodes on this+0x28 (0x00489c96), then the cookie base's vtable 0x004ba278 (0x00489c9e) and the
+// cookie it saved (+0x2c) back into the global 0x00839650 (0x00489ca4). Returns that cookie (eax, 0x00489c9b).
+T0_t ListSubDtor_orig;
+unsigned __fastcall ListSubDtor_re(void* self, void*) {
+    void* base = B(self) + 0x28;                                         // 0x00489c91
+    kDestroyNodes(base, 0);                                              // 0x00489c96
+    unsigned cookie = U(base, 4);                                        // 0x00489c9b
+    U(base, 0) = 0x004ba278;                                             // 0x00489c9e
+    G<unsigned>(0x00839650) = cookie;                                    // 0x00489ca4
+    return cookie;
+}
+
+// 0x004a3370  panelSubDtor4a3370: the same for the panel's node list (panel+0x78): panelSubDtor4a33e0 on this+0x28
+// (0x004a3376), vtable 0x004ba278 (0x004a337e), the cookie back into 0x00839650 (0x004a3384); returns the cookie.
+T0_t PanelListSubDtor_orig;
+unsigned __fastcall PanelListSubDtor_re(void* self, void*) {
+    void* base = B(self) + 0x28;                                         // 0x004a3371
+    kPanelListDestroy(base, 0);                                          // 0x004a3376
+    unsigned cookie = U(base, 4);                                        // 0x004a337b
+    U(base, 0) = 0x004ba278;                                             // 0x004a337e
+    G<unsigned>(0x00839650) = cookie;                                    // 0x004a3384
+    return cookie;
+}
+
+// 0x00489350  ListModel::scalarDtor(flags), `ret 4`: ListModel::dtor (0x00489353), operator delete when bit 0 of flags
+// is set (0x00489358 / 0x00489360); returns this (0x00489368).
+T1_t ListModelScalarDtor_orig;
+unsigned __fastcall ListModelScalarDtor_re(void* self, void*, unsigned flags) {
+    kListModelDtor(self, 0);                                             // 0x00489353
+    if (flags & 1) kOperatorDelete(self);                                // 0x0048935d je / 0x00489360
+    return reinterpret_cast<unsigned>(self);                             // 0x00489368
+}
+
+// 0x0049c8b0  freeCacheField(obj), stdcall `ret 4`: when the pointer at obj+4 is set (0x0049c8bb), Cache483010::dtor on
+// it (0x0049c8bf), operator delete (0x0049c8c5) and obj+4 = 0 (0x0049c8cd).
+typedef void(__stdcall* FreeCacheField_t)(void* obj);
+FreeCacheField_t FreeCacheField_orig;
+void __stdcall FreeCacheField_re(void* obj) {
+    void* c = P(obj, 4);                                                 // 0x0049c8b6
+    if (c) {                                                             // 0x0049c8b9 / 0x0049c8bb
+        kCacheDtor(c, 0);                                                // 0x0049c8bf
+        kOperatorDelete(c);                                              // 0x0049c8c5
+        P(obj, 4) = 0;                                                   // 0x0049c8cd
+    }
+}
+
+// 0x004897f0  ListModel::reset(arg), `ret 4`
+// ListModel::clear (0x004897f4), +0x20 = -1 and +0x1c = arg (0x004897fd / 0x00489804); the node list at +0xc0: the node
+// loop when its head is set (0x00489817; ListModel::clear always leaves it 0), last = 0 and +0x18 = arg (0x00489882 /
+// 0x00489885). Returns 0 (0x00489889).
+T1_t ListModelReset_orig;
+unsigned __fastcall ListModelReset_re(void* self, void*, unsigned arg) {
+    kListModelClear(self, 0);                                            // 0x004897f4
+    I(self, 0x20) = -1;                                                  // 0x004897fd
+    U(self, 0x1c) = arg;                                                 // 0x00489804
+    void* L = B(self) + 0xc0;                                            // 0x0048980d
+    if (P(L, 8)) NodeLoop(L);                                            // 0x00489817
+    I(L, 0x14) = 0;                                                      // 0x00489882
+    U(L, 0x18) = arg;                                                    // 0x00489885
+    return 0;                                                            // 0x00489889
+}
+
+// 0x004896b0  ListModel::setKey(key), `ret 4`
+// ListModel::clear (0x004896b6), +0x20 = key (0x004896c3). A non-zero key (0x004896c6) is passed to Buf_alloc on the Buf
+// at +4 (0x004896d6); a non-zero result returns 4 (0x004896dd / 0x004896e2). Then the node list at +0xc0: the node loop
+// when its head is set (0x004896f9 / 0x0048977d; always 0 after ListModel::clear), last = 0, and +0x18 = this+4 for a
+// non-zero key (0x00489760), 0 for key 0 (0x004897e4). Returns 0 (0x00489769 / 0x004897ea).
+T1_t ListModelSetKey_orig;
+unsigned __fastcall ListModelSetKey_re(void* self, void*, unsigned key) {
+    kListModelClear(self, 0);                                            // 0x004896b6
+    U(self, 0x20) = key;                                                 // 0x004896c3
+    void* L = B(self) + 0xc0;
+    if (key) {                                                           // 0x004896c6 je
+        void* buf = B(self) + 4;                                         // 0x004896cc
+        if (kBufAlloc(buf, 0, key)) return 4;                            // 0x004896d6 / 0x004896dd
+        if (P(L, 8)) NodeLoop(L);                                        // 0x004896f9
+        P(L, 0x18) = buf;                                                // 0x00489760
+        I(L, 0x14) = 0;                                                  // 0x00489763
+        return 0;
+    }
+    if (P(L, 8)) NodeLoop(L);                                            // 0x0048977d
+    I(L, 0x14) = 0;                                                      // 0x004897e1
+    I(L, 0x18) = 0;                                                      // 0x004897e4
+    return 0;
+}
+
+// 0x004a3860  panelReset4a3860(arg), `ret 4`: panelSubReset4a35e0 (0x004a3863), then ListModel::reset(arg) on the
+// ListModel base (this + [[this] + 8], 0x004a3868..0x004a3874); returns its result.
+T1_t PanelReset_orig;
+unsigned __fastcall PanelReset_re(void* self, void*, unsigned arg) {
+    kPanelSubReset(self, 0);                                             // 0x004a3863
+    return kListModelReset(B(self) + I(P(self, 0), 8), 0, arg);          // 0x004a3874
+}
+
+// =====================================================================================================================
+// Window resets and destructors (all end in Window::ctorInit 0x00480610 = layoutNode + Image_releaseAll, or in the
+// Base4805a0::dtor 0x004805a0 teardown)
+// =====================================================================================================================
+
+const T0_t kCtorInit          = reinterpret_cast<T0_t>(0x00480610);   // Window::ctorInit
+const T0_t kWindowDetach      = reinterpret_cast<T0_t>(0x0047b820);   // Window::detach
+const T0_t kEditBoxReset      = reinterpret_cast<T0_t>(0x00485ff0);   // EditBox::resetFields
+const T0_t kTimerReset        = reinterpret_cast<T0_t>(0x00486f10);   // Timer::reset
+const T0_t kTimerDtor         = reinterpret_cast<T0_t>(0x00486ce0);   // Timer::dtor
+const T0_t kBaseDtor          = reinterpret_cast<T0_t>(0x004805a0);   // Base4805a0::dtor
+const T0_t kEditBoxDtor       = reinterpret_cast<T0_t>(0x004860d0);   // EditBox::dtor (this batch)
+const T0_t kButtonResetFields = reinterpret_cast<T0_t>(0x004886d0);   // Button::resetFields (this batch)
+const T0_t kListBoxReset      = reinterpret_cast<T0_t>(0x00489e40);   // ListBox::resetFields (this batch)
+const T0_t kCleanup49ece0     = reinterpret_cast<T0_t>(0x0049ece0);   // viewFieldCleanup49ece0 (this batch)
+const T0_t kCleanup49d690     = reinterpret_cast<T0_t>(0x0049d690);   // viewFieldCleanup49d690 (this batch)
+const T0_t kReset4a23a0       = reinterpret_cast<T0_t>(0x004a23a0);   // viewFieldReset4a23a0 (this batch)
+const T0_t kHotListRelease    = reinterpret_cast<T0_t>(0x00492830);   // HotList::releaseArray
+const T0_t kHotListDtor       = reinterpret_cast<T0_t>(0x004928d0);   // HotList::dtor
+const T1_t kListModelSetKey   = reinterpret_cast<T1_t>(0x004896b0);   // ListModel::setKey (this batch), ret 4
+const C1_t kFree              = reinterpret_cast<C1_t>(0x004a5007);
+
+// 0x00489120  Button::detach (vtable slot +8 of 0x004bb0a8): when +0x620 is 0 (0x00489126 / 0x00489128), +0x614 = 0
+// (0x0048912a); then a tail jump to Window::detach 0x0047b820 (0x00489134), whose eax it leaves.
+T0_t ButtonDetach_orig;
+unsigned __fastcall ButtonDetach_re(void* self, void*) {
+    if (I(self, 0x620) == 0) I(self, 0x614) = 0;                         // 0x00489128 jne / 0x0048912a
+    return kWindowDetach(self, 0);                                       // 0x00489134 jmp
+}
+
+// 0x004860d0  EditBox::dtor: frees the text buffer +0x574 when set (0x004860db / 0x004860de), EditBox::resetFields
+// (0x004860e8), Timer::reset on the timer +0x5ac (0x004860f3) and Window::ctorInit (0x004860fa), whose eax it returns.
+T0_t EditBoxDtor_orig;
+unsigned __fastcall EditBoxDtor_re(void* self, void*) {
+    void* text = P(self, 0x574);                                         // 0x004860d3
+    if (text) kFree(text);                                               // 0x004860db je / 0x004860de
+    kEditBoxReset(self, 0);                                              // 0x004860e8
+    kTimerReset(B(self) + 0x5ac, 0);                                     // 0x004860f3
+    return kCtorInit(self, 0);                                           // 0x004860fa
+}
+
+// 0x0043cb50  editBoxTimer_dtor: the EditBox's complete destructor. Its vtables 0x004ba4a8 at +0 and 0x004ba494 at
+// +0x274 (0x0043cb6d / 0x0043cb73), EditBox::dtor (0x0043cb85), Timer::dtor on +0x5ac (0x0043cb95), Base4805a0::dtor
+// (0x0043cba4), whose eax it returns.
+T0_t EditBoxTimerDtor_orig;
+unsigned __fastcall EditBoxTimerDtor_re(void* self, void*) {
+    U(self, 0) = 0x004ba4a8;                                             // 0x0043cb6d
+    U(self, 0x274) = 0x004ba494;                                         // 0x0043cb73
+    kEditBoxDtor(self, 0);                                               // 0x0043cb85
+    kTimerDtor(B(self) + 0x5ac, 0);                                      // 0x0043cb95
+    return kBaseDtor(self, 0);                                           // 0x0043cba4
+}
+
+// 0x004886d0  Button::resetFields (vtable slot +0x16c of 0x004bb0a8): Window::ctorInit (0x004886d4), the constructor's
+// field values again (+0x5ec / +0x5f0 from 0x004e4480 / 0x004e4484, zeros, -1 at +0x5ac / +0x5b0, the 0x0083b604 /
+// 0x004e443c..0x004e4448 / 0x0083b608 / 0x004e444c copies; 0x004886d9..0x00488785), then the two blocks +0x5f4 and
+// +0x5f8 freed and cleared when set (0x0048878b / 0x004887a4) and +0x620 = 0 (0x004887b5). eax at the return is the
+// +0x5f8 value or free's: not a result (the registry key declares void).
+T0_t ButtonResetFields_orig;
+unsigned __fastcall ButtonResetFields_re(void* self, void*) {
+    kCtorInit(self, 0);                                                  // 0x004886d4
+    U(self, 0x5ec) = G<unsigned>(0x004e4480);                            // 0x004886e0
+    U(self, 0x5f0) = G<unsigned>(0x004e4484);                            // 0x004886ef
+    I(self, 0x574) = 0;                                                  // 0x004886f5
+    I(self, 0x5e4) = 0;
+    I(self, 0x614) = 0;
+    I(self, 0x5e8) = 0;
+    I(self, 0x5ac) = -1;                                                 // 0x0048870d
+    I(self, 0x5b0) = -1;
+    I(self, 0x624) = 0;                                                  // 0x00488719..0x00488725
+    I(self, 0x628) = 0;
+    I(self, 0x62c) = 0;
+    U(self, 0x60c) = G<unsigned>(0x0083b604);                            // 0x00488731
+    U(self, 0x5fc) = G<unsigned>(0x004e443c);                            // 0x0048873c
+    U(self, 0x600) = G<unsigned>(0x004e4440);
+    U(self, 0x604) = G<unsigned>(0x004e4444);
+    U(self, 0x608) = G<unsigned>(0x004e4448);                            // 0x0048875f
+    U(self, 0x610) = G<unsigned>(0x0083b608);                            // 0x00488771
+    I(self, 0x61c) = 0;                                                  // 0x00488777
+    U(self, 0x618) = G<unsigned>(0x004e444c);                            // 0x00488785
+    void* a = P(self, 0x5f4);                                            // 0x0048876b
+    if (a) {                                                             // 0x0048878b je
+        kFree(a);                                                        // 0x0048878e
+        P(self, 0x5f4) = 0;
+    }
+    void* b = P(self, 0x5f8);                                            // 0x0048879c
+    if (b) {                                                             // 0x004887a4 je
+        kFree(b);                                                        // 0x004887a7
+        P(self, 0x5f8) = 0;
+    }
+    I(self, 0x620) = 0;                                                  // 0x004887b5
+    return reinterpret_cast<unsigned>(b);
+}
+
+// 0x00488650  Button::dtor: the Button vtables 0x004bb0a8 / 0x004bb094 (0x0048866d / 0x00488673), Button::resetFields
+// (0x00488685), Timer::dtor on +0x5b4 then +0x57c (0x00488695 / 0x004886a5), Base4805a0::dtor (0x004886b4), whose eax it
+// returns.
+T0_t ButtonDtor_orig;
+unsigned __fastcall ButtonDtor_re(void* self, void*) {
+    U(self, 0) = 0x004bb0a8;                                             // 0x0048866d
+    U(self, 0x274) = 0x004bb094;                                         // 0x00488673
+    kButtonResetFields(self, 0);                                         // 0x00488685
+    kTimerDtor(B(self) + 0x5b4, 0);                                      // 0x00488695
+    kTimerDtor(B(self) + 0x57c, 0);                                      // 0x004886a5
+    return kBaseDtor(self, 0);                                           // 0x004886b4
+}
+
+// 0x004961d0  controlInitBase (the class buildLabeledControl 0x00496030 constructs; layoutViewTree builds its +0x270 /
+// +0x26c objects with it, 0x0047a98e / 0x0047aa3e, and comboDtor 0x00497a20 calls this function): the field block +0x574..+0x5d0
+// from 0x0083ff1c / 0x0083ff20 / 0x004e4764..0x004e478c and zeros / -1 (0x004961db..0x004962a5), three columns i = 0..2
+// (`cmp eax, 0xc` 0x004962dc): +0x5dc / +0x5e8 / +0x5f4 / +0x600 + 4i from 0x0083ff24 / 0x0083ff30 / 0x0083ff3c /
+// 0x0083ff48 + 4i (0x004962b3..0x004962d6), +0x5d4 / +0x5d8 from 0x0083ff58 / 0x0083ff5c, +0x13ac = +0x13b0 = 0; the
+// virtual reset (slot +0x16c) of the two buttons +0x60c and +0xcdc (0x0049630c / 0x0049631e); Window::ctorInit
+// (0x00496326), whose eax it returns.
+T0_t ControlInitBase_orig;
+unsigned __fastcall ControlInitBase_re(void* self, void*) {
+    U(self, 0x574) = G<unsigned>(0x0083ff1c);                            // 0x004961db
+    U(self, 0x57c) = G<unsigned>(0x004e4770);                            // 0x004961e7
+    I(self, 0x588) = 0;                                                  // 0x004961ed
+    U(self, 0x580) = G<unsigned>(0x0083ff20);                            // 0x004961f8
+    U(self, 0x584) = G<unsigned>(0x004e4774);                            // 0x00496204
+    U(self, 0x58c) = G<unsigned>(0x0083ff20);                            // 0x0049620f
+    I(self, 0x59c) = -1;                                                 // 0x00496215
+    I(self, 0x598) = 0;
+    U(self, 0x590) = G<unsigned>(0x004e476c);                            // 0x0049622b
+    U(self, 0x594) = G<unsigned>(0x004e4768);                            // 0x00496236
+    U(self, 0x5a0) = G<unsigned>(0x004e4764);                            // 0x00496242
+    I(self, 0x5a4) = 0;                                                  // 0x00496248..0x00496260
+    I(self, 0x5ac) = 0;
+    I(self, 0x5b0) = 0;
+    I(self, 0x5b4) = 0;
+    I(self, 0x5b8) = 0;
+    U(self, 0x5a8) = G<unsigned>(0x004e4778);                            // 0x0049626b
+    U(self, 0x5bc) = G<unsigned>(0x004e477c);                            // 0x00496277
+    U(self, 0x5c4) = G<unsigned>(0x004e4780);                            // 0x00496282
+    U(self, 0x5c8) = G<unsigned>(0x004e4784);
+    U(self, 0x5cc) = G<unsigned>(0x004e4788);
+    U(self, 0x5d0) = G<unsigned>(0x004e478c);                            // 0x004962a5
+    for (int i = 0; i < 3; i++) {                                        // eax = 4i, ecx = this + 0x5e8 + 4i
+        U(self, 0x5dc + 4 * i) = G<unsigned>(0x0083ff24 + 4 * i);        // 0x004962b3 / 0x004962bc
+        U(self, 0x5e8 + 4 * i) = G<unsigned>(0x0083ff30 + 4 * i);        // 0x004962bf / 0x004962c5
+        U(self, 0x5f4 + 4 * i) = G<unsigned>(0x0083ff3c + 4 * i);        // 0x004962c7 / 0x004962cd
+        U(self, 0x600 + 4 * i) = G<unsigned>(0x0083ff48 + 4 * i);        // 0x004962d0 / 0x004962d6
+    }
+    U(self, 0x5d4) = G<unsigned>(0x0083ff58);                            // 0x004962e6
+    U(self, 0x5d8) = G<unsigned>(0x0083ff5c);                            // 0x004962f2
+    I(self, 0x13ac) = 0;                                                 // 0x004962fe
+    I(self, 0x13b0) = 0;
+    void* b1 = B(self) + 0x60c;
+    VSlot0(b1, 0x16c)(b1, 0);                                            // 0x0049630c
+    void* b2 = B(self) + 0xcdc;
+    VSlot0(b2, 0x16c)(b2, 0);                                            // 0x0049631e
+    return kCtorInit(self, 0);                                           // 0x00496326
+}
+
+// 0x00489e40  ListBox::resetFields (this = the ListBox part; its vbptr is at +4): Window::ctorInit on the Window base
+// (this + 4 + [[this+4]+4], 0x00489e4d), ListModel::clear on the ListModel base (this + 4 + [[this+4]+8], 0x00489e5c),
+// then -1 at +0x20 / +0x24, zeros at +0xc +0x10 +0x28 +0x2c +0x30, +0x34 / +0x38 / +0x3c / +0x18 / +0x1c from 0x004e44d0
+// / 0x0083b648 / 0x004e44d4 / 0x004e44d8 / 0x004e44dc, the dword this + [[this+4]+8] + 0xbc = 1 (0x00489eae: the vbptr's
+// own +4 is not added, so it is the ListModel base's +0xb8), zeros at +0x44..+0x54 and +0x14. Returns 0 (0x00489e6a).
+T0_t ListBoxReset_orig;
+unsigned __fastcall ListBoxReset_re(void* self, void*) {
+    kCtorInit(B(self) + 4 + I(P(self, 4), 4), 0);                        // 0x00489e4d
+    kListModelClear(B(self) + 4 + I(P(self, 4), 8), 0);                  // 0x00489e5c
+    I(self, 0x20) = -1;                                                  // 0x00489e64
+    I(self, 0x24) = -1;
+    I(self, 0xc) = 0;                                                    // 0x00489e6c..0x00489e78
+    I(self, 0x10) = 0;
+    I(self, 0x28) = 0;
+    I(self, 0x2c) = 0;
+    I(self, 0x30) = 0;
+    U(self, 0x34) = G<unsigned>(0x004e44d0);                             // 0x00489e81
+    U(self, 0x38) = G<unsigned>(0x0083b648);                             // 0x00489e8a
+    U(self, 0x3c) = G<unsigned>(0x004e44d4);                             // 0x00489e93
+    U(self, 0x18) = G<unsigned>(0x004e44d8);                             // 0x00489e9c
+    U(self, 0x1c) = G<unsigned>(0x004e44dc);                             // 0x00489ea8
+    I(self, I(P(self, 4), 8) + 0xbc) = 1;                                // 0x00489eab / 0x00489eae
+    I(self, 0x44) = 0;                                                   // 0x00489eb9..0x00489ec8
+    I(self, 0x48) = 0;
+    I(self, 0x4c) = 0;
+    I(self, 0x50) = 0;
+    I(self, 0x54) = 0;
+    I(self, 0x14) = 0;
+    return 0;
+}
+
+// 0x00489de0  ListBox::dtor (this = the ListBox part + 0x5c, the Window offset of a stand-alone ListBox): with L = this -
+// 0x5c, the ListBox vtable 0x004bb3cc at L+0 (0x00489de6) and, through the vbptr at L+4, the Window vtable 0x004bb260, its
+// Image vtable 0x004bb24c, the ListModel vtable 0x004bb240 and the vtordisps (offset - 0x58, offset - 0x5d0) in the dwords
+// before the vbptr-relative bases (0x00489dec..0x00489e32); then ListBox::resetFields on L (0x00489e36), whose eax it
+// returns.
+T0_t ListBoxDtor_orig;
+unsigned __fastcall ListBoxDtor_re(void* self, void*) {
+    void* L = B(self) - 0x5c;                                            // 0x00489de3
+    U(L, 0) = 0x004bb3cc;                                                // 0x00489de6
+    PartBases(L, 4, 0x004bb260, 0x004bb24c, 0x004bb240, 0x58, 0x5d0);   // 0x00489dec..0x00489e32
+    return kListBoxReset(L, 0);                                          // 0x00489e36
+}
+
+// 0x0049ece0  viewFieldCleanup49ece0 (this = the 49ebb0 field part, vbptr at +0): +4 = +8 = +0xc = 0, +0x14 / +0x10 =
+// 0x004e4a28 / 0x004e4a24 (0x0049ece7..0x0049ecfe), ListModel::clear on the ListModel base (0x0049ed06), Window::ctorInit
+// on the Window base (0x0049ed12), whose eax it returns.
+T0_t Cleanup49ece0_orig;
+unsigned __fastcall Cleanup49ece0_re(void* self, void*) {
+    I(self, 4) = 0;                                                      // 0x0049ece7
+    I(self, 8) = 0;
+    I(self, 0xc) = 0;
+    U(self, 0x14) = G<unsigned>(0x004e4a28);                             // 0x0049ecf5
+    U(self, 0x10) = G<unsigned>(0x004e4a24);                             // 0x0049ecfe
+    kListModelClear(B(self) + I(P(self, 0), 8), 0);                      // 0x0049ed06
+    return kCtorInit(B(self) + I(P(self, 0), 4), 0);                     // 0x0049ed12
+}
+
+// 0x0049d690  viewFieldCleanup49d690 (this = the 49d5a0 field part): +0x10 = +0x14 = 0, +8 / +0xc / +4 = 0x004e4a14 /
+// 0x004e4a18 / 0x004e4a10 (0x0049d695..0x0049d6b4), ListModel::clear on the ListModel base (0x0049d6bc),
+// Window::ctorInit on the Window base (0x0049d6c8), whose eax it returns.
+T0_t Cleanup49d690_orig;
+unsigned __fastcall Cleanup49d690_re(void* self, void*) {
+    I(self, 0x10) = 0;                                                   // 0x0049d695
+    I(self, 0x14) = 0;
+    U(self, 8) = G<unsigned>(0x004e4a14);                                // 0x0049d6a0
+    U(self, 0xc) = G<unsigned>(0x004e4a18);                              // 0x0049d6ab
+    U(self, 4) = G<unsigned>(0x004e4a10);                                // 0x0049d6b4
+    kListModelClear(B(self) + I(P(self, 0), 8), 0);                      // 0x0049d6bc
+    return kCtorInit(B(self) + I(P(self, 0), 4), 0);                     // 0x0049d6c8
+}
+
+// 0x004a23a0  viewFieldReset4a23a0 (this = the 4a2250 field part): ten slots k = 0..9 (`dec ebx; jne` 0x004a23e0): an
+// object at +4 + 4k is destroyed through its vtable slot 0 with 1 (0x004a23b5 / 0x004a23b7), cleared, and +0x54 + 4k = 10
+// (0x004a23bf); a block at +0x2c + 4k is freed and cleared (0x004a23cb..0x004a23d6). Then +0x84 = 0x008409c4 (0x004a23ec)
+// and ListModel::clear on the ListModel base (0x004a23f7), whose eax it leaves (the registry key declares void: the
+// ListModel::clear reimplementation of batch c3cz returns nothing).
+T0_t Reset4a23a0_orig;
+unsigned __fastcall Reset4a23a0_re(void* self, void*) {
+    for (int k = 0; k < 10; k++) {                                       // ebx = 10 .. 1
+        void* obj = P(self, 4 + 4 * k);                                  // 0x004a23ad
+        if (obj) {                                                       // 0x004a23b1 je
+            VSlot1(obj, 0)(obj, 0, 1);                                   // 0x004a23b7
+            P(self, 4 + 4 * k) = 0;                                      // 0x004a23b9
+            I(self, 0x54 + 4 * k) = 10;                                  // 0x004a23bf
+        }
+        void* blk = P(self, 0x2c + 4 * k);                               // 0x004a23c6
+        if (blk) {                                                       // 0x004a23cb je
+            kFree(blk);                                                  // 0x004a23ce
+            P(self, 0x2c + 4 * k) = 0;                                   // 0x004a23d6
+        }
+    }
+    U(self, 0x84) = G<unsigned>(0x008409c4);                             // 0x004a23ec
+    return kListModelClear(B(self) + I(P(self, 0), 8), 0);               // 0x004a23f7
+}
+
+// 0x004a2330  viewFieldDtor4a2330 (this = the 4a2250 field part + 0x8c): with F = this - 0x8c, the part's vtables
+// 0x004bc0a8 (Window base), 0x004bc094 (its Image), 0x004bc088 (ListModel base) and the vtordisps against 0x8c / 0x604
+// (0x004a2333..0x004a238a), then viewFieldReset4a23a0 on F (0x004a2391), whose eax it leaves.
+T0_t FieldDtor4a2330_orig;
+unsigned __fastcall FieldDtor4a2330_re(void* self, void*) {
+    void* F = B(self) - 0x8c;
+    PartBases(F, 0, 0x004bc0a8, 0x004bc094, 0x004bc088, 0x8c, 0x604);   // 0x004a2333..0x004a238a
+    return kReset4a23a0(F, 0);                                           // 0x004a2391
+}
+
+// 0x0049ec80  viewFieldDtor49ec80 (this = the 49ebb0 field part + 0x1c): the part's vtables 0x004bbeb0 / 0x004bbe9c /
+// 0x004bbe90 and the vtordisps against 0x1c / 0x594 (0x0049ec83..0x0049ecc8), then viewFieldCleanup49ece0 on the part
+// (0x0049eccc), whose eax it returns.
+T0_t FieldDtor49ec80_orig;
+unsigned __fastcall FieldDtor49ec80_re(void* self, void*) {
+    void* F = B(self) - 0x1c;
+    PartBases(F, 0, 0x004bbeb0, 0x004bbe9c, 0x004bbe90, 0x1c, 0x594);   // 0x0049ec83..0x0049ecc8
+    return kCleanup49ece0(F, 0);                                         // 0x0049eccc
+}
+
+// 0x00491680  Dialog::childDtor (this = the 49d5a0 field part + 0x24): the part's vtables 0x004bb744 / 0x004bb730 /
+// 0x004bb724 and the vtordisps against 0x24 / 0x59c (0x00491683..0x004916c8), then viewFieldCleanup49d690 on the part
+// (0x004916cc), whose eax it returns.
+T0_t DialogChildDtor_orig;
+unsigned __fastcall DialogChildDtor_re(void* self, void*) {
+    void* F = B(self) - 0x24;
+    PartBases(F, 0, 0x004bb744, 0x004bb730, 0x004bb724, 0x24, 0x59c);   // 0x00491683..0x004916c8
+    return kCleanup49d690(F, 0);                                         // 0x004916cc
+}
+
+// 0x00491ad0  listPanelDeletingDtor(flags), `ret 4` (this = a stand-alone 49d5a0 field + 0x24): the same vtable and
+// vtordisp stores as Dialog::childDtor (0x00491ad8..0x00491b1d), viewFieldCleanup49d690 on F = this - 0x24 (0x00491b21),
+// ListModel::dtor on F + 0x59c (0x00491b2c), Base4805a0::dtor on F + 0x24 (0x00491b33), operator delete of F when bit 0
+// of flags is set (0x00491b38 / 0x00491b40). Returns F (0x00491b48).
+T1_t ListPanelDeletingDtor_orig;
+unsigned __fastcall ListPanelDeletingDtor_re(void* self, void*, unsigned flags) {
+    void* F = B(self) - 0x24;                                            // 0x00491ad2
+    PartBases(F, 0, 0x004bb744, 0x004bb730, 0x004bb724, 0x24, 0x59c);   // 0x00491ad8..0x00491b1d
+    kCleanup49d690(F, 0);                                                // 0x00491b21
+    kListModelDtor(B(F) + 0x59c, 0);                                     // 0x00491b2c
+    kBaseDtor(self, 0);                                                  // 0x00491b33
+    if (flags & 1) kOperatorDelete(F);                                   // 0x00491b3d je / 0x00491b40
+    return reinterpret_cast<unsigned>(F);                                // 0x00491b48
+}
+
+// The Image (+0x274 of the Window base) defaults every panel reset writes: Widget_setQuad / 70 / 74 with the dword
+// columns 0x004e449c.. (0x004a370f, 0x004a373b, 0x004a3767; the same values panelSubCtor4a3110 uses).
+static void PanelQuads(void* self) {
+    kWidgetSetQuad(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x004e449c), G<unsigned>(0x004e44a8),
+                   G<unsigned>(0x004e44b4), G<unsigned>(0x004e44c0));
+    kWidgetSetQuad70(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x004e44a0), G<unsigned>(0x004e44ac),
+                     G<unsigned>(0x004e44b8), G<unsigned>(0x004e44c4));
+    kWidgetSetQuad74(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x004e44a4), G<unsigned>(0x004e44b0),
+                     G<unsigned>(0x004e44bc), G<unsigned>(0x004e44c8));
+}
+
+// 0x004a35e0  panelSubReset4a35e0 (this = the panel part): Window::ctorInit on the Window base (0x004a35ed),
+// ListModel::clear on the ListModel base (0x004a35f9), +4 = 0, +0x70 = +0x74 = 1, +0xa8..+0xd8 = 0 (0x004a3608..
+// 0x004a3659); the node list at +0x78: the node loop when its head is set (0x004a3664..0x004a36d1), last = 0 (0x004a36d7);
+// HotList::releaseArray on +0x10 (0x004a36da), +8 = 0x008409cc (0x004a36e5), the three Image quads and setDrawTarget with
+// 0, 0, 0, 0 (0x004a377c), whose eax (3: a NULL surface, 0x004762d3) it returns.
+T0_t PanelSubReset_orig;
+unsigned __fastcall PanelSubReset_re(void* self, void*) {
+    kCtorInit(B(self) + I(P(self, 0), 4), 0);                            // 0x004a35ed
+    kListModelClear(B(self) + I(P(self, 0), 8), 0);                      // 0x004a35f9
+    I(self, 4) = 0;                                                      // 0x004a3608
+    I(self, 0x70) = 1;
+    I(self, 0x74) = 1;
+    for (int off = 0xa8; off <= 0xd8; off += 4) I(self, off) = 0;        // 0x004a3611..0x004a3659
+    void* L = B(self) + 0x78;                                            // 0x004a3605
+    if (P(L, 8)) NodeLoop(L);                                            // 0x004a3664 je
+    I(L, 0x14) = 0;                                                      // 0x004a36d7
+    kHotListRelease(B(self) + 0x10, 0);                                  // 0x004a36da
+    U(self, 8) = G<unsigned>(0x008409cc);                                // 0x004a36e5
+    PanelQuads(self);
+    return kSetDrawTarget(B(self) + I(P(self, 0), 4) + 0x274, 0, 0, 0, 0, 0);   // 0x004a377c
+}
+
+// 0x004a3480  panelSubDtor4a3480 (this = the panel part + 0xe0): with P0 = this - 0xe0, the panel's vtables 0x004bc244 /
+// 0x004bc230 / 0x004bc224 and the vtordisps against 0xe0 / 0x658 (0x004a34a1..0x004a34f8), panelSubReset4a35e0 on P0
+// (0x004a3507); the +0x78 list's vtables 0x004ba2c4 / 0x004ba2c0 (0x004a3515 / 0x004a3521), its node loop when the head is
+// set (0x004a352e; panelSubReset4a35e0 always left it 0), last = 0 (0x004a359f); its cookie base +0xa0 = 0x004ba278 and
+// the heap global 0x00839650 = +0xa4 (0x004a35a5 / 0x004a35ac); HotList::dtor on +0x10 (0x004a35c0), whose eax it returns.
+T0_t PanelSubDtor_orig;
+unsigned __fastcall PanelSubDtor_re(void* self, void*) {
+    void* P0 = B(self) - 0xe0;
+    PartBases(P0, 0, 0x004bc244, 0x004bc230, 0x004bc224, 0xe0, 0x658);  // 0x004a34a1..0x004a34f8
+    kPanelSubReset(P0, 0);                                               // 0x004a3507
+    void* L = B(P0) + 0x78;                                              // 0x004a350c
+    U(L, 0) = 0x004ba2c4;                                                // 0x004a3515
+    U(L, 4 + I(P(L, 4), 4)) = 0x004ba2c0;                                // 0x004a351b..0x004a3521
+    if (P(L, 8)) NodeLoop(L);                                            // 0x004a352e je
+    I(L, 0x14) = 0;                                                      // 0x004a359f
+    unsigned cookie = U(P0, 0xa4);                                       // 0x004a35a2
+    U(P0, 0xa0) = 0x004ba278;                                            // 0x004a35a5
+    G<unsigned>(0x00839650) = cookie;                                    // 0x004a35ac
+    return kHotListDtor(B(P0) + 0x10, 0);                                // 0x004a35c0
+}
+
+// 0x004a3790  panelOpenReset4a3790(key), `ret 4` (this = the panel part): panelSubReset4a35e0 (0x004a3793), the three
+// Image quads (0x004a37be, 0x004a37e9, 0x004a3814), setDrawTarget with the globals 0x0083b628 / 0x0083b62c / 0x0083b630
+// and 0 (0x004a383b), then ListModel::setKey(key) on the ListModel base (0x004a384c), whose result it returns.
+T1_t PanelOpenReset_orig;
+unsigned __fastcall PanelOpenReset_re(void* self, void*, unsigned key) {
+    kPanelSubReset(self, 0);                                             // 0x004a3793
+    PanelQuads(self);
+    kSetDrawTarget(B(self) + I(P(self, 0), 4) + 0x274, 0, G<unsigned>(0x0083b628), G<unsigned>(0x0083b62c),
+                   G<unsigned>(0x0083b630), 0);                          // 0x004a383b
+    return kListModelSetKey(B(self) + I(P(self, 0), 8), 0, key);         // 0x004a384c
+}
+
+// =====================================================================================================================
+// TextView::reset
+// =====================================================================================================================
+
+const T0_t kSurfaceFree       = reinterpret_cast<T0_t>(0x00473ae0);   // Surface_free
+const T1_t kSetFontSize       = reinterpret_cast<T1_t>(0x0048e120);   // TextView::setFontSize, ret 4
+const T1_t kSetLineSpacing    = reinterpret_cast<T1_t>(0x0048e0b0);   // TextView::setLineSpacing, ret 4
+typedef unsigned(__fastcall* T2_t)(void* self, void* edx, unsigned a, unsigned b);
+const T2_t kSetSize           = reinterpret_cast<T2_t>(0x0048e190);   // TextView::setSize, ret 8
+const T0_t kBufReleaseData    = reinterpret_cast<T0_t>(0x004747e0);   // Buf_releaseData
+
+static void CopyDwords(void* dst, unsigned src, int n) {
+    for (int i = 0; i < n; i++) U(dst, 4 * i) = G<unsigned>(src + 4 * i);
+}
+
+// 0x0048d480  TextView::reset (this = the TextView; Dialog::dtor 0x00491749 and TextView::init 0x0048db60 call it)
+// In order: the virtual slot +0x19c (0x0048d48a); +0x1f64 / +0x1f00 from 0x0083b9ec / 0x0083b8e8; 0x46 dwords from
+// 0x0083b6a8 to +0x1cd0 and from 0x0083b7c0 to +0x1de8 (`rep movsd`, 0x0048d4ba / 0x0048d4cc); the blocks +0x2108 and
+// +0x210c freed and cleared when set (0x0048d4d6 / 0x0048d4ef); +0x5bc = this (0x0048d500); 0x0083b900..0x0083b908 to
+// +0x2090 (0x0048d511..0x0048d520), the 3 x 9 table 0x0083b90c.. to +0x209c.. (0x0048d52a..0x0048d583),
+// 0x0083b978..0x0083b980 to +0x2078 and 0x0083b984..0x0083b98c to +0x2084 (0x0048d590..0x0048d5bb). The composite at
+// +0x1460: ListBox::resetFields (+0x1460), viewFieldCleanup49ece0 (+0x14d8), viewFieldCleanup49d690 (+0x14b8),
+// panelSubReset4a35e0 (+0x14f0), viewFieldReset4a23a0 (+0x15cc), then Window::ctorInit on this (0x0048d5c3..
+// 0x0048d5f6). +0x137c = 0; when the byte +0x574 is 0 (0x0048d609) Surface_free on +0x13a0 and +0x13cc = +0x13d0 = 0;
+// +0x5c0 = 0, +0x5c4 = -1, the block +0x5c8 freed when set (0x0048d639), +0x1458 = 0, +0x145c = -1; the virtual reset
+// (slot +0x16c) of the two buttons +0x5dc and +0xcac (0x0048d65e / 0x0048d670); the node loops of the lists +0x1410
+// (0x0048d684) and +0x13e0 (0x0048d702) when their heads are set, last = 0 after each; the eight objects at +0x1380..
+// destroyed through slot 0 with 1 and cleared (0x0048d77e..0x0048d790); +0x1448 / +0x144c / +0x1440 / +0x1444 from
+// 0x0083b9b0 / 0x0083b9ac / 0x0083b9a4 / 0x0083b9a8, +0x1450 / +0x1454 from 0x004e44f0 / 0x004e44f4, +0x1f70..+0x1fb4 and
+// +0x1f68 / +0x1f6c / +0x1fc0 = 0, +0x1fb8 = +0x1fbc = 0x1000. When the byte +0x574 is 0 (0x0048d86f) the block
+// +0x1fc4..+0x2074 and +0x13d4..+0x13dc takes its defaults (listed below). +0x2110 = 0x0083b9f0 (after a 0 store), the
+// byte +0x2060 = the byte 0x004e4574, +0x590 / +0x594 / +0x598 from 0x0083b8f4 / 0x0083b8f8 / 0x0083b8fc, +0x59c / +0x5a0
+// from 0x004e44e4 / 0x004e44e8; a non-zero +0x590 (0x0048daff) calls setFontSize(+0x59c), setLineSpacing(+0x5a0),
+// setSize(+0x594, +0x598) and sets bits 3 in the dword this + 0x1488 + [[this+0x1464]+8] (0x0048db32..0x0048db4c).
+// Last, Buf_releaseData on the Buf +0x5a4 (0x0048db55), whose eax it returns.
+T0_t TextViewReset_orig;
+unsigned __fastcall TextViewReset_re(void* self, void*) {
+    VSlot0(self, 0x19c)(self, 0);                                        // 0x0048d48a
+    U(self, 0x1f64) = G<unsigned>(0x0083b9ec);                           // 0x0048d49c
+    U(self, 0x1f00) = G<unsigned>(0x0083b8e8);                           // 0x0048d4b2
+    CopyDwords(B(self) + 0x1cd0, 0x0083b6a8, 0x46);                      // 0x0048d4ba
+    CopyDwords(B(self) + 0x1de8, 0x0083b7c0, 0x46);                      // 0x0048d4cc
+    if (P(self, 0x2108)) { kFree(P(self, 0x2108)); P(self, 0x2108) = 0; }   // 0x0048d4d6 / 0x0048d4d9
+    if (P(self, 0x210c)) { kFree(P(self, 0x210c)); P(self, 0x210c) = 0; }   // 0x0048d4ef / 0x0048d4f2
+    P(self, 0x5bc) = self;                                               // 0x0048d500
+    CopyDwords(B(self) + 0x2090, 0x0083b900, 3);                         // 0x0048d511..0x0048d520
+    for (int i = 0; i < 3; i++)                                          // `cmp eax, 0xc` 0x0048d580
+        for (int k = 0; k < 9; k++)                                      // 0x0048d52a..0x0048d574
+            U(self, 0x209c + 0xc * k + 4 * i) = G<unsigned>(0x0083b90c + 0xc * k + 4 * i);
+    CopyDwords(B(self) + 0x2078, 0x0083b978, 3);                         // 0x0048d590..0x0048d59f
+    CopyDwords(B(self) + 0x2084, 0x0083b984, 3);                         // 0x0048d5ac..0x0048d5bb
+    kListBoxReset(B(self) + 0x1460, 0);                                  // 0x0048d5c3
+    kCleanup49ece0(B(self) + 0x14d8, 0);                                 // 0x0048d5ce
+    kCleanup49d690(B(self) + 0x14b8, 0);                                 // 0x0048d5d9
+    kPanelSubReset(B(self) + 0x14f0, 0);                                 // 0x0048d5e4
+    kReset4a23a0(B(self) + 0x15cc, 0);                                   // 0x0048d5ef
+    kCtorInit(self, 0);                                                  // 0x0048d5f6
+    I(self, 0x137c) = 0;                                                 // 0x0048d5fb
+    if (*(B(self) + 0x574) == 0) {                                       // 0x0048d601 / 0x0048d609
+        kSurfaceFree(B(self) + 0x13a0, 0);                               // 0x0048d611
+        I(self, 0x13cc) = 0;
+        I(self, 0x13d0) = 0;
+    }
+    I(self, 0x5c0) = 0;                                                  // 0x0048d625
+    I(self, 0x5c4) = -1;
+    if (P(self, 0x5c8)) { kFree(P(self, 0x5c8)); P(self, 0x5c8) = 0; }   // 0x0048d639 / 0x0048d63c
+    I(self, 0x1458) = 0;                                                 // 0x0048d650
+    I(self, 0x145c) = -1;
+    void* b1 = B(self) + 0x5dc;
+    VSlot0(b1, 0x16c)(b1, 0);                                            // 0x0048d65e
+    void* b2 = B(self) + 0xcac;
+    VSlot0(b2, 0x16c)(b2, 0);                                            // 0x0048d670
+    void* L1 = B(self) + 0x1410;
+    if (P(L1, 8)) NodeLoop(L1);                                          // 0x0048d684 je
+    I(L1, 0x14) = 0;                                                     // 0x0048d6f1
+    void* L2 = B(self) + 0x13e0;
+    if (P(L2, 8)) NodeLoop(L2);                                          // 0x0048d702 je
+    I(L2, 0x14) = 0;                                                     // 0x0048d770
+    for (int k = 0; k < 8; k++) {                                        // edi = 8, `dec edi; jne` 0x0048d790
+        void* obj = P(self, 0x1380 + 4 * k);
+        if (obj) {                                                       // 0x0048d782 je
+            VSlot1(obj, 0)(obj, 0, 1);                                   // 0x0048d788
+            P(self, 0x1380 + 4 * k) = 0;
+        }
+    }
+    U(self, 0x1448) = G<unsigned>(0x0083b9b0);                           // 0x0048d797
+    U(self, 0x144c) = G<unsigned>(0x0083b9ac);
+    U(self, 0x1440) = G<unsigned>(0x0083b9a4);
+    U(self, 0x1444) = G<unsigned>(0x0083b9a8);
+    U(self, 0x1450) = G<unsigned>(0x004e44f0);
+    U(self, 0x1454) = G<unsigned>(0x004e44f4);                           // 0x0048d7d2
+    for (int off = 0x1f70; off <= 0x1fb4; off += 4) I(self, off) = 0;    // 0x0048d7d8..0x0048d83e
+    I(self, 0x1f68) = 0;                                                 // 0x0048d844
+    I(self, 0x1f6c) = 0;
+    I(self, 0x1fb8) = 0x1000;                                            // 0x0048d855
+    I(self, 0x1fbc) = 0x1000;
+    I(self, 0x1fc0) = 0;
+    if (*(B(self) + 0x574) == 0) {                                       // 0x0048d867 / 0x0048d86f
+        U(self, 0x1fc4) = G<unsigned>(0x004e44f8);                       // 0x0048d87a
+        U(self, 0x1fc8) = G<unsigned>(0x004e44f8);                       // 0x0048d886 (the same dword again)
+        U(self, 0x1fcc) = G<unsigned>(0x004e4500);
+        // four rows of five: +0x1fd0 + 4r from 0x0083b9b4 + 4r, then +0x1fe0 / +0x1ff0 / +0x2000 / +0x2010 + 4r from
+        // 0x004e4504 / 0x004e4514 / 0x004e4524 / 0x004e4534 + 4r (0x0048d89d..0x0048d975)
+        for (int r = 0; r < 4; r++) {
+            U(self, 0x1fd0 + 4 * r) = G<unsigned>(0x0083b9b4 + 4 * r);
+            for (int c = 0; c < 4; c++)
+                U(self, 0x1fe0 + 0x10 * c + 4 * r) = G<unsigned>(0x004e4504 + 0x10 * c + 4 * r);
+        }
+        I(self, 0x2020) = 0;                                             // 0x0048d981..0x0048d98d
+        I(self, 0x2024) = 0;
+        I(self, 0x2028) = 0;
+        // three columns: +0x202c + 4c from 0x0083b9c4 + 4c, the byte +0x2038 + c from the byte 0x004e4544 + 4c, and
+        // +0x203c / +0x2048 / +0x2054 + 4c from 0x004e4550 / 0x004e455c / 0x004e4568 + 4c (0x0048d993..0x0048da36)
+        for (int c = 0; c < 3; c++) {
+            U(self, 0x202c + 4 * c) = G<unsigned>(0x0083b9c4 + 4 * c);
+            *(B(self) + 0x2038 + c) = *reinterpret_cast<unsigned char*>(0x004e4544 + 4 * c);
+            for (int k = 0; k < 3; k++)
+                U(self, 0x203c + 0xc * k + 4 * c) = G<unsigned>(0x004e4550 + 0xc * k + 4 * c);
+        }
+        U(self, 0x2064) = G<unsigned>(0x004e4578);                       // 0x0048da48
+        U(self, 0x2068) = G<unsigned>(0x004e457c);
+        U(self, 0x206c) = G<unsigned>(0x004e4580);
+        U(self, 0x2070) = G<unsigned>(0x0083b9d0);                       // 0x0048da6b
+        U(self, 0x2074) = G<unsigned>(0x0083b9d4);
+        U(self, 0x13dc) = G<unsigned>(0x0083b9e0);                       // 0x0048da82
+        U(self, 0x13d8) = G<unsigned>(0x0083b9dc);
+        U(self, 0x13d4) = G<unsigned>(0x0083b9d8);                       // 0x0048da99
+    }
+    U(self, 0x2110) = G<unsigned>(0x0083b9f0);                           // 0x0048da9f / 0x0048daab
+    *(B(self) + 0x2060) = *reinterpret_cast<unsigned char*>(0x004e4574); // 0x0048dab7
+    U(self, 0x590) = G<unsigned>(0x0083b8f4);                            // 0x0048dac2
+    U(self, 0x594) = G<unsigned>(0x0083b8f8);
+    U(self, 0x598) = G<unsigned>(0x0083b8fc);
+    U(self, 0x59c) = G<unsigned>(0x004e44e4);
+    U(self, 0x5a0) = G<unsigned>(0x004e44e8);                            // 0x0048daf1
+    if (I(self, 0x590) != 0) {                                           // 0x0048dafd / 0x0048daff
+        kSetFontSize(self, 0, U(self, 0x59c));                           // 0x0048db0a
+        kSetLineSpacing(self, 0, U(self, 0x5a0));                        // 0x0048db18
+        kSetSize(self, 0, U(self, 0x594), U(self, 0x598));               // 0x0048db2d
+        int off = I(P(self, 0x1464), 8);                                 // 0x0048db32 / 0x0048db38
+        I(self, 0x1464 + off + 0x24) = I(self, off + 0x1488) | 3;        // 0x0048db42..0x0048db4c
+    }
+    return kBufReleaseData(B(self) + 0x5a4, 0);                          // 0x0048db55
+}
+
+// =====================================================================================================================
+// Window::create and layoutViewTree
+// =====================================================================================================================
+
+const T0_t kLayoutNode        = reinterpret_cast<T0_t>(0x00479f30);   // layoutNode
+typedef void*(__cdecl* New_t)(unsigned size);
+const New_t kOperatorNew      = reinterpret_cast<New_t>(0x004a57f1);
+const T0_t kImageCtor         = reinterpret_cast<T0_t>(0x00474ae0);   // Image_ctor
+const T1_t kChildInsert       = reinterpret_cast<T1_t>(0x0047e5f0);   // ChildArray::insert, ret 4
+typedef void(__cdecl* ZPush_t)(void* w);
+const ZPush_t kZPush          = reinterpret_cast<ZPush_t>(0x0047e4c0);
+typedef int(__stdcall* MessageBoxA_t)(void*, const char*, const char*, unsigned);
+typedef void(__cdecl* Exit_t)(int code);
+const Exit_t kExit            = reinterpret_cast<Exit_t>(0x004a5108);   // _exit
+const T1_t kShrinkRect        = reinterpret_cast<T1_t>(0x0047cce0);   // Window::shrinkRect, ret 4
+const T1_t kGrowRect          = reinterpret_cast<T1_t>(0x0047cc10);   // Window::growRect, ret 4
+const T1_t kLabelSetText      = reinterpret_cast<T1_t>(0x0047b8f0);   // Label::setText, ret 4
+const T0_t kScrollbarCtor     = reinterpret_cast<T0_t>(0x00496030);   // buildLabeledControl (constructs the +0x270 / +0x26c objects)
+typedef unsigned(__fastcall* T5_t)(void* self, void* edx, unsigned a, unsigned b, unsigned c, unsigned d, unsigned e);
+const T5_t kScrollbarCreateA  = reinterpret_cast<T5_t>(0x00496710);   // ret 0x14
+const T5_t kScrollbarCreateB  = reinterpret_cast<T5_t>(0x00496740);   // ret 0x14
+const T0_t kReleaseScrollbars = reinterpret_cast<T0_t>(0x0047d510);   // Window::releaseScrollbars
+const T1_t kViewAttach        = reinterpret_cast<T1_t>(0x0047abe0);   // View_attach, ret 4
+const T0_t kCalcSize          = reinterpret_cast<T0_t>(0x00481760);   // Window::calcSizeFromCorners
+const T2_t kInnerSize         = reinterpret_cast<T2_t>(0x0047cb10);   // Window::innerSize(int*, int*), ret 8
+typedef unsigned(__fastcall* T6_t)(void* self, void* edx, unsigned a, unsigned b, unsigned c, unsigned d, unsigned e,
+                                   unsigned f);
+const T6_t kCreateFull        = reinterpret_cast<T6_t>(0x00474dd0);   // Surface_createFull, ret 0x18
+const T1_t kApplyPalette      = reinterpret_cast<T1_t>(0x004789f0);   // Widget_applyPalette, ret 4
+
+// Rect copy (`mov edx, [eax]; mov [ecx], edx` x4, 0x0047a7fb..0x0047a80f and the others).
+static void Rect4(void* dst, void* src) { for (int i = 0; i < 16; i += 4) I(dst, i) = I(src, i); }
+
+// 0x0047a4c0  layoutViewTree(x, y, w, h, label, flags, parent, owner, border), `ret 0x24` (Window::create 0x004807d7 is
+// its only caller). layoutNode (0x0047a4db); the border triple into +0x180..+0x188 when given (0x0047a4e6); +0x220 |= 2;
+// four Images (operator new 0x2b8 + Image_ctor) into +0x11c..+0x128, returning 4 at the first failed one (0x0047a51a..
+// 0x0047a60f); with any of the flags 0xf0000000 the virtual slot +0x11c must return non-zero, else 3 (0x0047a624 /
+// 0x0047a62e); flag 0x80000 adds 0x20 (0x0047a640). A negative x is taken from the parent's right edge (+0x1b4 - +0x1ac)
+// or, without one, from the display's slot +0xa8 (0 without a display), minus w (0x0047a653..0x0047a6d3); a negative y
+// the same with +0x1b8 - +0x1b0 / slot +0xac and h. Without a parent the default parent 0x0083aa9c is taken when set
+// (0x0047a6f9). +0x9c = flags, +0x130 = parent, +0x15c = owner; a non-empty label with neither 0x400000 nor 0x80 adds
+// 0x10 (0x0047a72a..0x0047a738). The window goes into its parent's child array, or onto the z-list (zPush 0x0047e4c0);
+// a z-list already holding 0x80 windows resets the window, shows a message box and exits (0x0047a74c..0x0047a775). With
+// flag 0x80 clear and any of 0x1d set, +0xa0 |= 2, else +0xa0 &= ~2 and +0x9c &= 0xfffffbee (0x0047a783..0x0047a7b5).
+// The rectangle +0x1ac (and +0x1bc): with 0x800 clear and +0xa0 bit 1 set, the outer rect is (x, y, x+w, y+h), shrunk
+// by Window::shrinkRect into +0x1ac and made relative to +0x1bc (0x0047a7cf..0x0047a831); otherwise +0x1ac is (x, y,
+// x+w, y+h) and, with +0xa0 bit 1, +0x1bc grown from it (Window::growRect) and +0x1ac made relative (0x0047a833..
+// 0x0047a8b1). +0x1cc = +0x1ac; Label::setText(label); the virtual slot +0x130; an owner's slot +0x16c(this), whose
+// non-zero result resets the window and is returned (0x0047a8f2..0x0047a907). +0x1ec takes +0x180 (flag 0x10) or +0x184
+// (neither 0x10 nor 0x20), +0x1f0 = +0x184 with flag 0x400 else 0. Flag 4: the vertical scrollbar +0x270 (slot +0x18
+// first with flag 0x40); when none, a new one (operator new 0x13b4 + buildLabeledControl, 4 when NULL) is created by
+// scrollbarCreateB(0, +0x1b8 - border, +0x1b4 - +0x1ac (- border with flag 8), this, -2) and its slot +4 called with 0
+// (0x0047a958..0x0047a9ef); flag 8 the same for +0x26c with scrollbarCreateA(+0x1b4 - border, 0, +0x1b8 - +0x1b0 (-
+// border with flag 4), this, -1) (0x0047aa00..0x0047aaa7). Then Window::releaseScrollbars, 0x0083ab2c = this, View_attach
+// to the parent with flag 0x100000, +0xa0 |= 4 and 0 (0x0047aaaa..0x0047aade).
+typedef unsigned(__fastcall* Layout_t)(void* self, void* edx, int x, int y, int w, int h, const char* label,
+                                       unsigned flags, void* parent, void* owner, int* border);
+Layout_t LayoutViewTree_orig;
+unsigned __fastcall LayoutViewTree_re(void* self, void*, int x, int y, int w, int h, const char* label, unsigned flags,
+                                      void* parent, void* owner, int* border) {
+    kLayoutNode(self, 0);                                                // 0x0047a4db
+    if (border) {                                                        // 0x0047a4e6 je
+        I(self, 0x180) = border[0];
+        I(self, 0x184) = border[1];
+        I(self, 0x188) = border[2];
+    }
+    U(self, 0x220) |= 2;                                                 // 0x0047a50d / 0x0047a514
+    for (int k = 0; k < 4; k++) {                                        // 0x0047a51a, 0x0047a55d, 0x0047a59d, 0x0047a5d9
+        void* p = kOperatorNew(0x2b8);
+        void* img = p ? reinterpret_cast<void*>(kImageCtor(p, 0)) : 0;
+        P(self, 0x11c + 4 * k) = img;                                    // stored before the test
+        if (!img) return 4;                                              // 0x0047a54e, 0x0047a58e, 0x0047a5ca, 0x0047a60a
+    }
+    if (flags & 0xf0000000) {                                            // 0x0047a618
+        if (VSlot0(self, 0x11c)(self, 0) == 0) return 3;                 // 0x0047a624 / 0x0047a62e
+    }
+    if (flags & 0x80000) flags |= 0x20;                                  // 0x0047a638 / 0x0047a640
+    void** disp = reinterpret_cast<void**>(0x0083ad50);
+    if (x < 0) {                                                         // 0x0047a655 jge
+        if (parent) x += I(parent, 0x1b4) - I(parent, 0x1ac) - w;        // 0x0047a65b..0x0047a671
+        else if (*disp == 0) x += -w;                                    // 0x0047a6a9..0x0047a6b3
+        else x += static_cast<int>(VSlot0(*disp, 0xa8)(*disp, 0)) - w;   // 0x0047a6bb..0x0047a6cf
+    }
+    if (y < 0) {                                                         // 0x0047a681 jge
+        if (parent) y += I(parent, 0x1b8) - I(parent, 0x1b0) - h;        // 0x0047a687..0x0047a69b
+        else if (*disp == 0) y += -h;                                    // 0x0047a6d9..0x0047a6e1
+        else y += static_cast<int>(VSlot0(*disp, 0xac)(*disp, 0)) - h;   // 0x0047a6e7..0x0047a6f1
+    }
+    if (!parent) {                                                       // 0x0047a6f5 / 0x0047a6f7
+        void* dp = G<void*>(0x0083aa9c);                                 // 0x0047a6f9
+        if (dp) parent = dp;                                             // 0x0047a700 / 0x0047a702
+    }
+    U(self, 0x9c) = flags;                                               // 0x0047a714
+    P(self, 0x130) = parent;                                             // 0x0047a71c
+    P(self, 0x15c) = owner;                                              // 0x0047a722
+    if (label && *label && !(flags & 0x400080)) {                        // 0x0047a728..0x0047a734
+        flags |= 0x10;                                                   // 0x0047a736
+        U(self, 0x9c) = flags;                                           // 0x0047a738
+    }
+    if (parent) {
+        kChildInsert(parent, 0, reinterpret_cast<unsigned>(self));      // 0x0047a745
+    } else {
+        if (G<int>(0x0083ab94) == 0x80) {                                // 0x0047a74c
+            kLayoutNode(self, 0);                                        // 0x0047a75a
+            reinterpret_cast<MessageBoxA_t>(G<unsigned>(0x004ba1f4))(0, reinterpret_cast<const char*>(0x004e42f0),
+                                                                      reinterpret_cast<const char*>(0x004e4304), 0);
+            kExit(4);                                                    // 0x0047a775
+        }
+        kZPush(self);                                                    // 0x0047a77b
+    }
+    unsigned f = U(self, 0x9c);                                          // 0x0047a783
+    if (!(f & 0x80) && (f & 0x1d)) {                                     // 0x0047a789 / 0x0047a78d
+        U(self, 0xa0) |= 2;                                              // 0x0047a797
+    } else {
+        U(self, 0xa0) &= ~2u;                                            // 0x0047a7a7
+        U(self, 0x9c) = f & 0xfffffbee;                                  // 0x0047a7aa / 0x0047a7b5
+    }
+    void* Q = B(self) + 0x1ac;
+    void* R = B(self) + 0x1bc;
+    f = U(self, 0x9c);                                                   // 0x0047a7bb
+    if (!(f & 0x800) && (U(self, 0xa0) & 2)) {                           // 0x0047a7c1 / 0x0047a7c6
+        I(R, 0) = x;                                                     // 0x0047a7e7
+        I(R, 4) = y;
+        I(R, 8) = x + w;
+        I(R, 0xc) = y + h;                                               // 0x0047a7f6
+        Rect4(Q, R);
+        kShrinkRect(self, 0, reinterpret_cast<unsigned>(Q));             // 0x0047a814
+        int dx = -I(R, 0);                                               // 0x0047a819 / 0x0047a827
+        int dy = -I(self, 0x1c0);                                        // 0x0047a81e / 0x0047a82b
+        int right = I(Q, 8);
+        I(Q, 0) += dx;                                                   // 0x0047a82d
+        I(Q, 8) = right + dx;                                            // 0x0047a89d
+        I(Q, 4) += dy;                                                   // 0x0047a8a9
+        I(Q, 0xc) += dy;                                                 // 0x0047a8b1
+    } else {
+        I(Q, 0) = x;                                                     // 0x0047a845
+        I(Q, 4) = y;
+        I(Q, 8) = x + w;
+        I(Q, 0xc) = y + h;                                               // 0x0047a851
+        if (U(self, 0xa0) & 2) {                                         // 0x0047a854
+            Rect4(R, Q);
+            kGrowRect(self, 0, reinterpret_cast<unsigned>(R));           // 0x0047a880
+            int dx = -I(R, 0);                                           // 0x0047a885 / 0x0047a893
+            int dy = -I(self, 0x1c0);                                    // 0x0047a88a / 0x0047a897
+            int right = I(Q, 8);
+            I(Q, 0) += dx;                                               // 0x0047a899
+            I(Q, 8) = right + dx;                                        // 0x0047a89d
+            I(Q, 4) += dy;
+            I(Q, 0xc) += dy;
+        }
+    }
+    Rect4(B(self) + 0x1cc, Q);                                           // 0x0047a8b4..0x0047a8d4
+    kLabelSetText(self, 0, reinterpret_cast<unsigned>(label));          // 0x0047a8d9
+    VSlot0(self, 0x130)(self, 0);                                        // 0x0047a8e2
+    if (owner) {                                                         // 0x0047a8ea
+        unsigned r = VSlot1(owner, 0x16c)(owner, 0, reinterpret_cast<unsigned>(self));   // 0x0047a8f2
+        if (r) {                                                         // 0x0047a8fc
+            kLayoutNode(self, 0);                                        // 0x0047a900
+            return r;
+        }
+    }
+    f = U(self, 0x9c);                                                   // 0x0047a90c
+    if (f & 0x10) I(self, 0x1ec) = I(self, 0x180);                       // 0x0047a914 / 0x0047a916
+    else if (!(f & 0x20)) I(self, 0x1ec) = I(self, 0x184);               // 0x0047a920 / 0x0047a922
+    I(self, 0x1f0) = (f & 0x400) ? I(self, 0x184) : 0;                   // 0x0047a92e..0x0047a941
+    if (f & 4) {                                                         // 0x0047a94b / 0x0047a952
+        if (f & 0x40) P(self, 0x270) = reinterpret_cast<void*>(VSlot0(self, 0x18)(self, 0));   // 0x0047a960
+        if (!P(self, 0x270)) {                                           // 0x0047a971
+            void* p = kOperatorNew(0x13b4);                              // 0x0047a978
+            void* sb = p ? reinterpret_cast<void*>(kScrollbarCtor(p, 0)) : 0;
+            P(self, 0x270) = sb;                                         // 0x0047a9a1
+            if (!sb) return 4;                                           // 0x0047a9a9
+            int bd = G<int>(0x0083ff10);                                 // 0x0047a9b6
+            int a2 = I(self, 0x1b8) - bd;                                // 0x0047a9c2
+            int a3 = (U(self, 0x9c) & 8) ? I(self, 0x1b4) - I(Q, 0) - bd   // 0x0047a9c4 / 0x0047a9cf / 0x0047a9d5
+                                         : I(self, 0x1b4) - I(Q, 0);       // 0x0047a9d3 / 0x0047a9d5
+            kScrollbarCreateB(sb, 0, 0, a2, a3, reinterpret_cast<unsigned>(self), static_cast<unsigned>(-2));  // 0x0047a9e0
+            void* s2 = P(self, 0x270);                                   // 0x0047a9e5
+            VSlot1(s2, 4)(s2, 0, 0);                                     // 0x0047a9ef
+        }
+    }
+    f = U(self, 0x9c);                                                   // 0x0047a9f2
+    if (f & 8) {                                                         // 0x0047a9f8 / 0x0047a9fa
+        if (f & 0x40) P(self, 0x26c) = reinterpret_cast<void*>(VSlot0(self, 0x18)(self, 0));   // 0x0047aa08
+        if (!P(self, 0x26c)) {                                           // 0x0047aa19
+            void* p = kOperatorNew(0x13b4);                              // 0x0047aa24
+            void* sb = p ? reinterpret_cast<void*>(kScrollbarCtor(p, 0)) : 0;
+            P(self, 0x26c) = sb;                                         // 0x0047aa51
+            if (!sb) return 4;                                           // 0x0047aa59
+            int bd = G<int>(0x0083ff10);                                 // 0x0047aa66
+            int a1 = I(self, 0x1b4) - bd;                                // 0x0047aa72
+            int a3 = (U(self, 0x9c) & 4) ? I(self, 0x1b8) - I(self, 0x1b0) - bd   // 0x0047aa74 / 0x0047aa7f / 0x0047aa8d
+                                         : I(self, 0x1b8) - I(self, 0x1b0);       // 0x0047aa87 / 0x0047aa8d
+            kScrollbarCreateA(sb, 0, static_cast<unsigned>(a1), 0, static_cast<unsigned>(a3),
+                              reinterpret_cast<unsigned>(self), static_cast<unsigned>(-1));          // 0x0047aa98
+            void* s2 = P(self, 0x26c);                                   // 0x0047aa9d
+            VSlot1(s2, 4)(s2, 0, 0);                                     // 0x0047aaa7
+        }
+    }
+    kReleaseScrollbars(self, 0);                                         // 0x0047aaac
+    G<void*>(0x0083ab2c) = self;                                         // 0x0047aab1
+    if (U(self, 0x9c) & 0x100000) kViewAttach(self, 0, reinterpret_cast<unsigned>(parent));   // 0x0047aabd / 0x0047aacb
+    U(self, 0xa0) |= 4;                                                  // 0x0047aad0..0x0047aad8
+    return 0;                                                            // 0x0047aade
+}
+
+// 0x004806c0  Window::create(x, y, w, h, label, flags, parent, owner, border), `ret 0x24`
+// Window::ctorInit (0x004806d9); with flags 0x30000000 eleven dwords from 0x0083abe4..0x0083ac0c into +0x52c..+0x554
+// (0x004806ee..0x00480768); with flag 0x40000000 a new Image (operator new 0x2b8 + Image_ctor, NULL kept) at +0x568
+// (0x00480776..0x004807a6). layoutViewTree with the same nine arguments (0x004807d7); its non-zero result is returned.
+// Then Window::calcSizeFromCorners (0x004807e2); with flag 0x800 clear Window::innerSize(&w, &h) (0x004807fb), else the
+// border 0x0083ff10 is added to w with +0x9c bit 8 and to h with bit 4 (0x00480802..0x0048081a). Surface_createFull on
+// the Image +0x274 with (w, h, (flags >> 28) & 8, 1, 0, 0) (0x0048083d): a non-zero result is returned, else
+// Widget_applyPalette(0x0083ad10) and 0 (0x0048084f / 0x00480854).
+typedef unsigned(__fastcall* Create_t)(void* self, void* edx, int x, int y, int w, int h, const char* label,
+                                       unsigned flags, void* parent, void* owner, int* border);
+Create_t WindowCreate_orig2;
+unsigned __fastcall WindowCreate_re(void* self, void*, int x, int y, int w, int h, const char* label, unsigned flags,
+                                    void* parent, void* owner, int* border) {
+    kCtorInit(self, 0);                                                  // 0x004806d9
+    if (flags & 0x30000000) {                                            // 0x004806e2
+        U(self, 0x52c) = G<unsigned>(0x0083abe4);
+        U(self, 0x534) = G<unsigned>(0x0083abec);
+        U(self, 0x530) = G<unsigned>(0x0083abe8);
+        U(self, 0x538) = G<unsigned>(0x0083abf0);
+        U(self, 0x548) = G<unsigned>(0x0083abf4);
+        U(self, 0x544) = G<unsigned>(0x0083abf8);
+        U(self, 0x53c) = G<unsigned>(0x0083abfc);
+        U(self, 0x540) = G<unsigned>(0x0083ac00);
+        U(self, 0x54c) = G<unsigned>(0x0083ac08);
+        U(self, 0x550) = G<unsigned>(0x0083ac04);
+        U(self, 0x554) = G<unsigned>(0x0083ac0c);                        // 0x00480768
+    }
+    if (flags & 0x40000000) {                                            // 0x0048076e
+        void* p = kOperatorNew(0x2b8);                                   // 0x0048077b
+        P(self, 0x568) = p ? reinterpret_cast<void*>(kImageCtor(p, 0)) : 0;   // 0x00480795 / 0x004807a6
+    }
+    unsigned r = reinterpret_cast<Layout_t>(0x0047a4c0)(self, 0, x, y, w, h, label, flags, parent, owner, border);
+    if (r) return r;                                                     // 0x004807de
+    kCalcSize(self, 0);                                                  // 0x004807e2
+    if (!(flags & 0x800)) {                                              // 0x004807e7
+        kInnerSize(self, 0, reinterpret_cast<unsigned>(&w), reinterpret_cast<unsigned>(&h));   // 0x004807fb
+    } else {
+        unsigned f = U(self, 0x9c);                                      // 0x00480802
+        int bd = G<int>(0x0083ff10);
+        if (f & 8) w += bd;                                              // 0x0048080e / 0x00480812
+        if (f & 4) h += bd;                                              // 0x00480816 / 0x0048081a
+    }
+    r = kCreateFull(B(self) + 0x274, 0, static_cast<unsigned>(w), static_cast<unsigned>(h), (flags >> 0x1c) & 8, 1, 0, 0);
+    if (r) return r;                                                     // 0x00480844
+    kApplyPalette(B(self) + 0x274, 0, G<unsigned>(0x0083ad10));          // 0x0048084f
+    return 0;                                                            // 0x00480854
+}
+
+// 0x0047d7c0  View::ctorVtbl47d7c0 (its callers are the EH unwind funclets 0x004b7be0 / 0x004b7c00): the vtable
+// 0x004baa14 that initWidgetTable 0x00495d30 stores (0x00495d32) into +0 (0x0047d7c0), then a tail jump to
+// resetWidgetTable 0x00495eb0 (0x0047d7c6), which copies the template 0x0083fe78.. back into the table; eax is
+// resetWidgetTable's (the unwind funclets do not read it; the registry keys declare void).
+const T0_t kResetWidgetTable  = reinterpret_cast<T0_t>(0x00495eb0);
+T0_t ViewCtorVtbl_orig;
+unsigned __fastcall ViewCtorVtbl_re(void* self, void*) {
+    U(self, 0) = 0x004baa14;                                             // 0x0047d7c0
+    return kResetWidgetTable(self, 0);                                   // 0x0047d7c6 jmp
+}
+
+}  // namespace
+
+SG_HOOK("golf_clean.exe", 0x0047d7c0, View_ctorVtbl47d7c0, ViewCtorVtbl_re, ViewCtorVtbl_orig);
+SG_HOOK("golf_clean.exe", 0x0047a4c0, layoutViewTree, LayoutViewTree_re, LayoutViewTree_orig);
+SG_HOOK("golf_clean.exe", 0x004806c0, Window_create, WindowCreate_re, WindowCreate_orig2);
+SG_HOOK("golf_clean.exe", 0x0048d480, TextView_reset, TextViewReset_re, TextViewReset_orig);
+SG_HOOK("golf_clean.exe", 0x00489120, Button_detach, ButtonDetach_re, ButtonDetach_orig);
+SG_HOOK("golf_clean.exe", 0x004860d0, EditBox_dtor, EditBoxDtor_re, EditBoxDtor_orig);
+SG_HOOK("golf_clean.exe", 0x0043cb50, editBoxTimer_dtor, EditBoxTimerDtor_re, EditBoxTimerDtor_orig);
+SG_HOOK("golf_clean.exe", 0x004886d0, Button_resetFields, ButtonResetFields_re, ButtonResetFields_orig);
+SG_HOOK("golf_clean.exe", 0x00488650, Button_dtor, ButtonDtor_re, ButtonDtor_orig);
+SG_HOOK("golf_clean.exe", 0x004961d0, controlInitBase, ControlInitBase_re, ControlInitBase_orig);
+SG_HOOK("golf_clean.exe", 0x00489e40, ListBox_resetFields, ListBoxReset_re, ListBoxReset_orig);
+SG_HOOK("golf_clean.exe", 0x00489de0, ListBox_dtor, ListBoxDtor_re, ListBoxDtor_orig);
+SG_HOOK("golf_clean.exe", 0x0049ece0, viewFieldCleanup49ece0, Cleanup49ece0_re, Cleanup49ece0_orig);
+SG_HOOK("golf_clean.exe", 0x0049d690, viewFieldCleanup49d690, Cleanup49d690_re, Cleanup49d690_orig);
+SG_HOOK("golf_clean.exe", 0x004a23a0, viewFieldReset4a23a0, Reset4a23a0_re, Reset4a23a0_orig);
+SG_HOOK("golf_clean.exe", 0x004a2330, viewFieldDtor4a2330, FieldDtor4a2330_re, FieldDtor4a2330_orig);
+SG_HOOK("golf_clean.exe", 0x0049ec80, viewFieldDtor49ec80, FieldDtor49ec80_re, FieldDtor49ec80_orig);
+SG_HOOK("golf_clean.exe", 0x00491680, Dialog_childDtor, DialogChildDtor_re, DialogChildDtor_orig);
+SG_HOOK("golf_clean.exe", 0x00491ad0, listPanelDeletingDtor, ListPanelDeletingDtor_re, ListPanelDeletingDtor_orig);
+SG_HOOK("golf_clean.exe", 0x004a35e0, panelSubReset4a35e0, PanelSubReset_re, PanelSubReset_orig);
+SG_HOOK("golf_clean.exe", 0x004a3480, panelSubDtor4a3480, PanelSubDtor_re, PanelSubDtor_orig);
+SG_HOOK("golf_clean.exe", 0x004a3790, panelOpenReset4a3790, PanelOpenReset_re, PanelOpenReset_orig);
+
+SG_HOOK("golf_clean.exe", 0x00488500, Button_ctor, ButtonCtor_re, ButtonCtor_orig);
+SG_HOOK("golf_clean.exe", 0x004a13f0, ctorObj4a13f0, CtorObj4a13f0_re, CtorObj4a13f0_orig);
+SG_HOOK("golf_clean.exe", 0x0049d5a0, viewFieldCtor49d5a0, Field49d5a0Ctor_re, Field49d5a0Ctor_orig);
+SG_HOOK("golf_clean.exe", 0x0049ebb0, viewFieldCtor49ebb0, Field49ebb0Ctor_re, Field49ebb0Ctor_orig);
+SG_HOOK("golf_clean.exe", 0x004a3110, panelSubCtor4a3110, PanelSubCtor_re, PanelSubCtor_orig);
+SG_HOOK("golf_clean.exe", 0x004a0740, viewCtor4a0740, ViewCtor4a0740_re, ViewCtor4a0740_orig);
+SG_HOOK("golf_clean.exe", 0x00489b30, ListModel_destroyNodes, DestroyNodes_re, DestroyNodes_orig);
+SG_HOOK("golf_clean.exe", 0x00489c90, ListBox_subDtor, ListSubDtor_re, ListSubDtor_orig);
+SG_HOOK("golf_clean.exe", 0x004a3370, panelSubDtor4a3370, PanelListSubDtor_re, PanelListSubDtor_orig);
+SG_HOOK("golf_clean.exe", 0x00489350, ListModel_scalarDtor, ListModelScalarDtor_re, ListModelScalarDtor_orig);
+SG_HOOK("golf_clean.exe", 0x0049c8b0, freeCacheField, FreeCacheField_re, FreeCacheField_orig);
+SG_HOOK("golf_clean.exe", 0x004897f0, ListModel_reset, ListModelReset_re, ListModelReset_orig);
+SG_HOOK("golf_clean.exe", 0x004896b0, ListModel_setKey, ListModelSetKey_re, ListModelSetKey_orig);
+SG_HOOK("golf_clean.exe", 0x004a3860, panelReset4a3860, PanelReset_re, PanelReset_orig);

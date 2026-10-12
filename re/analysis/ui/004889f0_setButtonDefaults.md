@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 15 instructions, subsystem `ui`. Mechanical t
 Stores the default button font/colour globals g_0083b60c/g_0083b610/g_0083b614. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+setButtonDefaults (0x004889f0) stores the three default-button globals from (obj, font, colour). It returns 3 when obj is NULL (`test eax,eax` / `jne` at 0x004889f4..0x004889f6); otherwise it stores obj into 0x0083b60c only when the dword at obj+4 is non-zero (`mov ecx,[eax+4]` / `test` / `je` at 0x004889fe..0x00488a03, store at 0x00488a05), then stores font into 0x0083b610 and colour into 0x0083b614 (0x00488a12 / 0x00488a17) and returns 0. A writer of three adjacent globals; it reads one field (obj+4) of its argument. Reimplemented in `shim/src/re/c3l.cpp`; path-1 A/B GREEN: setButtonDefaults (7 vectors, 7 distinct results, 6 changing state, `log/diff/004889f0_setButtonDefaults.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004889fd, 0x00488a1f): callee pops 0 bytes of stack arguments.
 

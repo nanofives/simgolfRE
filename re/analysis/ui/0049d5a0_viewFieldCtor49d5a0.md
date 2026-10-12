@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 231 bytes, 61 instructions, subsystem `ui`. Mechanical 
 constructs one sub-field of the composite view built at 0x004a0740. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`, `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Constructs the field-view part of the TextView composite that viewCtor4a0740 builds at +0x58 (0x004a07e4) over a Window virtual base and a ListModel virtual base. With a non-zero build argument (`cmp eax, edi; je` 0x0049d5c4) it is the most-derived class: vbptr 0x004bbe7c at +0 (0x0049d5d1), View4804a0::ctor on +0x24 (0x0049d5d7) and ListModel::ctor on +0x59c (0x0049d5ee); with build 0 the caller has already done that. Then, through the vbptr's entries +4 / +8 (re-read from [this] at each step), the Window base gets the vtable 0x004bb744 and its Image 0x004bb730, the ListModel base 0x004bb724, and the dwords before them the vtordisp values offset - 0x24 and offset - 0x59c (0x0049d5f3..0x0049d632); +0x10 = +0x14 = 0, +8 / +0xc / +4 = the dwords 0x004e4a14 / 0x004e4a18 / 0x004e4a10, and +0x18 and +0x1c both = the ListModel base's dword +0x80 (0x0049d659..0x0049d674). Returns this; `ret 4`. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: viewFieldCtor49d5a0_s0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049d5a0_viewFieldCtor49d5a0_s0.path1.csv`); viewFieldCtor49d5a0_s1 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049d5a0_viewFieldCtor49d5a0_s1.path1.csv`); viewFieldCtor49d5a0_s2 (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049d5a0_viewFieldCtor49d5a0_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_49d5a0.cpp` as `??0D49d5a0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049d684): callee pops 4 bytes of stack arguments.

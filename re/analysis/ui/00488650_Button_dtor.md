@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 121 bytes, 27 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: resets fields, destroys both Timers, chains to base dtor. (`re/names/exe_4.tsv`)
 
+## Purpose
+The Button's complete destructor: the Button vtables 0x004bb0a8 / 0x004bb094 (0x0048866d / 0x00488673), Button::resetFields (0x00488685), Timer::dtor on +0x5b4 and then +0x57c (0x00488695 / 0x004886a5) and Base4805a0::dtor (0x004886b4), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: Button::dtor_a (12 vectors, 12 distinct results, 12 changing state, `log/diff/00488650_Button_dtor_a.path1.csv`); Button::dtor_b (12 vectors, 12 distinct results, 12 changing state, `log/diff/00488650_Button_dtor_b.path1.csv`); Button::dtor_c (12 vectors, 12 distinct results, 12 changing state, `log/diff/00488650_Button_dtor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??1R1C488500@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004886c8): callee pops 0 bytes of stack arguments.

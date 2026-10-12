@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 105 bytes, 24 instructions, subsystem `ui`. Mechanical 
 destructor of a composite UI object that owns an EditBox and a Timer: destroys the Timer, EditBox and base subobjects (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+The EditBox's complete destructor (called by its deleting destructor 0x0043cbd0): the EditBox vtables 0x004ba4a8 at +0 and 0x004ba494 at +0x274 (0x0043cb6d / 0x0043cb73), EditBox::dtor (0x0043cb85), Timer::dtor on the Timer +0x5ac (0x0043cb95) and Base4805a0::dtor (0x0043cba4), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: editBoxTimer_dtor_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/0043cb50_editBoxTimer_dtor_a.path1.csv`); editBoxTimer_dtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/0043cb50_editBoxTimer_dtor_b.path1.csv`); editBoxTimer_dtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/0043cb50_editBoxTimer_dtor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `??1R0C43cb50@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043cbb8): callee pops 0 bytes of stack arguments.

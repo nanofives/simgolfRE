@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 141 bytes, 40 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Destroys the embedded window and model and reloads the control's default colours. (`re/names/exe_4.tsv`)
 
+## Purpose
+Resets the ListBox part (vbptr at +4): Window::ctorInit on the Window base this + 4 + [[this+4]+4] (0x00489e4d), ListModel::clear on the ListModel base this + 4 + [[this+4]+8] (0x00489e5c), -1 at +0x20 / +0x24, zeros at +0xc, +0x10, +0x28, +0x2c, +0x30, +0x44..+0x54, +0x14, the copies +0x34 / +0x38 / +0x3c / +0x18 / +0x1c of 0x004e44d0 / 0x0083b648 / 0x004e44d4 / 0x004e44d8 / 0x004e44dc, and 1 into the dword this + [[this+4]+8] + 0xbc (0x00489eae: the vbptr's own offset 4 is not added, so it is the ListModel base's +0xb8). Returns 0 (0x00489e6a). Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ListBox::resetFields_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/00489e40_ListBox_resetFields_a.path1.csv`); ListBox::resetFields_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/00489e40_ListBox_resetFields_b.path1.csv`); ListBox::resetFields_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/00489e40_ListBox_resetFields_c.path1.csv`); ListBox::resetFields_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489e40_ListBox_resetFields_tva.path1.csv`); ListBox::resetFields_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489e40_ListBox_resetFields_tvb.path1.csv`); ListBox::resetFields_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489e40_ListBox_resetFields_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00489e40@f_00489e40@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00489ecc): callee pops 0 bytes of stack arguments.

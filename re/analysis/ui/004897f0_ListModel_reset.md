@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 159 bytes, 63 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Clears the item list and stores a context pointer at this+0x1c/0xd8. (`re/names/exe_4.tsv`)
 
+## Purpose
+Resets a ListModel to an empty one keyed by its argument: ListModel::clear (0x004897f4), +0x20 = -1, +0x1c = arg (0x004897fd / 0x00489804); on the node list at +0xc0 the node loop runs when its head is set (0x00489817; ListModel::clear always leaves it 0), then last = 0 and +0x18 = arg (0x00489882 / 0x00489885). Returns 0 (0x00489889); `ret 4`. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ListModel::reset (6 vectors, 6 distinct results, 6 changing state, `log/diff/004897f0_ListModel_reset.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?reset@C4897f0@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048988c): callee pops 4 bytes of stack arguments.

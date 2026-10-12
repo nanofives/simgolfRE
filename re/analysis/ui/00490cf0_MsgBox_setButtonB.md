@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 48 bytes, 15 instructions, subsystem `ui`. Mechanical t
 Stores the message-box button-B object/callbacks into globals g_0083b9c4/0x83b9c8/0x83b9cc. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+MsgBox::setButtonB (0x00490cf0) stores the message-box button-B globals from (obj, cb, ctx), with the same shape as setButtonDefaults. It returns 3 when obj is NULL (`test eax,eax` / `jne` at 0x00490cf4..0x00490cf6); otherwise it stores obj into 0x0083b9c4 only when the dword at obj+4 is non-zero (`mov ecx,[eax+4]` / `test` / `je` at 0x00490cfe..0x00490d03, store at 0x00490d05), then stores cb into 0x0083b9c8 and ctx into 0x0083b9cc (0x00490d12 / 0x00490d17) and returns 0. A writer of three adjacent globals that reads one field (obj+4) of its argument. Reimplemented in `shim/src/re/c3l.cpp`; path-1 A/B GREEN: MsgBox::setButtonB (7 vectors, 7 distinct results, 6 changing state, `log/diff/00490cf0_MsgBox_setButtonB.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00490cfd, 0x00490d1f): callee pops 0 bytes of stack arguments.
 

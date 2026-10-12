@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 27 bytes, 9 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 Sub-object destructor that restores g_00839650 from field [0x2c]. (`re/names/exe_4.tsv`)
 
+## Purpose
+The complete destructor of a ListModel-class node list (a list object with its list-heap base at +0x28, such as ListModel+0xc0): ListModel::destroyNodes on this + 0x28 (0x00489c96), then the base's vtable 0x004ba278 (0x00489c9e) and the saved list-heap pointer (+0x2c) back into the global 0x00839650 (0x00489ca4). Returns that pointer (0x00489c9b). The name says ListBox; the body only touches the node list. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ListBox::subDtor (7 vectors, 7 distinct results, 7 changing state, `log/diff/00489c90_ListBox_subDtor.path1.csv`); ListBox::subDtor_b (7 vectors, 7 distinct results, 7 changing state, `log/diff/00489c90_ListBox_subDtor_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_00.cpp` as `??1C489c90@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00489caa): callee pops 0 bytes of stack arguments.

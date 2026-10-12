@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 104 bytes, 23 instructions, subsystem `ui`. Mechanical 
 destructor for the C4a23a0 view sub-field object. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The 4a2250 field part's destructor, called with this = the part + 0x8c (Dialog::viewDtor 0x004915b7 / 0x004915bd): with F = this - 0x8c, the part's Window vtable 0x004bc0a8, its Image 0x004bc094, the ListModel vtable 0x004bc088 and the vtordisps against 0x8c / 0x604 (0x004a2333..0x004a238a), then viewFieldReset4a23a0 on F (0x004a2391), whose eax it leaves. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: viewFieldDtor4a2330_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a2330_viewFieldDtor4a2330_a.path1.csv`); viewFieldDtor4a2330_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a2330_viewFieldDtor4a2330_b.path1.csv`); viewFieldDtor4a2330_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a2330_viewFieldDtor4a2330_c.path1.csv`); viewFieldDtor4a2330_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a2330_viewFieldDtor4a2330_tva.path1.csv`); viewFieldDtor4a2330_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a2330_viewFieldDtor4a2330_tvb.path1.csv`); viewFieldDtor4a2330_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a2330_viewFieldDtor4a2330_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `??1C4a23a0@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a2397): callee pops 0 bytes of stack arguments.

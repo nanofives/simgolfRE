@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the ListModel. (`re/names/exe_4.tsv`)
 
+## Purpose
+Slot 0 of the ListModel vtable 0x004bb21c: ListModel::dtor (0x00489353), then operator delete 0x004a4ffc on this when bit 0 of the flags argument is set (`test byte [esp+8], 1; je` 0x00489358 / 0x0048935d). Returns this (0x00489368); `ret 4`. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ListModel::scalarDtor (6 vectors, 6 distinct results, 6 changing state, `log/diff/00489350_ListModel_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00489350@C_FUN_00489350@f_00489350@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048936b): callee pops 4 bytes of stack arguments.

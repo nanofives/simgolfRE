@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 93 bytes, 24 instructions, subsystem `ui`. Mechanical t
 Destructor for the list-box control. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The ListBox part's destructor, called with this = the part + 0x5c (the Window offset of a stand-alone ListBox; Dialog::viewDtor 0x00491658 passes it so): with L = this - 0x5c, the ListBox vtable 0x004bb3cc at L+0 (0x00489de6) and, through the vbptr at L+4, the Window vtable 0x004bb260, its Image 0x004bb24c, the ListModel vtable 0x004bb240 and the vtordisps offset - 0x58 / offset - 0x5d0 (0x00489dec..0x00489e32); then ListBox::resetFields on L (0x00489e36), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ListBox::dtor_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/00489de0_ListBox_dtor_a.path1.csv`); ListBox::dtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/00489de0_ListBox_dtor_b.path1.csv`); ListBox::dtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/00489de0_ListBox_dtor_c.path1.csv`); ListBox::dtor_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489de0_ListBox_dtor_tva.path1.csv`); ListBox::dtor_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489de0_ListBox_dtor_tvb.path1.csv`); ListBox::dtor_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489de0_ListBox_dtor_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C489de0@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00489e3c): callee pops 0 bytes of stack arguments.

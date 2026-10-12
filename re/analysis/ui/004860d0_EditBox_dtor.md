@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 49 bytes, 16 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: frees the text buffer field [0x15d], resets fields, destroys the caret Timer, chains to base dtor. (`re/names/exe_4.tsv`)
 
+## Purpose
+Releases an EditBox's state: frees the text buffer +0x574 (EditBox::resizeBuffer's block) when set (0x004860db / 0x004860de), EditBox::resetFields (0x004860e8), Timer::reset on its Timer at +0x5ac (0x004860f3) and Window::ctorInit (0x004860fa), whose eax (the +0x568 object's slot result or the global 0x0083ac18) it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: EditBox::dtor_a (6 vectors, 1 distinct results, 6 changing state, `log/diff/004860d0_EditBox_dtor_a.path1.csv`); EditBox::dtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/004860d0_EditBox_dtor_b.path1.csv`); EditBox::dtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/004860d0_EditBox_dtor_c.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `??1C4860d0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00486100): callee pops 0 bytes of stack arguments.

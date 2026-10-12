@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 289 bytes, 59 instructions, subsystem `ui`. Mechanical 
 Constructs a push-button control: Widget base, two Timers (press/tooltip) at this+0x15f and 0x16d, default colors from DAT_004e443c etc. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+Constructs a Button: the window base by View4804a0::ctor (0x0048851e), two Timers by Timer::ctor at +0x57c and +0x5b4 (0x0048852f / 0x0048853f), the Button vtables 0x004bb0a8 at +0 and 0x004bb094 at the Image sub-object +0x274 (0x00488544 / 0x0048854a), then the button fields: +0x5ec / +0x5f0 from the dwords 0x004e4480 / 0x004e4484, zeros at +0x574, +0x5e4, +0x5e8, +0x614 (the pressed flag Button::beginPress sets at 0x00488ae1), +0x5f4 (the label Button::create mallocs at 0x004887fe), +0x5f8 (the tooltip Button::setTooltip mallocs), +0x620..+0x62c and +0x61c, -1 at +0x5ac and +0x5b0, +0x60c from 0x0083b604, +0x5fc..+0x608 from 0x004e443c..0x004e4448, +0x610 from 0x0083b608 and +0x618 from 0x004e444c (0x00488554..0x0048860c). Returns this (0x00488612). Straight-line code: no conditional branch. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: Button::ctor_s0 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00488500_Button_ctor_s0.path1.csv`); Button::ctor_s1 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00488500_Button_ctor_s1.path1.csv`); Button::ctor_s2 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00488500_Button_ctor_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??0R1C488500@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00488620): callee pops 0 bytes of stack arguments.

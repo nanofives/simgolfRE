@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 127 bytes, 36 instructions, subsystem `ui`. Mechanical 
 scalar deleting destructor of the sub-field built by viewFieldCtor49d5a0 0x0049d5a0: writes the three base vtables 0x004bb744, 0x004bb730 and 0x004bb724 back into the object and restores the two displacement fields, calls viewFieldCleanup49d690 0x0049d690 with this-0x24, ListModel::dtor 0x00489370 with this+0x578 and Base4805a0::dtor 0x004805a0 with this, calls operatorDelete_4a4ffc 0x004a4ffc with this-0x24 when bit 0 of the byte argument is set (0x00491b38), and returns this-0x24 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The deleting destructor of a stand-alone 49d5a0 field (reached through 0x00491ac0), this = the field + 0x24: the same vtable and vtordisp stores as Dialog::childDtor (0x00491ad8..0x00491b1d), viewFieldCleanup49d690 on F = this - 0x24 (0x00491b21), ListModel::dtor on F + 0x59c (0x00491b2c), Base4805a0::dtor on F + 0x24 (0x00491b33) and operator delete of F when bit 0 of the flags is set (0x00491b38 / 0x00491b40). Returns F (0x00491b48); `ret 4`. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: listPanelDeletingDtor_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491ad0_listPanelDeletingDtor_a.path1.csv`); listPanelDeletingDtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491ad0_listPanelDeletingDtor_b.path1.csv`); listPanelDeletingDtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491ad0_listPanelDeletingDtor_c.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00491b4c): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00491ad2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

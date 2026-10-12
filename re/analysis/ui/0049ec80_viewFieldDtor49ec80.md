@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 83 bytes, 23 instructions, subsystem `ui`. Mechanical t
 destructor for the view sub-field built by viewFieldCtor49ebb0. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The 49ebb0 field part's destructor, called with this = the part + 0x1c (Dialog::viewDtor 0x004915f3 / 0x004915f6): the part's vtables 0x004bbeb0 / 0x004bbe9c / 0x004bbe90 and the vtordisps against 0x1c / 0x594 (0x0049ec83..0x0049ecc8), then viewFieldCleanup49ece0 on the part (0x0049eccc), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: viewFieldDtor49ec80_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049ec80_viewFieldDtor49ec80_a.path1.csv`); viewFieldDtor49ec80_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049ec80_viewFieldDtor49ec80_b.path1.csv`); viewFieldDtor49ec80_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049ec80_viewFieldDtor49ec80_c.path1.csv`); viewFieldDtor49ec80_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049ec80_viewFieldDtor49ec80_tva.path1.csv`); viewFieldDtor49ec80_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049ec80_viewFieldDtor49ec80_tvb.path1.csv`); viewFieldDtor49ec80_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049ec80_viewFieldDtor49ec80_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C49ec80@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049ecd2): callee pops 0 bytes of stack arguments.

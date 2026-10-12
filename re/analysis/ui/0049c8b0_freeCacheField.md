@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 41 bytes, 15 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 destroys and frees the cache object held at param_1+4 (Cache dtor then operator delete), clearing the field (`re/names/exe_6.tsv`)
 
+## Purpose
+Slot 1 of the table 0x004babac (installed by Cache482f60::ctor; createCache 0x0049c830 is slot 0): when the holder's +4 holds a cache (0x0049c8b9 / 0x0049c8bb), Cache483010::dtor on it (0x0049c8bf), operator delete (0x0049c8c5) and +4 = 0 (0x0049c8cd). stdcall, `ret 4`; eax at the return is not a result. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: freeCacheField (6 vectors, 6 distinct results, 5 changing state, `log/diff/0049c8b0_freeCacheField.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_0049c8b0@f_0049c8b0@@YGXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049c8d6): callee pops 4 bytes of stack arguments.

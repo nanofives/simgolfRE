@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 83 bytes, 23 instructions, subsystem `ui`. Mechanical t
 Destroys one embedded child control group of the dialog. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+The 49d5a0 field part's destructor, called with this = the part + 0x24: the part's vtables 0x004bb744 / 0x004bb730 / 0x004bb724 and the vtordisps against 0x24 / 0x59c (0x00491683..0x004916c8), then viewFieldCleanup49d690 on the part (0x004916cc), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: Dialog::childDtor_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491680_Dialog_childDtor_a.path1.csv`); Dialog::childDtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491680_Dialog_childDtor_b.path1.csv`); Dialog::childDtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/00491680_Dialog_childDtor_c.path1.csv`); Dialog::childDtor_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/00491680_Dialog_childDtor_tva.path1.csv`); Dialog::childDtor_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/00491680_Dialog_childDtor_tvb.path1.csv`); Dialog::childDtor_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/00491680_Dialog_childDtor_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `??1C491680@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004916d2): callee pops 0 bytes of stack arguments.

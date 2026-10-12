@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 197 bytes, 58 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 opens the resource and resets the panel sub-view. (`re/names/exe_5.tsv`)
 
+## Purpose
+Resets a panel for a new key: panelSubReset4a35e0 (0x004a3793), the three Image quads again (0x004a37be, 0x004a37e9, 0x004a3814), setDrawTarget with the globals 0x0083b628 / 0x0083b62c / 0x0083b630 and 0 (0x004a383b), then ListModel::setKey(key) on the ListModel base (0x004a384c), whose result it returns; `ret 4`. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: panelOpenReset4a3790_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a3790_panelOpenReset4a3790_a.path1.csv`); panelOpenReset4a3790_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a3790_panelOpenReset4a3790_b.path1.csv`); panelOpenReset4a3790_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a3790_panelOpenReset4a3790_c.path1.csv`); panelOpenReset4a3790_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a3790_panelOpenReset4a3790_tva.path1.csv`); panelOpenReset4a3790_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a3790_panelOpenReset4a3790_tvb.path1.csv`); panelOpenReset4a3790_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/004a3790_panelOpenReset4a3790_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a3790@C_FUN_004a3790@f_004a3790@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004a3852): callee pops 4 bytes of stack arguments.

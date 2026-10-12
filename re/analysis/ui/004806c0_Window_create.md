@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 425 bytes, 115 instructions, subsystem `ui`. Mechanical
 creates a window: reset, copies the 11 default corner widgets g_83abe4.., optional image m_568, base create, layout, adjustSize and open (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Creates a window (`ret 0x24`, the same nine arguments): Window::ctorInit (0x004806d9); with flags 0x30000000 eleven dwords 0x0083abe4..0x0083ac0c into +0x52c..+0x554 (0x004806ee..0x00480768); with flag 0x40000000 a new Image at +0x568 (operator new 0x2b8 + Image_ctor, 0x0048077b..0x004807a6). layoutViewTree (0x004807d7), whose non-zero result is returned; Window::calcSizeFromCorners (0x004807e2); Window::innerSize(&w, &h) with flag 0x800 clear (0x004807fb), else the border 0x0083ff10 added to w / h for the +0x9c bits 8 / 4 (0x00480802..0x0048081a); Surface_createFull on the Image +0x274 with (w, h, (flags >> 28) & 8, 1, 0, 0) (0x0048083d), whose non-zero result is returned, else Widget_applyPalette with the global 0x0083ad10 and 0 (0x0048084f / 0x00480854). Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: Window::create_a (14 vectors, 14 distinct results, 14 changing state, `log/diff/004806c0_Window_create_a.path1.csv`); Window::create_b (14 vectors, 14 distinct results, 14 changing state, `log/diff/004806c0_Window_create_b.path1.csv`); Window::create_d (14 vectors, 8 distinct results, 14 changing state, `log/diff/004806c0_Window_create_d.path1.csv`); Window::create_e (14 vectors, 14 distinct results, 14 changing state, `log/diff/004806c0_Window_create_e.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?create@R2C4806c0@@QAEHHHHHPBDIHPAH1@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x24` (at 0x00480866): callee pops 36 bytes of stack arguments.

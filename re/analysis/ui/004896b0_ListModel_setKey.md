@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 320 bytes, 129 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Sets the model key string at this+4 and clears the item list. (`re/names/exe_4.tsv`)
 
+## Purpose
+Clears a ListModel and gives it a key: ListModel::clear (0x004896b6), +0x20 = key (0x004896c3). A non-zero key (0x004896c6) sizes the ListModel's Buf at +4 through Buf_alloc(key) (0x004896d6), and a failed allocation returns 4 (0x004896dd / 0x004896e2). Then on the node list at +0xc0: the node loop when its head is set (0x004896f9 / 0x0048977d; always 0 after ListModel::clear), last = 0, and +0x18 = the Buf (this + 4) for a non-zero key (0x00489760) or 0 (0x004897e4). Returns 0 (0x00489769 / 0x004897ea); `ret 4`. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: ListModel::setKey (6 vectors, 6 distinct results, 6 changing state, `log/diff/004896b0_ListModel_setKey.path1.csv`); ListModel::setKey_fail (6 vectors, 6 distinct results, 6 changing state, `log/diff/004896b0_ListModel_setKey_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_09_k.cpp` as `?open@C4896b0@@QAEHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004896e8, 0x0048976c, 0x004897ed): callee pops 4 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 sets the vtable pointer PTR_004baa14 and calls FUN_00495eb0 to finish base init (`re/names/exe_3.tsv`)
 
+## Purpose
+The widget table's teardown (its callers are the EH unwind funclets 0x004b7be0 / 0x004b7c00): the vtable 0x004baa14 that initWidgetTable stores (0x00495d32) into +0 (0x0047d7c0) and a tail jump to resetWidgetTable 0x00495eb0 (0x0047d7c6), which copies the template 0x0083fe78.. back into the table. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: View::ctorVtbl47d7c0_s0 (8 vectors, 8 distinct results, 8 changing state, `log/diff/0047d7c0_View_ctorVtbl47d7c0_s0.path1.csv`); View::ctorVtbl47d7c0_s1 (8 vectors, 8 distinct results, 8 changing state, `log/diff/0047d7c0_View_ctorVtbl47d7c0_s1.path1.csv`); View::ctorVtbl47d7c0_s2 (8 vectors, 8 distinct results, 8 changing state, `log/diff/0047d7c0_View_ctorVtbl47d7c0_s2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_0047d7c0@f_0047d7c0@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

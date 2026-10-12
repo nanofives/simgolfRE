@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 63 bytes, 21 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 cleans up a view sub-field, resetting its embedded S1D489150 object. (`re/names/exe_5.tsv`)
 
+## Purpose
+Resets the 49d5a0 field part: +0x10 = +0x14 = 0, +8 / +0xc / +4 = the dwords 0x004e4a14 / 0x004e4a18 / 0x004e4a10 (0x0049d695..0x0049d6b4), ListModel::clear on the ListModel base (0x0049d6bc) and Window::ctorInit on the Window base (0x0049d6c8), whose eax it returns. Reimplemented in `shim/src/re/c3ef.cpp`; path-1 A/B GREEN: viewFieldCleanup49d690_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049d690_viewFieldCleanup49d690_a.path1.csv`); viewFieldCleanup49d690_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049d690_viewFieldCleanup49d690_b.path1.csv`); viewFieldCleanup49d690_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/0049d690_viewFieldCleanup49d690_c.path1.csv`); viewFieldCleanup49d690_tva (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049d690_viewFieldCleanup49d690_tva.path1.csv`); viewFieldCleanup49d690_tvb (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049d690_viewFieldCleanup49d690_tvb.path1.csv`); viewFieldCleanup49d690_tvc (4 vectors, 4 distinct results, 4 changing state, `log/diff/0049d690_viewFieldCleanup49d690_tvc.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?cleanup@R2C491680@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049d6ce): callee pops 0 bytes of stack arguments.
