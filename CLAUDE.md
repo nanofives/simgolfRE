@@ -383,6 +383,37 @@ whatever its source (overwrite on the exe: renamed=0). The two C0 sound rows wer
 UI / drawing plan (2026-10-12): re/C3_UI_PLAN.md. Round 29 = four batches by blocker (log/c3/round29_candidates.py,
 round29_brief.md): c3ee image pipeline + shared filestandin.js (Opus; releases Image_draw / Surface_drawScaled from hold),
 c3ef widget lifecycle + shared uitree.js (Opus), c3eg window plumbing with a user32 import preset, c3eh drawing bodies.
+Twenty-ninth round (2026-10-12, claude3, model split; verifier runner log/c3/alt/r29_main.py, children
+log/c3/round29_children.tsv): c3ee 17 (Opus; the image pipeline: loadImage, loadImageData, decodePcx8/16, the BMP loaders,
+openImageAsset, cropSprite, Image::loadPcx/savePcx, loadFileWinResource, through the FILE STAND-IN `re/frida/js/filestandin.js`:
+`__fileStandIn({module, kernel32, crt, files, imports})` serves fixture files to KERNEL32 CreateFile/GetFileSize/mapping
+imports and to the exe's static CRT fopen/fread/fwrite/fgets/fseek layer on the A/B thread, bytes, cursors, VC6 FILE records
+and an operation log all compared state; its new keys ran the load arms Image_draw, Surface_drawScaled and Surface_blit were
+held for, so all three left re/c3_hold.tsv and were promoted through c3df / c3h), c3ef 36 + c3l's setButtonDefaults and
+MsgBox::setButtonB (Opus; the widget lifecycle on REAL objects through `re/frida/js/uitree.js`: `__uiTree(opts)` builds
+window-tree objects with the game's own constructors in one heap arena, a recording display at 0x0083ad50 that forwards
+other threads' calls to the real one (the winmm timer thread calls its slot +0x20), recording Surfaces, a user32/winmm
+import preset and allocation-failure scheduling; Button, EditBox, ListBox, ListModel, the composite view fields and
+panels, layoutViewTree, Window::create), c3eg 18 (Sonnet; Window::show / invalidate / dispatchAccel / onKeyChar, press and
+release slots, Surface_clip, relayoutClip, redrawDrawList, drawTooltip, drawCursor, ListBox::onMouse / onKey) and c3eh 12
+(Sonnet; ListBox::measure / drawContents, rebuildFramePieces / drawFramePieces, drawScrollText, drawMatchScoreboard,
+drawWindowFrame, drawCircle, comboSetItems, panelLayoutLabeledText) promoted: 87 functions, C3 2,388 (exe 1,307), open
+C2 584. diff_hook loads filestandin.js after importstandin.js and uitree.js after freeze.js. Main build: every key GREEN
+with every hook on and with other batches' callees off (c3ee 54, c3eh 14, c3ef 140, c3eg 19); existing C3 callers GREEN
+both ways (the three held rows' 13 keys, c3eg's 13 callers / 36 keys); runtime suite 19 passed with all 87 hooks live.
+Renames (re/names, ApplyNames overwrite renamed exactly the changed rows each time, systems writeup exe_12.md, globals
+exe_12_globals.tsv): decodePcx8 / decodePcx16 (decodeImagePaletted / decodeImage16), Image_recreateSurface (Surface_paint),
+decodeChunk7WordDelta, rebuildFramePieces / drawFramePieces (buildControlStrip47d610 / drawPanelContents),
+panelLayoutLabeledText (panelBuildChildren), widgetTableDtor (View::ctorVtbl47d7c0), modelListDtor489c90 (ListBox::subDtor),
+viewFieldDtor49d5a0 (Dialog::childDtor), EditBox::dtor 0x43cb50 / EditBox::releaseState 0x4860d0 (editBoxTimer_dtor /
+EditBox::dtor), ListBox::onKey (ListBox::typeAhead). The disk filled during the round (the Frida temp leak above); every
+child re-ran what failed in that window. Findings: decodePcx16 reads its colours through a table pointer its local cache's
+constructor leaves NULL (any 16-bit image with pixels faults at 0x0049566c); Image::savePcx writes 102 uninitialised stack
+bytes into every PCX header and can encode past its buffer; drawScrollText's line table has no bound (line 32 overwrites
+its refresh switch, line 34 its line count) and it returns its second argument; drawMatchScoreboard always returns 0x300;
+Window::onKeyChar toggles the debug object 0x008400c8 when `mdebug` is typed (table 0x004e4324); ListBox::onMouse divides
+by [B+0x60] unchecked (0x0048c7ec); Window::dispatchAccel faults when +0x140 is set and +0x138 is 0. Lead: 23 older fixture
+files swap 0x0083ad50 for a recording display without uitree.js's thread test (c3ef notes 4.1).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
