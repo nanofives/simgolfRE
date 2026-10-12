@@ -24,11 +24,9 @@
     __freeze.thread();
     frozenNow = true;
     __freeze.atFlush(function () { frozenNow = false; });
-    // the negative-control build (log/c3/alt/c3dt/negctl_gen.py) keeps its wrong detail of Channel_serviceBuffer dormant until this flag page is set;
+    // the negative-control build (log/c3/alt/c3dt/negctl_gen.py) keeps its wrong detail of Channel_serviceBuffer dormant until its exported NegCtl switch is set;
     // in the normal build the address is unmapped and nothing is written
-    try {
-      if (ptr('0x7A110000').add(4).readU32() === 0x5147454e) __freeze.setU32(ptr('0x7A110000'), 1);
-    } catch (e) { /* normal build: no flag page */ }
+    __freeze.negOn();   // every exported <Batch>NegCtl switch (re/frida/js/freeze.js)
   }
   function quietTimer(out) {
     guard();

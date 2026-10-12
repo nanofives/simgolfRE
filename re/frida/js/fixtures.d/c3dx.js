@@ -26,12 +26,10 @@
   function fill(p, n, v) { for (let i = 0; i < n; i += 4) p.add(i).writeU32(v >>> 0); }
   function alloc(n, v) { const p = Memory.alloc(n); fill(p, n, v === undefined ? 0 : v); return p; }
 
-  // The negative-control build (log/c3/alt/c3dx_negctl_gen.py) keeps its wrong bodies dormant until this flag page is set;
-  // in the normal build the address is unmapped and the write is skipped. Always called right after the first thread froze.
+  // The negative-control build (log/c3/alt/c3dx_negctl_gen.py) keeps its wrong bodies dormant until its exported NegCtl switch is set;
+  // in the normal build there is no such export and nothing is written. Always called right after the first thread froze.
   function negOn() {
-    try {
-      if (ptr('0x7A110000').add(4).readU32() === 0x5147454e) __freeze.setU32(ptr('0x7A110000'), 1);
-    } catch (e) { /* normal build: no flag page */ }
+    __freeze.negOn();   // every exported <Batch>NegCtl switch (re/frida/js/freeze.js)
   }
   function codeArena() {
     const size = Process.pageSize * 4;
@@ -1048,12 +1046,10 @@
   function u32(v) { v >>>= 0; return [v & 0xff, (v >>> 8) & 0xff, (v >>> 16) & 0xff, (v >>> 24) & 0xff]; }
   function fill32(p, n, v) { for (let i = 0; i + 4 <= n; i += 4) p.add(i).writeU32(v >>> 0); }
 
-  // The negative-control build (log/c3/alt/c3dx_negctl_gen.py) keeps its wrong bodies dormant until this flag page is set;
-  // in the normal build the address is unmapped and the write is skipped. Always called right after the first thread froze.
+  // The negative-control build (log/c3/alt/c3dx_negctl_gen.py) keeps its wrong bodies dormant until its exported NegCtl switch is set;
+  // in the normal build there is no such export and nothing is written. Always called right after the first thread froze.
   function negOn() {
-    try {
-      if (ptr('0x7A110000').add(4).readU32() === 0x5147454e) __freeze.setU32(ptr('0x7A110000'), 1);
-    } catch (e) { /* normal build: no flag page */ }
+    __freeze.negOn();   // every exported <Batch>NegCtl switch (re/frida/js/freeze.js)
   }
   function codeArena() {
     const size = Process.pageSize * 16;

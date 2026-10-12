@@ -26,16 +26,9 @@
     for (let i = 0; i < n; i += 4) p.add(i).writeU32(0);
     return p;
   }
-  // The negative-control build keeps its wrong bodies dormant until this flag page is set (memory note negctl-wrong-bodies).
+  // The negative-control build keeps its wrong bodies dormant until its exported C3ecNegCtl switch is set.
   function negOn() {
-    try {
-      if (ptr('0x7A110000').add(4).readU32() === 0x5147454e) __freeze.setU32(ptr('0x7A110000'), 1);
-    } catch (e) { /* normal build: no flag page */ }
-    // c3ec's own negative-control build exports its switch instead (log/c3/alt/c3ec_negctl_gen.py)
-    try {
-      const e = Process.getModuleByName('winmm.dll').findExportByName('C3ecNegCtl');
-      if (e && e.add(4).readU32() === 0x5147454e) __freeze.setU32(e, 1);
-    } catch (e2) { /* not that build */ }
+    __freeze.negOn();   // every exported <Batch>NegCtl switch (re/frida/js/freeze.js)
   }
   let frozen = false;
   function freezeNow() {

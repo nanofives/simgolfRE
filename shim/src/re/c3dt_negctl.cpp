@@ -24,12 +24,10 @@
 //   E. small channel / sequencer / list bodies with virtual or thunked callees
 #include "hooks.h"
 #include <windows.h>
-// The wrong detail of Channel_serviceBuffer is live only while a fixture runs: re/frida/js/fixtures.d/c3dt.js writes 1 into the flag page at
-// 0x7A110000 after it froze the first thread. The game itself calls that function from the multimedia-timer thread.
-static volatile int* const g_negFlag = (volatile int*)0x7A110000;
-static bool g_negInit = (VirtualAlloc((LPVOID)0x7A110000, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE) != 0) &&
-                        ((((volatile int*)0x7A110000)[1] = 0x5147454e), true);   // magic: the fixture checks it before writing
-#define NEG_ON (g_negInit && *g_negFlag)
+// The wrong detail of Channel_serviceBuffer is live only while a fixture runs: re/frida/js/fixtures.d/c3dt.js writes 1 into the exported switch
+// C3dtNegCtl after it froze the first thread. The game itself calls that function from the multimedia-timer thread.
+extern "C" __declspec(dllexport) volatile int C3dtNegCtl[4] = {0, 0x5147454e, 0, 0};   // word 1 = magic; re/frida/js/freeze.js negOn() sets word 0
+#define NEG_ON (C3dtNegCtl[0])
 #define NEG(right, wrong) (NEG_ON ? (wrong) : (right))
 #include <stdint.h>
 

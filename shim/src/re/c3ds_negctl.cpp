@@ -15,12 +15,10 @@
 // after a png_error / png_chunk_error call that a returning png_error would need; the A/B fixture catches the
 // longjmp (log/c3/c3ds_purpose.md, "the longjmp catcher").
 #include "hooks.h"
-// The wrong detail is live only while a c3ds key runs: re/frida/js/fixtures.d/c3ds.js writes 1 into the flag page
-// at 0x7A110000 after freezing the game's first thread (0 again at the flush, before the resume).
-static volatile int* const g_negFlag = (volatile int*)0x7A110000;
-static bool g_negInit = (VirtualAlloc((LPVOID)0x7A110000, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE) != 0) &&
-                        ((((volatile int*)0x7A110000)[1] = 0x5147454e), true);   // magic: the fixture checks it
-#define NEG_ON (g_negInit && *g_negFlag)
+// The wrong detail is live only while a c3ds key runs: re/frida/js/fixtures.d/c3ds.js writes 1 into the exported switch
+// C3dsNegCtl after freezing the game's first thread (0 again at the flush, before the resume).
+extern "C" __declspec(dllexport) volatile int C3dsNegCtl[4] = {0, 0x5147454e, 0, 0};   // word 1 = magic; re/frida/js/freeze.js negOn() sets word 0
+#define NEG_ON (C3dsNegCtl[0])
 #define NEG(right, wrong) (NEG_ON ? (wrong) : (right))
 
 namespace {

@@ -109,6 +109,27 @@
   function fill(p, n, byte) { save(p, n); p.writeByteArray(new Array(n).fill(byte)); }
   function setU32(p, v) { save(p, 4); p.writeU32(v); }
 
+  // Negative-control switch. A negctl build exports `volatile int <Batch>NegCtl[4] = {0, 0x5147454e, ...}` from the
+  // shim (winmm.dll) and keeps its wrong bodies dormant while word 0 is 0. negOn() sets word 0 of every such export to 1
+  // until the next flush; in a normal build there is none and it does nothing. Call it only after thread() froze the
+  // first thread. (Before 2026-10-12 the switch was a page at the fixed address 0x7A110000; Windows Defender's ML
+  // heuristic quarantined DLLs that allocated it.)
+  let negWords = null;
+  function negCtlWords() {
+    if (negWords === null) {
+      negWords = [];
+      try {
+        Process.getModuleByName('winmm.dll').enumerateExports().forEach(function (x) {
+          if (!/NegCtl$/.test(x.name)) return;
+          try { if (x.address.add(4).readU32() === 0x5147454e) negWords.push(x.address); } catch (e) { /* unreadable */ }
+        });
+      } catch (e) { /* no shim module */ }
+    }
+    return negWords;
+  }
+  function negOn() { negCtlWords().forEach(function (a) { setU32(a, 1); }); }
+
   globalThis.__freeze = { begin: flush, flush: flush, schedule: schedule, thread: thread, atFlush: atFlush,
-                          save: save, fill: fill, setU32: setU32, status: status };
+                          save: save, fill: fill, setU32: setU32, status: status,
+                          negOn: negOn, negCtlWords: negCtlWords };
 })();

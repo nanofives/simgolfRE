@@ -13,12 +13,10 @@
     for (let i = 0; i < n; i += 4) p.add(i).writeU32(0);
     return p;
   }
-  // The negative-control build (log/c3/alt/c3dv_negctl_gen.py) keeps its wrong bodies dormant until this flag page is set;
-  // in the normal build the address is unmapped and the write is skipped.
+  // The negative-control build (log/c3/alt/c3dv_negctl_gen.py) keeps its wrong bodies dormant until its exported NegCtl switch is set;
+  // in the normal build there is no such export and nothing is written.
   function negOn() {
-    try {
-      if (ptr('0x7A110000').add(4).readU32() === 0x5147454e) __freeze.setU32(ptr('0x7A110000'), 1);
-    } catch (e) { /* normal build: no flag page */ }
+    __freeze.negOn();   // every exported <Batch>NegCtl switch (re/frida/js/freeze.js)
   }
   // Freeze the game's first thread, then (only then) switch the negative-control flag on: the game calls several of these
   // functions on its own thread, so a wrong body must not be live while that thread still runs.

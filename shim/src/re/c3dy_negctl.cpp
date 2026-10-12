@@ -14,11 +14,9 @@
 #include <stdlib.h>
 // The wrong detail is live only while a fixture runs AND only for the edits named in the environment variable
 // SIMGOLF_NEGSEL (comma separated edit numbers, one per function that can run in the same boot).
-// re/frida/js/fixtures.d/c3dy.js writes 1 into the flag page at 0x7A110000 right after it froze the game's first
+// re/frida/js/fixtures.d/c3dy.js writes 1 into the exported switch C3dyNegCtl right after it froze the game's first
 // thread (and 0 again at the flush). The game itself calls most of these functions from the first frame.
-static volatile int* const g_negFlag = (volatile int*)0x7A110000;
-static bool g_negInit = (VirtualAlloc((LPVOID)0x7A110000, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE) != 0) &&
-                        ((((volatile int*)0x7A110000)[1] = 0x5147454e), true);   // magic: the fixture checks it before writing
+extern "C" __declspec(dllexport) volatile int C3dyNegCtl[4] = {0, 0x5147454e, 0, 0};   // word 1 = magic; re/frida/js/freeze.js negOn() sets word 0
 static bool g_negSel[1024];
 static bool g_negSelInit = []() {
     const char* e = getenv("SIMGOLF_NEGSEL");
@@ -30,7 +28,7 @@ static bool g_negSelInit = []() {
     }
     return true;
 }();
-#define NEG_ON(id) (g_negInit && *g_negFlag && g_negSel[id])
+#define NEG_ON(id) (C3dyNegCtl[0] && g_negSel[id])
 #define NEG(id, right, wrong) (NEG_ON(id) ? (wrong) : (right))
 
 namespace {

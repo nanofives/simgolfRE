@@ -11,13 +11,11 @@
 // through their original addresses (a hooked callee runs its reimplementation).
 #include "hooks.h"
 #include <windows.h>
-// The wrong detail is live only while a fixture runs: re/frida/js/fixtures.d/c3dv.js writes 1 into the flag page at
-// 0x7A110000 right after it froze the game's first thread (and 0 again at the flush). The game itself calls several of
+// The wrong detail is live only while a fixture runs: re/frida/js/fixtures.d/c3dv.js writes 1 into the exported switch
+// C3dvNegCtl right after it froze the game's first thread (and 0 again at the flush). The game itself calls several of
 // these functions from the first frame, on more than one thread, so a wrong body must not be live outside the A/B.
-static volatile int* const g_negFlag = (volatile int*)0x7A110000;
-static bool g_negInit = (VirtualAlloc((LPVOID)0x7A110000, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE) != 0) &&
-                        ((((volatile int*)0x7A110000)[1] = 0x5147454e), true);   // magic: the fixture checks it before writing
-#define NEG_ON (g_negInit && *g_negFlag)
+extern "C" __declspec(dllexport) volatile int C3dvNegCtl[4] = {0, 0x5147454e, 0, 0};   // word 1 = magic; re/frida/js/freeze.js negOn() sets word 0
+#define NEG_ON (C3dvNegCtl[0])
 #define NEG(right, wrong) (NEG_ON ? (wrong) : (right))
 #include <string.h>
 

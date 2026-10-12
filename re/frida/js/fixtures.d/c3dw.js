@@ -15,12 +15,10 @@
     for (let i = 0; i < n; i += 4) p.add(i).writeU32(0);
     return p;
   }
-  // The negative-control build keeps its wrong bodies dormant until this flag page is set; in the normal build the address
+  // The negative-control build keeps its wrong bodies dormant until its exported NegCtl switch is set; in the normal build the address
   // is unmapped and the write is skipped.
   function negOn() {
-    try {
-      if (ptr('0x7A110000').add(4).readU32() === 0x5147454e) __freeze.setU32(ptr('0x7A110000'), 1);
-    } catch (e) { /* normal build: no flag page */ }
+    __freeze.negOn();   // every exported <Batch>NegCtl switch (re/frida/js/freeze.js)
   }
   let frozen = false;
   function freezeNow() {

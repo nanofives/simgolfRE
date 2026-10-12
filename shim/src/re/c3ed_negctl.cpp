@@ -12,11 +12,10 @@
 
 #include <windows.h>
 // NEGATIVE CONTROL for batch c3ed: wrong details are live only while a fixture runs AND only for the selector bytes the driver sets.
-static volatile int* const g_negFlag = (volatile int*)0x7A110000;
-static bool g_negInit = (VirtualAlloc((LPVOID)0x7A110000, 0x4000, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE) != 0) &&
-                        ((((volatile int*)0x7A110000)[1] = 0x5147454e), true);   // magic: the fixture checks it before writing
-static volatile unsigned char* const g_negSel = (volatile unsigned char*)0x7A110200;
-#define NEG_ON(id) (g_negInit && *g_negFlag && g_negSel[id])
+extern "C" __declspec(dllexport) volatile int C3edNegCtl[4] = {0, 0x5147454e, 0, 0};   // word 1 = magic; re/frida/js/freeze.js negOn() sets word 0
+extern "C" __declspec(dllexport) volatile unsigned char C3edNegSel[0x3e00] = {0};   // selector byte per edit id (log/c3/alt/c3ed_negctl.py)
+static volatile unsigned char* const g_negSel = C3edNegSel;
+#define NEG_ON(id) (C3edNegCtl[0] && g_negSel[id])
 #define NEG(id, right, wrong) (NEG_ON(id) ? (wrong) : (right))
 
 namespace {

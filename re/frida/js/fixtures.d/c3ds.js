@@ -1301,17 +1301,15 @@
     c3ds_err_null() { return errWorld('null'); },
   });
 
-  // Negative controls (log/c3/alt/c3ds_negctl_gen.py): the negctl build allocates a flag page at 0x7A110000 (magic
+  // Negative controls (log/c3/alt/c3ds_negctl_gen.py): the negctl build exports the switch C3dsNegCtl (magic
   // 0x5147454e at +4) and keeps its wrong details dormant until the flag is 1. Every c3ds fixture ends by freezing the
   // game's first thread (once per key) and only then setting the flag (restored to 0 at the flush, before the resume),
   // so the game's own calls of live functions (setClip, Palette::update, Font::create, strcpy) never see a wrong body.
-  // In the normal build the page is unmapped: the read throws and nothing happens.
+  // In the normal build there is no such export and nothing happens.
   function negOn() {
-    let magic = false;
-    try { magic = ptr('0x7A110000').add(4).readU32() === 0x5147454e; } catch (e) { magic = false; }
-    if (!magic) return;
+    if (__freeze.negCtlWords().length === 0) return;
     freezeOnce();
-    __freeze.setU32(ptr('0x7A110000'), 1);
+    __freeze.negOn();
   }
   Object.keys(globalThis.DIFF_FIXTURES).filter((k) => k.startsWith('c3ds_')).forEach(function (k) {
     const f = globalThis.DIFF_FIXTURES[k];
