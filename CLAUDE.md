@@ -463,8 +463,10 @@ and kill only that one. Without SIMGOLF_ALLOW_MULTI `Game.start()` refuses while
 Never blanket-kill by name.
 Frida temp (2026-10-12): frida-core unpacks a 22-50 MB agent dir (%TEMP%rida-<hash>) per Python process and
 removes it only on a clean exit, so runners killed on a timeout leak one each: 6,461 (326 GB) filled C: during round 29.
-Game.start() now calls re/tools/game.py purge_frida_temp() (dirs older than 10 min; a dir in use cannot be renamed, so
-it is renamed first and deleted only if that worked). Other tools that attach Frida without Game should call it too.
+Game.start() now calls re/tools/game.py purge_frida_temp(): it deletes only dirs created before every running python /
+node / frida process started (a live process's dir has no open file between attaches, so the first version, which trusted
+a failed rename, deleted its own runner's dir and the next attach failed with `unable to find DLL`). Tools that attach
+Frida without Game should call it too.
 
 ### Patching
 Patches are `patches/<name>.ini` with `expect` bytes taken from the anchored binary. Default

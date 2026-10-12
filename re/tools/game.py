@@ -62,16 +62,26 @@ def _enum_windows(pid: int, cls: str | None = None):
 def purge_frida_temp(min_age_s: float = 600) -> tuple[int, int]:
     """Delete leaked Frida agent dirs (%TEMP%\\frida-<hash>, 22-50 MB each). frida-core unpacks one per Python process
     and removes it only on a clean exit, so every runner killed on a timeout leaks one; on 2026-10-12 6,461 of them
-    (326 GB) filled C: during round 29. A dir still in use holds open files and cannot be renamed, so each dir is
-    renamed first and only a dir that moved is deleted: a live session (ours or another project's) is never touched.
-    Returns (dirs removed, bytes freed)."""
+    (326 GB) filled C: during round 29. A process's dir is created after that process starts and is reused for its
+    whole life, with no file open between attaches (the first version of this purge, which trusted a failed rename to
+    spot a live dir, deleted its own runner's dir mid-run). So only dirs created before EVERY running process that can
+    host frida-core (python, node, frida) started are deleted: no live process, ours or another project's, can own them.
+    The rename-first step still skips a dir with open files. Returns (dirs removed, bytes freed)."""
     import shutil, tempfile
+    import psutil
     tmp = pathlib.Path(os.environ.get("TEMP") or tempfile.gettempdir())
     now = time.time()
+    hosts = []
+    for p in psutil.process_iter(["name", "create_time"]):
+        n = (p.info["name"] or "").lower()
+        if n.startswith(("python", "py.exe", "pythonw", "node", "frida")) and p.info["create_time"]:
+            hosts.append(p.info["create_time"])
+    cutoff = min(hosts, default=now) - 60  # margin for clock granularity
     removed = freed = 0
     for d in tmp.glob("frida-*"):
         try:
-            if not d.is_dir() or now - d.stat().st_mtime < min_age_s:
+            st = d.stat()
+            if not d.is_dir() or now - st.st_mtime < min_age_s or st.st_ctime >= cutoff:
                 continue
             gone = d.with_name("gone-" + d.name)
             d.rename(gone)  # fails while any file inside is open
