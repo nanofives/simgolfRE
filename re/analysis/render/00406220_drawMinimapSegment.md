@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 44 bytes, 17 instructions, subsystem `render`. Mechanic
 forwards its 7 arguments to drawMapLine 0x004493d0 to draw one minimap line segment (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+forwards its seven stack arguments, in the same order, to drawMapLine 0x004493d0 (the loads at 0x00406220..0x0040623c rebuild the pushes 0x0040622d..0x00406242 so that argument n arrives as argument n; call 0x00406243), pops them (add esp, 0x1c at 0x00406248) and returns drawMapLine's eax (ret 0x0040624b, cdecl). Key `drawMinimapSegment` (fixture c3eh_dms): twelve argument tuples drawn from {0, 1, -1, 5, 0x7fffffff, -0x80000000, 100, 639, 7, 0x1234, -77, 3} rotated so that every position differs; the Terrain.dll import Terrain::drawLine behind drawMapLine (call 0x004493f9) is stood in with a body that returns a weighted sum of its arguments, so a swapped pair changes both the compared return value and the call log. The negative control swaps arguments 6 and 7. No branches. Reimplemented in `shim/src/re/c3eh.cpp`; path-1 A/B GREEN: drawMinimapSegment (12 vectors, 12 distinct results, 12 changing state, `log/diff/00406220_drawMinimapSegment.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small3.cpp` as `?f_406220@@YAHHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040624b): callee pops 0 bytes of stack arguments.

@@ -24,3 +24,14 @@ globals are in `re/names/exe_12_globals.tsv`.
 `g_imageAssetExtMode` 0x0083fe5c picks openImageAsset's extension (0x00479016). `g_listPalette` 0x00839a98 is the palette
 cache loadImage takes from the list 0x0083ac88 (0x00475987). `g_loadImage` 0x00839348 is the Image that Image_draw
 0x00473e60 and Surface_drawScaled 0x00473cb0 load into when the surface carries a file name (this+8).
+
+## Frame pieces and labeled panels (batch c3eh)
+Round 29's drawing batch c3eh renamed three rows from their instructions:
+- `rebuildFramePieces` 0x0047d610 (was buildControlStrip47d610) re-creates the four frame piece surfaces at this+0x11c,
+  +0x128, +0x124, +0x120 (Surface_createFull 0x00474dd0 at 0x0047d689 / 0x0047d6da / 0x0047d733 / 0x0047d783) and ends by
+  calling slot +0x134 of its own vtable (0x0047d7b1).
+- `drawFramePieces` 0x0047d850 (was drawPanelContents) is that slot 77 (+0x134) of the View vtable 0x004ba8b4 (View_ctor
+  0x00479c40): it fills the piece the argument selects (-1 for all; 0 / 2 / 3 / 1 at 0x0047d92a, 0x0047dbe6, 0x0047dd9d,
+  0x0047df47).
+- `panelLayoutLabeledText` 0x004a2a60 (was panelBuildChildren) lays out records like panelBuildText 0x0049d770 but also
+  measures a second string array at this+0x2c with Text_put (0x004a2c24) and keeps the widest item and label.

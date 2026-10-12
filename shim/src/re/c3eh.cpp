@@ -1,0 +1,1072 @@
+// C3 batch c3eh (round 29, 2026-10-12) of golf_clean.exe: drawing bodies (ListBox::drawContents and its vtordisp thunk,
+// ListBox::measure, drawPanelContents, drawScrollText, drawMatchScoreboard, drawWindowFrame, drawCircle,
+// buildControlStrip47d610, comboSetItems, panelBuildChildren, drawMinimapSegment). Fixtures: re/frida/js/fixtures.d/c3eh.js
+// (built from log/c3/c3eh_parts). Registry: re/frida/registry.d/c3eh.py. Purposes and per-jcc tables: log/c3/c3eh_purpose.md.
+//
+// Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list; copies in
+// log/c3/c3eh_asm) and cites the instructions it reproduces. __thiscall is emulated with __fastcall (ecx = this, edx unused).
+// Callees run through their original addresses; an import is called through the IAT slot the original reads.
+#include "hooks.h"
+#include <string.h>
+
+namespace {
+
+template <typename T> static inline T& G(unsigned addr) { return *reinterpret_cast<T*>(addr); }
+static inline char* B(void* p) { return reinterpret_cast<char*>(p); }
+template <typename T> static inline T& At(void* p, unsigned off) { return *reinterpret_cast<T*>(B(p) + off); }
+static inline int& I(void* base, int off) { return *reinterpret_cast<int*>(B(base) + off); }
+static inline void*& Pp(void* base, int off) { return *reinterpret_cast<void**>(B(base) + off); }
+static inline int add(int a, int b) { return static_cast<int>(static_cast<unsigned>(a) + static_cast<unsigned>(b)); }
+static inline int mul(int a, int b) { return static_cast<int>(static_cast<unsigned>(a) * static_cast<unsigned>(b)); }
+
+typedef int(__cdecl* C0_t)();
+typedef int(__cdecl* C7_t)(int, int, int, int, int, int, int);
+typedef int(__fastcall* T0_t)(void* ecx, void* edx);
+typedef int(__fastcall* T1_t)(void* ecx, void* edx, int a);
+typedef int(__fastcall* T4_t)(void* ecx, void* edx, int a, int b, int c, int d);
+
+const C7_t kDrawMapLine = reinterpret_cast<C7_t>(0x004493d0);
+const T0_t kComboDrawFrame = reinterpret_cast<T0_t>(0x00493f50);
+
+}  // namespace
+
+// ====================================================================================================================
+// Small forwarders
+// ====================================================================================================================
+
+// 0x00406220  drawMinimapSegment(a1..a7): reloads the seven stack arguments into the pushes 0x00406229..0x00406242 so that
+// drawMapLine 0x004493d0 (call 0x00406243) receives (a1, a2, a3, a4, a5, a6, a7) in the same order; add esp, 0x1c (0x00406248)
+// and ret (0x0040624b, cdecl) with drawMapLine's eax.
+int __cdecl DrawMinimapSegment_re(int a1, int a2, int a3, int a4, int a5, int a6, int a7) {
+    return kDrawMapLine(a1, a2, a3, a4, a5, a6, a7);                        // 0x00406243
+}
+C7_t DrawMinimapSegment_orig;
+// 0x00406220
+SG_HOOK("golf_clean.exe", 0x00406220, drawMinimapSegment, DrawMinimapSegment_re, DrawMinimapSegment_orig);
+
+// 0x00493ef0  comboSetItems(this, src), ret 4 (0x00493f4d): the three dwords at src are copied to this+0x3468 (loop 0x00493f06..
+// 0x00493f11, edx = 3, lea edi = this+0x3468 at 0x00493efe); eax = [this+0x3468] (0x00493f13), edi = [eax+0x1c] (0x00493f1d).
+// [this+0x23b4] (0x00493f15) non-NULL (test 0x00493f1b, je 0x00493f2c): eax = the result of the virtual call
+// [[obj]+0xd8](obj) (0x00493f22..0x00493f24); NULL: eax = 0 (xor 0x00493f2c). Then [this+0x213c] is the sub-object (ecx =
+// this+0x213c, 0x00493f34) whose vtable slot +0xc takes (eax, edi, 0, 0) (pushes 0x00493f3a..0x00493f3f, call 0x00493f40,
+// callee pops). Finally comboDrawFrame 0x00493f50 (ecx = this, call 0x00493f45); the ret leaves its eax.
+int __fastcall ComboSetItems_re(void* self, void* edx, const int* src) {
+    int* dst = reinterpret_cast<int*>(B(self) + 0x3468);                    // 0x00493efe
+    for (int i = 0; i < 3; i++) dst[i] = src[i];                            // 0x00493f06..0x00493f11
+    int rec = At<int>(self, 0x3468);                                        // 0x00493f13
+    int itemId = At<int>(reinterpret_cast<void*>(rec), 0x1c);               // 0x00493f1d
+    void* obj = At<void*>(self, 0x23b4);                                    // 0x00493f15
+    int first = 0;
+    if (obj != 0) {                                                         // 0x00493f1b / 0x00493f20
+        void** vt = At<void**>(obj, 0);                                     // 0x00493f22
+        first = reinterpret_cast<T0_t>(vt[0xd8 / 4])(obj, 0);               // 0x00493f24
+    }
+    void* sub = B(self) + 0x213c;                                           // 0x00493f34
+    void** svt = At<void**>(self, 0x213c);                                  // 0x00493f2e
+    reinterpret_cast<T4_t>(svt[0xc / 4])(sub, 0, first, itemId, 0, 0);      // 0x00493f40
+    return kComboDrawFrame(self, 0);                                        // 0x00493f45
+}
+typedef int(__fastcall* ComboSetItems_t)(void*, void*, const int*);
+ComboSetItems_t ComboSetItems_orig;
+// 0x00493ef0
+SG_HOOK("golf_clean.exe", 0x00493ef0, comboSetItems, ComboSetItems_re, ComboSetItems_orig);
+
+// ====================================================================================================================
+// Line and frame drawing
+// ====================================================================================================================
+namespace {
+typedef int(__cdecl* C2_t)(int, int);
+typedef int(__cdecl* C4_t)(int, int, int, int);
+typedef int(__cdecl* C5_t)(int, int, int, int, int);
+typedef int(__cdecl* W2S_t)(int, int, int*, int*, int);
+typedef int(__fastcall* T3_t)(void* ecx, void* edx, int a, int b, int c);
+typedef int(__fastcall* T5_t)(void* ecx, void* edx, int a, int b, int c, int d, int e);
+typedef int(__fastcall* T6_t)(void* ecx, void* edx, int a, int b, int c, int d, int e, int f);
+const C2_t kFoldRange = reinterpret_cast<C2_t>(0x00467270);          // foldRange
+const C2_t kAbsDiff = reinterpret_cast<C2_t>(0x004672b0);            // absDiff
+const W2S_t kWorldToScreen = reinterpret_cast<W2S_t>(0x0042fb90);    // worldToScreen
+const C2_t kSetLinePoint = reinterpret_cast<C2_t>(0x0040bf00);       // setLinePoint
+const C5_t kLineTo = reinterpret_cast<C5_t>(0x0040bf20);             // lineTo
+const C5_t kBlitPanel = reinterpret_cast<C5_t>(0x0040ca10);          // blitPanel
+const T5_t kStretchBlit = reinterpret_cast<T5_t>(0x00473f60);        // Surface_stretchBlit
+}  // namespace
+
+// 0x00407c60  drawCircle(a1, a2, a3, a4), cdecl: a circle of 25 segments around the world point (a1, a2). ebx = (a3 << 10) *
+// 0x51eb851f >> 32 >> 3, plus its sign bit (0x00407c67..0x00407c7c): the radius in world units. The angle edi runs from 0 in
+// steps of 0x0aaaaaaa (0x00407d09) for 25 iterations (counter 0x19 at 0x00407c86, dec/jne 0x00407d0f/0x00407d14). Each step:
+// x = foldRange(edi, ebx) + a1 (0x00407c90, 0x00407c9d), y = absDiff(edi, ebx) + a2 (0x00407c9f, 0x00407cac), then
+// worldToScreen(x, y, &sx, &sy, 0) (call 0x00407cb8) where sx is the stack slot of argument a3 (lea edx, [esp+0x38] after the
+// push 0) and sy the first local. Not visible (eax 0, 0x00407cc0/0x00407cc2): ebp = -1 (0x00407d02). Visible with ebp == -1
+// (0x00407cc4/0x00407cc7): setLinePoint(sx, sy) (call 0x00407cd3), ebp = sx (0x00407cd8). Visible otherwise: lineTo(sx, sy, a4, 2, 7)
+// (pushes 0x00407ced..0x00407cf3, call 0x00407cf4), ebp = sx (0x00407cf9). The loop leaves eax = 0 (dec eax, jne not taken).
+int __cdecl DrawCircle_re(int a1, int a2, int a3, int a4) {
+    long long prod = static_cast<long long>(static_cast<int>(static_cast<unsigned>(a3) << 10)) * 0x51eb851fLL;   // 0x00407c6c..0x00407c6f
+    int s = static_cast<int>(prod >> 32) >> 3;                                                              // 0x00407c71
+    int radius = s + static_cast<int>(static_cast<unsigned>(s) >> 31);                                     // 0x00407c74..0x00407c7c
+    int sx = a3;                                                            // the argument slot lea edx, [esp+0x38] points at
+    int sy = 0;                                                             // the first local; worldToScreen writes it on every visible path
+    int prev = -1;                                                          // ebp, 0x00407c7f
+    unsigned angle = 0;                                                     // edi, 0x00407c84
+    for (int n = 25; n != 0; n--) {                                         // 0x00407c86, 0x00407d0f
+        int x = kFoldRange(static_cast<int>(angle), radius) + a1;           // 0x00407c90, 0x00407c9d
+        int y = kAbsDiff(static_cast<int>(angle), radius) + a2;             // 0x00407c9f, 0x00407cac
+        if (kWorldToScreen(x, y, &sx, &sy, 0) != 0) {                       // 0x00407cb8, 0x00407cc0
+            if (prev == -1) kSetLinePoint(sx, sy);                          // 0x00407cc4, 0x00407cd3
+            else kLineTo(sx, sy, a4, 2, 7);                                 // 0x00407cf4
+            prev = sx;                                                      // 0x00407cd8 / 0x00407cf9
+        } else {
+            prev = -1;                                                      // 0x00407d02
+        }
+        angle += 0x0aaaaaaau;                                               // 0x00407d09
+    }
+    return 0;                                                               // 0x00407d0f dec eax -> 0
+}
+C4_t DrawCircle_orig;
+// 0x00407c60
+SG_HOOK("golf_clean.exe", 0x00407c60, drawCircle, DrawCircle_re, DrawCircle_orig);
+
+// 0x0040cdd0  drawWindowFrame(x, y, w, h, flag), cdecl (ret 0x0040ceef): a frame of 16-pixel tiles. The live display
+// [0x0083ad50] (0x0040cdd0), when non-NULL, gets vtable slot +0x9c with (1, 1, 1) (pushes 0x0040cdda..0x0040cde0, call
+// 0x0040cde2, callee pops). w and h are rounded up to a multiple of 16: r = w & 15 (0x0040cdf1); r != 0: w += 15 - r (0x0040ce05)
+// and x -= (15 - r) >> 1 (0x0040ce0b..0x0040ce16); h and y likewise (0x0040ce1e..0x0040ce4a). flag != 0 (0x0040ce52): blitPanel
+// (x, y - 1, w, h, 0) (call 0x0040ce61). esi = 12, ebx = w - 16 (0x0040ce69, 0x0040ce6e): while ebx > 12 (jle 0x0040cea5) the top row
+// is stretchBlit(0x005a5604, 0x0058b8bc, [0x004c1570], x + esi, y + h - 16, 0) for esi = 12, 28, ... while esi < ebx (call
+// 0x0040ce95). Then stretchBlit(0x005a5630, 0x0058b8e8, [0x004c1570], x + w - 12, y + h - 16, 0) (call 0x0040cecf) and
+// stretchBlit(0x005a55d8, 0x0058b890, [0x004c1570], x - 4, y + h - 16, 0) (call 0x0040cee6). eax at ret is the last stretchBlit's.
+int __cdecl DrawWindowFrame_re(int x0, int y0, int w0, int h0, int flag) {
+    void* disp = G<void*>(0x0083ad50);                                      // 0x0040cdd0
+    if (disp != 0) {                                                        // 0x0040cdd6
+        void** vt = At<void**>(disp, 0);                                    // 0x0040cdda
+        reinterpret_cast<T3_t>(vt[0x9c / 4])(disp, 0, 1, 1, 1);             // 0x0040cde2
+    }
+    int w = w0, x = x0;
+    int rw = w0 & 0xf;                                                      // 0x0040cdf1
+    if (rw != 0) {                                                          // 0x0040cdf5
+        w = w0 + (0xf - rw);                                                // 0x0040ce05
+        x = x0 - ((0xf - rw) >> 1);                                         // 0x0040ce0b..0x0040ce16
+    }
+    int h = h0, y = y0;
+    int rh = h0 & 0xf;                                                      // 0x0040ce24
+    if (rh != 0) {                                                          // 0x0040ce27
+        h = h0 + (0xf - rh);                                                // 0x0040ce30
+        y = y0 - ((0xf - rh) >> 1);                                         // 0x0040ce3d..0x0040ce4a
+    }
+    if (flag != 0) kBlitPanel(x, y - 1, w, h, 0);                           // 0x0040ce52..0x0040ce61
+    int right = w - 16;                                                     // ebx, 0x0040ce6e
+    int rowY = y + h - 16;                                                  // 0x0040ce79 (ebp)
+    if (right > 12) {                                                       // 0x0040ce71 / 0x0040ce73
+        int i = 12;                                                         // esi, 0x0040ce69
+        do {
+            kStretchBlit(reinterpret_cast<void*>(0x005a5604), 0, 0x0058b8bc, G<int>(0x004c1570), x + i, rowY, 0);   // 0x0040ce95
+            i += 16;                                                        // 0x0040ce9a
+        } while (i < right);                                                // 0x0040ce9f
+    }
+    rowY = y + h - 16;                                                      // esi, 0x0040ceaf
+    kStretchBlit(reinterpret_cast<void*>(0x005a5630), 0, 0x0058b8e8, G<int>(0x004c1570), x + w - 12, rowY, 0);      // 0x0040cecf
+    return kStretchBlit(reinterpret_cast<void*>(0x005a55d8), 0, 0x0058b890, G<int>(0x004c1570), x - 4, rowY, 0);    // 0x0040cee6
+}
+C5_t DrawWindowFrame_orig;
+// 0x0040cdd0
+SG_HOOK("golf_clean.exe", 0x0040cdd0, drawWindowFrame, DrawWindowFrame_re, DrawWindowFrame_orig);
+
+// ====================================================================================================================
+// Window control strip
+// ====================================================================================================================
+namespace {
+const T0_t kWindowPrep47b9a0 = reinterpret_cast<T0_t>(0x0047b9a0);      // unnamed, thiscall, plain ret
+const T6_t kSurfaceCreateFull = reinterpret_cast<T6_t>(0x00474dd0);     // Surface_createFull, ret 0x18
+const T1_t kWidgetApplyPalette = reinterpret_cast<T1_t>(0x004789f0);    // Widget_applyPalette, ret 4
+const T1_t kWidgetClearArea = reinterpret_cast<T1_t>(0x00478b30);       // Widget_clearArea, ret 4
+
+// One strip piece: Surface_createFull(piece, a, b, 0, 1, 0, 0), Widget_applyPalette(piece, [0x0083ad10]),
+// Widget_clearArea(piece, [0x004e432c]) (pushes 0x0047d67d..0x0047d689, calls 0x0047d689, 0x0047d69b, 0x0047d6ad and the twins).
+static void stripPiece(void* piece, int a, int b) {
+    kSurfaceCreateFull(piece, 0, a, b, 0, 1, 0, 0);
+    kWidgetApplyPalette(piece, 0, G<int>(0x0083ad10));
+    kWidgetClearArea(piece, 0, G<int>(0x004e432c));
+}
+}  // namespace
+
+// 0x0047d610  buildControlStrip47d610(this), thiscall, plain ret (0x0047d7ba): rebuilds the four strip pieces of a window.
+// 0x0047b9a0 (call 0x0047d613) first. [this+0xa0] bit 1 clear (test 0x0047d618, je 0x0047d7b9) returns its eax. Otherwise
+// ebx = [this+0x180] when [this+0x9c] has bit 0x10 and not bit 0x400000 (0x0047d62c..0x0047d638) else [this+0x184] (0x0047d640);
+// edi = [this+0x188], replaced by [this+0x184] when it is -1 (0x0047d64c..0x0047d651); edi < 1 becomes 1 (0x0047d657..0x0047d65c),
+// ebx < 1 becomes 1 (0x0047d661..0x0047d666), both signed. Piece [this+0x11c]: (c4 - bc, ebx) with c4 = [this+0x1c4],
+// bc = [this+0x1bc] (0x0047d66b..0x0047d689). [this+0x188] != 0 (0x0047d6b8): piece [this+0x128] with (c4 - bc, edi). [this+0x184]
+// != 0 (0x0047d70b): piece [this+0x124] with ([this+0x184], c8 - c0 - edi - ebx) and piece [this+0x120] with the same pair
+// (c8 = [this+0x1c8], c0 = [this+0x1c0]; 0x0047d711..0x0047d7a6). Last: [[this]+0x134](this, -1) (call 0x0047d7b1); eax is its.
+int __fastcall BuildControlStrip_re(void* self, void* edx) {
+    int r = kWindowPrep47b9a0(self, 0);                                     // 0x0047d613
+    if ((At<unsigned char>(self, 0xa0) & 2) == 0) return r;                 // 0x0047d618 / 0x0047d61f
+    unsigned flags = At<unsigned>(self, 0x9c);                              // 0x0047d625
+    int ebx;
+    if ((flags & 0x10) != 0 && (flags & 0x400000) == 0) ebx = At<int>(self, 0x180);      // 0x0047d62c..0x0047d638
+    else ebx = At<int>(self, 0x184);                                        // 0x0047d640
+    int edi = At<int>(self, 0x188);                                         // 0x0047d646
+    if (edi == -1) edi = At<int>(self, 0x184);                              // 0x0047d64c..0x0047d651
+    if (edi < 1) edi = 1;                                                   // 0x0047d657..0x0047d65c
+    if (ebx < 1) ebx = 1;                                                   // 0x0047d661..0x0047d666
+    int c4 = At<int>(self, 0x1c4), bc = At<int>(self, 0x1bc);               // 0x0047d66b, 0x0047d671
+    stripPiece(At<void*>(self, 0x11c), c4 - bc, ebx);                       // 0x0047d689..0x0047d6ad
+    if (At<int>(self, 0x188) != 0) {                                        // 0x0047d6b2..0x0047d6ba
+        stripPiece(At<void*>(self, 0x128), At<int>(self, 0x1c4) - At<int>(self, 0x1bc), edi);       // 0x0047d6da..0x0047d6fe
+    }
+    int w184 = At<int>(self, 0x184);                                        // 0x0047d703
+    if (w184 != 0) {                                                        // 0x0047d70b
+        int span = At<int>(self, 0x1c8) - At<int>(self, 0x1c0) - edi - ebx; // 0x0047d711..0x0047d727
+        stripPiece(At<void*>(self, 0x124), w184, span);                     // 0x0047d733..0x0047d756
+        int span2 = At<int>(self, 0x1c8) - At<int>(self, 0x1c0) - edi - ebx;    // 0x0047d75b..0x0047d777
+        stripPiece(At<void*>(self, 0x120), At<int>(self, 0x184), span2);    // 0x0047d783..0x0047d7a6
+    }
+    void** vt = At<void**>(self, 0);                                        // 0x0047d7ab
+    return reinterpret_cast<T1_t>(vt[0x134 / 4])(self, 0, -1);              // 0x0047d7b1
+}
+typedef int(__fastcall* BuildControlStrip_t)(void*, void*);
+BuildControlStrip_t BuildControlStrip_orig;
+// 0x0047d610
+SG_HOOK("golf_clean.exe", 0x0047d610, buildControlStrip47d610, BuildControlStrip_re, BuildControlStrip_orig);
+
+// ====================================================================================================================
+// Panel layout (virtual-base objects: this + [vt+4] + 0x274 is the text sub-object, this + [vt+8] the base record b)
+// ====================================================================================================================
+namespace {
+typedef int(__fastcall* Quad_t)(void* self, void*, int a, int b, int c, int d);              // 0x00476310 / 0x00476340 / 0x00476370, ret 0x10
+typedef int(__fastcall* Get_t)(void* self, void*);                                           // 0x00477560 / 0x00477580
+typedef int(__fastcall* TextPut_t)(void* self, void*, const char* text);                     // 0x00477250, ret 4
+typedef int(__fastcall* SetDrawTarget_t)(void* self, void*, int a, int b, int c, int d);     // 0x004762d0, ret 0x10
+const Quad_t kSetQuad = reinterpret_cast<Quad_t>(0x00476310);
+const Quad_t kSetQuad70 = reinterpret_cast<Quad_t>(0x00476340);
+const Quad_t kSetQuad74 = reinterpret_cast<Quad_t>(0x00476370);
+const Get_t kWidgetValue = reinterpret_cast<Get_t>(0x00477580);
+const TextPut_t kTextPut = reinterpret_cast<TextPut_t>(0x00477250);
+const SetDrawTarget_t kSetDrawTarget = reinterpret_cast<SetDrawTarget_t>(0x004762d0);
+static inline char* panelBase(void* self) { return B(self) + reinterpret_cast<int*>(Pp(self, 0))[2]; }
+static inline void* panelText(void* self) { return B(self) + reinterpret_cast<int*>(Pp(self, 0))[1] + 0x274; }
+}  // namespace
+
+// 0x004a2a60  panelBuildChildren(this): thiscall, no stack arguments, plain ret. b = this + [vt+8] (0x004a2a66..0x004a2a6b);
+// b+0xd0 (the list count) == 0 returns 7 (0x004a2a6d..0x004a2a76). The text sub-object gets setQuad(b+0x80, +0x8c, +0x98, +0xa4)
+// (call 0x004a2aa3), setQuad70(+0x84, +0x90, +0x9c, +0xa8) (0x004a2ad6), setQuad74(+0x88, +0x94, +0xa0, +0xac) (0x004a2b09) and
+// setDrawTarget(b+0x74, +0x78, +0x7c, 0) (0x004a2b2d). b+0x5c = min(count, b+0x54) (signed, 0x004a2b43..0x004a2b49). The list
+// header at b+0xc0 (head +8, cursor +0xc, count +0x10, index +0x14, nodes: next +0xc, previous +0x10): for count - 1 >= -1
+// (0x004a2b64/0x004a2b67) the cursor becomes the head (0x004a2b6c); the inlined seek to index -1 uses |-1| = 1 (0x004a2b6f..
+// 0x004a2b75), which must not exceed the count (0x004a2b77/0x004a2b79) and moves the cursor one node back (0x004a2b7f..0x004a2b89),
+// then the index = count - 1 (0x004a2b8b). this+0x7c = this+0x80 = 0 (0x004a2b90, 0x004a2b93). For count > 0 (0x004a2ba3/
+// 0x004a2ba5) and each of the count rounds: a non-NULL head advances the cursor and the index, which wraps to 0 at the count
+// (0x004a2bc3..0x004a2bdc); the item text is [[cursor+8]+4] (0x004a2bea..0x004a2bed), 0 for a NULL cursor (0x004a2bf9);
+// Text_put(text) (call 0x004a2c08) raises this+0x7c (0x004a2c0d..0x004a2c12); Text_put of the string pointer at this+0x2c+4*i
+// (call 0x004a2c24) above this+0x80 (0x004a2c29/0x004a2c2f) stores that width + 2 * b+0x44 (0x004a2c31..0x004a2c3d). this+0x80
+// is then at least 10 (0x004a2c4d..0x004a2c5f). b+0x68 = b+0x38 + 2 * (b+0x48 + b+0x44) + this+0x80 + this+0x7c (0x004a2c68..
+// 0x004a2c80); b+0x6c = Widget_value(text) + b+0x48 (0x004a2c97..0x004a2c9f). Bit 1 of the byte b+0x24 with b+0x30 != 0
+// (0x004a2ca9..0x004a2cba): b+0x60 = b+0x30, b+0x58 = b+0x30 / b+0x68 (0x004a2cbc..0x004a2cce); else b+0x60 = max(b+0x68 * b+0x50,
+// b+0x30) (0x004a2cd3..0x004a2ce3), b+0x68 = b+0x60 / b+0x50, b+0x58 = b+0x50 (0x004a2cee..0x004a2d02). Bit 0 with b+0x34 != 0
+// (0x004a2d10..0x004a2d19): b+0x64 = b+0x34, b+0x5c = b+0x34 / b+0x6c (0x004a2d1d..0x004a2d32); else b+0x64 = b+0x6c * b+0x5c +
+// b+0x48 (0x004a2d38..0x004a2d45). Returns 0 (0x004a2d35 / 0x004a2d48).
+int __fastcall PanelBuildChildren_re(void* self, void*) {
+    char* b = panelBase(self);                                              // 0x004a2a6b
+    if (I(b, 0xd0) == 0) return 7;                                          // 0x004a2a6d..0x004a2a76
+    void* t = panelText(self);                                              // 0x004a2a9c
+    kSetQuad(t, 0, I(b, 0x80), I(b, 0x8c), I(b, 0x98), I(b, 0xa4));        // 0x004a2aa3
+    kSetQuad70(t, 0, I(b, 0x84), I(b, 0x90), I(b, 0x9c), I(b, 0xa8));      // 0x004a2ad6
+    kSetQuad74(t, 0, I(b, 0x88), I(b, 0x94), I(b, 0xa0), I(b, 0xac));      // 0x004a2b09
+    kSetDrawTarget(t, 0, I(b, 0x74), I(b, 0x78), I(b, 0x7c), 0);            // 0x004a2b2d
+    {
+        const int cnt = I(b, 0xd0), c54 = I(b, 0x54);
+        I(b, 0x5c) = cnt < c54 ? cnt : c54;                                 // 0x004a2b43..0x004a2b49
+    }
+    {
+        char* hdr = b + 0xc0;                                               // 0x004a2b5a
+        const int edi = I(b, 0xd0);
+        const int last = edi - 1;                                           // 0x004a2b61
+        if (last >= -1) {                                                   // 0x004a2b64 / 0x004a2b67
+            I(hdr, 0xc) = I(hdr, 8);                                        // 0x004a2b69 / 0x004a2b6c
+            int steps = 1;                                                  // |-1|, 0x004a2b6f..0x004a2b75
+            if (!(steps > edi)) {                                           // 0x004a2b77 / 0x004a2b79
+                if (steps > 0) {                                            // 0x004a2b7b / 0x004a2b7d
+                    do {
+                        I(hdr, 0xc) = I(reinterpret_cast<void*>(I(hdr, 0xc)), 0x10);   // 0x004a2b7f..0x004a2b86
+                        steps--;                                            // 0x004a2b82
+                    } while (steps != 0);                                   // 0x004a2b89
+                }
+                I(hdr, 0x14) = last;                                        // 0x004a2b8b
+            }
+        }
+    }
+    I(self, 0x7c) = 0;                                                      // 0x004a2b90
+    I(self, 0x80) = 0;                                                      // 0x004a2b93
+    const int count = I(b, 0xd0);                                           // 0x004a2b9c
+    if (count > 0) {                                                        // 0x004a2ba3 / 0x004a2ba5
+        const int* labels = reinterpret_cast<int*>(B(self) + 0x2c);         // edi, 0x004a2bab
+        for (int i = 0; i < count; i++) {                                   // ebx, 0x004a2bae / 0x004a2c46
+            char* hdr = b + 0xc0;                                           // 0x004a2bbc
+            const int head = I(b, 0xc8);                                    // 0x004a2bb5
+            if (head != 0) {                                                // 0x004a2bc3 / 0x004a2bc5
+                I(hdr, 0xc) = I(reinterpret_cast<void*>(I(hdr, 0xc)), 0xc);    // 0x004a2bc7..0x004a2bcd
+                const int idx = I(hdr, 0x14) + 1;                           // 0x004a2bd0 / 0x004a2bd3
+                I(hdr, 0x14) = idx;                                         // 0x004a2bd7
+                if (idx == I(hdr, 0x10)) I(hdr, 0x14) = 0;                  // 0x004a2bd4 / 0x004a2bda / 0x004a2bdc
+            }
+            void* cur = reinterpret_cast<void*>(I(hdr, 0xc));               // 0x004a2bdf
+            const char* text;
+            if (cur == 0) text = 0;                                         // 0x004a2be4 / 0x004a2bf9
+            else if (head == 0) text = *reinterpret_cast<const char* const*>(4);   // 0x004a2bf2..0x004a2bf4 (NULL item: faults)
+            else text = reinterpret_cast<const char*>(Pp(Pp(cur, 8), 4));   // 0x004a2bea / 0x004a2bed
+            const int w1 = kTextPut(t, 0, text);                            // 0x004a2c08
+            if (w1 > I(self, 0x7c)) I(self, 0x7c) = w1;                     // 0x004a2c0d / 0x004a2c10 / 0x004a2c12
+            const int w2 = kTextPut(t, 0, reinterpret_cast<const char*>(labels[i]));    // 0x004a2c24
+            if (w2 > I(self, 0x80)) I(self, 0x80) = add(w2, 2 * I(b, 0x44));            // 0x004a2c29..0x004a2c3d
+        }
+    }
+    {
+        int ecx = I(self, 0x80);                                            // 0x004a2c4d
+        if (!(ecx > 10)) ecx = 10;                                          // 0x004a2c53 / 0x004a2c56 / 0x004a2c58
+        I(self, 0x80) = ecx;                                                // 0x004a2c5f
+        I(b, 0x68) = add(add(I(b, 0x38), 2 * add(I(b, 0x48), I(b, 0x44))), add(ecx, I(self, 0x7c)));   // 0x004a2c68..0x004a2c80
+    }
+    I(b, 0x6c) = add(kWidgetValue(t, 0), I(b, 0x48));                       // 0x004a2c97 / 0x004a2c9c / 0x004a2c9f
+    if ((*reinterpret_cast<unsigned char*>(b + 0x24) & 2) != 0 && I(b, 0x30) != 0) {   // 0x004a2cad / 0x004a2cb3 / 0x004a2cb8
+        I(b, 0x60) = I(b, 0x30);                                            // 0x004a2cbc
+        I(b, 0x58) = I(b, 0x30) / I(b, 0x68);                               // 0x004a2ccb / 0x004a2cce
+    } else {
+        int m = mul(I(b, 0x68), I(b, 0x50));                                // 0x004a2cd3 / 0x004a2cd9
+        const int e30 = I(b, 0x30);                                         // 0x004a2cd6
+        if (e30 > m) m = e30;                                               // 0x004a2cdd / 0x004a2cdf / 0x004a2ce1
+        I(b, 0x60) = m;                                                     // 0x004a2ce3
+        I(b, 0x68) = I(b, 0x60) / I(b, 0x50);                               // 0x004a2cf2 / 0x004a2cf3 / 0x004a2cf6
+        I(b, 0x58) = I(b, 0x50);                                            // 0x004a2cfe / 0x004a2d02
+    }
+    if ((*reinterpret_cast<unsigned char*>(b + 0x24) & 1) != 0 && I(b, 0x34) != 0) {   // 0x004a2d10 / 0x004a2d14 / 0x004a2d19
+        I(b, 0x64) = I(b, 0x34);                                            // 0x004a2d1d
+        I(b, 0x5c) = I(b, 0x34) / I(b, 0x6c);                               // 0x004a2d2d / 0x004a2d32
+    } else {
+        I(b, 0x64) = add(mul(I(b, 0x6c), I(b, 0x5c)), I(b, 0x48));         // 0x004a2d38..0x004a2d45
+    }
+    return 0;                                                               // 0x004a2d35 / 0x004a2d48
+}
+typedef int(__fastcall* PanelBuildChildren_t)(void*, void*);
+PanelBuildChildren_t PanelBuildChildren_orig;
+// 0x004a2a60
+SG_HOOK("golf_clean.exe", 0x004a2a60, panelBuildChildren, PanelBuildChildren_re, PanelBuildChildren_orig);
+
+// ====================================================================================================================
+// ListBox::drawContents (a method of the ListBox sub-object T = P + 0x58, P = the object holding the virtual-base pointer)
+// ====================================================================================================================
+namespace {
+typedef int(__fastcall* V0_t)(void* ecx, void* edx);
+typedef int(__fastcall* V1_t)(void* ecx, void* edx, int a);
+typedef int(__fastcall* V2_t)(void* ecx, void* edx, int a, int b);
+typedef int(__fastcall* V3_t)(void* ecx, void* edx, int a, int b, int c);
+typedef int(__fastcall* V7_t)(void* ecx, void* edx, int a, int b, int c, int d, int e, int f, int g);
+typedef int(__cdecl* Cb4_t)(void* a, int b, int c, int d);
+template <typename T> static inline T vslotOf(void* obj, int off) {
+    return *reinterpret_cast<T*>(*reinterpret_cast<char**>(obj) + off);
+}
+const V2_t kDrawNinePatch = reinterpret_cast<V2_t>(0x004791b0);      // drawNinePatch, ret 8
+const V7_t kSurfaceBlitThunk = reinterpret_cast<V7_t>(0x00475c60);   // Surface_blitThunk, ret 0x1c
+const V1_t kWindowPaint = reinterpret_cast<V1_t>(0x004808c0);        // Window::paint, ret 4
+const V3_t kDrawBevelBoxR = reinterpret_cast<V3_t>(0x004795d0);      // Widget_drawBevelBoxR, ret 0xc
+}  // namespace
+
+// 0x0048c130  ListBox::drawContents(this = T), thiscall, plain ret (0x0048c415). P = T - 0x58 holds the virtual-base table vbt
+// (0x0048c139): vbt[1] = d1 locates the Window base W = P + d1, vbt[2] = d2 the list record M = P + d2; Q = T + d2 = M + 0x58.
+// edi = parent = [W+0x130] (0x0048c13f); NULL returns (eax = vbt at that point; 0x0048c146/0x0048c148). [0x0083ab2c] = parent
+// (0x0048c14e). O = [W+0x278] (0x0048c15a): non-NULL gets [[O]+0xc4]() (0x0048c16e). S2 = W + 0x274. cb = [T-0x10]
+// (0x0048c174): non-NULL is called cdecl with (W, 0, 0, 0) (0x0048c193); a non-zero result goes to the tail (0x0048c19a). Then
+// [[parent]+0x28](parent, W) (0x0048c1ba): non-zero also goes to the tail (0x0048c1bf). nine = [T-0x1c] (0x0048c1c5) non-zero:
+// drawNinePatch(S2; O ? [[O]+0xd4]() : 0, nine) (0x0048c1d9..0x0048c202) and the tail. Otherwise [W+0x9c] (0x0048c215) bit 0x80000
+// set (0x0048c219) with the parent non-NULL (0x0048c22d): Surface_blitThunk(parent + 0x274; S2, [M+0x28], [M+0x2c], 0, 0,
+// O ? [[O]+0xd8]() : 0, O ? [[O]+0xdc]() : 0) (0x0048c239..0x0048c29e); bit clear: Window::paint(W, [M+0x70]) (0x0048c2a5..
+// 0x0048c2b0). Tail (0x0048c2b5): O = [W+0x278] again, non-NULL gets [[O]+0xd0](&rect) which fills a stack rectangle
+// (0x0048c2cd..0x0048c2d4). n = [Q+0x60] border rounds (0x0048c2e5..0x0048c33d, signed): Widget_drawBevelBoxR(S2; &rect, [Q+0x58],
+// [Q+0x5c]) (call 0x0048c304) and the rectangle shrinks by one on every side (0x0048c319..0x0048c32c). count = [Q+0x78]
+// (0x0048c345): zero returns 0 (0x0048c34d). top = [T-0x34] (0x0048c353), edi = top - 1: above count - 1 (0x0048c35e/0x0048c35e) skips
+// the seek; else the cursor [Q+0x74] = head [Q+0x70] (0x0048c360/0x0048c365); edi >= 0 (0x0048c368): edi times forward through
+// the +0xc links (0x0048c38b..0x0048c397), index [Q+0x7c] = edi (0x0048c399); edi < 0: |edi| above count skips (0x0048c371/
+// 0x0048c373), else |edi| times back through the +0x10 links (0x0048c379..0x0048c383) and the index = edi + count (0x0048c385).
+// [0x0083b650] = 0 (0x0048c39e). mode = [Q+0] (0x0048c3b1): <= 0 returns Q (0x0048c3b6). For each of mode columns, rows = [Q+4]
+// calls of S's vtable slot 0 with top + [0x0083b650] (0x0048c3c7..0x0048c3ce), the counter incremented (0x0048c3d7); the column
+// ends early when the counter equals count - top (0x0048c3ed/0x0048c3ef). Returns Q (the last eax).
+int __fastcall ListBoxDrawContents_re(void* self, void*) {
+    char* T = B(self);
+    int* vbt = *reinterpret_cast<int**>(T - 0x58);                          // 0x0048c139
+    const int d1 = vbt[1], d2 = vbt[2];                                     // 0x0048c13c, 0x0048c1ab
+    char* W58 = T + d1;                                                     // W + 0x58
+    void* parent = *reinterpret_cast<void**>(W58 + 0xd8);                   // 0x0048c13f
+    if (parent == 0) return reinterpret_cast<int>(vbt);                     // 0x0048c146 / 0x0048c148
+    G<void*>(0x0083ab2c) = parent;                                          // 0x0048c14e
+    void* S2 = W58 + 0x21c;                                                 // 0x0048c161
+    char* P = T - 0x58;
+    void* W = P + d1;                                                       // 0x0048c188
+    void* S = T - 0x5c;
+    void* O = *reinterpret_cast<void**>(W58 + 0x220);                       // 0x0048c15a
+    if (O != 0) vslotOf<V0_t>(O, 0xc4)(O, 0);                               // 0x0048c168 / 0x0048c16e
+    bool tail = false;
+    Cb4_t cb = *reinterpret_cast<Cb4_t*>(T - 0x10);                         // 0x0048c174
+    if (cb != 0) {                                                          // 0x0048c177
+        if (cb(W, 0, 0, 0) != 0) tail = true;                               // 0x0048c193 / 0x0048c19a
+    }
+    if (!tail) {
+        if (vslotOf<V1_t>(parent, 0x28)(parent, 0, reinterpret_cast<int>(W)) != 0) tail = true;      // 0x0048c1ba / 0x0048c1bf
+    }
+    if (!tail) {
+        const int nine = *reinterpret_cast<int*>(T - 0x1c);                 // 0x0048c1c5
+        if (nine != 0) {                                                    // 0x0048c1ca
+            O = *reinterpret_cast<void**>(W58 + 0x220);                     // 0x0048c1d9
+            const int a = O != 0 ? vslotOf<V0_t>(O, 0xd4)(O, 0) : 0;       // 0x0048c1e2 / 0x0048c1e6 / 0x0048c1ee
+            kDrawNinePatch(S2, 0, a, nine);                                 // 0x0048c202
+        } else {
+            const int flags = *reinterpret_cast<int*>(W58 + 0x44);          // 0x0048c215
+            if ((flags & 0x80000) != 0 && *reinterpret_cast<void**>(W58 + 0xd8) != 0) {      // 0x0048c219..0x0048c22d
+                O = *reinterpret_cast<void**>(W58 + 0x220);                 // 0x0048c239
+                const int edi = O != 0 ? vslotOf<V0_t>(O, 0xdc)(O, 0) : 0;     // 0x0048c241 / 0x0048c247
+                O = *reinterpret_cast<void**>(W58 + 0x220);                 // 0x0048c260
+                const int eax = O != 0 ? vslotOf<V0_t>(O, 0xd8)(O, 0) : 0;     // 0x0048c269 / 0x0048c26d
+                char* Q = T + d2;
+                void* parentSurf = *reinterpret_cast<char**>(W58 + 0xd8) + 0x274;    // 0x0048c291 / 0x0048c298
+                kSurfaceBlitThunk(parentSurf, 0, reinterpret_cast<int>(S2), *reinterpret_cast<int*>(Q - 0x30), *reinterpret_cast<int*>(Q - 0x2c), 0, 0, eax, edi);   // 0x0048c29e
+            } else {
+                kWindowPaint(W, 0, *reinterpret_cast<int*>(T + d2 + 0x18));    // 0x0048c2a5..0x0048c2b0
+            }
+        }
+    }
+    int rect[4];                                                            // esp+0x14.. (filled by the slot when O is non-NULL)
+    O = *reinterpret_cast<void**>(W58 + 0x220);                             // 0x0048c2b5..0x0048c2c2
+    if (O != 0) vslotOf<V1_t>(O, 0xd0)(O, 0, reinterpret_cast<int>(rect));  // 0x0048c2c9..0x0048c2d4
+    char* Q = T + d2;                                                       // 0x0048c2e2
+    for (int i = 0; *reinterpret_cast<int*>(Q + 0x60) > 0 && i < *reinterpret_cast<int*>(Q + 0x60); i++) {   // 0x0048c2eb, 0x0048c33b
+        kDrawBevelBoxR(S2, 0, reinterpret_cast<int>(rect), *reinterpret_cast<int*>(Q + 0x58), *reinterpret_cast<int*>(Q + 0x5c));   // 0x0048c304
+        rect[0]++;                                                          // 0x0048c319
+        rect[2]--;                                                          // 0x0048c31a
+        rect[1]++;                                                          // 0x0048c322
+        rect[3]--;                                                          // 0x0048c323
+    }
+    const int count = *reinterpret_cast<int*>(Q + 0x78);                    // 0x0048c345
+    if (count == 0) return 0;                                               // 0x0048c34b / 0x0048c34d
+    const int top = *reinterpret_cast<int*>(T - 0x34);                      // 0x0048c353
+    int edi = top - 1;                                                      // 0x0048c358
+    if (!(edi > count - 1)) {                                               // 0x0048c35c / 0x0048c35e
+        *reinterpret_cast<int*>(Q + 0x74) = *reinterpret_cast<int*>(Q + 0x70);     // 0x0048c360 / 0x0048c365
+        if (edi >= 0) {                                                     // 0x0048c368
+            if (edi != 0) {                                                 // 0x0048c389
+                int n = edi;
+                do {
+                    *reinterpret_cast<int*>(Q + 0x74) = *reinterpret_cast<int*>(*reinterpret_cast<int*>(Q + 0x74) + 0xc);    // 0x0048c38d..0x0048c394
+                    n--;                                                    // 0x0048c390
+                } while (n != 0);                                           // 0x0048c397
+            }
+            *reinterpret_cast<int*>(Q + 0x7c) = edi;                        // 0x0048c399
+        } else {
+            int a = edi < 0 ? -edi : edi;                                   // 0x0048c36a..0x0048c36f
+            if (!(a > count)) {                                             // 0x0048c371 / 0x0048c373
+                if (a > 0) {                                                // 0x0048c375 / 0x0048c377
+                    do {
+                        *reinterpret_cast<int*>(Q + 0x74) = *reinterpret_cast<int*>(*reinterpret_cast<int*>(Q + 0x74) + 0x10);   // 0x0048c379..0x0048c380
+                        a--;                                                // 0x0048c37c
+                    } while (a != 0);                                       // 0x0048c383
+                }
+                *reinterpret_cast<int*>(Q + 0x7c) = edi + count;            // 0x0048c385 / 0x0048c387 / 0x0048c399
+            }
+        }
+    }
+    G<int>(0x0083b650) = 0;                                                 // 0x0048c39e
+    int mode = *reinterpret_cast<int*>(Q + 0);                              // 0x0048c3b1
+    if (mode <= 0) return reinterpret_cast<int>(Q);                         // 0x0048c3b4 / 0x0048c3b6
+    for (int j = 0; ; ) {                                                   // 0x0048c3b8
+        if (*reinterpret_cast<int*>(Q + 4) > 0) {                           // 0x0048c3bd / 0x0048c3bf
+            int ebx = 0;
+            do {
+                const int counter = G<int>(0x0083b650);
+                vslotOf<V1_t>(S, 0)(S, 0, top + counter);                   // 0x0048c3c7..0x0048c3ce
+                const int c = G<int>(0x0083b650) + 1;                       // 0x0048c3d0 / 0x0048c3d6
+                G<int>(0x0083b650) = c;                                     // 0x0048c3d7
+                if (c == *reinterpret_cast<int*>(Q + 0x78) - top) break;    // 0x0048c3e8..0x0048c3ef
+                ebx++;                                                      // 0x0048c3f4
+            } while (ebx < *reinterpret_cast<int*>(Q + 4));                 // 0x0048c3f5 / 0x0048c3f7
+        }
+        j++;                                                                // 0x0048c400
+        if (!(j < *reinterpret_cast<int*>(Q))) break;                       // 0x0048c40a / 0x0048c40c
+    }
+    return reinterpret_cast<int>(Q);                                        // 0x0048c408
+}
+typedef int(__fastcall* ListBoxDrawContents_t)(void*, void*);
+ListBoxDrawContents_t ListBoxDrawContents_orig;
+// 0x0048c130
+SG_HOOK("golf_clean.exe", 0x0048c130, ListBox__drawContents, ListBoxDrawContents_re, ListBoxDrawContents_orig);
+
+// 0x0048cc60  ListBox::drawContents_vtordisp(this), thiscall, plain ret: ecx -= [ecx - 4] (0x0048cc60), then a tail jump to
+// ListBox::drawContents 0x0048c130 (0x0048cc63); eax is drawContents's.
+int __fastcall ListBoxDrawContentsVtordisp_re(void* self, void*) {
+    void* adj = B(self) - *reinterpret_cast<int*>(B(self) - 4);             // 0x0048cc60
+    return reinterpret_cast<V0_t>(0x0048c130)(adj, 0);                      // 0x0048cc63
+}
+typedef int(__fastcall* ListBoxDrawContentsVtordisp_t)(void*, void*);
+ListBoxDrawContentsVtordisp_t ListBoxDrawContentsVtordisp_orig;
+// 0x0048cc60
+SG_HOOK("golf_clean.exe", 0x0048cc60, ListBox__drawContents_vtordisp, ListBoxDrawContentsVtordisp_re, ListBoxDrawContentsVtordisp_orig);
+
+// ====================================================================================================================
+// ListBox::measure
+// ====================================================================================================================
+
+// 0x0048a120  ListBox::measure(this), thiscall, plain ret: sizes the list from its item texts. [this+4] = vbt (0x0048a126):
+// b = this + vbt[2] (0x0048a129), the text sub-object t = this + vbt[1] + 0x278 (0x0048a149), the window flag byte at
+// this + vbt[1] + 0xa0. b+0xd4 (the item count) == 0 returns 7 (0x0048a12c..0x0048a13c). this+0x14 = 0 (0x0048a13d). t gets
+// setQuad(b+0x84, +0x90, +0x9c, +0xa8) (call 0x0048a16c), setQuad70(+0x88, +0x94, +0xa0, +0xac) (0x0048a1a0), setQuad74(+0x8c,
+// +0x98, +0xa4, +0xb0) (0x0048a1d4) and setDrawTarget(b+0x78, +0x7c, +0x80, 0) (0x0048a1fc). b+0x60 = min(count, b+0x58)
+// (signed, 0x0048a207..0x0048a219). For count > 0 (0x0048a232/0x0048a234) and each of the count rounds: a non-NULL head (b+0xcc)
+// advances the cursor b+0xd0 along the +0xc links and the index b+0xd8, which wraps to 0 at the count (0x0048a23a..0x0048a268);
+// the text is [[cursor+8]+4] (0x0048a27c), 0 for a NULL cursor (0x0048a28b); Text_put(t, text) (call 0x0048a29b) keeps the
+// widest in edi (0x0048a2a0..0x0048a2a4). edi == 0 (no round, or only zero widths; 0x0048a2b7/0x0048a2b9) becomes b+0x34
+// (0x0048a2c1). b+0x6c = b+0x4c + 2 * [this+0x3c] + 2 + b+0x3c + edi (0x0048a2c8..0x0048a2e0). b+0x70 = Widget_value(t) +
+// b+0x4c when b+0x50 == -1 (0x0048a2ee..0x0048a30d), else b+0x50 (0x0048a312). Bit 1 of the byte b+0x28 with b+0x34 != 0
+// (0x0048a321..0x0048a32a): b+0x64 = b+0x34, b+0x5c = b+0x54, then b+0x6c = b+0x64 - 2 * b+0x48 for b+0x5c == 1
+// (0x0048a345..0x0048a355) else b+0x6c - b+0x4c (0x0048a35d..0x0048a365). Otherwise b+0x54 == 1: b+0x64 = max(b+0x34, b+0x6c +
+// 2 * b+0x48) and b+0x6c = b+0x64 - 2 * b+0x48 (0x0048a373..0x0048a39f); b+0x54 != 1: b+0x6c = (b+0x64 - 2 * b+0x48 + b+0x4c) /
+// b+0x54 - b+0x4c and b+0x64 = max(b+0x34, (b+0x6c + b+0x4c) * b+0x54 + 2 * b+0x48 - b+0x4c) (0x0048a3a4..0x0048a3e5); then b+0x5c =
+// b+0x54 (0x0048a3e8..0x0048a3f3). Bit 0 with b+0x38 != 0 (0x0048a400..0x0048a40f): b+0x68 = b+0x38 and b+0x60 = (b+0x68 - b+0x44 -
+// b+0x40 + b+0x4c) / b+0x70 (0x0048a415..0x0048a43b); with window flag 0x40 clear (0x0048a444/0x0048a44b) and b+0x60 * b+0x5c below
+// [this+0x30] (0x0048a45e..0x0048a463): b+0x5c > 1 gives b+0x68 = b+0x38 - [0x0083ff10] and b+0x60 = b+0x68 / b+0x70 (0x0048a46a..
+// 0x0048a489), else b+0x64 = b+0x34 - [0x0083ff10] and b+0x5c = 1 (0x0048a48e..0x0048a4a2). Otherwise b+0x68 = b+0x70 * b+0x60 -
+// b+0x4c + b+0x44 + b+0x40 (0x0048a4ac..0x0048a4c2). b+0x70 -= b+0x4c (0x0048a4cb..0x0048a4d6); q = (b+0x68 - b+0x44 - b+0x40 +
+// b+0x4c) / (b+0x70 + b+0x4c) (0x0048a4df..0x0048a4fe); count <= q (0x0048a500/0x0048a506): bit 1 of b+0x28 gives b+0x6c = (b+0x64 -
+// 2 * b+0x48 + b+0x4c) / b+0x5c - b+0x4c (0x0048a50e..0x0048a520) else b+0x64 - 2 * b+0x48 (0x0048a525..0x0048a52f). [this+0x2c] =
+// b+0x60 * b+0x5c (0x0048a546); [this+0x30] <= that returns 0 (0x0048a54b). b+0x5c > 1 (0x0048a55e): window flag 0x40 clear adds
+// [0x0083ff10] to b+0x68 (0x0048a56c..0x0048a577), [this+0x14] |= 1 (0x0048a57e..0x0048a581); else flag clear adds it to b+0x64
+// (0x0048a595..0x0048a59e), bit 1 of b+0x28 takes [0x0083ff10] / b+0x5c off b+0x6c (0x0048a5b4..0x0048a5bd) and [this+0x14] |= 2
+// (0x0048a5c3..0x0048a5c5). Returns 0.
+int __fastcall ListBoxMeasure_re(void* self, void*) {
+    char* esi = B(self);
+    int* vbt = *reinterpret_cast<int**>(esi + 4);                           // 0x0048a126
+    char* b = esi + vbt[2];                                                 // 0x0048a129
+    if (I(b, 0xd4) == 0) return 7;                                          // 0x0048a12c..0x0048a13c
+    I(self, 0x14) = 0;                                                      // 0x0048a13d
+    void* t = esi + vbt[1] + 0x278;                                         // 0x0048a149
+    const unsigned char wflag = *reinterpret_cast<unsigned char*>(esi + vbt[1] + 0xa0);   // 0x0048a444
+    kSetQuad(t, 0, I(b, 0x84), I(b, 0x90), I(b, 0x9c), I(b, 0xa8));        // 0x0048a16c
+    kSetQuad70(t, 0, I(b, 0x88), I(b, 0x94), I(b, 0xa0), I(b, 0xac));      // 0x0048a1a0
+    kSetQuad74(t, 0, I(b, 0x8c), I(b, 0x98), I(b, 0xa4), I(b, 0xb0));      // 0x0048a1d4
+    kSetDrawTarget(t, 0, I(b, 0x78), I(b, 0x7c), I(b, 0x80), 0);            // 0x0048a1fc
+    {
+        const int cnt = I(b, 0xd4), c58 = I(b, 0x58);
+        I(b, 0x60) = cnt < c58 ? cnt : c58;                                 // 0x0048a207..0x0048a219
+    }
+    int edi = 0, rounds = 0;                                                // 0x0048a22b, 0x0048a22d
+    if (I(b, 0xd4) > 0) {                                                   // 0x0048a232 / 0x0048a234
+        do {
+            const int head = I(b, 0xcc);                                    // 0x0048a23a
+            if (head != 0) {                                                // 0x0048a240 / 0x0048a242
+                I(b, 0xd0) = I(reinterpret_cast<void*>(I(b, 0xd0)), 0xc);   // 0x0048a244..0x0048a24d
+                const int idx = I(b, 0xd8) + 1;                             // 0x0048a253 / 0x0048a259
+                I(b, 0xd8) = idx;                                           // 0x0048a260
+                if (idx == I(b, 0xd4)) I(b, 0xd8) = 0;                      // 0x0048a25a / 0x0048a266 / 0x0048a268
+            }
+            void* cur = reinterpret_cast<void*>(I(b, 0xd0));                // 0x0048a26e
+            const char* text;
+            if (cur == 0) text = 0;                                         // 0x0048a274 / 0x0048a276 / 0x0048a28b
+            else if (head == 0) text = *reinterpret_cast<const char* const*>(4);    // 0x0048a284..0x0048a286 (faults)
+            else text = reinterpret_cast<const char*>(Pp(Pp(cur, 8), 4));   // 0x0048a27c / 0x0048a27f
+            const int w = kTextPut(t, 0, text);                             // 0x0048a29b
+            if (w > edi) edi = w;                                           // 0x0048a2a0 / 0x0048a2a2 / 0x0048a2a4
+            rounds++;                                                       // 0x0048a2a9
+        } while (rounds < I(b, 0xd4));                                      // 0x0048a2af / 0x0048a2b5
+    }
+    if (edi == 0) edi = I(b, 0x34);                                         // 0x0048a2b7 / 0x0048a2b9 / 0x0048a2c1
+    I(b, 0x6c) = add(add(add(I(b, 0x4c), add(mul(2, I(self, 0x3c)), 2)), I(b, 0x3c)), edi);   // 0x0048a2c8..0x0048a2e0
+    if (I(b, 0x50) == -1) I(b, 0x70) = add(kWidgetValue(t, 0), I(b, 0x4c)); // 0x0048a2ee / 0x0048a305..0x0048a30d
+    else I(b, 0x70) = I(b, 0x50);                                           // 0x0048a312
+    if ((*reinterpret_cast<unsigned char*>(b + 0x28) & 2) != 0 && I(b, 0x34) != 0) {    // 0x0048a321 / 0x0048a323 / 0x0048a328
+        I(b, 0x64) = I(b, 0x34);                                            // 0x0048a32c
+        I(b, 0x5c) = I(b, 0x54);                                            // 0x0048a33a
+        if (I(b, 0x5c) == 1) I(b, 0x6c) = I(b, 0x64) - 2 * I(b, 0x48);     // 0x0048a345 / 0x0048a349 / 0x0048a34b..0x0048a355
+        else I(b, 0x6c) = I(b, 0x6c) - I(b, 0x4c);                         // 0x0048a35d..0x0048a365
+    } else {
+        const int e54 = I(b, 0x54);                                         // 0x0048a36d
+        if (e54 == 1) {                                                     // 0x0048a370 / 0x0048a373
+            int v = add(I(b, 0x6c), 2 * I(b, 0x48));                        // 0x0048a378 / 0x0048a37b
+            const int e34 = I(b, 0x34);                                     // 0x0048a37e
+            if (e34 > v) v = e34;                                           // 0x0048a381 / 0x0048a383 / 0x0048a385
+            I(b, 0x64) = v;                                                 // 0x0048a387
+            I(b, 0x6c) = I(b, 0x64) - 2 * I(b, 0x48);                       // 0x0048a38a..0x0048a39f
+        } else {
+            const int e4c = I(b, 0x4c);                                     // 0x0048a3a7
+            I(b, 0x6c) = (I(b, 0x64) - 2 * I(b, 0x48) + e4c) / e54 - e4c;  // 0x0048a3a4..0x0048a3ba
+            int v = mul(add(I(b, 0x6c), I(b, 0x4c)), I(b, 0x54));          // 0x0048a3ca..0x0048a3d3
+            v = add(v, 2 * I(b, 0x48)) - I(b, 0x4c);                        // 0x0048a3d7 / 0x0048a3da
+            const int e34 = I(b, 0x34);                                     // 0x0048a3dc
+            if (e34 > v) v = e34;                                           // 0x0048a3df / 0x0048a3e1 / 0x0048a3e3
+            I(b, 0x64) = v;                                                 // 0x0048a3e5
+        }
+        I(b, 0x5c) = I(b, 0x54);                                            // 0x0048a3e8..0x0048a3f3
+    }
+    if ((*reinterpret_cast<unsigned char*>(b + 0x28) & 1) != 0 && I(b, 0x38) != 0) {    // 0x0048a400 / 0x0048a404 / 0x0048a40d / 0x0048a40f
+        I(b, 0x68) = I(b, 0x38);                                            // 0x0048a415
+        I(b, 0x60) = (I(b, 0x68) - I(b, 0x44) - I(b, 0x40) + I(b, 0x4c)) / I(b, 0x70);     // 0x0048a41e..0x0048a43b
+        if ((wflag & 0x40) == 0) {                                          // 0x0048a444 / 0x0048a44b
+            const int e30 = I(self, 0x30);                                  // 0x0048a450
+            const int e5c = I(b, 0x5c);                                     // 0x0048a453
+            if (mul(I(b, 0x60), e5c) < e30) {                               // 0x0048a45a..0x0048a463
+                if (e5c > 1) {                                              // 0x0048a465 / 0x0048a468
+                    I(b, 0x68) = I(b, 0x38) - G<int>(0x0083ff10);           // 0x0048a46a..0x0048a475
+                    I(b, 0x60) = I(b, 0x68) / I(b, 0x70);                   // 0x0048a481..0x0048a489
+                } else {
+                    I(b, 0x64) = I(b, 0x34) - G<int>(0x0083ff10);           // 0x0048a48e..0x0048a499
+                    I(b, 0x5c) = 1;                                         // 0x0048a4a2
+                }
+            }
+        }
+    } else {
+        I(b, 0x68) = add(add(mul(I(b, 0x70), I(b, 0x60)) - I(b, 0x4c), I(b, 0x44)), I(b, 0x40));    // 0x0048a4ac..0x0048a4c2
+    }
+    I(b, 0x70) = I(b, 0x70) - I(b, 0x4c);                                   // 0x0048a4cb..0x0048a4d6
+    {
+        const int q = (I(b, 0x68) - I(b, 0x44) - I(b, 0x40) + I(b, 0x4c)) / add(I(b, 0x70), I(b, 0x4c));   // 0x0048a4df..0x0048a4fe
+        if (!(I(b, 0xd4) > q)) {                                            // 0x0048a500 / 0x0048a506
+            if ((*reinterpret_cast<unsigned char*>(b + 0x28) & 2) != 0)     // 0x0048a508 / 0x0048a50c
+                I(b, 0x6c) = (I(b, 0x64) - 2 * I(b, 0x48) + I(b, 0x4c)) / I(b, 0x5c) - I(b, 0x4c);     // 0x0048a50e..0x0048a520
+            else I(b, 0x6c) = I(b, 0x64) - 2 * I(b, 0x48);                  // 0x0048a525..0x0048a52f
+        }
+    }
+    const int area = mul(I(b, 0x60), I(b, 0x5c));                           // 0x0048a53b / 0x0048a53f
+    I(self, 0x2c) = area;                                                   // 0x0048a546
+    if (I(self, 0x30) <= area) return 0;                                    // 0x0048a543 / 0x0048a549 / 0x0048a54b
+    if (I(b, 0x5c) > 1) {                                                   // 0x0048a550 / 0x0048a55c / 0x0048a55e
+        if ((wflag & 0x40) == 0) I(b, 0x68) = add(I(b, 0x68), G<int>(0x0083ff10));      // 0x0048a563 / 0x0048a56a / 0x0048a56c..0x0048a577
+        I(self, 0x14) = I(self, 0x14) | 1;                                  // 0x0048a57a..0x0048a581
+        return 0;                                                           // 0x0048a585
+    }
+    if ((wflag & 0x40) == 0) I(b, 0x64) = add(I(b, 0x64), G<int>(0x0083ff10));  // 0x0048a58c / 0x0048a593 / 0x0048a595..0x0048a59e
+    if ((*reinterpret_cast<unsigned char*>(b + 0x28) & 2) != 0)             // 0x0048a5ac..0x0048a5b2
+        I(b, 0x6c) = I(b, 0x6c) - G<int>(0x0083ff10) / I(b, 0x5c);         // 0x0048a5b4..0x0048a5bd
+    I(self, 0x14) = I(self, 0x14) | 2;                                      // 0x0048a5c0..0x0048a5c5
+    return 0;                                                               // 0x0048a5cb
+}
+typedef int(__fastcall* ListBoxMeasure_t)(void*, void*);
+ListBoxMeasure_t ListBoxMeasure_orig;
+// 0x0048a120
+SG_HOOK("golf_clean.exe", 0x0048a120, ListBox__measure, ListBoxMeasure_re, ListBoxMeasure_orig);
+
+// ====================================================================================================================
+// drawScrollText
+// ====================================================================================================================
+namespace {
+typedef int(__cdecl* C1_t)(int);
+typedef int(__cdecl* C3_t)(int, int, int);
+typedef int(__cdecl* C5i_t)(int, int, int, int, int);
+typedef char*(__cdecl* Strchr_t)(const char*, int);
+const C1_t kScaleX = reinterpret_cast<C1_t>(0x00404970);               // scaleX
+const C3_t kClamp = reinterpret_cast<C3_t>(0x00467130);                // clamp(v, lo, hi)
+const C5i_t kDrawFrameS2 = reinterpret_cast<C5i_t>(0x0040d0b0);        // drawFrameS2 (5 stack arguments, add esp 0x14)
+const C5i_t kDrawRectScaled = reinterpret_cast<C5i_t>(0x0046e710);     // drawRectScaled (5 stack arguments)
+const Strchr_t kStrchr = reinterpret_cast<Strchr_t>(0x004a6170);       // strchr
+typedef int(__cdecl* DrawTextAt_t)(const char* text, int x, int y, int colour);
+const DrawTextAt_t kDrawText4049d0 = reinterpret_cast<DrawTextAt_t>(0x004049d0);       // drawText4049d0
+const DrawTextAt_t kDrawTextScaled = reinterpret_cast<DrawTextAt_t>(0x00404a20);       // drawTextScaled
+const V1_t kRefreshFull = reinterpret_cast<V1_t>(0x00480c80);          // Window::refreshFull, thiscall one argument
+static int scrollColour(int cur) {
+    if (cur < 0) return G<int>(0x00838f74);                            // 0x0046e5a4
+    return (G<unsigned>(0x00838ee4) & (1u << (cur & 31))) != 0 ? static_cast<int>(0x800003ff) : G<int>(0x00839250);   // 0x0046e5ab..0x0046e5bf
+}
+}  // namespace
+
+// 0x0046e260  drawScrollText(text, sel), cdecl (ret 0x0046e70f): lays out and draws a scroll-text box. The 32 bytes at 0x00838ec4
+// are filled with 0xff (0x0046e270..0x0046e278); [0x00838ef0], [0x00838f78] and [0x00838f94] = 0 (0x0046e285..0x0046e291). Pass 1
+// walks the text (index idx, pointer ebx): a newline (0x0046e2c4) keeps the widest line in [0x00838f94] (0x0046e2c8..0x0046e2d0),
+// starts a line (ebp++, [0x00838f78] = ebp) and stores (ebx - text + 1) at 0x00838ef0 + 4 * ebp (0x0046e2d8..0x0046e2e1); any
+// other character at width 0 that is ' ' or '_' (0x0046e2ea..0x0046e2f4) stores the NEXT character in the byte table 0x00838ec4
+// while fewer than 0x20 marks exist (0x0046e2fa..0x0046e307), sets [0x0083927c] = ebp when it is -1 (0x0046e30d..0x0046e316) and
+// counts the mark (0x0046e31c); the character's width is Text_put([0x004c1570], {c, 0}) (call 0x0046e332) and a '|' adds the
+// width of the string 0x004e3db4 (0x0046e33d..0x0046e34f). Pass 2: [0x00838f78] = clamp(ebp, 0, (0xe8 - [0x00839264]) /
+// [0x004e3dac]) (call 0x0046e395); [0x00839260] == -1 becomes 0xa0 - ((g94 + 8 - sign) >> 1) (0x0046e3a7..0x0046e3c1);
+// right = 2 * g94 / scaleX(2) + [0x00839260] + 8 stored at [0x00838f84], bottom = [0x004e3dac] * [0x00838f78] + [0x00839264] + 6
+// (+2 when [0x00839290] is set) at [0x00838f88] (0x0046e3eb..0x0046e417); a text not ending in a newline takes one mark off
+// (0x0046e42f..0x0046e436) and [0x00838f7c] = the mark count (0x0046e441). [0x00839264] even (test bl, 1; 0x0046e43e): drawFrameS2(
+// scaleX([0x00839260] - 8), scaleX([0x00839264] - 6), scaleX(right - [0x00839260] + 0x10), scaleX(bottom - [0x00839264] + 0xc), 1)
+// (0x0046e449..0x0046e499); odd: drawRectScaled([0x00839260], [0x00839264], right - [0x00839260], bottom - [0x00839264] + 4,
+// 0x80007fff) and [0x00838f80] = 1 (0x0046e4a3..0x0046e4bb). [0x00839274] set: drawText4049d0(0x004e3db0, right - 0x11, bottom - 8,
+// 0x800003ff) and drawRectScaled(right - 0x14, bottom - 0xa, 0x14, 0xa, 0x800003ff) (0x0046e4d0..0x0046e50f). cur = 0 when the text
+// starts with ' ' or '_', else -1 (0x0046e517..0x0046e529). Pass 3, for each of [0x00838f78] lines j: the newline before the next
+// line start becomes NUL (0x0046e548), strchr(line, '|') (call 0x0046e553); a bar becomes NUL and the right part is measured:
+// x2 = right - 2 * Text_put(right part) / scaleX(2) - 5 (0x0046e561..0x0046e598). Colour: cur < 0 [0x00838f74], else
+// [0x00838ee4] bit cur (mod 32) set 0x800003ff else [0x00839250]. drawTextScaled(line, [0x00839260] + 5, [0x00839264] +
+// [0x004e3dac] * j + 5, colour) (call 0x0046e5eb) and, with a bar, drawTextScaled(right part, x2, y, colour) (0x0046e63d). With
+// [0x00839278] set and 0 <= cur == sel (0x0046e645..0x0046e656) both are drawn again in colour [0x0083925c] (0x0046e688, 0x0046e6b7).
+// The bar and the newline are restored (0x0046e6c3, 0x0046e6c8) and cur is incremented when the next line starts with ' ' or '_'
+// (0x0046e6cf..0x0046e6da). [0x00838f70] == 0 (0x0046e6ef..0x0046e6f7): Window::refreshFull(0x00519a60, 0) (call 0x0046e703).
+// The ret leaves [esp+0x18] after four pops: the SECOND ARGUMENT (0x0046e708), returned unchanged.
+int __cdecl DrawScrollText_re(char* text, int sel) {
+    memset(reinterpret_cast<void*>(0x00838ec4), 0xff, 32);                  // 0x0046e270..0x0046e278
+    int esi = 0, ebp = 0;                                                   // 0x0046e27a, 0x0046e27c
+    G<int>(0x00838ef0) = 0;                                                 // 0x0046e285
+    G<int>(0x00838f78) = 0;                                                 // 0x0046e28b
+    G<int>(0x00838f94) = 0;                                                 // 0x0046e291
+    char pair[2] = {0, 0};                                                  // [esp+0x12], [esp+0x13] (0x0046e29c)
+    int marks = 0, idx = 0;                                                 // [esp+0x14], [esp+0x18]
+    if (strlen(text) != 0) {                                                // 0x0046e2a9
+        char* ebx = text;                                                   // 0x0046e2b4
+        do {
+            const char c = *ebx;                                            // 0x0046e2c2
+            if (c == '\n') {                                                // 0x0046e2c4 / 0x0046e2c6
+                if (G<int>(0x00838f94) < esi) G<int>(0x00838f94) = esi;     // 0x0046e2c8 / 0x0046e2ce / 0x0046e2d0
+                esi = 0;                                                    // 0x0046e2d6
+                ebp++;                                                      // 0x0046e2d8
+                G<int>(0x00838f78) = ebp;                                   // 0x0046e2db
+                G<int>(0x00838ef0 + 4 * ebp) = static_cast<int>(ebx - text) + 1;     // 0x0046e2e1
+            } else {
+                if (esi == 0 && (c == ' ' || c == '_')) {                   // 0x0046e2ea / 0x0046e2ec / 0x0046e2ee..0x0046e2f4
+                    if (marks < 0x20) G<char>(0x00838ec4 + marks) = text[idx + 1];      // 0x0046e2fa / 0x0046e2fd / 0x0046e307
+                    if (G<int>(0x0083927c) == -1) G<int>(0x0083927c) = ebp; // 0x0046e30d / 0x0046e314 / 0x0046e316
+                    marks++;                                                // 0x0046e31c
+                }
+                pair[0] = *ebx;                                             // 0x0046e321 / 0x0046e32e
+                esi += kTextPut(G<void*>(0x004c1570), 0, pair);             // 0x0046e332 / 0x0046e337
+                if (*ebx == '|') esi += kTextPut(G<void*>(0x004c1570), 0, reinterpret_cast<const char*>(0x004e3db4));   // 0x0046e33b..0x0046e34f
+                ebp = G<int>(0x00838f78);                                   // 0x0046e351
+            }
+            idx++;                                                          // 0x0046e362
+            ebx++;                                                          // 0x0046e36b
+        } while (static_cast<unsigned>(idx) < strlen(text));                // 0x0046e375 / 0x0046e377
+    }
+    G<int>(0x00838f78) = kClamp(ebp, 0, (0xe8 - G<int>(0x00839264)) / G<int>(0x004e3dac));     // 0x0046e37d..0x0046e39a
+    if (G<int>(0x00839260) == -1) {                                         // 0x0046e39f / 0x0046e3a7 / 0x0046e3aa
+        int t = G<int>(0x00838f94) + 8;                                     // 0x0046e3b7
+        t = t - (t >> 31);                                                  // 0x0046e3ba / 0x0046e3bb
+        G<int>(0x00839260) = 0xa0 - (t >> 1);                               // 0x0046e3bd..0x0046e3c1
+    }
+    const int sx2 = kScaleX(2);                                             // 0x0046e3c9
+    const int g94 = G<int>(0x00838f94);                                     // 0x0046e3ce
+    const int x0 = G<int>(0x00839260);                                      // 0x0046e3d6
+    const int y0 = G<int>(0x00839264);                                      // 0x0046e3dc
+    const int right = (g94 * 2) / sx2 + x0 + 8;                             // 0x0046e3e2..0x0046e3eb
+    G<int>(0x00838f84) = right;                                             // 0x0046e3fb
+    int bottom = add(add(mul(G<int>(0x004e3dac), G<int>(0x00838f78)), y0), 6);      // 0x0046e3ef..0x0046e401
+    G<int>(0x00838f88) = bottom;                                            // 0x0046e40c
+    if (G<int>(0x00839290) != 0) { bottom += 2; G<int>(0x00838f88) = bottom; }       // 0x0046e405..0x0046e417
+    const int len = static_cast<int>(strlen(text));                         // 0x0046e426
+    if (text[len - 1] != '\n') marks--;                                     // 0x0046e42f / 0x0046e434 / 0x0046e436
+    G<int>(0x00838f7c) = marks;                                             // 0x0046e441
+    if ((y0 & 1) == 0) {                                                    // 0x0046e43e / 0x0046e447
+        const int A = kScaleX(bottom - y0 + 0xc);                           // 0x0046e451
+        const int B = kScaleX(G<int>(0x00838f84) - G<int>(0x00839260) + 0x10);   // 0x0046e46b
+        const int C = kScaleX(G<int>(0x00839264) - 6);                      // 0x0046e47d
+        const int D = kScaleX(G<int>(0x00839260) - 8);                      // 0x0046e490
+        kDrawFrameS2(D, C, B, A, 1);                                        // 0x0046e499
+    } else {
+        kDrawRectScaled(x0, y0, right - x0, bottom - y0 + 4, static_cast<int>(0x80007fff));   // 0x0046e4b3
+        G<int>(0x00838f80) = 1;                                             // 0x0046e4bb
+    }
+    if (G<int>(0x00839274) != 0) {                                          // 0x0046e4c5 / 0x0046e4cc / 0x0046e4ce
+        kDrawText4049d0(reinterpret_cast<const char*>(0x004e3db0), G<int>(0x00838f84) - 0x11, G<int>(0x00838f88) - 8, static_cast<int>(0x800003ff));   // 0x0046e4ed
+        kDrawRectScaled(G<int>(0x00838f84) - 0x14, G<int>(0x00838f88) - 0xa, 0x14, 0xa, static_cast<int>(0x800003ff));   // 0x0046e50f
+    }
+    int cur = (text[0] == ' ' || text[0] == '_') ? 0 : -1;                  // 0x0046e517..0x0046e529
+    if (G<int>(0x00838f78) > 0) {                                           // 0x0046e52d / 0x0046e533
+        int* edi = reinterpret_cast<int*>(0x00838ef4);                      // 0x0046e539
+        int j = 0;                                                          // ebx
+        int xr = 0;                                                         // [esp+0x18] (written only when a bar is found)
+        do {
+            text[*edi - 1] = 0;                                             // 0x0046e53e / 0x0046e548
+            char* hit = kStrchr(text + edi[-1], 0x7c);                      // 0x0046e550..0x0046e553
+            if (hit != 0) {                                                 // 0x0046e55d / 0x0046e55f
+                *hit = 0;                                                   // 0x0046e564
+                const int w = kTextPut(G<void*>(0x004c1570), 0, hit + 1);   // 0x0046e56e
+                xr = G<int>(0x00838f84) - (w * 2) / kScaleX(2) - 5;         // 0x0046e573..0x0046e598
+            }
+            const int y = add(add(mul(G<int>(0x004e3dac), j), G<int>(0x00839264)), 5);   // 0x0046e5c4..0x0046e5d4
+            kDrawTextScaled(text + edi[-1], G<int>(0x00839260) + 5, y, scrollColour(cur));   // 0x0046e5eb
+            if (hit != 0) kDrawTextScaled(hit + 1, xr, y, scrollColour(cur));       // 0x0046e5f3 / 0x0046e63d
+            if (G<int>(0x00839278) != 0 && cur >= 0 && cur == sel) {        // 0x0046e645..0x0046e656
+                kDrawTextScaled(text + edi[-1], G<int>(0x00839260) + 5, y, G<int>(0x0083925c));      // 0x0046e688
+                if (hit != 0) kDrawTextScaled(hit + 1, xr, y, G<int>(0x0083925c));  // 0x0046e692 / 0x0046e6b7
+            }
+            if (hit != 0) *hit = 0x7c;                                      // 0x0046e6bf / 0x0046e6c3
+            text[*edi - 1] = '\n';                                          // 0x0046e6c6 / 0x0046e6c8
+            const char nc = text[*edi];                                     // 0x0046e6cf
+            if (nc == ' ' || nc == '_') cur++;                              // 0x0046e6d2..0x0046e6da
+            j++;                                                            // 0x0046e6e3
+            edi++;                                                          // 0x0046e6e4
+        } while (j < G<int>(0x00838f78));                                   // 0x0046e6e7 / 0x0046e6e9
+    }
+    if (G<int>(0x00838f70) == 0) kRefreshFull(reinterpret_cast<void*>(0x00519a60), 0, 0);     // 0x0046e6ef..0x0046e703
+    return sel;                                                             // 0x0046e708
+}
+typedef int(__cdecl* DrawScrollText_t)(char*, int);
+DrawScrollText_t DrawScrollText_orig;
+// 0x0046e260
+SG_HOOK("golf_clean.exe", 0x0046e260, drawScrollText, DrawScrollText_re, DrawScrollText_orig);
+
+// ====================================================================================================================
+// drawMatchScoreboard
+// ====================================================================================================================
+namespace {
+typedef char*(__cdecl* Itoa_t)(int value, char* buf, int radix);
+typedef void(__cdecl* AppendNumber_t)(int n);
+typedef int(__cdecl* BuildGolferName_t)(int idx, int flag);
+const Itoa_t kItoa = reinterpret_cast<Itoa_t>(0x004ad425);                         // CRT _itoa
+const AppendNumber_t kAppendNumber = reinterpret_cast<AppendNumber_t>(0x0042dc00); // appendNumber
+const BuildGolferName_t kBuildGolferName = reinterpret_cast<BuildGolferName_t>(0x004676e0);   // buildGolferName
+typedef int(__cdecl* DrawAt_t)(const char* text, int a, int b, int colour);
+const DrawAt_t kDrawCenteredText = reinterpret_cast<DrawAt_t>(0x00404b70);        // drawCenteredText
+char* const kMsgBuf = reinterpret_cast<char*>(0x0051a068);                         // the shared message buffer
+char* const kItoaBuf = reinterpret_cast<char*>(0x00824134);
+static void sbSetTarget(unsigned surf) {
+    kSetDrawTarget(G<void*>(0x004c1570), 0, static_cast<int>(surf), 0, 0, 0);     // thiscall on the current text target
+}
+}  // namespace
+
+// 0x00461110  drawMatchScoreboard(who), cdecl (ret 0x004615e9): draws the two-player score table. setDrawTarget(0x00519fd8) on
+// the target [0x004c1570] (0x00461123..0x00461128); drawText4049d0(0x004c88a8, 0x19a, 0x207, 0x80007fff) (0x0046115a) and
+// (0x004c88f8, 0x19e, 0x216, 0x80007fff) (0x00461173); setDrawTarget(0x0051b360) (0x0046118c). The header: the opponent record
+// (who ^ 1) << 8 + 0x005794d0, mask 0xe0 (0x00461193..0x0046119f): == 0x20 (0x004611a2/0x004611a5): [0x0059e7b8] bit 0x200000 set
+// draws (0x004d55c8, 0x145, 0x20a) and (0x004d55bc, 0x145, 0x215) in colour 0x80000000 (0x004611c1..0x004611e4); clear draws
+// (0x004d55b0, 0x14e, 0x20a) (0x004611fb), copies the string 0x004c61e0 to the buffer 0x0051a068 (0x00461200..0x00461224),
+// appends appendNumber([0x0059b730] * 2000) (0x0046120e..0x00461237), appends 0x004d55a8 (0x00461246..0x0046126a) and draws the
+// buffer at (0x140, 0x215) (0x0046127d); any other opponent value draws (0x004d559c, 0x14e, 0x20a) and (0x004d5594, 0x14e, 0x215)
+// (0x00461287..0x004612b4). Then two rounds (row y = 0x228, += 0x15 while < 0x24e; 0x004615c4..0x004615dc), cur = who first: the
+// buffer is cleared (0x004612c9), buildGolferName(cur, 0) (call 0x004612d0) fills it, cur == who appends 0x004d558c
+// (0x004612d8..0x00461307), setDrawTarget(0x0051b360) (0x0046131a), Text_put of the buffer (call 0x0046132a) above 0x73 selects
+// setDrawTarget(0x00519fd8) (0x0046132f..0x00461345), drawText4049d0(buffer, 0x140, y, 0x80000000) (0x0046135a), setDrawTarget(0x0051b360)
+// (0x00461373). Columns col = 0.. (x = 0x1aa, += 0x12 while < 0x300; row pointer 0x00575ab0 += 0x208; 0x00461594..0x004615b3) whose row
+// byte is non-zero (0x00461394): with cur == who the column number and the row byte are drawn through _itoa and drawCenteredText at
+// (x, y - 0x22) and (x, y - 0x13) in colour 0x80006318 (0x004613ad..0x00461460). Record byte +9 (0x005794d9, signed) below col skips
+// the cell (0x00461473); equal draws the signed byte +0xa (0x00461489..0x004614c3); above draws the signed byte at +0xb + col and
+// moves the running total [esp+0x1c] by it (down for cur == who, up otherwise; 0x004614c5..0x00461528). The colour is 0x80004210 when
+// +9 equals col, else by the score byte against the row byte: 0x80002108; below it 0x80006000; more than one below 0x80007d08; above
+// 0x80000018; more than one above 0x80004010 (0x0046152c..0x00461577). drawCenteredText(buffer, x, y, colour) (call 0x0046158c). Next
+// cur = signed word at record + 0x9a (0x004615c7). Returns eax = x = 0x300 (0x004615a6 compares the last 0x300).
+int __cdecl DrawMatchScoreboard_re(int who) {
+    sbSetTarget(0x519fd8);                                                  // 0x00461128
+    int cur = who;                                                          // [esp+0x10]
+    int adj = 0;                                                            // [esp+0x1c]
+    int y = 0x228;                                                          // ebp, [esp+0x20]
+    kDrawText4049d0(reinterpret_cast<const char*>(0x4c88a8), 0x19a, 0x207, static_cast<int>(0x80007fff));   // 0x0046115a
+    kDrawText4049d0(reinterpret_cast<const char*>(0x4c88f8), 0x19e, 0x216, static_cast<int>(0x80007fff));   // 0x00461173
+    sbSetTarget(0x51b360);                                                  // 0x0046118c
+    const unsigned char oppFlags = G<unsigned char>(((static_cast<unsigned>(who) ^ 1u) << 8) + 0x005794d0);   // 0x00461191..0x00461199
+    if ((oppFlags & 0xe0) == 0x20) {                                        // 0x0046119f / 0x004611a2 / 0x004611a5
+        if ((G<unsigned>(0x0059e7b8) & 0x200000) != 0) {                    // 0x004611ab / 0x004611b5 / 0x004611bf
+            kDrawText4049d0(reinterpret_cast<const char*>(0x4d55c8), 0x145, 0x20a, static_cast<int>(0x80000000));   // 0x004611cb
+            kDrawText4049d0(reinterpret_cast<const char*>(0x4d55bc), 0x145, 0x215, static_cast<int>(0x80000000));   // 0x004611e4
+        } else {
+            kDrawText4049d0(reinterpret_cast<const char*>(0x4d55b0), 0x14e, 0x20a, static_cast<int>(0x80000000));   // 0x004611fb
+            strcpy(kMsgBuf, reinterpret_cast<const char*>(0x4c61e0));       // 0x00461200..0x00461224
+            kAppendNumber(mul(G<int>(0x0059b730), 2000));                   // 0x0046121e..0x00461237
+            strcat(kMsgBuf, reinterpret_cast<const char*>(0x4d55a8));       // 0x0046123c..0x0046126a
+            kDrawText4049d0(kMsgBuf, 0x140, 0x215, static_cast<int>(0x80000000));   // 0x0046127d
+        }
+    } else {
+        kDrawText4049d0(reinterpret_cast<const char*>(0x4d559c), 0x14e, 0x20a, static_cast<int>(0x80000000));       // 0x0046129b
+        kDrawText4049d0(reinterpret_cast<const char*>(0x4d5594), 0x14e, 0x215, static_cast<int>(0x80000000));       // 0x004612b4
+    }
+    do {
+        kMsgBuf[0] = 0;                                                     // 0x004612c9
+        kBuildGolferName(cur, 0);                                           // 0x004612d0
+        if (cur == who) strcat(kMsgBuf, reinterpret_cast<const char*>(0x4d558c));   // 0x004612d8 / 0x004612da / 0x004612dc..0x00461307
+        sbSetTarget(0x51b360);                                              // 0x0046131a
+        if (kTextPut(G<void*>(0x004c1570), 0, kMsgBuf) > 0x73) sbSetTarget(0x519fd8);   // 0x0046132a..0x00461345
+        kDrawText4049d0(kMsgBuf, 0x140, y, static_cast<int>(0x80000000));  // 0x0046135a
+        sbSetTarget(0x51b360);                                              // 0x00461373
+        const unsigned rec = static_cast<unsigned>(cur) << 8;               // 0x00461467
+        const unsigned char* row = reinterpret_cast<const unsigned char*>(0x00575ab0);     // 0x0046137a
+        int x = 0x1aa;                                                      // 0x00461382
+        for (int col = 0; ; ) {                                             // ebx
+            if (*row != 0) {                                                // 0x00461394 / 0x00461397
+                if (cur == who) {                                           // 0x004613a5 / 0x004613a7
+                    kMsgBuf[0] = 0;                                         // 0x004613b5
+                    strcat(kMsgBuf, kItoa(col, kItoaBuf, 10));              // 0x004613bc..0x004613ea
+                    kDrawCenteredText(kMsgBuf, x, y - 0x13 - 0xf, static_cast<int>(0x80006318));    // 0x00461401
+                    kMsgBuf[0] = 0;                                         // 0x00461411
+                    strcat(kMsgBuf, kItoa(static_cast<signed char>(*row), kItoaBuf, 10));        // 0x0046141c..0x00461448
+                    kDrawCenteredText(kMsgBuf, x, y - 0x13, static_cast<int>(0x80006318));       // 0x0046145b
+                }
+                const int c9 = G<signed char>(0x005794d9 + rec);            // 0x0046146a
+                if (!(c9 < col)) {                                          // 0x00461471 / 0x00461473
+                    kMsgBuf[0] = 0;                                         // 0x0046147b
+                    if (c9 == col) {                                        // 0x00461487
+                        strcat(kMsgBuf, kItoa(G<signed char>(0x005794da + rec), kItoaBuf, 10));  // 0x00461489..0x004614c1
+                    } else {
+                        const int hs = G<signed char>(0x005794db + rec + col);     // 0x004614c5
+                        strcat(kMsgBuf, kItoa(hs, kItoaBuf, 10));           // 0x004614ce..0x00461502
+                        if (cur == who) adj = adj - hs;                     // 0x00461504 / 0x00461508 / 0x00461516
+                        else adj = adj + hs;                                // 0x0046151a..0x00461526
+                    }
+                    int colour = static_cast<int>(0x80004210);              // 0x00461535
+                    if (G<signed char>(0x005794d9 + rec) != col) {          // 0x0046152c / 0x00461533 / 0x0046153a
+                        const signed char al = G<signed char>(0x005794db + rec + col);     // 0x00461540
+                        const signed char cl = static_cast<signed char>(*row);             // 0x0046154c
+                        colour = static_cast<int>(0x80002108);              // 0x00461547
+                        if (al < cl) colour = static_cast<int>(0x80006000); // 0x0046154e / 0x00461550 / 0x00461552
+                        if (static_cast<int>(al) < static_cast<int>(cl) - 1) colour = static_cast<int>(0x80007d08);   // 0x0046155d..0x00461564
+                        if (al > cl) colour = static_cast<int>(0x80000018); // 0x00461569 / 0x0046156b / 0x0046156d
+                        if (static_cast<int>(al) > static_cast<int>(cl) + 1) colour = static_cast<int>(0x80004010);   // 0x00461572..0x00461577
+                    }
+                    kDrawCenteredText(kMsgBuf, x, y, colour);               // 0x0046158c
+                }
+            }
+            x += 0x12;                                                      // 0x0046159c
+            col++;                                                          // 0x0046159f
+            row += 0x208;                                                   // 0x004615a0
+            if (!(x < 0x300)) break;                                        // 0x004615a6 / 0x004615b3
+        }
+        cur = static_cast<int>(G<signed short>(0x0057955a + (static_cast<unsigned>(cur) << 8)));   // 0x004615c7
+        y += 0x15;                                                          // 0x004615c4
+    } while (y < 0x24e);                                                    // 0x004615ce / 0x004615dc
+    (void)adj;
+    return 0x300;                                                           // eax = x at 0x004615a6
+}
+typedef int(__cdecl* DrawMatchScoreboard_t)(int);
+DrawMatchScoreboard_t DrawMatchScoreboard_orig;
+// 0x00461110
+SG_HOOK("golf_clean.exe", 0x00461110, drawMatchScoreboard, DrawMatchScoreboard_re, DrawMatchScoreboard_orig);
+
+// ====================================================================================================================
+// drawPanelContents
+// ====================================================================================================================
+namespace {
+const V7_t kBlitMid = reinterpret_cast<V7_t>(0x00475fb0);               // blitMid, ret 0x1c
+const V1_t kClearArea = reinterpret_cast<V1_t>(0x00478b30);             // Widget_clearArea, ret 4
+const V1_t kFillRectR = reinterpret_cast<V1_t>(0x00475b00);             // Widget_fillRectR, ret 4
+typedef int(__fastcall* Text3_t)(void* ecx, void* edx, const char* text, int* rect, int len);
+const Text3_t kDrawCentered477cd0 = reinterpret_cast<Text3_t>(0x00477cd0);       // drawCentered, ret 0xc
+const Text3_t kDrawRight2 = reinterpret_cast<Text3_t>(0x004781f0);               // drawRight2, ret 0xc
+const Text3_t kDrawCentered3 = reinterpret_cast<Text3_t>(0x00477eb0);            // drawCentered3, ret 0xc
+
+// vtable slot 0xd0 of the object at piece+4 fills a rectangle (0x0047d947, 0x0047da8d, ...)
+static void panelClip(void* piece, int* rect) {
+    void* in = Pp(piece, 4);
+    if (in != 0) vslotOf<V1_t>(in, 0xd0)(in, 0, reinterpret_cast<int>(rect));
+}
+// a run of Widget_drawBevelBoxR calls, one per border round [this+0x194]: shrinking rounds pass ([this+0x18c], [this+0x190]),
+// growing rounds the two swapped
+static void panelBevels(void* self, void* piece, int* r, bool grow) {
+    if (I(self, 0x194) <= 0) return;
+    int i = 0;
+    do {
+        if (!grow) kDrawBevelBoxR(piece, 0, reinterpret_cast<int>(r), I(self, 0x18c), I(self, 0x190));
+        else kDrawBevelBoxR(piece, 0, reinterpret_cast<int>(r), I(self, 0x190), I(self, 0x18c));
+        if (!grow) { r[0]++; r[2]--; r[1]++; r[3]--; } else { r[0]--; r[2]++; r[1]--; r[3]++; }
+        i++;
+    } while (i < I(self, 0x194));
+}
+// the background of a piece: blitMid(piece; [this+0x168], x, y, 0, 0, w, h) with an image, else Widget_clearArea(piece; [this+0x16c])
+static void panelFill(void* self, void* piece, int x, int y, int w, int h) {
+    const int img = I(self, 0x168);
+    if (img != 0) kBlitMid(piece, 0, img, x, y, 0, 0, w, h);
+    else kClearArea(piece, 0, I(self, 0x16c));
+}
+static int panelClose(void* self, void* piece, int k) {
+    void* in = Pp(piece, 4);
+    if (in != 0) vslotOf<V0_t>(in, 0xc4)(in, 0);
+    return vslotOf<V2_t>(self, 0x118)(self, 0, reinterpret_cast<int>(piece), k);
+}
+}  // namespace
+
+// 0x0047d850  drawPanelContents(this, which), thiscall, ret 4 (0x0047e10a): redraws the four pieces of a window, [this+0x11c] (which
+// -1 or 0), [this+0x128] (-1 or 2), [this+0x124] (-1 or 3) and [this+0x120] (-1 or 1). [this+0xa0] bit 1 clear returns (0x0047d859..
+// 0x0047d860), as does [this+0x9c] with neither bit 0x10 nor 0x01 (0x0047d86c/0x0047d86e); eax is then the caller's. V14 = [this+0x180]
+// when [this+0x9c] has bit 0x10 and not 0x400000, else [this+0x184] (0x0047d874..0x0047d891); V20 = [this+0x188], [this+0x184] when it is
+// -1 (0x0047d895..0x0047d8ac); V10 = [this+0x1c4] - [this+0x1bc]; h = [this+0x1c8] - [this+0x1c0]; V1c = V14 - 1; V18 = [this+0x184] - 1;
+// V40 = [this+0x1b4] - [this+0x1ac] + V18 + 2; V24 = h - V20; V44 = V24 - V14 + V1c + 2 (0x0047d8b0..0x0047d91a). Each present piece
+// (0x0047d922, 0x0047dbd8, 0x0047dd8f, 0x0047df39) selected by `which` (0x0047d92a..0x0047d931, 0x0047dbe6..0x0047dbee, 0x0047dd9d..
+// 0x0047dda5, 0x0047df47..0x0047df4c): [[piece+4]+0xd0](&clip) when piece+4 is non-NULL; with [this+0x168] non-zero blitMid(piece; image,
+// 0 / V10 - [this+0x184], 0 / V24 / V14, 0, 0, V10, h) (calls 0x0047d96c, 0x0047dc2a, 0x0047ddf6, 0x0047df92) else Widget_clearArea(
+// piece; [this+0x16c]) (0x0047d980, 0x0047dc3e, 0x0047de0a, 0x0047dfa6); [this+0x194] shrinking bevel rounds Widget_drawBevelBoxR(piece;
+// &rect, [this+0x18c], [this+0x190]) over (0, 0, V10, h) shifted per piece (0x0047d9be, 0x0047dc9c, 0x0047de58, 0x0047e010), then the same
+// number of growing rounds with the two arguments swapped over (V18, V1c, V40, V44) shifted per piece (0x0047da37, 0x0047dd2f,
+// 0x0047ded9, 0x0047e0a7). The first piece only, with [this+0x14c] (the text) non-NULL: clip again, the rect shrinks by [this+0x194],
+// setQuad(piece; [this+0x170], +0x174, +0x178, +0x17c) (0x0047dae5), setDrawTarget(piece; [this+0x164], 0, 0, 0) (0x0047dafd),
+// Widget_fillRectR(piece; &rect) (0x0047db0d), the rect's left moves by [this+0x198] (0x0047db12..0x0047db29), and the text is drawn
+// with drawCentered 0x00477cd0 ([this+0x9c] bit 0x10000; 0x0047db52), drawRight2 0x004781f0 (bit 0x40000; 0x0047db83) or drawCentered3
+// 0x00477eb0 (0x0047dba7) as (text, &rect, strlen). Every piece ends with [[piece+4]+0xc4]() when piece+4 is non-NULL and [[this]+0x118](
+// this, piece, k) with k = 0, 2, 3, 1 (0x0047dbce, 0x0047dd85, 0x0047df2f, 0x0047e0fd). The ret leaves [this+0x120] (0x0047df39) or the
+// last slot 0x118 result (when the first-listed pieces' tests fall through) in eax.
+int __fastcall DrawPanelContents_re(void* self, void*, int which) {
+    if ((At<unsigned char>(self, 0xa0) & 2) == 0) return 0;                 // 0x0047d859 / 0x0047d860
+    const unsigned fl = At<unsigned>(self, 0x9c);                           // 0x0047d866
+    if ((fl & 0x11) == 0) return 0;                                         // 0x0047d86c / 0x0047d86e
+    int V14;
+    if ((fl & 0x10) != 0 && (fl & 0x400000) == 0) V14 = I(self, 0x180);     // 0x0047d874..0x0047d885
+    else V14 = I(self, 0x184);                                              // 0x0047d88b..0x0047d891
+    int V20 = I(self, 0x188);                                               // 0x0047d895
+    if (V20 == -1) V20 = I(self, 0x184);                                    // 0x0047d89b..0x0047d8a6
+    const int V10 = I(self, 0x1c4) - I(self, 0x1bc);                        // 0x0047d8b0 / 0x0047d8ce
+    const int h = I(self, 0x1c8) - I(self, 0x1c0);                          // 0x0047d8bc / 0x0047d8de
+    const int V1c = V14 - 1;                                                // 0x0047d8e4
+    const int V18 = I(self, 0x184) - 1;                                     // 0x0047d8e7 / 0x0047d8ed
+    const int V40 = (I(self, 0x1b4) - I(self, 0x1ac)) + V18 + 2;           // 0x0047d8c8 / 0x0047d8d0 / 0x0047d8f6
+    const int V24 = h - V20;                                                // 0x0047d902 / 0x0047d904
+    const int V44 = V24 - V14 + V1c + 2;                                    // 0x0047d906..0x0047d910
+    int rect48[4] = {0, 0, 0, 0};
+    int r[4];
+    void* P0 = Pp(self, 0x11c);                                             // 0x0047d914
+    if (P0 != 0 && (which == -1 || which == 0)) {                           // 0x0047d922 / 0x0047d92a / 0x0047d92d / 0x0047d92f / 0x0047d931
+        panelClip(P0, rect48);                                              // 0x0047d937..0x0047d947
+        panelFill(self, P0, 0, 0, V10, h);                                  // 0x0047d94d..0x0047d980
+        r[0] = 0; r[1] = 0; r[2] = V10; r[3] = h;                           // 0x0047d985..0x0047d99f
+        panelBevels(self, P0, r, false);                                    // 0x0047d9a3..0x0047d9f0
+        r[1] = V1c; r[0] = V18; r[2] = V40; r[3] = V44;                     // 0x0047d9f2..0x0047da18
+        panelBevels(self, P0, r, true);                                     // 0x0047da1c..0x0047da69
+        if (I(self, 0x14c) != 0) {                                          // 0x0047da6b / 0x0047da71 / 0x0047da73
+            panelClip(P0, r);                                               // 0x0047da79..0x0047da8d
+            const int n = I(self, 0x194);                                   // 0x0047da93
+            r[0] = r[0] + n; r[2] = r[2] - n; r[1] = r[1] + n; r[3] = r[3] - n;      // 0x0047daa9..0x0047dae1
+            kSetQuad(P0, 0, I(self, 0x170), I(self, 0x174), I(self, 0x178), I(self, 0x17c));   // 0x0047dae5
+            kSetDrawTarget(P0, 0, I(self, 0x164), 0, 0, 0);                 // 0x0047dafd
+            kFillRectR(P0, 0, reinterpret_cast<int>(r));                    // 0x0047db0d
+            r[0] = r[0] + I(self, 0x198);                                   // 0x0047db12..0x0047db29
+            const unsigned fl2 = At<unsigned>(self, 0x9c);                  // 0x0047db1e
+            const char* text = reinterpret_cast<const char*>(I(self, 0x14c));    // 0x0047db2f / 0x0047db59
+            if ((fl2 & 0x10000) != 0) {                                     // 0x0047db24 / 0x0047db2d
+                if (text != 0) kDrawCentered477cd0(P0, 0, text, r, static_cast<int>(strlen(text)));     // 0x0047db37 / 0x0047db52
+            } else if ((fl2 & 0x40000) != 0) {                              // 0x0047db5f / 0x0047db64
+                if (text != 0) kDrawRight2(P0, 0, text, r, static_cast<int>(strlen(text)));            // 0x0047db66 / 0x0047db83
+            } else {
+                if (text != 0) kDrawCentered3(P0, 0, text, r, static_cast<int>(strlen(text)));          // 0x0047db8a / 0x0047dba7
+            }
+        }
+        panelClose(self, P0, 0);                                            // 0x0047dbac..0x0047dbce
+    }
+    void* P2 = Pp(self, 0x128);                                             // 0x0047dbd8
+    if (P2 != 0 && (which == -1 || which == 2)) {                           // 0x0047dbde / 0x0047dbe6 / 0x0047dbe9 / 0x0047dbeb / 0x0047dbee
+        panelClip(P2, rect48);                                              // 0x0047dbf4..0x0047dc02
+        panelFill(self, P2, 0, V24, V10, h);                                // 0x0047dc08..0x0047dc3e
+        const int E1 = V20 - I(self, 0x1c8) + I(self, 0x1c0);               // 0x0047dc43..0x0047dc6b
+        r[0] = 0; r[1] = E1; r[2] = V10; r[3] = h + E1;                     // 0x0047dc59..0x0047dc7b
+        panelBevels(self, P2, r, false);                                    // 0x0047dc7f..0x0047dcce
+        const int E1b = V20 - I(self, 0x1c8) + I(self, 0x1c0);              // 0x0047dce6..0x0047dcf6
+        r[0] = V18; r[1] = V1c + E1b; r[2] = V40; r[3] = V44 + E1b;         // 0x0047dce2..0x0047dd10
+        panelBevels(self, P2, r, true);                                     // 0x0047dd0a..0x0047dd61
+        panelClose(self, P2, 2);                                            // 0x0047dd63..0x0047dd85
+    }
+    void* P3 = Pp(self, 0x124);                                             // 0x0047dd8f
+    if (P3 != 0 && (which == -1 || which == 3)) {                           // 0x0047dd95 / 0x0047dd9d / 0x0047dda0 / 0x0047dda2 / 0x0047dda5
+        panelClip(P3, rect48);                                              // 0x0047ddab..0x0047ddb9
+        {
+            void* in = Pp(Pp(self, 0x124), 4);                              // 0x0047ddbf..0x0047ddc5
+            if (in != 0) vslotOf<V0_t>(in, 0xc4)(in, 0);                    // 0x0047ddcc..0x0047ddce
+        }
+        panelFill(self, P3, 0, V14, V10, h);                                // 0x0047ddd4..0x0047de0a
+        r[0] = 0; r[1] = -V14; r[2] = V10; r[3] = h - V14;                  // 0x0047de0f..0x0047de39
+        panelBevels(self, P3, r, false);                                    // 0x0047de33..0x0047de8a
+        r[2] = V40; r[1] = V1c - V14; r[3] = V44 - V14; r[0] = V18;         // 0x0047de8c..0x0047debe
+        panelBevels(self, P3, r, true);                                     // 0x0047deb8..0x0047df0b
+        panelClose(self, P3, 3);                                            // 0x0047df0d..0x0047df2f
+    }
+    int result = I(self, 0x120);                                            // 0x0047df39
+    void* P1 = Pp(self, 0x120);
+    if (P1 != 0 && (which == -1 || which == 1)) {                           // 0x0047df3f / 0x0047df47 / 0x0047df4a / 0x0047df4c
+        panelClip(P1, rect48);                                              // 0x0047df55..0x0047df63
+        panelFill(self, P1, V10 - I(self, 0x184), V14, V10, h);     // 0x0047df69..0x0047dfa6
+        const int E2 = I(self, 0x1bc) - I(self, 0x1c4) + I(self, 0x184);    // 0x0047dfb9..0x0047dfd3
+        r[0] = E2; r[1] = -V14; r[2] = V10 + E2; r[3] = h - V14;            // 0x0047dfd7..0x0047dff1
+        panelBevels(self, P1, r, false);                                    // 0x0047dfeb..0x0047e042
+        const int E2b = I(self, 0x1bc) - I(self, 0x1c4) + I(self, 0x184);   // 0x0047e044..0x0047e060
+        r[0] = V18 + E2b; r[2] = V40 + E2b; r[1] = V1c - V14; r[3] = V44 - V14;     // 0x0047e04a..0x0047e088
+        panelBevels(self, P1, r, true);                                     // 0x0047e07a..0x0047e0d9
+        result = panelClose(self, P1, 1);                                   // 0x0047e0db..0x0047e0fd
+    }
+    return result;                                                          // 0x0047e103
+}
+typedef int(__fastcall* DrawPanelContents_t)(void*, void*, int);
+DrawPanelContents_t DrawPanelContents_orig;
+// 0x0047d850
+SG_HOOK("golf_clean.exe", 0x0047d850, drawPanelContents, DrawPanelContents_re, DrawPanelContents_orig);

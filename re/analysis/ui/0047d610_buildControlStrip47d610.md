@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 427 bytes, 120 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 creates a row of child controls via FUN_00474dd0, stores the result and sets g_83ad10 (`re/names/exe_3.tsv`)
 
+## Purpose
+rebuilds the four frame piece surfaces of a window. It first calls the unnamed 0x0047b9a0 (call 0x0047d613); [this+0xa0] bit 1 clear returns that call's eax (0x0047d618..0x0047d61f). Otherwise ebx = [this+0x180] when [this+0x9c] has bit 0x10 and not 0x400000, else [this+0x184] (0x0047d62c..0x0047d640), edi = [this+0x188] (replaced by [this+0x184] when it is -1), both then raised to at least 1 (signed; 0x0047d64c..0x0047d666). The piece [this+0x11c] gets Surface_createFull(c4 - bc, ebx, 0, 1, 0, 0), Widget_applyPalette( [0x0083ad10]) and Widget_clearArea([0x004e432c]) (0x0047d689, 0x0047d69b, 0x0047d6ad); a non-zero [this+0x188] repeats it for [this+0x128] with (c4 - bc, edi); a non-zero [this+0x184] for [this+0x124] with ([this+0x184], c8 - c0 - edi - ebx) and for [this+0x120] with the same pair (0x0047d733..0x0047d7a6). The ret follows [[this]+0x134](this, -1) (call 0x0047d7b1) and leaves its eax. Fixture c3eh_bcs: eighteen window objects (every flag combination, [0x188] of -1 / 0 / 1 / negative, [0x180] and [0x184] of 0, 1, negative and 0x7fffffff, [0xa0] of 0 / 1 / 2 / 3); the prep call and the three draw callees are stood in (calls and arguments in `$clog`), slot 0x134 records. 18 distinct results in 18 vectors. Reimplemented in `shim/src/re/c3eh.cpp`; path-1 A/B GREEN: buildControlStrip47d610 (18 vectors, 18 distinct results, 18 changing state, `log/diff/0047d610_buildControlStrip47d610.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0047d7ba): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0047d611 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

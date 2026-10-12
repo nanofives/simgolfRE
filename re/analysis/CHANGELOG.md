@@ -4,6 +4,21 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  004a2a60  panelLayoutLabeledText  name panelBuildChildren->panelLayoutLabeledText  log/c3/round29_renamed.tsv
+2026-10-12  0047d850  drawFramePieces  name drawPanelContents->drawFramePieces  log/c3/round29_renamed.tsv
+2026-10-12  0047d610  rebuildFramePieces  name buildControlStrip47d610->rebuildFramePieces  log/c3/round29_renamed.tsv
+2026-10-12  004a2a60  panelBuildChildren  C2->C3  log/diff/004a2a60_panelBuildChildren.path1.csv
+2026-10-12  00493ef0  comboSetItems  C2->C3  log/diff/00493ef0_comboSetItems.path1.csv
+2026-10-12  0048cc60  ListBox::drawContents_vtordisp  C2->C3  log/diff/0048cc60_ListBox_drawContents_vtordisp.path1.csv
+2026-10-12  0048c130  ListBox::drawContents  C2->C3  log/diff/0048c130_ListBox_drawContents.path1.csv
+2026-10-12  0048a120  ListBox::measure  C2->C3  log/diff/0048a120_ListBox_measure.path1.csv
+2026-10-12  0047d850  drawPanelContents  C2->C3  log/diff/0047d850_drawPanelContents.path1.csv
+2026-10-12  0047d610  buildControlStrip47d610  C2->C3  log/diff/0047d610_buildControlStrip47d610.path1.csv
+2026-10-12  0046e260  drawScrollText  C2->C3  log/diff/0046e260_drawScrollText.path1.csv
+2026-10-12  00461110  drawMatchScoreboard  C2->C3  log/diff/00461110_drawMatchScoreboard.path1.csv
+2026-10-12  0040cdd0  drawWindowFrame  C2->C3  log/diff/0040cdd0_drawWindowFrame.path1.csv
+2026-10-12  00407c60  drawCircle  C2->C3  log/diff/00407c60_drawCircle.path1.csv
+2026-10-12  00406220  drawMinimapSegment  C2->C3  log/diff/00406220_drawMinimapSegment.path1.csv
 2026-10-12  004827d0  decodeChunk7WordDelta  name decodeSprite4827d0->decodeChunk7WordDelta  log/c3/round29_renamed.tsv
 2026-10-12  00495420  decodePcx16  name decodeImage16->decodePcx16  log/c3/round29_renamed.tsv
 2026-10-12  00495100  decodePcx8  name decodeImagePaletted->decodePcx8  log/c3/round29_renamed.tsv

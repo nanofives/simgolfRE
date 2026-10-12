@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 96 bytes, 36 instructions, subsystem `ui`. Mechanical t
 stores the Item493 array pointer into the combo and re-runs layout. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+copies the three-dword descriptor at src to this+0x3468 (loop 0x00493f06..0x00493f11), reads [[this+0x3468]+0x1c] (0x00493f1d), calls [[obj]+0xd8]() for the object at this+0x23b4 when it is set (0x00493f24) else uses 0, calls slot +0xc of the sub-object at this+0x213c with (that result, the value, 0, 0) (call 0x00493f40) and ends with comboDrawFrame(this) (call 0x00493f45), returning its eax. Fixture c3eh_cs: eight combo objects (six with a slot object returning 0, 7, -1, 0x1234, 0x7fffffff, 3; two without) x five descriptors with +0x1c of 0, 5, -1, 0x4321, 0x7fffffff; comboDrawFrame is stood in (call-indexed results). 40 distinct results. Reimplemented in `shim/src/re/c3eh.cpp`; path-1 A/B GREEN: comboSetItems (40 vectors, 40 distinct results, 40 changing state, `log/diff/00493ef0_comboSetItems.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?setItems@C493ef0@@QAEXPAPAUItem493@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x00493f4d): callee pops 4 bytes of stack arguments.
