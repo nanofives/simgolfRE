@@ -414,6 +414,43 @@ its refresh switch, line 34 its line count) and it returns its second argument; 
 Window::onKeyChar toggles the debug object 0x008400c8 when `mdebug` is typed (table 0x004e4324); ListBox::onMouse divides
 by [B+0x60] unchecked (0x0048c7ec); Window::dispatchAccel faults when +0x140 is set and +0x138 is 0. Lead: 23 older fixture
 files swap 0x0083ad50 for a recording display without uitree.js's thread test (c3ef notes 4.1).
+Display guard (2026-10-12, closes that lead): `re/frida/js/recdisplay.js` (loaded after freeze.js) gives
+`__recDisplay.guard(fake[, real])`: the fixture display's vtable pointer is swapped for a native thunk table whose slots
+run the fake's own slot on the thread that guarded it and jump to the real display's slot (counted) on any other thread,
+without entering JS. Applied at 36 swap sites in 21 fixture files (c3ad overrides one real slot and c3cg swaps nothing:
+unchanged); all 1,608 of their keys GREEN; a probe key showed 48 winmm-thread calls reaching an unguarded recorder (both
+arms alike, so still GREEN) and 0 with the guard. Fixtures that set 0x0083ad50 to 0 can still fault the timer thread
+(0x00486fba has no NULL test); none did. log/c3/dispguard_notes.txt.
+Thirtieth round (2026-10-12, claude3, model split; log/c3/round30_candidates.py, round30_brief.md, runner
+log/c3/alt/r30_main.py, which no longer switches off a batch's own hooks in the callees-off pass even when an agent's
+list names an in-batch callee): c3el 7 (Opus; the MODAL pilot `re/frida/js/modal.js`, loaded after uitree.js: for one key
+the C3 pumps are stood in on the A/B thread with a scripted input queue fed through the root window's own input handlers
+and a virtual clock, so a modal loop runs a bounded number of iterations and leaves on a scripted Esc / click / Enter;
+pump calls, events, script position and clock are compared state; past maxCalls / maxFrames the next pump faults on
+purpose, the key is an ERROR and the game keeps running; contract in log/c3/c3el_notes.txt section 1; gfxFlushA,
+pumpInput483c90 / 483cf0, Window::runModal, scrollTextWindow, runScrollText, textInputBox), c3ei 15 (Sonnet; image
+consumers: loadPcxSurface, loadFonts, loadCursors, addSprite, drawQueuedSprite, composeGolferSprite, drawWindow,
+drawThoughtBubble, the toolbar / amenity / building / record panels, drawPanel4810d0, scrollbarDraw), c3ej 38 (Sonnet;
+the eight viewDispatch* dispatchers with one key per this-adjustment tag, the listPanel / optionDialog bodies and every
+vtordisp thunk on real uitree.js composites, compositeScreen, uiPointerMove) and c3ek 22 + resetMsgObject (Sonnet;
+TextView ctor / init / loadScript / drawContents, panelStop, LabelButton, Window::createFromRect, Button::create,
+drawRichText, drawText, the combo chain) promoted: 83 functions, C3 2,470 (exe 1,389), open C2 514. Held at C2:
+TextView::create (no caller; only the global 0x4e44ec references it). Main build: every key GREEN with every hook on and
+with other batches' callees off (c3el 11, c3ei 15, c3ej 97, c3ek 54; two freeze-budget / own-hook ERRORs passed on
+re-run); existing C3 callers GREEN both ways (c3el 19 keys, c3ei 1, c3ek 32: the drawText / drawCentered family); runtime
+suite 19 passed with every round-30 hook live. Named first (re/names/exe_13.tsv, systems exe_13.md, C1 -> C2): the eleven
+root-window input handlers rootWin_onPress1 .. rootWin_onChar0 (vtable 0x004ba2fc slots 29..39, outside every function
+until created with CreateFunctions.java; exe index re-exported, 2,492 functions) and listPanelSlot28 0x0049e990. Renames:
+formatGolferTitle -> composeGolferSprite (it composes the layered golfer sprite), resetMsgObject -> LabelButton::reset,
+TextView::layout -> TextView::loadScript (a script-section interpreter). Lessons: under load a key's first allocations
+can escape its arena (c3ej's fixtures now check and report an ERROR; re-run once); boots of 12-20 keys lose the game now
+and then (re-run the boot). Findings: textInputBox's Backspace deletes the byte at the cursor and its width cut leaves the
+length stale; flushRedraw drops a key that arrives the frame after another (scripts leave an empty frame between keys);
+drawWindow ignores its third argument; drawAmenitiesPanel overwrites its own first argument's slot; drawRecords reads an
+uninitialised slot for odd rotations; compositeScreen can union an uninitialised local into the dirty box; optionListDraw
+never reads its third argument; ListModel::reset always returns 0. Round 31 leads: showPopup, skillPointDialog (fit
+modal.js as it stands), allocTextBuffer, LabelButton::drawContents, TextView::render / build, then the 42 show* / select*
+screens that call a pump.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
