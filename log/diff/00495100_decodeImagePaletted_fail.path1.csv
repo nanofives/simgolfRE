@@ -1,0 +1,11 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$i0 $d_p_basic $n_p_basic 0 0 256,9,9,True,029bee55,029bee55,True
+$i1 $d_p_runs $n_p_runs $c0 0 256,9,9,True,67443125,67443125,True
+$i0 $d_p_v3 $n_p_v3 $c0 0 256,3,3,True,1ff08510,1ff08510,False
+$i2 $d_p_basic $n_p_basic $c0 0 256,0,0,True,eb40f2f2,eb40f2f2,True
+$i0 $d_p_mfr $n_p_mfr 0 0 256,3,3,True,1ff08510,1ff08510,False
+state_regions,$objs+0x0:40960 $rec+0x0:16384 $arena+0x0:65552 $freelog+0x0:1028 0x00839ab0+0x0:4 0x0083ad4c+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105e1a0,original=0x1450ce0,2026-10-12T05:49:37
+distinct_results,4,,
+VERDICT,GREEN,5,

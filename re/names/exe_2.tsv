@@ -89,13 +89,13 @@ golf_clean.exe	0x00474860	heapAlloc	util	match re/match/golf_hand_s0_k.cpp; stri
 golf_clean.exe	0x00474ae0	Image_ctor	render	match re/match/golf_hand_09_a.cpp; __fastcall ctor	constructs an image object
 golf_clean.exe	0x00474c40	Image_dtor	render	match re/match/golf_hand_r0.cpp; virtual dtor	destroys an image object
 golf_clean.exe	0x00474dd0	Surface_createFull	render	match re/match/golf_hand_04.cpp; 7-arg create	creates a surface with full attributes
-golf_clean.exe	0x00474e70	Surface_paint	render	match re/match/golf_hand_03.cpp	fills/paints a surface with a value
+golf_clean.exe	0x00474e70	Image_recreateSurface	render	instructions 0x00474e7f-0x00474ecc; callee Surface_createFull 0x00474dd0; global 0x00839ab0 written at 0x00474e73 / 0x00474ea5 / 0x00474ed1	(re)creates the object's surface at (width, height, depth): the object's slot +0x10 sub-object's slot +0xc with (w, h, 1, depth) when that slot returns non-NULL, else Surface_createFull (w, h, depth, 0, this+0x20, 0); 0x00839ab0 is 1 during the call. Replaces `Surface_paint` (nothing is painted)
 golf_clean.exe	0x00474ee0	loadBmp	render	match re/match/golf_hand_r2.cpp; __stdcall; tagBITMAPINFO	loads a BMP file into a DIB pixel buffer
-golf_clean.exe	0x00475050	reloadBmp	render	caller 0x00475210 (loadBmpSurface)	reload helper for the BMP surface loader
+golf_clean.exe	0x00475050	reloadBmp	render	colour table at info + 0x28 (0x0047510c); display slot +0xb4 (0x0047512c); stores 0x004751c2; frees 0x004751e8 / 0x004751ee	purpose correction: converts an 8-bit BMP through its colour table into the surface's 16-bit buffer (5-6-5 when the display's slot +0xb4 returns 1, else 5-5-5), re-creating the surface when the bitmap is larger, then frees both blocks
 golf_clean.exe	0x00475210	loadBmpSurface	render	caller 0x0046e810 (showBulletinBoard); callee 0x00474ee0 (loadBmp); callee 0x00475410 (flipBmpRows)	loads a BMP file into a newly created surface
 golf_clean.exe	0x00475410	flipBmpRows	render	match re/match/golf_hand_r3.cpp; __stdcall; tagBITMAPINFOHEADER	flips the rows of a top-down/bottom-up DIB
 golf_clean.exe	0x00475580	saveBmp	render	caller 0x00407e00; callee _fwrite	writes a surface out to a BMP file
-golf_clean.exe	0x00475840	loadImage	render	string 0x004e4234; callee 0x00478cd0 (loadImageData); 22 callers	loads an image asset (.pcx/.bmp) into a surface
+golf_clean.exe	0x00475840	loadImage	render	MappedFile::open 0x00475a34; default extension 0x004e4234 (0x004759fb); loadImageData 0x00475a81	purpose correction: maps a file (the extension at 0x004e4234 appended when the name has no dot) and decodes it with loadImageData; flag 1 uses / makes the cache at +0xac as palette, flag 2 a new cache from the list 0x0083ac88. It never reads BMP files
 golf_clean.exe	0x00475b20	Surface_box	render	match re/match/golf_hand_01.cpp	draws a rectangle box on a surface
 golf_clean.exe	0x00475b60	DC_call84	render	match re/match/golf_hand_01.cpp; calls DC vtable +0x84	forwards to the device-context method at vtable +0x84
 golf_clean.exe	0x00475ba0	DC_call90	render	match re/match/golf_hand_01.cpp; calls DC vtable +0x90	forwards to the device-context method at vtable +0x90

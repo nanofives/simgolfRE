@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 816 bytes, 228 instructions, subsystem `render`. Mechan
 decodes the 16-bit variant of the custom image format guarded by the same signature string. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Thiscall, five stack arguments (`ret 0x14`, 0x0049574d), the 16-bit twin of decodeImagePaletted. A local Cache482fd0 is built (0x00495449) and destroyed (0x00483010) on every exit. NULL data returns 3 (0x00495460). The handle's slot +0xe4 format record's word +4 is read without a NULL test (0x00495479) and picks the local cache's +4 object's slot +0x18 or +0x1c as the 16-bit colour table, 0 when that object is NULL (0x0049547c-0x004954a2). The cache's constructor leaves +4 NULL (0x00482ffe), so the table is always 0, and the RLE loop's read of the colour (`mov ax, [eax + edx*2]` at 0x0049566c) faults for any image with pixels: only a zero total (bytes per line 0) reaches the end. The magic prefix 0x004e4748 is skipped without changing size (0x004954d5); the header checks match the paletted decoder (0x004954fa, 0x00495502, 0x00495510 / 0x0049551a, result 3); Surface_paint with depth 0x10 (0x00495568) returns its non-zero result; the bpp / planes check (0x004955b7); the handle's slot +0x20 must be non-NULL (0x004955f2), else 7. The handle's slot +0x24 gets 1 (0x004956d4); with a palette the no-op 0x00483020 runs with ecx = palette (0x004956ff); 0. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: decodeImage16 (16 vectors, 9 distinct results, 15 changing state, `log/diff/00495420_decodeImage16.path1.csv`); decodeImage16_f (16 vectors, 9 distinct results, 15 changing state, `log/diff/00495420_decodeImage16_f.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x0049574d): callee pops 20 bytes of stack arguments.
 - `ecx` is read at 0x0049543d before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

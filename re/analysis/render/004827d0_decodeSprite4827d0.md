@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 367 bytes, 129 instructions, subsystem `render`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 decodes a transparency/run compressed sprite (0xc000 skip-rows, 0x8000 single-pixel control words) into the locked 16-bit surface at m_58 (`re/names/exe_3.tsv`)
 
+## Purpose
+Thiscall, three stack arguments (`ret 0xc`, 0x0048293c): chunk, an argument it does not read, surface. decodeImageChunks 0x00482570 sends chunk type 7 here (the type word at chunk + 4, jump table 0x004826cc slot 3, call 0x004825c5). The destination is the surface handle's slot +0x20 (0x004827eb); the line stride is the word +8 of the header at this+0x58 (0x00482837). The word at chunk + 6 is the line count (0x004827f0); per line, words with both top bits set skip |(short)word| lines (0x0048282d-0x00482846), a word with only the top bit stores its low byte at the line's last byte (0x0048286a) and the next word is the packet count; each packet is a skip byte and a signed count byte (0x0048288f / 0x00482891): negative repeats the next word -count times (0x004828cc / 0x004828d0; -128 writes nothing), positive copies count words (0x004828e7-0x004828f2). The handle's slot +0x24 gets 1 (0x00482932); 0. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: decodeSprite4827d0_s16 (10 vectors, 9 distinct results, 10 changing state, `log/diff/004827d0_decodeSprite4827d0_s16.path1.csv`); decodeSprite4827d0_s9 (10 vectors, 9 distinct results, 10 changing state, `log/diff/004827d0_decodeSprite4827d0_s9.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x0048293c): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x004827d9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

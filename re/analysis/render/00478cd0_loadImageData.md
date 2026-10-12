@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 283 bytes, 98 instructions, subsystem `render`. Mechani
 decodes signature-tagged image data into a surface buffer (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Thiscall, five stack arguments (`ret 0x14`, 0x00478cf6 / 0x00478de8): data, size, palette, offset, count. NULL data returns 3 (0x00478ce6). A leading copy of the text at 0x004e4218 (strncmp 0x00478d10) is skipped with its terminator and size shrinks by as much (0x00478d35-0x00478d46). Byte 3 of the header (the bit depth, copied at 0x00478d5c) must be 8 (0x00478d63), else 0x17. When this object's virtual slot +0x10 is non-NULL (0x00478d85) and blitError 0x00492460 (the global 0x0083c310, or 8 when it is 0) is not 8 (0x00478d8f), decodeImage16 0x00495420 runs (0x00478dad); otherwise decodeImagePaletted 0x00495100 (0x00478dda). Both get the adjusted data and size and their result is returned. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: loadImageData_d0 (10 vectors, 9 distinct results, 7 changing state, `log/diff/00478cd0_loadImageData_d0.path1.csv`); loadImageData_d8 (10 vectors, 9 distinct results, 7 changing state, `log/diff/00478cd0_loadImageData_d8.path1.csv`); loadImageData_d16 (9 vectors, 9 distinct results, 7 changing state, `log/diff/00478cd0_loadImageData_d16.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `?load@r3_C478cd0@@QAEHPADHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00478cf6, 0x00478d75, 0x00478dbb, 0x00478de8): callee pops 20 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 361 bytes, 154 instructions, subsystem `render`. Mechan
 loads a BMP file into a DIB pixel buffer (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Two stack arguments, `ret 8` (0x00474f06 / 0x00475046), ecx not read: file name and a pointer that receives the header block. fopen(name, the mode text at 0x004c84f0) (0x00474ef1) NULL returns 0. fread of the 0xe-byte file header below one item (0x00474f1e) or a type word other than 0x4d42 (0x00474f35) closes and returns 0. malloc(bfOffBits - 0xe) (0x00474f5b) is stored through the pointer even when NULL (0x00474f69), which closes and returns 0; a short fread of it (unsigned, 0x00474f91) frees it, closes and returns 0. The pixel size is biSizeImage (0x00474fb4) or, when that is 0, |biHeight| * biBitCount * biWidth (0x00474fbb-0x00474fce: bits, eight times the bytes). malloc of it NULL (0x00474fdf) frees the header and closes; fread returning 0 (0x0047500c) frees both and closes; both return 0. Otherwise fclose (0x00475035) and the pixel block is returned. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: loadBmp (14 vectors, 13 distinct results, 14 changing state, `log/diff/00474ee0_loadBmp.path1.csv`); loadBmp_f0 (14 vectors, 13 distinct results, 14 changing state, `log/diff/00474ee0_loadBmp_f0.path1.csv`); loadBmp_f1 (14 vectors, 13 distinct results, 14 changing state, `log/diff/00474ee0_loadBmp_f1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?loadBmp474ee0@@YGPAEPBDPAPAUtagBITMAPINFO@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00474f06, 0x00474f32, 0x00474f50, 0x00474f80, 0x00474fae, 0x00474ffc, 0x00475031, 0x00475046): callee pops 8 bytes of stack arguments.

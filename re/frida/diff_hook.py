@@ -60,8 +60,10 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
         frags = [p for p in sorted((JS_DIR / "fixtures.d").glob("*.js")) if p.stem in enabled_batches()]
         # heapstandin.js: __heapStandIn, the per-key arena allocator / recording deallocator (2026-10-09)
         # importstandin.js: __importStandIn, per-key recording stubs in a module's IAT slots (batch c3cy, 2026-10-10)
+        # filestandin.js: __fileStandIn, fixture files served to KERNEL32 file/mapping imports and the static CRT file layer
+        #   (batch c3ee, 2026-10-12; calls __importStandIn at fixture time, so it loads after importstandin.js)
         # freeze.js: __freeze, the shared frozen-thread helper (safe-point suspend, newest-first restore; 2026-10-09)
-        parts = [JS_DIR / "keepalive.js", JS_DIR / "heapstandin.js", JS_DIR / "importstandin.js", JS_DIR / "freeze.js", JS_DIR / "diff_fixtures.js"] + frags + [JS_DIR / "diff_hook.js"]
+        parts = [JS_DIR / "keepalive.js", JS_DIR / "heapstandin.js", JS_DIR / "importstandin.js", JS_DIR / "filestandin.js", JS_DIR / "freeze.js", JS_DIR / "diff_fixtures.js"] + frags + [JS_DIR / "diff_hook.js"]
         # fixtures allocate through __keepAlloc (keepalive.js) so linked blocks are never garbage-collected mid-run
         src = "\n".join(p.read_text() if p.name in ("keepalive.js", "diff_hook.js")
                         else p.read_text().replace("Memory.alloc(", "__keepAlloc(") for p in parts)

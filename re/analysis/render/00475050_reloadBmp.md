@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 433 bytes, 152 instructions, subsystem `render`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 reload helper for the BMP surface loader (`re/names/exe_2.tsv`)
 
+## Purpose
+Thiscall, two stack arguments (`ret 8`, 0x004751fe): BITMAPINFO block and 8-bit pixel block. A positive biHeight (0x00475067) runs flipBmpRows 0x00475410 first. A bitmap wider than the handle's slot +0xd8 (0x0047508a) or with |biHeight| taller than slot +0xdc (0x004750ab; 0 for a NULL handle) re-creates the surface with Surface_createFull (biWidth, |biHeight|, 0, 1, 0, 0) (0x004750c1). The destination is the handle's slot +0x20 (0x004750d7), written without a NULL test. Every pixel's byte indexes the colour table at info + 0x28 (0x0047510c-0x00475114); the display's slot +0xb4 is asked per pixel (0x0047512c) and 1 selects 5-6-5 packing (0x0047513b), any other value 5-5-5 (0x0047516f); the word is stored at row * (handle slot +0xd8) + column (0x004751c2). No unlock. Both blocks are freed (0x004751e8 / 0x004751ee) and the result is 0. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: reloadBmp (10 vectors, 10 distinct results, 10 changing state, `log/diff/00475050_reloadBmp.path1.csv`); reloadBmp_555 (10 vectors, 10 distinct results, 10 changing state, `log/diff/00475050_reloadBmp_555.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004751fe): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0047505c before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

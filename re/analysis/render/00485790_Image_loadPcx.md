@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 781 bytes, 239 instructions, subsystem `render`. Mechan
 Reads a 0x80-byte PCX header (signature 0x0a, bpp 8), RLE-decodes the 8-bit image into the surface at this+4, then reads the 256-color palette and builds a palette object at this+0xac. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Thiscall, one stack argument (`ret 4`, 0x00485a9a): an open CRT stream. fread of the 0x80-byte header (0x004857c9, result not tested); manufacturer not 10 (0x004857d7), encoding not 1 (0x004857e2) or version below 4 (0x004857ed) returns 3. Surface_paint 0x00474e70 (width, height, 8) (0x00485826) non-zero is returned; the bpp / planes check (0x00485856); a NULL handle or slot +0x18 returns 7 (0x0048588f / 0x00485898). The RLE loop reads one byte per fread(1, 1) (0x004858ba / 0x004858e0) into a dword whose low byte is used, so a failed read repeats the previous byte; no value offset. Unlock with 1 (0x0048599d). One byte is read and dropped (0x004859aa), then 256 RGB triples one byte per fread (0x004859c8-0x004859f3). operator new(0x58) + Cache482fd0::ctor (0x00485a0a / 0x00485a27) is stored at +0xac without releasing the previous cache (0x00485a41), its slot 0 runs when its +4 is NULL (0x00485a52), its device's slot +0x14 gets (table, 0, 0x100) (0x00485a68), Widget_applyPalette 0x004789f0 runs (0x00485a74); 0. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: Image::loadPcx (18 vectors, 18 distinct results, 18 changing state, `log/diff/00485790_Image_loadPcx.path1.csv`); Image::loadPcx_fail (4 vectors, 4 distinct results, 4 changing state, `log/diff/00485790_Image_loadPcx_fail.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00485a9a): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004857bd before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -1,0 +1,5 @@
+module	addr	name	type	evidence
+golf_clean.exe	0x0083fe5c	g_imageAssetExtMode	int	read by openImageAsset 0x00479016: 1 appends the extension at 0x004e42b0, 2 the one at 0x004e42b8, other values the one at 0x004e4234
+golf_clean.exe	0x00839ab0	g_surfaceRecreating	int	set to 1 by Surface_paint 0x00474e73 and to 0 at 0x00474ea5 / 0x00474ed1; Image_releaseAll 0x00474cce keeps the cache at +0xac while it is non-zero
+golf_clean.exe	0x00839a98	g_listPalette	ptr	written by loadImage 0x00475987 with the cache the list 0x0083ac88's slot 0 (createCache 0x0049c830) stored at 0x0083aca4
+golf_clean.exe	0x00839348	g_loadImage	Image	the Image (0x2c0 bytes, vtable 0x004ba858) that Image_draw 0x00473e60 and Surface_drawScaled 0x00473cb0 load into with loadImage when the surface carries a file name (this+8)

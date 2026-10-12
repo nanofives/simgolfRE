@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 508 bytes, 182 instructions, subsystem `render`. Mechan
 loads a BMP file into a newly created surface (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Thiscall, one stack argument (`ret 4`, 0x00475242 / 0x00475409): file name. loadBmp 0x00474ee0 (0x00475229) NULL returns 6 (0x00475234). An 8-bit bitmap (biBitCount at 0x00475249) returns reloadBmp 0x00475050's result (0x00475254). Otherwise the 24-bit body: rows flipped when biHeight > 0 (0x0047526c), the surface re-created as in reloadBmp (0x004752ca), and each pixel's three bytes (blue, green, red at 0x00475314-0x0047531b) packed by the display's slot +0xb4 answer (0x00475333 / 0x00475342 / 0x00475376) into the handle's slot +0x20 buffer at row * (slot +0xd8) + column (0x004753c9), written without a NULL test and without an unlock. Both blocks are freed (0x004753ee / 0x004753f8) and the result is 0. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: loadBmpSurface (16 vectors, 16 distinct results, 16 changing state, `log/diff/00475210_loadBmpSurface.path1.csv`); loadBmpSurface_555 (16 vectors, 16 distinct results, 16 changing state, `log/diff/00475210_loadBmpSurface_555.path1.csv`); loadBmpSurface_f1 (16 vectors, 13 distinct results, 16 changing state, `log/diff/00475210_loadBmpSurface_f1.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00475242, 0x00475260, 0x00475409): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00475217 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

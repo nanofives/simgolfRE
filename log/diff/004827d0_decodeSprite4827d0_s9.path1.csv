@@ -1,0 +1,16 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$flic $d_copy 0 $surf,0,0,True,f120b64e,f120b64e,True
+$flic $d_fill 257 $surf,0,0,True,703dff3a,703dff3a,True
+$flic $d_skip 514 $surf,0,0,True,fd6f5731,fd6f5731,True
+$flic $d_last 771 $surf,0,0,True,d1b6cd5f,d1b6cd5f,True
+$flic $d_zero 1028 $surf,0,0,True,725fbb65,725fbb65,True
+$flic $d_empty 1285 $surf,0,0,True,725fbb65,725fbb65,True
+$flic $d_m128 1542 $surf,0,0,True,d37bf4b9,d37bf4b9,True
+$flic $d_mixed 1799 $surf,0,0,True,c90997d7,c90997d7,True
+$flic $d_bigskip 2056 $surf,0,0,True,3e743543,3e743543,True
+$flic $d_many 2313 $surf,0,0,True,8763130a,8763130a,True
+state_regions,$objs+0x0:40960 $rec+0x0:16384,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105e470,original=0x15d0e00,2026-10-12T05:52:03
+distinct_results,9,,
+VERDICT,GREEN,10,

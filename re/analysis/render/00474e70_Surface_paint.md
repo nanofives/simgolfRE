@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 111 bytes, 38 instructions, subsystem `render`. Mechani
 fills/paints a surface with a value (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`, `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Thiscall, three stack arguments (`ret 0xc` at 0x00474eb0 / 0x00474edc): width, height, depth. It (re)creates the image's surface. The global 0x00839ab0 is 1 for the length of the call (0x00474e73) and 0 after it (0x00474ea5 / 0x00474ed1); Image_releaseAll 0x00474cb0 keeps the palette cache while it is set. When this object's own virtual slot +0x10 returns non-NULL (0x00474e7f / 0x00474e84) the slot is called a second time (0x00474e8a) and that object's slot +0xc gets (width, height, 1, depth) (0x00474ea2); otherwise Surface_createFull 0x00474dd0 gets (width, height, depth, 0, this+0x20, 0) (0x00474ecc). eax is that call's result. For the exe's Image class (vtable 0x004ba858) slot +0x10 is 0x00479820, which returns 0, so Images take the Surface_createFull arm. Nothing is painted: the names row's `fills/paints a surface with a value` does not match the instructions (log/c3/c3ee_names.tsv). Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: Surface_paint_ok (12 vectors, 12 distinct results, 12 changing state, `log/diff/00474e70_Surface_paint_ok.path1.csv`); Surface_paint_fail (12 vectors, 12 distinct results, 12 changing state, `log/diff/00474e70_Surface_paint_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?paint@C474e70@@QAEXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x00474eb0, 0x00474edc): callee pops 12 bytes of stack arguments.

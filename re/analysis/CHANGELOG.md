@@ -4,6 +4,27 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  004827d0  decodeChunk7WordDelta  name decodeSprite4827d0->decodeChunk7WordDelta  log/c3/round29_renamed.tsv
+2026-10-12  00495420  decodePcx16  name decodeImage16->decodePcx16  log/c3/round29_renamed.tsv
+2026-10-12  00495100  decodePcx8  name decodeImagePaletted->decodePcx8  log/c3/round29_renamed.tsv
+2026-10-12  00474e70  Image_recreateSurface  name Surface_paint->Image_recreateSurface  log/c3/round29_renamed.tsv
+2026-10-12  00473bf0  Surface_blit  C2->C3  log/diff/00473bf0_Surface_blit.path1.csv
+2026-10-12  00473e60  Image_draw  C2->C3  log/diff/00473e60_Image_draw_load.path1.csv
+2026-10-12  00473cb0  Surface_drawScaled  C2->C3  log/diff/00473cb0_Surface_drawScaled_load.path1.csv
+2026-10-12  0049d3b0  loadFileWinResource  C2->C3  log/diff/0049d3b0_loadFileWinResource_empty.path1.csv
+2026-10-12  00495420  decodeImage16  C2->C3  log/diff/00495420_decodeImage16.path1.csv
+2026-10-12  00495100  decodeImagePaletted  C2->C3  log/diff/00495100_decodeImagePaletted.path1.csv
+2026-10-12  00492000  cropSprite  C2->C3  log/diff/00492000_cropSprite.path1.csv
+2026-10-12  00485aa0  Image::savePcx  C2->C3  log/diff/00485aa0_Image_savePcx.path1.csv
+2026-10-12  00485790  Image::loadPcx  C2->C3  log/diff/00485790_Image_loadPcx.path1.csv
+2026-10-12  004827d0  decodeSprite4827d0  C2->C3  log/diff/004827d0_decodeSprite4827d0_s16.path1.csv
+2026-10-12  00478f50  openImageAsset  C2->C3  log/diff/00478f50_openImageAsset_m0.path1.csv
+2026-10-12  00478cd0  loadImageData  C2->C3  log/diff/00478cd0_loadImageData_d0.path1.csv
+2026-10-12  00475840  loadImage  C2->C3  log/diff/00475840_loadImage.path1.csv
+2026-10-12  00475210  loadBmpSurface  C2->C3  log/diff/00475210_loadBmpSurface.path1.csv
+2026-10-12  00475050  reloadBmp  C2->C3  log/diff/00475050_reloadBmp.path1.csv
+2026-10-12  00474ee0  loadBmp  C2->C3  log/diff/00474ee0_loadBmp.path1.csv
+2026-10-12  00474e70  Surface_paint  C2->C3  log/diff/00474e70_Surface_paint_fail.path1.csv
 2026-10-12  sound.dll:0002fc10  enqueueWaveCmd10  C1->C2  re/analysis/audio/0002fc10_sound_enqueueWaveCmd10.md
 2026-10-12  sound.dll:0002f680  Ch5c2ec_forwardSlot37  C1->C2  re/analysis/audio/0002f680_sound_Ch5c2ec_forwardSlot37.md
 2026-10-12  sound.dll:0002fc10  enqueueWaveCmd10  C0->C1  string 0x10063e98; demoted C1->C0: round-1 name createBlankVoice unsupported: string 0x10063e98 is not referenced by the function; table slot 10 (+0x28) of vtbl_Ch5c3a4 0x1005c3a4 (installer 0x1002f740 Ch5c3a4_ctor); reads g_soundEngine 0x100b4a20 (0x1002fc26); operator_new 0x100424d7 (0x1002fc5f); callee 0x10008810 pairStore via thunk 0x10001299 (0x1002fc7c, args 0x10, this); callee 0x1000c3d0 WaveCmdQueue::pushValue via thunk 0x100011c7 (0x1002fc94, ecx = g_soundEngine); sibling of enqueueWaveCmdE 0x1002fb70

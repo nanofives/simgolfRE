@@ -1,0 +1,31 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$i0 $d_p_basic $n_p_basic 0 0 256,0,0,True,d19fa871,d19fa871,True
+$i0 $d_p_basic $n_p_basic $c0 0 256,0,0,True,9e830d91,9e830d91,True
+$i0 $d_p_magic $n_p_magic $c1 5 10,0,0,True,4595ccd7,4595ccd7,True
+$i1 $d_p_runs $n_p_runs $c0 -3 6,0,0,True,4f697db3,4f697db3,True
+$i0 $d_p_cross $n_p_cross 0 250 6,0,0,True,fd18600f,fd18600f,True
+$i0 $d_p_v3 $n_p_v3 $c0 0 4,3,3,True,e65505ee,e65505ee,False
+$i0 $d_p_v2 $n_p_v2 0 1 3,0,0,True,c3b5fd25,c3b5fd25,True
+$i0 $d_p_bpp4 $n_p_bpp4 0 0 256,3,3,True,f9148a00,f9148a00,True
+$i0 $d_p_bpp4p16 $n_p_bpp4p16 $c0 16 32,0,0,True,dd2075c4,dd2075c4,True
+$i0 $d_p_bpp8p2 $n_p_bpp8p2 0 0 256,3,3,True,f9148a00,f9148a00,True
+$i0 $d_p_mfr $n_p_mfr 0 0 256,3,3,True,e65505ee,e65505ee,False
+$i0 $d_p_enc0 $n_p_enc0 0 0 256,3,3,True,e65505ee,e65505ee,False
+$i0 $d_p_offset $n_p_offset $c0 16 32,0,0,True,75e6ccee,75e6ccee,True
+$i0 $d_p_zero $n_p_zero $c1 0 16,0,0,True,da22d2ec,da22d2ec,True
+$i0 $d_p_zero_m $n_p_zero_m 0 7 1,0,0,True,2673f686,2673f686,True
+$i0 $d_p_1x1 $n_p_1x1 $c0 -10 12,0,0,True,825e5ed2,825e5ed2,True
+$i0 $d_p_wide $n_p_wide $c0 0 0,0,0,True,05206398,05206398,True
+$i0 $d_p_neg $n_p_neg 0 0 256,0,0,True,c811173a,c811173a,True
+$i0 0 0 0 0 256,3,3,True,e65505ee,e65505ee,False
+$i2 $d_p_basic $n_p_basic $c0 0 256,0,0,True,429eea46,429eea46,True
+$i3 $d_p_basic $n_p_basic 0 0 256,7,7,True,399f9834,399f9834,True
+$i4 $d_p_basic $n_p_basic 0 0 256,7,7,True,8a34f350,8a34f350,True
+$i5 $d_p_basic $n_p_basic $c0 0 256,6,6,True,f8aff45b,f8aff45b,True
+$i2 $d_p_runs $n_p_runs $c1 200 56,0,0,True,225326e3,225326e3,True
+$i0 $d_p_basic $n_p_basic $c0 -1 1,0,0,True,4cb67af9,4cb67af9,True
+state_regions,$objs+0x0:40960 $rec+0x0:16384 $arena+0x0:65552 $freelog+0x0:1028 0x00839ab0+0x0:4 0x0083ad4c+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105e1a0,original=0x1450ce0,2026-10-12T05:49:34
+distinct_results,21,,
+VERDICT,GREEN,25,

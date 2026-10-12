@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 608 bytes, 174 instructions, subsystem `render`. Mechan
 opens an image asset by extension (.pcx/.pcf/.pcg) with a signature check (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Cdecl (name, &width, &height). It reads a PCX file's dimensions. A NULL name, width or height pointer returns 3 (0x00478f88 / 0x00478f95 / 0x00478fa2). Without a '.' after the name's first character an extension is appended by the mode 0x0083fe5c: 1 the extension at 0x004e42b0, 2 the one at 0x004e42b8, any other value the one at 0x004e4234 (0x00479016-0x00479034). MappedFile::open(name, 1) NULL returns 6 (0x0047907d); GetFileSize [0x4ba0a0] runs and its result is not used (0x004790ba). The text at 0x004e4218 is skipped when it leads the file (0x004790e0); a header whose manufacturer is not 10 (0x00479103) or encoding not 1 (0x0047910a) returns 3; else width = xmax - xmin + 1 (0x00479133) and height = ymax - ymin + 1 (0x00479148) are stored, MappedFile::close runs (0x0047914e) and the result is 0. Reimplemented in `shim/src/re/c3ee.cpp`; path-1 A/B GREEN: openImageAsset_m0 (15 vectors, 11 distinct results, 12 changing state, `log/diff/00478f50_openImageAsset_m0.path1.csv`); openImageAsset_m1 (15 vectors, 12 distinct results, 12 changing state, `log/diff/00478f50_openImageAsset_m1.path1.csv`); openImageAsset_m2 (15 vectors, 12 distinct results, 12 changing state, `log/diff/00478f50_openImageAsset_m2.path1.csv`); openImageAsset_m7 (15 vectors, 11 distinct results, 12 changing state, `log/diff/00478f50_openImageAsset_m7.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004790ae, 0x0047917f, 0x004791af): callee pops 0 bytes of stack arguments.
 

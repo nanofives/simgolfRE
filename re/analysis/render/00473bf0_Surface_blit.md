@@ -6,6 +6,11 @@ Module `golf_clean.exe`, 102 bytes, 43 instructions, subsystem `render`. Mechani
 blits a source surface region onto this surface (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Surface_blit (0x00473bf0) is the thiscall 8-bit blit guard of a Surf473. It returns 0x10 when the source argument is null (`test esi,esi` at 0x00473bf8), 7 when the source has no DirectDraw surface at s+4 (0x00473c06 / 0x00473c0b), 0 when that surface's pixel format (virtual slot +0xe4) reports a depth other than 8 (`call [eax+0xe4]` / `cmp [eax],8` at 0x00473c19/0x00473c1f), and otherwise delegates to Surf473::blitTo (0x00492000) for the copy. Matched in re/match/golf_hand_03.cpp (`?f473bf0@Surf473@@QAEHPAU1@HHHHHH@Z`). Reimplemented in `shim/src/re/c3h.cpp`; path-1 A/B GREEN: Surface_blit (9 vectors, 3 distinct results, 5 changing state, `log/diff/00473bf0_Surface_blit.path1.csv`).
+
+Released from re/c3_hold.tsv on 2026-10-12 (round 29, batch c3ee): the arm it was held for now runs in the keys Surface_blit_copy, Surface_blit_fmt16; 22 vectors, GREEN on the main build with every hook on and with other batches' callees off (log/c3/alt/r29_main_c3ee.log). (c3h's hook; this batch adds Surface_blit_copy / Surface_blit_fmt16.) A NULL source returns 0x10 (0x00473bf8), a NULL source handle 7 (0x00473c0b), a source whose handle's slot +0xe4 format word is not 8 returns 0 (0x00473c1f / 0x00473c22); otherwise cropSprite 0x00492000 gets all seven arguments (0x00473c4c) and its result is returned. The copy path, which no earlier key ran, runs in every Surface_blit_copy vector.
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_03.cpp` as `?f473bf0@Surf473@@QAEHPAU1@HHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x1c` (at 0x00473c03, 0x00473c14, 0x00473c28, 0x00473c53): callee pops 28 bytes of stack arguments.

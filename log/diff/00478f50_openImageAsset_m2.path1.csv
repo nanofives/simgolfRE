@@ -1,0 +1,21 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$s0 $pw $ph,0,0,True,921f5b10,921f5b10,True
+$s1 $pw $ph,0,0,True,9025321a,9025321a,True
+$s2 $pw $ph,0,0,True,eee12496,eee12496,True
+$s3 $pw $ph,6,6,True,ccb7f469,ccb7f469,True
+$s4 $pw $ph,6,6,True,d7105dc6,d7105dc6,True
+$s5 $pw $ph,6,6,True,0999e674,0999e674,True
+$s6 $pw $ph,0,0,True,8fbfd2dd,8fbfd2dd,True
+$s7 $pw $ph,6,6,True,03556d6f,03556d6f,True
+$s8 $pw $ph,6,6,True,2a775330,2a775330,True
+$s9 $pw $ph,3,3,True,9bebcefc,9bebcefc,False
+$s10 $pw $ph,6,6,True,6d6bdb95,6d6bdb95,True
+$s11 $pw $ph,0,0,True,921f5b10,921f5b10,True
+$s0 0 $ph,3,3,True,9bebcefc,9bebcefc,False
+$s0 $pw 0,3,3,True,9bebcefc,9bebcefc,False
+$s2 $pw2 $ph2,0,0,True,98a8000a,98a8000a,True
+state_regions,$out+0x0:64 $fsblock+0x0:24576 $implog+0x0:1024 0x0083fe5c+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x7105eff0,original=0x1450d60,2026-10-12T05:50:37
+distinct_results,12,,
+VERDICT,GREEN,15,
