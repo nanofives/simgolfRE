@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 221 bytes, 58 instructions, subsystem `ui`. Mechanical 
 loads the bitmap fonts from jackal.pcx into the font surface globals. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x0049fe50 loadFonts(): the same local Image; loadImage(name 0x004e49fc, 0, 0, 0x100, 2) (pushes 0x0049fe75..0x0049fe80, call 0x0049fe94). A non-zero result (test 0x0049fe9b) is destroyed-and-returned (0x0049feae, 0x0049feb3). Zero: Surface_blit on the record 0x008408c8 with (img, 1, 0x23, 0x20, 0x20, 1, 1) (0x0049fecb..0x0049fee1) and on 0x008408f8 with (img, 0x22, 0x23, 0x20, 0x20, 1, 1) (0x0049fee6..0x0049fefc), their results ignored; the destructor, then xor eax, eax (0x0049ff1c) returns 0. Reimplemented in `shim/src/re/c3ei.cpp`; path-1 A/B GREEN: loadFonts (12 vectors, 8 distinct results, 12 changing state, `log/diff/0049fe50_loadFonts.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_49fe50.cpp` as `?loadFonts49fe50@@YAHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049feca, 0x0049ff2c): callee pops 0 bytes of stack arguments.

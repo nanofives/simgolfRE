@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 248 bytes, 68 instructions, subsystem `input`. Mechanic
 loads the mouse cursor bitmaps from jackal.pcx into the cursor surface globals. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x0049e9d0 loadCursors(): loadImage(name 0x004e49fc, 0, 0, 0x100, 2) (0x0049e9f5..0x0049ea14); non-zero: destroy and return it (0x0049ea1f..0x0049ea35). Zero: three Surface_blit calls with the image: record 0x00840830 (img, 1, 0x23, 0x20, 0x20, 1, 1) (0x0049ea4b..0x0049ea61), 0x00840890 (img, 1, 0x23, ...) (0x0049ea66..0x0049ea7c) and 0x00840860 (img, 0x22, 0x23, ...) (0x0049ea81..0x0049ea97); the destructor, then xor eax, eax returns 0 (0x0049eab7). Reimplemented in `shim/src/re/c3ei.cpp`; path-1 A/B GREEN: loadCursors (12 vectors, 8 distinct results, 12 changing state, `log/diff/0049e9d0_loadCursors.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?loadCursors49e9d0@@YAHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049ea4a, 0x0049eac7): callee pops 0 bytes of stack arguments.

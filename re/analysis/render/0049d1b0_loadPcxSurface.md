@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 199 bytes, 53 instructions, subsystem `render`. Mechani
 loads jackal.pcx into the graphics surface global at 0x00840710. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+0x0049d1b0 loadPcxSurface(): a local Image (ctor 0x0049d1d0), loadImage(name 0x004e49fc, 0, 0xa, 0xec, 0) (pushes 0x0049d1d5.. 0x0049d1e0, call 0x0049d1f4). eax != 0 (test 0x0049d1f9): Surface_init2 0x004745c0 on the Surface record 0x00840710 with (0x10, 0x10) (0x0049d1fd..0x0049d206); eax == 0: Surface_blit 0x00473bf0 on 0x00840710 with (img, 1, 0x12, 0x10, 0x10, 1, 1) (0x0049d20d..0x0049d223). esi = that result (0x0049d228); the destructor 0x00474c40 runs on the local either way (0x0049d23d / 0x0049d25a); esi != 0 returns esi (0x0049d242), esi == 0 returns 0 (xor 0x0049d266). Reimplemented in `shim/src/re/c3ei.cpp`; path-1 A/B GREEN: loadPcxSurface (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049d1b0_loadPcxSurface.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_f.cpp` as `?load49d1b0@@YAHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049d259, 0x0049d276): callee pops 0 bytes of stack arguments.

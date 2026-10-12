@@ -4,6 +4,22 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-12  00462020  composeGolferSprite  name formatGolferTitle->composeGolferSprite  log/c3/round30_renamed.tsv
+2026-10-12  0049fe50  loadFonts  C2->C3  log/diff/0049fe50_loadFonts.path1.csv
+2026-10-12  0049e9d0  loadCursors  C2->C3  log/diff/0049e9d0_loadCursors.path1.csv
+2026-10-12  0049d1b0  loadPcxSurface  C2->C3  log/diff/0049d1b0_loadPcxSurface.path1.csv
+2026-10-12  00496fc0  scrollbarDraw  C2->C3  log/diff/00496fc0_scrollbarDraw.path1.csv
+2026-10-12  004810d0  drawPanel4810d0  C2->C3  log/diff/004810d0_drawPanel4810d0.path1.csv
+2026-10-12  00462be0  drawQueuedSprite  C2->C3  log/diff/00462be0_drawQueuedSprite.path1.csv
+2026-10-12  004628d0  addSprite  C2->C3  log/diff/004628d0_addSprite.path1.csv
+2026-10-12  00462020  formatGolferTitle  C2->C3  log/diff/00462020_formatGolferTitle.path1.csv
+2026-10-12  0045c200  drawThoughtBubble  C2->C3  log/diff/0045c200_drawThoughtBubble.path1.csv
+2026-10-12  00434cf0  drawAmenitiesPanel  C2->C3  log/diff/00434cf0_drawAmenitiesPanel.path1.csv
+2026-10-12  00434350  drawBuildingPanel  C2->C3  log/diff/00434350_drawBuildingPanel.path1.csv
+2026-10-12  00433e50  drawTerrainToolbar  C2->C3  log/diff/00433e50_drawTerrainToolbar.path1.csv
+2026-10-12  00432200  drawAmenityRow  C2->C3  log/diff/00432200_drawAmenityRow.path1.csv
+2026-10-12  0040d320  drawWindow  C2->C3  log/diff/0040d320_drawWindow.path1.csv
+2026-10-12  004012d0  drawRecords  C2->C3  log/diff/004012d0_drawRecords.path1.csv
 2026-10-12  00497b00  gfxFlushA  C2->C3  log/diff/00497b00_gfxFlushA.path1.csv
 2026-10-12  00483cf0  pumpInput483cf0  C2->C3  log/diff/00483cf0_pumpInput483cf0.path1.csv
 2026-10-12  00483c90  pumpInput483c90  C2->C3  log/diff/00483c90_pumpInput483c90.path1.csv

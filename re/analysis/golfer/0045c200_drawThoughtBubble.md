@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 532 bytes, 185 instructions, subsystem `golfer`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Draws a golfer's thought-bubble icon from its thought flags. (`re/names/exe_1.tsv`)
 
+## Purpose
+0x0045c200 drawThoughtBubble(g, x, y, mode): cdecl, four arguments ([esp + 0x14..0x20] after the four pushes). t = the word at golfer record + 0x57956e (movsx, 0x0045c211), r = t * 0x230 (0x0045c218..0x0045c228); app = signed byte [r + 0x4d60aa] (0x0045c231) and col = ([r + 0x4d60ab] >> 4) & 3 (0x0045c22b..0x0045c23b). mode == 0 (test 0x0045c23e): Win_fillRect 0x00478af0 on [0x4c1570] with (x + 4, y, 0x50, 0x60, 0x80007fff) (0x0045c246..0x0045c25e). Then formatGolferTitle(g) (0x0045c264). mode != 1 (cmp 0x0045c277): Surface_drawScaled 0x00473cb0 on the record 0x5628e8 + 0x2c * (3 * (app + 72 * typeBit7Clear(g)) + thoughtFlag(g)) with (tgt, x, y, 1, 1, 1, 0) (both arms of `cmp edi, 0x14` 0x0045c286 compute the same table address, copies of one expression at 0x0045c2c1 / 0x0045c300). mode == 1 (0x0045c30a): Image_draw on 0x5787a0 with (tgt, x + 0x10, y + 0x4c, 0) when [r + 0x4d60b4] & 8 (0x0045c30a..0x0045c326); formatGolferTitle(g) again; Image_draw on 0x5439e0 + 0x2c * (col [+ 4 with the flag] + 8 * typeBit7Clear(g)) with (tgt, x + 0x13, y + 0x4c, 0x81ca10) (0x0045c34f..0x0045c37c); then Surface_drawScaled with (tgt, x, y - 0x14, 1, 1, 1, 0) on 0x59e7c0 + 0x2c * (3 * (app + 20 * typeBit7Clear(g)) + thoughtFlag(g)) when app < 0x14 (0x0045c3c5), or with (tgt, x - 0x14, y - 0x14, ...) on 0x5628e8 + 0x2c * (3 * (app + 72 * typeBit7Clear(g)) + thoughtFlag(g)) otherwise (0x0045c40a). The result is the last callee's eax. Reimplemented in `shim/src/re/c3ei.cpp`; path-1 A/B GREEN: drawThoughtBubble (38 vectors, 35 distinct results, 38 changing state, `log/diff/0045c200_drawThoughtBubble.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0045c2ca, 0x0045c309, 0x0045c3ce, 0x0045c413): callee pops 0 bytes of stack arguments.
 

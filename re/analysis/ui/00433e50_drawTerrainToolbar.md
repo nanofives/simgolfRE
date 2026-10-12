@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 549 bytes, 165 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Draws the terrain build toolbar (Undo/Analyze/Raise-lower/Buildings). (`re/names/exe_1.tsv`)
 
+## Purpose
+0x00433e50 drawTerrainToolbar(a, b): cdecl, two arguments. sel = hitBuildTool433c60(a, b) (push ebp / push eax, call 0x00433e5c). Surface_stretchBlit on 0x541b78 with (mask 0x58b4f0, dst [0x4c1570], 0xd7, 0x1e2, 0) (0x00433e6c..0x00433e83); setDrawTarget on [0x4c1570] with (0x519fd8, 0, 0, 0) (0x00433e99). sel == -2: Image_draw 0x58b2a8 at (0xfe, 0x1e3); [0x59e7b8] & 0x8000000: Image_draw 0x571f7c at (0xfd, 0x222); sel == -3: Image_draw 0x571f50 at (0xfd, 0x222); sel >= 0: Image_draw 0x571d40 + 0x84 * sel at the shorts (x, y) = ([4 * sel + 0x4c7a88], [4 * sel + 0x4c7a8a]) (0x00433f0b..0x00433f2d); then always Image_draw 0x571d6c + 0x84 * [0x542f20] at the shorts of that index (0x00433f39..0x00433f67). sel != [0x5a9f54] (cmp 0x00433f6c): [0x5aa554] = 0 and [0x5a9f54] = sel (0x00434062), return. Otherwise [0x5aa554] += 1 (0x00433f7e); sel == -1 returns; eax = the new count (0x00433f8e) and a count <= 10 (signed) returns it; else the text buffer 0x51a068 is emptied (0x00433fa0) and, by the jump table 0x434078 on sel + 3 (unsigned > 6 -> default): -3 -> the string at 0x4c7f2c, -2 -> 0x4c8030, 0 -> 0x4c801c, 1 -> 0x4c8008, 2 -> 0x4c7ff4, 3 -> 0x4c7fe0, others none, is copied there (strlen + 1 bytes); finally drawPanelBackdrop(a, b - 5) (0x00434056). Reimplemented in `shim/src/re/c3ei.cpp`; path-1 A/B GREEN: drawTerrainToolbar (51 vectors, 51 distinct results, 51 changing state, `log/diff/00433e50_drawTerrainToolbar.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `?S1drawTools433e50@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00434061, 0x00434074): callee pops 0 bytes of stack arguments.

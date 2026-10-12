@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 345 bytes, 100 instructions, subsystem `render`. Mechan
 wrapper that forwards eight sprite parameters to enqueueSprite (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+0x004628d0 addSprite(a1 x, a2 y, a3, a4, a5, a6, a7, a8): cdecl, eight stack arguments ([esp+0x14]..[esp+0x30] after four pushes). ebx = 0x10; [0x822c8c] > 1000 (jle 0x004628e3) -> 0xd; >= 0x4b0 (jl 0x004628ef) -> 0xa; a8 & 0x100 (test ah, 1, 0x004628fa) -> 0x10. i = [0x838200]; s = [0x4c2844]. a7 == 0 (0x0046290a): x[i] = a1 - ((s * a4 + ((s * a4 >> 31) & 3)) >> 2) and y[i] = a2 - ((s * a5 + ...) >> 2) (0x00462916..0x0046294f); a7 > 0 (0x0046295b): x[i] = a1 - s * a4 * a7 / d, y[i] = a2 - s * a5 * a7 / d (idiv 0x00462978 / 0x00462990); a7 < 0: d = 2 * d, x[i] = s * a4 * a7 / d + a1, y[i] = s * a5 * a7 / d + a2 (idiv 0x004629ba / 0x004629d6). Stores 0x0082c164[i] = a2, 0x0082915c[i] = a7, 0x0082b160[i] = a1, 0x0082415c[i] = a3, 0x0082a15c[i] = a6, 0x0082815c[i] = a8 (0x004629e9..0x00462a15), then drawQueuedSprite 0x00462be0 (i) (push esi 0x004629ff, call 0x00462a1c); its eax is the result (ret 0x00462a28). Reimplemented in `shim/src/re/c3ei.cpp`; path-1 A/B GREEN: addSprite (72 vectors, 72 distinct results, 72 changing state, `log/diff/004628d0_addSprite.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r0.cpp` as `?r0_add4628d0@@YAXHHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00462a28): callee pops 0 bytes of stack arguments.
