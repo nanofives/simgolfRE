@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$p0 $path0 0 0 0,7,7,True,7ec53c5f,7ec53c5f,False
+$p1 $path1 0 0 4661,1,1,True,3a3273db,3a3273db,True
+$p2 $path2 0 0 4662,1,1,True,2fa349d8,2fa349d8,True
+$p3 $path3 0 0 0,1,1,True,31940b68,31940b68,True
+$p4 $path4 0 0 4664,0,0,True,d425e9d1,d425e9d1,True
+$p5 $path5 12 34 4665,0,0,True,77d8c9d7,77d8c9d7,True
+$p6 $path6 -1 -2 0,0,0,True,2102fa21,2102fa21,True
+$p7 $path7 7 0 4667,0,0,True,714aecf3,714aecf3,True
+$p8 $path8 0 0 4668,0,0,True,d3a9a557,d3a9a557,True
+$p9 $path9 0 0 0,0,0,True,0926f549,0926f549,True
+$p10 $path10 1 1 4670,0,0,True,32d8a60e,32d8a60e,True
+$p11 $path11 2147483647 -2147483648 4671,0,0,True,f2016cab,f2016cab,True
+$p12 $path12 5 6 0,1,1,True,5963c997,5963c997,True
+$p13 $path13 0 0 4673,0,0,True,6d7285a8,6d7285a8,True
+state_regions,$heap+0x0:32784 $freelog+0x0:1028 $implog+0x0:1024 $rec+0x0:4096 0x0083ab94+0x0:4 0x0083ab90+0x0:4 0x0083aae0+0x0:4 0x0083aaec+0x0:4 0x0083aaa0+0x0:4 0x0083aabc+0x0:4 0x0083aac0+0x0:4 0x0083aac4+0x0:4 0x0083aa98+0x0:4 0x0083aaf0+0x0:4 0x0083ab30+0x0:4 0x0083ab34+0x0:4 0x0083ab40+0x0:4 0x0083ab44+0x0:4 0x0083ab54+0x0:4 0x0083ac18+0x0:4 0x00839650+0x0:4 0x0083ab2c+0x0:4 0x0083aa9c+0x0:4 0x0083a2c8+0x0:4 0x0083a2cc+0x0:4 0x0083a2d0+0x0:4 0x0083a2d4+0x0:4 0x0083ad50+0x0:4 0x0083ad4c+0x0:4 0x0083a2d8+0x0:512 0x0083ab9c+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62438680,original=0x1340de0,2026-10-13T06:21:51
+distinct_results,14,,
+VERDICT,GREEN,14,
