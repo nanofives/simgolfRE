@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 275 bytes, 90 instructions, subsystem `economy`. Mechan
 returns whether the player can afford a cost, posting an insufficient-funds message otherwise (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+Checks whether the course purse covers a price and, when it does not, puts the refusal panel up and reports the refusal. The one argument is the price: a price at or below 0 (0x00406c34), a price the purse [0x00571fd4] covers (0x00406c3c), the flag bit 0x1000000 of the flag word [0x0059e7b8] (0x00406c48) and a [0x005685f0] at or below 3 (0x00406c58) each return 1 without drawing anything. Otherwise the shared text buffer 0x0051a068 gets the string at 0x004c495c, the price multiplied by 100 through appendNumber (0x00406c87..0x00406c96), the string at 0x004c4948, the purse multiplied by 100 (0x00406cbb..0x00406cd7) and the string at 0x004c4944; the panel is drawn with drawWindow(0xc8, 0x96, 0x80007fff, -2) (0x00406d1a), the root window is repainted (0x00406d29), one frame is pumped (0x00406d30) and the function returns 0 (0x00406d38). Reimplemented in `shim/src/re/c3em.cpp`; path-1 A/B GREEN: canAfford (12 vectors, 12 distinct results, 5 changing state, `log/diff/00406c30_canAfford.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small33.cpp` as `?canAfford@@YAHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00406d3c, 0x00406d42): callee pops 0 bytes of stack arguments.

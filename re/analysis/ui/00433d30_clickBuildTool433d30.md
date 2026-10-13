@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 277 bytes, 79 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Handles a click on the terrain build toolbar with the confirm/undo flow. (`re/names/exe_1.tsv`)
 
+## Purpose
+Handles a click on the build-tool strip. hitBuildTool433c60 (0x00433d3a) turns the point into a tool index. -2 leaves the strip: [0x0055e928] = 0, [0x00567afc] = 1, bit 1 of the flag word [0x0059e7b8] cleared, result -1 (0x00433d4c..0x00433d67). -3 is the "click again" notice: the strings at 0x004c7ec4 and 0x004c7e7c go into the text buffer with [0x004c2e08] = -0x16, drawWindow(0xc8, 0x154, 0x80007fff, -2) draws it (0x00433de1), the same three globals are written, the root window is repainted and one frame pumped, and the result is that pump's (0x00433e1a / 0x00433e24). A tool index at or above 0 is stored in [0x00542f20], sets bit 1 of the flag word, clears the panel selection [0x004c2848] and the function returns the flag word it stored (0x00433e29..0x00433e44). Any other index (only -1 reaches it) is returned unchanged. Reimplemented in `shim/src/re/c3em.cpp`; path-1 A/B GREEN: clickBuildTool433d30 (10 vectors, 10 distinct results, 8 changing state, `log/diff/00433d30_clickBuildTool433d30.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?click433d30@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00433d6a, 0x00433e24, 0x00433e44): callee pops 0 bytes of stack arguments.

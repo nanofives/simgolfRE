@@ -1,0 +1,26 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$r0 $y0 $m0 $f0 $d0,1,1,True,2ccbea49,2ccbea49,True
+$r1 $y1 $m1 $f1 $d1,5,5,True,0dfd4de6,0dfd4de6,True
+$r2 $y2 $m2 $f2 $d2,5,5,True,d86a92f1,d86a92f1,True
+$r3 $y3 $m3 $f3 $d3,2,2,True,384efca7,384efca7,True
+$r4 $y4 $m4 $f4 $d4,16,16,True,0c74983e,0c74983e,True
+$r5 $y5 $m5 $f5 $d5,1,1,True,8d1cf02b,8d1cf02b,True
+$r6 $y6 $m6 $f6 $d6,85,85,True,1362305d,1362305d,True
+$r7 $y7 $m7 $f7 $d7,1,1,True,3a02ce4b,3a02ce4b,True
+$r8 $y8 $m8 $f8 $d8,1,1,True,6e15ff6a,6e15ff6a,True
+$r9 $y9 $m9 $f9 $d9,2,2,True,be9d8ac0,be9d8ac0,True
+$r10 $y10 $m10 $f10 $d10,0,0,True,de2d1809,de2d1809,True
+$r11 $y11 $m11 $f11 $d11,0,0,True,4de70f38,4de70f38,True
+$r12 $y12 $m12 $f12 $d12,-1,-1,True,4f1e0f8e,4f1e0f8e,True
+$r13 $y13 $m13 $f13 $d13,-1,-1,True,a4020efd,a4020efd,True
+$r14 $y14 $m14 $f14 $d14,0,0,True,413ad6cf,413ad6cf,True
+$r15 $y15 $m15 $f15 $d15,1,1,True,4062d385,4062d385,True
+$r16 $y16 $m16 $f16 $d16,0,0,True,87817e97,87817e97,True
+$r17 $y17 $m17 $f17 $d17,-1,-1,True,9bff32fc,9bff32fc,True
+$r18 $y18 $m18 $f18 $d18,1,1,True,cb62e378,cb62e378,True
+$r19 $y19 $m19 $f19 $d19,0,0,True,324fd5da,324fd5da,True
+state_regions,$heap+0x0:8208 $freelog+0x0:1028 $implog+0x0:1024 $rec+0x0:4096 0x0083ab94+0x0:4 0x0083ab90+0x0:4 0x0083aae0+0x0:4 0x0083aaec+0x0:4 0x0083aaa0+0x0:4 0x0083aabc+0x0:4 0x0083aac0+0x0:4 0x0083aac4+0x0:4 0x0083aa98+0x0:4 0x0083aaf0+0x0:4 0x0083ab30+0x0:4 0x0083ab34+0x0:4 0x0083ab40+0x0:4 0x0083ab44+0x0:4 0x0083ab54+0x0:4 0x0083ac18+0x0:4 0x00839650+0x0:4 0x0083ab2c+0x0:4 0x0083aa9c+0x0:4 0x0083a2c8+0x0:4 0x0083a2cc+0x0:4 0x0083a2d0+0x0:4 0x0083a2d4+0x0:4 0x0083ad50+0x0:4 0x0083ad4c+0x0:4 0x0083a2d8+0x0:512 $modal+0x0:4096 0x00822b98+0x0:8 0x00822d58+0x0:64 0x004d3834+0x0:4 0x0083ad4c+0x0:4 0x0083afcc+0x0:4 0x00838208+0x0:4 0x0083821c+0x0:4 0x0083ab9c+0x0:4 $seq+0x0:1152 $clog+0x0:4096 0x0051a068+0x0:256 0x004c2848+0x0:4 0x004c2854+0x0:4 0x004c2e08+0x0:4 0x00542f20+0x0:4 0x0055e924+0x0:4 0x0055e928+0x0:4 0x00567afc+0x0:4 0x0056d1b0+0x0:4 0x00571fd4+0x0:4 0x005685f0+0x0:4 0x0059e7b8+0x0:4 0x005a6364+0x0:4 0x005a8c38+0x0:64 0x005a9f50+0x0:4 0x005a9f60+0x0:4 0x005a9f64+0x0:4 0x00822d9c+0x0:4 0x005aa55c+0x0:4 0x0059b76c+0x0:32,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62340f50,original=0xb90b00,2026-10-13T06:16:45
+distinct_results,20,,
+VERDICT,GREEN,20,

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 526 bytes, 176 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Handles selecting/upgrading a building from the building panel. (`re/names/exe_1.tsv`)
 
+## Purpose
+Handles a click on the building palette, or hands it to the build-tool strip when that strip is open ([0x0055e928] != 0, 0x00434146), and reports the panel result [0x005a9f64]. hitBuildingTool (0x0043416a) turns the point into a slot: -3 draws the same "click again" notice as clickBuildTool433d30 and returns 0 (0x0043417b.. 0x00434204); -2 opens the build-tool strip ([0x0055e928] = [0x00567afc] = 1) and returns 0 (0x0043420f..0x00434223); -1 returns -1 (0x0043422d). Otherwise the slot becomes the tool index slot + 6 in [0x004c2854] (0x00434238 / 0x0043423d) and two refusals are checked: a non-zero table entry [0x005a8c50 + 4 * slot] with bucketValue([0x005685f0] - 1) below 2 (0x00434249..0x0043425a), or that entry at 2 or more (0x00434261), play playSound(0x18, 0x64, 0, 0, 0), put the string at 0x004c80d0 (entry at 2 or more) or at 0x004c8084 into the text buffer, start the message with startMessage(0x80006000, 1, -1) and set the index to -1 (0x00434278..0x004342ea); an index at or above the count [0x005a6364] plays the same sound, puts the string at 0x004c803c up and sets the index to -1 (0x00434301..0x0043433c). Reimplemented in `shim/src/re/c3em.cpp`; path-1 A/B GREEN: pickBuilding (16 vectors, 16 distinct results, 15 changing state, `log/diff/00434140_pickBuilding.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `?S1pickBuilding434140@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043415f, 0x00434208, 0x00434226, 0x00434230, 0x0043434d): callee pops 0 bytes of stack arguments.

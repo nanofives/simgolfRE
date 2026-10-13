@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 332 bytes, 98 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Handles a click on the build-slot panel and its right-click-to-confirm/undo flow. (`re/names/exe_1.tsv`)
 
+## Purpose
+Handles a click on the slot panel, or hands it to clickAmenityPanel when the amenity panel is open ([0x0055e924] != 0, 0x00433045), and in every case ends by drawing Random::range(3) masked to 16 bits, which it returns (0x0043317a..0x0043318b). hitTestSlot432f90 (0x00433066) turns the point into a slot: -1 does nothing; a slot below 0x14 stores the signed byte [0x004c79a0 + slot] in [0x004c2848] (0x0043307c / 0x00433083); 0x14 stores -1 there (0x004330a4); 0x15 puts the "click again" notice up through drawWindow(0xc8, 0x154, 0x80007fff, -2) and pumps a frame (0x004330c4..0x00433145); 0x16 opens the amenity panel ([0x0055e924] = 1, [0x00567afc] = 0, 0x00433166 / 0x00433170). Reimplemented in `shim/src/re/c3em.cpp`; path-1 A/B GREEN: clickSlotPanel (12 vectors, 12 distinct results, 11 changing state, `log/diff/00433040_clickSlotPanel.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small34.cpp` as `?clickSlotPanel@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043305b, 0x0043309a, 0x004330b8, 0x00433160, 0x0043318b): callee pops 0 bytes of stack arguments.
