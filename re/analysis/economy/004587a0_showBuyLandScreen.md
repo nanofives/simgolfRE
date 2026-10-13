@@ -143,7 +143,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00476700 `drawStringAt` at 0x00458d5e
 - 0x00477c30 `drawText` at 0x00458b25
 - 0x00478080 `drawRight` at 0x004590e8
-- 0x00478430 `measureText2` at 0x0045905a
+- 0x00478430 `drawTextLinesAt` at 0x0045905a
 - 0x0047ab50 `View_toLocal` at 0x004591e4
 - 0x00480c80 `Window::refreshFull` at 0x004591c4
 - 0x004ad425 `__itoa` at 0x00458901, 0x00458e73, 0x00458ee8

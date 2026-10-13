@@ -120,7 +120,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x10002031 -> 0x100087f0 `listNode3Init` (incremental-linking thunk) at 0x1000d6fb, 0x1000d785
 - 0x10002257 -> 0x100088c0 `CommandQueue::at` (incremental-linking thunk) at 0x1000cde8
 - 0x100022e8 -> 0x1000f790 `DsBuffer::setPosition` (incremental-linking thunk) at 0x1000d05d
-- 0x1000272a -> 0x10034db0 `Voice_stopAndFlag` (incremental-linking thunk) at 0x1000d613
+- 0x1000272a -> 0x10034db0 `Channel_recomputeGainsSetBit3` (incremental-linking thunk) at 0x1000d613
 - 0x1004249a `operator_delete` at 0x1000cfa9, 0x1000d109, 0x1000d195, 0x1000d259, 0x1000d38b, 0x1000d430, 0x1000d51d, 0x1000d6a0 (+1 more)
 - 0x100424d7 `operator_new` at 0x1000ce38, 0x1000cee6, 0x1000d6e1, 0x1000d76b
 - import `USER32.dll!PostMessageA` at 0x1000d031, 0x1000d2f1, 0x1000d4aa, 0x1000d741, 0x1000d7cb

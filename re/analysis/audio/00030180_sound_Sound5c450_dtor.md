@@ -52,7 +52,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x1003020e, 0x100302b3, 0x1003031f
 
 ## Callees
-- 0x10001b45 -> 0x10037df0 `FUN_10037df0` (incremental-linking thunk) at 0x10030275
+- 0x10001b45 -> 0x10037df0 `VoiceSlot_dtorEmpty` (incremental-linking thunk) at 0x10030275
 - 0x10001cc6 -> 0x1002ef40 `Ch5c234_dtor` (incremental-linking thunk) at 0x1003032b
 - 0x1004249a `operator_delete` at 0x100301d3, 0x1003024f, 0x1003027b, 0x100302a2, 0x100302dc, 0x1003030e
 - indirect `call ebp` at 0x100301f9

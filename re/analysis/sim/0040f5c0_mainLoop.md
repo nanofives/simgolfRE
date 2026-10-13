@@ -324,7 +324,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0045bf80 `waitTicks` at 0x0040fa34
 - 0x0045c150 `pumpLight` at 0x0040faa9
 - 0x0045c1e0 `Random::range` at 0x0040f8b1, 0x0040feaf, 0x0040ff71, 0x0041157b
-- 0x0045de80 `announceVipGolfer` at 0x0040fe46
+- 0x0045de80 `pairGolfersWithStory` at 0x0040fe46
 - 0x004627d0 `resetSpriteQueue` at 0x004105cf
 - 0x004628d0 `addSprite` at 0x00410afd, 0x00410bd6, 0x00410d0b, 0x00410dcc, 0x00410e9c, 0x00410f42, 0x00410ff0, 0x00411132 (+7 more)
 - 0x00462a30 `enqueueSprite` at 0x0041155f
@@ -332,7 +332,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00467130 `clamp` at 0x0040fc9a, 0x0040fcc0, 0x00410a4d, 0x00410b90, 0x00410c53, 0x00410d88, 0x00410e59, 0x00411053
 - 0x0046ddd0 `startNewCourse` at 0x0040fb25
 - 0x00470a00 -> 0x0046f550 `courseActionMenu` (incremental-linking thunk) at 0x0040fb9f
-- 0x00470a60 `applyTerrainEdit` at 0x0040fbd5
+- 0x00470a60 `generateRandomCourse` at 0x0040fbd5
 - 0x00473e60 `Image_draw` at 0x0040f848
 - 0x00474dd0 `Surface_createFull` at 0x0040f61f, 0x0040f63b, 0x0040f657
 - 0x00475840 `loadImage` at 0x0040f7de

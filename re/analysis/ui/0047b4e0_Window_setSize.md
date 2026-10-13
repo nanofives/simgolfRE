@@ -4,6 +4,7 @@ Module `golf_clean.exe`, 393 bytes, 123 instructions, subsystem `ui`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 resizes the window: clamps size, sets m_1ac/m_1bc rects, relayouts, calls resized and notifies the screen g_83ad50->update (`re/names/exe_3.tsv`)
+System writeup: `re/analysis/systems/exe_14.md`.
 
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?setSize@R2C47b4e0@@QAEHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -63,7 +64,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x0047b4ed, 0x0047b515
 
 ## Callees
-- 0x0047b9a0 `FUN_0047b9a0` at 0x0047b5f7
+- 0x0047b9a0 `Window::passLocalRect` at 0x0047b5f7
 - 0x0047bc60 `Window::resized` at 0x0047b645
 - 0x0047ca10 `Window::adjustSizeOuter` at 0x0047b551
 - 0x0047cce0 `Window::shrinkRect` at 0x0047b5e6

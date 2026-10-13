@@ -97,7 +97,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00430020 `screenToTile` at 0x004039b8, 0x00403ded
 - 0x00432620 `drawPanelBackdrop` at 0x00403a2c
 - 0x0043d6f0 `cellAt` at 0x00403a58, 0x00403c1e
-- 0x00462020 `formatGolferTitle` at 0x00403a32, 0x00403ea9
+- 0x00462020 `composeGolferSprite` at 0x00403a32, 0x00403ea9
 - 0x004628d0 `addSprite` at 0x00403ed2
 - 0x00462a30 `enqueueSprite` at 0x00403a7f, 0x00403c4a, 0x00403c6b
 - 0x00467130 `clamp` at 0x0040396e

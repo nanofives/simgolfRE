@@ -75,7 +75,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x100065a3, 0x100065be, 0x100066b1, 0x100066de
 
 ## Callees
-- 0x10001b45 -> 0x10037df0 `FUN_10037df0` (incremental-linking thunk) at 0x10006565, 0x10006691, 0x10006757
+- 0x10001b45 -> 0x10037df0 `VoiceSlot_dtorEmpty` (incremental-linking thunk) at 0x10006565, 0x10006691, 0x10006757
 - 0x1004249a `operator_delete` at 0x10006537, 0x1000656b, 0x10006592, 0x10006664, 0x10006697, 0x1000672e, 0x1000675d
 - import `WINMM.dll!mmioClose` at 0x10006553, 0x10006678, 0x10006742
 - indirect `call [eax+0x20]` at 0x1000670f

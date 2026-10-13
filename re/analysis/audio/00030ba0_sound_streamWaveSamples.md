@@ -77,7 +77,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x10001640 -> 0x100184a0 `streamRenderBlock` (incremental-linking thunk) at 0x10030d66
 - 0x10001933 -> 0x100188d0 `streamRenderTail` (incremental-linking thunk) at 0x10030d6d
-- 0x10001b45 -> 0x10037df0 `FUN_10037df0` (incremental-linking thunk) at 0x10030ca3, 0x10030dde, 0x10030e81
+- 0x10001b45 -> 0x10037df0 `VoiceSlot_dtorEmpty` (incremental-linking thunk) at 0x10030ca3, 0x10030dde, 0x10030e81
 - 0x1004249a `operator_delete` at 0x10030c03, 0x10030c7d, 0x10030ca9, 0x10030cd0, 0x10030db0, 0x10030de4, 0x10030e58, 0x10030e87
 - import `WINMM.dll!mmioClose` at 0x10030c23, 0x10030dc9, 0x10030e6c
 - indirect `call [edx+0x20]` at 0x10030e39

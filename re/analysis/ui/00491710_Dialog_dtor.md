@@ -52,7 +52,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0048d480 `TextView::reset` at 0x00491749
 - 0x00491500 `Dialog::viewDtor` at 0x0049176b
 - 0x004928d0 `HotList::dtor` at 0x00491759
-- 0x004a14c0 `resetMsgObject` at 0x0049185c, 0x0049188a
+- 0x004a14c0 `LabelButton::reset` at 0x0049185c, 0x0049188a
 
 ## Callers
 0x004916f0 `Dialog::scalarDtor`, 0x0049acf0 `netHandleControl`, 0x004b8360 `Unwind@004b8360`, 0x004b8820 `Unwind@004b8820`, 0x004b8e50 `Unwind@004b8e50`

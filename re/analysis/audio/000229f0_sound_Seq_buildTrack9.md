@@ -70,7 +70,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x1000106e -> 0x10025010 `NodeList_initNode` (incremental-linking thunk) at 0x10022c1b
 - 0x10001073 -> 0x10024f90 `NodeList_pushFront` (incremental-linking thunk) at 0x10022be6
-- 0x10001410 -> 0x1000b000 `FUN_1000b000` (incremental-linking thunk) at 0x10022a38
+- 0x10001410 -> 0x1000b000 `NodeB000_ctor` (incremental-linking thunk) at 0x10022a38
 - 0x100015fa -> 0x1001d780 `Seq_listGetAt` (incremental-linking thunk) at 0x10022a6d
 - 0x100019e7 -> 0x1001f150 `Seq_clearTrackFlag8All` (incremental-linking thunk) at 0x10022a99
 - 0x10001ef1 -> 0x10024e60 `NodeList_insert` (incremental-linking thunk) at 0x10022c52

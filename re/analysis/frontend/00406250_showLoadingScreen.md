@@ -43,7 +43,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x00404b70 `drawCenteredText` at 0x00406504
-- 0x0045b0d0 `drawValueWidget` at 0x00406482
+- 0x0045b0d0 `drawMessageBuffer` at 0x00406482
 - 0x0045c1e0 `Random::range` at 0x00406297, 0x004063e8
 - 0x00467130 `clamp` at 0x004064a7
 - 0x00473ab0 `Surface_ctor` at 0x0040626f

@@ -106,8 +106,8 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jo` (signed) at 0x10014f34, 0x10014f7a
 
 ## Callees
-- 0x100014ce -> 0x10014250 `mixCopyInnerB` (incremental-linking thunk) at 0x10014d8b, 0x10014e69
-- 0x100015e6 -> 0x10014510 `mixResampleInnerB` (incremental-linking thunk) at 0x10014db0, 0x10014e91
+- 0x100014ce -> 0x10014250 `mixMonoDupAdd` (incremental-linking thunk) at 0x10014d8b, 0x10014e69
+- 0x100015e6 -> 0x10014510 `mixMonoGainFadeAdd` (incremental-linking thunk) at 0x10014db0, 0x10014e91
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

@@ -56,7 +56,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - indirect `call [eax+0x40]` at 0x1003548e
 
 ## Callers
-0x10031be0 `FUN_10031be0`, 0x10031e50 `Channel_ctor`, 0x100339c0 `rewindChannel`, 0x10034db0 `Voice_stopAndFlag`
+0x10031be0 `Channel_ctorB`, 0x10031e50 `Channel_ctor`, 0x100339c0 `rewindChannel`, 0x10034db0 `Channel_recomputeGainsSetBit3`
 
 ## Constants
 - `0x0` at 0x1003550b

@@ -131,8 +131,8 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x1000118b -> 0x10020fe0 `Seq_setupChannel` (incremental-linking thunk) at 0x10004c49
 - 0x10001249 -> 0x10023e10 `Seq_applyTrackFlag` (incremental-linking thunk) at 0x10004f3e
 - 0x1000132f -> 0x1002e3c0 `FUN_1002e3c0` (incremental-linking thunk) at 0x1000422f
-- 0x10001410 -> 0x1000b000 `FUN_1000b000` (incremental-linking thunk) at 0x100044ed
-- 0x100014bf -> 0x1001ccf0 `FUN_1001ccf0` (incremental-linking thunk) at 0x1000421a
+- 0x10001410 -> 0x1000b000 `NodeB000_ctor` (incremental-linking thunk) at 0x100044ed
+- 0x100014bf -> 0x1001ccf0 `ChanRecord_init` (incremental-linking thunk) at 0x1000421a
 - 0x100014c9 -> 0x10021240 `Sound_findByName` (incremental-linking thunk) at 0x10004958
 - 0x10001550 -> 0x10021fa0 `Seq_updateChannel` (incremental-linking thunk) at 0x10004c55
 - 0x10001591 -> 0x1002d240 `Voice_setName` (incremental-linking thunk) at 0x100046d4
@@ -144,12 +144,12 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x10001a73 -> 0x1002cee0 `MixBuffer_ctor` (incremental-linking thunk) at 0x1000462b
 - 0x10001ab9 -> 0x1001cbd0 `CtrlObject_dtorC` (incremental-linking thunk) at 0x100042f1, 0x100043ba, 0x10004d10, 0x10004dd9, 0x10004ed3, 0x10005060
 - 0x10001fbe -> 0x10005c00 `listPopFront` (incremental-linking thunk) at 0x100042c5, 0x1000438e, 0x10004ce4
-- 0x10002004 -> 0x1001cd30 `FUN_1001cd30` (incremental-linking thunk) at 0x100042da, 0x100043a3, 0x10004cf9, 0x10004dc2, 0x10004ebc, 0x10005049
+- 0x10002004 -> 0x1001cd30 `ChanRecord_freeBuffers` (incremental-linking thunk) at 0x100042da, 0x100043a3, 0x10004cf9, 0x10004dc2, 0x10004ebc, 0x10005049
 - 0x10002180 -> 0x1001cbf0 `Ctrl5b668_ctor` (incremental-linking thunk) at 0x1000456d
 - 0x100023ab -> 0x10022d00 `Seq_buildTrack14` (incremental-linking thunk) at 0x1000452f
 - 0x1000242d -> 0x10020360 `Midi_loadMemoryAndPreRoll` (incremental-linking thunk) at 0x10004df9
 - 0x100024c8 -> 0x1002d100 `allocVoiceSlot` (incremental-linking thunk) at 0x1000496a
-- 0x100025f4 -> 0x1002d430 `FUN_1002d430` (incremental-linking thunk) at 0x10004950
+- 0x100025f4 -> 0x1002d430 `getField204` (incremental-linking thunk) at 0x10004950
 - 0x10002621 -> 0x1002ceb0 `VoiceSlot_init` (incremental-linking thunk) at 0x10004734
 - 0x10002644 -> 0x1001caf0 `CtrlObject3_ctor` (incremental-linking thunk) at 0x1000420a
 - 0x10002711 -> 0x10022280 `Seq_copyChannelParams` (incremental-linking thunk) at 0x10004458

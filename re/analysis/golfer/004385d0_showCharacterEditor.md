@@ -189,12 +189,12 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0043d6f0 `cellAt` at 0x00438a4a, 0x00438a79
 - 0x004481b0 `playSound` at 0x0043866d, 0x0043a22d, 0x0043a302
 - 0x00448200 `startSoundSlot` at 0x0043864a, 0x0043a2f3
-- 0x0045b0d0 `drawValueWidget` at 0x0043944e
+- 0x0045b0d0 `drawMessageBuffer` at 0x0043944e
 - 0x0045b2c0 `textInputBox` at 0x00439fb3, 0x0043a081, 0x0043a0cf
 - 0x0045bf80 `waitTicks` at 0x004397b2, 0x004397c0, 0x0043a247
 - 0x0045c030 `pumpMessages` at 0x004397b7, 0x00439eec, 0x0043a235, 0x0043a24f
 - 0x0045c1e0 `Random::range` at 0x0043868a
-- 0x00462020 `formatGolferTitle` at 0x00438857
+- 0x00462020 `composeGolferSprite` at 0x00438857
 - 0x004628d0 `addSprite` at 0x00438a6f, 0x00438a9e
 - 0x004675d0 `thoughtFlag` at 0x004388c5, 0x00438900
 - 0x004676e0 `buildGolferName` at 0x00438aca
@@ -209,9 +209,9 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00475840 `loadImage` at 0x004386e9, 0x00439d57, 0x00439d6a
 - 0x00475c60 `Surface_blitThunk` at 0x00438719
 - 0x004762d0 `setDrawTarget` at 0x00438ab7, 0x00438c0b, 0x00438dcd, 0x00438ebf, 0x00438fcd, 0x00439247, 0x00439467
-- 0x00479830 `blendRed` at 0x00439e00
-- 0x004798c0 `blendGreen` at 0x00439e12
-- 0x00479950 `drawPixelRun` at 0x00439e24
+- 0x00479830 `pixelRed` at 0x00439e00
+- 0x004798c0 `pixelGreen` at 0x00439e12
+- 0x00479950 `pixelBlue` at 0x00439e24
 - 0x0047ab50 `View_toLocal` at 0x0043872d
 - 0x0047b670 `Window::show` at 0x00439ec7
 - 0x00480b00 `fillWindowRect` at 0x00439024, 0x0043904b, 0x0043918d
@@ -221,7 +221,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00483c70 `redrawAll` at 0x00439ee2
 - 0x00483d30 `enterModal483d30` at 0x0043a30a
 - 0x00483d80 `leaveModal483d80` at 0x00439ee7
-- 0x004860d0 `EditBox::dtor` at 0x00439f43
+- 0x004860d0 `EditBox::releaseState` at 0x00439f43
 - 0x00486110 `EditBox::create` at 0x00439e62
 - 0x00486200 `EditBox::setText` at 0x00439e92
 - 0x00486250 `EditBox::resizeBuffer` at 0x00439e7d

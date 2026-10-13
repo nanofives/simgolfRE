@@ -30,7 +30,7 @@ None.
 - indirect `call [edx+0xa4]` at 0x00475c15
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x00480dc0 `Window::blitToTarget`
 
 ## Constants
 - `0x7` at 0x00475be7

@@ -55,7 +55,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x100399d3, 0x10039aa6
 
 ## Callees
-- 0x10001005 -> 0x10031be0 `FUN_10031be0` (incremental-linking thunk) at 0x10039a2e
+- 0x10001005 -> 0x10031be0 `Channel_ctorB` (incremental-linking thunk) at 0x10039a2e
 - 0x10001465 -> 0x1002b4e0 `SubChannel_ctor` (incremental-linking thunk) at 0x10039a21
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x10039a87
 - 0x10001e51 -> 0x100326a0 `parseRiffWave` (incremental-linking thunk) at 0x100399ca

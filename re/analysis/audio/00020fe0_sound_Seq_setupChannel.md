@@ -67,11 +67,11 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x100010f5 -> 0x1001ced0 `Sound_setName` (incremental-linking thunk) at 0x1002113a
-- 0x100014bf -> 0x1001ccf0 `FUN_1001ccf0` (incremental-linking thunk) at 0x10021070
+- 0x100014bf -> 0x1001ccf0 `ChanRecord_init` (incremental-linking thunk) at 0x10021070
 - 0x100015d2 -> 0x10024280 `Seq_loadChannelDesc` (incremental-linking thunk) at 0x10021150
 - 0x10001604 -> 0x1001d0a0 `Sound_setAltName` (incremental-linking thunk) at 0x1002109e
 - 0x10001d52 -> 0x10024360 `Seq_mergeChannelDesc` (incremental-linking thunk) at 0x1002111f, 0x10021142
-- 0x10002004 -> 0x1001cd30 `FUN_1001cd30` (incremental-linking thunk) at 0x1002103d, 0x10021164
+- 0x10002004 -> 0x1001cd30 `ChanRecord_freeBuffers` (incremental-linking thunk) at 0x1002103d, 0x10021164
 - 0x1004249a `operator_delete` at 0x10021043, 0x1002116a
 - 0x100424d7 `operator_new` at 0x10021058
 

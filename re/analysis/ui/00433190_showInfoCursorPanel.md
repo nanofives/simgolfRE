@@ -91,7 +91,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00434cf0 `drawAmenitiesPanel` at 0x004331b0
 - 0x0043d6f0 `cellAt` at 0x004337f5
 - 0x004493d0 `drawMapLine` at 0x00433a5c
-- 0x0045b0d0 `drawValueWidget` at 0x00433516
+- 0x0045b0d0 `drawMessageBuffer` at 0x00433516
 - 0x0045b660 `lookupThemeText` at 0x004334fe
 - 0x004628d0 `addSprite` at 0x00433820
 - 0x00467130 `clamp` at 0x00433277, 0x00433417
