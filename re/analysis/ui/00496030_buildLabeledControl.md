@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 407 bytes, 83 instructions, subsystem `ui`. Mechanical 
 constructor for a labeled multi-item control; builds its sub-objects and references the 0x004e4764 label table. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+constructor of the window class with vtables 0x004bbac8 / 0x004bbab4 (the class uitree.js calls Scrollbar, log/c3/c3ef_notes.txt section 1): it runs View4804a0::ctor 0x004804a0 on this and ctorObj4a13f0 0x004a13f0 on the parts at +0x60c and +0xcdc (0x0049604e..0x0049606f), installs the two vtables (0x00496074 / 0x0049607a), copies the globals 0x0083ff1c.. and 0x004e4764.. into its fields (0x00496084..0x00496132; twelve dwords from 0x0083ff24 in four groups of three, loop 0x00496161..0x0049618f, and +0x5d4 / +0x5d8 from 0x0083ff58 / 0x0083ff5c), sets the counters +0x588 / +0x598 / +0x5a4 / +0x5ac..+0x5b8 / +0x13ac / +0x13b0 to 0 and +0x59c to -1, and returns this. Called by layoutViewTree 0x0047a4c0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: buildLabeledControl (10 vectors, 10 distinct results, 10 changing state, `log/diff/00496030_buildLabeledControl.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `??0R2C496030@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004961c6): callee pops 0 bytes of stack arguments.

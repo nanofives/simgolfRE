@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 176 bytes, 59 instructions, subsystem `frontend`. Mecha
 shows the character-customization intro panel (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+fills the shared text buffer 0x0051a068 with the string 0x004c4714 followed by 0x004c46bc (0x004065c2..0x00406617), counts 10 plus 3 for every non-zero dword of the 22-entry table 0x004c15a0 (stride 0x30, loop 0x0040661e..0x0040662e), sets [0x004c2e08] = -1 (0x00406641), calls drawWindow 0x0040d320 (0xc8, 0x172, 0x80007fff, -2) (0x0040664b) and skillPointDialog 0x0045f0f0 (0x004d6098, 0, count, -1, 0xc8) (0x0040665f), and stores that call's result as a word at [0x004c2c9c] (0x00406667) while returning it whole. Called by customizeCharacter 0x0040f190. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: showCharacterIntro (12 vectors, 12 distinct results, 12 changing state, `log/diff/004065c0_showCharacterIntro.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?show4065c0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040666f): callee pops 0 bytes of stack arguments.

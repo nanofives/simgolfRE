@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 408 bytes, 133 instructions, subsystem `video`. Mechani
 advances the movie by one frame, stepping the audio and logging progress. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+reads the chunks of the next movie frame from the mmio handle [this+0xbc] (none returns 7, 0x0049c954). It logs the time (logLine 0x004a0320 with timeGetTime, 0x0049c973), leaves the current chunk with mmioAscend when one is open (0x0049c995), then descends chunk by chunk (mmioDescend, 0x0049c9c3): the frame-end id [this+0x1a4] stops (frame counter [this+0x940] + 1, a second time log, result 0, 0x0049caaa..0x0049cac8); the data id [this+0x1a8] asks the sink at this+4 for a buffer of the chunk size (slot +0x8c, 0x0049ca1b), reads the chunk into it with mmioRead, which must deliver the whole size (0x0049ca4b), sets the buffer's end pointer +0x20 (0x0049ca55) and hands it back (slot +0x90, 0x0049ca5a), logging 0x004e48f4 instead when no buffer is given; a 'LIST' chunk is entered at once (0x0049ca7a), any other is left with mmioAscend. Any failing mmio call returns 1. Called by movieReadFrame 0x0049cb90 and moviePlayFrame 0x0049ccc0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: movieAdvanceFrame (14 vectors, 14 distinct results, 13 changing state, `log/diff/0049c940_movieAdvanceFrame.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0049c95b, 0x0049caa9, 0x0049cad7): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0049c940 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

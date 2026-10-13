@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 554 bytes, 158 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Handles employee detail actions (rename/move/fire) including the rename text entry. (`re/names/exe_1.tsv`)
 
+## Purpose
+click handler. hitEmployee436b00 0x00436b00 (x, y) (0x00436c0a) gives a code r: -3 / -2 set [0x00561254] = 0 and [0x00567afc] = 4 / 2 (0x00436c17..0x00436c3e); 0 and 1 set sel = [0x004c7aec] = -1 and [0x0059ca54] = 0 (0x00436c61); 2 / 3 set sel = -1 and move [0x005aa558] by -2 (only when it is non-zero) / +2 (0x00436c76 / 0x00436c96). With [0x0059ca54] != 0 and sel != -1, g = [0x005aa5b8 + 4 sel] and its walker record 0x00585850 + 0x4c g: 4 sets [0x004c2e10] = g (0x00436cc8); 6 clears the text buffer, calls pickGolferName 0x00467600 (g) (0x00436d04) and textInputBox 0x0045b2c0 (0x004c837c, 0xc8, 0x1b0, 0x1f) (0x00436d1a), then copies the text buffer to the record's +0x2a (0x00436d1f..0x00436d50); 5 subtracts 0x19 from [0x00571fd4] (0x00436d84), clears the record byte +0x12, calls pointsPopup 0x0040c890 (-0x19, record +0, record +4, -1) (0x00436da7), sets [0x004c2e10] = -1 and adds -0x19 to the word 0x0058421a + 20 * (word [0x005a6d3c] % 100) (0x00436dc8). Codes 8 and above set sel = r - 8 when it is below [0x005aa6c0] (0x00436dea) and set the camera [0x004c2ba0] / [0x004c2ba4] from that walker record's first two dwords >> 10 (0x00436e19 / 0x00436e1f), else sel = -1. Every path returns -1. Called by clickEmployeeView 0x00435680 and clickGolferPanel 0x00436060. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: handleEmployeeAction (26 vectors, 26 distinct results, 26 changing state, `log/diff/00436c00_handleEmployeeAction.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00436c2e, 0x00436c4b, 0x00436c75, 0x00436c95, 0x00436cad, 0x00436cd9, 0x00436d55, 0x00436dd4 (+2 more)): callee pops 0 bytes of stack arguments.
 

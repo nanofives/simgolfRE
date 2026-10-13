@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 216 bytes, 66 instructions, subsystem `ui`. Mechanical 
 dispatches a panel command id to the matching build/update routine. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+dispatch of a composite panel's build request by part kind: the kind's low five bits are stored at this+0x1f4 (0x004a08a7) and select, through the byte table 0x004a0990 and the jump table 0x004a0978, optionDialogBuild 0x0049ed20 on this+0x60c (kind 1), ListBox::build 0x0048a5d0 on this+0x5d4 (2), panelCreate4a2400 0x004a2400 on this+0x770 (4), panelBuild4a3880 0x004a3880 on this+0x6e8 (8) or panelBuildRow 0x0049d6d0 on this+0x5f4 (16), each with the four remaining arguments (0x004a08c6..0x004a0968), whose result is returned; any other kind returns 3 (0x004a0970). Called by TextView::build 0x0048e900. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: panelDispatch (40 vectors, 38 distinct results, 40 changing state, `log/diff/004a08a0_panelDispatch.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_g.cpp` as `?dispatch@C4a08a0@@QAEHIHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x004a08e5, 0x004a0907, 0x004a0929, 0x004a094b, 0x004a096d, 0x004a0975): callee pops 20 bytes of stack arguments.

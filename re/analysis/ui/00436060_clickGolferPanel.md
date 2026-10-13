@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 598 bytes, 187 instructions, subsystem `ui`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Handles a click in the golfer/action panel. (`re/names/exe_1.tsv`)
 
+## Purpose
+click handler. With [0x00561254] != 0 it returns handleEmployeeAction 0x00436c00 (x, y) (0x00436076). Otherwise hitGolferPanel435f00 0x00435f00 (x, y) gives a code s; Image_draw 0x00473e60 draws the images 0x00583b88 / 0x00583c38 / 0x00583ce8 at the word positions 0x004c7ac4 .. 0x004c7ace, each unless its own condition on [0x005685f0], the flag word [0x0059e7b8] (bits 0x2000, 0x400000, 0x4200000) and [0x004c2e14] holds (0x004360a0..0x00436148), the flag word being re-read after every draw. Then code 0 sets byte [0x00582cd0] = 0x20, word [0x00582d6e] = 0, byte [0x00582cd1] = [0x004d60b4] & 7 (7 when that dword is 0) and calls showCharacterEditor 0x004385d0 (0, 0x98) (0x00436162..0x004361a5); 1 and 2 set bit 0x4000 of the flag word (1 also clears 0x2000) when their conditions and [0x005a59f8] == -1 hold (0x004361dd / 0x00436223); 3 returns 0x4a under its condition (0x00436245); 4..8 set [0x0058f330] to 0, -1, 1, 3, 4; 9 sets [0x00567afc] = 2; 10 sets [0x0059ca54] = [0x00561254] = 1. Every other path returns -1. Called by mainLoop 0x0040f5c0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: clickGolferPanel (29 vectors, 29 distinct results, 29 changing state, `log/diff/00436060_clickGolferPanel.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s1.cpp` as `?S1click436060@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00436081, 0x00436196, 0x004361b2, 0x004361e6, 0x0043622c, 0x0043624b, 0x0043625b, 0x00436267 (+5 more)): callee pops 0 bytes of stack arguments.

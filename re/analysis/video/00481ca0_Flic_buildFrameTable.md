@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 416 bytes, 162 instructions, subsystem `video`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 allocates (operator new) and fills the per-frame pointer table of a loaded FLC animation, resetting via FUN_00481ba0 (`re/names/exe_3.tsv`)
 
+## Purpose
+With a loader object [this+0x54] (none returns 7) it records the file size (GetFileSize, [this+0x7c], 0x00481cc9) and the header [this+0x58], checks the type word 0xaf12 (0x00481cd2, else 0x16) and the word +0xc = 8 (0x00481ce6, else 0x17). A header whose dword +0x1a is not 0xf1f1f2f2 (0x00481cf9) is copied into a new block (operator new 0x004a57f1, size) and rewritten: +0x58 = 0x1c, word +0x62 = word +6, word +0x60 = 1, +0x5c and words +0x64 / +0x66 = 0, words +0x68 / +0x6a = words +8 / +0xa, +0x1a = 0xf1f1f2f2 (0x00481ddf..0x00481e29). A header already marked is copied only when flags bit 2 is set (0x00481d06), else used in place ([this+0x44] = [this+0x58] = header, 0x00481d75). A copy deletes the loader through its slot 0 (1) and clears [this+0x54]; a failed allocation runs Flic::reset 0x00481ba0 and returns 4. The result is 0 when [this+0x44] is set, 7 otherwise. Called by Flic::open 0x00481f40. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: Flic::buildFrameTable (12 vectors, 12 distinct results, 11 changing state, `log/diff/00481ca0_Flic_buildFrameTable.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00481cb8, 0x00481ce3, 0x00481cf6, 0x00481d2d, 0x00481d6e, 0x00481d89, 0x00481dac, 0x00481e3d): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00481ca1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

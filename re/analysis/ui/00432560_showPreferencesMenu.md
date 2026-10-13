@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 177 bytes, 69 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Opens the Preferences submenu via the popup menu helper 0x46d6e0. (`re/names/exe_1.tsv`)
 
+## Purpose
+builds a popup text and shows it. The text buffer 0x0051a068 gets 0x004c7c34 (0x00432563) and, for each of the six string pointers at 0x004c2ca8..0x004c2cbc, that string followed by 0x004c7c30 (0x0043258d..0x004325eb). showPopup 0x0046d6e0 (0x190, 0xc8, [0x005a5a00], 0, 0) (0x00432600) receives the word [0x005a5a00] as its third argument, and its result becomes the new [0x005a5a00] (0x00432608) and the return value. Called by OptionsMenuBuild 0x00432720. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: showPreferencesMenu (10 vectors, 10 distinct results, 10 changing state, `log/diff/00432560_showPreferencesMenu.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?show432560@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00432610): callee pops 0 bytes of stack arguments.

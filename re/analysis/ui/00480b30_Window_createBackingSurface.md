@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 237 bytes, 81 instructions, subsystem `ui`. Mechanical 
 asks the virtual +0x54 for a size, clamps both axes to at least 1 (and when the caller's flag dword is 0 runs Window::adjustSizeOuter 0x0047ca10 and Window::innerSize 0x0047cb10 over it), raises 0x00839ab0 to 1 around Surface_createFull 0x00474dd0 on the Surface at this+0x274, and on a 0 result calls Window::setSize 0x0047b4e0 with the computed size (`re/names/undisc_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`, `re/analysis/systems/undisc_exe.md`.
 
+## Purpose
+window virtual (slot 3, +0xc, of the Window vtables, e.g. 0x004bbac8 installed by buildLabeledControl 0x00496030) that creates the window's backing surface. Slot +0x54 (&w, &h, &keep) (0x00480b4a) may adjust the request; with keep set, w and h are raised to at least 1 (0x00480b5a..0x00480b6a); without, they are raised to the outer minimum Window::adjustSizeOuter 0x0047ca10 reports (both locals start at 1, 0x00480b7c..0x00480ba5) and turned into the inner size by Window::innerSize 0x0047cb10 (0x00480bbd). The surface is made by Surface_createFull 0x00474dd0 on this+0x274 (w, h, a3, 0, 8 when bit 31 of [this+0x9c] is set, 0) with the global [0x00839ab0] = 1 for the call only (0x00480bc6 / 0x00480bf5); a non-zero result is returned, otherwise Window::setSize 0x0047b4e0 (w, h, 1, 0)'s (0x00480c10). Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: Window::createBackingSurface (12 vectors, 12 distinct results, 12 changing state, `log/diff/00480b30_Window_createBackingSurface.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x00480c1a): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x00480b38 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

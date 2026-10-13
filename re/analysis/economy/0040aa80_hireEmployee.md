@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 586 bytes, 168 instructions, subsystem `economy`. Mecha
 handles hiring an employee, gated on course size and cash (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+k = showHireEmployeeDialog 0x00459400 () (0x0040aa82), then enterModal483d30 0x00483d30 (); k outside 0..11 returns enterModal's result (0x0040aa90 / 0x0040aa99). When bucketValue 0x0044faf0 ([0x005685f0] - 1) is below 1 and k % 3 == 2, it calls playSound 0x004481b0 (0x18, 0x64, 0, 0, 0), copies 0x004c5228 into the text buffer and returns startMessage 0x0040cb00 (0x80006000, 1, -1) (0x0040aacc..0x0040aaff). Otherwise canAfford 0x00406c30 (0) == 0 returns 0 (0x0040ab1f); else spawnWalker 0x00402970 (-2 - k / 3) (0x0040ab67) gives g, and the walker record 0x00585850 + 0x4c g gets bytes +0x10 / +0x11 from the tables 0x004c2878 / 0x004c2898 at (byte [0x00575cb9] + 2) & 7 plus bytes [0x00575cc0] / [0x00575cc4] when byte [0x00575cb8] is set (0x0040ab79..0x0040abb2), else 3 or -3 (by Random::range 0x0045c1e0 (2)'s low word) plus bytes [0x00578150] / [0x00578154] (0x0040abba..0x0040ac03); k % 3 == 2 sets bit 3 of +0x12 (0x0040ac18); d = (((angleFixed 0x004672d0 (dx, dy) >> 28) & 15) + 1 >> 1) & 7 from the differences between those bytes << 10 and the record's +0 / +4 (0x0040ac1f..0x0040ac61) is stored at +0x16, +0 / +4 gain (table dword d << 10) + 0x200 (0x0040ac84 / 0x0040acae) and the word +0x22 = [0x00834170] / 1024 (0x0040acc0), which is the result. Called by mainLoop 0x0040f5c0 and drawEmployeeDetailPanel 0x00436e50. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: hireEmployee (15 vectors, 15 distinct results, 15 changing state, `log/diff/0040aa80_hireEmployee.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0040ab09, 0x0040acc9): callee pops 0 bytes of stack arguments.
 

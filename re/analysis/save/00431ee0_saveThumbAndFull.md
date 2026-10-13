@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 184 bytes, 77 instructions, subsystem `save`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Writes Thumb.jpg and Full.jpg screenshots of the course via saveCourseJpg. (`re/names/exe_1.tsv`)
 
+## Purpose
+saves the course picture twice from the screen surface [0x004c1570]: it cuts the path at its first '.' (strchr 0x004a6170, 0x00431eeb / 0x00431ef9), appends the suffix 0x004c7838 and calls saveCourseJpg 0x00431d20 (path, [0x004c1570], 0, 0, 0x320, 0x258, 2) (0x00431f3c), cuts again at the same '.' (0x00431f48), appends 0x004c782c and saves with scale 10 (0x00431f8b), returning the second save's result. A path without '.' is never cut, so the second suffix is appended after the first. Called by flushCourseInfo 0x00432170. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: saveThumbAndFull (10 vectors, 10 distinct results, 10 changing state, `log/diff/00431ee0_saveThumbAndFull.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_i.cpp` as `?loadPair431ee0@@YAXPAD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00431f97): callee pops 0 bytes of stack arguments.

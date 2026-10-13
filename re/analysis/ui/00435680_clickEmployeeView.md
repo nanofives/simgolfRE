@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 210 bytes, 64 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Handles a click in the employee view panel. (`re/names/exe_1.tsv`)
 
+## Purpose
+click handler. With [0x00561254] != 0 (0x00435685) it returns handleEmployeeAction 0x00436c00 (x, y) (0x00435693). Otherwise hitEmployeeSlot435570 0x00435570 (x, y) (0x004356a6) gives a code r: for r >= 0 whose list entry e = [0x005a9cf0 + 4r] is not -1 (0x004356b9), the camera [0x004c2ba0] / [0x004c2ba4] is set to the golfer record 0x005794b8 + 0x100 e's first two dwords >> 10 (0x004356ea..0x004356f6) and, when that record's dword +8 is not -1 or [0x0053df54] is positive, [0x0053df54] = e + 1 (0x004356c4..0x004356d8); the codes -3 / -4 / -5 / -6 set [0x00567afc] = 4, set [0x0059ca54] = [0x00561254] = 1, subtract 0x10 from [0x005aa6c8] when it is non-zero, add 0x10 to it (0x00435702..0x00435747). The result is -1 except on the forwarded path. Called by mainLoop 0x0040f5c0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: clickEmployeeView (17 vectors, 17 distinct results, 17 changing state, `log/diff/00435680_clickEmployeeView.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_h.cpp` as `?click435680@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043569b, 0x0043570f, 0x00435727, 0x00435741, 0x00435751): callee pops 0 bytes of stack arguments.

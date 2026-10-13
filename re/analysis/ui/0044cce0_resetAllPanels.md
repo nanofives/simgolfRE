@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 783 bytes, 170 instructions, subsystem `ui`. Mechanical
 Tears down all global panel/widget state objects on session reset/exit. (`re/names/exe_1.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+releases a fixed set of surfaces: Surface::releaseBacking 0x004838b0 on 0x00821ee8, 0x00821f28, 0x00821020 (0x0044cce6..0x0044ccfa), then Surface_free 0x00473ae0 on 159 surfaces at fixed addresses in a fixed order (0x0044cd04..0x0044cfe8): single ones, the 0x2c-stride runs from 0x00820f40 and 0x00821fa0, the five rows from 0x00821468 (twelve 0x84-stride icons and the row itself for the first three, +0x84 for all five, 0x0044cd63..0x0044cda1) and the 21 rows from 0x008224f4 (+0x2ec always, the row below 0x008225a4, +0xb0 below 0x00822704, 0x0044cee3..0x0044cf19). The last Surface_free result is returned. Called by gameMain 0x0045baf0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: resetAllPanels (10 vectors, 10 distinct results, 10 changing state, `log/diff/0044cce0_resetAllPanels.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s2.cpp` as `?S2_resetAll44cce0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044cfee): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 399 bytes, 132 instructions, subsystem `boot`. Mechanic
 Master engine initializer: creates the global app object g_0083ad50 and, per the param_3 subsystem bitmask, brings up graphics/sound/input/message-box/sine-table/cursor/timer subsystems; writes g_0083afd0. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`, `re/analysis/systems/exe_5.md`.
 
+## Purpose
+engine start-up driven by a flag word. It records the flags at [0x0083afd0] (0x004855bc), loads the graphics object through loadGraphsyObject 0x004a00a0 (module) into the display global [0x0083ad50] (0x004855ca; none returns 0x19), then runs one initialiser per set bit, returning the first non-zero result: 0x8000 the display's slot +4 (0x0083a4f8, hwnd, 0x0083a7b8) (0x004855f4, a failure also runs engineShutdown 0x00485740), 1 resetViewState47cfd0 (hwnd, 1), 2 resetScreenState 0x00483320 (0) with [0x0083ad0c] = 0x0083acb0 and the 0x0083acb0 cache attached and detached (0x0048562f..0x00485648), 4 and 0x10 jpeg_mem_init 0x004b04b0, 8 loadFonts 0x0049fe50, 0x20 loadCursors 0x0049e9d0, 0x80 setPrimarySurface 0x00483ac0 (0x0083ad20) then setButtonDefaults 0x004889f0 (0x0083ad20, 0, 0) and [0x0083ab68] = [0x0083ad44] (0x004856c3), 0x100 MsgBox::initDefaults 0x00490bf0, 0x200 loadFileWinResource 0x0049d3b0, 0x400 loadPcxSurface 0x0049d1b0, 0x4000 initSinTable 0x00491c10 (result ignored), 0x800 cacheCursorMetrics 0x004884e0, 0x2000 strBufReset 0x0049d090 on 0x008406e8 (0x8000) (non-zero returns 1, 0x00485724), 0x1000 Timer::lockInc 0x00486fe0; 0 when all pass (0x00485739). Called by gameMain 0x0045baf0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: engineInit (23 vectors, 23 distinct results, 23 changing state, `log/diff/004855b0_engineInit.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?init4855b0@@YAHPBDHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004855db, 0x00485607, 0x0048572a, 0x0048573e): callee pops 0 bytes of stack arguments.
@@ -44,7 +47,7 @@ Globals:
 - 0x004889f0 `setButtonDefaults` at 0x004856b6
 - 0x00490bf0 `MsgBox::initDefaults` at 0x004856cd
 - 0x00491c10 `initSinTable` at 0x004856f7
-- 0x0049d090 `strAssign` at 0x00485719
+- 0x0049d090 `strBufReset` at 0x00485719
 - 0x0049d1b0 `loadPcxSurface` at 0x004856e9
 - 0x0049d3b0 `loadFileWinResource` at 0x004856db
 - 0x0049e9d0 `loadCursors` at 0x00485688

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 778 bytes, 182 instructions, subsystem `save`. Mechanic
 deserializes the course/tile/object state from a loaded save buffer (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+stores its argument at [0x0053e638] (0x0040bbfb), the global saveFieldIo 0x0040af70 reads (re/names/exe_0.tsv), and passes 57 fields to saveFieldIo (address, size) in a fixed order, from [0x00822c78] (4 bytes, 0x0040bc00) to the 0x30e bytes at 0x00571fd8 (0x0040bef1), including the course tables 0x00575ab0 (0x28a0), 0x0053caf0 (0x1388), 0x004d6088 (0xa640) and the walker records 0x00585850 (0x1300); the last call's result is returned. Called by loadCourse 0x0040b840. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: deserializeCourse (10 vectors, 10 distinct results, 10 changing state, `log/diff/0040bbf0_deserializeCourse.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_0040bbf0@f_0040bbf0@@YAXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0040bef9): callee pops 0 bytes of stack arguments.

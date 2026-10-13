@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 786 bytes, 283 instructions, subsystem `save`. Mechanic
 runs the save-game name-entry dialog and calls saveGame (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+the save-game prompt. It calls drawPanelS2 0x0040cc00, setDrawTarget 0x004762d0 on [0x004c1570] and drawCenteredText2 0x00404bc0 (0x004c3f74, ...), builds a default name in the text buffer (appendCourseTitle 0x0040daa0 (-1), 0x004c3f70, the number (date % 1024) * 30 / 1024 + 1 of [0x00834170] written by __itoa 0x004ad425 into 0x0058a528 (0x00405b91..0x00405bc1), 0x004c3f70, appendDate 0x0040d7b0 ([0x00834170])) and calls textInputBox 0x0045b2c0 (0x004c3f5c, 0x40, 0x66, 0x30) (0x00405c31). An empty text or a 0 from sanitizeFileName 0x00405ac0 (0x00405c40 / 0x00405c55) puts 0x004c3eec into the text buffer and returns startMessage 0x0040cb00 (0x80001284, 1, -4). Otherwise fileExists 0x004378a0 tests 0x004c3f4c + name + 0x004c3f44 (0x00405d00); when it answers non-zero, showPopup 0x0046d6e0 (0x190, 0x8c, 1, 1, 0) runs on name + 0x004c3f0c (0x00405d6c) and its non-zero answer is returned at once (0x00405d76); then saveGame 0x0040b4a0 (name) (0x00405da5), 0x004c3f00 into the text buffer and startMessage (0x80001284, 1, -4), whose result is returned. Called by mainLoop 0x0040f5c0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: saveGameDialog (12 vectors, 12 distinct results, 12 changing state, `log/diff/00405b10_saveGameDialog.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00405de5, 0x00405e21): callee pops 0 bytes of stack arguments.
 

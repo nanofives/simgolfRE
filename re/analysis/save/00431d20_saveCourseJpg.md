@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 440 bytes, 143 instructions, subsystem `save`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 Encodes a window region to a JPEG file via CreateJPG. (`re/names/exe_1.tsv`)
 
+## Purpose
+writes a rectangle of a 16-bit surface to a JPEG file. Null path, surface, width, height or scale, a negative coordinate or size, or a scale above 20 return at once (0x00431d2a..0x00431d93). The surface's inner object [surf+4] gives width, height, pitch ([0x0056125c]) and a pixel format that must be {0x10, 0} (0x00431df6 / 0x00431e04), x / y must lie inside (0x00431e10 / 0x00431e1c), and the rectangle is clipped to the surface (0x00431e27 / 0x00431e36). The file is opened by 0x004a614d (path, 0x004c7828) (0x00431e48; none returns 0); the scale goes to [0x004c3074], the first pixel address pixels + 2 (pitch y + x) to [0x00543cf0] (0x00431e88) and a row buffer of 3 w / scale bytes from malloc 0x004a504f to [0x0056a510] (0x00431e97) for the row callback 0x00431be0 that CreateJPG 0x004ae020 (f, w / scale, h / scale, 0x00431be0) uses (0x00431eb0); the buffer is freed (0x00431ec2, only when non-NULL) and the file closed with fclose 0x004a609f, whose result is returned. Called by saveThumbAndFull 0x00431ee0 and mainLoop 0x0040f5c0. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: saveCourseJpg (23 vectors, 16 distinct results, 12 changing state, `log/diff/00431d20_saveCourseJpg.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?saveJpg431d20@@YAXPBDPAUR1Win431d20@@HHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00431ed7): callee pops 0 bytes of stack arguments.
@@ -55,7 +58,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004a5007 `_free` at 0x00431ec2
 - 0x004a504f `_malloc` at 0x00431e92
 - 0x004a609f `_fclose` at 0x00431ecb
-- 0x004a614d `FUN_004a614d` at 0x00431e48
+- 0x004a614d `_fopen` at 0x00431e48
 - 0x004ae020 `_CreateJPG` at 0x00431eb0
 - indirect `call [eax+0xd8]` at 0x00431da2
 - indirect `call [edx+0x10]` at 0x00431e6d

@@ -4,6 +4,10 @@ Module `golf_clean.exe`, 346 bytes, 148 instructions, subsystem `render`. Mechan
 
 ## Role (from the naming pass, not a C3 purpose)
 iterates the chunks of an image/frame and dispatches each to the palette (colorChunk), clear, RLE (brun), raw copy or sprite decoder by chunk type (`re/names/exe_3.tsv`)
+System writeup: `re/analysis/systems/exe_12.md`.
+
+## Purpose
+decodes one chunk of an image frame. The chunk type at +4 (0x0048257a) picks the decoder, called on `this` with (chunk, image, dst or image+8): type 7 decodeChunk7WordDelta 0x004827d0, 12 the empty decoder 0x00487cb0, 13 Surface::clear 0x00482940, 15 Surface::blitRLE 0x00482990, 16 Surface::copyRaw 0x00482a80; types 4 and 11 go to Palette::decodeChunk 0x004826f0 (this, chunk) (table 0x004826cc). A frame chunk 0xf1fa (0x0048261d) walks its word [+6] sub-chunks from +0x10, each advancing by its own size (0x00482673): when the image has a record table (+0x34), +0x3c is 0 and no dst is given, the whole sub-chunk is replaced by Surface_copyFrom 0x004744c0 on image+8 from record [+0x40] of that table (0x0048264a..0x0048265a); otherwise the sub-chunk is decoded by a recursive call (0x0048266c). Frames and unknown types return 0. Called by Image::step 0x00482420 and Image::seek 0x00482490. Reimplemented in `shim/src/re/c3fa.cpp`; path-1 A/B GREEN: decodeImageChunks (68 vectors, 37 distinct results, 38 changing state, `log/diff/00482570_decodeImageChunks.path1.csv`).
 
 ## Signature
 - Returns with `ret 0xc` (at 0x004825ae, 0x004825ce, 0x004825ee, 0x0048260e, 0x00482687, 0x004826a7, 0x004826c7): callee pops 12 bytes of stack arguments.
@@ -41,7 +45,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x004744c0 `Surface_copyFrom` at 0x0048265a
 - 0x00482570 `decodeImageChunks` at 0x0048266c
 - 0x004826f0 `Palette::decodeChunk` at 0x004825a5
-- 0x004827d0 `decodeSprite4827d0` at 0x004825c5
+- 0x004827d0 `decodeChunk7WordDelta` at 0x004825c5
 - 0x00482940 `Surface::clear` at 0x00482605
 - 0x00482990 `Surface::blitRLE` at 0x004826be
 - 0x00482a80 `Surface::copyRaw` at 0x0048269e
