@@ -451,6 +451,37 @@ uninitialised slot for odd rotations; compositeScreen can union an uninitialised
 never reads its third argument; ListModel::reset always returns 0. Round 31 leads: showPopup, skillPointDialog (fit
 modal.js as it stands), allocTextBuffer, LabelButton::drawContents, TextView::render / build, then the 42 show* / select*
 screens that call a pump.
+Thirty-first round (2026-10-13, first on LIVING-PC, all six children on claude2 `claude-opus-5`: the Accenture policy that
+blocked claude2 on MARIANO-PC is absent here; log/c3/round31_candidates.py takes every open C2 row calling a C3 pump except
+mainLoop / gameMain / loadFlic, brief log/c3/round31_brief.md, runner log/c3/alt/r31_main.py): c3em 9 (canAfford, the
+build-panel click / pick helpers, showPopup, skillPointDialog, showBulletinBoard), c3en 7 (selectDifficultyScreen,
+showCreditsScreen, showFinancialReport, showHireEmployeeDialog, showBestScoresScreen, showPlayerCommentsReport,
+showHistographScreen; branch coverage measured on an instrumented build, 144 of 162 conditions both sides), c3eo 4
+(resetGolferState, showMembershipRoster, showHoleStatsScreen, showTournamentResults), c3ep 9 (listThemes, loadThemes,
+listMatchingFiles, loadThemeFile, loadCourse, saveGame, loadGame through a directory stand-in and a low-level
+__open / __read / __write stand-in in its own fixture, EditBox::create, promptAndSaveFile), c3eq 3 (playAudioFile,
+BinkPlayer::play over stood-in binkw32 imports, TextView::render) and c3er 2 (drawScoreSummary, CareerRetirementFlow)
+promoted: 34 functions, C3 2,504 (exe 1,423), open C2 480. Main build: all 116 keys GREEN with every hook on and with
+other batches' hooked callees off; the existing C3 callers updateGolfers (over skillPointDialog) and showTutorialText (over
+saveGame), 32 keys, GREEN both ways; static 360 and runtime 19 pass with every round-31 hook live. Never switch Timer::stop
+0x00486ec0 off under an EditBox::create key: its original tail-jumps into pumpInputDisplay483da0 and pumps the real queue
+on the A/B thread. Lessons: a modal loop that waits only on a pump outside modal.js's default visit set (showBulletinBoard's
+pumpInput483bd0) needs `visits: [...]` or no frame is delivered; a stand-in's result must depend only on its arguments or on
+compared memory (a JS-side per-call counter differs between the arms: 17 RED hire vectors); a UI_STATE arena larger than the
+fixture's arenaSize makes diff_hook read and write past the arena and the key hangs instead of reading RED. Dropped with
+leads: syncTiles / rebuildTerrainGrid (sweep the live 50x50 Terrain grid through Terrain.dll; a Terrain-shaped batch),
+showGolferPairSelect, showRoutingMapScreen, showBuyLandScreen, showCourseReport (4,715 instructions, 204 jcc), allocTextBuffer
+(no usable decompilation: ebp is `this`), LabelButton::drawContents, TextView::build (size only); showShortcutsScreen and the
+five browser screens showThemePackSelect, pickAProScreen, courseActionMenu, loadGameBrowserScreen, showCharacterEditor keep
+their Surfaces in frame-local records, so stand-in logs carry stack addresses that differ between arms: the unblocker is a
+`{base, stride}` mask in calleeStand that records a frame pointer as an index (c3ep notes section 5). Name lead: fillSlots54
+0x004a29a0 (log/c3/c3eq_names.tsv, no hooks.csv row). Findings: showPopup's `1 << line` and recorded-index arms are dead and it
+compares an uninitialised slot when the text has no option line; clickSlotPanel's signed slot test reads the byte before
+0x004c79a0; showFinancialReport writes entry 8 back into every drawn year row (0x0044f911); showHireEmployeeDialog returns 2
+for a click on no row (0x00459837); showHistographScreen draws the previous event's text for kinds outside its switch windows;
+resetGolferState's 18-iteration loop works on one course record (0x0046d11d) and applies its thresholds twice;
+showMembershipRoster builds a tally nothing draws and strcpy's a 0x230-byte slot into a 19-byte buffer (0x00454fb6); a
+championship save loses its `.chr` / `Default` suffix; fileExists 0x004378a0 never closes its FindFirstFileA handle.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

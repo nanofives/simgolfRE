@@ -4,6 +4,40 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-13  00473470  drawScoreSummary  C2->C3  log/diff/00473470_drawScoreSummary.path1.csv
+2026-10-13  0044cff0  CareerRetirementFlow  C2->C3  log/diff/0044cff0_CareerRetirementFlow.path1.csv
+2026-10-13  0048fe60  TextView::render  C2->C3  log/diff/0048fe60_TextView_render.path1.csv
+2026-10-13  00487090  BinkPlayer::play  C2->C3  log/diff/00487090_BinkPlayer_play.path1.csv
+2026-10-13  0043cce0  playAudioFile  C2->C3  log/diff/0043cce0_playAudioFile.path1.csv
+2026-10-13  00486110  EditBox::create  C2->C3  log/diff/00486110_EditBox_create_a.path1.csv
+2026-10-13  004724c0  listThemes  C2->C3  log/diff/004724c0_listThemes_chr.path1.csv
+2026-10-13  004658b0  loadThemes  C2->C3  log/diff/004658b0_loadThemes_empty.path1.csv
+2026-10-13  0043d2a0  listMatchingFiles  C2->C3  log/diff/0043d2a0_listMatchingFiles.path1.csv
+2026-10-13  00437fa0  loadThemeFile  C2->C3  log/diff/00437fa0_loadThemeFile_a.path1.csv
+2026-10-13  00437910  promptAndSaveFile  C2->C3  log/diff/00437910_promptAndSaveFile_a.path1.csv
+2026-10-13  0040b9b0  loadGame  C2->C3  log/diff/0040b9b0_loadGame_a.path1.csv
+2026-10-13  0040b840  loadCourse  C2->C3  log/diff/0040b840_loadCourse_a.path1.csv
+2026-10-13  0040b4a0  saveGame  C2->C3  log/diff/0040b4a0_saveGame_a.path1.csv
+2026-10-13  0046d0c0  resetGolferState  C2->C3  log/diff/0046d0c0_resetGolferState.path1.csv
+2026-10-13  0045a090  showTournamentResults  C2->C3  log/diff/0045a090_showTournamentResults.path1.csv
+2026-10-13  00454c50  showMembershipRoster  C2->C3  log/diff/00454c50_showMembershipRoster.path1.csv
+2026-10-13  00453330  showHoleStatsScreen  C2->C3  log/diff/00453330_showHoleStatsScreen.path1.csv
+2026-10-13  00459400  showHireEmployeeDialog  C2->C3  log/diff/00459400_showHireEmployeeDialog.path1.csv
+2026-10-13  00455ed0  showHistographScreen  C2->C3  log/diff/00455ed0_showHistographScreen.path1.csv
+2026-10-13  00455a30  showBestScoresScreen  C2->C3  log/diff/00455a30_showBestScoresScreen.path1.csv
+2026-10-13  004546b0  showPlayerCommentsReport  C2->C3  log/diff/004546b0_showPlayerCommentsReport.path1.csv
+2026-10-13  0044f6b0  showFinancialReport  C2->C3  log/diff/0044f6b0_showFinancialReport.path1.csv
+2026-10-13  0044b9c0  showCreditsScreen  C2->C3  log/diff/0044b9c0_showCreditsScreen.path1.csv
+2026-10-13  0043a400  selectDifficultyScreen  C2->C3  log/diff/0043a400_selectDifficultyScreen.path1.csv
+2026-10-13  0046e810  showBulletinBoard  C2->C3  log/diff/0046e810_showBulletinBoard.path1.csv
+2026-10-13  0046d6e0  showPopup  C2->C3  log/diff/0046d6e0_showPopup.path1.csv
+2026-10-13  0045f0f0  skillPointDialog  C2->C3  log/diff/0045f0f0_skillPointDialog.path1.csv
+2026-10-13  00438390  pickCharEditor  C2->C3  log/diff/00438390_pickCharEditor.path1.csv
+2026-10-13  00434ac0  clickAmenityPanel  C2->C3  log/diff/00434ac0_clickAmenityPanel.path1.csv
+2026-10-13  00434140  pickBuilding  C2->C3  log/diff/00434140_pickBuilding.path1.csv
+2026-10-13  00433d30  clickBuildTool433d30  C2->C3  log/diff/00433d30_clickBuildTool433d30.path1.csv
+2026-10-13  00433040  clickSlotPanel  C2->C3  log/diff/00433040_clickSlotPanel.path1.csv
+2026-10-13  00406c30  canAfford  C2->C3  log/diff/00406c30_canAfford.path1.csv
 2026-10-12  0048e1c0  TextView::loadScript  name TextView::layout->TextView::loadScript  log/c3/round30_renamed.tsv
 2026-10-12  004a14c0  LabelButton::reset  name resetMsgObject->LabelButton::reset  log/c3/round30_renamed.tsv
 2026-10-12  004a2010  LabelButton::onMouseMove  C2->C3  log/diff/004a2010_LabelButton_onMouseMove.path1.csv

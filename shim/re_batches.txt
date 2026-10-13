@@ -141,3 +141,9 @@ c3el.cpp
 c3ei.cpp
 c3ej.cpp
 c3ek.cpp
+c3em.cpp
+c3en.cpp
+c3eo.cpp
+c3ep.cpp
+c3eq.cpp
+c3er.cpp
