@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 90 bytes, 26 instructions, subsystem `util`. Mechanical
 Builds the fixed-point sine lookup table at g_0083b9f4 from fsin over the angle index, then seeds the sin/cos helpers. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+argument-free: fills g_sinTable 0x0083b9f4 .. 0x0083bdf4 (256 dwords, loop end 0x00491c40) with __ftol(sin(i * [0x004bba50]) * [0x004bba48]) for i = 0 .. 255 (`fild` / `fmul` / `fsin` / `fmul` / call __ftol 0x004a6030, 0x00491c1f .. 0x00491c31; the reimplementation runs the same x87 instructions), then calls sinScaled 0x00491c70 (0x40000000, 0x64) and cosScaled 0x00491d80 (0xa02d82d8, 0x64) (0x00491c4c .. 0x00491c5f); eax at the `ret` (0x00491c69) is cosScaled's result. Caller: 0x004855b0 (hooks.csv). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: initSinTable_00 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00491c10_initSinTable_00.path1.csv`); initSinTable_a5 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00491c10_initSinTable_a5.path1.csv`); initSinTable_7f (1 vectors, 1 distinct results, 1 changing state, `log/diff/00491c10_initSinTable_7f.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small9.cpp` as `?initSinTable@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00491c69): callee pops 0 bytes of stack arguments.

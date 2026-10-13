@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts 0x274 from this and tail-jumps to Dialog::scalarDtor 0x004916f0 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+this-adjustor in slot 3 (+0xc) of the table 0x004bb3e4 (installed by TextView::ctor 0x0048ce00, Dialog::dtor 0x00491710 and the net dialogs 0x00497fc0 / 0x00499140 / 0x0049acf0): `sub ecx, 0x274` (0x004918d0), `jmp 0x004916f0` (0x004918d6) into Dialog::scalarDtor. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Dialog::scalarDtor_adj274 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004918d0_Dialog_scalarDtor_adj274.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x004918d0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

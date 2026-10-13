@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 260 bytes, 102 instructions, subsystem `util`. Mechanic
 Matches param_1 against the table's file name, then searches its key array for param_2 and returns the associated value, else -1. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+looks a key up in one named key table (thiscall, `ret 8`: name, key). The name is copied to a 0x200-byte local (0x00488322 .. 0x00488344); when _strchr 0x004a6170 finds no '.' (0x0048834b / `jne` 0x00488355) the extension 0x004e4418 (`.txt`) is appended (0x00488357 .. 0x00488381). Unless __strcmpi 0x004ad4b0 (local, this+4) is 0 (0x0048838c / `jne` 0x00488396) the answer is -1. A leading `#` of the key is skipped (`cmp byte [ebp], 0x23` 0x0048839f, `inc ebp` 0x004883a5). The entries at [this+0x110] are packed {dword value; char name[]}; the first is compared before the count [this+0x104] is used (0x004883a6 .. `je` 0x004883c7); after a mismatch the name is skipped to its NUL plus one byte (0x004883c9 .. 0x004883da), the count decremented and -1 returned at 0 (`dec eax` / `je` 0x004883e0), else the next entry is compared (0x004883e2 .. `jne` 0x004883f3). A match returns the entry's value dword (0x004883f5). A count of 0 is decremented to -1 before it is tested, so the scan then runs until a name matches. Caller: KeyTable::lookup 0x00488420. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: KeyTable::find (18 vectors, 10 distinct results, 0 changing state, `log/diff/00488310_KeyTable_find.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_b.cpp` as `?find@C488310@@QAEHPBD0@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x00488401, 0x00488411): callee pops 8 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 183 bytes, 63 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+IJG 6a jcinit.c (cdecl, cinfo): jinit_c_master_control 0x004b51e0 (cinfo, 0) (0x004b03a8); unless raw_data_in [+0xa8] (`jne` 0x004b03b8) jinit_color_converter 0x004b4a60, jinit_downsampler 0x004b4040, jinit_c_prep_controller 0x004b3a80 (cinfo, 0); jinit_forward_dct 0x004b34b0 (0x004b03d2). arith_code [+0xac] (`je` 0x004b03e2) sets err->msg_code [err+0x14] = 1 and calls err->error_exit [err+0] (0x004b03e4 .. 0x004b03f0); else progressive_mode [+0xdc] picks jinit_phuff_encoder 0x004b1f30 or jinit_huff_encoder 0x004b12b0 (`je` 0x004b03fd). jinit_c_coef_controller 0x004b06f0 (cinfo, num_scans [+0xa0] > 1 signed || optimize_coding [+0xb0] != 0) (`jg` 0x004b0417, `jne` 0x004b0421), jinit_c_main_controller 0x004b0560 (cinfo, 0), jinit_marker_writer 0x004afaf0, mem->realize_virt_arrays [[cinfo+4]+0x18] (0x004b0445), marker->write_file_header [[cinfo+0x154]+4] (0x004b044f), whose eax is returned. Caller: jpeg_start_compress 0x004ae380. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: jinit_compress_master (12 vectors, 12 distinct results, 12 changing state, `log/diff/004b03a0_jinit_compress_master.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_cinit.cpp` as `_jinit_compress_master` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004b0456): callee pops 0 bytes of stack arguments.

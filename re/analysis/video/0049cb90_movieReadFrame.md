@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 301 bytes, 112 instructions, subsystem `video`. Mechani
 reads one movie frame from the source and pushes it into the frame FIFO. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+reads the next movie frame (thiscall, no stack argument; one local, the buffer pointer listPush writes). Without a frame size [this+0xd8] (`jne` 0x0049cb9e): listPush 0x004a4db0 on this+0x668 (&buf, 0, [this+0x940], 1); non-zero -> 0 (`je` 0x0049cbbd); else logLine 0x004a0320 (0x004e498c, 0x004e49b4, [this+0x940], [this+0x674], 0). With a size n: listPush (&buf, n, [this+0x940], 0); 0x12 -> 0 (`jne` 0x0049cbfd); a NULL buf -> logLine (0x004e498c, 0x004e499c, timeGetTime(), 0, 0) and 0 (`jne` 0x0049cc0c). Then [this+0xd8] is read again (0x0049cc32, `je` 0x0049cc3a) and read in pieces of at most 0x10000 (unsigned `ja` 0x0049cc4d) with mmioRead (IAT 0x004ba20c) ([this+0xbc], buf, piece), buf and the remaining count moved by each result (0x0049cc64 .. `jne` 0x0049cc72); a 0 result clears bit 15 of [this+0xb8] and returns 0 (`je` 0x0049cc62, 0x0049cca7 .. 0x0049ccb8); after the read logLine (0x004e498c, 0x004e4974, [this+0x940], [this+0x674], 0). Both success paths end with movieAdvanceFrame 0x0049c940 (0x0049cc98) and return 1. Callers: movieReadProcess 0x0049cb20, moviePlayFrame 0x0049ccc0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: movieReadFrame (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049cb90_movieReadFrame.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r2.cpp` as `?readFrame@R2C49cb90@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049cbc5, 0x0049cc05, 0x0049cc31, 0x0049cca6, 0x0049ccbc): callee pops 0 bytes of stack arguments.

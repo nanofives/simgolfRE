@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 16 bytes, 4 instructions, subsystem `util`. Mechanical 
 dynamic initializer that opens the debug log file (string in the binary) (handle at 0x00840930). (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+argument-free: constructs the global logger 0x00840930 with loggerCtor 0x004a0180 and the path 0x004e4a44 (`push 0x4e4a44; mov ecx, 0x840930; call` 0x004a0130 .. 0x004a013a; the callee pops its argument) and returns its eax (`this`). loggerCtor sets the logger's vtable and path pointer, then loggerSetPath copies the path into a malloc block, opens the file through resolveAndOpenFile 0x004a00f0 and closes it at once with fclose 0x004a609f. Caller: dynInit_initLogFile 0x004a0120. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: initLogFile_ok (1 vectors, 1 distinct results, 1 changing state, `log/diff/004a0130_initLogFile_ok.path1.csv`); initLogFile_nofile (1 vectors, 1 distinct results, 1 changing state, `log/diff/004a0130_initLogFile_nofile.path1.csv`); initLogFile_nomem (1 vectors, 1 distinct results, 1 changing state, `log/diff/004a0130_initLogFile_nomem.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_004a0130@f_004a0130@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a013f): callee pops 0 bytes of stack arguments.

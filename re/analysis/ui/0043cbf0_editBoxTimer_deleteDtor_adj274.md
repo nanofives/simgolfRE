@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts 0x274 from this and tail-jumps to editBoxTimer_deleteDtor 0x0043cbd0 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+this-adjustor in slot 3 (+0xc) of the table 0x004ba494 (installed by EditBox::ctor 0x00486070 / EditBox::dtor 0x0043cb50): `sub ecx, 0x274` (0x0043cbf0, the Surface sub-object of every Window class sits at +0x274) then `jmp 0x0043cbd0` (0x0043cbf6), editBoxTimer_deleteDtor with the flag argument. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: editBoxTimer_deleteDtor_adj274 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0043cbf0_editBoxTimer_deleteDtor_adj274.path1.csv`); editBoxTimer_deleteDtor_adj274_real (4 vectors, 4 distinct results, 4 changing state, `log/diff/0043cbf0_editBoxTimer_deleteDtor_adj274_real.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0043cbf0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

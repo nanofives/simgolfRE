@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 45 bytes, 14 instructions, subsystem `util`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 resets/clears a pair record, invoking its member destructor 0x00482dd0 (`re/names/exe_0.tsv`)
 
+## Purpose
+cdecl (i): Stream482dd0::dtor 0x00482dd0 on the 0x44-byte record 0x0050fc20 + i * 0x44 (0x004041c5 .. 0x004041d3) and Flic::reset 0x00481ba0 on the 0x84-byte record 0x004f65c8 + i * 0x84 (0x004041d8 .. 0x004041e6), whose eax is returned (no later write). Caller: 0x0043d740 (hooks.csv). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: resetPair (12 vectors, 10 distinct results, 12 changing state, `log/diff/004041c0_resetPair.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small4.cpp` as `?resetPair4041c0@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004041ec): callee pops 0 bytes of stack arguments.

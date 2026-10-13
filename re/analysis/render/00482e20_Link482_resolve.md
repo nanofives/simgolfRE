@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 21 bytes, 10 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 returns the link target via the manager find(this,0), or 0 if unbound (`re/names/exe_3.tsv`)
 
+## Purpose
+thiscall, no stack argument: 0 when [this+4] is NULL (`test ecx, ecx; jne` 0x00482e25 / 0x00482e27, `xor eax, eax` 0x00482e29); otherwise Image::step 0x00482420 with ecx = [this+4] and the stack arguments (this, 0) (pushes 0x00482e2c / 0x00482e2e, call 0x00482e2f), returning its eax. Caller: 0x00404090 (hooks.csv). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Link482::resolve (12 vectors, 7 distinct results, 6 changing state, `log/diff/00482e20_Link482_resolve.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small16.cpp` as `?resolve@Link482@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00482e2b, 0x00482e34): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts 0x5c from this and tail-jumps to screenObj_deleteDtor 0x0049bf70 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+this-adjustor in slot 0 of the table 0x004bbc38 (installed by S3List_addVoiceRx 0x0049b970): `sub ecx, 0x5c` (0x0049bfd0) then `jmp 0x0049bf70` (0x0049bfd3): screenObj_deleteDtor on the object 0x5c bytes below the sub-object, with the flag argument. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: screenObj_deleteDtor_adj5c (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049bfd0_screenObj_deleteDtor_adj5c.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0049bfd0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

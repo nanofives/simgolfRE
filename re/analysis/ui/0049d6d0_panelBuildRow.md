@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 157 bytes, 55 instructions, subsystem `ui`. Mechanical 
 builds one row/widget of the panel and fills in its text. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+builds one panel row window (thiscall, `ret 0x10`: owner, a2, a3, style; `this` is the sub-object 0x59c into the panel, whose vbtable [this-0x59c] gives the Window base at +4 and the row's virtual base at +8). A NULL owner returns 3 (`jne` 0x0049d6db); panelLayoutText 0x0049d770 on this-0x59c (0x0049d6f0) returns a non-zero result at once (`jne` 0x0049d6f7). Otherwise a2 / a3 go to +0x28 / +0x2c of the virtual base (0x0049d6fc .. 0x0049d713), the style gets bit 20 unless bit 12 of [owner+0x9c] is set (`test ah, 0x10` 0x0049d720, `jne` 0x0049d723, `or` 0x0049d725) and Window::create 0x004806c0 runs on the Window base with (a2, a3, [vbase+0x60], [vbase+0x64], 0, style, owner, 0, 0) (0x0049d72d .. 0x0049d761); its eax is returned. Callers: panelBuildRow_vtordisp 0x00491bf0, panelDispatch 0x004a08a0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: panelBuildRow (12 vectors, 11 distinct results, 10 changing state, `log/diff/0049d6d0_panelBuildRow.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x0049d6e5, 0x0049d76a): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x0049d6d9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

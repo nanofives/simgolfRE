@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 95 bytes, 28 instructions, subsystem `input`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 `ret 8` (x, y): positions as rootWin_onPress1, [0x00822d68] = 2, [0x00822d78] = [0x00822d74] = 1 (`re/names/exe_13.tsv`)
 
+## Purpose
+slot 39 (+0x9c) of 0x004ba2fc: the same body as rootWin_onPress1b (0x00465840..0x00465888) except that [0x00822d68] = 2 (0x0046587d); [0x00822d78] = [0x00822d74] = 1 (0x00465892 / 0x00465897), eax = 1, `ret 8` (0x0046589c). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: rootWin_onPress2b_a (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465840_rootWin_onPress2b_a.path1.csv`); rootWin_onPress2b_b (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465840_rootWin_onPress2b_b.path1.csv`); rootWin_onPress2b_c (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465840_rootWin_onPress2b_c.path1.csv`); rootWin_onPress2b_d (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465840_rootWin_onPress2b_d.path1.csv`); rootWin_onPress2b_e (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465840_rootWin_onPress2b_e.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0046589c): callee pops 8 bytes of stack arguments.
 

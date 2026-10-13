@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 96 bytes, 26 instructions, subsystem `boot`. Mechanical
 initialises a fresh course game state (cash=1000, date=0x2c00, flags=0x4000000) and loads the starting golf pro (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+the new-course flow (no argument): [0x00822c88] is read first (0x0046ddd1); pickAProScreen 0x0043b610 (1, 1) (0x0046dddb) answering 0 is returned (`jne` 0x0046dde5); otherwise [0x00822c88] gets the value read before (0x0046dde9), [0x00571fd4] = 1000 (0x0046ddf4), g_date [0x00834170] = 0x2c00 (0x0046ddfa), [0x0059e7b8] = 0x4000000 (0x0046de04); loadGameBrowserScreen 0x0043a8c0 (0x0046de0e) answering 0 sets [0x0059e7b8] = 0 and returns 0 (`jne` 0x0046de15); else loadGolfPro 0x0046c970 (0x0046de1e), [0x00571fd4] = 1000 again (0x0046de23), return 1. Caller: mainLoop 0x0040f5c0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: startNewCourse_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/0046ddd0_startNewCourse_a.path1.csv`); startNewCourse_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/0046ddd0_startNewCourse_b.path1.csv`); startNewCourse_c (1 vectors, 1 distinct results, 1 changing state, `log/diff/0046ddd0_startNewCourse_c.path1.csv`); startNewCourse_d (1 vectors, 1 distinct results, 1 changing state, `log/diff/0046ddd0_startNewCourse_d.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0046dde8, 0x0046de1d, 0x0046de2f): callee pops 0 bytes of stack arguments.
 

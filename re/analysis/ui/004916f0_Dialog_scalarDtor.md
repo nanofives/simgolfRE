@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the composite dialog. (`re/names/exe_4.tsv`)
 
+## Purpose
+Dialog's scalar deleting destructor: Dialog::dtor 0x00491710 (0x004916f3), operator delete 0x004a4ffc when bit 0 of the flag is set (0x004916f8 / 0x004916fd / 0x00491700), eax = `this` (0x00491708). Caller: the adjustor 0x004918d0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Dialog::scalarDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004916f0_Dialog_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_004916f0@C_FUN_004916f0@f_004916f0@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049170b): callee pops 4 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 74 bytes, 28 instructions, subsystem `ui`. Mechanical t
 loads the (string in the binary) resource object into the global at 0x0084092c. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+loads the graphics DLL and creates the display (cdecl, the DLL path). A NULL path is returned as it is (`jne` 0x004a00a6). LoadLibraryA through IAT 0x004ba0a8 (0x004a00aa), the handle stored in [0x0084092c] (0x004a00b2) and returned when NULL (`jne` 0x004a00b7). GetProcAddress (IAT 0x004ba0a4) for 0x004e4a2c (`get_graphsy_object_ptr`): NULL -> freeGraphsyObject 0x004a0060 and 0 (`jne` 0x004a00c8, 0x004a00ca / 0x004a00cf). The export is called without arguments (0x004a00d3); a NULL result also runs freeGraphsyObject (`jne` 0x004a00d9); [0x0083ad50] (the display global) = the result either way (0x004a00e0), which is returned. Caller: engineInit 0x004855b0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: loadGraphsyObject (13 vectors, 13 distinct results, 12 changing state, `log/diff/004a00a0_loadGraphsyObject.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_11.cpp` as `?FUN_004a00a0@f_004a00a0@@YAHPBD@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004a00a8, 0x004a00b9, 0x004a00d1, 0x004a00e9): callee pops 0 bytes of stack arguments.

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts 0x274 from this and tail-jumps to globalObjDeleteDtor49c800 0x0049c800 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+this-adjustor in slot 3 (+0xc) of the table 0x004bbce0 (installed by ctorGlobalObj49c020 0x0049c020 / globalObjDtor49c780 0x0049c780): `sub ecx, 0x274` (0x0049c820), `jmp 0x0049c800` (0x0049c826) into globalObjDeleteDtor49c800. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: globalObjDeleteDtor49c800_adj274 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c820_globalObjDeleteDtor49c800_adj274.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0049c820 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

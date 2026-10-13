@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 59 bytes, 23 instructions, subsystem `ui`. Mechanical t
 inner helper that forwards one orientation of scrollbar arguments to scrollbarCreate. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+five stack arguments (`ret 0x14` 0x004966c0 / 0x004966c8), ecx not read and passed through: 3 when the fourth argument (`test edx, edx; je` 0x00496694 / 0x00496696) or the third (0x0049669c / 0x0049669e) is 0 (`mov eax, 3` 0x004966c3); otherwise scrollbarCreate 0x00496330 with (a1, a2, [0x0083ff10], a3, a4, a5, 0) (pushes 0x004966a5 .. 0x004966b9, call 0x004966ba, `ret 0x1c` callee) and its eax. Caller: scrollbarCreateA 0x00496710. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: scrollbarCreateA_impl_a (10 vectors, 7 distinct results, 6 changing state, `log/diff/00496690_scrollbarCreateA_impl_a.path1.csv`); scrollbarCreateA_impl_b (10 vectors, 7 distinct results, 6 changing state, `log/diff/00496690_scrollbarCreateA_impl_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00496690@C_FUN_00496690@f_00496690@@QAEHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x004966c0, 0x004966c8): callee pops 20 bytes of stack arguments.

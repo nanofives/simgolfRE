@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to panelBuild4a3880 0x004a3880 (`re/names/undisc2_exe.tsv`)
 
+## Purpose
+vtordisp thunk in slot 1 (+0x4) of the panel table 0x004bc224 (installed by panelSubCtor4a3110 0x004a3110 / panelSubDtor4a3480 0x004a3480): `sub ecx, [ecx - 4]` (0x004a4ab0), `jmp 0x004a3880` (0x004a4ab3) into panelBuild4a3880 with its four stack arguments (`ret 0x10` 0x004a3bd1). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: panelBuild4a3880_vtordisp (24 vectors, 24 distinct results, 24 changing state, `log/diff/004a4ab0_panelBuild4a3880_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x004a4ab0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

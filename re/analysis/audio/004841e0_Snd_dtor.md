@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 127 bytes, 35 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 sound destructor: frees the name m_50 and the device object m_40 (releaseSoundObj), then cleanup (`re/names/exe_3.tsv`)
 
+## Purpose
+destructor of the Snd base class (SEH frame 0x004841e0 .. 0x004841ee): [this] = 0x004bac68 (0x004841fd); a non-NULL buffer at this+0x50 goes to operator delete 0x004a4ffc and the field is cleared (0x00484203 .. 0x0048421b); a non-NULL object at this+0x40 goes to releaseSoundObj 0x00484110 (cdecl) and that field is cleared (0x00484222 .. 0x00484232); then Snd::unlinkFromList 0x004844e0 on `this` (0x0048423b) and Snd::setVtbl4852d0 0x004852d0 (0x0048424a), which stores the vtable 0x004badec at [this] and leaves eax, so eax is unlinkFromList's. Callers: the scalar deleting destructors 0x004841c0 and SndMusic::dtor 0x004848a0, Screen::dtor 0x004853d0 (hooks.csv). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Snd::dtor (10 vectors, 10 distinct results, 10 changing state, `log/diff/004841e0_Snd_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `??1C4841e0@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048425e): callee pops 0 bytes of stack arguments.

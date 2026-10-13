@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 37 bytes, 8 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Compiler-generated static initializer for a global array of objects. (`re/names/exe_1.tsv`)
 
+## Purpose
+static constructor of the Surface pool: the eh vector constructor 0x004a55d2 (stdcall, 5 arguments) over 0xdd40 Surfaces of 0x2c bytes at 0x005aaa30 with Surface_ctor 0x00473ab0 and the destructor 0x004041f0 (pushes 0x0043d460 .. 0x0043d471, call 0x0043d476), then a tail jump into Surface_ctor with ecx = 0x005aa748 (0x0043d47b / 0x0043d480): it constructs the single Surface 0x005aa748 and returns its eax (that address). Caller: dynInit_arrayStaticInit_43d460 0x0043d450. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: arrayStaticInit_43d460_ok (1 vectors, 1 distinct results, 1 changing state, `log/diff/0043d460_arrayStaticInit_43d460_ok.path1.csv`); arrayStaticInit_43d460_fail (1 vectors, 1 distinct results, 1 changing state, `log/diff/0043d460_arrayStaticInit_43d460_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_arrays.cpp` as `_$E86` (C linkage: the source declares the signature).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

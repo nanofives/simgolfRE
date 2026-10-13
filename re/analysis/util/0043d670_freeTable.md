@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 118 bytes, 40 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Frees a whole block table. (`re/names/exe_1.tsv`)
 
+## Purpose
+cdecl (i): releases table entry i. base = [0x005a9370 + i * 4] (0x0043d675); nothing is done when it is -1 (0x0043d683 / 0x0043d686, eax = i). Otherwise freeBlock 0x0043d520 (base, [0x0053f3e8 + i * 4] * [0x005a5a2c + i * 4]) (0x0043d699 .. 0x0043d6a0), then Surface_free 0x00473ae0 on each 0x2c-byte Surface 0x005aaa30 + ([base slot] + k) * 0x2c for k below that product (0x0043d6b3 .. 0x0043d6d2; the product and the base are re-read every pass, `jle` 0x0043d6b1 skips the loop for a product <= 0); then [0x0053f3e8 + i * 4] = 0 (0x0043d6d4) and the base slot = -1 (0x0043d6dc). eax is the last callee's. Caller: loadWorldAssets 0x0043dbe0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: freeTable_a (16 vectors, 16 distinct results, 13 changing state, `log/diff/0043d670_freeTable_a.path1.csv`); freeTable_b (16 vectors, 16 distinct results, 13 changing state, `log/diff/0043d670_freeTable_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small11.cpp` as `?freeTable@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0043d6e5): callee pops 0 bytes of stack arguments.

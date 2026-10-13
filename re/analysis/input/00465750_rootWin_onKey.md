@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 95 bytes, 23 instructions, subsystem `input`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 `ret 8` (a, code): [0x00822b9c] = a unless code is 0x60..0x69 (then 0), [0x00822b98] = code, [0x00838208] = (code == 0x1000d), the [0x0083ab9c] test; returns 1 (`re/names/exe_13.tsv`)
 
+## Purpose
+slot 35 (+0x8c) of 0x004ba2fc, `ret 8` (a, code), `this` unused: [0x00822b9c] = 0 for codes 0x60 .. 0x69 (signed, `jl` 0x00465757 / `jg` 0x0046575c, store 0x0046575e), otherwise a (0x0046576e); [0x00822b98] = code (0x00465776); [0x00838208] = 1 when code is 0x1000d, else 0 (0x0046577b / `sete` 0x00465785 / 0x0046578a). The byte [0x0083ab9c] is cleared (0x004657a0) when the key timer [0x005aa774] is 0 (`je` 0x00465790) or when timeGetTime (IAT 0x004ba21c, call 0x00465792) is above it, unsigned (`jbe` 0x0046579e skips the clear when the time is at or below it). eax = 1 (0x004657a7). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: rootWin_onKey_a (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465750_rootWin_onKey_a.path1.csv`); rootWin_onKey_b (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465750_rootWin_onKey_b.path1.csv`); rootWin_onKey_c (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465750_rootWin_onKey_c.path1.csv`); rootWin_onKey_d (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465750_rootWin_onKey_d.path1.csv`); rootWin_onKey_e (10 vectors, 10 distinct results, 10 changing state, `log/diff/00465750_rootWin_onKey_e.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x004657ac): callee pops 8 bytes of stack arguments.
 

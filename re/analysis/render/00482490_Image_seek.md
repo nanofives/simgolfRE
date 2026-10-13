@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 215 bytes, 94 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 seeks to frame (a,b) of a multi-frame image resource, loading and stepping chunk records (m_48 table) into the frame state (`re/names/exe_3.tsv`)
 
+## Purpose
+moves an animation link to (frame, pos). Arguments (frame, pos, link, a4), `ret 0x10`, `this` = the Image; header = [this+0x58], 0 when NULL (0x00482495 .. 0x004824a3). pos == -1 (0x004824aa) takes slot = frame and target step 0 (0x004824af .. 0x004824b5). Otherwise, with the frame mask m = [header+0x70] non-zero (0x004824b7 / 0x004824bc), the result is 0 unless bit (frame & 31) of m is set (0x004824c2 .. 0x004824cd), and the slot is the number of set bits of m below `frame` (loop 0x004824e0 .. 0x004824ef, entered only for frame > 0, `jle` 0x004824de); with m == 0 the slot is frame % word [header+0x60] (signed `idiv`, 0x004824f9 .. 0x00482506). The target step is pos % word [header+0x62] (0x00482508 .. 0x00482515). When the link's slot +0x40 differs (0x00482517 / 0x0048251c), the link restarts at it: +0x40 = slot, +0x3c = 0, +0x38 = [[this+0x48] + slot * 4] (0x00482522 .. 0x00482534), decodeImageChunks 0x00482570 (that pointer, link, a4) (0x0048253a), and the chunk pointer advances by the chunk's length (0x0048253f .. 0x00482546). Then Image::step 0x00482420 (link, 0) repeats until the counter equals the target (0x00482549 .. 0x0048255b). Returns link + 8 (0x0048255d). Caller: Link482b::send 0x00482e40. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Image::seek (97 vectors, 66 distinct results, 68 changing state, `log/diff/00482490_Image_seek.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?seek@R1C482490@@QAEPAHHHPAUR1S482490@@H@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x004824a3, 0x004824d5, 0x00482564): callee pops 16 bytes of stack arguments.

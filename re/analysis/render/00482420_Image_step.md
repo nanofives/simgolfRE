@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 102 bytes, 41 instructions, subsystem `render`. Mechani
 ## Role (from the naming pass, not a C3 purpose)
 advances image/animation decode by invoking the chunk decoder (decodeImageChunks) for the next unit (`re/names/exe_3.tsv`)
 
+## Purpose
+advances an animation link one frame step. Arguments (link, a2), `ret 8`, `this` = the Image. The link's step counter +0x3c is incremented and stored (0x0048242d / 0x00482434 / 0x00482438) before decodeImageChunks 0x00482570 runs with (the link's current chunk pointer +0x38, link, a2) (0x0048242c .. 0x0048243b). When the counter then equals the word +0x62 of the header [this+0x58] (0x00482440 .. 0x0048244e), the chunk pointer restarts at the frame slot [link+0x40] of the frame table [this+0x48] (0x00482450 .. 0x0048245a) and the counter is reset to 0 (0x00482461). In both cases the chunk pointer then advances by the dword it points at, the chunk's length (0x0048245f / 0x00482468, 0x00482474 .. 0x0048247f). Returns link + 8 (0x0048246a / 0x0048247c). Callers: Image::seek 0x00482490, Link482::resolve 0x00482e20. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Image::step (28 vectors, 28 distinct results, 28 changing state, `log/diff/00482420_Image_step.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00482471, 0x00482483): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x0048242a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

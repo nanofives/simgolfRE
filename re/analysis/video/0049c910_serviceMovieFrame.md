@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 47 bytes, 18 instructions, subsystem `video`. Mechanica
 advances the movie player one step: starts decode, reads and plays frames. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+per-frame service of a movie object: eax = this+0xb8 (0x0049c913); nothing more, the flags word being the result, unless bit 15 is set (`test ah, 0x80; je` 0x0049c919 / 0x0049c91c). With bit 4 set (0x0049c91e / 0x0049c920) it goes straight to movieReadProcess 0x0049cb20 (0x0049c936 / 0x0049c938). Otherwise moviePlayFrame 0x0049ccc0 (0x0049c922) and then movieDecodeStart 0x0049cae0 (0x0049c92b / 0x0049c92d) end it with their result when it is non-zero (`jne` 0x0049c929 / 0x0049c934); only when both answer 0 movieReadProcess runs. eax is the last callee's. Caller: 0x0049c8e0 (hooks.csv). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: serviceMovieFrame (14 vectors, 14 distinct results, 11 changing state, `log/diff/0049c910_serviceMovieFrame.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_05.cpp` as `?FUN_0049c910@f_0049c910@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049c93e): callee pops 0 bytes of stack arguments.

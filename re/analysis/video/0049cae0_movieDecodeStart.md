@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 64 bytes, 23 instructions, subsystem `video`. Mechanica
 starts the decode-frame step of the movie player. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+logs through logLine 0x004a0320 (format 0x004e493c, tag 0x004e4954, timeGetTime() through IAT 0x004ba21c, 0, 0) (pushes 0x0049cae1 .. 0x0049caf3, call 0x0049caf8, `add esp, 0x14` 0x0049cb03); answers 0 when bit 4 of the byte this+0xb8 is set (0x0049cafd / 0x0049cb06 / 0x0049cb08, 0x0049cb0a); otherwise calls moviePlayFrame 0x0049ccc0 (0x0049cb10, result unused) and returns movieStepReturn1 0x0049cb80 (this, 0) (0x0049cb15 .. 0x0049cb19). Caller: serviceMovieFrame 0x0049c910. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: movieDecodeStart (14 vectors, 11 distinct results, 14 changing state, `log/diff/0049cae0_movieDecodeStart.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `?start@C49cae0@@QAEHXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049cb0d, 0x0049cb1f): callee pops 0 bytes of stack arguments.

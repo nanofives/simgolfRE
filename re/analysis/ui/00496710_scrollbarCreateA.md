@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 43 bytes, 13 instructions, subsystem `ui`. Mechanical t
 public entry that creates a scrollbar in one orientation. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+five stack arguments (`ret 0x14` 0x00496738): sets [0x0083ff60] = 1 (0x00496729), then calls scrollbarCreateA_impl 0x00496690 with the same five arguments in order (pushes 0x00496718 .. 0x00496728, call 0x00496733) and returns its eax; ecx passes through. Caller: layoutViewTree 0x0047a4c0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: scrollbarCreateA_a (10 vectors, 7 distinct results, 10 changing state, `log/diff/00496710_scrollbarCreateA_a.path1.csv`); scrollbarCreateA_b (10 vectors, 7 distinct results, 10 changing state, `log/diff/00496710_scrollbarCreateA_b.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00496710@C_FUN_00496710@f_00496710@@QAEXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x00496738): callee pops 20 bytes of stack arguments.

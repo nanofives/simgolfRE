@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 107 bytes, 27 instructions, subsystem `render`. Mechani
 walks the z-sorted sprite queue (head DAT_0082c160, next DAT_008361f4) and draws every entry (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+draws the queued sprites in list order (no argument; SEH frame 0x00463100 .. 0x0046310e). A 0x58-byte local cache is built by Cache482fd0::ctor 0x00482fd0 (0x0046311d) and destroyed by Cache483010::dtor 0x00483010 (0x00463156) and nothing else touches it. From the head [0x0082c160] (0x00463122) until -1 (`je` 0x00463133, `jne` 0x00463148) drawQueuedSprite 0x00462be0 (cdecl) gets each index (0x00463136) and the next index is [0x008361f4 + 4 * i] (0x0046313b). eax is the destructor's: Cache483070::reset 0x00483070 on a fresh cache leaves 0. Caller: mainLoop 0x0040f5c0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: renderSpriteQueue_empty (1 vectors, 1 distinct results, 0 changing state, `log/diff/00463100_renderSpriteQueue_empty.path1.csv`); renderSpriteQueue_one (1 vectors, 1 distinct results, 1 changing state, `log/diff/00463100_renderSpriteQueue_one.path1.csv`); renderSpriteQueue_chain (1 vectors, 1 distinct results, 1 changing state, `log/diff/00463100_renderSpriteQueue_chain.path1.csv`); renderSpriteQueue_long (1 vectors, 1 distinct results, 1 changing state, `log/diff/00463100_renderSpriteQueue_long.path1.csv`); renderSpriteQueue_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/00463100_renderSpriteQueue_zero.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0046316a): callee pops 0 bytes of stack arguments.
 

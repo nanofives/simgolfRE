@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 132 bytes, 55 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Pushes one tile's wall edges into Terrain.dll. (`re/names/exe_1.tsv`)
 
+## Purpose
+writes a tile's four wall heights into Terrain.dll (cdecl: tile, x, y; returns a byte). For each side s = 0, 2, 4, 6 (0x0044a396, `jl` 0x0044a3f8): wallHeight 0x00449330 (x, y, s) non-zero with the byte [tile + 0x234 + s] 0 (`je` 0x0044a3a5, `jne` 0x0044a3b0) -> wallHeight again and Terrain::setWall (the exe's import thunk 0x004a4f40, thiscall on [0x00820ed0]) with (tile, s, that height, 1): the `push 1` at 0x0044a3b2 stays on the stack after the cdecl call (`add esp, 0xc` 0x0044a3bc) and becomes setWall's last argument. Otherwise wallHeight is called again (0x0044a3c5) and when it is 0 with the byte non-zero (`jne` 0x0044a3cf, `je` 0x0044a3da) setWall gets (tile, s, 0, 0). Only al is set at the end (`mov al, [esp+0x13]` 0x0044a3fa): 1 when any setWall ran (0x0044a3ed), else 0. Caller: 0x0044a5b0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: applyTileWalls (13 vectors, 13 distinct results, 13 changing state, `log/diff/0044a380_applyTileWalls.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0044a403): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0044a380 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

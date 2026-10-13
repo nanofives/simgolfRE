@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 38 bytes, 13 instructions, subsystem `ui`. Mechanical t
 Destructor helper for a composite dialog: tears down the embedded view and model sub-objects. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+destructor of the composite sub-object: Dialog::viewDtor 0x00491500 on this + 0x1fc (0x004914d4 .. 0x004914dc), ListModel::dtor 0x00489370 on this + 0x774 (0x004914e1 / 0x004914e7), Base4805a0::dtor 0x004805a0 on this + 0x1fc (0x004914ee), whose eax is left. Callers: netHandleControl 0x0049acf0 and unwind funclets 0x004b802c ... (hooks.csv). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Dialog::subDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004914d0_Dialog_subDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_classes.cpp` as `??1C4914d0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004914f5): callee pops 0 bytes of stack arguments.

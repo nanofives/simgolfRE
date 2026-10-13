@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 15 bytes, 3 instructions, subsystem `input`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 `ret 4`: [0x0083821c] = 0; returns 0 (`re/names/exe_13.tsv`)
 
+## Purpose
+slot 37 (+0x94) of 0x004ba2fc, `ret 4` (its argument unused): [0x0083821c] = 0 (0x004657d0), eax = 0 (0x004657da). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: rootWin_onChar0_a (10 vectors, 1 distinct results, 10 changing state, `log/diff/004657d0_rootWin_onChar0_a.path1.csv`); rootWin_onChar0_b (10 vectors, 1 distinct results, 10 changing state, `log/diff/004657d0_rootWin_onChar0_b.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004657dc): callee pops 4 bytes of stack arguments.
 

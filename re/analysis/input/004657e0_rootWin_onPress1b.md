@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 90 bytes, 28 instructions, subsystem `input`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 `ret 8` (x, y): positions as rootWin_onPress1, [0x00822d68] = [0x00822d78] = [0x00822d74] = 1, no modifier read (`re/names/exe_13.tsv`)
 
+## Purpose
+root-window input handler in slot 38 (+0x98) of the root window's vtable 0x004ba2fc (installed by staticInit_404360 0x00404360), `ret 8` (x, y), `this` unused. It stores the press position scaled by scaleX 0x00404970 (2) (the screen width [0x00822c8c] times 2 plus 0xa0, divided by 320): [0x00822d58] = 2x / scale (0x004657e4..0x004657f7, signed `idiv`), [0x00822d60] = x (0x0046580a), [0x00822d64] = y (0x00465813), [0x00822d5c] = 2y / scale (0x004657fc..0x0046581e), then [0x00822d68] = [0x00822d78] = [0x00822d74] = 1 (0x00465828..0x00465832); eax = 1 (0x00465823). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: rootWin_onPress1b_a (10 vectors, 10 distinct results, 10 changing state, `log/diff/004657e0_rootWin_onPress1b_a.path1.csv`); rootWin_onPress1b_b (10 vectors, 10 distinct results, 10 changing state, `log/diff/004657e0_rootWin_onPress1b_b.path1.csv`); rootWin_onPress1b_c (10 vectors, 10 distinct results, 10 changing state, `log/diff/004657e0_rootWin_onPress1b_c.path1.csv`); rootWin_onPress1b_d (10 vectors, 10 distinct results, 10 changing state, `log/diff/004657e0_rootWin_onPress1b_d.path1.csv`); rootWin_onPress1b_e (10 vectors, 10 distinct results, 10 changing state, `log/diff/004657e0_rootWin_onPress1b_e.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00465837): callee pops 8 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 39 bytes, 16 instructions, subsystem `sim`. Mechanical 
 iterates the animal records and advances each one (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+argument-free walk of the 100 animal records of 0x3c bytes at 0x0056d1d8 (0x00401c04; end 0x0056e948, compare 0x00401c1c) with an index from 0 (0x00401c02 / 0x00401c1b): for every record whose first word is not 0xffff (`cmp word [esi], -1; je` 0x00401c09 / 0x00401c0d) it calls placeAnimal 0x004017d0 (cdecl) with the record's index (0x00401c0f .. 0x00401c15). No result (void). Caller: mainLoop 0x0040f5c0 (hooks.csv). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: tickAnimals_none (1 vectors, 1 distinct results, 0 changing state, `log/diff/00401c00_tickAnimals_none.path1.csv`); tickAnimals_all (1 vectors, 1 distinct results, 1 changing state, `log/diff/00401c00_tickAnimals_all.path1.csv`); tickAnimals_odd (1 vectors, 1 distinct results, 1 changing state, `log/diff/00401c00_tickAnimals_odd.path1.csv`); tickAnimals_ends (1 vectors, 1 distinct results, 1 changing state, `log/diff/00401c00_tickAnimals_ends.path1.csv`); tickAnimals_fffe (1 vectors, 1 distinct results, 1 changing state, `log/diff/00401c00_tickAnimals_fffe.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small2.cpp` as `?forEachRec3c@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00401c26): callee pops 0 bytes of stack arguments.

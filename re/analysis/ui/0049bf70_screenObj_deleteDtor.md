@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 65 bytes, 20 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor of a Screen-derived object: runs Screen::dtor, restores the base vtable 0x004ba278 at this+0x5c and frees the object (multiple-inheritance layout, base guard 0x00839650) (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+deleting destructor of a list-heap object: 0x0049bfc0 (`jmp 0x004853d0`, Screen::dtor) on `this` (0x0049bf73); then it reads this+0x60 (0x0049bf7c), stores the vtable 0x004ba278 at this+0x5c (0x0049bf7f) and copies the +0x60 word into the list cookie 0x00839650 (0x0049bf86). Only with bit 0 of the flag set (0x0049bf8b) and a non-NULL `this` (0x0049bf90) it frees: CRT free 0x004a5007, not operator delete, and only when the +0x60 word was 0 (`test eax, eax; jne` 0x0049bf94 / 0x0049bf96, call 0x0049bf99); the cookie is then cleared to 0 whatever +0x60 held (0x0049bfa1). eax = `this` (0x0049bfab). Caller: the adjustor 0x0049bfd0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: screenObj_deleteDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049bf70_screenObj_deleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_14.cpp` as `?FUN_0049bf70@C_FUN_0049bf70@f_0049bf70@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049bfae): callee pops 4 bytes of stack arguments.

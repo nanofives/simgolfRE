@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor: runs editBoxTimer_dtor then frees the object when the low bit of the flag is set (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+scalar deleting destructor: EditBox::dtor 0x0043cb50 (0x0043cbd3), operator delete 0x004a4ffc on flag bit 0 (0x0043cbd8 / 0x0043cbdd / 0x0043cbe0), eax = `this` (0x0043cbe8). Caller: the adjustor 0x0043cbf0. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: editBoxTimer_deleteDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0043cbd0_editBoxTimer_deleteDtor.path1.csv`); editBoxTimer_deleteDtor_real (4 vectors, 4 distinct results, 4 changing state, `log/diff/0043cbd0_editBoxTimer_deleteDtor_real.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_07.cpp` as `?FUN_0043cbd0@C_FUN_0043cbd0@f_0043cbd0@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0043cbeb): callee pops 4 bytes of stack arguments.

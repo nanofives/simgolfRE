@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 62 bytes, 19 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor of the sub-view built by panelSubCtor4a3110 0x004a3110: calls panelSubDtor4a3480 0x004a3480 with this, ListModel::dtor 0x00489370 with this+0x578 and Base4805a0::dtor 0x004805a0 with this, calls operatorDelete_4a4ffc 0x004a4ffc with this-0xe0 when bit 0 of the byte argument is set (0x004a49a7), and returns this-0xe0 (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+deleting destructor of the panel part, entered with its Window base: full object = this - 0xe0 (0x004a4981); panelSubDtor4a3480 0x004a3480 on the Window base (0x004a4990), ListModel::dtor on full + 0x658 (0x004a4995 / 0x004a499b), Base4805a0::dtor on the Window base (0x004a49a2), operator delete of the full object on flag bit 0 (0x004a49a7 / 0x004a49ac / 0x004a49af); eax = the full object (0x004a49b7). Caller: the vtordisp thunk 0x004a4970. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: panelSubDeletingDtor (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a4980_panelSubDeletingDtor.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004a49bb): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004a4981 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

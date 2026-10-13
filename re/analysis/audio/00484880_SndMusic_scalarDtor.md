@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor wrapper for the streaming sound object (FUN_004848a0 + free) (`re/names/exe_3.tsv`)
 
+## Purpose
+scalar deleting destructor in slot 0 of the table 0x004bacf8 (installed by Snd::ctorDerived 0x00484820 / SndMusic::dtor 0x004848a0): SndMusic::dtor 0x004848a0 (0x00484883), operator delete on flag bit 0 (0x00484888 / 0x0048488d / 0x00484890), eax = `this` (0x00484898). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: SndMusic::scalarDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00484880_SndMusic_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00484880@C_FUN_00484880@f_00484880@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048489b): callee pops 4 bytes of stack arguments.

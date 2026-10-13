@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `render`. Mechanic
 Scalar-deleting destructor: runs the destructor then frees this when bit0 of param_1 is set. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+scalar deleting destructor in slot 0 of the table 0x004badf8 (installed by VoiceRx::ctor 0x004852e0 / Screen::dtor 0x004853d0): Screen::dtor 0x004853d0 (0x004853b3), operator delete on flag bit 0 (0x004853b8 / 0x004853bd / 0x004853c0), eax = `this` (0x004853c8). Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Screen::scalarDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/004853b0_Screen_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_004853b0@C_FUN_004853b0@f_004853b0@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x004853cb): callee pops 4 bytes of stack arguments.

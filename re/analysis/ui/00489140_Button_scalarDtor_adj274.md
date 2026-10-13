@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `ui`. Mechanical tr
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts 0x274 from this and tail-jumps to Button::scalarDtor 0x00488630 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+this-adjustor in slot 3 (+0xc) of the Button table 0x004bb094 (installed by Button::ctor 0x00488500 / Button::dtor 0x00488650): `sub ecx, 0x274` (0x00489140), `jmp 0x00488630` (0x00489146) into Button::scalarDtor. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: Button::scalarDtor_adj274 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00489140_Button_scalarDtor_adj274.path1.csv`); Button::scalarDtor_adj274_real (4 vectors, 4 distinct results, 4 changing state, `log/diff/00489140_Button_scalarDtor_adj274_real.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x00489140 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

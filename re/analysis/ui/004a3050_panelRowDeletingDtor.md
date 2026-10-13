@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 62 bytes, 19 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor of the sub-field built by viewFieldCtor4a2250 0x004a2250: calls viewFieldDtor4a2330 0x004a2330 with this, ListModel::dtor 0x00489370 with this+0x578 and Base4805a0::dtor 0x004805a0 with this, calls operatorDelete_4a4ffc 0x004a4ffc with this-0x8c when bit 0 of the byte argument is set (0x004a3077), and returns this-0x8c (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+deleting destructor of the field part 4a2250, entered with `this` = its Window base: the full object is this - 0x8c (0x004a3051). viewFieldDtor4a2330 0x004a2330 runs on the Window base (0x004a3060), ListModel::dtor 0x00489370 on full + 0x604 (0x004a3065 / 0x004a306b), Base4805a0::dtor 0x004805a0 on the Window base (0x004a3072); operator delete 0x004a4ffc frees the FULL object when bit 0 of the flag is set (0x004a3077 / 0x004a307c / 0x004a307f). eax = the full object (0x004a3087). Caller: the vtordisp thunk 0x004a3040. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: panelRowDeletingDtor (6 vectors, 6 distinct results, 6 changing state, `log/diff/004a3050_panelRowDeletingDtor.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x004a308b): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x004a3051 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `ui`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 scalar deleting destructor for the global UI object. (`re/names/exe_5.tsv`)
 
+## Purpose
+scalar deleting destructor: globalObjDtor49c780 0x0049c780 (0x0049c803), operator delete 0x004a4ffc on flag bit 0 (0x0049c808 / 0x0049c80d / 0x0049c810), eax = `this` (0x0049c818). Caller: the adjustor 0x0049c820. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: globalObjDeleteDtor49c800 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c800_globalObjDeleteDtor49c800.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_0049c800@C_FUN_0049c800@f_0049c800@@QAEPAHE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0049c81b): callee pops 4 bytes of stack arguments.

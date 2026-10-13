@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 86 bytes, 30 instructions, subsystem `video`. Mechanica
 runs the read-frame step: reads the next frame and plays it. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+logs through logLine 0x004a0320 (format 0x004e4960, tag 0x004e4954, timeGetTime(), 0, 0) (0x0049cb21 .. 0x0049cb38); unless bit 4 of the byte this+0xb8 is set (0x0049cb46 / 0x0049cb48) and when moviePlayFrame 0x0049ccc0 answers non-zero (0x0049cb4c / 0x0049cb51 / 0x0049cb53), it repeats movieStepReturn1 0x0049cb80 (this, 0) and moviePlayFrame while both answer non-zero (`je` 0x0049cb60, `jne` 0x0049cb6b back to 0x0049cb55); then movieReadFrame 0x0049cb90 (0x0049cb6d / 0x0049cb6f), whose eax is returned. movieStepReturn1 itself always answers 1 (`mov eax, 1; ret 4`, 0x0049cb80), so in the game the loop only ends on moviePlayFrame; the stand-in also answers 0 to cover the other exit. Caller: serviceMovieFrame 0x0049c910. Reimplemented in `shim/src/re/c3ev.cpp`; path-1 A/B GREEN: movieReadProcess (14 vectors, 14 distinct results, 14 changing state, `log/diff/0049cb20_movieReadProcess.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_02.cpp` as `?run@C49cb20@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049cb75): callee pops 0 bytes of stack arguments.
