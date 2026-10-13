@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$d0,0,0,True,e4e22454,e4e22454,True
+$d1,0,0,True,4ecc4c7d,4ecc4c7d,True
+$d2,0,0,True,d2eb9896,d2eb9896,True
+$d3,0,0,True,b23a84ef,b23a84ef,True
+$d4,0,0,True,ca34b263,ca34b263,True
+$d5,0,0,True,96137d13,96137d13,True
+$d6,0,0,True,15a7cbd3,15a7cbd3,True
+$d7,0,0,True,4a10a3ba,4a10a3ba,True
+$d8,0,0,True,e702ca0a,e702ca0a,True
+$d9,0,0,True,27a85014,27a85014,True
+$d10,0,0,True,6476b425,6476b425,True
+$d11,0,0,True,999ee565,999ee565,True
+state_regions,$d0+0x0:256 $d1+0x0:256 $d2+0x0:256 $d3+0x0:256 $d4+0x0:256 $d5+0x0:256 $d6+0x0:256 $d7+0x0:256 $d8+0x0:256 $d9+0x0:256 $d10+0x0:256 $d11+0x0:256 $vox+0x0:2560 $tn+0x0:128 $cn+0x0:128 $cp+0x0:256 $tmr+0x0:64 $gth+0x0:4 $gtt+0x0:4 $gtc+0x0:4 $gtn+0x0:4 $gch+0x0:4 $gct+0x0:4 $gcn+0x0:4 $gtm+0x0:4 $implog+0x0:1024 $arena+0x0:272 $freelog+0x0:1028 $log+0x0:2080 $g49a8+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62482700,original=0x3bc0180,2026-10-13T20:44:53
+distinct_results,12,,
+VERDICT,GREEN,12,

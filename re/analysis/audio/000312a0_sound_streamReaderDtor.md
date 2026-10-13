@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000312a0`), 335 bytes, 122 instructions, subsystem `a
 Destructor (vtable 0x1005c528): frees the mmio-handle node list at this+0x17, mmioClose each handle and decrement g_100b4a08. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Destroys a stream reader (plain `ret` 0x100313ee; its only caller StreamReader_scalarDtor 0x10031270 returns this, 0x10031288): vtable 0x1005c528 (0x100312c0); the list head +0x5c / tail +0x60 / count +0x68 is popped as in Sound::dtor and every non-NULL payload p (0x100312fb / 0x10031300, 0x1003134f / 0x10031354) is closed with mmioClose(p[0], 0) through [0x100b8670] (0x10031302-0x1003130c), the open-file count 0x100b4a08 decremented (0x1003130e-0x10031316) and p deleted (0x1003131c); the walk stops on a NULL payload or an empty list (0x10031327 / 0x10031329). With the wave-in device 0x100b4a24 non-NULL (0x10031356-0x1003135e) Wave_In_Device::clearStream runs on it (thunk 0x10001ba4, 0x10031360). The list is drained once more without closing (0x10031365- 0x100313cb) and Ch5c2ec_dtor runs on this (thunk 0x10002612, 0x100313d7). Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: streamReaderDtor_wi (12 vectors, 12 distinct results, 12 changing state, `log/diff/000312a0_sound_streamReaderDtor_wi.path1.csv`); streamReaderDtor_nowi (12 vectors, 12 distinct results, 12 changing state, `log/diff/000312a0_sound_streamReaderDtor_nowi.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100313ee): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100312b5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -45,7 +48,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `jne` (equality) at 0x10031354, 0x100313cb
 
 ## Callees
-- 0x10001ba4 -> 0x1000eda0 `Wave_In_Device::op2` (incremental-linking thunk) at 0x10031360
+- 0x10001ba4 -> 0x1000eda0 `Wave_In_Device::clearStream` (incremental-linking thunk) at 0x10031360
 - 0x10002612 -> 0x1002f3f0 `Ch5c2ec_dtor` (incremental-linking thunk) at 0x100313d7
 - 0x1004249a `operator_delete` at 0x100312ef, 0x1003131c, 0x10031343, 0x10031388, 0x100313ba
 - indirect `call ebp` at 0x1003130c

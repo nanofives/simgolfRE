@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o0,0,0,True,8ccda978,8ccda978,True
+$o1,11,11,True,57f90e66,57f90e66,False
+$o2,0,0,True,b8f61f85,b8f61f85,True
+$o3,0,0,True,36662ac4,36662ac4,True
+$o4,0,0,True,5b4f2602,5b4f2602,True
+$o5,0,0,True,307e7602,307e7602,True
+$o6,0,0,True,a903a7af,a903a7af,True
+$o7,0,0,True,5c024c40,5c024c40,True
+$o8,0,0,True,3f857b8e,3f857b8e,True
+$o9,0,0,True,df3b11cb,df3b11cb,True
+$o10,0,0,True,dc1dae5e,dc1dae5e,True
+$o11,0,0,True,b7cb74af,b7cb74af,True
+state_regions,$o0+0x0:5120 $o1+0x0:5120 $o2+0x0:5120 $o3+0x0:5120 $o4+0x0:5120 $o5+0x0:5120 $o6+0x0:5120 $o7+0x0:5120 $o8+0x0:5120 $o9+0x0:5120 $o10+0x0:5120 $o11+0x0:5120 $cnodes+0x0:2048 $cpays+0x0:4096 $streams+0x0:960 $mnodes+0x0:256 $gmh+0x0:4 $gmt+0x0:4 $gmc+0x0:4 $gmn+0x0:4 $gopen+0x0:4 $implog+0x0:1024 $arena+0x0:272 $freelog+0x0:1028 $log+0x0:2080 $g49a8+0x0:4 $gwd+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62481f30,original=0x3bc0120,2026-10-13T20:44:37
+distinct_results,12,,
+VERDICT,GREEN,12,

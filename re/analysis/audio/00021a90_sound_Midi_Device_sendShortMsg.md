@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00021a90`), 272 bytes, 100 instructions, subsystem `a
 Emits a MIDI channel-voice short message via midiOutShortMsg; uses g_100b4a1c. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Sends a note-off style short message (`ret 0xc`; arguments msg, channel, track read at [esp+0x18] / [esp+0x1c] / [esp+0x20] after five pushes). v = this[0x25c + 0x4c*channel] (0x10021aa3-0x10021aa9); the note is msg[0] (0x10021ab8), remapped by the track's vtable slot +4 when Seq_firstTrackData on the track (thunk 0x10001906) is non-zero (0x10021abe-0x10021acf). With g_midiDevice 0x100b4a1c's +0x3c non-zero (0x10021ad1-0x10021add) midiOutShortMsg(handle, ((msg[1] << 8 | note) << 8 | channel) | 0x80) runs through [0x100b8638] (0x10021adf-0x10021af4), the track's +0x258 + 4*note is cleared (0x10021afa) and 2 returned. With it zero: e = this[0x744 + 4v] (0x10021b12-0x10021b1a), c = track[0x58 + 4*msg[0]] (the unmapped note, 0x10021b21); c NULL (0x10021b27) or bit 3 of e's byte +4 clear (0x10021b2d) returns 2. Otherwise the track slot and c's +0x143c are cleared (0x10021b2f / 0x10021b33); with bit 0 of c's byte +0xc8 (0x10021b40) Channel_findVoiceByTag(msg[0]) on c+0x70 (thunk 0x1000187a) and, for a voice found, Voice_noteOff (thunk 0x100014a6); with it clear, e+0x30 non-NULL passes its +0x218 to Channel_recomputeGainsSetBit3 on c+0x70 (thunk 0x1000272a), NULL runs c's slot +0x28 (0x10021b8e / 0x10021b90). 2 is returned on every path past the NULL test. Caller: Midi_Device::playEvent 0x10020870. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Midi_Device::sendShortMsg_h (12 vectors, 12 distinct results, 12 changing state, `log/diff/00021a90_sound_Midi_Device_sendShortMsg_h.path1.csv`); Midi_Device::sendShortMsg_n (12 vectors, 12 distinct results, 12 changing state, `log/diff/00021a90_sound_Midi_Device_sendShortMsg_n.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x10021b0f, 0x10021b68, 0x10021b8b, 0x10021b9d): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10021a90 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -51,7 +54,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x100014a6 -> 0x100381f0 `Voice_noteOff` (incremental-linking thunk) at 0x10021b59
 - 0x1000187a -> 0x10038330 `Channel_findVoiceByTag` (incremental-linking thunk) at 0x10021b4e
 - 0x10001906 -> 0x1001bb80 `Seq_firstTrackData` (incremental-linking thunk) at 0x10021abe
-- 0x1000272a -> 0x10034db0 `Voice_stopAndFlag` (incremental-linking thunk) at 0x10021b7c
+- 0x1000272a -> 0x10034db0 `Channel_recomputeGainsSetBit3` (incremental-linking thunk) at 0x10021b7c
 - import `WINMM.dll!midiOutShortMsg` at 0x10021af4
 - indirect `call [eax+0x28]` at 0x10021b90
 - indirect `call [edx+0x4]` at 0x10021acc

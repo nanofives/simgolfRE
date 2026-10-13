@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00023950`), 200 bytes, 82 instructions, subsystem `au
 Walks a track's event tick range [param_1..param_2] via Seq_listGetAt, toggling the +0x38 bit3 resend flag and re-emitting events. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Replays or clears the "pending" bit 3 of the tracks first..last (`ret 8`). last < first (unsigned, 0x1002395f) or last >= vtable slot +0xb4's track count (0x10023965-0x1002396f) returns 0xa (0x10023a0f). Seq_listGetAt(this+0x60, slot, 0) runs with the out slot being LAST's own argument slot (`lea ecx, [esp+0x18]` 0x10023976); when it returns NON-zero (`je` 0x10023989 skips on 0) bit 3 of byte +0x38 of whatever that slot holds is set (0x1002398b / 0x1002398f), so a failed lookup that leaves the slot alone writes through the value of `last`. Then with slot +0x5c returning 0 (0x10023993-0x1002399c) every track i in first..last that is found loses bit 3 (0x100239a2-0x100239be); with it non-zero each found track whose bit 3 is set (0x100239de-0x100239e7) loses it (0x100239ec), Midi_Device::emitEvent(i) runs on this (thunk 0x100021ee) and Seq_rewindTracks on the track (thunk 0x10001ca3). Both walks return 0. Caller: Seq_cmdHandler9 0x100238b0. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Seq_replayEventRange (16 vectors, 14 distinct results, 14 changing state, `log/diff/00023950_sound_Seq_replayEventRange.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x100239c6, 0x10023a0a, 0x10023a15): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1002395d before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039690`), 154 bytes, 42 instructions, subsystem `au
 Default constructor of the multi-channel Sound (vtable 0x1005c7e8): runs the SubChannel base ctor, constructs the embedded Channel at +0x70, zeroes the sub-channel array/counters at +0x1420..+0x1448, and calls Sound_setSourceType(this,1). (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`, `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+Constructs a MultiSound in place and returns it (`mov eax, esi` 0x1003971b, plain `ret` 0x10039729). SubChannel_ctor runs on this (thunk 0x10001465, 0x100396ae) and the channel constructor 0x10031be0 on this+0x70 (thunk 0x10001005, 0x100396bc; named in log/c3/c3fd_names.tsv). Then vtable 0x1005c7e8 (0x100396c9) and the fields: +0x1424 / +0x1428 = 0 (0x100396d4 / 0x100396db), +0x1420 = 0 (0x100396e4), +0x142c = 0 (0x100396ea), +0x1438 = 1 (0x100396f0), +0x143c = 0 (0x100396f6), +0x1440 / +0x1444 / +0x1448 = 0 (0x100396fc-0x10039701), +0x1430 / +0x1434 = 0 (0x10039706 / 0x1003970c); Sound_setSourceType(1) on this (thunk 0x100018a2, 0x10039712). Caller: MultiSound_setSlotSource 0x1002f8d0 (thunk 0x100025ea at 0x1002f990). Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: MultiSound_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039690_sound_MultiSound_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10039729): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100396a5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -36,7 +39,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0x8]` dword at 0x100396aa
 
 ## Callees
-- 0x10001005 -> 0x10031be0 `FUN_10031be0` (incremental-linking thunk) at 0x100396bc
+- 0x10001005 -> 0x10031be0 `Channel_ctorB` (incremental-linking thunk) at 0x100396bc
 - 0x10001465 -> 0x1002b4e0 `SubChannel_ctor` (incremental-linking thunk) at 0x100396ae
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x10039712
 

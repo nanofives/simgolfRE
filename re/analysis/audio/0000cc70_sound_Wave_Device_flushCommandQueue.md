@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000cc70`), 182 bytes, 63 instructions, subsystem `au
 Flushes pending wave commands (ring +0x1d8, head +0x41d8/tail +0x41dc), releasing command-4 objects via their vtable[0](1). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Frees every pending command of the wave device's ring and empties it; returns 0 (0x1000cc8a / 0x1000cd1f). head = +0x41d8, tail = +0x41dc (0x1000cc76 / 0x1000cc7c); equal returns at once (0x1000cc88). Otherwise n = (tail - head) & 0xfff (0x1000cc91-0x1000cc99) entries are visited from (head + 1) & 0xfff (0x1000cc96 / 0x1000cc9e), wrapping at 0x1000 (0x1000cd04 / 0x1000cd05). CommandQueue::at on this+0x1d8 (thunk 0x10002257) gives each entry; NULL is skipped (0x1000ccc0). The entry's kind - 1 indexes the table 0x1000cd28 (bounds 0x1000ccc5 / 0x1000ccc8): kinds 1..3 go to 0x1000cce5, kind 4 to 0x1000ccd1, which first deletes the object at +4 through its slot 0 with 1 pushed when non-NULL and clears +4 (0x1000ccd1-0x1000ccde); kinds 1..4 then run pairClear (0x1000cce7) and operator delete (0x1000cced) on the entry; every visited non-NULL entry's ring slot is cleared (0x1000ccf5), so other kinds are dropped without being freed. head = the tail read at entry (0x1000cd18). Caller: Wave_Device::stop 0x1000b960. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Wave_Device::flushCommandQueue (13 vectors, 13 distinct results, 12 changing state, `log/diff/0000cc70_sound_Wave_Device_flushCommandQueue.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000cc90, 0x1000cd25): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000cc74 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

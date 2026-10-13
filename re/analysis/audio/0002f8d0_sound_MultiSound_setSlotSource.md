@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002f8d0`), 313 bytes, 102 instructions, subsystem `a
 returns SNDERR 0xf if busy (+0xfc), 10 if index>0x27; otherwise constructs a sub-sound for the +0x58 slot array and binds its stream source (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Gives a channel a new multi-sound for one of its 0x28 source slots (`ret 4`, the slot index). A current +0xfc returns 0xf (0x1002f8ee-0x1002f903); index >= 0x28 (unsigned, 0x1002f91e / 0x1002f921) returns 0xa; an empty slot +0x58 + 4*index returns 0x24 (0x1002f93b-0x1002f942). The flag word is 0x302 with a stream source +0xf8, else 0x102 (0x1002f959-0x1002f970). A 0x1450-byte block from operator new (0x1002f975 / 0x1002f97a) is built by MultiSound_ctor (thunk 0x100025ea, 0x1002f990); the object's vtable slot +0x6c gets the flag word (0x1002f9a4) and slot +0x10 the slot's value (0x1002f9a7-0x1002f9b4); that result r is returned (0x1002f9f7). r non-zero deletes the object through slot 0 with 1 (0x1002f9bd-0x1002f9c7). r zero: with bit 2 of the object's byte +0xcc (0x1002f9cb / 0x1002f9d2) the routine 0x10032660 (`mov eax, 0xb; ret`, named in log/c3/c3fd_names.tsv) runs on object+0x70 (thunk 0x10001dde); the object goes to +0xfc (0x1002f9e4) and, with +0xf8 set, Channel_setStreamSource(&+0xfc, &+0xf8) runs on +0xf8's object +0x70 (thunk 0x1000122b, 0x1002f9e8-0x1002f9ed). Reached as slot 33 (+0x84) of the vtable 0x1005c3a4 (dword 0x1005c428), installed by Ch5c3a4_ctor 0x1002f740 (re/tools/pointer_callers.py). Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: MultiSound_setSlotSource (12 vectors, 11 distinct results, 8 changing state, `log/diff/0002f8d0_sound_MultiSound_setSlotSource.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002f917, 0x1002f938, 0x1002f956, 0x1002fa06): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002f8ea before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -48,7 +51,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x1000122b -> 0x10037720 `Channel_setStreamSource` (incremental-linking thunk) at 0x1002f9ed
-- 0x10001dde -> 0x10032660 `FUN_10032660` (incremental-linking thunk) at 0x1002f9d7
+- 0x10001dde -> 0x10032660 `return0xb_32660` (incremental-linking thunk) at 0x1002f9d7
 - 0x100025ea -> 0x10039690 `MultiSound_ctor` (incremental-linking thunk) at 0x1002f990
 - 0x100424d7 `operator_new` at 0x1002f97a
 - indirect `call [eax+0x6c]` at 0x1002f9a4

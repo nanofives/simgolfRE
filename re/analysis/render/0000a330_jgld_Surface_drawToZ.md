@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a330`), 336 bytes, 106 instructions, subsystem `re
 draws this surface onto another with a depth/key parameter. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Surface vtable 0x1011d0b0 slot 35 (+0x8c): drawTo with a fourth argument. The same frame Sprite at [ebp-0x60] is built the same way (Sprite::ctorN 0x1000a36d, fields 0x1000a37c..0x1000a3e3, setField28 0x1000a3f3), then Sprite::drawG (dst, x, y, z, slot +0xe8 0x1000a402) through the thunk 0x100017b2 (0x1000a423) gives the result; releaseDC2 (1) (0x1000a437), Sprite +0x14 = 0 (0x1000a441), Sprite::dtor (0x1000a458). No conditional branch. thiscall, `ret 0x10`. Reimplemented in `shim/src/re/c3ff.cpp`; path-1 A/B GREEN: Surface::drawToZ (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000a330_jgld_Surface_drawToZ.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface_sprite.cpp` as `?drawToZ@Surface@@QAEHPAV1@HHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x1000a47d): callee pops 16 bytes of stack arguments.

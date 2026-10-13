@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00049604`), 28 bytes, 12 instructions, subsystem `crt
 validates that the [esp+0xc] pointer is writable with IsBadWritePtr; called from BuildCatchObject (EH) (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+Reports whether a block is writable, for the exception machinery that is about to copy a thrown object into it. The two stack arguments are pushed back in reverse (0x10049608 pushes the second, 0x1004960c the first) and handed to the import at [0x100b84bc], KERNEL32!IsBadWritePtr, at 0x10049610, so the call is IsBadWritePtr(pointer, length). The answer is inverted: esi is preloaded with 1 at 0x10049605 and cleared at 0x1004961a when the import returns a non-zero value (test and je at 0x10049616 and 0x10049618), so the function returns 1 for a block the import accepts and 0 otherwise, and the `ret` at 0x1004961f pops nothing. Nothing is read or written besides the two arguments. Reimplemented in `shim/src/re/c3cm.cpp`; path-1 A/B GREEN: crtValidatePointer (12 vectors, 2 distinct results, `log/diff/00049604_sound_crtValidatePointer.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1004961f): callee pops 0 bytes of stack arguments.
 

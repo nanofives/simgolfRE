@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002add0`), 236 bytes, 106 instructions, subsystem `a
 thiscall(filespec): creates the Sound at this+0x40 via create_sound (or resets it via vtbl+0x60), opens it (vtbl+0x10), sets this+0x44 bit0 and starts playback (vtbl+0x7c); returns 1 when g_100b507c is 0. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Plays a named sound on a channel (`ret 4`, the name). The word 0x100b507c zero returns 1 (0x1002add1-0x1002ade1). An empty slot +0x40 is filled by create_sound(slot, name, 1) through the thunk 0x1000137a, whose non-zero result is returned (0x1002adf5-0x1002ae07); a filled slot whose object's vtable slot +0x60 is non-zero returns 0xf (0x1002ae10-0x1002ae1b). r = the object's slot +0x10 with the name (0x1002ae25-0x1002ae2d). r non-zero clears bit 0 of +0x44 (0x1002ae5a / 0x1002ae5c); r zero with bit 0 clear sets it (0x1002ae3c-0x1002ae40), runs this's slot +0x7c (0x1002ae45) and, with +0x30 non-zero, the object's slot +0x48 with 1 (0x1002ae48-0x1002ae55). The name is copied with its terminator into operator new(strlen + 1) (0x1002ae60-0x1002ae97, no NULL test), the old +0x50 string, when non-NULL, goes to operator delete (0x1002ae99-0x1002aea2) and +0x50 = the copy (0x1002aeb3); r is returned (0x1002aeae). Callers 0x1002bc60, 0x1002bd80, 0x1002deb0. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Engine_playSound (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002add0_sound_Engine_playSound.path1.csv`); Engine_playSound_off (12 vectors, 1 distinct results, 0 changing state, `log/diff/0002add0_sound_Engine_playSound_off.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002ade8, 0x1002ae0d, 0x1002ae22, 0x1002aeb9): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002add0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

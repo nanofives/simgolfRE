@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000dcf0`), 675 bytes, 206 instructions, subsystem `a
 Scans a range of the wave command ring via CommandQueue::at, building a summary pair for the executor. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/sound_2.md`.
 
+## Purpose
+The same scan over the wave device's ring at this+0x1d8 (0x1000dd26), `ret 8` (0x1000df90), returning 0 (0x1000df8a), with two differences: duplicates compare only the object +4 (0x1000dd6a-0x1000dd72) and the kind +0 (0x1000dd8a-0x1000dd90), and the object flag is bit 6 of its byte +0xc8 (0x1000ddf5 / 0x1000deb3). Caller: Wave_Device::processCommandQueue 0x1000c420. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Wave_Device::scanCommandRing (12 vectors, 11 distinct results, 10 changing state, `log/diff/0000dcf0_sound_Wave_Device_scanCommandRing.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x1000df90): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1000dcfd before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

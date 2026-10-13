@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001e2b0`), 211 bytes, 65 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: when +0x13 bit0 is set closes the open SMF via closeFile, then frees the track node list headed at +0x67. (`re/names/sound_3.tsv`)
 
+## Purpose
+Destroys a sequencer's node list (plain `ret` 0x1001e382; its caller Sound5b6a8_dtor makes another call right after it, 0x100201a9 / 0x100201b8, so ret void). With bit 0 of the byte +0x4c (0x1001e2cf-0x1001e2da) Midi_Device::closeFile runs on this (thunk 0x10001014, 0x1001e2dc). Then the list head +0x19c / tail +0x1a0 / count +0x1a8 is popped from the head: the next node becomes the head with its back link cleared (0x1001e2f3-0x1001e2fc) or, with no next, head and tail are cleared (0x1001e304 / 0x1001e30a); the payload +8 is read (0x1001e310), the node goes to operator delete (0x1001e314) and the count is decremented (0x1001e319-0x1001e325). The walk stops on a NULL payload (0x1001e323 / 0x1001e32b, 0x1001e367 / 0x1001e36f) or an empty list (0x1001e333 / 0x1001e335), so a node with a NULL payload ends the teardown and leaves the rest of the list in place. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Seq_dtor (12 vectors, 12 distinct results, 11 changing state, `log/diff/0001e2b0_sound_Seq_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001e382): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001e2c5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

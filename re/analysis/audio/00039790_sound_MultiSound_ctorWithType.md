@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039790`), 164 bytes, 40 instructions, subsystem `au
 Constructor of the multi-channel Sound taking a source type: same as MultiSound_ctor but stores param_1 at +0x1420 and +0x1ec. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+The same constructor with a type argument (`ret 4` 0x10039831, read at [esp+0x1c] 0x100397df after six pushes), returning this (0x10039824): SubChannel_ctor on this (0x100397ad), the channel constructor 0x10031be0 on this+0x70 (0x100397bd), vtable 0x1005c7e8 (0x100397ca), +0x1424 / +0x1428 = 0 (0x100397d5 / 0x100397dc), +0x1420 = type (0x100397e3), +0x1438 = 1 (0x100397e9), +0x1430 / +0x1434 = 0 (0x100397ef / 0x100397f9), +0x1ec = type (0x10039803), +0x1440 .. +0x1448 = 0 (0x10039813-0x10039818), Sound_setSourceType(1) (0x1003981b). Unlike MultiSound_ctor it leaves +0x142c and +0x143c as the base constructor left them. Caller: create_sound 0x100093e0 (hooks.csv). Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: MultiSound_ctorWithType (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039790_sound_MultiSound_ctorWithType.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10039831): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100397a5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -36,7 +39,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `[esp+0x4]` dword at 0x100397a9
 
 ## Callees
-- 0x10001005 -> 0x10031be0 `FUN_10031be0` (incremental-linking thunk) at 0x100397bd
+- 0x10001005 -> 0x10031be0 `Channel_ctorB` (incremental-linking thunk) at 0x100397bd
 - 0x10001465 -> 0x1002b4e0 `SubChannel_ctor` (incremental-linking thunk) at 0x100397ad
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x1003981b
 

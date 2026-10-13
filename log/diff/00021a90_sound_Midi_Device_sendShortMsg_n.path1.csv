@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$dev $msg0 0 $t0,2,2,True,940ef87b,940ef87b,True
+$dev $msg1 1 $t1,2,2,True,9e982e0f,9e982e0f,True
+$dev $msg2 2 $t2,2,2,True,b28205ea,b28205ea,True
+$dev $msg3 3 $t3,2,2,True,1ef795d0,1ef795d0,True
+$dev $msg4 4 $t4,2,2,True,d946e63c,d946e63c,True
+$dev $msg5 5 $t5,2,2,True,31b9979c,31b9979c,True
+$dev $msg6 6 $t6,2,2,True,51fc52a4,51fc52a4,True
+$dev $msg7 7 $t7,2,2,True,e2573d41,e2573d41,True
+$dev $msg8 8 $t8,2,2,True,e6f45426,e6f45426,True
+$dev $msg9 9 $t9,2,2,True,dc2c2b5d,dc2c2b5d,True
+$dev $msg10 10 $t10,2,2,True,4731e093,4731e093,True
+$dev $msg11 15 $t11,2,2,True,dab91d5f,dab91d5f,True
+state_regions,$dev+0x0:4096 $e0+0x0:64 $e1+0x0:64 $e2+0x0:64 $e3+0x0:64 $ea0+0x0:544 $ea1+0x0:544 $ea2+0x0:544 $ea3+0x0:544 $t0+0x0:1280 $t1+0x0:1280 $t2+0x0:1280 $t3+0x0:1280 $t4+0x0:1280 $t5+0x0:1280 $t6+0x0:1280 $t7+0x0:1280 $t8+0x0:1280 $t9+0x0:1280 $t10+0x0:1280 $t11+0x0:1280 $c0+0x0:5376 $c1+0x0:5376 $c2+0x0:5376 $c3+0x0:5376 $c4+0x0:5376 $c5+0x0:5376 $c6+0x0:5376 $c7+0x0:5376 $c8+0x0:5376 $c9+0x0:5376 $c10+0x0:5376 $c11+0x0:5376 $msg0+0x0:16 $msg1+0x0:16 $msg2+0x0:16 $msg3+0x0:16 $msg4+0x0:16 $msg5+0x0:16 $msg6+0x0:16 $msg7+0x0:16 $msg8+0x0:16 $msg9+0x0:16 $msg10+0x0:16 $msg11+0x0:16 $gmd+0x0:4 $md+0x0:64 $log+0x0:2080 $g49a8+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62482570,original=0x4760f80,2026-10-13T20:43:50
+distinct_results,12,,
+VERDICT,GREEN,12,

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002f220`), 245 bytes, 77 instructions, subsystem `au
 constructor: sets field[1]=0x7f and copies the literal name (string in the binary) into the object's std::string at this+3 (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+Constructs the voice-transmit sound object in place and returns this (0x1002f306, plain `ret` 0x1002f314): the inline sub-channel defaults +4 = 0x7f (0x1002f249), +8 = 0 (0x1002f250), +0xc .. +0x2c = 0 (`rep stosd` 0x1002f23f-0x1002f253), +0x30 = 0, vtable 0x1005bae0, +0x48 / +0x4c / +0x40 / +0x50 = 0, +0x44 = 0 (0x1002f259-0x1002f276), +0x38 = 0x3e8 (0x1002f282); then +0x54 = 0 (0x1002f295), vtable 0x1005c2ec (0x1002f29b), +0x58 = 0 (0x1002f2ab). The nine-byte string at 0x10063e8c (8 characters and the terminator, 0x1002f2ad-0x1002f2c6) is copied into operator new(10) (0x1002f2a1 / 0x1002f2ca, no NULL test) stored at +0x50 (0x1002f2dd). Sound_setSourceType(7) runs on this (thunk 0x100018a2, 0x1002f2fc). Caller: StreamReader_ctor 0x10031200. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: buildVoiceTxName (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002f220_sound_buildVoiceTxName.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002f314): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002f239 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

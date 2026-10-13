@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001ac40`), 191 bytes, 64 instructions, subsystem `au
 For each sub-object of a channel (array +0x1440, count +0x1438) still present in the engine g_100b4a20 (checked via 0x1000e050), posts notification code 5 via postNotification (0x1000dbe0), or calls 0x10039c10 when the sub-object's +0x32 bit0 is set. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+For each of the 0x80 voice slots at this+4 .. this+0x200 (0x1001ac48, `cmp esi, 0x80; jl` 0x1001acec / 0x1001acf2) that holds a group g: when g's count +0x1438 is non-zero (0x1001ac5a / 0x1001ac5c), each member g[0x1440 + 4j], j < count - 1 (signed, re-read each pass, 0x1001ac60-0x1001ac63 / 0x1001acaa-0x1001acb3), and then g itself (0x1001acb5-0x1001ace6), is offered to removeSoundNode on the device 0x100b4a20 (thunk 0x10002243); when that returns 0 the node is rewound by SoundGroup_rewind (thunk 0x10002568) if bit 0 of its byte +0xc8 is set, else postNotification(node, 5) runs on the device (thunk 0x10001b3b). Returns 0 (0x1001acfb). Caller: Voice_allNotesOff 0x10020d80. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Voice_notifyChannelNotes (12 vectors, 12 distinct results, 11 changing state, `log/diff/0001ac40_sound_Voice_notifyChannelNotes.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001acfe): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001ac44 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00004000`), 356 bytes, 105 instructions, subsystem `a
 Destructor: re-installs vtable 0x1005b000 and drains/frees the chunk list at +0xa4c. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Destroys a Sound (plain `ret` 0x10004163; its only caller Sound::scalarDeletingDtor 0x10003fd0 returns this, 0x10003fe8, so ret void): vtable 0x1005b000 (0x1000401f), then the node list head +0xa4c / tail +0xa50 / count +0xa58 is drained twice with the same loop (0x10004025-0x100040b5 and 0x100040b7-0x10004141): pop the head (next becomes head with its back link cleared, 0x10004039-0x10004042, or head and tail cleared, 0x1000404a / 0x10004050), read the payload +8 (0x10004056), operator delete the node (0x1000405a), decrement the count (0x1000405f-0x1000406b), stop on a NULL payload (0x10004071) or an empty list (0x1000407b). The second pass goes on past the first NULL payload and stops at the next one. Then Sound5b6a8_dtor runs on this (thunk 0x10001893, 0x1000414d). Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Sound::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00004000_sound_Sound_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10004163): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10004015 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

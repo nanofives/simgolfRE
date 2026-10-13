@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039870`), 196 bytes, 58 instructions, subsystem `au
 Destructor: sets vtable 0x1005c7e8, virtual-deletes each child sub-channel (array +0x1440, count +0x1438), releases the embedded Channel buffers and closes it (Channel_closeAndFree at +0x70), frees +0x1430, and chains to the SubChannel base dtor 0x1002b620. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Destroys a MultiSound (plain `ret` 0x10039933; its caller MultiSound_deleteDtor 0x10039760 returns this, so the A/B compares memory). Vtable 0x1005c7e8 is stored (0x10039890). With the member count +0x1438 above 1 (signed, 0x100398a1 / 0x100398a7) each member at +0x1440 + 4*(i-1), i = 1 .. count - 1 (count re-read each pass, 0x100398c2-0x100398ce), is deleted through its slot 0 with 1 pushed when non-NULL (0x100398b2-0x100398ba) and cleared (0x100398bc). With bit 1 of the byte +0xc8 (0x100398d1 / 0x100398d8) Channel_releaseBuffers runs on this+0x70 (thunk 0x10001d11, 0x100398dd). A non-NULL +0x1430 goes to operator delete and is cleared (0x100398e8-0x100398f5). Channel_closeAndFree runs on this+0x70 (or NULL for a NULL this, 0x100398ff-0x1003990f, thunk 0x100011b8), then Ch5bb90_dtor on this (thunk 0x10002108, 0x1003991e). Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: MultiSound_dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00039870_sound_MultiSound_dtor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10039933): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1003988a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000092e0`), 100 bytes, 27 instructions, subsystem `au
 Allocates and initializes the global sound timer object, storing it at g_100b49ec and g_100b49d8 and calling SoundTimer::init. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/jgld_2.md`, `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Export #3 (thunk 0x10001c67), stored at 0x0083af74 by soundVersionCheck (0x0048400c) and called by callSoundHook74 0x00484090, which forwards its own two arguments (0x004840a7 / 0x004840a8, `call [0x83af74]` 0x004840a9). __cdecl with two arguments of which only the SECOND is read (`mov eax, [esp+0x14]` 0x100092ee after three pushes; its slot is later reused for the new block, 0x1000930c). That argument is stored at 0x100b49d8 on every path (0x100092fb). With bit 0 set (`test al, 1` 0x100092f9, `jne` 0x10009300) nothing else happens. Otherwise a 0x5c-byte block from operator new (0x10009302 / 0x10009304) is constructed by SoundTimer::init through the thunk 0x100022b1 (0x1000931c / 0x1000931e) and the constructor's eax becomes g_soundTimer 0x100b49ec (0x10009327); its dword +0x24 is set to the address of the thunk 0x10002671, a bare `ret` at 0x10009a70 (0x1000932c). 0 is returned (0x10009337). Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: init_sound_timer (12 vectors, 12 distinct results, 12 changing state, `log/diff/000092e0_sound_init_sound_timer.path1.csv`); init_sound_timer_alt (12 vectors, 12 distinct results, 12 changing state, `log/diff/000092e0_sound_init_sound_timer_alt.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10009343): callee pops 0 bytes of stack arguments.
 

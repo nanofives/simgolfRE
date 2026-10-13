@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000246a0`), 221 bytes, 75 instructions, subsystem `au
 Emits a MIDI short message via midiOutShortMsg; uses g_100b4a1c. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Flushes one track's pending output (`ret 4`, the track index). Seq_listGetAt(this+0x60, slot, index) runs with the out slot being the index argument's own slot (0x100246a6-0x100246af); a non-zero result is returned (0x100246b6). With the track t: when g_midiDevice 0x100b4a1c's +0x3c (the MIDI-out handle) is non-zero (0x100246bc-0x100246c6), each dword t+0x258 .. t+0x454 (`cmp esi, 0x458; jl` 0x10024707 / 0x1002470d) whose low byte is non-zero (0x100246d7 / 0x100246db) has its byte 2 cleared (0x100246dd), is sent with midiOutShortMsg(handle re-read, dword) through [0x100b8638] (0x100246e2-0x100246f3) and cleared (0x100246f9); 0 is returned. With the handle zero, each sound s at t+0x58 .. t+0x254 (0x10024769 / 0x10024772) that is non-NULL is cleared from the track (0x10024728), its vtable slot +0x28 runs (0x10024733) and, when s's +0x1438 is above 1 (0x1002473f), so does slot +0x28 of each member s[0x1440 + 4j], j < +0x1438 - 1 (0x10024748-0x10024763), with no NULL test on the member; 0 is returned (0x10024775). Caller: Seq_replayEventRange 0x10023950. Reimplemented in `shim/src/re/c3fd.cpp`; path-1 A/B GREEN: Midi_Device::emitEvent_h (14 vectors, 14 distinct results, 14 changing state, `log/diff/000246a0_sound_Midi_Device_emitEvent_h.path1.csv`); Midi_Device::emitEvent_n (14 vectors, 14 distinct results, 14 changing state, `log/diff/000246a0_sound_Midi_Device_emitEvent_n.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10024713, 0x1002477a): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100246ac before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
