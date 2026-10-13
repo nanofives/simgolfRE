@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065050`), 54 bytes, 22 instructions, subsystem `crt`
 Static initializer half: registers 0x100650a0 (the teardown of g_arrayE0 0x101286e0) with _atexit 0x1007f080 (0x1006506d). (`re/names/jgld_8.tsv`)
 System writeup: `re/analysis/systems/jgld_7.md`, `re/analysis/systems/jgld_8.md`.
 
+## Purpose
+The second half of the static initializer dynInit_arrayE0 0x10064fd0 (call 0x10064fed): it registers 0x100650a0, the teardown of the module global g_arrayE0 0x101286e0, with _atexit 0x1007f080 (`push 0x100650a0` 0x10065068, call 0x1006506d) and returns _atexit's result (the `call __chkesp` 0x1007e780 at 0x1006507d leaves eax alone). Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: registerArrayE0Teardown_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065050_jgld_registerArrayE0Teardown_a.path1.csv`); registerArrayE0Teardown_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065050_jgld_registerArrayE0Teardown_b.path1.csv`); registerArrayE0Teardown_fail (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065050_jgld_registerArrayE0Teardown_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10065050@f_10065050@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065085): callee pops 0 bytes of stack arguments.

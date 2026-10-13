@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065160`), 54 bytes, 22 instructions, subsystem `crt`
 Static initializer half: registers 0x100651b0 (the teardown of g_modes 0x101286c8) with _atexit 0x1007f080 (0x1006517d). (`re/names/jgld_8.tsv`)
 System writeup: `re/analysis/systems/jgld_7.md`, `re/analysis/systems/jgld_8.md`.
 
+## Purpose
+The second half of dynInit_modes 0x100650e0 (call 0x100650fd): it registers 0x100651b0, the teardown of the mode array 0x101286c8, with _atexit 0x1007f080 (`push 0x100651b0` 0x10065178, call 0x1006517d) and returns _atexit's result. Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: registerModesTeardown_a (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065160_jgld_registerModesTeardown_a.path1.csv`); registerModesTeardown_b (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065160_jgld_registerModesTeardown_b.path1.csv`); registerModesTeardown_fail (1 vectors, 1 distinct results, 1 changing state, `log/diff/00065160_jgld_registerModesTeardown_fail.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_raw_10.cpp` as `?FUN_10065160@f_10065160@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065195): callee pops 0 bytes of stack arguments.

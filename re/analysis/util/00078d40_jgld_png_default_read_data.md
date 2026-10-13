@@ -5,6 +5,9 @@ Module `jgld.dll` (RVA `0x00078d40`), 94 bytes, 38 instructions, subsystem `util
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+libpng 1.0.5's default read function, which png_set_read_fn stores as the reader (the constant 0x10078d40 written at 0x10078ce5): it freads `length` items of size 1 (`push 1` 0x10078d63) into `data` from the stream png_ptr->io_ptr (+0x54, 0x10078d5b) with jgld's fread 0x10082d80 (call 0x10078d69) and, when the count read differs from `length` (`cmp ecx, [ebp+0x10]; je` 0x10078d77 / 0x10078d7a), calls png_error 0x10078fe0 (0x10078d85) with the module string 0x1011e060. eax at `ret` (0x10078d9d) is the count fread returned. Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: png_default_read_data_jump (14 vectors, 14 distinct results, 14 changing state, `log/diff/00078d40_jgld_png_default_read_data_jump.path1.csv`); png_default_read_data_ret (14 vectors, 14 distinct results, 14 changing state, `log/diff/00078d40_jgld_png_default_read_data_ret.path1.csv`); png_default_read_data_null (14 vectors, 14 distinct results, 14 changing state, `log/diff/00078d40_jgld_png_default_read_data_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_png_rio.cpp` as `_png_default_read_data` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x10078d9d): callee pops 0 bytes of stack arguments.

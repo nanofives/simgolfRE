@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00018490`), 100 bytes, 42 instructions, subsystem `ren
 draws a straight line into the sprite's own pixel buffer (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 35 of the Sprite vtable 0x1011d380 (lineTo(dst, mask, x, y, table, pal), thiscall, `ret 0x18` 0x100184f1). It reads the sprite's Palette word +0x10 into [ebp-8] (0x100184b3) and never reads it back; when pal is nonzero (`cmp [ebp+0x1c], 0; je` 0x100184b6) it stores pal at +0x10 (0x100184c2) and leaves it there. It returns Sprite::blitMask 0x1002cec0 (thunk 0x100010a0, call 0x100184dc) with (dst, x, y, table, mask): the pushes 0x100184c5..0x100184d8 move its second argument, the mask sprite, to the last place. Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: Sprite::lineTo (12 vectors, 12 distinct results, 12 changing state, `log/diff/00018490_jgld_Sprite_lineTo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?lineTo@Sprite@@QAEHPAVSurface@@PAHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x18` (at 0x100184f1): callee pops 24 bytes of stack arguments.

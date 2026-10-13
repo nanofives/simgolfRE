@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x00003270`), 51 bytes, 23 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns Tile's shared normal array: `this` is kept in [ebp-4] (0x1000328a) and the static Tile::normalArray 0x10013ff0 is called through the thunk 0x100011f4 (0x1000328d); its eax is returned (`ret` 0x100032a2; `call __chkesp` 0x100180a0 leaves eax alone). In the game that callee is the constant 0x10070a18 (`mov eax` 0x10014008), relocated with the module. Callers: Terrain::initTerrain 0x1000a970 and Terrain::resetTerrain 0x1000aa10. Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: Terrain::normalArray (12 vectors, 12 distinct results, 12 changing state, `log/diff/00003270_Terrain_Terrain_normalArray.path1.csv`); Terrain::normalArray_real (4 vectors, 1 distinct results, `log/diff/00003270_Terrain_Terrain_normalArray_real.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile2.cpp` as `?normalArray@Terrain@@QAEPAMXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100032a2): callee pops 0 bytes of stack arguments.

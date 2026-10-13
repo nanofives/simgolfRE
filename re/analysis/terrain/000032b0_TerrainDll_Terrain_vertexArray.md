@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x000032b0`), 51 bytes, 23 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+Returns Tile's shared vertex array, the same shape as Terrain::normalArray around the static Tile::vertexArray 0x10013fc0 through the thunk 0x100010c8 (call 0x100032cd, `ret` 0x100032e2). Callers: Terrain::initTerrain 0x1000a970 and Terrain::resetTerrain 0x1000aa10. Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: Terrain::vertexArray (12 vectors, 12 distinct results, 12 changing state, `log/diff/000032b0_Terrain_Terrain_vertexArray.path1.csv`); Terrain::vertexArray_real (4 vectors, 1 distinct results, `log/diff/000032b0_Terrain_Terrain_vertexArray_real.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_tile2.cpp` as `?vertexArray@Terrain@@QAEPAMXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x100032e2): callee pops 0 bytes of stack arguments.

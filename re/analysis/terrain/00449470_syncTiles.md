@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 172 bytes, 64 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Syncs the exe tile types/variations into the Terrain.dll tile grid. (`re/names/exe_1.tsv`)
 
+## Purpose
+Pushes the exe's per-tile type and variation grids into Terrain.dll's tile grid, touching only the tiles that differ. For x from 49 down to 0 (`dec edi; jns` 0x00449509) it first runs the input pump pumpInput483bd0 (0x00449479), then for y from 49 down to 0 (`dec esi; jns` 0x00449502) it takes the tile (x, y) of the Terrain object [0x00820ed0] (object + 0x3a4 + (x + y * width) * 0x248, width +0x14 and height +0x18 tested signed at 0x0044948c..0x0044949b, NULL outside them) and reads the tile's type field +0x24 (0x004494b3) with no NULL test. When tileType(x, y) 0x004492d0 differs from that field (`jne` 0x004494c2), or when Terrain::getVariation(tile) (thunk 0x004a4f2e, call 0x004494cb) differs from tileByte(x, y) 0x004492f0 (`je` 0x004494de skips the tile), it calls Terrain::setType(tile, tileType(x, y), tileByte(x, y)) (thunk 0x004a4f28, call 0x004494fd, the two accessors called again at 0x004494e2 / 0x004494ed). It ends by setting the byte [0x00820f2a] to 1 (0x00449513) and returns, in eax, the last call's result (setType's, or tileByte's when the last tile, (0, 0), matched). Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: syncTiles_50 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00449470_syncTiles_50.path1.csv`); syncTiles_53 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00449470_syncTiles_53.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?syncTiles449470@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044951b): callee pops 0 bytes of stack arguments.

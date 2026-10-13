@@ -1,0 +1,9 @@
+vector,original,reimpl,match
+$t0,269166792,269166792,True
+$t1,269166792,269166792,True
+$t2,269166792,269166792,True
+4660,269166792,269166792,True
+install_witness,0xe9,0xe9,True
+meta,detour=0x624f7c90,original=0x1340e40,2026-10-13T12:29:14
+distinct_results,1,,
+VERDICT,GREEN,4,

@@ -5,6 +5,9 @@ Module `Terrain.dll` (RVA `0x0000b9f0`), 60 bytes, 26 instructions, subsystem `t
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/terrain.tsv`)
 
+## Purpose
+The allocator's destroy(p) for the std::list<Tile*> nodes, called by std::list<Tile*>::erase 0x1000b800: it passes p (`push [ebp+8]` 0x1000ba0d / 0x1000ba10) to std::_Destroy 0x1000bb40 through the thunk 0x1000118b (call 0x1000ba11), pops that argument itself (`add esp, 4` 0x1000ba16, _Destroy is cdecl) and returns with `ret 4` (0x1000ba29) and _Destroy's eax; _Destroy has an empty body, so in the game eax is the 0xcccccccc its /GZ fill leaves (0x1000bb51). Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: std::allocator<Tile*>::destroy (12 vectors, 11 distinct results, 12 changing state, `log/diff/0000b9f0_Terrain_std_allocator(TileP)_destroy.path1.csv`); std::allocator<Tile*>::destroy_real (3 vectors, 1 distinct results, `log/diff/0000b9f0_Terrain_std_allocator(TileP)_destroy_real.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/terrain_list.cpp` as `?destroy@?$allocator@PAVTile@@@std@@QAEXPAPAVTile@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000ba29): callee pops 4 bytes of stack arguments.

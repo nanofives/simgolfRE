@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00018510`), 123 bytes, 51 instructions, subsystem `ren
 draws a dashed line into the sprite's own pixel buffer (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`.
 
+## Purpose
+Slot 34 of the Sprite vtable 0x1011d380 (dashTo(dst, mask, x, y, a5, a6, a7, table, pal), thiscall, `ret 0x24` 0x10018588). When a5 differs from a6 (`cmp eax, [ebp+0x1c]; je` 0x10018530 / 0x10018533) it returns 1 (0x10018535) and touches nothing. Otherwise it applies the same Palette override as lineTo (0x10018545 / 0x10018551, never restored) and returns Sprite::blitMaskScaled 0x1002d390 (thunk 0x100013a2, call 0x10018573) with (dst, x, y, a5, a7, table, mask) (pushes 0x10018554..0x1001856f). Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: Sprite::dashTo (12 vectors, 9 distinct results, 8 changing state, `log/diff/00018510_jgld_Sprite_dashTo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_sprite.cpp` as `?dashTo@Sprite@@QAEHPAVSurface@@PAHHHHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x24` (at 0x10018588): callee pops 36 bytes of stack arguments.

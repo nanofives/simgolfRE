@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000792b0`), 57 bytes, 20 instructions, subsystem `util
 libpng 1.0.5 default error handler: prints the message to jgld stderr 0x101233f0 with the format 0x1011e0cc (fprintf at 0x100792d6), then longjmp (png_ptr->jmpbuf, 1) at 0x100792e4; never returns. (`re/names/jgld_8.tsv`)
 System writeup: `re/analysis/systems/jgld_8.md`.
 
+## Purpose
+libpng 1.0.5's default error handler, the last step of png_error 0x10078fe0 (call 0x10079023): it prints the message with fprintf 0x10083010 (call 0x100792d6) to jgld's stderr 0x101233f0 through the format 0x1011e0cc, then calls longjmp 0x10082f90 (0x100792e4) with the jmp_buf at png_ptr + 0 (`push [ebp+8]` 0x100792e0) and the value 1 (0x100792de). It never returns: there is no `ret` after the longjmp. Reimplemented in `shim/src/re/c3ey.cpp`; path-1 A/B GREEN: png_default_error_a (12 vectors, 12 distinct results, 12 changing state, `log/diff/000792b0_jgld_png_default_error_a.path1.csv`); png_default_error_b (12 vectors, 12 distinct results, 12 changing state, `log/diff/000792b0_jgld_png_default_error_b.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 
