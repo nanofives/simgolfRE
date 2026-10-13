@@ -21,12 +21,23 @@ your own copy of the game (the original CD/ISO). Everything game-derived is rege
 
 1. Put your ISO in the repo root as `SM_SIMGOLF.iso` and follow `re/analysis/PORTABLE_RUNTIME.md`
    (7-Zip + unshield extraction, SafeDisc removal of your copy, `shim\build.bat`).
-2. Optional, for matching: extract `VC98\` from your own Visual Studio 6 disc to `tools/vc6/vc98`.
-3. Regenerate test references from your copy: `py -3.12 re/tools/capture_goldens.py`.
-4. `py -3.12 -m pytest -m static`, then `-m runtime`.
+2. Optional, for matching: extract `VC98\` from your own Visual Studio 6 disc to `tools/vc6/vc98`, and copy
+   `mspdb60.dll`, `msobj10.dll`, `msdis110.dll`, `msenc10.dll`, `rcdll.dll` from the disc's `Common\MSDev98\bin`
+   into `tools/vc6/vc98/bin` (cl.exe does not start without them).
+3. Register the compatibility layer for the exe (per user, no admin): value `~ DWM8And16BitMitigation` named by the
+   full path of `original\golf_clean.exe` under `HKCU\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers`.
+   Without it a plain launch exits with code 0 a few seconds after the window opens (`game.py` sets `__COMPAT_LAYER`
+   itself, so only `Play SimGolf.bat` and test_plain_launch_without_frida depend on it).
+4. Regenerate test references from your copy: `py -3.12 re/tools/capture_goldens.py`.
+5. `py -3.12 -m pytest -m static`, then `-m runtime`.
 
-Tool requirements: Python 3.12 (frida, pefile, capstone, unicorn, pywinauto, pillow, numpy, pytest),
-MSVC Build Tools 2022 (x86), Ghidra 12.
+Tool requirements: Python 3.12 (frida 17.22.1, pefile, capstone, unicorn, pywinauto, pillow, numpy, pytest),
+MSVC Build Tools 2022 (x86), Ghidra 12. Pin frida: 17.22.2 and later return garbage for x87 double returns of
+thiscall NativeFunctions (Random_next RED in tests/test_diff_tool.py; 17.9.11 to 17.22.1 GREEN, bisected 2026-10-12).
+MCP servers (`.mcp.json`): Ghidra 12.0.3 at `..\TD5RE\ghidra\ghidra_12.0.3_PUBLIC` (the stock GitHub release zip) with
+`headless-mcp` beside it (`pip install -e .`, pulls pyghidra); frida MCP from
+`pip install git+https://github.com/0xhackerfren/frida-game-hacking-mcp "mcp<2" "frida==17.22.1"` (it imports
+`mcp.server.fastmcp`, which mcp 2.x removed).
 
 ## Status
 
