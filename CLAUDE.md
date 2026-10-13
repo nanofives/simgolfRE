@@ -566,7 +566,12 @@ Game.start() now calls re/tools/game.py purge_frida_temp(): it deletes only dirs
 node / frida process started (a live process's dir has no open file between attaches, so the first version, which trusted
 a failed rename, deleted its own runner's dir and the next attach failed with `unable to find DLL`). Tools that attach
 Frida without Game should call it too.
-Defender: `instances\` is excluded from scanning (2026-10-12). Negctl builds that VirtualAlloc'd a flag page at the
+No audio output (LIVING-PC, 2026-10-13, found by c3ex): with waveOutGetNumDevs() = 0 initSound 0x483e90 gets 3 from the
+music device open and freeSoundLib 0x484060 FreeLibrary's sound.dll ~1.3 s after the window, so every sound.dll key
+ERRORs with `unable to find module`. re/tools/game.py then loads re/frida/js/keepsound.js, which pins sound.dll
+(GetModuleHandleExA PIN) when the game's LoadLibraryA returns it; the game still runs its no-sound path (g_soundReady
+0x83afc4 = 0), so sound code runs only when a fixture calls it. `SIMGOLF_KEEP_SOUND=0/1` overrides the detection.
+Defender: `instances\` is excluded from scanning (2026-10-12; MARIANO-PC only, not set on LIVING-PC). Negctl builds that VirtualAlloc'd a flag page at the
 fixed address 0x7A110000 were quarantined there as Trojan:Win32/Bearfoos.B!ml. All negctl sources now export the switch
 instead (`<Batch>NegCtl[4]`, word 1 magic 0x5147454e; fixtures call `__freeze.negOn()` in re/frida/js/freeze.js after the
 freeze); never reintroduce a fixed-address page. `original\` is still scanned: never deploy a negctl build there.

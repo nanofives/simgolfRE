@@ -97,6 +97,18 @@ def purge_frida_temp(min_age_s: float = 600) -> tuple[int, int]:
     return removed, freed
 
 
+def keep_sound() -> bool:
+    """Pin sound.dll (js/keepsound.js) when the machine has no audio output: the game then FreeLibrary's it ~1.3 s after
+    the window and every sound.dll hook goes with it (c3ex, round 32). SIMGOLF_KEEP_SOUND=0/1 overrides the detection."""
+    v = os.environ.get("SIMGOLF_KEEP_SOUND")
+    if v in ("0", "1"):
+        return v == "1"
+    try:
+        return ctypes.windll.winmm.waveOutGetNumDevs() == 0
+    except Exception:
+        return False
+
+
 class Game:
     """One spawned game process. Context manager kills it on exit."""
 
@@ -161,7 +173,7 @@ class Game:
         self.pid = frida.spawn([str(GAME_DIR / self.exe), *self.args], cwd=str(GAME_DIR), env=env)
         self.session = frida.attach(self.pid)
         self.session.on("detached", self._on_detached)
-        sources = ["harness.js"] + self.extra_js
+        sources = ["harness.js"] + (["keepsound.js"] if keep_sound() else []) + self.extra_js
         for name in sources:
             path = pathlib.Path(name)
             src = (path if path.is_absolute() else JS_DIR / name).read_text()
