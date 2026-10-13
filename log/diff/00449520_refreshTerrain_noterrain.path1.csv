@@ -9,6 +9,6 @@ $r6,0,0,True,8a67a5ae,8a67a5ae,True
 $r7,0,0,True,8a67a5ae,8a67a5ae,True
 state_regions,$implog+0x0:1024 0x00820ed0+0x0:4 $clog+0x0:1024 0x00820f2a+0x0:1,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x6db21590,original=0x1440a20,2026-10-11T10:48:45
+meta,detour=0x624d7320,original=0x13707e0,2026-10-13T13:23:55
 distinct_results,1,,
 VERDICT,GREEN,8,

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 153 bytes, 58 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 dispatches a command id: forwards to the focus child m_140 then the m_264 callback plus v37, sets g_83ab2c and notifies panel m_40 (`re/names/exe_3.tsv`)
 
+## Purpose
+Window::dispatchCommand (0x0047c970, thiscall, one argument cmd) offers a command id to a window and returns how it was handled. A window whose flags dword +0x9c has bit 0x200000 (0x0047c977) or whose byte +0xa0 has bit 0x8 (0x0047c983) returns 0 without doing anything. When +0x140 is non-zero the command goes first to the focus child, the window at +4 of the node +0x13c (0x0047c99a..0x0047c9aa), through a recursive call (0x0047c9b2); a non-zero answer there returns 1 (0x0047c9bf). Otherwise it stores the window into g_curWidget 0x0083ab2c (0x0047c9c8), calls the cdecl callback +0x264 with cmd when it is set (0x0047c9d9), adds the result of the virtual slot 0x94 (cmd) (0x0047c9e5), notifies the panel object +0x40 through its slot 0x1c when it is set (0x0047c9f6) and returns the sum. Reimplemented in `shim/src/re/c3o.cpp`; path-1 A/B GREEN: Window::dispatchCommand (20 vectors, 17 distinct results, 16 changing state, `log/diff/0047c970_Window_dispatchCommand.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?dispatch@C47c970@@QAEHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0047c9c5, 0x0047c9fe, 0x0047ca06): callee pops 4 bytes of stack arguments.

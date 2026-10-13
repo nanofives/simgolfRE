@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 80 bytes, 20 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 derived sound constructor: setMode(1), default pitch 1.0 (m_60) and zeroed state (`re/names/exe_3.tsv`)
 
+## Purpose
+`__thiscall() -> this` runs the parent ctor 0x00484150 (0x00484823), installs the derived vtable 0x004bacf8 at this+0 (0x0048482b), zeroes this+0x58 (0x00484833), sets bit 2 (value 4) of the dword at this+0x44 (0x00484839..0x0048483f), runs setMode 0x00484260 with 1 (0x00484844 — setMode case 1 ORs 4 into this+0x44 and stores 1 at this+0x54), then stores 0 at this+0x5c (0x00484849), 0x3f800000 (1.0f) at this+0x60 (0x00484850), 0x10 at this+0x3c (0x00484857) and 0 at this+0x64 and this+0x68 (0x0048485e, 0x00484865), returning `this` (0x00484820). Reimplemented in `shim/src/re/c3c.cpp`; path-1 A/B GREEN: Snd::ctorDerived (6 vectors, 6 distinct results, 6 changing state, `log/diff/00484820_Snd_ctorDerived.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `??0r3_C484820@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048486f): callee pops 0 bytes of stack arguments.

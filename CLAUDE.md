@@ -482,6 +482,44 @@ for a click on no row (0x00459837); showHistographScreen draws the previous even
 resetGolferState's 18-iteration loop works on one course record (0x0046d11d) and applies its thresholds twice;
 showMembershipRoster builds a tally nothing draws and strcpy's a 0x230-byte slot into a 19-byte buffer (0x00454fb6); a
 championship save loses its `.chr` / `Default` suffix; fileExists 0x004378a0 never closes its FindFirstFileA handle.
+Thirty-second round (2026-10-13, claude2 with model `opus` = claude-opus-5-5; Happy lists only aliases for claude2 and
+silently runs a full id such as `claude-opus-5-5` as claude-sonnet-4-6. The Accenture policy (v33) reached LIVING-PC
+mid-round: children run in don't-ask mode, unblocked by allow rules in ~/.claude-account2/settings.json; bare `py` stays
+refused, `~/bin/py -3.12 ...` runs; writing new .ps1 files is refused. Four batches were stopped at the user's request and
+continued by fresh sessions from their files. log/c3/round32_candidates.py takes round 31's drops plus the whole open C2
+pool by module and drop class, brief log/c3/round32_brief.md, runner log/c3/alt/r32_main.py): c3es 1 (showShortcutsScreen,
+over the FRAME MASK pilot `re/frida/js/framemask.js`, now loaded by diff_hook after modal.js: a pointer into the caller's
+frame is logged as (object ordinal, offset) so recording stand-ins compare which frame object a call targets; controls: mask
+on GREEN, null RED, mask off RED, three wrong-object bodies RED; the {base, stride} array path is coded but not yet proven),
+c3et 5 (allocTextBuffer, showGolferPairSelect, TextView::build, LabelButton::drawContents, showRoutingMapScreen), c3eu 35 (exe
+heap / import / file I/O rows: initSound, shutdownSound, the flic readers, logWrite and writeCourseInfo through fprintf /
+fopen / fclose stand-ins, the rootWin input handlers, jpeg_CreateCompress ...), c3ev 65 (exe display / live / other rows:
+movie readers, KeyTable::find, applyTileWalls, startNewCourse ...), c3ew 21 (sound wave-in / wave-out devices, SoundTimer,
+sequencer handlers, Seq_allocTrackSlot), c3ex 31 (sound channel / device / DirectSound list / MultiSound / sequencer rows) and
+c3ey 15 (syncTiles / rebuildTerrainGrid on a fixture Terrain object at [0x820ed0] with the six Terrain imports stood in at
+the exe's IAT under a frozen thread, jgld Sprite::lineTo / dashTo / drawO / blitMask / blitMaskScaled, png_default_error /
+read_data, the jgld_8 teardown registrars, three Terrain forwarders) promoted, plus Snd::ctorDerived 0x484820 (c3c, installer
+arrayStaticInit_448160) and Window::dispatchCommand 0x47c970 (c3o, caller Window::onCommand): 175 functions, C3 2,679 (exe
+1,533, jgld 517, Terrain 148, sound 481), open C2 305. Every batch has null and wrong-body controls (exported <Batch>NegCtl
+switches); the controls found fixture gaps in c3ew, c3ex (keys that never froze, so never armed the switch) and c3ev (missing
+vectors). Main build: all 360 keys GREEN with every hook on and with other batches' hooked callees off; 34 existing C3 callers
+(80 keys) GREEN both ways, including seven hooks.csv does not record (EXTRA_CALLERS in r32_main.py); static 360 and runtime
+19 pass with every hook live. Held: Channel_set3DBufferStub sound 0x37c00 (its only callee is `mov eax, 0xb`). Fixture rules:
+never stub a key's own function's thunk (Interceptor.replace follows the jmp into the shim's detour); mask stack out-slots in
+stand-in logs; default vtable answers in fixture objects are 0, not marker words; a fixture that reaches the walker list or
+cellAt early in a boot must write the cell-table widths itself (showRoutingMapScreen divided by zero only when it ran first).
+Dropped with leads: showThemePackSelect and the four browser screens (with ??_L stood in, the original's SEH unlink leaves
+fs:[0] on a bogus in-stack record and the process dies; real array construction brings back the frame layout), showBuyLandScreen
+and showCourseReport (not attempted), error_exit (with exit stood in it returns to a garbage address), the heavier sequencer
+bodies and DirectSound list bodies, about 30 larger exe rows per batch. Leads: c3eu's trivial proposals null_method 0x4b01e0,
+ListBox::Slot60 0x487af0, jpeg_mem_init 0x4b04b0 fail endstate.py's eax check with `0 ret(s)` (extent issue to look at);
+add jgld fread 0x10082d80 to filestandin.js's CRT table (c3ey patches it at run time); rename allocTextBuffer -> drawTextRun
+(log/c3/c3et_names.tsv). Findings: moviePlayFrame's catch-up loops wait for movieStepReturn1, which always returns 1, so the
+stock game can hang there; KeyTable::find scans a count-0 table until a name matches; DirectSoundDevice::removeBuffer
+decrements its count even for a buffer not on the list (0x1001336b); MultiSound::startVoice queues on g_soundEngine with no
+NULL test (0x10039fa6); blitMaskScaled divides by abs(a4) before testing a4 < 0; showRoutingMapScreen's exit remap indexes a
+20-entry table with golfers' hole bytes (>= 20 reads the stack); writeCourseInfo never checks fopen; shutdownSound's drain
+loop never ends if a node is not unlinked.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

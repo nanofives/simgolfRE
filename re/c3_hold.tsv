@@ -4,3 +4,4 @@ golf_clean.exe	0042f1c0	propagateType11: one of 7 vectors does anything (round 3
 sound.dll	00049604	crtValidatePointer: its result is decided by KERNEL32!IsBadWritePtr; only NULL and one valid pointer are testable without a fault (round 21)
 sound.dll	00015f70	mixResampleG (mixRatedStereo16Set): GREEN, but the original reads an uninitialised eof flag at [ebp-0x30], so the loop rows were dropped and the A/B does not cover that path (round 27, c3do)
 sound.dll	0002ddb0	Channel_propagateFlag0: GREEN, but its only static caller is itself (0x1002ddb0), so no outside caller reaches it (round 27, c3do)
+sound.dll	00037c00	Channel_set3DBufferStub: its only callee is `mov eax, 0xb`, so it returns 0xb on every path in this build; the A/B proves only the wrapper over a stubbed callee (c3ex, round 32)

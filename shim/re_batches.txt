@@ -147,3 +147,10 @@ c3eo.cpp
 c3ep.cpp
 c3eq.cpp
 c3er.cpp
+c3es.cpp
+c3et.cpp
+c3eu.cpp
+c3ev.cpp
+c3ew.cpp
+c3ex.cpp
+c3ey.cpp
