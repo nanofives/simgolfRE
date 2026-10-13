@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002a920`), 54 bytes, 21 instructions, subsystem `aud
 ResetEvents this+0x24, if not already running sets flag bit0, starts the worker thread at 0x10001366 via _beginthread storing the handle at this+0x20 and SetThreadPriority(,0) (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+Resets the object's event (ResetEvent(this+0x24), 0x1002a923-0x1002a927) and starts its worker thread once. Bit 0 of the flag byte at this+0 already set (0x1002a92d-0x1002a931) returns ResetEvent's result with its low byte replaced by the flag byte (`mov al, [esi]` 0x1002a92d). Otherwise the bit is set (0x1002a93e), _beginthread(0x10001366, 0, 0) starts soundThreadPump 0x1002a970 (0x1002a933-0x1002a940), the handle goes to this+0x20 (0x1002a948) and SetThreadPriority(handle, 0)'s result is returned (0x1002a94b-0x1002a94e). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: startSignalThread (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002a920_sound_startSignalThread.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002a920@f_1002a920@@YIXPAE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002a955): callee pops 0 bytes of stack arguments.

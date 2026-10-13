@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039470`), 10 bytes, 3 instructions, subsystem `audi
 Clears this+0x6c (0x10039470) and returns 0 (0x10039477); called by Wave_In_Device::op2 0x1000eda0. (`re/names/sound_13.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_13.md`.
 
+## Purpose
+Clears the dword at this+0x6c (0x10039470) and returns 0 (0x10039477); thiscall with nothing pushed (`ret` 0x10039479). It is the body Wave_In_Device::op2 0x1000eda0 tail-jumps to. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: clearField6cReturn0 (12 vectors, 11 distinct results, 10 changing state, `log/diff/00039470_sound_clearField6cReturn0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10039470@f_10039470@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10039479): callee pops 0 bytes of stack arguments.

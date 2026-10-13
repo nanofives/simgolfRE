@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000205f0`), 232 bytes, 89 instructions, subsystem `au
 Advances one track up to the current tick: decodes VLQ deltas (0x1001e710), dispatches each due event through Midi_Device::playEvent (0x10020870), advancing the read position (0x1001e9f0). (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Resets track i and plays its leading events. i at or above the track count (this's slot +0xb4, unsigned `jb` 0x10020606) returns 0xa. Seq_listGetAt (thunk 0x100015fa) on this+0x60 fetches the track (0x10020616-0x1002061f); 0x24 is returned as is (0x10020627), any other result goes on with the slot as it stands (the fixture's lookup returns only 0 or 0x24). Bit 1 of the byte at t+0x34 returns 0x29 (0x1002063a). The 0x80 dwords from t+0x58 are zeroed (`rep stosd` 0x1002064a-0x10020654) and the event walk of Seq_stepTrackMeta runs on t (0x10020656-0x100206cb). 0 is returned (0x100206cf). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Seq_preRollTrack (12 vectors, 11 distinct results, 12 changing state, `log/diff/000205f0_sound_Seq_preRollTrack.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10020613, 0x1002062f, 0x10020647, 0x100206d5): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100205f4 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

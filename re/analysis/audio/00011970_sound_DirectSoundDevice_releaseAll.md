@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00011970`), 208 bytes, 66 instructions, subsystem `au
 Frees the active buffer list g_100b4a34/g_100b4a38 and releases the IDirectSound interface. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Releases every DirectSound object of the device. The buffer list is emptied as in releaseAllBuffers, without the flag test (0x10011972-0x100119df). Bit 1 of the byte at this+0x6c (0x100119e1 / 0x100119e5) runs DsBuffer::releaseIfOwned on the embedded buffer this+0x70 (0x100119ea). A buffer at this+0x198 (0x100119ef-0x100119f7) gets releaseIfOwned (0x100119f9); the field is reloaded and, still non-NULL, destroyed and deleted (0x100119fe-0x10011a10); the field is cleared (0x10011a18). The interface at this+0 is released through its vtable slot +8 (stdcall, 0x10011a24-0x10011a27) and cleared (0x10011a2a). this+8 is cleared (0x10011a32) and the incremented this+0x18c is returned (0x10011a2c-0x10011a36). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: DirectSoundDevice::releaseAll_0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00011970_sound_DirectSoundDevice_releaseAll_0.path1.csv`); DirectSoundDevice::releaseAll_3 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00011970_sound_DirectSoundDevice_releaseAll_3.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10011a3f): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001197d before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

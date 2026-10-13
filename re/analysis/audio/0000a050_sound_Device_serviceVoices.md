@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000a050`), 78 bytes, 32 instructions, subsystem `aud
 Timer-tick client: dispatches pending commands then walks the active-voice list at +0x40 calling Voice::update on each voice with flag +0xac bit5 set. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+One service pass of a MIDI device: Midi_Device::dispatchCommand (thunk 0x10001f4b, 0x1000a054) runs, then the voice list from this+0x40 is walked with this+0x48 as the cursor (0x1000a059-0x1000a060). Each voice (+8 of a node) with bit 5 of its +0xac byte (0x1000a06c / 0x1000a073) gets Voice::update (thunk 0x10001c4e) with this+0x34 (0x1000a075-0x1000a07b); the cursor is reloaded after that call (0x1000a080) and advanced to its +4 (0x1000a087-0x1000a08c). A NULL head, cursor, next node or voice ends the walk (0x1000a063, 0x1000a06a, 0x1000a085, 0x1000a08f, 0x1000a096); this+0x34 is cleared (0x1000a098). Every exit is a `je` on the value just loaded being 0, so eax is 0 at the `ret`. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Device::serviceVoices (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000a050_sound_Device_serviceVoices.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000a09d): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000a052 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

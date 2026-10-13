@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002f060`), 100 bytes, 43 instructions, subsystem `au
 creates a type-6 Sound at +0x40 if empty; returns the create_sound error otherwise (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+The type-6 twin of openSourceType4 with three arguments (`ret 0xc` 0x1002f0c1): create_sound(this+0x40, 0, 6) when the slot is NULL (0x1002f070-0x1002f079, result returned when non-zero at 0x1002f07e), NULL object returns 0 (0x1002f084), slot +0x84 with a1..a3 (0x1002f086-0x1002f098), delete and clear on a non-zero result (0x1002f0a0-0x1002f0af), this's slot +0x7c (0x1002f0b9), the slot +0x84 result returned (0x1002f0bc). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: openSourceType6 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002f060_sound_openSourceType6.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x1002f0c1): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x1002f061 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

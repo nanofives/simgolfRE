@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00020290`), 148 bytes, 58 instructions, subsystem `au
 when bit 6 of this+0x214 is set calls pumpWaveMessages 0x10001997 on 0x100b49b8, loads the file with Midi_Device::loadFile 0x1000270c on this+0x60 and takes the first entry with Seq_listGetAt 0x100015fa; on success it pre-rolls every track with Seq_preRollTrack 0x10001956 counted by the virtual +0xb4, sets bit 10 of this+0xac, clears this+0x71c, this+0x720 and this+0x724 and returns 0, otherwise it returns the load error (`re/names/undisc_sound.tsv`)
 System writeup: `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+Loads a MIDI file into the sequencer and pre-rolls every track. Bit 6 of the byte at this+0x214 first pumps the sound window's messages (pumpWaveMessages, thunk 0x10001997, ecx = the module object 0x100b49b8; 0x10020296-0x100202a4). Midi_Device::loadFile(name) on the track list this+0x60 (thunk 0x1000270c, 0x100202a9-0x100202b3) gives r; Seq_listGetAt(&x, 1) runs and its result is dropped (0x100202b8-0x100202c3). A non-zero r is returned (0x100202ca). Otherwise each track i from 0 while i < slot +0xb4 (called again after each pass, 0x100202cc-0x100202f2) is pre-rolled (Seq_preRollTrack, thunk 0x10001956), bit 10 of this+0xac is set (`or ah, 4` 0x100202f8), this+0x720 / +0x71c / +0x724 are cleared (0x100202fe-0x1002030c) and 0 is returned. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Seq::loadFile (12 vectors, 12 distinct results, 12 changing state, `log/diff/00020290_sound_Seq_loadFile.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10020318, 0x10020321): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10020290 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

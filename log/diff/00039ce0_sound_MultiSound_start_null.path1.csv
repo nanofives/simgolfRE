@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$m0,14,14,True,b55af6b2,b55af6b2,False
+$m1,1,1,True,b55af6b2,b55af6b2,False
+$m2,1,1,True,b55af6b2,b55af6b2,False
+$m3,1,1,True,b55af6b2,b55af6b2,False
+$m4,1,1,True,b55af6b2,b55af6b2,False
+$m5,1,1,True,b55af6b2,b55af6b2,False
+$m6,1,1,True,b55af6b2,b55af6b2,False
+$m7,1,1,True,b55af6b2,b55af6b2,False
+$m8,1,1,True,b55af6b2,b55af6b2,False
+$m9,1,1,True,b55af6b2,b55af6b2,False
+$m10,1,1,True,b55af6b2,b55af6b2,False
+$m11,1,1,True,b55af6b2,b55af6b2,False
+state_regions,$gdev+0x0:4 $g49a8+0x0:4 $log+0x0:1056 $m0+0x0:5376 $m1+0x0:5376 $m2+0x0:5376 $m3+0x0:5376 $m4+0x0:5376 $m5+0x0:5376 $m6+0x0:5376 $m7+0x0:5376 $m8+0x0:5376 $m9+0x0:5376 $m10+0x0:5376 $m11+0x0:5376 $out0+0x0:16 $out1+0x0:16 $out2+0x0:16 $out3+0x0:16 $out4+0x0:16 $out5+0x0:16 $out6+0x0:16 $out7+0x0:16 $out8+0x0:16 $out9+0x0:16 $out10+0x0:16 $out11+0x0:16,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x625d5ae0,original=0x3740840,2026-10-13T12:40:26
+distinct_results,2,,
+VERDICT,GREEN,12,

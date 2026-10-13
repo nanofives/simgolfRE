@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002f680`), 18 bytes, 7 instructions, subsystem `audi
 Forwards to slot 37 (+0x94) of the object held at this+0x40 with that object as this (tail jump at 0x1002f689); returns 0 when this+0x40 is NULL (0x1002f68f). (`re/names/sound_14.tsv`)
 System writeup: `re/analysis/systems/sound_14.md`.
 
+## Purpose
+Slot 37 (+0x94) of vtbl_Ch5c2ec 0x1005c2ec. Forwards to the object held at this+0x40: NULL returns 0 (`test` / `je` 0x1002f683 / 0x1002f685, `xor eax, eax` 0x1002f68f); otherwise `jmp [eax+0x94]` (0x1002f689) runs that object's slot 37 with it as ecx and its result is the result. Nothing is pushed by callers (plain `ret` on the NULL arm, 0x1002f691). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Ch5c2ec_forwardSlot37 (12 vectors, 10 distinct results, 9 changing state, `log/diff/0002f680_sound_Ch5c2ec_forwardSlot37.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_05.cpp` as `?FUN_1002f680@f_1002f680@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002f691): callee pops 0 bytes of stack arguments.

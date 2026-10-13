@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000133d0`), 127 bytes, 40 instructions, subsystem `au
 Walks g_dsBufferList, unlinking, releasing and freeing every buffer node. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Destroys every buffer on the module's DirectSound buffer list. Bit 1 of the byte at this+0x6c clear returns 3 (0x100133d0-0x100133d6). Otherwise, while the head 0x100b4a34 is non-NULL (0x100133e8, reloaded at 0x10013440-0x10013448), the head buffer is unlinked (prev +0xbc / next +0xc0; the head or tail 0x100b4a38 take over when a neighbour is missing, 0x100133ea-0x10013421), DsBuffer::releaseIfOwned runs on it (thunk 0x100012d5, 0x10013427), then DsBuffer::destroy (thunk 0x10001910, 0x10013432) and operator delete 0x1004249a (0x10013438). 0 is returned (0x1001344b). In the A/B the two list words are swapped for a fixture list under the frozen first thread (keys _0, _1, _4 = list length). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: DirectSoundDevice::releaseAllBuffers_0 (12 vectors, 2 distinct results, 0 changing state, `log/diff/000133d0_sound_DirectSoundDevice_releaseAllBuffers_0.path1.csv`); DirectSoundDevice::releaseAllBuffers_1 (12 vectors, 2 distinct results, 9 changing state, `log/diff/000133d0_sound_DirectSoundDevice_releaseAllBuffers_1.path1.csv`); DirectSoundDevice::releaseAllBuffers_4 (12 vectors, 2 distinct results, 9 changing state, `log/diff/000133d0_sound_DirectSoundDevice_releaseAllBuffers_4.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100133db, 0x1001344e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100133d0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

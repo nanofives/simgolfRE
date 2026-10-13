@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002bc60`), 210 bytes, 88 instructions, subsystem `au
 thiscall(filespec): ensures the Sound at this+0x40 exists (create_sound), then builds a mode-flag word from this+0x58 bits (0/8/0x10/0x40/2) plus vtbl+0x58, used to arm the voice. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Prepares the device's type-1 sound object with one argument a. A NULL this+0x40 gets create_sound(this+0x40, a, 1), returned when non-zero (0x1002bc76-0x1002bc84). f = 1 for bit 0 of the +0x58 byte (0x1002bc8a-0x1002bc90), | 2 when this's slot +0x58 returns non-zero (0x1002bca0); from the +0x58 dword (0x1002bca3): bit 3 adds 0x40 (0x1002bcaa), bit 4 adds 0x80 (0x1002bcb1), bit 6 adds 0x400 (0x1002bcb8), bit 1 adds 4 (0x1002bcbf). The object gets f through slot +0x6c (0x1002bcc7). Bit 1 of the +0x58 byte, read again after that call, set returns 0 (0x1002bcca / 0x1002bcce). Otherwise Engine_playSound(a) (0x1002bcd3); a failure deletes the object, clears this+0x40 and is returned (0x1002bcda-0x1002bcef). Then the object's slot +0xc8 result goes to this+0x64 (0x1002bd07) and its slots +0x40, +0x9c, +0x44 get this+4, this+0x5c, this+8 (0x1002bd02-0x1002bd26). 0 is returned (0x1002bd29). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Device_prepareSoundFlags (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002bc60_sound_Device_prepareSoundFlags.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002bcf5, 0x1002bd2f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002bc63 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

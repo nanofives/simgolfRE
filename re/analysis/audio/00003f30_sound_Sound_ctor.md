@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00003f30`), 127 bytes, 36 instructions, subsystem `au
 Constructs a Sound object: base ctor 0x1001f4a0, installs vtable 0x1005b000, clears the chunk list +0xa4c and the 0x40-dword table at +0x948. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_2.md`, `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+Constructor of the Sound class (vtable 0x1005b000). The Sound5b6a8 base is built first (thunk 0x10002513, 0x10003f4f); then this+0xa4c..+0xa58 are cleared (0x10003f5a-0x10003f6c), the vtable is stored (0x10003f7f), the 0x40 dwords from this+0x948 are zeroed (`rep stosd` 0x10003f72-0x10003f85), Sound_setSourceType(5) runs (thunk 0x100018a2, 0x10003f90; jump-table entry 4 at 0x1002ad80 is 0x1002ad50, which stores 5 at +0x54 and ORs 0x28 into +0x44), this+0xa48 is cleared (0x10003f99) and this is returned (0x10003f9f). The EH frame (0x10003f30-0x10003f3e) is never unwound by the body. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Sound::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00003f30_sound_Sound_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10003fae): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10003f45 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

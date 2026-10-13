@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00020720`), 154 bytes, 62 instructions, subsystem `au
 Steps one track after a meta event (tempo/resync): decodes VLQ deltas and dispatches events via Midi_Device::playEvent. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Plays a track's leading meta / controller events up to its first note-on or program change. A NULL track returns 0xa (0x10020727-0x1002072f); bit 1 of the byte at t+0x34 returns 0x29 (0x10020738-0x10020740). The delta at the read pointer t+0x2c is read with Midi_readVarLen (thunk 0x1000139d, cdecl, 0x10020749-0x10020752; the count slot is the argument's own stack slot); a failed read returns 0 (0x1002075c). While the event's status byte (+1) masked with 0xf0 is neither 0x90 nor 0xc0 (0x1002075e-0x10020769) the delta is consumed (Track_advancePos, thunk 0x10001c7b, 0x10020772), the event is played with the count cleared (Midi_Device::playEvent, thunk 0x10002068, ecx = this, 0x10020777-0x10020787), a 0x29 from it returns 0x29 (0x1002078c / 0x1002078f), the count the player left is consumed (0x10020798) and the next delta read (0x1002079d-0x100207a6), looping while it reads (0x100207b0). 0 is returned (0x100207b4). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Seq_stepTrackMeta (12 vectors, 11 distinct results, 9 changing state, `log/diff/00020720_sound_Seq_stepTrackMeta.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10020735, 0x10020746, 0x100207b7): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10020729 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

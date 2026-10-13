@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002b7c0`), 93 bytes, 35 instructions, subsystem `aud
 if the device at this+0x40 is null and the byte at this+0x58 has bit 0x10 clear returns SNDERR 0x14; else lazily creates the device via 0x1002bd80 and calls its vtbl+0x1c; when this+0x58 bit 0x10 is set, records timeGetTime() at this+0x68, calls vtbl+0x80 and clears this+0x40 (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+Starts the device's sound object and records the start time. With an object in this+0x40 its slot +0x1c gives the result (0x1002b7c6-0x1002b7d2). Without one, bit 4 of the +0x58 byte (0x1002b7d6 / 0x1002b7da) calls Device_lazyCreateSound (thunk 0x100016f4, 0x1002b7de), and the object it left, if any, gives the result through slot +0x1c (0x1002b7e3-0x1002b7ef; none: 0); without the bit the result is 0x14 (0x1002b7f3). Then, with bit 4 of the +0x58 byte read again (0x1002b7f8 / 0x1002b7fc), timeGetTime goes to this+0x68 (0x1002b7fe-0x1002b804), this's slot +0x80 runs (0x1002b80b) and this+0x40 is cleared (0x1002b811). The result is returned (0x1002b818). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: startDevicePlayback (12 vectors, 11 distinct results, 10 changing state, `log/diff/0002b7c0_sound_startDevicePlayback.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002b81c): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002b7c1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

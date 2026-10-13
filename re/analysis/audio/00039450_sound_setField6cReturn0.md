@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039450`), 12 bytes, 4 instructions, subsystem `audi
 Stores its one argument into this+0x6c (0x10039454) and returns 0 (0x10039457); called by Wave_In_Device::op1 0x1000ed70. (`re/names/sound_13.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_13.md`.
 
+## Purpose
+Stores its one stack argument into this+0x6c (`mov eax, [esp+4]` 0x10039450, `mov [ecx+0x6c], eax` 0x10039454) and returns 0 (`xor eax, eax` 0x10039457, `ret 4` 0x10039459). It is the body Wave_In_Device::op1 0x1000ed70 reaches. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: setField6cReturn0 (12 vectors, 12 distinct results, 11 changing state, `log/diff/00039450_sound_setField6cReturn0.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_06.cpp` as `?FUN_10039450@C_FUN_10039450@f_10039450@@QAEII@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10039459): callee pops 4 bytes of stack arguments.

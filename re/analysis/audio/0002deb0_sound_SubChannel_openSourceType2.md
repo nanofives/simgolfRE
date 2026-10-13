@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002deb0`), 90 bytes, 39 instructions, subsystem `aud
 if the Sound slot +0x40 is empty creates a type-2 Sound there, otherwise plays it via Engine_playSound; propagates the +0x58 flag bit1 and +0x5c to the created Sound (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Table slot 4 (+0x10) of the table at 0x1005be88 (installers Ch5be88_ctor 0x1002d450, Ch5be88_dtorA 0x1002d560, Ch5be88_dtorB 0x1002e660). Opens a type-2 source: with this+0x40 NULL the result of create_sound(this+0x40, a, 2) is taken (0x1002dec3-0x1002decc, thunk 0x1000137a); with an object already there the argument itself is taken (0x1002ded1). A non-zero value is returned (0x1002ded7). Then Engine_playSound(a) (thunk 0x100026e9, 0x1002dedc); a non-zero result is returned (0x1002dee3). With bit 1 of the byte at this+0x58 (0x1002dee9) the new object's +0x58 byte gets bit 1 (0x1002deeb-0x1002def3) and a non-zero this+0x5c is copied to its +0x5c (0x1002defb-0x1002deff). 0 is returned (0x1002df02). The argument doubling as the result when the object exists is how the original reads: a non-zero argument is returned unchanged without starting play. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: SubChannel_openSourceType2 (12 vectors, 12 distinct results, 10 changing state, `log/diff/0002deb0_sound_SubChannel_openSourceType2.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1002df07): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1002deb2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002f5e0`), 117 bytes, 50 instructions, subsystem `au
 calls vtbl+0x14 then creates a type-7 Sound at +0x40 if empty (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+The type-7 member of the family. this's slot +0x14 runs first (0x1002f5e9). create_sound(this+0x40, 0, 7) when the slot is NULL (0x1002f5f6-0x1002f5ff) is returned when non-zero (0x1002f606); a NULL object returns that 0 (0x1002f60c). The object's slot +0x84 gets a1..a3 (0x1002f60e-0x1002f61f); a result that is neither 0 nor 0x10 (0x1002f629 / 0x1002f62e) deletes and clears the object (0x1002f630-0x1002f63b), so 0x10 keeps it. this's slot +0x7c runs only while this+0x40 is still non-NULL (0x1002f641-0x1002f64a). The slot +0x84 result is returned (0x1002f64e). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: openSourceType7 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002f5e0_sound_openSourceType7.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x1002f652): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x1002f5e3 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

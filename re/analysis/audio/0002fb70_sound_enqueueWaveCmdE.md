@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002fb70`), 126 bytes, 37 instructions, subsystem `au
 if the global wave device exists, operator_new(0x10) a command node, pairStore(node,0xe,this), stores param_1 at node+8 and posts it to the wave command queue (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Posts wave command 0xe for this object on the engine's queue. g_soundEngine 0x100b4a20 NULL returns 0 (0x1002fb86 / 0x1002fb90). Otherwise a 0x10-byte node from operator new 0x100424d7 (0x1002fb94) is filled by pairStore (thunk 0x10001299: +0 = 0xe, +4 = this, 0x1002fbb1), the first argument goes to +8 and the third to +0xc (0x1002fbc2 / 0x1002fbc5; the second argument is never read), and WaveCmdQueue::pushValue (thunk 0x100011c7) queues it on the reloaded engine (0x1002fbc8-0x1002fbd7), whose result is returned (`ret 0xc`). A NULL node is written through (0x1002fbc2), a fault of the original that no vector takes. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: enqueueWaveCmdE_eng (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002fb70_sound_enqueueWaveCmdE_eng.path1.csv`); enqueueWaveCmdE_null (12 vectors, 1 distinct results, 0 changing state, `log/diff/0002fb70_sound_enqueueWaveCmdE_null.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x1002fbeb): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x1002fb85 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

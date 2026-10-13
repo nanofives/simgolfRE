@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000286f0`), 64 bytes, 26 instructions, subsystem `aud
 thiscall(hwnd): if not already attached (this+8==0) installs the subclass WNDPROC 0x100025ef via SetWindowLongA(hwnd,-4), saving the old proc at this+0xc, storing the HWND at this+8 and setting flag this+4 bit2; returns 0x18 on failure. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Subclasses a window with the sound library's window procedure. Already subclassed (this+8 non-zero, 0x100286f4 / 0x100286f9) returns 0. Otherwise SetWindowLongA(hwnd, GWL_WNDPROC = -4, 0x100025ef) (0x100286fb-0x10028707; 0x100025ef is the thunk to soundWindowSubclassProc 0x10028b70) and the previous procedure is stored at this+0xc (0x1002870f). A zero result returns 0x18 (0x10028712-0x1002871b); otherwise hwnd goes to this+8 (0x10028721), bit 2 of the byte at this+4 is set (0x10028726) and 0 is returned. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: SoundWindowObj_subclass (12 vectors, 11 distinct results, 10 changing state, `log/diff/000286f0_sound_SoundWindowObj_subclass.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_100286f0@C_FUN_100286f0@f_100286f0@@QAEIPAUHWND__@@@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1002871b, 0x1002872d): callee pops 4 bytes of stack arguments.

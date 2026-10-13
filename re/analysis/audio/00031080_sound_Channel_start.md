@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00031080`), 72 bytes, 28 instructions, subsystem `aud
 returns SNDERR 0xd if already started (+0x58 bit0); else if the global wave device (g_waveDevice) accepts (vtbl+0x6c()==0) sets +0x58 bit0 and posts wave command 1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Starts a channel through the wave command queue. Bit 0 of the byte at this+0x58 set returns 0xd (0x10031083 / 0x10031087 / 0x10031089). With g_soundEngine 0x100b4a20 NULL (0x10031090 / 0x10031098) or the engine's slot +0x6c returning non-zero (0x1003109c / 0x100310a1) it returns 1. Otherwise +0x58 becomes (old & 0xffffffdb) | 1 (0x100310a3-0x100310af: bits 2 and 5 cleared, bit 0 set), WaveCmdQueue::pushNode 0x1000c2f0 is called through the thunk 0x100020b3 on the reloaded engine with (this, 1) (0x100310b2-0x100310b8), and 0 is returned. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Channel_start_ok (12 vectors, 8 distinct results, 7 changing state, `log/diff/00031080_sound_Channel_start_ok.path1.csv`); Channel_start_busy (12 vectors, 2 distinct results, 7 changing state, `log/diff/00031080_sound_Channel_start_busy.path1.csv`); Channel_start_null (12 vectors, 2 distinct results, 0 changing state, `log/diff/00031080_sound_Channel_start_null.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_07.cpp` as `?FUN_10031080@f_10031080@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1003108f, 0x100310c0, 0x100310c7): callee pops 0 bytes of stack arguments.

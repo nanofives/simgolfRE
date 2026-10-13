@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000132e0`), 183 bytes, 56 instructions, subsystem `au
 Finds the given buffer in g_dsBufferList, decrements the active count +0x158, then releases and frees it. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Removes one buffer b. Bit 1 of the byte at this+0x6c clear returns 3 (0x100132e4-0x100132e8); a NULL b returns 0xa (0x100132f9). b is searched for in the list from 0x100b4a34 along +0xc0 (0x10013302-0x10013317) and unlinked when found (0x1001331f-0x1001335a). `mov eax, [b+0x98]; or eax, 4; je` (0x10013365-0x1001336e) never jumps, so this+0x158 is decremented on every call that gets this far (0x10013370). DsBuffer::releaseIfOwned(b) returning 0 (0x10013378-0x1001337f) is followed by DsBuffer::destroy and operator delete of b (0x10013381-0x10013389). 0 is returned (0x10013391). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: DirectSoundDevice::removeBuffer_4 (12 vectors, 11 distinct results, 9 changing state, `log/diff/000132e0_sound_DirectSoundDevice_removeBuffer_4.path1.csv`); DirectSoundDevice::removeBuffer_1 (12 vectors, 9 distinct results, 7 changing state, `log/diff/000132e0_sound_DirectSoundDevice_removeBuffer_1.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100132ee, 0x100132ff, 0x10013394): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100132e0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

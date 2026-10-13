@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00010660`), 62 bytes, 21 instructions, subsystem `aud
 Dispatches to the time-based or hardware-cursor position reader by the owner flag +0x10 bit5. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Reads a buffer position through the right method for the buffer's descriptor. No descriptor at this+0x5c returns 1 (0x10010665, 0x10010696). Bit 5 of the descriptor's +0x10 byte (0x10010667 / 0x1001066b) selects DsBuffer::getTimedPosition (thunk 0x1000115e) with the three arguments (0x1001066d-0x1001067c); otherwise DsBuffer::getPlayPosition (thunk 0x10001695) with the first two (0x10010684-0x1001068e). The chosen method's result is returned (`ret 0xc`). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: DsBuffer::getPosition (12 vectors, 11 distinct results, 10 changing state, `log/diff/00010660_sound_DsBuffer_getPosition.path1.csv`).
+
 ## Signature
 - Returns with `ret 0xc` (at 0x10010681, 0x10010693, 0x1001069b): callee pops 12 bytes of stack arguments.
 - `ecx` is read at 0x10010660 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

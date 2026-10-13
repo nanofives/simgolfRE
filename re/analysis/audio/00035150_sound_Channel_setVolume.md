@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00035150`), 69 bytes, 26 instructions, subsystem `aud
 Sets DirectSound volume param_1 on the channel's primary buffer (+0x54) and on each of the 16 sub-voice buffers (+0x318 stride 0x110), gated on +0x58 bit28 and a non-null buffer. (`re/names/sound_7.tsv`)
 System writeup: `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Sets one volume on a channel's DirectSound buffers. Bit 28 of this+0x58 clear (0x10035153 / 0x1003515a) or no buffer at this+0x54 (0x10035161) returns at once. Otherwise DsBuffer::setVolume (thunk 0x100018f7) runs on that buffer with the argument (0x1003516a) and then on every non-NULL dword of the 16 slots at this+0x318 + 0x110 k (0x1003516f-0x1003518d). Its eax is not a result: both callers drop it (MultiSound::setVolume 0x1003a104 is followed by `test esi, esi` 0x1003a109, MultiSound_start 0x10039d9e by `mov ecx, edi` 0x10039da3), so the key compares the calls and memory only (ret void). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Channel_setVolume (12 vectors, 8 distinct results, 7 changing state, `log/diff/00035150_sound_Channel_setVolume.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_09.cpp` as `?FUN_10035150@C_FUN_10035150@f_10035150@@QAEXI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x10035192): callee pops 4 bytes of stack arguments.

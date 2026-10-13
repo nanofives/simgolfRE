@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002bd80`), 206 bytes, 86 instructions, subsystem `au
 fastcall(dev): if a filespec is present at dev+0x14, lazily create_sound at dev+0x10 and build the mode-flag word from dev+0x16 flags and vtbl+0x58; returns 8 when no filespec. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Creates and starts the device's type-1 sound object, building its start flags from the device. this+0x50 zero returns 8 (0x1002bd8d, 0x1002be42); a NULL this+0x40 gets create_sound(this+0x40, this+0x50, 1), returned when non-zero (0x1002bd9d-0x1002bdab). f = 1 for bit 0 of the +0x58 byte (0x1002bdb1-0x1002bdb7), | 2 when this's slot +0x58 returns non-zero (0x1002bdc0-0x1002bdc7); from the +0x58 dword read after that call (0x1002bdca): bit 2 adds 0x11 (0x1002bdd1), bit 3 adds 0x40 and, without bit 5, 1 (0x1002bdd4-0x1002bddf), bit 4 adds 0x80 (0x1002bde6), bit 5 adds 0x100 (0x1002bdf0), bit 6 adds 0x400 (0x1002bdfa). The object gets f through slot +0x6c (0x1002be05); Engine_playSound(this+0x50) (thunk 0x100026e9, 0x1002be0b) failing deletes the object, clears this+0x40 and returns the failure (0x1002be12-0x1002be27); otherwise the object's slot +0xc8 result is stored at this+0x64 (0x1002be38) and 0 is returned. Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Device_lazyCreateSound (12 vectors, 12 distinct results, 11 changing state, `log/diff/0002bd80_sound_Device_lazyCreateSound.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002be2d, 0x1002be41, 0x1002be4d): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002bd81 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

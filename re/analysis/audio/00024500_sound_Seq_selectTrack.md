@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00024500`), 135 bytes, 48 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Selects track index param_2 as current: advances it to tick param_1 (0x1001e9f0), clears its +0x34 bit2, updates the current-track index +0x20c when later than the previous, and pre-rolls it (0x100205f0). (`re/names/sound_3.tsv`)
 
+## Purpose
+Gives track i new data and makes it current when it ranks after the current one. The current track (index this+0x20c) is looked up (0x10024508-0x10024519) and taken as NULL when the lookup fails (0x1002451e-0x10024522). Track i is looked up (0x1002452a-0x10024536); a failure is returned (0x1002453d). Track_setData(data) runs on it (thunk 0x10002298, 0x1002453f-0x10024548) and bit 2 of its +0x34 is cleared (0x1002454d-0x10024557). this+0x20c becomes i when there is no current track or the current one's +0x54 is below track i's (unsigned, `jae` 0x1002456c; 0x1002455a-0x1002456e). Seq_preRollTrack(i) runs (thunk 0x10001956, 0x10024577) and 0 is returned (0x1002457c). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Seq_selectTrack (12 vectors, 12 distinct results, 12 changing state, `log/diff/00024500_sound_Seq_selectTrack.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_03.cpp` as `?FUN_10024500@C_FUN_10024500@f_10024500@@QAEHHI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x8` (at 0x10024584): callee pops 8 bytes of stack arguments.

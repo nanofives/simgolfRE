@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0001e9a0`), 64 bytes, 21 instructions, subsystem `aud
 ## Role (from the naming pass, not a C3 purpose)
 Sets a track's event buffer: frees the old buffer at +0x3c when +0x34 bit2 is set, stores param_1 at +0x3c/+0x2c, scans the new track (Midi_scanTrack) when non-null, and clears the tick +0x40. (`re/names/sound_3.tsv`)
 
+## Purpose
+Replaces a MIDI track's data pointer. Old data at this+0x3c owned by the track (bit 2 of the byte at this+0x34, 0x1001e9a8-0x1001e9ae) is freed by operator delete 0x1004249a (0x1001e9b1) and the field cleared (0x1001e9b9). The new pointer goes to this+0x3c and this+0x2c (0x1001e9c6 / 0x1001e9c9); a non-NULL one is scanned by Midi_scanTrack (thunk 0x1000215d, 0x1001e9d0), whose result is returned (a NULL pointer returns 0). this+0x40 is cleared (0x1001e9d5). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Track_setData (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001e9a0_sound_Track_setData.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001e9a0@C_FUN_1001e9a0@f_1001e9a0@@QAEXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1001e9dd): callee pops 4 bytes of stack arguments.

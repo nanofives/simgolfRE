@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002eb40`), 105 bytes, 45 instructions, subsystem `au
 creates a type-4 Sound at +0x40 if empty; returns the create_sound error otherwise (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Opens a type-4 source and hands it four arguments. With this+0x40 NULL create_sound(this+0x40, 0, 4) runs (0x1002eb50-0x1002eb59, thunk 0x1000137a) and a non-zero result is returned (0x1002eb5e). A NULL object then returns 0 (0x1002eb60-0x1002eb64). Otherwise the object's slot +0x84 gets a1..a4 (0x1002eb66-0x1002eb7d); a non-zero result deletes the object through delete_sound (thunk 0x10001a87, 0x1002eb8c) and clears this+0x40 (0x1002eb94). this's slot +0x7c then runs (0x1002eb9e) and the slot +0x84 result is returned (0x1002eba1, `ret 0x10`). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: openSourceType4 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002eb40_sound_openSourceType4.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x1002eba6): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x1002eb41 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

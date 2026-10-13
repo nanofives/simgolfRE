@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002bee0`), 143 bytes, 65 instructions, subsystem `au
 fastcall(dev): create_sound at dev+0x10, set mode (vtbl+0x6c), open (vtbl+0x84), and on success set dev+0x11 bit0, start (vtbl+0x7c) and queue the first buffer (vtbl+0x48). (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Creates the device's type-1 sound object on demand and queues its start. this+0x50 zero returns 8 (0x1002beec, 0x1002bf64). With this+0x40 NULL create_sound(this+0x40, this+0x50, 1) runs and a non-zero result is returned (0x1002bef8-0x1002bf06). The flag f is 1 for bit 0 of the byte at this+0x58 (0x1002bf08-0x1002bf0e), plus 2 when this's slot +0x58 returns non-zero (0x1002bf13-0x1002bf1e); the object gets f through its slot +0x6c (0x1002bf26) and its slot +0x84 runs (0x1002bf2d), whose non-zero result is returned (0x1002bf37). Bit 0 of this+0x44 already set returns 0 (0x1002bf3e); otherwise it is set (0x1002bf46), this's slot +0x7c runs (0x1002bf49) and, with this+0x30 non-zero, the object's slot +0x48 gets 1 (0x1002bf4c-0x1002bf5b). 0 is returned (0x1002bf5f). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Device_createStartQueue (12 vectors, 12 distinct results, 11 changing state, `log/diff/0002bee0_sound_Device_createStartQueue.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002bf63, 0x1002bf6e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002bee2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

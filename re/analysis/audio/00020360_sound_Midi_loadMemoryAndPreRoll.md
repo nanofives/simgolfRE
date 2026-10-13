@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00020360`), 211 bytes, 81 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Loads an SMF from memory into the player sub-object (this+0x60) via loadFromMemory, pre-rolls every track (0x100205f0 over the vtbl+0xb4 count), sets +0xac bit 0x400 and clears the timing accumulators +0x71c/+0x720/+0x724. (`re/names/sound_3.tsv`)
 
+## Purpose
+Loads a MIDI image from memory and marks every track. r = Midi_Device::loadFromMemory(mem) on this+0x60 (thunk 0x1000169f, 0x10020363-0x10020373), kept in mem's stack slot (0x10020383) and returned on every path (0x10020419, 0x10020427); the second argument is never read. Seq_listGetAt(&x, 1) runs and its result is dropped (0x10020378-0x10020387). r = 0 pre-rolls every track and resets the fields as Seq::loadFile does (0x10020390-0x100203d2). With this+0x224 zero (0x100203d8 / 0x100203de) each track i < slot +0xb4 (called again each pass) that Seq_listGetAt finds (result 0, 0x10020401) gets bit 3 of its +0x38 byte (0x10020403-0x10020407). Reimplemented in `shim/src/re/c3ex.cpp`; path-1 A/B GREEN: Midi_loadMemoryAndPreRoll (12 vectors, 12 distinct results, 12 changing state, `log/diff/00020360_sound_Midi_loadMemoryAndPreRoll.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x10020424, 0x10020430): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x1002036a before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
