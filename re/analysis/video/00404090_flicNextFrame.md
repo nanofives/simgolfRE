@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 138 bytes, 51 instructions, subsystem `video`. Mechanic
 advances FLC stream param_1: reads frame counts from the per-flic record at 0x004f6620 (stride 0x84, +0x60/+0x62), seeks to the next frame via Link482b::send and returns the decoded frame via Link482::data (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Steps the flic in a slot one frame: n = the Flic record's word +0x62 (Flic records 0x004f65c8 + 0x84 * slot, 0x0040409c; the word read through [rec + 0x58] when [rec + 0x44] is not NULL, else 0, 0x004040a3-0x004040b9). A link position +0x3c below n - 1 (stream links 0x0050fc20 + 0x44 * slot; `cmp [link + 0x3c], ecx; jb` 0x004040c6 / 0x004040cc, unsigned, so a Flic with no header gives 0xffffffff) tail-calls Link482::resolve 0x00482e20 on the link (0x00404113). Otherwise the frame +0x40 (0x004040e2) equal to the word +0x60 minus 1 (`cmp edx, ecx; jne` 0x004040e9 / 0x004040eb) returns 0 (0x004040ed); any other frame goes to Link482b::send 0x00482e40 with (frame + 1, 0, 0) (pushes 0x004040f7- 0x004040fc, call 0x004040ff) and Link482::data 0x00482e10 on the link gives eax (0x00404106). Caller: loadFlic 0x0043d740 (slot 0x24e at 0x0043da76; the tables hold 591 slots: the frame-table records 0x004e9aa0 + 0x58 * 591 end at 0x004f65c8). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: flicNextFrame (12 vectors, 9 distinct results, 8 changing state, `log/diff/00404090_flicNextFrame.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004040f0, 0x0040410c, 0x00404119): callee pops 0 bytes of stack arguments.
 

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 123 bytes, 34 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 streaming sound destructor: returns its slot to the manager g_83ad80c when m_3c<16, frees the name and cleans up (`re/names/exe_3.tsv`)
 
+## Purpose
+The SndMusic destructor: the vtable 0x004bacf8 into +0 (0x004848bd); a bucket index +0x3c below 0x10 (`cmp eax, 0x10; jae` 0x004848ce / 0x004848d1, unsigned) removes this from the hash table object 0x0083ad80 (HashTable::remove 0x004876c0, 0x004848d9); a buffer +0x50 (0x004848de, `je` 0x004848e3) goes to operator delete (0x004848e6) and +0x50 = 0 in every case (0x004848f0); Snd::unlinkFromList 0x004844e0 (0x004848f7) and Snd::dtor 0x004841e0 (0x00484906) follow, and Snd::dtor's eax is returned (`ret` 0x0048491a). SEH frame not reproduced. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: SndMusic::dtor_lib0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004848a0_SndMusic_dtor_lib0.path1.csv`); SndMusic::dtor_lib1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004848a0_SndMusic_dtor_lib1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `??1C4848a0@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0048491a): callee pops 0 bytes of stack arguments.

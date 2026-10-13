@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$t0 273 546 3 4 5,-195222666,-195222666,True,9e162860,9e162860,True
+$t0 273 0 3 4 5,-195222666,-195222666,True,8ffb8e30,8ffb8e30,True
+$t1 1 2 3 4 5,0,0,True,5d4b7bc6,5d4b7bc6,False
+$t2 1 2 3 4 5,89076584,89076584,True,5d4b7bc6,5d4b7bc6,False
+$t3 1 2 3 4 5,0,0,True,625cb1d8,625cb1d8,True
+$t4 7 0 -1 -2 -3,-195222538,-195222538,True,76bb8360,76bb8360,True
+$t4 8 9 2147483647 0 1,-195222538,-195222538,True,ecfd558a,ecfd558a,True
+$t3 0 0 0 0 0,0,0,True,625cb1d8,625cb1d8,True
+$t0 0 0 0 0 0,-195222666,-195222666,True,0c36cbac,0c36cbac,True
+$t2 0 0 6 6 6,89076584,89076584,True,5d4b7bc6,5d4b7bc6,False
+$t4 -1 -1 -1 -1 -1,-195222538,-195222538,True,2e1040c7,2e1040c7,True
+$t1 0 0 0 0 0,0,0,True,5d4b7bc6,5d4b7bc6,False
+state_regions,$tblk+0x0:160 $names+0x0:160 0x00840940+0x0:4 $clog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x625d1800,original=0x1340580,2026-10-13T12:51:46
+distinct_results,9,,
+VERDICT,GREEN,12,

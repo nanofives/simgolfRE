@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 41 bytes, 17 instructions, subsystem `video`. Mechanica
 per-frame entry that drives the movie/FMV player during screen updates. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Services every open movie: the movie count 0x008406e4 at zero or below (`test eax, eax; jle` 0x0049c8e8 / 0x0049c8ea) returns at once; otherwise each pointer of the table 0x00840698 goes to serviceMovieFrame 0x0049c910 as this (0x0049c8f2 / 0x0049c8f4). The count is read again after every call (0x0049c8f9) and the loop continues while the index is below it (`cmp esi, eax; jl` 0x0049c902 / 0x0049c904, signed), so a movie that closes during its frame shortens the loop. eax is the last count read (`ret` 0x0049c908). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: serviceMovie_n0 (1 vectors, 1 distinct results, 0 changing state, `log/diff/0049c8e0_serviceMovie_n0.path1.csv`); serviceMovie_neg (1 vectors, 1 distinct results, 0 changing state, `log/diff/0049c8e0_serviceMovie_neg.path1.csv`); serviceMovie_n1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049c8e0_serviceMovie_n1.path1.csv`); serviceMovie_n3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049c8e0_serviceMovie_n3.path1.csv`); serviceMovie_n19 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049c8e0_serviceMovie_n19.path1.csv`); serviceMovie_shrink (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049c8e0_serviceMovie_shrink.path1.csv`); serviceMovie_grow (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049c8e0_serviceMovie_grow.path1.csv`); serviceMovie_drop0 (1 vectors, 1 distinct results, 1 changing state, `log/diff/0049c8e0_serviceMovie_drop0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0049c908): callee pops 0 bytes of stack arguments.
 

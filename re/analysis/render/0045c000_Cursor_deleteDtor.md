@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 36 bytes, 12 instructions, subsystem `render`. Mechanic
 scalar deleting destructor of a Cursor object: sets vtable 0x004ba7f4, calls Cursor::destroy, frees when the flag low bit is set (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+The scalar deleting destructor of the cursor object: the vtable 0x004ba7f4 into +0 (0x0045c003), Cursor::destroy 0x004884b0 (0x0045c009; DestroyCursor on +4, the sub-object's deleting destructor on +8), then bit 0 of the flags argument (0x0045c00e / `je` 0x0045c013) hands the object to operator delete (0x0045c016); returns this (0x0045c01e), `ret 4`. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: Cursor_deleteDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0045c000_Cursor_deleteDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_08.cpp` as `?FUN_0045c000@C_FUN_0045c000@f_0045c000@@QAEPAIE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0045c021): callee pops 4 bytes of stack arguments.

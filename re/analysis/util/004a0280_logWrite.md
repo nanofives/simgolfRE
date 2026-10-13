@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 156 bytes, 55 instructions, subsystem `util`. Mechanica
 writes a formatted record to the debug log file. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Appends one line to a logger's file (thiscall, five stack arguments, `ret 0x14` 0x004a02ea / 0x004a0319): a NULL path at +4 (`test eax, eax; je` 0x004a0284 / 0x004a0286) returns 0; a non-zero +8 (`test edx, edx; jne` 0x004a028f / 0x004a0291) or global 0x00840940 (`test ecx, ecx; jne` 0x004a029d / 0x004a029f) returns the path pointer (eax still holds it). Otherwise resolveAndOpenFile 0x004a00f0 (path, mode 0x004e4a70 `at`) (pushes 0x004a02a1 / 0x004a02a6) and a NULL file (0x004a02b1 / 0x004a02b3) returns 0. A non-NULL second argument (`test eax, eax; je` 0x004a02b9 / 0x004a02bb) selects the format 0x004e4a60 (two %s, three %d) with all five arguments in order (pushes 0x004a02c5-0x004a02d7); a NULL one the format 0x004e4a50 (one %s, three %d) with arguments 1, 3, 4, 5 (0x004a02f9-0x004a0306); fprintf 0x004a622c writes it and fclose 0x004a609f on the file gives eax (0x004a02e1 / 0x004a0310). Caller: 0x004a0320 (hooks.csv). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: logWrite (12 vectors, 9 distinct results, 8 changing state, `log/diff/004a0280_logWrite.path1.csv`); logWrite_off (6 vectors, 5 distinct results, 0 changing state, `log/diff/004a0280_logWrite_off.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_05.cpp` as `?log@C4a0280@@QAEXHHHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x14` (at 0x004a02ea, 0x004a0319): callee pops 20 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 117 bytes, 33 instructions, subsystem `render`. Mechani
 Destructor: releases the device object at this+0x40 (field [0x10]) via its vtable, frees buffer at [0x14], chains to base dtor 0x004841e0. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+The Screen destructor: the vtable 0x004badf8 into +0 (0x004853ed); an object at +0x40 (0x004853f3, `je` 0x00485400) gets its virtual slot 0 with 1 (`push 1; call [eax]` 0x00485404 / 0x00485406, a deleting destructor) and +0x40 = 0 (0x00485408); a buffer at +0x50 (0x0048540f, `je` 0x00485414) goes to operator delete (0x00485417) and +0x50 = 0 (0x0048541f); then Snd::dtor 0x004841e0 (0x00485430), whose eax is returned (`ret` 0x00485444). The SEH frame (0x004853d0-0x004853de) is not reproduced. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: Screen::dtor_lib0 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004853d0_Screen_dtor_lib0.path1.csv`); Screen::dtor_lib1 (12 vectors, 12 distinct results, 12 changing state, `log/diff/004853d0_Screen_dtor_lib1.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `??1r3_C4853d0@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00485444): callee pops 0 bytes of stack arguments.

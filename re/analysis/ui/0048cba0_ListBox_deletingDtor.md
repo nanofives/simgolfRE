@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 56 bytes, 19 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor: calls ListBox::dtor 0x00489de0 with this, ListModel::dtor 0x00489370 with this+0x578, Base4805a0::dtor 0x004805a0 with this, calls operatorDelete_4a4ffc 0x004a4ffc with this-0x5c when bit 0 of the byte argument is set (0x0048cbc1), and returns this-0x5c (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 0 of the ListBox table 0x004bb260 (reached through the vtordisp thunk 0x0048cb90): it takes the Window base and finds the object 0x5c below it (`lea esi, [ecx - 0x5c]` 0x0048cba1), runs ListBox::dtor 0x00489de0 on the Window base (0x0048cbaa), ListModel::dtor 0x00489370 on object + 0x5d4 (0x0048cbaf / 0x0048cbb5) and Base4805a0::dtor 0x004805a0 on the Window base (0x0048cbbc); bit 0 of flags (0x0048cbc1, `je` 0x0048cbc6) hands the OBJECT to operator delete (0x0048cbc9); returns the object (0x0048cbd1), `ret 4`. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: ListBox::deletingDtor_a (6 vectors, 6 distinct results, 6 changing state, `log/diff/0048cba0_ListBox_deletingDtor_a.path1.csv`); ListBox::deletingDtor_b (6 vectors, 6 distinct results, 6 changing state, `log/diff/0048cba0_ListBox_deletingDtor_b.path1.csv`); ListBox::deletingDtor_c (6 vectors, 6 distinct results, 6 changing state, `log/diff/0048cba0_ListBox_deletingDtor_c.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0048cbd5): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x0048cba1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

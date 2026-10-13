@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 62 bytes, 19 instructions, subsystem `ui`. Mechanical t
 scalar deleting destructor of the composite view built by viewCtor4a0740 0x004a0740: calls Dialog::viewDtor 0x00491500 with this, ListModel::dtor 0x00489370 with this+0x578, Base4805a0::dtor 0x004805a0 with this, calls operatorDelete_4a4ffc 0x004a4ffc with this-0x1fc when bit 0 of the byte argument is set (0x00491927), and returns this-0x1fc (`re/names/undisc2_exe.tsv`)
 System writeup: `re/analysis/systems/undisc2_exe.md`.
 
+## Purpose
+Slot 0 of the table 0x004bb8d0 (reached through the vtordisp thunk 0x004918f0): the object starts 0x1fc below the Window base (0x00491901); Dialog::viewDtor 0x00491500 on the Window base (0x00491910), ListModel::dtor 0x00489370 on object + 0x774 (0x00491915 / 0x0049191b), Base4805a0::dtor 0x004805a0 on the Window base (0x00491922); bit 0 of flags (0x00491927, `je` 0x0049192c) deletes the object (0x0049192f); returns the object (0x00491937), `ret 4`. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: viewDeletingDtor_a (4 vectors, 4 distinct results, 4 changing state, `log/diff/00491900_viewDeletingDtor_a.path1.csv`); viewDeletingDtor_b (4 vectors, 4 distinct results, 4 changing state, `log/diff/00491900_viewDeletingDtor_b.path1.csv`); viewDeletingDtor_c (4 vectors, 4 distinct results, 4 changing state, `log/diff/00491900_viewDeletingDtor_c.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x0049193b): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00491901 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

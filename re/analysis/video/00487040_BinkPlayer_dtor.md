@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `video`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 Destructor: closes the Bink stream and buffer. (`re/names/exe_4.tsv`)
 
+## Purpose
+Stores the BinkPlayer vtable 0x004baea8 into +0 (0x00487040) and tail-jumps into BinkPlayer::close 0x00487060 (0x00487046), which closes the Bink handle +4 (_BinkClose) and the buffer handle +8 (_BinkBufferClose) and clears both but never writes +0; close's eax is this function's result. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: BinkPlayer::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487040_BinkPlayer_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487040@f_00487040@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

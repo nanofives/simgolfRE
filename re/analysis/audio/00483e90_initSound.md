@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 121 bytes, 47 instructions, subsystem `audio`. Mechanic
 initializes the sound system: runs soundVersionCheck, loads the sfx/music/voice device singletons g_83ad58/g_83ad80/g_83af98 (C487c00::load) and sets g_83afc4 (`re/names/exe_3.tsv`)
 System writeup: `re/analysis/systems/exe_3.md`.
 
+## Purpose
+Brings up the sound system: soundVersionCheck 0x00483fc0 (0x00483e95) non-zero is returned at once (`test eax, eax; jne` 0x00483e9a / 0x00483e9c). Otherwise callSoundHook74 0x00484090 (0, 0) (pushes 0x00483e9e / 0x00483e9f); flag bit 1 (`test bl, 2; je` 0x00483eb0 / 0x00483eb3) runs resourceLoadB 0x00487a70 on 0x0083ad58 with (device, 2 when flag bit 8 is set else 0) (`test bh, 1; je` 0x00483eb5 / 0x00483eb8, `mov esi, 2` 0x00483eba); resourceLoad 0x00487c00 on 0x0083ad80 with (device, flags) (0x00483ecb-0x00483ed2) failing (`test esi, esi; je` 0x00483ed9 / 0x00483edb) calls freeSoundLib 0x00484060 and returns the failure (0x00483edd / 0x00483ee2); else flag bit 3 (`test bl, 8; je` 0x00483ee8 / 0x00483eeb) runs resourceLoad on 0x0083af98 (result unused), g_soundReady 0x0083afc4 becomes 1 (0x00483ef9) and 0 is returned (0x00483f03). Caller: gameMain 0x0045baf0. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: initSound (12 vectors, 12 distinct results, 12 changing state, `log/diff/00483e90_initSound.path1.csv`); initSound_ver3 (4 vectors, 1 distinct results, 4 changing state, `log/diff/00483e90_initSound_ver3.path1.csv`); initSound_verneg (4 vectors, 1 distinct results, 4 changing state, `log/diff/00483e90_initSound_verneg.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00483ee7, 0x00483f08): callee pops 0 bytes of stack arguments.
 

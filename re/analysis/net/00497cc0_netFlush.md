@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 69 bytes, 20 instructions, subsystem `net`. Mechanical 
 flushes pending network output by calling the send worker. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Window::onCommand's flush of the network object (`call 0x00497cc0` 0x0047eeb2): with bit 29 of +0xe8 clear (`test dword ptr [esi + 0xe8], 0x20000000; je` 0x00497cc3 / 0x00497ccd) it returns with eax untouched (onCommand calls it with eax = 0, `mov eax, [esp + 8]` 0x0047ee85 tested zero). With the bit set, the sub-object at +0x64 gets its virtual slot +0x20 (`call [eax + 0x20]` 0x00497cd5), +0xe4 and +0xe8 are read after it (0x00497cd8 / 0x00497cde), bit 29 is cleared (`and edx, 0xdfffffff` 0x00497cec, store 0x00497cf8) and netSendMessages 0x00499140 runs on this with (0, 0, +0xe4, 0x200, 0) (pushes 0x00497ce4-0x00497cf4, call 0x00497cfe, `ret 0x14` in the callee); its eax is returned. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: netFlush (8 vectors, 8 distinct results, 8 changing state, `log/diff/00497cc0_netFlush.path1.csv`); netFlush_clear (4 vectors, 1 distinct results, 0 changing state, `log/diff/00497cc0_netFlush_clear.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?flush@C497cc0@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00497d04): callee pops 0 bytes of stack arguments.

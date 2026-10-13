@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 25 bytes, 8 instructions, subsystem `render`. Mechanica
 second screen-flush helper that services the network control path. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+The network step the screen pumps tail-call (showScreen, hideScreen, pumpInput483c30, redrawAll, frameTick483cd0, enterModal483d30 ...): with no network object at 0x008400b8 (`test ecx, ecx; je` 0x00497b26 / 0x00497b28) it returns with eax untouched (the caller's result passes through); with the session word 0x008400b0 at zero (`je` 0x00497b31) it returns 0 (the word itself); otherwise it tail-jumps into netServiceControl 0x0049ab40 with ecx = the object (0x00497b33), whose eax is the result. The reimplementation's naked entry passes the incoming eax to the body. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: gfxFlushB_noobj (1 vectors, 1 distinct results, 0 changing state, `log/diff/00497b20_gfxFlushB_noobj.path1.csv`); gfxFlushB_nosess (1 vectors, 1 distinct results, 0 changing state, `log/diff/00497b20_gfxFlushB_nosess.path1.csv`); gfxFlushB_call1 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00497b20_gfxFlushB_call1.path1.csv`); gfxFlushB_call2 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00497b20_gfxFlushB_call2.path1.csv`); gfxFlushB_call3 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00497b20_gfxFlushB_call3.path1.csv`); gfxFlushB_call4 (1 vectors, 1 distinct results, 1 changing state, `log/diff/00497b20_gfxFlushB_call4.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_small17.cpp` as `?gfxFlushB@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00497b38): callee pops 0 bytes of stack arguments.

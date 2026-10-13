@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 146 bytes, 57 instructions, subsystem `video`. Mechanic
 opens FLC slot param_2 with Flic::open/createStream, returns its total frame count in *param_3 and the frame-data pointer via Link482::data (`re/names/exe_6.tsv`)
 System writeup: `re/analysis/systems/exe_6.md`.
 
+## Purpose
+Opens the flic file of a slot: Flic::open 0x00481f40 on the slot's Flic record (0x00404139) with (path, 0, the slot's frame-table record 0x004e9aa0 + 0x58 * slot, 0) (pushes 0x00404130-0x0040414a, call 0x0040414d, `ret 0x10`). A non-zero result (`test eax, eax; jne` 0x00404152 / 0x00404154) stores 0 through outCount when it is not NULL (`test eax, eax; je` 0x004041a3 / 0x004041a5, store 0x004041a7) and returns 0 (0x004041ae). Otherwise Flic::createStream 0x00482b90 on the slot's link with (the Flic record, 0) (pushes 0x00404158 / 0x0040415e, call 0x00404168, `ret 8`); a non-NULL outCount (0x00404171 / 0x00404173) receives the frame count, the word +0x62 through [rec + 0x58] or 0 when [rec + 0x44] is NULL (0x00404175-0x00404185, 0x00404191 / 0x00404193), and Link482::data 0x00482e10 on the link gives eax (0x00404189 / 0x00404197). Caller: loadFlic 0x0043d740 (0x0043d8b8, 0x0043d971). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: flicOpenStream (12 vectors, 12 distinct results, 12 changing state, `log/diff/00404120_flicOpenStream.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00404190, 0x0040419e, 0x004041b1): callee pops 0 bytes of stack arguments.
 

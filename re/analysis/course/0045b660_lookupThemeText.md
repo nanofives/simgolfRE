@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 343 bytes, 130 instructions, subsystem `course`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Reads the theme description text file and returns the line matching a key. (`re/names/exe_1.tsv`)
 
+## Purpose
+Copies the paragraph that follows a heading line out of a theme text file: the file is opened in text mode (fopen 0x004a614d with the mode string 0x004d3884, 0x0045b676; the FILE * is never tested) and read line by line (fgets 0x004a65ee, at most 0xf9 characters, 0x0045b692), each line losing its last character (`mov byte ptr [esp + ecx + 0x27], al` 0x0045b6ab, the newline when the line has one), until a line equals the key without regard to case (_stricmp 0x004ad4b0, 0x0045b6af / `je` 0x0045b6b9). 100 lines without a match (`cmp ebx, 0x64; jge` 0x0045b6bc / 0x0045b6bf) close the file (0x0045b6c9) and return -1 (0x0045b6d1). After a match each following line is appended to the text buffer 0x0051a068 with the separator string 0x004c3f70 (inline strcat 0x0045b70a-0x0045b76a) until a line starting with '*' (`cmp al, 0x2a; je` 0x0045b78b / 0x0045b78d) or 100 lines (`jl` 0x0045b79b); the file is closed (0x0045b7a2) and the number of lines read after the heading is returned (0x0045b7aa). At end of file fgets leaves the buffer unchanged, so the last line read loses one more character on every further read (an empty key then matches once it is cut to nothing, key lookupThemeText vector ($f3, $k3) returns 100). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: lookupThemeText (14 vectors, 14 distinct results, 14 changing state, `log/diff/0045b660_lookupThemeText.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0045b6de, 0x0045b7b6): callee pops 0 bytes of stack arguments.
 

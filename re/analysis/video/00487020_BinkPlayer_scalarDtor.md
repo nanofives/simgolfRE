@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 30 bytes, 11 instructions, subsystem `video`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Scalar-deleting destructor for the Bink player. (`re/names/exe_4.tsv`)
 
+## Purpose
+The scalar deleting destructor of BinkPlayer: BinkPlayer::dtor 0x00487040 (call 0x00487023), then bit 0 of the flags argument (`test byte ptr [esp + 8], 1` 0x00487028, `je` 0x0048702d) hands the object to operator delete 0x004a4ffc (0x00487030); it returns this (0x00487038) with `ret 4`. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: BinkPlayer::scalarDtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487020_BinkPlayer_scalarDtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_09.cpp` as `?FUN_00487020@C_FUN_00487020@f_00487020@@QAEPAXE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x0048703b): callee pops 4 bytes of stack arguments.

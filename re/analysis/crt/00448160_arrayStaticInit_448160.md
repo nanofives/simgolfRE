@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 28 bytes, 7 instructions, subsystem `crt`. Mechanical t
 ## Role (from the naming pass, not a C3 purpose)
 Compiler-generated static initializer for a global array of objects. (`re/names/exe_1.tsv`)
 
+## Purpose
+Builds the static array of 0x12c Snd objects of 0x6c bytes at 0x0080d840 (0x0080d840 .. 0x008156cf): the eh vector constructor iterator 0x004a55d2 (stdcall, pushes 0x00448160-0x00448171) runs Snd::ctorDerived 0x00484820 on each element, with SndMusic::dtor 0x004848a0 passed for the unwinding of a throwing constructor; `ret` at 0x0044817b. It is called by the dynamic initializer dynInit_arrayStaticInit_448160 0x00448150 from __cinit's table. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: arrayStaticInit_448160_live (1 vectors, 1 distinct results, 1 changing state, `log/diff/00448160_arrayStaticInit_448160_live.path1.csv`); arrayStaticInit_448160_pat (1 vectors, 1 distinct results, 1 changing state, `log/diff/00448160_arrayStaticInit_448160_pat.path1.csv`); arrayStaticInit_448160_zero (1 vectors, 1 distinct results, 1 changing state, `log/diff/00448160_arrayStaticInit_448160_zero.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_arrays.cpp` as `_$E26` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0044817b): callee pops 0 bytes of stack arguments.

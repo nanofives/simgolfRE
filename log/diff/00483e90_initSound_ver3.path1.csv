@@ -1,0 +1,10 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+16 0,3,3,True,4745c29f,4745c29f,True
+16 2,3,3,True,4745c29f,4745c29f,True
+16 258,3,3,True,4745c29f,4745c29f,True
+16 8,3,3,True,4745c29f,4745c29f,True
+state_regions,0x0083afc4+0x0:4 $clog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x625d1290,original=0x1340540,2026-10-13T12:52:36
+distinct_results,1,,
+VERDICT,GREEN,4,

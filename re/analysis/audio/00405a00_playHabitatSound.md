@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 182 bytes, 67 instructions, subsystem `audio`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 maps habitat/animal type param_1 (0,1,3,4,6,5) to sound id (0x3b,0x3a,0xc3,0xc4,0xc5,0xc6) and calls playSoundAt at (param_2,param_3) (`re/names/exe_6.tsv`)
 
+## Purpose
+Plays the sound of a habitat kind at a position: kind 0 / 1 / 3 / 4 / 6 / 5 (`test eax, eax; jne` 0x00405a04 / 0x00405a06, then `cmp eax, 1 / 3 / 4 / 6 / 5; jne` at 0x00405a21, 0x00405a3d, 0x00405a5c, 0x00405a7b, 0x00405a9a) calls playSoundAt 0x0040c500 with the sound id 0x3b / 0x3a / 0xc3 / 0xc4 / 0xc5 / 0xc6 (pushes 0x00405a13, 0x00405a2f, 0x00405a4b, 0x00405a6a, 0x00405a89, 0x00405aa8), the two position arguments and 0 (cdecl, `add esp, 0x10`), returning its eax. Any other kind (2, 7 and above, negative) returns with eax = kind: it is loaded at 0x00405a00 and only compared after that (`ret` 0x00405ab5). Callers: placeHabitat 0x00405e30, drawWorldObjects 0x00430360 (hooks.csv). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: playHabitatSound (13 vectors, 13 distinct results, 8 changing state, `log/diff/00405a00_playHabitatSound.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_07.cpp` as `?FUN_00405a00@f_00405a00@@YAXHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00405a1d, 0x00405a39, 0x00405a58, 0x00405a77, 0x00405a96, 0x00405ab5): callee pops 0 bytes of stack arguments.

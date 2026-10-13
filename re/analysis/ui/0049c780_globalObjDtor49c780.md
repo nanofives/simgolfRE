@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 122 bytes, 27 instructions, subsystem `ui`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 virtual destructor for the global UI object built at 0x0049c020. (`re/names/exe_5.tsv`)
 
+## Purpose
+Destructor of a window class with a timer and a backing surface: inside an SEH frame (0x0049c780-0x0049c78e, its state word at [esp + 0x10] only orders the unwind: 1 at 0x0049c7ad, 0 at 0x0049c7cb, -1 at 0x0049c7dd) it stores the vtables 0x004bbcf4 at +0 (0x0049c79d) and 0x004bbce0 at +0x274 (0x0049c7a3, the Surface sub-object), runs 0x0049c0a0 on this (ecx unchanged, 0x0049c7b5; it clears +0x594), Timer::dtor 0x00486ce0 on this + 0x598 (0x0049c7ba / 0x0049c7c0), stores 0x004ba468 at +0x574 (0x0049c7d0) and runs Surface::releaseBacking 0x004838b0 on this + 0x574 (0x0049c7c5 / 0x0049c7d6), then Base4805a0::dtor 0x004805a0 on this (0x0049c7e5), whose eax is returned (the epilogue 0x0049c7ea-0x0049c7f9 keeps it). Caller: globalObjDeleteDtor49c800 0x0049c800 (`call 0x0049c780` 0x0049c803). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: globalObjDtor49c780 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049c780_globalObjDtor49c780.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_04.cpp` as `??1C49c780@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049c7f9): callee pops 0 bytes of stack arguments.

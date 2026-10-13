@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 98 bytes, 27 instructions, subsystem `util`. Mechanical
 Constructs a growable node list (nodes of 0x1c bytes, block of 0x10). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+The NodeList constructor: StrList::ctor 0x00487210 (0x0048729d), then the eh vector constructor iterator 0x004a55d2 (stdcall, pushes 0x004872a2-0x004872b3: array this + 0x24, element size 0x1c, count 0x10, constructor 0x004877d0, destructor 0x00487310) builds the 16 buckets; the NodeList vtable 0x004baf00 into +0 (0x004872c4) and +0x20 = 0 (0x004872cd); returns this (0x004872ca). The SEH frame is not reproduced. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: NodeList::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487280_NodeList_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r3.cpp` as `??0r3_C487280@@QAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004872e1): callee pops 0 bytes of stack arguments.

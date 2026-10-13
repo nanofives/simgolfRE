@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 52 bytes, 12 instructions, subsystem `input`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 `ret 8` (x, y): [0x00822d8c] / [0x00822d90] = x, y; with [0x005aa774] non-zero and timeGetTime above it, or with it zero, the byte [0x0083ab9c] = 0 (`re/names/exe_13.tsv`)
 
+## Purpose
+Slot 30 (+0x78) of the root-window vtable 0x004ba2fc records a pointer position and expires a timed flag: the first argument goes to 0x00822d8c (0x00465618) and the second to 0x00822d90 (0x00465624). With the deadline word 0x005aa774 at zero (`test eax, eax; je` 0x00465622 / 0x0046562a) the byte 0x0083ab9c is cleared (0x0046563a) and eax is 0; otherwise timeGetTime (`call [0x4ba21c]` 0x0046562c) is compared with the deadline (`cmp eax, [0x005aa774]` 0x00465632) and only a time strictly above it (`jbe` 0x00465638 skips the clear, unsigned) clears the byte; eax is then the time. `ret 8` (0x00465641). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: rootWin_onPoint_d0 (3 vectors, 3 distinct results, 3 changing state, `log/diff/00465610_rootWin_onPoint_d0.path1.csv`); rootWin_onPoint_lt (3 vectors, 3 distinct results, 3 changing state, `log/diff/00465610_rootWin_onPoint_lt.path1.csv`); rootWin_onPoint_eq (3 vectors, 3 distinct results, 3 changing state, `log/diff/00465610_rootWin_onPoint_eq.path1.csv`); rootWin_onPoint_gt (3 vectors, 3 distinct results, 3 changing state, `log/diff/00465610_rootWin_onPoint_gt.path1.csv`); rootWin_onPoint_one (3 vectors, 3 distinct results, 3 changing state, `log/diff/00465610_rootWin_onPoint_one.path1.csv`); rootWin_onPoint_hi (3 vectors, 3 distinct results, 3 changing state, `log/diff/00465610_rootWin_onPoint_hi.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00465641): callee pops 8 bytes of stack arguments.
 

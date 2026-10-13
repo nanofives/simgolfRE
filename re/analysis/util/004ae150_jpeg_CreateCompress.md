@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 184 bytes, 64 instructions, subsystem `util`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 symbol of the 100% matched source (`re/names/libs.tsv`)
 
+## Purpose
+IJG libjpeg 6a's jpeg_CreateCompress: cinfo->mem (+4) = NULL (0x004ae15f); a library version other than 0x3d (`cmp eax, 0x3d; je` 0x004ae15c / 0x004ae162) raises ERREXIT2 0xa with 0x3d and the version (0x004ae164-0x004ae17e), a structure size other than 0x168 (0x004ae187 / 0x004ae18c) raises ERREXIT2 0x13 with 0x168 and the size (0x004ae18e- 0x004ae1a8); with a returning error_exit it goes on. The 0x5a dwords of cinfo are zeroed with the error manager pointer kept (0x004ae1ad-0x004ae1bc), is_decompressor +0xc = 0 (0x004ae1be), jinit_memory_mgr 0x004aee30 runs (0x004ae1c1), progress +8, dest +0x14 and comp_info +0x3c are NULL (0x004ae1cb-0x004ae1d1), the four quantization table pointers +0x40 and the four DC / AC Huffman table pointers +0x50 / +0x60 are NULL (0x004ae1d4-0x004ae1f2), input_gamma +0x28 = 1.0 (0x004ae1f4 / 0x004ae1f7) and global_state +0x10 = 0x64 (0x004ae1fe). eax is cinfo + 0x70, the loop pointer, at the `ret` (0x004ae207). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: jpeg_CreateCompress_none (8 vectors, 8 distinct results, 8 changing state, `log/diff/004ae150_jpeg_CreateCompress_none.path1.csv`); jpeg_CreateCompress_m (8 vectors, 8 distinct results, 8 changing state, `log/diff/004ae150_jpeg_CreateCompress_m.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_jpeg_capimin.cpp` as `_jpeg_CreateCompress` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x004ae207): callee pops 0 bytes of stack arguments.

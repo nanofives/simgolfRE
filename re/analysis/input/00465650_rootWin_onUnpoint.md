@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 43 bytes, 9 instructions, subsystem `input`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 `ret 8`: [0x00822d8c] = -1; the same [0x0083ab9c] test as rootWin_onPoint (`re/names/exe_13.tsv`)
 
+## Purpose
+Slot 31 (+0x7c) of the root-window vtable 0x004ba2fc marks the pointer as gone: 0xffffffff goes to 0x00822d8c (0x00465655) and neither stack argument is read (`ret 8` 0x00465678 pops two). The deadline 0x005aa774 is then handled as in rootWin_onPoint: zero (`je` 0x00465661) clears the byte 0x0083ab9c (0x00465671) with eax 0; otherwise timeGetTime (0x00465663) above the deadline (`jbe` 0x0046566f, unsigned) clears it, and eax is the time. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: rootWin_onUnpoint_d0 (3 vectors, 1 distinct results, 3 changing state, `log/diff/00465650_rootWin_onUnpoint_d0.path1.csv`); rootWin_onUnpoint_lt (3 vectors, 1 distinct results, 3 changing state, `log/diff/00465650_rootWin_onUnpoint_lt.path1.csv`); rootWin_onUnpoint_eq (3 vectors, 1 distinct results, 3 changing state, `log/diff/00465650_rootWin_onUnpoint_eq.path1.csv`); rootWin_onUnpoint_gt (3 vectors, 1 distinct results, 3 changing state, `log/diff/00465650_rootWin_onUnpoint_gt.path1.csv`); rootWin_onUnpoint_one (3 vectors, 1 distinct results, 3 changing state, `log/diff/00465650_rootWin_onUnpoint_one.path1.csv`); rootWin_onUnpoint_hi (3 vectors, 1 distinct results, 3 changing state, `log/diff/00465650_rootWin_onUnpoint_hi.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00465678): callee pops 8 bytes of stack arguments.
 

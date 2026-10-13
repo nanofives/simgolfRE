@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 8 bytes, 2 instructions, subsystem `ui`. Mechanical tra
 ## Role (from the naming pass, not a C3 purpose)
 this-adjustor thunk: subtracts the dword at this-4 (the vtordisp field) from this and tail-jumps to ListBox::typeAhead 0x0048aea0 (`re/names/undisc_exe.tsv`)
 
+## Purpose
+The vtordisp thunk of ListBox::onKey 0x0048aea0 (the type-ahead key handler): `sub ecx, [ecx - 4]` (0x0048ccd0) and a jump to it (0x0048ccd3) with the caller's key argument; ListBox::onKey's eax is the result. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: ListBox::typeAhead_vtordisp (52 vectors, 52 distinct results, 52 changing state, `log/diff/0048ccd0_ListBox_typeAhead_vtordisp.path1.csv`).
+
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).
 - `ecx` is read at 0x0048ccd0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

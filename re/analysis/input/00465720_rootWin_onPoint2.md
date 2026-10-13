@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 22 bytes, 5 instructions, subsystem `input`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 `ret 8` (x, y): [0x00822d8c] / [0x00822d90] = x, y (`re/names/exe_13.tsv`)
 
+## Purpose
+Slot 33 (+0x84) of the root-window vtable 0x004ba2fc (installer staticInit_404360 0x00404360) records a pointer position: the first argument goes to 0x00822d8c (0x00465728) and the second to 0x00822d90 (0x0046572d); eax keeps the first argument (`mov eax, [esp + 4]` 0x00465720) and `ret 8` (0x00465733) pops both. ecx is never read. Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: rootWin_onPoint2 (12 vectors, 12 distinct results, 12 changing state, `log/diff/00465720_rootWin_onPoint2.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x00465733): callee pops 8 bytes of stack arguments.
 

@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 146 bytes, 40 instructions, subsystem `input`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 `ret 8` (x, y): as rootWin_onPress1 with [0x00822d68] = 2 (`re/names/exe_13.tsv`)
 
+## Purpose
+Slot 32 (+0x80) of the root-window vtable 0x004ba2fc records a button-2 press with the body of rootWin_onPress1 (scaleX 0x00404970 calls 0x00465684 / 0x0046569c, the signed divisions 0x00465695 / 0x004656ba into 0x00822d58 / 0x00822d5c, x / y into 0x00822d60 / 0x00822d64, GetAsyncKeyState [0x4ba1f0] of 0x11 and 0x10 into 0x00822d70 / 0x00822d6c, 0x00822d74 = 1, 0x00822d78 = 0) but stores 2 in the button word 0x00822d68 (0x004656c4) and returns the GetAsyncKeyState(VK_SHIFT) result itself (call 0x004656e7, no later write to eax before `ret 8` 0x0046570f). Reimplemented in `shim/src/re/c3eu.cpp`; path-1 A/B GREEN: rootWin_onPress2_0 (8 vectors, 8 distinct results, 8 changing state, `log/diff/00465680_rootWin_onPress2_0.path1.csv`); rootWin_onPress2_1 (8 vectors, 8 distinct results, 8 changing state, `log/diff/00465680_rootWin_onPress2_1.path1.csv`); rootWin_onPress2_2 (8 vectors, 8 distinct results, 8 changing state, `log/diff/00465680_rootWin_onPress2_2.path1.csv`); rootWin_onPress2_3 (8 vectors, 8 distinct results, 8 changing state, `log/diff/00465680_rootWin_onPress2_3.path1.csv`); rootWin_onPress2_4 (8 vectors, 8 distinct results, 8 changing state, `log/diff/00465680_rootWin_onPress2_4.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x0046570f): callee pops 8 bytes of stack arguments.
 
