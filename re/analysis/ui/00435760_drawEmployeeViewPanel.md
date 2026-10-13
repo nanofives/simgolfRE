@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1951 bytes, 587 instructions, subsystem `ui`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Draws the employee roster view panel. (`re/names/exe_1.tsv`)
 
+## Purpose
+The golfer list panel. While [0x00561254] is set it hands over to drawEmployeeDetailPanel 0x00436e50. Otherwise it draws the background (0x004357a4) and the hovered button (hitEmployeeSlot 0x00435570, slots -3..-6), lists newest first (g = ([0x005a5a24] - i + 0x98) % 0x98, 0x004358a9) every golfer on the course or whose partner is (0x004358b6..0x004358eb), past the scroll offset 0x005aa6c8: in the compact layout (text mode 0x004c2844 under 4) a mood face, the name in a colour from four golfer words (0x00435974..0x004359b6) in six-row columns; in the wide layout four rows per column with, for odd g, the hole number and club icons; each listed golfer is recorded in 0x005a9cf0. Then the scroll bar (0x00435d47..0x00435dd5) and, when the same slot has been hovered more than ten calls in a row (0x005a9f54 / 0x005aa554), its tooltip (drawMapLine 0x00435ec8, drawCenteredText 0x00435edc). Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: drawEmployeeViewPanel (11 vectors, 11 distinct results, 11 changing state, `log/diff/00435760_drawEmployeeViewPanel.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00435787, 0x00435ee9, 0x00435efe): callee pops 0 bytes of stack arguments.
 

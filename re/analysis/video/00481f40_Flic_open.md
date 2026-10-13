@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1141 bytes, 345 instructions, subsystem `video`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 opens and parses a FLC/sprite animation resource via a memory-mapped file (MappedFile::open), building its frame index and decoder objects (`re/names/exe_3.tsv`)
 
+## Purpose
+Opens a flic. With a name it resets the Flic (Flic::reset 0x00481ba0), deletes the MappedFile at +0x54, makes a new one (0x00481f85 / 0x00481f9b) and opens the file (MappedFile::open 0x00481fb3; failure resets and returns 6). Flag bit 0 then takes the Cache482fd0 at +0x78 (returning 3 when a source is also given; created when absent, 4 when that fails) and calls its slot 0; bit 1 frees that cache and appends a node pair to the decoder pool at 0x0083ac88 (first node 0x0083ac90 inline-constructed or Decoder482ae0, decoder Decoder482b20 0x00482b20, registered through the pool's slot 0 createCache 0x0049c830, which sets the current cache 0x0083aca4; count 0x0083ac98 bumped, 0x00482304) and calls the current cache's slot 0 (0x0048231e); with neither bit the source argument is taken. The chosen object goes to +0x74 and Flic::buildFrameTable 0x00481ca0 runs (non-zero resets and returns it). Then +0x44 must be set (7 otherwise), Flic::indexFrames 0x00481e40 indexes the header's two words (non-zero resets and returns it) and Flic::createStream 0x00482b90 builds the stream with mode & 2. It returns 0. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: Flic::open (16 vectors, 16 distinct results, 16 changing state, `log/diff/00481f40_Flic_open.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x004823b2): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x00481f55 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

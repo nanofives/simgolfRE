@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 1246 bytes, 410 instructions, subsystem `economy`. Mech
 shows the Top 10 Golf Courses ranking message for the player course; callers not identified (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+The Top 10 Golf Courses panel. A frame sized by the year word 0x005a6d3c is drawn on the live window (fillWindowRect 0x00480b00, 0x0045f8b0..0x0045f8e3) and the title centred (0x0045f934). The player's record 9 (0x005423d0) is rebuilt from five live counts with their sum as its score (0x0045f957..0x0045f9b0); ten rounds then draw the untaken record with the highest score (ties to the later record, 0x0045f9d1), with its name (the rival table 0x004c2a60, or the course title for record 9, which also gives the rank) in white or, for the player, in the highlight colour (0x0045fa3b), and its five icon counts as Image_draw icons (0x0045fa73..0x0045fb58). Last it draws `After <years> years of operation your course` and `ranks <ordinal> on the list of great courses` (0x0045fb6f..0x0045fd3e); eax is the last drawCenteredText2's. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: showCourseRanking (8 vectors, 8 distinct results, 8 changing state, `log/diff/0045f870_showCourseRanking.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0045fd4d): callee pops 0 bytes of stack arguments.
 

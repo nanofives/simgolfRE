@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1480 bytes, 462 instructions, subsystem `golfer`. Mecha
 ## Role (from the naming pass, not a C3 purpose)
 Composes a golfer's bio text (favorite color, likes) into the text buffer. (`re/names/exe_1.tsv`)
 
+## Purpose
+The new-course reset. It clears the course tables (rep stosd 0x004315f1 .. 0x004316ec, clearBuffers 0x0045b880 at 0x004316ee), then picks the twelve golfer types of the four arrival groups: r = Random::range(0x4c) (0x00431725) is taken when r mod 3 equals the count mod 3 (0x00431749), its taken byte 0x005849e2 + 0x2c * r is clear (0x0043175e) and its class matches the group's (5, 3, 6, 7 through jump table 0x00431ba8; the class comes from the flag bytes at 0x004d60a8 + 0x230 * r, 0x00431762..0x004317b0). Next it writes a bio into each of the 76 golfer-type records (0x004d60b8 + 0x230 * k): name, ` likes `, three of the forty words at 0x004c2fd4 chosen by two random numbers, and on a coin flip (0x004319cd) a pronoun (the first 57 records one, the rest the other, 0x004319de) and one of ten colours (jump table 0x00431bb8). Last it resets more tables and words (0x00431afc..0x00431b9c) and returns initRecords' result (0x00431ba1). Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: buildGolferBioText (8 vectors, 8 distinct results, 8 changing state, `log/diff/004315e0_buildGolferBioText.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00431ba7): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004315e0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

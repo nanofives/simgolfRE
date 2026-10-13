@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1179 bytes, 331 instructions, subsystem `ui`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 creates a panel sub-view with its child widgets and text labels (exception-guarded). (`re/names/exe_5.tsv`)
 
+## Purpose
+Creates a panel part and its grid of edit boxes. `this` sits 0x604 bytes into its object; fields are reached through the object's vbtable (F(off) = [this + vbtable[2] + off], 0x004a243d..), the window base is this + vbtable[1] - 0x604. With no parent it returns 3 (0x004a2426). It lays out the labelled text (0x004a2438), stores x / y (0x004a2447 / 0x004a2458), adds flag 0x100000 when the parent's +0x9c lacks 0x1000 (0x004a246a), creates the window (Window::create 0x004806c0; a non-zero result is returned) and sets its three colour quads and draw target (0x004a24e3..0x004a257a). Then for each row (F(-0x5ac)) and column (F(-0x5a8)) it deletes the old box at [this - 0x600 + 4k] (slot 0 with 1), allocates and constructs a 0x5dc-byte EditBox (0x004a2660 / 0x004a267a; NULL returns 4), creates it in a cell computed from F(-0x5cc), F(-0x5bc), F(-0x59c), F(-0x598) and the word [this - 0x588] (EditBox::create 0x004a26d1; a non-zero result is returned), and fills it from F fields and the per-box arrays [this - 0x5b0 + 4k] / [this - 0x5d8 + 4k] (0x004a26e4..0x004a280a). It returns 0. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: panelCreate4a2400 (11 vectors, 11 distinct results, 10 changing state, `log/diff/004a2400_panelCreate4a2400.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x004a2898): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x004a2422 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -129,7 +132,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00486110 `EditBox::create` at 0x004a26d1
 - 0x00486200 `EditBox::setText` at 0x004a276a
 - 0x00486250 `EditBox::resizeBuffer` at 0x004a275f
-- 0x004a2a60 `panelBuildChildren` at 0x004a2438
+- 0x004a2a60 `panelLayoutLabeledText` at 0x004a2438
 - 0x004a57f1 `operator_new` at 0x004a2660
 - indirect `call [eax+0x120]` at 0x004a27fe
 - indirect `call [edx+0x4]` at 0x004a280a

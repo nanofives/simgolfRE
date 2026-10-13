@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1026 bytes, 382 instructions, subsystem `ui`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Builds and runs the System Functions menu (Save/Load/Rename/Reports/Exit). (`re/names/exe_1.tsv`)
 
+## Purpose
+The menu-bar click handler. nearestMenuSpot 0x004326a0 (0x0043272c) picks a spot (jump table 0x00432b24). Spots 0..2 switch the game speed 0x00567afc between 5 and the spot's own speed (0, 1, 2) and reset three words (0x00432756..0x0043276a); spot 3 opens the Information popup (showPopup 0x0046d6e0 at 0x0043281b, unless 0x00822d68 is 2), whose answers 0..11 return command codes or run showBestScoresScreen / drawScoreSummary (jump table 0x00432b50); spot 5 opens the System popup (0x00432925, table 0x00432b80): save for championship loops back to the popup until promptAndSaveFile 0x00437910 succeeds, then posts `<course> saved for championship play.` (startMessage 0x0040cb00); rename asks for a name (textInputBox 0x0045b2c0) and stores it when sanitizeFileName 0x00405ac0 accepts it (else a sound); preferences run showPreferencesMenu 0x00432560; the rest return codes (answer 7 also sets 0x0059b734). Other spots return fixed codes; an answer or spot above a table returns -1. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: OptionsMenuBuild (50 vectors, 50 distinct results, 50 changing state, `log/diff/00432720_OptionsMenuBuild.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_s3.cpp` as `?S3menu432720@@YAHHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00432779, 0x004327bb, 0x0043283a, 0x00432842, 0x0043284a, 0x00432852, 0x0043285a, 0x00432862 (+20 more)): callee pops 0 bytes of stack arguments.

@@ -8,6 +8,9 @@ System writeup: `re/analysis/systems/exe_0.md`.
 
 Hand-written analysis of this function: `re/analysis/save/0040afa0_save_serializer.md`.
 
+## Purpose
+Reads or writes the whole course state through the save descriptor. The argument is stored in the mode word 0x0053e638 (0x0040afab), which saveFieldIo 0x0040af70 tests (non-zero reads with __read, zero writes with __write); then 86 saveFieldIo(buffer, size) calls move the course globals in a fixed order (first 0x00822c78 / 4 at 0x0040afb0, last 0x005a5a00 / 4 at 0x0040b43f), the flag word 0x0059e7b8 among them (0x0040b36d), so in read mode the two tails test the value just read: bit 0x40000000 (0x0040b44c / 0x0040b451) moves 0x8c0 bytes at 0x004e06c8 (golfer-type record 76), bit 0x200000 (0x0040b465 / 0x0040b46f) moves 0xb7c0 bytes at 0x0058f338 and 0x19a28 bytes at 0x00520a28. It returns the last saveFieldIo result, or the flag word when neither tail runs (0x0040b444); saveGame 0x0040b663 and loadGame 0x0040bad6 drop it. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: serializeCourse (18 vectors, 18 distinct results, 18 changing state, `log/diff/0040afa0_serializeCourse.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_t3.cpp` as `FUN_0040afa0` (C linkage: the source declares the signature).
 - Returns with `ret` (at 0x0040b492): callee pops 0 bytes of stack arguments.

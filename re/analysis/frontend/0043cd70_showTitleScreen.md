@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1291 bytes, 408 instructions, subsystem `frontend`. Mec
 ## Role (from the naming pass, not a C3 purpose)
 Sets up and displays the title screen and plays the intro Bink video. (`re/names/exe_1.tsv`)
 
+## Purpose
+Builds the title screen's button surfaces. It plays the intro movie (playAudioFile 0x0043cce0 at 0x0043cd97 with 0x004c8a0c), makes a 0x400 x 0x320 Image in its frame (Image_ctor 0x0043cda3, Surface_createFull 0x0043cdc2), and cuts from two pop-up images (loadImage 0x0043cdd9 / 0x0043cf09) four nine-piece frame sets of eight pieces each into the Surfaces at 0x00562368 + 0x160 * set and 0x0059d920 + 0x160 * set (Surface_blit 0x00473bf0; the set's source row is 200 for set 1, 100 for set 2, 0 otherwise, jump tables 0x0043d27c / 0x0043d28c), then seven button pieces from each title image (0x0043d03b / 0x0043d147) into the Surfaces 0x0053b7e0 .. 0x0053ba1c. It reads no input; eax is Image_dtor's (0x0043d261). Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: showTitleScreen (10 vectors, 10 distinct results, 10 changing state, `log/diff/0043cd70_showTitleScreen.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0043d27a): callee pops 0 bytes of stack arguments.
 

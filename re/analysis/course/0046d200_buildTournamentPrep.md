@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 1246 bytes, 417 instructions, subsystem `course`. Mecha
 builds the tournament-preparation recommendations text (rough depth, green speed, TV towers); callers not identified (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Prepares the course for a tournament. Every open hole (18 records from 0x00575cb8) whose par byte differs from its length class (3 under 300, 4 under 500, else 5; 0x0046d2d8 / 0x0046d2e3, signed) gets a `Change hole` line with the old and new par and the new par stored (0x0046d43a), its number kept in a frame list. showPopup 0x0046d6e0 (0x0046d4ae) answers a mask of accepted items, or 0xfffff without asking when flag 0x4000000 is set (0x0046d48b); the mask goes to 0x005a47e0 and each change whose bit 3 + i is clear has its par raised by one again (0x0046d4cd..0x0046d4e5). With mask bit 0 set (0x0046d517), each open hole runs two passes (the second only for the last two holes and with a turned direction, 0x0046d526..0x0046d56d) of a seven-step random walk from its marker (+0x18, +0x1c) along direction tables 0x004c2878 / 0x004c2898; from step 2 on the first tile of class 4 or 0xd, not type 0x16, not blocked (tileBlocked 0x0040bf60) and with a zero flag word receives stampCourseTiles 0x0040e000 (object 0x11 or 0x12), whose object gets flag 0x40 and a facing toward the marker (0x0046d63b..0x0046d675). eax is 2 after a walked hole, else the last hole's first byte over the previous eax (0x0046d50c). Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: buildTournamentPrep (6 vectors, 6 distinct results, 6 changing state, `log/diff/0046d200_buildTournamentPrep.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0046d6dd): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0046d207 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

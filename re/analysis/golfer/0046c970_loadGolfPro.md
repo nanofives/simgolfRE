@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 1729 bytes, 447 instructions, subsystem `golfer`. Mecha
 loads a hired Golf Pro employee from a .pro file (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Builds a tournament field. It backs up the golfer-type records and their stat block (0x0046c996 / 0x0046c9ac), resets every golfer's status byte and partner word (0x0046c9ae..0x0046c9c4), then for each of the 18 hole records (0x208 bytes from 0x00575cb8) whose first byte is set (0x0046c9fe) fills the two golfers g = 2 * hole + 0 / 1 (0x0046ca34..0x0046cb69). Golfer 1 is the player (clubs from 0x005a5a04, flag 0x200, start position unless flag 0x4000000, 0x0046cf3f..0x0046cfbd); every other golfer gets a pro by a rejection loop (0x0046cb70..0x0046cc90: r = range(100), skip unused records (+0x20 = 0xff) and r = 0, prefer untaken records for 800 tries, accept when the skill cost (skill - 10)^2 / ((level * 5 + 20) * 2) fits the bounds set by tries, reputation / 10 and money / 200), whose `.pro` file loadThemeFile 0x00437fa0 loads into golfer type t (0x0046cd85); on success the pro record fills type t (0x0046cd95..0x0046ced8). It ends with flag 0x200000 set (0x0046d024) and returns the new flag word. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: loadGolfPro (6 vectors, 6 distinct results, 6 changing state, `log/diff/0046c970_loadGolfPro.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0046d030): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 1068 bytes, 282 instructions, subsystem `frontend`. Mec
 runs the player-character customization flow and writes the .pro profile (`re/names/exe_0.tsv`)
 System writeup: `re/analysis/systems/exe_0.md`.
 
+## Purpose
+Sets up the player's pair at the start of a course. After a sound (0x0040f1a0) it ORs the player's club bytes 0x005a5a04 into the mask 0x004c2c9c and runs showCharacterIntro 0x004065c0 when the mask is empty (0x0040f1d3); advances the cycle word 0x0059ae7c by 2 mod 0x98 when its bit 1 is set (0x0040f1e8); resets every golfer whose status +0x21 is 1 with +0x22 clear, or 0xff (resetGolfer 0x00426670, 0x0040f204..0x0040f22b); takes two golfers g1 / g2 from updateMembership 0x00421bc0 (g1 is drawn again when odd, 0x0040f238; 0x005a5a24 is set to g1 unless -1, then to g2) and makes them partners (+0xa2, 0x0040f275 / 0x0040f27f). With a non-zero argument g1 becomes the pro [0x004c2e14]: its `.pro` file is read by loadThemeFile 0x00437fa0 (0x0040f32a) and, on success, the pro record (0x38 bytes from 0x0058dd50) is copied into golfer-type record 76 at 0x004e06c8 (0x0040f348..0x0040f407); g1's record gets the type, level (clamp 0x0040f432) and clubs, and [0x004c2e14] becomes -1. g2 is always the player (flag 0x200 at 0x0040f581, start position from 0x00585850 / 0x00585854 / 0x00585866). eax at the ret is g2's flag dword with al = the start byte. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: customizeCharacter (14 vectors, 12 distinct results, 14 changing state, `log/diff/0040f190_customizeCharacter.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0040f5bb): callee pops 0 bytes of stack arguments.
 

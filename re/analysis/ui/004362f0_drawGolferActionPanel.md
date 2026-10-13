@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 2014 bytes, 612 instructions, subsystem `ui`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Draws the golfer action panel (shot types, tournament, practice round). (`re/names/exe_1.tsv`)
 
+## Purpose
+The golfer action panel. While the detail panel is up (0x00561254, unless the speed is 3) it hands over to drawEmployeeDetailPanel 0x00436e50. Otherwise it draws the background (0x0043633c), the hovered button (hitGolferPanel 0x00435f00; buttons 4..8 through Surface_stretchBlit, the others Image_draw; positions 0x004c7ac0), then either the player golfer's three buttons and either the match scoreboard (drawMatchScoreboard 0x00461110, when +0xcc is set) or the five shot buttons, whose frames depend on the selected shot 0x0058f330, the hover and the lie under the golfer (typeAtPos 0x0040bfa0, class byte 0x00578372 + 0x30 * type: three buttons are greyed on a lie of class above 0); or, with no player golfer, the three start buttons (gated by the hole count, flag 0x2000, the pro 0x004c2e14 and flag 0x400000) and the bag of clubs (0x004367d7..0x004368f9). Last the tooltip after more than ten calls on the same button (texts by jump table 0x00436ad0, drawPanelBackdrop 0x00436aaa); eax is the previous hover, the hover count or drawPanelBackdrop's. Reimplemented in `shim/src/re/c3fb.cpp`; path-1 A/B GREEN: drawGolferActionPanel (22 vectors, 22 distinct results, 22 changing state, `log/diff/004362f0_drawGolferActionPanel.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0043631e, 0x00436ab7, 0x00436acd): callee pops 0 bytes of stack arguments.
 
