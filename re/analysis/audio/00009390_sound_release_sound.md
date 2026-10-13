@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00009390`), 59 bytes, 19 instructions, subsystem `aud
 Shuts the sound library down, stopping the multimedia timer; reads g_100b49ec. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Export #4 of sound.dll; the exe fetches it by ordinal in soundVersionCheck 0x00483fc0 (GetProcAddress loop at 0x00484008 into the slot table 0x0083af6c, slot 0x0083af78) and calls it from shutdownSound 0x00483f10 (`call [0x83af78]` at 0x00483f24). With a NULL g_soundTimer 0x100b49ec it returns 0 at once (0x10009398). Otherwise it calls SoundTimer::stopKeepLock (thunk 0x100024e6) on the timer (0x1000939b), reads g_soundTimer again (0x100093a0) and, when that value is non-zero, calls SoundTimer::stop (thunk 0x1000218a) on it and frees it with operator delete 0x1004249a (0x100093aa-0x100093b7); on this path it then zeroes g_soundTimer (0x100093ba) and returns 0. The second read matters: a timer that stopKeepLock replaced or cleared is the one stopped and freed. Reimplemented in `shim/src/re/c3fe.cpp`; path-1 A/B GREEN: release_sound_null (1 vectors, 1 distinct results, 0 changing state, `log/diff/00009390_sound_release_sound_null.path1.csv`); release_sound_tmr (1 vectors, 1 distinct results, 1 changing state, `log/diff/00009390_sound_release_sound_tmr.path1.csv`); release_sound_clr (1 vectors, 1 distinct results, 1 changing state, `log/diff/00009390_sound_release_sound_clr.path1.csv`); release_sound_swap (1 vectors, 1 distinct results, 1 changing state, `log/diff/00009390_sound_release_sound_swap.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100093c7, 0x100093ca): callee pops 0 bytes of stack arguments.
 

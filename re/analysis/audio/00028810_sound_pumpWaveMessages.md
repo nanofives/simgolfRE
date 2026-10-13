@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00028810`), 100 bytes, 39 instructions, subsystem `au
 Drains buffer-completion messages 0x7e8..0x7ef from the window at this+8 with PeekMessageA, dispatching each to soundWindowSubclassProc. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Drains the buffer-completion messages 0x7e8..0x7ef of the window at this+8: PeekMessageA (IAT 0x100b85b4, loaded once at 0x10028817) with PM_REMOVE (0x1002881d-0x10028832), and each message goes to soundWindowSubclassProc (thunk 0x100025ef, stdcall) as (hwnd, message, wParam, lParam) (0x10028838-0x1002884c). The window at this+8 is read again before every peek (0x10028851), so a handler that changes it changes the next peek. Returns 0 (0x1002886d). Reimplemented in `shim/src/re/c3fe.cpp`; path-1 A/B GREEN: pumpWaveMessages (12 vectors, 12 distinct results, 12 changing state, `log/diff/00028810_sound_pumpWaveMessages.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10028873): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10028814 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
