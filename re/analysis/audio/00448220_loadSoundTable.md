@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 3724 bytes, 877 instructions, subsystem `audio`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Loads the full sound-filename table (interface/emotion/celeb/golf sfx). (`re/names/exe_1.tsv`)
 
+## Purpose
+assigns the game's sound files to the sound-slot array at 0x0080d840 (0x6c-byte slots, the array startSoundSlot 0x00448200 indexes as 0x0080d840 + 0x6c * i). The body is 219 groups of `push mode; push path; mov ecx, slot; call 0x00484e30` from 0x00448220 to 0x004490a6, with no branch and no frame, so it is a fixed table: each group runs Snd::applyMode484e30 on one slot with one path string from the 0x004d0604..0x004d2020 block and a mode of 4 (201 calls) or 0x14 (18 calls: the nine from 0x00448a9b to 0x00448b23 and the nine from 0x00448c00 to 0x00448c88). 210 slots are named once; nine are named twice (0x0080dba0 at 0x0044833c and 0x0044865b, 0x0080df00 at 0x0044854b and 0x00448d98, and likewise 0x0080df6c, 0x0080dfd8, 0x0080e044, 0x0080e11c, 0x0080e188, 0x0080e1f4, 0x0080e260), so for those the second call's path is the one the slot is left with. The function returns with `ret` at 0x004490ab, so eax is the last call's result (slot 0x008149bc, path 0x004d0604, mode 4); its only caller, gameMain 0x0045baf0, does not read it (0x0045bf1e is followed by pushes for the next call). Reimplemented in `shim/src/re/c3fc.cpp`; path-1 A/B GREEN: loadSoundTable (12 vectors, 12 distinct results, 12 changing state, `log/diff/00448220_loadSoundTable.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_00448220@f_00448220@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004490ab): callee pops 0 bytes of stack arguments.
