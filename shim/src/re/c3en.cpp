@@ -1,0 +1,929 @@
+// C3 batch c3en (round 31, 2026-10-13) of golf_clean.exe: the report and list screens of the frontend / in-game menus.
+// Each one draws a page onto the screen widget 0x00519cd4, then loops on the C3 pumps until the player clicks or presses
+// a key. They are A/B'd through re/frida/js/modal.js (the pumps stood in by deterministic models on the A/B thread, a
+// scripted input queue delivered through the root window's own handlers, a virtual clock and a bound that turns a runaway
+// loop into an ERROR row) over re/frida/js/uitree.js (frozen first thread, heap and import stand-ins, a recording display
+// at 0x0083ad50). Fixtures: re/frida/js/fixtures.d/c3en.js. Registry: re/frida/registry.d/c3en.py. Purposes and per-jcc
+// branch tables: log/c3/c3en_purpose.md. Notes: log/c3/c3en_notes.txt.
+//
+// Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list) and
+// cites the instruction addresses it reproduces. __thiscall is emulated with __fastcall (ecx = this, edx unused).
+// Callees run through their original addresses.
+//
+// Two encodings recur in these functions and are written as the constant they always produce:
+//   * `mov eax, 0x519a60; neg eax; sbb eax, eax; and eax, 0x519cd4` (e.g. 0x0044f6b3..0x0044f6c9) is
+//     `0x00519a60 != 0 ? 0x00519cd4 : 0`; the operand is the address of a static object, so the value is 0x00519cd4.
+//   * `xor eax, eax; cmp <v>, 0; setl al; dec eax; and eax, M; add eax, K` is `v < 0 ? K : (M + K) & 0xffffffff`.
+#include "hooks.h"
+
+namespace {
+
+template <typename T> static inline T& G(unsigned addr) { return *reinterpret_cast<T*>(addr); }
+static inline void* P(unsigned addr) { return reinterpret_cast<void*>(addr); }
+// a field of an object, and an import read through the IAT slot the original reads
+template <typename T> static inline T& At(void* p, unsigned off) { return *reinterpret_cast<T*>(reinterpret_cast<char*>(p) + off); }
+template <typename T> static inline T Imp(unsigned slot) { return *reinterpret_cast<T*>(slot); }
+
+// ---- the inline string primitives VC6 compiled into these functions (repne scasb + rep movsd/movsb) ----
+static inline unsigned SLen(const char* s) {
+    unsigned n = 0;
+    while (s[n] != '\0') n++;
+    return n;
+}
+// strcpy: the original copies strlen(src) + 1 bytes to the start of the buffer
+static void Cpy(char* dst, const char* src) {
+    unsigned n = SLen(src);
+    for (unsigned k = 0; k <= n; k++) dst[k] = src[k];
+}
+// strcat: the original finds the NUL of dst and copies strlen(src) + 1 bytes over it
+static void Cat(char* dst, const char* src) {
+    Cpy(dst + SLen(dst), src);
+}
+
+// ---- callee types (stack argument counts from each callee's `ret N`, re/tools/check_ret_args.py) ----
+typedef int(__cdecl* C0_t)();
+typedef int(__cdecl* C1_t)(int);
+typedef int(__cdecl* C3_t)(int, int, int);
+typedef char*(__cdecl* Itoa_t)(int, char*, int);
+typedef void(__cdecl* Text4_t)(const char*, int, int, int);
+typedef void*(__cdecl* CellAt_t)(int, int, int);
+typedef void(__cdecl* AddSprite_t)(int, int, int, int, int, void*, int, int);
+typedef void(__fastcall* T1_t)(void* ecx, void* edx, int a);
+typedef int(__fastcall* T2_t)(void* ecx, void* edx, int* a, int* b);
+typedef void(__fastcall* Quad_t)(void* ecx, void* edx, unsigned a, int b, int c, int d);
+typedef void(__fastcall* Str5_t)(void* ecx, void* edx, void* font, const char* s, int x, int y, int len);
+typedef void(__fastcall* Blit5_t)(void* ecx, void* edx, void* a, void* surf, int x, int y, int z);
+typedef void(__fastcall* Sprite6_t)(void* ecx, void* edx, void* surf, int x, int y, int s, int a, int b);
+typedef void(__fastcall* Image4_t)(void* ecx, void* edx, void* surf, int x, int y, int f);
+typedef void(__fastcall* Target4_t)(void* ecx, void* edx, void* font, int a, int b, int c);
+typedef void(__fastcall* Rect5_t)(void* ecx, void* edx, int x, int y, int w, int h, unsigned colour);
+typedef int(__fastcall* Slot0_t)(void* ecx, void* edx);
+
+const Sprite6_t kSurfaceDrawSprite = reinterpret_cast<Sprite6_t>(0x00474440);
+const Blit5_t kSurfaceStretchBlit = reinterpret_cast<Blit5_t>(0x00473f60);
+const Quad_t kWidgetSetQuad = reinterpret_cast<Quad_t>(0x00476310);
+const Str5_t kWidgetDraw = reinterpret_cast<Str5_t>(0x00476650);
+const Str5_t kDrawStringAt = reinterpret_cast<Str5_t>(0x00476700);
+const Str5_t kDrawStringAt2 = reinterpret_cast<Str5_t>(0x00476750);
+const Image4_t kImageDraw = reinterpret_cast<Image4_t>(0x00473e60);
+const T1_t kWindowRefreshFull = reinterpret_cast<T1_t>(0x00480c80);
+const T2_t kViewToLocal = reinterpret_cast<T2_t>(0x0047ab50);
+const Target4_t kSetDrawTarget = reinterpret_cast<Target4_t>(0x004762d0);
+const Rect5_t kFillWindowRect = reinterpret_cast<Rect5_t>(0x00480b00);
+const Text4_t kDrawText4049d0 = reinterpret_cast<Text4_t>(0x004049d0);
+const Text4_t kDrawCenteredText = reinterpret_cast<Text4_t>(0x00404b70);
+const C1_t kAppendNumber = reinterpret_cast<C1_t>(0x0042dc00);
+const C1_t kAppendString = reinterpret_cast<C1_t>(0x0045b9f0);
+const C3_t kClamp = reinterpret_cast<C3_t>(0x00467130);
+const Itoa_t kItoa = reinterpret_cast<Itoa_t>(0x004ad425);
+const CellAt_t kCellAt = reinterpret_cast<CellAt_t>(0x0043d6f0);
+typedef void(__cdecl* Comment_t)(int, int, int, int);
+const Comment_t kBuildGolferComment = reinterpret_cast<Comment_t>(0x00469b00);
+typedef void(__fastcall* Box4_t)(void* ecx, void* edx, int a, int b, int c, int d);
+const Box4_t kSurfaceBox = reinterpret_cast<Box4_t>(0x00475b20);
+const Rect5_t kWidgetFillRect = reinterpret_cast<Rect5_t>(0x00478b80);
+const C1_t kAppendCents = reinterpret_cast<C1_t>(0x0042dd50);
+typedef int(__cdecl* C2_t)(int, int);
+const C2_t kLandmarkName = reinterpret_cast<C2_t>(0x004074a0);
+const C2_t kApproxDistance = reinterpret_cast<C2_t>(0x00467170);
+typedef void(__cdecl* V2_t)(int, int);
+const V2_t kDrawPanelBackdrop = reinterpret_cast<V2_t>(0x00432620);
+// selectDifficultyScreen's stack objects: the five Surfaces through the MSVC array helpers (stdcall, the callee pops)
+typedef void(__fastcall* Ctor0_t)(void* ecx, void* edx);
+typedef void(__stdcall* EhCtor_t)(void* ptr, unsigned size, int count, Ctor0_t ctor, Ctor0_t dtor);
+typedef void(__stdcall* EhDtor_t)(void* ptr, unsigned size, int count, Ctor0_t dtor);
+const EhCtor_t kEhVecCtor = reinterpret_cast<EhCtor_t>(0x004a55d2);
+const EhDtor_t kEhVecDtor = reinterpret_cast<EhDtor_t>(0x004a5713);
+const Ctor0_t kSurfaceCtor = reinterpret_cast<Ctor0_t>(0x00473ab0);
+const Ctor0_t kUnwindFree4041f0 = reinterpret_cast<Ctor0_t>(0x004041f0);
+const Ctor0_t kImageCtor = reinterpret_cast<Ctor0_t>(0x00474ae0);
+const Ctor0_t kImageDtor = reinterpret_cast<Ctor0_t>(0x00474c40);
+typedef void(__fastcall* Load5_t)(void* ecx, void* edx, const char* name, int a, int b, int c, int d);
+const Load5_t kLoadImage = reinterpret_cast<Load5_t>(0x00475840);
+typedef void(__fastcall* Blit7_t)(void* ecx, void* edx, void* src, int x, int y, int w, int h, int a, int b);
+const Blit7_t kSurfaceBlit = reinterpret_cast<Blit7_t>(0x00473bf0);
+const Blit7_t kSurfaceBlitThunk = reinterpret_cast<Blit7_t>(0x00475c60);
+const Blit7_t kSurfaceBlitTakeDirty = reinterpret_cast<Blit7_t>(0x00473c60);
+// showCreditsScreen's objects, reader and text
+typedef void(__fastcall* Create6_t)(void* ecx, void* edx, int w, int h, int a, int b, int c, int d);
+const Create6_t kSurfaceCreateFull = reinterpret_cast<Create6_t>(0x00474dd0);
+const Ctor0_t kImageReleaseAll = reinterpret_cast<Ctor0_t>(0x00474cb0);
+const Ctor0_t kSurfaceFree = reinterpret_cast<Ctor0_t>(0x00473ae0);
+const C2_t kReadSectionGlobal = reinterpret_cast<C2_t>(0x00487e70);
+const C0_t kReadLineGlobal = reinterpret_cast<C0_t>(0x00487e90);
+const C0_t kDestroyGlobalReader = reinterpret_cast<C0_t>(0x00487e60);
+typedef void*(__cdecl* Malloc_t)(unsigned);
+const Malloc_t kMalloc = reinterpret_cast<Malloc_t>(0x004a504f);
+typedef void(__cdecl* Free_t)(void*);
+const Free_t kFree = reinterpret_cast<Free_t>(0x004a5007);
+typedef void(__fastcall* Text4_tc)(void* ecx, void* edx, const char* s, int x, int y, int len);
+const Text4_tc kDrawText = reinterpret_cast<Text4_tc>(0x00477c30);
+typedef void(__fastcall* Region4_t)(void* ecx, void* edx, void* surf, int x, int y, int f);
+const Region4_t kSurfaceDrawRegion = reinterpret_cast<Region4_t>(0x00473df0);
+typedef unsigned(__stdcall* TimeGetTime_t)();
+const unsigned kIatTimeGetTime = 0x004ba21c;      // the IAT slot showCreditsScreen calls (0x0044bb91, 0x0044bbd3)
+// the inlined strcmp of showCreditsScreen (0x0044bc5a..0x0044bc85): 0 when the two strings are equal
+static int Cmp(const char* a, const char* b) {
+    while (*a != 0 && *a == *b) { a++; b++; }
+    return (static_cast<unsigned char>(*a) < static_cast<unsigned char>(*b)) ? -1
+         : (static_cast<unsigned char>(*a) > static_cast<unsigned char>(*b)) ? 1 : 0;
+}
+const AddSprite_t kAddSprite = reinterpret_cast<AddSprite_t>(0x004628d0);
+const C0_t kPumpMessages = reinterpret_cast<C0_t>(0x0045c030);
+const C0_t kFlushRedraw = reinterpret_cast<C0_t>(0x0045ae70);
+const C0_t kPumpLight = reinterpret_cast<C0_t>(0x0045c150);
+const C0_t kEnterModal = reinterpret_cast<C0_t>(0x00483d30);
+typedef int(__cdecl* Wait_t)(int, int);
+const Wait_t kWaitTicks = reinterpret_cast<Wait_t>(0x0045bf80);
+
+const unsigned kScreenWidget = 0x00519cd4;      // the widget every page draws through
+const unsigned kRootWindow = 0x00519a60;        // the window View_toLocal / Window::refreshFull are called on
+const unsigned kBuf = 0x0051a068;               // the shared text buffer
+const unsigned kItoaBuf = 0x00821c50;           // the itoa scratch buffer these screens pass
+const unsigned kMouseDown = 0x00822d68;         // set by the press handlers, cleared by the pumps
+const unsigned kFlag569498 = 0x00569498;        // cleared on the way out of every page below
+
+}  // namespace
+
+// ====================================================================================================================
+// showFinancialReport 0x0044f6b0
+// ====================================================================================================================
+
+// 0x0044f6b0  showFinancialReport: draws the nine income / cost labels of the table 0x004d2054..0x004d2074 down the left
+// side, then one column per year from the short rows at 0x00584210 (stride 0x14, nine used entries), and loops until a
+// click or a key. [0x005a6d3c] is the last year index (clamped 0..99, 0x0044f796..0x0044f7a2); the first column shown is
+// clamp(last - 8, 0, 999) (0x0044f7b4..0x0044f7b8), so at most nine columns are drawn. Entry 8 of each row is written
+// with the sum of entries 0..7 (0x0044f911).
+static void __cdecl ShowFinancialReport_re() {
+    kSurfaceDrawSprite(P(0x00821040), 0, P(kScreenWidget), 0, 0, 0x3e800000, 0, 1);         // 0x0044f6d8
+    kSurfaceStretchBlit(P(0x008210c8), 0, P(0x008210f4), P(kScreenWidget), 8, 7, 0);        // 0x0044f6fc
+    kWidgetSetQuad(P(kScreenWidget), 0, 0x80000000, -1, 2, 2);                              // 0x0044f711
+    {
+        const char* title = reinterpret_cast<const char*>(0x004d2e10);                      // 0x0044f716
+        kWidgetDraw(P(kScreenWidget), 0, P(0x00821020), title, 0xda, 0x15, SLen(title));    // 0x0044f742
+    }
+    for (int i = 0; i < 9; i++) {                                                           // 0x0044f74b..0x0044f794
+        const char* label = G<const char*>(0x004d2054 + 4 * i);
+        if (label != 0) {                                                                   // 0x0044f755
+            const int y = ((i != 8) ? 0 : 7) + i * 0x11 + 0x57;                             // 0x0044f764..0x0044f770
+            kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), label, 0x62, y, SLen(label));  // 0x0044f782
+        }
+    }
+    const int last = kClamp(G<short>(0x005a6d3c), 0, 99);                                   // 0x0044f796..0x0044f7a2
+    const int first = kClamp(last - 8, 0, 999);                                             // 0x0044f7b4..0x0044f7b8
+    if (last >= 0) {                                                                        // 0x0044f7c2 / 0x0044f7cc
+        char* buf = reinterpret_cast<char*>(kBuf);
+        for (int year = 0; year <= last; year++) {                                          // 0x0044f9b2..0x0044f9c0
+            if (year >= first) {                                                            // 0x0044f7ec / 0x0044f7ee
+                short* row = reinterpret_cast<short*>(0x00584210 + year * 0x14);            // 0x0044f7d5 / 0x0044f9af
+                const int x = (year - first) * 0x4b + 0xde;                                 // 0x0044f7f4..0x0044f814
+                int total = 0;                                                              // 0x0044f80c
+                buf[0] = '\0';                                                              // 0x0044f81a
+                Cat(buf, kItoa(year + 0x7d1, reinterpret_cast<char*>(kItoaBuf), 10));       // 0x0044f800..0x0044f857
+                kWidgetSetQuad(P(kScreenWidget), 0, 0x80000000, -1, 2, 2);                  // 0x0044f863
+                kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), buf, x, 0x3c, SLen(buf));  // 0x0044f88b
+                int rowY = 0x56;                                                            // 0x0044f898
+                for (int i = 0; i <= 8; i++) {                                              // 0x0044f8a6 / 0x0044f98a
+                    buf[0] = '\0';                                                          // 0x0044f8a9
+                    if (i <= 7) {                                                           // 0x0044f8b0
+                        kAppendNumber(row[i] * 100);                                        // 0x0044f8b2..0x0044f8ba
+                        // a zero entry overwrites the number just appended with the text at 0x004e9a84
+                        if (row[i] == 0) Cpy(buf, reinterpret_cast<const char*>(0x004e9a84));  // 0x0044f8c6..0x0044f8ee
+                        total += row[i];                                                    // 0x0044f8f0..0x0044f8f9
+                    } else {
+                        kAppendNumber(total * 100);                                         // 0x0044f8ff..0x0044f909
+                        row[i] = static_cast<short>(total);                                 // 0x0044f911
+                    }
+                    kWidgetSetQuad(P(kScreenWidget), 0, (row[i] < 0) ? 0x80006000u : 0x80000000u, -1, 2, 2);   // 0x0044f917..0x0044f935
+                    kDrawStringAt2(P(kScreenWidget), 0, P(0x00821ee8), buf, x + 0x22, rowY, SLen(buf));      // 0x0044f93a..0x0044f96c
+                    rowY += (i != 7) ? 0x11 : 0x18;                                         // 0x0044f971..0x0044f987
+                }
+            }
+        }
+    }
+    bool hover = false;                                                                     // 0x0044f9cb
+    kImageDraw(P(0x00820f40), 0, P(kScreenWidget), 0x2d6, 0xf9, 0);                         // 0x0044f9e7
+    kWindowRefreshFull(P(kRootWindow), 0, 0);                                               // 0x0044f9f2
+    kWaitTicks(10, 0);                                                                      // 0x0044f9fa
+    kEnterModal();                                                                          // 0x0044fa02
+    bool running = true;                                                                    // 0x0044fa07 (bl = 1)
+    for (;;) {
+        kWaitTicks(1, 0);                                                                   // 0x0044fa0d
+        int x = 0, y = 0;
+        kViewToLocal(P(kRootWindow), 0, &x, &y);                                            // 0x0044fa24
+        if (x >= 0x2d6 && x < 0x302 && y >= 0xf9 && y < 0x125) {                            // 0x0044fa2d..0x0044fa4b
+            if (!hover) {                                                                   // 0x0044fa4d
+                hover = true;                                                               // 0x0044fa6b
+                kImageDraw(P(0x00820f6c), 0, P(kScreenWidget), 0x2d6, 0xf9, 0);             // 0x0044fa71..0x0044fa9d
+                kWindowRefreshFull(P(kRootWindow), 0, 0);                                   // 0x0044faa9
+            }
+        } else if (hover) {                                                                 // 0x0044fa78 / 0x0044fa7a
+            hover = false;                                                                  // 0x0044fa81
+            kImageDraw(P(0x00820f40), 0, P(kScreenWidget), 0x2d6, 0xf9, 0);                 // 0x0044fa98..0x0044fa9d
+            kWindowRefreshFull(P(kRootWindow), 0, 0);                                       // 0x0044faa9
+        }
+        kPumpMessages();                                                                    // 0x0044faae
+        if (kFlushRedraw() != 0) running = false;                                           // 0x0044fab3..0x0044fabc
+        if (G<int>(kMouseDown) != 0 || !running) break;                                     // 0x0044fabe..0x0044fac9
+    }
+    G<char>(kFlag569498) = 0;                                                               // 0x0044facf
+    kPumpLight();                                                                           // 0x0044fad6
+}
+static void(__cdecl* ShowFinancialReport_orig)();
+// 0x0044f6b0
+SG_HOOK("golf_clean.exe", 0x0044f6b0, showFinancialReport, ShowFinancialReport_re, ShowFinancialReport_orig);
+
+// ====================================================================================================================
+// showBestScoresScreen 0x00455a30
+// ====================================================================================================================
+
+// 0x00455a30  showBestScoresScreen: a header built in the text buffer from the texts 0x004d3328 and 0x004d3318 around
+// [0x005685f0] - 1 (0x00455ac3), then one row per non-zero entry of the int table 0x0056a524..0x0056a548 (0x00455c18,
+// 0x00455d7d): the entry's number at x 0x227 and, at x 0xf6, the row index + 1 followed by the text 0x004d3304 and the
+// string appendString 0x0045b9f0 adds for id row + 0x14 (0x00455d3d). Row y = [0x0082232c] * row + [0x008222d4] + 0x2d
+// (0x00455c21..0x00455c39). The footer sprite and the button go below the last row (0x00455d8c..0x00455dca), and the loop
+// ends on a click or a key.
+static void __cdecl ShowBestScoresScreen_re() {
+    char* buf = reinterpret_cast<char*>(kBuf);
+    kSurfaceDrawSprite(P(0x00821040), 0, P(kScreenWidget), 0, 0, 0x3e800000, 0, 1);          // 0x00455a56
+    kSurfaceStretchBlit(P(0x008222b8), 0, P(0x008222e4), P(kScreenWidget), 0xc3, 0x2d, 0);   // 0x00455a7d
+    kWidgetSetQuad(P(kScreenWidget), 0, 0x80000000, -1, 2, 2);                               // 0x00455a92
+    Cpy(buf, reinterpret_cast<const char*>(0x004d3328));                                     // 0x00455a97..0x00455ac1
+    Cat(buf, kItoa(G<int>(0x005685f0) - 1, reinterpret_cast<char*>(kItoaBuf), 10));          // 0x00455ac3..0x00455afb
+    Cat(buf, reinterpret_cast<const char*>(0x004d3318));                                     // 0x00455afd..0x00455b2d
+    kDrawStringAt(P(kScreenWidget), 0, P(0x00821020), buf, 0x19d, 0x3b, SLen(buf));          // 0x00455b54
+    Cpy(buf, reinterpret_cast<const char*>(0x004d3310));                                     // 0x00455b59..0x00455b83
+    kWidgetDraw(P(kScreenWidget), 0, P(0x00821ee8), buf, 0xec, 0x60, SLen(buf));             // 0x00455baa
+    Cpy(buf, reinterpret_cast<const char*>(0x004d3308));                                     // 0x00455baf..0x00455bd9
+    kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), buf, 0x227, 0x60, SLen(buf));          // 0x00455c00
+    int rows = 0;                                                                            // 0x00455c0c
+    const int* rec = reinterpret_cast<const int*>(0x0056a524);                               // 0x00455c05
+    for (;;) {
+        if (*rec == 0) break;                                                                // 0x00455c18 / 0x00455c1b
+        const int y = G<int>(0x0082232c) * rows + G<int>(0x008222d4) + 0x2d;                 // 0x00455c21..0x00455c39
+        kSurfaceStretchBlit(P(0x00822310), 0, P(0x0082233c), P(kScreenWidget), 0xc3, y, 0);  // 0x00455c55
+        buf[0] = '\0';                                                                       // 0x00455c64
+        Cat(buf, kItoa(*rec, reinterpret_cast<char*>(kItoaBuf), 10));                        // 0x00455c5c..0x00455c9b
+        kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), buf, 0x227, y, SLen(buf));         // 0x00455cc1
+        buf[0] = '\0';                                                                       // 0x00455cc6
+        Cat(buf, kItoa(rows + 1, reinterpret_cast<char*>(kItoaBuf), 10));                    // 0x00455ccd..0x00455d02
+        Cat(buf, reinterpret_cast<const char*>(0x004d3304));                                 // 0x00455d04..0x00455d36
+        kAppendString(rows + 0x14);                                                          // 0x00455d3d
+        kWidgetDraw(P(kScreenWidget), 0, P(0x00821ee8), buf, 0xf6, y, SLen(buf));            // 0x00455d70
+        rows++;                                                                              // 0x00455d79
+        rec++;
+        if (reinterpret_cast<unsigned>(rec) >= 0x0056a54c) break;                            // 0x00455d7d / 0x00455d86
+    }
+    const int endY = G<int>(0x0082232c) * rows + G<int>(0x008222d4) + 0x2d;                  // 0x00455d8c..0x00455da4
+    kSurfaceStretchBlit(P(0x00822368), 0, P(0x00822394), P(kScreenWidget), 0xc3, endY, 0);   // 0x00455dc0
+    const int by = endY + 0xe;                                                               // 0x00455dca
+    bool hover = false;                                                                      // 0x00455dcd
+    kImageDraw(P(0x00820f40), 0, P(kScreenWidget), 0x220, by, 0);                            // 0x00455de5
+    kWindowRefreshFull(P(kRootWindow), 0, 0);                                                // 0x00455df0
+    kWaitTicks(10, 0);                                                                       // 0x00455df8
+    kEnterModal();                                                                           // 0x00455e00
+    for (;;) {
+        kWaitTicks(1, 0);                                                                    // 0x00455e0b
+        int x = 0, y = 0;
+        kViewToLocal(P(kRootWindow), 0, &x, &y);                                             // 0x00455e22
+        if (x >= 0x220 && x < 0x24c && y >= by && y < by + 0x2c) {                           // 0x00455e2b..0x00455e46
+            if (!hover) {                                                                    // 0x00455e48
+                hover = true;                                                                // 0x00455e62
+                kImageDraw(P(0x00820f6c), 0, P(kScreenWidget), 0x220, by, 0);                // 0x00455e68..0x00455e90
+                kWindowRefreshFull(P(kRootWindow), 0, 0);                                    // 0x00455e9c
+            }
+        } else if (hover) {                                                                  // 0x00455e6f / 0x00455e71
+            hover = false;                                                                   // 0x00455e78
+            kImageDraw(P(0x00820f40), 0, P(kScreenWidget), 0x220, by, 0);                    // 0x00455e8b..0x00455e90
+            kWindowRefreshFull(P(kRootWindow), 0, 0);                                        // 0x00455e9c
+        }
+        kPumpMessages();                                                                     // 0x00455ea1
+        if (G<int>(kMouseDown) != 0) break;                                                  // 0x00455ea6..0x00455ead
+        if (kFlushRedraw() != 0) break;                                                      // 0x00455eaf..0x00455eb6
+    }
+    G<char>(kFlag569498) = 0;                                                                // 0x00455ebc
+    kPumpLight();                                                                            // 0x00455ec3
+}
+static void(__cdecl* ShowBestScoresScreen_orig)();
+// 0x00455a30
+SG_HOOK("golf_clean.exe", 0x00455a30, showBestScoresScreen, ShowBestScoresScreen_re, ShowBestScoresScreen_orig);
+
+// ====================================================================================================================
+// showHireEmployeeDialog 0x00459400
+// ====================================================================================================================
+
+// 0x00459400  showHireEmployeeDialog: redraws the whole dialog every frame and returns the row the player clicked. The
+// cursor's y picks one of eight rows through four bands (0x00459451..0x004594d2); outside them the row is -1 and a
+// cursor inside the button rect (0x229..0x250, 0x1a8..0x1ce) selects the second Image 0x00820f6c (0x00459510..0x00459560).
+// Each of the eight entries of the table 0x004c1464..0x004c1480 is drawn with the cost byte 0x004c2e2c + row (times 100,
+// 0x00459679..0x00459699) between the texts 0x004d2958 and 0x004d36dc; the hovered row gets a filled rect whose colour
+// comes from the display's slot +0xb4 (0x004596de). Four animated sprites follow (cellAt 0x0043d6f0 with the frame
+// counter modulo the table 0x0053fc20, 0x0045977d). A click leaves through pumpLight and returns
+// (row / 2) * 3 + 1 + (row & 1) (0x00459826..0x00459837), with row forced to -1 outside 0..0xc (0x0045980d..0x00459822);
+// a key alone (flushRedraw != 0 with no button down) returns -1 without pumpLight (0x004597f4..0x00459807).
+static int __cdecl ShowHireEmployeeDialog_re() {
+    int frame = 0;                                                                           // 0x00459428
+    int sel = -1;
+    int y = 0;    // ebp: loaded from an uninitialised slot at 0x00459435 and always written by the switch before it is read
+    kSurfaceDrawSprite(P(0x00821040), 0, P(kScreenWidget), 0, 0, 0x3e800000, 0, 1);          // 0x00459430
+    for (;;) {
+        int px = 0, py = 0;
+        kViewToLocal(P(kRootWindow), 0, &px, &py);                                           // 0x00459448
+        if (py >= 0xab && py < 0xd3) sel = (py >= 0xbf) ? 1 : 0;                             // 0x00459451..0x00459469
+        else if (py >= 0xf2 && py < 0x11a) sel = 2 + ((py >= 0x106) ? 1 : 0);                // 0x0045946f..0x0045948a
+        else if (py >= 0x139 && py < 0x161) sel = 4 + ((py >= 0x14d) ? 1 : 0);               // 0x00459490..0x004594ab
+        else if (py >= 0x180 && py < 0x1a8) sel = 6 + ((py >= 0x194) ? 1 : 0);               // 0x004594b1..0x004594cc
+        else sel = -1;                                                                       // 0x004594d2
+        kSurfaceStretchBlit(P(0x00821070), 0, P(0x0082109c), P(kScreenWidget), 0, 0, 0);     // 0x004594f9
+        int over = 0;                                                                        // 0x00459544
+        if (sel == -1 && px >= 0x229 && px < 0x251 && py >= 0x1a8 && py < 0x1cf) over = 1;    // 0x00459510..0x0045953d
+        kImageDraw(P(0x00820f40 + over * 0x2c), 0, P(kScreenWidget), 0x229, 0x1a6, 0);       // 0x0045954d..0x00459560
+        kSetDrawTarget(G<void*>(0x004c1570), 0, P(0x00821020), 0, 0, 0);                     // 0x00459565..0x00459576
+        kDrawCenteredText(reinterpret_cast<const char*>(0x004d372c), 0x179, 0x6b, 0x80000000);   // 0x0045958c
+        kSetDrawTarget(G<void*>(0x004c1570), 0, P(0x00821ee8), 0, 0, 0);                     // 0x00459591..0x004595a5
+        char* buf = reinterpret_cast<char*>(kBuf);
+        for (int k = 0; k < 8; k++) {                                                        // 0x004595b4..0x00459742
+            const bool odd = (k & 1) != 0;                                                   // 0x004595b4..0x004595bd
+            if (!odd) {
+                switch (k / 2) {                                                             // 0x004595bf..0x004595cb (table 0x00459840)
+                    case 0: y = 0x97;  kDrawText4049d0(reinterpret_cast<const char*>(0x004d3720), 0xe7, y, 0x80000000); break;   // 0x004595d2
+                    case 1: y = 0xde;  kDrawText4049d0(reinterpret_cast<const char*>(0x004d370c), 0xe7, y, 0x80000000); break;   // 0x004595e9
+                    case 2: y = 0x125; kDrawText4049d0(reinterpret_cast<const char*>(0x004d36fc), 0xe7, y, 0x80000000); break;   // 0x00459600
+                    case 3: y = 0x16c; kDrawText4049d0(reinterpret_cast<const char*>(0x004d36e8), 0xe7, y, 0x80000000); break;   // 0x00459617
+                }
+            }
+            y += 0x14;                                                                       // 0x0045963a
+            Cpy(buf, G<const char*>(0x004c1464 + 4 * k));                                    // 0x0045963d..0x0045965b
+            Cat(buf, reinterpret_cast<const char*>(0x004d2958));                             // 0x0045965d..0x00459696
+            kAppendNumber(G<signed char>(0x004c2e2c + k) * 100);                             // 0x00459679..0x00459699
+            Cat(buf, reinterpret_cast<const char*>(0x004d36dc));                             // 0x0045969e..0x004596d2
+            if (sel == k) {                                                                  // 0x004596c7..0x004596d4
+                void* disp = G<void*>(0x0083ad50);                                           // 0x004596d6
+                const Slot0_t slot = *reinterpret_cast<Slot0_t*>(*reinterpret_cast<char**>(disp) + 0xb4);
+                const int r = slot(disp, 0);                                                 // 0x004596de
+                kFillWindowRect(P(kRootWindow), 0, 0xe7, y - 2, 0x123, 0x10,
+                                (r == 1) ? 0x8000fea0u : 0x80007f40u);                       // 0x004596e4..0x00459709
+            }
+            kDrawText4049d0(buf, 0xf6, y, 0x80000000);                                       // 0x0045971e
+            if (odd) y += 8;                                                                 // 0x0045972a..0x0045972e
+        }
+        frame++;                                                                             // 0x00459754
+        int sx = 0xc0;                                                                       // 0x0045974c
+        for (int s = 0, b = 1; b < 9; b += 2, s++) {                                         // 0x0045975b..0x004597bf
+            int idx = s, c = s * 4;                                                          // 0x00459764 / 0x00459768
+            if (sel == b) { idx = s + 4; c += 0x10; }                                        // 0x00459766..0x00459774
+            void* cell = kCellAt(idx + 0x20e, frame % G<int>(0x0053fc20 + c), s);            // 0x00459777..0x0045978b
+            kAddSprite(0x240, sx, y, 0x28, 0x28, cell, 4, idx + 0x82);                       // 0x00459790..0x004597a9
+            sx += 0x46;                                                                      // 0x004597b5
+        }
+        kWindowRefreshFull(P(kRootWindow), 0, 0);                                            // 0x004597c8
+        kPumpMessages();                                                                     // 0x004597cd
+        kWaitTicks(1, 0);                                                                    // 0x004597d6
+        if (G<int>(kMouseDown) != 0) break;                                                  // 0x004597db..0x004597e5
+        if (kFlushRedraw() == 0) continue;                                                   // 0x004597e7..0x004597ee
+        if (G<int>(kMouseDown) == 0) return -1;                                              // 0x004597f4..0x00459807
+        break;
+    }
+    kPumpLight();                                                                            // 0x00459808
+    if (sel < 0 || sel > 0xc) sel = -1;                                                      // 0x0045980d..0x00459822
+    return (sel / 2) * 3 + 1 + (sel & 1);                                                    // 0x00459826..0x00459837
+}
+static int(__cdecl* ShowHireEmployeeDialog_orig)();
+// 0x00459400
+SG_HOOK("golf_clean.exe", 0x00459400, showHireEmployeeDialog, ShowHireEmployeeDialog_re, ShowHireEmployeeDialog_orig);
+
+// ====================================================================================================================
+// showPlayerCommentsReport 0x004546b0
+// ====================================================================================================================
+
+// 0x004546b0  showPlayerCommentsReport: counts, per comment kind, how often it was recorded on each of the 18 holes
+// (the short arrays at 0x00575d90 + kind*2, stride 0x208, 0x004547f2..0x0045484e) and keeps for each kind the hole with
+// the highest count (0x00454824..0x0045482e); the total of the dwords at 0x00575cd8 is summed while kind is 0
+// (0x00454816..0x00454820). It then draws up to 20 rows (0x0045485b), each time taking the kind with the largest count
+// among the first 0x32 (0x00454863..0x00454881), building its comment with buildGolferComment 0x00469b00 (0x00454909)
+// into the text buffer between two copies of the text at 0x004c4e54, drawing it in a colour that follows [0x0058b198]
+// (0x00454937..0x00454964), then the percentage count * 100 / total at x 0x256 (0x004549c5) and the hole number at
+// x 0x1f8 (0x00454acb), and clearing that kind's count (0x00454add). A row that finds no positive count, or a zero
+// total, draws nothing and only consumes one of the 20 (0x00454883..0x00454891). The footer sprite and the button
+// follow the last drawn row (0x00454b38, 0x00454b5d), and the loop ends on a click or a key.
+static void __cdecl ShowPlayerCommentsReport_re() {
+    char* buf = reinterpret_cast<char*>(kBuf);
+    kSurfaceDrawSprite(P(0x00821040), 0, P(kScreenWidget), 0, 0, 0x3e800000, 0, 1);          // 0x004546da
+    kSurfaceStretchBlit(P(0x008223c0), 0, P(0x008223ec), P(kScreenWidget), 0x94, 0x2d, 0);   // 0x00454701
+    int spriteY = G<int>(0x008223dc) + 0x16;                                                 // 0x00454706..0x00454711
+    kWidgetSetQuad(P(kScreenWidget), 0, 0x80000000, -1, 2, 2);                               // 0x00454722
+    {
+        const char* t = reinterpret_cast<const char*>(0x004d3288);                           // 0x00454727
+        kDrawStringAt(P(kScreenWidget), 0, P(0x00821020), t, 0x185, 0x3d, SLen(t));          // 0x00454753
+    }
+    {
+        const char* t = reinterpret_cast<const char*>(0x004d3198);                           // 0x00454758
+        kWidgetDraw(P(kScreenWidget), 0, P(0x00821ee8), t, 0xb6, 0x60, SLen(t));             // 0x00454780
+    }
+    {
+        const char* t = reinterpret_cast<const char*>(0x004c88a8);                           // 0x00454785
+        kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), t, 0x1f8, 0x60, SLen(t));          // 0x004547b1
+    }
+    {
+        const char* t = reinterpret_cast<const char*>(0x004d327c);                           // 0x004547b6
+        kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), t, 0x256, 0x60, SLen(t));          // 0x004547e2
+    }
+    int counts[0x40];                                                                        // E-0x200
+    int best[0x40];                                                                          // E-0x100
+    int total = 0;                                                                           // 0x004547e8
+    for (int kind = 0; kind < 0x40; kind++) {                                                // 0x004547f2 / 0x0045484b
+        int max = 0;                                                                         // 0x004547f9
+        counts[kind] = 0;                                                                    // 0x004547fd
+        const int* p = reinterpret_cast<const int*>(0x00575cd8);                             // 0x00454801
+        const short* q = reinterpret_cast<const short*>(0x00575d90 + kind * 2);              // 0x00454806
+        int hole = 1;                                                                        // 0x004547f4
+        do {
+            const int c = *q;                                                                // 0x0045480d
+            counts[kind] += c;                                                               // 0x00454810..0x00454818
+            if (kind == 0) total += *p;                                                      // 0x00454816..0x00454820
+            if (c > max) { max = c; best[kind] = hole; }                                     // 0x00454824..0x0045482e
+            p = reinterpret_cast<const int*>(reinterpret_cast<const char*>(p) + 0x208);      // 0x00454835
+            q = reinterpret_cast<const short*>(reinterpret_cast<const char*>(q) + 0x208);    // 0x0045483c
+            hole++;                                                                          // 0x0045483b
+        } while (reinterpret_cast<unsigned>(p) < 0x00578168);                                // 0x00454842
+    }
+    int textY = spriteY + 2;                                                                 // 0x00454854..0x00454857
+    // E-0x208 in the original: read from an uninitialised slot at 0x00454850 and only used after the search below has
+    // written it (the row body runs only when a count was positive)
+    int bestKind = 0;
+    for (int row = 0x14; row != 0; row--) {                                                  // 0x0045485b / 0x00454af3..0x00454afc
+        int max = 0;                                                                         // 0x00454863
+        for (int k = 0; k < 0x40; k++) {                                                     // 0x0045487e / 0x00454881
+            if (k < 0x32 && counts[k] > max) { max = counts[k]; bestKind = k; }              // 0x0045486b..0x00454878
+        }
+        if (max != 0 && total != 0) {                                                        // 0x00454883..0x00454891
+            kSurfaceStretchBlit(P(0x00822418), 0, P(0x00822444), P(kScreenWidget), 0x94, spriteY, 0);   // 0x004548b8
+            const int hole = best[bestKind];                                                 // 0x004548c7
+            Cpy(buf, reinterpret_cast<const char*>(0x004c4e54));                             // 0x004548bd..0x004548ee
+            const int arg = G<unsigned short>(0x00575c1c + (bestKind + hole * 0x104) * 2) & 0x3fff;   // 0x004548f0..0x00454902
+            kBuildGolferComment(bestKind, arg, -1, 0x98);                                    // 0x004548d4..0x00454909
+            Cat(buf, reinterpret_cast<const char*>(0x004c4e54));                             // 0x0045490e..0x00454946
+            const unsigned g = G<unsigned>(0x0058b198);                                      // 0x00454937
+            const unsigned colour = (g == 0x800023e8) ? 0x80001284u                          // 0x00454941..0x0045494f
+                                  : (g == 0x80007d08) ? 0x80007d08u : 0x80000000u;           // 0x00454951..0x00454964
+            kWidgetSetQuad(P(kScreenWidget), 0, colour, -1, 2, 2);                           // 0x00454970
+            kWidgetDraw(P(kScreenWidget), 0, P(0x00821ee8), buf, 0xb6, textY, SLen(buf));    // 0x004549a4
+            buf[0] = 0;                                                                      // 0x004549b4
+            Cat(buf, kItoa(counts[bestKind] * 100 / total, reinterpret_cast<char*>(kItoaBuf), 10));   // 0x004549a9..0x004549fa
+            Cat(buf, reinterpret_cast<const char*>(0x004c60c4));                             // 0x004549fc..0x00454a2c
+            kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), buf, 0x256, textY, SLen(buf));  // 0x00454a56
+            buf[0] = 0;                                                                      // 0x00454a63
+            Cat(buf, kItoa(hole, reinterpret_cast<char*>(kItoaBuf), 10));                    // 0x00454a5b..0x00454aa1
+            kDrawStringAt(P(kScreenWidget), 0, P(0x00821ee8), buf, 0x1f8, textY, SLen(buf));  // 0x00454acb
+            counts[bestKind] = 0;                                                            // 0x00454add
+            spriteY += 0xf;                                                                  // 0x00454ad0..0x00454ae9
+            textY += 0xf;                                                                    // 0x00454ad4..0x00454aed
+        }
+    }
+    kWidgetSetQuad(P(kScreenWidget), 0, 0x80000000, -1, 2, 2);                               // 0x00454b12
+    kSurfaceStretchBlit(P(0x00822470), 0, P(0x0082249c), P(kScreenWidget), 0x94, spriteY, 0);  // 0x00454b38
+    const int by = spriteY + 0xe;                                                            // 0x00454b42
+    bool hover = false;                                                                      // 0x00454b45
+    kImageDraw(P(0x00820f40), 0, P(kScreenWidget), 0x24f, by, 0);                            // 0x00454b5d
+    kWindowRefreshFull(P(kRootWindow), 0, 0);                                                // 0x00454b68
+    kWaitTicks(10, 0);                                                                       // 0x00454b70
+    kEnterModal();                                                                           // 0x00454b78
+    for (;;) {
+        kWaitTicks(1, 0);                                                                    // 0x00454b82
+        int x = 0, y = 0;
+        kViewToLocal(P(kRootWindow), 0, &x, &y);                                             // 0x00454b99
+        if (x >= 0x24f && x < 0x27b && y >= by && y < by + 0x2c) {                           // 0x00454ba2..0x00454bbd
+            if (!hover) {                                                                    // 0x00454bbf
+                hover = true;                                                                // 0x00454bd9
+                kImageDraw(P(0x00820f6c), 0, P(kScreenWidget), 0x24f, by, 0);                // 0x00454bdf..0x00454c07
+                kWindowRefreshFull(P(kRootWindow), 0, 0);                                    // 0x00454c13
+            }
+        } else if (hover) {                                                                  // 0x00454be6 / 0x00454be8
+            hover = false;                                                                   // 0x00454bef
+            kImageDraw(P(0x00820f40), 0, P(kScreenWidget), 0x24f, by, 0);                    // 0x00454c02..0x00454c07
+            kWindowRefreshFull(P(kRootWindow), 0, 0);                                        // 0x00454c13
+        }
+        kPumpMessages();                                                                     // 0x00454c18
+        if (G<int>(kMouseDown) != 0) break;                                                  // 0x00454c1d..0x00454c24
+        if (kFlushRedraw() != 0) break;                                                      // 0x00454c26..0x00454c2d
+    }
+    G<char>(kFlag569498) = 0;                                                                // 0x00454c33
+    kPumpLight();                                                                            // 0x00454c3a
+}
+static void(__cdecl* ShowPlayerCommentsReport_orig)();
+// 0x004546b0
+SG_HOOK("golf_clean.exe", 0x004546b0, showPlayerCommentsReport, ShowPlayerCommentsReport_re, ShowPlayerCommentsReport_orig);
+
+// ====================================================================================================================
+// showHistographScreen 0x00455ed0
+// ====================================================================================================================
+
+// 0x00455ed0  showHistographScreen: the four history curves and the event markers of the whole game. The left axis is
+// labelled with appendCents for the skill scale and itoa for the cash scale (0x004560cc..0x004561e7, 16 rows 0x32 apart
+// from y 0x202); the two scales come from [0x00541cd8] (1 or 2 above 0x9c4, 0x0045604d) and [0x00571fd4] (1, 2, 4, 10,
+// 0x14, 0x28 or 0x50 by the thresholds at 0x00455fe5..0x00456039). One column per week of [0x00834170] / 0x400
+// (0x0045625d..0x00456279, step clamp(600 / (weeks + 1), 1, 4) at 0x0045620e) draws four segments from the previous
+// week's height with Widget_fillRect: the skill shorts 0x005409ae scaled and halved or, above 0x1f4, tenthed and offset
+// by 0xc8 (0x0045628f..0x004562e4), the cash shorts 0x0051b38a the same way but through their absolute value and in a
+// colour that follows their sign (0x004562e9..0x0045635b), the shorts at 0x0053e63e (0x00456360..0x004563b6) and the
+// shorts at 0x00520642 multiplied by 4 (0x004563c3..0x004563e9). A non-zero event word at 0x00568602 (0x004563ee) is
+// split into a kind (its bits above the low five) and an id, and the kind picks the text built in the buffer
+// (0x00456402..0x00456847); the marker is drawn at a y that walks 10 pixels per event modulo 0x1c2
+// (0x00456849..0x004568c5). Afterwards the screen surface's slot +0xc4 is called when [0x00519cd8] is not NULL
+// (0x0045690c..0x00456918) and the usual button loop runs (rect x 0x2c0..0x2eb, y 0x227..0x252).
+static void __cdecl ShowHistographScreen_re() {
+    char* buf = reinterpret_cast<char*>(kBuf);
+    char* const num = reinterpret_cast<char*>(kItoaBuf);
+    kSurfaceDrawSprite(P(0x00821040), 0, P(kScreenWidget), 0, 0, 0x3e800000, 0, 1);          // 0x00455ef5
+    kSurfaceStretchBlit(P(0x00821bf8), 0, P(0x00821c24), P(kScreenWidget), 0, 0, 0);         // 0x00455f1a
+    kWidgetSetQuad(P(kScreenWidget), 0, 0x80000000, -1, 2, 2);                               // 0x00455f2f
+    {
+        const char* t = reinterpret_cast<const char*>(0x004d3354);
+        kDrawStringAt(P(kScreenWidget), 0, P(0x00821020), t, 0x177, 0x14, SLen(t));          // 0x00455f60
+    }
+    kSetDrawTarget(G<void*>(0x004c1570), 0, P(0x00821ee8), 0, 0, 0);                         // 0x00455f71
+    kDrawCenteredText(reinterpret_cast<const char*>(0x004d334c), 0xb1, 0x21e, 0x80000000);   // 0x00455f8d
+    kDrawCenteredText(reinterpret_cast<const char*>(0x004c88e8), 0x14c, 0x21e, 0x80000000);  // 0x00455fa6
+    kDrawCenteredText(reinterpret_cast<const char*>(0x004d2120), 0x1e8, 0x21e, 0x80000000);  // 0x00455fbf
+    kDrawCenteredText(reinterpret_cast<const char*>(0x004d3344), 0x284, 0x21e, 0x80000000);  // 0x00455fd8
+    const int cash = G<int>(0x00571fd4);                                                     // 0x00455fdd
+    int cashScale = 1;                                                                       // 0x00455fea
+    if (cash > 0x9c4) cashScale = 2;                                                         // 0x00455fe5 / 0x00455ff4
+    if (cash > 0x1388) cashScale = 4;                                                        // 0x00455ff8 / 0x00455fff
+    if (cash > 0x2710) cashScale = 10;                                                       // 0x00456007 / 0x0045600e
+    if (cash > 0x61a8) cashScale = 0x14;                                                     // 0x00456016 / 0x0045601d
+    if (cash > 0xc350) cashScale = 0x28;                                                     // 0x00456025 / 0x0045602c
+    if (cash > 0x186a0) cashScale = 0x50;                                                    // 0x00456034 / 0x0045603b
+    const int skillScale = (G<int>(0x00541cd8) > 0x9c4) ? 2 : 1;                             // 0x00456043..0x00456058
+    // axis labels: the two left-hand scales start negative and the two right-hand ones at 0
+    int skillAxis = skillScale * -2000;                                                      // 0x004560ad..0x004560c2
+    int cashAxis = cashScale * -200;                                                         // 0x004560a1..0x004560b6
+    int skillAxis2 = 0;                                                                      // 0x00456066
+    int cashAxis2 = 0;                                                                       // 0x00456062
+    for (int y = 0x202; y > 0xe; y -= 0x32) {                                                // 0x0045606a / 0x004561d0..0x004561e7
+        buf[0] = 0;                                                                          // 0x004560d2
+        kAppendCents((y < 0x108) ? skillAxis : skillAxis2);                                  // 0x004560cc..0x004560e3
+        kDrawCenteredText(buf, 0x4d, y, 0x80004010);                                         // 0x004560f8
+        Cpy(buf, reinterpret_cast<const char*>(0x004c61e0));                                 // 0x004560fd..0x00456130
+        Cat(buf, kItoa((y < 0x108) ? cashAxis : cashAxis2, num, 10));                        // 0x0045612a..0x00456177
+        Cat(buf, reinterpret_cast<const char*>(0x004d3340));                                 // 0x00456179..0x004561a7
+        kDrawCenteredText(buf, 0x2d7, y, 0x80000000);                                        // 0x004561a9
+        skillAxis += skillScale * 500;                                                       // 0x004561c2 / 0x004561c8
+        skillAxis2 += skillScale * 100;                                                      // 0x004561d6 / 0x004561df
+        cashAxis += cashScale * 50;                                                          // 0x004561d8
+        cashAxis2 += cashScale * 10;                                                         // 0x004561da / 0x004561e3
+    }
+    const int weeks = (G<int>(0x00834170) + ((G<int>(0x00834170) >> 31) & 0x3ff)) >> 10;     // 0x004561ed..0x004561ff
+    const int step = kClamp(600 / (weeks + 1), 1, 4);                                        // 0x00456202..0x0045620e
+    kSetDrawTarget(G<void*>(0x004c1570), 0, P(0x00519fd8), 0, 0, 0);                         // 0x00456213..0x0045622c
+    int prevSkill = 0, prevCash = 0, prev3 = 0, prev4 = 0, eventSlot = 0;                    // 0x00456244..0x00456254
+    kSurfaceBox(P(kScreenWidget), 0, 0x6a, 0x48, 0x256, 0x1c2);                              // 0x00456258
+    int week = 1;                                                                            // 0x00456262
+    if (weeks >= 1) {                                                                        // 0x00456276 / 0x00456279
+        int x1 = 0x6b;                                                                       // 0x0045627f
+        int x2 = step + 0x6b;                                                                // 0x00456284
+        int off = 0;                                                                         // 0x0045628b (byte offset, 2 per week)
+        do {
+            const int sv = G<short>(0x005409ae + off) / skillScale;                          // 0x0045628f..0x00456297
+            const int sh = (sv > 0x1f4) ? (sv / 10 + 0xc8) : (sv / 2);                       // 0x0045629d..0x004562bd
+            kWidgetFillRect(P(kScreenWidget), 0, x1, 0x209 - prevSkill, x2, 0x209 - sh, 0x80004010);   // 0x004562c4..0x004562e4
+            prevSkill = sh;                                                                  // 0x004562f0
+            const short cw = G<short>(0x0051b38a + off);                                     // 0x004562e9
+            const int cv = cw / cashScale;                                                   // 0x004562f4..0x004562f8
+            int cabs = cv;                                                                   // 0x00456306..0x00456309 (cdq; xor; sub)
+            if (cv < 0) cabs = -cv;
+            const int chh = (cv > 0x1f4) ? (cv / 10 + 0xc8) : (cabs / 2);                    // 0x004562fe..0x00456323
+            kWidgetFillRect(P(kScreenWidget), 0, x1, 0x209 - prevCash, x2, 0x209 - chh,
+                            (cw < 0) ? 0x80007d08u : 0x80000000u);                           // 0x0045632a..0x0045635b
+            prevCash = chh;                                                                  // 0x00456367
+            const short t3 = G<short>(0x0053e63e + off);                                     // 0x00456360
+            const int h3 = (t3 > 0x1f4) ? (t3 / 10 + 0xc8) : (t3 / 2);                       // 0x0045636b..0x0045638f
+            kWidgetFillRect(P(kScreenWidget), 0, x1, 0x209 - prev3, x2, 0x209 - h3, 0x800003e0);   // 0x00456396..0x004563b6
+            prev3 = h3;                                                                      // 0x004563bf
+            const int h4 = G<short>(0x00520642 + off) * 4;                                   // 0x004563c3..0x004563ca
+            kWidgetFillRect(P(kScreenWidget), 0, x1, 0x209 - prev4, x2, 0x209 - h4, 0x80000210);   // 0x004563cd..0x004563e9
+            prev4 = h4;                                                                      // 0x004563f5
+            const short code = G<short>(0x00568602 + off);                                   // 0x004563ee
+            if (code != 0) {                                                                 // 0x004563f9 / 0x004563fc
+                const int kind = static_cast<int>(code) & ~0x1f;                             // 0x00456402..0x00456407
+                const int id = static_cast<int>(code) & 0x1f;                                // 0x00456409
+                // the two index tables 0x00456a48 / 0x00456ae4 map a kind that is 0x20 apart to one arm each; anything
+                // outside the two 0x80-wide windows leaves the buffer as the previous event left it (0x00456426 /
+                // 0x004566c2 -> 0x00456849)
+                bool known;
+                if (kind > 0xc0) known = static_cast<unsigned>(kind - 0xe0) <= 0x80;          // 0x0045640c / 0x004566bc
+                else if (kind == 0xc0) known = true;                                          // 0x00456417
+                else known = static_cast<unsigned>(kind - 0x20) <= 0x80;                      // 0x00456420
+                if (known) {
+                    switch (kind) {
+                        case 0x20:                                                           // 0x0045643b
+                            Cpy(buf, reinterpret_cast<const char*>(0x004c4978));
+                            Cat(buf, kItoa(id, num, 10));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d294c));
+                            break;
+                        case 0x40:                                                           // 0x004564be
+                            Cpy(buf, reinterpret_cast<const char*>(0x004c26b0 + id * 20));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d2944));
+                            break;
+                        case 0x60:                                                           // 0x00456612
+                            Cpy(buf, reinterpret_cast<const char*>(0x004d2914));
+                            Cat(buf, reinterpret_cast<const char*>(0x0058dd50 + id * 56));
+                            break;
+                        case 0x80:                                                           // 0x0045650c
+                            Cpy(buf, reinterpret_cast<const char*>(0x004c4978));
+                            Cat(buf, kItoa(id, num, 10));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d2934));
+                            break;
+                        case 0xa0:                                                           // 0x0045658f
+                            Cpy(buf, reinterpret_cast<const char*>(0x004c4978));
+                            Cat(buf, kItoa(id, num, 10));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d2924));
+                            break;
+                        case 0xc0:                                                           // 0x00456668
+                            Cpy(buf, reinterpret_cast<const char*>(0x0055d738 + id * 0x25));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d2904));
+                            break;
+                        case 0xe0:                                                           // 0x004566d7
+                            Cpy(buf, reinterpret_cast<const char*>(0x004d6098));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d28f8));
+                            Cat(buf, kItoa(id, num, 10));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d28e8));
+                            break;
+                        case 0x100:                                                          // 0x00456787
+                            Cpy(buf, G<const char*>(0x004c2c18));
+                            Cat(buf, reinterpret_cast<const char*>(0x004d28d4));
+                            break;
+                        case 0x120:                                                          // 0x004567d0
+                            Cpy(buf, reinterpret_cast<const char*>(0x004d3330));
+                            break;
+                        case 0x140:                                                          // 0x00456824
+                            Cpy(buf, reinterpret_cast<const char*>(0x004d2894));
+                            break;
+                        case 0x160:                                                          // 0x004567f2
+                            Cpy(buf, reinterpret_cast<const char*>(0x004d28b0));
+                            kLandmarkName(id, 0);                                            // 0x0045681a
+                            break;
+                        default:                                                             // 0x00456849
+                            break;
+                    }
+                }
+                eventSlot = eventSlot % 0x1c2 + 10;                                           // 0x00456849..0x00456872
+                const int base = 0x209 - prevSkill;                                           // 0x00456855..0x00456863
+                kFillWindowRect(P(kRootWindow), 0, x2 + 10, base, 2, 2, 0x80000210);          // 0x0045685e..0x0045687c
+                kWidgetFillRect(P(kScreenWidget), 0, x2 + 11, base, x2 + 11, 0x209 - eventSlot, 0x800003ff);   // 0x00456881..0x00456899
+                kFillWindowRect(P(kRootWindow), 0, x2 + 11, 0x209 - eventSlot, 2, 2, 0x80000210);   // 0x0045689e..0x004568ae
+                kDrawText4049d0(buf, x2 + 14, 0x209 - eventSlot - 3, 0x80000210);             // 0x004568b3..0x004568c5
+            }
+            x1 += step;                                                                       // 0x004568dd
+            x2 += step;                                                                       // 0x004568df
+            off += 2;                                                                         // 0x004568ee
+            week++;                                                                           // 0x004568e6
+        } while (week <= ((G<int>(0x00834170) + ((G<int>(0x00834170) >> 31) & 0x3ff)) >> 10));  // 0x004568e1..0x00456904
+    }
+    {
+        void* surf = G<void*>(0x00519cd8);                                                    // 0x0045690c
+        if (surf != 0) {                                                                      // 0x00456912 / 0x00456914
+            const Slot0_t slot = *reinterpret_cast<Slot0_t*>(*reinterpret_cast<char**>(surf) + 0xc4);
+            slot(surf, 0);                                                                    // 0x00456918
+        }
+    }
+    bool hover = false;                                                                       // 0x00456923
+    kImageDraw(P(0x00820fc4), 0, P(kScreenWidget), 0x2c0, 0x227, 0);                          // 0x0045693f
+    kWindowRefreshFull(P(kRootWindow), 0, 0);                                                 // 0x0045694a
+    kWaitTicks(10, 0);                                                                        // 0x00456952
+    kEnterModal();                                                                            // 0x0045695a
+    for (;;) {
+        kWaitTicks(1, 0);                                                                     // 0x00456962
+        int x = 0, y = 0;
+        kViewToLocal(P(kRootWindow), 0, &x, &y);                                              // 0x00456979
+        if (x >= 0x2c0 && x < 0x2ec && y >= 0x227 && y < 0x253) {                             // 0x00456982..0x004569a0
+            if (!hover) {                                                                     // 0x004569a2
+                hover = true;                                                                 // 0x004569bf
+                kImageDraw(P(0x00820ff0), 0, P(kScreenWidget), 0x2c0, 0x227, 0);              // 0x004569c5..0x004569f1
+                kWindowRefreshFull(P(kRootWindow), 0, 0);                                     // 0x004569fc
+            }
+        } else if (hover) {                                                                   // 0x004569cc / 0x004569ce
+            hover = false;                                                                    // 0x004569d5
+            kImageDraw(P(0x00820fc4), 0, P(kScreenWidget), 0x2c0, 0x227, 0);                  // 0x004569ec..0x004569f1
+            kWindowRefreshFull(P(kRootWindow), 0, 0);                                         // 0x004569fc
+        }
+        kPumpMessages();                                                                      // 0x00456a01
+        if (G<int>(kMouseDown) != 0) break;                                                   // 0x00456a06..0x00456a0c
+        if (kFlushRedraw() != 0) break;                                                       // 0x00456a0e..0x00456a15
+    }
+    G<char>(kFlag569498) = 0;                                                                 // 0x00456a1b
+    kPumpLight();                                                                             // 0x00456a22
+}
+static void(__cdecl* ShowHistographScreen_orig)();
+// 0x00455ed0
+SG_HOOK("golf_clean.exe", 0x00455ed0, showHistographScreen, ShowHistographScreen_re, ShowHistographScreen_orig);
+
+// ====================================================================================================================
+// selectDifficultyScreen 0x0043a400
+// ====================================================================================================================
+
+// 0x0043a400  selectDifficultyScreen: the four difficulty choices and the cancel button of the front end; returns the
+// chosen index 0..3, or -1 for cancel and for a key. Five Surfaces are built on the stack with __ehvec_ctor_iter
+// 0x004a55d2 (element 0x2c, Surface_ctor 0x00473ab0, unwindFree_4041f0 as its unwind handler, 0x0043a47f) and filled
+// from one Image: the asset 0x004c8778 is loaded (0x0043a4b6), the five sub-rectangles are blitted out of it
+// (0x0043a4d7..0x0043a576) and then the asset 0x004c875c is loaded over the same Image (0x0043a590). Each frame
+// redraws the whole screen (0x0043a5a2..0x0043a6ea): the second asset at (0, 0) scaled to 0x320 x 0x258, the title
+// 0x004c8748, the highlighted item's sub-Surface at the coordinates of the table built at 0x0043a429..0x0043a477
+// (y at index 0..4, x at index 5..9) and the four captions, each 2 pixels lower and in the colour 0x80004210 while it
+// is not the highlighted one (0x0043a61f..0x0043a6ea). The highlight is then recomputed from the cursor: the item
+// whose centre is within 0x50 of ((x - cx) / 2, y - cy) by approxDistance 0x00467170 (0x0043a718..0x0043a78b), the
+// cancel button within 0x19 of (x - 0x2ff, y - 0x22d) (0x0043a7bc..0x0043a7de), and -1 when none matches. A highlight
+// that stays the same for more than 0x1e frames on the cancel button copies the text 0x004c8590 into the text buffer
+// and calls drawPanelBackdrop (0x0043a7e3..0x0043a829); any change resets that counter (0x0043a833). The loop ends on
+// a mouse button (0x0043a84a) or on a key (0x0043a856); the cancel item and the key both return -1
+// (0x0043a863..0x0043a870), and the Image and the five Surfaces are destroyed on the way out (0x0043a881, 0x0043a89f).
+static int __cdecl SelectDifficultyScreen_re() {
+    char surfaces[5 * 0x2c];
+    char image[0x2b8];
+    // the coordinate table of the highlight sprite: y at 0..4, x at 5..9 (0x0043a429..0x0043a477)
+    const int tbl[10] = {0x20, 0xa1, 0x140, 0x1b4, 0x214, 0xc1, 0x96, 0xa1, 0xc8, 0x2dc};
+    kEhVecCtor(surfaces, 0x2c, 5, kSurfaceCtor, kUnwindFree4041f0);                          // 0x0043a47f
+    kImageCtor(image, 0);                                                                    // 0x0043a494
+    kLoadImage(image, 0, reinterpret_cast<const char*>(0x004c8778), 0, 0, 0x100, 2);         // 0x0043a4b6
+    kSurfaceBlit(surfaces + 0 * 0x2c, 0, image, 0, 0, 0x152, 0x92, 1, 1);                    // 0x0043a4d7
+    kSurfaceBlit(surfaces + 1 * 0x2c, 0, image, 400, 0, 0x152, 0x92, 1, 1);                  // 0x0043a4ff
+    kSurfaceBlit(surfaces + 2 * 0x2c, 0, image, 0, 0x12c, 0x14c, 0x72, 1, 1);                // 0x0043a524
+    kSurfaceBlit(surfaces + 3 * 0x2c, 0, image, 400, 0x12c, 0x14c, 0x82, 1, 1);              // 0x0043a550
+    kSurfaceBlit(surfaces + 4 * 0x2c, 0, image, 0x2dc, 0x214, 0x44, 0x44, 1, 1);             // 0x0043a576
+    kLoadImage(image, 0, reinterpret_cast<const char*>(0x004c875c), 0, 0, 0x100, 2);         // 0x0043a590
+    G<int>(kMouseDown) = 0;                                                                  // 0x0043a595
+    int sel = -1;                                                                            // 0x0043a59b
+    int dwell = 0;                                                                           // 0x0043a59e
+    for (;;) {
+        kSetDrawTarget(G<void*>(0x004c1570), 0, P(0x00519a40), 0, 0, 0);                     // 0x0043a5a2..0x0043a5b0
+        kSurfaceBlitThunk(image, 0, P(kScreenWidget), 0, 0, 0, 0, 0x320, 0x258);             // 0x0043a5b5..0x0043a5d9
+        kDrawCenteredText(reinterpret_cast<const char*>(0x004c8748), 0x25a, 0x2a, 0x80000000);   // 0x0043a5ef
+        if (sel != -1) {                                                                     // 0x0043a5f7 / 0x0043a5fa
+            kImageDraw(surfaces + sel * 0x2c, 0, G<void*>(0x004c1570), tbl[sel + 5], tbl[sel], 0);   // 0x0043a5fc..0x0043a61a
+        }
+        kDrawCenteredText(reinterpret_cast<const char*>(0x004c8740), 0x184,
+                          0x71 + ((sel != 0) ? 2 : 0), 0x80000000u + ((sel != 0) ? 0x4210u : 0u));   // 0x0043a61f..0x0043a649
+        kDrawCenteredText(reinterpret_cast<const char*>(0x004c8734), 0x168,
+                          0xe3 + ((sel != 1) ? 2 : 0), 0x80000000u + ((sel != 1) ? 0x4210u : 0u));   // 0x0043a64e..0x0043a67d
+        kDrawCenteredText(reinterpret_cast<const char*>(0x004c8728), 0x16e,
+                          0x15a + ((sel != 2) ? 2 : 0), 0x80000000u + ((sel != 2) ? 0x4210u : 0u));  // 0x0043a682..0x0043a6b3
+        kDrawCenteredText(reinterpret_cast<const char*>(0x004c871c), 0x192,
+                          0x1d0 + ((sel != 3) ? 2 : 0), 0x80000000u + ((sel != 3) ? 0x4210u : 0u));  // 0x0043a6b8..0x0043a6ea
+        kPumpMessages();                                                                     // 0x0043a6f2
+        int x = 0, y = 0;
+        kViewToLocal(P(kRootWindow), 0, &x, &y);                                             // 0x0043a706
+        const int prev = sel;                                                                // 0x0043a713
+        sel = -1;                                                                            // 0x0043a715
+        if (kApproxDistance((x - 0x15c) / 2, y - 0x6b) < 0x50) sel = 0;                      // 0x0043a718..0x0043a735
+        if (kApproxDistance((x - 0x13f) / 2, y - 0xda) < 0x50) sel = 1;                      // 0x0043a737..0x0043a75e
+        if (kApproxDistance((x - 0x140) / 2, y - 0x16f) < 0x50) sel = 2;                     // 0x0043a763..0x0043a78b
+        if (kApproxDistance((x - 0x16b) / 2, y - 0x1ef) < 0x50) sel = 3;                     // 0x0043a790..0x0043a7b7
+        if (kApproxDistance(x - 0x2ff, y - 0x22d) < 0x19) sel = 4;                           // 0x0043a7bc..0x0043a7de
+        if (sel == prev) {                                                                   // 0x0043a7e3 / 0x0043a7e5
+            dwell++;                                                                         // 0x0043a7eb..0x0043a7ef
+            if (dwell > 0x1e && sel == 4) {                                                  // 0x0043a7ec..0x0043a7f8
+                Cpy(reinterpret_cast<char*>(kBuf), reinterpret_cast<const char*>(0x004c8590));   // 0x0043a7fa..0x0043a827
+                kDrawPanelBackdrop(0x2ff, 0x22d);                                            // 0x0043a829
+            }
+        } else {
+            dwell = 0;                                                                       // 0x0043a833
+        }
+        kWindowRefreshFull(P(kRootWindow), 0, 0);                                            // 0x0043a83d
+        kWaitTicks(2, 0);                                                                    // 0x0043a845
+        if (G<int>(kMouseDown) != 0) break;                                                  // 0x0043a84a..0x0043a854
+        if (kFlushRedraw() == 0) continue;                                                   // 0x0043a856..0x0043a85d
+        if (G<int>(kMouseDown) == 0) { sel = -1; break; }                                    // 0x0043a863..0x0043a870
+        break;
+    }
+    if (sel == 4) sel = -1;                                                                  // 0x0043a86b..0x0043a870
+    kImageDtor(image, 0);                                                                    // 0x0043a881
+    kEhVecDtor(surfaces, 0x2c, 5, kUnwindFree4041f0);                                        // 0x0043a89f
+    return sel;                                                                              // 0x0043a8ac
+}
+static int(__cdecl* SelectDifficultyScreen_orig)();
+// 0x0043a400
+SG_HOOK("golf_clean.exe", 0x0043a400, selectDifficultyScreen, SelectDifficultyScreen_re, SelectDifficultyScreen_orig);
+
+// ====================================================================================================================
+// showCreditsScreen 0x0044b9c0
+// ====================================================================================================================
+
+// 0x0044b9c0  showCreditsScreen: scrolls the credit lines of the section 0x004d21b8 of the file 0x004d21ac up the
+// screen over a background picture. Two Surfaces and one Image are built on the stack (0x0044b9e3, 0x0044b9f5,
+// 0x0044ba09); the Image is given an 800 x 600 surface (0x0044ba35), the background asset 0x004d21cc is loaded into it
+// and taken over by the first Surface (0x0044ba4f, 0x0044ba6f), then the logo asset 0x004d21c0 is loaded and taken
+// over by the second one at the size its own surface reports through the slots +0xdc (height) and +0xd8 (width)
+// (0x0044ba8e..0x0044bad0), after which the Image's data is released (0x0044badc). The reader is opened on the section
+// (0x0044baeb); a failure skips everything (0x0044baf5). Otherwise every line until one that starts with '#' is
+// copied into a malloc'd block (size strlen + 1, 0x0044bb1c) and kept in the stack array, a line whose allocation
+// fails is not counted (0x0044bb26..0x0044bb39), and the reader is closed (0x0044bb62). The scroll then runs on the
+// clock: y starts at 0x258 and falls by one per 0x1e milliseconds since the start (0x0044bbd3..0x0044bbf5), the
+// background is redrawn each frame (0x0044bc0b), and the lines are drawn from y downwards 0x11 (the line height from
+// [0x00821028] / [0x00821030] / [0x0082102c], 0x0044bb9b..0x0044bbb5) apart until the bottom of the screen
+// (0x0044bc29..0x0044bd03); a line equal to the text 0x004d21a4 draws the logo Surface centred instead
+// (0x0044bc55..0x0044bcb0). The loop ends when the whole list has scrolled past the top (0x0044bc10..0x0044bc24), on a
+// mouse button or on a key (0x0044bd09..0x0044bd1b); the blocks are then freed back to front (0x0044bd44..0x0044bd61)
+// and the three objects destroyed, each Surface twice because its base class shares the same destructor
+// (0x0044bd63..0x0044bdb6).
+static void __cdecl ShowCreditsScreen_re() {
+    char bg[0x2c];
+    char logo[0x2c];
+    char img[0x2b8];
+    char* lines[512];
+    kSurfaceCtor(bg, 0);                                                                     // 0x0044b9e3
+    int count = 0;                                                                           // 0x0044b9ee / 0x0044ba2c
+    kSurfaceCtor(logo, 0);                                                                   // 0x0044b9f5
+    kImageCtor(img, 0);                                                                      // 0x0044ba09
+    bool running = true;                                                                     // 0x0044ba30
+    kSurfaceCreateFull(img, 0, 0x320, 0x258, 0, 1, 0, 0);                                    // 0x0044ba35
+    kLoadImage(img, 0, reinterpret_cast<const char*>(0x004d21cc), 0, 0, 0x100, 1);           // 0x0044ba4f
+    kSurfaceBlitTakeDirty(bg, 0, img, 0, 0, 0x320, 0x258, 1, 0);                             // 0x0044ba6f
+    kLoadImage(img, 0, reinterpret_cast<const char*>(0x004d21c0), 0, 0, 0x100, 1);           // 0x0044ba89
+    int w = 0, h = 0;                                                                        // 0x0044bab8 / 0x0044baba
+    {
+        void* surf = At<void*>(img, 4);                                                      // 0x0044ba8e
+        if (surf != 0) {                                                                     // 0x0044ba95 / 0x0044ba97
+            h = (*reinterpret_cast<Slot0_t*>(*reinterpret_cast<char**>(surf) + 0xdc))(surf, 0);   // 0x0044ba9b
+            surf = At<void*>(img, 4);                                                        // 0x0044baa1
+            if (surf != 0) {                                                                 // 0x0044baaa / 0x0044baac
+                w = (*reinterpret_cast<Slot0_t*>(*reinterpret_cast<char**>(surf) + 0xd8))(surf, 0);   // 0x0044bab0
+            }
+        }
+    }
+    kSurfaceBlitTakeDirty(logo, 0, img, 0, 0, w, h, 1, 1);                                   // 0x0044bad0
+    kImageReleaseAll(img, 0);                                                                // 0x0044badc
+    if (kReadSectionGlobal(0x004d21ac, 0x004d21b8) == 0) {                                   // 0x0044baeb..0x0044baf5
+        const char* line = reinterpret_cast<const char*>(kReadLineGlobal());                 // 0x0044baf7
+        if (*line != '#') {                                                                  // 0x0044bb00 / 0x0044bb03
+            char** p = lines;                                                                // 0x0044bb05
+            do {
+                const char* src = G<const char*>(0x0083b164);                                // 0x0044bb0c
+                char* buf = reinterpret_cast<char*>(kMalloc(SLen(src) + 1));                 // 0x0044bb12..0x0044bb1c
+                *p = buf;                                                                    // 0x0044bb28
+                if (buf != 0) {                                                              // 0x0044bb26 / 0x0044bb2b
+                    count++;                                                                 // 0x0044bb38
+                    p++;                                                                     // 0x0044bb39
+                    Cpy(buf, G<const char*>(0x0083b164));                                    // 0x0044bb2d..0x0044bb52
+                }
+                line = reinterpret_cast<const char*>(kReadLineGlobal());                     // 0x0044bb54
+            } while (*line != '#');                                                          // 0x0044bb59 / 0x0044bb5c
+        }
+        kDestroyGlobalReader();                                                              // 0x0044bb62
+        kSetDrawTarget(P(kScreenWidget), 0, P(0x00821020), 0, 0, 0);                         // 0x0044bb77
+        kWidgetSetQuad(P(kScreenWidget), 0, 0x80007fff, -1, 2, 2);                           // 0x0044bb8c
+        const unsigned t0 = Imp<TimeGetTime_t>(kIatTimeGetTime)();                           // 0x0044bb91
+        int lineH = G<int>(0x0082102c);                                                      // 0x0044bbaf
+        if (G<int>(0x00821028) >= 0) lineH = G<int>(0x00821030) + G<int>(0x00821028);        // 0x0044bb9b..0x0044bbaa
+        kEnterModal();                                                                       // 0x0044bbb9
+        if (count != 0) {                                                                    // 0x0044bbbe / 0x0044bbc0
+            const int total = lineH * count + 0x96;                                          // 0x0044bbc6..0x0044bbc9
+            do {
+                const unsigned now = Imp<TimeGetTime_t>(kIatTimeGetTime)();                  // 0x0044bbd3
+                int y = 0x258 - static_cast<int>((now - t0) / 0x1e);                         // 0x0044bbdd..0x0044bbf5
+                kImageDraw(bg, 0, P(kScreenWidget), 0, 0, 0);                                // 0x0044bbf7..0x0044bc0b
+                int i = 0;                                                                   // 0x0044bc1a
+                if (-y > total) running = false;                                             // 0x0044bc10..0x0044bc24
+                if (y < 0x258) {                                                             // 0x0044bc29 / 0x0044bc2f
+                    char** q = lines;                                                        // 0x0044bc35
+                    while (i < count) {                                                      // 0x0044bc40 / 0x0044bc44
+                        char* s = *q;                                                        // 0x0044bc4a
+                        bool drawn = false;
+                        if (*s != 0) {                                                       // 0x0044bc50 / 0x0044bc53
+                            if (Cmp(s, reinterpret_cast<const char*>(0x004d21a4)) == 0) {     // 0x0044bc55..0x0044bc87
+                                const int lw = At<int>(logo, 0x10);                           // 0x0044bc89
+                                kSurfaceDrawRegion(logo, 0, P(kScreenWidget),
+                                                   (0x320 - lw) / 2, y, 0);                   // 0x0044bc92..0x0044bcb0
+                                drawn = true;
+                            }
+                        }
+                        if (!drawn && s != 0) {                                               // 0x0044bcbf / 0x0044bcc1
+                            kDrawText(P(kScreenWidget), 0, s, 0x32, y, SLen(s));              // 0x0044bcc3..0x0044bcd9
+                        }
+                        y += lineH;                                                           // 0x0044bcea
+                        i++;                                                                  // 0x0044bcec
+                        q++;                                                                  // 0x0044bced
+                        kPumpMessages();                                                       // 0x0044bcf8
+                        if (y >= 0x258) break;                                                 // 0x0044bcfd / 0x0044bd03
+                    }
+                }
+                if (G<int>(kMouseDown) != 0) running = false;                                  // 0x0044bd09..0x0044bd10
+                else if (kFlushRedraw() != 0) running = false;                                 // 0x0044bd12..0x0044bd1b
+                kWindowRefreshFull(P(kRootWindow), 0, 0);                                      // 0x0044bd27
+                kWaitTicks(1, 0);                                                              // 0x0044bd30
+            } while (running);                                                                 // 0x0044bd35..0x0044bd3e
+            for (int k = count; k != 0; k--) {                                                 // 0x0044bd44..0x0044bd61
+                if (lines[k - 1] != 0) kFree(lines[k - 1]);                                     // 0x0044bd53..0x0044bd58
+            }
+        }
+    }
+    kSurfaceFree(bg, 0);                                                                       // 0x0044bd67
+    kSurfaceFree(logo, 0);                                                                     // 0x0044bd70
+    kImageDtor(img, 0);                                                                        // 0x0044bd84
+    *reinterpret_cast<unsigned*>(logo) = 0x004ba2d8;                                           // 0x0044bd9a
+    kSurfaceFree(logo, 0);                                                                     // 0x0044bd9e
+    *reinterpret_cast<unsigned*>(bg) = 0x004ba2d8;                                             // 0x0044bdb2
+    kSurfaceFree(bg, 0);                                                                       // 0x0044bdb6
+}
+static void(__cdecl* ShowCreditsScreen_orig)();
+// 0x0044b9c0
+SG_HOOK("golf_clean.exe", 0x0044b9c0, showCreditsScreen, ShowCreditsScreen_re, ShowCreditsScreen_orig);

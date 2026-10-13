@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1182 bytes, 396 instructions, subsystem `ui`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Shows the best hole scores screen. (`re/names/exe_1.tsv`)
 
+## Purpose
+Lists the stored best scores. The header is built in the text buffer from the text 0x004d3328, the hole count [0x005685f0] - 1 and the text 0x004d3318 (0x00455ac3..0x00455b2d), then the two column captions are drawn (0x00455baa, 0x00455c00). The ten int entries at 0x0056a524..0x0056a548 are walked until the first zero entry or the end of the table (0x00455c18, 0x00455d7d): each gives a row at y [0x0082232c] * index + [0x008222d4] + 0x2d (0x00455c21..0x00455c39) with the entry's number at x 0x227 and, at x 0xf6, the row number followed by the text 0x004d3304 and the string appendString 0x0045b9f0 adds for the id index + 0x14 (0x00455d3d), which appends nothing when that id's offset word is -1. The footer sprite goes below the last row and the button 0x0e lower (0x00455d8c.. 0x00455dca); it is swapped for its hover image inside x 0x220..0x24b, y by..by+0x2b (0x00455e2b..0x00455e46) and the loop ends on a mouse button or a key (0x00455ea6..0x00455eb6), clearing [0x00569498] (0x00455ebc). Reimplemented in `shim/src/re/c3en.cpp`; path-1 A/B GREEN: showBestScoresScreen (16 vectors, 16 distinct results, 16 changing state, `log/diff/00455a30_showBestScoresScreen.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00455ecd): callee pops 0 bytes of stack arguments.
 

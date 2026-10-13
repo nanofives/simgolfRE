@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1433 bytes, 461 instructions, subsystem `ui`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Shows the player comments report screen. (`re/names/exe_1.tsv`)
 
+## Purpose
+Ranks the golfers' comment kinds. For each of the 0x40 kinds it sums that kind's count over the 18 hole records (the short at 0x00575d90 + kind * 2, stride 0x208) and remembers the hole with the largest single count (0x004547f2..0x0045484e); while the kind is 0 it also sums the dword at the start of each record into a total (0x00454816..0x00454820). It then fills up to 20 rows (0x0045485b): each takes the kind with the largest remaining sum among the first 0x32 (0x00454863..0x00454881), draws a row sprite, builds the comment with buildGolferComment 0x00469b00 between two copies of the text 0x004c4e54 (0x004548bd..0x00454946) using the word at 0x00575c1c + hole * 0x208 + kind * 2 masked to 14 bits as its argument (0x004548f0..0x00454902), draws it in a colour chosen by [0x0058b198] (0x00454941..0x00454964), then the percentage sum * 100 / total at x 0x256 (0x004549c5) and the hole number at x 0x1f8 (0x00454acb), and clears that kind's sum so the next row takes another (0x00454add). A row that finds no positive sum, or a zero total, draws nothing and still consumes one of the 20 (0x00454883..0x00454891). The footer and the button follow the last drawn row (0x00454b38, 0x00454b5d) and the loop ends on a mouse button or a key (0x00454c1d..0x00454c2d). Reimplemented in `shim/src/re/c3en.cpp`; path-1 A/B GREEN: showPlayerCommentsReport (16 vectors, 16 distinct results, 16 changing state, `log/diff/004546b0_showPlayerCommentsReport.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00454c48): callee pops 0 bytes of stack arguments.
 

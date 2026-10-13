@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1087 bytes, 338 instructions, subsystem `economy`. Mech
 ## Role (from the naming pass, not a C3 purpose)
 Shows the hire-an-employee dialog with per-week wages. (`re/names/exe_1.tsv`)
 
+## Purpose
+Redraws the hire dialog every frame and returns the row the player clicked. The cursor's y selects one of eight rows through four bands of two (0x00459451..0x004594d2); outside them the row is -1, and then a cursor inside x 0x229..0x250, y 0x1a8..0x1ce selects the second button image 0x00820f6c (0x00459510..0x00459560). The eight entries of the pointer table 0x004c1464..0x004c1480 are drawn as `<name><0x004d2958><cost * 100><0x004d36dc>` built in the text buffer (0x0045963d..0x004596d2) with the cost byte 0x004c2e2c + row (0x00459679); every second entry is preceded by a group caption at one of four fixed y values (0x004595cb jump table 0x00459840) and the y advances 0x14 per entry plus 8 after an odd one (0x0045963a, 0x0045972a). The hovered row gets a filled rectangle whose colour is 0x8000fea0 when the display's slot +0xb4 returns 1 and 0x80007f40 otherwise (0x004596de..0x00459709). Four animated sprites follow, each cell taken from cellAt with the frame counter modulo the int table 0x0053fc20 (0x0045977d) and a sprite id 0x82 higher for the hovered row (0x00459766..0x00459774). A mouse button leaves through pumpLight and returns (row / 2) * 3 + 1 + (row & 1), with the row forced to -1 outside 0..0xc (0x0045980d..0x00459837), so a click with no row hovered returns 2; a key alone returns -1 without pumpLight (0x004597f4..0x00459807). Reimplemented in `shim/src/re/c3en.cpp`; path-1 A/B GREEN: showHireEmployeeDialog (20 vectors, 20 distinct results, 20 changing state, `log/diff/00459400_showHireEmployeeDialog.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00459807, 0x0045983e): callee pops 0 bytes of stack arguments.
 

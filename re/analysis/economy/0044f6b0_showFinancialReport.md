@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 1075 bytes, 344 instructions, subsystem `economy`. Mech
 ## Role (from the naming pass, not a C3 purpose)
 Shows the financial report screen. (`re/names/exe_1.tsv`)
 
+## Purpose
+Draws the income and cost table of the course, one column per game year, and waits for a click or a key. The nine row labels come from the pointer table 0x004d2054..0x004d2074 (a NULL entry is skipped, 0x0044f755) and are drawn at y 0x57 + 0x11 per row, the ninth 7 pixels higher (0x0044f764..0x0044f770). The last year index is [0x005a6d3c] clamped to 0..99 (0x0044f796) and the leftmost column shown is that minus 8, clamped to 0..999 (0x0044f7b4), so at most nine of the 0x14-byte short rows at 0x00584210 are drawn, at x (year - first) * 0x4b + 0xde (0x0044f7f4..0x0044f814). Each column prints the year number 0x7d1 + year (0x0044f800) and then the row's nine entries: entries 0..7 are appended with appendNumber as hundredths (0x0044f8b2), an entry equal to 0 has that number overwritten by the text at 0x004e9a84 (0x0044f8c6..0x0044f8ee), and entry 8 is the sum of the first eight, both printed and WRITTEN BACK into the table (0x0044f911). A negative entry is drawn in the second colour (0x0044f917..0x0044f935) and the rows are 0x11 apart except after entry 7, where they are 0x18 apart (0x0044f971..0x0044f987). The button image 0x00820f40 is swapped for 0x00820f6c while the cursor is inside x 0x2d6..0x301, y 0xf9..0x124 (0x0044fa2d..0x0044fa4b), and the loop ends when a mouse button is down ([0x00822d68]) or flushRedraw reports a key (0x0044fabe..0x0044fac9), after which [0x00569498] is cleared and pumpLight runs (0x0044facf). Reimplemented in `shim/src/re/c3en.cpp`; path-1 A/B GREEN: showFinancialReport (16 vectors, 16 distinct results, 16 changing state, `log/diff/0044f6b0_showFinancialReport.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0044fae2): callee pops 0 bytes of stack arguments.
 
