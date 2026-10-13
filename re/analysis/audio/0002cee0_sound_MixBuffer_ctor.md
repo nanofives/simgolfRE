@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002cee0`), 79 bytes, 20 instructions, subsystem `aud
 fastcall(obj): installs vtable 0x1005be84, zeroes 0x80 dwords and sets defaults obj+0x82=2, obj+0x86=0xfa. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Constructs the mix-buffer object. Returns `this` (0x1002cf2b). It installs the vtable 0x1005be84 at +0 (0x1002ceea), sets the flag dword +0x208 to `(0 & ~4) | 2` = 2 (0x1002cef3 / 0x1002cef9), clears +0x20c, +0x210, +0x204, +0x214 (0x1002cf07-0x1002cf19), sets +0x218 = 0xfa (0x1002cf1f) and zeroes the 0x80-dword region +4..+0x203 (`rep stosd` 0x1002cf29). No branches. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: MixBuffer_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002cee0_sound_MixBuffer_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002cf2e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002cee0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

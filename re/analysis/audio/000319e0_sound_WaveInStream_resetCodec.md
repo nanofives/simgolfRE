@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000319e0`), 63 bytes, 17 instructions, subsystem `aud
 zeroes the stream counters at +0x80/+0x84/+0x88, increments +0x8c, allocates a codec context into +0x90, and restarts via Wave_In_Device::op1 (`re/names/sound_6.tsv`)
 System writeup: `re/analysis/systems/sound_6.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Resets the wave-in stream's codec context. Returns 0 (0x10031a1b). It clears +0x80 / +0x84 / +0x88, increments +0x8c (0x100319e5-0x100319fe), allocates a context through codecAllocContextA 0x1003aa90 (a direct cdecl call, 0x10031a04; its malloc 0x10042acd is the heap stand-in's anchor) and stores it at +0x90 (0x10031a09), then calls Wave_In_Device::setStream (thunk 0x100015b4) with ecx = the stream word 0x100b4a24 and `this` pushed (0x10031a16). No branch in the body; _ok and _oom differ in the allocator (the stand-in's failMask), both GREEN. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: WaveInStream_resetCodec_ok (12 vectors, 12 distinct results, 12 changing state, `log/diff/000319e0_sound_WaveInStream_resetCodec_ok.path1.csv`); WaveInStream_resetCodec_oom (12 vectors, 12 distinct results, 12 changing state, `log/diff/000319e0_sound_WaveInStream_resetCodec_oom.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10031a1e): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100319e1 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

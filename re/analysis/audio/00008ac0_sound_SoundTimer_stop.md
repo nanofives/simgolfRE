@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008ac0`), 234 bytes, 84 instructions, subsystem `au
 Stops the timer (timeKillEvent/timeEndPeriod) and deletes the critical section g_100b4990. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Stops the timer, deletes its critical section and frees its client list. Its only caller, release_sound 0x10009390, discards eax (`push esi; call operator_delete; xor eax, eax` 0x100093b1-0x100093c4), so the function is A/B'd on state alone. The module word 0x100b49a8 is incremented (0x10008acd). With bits 0 and 1 of +0x3c both set (`je` 0x10008ad9 / 0x10008add) it increments the word again (0x10008ae7), clears bit 2 of +0x3c (0x10008af3), Enter/LeaveCriticalSection [0x100b83f4 / 0x100b84e0] on 0x100b4990 (0x10008af6 / 0x10008b01), clears +8 / +4, timeKillEvent [0x100b8648] (+0x40) and timeEndPeriod [0x100b864c] (+0x18) (0x10008b11 / 0x10008b1b) and clears bit 0 of +0x3c (0x10008b26). On every path DeleteCriticalSection [0x100b83e4] on 0x100b4990 (0x10008b2e) and the section is zeroed (0x10008b40). The client list at +0x4c / +0x50 / +0x58 is popped from the front, each node deleted, until empty (`je` 0x10008b47 / 0x10008b79) or a popped value is NULL (`je` 0x10008b72 / 0x10008ba4). The TFLAGS rows cover both sides of the +0x3c bit test and list rows cover empty / non-empty / NULL-value. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: SoundTimer::stop (12 vectors, 12 distinct results, 12 changing state, `log/diff/00008ac0_sound_SoundTimer_stop.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10008ba9): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10008ac8 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000bef0`), 122 bytes, 36 instructions, subsystem `au
 Pauses wave output: kills the timer, unregisters the device as a timer client and stops the primary/secondary DirectSound buffers. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Stops playback on the live wave device. SoundTimer::killEvent (thunk 0x100026fd) runs on g_soundTimer 0x100b49ec with no NULL test (0x1000befa); a non-zero this+0x1a8 (`je` 0x1000bf09) adds SoundTimer::unregisterClient (thunk 0x10001ed3) with `this` (0x1000bf12). The primary buffer 0x100b49f8 gets DsBuffer::stop (thunk 0x10001a2d) when non-zero (`je` 0x1000bf1f); with bit 4 of g_waveDevice+0x6c (`je` 0x1000bf2f) so do 0x100b49fc and 0x100b4a00 (0x1000bf3b / 0x1000bf4a). A non-zero g_waveStreamDev 0x100b49f4 gets +0x18 = 0 (`je` 0x1000bf56); this+0x1b0 and +0x1b4 are cleared (0x1000bf5b / 0x1000bf61); eax at the `ret` is the stream-device pointer loaded at 0x1000bf4f. Keys _all / _none / _mix / _mix2 cover both sides of each test. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Wave_Device::stopOutput_all (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000bef0_sound_Wave_Device_stopOutput_all.path1.csv`); Wave_Device::stopOutput_none (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000bef0_sound_Wave_Device_stopOutput_none.path1.csv`); Wave_Device::stopOutput_mix (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000bef0_sound_Wave_Device_stopOutput_mix.path1.csv`); Wave_Device::stopOutput_mix2 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000bef0_sound_Wave_Device_stopOutput_mix2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000bef0@f_1000bef0@@YIXPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000bf69): callee pops 0 bytes of stack arguments.

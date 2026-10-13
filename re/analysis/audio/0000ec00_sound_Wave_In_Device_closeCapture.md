@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000ec00`), 57 bytes, 19 instructions, subsystem `aud
 Kills the timer, unregisters the device as a timer client and releases g_waveInCapture via its virtual destructor. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Tears down the live wave-in capture device. Returns 0 (0x1000ec36). A non-zero timer object at this+0x30 (`je` 0x1000ec08) gets SoundTimer::killEvent (thunk 0x100026fd, 0x1000ec0a) and then SoundTimer::unregisterClient (thunk 0x10001ed3) on g_soundTimer 0x100b49ec with `this` pushed (0x1000ec0f-0x1000ec16). A non-zero g_waveIn 0x100b4a04 (`je` 0x1000ec24) gets its vtable slot 0 with 1 (the deleting destructor, 0x1000ec26-0x1000ec2a) and the global is cleared (0x1000ec2c). Branches 0x1000ec08 (timer present / absent) and 0x1000ec24 (device present / absent) are both covered: the _dev key has the device, the null key clears g_waveIn, and the objects alternate +0x30 zero / non-zero (i%3). Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Wave_In_Device::closeCapture_null (12 vectors, 9 distinct results, 8 changing state, `log/diff/0000ec00_sound_Wave_In_Device_closeCapture_null.path1.csv`); Wave_In_Device::closeCapture_dev (12 vectors, 9 distinct results, 12 changing state, `log/diff/0000ec00_sound_Wave_In_Device_closeCapture_dev.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_07.cpp` as `?FUN_1000ec00@f_1000ec00@@YIIPAH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000ec38): callee pops 0 bytes of stack arguments.

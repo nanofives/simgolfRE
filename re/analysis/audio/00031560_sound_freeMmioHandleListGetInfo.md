@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00031560`), 197 bytes, 78 instructions, subsystem `au
 Like freeMmioHandleList but mmioGetInfo's each node's handle before mmioClose (to flush the write buffer); frees the list at this+0x5c and decrements g_100b4a08. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Frees the mmio-handle list and clears the stream flag. Returns 0 (0x1003161e). The list at +0x5c (front) / +0x60 (back) / +0x68 (count) is popped from the front (0x1003156b-0x1003159c); the walk ends when the list is empty (`je` 0x10031570 / 0x100315d7) or a popped value is NULL (`je` 0x1003159f / 0x10031602). For each non-NULL value, the mmio handle in its first dword gets mmioGetInfo [0x100b8668] with a 0x48-byte stack MMIOINFO (0x100315b0) and mmioClose [0x100b8670] (0x100315b6), the module counter 0x100b4a08 is decremented (0x100315c4) and the value is deleted (0x10031590 / 0x100315ca). Then a non-zero stream word 0x100b4a24 gets Wave_In_Device::clearStream (thunk 0x10001ba4, `je` 0x1003160c) and bit 2 of +0x7c is cleared (0x10031619). Twelve list rows cover empty, single, multi, NULL-value-in-middle; _null and _strm differ in the stream word for the last branch. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: freeMmioHandleListGetInfo_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/00031560_sound_freeMmioHandleListGetInfo_null.path1.csv`); freeMmioHandleListGetInfo_strm (12 vectors, 12 distinct results, 12 changing state, `log/diff/00031560_sound_freeMmioHandleListGetInfo_strm.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10031624): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10031566 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

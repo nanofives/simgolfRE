@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00023540`), 150 bytes, 57 instructions, subsystem `au
 Command 8 handler: finds the track node with id==param_1 in the list at this+0x218 (skips when already current at +0x738), invokes vtbl+0x84 on its data, then re-marks its event range via 0x10023610. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Finds a track by id in the sequencer's track list and dispatches a remark. One stack argument, the id (`ret 4`). A zero +0x224 returns 0x24 (`jne` 0x1002354c). The id equal to +0x738 returns 0 (`jne` 0x10023564). The list front is +0x218, kept in the cursor +0x220; each node's value is node+8; the walk follows the cursor's +4 link and returns 0x24 when the cursor or a value is NULL (`je` 0x1002357b / 0x10023582 / 0x10023591 / 0x1002359e / 0x100235a5) or matches a value's +4 against the id (`je` 0x10023587). On a match: a non-zero value+0x1c is pushed to this's vtable slot +0x84 (`je` 0x100235bc), then Seq_remarkEventRange (thunk 0x10001519) with the value is called and its eax returned (0x100235cc). Twelve rows cover flag-off, id==+0x738, a miss to NULL, a match at first / middle / last, a NULL value mid-list, and value+0x1c zero / non-zero. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Seq_cmdHandler8 (12 vectors, 12 distinct results, 10 changing state, `log/diff/00023540_sound_Seq_cmdHandler8.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10023555, 0x1002356a, 0x100235b4, 0x100235d3): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10023542 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

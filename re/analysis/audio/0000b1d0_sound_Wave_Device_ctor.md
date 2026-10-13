@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000b1d0`), 172 bytes, 39 instructions, subsystem `au
 Constructs a Wave_Device object and records the singleton pointer at g_100b49f0. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/undisc_sound.md`.
 
+## Purpose
+Constructs the wave device. Returns `this` (0x1000b26d). It runs VoiceBase_ctor (thunk 0x100021df) on `this` (0x1000b1ee), clears +0x1c8 / +0x1cc / +0x1d0 / +0x1d4 (0x1000b1f9-0x1000b20b), runs CommandQueue::init (thunk 0x100010aa) on this+0x1d8 (0x1000b21c), installs the vtable 0x1005b304 at +0 (0x1000b225), clears the three module globals g_waveDevice 0x100b49f0, 0x100b49f8 and g_waveStreamDev 0x100b49f4 (0x1000b231-0x1000b23d), and sets +0x1a8 / +0x1ac / +0x1b0 = 0, +0x1b8 = 0x7f, +0x1a4 / +0x1b4 / +0x1c4 = 0 (0x1000b243-0x1000b267). No branch; the three globals start non-zero so every vector clears them. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Wave_Device::ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b1d0_sound_Wave_Device_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000b27b): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000b1e5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

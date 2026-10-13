@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00039e70`), 141 bytes, 51 instructions, subsystem `au
 thiscall(idx): if armed (this+0xc8 bit0) and not yet opened, opens via vtbl+0x10 and checks this+0x58 bit1; (re)starts the global SoundTimer g_100b49ec, calls Channel_startVoice on the embedded channel this+0x70, and if not playing (this+0xc8 bit6) sets it and starts output via vtbl+0x7c. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Starts a channel's voice and arms the timer. One stack argument (`ret 4`). Bit 0 of +0xc8 clear returns 0xb (`jne` 0x10039e7b). With bit 1 of +0xc8 clear (`jne` 0x10039e88): Channel_resetPanState (thunk 0x10001866) on this+0x70 (0x10039e8d); bit 1 of the byte +0x58 clear returns 0x14 (`je` 0x10039e96 -> 0x10039eb0); otherwise this's vtable slot +0x10 with +0x50 (0x10039ea0): a non-zero result returns 8 (`je` 0x10039ea5). Then a non-zero g_soundTimer 0x100b49ec gets SoundTimer::start (thunk 0x10001dfc, `je` 0x10039ec1); Channel_startVoice (thunk 0x10001212) on this+0x70 with the argument (0x10039ed3). Bit 6 of the byte +0xc8 clear (`jne` 0x10039ee5): +0xc8 gets bit 6 (0x10039eec) and slot +0x7c runs (0x10039ef3). Returns 0. CF / C58 / C50 rows cover every branch; keys _tmr / _null cover the g_soundTimer test. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Channel_startVoiceTimed_tmr (12 vectors, 11 distinct results, 10 changing state, `log/diff/00039e70_sound_Channel_startVoiceTimed_tmr.path1.csv`); Channel_startVoiceTimed_null (12 vectors, 11 distinct results, 10 changing state, `log/diff/00039e70_sound_Channel_startVoiceTimed_null.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10039e83, 0x10039ead, 0x10039eb6, 0x10039efa): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10039e71 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

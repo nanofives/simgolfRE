@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000bf90`), 103 bytes, 30 instructions, subsystem `au
 Starts wave output: plays the secondary buffers, records g_soundTimer at +0x1a8, registers the device as a timer client and starts the timer. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Starts playback on the live wave device. A non-zero primary buffer 0x100b49f8 gets DsBuffer::restartPlayback (thunk 0x10001339, `je` 0x1000bf9b). With bit 4 of g_waveDevice+0x6c set (`je` 0x1000bfab), the buffers 0x100b49fc and 0x100b4a00, each when non-zero, get DsBuffer::play (thunk 0x10001203) with 1 (0x1000bfb9 / 0x1000bfca). Then a non-zero g_soundTimer 0x100b49ec (`je` 0x1000bfd6) is stored at this+0x1a8 (0x1000bfd8); SoundTimer::registerClient (thunk 0x1000227a) runs on it with `this` (0x1000bfe5) and SoundTimer::start (thunk 0x10001dfc) returns its eax (0x1000bff0); a NULL timer returns 0. Keys _all / _none / _mix / _mix2 set different globals and bit 4 to reach both sides of 0x1000bf9b, 0x1000bfab, 0x1000bfd6 (and the inner buffer tests). Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Wave_Device::startOutput_all (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000bf90_sound_Wave_Device_startOutput_all.path1.csv`); Wave_Device::startOutput_none (12 vectors, 1 distinct results, 0 changing state, `log/diff/0000bf90_sound_Wave_Device_startOutput_none.path1.csv`); Wave_Device::startOutput_mix (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000bf90_sound_Wave_Device_startOutput_mix.path1.csv`); Wave_Device::startOutput_mix2 (12 vectors, 1 distinct results, 12 changing state, `log/diff/0000bf90_sound_Wave_Device_startOutput_mix2.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_07.cpp` as `?FUN_1000bf90@f_1000bf90@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000bff6): callee pops 0 bytes of stack arguments.

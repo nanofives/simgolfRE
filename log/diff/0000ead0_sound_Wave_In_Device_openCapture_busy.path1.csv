@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o0 0 4294967295,0,0,True,3a4362b5,3a4362b5,True
+$o1 1 3735928559,0,0,True,1e38d647,1e38d647,True
+$o2 4660 1,0,0,True,02ad00dd,02ad00dd,True
+$o3 4294967295 2,0,0,True,3281c8f8,3281c8f8,False
+$o4 2147483648 2147483647,0,0,True,87b1b179,87b1b179,True
+$o5 21845 2147483648,0,0,True,2b273aab,2b273aab,True
+$o6 2 65,0,0,True,87ac1fb9,87ac1fb9,True
+$o7 256 4660,0,0,True,579cea6f,579cea6f,True
+$o8 3735928559 256,0,0,True,3281c8f8,3281c8f8,False
+$o9 65 0,0,0,True,7543d8a3,7543d8a3,True
+$o10 7 21845,0,0,True,5013fe75,5013fe75,True
+$o11 2147483647 7,0,0,True,696ba667,696ba667,True
+state_regions,$o0+0x0:128 $o1+0x0:128 $o2+0x0:128 $o3+0x0:128 $o4+0x0:128 $o5+0x0:128 $o6+0x0:128 $o7+0x0:128 $o8+0x0:128 $o9+0x0:128 $o10+0x0:128 $o11+0x0:128 $log+0x0:512 $g49a8+0x0:4 $gwi+0x0:4 $arena+0x0:528 $freelog+0x0:1028 $dev+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62544d80,original=0x3c102e0,2026-10-13T12:33:18
+distinct_results,11,,
+VERDICT,GREEN,12,

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000238b0`), 117 bytes, 37 instructions, subsystem `au
 Command 8/9 handler: finds the track node with id==param_1 in the list at this+0x218, clears node+0x34, and replays its event tick range via 0x10023950. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Finds a track by id in the sequencer's track list and replays its event range. One stack argument, the id (`ret 4`). A zero +0x224 returns 0x24 (`jne` 0x100238b8). The list front is +0x218, kept in the cursor +0x220; each node's value is node+8; the walk follows the cursor's +4 link and returns 0x24 when the cursor or a value is NULL (`je` 0x100238d0 / 0x100238d7 / 0x100238ea / 0x100238f7 / 0x100238fe) or matches a value's +4 against the id (`jne` 0x100238e0 continues, match at 0x10023902). On a match: value+0x34 = 0 (0x10023911) and Seq_replayEventRange (thunk 0x10001c3f) with (value+8, value+0xc) is called and its eax returned (0x1002391d). Twelve rows cover flag-off, a miss to NULL, a match at first / middle / last, and a NULL value mid-list. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Seq_cmdHandler9 (12 vectors, 12 distinct results, 11 changing state, `log/diff/000238b0_sound_Seq_cmdHandler9.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100238bf, 0x1002390b, 0x10023922): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100238b0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

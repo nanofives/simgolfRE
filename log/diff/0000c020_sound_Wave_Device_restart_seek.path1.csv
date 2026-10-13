@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w0 0,6,6,True,719db453,719db453,True
+$w1 1,6,6,True,e6a406d7,e6a406d7,True
+$w2 5,6,6,True,49764d9a,49764d9a,True
+$w3 6,10,10,True,7bd894d5,7bd894d5,False
+$w4 7,10,10,True,7bd894d5,7bd894d5,False
+$w5 4294967295,10,10,True,7bd894d5,7bd894d5,False
+$w6 2,6,6,True,7b6777a6,7b6777a6,True
+$w7 3,6,6,True,75a2ed70,75a2ed70,True
+$w8 2147483648,10,10,True,7bd894d5,7bd894d5,False
+$w9 4,6,6,True,5d06456b,5d06456b,True
+$w10 256,10,10,True,7bd894d5,7bd894d5,False
+$w11 5,6,6,True,fc316289,fc316289,True
+state_regions,$w0+0x0:512 $w1+0x0:512 $w2+0x0:512 $w3+0x0:512 $w4+0x0:512 $w5+0x0:512 $w6+0x0:512 $w7+0x0:512 $w8+0x0:512 $w9+0x0:512 $w10+0x0:512 $w11+0x0:512 $log+0x0:512 $g49a8+0x0:4 $gb49ec+0x0:4 $gb49f0+0x0:4 $gb49f4+0x0:4 $gb49f8+0x0:4 $gb4a3c+0x0:4 $blkb49ec+0x0:512 $blkb49f4+0x0:512 $blkb49f8+0x0:512 $dev+0x0:512 $buf+0x0:256,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62544450,original=0x3bd0400,2026-10-13T12:34:51
+distinct_results,8,,
+VERDICT,GREEN,12,

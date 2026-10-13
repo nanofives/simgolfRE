@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000b2e0`), 250 bytes, 72 instructions, subsystem `au
 Destructor: installs vtable 0x1005b304, stops the device when g_waveDevice is set, clears the command ring at +0x1d8 and frees its nodes. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Destroys the wave device. eax at the `ret` is VoiceBase_dtor's (the last call). It installs the vtable 0x1005b304 (0x1000b2ff); a non-zero g_waveDevice 0x100b49f0 (`je` 0x1000b316) runs Wave_Device::stop (thunk 0x10001a9b) on `this` (0x1000b318); CommandQueue::clear (thunk 0x100019a1) runs on this+0x1d8 (0x1000b328). The list at +0x1c8 (front) / +0x1cc (back) / +0x1d4 (count) is popped from the front, each node deleted, until it is empty (`je` 0x1000b339 / 0x1000b37d) or a popped node's value is NULL (`je` 0x1000b373 / 0x1000b3b7); the values are not freed. Then VoiceBase_dtor (thunk 0x10001dac) on `this` (0x1000b3c3). Keys _dev / _null cover the g_waveDevice test; the list rows cover empty / non-empty and a NULL value. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: Wave_Device::dtor_dev (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b2e0_sound_Wave_Device_dtor_dev.path1.csv`); Wave_Device::dtor_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b2e0_sound_Wave_Device_dtor_null.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000b3d9): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1000b2f5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

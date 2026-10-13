@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000089f0`), 154 bytes, 46 instructions, subsystem `au
 Initializes a timer object: timeGetDevCaps -> wPeriodMin at +0x18, sets default fields (period 0x1e, 22050/44100/16-bit), InitializeCriticalSection(g_100b4990). (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Initialises the multimedia-timer object and its critical section. Returns `this` (0x10008a84). It clears +0x4c / +0x50 / +0x54 / +0x58 / +0x3c (0x100089ff-0x10008a0c), calls timeGetDevCaps [0x100b8650] (this+0x44, 8) (0x10008a0e) and copies the filled minimum-period dword at +0x44 to +0x18 (0x10008a1b), then sets the fixed fields +4..+0x14 = 0, +0x1c = 1, +0x24 / +0x40 / +0x20 = 0, word +0x28 = 1, word +0x38 = 0, +0 = 0x1e, word +0x2a = 2, +0x2c = 0xac44, +0x30 = 0x2b110, word +0x34 = 4, word +0x36 = 0x10, +0x10 = 0x52b (0x10008a1e-0x10008a70), zeroes the 24-byte module critical section 0x100b4990 (`rep stosd` 0x10008a7c) and calls InitializeCriticalSection [0x100b83f0] on it (0x10008a7e). No branch. The section is confirmed unheld before the key (its LockCount / RecursionCount are read), saved and restored; the timeGetDevCaps import stand-in writes the period. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: SoundTimer::init (12 vectors, 12 distinct results, 12 changing state, `log/diff/000089f0_sound_SoundTimer_init.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10008a89): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100089f2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

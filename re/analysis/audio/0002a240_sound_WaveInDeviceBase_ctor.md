@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002a240`), 40 bytes, 13 instructions, subsystem `aud
 Constructs the Wave_In_Device base sub-object: default level this[2]=0x7f, zeroes this[1..7], installs vtable 0x1005ba5c. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Constructs the Wave_In_Device base sub-object. Returns `this` (`mov eax, ecx` 0x1002a240). It clears +4 (0x1002a249), sets the default level +8 = 0x7f (0x1002a24b), clears +0xc, +0x18, +0x1c, +0x10, +0x14 (0x1002a252-0x1002a25e) and installs the vtable 0x1005ba5c at +0 (0x1002a261). No branches. Twelve marker-filled fixture blocks; every vector changes the block. Reimplemented in `shim/src/re/c3ew.cpp`; path-1 A/B GREEN: WaveInDeviceBase_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0002a240_sound_WaveInDeviceBase_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1002a267): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1002a240 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

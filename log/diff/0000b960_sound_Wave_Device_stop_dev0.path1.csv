@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$w0,0,0,True,a07ba73a,a07ba73a,True
+$w1,0,0,True,853569af,853569af,True
+$w2,0,0,True,559eb7c2,559eb7c2,True
+$w3,0,0,True,6fa755bd,6fa755bd,True
+$w4,0,0,True,230b5851,230b5851,True
+$w5,0,0,True,28b5a91d,28b5a91d,True
+$w6,0,0,True,576bebe3,576bebe3,True
+$w7,0,0,True,08265d88,08265d88,True
+$w8,0,0,True,0f97a86f,0f97a86f,True
+$w9,0,0,True,ba2e8a8d,ba2e8a8d,True
+$w10,0,0,True,cbc988ef,cbc988ef,True
+$w11,0,0,True,13795e97,13795e97,True
+state_regions,$w0+0x0:512 $w1+0x0:512 $w2+0x0:512 $w3+0x0:512 $w4+0x0:512 $w5+0x0:512 $w6+0x0:512 $w7+0x0:512 $w8+0x0:512 $w9+0x0:512 $w10+0x0:512 $w11+0x0:512 $log+0x0:512 $g49a8+0x0:4 $gb49ec+0x0:4 $gb49f0+0x0:4 $gb49f4+0x0:4 $gb49f8+0x0:4 $gb49fc+0x0:4 $gb4a00+0x0:4 $blkb49ec+0x0:512 $blkb49f4+0x0:512 $blkb49fc+0x0:512 $blkb4a00+0x0:512 $dev+0x0:512 $freelog+0x0:1028 $gmb+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62544a00,original=0x3bd03e0,2026-10-13T12:34:35
+distinct_results,12,,
+VERDICT,GREEN,12,
