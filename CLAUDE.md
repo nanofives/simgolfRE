@@ -520,6 +520,43 @@ decrements its count even for a buffer not on the list (0x1001336b); MultiSound:
 NULL test (0x10039fa6); blitMaskScaled divides by abs(a4) before testing a4 < 0; showRoutingMapScreen's exit remap indexes a
 20-entry table with golfers' hole bytes (>= 20 reads the stack); writeCourseInfo never checks fopen; shutdownSound's drain
 loop never ends if a node is not unlinked.
+End-game plan (2026-10-13): re/C3_ENDGAME_PLAN.md classifies the 305 open C2 rows left after round 32 by their newest
+measured blocker (log/c3/endgame_classified.tsv) into path A (ordinary batches), path B (two tooling pilots: an mmio
+stand-in, an x87-faithful mixer harness) and path C (`dead` / `trivial` / holds with the measured reason).
+Thirty-third round = path A (2026-10-13, claude2 model `opus`, log/c3/round33_candidates.py over endgame_classified.tsv,
+brief log/c3/round33_brief.md, runner log/c3/alt/r33_main.py): c3ez 11 (the seven Terrain-grid exe rows on c3ey's fixture
+Terrain object, netPump / netSendList / netQueueMessage / netServiceControl on a fixture session object at [0x8400b8]),
+c3fa 18 and c3fb 13 (exe size-only rows: serializeCourse, deserializeCourse, showTitleScreen, demolishObject,
+OptionsMenuBuild, Flic::open, panelDispatch, hireEmployee ...), c3fc 3 (loadSoundTable, loadGolferRoster,
+drawEmployeeDetailPanel), c3fd 32 (sound GetProcAddress exports delete_device / init_sound_timer / create_device,
+MultiSound ctor / dtor, command rings, MIDI senders, crtValidatePointer, released from re/c3_hold.tsv through the import
+stand-in and promoted via c3cm, whose source holds its hook), c3fe 8 (release_sound, soundWindowProc, soundThreadPump, the
+channel render rows) and c3ff 6 (jgld Surface::drawTo / drawToZ over framemask.js, saveImage / writePcx8 / loadPng over
+filestandin.js with jgld's fopen / fread / fclose added at run time, createDisplay) promoted: 91 functions, C3 2,770 (exe
+1,578, jgld 523, sound 521, Terrain 148), open C2 243 (29 newly named callees entered at C2). Names first (re/names/exe_14,
+sound_15, jgld_9 with systems writeups): Window::passLocalRect, Window::blitToTarget 0x480dc0 (created with
+CreateFunctions.java; its `call 0x475c20` gives DC_calla0 its caller), openHookA/B/C 0x4873f0 / 0x4879b0 / 0x487b90
+(created; they call sound.dll's create_device exports through slots soundVersionCheck 0x483fc0 fills with
+GetProcAddress), the static CRT names c3fc / c3ff needed, nine sound callees; Sound_lookupOrCreate's sound_3.tsv row
+read 0x1002d430 as strcmp, but its whole body is `mov eax, [ecx+0x204]; ret` (row reworded). GetProcAddress exports are
+promoted with `c3_verify.py --callers <rva>=golf_clean.exe:<caller>` (pointer_callers.py cannot see an ordinal import).
+Main build: all 169 keys GREEN with every hook on and with other batches' hooked callees off; 31 existing C3 callers (56
+keys) GREEN with the hooks on, 53/56 off in 15-key boots, the three others (loadCourse_short, gfxFlushB_noobj /
+_call1) GREEN alone; static 360 and runtime 19 pass. AUDIO: this PC had an output device during the round (the TV), so
+keepsound.js stayed unloaded and the sound timer ran live (~32 ticks/s); c3fe's fixtures make SoundTimer::onTick return at
+its first test (0x100b49a8 = 5) only when its lock is free, and c3fe warns that c3ew's fixture saves that word whatever its
+value (a mid-tick save would silence the timer for the rest of that boot). Commit note: the per-batch commit script matched
+CSVs and notes by RVA only, so jgld drawToZ's (RVA 0xa330, = sound Midi_Device::drainCommandQueue) went into the c3fd
+commit; match the module tag in the file name too. Dropped with leads: drawFlyingBall (reads an unwritten frame slot),
+showInfoCursorPanel (a frame overrun writes the caller's saved esi), showBuyLandScreen / drawWorldObjects (RNG-driven),
+buildSceneSprites (9.1 KB, no blocker: best next exe candidate), narrateShot, showCourseReport, unlinkSound (its walker
+0x487500 is never entered at the menu: A/B-able next round), netPoll / netSendShutdown (drafted under #if 0), the 11 sound
+rows the live timer thread enters, eight DirectSound list / COM bodies, the uitree / file rows c3fa left. Findings:
+loadGolfPro divides by 4 - level; customizeCharacter writes golfer index -1 when updateMembership returns -1; Flic::open
+faults on every failed decoder-pool allocation (0x0048231c); loadGolferRoster writes each .pro record's skill bytes into the
+next record (0x0046630b); both create_device exports report success after a failed allocation; Midi_Device::shutdown skips
+every second track; Channel_startVoice's signed index writes below the channel object; writePcx8 maps width*height*2+0x80
+bytes but writes pitch bytes per row plus 769 palette bytes; loadPng only accepts RGB.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

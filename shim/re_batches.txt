@@ -154,3 +154,10 @@ c3ev.cpp
 c3ew.cpp
 c3ex.cpp
 c3ey.cpp
+c3ez.cpp
+c3fa.cpp
+c3fb.cpp
+c3fc.cpp
+c3fd.cpp
+c3fe.cpp
+c3ff.cpp
