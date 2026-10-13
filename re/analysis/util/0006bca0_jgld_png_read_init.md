@@ -41,7 +41,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10078fe0 `png_error` at 0x1006bd84, 0x1006bd97, 0x1006bdaa
 - 0x1007e780 `__chkesp` at 0x1006bdf1
 - 0x1007e7c0 `_memset` at 0x1006bcdb
-- 0x1007f3a0 `FID_conflict:_memcpy` at 0x1006bcc8, 0x1006bced
+- 0x1007f3a0 `memcpy` at 0x1006bcc8, 0x1006bced
 - 0x1009c0b0 `inflateInit_` at 0x1006bd55
 - indirect `jmp [edx*4+0x1006bdfa]` at 0x1006bd72
 

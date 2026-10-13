@@ -41,7 +41,7 @@ Through registers:
 ## Callees
 - 0x10079040 `png_warning` at 0x1006f257
 - 0x1007e780 `__chkesp` at 0x1006f320
-- 0x1007f3a0 `FID_conflict:_memcpy` at 0x1006f283
+- 0x1007f3a0 `memcpy` at 0x1006f283
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

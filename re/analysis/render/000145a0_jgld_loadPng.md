@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x000145a0`), 939 bytes, 304 instructions, subsystem `re
 loads a PNG image via libpng 1.0.5 (fopen, read IHDR/PLTE, strip alpha, read image) into a jalloc'd buffer. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Surface vtable 0x1011d0b0 slot 29 (+0x74): loads a PNG file into the surface with jgld's libpng 1.0.5. fopen 0x1007faa0 (name, "rb" 0x1011d370) (0x100145d3): NULL (`jne` 0x100145e2) returns 6. png_create_read_struct 0x1006bac0 (the version string 0x1011d368, NULL, trace, trace) (0x100145ff; error and warning function are both the thunk 0x1000117c to trace 0x10014550, which passes the message to OutputDebugStringA): NULL (`jne` 0x1001460e) closes the file (fclose 0x1007f850) and returns 1. png_create_info_struct 0x10078870 (0x1001462a): NULL (`jne` 0x10014639) closes the file, then png_destroy_read_struct 0x1006d150 (&png, NULL, NULL), and returns 1. _setjmp3 0x1007fab8 (png, 0) (0x10014667): a nonzero return, i.e. libpng's png_default_error longjmp'ing back after any png_error (`je` 0x10014671 not taken), runs png_destroy_read_struct (&png, &info, NULL), fclose, and returns 1. png_init_io (png, fp) 0x100146a3, png_read_info 0x100146b3, png_get_IHDR (png, info, &w, &h, &depth, &type, &interlace, NULL, NULL) 0x100146db. A colour type other than 2 (`je` 0x100146e7) whose info->pixel_depth (+0x1e) is not 24 (`je` 0x100146f4) is destroyed, closed and 0x17 returned. depth 16 (`jne` 0x10014722) adds png_set_swap 0x10014728; type & 4 (`je` 0x10014738) adds png_set_strip_alpha 0x1001473e. With a palette argument (`je` 0x1001474a) and type 3 (`jne` 0x10014754), png_get_PLTE (png, info, &palette, &num = 0x100) (0x10014771), 256 triples copied into a frame table [ebp-0x33c] (0x1001478b..0x100147e1), the palette's slot +0x14 called with (ebp-0x33c + i * 3, a3, a4) where i is 0x100 after the loop, so the pointer passed is the address of the loop counter itself at [ebp-0x3c] (`lea eax, [ebp + edx - 0x33c]` 0x100147f3) and the table is never read, then this->setPalette (pal) (slot +0xec, 0x1001481b). A float 1.0 is stored to [ebp-0x2c] and never read (0x10014828). png_set_bgr 0x10014833; this+0x80's slot +4 (w, h, info->pixel_depth) (0x10014862, result unused); slot +0x44 (0, 2) (0x1001487d); rows = jalloc 0x10014a40 (h * 4) through 0x100017c6 (0x1001488e), rows[i] = slot +0xc (0, i) for i < h (unsigned `jae` 0x100148c0, 0x100148d5); png_read_image 0x1006cc50 (png, rows) (0x100148fb), png_read_end 0x1006cd00 (0x1001490b), png_destroy_read_struct (&png, &info, NULL) (0x1001491d), fclose (0x10014929), jfree 0x10014a90 (rows) through 0x100017b7 (0x10014938), return 0. A png_error inside png_read_image / png_read_end lands on the setjmp exit, which never frees rows. thiscall, `ret 0x10`. Reimplemented in `shim/src/re/c3ff.cpp`; path-1 A/B GREEN: loadPng (16 vectors, 15 distinct results, 16 changing state, `log/diff/000145a0_jgld_loadPng.path1.csv`); loadPng_oom (11 vectors, 11 distinct results, 11 changing state, `log/diff/000145a0_jgld_loadPng_oom.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x10014948): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x100145ac before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -86,9 +89,9 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10078870 `png_create_info_struct` at 0x1001462a
 - 0x10078ad0 `png_init_io` at 0x100146a3
 - 0x1007e780 `__chkesp` at 0x10014808, 0x10014823, 0x10014867, 0x10014882, 0x100148da
-- 0x1007f850 `_fclose` at 0x10014614, 0x1001463f, 0x10014689, 0x1001470c, 0x10014929
-- 0x1007faa0 `_fopen` at 0x100145d3
-- 0x1007fab8 `__setjmp3` at 0x10014667
+- 0x1007f850 `fclose` at 0x10014614, 0x1001463f, 0x10014689, 0x1001470c, 0x10014929
+- 0x1007faa0 `fopen` at 0x100145d3
+- 0x1007fab8 `_setjmp3` at 0x10014667
 - indirect `call [eax+0x4]` at 0x10014862
 - indirect `call [edx+0x14]` at 0x10014803
 - indirect `call [edx+0x44]` at 0x1001487d

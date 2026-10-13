@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00065390`), 115 bytes, 37 instructions, subsystem `ren
 allocates (operator new 0x14c) and constructs the single Display object and stores it in g_display (0x1012870c) and 0x10128420 (`re/names/jgld_1.tsv`)
 System writeup: `re/analysis/systems/jgld_1.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+jgld.dll export #1 get_graphsy_object_ptr (export thunk 0x10001780 -> 0x10065390), fetched with GetProcAddress and called without arguments by the exe's loadGraphsyObject 0x004a00a0 (call 0x004a00d3, which stores the result into the exe's display global 0x0083ad50). operator new 0x1007f0f0 (0x14c bytes, 0x100653ad); a non-NULL block (`je` 0x100653bc) is built by Display::Display 0x100654b0 through the thunk 0x100013f7 (0x100653c1), a NULL one gives 0 (0x100653cb). The result is stored to 0x1012870c (0x100653db), 0x1012870c is copied to the module display 0x10128420 (0x100653e1 / 0x100653e7) and returned (0x100653ed). cdecl, plain `ret` 0x10065402. Reimplemented in `shim/src/re/c3ff.cpp`; path-1 A/B GREEN: createDisplay (8 vectors, 8 distinct results, 8 changing state, `log/diff/00065390_jgld_createDisplay.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_display_noeh.cpp` as `?createDisplay@@YAPAVDisplay@@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x10065402): callee pops 0 bytes of stack arguments.

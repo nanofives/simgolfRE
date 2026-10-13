@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0000a550`), 103 bytes, 40 instructions, subsystem `ren
 saves the surface to a file: for an 8-bit surface writes a PCX via writePcx8. (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Surface vtable 0x1011d0b0 slot 30 (+0x78): saves an 8-bit surface as a PCX file. The first word of the format pair whose address slot +0xe4 getDepthPtr returns (call 0x1000a577, `mov eax, [eax]` 0x1000a584) is compared with 8 (`cmp` 0x1000a589, `je` 0x1000a58d): equal, the result of Surface::writePcx8 (name) through the thunk 0x10001a6e (0x1000a598) is returned; any other depth returns 0x17 (0x1000a59f) without touching the name. thiscall, `ret 4`. Reimplemented in `shim/src/re/c3ff.cpp`; path-1 A/B GREEN: Surface::saveImage (12 vectors, 11 distinct results, 12 changing state, `log/diff/0000a550_jgld_Surface_saveImage.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface.cpp` as `?op1@Surface@@QAEHPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x4` (at 0x1000a5b4): callee pops 4 bytes of stack arguments.

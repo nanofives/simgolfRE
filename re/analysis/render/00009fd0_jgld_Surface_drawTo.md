@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x00009fd0`), 332 bytes, 104 instructions, subsystem `re
 draws this surface onto another surface at (x,y). (`re/names/jgld_0.tsv`)
 System writeup: `re/analysis/systems/jgld_0.md`, `re/analysis/systems/jgld_2.md`.
 
+## Purpose
+Surface vtable 0x1011d0b0 slot 33 (+0x84): draws this surface onto `dst` at (x, y) by wrapping its pixels in a temporary Sprite. The Sprite lives in the frame at [ebp-0x60] (0x50 bytes) and is built by Sprite::ctorN (owner 0) through the thunk 0x100018de (0x1000a00d); its fields are then set from this surface in this order: +0x20 = this+0x24 (0x1000a01c / 0x1000a01f), +0x14 = slot +0x10 acquireDC2 (0x1000a02c / 0x1000a036), +0x18 = 0 (0x1000a039), +0x2c = this+0x40 (0x1000a046), +0x30 = slot +0xd8 width (0x1000a053 / 0x1000a060), +0x34 = slot +0xdc height (0x1000a06d / 0x1000a07a), +0x10 = this+0x7c (0x1000a083), and setField28 0x1000aeb0 (this+0x4d0) through 0x100011ae (0x1000a093) stores +0x28. Sprite::drawB (dst, x, y, slot +0xe8 getField7c 0x1000a0a2) through the thunk 0x10001a5a (0x1000a0bf) gives the result. Then releaseDC2 (1) (slot +0x24, 0x1000a0d3), Sprite +0x14 = 0 (0x1000a0dd) and Sprite::dtor through 0x10001735 (0x1000a0f4). The SEH frame (handler 0x100aeec9, 0x10009fd3..0x10009fe1) only marks the Sprite's lifetime (try level 0 at 0x1000a012, -1 at 0x1000a0ea). No conditional branch. thiscall, `ret 0xc`. Reimplemented in `shim/src/re/c3ff.cpp`; path-1 A/B GREEN: Surface::drawTo (12 vectors, 12 distinct results, 12 changing state, `log/diff/00009fd0_jgld_Surface_drawTo.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/jgld_surface_sprite.cpp` as `?drawTo@Surface@@QAEHPAV1@HH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x1000a119): callee pops 12 bytes of stack arguments.
