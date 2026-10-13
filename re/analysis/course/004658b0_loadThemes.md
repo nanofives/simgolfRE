@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 226 bytes, 87 instructions, subsystem `course`. Mechani
 loads the available theme list and the standard roster (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Loads every theme file of the current theme. It always calls loadGolferRoster 0x004659a0 first (0x004658b3) and returns its argument when that argument is 0 (0x004658bc / 0x004658be: eax is the argument itself). Otherwise it builds <0x004c84e8><the theme name at 0x00567328><0x004c856c> in the text buffer 0x0051a068 (0x004658c4..0x0046594e), enumerates it with listMatchingFiles 0x0043d2a0 and both filters empty (0x00465950), and returns 0 when nothing matched (0x0046595a / 0x0046595e). For entry i (0-based) it sets bit 0 of the byte at 0x00584a0e + 0x2c * i (0x0046596b / 0x00465972 / 0x00465977) and calls loadThemeFile 0x00437fa0 with that entry, the one-based index i + 1 and -1 (0x0046596d / 0x00465979), advancing both cursors (0x00465983 / 0x00465986) until the count is reached (0x0046598b). The count is returned. Reimplemented in `shim/src/re/c3ep.cpp`; path-1 A/B GREEN: loadThemes_mix (4 vectors, 2 distinct results, 4 changing state, `log/diff/004658b0_loadThemes_mix.path1.csv`); loadThemes_one (4 vectors, 2 distinct results, 4 changing state, `log/diff/004658b0_loadThemes_one.path1.csv`); loadThemes_empty (4 vectors, 2 distinct results, 4 changing state, `log/diff/004658b0_loadThemes_empty.path1.csv`); loadThemes_many (4 vectors, 2 distinct results, 4 changing state, `log/diff/004658b0_loadThemes_many.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_4658b0.cpp` as `?loadThemes4658b0@@YAXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00465991): callee pops 0 bytes of stack arguments.

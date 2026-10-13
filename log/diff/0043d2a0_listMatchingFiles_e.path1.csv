@@ -1,0 +1,11 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$p0 $q0 $q0,7,7,True,a590a412,a590a412,True
+$p3 $q2 $q0,6,6,True,6e3a2bf8,6e3a2bf8,True
+$p2 $q0 $q0,1,1,True,2e4d7ecb,2e4d7ecb,True
+$p1 $q0 $q0,0,0,True,76964993,76964993,True
+$p0 $q1 $q3,2,2,True,785e2fc7,785e2fc7,True
+state_regions,0x0051a068+0x0:1536 0x0080b130+0x0:10000 $lio+0x0:12288 $rec+0x0:4096 $implog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x624874c0,original=0x14d0cc0,2026-10-13T06:20:28
+distinct_results,5,,
+VERDICT,GREEN,5,

@@ -1,0 +1,527 @@
+// C3 batch c3ep (round 31, 2026-10-13) of golf_clean.exe: the file layer and the theme / save readers.
+//
+//   listMatchingFiles 0x0043d2a0, listThemes 0x004724c0, loadThemes 0x004658b0, loadThemeFile 0x00437fa0,
+//   saveGame 0x0040b4a0, loadCourse 0x0040b840, loadGame 0x0040b9b0, EditBox::create 0x00486110
+//
+// Every body is hand-written from the disassembly (py -3.12 re/tools/asm2inline.py golf_clean.exe 0x<addr> --list,
+// listings in log/c3/alt/c3ep_decomp/) and cites the address of each instruction it reproduces. __thiscall is emulated
+// with __fastcall (ecx = this, edx unused).
+//
+// The originals reach the outside world through
+//   * the exe's own IAT slots: FindFirstFileA 0x004ba090, FindClose 0x004ba094, FindNextFileA 0x004ba098
+//     (re/frida/js/importstandin.js patches those slots, so the reimplementations call them the same way);
+//   * the static CRT: fopen 0x004a614d, fread 0x004a63a1, fclose 0x004a609f (re/frida/js/filestandin.js),
+//     __open 0x004a5d48, __read 0x004a583a, __write 0x004a5b58, __close 0x004a5a78, __tell 0x004a6057
+//     (the low-level layer, stood in by this batch's own fixture helper __c3epLowIo),
+//     _strstr 0x004a64f0 and __itoa 0x004ad425 (pure; called at their addresses).
+// Game callees run through their original addresses, so a callee's own hook is what runs when it is linked:
+//   loadGolferRoster 0x004659a0 (C2, stood in by the fixture), loadThemeFile 0x00437fa0 (this batch),
+//   listMatchingFiles 0x0043d2a0 (this batch), Image::loadPcx 0x00485790 (C3, c3ee), Surface_blit 0x00473bf0 (C3, c3h),
+//   appendCourseTitle 0x0040daa0 (C3, c3ac), appendDate 0x0040d7b0 (C3, c3w), serializeCourse 0x0040afa0 (C2),
+//   deserializeCourse 0x0040bbf0 (C2), loadInterfaceArt 0x00442180 (C2), buildGolferBioText 0x004315e0 (C2),
+//   loadWorldAssets 0x0043dbe0 (C2), drawWindow 0x0040d320 (C3, c3ei), Window::refreshFull 0x00480c80 (C3, c3dv),
+//   rebuildHeightfield 0x0042f7a0 / rebuildTileCoverage 0x0042f340 / markTileKind11 0x0042f2c0 (C3, c3dm / c3eb),
+//   applyCourseType 0x00449400 / refreshTerrain 0x00449520 (C3, c3dw), EditBox::releaseState 0x004860d0 /
+//   EditBox::resizeBuffer 0x00486250 (C3, c3ef / c3de), Window::create 0x004806c0 (C3, c3ef),
+//   Widget_setQuad 0x00476310 (C3, c3c), EditBox_setCursorChar 0x0047ab00 (C3, c3eg), Timer::initA 0x00486cf0 (C3, c3de).
+// The fixtures of the save / load keys stand in every one of those game callees with a recording stub (c3ea's
+// calleeStand method), so no key writes the live terrain, window tree or display.
+//
+// Globals the bodies touch (addresses from the instructions that read or write them):
+//   0x0051a068 the text buffer, 0x0080b130 the 100 x 0x64 directory table, 0x0056e928 the theme-name table (0x32 each),
+//   0x00567328 the current theme name, 0x00568d08 the open file descriptor, 0x00834170 the game date,
+//   0x0059e7b8 the flag word, 0x004d6088 / 0x00543d10 / 0x005795a8 / 0x005a5a04 / 0x0059b76c the theme tables,
+//   0x004c2e08 / 0x00567afc / 0x004c2854 / 0x004c2848 / 0x005a34e0 the load flags, 0x0083afe0 / 0x004e43fc..0x004e4404
+//   the edit-box colours.
+#include "hooks.h"
+#include <windows.h>
+
+namespace {
+
+template <typename T> static inline T& G(unsigned addr) { return *reinterpret_cast<T*>(addr); }
+static inline char* S(unsigned addr) { return reinterpret_cast<char*>(addr); }
+static inline unsigned char* B(void* p) { return reinterpret_cast<unsigned char*>(p); }
+static inline int& I(void* base, int off) { return *reinterpret_cast<int*>(B(base) + off); }
+static inline void*& P(void* base, int off) { return *reinterpret_cast<void**>(B(base) + off); }
+template <typename T> static inline T vslot(void* obj, int off) {
+    return *reinterpret_cast<T*>(*reinterpret_cast<unsigned char**>(obj) + off);
+}
+
+// The originals copy strings with `repne scasb` + `rep movsd` + `rep movsb`, i.e. a byte copy of strlen + 1 bytes.
+static int StrLen(const char* s) { int n = 0; while (s[n] != 0) n++; return n; }
+static void StrCopy(char* dst, const char* src) { int i = 0; do { dst[i] = src[i]; } while (src[i++] != 0); }
+static void StrCat(char* dst, const char* src) { StrCopy(dst + StrLen(dst), src); }
+// `mov dl,[eax]; cmp dl,[esi]; ...` two bytes at a time, result 0 / -1 / 1 (0x004724ee..0x00472539, 0x0040bb40..0x0040bb6a)
+static int StrCmp(const char* a, const char* b) {
+    for (;;) {
+        unsigned char x = static_cast<unsigned char>(*a), y = static_cast<unsigned char>(*b);
+        if (x != y) return x < y ? -1 : 1;
+        if (x == 0) return 0;
+        a++; b++;
+    }
+}
+
+// ---- entry points the originals call, at their own addresses
+typedef HANDLE(__stdcall* FindFirstA_t)(const char*, WIN32_FIND_DATAA*);
+typedef BOOL(__stdcall* FindNextA_t)(HANDLE, WIN32_FIND_DATAA*);
+typedef BOOL(__stdcall* FindClose_t)(HANDLE);
+typedef char*(__cdecl* StrStr_t)(const char*, const char*);
+const StrStr_t kStrStr = reinterpret_cast<StrStr_t>(0x004a64f0);
+typedef char*(__cdecl* Itoa_t)(int, char*, int);
+const Itoa_t kItoa = reinterpret_cast<Itoa_t>(0x004ad425);
+typedef void*(__cdecl* Fopen_t)(const char*, const char*);
+const Fopen_t kFopen = reinterpret_cast<Fopen_t>(0x004a614d);
+typedef unsigned(__cdecl* Fwrite_t)(const void*, unsigned, unsigned, void*);
+const Fwrite_t kFwrite = reinterpret_cast<Fwrite_t>(0x004a6268);
+typedef unsigned(__cdecl* Fread_t)(void*, unsigned, unsigned, void*);
+const Fread_t kFread = reinterpret_cast<Fread_t>(0x004a63a1);
+typedef int(__cdecl* Fclose_t)(void*);
+const Fclose_t kFclose = reinterpret_cast<Fclose_t>(0x004a609f);
+typedef int(__cdecl* Open_t)(const char*, int, int);
+const Open_t kOpen = reinterpret_cast<Open_t>(0x004a5d48);
+// loadCourse / loadGame push only two arguments (0x0040b876, 0x0040ba78). __open forwards a third dword to _sopen
+// (0x004a5d4c), which reads it only for _O_CREAT, so a read-only open leaves it whatever the stack holds.
+typedef int(__cdecl* Open2_t)(const char*, int);
+const Open2_t kOpen2 = reinterpret_cast<Open2_t>(0x004a5d48);
+typedef int(__cdecl* Read_t)(int, void*, unsigned);
+const Read_t kRead = reinterpret_cast<Read_t>(0x004a583a);
+typedef int(__cdecl* Write_t)(int, const void*, unsigned);
+const Write_t kWrite = reinterpret_cast<Write_t>(0x004a5b58);
+typedef int(__cdecl* Close_t)(int);
+const Close_t kClose = reinterpret_cast<Close_t>(0x004a5a78);
+typedef long(__cdecl* Tell_t)(int);
+const Tell_t kTell = reinterpret_cast<Tell_t>(0x004a6057);
+
+typedef int(__cdecl* Arg1_t)(int);
+typedef int(__cdecl* Arg0_t)();
+typedef int(__cdecl* Arg3_t)(int, int, int);
+typedef int(__cdecl* Arg4_t)(int, int, int, int);
+typedef int(__fastcall* T0_t)(void* ecx, void* edx);
+typedef int(__fastcall* T1_t)(void* ecx, void* edx, int a);
+typedef int(__fastcall* T2_t)(void* ecx, void* edx, int a, int b);
+typedef int(__fastcall* T4_t)(void* ecx, void* edx, int a, int b, int c, int d);
+typedef int(__fastcall* T7_t)(void* ecx, void* edx, int a, int b, int c, int d, int e, int f, int g);
+typedef int(__fastcall* T9_t)(void* ecx, void* edx, int a, int b, int c, int d, int e, int f, int g, int h, int i);
+typedef int(__fastcall* T5_t)(void* ecx, void* edx, int a, int b, int c, int d, int e);
+typedef int(__fastcall* T6_t)(void* ecx, void* edx, int a, int b, int c, int d, int e, int f);
+typedef int(__cdecl* Arg5_t)(int, int, int, int, int);
+// `mov eax, [obj]; call [eax + off]` with no stack argument
+static inline int Call0(void* obj, int off) { return vslot<T0_t>(obj, off)(obj, 0); }
+
+const unsigned kText = 0x0051a068;              // the shared text buffer every body builds its path in
+const unsigned kDirTable = 0x0080b130;          // 100 entries of 0x64 bytes (0x2710, cleared at 0x0043d2a7)
+const unsigned kDirTableEnd = 0x0080d840;       // 0x0080b130 + 0x2710 (the loop bound at 0x00472570)
+
+// ---------------------------------------------------------------------------------------------------- listMatchingFiles
+// 0x0043d2a0  listMatchingFiles(pattern, require, exclude), `ret` (cdecl, 3 arguments), returns the entry count.
+// Enumerates `pattern` with FindFirstFileA / FindNextFileA, keeps the names that pass four substring tests, appends each
+// kept name and the 2-byte separator 0x004c8a28 to the text buffer, and stores it in the next 0x64-byte slot of
+// 0x0080b130. The whole 0x2710-byte table is cleared first (0x0043d2a7: `mov ecx,0x9c4; rep stosd`).
+static int __cdecl ListMatchingFiles_re(const char* pattern, const char* require, const char* exclude);
+static decltype(&ListMatchingFiles_re) ListMatchingFiles_orig;
+static int __cdecl ListMatchingFiles_re(const char* pattern, const char* require, const char* exclude) {
+    WIN32_FIND_DATAA fd;                                             // [esp+0x7c], 0x140 bytes
+    char name[0x64];                                                 // [esp+0x18]; the slot below the find data
+    for (int i = 0; i < 0x2710; i++) B(reinterpret_cast<void*>(kDirTable))[i] = 0;   // 0x0043d2a7..0x0043d2b3
+    int count = 0;                                                   // [esp+0x10], zeroed at 0x0043d2bc
+    HANDLE h = (*reinterpret_cast<FindFirstA_t*>(0x004ba090))(pattern, &fd);         // 0x0043d2c6
+    if (h == INVALID_HANDLE_VALUE) return 0;                         // 0x0043d2cc / 0x0043d2d5
+    char* slot = S(kDirTable);                                       // ebp, 0x0043d2e2
+    do {
+        int keep = 1;                                                // ebx = 1, 0x0043d2fd
+        StrCopy(name, fd.cFileName);                                 // 0x0043d2e7..0x0043d319
+        if (*reinterpret_cast<const unsigned char*>(require) != 0    // 0x0043d31b
+            && kStrStr(name, require) == 0) keep = 0;                // 0x0043d326 / 0x0043d332
+        if (*reinterpret_cast<const unsigned char*>(exclude) != 0    // 0x0043d33b
+            && kStrStr(name, exclude) != 0) keep = 0;                // 0x0043d346 / 0x0043d352
+        if (kStrStr(name, S(0x004c8a34)) != 0) keep = 0;             // 0x0043d35e / 0x0043d36a
+        if (kStrStr(name, S(0x004c8a2c)) == 0 && keep != 0) {        // 0x0043d376 / 0x0043d386
+            StrCat(S(kText), name);                                  // 0x0043d38e..0x0043d3b6
+            StrCat(S(kText), S(0x004c8a28));                         // 0x0043d3b8..0x0043d3e6
+            char* dst = slot;                                        // edx = ebp before the advance, 0x0043d3de
+            slot += 0x64;                                            // 0x0043d3e3
+            count++;                                                 // 0x0043d3e8..0x0043d3f1
+            StrCopy(dst, name);                                      // 0x0043d3f5..0x0043d40e
+        }
+    } while ((*reinterpret_cast<FindNextA_t*>(0x004ba098))(h, &fd) != 0);            // 0x0043d41a
+    (*reinterpret_cast<FindClose_t*>(0x004ba094))(h);                                // 0x0043d42d
+    return count;                                                    // 0x0043d433
+}
+// 0x0043d2a0  listMatchingFiles
+SG_HOOK("golf_clean.exe", 0x0043d2a0, listMatchingFiles, ListMatchingFiles_re, ListMatchingFiles_orig);
+
+// ---------------------------------------------------------------------------------------------------- listThemes
+// 0x004724c0  listThemes(), `ret` (cdecl, no argument), returns the number of names kept.
+// Enumerates the pattern at 0x004e40a0 through listMatchingFiles with both filters empty (0x004e9a84), then walks the
+// directory table from entry ONE (0x0080b194, 0x004724e4) to its end, dropping names that contain the 1-byte string at
+// 0x004c4944, names of length 0 and the name at 0x004c3c5c, and copies the rest into 0x0056e928 with a stride of 0x32.
+static int __cdecl ListThemes_re();
+static decltype(&ListThemes_re) ListThemes_orig;
+static int __cdecl ListThemes_re() {
+    int count = 0;                                                   // [esp+0x1c], 0x004724d4
+    reinterpret_cast<Arg3_t>(0x0043d2a0)(0x004e40a0, 0x004e9a84, 0x004e9a84);        // 0x004724dc
+    char* ent = S(kDirTable + 0x64);                                 // ebp, 0x004724e4: entry 1, not entry 0
+    char* out = S(0x0056e928);                                       // ebx, 0x004724e9
+    for (; ent < S(kDirTableEnd); ent += 0x64) {                     // 0x00472570
+        if (kStrStr(ent, S(0x004c4944)) != 0) continue;              // 0x004724f4 / 0x004724fe
+        if (StrLen(ent) == 0) continue;                              // 0x00472502..0x0047250a
+        if (StrCmp(ent, S(0x004c3c5c)) == 0) continue;               // 0x0047250c..0x0047253e
+        count++;                                                     // 0x0047254d
+        char* dst = out;                                             // edx = ebx before the advance, 0x00472544
+        out += 0x32;                                                 // 0x0047254e
+        StrCopy(dst, ent);                                           // 0x00472555..0x0047256b
+    }
+    StrCopy(S(0x00567328), S(0x004c6c10));                           // 0x0047257c..0x004725a3
+    return count;                                                    // eax, loaded at 0x0047258c
+}
+// 0x004724c0  listThemes
+SG_HOOK("golf_clean.exe", 0x004724c0, listThemes, ListThemes_re, ListThemes_orig);
+
+// ---------------------------------------------------------------------------------------------------- loadThemes
+// 0x004658b0  loadThemes(enable), `ret` (cdecl, 1 argument), returns the number of theme files loaded.
+// Always calls loadGolferRoster first (0x004658b3); with enable == 0 it returns that 0 immediately. Otherwise it builds
+// <0x004c84e8><theme name 0x00567328><0x004c856c> in the text buffer, enumerates it, and for entry i (0-based) sets bit 0
+// of the byte at 0x00584a0e + 0x2c * i and calls loadThemeFile(entry, i + 1, -1).
+static int __cdecl LoadThemes_re(int enable);
+static decltype(&LoadThemes_re) LoadThemes_orig;
+static int __cdecl LoadThemes_re(int enable) {
+    reinterpret_cast<Arg0_t>(0x004659a0)();                          // 0x004658b3
+    if (enable == 0) return enable;                                  // 0x004658bc: eax is the argument itself
+    StrCopy(S(kText), S(0x004c84e8));                                // 0x004658c4..0x004658f8
+    StrCat(S(kText), S(0x00567328));                                 // 0x004658fa..0x00465923
+    StrCat(S(kText), S(0x004c856c));                                 // 0x00465925..0x0046594e
+    int n = reinterpret_cast<Arg3_t>(0x0043d2a0)(kText, 0x004e9a84, 0x004e9a84);     // 0x00465950
+    if (n <= 0) return 0;                                            // 0x0046595a / 0x0046595e
+    char* ent = S(kDirTable);                                        // ebx, 0x00465961
+    unsigned char* flag = reinterpret_cast<unsigned char*>(0x00584a0e);              // esi, 0x00465966
+    int i = 0;
+    do {
+        *flag = static_cast<unsigned char>(*flag | 1);               // 0x0046596b / 0x00465972 / 0x00465977
+        reinterpret_cast<Arg3_t>(0x00437fa0)(reinterpret_cast<int>(ent), i + 1, -1); // 0x00465979
+        i = i + 1;                                                   // edi = eax + 1, 0x0046596d / 0x0046597e
+        flag += 0x2c;                                                // 0x00465983
+        ent += 0x64;                                                 // 0x00465986
+    } while (i < n);                                                 // 0x00465989 / 0x0046598b
+    return i;                                                        // eax
+}
+// 0x004658b0  loadThemes
+SG_HOOK("golf_clean.exe", 0x004658b0, loadThemes, LoadThemes_re, LoadThemes_orig);
+
+// ---------------------------------------------------------------------------------------------------- loadThemeFile
+// 0x00437fa0  loadThemeFile(name, index, slot), `ret` (cdecl, 3 arguments), returns 1 when the file opened and 0 when it
+// did not. Builds the path from 0x004c84f4 when index > 0x4c (0x00437fcd) and otherwise from 0x004c84e8 + the theme name
+// 0x00567328 + 0x004c84e4, appends `name`, opens it with the mode string 0x004c84f0, reads a 0x230-byte record into
+// 0x004d6088 + 0x230 * index, a 0x4e2-byte record into 0x00543d10 + 0x4e2 * index and a 0x10-byte record into the frame,
+// copies that record to 0x005795a8 + (slot << 8) (and to 0x005a5a04 for index 0), reads 8 more bytes over it, loads the
+// image into 0x005a7148, and blits three 0x8c-square tiles out of it into the surface triple at 0x005628e8.
+static int __cdecl LoadThemeFile_re(const char* name, int index, int slot);
+static decltype(&LoadThemeFile_re) LoadThemeFile_orig;
+static int __cdecl LoadThemeFile_re(const char* name, int index, int slot) {
+    int rec[4];                                                      // [esp+0x10] after the third fread
+    char path[0x40];                                                 // [esp+0x1c], the frame's tail
+    StrCopy(path, name);                                             // 0x00437faf..0x00437fd0
+    if (index > 0x4c) StrCopy(S(kText), S(0x004c84f4));              // 0x00437fcd / 0x0043804c..0x00438068
+    else {
+        StrCopy(S(kText), S(0x004c84e8));                            // 0x00437fd4..0x00437ff7
+        StrCat(S(kText), S(0x00567328));                             // 0x00437ff9..0x00438022
+        StrCat(S(kText), S(0x004c84e4));                             // 0x00438024..0x00438046
+    }
+    StrCat(S(kText), path);                                          // 0x00438073..0x004380a5
+    void* f = kFopen(S(kText), S(0x004c84f0));                       // 0x004380a7
+    if (f == 0) return 0;                                            // 0x004380b1
+    const int span = index * 0x230;                                  // esi, 0x004380bc..0x004380d1
+    kFread(reinterpret_cast<void*>(0x004d6088 + span), 0x230, 1, f); // 0x004380db
+    kFread(reinterpret_cast<void*>(0x00543d10 + index * 0x4e2), 0x4e2, 1, f);        // 0x004380fc
+    kFread(rec, 0x10, 1, f);                                         // 0x0043810b
+    if (slot != -1) {                                                // 0x0043811a
+        if (index != 0 || (G<int>(0x0059e7b8) & 0x4000000) != 0) {   // 0x0043811f / 0x00438123
+            int* dst = reinterpret_cast<int*>(0x005795a8 + (slot << 8));             // 0x0043813b / 0x0043813e
+            dst[0] = rec[0]; dst[1] = rec[1]; dst[2] = rec[2]; dst[3] = rec[3];      // 0x00438145..0x00438151
+            if (index == 0) {                                        // 0x00438143 / 0x00438154
+                G<int>(0x005a5a04) = rec[0]; G<int>(0x005a5a08) = rec[1];            // 0x00438156 / 0x00438160
+                G<int>(0x005a5a0c) = rec[2]; G<int>(0x005a5a10) = rec[3];            // 0x00438166 / 0x0043816c
+            }
+        }
+    }
+    kFread(rec, 8, 1, f);                                            // 0x0043817c
+    reinterpret_cast<T1_t>(0x00485790)(reinterpret_cast<void*>(0x005a7148), 0, reinterpret_cast<int>(f));   // 0x0043818a
+    const unsigned char a = *reinterpret_cast<unsigned char*>(0x004d60a9 + span);    // 0x0043818f
+    const signed char c = *reinterpret_cast<signed char*>(0x004d60aa + span);        // 0x00438195
+    const int k = ((~static_cast<int>(a)) >> 7) & 1;                 // 0x0043819b..0x004381a0
+    if (c >= 0x14) {                                                 // 0x004381a3 (signed byte compare)
+        const int used = G<int>(0x0059b76c + k * 4);                 // 0x004381ad
+        if (used < 0x48) {                                           // 0x004381b4
+            *reinterpret_cast<unsigned char*>(0x004d60aa + span) = static_cast<unsigned char>(used);        // 0x004381c0
+            G<int>(0x0059b76c + k * 4) = used + 1;                   // 0x004381c6
+            const int tile = used + (k * 9) * 8;                     // 0x004381cd / 0x004381d4
+            const int off = ((tile << 5) + tile) << 2;               // 0x004381e3..0x004381ea (tile * 0x84)
+            const T7_t blit = reinterpret_cast<T7_t>(0x00473bf0);
+            blit(reinterpret_cast<void*>(0x005628e8 + off), 0, 0x005a7148, 0, 0, 0x8c, 0x8c, 1, 1);         // 0x004381fa
+            blit(reinterpret_cast<void*>(0x00562914 + off), 0, 0x005a7148, 0, 0x8c, 0x8c, 0x8c, 1, 1);      // 0x0043821f
+            blit(reinterpret_cast<void*>(0x00562940 + off), 0, 0x005a7148, 0, 0x118, 0x8c, 0x8c, 1, 1);     // 0x00438244
+        }
+    }
+    kFclose(f);                                                      // 0x0043824a
+    return 1;                                                        // 0x00438252
+}
+// 0x00437fa0  loadThemeFile
+SG_HOOK("golf_clean.exe", 0x00437fa0, loadThemeFile, LoadThemeFile_re, LoadThemeFile_orig);
+
+// ---------------------------------------------------------------------------------------------------- saveGame
+// 0x0040b4a0  saveGame(name), `ret` (cdecl, 1 argument), returns __close's result.
+// Builds <0x004c3f4c><name><0x004c3f44> in the text buffer, opens it for writing (__open flags 0x8301, pmode 0x80,
+// 0x0040b556), remembers the descriptor in 0x00568d08, then builds a 0x64-byte header line in the same buffer out of
+// 0x004c52bc, appendCourseTitle(0), 0x004c52b8, the decimal of (date mod 1024) * 30 / 1024 + 1, 0x004c3f70 and
+// appendDate(date), writes 0x64 bytes of it (0x0040b65c) and hands the descriptor to serializeCourse(0).
+static int __cdecl SaveGame_re(const char* name);
+static decltype(&SaveGame_re) SaveGame_orig;
+static int __cdecl SaveGame_re(const char* name) {
+    char path[0x78];                                                 // the frame, 0x0040b4a0 / 0x0040b4a8
+    StrCopy(path, name);                                             // 0x0040b4ae..0x0040b4dc
+    StrCopy(S(kText), S(0x004c3f4c));                                // 0x0040b4de..0x0040b4ff
+    StrCat(S(kText), path);                                          // 0x0040b501..0x0040b529
+    StrCat(S(kText), S(0x004c3f44));                                 // 0x0040b52b..0x0040b554
+    G<int>(0x00568d08) = kOpen(S(kText), 0x8301, 0x80);              // 0x0040b556 / 0x0040b55b
+    StrCopy(S(kText), S(0x004c52bc));                                // 0x0040b560..0x0040b585
+    reinterpret_cast<Arg1_t>(0x0040daa0)(0);                         // 0x0040b587
+    StrCat(S(kText), S(0x004c52b8));                                 // 0x0040b58c..0x0040b5c8
+    int m = G<int>(0x00834170) & 0x800003ff;                         // 0x0040b5b9 / 0x0040b5c3
+    if (m < 0) m = ((m - 1) | static_cast<int>(0xfffffc00)) + 1;     // 0x0040b5ca..0x0040b5d2
+    int v = m * 30;                                                  // 0x0040b5d3..0x0040b5d9
+    v = (v + ((v >> 31) & 0x3ff)) >> 10;                             // 0x0040b5db..0x0040b5e4 (cdq / and / add / sar)
+    v = v + 1;                                                       // 0x0040b5e7
+    StrCat(S(kText), kItoa(v, S(0x0058a528), 10));                   // 0x0040b5e9 / 0x0040b5f0..0x0040b616
+    StrCat(S(kText), S(0x004c3f70));                                 // 0x0040b618..0x0040b647
+    reinterpret_cast<Arg1_t>(0x0040d7b0)(G<int>(0x00834170));        // 0x0040b63c / 0x0040b649
+    kWrite(G<int>(0x00568d08), S(kText), 0x64);                      // 0x0040b64e..0x0040b65c
+    reinterpret_cast<Arg1_t>(0x0040afa0)(0);                         // 0x0040b663
+    return kClose(G<int>(0x00568d08));                               // 0x0040b66f
+}
+// 0x0040b4a0  saveGame
+SG_HOOK("golf_clean.exe", 0x0040b4a0, saveGame, SaveGame_re, SaveGame_orig);
+
+// ---------------------------------------------------------------------------------------------------- loadCourse
+// 0x0040b840  loadCourse(mode), `ret` (cdecl, 1 argument). Opens the path already standing in the text buffer (read-only
+// binary, 0x0040b876), reads the 0x64-byte header back over the buffer, and leaves after __close for mode 2. For mode 0
+// it puts the label 0x004c52f4 in the buffer, sets 0x004c2e08 to -1 and draws the progress window, refreshes the window
+// at 0x00519a60 and loads the interface art and the golfer bios. It then reads a second 0x64-byte header, leaves for
+// mode 3, and otherwise reads the course through deserializeCourse(1), reads 8 trailing bytes, asks __tell and closes.
+// For mode 0 it finally clears 0x00567afc, sets 0x004c2854 / 0x004c2848 to -1 and rebuilds the heightfield.
+static int __cdecl LoadCourse_re(int mode);
+static decltype(&LoadCourse_re) LoadCourse_orig;
+static int __cdecl LoadCourse_re(int mode) {
+    char path[0x64];                                                 // [esp+0x10] of the entry frame; the 8-byte read at
+                                                                     // 0x0040b964 lands in the same slot
+    StrCopy(path, S(kText));                                         // 0x0040b84f..0x0040b86f
+    G<int>(0x00568d08) = kOpen2(path, 0x8000);                       // 0x0040b876 / 0x0040b883 (two pushes: no pmode)
+    *S(kText) = 0;                                                   // 0x0040b888
+    kRead(G<int>(0x00568d08), S(kText), 0x64);                       // 0x0040b88f
+    if (mode == 2) return kClose(G<int>(0x00568d08));                // 0x0040b89e / 0x0040b8aa
+    if (mode == 0) {                                                 // 0x0040b8b9
+        StrCopy(S(kText), S(0x004c52f4));                            // 0x0040b8bd..0x0040b8fb
+        G<int>(0x004c2e08) = -1;                                     // 0x0040b8f1
+        reinterpret_cast<Arg4_t>(0x0040d320)(0xc8, 0xc8, static_cast<int>(0x80001284), -2);   // 0x0040b8fd
+        reinterpret_cast<T1_t>(0x00480c80)(reinterpret_cast<void*>(0x00519a60), 0, mode);     // 0x0040b905..0x0040b90b
+        reinterpret_cast<Arg1_t>(0x00442180)(mode);                  // 0x0040b911
+        reinterpret_cast<Arg0_t>(0x004315e0)();                      // 0x0040b919
+    }
+    kRead(G<int>(0x00568d08), S(kText), 0x64);                       // 0x0040b92c
+    if (mode == 3) return kClose(G<int>(0x00568d08));                // 0x0040b934 / 0x0040b940
+    reinterpret_cast<Arg1_t>(0x0040bbf0)(1);                         // 0x0040b951
+    kRead(G<int>(0x00568d08), path, 8);                              // 0x0040b964 (over the path slot)
+    kTell(G<int>(0x00568d08));                                       // 0x0040b970
+    int r = kClose(G<int>(0x00568d08));                              // 0x0040b97b
+    if (mode == 0) {                                                 // 0x0040b983
+        G<int>(0x00567afc) = mode;                                   // 0x0040b98a (ebp, which is 0 here)
+        G<int>(0x004c2854) = -1;                                     // 0x0040b990
+        G<int>(0x004c2848) = -1;                                     // 0x0040b995
+        r = reinterpret_cast<Arg0_t>(0x0042f7a0)();                  // 0x0040b99a
+    }
+    return r;
+}
+// 0x0040b840  loadCourse
+SG_HOOK("golf_clean.exe", 0x0040b840, loadCourse, LoadCourse_re, LoadCourse_orig);
+
+// ---------------------------------------------------------------------------------------------------- loadGame
+// 0x0040b9b0  loadGame(name, finish, headerOnly, championship), `ret` (cdecl, 4 arguments). Builds the path from
+// 0x004c5328 when `championship` is set and from 0x004c3f4c otherwise (0x0040b9f9), opens it read-only binary, reads a
+// 0x64-byte header (and a second one for a championship file), and leaves after __close when `headerOnly` is set.
+// Otherwise it reads the game through serializeCourse(1), closes, rewrites the flag word 0x0059e7b8 (bits 2 and 3 cleared,
+// bit 2 taken from the value READ AT ENTRY, bit 30 set), clears 0x00567afc, sets 0x004c2854 / 0x004c2848 to -1 and
+// rebuilds the terrain tables. With `finish` set it draws the progress window unless the name equals 0x004c5314, applies
+// the course type from 0x005a34e0, reloads the world assets when that byte changed and refreshes the terrain.
+static int __cdecl LoadGame_re(const char* name, int finish, int headerOnly, int championship);
+static decltype(&LoadGame_re) LoadGame_orig;
+static int __cdecl LoadGame_re(const char* name, int finish, int headerOnly, int championship) {
+    char path[0x64];                                                 // [esp+0x14]
+    const int type0 = *reinterpret_cast<signed char*>(0x005a34e0);   // 0x0040b9b3 (movsx), saved in the frame
+    const int flags0 = G<int>(0x0059e7b8);                           // ebp, 0x0040b9ea
+    StrCopy(path, name);                                             // 0x0040b9be..0x0040b9f7
+    if (championship != 0) StrCopy(S(kText), S(0x004c5328));         // 0x0040b9f5 / 0x0040b9fb..0x0040ba19
+    else StrCopy(S(kText), S(0x004c3f4c));                           // 0x0040ba1d..0x0040ba3b
+    StrCat(S(kText), path);                                          // 0x0040ba44..0x0040ba76
+    G<int>(0x00568d08) = kOpen2(S(kText), 0x8000);                   // 0x0040ba78 / 0x0040ba85
+    *S(kText) = 0;                                                   // 0x0040ba8a
+    kRead(G<int>(0x00568d08), S(kText), 0x64);                       // 0x0040ba91
+    if (championship != 0) kRead(G<int>(0x00568d08), S(kText), 0x64);            // 0x0040ba99 / 0x0040baaa
+    if (headerOnly != 0) return kClose(G<int>(0x00568d08));          // 0x0040bab9 / 0x0040bac4
+    reinterpret_cast<Arg1_t>(0x0040afa0)(1);                         // 0x0040bad6
+    kClose(G<int>(0x00568d08));                                      // 0x0040bae2
+    G<int>(0x0059e7b8) = static_cast<int>(                           // 0x0040bae7..0x0040bb08
+        ((static_cast<unsigned>(G<int>(0x0059e7b8)) & 0xfffffff3u)   // `and al,0xf3`: only the low byte is masked
+         | (static_cast<unsigned>(flags0) & 4u)) | 0x40000000u);
+    G<int>(0x00567afc) = 0;                                          // 0x0040bafe
+    G<int>(0x004c2854) = -1;                                         // 0x0040bb0d
+    G<int>(0x004c2848) = -1;                                         // 0x0040bb13
+    reinterpret_cast<Arg0_t>(0x0042f7a0)();                          // 0x0040bb19
+    reinterpret_cast<Arg0_t>(0x0042f340)();                          // 0x0040bb1e
+    reinterpret_cast<Arg0_t>(0x0042f2c0)();                          // 0x0040bb23
+    if (finish == 0) return finish;                                  // 0x0040bb28 / 0x0040bb31: eax is the argument
+    if (StrCmp(path, S(0x004c5314)) != 0) {                          // 0x0040bb37..0x0040bb6e
+        StrCopy(S(kText), S(0x004c5304));                            // 0x0040bb70..0x0040bba9
+        G<int>(0x004c2e08) = -1;                                     // 0x0040bba3 (ebp holds -1 here)
+        reinterpret_cast<Arg4_t>(0x0040d320)(0xc8, 0xc8, static_cast<int>(0x80001284), -2);   // 0x0040bbab
+        reinterpret_cast<T1_t>(0x00480c80)(reinterpret_cast<void*>(0x00519a60), 0, 0);        // 0x0040bbb3..0x0040bbba
+    }
+    reinterpret_cast<Arg1_t>(0x00449400)(*reinterpret_cast<signed char*>(0x005a34e0));        // 0x0040bbbf / 0x0040bbc7
+    if (*reinterpret_cast<signed char*>(0x005a34e0) != type0)        // 0x0040bbcc..0x0040bbdc
+        reinterpret_cast<Arg0_t>(0x0043dbe0)();                      // 0x0040bbde
+    return reinterpret_cast<Arg0_t>(0x00449520)();                   // 0x0040bbe3
+}
+// 0x0040b9b0  loadGame
+SG_HOOK("golf_clean.exe", 0x0040b9b0, loadGame, LoadGame_re, LoadGame_orig);
+
+// ---------------------------------------------------------------------------------------------------- EditBox::create
+// 0x00486110  EditBox::create(this, x, y, w, h, parent, unused), `ret 0x18` (thiscall, 6 stack arguments, the sixth never
+// read). Releases the edit box's state, returns 3 without a parent (0x00486121), gives it a 0x40-byte buffer, and builds
+// the window with the flags 0x2020 or 0x102020 depending on bit 12 of the parent's word +0x9c (0x0048613f). After a
+// successful Window::create it clears +0x2b4, paints the frame quad from 0x0083afe0 / 0x004e43fc..0x004e4404, sets the
+// cursor character 0x7f01, zeroes +0x5a0, puts the length of the text at +0x574 into +0x5a4, calls the window's own slot
+// +0x120 twice and starts the caret timer at +0x5ac.
+static int __fastcall EditBoxCreate_re(void* self, void* edx, int x, int y, int w, int h, int parent, int unused);
+static decltype(&EditBoxCreate_re) EditBoxCreate_orig;
+static int __fastcall EditBoxCreate_re(void* self, void* edx, int x, int y, int w, int h, int parent, int unused) {
+    (void)edx; (void)unused;
+    reinterpret_cast<T0_t>(0x004860d0)(self, 0);                     // 0x00486114 (releaseState: no stack argument)
+    if (parent == 0) return 3;                                       // 0x0048611d / 0x00486122
+    reinterpret_cast<T1_t>(0x00486250)(self, 0, 0x40);               // 0x0048612f
+    int flags = 0x2020;                                              // 0x0048613a
+    if ((I(reinterpret_cast<void*>(parent), 0x9c) & 0x1000) == 0) flags = 0x102020;  // 0x0048613f / 0x00486144
+    int r = reinterpret_cast<T9_t>(0x004806c0)(self, 0, x, y, w, h, 0, flags, parent, 0, 0);  // 0x00486167
+    if (r != 0) return r;                                            // 0x0048616c
+    I(self, 0x2b4) = 0;                                              // 0x00486174
+    reinterpret_cast<T4_t>(0x00476310)(B(self) + 0x274, 0, G<int>(0x0083afe0),       // 0x00486195
+                                       G<int>(0x004e43fc), G<int>(0x004e4400), G<int>(0x004e4404));
+    reinterpret_cast<T1_t>(0x0047ab00)(self, 0, 0x7f01);             // 0x004861a7
+    I(self, 0x5a0) = 0;                                              // 0x004861b7
+    I(self, 0x5a4) = StrLen(reinterpret_cast<const char*>(P(self, 0x574)));          // 0x004861ac..0x004861c8
+    vslot<T0_t>(self, 0x120)(self, 0);                               // 0x004861d0 (the slot takes no stack argument)
+    reinterpret_cast<T4_t>(0x00486cf0)(B(self) + 0x5ac, 0, 0x00486b70,              // 0x004861e9
+                                        reinterpret_cast<int>(self), 0x1f4, 5);
+    vslot<T0_t>(self, 0x120)(self, 0);                               // 0x004861f2
+    return 0;                                                        // 0x004861f8
+}
+// 0x00486110  EditBox::create
+SG_HOOK("golf_clean.exe", 0x00486110, EditBox_create, EditBoxCreate_re, EditBoxCreate_orig);
+
+// ---------------------------------------------------------------------------------------------------- promptAndSaveFile
+// 0x00437910  promptAndSaveFile(index, mode, championship), `ret` (cdecl, 3 arguments), returns 1 when the file was
+// written and 0 on every refusal. The original carries an SEH frame (0x00437916..0x00437923, handler 0x004b738b) for
+// the local Image; nothing here throws, so the reimplementation does not install one.
+// Path: <0x004c84e8> then, for mode -2, the name at 0x004c84d4 (0x00437b69) and the suffix 0x004c5948, otherwise the
+// theme name 0x00567328, 0x004c84e4, the record name at 0x004d6098 + 0x230 * index and the suffix 0x004c84dc for
+// mode -1 or 0x004c5948 for any other mode (0x00437a1b..0x00437a25). A non-zero third argument replaces the whole path
+// with <0x004c5328><record name><0x004c5948> (0x00437a63..0x00437aee).
+static int __cdecl PromptAndSaveFile_re(int index, int mode, int championship);
+static decltype(&PromptAndSaveFile_re) PromptAndSaveFile_orig;
+static int __cdecl PromptAndSaveFile_re(int index, int mode, int championship) {
+    int imageBuf[0x2b8 / 4];                                         // [esp+0x20], the Image the picture is drawn into
+    void* const image = imageBuf;
+    int rec[4];                                                      // [esp+0x10]
+    if (G<int>(0x004c7b34) != 0) {                                   // 0x0043791e / 0x00437932
+        reinterpret_cast<T0_t>(0x00483030)(reinterpret_cast<void*>(0x005aa560), 0);     // 0x00437939
+        G<int>(0x004c7b34) = 0;                                      // 0x0043793e
+    }
+    const int span = index * 0x230;                                  // 0x004379db..0x004379f2
+    char* const name = S(0x004d6098 + span);                         // the record's name, at record + 0x10
+    StrCopy(S(kText), S(0x004c84e8));                                // 0x0043794c..0x00437980
+    const char* suffix;
+    if (mode == -2) {                                                // 0x0043797d / 0x00437982
+        StrCat(S(kText), S(0x004c84d4));                             // 0x00437b69..0x00437b94
+        suffix = S(0x004c5948);                                      // the jump at 0x00437b96 lands on 0x00437a27
+    } else {
+        StrCat(S(kText), S(0x00567328));                             // 0x00437988..0x004379b3
+        StrCat(S(kText), S(0x004c84e4));                             // 0x004379b5..0x004379e7
+        StrCat(S(kText), name);                                      // 0x004379e9..0x00437a1e
+        suffix = (mode == -1) ? S(0x004c84dc) : S(0x004c5948);       // 0x00437a1b / 0x00437a20 / 0x00437a25
+    }
+    StrCat(S(kText), suffix);                                        // 0x00437a2c..0x00437a5b
+    if (championship != 0) {                                         // 0x00437a4d / 0x00437a5d
+        StrCopy(S(kText), S(0x004c5328));                            // 0x00437a63..0x00437a8f
+        StrCat(S(kText), name);                                      // 0x00437a91..0x00437ac3
+        StrCat(S(kText), S(0x004c5948));                             // 0x00437ac5..0x00437aee
+    }
+    if (reinterpret_cast<Arg1_t>(0x004378a0)(static_cast<int>(kText)) != 0 && mode != -2) {    // 0x00437af5 / 0x00437aff / 0x00437b05
+        const int len = StrLen(S(kText));                            // 0x00437b0e..0x00437b1c
+        StrCat(S(kText), S(0x004c3f0c));                             // 0x00437b1d..0x00437b54
+        if (reinterpret_cast<Arg5_t>(0x0046d6e0)(0xc8, 0x1e, 1, 1, 0) != 0) return 0;          // 0x00437b56 / 0x00437b60
+        S(kText)[len] = 0;                                           // 0x00437b9b
+    }
+    if (reinterpret_cast<Arg1_t>(0x00405ac0)(reinterpret_cast<int>(name)) == 0) {              // 0x00437bb8 / 0x00437bc2
+        StrCat(S(kText), S(0x004c84bc));                             // 0x00437bc4..0x00437bf6
+        reinterpret_cast<Arg3_t>(0x0046de70)(static_cast<int>(kText), 0x1e, 0x1e);             // 0x00437bf8
+        return 0;                                                    // 0x00437c00
+    }
+    void* f = kFopen(S(kText), S(0x004c7828));                       // 0x00437c11
+    if (f == 0) {                                                    // 0x00437c1b
+        StrCat(S(kText), S(0x004c84a4));                             // 0x00437c1f..0x00437c51
+        reinterpret_cast<Arg3_t>(0x0046de70)(static_cast<int>(kText), 0x1e, 0x1e);             // 0x00437c53
+        return 0;                                                    // 0x00437c5b
+    }
+    kFwrite(reinterpret_cast<void*>(0x004d6088 + span), 0x230, 1, f);                          // 0x00437c71
+    kFwrite(reinterpret_cast<void*>(0x00543d10 + index * 0x4e2), 0x4e2, 1, f);                 // 0x00437c93
+    rec[0] = 0; rec[1] = 0; rec[2] = 0; rec[3] = 0;                  // 0x00437c98..0x00437ca9
+    if (mode != -1) {                                                // 0x00437cad / 0x00437cb7
+        const int* src = reinterpret_cast<const int*>(0x005795a8 + (mode << 8));               // 0x00437cb9
+        rec[0] = src[0]; rec[1] = src[1]; rec[2] = src[2]; rec[3] = src[3];                    // 0x00437cc1..0x00437cd8
+    }
+    if (index == 0) {                                                // 0x00437cdc / 0x00437cde
+        rec[0] = G<int>(0x005a5a04); rec[1] = G<int>(0x005a5a08);                              // 0x00437ce0..0x00437cf1
+        rec[2] = G<int>(0x005a5a0c); rec[3] = G<int>(0x005a5a10);                              // 0x00437ceb..0x00437d02
+    }
+    kFwrite(rec, 0x10, 1, f);                                        // 0x00437d10
+    kFwrite(reinterpret_cast<void*>(0x004c52c0), 8, 1, f);           // 0x00437d1f
+    reinterpret_cast<T0_t>(0x00474ae0)(image, 0);                    // 0x00437d2b
+    reinterpret_cast<T6_t>(0x00474dd0)(image, 0, 0x8c, 0x1a4, 8, 1, 0, 0);                     // 0x00437d51
+    reinterpret_cast<T5_t>(0x00478af0)(image, 0, 0, 0, 0x8c, 0x1a4, 0xff);                     // 0x00437d6d
+    const int counter = *reinterpret_cast<signed char*>(0x004d60aa + span);                    // 0x00437d72 / 0x00437d8e
+    const int k = ((~static_cast<int>(*reinterpret_cast<unsigned char*>(0x004d60a9 + span))) >> 7) & 1;
+    const T7_t drawScaled = reinterpret_cast<T7_t>(0x00473cb0);
+    void* third;
+    if (counter < 0x14) {                                            // 0x00437d78 / 0x00437d7a (signed byte compare)
+        const int idx = counter + (k * 9) * 8;                       // 0x00437d91 / 0x00437d94
+        const int off = ((idx << 5) + idx) * 4;                      // 0x00437d97..0x00437d9e (idx * 0x84)
+        G<int>(0x005aa564) = Call0(G<void*>(0x00562918 + off), 0x14);                          // 0x00437d9e..0x00437db3
+        reinterpret_cast<T1_t>(0x004789f0)(image, 0, 0x005aa560);                              // 0x00437db8
+        drawScaled(reinterpret_cast<void*>(0x005628e8 + off), 0, reinterpret_cast<int>(image), 0, 0, 1, 1, 1, 0);      // 0x00437df7
+        drawScaled(reinterpret_cast<void*>(0x00562914 + off), 0, reinterpret_cast<int>(image), 0, 0x8c, 1, 1, 1, 0);   // 0x00437e39
+        third = reinterpret_cast<void*>(0x00562940 + off);           // 0x00437e60
+    } else {
+        const int idx = (counter - 0x14) + (k * 9) * 8;              // 0x00437e6c..0x00437e83
+        const int off = ((idx << 5) + idx) * 4;                      // 0x00437e86..0x00437e8d
+        G<int>(0x005aa564) = Call0(G<void*>(0x00563368 + off), 0x14);                          // 0x00437e8d..0x00437ea2
+        reinterpret_cast<T1_t>(0x004789f0)(image, 0, 0x005aa560);                              // 0x00437ea7
+        drawScaled(reinterpret_cast<void*>(0x00563338 + off), 0, reinterpret_cast<int>(image), 0, 0, 1, 1, 1, 0);      // 0x00437edf
+        drawScaled(reinterpret_cast<void*>(0x00563364 + off), 0, reinterpret_cast<int>(image), 0, 0x8c, 1, 1, 1, 0);   // 0x00437f1a
+        third = reinterpret_cast<void*>(0x00563390 + off);           // 0x00437f3a
+    }
+    drawScaled(third, 0, reinterpret_cast<int>(image), 0, 0x118, 1, 1, 1, 0);                  // 0x00437f55
+    reinterpret_cast<T1_t>(0x00485aa0)(image, 0, reinterpret_cast<int>(f));                    // 0x00437f5f
+    kFclose(f);                                                      // 0x00437f65
+    reinterpret_cast<T0_t>(0x00474c40)(image, 0);                    // 0x00437f7c
+    return 1;                                                        // 0x00437f81
+}
+// 0x00437910  promptAndSaveFile
+SG_HOOK("golf_clean.exe", 0x00437910, promptAndSaveFile, PromptAndSaveFile_re, PromptAndSaveFile_orig);
+
+}  // namespace
