@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 208 bytes, 56 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Initializes Terrain.dll for a course of given dimensions and rebuilds the grid. (`re/names/exe_1.tsv`)
 
+## Purpose
+First-time set-up of Terrain.dll for a screen of w x h. GetVersionExA (IAT slot 0x004ba09c, 0x004497a3) on a 0x94-byte OSVERSIONINFOA (0x0044979a): dwMajorVersion >= 5 (unsigned `jb` 0x004497ae) sets the byte [0x00820f28] = 1 (0x004497b0). w and h go to 0x00820f30 / 0x00820f34 (0x004497ce / 0x004497d4). An int per type record (0x17 records of 0x30 bytes from 0x00578372, 0x004497e3..0x00449812) is the record's signed byte +4, replaced by 4 when the mode byte [0x005a34e0] is 1 (0x004497e7), the record's byte +0 is > 0 (signed `jle` 0x004497f1) and the record is neither type 5 (0x00578462, 0x004497f3) nor type 7 (0x005784c2, 0x004497fa); Terrain::passCollarInfo(array, 0x17) (0x00449821). Then Terrain::initSystem(w, h, hdc, the byte [0x00820f28]) (0x00449841), hdc being slot +0x28 of the object [0x00519cd8] (0x00449835; that slot takes no argument, so the byte pushed at 0x00449832 is initSystem's fourth), Terrain::initTerrain (0x0044984c) and rebuildTerrainGrid 0x00449540 (0x00449851), whose eax is returned. Caller: updateTerrainRender 0x004498a0 (0x00449d7a), on its first run. Reimplemented in `shim/src/re/c3ez.cpp`; path-1 A/B GREEN: initTerrain_v5 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00449790_initTerrain_v5.path1.csv`); initTerrain_v4 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00449790_initTerrain_v4.path1.csv`); initTerrain_v6 (6 vectors, 6 distinct results, 6 changing state, `log/diff/00449790_initTerrain_v6.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_f.cpp` as `?initTerrain449790@@YAXHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044985f): callee pops 0 bytes of stack arguments.

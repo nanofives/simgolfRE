@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 402 bytes, 141 instructions, subsystem `terrain`. Mecha
 ## Role (from the naming pass, not a C3 purpose)
 Toggles the path flag on a tile and updates connected path rendering. (`re/names/exe_1.tsv`)
 
+## Purpose
+Lays or removes a path on one tile to match the course flag word. With f = tileFlag20(x, y) 0x004493b0 (0x0044a420) and b = the byte [0x0053caf0 + (x * 50 + y) * 2]: when f is set and Terrain::hasPath(tile) is false (0x0044a43b, `test al, al` 0x0044a440), a path is laid: if b & 0x40 (0x0044a456) every tile of the 50 x 50 grid with tileFlag20 set first gets Terrain::updatePath(x', y', its own 0x40 bit) (0x0044a460..0x0044a49f) and [0x00820f2b] = 1 (0x0044a4a9); then Terrain::layPath(tile, tileFlag20(x, y), b & 0x40) (0x0044a4d1) and al = 1. Otherwise tileFlag20 is called again (0x0044a4df): set -> al = 0; clear and hasPath false (0x0044a501) -> al = 0; clear and hasPath true -> the path is removed: if Terrain::hasConnectedPath(x, y) (0x0044a50f) the same all-grid updatePath sweep runs (0x0044a518..0x0044a55d), then layPath(tile, 0, b & 0x40) (0x0044a58f) and al = 1. eax's upper bytes are tileFlag20's (0), hasPath's or layPath's. Caller: rebuildTileData 0x0044a5b0 (0x0044a670). Reimplemented in `shim/src/re/c3ez.cpp`; path-1 A/B GREEN: togglePath (13 vectors, 13 distinct results, 13 changing state, `log/diff/0044a410_togglePath.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `?togglePath44a410@@YA_NPAUR1Tile44a5b0@@HH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0044a4dc, 0x0044a59a, 0x0044a5a1): callee pops 0 bytes of stack arguments.

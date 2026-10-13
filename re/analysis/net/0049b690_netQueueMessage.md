@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 282 bytes, 95 instructions, subsystem `net`. Mechanical
 appends an outgoing message (buffer+len+flags) to the network send queue. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Adds a peer to the session's 16-slot table (this+0x170, 0x58 bytes each) or finds an existing one. The slots are scanned (0x0049b6a1): a slot with the id returns it at once (0x0049b6a9); the first empty slot (0x0049b6a5) takes the id, the flag byte +0x14 and the name +0x15, and bit 0 of the flags copies the id to +0x780 (this side becomes host, 0x0049b71d); with no empty slot index 16 (the record this+0x6f0) is used. The count +0x6f8 grows, netSendList runs when host (0x0049b744), the object's own slot +8 is told (name, id), S3List_addVoiceRx 0x0049b970 adds the id to the list +0xc0, and slot +0x84 of the list's current payload is called with (0x1000, 0, 0); that eax is returned. Caller: netPoll 0x0049b7b0 (0x0049b690 is reached from 0x0049b834 and 0x0049b8e4). Reimplemented in `shim/src/re/c3ez.cpp`; path-1 A/B GREEN: netQueueMessage (10 vectors, 10 distinct results, 8 changing state, `log/diff/0049b690_netQueueMessage.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_08_h.cpp` as `?add@C49b690@@QAEXPBDHE@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0xc` (at 0x0049b7a7): callee pops 12 bytes of stack arguments.
@@ -55,7 +58,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 
 ## Callees
 - 0x00497b40 `netSendList` at 0x0049b748
-- 0x0049b970 `netHeapAlloc` at 0x0049b77d
+- 0x0049b970 `S3List_addVoiceRx` at 0x0049b77d
 - indirect `call [edx+0x84]` at 0x0049b79e
 - indirect `call [edx+0x8]` at 0x0049b76b
 

@@ -1,0 +1,8 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$r0 $q0,void,void,True,c66d86f8,c66d86f8,True
+$r1 $q1,void,void,True,c2b3875b,c2b3875b,True
+state_regions,$implog+0x0:262144 $clog+0x0:4096 0x00820f14+0x0:40 0x004d2044+0x0:16 0x00820ed0+0x0:4 $tobj+0x7124:1168 $tobj+0xe334:1168 $tobj+0x15544:1168 $tobj+0x1c754:1168 $tobj+0x23964:1168 $tobj+0x2ab74:1168 $tobj+0x31d84:1168 $tobj+0x38f94:1168 $tobj+0x401a4:1168 $tobj+0x473b4:1168 $tobj+0x4e5c4:1168 $tobj+0x557d4:1168 $tobj+0x5c9e4:1168 $tobj+0x63bf4:1168 $tobj+0x6ae04:1168 $tobj+0x72014:1168 $tobj+0x79224:1168 $tobj+0x80434:1168 $tobj+0x87644:1168 $tobj+0x8e854:1168 $tobj+0x95a64:1168 $tobj+0x9cc74:1168 $tobj+0xa3e84:1168 $tobj+0xab094:1168 $tobj+0xb22a4:1168 $tobj+0xb94b4:1168 $tobj+0xc06c4:1168 $tobj+0xc78d4:1168 $tobj+0xceae4:1168 $tobj+0xd5cf4:1168 $tobj+0xdcf04:1168 $tobj+0xe4114:1168 $tobj+0xeb324:1168 $tobj+0xf2534:1168 $tobj+0xf9744:1168 $tobj+0x100954:1168 $tobj+0x107b64:1168 $tobj+0x10ed74:1168 $tobj+0x115f84:1168 $tobj+0x11d194:1168 $tobj+0x1243a4:1168 $tobj+0x12b5b4:1168 $tobj+0x1327c4:1168 $tobj+0x1399d4:1168 $tobj+0x140be4:1168 $tobj+0x147df4:1168 $tobj+0x14f004:1168 $tobj+0x156214:1168 $tobj+0x15d424:1168 $tobj+0x164634:1168 $lst+0x0:32 $arena+0x0:65552 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x624796a0,original=0x1340940,2026-10-13T20:38:31
+distinct_results,2,,
+VERDICT,GREEN,2,

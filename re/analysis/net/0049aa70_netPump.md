@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 199 bytes, 76 instructions, subsystem `net`. Mechanical
 pumps the network layer: services incoming traffic and sends queued output. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+Services the network sub-object this+0x64 once per frame. Its slot +0x94 gives the pending count. With bit 0x40000000 of the flag word +0xe8 set (0x0049aa80), a count >= 0x32 returns it (0x0049aa91), else the bit is cleared and the new flag word returned. With the bit clear, a count > 0x64 (0x0049aabd) sets the bit and returns slot +0x20's result; otherwise slot +0x88 gives the next message (NULL returns 0, 0x0049aae6), its bytes [+0x18, +0x20) go to netService 0x00497fc0 when the mode +0x60 is nonzero (0x0049ab01) or else netSendMessages 0x00499140 (each with +0xe4, 0x100, 0), slot +0x8c releases the message, and that eax is returned. gfxFlushA 0x00497b00 tail-jumps here, so the returned eax is observed. Caller: gfxFlushA 0x00497b00 (tail jmp 0x00497b13). Reimplemented in `shim/src/re/c3ez.cpp`; path-1 A/B GREEN: netPump (12 vectors, 12 distinct results, 12 changing state, `log/diff/0049aa70_netPump.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_06_l.cpp` as `?pump@Net49a@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x0049aaab, 0x0049aad7, 0x0049ab1c, 0x0049ab36): callee pops 0 bytes of stack arguments.

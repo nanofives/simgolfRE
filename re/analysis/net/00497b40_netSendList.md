@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 224 bytes, 81 instructions, subsystem `net`. Mechanical
 flushes the queued outgoing message list to the network send worker. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+When this side is the host (+0x77c == +0x780, 0x00497b5a) and the peer count +0x6f8 is nonzero (0x00497b68), builds a roster message: a malloc'd block of count * 0x2c + 4 bytes (0x004a504f) whose first byte is the count and whose per-peer 0x28-byte records hold the peer id, its name (clamped to 31 chars: the name byte 0x1f is cleared before the copy, 0x00497bb3) and its flag byte +0x14 as a dword; netSendMessages 0x00499140(block, size, 0, 0x10, 1) sends it and free 0x004a5007 releases it. eax is unused (its one caller netQueueMessage overwrites it at 0x0049b74d), so the compared evidence is the whole session block and the arena. Caller: netQueueMessage 0x0049b690 (0x0049b748). Reimplemented in `shim/src/re/c3ez.cpp`; path-1 A/B GREEN: netSendList (10 vectors, 9 distinct results, 8 changing state, `log/diff/00497b40_netSendList.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_07_497b40.cpp` as `?sendList@C497b40@@QAEXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x00497c1f): callee pops 0 bytes of stack arguments.

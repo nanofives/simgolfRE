@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 158 bytes, 66 instructions, subsystem `terrain`. Mechan
 ## Role (from the naming pass, not a C3 purpose)
 Pushes one tile's type and variation into Terrain.dll. (`re/names/exe_1.tsv`)
 
+## Purpose
+Brings one Terrain.dll tile's type and variation in line with the exe's course grids. The tile's type is its +0x24 (read at 0x00449f0b with no NULL test). When tileType(x, y) (0x00449f15) equals it (`jne` 0x00449f1f) and Terrain::getVariation(tile) (0x00449f28) equals tileByte(x, y) (0x00449f31, `jne` 0x00449f3b), nothing changes and al = 0 (0x00449f40). Otherwise the byte [0x00820f2c] (normals need recomputing) is set to 1 (0x00449f6e) when the new or the old type is 7 (0x00449f4e / 0x00449f53) or, failing that, 6 (0x00449f63 / 0x00449f68), then Terrain::setType(tile, tileType(x, y), tileByte(x, y)) (0x00449f92, through the import thunk 0x004a4f28) and al = 1 (0x00449f9a). The upper bytes of eax are tileByte's (exit 0) or setType's (exit 1); the only caller rebuildTileData 0x0044a5b0 reads al (`mov bl, al` 0x0044a65a). Caller: rebuildTileData 0x0044a5b0 (0x0044a648). Reimplemented in `shim/src/re/c3ez.cpp`; path-1 A/B GREEN: applyTileVariation (13 vectors, 13 distinct results, 13 changing state, `log/diff/00449f00_applyTileVariation.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x00449f43, 0x00449f9d): callee pops 0 bytes of stack arguments.
 

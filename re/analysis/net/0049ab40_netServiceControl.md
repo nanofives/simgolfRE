@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 432 bytes, 135 instructions, subsystem `net`. Mechanica
 services the network control channel, dispatching to the control-message handler. (`re/names/exe_5.tsv`)
 System writeup: `re/analysis/systems/exe_5.md`.
 
+## Purpose
+The network control tick: times out silent peers and triggers drop votes. Returns early when the interface [0x008400b0] is NULL (0x0049ab4e), when timeGetTime - 2000 is not past the last tick +0xec (0x0049ab69) or the guard [0x008400c0] is set (0x0049ab76). Otherwise it sends a keep-alive (netSendMessages, 0x20) inside that guard, stamps +0xec, and, unless [0x008400bc] is already set (0x0049abb1) and only with bit 0x40000 of +0xe8 (0x0049abc8), checks drops: as host (+0x77c == +0x780, 0x0049abdc) every peer whose time +0x10 is older than the timeout +0xf0 gets netHandleControl(id, 0) and a 0 result restamps it; when +0x77c == slot 1's id +0x1c8 (0x0049ac48) slot 0's time +0x180 is checked the same way; otherwise, when slots 0 and 1 are both stale, netHandleControl(-1, 0) and a 0 result stamps +0x1d8 / +0x180. [0x008400bc] is cleared on every exit after it was set. Caller: gfxFlushB 0x00497b20 (tail jmp 0x00497b33), so the eax each exit leaves is observed. Reimplemented in `shim/src/re/c3ez.cpp`; path-1 A/B GREEN: netServiceControl (11 vectors, 11 distinct results, 10 changing state, `log/diff/0049ab40_netServiceControl.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0049ac41, 0x0049ac91, 0x0049acef): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0049ab40 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
