@@ -7,6 +7,6 @@ $c4,5,5,True,1a76e752,1a76e752,True
 $c5,0,0,True,237d7d7a,237d7d7a,True
 state_regions,$clog+0x0:2048 0x0051a068+0x0:1536 0x00575ab0+0x0:9880 0x005a47e0+0x0:4 0x0058bcb8+0x0:4096 0x00838eac+0x0:16 0x00822d9c+0x0:4,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x6247c120,original=0x1340d20,2026-10-13T20:40:14
+meta,detour=0x62bcd530,original=0x1380900,2026-10-14T16:27:54
 distinct_results,6,,
 VERDICT,GREEN,6,

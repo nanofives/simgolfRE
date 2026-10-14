@@ -1,28 +1,28 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$s0 $z0 0,0,0,True,960b562d,960b562d,True
-$s0 $z0 -5,0,0,True,960b562d,960b562d,True
-$s0 $z1 -5,0,0,True,a1481b77,a1481b77,True
-$s0 $z2 -5,-5,-5,True,1918a265,1918a265,False
-$s0 $z3 2,2,2,True,224904be,224904be,True
-$s1 $z0 0,0,0,True,6e601a9e,6e601a9e,True
-$s1 $z1 -5,0,0,True,4eaa2b3d,4eaa2b3d,True
-$s1 $z3 -5,0,0,True,fb5fcc8a,fb5fcc8a,True
-$s2 $z0 1,1,1,True,5e09d751,5e09d751,True
-$s2 $z5 0,0,0,True,256309b0,256309b0,True
-$s3 $z0 -5,-5,-5,True,c25727a1,c25727a1,True
-$s4 $z0 -5,-5,-5,True,1918a265,1918a265,False
-$s5 $z0 0,0,0,True,864fa9e4,864fa9e4,True
-$s5 $z2 -5,-5,-5,True,d5486c05,d5486c05,True
-$s6 $z0 -3,-3,-3,True,9b2ce467,9b2ce467,True
-$s6 $z5 0,0,0,True,eba454c6,eba454c6,True
-$s7 $z4 -5,0,0,True,97f8791b,97f8791b,True
-$s7 $z1 0,0,0,True,a0162a51,a0162a51,True
-$s8 $z0 -5,0,0,True,b663359a,b663359a,True
-$s8 $z3 1,1,1,True,4bfdd5e5,4bfdd5e5,True
-$s9 $z4 -5,0,0,True,b8c9e4d1,b8c9e4d1,True
-$s9 $z1 0,0,0,True,72b5ef33,72b5ef33,True
+$s0 $z0 0,0,0,True,b9d51bd5,b9d51bd5,True
+$s0 $z0 -5,0,0,True,b9d51bd5,b9d51bd5,True
+$s0 $z1 -5,0,0,True,f5ddacbf,f5ddacbf,True
+$s0 $z2 -5,-5,-5,True,313b794d,313b794d,False
+$s0 $z3 2,2,2,True,4e9c2c8e,4e9c2c8e,True
+$s1 $z0 0,0,0,True,7d7abba6,7d7abba6,True
+$s1 $z1 -5,0,0,True,2ae035e5,2ae035e5,True
+$s1 $z3 -5,0,0,True,641730ba,641730ba,True
+$s2 $z0 1,1,1,True,d13a3a79,d13a3a79,True
+$s2 $z5 0,0,0,True,843086b0,843086b0,True
+$s3 $z0 -5,-5,-5,True,e5217559,e5217559,True
+$s4 $z0 -5,-5,-5,True,313b794d,313b794d,False
+$s5 $z0 0,0,0,True,f0b6073c,f0b6073c,True
+$s5 $z2 -5,-5,-5,True,07b2148d,07b2148d,True
+$s6 $z0 -3,-3,-3,True,f6151fb7,f6151fb7,True
+$s6 $z5 0,0,0,True,fb7fe3fe,fb7fe3fe,True
+$s7 $z4 -5,0,0,True,462a609f,462a609f,True
+$s7 $z1 0,0,0,True,0bf18149,0bf18149,True
+$s8 $z0 -5,0,0,True,3d5e58c2,3d5e58c2,True
+$s8 $z3 1,1,1,True,aa97c335,aa97c335,True
+$s9 $z4 -5,0,0,True,111c768d,111c768d,True
+$s9 $z1 0,0,0,True,ffe5a223,ffe5a223,True
 state_regions,$zblk+0x0:4096,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x5de82c50,original=0x14700a0,2026-10-08T10:44:56
+meta,detour=0x629be500,original=0x3c50b80,2026-10-14T15:12:57
 distinct_results,20,,
 VERDICT,GREEN,22,

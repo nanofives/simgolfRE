@@ -1,12 +1,12 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$spA $d0 0 0 $t,0,0,True,b783dc06,b783dc06,True
-$spA $d0 4 2 $t2,0,0,True,fde962c5,fde962c5,True
-$spA $d0 -3 -2 $t,0,0,True,de4f59dd,de4f59dd,True
-$spA $d1 0 0 $t2,0,0,True,3b877f71,3b877f71,True
-$spB $d0 1 1 $t,0,0,True,62a56f86,62a56f86,True
-$spA $d0 100 100 $t2,0,0,True,9ad1b380,9ad1b380,True
+$spA $d0 0 0 $t,0,0,True,e7177563,e7177563,True
+$spA $d0 4 2 $t2,0,0,True,98f9e344,98f9e344,True
+$spA $d0 -3 -2 $t,0,0,True,5dec95dc,5dec95dc,True
+$spA $d1 0 0 $t2,0,0,True,44ed78f8,44ed78f8,True
+$spB $d0 1 1 $t,0,0,True,923908e3,923908e3,True
+$spA $d0 100 100 $t2,0,0,True,7f1bf805,7f1bf805,True
 state_regions,$pix+0x0:24576 $spr+0x0:640 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $gflat+0x0:4 $gvstep+0x0:8 $gtbl+0x0:4 $gpos+0x0:8 $gcols+0x0:8 $gxstep+0x0:20 $growpair+0x0:8,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x6bfe52e0,original=0x37308e0,2026-10-09T17:09:40
+meta,detour=0x62ac8790,original=0x3c400e0,2026-10-14T15:19:36
 distinct_results,6,,
 VERDICT,GREEN,6,

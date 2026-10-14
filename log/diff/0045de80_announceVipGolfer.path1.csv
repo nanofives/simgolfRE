@@ -302,6 +302,6 @@ $r299 $b299,-131276,-131276,True,0ebb28f0,0ebb28f0,True
 $r300 $b300,-131276,-131276,True,114f9fda,114f9fda,True
 state_regions,$clog+0x0:32768 0x005794b8+0x0:39168 0x0051a068+0x0:2048 0x005849e0+0x0:3584 0x0056a51c+0x0:4 0x00572cac+0x0:4 0x00824134+0x0:32,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x7197c530,original=0xcc0e20,2026-10-11T18:32:47
+meta,detour=0x62b13070,original=0x13b0c40,2026-10-14T16:00:12
 distinct_results,248,,
 VERDICT,GREEN,301,

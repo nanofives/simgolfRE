@@ -6,6 +6,6 @@ $p1 $q0 $q0,0,0,True,76964993,76964993,True
 $p0 $q1 $q3,2,2,True,785e2fc7,785e2fc7,True
 state_regions,0x0051a068+0x0:1536 0x0080b130+0x0:10000 $lio+0x0:12288 $rec+0x0:4096 $implog+0x0:1024,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x624874c0,original=0x14d0cc0,2026-10-13T06:20:28
+meta,detour=0x62bbba80,original=0x1390500,2026-10-14T16:19:07
 distinct_results,5,,
 VERDICT,GREEN,5,

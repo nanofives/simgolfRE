@@ -4,6 +4,178 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-14  sound.dll:00009a90  Dll_Midi_Device::create_device  C2->C3  log/diff/00009a90_sound_Dll_Midi_Device_create_device_busy.path1.csv
+2026-10-14  00475c20  DC_calla0  C2->C3  log/diff/00475c20_DC_calla0.path1.csv
+2026-10-14  sound.dll:000371d0  renderChannelVoice  C2->C3  log/diff/000371d0_sound_renderChannelVoice_eng.path1.csv
+2026-10-14  sound.dll:00034430  serviceChannelPlayback  C2->C3  log/diff/00034430_sound_serviceChannelPlayback_dev.path1.csv
+2026-10-14  sound.dll:00028b70  soundWindowSubclassProc  C2->C3  log/diff/00028b70_sound_soundWindowSubclassProc_f0.path1.csv
+2026-10-14  sound.dll:000215c0  Midi_Device::noteOn  C2->C3  log/diff/000215c0_sound_Midi_Device_noteOn_hw.path1.csv
+2026-10-14  sound.dll:000106b0  DsBuffer::getPlayPosition  C2->C3  log/diff/000106b0_sound_DsBuffer_getPlayPosition.path1.csv
+2026-10-14  sound.dll:000101a0  DsBuffer::restore  C2->C3  log/diff/000101a0_sound_DsBuffer_restore.path1.csv
+2026-10-14  sound.dll:0000cd80  Wave_Device::dispatchCommand  C2->C3  log/diff/0000cd80_sound_Wave_Device_dispatchCommand_post.path1.csv
+2026-10-14  sound.dll:0000c230  Wave_Device::serviceTick  C2->C3  log/diff/0000c230_sound_Wave_Device_serviceTick_empty.path1.csv
+2026-10-14  sound.dll:0000a670  Midi_Device::dispatchCommand  C2->C3  log/diff/0000a670_sound_Midi_Device_dispatchCommand_null.path1.csv
+2026-10-14  sound.dll:00008ed0  SoundTimer::onTick  C2->C3  log/diff/00008ed0_sound_SoundTimer_onTick_flip.path1.csv
+2026-10-14  sound.dll:00008470  flushSoundList  C2->C3  log/diff/00008470_sound_flushSoundList_cut.path1.csv
+2026-10-14  sound.dll:00007010  writeWaveFile  C2->C3  log/diff/00007010_sound_writeWaveFile_empty.path1.csv
+2026-10-14  sound.dll:00031be0  Channel_ctorB  C2->C3  log/diff/00031be0_sound_Channel_ctorB.path1.csv
+2026-10-14  sound.dll:00030180  Sound5c450_dtor  C2->C3  log/diff/00030180_sound_Sound5c450_dtor.path1.csv
+2026-10-14  sound.dll:0002e3f0  NodeB000_initBase  C2->C3  log/diff/0002e3f0_sound_NodeB000_initBase.path1.csv
+2026-10-14  sound.dll:0002d430  getField204  C2->C3  log/diff/0002d430_sound_getField204.path1.csv
+2026-10-14  sound.dll:00023d00  Seq_buildPlayOrder  C2->C3  log/diff/00023d00_sound_Seq_buildPlayOrder.path1.csv
+2026-10-14  sound.dll:00022d00  Seq_buildTrack14  C2->C3  log/diff/00022d00_sound_Seq_buildTrack14.path1.csv
+2026-10-14  sound.dll:000229f0  Seq_buildTrack9  C2->C3  log/diff/000229f0_sound_Seq_buildTrack9.path1.csv
+2026-10-14  sound.dll:00022320  Sound_lookupOrCreate  C2->C3  log/diff/00022320_sound_Sound_lookupOrCreate.path1.csv
+2026-10-14  sound.dll:00021fa0  Seq_updateChannel  C2->C3  log/diff/00021fa0_sound_Seq_updateChannel.path1.csv
+2026-10-14  sound.dll:00021bf0  Midi_Device::handleMetaEvent  C2->C3  log/diff/00021bf0_sound_Midi_Device_handleMetaEvent.path1.csv
+2026-10-14  sound.dll:00020fe0  Seq_setupChannel  C2->C3  log/diff/00020fe0_sound_Seq_setupChannel.path1.csv
+2026-10-14  sound.dll:0001ff50  Sound5b6a8_dtor  C2->C3  log/diff/0001ff50_sound_Sound5b6a8_dtor.path1.csv
+2026-10-14  sound.dll:0001cd30  ChanRecord_freeBuffers  C2->C3  log/diff/0001cd30_sound_ChanRecord_freeBuffers.path1.csv
+2026-10-14  sound.dll:0001ccf0  ChanRecord_init  C2->C3  log/diff/0001ccf0_sound_ChanRecord_init.path1.csv
+2026-10-14  sound.dll:0001b160  StrPtr_assign  C2->C3  log/diff/0001b160_sound_StrPtr_assign.path1.csv
+2026-10-14  sound.dll:0001ae50  ChannelTable_callSlot4  C2->C3  log/diff/0001ae50_sound_ChannelTable_callSlot4.path1.csv
+2026-10-14  sound.dll:00012fe0  DirectSoundDevice::createBufferFmt  C2->C3  log/diff/00012fe0_sound_DirectSoundDevice_createBufferFmt.path1.csv
+2026-10-14  sound.dll:00012d10  DirectSoundDevice::createBuffer  C2->C3  log/diff/00012d10_sound_DirectSoundDevice_createBuffer.path1.csv
+2026-10-14  sound.dll:00012690  DirectSoundDevice::freeBufferById  C2->C3  log/diff/00012690_sound_DirectSoundDevice_freeBufferById.path1.csv
+2026-10-14  sound.dll:00012260  DirectSoundDevice::duplicateBuffer  C2->C3  log/diff/00012260_sound_DirectSoundDevice_duplicateBuffer.path1.csv
+2026-10-14  sound.dll:00011c60  DirectSoundDevice::create  C2->C3  log/diff/00011c60_sound_DirectSoundDevice_create.path1.csv
+2026-10-14  sound.dll:00011a80  DirectSoundDevice::stopAll  C2->C3  log/diff/00011a80_sound_DirectSoundDevice_stopAll_l0.path1.csv
+2026-10-14  sound.dll:000114e0  DirectSoundDevice::enumerate  C2->C3  log/diff/000114e0_sound_DirectSoundDevice_enumerate_i0.path1.csv
+2026-10-14  sound.dll:00011290  DirectSoundDevice::close  C2->C3  log/diff/00011290_sound_DirectSoundDevice_close.path1.csv
+2026-10-14  sound.dll:0000b000  NodeB000_ctor  C2->C3  log/diff/0000b000_sound_NodeB000_ctor.path1.csv
+2026-10-14  0049acf0  netHandleControl  C2->C3  log/diff/0049acf0_netHandleControl.path1.csv
+2026-10-14  00463180  buildSceneSprites  C2->C3  log/diff/00463180_buildSceneSprites_k10.path1.csv
+2026-10-14  004a3880  panelBuild4a3880  C2->C3  log/diff/004a3880_panelBuild4a3880.path1.csv
+2026-10-14  0049b7b0  netPoll  C2->C3  log/diff/0049b7b0_netPoll.path1.csv
+2026-10-14  00497d10  netSendShutdown  C2->C3  log/diff/00497d10_netSendShutdown.path1.csv
+2026-10-14  00496330  scrollbarCreate  C2->C3  log/diff/00496330_scrollbarCreate.path1.csv
+2026-10-14  00491710  Dialog::dtor  C2->C3  log/diff/00491710_Dialog_dtor.path1.csv
+2026-10-14  00491500  Dialog::viewDtor  C2->C3  log/diff/00491500_Dialog_viewDtor.path1.csv
+2026-10-14  0048a5d0  ListBox::build  C2->C3  log/diff/0048a5d0_ListBox_build.path1.csv
+2026-10-14  00487fb0  Reader::open  C2->C3  log/diff/00487fb0_Reader_open.path1.csv
+2026-10-14  004843e0  unlinkSound  C2->C3  log/diff/004843e0_unlinkSound.path1.csv
+2026-10-14  004835f0  Cache482f60::dtor  C2->C3  log/diff/004835f0_Cache482f60_dtor.path1.csv
+2026-10-14  00482b90  Flic::createStream  C2->C3  log/diff/00482b90_Flic_createStream.path1.csv
+2026-10-14  0047b4e0  Window::setSize  C2->C3  log/diff/0047b4e0_Window_setSize.path1.csv
+2026-10-14  00432ba0  showMainRadialMenu  C2->C3  log/diff/00432ba0_showMainRadialMenu.path1.csv
+2026-10-14  00406250  showLoadingScreen  C2->C3  log/diff/00406250_showLoadingScreen.path1.csv
+2026-10-14  00405e30  placeHabitat  C2->C3  log/diff/00405e30_placeHabitat.path1.csv
+2026-10-14  sound.dll:00037c40  Voice_resetDefaults  C2->C3  log/diff/00037c40_sound_Voice_resetDefaults_N_w27f.path1.csv
+2026-10-14  sound.dll:00035fc0  Channel_stepVolumeFade  C2->C3  log/diff/00035fc0_sound_Channel_stepVolumeFade_w27f.path1.csv
+2026-10-14  sound.dll:000355d0  Channel_setReverseRate  C2->C3  log/diff/000355d0_sound_Channel_setReverseRate_A_w27f.path1.csv
+2026-10-14  sound.dll:00035460  Channel_recomputeVoiceGains  C2->C3  log/diff/00035460_sound_Channel_recomputeVoiceGains_A_w27f.path1.csv
+2026-10-14  sound.dll:000351c0  Channel_setRate  C2->C3  log/diff/000351c0_sound_Channel_setRate_A_w27f.path1.csv
+2026-10-14  sound.dll:00021ee0  Seq_setTempo  C2->C3  log/diff/00021ee0_sound_Seq_setTempo_w27f.path1.csv
+2026-10-14  sound.dll:0001f4a0  Sound5b6a8_ctor  C2->C3  log/diff/0001f4a0_sound_Sound5b6a8_ctor_N_w27f.path1.csv
+2026-10-14  sound.dll:0001a910  Voice_mixAddStereo16  C2->C3  log/diff/0001a910_sound_Voice_mixAddStereo16.path1.csv
+2026-10-14  sound.dll:0001a6c0  Voice_mixSetStereo16  C2->C3  log/diff/0001a6c0_sound_Voice_mixSetStereo16.path1.csv
+2026-10-14  sound.dll:0001a2c0  Voice_mixAdd8bit  C2->C3  log/diff/0001a2c0_sound_Voice_mixAdd8bit.path1.csv
+2026-10-14  sound.dll:00019ec0  Voice_mixSet8bit  C2->C3  log/diff/00019ec0_sound_Voice_mixSet8bit.path1.csv
+2026-10-14  sound.dll:00019b20  Voice_mixSetMono16  C2->C3  log/diff/00019b20_sound_Voice_mixSetMono16.path1.csv
+2026-10-14  sound.dll:00019770  Voice_mixAddMono16  C2->C3  log/diff/00019770_sound_Voice_mixAddMono16.path1.csv
+2026-10-14  sound.dll:000188d0  streamRenderTail  C2->C3  log/diff/000188d0_sound_streamRenderTail.path1.csv
+2026-10-14  sound.dll:000184a0  streamRenderBlock  C2->C3  log/diff/000184a0_sound_streamRenderBlock.path1.csv
+2026-10-14  sound.dll:0000f1c0  DsBuffer::setVolume  C2->C3  log/diff/0000f1c0_sound_DsBuffer_setVolume_w27f.path1.csv
+2026-10-14  jgld.dll:000702a0  png_init_read_transformations  C2->C3  log/diff/000702a0_jgld_png_init_read_transformations_w27f.path1.csv
+2026-10-14  00481870  allocResampleTable  C2->C3  log/diff/00481870_allocResampleTable_f555_w27f.path1.csv
+2026-10-14  sound.dll:000399a0  loadMultiChannel  C2->C3  log/diff/000399a0_sound_loadMultiChannel.path1.csv
+2026-10-14  sound.dll:000326a0  parseRiffWave  C2->C3  log/diff/000326a0_sound_parseRiffWave.path1.csv
+2026-10-14  sound.dll:00032290  beginDecodeStreamB  C2->C3  log/diff/00032290_sound_beginDecodeStreamB.path1.csv
+2026-10-14  sound.dll:00032130  beginDecodeStreamA  C2->C3  log/diff/00032130_sound_beginDecodeStreamA.path1.csv
+2026-10-14  sound.dll:00032020  Sound_resetBuffers  C2->C3  log/diff/00032020_sound_Sound_resetBuffers.path1.csv
+2026-10-14  sound.dll:0001d380  MidiReader_init  C2->C3  log/diff/0001d380_sound_MidiReader_init_null.path1.csv
+2026-10-14  sound.dll:00005770  processWaveChunks  C2->C3  log/diff/00005770_sound_processWaveChunks.path1.csv
+2026-10-14  sound.dll:00005440  Wave_Device::readFmtChunk  C2->C3  log/diff/00005440_sound_Wave_Device_readFmtChunk.path1.csv
+2026-10-14  jgld.dll:0007fab8  _setjmp3  C2->C3  log/diff/0007fab8_jgld__setjmp3.path1.csv
+2026-10-14  jgld.dll:0007faa0  fopen  C2->C3  log/diff/0007faa0_jgld_fopen.path1.csv
+2026-10-14  jgld.dll:0007f850  fclose  C2->C3  log/diff/0007f850_jgld_fclose.path1.csv
+2026-10-14  jgld.dll:0007f770  strcat  C2->C3  log/diff/0007f770_jgld_strcat.path1.csv
+2026-10-14  jgld.dll:0007f6e0  strlen  C2->C3  log/diff/0007f6e0_jgld_strlen.path1.csv
+2026-10-14  jgld.dll:0007f3a0  memcpy  C2->C3  log/diff/0007f3a0_jgld_memcpy.path1.csv
+2026-10-14  jgld.dll:0007f370  abs  C2->C3  log/diff/0007f370_jgld_abs.path1.csv
+2026-10-14  jgld.dll:0007f0f0  operator_new  C2->C3  log/diff/0007f0f0_jgld_operator_new.path1.csv
+2026-10-14  jgld.dll:0000c140  Surface::dashedLine16  C2->C3  log/diff/0000c140_jgld_Surface_dashedLine16.path1.csv
+2026-10-14  004ad452  _xtoa  C2->C3  log/diff/004ad452__xtoa.path1.csv
+2026-10-14  004ad425  __itoa  C2->C3  log/diff/004ad425___itoa.path1.csv
+2026-10-14  004a678b  _strtok  C2->C3  log/diff/004a678b__strtok.path1.csv
+2026-10-14  004a65ee  _fgets  C2->C3  log/diff/004a65ee__fgets.path1.csv
+2026-10-14  004a64f0  _strstr  C2->C3  log/diff/004a64f0__strstr.path1.csv
+2026-10-14  004a6170  _strchr  C2->C3  log/diff/004a6170__strchr.path1.csv
+2026-10-14  004a614d  _fopen  C2->C3  log/diff/004a614d__fopen.path1.csv
+2026-10-14  004a609f  _fclose  C2->C3  log/diff/004a609f__fclose.path1.csv
+2026-10-14  00487b90  openHookC  C2->C3  log/diff/00487b90_openHookC.path1.csv
+2026-10-14  004879b0  openHookB  C2->C3  log/diff/004879b0_openHookB.path1.csv
+2026-10-14  004873f0  openHookA  C2->C3  log/diff/004873f0_openHookA.path1.csv
+2026-10-14  00480dc0  Window::blitToTarget  C2->C3  log/diff/00480dc0_Window_blitToTarget_nodisp.path1.csv
+2026-10-14  0047b9a0  Window::passLocalRect  C2->C3  log/diff/0047b9a0_Window_passLocalRect.path1.csv
+2026-10-14  00475be0  DC_calla4  C2->C3  log/diff/00475be0_DC_calla4.path1.csv
+2026-10-14  00475ba0  DC_call90  C2->C3  log/diff/00475ba0_DC_call90.path1.csv
+2026-10-14  sound.dll:00042902  ehVectorConstructorIterator  C1->C2  re/analysis/crt/00042902_sound_ehVectorConstructorIterator.md
+2026-10-14  sound.dll:00042550  __ftol  C1->C2  re/analysis/crt/00042550_sound_ftol.md
+2026-10-14  sound.dll:0002e3f0  NodeB000_initBase  C1->C2  re/analysis/audio/0002e3f0_sound_NodeB000_initBase.md
+2026-10-14  sound.dll:0001b0d0  ChannelTable_releaseObject  C1->C2  re/analysis/audio/0001b0d0_sound_ChannelTable_releaseObject.md
+2026-10-14  sound.dll:0001aef0  ChannelTable_loadRange  C1->C2  re/analysis/audio/0001aef0_sound_ChannelTable_loadRange.md
+2026-10-14  jgld.dll:000832a0  __unlock_file  C1->C2  re/analysis/crt/000832a0_jgld_unlock_file.md
+2026-10-14  jgld.dll:00083230  __lock_file  C1->C2  re/analysis/crt/00083230_jgld_lock_file.md
+2026-10-14  jgld.dll:00082a79  pow  C1->C2  re/analysis/crt/00082a79_jgld_pow.md
+2026-10-14  jgld.dll:00082960  fabs  C1->C2  re/analysis/crt/00082960_jgld_fabs.md
+2026-10-14  jgld.dll:00081f90  _CrtDbgReport  C1->C2  re/analysis/crt/00081f90_jgld_CrtDbgReport.md
+2026-10-14  jgld.dll:0007fba0  __nh_malloc  C1->C2  re/analysis/crt/0007fba0_jgld_nh_malloc.md
+2026-10-14  jgld.dll:0007f9a0  __fsopen  C1->C2  re/analysis/crt/0007f9a0_jgld_fsopen.md
+2026-10-14  jgld.dll:0007f8e0  __fclose_lk  C1->C2  re/analysis/crt/0007f8e0_jgld_fclose_lk.md
+2026-10-14  jgld.dll:0007f370  abs  C1->C2  re/analysis/crt/0007f370_jgld_abs.md
+2026-10-14  jgld.dll:0007f12c  __ftol  C1->C2  re/analysis/crt/0007f12c_jgld_ftol.md
+2026-10-14  004ad580  __strnicmp  C1->C2  re/analysis/crt/004ad580_strnicmp.md
+2026-10-14  004ad4b0  __strcmpi  C1->C2  re/analysis/crt/004ad4b0_strcmpi.md
+2026-10-14  004ad452  _xtoa  C1->C2  re/analysis/crt/004ad452_xtoa.md
+2026-10-14  004aa9f5  __filbuf  C1->C2  re/analysis/crt/004aa9f5_filbuf.md
+2026-10-14  004a98c6  __unlock_file  C1->C2  re/analysis/crt/004a98c6_unlock_file.md
+2026-10-14  004a9874  __lock_file  C1->C2  re/analysis/crt/004a9874_lock_file.md
+2026-10-14  004a8e53  __getptd  C1->C2  re/analysis/crt/004a8e53_getptd.md
+2026-10-14  004a7119  _fseek  C1->C2  re/analysis/crt/004a7119_fseek.md
+2026-10-14  004a70b5  _rewind  C1->C2  re/analysis/crt/004a70b5_rewind.md
+2026-10-14  004a6170  _strchr  C1->C2  re/analysis/crt/004a6170_strchr.md
+2026-10-14  004a611c  __fsopen  C1->C2  re/analysis/crt/004a611c_fsopen.md
+2026-10-14  004a60d0  __fclose_lk  C1->C2  re/analysis/crt/004a60d0_fclose_lk.md
+2026-10-14  004a6030  __ftol  C1->C2  re/analysis/crt/004a6030_ftol.md
+2026-10-14  004a57f1  operator_new  C1->C2  re/analysis/crt/004a57f1_operator_new.md
+2026-10-14  004a55d2  ehVectorConstructorIterator  C1->C2  re/analysis/crt/004a55d2_ehVectorConstructorIterator.md
+2026-10-14  004a504f  _malloc  C1->C2  re/analysis/crt/004a504f_malloc.md
+2026-10-14  004a5007  _free  C1->C2  re/analysis/crt/004a5007_free.md
+2026-10-14  004a0890  emptyFunc_4a0890  C1->C2  re/analysis/crt/004a0890_emptyFunc_4a0890.md
+2026-10-14  jgld.dll:000832a0  __unlock_file  C0->C1  FID name __unlock_file (re/functions_ghidra_jgld.dll.tsv); fclose 0x1007f850 calls it with the stream after __fclose_lk (0x1007f8c0)
+2026-10-14  jgld.dll:00083230  __lock_file  C0->C1  FID name __lock_file (re/functions_ghidra_jgld.dll.tsv); fclose 0x1007f850 calls it with the stream before __fclose_lk (0x1007f8a5)
+2026-10-14  jgld.dll:00082a79  pow  C0->C1  the call libpng 1.0.5 writes as pow (png_init_read_transformations 0x100707db and png_build_gamma_table, re/match/jgld_png_rtran.cpp at 100%); entry `lea edx, [esp+0xc]; call 0x10083f45` (__fload_withFB, FID name) 0x10082a79/0x10082a7d; the caller pushes two doubles and pops 0x10 (`add esp, 0x10` 0x100707e0), the result is left in st(0)
+2026-10-14  jgld.dll:00082960  fabs  C0->C1  FID name _fabs (re/functions_ghidra_jgld.dll.tsv 00082960, 243 bytes); called for `fabs(gs - 1.0)` in png_init_read_transformations (call 0x10070771, re/match/jgld_png_rtran.cpp, libpng 1.0.5 pngrtran.c line 769); _controlfp 0x1008c320 saved at 0x10082970; exponent test `and eax, 0x7ff0; cmp eax, 0x7ff0` 0x10082983/0x10082988 (NaN / infinity arms through 0x1008c120); finite path clears the sign bit (`and edx, 0x7fffffff` 0x10082a2c) and returns the value in st(0) (`fld qword [ebp-8]` 0x10082a4c)
+2026-10-14  jgld.dll:00081f90  _CrtDbgReport  C0->C1  FID name __CrtDbgReport (re/functions_ghidra_jgld.dll.tsv, 62 callers); __chkesp 0x1007e780 calls it with (1, file-name text at 0x1011eb9c, 0x2a, 0, format text at 0x1011ebac) (0x1007e78e..0x1007e7a1) and executes `int3` when it returns 1 (0x1007e7a9 / 0x1007e7ae); fclose 0x1007f850 calls it with (2, file-name text at 0x1011ec94, 0x3a, 0, format text at 0x1011eca0) for a NULL stream (0x1007f864..0x1007f874)
+2026-10-14  jgld.dll:0007fba0  __nh_malloc  C0->C1  FID name __nh_malloc (re/functions_ghidra_jgld.dll.tsv); called by operator_new 0x1007f0f0 with (size, 1) (`push 1` 0x1007f0f4, `call 0x1007fba0` 0x1007f0fa); body pushes (size, nhFlag, 1, 0, 0) (0x1007fba3..0x1007fbb0) and calls 0x1007fbc0 (0x1007fbb1), returning its eax
+2026-10-14  jgld.dll:0007f9a0  __fsopen  C0->C1  FID name __fsopen (re/functions_ghidra_jgld.dll.tsv); only caller fopen 0x1007faa0 (`push 0x40` 0x1007faa3, `call 0x1007f9a0` 0x1007faad)
+2026-10-14  jgld.dll:0007f8e0  __fclose_lk  C0->C1  FID name __fclose_lk (re/functions_ghidra_jgld.dll.tsv); only caller fclose 0x1007f850 (`call 0x1007f8e0` 0x1007f8b1, result stored at [ebp - 4] 0x1007f8b9)
+2026-10-14  jgld.dll:0007f370  abs  C0->C1  FUN_1007f370 in the master (72 callers); body: `cmp dword ptr [ebp + 8], 0` 0x1007f374, `jl` 0x1007f378 to `neg ecx` 0x1007f385, else the argument (0x1007f37a), result through [ebp - 4] into eax (0x1007f38a), `ret` 0x1007f390 (cdecl, one argument); called as the CRT abs by the C3 blitters (shim/src/re/c3bc.cpp `Abs_t` 0x1007f370) and by Surface::dashedLine16 (0x1000c85a)
+2026-10-14  jgld.dll:0007f12c  __ftol  C0->C1  FID name __ftol (re/functions_ghidra_jgld.dll.tsv 0007f12c, 39 bytes); same body as sound.dll 0x10042550: fnstcw [ebp-2] 0x1007f133, `or ah, 0xc` 0x1007f13b, fldcw [ebp-4] 0x1007f142, fistp qword [ebp-0xc] 0x1007f145, fldcw [ebp-2] 0x1007f148, edx:eax 0x1007f14b/0x1007f14e, `ret` 0x1007f152
+2026-10-14  sound.dll:00042902  ehVectorConstructorIterator  C0->C1  FID name ??_L@YGXPAXIHP6EX0@Z1@Z (re/functions_ghidra_sound.dll.tsv 00042902); SEH frame with handler 0x10045744 and scope table 0x1005ed28 (0x10042905-0x10042918); loop 0x10042930-0x10042949: `mov ecx, esi; call [ebp+0x14]` 0x1004293b/0x1004293d then `add esi, [ebp+0xc]` 0x10042940 while the counter [ebp-0x1c] < [ebp+0x10] (`jge` 0x10042936); unwind funclet 0x1004296c called at 0x10042956; `ret 0x14` 0x10042969
+2026-10-14  sound.dll:00042550  __ftol  C0->C1  FID name __ftol (re/functions_ghidra_sound.dll.tsv 00042550, 39 bytes); same 39-byte body as golf_clean.exe __ftol 0x004a6030: fnstcw [ebp-2] 0x10042557, `or ah, 0xc` 0x1004255f, fldcw [ebp-4] 0x10042566, fistp qword [ebp-0xc] 0x10042569, fldcw [ebp-2] 0x1004256c, edx:eax from the qword 0x1004256f/0x10042572, `ret` 0x10042576
+2026-10-14  sound.dll:0002e3f0  NodeB000_initBase  C0->C1  only caller NodeB000_ctor 0x1000b000 through the thunk 0x100012a3 (0x1000b003, ecx = this, result unused); `mov eax, ecx` (0x1002e3f0); zeroes +4, +8, +0xc, +0x10 (0x1002e3f4-0x1002e3fd), +0 (0x1002e400), +0x14, +0x18, +0x1c (0x1002e402-0x1002e408); stores 0xffffffff at +0x20 (0x1002e40b); plain `ret` (0x1002e412), no callee
+2026-10-14  sound.dll:0001b0d0  ChannelTable_releaseObject  C0->C1  only caller ChannelTable_loadRange 0x1001aef0 through the thunk 0x10001e01 (0x1001b030); __thiscall (o), `ret 4` (0x1001b134); clears every one of the 0x80 slots this+4 .. this+0x200 equal to o (0x1001b0d5-0x1001b0eb); for at most 3 members (`cmp edi, 3; jge` 0x1001b101 / 0x1001b104) from o+0x1440 while the member read is non-NULL (0x1001b0ff, 0x1001b121) calls a non-NULL member's vtable slot 0 with 1 (0x1001b10c-0x1001b110) and zeroes its slot (0x1001b112); a non-NULL o gets slot 0 with 1 (0x1001b125-0x1001b12f); returns 0 (0x1001b131)
+2026-10-14  sound.dll:0001aef0  ChannelTable_loadRange  C0->C1  only caller Sound_lookupOrCreate 0x10022320 through the thunk 0x10001fa0 (0x1002242e); __thiscall (s), `ret 4` (0x1001b061); reads s[0] (0x1001af1e), s[1] (0x1001af1b), s[2] (0x1001af97); operator_new 0x100424d7 of 0x1450 bytes (0x1001af28) constructed by MultiSound_ctorWithType 0x10039790 with the global 0x100b49c0 (0x1001af3e-0x1001af47); sets bit 0 of +0x1424 (0x1001af57-0x1001af5b); calls vtable slot +0x10 with s+0xc (0x1001af6d) and, on a non-zero result, the object's slot 0 with 1 (0x1001af80) and returns that result (0x1001af82); else slot +4 with this+0x218 (0x1001af94); for k from 1 while k < s[2] (unsigned `jb` 0x1001b008) a further 0x1450-byte MultiSound (0x1001afae-0x1001afcf) stored at +0x1440 + 4(k-1) (0x1001afdb) gets slot +0x10 (0x1001afea) and slot +4 (0x1001affc); +0x1438 = s[2] (0x1001b019); for i from s[1] to s[0] (unsigned `ja` 0x1001b023, `jbe` 0x1001b038) a non-NULL table slot this+4+4i goes to ChannelTable_releaseObject 0x1001b0d0 through the thunk 0x10001e01 (0x1001b030); `rep stosd` stores the new object into slots s[1]..s[0] (0x1001b03e-0x1001b04b); returns 0 (0x1001b04d)
+2026-10-14  004ad580  __strnicmp  C0->C1  FID full match __strnicmp, VC6 12.00.8168 libcmt (score 186.06, applied); called by Reader::open 0x00487fb0 at 0x00487fdf with (path, name, length) (cdecl)
+2026-10-14  004ad4b0  __strcmpi  C0->C1  FID full match __strcmpi, VC6 12.00.8168 libcmt (score 171.08, applied); called by Reader::open 0x00487fb0 at 0x004881eb with (key, line) (cdecl)
+2026-10-14  004ad452  _xtoa  C0->C1  FID name _xtoa (re/functions_ghidra.tsv); only caller __itoa 0x004ad425 (`call 0x4ad452` 0x004ad445 with (value, buf, radix, is_neg)); `mov byte ptr [ecx], 0x2d` 0x004ad464 and `neg esi` 0x004ad468 when the fourth argument is nonzero (`je` 0x004ad45f); unsigned `div dword ptr [ebp + 0x10]` 0x004ad475 / 0x004ad47e; digit `add bl, 0x57` 0x004ad488 above 9 (`jbe` 0x004ad486) else `add bl, 0x30` 0x004ad48d; loop `ja` 0x004ad495; terminator `and byte ptr [ecx], 0` 0x004ad497; reversal loop 0x004ad49b..0x004ad4a7; `ret` 0x004ad4ad
+2026-10-14  004aa9f5  __filbuf  C0->C1  FID name __filbuf (re/functions_ghidra.tsv); called by _fgets 0x004a65ee when the stream's count goes negative (`dec dword ptr [esi + 4]` 0x004a6612, `js` 0x004a6615, `call 0x4aa9f5` 0x004a6622) and its result compared with -1 (0x004a6628)
+2026-10-14  004a98c6  __unlock_file  C0->C1  FID name __unlock_file (re/functions_ghidra.tsv); same range test 0x004a98cf / 0x004a98d3; `call 0x4a7a13` (_unlock) 0x004a98e3; outside the table `add eax, 0x20` 0x004a98ea and `call dword ptr [0x4ba0e0]` (KERNEL32!LeaveCriticalSection) 0x004a98ee
+2026-10-14  004a9874  __lock_file  C0->C1  FID name __lock_file (re/functions_ghidra.tsv); range test against the _iob table `cmp eax, 0x4e4d88` 0x004a987d / `cmp eax, 0x4e4fe8` 0x004a9881; index `sar eax, 5` 0x004a988a, `add eax, 0x1c` 0x004a988d, `call 0x4a79b2` (__lock) 0x004a9891; outside the table `add eax, 0x20` 0x004a9898 and `call dword ptr [0x4ba0e8]` (KERNEL32!EnterCriticalSection) 0x004a989c
+2026-10-14  004a8e53  __getptd  C0->C1  FID name __getptd (re/functions_ghidra.tsv); KERNEL32 GetLastError [0x4ba02c] 0x004a8e55, TlsGetValue [0x4ba100] with the TLS index [0x4e4bf0] 0x004a8e63, on NULL `call 0x4ab534` (_calloc) with (1, 0x74) 0x004a8e73, TlsSetValue [0x4ba124] 0x004a8e87, __initptd 0x004a8e40 (0x004a8e92), GetCurrentThreadId [0x4ba0d8] 0x004a8e98 stored at +0 (0x004a8ea2), `or dword ptr [esi + 4], 0xffffffff` 0x004a8e9e; failure `push 0x10; call 0x4a6937` (__amsg_exit) 0x004a8ea8; SetLastError [0x4ba108] 0x004a8eaf
+2026-10-14  004a7119  _fseek  C0->C1  FID full match _fseek, VC6 12.00.8168 libcmt (score 84.02, applied); called by Reader::open 0x00487fb0 at 0x0048815f with (FILE, offset, 0) (cdecl)
+2026-10-14  004a70b5  _rewind  C0->C1  FID full match _rewind, VC6 12.00.8168 libcmt (re/fid/golf_clean.exe.fid.tsv score 117.00, applied); called by Reader::open 0x00487fb0 at 0x00488187 with the FILE (cdecl)
+2026-10-14  004a6170  _strchr  C0->C1  FID name _strchr (re/functions_ghidra.tsv, ranges 0x004a6160-0x004a6165 and 0x004a6170-0x004a622c); _strstr 0x004a64f0 enters its body at 0x004a6176 with `mov al, dl; jmp 0x4a6176` (0x004a655c / 0x004a655e) when the needle has one character; byte loop 0x004a6188..0x004a6199 returning through 0x004a6160 (`lea eax, [edx - 1]`), dword scan 0x004a61a6..0x004a61e0 with the 0x7efefeff / 0x81010100 masks, candidate block 0x004a61e8..0x004a620e; identical in shape to sound.dll's strchr 0x10045680 (C3, shim/src/re/c3cm.cpp)
+2026-10-14  004a611c  __fsopen  C0->C1  FID name __fsopen (re/functions_ghidra.tsv); only caller _fopen 0x004a614d (`push 0x40` 0x004a614d, `call 0x4a611c` 0x004a6157); body: `call 0x4a9c19` (__getstream) 0x004a611d, NULL `jne` 0x004a6126 returns 0 at 0x004a6129, else `call 0x4a9aa9` (__openfile) with (name, mode, shflag, stream) 0x004a6138 and `call 0x4a98c6` (__unlock_file) 0x004a6140, returns __openfile's eax (0x004a6148)
+2026-10-14  004a60d0  __fclose_lk  C0->C1  FID name __fclose_lk (re/functions_ghidra.tsv); only caller _fclose 0x004a609f (`call 0x4a60d0` 0x004a60bb, result kept in edi 0x004a60c1); `test byte ptr [esi + 0xc], 0x83` 0x004a60d9; calls __flush 0x004a99a0 (0x004a60e0), __freebuf 0x004a9918 (0x004a60e8), __close 0x004a5a78 with [stream + 0x10] (0x004a60f0) and _free 0x004a5007 on [stream + 0x1c] (0x004a6109); `and dword ptr [esi + 0xc], 0` 0x004a6113
+2026-10-14  004a6030  __ftol  C0->C1  FID name __ftol (re/functions_ghidra.tsv 004a6030, 39 bytes): fnstcw [ebp-2] 0x004a6037, `or ah, 0xc` 0x004a603f, fldcw [ebp-4] 0x004a6046, fistp qword [ebp-0xc] 0x004a6049, fldcw [ebp-2] 0x004a604c, edx:eax 0x004a604f/0x004a6052, `ret` 0x004a6056
+2026-10-14  004a57f1  operator_new  C0->C1  body `push 1; push [esp + 8]; call 0x004a5061; pop ecx; pop ecx; ret` (0x004a57f1..0x004a57fe), 0x004a5061 being __nh_malloc (FID full match, VC6 12.00.8168 libcmt, score 65.35); FID names it ??2@YAPAXI@Z from a Visual Studio 2003 library (score 20.34), whose bytes are the same call form; called by Flic::createStream 0x00482b90 at 0x00482c89
+2026-10-14  004a55d2  ehVectorConstructorIterator  C0->C1  FID full match `eh vector constructor iterator`, VC6 12.00.8168 libc (re/fid/golf_clean.exe.fid.tsv score 41.00, applied); called by Flic::createStream 0x00482b90 at 0x00482cb4 with five stdcall arguments (block + 4, 0x2c, n, ctor 0x00473ab0, dtor 0x004041f0; no stack cleanup after the call)
+2026-10-14  004a504f  _malloc  C0->C1  FID name _malloc (re/functions_ghidra.tsv 004a504f, 18 bytes): `push dword [0x840b18]` 0x004a504f (the new-handler mode word), `push dword [esp+8]` 0x004a5055 (the size), `call 0x4a5061` 0x004a5059 (__nh_malloc, FID name), two `pop ecx` and `ret` 0x004a505e-0x004a5060 (cdecl)
+2026-10-14  004a5007  _free  C0->C1  FID full match _free, VC6 12.00.8168 libcmt (re/fid/golf_clean.exe.fid.tsv score 301.02, applied in re/fid/golf_clean.exe.fid_applied.tsv); called by netSendShutdown 0x00497d10 at 0x00497e06 / 0x00497e1f / 0x00497e38 / 0x00497e4e with one cdecl argument (`add esp, 4`)
+2026-10-14  004a0890  emptyFunc_4a0890  C0->C1  body is the single instruction `ret` at 0x004a0890 (size 1, re/functions_ghidra.tsv), no FID match; called by Dialog::viewDtor 0x00491500 (0x00491599), narrateShot, advanceStory, emitGolferThought, resetViewState47cfd0, engineShutdown, shutdownBlitter, jinit_memory_mgr, self_destruct_jmemmgr (re/tools/xref.py)
 2026-10-13  sound.dll:00049604  crtValidatePointer  C2->C3  log/diff/00049604_sound_crtValidatePointer.path1.csv
 2026-10-13  jgld.dll:00065390  createDisplay  C2->C3  log/diff/00065390_jgld_createDisplay.path1.csv
 2026-10-13  jgld.dll:000145a0  loadPng  C2->C3  log/diff/000145a0_jgld_loadPng.path1.csv

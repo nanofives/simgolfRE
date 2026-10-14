@@ -15,6 +15,6 @@ $r12,768,768,True,06ebc2fd,06ebc2fd,True
 $r13,768,768,True,54827f45,54827f45,True
 state_regions,$clog+0x0:4096 0x0051a068+0x0:256 0x00824134+0x0:32,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x7109fae0,original=0x1440e40,2026-10-12T06:08:48
+meta,detour=0x62ba5f90,original=0x13a0100,2026-10-14T16:11:09
 distinct_results,14,,
 VERDICT,GREEN,14,

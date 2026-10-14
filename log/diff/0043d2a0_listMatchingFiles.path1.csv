@@ -21,6 +21,6 @@ $p3 $q1 $q0,0,0,True,da96c756,da96c756,True
 $p3 $q2 $q3,6,6,True,d0c8a664,d0c8a664,True
 state_regions,0x0051a068+0x0:1536 0x0080b130+0x0:10000 $lio+0x0:12288 $rec+0x0:4096 $implog+0x0:1024,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x624874c0,original=0x14d0cc0,2026-10-13T06:20:28
+meta,detour=0x62bbba80,original=0x1390500,2026-10-14T16:18:56
 distinct_results,12,,
 VERDICT,GREEN,20,

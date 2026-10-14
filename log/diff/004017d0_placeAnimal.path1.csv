@@ -170,6 +170,6 @@ $r167,void,void,True,32a9c3bf,32a9c3bf,True
 $r168,void,void,True,f32263aa,f32263aa,True
 state_regions,$clog+0x0:1024 0x0056d1d8+0x0:6000 0x004e9a80+0x0:4 0x004e9a70+0x0:32 0x0051a068+0x0:64,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x70c26d60,original=0x1340e60,2026-10-11T21:40:22
+meta,detour=0x62b1d710,original=0x13b0da0,2026-10-14T16:01:05
 distinct_results,151,,
 VERDICT,GREEN,169,

@@ -557,6 +557,48 @@ faults on every failed decoder-pool allocation (0x0048231c); loadGolferRoster wr
 next record (0x0046630b); both create_device exports report success after a failed allocation; Midi_Device::shutdown skips
 every second track; Channel_startVoice's signed index writes below the channel object; writePcx8 maps width*height*2+0x80
 bytes but writes pitch bytes per row plus 769 palette bytes; loadPng only accepts RGB.
+Thirty-fourth round = paths A + B (2026-10-13/14, seven claude2 `opus` children, all stopped at the token limit once and
+resumed in fresh sessions from their files; brief log/c3/round34_brief.md, runner log/c3/alt/r34_main.py, children
+log/c3/round34_children.tsv): c3fg 8 (path B1, the MMIO STAND-IN `re/frida/js/mmiostandin.js`, loaded by diff_hook after
+filestandin.js: the twelve WINMM mmio imports of sound.dll served on the A/B thread through importstandin.js, 354/354 records
+equal to the real winmm in its conformance harness log/c3/alt/c3fg_conform*; first user parseRiffWave, plus MidiReader_init,
+Sound_resetBuffers, beginDecodeStreamA/B, processWaveChunks, loadMultiChannel, Wave_Device::readFmtChunk), c3fh 18 (path B2,
+the x87 pilot: the six Voice_mix* leaves and streamRenderBlock / Tail load control word 0x0f7f (64-bit, toward zero) and leave
+it set; a C body with MSVC `long double`, which is the 53-bit double, is RED on all six mixers (first divergence at `fmul st(2)`
+0x10019cf4), while a body of one-instruction X80 steps on 10-byte operands in the original's order matches every register,
+the status and tag words (log/c3/alt/c3fh_ab.py fnsaves both arms); the caller-word helpers Seq_setTempo, DsBuffer::setVolume,
+Channel_setRate / recomputeVoiceGains / setReverseRate / stepVolumeFade, Voice_resetDefaults, Sound5b6a8_ctor,
+allocResampleTable and png_init_read_transformations A/B'd at 0x027f and 0x0f7f, since their originals' outputs change with
+the word), c3fi 15 (exe rows under 2 KB: netPoll, netSendShutdown, Reader::open, ListBox::build, scrollbarCreate,
+showMainRadialMenu, showLoadingScreen ...), c3fj 2 (buildSceneSprites, 16 keys / 562 vectors; netHandleControl, its dialog
+declared through framemask.js), c3fk 25 (sound sequencer channel setup, track nodes, the eight DirectSoundDevice bodies),
+c3fl 13 (sound rows the live timer thread runs: SoundTimer::onTick, Wave_Device::serviceTick, writeWaveFile, DsBuffer::restore
+...; this PC had an output device, so the engine ran live) and c3fm 24 (the exe's file / string CRT and jgld's memcpy / strlen
+/ strcat / abs / operator_new / _setjmp3 / fopen / fclose, openHookA/B/C, Window::blitToTarget, Surface::dashedLine16)
+promoted, plus DC_calla0 0x475c20 (c3dl's key, its caller now recorded): 106 functions, C3 2,876 (exe 1,612, jgld 533, sound 583,
+Terrain 148), open C2 170. Names first (re/names/exe_15, sound_16, jgld_10, 33 rows: FID-matched CRT callees,
+NodeB000_initBase, ChannelTable_loadRange / releaseObject). Main build: all 251 keys GREEN with every hook on and with other
+batches' hooked callees off; 208 existing C3 callers (888 keys) GREEN both ways (c3fm's CRT hooks put abs, __itoa, memcpy and
+the file CRT under 162 of them); lost boots (announceBuilding, matchUpdate, expandTextMarkup, Sprite::create8_oom) and two
+one-vector matchUpdate state REDs passed in 1-4-key boots; static 360 and runtime 19 pass. Dll_Midi_Device::create_device
+needed `--callers 0x9a90=golf_clean.exe:0x004879b0` (openHookB calls export #7 through 0x0083af84). Defender quarantined
+c3fi's COVERAGE build in instances\c3fi (Behavior:Win32/DefenseEvasion.A!ml: the DLL CreateFile/WriteFile'd its counters);
+the verifier then ran the five missing controls on the normal and negctl builds without a detection. Those controls found a
+fixture gap: showMainRadialMenu's wrong body storing the spot s instead of the image byte k (0x00432f39) read GREEN because
+every row had k == s (0x004c7994[s] = s for s < 3); two rows with s = 3 and 7 now read it RED. Running c3fi_run.py with
+`--batches <negctl list>` loads no c3fi fixture (`not a function` on every key): the negctl DLL goes to the instance, the
+registry list stays the default. A background shell's 2-hour limit kills the shell, not the Python runner (it kept writing
+and finished); stopping the "orphaned" game killed its live boot instead. Held (re/c3_hold.tsv): jgld __chkesp (its input
+is the caller's ZF), Surface::dashedVLine16 (no vector reaches its run reload without a fault), showInfoCursorPanel (it
+overwrites the caller's saved esi, which diff_hook does not compare). return0Pop4_487b00 stays C2: endstate.py reads its
+5-byte body as size 0 (the extent fix planned for round 35). Leads (each batch's Path C): the 12 remaining MMIO rows over the
+stand-in (closeMmioSound, openMmioSound, fillDecodeRing, Midi_Device::loadFile / loadFromMemory ...; the write path needs
+measuring first), Voice::update and loadWaveResource with the X80 method, renderChannelStreamed (a dedicated batch), netService
+/ netSendMessages (uninitialised frame arrays), drawFlyingBall, create_sound. Findings: streamRenderBlock's chain end reads the
+flags of `cmp edx, 0` and always stores the loaded sample as the integer position (0x10018722); Sound5b6a8_ctor's tempo
+multiplies a freshly zeroed +0x720; Wave_Device::dispatchCommand kind 4 reads o+0x44 before its NULL test; _xtoa never ends for
+radix 1; jgld fclose dereferences a NULL stream after reporting it; Cache482f60::dtor's second pass can never run; showLoadingScreen
+frees its frame Surface twice; netHandleControl leaves slot 15 duplicated when it removes a peer.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

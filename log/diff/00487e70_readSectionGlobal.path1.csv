@@ -13,6 +13,6 @@ $r10 -1,2,2,True,f192bbb1,f192bbb1,True
 $r11 5,69,69,True,7f8958a1,7f8958a1,True
 state_regions,$rec+0x0:8192 $cnt+0x0:128 $clog+0x0:1024 $cellb+0x0:64,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x6db21500,original=0x1440d40,2026-10-11T10:49:05
+meta,detour=0x62b89710,original=0x13b0140,2026-10-14T15:58:29
 distinct_results,12,,
 VERDICT,GREEN,12,
