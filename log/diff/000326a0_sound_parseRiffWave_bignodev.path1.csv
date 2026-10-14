@@ -1,0 +1,10 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o0 $n0,0,0,True,ed566e2b,ed566e2b,True
+$o1 $n1,0,0,True,19c8a4e7,19c8a4e7,True
+$o2 $n2,0,0,True,eb89e453,eb89e453,True
+$o3 $n3,0,0,True,983d7d39,983d7d39,True
+state_regions,$objs+0x0:20480 $log+0x0:512 $gwave+0x0:4 $gds+0x0:4 $nodes+0x0:64 $glist+0x0:16 $gmmio+0x0:4 $freelog+0x0:1028 $mmblock+0x0:397312 $implog+0x0:1024 $arena+0x0:135184,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x629f6ab0,original=0x3c60600,2026-10-14T14:20:12
+distinct_results,4,,
+VERDICT,GREEN,4,

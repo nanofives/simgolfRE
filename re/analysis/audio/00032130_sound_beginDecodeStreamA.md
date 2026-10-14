@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00032130`), 257 bytes, 93 instructions, subsystem `au
 thiscall(src): opens a decoder at this+0x54 via 0x10012fe0 (codec id 0x100e0, block size this+0x178), decodes the first block (0x100101a0), mmioReads the compressed data and feeds it to the decoder (0x10010370); sets this+0x58 bit28 and this+0x220=0x5622; returns 0x11/0x23 on failure. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Starts a compressed decode stream for a Channel; called by parseRiffWave 0x100326a0 through the thunk 0x10002509 (0x10032b4c) with the DirectSound device [0x100b49f0]. A NULL device stores +0x220 = 0x5622 and returns 0 (0x1003213e -> 0x1003220e). Otherwise DirectSoundDevice::createBufferFmt (thunk 0x100011e5, 0x1003215d) creates the decoder buffer at +0x54 with the format +0x180, codec id 0x100e0 and size +0x178; a failure returns 0x11 (0x10032223). +0x58 |= 0x10000000 (0x10032171), the buffer is locked through DsBuffer::restore (thunk 0x1000213f, 0x10032195, outputs ptr1 / bytes1 / ptr2 / bytes2); a lock failure or bytes1 != size returns 0 after +0x220 = 0x5622 without unlocking (0x1003219c / 0x100321aa). The compressed data is read with mmioRead(+0, ptr1, bytes1) (0x100321b5): a short read unlocks (DsBuffer::unlock, thunk 0x10001ec9), removes the buffer from the device (thunk 0x10001677, 0x100321df) and returns 0x23; a full read unlocks, stores the channel at the buffer's +0x20 (0x1003220b) and returns 0 with +0x220 = 0x5622. Reimplemented in `shim/src/re/c3fg.cpp`; path-1 A/B GREEN: beginDecodeStreamA (12 vectors, 12 distinct results, 12 changing state, `log/diff/00032130_sound_beginDecodeStreamA.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100321ef, 0x10032220, 0x1003222e): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1003213c before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

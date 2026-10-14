@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00032020`), 198 bytes, 71 instructions, subsystem `au
 Resets the Sound stream: frees the decode buffer at this+2, zeroes the 0x12-dword MMIOINFO at this+3 and flags at this+0x16, and if the HMMIO at this+0 is open mmioClose's it, unlinks from g_100b49c8 and decrements g_100b4a08. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Resets a Sound stream after a failed parse (parseRiffWave 0x100326a0 calls it through the thunk 0x10001aaf on each missing chunk, 0x1003283c). Frees the decode buffer +8 with operator delete 0x1004249a when set (0x1003202a-0x10032035), zeroes the MMIOINFO +0xc (0x10032048) and +0x58 / +0x5c (0x10032051 / 0x10032053; the `and` at 0x10032058 keeps +0x58 zero). When the HMMIO +0 is set (0x10032061) it calls mmioClose(h, 0) (0x10032065), unlinks and frees the first g_openSoundList 0x100b49c8 node whose value is this+0xc (`cmp [eax+8], ebx` 0x10032074; head / next->prev, the cursor 0x100b49d0 and the tail 0x100b49cc updated as at 0x10032086-0x100320bc), lowers g_openSoundCount 0x100b49d4 for that node and g_openMmioCount 0x100b4a08 in any case (0x100320d6). +0 = 0 on every path (0x100320dc). eax at the `ret` is the lowered sound count or 0. Reimplemented in `shim/src/re/c3fg.cpp`; path-1 A/B GREEN: Sound_resetBuffers (12 vectors, 12 distinct results, 12 changing state, `log/diff/00032020_sound_Sound_resetBuffers.path1.csv`); Sound_resetBuffers_single (12 vectors, 12 distinct results, 12 changing state, `log/diff/00032020_sound_Sound_resetBuffers_single.path1.csv`); Sound_resetBuffers_empty (12 vectors, 12 distinct results, 12 changing state, `log/diff/00032020_sound_Sound_resetBuffers_empty.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100320e5): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10032022 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

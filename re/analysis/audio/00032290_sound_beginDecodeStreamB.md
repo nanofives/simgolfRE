@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00032290`), 291 bytes, 107 instructions, subsystem `a
 thiscall(src): like beginDecodeStreamA but requires src flag +0x6c bit3 and uses codec id 0x100f4; opens the decoder at this+0x54, primes the first decoded block and feeds the compressed data, setting this+0x58 bit28 and this+0x220=0x5622. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+The second decode-stream starter, called by parseRiffWave 0x100326a0 through the thunk 0x10001b7c (0x10032c20) with [0x100b49f0]. A NULL device returns 1 (0x1003229e -> 0x100323a7, no +0x220 store); a device whose byte +0x6c has bit 3 clear returns 0xb (0x100322a4 / 0x100322ac). Otherwise the same sequence as beginDecodeStreamA with the codec id 0x100f4 (0x100322c8): createBufferFmt (0x100322d1; failure 0x11), +0x58 |= 0x10000000, the lock (0x10032309; failure or a short byte count -> 0 with +0x220 = 0x5622), mmioRead into the lock (0x10032329), unlock and removeBuffer with 0x23 on a short read (0x10032349 / 0x10032353), else unlock, the channel stored at the buffer's +0x20 (0x1003237f), +0x220 = 0x5622 and 0. Reimplemented in `shim/src/re/c3fg.cpp`; path-1 A/B GREEN: beginDecodeStreamB (12 vectors, 12 distinct results, 10 changing state, `log/diff/00032290_sound_beginDecodeStreamB.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x100322b5, 0x10032363, 0x10032394, 0x100323a2, 0x100323b0): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1003229c before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

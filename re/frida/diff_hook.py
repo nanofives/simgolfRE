@@ -71,7 +71,7 @@ def run(names: list[str], override_re: dict[str, int | str] | None = None, out_d
         # freeze.js: __freeze, the shared frozen-thread helper (safe-point suspend, newest-first restore; 2026-10-09)
         # recdisplay.js: __recDisplay.guard, native per-slot thunks that send other threads' calls on a fixture display
         #   swapped into 0x0083ad50 to the real display (the winmm timer thread's slot +0x20 call; 2026-10-12)
-        parts = [JS_DIR / "keepalive.js", JS_DIR / "heapstandin.js", JS_DIR / "importstandin.js", JS_DIR / "filestandin.js", JS_DIR / "freeze.js", JS_DIR / "recdisplay.js", JS_DIR / "uitree.js", JS_DIR / "modal.js", JS_DIR / "framemask.js", JS_DIR / "diff_fixtures.js"] + frags + [JS_DIR / "diff_hook.js"]
+        parts = [JS_DIR / "keepalive.js", JS_DIR / "heapstandin.js", JS_DIR / "importstandin.js", JS_DIR / "filestandin.js", JS_DIR / "mmiostandin.js", JS_DIR / "freeze.js", JS_DIR / "recdisplay.js", JS_DIR / "uitree.js", JS_DIR / "modal.js", JS_DIR / "framemask.js", JS_DIR / "diff_fixtures.js"] + frags + [JS_DIR / "diff_hook.js"]
         # fixtures allocate through __keepAlloc (keepalive.js) so linked blocks are never garbage-collected mid-run
         src = "\n".join(p.read_text() if p.name in ("keepalive.js", "diff_hook.js")
                         else p.read_text().replace("Memory.alloc(", "__keepAlloc(") for p in parts)

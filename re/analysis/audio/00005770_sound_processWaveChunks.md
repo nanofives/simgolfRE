@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00005770`), 196 bytes, 71 instructions, subsystem `au
 Walks the loaded file chunk list (head +0xa4c, nodes +8, format type at +0x20) allocating sample buffers (virtual +0x118) for PCM chunks and handling format-3 streams. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Walks a Wave_Device's loaded chunk list after a file load; called by loadSoundFile 0x100041d0 through the thunk 0x1000272f (0x10004f4f). The list +0xa4c holds nodes {prev, next, record}; the cursor +0xa54 follows it (0x1000577e, 0x1000581c) and the walk stops at a NULL node or record (0x10005784 / 0x1000578f / 0x10005815-0x10005829). An object pointer starts as this (the slot `push ecx` 0x10005770 makes, read at 0x10005795). A record of type 0 (+0x20, 0x1000579e) asks the device's virtual +0x118 for (0, record +0x24) (0x100057fd) and that answer becomes the object; a record of type 3 looks at the previous node's record (the cursor moved back and forward, 0x100057a5-0x100057cf): its byte +0x18 zero skips it (0x100057da), its +0x1c == 3 makes the object that record - 0x2c (0x100057e6), and a NULL object skips (0x100057eb). Each record not skipped goes to Ctrl_appendIfAccepted (thunk 0x10001654) on the object (0x10005808), even when the virtual answered NULL. Other types are skipped. eax at the `ret` is the last cursor value read. Reimplemented in `shim/src/re/c3fg.cpp`; path-1 A/B GREEN: processWaveChunks (12 vectors, 12 distinct results, 12 changing state, `log/diff/00005770_sound_processWaveChunks.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10005833): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10005770 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

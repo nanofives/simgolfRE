@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000399a0`), 307 bytes, 85 instructions, subsystem `au
 thiscall(filespec): parses the RIFF file into the embedded channel this+0x70 (parseRiffWave); if it is a multi-channel file (this+0x1438 in [2,3)) allocates the extra 0x1450-byte sub-channels at this+0x1440 (operator_new + ctor 0x1002b4e0). (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Virtual slot 4 of the MultiSound vtable 0x1005c7e8 (slot 0x1005c7f8 holds the thunk 0x100024a0 to this body): loads a sound file into a MultiSound and builds its extra sub-channels. parseRiffWave (thunk 0x10001e51, 0x100399ca) parses the file into the channel +0x70 and a non-zero result is returned (0x100399d3). Only when +0x1438 is 2 (signed `jle` 0x100399e2, `jge` 0x100399eb) are sub-channels built, one per index 1 .. +0x1438 - 1, re-reading +0x1438 each round (0x10039ab2): operator new 0x1450 (0x10039a09), SubChannel_ctor (0x10039a21), the channel constructor on +0x70 (0x10039a2e), the MultiSound vtable and fields with +0x1438 = 1 (0x10039a3b-0x10039a81), Sound_setSourceType(1) (0x10039a87), then the sub-channel's own slot 4 with the same name (0x10039aa1): a non-zero answer is returned before the slot +0x1440 + 4 * (i - 1) is written (0x10039aa6 / 0x10039aac). Returns the last result. A failed operator new faults at the slot-4 load (0x10039a94). Reimplemented in `shim/src/re/c3fg.cpp`; path-1 A/B GREEN: loadMultiChannel (12 vectors, 12 distinct results, 12 changing state, `log/diff/000399a0_sound_loadMultiChannel.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10039ad0): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x100399be before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
