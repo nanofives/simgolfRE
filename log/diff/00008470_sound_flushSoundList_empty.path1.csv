@@ -1,0 +1,7 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+,0,0,True,c323719b,c323719b,True
+state_regions,$eng+0x0:512 $geng+0x0:4 $log+0x0:2048 $freelog+0x0:1028 $implog+0x0:1024,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b643d0,original=0x3b20c60,2026-10-14T14:59:24
+distinct_results,1,,
+VERDICT,GREEN,1,

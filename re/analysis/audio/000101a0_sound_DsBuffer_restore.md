@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000101a0`), 198 bytes, 80 instructions, subsystem `au
 Forwards to IDirectSoundBuffer::Restore (vtbl+0x50) to recover a lost buffer. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Re-locks a DirectSound buffer wrapper's region after a loss. Calls the IDirectSoundBuffer's Lock (slot +0x2c at 0x100101cc) with the six arguments unchanged; a 0 result returns 0 (0x100101d1), a result that is not DSERR_BUFFERLOST returns 0x19 (c3fl_isBufferLost: `jle` 0x100101dc, `ja` 0x100101e6, the byte table 0x10010274 sends only 0x88780096 to the lost path), and a lost buffer is Restored (slot +0x50 at 0x10010201) and Locked again (0x1001021e); the second lost result returns 0x1e, anything else 0x19. - 0x100101d1 r==0: $o0 (false elsewhere). - 0x100101dc/0x100101e6 lost classification: $o1 lost, $o4..$o8 near-but-not (not lost), $o11 the second-lock switch. - 0x101021fa buf NULL before Restore: original cannot reach a NULL here (the fixture always sets +0x60); the C0 guard follows a deref. Reimplemented in `shim/src/re/c3fl.cpp`; path-1 A/B GREEN: DsBuffer::restore (14 vectors, 14 distinct results, 14 changing state, `log/diff/000101a0_sound_DsBuffer_restore.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x18` (at 0x1001024e, 0x1001025a, 0x10010263): callee pops 24 bytes of stack arguments.
 - `ecx` is read at 0x100101b9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

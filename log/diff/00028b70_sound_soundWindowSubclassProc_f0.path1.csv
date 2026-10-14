@@ -1,0 +1,33 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+8738 16 5 6,329149905,329149905,True,3867a711,3867a711,True
+8738 960 7 8,329149956,329149956,True,198dcefc,198dcefc,True
+8738 959 9 10,329150055,329150055,True,8b2bd4de,8b2bd4de,True
+8738 2025 1 2,329148960,329148960,True,0f73da77,0f73da77,True
+8738 961 3 4,329149964,329149964,True,f178fd79,f178fd79,True
+8738 2026 3 $snd1,0,0,True,d71d1e4c,d71d1e4c,True
+8738 2027 $chA 0,0,0,True,8bb7da75,8bb7da75,True
+8738 2027 $chB 0,0,0,True,badbb601,badbb601,True
+8738 2028 0 $oA,0,0,True,cd738b63,cd738b63,True
+8739 2029 4 5,329148961,329148961,True,8711a6dd,8711a6dd,True
+8738 2030 0 $n3a,0,0,True,df8bb1b7,df8bb1b7,True
+8738 2030 0 $n3b,0,0,True,9dcf4a62,9dcf4a62,True
+8738 2030 0 $n4a,0,0,True,e1ad0ce9,e1ad0ce9,True
+8738 2030 0 $n4n,0,0,True,247d4e13,247d4e13,True
+8738 2030 0 $n5,0,0,True,930dfc72,930dfc72,True
+8738 2030 0 $n7,0,0,True,f10d61ed,f10d61ed,False
+8738 2031 0 $n3a,0,0,True,cb6cb15a,cb6cb15a,True
+8738 2031 0 $n4a,0,0,True,e1ad0ce9,e1ad0ce9,True
+8738 2031 0 $n4n,0,0,True,247d4e13,247d4e13,True
+8738 2031 0 $n5,0,0,True,23edc564,23edc564,True
+8738 2031 0 $n7,0,0,True,f10d61ed,f10d61ed,False
+8738 2032 119 $wiA,0,0,True,c97b5596,c97b5596,True
+8738 2032 120 $wiB,0,0,True,f10d61ed,f10d61ed,False
+8740 2032 121 0,329149123,329149123,True,a343a152,a343a152,True
+8738 2033 1 1,329148984,329148984,True,9c3a7f89,9c3a7f89,True
+8741 4294967295 2 2,3965817401,3965817401,True,dd0d34f2,dd0d34f2,True
+8738 2024 2024 2024,329147662,329147662,True,1730ce69,1730ce69,True
+state_regions,$log+0x0:1024 $freelog+0x0:1028 $implog+0x0:1024 $gflag+0x0:4 $gprev+0x0:4 $oA+0x0:5168 $oB+0x0:5168 $oC+0x0:5168 $oD+0x0:5168 $n3a+0x0:32 $n3b+0x0:32 $n4a+0x0:32 $n4n+0x0:32 $n5+0x0:32 $n7+0x0:32 $chA+0x0:5120 $chB+0x0:5120 $wiA+0x0:64 $wiB+0x0:64 $snd1+0x0:64,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b655e0,original=0x3b20c20,2026-10-14T14:58:43
+distinct_results,23,,
+VERDICT,GREEN,27,

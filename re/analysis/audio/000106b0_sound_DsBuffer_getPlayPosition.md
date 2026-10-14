@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000106b0`), 333 bytes, 141 instructions, subsystem `a
 Reads the hardware play cursor (GetCurrentPosition vtbl+0x10) and converts it to a sample position using block align +0xb4; writes +0x18. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Advances the wrapper's play/write bookkeeping from the buffer's GetCurrentPosition (slot +0x10 at 0x100106e6). A NULL +0x60 returns 0x14 (0x100106c2); it computes the frame delta +0x18 = (play - last, wrapped by the size S, 0x100106f0) / block-align W (0x1001070c), returns 0x15 when the write cursor is unchanged (0x10010726), and otherwise recomputes the readable span (e, s) with one or two wrap corrections (0x10010745 / 0x1001074e / 0x1001077e), writes *outA/*outB, updates +0x30/+0x24/+0x10 and +0x1c, and returns 0 or 0x2d. - 0x100106c2 NULL buffer: $onull. - 0x1001070f W==0 / 0x100107d1 W2==0: object 13's first path uses W!=0 (every object has a non-zero +0xb4), so the W==0 side is not exercised by design; noted, not reached. - 0x10010726 write==+0x24: the objects set distinct cursors; the 0x15 side is reached by the object whose +0x24 equals its write. - 0x10010747/0x10010750/0x10010784 the wrap corrections: $o0..$o13 span e<S / e>=S with s above/below the write cursor. Reimplemented in `shim/src/re/c3fl.cpp`; path-1 A/B GREEN: DsBuffer::getPlayPosition (15 vectors, 15 distinct results, 14 changing state, `log/diff/000106b0_sound_DsBuffer_getPlayPosition.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x8` (at 0x100106d6, 0x10010737, 0x100107e9, 0x100107fa): callee pops 8 bytes of stack arguments.
 - `ecx` is read at 0x100106b6 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

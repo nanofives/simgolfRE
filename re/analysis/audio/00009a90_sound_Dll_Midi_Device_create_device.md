@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00009a90`), 220 bytes, 65 instructions, subsystem `au
 Allocates and constructs a Midi_Device, storing the singleton at g_100b4a1c. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Export #7 (fetched by initSound through GetProcAddress). A non-NULL g_midiDevice 0x100b4a1c returns 0xc without writing (0x10009aa6); otherwise operator new (0x4058 bytes, 0x10009abc) builds a Midi device (MidiDeviceBase_ctor, CommandQueue::init on +0x50, vtable 0x1005b28c, fields +0x24..+0x3c with +0x38=0x7f and +0x30=0xf), stores it in g_midiDevice and *out, and returns 0; a failed allocation stores 0 in both and returns 0. - 0x10009aa6 g_midiDevice non-NULL: _busy; NULL for _null/_fail. - 0x10009aca allocation NULL: _fail (heap stand-in failMask 1), _null allocates. Reimplemented in `shim/src/re/c3fl.cpp`; path-1 A/B GREEN: Dll_Midi_Device::create_device_null (12 vectors, 12 distinct results, 12 changing state, `log/diff/00009a90_sound_Dll_Midi_Device_create_device_null.path1.csv`); Dll_Midi_Device::create_device_fail (12 vectors, 12 distinct results, 12 changing state, `log/diff/00009a90_sound_Dll_Midi_Device_create_device_fail.path1.csv`); Dll_Midi_Device::create_device_busy (12 vectors, 1 distinct results, 0 changing state, `log/diff/00009a90_sound_Dll_Midi_Device_create_device_busy.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10009b35, 0x10009b56, 0x10009b6b): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10009aa5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

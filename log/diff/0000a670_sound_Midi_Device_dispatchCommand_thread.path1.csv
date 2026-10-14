@@ -1,0 +1,12 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$d0,64,64,True,c4156f08,c4156f08,False
+$d1,29,29,True,5cd2febb,5cd2febb,True
+$d2,7,7,True,5825da6d,5825da6d,True
+$d3,4128,4128,True,364092ef,364092ef,True
+$d4,768,768,True,748f1ca2,748f1ca2,True
+$d5,9,9,True,4ddfd748,4ddfd748,True
+state_regions,$d0+0x0:16480 $d1+0x0:16480 $d2+0x0:16480 $d3+0x0:16480 $d4+0x0:16480 $d5+0x0:16480 $ch0A+0x0:544 $ch0B+0x0:544 $ch0C+0x0:544 $ch0N+0x0:544 $ch0F+0x0:544 $ch0X+0x0:544 $ch1A+0x0:544 $ch1B+0x0:544 $ch1C+0x0:544 $ch1N+0x0:544 $ch1F+0x0:544 $ch1X+0x0:544 $ch2A+0x0:544 $ch2B+0x0:544 $ch2C+0x0:544 $ch2N+0x0:544 $ch2F+0x0:544 $ch2X+0x0:544 $ch3A+0x0:544 $ch3B+0x0:544 $ch3C+0x0:544 $ch3N+0x0:544 $ch3F+0x0:544 $ch3X+0x0:544 $ch4A+0x0:544 $ch4B+0x0:544 $ch4C+0x0:544 $ch4N+0x0:544 $ch4F+0x0:544 $ch4X+0x0:544 $ch5A+0x0:544 $ch5B+0x0:544 $ch5C+0x0:544 $ch5N+0x0:544 $ch5F+0x0:544 $ch5X+0x0:544 $ln1_0+0x0:16 $ln1_1+0x0:16 $ln1_2+0x0:16 $ln2_0+0x0:16 $ln4_0+0x0:16 $ln4_1+0x0:16 $ln5_0+0x0:16 $ln5_1+0x0:16 $log+0x0:4096 $freelog+0x0:1028 $implog+0x0:1024 $geng+0x0:4 $eng+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b64760,original=0x3b20c80,2026-10-14T14:59:55
+distinct_results,6,,
+VERDICT,GREEN,6,

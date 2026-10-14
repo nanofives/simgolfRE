@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00008ed0`), 278 bytes, 90 instructions, subsystem `au
 Multimedia-timer callback: measures elapsed ms since last tick, logs (string in the binary) when overdue, and calls virtual methods +0x44/+0x38 on each registered client; guarded by g_100b49a8 and g_100b4990. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+The multimedia-timer callback. A non-zero re-entrancy word 0x100b49a8 returns it (0x10008edf); a timer whose bit 2 of +0x3c is clear returns 0 (0x10008ef4); otherwise it enters the critical section 0x100b4990, and on the second flag test (0x10008f13) either bumps the word or walks the client list +0x4c calling each client's slots +0x44 (with the elapsed ms) and +0x38 (0x10008f99), formatting an overrun through _sprintf/OutputDebugStringA (0x10008f5b), then leaves the section and returns its result. - 0x10008edb word!=0: _w3 (word 3, returns 3), false for _w0. - 0x10008eec/0x10008f0f bit 2 of +0x3c: _w0 timers 0..11 span set and clear; _flip clears the flag inside EnterCriticalSection. - 0x10008f33 last==0 / 0x10008f46 elapsed below the floor / 0x10008f5b overrun: the _w0 timers seed last / period so each side runs (vectors with last 0, within, and above the +0x14 overrun threshold). Reimplemented in `shim/src/re/c3fl.cpp`; path-1 A/B GREEN: SoundTimer::onTick_w0 (12 vectors, 12 distinct results, 11 changing state, `log/diff/00008ed0_sound_SoundTimer_onTick_w0.path1.csv`); SoundTimer::onTick_w3 (12 vectors, 1 distinct results, 0 changing state, `log/diff/00008ed0_sound_SoundTimer_onTick_w3.path1.csv`); SoundTimer::onTick_flip (3 vectors, 3 distinct results, 2 changing state, `log/diff/00008ed0_sound_SoundTimer_onTick_flip.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x10008fe3): callee pops 20 bytes of stack arguments.
 

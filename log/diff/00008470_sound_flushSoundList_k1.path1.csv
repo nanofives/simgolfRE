@@ -1,0 +1,7 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+,0,0,True,a711485d,a711485d,True
+state_regions,$eng+0x0:512 $geng+0x0:4 $log+0x0:2048 $freelog+0x0:1028 $implog+0x0:1024 $o0+0x0:5168 $o1+0x0:5168 $o2+0x0:5168 $o3+0x0:5168 $o4+0x0:5168 $o5+0x0:5168 $o6+0x0:5168 $n0+0x0:16 $n1+0x0:16 $n2+0x0:16 $n3+0x0:16 $n4+0x0:16 $n5+0x0:16 $n6+0x0:16,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b643d0,original=0x3b20c60,2026-10-14T14:59:31
+distinct_results,1,,
+VERDICT,GREEN,1,
