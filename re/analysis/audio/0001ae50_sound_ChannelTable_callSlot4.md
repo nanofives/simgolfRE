@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001ae50`), 128 bytes, 51 instructions, subsystem `au
 Calls slot +4 with one value on every sound held in a 0x80-entry voice table (a sound repeated in successive non-NULL slots is called once) (and on each sound's members), then stores the value at +0x218. (`re/names/sound_15.tsv`)
 System writeup: `re/analysis/systems/sound_15.md`.
 
+## Purpose
+Broadcasts v to every distinct object of a ChannelTable's 0x80-entry table: for the slots this+4 .. this+0x200 (`add ebx, 4` / `dec` / `jne` 0x1001aeb2-0x1001aeba), an object that is NULL or equal to the last one handled is skipped (0x1001ae6e-0x1001ae74); otherwise its vtable slot +4 runs with v (0x1001ae76-0x1001ae79), the slot is read again (0x1001ae7c), and for j < [obj+0x1438] - 1 (signed `jle` 0x1001ae89, `jl` 0x1001aeaa) the member at obj+0x1440 + 4j gets slot +4 with v (0x1001ae90-0x1001ae98), the slot and the count re-read after each call (0x1001ae9b-0x1001aeaa). Finally +0x218 = v (0x1001aec2) and eax is the last object handled (0 when none, 0x1001ae5f / 0x1001aeac). __thiscall, `ret 4`. Sound_lookupOrCreate 0x10022320 calls it on a new entry through the thunk 0x10002455 (0x1002244a). Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: ChannelTable_callSlot4 (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001ae50_sound_ChannelTable_callSlot4.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001aecd): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001ae5b before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

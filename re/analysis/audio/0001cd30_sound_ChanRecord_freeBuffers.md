@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001cd30`), 37 bytes, 16 instructions, subsystem `aud
 Frees the two buffers a ChanRecord_init record points to at +0x1c and +0x24, leaving the pointers in place. (`re/names/sound_15.tsv`)
 System writeup: `re/analysis/systems/sound_15.md`.
 
+## Purpose
+Frees the two buffers of a sequencer channel record: a non-NULL +0x1c goes to operator delete 0x1004249a (`test` / `je` 0x1001cd36 / 0x1001cd38, call 0x1001cd3b), then a non-NULL +0x24 (0x1001cd46 / 0x1001cd48, call 0x1001cd4b). Neither field is cleared; plain `ret` (0x1001cd54), and every caller discards eax (Seq_setupChannel 0x10020fe0 through the thunk 0x10002004 at 0x1002103d and 0x10021164, Sound5b6a8_dtor 0x1001ffae, loadSoundFile at 0x100042da and five more sites). Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: ChanRecord_freeBuffers (12 vectors, 11 distinct results, 10 changing state, `log/diff/0001cd30_sound_ChanRecord_freeBuffers.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_02.cpp` as `?FUN_1001cd30@f_1001cd30@@YIXH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1001cd54): callee pops 0 bytes of stack arguments.

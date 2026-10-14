@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000b000`), 29 bytes, 12 instructions, subsystem `aud
 A constructor: runs the base initialiser 0x1002e3f0 on this, clears the five dwords +0x24 .. +0x34 and returns this. (`re/names/sound_15.tsv`)
 System writeup: `re/analysis/systems/sound_15.md`.
 
+## Purpose
+Constructor of the 0x38-byte track node that Seq_buildTrack9 0x100229f0 (0x10022a38) and Seq_buildTrack14 0x10022d00 (0x10022d36) build through the thunk 0x10001410: it runs NodeB000_initBase on this through the thunk 0x100012a3 (0x1000b003, its eax unused), zeroes +0x24, +0x28, +0x2c, +0x30, +0x34 (0x1000b00a-0x1000b016) and returns this (`mov eax, esi` 0x1000b019, plain `ret` 0x1000b01c). Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: NodeB000_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/0000b000_sound_NodeB000_ctor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_01.cpp` as `?FUN_1000b000@f_1000b000@@YIPAIPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1000b01c): callee pops 0 bytes of stack arguments.

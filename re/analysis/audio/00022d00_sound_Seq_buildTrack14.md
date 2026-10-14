@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00022d00`), 608 bytes, 202 instructions, subsystem `a
 ## Role (from the naming pass, not a C3 purpose)
 Allocates and constructs a 0x38-byte track descriptor, copies 14 dwords from the source, and builds its event node lists; invoked by the master loader loadSoundFile. (`re/names/sound_3.tsv`)
 
+## Purpose
+The 14-dword twin of Seq_buildTrack9 (__thiscall (desc), `ret 4`), called by loadSoundFile 0x100041d0 through the thunk 0x100023ab (0x1000452f). desc is not tested: node = operator new(0x38) (0x10022d1e) constructed by NodeB000_ctor through 0x10001410 (0x10022d36; NULL leaves 0) and 0xe dwords of desc copied over it (`rep movsd` 0x10022d49-0x10022d5c, no NULL test). A count this+0x224 of 0 (0x10022d64) appends the node raw to list A then list B (0x10022d6a-0x10022e00) with no Seq_clearTrackFlag8All and no Seq_listGetAt loop. Otherwise the same ordered insertion (0x10022e08-0x10022f5b), except that B's cursor steps back BEFORE list A's insertion (0x10022ea3-0x10022eac; Seq_buildTrack9 does it after, 0x10022c43). 0 is returned (0x10022e83). Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: Seq_buildTrack14 (13 vectors, 13 distinct results, 13 changing state, `log/diff/00022d00_sound_Seq_buildTrack14.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10022e90): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10022d15 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

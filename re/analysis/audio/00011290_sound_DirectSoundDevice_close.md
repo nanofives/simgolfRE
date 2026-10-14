@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00011290`), 455 bytes, 141 instructions, subsystem `a
 Releases DirectSound buffers and the IDirectSound interface, then CoUninitialize. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Tears the DirectSound device down (__thiscall, plain `ret` 0x10011456); callers Wave_Device::stop 0x1000b960, Wave_Device::start 0x1000baa0, Wave_Device::open 0x1000b420. The enumerated-device chain +4 (next +0x10) is freed entry by entry (0x100112af-0x10011307), each non-NULL string +0, +4, +8 first (freed and cleared, 0x100112c0-0x100112f4); +4 = +8 = 0 (0x1001130b / 0x1001130e); DirectSoundDevice::releaseAll (thunk 0x1000104b, 0x10011311); CoUninitialize through [0x100b86c0] (0x10011316); the lists {+0x178, +0x17c, +0x184} and {+0x168, +0x16c, +0x174} are popped freeing only their nodes until a NULL payload (0x1001131c-0x100113a7, 0x100113a9-0x10011433); DsBuffer::destroy runs on the primary buffer this+0x70 (thunk 0x10001910, 0x10011440) and its eax is what returns. Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: DirectSoundDevice::close (12 vectors, 12 distinct results, 12 changing state, `log/diff/00011290_sound_DirectSoundDevice_close.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10011456): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100112a5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

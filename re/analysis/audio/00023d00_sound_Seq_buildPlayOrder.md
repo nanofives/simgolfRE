@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00023d00`), 206 bytes, 66 instructions, subsystem `au
 When the play-mode bits +0x214 & 0x180 == 0x100, fills the caller array with the sequential track order from +0x248..+0x24c (wrapping), count +0x23c, and resets +0x244. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`.
 
+## Purpose
+Fills the play-order array out[0 .. count-1] with track indices between lo = this+0x248 and hi = this+0x24c, count = this+0x23c (__thiscall (out), `ret 4`). Its only caller, Seq_setPlayOrderMode 0x10022750, passes this+0x238 through the thunk 0x10001bcc (0x10022782) and discards eax (0x10022787). When (this+0x214 & 0x180) == 0x100 (0x10023d05-0x10023d15) the order is sequential: lo, lo + 1, ... wrapping to lo after hi (unsigned `jbe` 0x10023da0; hi and the count re-read each step, 0x10023d97 / 0x10023da8, signed `jl` 0x10023db4), and eax ends as the next index (lo when count <= 0, `jle` 0x10023d8f). Otherwise the seed 0x100b4fe0 = timeGetTime() (0x10023d17 / 0x10023d1d) and, for count > 0 (`jle` 0x10023d2c), each entry is __ftol(nextRandomFloat(&seed)) mod (hi - lo + 1) + lo (0x10023d3d-0x10023d5f, unsigned `div` 0x10023d5a; lo and hi re-read each step); eax ends as the count. nextRandomFloat 0x100285a0 returns mantissa / 2^23 in [0, 1) (its C3 note), so __ftol always gives 0 and every random entry is lo; only the seed moves. Both paths store 0 at +0x244 (0x10023d6d, 0x10023db6, 0x10023dc2). With hi = lo - 1 the random path divides by 0 (0x10023d5a), a fault no row takes. Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: Seq_buildPlayOrder (12 vectors, 12 distinct results, 12 changing state, `log/diff/00023d00_sound_Seq_buildPlayOrder.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10023d7a, 0x10023dbf, 0x10023dcb): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10023d02 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

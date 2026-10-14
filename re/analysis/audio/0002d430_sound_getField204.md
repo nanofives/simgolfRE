@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0002d430`), 7 bytes, 2 instructions, subsystem `audio
 Returns the dword at this+0x204. (re/names/sound_3.tsv describes it as a case-sensitive string comparison inside Sound_lookupOrCreate's purpose; the body compares nothing.) (`re/names/sound_15.tsv`)
 System writeup: `re/analysis/systems/sound_15.md`.
 
+## Purpose
+Returns the dword at this+0x204: the whole body is `mov eax, [ecx+0x204]` (0x1002d430) and `ret` (0x1002d436), __thiscall with no stack argument. Sound_lookupOrCreate 0x10022320 calls it through the thunk 0x100025f4 on its descriptor to get the entry name it compares and stores (0x10022379, 0x10022412), and loadSoundFile 0x100041d0 calls it at 0x10004950. (re/names/sound_3.tsv's Sound_lookupOrCreate row calls this callee a string comparison; c3fd notes C.7 corrected that.) Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: getField204 (12 vectors, 12 distinct results, 0 changing state, `log/diff/0002d430_sound_getField204.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/sound_raw_04.cpp` as `?FUN_1002d430@f_1002d430@@YIIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x1002d436): callee pops 0 bytes of stack arguments.

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001ccf0`), 42 bytes, 15 instructions, subsystem `aud
 Initialises a 0x28-byte record: every dword 0 except +0x18 = 0xfa; returns the record. (`re/names/sound_15.tsv`)
 System writeup: `re/analysis/systems/sound_15.md`.
 
+## Purpose
+Initialises a 0x34-byte sequencer channel record: `mov eax, ecx` (0x1001ccf0) makes this the result; +4, +0, +8, +0xc, +0x10, +0x14 (0x1001ccf9-0x1001cd06) and +0x1c, +0x20, +0x24 (0x1001cd09-0x1001cd0f) are zeroed and +0x18 = 0xfa (0x1001cd12); nothing past +0x27 is written; plain `ret` (0x1001cd19). Seq_setupChannel 0x10020fe0 runs it on a new record through the thunk 0x100014bf (0x10021070) and then clears +0x28, +0x2c, +0x30 itself; loadSoundFile 0x100041d0 calls it at 0x1000421a. Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: ChanRecord_init (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001ccf0_sound_ChanRecord_init.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001cd19): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001ccf0 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

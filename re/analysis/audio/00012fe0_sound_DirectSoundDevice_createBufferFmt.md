@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00012fe0`), 600 bytes, 178 instructions, subsystem `a
 Creates an IDirectSoundBuffer with a supplied WAVEFORMATEX and links it into g_100b4a34. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+The variant of createBuffer 0x00012d10 that also sets the primary format: without bit 1 of +0x6c returns 3 (0x10012ffe-0x10013009), with a NULL fmt 0xa (0x10013014-0x10013018), then runs the shared c3fk_dsCreateCore (0x10013022-0x10013221) with DsBuffer::setPrimaryFormat(fmt) (0x10001d75, 0x1001317b-0x10013182) inserted after setBufferSize. Full body and branch table under the combined createBuffer section below. Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: DirectSoundDevice::createBufferFmt (12 vectors, 12 distinct results, 9 changing state, `log/diff/00012fe0_sound_DirectSoundDevice_createBufferFmt.path1.csv`); DirectSoundDevice::createBufferFmt_empty (12 vectors, 12 distinct results, 9 changing state, `log/diff/00012fe0_sound_DirectSoundDevice_createBufferFmt_empty.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x10013235): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x10012ffb before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

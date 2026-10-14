@@ -1,0 +1,20 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$q0 $d0,0,0,True,1e434ec0,1e434ec0,True
+$q1 $d1,0,0,True,42c73c67,42c73c67,True
+$q2 $d2,0,0,True,387bd28d,387bd28d,True
+$q3 $d3,0,0,True,abb68690,abb68690,True
+$q4 $d4,0,0,True,72568494,72568494,True
+$q5 $d5,0,0,True,e3dfd0f0,e3dfd0f0,True
+$q6 $d6,0,0,True,50aa9605,50aa9605,True
+$q7 $d7,0,0,True,adda3cbc,adda3cbc,True
+$q8 $d8,0,0,True,864039ed,864039ed,True
+$q9 $d9,0,0,True,9d2b7e8d,9d2b7e8d,True
+$q10 $d10,0,0,True,28adf3d4,28adf3d4,True
+$q11 $d11,0,0,True,d94e9689,d94e9689,True
+$q12 $d12,0,0,True,91601c5c,91601c5c,True
+$q4 0,10,10,True,c17fed54,c17fed54,False
+state_regions,$q0+0x0:1280 $q1+0x0:1280 $q2+0x0:1280 $q3+0x0:1280 $q4+0x0:1280 $q5+0x0:1280 $q6+0x0:1280 $q7+0x0:1280 $q8+0x0:1280 $q9+0x0:1280 $q10+0x0:1280 $q11+0x0:1280 $q12+0x0:1280 $tk1_0+0x0:32 $na1_0+0x0:16 $nb1_0+0x0:16 $tg1_0+0x0:1120 $tk2_0+0x0:32 $na2_0+0x0:16 $nb2_0+0x0:16 $tg2_0+0x0:1120 $tg2_1+0x0:1120 $tk3_0+0x0:32 $na3_0+0x0:16 $nb3_0+0x0:16 $tg3_2+0x0:1120 $tk4_0+0x0:32 $tk4_1+0x0:32 $tk4_2+0x0:32 $na4_0+0x0:16 $na4_1+0x0:16 $na4_2+0x0:16 $nb4_0+0x0:16 $nb4_1+0x0:16 $nb4_2+0x0:16 $tg4_0+0x0:1120 $tg4_1+0x0:1120 $tg4_2+0x0:1120 $tg4_3+0x0:1120 $tk5_0+0x0:32 $tk5_1+0x0:32 $tk5_2+0x0:32 $na5_0+0x0:16 $na5_1+0x0:16 $na5_2+0x0:16 $nb5_0+0x0:16 $nb5_1+0x0:16 $nb5_2+0x0:16 $tg5_1+0x0:1120 $tg5_4+0x0:1120 $tg5_5+0x0:1120 $tk6_0+0x0:32 $tk6_1+0x0:32 $na6_0+0x0:16 $na6_1+0x0:16 $nb6_0+0x0:16 $nb6_1+0x0:16 $tk7_0+0x0:32 $na7_0+0x0:16 $nb7_0+0x0:16 $tk8_0+0x0:32 $tk8_1+0x0:32 $na8_0+0x0:16 $na8_1+0x0:16 $nb8_0+0x0:16 $nb8_1+0x0:16 $tk9_0+0x0:32 $tk9_2+0x0:32 $na9_0+0x0:16 $na9_1+0x0:16 $na9_2+0x0:16 $nb9_0+0x0:16 $nb9_1+0x0:16 $nb9_2+0x0:16 $tg9_1+0x0:1120 $tk10_0+0x0:32 $tk10_1+0x0:32 $tk10_2+0x0:32 $na10_0+0x0:16 $na10_1+0x0:16 $na10_2+0x0:16 $nb10_0+0x0:16 $tg10_0+0x0:1120 $tg11_0+0x0:1120 $tk12_0+0x0:32 $tk12_1+0x0:32 $na12_0+0x0:16 $na12_1+0x0:16 $nb12_0+0x0:16 $nb12_1+0x0:16 $tg12_0+0x0:1120 $stray12+0x0:16 $arena+0x0:528 $freelog+0x0:1028 $log+0x0:2080 $g49a8+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b61680,original=0x3c70900,2026-10-14T14:51:01
+distinct_results,14,,
+VERDICT,GREEN,14,

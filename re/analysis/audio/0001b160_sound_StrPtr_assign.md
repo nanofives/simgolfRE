@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001b160`), 101 bytes, 46 instructions, subsystem `au
 Replaces the heap string held at *this by a copy of the argument; 0xa for a NULL argument. (`re/names/sound_15.tsv`)
 System writeup: `re/analysis/systems/sound_15.md`.
 
+## Purpose
+Replaces the string *this points to with a heap copy of s: a NULL s returns 0xa (`test ebx, ebx` / `jne` 0x1001b168 / 0x1001b16a, 0x1001b16d) and changes nothing; otherwise a non-NULL old *this goes to operator delete (0x1001b176-0x1001b17d), operator new(strlen(s) + 1) (`repne scasb` 0x1001b186-0x1001b191, call 0x1001b192, no NULL test) is stored at *this (0x1001b1a3), s and its terminator are copied there (`rep movsd` / `rep movsb` 0x1001b1a5-0x1001b1bd) and 0 is returned (`xor eax, eax` 0x1001b1b8). __thiscall, `ret 4`. Sound_lookupOrCreate 0x10022320 calls it through the thunk 0x10001334 (0x1002241a) to name a new entry. Reimplemented in `shim/src/re/c3fk.cpp`; path-1 A/B GREEN: StrPtr_assign (12 vectors, 11 distinct results, 10 changing state, `log/diff/0001b160_sound_StrPtr_assign.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001b173, 0x1001b1c2): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001b166 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
