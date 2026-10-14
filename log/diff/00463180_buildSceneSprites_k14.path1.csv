@@ -1,0 +1,38 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$k0 $v0 $x0 $y0 $p0 $q0 $o0,void,void,True,409c664b,409c664b,True
+$k1 $v1 $x1 $y1 $p1 $q1 $o1,void,void,True,23b72272,23b72272,True
+$k2 $v2 $x2 $y2 $p2 $q2 $o2,void,void,True,8b252d73,8b252d73,True
+$k3 $v3 $x3 $y3 $p3 $q3 $o3,void,void,True,21d9811e,21d9811e,True
+$k4 $v4 $x4 $y4 $p4 $q4 $o4,void,void,True,c410f405,c410f405,True
+$k5 $v5 $x5 $y5 $p5 $q5 $o5,void,void,True,634540df,634540df,True
+$k6 $v6 $x6 $y6 $p6 $q6 $o6,void,void,True,9a38ba2b,9a38ba2b,True
+$k7 $v7 $x7 $y7 $p7 $q7 $o7,void,void,True,8d30769b,8d30769b,True
+$k8 $v8 $x8 $y8 $p8 $q8 $o8,void,void,True,475f6bef,475f6bef,True
+$k9 $v9 $x9 $y9 $p9 $q9 $o9,void,void,True,14a61e79,14a61e79,True
+$k10 $v10 $x10 $y10 $p10 $q10 $o10,void,void,True,b751345e,b751345e,True
+$k11 $v11 $x11 $y11 $p11 $q11 $o11,void,void,True,292d8833,292d8833,True
+$k12 $v12 $x12 $y12 $p12 $q12 $o12,void,void,True,9d40cccd,9d40cccd,True
+$k13 $v13 $x13 $y13 $p13 $q13 $o13,void,void,True,8e98f35e,8e98f35e,True
+$k14 $v14 $x14 $y14 $p14 $q14 $o14,void,void,True,a29ceda2,a29ceda2,True
+$k15 $v15 $x15 $y15 $p15 $q15 $o15,void,void,True,1592ad58,1592ad58,True
+$k16 $v16 $x16 $y16 $p16 $q16 $o16,void,void,True,8a215103,8a215103,True
+$k17 $v17 $x17 $y17 $p17 $q17 $o17,void,void,True,e37e6dc1,e37e6dc1,True
+$k18 $v18 $x18 $y18 $p18 $q18 $o18,void,void,True,e10c59f7,e10c59f7,True
+$k19 $v19 $x19 $y19 $p19 $q19 $o19,void,void,True,f06de712,f06de712,True
+$k20 $v20 $x20 $y20 $p20 $q20 $o20,void,void,True,6e62e3f0,6e62e3f0,True
+$k21 $v21 $x21 $y21 $p21 $q21 $o21,void,void,True,fe35a134,fe35a134,True
+$k22 $v22 $x22 $y22 $p22 $q22 $o22,void,void,True,22272e7e,22272e7e,True
+$k23 $v23 $x23 $y23 $p23 $q23 $o23,void,void,True,7d8febfe,7d8febfe,True
+$k24 $v24 $x24 $y24 $p24 $q24 $o24,void,void,True,3e083b18,3e083b18,True
+$k25 $v25 $x25 $y25 $p25 $q25 $o25,void,void,True,44ee8ce2,44ee8ce2,True
+$k26 $v26 $x26 $y26 $p26 $q26 $o26,void,void,True,04618de6,04618de6,True
+$k27 $v27 $x27 $y27 $p27 $q27 $o27,void,void,True,60357654,60357654,True
+$k28 $v28 $x28 $y28 $p28 $q28 $o28,void,void,True,7dc5a948,7dc5a948,True
+$k29 $v29 $x29 $y29 $p29 $q29 $o29,void,void,True,c99e0f9b,c99e0f9b,True
+$k30 $v30 $x30 $y30 $p30 $q30 $o30,void,void,True,7441ccfc,7441ccfc,True
+$k31 $v31 $x31 $y31 $p31 $q31 $o31,void,void,True,abd309b3,abd309b3,True
+state_regions,$clog+0x0:16384 0x00838204+0x0:4 0x0058bcb8+0x0:256 0x0053cbb8+0x0:800 0x0051a068+0x0:64 0x00834164+0x0:12,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62bdeff0,original=0x1380c60,2026-10-14T14:48:22
+distinct_results,32,,
+VERDICT,GREEN,32,
