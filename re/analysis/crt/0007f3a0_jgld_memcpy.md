@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007f3a0`), 664 bytes in 21 address ranges, 231 instru
 CRT memcpy (dst, src, n). (`re/names/jgld_9.tsv`)
 System writeup: `re/analysis/systems/jgld_9.md`.
 
+## Purpose
+jgld.dll's CRT memcpy(dst, src, n), the VC6 routine that also handles overlap. Forward when dst <= src (`jbe` 0x1007f3b6) or dst >= src + n (`jb` 0x1007f3ba not taken): dst aligned (`jne` 0x1007f3c6 not taken) copies n / 4 dwords by `rep movsd` (0x1007f3d3) or, below 8 (`jb` 0x1007f3d1), through the unrolled table 0x1007f47c, then n & 3 tail bytes (table 0x1007f4e8); dst unaligned copies n < 4 bytes through table 0x1007f4f8 (`jb` 0x1007f3e6) or first 1..3 alignment bytes (table 0x1007f400; `jb` 0x1007f42e / 0x1007f454 / 0x1007f46e choose the small table). Otherwise (dst inside (src, src + n)) it copies downward from the last dword (0x1007f538; `jne` 0x1007f546 on the last dword's alignment, `std; rep movsd; cld` 0x1007f553..0x1007f556, `jb` 0x1007f551 / 0x1007f576 / 0x1007f5a8 / 0x1007f5d2 / 0x1007f600 to the small tables 0x1007f630 / 0x1007f680). Either way each destination byte gets the source byte at the same offset as before the call; returns dst ([ebp + 8]). jgld.dll is the debug build (/Od); addresses are VAs (0x10000000 + RVA). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: memcpy (76 vectors, 75 distinct results, 74 changing state, `log/diff/0007f3a0_jgld_memcpy.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1007f4fe, 0x1007f50a, 0x1007f51c, 0x1007f536, 0x1007f696, 0x1007f6a4, 0x1007f6ba, 0x1007f6d4): callee pops 0 bytes of stack arguments.
 

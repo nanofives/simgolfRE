@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007f6e0`), 123 bytes, 44 instructions, subsystem `crt
 CRT strlen (s). (`re/names/jgld_9.tsv`)
 System writeup: `re/analysis/systems/jgld_9.md`.
 
+## Purpose
+jgld.dll's CRT strlen(s) (no /GZ frame: the CRT's assembly routine): byte steps while s is not dword aligned (`je` 0x1007f6ea leaves for the dword loop, `je` 0x1007f6f1 finds the terminator, `jne` 0x1007f6f9 loops); then whole dwords with `(0x7efefeff + x) ^ ~x` masked by 0x81010100 (`je` 0x1007f716 continues), a candidate testing bytes 0..3 for 0 (`je` 0x1007f71d / 0x1007f721 / 0x1007f728 / 0x1007f72f; a 0x80 top byte that only looks like a zero falls through to the loop). Returns the terminator's address minus s (0x1007f733..0x1007f75a), __cdecl. jgld.dll is the debug build (/Od); addresses are VAs (0x10000000 + RVA). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: strlen (27 vectors, 17 distinct results, 0 changing state, `log/diff/0007f6e0_jgld_strlen.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1007f73c, 0x1007f746, 0x1007f750, 0x1007f75a): callee pops 0 bytes of stack arguments.
 

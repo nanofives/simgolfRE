@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 74 bytes, 31 instructions, subsystem `ui`. Mechanical t
 thiscall, no stack argument (`ret` 0x0047b9e9): builds on its stack the rect at this+0x1ac moved to the origin ({0, 0, right - left, bottom - top}, 0x0047b9ac..0x0047b9d9) and passes its address with `this` to 0x00487b00 by a direct call, so it always returns that function's 0 (`re/names/exe_14.tsv`)
 System writeup: `re/analysis/systems/exe_14.md`, `re/analysis/systems/exe_3.md`.
 
+## Purpose
+Moves the window rect at this + 0x1ac to the origin and hands it on: l, t, r, b are read (0x0047b9ac..0x0047b9c1), l and t subtracted from themselves and from r and b (`neg edx; add esi, edx; add ebx, edx` 0x0047b9b4..0x0047b9bb, `neg eax; add edi, eax; add ebp, eax` 0x0047b9c6..0x0047b9ca), the frame rect {0, 0, r - l, b - t} stored (0x0047b9cd..0x0047b9d9) and its address passed, with ecx still this, to return0Pop4_487b00 (0x0047b9dd), whose eax (always 0: `xor eax, eax; ret 4`) is returned. thiscall, no stack argument (`ret` 0x0047b9e9). Callers Window::setSize 0x0047b4e0 and rebuildFramePieces 0x0047d610. No branch. Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: Window::passLocalRect (9 vectors, 9 distinct results, 9 changing state, `log/diff/0047b9a0_Window_passLocalRect.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x0047b9e9): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x0047b9a4 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

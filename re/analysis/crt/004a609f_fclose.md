@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 49 bytes, 20 instructions, subsystem `crt`. Mechanical 
 static CRT fclose(f); callee of loadGolferRoster 0x004659a0 (0x00465e41, 0x00466211) (`re/names/exe_14.tsv`)
 System writeup: `re/analysis/systems/exe_14.md`.
 
+## Purpose
+The static CRT's fclose(stream). The result starts at -1 (`or edi, 0xffffffff` 0x004a60a5). A stream with bit 0x40 of its flag byte (_IOSTRG, `test byte ptr [esi + 0xc], 0x40` 0x004a60a8, `je` 0x004a60ac not taken) only has its flag dword cleared (`and dword ptr [esi + 0xc], 0` 0x004a60ae) and returns -1. Any other stream is locked (__lock_file 0x004a9874, call 0x004a60b5), closed by __fclose_lk 0x004a60d0 (0x004a60bb, result kept in edi at 0x004a60c1) and unlocked (__unlock_file 0x004a98c6, 0x004a60c3); the result is __fclose_lk's (`mov eax, edi` 0x004a60cb, `ret` 0x004a60cf, __cdecl). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: _fclose (14 vectors, 14 distinct results, 14 changing state, `log/diff/004a609f__fclose.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a60cf): callee pops 0 bytes of stack arguments.
 

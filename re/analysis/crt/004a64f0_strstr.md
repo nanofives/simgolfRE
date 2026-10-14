@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 128 bytes, 66 instructions, subsystem `crt`. Mechanical
 static CRT strstr(s, sub); callee of loadGolferRoster 0x004659a0 (0x00465adc) and listMatchingFiles 0x0043d2a0 (`re/names/exe_14.tsv`)
 System writeup: `re/analysis/systems/exe_14.md`.
 
+## Purpose
+The static CRT's strstr(s1, s2). An empty s2 returns s1 (`je` 0x004a64ff -> 0x004a656a). A one-character s2 (`je` 0x004a6506) leaves through `mov al, dl; jmp 0x4a6176` (0x004a655c / 0x004a655e) into _strchr's body, i.e. strchr(s1, s2[0]). Otherwise each attempt (0x004a6508) scans for s2[0] (`je` 0x004a6513 / 0x004a651e, a 0 byte returning NULL through `je` 0x004a6517 / `jne` 0x004a6522), checks the next byte against s2[1] (`jne` 0x004a652f resumes the scan with that byte) and then compares s2[2..] two bytes per turn (`jne` 0x004a6542 restarts the attempt one byte after the first match, `je` 0x004a6553 continues); a 0 in s2 (`je` 0x004a6539 / 0x004a6549) returns the first match's address. Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: _strstr (29 vectors, 17 distinct results, 0 changing state, `log/diff/004a64f0__strstr.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a6529, 0x004a6569, 0x004a656f): callee pops 0 bytes of stack arguments.
 

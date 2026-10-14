@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 98 bytes, 48 instructions, subsystem `crt`. Mechanical 
 static CRT fgets(buf, n, f); callee of loadGolferRoster 0x004659a0 (0x00465c27, 0x00465e30, 0x00465f64, 0x00466200) (`re/names/exe_14.tsv`)
 System writeup: `re/analysis/systems/exe_14.md`.
 
+## Purpose
+The static CRT's fgets(buf, n, stream). n <= 0 (signed `jg` 0x004a65fc not taken) returns NULL without locking (0x004a65fe). Otherwise the stream is locked (0x004a6607) and the loop at 0x004a660d copies characters while --n != 0 (`je` 0x004a6610): each comes from _ptr (0x004a6617..0x004a661d, zero-extended) unless --_cnt goes negative (`js` 0x004a6615), when __filbuf 0x004a6622 refills. A -1 result (`cmp eax, -1` 0x004a6628, a full-width compare, so a 0xff byte is 255) ends the loop: with nothing stored (`cmp edi, [ebp + 8]` / `jne` 0x004a6639) the result is NULL and no terminator is written (0x004a663b), else the terminator is written (0x004a663f). Any other value is stored as its low byte (0x004a662d) and a stored newline (`cmp al, 0xa` / `je` 0x004a6632) ends the loop through the terminator. The stream is unlocked (0x004a6643) and buf or NULL returned (0x004a6649). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: _fgets (19 vectors, 16 distinct results, 16 changing state, `log/diff/004a65ee__fgets.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a664f): callee pops 0 bytes of stack arguments.
 

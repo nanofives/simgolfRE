@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 63 bytes, 23 instructions, subsystem `render`. Mechanic
 ## Role (from the naming pass, not a C3 purpose)
 forwards to the device-context method at vtable +0xa4 (`re/names/exe_2.tsv`)
 
+## Purpose
+DC_calla4(this, target, a, b, c): thiscall, four stack arguments (`ret 0x10` on every exit). The surface this + 4 NULL (`jne` 0x00475be5 not taken) returns 7; a NULL target (`jne` 0x00475bf5 not taken) returns 0x10; else slot +0xa4 of the surface is called with ([target + 4], a, b, c) (0x00475c15) and its eax returned. Its only caller is Window::blitToTarget 0x00480dc0 (0x00480f1f). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: DC_calla4 (11 vectors, 9 distinct results, 7 changing state, `log/diff/00475be0_DC_calla4.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_01.cpp` as `?calla4@C475b60@@QAEHPAUH475b60@@HHH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret 0x10` (at 0x00475bec, 0x00475bfc, 0x00475c1c): callee pops 16 bytes of stack arguments.

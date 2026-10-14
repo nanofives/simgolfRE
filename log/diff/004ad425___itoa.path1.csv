@@ -1,0 +1,28 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $B0 10,obj+0x0,obj+0x0,True,d70cfd3a,d70cfd3a,True
+5 $B1 10,obj+0x41,obj+0x41,True,27c458c5,27c458c5,True
+-5 $B2 10,obj+0x82,obj+0x82,True,b1684651,b1684651,True
+123456789 $B3 10,obj+0xc3,obj+0xc3,True,20f37b61,20f37b61,True
+-2147483648 $B4 10,obj+0x100,obj+0x100,True,dcf2da74,dcf2da74,True
+2147483647 $B5 10,obj+0x141,obj+0x141,True,7575b6bd,7575b6bd,True
+-1 $B6 16,obj+0x182,obj+0x182,True,6c46598b,6c46598b,True
+255 $B7 16,obj+0x1c3,obj+0x1c3,True,982cbb9f,982cbb9f,True
+-255 $B0 16,obj+0x0,obj+0x0,True,6f94219c,6f94219c,True
+35 $B1 36,obj+0x41,obj+0x41,True,5cfeeb3d,5cfeeb3d,True
+1295 $B2 36,obj+0x82,obj+0x82,True,d0000a6f,d0000a6f,True
+7 $B3 2,obj+0xc3,obj+0xc3,True,da6db245,da6db245,True
+-7 $B4 2,obj+0x100,obj+0x100,True,2fe5a54b,2fe5a54b,True
+12345 $B5 8,obj+0x141,obj+0x141,True,6e5222a1,6e5222a1,True
+100 $B6 37,obj+0x182,obj+0x182,True,c2c39a4a,c2c39a4a,True
+5 $B7 -3,obj+0x1c3,obj+0x1c3,True,d3cb0ded,d3cb0ded,True
+-1 $B0 65536,obj+0x0,obj+0x0,True,4f46d333,4f46d333,True
+0 $B1 1,obj+0x41,obj+0x41,True,e59f79c2,e59f79c2,True
+9 $B2 10,obj+0x82,obj+0x82,True,b522f4ad,b522f4ad,True
+10 $B3 10,obj+0xc3,obj+0xc3,True,b4c3cfd4,b4c3cfd4,True
+-10 $B4 10,obj+0x100,obj+0x100,True,fcd37318,fcd37318,True
+36 $B5 36,obj+0x141,obj+0x141,True,e5f3a034,e5f3a034,True
+state_regions,$iblk+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b67b10,original=0x1380d80,2026-10-14T15:07:24
+distinct_results,22,,
+VERDICT,GREEN,22,

@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007f770`), 224 bytes, 84 instructions, subsystem `crt
 CRT strcat (dst, src). (`re/names/jgld_9.tsv`)
 System writeup: `re/analysis/systems/jgld_9.md`.
 
+## Purpose
+jgld.dll's CRT strcat(dst, src): edi = the terminator of dst, found as strlen does (byte steps `je` 0x1007f77b / `je` 0x1007f782 / `jne` 0x1007f78a; dwords `je` 0x1007f7a2 with the byte tests `je` 0x1007f7a9 / 0x1007f7ad / 0x1007f7b4 / 0x1007f7bb, a false candidate continuing at 0x1007f7bd). The copy then steps src byte by byte while src is unaligned (`je` 0x1007f7db, `je` 0x1007f7e2 stores the terminator at 0x1007f848, `jne` 0x1007f7ed), then whole dwords until one may hold a zero (`je` 0x1007f80e stores the dword at 0x1007f7f1 and loops): byte 0 zero stores one byte (`je` 0x1007f812 -> 0x1007f848), byte 1 a word (`je` 0x1007f816 -> 0x1007f83f), byte 2 a word and a 0 (`je` 0x1007f81e -> 0x1007f832), byte 3 the dword (`je` 0x1007f826 -> 0x1007f82a), a false candidate stores the dword and continues. Exactly src's bytes up to its terminator are written at dst's terminator; returns dst. strcpy 0x1007f760 (c3ds) enters the copy half at 0x1007f7d1. jgld.dll is the debug build (/Od); addresses are VAs (0x10000000 + RVA). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: strcat (23 vectors, 22 distinct results, 19 changing state, `log/diff/0007f770_jgld_strcat.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1007f831, 0x1007f83e, 0x1007f847, 0x1007f84f): callee pops 0 bytes of stack arguments.
 

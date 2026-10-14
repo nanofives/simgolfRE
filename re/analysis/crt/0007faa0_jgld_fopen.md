@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007faa0`), 23 bytes, 11 instructions, subsystem `crt`
 CRT fopen (name, mode), a forwarder to _fsopen 0x1007f9a0. (`re/names/jgld_9.tsv`)
 System writeup: `re/analysis/systems/jgld_9.md`.
 
+## Purpose
+jgld.dll's debug CRT fopen(name, mode): pushes _SH_DENYNO 0x40 (0x1007faa3), mode (0x1007faa8) and name (0x1007faac) and calls __fsopen 0x1007f9a0 (0x1007faad), returning its eax (`ret` 0x1007fab6, __cdecl). No branch. Caller 0x100145a0. jgld.dll is the debug build (/Od); addresses are VAs (0x10000000 + RVA). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: fopen (9 vectors, 9 distinct results, 9 changing state, `log/diff/0007faa0_jgld_fopen.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1007fab6): callee pops 0 bytes of stack arguments.
 

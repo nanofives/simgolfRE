@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 19 bytes, 6 instructions, subsystem `crt`. Mechanical t
 static CRT fopen(name, mode): _fsopen with _SH_DENYNO; callee of loadGolferRoster 0x004659a0 (0x00465ba3, 0x00465bbb, 0x00465ed0, 0x00465eee) (`re/names/exe_14.tsv`)
 System writeup: `re/analysis/systems/exe_14.md`.
 
+## Purpose
+The static CRT's fopen(name, mode): it pushes _SH_DENYNO (`push 0x40` at 0x004a614d), re-pushes mode and name from the stack (0x004a614f / 0x004a6153) and calls __fsopen 0x004a611c (0x004a6157, named in log/c3/c3fm_names.tsv), returning its eax (`add esp, 0xc; ret` 0x004a615c / 0x004a615f, __cdecl). It has no branch: what it decides is the share flag and the argument order it hands __fsopen. Ten exe functions call it, among them loadStoryStrings 0x00466b70 and resolveAndOpenFile 0x004a00f0. Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: _fopen (9 vectors, 9 distinct results, 9 changing state, `log/diff/004a614d__fopen.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a615f): callee pops 0 bytes of stack arguments.
 

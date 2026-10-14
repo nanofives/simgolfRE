@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007f0f0`), 28 bytes, 13 instructions, subsystem `crt`
 VC6 operator new (size): the allocation behind every `new` of jgld.dll. (`re/names/jgld_9.tsv`)
 System writeup: `re/analysis/systems/jgld_9.md`.
 
+## Purpose
+jgld.dll's debug operator new(size): calls __nh_malloc 0x1007fba0 with (size, 1) (`push 1` 0x1007f0f4, size 0x1007f0f9, call 0x1007f0fa) and returns its eax through [ebp - 4] (0x1007f102 / 0x1007f105), __cdecl. No branch. Eight C3 functions call it (Array_Rec14::add, Array_Rec94::add, ...). jgld.dll is the debug build (/Od); addresses are VAs (0x10000000 + RVA). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: operator_new (9 vectors, 9 distinct results, 9 changing state, `log/diff/0007f0f0_jgld_operator_new.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1007f10b): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1007f0f3 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

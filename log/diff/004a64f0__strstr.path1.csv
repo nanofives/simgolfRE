@@ -1,0 +1,35 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$HABCABCABD $E,obj+0x4c0,obj+0x4c0,True,ed64c46a,ed64c46a,False
+$HABCABCABD $NA,obj+0x4c0,obj+0x4c0,True,ed64c46a,ed64c46a,False
+$E $NAB,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HABCABCABD $NAB,obj+0x4c0,obj+0x4c0,True,ed64c46a,ed64c46a,False
+$HXX $NAB,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HAXBAB $NAB,obj+0x5c5,obj+0x5c5,True,ed64c46a,ed64c46a,False
+$HABCABCABD $NABC,obj+0x4c0,obj+0x4c0,True,ed64c46a,ed64c46a,False
+$HABCABCABD $NABD,obj+0x4c6,obj+0x4c6,True,ed64c46a,ed64c46a,False
+$HABCABCABD $NZZZ,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HFOX $NLAZY,obj+0x6e3,obj+0x6e3,True,ed64c46a,ed64c46a,False
+$HFOX $NDOG,obj+0x6e8,obj+0x6e8,True,ed64c46a,ed64c46a,False
+$HABCDE $NABCDE,obj+0x780,obj+0x780,True,ed64c46a,ed64c46a,False
+$HABCDX $NABCD,obj+0x800,obj+0x800,True,ed64c46a,ed64c46a,False
+$HABCD $NABCDE,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HAAAB $NAB,obj+0x8c2,obj+0x8c2,True,ed64c46a,ed64c46a,False
+$HAAAB $NAAB,obj+0x8c1,obj+0x8c1,True,ed64c46a,ed64c46a,False
+$HABCABD $NABD,obj+0x943,obj+0x943,True,ed64c46a,ed64c46a,False
+$HABCABCABD $NABCABD,obj+0x4c3,obj+0x4c3,True,ed64c46a,ed64c46a,False
+$E $E,obj+0x40,obj+0x40,True,ed64c46a,ed64c46a,False
+$HABCABCABD $NC,obj+0x4c2,obj+0x4c2,True,ed64c46a,ed64c46a,False
+$E $NA,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HFOX $NZZZ,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HABCXE $NABCDE,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HXX $NABCDEF,NULL,NULL,True,ed64c46a,ed64c46a,False
+$HFOX_3 $NDOG,obj+0x6e8,obj+0x6e8,True,ed64c46a,ed64c46a,False
+$A16 $NBC,obj+0x1,obj+0x1,True,ed64c46a,ed64c46a,False
+$A16_1 $NBC,obj+0x1,obj+0x1,True,ed64c46a,ed64c46a,False
+$HABCD $HABCD,obj+0x881,obj+0x881,True,ed64c46a,ed64c46a,False
+$FPC $NC,obj+0x1c2,obj+0x1c2,True,ed64c46a,ed64c46a,False
+state_regions,$strblk+0x0:8192,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b67ed0,original=0x1380d40,2026-10-14T15:07:15
+distinct_results,17,,
+VERDICT,GREEN,29,

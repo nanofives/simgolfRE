@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 50 bytes, 17 instructions, subsystem `util`. Mechanical
 Opens the wave input device through the sound library into this+0x14. Counterpart of closeHookC 0x00487bd0. (`re/names/exe_14.tsv`)
 System writeup: `re/analysis/systems/exe_14.md`.
 
+## Purpose
+The open routine of a sound-library device node: slot 1 of the node table 0x004bb014 (installers NodeListC::ctor 0x00487b40 / dtor 0x00487b80). thiscall with one stack argument (`ret 4` on its three exits). A device pointer already at this + 0x14 (`jne` 0x00487b98) returns 0xc; a NULL library entry point in the global 0x0083af8c (Dll_Wave_In_Device::create_device, export #9, filled by soundVersionCheck 0x00483fc0 with GetProcAddress) returns 0x14 (`je` 0x00487ba2); else the entry point is called __cdecl with (this + 0x14, the argument) (0x00487ba4..0x00487bac) and its eax returned. Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: openHookC (10 vectors, 8 distinct results, 7 changing state, `log/diff/00487b90_openHookC.path1.csv`); openHookC_null (6 vectors, 2 distinct results, 0 changing state, `log/diff/00487b90_openHookC_null.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x00487baf, 0x00487bb7, 0x00487bbf): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x00487b90 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

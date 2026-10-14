@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 164 bytes, 78 instructions, subsystem `crt`. Mechanical
 static CRT strtok(s, delim) (per-thread position); callee of loadGolferRoster 0x004659a0 (13 calls from 0x00465c78) (`re/names/exe_14.tsv`)
 System writeup: `re/analysis/systems/exe_14.md`.
 
+## Purpose
+The static CRT's strtok(s, delim). The saved position lives in the calling thread's data block (__getptd 0x004a8e53 at 0x004a6797, field +0x18 read at 0x004a67d1 and written at 0x004a681f). A 32-byte bit map in the frame is cleared (`rep stosd` 0x004a67a9) and every byte of delim including its terminator sets bit (c & 7) of byte (c >> 3) (loop 0x004a67ac..0x004a67c5 stores before it tests, `jne` 0x004a67c5), so the terminator always counts as a delimiter. A NULL s (`jne` 0x004a67cc not taken) continues from the saved position. Leading bytes in the map are skipped while they are not 0 (`je` 0x004a67eb, `je` 0x004a67ef); the token starts there (0x004a67f4) and runs to the first byte in the map (`jne` 0x004a6811), a 0 byte leaving first through `je` 0x004a67fa without a write; a delimiter is overwritten with 0 and skipped (0x004a6816 / 0x004a6819). The position is stored (0x004a681f) and the token returned unless it is empty (`sub; neg; sbb; and` 0x004a6822..0x004a682a: NULL when start == position). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: _strtok (17 vectors, 14 distinct results, 17 changing state, `log/diff/004a678b__strtok.path1.csv`); _strtok_end (5 vectors, 2 distinct results, 0 changing state, `log/diff/004a678b__strtok_end.path1.csv`); _strtok_mid (4 vectors, 3 distinct results, 4 changing state, `log/diff/004a678b__strtok_mid.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a682e): callee pops 0 bytes of stack arguments.
 

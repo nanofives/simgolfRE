@@ -1,0 +1,15 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$HFOX $NA,252767904,252767904,True,26999fe0,26999fe0,True
+$NABC $NAB,252710659,252710659,True,7ee92727,7ee92727,True
+$T3 $NC,252760803,252760803,True,5c87a372,5c87a372,True
+$E $NA,252746587,252746587,True,dc2ecc20,dc2ecc20,True
+$L20 $U2,252737369,252737369,True,339c0975,339c0975,True
+$A16_1 $NDOG,252712215,252712215,True,e9202ef1,e9202ef1,True
+0 $NA,252743209,252743209,True,69469c1c,69469c1c,True
+$NZZZ 0,252758016,252758016,True,bc7f07c8,bc7f07c8,True
+$HB $E,252762347,252762347,True,52b785a7,52b785a7,True
+state_regions,$strblk+0x0:8192 $fmlog+0x0:4096,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62be7c50,original=0x3750f40,2026-10-14T15:08:48
+distinct_results,9,,
+VERDICT,GREEN,9,

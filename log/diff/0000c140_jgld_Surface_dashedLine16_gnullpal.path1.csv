@@ -1,0 +1,9 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$S3 6 5 30 12 5 42 3 2 0,void,void,True,201527f9,201527f9,True
+$S3 10 25 15 4 255 128 2 2 1,void,void,True,2d049080,2d049080,True
+$S3 30 12 6 5 9 -1 4 1 2,void,void,True,b8a1ccbe,b8a1ccbe,True
+state_regions,$sblk+0x0:22528 $vlog+0x0:4096 $fmlog+0x0:4096,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62be7100,original=0x2b10060,2026-10-14T15:09:34
+distinct_results,3,,
+VERDICT,GREEN,3,

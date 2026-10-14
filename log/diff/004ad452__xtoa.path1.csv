@@ -1,0 +1,24 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+0 $B0 10 0,48,48,True,d70cfd3a,d70cfd3a,True
+5 $B1 10 1,57,57,True,2a72e40c,2a72e40c,True
+123 $B2 10 0,49,49,True,5fd48c3a,5fd48c3a,True
+123 $B3 10 1,57,57,True,c8e82cad,c8e82cad,True
+4294967295 $B4 16 0,102,102,True,dcf8a32b,dcf8a32b,True
+4294967295 $B5 16 1,49,49,True,3e584ccd,3e584ccd,True
+2147483648 $B6 10 1,52,52,True,e46ed2d4,e46ed2d4,True
+255 $B7 2 0,49,49,True,e515015b,e515015b,True
+255 $B0 2 7,49,49,True,aabcd674,aabcd674,True
+1295 $B1 36 0,122,122,True,173a5c2f,173a5c2f,True
+100 $B2 37 0,50,50,True,502a9e4a,502a9e4a,True
+5 $B3 4294967293 0,53,53,True,89944ded,89944ded,True
+4294967295 $B4 65536 0,86,86,True,facd6333,facd6333,True
+9 $B5 10 0,57,57,True,8cea6da9,8cea6da9,True
+10 $B6 10 0,49,49,True,adf8abf0,adf8abf0,True
+305419896 $B7 16 0,52,52,True,6f1c17c3,6f1c17c3,True
+0 $B0 1 0,48,48,True,d70cfd3a,d70cfd3a,True
+0 $B1 10 1,48,48,True,164c4472,164c4472,True
+state_regions,$iblk+0x0:512,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b68040,original=0x1380d60,2026-10-14T15:07:26
+distinct_results,17,,
+VERDICT,GREEN,18,

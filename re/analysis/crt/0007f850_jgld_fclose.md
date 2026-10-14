@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007f850`), 130 bytes, 50 instructions, subsystem `crt
 CRT fclose (stream) (debug build: asserts a non-NULL stream, locks the stream around __fclose_lk 0x1007f8e0). (`re/names/jgld_9.tsv`)
 System writeup: `re/analysis/systems/jgld_9.md`.
 
+## Purpose
+jgld.dll's debug CRT fclose(stream): result slot [ebp - 4] = -1 (0x1007f857). A NULL stream (`jne` 0x1007f862 not taken) is reported through _CrtDbgReport 0x10081f90 (type 2, line 0x3a; `int3` when it returns 1, 0x1007f881) and then dereferenced (0x1007f88b): the original faults, so no vector passes NULL. A stream whose flag dword has bit 0x40 (`and edx, 0x40` 0x1007f88e, `je` 0x1007f893 not taken) has the flag set to 0 (0x1007f898) and returns -1; any other is locked (__lock_file 0x10083230, 0x1007f8a5), closed by __fclose_lk 0x1007f8e0 (0x1007f8b1, stored to [ebp - 4] 0x1007f8b9) and unlocked (__unlock_file 0x100832a0, 0x1007f8c0); returns [ebp - 4] (0x1007f8c8, __cdecl). jgld.dll is the debug build (/Od); addresses are VAs (0x10000000 + RVA). Reimplemented in `shim/src/re/c3fm.cpp`; path-1 A/B GREEN: fclose (12 vectors, 12 distinct results, 12 changing state, `log/diff/0007f850_jgld_fclose.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1007f8d1): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1007f853 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
