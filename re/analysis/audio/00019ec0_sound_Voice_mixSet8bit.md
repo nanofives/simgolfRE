@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00019ec0`), 804 bytes, 258 instructions, subsystem `a
 Resamples an 8-bit voice buffer (byte*) and OVERWRITES the stereo double* output; selected for the 8-bit path when count arg > 0xb (and in 0x100371d0 for both count branches). (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_4.md`.
 
+## Purpose
+The unsigned 8-bit form of Voice_mixSetMono16: each sample byte is widened as (b - 128) * 256 (`movzx`, `shl eax, 8`, `sub eax, 0x8000`, stored as a word and loaded with `fild word`, 0x1001a087-0x1001a096) and the cursor moves one byte per sample (`add esi, eax` 0x1001a07d, `inc esi` 0x1001a099, `sub esi, 1` 0x1001a163); the rest is the mono resampler with its 0x0f7f control word. Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: Voice_mixSet8bit (23 vectors, 23 distinct results, 23 changing state, `log/diff/00019ec0_sound_Voice_mixSet8bit.path1.csv`); Voice_mixSet8bit_st0 (23 vectors, 23 distinct results, 23 changing state, `log/diff/00019ec0_sound_Voice_mixSet8bit_st0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001a1bf, 0x1001a1e3): callee pops 0 bytes of stack arguments.
 

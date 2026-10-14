@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000184a0`), 838 bytes, 271 instructions, subsystem `a
 Floating-point stream render/mix routine chosen by streamWaveSamples for the count>11 (block) path; writes short* output from a voice. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+The resampler streamWaveSamples 0x10030ba0 uses for streamed 16-bit sound: the mono resampler's register machine (0x0f7f after `fninit`, 0x10018611-0x1001862a; position += step, `fist` / `fisub` fraction, interpolation, gains, stores) with the step fixed at the constant 0x3fd7384ef2a605ce (0x1001852f / 0x10018536). Mode 1 multiplies by 2.0 on both sides (0x100184fb / 0x10018502) and always arms the wrap (+0x1378 into the window end +0x20 once, 0x10018558-0x10018570, with no cursor test); other modes take the gains +0x80 / +0x70 and can follow a buffer chain: with +0x9c bit 0 (0x100185d2-0x100185e0) the end of the current buffer hops to the one at +0xb4 (start +0x18 for the first hop, +0xd8 afterwards, end +0xd4, 0x100186d0-0x10018708), counting the hops into +0xcc at exit (0x100187c0-0x100187d1). When the chain ends, the `jne` at 0x10018722 still sees the flags of `cmp edx, 0` (0x100186f9) and falls into `fist` 0x10018728, which stores the sample just loaded as the integer part, and takes the pad arm without advancing the cursor: a count exit right after it subtracts that sample from the stored position (0x10018757). Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: streamRenderBlock (21 vectors, 21 distinct results, 21 changing state, `log/diff/000184a0_sound_streamRenderBlock.path1.csv`); streamRenderBlock_st0 (21 vectors, 21 distinct results, 21 changing state, `log/diff/000184a0_sound_streamRenderBlock_st0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100187b0, 0x100187e5): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000188d0`), 859 bytes in 2 address ranges, 274 instru
 Floating-point stream render/mix routine chosen by streamWaveSamples for the count<=11 (tail) path; writes short* output from a voice. (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+streamRenderBlock's accumulating twin (`fadd qword [edi]` / `[edi+8]` 0x10018ab0 / 0x10018ab4) with the gain sources swapped: mode 1 reads +0x1f0 / +0x200 (0x10018914-0x10018932), other modes multiply by 2.0 (0x100189d1-0x100189e6). Its chain end is `jmp 0x10018a8e` (0x10018b6b): back to the cursor step after the first sample like any other hop, so Block's `fist` of the sample does not happen here (0x10018b70 is unreachable). Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: streamRenderTail (21 vectors, 21 distinct results, 21 changing state, `log/diff/000188d0_sound_streamRenderTail.path1.csv`); streamRenderTail_st0 (21 vectors, 21 distinct results, 21 changing state, `log/diff/000188d0_sound_streamRenderTail_st0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10018bf8, 0x10018c2d): callee pops 0 bytes of stack arguments.
 

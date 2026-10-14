@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001a6c0`), 452 bytes, 160 instructions, subsystem `a
 Stereo 16-bit resampling render like 0x1001a910 but OVERWRITES the stereo double* output; selected when voice+0x182==2 and count arg > 0xb. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_4.md`.
 
+## Purpose
+The 16-bit stereo copier of the channel mixer: no resampling, each frame is the left word at the cursor times the B gain and the right word at cursor + 2 times the A gain (0x1001a7ff-0x1001a80a), stored as two doubles (0x1001a80e / 0x1001a810), the cursor stepping 4 bytes (0x1001a819). Gains, ramp, loop and wrap fields as in the mono mixers (0x1001a6ee-0x1001a7cf); the ramp division runs before `fninit` / `fldcw 0x0f7f` (0x1001a7ef / 0x1001a7f1), and the two gains stay on the register stack at exit. Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: Voice_mixSetStereo16 (16 vectors, 16 distinct results, 16 changing state, `log/diff/0001a6c0_sound_Voice_mixSetStereo16.path1.csv`); Voice_mixSetStereo16_st0 (16 vectors, 16 distinct results, 16 changing state, `log/diff/0001a6c0_sound_Voice_mixSetStereo16_st0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001a883): callee pops 0 bytes of stack arguments.
 

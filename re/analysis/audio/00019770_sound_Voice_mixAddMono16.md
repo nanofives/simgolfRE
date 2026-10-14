@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00019770`), 738 bytes, 247 instructions, subsystem `a
 Resamples a mono 16-bit voice sample buffer (short* at voice+0x18/+0xd8) with linear interpolation and per-channel gain ramp and ACCUMULATES it into the stereo double* mix buffer (*param_1 += sample*gain); selected when voice+0x182!=2 and +0x18e!=8 and the dispatcher's count arg <= 0xb. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Voice_mixSetMono16 with accumulation: the two products are added to the doubles already in the output (`fadd qword [edi]` / `fadd qword [edi+8]` 0x10019956 / 0x1001995d) before the stores; every other instruction is the same sequence at shifted addresses (log/c3/alt/c3fh_twindiff.py). Same control word handling (0x0f7f loaded after `fninit`, never restored) and the same registers left on the stack. Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: Voice_mixAddMono16 (23 vectors, 23 distinct results, 23 changing state, `log/diff/00019770_sound_Voice_mixAddMono16.path1.csv`); Voice_mixAddMono16_st0 (23 vectors, 23 distinct results, 23 changing state, `log/diff/00019770_sound_Voice_mixAddMono16_st0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10019a2d, 0x10019a51): callee pops 0 bytes of stack arguments.
 

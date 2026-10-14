@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001a2c0`), 816 bytes, 262 instructions, subsystem `a
 Resamples an 8-bit voice buffer (byte* at voice+0x18/+0xd8) with gain ramp and ACCUMULATES into the stereo double* mix buffer; selected when voice+0x18e==8 and count arg <= 0xb. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Voice_mixSet8bit with the accumulating stores of Voice_mixAddMono16 (`fadd qword [edi]` / `[edi+8]`, 0x1001a4cd / 0x1001a4d4). Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: Voice_mixAdd8bit (23 vectors, 23 distinct results, 23 changing state, `log/diff/0001a2c0_sound_Voice_mixAdd8bit.path1.csv`); Voice_mixAdd8bit_st0 (23 vectors, 23 distinct results, 23 changing state, `log/diff/0001a2c0_sound_Voice_mixAdd8bit_st0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001a5cb, 0x1001a5ef): callee pops 0 bytes of stack arguments.
 

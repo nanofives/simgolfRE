@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x00021ee0`), 130 bytes, 35 instructions, subsystem `au
 ## Role (from the naming pass, not a C3 purpose)
 Sets the tempo value at +0x718 and recomputes the per-tick duration +0x728/+0x720 as a constant divided by (ticks-per-unit +0x1bc * tempo * constant). (`re/names/sound_3.tsv`)
 
+## Purpose
+Slot 33 (+0x84) of the Sound vtable 0x1005b000 and the Sound5b6a8 vtable 0x1005b6a8 (installers Sound::ctor 0x10003f30, Sound5b6a8_ctor 0x1001f4a0, Seq_ctor 0x1001f6f0). __thiscall (tempo), `ret 4`, returns 0 (0x10021f53). Stores the new tempo at +0x718 (0x10021f19) and from it, under the caller's control word: +0x728 = 1000.0 / ([+0x1bc] * tempo * 1/60) (float constants 0x1005b69c / 0x1005b6a0, both integers loaded as unsigned 64-bit, 0x10021efb-0x10021f2d), and the position +0x720 rescaled to the new tempo: __ftol 0x10042550 of [+0x720] * old / tempo, where the old +0x718 is divided as a SIGNED dword (`fidivr` 0x10021f33), then stored back as the unsigned 32-bit low half of that integer (0x10021f46-0x10021f55). Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: Seq_setTempo_w27f (12 vectors, 12 distinct results, 12 changing state, `log/diff/00021ee0_sound_Seq_setTempo_w27f.path1.csv`); Seq_setTempo_wf7f (12 vectors, 12 distinct results, 12 changing state, `log/diff/00021ee0_sound_Seq_setTempo_wf7f.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x10021f5f): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10021ee9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001a910`), 461 bytes, 164 instructions, subsystem `a
 Resamples a stereo 16-bit voice buffer (two short* streams) with gain ramp and ACCUMULATES into the stereo double* mix buffer; selected when voice+0x182==2 and dispatcher count arg <= 0xb. (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Voice_mixSetStereo16 with the accumulating stores (`fadd qword` 0x1001aa5e / 0x1001aa65). Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: Voice_mixAddStereo16 (16 vectors, 16 distinct results, 16 changing state, `log/diff/0001a910_sound_Voice_mixAddStereo16.path1.csv`); Voice_mixAddStereo16_st0 (16 vectors, 16 distinct results, 16 changing state, `log/diff/0001a910_sound_Voice_mixAddStereo16_st0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001aadc): callee pops 0 bytes of stack arguments.
 

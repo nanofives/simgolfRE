@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0000f1c0`), 180 bytes, 49 instructions, subsystem `au
 Converts a 0..0x7f level into a DirectSound attenuation (cached at +0xc4) and applies it via SetVolume (vtbl+0x3c). (`re/names/sound_2.tsv`)
 System writeup: `re/analysis/systems/sound_2.md`.
 
+## Purpose
+Sets a DirectSound buffer's volume from a 0..127 level. __thiscall (level), `ret 4`. The level is clamped to 0x7f (`jbe`, unsigned, 0x1000f1cd) and combined with the master level at [[this+0x5c]+0x188] (0x7f without a master, 0x1000f1d4- 0x1000f1e3): e = __ftol(master/127 * level/127 * 127) (0x1000f1f4-0x1000f21c; constants 1/127 0x1005b488, 127.0 0x1005b478), then for e != 0 the attenuation __ftol(ln(e/127) * 10 * 100) (`fldln2; fxch; fyl2x` 0x1000f23b-0x1000f23f, constants 0x1005b468 / 0x1005b458), else -10000 (0xffffd8f0, 0x1000f254). The result is kept at +0xc4 (0x1000f25c) and passed to the buffer's IDirectSoundBuffer::SetVolume (vtable +0x3c, 0x1000f26b) when +0x60 holds one; the return value is that call's HRESULT, or the volume itself without a buffer (0x1000f265). Runs under the caller's control word: 6 of the 15 vectors give different results at 0x027f and 0x0f7f (log/c3/alt/c3fh_cwpair.txt). Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: DsBuffer::setVolume_w27f (15 vectors, 15 distinct results, 15 changing state, `log/diff/0000f1c0_sound_DsBuffer_setVolume_w27f.path1.csv`); DsBuffer::setVolume_wf7f (15 vectors, 15 distinct results, 15 changing state, `log/diff/0000f1c0_sound_DsBuffer_setVolume_wf7f.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000f271): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1000f1c4 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

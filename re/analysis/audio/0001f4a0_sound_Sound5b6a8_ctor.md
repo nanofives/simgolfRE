@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001f4a0`), 426 bytes, 93 instructions, subsystem `au
 Constructor for the Sound object: runs the base ctor 0x1002d450, initializes the embedded SMF reader at +0x18 (0x1001d380) and zeroes the sequencer region at +0x218 (param_1[0x86]..). (`re/names/sound_3.tsv`)
 System writeup: `re/analysis/systems/sound_3.md`, `re/analysis/systems/sound_6.md`.
 
+## Purpose
+Constructor of the class with vtable 0x1005b6a8 (Sound::ctor 0x10003f30 and create_sound 0x100093e0 call it). __thiscall, no argument, returns this. It runs the base constructor Ch5be88_ctor (thunk 0x100015f5), MidiReader_init on the member at +0x60 (thunk 0x10001b1d), the eh vector constructor iterator 0x10042902 over 16 elements of 0x4c bytes at +0x250 (constructor thunk 0x10002667, destructor 0x1000166d), writes the vtable (0x1001f52a) and its fields (+0x210 .. +0x24c, +0x710 .. +0x740, 0x200 at +0x214, 0x7f at +0x730, -1 at +0x738, 0x80 zero dwords from +0x744), calls Sound_setSourceType(2) (thunk 0x100018a2) and finishes with Seq_setTempo's computation for tempo 0x78: +0x728 = 1000 / ([+0x1bc] * 120 * 1/60) (0x1001f5c3-0x1001f5ff) and +0x720 = __ftol(0 * old * 1/120) = 0 (0x1001f605-0x1001f637). Reimplemented in `shim/src/re/c3fh.cpp`; path-1 A/B GREEN: Sound5b6a8_ctor_w27f (3 vectors, 3 distinct results, 3 changing state, `log/diff/0001f4a0_sound_Sound5b6a8_ctor_w27f.path1.csv`); Sound5b6a8_ctor_wf7f (3 vectors, 3 distinct results, 3 changing state, `log/diff/0001f4a0_sound_Sound5b6a8_ctor_wf7f.path1.csv`); Sound5b6a8_ctor_N_w27f (3 vectors, 3 distinct results, 3 changing state, `log/diff/0001f4a0_sound_Sound5b6a8_ctor_N_w27f.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1001f649): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x1001f4ba before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
