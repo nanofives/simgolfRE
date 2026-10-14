@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 96 bytes, 35 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 removes a sound object from the active list (head g_83af68 / tail g_83af64) by relinking its m_48/m_4c neighbours (`re/names/exe_3.tsv`)
 
+## Purpose
+takes one Snd node out of the doubly linked sound list whose head and tail are [0x0083af68] / [0x0083af64]. A NULL node returns 0xa (0x004843e8 / 0x004843ea); a node whose flag byte +0x44 lacks bit 2 is not on the list and returns 0 (0x004843f0 / 0x004843f6). Otherwise the node's prev +0x48 gets the node's next as its next, or the head [0x0083af68] does when there is no prev (0x004843ff..0x0048440c); the node's next gets the node's prev as its prev, or the tail [0x0083af64] does when there is no next (0x00484417..0x00484424); then the node's next and prev are cleared and its flag dword loses bits 0x202 (`and ecx, 0xfffffdfd` 0x00484430..0x00484439), and 0 is returned (0x0048443c). Called by shutdownSound 0x00483f10. A leaf (no callees). Reimplemented in `shim/src/re/c3fi.cpp`; path-1 A/B GREEN: unlinkSound (13 vectors, 13 distinct results, 9 changing state, `log/diff/004843e0_unlinkSound.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_03.cpp` as `?FUN_004843e0@f_004843e0@@YAIH@Z` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004843ef, 0x004843f8, 0x0048443f): callee pops 0 bytes of stack arguments.

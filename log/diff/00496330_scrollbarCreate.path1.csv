@@ -1,0 +1,24 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$r0 $a0_1 $a0_2 $a0_3 $a0_4 $a0_5 $a0_6 $a0_7,3,3,True,c287dfa7,c287dfa7,False
+$r1 $a1_1 $a1_2 $a1_3 $a1_4 $a1_5 $a1_6 $a1_7,3,3,True,3a8debcf,3a8debcf,False
+$r2 $a2_1 $a2_2 $a2_3 $a2_4 $a2_5 $a2_6 $a2_7,3,3,True,ddf7c3b3,ddf7c3b3,False
+$r3 $a3_1 $a3_2 $a3_3 $a3_4 $a3_5 $a3_6 $a3_7,0,0,True,c696b484,c696b484,True
+$r4 $a4_1 $a4_2 $a4_3 $a4_4 $a4_5 $a4_6 $a4_7,0,0,True,4b06304c,4b06304c,True
+$r5 $a5_1 $a5_2 $a5_3 $a5_4 $a5_5 $a5_6 $a5_7,0,0,True,4780df75,4780df75,True
+$r6 $a6_1 $a6_2 $a6_3 $a6_4 $a6_5 $a6_6 $a6_7,0,0,True,018ad9a1,018ad9a1,True
+$r7 $a7_1 $a7_2 $a7_3 $a7_4 $a7_5 $a7_6 $a7_7,0,0,True,2c0c93bb,2c0c93bb,True
+$r8 $a8_1 $a8_2 $a8_3 $a8_4 $a8_5 $a8_6 $a8_7,0,0,True,e3b95119,e3b95119,True
+$r9 $a9_1 $a9_2 $a9_3 $a9_4 $a9_5 $a9_6 $a9_7,7,7,True,4275fa8f,4275fa8f,True
+$r10 $a10_1 $a10_2 $a10_3 $a10_4 $a10_5 $a10_6 $a10_7,9,9,True,b683e9d6,b683e9d6,True
+$r11 $a11_1 $a11_2 $a11_3 $a11_4 $a11_5 $a11_6 $a11_7,17,17,True,ed266668,ed266668,True
+$r12 $a12_1 $a12_2 $a12_3 $a12_4 $a12_5 $a12_6 $a12_7,0,0,True,fc178d7b,fc178d7b,True
+$r13 $a13_1 $a13_2 $a13_3 $a13_4 $a13_5 $a13_6 $a13_7,0,0,True,26fa3a7c,26fa3a7c,True
+$r14 $a14_1 $a14_2 $a14_3 $a14_4 $a14_5 $a14_6 $a14_7,0,0,True,f2a270d6,f2a270d6,True
+$r15 $a15_1 $a15_2 $a15_3 $a15_4 $a15_5 $a15_6 $a15_7,0,0,True,acb1bab1,acb1bab1,True
+$r16 $a16_1 $a16_2 $a16_3 $a16_4 $a16_5 $a16_6 $a16_7,0,0,True,f2b8d6f4,f2b8d6f4,True
+$r17 $a17_1 $a17_2 $a17_3 $a17_4 $a17_5 $a17_6 $a17_7,0,0,True,b5b6e231,b5b6e231,True
+state_regions,$fmlog+0x0:16384 $obj+0x0:5120 0x0083ff60+0x0:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62b5e710,original=0x1510bc0,2026-10-14T14:45:24
+distinct_results,18,,
+VERDICT,GREEN,18,

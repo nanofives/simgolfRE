@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 444 bytes, 98 instructions, subsystem `ui`. Mechanical 
 Destructor for the composite dialog window: tears down the TextView, HotList, two lists and two buttons. (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+the Dialog destructor. It writes the Dialog vtables (+0 = 0x004bb3f8, +0x274 = 0x004bb3e4, 0x00491731 / 0x00491737) and destroys the members in reverse order of construction: TextView::reset 0x0048d480 (this) (0x00491749), HotList::dtor 0x004928d0 (+0x1f04) (0x00491759), Dialog::viewDtor 0x00491500 (+0x165c) (0x0049176b), ListModel::dtor 0x00489370 (+0x1bd4) (0x00491776), Base4805a0::dtor 0x004805a0 (+0x165c) (0x0049177d); two list members at e = +0x1438 and e = +0x1408 (0x00491782..0x00491824), each: [e - 0x28] = 0x004bb22c, its base vtable through the vbtable [e - 0x24]'s second dword = 0x004bb228, List402_clear 0x004026a0 (e - 0x28), [e - 0x14] = 0, List401c70_dtor 0x00401c70 (e - 0xc), then [0x00839650] = [e + 4] (read before) and [e] = 0x004ba278; +0x13a0 = 0x004ba2d8 and Surface_free 0x00473ae0 (+0x13a0) (0x0049182f / 0x00491835); two LabelButtons at +0xcac and +0x5dc (0x0049183a..0x00491896), each with +0 = 0x004bb5b4, +0x274 = 0x004bb5a0, LabelButton::reset 0x004a14c0 and Button::dtor 0x00488650; Buf_dtor 0x00474810 (+0x5a4) (0x004918a6); Base4805a0::dtor (this) (0x004918b5), whose eax it returns. No conditional jumps. Called by Dialog::scalarDtor 0x004916f0 and netHandleControl 0x0049acf0. Reimplemented in `shim/src/re/c3fi.cpp`; path-1 A/B GREEN: Dialog::dtor (10 vectors, 10 distinct results, 10 changing state, `log/diff/00491710_Dialog_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_hand_r1.cpp` as `??1R1X491710@@UAE@XZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004918cb): callee pops 0 bytes of stack arguments.
