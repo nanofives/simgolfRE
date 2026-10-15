@@ -382,7 +382,10 @@ function attachReach() {
     for (const x of list) x.armed = true;
   }
 }
-function reachCounts() { return reach.map(r => [r.module, r.rva, r.state, r.hits, r.hitsOther]); }
+function reachCounts() {
+  if (CFG.spawnReach) return reach.map(r => [r.module, r.rva, r.state, r.hits, r.hitsOther, r.bootHits, r.bootOther, r.armedAt]);
+  return reach.map(r => [r.module, r.rva, r.state, r.hits, r.hitsOther]);
+}
 const reachByKey = new Map(reach.map(r => [r.module.toLowerCase() + ':' + r.rva, r]));
 function armedOrig(module, rva) {
   const r = reachByKey.get(module.toLowerCase() + ':' + rva);
@@ -425,7 +428,13 @@ function status() {
     })() : undefined,
   };
 }
+let firstPollDone = false;
 function poll(now) {
+  if (CFG.spawnReach && !firstPollDone) {
+    // spawn mode: hits taken before the first poll (static initializers, early boot) are kept apart for the report
+    firstPollDone = true;
+    for (const r of reach) { r.bootHits = r.hits; r.bootOther = r.hitsOther; }
+  }
   attachReach();
   const lg = log.splice(0, log.length);
   send({ type: 'poll', st: status(), log: lg, bt: where(), reach: CFG.debugBt ? reachCounts() : undefined });
@@ -446,6 +455,19 @@ function poll(now) {
   }
 }
 schedule(CFG.firstPoll, poll);
+
+// SPAWN-TIME REACH (cfg.spawnReach, scenario_ab.py --spawn-reach; batch s36c, round 36). Game.start() loads this agent
+// while the spawned process is still suspended: the shim's DllMain has installed its hooks (0xE9 at hooked entries,
+// measured 2026-10-15) but the main thread has not reached the exe's entry, so __cinit 0x004a50db and the boot have not
+// run. Without this block the breakpoints are first armed at the first poll (cfg.firstPoll), after all of that code. Here
+// every target whose module is mapped now (and, in the ON arm, whose hook is installed) is armed before the resume; DLLs
+// loaded later (jgld.dll, sound.dll) are armed at the polls as before. lastRearm is reset so the first poll re-arms and
+// the re-arm grid of the default mode (first poll, then every cfg.rearmMs) is kept.
+if (CFG.spawnReach) {
+  attachReach();
+  for (const r of reach) r.armedAt = r.state === 'armed' ? 'spawn' : 'poll';
+  lastRearm = null;
+}
 
 // debug: messages dispatched on the main thread (DispatchMessageA), by message number
 const msgCounts = {};

@@ -1,0 +1,16 @@
+checkpoint,off,on,match
+menu T=3434,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,True
+sandbox_00 T=6969,state=c11c62044e3851a1 frame=de999e4f455d2219,state=c11c62044e3851a1 frame=de999e4f455d2219,True
+sandbox_05 T=12120,state=85fdbc5fbd5f7587 frame=2c882d8c9580c4b1,state=85fdbc5fbd5f7587 frame=2c882d8c9580c4b1,True
+sandbox_10 T=17271,state=8e7e1ed1ee8ebb19 frame=39915d8dec9b6f45,state=8e7e1ed1ee8ebb19 frame=39915d8dec9b6f45,True
+sandbox_15 T=22422,state=c270ad6d4d8e297f frame=50dfff6dc1c606a1,state=c270ad6d4d8e297f frame=50dfff6dc1c606a1,True
+sandbox_20 T=27573,state=313587064b3d0ab7 frame=20f768fd8cd5ae3f,state=313587064b3d0ab7 frame=20f768fd8cd5ae3f,True
+sandbox_25 T=32724,state=1a4b36b4e1ff9a88 frame=10635629d90602e9,state=1a4b36b4e1ff9a88 frame=10635629d90602e9,True
+sandbox_30 T=37875,state=d964bf233174f522 frame=8489704f196bd3f8,state=d964bf233174f522 frame=8489704f196bd3f8,True
+sandbox_35 T=43026,state=900ce4ab12309d61 frame=50c99b7cd8ce3392,state=900ce4ab12309d61 frame=50c99b7cd8ce3392,True
+sandbox_40 T=48177,state=6e0b6b6b35ce1069 frame=ff2b01c2972ab662,state=6e0b6b6b35ce1069 frame=ff2b01c2972ab662,True
+install_witness,0xe9,0xe9,True
+meta,scenario=sandbox_basic_spawn hooks_on=2927 tag=all2,reach_on=4 other_threads=0 (armed) reach_off=4 other_threads=0 (armed) off_byte=0x55,2026-10-15T11:02:56
+meta,off=log/c3/alt/c3ft/sandbox_basic_spawn/ab_all2_off,on=log/c3/alt/c3ft/sandbox_basic_spawn/ab_all2_on,clock=virtual step 1 ms poll 100 ms
+meta,reach_armed=spawn (before the exe entry; DLLs loaded later at the polls),boot_on=1 boot_other_on=0 armed_on=spawn boot_off=1 boot_other_off=0 armed_off=spawn,
+VERDICT,GREEN,10,

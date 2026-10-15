@@ -8,6 +8,10 @@ seed 0x00822d9c, and the frame.
     # 2. A/B: replay the recorded schedule with hooks OFF and with the named hooks ON (all other hooks OFF)
     py -3.12 re/frida/scenario_ab.py ab --scenario sandbox_basic --on golf_clean.exe:0x45c1a0 jgld.dll:0x11dd0 ...
     #    --on all: every registered hook ON; --negctl <dll>: the ON arm runs a control build (never writes log/diff)
+    # 3. spawn-time reach (opt-in, round 36 s36c): the same commands with --spawn-reach arm the reach breakpoints before
+    #    the exe entry runs (static initializers and early boot count as reached); outputs under <scenario>_spawn
+    py -3.12 re/frida/scenario_ab.py determinism --scenario sandbox_basic --spawn-reach
+    py -3.12 re/frida/scenario_ab.py ab --scenario sandbox_basic --spawn-reach --on all
 
 Every run uses the install copy instances\c3ft (--instance) and SIMGOLF_ALLOW_MULTI=1, so other sessions' games are
 never touched. The ON set is written to the copy's simgolf_shim.ini [hooks] section (every registered hook not in the set
@@ -255,7 +259,8 @@ class Ctx:
 class Run:
     """One boot of the game under scenario_det.js, driven through one scenario script."""
 
-    def __init__(self, label, scenario_name, mode, env, reach, witness, schedule=None, out_dir=None):
+    def __init__(self, label, scenario_name, mode, env, reach, witness, schedule=None, out_dir=None, spawn_reach=False):
+        self.spawn_reach = spawn_reach       # --spawn-reach: breakpoints armed before the exe entry (scenario_det.js)
         self.label = label
         self.scenario_name = scenario_name
         self.mode = mode                     # 'record' | 'replay'
@@ -288,7 +293,9 @@ class Run:
                "slots": slot_config(), "regions": [[va, n] for va, n, _ in self.regs], "witness": self.witness,
                "reach": self.reach + dbg_reach, "firstPoll": T0 + POLL_MS, "rearmMs": REARM_MS, "debugBt": bool(os.environ.get("C3FT_DEBUG_BT")),
                "debugMsg": bool(os.environ.get("C3FT_DEBUG_MSG"))}
-        src = "const SCENARIO_CFG = " + json.dumps(cfg) + ";\n" + (JS_DIR / "scenario_det.js").read_text()
+        if self.spawn_reach:                 # the key is absent in the default mode, so its agent source is unchanged
+            cfg["spawnReach"] = True
+        src ="const SCENARIO_CFG = " + json.dumps(cfg) + ";\n" + (JS_DIR / "scenario_det.js").read_text()
         self.out.mkdir(parents=True, exist_ok=True)
         p = self.out / "agent.js"
         p.write_text(src)
@@ -511,23 +518,73 @@ def run_dir(scenario, label):
     return OUT_ROOT / scenario / label
 
 
+def scen_key(a) -> str:
+    """The name a run's outputs are filed under: the scenario, plus `_spawn` with --spawn-reach, so a spawn-mode run has its
+    own folder (log/c3/alt/c3ft/<scenario>_spawn/), its own schedule.json and its own CSV names
+    (<addr>_<name>_<scenario>_spawn.scenario.csv) and never overwrites a default-mode result."""
+    return a.scenario + ("_spawn" if getattr(a, "spawn_reach", False) else "")
+
+
+def spawn_reach_report(dirs: list[pathlib.Path]) -> dict:
+    """--spawn-reach: per run, the targets entered before the first poll (boot hits), and whether two runs agree on every
+    target's state and counts (main thread and other threads, boot and total)."""
+    out = {}
+    for d in dirs:
+        s = json.loads((d / "summary.json").read_text())
+        last = list(s["checkpoints"])[-1]
+        out[d.name] = {f"{x[0]}:{x[1]:x}": x[2:] for x in s["checkpoints"][last]["reach"]}
+    names = list(out)
+    rep = {"runs": names}
+    for n in names:
+        r = out[n]
+        rep[n] = {"targets": len(r), "armed_at_spawn": sum(1 for v in r.values() if len(v) > 5 and v[5] == "spawn"),
+                  "boot_main": sum(1 for v in r.values() if len(v) > 3 and (v[3] or 0) > 0),
+                  "total_main": sum(1 for v in r.values() if (v[1] or 0) > 0)}
+    if len(names) == 2:
+        a, b = out[names[0]], out[names[1]]
+        diff = {k: [a.get(k), b.get(k)] for k in sorted(set(a) | set(b)) if a.get(k) != b.get(k)}
+        main_diff = {k: v for k, v in diff.items()
+                     if not v[0] or not v[1] or v[0][1] != v[1][1] or v[0][3] != v[1][3] or v[0][0] != v[1][0]}
+        rep["differ"] = diff
+        rep["differ_main_thread"] = main_diff
+    return rep
+
+
 def cmd_determinism(a):
-    sched_path = OUT_ROOT / a.scenario / "schedule.json"
+    key = scen_key(a)
+    sched_path = OUT_ROOT / key / "schedule.json"
     write_ini_hooks([])
     fn = SCENARIOS[a.scenario]
+    reach, spawn = [], getattr(a, "spawn_reach", False)
+    if spawn:
+        # spawn mode: both OFF runs arm a breakpoint on the original entry of every registered hook before the exe entry,
+        # so the check covers the breakpoints' own effect on the timeline and the reach counts of the two runs are compared
+        reg = registered_hooks(INSTANCE / "simgolf_shim.log")
+        if not reg:
+            raise SystemExit(f"no `re-hook` lines in {INSTANCE / 'simgolf_shim.log'}: boot the instance once first")
+        reach = [{"module": m, "rva": r, "arm": "off"} for _n, m, r in reg]
+        (OUT_ROOT / key).mkdir(parents=True, exist_ok=True)
     if a.reuse_schedule and sched_path.exists():
         sched = json.loads(sched_path.read_text())
-        ra = Run("off_a", a.scenario, "replay", arm_env_off(), [], [], schedule=sched, out_dir=run_dir(a.scenario, a.label_a)).go(fn)
+        ra = Run("off_a", a.scenario, "replay", arm_env_off(), reach, [], schedule=sched, out_dir=run_dir(key, a.label_a),
+                 spawn_reach=spawn).go(fn)
     else:
-        ra = Run("off_a", a.scenario, "record", arm_env_off(), [], [], out_dir=run_dir(a.scenario, a.label_a)).go(fn)
+        ra = Run("off_a", a.scenario, "record", arm_env_off(), reach, [], out_dir=run_dir(key, a.label_a),
+                 spawn_reach=spawn).go(fn)
         sched_path.write_text(json.dumps(ra.schedule, indent=1))
-    rb = Run("off_b", a.scenario, "replay", arm_env_off(), [], [], schedule=ra.schedule,
-             out_dir=run_dir(a.scenario, a.label_b)).go(fn)
+    rb = Run("off_b", a.scenario, "replay", arm_env_off(), reach, [], schedule=ra.schedule,
+             out_dir=run_dir(key, a.label_b), spawn_reach=spawn).go(fn)
     cmp = compare_runs(ra.out, rb.out)
-    (OUT_ROOT / a.scenario / f"determinism_{a.label_a}_vs_{a.label_b}.json").write_text(json.dumps(cmp, indent=1))
-    print(f"determinism {a.scenario}: {a.label_a} vs {a.label_b}")
+    (OUT_ROOT / key / f"determinism_{a.label_a}_vs_{a.label_b}.json").write_text(json.dumps(cmp, indent=1))
+    print(f"determinism {key}: {a.label_a} vs {a.label_b}")
     print_compare(cmp)
     same = all(not r.get("missing") and not r["regions_differ"] and r["frame_px_differ"] == 0 for r in cmp.values())
+    if spawn:
+        rep = spawn_reach_report([ra.out, rb.out])
+        (OUT_ROOT / key / f"reach_{a.label_a}_vs_{a.label_b}.json").write_text(json.dumps(rep, indent=1))
+        for n in rep["runs"]:
+            print(f"  reach {n}: {rep[n]}")
+        print(f"  reach differs for {len(rep['differ'])} targets, on the main thread for {len(rep['differ_main_thread'])}")
     print("DETERMINISTIC" if same else "NOT DETERMINISTIC")
     return 0 if same else 1
 
@@ -557,9 +614,12 @@ def scenario_csv_path(module: str, rva: int, name: str, out_dir: pathlib.Path, s
 
 
 def cmd_ab(a):
-    sched_path = OUT_ROOT / a.scenario / "schedule.json"
+    key = scen_key(a)
+    spawn = getattr(a, "spawn_reach", False)
+    sched_path = OUT_ROOT / key / "schedule.json"
     if not sched_path.exists():
-        raise SystemExit(f"no recorded schedule {sched_path}: run `determinism --scenario {a.scenario}` first")
+        raise SystemExit(f"no recorded schedule {sched_path}: run `determinism --scenario {a.scenario}"
+                         f"{' --spawn-reach' if spawn else ''}` first")
     sched = json.loads(sched_path.read_text())
     fn = SCENARIOS[a.scenario]
     log_path = INSTANCE / "simgolf_shim.log"
@@ -585,10 +645,10 @@ def cmd_ab(a):
     if not a.skip_off:
         write_ini_hooks([])
         off_run = Run("off", a.scenario, "replay", arm_env_off(), reach_off, witness, schedule=sched,
-                      out_dir=run_dir(a.scenario, f"ab_{tag}_off")).go(fn)
+                      out_dir=run_dir(key, f"ab_{tag}_off"), spawn_reach=spawn).go(fn)
         off_dir = off_run.out
     else:
-        off_dir = run_dir(a.scenario, a.skip_off)
+        off_dir = run_dir(key, a.skip_off)
     # ON arm
     dll_backup = None
     try:
@@ -601,7 +661,7 @@ def cmd_ab(a):
         env = {"SIMGOLF_HOOKS_OFF": ",".join(env_off)} if env_off else {}
         env.update(dict(kv.split("=", 1) for kv in (a.env or [])))
         on_run = Run("on", a.scenario, "replay", env, reach_on, witness, schedule=sched,
-                     out_dir=run_dir(a.scenario, f"ab_{tag}_on"))
+                     out_dir=run_dir(key, f"ab_{tag}_on"), spawn_reach=spawn)
         try:
             on_run.go(fn)
         except Exception:  # noqa: BLE001 - a hang or a crash of the ON arm is a result (RED), not a tool error
@@ -623,11 +683,13 @@ def cmd_ab(a):
 
 def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> int:
     """Compare two finished arms (their run folders) and write one scenario CSV per function of the ON set."""
+    key = scen_key(a)
+    spawn = getattr(a, "spawn_reach", False)
     on_summary = json.loads((on_dir / "summary.json").read_text())
     failure = on_summary.get("failure")
     cmp = compare_runs(off_dir, on_dir)
-    (OUT_ROOT / a.scenario / f"ab_{tag}.json").write_text(json.dumps(cmp, indent=1))
-    print(f"A/B {a.scenario} [{tag}]: OFF vs ON ({len(on)} hooks ON)")
+    (OUT_ROOT / key / f"ab_{tag}.json").write_text(json.dumps(cmp, indent=1))
+    print(f"A/B {key} [{tag}]: OFF vs ON ({len(on)} hooks ON)")
     print_compare(cmp)
     state_same = all(not r.get("missing") and not r["regions_differ"] for r in cmp.values())
     frames_same = all(not r.get("missing") and r["frame_px_differ"] == 0 for r in cmp.values())
@@ -643,7 +705,10 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
     # its reach counter to the detour, never to the original entry). OFF arm: the byte before the agent's own counter.
     on_wit = {(w[0].lower(), w[1]): w[3] for w in on_sum[on_last]["witness"]} if on_last else {}
     off_wit = {(w[0].lower(), w[1]): w[2] for w in off_sum["checkpoints"][off_last]["witness"]}
-    out_dir = OUT_ROOT / a.scenario / f"csv_{tag}"
+    # --spawn-reach: [.., boot main hits, boot other hits, armed at 'spawn' | 'poll'] (hits before the first poll)
+    on_boot = {(x[0].lower(), x[1]): x[5:8] for x in on_sum[on_last]["reach"]} if (spawn and on_last) else {}
+    off_boot = {(x[0].lower(), x[1]): x[5:8] for x in off_sum["checkpoints"][off_last]["reach"]} if spawn else {}
+    out_dir = OUT_ROOT / key / f"csv_{tag}"
     out_dir.mkdir(parents=True, exist_ok=True)
     rows_by_key = hooks_csv_rows()
     written = []
@@ -673,7 +738,7 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
             verdict = "GREEN"
         hrow = rows_by_key.get(k, {})
         fname = hrow.get("name") or name
-        path = scenario_csv_path(mod, rva, fname, out_dir, a.scenario)
+        path = scenario_csv_path(mod, rva, fname, out_dir, key)
         with path.open("w", newline="") as f:
             w = csv.writer(f)
             w.writerow(["checkpoint", "off", "on", "match"])
@@ -687,12 +752,17 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
                             f"state={r['state_hash_b']} frame={r['frame_sha_b']}" + (f" differ={diff}" if diff else "")
                             + (f" px={r['frame_px_differ']}" if r["frame_px_differ"] else ""), same])
             w.writerow(["install_witness", f"0x{wb & 0xff:02x}" if wb >= 0 else str(wb), "0xe9", witness_ok])
-            w.writerow(["meta", f"scenario={a.scenario} hooks_on={len(on)} tag={tag}",
+            w.writerow(["meta", f"scenario={key} hooks_on={len(on)} tag={tag}",
                         f"reach_on={n_on} other_threads={o_on} ({st_on}) reach_off={n_off} other_threads={o_off} ({st_off}) "
                         f"off_byte=0x{off_wit.get(k, -1) & 0xff:02x}",
                         datetime.datetime.now().isoformat(timespec="seconds")])
             w.writerow(["meta", f"off={off_dir.relative_to(ROOT).as_posix()}", f"on={on_dir.relative_to(ROOT).as_posix()}",
                         f"clock=virtual step {STEP_MS} ms poll {POLL_MS} ms"])
+            if spawn:
+                bo, bf = on_boot.get(k, [None] * 3), off_boot.get(k, [None] * 3)
+                w.writerow(["meta", "reach_armed=spawn (before the exe entry; DLLs loaded later at the polls)",
+                            f"boot_on={bo[0]} boot_other_on={bo[1]} armed_on={bo[2]} "
+                            f"boot_off={bf[0]} boot_other_off={bf[1]} armed_off={bf[2]}", ""])
             if failure:
                 w.writerow(["meta", "on_arm_failure", failure[:600].replace("\n", " "), ""])
             w.writerow(["VERDICT", verdict, len(cmp), ""])
@@ -702,7 +772,7 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
         for v, p in written:
             print(f"  {v:10s} {p.relative_to(ROOT).as_posix()}")
     print(f"  verdicts: {dict(Counter(v for v, _ in written))} -> {out_dir.relative_to(ROOT).as_posix()}")
-    (OUT_ROOT / a.scenario / f"verdicts_{tag}.tsv").write_text("".join(f"{v}\t{p.name}\n" for v, p in written))
+    (OUT_ROOT / key / f"verdicts_{tag}.tsv").write_text("".join(f"{v}\t{p.name}\n" for v, p in written))
     if a.write_evidence and not a.negctl:
         # evidence: GREEN CSVs only. The C4 gate (scripts/re_classify.py) reads every <addr>_[<stem>_]*.scenario.csv of the
         # row's own module and wants all of them GREEN with a witness, so a DLL CSV is never read for another module's
@@ -722,7 +792,12 @@ def cmd_csv(a):
     reg = registered_hooks(INSTANCE / "simgolf_shim.log")
     on = resolve_on_set(a.on, reg)
     a.negctl = None
-    return write_results(a, on, a.label, run_dir(a.scenario, a.off_dir), run_dir(a.scenario, a.on_dir))
+    return write_results(a, on, a.label, run_dir(scen_key(a), a.off_dir), run_dir(scen_key(a), a.on_dir))
+
+
+SPAWN_HELP = ("arm the reach breakpoints when the agent loads, before the spawned process's main thread reaches the exe "
+              "entry, so static initializers (__cinit 0x004a50db) and boot code count as reached; outputs go to "
+              "<scenario>_spawn (folder, schedule, CSV names). Default: armed at the first poll")
 
 
 def main():
@@ -734,6 +809,8 @@ def main():
     p.add_argument("--label-a", default="det_a")
     p.add_argument("--label-b", default="det_b")
     p.add_argument("--reuse-schedule", action="store_true", help="replay the saved schedule in both runs")
+    p.add_argument("--spawn-reach", action="store_true", help=SPAWN_HELP + "; both OFF runs arm every registered hook's "
+                   "original entry and their reach counts are compared")
     p.set_defaults(fn=cmd_determinism)
     p = sp.add_parser("ab")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -743,6 +820,7 @@ def main():
     p.add_argument("--env", nargs="*", help="extra env for the ON arm, KEY=VALUE")
     p.add_argument("--skip-off", help="reuse an earlier OFF run directory name instead of running the OFF arm")
     p.add_argument("--write-evidence", action="store_true", help="write the per-function CSVs into log/diff")
+    p.add_argument("--spawn-reach", action="store_true", help=SPAWN_HELP)
     p.set_defaults(fn=cmd_ab)
     p = sp.add_parser("csv", help="re-score two finished arms (run folder names under log/c3/alt/c3ft/<scenario>/)")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -751,6 +829,7 @@ def main():
     p.add_argument("--on-dir", required=True)
     p.add_argument("--label", required=True)
     p.add_argument("--write-evidence", action="store_true")
+    p.add_argument("--spawn-reach", action="store_true", help="the arms are spawn-mode runs (folder <scenario>_spawn)")
     p.set_defaults(fn=cmd_csv)
     a = ap.parse_args()
     return a.fn(a)
