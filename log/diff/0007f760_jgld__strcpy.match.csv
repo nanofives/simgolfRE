@@ -1,0 +1,6 @@
+instruction,library_object,original,match
+0,push edi,push edi,True
+1,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+2,jmp 0x71,jmp 0x1007f7d1,True
+meta,"library=libcmtd.lib member=build\intel\xmt_obj\strcat.obj (library object, no compilation)",symbol=_strcpy,module=jgld.dll
+VERDICT,GREEN,3,100.0%

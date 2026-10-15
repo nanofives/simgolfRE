@@ -1,0 +1,47 @@
+instruction,library_object,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,"test ecx, 3","test ecx, 3",True
+2,je 0x20,je 0x1007f700,True
+3,"mov al, byte ptr [ecx]","mov al, byte ptr [ecx]",True
+4,inc ecx,inc ecx,True
+5,"test al, al","test al, al",True
+6,je 0x53,je 0x1007f733,True
+7,"test ecx, 3","test ecx, 3",True
+8,jne 0xc,jne 0x1007f6ec,True
+9,"add eax, 0","add eax, 0",True
+10,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+11,"mov edx, 0x7efefeff","mov edx, 0x7efefeff",True
+12,"add edx, eax","add edx, eax",True
+13,"xor eax, 0xffffffff","xor eax, 0xffffffff",True
+14,"xor eax, edx","xor eax, edx",True
+15,"add ecx, 4","add ecx, 4",True
+16,"test eax, 0x81010100","test eax, 0x81010100",True
+17,je 0x20,je 0x1007f700,True
+18,"mov eax, dword ptr [ecx - 4]","mov eax, dword ptr [ecx - 4]",True
+19,"test al, al","test al, al",True
+20,je 0x71,je 0x1007f751,True
+21,"test ah, ah","test ah, ah",True
+22,je 0x67,je 0x1007f747,True
+23,"test eax, 0xff0000","test eax, 0xff0000",True
+24,je 0x5d,je 0x1007f73d,True
+25,"test eax, 0xff000000","test eax, 0xff000000",True
+26,je 0x53,je 0x1007f733,True
+27,jmp 0x20,jmp 0x1007f700,True
+28,"lea eax, [ecx - 1]","lea eax, [ecx - 1]",True
+29,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+30,"sub eax, ecx","sub eax, ecx",True
+31,ret ,ret ,True
+32,"lea eax, [ecx - 2]","lea eax, [ecx - 2]",True
+33,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+34,"sub eax, ecx","sub eax, ecx",True
+35,ret ,ret ,True
+36,"lea eax, [ecx - 3]","lea eax, [ecx - 3]",True
+37,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+38,"sub eax, ecx","sub eax, ecx",True
+39,ret ,ret ,True
+40,"lea eax, [ecx - 4]","lea eax, [ecx - 4]",True
+41,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+42,"sub eax, ecx","sub eax, ecx",True
+43,ret ,ret ,True
+meta,"library=libcmtd.lib member=build\intel\xmt_obj\strlen.obj (library object, no compilation)",symbol=_strlen,module=jgld.dll
+VERDICT,GREEN,44,100.0%

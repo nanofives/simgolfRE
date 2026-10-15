@@ -1,0 +1,87 @@
+instruction,library_object,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,push edi,push edi,True
+2,"test ecx, 3","test ecx, 3",True
+3,je 0x1c,je 0x1007f78c,True
+4,"mov al, byte ptr [ecx]","mov al, byte ptr [ecx]",True
+5,inc ecx,inc ecx,True
+6,"test al, al","test al, al",True
+7,je 0x4f,je 0x1007f7bf,True
+8,"test ecx, 3","test ecx, 3",True
+9,jne 0xd,jne 0x1007f77d,True
+10,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+11,"mov edx, 0x7efefeff","mov edx, 0x7efefeff",True
+12,"add edx, eax","add edx, eax",True
+13,"xor eax, 0xffffffff","xor eax, 0xffffffff",True
+14,"xor eax, edx","xor eax, edx",True
+15,"add ecx, 4","add ecx, 4",True
+16,"test eax, 0x81010100","test eax, 0x81010100",True
+17,je 0x1c,je 0x1007f78c,True
+18,"mov eax, dword ptr [ecx - 4]","mov eax, dword ptr [ecx - 4]",True
+19,"test al, al","test al, al",True
+20,je 0x5e,je 0x1007f7ce,True
+21,"test ah, ah","test ah, ah",True
+22,je 0x59,je 0x1007f7c9,True
+23,"test eax, 0xff0000","test eax, 0xff0000",True
+24,je 0x54,je 0x1007f7c4,True
+25,"test eax, 0xff000000","test eax, 0xff000000",True
+26,je 0x4f,je 0x1007f7bf,True
+27,jmp 0x1c,jmp 0x1007f78c,True
+28,"lea edi, [ecx - 1]","lea edi, [ecx - 1]",True
+29,jmp 0x61,jmp 0x1007f7d1,True
+30,"lea edi, [ecx - 2]","lea edi, [ecx - 2]",True
+31,jmp 0x61,jmp 0x1007f7d1,True
+32,"lea edi, [ecx - 3]","lea edi, [ecx - 3]",True
+33,jmp 0x61,jmp 0x1007f7d1,True
+34,"lea edi, [ecx - 4]","lea edi, [ecx - 4]",True
+35,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+36,"test ecx, 3","test ecx, 3",True
+37,je 0x86,je 0x1007f7f6,True
+38,"mov dl, byte ptr [ecx]","mov dl, byte ptr [ecx]",True
+39,inc ecx,inc ecx,True
+40,"test dl, dl","test dl, dl",True
+41,je 0xd8,je 0x1007f848,True
+42,"mov byte ptr [edi], dl","mov byte ptr [edi], dl",True
+43,inc edi,inc edi,True
+44,"test ecx, 3","test ecx, 3",True
+45,jne 0x6d,jne 0x1007f7dd,True
+46,jmp 0x86,jmp 0x1007f7f6,True
+47,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+48,"add edi, 4","add edi, 4",True
+49,"mov edx, 0x7efefeff","mov edx, 0x7efefeff",True
+50,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+51,"add edx, eax","add edx, eax",True
+52,"xor eax, 0xffffffff","xor eax, 0xffffffff",True
+53,"xor eax, edx","xor eax, edx",True
+54,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+55,"add ecx, 4","add ecx, 4",True
+56,"test eax, 0x81010100","test eax, 0x81010100",True
+57,je 0x81,je 0x1007f7f1,True
+58,"test dl, dl","test dl, dl",True
+59,je 0xd8,je 0x1007f848,True
+60,"test dh, dh","test dh, dh",True
+61,je 0xcf,je 0x1007f83f,True
+62,"test edx, 0xff0000","test edx, 0xff0000",True
+63,je 0xc2,je 0x1007f832,True
+64,"test edx, 0xff000000","test edx, 0xff000000",True
+65,je 0xba,je 0x1007f82a,True
+66,jmp 0x81,jmp 0x1007f7f1,True
+67,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+68,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+69,pop edi,pop edi,True
+70,ret ,ret ,True
+71,"mov word ptr [edi], dx","mov word ptr [edi], dx",True
+72,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+73,"mov byte ptr [edi + 2], 0","mov byte ptr [edi + 2], 0",True
+74,pop edi,pop edi,True
+75,ret ,ret ,True
+76,"mov word ptr [edi], dx","mov word ptr [edi], dx",True
+77,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+78,pop edi,pop edi,True
+79,ret ,ret ,True
+80,"mov byte ptr [edi], dl","mov byte ptr [edi], dl",True
+81,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+82,pop edi,pop edi,True
+83,ret ,ret ,True
+meta,"library=libcmtd.lib member=build\intel\xmt_obj\strcat.obj (library object, no compilation)",symbol=_strcat,module=jgld.dll
+VERDICT,GREEN,84,100.0%

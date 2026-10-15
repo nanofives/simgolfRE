@@ -1,0 +1,14 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push 0x40,push 0x40,True
+3,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+4,push eax,push eax,True
+5,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+6,push ecx,push ecx,True
+7,call 0x12,call 0x1007f9a0,True
+8,"add esp, 0xc","add esp, 0xc",True
+9,pop ebp,pop ebp,True
+10,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od,symbol=_fopen,module=jgld.dll
+VERDICT,GREEN,11,100.0%

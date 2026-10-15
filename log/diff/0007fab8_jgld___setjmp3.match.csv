@@ -1,0 +1,45 @@
+instruction,library_object,original,match
+0,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+1,"mov dword ptr [edx], ebp","mov dword ptr [edx], ebp",True
+2,"mov dword ptr [edx + 4], ebx","mov dword ptr [edx + 4], ebx",True
+3,"mov dword ptr [edx + 8], edi","mov dword ptr [edx + 8], edi",True
+4,"mov dword ptr [edx + 0xc], esi","mov dword ptr [edx + 0xc], esi",True
+5,"mov dword ptr [edx + 0x10], esp","mov dword ptr [edx + 0x10], esp",True
+6,"mov eax, dword ptr [esp]","mov eax, dword ptr [esp]",True
+7,"mov dword ptr [edx + 0x14], eax","mov dword ptr [edx + 0x14], eax",True
+8,"mov dword ptr [edx + 0x20], 0x56433230","mov dword ptr [edx + 0x20], 0x56433230",True
+9,"mov dword ptr [edx + 0x24], 0","mov dword ptr [edx + 0x24], 0",True
+10,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+11,"mov dword ptr [edx + 0x18], eax","mov dword ptr [edx + 0x18], eax",True
+12,"cmp eax, -1","cmp eax, -1",True
+13,jne 0x3d,jne 0x1007faf5,True
+14,"mov dword ptr [edx + 0x1c], 0xffffffff","mov dword ptr [edx + 0x1c], 0xffffffff",True
+15,jmp 0x78,jmp 0x1007fb30,True
+16,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+17,"or ecx, ecx","or ecx, ecx",True
+18,je 0x4f,je 0x1007fb07,True
+19,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+20,"mov dword ptr [edx + 0x24], eax","mov dword ptr [edx + 0x24], eax",True
+21,dec ecx,dec ecx,True
+22,jne 0x57,jne 0x1007fb0f,True
+23,"mov eax, dword ptr [eax + 0xc]","mov eax, dword ptr [eax + 0xc]",True
+24,"mov dword ptr [edx + 0x1c], eax","mov dword ptr [edx + 0x1c], eax",True
+25,jmp 0x78,jmp 0x1007fb30,True
+26,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+27,"mov dword ptr [edx + 0x1c], eax","mov dword ptr [edx + 0x1c], eax",True
+28,dec ecx,dec ecx,True
+29,je 0x78,je 0x1007fb30,True
+30,push esi,push esi,True
+31,push edi,push edi,True
+32,"lea esi, [esp + 0x1c]","lea esi, [esp + 0x1c]",True
+33,"lea edi, [edx + 0x28]","lea edi, [edx + 0x28]",True
+34,"cmp ecx, 6","cmp ecx, 6",True
+35,jbe 0x74,jbe 0x1007fb2c,True
+36,"mov ecx, 6","mov ecx, 6",True
+37,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+38,pop edi,pop edi,True
+39,pop esi,pop esi,True
+40,"sub eax, eax","sub eax, eax",True
+41,ret ,ret ,True
+meta,"library=libcmtd.lib member=build\intel\xmt_obj\setjmp3.obj (library object, no compilation)",symbol=__setjmp3,module=jgld.dll
+VERDICT,GREEN,42,100.0%
