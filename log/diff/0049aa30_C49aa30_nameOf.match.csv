@@ -1,0 +1,22 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,"xor eax, eax","xor eax, eax",True
+3,"lea edx, [ecx + 0x170]","lea edx, [ecx + 0x170]",True
+4,"cmp dword ptr [edx], esi","cmp dword ptr [edx], esi",True
+5,je 0x1a,je 0x49aa4a,True
+6,inc eax,inc eax,True
+7,"add edx, 0x58","add edx, 0x58",True
+8,"cmp eax, 0x10","cmp eax, 0x10",True
+9,jl 0xd,jl 0x49aa3d,True
+10,"cmp eax, 0x10","cmp eax, 0x10",True
+11,pop esi,pop esi,True
+12,jne 0x25,jne 0x49aa55,True
+13,"xor eax, eax","xor eax, eax",True
+14,ret 4,ret 4,True
+15,"lea edx, [eax + eax*4]","lea edx, [eax + eax*4]",True
+16,"lea eax, [eax + edx*2]","lea eax, [eax + edx*2]",True
+17,"lea eax, [ecx + eax*8 + 0x185]","lea eax, [ecx + eax*8 + 0x185]",True
+18,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?nameOf@C49aa30@@QAEPADH@Z,module=golf_clean.exe
+VERDICT,GREEN,19,100.0%

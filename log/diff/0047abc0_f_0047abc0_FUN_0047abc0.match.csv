@@ -1,0 +1,13 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push 1,push 1,True
+2,call dword ptr [0],call dword ptr [0x4ba1f0],True
+3,"movsx esi, ax","movsx esi, ax",True
+4,push 0x17,push 0x17,True
+5,"sar esi, 0xf","sar esi, 0xf",True
+6,call dword ptr [0],call dword ptr [0x4ba1c8],True
+7,"xor eax, esi","xor eax, esi",True
+8,pop esi,pop esi,True
+9,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_0047abc0@f_0047abc0@@YAIXZ,module=golf_clean.exe
+VERDICT,GREEN,10,100.0%

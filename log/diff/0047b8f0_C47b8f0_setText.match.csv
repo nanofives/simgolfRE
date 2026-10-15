@@ -1,0 +1,64 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, ecx","mov ebx, ecx",True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"mov eax, dword ptr [ebx + 0x14c]","mov eax, dword ptr [ebx + 0x14c]",True
+5,"test eax, eax","test eax, eax",True
+6,je 0x22,je 0x47b912,True
+7,push eax,push eax,True
+8,call 0x15,call 0x4a5007,True
+9,"add esp, 4","add esp, 4",True
+10,"mov dword ptr [ebx + 0x14c], 0","mov dword ptr [ebx + 0x14c], 0",True
+11,"mov esi, dword ptr [esp + 0x10]","mov esi, dword ptr [esp + 0x10]",True
+12,"test esi, esi","test esi, esi",True
+13,je 0x76,je 0x47b966,True
+14,"mov edi, esi","mov edi, esi",True
+15,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+16,"xor eax, eax","xor eax, eax",True
+17,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+18,not ecx,not ecx,True
+19,push ecx,push ecx,True
+20,call 0x3b,call 0x4a504f,True
+21,"add esp, 4","add esp, 4",True
+22,"mov dword ptr [ebx + 0x14c], eax","mov dword ptr [ebx + 0x14c], eax",True
+23,"test eax, eax","test eax, eax",True
+24,je 0x9b,je 0x47b98b,True
+25,"mov byte ptr [eax], 0","mov byte ptr [eax], 0",True
+26,"mov edi, esi","mov edi, esi",True
+27,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+28,"xor eax, eax","xor eax, eax",True
+29,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+30,not ecx,not ecx,True
+31,"sub edi, ecx","sub edi, ecx",True
+32,"mov esi, edi","mov esi, edi",True
+33,"mov edi, dword ptr [ebx + 0x14c]","mov edi, dword ptr [ebx + 0x14c]",True
+34,"mov edx, ecx","mov edx, ecx",True
+35,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+36,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+37,"mov ecx, edx","mov ecx, edx",True
+38,dec edi,dec edi,True
+39,"shr ecx, 2","shr ecx, 2",True
+40,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+41,"mov ecx, edx","mov ecx, edx",True
+42,"and ecx, 3","and ecx, 3",True
+43,"rep movsb byte ptr es:[edi], byte ptr [esi]","rep movsb byte ptr es:[edi], byte ptr [esi]",True
+44,"mov ecx, ebx","mov ecx, ebx",True
+45,call 0x7d,call 0x4801f0,True
+46,"test eax, eax","test eax, eax",True
+47,je 0x9b,je 0x47b98b,True
+48,"mov eax, dword ptr [ebx]","mov eax, dword ptr [ebx]",True
+49,push 0,push 0,True
+50,"mov ecx, ebx","mov ecx, ebx",True
+51,call dword ptr [eax + 0x134],call dword ptr [eax + 0x134],True
+52,"mov edx, dword ptr [ebx]","mov edx, dword ptr [ebx]",True
+53,push 0,push 0,True
+54,push 0,push 0,True
+55,"mov ecx, ebx","mov ecx, ebx",True
+56,call dword ptr [edx + 0x13c],call dword ptr [edx + 0x13c],True
+57,pop edi,pop edi,True
+58,pop esi,pop esi,True
+59,pop ebx,pop ebx,True
+60,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?setText@C47b8f0@@QAEXPBD@Z,module=golf_clean.exe
+VERDICT,GREEN,61,100.0%

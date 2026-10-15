@@ -1,0 +1,83 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x64","sub esp, 0x64",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x64]","lea edi, [ebp - 0x64]",True
+7,"mov ecx, 0x19","mov ecx, 0x19",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+11,je 0x24,je 0x1007e144,True
+12,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+13,jne 0x29,jne 0x1007e149,True
+14,jmp 0xed,jmp 0x1007e20d,True
+15,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+16,push eax,push eax,True
+17,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+18,push ecx,push ecx,True
+19,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+20,push edx,push edx,True
+21,call 0x3a,call 0x1007e0d0,True
+22,"add esp, 0xc","add esp, 0xc",True
+23,"mov dword ptr [ebp - 4], 0x3ee8bac7","mov dword ptr [ebp - 4], 0x3ee8bac7",True
+24,fld dword ptr [ebp - 4],fld dword ptr [ebp - 4],True
+25,"sub esp, 8","sub esp, 8",True
+26,fstp qword ptr [esp],fstp qword ptr [esp],True
+27,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+28,push eax,push eax,True
+29,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+30,push ecx,push ecx,True
+31,call 0x5a,call 0x1007dbd0,True
+32,"add esp, 0x10","add esp, 0x10",True
+33,"mov dword ptr [ebp - 8], 0x3ea01a37","mov dword ptr [ebp - 8], 0x3ea01a37",True
+34,"mov dword ptr [ebp - 0xc], 0x3ea872b0","mov dword ptr [ebp - 0xc], 0x3ea872b0",True
+35,"mov dword ptr [ebp - 0x10], 0x3f23d70a","mov dword ptr [ebp - 0x10], 0x3f23d70a",True
+36,"mov dword ptr [ebp - 0x14], 0x3ea8f5c3","mov dword ptr [ebp - 0x14], 0x3ea8f5c3",True
+37,"mov dword ptr [ebp - 0x18], 0x3e99999a","mov dword ptr [ebp - 0x18], 0x3e99999a",True
+38,"mov dword ptr [ebp - 0x1c], 0x3f19999a","mov dword ptr [ebp - 0x1c], 0x3f19999a",True
+39,"mov dword ptr [ebp - 0x20], 0x3e19999a","mov dword ptr [ebp - 0x20], 0x3e19999a",True
+40,"mov dword ptr [ebp - 0x24], 0x3d75c28f","mov dword ptr [ebp - 0x24], 0x3d75c28f",True
+41,fld dword ptr [ebp - 0x24],fld dword ptr [ebp - 0x24],True
+42,"sub esp, 8","sub esp, 8",True
+43,fstp qword ptr [esp],fstp qword ptr [esp],True
+44,fld dword ptr [ebp - 0x20],fld dword ptr [ebp - 0x20],True
+45,"sub esp, 8","sub esp, 8",True
+46,fstp qword ptr [esp],fstp qword ptr [esp],True
+47,fld dword ptr [ebp - 0x1c],fld dword ptr [ebp - 0x1c],True
+48,"sub esp, 8","sub esp, 8",True
+49,fstp qword ptr [esp],fstp qword ptr [esp],True
+50,fld dword ptr [ebp - 0x18],fld dword ptr [ebp - 0x18],True
+51,"sub esp, 8","sub esp, 8",True
+52,fstp qword ptr [esp],fstp qword ptr [esp],True
+53,fld dword ptr [ebp - 0x14],fld dword ptr [ebp - 0x14],True
+54,"sub esp, 8","sub esp, 8",True
+55,fstp qword ptr [esp],fstp qword ptr [esp],True
+56,fld dword ptr [ebp - 0x10],fld dword ptr [ebp - 0x10],True
+57,"sub esp, 8","sub esp, 8",True
+58,fstp qword ptr [esp],fstp qword ptr [esp],True
+59,fld dword ptr [ebp - 0xc],fld dword ptr [ebp - 0xc],True
+60,"sub esp, 8","sub esp, 8",True
+61,fstp qword ptr [esp],fstp qword ptr [esp],True
+62,fld dword ptr [ebp - 8],fld dword ptr [ebp - 8],True
+63,"sub esp, 8","sub esp, 8",True
+64,fstp qword ptr [esp],fstp qword ptr [esp],True
+65,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+66,push edx,push edx,True
+67,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+68,push eax,push eax,True
+69,call 0xea,call 0x1007db30,True
+70,"add esp, 0x48","add esp, 0x48",True
+71,pop edi,pop edi,True
+72,pop esi,pop esi,True
+73,pop ebx,pop ebx,True
+74,"add esp, 0x64","add esp, 0x64",True
+75,"cmp ebp, esp","cmp ebp, esp",True
+76,call 0xfa,call 0x1007e780,True
+77,"mov esp, ebp","mov esp, ebp",True
+78,pop ebp,pop ebp,True
+79,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_set_sRGB_gAMA_and_cHRM,module=jgld.dll
+VERDICT,GREEN,80,100.0%

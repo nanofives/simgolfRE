@@ -1,0 +1,26 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,"mov eax, 0x51eb851f","mov eax, 0x51eb851f",True
+2,imul ecx,imul ecx,True
+3,"sar edx, 6","sar edx, 6",True
+4,"mov eax, edx","mov eax, edx",True
+5,"shr eax, 0x1f","shr eax, 0x1f",True
+6,"add edx, eax","add edx, eax",True
+7,jne 0x1a,jne 0x40e5ca,True
+8,"xor eax, eax","xor eax, eax",True
+9,ret ,ret ,True
+10,"cmp edx, 2","cmp edx, 2",True
+11,jg 0x25,jg 0x40e5d5,True
+12,"mov eax, 1","mov eax, 1",True
+13,ret ,ret ,True
+14,"cmp edx, 5","cmp edx, 5",True
+15,jg 0x30,jg 0x40e5e0,True
+16,"mov eax, 2","mov eax, 2",True
+17,ret ,ret ,True
+18,"xor eax, eax","xor eax, eax",True
+19,"cmp edx, 9","cmp edx, 9",True
+20,setg al,setg al,True
+21,"add eax, 3","add eax, 3",True
+22,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?rank40e5b0@@YAHH@Z,module=golf_clean.exe
+VERDICT,GREEN,23,100.0%

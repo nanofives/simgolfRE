@@ -1,0 +1,43 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x48","sub esp, 0x48",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x48]","lea edi, [ebp - 0x48]",True
+8,"mov ecx, 0x12","mov ecx, 0x12",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"cmp dword ptr [eax + 4], 0","cmp dword ptr [eax + 4], 0",True
+15,je 0x3b,je 0x1006803b,True
+16,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+17,"mov edx, dword ptr [ecx + 4]","mov edx, dword ptr [ecx + 4]",True
+18,"mov dword ptr [ebp - 8], edx","mov dword ptr [ebp - 8], edx",True
+19,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+20,push eax,push eax,True
+21,call 0x38,call 0x1007e6d0,True
+22,"add esp, 4","add esp, 4",True
+23,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+24,"mov dword ptr [ecx + 4], 0","mov dword ptr [ecx + 4], 0",True
+25,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+26,"mov dword ptr [edx + 8], 0","mov dword ptr [edx + 8], 0",True
+27,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+28,"mov dword ptr [eax + 0xc], 0","mov dword ptr [eax + 0xc], 0",True
+29,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+30,"mov dword ptr [ecx + 0x10], 1","mov dword ptr [ecx + 0x10], 1",True
+31,pop edi,pop edi,True
+32,pop esi,pop esi,True
+33,pop ebx,pop ebx,True
+34,"add esp, 0x48","add esp, 0x48",True
+35,"cmp ebp, esp","cmp ebp, esp",True
+36,call 0x70,call 0x1007e780,True
+37,"mov esp, ebp","mov esp, ebp",True
+38,pop ebp,pop ebp,True
+39,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?FUN_10068000@f_10068000@@YIXH@Z,module=jgld.dll
+VERDICT,GREEN,40,100.0%

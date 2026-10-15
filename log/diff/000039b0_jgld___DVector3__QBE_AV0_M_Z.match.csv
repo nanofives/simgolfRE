@@ -1,0 +1,44 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x54","sub esp, 0x54",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x54]","lea edi, [ebp - 0x54]",True
+8,"mov ecx, 0x15","mov ecx, 0x15",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov dword ptr [ebp - 0x14], 0","mov dword ptr [ebp - 0x14], 0",True
+14,jmp 0x2f,jmp 0x100039df,True
+15,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+16,"add eax, 1","add eax, 1",True
+17,"mov dword ptr [ebp - 0x14], eax","mov dword ptr [ebp - 0x14], eax",True
+18,"cmp dword ptr [ebp - 0x14], 3","cmp dword ptr [ebp - 0x14], 3",True
+19,jge 0x4a,jge 0x100039fa,True
+20,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+21,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+22,fld dword ptr [ebp + 0xc],fld dword ptr [ebp + 0xc],True
+23,fmul dword ptr [edx + ecx*4],fmul dword ptr [edx + ecx*4],True
+24,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+25,fstp dword ptr [ebp + eax*4 - 0x10],fstp dword ptr [ebp + eax*4 - 0x10],True
+26,jmp 0x26,jmp 0x100039d6,True
+27,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+28,"mov edx, dword ptr [ebp - 0x10]","mov edx, dword ptr [ebp - 0x10]",True
+29,"mov dword ptr [ecx], edx","mov dword ptr [ecx], edx",True
+30,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+31,"mov dword ptr [ecx + 4], eax","mov dword ptr [ecx + 4], eax",True
+32,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+33,"mov dword ptr [ecx + 8], edx","mov dword ptr [ecx + 8], edx",True
+34,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+35,pop edi,pop edi,True
+36,pop esi,pop esi,True
+37,pop ebx,pop ebx,True
+38,"mov esp, ebp","mov esp, ebp",True
+39,pop ebp,pop ebp,True
+40,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=??DVector3@@QBE?AV0@M@Z,module=jgld.dll
+VERDICT,GREEN,41,100.0%

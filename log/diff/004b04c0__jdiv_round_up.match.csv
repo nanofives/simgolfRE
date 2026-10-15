@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+1,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+2,"lea eax, [eax + ecx - 1]","lea eax, [eax + ecx - 1]",True
+3,cdq ,cdq ,True
+4,idiv ecx,idiv ecx,True
+5,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jdiv_round_up,module=golf_clean.exe
+VERDICT,GREEN,6,100.0%

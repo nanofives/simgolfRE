@@ -1,0 +1,34 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+2,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+3,push ebx,push ebx,True
+4,"mov ebx, dword ptr [esp + 0x18]","mov ebx, dword ptr [esp + 0x18]",True
+5,"lea eax, [ecx + eax*4]","lea eax, [ecx + eax*4]",True
+6,"mov ecx, dword ptr [esp + 0x10]","mov ecx, dword ptr [esp + 0x10]",True
+7,"test ebx, ebx","test ebx, ebx",True
+8,"lea edx, [ecx + edx*4]","lea edx, [ecx + edx*4]",True
+9,jle 0x44,jle 0x4b0534,True
+10,push ebp,push ebp,True
+11,push esi,push esi,True
+12,push edi,push edi,True
+13,"mov ecx, dword ptr [esp + 0x28]","mov ecx, dword ptr [esp + 0x28]",True
+14,"mov esi, dword ptr [eax]","mov esi, dword ptr [eax]",True
+15,"mov edi, dword ptr [edx]","mov edi, dword ptr [edx]",True
+16,"mov ebp, ecx","mov ebp, ecx",True
+17,"shr ecx, 2","shr ecx, 2",True
+18,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+19,"mov ecx, ebp","mov ecx, ebp",True
+20,"add eax, 4","add eax, 4",True
+21,"add edx, 4","add edx, 4",True
+22,"and ecx, 3","and ecx, 3",True
+23,dec ebx,dec ebx,True
+24,"rep movsb byte ptr es:[edi], byte ptr [esi]","rep movsb byte ptr es:[edi], byte ptr [esi]",True
+25,jne 0x22,jne 0x4b0512,True
+26,pop edi,pop edi,True
+27,pop esi,pop esi,True
+28,pop ebp,pop ebp,True
+29,pop ebx,pop ebx,True
+30,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jcopy_sample_rows,module=golf_clean.exe
+VERDICT,GREEN,31,100.0%

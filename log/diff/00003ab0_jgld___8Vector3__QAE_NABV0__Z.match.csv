@@ -1,0 +1,46 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x44","sub esp, 0x44",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x44]","lea edi, [ebp - 0x44]",True
+8,"mov ecx, 0x11","mov ecx, 0x11",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+15,fld dword ptr [eax],fld dword ptr [eax],True
+16,fcomp dword ptr [ecx],fcomp dword ptr [ecx],True
+17,fnstsw ax,fnstsw ax,True
+18,"test ah, 0x40","test ah, 0x40",True
+19,je 0x58,je 0x10003b08,True
+20,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+21,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+22,fld dword ptr [edx + 4],fld dword ptr [edx + 4],True
+23,fcomp dword ptr [eax + 4],fcomp dword ptr [eax + 4],True
+24,fnstsw ax,fnstsw ax,True
+25,"test ah, 0x40","test ah, 0x40",True
+26,je 0x58,je 0x10003b08,True
+27,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+28,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+29,fld dword ptr [ecx + 8],fld dword ptr [ecx + 8],True
+30,fcomp dword ptr [edx + 8],fcomp dword ptr [edx + 8],True
+31,fnstsw ax,fnstsw ax,True
+32,"test ah, 0x40","test ah, 0x40",True
+33,je 0x58,je 0x10003b08,True
+34,"mov al, 1","mov al, 1",True
+35,jmp 0x5a,jmp 0x10003b0a,True
+36,"xor al, al","xor al, al",True
+37,pop edi,pop edi,True
+38,pop esi,pop esi,True
+39,pop ebx,pop ebx,True
+40,"mov esp, ebp","mov esp, ebp",True
+41,pop ebp,pop ebp,True
+42,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=??8Vector3@@QAE_NABV0@@Z,module=jgld.dll
+VERDICT,GREEN,43,100.0%

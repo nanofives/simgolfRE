@@ -1,0 +1,7 @@
+instruction,recompiled,original,match
+0,push 2,push 2,True
+1,call 7,call 0x1004319b,True
+2,pop ecx,pop ecx,True
+3,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1004a158@f_1004a158@@YAXXZ,module=sound.dll
+VERDICT,GREEN,4,100.0%

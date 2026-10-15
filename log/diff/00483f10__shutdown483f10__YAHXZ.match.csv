@@ -1,0 +1,58 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x83afc4]",True
+1,push edi,push edi,True
+2,"xor edi, edi","xor edi, edi",True
+3,"cmp eax, edi","cmp eax, edi",True
+4,jne 0x13,jne 0x483f23,True
+5,"mov eax, 1","mov eax, 1",True
+6,pop edi,pop edi,True
+7,ret ,ret ,True
+8,push esi,push esi,True
+9,call dword ptr [0],call dword ptr [0x83af78],True
+10,"mov esi, dword ptr [0]","mov esi, dword ptr [0x83af68]",True
+11,"cmp esi, edi","cmp esi, edi",True
+12,je 0x7b,je 0x483f8b,True
+13,"mov eax, dword ptr [esi + 0x40]","mov eax, dword ptr [esi + 0x40]",True
+14,"cmp eax, edi","cmp eax, edi",True
+15,je 0x37,je 0x483f47,True
+16,push eax,push eax,True
+17,call 0x31,call 0x484110,True
+18,"add esp, 4","add esp, 4",True
+19,"mov dword ptr [esi + 0x40], edi","mov dword ptr [esi + 0x40], edi",True
+20,"mov eax, dword ptr [esi + 0x50]","mov eax, dword ptr [esi + 0x50]",True
+21,"cmp eax, edi","cmp eax, edi",True
+22,je 0x4a,je 0x483f5a,True
+23,push eax,push eax,True
+24,call 0x44,call 0x4a4ffc,True
+25,"add esp, 4","add esp, 4",True
+26,"mov dword ptr [esi + 0x50], edi","mov dword ptr [esi + 0x50], edi",True
+27,"mov eax, dword ptr [esi + 0x44]","mov eax, dword ptr [esi + 0x44]",True
+28,"test al, 2","test al, 2",True
+29,je 0x67,je 0x483f77,True
+30,"test ah, 2","test ah, 2",True
+31,je 0x67,je 0x483f77,True
+32,push esi,push esi,True
+33,call 0x5c,call 0x4843e0,True
+34,push esi,push esi,True
+35,call 0x62,call 0x484110,True
+36,"add esp, 8","add esp, 8",True
+37,jmp 0x71,jmp 0x483f81,True
+38,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+39,"mov ecx, esi","mov ecx, esi",True
+40,call dword ptr [eax + 0x80],call dword ptr [eax + 0x80],True
+41,"mov esi, dword ptr [0]","mov esi, dword ptr [0x83af68]",True
+42,"cmp esi, edi","cmp esi, edi",True
+43,jne 0x24,jne 0x483f34,True
+44,"mov ecx, 0","mov ecx, 0x83ad58",True
+45,call 0x85,call 0x487ac0,True
+46,"mov ecx, 0","mov ecx, 0x83ad80",True
+47,call 0x8f,call 0x487460,True
+48,"mov ecx, 0","mov ecx, 0x83af98",True
+49,call 0x99,call 0x487c40,True
+50,call 0x9e,call 0x484060,True
+51,pop esi,pop esi,True
+52,"xor eax, eax","xor eax, eax",True
+53,pop edi,pop edi,True
+54,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?shutdown483f10@@YAHXZ,module=golf_clean.exe
+VERDICT,GREEN,55,100.0%

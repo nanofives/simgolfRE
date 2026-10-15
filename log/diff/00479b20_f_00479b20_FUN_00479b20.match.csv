@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,"cmp dword ptr [0], ecx","cmp dword ptr [0x83aa98], ecx",True
+1,jne 0x1a,jne 0x479b3a,True
+2,push 0,push 0,True
+3,call dword ptr [0],call dword ptr [0x4ba1d0],True
+4,"mov dword ptr [0], 0","mov dword ptr [0x83aa98], 0",True
+5,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00479b20@f_00479b20@@YIXH@Z,module=golf_clean.exe
+VERDICT,GREEN,6,100.0%

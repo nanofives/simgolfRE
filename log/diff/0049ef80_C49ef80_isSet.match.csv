@@ -1,0 +1,43 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+1,push ebx,push ebx,True
+2,push ebp,push ebp,True
+3,push esi,push esi,True
+4,"mov edx, dword ptr [eax + 8]","mov edx, dword ptr [eax + 8]",True
+5,"xor esi, esi","xor esi, esi",True
+6,push edi,push edi,True
+7,"lea eax, [edx + ecx + 0xc0]","lea eax, [edx + ecx + 0xc0]",True
+8,"mov edx, dword ptr [edx + ecx + 0xc8]","mov edx, dword ptr [edx + ecx + 0xc8]",True
+9,"cmp edx, esi","cmp edx, esi",True
+10,je 0x48,je 0x49efc8,True
+11,"mov edi, dword ptr [eax + 0x10]","mov edi, dword ptr [eax + 0x10]",True
+12,"mov dword ptr [eax + 0x14], esi","mov dword ptr [eax + 0x14], esi",True
+13,"cmp edi, esi","cmp edi, esi",True
+14,"mov dword ptr [eax + 0xc], edx","mov dword ptr [eax + 0xc], edx",True
+15,jle 0x48,jle 0x49efc8,True
+16,"mov ebx, dword ptr [esp + 0x14]","mov ebx, dword ptr [esp + 0x14]",True
+17,"mov edx, dword ptr [eax + 0xc]","mov edx, dword ptr [eax + 0xc]",True
+18,"cmp dword ptr [edx + 4], ebx","cmp dword ptr [edx + 4], ebx",True
+19,je 0x48,je 0x49efc8,True
+20,"mov ebp, dword ptr [eax + 0x14]","mov ebp, dword ptr [eax + 0x14]",True
+21,inc ebp,inc ebp,True
+22,inc esi,inc esi,True
+23,"mov dword ptr [eax + 0x14], ebp","mov dword ptr [eax + 0x14], ebp",True
+24,"mov edx, dword ptr [edx + 0xc]","mov edx, dword ptr [edx + 0xc]",True
+25,"cmp esi, edi","cmp esi, edi",True
+26,"mov dword ptr [eax + 0xc], edx","mov dword ptr [eax + 0xc], edx",True
+27,jl 0x2e,jl 0x49efae,True
+28,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+29,pop edi,pop edi,True
+30,pop esi,pop esi,True
+31,pop ebp,pop ebp,True
+32,"mov edx, dword ptr [eax + 8]","mov edx, dword ptr [eax + 8]",True
+33,"mov eax, 1","mov eax, 1",True
+34,"add edx, ecx","add edx, ecx",True
+35,pop ebx,pop ebx,True
+36,"mov ecx, dword ptr [edx + 0xd4]","mov ecx, dword ptr [edx + 0xd4]",True
+37,"shl eax, cl","shl eax, cl",True
+38,"and eax, dword ptr [edx + 0xf0]","and eax, dword ptr [edx + 0xf0]",True
+39,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?isSet@C49ef80@@QAEHH@Z,module=golf_clean.exe
+VERDICT,GREEN,40,100.0%

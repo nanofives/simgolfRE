@@ -1,0 +1,6 @@
+instruction,recompiled,original,match
+0,call 5,call 0x483d40,True
+1,call 0xa,call 0x483d60,True
+2,jmp 0xf,jmp 0x497b20,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00483d30@f_00483d30@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,3,100.0%

@@ -1,0 +1,12 @@
+instruction,recompiled,original,match
+0,"test byte ptr [ecx + 0xc8], 2","test byte ptr [ecx + 0xc8], 2",True
+1,jne 0xf,jne 0x1003a08f,True
+2,"mov eax, 0x14","mov eax, 0x14",True
+3,ret ,ret ,True
+4,push 1,push 1,True
+5,"add ecx, 0x70","add ecx, 0x70",True
+6,call 0x19,call 0x10002117,True
+7,"xor eax, eax","xor eax, eax",True
+8,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1003a080@f_1003a080@@YIIH@Z,module=sound.dll
+VERDICT,GREEN,9,100.0%

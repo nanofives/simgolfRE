@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,"sub esp, 8","sub esp, 8",True
+1,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+2,"mov dword ptr [esp + 4], 0","mov dword ptr [esp + 4], 0",True
+3,"mov dword ptr [esp], eax","mov dword ptr [esp], eax",True
+4,fild qword ptr [esp],fild qword ptr [esp],True
+5,"test eax, eax","test eax, eax",True
+6,fmul qword ptr [0],fmul qword ptr [0x1005b488],True
+7,fstp qword ptr [ecx + 0x58],fstp qword ptr [ecx + 0x58],True
+8,je 0x25,je 0x100383d5,True
+9,inc eax,inc eax,True
+10,"shl eax, 9","shl eax, 9",True
+11,"mov dword ptr [ecx + 0x50], eax","mov dword ptr [ecx + 0x50], eax",True
+12,"mov eax, dword ptr [ecx + 0x48]","mov eax, dword ptr [ecx + 0x48]",True
+13,push eax,push eax,True
+14,call 0x34,call 0x1000231a,True
+15,"add esp, 8","add esp, 8",True
+16,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_100383b0@C_FUN_100383b0@f_100383b0@@QAEXI@Z,module=sound.dll
+VERDICT,GREEN,17,100.0%

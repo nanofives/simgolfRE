@@ -1,0 +1,173 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov ecx, 0","mov ecx, 0x821ee8",True
+2,call 0xb,call 0x4838b0,True
+3,"mov ecx, 0","mov ecx, 0x821f28",True
+4,call 0x15,call 0x4838b0,True
+5,"mov ecx, 0","mov ecx, 0x821020",True
+6,call 0x1f,call 0x4838b0,True
+7,"mov ecx, 0","mov ecx, 0x821040",True
+8,call 0x29,call 0x473ae0,True
+9,"mov esi, 0","mov esi, 0x820f40",True
+10,"mov ecx, esi","mov ecx, esi",True
+11,call 0x35,call 0x473ae0,True
+12,"add esi, 0x2c","add esi, 0x2c",True
+13,"cmp esi, 0x84","cmp esi, 0x820fc4",True
+14,jl 0x2e,jl 0x44cd0e,True
+15,push ebx,push ebx,True
+16,push edi,push edi,True
+17,"mov ecx, 0","mov ecx, 0x8210c8",True
+18,call 0x4c,call 0x473ae0,True
+19,"mov ecx, 0","mov ecx, 0x8210f4",True
+20,call 0x56,call 0x473ae0,True
+21,"mov ecx, 0","mov ecx, 0x821308",True
+22,call 0x60,call 0x473ae0,True
+23,"mov ecx, 0","mov ecx, 0x821360",True
+24,call 0x6a,call 0x473ae0,True
+25,"mov ecx, 0","mov ecx, 0x8213b8",True
+26,call 0x74,call 0x473ae0,True
+27,"mov ecx, 0","mov ecx, 0x821410",True
+28,call 0x7e,call 0x473ae0,True
+29,"mov edi, 0","mov edi, 0x821468",True
+30,"cmp edi, 0x84","cmp edi, 0x8214ec",True
+31,jge 0xad,jge 0x44cd8d,True
+32,"lea esi, [edi + 0x160]","lea esi, [edi + 0x160]",True
+33,"mov ebx, 0xc","mov ebx, 0xc",True
+34,"mov ecx, esi","mov ecx, esi",True
+35,call 0x9d,call 0x473ae0,True
+36,"add esi, 0x84","add esi, 0x84",True
+37,dec ebx,dec ebx,True
+38,jne 0x96,jne 0x44cd76,True
+39,"mov ecx, edi","mov ecx, edi",True
+40,call 0xad,call 0x473ae0,True
+41,"lea ecx, [edi + 0x84]","lea ecx, [edi + 0x84]",True
+42,call 0xb8,call 0x473ae0,True
+43,"add edi, 0x2c","add edi, 0x2c",True
+44,"cmp edi, 0xdc","cmp edi, 0x821544",True
+45,jl 0x83,jl 0x44cd63,True
+46,"mov ecx, 0","mov ecx, 0x821334",True
+47,call 0xcd,call 0x473ae0,True
+48,"mov ecx, 0","mov ecx, 0x82138c",True
+49,call 0xd7,call 0x473ae0,True
+50,"mov ecx, 0","mov ecx, 0x8213e4",True
+51,call 0xe1,call 0x473ae0,True
+52,"mov ecx, 0","mov ecx, 0x82143c",True
+53,call 0xeb,call 0x473ae0,True
+54,"mov ecx, 0","mov ecx, 0x821c60",True
+55,call 0xf5,call 0x473ae0,True
+56,"mov ecx, 0","mov ecx, 0x821c8c",True
+57,call 0xff,call 0x473ae0,True
+58,"mov ecx, 0","mov ecx, 0x821200",True
+59,call 0x109,call 0x473ae0,True
+60,"mov ecx, 0","mov ecx, 0x821258",True
+61,call 0x113,call 0x473ae0,True
+62,"mov ecx, 0","mov ecx, 0x8212b0",True
+63,call 0x11d,call 0x473ae0,True
+64,"mov ecx, 0","mov ecx, 0x82122c",True
+65,call 0x127,call 0x473ae0,True
+66,"mov ecx, 0","mov ecx, 0x821284",True
+67,call 0x131,call 0x473ae0,True
+68,"mov ecx, 0","mov ecx, 0x8212dc",True
+69,call 0x13b,call 0x473ae0,True
+70,"mov ecx, 0","mov ecx, 0x8223c0",True
+71,call 0x145,call 0x473ae0,True
+72,"mov ecx, 0","mov ecx, 0x822418",True
+73,call 0x14f,call 0x473ae0,True
+74,"mov ecx, 0","mov ecx, 0x822470",True
+75,call 0x159,call 0x473ae0,True
+76,"mov ecx, 0","mov ecx, 0x8223ec",True
+77,call 0x163,call 0x473ae0,True
+78,"mov ecx, 0","mov ecx, 0x822444",True
+79,call 0x16d,call 0x473ae0,True
+80,"mov ecx, 0","mov ecx, 0x82249c",True
+81,call 0x177,call 0x473ae0,True
+82,"mov ecx, 0","mov ecx, 0x821f48",True
+83,call 0x181,call 0x473ae0,True
+84,"mov ecx, 0","mov ecx, 0x821f74",True
+85,call 0x18b,call 0x473ae0,True
+86,pop edi,pop edi,True
+87,"mov esi, 0","mov esi, 0x821fa0",True
+88,pop ebx,pop ebx,True
+89,"mov ecx, esi","mov ecx, esi",True
+90,call 0x199,call 0x473ae0,True
+91,"add esi, 0x2c","add esi, 0x2c",True
+92,"cmp esi, 0x318","cmp esi, 0x8222b8",True
+93,jl 0x192,jl 0x44ce72,True
+94,"mov ecx, 0","mov ecx, 0x8222b8",True
+95,call 0x1ae,call 0x473ae0,True
+96,"mov ecx, 0","mov ecx, 0x822310",True
+97,call 0x1b8,call 0x473ae0,True
+98,"mov ecx, 0","mov ecx, 0x822368",True
+99,call 0x1c2,call 0x473ae0,True
+100,"mov ecx, 0","mov ecx, 0x8222e4",True
+101,call 0x1cc,call 0x473ae0,True
+102,"mov ecx, 0","mov ecx, 0x82233c",True
+103,call 0x1d6,call 0x473ae0,True
+104,"mov ecx, 0","mov ecx, 0x822394",True
+105,call 0x1e0,call 0x473ae0,True
+106,"mov ecx, 0","mov ecx, 0x821bf8",True
+107,call 0x1ea,call 0x473ae0,True
+108,"mov ecx, 0","mov ecx, 0x821c24",True
+109,call 0x1f4,call 0x473ae0,True
+110,"mov ecx, 0x2c0","mov ecx, 0x8227b4",True
+111,call 0x1fe,call 0x473ae0,True
+112,"mov esi, 0","mov esi, 0x8224f4",True
+113,"lea ecx, [esi + 0x2ec]","lea ecx, [esi + 0x2ec]",True
+114,call 0x20e,call 0x473ae0,True
+115,"cmp esi, 0xb0","cmp esi, 0x8225a4",True
+116,jge 0x21d,jge 0x44cefd,True
+117,"mov ecx, esi","mov ecx, esi",True
+118,call 0x21d,call 0x473ae0,True
+119,"cmp esi, 0x210","cmp esi, 0x822704",True
+120,jge 0x230,jge 0x44cf10,True
+121,"lea ecx, [esi + 0xb0]","lea ecx, [esi + 0xb0]",True
+122,call 0x230,call 0x473ae0,True
+123,"add esi, 0x2c","add esi, 0x2c",True
+124,"cmp esi, 0x39c","cmp esi, 0x822890",True
+125,jl 0x203,jl 0x44cee3,True
+126,"mov ecx, 0x2c0","mov ecx, 0x8227b4",True
+127,call 0x245,call 0x473ae0,True
+128,"mov ecx, 0","mov ecx, 0x8224c8",True
+129,call 0x24f,call 0x473ae0,True
+130,"mov ecx, 0","mov ecx, 0x821070",True
+131,call 0x259,call 0x473ae0,True
+132,"mov ecx, 0","mov ecx, 0x82109c",True
+133,call 0x263,call 0x473ae0,True
+134,"mov ecx, 0","mov ecx, 0x821120",True
+135,call 0x26d,call 0x473ae0,True
+136,"mov ecx, 0","mov ecx, 0x82114c",True
+137,call 0x277,call 0x473ae0,True
+138,"mov ecx, 0","mov ecx, 0x821178",True
+139,call 0x281,call 0x473ae0,True
+140,"mov ecx, 0","mov ecx, 0x8211a4",True
+141,call 0x28b,call 0x473ae0,True
+142,"mov ecx, 0","mov ecx, 0x8211d0",True
+143,call 0x295,call 0x473ae0,True
+144,"mov ecx, 0","mov ecx, 0x821cb8",True
+145,call 0x29f,call 0x473ae0,True
+146,"mov ecx, 0","mov ecx, 0x821d10",True
+147,call 0x2a9,call 0x473ae0,True
+148,"mov ecx, 0","mov ecx, 0x821d68",True
+149,call 0x2b3,call 0x473ae0,True
+150,"mov ecx, 0","mov ecx, 0x821dc0",True
+151,call 0x2bd,call 0x473ae0,True
+152,"mov ecx, 0","mov ecx, 0x821e18",True
+153,call 0x2c7,call 0x473ae0,True
+154,"mov ecx, 0","mov ecx, 0x821e70",True
+155,call 0x2d1,call 0x473ae0,True
+156,"mov ecx, 0","mov ecx, 0x821ce4",True
+157,call 0x2db,call 0x473ae0,True
+158,"mov ecx, 0","mov ecx, 0x821d3c",True
+159,call 0x2e5,call 0x473ae0,True
+160,"mov ecx, 0","mov ecx, 0x821d94",True
+161,call 0x2ef,call 0x473ae0,True
+162,"mov ecx, 0","mov ecx, 0x821dec",True
+163,call 0x2f9,call 0x473ae0,True
+164,"mov ecx, 0","mov ecx, 0x821e44",True
+165,call 0x303,call 0x473ae0,True
+166,"mov ecx, 0","mov ecx, 0x821e9c",True
+167,call 0x30d,call 0x473ae0,True
+168,pop esi,pop esi,True
+169,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?S2_resetAll44cce0@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,170,100.0%

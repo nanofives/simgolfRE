@@ -1,0 +1,8 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,push eax,push eax,True
+2,call 0xa,call 0x4a5007,True
+3,pop ecx,pop ecx,True
+4,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jpeg_free_large,module=golf_clean.exe
+VERDICT,GREEN,5,100.0%

@@ -1,0 +1,49 @@
+instruction,recompiled,original,match
+0,push 0,push 0x4041f0,True
+1,push 0,push 0x473ab0,True
+2,push 0x50,push 0x50,True
+3,push 0x2c,push 0x2c,True
+4,push 0,push 0x59ca58,True
+5,call 0x18,call 0x4a55d2,True
+6,"mov ecx, 0","mov ecx, 0x59b740",True
+7,call 0x22,call 0x473ab0,True
+8,push 0,push 0x4041f0,True
+9,push 0,push 0x473ab0,True
+10,push 0x10,push 0x10,True
+11,push 0x2c,push 0x2c,True
+12,push 0,push 0x56a250,True
+13,call 0x3a,call 0x4a55d2,True
+14,push 0,push 0x4041f0,True
+15,push 0,push 0x473ab0,True
+16,push 2,push 2,True
+17,push 0x2c,push 0x2c,True
+18,push 0,push 0x540950,True
+19,call 0x52,call 0x4a55d2,True
+20,push 0,push 0x4041f0,True
+21,push 0,push 0x473ab0,True
+22,push 0x10,push 0x10,True
+23,push 0x2c,push 0x2c,True
+24,push 0,push 0x5439e0,True
+25,call 0x6a,call 0x4a55d2,True
+26,"mov ecx, 0","mov ecx, 0x5787a0",True
+27,call 0x74,call 0x473ab0,True
+28,push 0,push 0x4041f0,True
+29,push 0,push 0x473ab0,True
+30,push 0x14,push 0x14,True
+31,push 0x2c,push 0x2c,True
+32,push 0,push 0x55e5b0,True
+33,call 0x8c,call 0x4a55d2,True
+34,"mov ecx, 0","mov ecx, 0x58b650",True
+35,call 0x96,call 0x473ab0,True
+36,"mov ecx, 0","mov ecx, 0x5791c8",True
+37,call 0xa0,call 0x473ab0,True
+38,"mov ecx, 0","mov ecx, 0x567b08",True
+39,call 0xaa,call 0x473ab0,True
+40,"mov ecx, 0","mov ecx, 0x5787d0",True
+41,call 0xb4,call 0x473ab0,True
+42,"mov ecx, 0","mov ecx, 0x5a4100",True
+43,call 0xbe,call 0x473ab0,True
+44,"mov ecx, 0","mov ecx, 0x5423e8",True
+45,jmp 0xc8,jmp 0x473ab0,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=_$E41,module=golf_clean.exe
+VERDICT,GREEN,46,100.0%

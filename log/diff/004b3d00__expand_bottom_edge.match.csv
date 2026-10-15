@@ -1,0 +1,30 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, dword ptr [esp + 0x14]","mov ebp, dword ptr [esp + 0x14]",True
+2,push esi,push esi,True
+3,"mov esi, dword ptr [esp + 0x14]","mov esi, dword ptr [esp + 0x14]",True
+4,"cmp esi, ebp","cmp esi, ebp",True
+5,jge 0x31,jge 0x4b3d31,True
+6,push ebx,push ebx,True
+7,push edi,push edi,True
+8,"mov edi, dword ptr [esp + 0x14]","mov edi, dword ptr [esp + 0x14]",True
+9,"lea ebx, [esi - 1]","lea ebx, [esi - 1]",True
+10,"mov eax, dword ptr [esp + 0x18]","mov eax, dword ptr [esp + 0x18]",True
+11,push eax,push eax,True
+12,push 1,push 1,True
+13,push esi,push esi,True
+14,push edi,push edi,True
+15,push ebx,push ebx,True
+16,push edi,push edi,True
+17,call 0x27,call 0x4b04f0,True
+18,"add esp, 0x18","add esp, 0x18",True
+19,inc esi,inc esi,True
+20,"cmp esi, ebp","cmp esi, ebp",True
+21,jl 0x17,jl 0x4b3d17,True
+22,pop edi,pop edi,True
+23,pop ebx,pop ebx,True
+24,pop esi,pop esi,True
+25,pop ebp,pop ebp,True
+26,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_expand_bottom_edge,module=golf_clean.exe
+VERDICT,GREEN,27,100.0%

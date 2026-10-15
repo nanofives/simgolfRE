@@ -1,0 +1,49 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x48","sub esp, 0x48",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x48]","lea edi, [ebp - 0x48]",True
+8,"mov ecx, 0x12","mov ecx, 0x12",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+14,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+15,"cmp dword ptr [ebp - 8], 0x46","cmp dword ptr [ebp - 8], 0x46",True
+16,ja 0x77,ja 0x10013e47,True
+17,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+18,"xor ecx, ecx","xor ecx, ecx",True
+19,"mov cl, byte ptr [edx]","mov cl, byte ptr [edx + 0x10013e7a]",True
+20,jmp dword ptr [ecx*4],jmp dword ptr [ecx*4 + 0x10013e52],True
+21,"xor eax, eax","xor eax, eax",True
+22,jmp 0x79,jmp 0x10013e49,True
+23,"mov eax, 2","mov eax, 2",True
+24,jmp 0x79,jmp 0x10013e49,True
+25,"mov eax, 4","mov eax, 4",True
+26,jmp 0x79,jmp 0x10013e49,True
+27,"mov eax, 3","mov eax, 3",True
+28,jmp 0x79,jmp 0x10013e49,True
+29,"mov eax, 1","mov eax, 1",True
+30,jmp 0x79,jmp 0x10013e49,True
+31,"mov eax, 8","mov eax, 8",True
+32,jmp 0x79,jmp 0x10013e49,True
+33,"mov eax, 7","mov eax, 7",True
+34,jmp 0x79,jmp 0x10013e49,True
+35,"mov eax, 5","mov eax, 5",True
+36,jmp 0x79,jmp 0x10013e49,True
+37,"mov eax, 6","mov eax, 6",True
+38,jmp 0x79,jmp 0x10013e49,True
+39,"xor eax, eax","xor eax, eax",True
+40,pop edi,pop edi,True
+41,pop esi,pop esi,True
+42,pop ebx,pop ebx,True
+43,"mov esp, ebp","mov esp, ebp",True
+44,pop ebp,pop ebp,True
+45,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX /MTd,symbol=?idClass@Terrain@@QAEHH@Z,module=Terrain.dll
+VERDICT,GREEN,46,100.0%

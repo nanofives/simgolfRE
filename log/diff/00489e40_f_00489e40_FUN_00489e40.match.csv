@@ -1,0 +1,43 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+3,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+4,"lea ecx, [ecx + esi + 4]","lea ecx, [ecx + esi + 4]",True
+5,call 0x12,call 0x480610,True
+6,"mov edx, dword ptr [esi + 4]","mov edx, dword ptr [esi + 4]",True
+7,"mov eax, dword ptr [edx + 8]","mov eax, dword ptr [edx + 8]",True
+8,"lea ecx, [eax + esi + 4]","lea ecx, [eax + esi + 4]",True
+9,call 0x21,call 0x4894b0,True
+10,"or eax, 0xffffffff","or eax, 0xffffffff",True
+11,"mov dword ptr [esi + 0x20], eax","mov dword ptr [esi + 0x20], eax",True
+12,"mov dword ptr [esi + 0x24], eax","mov dword ptr [esi + 0x24], eax",True
+13,"xor eax, eax","xor eax, eax",True
+14,"mov dword ptr [esi + 0xc], eax","mov dword ptr [esi + 0xc], eax",True
+15,"mov dword ptr [esi + 0x10], eax","mov dword ptr [esi + 0x10], eax",True
+16,"mov dword ptr [esi + 0x28], eax","mov dword ptr [esi + 0x28], eax",True
+17,"mov dword ptr [esi + 0x2c], eax","mov dword ptr [esi + 0x2c], eax",True
+18,"mov dword ptr [esi + 0x30], eax","mov dword ptr [esi + 0x30], eax",True
+19,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x4e44d0]",True
+20,"mov dword ptr [esi + 0x34], ecx","mov dword ptr [esi + 0x34], ecx",True
+21,"mov edx, dword ptr [0]","mov edx, dword ptr [0x83b648]",True
+22,"mov dword ptr [esi + 0x38], edx","mov dword ptr [esi + 0x38], edx",True
+23,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x4e44d4]",True
+24,"mov dword ptr [esi + 0x3c], ecx","mov dword ptr [esi + 0x3c], ecx",True
+25,"mov edx, dword ptr [0]","mov edx, dword ptr [0x4e44d8]",True
+26,"mov dword ptr [esi + 0x18], edx","mov dword ptr [esi + 0x18], edx",True
+27,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x4e44dc]",True
+28,"mov edx, dword ptr [esi + 4]","mov edx, dword ptr [esi + 4]",True
+29,"mov dword ptr [esi + 0x1c], ecx","mov dword ptr [esi + 0x1c], ecx",True
+30,"mov ecx, dword ptr [edx + 8]","mov ecx, dword ptr [edx + 8]",True
+31,"mov dword ptr [ecx + esi + 0xbc], 1","mov dword ptr [ecx + esi + 0xbc], 1",True
+32,"mov dword ptr [esi + 0x44], eax","mov dword ptr [esi + 0x44], eax",True
+33,"mov dword ptr [esi + 0x48], eax","mov dword ptr [esi + 0x48], eax",True
+34,"mov dword ptr [esi + 0x4c], eax","mov dword ptr [esi + 0x4c], eax",True
+35,"mov dword ptr [esi + 0x50], eax","mov dword ptr [esi + 0x50], eax",True
+36,"mov dword ptr [esi + 0x54], eax","mov dword ptr [esi + 0x54], eax",True
+37,"mov dword ptr [esi + 0x14], eax","mov dword ptr [esi + 0x14], eax",True
+38,pop esi,pop esi,True
+39,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00489e40@f_00489e40@@YIXH@Z,module=golf_clean.exe
+VERDICT,GREEN,40,100.0%

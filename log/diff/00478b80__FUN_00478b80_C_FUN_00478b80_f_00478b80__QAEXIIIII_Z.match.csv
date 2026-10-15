@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [ecx + 4]","mov ecx, dword ptr [ecx + 4]",True
+1,"test ecx, ecx","test ecx, ecx",True
+2,je 0x27,je 0x478ba7,True
+3,"mov edx, dword ptr [esp + 0x14]","mov edx, dword ptr [esp + 0x14]",True
+4,push 1,push 1,True
+5,push edx,push edx,True
+6,"mov edx, dword ptr [esp + 0x18]","mov edx, dword ptr [esp + 0x18]",True
+7,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+8,push edx,push edx,True
+9,"mov edx, dword ptr [esp + 0x18]","mov edx, dword ptr [esp + 0x18]",True
+10,push edx,push edx,True
+11,"mov edx, dword ptr [esp + 0x18]","mov edx, dword ptr [esp + 0x18]",True
+12,push edx,push edx,True
+13,"mov edx, dword ptr [esp + 0x18]","mov edx, dword ptr [esp + 0x18]",True
+14,push edx,push edx,True
+15,call dword ptr [eax + 0x64],call dword ptr [eax + 0x64],True
+16,ret 0x14,ret 0x14,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00478b80@C_FUN_00478b80@f_00478b80@@QAEXIIIII@Z,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%

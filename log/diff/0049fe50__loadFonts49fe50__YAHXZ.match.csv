@@ -1,0 +1,61 @@
+instruction,recompiled,original,match
+0,push -1,push -1,True
+1,push 0,push 0x4b928b,True
+2,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+3,push eax,push eax,True
+4,"mov dword ptr fs:[0], esp","mov dword ptr fs:[0], esp",True
+5,"sub esp, 0x2b8","sub esp, 0x2b8",True
+6,push esi,push esi,True
+7,"lea ecx, [esp + 4]","lea ecx, [esp + 4]",True
+8,call 0x25,call 0x474ae0,True
+9,push 2,push 2,True
+10,push 0x100,push 0x100,True
+11,push 0,push 0,True
+12,push 0,push 0,True
+13,push 0,push 0x4e49fc,True
+14,"lea ecx, [esp + 0x18]","lea ecx, [esp + 0x18]",True
+15,"mov dword ptr [esp + 0x2d8], 0","mov dword ptr [esp + 0x2d8], 0",True
+16,call 0x49,call 0x475840,True
+17,"mov esi, eax","mov esi, eax",True
+18,"test esi, esi","test esi, esi",True
+19,je 0x7b,je 0x49fecb,True
+20,"lea ecx, [esp + 4]","lea ecx, [esp + 4]",True
+21,"mov dword ptr [esp + 0x2c4], 0xffffffff","mov dword ptr [esp + 0x2c4], 0xffffffff",True
+22,call 0x63,call 0x474c40,True
+23,"mov eax, esi","mov eax, esi",True
+24,pop esi,pop esi,True
+25,"mov ecx, dword ptr [esp + 0x2b8]","mov ecx, dword ptr [esp + 0x2b8]",True
+26,"mov dword ptr fs:[0], ecx","mov dword ptr fs:[0], ecx",True
+27,"add esp, 0x2c4","add esp, 0x2c4",True
+28,ret ,ret ,True
+29,push 1,push 1,True
+30,push 1,push 1,True
+31,push 0x20,push 0x20,True
+32,push 0x20,push 0x20,True
+33,push 0x23,push 0x23,True
+34,"lea eax, [esp + 0x18]","lea eax, [esp + 0x18]",True
+35,push 1,push 1,True
+36,push eax,push eax,True
+37,"mov ecx, 0","mov ecx, 0x8408c8",True
+38,call 0x96,call 0x473bf0,True
+39,push 1,push 1,True
+40,push 1,push 1,True
+41,push 0x20,push 0x20,True
+42,push 0x20,push 0x20,True
+43,push 0x23,push 0x23,True
+44,"lea ecx, [esp + 0x18]","lea ecx, [esp + 0x18]",True
+45,push 0x22,push 0x22,True
+46,push ecx,push ecx,True
+47,"mov ecx, 0","mov ecx, 0x8408f8",True
+48,call 0xb1,call 0x473bf0,True
+49,"lea ecx, [esp + 4]","lea ecx, [esp + 4]",True
+50,"mov dword ptr [esp + 0x2c4], 0xffffffff","mov dword ptr [esp + 0x2c4], 0xffffffff",True
+51,call 0xc5,call 0x474c40,True
+52,"mov ecx, dword ptr [esp + 0x2bc]","mov ecx, dword ptr [esp + 0x2bc]",True
+53,"xor eax, eax","xor eax, eax",True
+54,pop esi,pop esi,True
+55,"mov dword ptr fs:[0], ecx","mov dword ptr fs:[0], ecx",True
+56,"add esp, 0x2c4","add esp, 0x2c4",True
+57,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?loadFonts49fe50@@YAHXZ,module=golf_clean.exe
+VERDICT,GREEN,58,100.0%

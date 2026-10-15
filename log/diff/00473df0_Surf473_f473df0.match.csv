@@ -1,0 +1,50 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 8]","mov eax, dword ptr [ecx + 8]",True
+1,push esi,push esi,True
+2,"test eax, eax","test eax, eax",True
+3,je 0x11,je 0x473e01,True
+4,"mov eax, 0x18","mov eax, 0x18",True
+5,pop esi,pop esi,True
+6,ret 0x10,ret 0x10,True
+7,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+8,"test edx, edx","test edx, edx",True
+9,jne 0x22,jne 0x473e12,True
+10,"mov eax, 0x10","mov eax, 0x10",True
+11,pop esi,pop esi,True
+12,ret 0x10,ret 0x10,True
+13,"mov eax, dword ptr [ecx + 4]","mov eax, dword ptr [ecx + 4]",True
+14,"test eax, eax","test eax, eax",True
+15,je 0x64,je 0x473e54,True
+16,"mov esi, dword ptr [edx + 4]","mov esi, dword ptr [edx + 4]",True
+17,"test esi, esi","test esi, esi",True
+18,je 0x64,je 0x473e54,True
+19,"mov edx, dword ptr [esp + 0x14]","mov edx, dword ptr [esp + 0x14]",True
+20,"test edx, edx","test edx, edx",True
+21,je 0x3d,je 0x473e2d,True
+22,"mov edx, dword ptr [edx + 4]","mov edx, dword ptr [edx + 4]",True
+23,jmp 0x3f,jmp 0x473e2f,True
+24,"xor edx, edx","xor edx, edx",True
+25,push ebx,push ebx,True
+26,"mov ebx, dword ptr [esp + 0x14]","mov ebx, dword ptr [esp + 0x14]",True
+27,push edi,push edi,True
+28,push edx,push edx,True
+29,"mov edx, dword ptr [ecx + 0x24]","mov edx, dword ptr [ecx + 0x24]",True
+30,"mov ecx, dword ptr [ecx + 0x20]","mov ecx, dword ptr [ecx + 0x20]",True
+31,"mov edi, dword ptr [eax]","mov edi, dword ptr [eax]",True
+32,"add edx, ebx","add edx, ebx",True
+33,push edx,push edx,True
+34,"mov edx, dword ptr [esp + 0x1c]","mov edx, dword ptr [esp + 0x1c]",True
+35,"add ecx, edx","add ecx, edx",True
+36,push ecx,push ecx,True
+37,push esi,push esi,True
+38,"mov ecx, eax","mov ecx, eax",True
+39,call dword ptr [edi + 0x5c],call dword ptr [edi + 0x5c],True
+40,pop edi,pop edi,True
+41,pop ebx,pop ebx,True
+42,pop esi,pop esi,True
+43,ret 0x10,ret 0x10,True
+44,"mov eax, 7","mov eax, 7",True
+45,pop esi,pop esi,True
+46,ret 0x10,ret 0x10,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?f473df0@Surf473@@QAEHPAU1@HH0@Z,module=golf_clean.exe
+VERDICT,GREEN,47,100.0%

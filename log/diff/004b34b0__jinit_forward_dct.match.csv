@@ -1,0 +1,47 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push edi,push edi,True
+2,"mov edi, dword ptr [esp + 0xc]","mov edi, dword ptr [esp + 0xc]",True
+3,push 0x30,push 0x30,True
+4,push 1,push 1,True
+5,push edi,push edi,True
+6,"mov eax, dword ptr [edi + 4]","mov eax, dword ptr [edi + 4]",True
+7,call dword ptr [eax],call dword ptr [eax],True
+8,"mov esi, eax","mov esi, eax",True
+9,"add esp, 0xc","add esp, 0xc",True
+10,"mov dword ptr [edi + 0x160], esi","mov dword ptr [edi + 0x160], esi",True
+11,"mov dword ptr [esi], 0","mov dword ptr [esi], 0x4b3550",True
+12,"mov eax, dword ptr [edi + 0xbc]","mov eax, dword ptr [edi + 0xbc]",True
+13,"sub eax, 0","sub eax, 0",True
+14,je 0x65,je 0x4b3515,True
+15,dec eax,dec eax,True
+16,je 0x55,je 0x4b3505,True
+17,dec eax,dec eax,True
+18,je 0x45,je 0x4b34f5,True
+19,"mov ecx, dword ptr [edi]","mov ecx, dword ptr [edi]",True
+20,push edi,push edi,True
+21,"mov dword ptr [ecx + 0x14], 0x2f","mov dword ptr [ecx + 0x14], 0x2f",True
+22,"mov edx, dword ptr [edi]","mov edx, dword ptr [edi]",True
+23,call dword ptr [edx],call dword ptr [edx],True
+24,"add esp, 4","add esp, 4",True
+25,jmp 0x73,jmp 0x4b3523,True
+26,"mov dword ptr [esi + 4], 0","mov dword ptr [esi + 4], 0x4b38c0",True
+27,"mov dword ptr [esi + 0x1c], 0","mov dword ptr [esi + 0x1c], 0x4b6360",True
+28,jmp 0x73,jmp 0x4b3523,True
+29,"mov dword ptr [esi + 4], 0","mov dword ptr [esi + 4], 0x4b3720",True
+30,"mov dword ptr [esi + 8], 0","mov dword ptr [esi + 8], 0x4b6110",True
+31,jmp 0x73,jmp 0x4b3523,True
+32,"mov dword ptr [esi + 4], 0","mov dword ptr [esi + 4], 0x4b3720",True
+33,"mov dword ptr [esi + 8], 0","mov dword ptr [esi + 8], 0x4b5d50",True
+34,"lea eax, [esi + 0x20]","lea eax, [esi + 0x20]",True
+35,pop edi,pop edi,True
+36,"mov ecx, 4","mov ecx, 4",True
+37,pop esi,pop esi,True
+38,"mov dword ptr [eax - 0x14], 0","mov dword ptr [eax - 0x14], 0",True
+39,"mov dword ptr [eax], 0","mov dword ptr [eax], 0",True
+40,"add eax, 4","add eax, 4",True
+41,dec ecx,dec ecx,True
+42,jne 0x7d,jne 0x4b352d,True
+43,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jinit_forward_dct,module=golf_clean.exe
+VERDICT,GREEN,44,100.0%

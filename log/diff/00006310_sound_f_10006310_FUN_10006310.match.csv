@@ -1,0 +1,6 @@
+instruction,recompiled,original,match
+0,call 5,call 0x10002419,True
+1,"xor eax, eax","xor eax, eax",True
+2,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10006310@f_10006310@@YIIH@Z,module=sound.dll
+VERDICT,GREEN,3,100.0%

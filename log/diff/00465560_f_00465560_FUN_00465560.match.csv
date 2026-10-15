@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,call 5,call 0x483d30,True
+1,"xor eax, eax","xor eax, eax",True
+2,"mov dword ptr [0], eax","mov dword ptr [0x822d68], eax",True
+3,"mov dword ptr [0], eax","mov dword ptr [0x822b9c], eax",True
+4,"mov dword ptr [0], eax","mov dword ptr [0x822b98], eax",True
+5,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00465560@f_00465560@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,6,100.0%

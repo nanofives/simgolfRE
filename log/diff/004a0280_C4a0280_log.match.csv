@@ -1,0 +1,58 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 4]","mov eax, dword ptr [ecx + 4]",True
+1,push esi,push esi,True
+2,"test eax, eax","test eax, eax",True
+3,je 0x98,je 0x4a0318,True
+4,"mov edx, dword ptr [ecx + 8]","mov edx, dword ptr [ecx + 8]",True
+5,"test edx, edx","test edx, edx",True
+6,jne 0x98,jne 0x4a0318,True
+7,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x840940]",True
+8,"test ecx, ecx","test ecx, ecx",True
+9,jne 0x98,jne 0x4a0318,True
+10,push 0,push 0x4e4a70,True
+11,push eax,push eax,True
+12,call 0x2c,call 0x4a00f0,True
+13,"mov esi, eax","mov esi, eax",True
+14,"add esp, 8","add esp, 8",True
+15,"test esi, esi","test esi, esi",True
+16,je 0x98,je 0x4a0318,True
+17,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+18,"test eax, eax","test eax, eax",True
+19,je 0x6d,je 0x4a02ed,True
+20,"mov ecx, dword ptr [esp + 0x18]","mov ecx, dword ptr [esp + 0x18]",True
+21,"mov edx, dword ptr [esp + 0x14]","mov edx, dword ptr [esp + 0x14]",True
+22,push ecx,push ecx,True
+23,"mov ecx, dword ptr [esp + 0x14]","mov ecx, dword ptr [esp + 0x14]",True
+24,push edx,push edx,True
+25,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+26,push ecx,push ecx,True
+27,push eax,push eax,True
+28,push edx,push edx,True
+29,push 0,push 0x4e4a60,True
+30,push esi,push esi,True
+31,call 0x5d,call 0x4a622c,True
+32,"add esp, 0x1c","add esp, 0x1c",True
+33,push esi,push esi,True
+34,call 0x66,call 0x4a609f,True
+35,"add esp, 4","add esp, 4",True
+36,pop esi,pop esi,True
+37,ret 0x14,ret 0x14,True
+38,"mov eax, dword ptr [esp + 0x18]","mov eax, dword ptr [esp + 0x18]",True
+39,"mov ecx, dword ptr [esp + 0x14]","mov ecx, dword ptr [esp + 0x14]",True
+40,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+41,push eax,push eax,True
+42,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+43,push ecx,push ecx,True
+44,push edx,push edx,True
+45,push eax,push eax,True
+46,push 0,push 0x4e4a50,True
+47,push esi,push esi,True
+48,call 0x8c,call 0x4a622c,True
+49,"add esp, 0x18","add esp, 0x18",True
+50,push esi,push esi,True
+51,call 0x95,call 0x4a609f,True
+52,"add esp, 4","add esp, 4",True
+53,pop esi,pop esi,True
+54,ret 0x14,ret 0x14,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?log@C4a0280@@QAEXHHHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,55,100.0%

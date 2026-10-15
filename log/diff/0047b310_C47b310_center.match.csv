@@ -1,0 +1,88 @@
+instruction,recompiled,original,match
+0,"sub esp, 8","sub esp, 8",True
+1,push esi,push esi,True
+2,"mov esi, ecx","mov esi, ecx",True
+3,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x83ad50]",True
+4,push edi,push edi,True
+5,"test byte ptr [esi + 0xa0], 2","test byte ptr [esi + 0xa0], 2",True
+6,je 0x77,je 0x47b387,True
+7,"test ecx, ecx","test ecx, ecx",True
+8,jne 0x1e,jne 0x47b32e,True
+9,"xor edx, edx","xor edx, edx",True
+10,jmp 0x2e,jmp 0x47b33e,True
+11,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+12,call dword ptr [eax + 0xa8],call dword ptr [eax + 0xa8],True
+13,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x83ad50]",True
+14,"mov edx, eax","mov edx, eax",True
+15,"mov eax, dword ptr [esi + 0x1bc]","mov eax, dword ptr [esi + 0x1bc]",True
+16,"mov edi, dword ptr [esi + 0x1c4]","mov edi, dword ptr [esi + 0x1c4]",True
+17,"sub eax, edi","sub eax, edi",True
+18,"add eax, edx","add eax, edx",True
+19,cdq ,cdq ,True
+20,"sub eax, edx","sub eax, edx",True
+21,"mov edi, eax","mov edi, eax",True
+22,"sar edi, 1","sar edi, 1",True
+23,"test ecx, ecx","test ecx, ecx",True
+24,"mov dword ptr [esp + 8], edi","mov dword ptr [esp + 8], edi",True
+25,jne 0x5b,jne 0x47b36b,True
+26,"mov eax, dword ptr [esi + 0x1c0]","mov eax, dword ptr [esi + 0x1c0]",True
+27,"mov edx, dword ptr [esi + 0x1c8]","mov edx, dword ptr [esi + 0x1c8]",True
+28,jmp 0xc8,jmp 0x47b3d8,True
+29,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+30,call dword ptr [edx + 0xac],call dword ptr [edx + 0xac],True
+31,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+32,"mov edx, dword ptr [esi + 0x1c8]","mov edx, dword ptr [esi + 0x1c8]",True
+33,"mov ecx, eax","mov ecx, eax",True
+34,"mov eax, dword ptr [esi + 0x1c0]","mov eax, dword ptr [esi + 0x1c0]",True
+35,jmp 0xc8,jmp 0x47b3d8,True
+36,"test ecx, ecx","test ecx, ecx",True
+37,jne 0x7f,jne 0x47b38f,True
+38,"xor edx, edx","xor edx, edx",True
+39,jmp 0x8f,jmp 0x47b39f,True
+40,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+41,call dword ptr [eax + 0xa8],call dword ptr [eax + 0xa8],True
+42,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x83ad50]",True
+43,"mov edx, eax","mov edx, eax",True
+44,"mov eax, dword ptr [esi + 0x1ac]","mov eax, dword ptr [esi + 0x1ac]",True
+45,"mov edi, dword ptr [esi + 0x1b4]","mov edi, dword ptr [esi + 0x1b4]",True
+46,"sub eax, edi","sub eax, edi",True
+47,"add eax, edx","add eax, edx",True
+48,cdq ,cdq ,True
+49,"sub eax, edx","sub eax, edx",True
+50,"mov edi, eax","mov edi, eax",True
+51,"sar edi, 1","sar edi, 1",True
+52,"test ecx, ecx","test ecx, ecx",True
+53,"mov dword ptr [esp + 8], edi","mov dword ptr [esp + 8], edi",True
+54,je 0xbc,je 0x47b3cc,True
+55,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+56,call dword ptr [edx + 0xac],call dword ptr [edx + 0xac],True
+57,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+58,"mov ecx, eax","mov ecx, eax",True
+59,"mov eax, dword ptr [esi + 0x1b0]","mov eax, dword ptr [esi + 0x1b0]",True
+60,"mov edx, dword ptr [esi + 0x1b8]","mov edx, dword ptr [esi + 0x1b8]",True
+61,"sub eax, edx","sub eax, edx",True
+62,"add eax, ecx","add eax, ecx",True
+63,"mov ecx, dword ptr [esi + 0x130]","mov ecx, dword ptr [esi + 0x130]",True
+64,cdq ,cdq ,True
+65,"sub eax, edx","sub eax, edx",True
+66,"sar eax, 1","sar eax, 1",True
+67,"test ecx, ecx","test ecx, ecx",True
+68,"mov dword ptr [esp + 0xc], eax","mov dword ptr [esp + 0xc], eax",True
+69,je 0xf6,je 0x47b406,True
+70,"lea eax, [esp + 0xc]","lea eax, [esp + 0xc]",True
+71,"lea edx, [esp + 8]","lea edx, [esp + 8]",True
+72,push eax,push eax,True
+73,push edx,push edx,True
+74,call 0xee,call 0x47b200,True
+75,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+76,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+77,push eax,push eax,True
+78,push edi,push edi,True
+79,"mov ecx, esi","mov ecx, esi",True
+80,call 0xff,call 0x47b420,True
+81,pop edi,pop edi,True
+82,pop esi,pop esi,True
+83,"add esp, 8","add esp, 8",True
+84,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?center@C47b310@@QAEXXZ,module=golf_clean.exe
+VERDICT,GREEN,85,100.0%

@@ -1,0 +1,19 @@
+instruction,recompiled,original,match
+0,call 5,call 0x492470,True
+1,call 0xa,call 0x486ff0,True
+2,call 0xf,call 0x4a0890,True
+3,call 0x14,call 0x4a0890,True
+4,call 0x19,call 0x49ff30,True
+5,call 0x1e,call 0x49ead0,True
+6,call 0x23,call 0x483b10,True
+7,call 0x28,call 0x49d280,True
+8,call 0x2d,call 0x49d460,True
+9,call 0x32,call 0x490c30,True
+10,call 0x37,call 0x4a0890,True
+11,call 0x3c,call 0x47d010,True
+12,call 0x41,call 0x483340,True
+13,"mov ecx, 0","mov ecx, 0x8406e8",True
+14,call 0x4b,call 0x49d0e0,True
+15,jmp 0x50,jmp 0x4a0060,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00485740@f_00485740@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,16,100.0%

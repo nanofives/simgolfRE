@@ -1,0 +1,49 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov eax, dword ptr [esi + 0x10]","mov eax, dword ptr [esi + 0x10]",True
+3,"test eax, eax","test eax, eax",True
+4,jne 0x18,jne 0x486dd8,True
+5,"mov eax, dword ptr [esi + 0x14]","mov eax, dword ptr [esi + 0x14]",True
+6,"test eax, eax","test eax, eax",True
+7,jne 0x18,jne 0x486dd8,True
+8,"mov eax, 7","mov eax, 7",True
+9,pop esi,pop esi,True
+10,ret ,ret ,True
+11,"mov edx, dword ptr [esi + 8]","mov edx, dword ptr [esi + 8]",True
+12,"mov eax, dword ptr [esi + 0x20]","mov eax, dword ptr [esi + 0x20]",True
+13,"and edx, 0xfffffffe","and edx, 0xfffffffe",True
+14,"cmp eax, 0x32","cmp eax, 0x32",True
+15,"mov dword ptr [esi + 8], edx","mov dword ptr [esi + 8], edx",True
+16,jae 0x4a,jae 0x486e0a,True
+17,"mov ecx, dword ptr [esi + 0x28]","mov ecx, dword ptr [esi + 0x28]",True
+18,push 1,push 1,True
+19,push esi,push esi,True
+20,push 0,push 0x486f90,True
+21,push ecx,push ecx,True
+22,push eax,push eax,True
+23,call dword ptr [0],call dword ptr [0x4ba218],True
+24,"mov dword ptr [esi + 0xc], eax","mov dword ptr [esi + 0xc], eax",True
+25,pop esi,pop esi,True
+26,neg eax,neg eax,True
+27,"sbb eax, eax","sbb eax, eax",True
+28,"and al, 0xfe","and al, 0xfe",True
+29,"add eax, 2","add eax, 2",True
+30,ret ,ret ,True
+31,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x83ad50]",True
+32,push 0,push 0x486f40,True
+33,push eax,push eax,True
+34,push esi,push esi,True
+35,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+36,call dword ptr [edx + 0x20],call dword ptr [edx + 0x20],True
+37,push eax,push eax,True
+38,call dword ptr [0],call dword ptr [0x4ba1b8],True
+39,"mov dword ptr [esi + 0xc], eax","mov dword ptr [esi + 0xc], eax",True
+40,pop esi,pop esi,True
+41,neg eax,neg eax,True
+42,"sbb eax, eax","sbb eax, eax",True
+43,"and al, 0xfe","and al, 0xfe",True
+44,"add eax, 2","add eax, 2",True
+45,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?start@Timer486@@QAEHXZ,module=golf_clean.exe
+VERDICT,GREEN,46,100.0%

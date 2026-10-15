@@ -1,0 +1,6 @@
+instruction,recompiled,original,match
+0,call 5,call 0x10044171,True
+1,"add eax, 0xc","add eax, 0xc",True
+2,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10045898@f_10045898@@YAPAKXZ,module=sound.dll
+VERDICT,GREEN,3,100.0%

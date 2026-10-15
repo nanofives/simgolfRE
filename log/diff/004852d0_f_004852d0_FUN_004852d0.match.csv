@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,"mov dword ptr [ecx], 0","mov dword ptr [ecx], 0x4badec",True
+1,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_004852d0@f_004852d0@@YIXPAI@Z,module=golf_clean.exe
+VERDICT,GREEN,2,100.0%

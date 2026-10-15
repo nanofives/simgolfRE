@@ -1,0 +1,36 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ebx,push ebx,True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,"mov ebx, dword ptr [ebp + 0xc]","mov ebx, dword ptr [ebp + 0xc]",True
+5,"mov edx, dword ptr [ebx]","mov edx, dword ptr [ebx]",True
+6,"and edx, edx","and edx, edx",True
+7,je 0x40,je 0x476e10,True
+8,"mov cl, byte ptr [eax]","mov cl, byte ptr [eax]",True
+9,"cmp cl, 0x7b","cmp cl, 0x7b",True
+10,je 0x39,je 0x476e09,True
+11,"cmp cl, 0x7d","cmp cl, 0x7d",True
+12,je 0x39,je 0x476e09,True
+13,"cmp cl, 0x5b","cmp cl, 0x5b",True
+14,je 0x39,je 0x476e09,True
+15,"cmp cl, 0x5d","cmp cl, 0x5d",True
+16,je 0x39,je 0x476e09,True
+17,"cmp cl, 0x24","cmp cl, 0x24",True
+18,je 0x39,je 0x476e09,True
+19,"cmp cl, 0x3d","cmp cl, 0x3d",True
+20,je 0x39,je 0x476e09,True
+21,"cmp cl, 0x5e","cmp cl, 0x5e",True
+22,je 0x39,je 0x476e09,True
+23,inc eax,inc eax,True
+24,dec edx,dec edx,True
+25,jne 0x10,jne 0x476de0,True
+26,"mov dword ptr [ebx], edx","mov dword ptr [ebx], edx",True
+27,"mov dword ptr [ebp + 8], eax","mov dword ptr [ebp + 8], eax",True
+28,jmp 0x40,jmp 0x476e10,True
+29,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+30,pop ebx,pop ebx,True
+31,pop ebp,pop ebp,True
+32,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?scanToken476dd0@@YAPADPADPAH@Z,module=golf_clean.exe
+VERDICT,GREEN,33,100.0%

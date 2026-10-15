@@ -1,0 +1,47 @@
+instruction,recompiled,original,match
+0,"mov al, byte ptr [0]","mov al, byte ptr [0x839658]",True
+1,push ebx,push ebx,True
+2,"xor ebx, ebx","xor ebx, ebx",True
+3,push esi,push esi,True
+4,"cmp al, bl","cmp al, bl",True
+5,"mov esi, ecx","mov esi, ecx",True
+6,je 0x5d,je 0x4789cd,True
+7,"mov eax, 0","mov eax, 0x839658",True
+8,"test eax, eax","test eax, eax",True
+9,je 0x41,je 0x4789b1,True
+10,push edi,push edi,True
+11,"mov edi, eax","mov edi, eax",True
+12,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+13,"xor eax, eax","xor eax, eax",True
+14,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+15,"mov edx, dword ptr [0]","mov edx, dword ptr [0x839a9c]",True
+16,not ecx,not ecx,True
+17,dec ecx,dec ecx,True
+18,push ecx,push ecx,True
+19,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x839aa0]",True
+20,push ecx,push ecx,True
+21,push edx,push edx,True
+22,push 0,push 0x839658,True
+23,"mov ecx, esi","mov ecx, esi",True
+24,call 0x40,call 0x477c30,True
+25,pop edi,pop edi,True
+26,"mov ecx, esi","mov ecx, esi",True
+27,call 0x48,call 0x477580,True
+28,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x839aa0]",True
+29,"add ecx, eax","add ecx, eax",True
+30,"mov dword ptr [0], ecx","mov dword ptr [0x839aa0], ecx",True
+31,"mov eax, dword ptr [esi + 0x1c]","mov eax, dword ptr [esi + 0x1c]",True
+32,inc eax,inc eax,True
+33,"mov dword ptr [esi + 0x1c], eax","mov dword ptr [esi + 0x1c], eax",True
+34,"mov byte ptr [0], bl","mov byte ptr [0x839658], bl",True
+35,"mov dword ptr [0], ebx","mov dword ptr [0x839aa4], ebx",True
+36,"mov dword ptr [esi + 0x30], ebx","mov dword ptr [esi + 0x30], ebx",True
+37,"mov dword ptr [esi + 0x38], ebx","mov dword ptr [esi + 0x38], ebx",True
+38,"mov dword ptr [esi + 0x34], ebx","mov dword ptr [esi + 0x34], ebx",True
+39,"mov dword ptr [esi + 0x3c], ebx","mov dword ptr [esi + 0x3c], ebx",True
+40,"mov eax, dword ptr [0]","mov eax, dword ptr [0x839aa0]",True
+41,pop esi,pop esi,True
+42,pop ebx,pop ebx,True
+43,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?flush@C478970@@QAEHXZ,module=golf_clean.exe
+VERDICT,GREEN,44,100.0%

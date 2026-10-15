@@ -1,0 +1,44 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"sub esp, 0x10","sub esp, 0x10",True
+2,"test eax, eax","test eax, eax",True
+3,push esi,push esi,True
+4,jne 0x18,jne 0x475ca8,True
+5,"mov eax, 0x10","mov eax, 0x10",True
+6,pop esi,pop esi,True
+7,"add esp, 0x10","add esp, 0x10",True
+8,ret 0x14,ret 0x14,True
+9,"mov ecx, dword ptr [ecx + 4]","mov ecx, dword ptr [ecx + 4]",True
+10,"test ecx, ecx","test ecx, ecx",True
+11,je 0x63,je 0x475cf3,True
+12,"mov esi, dword ptr [eax + 4]","mov esi, dword ptr [eax + 4]",True
+13,"test esi, esi","test esi, esi",True
+14,je 0x63,je 0x475cf3,True
+15,"mov eax, dword ptr [esp + 0x1c]","mov eax, dword ptr [esp + 0x1c]",True
+16,"mov edx, dword ptr [esp + 0x20]","mov edx, dword ptr [esp + 0x20]",True
+17,push edi,push edi,True
+18,"mov edi, dword ptr [esp + 0x28]","mov edi, dword ptr [esp + 0x28]",True
+19,"mov dword ptr [esp + 8], eax","mov dword ptr [esp + 8], eax",True
+20,"add eax, edi","add eax, edi",True
+21,"mov dword ptr [esp + 0x10], eax","mov dword ptr [esp + 0x10], eax",True
+22,"mov eax, dword ptr [esp + 0x2c]","mov eax, dword ptr [esp + 0x2c]",True
+23,"mov dword ptr [esp + 0xc], edx","mov dword ptr [esp + 0xc], edx",True
+24,"add edx, eax","add edx, eax",True
+25,"lea eax, [esp + 8]","lea eax, [esp + 8]",True
+26,"mov dword ptr [esp + 0x14], edx","mov dword ptr [esp + 0x14], edx",True
+27,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+28,push eax,push eax,True
+29,"lea eax, [esp + 0xc]","lea eax, [esp + 0xc]",True
+30,push eax,push eax,True
+31,push esi,push esi,True
+32,call dword ptr [edx + 0x40],call dword ptr [edx + 0x40],True
+33,pop edi,pop edi,True
+34,pop esi,pop esi,True
+35,"add esp, 0x10","add esp, 0x10",True
+36,ret 0x14,ret 0x14,True
+37,"mov eax, 7","mov eax, 7",True
+38,pop esi,pop esi,True
+39,"add esp, 0x10","add esp, 0x10",True
+40,ret 0x14,ret 0x14,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?f475c90@Surf473@@QAEHPAU1@HHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,41,100.0%

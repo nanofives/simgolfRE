@@ -1,0 +1,45 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x48","sub esp, 0x48",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x48]","lea edi, [ebp - 0x48]",True
+8,"mov ecx, 0x12","mov ecx, 0x12",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"mov ecx, dword ptr [eax + 0x10]","mov ecx, dword ptr [eax + 0x10]",True
+15,"mov dword ptr [ebp - 8], ecx","mov dword ptr [ebp - 8], ecx",True
+16,"cmp dword ptr [ebp + 0x1c], 0","cmp dword ptr [ebp + 0x1c], 0",True
+17,je 0x35,je 0x100184c5,True
+18,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+19,"mov eax, dword ptr [ebp + 0x1c]","mov eax, dword ptr [ebp + 0x1c]",True
+20,"mov dword ptr [edx + 0x10], eax","mov dword ptr [edx + 0x10], eax",True
+21,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+22,push ecx,push ecx,True
+23,"mov edx, dword ptr [ebp + 0x18]","mov edx, dword ptr [ebp + 0x18]",True
+24,push edx,push edx,True
+25,"mov eax, dword ptr [ebp + 0x14]","mov eax, dword ptr [ebp + 0x14]",True
+26,push eax,push eax,True
+27,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+28,push ecx,push ecx,True
+29,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+30,push edx,push edx,True
+31,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+32,call 0x51,call 0x100010a0,True
+33,pop edi,pop edi,True
+34,pop esi,pop esi,True
+35,pop ebx,pop ebx,True
+36,"add esp, 0x48","add esp, 0x48",True
+37,"cmp ebp, esp","cmp ebp, esp",True
+38,call 0x5e,call 0x1007e780,True
+39,"mov esp, ebp","mov esp, ebp",True
+40,pop ebp,pop ebp,True
+41,ret 0x18,ret 0x18,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?lineTo@Sprite@@QAEHPAVSurface@@PAHHHHH@Z,module=jgld.dll
+VERDICT,GREEN,42,100.0%

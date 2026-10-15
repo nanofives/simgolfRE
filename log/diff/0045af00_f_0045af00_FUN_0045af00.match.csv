@@ -1,0 +1,15 @@
+instruction,recompiled,original,match
+0,call 5,call 0x483c70,True
+1,call 0xa,call 0x483c30,True
+2,"mov eax, dword ptr [0]","mov eax, dword ptr [0x822b9c]",True
+3,"test eax, eax","test eax, eax",True
+4,jne 0x22,jne 0x45af22,True
+5,"mov eax, dword ptr [0]","mov eax, dword ptr [0x822b98]",True
+6,"test eax, eax","test eax, eax",True
+7,jne 0x22,jne 0x45af22,True
+8,"mov eax, 1","mov eax, 1",True
+9,ret ,ret ,True
+10,"xor eax, eax","xor eax, eax",True
+11,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_0045af00@f_0045af00@@YAIXZ,module=golf_clean.exe
+VERDICT,GREEN,12,100.0%

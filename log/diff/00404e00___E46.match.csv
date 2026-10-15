@@ -1,0 +1,35 @@
+instruction,recompiled,original,match
+0,push 0,push 0x4041f0,True
+1,push 0,push 0x473ab0,True
+2,push 0x20,push 0x20,True
+3,push 0x2c,push 0x2c,True
+4,push 0,push 0x562368,True
+5,call 0x18,call 0x4a55d2,True
+6,push 0,push 0x4041f0,True
+7,push 0,push 0x473ab0,True
+8,push 0x20,push 0x20,True
+9,push 0x2c,push 0x2c,True
+10,push 0,push 0x59d920,True
+11,call 0x30,call 0x4a55d2,True
+12,"mov ecx, 0","mov ecx, 0x58b358",True
+13,call 0x3a,call 0x473ab0,True
+14,"mov ecx, 0","mov ecx, 0x56a760",True
+15,call 0x44,call 0x473ab0,True
+16,"mov ecx, 0","mov ecx, 0x56c7b8",True
+17,call 0x4e,call 0x473ab0,True
+18,push 0,push 0x4041f0,True
+19,push 0,push 0x473ab0,True
+20,push 4,push 4,True
+21,push 0x2c,push 0x2c,True
+22,push 0,push 0x5a48e8,True
+23,call 0x66,call 0x4a55d2,True
+24,push 0,push 0x4041f0,True
+25,push 0,push 0x473ab0,True
+26,push 0x10,push 0x10,True
+27,push 0x2c,push 0x2c,True
+28,push 0,push 0x59abb8,True
+29,call 0x7e,call 0x4a55d2,True
+30,"mov ecx, 0","mov ecx, 0x59bf98",True
+31,jmp 0x88,jmp 0x473ab0,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=_$E46,module=golf_clean.exe
+VERDICT,GREEN,32,100.0%

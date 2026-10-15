@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+1,"test eax, eax","test eax, eax",True
+2,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+3,"mov edx, dword ptr [eax + 8]","mov edx, dword ptr [eax + 8]",True
+4,"lea eax, [edx + ecx + 0xf0]","lea eax, [edx + ecx + 0xf0]",True
+5,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+6,"mov edx, 1","mov edx, 1",True
+7,je 0x24,je 0x49f014,True
+8,"shl edx, cl","shl edx, cl",True
+9,"or dword ptr [eax], edx","or dword ptr [eax], edx",True
+10,ret 8,ret 8,True
+11,"shl edx, cl","shl edx, cl",True
+12,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+13,not edx,not edx,True
+14,"and ecx, edx","and ecx, edx",True
+15,"mov dword ptr [eax], ecx","mov dword ptr [eax], ecx",True
+16,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?setBit@C49eff0@@QAEXHH@Z,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%

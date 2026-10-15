@@ -1,0 +1,1214 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x84","sub esp, 0x84",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x84]","lea edi, [ebp - 0x84]",True
+8,"mov ecx, 0x21","mov ecx, 0x21",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+14,"cmp dword ptr [eax + 0x14], 0","cmp dword ptr [eax + 0x14], 0",True
+15,je 0x4a,je 0x10041fca,True
+16,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+17,je 0x4a,je 0x10041fca,True
+18,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+19,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+20,"mov esi, esp","mov esi, esp",True
+21,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+22,call dword ptr [edx + 0x10],call dword ptr [edx + 0x10],True
+23,"cmp esi, esp","cmp esi, esp",True
+24,call 0x46,call 0x1007e780,True
+25,"test eax, eax","test eax, eax",True
+26,jne 0x54,jne 0x10041fd4,True
+27,"mov eax, 3","mov eax, 3",True
+28,jmp 0x1074,jmp 0x10042ff4,True
+29,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+30,"cmp dword ptr [eax + 0x10], 0","cmp dword ptr [eax + 0x10], 0",True
+31,je 0x68,je 0x10041fe8,True
+32,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+33,"mov edx, dword ptr [ecx + 0x10]","mov edx, dword ptr [ecx + 0x10]",True
+34,"mov dword ptr [ebp - 0x38], edx","mov dword ptr [ebp - 0x38], edx",True
+35,jmp 0x73,jmp 0x10041ff3,True
+36,"mov eax, dword ptr [0]","mov eax, dword ptr [0x1012873c]",True
+37,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+38,"mov dword ptr [ebp - 0x38], ecx","mov dword ptr [ebp - 0x38], ecx",True
+39,"cmp dword ptr [ebp - 0x38], 0","cmp dword ptr [ebp - 0x38], 0",True
+40,jne 0x99,jne 0x10042019,True
+41,"mov esi, esp","mov esi, esp",True
+42,push 1,push 1,True
+43,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+44,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+45,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+46,call dword ptr [eax + 0x24],call dword ptr [eax + 0x24],True
+47,"cmp esi, esp","cmp esi, esp",True
+48,call 0x8f,call 0x1007e780,True
+49,"mov eax, 0x10","mov eax, 0x10",True
+50,jmp 0x1074,jmp 0x10042ff4,True
+51,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10122dc0]",True
+52,push ecx,push ecx,True
+53,call 0xa5,call 0x1007f370,True
+54,"add esp, 4","add esp, 4",True
+55,"mov dword ptr [ebp - 0x3c], eax","mov dword ptr [ebp - 0x3c], eax",True
+56,fild dword ptr [ebp - 0x3c],fild dword ptr [ebp - 0x3c],True
+57,fidiv dword ptr [0],fidiv dword ptr [0x10122dc8],True
+58,fstp dword ptr [0],fstp dword ptr [0x1012858c],True
+59,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10122dc4]",True
+60,push edx,push edx,True
+61,call 0xc6,call 0x1007f370,True
+62,"add esp, 4","add esp, 4",True
+63,"mov dword ptr [ebp - 0x40], eax","mov dword ptr [ebp - 0x40], eax",True
+64,fild dword ptr [ebp - 0x40],fild dword ptr [ebp - 0x40],True
+65,fidiv dword ptr [0],fidiv dword ptr [0x10122dc8],True
+66,fstp dword ptr [0],fstp dword ptr [0x10128590],True
+67,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+68,"mov ecx, dword ptr [eax + 0x2c]","mov ecx, dword ptr [eax + 0x2c]",True
+69,"mov dword ptr [0], ecx","mov dword ptr [0x1012857c], ecx",True
+70,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+71,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+72,"mov esi, esp","mov esi, esp",True
+73,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+74,call dword ptr [eax + 0xe0],call dword ptr [eax + 0xe0],True
+75,"cmp esi, esp","cmp esi, esp",True
+76,call 0xfe,call 0x1007e780,True
+77,"mov dword ptr [0], eax","mov dword ptr [0x1012855c], eax",True
+78,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+79,"mov edx, dword ptr [ecx + 0x14]","mov edx, dword ptr [ecx + 0x14]",True
+80,"mov dword ptr [ebp - 0x2c], edx","mov dword ptr [ebp - 0x2c], edx",True
+81,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+82,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+83,"mov esi, esp","mov esi, esp",True
+84,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+85,call dword ptr [edx + 0xe4],call dword ptr [edx + 0xe4],True
+86,"cmp esi, esp","cmp esi, esp",True
+87,call 0x123,call 0x1007e780,True
+88,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+89,"mov dword ptr [ebp - 0x44], eax","mov dword ptr [ebp - 0x44], eax",True
+90,"cmp dword ptr [ebp - 0x44], 0","cmp dword ptr [ebp - 0x44], 0",True
+91,je 0x137,je 0x100420b7,True
+92,"cmp dword ptr [ebp - 0x44], 1","cmp dword ptr [ebp - 0x44], 1",True
+93,je 0x152,je 0x100420d2,True
+94,jmp 0x16d,jmp 0x100420ed,True
+95,"mov ecx, dword ptr [ebp - 0x38]","mov ecx, dword ptr [ebp - 0x38]",True
+96,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+97,"mov esi, esp","mov esi, esp",True
+98,"mov ecx, dword ptr [ebp - 0x38]","mov ecx, dword ptr [ebp - 0x38]",True
+99,call dword ptr [edx + 0x18],call dword ptr [edx + 0x18],True
+100,"cmp esi, esp","cmp esi, esp",True
+101,call 0x14b,call 0x1007e780,True
+102,"mov dword ptr [0], eax","mov dword ptr [0x1012856c], eax",True
+103,jmp 0x18d,jmp 0x1004210d,True
+104,"mov eax, dword ptr [ebp - 0x38]","mov eax, dword ptr [ebp - 0x38]",True
+105,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+106,"mov esi, esp","mov esi, esp",True
+107,"mov ecx, dword ptr [ebp - 0x38]","mov ecx, dword ptr [ebp - 0x38]",True
+108,call dword ptr [edx + 0x1c],call dword ptr [edx + 0x1c],True
+109,"cmp esi, esp","cmp esi, esp",True
+110,call 0x166,call 0x1007e780,True
+111,"mov dword ptr [0], eax","mov dword ptr [0x1012856c], eax",True
+112,jmp 0x18d,jmp 0x1004210d,True
+113,"mov esi, esp","mov esi, esp",True
+114,push 1,push 1,True
+115,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+116,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+117,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+118,call dword ptr [edx + 0x24],call dword ptr [edx + 0x24],True
+119,"cmp esi, esp","cmp esi, esp",True
+120,call 0x183,call 0x1007e780,True
+121,"mov eax, 1","mov eax, 1",True
+122,jmp 0x1074,jmp 0x10042ff4,True
+123,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10122dc0]",True
+124,push eax,push eax,True
+125,call 0x198,call 0x1007f370,True
+126,"add esp, 4","add esp, 4",True
+127,"mov esi, eax","mov esi, eax",True
+128,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10122dc8]",True
+129,push ecx,push ecx,True
+130,call 0x1a9,call 0x1007f370,True
+131,"add esp, 4","add esp, 4",True
+132,"cmp esi, eax","cmp esi, eax",True
+133,jne 0x710,jne 0x10042690,True
+134,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10122dc4]",True
+135,push edx,push edx,True
+136,call 0x1c0,call 0x1007f370,True
+137,"add esp, 4","add esp, 4",True
+138,"mov esi, eax","mov esi, eax",True
+139,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10122dc8]",True
+140,push eax,push eax,True
+141,call 0x1d0,call 0x1007f370,True
+142,"add esp, 4","add esp, 4",True
+143,"cmp esi, eax","cmp esi, eax",True
+144,jne 0x710,jne 0x10042690,True
+145,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+146,"mov edx, dword ptr [ecx + 0x34]","mov edx, dword ptr [ecx + 0x34]",True
+147,push edx,push edx,True
+148,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+149,"mov ecx, dword ptr [eax + 0x30]","mov ecx, dword ptr [eax + 0x30]",True
+150,push ecx,push ecx,True
+151,"mov edx, dword ptr [ebp + 0x10]","mov edx, dword ptr [ebp + 0x10]",True
+152,push edx,push edx,True
+153,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+154,push eax,push eax,True
+155,"lea ecx, [ebp - 0x14]","lea ecx, [ebp - 0x14]",True
+156,push ecx,push ecx,True
+157,call 0x1fa,call 0x10001019,True
+158,"add esp, 0x14","add esp, 0x14",True
+159,"mov edx, dword ptr [ebp - 0x14]","mov edx, dword ptr [ebp - 0x14]",True
+160,"mov dword ptr [ebp - 0x24], edx","mov dword ptr [ebp - 0x24], edx",True
+161,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+162,"mov dword ptr [ebp - 0x20], eax","mov dword ptr [ebp - 0x20], eax",True
+163,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+164,"mov dword ptr [ebp - 0x1c], ecx","mov dword ptr [ebp - 0x1c], ecx",True
+165,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+166,"mov dword ptr [ebp - 0x18], edx","mov dword ptr [ebp - 0x18], edx",True
+167,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+168,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+169,"mov esi, esp","mov esi, esp",True
+170,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+171,call dword ptr [edx + 0xcc],call dword ptr [edx + 0xcc],True
+172,"cmp esi, esp","cmp esi, esp",True
+173,call 0x22c,call 0x1007e780,True
+174,"mov esi, esp","mov esi, esp",True
+175,push eax,push eax,True
+176,"lea eax, [ebp - 0x14]","lea eax, [ebp - 0x14]",True
+177,push eax,push eax,True
+178,"lea ecx, [ebp - 0x14]","lea ecx, [ebp - 0x14]",True
+179,push ecx,push ecx,True
+180,call dword ptr [0],call dword ptr [0x1012c5e4],True
+181,"cmp esi, esp","cmp esi, esp",True
+182,call 0x244,call 0x1007e780,True
+183,"test eax, eax","test eax, eax",True
+184,jne 0x265,jne 0x100421e5,True
+185,"mov esi, esp","mov esi, esp",True
+186,push 1,push 1,True
+187,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+188,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+189,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+190,call dword ptr [eax + 0x24],call dword ptr [eax + 0x24],True
+191,"cmp esi, esp","cmp esi, esp",True
+192,call 0x25e,call 0x1007e780,True
+193,"xor eax, eax","xor eax, eax",True
+194,jmp 0x1074,jmp 0x10042ff4,True
+195,"cmp dword ptr [0], 0","cmp dword ptr [0x10122dc0], 0",True
+196,jl 0x4c1,jl 0x10042441,True
+197,"cmp dword ptr [0], 0","cmp dword ptr [0x10122dc4], 0",True
+198,jl 0x3a0,jl 0x10042320,True
+199,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+200,"sub ecx, dword ptr [ebp - 0x24]","sub ecx, dword ptr [ebp - 0x24]",True
+201,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+202,"mov eax, dword ptr [edx + 0x14]","mov eax, dword ptr [edx + 0x14]",True
+203,"add eax, ecx","add eax, ecx",True
+204,"mov ecx, dword ptr [ebp - 0x10]","mov ecx, dword ptr [ebp - 0x10]",True
+205,"sub ecx, dword ptr [ebp - 0x20]","sub ecx, dword ptr [ebp - 0x20]",True
+206,"imul ecx, dword ptr [0]","imul ecx, dword ptr [0x1012857c]",True
+207,"add eax, ecx","add eax, ecx",True
+208,"mov dword ptr [ebp - 0x2c], eax","mov dword ptr [ebp - 0x2c], eax",True
+209,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+210,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+211,"mov esi, esp","mov esi, esp",True
+212,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+213,call dword ptr [eax + 0x20],call dword ptr [eax + 0x20],True
+214,"cmp esi, esp","cmp esi, esp",True
+215,call 0x2b3,call 0x1007e780,True
+216,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+217,"lea edx, [eax + ecx*2]","lea edx, [eax + ecx*2]",True
+218,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+219,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012855c]",True
+220,"lea ecx, [edx + eax*2]","lea ecx, [edx + eax*2]",True
+221,"mov dword ptr [ebp - 0x28], ecx","mov dword ptr [ebp - 0x28], ecx",True
+222,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+223,"sub edx, dword ptr [ebp - 0x10]","sub edx, dword ptr [ebp - 0x10]",True
+224,"mov dword ptr [0], edx","mov dword ptr [0x10128578], edx",True
+225,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+226,"sub eax, dword ptr [ebp - 0x14]","sub eax, dword ptr [ebp - 0x14]",True
+227,"mov dword ptr [0], eax","mov dword ptr [0x10128564], eax",True
+228,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012857c]",True
+229,"sub ecx, dword ptr [0]","sub ecx, dword ptr [0x10128564]",True
+230,"mov dword ptr [0], ecx","mov dword ptr [0x1012853c], ecx",True
+231,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012855c]",True
+232,"sub edx, dword ptr [0]","sub edx, dword ptr [0x10128564]",True
+233,"shl edx, 1","shl edx, 1",True
+234,"mov dword ptr [0], edx","mov dword ptr [0x10128560], edx",True
+235,push esi,push esi,True
+236,push edi,push edi,True
+237,"xor eax, eax","xor eax, eax",True
+238,"xor ebx, ebx","xor ebx, ebx",True
+239,"xor ecx, ecx","xor ecx, ecx",True
+240,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+241,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+242,push ecx,push ecx,True
+243,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+244,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128564]",True
+245,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+246,jae 0x37d,jae 0x100422fd,True
+247,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+248,je 0x331,je 0x100422b1,True
+249,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+250,jae 0x37d,jae 0x100422fd,True
+251,push ebx,push ebx,True
+252,push ecx,push ecx,True
+253,push edx,push edx,True
+254,"xor eax, eax","xor eax, eax",True
+255,"xor edx, edx","xor edx, edx",True
+256,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+257,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+258,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+259,"shl eax, 4","shl eax, 4",True
+260,"shl edx, 4","shl edx, 4",True
+261,"mov ebx, eax","mov ebx, eax",True
+262,"mov ecx, edx","mov ecx, edx",True
+263,"and eax, 0xf81f0","and eax, 0xf81f0",True
+264,"and ebx, 0x7e00","and ebx, 0x7e00",True
+265,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+266,"and edx, 0x7e00","and edx, 0x7e00",True
+267,"add eax, ecx","add eax, ecx",True
+268,"add ebx, edx","add ebx, edx",True
+269,"shr eax, 1","shr eax, 1",True
+270,"shr ebx, 1","shr ebx, 1",True
+271,"and eax, 0xf81f0","and eax, 0xf81f0",True
+272,"and ebx, 0x7e00","and ebx, 0x7e00",True
+273,"add eax, ebx","add eax, ebx",True
+274,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+275,pop edx,pop edx,True
+276,pop ecx,pop ecx,True
+277,pop ebx,pop ebx,True
+278,inc esi,inc esi,True
+279,"add edi, 2","add edi, 2",True
+280,dec edx,dec edx,True
+281,jne 0x321,jne 0x100422a1,True
+282,"add esi, dword ptr [0]","add esi, dword ptr [0x1012853c]",True
+283,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+284,dec dword ptr [0],dec dword ptr [0x10128578],True
+285,jne 0x31b,jne 0x1004229b,True
+286,pop ecx,pop ecx,True
+287,pop edi,pop edi,True
+288,pop esi,pop esi,True
+289,jmp 0x4bc,jmp 0x1004243c,True
+290,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+291,"sub eax, dword ptr [ebp - 0x24]","sub eax, dword ptr [ebp - 0x24]",True
+292,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+293,"mov edx, dword ptr [ecx + 0x14]","mov edx, dword ptr [ecx + 0x14]",True
+294,"add edx, eax","add edx, eax",True
+295,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+296,"sub eax, dword ptr [ebp - 0x20]","sub eax, dword ptr [ebp - 0x20]",True
+297,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012857c]",True
+298,"add edx, eax","add edx, eax",True
+299,"mov dword ptr [ebp - 0x2c], edx","mov dword ptr [ebp - 0x2c], edx",True
+300,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+301,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+302,"mov esi, esp","mov esi, esp",True
+303,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+304,call dword ptr [edx + 0x20],call dword ptr [edx + 0x20],True
+305,"cmp esi, esp","cmp esi, esp",True
+306,call 0x3d4,call 0x1007e780,True
+307,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+308,"lea edx, [eax + ecx*2]","lea edx, [eax + ecx*2]",True
+309,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+310,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012855c]",True
+311,"lea ecx, [edx + eax*2]","lea ecx, [edx + eax*2]",True
+312,"mov dword ptr [ebp - 0x28], ecx","mov dword ptr [ebp - 0x28], ecx",True
+313,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+314,"sub edx, dword ptr [ebp - 0x10]","sub edx, dword ptr [ebp - 0x10]",True
+315,"mov dword ptr [0], edx","mov dword ptr [0x10128578], edx",True
+316,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+317,"sub eax, dword ptr [ebp - 0x14]","sub eax, dword ptr [ebp - 0x14]",True
+318,"mov dword ptr [0], eax","mov dword ptr [0x10128564], eax",True
+319,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012857c]",True
+320,"add ecx, dword ptr [0]","add ecx, dword ptr [0x10128564]",True
+321,"mov dword ptr [0], ecx","mov dword ptr [0x1012853c], ecx",True
+322,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012855c]",True
+323,"sub edx, dword ptr [0]","sub edx, dword ptr [0x10128564]",True
+324,"shl edx, 1","shl edx, 1",True
+325,"mov dword ptr [0], edx","mov dword ptr [0x10128560], edx",True
+326,push esi,push esi,True
+327,push edi,push edi,True
+328,"xor eax, eax","xor eax, eax",True
+329,"xor ebx, ebx","xor ebx, ebx",True
+330,"xor ecx, ecx","xor ecx, ecx",True
+331,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+332,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+333,push ecx,push ecx,True
+334,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+335,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128564]",True
+336,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+337,jae 0x49e,jae 0x1004241e,True
+338,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+339,je 0x452,je 0x100423d2,True
+340,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+341,jae 0x49e,jae 0x1004241e,True
+342,push ebx,push ebx,True
+343,push ecx,push ecx,True
+344,push edx,push edx,True
+345,"xor eax, eax","xor eax, eax",True
+346,"xor edx, edx","xor edx, edx",True
+347,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+348,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+349,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+350,"shl eax, 4","shl eax, 4",True
+351,"shl edx, 4","shl edx, 4",True
+352,"mov ebx, eax","mov ebx, eax",True
+353,"mov ecx, edx","mov ecx, edx",True
+354,"and eax, 0xf81f0","and eax, 0xf81f0",True
+355,"and ebx, 0x7e00","and ebx, 0x7e00",True
+356,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+357,"and edx, 0x7e00","and edx, 0x7e00",True
+358,"add eax, ecx","add eax, ecx",True
+359,"add ebx, edx","add ebx, edx",True
+360,"shr eax, 1","shr eax, 1",True
+361,"shr ebx, 1","shr ebx, 1",True
+362,"and eax, 0xf81f0","and eax, 0xf81f0",True
+363,"and ebx, 0x7e00","and ebx, 0x7e00",True
+364,"add eax, ebx","add eax, ebx",True
+365,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+366,pop edx,pop edx,True
+367,pop ecx,pop ecx,True
+368,pop ebx,pop ebx,True
+369,inc esi,inc esi,True
+370,"add edi, 2","add edi, 2",True
+371,dec edx,dec edx,True
+372,jne 0x442,jne 0x100423c2,True
+373,"sub esi, dword ptr [0]","sub esi, dword ptr [0x1012853c]",True
+374,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+375,dec dword ptr [0],dec dword ptr [0x10128578],True
+376,jne 0x43c,jne 0x100423bc,True
+377,pop ecx,pop ecx,True
+378,pop edi,pop edi,True
+379,pop esi,pop esi,True
+380,jmp 0x70b,jmp 0x1004268b,True
+381,"cmp dword ptr [0], 0","cmp dword ptr [0x10122dc4], 0",True
+382,jl 0x5ef,jl 0x1004256f,True
+383,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+384,"sub eax, dword ptr [ebp - 0x24]","sub eax, dword ptr [ebp - 0x24]",True
+385,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+386,"mov edx, dword ptr [ecx + 0x14]","mov edx, dword ptr [ecx + 0x14]",True
+387,"add edx, eax","add edx, eax",True
+388,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+389,"sub eax, dword ptr [ebp - 0x20]","sub eax, dword ptr [ebp - 0x20]",True
+390,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012857c]",True
+391,"add edx, eax","add edx, eax",True
+392,"mov dword ptr [ebp - 0x2c], edx","mov dword ptr [ebp - 0x2c], edx",True
+393,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+394,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+395,"mov esi, esp","mov esi, esp",True
+396,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+397,call dword ptr [edx + 0x20],call dword ptr [edx + 0x20],True
+398,"cmp esi, esp","cmp esi, esp",True
+399,call 0x502,call 0x1007e780,True
+400,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+401,"lea edx, [eax + ecx*2]","lea edx, [eax + ecx*2]",True
+402,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+403,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012855c]",True
+404,"lea ecx, [edx + eax*2]","lea ecx, [edx + eax*2]",True
+405,"mov dword ptr [ebp - 0x28], ecx","mov dword ptr [ebp - 0x28], ecx",True
+406,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+407,"sub edx, dword ptr [ebp - 0x10]","sub edx, dword ptr [ebp - 0x10]",True
+408,"mov dword ptr [0], edx","mov dword ptr [0x10128578], edx",True
+409,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+410,"sub eax, dword ptr [ebp - 0x14]","sub eax, dword ptr [ebp - 0x14]",True
+411,"mov dword ptr [0], eax","mov dword ptr [0x10128564], eax",True
+412,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012857c]",True
+413,"add ecx, dword ptr [0]","add ecx, dword ptr [0x10128564]",True
+414,"mov dword ptr [0], ecx","mov dword ptr [0x1012853c], ecx",True
+415,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012855c]",True
+416,"sub edx, dword ptr [0]","sub edx, dword ptr [0x10128564]",True
+417,"shl edx, 1","shl edx, 1",True
+418,"mov dword ptr [0], edx","mov dword ptr [0x10128560], edx",True
+419,push esi,push esi,True
+420,push edi,push edi,True
+421,"xor eax, eax","xor eax, eax",True
+422,"xor ebx, ebx","xor ebx, ebx",True
+423,"xor ecx, ecx","xor ecx, ecx",True
+424,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+425,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+426,push ecx,push ecx,True
+427,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+428,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128564]",True
+429,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+430,jae 0x5cc,jae 0x1004254c,True
+431,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+432,je 0x580,je 0x10042500,True
+433,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+434,jae 0x5cc,jae 0x1004254c,True
+435,push ebx,push ebx,True
+436,push ecx,push ecx,True
+437,push edx,push edx,True
+438,"xor eax, eax","xor eax, eax",True
+439,"xor edx, edx","xor edx, edx",True
+440,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+441,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+442,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+443,"shl eax, 4","shl eax, 4",True
+444,"shl edx, 4","shl edx, 4",True
+445,"mov ebx, eax","mov ebx, eax",True
+446,"mov ecx, edx","mov ecx, edx",True
+447,"and eax, 0xf81f0","and eax, 0xf81f0",True
+448,"and ebx, 0x7e00","and ebx, 0x7e00",True
+449,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+450,"and edx, 0x7e00","and edx, 0x7e00",True
+451,"add eax, ecx","add eax, ecx",True
+452,"add ebx, edx","add ebx, edx",True
+453,"shr eax, 1","shr eax, 1",True
+454,"shr ebx, 1","shr ebx, 1",True
+455,"and eax, 0xf81f0","and eax, 0xf81f0",True
+456,"and ebx, 0x7e00","and ebx, 0x7e00",True
+457,"add eax, ebx","add eax, ebx",True
+458,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+459,pop edx,pop edx,True
+460,pop ecx,pop ecx,True
+461,pop ebx,pop ebx,True
+462,dec esi,dec esi,True
+463,"add edi, 2","add edi, 2",True
+464,dec edx,dec edx,True
+465,jne 0x570,jne 0x100424f0,True
+466,"add esi, dword ptr [0]","add esi, dword ptr [0x1012853c]",True
+467,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+468,dec dword ptr [0],dec dword ptr [0x10128578],True
+469,jne 0x56a,jne 0x100424ea,True
+470,pop ecx,pop ecx,True
+471,pop edi,pop edi,True
+472,pop esi,pop esi,True
+473,jmp 0x70b,jmp 0x1004268b,True
+474,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+475,"sub eax, dword ptr [ebp - 0x24]","sub eax, dword ptr [ebp - 0x24]",True
+476,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+477,"mov edx, dword ptr [ecx + 0x14]","mov edx, dword ptr [ecx + 0x14]",True
+478,"add edx, eax","add edx, eax",True
+479,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+480,"sub eax, dword ptr [ebp - 0x20]","sub eax, dword ptr [ebp - 0x20]",True
+481,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012857c]",True
+482,"add edx, eax","add edx, eax",True
+483,"mov dword ptr [ebp - 0x2c], edx","mov dword ptr [ebp - 0x2c], edx",True
+484,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+485,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+486,"mov esi, esp","mov esi, esp",True
+487,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+488,call dword ptr [edx + 0x20],call dword ptr [edx + 0x20],True
+489,"cmp esi, esp","cmp esi, esp",True
+490,call 0x623,call 0x1007e780,True
+491,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+492,"lea edx, [eax + ecx*2]","lea edx, [eax + ecx*2]",True
+493,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+494,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012855c]",True
+495,"lea ecx, [edx + eax*2]","lea ecx, [edx + eax*2]",True
+496,"mov dword ptr [ebp - 0x28], ecx","mov dword ptr [ebp - 0x28], ecx",True
+497,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+498,"sub edx, dword ptr [ebp - 0x10]","sub edx, dword ptr [ebp - 0x10]",True
+499,"mov dword ptr [0], edx","mov dword ptr [0x10128578], edx",True
+500,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+501,"sub eax, dword ptr [ebp - 0x14]","sub eax, dword ptr [ebp - 0x14]",True
+502,"mov dword ptr [0], eax","mov dword ptr [0x10128564], eax",True
+503,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012857c]",True
+504,"sub ecx, dword ptr [0]","sub ecx, dword ptr [0x10128564]",True
+505,"mov dword ptr [0], ecx","mov dword ptr [0x1012853c], ecx",True
+506,"mov edx, dword ptr [0]","mov edx, dword ptr [0x1012855c]",True
+507,"sub edx, dword ptr [0]","sub edx, dword ptr [0x10128564]",True
+508,"shl edx, 1","shl edx, 1",True
+509,"mov dword ptr [0], edx","mov dword ptr [0x10128560], edx",True
+510,push esi,push esi,True
+511,push edi,push edi,True
+512,"xor eax, eax","xor eax, eax",True
+513,"xor ebx, ebx","xor ebx, ebx",True
+514,"xor ecx, ecx","xor ecx, ecx",True
+515,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+516,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+517,push ecx,push ecx,True
+518,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+519,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128564]",True
+520,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+521,jae 0x6ed,jae 0x1004266d,True
+522,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+523,je 0x6a1,je 0x10042621,True
+524,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+525,jae 0x6ed,jae 0x1004266d,True
+526,push ebx,push ebx,True
+527,push ecx,push ecx,True
+528,push edx,push edx,True
+529,"xor eax, eax","xor eax, eax",True
+530,"xor edx, edx","xor edx, edx",True
+531,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+532,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+533,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+534,"shl eax, 4","shl eax, 4",True
+535,"shl edx, 4","shl edx, 4",True
+536,"mov ebx, eax","mov ebx, eax",True
+537,"mov ecx, edx","mov ecx, edx",True
+538,"and eax, 0xf81f0","and eax, 0xf81f0",True
+539,"and ebx, 0x7e00","and ebx, 0x7e00",True
+540,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+541,"and edx, 0x7e00","and edx, 0x7e00",True
+542,"add eax, ecx","add eax, ecx",True
+543,"add ebx, edx","add ebx, edx",True
+544,"shr eax, 1","shr eax, 1",True
+545,"shr ebx, 1","shr ebx, 1",True
+546,"and eax, 0xf81f0","and eax, 0xf81f0",True
+547,"and ebx, 0x7e00","and ebx, 0x7e00",True
+548,"add eax, ebx","add eax, ebx",True
+549,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+550,pop edx,pop edx,True
+551,pop ecx,pop ecx,True
+552,pop ebx,pop ebx,True
+553,dec esi,dec esi,True
+554,"add edi, 2","add edi, 2",True
+555,dec edx,dec edx,True
+556,jne 0x691,jne 0x10042611,True
+557,"sub esi, dword ptr [0]","sub esi, dword ptr [0x1012853c]",True
+558,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+559,dec dword ptr [0],dec dword ptr [0x10128578],True
+560,jne 0x68b,jne 0x1004260b,True
+561,pop ecx,pop ecx,True
+562,pop edi,pop edi,True
+563,pop esi,pop esi,True
+564,jmp 0x105c,jmp 0x10042fdc,True
+565,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+566,fild dword ptr [eax + 0x34],fild dword ptr [eax + 0x34],True
+567,fmul dword ptr [0],fmul dword ptr [0x10128590],True
+568,call 0x721,call 0x1007f12c,True
+569,push eax,push eax,True
+570,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+571,fild dword ptr [ecx + 0x30],fild dword ptr [ecx + 0x30],True
+572,fmul dword ptr [0],fmul dword ptr [0x1012858c],True
+573,call 0x733,call 0x1007f12c,True
+574,push eax,push eax,True
+575,fld dword ptr [0],fld dword ptr [0x10128590],True
+576,call 0x73f,call 0x1007f12c,True
+577,"mov edx, dword ptr [ebp + 0x10]","mov edx, dword ptr [ebp + 0x10]",True
+578,"add edx, eax","add edx, eax",True
+579,push edx,push edx,True
+580,fld dword ptr [0],fld dword ptr [0x1012858c],True
+581,call 0x750,call 0x1007f12c,True
+582,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+583,"add ecx, eax","add ecx, eax",True
+584,push ecx,push ecx,True
+585,"lea edx, [ebp - 0x14]","lea edx, [ebp - 0x14]",True
+586,push edx,push edx,True
+587,call 0x75f,call 0x10001019,True
+588,"add esp, 0x14","add esp, 0x14",True
+589,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+590,"mov dword ptr [ebp - 0x24], eax","mov dword ptr [ebp - 0x24], eax",True
+591,"mov ecx, dword ptr [ebp - 0x10]","mov ecx, dword ptr [ebp - 0x10]",True
+592,"mov dword ptr [ebp - 0x20], ecx","mov dword ptr [ebp - 0x20], ecx",True
+593,"mov edx, dword ptr [ebp - 0xc]","mov edx, dword ptr [ebp - 0xc]",True
+594,"mov dword ptr [ebp - 0x1c], edx","mov dword ptr [ebp - 0x1c], edx",True
+595,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+596,"mov dword ptr [ebp - 0x18], eax","mov dword ptr [ebp - 0x18], eax",True
+597,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+598,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+599,"mov esi, esp","mov esi, esp",True
+600,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+601,call dword ptr [edx + 0xcc],call dword ptr [edx + 0xcc],True
+602,"cmp esi, esp","cmp esi, esp",True
+603,call 0x791,call 0x1007e780,True
+604,push eax,push eax,True
+605,"lea eax, [ebp - 0x14]","lea eax, [ebp - 0x14]",True
+606,push eax,push eax,True
+607,"lea ecx, [ebp - 0x14]","lea ecx, [ebp - 0x14]",True
+608,push ecx,push ecx,True
+609,call 0x79f,call 0x10001087,True
+610,"add esp, 0xc","add esp, 0xc",True
+611,"test eax, eax","test eax, eax",True
+612,jne 0x7c3,jne 0x10042743,True
+613,"mov esi, esp","mov esi, esp",True
+614,push 1,push 1,True
+615,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+616,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+617,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+618,call dword ptr [eax + 0x24],call dword ptr [eax + 0x24],True
+619,"cmp esi, esp","cmp esi, esp",True
+620,call 0x7bc,call 0x1007e780,True
+621,"xor eax, eax","xor eax, eax",True
+622,jmp 0x1074,jmp 0x10042ff4,True
+623,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+624,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+625,"mov esi, esp","mov esi, esp",True
+626,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+627,call dword ptr [edx + 0x20],call dword ptr [edx + 0x20],True
+628,"cmp esi, esp","cmp esi, esp",True
+629,call 0x7d7,call 0x1007e780,True
+630,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+631,"lea edx, [eax + ecx*2]","lea edx, [eax + ecx*2]",True
+632,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+633,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012855c]",True
+634,"lea ecx, [edx + eax*2]","lea ecx, [edx + eax*2]",True
+635,"mov dword ptr [ebp - 0x28], ecx","mov dword ptr [ebp - 0x28], ecx",True
+636,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+637,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+638,"mov esi, esp","mov esi, esp",True
+639,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+640,call dword ptr [eax + 0xe0],call dword ptr [eax + 0xe0],True
+641,"cmp esi, esp","cmp esi, esp",True
+642,call 0x804,call 0x1007e780,True
+643,"mov dword ptr [0], eax","mov dword ptr [0x1012855c], eax",True
+644,"mov ecx, dword ptr [ebp - 0xc]","mov ecx, dword ptr [ebp - 0xc]",True
+645,"sub ecx, dword ptr [ebp - 0x14]","sub ecx, dword ptr [ebp - 0x14]",True
+646,"mov dword ptr [0], ecx","mov dword ptr [0x10128564], ecx",True
+647,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+648,"sub edx, dword ptr [ebp - 0x10]","sub edx, dword ptr [ebp - 0x10]",True
+649,"mov dword ptr [0], edx","mov dword ptr [0x10128578], edx",True
+650,"mov eax, dword ptr [0]","mov eax, dword ptr [0x1012855c]",True
+651,"sub eax, dword ptr [0]","sub eax, dword ptr [0x10128564]",True
+652,"shl eax, 1","shl eax, 1",True
+653,"mov dword ptr [0], eax","mov dword ptr [0x10128560], eax",True
+654,"mov esi, dword ptr [0]","mov esi, dword ptr [0x10122dc8]",True
+655,"shl esi, 0x10","shl esi, 0x10",True
+656,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10122dc0]",True
+657,push ecx,push ecx,True
+658,call 0x848,call 0x1007f370,True
+659,"add esp, 4","add esp, 4",True
+660,"mov ecx, eax","mov ecx, eax",True
+661,"mov eax, esi","mov eax, esi",True
+662,cdq ,cdq ,True
+663,idiv ecx,idiv ecx,True
+664,"mov dword ptr [0], eax","mov dword ptr [0x10128588], eax",True
+665,"mov esi, dword ptr [0]","mov esi, dword ptr [0x10122dc8]",True
+666,"shl esi, 0x10","shl esi, 0x10",True
+667,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10122dc4]",True
+668,push edx,push edx,True
+669,call 0x86c,call 0x1007f370,True
+670,"add esp, 4","add esp, 4",True
+671,"mov ecx, eax","mov ecx, eax",True
+672,"mov eax, esi","mov eax, esi",True
+673,cdq ,cdq ,True
+674,idiv ecx,idiv ecx,True
+675,"mov dword ptr [0], eax","mov dword ptr [0x10128540], eax",True
+676,"cmp dword ptr [0], 0","cmp dword ptr [0x10122dc0], 0",True
+677,jl 0xc6c,jl 0x10042bec,True
+678,"cmp dword ptr [0], 0","cmp dword ptr [0x10122dc4], 0",True
+679,jl 0xa88,jl 0x10042a08,True
+680,"mov edx, dword ptr [ebp - 0x14]","mov edx, dword ptr [ebp - 0x14]",True
+681,"sub edx, dword ptr [ebp - 0x24]","sub edx, dword ptr [ebp - 0x24]",True
+682,"mov dword ptr [ebp - 0x30], edx","mov dword ptr [ebp - 0x30], edx",True
+683,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+684,"sub eax, dword ptr [ebp - 0x20]","sub eax, dword ptr [ebp - 0x20]",True
+685,"mov dword ptr [ebp - 0x34], eax","mov dword ptr [ebp - 0x34], eax",True
+686,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128588]",True
+687,"imul ecx, dword ptr [ebp - 0x30]","imul ecx, dword ptr [ebp - 0x30]",True
+688,"mov dword ptr [0], ecx","mov dword ptr [0x10128554], ecx",True
+689,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128540]",True
+690,"imul edx, dword ptr [ebp - 0x34]","imul edx, dword ptr [ebp - 0x34]",True
+691,"mov dword ptr [0], edx","mov dword ptr [0x10128558], edx",True
+692,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128554]",True
+693,"and eax, 0xffff","and eax, 0xffff",True
+694,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128588]",True
+695,"imul ecx, dword ptr [0]","imul ecx, dword ptr [0x10128564]",True
+696,"add eax, ecx","add eax, ecx",True
+697,"shr eax, 0x10","shr eax, 0x10",True
+698,"mov dword ptr [0], eax","mov dword ptr [0x10128570], eax",True
+699,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128558]",True
+700,"and edx, 0xffff","and edx, 0xffff",True
+701,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+702,"imul eax, dword ptr [0]","imul eax, dword ptr [0x10128578]",True
+703,"add edx, eax","add edx, eax",True
+704,"shr edx, 0x10","shr edx, 0x10",True
+705,"mov dword ptr [0], edx","mov dword ptr [0x10128584], edx",True
+706,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012857c]",True
+707,"sub ecx, dword ptr [0]","sub ecx, dword ptr [0x10128570]",True
+708,"mov dword ptr [0], ecx","mov dword ptr [0x1012853c], ecx",True
+709,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128558]",True
+710,"shr edx, 0x10","shr edx, 0x10",True
+711,"imul edx, dword ptr [0]","imul edx, dword ptr [0x1012857c]",True
+712,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+713,"mov ecx, dword ptr [eax + 0x14]","mov ecx, dword ptr [eax + 0x14]",True
+714,"add ecx, edx","add ecx, edx",True
+715,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128554]",True
+716,"shr edx, 0x10","shr edx, 0x10",True
+717,"add ecx, edx","add ecx, edx",True
+718,"mov dword ptr [ebp - 0x2c], ecx","mov dword ptr [ebp - 0x2c], ecx",True
+719,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+720,"shr eax, 0x10","shr eax, 0x10",True
+721,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012857c]",True
+722,"sub eax, dword ptr [0]","sub eax, dword ptr [0x1012857c]",True
+723,"add eax, dword ptr [0]","add eax, dword ptr [0x1012853c]",True
+724,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10122e20]",True
+725,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+726,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10122e20]",True
+727,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+728,"add eax, dword ptr [0]","add eax, dword ptr [0x1012857c]",True
+729,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10122e1c]",True
+730,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+731,push esi,push esi,True
+732,push edi,push edi,True
+733,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+734,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+735,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128558]",True
+736,"shl edx, 0x10","shl edx, 0x10",True
+737,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+738,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128578]",True
+739,"shl ebx, 0x10","shl ebx, 0x10",True
+740,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+741,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128564]",True
+742,dec ecx,dec ecx,True
+743,"shl ecx, 0x10","shl ecx, 0x10",True
+744,"mov dword ptr [0], ecx","mov dword ptr [0x10128564], ecx",True
+745,"xor ecx, ecx","xor ecx, ecx",True
+746,"mov cx, word ptr [0]","mov cx, word ptr [0x1012858a]",True
+747,"mov dword ptr [0], ecx","mov dword ptr [0x10128580], ecx",True
+748,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+749,"shl eax, 0x10","shl eax, 0x10",True
+750,"mov dword ptr [0], eax","mov dword ptr [0x10128544], eax",True
+751,push ecx,push ecx,True
+752,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+753,"xor eax, eax","xor eax, eax",True
+754,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128564]",True
+755,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+756,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+757,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+758,jae 0xa49,jae 0x100429c9,True
+759,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+760,je 0x9fd,je 0x1004297d,True
+761,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+762,jae 0xa49,jae 0x100429c9,True
+763,push ebx,push ebx,True
+764,push ecx,push ecx,True
+765,push edx,push edx,True
+766,"xor eax, eax","xor eax, eax",True
+767,"xor edx, edx","xor edx, edx",True
+768,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+769,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+770,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+771,"shl eax, 4","shl eax, 4",True
+772,"shl edx, 4","shl edx, 4",True
+773,"mov ebx, eax","mov ebx, eax",True
+774,"mov ecx, edx","mov ecx, edx",True
+775,"and eax, 0xf81f0","and eax, 0xf81f0",True
+776,"and ebx, 0x7e00","and ebx, 0x7e00",True
+777,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+778,"and edx, 0x7e00","and edx, 0x7e00",True
+779,"add eax, ecx","add eax, ecx",True
+780,"add ebx, edx","add ebx, edx",True
+781,"shr eax, 1","shr eax, 1",True
+782,"shr ebx, 1","shr ebx, 1",True
+783,"and eax, 0xf81f0","and eax, 0xf81f0",True
+784,"and ebx, 0x7e00","and ebx, 0x7e00",True
+785,"add eax, ebx","add eax, ebx",True
+786,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+787,pop edx,pop edx,True
+788,pop ecx,pop ecx,True
+789,pop ebx,pop ebx,True
+790,"add dx, bx","add dx, bx",True
+791,"adc esi, dword ptr [0]","adc esi, dword ptr [0x10128580]",True
+792,"add edi, 2","add edi, 2",True
+793,"sub ebx, 0x10000","sub ebx, 0x10000",True
+794,jns 0x9ed,jns 0x1004296d,True
+795,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+796,"add edx, dword ptr [0]","add edx, dword ptr [0x10128544]",True
+797,"sbb eax, eax","sbb eax, eax",True
+798,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10122e20]",True
+799,"add esi, dword ptr [ebx + eax*4]","add esi, dword ptr [ebx + eax*4]",True
+800,dec dword ptr [0],dec dword ptr [0x10128578],True
+801,jne 0x9d7,jne 0x10042957,True
+802,pop ecx,pop ecx,True
+803,pop edi,pop edi,True
+804,pop esi,pop esi,True
+805,jmp 0xc67,jmp 0x10042be7,True
+806,"mov edx, dword ptr [ebp - 0x14]","mov edx, dword ptr [ebp - 0x14]",True
+807,"sub edx, dword ptr [ebp - 0x24]","sub edx, dword ptr [ebp - 0x24]",True
+808,"mov dword ptr [ebp - 0x30], edx","mov dword ptr [ebp - 0x30], edx",True
+809,"mov eax, dword ptr [ebp - 0x10]","mov eax, dword ptr [ebp - 0x10]",True
+810,"sub eax, dword ptr [ebp - 0x20]","sub eax, dword ptr [ebp - 0x20]",True
+811,"mov dword ptr [ebp - 0x34], eax","mov dword ptr [ebp - 0x34], eax",True
+812,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128588]",True
+813,"imul ecx, dword ptr [ebp - 0x30]","imul ecx, dword ptr [ebp - 0x30]",True
+814,"mov dword ptr [0], ecx","mov dword ptr [0x10128554], ecx",True
+815,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128540]",True
+816,"imul edx, dword ptr [ebp - 0x34]","imul edx, dword ptr [ebp - 0x34]",True
+817,"mov dword ptr [0], edx","mov dword ptr [0x10128558], edx",True
+818,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128554]",True
+819,"and eax, 0xffff","and eax, 0xffff",True
+820,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128588]",True
+821,"imul ecx, dword ptr [0]","imul ecx, dword ptr [0x10128564]",True
+822,"add eax, ecx","add eax, ecx",True
+823,"shr eax, 0x10","shr eax, 0x10",True
+824,"mov dword ptr [0], eax","mov dword ptr [0x10128570], eax",True
+825,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128558]",True
+826,"and edx, 0xffff","and edx, 0xffff",True
+827,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+828,"imul eax, dword ptr [0]","imul eax, dword ptr [0x10128578]",True
+829,"add edx, eax","add edx, eax",True
+830,"shr edx, 0x10","shr edx, 0x10",True
+831,"mov dword ptr [0], edx","mov dword ptr [0x10128584], edx",True
+832,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+833,"mov edx, dword ptr [ecx + 0x34]","mov edx, dword ptr [ecx + 0x34]",True
+834,"sub edx, 1","sub edx, 1",True
+835,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128558]",True
+836,"shr eax, 0x10","shr eax, 0x10",True
+837,"sub edx, eax","sub edx, eax",True
+838,"imul edx, dword ptr [0]","imul edx, dword ptr [0x1012857c]",True
+839,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+840,"mov eax, dword ptr [ecx + 0x14]","mov eax, dword ptr [ecx + 0x14]",True
+841,"add eax, edx","add eax, edx",True
+842,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128554]",True
+843,"shr ecx, 0x10","shr ecx, 0x10",True
+844,"add eax, ecx","add eax, ecx",True
+845,"mov dword ptr [ebp - 0x2c], eax","mov dword ptr [ebp - 0x2c], eax",True
+846,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128540]",True
+847,"shr edx, 0x10","shr edx, 0x10",True
+848,"imul edx, dword ptr [0]","imul edx, dword ptr [0x1012857c]",True
+849,"add edx, dword ptr [0]","add edx, dword ptr [0x10128570]",True
+850,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10122e20]",True
+851,"mov dword ptr [eax], edx","mov dword ptr [eax], edx",True
+852,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10122e20]",True
+853,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+854,"add edx, dword ptr [0]","add edx, dword ptr [0x1012857c]",True
+855,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10122e1c]",True
+856,"mov dword ptr [eax], edx","mov dword ptr [eax], edx",True
+857,push esi,push esi,True
+858,push edi,push edi,True
+859,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+860,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+861,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128558]",True
+862,"shl edx, 0x10","shl edx, 0x10",True
+863,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+864,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128578]",True
+865,"shl ebx, 0x10","shl ebx, 0x10",True
+866,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+867,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128564]",True
+868,dec ecx,dec ecx,True
+869,"shl ecx, 0x10","shl ecx, 0x10",True
+870,"mov dword ptr [0], ecx","mov dword ptr [0x10128564], ecx",True
+871,"xor ecx, ecx","xor ecx, ecx",True
+872,"mov cx, word ptr [0]","mov cx, word ptr [0x1012858a]",True
+873,"mov dword ptr [0], ecx","mov dword ptr [0x10128580], ecx",True
+874,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+875,"shl eax, 0x10","shl eax, 0x10",True
+876,"mov dword ptr [0], eax","mov dword ptr [0x10128544], eax",True
+877,push ecx,push ecx,True
+878,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+879,"xor eax, eax","xor eax, eax",True
+880,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128564]",True
+881,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+882,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+883,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+884,jae 0xc2d,jae 0x10042bad,True
+885,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+886,je 0xbe1,je 0x10042b61,True
+887,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+888,jae 0xc2d,jae 0x10042bad,True
+889,push ebx,push ebx,True
+890,push ecx,push ecx,True
+891,push edx,push edx,True
+892,"xor eax, eax","xor eax, eax",True
+893,"xor edx, edx","xor edx, edx",True
+894,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+895,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+896,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+897,"shl eax, 4","shl eax, 4",True
+898,"shl edx, 4","shl edx, 4",True
+899,"mov ebx, eax","mov ebx, eax",True
+900,"mov ecx, edx","mov ecx, edx",True
+901,"and eax, 0xf81f0","and eax, 0xf81f0",True
+902,"and ebx, 0x7e00","and ebx, 0x7e00",True
+903,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+904,"and edx, 0x7e00","and edx, 0x7e00",True
+905,"add eax, ecx","add eax, ecx",True
+906,"add ebx, edx","add ebx, edx",True
+907,"shr eax, 1","shr eax, 1",True
+908,"shr ebx, 1","shr ebx, 1",True
+909,"and eax, 0xf81f0","and eax, 0xf81f0",True
+910,"and ebx, 0x7e00","and ebx, 0x7e00",True
+911,"add eax, ebx","add eax, ebx",True
+912,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+913,pop edx,pop edx,True
+914,pop ecx,pop ecx,True
+915,pop ebx,pop ebx,True
+916,"add dx, bx","add dx, bx",True
+917,"adc esi, dword ptr [0]","adc esi, dword ptr [0x10128580]",True
+918,"add edi, 2","add edi, 2",True
+919,"sub ebx, 0x10000","sub ebx, 0x10000",True
+920,jns 0xbd1,jns 0x10042b51,True
+921,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+922,"add edx, dword ptr [0]","add edx, dword ptr [0x10128544]",True
+923,"sbb eax, eax","sbb eax, eax",True
+924,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10122e20]",True
+925,"add esi, dword ptr [ebx + eax*4]","add esi, dword ptr [ebx + eax*4]",True
+926,dec dword ptr [0],dec dword ptr [0x10128578],True
+927,jne 0xbbb,jne 0x10042b3b,True
+928,pop ecx,pop ecx,True
+929,pop edi,pop edi,True
+930,pop esi,pop esi,True
+931,jmp 0x105c,jmp 0x10042fdc,True
+932,"cmp dword ptr [0], 0","cmp dword ptr [0x10122dc4], 0",True
+933,jl 0xe5d,jl 0x10042ddd,True
+934,"mov ecx, dword ptr [ebp - 0x14]","mov ecx, dword ptr [ebp - 0x14]",True
+935,"sub ecx, dword ptr [ebp - 0x24]","sub ecx, dword ptr [ebp - 0x24]",True
+936,"mov dword ptr [ebp - 0x30], ecx","mov dword ptr [ebp - 0x30], ecx",True
+937,"mov edx, dword ptr [ebp - 0x10]","mov edx, dword ptr [ebp - 0x10]",True
+938,"sub edx, dword ptr [ebp - 0x20]","sub edx, dword ptr [ebp - 0x20]",True
+939,"mov dword ptr [ebp - 0x34], edx","mov dword ptr [ebp - 0x34], edx",True
+940,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128588]",True
+941,"imul eax, dword ptr [ebp - 0x30]","imul eax, dword ptr [ebp - 0x30]",True
+942,"mov dword ptr [0], eax","mov dword ptr [0x10128554], eax",True
+943,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128540]",True
+944,"imul ecx, dword ptr [ebp - 0x34]","imul ecx, dword ptr [ebp - 0x34]",True
+945,"mov dword ptr [0], ecx","mov dword ptr [0x10128558], ecx",True
+946,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128554]",True
+947,"and edx, 0xffff","and edx, 0xffff",True
+948,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128588]",True
+949,"imul eax, dword ptr [0]","imul eax, dword ptr [0x10128564]",True
+950,"add edx, eax","add edx, eax",True
+951,"shr edx, 0x10","shr edx, 0x10",True
+952,"mov dword ptr [0], edx","mov dword ptr [0x10128570], edx",True
+953,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128558]",True
+954,"and ecx, 0xffff","and ecx, 0xffff",True
+955,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128540]",True
+956,"imul edx, dword ptr [0]","imul edx, dword ptr [0x10128578]",True
+957,"add ecx, edx","add ecx, edx",True
+958,"shr ecx, 0x10","shr ecx, 0x10",True
+959,"mov dword ptr [0], ecx","mov dword ptr [0x10128584], ecx",True
+960,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128558]",True
+961,"shr eax, 0x10","shr eax, 0x10",True
+962,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012857c]",True
+963,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+964,"mov edx, dword ptr [ecx + 0x14]","mov edx, dword ptr [ecx + 0x14]",True
+965,"add edx, eax","add edx, eax",True
+966,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+967,"mov ecx, dword ptr [eax + 0x30]","mov ecx, dword ptr [eax + 0x30]",True
+968,"lea edx, [edx + ecx - 1]","lea edx, [edx + ecx - 1]",True
+969,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128554]",True
+970,"shr eax, 0x10","shr eax, 0x10",True
+971,"sub edx, eax","sub edx, eax",True
+972,"mov dword ptr [ebp - 0x2c], edx","mov dword ptr [ebp - 0x2c], edx",True
+973,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128540]",True
+974,"shr ecx, 0x10","shr ecx, 0x10",True
+975,"imul ecx, dword ptr [0]","imul ecx, dword ptr [0x1012857c]",True
+976,"add ecx, dword ptr [0]","add ecx, dword ptr [0x10128570]",True
+977,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10122e20]",True
+978,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+979,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10122e20]",True
+980,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+981,"add ecx, dword ptr [0]","add ecx, dword ptr [0x1012857c]",True
+982,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10122e1c]",True
+983,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+984,push esi,push esi,True
+985,push edi,push edi,True
+986,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+987,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+988,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128558]",True
+989,"shl edx, 0x10","shl edx, 0x10",True
+990,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+991,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128578]",True
+992,"shl ebx, 0x10","shl ebx, 0x10",True
+993,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+994,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128564]",True
+995,dec ecx,dec ecx,True
+996,"shl ecx, 0x10","shl ecx, 0x10",True
+997,"mov dword ptr [0], ecx","mov dword ptr [0x10128564], ecx",True
+998,"xor ecx, ecx","xor ecx, ecx",True
+999,"mov cx, word ptr [0]","mov cx, word ptr [0x1012858a]",True
+1000,"mov dword ptr [0], ecx","mov dword ptr [0x10128580], ecx",True
+1001,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+1002,"shl eax, 0x10","shl eax, 0x10",True
+1003,"mov dword ptr [0], eax","mov dword ptr [0x10128544], eax",True
+1004,push ecx,push ecx,True
+1005,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+1006,"xor eax, eax","xor eax, eax",True
+1007,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128564]",True
+1008,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+1009,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+1010,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+1011,jae 0xe1e,jae 0x10042d9e,True
+1012,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+1013,je 0xdd2,je 0x10042d52,True
+1014,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+1015,jae 0xe1e,jae 0x10042d9e,True
+1016,push ebx,push ebx,True
+1017,push ecx,push ecx,True
+1018,push edx,push edx,True
+1019,"xor eax, eax","xor eax, eax",True
+1020,"xor edx, edx","xor edx, edx",True
+1021,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+1022,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+1023,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+1024,"shl eax, 4","shl eax, 4",True
+1025,"shl edx, 4","shl edx, 4",True
+1026,"mov ebx, eax","mov ebx, eax",True
+1027,"mov ecx, edx","mov ecx, edx",True
+1028,"and eax, 0xf81f0","and eax, 0xf81f0",True
+1029,"and ebx, 0x7e00","and ebx, 0x7e00",True
+1030,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+1031,"and edx, 0x7e00","and edx, 0x7e00",True
+1032,"add eax, ecx","add eax, ecx",True
+1033,"add ebx, edx","add ebx, edx",True
+1034,"shr eax, 1","shr eax, 1",True
+1035,"shr ebx, 1","shr ebx, 1",True
+1036,"and eax, 0xf81f0","and eax, 0xf81f0",True
+1037,"and ebx, 0x7e00","and ebx, 0x7e00",True
+1038,"add eax, ebx","add eax, ebx",True
+1039,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+1040,pop edx,pop edx,True
+1041,pop ecx,pop ecx,True
+1042,pop ebx,pop ebx,True
+1043,"add dx, bx","add dx, bx",True
+1044,"sbb esi, dword ptr [0]","sbb esi, dword ptr [0x10128580]",True
+1045,"add edi, 2","add edi, 2",True
+1046,"sub ebx, 0x10000","sub ebx, 0x10000",True
+1047,jns 0xdc2,jns 0x10042d42,True
+1048,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+1049,"add edx, dword ptr [0]","add edx, dword ptr [0x10128544]",True
+1050,"sbb eax, eax","sbb eax, eax",True
+1051,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10122e20]",True
+1052,"add esi, dword ptr [ebx + eax*4]","add esi, dword ptr [ebx + eax*4]",True
+1053,dec dword ptr [0],dec dword ptr [0x10128578],True
+1054,jne 0xdac,jne 0x10042d2c,True
+1055,pop ecx,pop ecx,True
+1056,pop edi,pop edi,True
+1057,pop esi,pop esi,True
+1058,jmp 0x105c,jmp 0x10042fdc,True
+1059,"mov eax, dword ptr [ebp - 0x14]","mov eax, dword ptr [ebp - 0x14]",True
+1060,"sub eax, dword ptr [ebp - 0x24]","sub eax, dword ptr [ebp - 0x24]",True
+1061,"mov dword ptr [ebp - 0x30], eax","mov dword ptr [ebp - 0x30], eax",True
+1062,"mov ecx, dword ptr [ebp - 0x10]","mov ecx, dword ptr [ebp - 0x10]",True
+1063,"sub ecx, dword ptr [ebp - 0x20]","sub ecx, dword ptr [ebp - 0x20]",True
+1064,"mov dword ptr [ebp - 0x34], ecx","mov dword ptr [ebp - 0x34], ecx",True
+1065,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128588]",True
+1066,"imul edx, dword ptr [ebp - 0x30]","imul edx, dword ptr [ebp - 0x30]",True
+1067,"mov dword ptr [0], edx","mov dword ptr [0x10128554], edx",True
+1068,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+1069,"imul eax, dword ptr [ebp - 0x34]","imul eax, dword ptr [ebp - 0x34]",True
+1070,"mov dword ptr [0], eax","mov dword ptr [0x10128558], eax",True
+1071,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128554]",True
+1072,"and ecx, 0xffff","and ecx, 0xffff",True
+1073,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128588]",True
+1074,"imul edx, dword ptr [0]","imul edx, dword ptr [0x10128564]",True
+1075,"add ecx, edx","add ecx, edx",True
+1076,"shr ecx, 0x10","shr ecx, 0x10",True
+1077,"mov dword ptr [0], ecx","mov dword ptr [0x10128570], ecx",True
+1078,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128558]",True
+1079,"and eax, 0xffff","and eax, 0xffff",True
+1080,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128540]",True
+1081,"imul ecx, dword ptr [0]","imul ecx, dword ptr [0x10128578]",True
+1082,"add eax, ecx","add eax, ecx",True
+1083,"shr eax, 0x10","shr eax, 0x10",True
+1084,"mov dword ptr [0], eax","mov dword ptr [0x10128584], eax",True
+1085,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+1086,"mov eax, dword ptr [edx + 0x34]","mov eax, dword ptr [edx + 0x34]",True
+1087,"sub eax, 1","sub eax, 1",True
+1088,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128558]",True
+1089,"shr ecx, 0x10","shr ecx, 0x10",True
+1090,"sub eax, ecx","sub eax, ecx",True
+1091,"imul eax, dword ptr [0]","imul eax, dword ptr [0x1012857c]",True
+1092,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+1093,"mov ecx, dword ptr [edx + 0x14]","mov ecx, dword ptr [edx + 0x14]",True
+1094,"add ecx, eax","add ecx, eax",True
+1095,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+1096,"mov eax, dword ptr [edx + 0x30]","mov eax, dword ptr [edx + 0x30]",True
+1097,"lea ecx, [ecx + eax - 1]","lea ecx, [ecx + eax - 1]",True
+1098,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128554]",True
+1099,"shr edx, 0x10","shr edx, 0x10",True
+1100,"sub ecx, edx","sub ecx, edx",True
+1101,"mov dword ptr [ebp - 0x2c], ecx","mov dword ptr [ebp - 0x2c], ecx",True
+1102,"mov eax, dword ptr [0]","mov eax, dword ptr [0x1012857c]",True
+1103,neg eax,neg eax,True
+1104,"add eax, dword ptr [0]","add eax, dword ptr [0x10128570]",True
+1105,"mov dword ptr [0], eax","mov dword ptr [0x1012853c], eax",True
+1106,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128540]",True
+1107,"shr ecx, 0x10","shr ecx, 0x10",True
+1108,"imul ecx, dword ptr [0]","imul ecx, dword ptr [0x1012857c]",True
+1109,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128570]",True
+1110,neg edx,neg edx,True
+1111,"add ecx, edx","add ecx, edx",True
+1112,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10122e20]",True
+1113,"mov dword ptr [eax], ecx","mov dword ptr [eax], ecx",True
+1114,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10122e20]",True
+1115,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+1116,"add edx, dword ptr [0]","add edx, dword ptr [0x1012857c]",True
+1117,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10122e1c]",True
+1118,"mov dword ptr [eax], edx","mov dword ptr [eax], edx",True
+1119,push esi,push esi,True
+1120,push edi,push edi,True
+1121,"mov esi, dword ptr [ebp - 0x2c]","mov esi, dword ptr [ebp - 0x2c]",True
+1122,"mov edi, dword ptr [ebp - 0x28]","mov edi, dword ptr [ebp - 0x28]",True
+1123,"mov edx, dword ptr [0]","mov edx, dword ptr [0x10128558]",True
+1124,"shl edx, 0x10","shl edx, 0x10",True
+1125,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+1126,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128578]",True
+1127,"shl ebx, 0x10","shl ebx, 0x10",True
+1128,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+1129,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x10128564]",True
+1130,dec ecx,dec ecx,True
+1131,"shl ecx, 0x10","shl ecx, 0x10",True
+1132,"mov dword ptr [0], ecx","mov dword ptr [0x10128564], ecx",True
+1133,"xor ecx, ecx","xor ecx, ecx",True
+1134,"mov cx, word ptr [0]","mov cx, word ptr [0x1012858a]",True
+1135,"mov dword ptr [0], ecx","mov dword ptr [0x10128580], ecx",True
+1136,"mov eax, dword ptr [0]","mov eax, dword ptr [0x10128540]",True
+1137,"shl eax, 0x10","shl eax, 0x10",True
+1138,"mov dword ptr [0], eax","mov dword ptr [0x10128544], eax",True
+1139,push ecx,push ecx,True
+1140,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x1012856c]",True
+1141,"xor eax, eax","xor eax, eax",True
+1142,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10128564]",True
+1143,"mov bx, word ptr [0]","mov bx, word ptr [0x10128588]",True
+1144,"mov dx, word ptr [0]","mov dx, word ptr [0x10128554]",True
+1145,"cmp byte ptr [esi], 0xff","cmp byte ptr [esi], 0xff",True
+1146,jae 0x1022,jae 0x10042fa2,True
+1147,"or byte ptr [ebp + 0x14], 0","or byte ptr [ebp + 0x14], 0",True
+1148,je 0xfd6,je 0x10042f56,True
+1149,"cmp byte ptr [esi], 0xf8","cmp byte ptr [esi], 0xf8",True
+1150,jae 0x1022,jae 0x10042fa2,True
+1151,push ebx,push ebx,True
+1152,push ecx,push ecx,True
+1153,push edx,push edx,True
+1154,"xor eax, eax","xor eax, eax",True
+1155,"xor edx, edx","xor edx, edx",True
+1156,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+1157,"mov dx, word ptr [edi]","mov dx, word ptr [edi]",True
+1158,"mov ax, word ptr [ecx + eax*2]","mov ax, word ptr [ecx + eax*2]",True
+1159,"shl eax, 4","shl eax, 4",True
+1160,"shl edx, 4","shl edx, 4",True
+1161,"mov ebx, eax","mov ebx, eax",True
+1162,"mov ecx, edx","mov ecx, edx",True
+1163,"and eax, 0xf81f0","and eax, 0xf81f0",True
+1164,"and ebx, 0x7e00","and ebx, 0x7e00",True
+1165,"and ecx, 0xf81f0","and ecx, 0xf81f0",True
+1166,"and edx, 0x7e00","and edx, 0x7e00",True
+1167,"add eax, ecx","add eax, ecx",True
+1168,"add ebx, edx","add ebx, edx",True
+1169,"shr eax, 1","shr eax, 1",True
+1170,"shr ebx, 1","shr ebx, 1",True
+1171,"and eax, 0xf81f0","and eax, 0xf81f0",True
+1172,"and ebx, 0x7e00","and ebx, 0x7e00",True
+1173,"add eax, ebx","add eax, ebx",True
+1174,"mov word ptr [edi], ax","mov word ptr [edi], ax",True
+1175,pop edx,pop edx,True
+1176,pop ecx,pop ecx,True
+1177,pop ebx,pop ebx,True
+1178,"add dx, bx","add dx, bx",True
+1179,"sbb esi, dword ptr [0]","sbb esi, dword ptr [0x10128580]",True
+1180,"add edi, 2","add edi, 2",True
+1181,"sub ebx, 0x10000","sub ebx, 0x10000",True
+1182,jns 0xfc6,jns 0x10042f46,True
+1183,"add edi, dword ptr [0]","add edi, dword ptr [0x10128560]",True
+1184,"add edx, dword ptr [0]","add edx, dword ptr [0x10128544]",True
+1185,"sbb eax, eax","sbb eax, eax",True
+1186,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x10122e20]",True
+1187,"add esi, dword ptr [ebx + eax*4]","add esi, dword ptr [ebx + eax*4]",True
+1188,dec dword ptr [0],dec dword ptr [0x10128578],True
+1189,jne 0xfb0,jne 0x10042f30,True
+1190,pop ecx,pop ecx,True
+1191,pop edi,pop edi,True
+1192,pop esi,pop esi,True
+1193,"mov esi, esp","mov esi, esp",True
+1194,push 2,push 2,True
+1195,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+1196,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+1197,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+1198,call dword ptr [edx + 0x24],call dword ptr [edx + 0x24],True
+1199,"cmp esi, esp","cmp esi, esp",True
+1200,call 0x1072,call 0x1007e780,True
+1201,"xor eax, eax","xor eax, eax",True
+1202,pop edi,pop edi,True
+1203,pop esi,pop esi,True
+1204,pop ebx,pop ebx,True
+1205,"add esp, 0x84","add esp, 0x84",True
+1206,"cmp ebp, esp","cmp ebp, esp",True
+1207,call 0x1084,call 0x1007e780,True
+1208,"mov esp, ebp","mov esp, ebp",True
+1209,pop ebp,pop ebp,True
+1210,ret 0x10,ret 0x10,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?draw16_10041f80@Sprite@@QAEHPAVSurface@@HHD@Z,module=jgld.dll
+VERDICT,GREEN,1211,100.0%

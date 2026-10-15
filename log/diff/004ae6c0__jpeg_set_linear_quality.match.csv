@@ -1,0 +1,26 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,"mov esi, dword ptr [esp + 0x14]","mov esi, dword ptr [esp + 0x14]",True
+4,push edi,push edi,True
+5,"mov edi, dword ptr [esp + 0x14]","mov edi, dword ptr [esp + 0x14]",True
+6,push esi,push esi,True
+7,push edi,push edi,True
+8,push 0,push 0x4bcb08,True
+9,push 0,push 0,True
+10,push ebx,push ebx,True
+11,call 0x1e,call 0x4ae600,True
+12,push esi,push esi,True
+13,push edi,push edi,True
+14,push 0,push 0x4bcc08,True
+15,push 1,push 1,True
+16,push ebx,push ebx,True
+17,call 0x2d,call 0x4ae600,True
+18,"add esp, 0x28","add esp, 0x28",True
+19,pop edi,pop edi,True
+20,pop esi,pop esi,True
+21,pop ebx,pop ebx,True
+22,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jpeg_set_linear_quality,module=golf_clean.exe
+VERDICT,GREEN,23,100.0%

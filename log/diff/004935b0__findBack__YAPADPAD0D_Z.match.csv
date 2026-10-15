@@ -1,0 +1,30 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,push ebx,push ebx,True
+4,"mov ebx, dword ptr [ebp + 8]","mov ebx, dword ptr [ebp + 8]",True
+5,"and ebx, ebx","and ebx, ebx",True
+6,je 0x26,je 0x4935d6,True
+7,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+8,"and ecx, ecx","and ecx, ecx",True
+9,je 0x26,je 0x4935d6,True
+10,"mov eax, ecx","mov eax, ecx",True
+11,"sub ecx, ebx","sub ecx, ebx",True
+12,"and ecx, ecx","and ecx, ecx",True
+13,je 0x26,je 0x4935d6,True
+14,"mov bl, byte ptr [ebp + 0x10]","mov bl, byte ptr [ebp + 0x10]",True
+15,"cmp byte ptr [eax], bl","cmp byte ptr [eax], bl",True
+16,je 0x28,je 0x4935d8,True
+17,dec eax,dec eax,True
+18,dec ecx,dec ecx,True
+19,jne 0x1e,jne 0x4935ce,True
+20,"xor eax, eax","xor eax, eax",True
+21,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+22,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+23,pop ebx,pop ebx,True
+24,"mov esp, ebp","mov esp, ebp",True
+25,pop ebp,pop ebp,True
+26,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?findBack@@YAPADPAD0D@Z,module=golf_clean.exe
+VERDICT,GREEN,27,100.0%

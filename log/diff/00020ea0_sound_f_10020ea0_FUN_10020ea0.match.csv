@@ -1,0 +1,18 @@
+instruction,recompiled,original,match
+0,"test byte ptr [ecx + 0xac], 1","test byte ptr [ecx + 0xac], 1",True
+1,jne 0xf,jne 0x10020eaf,True
+2,"mov eax, 0x14","mov eax, 0x14",True
+3,ret ,ret ,True
+4,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b4a1c]",True
+5,"test eax, eax","test eax, eax",True
+6,je 0x26,je 0x10020ec6,True
+7,push 0,push 0,True
+8,push 0,push 0,True
+9,push 2,push 2,True
+10,push ecx,push ecx,True
+11,"mov ecx, eax","mov ecx, eax",True
+12,call 0x26,call 0x100015e1,True
+13,"xor eax, eax","xor eax, eax",True
+14,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10020ea0@f_10020ea0@@YIIH@Z,module=sound.dll
+VERDICT,GREEN,15,100.0%

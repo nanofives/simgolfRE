@@ -1,0 +1,32 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+11,je 0x24,je 0x1007dc44,True
+12,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+13,jne 0x26,jne 0x1007dc46,True
+14,jmp 0x3d,jmp 0x1007dc5d,True
+15,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+16,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+17,"mov dword ptr [eax + 0x7c], ecx","mov dword ptr [eax + 0x7c], ecx",True
+18,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+19,"mov eax, dword ptr [edx + 8]","mov eax, dword ptr [edx + 8]",True
+20,"or al, 0x40","or al, 0x40",True
+21,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+22,"mov dword ptr [ecx + 8], eax","mov dword ptr [ecx + 8], eax",True
+23,pop edi,pop edi,True
+24,pop esi,pop esi,True
+25,pop ebx,pop ebx,True
+26,"mov esp, ebp","mov esp, ebp",True
+27,pop ebp,pop ebp,True
+28,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_set_hIST,module=jgld.dll
+VERDICT,GREEN,29,100.0%

@@ -1,0 +1,33 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push 0,push 0,True
+2,"mov esi, ecx","mov esi, ecx",True
+3,push 0,push 0,True
+4,call dword ptr [0],call dword ptr [0x4ba21c],True
+5,push eax,push eax,True
+6,push 0,push 0x4e4954,True
+7,push 0,push 0x4e4960,True
+8,call 0x1d,call 0x4a0320,True
+9,"mov al, byte ptr [esi + 0xb8]","mov al, byte ptr [esi + 0xb8]",True
+10,"add esp, 0x14","add esp, 0x14",True
+11,"test al, 0x10","test al, 0x10",True
+12,jne 0x4d,jne 0x49cb6d,True
+13,"mov ecx, esi","mov ecx, esi",True
+14,call 0x31,call 0x49ccc0,True
+15,"test eax, eax","test eax, eax",True
+16,je 0x4d,je 0x49cb6d,True
+17,push 0,push 0,True
+18,"mov ecx, esi","mov ecx, esi",True
+19,call 0x3e,call 0x49cb80,True
+20,"test eax, eax","test eax, eax",True
+21,je 0x4d,je 0x49cb6d,True
+22,"mov ecx, esi","mov ecx, esi",True
+23,call 0x49,call 0x49ccc0,True
+24,"test eax, eax","test eax, eax",True
+25,jne 0x35,jne 0x49cb55,True
+26,"mov ecx, esi","mov ecx, esi",True
+27,call 0x54,call 0x49cb90,True
+28,pop esi,pop esi,True
+29,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?run@C49cb20@@QAEXXZ,module=golf_clean.exe
+VERDICT,GREEN,30,100.0%

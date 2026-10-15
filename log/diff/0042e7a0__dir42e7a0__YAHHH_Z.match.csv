@@ -1,0 +1,35 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,push esi,push esi,True
+2,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+3,"mov eax, ecx","mov eax, ecx",True
+4,cdq ,cdq ,True
+5,push edi,push edi,True
+6,"mov edi, eax","mov edi, eax",True
+7,"xor edi, edx","xor edi, edx",True
+8,"mov eax, esi","mov eax, esi",True
+9,"sub edi, edx","sub edi, edx",True
+10,cdq ,cdq ,True
+11,"xor eax, edx","xor eax, edx",True
+12,"sub eax, edx","sub eax, edx",True
+13,"cmp edi, eax","cmp edi, eax",True
+14,jle 0x2e,jle 0x42e7ce,True
+15,"xor eax, eax","xor eax, eax",True
+16,pop edi,pop edi,True
+17,"test ecx, ecx","test ecx, ecx",True
+18,setle al,setle al,True
+19,dec eax,dec eax,True
+20,pop esi,pop esi,True
+21,"and al, 0xfc","and al, 0xfc",True
+22,"add eax, 6","add eax, 6",True
+23,ret ,ret ,True
+24,"xor eax, eax","xor eax, eax",True
+25,pop edi,pop edi,True
+26,"test esi, esi","test esi, esi",True
+27,setle al,setle al,True
+28,dec eax,dec eax,True
+29,pop esi,pop esi,True
+30,"and eax, 4","and eax, 4",True
+31,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?dir42e7a0@@YAHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,32,100.0%

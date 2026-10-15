@@ -1,0 +1,44 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x4c","sub esp, 0x4c",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x4c]","lea edi, [ebp - 0x4c]",True
+7,"mov ecx, 0x13","mov ecx, 0x13",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"mov ecx, 0","mov ecx, 0x10128428",True
+11,call 0x22,call 0x1000105f,True
+12,"test eax, eax","test eax, eax",True
+13,je 0x5d,je 0x10006c4d,True
+14,"mov eax, dword ptr [4]","mov eax, dword ptr [0x1012842c]",True
+15,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+16,"mov ecx, dword ptr [ebp - 8]","mov ecx, dword ptr [ebp - 8]",True
+17,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+18,"cmp dword ptr [ebp - 4], 0","cmp dword ptr [ebp - 4], 0",True
+19,je 0x54,je 0x10006c44,True
+20,"mov esi, esp","mov esi, esp",True
+21,push 1,push 1,True
+22,"mov edx, dword ptr [ebp - 4]","mov edx, dword ptr [ebp - 4]",True
+23,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+24,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+25,call dword ptr [eax],call dword ptr [eax],True
+26,"cmp esi, esp","cmp esi, esp",True
+27,call 0x4f,call 0x1007e780,True
+28,"mov dword ptr [ebp - 0xc], eax","mov dword ptr [ebp - 0xc], eax",True
+29,jmp 0x5b,jmp 0x10006c4b,True
+30,"mov dword ptr [ebp - 0xc], 0","mov dword ptr [ebp - 0xc], 0",True
+31,jmp 0x18,jmp 0x10006c08,True
+32,pop edi,pop edi,True
+33,pop esi,pop esi,True
+34,pop ebx,pop ebx,True
+35,"add esp, 0x4c","add esp, 0x4c",True
+36,"cmp ebp, esp","cmp ebp, esp",True
+37,call 0x6a,call 0x1007e780,True
+38,"mov esp, ebp","mov esp, ebp",True
+39,pop ebp,pop ebp,True
+40,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?deleteAll@Tracked@@SAXXZ,module=jgld.dll
+VERDICT,GREEN,41,100.0%

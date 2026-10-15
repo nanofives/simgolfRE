@@ -1,0 +1,880 @@
+instruction,recompiled,original,match
+0,push 4,push 4,True
+1,push 0,push 0x4d2020,True
+2,"mov ecx, 0","mov ecx, 0x812790",True
+3,call 0x11,call 0x484e30,True
+4,push 4,push 4,True
+5,push 0,push 0x4d1ffc,True
+6,"mov ecx, 0","mov ecx, 0x8127fc",True
+7,call 0x22,call 0x484e30,True
+8,push 4,push 4,True
+9,push 0,push 0x4d1fdc,True
+10,"mov ecx, 0","mov ecx, 0x812c34",True
+11,call 0x33,call 0x484e30,True
+12,push 4,push 4,True
+13,push 0,push 0x4d1fb8,True
+14,"mov ecx, 0","mov ecx, 0x812ca0",True
+15,call 0x44,call 0x484e30,True
+16,push 4,push 4,True
+17,push 0,push 0x4d1f8c,True
+18,"mov ecx, 0","mov ecx, 0x812868",True
+19,call 0x55,call 0x484e30,True
+20,push 4,push 4,True
+21,push 0,push 0x4d1f64,True
+22,"mov ecx, 0","mov ecx, 0x8128d4",True
+23,call 0x66,call 0x484e30,True
+24,push 4,push 4,True
+25,push 0,push 0x4d1f3c,True
+26,"mov ecx, 0","mov ecx, 0x812940",True
+27,call 0x77,call 0x484e30,True
+28,push 4,push 4,True
+29,push 0,push 0x4d1f10,True
+30,"mov ecx, 0","mov ecx, 0x8129ac",True
+31,call 0x88,call 0x484e30,True
+32,push 4,push 4,True
+33,push 0,push 0x4d1eec,True
+34,"mov ecx, 0","mov ecx, 0x80d840",True
+35,call 0x99,call 0x484e30,True
+36,push 4,push 4,True
+37,push 0,push 0x4d1ed0,True
+38,"mov ecx, 0","mov ecx, 0x80d8ac",True
+39,call 0xaa,call 0x484e30,True
+40,push 4,push 4,True
+41,push 0,push 0x4d1eb4,True
+42,"mov ecx, 0","mov ecx, 0x80d918",True
+43,call 0xbb,call 0x484e30,True
+44,push 4,push 4,True
+45,push 0,push 0x4d1e98,True
+46,"mov ecx, 0","mov ecx, 0x80d984",True
+47,call 0xcc,call 0x484e30,True
+48,push 4,push 4,True
+49,push 0,push 0x4d1e74,True
+50,"mov ecx, 0","mov ecx, 0x80d9f0",True
+51,call 0xdd,call 0x484e30,True
+52,push 4,push 4,True
+53,push 0,push 0x4d1e54,True
+54,"mov ecx, 0","mov ecx, 0x80da5c",True
+55,call 0xee,call 0x484e30,True
+56,push 4,push 4,True
+57,push 0,push 0x4d1e34,True
+58,"mov ecx, 0","mov ecx, 0x80dac8",True
+59,call 0xff,call 0x484e30,True
+60,push 4,push 4,True
+61,push 0,push 0x4d1e14,True
+62,"mov ecx, 0","mov ecx, 0x80db34",True
+63,call 0x110,call 0x484e30,True
+64,push 4,push 4,True
+65,push 0,push 0x4d1dec,True
+66,"mov ecx, 0","mov ecx, 0x80dba0",True
+67,call 0x121,call 0x484e30,True
+68,push 4,push 4,True
+69,push 0,push 0x4d1dc4,True
+70,"mov ecx, 0","mov ecx, 0x80ef08",True
+71,call 0x132,call 0x484e30,True
+72,push 4,push 4,True
+73,push 0,push 0x4d1da0,True
+74,"mov ecx, 0","mov ecx, 0x80ef74",True
+75,call 0x143,call 0x484e30,True
+76,push 4,push 4,True
+77,push 0,push 0x4d1d88,True
+78,"mov ecx, 0","mov ecx, 0x80dce4",True
+79,call 0x154,call 0x484e30,True
+80,push 4,push 4,True
+81,push 0,push 0x4d1d70,True
+82,"mov ecx, 0","mov ecx, 0x80ddbc",True
+83,call 0x165,call 0x484e30,True
+84,push 4,push 4,True
+85,push 0,push 0x4d1d58,True
+86,"mov ecx, 0","mov ecx, 0x80df6c",True
+87,call 0x176,call 0x484e30,True
+88,push 4,push 4,True
+89,push 0,push 0x4d1d40,True
+90,"mov ecx, 0","mov ecx, 0x80e044",True
+91,call 0x187,call 0x484e30,True
+92,push 4,push 4,True
+93,push 0,push 0x4d1d24,True
+94,"mov ecx, 0","mov ecx, 0x80e11c",True
+95,call 0x198,call 0x484e30,True
+96,push 4,push 4,True
+97,push 0,push 0x4d1d0c,True
+98,"mov ecx, 0","mov ecx, 0x80e1f4",True
+99,call 0x1a9,call 0x484e30,True
+100,push 4,push 4,True
+101,push 0,push 0x4d1cf4,True
+102,"mov ecx, 0","mov ecx, 0x80f1fc",True
+103,call 0x1ba,call 0x484e30,True
+104,push 4,push 4,True
+105,push 0,push 0x4d1cdc,True
+106,"mov ecx, 0","mov ecx, 0x80f2d4",True
+107,call 0x1cb,call 0x484e30,True
+108,push 4,push 4,True
+109,push 0,push 0x4d1cc4,True
+110,"mov ecx, 0","mov ecx, 0x80f3ac",True
+111,call 0x1dc,call 0x484e30,True
+112,push 4,push 4,True
+113,push 0,push 0x4d1cac,True
+114,"mov ecx, 0","mov ecx, 0x80f484",True
+115,call 0x1ed,call 0x484e30,True
+116,push 4,push 4,True
+117,push 0,push 0x4d1c90,True
+118,"mov ecx, 0","mov ecx, 0x80f55c",True
+119,call 0x1fe,call 0x484e30,True
+120,push 4,push 4,True
+121,push 0,push 0x4d1c78,True
+122,"mov ecx, 0","mov ecx, 0x80f634",True
+123,call 0x20f,call 0x484e30,True
+124,push 4,push 4,True
+125,push 0,push 0x4d1c60,True
+126,"mov ecx, 0","mov ecx, 0x80f70c",True
+127,call 0x220,call 0x484e30,True
+128,push 4,push 4,True
+129,push 0,push 0x4d1c48,True
+130,"mov ecx, 0","mov ecx, 0x80f7e4",True
+131,call 0x231,call 0x484e30,True
+132,push 4,push 4,True
+133,push 0,push 0x4d1c2c,True
+134,"mov ecx, 0","mov ecx, 0x80f8bc",True
+135,call 0x242,call 0x484e30,True
+136,push 4,push 4,True
+137,push 0,push 0x4d1c14,True
+138,"mov ecx, 0","mov ecx, 0x80f994",True
+139,call 0x253,call 0x484e30,True
+140,push 4,push 4,True
+141,push 0,push 0x4d1bfc,True
+142,"mov ecx, 0","mov ecx, 0x80fa6c",True
+143,call 0x264,call 0x484e30,True
+144,push 4,push 4,True
+145,push 0,push 0x4d1be4,True
+146,"mov ecx, 0","mov ecx, 0x80fb44",True
+147,call 0x275,call 0x484e30,True
+148,push 4,push 4,True
+149,push 0,push 0x4d1bcc,True
+150,"mov ecx, 0","mov ecx, 0x80dc0c",True
+151,call 0x286,call 0x484e30,True
+152,push 4,push 4,True
+153,push 0,push 0x4d1bb4,True
+154,"mov ecx, 0","mov ecx, 0x80fcf4",True
+155,call 0x297,call 0x484e30,True
+156,push 4,push 4,True
+157,push 0,push 0x4d1b9c,True
+158,"mov ecx, 0","mov ecx, 0x80fdcc",True
+159,call 0x2a8,call 0x484e30,True
+160,push 4,push 4,True
+161,push 0,push 0x4d1b80,True
+162,"mov ecx, 0","mov ecx, 0x80fea4",True
+163,call 0x2b9,call 0x484e30,True
+164,push 4,push 4,True
+165,push 0,push 0x4d1b64,True
+166,"mov ecx, 0","mov ecx, 0x811ddc",True
+167,call 0x2ca,call 0x484e30,True
+168,push 4,push 4,True
+169,push 0,push 0x4d1b48,True
+170,"mov ecx, 0","mov ecx, 0x811eb4",True
+171,call 0x2db,call 0x484e30,True
+172,push 4,push 4,True
+173,push 0,push 0x4d1b28,True
+174,"mov ecx, 0","mov ecx, 0x80de28",True
+175,call 0x2ec,call 0x484e30,True
+176,push 4,push 4,True
+177,push 0,push 0x4d1b08,True
+178,"mov ecx, 0","mov ecx, 0x80de94",True
+179,call 0x2fd,call 0x484e30,True
+180,push 4,push 4,True
+181,push 0,push 0x4d1aec,True
+182,"mov ecx, 0","mov ecx, 0x80dc78",True
+183,call 0x30e,call 0x484e30,True
+184,push 4,push 4,True
+185,push 0,push 0x4d1ad0,True
+186,"mov ecx, 0","mov ecx, 0x80dd50",True
+187,call 0x31f,call 0x484e30,True
+188,push 4,push 4,True
+189,push 0,push 0x4d1ab4,True
+190,"mov ecx, 0","mov ecx, 0x80df00",True
+191,call 0x330,call 0x484e30,True
+192,push 4,push 4,True
+193,push 0,push 0x4d1a98,True
+194,"mov ecx, 0","mov ecx, 0x80dfd8",True
+195,call 0x341,call 0x484e30,True
+196,push 4,push 4,True
+197,push 0,push 0x4d1a7c,True
+198,"mov ecx, 0","mov ecx, 0x80e0b0",True
+199,call 0x352,call 0x484e30,True
+200,push 4,push 4,True
+201,push 0,push 0x4d1a60,True
+202,"mov ecx, 0","mov ecx, 0x80e188",True
+203,call 0x363,call 0x484e30,True
+204,push 4,push 4,True
+205,push 0,push 0x4d1a44,True
+206,"mov ecx, 0","mov ecx, 0x80f190",True
+207,call 0x374,call 0x484e30,True
+208,push 4,push 4,True
+209,push 0,push 0x4d1a2c,True
+210,"mov ecx, 0","mov ecx, 0x80f268",True
+211,call 0x385,call 0x484e30,True
+212,push 4,push 4,True
+213,push 0,push 0x4d1a14,True
+214,"mov ecx, 0","mov ecx, 0x80f340",True
+215,call 0x396,call 0x484e30,True
+216,push 4,push 4,True
+217,push 0,push 0x4d19f8,True
+218,"mov ecx, 0","mov ecx, 0x80f418",True
+219,call 0x3a7,call 0x484e30,True
+220,push 4,push 4,True
+221,push 0,push 0x4d19dc,True
+222,"mov ecx, 0","mov ecx, 0x80f4f0",True
+223,call 0x3b8,call 0x484e30,True
+224,push 4,push 4,True
+225,push 0,push 0x4d19c4,True
+226,"mov ecx, 0","mov ecx, 0x80f5c8",True
+227,call 0x3c9,call 0x484e30,True
+228,push 4,push 4,True
+229,push 0,push 0x4d19a8,True
+230,"mov ecx, 0","mov ecx, 0x80f6a0",True
+231,call 0x3da,call 0x484e30,True
+232,push 4,push 4,True
+233,push 0,push 0x4d198c,True
+234,"mov ecx, 0","mov ecx, 0x80f778",True
+235,call 0x3eb,call 0x484e30,True
+236,push 4,push 4,True
+237,push 0,push 0x4d1970,True
+238,"mov ecx, 0","mov ecx, 0x80f850",True
+239,call 0x3fc,call 0x484e30,True
+240,push 4,push 4,True
+241,push 0,push 0x4d1954,True
+242,"mov ecx, 0","mov ecx, 0x80f928",True
+243,call 0x40d,call 0x484e30,True
+244,push 4,push 4,True
+245,push 0,push 0x4d193c,True
+246,"mov ecx, 0","mov ecx, 0x80fa00",True
+247,call 0x41e,call 0x484e30,True
+248,push 4,push 4,True
+249,push 0,push 0x4d1920,True
+250,"mov ecx, 0","mov ecx, 0x80fad8",True
+251,call 0x42f,call 0x484e30,True
+252,push 4,push 4,True
+253,push 0,push 0x4d1904,True
+254,"mov ecx, 0","mov ecx, 0x80dba0",True
+255,call 0x440,call 0x484e30,True
+256,push 4,push 4,True
+257,push 0,push 0x4d18e8,True
+258,"mov ecx, 0","mov ecx, 0x80fc88",True
+259,call 0x451,call 0x484e30,True
+260,push 4,push 4,True
+261,push 0,push 0x4d18cc,True
+262,"mov ecx, 0","mov ecx, 0x80fd60",True
+263,call 0x462,call 0x484e30,True
+264,push 4,push 4,True
+265,push 0,push 0x4d18b0,True
+266,"mov ecx, 0","mov ecx, 0x80fe38",True
+267,call 0x473,call 0x484e30,True
+268,push 4,push 4,True
+269,push 0,push 0x4d1894,True
+270,"mov ecx, 0","mov ecx, 0x811d70",True
+271,call 0x484,call 0x484e30,True
+272,push 4,push 4,True
+273,push 0,push 0x4d1878,True
+274,"mov ecx, 0","mov ecx, 0x811e48",True
+275,call 0x495,call 0x484e30,True
+276,push 4,push 4,True
+277,push 0,push 0x4d185c,True
+278,"mov ecx, 0","mov ecx, 0x8117f4",True
+279,call 0x4a6,call 0x484e30,True
+280,push 4,push 4,True
+281,push 0,push 0x4d1844,True
+282,"mov ecx, 0","mov ecx, 0x8118cc",True
+283,call 0x4b7,call 0x484e30,True
+284,push 4,push 4,True
+285,push 0,push 0x4d1828,True
+286,"mov ecx, 0","mov ecx, 0x8119a4",True
+287,call 0x4c8,call 0x484e30,True
+288,push 4,push 4,True
+289,push 0,push 0x4d1810,True
+290,"mov ecx, 0","mov ecx, 0x811a7c",True
+291,call 0x4d9,call 0x484e30,True
+292,push 4,push 4,True
+293,push 0,push 0x4d17f4,True
+294,"mov ecx, 0","mov ecx, 0x811b54",True
+295,call 0x4ea,call 0x484e30,True
+296,push 4,push 4,True
+297,push 0,push 0x4d17dc,True
+298,"mov ecx, 0","mov ecx, 0x811c2c",True
+299,call 0x4fb,call 0x484e30,True
+300,push 4,push 4,True
+301,push 0,push 0x4d17c0,True
+302,"mov ecx, 0","mov ecx, 0x811d04",True
+303,call 0x50c,call 0x484e30,True
+304,push 4,push 4,True
+305,push 0,push 0x4d17a4,True
+306,"mov ecx, 0","mov ecx, 0x811788",True
+307,call 0x51d,call 0x484e30,True
+308,push 4,push 4,True
+309,push 0,push 0x4d178c,True
+310,"mov ecx, 0","mov ecx, 0x811860",True
+311,call 0x52e,call 0x484e30,True
+312,push 4,push 4,True
+313,push 0,push 0x4d1770,True
+314,"mov ecx, 0","mov ecx, 0x811938",True
+315,call 0x53f,call 0x484e30,True
+316,push 4,push 4,True
+317,push 0,push 0x4d1754,True
+318,"mov ecx, 0","mov ecx, 0x811a10",True
+319,call 0x550,call 0x484e30,True
+320,push 4,push 4,True
+321,push 0,push 0x4d1738,True
+322,"mov ecx, 0","mov ecx, 0x811ae8",True
+323,call 0x561,call 0x484e30,True
+324,push 4,push 4,True
+325,push 0,push 0x4d171c,True
+326,"mov ecx, 0","mov ecx, 0x811bc0",True
+327,call 0x572,call 0x484e30,True
+328,push 4,push 4,True
+329,push 0,push 0x4d1700,True
+330,"mov ecx, 0","mov ecx, 0x811c98",True
+331,call 0x583,call 0x484e30,True
+332,push 4,push 4,True
+333,push 0,push 0x4d16e4,True
+334,"mov ecx, 0","mov ecx, 0x80ff10",True
+335,call 0x594,call 0x484e30,True
+336,push 4,push 4,True
+337,push 0,push 0x4d16c8,True
+338,"mov ecx, 0","mov ecx, 0x80ff7c",True
+339,call 0x5a5,call 0x484e30,True
+340,push 4,push 4,True
+341,push 0,push 0x4d16ac,True
+342,"mov ecx, 0","mov ecx, 0x80ffe8",True
+343,call 0x5b6,call 0x484e30,True
+344,push 4,push 4,True
+345,push 0,push 0x4d1690,True
+346,"mov ecx, 0","mov ecx, 0x810054",True
+347,call 0x5c7,call 0x484e30,True
+348,push 4,push 4,True
+349,push 0,push 0x4d166c,True
+350,"mov ecx, 0","mov ecx, 0x8100c0",True
+351,call 0x5d8,call 0x484e30,True
+352,push 4,push 4,True
+353,push 0,push 0x4d164c,True
+354,"mov ecx, 0","mov ecx, 0x81012c",True
+355,call 0x5e9,call 0x484e30,True
+356,push 4,push 4,True
+357,push 0,push 0x4d1628,True
+358,"mov ecx, 0","mov ecx, 0x810198",True
+359,call 0x5fa,call 0x484e30,True
+360,push 4,push 4,True
+361,push 0,push 0x4d1608,True
+362,"mov ecx, 0","mov ecx, 0x810204",True
+363,call 0x60b,call 0x484e30,True
+364,push 4,push 4,True
+365,push 0,push 0x4d15ec,True
+366,"mov ecx, 0","mov ecx, 0x810270",True
+367,call 0x61c,call 0x484e30,True
+368,push 4,push 4,True
+369,push 0,push 0x4d15c4,True
+370,"mov ecx, 0","mov ecx, 0x8102dc",True
+371,call 0x62d,call 0x484e30,True
+372,push 4,push 4,True
+373,push 0,push 0x4d159c,True
+374,"mov ecx, 0","mov ecx, 0x810348",True
+375,call 0x63e,call 0x484e30,True
+376,push 4,push 4,True
+377,push 0,push 0x4d1578,True
+378,"mov ecx, 0","mov ecx, 0x8103b4",True
+379,call 0x64f,call 0x484e30,True
+380,push 4,push 4,True
+381,push 0,push 0x4d1558,True
+382,"mov ecx, 0","mov ecx, 0x810420",True
+383,call 0x660,call 0x484e30,True
+384,push 4,push 4,True
+385,push 0,push 0x4d1534,True
+386,"mov ecx, 0","mov ecx, 0x81048c",True
+387,call 0x671,call 0x484e30,True
+388,push 4,push 4,True
+389,push 0,push 0x4d1510,True
+390,"mov ecx, 0","mov ecx, 0x8104f8",True
+391,call 0x682,call 0x484e30,True
+392,push 4,push 4,True
+393,push 0,push 0x4d14f4,True
+394,"mov ecx, 0","mov ecx, 0x810564",True
+395,call 0x693,call 0x484e30,True
+396,push 4,push 4,True
+397,push 0,push 0x4d14d8,True
+398,"mov ecx, 0","mov ecx, 0x80e8b4",True
+399,call 0x6a4,call 0x484e30,True
+400,push 4,push 4,True
+401,push 0,push 0x4d14bc,True
+402,"mov ecx, 0","mov ecx, 0x80e920",True
+403,call 0x6b5,call 0x484e30,True
+404,push 4,push 4,True
+405,push 0,push 0x4d14a4,True
+406,"mov ecx, 0","mov ecx, 0x80e9f8",True
+407,call 0x6c6,call 0x484e30,True
+408,push 4,push 4,True
+409,push 0,push 0x4d1488,True
+410,"mov ecx, 0","mov ecx, 0x80ea64",True
+411,call 0x6d7,call 0x484e30,True
+412,push 4,push 4,True
+413,push 0,push 0x4d146c,True
+414,"mov ecx, 0","mov ecx, 0x80e98c",True
+415,call 0x6e8,call 0x484e30,True
+416,push 4,push 4,True
+417,push 0,push 0x4d1450,True
+418,"mov ecx, 0","mov ecx, 0x80e260",True
+419,call 0x6f9,call 0x484e30,True
+420,push 4,push 4,True
+421,push 0,push 0x4d1438,True
+422,"mov ecx, 0","mov ecx, 0x80e2cc",True
+423,call 0x70a,call 0x484e30,True
+424,push 4,push 4,True
+425,push 0,push 0x4d141c,True
+426,"mov ecx, 0","mov ecx, 0x80e47c",True
+427,call 0x71b,call 0x484e30,True
+428,push 4,push 4,True
+429,push 0,push 0x4d1400,True
+430,"mov ecx, 0","mov ecx, 0x80e4e8",True
+431,call 0x72c,call 0x484e30,True
+432,push 4,push 4,True
+433,push 0,push 0x4d13e4,True
+434,"mov ecx, 0","mov ecx, 0x80e554",True
+435,call 0x73d,call 0x484e30,True
+436,push 4,push 4,True
+437,push 0,push 0x4d13c8,True
+438,"mov ecx, 0","mov ecx, 0x80e5c0",True
+439,call 0x74e,call 0x484e30,True
+440,push 4,push 4,True
+441,push 0,push 0x4d13ac,True
+442,"mov ecx, 0","mov ecx, 0x80e62c",True
+443,call 0x75f,call 0x484e30,True
+444,push 4,push 4,True
+445,push 0,push 0x4d1394,True
+446,"mov ecx, 0","mov ecx, 0x80e698",True
+447,call 0x770,call 0x484e30,True
+448,push 4,push 4,True
+449,push 0,push 0x4d1378,True
+450,"mov ecx, 0","mov ecx, 0x80e704",True
+451,call 0x781,call 0x484e30,True
+452,push 4,push 4,True
+453,push 0,push 0x4d135c,True
+454,"mov ecx, 0","mov ecx, 0x80e770",True
+455,call 0x792,call 0x484e30,True
+456,push 4,push 4,True
+457,push 0,push 0x4d1340,True
+458,"mov ecx, 0","mov ecx, 0x80e7dc",True
+459,call 0x7a3,call 0x484e30,True
+460,push 4,push 4,True
+461,push 0,push 0x4d131c,True
+462,"mov ecx, 0","mov ecx, 0x80e848",True
+463,call 0x7b4,call 0x484e30,True
+464,push 4,push 4,True
+465,push 0,push 0x4d12f8,True
+466,"mov ecx, 0","mov ecx, 0x811494",True
+467,call 0x7c5,call 0x484e30,True
+468,push 4,push 4,True
+469,push 0,push 0x4d12d0,True
+470,"mov ecx, 0","mov ecx, 0x811500",True
+471,call 0x7d6,call 0x484e30,True
+472,push 4,push 4,True
+473,push 0,push 0x4d12b4,True
+474,"mov ecx, 0","mov ecx, 0x80efe0",True
+475,call 0x7e7,call 0x484e30,True
+476,push 4,push 4,True
+477,push 0,push 0x4d1294,True
+478,"mov ecx, 0","mov ecx, 0x80f04c",True
+479,call 0x7f8,call 0x484e30,True
+480,push 4,push 4,True
+481,push 0,push 0x4d1270,True
+482,"mov ecx, 0","mov ecx, 0x80f0b8",True
+483,call 0x809,call 0x484e30,True
+484,push 4,push 4,True
+485,push 0,push 0x4d1254,True
+486,"mov ecx, 0","mov ecx, 0x80f124",True
+487,call 0x81a,call 0x484e30,True
+488,push 4,push 4,True
+489,push 0,push 0x4d1238,True
+490,"mov ecx, 0","mov ecx, 0x812a84",True
+491,call 0x82b,call 0x484e30,True
+492,push 4,push 4,True
+493,push 0,push 0x4d1218,True
+494,"mov ecx, 0","mov ecx, 0x812af0",True
+495,call 0x83c,call 0x484e30,True
+496,push 4,push 4,True
+497,push 0,push 0x4d11f8,True
+498,"mov ecx, 0","mov ecx, 0x812b5c",True
+499,call 0x84d,call 0x484e30,True
+500,push 4,push 4,True
+501,push 0,push 0x4d11dc,True
+502,"mov ecx, 0","mov ecx, 0x812bc8",True
+503,call 0x85e,call 0x484e30,True
+504,push 4,push 4,True
+505,push 0,push 0x4d11c4,True
+506,"mov ecx, 0","mov ecx, 0x81306c",True
+507,call 0x86f,call 0x484e30,True
+508,push 0x14,push 0x14,True
+509,push 0,push 0x4d11ac,True
+510,"mov ecx, 0","mov ecx, 0x80ead0",True
+511,call 0x880,call 0x484e30,True
+512,push 0x14,push 0x14,True
+513,push 0,push 0x4d1194,True
+514,"mov ecx, 0","mov ecx, 0x80ed58",True
+515,call 0x891,call 0x484e30,True
+516,push 0x14,push 0x14,True
+517,push 0,push 0x4d117c,True
+518,"mov ecx, 0","mov ecx, 0x80edc4",True
+519,call 0x8a2,call 0x484e30,True
+520,push 0x14,push 0x14,True
+521,push 0,push 0x4d1164,True
+522,"mov ecx, 0","mov ecx, 0x80ee30",True
+523,call 0x8b3,call 0x484e30,True
+524,push 0x14,push 0x14,True
+525,push 0,push 0x4d1140,True
+526,"mov ecx, 0","mov ecx, 0x80ee9c",True
+527,call 0x8c4,call 0x484e30,True
+528,push 0x14,push 0x14,True
+529,push 0,push 0x4d112c,True
+530,"mov ecx, 0","mov ecx, 0x810cfc",True
+531,call 0x8d5,call 0x484e30,True
+532,push 0x14,push 0x14,True
+533,push 0,push 0x4d1114,True
+534,"mov ecx, 0","mov ecx, 0x810d68",True
+535,call 0x8e6,call 0x484e30,True
+536,push 0x14,push 0x14,True
+537,push 0,push 0x4d10fc,True
+538,"mov ecx, 0","mov ecx, 0x810dd4",True
+539,call 0x8f7,call 0x484e30,True
+540,push 0x14,push 0x14,True
+541,push 0,push 0x4d10e4,True
+542,"mov ecx, 0","mov ecx, 0x810e40",True
+543,call 0x908,call 0x484e30,True
+544,push 4,push 4,True
+545,push 0,push 0x4d10cc,True
+546,"mov ecx, 0","mov ecx, 0x810eac",True
+547,call 0x919,call 0x484e30,True
+548,push 4,push 4,True
+549,push 0,push 0x4d10b0,True
+550,"mov ecx, 0","mov ecx, 0x80eb3c",True
+551,call 0x92a,call 0x484e30,True
+552,push 4,push 4,True
+553,push 0,push 0x4d109c,True
+554,"mov ecx, 0","mov ecx, 0x80eba8",True
+555,call 0x93b,call 0x484e30,True
+556,push 4,push 4,True
+557,push 0,push 0x4d1084,True
+558,"mov ecx, 0","mov ecx, 0x80ec14",True
+559,call 0x94c,call 0x484e30,True
+560,push 4,push 4,True
+561,push 0,push 0x4d106c,True
+562,"mov ecx, 0","mov ecx, 0x80ec80",True
+563,call 0x95d,call 0x484e30,True
+564,push 4,push 4,True
+565,push 0,push 0x4d104c,True
+566,"mov ecx, 0","mov ecx, 0x80ecec",True
+567,call 0x96e,call 0x484e30,True
+568,push 4,push 4,True
+569,push 0,push 0x4d1028,True
+570,"mov ecx, 0","mov ecx, 0x81156c",True
+571,call 0x97f,call 0x484e30,True
+572,push 4,push 4,True
+573,push 0,push 0x4d1010,True
+574,"mov ecx, 0","mov ecx, 0x8115d8",True
+575,call 0x990,call 0x484e30,True
+576,push 4,push 4,True
+577,push 0,push 0x4d0ff0,True
+578,"mov ecx, 0","mov ecx, 0x8116b0",True
+579,call 0x9a1,call 0x484e30,True
+580,push 4,push 4,True
+581,push 0,push 0x4d0fd4,True
+582,"mov ecx, 0","mov ecx, 0x811644",True
+583,call 0x9b2,call 0x484e30,True
+584,push 4,push 4,True
+585,push 0,push 0x4d0fb8,True
+586,"mov ecx, 0","mov ecx, 0x81171c",True
+587,call 0x9c3,call 0x484e30,True
+588,push 4,push 4,True
+589,push 0,push 0x4d0fa4,True
+590,"mov ecx, 0","mov ecx, 0x812a18",True
+591,call 0x9d4,call 0x484e30,True
+592,push 0x14,push 0x14,True
+593,push 0,push 0x4d0f78,True
+594,"mov ecx, 0","mov ecx, 0x810ae0",True
+595,call 0x9e5,call 0x484e30,True
+596,push 0x14,push 0x14,True
+597,push 0,push 0x4d0f48,True
+598,"mov ecx, 0","mov ecx, 0x810b4c",True
+599,call 0x9f6,call 0x484e30,True
+600,push 0x14,push 0x14,True
+601,push 0,push 0x4d0f18,True
+602,"mov ecx, 0","mov ecx, 0x810bb8",True
+603,call 0xa07,call 0x484e30,True
+604,push 0x14,push 0x14,True
+605,push 0,push 0x4d0ef8,True
+606,"mov ecx, 0","mov ecx, 0x8106a8",True
+607,call 0xa18,call 0x484e30,True
+608,push 0x14,push 0x14,True
+609,push 0,push 0x4d0ec8,True
+610,"mov ecx, 0","mov ecx, 0x810714",True
+611,call 0xa29,call 0x484e30,True
+612,push 0x14,push 0x14,True
+613,push 0,push 0x4d0e98,True
+614,"mov ecx, 0","mov ecx, 0x810780",True
+615,call 0xa3a,call 0x484e30,True
+616,push 0x14,push 0x14,True
+617,push 0,push 0x4d0e7c,True
+618,"mov ecx, 0","mov ecx, 0x8108c4",True
+619,call 0xa4b,call 0x484e30,True
+620,push 0x14,push 0x14,True
+621,push 0,push 0x4d0e50,True
+622,"mov ecx, 0","mov ecx, 0x810930",True
+623,call 0xa5c,call 0x484e30,True
+624,push 0x14,push 0x14,True
+625,push 0,push 0x4d0e28,True
+626,"mov ecx, 0","mov ecx, 0x81099c",True
+627,call 0xa6d,call 0x484e30,True
+628,push 4,push 4,True
+629,push 0,push 0x4d0e08,True
+630,"mov ecx, 0","mov ecx, 0x810f18",True
+631,call 0xa7e,call 0x484e30,True
+632,push 4,push 4,True
+633,push 0,push 0x4d0de8,True
+634,"mov ecx, 0","mov ecx, 0x810f84",True
+635,call 0xa8f,call 0x484e30,True
+636,push 4,push 4,True
+637,push 0,push 0x4d0dc4,True
+638,"mov ecx, 0","mov ecx, 0x810ff0",True
+639,call 0xaa0,call 0x484e30,True
+640,push 4,push 4,True
+641,push 0,push 0x4d0da4,True
+642,"mov ecx, 0","mov ecx, 0x81105c",True
+643,call 0xab1,call 0x484e30,True
+644,push 4,push 4,True
+645,push 0,push 0x4d0d84,True
+646,"mov ecx, 0","mov ecx, 0x8110c8",True
+647,call 0xac2,call 0x484e30,True
+648,push 4,push 4,True
+649,push 0,push 0x4d0d60,True
+650,"mov ecx, 0","mov ecx, 0x811134",True
+651,call 0xad3,call 0x484e30,True
+652,push 4,push 4,True
+653,push 0,push 0x4d0d40,True
+654,"mov ecx, 0","mov ecx, 0x8111a0",True
+655,call 0xae4,call 0x484e30,True
+656,push 4,push 4,True
+657,push 0,push 0x4d0d20,True
+658,"mov ecx, 0","mov ecx, 0x81120c",True
+659,call 0xaf5,call 0x484e30,True
+660,push 4,push 4,True
+661,push 0,push 0x4d0cfc,True
+662,"mov ecx, 0","mov ecx, 0x811278",True
+663,call 0xb06,call 0x484e30,True
+664,push 4,push 4,True
+665,push 0,push 0x4d0ce0,True
+666,"mov ecx, 0","mov ecx, 0x8112e4",True
+667,call 0xb17,call 0x484e30,True
+668,push 4,push 4,True
+669,push 0,push 0x4d0cc0,True
+670,"mov ecx, 0","mov ecx, 0x811350",True
+671,call 0xb28,call 0x484e30,True
+672,push 4,push 4,True
+673,push 0,push 0x4d0ca0,True
+674,"mov ecx, 0","mov ecx, 0x8113bc",True
+675,call 0xb39,call 0x484e30,True
+676,push 4,push 4,True
+677,push 0,push 0x4d0c7c,True
+678,"mov ecx, 0","mov ecx, 0x8130d8",True
+679,call 0xb4a,call 0x484e30,True
+680,push 4,push 4,True
+681,push 0,push 0x4d0c5c,True
+682,"mov ecx, 0","mov ecx, 0x813510",True
+683,call 0xb5b,call 0x484e30,True
+684,push 4,push 4,True
+685,push 0,push 0x4d0c38,True
+686,"mov ecx, 0","mov ecx, 0x813948",True
+687,call 0xb6c,call 0x484e30,True
+688,push 4,push 4,True
+689,push 0,push 0x4d0c14,True
+690,"mov ecx, 0","mov ecx, 0x80df00",True
+691,call 0xb7d,call 0x484e30,True
+692,push 4,push 4,True
+693,push 0,push 0x4d0bf0,True
+694,"mov ecx, 0","mov ecx, 0x813144",True
+695,call 0xb8e,call 0x484e30,True
+696,push 4,push 4,True
+697,push 0,push 0x4d0bd0,True
+698,"mov ecx, 0","mov ecx, 0x81357c",True
+699,call 0xb9f,call 0x484e30,True
+700,push 4,push 4,True
+701,push 0,push 0x4d0bac,True
+702,"mov ecx, 0","mov ecx, 0x8139b4",True
+703,call 0xbb0,call 0x484e30,True
+704,push 4,push 4,True
+705,push 0,push 0x4d0b88,True
+706,"mov ecx, 0","mov ecx, 0x80df6c",True
+707,call 0xbc1,call 0x484e30,True
+708,push 4,push 4,True
+709,push 0,push 0x4d0b68,True
+710,"mov ecx, 0","mov ecx, 0x8131b0",True
+711,call 0xbd2,call 0x484e30,True
+712,push 4,push 4,True
+713,push 0,push 0x4d0b48,True
+714,"mov ecx, 0","mov ecx, 0x8135e8",True
+715,call 0xbe3,call 0x484e30,True
+716,push 4,push 4,True
+717,push 0,push 0x4d0b24,True
+718,"mov ecx, 0","mov ecx, 0x813a20",True
+719,call 0xbf4,call 0x484e30,True
+720,push 4,push 4,True
+721,push 0,push 0x4d0b00,True
+722,"mov ecx, 0","mov ecx, 0x80dfd8",True
+723,call 0xc05,call 0x484e30,True
+724,push 4,push 4,True
+725,push 0,push 0x4d0adc,True
+726,"mov ecx, 0","mov ecx, 0x81321c",True
+727,call 0xc16,call 0x484e30,True
+728,push 4,push 4,True
+729,push 0,push 0x4d0abc,True
+730,"mov ecx, 0","mov ecx, 0x813654",True
+731,call 0xc27,call 0x484e30,True
+732,push 4,push 4,True
+733,push 0,push 0x4d0a98,True
+734,"mov ecx, 0","mov ecx, 0x813a8c",True
+735,call 0xc38,call 0x484e30,True
+736,push 4,push 4,True
+737,push 0,push 0x4d0a74,True
+738,"mov ecx, 0","mov ecx, 0x80e044",True
+739,call 0xc49,call 0x484e30,True
+740,push 4,push 4,True
+741,push 0,push 0x4d0a50,True
+742,"mov ecx, 0","mov ecx, 0x8132f4",True
+743,call 0xc5a,call 0x484e30,True
+744,push 4,push 4,True
+745,push 0,push 0x4d0a30,True
+746,"mov ecx, 0","mov ecx, 0x81372c",True
+747,call 0xc6b,call 0x484e30,True
+748,push 4,push 4,True
+749,push 0,push 0x4d0a0c,True
+750,"mov ecx, 0","mov ecx, 0x813b64",True
+751,call 0xc7c,call 0x484e30,True
+752,push 4,push 4,True
+753,push 0,push 0x4d09e8,True
+754,"mov ecx, 0","mov ecx, 0x80e11c",True
+755,call 0xc8d,call 0x484e30,True
+756,push 4,push 4,True
+757,push 0,push 0x4d09c4,True
+758,"mov ecx, 0","mov ecx, 0x813360",True
+759,call 0xc9e,call 0x484e30,True
+760,push 4,push 4,True
+761,push 0,push 0x4d09a4,True
+762,"mov ecx, 0","mov ecx, 0x813798",True
+763,call 0xcaf,call 0x484e30,True
+764,push 4,push 4,True
+765,push 0,push 0x4d0980,True
+766,"mov ecx, 0","mov ecx, 0x813bd0",True
+767,call 0xcc0,call 0x484e30,True
+768,push 4,push 4,True
+769,push 0,push 0x4d095c,True
+770,"mov ecx, 0","mov ecx, 0x80e188",True
+771,call 0xcd1,call 0x484e30,True
+772,push 4,push 4,True
+773,push 0,push 0x4d0938,True
+774,"mov ecx, 0","mov ecx, 0x8133cc",True
+775,call 0xce2,call 0x484e30,True
+776,push 4,push 4,True
+777,push 0,push 0x4d0918,True
+778,"mov ecx, 0","mov ecx, 0x813804",True
+779,call 0xcf3,call 0x484e30,True
+780,push 4,push 4,True
+781,push 0,push 0x4d08f4,True
+782,"mov ecx, 0","mov ecx, 0x813c3c",True
+783,call 0xd04,call 0x484e30,True
+784,push 4,push 4,True
+785,push 0,push 0x4d08d0,True
+786,"mov ecx, 0","mov ecx, 0x80e1f4",True
+787,call 0xd15,call 0x484e30,True
+788,push 4,push 4,True
+789,push 0,push 0x4d08ac,True
+790,"mov ecx, 0","mov ecx, 0x813438",True
+791,call 0xd26,call 0x484e30,True
+792,push 4,push 4,True
+793,push 0,push 0x4d0888,True
+794,"mov ecx, 0","mov ecx, 0x813870",True
+795,call 0xd37,call 0x484e30,True
+796,push 4,push 4,True
+797,push 0,push 0x4d0860,True
+798,"mov ecx, 0","mov ecx, 0x813ca8",True
+799,call 0xd48,call 0x484e30,True
+800,push 4,push 4,True
+801,push 0,push 0x4d0838,True
+802,"mov ecx, 0","mov ecx, 0x80e260",True
+803,call 0xd59,call 0x484e30,True
+804,push 4,push 4,True
+805,push 0,push 0x4d0818,True
+806,"mov ecx, 0","mov ecx, 0x8141b8",True
+807,call 0xd6a,call 0x484e30,True
+808,push 4,push 4,True
+809,push 0,push 0x4d07f8,True
+810,"mov ecx, 0","mov ecx, 0x814224",True
+811,call 0xd7b,call 0x484e30,True
+812,push 4,push 4,True
+813,push 0,push 0x4d07d8,True
+814,"mov ecx, 0","mov ecx, 0x814290",True
+815,call 0xd8c,call 0x484e30,True
+816,push 4,push 4,True
+817,push 0,push 0x4d07b8,True
+818,"mov ecx, 0","mov ecx, 0x8143d4",True
+819,call 0xd9d,call 0x484e30,True
+820,push 4,push 4,True
+821,push 0,push 0x4d079c,True
+822,"mov ecx, 0","mov ecx, 0x814440",True
+823,call 0xdae,call 0x484e30,True
+824,push 4,push 4,True
+825,push 0,push 0x4d0780,True
+826,"mov ecx, 0","mov ecx, 0x8144ac",True
+827,call 0xdbf,call 0x484e30,True
+828,push 4,push 4,True
+829,push 0,push 0x4d075c,True
+830,"mov ecx, 0","mov ecx, 0x814518",True
+831,call 0xdd0,call 0x484e30,True
+832,push 4,push 4,True
+833,push 0,push 0x4d0738,True
+834,"mov ecx, 0","mov ecx, 0x814584",True
+835,call 0xde1,call 0x484e30,True
+836,push 4,push 4,True
+837,push 0,push 0x4d0718,True
+838,"mov ecx, 0","mov ecx, 0x8145f0",True
+839,call 0xdf2,call 0x484e30,True
+840,push 4,push 4,True
+841,push 0,push 0x4d06fc,True
+842,"mov ecx, 0","mov ecx, 0x81465c",True
+843,call 0xe03,call 0x484e30,True
+844,push 4,push 4,True
+845,push 0,push 0x4d06e0,True
+846,"mov ecx, 0","mov ecx, 0x8146c8",True
+847,call 0xe14,call 0x484e30,True
+848,push 4,push 4,True
+849,push 0,push 0x4d06c4,True
+850,"mov ecx, 0","mov ecx, 0x814734",True
+851,call 0xe25,call 0x484e30,True
+852,push 4,push 4,True
+853,push 0,push 0x4d06a8,True
+854,"mov ecx, 0","mov ecx, 0x8147a0",True
+855,call 0xe36,call 0x484e30,True
+856,push 4,push 4,True
+857,push 0,push 0x4d0688,True
+858,"mov ecx, 0","mov ecx, 0x81480c",True
+859,call 0xe47,call 0x484e30,True
+860,push 4,push 4,True
+861,push 0,push 0x4d0668,True
+862,"mov ecx, 0","mov ecx, 0x814878",True
+863,call 0xe58,call 0x484e30,True
+864,push 4,push 4,True
+865,push 0,push 0x4d0644,True
+866,"mov ecx, 0","mov ecx, 0x8148e4",True
+867,call 0xe69,call 0x484e30,True
+868,push 4,push 4,True
+869,push 0,push 0x4d0620,True
+870,"mov ecx, 0","mov ecx, 0x814950",True
+871,call 0xe7a,call 0x484e30,True
+872,push 4,push 4,True
+873,push 0,push 0x4d0604,True
+874,"mov ecx, 0","mov ecx, 0x8149bc",True
+875,call 0xe8b,call 0x484e30,True
+876,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00448220@f_00448220@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,877,100.0%

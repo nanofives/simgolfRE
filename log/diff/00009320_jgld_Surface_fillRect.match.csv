@@ -1,0 +1,90 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x48","sub esp, 0x48",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,push ecx,push ecx,True
+7,"lea edi, [ebp - 0x48]","lea edi, [ebp - 0x48]",True
+8,"mov ecx, 0x12","mov ecx, 0x12",True
+9,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+10,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+11,pop ecx,pop ecx,True
+12,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+13,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+14,jne 0x2d,jne 0x1000934d,True
+15,"mov eax, 0x10","mov eax, 0x10",True
+16,jmp 0xce,jmp 0x100093ee,True
+17,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+18,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+19,"mov esi, esp","mov esi, esp",True
+20,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+21,call dword ptr [edx + 0xe4],call dword ptr [edx + 0xe4],True
+22,"cmp esi, esp","cmp esi, esp",True
+23,call 0x44,call 0x1007e780,True
+24,"mov eax, dword ptr [eax]","mov eax, dword ptr [eax]",True
+25,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+26,"cmp dword ptr [ebp - 8], 8","cmp dword ptr [ebp - 8], 8",True
+27,je 0x57,je 0x10009377,True
+28,"cmp dword ptr [ebp - 8], 0x10","cmp dword ptr [ebp - 8], 0x10",True
+29,je 0x90,je 0x100093b0,True
+30,jmp 0xc9,jmp 0x100093e9,True
+31,"mov ecx, dword ptr [ebp + 0x10]","mov ecx, dword ptr [ebp + 0x10]",True
+32,push ecx,push ecx,True
+33,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+34,push edx,push edx,True
+35,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+36,push eax,push eax,True
+37,call 0x68,call 0x1000173a,True
+38,"add esp, 4","add esp, 4",True
+39,push eax,push eax,True
+40,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+41,push ecx,push ecx,True
+42,call 0x75,call 0x10001794,True
+43,"add esp, 4","add esp, 4",True
+44,push eax,push eax,True
+45,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+46,"mov eax, dword ptr [edx + 4]","mov eax, dword ptr [edx + 4]",True
+47,push eax,push eax,True
+48,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+49,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+50,push edx,push edx,True
+51,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+52,call 0x8e,call 0x1000147e,True
+53,jmp 0xce,jmp 0x100093ee,True
+54,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+55,push eax,push eax,True
+56,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+57,push ecx,push ecx,True
+58,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+59,push edx,push edx,True
+60,call 0xa1,call 0x1000173a,True
+61,"add esp, 4","add esp, 4",True
+62,push eax,push eax,True
+63,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+64,push eax,push eax,True
+65,call 0xae,call 0x10001794,True
+66,"add esp, 4","add esp, 4",True
+67,push eax,push eax,True
+68,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+69,"mov edx, dword ptr [ecx + 4]","mov edx, dword ptr [ecx + 4]",True
+70,push edx,push edx,True
+71,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+72,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+73,push ecx,push ecx,True
+74,"mov ecx, dword ptr [ebp - 4]","mov ecx, dword ptr [ebp - 4]",True
+75,call 0xc7,call 0x100015d2,True
+76,jmp 0xce,jmp 0x100093ee,True
+77,"mov eax, 0x17","mov eax, 0x17",True
+78,pop edi,pop edi,True
+79,pop esi,pop esi,True
+80,pop ebx,pop ebx,True
+81,"add esp, 0x48","add esp, 0x48",True
+82,"cmp ebp, esp","cmp ebp, esp",True
+83,call 0xdb,call 0x1007e780,True
+84,"mov esp, ebp","mov esp, ebp",True
+85,pop ebp,pop ebp,True
+86,ret 0xc,ret 0xc,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ /GX,symbol=?fillRect@Surface@@QAEHPBUtagRECT@@HH@Z,module=jgld.dll
+VERDICT,GREEN,87,100.0%

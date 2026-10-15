@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,"add ecx, 0x70","add ecx, 0x70",True
+1,jmp 8,jmp 0x100024d7,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10039c80@f_10039c80@@YIXH@Z,module=sound.dll
+VERDICT,GREEN,2,100.0%

@@ -1,0 +1,87 @@
+instruction,recompiled,original,match
+0,push ecx,push ecx,True
+1,push ebx,push ebx,True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"xor ebx, ebx","xor ebx, ebx",True
+5,"mov esi, 0","mov esi, 0x53ea24",True
+6,"xor eax, eax","xor eax, eax",True
+7,"xor ecx, ecx","xor ecx, ecx",True
+8,"mov cl, byte ptr [esi + eax]","mov cl, byte ptr [esi + eax]",True
+9,"add ebx, ecx","add ebx, ecx",True
+10,inc eax,inc eax,True
+11,"cmp eax, 0x32","cmp eax, 0x32",True
+12,jl 0xd,jl 0x4616fd,True
+13,"add esi, 0x32","add esi, 0x32",True
+14,"cmp esi, 0x9c4","cmp esi, 0x53f3e8",True
+15,jl 0xb,jl 0x4616fb,True
+16,"mov ecx, 0x271","mov ecx, 0x271",True
+17,"xor eax, eax","xor eax, eax",True
+18,"mov edi, 0","mov edi, 0x82376c",True
+19,"cmp ebx, 0xa","cmp ebx, 0xa",True
+20,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+21,"mov ecx, 0x271","mov ecx, 0x271",True
+22,"mov edi, 0","mov edi, 0x822da0",True
+23,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+24,jl 0xe8,jl 0x4617d8,True
+25,"cmp ebx, 0x6d6","cmp ebx, 0x6d6",True
+26,jle 0x55,jle 0x461745,True
+27,"mov ebx, 0x6d6","mov ebx, 0x6d6",True
+28,push ebp,push ebp,True
+29,"mov ebp, 0","mov ebp, 0x5a6378",True
+30,"xor edi, edi","xor edi, edi",True
+31,"mov dword ptr [esp + 0x10], ebp","mov dword ptr [esp + 0x10], ebp",True
+32,"xor esi, esi","xor esi, esi",True
+33,"sub ebp, 0","sub ebp, 0x5a6378",True
+34,"mov al, byte ptr [esi + ebp]","mov al, byte ptr [esi + ebp + 0x5a6378]",True
+35,"test al, al","test al, al",True
+36,je 0x96,je 0x461786,True
+37,"and eax, 0xff","and eax, 0xff",True
+38,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+39,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+40,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+41,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+42,"shl eax, 5","shl eax, 5",True
+43,cdq ,cdq ,True
+44,idiv ebx,idiv ebx,True
+45,push eax,push eax,True
+46,push esi,push esi,True
+47,push edi,push edi,True
+48,call 0x93,call 0x4615f0,True
+49,"add esp, 0xc","add esp, 0xc",True
+50,"mov al, byte ptr [esi + ebp]","mov al, byte ptr [esi + ebp + 0x56c7e4]",True
+51,"test al, al","test al, al",True
+52,je 0xc9,je 0x4617b9,True
+53,"and eax, 0xff","and eax, 0xff",True
+54,"mov ecx, eax","mov ecx, eax",True
+55,neg eax,neg eax,True
+56,"shl eax, 2","shl eax, 2",True
+57,"sub eax, ecx","sub eax, ecx",True
+58,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+59,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+60,"lea eax, [eax + eax*4]","lea eax, [eax + eax*4]",True
+61,"shl eax, 6","shl eax, 6",True
+62,cdq ,cdq ,True
+63,idiv ebx,idiv ebx,True
+64,push eax,push eax,True
+65,push esi,push esi,True
+66,push edi,push edi,True
+67,call 0xc6,call 0x4615f0,True
+68,"add esp, 0xc","add esp, 0xc",True
+69,inc esi,inc esi,True
+70,"cmp esi, 0x32","cmp esi, 0x32",True
+71,jl 0x69,jl 0x461759,True
+72,"mov ebp, dword ptr [esp + 0x10]","mov ebp, dword ptr [esp + 0x10]",True
+73,inc edi,inc edi,True
+74,"add ebp, 0x32","add ebp, 0x32",True
+75,"cmp ebp, 0x9c4","cmp ebp, 0x5a6d3c",True
+76,"mov dword ptr [esp + 0x10], ebp","mov dword ptr [esp + 0x10], ebp",True
+77,jl 0x61,jl 0x461751,True
+78,pop ebp,pop ebp,True
+79,pop edi,pop edi,True
+80,pop esi,pop esi,True
+81,pop ebx,pop ebx,True
+82,pop ecx,pop ecx,True
+83,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?spread4616f0@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,84,100.0%

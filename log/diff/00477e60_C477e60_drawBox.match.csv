@@ -1,0 +1,25 @@
+instruction,recompiled,original,match
+0,"sub esp, 0x10","sub esp, 0x10",True
+1,"mov eax, dword ptr [esp + 0x18]","mov eax, dword ptr [esp + 0x18]",True
+2,"mov edx, dword ptr [esp + 0x1c]","mov edx, dword ptr [esp + 0x1c]",True
+3,push esi,push esi,True
+4,"mov esi, dword ptr [esp + 0x24]","mov esi, dword ptr [esp + 0x24]",True
+5,"mov dword ptr [esp + 4], eax","mov dword ptr [esp + 4], eax",True
+6,"add eax, esi","add eax, esi",True
+7,"mov dword ptr [esp + 0xc], eax","mov dword ptr [esp + 0xc], eax",True
+8,"mov eax, dword ptr [esp + 0x28]","mov eax, dword ptr [esp + 0x28]",True
+9,"mov dword ptr [esp + 8], edx","mov dword ptr [esp + 8], edx",True
+10,"add edx, eax","add edx, eax",True
+11,"mov dword ptr [esp + 0x10], edx","mov dword ptr [esp + 0x10], edx",True
+12,"mov edx, dword ptr [esp + 0x2c]","mov edx, dword ptr [esp + 0x2c]",True
+13,push edx,push edx,True
+14,"mov edx, dword ptr [esp + 0x1c]","mov edx, dword ptr [esp + 0x1c]",True
+15,"lea eax, [esp + 8]","lea eax, [esp + 8]",True
+16,push eax,push eax,True
+17,push edx,push edx,True
+18,call 0x3c,call 0x477eb0,True
+19,pop esi,pop esi,True
+20,"add esp, 0x10","add esp, 0x10",True
+21,ret 0x18,ret 0x18,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?drawBox@C477e60@@QAEHHHHHHH@Z,module=golf_clean.exe
+VERDICT,GREEN,22,100.0%

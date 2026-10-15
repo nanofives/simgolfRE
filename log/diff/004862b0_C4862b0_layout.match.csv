@@ -1,0 +1,47 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 0xc]","mov ebx, dword ptr [esp + 0xc]",True
+2,push ebp,push ebp,True
+3,"mov ebp, dword ptr [esp + 0xc]","mov ebp, dword ptr [esp + 0xc]",True
+4,push esi,push esi,True
+5,"mov esi, ecx","mov esi, ecx",True
+6,"mov dword ptr [ebx], 1","mov dword ptr [ebx], 1",True
+7,push edi,push edi,True
+8,"mov eax, dword ptr [esi + 0x574]","mov eax, dword ptr [esi + 0x574]",True
+9,"mov dword ptr [ebp], eax","mov dword ptr [ebp], eax",True
+10,"mov edi, dword ptr [esi + 0x59c]","mov edi, dword ptr [esi + 0x59c]",True
+11,"mov ecx, dword ptr [esi + 0x598]","mov ecx, dword ptr [esi + 0x598]",True
+12,"add edi, ecx","add edi, ecx",True
+13,"mov ecx, dword ptr [esi + 0x278]","mov ecx, dword ptr [esi + 0x278]",True
+14,"test ecx, ecx","test ecx, ecx",True
+15,je 0x3f,je 0x4862ef,True
+16,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+17,call dword ptr [edx + 0xd8],call dword ptr [edx + 0xd8],True
+18,jmp 0x41,jmp 0x4862f1,True
+19,"xor eax, eax","xor eax, eax",True
+20,"mov edx, dword ptr [esi + 0x574]","mov edx, dword ptr [esi + 0x574]",True
+21,"lea ecx, [edi + edi]","lea ecx, [edi + edi]",True
+22,push ebx,push ebx,True
+23,"sub eax, ecx","sub eax, ecx",True
+24,push ebp,push ebp,True
+25,push eax,push eax,True
+26,push edx,push edx,True
+27,"lea ecx, [esi + 0x274]","lea ecx, [esi + 0x274]",True
+28,call 0x5b,call 0x476e20,True
+29,"mov esi, dword ptr [esi + 0x574]","mov esi, dword ptr [esi + 0x574]",True
+30,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+31,"mov edi, esi","mov edi, esi",True
+32,"xor eax, eax","xor eax, eax",True
+33,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+34,"mov eax, dword ptr [ebx]","mov eax, dword ptr [ebx]",True
+35,pop edi,pop edi,True
+36,not ecx,not ecx,True
+37,dec ecx,dec ecx,True
+38,"add ecx, esi","add ecx, esi",True
+39,pop esi,pop esi,True
+40,"mov dword ptr [ebp + eax*4], ecx","mov dword ptr [ebp + eax*4], ecx",True
+41,pop ebp,pop ebp,True
+42,pop ebx,pop ebx,True
+43,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?layout@C4862b0@@QAEXPAPADPAH@Z,module=golf_clean.exe
+VERDICT,GREEN,44,100.0%

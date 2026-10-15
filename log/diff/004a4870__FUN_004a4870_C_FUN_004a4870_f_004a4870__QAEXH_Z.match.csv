@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx - 0xe0]","mov eax, dword ptr [ecx - 0xe0]",True
+1,"mov edx, dword ptr [eax + 4]","mov edx, dword ptr [eax + 4]",True
+2,"mov eax, dword ptr [edx + ecx - 0xe0]","mov eax, dword ptr [edx + ecx - 0xe0]",True
+3,"lea ecx, [edx + ecx - 0xe0]","lea ecx, [edx + ecx - 0xe0]",True
+4,call dword ptr [eax + 0x120],call dword ptr [eax + 0x120],True
+5,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_004a4870@C_FUN_004a4870@f_004a4870@@QAEXH@Z,module=golf_clean.exe
+VERDICT,GREEN,6,100.0%

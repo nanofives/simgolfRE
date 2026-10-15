@@ -1,0 +1,25 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,push 0,push 0x100650a0,True
+11,call 0x22,call 0x1007f080,True
+12,"add esp, 4","add esp, 4",True
+13,pop edi,pop edi,True
+14,pop esi,pop esi,True
+15,pop ebx,pop ebx,True
+16,"add esp, 0x40","add esp, 0x40",True
+17,"cmp ebp, esp","cmp ebp, esp",True
+18,call 0x32,call 0x1007e780,True
+19,"mov esp, ebp","mov esp, ebp",True
+20,pop ebp,pop ebp,True
+21,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=?FUN_10065050@f_10065050@@YAXXZ,module=jgld.dll
+VERDICT,GREEN,22,100.0%

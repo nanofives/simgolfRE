@@ -1,0 +1,79 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+11,je 0xe4,je 0x1006e9b4,True
+12,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+13,je 0xe4,je 0x1006e9b4,True
+14,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+15,"mov ecx, dword ptr [eax + 8]","mov ecx, dword ptr [eax + 8]",True
+16,"and ecx, 4","and ecx, 4",True
+17,"test ecx, ecx","test ecx, ecx",True
+18,je 0xe4,je 0x1006e9b4,True
+19,"cmp dword ptr [ebp + 0x10], 0","cmp dword ptr [ebp + 0x10], 0",True
+20,je 0x51,je 0x1006e921,True
+21,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+22,fld dword ptr [edx + 0x80],fld dword ptr [edx + 0x80],True
+23,"mov eax, dword ptr [ebp + 0x10]","mov eax, dword ptr [ebp + 0x10]",True
+24,fstp qword ptr [eax],fstp qword ptr [eax],True
+25,"cmp dword ptr [ebp + 0x14], 0","cmp dword ptr [ebp + 0x14], 0",True
+26,je 0x65,je 0x1006e935,True
+27,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+28,fld dword ptr [ecx + 0x84],fld dword ptr [ecx + 0x84],True
+29,"mov edx, dword ptr [ebp + 0x14]","mov edx, dword ptr [ebp + 0x14]",True
+30,fstp qword ptr [edx],fstp qword ptr [edx],True
+31,"cmp dword ptr [ebp + 0x18], 0","cmp dword ptr [ebp + 0x18], 0",True
+32,je 0x79,je 0x1006e949,True
+33,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+34,fld dword ptr [eax + 0x88],fld dword ptr [eax + 0x88],True
+35,"mov ecx, dword ptr [ebp + 0x18]","mov ecx, dword ptr [ebp + 0x18]",True
+36,fstp qword ptr [ecx],fstp qword ptr [ecx],True
+37,"cmp dword ptr [ebp + 0x1c], 0","cmp dword ptr [ebp + 0x1c], 0",True
+38,je 0x8d,je 0x1006e95d,True
+39,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+40,fld dword ptr [edx + 0x8c],fld dword ptr [edx + 0x8c],True
+41,"mov eax, dword ptr [ebp + 0x1c]","mov eax, dword ptr [ebp + 0x1c]",True
+42,fstp qword ptr [eax],fstp qword ptr [eax],True
+43,"cmp dword ptr [ebp + 0x20], 0","cmp dword ptr [ebp + 0x20], 0",True
+44,je 0xa1,je 0x1006e971,True
+45,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+46,fld dword ptr [ecx + 0x90],fld dword ptr [ecx + 0x90],True
+47,"mov edx, dword ptr [ebp + 0x20]","mov edx, dword ptr [ebp + 0x20]",True
+48,fstp qword ptr [edx],fstp qword ptr [edx],True
+49,"cmp dword ptr [ebp + 0x24], 0","cmp dword ptr [ebp + 0x24], 0",True
+50,je 0xb5,je 0x1006e985,True
+51,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+52,fld dword ptr [eax + 0x94],fld dword ptr [eax + 0x94],True
+53,"mov ecx, dword ptr [ebp + 0x24]","mov ecx, dword ptr [ebp + 0x24]",True
+54,fstp qword ptr [ecx],fstp qword ptr [ecx],True
+55,"cmp dword ptr [ebp + 0x28], 0","cmp dword ptr [ebp + 0x28], 0",True
+56,je 0xc9,je 0x1006e999,True
+57,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+58,fld dword ptr [edx + 0x98],fld dword ptr [edx + 0x98],True
+59,"mov eax, dword ptr [ebp + 0x28]","mov eax, dword ptr [ebp + 0x28]",True
+60,fstp qword ptr [eax],fstp qword ptr [eax],True
+61,"cmp dword ptr [ebp + 0x2c], 0","cmp dword ptr [ebp + 0x2c], 0",True
+62,je 0xdd,je 0x1006e9ad,True
+63,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+64,fld dword ptr [ecx + 0x9c],fld dword ptr [ecx + 0x9c],True
+65,"mov edx, dword ptr [ebp + 0x2c]","mov edx, dword ptr [ebp + 0x2c]",True
+66,fstp qword ptr [edx],fstp qword ptr [edx],True
+67,"mov eax, 4","mov eax, 4",True
+68,jmp 0xe6,jmp 0x1006e9b6,True
+69,"xor eax, eax","xor eax, eax",True
+70,pop edi,pop edi,True
+71,pop esi,pop esi,True
+72,pop ebx,pop ebx,True
+73,"mov esp, ebp","mov esp, ebp",True
+74,pop ebp,pop ebp,True
+75,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_get_cHRM,module=jgld.dll
+VERDICT,GREEN,76,100.0%

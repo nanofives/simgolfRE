@@ -1,0 +1,75 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+11,je 0xe3,je 0x1006eda3,True
+12,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+13,je 0xe3,je 0x1006eda3,True
+14,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+15,"mov ecx, dword ptr [eax + 8]","mov ecx, dword ptr [eax + 8]",True
+16,"and ecx, 0x400","and ecx, 0x400",True
+17,"test ecx, ecx","test ecx, ecx",True
+18,je 0xe3,je 0x1006eda3,True
+19,"cmp dword ptr [ebp + 0x10], 0","cmp dword ptr [ebp + 0x10], 0",True
+20,je 0xe3,je 0x1006eda3,True
+21,"cmp dword ptr [ebp + 0x14], 0","cmp dword ptr [ebp + 0x14], 0",True
+22,je 0xe3,je 0x1006eda3,True
+23,"cmp dword ptr [ebp + 0x18], 0","cmp dword ptr [ebp + 0x18], 0",True
+24,je 0xe3,je 0x1006eda3,True
+25,"cmp dword ptr [ebp + 0x1c], 0","cmp dword ptr [ebp + 0x1c], 0",True
+26,je 0xe3,je 0x1006eda3,True
+27,"cmp dword ptr [ebp + 0x20], 0","cmp dword ptr [ebp + 0x20], 0",True
+28,je 0xe3,je 0x1006eda3,True
+29,"cmp dword ptr [ebp + 0x24], 0","cmp dword ptr [ebp + 0x24], 0",True
+30,je 0xe3,je 0x1006eda3,True
+31,"cmp dword ptr [ebp + 0x28], 0","cmp dword ptr [ebp + 0x28], 0",True
+32,je 0xe3,je 0x1006eda3,True
+33,"mov edx, dword ptr [ebp + 0x10]","mov edx, dword ptr [ebp + 0x10]",True
+34,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+35,"mov ecx, dword ptr [eax + 0xa0]","mov ecx, dword ptr [eax + 0xa0]",True
+36,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+37,"mov edx, dword ptr [ebp + 0x14]","mov edx, dword ptr [ebp + 0x14]",True
+38,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+39,"mov ecx, dword ptr [eax + 0xa4]","mov ecx, dword ptr [eax + 0xa4]",True
+40,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+41,"mov edx, dword ptr [ebp + 0x18]","mov edx, dword ptr [ebp + 0x18]",True
+42,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+43,"mov ecx, dword ptr [eax + 0xa8]","mov ecx, dword ptr [eax + 0xa8]",True
+44,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+45,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+46,"xor eax, eax","xor eax, eax",True
+47,"mov al, byte ptr [edx + 0xb4]","mov al, byte ptr [edx + 0xb4]",True
+48,"mov ecx, dword ptr [ebp + 0x1c]","mov ecx, dword ptr [ebp + 0x1c]",True
+49,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+50,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+51,"xor eax, eax","xor eax, eax",True
+52,"mov al, byte ptr [edx + 0xb5]","mov al, byte ptr [edx + 0xb5]",True
+53,"mov ecx, dword ptr [ebp + 0x20]","mov ecx, dword ptr [ebp + 0x20]",True
+54,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+55,"mov edx, dword ptr [ebp + 0x24]","mov edx, dword ptr [ebp + 0x24]",True
+56,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+57,"mov ecx, dword ptr [eax + 0xac]","mov ecx, dword ptr [eax + 0xac]",True
+58,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+59,"mov edx, dword ptr [ebp + 0x28]","mov edx, dword ptr [ebp + 0x28]",True
+60,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+61,"mov ecx, dword ptr [eax + 0xb0]","mov ecx, dword ptr [eax + 0xb0]",True
+62,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+63,"mov eax, 0x400","mov eax, 0x400",True
+64,jmp 0xe5,jmp 0x1006eda5,True
+65,"xor eax, eax","xor eax, eax",True
+66,pop edi,pop edi,True
+67,pop esi,pop esi,True
+68,pop ebx,pop ebx,True
+69,"mov esp, ebp","mov esp, ebp",True
+70,pop ebp,pop ebp,True
+71,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_get_pCAL,module=jgld.dll
+VERDICT,GREEN,72,100.0%

@@ -1,0 +1,45 @@
+instruction,recompiled,original,match
+0,"sub esp, 0x10","sub esp, 0x10",True
+1,push ebx,push ebx,True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"mov edi, dword ptr [esp + 0x20]","mov edi, dword ptr [esp + 0x20]",True
+5,"test edi, edi","test edi, edi",True
+6,"mov ebx, ecx","mov ebx, ecx",True
+7,je 0x5e,je 0x47abae,True
+8,"mov esi, dword ptr [esp + 0x24]","mov esi, dword ptr [esp + 0x24]",True
+9,"test esi, esi","test esi, esi",True
+10,je 0x5e,je 0x47abae,True
+11,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x83ad50]",True
+12,"test ecx, ecx","test ecx, ecx",True
+13,je 0x29,je 0x47ab79,True
+14,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+15,push esi,push esi,True
+16,push edi,push edi,True
+17,call dword ptr [eax + 0x2c],call dword ptr [eax + 0x2c],True
+18,push esi,push esi,True
+19,push edi,push edi,True
+20,"mov ecx, ebx","mov ecx, ebx",True
+21,call 0x32,call 0x47b200,True
+22,"cmp ebx, dword ptr [0]","cmp ebx, dword ptr [0x83aa9c]",True
+23,jne 0x5e,jne 0x47abae,True
+24,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x83ad50]",True
+25,"test ecx, ecx","test ecx, ecx",True
+26,je 0x4e,je 0x47ab9e,True
+27,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+28,"lea eax, [esp + 0xc]","lea eax, [esp + 0xc]",True
+29,push eax,push eax,True
+30,call dword ptr [edx + 0x38],call dword ptr [edx + 0x38],True
+31,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+32,"mov edx, dword ptr [edi]","mov edx, dword ptr [edi]",True
+33,"sub edx, ecx","sub edx, ecx",True
+34,"mov dword ptr [edi], edx","mov dword ptr [edi], edx",True
+35,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+36,"sub dword ptr [esi], edx","sub dword ptr [esi], edx",True
+37,pop edi,pop edi,True
+38,pop esi,pop esi,True
+39,pop ebx,pop ebx,True
+40,"add esp, 0x10","add esp, 0x10",True
+41,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_0047ab50@C_FUN_0047ab50@f_0047ab50@@QAEXPAH0@Z,module=golf_clean.exe
+VERDICT,GREEN,42,100.0%

@@ -1,0 +1,24 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,"mov edx, dword ptr [ecx + 0xa8]","mov edx, dword ptr [ecx + 0xa8]",True
+2,"mov eax, dword ptr [ecx + 0x148]","mov eax, dword ptr [ecx + 0x148]",True
+3,"test edx, edx","test edx, edx",True
+4,jne 0x4d,jne 0x4b063d,True
+5,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+6,"mov dword ptr [eax + 8], 0","mov dword ptr [eax + 8], 0",True
+7,"test edx, edx","test edx, edx",True
+8,"mov dword ptr [eax + 0xc], 0","mov dword ptr [eax + 0xc], 0",True
+9,"mov dword ptr [eax + 0x10], 0","mov dword ptr [eax + 0x10], 0",True
+10,"mov dword ptr [eax + 0x14], edx","mov dword ptr [eax + 0x14], edx",True
+11,je 0x46,je 0x4b0636,True
+12,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+13,push ecx,push ecx,True
+14,"mov dword ptr [eax + 0x14], 4","mov dword ptr [eax + 0x14], 4",True
+15,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+16,call dword ptr [edx],call dword ptr [edx],True
+17,"add esp, 4","add esp, 4",True
+18,ret ,ret ,True
+19,"mov dword ptr [eax + 4], 0","mov dword ptr [eax + 4], 0x4b0640",True
+20,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_start_pass_main,module=golf_clean.exe
+VERDICT,GREEN,21,100.0%

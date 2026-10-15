@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,"mov eax, 0","mov eax, 0x83c310",True
+1,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00492450@f_00492450@@YAPAIXZ,module=golf_clean.exe
+VERDICT,GREEN,2,100.0%

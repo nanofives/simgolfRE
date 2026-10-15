@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,call dword ptr [0],call dword ptr [0x100b8654],True
+3,"mov dword ptr [esi + 0x100], eax","mov dword ptr [esi + 0x100], eax",True
+4,pop esi,pop esi,True
+5,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1002ffa0@f_1002ffa0@@YIXH@Z,module=sound.dll
+VERDICT,GREEN,6,100.0%

@@ -1,0 +1,60 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push 0xee,push 0xee,True
+3,push esi,push esi,True
+4,call 0x10,call 0x4afbf0,True
+5,push 0xe,push 0xe,True
+6,push esi,push esi,True
+7,call 0x18,call 0x4afc10,True
+8,push 0x41,push 0x41,True
+9,push esi,push esi,True
+10,call 0x20,call 0x4afbb0,True
+11,push 0x64,push 0x64,True
+12,push esi,push esi,True
+13,call 0x28,call 0x4afbb0,True
+14,push 0x6f,push 0x6f,True
+15,push esi,push esi,True
+16,call 0x30,call 0x4afbb0,True
+17,push 0x62,push 0x62,True
+18,push esi,push esi,True
+19,call 0x38,call 0x4afbb0,True
+20,push 0x65,push 0x65,True
+21,push esi,push esi,True
+22,call 0x40,call 0x4afbb0,True
+23,push 0x64,push 0x64,True
+24,push esi,push esi,True
+25,call 0x48,call 0x4afc10,True
+26,"add esp, 0x40","add esp, 0x40",True
+27,push 0,push 0,True
+28,push esi,push esi,True
+29,call 0x53,call 0x4afc10,True
+30,push 0,push 0,True
+31,push esi,push esi,True
+32,call 0x5b,call 0x4afc10,True
+33,"mov eax, dword ptr [esi + 0x38]","mov eax, dword ptr [esi + 0x38]",True
+34,"add esp, 0x10","add esp, 0x10",True
+35,"sub eax, 3","sub eax, 3",True
+36,je 0x85,je 0x4afda5,True
+37,"sub eax, 2","sub eax, 2",True
+38,je 0x78,je 0x4afd98,True
+39,push 0,push 0,True
+40,push esi,push esi,True
+41,call 0x73,call 0x4afbb0,True
+42,"add esp, 8","add esp, 8",True
+43,pop esi,pop esi,True
+44,ret ,ret ,True
+45,push 2,push 2,True
+46,push esi,push esi,True
+47,call 0x80,call 0x4afbb0,True
+48,"add esp, 8","add esp, 8",True
+49,pop esi,pop esi,True
+50,ret ,ret ,True
+51,push 1,push 1,True
+52,push esi,push esi,True
+53,call 0x8d,call 0x4afbb0,True
+54,"add esp, 8","add esp, 8",True
+55,pop esi,pop esi,True
+56,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_emit_adobe_app14,module=golf_clean.exe
+VERDICT,GREEN,57,100.0%

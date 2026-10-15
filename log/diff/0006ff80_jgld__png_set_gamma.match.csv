@@ -1,0 +1,44 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,fld qword ptr [ebp + 0xc],fld qword ptr [ebp + 0xc],True
+11,fmul qword ptr [ebp + 0x14],fmul qword ptr [ebp + 0x14],True
+12,fsub qword ptr [0],fsub qword ptr [0x1011d030],True
+13,"sub esp, 8","sub esp, 8",True
+14,fstp qword ptr [esp],fstp qword ptr [esp],True
+15,call 0x2f,call 0x10082960,True
+16,"add esp, 8","add esp, 8",True
+17,fcomp qword ptr [0],fcomp qword ptr [0x1011dd88],True
+18,fnstsw ax,fnstsw ax,True
+19,"test ah, 0x41","test ah, 0x41",True
+20,jne 0x4e,jne 0x1006ffce,True
+21,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+22,"mov ecx, dword ptr [eax + 0x70]","mov ecx, dword ptr [eax + 0x70]",True
+23,"or ch, 0x20","or ch, 0x20",True
+24,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+25,"mov dword ptr [edx + 0x70], ecx","mov dword ptr [edx + 0x70], ecx",True
+26,fld qword ptr [ebp + 0x14],fld qword ptr [ebp + 0x14],True
+27,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+28,fstp dword ptr [eax + 0x15c],fstp dword ptr [eax + 0x15c],True
+29,fld qword ptr [ebp + 0xc],fld qword ptr [ebp + 0xc],True
+30,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+31,fstp dword ptr [ecx + 0x160],fstp dword ptr [ecx + 0x160],True
+32,pop edi,pop edi,True
+33,pop esi,pop esi,True
+34,pop ebx,pop ebx,True
+35,"add esp, 0x40","add esp, 0x40",True
+36,"cmp ebp, esp","cmp ebp, esp",True
+37,call 0x73,call 0x1007e780,True
+38,"mov esp, ebp","mov esp, ebp",True
+39,pop ebp,pop ebp,True
+40,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_set_gamma,module=jgld.dll
+VERDICT,GREEN,41,100.0%

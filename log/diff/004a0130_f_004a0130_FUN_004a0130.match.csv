@@ -1,0 +1,7 @@
+instruction,recompiled,original,match
+0,push 0,push 0x4e4a44,True
+1,"mov ecx, 0","mov ecx, 0x840930",True
+2,call 0xf,call 0x4a0180,True
+3,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_004a0130@f_004a0130@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,4,100.0%

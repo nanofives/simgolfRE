@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,"mov dword ptr [ecx + 0x30], 0","mov dword ptr [ecx + 0x30], 0",True
+1,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1000ee10@f_1000ee10@@YIXH@Z,module=sound.dll
+VERDICT,GREEN,2,100.0%

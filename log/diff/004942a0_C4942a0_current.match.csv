@@ -1,0 +1,25 @@
+instruction,recompiled,original,match
+0,"test byte ptr [ecx + 4], 4","test byte ptr [ecx + 4], 4",True
+1,je 0x28,je 0x4942c8,True
+2,"mov eax, dword ptr [ecx + 0x1488]","mov eax, dword ptr [ecx + 0x1488]",True
+3,"mov edx, dword ptr [eax + 8]","mov edx, dword ptr [eax + 8]",True
+4,"lea eax, [edx + ecx + 0x1548]","lea eax, [edx + ecx + 0x1548]",True
+5,"mov ecx, dword ptr [edx + ecx + 0x1550]","mov ecx, dword ptr [edx + ecx + 0x1550]",True
+6,"test ecx, ecx","test ecx, ecx",True
+7,je 0x46,je 0x4942e6,True
+8,"mov eax, dword ptr [eax + 0xc]","mov eax, dword ptr [eax + 0xc]",True
+9,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+10,ret ,ret ,True
+11,"mov edx, dword ptr [ecx + 0x2d98]","mov edx, dword ptr [ecx + 0x2d98]",True
+12,"mov eax, dword ptr [edx + 8]","mov eax, dword ptr [edx + 8]",True
+13,"lea eax, [eax + ecx + 0x2e58]","lea eax, [eax + ecx + 0x2e58]",True
+14,"mov ecx, dword ptr [eax + 8]","mov ecx, dword ptr [eax + 8]",True
+15,"test ecx, ecx","test ecx, ecx",True
+16,je 0x46,je 0x4942e6,True
+17,"mov ecx, dword ptr [eax + 0xc]","mov ecx, dword ptr [eax + 0xc]",True
+18,"mov eax, dword ptr [ecx + 4]","mov eax, dword ptr [ecx + 4]",True
+19,ret ,ret ,True
+20,"xor eax, eax","xor eax, eax",True
+21,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?current@C4942a0@@QAEHXZ,module=golf_clean.exe
+VERDICT,GREEN,22,100.0%

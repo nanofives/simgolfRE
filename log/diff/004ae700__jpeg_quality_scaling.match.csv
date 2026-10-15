@@ -1,0 +1,24 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 4]","mov ecx, dword ptr [esp + 4]",True
+1,"test ecx, ecx","test ecx, ecx",True
+2,jg 0x16,jg 0x4ae716,True
+3,"mov eax, 0x1388","mov eax, 0x1388",True
+4,"mov ecx, 1","mov ecx, 1",True
+5,cdq ,cdq ,True
+6,idiv ecx,idiv ecx,True
+7,ret ,ret ,True
+8,"cmp ecx, 0x64","cmp ecx, 0x64",True
+9,jle 0x2a,jle 0x4ae72a,True
+10,"mov ecx, 0x64","mov ecx, 0x64",True
+11,"mov eax, 0x64","mov eax, 0x64",True
+12,"sub eax, ecx","sub eax, ecx",True
+13,"shl eax, 1","shl eax, 1",True
+14,ret ,ret ,True
+15,"cmp ecx, 0x32","cmp ecx, 0x32",True
+16,jge 0x20,jge 0x4ae720,True
+17,"mov eax, 0x1388","mov eax, 0x1388",True
+18,cdq ,cdq ,True
+19,idiv ecx,idiv ecx,True
+20,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jpeg_quality_scaling,module=golf_clean.exe
+VERDICT,GREEN,21,100.0%

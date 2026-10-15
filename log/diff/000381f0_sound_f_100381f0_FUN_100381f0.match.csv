@@ -1,0 +1,23 @@
+instruction,recompiled,original,match
+0,fld qword ptr [ecx + 0x58],fld qword ptr [ecx + 0x58],True
+1,fcomp qword ptr [0],fcomp qword ptr [0x1005b498],True
+2,fnstsw ax,fnstsw ax,True
+3,"test ah, 0x40","test ah, 0x40",True
+4,jne 0x2b,jne 0x1003821b,True
+5,fld qword ptr [ecx + 0xf0],fld qword ptr [ecx + 0xf0],True
+6,fcomp qword ptr [0],fcomp qword ptr [0x1005b498],True
+7,fnstsw ax,fnstsw ax,True
+8,"test ah, 0x40","test ah, 0x40",True
+9,jne 0x2b,jne 0x1003821b,True
+10,"or byte ptr [ecx + 0x9c], 8","or byte ptr [ecx + 0x9c], 8",True
+11,ret ,ret ,True
+12,"mov al, byte ptr [ecx + 0x9c]","mov al, byte ptr [ecx + 0x9c]",True
+13,"mov dword ptr [ecx + 0xe4], 0","mov dword ptr [ecx + 0xe4], 0",True
+14,"or al, 4","or al, 4",True
+15,"mov byte ptr [ecx + 0x9c], al","mov byte ptr [ecx + 0x9c], al",True
+16,"mov al, byte ptr [ecx + 0x94]","mov al, byte ptr [ecx + 0x94]",True
+17,"and al, 0xfe","and al, 0xfe",True
+18,"mov byte ptr [ecx + 0x94], al","mov byte ptr [ecx + 0x94], al",True
+19,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_100381f0@f_100381f0@@YIXH@Z,module=sound.dll
+VERDICT,GREEN,20,100.0%

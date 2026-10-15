@@ -1,0 +1,19 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov eax, dword ptr [esi + 0x1c]","mov eax, dword ptr [esi + 0x1c]",True
+3,"test eax, eax","test eax, eax",True
+4,je 0x13,je 0x1001cd43,True
+5,push eax,push eax,True
+6,call 0x10,call 0x1004249a,True
+7,"add esp, 4","add esp, 4",True
+8,"mov esi, dword ptr [esi + 0x24]","mov esi, dword ptr [esi + 0x24]",True
+9,"test esi, esi","test esi, esi",True
+10,je 0x23,je 0x1001cd53,True
+11,push esi,push esi,True
+12,call 0x20,call 0x1004249a,True
+13,"add esp, 4","add esp, 4",True
+14,pop esi,pop esi,True
+15,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1001cd30@f_1001cd30@@YIXH@Z,module=sound.dll
+VERDICT,GREEN,16,100.0%

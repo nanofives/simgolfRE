@@ -1,0 +1,47 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [ecx + 0xf0]","mov esi, dword ptr [ecx + 0xf0]",True
+2,push edi,push edi,True
+3,"mov edi, dword ptr [ecx + 0xd0]","mov edi, dword ptr [ecx + 0xd0]",True
+4,"lea eax, [edi - 1]","lea eax, [edi - 1]",True
+5,"cmp esi, eax","cmp esi, eax",True
+6,jg 0x66,jg 0x4899b6,True
+7,"mov edx, dword ptr [ecx + 0xc8]","mov edx, dword ptr [ecx + 0xc8]",True
+8,"test esi, esi","test esi, esi",True
+9,"mov dword ptr [ecx + 0xcc], edx","mov dword ptr [ecx + 0xcc], edx",True
+10,jge 0x4a,jge 0x48999a,True
+11,"mov eax, esi","mov eax, esi",True
+12,cdq ,cdq ,True
+13,"xor eax, edx","xor eax, edx",True
+14,"sub eax, edx","sub eax, edx",True
+15,"cmp eax, edi","cmp eax, edi",True
+16,jg 0x66,jg 0x4899b6,True
+17,"test eax, eax","test eax, eax",True
+18,jle 0x46,jle 0x489996,True
+19,"mov edx, dword ptr [ecx + 0xcc]","mov edx, dword ptr [ecx + 0xcc]",True
+20,dec eax,dec eax,True
+21,"mov edx, dword ptr [edx + 0x10]","mov edx, dword ptr [edx + 0x10]",True
+22,"mov dword ptr [ecx + 0xcc], edx","mov dword ptr [ecx + 0xcc], edx",True
+23,jne 0x34,jne 0x489984,True
+24,"add esi, edi","add esi, edi",True
+25,jmp 0x60,jmp 0x4899b0,True
+26,jle 0x60,jle 0x4899b0,True
+27,"mov eax, esi","mov eax, esi",True
+28,"mov edx, dword ptr [ecx + 0xcc]","mov edx, dword ptr [ecx + 0xcc]",True
+29,dec eax,dec eax,True
+30,"mov edx, dword ptr [edx + 0xc]","mov edx, dword ptr [edx + 0xc]",True
+31,"mov dword ptr [ecx + 0xcc], edx","mov dword ptr [ecx + 0xcc], edx",True
+32,jne 0x4e,jne 0x48999e,True
+33,"mov dword ptr [ecx + 0xd4], esi","mov dword ptr [ecx + 0xd4], esi",True
+34,"mov eax, dword ptr [ecx + 0xc8]","mov eax, dword ptr [ecx + 0xc8]",True
+35,pop edi,pop edi,True
+36,"test eax, eax","test eax, eax",True
+37,pop esi,pop esi,True
+38,je 0x7c,je 0x4899cc,True
+39,"mov eax, dword ptr [ecx + 0xcc]","mov eax, dword ptr [ecx + 0xcc]",True
+40,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+41,ret ,ret ,True
+42,"xor eax, eax","xor eax, eax",True
+43,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?getSel@C489950@@QAEPAXXZ,module=golf_clean.exe
+VERDICT,GREEN,44,100.0%

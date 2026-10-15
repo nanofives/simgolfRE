@@ -1,0 +1,28 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+11,push eax,push eax,True
+12,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+13,push ecx,push ecx,True
+14,call 0x25,call 0x10078ed0,True
+15,"add esp, 8","add esp, 8",True
+16,pop edi,pop edi,True
+17,pop esi,pop esi,True
+18,pop ebx,pop ebx,True
+19,"add esp, 0x40","add esp, 0x40",True
+20,"cmp ebp, esp","cmp ebp, esp",True
+21,call 0x35,call 0x1007e780,True
+22,"mov esp, ebp","mov esp, ebp",True
+23,pop ebp,pop ebp,True
+24,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_zfree,module=jgld.dll
+VERDICT,GREEN,25,100.0%

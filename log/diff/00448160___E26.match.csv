@@ -1,0 +1,10 @@
+instruction,recompiled,original,match
+0,push 0,push 0x4848a0,True
+1,push 0,push 0x484820,True
+2,push 0x12c,push 0x12c,True
+3,push 0x6c,push 0x6c,True
+4,push 0,push 0x80d840,True
+5,call 0x1b,call 0x4a55d2,True
+6,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=_$E26,module=golf_clean.exe
+VERDICT,GREEN,7,100.0%

@@ -1,0 +1,45 @@
+instruction,recompiled,original,match
+0,"sub esp, 0x48","sub esp, 0x48",True
+1,"lea eax, [esp]","lea eax, [esp]",True
+2,push edi,push edi,True
+3,"mov edi, ecx","mov edi, ecx",True
+4,push 0,push 0,True
+5,push eax,push eax,True
+6,"mov ecx, dword ptr [edi]","mov ecx, dword ptr [edi]",True
+7,push ecx,push ecx,True
+8,call dword ptr [0],call dword ptr [0x100b8668],True
+9,"mov eax, dword ptr [esp + 0x24]","mov eax, dword ptr [esp + 0x24]",True
+10,"mov ecx, dword ptr [esp + 0x20]","mov ecx, dword ptr [esp + 0x20]",True
+11,"sub eax, ecx","sub eax, ecx",True
+12,jne 0x2b,jne 0x1003500b,True
+13,"xor eax, eax","xor eax, eax",True
+14,pop edi,pop edi,True
+15,"add esp, 0x48","add esp, 0x48",True
+16,ret 8,ret 8,True
+17,push esi,push esi,True
+18,"mov esi, dword ptr [esp + 0x58]","mov esi, dword ptr [esp + 0x58]",True
+19,"cmp esi, eax","cmp esi, eax",True
+20,jbe 0x36,jbe 0x10035016,True
+21,"mov esi, eax","mov esi, eax",True
+22,"mov edx, dword ptr [esp + 0x54]","mov edx, dword ptr [esp + 0x54]",True
+23,push esi,push esi,True
+24,push ecx,push ecx,True
+25,push edx,push edx,True
+26,call 0x42,call 0x10042cf0,True
+27,"mov eax, dword ptr [esp + 0x30]","mov eax, dword ptr [esp + 0x30]",True
+28,"mov ecx, dword ptr [edi]","mov ecx, dword ptr [edi]",True
+29,"add eax, esi","add eax, esi",True
+30,"add esp, 0xc","add esp, 0xc",True
+31,"mov dword ptr [esp + 0x24], eax","mov dword ptr [esp + 0x24], eax",True
+32,"lea eax, [esp + 8]","lea eax, [esp + 8]",True
+33,push 0,push 0,True
+34,push eax,push eax,True
+35,push ecx,push ecx,True
+36,call dword ptr [0],call dword ptr [0x100b8634],True
+37,"mov eax, esi","mov eax, esi",True
+38,pop esi,pop esi,True
+39,pop edi,pop edi,True
+40,"add esp, 0x48","add esp, 0x48",True
+41,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10034fe0@C_FUN_10034fe0@f_10034fe0@@QAEIPAII@Z,module=sound.dll
+VERDICT,GREEN,42,100.0%

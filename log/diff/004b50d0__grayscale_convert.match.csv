@@ -1,0 +1,46 @@
+instruction,recompiled,original,match
+0,push ecx,push ecx,True
+1,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+2,push edi,push edi,True
+3,"mov edi, dword ptr [eax + 0x18]","mov edi, dword ptr [eax + 0x18]",True
+4,"mov eax, dword ptr [eax + 0x20]","mov eax, dword ptr [eax + 0x20]",True
+5,"mov dword ptr [esp + 4], eax","mov dword ptr [esp + 4], eax",True
+6,"mov eax, dword ptr [esp + 0x1c]","mov eax, dword ptr [esp + 0x1c]",True
+7,dec eax,dec eax,True
+8,js 0x64,js 0x4b5134,True
+9,"mov ecx, dword ptr [esp + 0x18]","mov ecx, dword ptr [esp + 0x18]",True
+10,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+11,push ebx,push ebx,True
+12,inc eax,inc eax,True
+13,push ebp,push ebp,True
+14,push esi,push esi,True
+15,"lea ebp, [ecx*4]","lea ebp, [ecx*4]",True
+16,"mov dword ptr [esp + 0x18], eax","mov dword ptr [esp + 0x18], eax",True
+17,"mov eax, dword ptr [esp + 0x20]","mov eax, dword ptr [esp + 0x20]",True
+18,"mov ecx, dword ptr [edx]","mov ecx, dword ptr [edx]",True
+19,"add edx, 4","add edx, 4",True
+20,"add ebp, 4","add ebp, 4",True
+21,"mov eax, dword ptr [eax]","mov eax, dword ptr [eax]",True
+22,"mov esi, dword ptr [eax + ebp - 4]","mov esi, dword ptr [eax + ebp - 4]",True
+23,"xor eax, eax","xor eax, eax",True
+24,"test edi, edi","test edi, edi",True
+25,jbe 0x56,jbe 0x4b5126,True
+26,"mov bl, byte ptr [ecx]","mov bl, byte ptr [ecx]",True
+27,"mov byte ptr [eax + esi], bl","mov byte ptr [eax + esi], bl",True
+28,"mov ebx, dword ptr [esp + 0x10]","mov ebx, dword ptr [esp + 0x10]",True
+29,"add ecx, ebx","add ecx, ebx",True
+30,inc eax,inc eax,True
+31,"cmp eax, edi","cmp eax, edi",True
+32,jb 0x46,jb 0x4b5116,True
+33,"mov eax, dword ptr [esp + 0x18]","mov eax, dword ptr [esp + 0x18]",True
+34,dec eax,dec eax,True
+35,"mov dword ptr [esp + 0x18], eax","mov dword ptr [esp + 0x18], eax",True
+36,jne 0x2e,jne 0x4b50fe,True
+37,pop esi,pop esi,True
+38,pop ebp,pop ebp,True
+39,pop ebx,pop ebx,True
+40,pop edi,pop edi,True
+41,pop ecx,pop ecx,True
+42,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_grayscale_convert,module=golf_clean.exe
+VERDICT,GREEN,43,100.0%

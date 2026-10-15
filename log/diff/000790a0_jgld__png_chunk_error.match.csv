@@ -1,0 +1,36 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x90","sub esp, 0x90",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x90]","lea edi, [ebp - 0x90]",True
+7,"mov ecx, 0x24","mov ecx, 0x24",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+11,push eax,push eax,True
+12,"lea ecx, [ebp - 0x50]","lea ecx, [ebp - 0x50]",True
+13,push ecx,push ecx,True
+14,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+15,push edx,push edx,True
+16,call 0x2f,call 0x10079100,True
+17,"add esp, 0xc","add esp, 0xc",True
+18,"lea eax, [ebp - 0x50]","lea eax, [ebp - 0x50]",True
+19,push eax,push eax,True
+20,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+21,push ecx,push ecx,True
+22,call 0x3f,call 0x10078fe0,True
+23,"add esp, 8","add esp, 8",True
+24,pop edi,pop edi,True
+25,pop esi,pop esi,True
+26,pop ebx,pop ebx,True
+27,"add esp, 0x90","add esp, 0x90",True
+28,"cmp ebp, esp","cmp ebp, esp",True
+29,call 0x52,call 0x1007e780,True
+30,"mov esp, ebp","mov esp, ebp",True
+31,pop ebp,pop ebp,True
+32,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_chunk_error,module=jgld.dll
+VERDICT,GREEN,33,100.0%

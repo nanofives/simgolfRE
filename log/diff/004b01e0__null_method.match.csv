@@ -1,0 +1,4 @@
+instruction,recompiled,original,match
+0,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_null_method,module=golf_clean.exe
+VERDICT,GREEN,1,100.0%

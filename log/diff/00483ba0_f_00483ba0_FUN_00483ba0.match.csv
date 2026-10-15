@@ -1,0 +1,6 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x83ad50]",True
+1,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+2,jmp dword ptr [eax + 0x124],jmp dword ptr [eax + 0x124],True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_00483ba0@f_00483ba0@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,3,100.0%

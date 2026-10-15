@@ -1,0 +1,15 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+1,push edi,push edi,True
+2,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+3,"mov edx, ecx","mov edx, ecx",True
+4,"xor eax, eax","xor eax, eax",True
+5,"shr ecx, 2","shr ecx, 2",True
+6,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+7,"mov ecx, edx","mov ecx, edx",True
+8,"and ecx, 3","and ecx, 3",True
+9,"rep stosb byte ptr es:[edi], al","rep stosb byte ptr es:[edi], al",True
+10,pop edi,pop edi,True
+11,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jzero_far,module=golf_clean.exe
+VERDICT,GREEN,12,100.0%

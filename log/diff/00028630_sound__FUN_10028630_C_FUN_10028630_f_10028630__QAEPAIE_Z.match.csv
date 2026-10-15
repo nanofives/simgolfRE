@@ -1,0 +1,29 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov eax, dword ptr [esi + 8]","mov eax, dword ptr [esi + 8]",True
+3,"mov dword ptr [esi], 0","mov dword ptr [esi], 0x1005b8ac",True
+4,"test eax, eax","test eax, eax",True
+5,je 0x39,je 0x10028669,True
+6,"test byte ptr [esi + 4], 4","test byte ptr [esi + 4], 4",True
+7,je 0x39,je 0x10028669,True
+8,"mov ecx, dword ptr [esi + 0xc]","mov ecx, dword ptr [esi + 0xc]",True
+9,push ecx,push ecx,True
+10,push -4,push -4,True
+11,push eax,push eax,True
+12,call dword ptr [0],call dword ptr [0x100b85a4],True
+13,"mov al, byte ptr [esi + 4]","mov al, byte ptr [esi + 4]",True
+14,"mov dword ptr [esi + 0xc], 0","mov dword ptr [esi + 0xc], 0",True
+15,"and al, 0xfb","and al, 0xfb",True
+16,"mov dword ptr [esi + 8], 0","mov dword ptr [esi + 8], 0",True
+17,"mov byte ptr [esi + 4], al","mov byte ptr [esi + 4], al",True
+18,"test byte ptr [esp + 8], 1","test byte ptr [esp + 8], 1",True
+19,je 0x49,je 0x10028679,True
+20,push esi,push esi,True
+21,call 0x46,call 0x1004249a,True
+22,"add esp, 4","add esp, 4",True
+23,"mov eax, esi","mov eax, esi",True
+24,pop esi,pop esi,True
+25,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10028630@C_FUN_10028630@f_10028630@@QAEPAIE@Z,module=sound.dll
+VERDICT,GREEN,26,100.0%

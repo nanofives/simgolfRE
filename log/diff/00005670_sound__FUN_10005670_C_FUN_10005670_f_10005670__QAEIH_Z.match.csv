@@ -1,0 +1,11 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"test eax, eax","test eax, eax",True
+2,jne 0x10,jne 0x10005680,True
+3,"mov eax, 0xa","mov eax, 0xa",True
+4,ret 4,ret 4,True
+5,"mov dword ptr [ecx + 0x38], eax","mov dword ptr [ecx + 0x38], eax",True
+6,"xor eax, eax","xor eax, eax",True
+7,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10005670@C_FUN_10005670@f_10005670@@QAEIH@Z,module=sound.dll
+VERDICT,GREEN,8,100.0%

@@ -1,0 +1,79 @@
+instruction,recompiled,original,match
+0,"mov eax, ecx","mov eax, ecx",True
+1,push esi,push esi,True
+2,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+3,"test ecx, ecx","test ecx, ecx",True
+4,je 0xf0,je 0x47cb00,True
+5,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+6,"test esi, esi","test esi, esi",True
+7,je 0xf0,je 0x47cb00,True
+8,"mov dl, byte ptr [eax + 0x9c]","mov dl, byte ptr [eax + 0x9c]",True
+9,push edi,push edi,True
+10,"test dl, 4","test dl, 4",True
+11,je 0x33,je 0x47ca43,True
+12,"mov edx, dword ptr [0]","mov edx, dword ptr [0x83ff10]",True
+13,"mov edi, dword ptr [esi]","mov edi, dword ptr [esi]",True
+14,"add edi, edx","add edi, edx",True
+15,"mov dword ptr [esi], edi","mov dword ptr [esi], edi",True
+16,"test byte ptr [eax + 0x9c], 8","test byte ptr [eax + 0x9c], 8",True
+17,je 0x48,je 0x47ca58,True
+18,"mov edx, dword ptr [0]","mov edx, dword ptr [0x83ff10]",True
+19,"mov edi, dword ptr [ecx]","mov edi, dword ptr [ecx]",True
+20,"add edi, edx","add edi, edx",True
+21,"mov dword ptr [ecx], edi","mov dword ptr [ecx], edi",True
+22,"mov edx, dword ptr [eax + 0x9c]","mov edx, dword ptr [eax + 0x9c]",True
+23,"test dh, 4","test dh, 4",True
+24,je 0x7c,je 0x47ca8c,True
+25,"mov edx, dword ptr [eax + 0x184]","mov edx, dword ptr [eax + 0x184]",True
+26,"mov edi, dword ptr [ecx]","mov edi, dword ptr [ecx]",True
+27,"shl edx, 1","shl edx, 1",True
+28,"add edi, edx","add edi, edx",True
+29,"mov dword ptr [ecx], edi","mov dword ptr [ecx], edi",True
+30,"mov ecx, dword ptr [eax + 0x184]","mov ecx, dword ptr [eax + 0x184]",True
+31,"mov edx, dword ptr [esi]","mov edx, dword ptr [esi]",True
+32,"shl ecx, 1","shl ecx, 1",True
+33,"add edx, ecx","add edx, ecx",True
+34,"mov dword ptr [esi], edx","mov dword ptr [esi], edx",True
+35,"mov ecx, dword ptr [eax + 0x188]","mov ecx, dword ptr [eax + 0x188]",True
+36,"cmp ecx, -1","cmp ecx, -1",True
+37,je 0xb2,je 0x47cac2,True
+38,jmp 0xa8,jmp 0x47cab8,True
+39,"test dl, 0x11","test dl, 0x11",True
+40,je 0xb2,je 0x47cac2,True
+41,"mov edx, dword ptr [eax + 0x184]","mov edx, dword ptr [eax + 0x184]",True
+42,"mov edi, dword ptr [ecx]","mov edi, dword ptr [ecx]",True
+43,"shl edx, 1","shl edx, 1",True
+44,"add edi, edx","add edi, edx",True
+45,"mov dword ptr [ecx], edi","mov dword ptr [ecx], edi",True
+46,"mov ecx, dword ptr [eax + 0x184]","mov ecx, dword ptr [eax + 0x184]",True
+47,"mov edx, dword ptr [esi]","mov edx, dword ptr [esi]",True
+48,"shl ecx, 1","shl ecx, 1",True
+49,"add edx, ecx","add edx, ecx",True
+50,"mov dword ptr [esi], edx","mov dword ptr [esi], edx",True
+51,"mov ecx, dword ptr [eax + 0x188]","mov ecx, dword ptr [eax + 0x188]",True
+52,"cmp ecx, -1","cmp ecx, -1",True
+53,je 0xb2,je 0x47cac2,True
+54,"sub ecx, dword ptr [eax + 0x184]","sub ecx, dword ptr [eax + 0x184]",True
+55,"add ecx, edx","add ecx, edx",True
+56,"mov dword ptr [esi], ecx","mov dword ptr [esi], ecx",True
+57,"test byte ptr [eax + 0x9c], 0x10","test byte ptr [eax + 0x9c], 0x10",True
+58,je 0xcf,je 0x47cadf,True
+59,"mov edx, dword ptr [eax + 0x180]","mov edx, dword ptr [eax + 0x180]",True
+60,"mov edi, dword ptr [eax + 0x184]","mov edi, dword ptr [eax + 0x184]",True
+61,"mov ecx, dword ptr [esi]","mov ecx, dword ptr [esi]",True
+62,"sub edx, edi","sub edx, edi",True
+63,"add ecx, edx","add ecx, edx",True
+64,"mov dword ptr [esi], ecx","mov dword ptr [esi], ecx",True
+65,"mov ecx, dword ptr [eax + 0x15c]","mov ecx, dword ptr [eax + 0x15c]",True
+66,pop edi,pop edi,True
+67,"test ecx, ecx","test ecx, ecx",True
+68,je 0xf0,je 0x47cb00,True
+69,"test dword ptr [eax + 0x9c], 0x20000000","test dword ptr [eax + 0x9c], 0x20000000",True
+70,jne 0xf0,jne 0x47cb00,True
+71,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+72,call dword ptr [eax + 0x170],call dword ptr [eax + 0x170],True
+73,"add dword ptr [esi], eax","add dword ptr [esi], eax",True
+74,pop esi,pop esi,True
+75,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?adjustSize@R2C47ca10@@QAEXPAH0@Z,module=golf_clean.exe
+VERDICT,GREEN,76,100.0%

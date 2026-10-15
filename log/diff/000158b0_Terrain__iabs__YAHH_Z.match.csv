@@ -1,0 +1,18 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push ecx,push ecx,True
+3,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+4,jl 0x12,jl 0x100158c2,True
+5,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+6,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+7,jmp 0x1a,jmp 0x100158ca,True
+8,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+9,neg ecx,neg ecx,True
+10,"mov dword ptr [ebp - 4], ecx","mov dword ptr [ebp - 4], ecx",True
+11,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+12,"mov esp, ebp","mov esp, ebp",True
+13,pop ebp,pop ebp,True
+14,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od,symbol=?iabs@@YAHH@Z,module=Terrain.dll
+VERDICT,GREEN,15,100.0%

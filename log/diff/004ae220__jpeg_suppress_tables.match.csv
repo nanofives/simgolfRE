@@ -1,0 +1,32 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push edi,push edi,True
+3,"mov edi, dword ptr [esp + 0x10]","mov edi, dword ptr [esp + 0x10]",True
+4,"lea ecx, [esi + 0x40]","lea ecx, [esi + 0x40]",True
+5,"mov edx, 4","mov edx, 4",True
+6,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+7,"test eax, eax","test eax, eax",True
+8,je 0x1e,je 0x4ae23e,True
+9,"mov dword ptr [eax + 0x80], edi","mov dword ptr [eax + 0x80], edi",True
+10,"add ecx, 4","add ecx, 4",True
+11,dec edx,dec edx,True
+12,jne 0x12,jne 0x4ae232,True
+13,"lea eax, [esi + 0x60]","lea eax, [esi + 0x60]",True
+14,"mov edx, 4","mov edx, 4",True
+15,"mov ecx, dword ptr [eax - 0x10]","mov ecx, dword ptr [eax - 0x10]",True
+16,"test ecx, ecx","test ecx, ecx",True
+17,je 0x39,je 0x4ae259,True
+18,"mov dword ptr [ecx + 0x114], edi","mov dword ptr [ecx + 0x114], edi",True
+19,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+20,"test ecx, ecx","test ecx, ecx",True
+21,je 0x45,je 0x4ae265,True
+22,"mov dword ptr [ecx + 0x114], edi","mov dword ptr [ecx + 0x114], edi",True
+23,"add eax, 4","add eax, 4",True
+24,dec edx,dec edx,True
+25,jne 0x2c,jne 0x4ae24c,True
+26,pop edi,pop edi,True
+27,pop esi,pop esi,True
+28,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jpeg_suppress_tables,module=golf_clean.exe
+VERDICT,GREEN,29,100.0%

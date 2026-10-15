@@ -1,0 +1,11 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,push eax,push eax,True
+2,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+3,"mov dword ptr [ecx + 0x14], 0x30","mov dword ptr [ecx + 0x14], 0x30",True
+4,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+5,call dword ptr [edx],call dword ptr [edx],True
+6,pop ecx,pop ecx,True
+7,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jpeg_open_backing_store,module=golf_clean.exe
+VERDICT,GREEN,8,100.0%

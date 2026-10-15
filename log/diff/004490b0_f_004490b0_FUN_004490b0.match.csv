@@ -1,0 +1,13 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, 0","mov esi, 0x80d840",True
+2,"mov ecx, esi","mov ecx, esi",True
+3,call 0xd,call 0x484f00,True
+4,"add esi, 0x6c","add esi, 0x6c",True
+5,"cmp esi, 0","cmp esi, 0x8156d0",True
+6,jl 6,jl 0x4490b6,True
+7,call 0x1d,call 0x483f10,True
+8,pop esi,pop esi,True
+9,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_004490b0@f_004490b0@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,10,100.0%

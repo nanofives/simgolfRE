@@ -1,0 +1,44 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x40","sub esp, 0x40",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x40]","lea edi, [ebp - 0x40]",True
+7,"mov ecx, 0x10","mov ecx, 0x10",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"cmp dword ptr [ebp + 8], 0","cmp dword ptr [ebp + 8], 0",True
+11,je 0x5b,je 0x1006e5db,True
+12,"cmp dword ptr [ebp + 0xc], 0","cmp dword ptr [ebp + 0xc], 0",True
+13,je 0x5b,je 0x1006e5db,True
+14,"mov eax, dword ptr [ebp + 0xc]","mov eax, dword ptr [ebp + 0xc]",True
+15,"mov ecx, dword ptr [eax + 8]","mov ecx, dword ptr [eax + 8]",True
+16,"and ecx, 0x80","and ecx, 0x80",True
+17,"test ecx, ecx","test ecx, ecx",True
+18,je 0x5b,je 0x1006e5db,True
+19,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+20,"xor eax, eax","xor eax, eax",True
+21,"mov al, byte ptr [edx + 0x78]","mov al, byte ptr [edx + 0x78]",True
+22,"cmp eax, 1","cmp eax, 1",True
+23,jne 0x4f,jne 0x1006e5cf,True
+24,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+25,"mov edx, dword ptr [ebp + 0xc]","mov edx, dword ptr [ebp + 0xc]",True
+26,"mov eax, dword ptr [ecx + 0x70]","mov eax, dword ptr [ecx + 0x70]",True
+27,"cmp eax, dword ptr [edx + 0x74]","cmp eax, dword ptr [edx + 0x74]",True
+28,je 0x53,je 0x1006e5d3,True
+29,"xor eax, eax","xor eax, eax",True
+30,jmp 0x5d,jmp 0x1006e5dd,True
+31,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+32,"mov eax, dword ptr [ecx + 0x70]","mov eax, dword ptr [ecx + 0x70]",True
+33,jmp 0x5d,jmp 0x1006e5dd,True
+34,"xor eax, eax","xor eax, eax",True
+35,pop edi,pop edi,True
+36,pop esi,pop esi,True
+37,pop ebx,pop ebx,True
+38,"mov esp, ebp","mov esp, ebp",True
+39,pop ebp,pop ebp,True
+40,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_png_get_pixels_per_meter,module=jgld.dll
+VERDICT,GREEN,41,100.0%

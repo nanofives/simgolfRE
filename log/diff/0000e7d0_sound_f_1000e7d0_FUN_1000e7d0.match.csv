@@ -1,0 +1,7 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x1a4]","mov eax, dword ptr [ecx + 0x1a4]",True
+1,"shr eax, 1","shr eax, 1",True
+2,"and eax, 1","and eax, 1",True
+3,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1000e7d0@f_1000e7d0@@YIIH@Z,module=sound.dll
+VERDICT,GREEN,4,100.0%

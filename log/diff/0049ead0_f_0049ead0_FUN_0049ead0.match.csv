@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,"mov ecx, 0","mov ecx, 0x840860",True
+1,call 0xa,call 0x473ae0,True
+2,"mov ecx, 0","mov ecx, 0x840890",True
+3,call 0x14,call 0x473ae0,True
+4,"mov ecx, 0","mov ecx, 0x840830",True
+5,jmp 0x1e,jmp 0x473ae0,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_0049ead0@f_0049ead0@@YAXXZ,module=golf_clean.exe
+VERDICT,GREEN,6,100.0%

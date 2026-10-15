@@ -1,0 +1,24 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push 0x6c,push 0x6c,True
+3,push 1,push 1,True
+4,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+5,push esi,push esi,True
+6,call dword ptr [eax],call dword ptr [eax],True
+7,"add esp, 0xc","add esp, 0xc",True
+8,"mov dword ptr [esi + 0x164], eax","mov dword ptr [esi + 0x164], eax",True
+9,"mov dword ptr [eax], 0","mov dword ptr [eax], 0x4b1f70",True
+10,"lea ecx, [eax + 0x5c]","lea ecx, [eax + 0x5c]",True
+11,"mov edx, 4","mov edx, 4",True
+12,"xor esi, esi","xor esi, esi",True
+13,"mov dword ptr [ecx - 0x10], esi","mov dword ptr [ecx - 0x10], esi",True
+14,"mov dword ptr [ecx], esi","mov dword ptr [ecx], esi",True
+15,"add ecx, 4","add ecx, 4",True
+16,dec edx,dec edx,True
+17,jne 0x28,jne 0x4b1f58,True
+18,"mov dword ptr [eax + 0x40], esi","mov dword ptr [eax + 0x40], esi",True
+19,pop esi,pop esi,True
+20,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=_jinit_phuff_encoder,module=golf_clean.exe
+VERDICT,GREEN,21,100.0%
