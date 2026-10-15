@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 100 bytes, 38 instructions, subsystem `crt`. Mechanical
 ## Role (from the naming pass, not a C3 purpose)
 the static CRT rewind (`re/names/exe_15.tsv`)
 
+## Purpose
+The VC6 CRT's `rewind(stream)` (cdecl): reads the descriptor `_file` (+0x10, 0x004a70bc) before taking the stream lock (__lock_file 0x004a9874, 0x004a70bf), flushes it (__flush 0x004a99a0, 0x004a70c5), clears _IOEOF and _IOERR in `_flag` (`and dword [esi+0xc], 0xffffffcf` 0x004a70ca), clears the descriptor's end-of-file bit FEOFLAG (`and byte [eax+4], 0xfd` 0x004a70f3) in its ioinfo record, found through __pioinfo 0x00842040 (`sar ecx, 5`, record (fd & 0x1f) * 0x24, 0x004a70d5..0x004a70e9) or, for descriptor -1 (`cmp edi, -1; je` 0x004a70cf / 0x004a70d3), in the dummy record __badioinfo 0x004e4d60; a stream opened for update (_IORW 0x80, `test al, 0x80` 0x004a70fa) also drops _IOREAD | _IOWRT (`and al, 0xfc` 0x004a70fe); then seeks the descriptor to 0 (__lseek(fd, 0, 0) 0x004a7108) and unlocks (__unlock_file 0x004a98c6, 0x004a710e). Reader::open 0x00487fb0 calls it at 0x00488187 when its section search wraps around the file. Reimplemented in `shim/src/re/c3fo.cpp`; path-1 A/B GREEN: _rewind (12 vectors, 12 distinct results, 12 changing state, `log/diff/004a70b5__rewind.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004a7118): callee pops 0 bytes of stack arguments.
 

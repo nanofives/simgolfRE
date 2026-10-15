@@ -1,0 +1,13 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$arr 4 3 $ctor $dtor,void,void,True,f2206ebe,f2206ebe,True
+$arr 4 4 $ctor $dtor,void,void,True,505c4769,505c4769,True
+$arr 8 8 $ctor $dtor,void,void,True,40e5e731,40e5e731,True
+$arr 44 5 $ctor $dtor,void,void,True,48881564,48881564,True
+$arr 0 6 $ctor $dtor,void,void,True,f2bfe6e3,f2bfe6e3,True
+$arr 268 4 $ctor $dtor,void,void,True,54738c03,54738c03,True
+$arr 12 2 $ctor $dtor,void,void,True,7deb784e,7deb784e,True
+state_regions,$D+0x0:528 $arr+0x0:8192 $blk+0x30:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62afa800,original=0x3890900,2026-10-14T20:59:50
+distinct_results,7,,
+VERDICT,GREEN,7,

@@ -4,7 +4,10 @@ Module `golf_clean.exe`, 106 bytes, 36 instructions, subsystem `crt`. Mechanical
 
 ## Role (from the naming pass, not a C3 purpose)
 the static CRT eh vector constructor iterator (array element constructor loop), named by its FID match; its unwind behaviour was not read (`re/names/exe_15.tsv`)
-System writeup: `re/analysis/systems/exe_0.md`, `re/analysis/systems/exe_6.md`.
+System writeup: `re/analysis/systems/exe_0.md`, `re/analysis/systems/exe_16.md`, `re/analysis/systems/exe_6.md`.
+
+## Purpose
+The compiler helper `eh vector constructor iterator` (??_L, `__stdcall (ptr, size, count, ctor, dtor)`, `ret 0x14` 0x004a5639) that constructs an array of objects with exception safety; the game's static array initializers (initGlobalArray_*, arrayStaticInit_*, gSurfaceCtor_*), Flic::createStream 0x00482b90 (at 0x00482cb4), the report screens and HotList::grow / alloc call it. It installs an SEH frame (`push 0x4bc438; push 0x4a8f7c`, fs:[0] 0x004a55d7..0x004a55e8: __except_handler3 with the scope table 0x004bc438 = {-1, filter 0, handler 0x004a563c}, a __finally), clears success [ebp-0x20] and the counter [ebp-0x1c] (0x004a55f5..0x004a55fd), and while counter < count (signed `jge` 0x004a5606) calls ctor with ecx = the current element (`mov ecx, esi; call [ebp+0x14]` 0x004a560b / 0x004a560d), then advances the element pointer by size (0x004a5610 / 0x004a5613, so it moves only after the constructor returned) and the counter (0x004a5616). After the loop success = 1 (0x004a561b), the scope is left (0x004a5622) and the __finally funclet runs on the normal path (`call 0x4a563c` 0x004a5626), which tests success (0x004a563c / `jne` 0x004a5640) and does nothing. When a constructor raises, the unwind runs the same funclet with success still 0: it calls __ArrayUnwind(ptr, size, counter, dtor) (0x004a5642..0x004a564e, __ArrayUnwind 0x004a5793 calls dtor on elements counter-1 down to 0), so the elements already constructed are destroyed, last first, and the exception continues to the caller's handler. Reimplemented in `shim/src/re/c3fo.cpp`; path-1 A/B GREEN: ehVectorConstructorIterator_none (12 vectors, 10 distinct results, 9 changing state, `log/diff/004a55d2_ehVectorConstructorIterator_none.path1.csv`); ehVectorConstructorIterator_t0 (5 vectors, 2 distinct results, 3 changing state, `log/diff/004a55d2_ehVectorConstructorIterator_t0.path1.csv`); ehVectorConstructorIterator_t3 (7 vectors, 7 distinct results, 7 changing state, `log/diff/004a55d2_ehVectorConstructorIterator_t3.path1.csv`).
 
 ## Signature
 - Returns with `ret 0x14` (at 0x004a5639): callee pops 20 bytes of stack arguments.
@@ -34,7 +37,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x004a5606
 
 ## Callees
-- 0x004a563c `FUN_004a563c` at 0x004a5626
+- 0x004a563c `ehVectorCtor_finally` at 0x004a5626
 - indirect `call [ebp+0x14]` at 0x004a560d
 
 ## Callers

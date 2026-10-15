@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$arr 4 0 $ctor $dtor,void,void,True,2039f9e5,2039f9e5,False
+$arr 4 1 $ctor $dtor,void,void,True,35650d44,35650d44,True
+$arr 4 5 $ctor $dtor,void,void,True,0c8886f4,0c8886f4,True
+$arr 8 3 $ctor 0,void,void,True,ebfababc,ebfababc,True
+$arr 44 4 $ctor $dtor,void,void,True,d81b79af,d81b79af,True
+$arr 0 3 $ctor $dtor,void,void,True,c5019298,c5019298,True
+$arr 4 -1 $ctor $dtor,void,void,True,2039f9e5,2039f9e5,False
+$arr 4 -2147483648 $ctor 0,void,void,True,2039f9e5,2039f9e5,False
+$arr 12 10 $ctor $dtor,void,void,True,351c39a4,351c39a4,True
+$arr 268 2 $ctor $dtor,void,void,True,724eb18c,724eb18c,True
+$arr 1 7 $ctor 0,void,void,True,866bdf0c,866bdf0c,True
+$arr 64 40 $ctor $dtor,void,void,True,a67d4337,a67d4337,True
+state_regions,$D+0x0:528 $arr+0x0:8192 $blk+0x30:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62afa800,original=0x3890900,2026-10-14T20:59:50
+distinct_results,10,,
+VERDICT,GREEN,12,

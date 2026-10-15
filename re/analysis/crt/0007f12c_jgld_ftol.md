@@ -6,6 +6,9 @@ Module `jgld.dll` (RVA `0x0007f12c`), 39 bytes, 16 instructions, subsystem `crt`
 converts st(0) to a 64-bit integer truncating toward zero (rounding control forced for the one fistp), restores the caller's control word, pops st(0), returns edx:eax (`re/names/jgld_10.tsv`)
 System writeup: `re/analysis/systems/jgld_10.md`.
 
+## Purpose
+jgld.dll's copy of the VC6 CRT conversion helper (linked from the release CRT although jgld.dll itself is a debug build): `fnstcw [ebp-2]` 0x1007f133, `or ah, 0xc` 0x1007f13b, `fldcw [ebp-4]` 0x1007f142, `fistp qword [ebp-0xc]` 0x1007f145, `fldcw [ebp-2]` 0x1007f148, edx:eax 0x1007f14b / 0x1007f14e. Same contract and measured side effects as 0x004a6030. Called by 66 jgld functions (hooks.csv), most of them the Sprite draw / blend family (0x1001cde0, 0x1001f2d0, 0x10026240 ... 0x10063f60) and libpng's gamma code (png_init_read_transformations 0x100702a0, png_build_gamma_table 0x10077d30). Same reimplementation (C3foFtolCore through C3foFtolJgld_re). Reimplemented in `shim/src/re/c3fo.cpp`; path-1 A/B GREEN: __ftol_jgld_w27f (56 vectors, 29 distinct results, 56 changing state, `log/diff/0007f12c_jgld___ftol_jgld_w27f.path1.csv`); __ftol_jgld_wf7f (56 vectors, 29 distinct results, 56 changing state, `log/diff/0007f12c_jgld___ftol_jgld_wf7f.path1.csv`); __ftol_jgld_w37f (56 vectors, 29 distinct results, 56 changing state, `log/diff/0007f12c_jgld___ftol_jgld_w37f.path1.csv`); __ftol_jgld_wa7f (56 vectors, 29 distinct results, 56 changing state, `log/diff/0007f12c_jgld___ftol_jgld_wa7f.path1.csv`); __ftol_jgld_w67f (56 vectors, 29 distinct results, 56 changing state, `log/diff/0007f12c_jgld___ftol_jgld_w67f.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1007f152): callee pops 0 bytes of stack arguments.
 

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00042902`), 106 bytes, 36 instructions, subsystem `cr
 __stdcall (array, element size, count, constructor, destructor): calls the __thiscall constructor on each of count elements of array in turn, element size bytes apart; the destructor argument is only used by the unwind path if a constructor throws (`re/names/sound_16.tsv`)
 System writeup: `re/analysis/systems/sound_16.md`.
 
+## Purpose
+sound.dll's copy of the same compiler helper, identical instruction for instruction at its own addresses: SEH frame with __except_handler3 0x10045744 and scope table 0x1005ed28 = {-1, filter 0, handler 0x1004296c} (0x10042905.. 0x10042918), the constructor loop 0x10042930..0x10042949 (`jge` 0x10042936, `call [ebp+0x14]` 0x1004293d), success = 1 at 0x1004294b, the __finally funclet 0x1004296c (`jne` 0x10042970) calling __ArrayUnwind 0x1004288e on an unwind (`call` 0x1004297e), `ret 0x14` 0x10042969. Called by Sound5b6a8_ctor 0x1001f4a0, Seq_ctor 0x1001f6f0 and the channel / track table constructors 0x10029020, 0x10031be0, 0x10031e50. Reimplemented in `shim/src/re/c3fo.cpp`; path-1 A/B GREEN: ehVectorConstructorIterator_snd_none (12 vectors, 10 distinct results, 9 changing state, `log/diff/00042902_sound_ehVectorConstructorIterator_snd_none.path1.csv`); ehVectorConstructorIterator_snd_t0 (5 vectors, 2 distinct results, 3 changing state, `log/diff/00042902_sound_ehVectorConstructorIterator_snd_t0.path1.csv`); ehVectorConstructorIterator_snd_t3 (7 vectors, 7 distinct results, 7 changing state, `log/diff/00042902_sound_ehVectorConstructorIterator_snd_t3.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x14` (at 0x10042969): callee pops 20 bytes of stack arguments.
 
@@ -34,7 +37,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jge` (signed) at 0x10042936
 
 ## Callees
-- 0x1004296c `FUN_1004296c` at 0x10042956
+- 0x1004296c `ehVectorCtor_finally` at 0x10042956
 - indirect `call [ebp+0x14]` at 0x1004293d
 
 ## Callers
