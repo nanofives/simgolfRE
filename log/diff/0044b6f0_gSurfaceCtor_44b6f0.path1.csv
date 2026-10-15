@@ -5,6 +5,6 @@ $g2,obj+0x1200,obj+0x1200,True,40fb0b39,40fb0b39,True
 $g3,obj+0x1b00,obj+0x1b00,True,f1198b29,f1198b29,True
 state_regions,$blk+0x0:131072 $arena+0x0:32784 $freelog+0x0:1028 $rec+0x0:1024,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x7001b470,original=0x1440a80,2026-10-10T12:12:32
+meta,detour=0x62b5a640,original=0x2aa0760,2026-10-14T21:55:58
 distinct_results,4,,
 VERDICT,GREEN,4,

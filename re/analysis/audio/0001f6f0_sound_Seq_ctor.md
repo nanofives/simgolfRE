@@ -63,7 +63,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x100018a2 -> 0x1002ad10 `Sound_setSourceType` (incremental-linking thunk) at 0x1001f799
 - 0x10001b1d -> 0x1001d380 `MidiReader_init` (incremental-linking thunk) at 0x1001f71e
 - 0x10042550 `__ftol` at 0x1001f812
-- 0x10042902 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x1001f76d
+- 0x10042902 `ehVectorConstructorIterator` at 0x1001f76d
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

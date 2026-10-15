@@ -599,6 +599,40 @@ flags of `cmp edx, 0` and always stores the loaded sample as the integer positio
 multiplies a freshly zeroed +0x720; Wave_Device::dispatchCommand kind 4 reads o+0x44 before its NULL test; _xtoa never ends for
 radix 1; jgld fclose dereferences a NULL stream after reporting it; Cache482f60::dtor's second pass can never run; showLoadingScreen
 frees its frame Surface twice; netHandleControl leaves slot 15 duplicated when it removes a peer.
+Thirty-fifth round = the C3 close-out (2026-10-14, eight claude2 `opus` children; pool log/c3/round35_pool.py, candidates
+log/c3/round35_candidates.py, brief log/c3/round35_brief.md, runner log/c3/alt/r35_main.py, children
+log/c3/round35_children.tsv): c3fn 8 (the MMIO remainder over mmiostandin.js: openMmioSound, closeMmioSound,
+streamWaveSamples, loadWaveResource, fillDecodeRing, flushMmioBuffer, Midi_Device::loadFile / loadFromMemory), c3fo 10 (the
+three `__ftol`, jgld fabs, __strcmpi / __strnicmp, _fseek / _rewind, both ehVectorConstructorIterator; new tool: an exported x87
+probe that fnsaves the whole FPU after each arm, so st(0)-in / st(0)-out leaves and their status flags are compared), c3fp 1
+(renderChannelStreamed, frame mapped by hand, X80 fade tail at both control words), c3fq 6 (Wave_Device freeBufferList /
+appendBuffer, create_sound, rewindChannel, ChannelTable_loadRange / releaseObject), c3fr 4 (showBuyLandScreen, narrateShot,
+GolferPanelEject (= hooks.csv drawGolferInfoPanel 0x0045c560), showCourseReport; 75 wrong bodies, all RED), c3fs 1
+(drawFlyingBall, c3ea's naked entry with the unwritten slot [F+0x14] seeded alike) and c3fu 11 (rows round 33 classed
+NO_OBSERVABLE / NO_CALLER that write globals, return a field or have a reference) promoted: 41 functions, C3 2,917 (exe 1,630, jgld 535, sound 604, Terrain 148). Main build: all 77 keys GREEN with
+every hook on and with other batches' hooked callees off; 143 existing C3 callers (708 keys) GREEN both ways (six
+announceBuilding keys and jgld_Random::range lost a boot and passed in 2-key boots); static 360 and runtime 19 pass.
+PATH C CLOSE-OUT: pointer_callers.py had skipped the range of every body of 5 bytes or less as a `jmp rel32` thunk, so
+endstate.py read real 1-5 byte functions as 0 bytes / 0 rets (return0Pop4, ListBox::Slot60, null_method, jpeg_mem_init); only E9
+bodies are skipped now and 8 rows were marked `trivial`. Every other row the batches did not take got a hold in
+re/c3_hold.tsv with its measured reason (123 held); `re_classify.py status --summary` now prints `C2 held` apart, so `C2 still
+open` means no end at all: 5 after this round, all named in round 35 and never offered (EditBox::onKey 0x004867b0, both
+__ArrayUnwind, sound dynInit_soundWindowObj100b49b8 / SoundWindowObj_ctor). Created in the master first (CreateFunctions.java):
+EditBox::onKey, dynInit_soundWindowObj100b49b8 0x100091c0, SoundWindowObj_ctor 0x10028600 (re/names/exe_16, sound_17). The two
+ehVectorCtor_finally funclets are held (they read their parent's frame). Gate pitfalls hit again: a stale CSV of a removed key
+(an ERROR) refused fillDecodeRing until deleted; a shared heading with `**Purpose (x):**` labels read as no-purpose
+(Midi_Device::loadFile / loadFromMemory, split into one `## 0x<rva>` section each). Held with measured reasons (path C):
+writeWaveChunk / B and writeWaveFileB (a full 10-vector run crashes the game after install, one vector never does, the arms never
+mismatch), loadSoundFile, jgld pow (naked x87 CRT with internal helpers), Voice::update (a full sequencer tick: its own batch),
+Wave_Device::open / start (real device, thread and timer: ~18 stubs), drawWorldObjects (per-call-site argument slots),
+netService / netSendMessages (SEH frame + alloca + in-frame dialog + COM + wsock32), the six x87 renderers in the table
+0x1005b830 that only an unreferenced constructor installs, and four functions called only from unreferenced code. Findings:
+renderChannelStreamed hangs its thread on an underrun at the read limit (0x10036782) or a segment switch with no second segment
+(0x10036792); create_sound maps `.aif` to the default case (0xb); ChannelTable_loadRange's release scan restarts at index 1;
+the MIDI loaders never check `MTrk`; showCourseReport's subtotal minutes are the last hole's time (0x00450b60); showBuyLandScreen
+prices a lot with no tile for sale at 50; resetSpriteQueue stores -1 into one dword 1,024 times. The C4 pilot c3ft is the
+next paragraph. The claude2 session that ran the round could not write the git index (don't-ask mode refuses `git add` /
+`git apply --cached`), so its commits were made from a claude3 session.
 C4 pilot c3ft (2026-10-14/15, notes log/c3/c3ft_notes.txt): `re/frida/scenario_ab.py` + agent `re/frida/js/scenario_det.js`
 run a canonical scenario on instances\c3ft with a hook set OFF and ON and compare, at fixed checkpoints, every .sve global
 (re/tools/sve.py FIELDS + both tail blocks), the RNG words 0x822d9c / 0x51b380 and the frame pixels. DETERMINISM: the main
@@ -628,6 +662,13 @@ ones witnessed). The C3 replay check does the same (calls summed); Project.diff_
 `<rva>_<stem>_` names (the Terrain tileAt replay was renamed). scripts/scoreboard.py keys evidence by (module, addr) from the
 file name and counts a kind only when all its CSVs are GREEN: 19 Terrain.dll rows had been credited with jgld / sound files.
 To promote: `re_classify.py promote <addr> --to C4 [--module m]`; the C2 rows propagateType11 / clearBuffers are refused.
+C4 BY MATCH (2026-10-15, approved by the user): the gate's other C4 evidence is a 100% VC6 match on top of C3. Only 316 match
+CSVs existed for 2,265 MATCH lines (bulk and test runs skip evidence), so log/c3/c4_match_regen.py re-ran re/tools/match.py
+over all 262 re/match/*.cpp (all rc 0, about a second each) and log/c3/c4_match_promote.py promoted every C3 row whose own
+module's match CSVs are all GREEN through `re_classify.py promote --to C4 --evidence <csv>` (the gate re-checks each and writes
+its CHANGELOG line): 1,889 promoted, C4 1,890 (exe 1,076, jgld 510, sound 155, Terrain 149), C3 1,028 left (1,020 without a
+match, 6 below 100%). Refused: flagSet 0x0049eef0 / flagIsSet 0x0049ef80, whose hooks.csv `file` names a source without their
+SG_HOOK (round 6's duplicate batch): point the column at the linked batch and re-run. The C3 rows left are the scenario route's.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

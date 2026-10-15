@@ -46,10 +46,12 @@ class Module:
             e = int(r["entry"], 16)
             e = e if name == "golf_clean.exe" or e >= 0x10000000 else e + self.base   # DLL tsv rows are VAs or RVAs
             self.entries[e] = r["name"]
-            if int(r["size"]) <= 5:
+            if int(r["size"]) <= 5 and self.img[e - self.base] == 0xE9:
+                # an incremental-link / tail thunk: index it by its target. Other bodies of 5 bytes or less (`ret`,
+                # `xor eax, eax; ret 4`) are real functions and keep their range (round 35: endstate.py read
+                # return0Pop4_487b00 as 0 bytes with 0 rets before this)
                 o = e - self.base
-                if self.img[o] == 0xE9:
-                    self.thunks.setdefault(e + 5 + struct.unpack("<i", self.img[o + 1:o + 5])[0], []).append(e)
+                self.thunks.setdefault(e + 5 + struct.unpack("<i", self.img[o + 1:o + 5])[0], []).append(e)
                 continue
             for rg in (r.get("ranges") or "").split(";"):
                 if "-" in rg:

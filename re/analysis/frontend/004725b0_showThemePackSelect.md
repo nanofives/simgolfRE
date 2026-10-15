@@ -105,7 +105,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x0047ab50 `View_toLocal` at 0x00472f0b
 - 0x00480c80 `Window::refreshFull` at 0x00472ee1, 0x0047300c, 0x004730f0
 - 0x00483d30 `enterModal483d30` at 0x00472c4f
-- 0x004a55d2 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x00472a37, 0x00472a5b
+- 0x004a55d2 `ehVectorConstructorIterator` at 0x00472a37, 0x00472a5b
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x004731e9, 0x0047323c, 0x0047328c, 0x004732ad
 - indirect `call ebx` at 0x004726ac, 0x00472749, 0x004727e6, 0x00472883, 0x00472920, 0x004729bd
 

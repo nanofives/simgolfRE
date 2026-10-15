@@ -424,8 +424,17 @@ def cmd_status(p: Project, a) -> int:
                    if r.get("status") in END_STATES)
     if ends:
         print("C2 end states: " + ", ".join(f"{m} {s}={n}" for (m, s), n in sorted(ends.items())))
-        open_c2 = sum(1 for r in rows.values() if r.get("confidence") == "C2" and r.get("status") not in END_STATES)
-        print(f"C2 still open: {open_c2}")
+        open_rows = [r for r in rows.values() if r.get("confidence") == "C2" and r.get("status") not in END_STATES]
+        # a row held by a verifier's judgement (re/c3_hold.tsv, with its measured reason) is path C's third end
+        # (re/C3_ENDGAME_PLAN.md); count it apart so "still open" means no end at all
+        hold_f = p.root / "re" / "c3_hold.tsv"
+        held = set()
+        if hold_f.exists():
+            for h in csv.DictReader(hold_f.open(encoding="utf-8"), delimiter="\t"):
+                held.add(((h.get("module") or "golf_clean.exe").lower(), norm_addr(h["addr"])))
+        n_held = sum(1 for r in open_rows if ((r.get("module") or "golf_clean.exe").lower(), norm_addr(r["addr"])) in held)
+        print(f"C2 held (re/c3_hold.tsv): {n_held}")
+        print(f"C2 still open: {len(open_rows) - n_held}")
     if not getattr(a, "summary", False):
         for r in sorted(rows.values(), key=lambda r: (r.get("module") or "", r["addr"])):
             print(f"  {r.get('module', ''):14} {r['addr']}  {r.get('confidence'):3}  {r.get('subsystem', ''):9} {r.get('name', '')}")

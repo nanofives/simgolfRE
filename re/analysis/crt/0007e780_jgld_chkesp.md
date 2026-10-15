@@ -4,7 +4,7 @@ Module `jgld.dll` (RVA `0x0007e780`), 56 bytes, 28 instructions, subsystem `crt`
 
 ## Role (from the naming pass, not a C3 purpose)
 VC6 debug runtime check: returns at once when the preceding compare set ZF (`jne` 0x1007e780 / `ret` 0x1007e782), otherwise reports through _CrtDbgReport 0x10081f90 (type 1, 0x1007e7a1) and breaks with int3 0x1007e7ae when that returns 1; called by every /GZ function of jgld.dll. (`re/names/jgld_9.tsv`)
-System writeup: `re/analysis/systems/jgld_9.md`.
+System writeup: `re/analysis/systems/jgld_10.md`, `re/analysis/systems/jgld_9.md`.
 
 ## Signature
 - Returns with `ret` (at 0x1007e782, 0x1007e7b7): callee pops 0 bytes of stack arguments.

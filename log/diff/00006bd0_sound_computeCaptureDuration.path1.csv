@@ -13,6 +13,6 @@ $d10,void,void,True,496e4398,496e4398,True
 $d11,void,void,True,4d6b5ecf,4d6b5ecf,True
 state_regions,$d0+0xb0:64 $d1+0xb0:64 $d2+0xb0:64 $d3+0xb0:64 $d4+0xb0:64 $d5+0xb0:64 $d6+0xb0:64 $d7+0xb0:64 $d8+0xb0:64 $d9+0xb0:64 $d10+0xb0:64 $d11+0xb0:64,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x70b9e910,original=0x35c0a20,2026-10-07T23:23:41
+meta,detour=0x62a9b800,original=0x4850320,2026-10-14T21:17:17
 distinct_results,11,,
 VERDICT,GREEN,12,

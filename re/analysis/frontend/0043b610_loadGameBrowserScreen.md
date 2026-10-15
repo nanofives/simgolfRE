@@ -136,7 +136,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00480b00 `fillWindowRect` at 0x0043bac8, 0x0043bc30
 - 0x00480c80 `Window::refreshFull` at 0x0043c32b, 0x0043c4c5, 0x0043c59e, 0x0043c964
 - 0x00483d30 `enterModal483d30` at 0x0043ca49, 0x0043cade
-- 0x004a55d2 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x0043b6ea
+- 0x004a55d2 `ehVectorConstructorIterator` at 0x0043b6ea
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x0043ca7b, 0x0043cb10
 - 0x004a64b8 `FUN_004a64b8` at 0x0043c79e
 - 0x004ad425 `__itoa` at 0x0043bcef, 0x0043bd4b, 0x0043bda4, 0x0043bea9, 0x0043bff0, 0x0043c048, 0x0043c09f, 0x0043c25b

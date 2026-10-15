@@ -1,24 +1,24 @@
 vector,original,reimpl,match,state_original,state_reimpl,state_changed
-$spA $d0 0 0,0,0,True,e6c6a195,e6c6a195,True
-$spA $d0 4 2,0,0,True,9af83e2e,9af83e2e,True
-$spA $d0 -3 -2,0,0,True,6b5a9605,6b5a9605,True
-$spA $d0 24 10,0,0,True,7f357165,7f357165,True
-$spA $d0 100 100,0,0,True,1b98cdd2,1b98cdd2,False
-$spA $d0 -20 0,0,0,True,1b98cdd2,1b98cdd2,False
-$spA $d1 0 0,0,0,True,b459bec5,b459bec5,True
-$spA $d2 0 0,0,0,True,02bb45f4,02bb45f4,True
-$spA $d3 0 0,1,1,True,1b98cdd2,1b98cdd2,False
-$spA $d4 0 0,3,3,True,1b98cdd2,1b98cdd2,False
-$spNB $d0 0 0,3,3,True,1b98cdd2,1b98cdd2,False
-$spA 0 0 0,3,3,True,1b98cdd2,1b98cdd2,False
-$spNP $d0 0 0,0,0,True,4b692745,4b692745,True
-$spB $d0 0 0,0,0,True,f4327500,f4327500,True
-$spD $d0 5 5,0,0,True,71f6779d,71f6779d,True
-$spA $d0 31 0,0,0,True,732daa1a,732daa1a,True
-$spA $d0 0 15,0,0,True,052b5897,052b5897,True
-$spA $d5 0 0,0,0,True,5473858d,5473858d,True
+$spA $d0 0 0,0,0,True,01d856c5,01d856c5,True
+$spA $d0 4 2,0,0,True,de5c5852,de5c5852,True
+$spA $d0 -3 -2,0,0,True,bcef7fd5,bcef7fd5,True
+$spA $d0 24 10,0,0,True,7020ef35,7020ef35,True
+$spA $d0 100 100,0,0,True,442451c6,442451c6,False
+$spA $d0 -20 0,0,0,True,442451c6,442451c6,False
+$spA $d1 0 0,0,0,True,ed7d8315,ed7d8315,True
+$spA $d2 0 0,0,0,True,e67da378,e67da378,True
+$spA $d3 0 0,1,1,True,442451c6,442451c6,False
+$spA $d4 0 0,3,3,True,442451c6,442451c6,False
+$spNB $d0 0 0,3,3,True,442451c6,442451c6,False
+$spA 0 0 0,3,3,True,442451c6,442451c6,False
+$spNP $d0 0 0,0,0,True,848ceb95,848ceb95,True
+$spB $d0 0 0,0,0,True,9a4d7d14,9a4d7d14,True
+$spD $d0 5 5,0,0,True,fc685bad,fc685bad,True
+$spA $d0 31 0,0,0,True,0ff5056e,0ff5056e,True
+$spA $d0 0 15,0,0,True,e2cade57,e2cade57,True
+$spA $d5 0 0,0,0,True,f7360d7d,f7360d7d,True
 state_regions,$pix+0x0:24576 $spr+0x0:640 $l0+0x0:20 $l1+0x0:20 $l2+0x0:20 $l3+0x0:20 $l4+0x0:20 $l5+0x0:20 $gflat+0x0:4 $gvstep+0x0:8 $gtbl+0x0:4 $gpos+0x0:8 $gcols+0x0:8 $gxstep+0x0:20 $growpair+0x0:8,,
 install_witness,0xe9,0xe9,True
-meta,detour=0x62b48880,original=0x3c40020,2026-10-14T15:14:37
+meta,detour=0x62b39010,original=0x3c60d80,2026-10-14T21:18:03
 distinct_results,15,,
 VERDICT,GREEN,18,

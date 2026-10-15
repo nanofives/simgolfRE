@@ -135,7 +135,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - 0x00482fd0 `Cache482fd0::ctor` at 0x0046f5a4
 - 0x00483010 `Cache483010::dtor` at 0x004708d0, 0x0047097d
 - 0x00483d30 `enterModal483d30` at 0x0047089e, 0x0047094b
-- 0x004a55d2 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x0046f58d
+- 0x004a55d2 `ehVectorConstructorIterator` at 0x0046f58d
 - 0x004a5713 `??_M@YGXPAXIHP6EX0@Z@Z` at 0x004708ee, 0x0047099b
 - 0x004ad425 `__itoa` at 0x0046fb91, 0x0046fe30, 0x0046fed0, 0x0046ff4c, 0x0047053d
 - indirect `jmp [eax*4+0x4709bc]` at 0x0046fcba

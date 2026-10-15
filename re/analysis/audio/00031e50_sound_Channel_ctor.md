@@ -70,7 +70,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 ## Callees
 - 0x10001e51 -> 0x100326a0 `parseRiffWave` (incremental-linking thunk) at 0x10031fa3
 - 0x10001efb -> 0x10035460 `Channel_recomputeVoiceGains` (incremental-linking thunk) at 0x10031f40
-- 0x10042902 `??_L@YGXPAXIHP6EX0@Z1@Z` at 0x10031e87
+- 0x10042902 `ehVectorConstructorIterator` at 0x10031e87
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.
