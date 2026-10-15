@@ -1,0 +1,21 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o0 $out0 $n0 $sz0 $wr0,38,38,True,5c2f0bc3,5c2f0bc3,True
+$o1 $out1 $n1 $sz1 $wr1,38,38,True,ba70e357,ba70e357,True
+$o2 $out2 $n2 $sz2 $wr2,0,0,True,2a2ae3e6,2a2ae3e6,True
+$o3 $out3 $n3 $sz3 $wr3,0,0,True,0822a89d,0822a89d,True
+$o4 $out4 $n4 $sz4 $wr4,0,0,True,1f90175b,1f90175b,True
+$o5 $out5 $n5 $sz5 $wr5,0,0,True,8aa8a509,8aa8a509,True
+$o6 $out6 $n6 $sz6 $wr6,38,38,True,e9c98415,e9c98415,True
+$o7 $out7 $n7 $sz7 $wr7,38,38,True,66fdaf48,66fdaf48,True
+$o8 $out8 $n8 $sz8 $wr8,0,0,True,f426da59,f426da59,True
+$o9 $out9 $n9 $sz9 $wr9,0,0,True,2079cc52,2079cc52,True
+$o10 $out10 $n10 $sz10 $wr10,0,0,True,f6cb72ad,f6cb72ad,True
+$o11 $out11 $n11 $sz11 $wr11,0,0,True,50eff572,50eff572,True
+$o12 $out12 $n12 $sz12 $wr12,38,38,True,80b8b0d2,80b8b0d2,True
+$o13 $out13 $n13 $sz13 $wr13,0,0,True,9624c21d,9624c21d,True
+$o14 $out14 $n14 $sz14 $wr14,0,0,True,51235a62,51235a62,True
+state_regions,$objs+0x0:3840 $st+0x0:15360 $snodes+0x0:960 $outs+0x0:4800 $wrs+0x0:60 $log+0x0:1024 $gdevp+0x0:4 $gmmio+0x0:4 $glist+0x0:16 $onodes+0x0:256 $mmblock+0x0:32768 $implog+0x0:1024 $arena+0x0:272 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62a79df0,original=0x3c608e0,2026-10-14T20:56:03
+distinct_results,15,,
+VERDICT,GREEN,15,

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00035ca0`), 551 bytes, 142 instructions, subsystem `a
 closes an open sound: mmioClose on the handle at obj+0x44, frees the MMIO buffer via 0x10042c07, decrements the open-stream count g_100b4a08 and unlinks it from list g_100b49c8 (`re/names/sound_1.tsv`)
 System writeup: `re/analysis/systems/sound_1.md`.
 
+## Purpose
+Retires a streaming sound's pending decode-stream record and hands its state back to a reusable voice, for renderChannelStreamed 0x10036660. It closes the record S = this+0x1390's HMMIO S+0x44 (mmioClose 0x10035cba), frees its buffer S+0x18 (free 0x10035cc1), lowers g_openMmioCount (0x10035cd5), unlinks S's node from g_openSoundList (0x10035ce1-0x10035d42). With the voice V = S+0xb4 set (0x10035d49): when this+0x58 bit 3 is set it copies S's bit 4 and the doubles S+0xf0 / S+0x58 into V, calls Voice_setPanGains 0x10037f30 with this+0x224, and sets V's byte +0x9c bit 3 when neither double is 0.0 or a NaN (`fcomp` [0x1005b498] = 0.0, C3 for equal / unordered, 0x10035db3-0x10035dd1) else bit 2 with +0x94 bit 0 cleared and +0xe4 = 0; with bit 3 clear it instead copies fourteen fields of this into V (0x10035e0b-0x10035e98). Then S is freed (operator delete 0x10035ea6), this+0x1390 = V and this+0x1398 lowered. Returns 0. Reimplemented in `shim/src/re/c3fn.cpp`; path-1 A/B GREEN: closeMmioSound (12 vectors, 12 distinct results, 12 changing state, `log/diff/00035ca0_sound_closeMmioSound.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10035ec6): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10035ca3 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

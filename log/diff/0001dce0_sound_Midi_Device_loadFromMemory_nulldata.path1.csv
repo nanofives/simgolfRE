@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$o0 $n0,18,18,True,68d3f3bc,68d3f3bc,True
+$o1 $n1,9,9,True,6696f9ff,6696f9ff,True
+$o2 $n2,0,0,True,58f67b64,58f67b64,True
+$o3 $n3,0,0,True,ffbd6b9a,ffbd6b9a,True
+$o4 $n4,0,0,True,85c55e25,85c55e25,True
+$o5 $n5,0,0,True,c007e1b8,c007e1b8,True
+$o6 $n6,0,0,True,f66a4627,f66a4627,True
+$o7 $n7,0,0,True,e47b4bb7,e47b4bb7,True
+$o8 $n8,0,0,True,3850b8b2,3850b8b2,True
+$o9 $n9,0,0,True,bd1c0bfd,bd1c0bfd,True
+$o10 $n10,0,0,True,c7fde460,c7fde460,True
+$o11 $n11,0,0,True,4f370fda,4f370fda,True
+state_regions,$objs+0x0:15360 $names+0x0:384 $rnodes+0x0:768 $membufs+0x0:2048 $log+0x0:1024 $gmmio+0x0:4 $mmblock+0x0:32768 $implog+0x0:1024 $arena+0x0:12304 $freelog+0x0:1028,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62989780,original=0x3b20840,2026-10-14T20:55:46
+distinct_results,12,,
+VERDICT,GREEN,12,

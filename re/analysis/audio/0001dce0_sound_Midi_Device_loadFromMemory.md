@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001dce0`), 857 bytes, 276 instructions, subsystem `a
 Parses a Standard MIDI File from an in-memory mmio buffer (MThd/MTrk). (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Midi_Device::loadFile 0x1001d810's work from a memory mmio file the caller already opened (Midi_loadMemoryAndPreRoll 0x10020360): the handle is stored at this+0 and its info read with mmioGetInfo (0x1001dd60), no open and no g_openMmioCount change; per track the data is read before it is attached and scanned once (no second scan), and the reader with the largest +0x54 - the first, and any later one above it - is kept in this+0x1ac (0x1001dff8). Returns 0. Reimplemented in `shim/src/re/c3fn.cpp`; path-1 A/B GREEN: Midi_Device::loadFromMemory (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001dce0_sound_Midi_Device_loadFromMemory.path1.csv`); Midi_Device::loadFromMemory_nulldata (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001dce0_sound_Midi_Device_loadFromMemory_nulldata.path1.csv`); Midi_Device::loadFromMemory_nodeoom (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001dce0_sound_Midi_Device_loadFromMemory_nodeoom.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001e036): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001dd05 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
