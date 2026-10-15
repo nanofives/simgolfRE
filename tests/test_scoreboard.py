@@ -59,6 +59,33 @@ def test_red_evidence_counts_for_nothing(tree):
     assert by_addr(sb.build(tree))["00402000"]["verification"] == 0
 
 
+def test_a_red_key_cancels_its_kind(tree):
+    # like the gate: one RED path-1 key among GREEN ones means the path-1 evidence does not count
+    (tree / "log" / "diff" / "00402000_Dead_b.path1.csv").write_text("vector,o,r,m\n1,1,2,False\nVERDICT,RED,1,\n")
+    assert by_addr(sb.build(tree))["00402000"]["verification"] == 0
+
+
+def test_replay_calls_sum_over_files(tree):
+    rows = "\n".join(f"{i},{i},{i},True" for i in range(60))
+    for k in ("a", "b"):
+        (tree / "log" / "diff" / f"00403000_Live_{k}.replay.csv").write_text(f"vector,o,r,m\n{rows}\nVERDICT,GREEN,60,\n")
+    (tree / "log" / "diff" / "00403000_Live.replay.csv").unlink()
+    assert by_addr(sb.build(tree))["00403000"]["verification"] == 2      # 60 + 60 >= REPLAY_MIN
+
+
+def test_dll_evidence_counts_only_for_its_module(tree):
+    # the three DLLs share base 0x10000000: a jgld CSV at a Terrain function's RVA is not that function's evidence
+    (tree / "re" / "functions_ghidra_Terrain.dll.tsv").write_text("entry\tname\tsize\tcallers\tcallees\n00001d50\tFUN_10001d50\t50\t1\t0\n")
+    d = tree / "log" / "diff"
+    (d / "00001d50_jgld_Other.match.csv").write_text("x\nVERDICT,GREEN,1,\n")
+    (d / "00001d50_TerrainDll_untagged.match.csv").write_text("x\nVERDICT,GREEN,1,\n")   # no module stem: not attributed
+    terrain = [r for r in sb.build(tree) if r["module"] == "Terrain.dll"][0]
+    assert terrain["verification"] == 0
+    (d / "00001d50_Terrain_tileAt.path1.csv").write_text("vector,o,r,m\n1,1,1,True\nVERDICT,GREEN,1,\n")
+    terrain = [r for r in sb.build(tree) if r["module"] == "Terrain.dll"][0]
+    assert terrain["verification"] == 1 and terrain["evidence"].endswith("00001d50_Terrain_tileAt.path1.csv")
+
+
 def test_unknown_reach_without_coverage(tree):
     (tree / "re" / "coverage" / "sandbox_basic.tsv").unlink()
     assert {r["reach"] for r in sb.build(tree)} == {"?"}

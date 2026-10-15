@@ -1,0 +1,17 @@
+checkpoint,off,on,match
+sandbox T=6868,state=d88243156ac59c11 frame=3bc604550ae76f3f,state=d88243156ac59c11 frame=3bc604550ae76f3f,True
+hole_open T=20705,state=882ea649c45d5f6d frame=45c4e947859f5d07,state=882ea649c45d5f6d frame=45c4e947859f5d07,True
+season_060 T=81406,state=f109537e63eaf68d frame=e14d18a1e1e24636,state=f109537e63eaf68d frame=e14d18a1e1e24636,True
+season_120 T=142107,state=a513b1c49a737c5a frame=13a4b69490d98171,state=a513b1c49a737c5a frame=13a4b69490d98171,True
+season_180 T=202808,state=b5ca99eb112f2fcf frame=e57d8c43acbba948,state=b5ca99eb112f2fcf frame=e57d8c43acbba948,True
+season_240 T=263509,state=b7544208aa32af62 frame=df82b588705df0b7,state=b7544208aa32af62 frame=df82b588705df0b7,True
+season_300 T=324210,state=8373288fdb3f224f frame=cb236a98dbd3252b,state=8373288fdb3f224f frame=cb236a98dbd3252b,True
+season_360 T=384911,state=a4b630e6eea223a5 frame=86c87fde2c77449b,state=a4b630e6eea223a5 frame=86c87fde2c77449b,True
+season_420 T=445612,state=60ca75a5df46beeb frame=ee752b5eee346b98,state=60ca75a5df46beeb frame=ee752b5eee346b98,True
+season_480 T=506313,state=aa30b8d7d8c27a5c frame=889564e003e254a8,state=aa30b8d7d8c27a5c frame=889564e003e254a8,True
+season_540 T=567014,state=7a1d21f6378c078f frame=2305a4927dc5bfdf,state=7a1d21f6378c078f frame=2305a4927dc5bfdf,True
+season_600 T=627715,state=6c06916aec9faceb frame=b110f6dcf5fd9084,state=6c06916aec9faceb frame=b110f6dcf5fd9084,True
+install_witness,0xe9,0xe9,True
+meta,scenario=course_season hooks_on=2886 tag=all,reach_on=8 other_threads=0 (armed) reach_off=8 other_threads=0 (armed) off_byte=0x53,2026-10-15T00:35:20
+meta,off=log/c3/alt/c3ft/course_season/ab_all_off,on=log/c3/alt/c3ft/course_season/ab_all_on,clock=virtual step 1 ms poll 100 ms
+VERDICT,GREEN,12,

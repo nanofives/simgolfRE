@@ -222,6 +222,70 @@ def test_dll_path1_csvs_are_per_module(tmp_path):
     assert [x.name for x in p.diff_csvs("000072b0", "path1", "sound.dll")] == ["000072b0_sound_Other.path1.csv"]
 
 
+SCEN_GREEN = ("checkpoint,off,on,match\nmenu T=1,state=a,state=a,True\ninstall_witness,0xe9,0xe9,True\n"
+              "VERDICT,GREEN,1,\n")
+
+
+def _c4_gate(root, module, addr):
+    """The C4 evidence gate line alone (the scenario / match check) for a minimal row."""
+    row = {"addr": addr, "module": module, "confidence": "C3"}
+    hits = [(ok, desc) for ok, desc in rc.gates(rc.Project(root), row, "C4", None) if desc.startswith("scenario ON/OFF")]
+    assert len(hits) == 1
+    return hits[0][0]
+
+
+def test_c4_scenario_csvs_are_per_module(tmp_path):
+    # G1 (c3ft): a GREEN jgld scenario CSV must not pass a sound.dll row at the same RVA
+    d = tmp_path / "log" / "diff"
+    d.mkdir(parents=True)
+    (d / "000072b0_jgld_LinkedList_find_sandbox_basic.scenario.csv").write_text(SCEN_GREEN)
+    assert _c4_gate(tmp_path, "jgld.dll", "000072b0")
+    assert not _c4_gate(tmp_path, "sound.dll", "000072b0")
+    (d / "000072b0_sound_Other_sandbox_basic.scenario.csv").write_text(SCEN_GREEN.replace("GREEN", "RED"))
+    assert not _c4_gate(tmp_path, "sound.dll", "000072b0") and _c4_gate(tmp_path, "jgld.dll", "000072b0")
+    # the 100% match path is per module too
+    (d / "000072b0_Terrain_Third.match.csv").write_text("x\nVERDICT,GREEN,1,\n")
+    assert _c4_gate(tmp_path, "Terrain.dll", "000072b0") and not _c4_gate(tmp_path, "sound.dll", "000072b0")
+
+
+def test_c4_reads_every_scenario_csv(tmp_path):
+    # G2 (c3ft): one CSV per scenario; a RED one is not hidden by a GREEN one that sorts first, and each needs its witness
+    d = tmp_path / "log" / "diff"
+    d.mkdir(parents=True)
+    (d / "00401000_Foo_course_season.scenario.csv").write_text(SCEN_GREEN)
+    assert _c4_gate(tmp_path, "golf_clean.exe", "00401000")
+    red = d / "00401000_Foo_sandbox_basic.scenario.csv"
+    red.write_text(SCEN_GREEN.replace("GREEN", "RED"))
+    assert not _c4_gate(tmp_path, "golf_clean.exe", "00401000")
+    red.write_text(SCEN_GREEN.replace("0xe9,True", "0x55,False"))      # GREEN rows but no install witness
+    assert not _c4_gate(tmp_path, "golf_clean.exe", "00401000")
+    red.write_text(SCEN_GREEN)
+    assert _c4_gate(tmp_path, "golf_clean.exe", "00401000")
+
+
+def _replay_gate(root, module, addr):
+    """The C3 'verified' gate line alone (path-1 or replay) for a minimal row."""
+    row = {"addr": addr, "module": module, "confidence": "C2"}
+    hits = [ok for ok, desc in rc.gates(rc.Project(root), row, "C3", None) if desc.startswith("verified:")]
+    assert len(hits) == 1
+    return hits[0]
+
+
+def test_c3_replay_csvs_are_per_module_and_summed(tmp_path):
+    d = tmp_path / "log" / "diff"
+    d.mkdir(parents=True)
+    calls = lambda n, v="GREEN": ("call,live,o,r,match\n" + "".join(f"{i},1,1,1,True\n" for i in range(n))  # noqa: E731
+                                  + f"install_witness,0xe9,0xe9,True\nVERDICT,{v},{n},\n")
+    (d / "00001d50_jgld_Other.replay.csv").write_text(calls(150))
+    assert not _replay_gate(tmp_path, "Terrain.dll", "00001d50")      # another module's replay is not evidence
+    (d / "00001d50_Terrain_a.replay.csv").write_text(calls(60))
+    assert not _replay_gate(tmp_path, "Terrain.dll", "00001d50")      # 60 < REPLAY_MIN
+    (d / "00001d50_Terrain_b.replay.csv").write_text(calls(60))
+    assert _replay_gate(tmp_path, "Terrain.dll", "00001d50")          # 60 + 60 summed
+    (d / "00001d50_Terrain_c.replay.csv").write_text(calls(5, "RED"))
+    assert not _replay_gate(tmp_path, "Terrain.dll", "00001d50")      # a RED replay fails the kind
+
+
 def test_dll_caller_va_is_matched_to_rva_row(proj):
     # callers of DLL functions are recorded as VAs (0x10006b80); the tracked row is keyed by RVA (00006b80)
     rows = {("jgld.dll", "00006b80"): {"addr": "00006b80", "module": "jgld.dll", "confidence": "C2", "name": "Tracked::dtor"}}

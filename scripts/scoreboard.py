@@ -9,7 +9,9 @@ Axes (0..3 each), all computed from evidence on disk; nothing is hand-entered:
                      0 never seen, 1 one phase, 2 two phases, 3 three or more phases.
                      "?" when no coverage file exists yet (treated as 0 for priority).
   Understanding (U)  from hooks.csv confidence: C0=0, C1=1, C2=2, C3/C4=3.
-  Verification (V)   strongest GREEN evidence in log/diff/ (or a reccmp match report):
+  Verification (V)   strongest GREEN evidence in log/diff/ (or a reccmp match report), per (module, addr): a DLL
+                     file counts only for its own module (<rva>_jgld_ / _sound_ / _Terrain_), and a kind counts only
+                     when every CSV of that kind for the function is GREEN (the gate's rule):
                      0 none
                      1 path1    hand-picked A/B vectors (diff_hook.py)
                      2 replay   >= REPLAY_MIN recorded real calls replayed in Unicorn (replay.py),
@@ -44,20 +46,44 @@ def verdict(path: pathlib.Path) -> tuple[bool, int]:
     return bool(v and v[1] == "GREEN"), n
 
 
-def verification(root: pathlib.Path) -> dict[str, tuple[int, str]]:
-    """addr -> (level, evidence file). Highest GREEN level wins."""
-    out: dict[str, tuple[int, str]] = {}
+DLL_STEMS = {"jgld": "jgld.dll", "sound": "sound.dll", "Terrain": "Terrain.dll"}
+
+
+def evidence_module(name: str) -> str | None:
+    """The module a log/diff file belongs to: golf_clean.exe for a VA (>= 0x00400000); for a DLL RVA the stem after the
+    address (<rva>_jgld_..., <rva>_sound_..., <rva>_Terrain_...), since the three DLLs share base 0x10000000 and their
+    RVAs collide. None for a DLL-range file without a stem (it cannot be attributed)."""
+    addr, rest = name.split("_", 1)
+    if int(addr, 16) >= 0x00400000:
+        return "golf_clean.exe"
+    return DLL_STEMS.get(rest.split("_", 1)[0])
+
+
+def verification(root: pathlib.Path) -> dict[tuple[str, str], tuple[int, str]]:
+    """(module, addr) -> (level, evidence file). Read like scripts/re_classify.py's gates: an evidence kind counts only
+    when EVERY CSV of that kind for the function is GREEN (one per registry key / scenario; replay calls summed over
+    them), and only the function's own module's files are read. The highest such level wins."""
+    out: dict[tuple[str, str], tuple[int, str]] = {}
     d = root / "log" / "diff"
     if not d.exists():
         return out
-    for f in d.glob("*.csv"):
-        addr, kind = f.name.split("_", 1)[0], f.name.rsplit(".", 2)[-2]
-        green, n = verdict(f)
-        if not green:
+    groups: dict[tuple[str, str, str], list[pathlib.Path]] = {}
+    for f in sorted(d.glob("*.csv")):
+        try:
+            mod = evidence_module(f.name)
+        except ValueError:
             continue
+        if mod is None:
+            continue
+        groups.setdefault((mod, f.name.split("_", 1)[0], f.name.rsplit(".", 2)[-2]), []).append(f)
+    for (mod, addr, kind), files in groups.items():
+        results = [verdict(f) for f in files]
+        if not all(g for g, _ in results):
+            continue
+        n = sum(k for _, k in results)
         level = {"path1": 1, "replay": 2 if n >= REPLAY_MIN else 1, "match": 3, "proof": 2, "scenario": 3}.get(kind, 0)
-        if level > out.get(addr, (0, ""))[0]:
-            out[addr] = (level, f.relative_to(root).as_posix())
+        if level > out.get((mod, addr), (0, ""))[0]:
+            out[(mod, addr)] = (level, files[0].relative_to(root).as_posix())
     return out
 
 
@@ -94,7 +120,7 @@ def build(root: pathlib.Path = ROOT) -> list[dict]:
             r = min(len(seen), 3) if have_cov else None
             h = hooks.get((mod, a), {})
             u = C_TO_U.get(h.get("confidence") or "C0", 0)
-            v, ev = ver.get(a, (0, ""))
+            v, ev = ver.get((mod, a), (0, ""))
             rows.append({
                 "module": mod, "addr": a, "name": h.get("name") or f["name"], "size": int(f["size"]),
                 "reach": "?" if r is None else r, "understanding": u, "verification": v,

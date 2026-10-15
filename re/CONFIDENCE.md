@@ -69,9 +69,12 @@ A marked row is still C2 for every count; `re_classify.py status` lists the end 
 
 ### C3 Understood
 - Purpose stated with citations, faithful reimplementation hooked and toggleable, path-1 GREEN.
-- **To C4:** a **canonical-scenario** run with the hook live (`log/diff/<addr>_<name>.scenario.csv`,
-  `VERDICT,GREEN`, install witness row) comparing hook ON vs OFF on observable game state, and no
-  `STUB` marker in the function body.
+- **To C4:** a **canonical-scenario** run with the hook live (`log/diff/<addr>_[<stem>_]<name>_<scenario>.scenario.csv`
+  from `re/frida/scenario_ab.py`, `VERDICT,GREEN`, install witness row) comparing hook ON vs OFF on observable game
+  state, and no `STUB` marker in the function body. The gate reads EVERY scenario CSV of the function in its own module
+  (DLL files carry the module stem after the RVA) and wants all of them GREEN and witnessed; the 100% match alternative
+  is read the same way (2026-10-15: before, the first `<addr>_*` file of any module was read, so a jgld CSV could pass a
+  sound.dll row at the same RVA and a GREEN scenario could hide a RED one).
 
 ### C4 Verified
 - Canonical reference; lower-confidence callers may lean on it.
@@ -96,6 +99,8 @@ C3 "verified" accepts either a GREEN path-1 A/B or a GREEN **replay** of >= 100 
 reimplementation on the exact memory the game had, checked three ways (live result == emulated
 original == reimplementation) plus write sets and stack cleanup. Replay covers what the game
 actually does; path-1 covers the extremes the game never produces. Use both when both are cheap.
+Like path-1, replay CSVs are read per module (`<rva>_<stem>_<name>.replay.csv` for a DLL) and all of a function's
+replay CSVs must be GREEN, their calls summed; `scripts/scoreboard.py` reads every evidence kind the same way.
 Precedent: Terrain.dll `0x00001d50` `Terrain::tileAt`, C3 on 2000 replayed calls (2026-10-02).
 
 ## NO-GUESSING (deterministic RE)

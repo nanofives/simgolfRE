@@ -11,7 +11,8 @@ captured around pointer inputs). Three-way check per call:
 Reads outside the captured state are reported, not hidden: they name exactly what the next recording
 has to capture (that failure is information).
 
-Writes log/diff/<addr>_<name>.replay.csv ending in VERDICT; GREEN needs all three checks on every call.
+Writes log/diff/<addr>_[<stem>_]<name>.replay.csv (DLL: <rva>_Terrain_..., <rva>_jgld_...) ending in VERDICT; GREEN
+needs all three checks on every call.
 """
 from __future__ import annotations
 
@@ -105,7 +106,11 @@ def replay(name: str, out_dir: pathlib.Path | None = None, wrong_stub: bytes | N
     m = b.meta
     out_dir = out_dir or ROOT / "log" / "diff"
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"{m['addr']:08x}_{name}.replay.csv"
+    # DLL replays carry the module stem after the RVA (<rva>_Terrain_<name>), the scheme every log/diff CSV uses: the
+    # three DLLs share base 0x10000000 and the gate reads a DLL row's CSVs by that stem
+    mod = m.get("module") or "golf_clean.exe"
+    tag = "" if mod.lower() == "golf_clean.exe" else mod.rsplit(".", 1)[0] + "_"
+    path = out_dir / f"{m['addr']:08x}_{tag}{name}.replay.csv"
     bad = {"fidelity": 0, "equivalence": 0, "side_effects": 0, "stack": 0, "misses": 0}
     miss_examples = []
     with path.open("w", newline="") as f:

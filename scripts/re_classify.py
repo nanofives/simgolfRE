@@ -116,14 +116,11 @@ class Project:
             return set()
         return set(re.findall(r"\|\s*(U-\d{4})\s*\|", self.uncert.read_text()))
 
-    def diff_csv(self, addr: str, name: str, kind: str) -> pathlib.Path | None:
-        hits = sorted(self.diff_dir.glob(f"{addr}_*.{kind}.csv")) if self.diff_dir.exists() else []
-        return hits[0] if hits else None
-
     def diff_csvs(self, addr: str, kind: str, module: str = "golf_clean.exe") -> list[pathlib.Path]:
-        """Every CSV of one function. DLL RVAs collide across jgld.dll / sound.dll / Terrain.dll, so a DLL's CSVs carry
-        its stem after the address (<rva>_jgld_<key>, as diff_hook.py writes them); exe VAs (>= 0x401000) cannot
-        collide with DLL RVAs."""
+        """Every CSV of one function, for every evidence kind (path1, replay, scenario, match). DLL RVAs collide across
+        jgld.dll / sound.dll / Terrain.dll, so a DLL's CSVs carry its stem after the address (<rva>_jgld_<key>, as
+        diff_hook.py, replay.py, scenario_ab.py and match.py write them); exe VAs (>= 0x401000) cannot collide with DLL
+        RVAs. (An address-only diff_csv lookup was removed on 2026-10-15: it read another module's file for a DLL row.)"""
         if not self.diff_dir.exists():
             return []
         if (module or "golf_clean.exe").lower() == "golf_clean.exe":
@@ -215,12 +212,14 @@ def gates(p: Project, row: dict, target: str, args) -> list[tuple[bool, str]]:
         ds = p.diff_csvs(addr, "path1", row.get("module") or "golf_clean.exe")
         d = ds[0] if ds else None
         info = read_path1(ds)
-        rp = p.diff_csv(addr, row.get("name", ""), "replay")
-        rinfo = read_diff(rp) if rp else None
+        # replay CSVs are read like path-1: this module's only (a DLL's carry its stem after the RVA), all GREEN, calls summed
+        rps = p.diff_csvs(addr, "replay", row.get("module") or "golf_clean.exe")
+        rp = rps[0] if rps else None
+        rinfo = read_path1(rps)
         replay_ok = bool(rinfo and rinfo["green"] and rinfo["vectors"] >= REPLAY_MIN)
         res.append((bool(info and info["green"]) or replay_ok,
                     f"verified: path-1 A/B GREEN ({(d.name + (f' +{len(ds) - 1} keys' if len(ds) > 1 else '')) if d else 'none'}) or replay GREEN >= {REPLAY_MIN} real calls "
-                    f"({rp.name + ': ' + str(rinfo['vectors']) if rp else 'none'})"))
+                    f"({(rp.name + (f' +{len(rps) - 1}' if len(rps) > 1 else '') + ': ' + str(rinfo['vectors'])) if rp else 'none'})"))
         res.append((bool(info and info["witness"]) or bool(rinfo and rinfo["witness"]),
                     "install witness (0xE9 at the address, hook live in-process) recorded in an A/B or replay CSV"))
         res += anti_island(p, row, info if (info and info["green"]) else rinfo)
@@ -230,13 +229,19 @@ def gates(p: Project, row: dict, target: str, args) -> list[tuple[bool, str]]:
     if target == "C4":
         # Either: the game with the hook live behaves the same (scenario ON/OFF), or the decompiled source
         # recompiles with the original compiler to the original instructions (100% match, re/tools/match.py).
-        d = p.diff_csv(addr, row.get("name", ""), "scenario")
-        info = read_diff(d) if d else None
-        m = p.diff_csv(addr, row.get("name", ""), "match")
-        minfo = read_diff(m) if m else None
+        # Both are read like path-1: every CSV of THIS module's function (a DLL's carry its stem after the address, so
+        # a jgld CSV is never read for a sound.dll row at the same RVA), all GREEN; a scenario CSV per canonical scenario
+        # (re/frida/scenario_ab.py writes <addr>_[<stem>_]<name>_<scenario>.scenario.csv), each with its install witness,
+        # so a RED in one scenario is never hidden by a GREEN one that sorts first (both found by c3ft, 2026-10-14).
+        mod = row.get("module") or "golf_clean.exe"
+        ss = p.diff_csvs(addr, "scenario", mod)
+        info = read_path1(ss)
+        ms = p.diff_csvs(addr, "match", mod)
+        minfo = read_path1(ms)
         res.append((bool(info and info["green"] and info["witness"]) or bool(minfo and minfo["green"]),
-                    f"scenario ON/OFF GREEN with install witness ({d.name if d else 'none'}) or 100% match with "
-                    f"the original compiler ({m.name if m else 'none'})"))
+                    f"scenario ON/OFF GREEN with install witness in every scenario CSV "
+                    f"({(ss[0].name + (f' +{len(ss) - 1}' if len(ss) > 1 else '')) if ss else 'none'}) or 100% match "
+                    f"with the original compiler ({(ms[0].name + (f' +{len(ms) - 1}' if len(ms) > 1 else '')) if ms else 'none'})"))
         src = p.root / row.get("file", "") if row.get("file") else None
         res.append((bool(src and src.is_file() and "STUB" not in src.read_text()), "no STUB marker in the reimplementation"))
     return res
@@ -319,9 +324,9 @@ def cmd_check(p: Project, a, write: bool, rows: dict | None = None, quiet: bool 
     ds = p.diff_csvs(addr, "path1", mod)
     if ds:
         row["frida_diff"] = ds[0].relative_to(p.root).as_posix()
-    s = p.diff_csv(addr, row.get("name", ""), "scenario")
-    if s:
-        row["scenario"] = s.relative_to(p.root).as_posix()
+    ss = p.diff_csvs(addr, "scenario", mod)
+    if ss:
+        row["scenario"] = ss[0].relative_to(p.root).as_posix()
     rows[(mod, addr)] = row
     ev = row.get("frida_diff") if a.to == "C3" else (row.get("scenario") if a.to == "C4" else row.get("note") or row.get("notes"))
     where = addr if mod == "golf_clean.exe" else f"{mod}:{addr}"

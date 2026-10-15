@@ -599,6 +599,35 @@ flags of `cmp edx, 0` and always stores the loaded sample as the integer positio
 multiplies a freshly zeroed +0x720; Wave_Device::dispatchCommand kind 4 reads o+0x44 before its NULL test; _xtoa never ends for
 radix 1; jgld fclose dereferences a NULL stream after reporting it; Cache482f60::dtor's second pass can never run; showLoadingScreen
 frees its frame Surface twice; netHandleControl leaves slot 15 duplicated when it removes a peer.
+C4 pilot c3ft (2026-10-14/15, notes log/c3/c3ft_notes.txt): `re/frida/scenario_ab.py` + agent `re/frida/js/scenario_det.js`
+run a canonical scenario on instances\c3ft with a hook set OFF and ON and compare, at fixed checkpoints, every .sve global
+(re/tools/sve.py FIELDS + both tail blocks), the RNG words 0x822d9c / 0x51b380 and the frame pixels. DETERMINISM: the main
+thread's timeGetTime (exe, sound.dll, binkw32 slots) and QPC (jgld, binkw32) point at native stubs that return a virtual clock
+advanced 1 ms per call (other threads get real time); a stub that finds T >= due calls JS on the main thread, which runs input
+(SetVirtualCursor / SetVirtualKey / PostMessageW, all from the main thread), the exe's SetTimer / timeSetEvent family stood in
+as virtual timers, and polls (the main thread blocks while Python screenshots and dumps). The RNG seed (seedFromTime 0x467110 =
+timeGetTime*37) needs no write. A record run times input by golden-screen matches and saves the virtual T of each
+(schedule.json); every other arm replays it. Pitfall: messages posted by the game's own thread are not DPI-rescaled, so they
+take LOGICAL coordinates (game.py's physical lParam landed off-screen at 250 % and the listener's hit test 0x47f700 in
+0x495aa0 dropped every click). Two OFF runs are identical in sandbox_basic (10 checkpoints) and course_season (build a hole,
+600 virtual s season, 12 checkpoints), with sound live. Reach = one-shot INT3 on each function's ORIGINAL entry (in the ON arm
+over MinHook's 0xE9), re-armed once per virtual second, counted per thread: Frida inline counters killed the game (relocated
+prologues) and detour breakpoints merged MSVC-folded identical reimplementations; a CModule's own data is read-only here (pass
+a JS-allocated table). Verdicts: GREEN (SAME + entered on the main thread), RED (diff, or the ON arm hung / died), UNREACHED,
+OFFTHREAD (only other threads), UNOBSERVED (sound.dll: audio is not compared, and three sound.dll functions' main-thread reach
+follows the real-time sound thread). With all 2,886 hooks ON both scenarios read SAME: sandbox 440 GREEN, course_season 583
+GREEN (562 functions, 559 at C3); their CSVs `<addr>_[<stem>_]<name>_<scenario>.scenario.csv` are in log/diff (nothing
+promoted). Controls: Random::range with results 0/1 swapped (shim/src/re/c3ft_negctl.cpp) RED from the menu on;
+fillRectC8 writing its last row as c^1 (c3ft_negctl2.cpp) RED on 11 frame px with the state SAME; the first fillRectC8
+control (skip the last row) read GREEN as an equivalent mutant (every fill is 255 over a row already 255), so a GREEN does
+not prove the scenario could see a wrong body; jpeg_set_quality ON read UNREACHED. GATE FIXES (2026-10-15): re_classify's
+C4 gate read the first `<addr>_*.scenario.csv` / `.match.csv` of ANY module (a jgld CSV passed a sound.dll row at the same
+RVA; sound Midi_Device::scalarDeletingDtor 0x9c80 would have passed through Terrain initSystem's match CSV) and only the first
+scenario (a GREEN could hide a RED); it now reads every CSV of the row's own module through read_path1 (all GREEN, scenario
+ones witnessed). The C3 replay check does the same (calls summed); Project.diff_csv was removed; replay.py writes
+`<rva>_<stem>_` names (the Terrain tileAt replay was renamed). scripts/scoreboard.py keys evidence by (module, addr) from the
+file name and counts a kind only when all its CSVs are GREEN: 19 Terrain.dll rows had been credited with jgld / sound files.
+To promote: `re_classify.py promote <addr> --to C4 [--module m]`; the C2 rows propagateType11 / clearBuffers are refused.
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
