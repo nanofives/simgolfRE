@@ -1,0 +1,15 @@
+checkpoint,off,on,match
+menu T=3434,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,True
+menu_done T=35047,state=451c57124e4077e0 frame=e32e36c8b1732365,state=451c57124e4077e0 frame=e32e36c8b1732365,True
+game T=46258,state=d25a3959c0f47e59 frame=6de76be3f592e90e,state=d25a3959c0f47e59 frame=6de76be3f592e90e,True
+people T=163721,state=3737ffe267f96024 frame=689a258de9316399,state=3737ffe267f96024 frame=689a258de9316399,True
+reports T=234522,state=cfb51af0b2931c90 frame=ca09653a89fbb8d9,state=cfb51af0b2931c90 frame=ca09653a89fbb8d9,True
+menus T=298758,state=e4b2b8da7fe018be frame=22982e019a5de4a9,state=e4b2b8da7fe018be frame=22982e019a5de4a9,True
+practice T=344208,state=b4bcbc8242854b09 frame=ede8a610c4aa3f58,state=b4bcbc8242854b09 frame=ede8a610c4aa3f58,True
+shot T=360772,state=ed16696495e8cb88 frame=a25529274aa9a192,state=ed16696495e8cb88 frame=a25529274aa9a192,True
+cancelled T=387739,state=bf2cab74c653ca27 frame=0a351efc9c402222,state=bf2cab74c653ca27 frame=0a351efc9c402222,True
+end T=415312,state=7b892203e2044914 frame=670a415cab303fe3,state=7b892203e2044914 frame=670a415cab303fe3,True
+install_witness,0xe9,0xe9,True
+meta,scenario=ui_tour hooks_on=2927 tag=all3,reach_on=2 other_threads=0 (armed) reach_off=2 other_threads=0 (armed) off_byte=0x81,2026-10-15T14:38:14
+meta,off=log/c3/alt/c3ft/ui_tour/ab_all3_off,on=log/c3/alt/c3ft/ui_tour/ab_all3_on,clock=virtual step 1 ms poll 100 ms
+VERDICT,GREEN,10,

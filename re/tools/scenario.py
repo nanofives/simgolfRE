@@ -505,3 +505,166 @@ SCENARIOS["mood5_fixture"] = {
     "phases": [("load", lambda g: (load_saved_game(g, MOOD5_FIXTURE), view_mood5_course(g))),
                ("season", lambda g: story_season(g))],
 }
+
+
+# ---- UI tour (s36b, round 36: C4 by the scenario route) ------------------------------------------------
+# Frame-locked only: "lockstep" is a scenario_ab.py Ctx script (virtual clock, recorded once, replayed in every arm);
+# log/c3/s36b_run.py registers it into scenario_ab.py. Notes: log/c3/s36b_notes.txt.
+def ui_tour_lockstep(c):
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("menu")
+    yield from c.click(630, 425); yield from c.sleep(4000)      # Select A Theme
+    yield from c.key(0x1B); yield from c.sleep(3000)
+    yield from c.click(170, 80); yield from c.sleep(4000)       # Continue Saved Game
+    yield from c.key(0x1B); yield from c.sleep(3000)
+    yield from c.click(560, 110); yield from c.sleep(4000)      # Start New Game
+    yield from c.key(0x1B); yield from c.sleep(3000)
+    yield from c.click(400, 540); yield from c.sleep(4000)      # Play a Championship
+    yield from c.key(0x1B); yield from c.sleep(3000)
+    yield from c.checkpoint("menu_done")
+    yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game -> Easy -> Monterey
+    yield from c.click(390, 125)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "location.png"), name="location")
+    yield from c.click(270, 32)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "ingame_hud_dial.png"), crop=DIAL, threshold=30, name="hud")
+    yield from c.sleep(6000)
+    yield from c.checkpoint("game")
+    yield from c.key(0x1B); yield from c.sleep(1500)             # welcome text
+    yield from c.click(45, 470); yield from c.sleep(1500)        # Build Course palette
+    yield from c.click(300, 527); yield from c.sleep(1000)       # tee tool
+    yield from c.click(110, 290); yield from c.sleep(1500)
+    yield from c.click(365, 527); yield from c.sleep(1000)       # green tool
+    yield from c.click(330, 400); yield from c.sleep(2500)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.key(0x48); yield from c.sleep(3000)            # H: open the hole
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    yield from c.click(118, 495); yield from c.sleep(2500)       # buildings palette
+    yield from c.click(390, 530); yield from c.sleep(1500)       # first building tool
+    yield from c.click(230, 300); yield from c.sleep(2500)       # place it
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.click(118, 495); yield from c.sleep(2500)       # buildings palette again: tooltips
+    for x in range(390, 760, 60):
+        for y in (527, 570):
+            c.move(x, y); yield from c.sleep(1000)
+    yield from c.click(118, 495); yield from c.sleep(1500)       # close it
+    # people palette: golfer list -> golfer panel, employees, character editor
+    yield from c.click(175, 535); yield from c.sleep(2500)
+    yield from c.click(360, 507); yield from c.sleep(3000)       # first golfer in the list
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    yield from c.click(232, 537); yield from c.sleep(2500)       # employees tab
+    for y in (530, 575):
+        for x in (368, 432, 496, 560):
+            c.move(x, y); yield from c.sleep(1000)              # tooltips of the eight employee kinds
+    for x in (650, 705, 760):
+        c.move(x, 513); yield from c.sleep(1000)
+    yield from c.click(368, 530); yield from c.sleep(3000)       # HIRE AN EMPLOYEE dialog
+    yield from c.click(330, 318); yield from c.sleep(3000)       # Groundskeeper: 200 per week
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    yield from c.click(368, 530); yield from c.sleep(3000)       # the hired employee's slot
+    for x in (650, 705, 760):
+        c.move(x, 513); yield from c.sleep(1000)
+    yield from c.click(760, 513); yield from c.sleep(2500)       # third action icon
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    yield from c.click(650, 513); yield from c.sleep(2000)       # first action icon
+    yield from c.click(250, 380); yield from c.sleep(3000)
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    yield from c.click(272, 560); yield from c.sleep(3000)       # character editor
+    for y in (29, 80, 131, 180, 229):                            # its five appearance tabs
+        yield from c.click(453, y); yield from c.sleep(1500)
+    yield from c.click(753, 213); yield from c.sleep(3000)       # check mark: back to the course
+    yield from c.checkpoint("people")
+    # report screens F1..F10 (mainLoop's key switch 0x0041de11, report byte 0x00569498)
+    for vk in range(0x70, 0x7A):
+        yield from c.key(vk); yield from c.sleep(3000)
+        if vk == 0x75:                                           # F6 world map: Esc does not close it
+            c.move(400, 30); yield from c.sleep(1500)            # hover Monterey (tooltip)
+            yield from c.click(770, 430); yield from c.sleep(3000)   # load browser
+            yield from c.key(0x1B); yield from c.sleep(2000)
+            yield from c.click(748, 488); yield from c.sleep(3000)   # save-name box
+            for vk2 in (0x41, 0x42):
+                yield from c.key(vk2); yield from c.sleep(300)
+            yield from c.key(0x08, char="\b"); yield from c.sleep(300)
+            yield from c.key(0x1B); yield from c.sleep(2000)
+            yield from c.click(768, 557); yield from c.sleep(3000)   # back arrow
+        else:
+            yield from c.key(0x1B); yield from c.sleep(2000)
+    yield from c.checkpoint("reports")
+    # information menu (info button): Best Scores, Top 10 Designers, Repeat Last Message
+    for y in (536, 560, 296):
+        yield from c.click(75, 550); yield from c.sleep(2000)
+        yield from c.click(150, y); yield from c.sleep(3000)
+        yield from c.key(0x1B); yield from c.sleep(2000)
+    # wrench menu: Edit Preferences, Rename Your Course, Save the Current Game, Load a Previous Game (all cancelled)
+    for y in (487, 463, 367, 391):
+        yield from c.click(132, 580); yield from c.sleep(2000)
+        yield from c.click(200, y); yield from c.sleep(3000)
+        if y == 487:                                             # preferences: one box off and on, then its check
+            yield from c.click(236, 342); yield from c.sleep(800)
+            yield from c.click(236, 342); yield from c.sleep(800)
+            yield from c.click(560, 368); yield from c.sleep(2000)
+            continue
+        if y == 463:                                             # rename box: type, delete
+            for vk2 in (0x43, 0x44):
+                yield from c.key(vk2); yield from c.sleep(300)
+            yield from c.key(0x08, char=""); yield from c.sleep(300)
+        yield from c.key(0x1B); yield from c.sleep(2000)
+    yield from c.checkpoint("menus")
+    yield from c.click(108, 568); yield from c.sleep(2000)       # pause
+    yield from c.click(108, 568); yield from c.sleep(2000)       # unpause
+    yield from c.key(0x58); yield from c.sleep(1500)             # X: zoom out
+    yield from c.key(0x5A); yield from c.sleep(1500)             # Z: zoom in
+    # pro tab: skill points dialog and its "points left" popup (both answers); leaving it starts a practice round
+    yield from c.click(175, 535); yield from c.sleep(2500)
+    yield from c.click(256, 511); yield from c.sleep(2500)
+    yield from c.click(313, 520); yield from c.sleep(2500)
+    for _ in range(3):
+        yield from c.click(265, 97); yield from c.sleep(600)     # Power Hitter +1
+    yield from c.click(541, 333); yield from c.sleep(2500)       # OK -> popup
+    yield from c.click(310, 286); yield from c.sleep(2000)       # "Whoops, my bad."
+    yield from c.click(541, 333); yield from c.sleep(2500)       # OK again
+    yield from c.click(400, 263); yield from c.sleep(4000)       # "Yea, I don't need ..."
+    for _ in range(10):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("practice")
+    # Gary's turn in the practice round: straight shot at the green (found on the RECORD frame, replayed from the schedule)
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    target = _ui_tour_point(c, "gary_target", lambda img: find_green(img) or (400, 260))
+    yield from c.click(*SHOT_STRAIGHT); yield from c.sleep(800)
+    c.move(*target); yield from c.sleep(600)
+    yield from c.click(*target)
+    for _ in range(12):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("shot")
+    for answer in ((380, 228), (360, 204)):                      # wrench: Cancel match/tournament -> No, then Yes
+        yield from c.click(132, 580); yield from c.sleep(2000)
+        yield from c.click(200, 511); yield from c.sleep(2500)
+        yield from c.click(*answer); yield from c.sleep(3000)
+    for _ in range(8):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("cancelled")
+    # wrench: Save Gary Golf / Save Course for Championship: the file exists in Themes\Championship, so each asks
+    # "already exists! Overwrite / Cancel"; Esc cancels (nothing is written)
+    for y in (439, 415):
+        yield from c.click(132, 580); yield from c.sleep(2000)
+        yield from c.click(200, y); yield from c.sleep(3000)
+        yield from c.key(0x1B); yield from c.sleep(2500)
+        yield from c.key(0x1B); yield from c.sleep(2000)
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def _ui_tour_point(c, name, find):
+    """A screen position measured on the RECORD run's frame and kept in the schedule, so every replay clicks the same
+    point without a screenshot."""
+    pts = c.run.schedule.setdefault("points", {})
+    key = f"{c.wait_index}:{name}"
+    c.wait_index += 1
+    if c.run.mode != "replay":
+        x, y = find(c.run.g.shot())
+        pts[key] = [int(x), int(y)]
+    return tuple(pts[key])
+
+
+SCENARIOS["ui_tour"] = {"env": {}, "phases": [], "lockstep": ui_tour_lockstep}   # no real-time (Game) form
