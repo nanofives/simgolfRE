@@ -1,0 +1,11 @@
+checkpoint,off,on,match
+menu T=3434,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,True
+tournament_start T=26866,state=c7868844af01f9e5 frame=82db997cbce0067c,state=c7868844af01f9e5 frame=82db997cbce0067c,True
+tour_0060 T=87163,state=57b87b6a8f91745b frame=49f1d1de874633a0,state=57b87b6a8f91745b frame=49f1d1de874633a0,True
+tour_0122 T=149682,state=22b9350848bef247 frame=6ba25548997ad59f,state=22b9350848bef247 frame=6ba25548997ad59f,True
+tour_0180 T=207555,state=06c074edbfa91381 frame=c984fb6d53bdfc44,state=06c074edbfa91381 frame=c984fb6d53bdfc44,True
+tournament_end T=258459,state=147bddd4b3585a1f frame=53d328cbe0f414b0,state=147bddd4b3585a1f frame=53d328cbe0f414b0,True
+install_witness,0xe9,0xe9,True
+meta,scenario=championship hooks_on=2927 tag=all2,reach_on=5 other_threads=0 (armed) reach_off=5 other_threads=0 (armed) off_byte=0x56,2026-10-15T11:08:12
+meta,off=log/c3/alt/s36a/championship/ab_all2_off,on=log/c3/alt/s36a/championship/ab_all2_on,clock=virtual step 1 ms poll 100 ms
+VERDICT,GREEN,6,

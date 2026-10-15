@@ -1,0 +1,9 @@
+checkpoint,off,on,match
+menu T=3434,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,True
+loaded T=17473,state=b1cca3d06c334667 frame=fd30afe053616035,state=b1cca3d06c334667 frame=fd30afe053616035,True
+view T=21412,state=a6824eb37eb88b68 frame=42a9b8eab78707fe,state=a6824eb37eb88b68 frame=42a9b8eab78707fe,True
+season_end T=33633,state=1756fae25c6c90cd frame=eda7b5e8f00dcccf,state=1756fae25c6c90cd frame=eda7b5e8f00dcccf,True
+install_witness,0xe9,0xe9,True
+meta,scenario=mood5_fixture hooks_on=2927 tag=all2,reach_on=26 other_threads=0 (armed) reach_off=26 other_threads=0 (armed) off_byte=0x8b,2026-10-15T11:20:25
+meta,off=log/c3/alt/s36a/mood5_fixture/ab_all2_off,on=log/c3/alt/s36a/mood5_fixture/ab_all2_on,clock=virtual step 1 ms poll 100 ms
+VERDICT,GREEN,4,

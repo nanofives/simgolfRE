@@ -1,0 +1,15 @@
+checkpoint,off,on,match
+menu T=3434,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,True
+sandbox T=6969,state=c11c62044e3851a1 frame=de999e4f455d2219,state=c11c62044e3851a1 frame=de999e4f455d2219,True
+hole_open T=20806,state=6b9cb1f52abffbf7 frame=afe5297dc3897d78,state=6b9cb1f52abffbf7 frame=afe5297dc3897d78,True
+season_0050 T=71407,state=76ec74392706608e frame=dc8d01d30d616423,state=76ec74392706608e frame=dc8d01d30d616423,True
+season_0100 T=122008,state=4244e47e58503f99 frame=273c5c0f1246a90c,state=4244e47e58503f99 frame=273c5c0f1246a90c,True
+season_0150 T=172609,state=513bf92d911225db frame=7e2e516d93dc9499,state=513bf92d911225db frame=7e2e516d93dc9499,True
+season_0200 T=223210,state=925840110b7934d5 frame=95a7a68310a86150,state=925840110b7934d5 frame=95a7a68310a86150,True
+golfer_panel T=224927,state=921c30ad87c850dd frame=fe1a957ee98243c0,state=921c30ad87c850dd frame=fe1a957ee98243c0,True
+landmark T=233714,state=60c852649e43b238 frame=7603092aea894eef,state=60c852649e43b238 frame=7603092aea894eef,True
+after_0020 T=254015,state=6a261db1cb6a5495 frame=9298236086f5ca4d,state=6a261db1cb6a5495 frame=9298236086f5ca4d,True
+install_witness,0xe9,0xe9,True
+meta,scenario=golfer_events hooks_on=2927 tag=all2,reach_on=237 other_threads=0 (armed) reach_off=237 other_threads=0 (armed) off_byte=0x56,2026-10-15T11:10:15
+meta,off=log/c3/alt/s36a/golfer_events/ab_all2_off,on=log/c3/alt/s36a/golfer_events/ab_all2_on,clock=virtual step 1 ms poll 100 ms
+VERDICT,GREEN,10,

@@ -1,0 +1,11 @@
+checkpoint,off,on,match
+menu T=3434,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,state=162ce36b499ecb35 frame=b1e9c3e7ac5a01d9,True
+sandbox T=6969,state=c11c62044e3851a1 frame=de999e4f455d2219,state=c11c62044e3851a1 frame=de999e4f455d2219,True
+hole_open T=20806,state=6b9cb1f52abffbf7 frame=afe5297dc3897d78,state=6b9cb1f52abffbf7 frame=afe5297dc3897d78,True
+holes_built T=57267,state=c0ee14cd64c23325 frame=7f2feed8371a0351,state=c0ee14cd64c23325 frame=7f2feed8371a0351,True
+season_0120 T=178568,state=6dc78c33b627ecec frame=3137121c2e44e3bb,state=6dc78c33b627ecec frame=3137121c2e44e3bb,True
+season_end T=210989,state=efaa17162991061b frame=674a7b71f5de1ded,state=efaa17162991061b frame=674a7b71f5de1ded,True
+install_witness,0xe9,0xe9,True
+meta,scenario=golfer_stories hooks_on=2927 tag=all2,reach_on=36 other_threads=0 (armed) reach_off=36 other_threads=0 (armed) off_byte=0x51,2026-10-15T11:15:21
+meta,off=log/c3/alt/s36a/golfer_stories/ab_all2_off,on=log/c3/alt/s36a/golfer_stories/ab_all2_on,clock=virtual step 1 ms poll 100 ms
+VERDICT,GREEN,6,
