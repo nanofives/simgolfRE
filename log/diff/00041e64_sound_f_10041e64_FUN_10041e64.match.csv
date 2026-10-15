@@ -1,0 +1,6 @@
+instruction,recompiled,original,match
+0,push dword ptr [esp + 4],push dword ptr [esp + 4],True
+1,call dword ptr [0],call dword ptr [0x100b84e0],True
+2,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=?FUN_10041e64@f_10041e64@@YAXPAU_RTL_CRITICAL_SECTION@@@Z,module=sound.dll
+VERDICT,GREEN,3,100.0%

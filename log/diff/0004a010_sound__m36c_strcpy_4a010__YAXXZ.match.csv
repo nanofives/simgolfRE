@@ -1,0 +1,6 @@
+instruction,recompiled,original,match
+0,push edi,push edi,True
+1,"mov edi, dword ptr [esp + 8]","mov edi, dword ptr [esp + 8]",True
+2,jmp 0x71,jmp 0x1004a081,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=?m36c_strcpy_4a010@@YAXXZ,module=sound.dll
+VERDICT,GREEN,3,100.0%

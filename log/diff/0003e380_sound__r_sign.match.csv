@@ -1,0 +1,50 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x54","sub esp, 0x54",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x54]","lea edi, [ebp - 0x54]",True
+7,"mov ecx, 0x15","mov ecx, 0x15",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+11,fld dword ptr [eax],fld dword ptr [eax],True
+12,fcomp dword ptr [0],fcomp dword ptr [0x1005ec00],True
+13,fnstsw ax,fnstsw ax,True
+14,"test ah, 1","test ah, 1",True
+15,jne 0x34,jne 0x1003e3b4,True
+16,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+17,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+18,"mov dword ptr [ebp - 0xc], edx","mov dword ptr [ebp - 0xc], edx",True
+19,jmp 0x3e,jmp 0x1003e3be,True
+20,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+21,fld dword ptr [eax],fld dword ptr [eax],True
+22,fchs ,fchs ,True
+23,fstp dword ptr [ebp - 0xc],fstp dword ptr [ebp - 0xc],True
+24,fld dword ptr [ebp - 0xc],fld dword ptr [ebp - 0xc],True
+25,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+26,"mov ecx, dword ptr [ebp + 0xc]","mov ecx, dword ptr [ebp + 0xc]",True
+27,fld dword ptr [ecx],fld dword ptr [ecx],True
+28,fcomp dword ptr [0],fcomp dword ptr [0x1005ec00],True
+29,fnstsw ax,fnstsw ax,True
+30,"test ah, 1","test ah, 1",True
+31,jne 0x64,jne 0x1003e3e4,True
+32,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+33,"mov dword ptr [ebp - 0x14], edx","mov dword ptr [ebp - 0x14], edx",True
+34,"mov eax, dword ptr [ebp - 4]","mov eax, dword ptr [ebp - 4]",True
+35,"mov dword ptr [ebp - 0x10], eax","mov dword ptr [ebp - 0x10], eax",True
+36,jmp 0x6c,jmp 0x1003e3ec,True
+37,fld qword ptr [ebp - 8],fld qword ptr [ebp - 8],True
+38,fchs ,fchs ,True
+39,fstp qword ptr [ebp - 0x14],fstp qword ptr [ebp - 0x14],True
+40,fld qword ptr [ebp - 0x14],fld qword ptr [ebp - 0x14],True
+41,pop edi,pop edi,True
+42,pop esi,pop esi,True
+43,pop ebx,pop ebx,True
+44,"mov esp, ebp","mov esp, ebp",True
+45,pop ebp,pop ebp,True
+46,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_r_sign,module=sound.dll
+VERDICT,GREEN,47,100.0%

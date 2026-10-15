@@ -1,0 +1,11 @@
+instruction,recompiled,original,match
+0,"mov eax, 0","mov eax, 0x1004477c",True
+1,"mov dword ptr [0], 0","mov dword ptr [0x100651bc], 0x10044426",True
+2,"mov dword ptr [0], eax","mov dword ptr [0x100651b8], eax",True
+3,"mov dword ptr [0], 0","mov dword ptr [0x100651c0], 0x1004448c",True
+4,"mov dword ptr [0], 0","mov dword ptr [0x100651c4], 0x100443cc",True
+5,"mov dword ptr [0], 0","mov dword ptr [0x100651c8], 0x10044474",True
+6,"mov dword ptr [0], eax","mov dword ptr [0x100651cc], eax",True
+7,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=_m36c_fill_651b8,module=sound.dll
+VERDICT,GREEN,8,100.0%

@@ -1,0 +1,54 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov eax, dword ptr [esi + 0xc8]","mov eax, dword ptr [esi + 0xc8]",True
+3,"test al, 1","test al, 1",True
+4,jne 0x16,jne 0x10039e86,True
+5,"mov eax, 0xb","mov eax, 0xb",True
+6,pop esi,pop esi,True
+7,ret 4,ret 4,True
+8,"test al, 2","test al, 2",True
+9,jne 0x49,jne 0x10039eb9,True
+10,"lea ecx, [esi + 0x70]","lea ecx, [esi + 0x70]",True
+11,call 0x22,call 0x10001866,True
+12,"test byte ptr [esi + 0x58], 2","test byte ptr [esi + 0x58], 2",True
+13,je 0x40,je 0x10039eb0,True
+14,"mov eax, dword ptr [esi + 0x50]","mov eax, dword ptr [esi + 0x50]",True
+15,"mov edx, dword ptr [esi]","mov edx, dword ptr [esi]",True
+16,push eax,push eax,True
+17,"mov ecx, esi","mov ecx, esi",True
+18,call dword ptr [edx + 0x10],call dword ptr [edx + 0x10],True
+19,"test eax, eax","test eax, eax",True
+20,je 0x49,je 0x10039eb9,True
+21,"mov eax, 8","mov eax, 8",True
+22,pop esi,pop esi,True
+23,ret 4,ret 4,True
+24,"mov eax, 0x14","mov eax, 0x14",True
+25,pop esi,pop esi,True
+26,ret 4,ret 4,True
+27,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49ec]",True
+28,"test ecx, ecx","test ecx, ecx",True
+29,je 0x58,je 0x10039ec8,True
+30,call 0x58,call 0x10001dfc,True
+31,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+32,push edi,push edi,True
+33,"lea edi, [esi + 0x70]","lea edi, [esi + 0x70]",True
+34,push eax,push eax,True
+35,"mov ecx, edi","mov ecx, edi",True
+36,call 0x68,call 0x10001212,True
+37,"mov cl, byte ptr [esi + 0xc8]","mov cl, byte ptr [esi + 0xc8]",True
+38,"mov eax, 0x40","mov eax, 0x40",True
+39,"test al, cl","test al, cl",True
+40,jne 0x86,jne 0x10039ef6,True
+41,"mov ecx, dword ptr [edi + 0x58]","mov ecx, dword ptr [edi + 0x58]",True
+42,"or ecx, eax","or ecx, eax",True
+43,"mov dword ptr [edi + 0x58], ecx","mov dword ptr [edi + 0x58], ecx",True
+44,"mov edx, dword ptr [esi]","mov edx, dword ptr [esi]",True
+45,"mov ecx, esi","mov ecx, esi",True
+46,call dword ptr [edx + 0x7c],call dword ptr [edx + 0x7c],True
+47,pop edi,pop edi,True
+48,"xor eax, eax","xor eax, eax",True
+49,pop esi,pop esi,True
+50,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10039e70@C_FUN_10039e70@f_10039e70@@QAEHH@Z,module=sound.dll
+VERDICT,GREEN,51,100.0%

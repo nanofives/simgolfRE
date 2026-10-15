@@ -1,0 +1,23 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"mov ecx, dword ptr [esi + 0x54]","mov ecx, dword ptr [esi + 0x54]",True
+3,"test ecx, ecx","test ecx, ecx",True
+4,je 0x1f,je 0x10035f9f,True
+5,call 0xf,call 0x10001b9f,True
+6,"test eax, eax","test eax, eax",True
+7,jne 0x1f,jne 0x10035f9f,True
+8,"mov eax, dword ptr [esi + 0x58]","mov eax, dword ptr [esi + 0x58]",True
+9,"or al, 0x10","or al, 0x10",True
+10,"mov dword ptr [esi + 0x58], eax","mov dword ptr [esi + 0x58], eax",True
+11,"xor eax, eax","xor eax, eax",True
+12,pop esi,pop esi,True
+13,ret ,ret ,True
+14,"test byte ptr [esi + 0x58], 8","test byte ptr [esi + 0x58], 8",True
+15,je 0x1b,je 0x10035f9b,True
+16,"mov ecx, esi","mov ecx, esi",True
+17,call 0x2c,call 0x10002716,True
+18,pop esi,pop esi,True
+19,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?serviceBuffer@C@f_10035f80@@QAEHXZ,module=sound.dll
+VERDICT,GREEN,20,100.0%

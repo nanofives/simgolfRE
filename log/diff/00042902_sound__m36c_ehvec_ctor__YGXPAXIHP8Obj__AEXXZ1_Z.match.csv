@@ -1,0 +1,47 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push -1,push -1,True
+3,push 0,push 0x1005ed28,True
+4,push 0,push 0x10045744,True
+5,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+6,push eax,push eax,True
+7,"mov dword ptr fs:[0], esp","mov dword ptr fs:[0], esp",True
+8,"sub esp, 0x10","sub esp, 0x10",True
+9,push ebx,push ebx,True
+10,push esi,push esi,True
+11,push edi,push edi,True
+12,"xor eax, eax","xor eax, eax",True
+13,"mov dword ptr [ebp - 0x20], eax","mov dword ptr [ebp - 0x20], eax",True
+14,"mov dword ptr [ebp - 4], eax","mov dword ptr [ebp - 4], eax",True
+15,"mov dword ptr [ebp - 0x1c], eax","mov dword ptr [ebp - 0x1c], eax",True
+16,"mov eax, dword ptr [ebp - 0x1c]","mov eax, dword ptr [ebp - 0x1c]",True
+17,"cmp eax, dword ptr [ebp + 0x10]","cmp eax, dword ptr [ebp + 0x10]",True
+18,jge 0x49,jge 0x1004294b,True
+19,"mov esi, dword ptr [ebp + 8]","mov esi, dword ptr [ebp + 8]",True
+20,"mov ecx, esi","mov ecx, esi",True
+21,call dword ptr [ebp + 0x14],call dword ptr [ebp + 0x14],True
+22,"add esi, dword ptr [ebp + 0xc]","add esi, dword ptr [ebp + 0xc]",True
+23,"mov dword ptr [ebp + 8], esi","mov dword ptr [ebp + 8], esi",True
+24,inc dword ptr [ebp - 0x1c],inc dword ptr [ebp - 0x1c],True
+25,jmp 0x2e,jmp 0x10042930,True
+26,"mov dword ptr [ebp - 0x20], 1","mov dword ptr [ebp - 0x20], 1",True
+27,"or dword ptr [ebp - 4], 0xffffffff","or dword ptr [ebp - 4], 0xffffffff",True
+28,call 0x6a,call 0x1004296c,True
+29,"mov ecx, dword ptr [ebp - 0x10]","mov ecx, dword ptr [ebp - 0x10]",True
+30,"mov dword ptr fs:[0], ecx","mov dword ptr fs:[0], ecx",True
+31,pop edi,pop edi,True
+32,pop esi,pop esi,True
+33,pop ebx,pop ebx,True
+34,leave ,leave ,True
+35,ret 0x14,ret 0x14,True
+36,"cmp dword ptr [ebp - 0x20], 0","cmp dword ptr [ebp - 0x20], 0",True
+37,jne 0x81,jne 0x10042983,True
+38,push dword ptr [ebp + 0x18],push dword ptr [ebp + 0x18],True
+39,push dword ptr [ebp - 0x1c],push dword ptr [ebp - 0x1c],True
+40,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+41,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+42,call 0x81,call 0x1004288e,True
+43,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=?m36c_ehvec_ctor@@YGXPAXIHP8Obj@@AEXXZ1@Z,module=sound.dll
+VERDICT,GREEN,44,100.0%

@@ -1,0 +1,48 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0x48","sub esp, 0x48",True
+3,push ebx,push ebx,True
+4,push esi,push esi,True
+5,push edi,push edi,True
+6,"lea edi, [ebp - 0x48]","lea edi, [ebp - 0x48]",True
+7,"mov ecx, 0x12","mov ecx, 0x12",True
+8,"mov eax, 0xcccccccc","mov eax, 0xcccccccc",True
+9,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+10,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+11,fld dword ptr [eax],fld dword ptr [eax],True
+12,fcomp dword ptr [0],fcomp dword ptr [0x1005ec00],True
+13,fnstsw ax,fnstsw ax,True
+14,"test ah, 1","test ah, 1",True
+15,jne 0x48,jne 0x1003e448,True
+16,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+17,fld dword ptr [ecx],fld dword ptr [ecx],True
+18,fadd qword ptr [0],fadd qword ptr [0x1005b820],True
+19,"sub esp, 8","sub esp, 8",True
+20,fstp qword ptr [esp],fstp qword ptr [esp],True
+21,call 0x40,call 0x1004339c,True
+22,"add esp, 8","add esp, 8",True
+23,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+24,jmp 0x66,jmp 0x1003e466,True
+25,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+26,fld dword ptr [edx],fld dword ptr [edx],True
+27,fsubr qword ptr [0],fsubr qword ptr [0x1005b820],True
+28,"sub esp, 8","sub esp, 8",True
+29,fstp qword ptr [esp],fstp qword ptr [esp],True
+30,call 0x5e,call 0x1004339c,True
+31,"add esp, 8","add esp, 8",True
+32,fchs ,fchs ,True
+33,fstp qword ptr [ebp - 8],fstp qword ptr [ebp - 8],True
+34,fld qword ptr [ebp - 8],fld qword ptr [ebp - 8],True
+35,call 0x6e,call 0x10042550,True
+36,pop edi,pop edi,True
+37,pop esi,pop esi,True
+38,pop ebx,pop ebx,True
+39,"add esp, 0x48","add esp, 0x48",True
+40,"cmp ebp, esp","cmp ebp, esp",True
+41,call 0x7b,call 0x100431ce,True
+42,"mov esp, ebp","mov esp, ebp",True
+43,pop ebp,pop ebp,True
+44,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/Od /ZI /GZ,symbol=_i_nint,module=sound.dll
+VERDICT,GREEN,45,100.0%

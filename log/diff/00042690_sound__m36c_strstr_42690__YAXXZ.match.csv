@@ -1,0 +1,69 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+1,push edi,push edi,True
+2,push ebx,push ebx,True
+3,push esi,push esi,True
+4,"mov dl, byte ptr [ecx]","mov dl, byte ptr [ecx]",True
+5,"mov edi, dword ptr [esp + 0x10]","mov edi, dword ptr [esp + 0x10]",True
+6,"test dl, dl","test dl, dl",True
+7,je 0x7a,je 0x1004270a,True
+8,"mov dh, byte ptr [ecx + 1]","mov dh, byte ptr [ecx + 1]",True
+9,"test dh, dh","test dh, dh",True
+10,je 0x67,je 0x100426f7,True
+11,"mov esi, edi","mov esi, edi",True
+12,"mov ecx, dword ptr [esp + 0x14]","mov ecx, dword ptr [esp + 0x14]",True
+13,"mov al, byte ptr [edi]","mov al, byte ptr [edi]",True
+14,inc esi,inc esi,True
+15,"cmp al, dl","cmp al, dl",True
+16,je 0x3a,je 0x100426ca,True
+17,"test al, al","test al, al",True
+18,je 0x34,je 0x100426c4,True
+19,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+20,inc esi,inc esi,True
+21,"cmp al, dl","cmp al, dl",True
+22,je 0x3a,je 0x100426ca,True
+23,"test al, al","test al, al",True
+24,jne 0x29,jne 0x100426b9,True
+25,pop esi,pop esi,True
+26,pop ebx,pop ebx,True
+27,pop edi,pop edi,True
+28,"xor eax, eax","xor eax, eax",True
+29,ret ,ret ,True
+30,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+31,inc esi,inc esi,True
+32,"cmp al, dh","cmp al, dh",True
+33,jne 0x2c,jne 0x100426bc,True
+34,"lea edi, [esi - 1]","lea edi, [esi - 1]",True
+35,"mov ah, byte ptr [ecx + 2]","mov ah, byte ptr [ecx + 2]",True
+36,"test ah, ah","test ah, ah",True
+37,je 0x73,je 0x10042703,True
+38,"mov al, byte ptr [esi]","mov al, byte ptr [esi]",True
+39,"add esi, 2","add esi, 2",True
+40,"cmp al, ah","cmp al, ah",True
+41,jne 0x18,jne 0x100426a8,True
+42,"mov al, byte ptr [ecx + 3]","mov al, byte ptr [ecx + 3]",True
+43,"test al, al","test al, al",True
+44,je 0x73,je 0x10042703,True
+45,"mov ah, byte ptr [esi - 1]","mov ah, byte ptr [esi - 1]",True
+46,"add ecx, 2","add ecx, 2",True
+47,"cmp al, ah","cmp al, ah",True
+48,je 0x44,je 0x100426d4,True
+49,jmp 0x18,jmp 0x100426a8,True
+50,"xor eax, eax","xor eax, eax",True
+51,pop esi,pop esi,True
+52,pop ebx,pop ebx,True
+53,pop edi,pop edi,True
+54,"mov al, dl","mov al, dl",True
+55,jmp 0x73,jmp 0x10045686,True
+56,"lea eax, [edi - 1]","lea eax, [edi - 1]",True
+57,pop esi,pop esi,True
+58,pop ebx,pop ebx,True
+59,pop edi,pop edi,True
+60,ret ,ret ,True
+61,"mov eax, edi","mov eax, edi",True
+62,pop esi,pop esi,True
+63,pop ebx,pop ebx,True
+64,pop edi,pop edi,True
+65,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=?m36c_strstr_42690@@YAXXZ,module=sound.dll
+VERDICT,GREEN,66,100.0%

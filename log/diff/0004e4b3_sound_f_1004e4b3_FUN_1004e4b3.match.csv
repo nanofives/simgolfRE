@@ -1,0 +1,98 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,"test esi, esi","test esi, esi",True
+3,je 0x18e,je 0x1004e641,True
+4,push dword ptr [esi + 4],push dword ptr [esi + 4],True
+5,call 0x15,call 0x10042c07,True
+6,push dword ptr [esi + 8],push dword ptr [esi + 8],True
+7,call 0x1d,call 0x10042c07,True
+8,push dword ptr [esi + 0xc],push dword ptr [esi + 0xc],True
+9,call 0x25,call 0x10042c07,True
+10,push dword ptr [esi + 0x10],push dword ptr [esi + 0x10],True
+11,call 0x2d,call 0x10042c07,True
+12,push dword ptr [esi + 0x14],push dword ptr [esi + 0x14],True
+13,call 0x35,call 0x10042c07,True
+14,push dword ptr [esi + 0x18],push dword ptr [esi + 0x18],True
+15,call 0x3d,call 0x10042c07,True
+16,push dword ptr [esi],push dword ptr [esi],True
+17,call 0x44,call 0x10042c07,True
+18,push dword ptr [esi + 0x20],push dword ptr [esi + 0x20],True
+19,call 0x4c,call 0x10042c07,True
+20,push dword ptr [esi + 0x24],push dword ptr [esi + 0x24],True
+21,call 0x54,call 0x10042c07,True
+22,push dword ptr [esi + 0x28],push dword ptr [esi + 0x28],True
+23,call 0x5c,call 0x10042c07,True
+24,push dword ptr [esi + 0x2c],push dword ptr [esi + 0x2c],True
+25,call 0x64,call 0x10042c07,True
+26,push dword ptr [esi + 0x30],push dword ptr [esi + 0x30],True
+27,call 0x6c,call 0x10042c07,True
+28,push dword ptr [esi + 0x34],push dword ptr [esi + 0x34],True
+29,call 0x74,call 0x10042c07,True
+30,push dword ptr [esi + 0x1c],push dword ptr [esi + 0x1c],True
+31,call 0x7c,call 0x10042c07,True
+32,push dword ptr [esi + 0x38],push dword ptr [esi + 0x38],True
+33,call 0x84,call 0x10042c07,True
+34,push dword ptr [esi + 0x3c],push dword ptr [esi + 0x3c],True
+35,call 0x8c,call 0x10042c07,True
+36,"add esp, 0x40","add esp, 0x40",True
+37,push dword ptr [esi + 0x40],push dword ptr [esi + 0x40],True
+38,call 0x97,call 0x10042c07,True
+39,push dword ptr [esi + 0x44],push dword ptr [esi + 0x44],True
+40,call 0x9f,call 0x10042c07,True
+41,push dword ptr [esi + 0x48],push dword ptr [esi + 0x48],True
+42,call 0xa7,call 0x10042c07,True
+43,push dword ptr [esi + 0x4c],push dword ptr [esi + 0x4c],True
+44,call 0xaf,call 0x10042c07,True
+45,push dword ptr [esi + 0x50],push dword ptr [esi + 0x50],True
+46,call 0xb7,call 0x10042c07,True
+47,push dword ptr [esi + 0x54],push dword ptr [esi + 0x54],True
+48,call 0xbf,call 0x10042c07,True
+49,push dword ptr [esi + 0x58],push dword ptr [esi + 0x58],True
+50,call 0xc7,call 0x10042c07,True
+51,push dword ptr [esi + 0x5c],push dword ptr [esi + 0x5c],True
+52,call 0xcf,call 0x10042c07,True
+53,push dword ptr [esi + 0x60],push dword ptr [esi + 0x60],True
+54,call 0xd7,call 0x10042c07,True
+55,push dword ptr [esi + 0x64],push dword ptr [esi + 0x64],True
+56,call 0xdf,call 0x10042c07,True
+57,push dword ptr [esi + 0x68],push dword ptr [esi + 0x68],True
+58,call 0xe7,call 0x10042c07,True
+59,push dword ptr [esi + 0x6c],push dword ptr [esi + 0x6c],True
+60,call 0xef,call 0x10042c07,True
+61,push dword ptr [esi + 0x70],push dword ptr [esi + 0x70],True
+62,call 0xf7,call 0x10042c07,True
+63,push dword ptr [esi + 0x74],push dword ptr [esi + 0x74],True
+64,call 0xff,call 0x10042c07,True
+65,push dword ptr [esi + 0x78],push dword ptr [esi + 0x78],True
+66,call 0x107,call 0x10042c07,True
+67,push dword ptr [esi + 0x7c],push dword ptr [esi + 0x7c],True
+68,call 0x10f,call 0x10042c07,True
+69,"add esp, 0x40","add esp, 0x40",True
+70,push dword ptr [esi + 0x80],push dword ptr [esi + 0x80],True
+71,call 0x11d,call 0x10042c07,True
+72,push dword ptr [esi + 0x84],push dword ptr [esi + 0x84],True
+73,call 0x128,call 0x10042c07,True
+74,push dword ptr [esi + 0x88],push dword ptr [esi + 0x88],True
+75,call 0x133,call 0x10042c07,True
+76,push dword ptr [esi + 0x8c],push dword ptr [esi + 0x8c],True
+77,call 0x13e,call 0x10042c07,True
+78,push dword ptr [esi + 0x90],push dword ptr [esi + 0x90],True
+79,call 0x149,call 0x10042c07,True
+80,push dword ptr [esi + 0x94],push dword ptr [esi + 0x94],True
+81,call 0x154,call 0x10042c07,True
+82,push dword ptr [esi + 0x98],push dword ptr [esi + 0x98],True
+83,call 0x15f,call 0x10042c07,True
+84,push dword ptr [esi + 0x9c],push dword ptr [esi + 0x9c],True
+85,call 0x16a,call 0x10042c07,True
+86,push dword ptr [esi + 0xa0],push dword ptr [esi + 0xa0],True
+87,call 0x175,call 0x10042c07,True
+88,push dword ptr [esi + 0xa4],push dword ptr [esi + 0xa4],True
+89,call 0x180,call 0x10042c07,True
+90,push dword ptr [esi + 0xa8],push dword ptr [esi + 0xa8],True
+91,call 0x18b,call 0x10042c07,True
+92,"add esp, 0x2c","add esp, 0x2c",True
+93,pop esi,pop esi,True
+94,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=?FUN_1004e4b3@f_1004e4b3@@YAXPAI@Z,module=sound.dll
+VERDICT,GREEN,95,100.0%

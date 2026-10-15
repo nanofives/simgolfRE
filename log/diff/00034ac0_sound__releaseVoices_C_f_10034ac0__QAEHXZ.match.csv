@@ -1,0 +1,54 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x58]","mov eax, dword ptr [ecx + 0x58]",True
+1,"test al, 0x40","test al, 0x40",True
+2,je 0x8b,je 0x10034b4b,True
+3,"test al, 0x10","test al, 0x10",True
+4,jne 0x8b,jne 0x10034b4b,True
+5,"test al, 1","test al, 1",True
+6,je 0x83,je 0x10034b43,True
+7,"test eax, 0x10000000","test eax, 0x10000000",True
+8,jne 0x83,jne 0x10034b43,True
+9,push esi,push esi,True
+10,push edi,push edi,True
+11,"mov esi, 1","mov esi, 1",True
+12,"lea edx, [ecx + 0x2d4]","lea edx, [ecx + 0x2d4]",True
+13,"mov edi, 0x10","mov edi, 0x10",True
+14,"test esi, esi","test esi, esi",True
+15,je 0x73,je 0x10034b33,True
+16,"test dword ptr [ecx + 0x58], 0xffff000","test dword ptr [ecx + 0x58], 0xffff000",True
+17,je 0x73,je 0x10034b33,True
+18,fld qword ptr [edx - 0x44],fld qword ptr [edx - 0x44],True
+19,fcomp qword ptr [0],fcomp qword ptr [0x1005b498],True
+20,fnstsw ax,fnstsw ax,True
+21,"test ah, 0x40","test ah, 0x40",True
+22,jne 0x5e,jne 0x10034b1e,True
+23,fld qword ptr [edx + 0x54],fld qword ptr [edx + 0x54],True
+24,fcomp qword ptr [0],fcomp qword ptr [0x1005b498],True
+25,fnstsw ax,fnstsw ax,True
+26,"test ah, 0x40","test ah, 0x40",True
+27,jne 0x5e,jne 0x10034b1e,True
+28,"or byte ptr [edx], 8","or byte ptr [edx], 8",True
+29,jmp 0x73,jmp 0x10034b33,True
+30,"mov al, byte ptr [edx]","mov al, byte ptr [edx]",True
+31,"mov dword ptr [edx + 0x48], 0","mov dword ptr [edx + 0x48], 0",True
+32,"or al, 4","or al, 4",True
+33,"mov byte ptr [edx], al","mov byte ptr [edx], al",True
+34,"mov al, byte ptr [edx - 8]","mov al, byte ptr [edx - 8]",True
+35,"and al, 0xfe","and al, 0xfe",True
+36,"mov byte ptr [edx - 8], al","mov byte ptr [edx - 8], al",True
+37,"shl esi, 1","shl esi, 1",True
+38,"add edx, 0x110","add edx, 0x110",True
+39,dec edi,dec edi,True
+40,jne 0x2c,jne 0x10034aec,True
+41,pop edi,pop edi,True
+42,"xor eax, eax","xor eax, eax",True
+43,pop esi,pop esi,True
+44,ret ,ret ,True
+45,"or al, 8","or al, 8",True
+46,"mov dword ptr [ecx + 0x58], eax","mov dword ptr [ecx + 0x58], eax",True
+47,"xor eax, eax","xor eax, eax",True
+48,ret ,ret ,True
+49,"mov eax, 0x15","mov eax, 0x15",True
+50,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?releaseVoices@C@f_10034ac0@@QAEHXZ,module=sound.dll
+VERDICT,GREEN,51,100.0%

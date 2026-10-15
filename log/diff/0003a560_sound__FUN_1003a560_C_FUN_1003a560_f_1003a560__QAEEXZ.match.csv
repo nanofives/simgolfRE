@@ -1,0 +1,12 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,call 8,call 0x1000245a,True
+3,"mov ecx, dword ptr [esi + 0x228]","mov ecx, dword ptr [esi + 0x228]",True
+4,pop esi,pop esi,True
+5,"test ecx, ecx","test ecx, ecx",True
+6,je 0x15,je 0x1003a575,True
+7,"or al, 8","or al, 8",True
+8,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1003a560@C_FUN_1003a560@f_1003a560@@QAEEXZ,module=sound.dll
+VERDICT,GREEN,9,100.0%

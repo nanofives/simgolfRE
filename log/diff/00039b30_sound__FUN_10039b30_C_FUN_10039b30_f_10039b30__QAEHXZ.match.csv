@@ -1,0 +1,45 @@
+instruction,recompiled,original,match
+0,push edi,push edi,True
+1,"mov edi, ecx","mov edi, ecx",True
+2,"mov eax, dword ptr [edi]","mov eax, dword ptr [edi]",True
+3,call dword ptr [eax + 0x5c],call dword ptr [eax + 0x5c],True
+4,"mov eax, dword ptr [edi + 0x1438]","mov eax, dword ptr [edi + 0x1438]",True
+5,"cmp eax, 1","cmp eax, 1",True
+6,jle 0x57,jle 0x10039b87,True
+7,push ebx,push ebx,True
+8,push esi,push esi,True
+9,"mov ebx, 1","mov ebx, 1",True
+10,"lea esi, [edi + 0x1440]","lea esi, [edi + 0x1440]",True
+11,"mov ecx, dword ptr [esi]","mov ecx, dword ptr [esi]",True
+12,"test ecx, ecx","test ecx, ecx",True
+13,je 0x3d,je 0x10039b6d,True
+14,call 0x2b,call 0x100016a4,True
+15,"mov ecx, dword ptr [esi]","mov ecx, dword ptr [esi]",True
+16,"test ecx, ecx","test ecx, ecx",True
+17,je 0x37,je 0x10039b67,True
+18,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+19,push 1,push 1,True
+20,call dword ptr [edx],call dword ptr [edx],True
+21,"mov dword ptr [esi], 0","mov dword ptr [esi], 0",True
+22,"mov eax, dword ptr [edi + 0x1438]","mov eax, dword ptr [edi + 0x1438]",True
+23,inc ebx,inc ebx,True
+24,"add esi, 4","add esi, 4",True
+25,"cmp ebx, eax","cmp ebx, eax",True
+26,jl 0x20,jl 0x10039b50,True
+27,pop esi,pop esi,True
+28,"mov dword ptr [edi + 0x1438], 1","mov dword ptr [edi + 0x1438], 1",True
+29,pop ebx,pop ebx,True
+30,"test byte ptr [edi + 0xc8], 2","test byte ptr [edi + 0xc8], 2",True
+31,je 0x73,je 0x10039ba3,True
+32,"lea ecx, [edi + 0x70]","lea ecx, [edi + 0x70]",True
+33,call 0x68,call 0x10001d11,True
+34,"mov ecx, dword ptr [edi + 0x44]","mov ecx, dword ptr [edi + 0x44]",True
+35,"and ecx, 0xfffffffe","and ecx, 0xfffffffe",True
+36,"mov dword ptr [edi + 0x44], ecx","mov dword ptr [edi + 0x44], ecx",True
+37,pop edi,pop edi,True
+38,ret ,ret ,True
+39,"mov eax, 0x14","mov eax, 0x14",True
+40,pop edi,pop edi,True
+41,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10039b30@C_FUN_10039b30@f_10039b30@@QAEHXZ,module=sound.dll
+VERDICT,GREEN,42,100.0%

@@ -1,0 +1,19 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"add esp, -0xc","add esp, -0xc",True
+3,wait ,wait ,True
+4,fnstcw word ptr [ebp - 2],fnstcw word ptr [ebp - 2],True
+5,wait ,wait ,True
+6,"mov ax, word ptr [ebp - 2]","mov ax, word ptr [ebp - 2]",True
+7,"or ah, 0xc","or ah, 0xc",True
+8,"mov word ptr [ebp - 4], ax","mov word ptr [ebp - 4], ax",True
+9,fldcw word ptr [ebp - 4],fldcw word ptr [ebp - 4],True
+10,fistp qword ptr [ebp - 0xc],fistp qword ptr [ebp - 0xc],True
+11,fldcw word ptr [ebp - 2],fldcw word ptr [ebp - 2],True
+12,"mov eax, dword ptr [ebp - 0xc]","mov eax, dword ptr [ebp - 0xc]",True
+13,"mov edx, dword ptr [ebp - 8]","mov edx, dword ptr [ebp - 8]",True
+14,leave ,leave ,True
+15,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=?m36c_ftol_42550@@YAXXZ,module=sound.dll
+VERDICT,GREEN,16,100.0%

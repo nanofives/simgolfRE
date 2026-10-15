@@ -1,0 +1,49 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,push edi,push edi,True
+3,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+4,"test eax, eax","test eax, eax",True
+5,je 0x7a,je 0x10031b3a,True
+6,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+7,"test ecx, ecx","test ecx, ecx",True
+8,je 0x1b,je 0x10031adb,True
+9,"mov dword ptr [ecx], 0","mov dword ptr [ecx], 0",True
+10,"mov dword ptr [esi], ecx","mov dword ptr [esi], ecx",True
+11,jmp 0x28,jmp 0x10031ae8,True
+12,"mov dword ptr [esi + 4], 0","mov dword ptr [esi + 4], 0",True
+13,"mov dword ptr [esi], 0","mov dword ptr [esi], 0",True
+14,"mov edi, dword ptr [eax + 8]","mov edi, dword ptr [eax + 8]",True
+15,push eax,push eax,True
+16,call 0x31,call 0x1004249a,True
+17,"mov ecx, dword ptr [esi + 0xc]","mov ecx, dword ptr [esi + 0xc]",True
+18,"add esp, 4","add esp, 4",True
+19,dec ecx,dec ecx,True
+20,"test edi, edi","test edi, edi",True
+21,"mov dword ptr [esi + 0xc], ecx","mov dword ptr [esi + 0xc], ecx",True
+22,je 0x7a,je 0x10031b3a,True
+23,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+24,"test eax, eax","test eax, eax",True
+25,je 0x7a,je 0x10031b3a,True
+26,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+27,"test ecx, ecx","test ecx, ecx",True
+28,je 0x56,je 0x10031b16,True
+29,"mov dword ptr [ecx], 0","mov dword ptr [ecx], 0",True
+30,"mov dword ptr [esi], ecx","mov dword ptr [esi], ecx",True
+31,jmp 0x63,jmp 0x10031b23,True
+32,"mov dword ptr [esi + 4], 0","mov dword ptr [esi + 4], 0",True
+33,"mov dword ptr [esi], 0","mov dword ptr [esi], 0",True
+34,"mov edi, dword ptr [eax + 8]","mov edi, dword ptr [eax + 8]",True
+35,push eax,push eax,True
+36,call 0x6c,call 0x1004249a,True
+37,"mov ecx, dword ptr [esi + 0xc]","mov ecx, dword ptr [esi + 0xc]",True
+38,"add esp, 4","add esp, 4",True
+39,dec ecx,dec ecx,True
+40,"test edi, edi","test edi, edi",True
+41,"mov dword ptr [esi + 0xc], ecx","mov dword ptr [esi + 0xc], ecx",True
+42,jne 0x3f,jne 0x10031aff,True
+43,pop edi,pop edi,True
+44,pop esi,pop esi,True
+45,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10031ac0@C_FUN_10031ac0@f_10031ac0@@QAEXXZ,module=sound.dll
+VERDICT,GREEN,46,100.0%

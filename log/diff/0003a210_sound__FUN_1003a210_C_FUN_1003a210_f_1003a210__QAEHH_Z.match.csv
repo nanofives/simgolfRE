@@ -1,0 +1,88 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"sub esp, 0xc","sub esp, 0xc",True
+3,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+4,push ebx,push ebx,True
+5,push esi,push esi,True
+6,push edi,push edi,True
+7,"cmp eax, 0xfffffb50","cmp eax, 0xfffffb50",True
+8,"mov edi, ecx","mov edi, ecx",True
+9,jl 0x1c,jl 0x1003a22c,True
+10,"cmp eax, 0x4b0","cmp eax, 0x4b0",True
+11,jle 0x29,jle 0x1003a239,True
+12,cdq ,cdq ,True
+13,"mov ecx, 0x4b0","mov ecx, 0x4b0",True
+14,idiv ecx,idiv ecx,True
+15,"mov dword ptr [ebp + 8], edx","mov dword ptr [ebp + 8], edx",True
+16,"mov eax, edx","mov eax, edx",True
+17,push eax,push eax,True
+18,"mov ecx, edi","mov ecx, edi",True
+19,call 0x31,call 0x10001924,True
+20,push eax,push eax,True
+21,push ecx,push ecx,True
+22,push edx,push edx,True
+23,"mov eax, dword ptr [ebp + 8]","mov eax, dword ptr [ebp + 8]",True
+24,cdq ,cdq ,True
+25,"mov ecx, 0x64","mov ecx, 0x64",True
+26,idiv ecx,idiv ecx,True
+27,"cmp edx, 0","cmp edx, 0",True
+28,jge 0x46,jge 0x1003a256,True
+29,neg edx,neg edx,True
+30,"mov dword ptr [ebp - 8], eax","mov dword ptr [ebp - 8], eax",True
+31,"mov dword ptr [ebp - 4], edx","mov dword ptr [ebp - 4], edx",True
+32,pop edx,pop edx,True
+33,pop ecx,pop ecx,True
+34,pop eax,pop eax,True
+35,"mov esi, dword ptr [ebp - 8]","mov esi, dword ptr [ebp - 8]",True
+36,"mov edx, dword ptr [edi]","mov edx, dword ptr [edi]",True
+37,"mov ecx, edi","mov ecx, edi",True
+38,"add esi, 0xc","add esi, 0xc",True
+39,"mov dword ptr [ebp - 0xc], 0","mov dword ptr [ebp - 0xc], 0",True
+40,"mov dword ptr [ebp - 8], 0","mov dword ptr [ebp - 8], 0",True
+41,call dword ptr [edx + 0xcc],call dword ptr [edx + 0xcc],True
+42,"test eax, eax","test eax, eax",True
+43,"lea eax, [esi*4]","lea eax, [esi*4]",True
+44,je 0x83,je 0x1003a293,True
+45,"mov ebx, dword ptr [eax]","mov ebx, dword ptr [eax + 0x1005c66c]",True
+46,fld qword ptr [ebp - 0xc],fld qword ptr [ebp - 0xc],True
+47,jmp 0x90,jmp 0x1003a2a0,True
+48,"mov ebx, dword ptr [eax]","mov ebx, dword ptr [eax + 0x1005c608]",True
+49,fld qword ptr [esi*8],fld qword ptr [esi*8 + 0x1005c6d0],True
+50,"mov ecx, dword ptr [ebp + 8]","mov ecx, dword ptr [ebp + 8]",True
+51,"test ecx, ecx","test ecx, ecx",True
+52,"lea ecx, [esi - 1]","lea ecx, [esi - 1]",True
+53,jl 0x9d,jl 0x1003a2ad,True
+54,"lea ecx, [esi + 1]","lea ecx, [esi + 1]",True
+55,fld qword ptr [ecx*8],fld qword ptr [ecx*8 + 0x1005c6d0],True
+56,fsub qword ptr [esi*8],fsub qword ptr [esi*8 + 0x1005c6d0],True
+57,fimul dword ptr [ebp - 4],fimul dword ptr [ebp - 4],True
+58,"mov ecx, dword ptr [ecx*4]","mov ecx, dword ptr [ecx*4 + 0x1005c608]",True
+59,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax + 0x1005c608]",True
+60,"sub ecx, edx","sub ecx, edx",True
+61,"mov dword ptr [ebp + 8], ecx","mov dword ptr [ebp + 8], ecx",True
+62,fmul qword ptr [0],fmul qword ptr [0x1005c910],True
+63,fadd st(1),fadd st(1),True
+64,fstp qword ptr [ebp - 0xc],fstp qword ptr [ebp - 0xc],True
+65,fstp st(0),fstp st(0),True
+66,fild dword ptr [ebp + 8],fild dword ptr [ebp + 8],True
+67,fimul dword ptr [ebp - 4],fimul dword ptr [ebp - 4],True
+68,fmul dword ptr [0],fmul dword ptr [0x1005c90c],True
+69,call 0xde,call 0x10042550,True
+70,"sub ebx, eax","sub ebx, eax",True
+71,"lea ecx, [edi + 0x70]","lea ecx, [edi + 0x70]",True
+72,push ebx,push ebx,True
+73,call 0xe9,call 0x100016f9,True
+74,"mov edx, dword ptr [ebp - 0xc]","mov edx, dword ptr [ebp - 0xc]",True
+75,"mov eax, dword ptr [ebp - 8]","mov eax, dword ptr [ebp - 8]",True
+76,"mov dword ptr [edi + 0x13f8], edx","mov dword ptr [edi + 0x13f8], edx",True
+77,"mov dword ptr [edi + 0x13fc], eax","mov dword ptr [edi + 0x13fc], eax",True
+78,pop edi,pop edi,True
+79,pop esi,pop esi,True
+80,"xor eax, eax","xor eax, eax",True
+81,pop ebx,pop ebx,True
+82,"mov esp, ebp","mov esp, ebp",True
+83,pop ebp,pop ebp,True
+84,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1003a210@C_FUN_1003a210@f_1003a210@@QAEHH@Z,module=sound.dll
+VERDICT,GREEN,85,100.0%

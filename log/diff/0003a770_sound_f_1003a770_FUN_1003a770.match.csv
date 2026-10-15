@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b4a3c]",True
+1,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1003a770@f_1003a770@@YAHXZ,module=sound.dll
+VERDICT,GREEN,2,100.0%

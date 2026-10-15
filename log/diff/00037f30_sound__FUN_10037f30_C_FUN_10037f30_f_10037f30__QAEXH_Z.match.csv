@@ -1,0 +1,85 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,"and esp, 0xfffffff8","and esp, 0xfffffff8",True
+3,"sub esp, 8","sub esp, 8",True
+4,"mov edx, dword ptr [ebp + 8]","mov edx, dword ptr [ebp + 8]",True
+5,push esi,push esi,True
+6,"cmp edx, -0x40","cmp edx, -0x40",True
+7,push edi,push edi,True
+8,jge 0x1a,jge 0x10037f4a,True
+9,"mov edx, 0xffffffc0","mov edx, 0xffffffc0",True
+10,jmp 0x24,jmp 0x10037f54,True
+11,"cmp edx, 0x3f","cmp edx, 0x3f",True
+12,jle 0x27,jle 0x10037f57,True
+13,"mov edx, 0x3f","mov edx, 0x3f",True
+14,"mov dword ptr [ebp + 8], edx","mov dword ptr [ebp + 8], edx",True
+15,"mov esi, dword ptr [ecx + 0x50]","mov esi, dword ptr [ecx + 0x50]",True
+16,"mov dword ptr [ecx + 0x48], edx","mov dword ptr [ecx + 0x48], edx",True
+17,"test edx, edx","test edx, edx",True
+18,jne 0x57,jne 0x10037f87,True
+19,"mov eax, dword ptr [ecx + 0x58]","mov eax, dword ptr [ecx + 0x58]",True
+20,"mov edx, dword ptr [ecx + 0x5c]","mov edx, dword ptr [ecx + 0x5c]",True
+21,"mov dword ptr [ecx + 0x70], eax","mov dword ptr [ecx + 0x70], eax",True
+22,"mov dword ptr [ecx + 0x80], eax","mov dword ptr [ecx + 0x80], eax",True
+23,"mov dword ptr [ecx + 0x68], esi","mov dword ptr [ecx + 0x68], esi",True
+24,"mov dword ptr [ecx + 0x78], esi","mov dword ptr [ecx + 0x78], esi",True
+25,"mov dword ptr [ecx + 0x74], edx","mov dword ptr [ecx + 0x74], edx",True
+26,"mov dword ptr [ecx + 0x84], edx","mov dword ptr [ecx + 0x84], edx",True
+27,pop edi,pop edi,True
+28,pop esi,pop esi,True
+29,"mov esp, ebp","mov esp, ebp",True
+30,pop ebp,pop ebp,True
+31,ret 4,ret 4,True
+32,"xor eax, eax","xor eax, eax",True
+33,"test edx, edx","test edx, edx",True
+34,setl al,setl al,True
+35,"add eax, 0x3f","add eax, 0x3f",True
+36,"mov edi, eax","mov edi, eax",True
+37,"mov eax, esi","mov eax, esi",True
+38,fild dword ptr [ebp + 8],fild dword ptr [ebp + 8],True
+39,"imul eax, edx","imul eax, edx",True
+40,fmul qword ptr [ecx + 0x58],fmul qword ptr [ecx + 0x58],True
+41,"mov dword ptr [esp + 8], edi","mov dword ptr [esp + 8], edi",True
+42,fidiv dword ptr [esp + 8],fidiv dword ptr [esp + 8],True
+43,cdq ,cdq ,True
+44,idiv edi,idiv edi,True
+45,fld st(0),fld st(0),True
+46,fadd qword ptr [ecx + 0x58],fadd qword ptr [ecx + 0x58],True
+47,fstp qword ptr [esp + 8],fstp qword ptr [esp + 8],True
+48,fsubr qword ptr [ecx + 0x58],fsubr qword ptr [ecx + 0x58],True
+49,"lea edx, [eax + esi]","lea edx, [eax + esi]",True
+50,"sub esi, eax","sub esi, eax",True
+51,"cmp edx, 0x10000","cmp edx, 0x10000",True
+52,jle 0x97,jle 0x10037fc7,True
+53,"mov edx, 0x10000","mov edx, 0x10000",True
+54,fld qword ptr [esp + 8],fld qword ptr [esp + 8],True
+55,fcomp qword ptr [0],fcomp qword ptr [0x1005c5f8],True
+56,fnstsw ax,fnstsw ax,True
+57,"test ah, 0x41","test ah, 0x41",True
+58,jne 0xb8,jne 0x10037fe8,True
+59,"mov dword ptr [esp + 8], 0","mov dword ptr [esp + 8], 0",True
+60,"mov dword ptr [esp + 0xc], 0x3ff00000","mov dword ptr [esp + 0xc], 0x3ff00000",True
+61,"cmp esi, 0x10000","cmp esi, 0x10000",True
+62,jle 0xc5,jle 0x10037ff5,True
+63,"mov esi, 0x10000","mov esi, 0x10000",True
+64,fcom qword ptr [0],fcom qword ptr [0x1005c5f8],True
+65,fnstsw ax,fnstsw ax,True
+66,"test ah, 0x41","test ah, 0x41",True
+67,jne 0xda,jne 0x1003800a,True
+68,fstp st(0),fstp st(0),True
+69,fld qword ptr [0],fld qword ptr [0x1005c5f8],True
+70,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+71,"mov dword ptr [ecx + 0x68], edx","mov dword ptr [ecx + 0x68], edx",True
+72,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+73,"mov dword ptr [ecx + 0x78], esi","mov dword ptr [ecx + 0x78], esi",True
+74,fstp qword ptr [ecx + 0x80],fstp qword ptr [ecx + 0x80],True
+75,"mov dword ptr [ecx + 0x70], edx","mov dword ptr [ecx + 0x70], edx",True
+76,pop edi,pop edi,True
+77,"mov dword ptr [ecx + 0x74], eax","mov dword ptr [ecx + 0x74], eax",True
+78,pop esi,pop esi,True
+79,"mov esp, ebp","mov esp, ebp",True
+80,pop ebp,pop ebp,True
+81,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_10037f30@C_FUN_10037f30@f_10037f30@@QAEXH@Z,module=sound.dll
+VERDICT,GREEN,82,100.0%
