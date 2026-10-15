@@ -41,6 +41,37 @@ C3 / C4 row has a linked hook).
 - **Scenario evidence does not cover dynInit_* stubs.** s36c's control A (a stub that skips its constructor) read GREEN in
   both spawn scenarios; c4_match_promote.py skips dynInit_* in scenario mode. They go to C4 by match only.
 
+## After round 36: roadmap (2026-10-15)
+
+State: C4 2,765 (exe 1,536, jgld 535 = all, sound 545, Terrain 149 = all), C3 153 (exe 94, sound 59), C2 open 5,
+C2 held 123. Committed and pushed (ff6e2415).
+
+Next, in order of value:
+1. **C2 open 5 -> C3 (one small batch):** EditBox::onKey 0x004867b0 (slot 36 of the EditBox vtable, uitree.js), both
+   __ArrayUnwind (0x004a5793, sound 0x1004288e: c3fo's SEH caller harness), sound dynInit_soundWindowObj100b49b8 0x100091c0 and
+   SoundWindowObj_ctor 0x10028600 (the c3co static-init method). Then match them for C4.
+2. **exe C3 94:** about 120 UI rows overall sit in the TextView / ListBox / optionDialog / panel / listPanel families, which only
+   network code builds (netService, netSendMessages, netHandleControl call TextView::ctor; TextView::create has no caller), so no
+   single-player scenario reaches them. Routes: a network-session scenario over importstandin.js (wsock32 / DirectPlay stubs and
+   the session object at [0x8400b8]), or matching them by hand (they are /O2, mostly mid-size). Also story / tournament /
+   retirement screens (showTutorialText, showCourseRanking, CareerRetirementFlow, showTournamentResults, showGolferPairSelect,
+   narrateShot, showTitleScreen): scenarios that drive a full tournament or a career end, from .sve fixtures.
+3. **sound C3 59:** mostly near misses at 60-99% where VC6 /O2 scheduling and register choice did not move under the permuter
+   (re/match/wip/m36{a,b,c}_*). Two leads: sound.dll's Rich header names other compiler builds (8047, 8966; U-0005), so some
+   objects may come from a different cl than 8168; and audio is not compared by scenario_ab.py, so a scenario route for sound
+   needs audio observation (hash the DirectSound buffers the mixers write) on a PC with an output device.
+4. **Tool fixes:** match.py normalize() computes branch offsets unsigned at obj base 0 (strchr's backward branch reads
+   +0xfffffff0 vs -0x10; m36c's log/c3/m36c_signed_branch_check.py has the fix in memory); asm2inline.py treats `movsx` as a
+   string instruction and drops its operands (m36a); c3_verify.py gives no reason when a row's hooks.csv `file` column names a
+   source without its SG_HOOK (flagSet / flagIsSet needed `re_classify.py promote --file`).
+5. **Names to revisit:** the sound codec 0x3a900-0x41a00 is LPC-10 2400 bps in f2c shape; several re/names rows contradict
+   that reading (codecCombFilter has random_'s shape, codecGainSmoother dyptrk_'s; leads in log/c3/m36c_D1/D2_notes.txt);
+   resetSpriteQueue's row says it fills an array but it stores -1 into one dword 1,024 times; registry key GolferPanelEject
+   = hooks.csv drawGolferInfoPanel 0x0045c560.
+6. **Open questions:** in ui_tour, __ftol's original entry is reached 20 times with hooks ON vs 286 OFF (verdict GREEN, cause not
+   measured); m36d's 182 thunk / stub matches fix shape and adjustment values only (match.py masks the relocated targets), so
+   their target is verified by C3 A/B, not by the match.
+
 ## Two routes
 
 **Match** is the main lever. sound.dll is a release build (`/O2`, like the 245 sound functions already matched; an earlier

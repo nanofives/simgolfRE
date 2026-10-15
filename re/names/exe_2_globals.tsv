@@ -7,7 +7,8 @@ golf_clean.exe	0x00830164	g_spriteX	int[]	screen x written by enqueueSprite 0x00
 golf_clean.exe	0x00831164	g_spriteY	int[]	screen y written by enqueueSprite 0x00462a30, read by drawQueuedSprite 0x00462be0
 golf_clean.exe	0x0082815c	g_spriteFlags	int[]	flags written by enqueueSprite 0x00462a30 (param_8), tested by drawQueuedSprite 0x00462be0 (bit 0x100)
 golf_clean.exe	0x004c2844	g_zoomScale	int	zoom/scale factor read by enqueueSprite 0x00462a30 and drawQueuedSprite 0x00462be0
-golf_clean.exe	0x00822c8c	g_zoomLevel	int	zoom level read by enqueueSprite/drawQueuedSprite to pick sprite tier (0x10/0xd/0xa)
+golf_clean.exe	0x00822c8c	g_screenWidth	int	screen width in pixels: gameMain stores 800 at 0x0045baf6 and passes it to the display set-mode slot (0x0045bb42); scaleX 0x00404970 multiplies by it; enqueueSprite 0x00462a30 compares it with 0x3e8 and 0x4b0 (0x00462a4b, 0x00462a5c); screenToTile 0x00430020 reads it as W (0x0043006f)
+golf_clean.exe	0x00822c90	g_screenHeight	int	screen height in pixels: gameMain stores 600 at 0x0045bb00 and passes it to the display set-mode slot (0x0045bb42); screenToTile 0x00430020 reads it as H (0x00430081)
 golf_clean.exe	0x00824148	g_color16Lut	ushort*	16-bit RGB lookup table pointer, filled by build16BitColorTable 0x00461830
 golf_clean.exe	0x00822da0	g_tileShadeA	byte[]	tile shade map written (clamped 0..255) by spreadShade 0x004615f0
 golf_clean.exe	0x0082376c	g_tileShadeB	byte[]	second tile shade map written by spreadShade 0x004615f0

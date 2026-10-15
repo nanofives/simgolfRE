@@ -51,8 +51,8 @@ A per-frame, depth-sorted display list of world sprites (golfers, objects).
   `g_spriteX` 0x00830164, y `g_spriteY` 0x00831164, flags `g_spriteFlags` 0x0082815c,
   sort key `g_spriteSortKey` 0x0082415c (plus 0x0082915c/0x0082a15c/0x0082b160/0x0082c164).
   A z-sorted singly-linked list threads them: head `g_spriteQueueHead` 0x0082c160, links
-  `g_spriteQueueNext` 0x008361f4. Scaling uses `g_zoomScale` 0x004c2844 and tier from
-  `g_zoomLevel` 0x00822c8c.
+  `g_spriteQueueNext` 0x008361f4. Scaling uses `g_zoomScale` 0x004c2844 and the sprite divisor tier from the screen size
+  `g_screenWidth` 0x00822c8c.
 - Flow each frame (all from the main update 0x0040f5c0):
   `resetSpriteQueue` 0x004627d0 -> `buildSceneSprites` 0x00463180 (projects world cells
   via `cellAt` 0x0043d6f0 and `tileToScreen`, calls `addSprite` 0x004628d0 ->

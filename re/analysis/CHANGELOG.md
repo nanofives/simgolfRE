@@ -4,6 +4,11 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-15  0045baf0  gameMain  C2->C3  log/diff/0045baf0_gameMain.path1.csv
+2026-10-15  0044bde0  loadInfoScreenArt  C2->C3  log/diff/0044bde0_loadInfoScreenArt.path1.csv
+2026-10-15  00442180  loadInterfaceArt  C2->C3  log/diff/00442180_loadInterfaceArt.path1.csv
+2026-10-15  0043dbe0  loadWorldAssets  C2->C3  log/diff/0043dbe0_loadWorldAssets.path1.csv
+2026-10-15  00430360  drawWorldObjects  C2->C3  log/diff/00430360_drawWorldObjects.path1.csv
 2026-10-15  sound.dll:0001a910  Voice_mixAddStereo16  C3->C4  
 2026-10-15  sound.dll:0001a6c0  Voice_mixSetStereo16  C3->C4  
 2026-10-15  sound.dll:0001a2c0  Voice_mixAdd8bit  C3->C4  
