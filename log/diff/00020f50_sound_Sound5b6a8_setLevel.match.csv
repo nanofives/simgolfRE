@@ -1,0 +1,26 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+2,push edi,push edi,True
+3,"cmp esi, 0x7f","cmp esi, 0x7f",True
+4,"mov edi, ecx","mov edi, ecx",True
+5,jle 0x23,jle 0x10020f73,True
+6,"mov esi, 0x7f","mov esi, 0x7f",True
+7,push esi,push esi,True
+8,call 0x18,call 0x100025d6,True
+9,"mov dword ptr [edi + 0x730], esi","mov dword ptr [edi + 0x730], esi",True
+10,pop edi,pop edi,True
+11,pop esi,pop esi,True
+12,ret 4,ret 4,True
+13,"test esi, esi","test esi, esi",True
+14,jge 0x29,jge 0x10020f79,True
+15,"xor esi, esi","xor esi, esi",True
+16,push esi,push esi,True
+17,"mov ecx, edi","mov ecx, edi",True
+18,call 0x31,call 0x100025d6,True
+19,"mov dword ptr [edi + 0x730], esi","mov dword ptr [edi + 0x730], esi",True
+20,pop edi,pop edi,True
+21,pop esi,pop esi,True
+22,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?setLevel@Sound5b6a8@@QAEXH@Z,module=sound.dll
+VERDICT,GREEN,23,100.0%

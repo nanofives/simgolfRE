@@ -1,0 +1,61 @@
+instruction,recompiled,original,match
+0,push ecx,push ecx,True
+1,push ebp,push ebp,True
+2,push esi,push esi,True
+3,"mov esi, ecx","mov esi, ecx",True
+4,push edi,push edi,True
+5,"test byte ptr [esi + 0x214], 0x40","test byte ptr [esi + 0x214], 0x40",True
+6,je 0x19,je 0x100202a9,True
+7,"mov ecx, 0","mov ecx, 0x100b49b8",True
+8,call 0x19,call 0x10001997,True
+9,"mov eax, dword ptr [esp + 0x14]","mov eax, dword ptr [esp + 0x14]",True
+10,"lea edi, [esi + 0x60]","lea edi, [esi + 0x60]",True
+11,push eax,push eax,True
+12,"mov ecx, edi","mov ecx, edi",True
+13,call 0x28,call 0x1000270c,True
+14,"lea ecx, [esp + 0xc]","lea ecx, [esp + 0xc]",True
+15,push 1,push 1,True
+16,push ecx,push ecx,True
+17,"mov ecx, edi","mov ecx, edi",True
+18,"mov ebp, eax","mov ebp, eax",True
+19,call 0x38,call 0x100015fa,True
+20,"test ebp, ebp","test ebp, ebp",True
+21,jne 0x8b,jne 0x1002031b,True
+22,"mov edx, dword ptr [esi]","mov edx, dword ptr [esi]",True
+23,push ebx,push ebx,True
+24,"mov ecx, esi","mov ecx, esi",True
+25,"xor ebx, ebx","xor ebx, ebx",True
+26,call dword ptr [edx + 0xb4],call dword ptr [edx + 0xb4],True
+27,"test eax, eax","test eax, eax",True
+28,jbe 0x64,jbe 0x100202f4,True
+29,push ebx,push ebx,True
+30,"mov ecx, esi","mov ecx, esi",True
+31,call 0x55,call 0x10001956,True
+32,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+33,"mov ecx, esi","mov ecx, esi",True
+34,inc ebx,inc ebx,True
+35,call dword ptr [eax + 0xb4],call dword ptr [eax + 0xb4],True
+36,"cmp ebx, eax","cmp ebx, eax",True
+37,jb 0x4d,jb 0x100202dd,True
+38,"mov eax, dword ptr [edi + 0x4c]","mov eax, dword ptr [edi + 0x4c]",True
+39,pop ebx,pop ebx,True
+40,"or ah, 4","or ah, 4",True
+41,"mov dword ptr [edi + 0x4c], eax","mov dword ptr [edi + 0x4c], eax",True
+42,"xor eax, eax","xor eax, eax",True
+43,"mov dword ptr [esi + 0x720], eax","mov dword ptr [esi + 0x720], eax",True
+44,"mov dword ptr [esi + 0x71c], eax","mov dword ptr [esi + 0x71c], eax",True
+45,"mov dword ptr [esi + 0x724], eax","mov dword ptr [esi + 0x724], eax",True
+46,pop edi,pop edi,True
+47,"mov eax, ebp","mov eax, ebp",True
+48,pop esi,pop esi,True
+49,pop ebp,pop ebp,True
+50,pop ecx,pop ecx,True
+51,ret 4,ret 4,True
+52,pop edi,pop edi,True
+53,"mov eax, ebp","mov eax, ebp",True
+54,pop esi,pop esi,True
+55,pop ebp,pop ebp,True
+56,pop ecx,pop ecx,True
+57,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?loadFile@Sound5b6a8@@QAEHPBD@Z,module=sound.dll
+VERDICT,GREEN,58,100.0%

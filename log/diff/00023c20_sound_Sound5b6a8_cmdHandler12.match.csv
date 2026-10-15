@@ -1,0 +1,22 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"lea edx, [esp + 4]","lea edx, [esp + 4]",True
+2,push eax,push eax,True
+3,push edx,push edx,True
+4,"add ecx, 0x60","add ecx, 0x60",True
+5,call 0x12,call 0x100015fa,True
+6,"test eax, eax","test eax, eax",True
+7,jne 0x31,jne 0x10023c51,True
+8,"mov cl, byte ptr [esp + 8]","mov cl, byte ptr [esp + 8]",True
+9,push esi,push esi,True
+10,"mov esi, dword ptr [esp + 8]","mov esi, dword ptr [esp + 8]",True
+11,"and cl, 1","and cl, 1",True
+12,"shl cl, 4","shl cl, 4",True
+13,"mov dl, byte ptr [esi + 0x38]","mov dl, byte ptr [esi + 0x38]",True
+14,"and dl, 0xef","and dl, 0xef",True
+15,"or cl, dl","or cl, dl",True
+16,"mov byte ptr [esi + 0x38], cl","mov byte ptr [esi + 0x38], cl",True
+17,pop esi,pop esi,True
+18,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?cmdHandler12@Sound5b6a8@@QAEHID@Z,module=sound.dll
+VERDICT,GREEN,19,100.0%

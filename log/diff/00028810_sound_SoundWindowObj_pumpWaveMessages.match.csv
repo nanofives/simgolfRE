@@ -1,0 +1,42 @@
+instruction,recompiled,original,match
+0,"sub esp, 0x1c","sub esp, 0x1c",True
+1,push esi,push esi,True
+2,"mov esi, ecx","mov esi, ecx",True
+3,push edi,push edi,True
+4,"mov edi, dword ptr [0]","mov edi, dword ptr [0x100b85b4]",True
+5,"mov eax, dword ptr [esi + 8]","mov eax, dword ptr [esi + 8]",True
+6,push 1,push 1,True
+7,push 0x7ef,push 0x7ef,True
+8,push 0x7e8,push 0x7e8,True
+9,"lea ecx, [esp + 0x14]","lea ecx, [esp + 0x14]",True
+10,push eax,push eax,True
+11,push ecx,push ecx,True
+12,call edi,call edi,True
+13,"test eax, eax","test eax, eax",True
+14,je 0x5c,je 0x1002886c,True
+15,"mov edx, dword ptr [esp + 0x14]","mov edx, dword ptr [esp + 0x14]",True
+16,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+17,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+18,push edx,push edx,True
+19,"mov edx, dword ptr [esp + 0xc]","mov edx, dword ptr [esp + 0xc]",True
+20,push eax,push eax,True
+21,push ecx,push ecx,True
+22,push edx,push edx,True
+23,call 0x41,call 0x100025ef,True
+24,"mov eax, dword ptr [esi + 8]","mov eax, dword ptr [esi + 8]",True
+25,push 1,push 1,True
+26,push 0x7ef,push 0x7ef,True
+27,push 0x7e8,push 0x7e8,True
+28,"lea ecx, [esp + 0x14]","lea ecx, [esp + 0x14]",True
+29,push eax,push eax,True
+30,push ecx,push ecx,True
+31,call edi,call edi,True
+32,"test eax, eax","test eax, eax",True
+33,jne 0x28,jne 0x10028838,True
+34,pop edi,pop edi,True
+35,"xor eax, eax","xor eax, eax",True
+36,pop esi,pop esi,True
+37,"add esp, 0x1c","add esp, 0x1c",True
+38,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?pumpWaveMessages@SoundWindowObj@@QAEHXZ,module=sound.dll
+VERDICT,GREEN,39,100.0%

@@ -1,0 +1,22 @@
+instruction,recompiled,original,match
+0,push 0,push 0,True
+1,push 0xc,push 0xc,True
+2,push 0xb,push 0xb,True
+3,push 0xb,push 0xb,True
+4,push 9,push 9,True
+5,push 9,push 9,True
+6,push 7,push 7,True
+7,push 7,push 7,True
+8,push 5,push 5,True
+9,push 4,push 4,True
+10,push 4,push 4,True
+11,push 2,push 2,True
+12,push 2,push 2,True
+13,"mov ecx, 0","mov ecx, 0x100b4b50",True
+14,call 0x24,call 0x1000123f,True
+15,push 0,push 0x1001b550,True
+16,call 0x2e,call 0x10042647,True
+17,pop ecx,pop ecx,True
+18,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?FUN_1001b510@f_1001b510@@YAXXZ,module=sound.dll
+VERDICT,GREEN,19,100.0%

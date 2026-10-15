@@ -1,0 +1,48 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, ecx","mov ebx, ecx",True
+2,"mov ecx, dword ptr [ebx + 0x40]","mov ecx, dword ptr [ebx + 0x40]",True
+3,push esi,push esi,True
+4,"lea esi, [ebx + 0x40]","lea esi, [ebx + 0x40]",True
+5,"xor eax, eax","xor eax, eax",True
+6,"test ecx, ecx","test ecx, ecx",True
+7,jne 0x20,jne 0x1002eb60,True
+8,push 4,push 4,True
+9,push eax,push eax,True
+10,push esi,push esi,True
+11,call 0x19,call 0x1000137a,True
+12,"add esp, 0xc","add esp, 0xc",True
+13,"test eax, eax","test eax, eax",True
+14,jne 0x64,jne 0x1002eba4,True
+15,"mov ecx, dword ptr [esi]","mov ecx, dword ptr [esi]",True
+16,"test ecx, ecx","test ecx, ecx",True
+17,je 0x64,je 0x1002eba4,True
+18,"mov edx, dword ptr [esp + 0x18]","mov edx, dword ptr [esp + 0x18]",True
+19,push edi,push edi,True
+20,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+21,push edx,push edx,True
+22,"mov edx, dword ptr [esp + 0x1c]","mov edx, dword ptr [esp + 0x1c]",True
+23,push edx,push edx,True
+24,"mov edx, dword ptr [esp + 0x1c]","mov edx, dword ptr [esp + 0x1c]",True
+25,push edx,push edx,True
+26,"mov edx, dword ptr [esp + 0x1c]","mov edx, dword ptr [esp + 0x1c]",True
+27,push edx,push edx,True
+28,call dword ptr [eax + 0x84],call dword ptr [eax + 0x84],True
+29,"mov edi, eax","mov edi, eax",True
+30,"test edi, edi","test edi, edi",True
+31,je 0x5a,je 0x1002eb9a,True
+32,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+33,push eax,push eax,True
+34,call 0x51,call 0x10001a87,True
+35,"add esp, 4","add esp, 4",True
+36,"mov dword ptr [esi], 0","mov dword ptr [esi], 0",True
+37,"mov edx, dword ptr [ebx]","mov edx, dword ptr [ebx]",True
+38,"mov ecx, ebx","mov ecx, ebx",True
+39,call dword ptr [edx + 0x7c],call dword ptr [edx + 0x7c],True
+40,"mov eax, edi","mov eax, edi",True
+41,pop edi,pop edi,True
+42,pop esi,pop esi,True
+43,pop ebx,pop ebx,True
+44,ret 0x10,ret 0x10,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?open4@Ch5c178@@QAEHHHHH@Z,module=sound.dll
+VERDICT,GREEN,45,100.0%

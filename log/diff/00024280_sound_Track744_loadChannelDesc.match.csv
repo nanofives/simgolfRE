@@ -1,0 +1,40 @@
+instruction,recompiled,original,match
+0,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+1,"test edx, edx","test edx, edx",True
+2,jne 0x10,jne 0x10024290,True
+3,"mov eax, 0xa","mov eax, 0xa",True
+4,ret 4,ret 4,True
+5,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+6,push esi,push esi,True
+7,"mov dword ptr [ecx], eax","mov dword ptr [ecx], eax",True
+8,"mov eax, dword ptr [edx + 8]","mov eax, dword ptr [edx + 8]",True
+9,"mov dword ptr [ecx + 8], eax","mov dword ptr [ecx + 8], eax",True
+10,"mov eax, dword ptr [edx + 0xc]","mov eax, dword ptr [edx + 0xc]",True
+11,"mov dword ptr [ecx + 0xc], eax","mov dword ptr [ecx + 0xc], eax",True
+12,"mov eax, dword ptr [edx + 0x10]","mov eax, dword ptr [edx + 0x10]",True
+13,"mov dword ptr [ecx + 0x10], eax","mov dword ptr [ecx + 0x10], eax",True
+14,"mov eax, dword ptr [edx + 0x14]","mov eax, dword ptr [edx + 0x14]",True
+15,"mov esi, dword ptr [ecx + 4]","mov esi, dword ptr [ecx + 4]",True
+16,"mov dword ptr [ecx + 0x14], eax","mov dword ptr [ecx + 0x14], eax",True
+17,"mov eax, dword ptr [edx + 4]","mov eax, dword ptr [edx + 4]",True
+18,"shl eax, 0x1f","shl eax, 0x1f",True
+19,"sar eax, 0x1f","sar eax, 0x1f",True
+20,"xor eax, esi","xor eax, esi",True
+21,"and eax, 1","and eax, 1",True
+22,"xor eax, esi","xor eax, esi",True
+23,"mov dword ptr [ecx + 4], eax","mov dword ptr [ecx + 4], eax",True
+24,"mov esi, dword ptr [edx + 4]","mov esi, dword ptr [edx + 4]",True
+25,"shl esi, 0x1e","shl esi, 0x1e",True
+26,"sar esi, 0x1e","sar esi, 0x1e",True
+27,"xor esi, eax","xor esi, eax",True
+28,"and esi, 2","and esi, 2",True
+29,"xor esi, eax","xor esi, eax",True
+30,"mov dword ptr [ecx + 4], esi","mov dword ptr [ecx + 4], esi",True
+31,"mov edx, dword ptr [edx + 0x1c]","mov edx, dword ptr [edx + 0x1c]",True
+32,push edx,push edx,True
+33,call 0x5f,call 0x100010f5,True
+34,"mov eax, 0xb","mov eax, 0xb",True
+35,pop esi,pop esi,True
+36,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?loadChannelDesc@Track744@@QAEHPAUChanDesc@@@Z,module=sound.dll
+VERDICT,GREEN,37,100.0%

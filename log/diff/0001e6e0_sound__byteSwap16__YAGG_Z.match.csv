@@ -1,0 +1,15 @@
+instruction,recompiled,original,match
+0,push ecx,push ecx,True
+1,"xor eax, eax","xor eax, eax",True
+2,"lea ecx, [esp + 9]","lea ecx, [esp + 9]",True
+3,"mov dl, byte ptr [ecx]","mov dl, byte ptr [ecx]",True
+4,"mov byte ptr [esp + eax + 2], dl","mov byte ptr [esp + eax + 2], dl",True
+5,inc eax,inc eax,True
+6,dec ecx,dec ecx,True
+7,"cmp eax, 2","cmp eax, 2",True
+8,jl 7,jl 0x1001e6e7,True
+9,"mov ax, word ptr [esp + 2]","mov ax, word ptr [esp + 2]",True
+10,pop ecx,pop ecx,True
+11,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?byteSwap16@@YAGG@Z,module=sound.dll
+VERDICT,GREEN,12,100.0%

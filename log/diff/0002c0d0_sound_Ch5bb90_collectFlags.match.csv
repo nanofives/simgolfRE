@@ -1,0 +1,36 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,"xor eax, eax","xor eax, eax",True
+3,"mov ecx, dword ptr [esi + 0x40]","mov ecx, dword ptr [esi + 0x40]",True
+4,"test ecx, ecx","test ecx, ecx",True
+5,je 0x11,je 0x1002c0e1,True
+6,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+7,call dword ptr [eax + 0x70],call dword ptr [eax + 0x70],True
+8,"mov ecx, dword ptr [esi + 0x30]","mov ecx, dword ptr [esi + 0x30]",True
+9,"test ecx, ecx","test ecx, ecx",True
+10,je 0x1a,je 0x1002c0ea,True
+11,"or al, 2","or al, 2",True
+12,"mov ecx, dword ptr [esi + 0x58]","mov ecx, dword ptr [esi + 0x58]",True
+13,pop esi,pop esi,True
+14,"test cl, 1","test cl, 1",True
+15,je 0x25,je 0x1002c0f5,True
+16,"or al, 1","or al, 1",True
+17,"test cl, 8","test cl, 8",True
+18,je 0x2c,je 0x1002c0fc,True
+19,"or al, 0x40","or al, 0x40",True
+20,"test cl, 2","test cl, 2",True
+21,je 0x33,je 0x1002c103,True
+22,"or al, 4","or al, 4",True
+23,"test cl, 4","test cl, 4",True
+24,je 0x3a,je 0x1002c10a,True
+25,"or al, 0x10","or al, 0x10",True
+26,"test cl, 0x10","test cl, 0x10",True
+27,je 0x41,je 0x1002c111,True
+28,"or al, 0x80","or al, 0x80",True
+29,"test cl, 0x20","test cl, 0x20",True
+30,je 0x49,je 0x1002c119,True
+31,"or ah, 1","or ah, 1",True
+32,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?collectFlags@Ch5bb90@@QAEIXZ,module=sound.dll
+VERDICT,GREEN,33,100.0%

@@ -1,0 +1,23 @@
+instruction,recompiled,original,match
+0,"mov edx, ecx","mov edx, ecx",True
+1,"xor eax, eax","xor eax, eax",True
+2,"mov ecx, eax","mov ecx, eax",True
+3,push edi,push edi,True
+4,"and ecx, 0xfffffffb","and ecx, 0xfffffffb",True
+5,"mov dword ptr [edx], 0","mov dword ptr [edx], 0x1005be84",True
+6,"or ecx, 2","or ecx, 2",True
+7,"mov dword ptr [edx + 0x208], eax","mov dword ptr [edx + 0x208], eax",True
+8,"mov dword ptr [edx + 0x208], ecx","mov dword ptr [edx + 0x208], ecx",True
+9,"mov ecx, 0x80","mov ecx, 0x80",True
+10,"lea edi, [edx + 4]","lea edi, [edx + 4]",True
+11,"mov dword ptr [edx + 0x20c], eax","mov dword ptr [edx + 0x20c], eax",True
+12,"mov dword ptr [edx + 0x210], eax","mov dword ptr [edx + 0x210], eax",True
+13,"mov dword ptr [edx + 0x204], eax","mov dword ptr [edx + 0x204], eax",True
+14,"mov dword ptr [edx + 0x214], eax","mov dword ptr [edx + 0x214], eax",True
+15,"mov dword ptr [edx + 0x218], 0xfa","mov dword ptr [edx + 0x218], 0xfa",True
+16,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+17,"mov eax, edx","mov eax, edx",True
+18,pop edi,pop edi,True
+19,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=??0MixBuffer@@QAE@XZ,module=sound.dll
+VERDICT,GREEN,20,100.0%

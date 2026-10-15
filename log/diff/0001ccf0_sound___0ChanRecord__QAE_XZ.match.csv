@@ -1,0 +1,18 @@
+instruction,recompiled,original,match
+0,"mov eax, ecx","mov eax, ecx",True
+1,"lea ecx, [eax + 4]","lea ecx, [eax + 4]",True
+2,"mov edx, ecx","mov edx, ecx",True
+3,"xor ecx, ecx","xor ecx, ecx",True
+4,"mov dword ptr [edx], ecx","mov dword ptr [edx], ecx",True
+5,"mov dword ptr [eax], ecx","mov dword ptr [eax], ecx",True
+6,"mov dword ptr [eax + 8], ecx","mov dword ptr [eax + 8], ecx",True
+7,"mov dword ptr [eax + 0xc], ecx","mov dword ptr [eax + 0xc], ecx",True
+8,"mov dword ptr [eax + 0x10], ecx","mov dword ptr [eax + 0x10], ecx",True
+9,"mov dword ptr [eax + 0x14], ecx","mov dword ptr [eax + 0x14], ecx",True
+10,"mov dword ptr [eax + 0x1c], ecx","mov dword ptr [eax + 0x1c], ecx",True
+11,"mov dword ptr [eax + 0x20], ecx","mov dword ptr [eax + 0x20], ecx",True
+12,"mov dword ptr [eax + 0x24], ecx","mov dword ptr [eax + 0x24], ecx",True
+13,"mov dword ptr [eax + 0x18], 0xfa","mov dword ptr [eax + 0x18], 0xfa",True
+14,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=??0ChanRecord@@QAE@XZ,module=sound.dll
+VERDICT,GREEN,15,100.0%

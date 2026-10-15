@@ -1,0 +1,42 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, ecx","mov ebx, ecx",True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"mov eax, dword ptr [ebx + 0x204]","mov eax, dword ptr [ebx + 0x204]",True
+5,"test eax, eax","test eax, eax",True
+6,je 0x18,je 0x1002d258,True
+7,push eax,push eax,True
+8,call 0x15,call 0x1004249a,True
+9,"add esp, 4","add esp, 4",True
+10,"mov esi, dword ptr [esp + 0x10]","mov esi, dword ptr [esp + 0x10]",True
+11,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+12,"mov edi, esi","mov edi, esi",True
+13,"xor eax, eax","xor eax, eax",True
+14,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+15,not ecx,not ecx,True
+16,push ecx,push ecx,True
+17,call 0x2d,call 0x100424d7,True
+18,"mov edx, eax","mov edx, eax",True
+19,"mov edi, esi","mov edi, esi",True
+20,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+21,"xor eax, eax","xor eax, eax",True
+22,"add esp, 4","add esp, 4",True
+23,"mov dword ptr [ebx + 0x204], edx","mov dword ptr [ebx + 0x204], edx",True
+24,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+25,not ecx,not ecx,True
+26,"sub edi, ecx","sub edi, ecx",True
+27,"mov eax, ecx","mov eax, ecx",True
+28,"mov esi, edi","mov esi, edi",True
+29,"mov edi, edx","mov edi, edx",True
+30,"shr ecx, 2","shr ecx, 2",True
+31,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+32,"mov ecx, eax","mov ecx, eax",True
+33,"and ecx, 3","and ecx, 3",True
+34,"rep movsb byte ptr es:[edi], byte ptr [esi]","rep movsb byte ptr es:[edi], byte ptr [esi]",True
+35,pop edi,pop edi,True
+36,pop esi,pop esi,True
+37,pop ebx,pop ebx,True
+38,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?setName@MixBuffer@@QAEXPBD@Z,module=sound.dll
+VERDICT,GREEN,39,100.0%

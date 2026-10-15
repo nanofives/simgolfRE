@@ -1,0 +1,42 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x19c]","mov eax, dword ptr [ecx + 0x19c]",True
+1,push esi,push esi,True
+2,"xor esi, esi","xor esi, esi",True
+3,push edi,push edi,True
+4,"test eax, eax","test eax, eax",True
+5,"mov dword ptr [ecx + 0x1a4], eax","mov dword ptr [ecx + 0x1a4], eax",True
+6,je 0x19,je 0x1001d799,True
+7,"mov eax, dword ptr [eax + 8]","mov eax, dword ptr [eax + 8]",True
+8,jmp 0x1b,jmp 0x1001d79b,True
+9,"xor eax, eax","xor eax, eax",True
+10,"mov edx, dword ptr [esp + 0xc]","mov edx, dword ptr [esp + 0xc]",True
+11,"mov edi, dword ptr [esp + 0x10]","mov edi, dword ptr [esp + 0x10]",True
+12,"test edi, edi","test edi, edi",True
+13,"mov dword ptr [edx], eax","mov dword ptr [edx], eax",True
+14,jbe 0x52,jbe 0x1001d7d2,True
+15,"mov eax, dword ptr [ecx + 0x1a4]","mov eax, dword ptr [ecx + 0x1a4]",True
+16,"test eax, eax","test eax, eax",True
+17,je 0x45,je 0x1001d7c5,True
+18,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+19,"test eax, eax","test eax, eax",True
+20,"mov dword ptr [ecx + 0x1a4], eax","mov dword ptr [ecx + 0x1a4], eax",True
+21,je 0x45,je 0x1001d7c5,True
+22,"mov eax, dword ptr [eax + 8]","mov eax, dword ptr [eax + 8]",True
+23,jmp 0x47,jmp 0x1001d7c7,True
+24,"xor eax, eax","xor eax, eax",True
+25,"test eax, eax","test eax, eax",True
+26,"mov dword ptr [edx], eax","mov dword ptr [edx], eax",True
+27,je 0x52,je 0x1001d7d2,True
+28,inc esi,inc esi,True
+29,"cmp esi, edi","cmp esi, edi",True
+30,jb 0x29,jb 0x1001d7a9,True
+31,"mov eax, dword ptr [edx]","mov eax, dword ptr [edx]",True
+32,pop edi,pop edi,True
+33,neg eax,neg eax,True
+34,"sbb eax, eax","sbb eax, eax",True
+35,pop esi,pop esi,True
+36,"and al, 0xdc","and al, 0xdc",True
+37,"add eax, 0x24","add eax, 0x24",True
+38,ret 8,ret 8,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?listGetAt@Seq@@QAEHPAPAXI@Z,module=sound.dll
+VERDICT,GREEN,39,100.0%

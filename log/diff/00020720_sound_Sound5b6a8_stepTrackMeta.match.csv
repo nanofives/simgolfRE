@@ -1,0 +1,65 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,push esi,push esi,True
+2,"mov esi, dword ptr [esp + 0xc]","mov esi, dword ptr [esp + 0xc]",True
+3,push edi,push edi,True
+4,"test esi, esi","test esi, esi",True
+5,"mov ebx, ecx","mov ebx, ecx",True
+6,jne 0x18,jne 0x10020738,True
+7,pop edi,pop edi,True
+8,pop esi,pop esi,True
+9,"mov eax, 0xa","mov eax, 0xa",True
+10,pop ebx,pop ebx,True
+11,ret 4,ret 4,True
+12,"test byte ptr [esi + 0x34], 2","test byte ptr [esi + 0x34], 2",True
+13,je 0x29,je 0x10020749,True
+14,pop edi,pop edi,True
+15,pop esi,pop esi,True
+16,"mov eax, 0x29","mov eax, 0x29",True
+17,pop ebx,pop ebx,True
+18,ret 4,ret 4,True
+19,"mov edi, dword ptr [esi + 0x2c]","mov edi, dword ptr [esi + 0x2c]",True
+20,"lea eax, [esp + 0x10]","lea eax, [esp + 0x10]",True
+21,push eax,push eax,True
+22,push edi,push edi,True
+23,call 0x37,call 0x1000139d,True
+24,"add esp, 8","add esp, 8",True
+25,"test eax, eax","test eax, eax",True
+26,jne 0x92,jne 0x100207b2,True
+27,"mov al, byte ptr [edi + 1]","mov al, byte ptr [edi + 1]",True
+28,"and al, 0xf0","and al, 0xf0",True
+29,"cmp al, 0x90","cmp al, 0x90",True
+30,je 0x92,je 0x100207b2,True
+31,"cmp al, 0xc0","cmp al, 0xc0",True
+32,je 0x92,je 0x100207b2,True
+33,"mov ecx, dword ptr [esp + 0x10]","mov ecx, dword ptr [esp + 0x10]",True
+34,push ecx,push ecx,True
+35,"mov ecx, esi","mov ecx, esi",True
+36,call 0x57,call 0x10001c7b,True
+37,"lea edx, [esp + 0x10]","lea edx, [esp + 0x10]",True
+38,"mov ecx, ebx","mov ecx, ebx",True
+39,push edx,push edx,True
+40,push esi,push esi,True
+41,"mov dword ptr [esp + 0x18], 0","mov dword ptr [esp + 0x18], 0",True
+42,call 0x6c,call 0x10002068,True
+43,"cmp eax, 0x29","cmp eax, 0x29",True
+44,je 0x1e,je 0x1002073e,True
+45,"mov eax, dword ptr [esp + 0x10]","mov eax, dword ptr [esp + 0x10]",True
+46,"mov ecx, esi","mov ecx, esi",True
+47,push eax,push eax,True
+48,call 0x7d,call 0x10001c7b,True
+49,"mov edi, dword ptr [esi + 0x2c]","mov edi, dword ptr [esi + 0x2c]",True
+50,"lea ecx, [esp + 0x10]","lea ecx, [esp + 0x10]",True
+51,push ecx,push ecx,True
+52,push edi,push edi,True
+53,call 0x8b,call 0x1000139d,True
+54,"add esp, 8","add esp, 8",True
+55,"test eax, eax","test eax, eax",True
+56,je 0x3e,je 0x1002075e,True
+57,pop edi,pop edi,True
+58,pop esi,pop esi,True
+59,"xor eax, eax","xor eax, eax",True
+60,pop ebx,pop ebx,True
+61,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?stepTrackMeta@Sound5b6a8@@QAEHPAUMidiTrack@@@Z,module=sound.dll
+VERDICT,GREEN,62,100.0%

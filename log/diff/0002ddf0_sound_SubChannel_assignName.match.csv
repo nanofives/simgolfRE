@@ -1,0 +1,50 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,"mov esi, ecx","mov esi, ecx",True
+4,"test ebx, ebx","test ebx, ebx",True
+5,je 0x64,je 0x1002de54,True
+6,"mov eax, dword ptr [esi + 0x50]","mov eax, dword ptr [esi + 0x50]",True
+7,"test eax, eax","test eax, eax",True
+8,je 0x1c,je 0x1002de0c,True
+9,push eax,push eax,True
+10,call 0x19,call 0x1004249a,True
+11,"add esp, 4","add esp, 4",True
+12,push edi,push edi,True
+13,"mov edi, ebx","mov edi, ebx",True
+14,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+15,"xor eax, eax","xor eax, eax",True
+16,"mov dword ptr [esi + 0x50], 0","mov dword ptr [esi + 0x50], 0",True
+17,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+18,not ecx,not ecx,True
+19,push ecx,push ecx,True
+20,call 0x35,call 0x100424d7,True
+21,"mov edx, eax","mov edx, eax",True
+22,"mov edi, ebx","mov edi, ebx",True
+23,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+24,"xor eax, eax","xor eax, eax",True
+25,"add esp, 4","add esp, 4",True
+26,"mov dword ptr [esi + 0x50], edx","mov dword ptr [esi + 0x50], edx",True
+27,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+28,not ecx,not ecx,True
+29,"sub edi, ecx","sub edi, ecx",True
+30,"mov eax, ecx","mov eax, ecx",True
+31,"mov esi, edi","mov esi, edi",True
+32,"mov edi, edx","mov edi, edx",True
+33,"shr ecx, 2","shr ecx, 2",True
+34,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+35,"mov ecx, eax","mov ecx, eax",True
+36,"and ecx, 3","and ecx, 3",True
+37,"xor eax, eax","xor eax, eax",True
+38,"rep movsb byte ptr es:[edi], byte ptr [esi]","rep movsb byte ptr es:[edi], byte ptr [esi]",True
+39,pop edi,pop edi,True
+40,pop esi,pop esi,True
+41,pop ebx,pop ebx,True
+42,ret 4,ret 4,True
+43,pop esi,pop esi,True
+44,"mov eax, 0xa","mov eax, 0xa",True
+45,pop ebx,pop ebx,True
+46,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?assignName@SubChannel@@QAEHPBD@Z,module=sound.dll
+VERDICT,GREEN,47,100.0%
