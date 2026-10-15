@@ -4,6 +4,1139 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-15  sound.dll:0001a910  Voice_mixAddStereo16  C3->C4  
+2026-10-15  sound.dll:0001a6c0  Voice_mixSetStereo16  C3->C4  
+2026-10-15  sound.dll:0001a2c0  Voice_mixAdd8bit  C3->C4  
+2026-10-15  sound.dll:00019ec0  Voice_mixSet8bit  C3->C4  
+2026-10-15  sound.dll:00019b20  Voice_mixSetMono16  C3->C4  
+2026-10-15  sound.dll:00019770  Voice_mixAddMono16  C3->C4  
+2026-10-15  sound.dll:000188d0  streamRenderTail  C3->C4  
+2026-10-15  sound.dll:000184a0  streamRenderBlock  C3->C4  
+2026-10-15  sound.dll:00017160  mixRatedMono8Set  C3->C4  
+2026-10-15  sound.dll:00016d90  mixRatedStereo8Set  C3->C4  
+2026-10-15  sound.dll:00016850  mixRatedMono16SetFade  C3->C4  
+2026-10-15  sound.dll:000165a0  mixMonoGainFadeSet  C3->C4  
+2026-10-15  sound.dll:00016340  mixMonoDupSet  C3->C4  
+2026-10-15  sound.dll:000156c0  mixRatedMono8Add  C3->C4  
+2026-10-15  sound.dll:000152b0  mixRatedStereo8Add  C3->C4  
+2026-10-15  sound.dll:00014820  mixRatedMono16AddFade  C3->C4  
+2026-10-15  sound.dll:00014510  mixMonoGainFadeAdd  C3->C4  
+2026-10-15  sound.dll:00014250  mixMonoDupAdd  C3->C4  
+2026-10-15  sound.dll:00013dd0  mixRatedStereo16Add  C3->C4  
+2026-10-15  sound.dll:00013b10  mixStereoGainAdd  C3->C4  
+2026-10-15  sound.dll:00013890  mixStereoAdd  C3->C4  
+2026-10-15  sound.dll:0001b160  StrPtr_assign  C3->C4  
+2026-10-15  sound.dll:0001b0d0  ChannelTable_releaseObject  C3->C4  
+2026-10-15  sound.dll:0001ae50  ChannelTable_callSlot4  C3->C4  
+2026-10-15  sound.dll:0001ae00  Seq_setPlayRange  C3->C4  
+2026-10-15  sound.dll:0001adc0  Midi_advanceMsgRing  C3->C4  
+2026-10-15  sound.dll:0001ad30  Sound_anyChannelActive  C3->C4  
+2026-10-15  sound.dll:0001ac40  Voice_notifyChannelNotes  C3->C4  
+2026-10-15  sound.dll:0001abd0  Seq_freeChannelObjects  C3->C4  
+2026-10-15  sound.dll:0001ab60  Sound_initEntry  C3->C4  
+2026-10-15  sound.dll:00013750  clearNodeListB  C3->C4  
+2026-10-15  sound.dll:000136c0  findAndUnlinkNode  C3->C4  
+2026-10-15  sound.dll:00013620  clearNodeListA  C3->C4  
+2026-10-15  sound.dll:000135a0  Ds3DListener::setPosition  C3->C4  
+2026-10-15  sound.dll:000134e0  unlinkDsBuffer  C3->C4  
+2026-10-15  sound.dll:000133d0  DirectSoundDevice::releaseAllBuffers  C3->C4  
+2026-10-15  sound.dll:000132e0  DirectSoundDevice::removeBuffer  C3->C4  
+2026-10-15  sound.dll:00012fe0  DirectSoundDevice::createBufferFmt  C3->C4  
+2026-10-15  sound.dll:00012d10  DirectSoundDevice::createBuffer  C3->C4  
+2026-10-15  sound.dll:00012690  DirectSoundDevice::freeBufferById  C3->C4  
+2026-10-15  sound.dll:00012260  DirectSoundDevice::duplicateBuffer  C3->C4  
+2026-10-15  sound.dll:000120a0  DirectSoundDevice::setCooperativeLevel  C3->C4  
+2026-10-15  sound.dll:00011c60  DirectSoundDevice::create  C3->C4  
+2026-10-15  sound.dll:00011a80  DirectSoundDevice::stopAll  C3->C4  
+2026-10-15  sound.dll:00011970  DirectSoundDevice::releaseAll  C3->C4  
+2026-10-15  sound.dll:00011810  dsEnumCallbackAppend  C3->C4  
+2026-10-15  sound.dll:00011790  getNodeByIndex  C3->C4  
+2026-10-15  sound.dll:00011760  getDeviceCaps  C3->C4  
+2026-10-15  sound.dll:000116a0  seekListToIndex  C3->C4  
+2026-10-15  sound.dll:000114e0  DirectSoundDevice::enumerate  C3->C4  
+2026-10-15  sound.dll:00011290  DirectSoundDevice::close  C3->C4  
+2026-10-15  sound.dll:00011180  initSoundVoice  C3->C4  
+2026-10-15  sound.dll:00011110  Ds3DBuffer::setPositionZ  C3->C4  
+2026-10-15  sound.dll:000110c0  Ds3DBuffer::setPositionY  C3->C4  
+2026-10-15  sound.dll:00011070  Ds3DBuffer::setPositionX  C3->C4  
+2026-10-15  sound.dll:00011000  Ds3DBuffer::setPosition  C3->C4  
+2026-10-15  sound.dll:00010f30  DsBuffer::configureDesc  C3->C4  
+2026-10-15  sound.dll:00010eb0  DsBuffer::setRegionMs  C3->C4  
+2026-10-15  sound.dll:00010e30  DsBuffer::isBusy  C3->C4  
+2026-10-15  sound.dll:00010db0  DsBuffer::play  C3->C4  
+2026-10-15  sound.dll:00010be0  DsBuffer::getTimedPosition  C3->C4  
+2026-10-15  sound.dll:00010860  DsBuffer::lockCaptureRegion  C3->C4  
+2026-10-15  sound.dll:00010660  DsBuffer::getPosition  C3->C4  
+2026-10-15  sound.dll:00010370  DsBuffer::unlock  C3->C4  
+2026-10-15  sound.dll:00010060  DsBuffer::releaseIfOwned  C3->C4  
+2026-10-15  sound.dll:0000ff60  DsBuffer::queryNotify  C3->C4  
+2026-10-15  sound.dll:0000fef0  DsBuffer::query3D  C3->C4  
+2026-10-15  sound.dll:0000fec0  DsBuffer::hasAuxInterfaces  C3->C4  
+2026-10-15  sound.dll:0000fbb0  DsBuffer::create  C3->C4  
+2026-10-15  sound.dll:0000f990  DsBuffer::setPrimaryFormat  C3->C4  
+2026-10-15  sound.dll:0000f8f0  DsBuffer::release  C3->C4  
+2026-10-15  sound.dll:0000f810  DsBuffer::lockEntire  C3->C4  
+2026-10-15  sound.dll:0000f790  DsBuffer::setPosition  C3->C4  
+2026-10-15  sound.dll:0000f760  DsBuffer::stop  C3->C4  
+2026-10-15  sound.dll:0000f590  DsBuffer::initDesc  C3->C4  
+2026-10-15  sound.dll:0000f480  mapDsError  C3->C4  
+2026-10-15  sound.dll:0000f1c0  DsBuffer::setVolume  C3->C4  
+2026-10-15  sound.dll:0000f190  DsBuffer::setVolumeRaw  C3->C4  
+2026-10-15  sound.dll:0000f160  DsBuffer::setFrequency  C3->C4  
+2026-10-15  sound.dll:0000f020  DsBuffer::restartPlayback  C3->C4  
+2026-10-15  sound.dll:0000ef60  DsBuffer::destroy  C3->C4  
+2026-10-15  sound.dll:0000ead0  Wave_In_Device::openCapture  C3->C4  
+2026-10-15  sound.dll:0000eaa0  Wave_In_Device::stop  C3->C4  
+2026-10-15  sound.dll:0000ea30  Wave_In_Device::start  C3->C4  
+2026-10-15  sound.dll:0000e910  Dll_Wave_In_Device::create_device  C3->C4  
+2026-10-15  sound.dll:0000e700  findAndUnlinkNodeB  C3->C4  
+2026-10-15  sound.dll:0000e5e0  clearNodeListC  C3->C4  
+2026-10-15  sound.dll:0000e310  serviceWaveDevice  C3->C4  
+2026-10-15  sound.dll:0000e2d0  getWaveDeviceInterface  C3->C4  
+2026-10-15  sound.dll:0000e260  Wave_Device::deviceName  C3->C4  
+2026-10-15  sound.dll:0000e230  Wave_Device::caps  C3->C4  
+2026-10-15  sound.dll:0000e050  removeSoundNode  C3->C4  
+2026-10-15  sound.dll:0000dcf0  Wave_Device::scanCommandRing  C3->C4  
+2026-10-15  sound.dll:0000dbe0  postNotification  C3->C4  
+2026-10-15  sound.dll:0000cd80  Wave_Device::dispatchCommand  C3->C4  
+2026-10-15  sound.dll:0000cc70  Wave_Device::flushCommandQueue  C3->C4  
+2026-10-15  sound.dll:0000c2f0  WaveCmdQueue::pushNode  C3->C4  
+2026-10-15  sound.dll:0000c230  Wave_Device::serviceTick  C3->C4  
+2026-10-15  sound.dll:0000c020  Wave_Device::restart  C3->C4  
+2026-10-15  sound.dll:0000be00  Wave_Device::closeOutput  C3->C4  
+2026-10-15  sound.dll:0000b960  Wave_Device::stop  C3->C4  
+2026-10-15  sound.dll:0000b2e0  Wave_Device::dtor  C3->C4  
+2026-10-15  sound.dll:0000b1d0  Wave_Device::ctor  C3->C4  
+2026-10-15  sound.dll:0000b170  Wave_Device::closeStream  C3->C4  
+2026-10-15  sound.dll:0000b140  Wave_Device::setCooperativeLevel  C3->C4  
+2026-10-15  sound.dll:0000b050  Dll_Wave_Device::create_device  C3->C4  
+2026-10-15  sound.dll:0000ae80  clearNodeListG  C3->C4  
+2026-10-15  sound.dll:0000aaf0  Midi_Device::scanCommandRing  C3->C4  
+2026-10-15  sound.dll:0000a670  Midi_Device::dispatchCommand  C3->C4  
+2026-10-15  sound.dll:0000a330  Midi_Device::drainCommandQueue  C3->C4  
+2026-10-15  sound.dll:0000a240  CommandQueue::push  C3->C4  
+2026-10-15  sound.dll:0000a050  Device::serviceVoices  C3->C4  
+2026-10-15  sound.dll:00009e40  Midi_Device::shutdown  C3->C4  
+2026-10-15  sound.dll:00009cb0  Midi_Device::dtor  C3->C4  
+2026-10-15  sound.dll:00009a90  Dll_Midi_Device::create_device  C3->C4  
+2026-10-15  sound.dll:00009390  release_sound  C3->C4  
+2026-10-15  sound.dll:000092e0  init_sound_timer  C3->C4  
+2026-10-15  sound.dll:000091f0  atexitDtor_100b49b8  C3->C4  
+2026-10-15  sound.dll:00008ed0  SoundTimer::onTick  C3->C4  
+2026-10-15  sound.dll:00008ce0  SoundTimer::start  C3->C4  
+2026-10-15  sound.dll:00008ac0  SoundTimer::stop  C3->C4  
+2026-10-15  sound.dll:000089f0  SoundTimer::init  C3->C4  
+2026-10-15  sound.dll:00008920  SoundTimer::unregisterClient  C3->C4  
+2026-10-15  sound.dll:00008810  pairStore  C3->C4  
+2026-10-15  sound.dll:000087f0  listNode3Init  C3->C4  
+2026-10-15  sound.dll:00008470  flushSoundList  C3->C4  
+2026-10-15  sound.dll:00007010  writeWaveFile  C3->C4  
+2026-10-15  sound.dll:00006e00  initStreamBuffer  C3->C4  
+2026-10-15  sound.dll:00006c70  clearNodeListF  C3->C4  
+2026-10-15  sound.dll:00006bd0  computeCaptureDuration  C3->C4  
+2026-10-15  sound.dll:00006850  Wave_Device::appendBuffer  C3->C4  
+2026-10-15  sound.dll:000064e0  Wave_Device::freeBufferList  C3->C4  
+2026-10-15  sound.dll:00006420  Wave_Device::openMemoryMmio  C3->C4  
+2026-10-15  sound.dll:00006330  closeMmioNodeList  C3->C4  
+2026-10-15  sound.dll:00006160  WaveStream::destroy  C3->C4  
+2026-10-15  sound.dll:00006020  WaveStream::ctor  C3->C4  
+2026-10-15  sound.dll:00005eb0  unregisterSound  C3->C4  
+2026-10-15  sound.dll:00005d80  Sound::scaleTickRate  C3->C4  
+2026-10-15  sound.dll:00005c00  listPopFront  C3->C4  
+2026-10-15  sound.dll:00005b60  clearNodeListE  C3->C4  
+2026-10-15  sound.dll:00005a60  clearNodeListD  C3->C4  
+2026-10-15  sound.dll:00005770  processWaveChunks  C3->C4  
+2026-10-15  sound.dll:00005440  Wave_Device::readFmtChunk  C3->C4  
+2026-10-15  sound.dll:00004000  Sound::dtor  C3->C4  
+2026-10-15  sound.dll:00003f30  Sound::ctor  C3->C4  
+2026-10-15  jgld.dll:0007fab8  _setjmp3  C3->C4  
+2026-10-15  jgld.dll:0007f770  strcat  C3->C4  
+2026-10-15  jgld.dll:0007f760  strcpy  C3->C4  
+2026-10-15  jgld.dll:0007f6e0  strlen  C3->C4  
+2026-10-15  0049ef80  flagIsSet  C3->C4  
+2026-10-15  0049eef0  flagSet  C3->C4  
+2026-10-15  0049ef80  flagIsSet  C2->C3  log/diff/0049ef80_flagIsSet.path1.csv
+2026-10-15  0049eef0  flagSet  C2->C3  log/diff/0049eef0_flagSet.path1.csv
+2026-10-15  sound.dll:00042902  ehVectorConstructorIterator  C3->C4  
+2026-10-15  sound.dll:00039980  Channel_parseWaveHeader_adjPlus70  C3->C4  
+2026-10-15  004a0ef0  viewDispatchBuild  C3->C4  
+2026-10-15  00493080  fillSpanUp  C4<-C3  DEMOTED: C4 rested only on a naked inline-asm transcription (re/match/golf_hand_03.cpp), which matches by construction; pending the user's decision on transcription evidence
+2026-10-15  00493000  fillSpanDown  C4<-C3  DEMOTED: C4 rested only on a naked inline-asm transcription (re/match/golf_hand_03.cpp), which matches by construction; pending the user's decision on transcription evidence
+2026-10-15  00042690  strstr  C4<-C3  DEMOTED: C4 rested only on a naked inline-asm transcription (re/match/m36c_crt_asm.cpp), which matches by construction; pending the user's decision on transcription evidence
+2026-10-15  00042550  __ftol  C4<-C3  DEMOTED: C4 rested only on a naked inline-asm transcription (re/match/m36c_crt_asm.cpp), which matches by construction; pending the user's decision on transcription evidence
+2026-10-15  0004a010  strcpy  C4<-C3  DEMOTED: C4 rested only on a naked inline-asm transcription (re/match/m36c_crt_asm.cpp), which matches by construction; pending the user's decision on transcription evidence
+2026-10-15  sound.dll:00051319  cvtdate  C3->C4  
+2026-10-15  sound.dll:0004e4b3  __free_lc_time  C3->C4  
+2026-10-15  sound.dll:0004a010  strcpy  C3->C4  
+2026-10-15  sound.dll:00049604  crtValidatePointer  C3->C4  
+2026-10-15  sound.dll:00047771  _unlock  C3->C4  
+2026-10-15  sound.dll:00047474  sbhResizeBlock  C3->C4  
+2026-10-15  sound.dll:00047103  sbhPageFree  C3->C4  
+2026-10-15  sound.dll:000470ac  sbhRegionLocate  C3->C4  
+2026-10-15  sound.dll:00045bc8  crtHeapSelect  C3->C4  
+2026-10-15  sound.dll:00045b9b  getModuleLinkerVersion  C3->C4  
+2026-10-15  sound.dll:00042690  strstr  C3->C4  
+2026-10-15  sound.dll:00042550  __ftol  C3->C4  
+2026-10-15  sound.dll:00042506  cfltcvtInit  C3->C4  
+2026-10-15  sound.dll:00041e64  leaveCriticalSection  C3->C4  
+2026-10-15  sound.dll:00041e59  enterCriticalSection  C3->C4  
+2026-10-15  sound.dll:00041e4e  deleteCriticalSection  C3->C4  
+2026-10-15  sound.dll:00041e43  initCriticalSection  C3->C4  
+2026-10-15  sound.dll:00041c26  ostreamResetVtable  C3->C4  
+2026-10-15  sound.dll:00041aad  iosResetVtable  C3->C4  
+2026-10-15  sound.dll:0003d040  codecApplyFixedCoeffs  C3->C4  
+2026-10-15  sound.dll:0003c1d0  bitUnpack  C3->C4  
+2026-10-15  sound.dll:0003c180  bitPack  C3->C4  
+2026-10-15  sound.dll:0003aa50  codecSetParams  C3->C4  
+2026-10-15  sound.dll:0003a770  getDsCoopLevel  C3->C4  
+2026-10-15  sound.dll:0003a6e0  MultiSound::setReverseRate  C3->C4  
+2026-10-15  sound.dll:0003a650  MultiSound::set3DPositionZ  C3->C4  
+2026-10-15  sound.dll:0003a630  MultiSound::set3DPositionY  C3->C4  
+2026-10-15  sound.dll:0003a600  MultiSound::set3DBuffer  C3->C4  
+2026-10-15  sound.dll:0003a5e0  MultiSound::set3DPositionX  C3->C4  
+2026-10-15  sound.dll:0003a560  MultiSound_getStatus  C3->C4  
+2026-10-15  sound.dll:0003a370  MultiSound::applyFlags  C3->C4  
+2026-10-15  sound.dll:0003a210  MultiSound_setPitchCents  C3->C4  
+2026-10-15  sound.dll:0003a140  MultiSound::setRateGlide  C3->C4  
+2026-10-15  sound.dll:0003a0d0  MultiSound::setVolume  C3->C4  
+2026-10-15  sound.dll:00039f30  MultiSound::startVoice  C3->C4  
+2026-10-15  sound.dll:00039e70  Channel_startVoiceTimed  C3->C4  
+2026-10-15  sound.dll:00039ce0  MultiSound_start  C3->C4  
+2026-10-15  sound.dll:00039c40  MultiSound_release  C3->C4  
+2026-10-15  sound.dll:00039b30  SoundGroup_stop  C3->C4  
+2026-10-15  sound.dll:000399a0  loadMultiChannel  C3->C4  
+2026-10-15  sound.dll:00039870  MultiSound_dtor  C3->C4  
+2026-10-15  sound.dll:00039790  MultiSound_ctorWithType  C3->C4  
+2026-10-15  sound.dll:00039690  MultiSound_ctor  C3->C4  
+2026-10-15  sound.dll:00039620  nodeListPopFront  C3->C4  
+2026-10-15  sound.dll:00039580  nodeListClear  C3->C4  
+2026-10-15  sound.dll:00039140  WaveInDevice_close  C3->C4  
+2026-10-15  sound.dll:00039050  WaveInDevice_open  C3->C4  
+2026-10-15  sound.dll:00038fd0  onWaveInCallbackMessage  C3->C4  
+2026-10-15  sound.dll:00038da0  WaveInDevice_addBuffer  C3->C4  
+2026-10-15  sound.dll:00038b40  WaveInDevice_prepareHeaders  C3->C4  
+2026-10-15  sound.dll:00038890  WaveInDevice_allocCaptureBuffers  C3->C4  
+2026-10-15  sound.dll:00038710  WaveInDevice_dtor  C3->C4  
+2026-10-15  sound.dll:00038650  WaveInDevice_ctor  C3->C4  
+2026-10-15  sound.dll:000384b0  nodeListClear2  C3->C4  
+2026-10-15  sound.dll:00038330  Channel_findVoiceByTag  C3->C4  
+2026-10-15  sound.dll:000382c0  Channel_allocVoiceSlot  C3->C4  
+2026-10-15  sound.dll:00037f30  Voice_setPanGains  C3->C4  
+2026-10-15  sound.dll:00037e10  MmioBuffer_init  C3->C4  
+2026-10-15  sound.dll:00037c40  Voice_resetDefaults  C3->C4  
+2026-10-15  sound.dll:00037b00  Channel_set3DPosition  C3->C4  
+2026-10-15  sound.dll:00037920  flushMmioBuffer  C3->C4  
+2026-10-15  sound.dll:000377f0  Channel_broadcastVoiceBit1  C3->C4  
+2026-10-15  sound.dll:00037760  Voice_setLoopFlag  C3->C4  
+2026-10-15  sound.dll:00035fc0  Channel_stepVolumeFade  C3->C4  
+2026-10-15  sound.dll:00035f80  Channel_serviceBuffer  C3->C4  
+2026-10-15  sound.dll:00035770  Channel_findStreamNode  C3->C4  
+2026-10-15  sound.dll:000351c0  Channel_setRate  C3->C4  
+2026-10-15  sound.dll:00034b90  Channel_stopVoices  C3->C4  
+2026-10-15  sound.dll:00034ac0  Channel_releaseVoices  C3->C4  
+2026-10-15  sound.dll:000348f0  Channel_startVoice  C3->C4  
+2026-10-15  sound.dll:00034770  Channel_allocAndInitVoice  C3->C4  
+2026-10-15  sound.dll:00034430  serviceChannelPlayback  C3->C4  
+2026-10-15  sound.dll:00033c70  Channel_closeAndFree  C3->C4  
+2026-10-15  sound.dll:00033ba0  Channel_resetPanState  C3->C4  
+2026-10-15  sound.dll:00032500  updateVoiceRate  C3->C4  
+2026-10-15  sound.dll:00032440  voiceListRemove  C3->C4  
+2026-10-15  sound.dll:00032290  beginDecodeStreamB  C3->C4  
+2026-10-15  sound.dll:00032130  beginDecodeStreamA  C3->C4  
+2026-10-15  sound.dll:00032020  Sound_resetBuffers  C3->C4  
+2026-10-15  sound.dll:00031ac0  PtrList_freeNodesB  C3->C4  
+2026-10-15  sound.dll:000319e0  WaveInStream_resetCodec  C3->C4  
+2026-10-15  sound.dll:000316c0  loadWaveResource  C3->C4  
+2026-10-15  sound.dll:00031560  freeMmioHandleListGetInfo  C3->C4  
+2026-10-15  sound.dll:00031490  freeMmioHandleList  C3->C4  
+2026-10-15  sound.dll:00031450  WaveInStream_start  C3->C4  
+2026-10-15  sound.dll:000312a0  streamReaderDtor  C3->C4  
+2026-10-15  sound.dll:00031200  StreamReader_ctor  C3->C4  
+2026-10-15  sound.dll:00030fb0  Channel_setFormat  C3->C4  
+2026-10-15  sound.dll:00030710  Sound5c450::openMmio  C3->C4  
+2026-10-15  sound.dll:00030570  Sound_freeBufferList  C3->C4  
+2026-10-15  sound.dll:000303f0  Sound_stop  C3->C4  
+2026-10-15  sound.dll:00030180  Sound5c450_dtor  C3->C4  
+2026-10-15  sound.dll:00030080  Sound5c450_ctor  C3->C4  
+2026-10-15  sound.dll:0002fc10  enqueueWaveCmd10  C3->C4  
+2026-10-15  sound.dll:0002fb70  enqueueWaveCmdE  C3->C4  
+2026-10-15  sound.dll:0002f740  Ch5c3a4_ctor  C3->C4  
+2026-10-15  sound.dll:0002f5e0  openSourceType7  C3->C4  
+2026-10-15  sound.dll:0002f3f0  Ch5c2ec_dtor  C3->C4  
+2026-10-15  sound.dll:0002f060  openSourceType6  C3->C4  
+2026-10-15  sound.dll:0002ef40  Ch5c234_dtor  C3->C4  
+2026-10-15  sound.dll:0002ed50  buildVoiceRxName  C3->C4  
+2026-10-15  sound.dll:0002eb40  openSourceType4  C3->C4  
+2026-10-15  sound.dll:0002ea30  Ch5c178_dtor  C3->C4  
+2026-10-15  sound.dll:0002e930  Ch5c178_ctor  C3->C4  
+2026-10-15  sound.dll:0002e660  Ch5be88_dtorB  C3->C4  
+2026-10-15  sound.dll:0002e3f0  NodeB000_initBase  C3->C4  
+2026-10-15  sound.dll:0002dff0  Channel_releaseSound  C3->C4  
+2026-10-15  sound.dll:0002deb0  SubChannel_openSourceType2  C3->C4  
+2026-10-15  sound.dll:0002ddf0  Sound_assignName  C3->C4  
+2026-10-15  sound.dll:0002d560  Ch5be88_dtorA  C3->C4  
+2026-10-15  sound.dll:0002d450  Ch5be88_ctor  C3->C4  
+2026-10-15  sound.dll:0002d240  Voice_setName  C3->C4  
+2026-10-15  sound.dll:0002cee0  MixBuffer_ctor  C3->C4  
+2026-10-15  sound.dll:0002cb00  Mixer_dtor  C3->C4  
+2026-10-15  sound.dll:0002c5e0  destroyMixerVoices  C3->C4  
+2026-10-15  sound.dll:0002c0d0  Channel_collectFlagBits  C3->C4  
+2026-10-15  sound.dll:0002c040  Channel_applyFlags  C3->C4  
+2026-10-15  sound.dll:0002bee0  Device_createStartQueue  C3->C4  
+2026-10-15  sound.dll:0002bd80  Device_lazyCreateSound  C3->C4  
+2026-10-15  sound.dll:0002bc60  Device_prepareSoundFlags  C3->C4  
+2026-10-15  sound.dll:0002bb10  Object_setName  C3->C4  
+2026-10-15  sound.dll:0002baa0  getPlaybackTime  C3->C4  
+2026-10-15  sound.dll:0002b7c0  startDevicePlayback  C3->C4  
+2026-10-15  sound.dll:0002b620  Ch5bb90_dtor  C3->C4  
+2026-10-15  sound.dll:0002b4e0  SubChannel_ctor  C3->C4  
+2026-10-15  sound.dll:0002b260  Seq_applyChannelLevel  C3->C4  
+2026-10-15  sound.dll:0002b090  unlinkFromActiveList  C3->C4  
+2026-10-15  sound.dll:0002add0  Engine_playSound  C3->C4  
+2026-10-15  sound.dll:0002ac00  SubChannel_dtor  C3->C4  
+2026-10-15  sound.dll:0002aa90  postSoundThreadMessage  C3->C4  
+2026-10-15  sound.dll:0002a970  soundThreadPump  C3->C4  
+2026-10-15  sound.dll:0002a8a0  stopSoundThreadFull  C3->C4  
+2026-10-15  sound.dll:0002a420  WaveInDeviceBase_openInner  C3->C4  
+2026-10-15  sound.dll:0002a240  WaveInDeviceBase_ctor  C3->C4  
+2026-10-15  sound.dll:00029f90  MidiDeviceBase_openInner  C3->C4  
+2026-10-15  sound.dll:00029e70  MidiDeviceBase_ctor  C3->C4  
+2026-10-15  sound.dll:000292d0  VoiceBase_openInner  C3->C4  
+2026-10-15  sound.dll:00029200  VoiceBase_dtor  C3->C4  
+2026-10-15  sound.dll:00029020  VoiceBase_ctor  C3->C4  
+2026-10-15  sound.dll:00028810  pumpWaveMessages  C3->C4  
+2026-10-15  sound.dll:000285a0  nextRandomFloat  C3->C4  
+2026-10-15  sound.dll:00025010  NodeList_initNode  C3->C4  
+2026-10-15  sound.dll:00024e60  NodeList_insert  C3->C4  
+2026-10-15  sound.dll:00024d40  NodeList_clear  C3->C4  
+2026-10-15  sound.dll:00024b80  Seq_scheduleEvent  C3->C4  
+2026-10-15  sound.dll:000246a0  Midi_Device::emitEvent  C3->C4  
+2026-10-15  sound.dll:00024280  Seq_loadChannelDesc  C3->C4  
+2026-10-15  sound.dll:000241f0  Seq_getListElementAt  C3->C4  
+2026-10-15  sound.dll:00024040  Seq_dispatchChannelCmd  C3->C4  
+2026-10-15  sound.dll:00023f10  Seq_getTrackFlagHigh  C3->C4  
+2026-10-15  sound.dll:00023ea0  Voice_requestCmd12  C3->C4  
+2026-10-15  sound.dll:00023e10  Seq_applyTrackFlag  C3->C4  
+2026-10-15  sound.dll:00023c70  Seq_cmdHandler11  C3->C4  
+2026-10-15  sound.dll:00023c20  Seq_cmdHandler12  C3->C4  
+2026-10-15  sound.dll:00023a60  Seq_cmdHandler10  C3->C4  
+2026-10-15  sound.dll:00023950  Seq_replayEventRange  C3->C4  
+2026-10-15  sound.dll:000238b0  Seq_cmdHandler9  C3->C4  
+2026-10-15  sound.dll:00023610  Seq_remarkEventRange  C3->C4  
+2026-10-15  sound.dll:00023540  Seq_cmdHandler8  C3->C4  
+2026-10-15  sound.dll:000231e0  Seq_cmdHandler7  C3->C4  
+2026-10-15  sound.dll:00023080  Seq_findTrackById  C3->C4  
+2026-10-15  sound.dll:00023000  Seq_findTrackOrZero  C3->C4  
+2026-10-15  sound.dll:000228d0  Seq_removeTrackById  C3->C4  
+2026-10-15  sound.dll:00022280  Seq_copyChannelParams  C3->C4  
+2026-10-15  sound.dll:00021240  Sound_findByName  C3->C4  
+2026-10-15  sound.dll:00020f50  Seq_setField730Clamped  C3->C4  
+2026-10-15  sound.dll:00020be0  Voice_startPlayback  C3->C4  
+2026-10-15  sound.dll:00020b60  postMidiNotification  C3->C4  
+2026-10-15  sound.dll:00020720  Seq_stepTrackMeta  C3->C4  
+2026-10-15  sound.dll:000205f0  Seq_preRollTrack  C3->C4  
+2026-10-15  sound.dll:000204e0  Sound_reapIdle  C3->C4  
+2026-10-15  sound.dll:000204b0  Seq_closeFile  C3->C4  
+2026-10-15  sound.dll:00020290  Seq::loadFile  C3->C4  
+2026-10-15  sound.dll:0001ff50  Sound5b6a8_dtor  C3->C4  
+2026-10-15  sound.dll:0001f1c0  PtrList_freeNodesA  C3->C4  
+2026-10-15  sound.dll:0001e9f0  Track_advancePos  C3->C4  
+2026-10-15  sound.dll:0001e8e0  Seq_rewindTracks  C3->C4  
+2026-10-15  sound.dll:0001e7d0  MidiReader_dtor  C3->C4  
+2026-10-15  sound.dll:0001e710  Midi_readVarLen  C3->C4  
+2026-10-15  sound.dll:0001e6e0  byteSwap16  C3->C4  
+2026-10-15  sound.dll:0001e630  Seq_scaleTickRate  C3->C4  
+2026-10-15  sound.dll:0001e2b0  Seq_dtor  C3->C4  
+2026-10-15  sound.dll:0001e230  Track_resetReadState  C3->C4  
+2026-10-15  sound.dll:0001d780  Seq_listGetAt  C3->C4  
+2026-10-15  sound.dll:0001d4a0  Midi_resetFileState  C3->C4  
+2026-10-15  sound.dll:0001d380  MidiReader_init  C3->C4  
+2026-10-15  sound.dll:0001d130  PtrList_init  C3->C4  
+2026-10-15  sound.dll:0001d0a0  Sound_setAltName  C3->C4  
+2026-10-15  sound.dll:0001ced0  Sound_setName  C3->C4  
+2026-10-15  sound.dll:0001ccf0  ChanRecord_init  C3->C4  
+2026-10-15  sound.dll:0001cbf0  Ctrl5b668_ctor  C3->C4  
+2026-10-15  sound.dll:0001caf0  CtrlObject3_ctor  C3->C4  
+2026-10-15  sound.dll:0001c990  Ctrl5b58c_dtorEmbedded  C3->C4  
+2026-10-15  sound.dll:0001c7e0  streamConsumeByte  C3->C4  
+2026-10-15  sound.dll:0001c7a0  streamReadByte  C3->C4  
+2026-10-15  sound.dll:0001c2f0  CtrlBase_flushElements  C3->C4  
+2026-10-15  sound.dll:0001c080  Ctrl5b58c_dtor  C3->C4  
+2026-10-15  sound.dll:0001bd90  Ctrl5b5c0_ctor  C3->C4  
+2026-10-15  sound.dll:0001bc50  CtrlObject::ctor  C3->C4  
+2026-10-15  sound.dll:0001bc00  ListValues_callSlot18  C3->C4  
+2026-10-15  sound.dll:0001b9a0  Ctrl_appendIfAccepted  C3->C4  
+2026-10-15  sound.dll:0001b870  MidiReader_freeContent  C3->C4  
+2026-10-15  sound.dll:0001b7d0  dynInit_ctrl100b4e08  C3->C4  
+2026-10-15  sound.dll:0001b770  dynInit_ctrl100b4a68  C3->C4  
+2026-10-15  sound.dll:0001b710  dynInit_ctrl100b4d20  C3->C4  
+2026-10-15  sound.dll:0001b6b0  dynInit_ctrl100b4c38  C3->C4  
+2026-10-15  sound.dll:0001b570  ChainObject_dtor  C3->C4  
+2026-10-15  sound.dll:0001b510  dynInit_ctrl100b4b50  C3->C4  
+2026-10-15  004a7119  _fseek  C3->C4  
+2026-10-15  004a70b5  _rewind  C3->C4  
+2026-10-15  004a4ab0  panelBuild4a3880_vtordisp  C3->C4  
+2026-10-15  004a4a70  panelSubSlot60_vtordisp  C3->C4  
+2026-10-15  004a4a60  hotHitCb6_vtordisp  C3->C4  
+2026-10-15  004a4a50  hotHitCb5_vtordisp  C3->C4  
+2026-10-15  004a4a40  panelOnKey_vtordisp  C3->C4  
+2026-10-15  004a4a30  hotHitCb4_vtordisp  C3->C4  
+2026-10-15  004a4a20  hotHitCb3_vtordisp  C3->C4  
+2026-10-15  004a4a10  hotHitCb2_vtordisp  C3->C4  
+2026-10-15  004a4a00  hotHitCb1_vtordisp  C3->C4  
+2026-10-15  004a49f0  hotHitCb0_vtordisp  C3->C4  
+2026-10-15  004a49e0  panelOnPick_vtordisp  C3->C4  
+2026-10-15  004a49c0  panelSubDrawContents_vtordisp  C3->C4  
+2026-10-15  004a4980  panelSubDeletingDtor  C3->C4  
+2026-10-15  004a4970  panelSubDeletingDtor_vtordisp  C3->C4  
+2026-10-15  004a45b0  panelSubDrawContents  C3->C4  
+2026-10-15  004a3100  panelDrawRow_vtordisp_adj578  C3->C4  
+2026-10-15  004a30f0  panelCreate4a2400_vtordisp  C3->C4  
+2026-10-15  004a30b0  panelRowCycleSelection_vtordisp  C3->C4  
+2026-10-15  004a30a0  widgetShow_vtordisp  C3->C4  
+2026-10-15  004a3090  panelDrawRow_vtordisp  C3->C4  
+2026-10-15  004a3050  panelRowDeletingDtor  C3->C4  
+2026-10-15  004a3040  panelRowDeletingDtor_vtordisp  C3->C4  
+2026-10-15  004a2ff0  panelRowCycleSelection  C3->C4  
+2026-10-15  004a13c0  viewDispatchScrollBy  C3->C4  
+2026-10-15  004a1170  viewDispatchSlot7  C3->C4  
+2026-10-15  004a1130  viewDispatchSlot6  C3->C4  
+2026-10-15  004a1090  viewDispatchCycleSelection  C3->C4  
+2026-10-15  004a0ff0  viewDispatchSlot60  C3->C4  
+2026-10-15  004a0ed0  viewDispatchOnScroll  C3->C4  
+2026-10-15  004a0eb0  viewDispatchSlot32  C3->C4  
+2026-10-15  004a0e90  viewDispatchSlot34  C3->C4  
+2026-10-15  004a0e60  viewDispatchSlot31  C3->C4  
+2026-10-15  004a0e40  viewDispatchSlot39  C3->C4  
+2026-10-15  004a0e20  viewDispatchSlot33  C3->C4  
+2026-10-15  004a0db0  viewDispatchSlot29  C3->C4  
+2026-10-15  004a0d30  viewDispatchDraw  C3->C4  
+2026-10-15  004a0c90  viewDispatchSelectChanged  C3->C4  
+2026-10-15  004a0bf0  viewDispatchSlot36  C3->C4  
+2026-10-15  004a0b50  viewDispatchSlot30  C3->C4  
+2026-10-15  004a0ab0  viewDispatchSlot27  C3->C4  
+2026-10-15  004a0a10  viewDispatchSlot28  C3->C4  
+2026-10-15  004a0120  dynInit_initLogFile  C3->C4  log/diff/004a0120_dynInit_initLogFile_course_season_spawn.scenario.csv
+2026-10-15  004a0040  optionDialogBuild_vtordisp  C3->C4  
+2026-10-15  004a0000  optionDialogSlot60_vtordisp  C3->C4  
+2026-10-15  0049fff0  optionDialogSlot38_vtordisp  C3->C4  
+2026-10-15  0049ffe0  optionDialogOnKey_vtordisp  C3->C4  
+2026-10-15  0049ffd0  optionDialogUpdate_vtordisp  C3->C4  
+2026-10-15  0049ffc0  optionDialogSlot28_vtordisp  C3->C4  
+2026-10-15  0049ffb0  optionDialogOnMouse_vtordisp  C3->C4  
+2026-10-15  0049ffa0  optionDialogDrawContents_vtordisp  C3->C4  
+2026-10-15  0049ff60  optionDialogDeletingDtor  C3->C4  
+2026-10-15  0049ff50  optionDialogDeletingDtor_vtordisp  C3->C4  
+2026-10-15  0049eb50  dynInit_initGfxGlobal_8408f8  C3->C4  log/diff/0049eb50_dynInit_initGfxGlobal_8408f8_course_season_spawn.scenario.csv
+2026-10-15  0049eaf0  dynInit_initGfxGlobal_8408c8  C3->C4  log/diff/0049eaf0_dynInit_initGfxGlobal_8408c8_course_season_spawn.scenario.csv
+2026-10-15  0049d540  dynInit_initGfxGlobal_840860  C3->C4  log/diff/0049d540_dynInit_initGfxGlobal_840860_course_season_spawn.scenario.csv
+2026-10-15  0049d4e0  dynInit_initGfxGlobal_840890  C3->C4  log/diff/0049d4e0_dynInit_initGfxGlobal_840890_course_season_spawn.scenario.csv
+2026-10-15  0049d480  dynInit_initGfxGlobal_840830  C3->C4  log/diff/0049d480_dynInit_initGfxGlobal_840830_course_season_spawn.scenario.csv
+2026-10-15  0049d350  dynInit_initGfxGlobal_8407f0  C3->C4  log/diff/0049d350_dynInit_initGfxGlobal_8407f0_course_season_spawn.scenario.csv
+2026-10-15  0049d2f0  dynInit_initGfxGlobal_840790  C3->C4  log/diff/0049d2f0_dynInit_initGfxGlobal_840790_course_season_spawn.scenario.csv
+2026-10-15  0049d290  dynInit_initGfxGlobal_8407c0  C3->C4  log/diff/0049d290_dynInit_initGfxGlobal_8407c0_course_season_spawn.scenario.csv
+2026-10-15  0049d150  dynInit_initGfxGlobal_840710  C3->C4  log/diff/0049d150_dynInit_initGfxGlobal_840710_course_season_spawn.scenario.csv
+2026-10-15  0049d000  dynInit_initPairArrayGlobal  C3->C4  log/diff/0049d000_dynInit_initPairArrayGlobal_course_season_spawn.scenario.csv
+2026-10-15  0049c820  globalObjDeleteDtor49c800_adj274  C3->C4  
+2026-10-15  0049bfe0  dynInit_initGlobalObj_49c020  C3->C4  log/diff/0049bfe0_dynInit_initGlobalObj_49c020_course_season_spawn.scenario.csv
+2026-10-15  0049bfd0  screenObj_deleteDtor_adj5c  C3->C4  
+2026-10-15  00497af0  comboDeleteDtor_adj274  C3->C4  
+2026-10-15  00492bb0  HotList::tipTimerCallback  C3->C4  
+2026-10-15  00491bf0  panelBuildRow_vtordisp  C3->C4  
+2026-10-15  00491bb0  listPanelSlot60_vtordisp  C3->C4  
+2026-10-15  00491ba0  listSelectionChanged_vtordisp  C3->C4  
+2026-10-15  00491b90  listPanelRefresh_vtordisp  C3->C4  
+2026-10-15  00491b80  listPanelOnScroll_vtordisp  C3->C4  
+2026-10-15  00491b70  listPanelSlot28_vtordisp  C3->C4  
+2026-10-15  00491b60  listPanelReadValue_vtordisp  C3->C4  
+2026-10-15  00491b50  listPanelDrawContents_vtordisp  C3->C4  
+2026-10-15  00491ad0  listPanelDeletingDtor  C3->C4  
+2026-10-15  00491ac0  listPanelDeletingDtor_vtordisp  C3->C4  
+2026-10-15  00491aa0  viewDispatchBuild_vtordisp  C3->C4  
+2026-10-15  00491a60  viewDispatchCycleSelection_vtordisp  C3->C4  
+2026-10-15  00491a50  viewDispatchSlot60_vtordisp  C3->C4  
+2026-10-15  00491a40  viewDispatchOnScroll_vtordisp58  C3->C4  
+2026-10-15  00491a30  viewDispatchOnScroll_vtordisp57  C3->C4  
+2026-10-15  00491a20  viewDispatchSlot39_vtordisp  C3->C4  
+2026-10-15  00491a10  viewDispatchSelectChanged_vtordisp  C3->C4  
+2026-10-15  00491a00  viewDispatchSlot36_vtordisp  C3->C4  
+2026-10-15  004919f0  viewDispatchSlot34_vtordisp  C3->C4  
+2026-10-15  004919e0  viewDispatchSlot33_vtordisp  C3->C4  
+2026-10-15  004919d0  viewDispatchSlot32_vtordisp  C3->C4  
+2026-10-15  004919c0  viewDispatchSlot31_vtordisp  C3->C4  
+2026-10-15  004919b0  viewDispatchSlot30_vtordisp  C3->C4  
+2026-10-15  004919a0  viewDispatchSlot29_vtordisp  C3->C4  
+2026-10-15  00491990  viewDispatchSlot28_vtordisp  C3->C4  
+2026-10-15  00491980  viewDispatchSlot27_vtordisp  C3->C4  
+2026-10-15  00491970  viewDispatchScrollBy_vtordisp  C3->C4  
+2026-10-15  00491960  viewDispatchDraw_vtordisp  C3->C4  
+2026-10-15  00491950  viewDispatchSlot7_vtordisp  C3->C4  
+2026-10-15  00491940  viewDispatchSlot6_vtordisp  C3->C4  
+2026-10-15  00491900  viewDeletingDtor  C3->C4  
+2026-10-15  004918f0  viewDeletingDtor_vtordisp  C3->C4  
+2026-10-15  004918e0  LabelButton::scalarDtor_adj274  C3->C4  
+2026-10-15  004918d0  Dialog::scalarDtor_adj274  C3->C4  
+2026-10-15  0048cd60  ListBox::build_vtordisp  C3->C4  
+2026-10-15  0048cd10  ListBox::onScroll_vtordisp  C3->C4  
+2026-10-15  0048cd00  ListBox::fwdOnScroll_vtordisp  C3->C4  
+2026-10-15  0048ccf0  ListBox::fireSelectChangedMarked_vtordisp  C3->C4  
+2026-10-15  0048cce0  ListBox::fireSelectChanged_vtordisp  C3->C4  
+2026-10-15  0048ccd0  ListBox::typeAhead_vtordisp  C3->C4  
+2026-10-15  0048ccc0  ListBox::onNavKeyMarked_vtordisp  C3->C4  
+2026-10-15  0048ccb0  ListBox::onNavKey_vtordisp  C3->C4  
+2026-10-15  0048cca0  ListBox::forwardClick_vtordisp  C3->C4  
+2026-10-15  0048cc90  ListBox::clearSelection_vtordisp  C3->C4  
+2026-10-15  0048cc80  ListBox::onDrag_vtordisp  C3->C4  
+2026-10-15  0048cc70  ListBox::scrollBy_vtordisp  C3->C4  
+2026-10-15  0048cc60  ListBox::drawContents_vtordisp  C3->C4  
+2026-10-15  0048cc30  ListBox::fwdInnerVfn24  C3->C4  
+2026-10-15  0048cc20  ListBox::fwdInnerVfn24_vtordisp  C3->C4  
+2026-10-15  0048cbf0  ListBox::fwdInnerVfn20  C3->C4  
+2026-10-15  0048cbe0  ListBox::fwdInnerVfn20_vtordisp  C3->C4  
+2026-10-15  0048cba0  ListBox::deletingDtor  C3->C4  
+2026-10-15  0048cb90  ListBox::deletingDtor_vtordisp  C3->C4  
+2026-10-15  0048c520  ListBox::fireSelectChangedMarked  C3->C4  
+2026-10-15  0048c4f0  ListBox::fwdOnScroll  C3->C4  
+2026-10-15  0048c420  ListBox::onScroll  C3->C4  
+2026-10-15  0048a9c0  ListBox::onNavKeyMarked  C3->C4  
+2026-10-15  00489140  Button::scalarDtor_adj274  C3->C4  
+2026-10-15  00489120  Button::detach  C3->C4  
+2026-10-15  00488fb0  Button::timerCallback  C3->C4  
+2026-10-15  00488eb0  Button::endPress  C3->C4  
+2026-10-15  00488e90  Button::onTipTimer  C3->C4  
+2026-10-15  00487e00  dynInit_initKeyTableArray  C3->C4  log/diff/00487e00_dynInit_initKeyTableArray_course_season_spawn.scenario.csv
+2026-10-15  00487d70  dynInit_initGlobalReader  C3->C4  log/diff/00487d70_dynInit_initGlobalReader_course_season_spawn.scenario.csv
+2026-10-15  00487b90  openHookC  C3->C4  
+2026-10-15  00486c40  EditBox::updateCaretDrag  C3->C4  
+2026-10-15  00486be0  EditBox::endCaretDrag  C3->C4  
+2026-10-15  00486b90  EditBox::beginCaretDrag  C3->C4  
+2026-10-15  00486b20  EditBox::cycleSelectionIfOwned  C3->C4  
+2026-10-15  00483e50  dynInit_staticInit_g83af98  C3->C4  log/diff/00483e50_dynInit_staticInit_g83af98_course_season_spawn.scenario.csv
+2026-10-15  00483e10  dynInit_staticInit_g83ad58  C3->C4  log/diff/00483e10_dynInit_staticInit_g83ad58_course_season_spawn.scenario.csv
+2026-10-15  00483dd0  dynInit_staticInit_g83ad80  C3->C4  log/diff/00483dd0_dynInit_staticInit_g83ad80_course_season_spawn.scenario.csv
+2026-10-15  004837a0  dynInit_screenMgrCtor4837b0  C3->C4  log/diff/004837a0_dynInit_screenMgrCtor4837b0_course_season_spawn.scenario.csv
+2026-10-15  00483750  Cache482f60::scalarDtorAdj20  C3->C4  
+2026-10-15  00482ef0  dynInit_staticInit_g83ac88  C3->C4  log/diff/00482ef0_dynInit_staticInit_g83ac88_course_season_spawn.scenario.csv
+2026-10-15  00482eb0  dynInit_staticInit_g83ac30  C3->C4  log/diff/00482eb0_dynInit_staticInit_g83ac30_course_season_spawn.scenario.csv
+2026-10-15  00482e70  dynInit_staticInit_g83acb0  C3->C4  log/diff/00482e70_dynInit_staticInit_g83acb0_course_season_spawn.scenario.csv
+2026-10-15  00481b40  View4804a0::scalarDtor_adj274  C3->C4  
+2026-10-15  00479a30  dynInit_gImageCtor_83a7b8  C3->C4  log/diff/00479a30_dynInit_gImageCtor_83a7b8_course_season_spawn.scenario.csv
+2026-10-15  004799e0  dynInit_gImageCtor_83a500  C3->C4  log/diff/004799e0_dynInit_gImageCtor_83a500_course_season_spawn.scenario.csv
+2026-10-15  00474a80  dynInit_gSurfaceCtor_839a68  C3->C4  log/diff/00474a80_dynInit_gSurfaceCtor_839a68_course_season_spawn.scenario.csv
+2026-10-15  00473a60  dynInit_initGlobalImage  C3->C4  log/diff/00473a60_dynInit_initGlobalImage_course_season_spawn.scenario.csv
+2026-10-15  0046de30  dynInit_gImageCtor_838f98  C3->C4  log/diff/0046de30_dynInit_gImageCtor_838f98_course_season_spawn.scenario.csv
+2026-10-15  00465840  rootWin_onPress2b  C3->C4  
+2026-10-15  004657e0  rootWin_onPress1b  C3->C4  
+2026-10-15  0045baa0  dynInit_staticCtor_45bab0  C3->C4  log/diff/0045baa0_dynInit_staticCtor_45bab0_course_season_spawn.scenario.csv
+2026-10-15  0045ba50  dynInit_staticCtor_45ba60  C3->C4  log/diff/0045ba50_dynInit_staticCtor_45ba60_course_season_spawn.scenario.csv
+2026-10-15  0044b780  atexitDtor_821cb8  C3->C4  
+2026-10-15  0044b750  dynInit_staticCtor_44b760  C3->C4  log/diff/0044b750_dynInit_staticCtor_44b760_course_season_spawn.scenario.csv
+2026-10-15  0044b680  atexitDtor_821120  C3->C4  
+2026-10-15  0044b650  dynInit_staticCtor_44b660  C3->C4  log/diff/0044b650_dynInit_staticCtor_44b660_course_season_spawn.scenario.csv
+2026-10-15  0044b4e0  atexitDtor_8224c8  C3->C4  
+2026-10-15  0044b4b0  dynInit_staticCtor_44b4c0  C3->C4  log/diff/0044b4b0_dynInit_staticCtor_44b4c0_course_season_spawn.scenario.csv
+2026-10-15  0044b3d0  atexitDtor_821f48  C3->C4  
+2026-10-15  0044b3a0  dynInit_staticCtor_44b3b0  C3->C4  log/diff/0044b3a0_dynInit_staticCtor_44b3b0_course_season_spawn.scenario.csv
+2026-10-15  0044b1a0  atexitDtor_821308  C3->C4  
+2026-10-15  0044b170  dynInit_staticCtor_44b180  C3->C4  log/diff/0044b170_dynInit_staticCtor_44b180_course_season_spawn.scenario.csv
+2026-10-15  0044b160  atexitDtor_8222b8  C3->C4  
+2026-10-15  0044b130  dynInit_staticCtor_44b140  C3->C4  log/diff/0044b130_dynInit_staticCtor_44b140_course_season_spawn.scenario.csv
+2026-10-15  0044b120  atexitDtor_8223c0  C3->C4  
+2026-10-15  0044b0f0  dynInit_staticCtor_44b100  C3->C4  log/diff/0044b0f0_dynInit_staticCtor_44b100_course_season_spawn.scenario.csv
+2026-10-15  0044afa0  atexitDtor_821200  C3->C4  
+2026-10-15  0044af70  dynInit_staticCtor_44af80  C3->C4  log/diff/0044af70_dynInit_staticCtor_44af80_course_season_spawn.scenario.csv
+2026-10-15  0044af60  atexitDtor_821070  C3->C4  
+2026-10-15  0044af30  dynInit_staticCtor_44af40  C3->C4  log/diff/0044af30_dynInit_staticCtor_44af40_course_season_spawn.scenario.csv
+2026-10-15  0044af20  atexitDtor_821bf8  C3->C4  
+2026-10-15  0044aef0  dynInit_staticCtor_44af00  C3->C4  log/diff/0044aef0_dynInit_staticCtor_44af00_course_season_spawn.scenario.csv
+2026-10-15  0044aee0  atexitDtor_821c60  C3->C4  
+2026-10-15  0044aeb0  dynInit_staticCtor_44aec0  C3->C4  log/diff/0044aeb0_dynInit_staticCtor_44aec0_course_season_spawn.scenario.csv
+2026-10-15  0044adf0  atexitDtor_8210c8  C3->C4  
+2026-10-15  0044adc0  dynInit_staticCtor_44add0  C3->C4  log/diff/0044adc0_dynInit_staticCtor_44add0_course_season_spawn.scenario.csv
+2026-10-15  0044ad70  dynInit_staticCtor_44ad80  C3->C4  log/diff/0044ad70_dynInit_staticCtor_44ad80_course_season_spawn.scenario.csv
+2026-10-15  0044ad10  dynInit_arrayStaticInit_44ad20  C3->C4  log/diff/0044ad10_dynInit_arrayStaticInit_44ad20_course_season_spawn.scenario.csv
+2026-10-15  0044ac50  dynInit_initPanelState  C3->C4  log/diff/0044ac50_dynInit_initPanelState_course_season_spawn.scenario.csv
+2026-10-15  00449200  dynInit_initList820f18  C3->C4  log/diff/00449200_dynInit_initList820f18_course_season_spawn.scenario.csv
+2026-10-15  004491b0  dynInit_staticCtor_4491c0  C3->C4  log/diff/004491b0_dynInit_staticCtor_4491c0_course_season_spawn.scenario.csv
+2026-10-15  00448150  dynInit_arrayStaticInit_448160  C3->C4  log/diff/00448150_dynInit_arrayStaticInit_448160_course_season_spawn.scenario.csv
+2026-10-15  0043d630  dynInit_staticCtor_43d640  C3->C4  log/diff/0043d630_dynInit_staticCtor_43d640_course_season_spawn.scenario.csv
+2026-10-15  0043d4d0  dynInit_staticCtor_43d4e0  C3->C4  log/diff/0043d4d0_dynInit_staticCtor_43d4e0_course_season_spawn.scenario.csv
+2026-10-15  0043d450  dynInit_arrayStaticInit_43d460  C3->C4  log/diff/0043d450_dynInit_arrayStaticInit_43d460_course_season_spawn.scenario.csv
+2026-10-15  0043cca0  dynInit_staticCtor_43ccb0  C3->C4  log/diff/0043cca0_dynInit_staticCtor_43ccb0_course_season_spawn.scenario.csv
+2026-10-15  0043cc60  dynInit_staticCtor_43cc70  C3->C4  log/diff/0043cc60_dynInit_staticCtor_43cc70_course_season_spawn.scenario.csv
+2026-10-15  0043cc00  dynInit_arrayStaticInit_43cc10  C3->C4  log/diff/0043cc00_dynInit_arrayStaticInit_43cc10_course_season_spawn.scenario.csv
+2026-10-15  0043cbf0  editBoxTimer_deleteDtor_adj274  C3->C4  
+2026-10-15  00438590  dynInit_staticCtor_4385a0  C3->C4  log/diff/00438590_dynInit_staticCtor_4385a0_course_season_spawn.scenario.csv
+2026-10-15  004378d0  dynInit_staticCtor_4378e0  C3->C4  log/diff/004378d0_dynInit_staticCtor_4378e0_course_season_spawn.scenario.csv
+2026-10-15  004061e0  dynInit_staticInit_004061f0  C3->C4  log/diff/004061e0_dynInit_staticInit_004061f0_course_season_spawn.scenario.csv
+2026-10-15  004061a0  dynInit_staticInit_004061b0  C3->C4  log/diff/004061a0_dynInit_staticInit_004061b0_course_season_spawn.scenario.csv
+2026-10-15  004058e0  dynInit_staticInit_004058f0  C3->C4  log/diff/004058e0_dynInit_staticInit_004058f0_course_season_spawn.scenario.csv
+2026-10-15  00405750  dynInit_initGlobalArray_00405760  C3->C4  log/diff/00405750_dynInit_initGlobalArray_00405760_course_season_spawn.scenario.csv
+2026-10-15  00405610  dynInit_initGlobalArray_00405620  C3->C4  log/diff/00405610_dynInit_initGlobalArray_00405620_course_season_spawn.scenario.csv
+2026-10-15  004054d0  dynInit_initGlobalArray_004054e0  C3->C4  log/diff/004054d0_dynInit_initGlobalArray_004054e0_course_season_spawn.scenario.csv
+2026-10-15  00405390  dynInit_initGlobalArray_004053a0  C3->C4  log/diff/00405390_dynInit_initGlobalArray_004053a0_course_season_spawn.scenario.csv
+2026-10-15  004051e0  dynInit_initGlobalArray_004051f0  C3->C4  log/diff/004051e0_dynInit_initGlobalArray_004051f0_course_season_spawn.scenario.csv
+2026-10-15  004050a0  dynInit_initGlobalArray_004050b0  C3->C4  log/diff/004050a0_dynInit_initGlobalArray_004050b0_course_season_spawn.scenario.csv
+2026-10-15  00404f40  dynInit_initGlobalArray_00404f50  C3->C4  log/diff/00404f40_dynInit_initGlobalArray_00404f50_course_season_spawn.scenario.csv
+2026-10-15  00404df0  dynInit_initGlobalArray_00404e00  C3->C4  log/diff/00404df0_dynInit_initGlobalArray_00404e00_course_season_spawn.scenario.csv
+2026-10-15  00404c10  dynInit_initGlobalArray_00404c20  C3->C4  log/diff/00404c10_dynInit_initGlobalArray_00404c20_course_season_spawn.scenario.csv
+2026-10-15  00404950  deletingDtor_404380_adj274  C3->C4  
+2026-10-15  00404830  dynInit_staticInit_00404840  C3->C4  log/diff/00404830_dynInit_staticInit_00404840_course_season_spawn.scenario.csv
+2026-10-15  004047e0  dynInit_staticInit_004047f0  C3->C4  log/diff/004047e0_dynInit_staticInit_004047f0_course_season_spawn.scenario.csv
+2026-10-15  00404790  dynInit_staticInit_004047a0  C3->C4  log/diff/00404790_dynInit_staticInit_004047a0_course_season_spawn.scenario.csv
+2026-10-15  00404740  dynInit_staticInit_00404750  C3->C4  log/diff/00404740_dynInit_staticInit_00404750_course_season_spawn.scenario.csv
+2026-10-15  004046f0  dynInit_staticInit_00404700  C3->C4  log/diff/004046f0_dynInit_staticInit_00404700_course_season_spawn.scenario.csv
+2026-10-15  004046b0  dynInit_staticInit_004046c0  C3->C4  log/diff/004046b0_dynInit_staticInit_004046c0_course_season_spawn.scenario.csv
+2026-10-15  00404660  dynInit_staticInit_00404670  C3->C4  log/diff/00404660_dynInit_staticInit_00404670_course_season_spawn.scenario.csv
+2026-10-15  00404610  dynInit_staticInit_00404620  C3->C4  log/diff/00404610_dynInit_staticInit_00404620_course_season_spawn.scenario.csv
+2026-10-15  004045c0  dynInit_staticInit_004045d0  C3->C4  log/diff/004045c0_dynInit_staticInit_004045d0_course_season_spawn.scenario.csv
+2026-10-15  00404570  dynInit_staticInit_00404580  C3->C4  log/diff/00404570_dynInit_staticInit_00404580_course_season_spawn.scenario.csv
+2026-10-15  00404520  dynInit_staticInit_00404530  C3->C4  log/diff/00404520_dynInit_staticInit_00404530_course_season_spawn.scenario.csv
+2026-10-15  004044d0  dynInit_staticInit_004044e0  C3->C4  log/diff/004044d0_dynInit_staticInit_004044e0_course_season_spawn.scenario.csv
+2026-10-15  00404480  dynInit_staticInit_00404490  C3->C4  log/diff/00404480_dynInit_staticInit_00404490_course_season_spawn.scenario.csv
+2026-10-15  00404430  dynInit_staticInit_00404440  C3->C4  log/diff/00404430_dynInit_staticInit_00404440_course_season_spawn.scenario.csv
+2026-10-15  004043e0  dynInit_staticInit_004043f0  C3->C4  log/diff/004043e0_dynInit_staticInit_004043f0_course_season_spawn.scenario.csv
+2026-10-15  004043a0  dynInit_staticInit_004043b0  C3->C4  log/diff/004043a0_dynInit_staticInit_004043b0_course_season_spawn.scenario.csv
+2026-10-15  00404310  dynInit_staticInit_00404320  C3->C4  log/diff/00404310_dynInit_staticInit_00404320_course_season_spawn.scenario.csv
+2026-10-15  004042f0  scalarDtor_404280  C3->C4  
+2026-10-15  00404030  dynInit_initGlobalArray_00404040  C3->C4  log/diff/00404030_dynInit_initGlobalArray_00404040_course_season_spawn.scenario.csv
+2026-10-15  00403fd0  dynInit_initGlobalArray_00403fe0  C3->C4  log/diff/00403fd0_dynInit_initGlobalArray_00403fe0_course_season_spawn.scenario.csv
+2026-10-15  00403f70  dynInit_initGlobalArray_00403f80  C3->C4  log/diff/00403f70_dynInit_initGlobalArray_00403f80_course_season_spawn.scenario.csv
+2026-10-15  00403f10  dynInit_initGlobalArray_00403f20  C3->C4  log/diff/00403f10_dynInit_initGlobalArray_00403f20_course_season_spawn.scenario.csv
+2026-10-15  00492ed0  polyEdgeStep  C3->C4  log/diff/00492ed0_polyEdgeStep_ui_tour.scenario.csv
+2026-10-15  00479950  pixelBlue  C3->C4  log/diff/00479950_pixelBlue_ui_tour.scenario.csv
+2026-10-15  0045f0f0  skillPointDialog  C3->C4  log/diff/0045f0f0_skillPointDialog_ui_tour.scenario.csv
+2026-10-15  00459400  showHireEmployeeDialog  C3->C4  log/diff/00459400_showHireEmployeeDialog_ui_tour.scenario.csv
+2026-10-15  0044f6b0  showFinancialReport  C3->C4  log/diff/0044f6b0_showFinancialReport_ui_tour.scenario.csv
+2026-10-15  00437910  promptAndSaveFile  C3->C4  log/diff/00437910_promptAndSaveFile_ui_tour.scenario.csv
+2026-10-15  0040f190  customizeCharacter  C3->C4  log/diff/0040f190_customizeCharacter_ui_tour.scenario.csv
+2026-10-15  0040aa80  hireEmployee  C3->C4  log/diff/0040aa80_hireEmployee_ui_tour.scenario.csv
+2026-10-15  00405b10  saveGameDialog  C3->C4  log/diff/00405b10_saveGameDialog_ui_tour.scenario.csv
+2026-10-15  00476750  drawStringAt2  C3->C4  log/diff/00476750_drawStringAt2_ui_tour.scenario.csv
+2026-10-15  00473470  drawScoreSummary  C3->C4  log/diff/00473470_drawScoreSummary_ui_tour.scenario.csv
+2026-10-15  0046d6e0  showPopup  C3->C4  log/diff/0046d6e0_showPopup_ui_tour.scenario.csv
+2026-10-15  0045b2c0  textInputBox  C3->C4  log/diff/0045b2c0_textInputBox_ui_tour.scenario.csv
+2026-10-15  00456be0  showRoutingMapScreen  C3->C4  log/diff/00456be0_showRoutingMapScreen_ui_tour.scenario.csv
+2026-10-15  00455ed0  showHistographScreen  C3->C4  log/diff/00455ed0_showHistographScreen_ui_tour.scenario.csv
+2026-10-15  00455a30  showBestScoresScreen  C3->C4  log/diff/00455a30_showBestScoresScreen_ui_tour.scenario.csv
+2026-10-15  00454c50  showMembershipRoster  C3->C4  log/diff/00454c50_showMembershipRoster_ui_tour.scenario.csv
+2026-10-15  004546b0  showPlayerCommentsReport  C3->C4  log/diff/004546b0_showPlayerCommentsReport_ui_tour.scenario.csv
+2026-10-15  0044fb30  showCourseReport  C3->C4  log/diff/0044fb30_showCourseReport_ui_tour.scenario.csv
+2026-10-15  0044e770  showShortcutsScreen  C3->C4  log/diff/0044e770_showShortcutsScreen_ui_tour.scenario.csv
+2026-10-15  00436e50  drawEmployeeDetailPanel  C3->C4  log/diff/00436e50_drawEmployeeDetailPanel_ui_tour.scenario.csv
+2026-10-15  00436c00  handleEmployeeAction  C3->C4  log/diff/00436c00_handleEmployeeAction_ui_tour.scenario.csv
+2026-10-15  00435760  drawEmployeeViewPanel  C3->C4  log/diff/00435760_drawEmployeeViewPanel_ui_tour.scenario.csv
+2026-10-15  00434350  drawBuildingPanel  C3->C4  log/diff/00434350_drawBuildingPanel_ui_tour.scenario.csv
+2026-10-15  004340a0  hitBuildingTool  C3->C4  log/diff/004340a0_hitBuildingTool_ui_tour.scenario.csv
+2026-10-15  004889f0  setButtonDefaults  C3->C4  log/diff/004889f0_setButtonDefaults_course_season_spawn.scenario.csv
+2026-10-15  00490cf0  MsgBox::setButtonB  C3->C4  log/diff/00490cf0_MsgBox_setButtonB_course_season_spawn.scenario.csv
+2026-10-15  00485260  Snd::ctor485260  C3->C4  log/diff/00485260_Snd_ctor485260_course_season_spawn.scenario.csv
+2026-10-15  00461830  build16BitColorTable  C3->C4  log/diff/00461830_build16BitColorTable_course_season_spawn.scenario.csv
+2026-10-15  004799d0  storeUiEventTable  C3->C4  log/diff/004799d0_storeUiEventTable_course_season_spawn.scenario.csv
+2026-10-15  00486d20  Timer::init  C3->C4  log/diff/00486d20_Timer_init_course_season_spawn.scenario.csv
+2026-10-15  00449210  initList820f18  C3->C4  log/diff/00449210_initList820f18_course_season_spawn.scenario.csv
+2026-10-15  00490bf0  MsgBox::initDefaults  C3->C4  log/diff/00490bf0_MsgBox_initDefaults_course_season_spawn.scenario.csv
+2026-10-15  00473c60  Surface_blitTakeDirty  C3->C4  log/diff/00473c60_Surface_blitTakeDirty_course_season_spawn.scenario.csv
+2026-10-15  0044ae60  gSurfaceCtor_44ae60  C3->C4  log/diff/0044ae60_gSurfaceCtor_44ae60_course_season_spawn.scenario.csv
+2026-10-15  0044b060  gSurfaceCtor_44b060  C3->C4  log/diff/0044b060_gSurfaceCtor_44b060_course_season_spawn.scenario.csv
+2026-10-15  004832e0  startColorCycle  C3->C4  log/diff/004832e0_startColorCycle_course_season_spawn.scenario.csv
+2026-10-15  00483190  allocColorRange  C3->C4  log/diff/00483190_allocColorRange_course_season_spawn.scenario.csv
+2026-10-15  004840e0  createSound4840e0  C3->C4  log/diff/004840e0_createSound4840e0_course_season_spawn.scenario.csv
+2026-10-15  00479f30  layoutNode  C3->C4  log/diff/00479f30_layoutNode_course_season_spawn.scenario.csv
+2026-10-15  00483fc0  soundVersionCheck  C3->C4  log/diff/00483fc0_soundVersionCheck_course_season_spawn.scenario.csv
+2026-10-15  0047cfd0  resetViewState47cfd0  C3->C4  log/diff/0047cfd0_resetViewState47cfd0_course_season_spawn.scenario.csv
+2026-10-15  00479c40  View_ctor  C3->C4  log/diff/00479c40_View_ctor_course_season_spawn.scenario.csv
+2026-10-15  00487060  BinkPlayer::close  C3->C4  log/diff/00487060_BinkPlayer_close_course_season_spawn.scenario.csv
+2026-10-15  00487210  StrList::ctor  C3->C4  log/diff/00487210_StrList_ctor_course_season_spawn.scenario.csv
+2026-10-15  00482b60  Flic::ctorBase482b60  C3->C4  log/diff/00482b60_Flic_ctorBase482b60_course_season_spawn.scenario.csv
+2026-10-15  00488230  Reader::readLine  C3->C4  log/diff/00488230_Reader_readLine_course_season_spawn.scenario.csv
+2026-10-15  00484a40  Snd::configure  C3->C4  log/diff/00484a40_Snd_configure_course_season_spawn.scenario.csv
+2026-10-15  0047d610  rebuildFramePieces  C3->C4  log/diff/0047d610_rebuildFramePieces_course_season_spawn.scenario.csv
+2026-10-15  0047a4c0  layoutViewTree  C3->C4  log/diff/0047a4c0_layoutViewTree_course_season_spawn.scenario.csv
+2026-10-15  0047d570  Window::layoutScrollbars  C3->C4  log/diff/0047d570_Window_layoutScrollbars_course_season_spawn.scenario.csv
+2026-10-15  0040ad60  loadTopScores  C3->C4  log/diff/0040ad60_loadTopScores_course_season_spawn.scenario.csv
+2026-10-15  00483e90  initSound  C3->C4  log/diff/00483e90_initSound_course_season_spawn.scenario.csv
+2026-10-15  0043cd70  showTitleScreen  C3->C4  log/diff/0043cd70_showTitleScreen_course_season_spawn.scenario.csv
+2026-10-15  00481870  allocResampleTable  C3->C4  log/diff/00481870_allocResampleTable_course_season_spawn.scenario.csv
+2026-10-15  004a6170  _strchr  C3->C4  log/diff/004a6170__strchr_course_season_spawn.scenario.csv
+2026-10-15  004873f0  openHookA  C3->C4  log/diff/004873f0_openHookA_course_season_spawn.scenario.csv
+2026-10-15  004879b0  openHookB  C3->C4  log/diff/004879b0_openHookB_course_season_spawn.scenario.csv
+2026-10-15  0047b9a0  Window::passLocalRect  C3->C4  log/diff/0047b9a0_Window_passLocalRect_course_season_spawn.scenario.csv
+2026-10-15  004ad580  __strnicmp  C3->C4  log/diff/004ad580___strnicmp_course_season_spawn.scenario.csv
+2026-10-15  00473a60  dynInit_initGlobalImage  C4<-C3  DEMOTED: promoted early on an s36c spawn-mode scenario CSV (since removed by s36c) before s36c reported; re-promote after its evidence is verified
+2026-10-15  00403f10  dynInit_initGlobalArray_00403f20  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00403f70  dynInit_initGlobalArray_00403f80  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00403fd0  dynInit_initGlobalArray_00403fe0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404030  dynInit_initGlobalArray_00404040  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404310  dynInit_staticInit_00404320  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004043a0  dynInit_staticInit_004043b0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004043e0  dynInit_staticInit_004043f0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404430  dynInit_staticInit_00404440  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404480  dynInit_staticInit_00404490  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004044d0  dynInit_staticInit_004044e0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404520  dynInit_staticInit_00404530  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404570  dynInit_staticInit_00404580  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004045c0  dynInit_staticInit_004045d0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404610  dynInit_staticInit_00404620  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404660  dynInit_staticInit_00404670  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004046b0  dynInit_staticInit_004046c0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004046f0  dynInit_staticInit_00404700  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404740  dynInit_staticInit_00404750  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404790  dynInit_staticInit_004047a0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004047e0  dynInit_staticInit_004047f0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404830  dynInit_staticInit_00404840  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404c10  dynInit_initGlobalArray_00404c20  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404df0  dynInit_initGlobalArray_00404e00  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00404f40  dynInit_initGlobalArray_00404f50  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004050a0  dynInit_initGlobalArray_004050b0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004051e0  dynInit_initGlobalArray_004051f0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00405390  dynInit_initGlobalArray_004053a0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004054d0  dynInit_initGlobalArray_004054e0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00405610  dynInit_initGlobalArray_00405620  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00405750  dynInit_initGlobalArray_00405760  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004058e0  dynInit_staticInit_004058f0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004061a0  dynInit_staticInit_004061b0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004061e0  dynInit_staticInit_004061f0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0040ad60  loadTopScores  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004378d0  dynInit_staticCtor_4378e0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00438590  dynInit_staticCtor_4385a0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0043cc00  dynInit_arrayStaticInit_43cc10  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0043cc60  dynInit_staticCtor_43cc70  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0043cca0  dynInit_staticCtor_43ccb0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0043cd70  showTitleScreen  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0043d450  dynInit_arrayStaticInit_43d460  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0043d4d0  dynInit_staticCtor_43d4e0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0043d630  dynInit_staticCtor_43d640  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00448150  dynInit_arrayStaticInit_448160  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004491b0  dynInit_staticCtor_4491c0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00449200  dynInit_initList820f18  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00449210  initList820f18  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044ac50  dynInit_initPanelState  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044ad10  dynInit_arrayStaticInit_44ad20  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044ad70  dynInit_staticCtor_44ad80  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044adc0  dynInit_staticCtor_44add0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044ae60  gSurfaceCtor_44ae60  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044aeb0  dynInit_staticCtor_44aec0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044aef0  dynInit_staticCtor_44af00  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044af30  dynInit_staticCtor_44af40  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044af70  dynInit_staticCtor_44af80  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b060  gSurfaceCtor_44b060  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b0f0  dynInit_staticCtor_44b100  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b130  dynInit_staticCtor_44b140  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b170  dynInit_staticCtor_44b180  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b3a0  dynInit_staticCtor_44b3b0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b4b0  dynInit_staticCtor_44b4c0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b650  dynInit_staticCtor_44b660  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0044b750  dynInit_staticCtor_44b760  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0045ba50  dynInit_staticCtor_45ba60  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0045baa0  dynInit_staticCtor_45bab0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00461830  build16BitColorTable  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0046de30  dynInit_gImageCtor_838f98  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00473c60  Surface_blitTakeDirty  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00474a80  dynInit_gSurfaceCtor_839a68  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004799d0  storeUiEventTable  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004799e0  dynInit_gImageCtor_83a500  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00479a30  dynInit_gImageCtor_83a7b8  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00479c40  View_ctor  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00479f30  layoutNode  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0047a4c0  layoutViewTree  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0047b9a0  Window::passLocalRect  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0047cfd0  resetViewState47cfd0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0047d570  Window::layoutScrollbars  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0047d610  rebuildFramePieces  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00481870  allocResampleTable  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00482b60  Flic::ctorBase482b60  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00482e70  dynInit_staticInit_g83acb0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00482eb0  dynInit_staticInit_g83ac30  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00482ef0  dynInit_staticInit_g83ac88  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00483190  allocColorRange  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004832e0  startColorCycle  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004837a0  dynInit_screenMgrCtor4837b0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00483dd0  dynInit_staticInit_g83ad80  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00483e10  dynInit_staticInit_g83ad58  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00483e50  dynInit_staticInit_g83af98  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00483e90  initSound  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00483fc0  soundVersionCheck  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004840e0  createSound4840e0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00484a40  Snd::configure  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00485260  Snd::ctor485260  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00486d20  Timer::init  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00487060  BinkPlayer::close  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00487210  StrList::ctor  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004873f0  openHookA  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004879b0  openHookB  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00487d70  dynInit_initGlobalReader  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00487e00  dynInit_initKeyTableArray  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00488230  Reader::readLine  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004889f0  setButtonDefaults  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00490bf0  MsgBox::initDefaults  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  00490cf0  MsgBox::setButtonB  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049bfe0  dynInit_initGlobalObj_49c020  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d000  dynInit_initPairArrayGlobal  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d150  dynInit_initGfxGlobal_840710  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d290  dynInit_initGfxGlobal_8407c0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d2f0  dynInit_initGfxGlobal_840790  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d350  dynInit_initGfxGlobal_8407f0  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d480  dynInit_initGfxGlobal_840830  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d4e0  dynInit_initGfxGlobal_840890  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049d540  dynInit_initGfxGlobal_840860  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049eaf0  dynInit_initGfxGlobal_8408c8  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  0049eb50  dynInit_initGfxGlobal_8408f8  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004a0120  dynInit_initLogFile  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004a6170  _strchr  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  004ad580  __strnicmp  C4<-C3  DEMOTED: promoted early on s36c spawn-mode scenario CSVs before s36c reported its default-mode check, determinism and controls; re-promote after they are verified
+2026-10-15  jgld.dll:0007f12c  __ftol  C3->C4  log/diff/0007f12c_jgld___ftol_golfer_stories.scenario.csv
+2026-10-15  004ad580  __strnicmp  C3->C4  log/diff/004ad580___strnicmp_course_season_spawn.scenario.csv
+2026-10-15  004ad4b0  __strcmpi  C3->C4  log/diff/004ad4b0___strcmpi_championship.scenario.csv
+2026-10-15  004a6170  _strchr  C3->C4  log/diff/004a6170__strchr_course_season_spawn.scenario.csv
+2026-10-15  004a6030  __ftol  C3->C4  log/diff/004a6030___ftol_championship.scenario.csv
+2026-10-15  004a55d2  ehVectorConstructorIterator  C3->C4  log/diff/004a55d2_ehVectorConstructorIterator_championship.scenario.csv
+2026-10-15  004a0120  dynInit_initLogFile  C3->C4  log/diff/004a0120_dynInit_initLogFile_course_season_spawn.scenario.csv
+2026-10-15  0049eb50  dynInit_initGfxGlobal_8408f8  C3->C4  log/diff/0049eb50_dynInit_initGfxGlobal_8408f8_course_season_spawn.scenario.csv
+2026-10-15  0049eaf0  dynInit_initGfxGlobal_8408c8  C3->C4  log/diff/0049eaf0_dynInit_initGfxGlobal_8408c8_course_season_spawn.scenario.csv
+2026-10-15  0049d540  dynInit_initGfxGlobal_840860  C3->C4  log/diff/0049d540_dynInit_initGfxGlobal_840860_course_season_spawn.scenario.csv
+2026-10-15  0049d4e0  dynInit_initGfxGlobal_840890  C3->C4  log/diff/0049d4e0_dynInit_initGfxGlobal_840890_course_season_spawn.scenario.csv
+2026-10-15  0049d480  dynInit_initGfxGlobal_840830  C3->C4  log/diff/0049d480_dynInit_initGfxGlobal_840830_course_season_spawn.scenario.csv
+2026-10-15  0049d350  dynInit_initGfxGlobal_8407f0  C3->C4  log/diff/0049d350_dynInit_initGfxGlobal_8407f0_course_season_spawn.scenario.csv
+2026-10-15  0049d2f0  dynInit_initGfxGlobal_840790  C3->C4  log/diff/0049d2f0_dynInit_initGfxGlobal_840790_course_season_spawn.scenario.csv
+2026-10-15  0049d290  dynInit_initGfxGlobal_8407c0  C3->C4  log/diff/0049d290_dynInit_initGfxGlobal_8407c0_course_season_spawn.scenario.csv
+2026-10-15  0049d150  dynInit_initGfxGlobal_840710  C3->C4  log/diff/0049d150_dynInit_initGfxGlobal_840710_course_season_spawn.scenario.csv
+2026-10-15  0049d000  dynInit_initPairArrayGlobal  C3->C4  log/diff/0049d000_dynInit_initPairArrayGlobal_course_season_spawn.scenario.csv
+2026-10-15  0049bfe0  dynInit_initGlobalObj_49c020  C3->C4  log/diff/0049bfe0_dynInit_initGlobalObj_49c020_course_season_spawn.scenario.csv
+2026-10-15  00490cf0  MsgBox::setButtonB  C3->C4  log/diff/00490cf0_MsgBox_setButtonB_course_season_spawn.scenario.csv
+2026-10-15  00490bf0  MsgBox::initDefaults  C3->C4  log/diff/00490bf0_MsgBox_initDefaults_course_season_spawn.scenario.csv
+2026-10-15  004889f0  setButtonDefaults  C3->C4  log/diff/004889f0_setButtonDefaults_course_season_spawn.scenario.csv
+2026-10-15  00488230  Reader::readLine  C3->C4  log/diff/00488230_Reader_readLine_course_season_spawn.scenario.csv
+2026-10-15  00487e00  dynInit_initKeyTableArray  C3->C4  log/diff/00487e00_dynInit_initKeyTableArray_course_season_spawn.scenario.csv
+2026-10-15  00487d70  dynInit_initGlobalReader  C3->C4  log/diff/00487d70_dynInit_initGlobalReader_course_season_spawn.scenario.csv
+2026-10-15  004879b0  openHookB  C3->C4  log/diff/004879b0_openHookB_course_season_spawn.scenario.csv
+2026-10-15  004873f0  openHookA  C3->C4  log/diff/004873f0_openHookA_course_season_spawn.scenario.csv
+2026-10-15  00487210  StrList::ctor  C3->C4  log/diff/00487210_StrList_ctor_course_season_spawn.scenario.csv
+2026-10-15  00487060  BinkPlayer::close  C3->C4  log/diff/00487060_BinkPlayer_close_course_season_spawn.scenario.csv
+2026-10-15  00486d20  Timer::init  C3->C4  log/diff/00486d20_Timer_init_course_season_spawn.scenario.csv
+2026-10-15  00485260  Snd::ctor485260  C3->C4  log/diff/00485260_Snd_ctor485260_course_season_spawn.scenario.csv
+2026-10-15  00484a40  Snd::configure  C3->C4  log/diff/00484a40_Snd_configure_course_season_spawn.scenario.csv
+2026-10-15  004840e0  createSound4840e0  C3->C4  log/diff/004840e0_createSound4840e0_course_season_spawn.scenario.csv
+2026-10-15  00483fc0  soundVersionCheck  C3->C4  log/diff/00483fc0_soundVersionCheck_course_season_spawn.scenario.csv
+2026-10-15  00483e90  initSound  C3->C4  log/diff/00483e90_initSound_course_season_spawn.scenario.csv
+2026-10-15  00483e50  dynInit_staticInit_g83af98  C3->C4  log/diff/00483e50_dynInit_staticInit_g83af98_course_season_spawn.scenario.csv
+2026-10-15  00483e10  dynInit_staticInit_g83ad58  C3->C4  log/diff/00483e10_dynInit_staticInit_g83ad58_course_season_spawn.scenario.csv
+2026-10-15  00483dd0  dynInit_staticInit_g83ad80  C3->C4  log/diff/00483dd0_dynInit_staticInit_g83ad80_course_season_spawn.scenario.csv
+2026-10-15  004837a0  dynInit_screenMgrCtor4837b0  C3->C4  log/diff/004837a0_dynInit_screenMgrCtor4837b0_course_season_spawn.scenario.csv
+2026-10-15  004832e0  startColorCycle  C3->C4  log/diff/004832e0_startColorCycle_course_season_spawn.scenario.csv
+2026-10-15  00483190  allocColorRange  C3->C4  log/diff/00483190_allocColorRange_course_season_spawn.scenario.csv
+2026-10-15  00482ef0  dynInit_staticInit_g83ac88  C3->C4  log/diff/00482ef0_dynInit_staticInit_g83ac88_course_season_spawn.scenario.csv
+2026-10-15  00482eb0  dynInit_staticInit_g83ac30  C3->C4  log/diff/00482eb0_dynInit_staticInit_g83ac30_course_season_spawn.scenario.csv
+2026-10-15  00482e70  dynInit_staticInit_g83acb0  C3->C4  log/diff/00482e70_dynInit_staticInit_g83acb0_course_season_spawn.scenario.csv
+2026-10-15  00482b60  Flic::ctorBase482b60  C3->C4  log/diff/00482b60_Flic_ctorBase482b60_course_season_spawn.scenario.csv
+2026-10-15  00481870  allocResampleTable  C3->C4  log/diff/00481870_allocResampleTable_course_season_spawn.scenario.csv
+2026-10-15  0047d610  rebuildFramePieces  C3->C4  log/diff/0047d610_rebuildFramePieces_course_season_spawn.scenario.csv
+2026-10-15  0047d570  Window::layoutScrollbars  C3->C4  log/diff/0047d570_Window_layoutScrollbars_course_season_spawn.scenario.csv
+2026-10-15  0047cfd0  resetViewState47cfd0  C3->C4  log/diff/0047cfd0_resetViewState47cfd0_course_season_spawn.scenario.csv
+2026-10-15  0047b9a0  Window::passLocalRect  C3->C4  log/diff/0047b9a0_Window_passLocalRect_course_season_spawn.scenario.csv
+2026-10-15  0047a4c0  layoutViewTree  C3->C4  log/diff/0047a4c0_layoutViewTree_course_season_spawn.scenario.csv
+2026-10-15  00479f30  layoutNode  C3->C4  log/diff/00479f30_layoutNode_course_season_spawn.scenario.csv
+2026-10-15  00479c40  View_ctor  C3->C4  log/diff/00479c40_View_ctor_course_season_spawn.scenario.csv
+2026-10-15  00479a30  dynInit_gImageCtor_83a7b8  C3->C4  log/diff/00479a30_dynInit_gImageCtor_83a7b8_course_season_spawn.scenario.csv
+2026-10-15  004799e0  dynInit_gImageCtor_83a500  C3->C4  log/diff/004799e0_dynInit_gImageCtor_83a500_course_season_spawn.scenario.csv
+2026-10-15  004799d0  storeUiEventTable  C3->C4  log/diff/004799d0_storeUiEventTable_course_season_spawn.scenario.csv
+2026-10-15  00478ea0  Widget_writePixel  C3->C4  log/diff/00478ea0_Widget_writePixel_championship.scenario.csv
+2026-10-15  00476700  drawStringAt  C3->C4  log/diff/00476700_drawStringAt_championship.scenario.csv
+2026-10-15  00474a80  dynInit_gSurfaceCtor_839a68  C3->C4  log/diff/00474a80_dynInit_gSurfaceCtor_839a68_course_season_spawn.scenario.csv
+2026-10-15  00473c60  Surface_blitTakeDirty  C3->C4  log/diff/00473c60_Surface_blitTakeDirty_course_season_spawn.scenario.csv
+2026-10-15  00473a60  dynInit_initGlobalImage  C3->C4  log/diff/00473a60_dynInit_initGlobalImage_course_season_spawn.scenario.csv
+2026-10-15  0046de30  dynInit_gImageCtor_838f98  C3->C4  log/diff/0046de30_dynInit_gImageCtor_838f98_course_season_spawn.scenario.csv
+2026-10-15  0046ddd0  startNewCourse  C3->C4  log/diff/0046ddd0_startNewCourse_championship.scenario.csv
+2026-10-15  0046d200  buildTournamentPrep  C3->C4  log/diff/0046d200_buildTournamentPrep_championship.scenario.csv
+2026-10-15  0046c970  loadGolfPro  C3->C4  log/diff/0046c970_loadGolfPro_championship.scenario.csv
+2026-10-15  00466b70  loadStoryStrings  C3->C4  log/diff/00466b70_loadStoryStrings_golfer_stories.scenario.csv
+2026-10-15  004669f0  computeStoryReply  C3->C4  log/diff/004669f0_computeStoryReply_golfer_stories.scenario.csv
+2026-10-15  004627d0  resetSpriteQueue  C3->C4  log/diff/004627d0_resetSpriteQueue_championship.scenario.csv
+2026-10-15  00461830  build16BitColorTable  C3->C4  log/diff/00461830_build16BitColorTable_course_season_spawn.scenario.csv
+2026-10-15  00461110  drawMatchScoreboard  C3->C4  log/diff/00461110_drawMatchScoreboard_championship.scenario.csv
+2026-10-15  0045c560  GolferPanelEject  C3->C4  log/diff/0045c560_GolferPanelEject_golfer_events.scenario.csv
+2026-10-15  0045baa0  dynInit_staticCtor_45bab0  C3->C4  log/diff/0045baa0_dynInit_staticCtor_45bab0_course_season_spawn.scenario.csv
+2026-10-15  0045ba50  dynInit_staticCtor_45ba60  C3->C4  log/diff/0045ba50_dynInit_staticCtor_45ba60_course_season_spawn.scenario.csv
+2026-10-15  0045a090  showTournamentResults  C3->C4  log/diff/0045a090_showTournamentResults_championship.scenario.csv
+2026-10-15  00453330  showHoleStatsScreen  C3->C4  log/diff/00453330_showHoleStatsScreen_championship.scenario.csv
+2026-10-15  0044b750  dynInit_staticCtor_44b760  C3->C4  log/diff/0044b750_dynInit_staticCtor_44b760_course_season_spawn.scenario.csv
+2026-10-15  0044b650  dynInit_staticCtor_44b660  C3->C4  log/diff/0044b650_dynInit_staticCtor_44b660_course_season_spawn.scenario.csv
+2026-10-15  0044b4b0  dynInit_staticCtor_44b4c0  C3->C4  log/diff/0044b4b0_dynInit_staticCtor_44b4c0_course_season_spawn.scenario.csv
+2026-10-15  0044b3a0  dynInit_staticCtor_44b3b0  C3->C4  log/diff/0044b3a0_dynInit_staticCtor_44b3b0_course_season_spawn.scenario.csv
+2026-10-15  0044b170  dynInit_staticCtor_44b180  C3->C4  log/diff/0044b170_dynInit_staticCtor_44b180_course_season_spawn.scenario.csv
+2026-10-15  0044b130  dynInit_staticCtor_44b140  C3->C4  log/diff/0044b130_dynInit_staticCtor_44b140_course_season_spawn.scenario.csv
+2026-10-15  0044b0f0  dynInit_staticCtor_44b100  C3->C4  log/diff/0044b0f0_dynInit_staticCtor_44b100_course_season_spawn.scenario.csv
+2026-10-15  0044b060  gSurfaceCtor_44b060  C3->C4  log/diff/0044b060_gSurfaceCtor_44b060_course_season_spawn.scenario.csv
+2026-10-15  0044af70  dynInit_staticCtor_44af80  C3->C4  log/diff/0044af70_dynInit_staticCtor_44af80_course_season_spawn.scenario.csv
+2026-10-15  0044af30  dynInit_staticCtor_44af40  C3->C4  log/diff/0044af30_dynInit_staticCtor_44af40_course_season_spawn.scenario.csv
+2026-10-15  0044aef0  dynInit_staticCtor_44af00  C3->C4  log/diff/0044aef0_dynInit_staticCtor_44af00_course_season_spawn.scenario.csv
+2026-10-15  0044aeb0  dynInit_staticCtor_44aec0  C3->C4  log/diff/0044aeb0_dynInit_staticCtor_44aec0_course_season_spawn.scenario.csv
+2026-10-15  0044ae60  gSurfaceCtor_44ae60  C3->C4  log/diff/0044ae60_gSurfaceCtor_44ae60_course_season_spawn.scenario.csv
+2026-10-15  0044adc0  dynInit_staticCtor_44add0  C3->C4  log/diff/0044adc0_dynInit_staticCtor_44add0_course_season_spawn.scenario.csv
+2026-10-15  0044ad70  dynInit_staticCtor_44ad80  C3->C4  log/diff/0044ad70_dynInit_staticCtor_44ad80_course_season_spawn.scenario.csv
+2026-10-15  0044ad10  dynInit_arrayStaticInit_44ad20  C3->C4  log/diff/0044ad10_dynInit_arrayStaticInit_44ad20_course_season_spawn.scenario.csv
+2026-10-15  0044ac50  dynInit_initPanelState  C3->C4  log/diff/0044ac50_dynInit_initPanelState_course_season_spawn.scenario.csv
+2026-10-15  0044a6e0  renderTerrainStrip  C3->C4  log/diff/0044a6e0_renderTerrainStrip_stories9_fixture.scenario.csv
+2026-10-15  00449210  initList820f18  C3->C4  log/diff/00449210_initList820f18_course_season_spawn.scenario.csv
+2026-10-15  00449200  dynInit_initList820f18  C3->C4  log/diff/00449200_dynInit_initList820f18_course_season_spawn.scenario.csv
+2026-10-15  004491b0  dynInit_staticCtor_4491c0  C3->C4  log/diff/004491b0_dynInit_staticCtor_4491c0_course_season_spawn.scenario.csv
+2026-10-15  00448150  dynInit_arrayStaticInit_448160  C3->C4  log/diff/00448150_dynInit_arrayStaticInit_448160_course_season_spawn.scenario.csv
+2026-10-15  0043d630  dynInit_staticCtor_43d640  C3->C4  log/diff/0043d630_dynInit_staticCtor_43d640_course_season_spawn.scenario.csv
+2026-10-15  0043d4d0  dynInit_staticCtor_43d4e0  C3->C4  log/diff/0043d4d0_dynInit_staticCtor_43d4e0_course_season_spawn.scenario.csv
+2026-10-15  0043d450  dynInit_arrayStaticInit_43d460  C3->C4  log/diff/0043d450_dynInit_arrayStaticInit_43d460_course_season_spawn.scenario.csv
+2026-10-15  0043cd70  showTitleScreen  C3->C4  log/diff/0043cd70_showTitleScreen_course_season_spawn.scenario.csv
+2026-10-15  0043cca0  dynInit_staticCtor_43ccb0  C3->C4  log/diff/0043cca0_dynInit_staticCtor_43ccb0_course_season_spawn.scenario.csv
+2026-10-15  0043cc60  dynInit_staticCtor_43cc70  C3->C4  log/diff/0043cc60_dynInit_staticCtor_43cc70_course_season_spawn.scenario.csv
+2026-10-15  0043cc00  dynInit_arrayStaticInit_43cc10  C3->C4  log/diff/0043cc00_dynInit_arrayStaticInit_43cc10_course_season_spawn.scenario.csv
+2026-10-15  0043a400  selectDifficultyScreen  C3->C4  log/diff/0043a400_selectDifficultyScreen_championship.scenario.csv
+2026-10-15  00438590  dynInit_staticCtor_4385a0  C3->C4  log/diff/00438590_dynInit_staticCtor_4385a0_course_season_spawn.scenario.csv
+2026-10-15  004378d0  dynInit_staticCtor_4378e0  C3->C4  log/diff/004378d0_dynInit_staticCtor_4378e0_course_season_spawn.scenario.csv
+2026-10-15  004362f0  drawGolferActionPanel  C3->C4  log/diff/004362f0_drawGolferActionPanel_championship.scenario.csv
+2026-10-15  0040b9b0  loadGame  C3->C4  log/diff/0040b9b0_loadGame_mood5_fixture.scenario.csv
+2026-10-15  0040ad60  loadTopScores  C3->C4  log/diff/0040ad60_loadTopScores_course_season_spawn.scenario.csv
+2026-10-15  0040a4e0  demolishObject  C3->C4  log/diff/0040a4e0_demolishObject_golfer_stories.scenario.csv
+2026-10-15  00407e00  narrateShot  C3->C4  log/diff/00407e00_narrateShot_championship.scenario.csv
+2026-10-15  00407700  decorationName  C3->C4  log/diff/00407700_decorationName_championship.scenario.csv
+2026-10-15  004061e0  dynInit_staticInit_004061f0  C3->C4  log/diff/004061e0_dynInit_staticInit_004061f0_course_season_spawn.scenario.csv
+2026-10-15  004061a0  dynInit_staticInit_004061b0  C3->C4  log/diff/004061a0_dynInit_staticInit_004061b0_course_season_spawn.scenario.csv
+2026-10-15  004058e0  dynInit_staticInit_004058f0  C3->C4  log/diff/004058e0_dynInit_staticInit_004058f0_course_season_spawn.scenario.csv
+2026-10-15  00405750  dynInit_initGlobalArray_00405760  C3->C4  log/diff/00405750_dynInit_initGlobalArray_00405760_course_season_spawn.scenario.csv
+2026-10-15  00405610  dynInit_initGlobalArray_00405620  C3->C4  log/diff/00405610_dynInit_initGlobalArray_00405620_course_season_spawn.scenario.csv
+2026-10-15  004054d0  dynInit_initGlobalArray_004054e0  C3->C4  log/diff/004054d0_dynInit_initGlobalArray_004054e0_course_season_spawn.scenario.csv
+2026-10-15  00405390  dynInit_initGlobalArray_004053a0  C3->C4  log/diff/00405390_dynInit_initGlobalArray_004053a0_course_season_spawn.scenario.csv
+2026-10-15  004051e0  dynInit_initGlobalArray_004051f0  C3->C4  log/diff/004051e0_dynInit_initGlobalArray_004051f0_course_season_spawn.scenario.csv
+2026-10-15  004050a0  dynInit_initGlobalArray_004050b0  C3->C4  log/diff/004050a0_dynInit_initGlobalArray_004050b0_course_season_spawn.scenario.csv
+2026-10-15  00404f40  dynInit_initGlobalArray_00404f50  C3->C4  log/diff/00404f40_dynInit_initGlobalArray_00404f50_course_season_spawn.scenario.csv
+2026-10-15  00404df0  dynInit_initGlobalArray_00404e00  C3->C4  log/diff/00404df0_dynInit_initGlobalArray_00404e00_course_season_spawn.scenario.csv
+2026-10-15  00404c10  dynInit_initGlobalArray_00404c20  C3->C4  log/diff/00404c10_dynInit_initGlobalArray_00404c20_course_season_spawn.scenario.csv
+2026-10-15  00404830  dynInit_staticInit_00404840  C3->C4  log/diff/00404830_dynInit_staticInit_00404840_course_season_spawn.scenario.csv
+2026-10-15  004047e0  dynInit_staticInit_004047f0  C3->C4  log/diff/004047e0_dynInit_staticInit_004047f0_course_season_spawn.scenario.csv
+2026-10-15  00404790  dynInit_staticInit_004047a0  C3->C4  log/diff/00404790_dynInit_staticInit_004047a0_course_season_spawn.scenario.csv
+2026-10-15  00404740  dynInit_staticInit_00404750  C3->C4  log/diff/00404740_dynInit_staticInit_00404750_course_season_spawn.scenario.csv
+2026-10-15  004046f0  dynInit_staticInit_00404700  C3->C4  log/diff/004046f0_dynInit_staticInit_00404700_course_season_spawn.scenario.csv
+2026-10-15  004046b0  dynInit_staticInit_004046c0  C3->C4  log/diff/004046b0_dynInit_staticInit_004046c0_course_season_spawn.scenario.csv
+2026-10-15  00404660  dynInit_staticInit_00404670  C3->C4  log/diff/00404660_dynInit_staticInit_00404670_course_season_spawn.scenario.csv
+2026-10-15  00404610  dynInit_staticInit_00404620  C3->C4  log/diff/00404610_dynInit_staticInit_00404620_course_season_spawn.scenario.csv
+2026-10-15  004045c0  dynInit_staticInit_004045d0  C3->C4  log/diff/004045c0_dynInit_staticInit_004045d0_course_season_spawn.scenario.csv
+2026-10-15  00404570  dynInit_staticInit_00404580  C3->C4  log/diff/00404570_dynInit_staticInit_00404580_course_season_spawn.scenario.csv
+2026-10-15  00404520  dynInit_staticInit_00404530  C3->C4  log/diff/00404520_dynInit_staticInit_00404530_course_season_spawn.scenario.csv
+2026-10-15  004044d0  dynInit_staticInit_004044e0  C3->C4  log/diff/004044d0_dynInit_staticInit_004044e0_course_season_spawn.scenario.csv
+2026-10-15  00404480  dynInit_staticInit_00404490  C3->C4  log/diff/00404480_dynInit_staticInit_00404490_course_season_spawn.scenario.csv
+2026-10-15  00404430  dynInit_staticInit_00404440  C3->C4  log/diff/00404430_dynInit_staticInit_00404440_course_season_spawn.scenario.csv
+2026-10-15  004043e0  dynInit_staticInit_004043f0  C3->C4  log/diff/004043e0_dynInit_staticInit_004043f0_course_season_spawn.scenario.csv
+2026-10-15  004043a0  dynInit_staticInit_004043b0  C3->C4  log/diff/004043a0_dynInit_staticInit_004043b0_course_season_spawn.scenario.csv
+2026-10-15  00404310  dynInit_staticInit_00404320  C3->C4  log/diff/00404310_dynInit_staticInit_00404320_course_season_spawn.scenario.csv
+2026-10-15  00404030  dynInit_initGlobalArray_00404040  C3->C4  log/diff/00404030_dynInit_initGlobalArray_00404040_course_season_spawn.scenario.csv
+2026-10-15  00403fd0  dynInit_initGlobalArray_00403fe0  C3->C4  log/diff/00403fd0_dynInit_initGlobalArray_00403fe0_course_season_spawn.scenario.csv
+2026-10-15  00403f70  dynInit_initGlobalArray_00403f80  C3->C4  log/diff/00403f70_dynInit_initGlobalArray_00403f80_course_season_spawn.scenario.csv
+2026-10-15  00403f10  dynInit_initGlobalArray_00403f20  C3->C4  log/diff/00403f10_dynInit_initGlobalArray_00403f20_course_season_spawn.scenario.csv
+2026-10-15  004038f0  drawFlyingBall  C3->C4  log/diff/004038f0_drawFlyingBall_championship.scenario.csv
+2026-10-15  sound.dll:000414f0  codecAmdfPitch  C3->C4  
+2026-10-15  sound.dll:00041020  codecWindowFeatures  C3->C4  
+2026-10-15  sound.dll:00040f60  codecCombFilter  C3->C4  
+2026-10-15  sound.dll:00040e30  codecBiquadFilter  C3->C4  
+2026-10-15  sound.dll:00040da0  codecFirstOrderFilter  C3->C4  
+2026-10-15  sound.dll:00040ab0  codecMarkCorrelationJumps  C3->C4  
+2026-10-15  sound.dll:00040740  codecSelectWindowFromJumps  C3->C4  
+2026-10-15  sound.dll:000404d0  codecSymmetricFir  C3->C4  
+2026-10-15  sound.dll:00040330  codecCorrelationLags  C3->C4  
+2026-10-15  sound.dll:00040000  codecPitchAnalysis  C3->C4  
+2026-10-15  sound.dll:0003f720  codecFeatureDecision  C3->C4  
+2026-10-15  sound.dll:0003f310  codecGainSmoother  C3->C4  
+2026-10-15  sound.dll:0003edc0  codecAlignAnalysisWindow  C3->C4  
+2026-10-15  sound.dll:0003ed00  codecRemoveMean  C3->C4  
+2026-10-15  sound.dll:0003ec60  codecRmsEnergy  C3->C4  
+2026-10-15  sound.dll:0003e9f0  codecAutocorrelation  C3->C4  
+2026-10-15  sound.dll:0003e6d0  gaussSolveClamped  C3->C4  
+2026-10-15  sound.dll:0003e600  substituteIfBelowThreshold  C3->C4  
+2026-10-15  sound.dll:0003e520  decodeTableSymbol  C3->C4  
+2026-10-15  sound.dll:0003e480  medianOfThree  C3->C4  
+2026-10-15  sound.dll:0003e400  floatFloorToInt  C3->C4  
+2026-10-15  sound.dll:0003e380  floatCopySign  C3->C4  
+2026-10-15  sound.dll:0003e2c0  intPow  C3->C4  
+2026-10-15  sound.dll:0003da50  interpSubframeParams  C3->C4  
+2026-10-15  sound.dll:0003d8d0  reflectionToLpc  C3->C4  
+2026-10-15  sound.dll:0003d1d0  lpcSynthesize  C3->C4  
+2026-10-15  sound.dll:0003d0a0  applyIir2  C3->C4  
+2026-10-15  sound.dll:0003c640  codecStageDispatch  C3->C4  
+2026-10-15  sound.dll:0003c220  quantizeParams  C3->C4  
+2026-10-15  sound.dll:0003bf30  bitPermute  C3->C4  
+2026-10-15  sound.dll:0003b5a0  codecTransformStage  C3->C4  
+2026-10-15  sound.dll:0003b230  codecSynthStage  C3->C4  
+2026-10-15  sound.dll:0003b150  codecProcessResource  C3->C4  
+2026-10-15  sound.dll:0003aef0  codecInitContextB  C3->C4  
+2026-10-15  sound.dll:0003aea0  codecAllocContextB  C3->C4  
+2026-10-15  sound.dll:0003aae0  codecInitContextA  C3->C4  
+2026-10-15  sound.dll:0003aa90  codecAllocContextA  C3->C4  
+2026-10-15  sound.dll:0003a980  codecProcessBlock  C3->C4  
+2026-10-15  jgld.dll:00082960  fabs  C3->C4  
+2026-10-15  jgld.dll:0007faa0  fopen  C3->C4  
+2026-10-15  jgld.dll:0007f850  fclose  C3->C4  
+2026-10-15  jgld.dll:000792b0  png_default_error  C3->C4  
+2026-10-15  jgld.dll:00069260  Font::deletingDtor_adj8  C3->C4  
+2026-10-15  jgld.dll:000175d0  Sprite::drawQ  C3->C4  
+2026-10-15  jgld.dll:000145a0  loadPng  C3->C4  
+2026-10-15  jgld.dll:00013c50  Surface::blitT_8to8  C3->C4  
+2026-10-15  jgld.dll:00012db0  Surface::blitT_8to16  C3->C4  
+2026-10-15  jgld.dll:00012140  Surface::writePcx8  C3->C4  
+2026-10-15  jgld.dll:0000ed70  Surface::blitT_16to16  C3->C4  
+2026-10-15  jgld.dll:0000cf90  Surface::dashedHLine16  C3->C4  
+2026-10-15  jgld.dll:0000c140  Surface::dashedLine16  C3->C4  
+2026-10-15  jgld.dll:00006a40  atexitDestroyGlobalList  C3->C4  
+2026-10-15  00478140  drawStringRightAt  C3->C4  log/diff/00478140_drawStringRightAt_championship.scenario.csv
+2026-10-15  00477fc0  drawStringCentered  C3->C4  log/diff/00477fc0_drawStringCentered_championship.scenario.csv
+2026-10-15  0049ef80  flagIsSet  C3<-C2  DEMOTED: no SG_HOOK at 0x0049ef80 in any shim source, now or in git history (round 6 promoted it from a path-1 CSV; c3x.cpp says it moved to c3u, which never hooked it); re-implement and A/B in round 36
+2026-10-15  0049eef0  flagSet  C3<-C2  DEMOTED: no SG_HOOK at 0x0049eef0 in any shim source, now or in git history (round 6 promoted it from a path-1 CSV; c3x.cpp says it moved to c3u, which never hooked it); re-implement and A/B in round 36
+2026-10-15  jgld.dll:0007f3a0  memcpy  C3->C4  log/diff/0007f3a0_jgld_memcpy_course_season.scenario.csv
+2026-10-15  jgld.dll:0007f370  abs  C3->C4  log/diff/0007f370_jgld_abs_course_season.scenario.csv
+2026-10-15  jgld.dll:0007f0f0  operator_new  C3->C4  log/diff/0007f0f0_jgld_operator_new_course_season.scenario.csv
+2026-10-15  jgld.dll:000692b0  windowProc  C3->C4  log/diff/000692b0_jgld_windowProc_course_season.scenario.csv
+2026-10-15  jgld.dll:0000b140  Surface::line16  C3->C4  log/diff/0000b140_jgld_Surface_line16_course_season.scenario.csv
+2026-10-15  jgld.dll:00007e40  allocDrawBuffer  C3->C4  log/diff/00007e40_jgld_allocDrawBuffer_course_season.scenario.csv
+2026-10-15  004ad452  _xtoa  C3->C4  log/diff/004ad452__xtoa_course_season.scenario.csv
+2026-10-15  004ad425  __itoa  C3->C4  log/diff/004ad425___itoa_course_season.scenario.csv
+2026-10-15  004a678b  _strtok  C3->C4  log/diff/004a678b__strtok_course_season.scenario.csv
+2026-10-15  004a65ee  _fgets  C3->C4  log/diff/004a65ee__fgets_course_season.scenario.csv
+2026-10-15  004a64f0  _strstr  C3->C4  log/diff/004a64f0__strstr_course_season.scenario.csv
+2026-10-15  004a614d  _fopen  C3->C4  log/diff/004a614d__fopen_course_season.scenario.csv
+2026-10-15  004a609f  _fclose  C3->C4  log/diff/004a609f__fclose_course_season.scenario.csv
+2026-10-15  004a4ffc  operatorDelete_4a4ffc  C3->C4  log/diff/004a4ffc_operatorDelete_4a4ffc_course_season.scenario.csv
+2026-10-15  0049c8e0  serviceMovie  C3->C4  log/diff/0049c8e0_serviceMovie_course_season.scenario.csv
+2026-10-15  0049c830  createCache  C3->C4  log/diff/0049c830_createCache_course_season.scenario.csv
+2026-10-15  004959b0  uiPointerMove  C3->C4  log/diff/004959b0_uiPointerMove_course_season.scenario.csv
+2026-10-15  00495990  uiKeyEvent148  C3->C4  log/diff/00495990_uiKeyEvent148_course_season.scenario.csv
+2026-10-15  00495910  uiKeyEvent  C3->C4  log/diff/00495910_uiKeyEvent_course_season.scenario.csv
+2026-10-15  00495100  decodePcx8  C3->C4  log/diff/00495100_decodePcx8_course_season.scenario.csv
+2026-10-15  00492d40  HotList::cancelTip  C3->C4  log/diff/00492d40_HotList_cancelTip_course_season.scenario.csv
+2026-10-15  00492800  HotList::resetFields  C3->C4  log/diff/00492800_HotList_resetFields_course_season.scenario.csv
+2026-10-15  00492000  cropSprite  C3->C4  log/diff/00492000_cropSprite_course_season.scenario.csv
+2026-10-15  00491c70  sinScaled  C3->C4  log/diff/00491c70_sinScaled_course_season.scenario.csv
+2026-10-15  00486f10  Timer::reset  C3->C4  log/diff/00486f10_Timer_reset_course_season.scenario.csv
+2026-10-15  00485790  Image::loadPcx  C3->C4  log/diff/00485790_Image_loadPcx_course_season.scenario.csv
+2026-10-15  00485140  Snd::setVolume  C3->C4  log/diff/00485140_Snd_setVolume_course_season.scenario.csv
+2026-10-15  00483da0  pumpInputDisplay483da0  C3->C4  log/diff/00483da0_pumpInputDisplay483da0_course_season.scenario.csv
+2026-10-15  00483930  measureTextWidth  C3->C4  log/diff/00483930_measureTextWidth_course_season.scenario.csv
+2026-10-15  00482b90  Flic::createStream  C3->C4  log/diff/00482b90_Flic_createStream_course_season.scenario.csv
+2026-10-15  004827d0  decodeChunk7WordDelta  C3->C4  log/diff/004827d0_decodeChunk7WordDelta_course_season.scenario.csv
+2026-10-15  00482570  decodeImageChunks  C3->C4  log/diff/00482570_decodeImageChunks_course_season.scenario.csv
+2026-10-15  00482420  Image::step  C3->C4  log/diff/00482420_Image_step_course_season.scenario.csv
+2026-10-15  00481f40  Flic::open  C3->C4  log/diff/00481f40_Flic_open_course_season.scenario.csv
+2026-10-15  00481ca0  Flic::buildFrameTable  C3->C4  log/diff/00481ca0_Flic_buildFrameTable_course_season.scenario.csv
+2026-10-15  00480dc0  Window::blitToTarget  C3->C4  log/diff/00480dc0_Window_blitToTarget_course_season.scenario.csv
+2026-10-15  00480c20  Window::refreshRect  C3->C4  log/diff/00480c20_Window_refreshRect_course_season.scenario.csv
+2026-10-15  00480b00  fillWindowRect  C3->C4  log/diff/00480b00_fillWindowRect_course_season.scenario.csv
+2026-10-15  0047fa30  redrawWindow  C3->C4  log/diff/0047fa30_redrawWindow_course_season.scenario.csv
+2026-10-15  0047f8e0  redrawDrawList  C3->C4  log/diff/0047f8e0_redrawDrawList_course_season.scenario.csv
+2026-10-15  0047f340  hitTestTree  C3->C4  log/diff/0047f340_hitTestTree_course_season.scenario.csv
+2026-10-15  0047f2f0  currentFocusOwner  C3->C4  log/diff/0047f2f0_currentFocusOwner_course_season.scenario.csv
+2026-10-15  0047f230  Window::onReleaseInner158  C3->C4  log/diff/0047f230_Window_onReleaseInner158_course_season.scenario.csv
+2026-10-15  0047f0f0  Window::onReleaseInner150  C3->C4  log/diff/0047f0f0_Window_onReleaseInner150_course_season.scenario.csv
+2026-10-15  0047f010  Window::onPressHot  C3->C4  log/diff/0047f010_Window_onPressHot_course_season.scenario.csv
+2026-10-15  0047eff0  Window::fwdMouseEvent238  C3->C4  log/diff/0047eff0_Window_fwdMouseEvent238_course_season.scenario.csv
+2026-10-15  0047ef30  Window::onKeyChar  C3->C4  log/diff/0047ef30_Window_onKeyChar_course_season.scenario.csv
+2026-10-15  0047eee0  matchInputCode  C3->C4  log/diff/0047eee0_matchInputCode_course_season.scenario.csv
+2026-10-15  0047ee70  Window::onCommand  C3->C4  log/diff/0047ee70_Window_onCommand_course_season.scenario.csv
+2026-10-15  0047e450  rebuildDrawList  C3->C4  log/diff/0047e450_rebuildDrawList_course_season.scenario.csv
+2026-10-15  0047d130  drawCursor  C3->C4  log/diff/0047d130_drawCursor_course_season.scenario.csv
+2026-10-15  0047cdb0  drawTooltip  C3->C4  log/diff/0047cdb0_drawTooltip_course_season.scenario.csv
+2026-10-15  0047c6c0  Window::dispatchAccel  C3->C4  log/diff/0047c6c0_Window_dispatchAccel_course_season.scenario.csv
+2026-10-15  0047be40  Window::mouseEvent238  C3->C4  log/diff/0047be40_Window_mouseEvent238_course_season.scenario.csv
+2026-10-15  00477c30  drawText  C3->C4  log/diff/00477c30_drawText_course_season.scenario.csv
+2026-10-15  004775b0  drawRichText  C3->C4  log/diff/004775b0_drawRichText_course_season.scenario.csv
+2026-10-15  00477280  drawMarkupRun  C3->C4  log/diff/00477280_drawMarkupRun_course_season.scenario.csv
+2026-10-15  00476d40  scanMarkupText  C3->C4  log/diff/00476d40_scanMarkupText_course_season.scenario.csv
+2026-10-15  004767a0  allocTextBuffer  C3->C4  log/diff/004767a0_allocTextBuffer_course_season.scenario.csv
+2026-10-15  004762d0  setDrawTarget  C3->C4  log/diff/004762d0_setDrawTarget_course_season.scenario.csv
+2026-10-15  00475c60  Surface_blitThunk  C3->C4  log/diff/00475c60_Surface_blitThunk_course_season.scenario.csv
+2026-10-15  00475840  loadImage  C3->C4  log/diff/00475840_loadImage_course_season.scenario.csv
+2026-10-15  00474440  Surface_drawSprite  C3->C4  log/diff/00474440_Surface_drawSprite_course_season.scenario.csv
+2026-10-15  00473f60  Surface_stretchBlit  C3->C4  log/diff/00473f60_Surface_stretchBlit_course_season.scenario.csv
+2026-10-15  00470a60  generateRandomCourse  C3->C4  log/diff/00470a60_generateRandomCourse_course_season.scenario.csv
+2026-10-15  0046f2b0  seedCourseTable  C3->C4  log/diff/0046f2b0_seedCourseTable_course_season.scenario.csv
+2026-10-15  0046e810  showBulletinBoard  C3->C4  log/diff/0046e810_showBulletinBoard_course_season.scenario.csv
+2026-10-15  00469b00  buildGolferComment  C3->C4  log/diff/00469b00_buildGolferComment_course_season.scenario.csv
+2026-10-15  00467a00  emitGolferThought  C3->C4  log/diff/00467a00_emitGolferThought_course_season.scenario.csv
+2026-10-15  004676e0  buildGolferName  C3->C4  log/diff/004676e0_buildGolferName_course_season.scenario.csv
+2026-10-15  004674c0  bilinearSample  C3->C4  log/diff/004674c0_bilinearSample_course_season.scenario.csv
+2026-10-15  004672d0  angleFixed  C3->C4  log/diff/004672d0_angleFixed_course_season.scenario.csv
+2026-10-15  004671a0  direction8  C3->C4  log/diff/004671a0_direction8_course_season.scenario.csv
+2026-10-15  00466370  advanceStory  C3->C4  log/diff/00466370_advanceStory_course_season.scenario.csv
+2026-10-15  004659a0  loadGolferRoster  C3->C4  log/diff/004659a0_loadGolferRoster_course_season.scenario.csv
+2026-10-15  004657d0  rootWin_onChar0  C3->C4  log/diff/004657d0_rootWin_onChar0_course_season.scenario.csv
+2026-10-15  004657b0  rootWin_onChar  C3->C4  log/diff/004657b0_rootWin_onChar_course_season.scenario.csv
+2026-10-15  00465750  rootWin_onKey  C3->C4  log/diff/00465750_rootWin_onKey_course_season.scenario.csv
+2026-10-15  00465740  rootWin_onUnpoint2  C3->C4  log/diff/00465740_rootWin_onUnpoint2_course_season.scenario.csv
+2026-10-15  00465720  rootWin_onPoint2  C3->C4  log/diff/00465720_rootWin_onPoint2_course_season.scenario.csv
+2026-10-15  00465680  rootWin_onPress2  C3->C4  log/diff/00465680_rootWin_onPress2_course_season.scenario.csv
+2026-10-15  00465650  rootWin_onUnpoint  C3->C4  log/diff/00465650_rootWin_onUnpoint_course_season.scenario.csv
+2026-10-15  00465610  rootWin_onPoint  C3->C4  log/diff/00465610_rootWin_onPoint_course_season.scenario.csv
+2026-10-15  00465580  rootWin_onPress1  C3->C4  log/diff/00465580_rootWin_onPress1_course_season.scenario.csv
+2026-10-15  00463180  buildSceneSprites  C3->C4  log/diff/00463180_buildSceneSprites_course_season.scenario.csv
+2026-10-15  00463100  renderSpriteQueue  C3->C4  log/diff/00463100_renderSpriteQueue_course_season.scenario.csv
+2026-10-15  00462be0  drawQueuedSprite  C3->C4  log/diff/00462be0_drawQueuedSprite_course_season.scenario.csv
+2026-10-15  00462a30  enqueueSprite  C3->C4  log/diff/00462a30_enqueueSprite_course_season.scenario.csv
+2026-10-15  00462020  composeGolferSprite  C3->C4  log/diff/00462020_composeGolferSprite_course_season.scenario.csv
+2026-10-15  00460df0  announceHoleType  C3->C4  log/diff/00460df0_announceHoleType_course_season.scenario.csv
+2026-10-15  0045de80  pairGolfersWithStory  C3->C4  log/diff/0045de80_pairGolfersWithStory_course_season.scenario.csv
+2026-10-15  0045c200  drawThoughtBubble  C3->C4  log/diff/0045c200_drawThoughtBubble_course_season.scenario.csv
+2026-10-15  0045c0c0  pumpAndRedraw  C3->C4  log/diff/0045c0c0_pumpAndRedraw_course_season.scenario.csv
+2026-10-15  0045b660  lookupThemeText  C3->C4  log/diff/0045b660_lookupThemeText_course_season.scenario.csv
+2026-10-15  0045b0d0  drawMessageBuffer  C3->C4  log/diff/0045b0d0_drawMessageBuffer_course_season.scenario.csv
+2026-10-15  0045af30  wrapMessageBuffer  C3->C4  log/diff/0045af30_wrapMessageBuffer_course_season.scenario.csv
+2026-10-15  0045ae70  flushRedraw  C3->C4  log/diff/0045ae70_flushRedraw_course_season.scenario.csv
+2026-10-15  0045ae50  setDirtyFlagB  C3->C4  log/diff/0045ae50_setDirtyFlagB_course_season.scenario.csv
+2026-10-15  0045ae30  setDirtyFlagA  C3->C4  log/diff/0045ae30_setDirtyFlagA_course_season.scenario.csv
+2026-10-15  0044ac00  listEraseRange  C3->C4  log/diff/0044ac00_listEraseRange_course_season.scenario.csv
+2026-10-15  0044a380  applyTileWalls  C3->C4  log/diff/0044a380_applyTileWalls_course_season.scenario.csv
+2026-10-15  00449fa0  applyTileElevation  C3->C4  log/diff/00449fa0_applyTileElevation_course_season.scenario.csv
+2026-10-15  00449f00  applyTileVariation  C3->C4  log/diff/00449f00_applyTileVariation_course_season.scenario.csv
+2026-10-15  004498a0  updateTerrainRender  C3->C4  log/diff/004498a0_updateTerrainRender_course_season.scenario.csv
+2026-10-15  00449400  applyCourseType  C3->C4  log/diff/00449400_applyCourseType_course_season.scenario.csv
+2026-10-15  004493d0  drawMapLine  C3->C4  log/diff/004493d0_drawMapLine_course_season.scenario.csv
+2026-10-15  00437fa0  loadThemeFile  C3->C4  log/diff/00437fa0_loadThemeFile_course_season.scenario.csv
+2026-10-15  00432f90  hitTestSlot432f90  C3->C4  log/diff/00432f90_hitTestSlot432f90_course_season.scenario.csv
+2026-10-15  00432ba0  showMainRadialMenu  C3->C4  log/diff/00432ba0_showMainRadialMenu_course_season.scenario.csv
+2026-10-15  00432620  drawPanelBackdrop  C3->C4  log/diff/00432620_drawPanelBackdrop_course_season.scenario.csv
+2026-10-15  004315e0  buildGolferBioText  C3->C4  log/diff/004315e0_buildGolferBioText_course_season.scenario.csv
+2026-10-15  00430020  screenToTile  C3->C4  log/diff/00430020_screenToTile_course_season.scenario.csv
+2026-10-15  0042fb90  worldToScreen  C3->C4  log/diff/0042fb90_worldToScreen_course_season.scenario.csv
+2026-10-15  0042f340  rebuildTileCoverage  C3->C4  log/diff/0042f340_rebuildTileCoverage_course_season.scenario.csv
+2026-10-15  0042f120  floodMark  C3->C4  log/diff/0042f120_floodMark_course_season.scenario.csv
+2026-10-15  0042e7e0  pathStep  C3->C4  log/diff/0042e7e0_pathStep_course_season.scenario.csv
+2026-10-15  0042dea0  holeMagazineEvent  C3->C4  log/diff/0042dea0_holeMagazineEvent_course_season.scenario.csv
+2026-10-15  004289e0  updateGolfers  C3->C4  log/diff/004289e0_updateGolfers_course_season.scenario.csv
+2026-10-15  00427380  matchUpdate  C3->C4  log/diff/00427380_matchUpdate_course_season.scenario.csv
+2026-10-15  004266b0  patronEvent  C3->C4  log/diff/004266b0_patronEvent_course_season.scenario.csv
+2026-10-15  00424120  prepareShot  C3->C4  log/diff/00424120_prepareShot_course_season.scenario.csv
+2026-10-15  00422fb0  chooseShotTarget  C3->C4  log/diff/00422fb0_chooseShotTarget_course_season.scenario.csv
+2026-10-15  004226a0  trialShot  C3->C4  log/diff/004226a0_trialShot_course_season.scenario.csv
+2026-10-15  00421fa0  scanTileLine  C3->C4  log/diff/00421fa0_scanTileLine_course_season.scenario.csv
+2026-10-15  00421bc0  updateMembership  C3->C4  log/diff/00421bc0_updateMembership_course_season.scenario.csv
+2026-10-15  00421b90  drawScaledSprite421b90  C3->C4  log/diff/00421b90_drawScaledSprite421b90_course_season.scenario.csv
+2026-10-15  0040e720  announceBuilding  C3->C4  log/diff/0040e720_announceBuilding_course_season.scenario.csv
+2026-10-15  0040e000  stampCourseTiles  C3->C4  log/diff/0040e000_stampCourseTiles_course_season.scenario.csv
+2026-10-15  0040df80  objectAt  C3->C4  log/diff/0040df80_objectAt_course_season.scenario.csv
+2026-10-15  0040db90  evalPlacementArea  C3->C4  log/diff/0040db90_evalPlacementArea_course_season.scenario.csv
+2026-10-15  0040d320  drawWindow  C3->C4  log/diff/0040d320_drawWindow_course_season.scenario.csv
+2026-10-15  0040ca10  blitPanel  C3->C4  log/diff/0040ca10_blitPanel_course_season.scenario.csv
+2026-10-15  0040c500  playSoundAt  C3->C4  log/diff/0040c500_playSoundAt_course_season.scenario.csv
+2026-10-15  0040bfe0  cornerHeights  C3->C4  log/diff/0040bfe0_cornerHeights_course_season.scenario.csv
+2026-10-15  0040af70  saveFieldIo  C3->C4  log/diff/0040af70_saveFieldIo_course_season.scenario.csv
+2026-10-15  0040a160  buildToolLabel  C3->C4  log/diff/0040a160_buildToolLabel_course_season.scenario.csv
+2026-10-15  00409bf0  updateRollingStats  C3->C4  log/diff/00409bf0_updateRollingStats_course_season.scenario.csv
+2026-10-15  004099f0  addGolferPair  C3->C4  log/diff/004099f0_addGolferPair_course_season.scenario.csv
+2026-10-15  00409950  updatePairSnapshot  C3->C4  log/diff/00409950_updatePairSnapshot_course_season.scenario.csv
+2026-10-15  00409620  scanShotArea  C3->C4  log/diff/00409620_scanShotArea_course_season.scenario.csv
+2026-10-15  00407000  holeQuadrants  C3->C4  log/diff/00407000_holeQuadrants_course_season.scenario.csv
+2026-10-15  00406670  membershipReport  C3->C4  log/diff/00406670_membershipReport_course_season.scenario.csv
+2026-10-15  00406250  showLoadingScreen  C3->C4  log/diff/00406250_showLoadingScreen_course_season.scenario.csv
+2026-10-15  004060a0  computeRatingTrend  C3->C4  log/diff/004060a0_computeRatingTrend_course_season.scenario.csv
+2026-10-15  00405e30  placeHabitat  C3->C4  log/diff/00405e30_placeHabitat_course_season.scenario.csv
+2026-10-15  00404120  flicOpenStream  C3->C4  log/diff/00404120_flicOpenStream_course_season.scenario.csv
+2026-10-15  00404090  flicNextFrame  C3->C4  log/diff/00404090_flicNextFrame_course_season.scenario.csv
+2026-10-15  00402a40  updateWalkers  C3->C4  log/diff/00402a40_updateWalkers_course_season.scenario.csv
+2026-10-15  00401040  placeRecord  C3->C4  log/diff/00401040_placeRecord_course_season.scenario.csv
+2026-10-15  00401000  resetRecordBank  C3->C4  log/diff/00401000_resetRecordBank_course_season.scenario.csv
 2026-10-15  sound.dll:000459c3  callocUnlockFunclet2  C3->C4  
 2026-10-15  sound.dll:0004593a  callocUnlockFunclet  C3->C4  
 2026-10-15  sound.dll:00045898  __doserrno  C3->C4  

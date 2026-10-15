@@ -669,6 +669,40 @@ module's match CSVs are all GREEN through `re_classify.py promote --to C4 --evid
 its CHANGELOG line): 1,889 promoted, C4 1,890 (exe 1,076, jgld 510, sound 155, Terrain 149), C3 1,028 left (1,020 without a
 match, 6 below 100%). Refused: flagSet 0x0049eef0 / flagIsSet 0x0049ef80, whose hooks.csv `file` names a source without their
 SG_HOOK (round 6's duplicate batch): point the column at the linked batch and re-run. The C3 rows left are the scenario route's.
+Thirty-sixth round = C4 round 1 (2026-10-15, plan re/C4_PLAN.md, brief log/c3/round36_brief.md, pool log/c3/c4_pool.py,
+candidates log/c3/round36_candidates.py, children log/c3/round36_children.tsv; eight claude2 `opus` children, five of them
+stopped when the account ran out of tokens and reactivated by the user from the Happy app). Before the round: the 150
+scenario-ready rows were promoted (user's decision), and flagSet 0x0049eef0 / flagIsSet 0x0049ef80 were found to have NO
+SG_HOOK in any source, now or in git history (round 6 promoted them from path-1 CSVs), so they were demoted to C2;
+log/c3/hook_integrity.py now checks that every C3 / C4 row has a linked hook (core sources by build.bat's `golf_*.cpp`
+wildcard included). MATCH route: m36a 143 + 1 and m36b 117 (sound.dll), m36c 129 + 2 (sound.dll), m36d 256 + 1 (exe <= 256
+bytes) and m36e 16 (jgld + the two exe partial matches) at 100%, with boundaries rows for Ctrl5b5c0_transposeTable,
+viewDispatchBuild, both ehVectorConstructorIterator-family extents, Channel_parseWaveHeader_adjPlus70, atexitDtor_100b49b8,
+streamRenderTail, png_default_error and Font::deletingDtor_adj8 (each checked in the disassembly). sound.dll is THREE builds:
+the C++ code /O2 (/GX with an EH frame), the LPC-10 2400 bps speech codec 0x3a900-0x41a00 debug /Od C (f2c-shaped:
+lpc10_encode/decode, analys_, synths_, pitsyn_, dyptrk_ ...; several re/names rows contradict it, leads in
+log/c3/m36c_D1/D2_notes.txt), and the static CRT /O1; the brief's sound flags were wrong (m36b caught it). log/sigs_sound.dll.tsv
+predated the names, so ghidra2src declared every renamed callee varargs cdecl: replaced with m36b's fresh dump (old kept as
+.pre_r36); the bulk path otherwise gave almost nothing, every match was hand work. m36d re-implemented flagSet / flagIsSet
+(shim/src/re/m36d.cpp, 12 keys, null + 7 wrong bodies RED), C2 -> C3 (promote with `--file shim/src/re/m36d.cpp`: their
+hooks.csv `file` still named c3x.cpp and c3_verify gave no reason) -> C4 by their old matches. SCENARIO route: s36a ran the
+six canonical scenarios not yet used (championship, golfer_events, golfer_stories, stories_fixture, stories9_fixture,
+mood5_fixture), each with two OFF runs SAME and the negctl RED; s36c added `--spawn-reach` to scenario_ab.py (default proven
+byte-identical) so boot code counts, and its boot control A showed a dynInit_* stub that skips its constructor reads GREEN, so
+dynInit_* stubs never go to C4 by scenario; s36b built the `ui_tour` scenario (re/tools/scenario.py, ~415 virtual s: every
+menu screen, the F1-F10 reports, hire / character editor, preferences, rename, save / load, a practice round), deterministic
+with the negctl RED. EVIDENCE DECISIONS (the user): a naked inline-asm transcription is NOT match evidence (matches by
+construction; five rows demoted: sound strcpy / __ftol / strstr, exe fillSpanDown / fillSpanUp); library-object identity IS
+(m36e: jgld __ftol, strlen, strcpy, strcat, _setjmp3 instruction-identical to libcmtd.lib members); an inline __asm block in a
+compiled C body IS (the C is matched and the asm covers instructions VC6 never emits from C; 85 rows already C4 that way, 21
+promoted). Verifier mistakes caught and undone: a blanket scenario pass promoted 122 rows on s36c's unverified spawn CSVs
+(demoted, then 35 re-promoted after its report); the match pass promoted three naked transcriptions. log/c3/c4_match_promote.py
+(`--kind match|scenario`) now skips naked-asm matches and dynInit_* scenario rows; promote scenario evidence by named files
+(log/c3/c4_promote_s36b.py / c4_promote_s36c.py), never by a blanket pass while batches run. Result: C4 2,765 (exe 1,536,
+jgld 535, sound 545, Terrain 149), C3 153 (exe 94, sound 59), C2 open 5; static 443 + match 344 and runtime 19 pass. Left: the
+exe UI families only network code builds (TextView / ListBox / optionDialog / panel, about 120 rows), story / tournament /
+retirement screens, sound near misses (VC6 scheduling and register choice the permuter does not move), strchr (needs a signed
+branch offset in match.py's normalize, and is a transcription anyway).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

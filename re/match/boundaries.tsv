@@ -7,3 +7,11 @@ golf_clean.exe	0x004676e0	466	body ends with ret at 0x4678b1; Ghidra stops at 0x
 jgld.dll	0x100175d0	566	Sprite::drawQ: Ghidra stops the body at 0x1001778d, short of the join and the ret 0x18 at 0x10017803 (c3ci)
 golf_clean.exe	0x00486ec0	76	Timer::stop: Ghidra folded the tail-jump target 0x00483da0 in as a second range
 golf_clean.exe	0x00483da0	44	pumpInputDisplay483da0: reached only by the tail jmp at 0x00486f06; was a range of Timer::stop
+jgld.dll	0x100792b0	74	png_default_error: Ghidra stops the body after the noreturn longjmp call at 0x100792e4; the /GZ epilogue (pop edi .. ret at 0x100792f9) follows (m36e)
+golf_clean.exe	0x004a0ef0	206	viewDispatchBuild: Ghidra's extent is 39 bytes; the body runs to 206 with its jump tables equal (m36d, round 36, checked by an in-memory override)
+sound.dll	0x10042902	130	ehVectorConstructorIterator: Ghidra stops at its __finally funclet 0x1004296c, which VC6 emits inside the symbol (m36c, round 36, log/c3/m36c_bound_check.py)
+sound.dll	0x10039980	8	Channel_parseWaveHeader_adjPlus70: Ghidra's extent includes 5 trailing nops (m36c, round 36)
+sound.dll	0x100091f0	10	atexitDtor_100b49b8: `mov ecx, 0x100b49b8; jmp 0x10002784` is 10 bytes; Ghidra's 15 count 5 trailing nops (m36a, round 36)
+sound.dll	0x100188d0	862	streamRenderTail: the body ends at `ret` 0x10018c2d (after `mov esp, ebp; pop ebp`); Ghidra's 859 bytes stop short of it (m36a, round 36)
+sound.dll	0x1001c1e0	94	Ctrl5b5c0_transposeTable: Ghidra stops at the `ret 4` of the early exit (0x1001c1f2) and lists the rest as FUN_1001c1f5, which the `jbe 0x1001c1f5` at 0x1001c1ea enters with ebp still set by this prologue; the body ends at `ret 4` 0x1001c23b (m36b, round 36)
+jgld.dll	0x10069260	8	Font::deletingDtor_adj8: the thunk is `sub ecx, 8; jmp 0x10001753` (8 bytes); Ghidra counts the five int3 pad bytes 0x10069268-0x1006926c (m36e)
