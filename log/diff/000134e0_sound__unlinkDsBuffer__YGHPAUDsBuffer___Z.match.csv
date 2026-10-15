@@ -1,0 +1,24 @@
+instruction,recompiled,original,match
+0,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+1,"test edx, edx","test edx, edx",True
+2,jne 0x10,jne 0x100134f0,True
+3,"mov eax, 0xa","mov eax, 0xa",True
+4,ret 4,ret 4,True
+5,"mov eax, dword ptr [edx + 0xbc]","mov eax, dword ptr [edx + 0xbc]",True
+6,"mov ecx, dword ptr [edx + 0xc0]","mov ecx, dword ptr [edx + 0xc0]",True
+7,"test eax, eax","test eax, eax",True
+8,je 0x28,je 0x10013508,True
+9,"mov dword ptr [eax + 0xc0], ecx","mov dword ptr [eax + 0xc0], ecx",True
+10,jmp 0x2e,jmp 0x1001350e,True
+11,"mov dword ptr [0], ecx","mov dword ptr [0x100b4a34], ecx",True
+12,"test ecx, ecx","test ecx, ecx",True
+13,je 0x3a,je 0x1001351a,True
+14,"mov dword ptr [ecx + 0xbc], eax","mov dword ptr [ecx + 0xbc], eax",True
+15,jmp 0x3f,jmp 0x1001351f,True
+16,"mov dword ptr [0], eax","mov dword ptr [0x100b4a38], eax",True
+17,"mov dword ptr [edx + 0xbc], 0","mov dword ptr [edx + 0xbc], 0",True
+18,"mov dword ptr [edx + 0xc0], 0","mov dword ptr [edx + 0xc0], 0",True
+19,"xor eax, eax","xor eax, eax",True
+20,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?unlinkDsBuffer@@YGHPAUDsBuffer@@@Z,module=sound.dll
+VERDICT,GREEN,21,100.0%

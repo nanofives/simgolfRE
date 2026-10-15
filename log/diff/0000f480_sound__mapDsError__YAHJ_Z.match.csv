@@ -1,0 +1,38 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+1,"cmp eax, 0x8878000a","cmp eax, 0x8878000a",True
+2,jg 0x3c,jg 0x1000f4bc,True
+3,je 0x36,je 0x1000f4b6,True
+4,"cmp eax, 0x8007000e","cmp eax, 0x8007000e",True
+5,jg 0x29,jg 0x1000f4a9,True
+6,je 0x23,je 0x1000f4a3,True
+7,"cmp eax, 0x80004001","cmp eax, 0x80004001",True
+8,jne 0x6d,jne 0x1000f4ed,True
+9,"mov eax, 0xb","mov eax, 0xb",True
+10,ret ,ret ,True
+11,"mov eax, 0x11","mov eax, 0x11",True
+12,ret ,ret ,True
+13,"cmp eax, 0x80070057","cmp eax, 0x80070057",True
+14,jne 0x6d,jne 0x1000f4ed,True
+15,"mov eax, 0xa","mov eax, 0xa",True
+16,ret ,ret ,True
+17,"mov eax, 0xc","mov eax, 0xc",True
+18,ret ,ret ,True
+19,"add eax, 0x7787ff9c","add eax, 0x7787ff9c",True
+20,"cmp eax, 0x46","cmp eax, 0x46",True
+21,ja 0x6d,ja 0x1000f4ed,True
+22,"xor ecx, ecx","xor ecx, ecx",True
+23,"mov cl, byte ptr [eax]","mov cl, byte ptr [eax + 0x1000f508]",True
+24,jmp dword ptr [ecx*4],jmp dword ptr [ecx*4 + 0x1000f4f4],True
+25,"mov eax, 1","mov eax, 1",True
+26,ret ,ret ,True
+27,"mov eax, 0x12","mov eax, 0x12",True
+28,ret ,ret ,True
+29,"mov eax, 0x13","mov eax, 0x13",True
+30,ret ,ret ,True
+31,"mov eax, 0x1e","mov eax, 0x1e",True
+32,ret ,ret ,True
+33,"mov eax, 0x2f","mov eax, 0x2f",True
+34,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?mapDsError@@YAHJ@Z,module=sound.dll
+VERDICT,GREEN,35,100.0%

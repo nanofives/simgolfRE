@@ -1,0 +1,42 @@
+instruction,recompiled,original,match
+0,"sub esp, 8","sub esp, 8",True
+1,push esi,push esi,True
+2,"mov esi, ecx","mov esi, ecx",True
+3,push edi,push edi,True
+4,"xor edi, edi","xor edi, edi",True
+5,"mov eax, dword ptr [esi + 0x60]","mov eax, dword ptr [esi + 0x60]",True
+6,"cmp eax, edi","cmp eax, edi",True
+7,je 0x2a,je 0x1000f7ba,True
+8,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+9,push edi,push edi,True
+10,push eax,push eax,True
+11,call dword ptr [ecx + 0x34],call dword ptr [ecx + 0x34],True
+12,"mov eax, dword ptr [esi + 0x60]","mov eax, dword ptr [esi + 0x60]",True
+13,"lea ecx, [esp + 8]","lea ecx, [esp + 8]",True
+14,push ecx,push ecx,True
+15,"lea ecx, [esp + 0x10]","lea ecx, [esp + 0x10]",True
+16,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+17,push ecx,push ecx,True
+18,push eax,push eax,True
+19,call dword ptr [edx + 0x10],call dword ptr [edx + 0x10],True
+20,"mov al, byte ptr [esi + 4]","mov al, byte ptr [esi + 4]",True
+21,"mov dword ptr [esi + 0x24], edi","mov dword ptr [esi + 0x24], edi",True
+22,"or al, 1","or al, 1",True
+23,"mov dword ptr [esi + 0x28], edi","mov dword ptr [esi + 0x28], edi",True
+24,"mov dword ptr [esi + 0x2c], edi","mov dword ptr [esi + 0x2c], edi",True
+25,"mov dword ptr [esi + 0x30], edi","mov dword ptr [esi + 0x30], edi",True
+26,"mov dword ptr [esi + 0xc], edi","mov dword ptr [esi + 0xc], edi",True
+27,"mov dword ptr [esi + 0x10], edi","mov dword ptr [esi + 0x10], edi",True
+28,"mov dword ptr [esi + 0x14], edi","mov dword ptr [esi + 0x14], edi",True
+29,"mov dword ptr [esi + 0x18], edi","mov dword ptr [esi + 0x18], edi",True
+30,"mov dword ptr [esi + 0x1c], edi","mov dword ptr [esi + 0x1c], edi",True
+31,"mov dword ptr [esi + 0x48], edi","mov dword ptr [esi + 0x48], edi",True
+32,"mov dword ptr [esi + 0x4c], edi","mov dword ptr [esi + 0x4c], edi",True
+33,"mov byte ptr [esi + 4], al","mov byte ptr [esi + 4], al",True
+34,pop edi,pop edi,True
+35,"xor eax, eax","xor eax, eax",True
+36,pop esi,pop esi,True
+37,"add esp, 8","add esp, 8",True
+38,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?setPosition@DsBuffer@m36a_g3a@@QAEHXZ,module=sound.dll
+VERDICT,GREEN,39,100.0%

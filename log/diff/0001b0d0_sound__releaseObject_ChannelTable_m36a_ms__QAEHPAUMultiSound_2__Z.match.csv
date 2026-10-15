@@ -1,0 +1,45 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,"lea eax, [ecx + 4]","lea eax, [ecx + 4]",True
+3,"mov ecx, 0x80","mov ecx, 0x80",True
+4,"cmp dword ptr [eax], ebx","cmp dword ptr [eax], ebx",True
+5,jne 0x17,jne 0x1001b0e7,True
+6,"mov dword ptr [eax], 0","mov dword ptr [eax], 0",True
+7,"add eax, 4","add eax, 4",True
+8,dec ecx,dec ecx,True
+9,jne 0xd,jne 0x1001b0dd,True
+10,"mov eax, dword ptr [ebx + 0x1440]","mov eax, dword ptr [ebx + 0x1440]",True
+11,push esi,push esi,True
+12,"lea esi, [ebx + 0x1440]","lea esi, [ebx + 0x1440]",True
+13,push edi,push edi,True
+14,"xor edi, edi","xor edi, edi",True
+15,"test eax, eax","test eax, eax",True
+16,je 0x53,je 0x1001b123,True
+17,"cmp edi, 3","cmp edi, 3",True
+18,jge 0x53,jge 0x1001b123,True
+19,"mov ecx, dword ptr [esi]","mov ecx, dword ptr [esi]",True
+20,"test ecx, ecx","test ecx, ecx",True
+21,je 0x42,je 0x1001b112,True
+22,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+23,push 1,push 1,True
+24,call dword ptr [eax],call dword ptr [eax],True
+25,"mov dword ptr [esi], 0","mov dword ptr [esi], 0",True
+26,"mov eax, dword ptr [esi + 4]","mov eax, dword ptr [esi + 4]",True
+27,"add esi, 4","add esi, 4",True
+28,inc edi,inc edi,True
+29,"test eax, eax","test eax, eax",True
+30,jne 0x31,jne 0x1001b101,True
+31,pop edi,pop edi,True
+32,pop esi,pop esi,True
+33,"test ebx, ebx","test ebx, ebx",True
+34,je 0x61,je 0x1001b131,True
+35,"mov edx, dword ptr [ebx]","mov edx, dword ptr [ebx]",True
+36,push 1,push 1,True
+37,"mov ecx, ebx","mov ecx, ebx",True
+38,call dword ptr [edx],call dword ptr [edx],True
+39,"xor eax, eax","xor eax, eax",True
+40,pop ebx,pop ebx,True
+41,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?releaseObject@ChannelTable@m36a_ms@@QAEHPAUMultiSound@2@@Z,module=sound.dll
+VERDICT,GREEN,42,100.0%

@@ -1,0 +1,55 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,push ebp,push ebp,True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"mov ebp, ecx","mov ebp, ecx",True
+5,"xor ebx, ebx","xor ebx, ebx",True
+6,"mov eax, dword ptr [ebp + ebx*4 + 4]","mov eax, dword ptr [ebp + ebx*4 + 4]",True
+7,"test eax, eax","test eax, eax",True
+8,je 0x58,je 0x1001ad88,True
+9,"mov ecx, dword ptr [eax + 0x1438]","mov ecx, dword ptr [eax + 0x1438]",True
+10,"test ecx, ecx","test ecx, ecx",True
+11,je 0x4b,je 0x1001ad7b,True
+12,"xor esi, esi","xor esi, esi",True
+13,dec ecx,dec ecx,True
+14,"test ecx, ecx","test ecx, ecx",True
+15,jle 0x4b,jle 0x1001ad7b,True
+16,"mov edi, 0x1440","mov edi, 0x1440",True
+17,"mov eax, dword ptr [edi + eax]","mov eax, dword ptr [edi + eax]",True
+18,"test eax, eax","test eax, eax",True
+19,je 0x38,je 0x1001ad68,True
+20,"mov edx, dword ptr [eax]","mov edx, dword ptr [eax]",True
+21,"mov ecx, eax","mov ecx, eax",True
+22,call dword ptr [edx + 0x5c],call dword ptr [edx + 0x5c],True
+23,"test eax, eax","test eax, eax",True
+24,jne 0x68,jne 0x1001ad98,True
+25,"mov eax, dword ptr [ebp + ebx*4 + 4]","mov eax, dword ptr [ebp + ebx*4 + 4]",True
+26,inc esi,inc esi,True
+27,"add edi, 4","add edi, 4",True
+28,"mov ecx, dword ptr [eax + 0x1438]","mov ecx, dword ptr [eax + 0x1438]",True
+29,dec ecx,dec ecx,True
+30,"cmp esi, ecx","cmp esi, ecx",True
+31,jl 0x26,jl 0x1001ad56,True
+32,"mov ecx, dword ptr [ebp + ebx*4 + 4]","mov ecx, dword ptr [ebp + ebx*4 + 4]",True
+33,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+34,call dword ptr [edx + 0x5c],call dword ptr [edx + 0x5c],True
+35,"test eax, eax","test eax, eax",True
+36,jne 0x68,jne 0x1001ad98,True
+37,inc ebx,inc ebx,True
+38,"cmp ebx, 0x80","cmp ebx, 0x80",True
+39,jl 8,jl 0x1001ad38,True
+40,pop edi,pop edi,True
+41,pop esi,pop esi,True
+42,pop ebp,pop ebp,True
+43,"xor al, al","xor al, al",True
+44,pop ebx,pop ebx,True
+45,ret ,ret ,True
+46,pop edi,pop edi,True
+47,pop esi,pop esi,True
+48,pop ebp,pop ebp,True
+49,"mov al, 1","mov al, 1",True
+50,pop ebx,pop ebx,True
+51,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?anyChannelActive@ChannelTable@m36a_ms@@QAE_NXZ,module=sound.dll
+VERDICT,GREEN,52,100.0%

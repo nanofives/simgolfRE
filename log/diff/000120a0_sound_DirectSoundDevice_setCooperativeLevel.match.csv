@@ -1,0 +1,36 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"mov esi, ecx","mov esi, ecx",True
+2,push edi,push edi,True
+3,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+4,"test eax, eax","test eax, eax",True
+5,jne 0x14,jne 0x100120b4,True
+6,pop edi,pop edi,True
+7,"mov eax, 0x13","mov eax, 0x13",True
+8,pop esi,pop esi,True
+9,ret 4,ret 4,True
+10,"mov edx, dword ptr [esi + 0x190]","mov edx, dword ptr [esi + 0x190]",True
+11,"mov edi, dword ptr [esp + 0xc]","mov edi, dword ptr [esp + 0xc]",True
+12,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+13,push edx,push edx,True
+14,push edi,push edi,True
+15,push eax,push eax,True
+16,call dword ptr [ecx + 0x18],call dword ptr [ecx + 0x18],True
+17,"test eax, eax","test eax, eax",True
+18,je 0x44,je 0x100120e4,True
+19,push eax,push eax,True
+20,call 0x30,call 0x1000268a,True
+21,"add esp, 4","add esp, 4",True
+22,"mov ecx, esi","mov ecx, esi",True
+23,call 0x3a,call 0x1000104b,True
+24,pop edi,pop edi,True
+25,"mov eax, 3","mov eax, 3",True
+26,pop esi,pop esi,True
+27,ret 4,ret 4,True
+28,"mov dword ptr [0], edi","mov dword ptr [0x100b4a3c], edi",True
+29,pop edi,pop edi,True
+30,"xor eax, eax","xor eax, eax",True
+31,pop esi,pop esi,True
+32,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?setCooperativeLevel@DirectSoundDevice@@QAEHPAX@Z,module=sound.dll
+VERDICT,GREEN,33,100.0%

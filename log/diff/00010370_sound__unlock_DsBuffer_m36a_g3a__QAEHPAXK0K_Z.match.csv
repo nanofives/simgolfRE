@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x60]","mov eax, dword ptr [ecx + 0x60]",True
+1,"test eax, eax","test eax, eax",True
+2,je 0x25,je 0x10010395,True
+3,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+4,"mov ecx, dword ptr [eax]","mov ecx, dword ptr [eax]",True
+5,push edx,push edx,True
+6,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+7,push edx,push edx,True
+8,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+9,push edx,push edx,True
+10,"mov edx, dword ptr [esp + 0x10]","mov edx, dword ptr [esp + 0x10]",True
+11,push edx,push edx,True
+12,push eax,push eax,True
+13,call dword ptr [ecx + 0x4c],call dword ptr [ecx + 0x4c],True
+14,"mov dword ptr [esp + 0x10], eax","mov dword ptr [esp + 0x10], eax",True
+15,"xor eax, eax","xor eax, eax",True
+16,ret 0x10,ret 0x10,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?unlock@DsBuffer@m36a_g3a@@QAEHPAXK0K@Z,module=sound.dll
+VERDICT,GREEN,17,100.0%

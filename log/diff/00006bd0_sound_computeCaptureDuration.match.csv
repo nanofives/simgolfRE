@@ -1,0 +1,39 @@
+instruction,recompiled,original,match
+0,"sub esp, 8","sub esp, 8",True
+1,push esi,push esi,True
+2,"mov esi, ecx","mov esi, ecx",True
+3,"mov eax, dword ptr [esi + 0xb4]","mov eax, dword ptr [esi + 0xb4]",True
+4,"test eax, eax","test eax, eax",True
+5,je 0x6c,je 0x10006c3c,True
+6,"mov ecx, dword ptr [esi + 0xd4]","mov ecx, dword ptr [esi + 0xd4]",True
+7,"test ecx, ecx","test ecx, ecx",True
+8,je 0x6c,je 0x10006c3c,True
+9,push edi,push edi,True
+10,"xor edi, edi","xor edi, edi",True
+11,"mov di, word ptr [esi + 0xe4]","mov di, word ptr [esi + 0xe4]",True
+12,"xor edx, edx","xor edx, edx",True
+13,div edi,div edi,True
+14,"mov dword ptr [esp + 0xc], 0","mov dword ptr [esp + 0xc], 0",True
+15,"mov edi, eax","mov edi, eax",True
+16,"mov eax, ecx","mov eax, ecx",True
+17,cdq ,cdq ,True
+18,idiv edi,idiv edi,True
+19,"mov dword ptr [esi + 0xc8], eax","mov dword ptr [esi + 0xc8], eax",True
+20,"mov eax, ecx","mov eax, ecx",True
+21,cdq ,cdq ,True
+22,idiv edi,idiv edi,True
+23,"mov eax, dword ptr [esi + 0xdc]","mov eax, dword ptr [esi + 0xdc]",True
+24,"mov dword ptr [esp + 8], edx","mov dword ptr [esp + 8], edx",True
+25,fild dword ptr [esp + 8],fild dword ptr [esp + 8],True
+26,"mov dword ptr [esp + 8], eax","mov dword ptr [esp + 8], eax",True
+27,fild qword ptr [esp + 8],fild qword ptr [esp + 8],True
+28,fdivp st(1),fdivp st(1),True
+29,fmul qword ptr [0],fmul qword ptr [0x1005b280],True
+30,call 0x65,call 0x10042550,True
+31,"mov dword ptr [esi + 0xc0], eax","mov dword ptr [esi + 0xc0], eax",True
+32,pop edi,pop edi,True
+33,pop esi,pop esi,True
+34,"add esp, 8","add esp, 8",True
+35,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?computeCaptureDuration@Capture@m36a_6bd0@@QAEXXZ,module=sound.dll
+VERDICT,GREEN,36,100.0%

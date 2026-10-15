@@ -1,0 +1,10 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b49f0]",True
+1,"test eax, eax","test eax, eax",True
+2,je 0xc,je 0x1000e2dc,True
+3,"mov eax, dword ptr [eax]","mov eax, dword ptr [eax]",True
+4,ret ,ret ,True
+5,"xor eax, eax","xor eax, eax",True
+6,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?getWaveDeviceInterface@@YAPAXXZ,module=sound.dll
+VERDICT,GREEN,7,100.0%

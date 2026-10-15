@@ -1,0 +1,87 @@
+instruction,recompiled,original,match
+0,"mov edx, dword ptr [0]","mov edx, dword ptr [0x100b49a8]",True
+1,push ebx,push ebx,True
+2,push esi,push esi,True
+3,"mov esi, ecx","mov esi, ecx",True
+4,inc edx,inc edx,True
+5,"xor ebx, ebx","xor ebx, ebx",True
+6,"mov dword ptr [0], edx","mov dword ptr [0x100b49a8], edx",True
+7,"mov eax, dword ptr [esi + 0x3c]","mov eax, dword ptr [esi + 0x3c]",True
+8,"test al, 1","test al, 1",True
+9,push edi,push edi,True
+10,je 0x69,je 0x10008b29,True
+11,"test al, 2","test al, 2",True
+12,je 0x69,je 0x10008b29,True
+13,"mov edi, edx","mov edi, edx",True
+14,push 0,push 0x100b4990,True
+15,inc edi,inc edi,True
+16,"mov dword ptr [0], edi","mov dword ptr [0x100b49a8], edi",True
+17,"mov edx, dword ptr [esi + 0x3c]","mov edx, dword ptr [esi + 0x3c]",True
+18,"and edx, 0xfffffffb","and edx, 0xfffffffb",True
+19,"mov dword ptr [esi + 0x3c], edx","mov dword ptr [esi + 0x3c], edx",True
+20,call dword ptr [0],call dword ptr [0x100b83f4],True
+21,push 0,push 0x100b4990,True
+22,call dword ptr [0],call dword ptr [0x100b84e0],True
+23,"mov eax, dword ptr [esi + 0x40]","mov eax, dword ptr [esi + 0x40]",True
+24,"mov dword ptr [esi + 8], ebx","mov dword ptr [esi + 8], ebx",True
+25,push eax,push eax,True
+26,"mov dword ptr [esi + 4], ebx","mov dword ptr [esi + 4], ebx",True
+27,call dword ptr [0],call dword ptr [0x100b8648],True
+28,"mov ecx, dword ptr [esi + 0x18]","mov ecx, dword ptr [esi + 0x18]",True
+29,push ecx,push ecx,True
+30,call dword ptr [0],call dword ptr [0x100b864c],True
+31,"mov eax, dword ptr [esi + 0x3c]","mov eax, dword ptr [esi + 0x3c]",True
+32,"and al, 0xfe","and al, 0xfe",True
+33,"mov dword ptr [esi + 0x3c], eax","mov dword ptr [esi + 0x3c], eax",True
+34,push 0,push 0x100b4990,True
+35,call dword ptr [0],call dword ptr [0x100b83e4],True
+36,"mov ecx, 6","mov ecx, 6",True
+37,"xor eax, eax","xor eax, eax",True
+38,"mov edi, 0","mov edi, 0x100b4990",True
+39,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+40,"mov eax, dword ptr [esi + 0x4c]","mov eax, dword ptr [esi + 0x4c]",True
+41,"cmp eax, ebx","cmp eax, ebx",True
+42,je 0xe6,je 0x10008ba6,True
+43,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+44,"cmp ecx, ebx","cmp ecx, ebx",True
+45,je 0x97,je 0x10008b57,True
+46,"mov dword ptr [ecx], ebx","mov dword ptr [ecx], ebx",True
+47,"mov dword ptr [esi + 0x4c], ecx","mov dword ptr [esi + 0x4c], ecx",True
+48,jmp 0x9d,jmp 0x10008b5d,True
+49,"mov dword ptr [esi + 0x50], ebx","mov dword ptr [esi + 0x50], ebx",True
+50,"mov dword ptr [esi + 0x4c], ebx","mov dword ptr [esi + 0x4c], ebx",True
+51,"mov edi, dword ptr [eax + 8]","mov edi, dword ptr [eax + 8]",True
+52,push eax,push eax,True
+53,call 0xa6,call 0x1004249a,True
+54,"mov ecx, dword ptr [esi + 0x58]","mov ecx, dword ptr [esi + 0x58]",True
+55,"add esp, 4","add esp, 4",True
+56,dec ecx,dec ecx,True
+57,"cmp edi, ebx","cmp edi, ebx",True
+58,"mov dword ptr [esi + 0x58], ecx","mov dword ptr [esi + 0x58], ecx",True
+59,je 0xe6,je 0x10008ba6,True
+60,"mov eax, dword ptr [esi + 0x4c]","mov eax, dword ptr [esi + 0x4c]",True
+61,"cmp eax, ebx","cmp eax, ebx",True
+62,je 0xe6,je 0x10008ba6,True
+63,"mov ecx, dword ptr [eax + 4]","mov ecx, dword ptr [eax + 4]",True
+64,"cmp ecx, ebx","cmp ecx, ebx",True
+65,je 0xc9,je 0x10008b89,True
+66,"mov dword ptr [ecx], ebx","mov dword ptr [ecx], ebx",True
+67,"mov dword ptr [esi + 0x4c], ecx","mov dword ptr [esi + 0x4c], ecx",True
+68,jmp 0xcf,jmp 0x10008b8f,True
+69,"mov dword ptr [esi + 0x50], ebx","mov dword ptr [esi + 0x50], ebx",True
+70,"mov dword ptr [esi + 0x4c], ebx","mov dword ptr [esi + 0x4c], ebx",True
+71,"mov edi, dword ptr [eax + 8]","mov edi, dword ptr [eax + 8]",True
+72,push eax,push eax,True
+73,call 0xd8,call 0x1004249a,True
+74,"mov ecx, dword ptr [esi + 0x58]","mov ecx, dword ptr [esi + 0x58]",True
+75,"add esp, 4","add esp, 4",True
+76,dec ecx,dec ecx,True
+77,"cmp edi, ebx","cmp edi, ebx",True
+78,"mov dword ptr [esi + 0x58], ecx","mov dword ptr [esi + 0x58], ecx",True
+79,jne 0xb4,jne 0x10008b74,True
+80,pop edi,pop edi,True
+81,pop esi,pop esi,True
+82,pop ebx,pop ebx,True
+83,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?stop@SoundTimer@m36a_8ac0@@QAEXXZ,module=sound.dll
+VERDICT,GREEN,84,100.0%

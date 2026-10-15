@@ -1,0 +1,42 @@
+instruction,recompiled,original,match
+0,push -1,push -1,True
+1,push 0,push 0x100587d6,True
+2,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+3,push eax,push eax,True
+4,"mov dword ptr fs:[0], esp","mov dword ptr fs:[0], esp",True
+5,push ecx,push ecx,True
+6,push esi,push esi,True
+7,"mov esi, ecx","mov esi, ecx",True
+8,push edi,push edi,True
+9,"mov dword ptr [esp + 8], esi","mov dword ptr [esp + 8], esi",True
+10,call 0x23,call 0x100021df,True
+11,"xor edi, edi","xor edi, edi",True
+12,"mov dword ptr [esp + 0x14], edi","mov dword ptr [esp + 0x14], edi",True
+13,"mov dword ptr [esi + 0x1c8], edi","mov dword ptr [esi + 0x1c8], edi",True
+14,"mov dword ptr [esi + 0x1cc], edi","mov dword ptr [esi + 0x1cc], edi",True
+15,"mov dword ptr [esi + 0x1d0], edi","mov dword ptr [esi + 0x1d0], edi",True
+16,"mov dword ptr [esi + 0x1d4], edi","mov dword ptr [esi + 0x1d4], edi",True
+17,"lea ecx, [esi + 0x1d8]","lea ecx, [esi + 0x1d8]",True
+18,"mov byte ptr [esp + 0x14], 1","mov byte ptr [esp + 0x14], 1",True
+19,call 0x51,call 0x100010aa,True
+20,"mov ecx, dword ptr [esp + 0xc]","mov ecx, dword ptr [esp + 0xc]",True
+21,"mov dword ptr [esi], 0","mov dword ptr [esi], 0x1005b304",True
+22,"lea eax, [esi + 0x1a4]","lea eax, [esi + 0x1a4]",True
+23,"mov dword ptr [0], edi","mov dword ptr [0x100b49f0], edi",True
+24,"mov dword ptr [0], edi","mov dword ptr [0x100b49f8], edi",True
+25,"mov dword ptr [0], edi","mov dword ptr [0x100b49f4], edi",True
+26,"mov dword ptr [esi + 0x1a8], edi","mov dword ptr [esi + 0x1a8], edi",True
+27,"mov dword ptr [esi + 0x1ac], edi","mov dword ptr [esi + 0x1ac], edi",True
+28,"mov dword ptr [esi + 0x1b0], edi","mov dword ptr [esi + 0x1b0], edi",True
+29,"mov dword ptr [esi + 0x1b8], 0x7f","mov dword ptr [esi + 0x1b8], 0x7f",True
+30,"mov dword ptr [eax], edi","mov dword ptr [eax], edi",True
+31,"mov dword ptr [esi + 0x1b4], edi","mov dword ptr [esi + 0x1b4], edi",True
+32,"mov dword ptr [esi + 0x1c4], edi","mov dword ptr [esi + 0x1c4], edi",True
+33,"mov eax, esi","mov eax, esi",True
+34,pop edi,pop edi,True
+35,pop esi,pop esi,True
+36,"mov dword ptr fs:[0], ecx","mov dword ptr fs:[0], ecx",True
+37,"add esp, 0x10","add esp, 0x10",True
+38,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=??0Wave_Device@m36a_b1d0@@QAE@XZ,module=sound.dll
+VERDICT,GREEN,39,100.0%

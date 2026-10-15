@@ -1,0 +1,30 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr fs:[0]","mov eax, dword ptr fs:[0]",True
+1,push -1,push -1,True
+2,push 0,push 0x1005863b,True
+3,push eax,push eax,True
+4,"mov eax, dword ptr [esp + 0x14]","mov eax, dword ptr [esp + 0x14]",True
+5,"mov dword ptr fs:[0], esp","mov dword ptr fs:[0], esp",True
+6,"test al, 1","test al, 1",True
+7,"mov dword ptr [0], eax","mov dword ptr [0x100b49d8], eax",True
+8,jne 0x53,jne 0x10009333,True
+9,push 0x5c,push 0x5c,True
+10,call 0x29,call 0x100424d7,True
+11,"add esp, 4","add esp, 4",True
+12,"mov dword ptr [esp + 0x14], eax","mov dword ptr [esp + 0x14], eax",True
+13,"test eax, eax","test eax, eax",True
+14,"mov dword ptr [esp + 8], 0","mov dword ptr [esp + 8], 0",True
+15,je 0x45,je 0x10009325,True
+16,"mov ecx, eax","mov ecx, eax",True
+17,call 0x43,call 0x100022b1,True
+18,jmp 0x47,jmp 0x10009327,True
+19,"xor eax, eax","xor eax, eax",True
+20,"mov dword ptr [0], eax","mov dword ptr [0x100b49ec], eax",True
+21,"mov dword ptr [eax + 0x24], 0","mov dword ptr [eax + 0x24], 0x10002671",True
+22,"mov ecx, dword ptr [esp]","mov ecx, dword ptr [esp]",True
+23,"xor eax, eax","xor eax, eax",True
+24,"mov dword ptr fs:[0], ecx","mov dword ptr fs:[0], ecx",True
+25,"add esp, 0xc","add esp, 0xc",True
+26,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?init_sound_timer@m36a_92e0@@YAHHH@Z,module=sound.dll
+VERDICT,GREEN,27,100.0%

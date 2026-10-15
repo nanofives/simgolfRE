@@ -1,0 +1,13 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x64]","mov eax, dword ptr [ecx + 0x64]",True
+1,"test eax, eax","test eax, eax",True
+2,jne 0x11,jne 0x1000fed1,True
+3,"mov eax, dword ptr [ecx + 0x68]","mov eax, dword ptr [ecx + 0x68]",True
+4,"test eax, eax","test eax, eax",True
+5,jne 0x11,jne 0x1000fed1,True
+6,"xor al, al","xor al, al",True
+7,ret ,ret ,True
+8,"mov al, 1","mov al, 1",True
+9,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?hasAuxInterfaces@DsBuffer@m36a_g3a@@QAE_NXZ,module=sound.dll
+VERDICT,GREEN,10,100.0%

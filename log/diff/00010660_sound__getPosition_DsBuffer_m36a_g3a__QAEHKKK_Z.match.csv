@@ -1,0 +1,24 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x5c]","mov eax, dword ptr [ecx + 0x5c]",True
+1,"test eax, eax","test eax, eax",True
+2,je 0x36,je 0x10010696,True
+3,"test byte ptr [eax + 0x10], 0x20","test byte ptr [eax + 0x10], 0x20",True
+4,je 0x24,je 0x10010684,True
+5,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+6,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+7,push eax,push eax,True
+8,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+9,push edx,push edx,True
+10,push eax,push eax,True
+11,call 0x21,call 0x1000115e,True
+12,ret 0xc,ret 0xc,True
+13,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+14,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+15,push edx,push edx,True
+16,push eax,push eax,True
+17,call 0x33,call 0x10001695,True
+18,ret 0xc,ret 0xc,True
+19,"mov eax, 1","mov eax, 1",True
+20,ret 0xc,ret 0xc,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?getPosition@DsBuffer@m36a_g3a@@QAEHKKK@Z,module=sound.dll
+VERDICT,GREEN,21,100.0%

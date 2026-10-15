@@ -1,0 +1,70 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push edi,push edi,True
+2,"mov edi, ecx","mov edi, ecx",True
+3,"mov ecx, dword ptr [edi + 0x1a8]","mov ecx, dword ptr [edi + 0x1a8]",True
+4,"test ecx, ecx","test ecx, ecx",True
+5,je 0x1f,je 0x1000b97f,True
+6,call 0x13,call 0x100026fd,True
+7,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49ec]",True
+8,push edi,push edi,True
+9,call 0x1f,call 0x10001ed3,True
+10,"test byte ptr [edi + 0x1a4], 0x20","test byte ptr [edi + 0x1a4], 0x20",True
+11,je 0x38,je 0x1000b998,True
+12,"mov al, byte ptr [4]","mov al, byte ptr [0x100b49bc]",True
+13,"and al, 0xfe","and al, 0xfe",True
+14,"xor al, 1","xor al, 1",True
+15,"mov byte ptr [4], al","mov byte ptr [0x100b49bc], al",True
+16,jmp 0x42,jmp 0x1000b9a2,True
+17,"mov ecx, 0","mov ecx, 0x100b5038",True
+18,call 0x42,call 0x10002757,True
+19,"mov ecx, edi","mov ecx, edi",True
+20,call 0x49,call 0x1000188e,True
+21,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49f0]",True
+22,"test ecx, ecx","test ecx, ecx",True
+23,je 0xb9,je 0x1000ba19,True
+24,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b49f8]",True
+25,"test eax, eax","test eax, eax",True
+26,je 0x72,je 0x1000b9d2,True
+27,push eax,push eax,True
+28,call 0x62,call 0x10001677,True
+29,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49f0]",True
+30,"mov dword ptr [0], 0","mov dword ptr [0x100b49f8], 0",True
+31,"test byte ptr [ecx + 0x6c], 8","test byte ptr [ecx + 0x6c], 8",True
+32,je 0x9b,je 0x1000b9fb,True
+33,"mov edx, dword ptr [0]","mov edx, dword ptr [0x100b49fc]",True
+34,push edx,push edx,True
+35,call 0x84,call 0x10001677,True
+36,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b4a00]",True
+37,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49f0]",True
+38,push eax,push eax,True
+39,call 0x95,call 0x10001677,True
+40,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49f0]",True
+41,"mov esi, ecx","mov esi, ecx",True
+42,"test esi, esi","test esi, esi",True
+43,je 0xaf,je 0x1000ba0f,True
+44,call 0xa6,call 0x10001b81,True
+45,push esi,push esi,True
+46,call 0xac,call 0x1004249a,True
+47,"add esp, 4","add esp, 4",True
+48,"mov dword ptr [0], 0","mov dword ptr [0x100b49f0], 0",True
+49,"mov esi, dword ptr [0]","mov esi, dword ptr [0x100b49f4]",True
+50,"test esi, esi","test esi, esi",True
+51,je 0xdd,je 0x1000ba3d,True
+52,"mov ecx, esi","mov ecx, esi",True
+53,call 0xca,call 0x10001a32,True
+54,push esi,push esi,True
+55,call 0xd0,call 0x1004249a,True
+56,"add esp, 4","add esp, 4",True
+57,"mov dword ptr [0], 0","mov dword ptr [0x100b49f4], 0",True
+58,"mov al, byte ptr [edi + 0x1a4]","mov al, byte ptr [edi + 0x1a4]",True
+59,pop edi,pop edi,True
+60,"test al, 0x20","test al, 0x20",True
+61,pop esi,pop esi,True
+62,je 0xf3,je 0x1000ba53,True
+63,"mov ecx, 0","mov ecx, 0x100b49b8",True
+64,call 0xf3,call 0x10002360,True
+65,"xor eax, eax","xor eax, eax",True
+66,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?stop@Wave_Device@m36a_b960@@QAEHXZ,module=sound.dll
+VERDICT,GREEN,67,100.0%

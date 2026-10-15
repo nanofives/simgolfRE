@@ -1,0 +1,49 @@
+instruction,recompiled,original,match
+0,push ebx,push ebx,True
+1,"mov ebx, dword ptr [esp + 8]","mov ebx, dword ptr [esp + 8]",True
+2,push esi,push esi,True
+3,"mov esi, ecx","mov esi, ecx",True
+4,"test ebx, ebx","test ebx, ebx",True
+5,jne 0x16,jne 0x1001b176,True
+6,pop esi,pop esi,True
+7,"mov eax, 0xa","mov eax, 0xa",True
+8,pop ebx,pop ebx,True
+9,ret 4,ret 4,True
+10,"mov eax, dword ptr [esi]","mov eax, dword ptr [esi]",True
+11,"test eax, eax","test eax, eax",True
+12,je 0x25,je 0x1001b185,True
+13,push eax,push eax,True
+14,call 0x22,call 0x1004249a,True
+15,"add esp, 4","add esp, 4",True
+16,push edi,push edi,True
+17,"mov edi, ebx","mov edi, ebx",True
+18,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+19,"xor eax, eax","xor eax, eax",True
+20,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+21,not ecx,not ecx,True
+22,push ecx,push ecx,True
+23,call 0x37,call 0x100424d7,True
+24,"mov edx, eax","mov edx, eax",True
+25,"mov edi, ebx","mov edi, ebx",True
+26,"or ecx, 0xffffffff","or ecx, 0xffffffff",True
+27,"xor eax, eax","xor eax, eax",True
+28,"add esp, 4","add esp, 4",True
+29,"mov dword ptr [esi], edx","mov dword ptr [esi], edx",True
+30,"repne scasb al, byte ptr es:[edi]","repne scasb al, byte ptr es:[edi]",True
+31,not ecx,not ecx,True
+32,"sub edi, ecx","sub edi, ecx",True
+33,"mov eax, ecx","mov eax, ecx",True
+34,"mov esi, edi","mov esi, edi",True
+35,"mov edi, edx","mov edi, edx",True
+36,"shr ecx, 2","shr ecx, 2",True
+37,"rep movsd dword ptr es:[edi], dword ptr [esi]","rep movsd dword ptr es:[edi], dword ptr [esi]",True
+38,"mov ecx, eax","mov ecx, eax",True
+39,"xor eax, eax","xor eax, eax",True
+40,"and ecx, 3","and ecx, 3",True
+41,"rep movsb byte ptr es:[edi], byte ptr [esi]","rep movsb byte ptr es:[edi], byte ptr [esi]",True
+42,pop edi,pop edi,True
+43,pop esi,pop esi,True
+44,pop ebx,pop ebx,True
+45,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?assign@StrPtr@m36a_1b160@@QAEHPBD@Z,module=sound.dll
+VERDICT,GREEN,46,100.0%

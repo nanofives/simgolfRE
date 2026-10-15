@@ -1,0 +1,23 @@
+instruction,recompiled,original,match
+0,"mov edx, ecx","mov edx, ecx",True
+1,push esi,push esi,True
+2,push edi,push edi,True
+3,"xor esi, esi","xor esi, esi",True
+4,"lea edi, [edx + 4]","lea edi, [edx + 4]",True
+5,"mov ecx, 0x80","mov ecx, 0x80",True
+6,"xor eax, eax","xor eax, eax",True
+7,"mov dword ptr [edx], esi","mov dword ptr [edx], esi",True
+8,"rep stosd dword ptr es:[edi], eax","rep stosd dword ptr es:[edi], eax",True
+9,"lea eax, [edx + 0x214]","lea eax, [edx + 0x214]",True
+10,pop edi,pop edi,True
+11,"mov dword ptr [eax], esi","mov dword ptr [eax], esi",True
+12,"mov dword ptr [edx + 0x204], esi","mov dword ptr [edx + 0x204], esi",True
+13,"mov dword ptr [edx + 0x208], esi","mov dword ptr [edx + 0x208], esi",True
+14,"mov dword ptr [edx + 0x20c], esi","mov dword ptr [edx + 0x20c], esi",True
+15,"mov dword ptr [edx + 0x210], esi","mov dword ptr [edx + 0x210], esi",True
+16,"mov dword ptr [edx + 0x218], 0xfa","mov dword ptr [edx + 0x218], 0xfa",True
+17,"mov eax, edx","mov eax, edx",True
+18,pop esi,pop esi,True
+19,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=??0SoundEntry@m36a_1ab60@@QAE@XZ,module=sound.dll
+VERDICT,GREEN,20,100.0%

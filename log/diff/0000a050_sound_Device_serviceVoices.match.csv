@@ -1,0 +1,35 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push edi,push edi,True
+2,"mov esi, ecx","mov esi, ecx",True
+3,call 9,call 0x10001f4b,True
+4,"mov eax, dword ptr [esi + 0x40]","mov eax, dword ptr [esi + 0x40]",True
+5,"xor edi, edi","xor edi, edi",True
+6,"cmp eax, edi","cmp eax, edi",True
+7,"mov dword ptr [esi + 0x48], eax","mov dword ptr [esi + 0x48], eax",True
+8,je 0x48,je 0x1000a098,True
+9,"mov eax, dword ptr [eax + 8]","mov eax, dword ptr [eax + 8]",True
+10,"cmp eax, edi","cmp eax, edi",True
+11,je 0x48,je 0x1000a098,True
+12,"test byte ptr [eax + 0xac], 0x20","test byte ptr [eax + 0xac], 0x20",True
+13,je 0x30,je 0x1000a080,True
+14,"mov ecx, dword ptr [esi + 0x34]","mov ecx, dword ptr [esi + 0x34]",True
+15,push ecx,push ecx,True
+16,"mov ecx, eax","mov ecx, eax",True
+17,call 0x30,call 0x10001c4e,True
+18,"mov eax, dword ptr [esi + 0x48]","mov eax, dword ptr [esi + 0x48]",True
+19,"cmp eax, edi","cmp eax, edi",True
+20,je 0x48,je 0x1000a098,True
+21,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+22,"cmp eax, edi","cmp eax, edi",True
+23,"mov dword ptr [esi + 0x48], eax","mov dword ptr [esi + 0x48], eax",True
+24,je 0x48,je 0x1000a098,True
+25,"mov eax, dword ptr [eax + 8]","mov eax, dword ptr [eax + 8]",True
+26,"cmp eax, edi","cmp eax, edi",True
+27,jne 0x1c,jne 0x1000a06c,True
+28,"mov dword ptr [esi + 0x34], edi","mov dword ptr [esi + 0x34], edi",True
+29,pop edi,pop edi,True
+30,pop esi,pop esi,True
+31,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?serviceVoices@Device@@QAEXXZ,module=sound.dll
+VERDICT,GREEN,32,100.0%

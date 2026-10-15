@@ -1,0 +1,9 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49f0]",True
+1,"test ecx, ecx","test ecx, ecx",True
+2,je 0xf,je 0x1000e23f,True
+3,jmp 0xf,jmp 0x10001c26,True
+4,"xor eax, eax","xor eax, eax",True
+5,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?Wave_Device_caps@@YAHXZ,module=sound.dll
+VERDICT,GREEN,6,100.0%

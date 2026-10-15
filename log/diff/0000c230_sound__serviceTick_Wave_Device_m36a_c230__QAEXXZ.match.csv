@@ -1,0 +1,47 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push edi,push edi,True
+2,"mov edi, ecx","mov edi, ecx",True
+3,call 9,call 0x10001e83,True
+4,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b49f0]",True
+5,"test eax, eax","test eax, eax",True
+6,je 0x4a,je 0x1000c27a,True
+7,"mov esi, dword ptr [eax + 0x168]","mov esi, dword ptr [eax + 0x168]",True
+8,"test esi, esi","test esi, esi",True
+9,je 0x4a,je 0x1000c27a,True
+10,"mov ecx, dword ptr [esi + 8]","mov ecx, dword ptr [esi + 8]",True
+11,"mov eax, dword ptr [ecx + 0x44]","mov eax, dword ptr [ecx + 0x44]",True
+12,"test eax, eax","test eax, eax",True
+13,je 0x43,je 0x1000c273,True
+14,"mov edx, dword ptr [edi + 0x1b4]","mov edx, dword ptr [edi + 0x1b4]",True
+15,"add eax, edx","add eax, edx",True
+16,"test eax, eax","test eax, eax",True
+17,"mov dword ptr [ecx + 0x44], eax","mov dword ptr [ecx + 0x44], eax",True
+18,jl 0x43,jl 0x1000c273,True
+19,push 0,push 0,True
+20,"mov dword ptr [ecx + 0x44], 0","mov dword ptr [ecx + 0x44], 0",True
+21,call 0x43,call 0x10001203,True
+22,"mov esi, dword ptr [esi + 4]","mov esi, dword ptr [esi + 4]",True
+23,"test esi, esi","test esi, esi",True
+24,jne 0x1c,jne 0x1000c24c,True
+25,"mov dword ptr [edi + 0x1b0], 0","mov dword ptr [edi + 0x1b0], 0",True
+26,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49f4]",True
+27,pop edi,pop edi,True
+28,pop esi,pop esi,True
+29,"test ecx, ecx","test ecx, ecx",True
+30,je 0x8a,je 0x1000c2ba,True
+31,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b49f0]",True
+32,"test byte ptr [eax + 0x6c], 0x10","test byte ptr [eax + 0x6c], 0x10",True
+33,jne 0x78,jne 0x1000c2a8,True
+34,"mov edx, dword ptr [0]","mov edx, dword ptr [0x100b49f8]",True
+35,push edx,push edx,True
+36,call 0x77,call 0x10001514,True
+37,ret ,ret ,True
+38,"mov eax, dword ptr [0]","mov eax, dword ptr [0x100b4a00]",True
+39,"mov edx, dword ptr [0]","mov edx, dword ptr [0x100b49fc]",True
+40,push eax,push eax,True
+41,push edx,push edx,True
+42,call 0x8a,call 0x100015a5,True
+43,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?serviceTick@Wave_Device@m36a_c230@@QAEXXZ,module=sound.dll
+VERDICT,GREEN,44,100.0%

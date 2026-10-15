@@ -1,0 +1,18 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [0]","mov ecx, dword ptr [0x100b49f0]",True
+1,"test ecx, ecx","test ecx, ecx",True
+2,je 0x21,je 0x1000e281,True
+3,"mov eax, dword ptr [esp + 0xc]","mov eax, dword ptr [esp + 0xc]",True
+4,"mov edx, dword ptr [esp + 8]","mov edx, dword ptr [esp + 8]",True
+5,push eax,push eax,True
+6,"mov eax, dword ptr [esp + 8]","mov eax, dword ptr [esp + 8]",True
+7,push edx,push edx,True
+8,push eax,push eax,True
+9,call 0x1e,call 0x1000222f,True
+10,ret 0xc,ret 0xc,True
+11,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+12,"mov eax, 3","mov eax, 3",True
+13,"mov byte ptr [ecx], 0","mov byte ptr [ecx], 0",True
+14,ret 0xc,ret 0xc,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?Wave_Device_deviceName@@YGHHPADH@Z,module=sound.dll
+VERDICT,GREEN,15,100.0%
