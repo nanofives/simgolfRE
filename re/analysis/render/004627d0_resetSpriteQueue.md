@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 41 bytes, 11 instructions, subsystem `render`. Mechanic
 resets the sprite draw queue (count=0, head=-1, next-array filled with -1) at the start of a frame (`re/names/exe_2.tsv`)
 System writeup: `re/analysis/systems/exe_2.md`.
 
+## Purpose
+Argument-free cdecl (`ret` 0x004627f8) that reads no register before writing it (eax is zeroed at 0x004627d0, ecx set to -1 at 0x004627d2). It stores 0 into g_spriteQueueCount 0x00838200 (0x004627d5), 0 into 0x00834174 (0x004627da), 0 into 0x008371fc (0x004627df) and -1 into g_spriteQueueHead 0x0082c160 (0x004627e4), then runs 0x400 passes of `dec eax; mov [0x8371f4], ecx; jne` (0x004627ea..0x004627f6). The loop has no index: every pass stores -1 into the same dword 0x008371f4, and the dwords after it keep their values (the A/B region 0x008371ec..0x00837203 shows 0x008371f8 and 0x00837200 unchanged from the prefill). eax is 0 at the `ret`. Its caller is mainLoop 0x0040f5c0 (call at 0x004105cf). Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: resetSpriteQueue (12 vectors, 12 distinct results, 12 changing state, `log/diff/004627d0_resetSpriteQueue.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x004627f8): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x004627d2 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

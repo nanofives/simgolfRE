@@ -6,6 +6,9 @@ Module `golf_clean.exe`, 80 bytes, 16 instructions, subsystem `boot`. Mechanical
 Tears down every engine subsystem in order (blitter, timers, message box, sound, resources). (`re/names/exe_4.tsv`)
 System writeup: `re/analysis/systems/exe_4.md`.
 
+## Purpose
+Argument-free cdecl that never reads ecx and calls, in this order, shutdownBlitter 0x00492470 (0x00485740), Timer::lockDec 0x00486ff0 (0x00485745), the one-instruction `ret` 0x004a0890 twice (0x0048574a, 0x0048574f), freeFonts 0x0049ff30 (0x00485754), freeCursors 0x0049ead0 (0x00485759), clearPrimarySurface 0x00483b10 (0x0048575e), freeGfxGlobal_840710 0x0049d280 (0x00485763), freeFileWinBuf 0x0049d460 (0x00485768), MsgBox::freeLabels 0x00490c30 (0x0048576d), 0x004a0890 again (0x00485772), screenTick47d010 0x0047d010 (0x00485777), clearScreenObjects 0x00483340 (0x0048577c) and strFree 0x0049d0e0 with ecx = 0x008406e8 (0x00485781 / 0x00485786), then tail-jumps to freeGraphsyObject 0x004a0060 (0x0048578b). None of the first twelve callees reads ecx before writing it (their first instructions are listed in c3fu.cpp). freeGraphsyObject calls slot +0xc of the display [0x0083ad50] when it is not NULL (0x004a0068 / 0x004a006c), FreeLibrary [0x004ba0ac] on g_graphsyObject [0x0084092c] when it is not NULL (0x004a0076 / 0x004a0079) and clears both globals (0x004a007f, 0x004a0089); its eax, returned by engineShutdown, is 0 or FreeLibrary's result. Callers: gameMain 0x0045baf0 (calls at 0x0045bc07, 0x0045bf61) and engineInit 0x004855b0 (0x004855fd). Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: engineShutdown (8 vectors, 7 distinct results, 8 changing state, `log/diff/00485740_engineShutdown.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_06.cpp` as `?FUN_00485740@f_00485740@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).
@@ -29,7 +32,7 @@ None.
 - 0x0049ead0 `freeCursors` at 0x00485759
 - 0x0049ff30 `freeFonts` at 0x00485754
 - 0x004a0060 `freeGraphsyObject` at 0x0048578b
-- 0x004a0890 `FUN_004a0890` at 0x0048574a, 0x0048574f, 0x00485772
+- 0x004a0890 `emptyFunc_4a0890` at 0x0048574a, 0x0048574f, 0x00485772
 
 ## Callers
 0x0045baf0 `gameMain`, 0x004855b0 `engineInit`

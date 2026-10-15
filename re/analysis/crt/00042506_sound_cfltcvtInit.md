@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00042506`), 56 bytes, 8 instructions, subsystem `crt`
 Installs the floating-point conversion function-pointer table at 0x100651b8 (__cfltcvt, __fassign, __forcdecpt and the two LAB stubs) used by printf float formatting. (`re/names/sound_8.tsv`)
 System writeup: `re/analysis/systems/sound_8.md`.
 
+## Purpose
+Argument-free (`ret` 0x1004253d) and never reads ecx. It fills the six-pointer table g_cfltcvtTable 0x100651b8 in this order: +4 = 0x10044426 (0x1004250b), +0 = 0x1004477c (0x10042515, from eax set at 0x10042506), +8 = 0x1004448c (0x1004251a), +0xc = 0x100443cc (0x10042524), +0x10 = 0x10044474 (0x1004252e), +0x14 = 0x1004477c again (0x10042538); the immediates are relocated with the module, and eax keeps the module's 0x1004477c at the `ret`. Its caller is the CRT's __fpmath 0x100424ee (FID name in re/functions_ghidra_sound.dll.tsv; call at 0x100424ee). Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: cfltcvtInit (12 vectors, 12 distinct results, 11 changing state, `log/diff/00042506_sound_cfltcvtInit.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1004253d): callee pops 0 bytes of stack arguments.
 

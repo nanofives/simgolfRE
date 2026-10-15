@@ -4,7 +4,10 @@ Module `sound.dll` (RVA `0x000091f0`), 15 bytes in 2 address ranges, 3 instructi
 
 ## Role (from the naming pass, not a C3 purpose)
 exit destructor stub registered with atexit: loads 0x100b49b8 into ecx and tail-jumps to SoundWindowObj_dtor 0x10002784 (`re/names/undisc_sound.tsv`)
-System writeup: `re/analysis/systems/undisc_sound.md`.
+System writeup: `re/analysis/systems/sound_17.md`, `re/analysis/systems/undisc_sound.md`.
+
+## Purpose
+Exit destructor of the sound module's window object 0x100b49b8: `mov ecx, 0x100b49b8` (0x100091f0) and a tail jump through the thunk 0x10002784 (0x100091f5) to SoundWindowObj_dtor 0x100286a0, whose eax it returns. That body stores the vtable 0x1005b8ac at +0 (0x100286a6) and, when the handle +8 is not NULL (0x100286ae) and bit 2 of the byte +4 is set (0x100286b4), calls SetWindowLongA [0x100b85a4] (handle, -4, [+0xc]) (0x100286bd), clears +0xc and +8 and bit 2 of +4 (0x100286c6..0x100286d6). It is passed to _atexit 0x10042647 by the dynamic initializer 0x100091c0 (`push 0x100091f0` at 0x100091ca), slot 66 (dword 0x10063108) of the CRT initializer table 0x10063000; 0x100091c0 is not yet a function of the listing (names row in log/c3/c3fu_names.tsv). Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: atexitDtor_100b49b8 (12 vectors, 12 distinct results, 8 changing state, `log/diff/000091f0_sound_atexitDtor_100b49b8.path1.csv`).
 
 ## Signature
 - No `ret` inside the extent (tail jump or noreturn call ends it).

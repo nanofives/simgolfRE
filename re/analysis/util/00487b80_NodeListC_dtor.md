@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 11 bytes, 2 instructions, subsystem `util`. Mechanical 
 ## Role (from the naming pass, not a C3 purpose)
 Destructor for the 0x004bb014 list. (`re/names/exe_4.tsv`)
 
+## Purpose
+The same shape as NodeListB::dtor with the NodeListC vtable 0x004bb014: stored at this+0 (0x00487b80), then a tail jump to StrList::dtor 0x00487260 (0x00487b86), whose store of 0x004baeac at +0 (0x00487260) overwrites it before any read; a non-NULL [this+0x14] (0x0048726b) gets its vtable slot +0x14 called with ecx = that object (0x0048726f). Callers: NodeListC::scalarDtor 0x00487b60 (call at 0x00487b63) and the exit stub 0x00483e80 (`jmp` at 0x00483e85, registered by atexit_483e80 0x00483e70). Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: NodeListC::dtor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00487b80_NodeListC_dtor.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_04.cpp` as `?FUN_00487b80@f_00487b80@@YIXPAI@Z` (the decorated name fixes the exact C++ signature and convention).
 - No `ret` inside the extent (tail jump or noreturn call ends it).

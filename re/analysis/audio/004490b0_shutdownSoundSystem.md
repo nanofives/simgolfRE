@@ -5,6 +5,9 @@ Module `golf_clean.exe`, 31 bytes, 10 instructions, subsystem `audio`. Mechanica
 ## Role (from the naming pass, not a C3 purpose)
 Stops playback and shuts down the sound system at exit. (`re/names/exe_1.tsv`)
 
+## Purpose
+Argument-free cdecl (`ret` 0x004490ce) that never reads ecx (it loads esi = 0x0080d840 at 0x004490b1 and `mov ecx, esi` at 0x004490b6). It calls Snd::stop484f00 0x00484f00 with ecx = each record of the Snd array 0x0080d840 in turn (0x004490b8), advancing by 0x6c (0x004490bd) while the pointer is below 0x008156d0 (signed `jl` at 0x004490c6), so the 300 records 0x0080d840..0x00815664 are stopped in address order; then it calls shutdownSound 0x00483f10 (0x004490c8) and returns that call's eax. Each Snd::stop484f00 call runs the record's device slot +0x14 when [record+0x40] is not NULL (0x00484f09 / 0x00484f0f), clears +0x40, runs the record's own slot +0x80 unless bit 1 of the byte +0x58 is set (0x00484f20 / 0x00484f26) and clears bit 0 of +0x44 (0x00484f2c..0x00484f31). Caller: gameMain 0x0045baf0 (call at 0x0045bf4d). Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: shutdownSoundSystem (6 vectors, 6 distinct results, 6 changing state, `log/diff/004490b0_shutdownSoundSystem.path1.csv`).
+
 ## Signature
 - Matched at 100% by `re/match/golf_raw_12.cpp` as `?FUN_004490b0@f_004490b0@@YAXXZ` (the decorated name fixes the exact C++ signature and convention).
 - Returns with `ret` (at 0x004490ce): callee pops 0 bytes of stack arguments.

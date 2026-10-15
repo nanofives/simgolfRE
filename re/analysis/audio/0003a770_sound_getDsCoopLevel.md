@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0003a770`), 6 bytes, 2 instructions, subsystem `audio
 Returns the stored DirectSound cooperative-level/window value g_dsCoopLevel. (`re/names/sound_5.tsv`)
 System writeup: `re/analysis/systems/sound_5.md`.
 
+## Purpose
+Returns g_dsCoopLevel 0x100b4a3c (`mov eax, [0x100b4a3c]` at 0x1003a770, `ret` at 0x1003a775); ecx is never read. It is slot 15 (+0x3c) of the MultiSound vtable 0x1005c7e8 (dword 0x1005c824), installed by MultiSound_ctor 0x10039690, MultiSound_ctorWithType 0x10039790, MultiSound_dtor 0x10039870 and loadMultiChannel 0x100399a0. Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: getDsCoopLevel (12 vectors, 12 distinct results, 0 changing state, `log/diff/0003a770_sound_getDsCoopLevel.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1003a775): callee pops 0 bytes of stack arguments.
 

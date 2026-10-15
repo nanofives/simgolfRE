@@ -4,7 +4,10 @@ Module `golf_clean.exe`, 122 bytes, 45 instructions, subsystem `ui`. Mechanical 
 
 ## Role (from the naming pass, not a C3 purpose)
 Maps a character byte offset to on-screen pixel x,y using the wrapped line table and font metrics at this+0x274. (`re/names/exe_4.tsv`)
-System writeup: `re/analysis/systems/exe_4.md`.
+System writeup: `re/analysis/systems/exe_16.md`, `re/analysis/systems/exe_4.md`.
+
+## Purpose
+__thiscall(lines, n, pos, outX, outY), `ret 0x14` (0x004863d7): the pixel position of character pos of the text [this+0x574]. idx = EditBox::lineIndexAt 0x00486330 (pos, lines, n) (0x00486370..0x00486375), the index of the last of the first n line starts at or below text + pos; start = lines[idx] (0x00486382). *outX = drawMarkupRun 0x00477280 on the text widget this+0x274 for the run from start of length text + pos - start (0x0048637a..0x0048639e); *outY = Widget_value 0x00477580 of the same widget times (idx - [this+0x57c]) (0x004863a1..0x004863b5); then the margin sum [this+0x59c] + [this+0x598] (0x004863b7..0x004863c6) is added to *outX (0x004863cb) and to *outY, read back after that store (0x004863ce..0x004863d4), and returned. Its callers are the key-0x26 and key-0x28 arms of the EditBox key handler 0x004867b0 (calls at 0x0048680d, 0x00486863), slot 36 of the EditBox vtable 0x004ba4a8; that handler is not yet a function of the listing (names row in log/c3/c3fu_names.tsv). Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: EditBox::charPosToPixel (71 vectors, 54 distinct results, 71 changing state, `log/diff/00486360_EditBox_charPosToPixel.path1.csv`); EditBox::charPosToPixel_b (71 vectors, 54 distinct results, 71 changing state, `log/diff/00486360_EditBox_charPosToPixel_b.path1.csv`).
 
 ## Signature
 - Matched at 100% by `re/match/golf_raw_13.cpp` as `?FUN_00486360@C_FUN_00486360@f_00486360@@QAEXPAIHHPAH1@Z` (the decorated name fixes the exact C++ signature and convention).
@@ -39,7 +42,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x00486330 `EditBox::lineIndexAt` at 0x00486375
 
 ## Callers
-None found by direct call (static); indirect callers are not resolved here.
+0x004867b0 `EditBox::onKey`
 
 ## Constants
 - `0x274` (628) at 0x00486385

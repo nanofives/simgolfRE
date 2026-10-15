@@ -5,6 +5,9 @@ Module `sound.dll` (RVA `0x0000e2d0`), 15 bytes, 7 instructions, subsystem `audi
 ## Role (from the naming pass, not a C3 purpose)
 Returns the IDirectSound interface pointer (first field) of g_waveDevice, or 0 when absent. (`re/names/sound_2.tsv`)
 
+## Purpose
+Returns the first dword of the object g_waveDevice 0x100b49f0 points to (0x1000e2d0 / 0x1000e2d9), or 0 when the global is NULL (0x1000e2d7 / 0x1000e2dc); ecx is never read. It is slot 29 (+0x74) of the Wave_Device vtable 0x1005b304 (dword 0x1005b378), installed by Wave_Device::ctor 0x1000b1d0 and Wave_Device::dtor 0x1000b2e0. Reimplemented in `shim/src/re/c3fu.cpp`; path-1 A/B GREEN: getWaveDeviceInterface (12 vectors, 11 distinct results, 0 changing state, `log/diff/0000e2d0_sound_getWaveDeviceInterface.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x1000e2db, 0x1000e2de): callee pops 0 bytes of stack arguments.
 
