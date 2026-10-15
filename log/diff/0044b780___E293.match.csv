@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,"mov ecx, 0","mov ecx, 0x821cb8",True
+1,jmp 0xa,jmp 0x44b790,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=_$E293,module=golf_clean.exe
+VERDICT,GREEN,2,100.0%

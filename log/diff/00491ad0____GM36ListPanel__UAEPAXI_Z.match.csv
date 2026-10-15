@@ -1,0 +1,39 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push edi,push edi,True
+2,"lea edi, [ecx - 0x24]","lea edi, [ecx - 0x24]",True
+3,"lea esi, [edi + 0x24]","lea esi, [edi + 0x24]",True
+4,"mov eax, dword ptr [esi - 0x24]","mov eax, dword ptr [esi - 0x24]",True
+5,"lea ecx, [esi - 0x24]","lea ecx, [esi - 0x24]",True
+6,"mov edx, dword ptr [eax + 4]","mov edx, dword ptr [eax + 4]",True
+7,"mov dword ptr [edx + esi - 0x24], 0","mov dword ptr [edx + esi - 0x24], 0x4bb744",True
+8,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+9,"mov edx, dword ptr [eax + 4]","mov edx, dword ptr [eax + 4]",True
+10,"mov dword ptr [edx + esi + 0x250], 0","mov dword ptr [edx + esi + 0x250], 0x4bb730",True
+11,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+12,"mov edx, dword ptr [eax + 8]","mov edx, dword ptr [eax + 8]",True
+13,"mov dword ptr [edx + esi - 0x24], 0","mov dword ptr [edx + esi - 0x24], 0x4bb724",True
+14,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+15,"mov eax, dword ptr [eax + 4]","mov eax, dword ptr [eax + 4]",True
+16,"lea edx, [eax - 0x24]","lea edx, [eax - 0x24]",True
+17,"mov dword ptr [eax + esi - 0x28], edx","mov dword ptr [eax + esi - 0x28], edx",True
+18,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+19,"mov eax, dword ptr [eax + 8]","mov eax, dword ptr [eax + 8]",True
+20,"lea edx, [eax - 0x59c]","lea edx, [eax - 0x59c]",True
+21,"mov dword ptr [eax + esi - 0x28], edx","mov dword ptr [eax + esi - 0x28], edx",True
+22,call 0x56,call 0x49d690,True
+23,"lea ecx, [edi + 0x59c]","lea ecx, [edi + 0x59c]",True
+24,call 0x61,call 0x489370,True
+25,"mov ecx, esi","mov ecx, esi",True
+26,call 0x68,call 0x4805a0,True
+27,"test byte ptr [esp + 0xc], 1","test byte ptr [esp + 0xc], 1",True
+28,je 0x78,je 0x491b48,True
+29,push edi,push edi,True
+30,call 0x75,call 0x4a4ffc,True
+31,"add esp, 4","add esp, 4",True
+32,"mov eax, edi","mov eax, edi",True
+33,pop edi,pop edi,True
+34,pop esi,pop esi,True
+35,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=??_GM36ListPanel@@UAEPAXI@Z,module=golf_clean.exe
+VERDICT,GREEN,36,100.0%

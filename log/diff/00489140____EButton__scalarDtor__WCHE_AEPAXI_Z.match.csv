@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,"sub ecx, 0x274","sub ecx, 0x274",True
+1,jmp 0xb,jmp 0x488630,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=??_EButton__scalarDtor@@WCHE@AEPAXI@Z,module=golf_clean.exe
+VERDICT,GREEN,2,100.0%

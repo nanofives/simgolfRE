@@ -1,0 +1,5 @@
+instruction,recompiled,original,match
+0,call 5,call 0x404700,True
+1,jmp 0xa,jmp 0x404710,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=_$E85,module=golf_clean.exe
+VERDICT,GREEN,2,100.0%

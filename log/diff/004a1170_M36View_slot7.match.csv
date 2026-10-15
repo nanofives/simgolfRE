@@ -1,0 +1,22 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx - 8]","mov eax, dword ptr [ecx - 8]",True
+1,"sub eax, 2","sub eax, 2",True
+2,jne 0x3b,jne 0x4a11ab,True
+3,"mov eax, dword ptr [ecx - 0x1f8]","mov eax, dword ptr [ecx - 0x1f8]",True
+4,"mov edx, dword ptr [eax + 4]","mov edx, dword ptr [eax + 4]",True
+5,"lea eax, [edx + ecx - 0x1a0]","lea eax, [edx + ecx - 0x1a0]",True
+6,"mov cl, byte ptr [edx + ecx - 0x15c]","mov cl, byte ptr [edx + ecx - 0x15c]",True
+7,"test cl, 0x40","test cl, 0x40",True
+8,je 0x3b,je 0x4a11ab,True
+9,"mov ecx, dword ptr [eax + 0xd8]","mov ecx, dword ptr [eax + 0xd8]",True
+10,"test ecx, ecx","test ecx, ecx",True
+11,je 0x3b,je 0x4a11ab,True
+12,"mov edx, dword ptr [esp + 4]","mov edx, dword ptr [esp + 4]",True
+13,"mov eax, dword ptr [ecx]","mov eax, dword ptr [ecx]",True
+14,push edx,push edx,True
+15,call dword ptr [eax + 0x24],call dword ptr [eax + 0x24],True
+16,ret 4,ret 4,True
+17,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+18,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?slot7@M36View@@UAEHH@Z,module=golf_clean.exe
+VERDICT,GREEN,19,100.0%

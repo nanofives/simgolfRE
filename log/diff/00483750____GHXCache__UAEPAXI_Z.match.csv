@@ -1,0 +1,27 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,push edi,push edi,True
+2,"lea edi, [ecx - 0x20]","lea edi, [ecx - 0x20]",True
+3,"lea esi, [edi + 0x20]","lea esi, [edi + 0x20]",True
+4,"mov ecx, esi","mov ecx, esi",True
+5,call 0xf,call 0x4835f0,True
+6,"mov al, byte ptr [esp + 0xc]","mov al, byte ptr [esp + 0xc]",True
+7,"mov dword ptr [esi], 0","mov dword ptr [esi], 0x4ba278",True
+8,"mov esi, dword ptr [esi + 4]","mov esi, dword ptr [esi + 4]",True
+9,"test al, 1","test al, 1",True
+10,"mov dword ptr [0], esi","mov dword ptr [0x839650], esi",True
+11,je 0x41,je 0x483791,True
+12,"test edi, edi","test edi, edi",True
+13,je 0x41,je 0x483791,True
+14,"test esi, esi","test esi, esi",True
+15,jne 0x37,jne 0x483787,True
+16,push edi,push edi,True
+17,call 0x34,call 0x4a5007,True
+18,"add esp, 4","add esp, 4",True
+19,"mov dword ptr [0], 0","mov dword ptr [0x839650], 0",True
+20,"mov eax, edi","mov eax, edi",True
+21,pop edi,pop edi,True
+22,pop esi,pop esi,True
+23,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=??_GHXCache@@UAEPAXI@Z,module=golf_clean.exe
+VERDICT,GREEN,24,100.0%

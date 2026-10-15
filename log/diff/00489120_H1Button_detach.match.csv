@@ -1,0 +1,8 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx + 0x620]","mov eax, dword ptr [ecx + 0x620]",True
+1,"test eax, eax","test eax, eax",True
+2,jne 0x14,jne 0x489134,True
+3,"mov dword ptr [ecx + 0x614], 0","mov dword ptr [ecx + 0x614], 0",True
+4,jmp 0x19,jmp 0x47b820,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?detach@H1Button@@QAEXXZ,module=golf_clean.exe
+VERDICT,GREEN,5,100.0%

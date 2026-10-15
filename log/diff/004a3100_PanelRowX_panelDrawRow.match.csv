@@ -1,0 +1,6 @@
+instruction,recompiled,original,match
+0,"sub ecx, dword ptr [ecx - 4]","sub ecx, dword ptr [ecx - 4]",True
+1,"sub ecx, 0x578","sub ecx, 0x578",True
+2,jmp 0xe,jmp 0x4a2d50,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?panelDrawRow@PanelRowX@@$4PPPPPPPM@FHI@AEXXZ,module=golf_clean.exe
+VERDICT,GREEN,3,100.0%

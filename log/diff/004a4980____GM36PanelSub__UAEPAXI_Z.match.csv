@@ -1,0 +1,22 @@
+instruction,recompiled,original,match
+0,push esi,push esi,True
+1,"lea esi, [ecx - 0xe0]","lea esi, [ecx - 0xe0]",True
+2,push edi,push edi,True
+3,"lea edi, [esi + 0xe0]","lea edi, [esi + 0xe0]",True
+4,"mov ecx, edi","mov ecx, edi",True
+5,call 0x15,call 0x4a3480,True
+6,"lea ecx, [esi + 0x658]","lea ecx, [esi + 0x658]",True
+7,call 0x20,call 0x489370,True
+8,"mov ecx, edi","mov ecx, edi",True
+9,call 0x27,call 0x4805a0,True
+10,"test byte ptr [esp + 0xc], 1","test byte ptr [esp + 0xc], 1",True
+11,je 0x37,je 0x4a49b7,True
+12,push esi,push esi,True
+13,call 0x34,call 0x4a4ffc,True
+14,"add esp, 4","add esp, 4",True
+15,"mov eax, esi","mov eax, esi",True
+16,pop edi,pop edi,True
+17,pop esi,pop esi,True
+18,ret 4,ret 4,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=??_GM36PanelSub@@UAEPAXI@Z,module=golf_clean.exe
+VERDICT,GREEN,19,100.0%

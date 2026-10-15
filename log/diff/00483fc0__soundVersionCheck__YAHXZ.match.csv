@@ -1,0 +1,56 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [0]","mov eax, dword ptr [0x83afc0]",True
+1,push ebx,push ebx,True
+2,push esi,push esi,True
+3,push edi,push edi,True
+4,"test eax, eax","test eax, eax",True
+5,jne 0x7f,jne 0x48403f,True
+6,push 0,push 0x4e43bc,True
+7,call dword ptr [0],call dword ptr [0x4ba0a8],True
+8,"test eax, eax","test eax, eax",True
+9,"mov dword ptr [0], eax","mov dword ptr [0x83afc0], eax",True
+10,jne 0x29,jne 0x483fe9,True
+11,pop edi,pop edi,True
+12,pop esi,pop esi,True
+13,"mov eax, 1","mov eax, 1",True
+14,pop ebx,pop ebx,True
+15,ret ,ret ,True
+16,"mov ebx, dword ptr [0]","mov ebx, dword ptr [0x4ba0a4]",True
+17,"xor edi, edi","xor edi, edi",True
+18,"mov esi, 0","mov esi, 0x83af6c",True
+19,jmp 0x3d,jmp 0x483ffd,True
+20,"mov eax, dword ptr [0]","mov eax, dword ptr [0x83afc0]",True
+21,"lea ecx, [edi + 1]","lea ecx, [edi + 1]",True
+22,"and ecx, 0xffff","and ecx, 0xffff",True
+23,push ecx,push ecx,True
+24,push eax,push eax,True
+25,call ebx,call ebx,True
+26,"test eax, eax","test eax, eax",True
+27,"mov dword ptr [esi], eax","mov dword ptr [esi], eax",True
+28,je 0x85,je 0x484045,True
+29,"add esi, 4","add esi, 4",True
+30,inc edi,inc edi,True
+31,"cmp esi, 0x2c","cmp esi, 0x83af98",True
+32,jl 0x38,jl 0x483ff8,True
+33,call 0x61,call 0x4840c0,True
+34,"and eax, 0xff00","and eax, 0xff00",True
+35,"cmp eax, 0xc00","cmp eax, 0xc00",True
+36,je 0x7f,je 0x48403f,True
+37,push 0,push 0x4bac50,True
+38,push 0,push 0x4babd0,True
+39,call 0x7c,call 0x485590,True
+40,"add esp, 8","add esp, 8",True
+41,pop edi,pop edi,True
+42,pop esi,pop esi,True
+43,"xor eax, eax","xor eax, eax",True
+44,pop ebx,pop ebx,True
+45,ret ,ret ,True
+46,call 0x8a,call 0x484060,True
+47,pop edi,pop edi,True
+48,pop esi,pop esi,True
+49,"mov dword ptr [0], 0","mov dword ptr [0x83afc4], 0",True
+50,"mov eax, 1","mov eax, 1",True
+51,pop ebx,pop ebx,True
+52,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?soundVersionCheck@@YAHXZ,module=golf_clean.exe
+VERDICT,GREEN,53,100.0%

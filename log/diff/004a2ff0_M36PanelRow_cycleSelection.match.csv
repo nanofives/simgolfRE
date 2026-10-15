@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,"mov eax, dword ptr [ecx - 0x8c]","mov eax, dword ptr [ecx - 0x8c]",True
+1,"mov edx, dword ptr [eax + 4]","mov edx, dword ptr [eax + 4]",True
+2,"lea eax, [edx + ecx]","lea eax, [edx + ecx]",True
+3,"mov ecx, dword ptr [edx + ecx + 0xb4]","mov ecx, dword ptr [edx + ecx + 0xb4]",True
+4,"test ecx, ecx","test ecx, ecx",True
+5,je 0x36,je 0x4a3026,True
+6,"mov ecx, dword ptr [eax + 0xac]","mov ecx, dword ptr [eax + 0xac]",True
+7,"test ecx, ecx","test ecx, ecx",True
+8,je 0x36,je 0x4a3026,True
+9,"mov ecx, dword ptr [eax + 0xb0]","mov ecx, dword ptr [eax + 0xb0]",True
+10,"mov ecx, dword ptr [ecx + 4]","mov ecx, dword ptr [ecx + 4]",True
+11,"test ecx, ecx","test ecx, ecx",True
+12,je 0x36,je 0x4a3026,True
+13,"mov edx, dword ptr [ecx]","mov edx, dword ptr [ecx]",True
+14,jmp dword ptr [edx + 0x128],jmp dword ptr [edx + 0x128],True
+15,"lea ecx, [eax - 0x8c]","lea ecx, [eax - 0x8c]",True
+16,jmp 0x41,jmp 0x47af60,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2 /GX,symbol=?cycleSelection@M36PanelRow@@UAEXXZ,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%

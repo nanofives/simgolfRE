@@ -1,0 +1,10 @@
+instruction,recompiled,original,match
+0,"mov ecx, dword ptr [esp + 8]","mov ecx, dword ptr [esp + 8]",True
+1,"test ecx, ecx","test ecx, ecx",True
+2,je 0x12,je 0x488fc2,True
+3,"mov eax, dword ptr [esp + 4]","mov eax, dword ptr [esp + 4]",True
+4,push eax,push eax,True
+5,call 0x12,call 0x488fd0,True
+6,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?buttonTimerCallback@@YAXHPAUH1Button@@@Z,module=golf_clean.exe
+VERDICT,GREEN,7,100.0%

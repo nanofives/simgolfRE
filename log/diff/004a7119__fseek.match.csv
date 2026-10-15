@@ -1,0 +1,20 @@
+instruction,recompiled,original,match
+0,push ebp,push ebp,True
+1,"mov ebp, esp","mov ebp, esp",True
+2,push esi,push esi,True
+3,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+4,call 0xc,call 0x4a9874,True
+5,push dword ptr [ebp + 0x10],push dword ptr [ebp + 0x10],True
+6,push dword ptr [ebp + 0xc],push dword ptr [ebp + 0xc],True
+7,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+8,call 0x1a,call 0x4a7145,True
+9,push dword ptr [ebp + 8],push dword ptr [ebp + 8],True
+10,"mov esi, eax","mov esi, eax",True
+11,call 0x24,call 0x4a98c6,True
+12,"add esp, 0x14","add esp, 0x14",True
+13,"mov eax, esi","mov eax, esi",True
+14,pop esi,pop esi,True
+15,pop ebp,pop ebp,True
+16,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O1,symbol=_fseek,module=golf_clean.exe
+VERDICT,GREEN,17,100.0%

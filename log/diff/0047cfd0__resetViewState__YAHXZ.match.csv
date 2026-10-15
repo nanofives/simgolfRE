@@ -1,0 +1,17 @@
+instruction,recompiled,original,match
+0,"sub esp, 0x2b8","sub esp, 0x2b8",True
+1,"lea ecx, [esp]","lea ecx, [esp]",True
+2,call 0xf,call 0x474ae0,True
+3,"xor eax, eax","xor eax, eax",True
+4,"mov dword ptr [0], eax","mov dword ptr [0x83a4e8], eax",True
+5,"mov dword ptr [0], eax","mov dword ptr [0x83a4ec], eax",True
+6,"mov dword ptr [0], eax","mov dword ptr [0x83a4f0], eax",True
+7,"mov dword ptr [0], eax","mov dword ptr [0x83a4f4], eax",True
+8,call 0x2a,call 0x4a0890,True
+9,"lea ecx, [esp]","lea ecx, [esp]",True
+10,call 0x33,call 0x474c40,True
+11,"xor eax, eax","xor eax, eax",True
+12,"add esp, 0x2b8","add esp, 0x2b8",True
+13,ret ,ret ,True
+meta,compiler=cl 12.00.8168 (VC6) flags=/O2,symbol=?resetViewState@@YAHXZ,module=golf_clean.exe
+VERDICT,GREEN,14,100.0%
