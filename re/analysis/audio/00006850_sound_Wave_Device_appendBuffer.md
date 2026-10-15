@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00006850`), 409 bytes, 132 instructions, subsystem `a
 Appends a new 0x110-byte buffer node to the device buffer list, or closes the mmio handle (+0xb0) when the stream is exhausted. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Appends one source buffer to a Wave_Device's voice queue, or closes the device when the buffer is empty. Only the sub-buffer at this+0x6c is accepted (else 0xa, 0x1000686f-0x10006878). d = the source range buf+0x20 - buf+0x18 (0x1000688f): d == 0 closes the mmio handle +0xb0, lowers the open-handle counter [0x100b4a08] and returns 0x26 (0x1000689d-0x100068c0). Otherwise a 0x110-byte voice is allocated, Voice_resetDefaults'd and MmioBuffer_init'd from buf and the format at this+0xd8 (0x100068d8-0x10006912); a 0xc-byte node {0, 0, voice} is linked at the tail of the queue and the count +0x68 raised (0x10006928-0x10006961); voice+0x90 = d / nBlockAlign (voice+0xac), voice+0xd4 = voice+0x20, voice+0xd8 = voice+0x18 (0x1000696c-0x10006990); the previous tail voice, if any, is back-patched (+0x98 |= 1, +0x9c |= 1, +0xb4 = voice, +0xcc = 0, 0x10006998-0x100069ba); and when +0x58 has bit 2 set and bit 0 clear it becomes (+0x58 & ~4) | 3 (0x100069c4-0x100069d0). Returns 0. Reimplemented in `shim/src/re/c3fq.cpp`; path-1 A/B GREEN: Wave_Device::appendBuffer (12 vectors, 12 distinct results, 12 changing state, `log/diff/00006850_sound_Wave_Device_appendBuffer.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1000688c, 0x100068d4, 0x100069e6): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x10006865 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

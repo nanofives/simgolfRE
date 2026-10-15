@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000093e0`), 766 bytes, 222 instructions, subsystem `a
 Creates a Sound object from a filename, selecting the format id (1/2/3) by matching the file extension (rmi/aif/mid/wav); reads g_100b4a1c and g_soundWindow 0x100b49c0 (read at 0x1000949b, passed to the Sound object). (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`, `re/analysis/systems/sound_7.md`.
 
+## Purpose
+Creates a Sound object of a type chosen from an explicit type argument, or from the file extension in the name. type != 0 is used directly (0x100093fe); a NULL name is type 1 (0x10009406); otherwise strstr picks the type from the name containing "wav" (1), "mid" (2), "aif" (3) or "rmi" (2, else 0) (0x1000940d-0x1000946a). type - 1 indexes an 8-entry jump table (0x1000946d-0x10009477); an out-of-range index returns 0xb. Each case allocates the class (operator new of 0x1450, 0x948, 0xec, 0xa60, 0xe8, 0x94 or 0x10c), builds it with its constructor, stores it at *out and returns 0; indexes 1 and 4 first return 3 when the gate global [0x100b4a1c] is 0 (0x100094d5 / 0x10009583); index 2 is the default (0xb). The seven constructors and the two name setters are recording stubs for the A/B (they are C3), so the evidence is the dispatch: the chosen type, the allocation size and the constructor and name-setter calls, in order. Reimplemented in `shim/src/re/c3fq.cpp`; path-1 A/B GREEN: create_sound (15 vectors, 12 distinct results, 11 changing state, `log/diff/000093e0_sound_create_sound.path1.csv`); create_sound_gate0 (15 vectors, 9 distinct results, 7 changing state, `log/diff/000093e0_sound_create_sound_gate0.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100094d4, 0x100094f2, 0x10009542, 0x10009582, 0x100095a0, 0x100095e0, 0x10009620, 0x1000965c (+4 more)): callee pops 0 bytes of stack arguments.
 

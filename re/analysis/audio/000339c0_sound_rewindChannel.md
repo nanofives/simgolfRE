@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000339c0`), 369 bytes, 118 instructions, subsystem `a
 Rewinds a channel for playback: clears flags this+0x16/0x17, mmioSeek's the stream to the data start (this+0x18c*blockAlign+this+0x174), mmioGetInfo/mmioAdvance to refill, resets the buffer descriptor at this[2] and the 16 sub-voice slots at this+0x95, then calls 0x10035460/0x10035340 to reset mix state. (`re/names/sound_4.tsv`)
 System writeup: `re/analysis/systems/sound_4.md`.
 
+## Purpose
+Rewinds a sound channel to the start of its stream. A channel with a NULL mmio handle and bit 2 of +0x5c clear returns 0x14 without touching anything (0x100339c9-0x100339d6). Otherwise +0x58 has bits 5 and 8 cleared (0x100339dd) and +0x16c is set to +0x164 (0x100339f3). When bit 0 of +0x58 is set the stream is rewound in memory (+0x28 = +0x24, +0x2c = +0x24 + +0x178, 0x100339fb-0x10033a09); otherwise, with a real mmio handle, the file is rewound with mmioSeek / mmioGetInfo / mmioAdvance (0x10033a13-0x10033a4a), the stream object at +8 reset (0x10033a4c-0x10033a6c), fillDecodeRing called (0x10033a72) and mmioAdvance repeated (0x10033a77). On every non-0x14 path +0x5c loses its low two bits, +0x1d8/+0x1e0/+0x1e4/+0x228 are copied from +0x208/+0x210/+0x214/0, +0x58 is masked to 0xf0000f67 (0x10033a7f-0x10033ac3), Channel_recomputeVoiceGains(+0x1c0) and Channel_setPanGains(+0x224) run (0x10033ac6-0x10033ad4), and when bit 0 of the resulting +0x58 is set the 16 voice records at this+0x250+0x110k are reset (0x10033adf-0x10033b29). Returns 0. Reimplemented in `shim/src/re/c3fq.cpp`; path-1 A/B GREEN: rewindChannel (12 vectors, 11 distinct results, 10 changing state, `log/diff/000339c0_sound_rewindChannel.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x100339dc, 0x10033b30): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x100339c3 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

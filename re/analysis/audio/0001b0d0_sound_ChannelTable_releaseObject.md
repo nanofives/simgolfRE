@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001b0d0`), 103 bytes, 42 instructions, subsystem `au
 Removes an object from every slot of a ChannelTable's 0x80-entry table, deletes up to three of its member objects and the object itself through their scalar deleting destructors (vtable slot 0, argument 1); returns 0. (`re/names/sound_16.tsv`)
 System writeup: `re/analysis/systems/sound_16.md`.
 
+## Purpose
+Removes a MultiSound object from a ChannelTable and tears it down. Every one of the 0x80 channel slots this+4 .. this+0x200 that still points at the object is cleared to 0 (0x1001b0d5-0x1001b0eb). The object's member array at obj+0x1440 is then walked for up to three members (`cmp edi, 3; jge` 0x1001b101 / 0x1001b104): each non-NULL member is destroyed through its vtable slot 0 with argument 1 (the deleting destructor, 0x1001b10c-0x1001b110) and its slot cleared (0x1001b112), continuing while the next slot is non-zero (0x1001b118-0x1001b121). Finally the object itself is destroyed through its own vtable slot 0 with 1 (0x1001b125-0x1001b12f). Returns 0 (0x1001b131), which its caller ChannelTable_loadRange uses as the restart index of its release scan (0x1001b035). Reimplemented in `shim/src/re/c3fq.cpp`; path-1 A/B GREEN: ChannelTable_releaseObject (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001b0d0_sound_ChannelTable_releaseObject.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001b134): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001b0d5 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -37,7 +40,7 @@ Through registers:
 - indirect `call [edx]` at 0x1001b12f
 
 ## Callers
-0x1001aef0 `FUN_1001aef0`
+0x1001aef0 `ChannelTable_loadRange`
 
 ## Constants
 - `0x0` at 0x1001b0e1, 0x1001b112

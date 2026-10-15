@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x0001aef0`), 372 bytes, 126 instructions, subsystem `a
 Builds a MultiSound (plus s[2] - 1 member MultiSounds at +0x1440) for the channel range s[1]..s[0] of a ChannelTable, loads each through its vtable slot +0x10 with s+0xc, releases whatever object held a slot of the range and installs the new one in every slot of it; returns 0, or the first load's non-zero result after deleting the object. (`re/names/sound_16.tsv`)
 System writeup: `re/analysis/systems/sound_16.md`.
 
+## Purpose
+Builds a MultiSound (and rec[2]-1 member MultiSounds at obj+0x1440) for the channel range rec[1]..rec[0] of a ChannelTable, loads each through its vtable slot +0x10 with rec+0xc, releases whatever object held a slot of that range, and installs the new object in every slot of it; returns 0, or the first load's non-zero result after destroying the object. The lead object is operator new(0x1450) built by MultiSound_ctorWithType with the module global [0x100b49c0] (0x1001af28-0x1001af4c); obj+0x1424 |= 1 (0x1001af4e-0x1001af5b); r = slot +0x10 (the load) (0x1001af6d). A non-zero r destroys the object and returns r (0x1001af76-0x1001af82). Otherwise slot +4 is given this+0x218 (0x1001af94); members 1..rec[2]-1 are each built, stored at obj+0x1440+4k, loaded and given this+0x218 (0x1001afa9-0x1001b006); obj+0x1438 = rec[2] (0x1001b019). From rec[1] to rec[0] every non-zero slot is sent to ChannelTable_releaseObject and the scan restarts at that call's returned index (0x1001b025-0x1001b035), then every slot of the range is set to the new object (`rep stosd` 0x1001b03e-0x1001b04b). Reimplemented in `shim/src/re/c3fq.cpp`; path-1 A/B GREEN: ChannelTable_loadRange (12 vectors, 12 distinct results, 12 changing state, `log/diff/0001aef0_sound_ChannelTable_loadRange.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x4` (at 0x1001b061): callee pops 4 bytes of stack arguments.
 - `ecx` is read at 0x1001af10 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).
@@ -57,7 +60,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `je` (equality) at 0x1001af3c, 0x1001af74, 0x1001af78, 0x1001afc4, 0x1001b02b
 
 ## Callees
-- 0x10001e01 -> 0x1001b0d0 `FUN_1001b0d0` (incremental-linking thunk) at 0x1001b030
+- 0x10001e01 -> 0x1001b0d0 `ChannelTable_releaseObject` (incremental-linking thunk) at 0x1001b030
 - 0x100026ad -> 0x10039790 `MultiSound_ctorWithType` (incremental-linking thunk) at 0x1001af47, 0x1001afcf
 - 0x100424d7 `operator_new` at 0x1001af28, 0x1001afae
 - indirect `call [eax+0x4]` at 0x1001affc

@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x000064e0`), 698 bytes, 244 instructions, subsystem `a
 Frees the device buffer list, closing each node's mmio handle (+0x44) and decrementing g_100b4a08. (`re/names/sound_0.tsv`)
 System writeup: `re/analysis/systems/sound_0.md`.
 
+## Purpose
+Converts the head voice of a Wave_Device's queue through the format converter 0x1005b4a4[fmt], drains or trims the queue and reports the number of frames produced. With bit 3 of +0x58 set the whole queue is first drained, each voice's mmio handle +0x44 closed (lowering [0x100b4a08]) and VoiceSlot_dtorEmpty'd and freed, then vtable slot +0x80 runs (0x1000650a-0x100065a9). The cursor +0x64 is set to the head; an empty queue or a NULL head payload writes *outN = 0, zeroes count*8 bytes of dst when the format pads, and returns 0x26 (0x100065af-0x100065eb). Otherwise the converter is called with &dst, &pos (= voice+0x1c), count and the voice, its result stored at *outN (0x100065f7-0x10006629); voice+0xcc extra rounds each advance the cursor and free the head voice (0x1000663b-0x100066b1); the head voice's +0x1c is updated to pos, and when pos has reached voice+0x20 with bit 0 of +0x9c clear the voice is finished (counters bumped, +0x58 bit 4 cleared and bit 2 set, vtable slot +0x20, the head freed, 0x100066c3-0x1000675d). A padding format zero-fills (count - got) * 8 bytes of the remaining dst (0x10006769-0x1000678c). Returns 0. Reimplemented in `shim/src/re/c3fq.cpp`; path-1 A/B GREEN: Wave_Device::freeBufferList (12 vectors, 12 distinct results, 12 changing state, `log/diff/000064e0_sound_Wave_Device_freeBufferList.path1.csv`).
+
 ## Signature
 - Returns with `ret 0x10` (at 0x100065f4, 0x10006797): callee pops 16 bytes of stack arguments.
 - `ecx` is read at 0x100064e9 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

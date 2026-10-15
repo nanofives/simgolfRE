@@ -1,0 +1,18 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$d0 $dst 64 0 $outN,0,0,True,00971db7,00971db7,True
+$d1 $dst 64 0 $outN,38,38,True,1b3d6d3f,1b3d6d3f,True
+$d2 $dst 64 12 $outN,38,38,True,1c9c1902,1c9c1902,True
+$d3 $dst 64 0 $outN,0,0,True,e1a76387,e1a76387,True
+$d4 $dst 64 0 $outN,0,0,True,bd0cc026,bd0cc026,True
+$d5 $dst 64 12 $outN,0,0,True,dd2831d6,dd2831d6,True
+$d6 $dst 64 12 $outN,0,0,True,10d43e84,10d43e84,True
+$d7 $dst 64 5 $outN,0,0,True,0786c9de,0786c9de,True
+$d8 $dst 64 0 $outN,0,0,True,ba86acb4,ba86acb4,True
+$d9 $dst 64 0 $outN,38,38,True,99d5a1bb,99d5a1bb,True
+$d10 $dst 64 13 $outN,0,0,True,09814afc,09814afc,True
+$d11 $dst 64 1 $outN,0,0,True,c8d1e5b0,c8d1e5b0,True
+state_regions,$log+0x0:2080 $implog+0x0:1024 $arena+0x0:1040 $freelog+0x0:1028 $g4a08+0x0:4 $dst+0x0:2048 $outN+0x0:4 $d0+0x0:1024 $fq0_0+0x0:16 $fv0+0x0:544 $d1+0x0:1024 $d2+0x0:1024 $d3+0x0:1024 $fq3_0+0x0:16 $fq3_1+0x0:16 $fq3_2+0x0:16 $fv30+0x0:544 $fv32+0x0:544 $d4+0x0:1024 $fq4_0+0x0:16 $fv40+0x0:544 $d5+0x0:1024 $fq5_0+0x0:16 $fv50+0x0:544 $d6+0x0:1024 $fq6_0+0x0:16 $fv60+0x0:544 $d7+0x0:1024 $fq7_0+0x0:16 $fq7_1+0x0:16 $fv70+0x0:544 $fv71+0x0:544 $d8+0x0:1024 $fq8_0+0x0:16 $fv80+0x0:544 $d9+0x0:1024 $d10+0x0:1024 $fq10_0+0x0:16 $fv100+0x0:544 $d11+0x0:1024 $fq11_0+0x0:16 $fv110+0x0:544,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x62afc470,original=0x3860980,2026-10-14T21:00:32
+distinct_results,12,,
+VERDICT,GREEN,12,
