@@ -1,0 +1,191 @@
+id	phase	va	kind	line	line2	covered	old	new
+100	FramePreamble	0x0040fed4	flip	704		sandbox_basic,course_season,golfer_events,stories_fixture,ui_tour_v,golfer_stories	(G8(p + 9) != 0 && (GU8(p) & 0xE0) == 0x20)	(MV(100, (G8(p + 9) != 0 && (GU8(p) & 0xE0) == 0x20), !(G8(p + 9) != 0 && (GU8(p) & 0xE0) == 0x20)))
+101	FramePreamble	0x0041039e	skipstore	856		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x238) = 0x004C6A98;	MSKIP(101, FD(0x238), 0x004C6A98);
+102	FramePreamble	0x0040fc82	const	831		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	0x63	MV(102, 0x63, (0x63) + 1)
+103	FramePreamble	0x00410509	dropcall	892		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x00449400, (int)G8(0x005A34E0));	MS(103) CC(0x00449400, (int)G8(0x005A34E0));
+104	FramePreamble	0x0040fe4e	bound	684		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	((GU8(0x00834170) & 0x7F) && count >= 2)	(MV(104, ((GU8(0x00834170) & 0x7F) && count >= 2), ((GU8(0x00834170) & 0x7F) && count > 2)))
+105	FramePreamble	0x0040fd1c	width	609		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G8(0x00575CB8)	MV(105, (int)G8(0x00575CB8), (int)GU8(0x00575CB8))
+106	FramePreamble	0x0040fe65	flip	688		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(count >= 8)	(MV(106, (count >= 8), !(count >= 8)))
+107	FramePreamble	0x004105b2	skipstore	914		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G32(0x00543D04) = camX;	MSKIP(107, G32(0x00543D04), camX);
+108	FramePreamble	0x0040fcaf	const	834		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	0x63	MV(108, 0x63, (0x63) + 1)
+109	FramePreamble	0x004104fc	dropcall	891		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	TC(0x004845E0, 0x0080EB3C);	MS(109) TC(0x004845E0, 0x0080EB3C);
+111	FramePreamble	0x0040ff41	flip	721		course_season,golfer_events,ui_tour_v,golfer_stories	(G32(0x00834170) <= ebxv)	(MV(111, (G32(0x00834170) <= ebxv), !(G32(0x00834170) <= ebxv)))
+112	FramePreamble	0x0040ffcf	bound	743		-	(acc < ecx5 - ediq)	(MV(112, (acc < ecx5 - ediq), (acc <= ecx5 - ediq)))
+113	FramePreamble	0x0041036e	const	798		-	0x26	MV(113, 0x26, (0x26) + 1)
+114	FramePreamble	0x00410177	skipstore	763		-	FD(0xC) = 0;	MSKIP(114, FD(0xC), 0);
+115	H1	0x0041e6fb	flip	9134		golfer_events	((u32)eax > 6)	(MV(115, ((u32)eax > 6), !((u32)eax > 6)))
+116	H1	0x0041c0d9	skipstore	7708		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x10) = esi;	MSKIP(116, FD(0x10), esi);
+117	H1	0x0041df31	const	8845		stories_fixture	0x31	MV(117, 0x31, (0x31) + 1)
+118	H1	0x0041cc66	dropcall	8175		ui_tour_v	CC(0x00405B10);	MS(118) CC(0x00405B10);
+119	H1	0x0041c5a1	bound	7910		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	((u32)eax > 0x71)	(MV(119, ((u32)eax > 0x71), ((u32)eax >= 0x71)))
+120	H1	0x0041c55b	width	7891		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G8(0x00569498)	MV(120, (int)G8(0x00569498), (int)GU8(0x00569498))
+121	H1	0x0041c56a	flip	7893		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(al != 0)	(MV(121, (al != 0), !(al != 0)))
+122	H1	0x0041d988	skipstore	8550		ui_tour_v	G32(0x005A7144) = 0x80;	MSKIP(122, G32(0x005A7144), 0x80);
+123	H1	0x0041e024	const	8858		stories_fixture	0x31	MV(123, 0x31, (0x31) + 1)
+124	H1	0x0041e070	dropcall	8869		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x0045FD80);	MS(124) CC(0x0045FD80);
+125	H1	0x0041e29b	swap	8939	8938	sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x004A0890);	TC(0x00480C80, 0x00519A60, ebp);
+126	H1	0x0041e6d2	flip	9121		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(eax != ebp)	(MV(126, (eax != ebp), !(eax != ebp)))
+127	H1	0x0041d56d	bound	8453		-	((short)GU16(ebp + 0x0059FC64) <= 0)	(MV(127, ((short)GU16(ebp + 0x0059FC64) <= 0), ((short)GU16(ebp + 0x0059FC64) < 0)))
+128	H1	0x0041d416	const	8410		-	0x99	MV(128, 0x99, (0x99) + 1)
+129	H1	0x0041e7cf	skipstore	9173		-	G32(esi + 0x005794C8) = eax;	MSKIP(129, G32(esi + 0x005794C8), eax);
+130	H2	0x0041efa6	flip	9502		championship,golfer_events,ui_tour_v	(gx == -1)	(MV(130, (gx == -1), !(gx == -1)))
+131	H2	0x0041ed86	skipstore	9449		championship	G32(0x0053DF54) = -h;	MSKIP(131, G32(0x0053DF54), -h);
+132	H2	0x0041fa74	const	9779		ui_tour_v	0x40	MV(132, 0x40, (0x40) + 1)
+133	H2	0x00420858	dropcall	10234		course_season,golfer_events,ui_tour_v,golfer_stories	CC(0x0040C890, H2_neg(edi), H2_W(ecx), H2_W(esi), -1);	MS(133) CC(0x0040C890, H2_neg(edi), H2_W(ecx), H2_W(esi), -1);
+134	H2	0x0041efc7	bound	9504		championship,golfer_events,ui_tour_v	(d < edi)	(MV(134, (d < edi), (d <= edi)))
+135	H2	0x0041f3cf	width	9585		ui_tour_v	G16(0x004C26C2u + 20u * (u32)edi)	MV(135, (int)G16(0x004C26C2u + 20u * (u32)edi), (int)GU16(0x004C26C2u + 20u * (u32)edi))
+136	H2	0x00420270	flip	10132		course_season,golfer_events,ui_tour_v,golfer_stories	(t20 == 0)	(MV(136, (t20 == 0), !(t20 == 0)))
+137	H2	0x0041f2cc	skipstore	10342		championship,ui_tour_v	G32(0x004C2848) = esi;	MSKIP(137, G32(0x004C2848), esi);
+138	H2	0x0041faa6	const	9780		ui_tour_v	0xff	MV(138, 0xff, (0xff) + 1)
+139	H2	0x0041f228	dropcall	10325		course_season,golfer_events,ui_tour_v,golfer_stories	TC(0x004762D0, Root(), 0x0051B360, ebp, ebp, ebp);	MS(139) TC(0x004762D0, Root(), 0x0051B360, ebp, ebp, ebp);
+140	H2	0x0041f1f9	swap	10319	10318	ui_tour_v,golfer_stories	CC(0x0040A4E0, s, y);	CC(0x0040C860, H2_W(FD(0x1c)), H2_W(FD(0x24)));
+141	H2	0x0041f3e9	flip	9590		ui_tour_v	(edi == 4)	(MV(141, (edi == 4), !(edi == 4)))
+142	H2	0x00420add	bound	9342		-	(eax < 3)	(MV(142, (eax < 3), (eax <= 3)))
+143	H2	0x0041f62d	const	9652		-	0x108	MV(143, 0x108, (0x108) + 1)
+144	H2	0x0041f8b9	skipstore	9722		-	G32(0x0059E7B8) = (int)(GU32(0x0059E7B8) & ~0x800u);	MSKIP(144, G32(0x0059E7B8), (int)(GU32(0x0059E7B8) & ~0x800u));
+145	Menu	0x0042109b	flip	353		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(d < bestDist)	(MV(145, (d < bestDist), !(d < bestDist)))
+146	Menu	0x0042142f	skipstore	458		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	GU32(0x543CFC) = 0x3FFF;	MSKIP(146, GU32(0x543CFC), 0x3FFF);
+147	Menu	0x004213f5	skipstore	446		ui_tour_v	FB(0x124C) = 0;	MSKIP(147, FB(0x124C), 0);
+148	Menu	0x004213fd	dropcall	447		ui_tour_v	TC(0x474C40, FA(0xE4C));	MS(148) TC(0x474C40, FA(0xE4C));
+149	Menu	0x00420f14	bound	317		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(ebx < 5)	(MV(149, (ebx < 5), (ebx <= 5)))
+150	Menu	0x00421161	width	377		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FW(0xF6 + ebp * 4)	MV(150, (int)FW(0xF6 + ebp * 4), (int)FUW(0xF6 + ebp * 4))
+151	Menu	0x00421508	flip	471		championship,ui_tour_v	(eax == -1)	(MV(151, (eax == -1), !(eax == -1)))
+152	Menu	0x0042142a	skipstore	457		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	GU32(0x59E7B8) = eax;	MSKIP(152, GU32(0x59E7B8), eax);
+153	Menu	0x00421036	swap	339	338	sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x483BD0);	CC(0x45C030);
+154	Menu	0x00420e5f	dropcall	299		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x401750);	MS(154) CC(0x401750);
+155	Menu	0x00421390	swap	441	440	ui_tour_v	CC(0x4725B0);	TC(0x474AE0, FA(0xE4C));
+156	Menu	0x00421407	flip	451		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(ebx == 3)	(MV(156, (ebx == 3), !(ebx == 3)))
+157	Menu	0x0042159f	skipstore	493		-	FB(0x124C) = 2;	MSKIP(157, FB(0x124C), 2);
+158	Menu	0x004215ed	dropcall	498		-	TC(0x474C40, FA(0xB94));	MS(158) TC(0x474C40, FA(0xB94));
+159	Menu	0x004215e5	skipstore	497		-	FB(0x124C) = 0;	MSKIP(159, FB(0x124C), 0);
+160	P1	0x00411941	flip	1656		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(G8(0x00578372 + a48) > 0 && dl != 0x16 && dl != 0x15)	(MV(160, (G8(0x00578372 + a48) > 0 && dl != 0x16 && dl != 0x15), !(G8(0x00578372 + a48) > 0 && dl != 0x16 && dl != 0x15)))
+161	P1	0x004107d3	skipstore	1623		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x20) = G8(0x00578376 + t * 0x30);	MSKIP(161, FD(0x20), G8(0x00578376 + t * 0x30));
+162	P1	0x00410b90	const	996		sandbox_basic,course_season,championship,golfer_events,ui_tour_v,golfer_stories,mood5_fixture	0xa	MV(162, 0xa, (0xa) + 1)
+163	P1	0x004116d9	dropcall	1233		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture	CC(0x004628D0, FD(0x50), FD(0x44), FD(0x44), 0x3c, 0x3c, c, 4, 0xb2);	MS(163) CC(0x004628D0, FD(0x50), FD(0x44), FD(0x44), 0x3c, 0x3c, c, 4, 0xb2);
+164	P1	0x004121a0	bound	1559		course_season,golfer_events,ui_tour_v,golfer_stories	(ecx2 >= G32(0x0053F3E8 + a * 4))	(MV(164, (ecx2 >= G32(0x0053F3E8 + a * 4)), (ecx2 > G32(0x0053F3E8 + a * 4))))
+165	P1	0x00411088	width	1092		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture	G8(0x005722E8 + eax + ecx * 50 + ebx)	MV(165, (int)G8(0x005722E8 + eax + ecx * 50 + ebx), (int)GU8(0x005722E8 + eax + ecx * 50 + ebx))
+166	P1	0x00410c01	flip	1006		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture	(FD(0x90) & eax)	(MV(166, (FD(0x90) & eax), !(FD(0x90) & eax)))
+167	P1	0x00411545	skipstore	1641		stories9_fixture	G32(0x005A9CC8) = c;	MSKIP(167, G32(0x005A9CC8), c);
+168	P1	0x00410bd6	const	999		sandbox_basic,course_season,championship,golfer_events,ui_tour_v,golfer_stories,mood5_fixture	0x13	MV(168, 0x13, (0x13) + 1)
+169	P1	0x0041209e	dropcall	1519		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x00462A30, G32(0x004C2840) + FD(0x28), y, y, 0x28, 0x28, c, 4, 0x63);	MS(169) CC(0x00462A30, G32(0x004C2840) + FD(0x28), y, y, 0x28, 0x28, c, 4, 0x63);
+170	P1	0x00410b24	flip	990		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture	(FD(0xb4) & G8(0x005619A0 + FD(0x14)))	(MV(170, (FD(0xb4) & G8(0x005619A0 + FD(0x14))), !(FD(0xb4) & G8(0x005619A0 + FD(0x14)))))
+171	P1	0x00411296	flip	1125		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	((FD(0x84) & G8(0x005619A0 + FD(0x14))) == 0)	(MV(171, ((FD(0x84) & G8(0x005619A0 + FD(0x14))) == 0), !((FD(0x84) & G8(0x005619A0 + FD(0x14))) == 0)))
+172	P1	0x00411313	bound	1136		-	(eax <= 3)	(MV(172, (eax <= 3), (eax < 3)))
+173	P1	0x00411c71	const	1419		-	4	MV(173, 4, (4) + 1)
+174	P1	0x00411b44	skipstore	1396		-	FD(0x18) = esi;	MSKIP(174, FD(0x18), esi);
+175	P2	0x00413209	flip	2157		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(n == 7 || n < 6 || n == 5)	(MV(175, (n == 7 || n < 6 || n == 5), !(n == 7 || n < 6 || n == 5)))
+176	P2	0x00412350	skipstore	2217		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x30) = b;	MSKIP(176, FD(0x30), b);
+177	P2	0x004129d3	dropcall	1908		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	TC(0x004762D0, Root(), 0x00519FD8, 0, 0, 0);	MS(177) TC(0x004762D0, Root(), 0x00519FD8, 0, 0, 0);
+178	P2	0x004131c5	dropcall	2171		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	TC(0x004762D0, root, 0x0051B360, 0, 0, 0);	MS(178) TC(0x004762D0, root, 0x0051B360, 0, 0, 0);
+179	P2	0x00412b14	bound	1939		stories_fixture	(m >= lim)	(MV(179, (m >= lim), (m > lim)))
+180	P2	0x004131d3	width	2175		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	GU8(0x0056988C + FD(0x14))	MV(180, (int)GU8(0x0056988C + FD(0x14)), (int)G8(0x0056988C + FD(0x14)))
+181	P2	0x00412dbb	flip	2009		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture	(GU8(0x005722E8 + tj) == 0xe)	(MV(181, (GU8(0x005722E8 + tj) == 0xe), !(GU8(0x005722E8 + tj) == 0xe)))
+182	P2	0x0041237e	skipstore	2196		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x14) = idx;	MSKIP(182, FD(0x14), idx);
+183	P2	0x00412acd	flip	1932		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture	(ty8 == 0x12)	(MV(183, (ty8 == 0x12), !(ty8 == 0x12)))
+184	P2	0x004131ab	dropcall	2168		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x0042FB90, x, y, FA(0xe0), FA(0xe4), 0);	MS(184) CC(0x0042FB90, x, y, FA(0xe0), FA(0xe4), 0);
+185	P2	0x0041344e	flip	2181		championship,stories_fixture,ui_tour_v,stories9_fixture	(!(GU8(0x00834170) & 2))	(MV(185, (!(GU8(0x00834170) & 2)), !(!(GU8(0x00834170) & 2))))
+186	P2	0x00412d46	flip	2001		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture	(t2 == 0xd)	(MV(186, (t2 == 0xd), !(t2 == 0xd)))
+187	P2	0x0041339a	bound	2124		-	((int)GU8(0x00578804 + tj) >= last)	(MV(187, ((int)GU8(0x00578804 + tj) >= last), ((int)GU8(0x00578804 + tj) > last)))
+188	P2	0x00412924	const	1879		-	0x50	MV(188, 0x50, (0x50) + 1)
+189	P2	0x00412c79	skipstore	1978		-	G32(0x005A9CC8) = c2;	MSKIP(189, G32(0x005A9CC8), c2);
+190	P3	0x00413b19	flip	2668		course_season,golfer_events,ui_tour_v,golfer_stories	((G32(eax + 0x575ac8)) != (ebx))	(MV(190, ((G32(eax + 0x575ac8)) != (ebx)), !((G32(eax + 0x575ac8)) != (ebx))))
+191	P3	0x004136e3	skipstore	2361		course_season,golfer_events,ui_tour_v,golfer_stories	G32(0x5a9cc4) = 0;	MSKIP(191, G32(0x5a9cc4), 0);
+192	P3	0x004137cf	const	2426		course_season,golfer_events,ui_tour_v,golfer_stories	(int)(7)	(int)(MV(192, 7, (7) + 1))
+193	P3	0x00414e37	flip	4182		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	((((((((ecx>>8)&0xff)) & (0x80)))&0xff)) == 0)	(MV(193, ((((((((ecx>>8)&0xff)) & (0x80)))&0xff)) == 0), !((((((((ecx>>8)&0xff)) & (0x80)))&0xff)) == 0)))
+194	P3	0x004154fb	bound	4668		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(((int)(eax)) >= 0)	(MV(194, (((int)(eax)) >= 0), (((int)(eax)) > 0)))
+195	P3	0x00415326	width	4526		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	GU8(ebp + 0x5794d7)	MV(195, (int)GU8(ebp + 0x5794d7), (int)G8(ebp + 0x5794d7))
+196	P3	0x00414c86	flip	4064		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(((GU8(ebp + 0x5794d5))&0xff) != ((4)&0xff))	(MV(196, (((GU8(ebp + 0x5794d5))&0xff) != ((4)&0xff)), !(((GU8(ebp + 0x5794d5))&0xff) != ((4)&0xff))))
+197	P3	0x00414120	skipstore	3136		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x18) = ebx;	MSKIP(197, FD(0x18), ebx);
+198	P3	0x0041381a	const	2446		course_season,golfer_events,ui_tour_v,golfer_stories	(int)(2)	(int)(MV(198, 2, (2) + 1))
+199	P3	0x004140bf	skipstore	3105		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x28) = eax;	MSKIP(199, FD(0x28), eax);
+200	P3	0x00415094	width	4353		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories	GU8(ebp + 0x5794d6)	MV(200, (int)GU8(ebp + 0x5794d6), (int)G8(ebp + 0x5794d6))
+201	P3	0x00414ff4	flip	4309		course_season,championship,golfer_events,golfer_stories,mood5_fixture,stories9_fixture	(((ecx)) != 0)	(MV(201, (((ecx)) != 0), !(((ecx)) != 0)))
+202	P3	0x004151dc	bound	4437		-	((int)(eax) >= (int)(0xc))	(MV(202, ((int)(eax) >= (int)(0xc)), ((int)(eax) > (int)(0xc))))
+203	P3	0x004147a1	const	3682		-	(int)(0x32)	(int)(MV(203, 0x32, (0x32) + 1))
+204	P3	0x00413d04	skipstore	2818		-	G32(edi + 0x59ae80) = ebx;	MSKIP(204, G32(edi + 0x59ae80), ebx);
+205	P4	0x004168d9	flip	5385		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(al == 0xc && (GU8(esi + 0x7d) != 1 || G32(0x00834170) < 0x2000))	(MV(205, (al == 0xc && (GU8(esi + 0x7d) != 1 || G32(0x00834170) < 0x2000)), !(al == 0xc && (GU8(esi + 0x7d) != 1 || G32(0x00834170) < 0x2000))))
+206	P4	0x00416b25	skipstore	5447		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x18) = ecx;	MSKIP(206, FD(0x18), ecx);
+207	P4	0x0041694b	const	5394		championship,golfer_events,golfer_stories	0x28	MV(207, 0x28, (0x28) + 1)
+208	P4	0x00415a3f	dropcall	4990		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,stories9_fixture	TC(0x004741B0, 0x005423E8, Root(), x, ecx, edx, 0);	MS(208) TC(0x004741B0, 0x005423E8, Root(), x, ecx, edx, 0);
+209	P4	0x00416b4b	bound	5454		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(a > b)	(MV(209, (a > b), (a >= b)))
+210	P4	0x00416b0e	width	5445		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G16(esi + 0x9a)	MV(210, (int)G16(esi + 0x9a), (int)GU16(esi + 0x9a))
+211	P4	0x00416e91	flip	5571		course_season,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(al == 0)	(MV(211, (al == 0), !(al == 0)))
+212	P4	0x00415c32	skipstore	5087		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0xc) = 0x0058BCB8;	MSKIP(212, FD(0xc), 0x0058BCB8);
+213	P4	0x00416975	const	5397		championship,golfer_events,golfer_stories	0x50	MV(213, 0x50, (0x50) + 1)
+214	P4	0x00415a6f	dropcall	5002		golfer_events,ui_tour_v	CC(0x00407C60, G32(g + 0x005793B8), G32(g + 0x005793BC), 0xf, (int)0x800023E8);	MS(214) CC(0x00407C60, G32(g + 0x005793B8), G32(g + 0x005793BC), 0xf, (int)0x800023E8);
+215	P4	0x00416a04	swap	5404	5403	championship,golfer_events,golfer_stories	CC(0x00406220, edi - 0x4f, ebp + 0x3c, edi + 0x51, ebp + 0x3c, (int)0x80000000, 2, 7);	CC(0x00406220, edi + 0x50, ebp - 0x4f, edi + 0x50, ebp + 0x3c, (int)0x80000000, 2, 7);
+216	P4	0x00416abd	flip	5435		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(cx == 0xc000)	(MV(216, (cx == 0xc000), !(cx == 0xc000)))
+217	P4	0x00415ef7	bound	5171		-	(eax > edx)	(MV(217, (eax > edx), (eax >= edx)))
+218	P4	0x004167d5	const	5271		-	0xa	MV(218, 0xa, (0xa) + 1)
+219	P4	0x00417342	skipstore	5697		-	G16(esi + 0x00575AB4) = (short)cx;	MSKIP(219, G16(esi + 0x00575AB4), (short)cx);
+220	P5	0x00417e98	flip	6036		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,stories9_fixture	(k == 5)	(MV(220, (k == 5), !(k == 5)))
+221	P5	0x004179e3	skipstore	5887		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G16(0x00520640 + slot * 2) = (short)cnt;	MSKIP(221, G16(0x00520640 + slot * 2), (short)cnt);
+222	P5	0x004186cc	const	6193		course_season,golfer_events,ui_tour_v,golfer_stories	0x1f4	MV(222, 0x1f4, (0x1f4) + 1)
+223	P5	0x004185b3	dropcall	6113		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x004481B0, id, b + 0x3c, 0x40 - a, 0xc8 - c, 0);	MS(223) CC(0x004481B0, id, b + 0x3c, 0x40 - a, 0xc8 - c, 0);
+224	P5	0x0041860f	bound	6161		course_season,golfer_events,ui_tour_v,golfer_stories	(esi < px)	(MV(224, (esi < px), (esi <= px)))
+225	P5	0x00417e75	width	6030		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,stories9_fixture	G16(w)	MV(225, (int)G16(w), (int)GU16(w))
+226	P5	0x004185c1	flip	6150		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(edx == -1)	(MV(226, (edx == -1), !(edx == -1)))
+227	P5	0x00417e15	skipstore	6021		course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,stories9_fixture	G32(c) = d - d / 8;	MSKIP(227, G32(c), d - d / 8);
+228	P5	0x004186a6	const	6189		course_season,golfer_events,ui_tour_v,golfer_stories	0x2bc	MV(228, 0x2bc, (0x2bc) + 1)
+229	P5	0x00418835	dropcall	6218		course_season,golfer_events,ui_tour_v,golfer_stories	CC(0x00404B70, 0x004C4E58, (FD(0xc) + x0) / 2, FD(0x18) + 4, (int)0x80006318);	MS(229) CC(0x00404B70, 0x004C4E58, (FD(0xc) + x0) / 2, FD(0x18) + 4, (int)0x80006318);
+230	P5	0x00418793	swap	6208	6207	course_season,golfer_events,ui_tour_v,golfer_stories	TC(0x00480B00, 0x00519A60, x1, y0 - 0x10, 0x10, FD(0x28), (int)0x80007fff);	TC(0x00478B80, 0x00519CD4, x0, y0, x1, y0, (int)0x80000000);
+231	P5	0x004189d3	flip	6232		course_season,golfer_events,ui_tour_v,golfer_stories	(G32(0x004C2E0C) & 0x100)	(MV(231, (G32(0x004C2E0C) & 0x100), !(G32(0x004C2E0C) & 0x100)))
+232	P5	0x00417abf	bound	5920		-	(G32(ebx) > lim)	(MV(232, (G32(ebx) > lim), (G32(ebx) >= lim)))
+233	P5	0x00418212	const	5980		-	0x320	MV(233, 0x320, (0x320) + 1)
+234	P5	0x0041821e	skipstore	5982		-	FUB(0x124c) = 0;	MSKIP(234, FUB(0x124c), 0);
+235	P6	0x00419c28	flip	6745		sandbox_basic,course_season,championship,golfer_events,ui_tour_v,golfer_stories,stories9_fixture	(!(GU32(0x0059E7B8) & 0x8000000))	(MV(235, (!(GU32(0x0059E7B8) & 0x8000000)), !(!(GU32(0x0059E7B8) & 0x8000000))))
+236	P6	0x00418be2	skipstore	6338		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G32(0x005A9CAC) = ebx;	MSKIP(236, G32(0x005A9CAC), ebx);
+237	P6	0x00419676	const	6567		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	0x2d2	MV(237, 0x2d2, (0x2d2) + 1)
+238	P6	0x00419929	dropcall	6660		ui_tour_v	CC(0x0045C560, g, 1);	MS(238) CC(0x0045C560, g, 1);
+239	P6	0x00418d64	bound	6408		sandbox_basic,course_season,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(lev <= 0)	(MV(239, (lev <= 0), (lev < 0)))
+240	P6	0x00418c56	width	6354		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	GU8(0x005787CC)	MV(240, (int)GU8(0x005787CC), (int)G8(0x005787CC))
+241	P6	0x004197d1	flip	6610		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(mode == 0)	(MV(241, (mode == 0), !(mode == 0)))
+242	P6	0x00418bee	skipstore	6340		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G32(0x005A9CB0) = edi;	MSKIP(242, G32(0x005A9CB0), edi);
+243	P6	0x004195dc	const	6558		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	0x2a5	MV(243, 0x2a5, (0x2a5) + 1)
+244	P6	0x00418f93	dropcall	6463		sandbox_basic,course_season,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x00404B70, static_cast<int>(kBuf), 0x90, 0xd, 0x80007FFFu);	MS(244) CC(0x00404B70, static_cast<int>(kBuf), 0x90, 0xd, 0x80007FFFu);
+245	P6	0x00418f23	swap	6453	6452	sandbox_basic,course_season,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	TC(0x00474030, 0x00520590, Root(), 0x30, 5, v, 1, 1, 1, 0);	TC(0x00473F60, 0x00542F28, 0x0059AB00, Root(), 0x30, 5, 0);
+246	P6	0x00418c01	flip	6344		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(c & 1)	(MV(246, (c & 1), !(c & 1)))
+247	P6	0x004193ec	bound	6517		-	(m2 < 0xa)	(MV(247, (m2 < 0xa), (m2 <= 0xa)))
+248	P6	0x0041940c	const	6519		-	0x32	MV(248, 0x32, (0x32) + 1)
+249	P6	0x00418c33	skipstore	6350		-	G32(0x005A9CB0) = G32(0x005A9CB0) + 1;	MSKIP(249, G32(0x005A9CB0), G32(0x005A9CB0) + 1);
+250	P7	0x0041acc4	flip	7211		course_season,golfer_events,ui_tour_v,golfer_stories	(obj == 1 && (GU8(0x5a34f0) & 1) != 0)	(MV(250, (obj == 1 && (GU8(0x5a34f0) & 1) != 0), !(obj == 1 && (GU8(0x5a34f0) & 1) != 0)))
+251	P7	0x0041b8b7	skipstore	7511		championship,ui_tour_v	FD(0x2c) = 0x1ee;	MSKIP(251, FD(0x2c), 0x1ee);
+252	P7	0x00419ebf	const	6874		ui_tour_v	7	MV(252, 7, (7) + 1)
+253	P7	0x00419e6a	dropcall	6870		ui_tour_v	CC(0x406220, FD(0x60), FD(0x64), FD(0xc8), FD(0xc4), ebx, 1, 7);	MS(253) CC(0x406220, FD(0x60), FD(0x64), FD(0xc8), FD(0xc4), ebx, 1, 7);
+254	P7	0x0041af1d	bound	7279		course_season,golfer_events,ui_tour_v,golfer_stories	(G32(0x5685f0) >= 0x13)	(MV(254, (G32(0x5685f0) >= 0x13), (G32(0x5685f0) > 0x13)))
+255	P7	0x0041aa9e	width	7164		course_season,golfer_events,ui_tour_v,golfer_stories	G8(esi + 0x4c2d28)	MV(255, (int)G8(esi + 0x4c2d28), (int)GU8(esi + 0x4c2d28))
+256	P7	0x0041aa46	flip	7152		course_season,golfer_events,ui_tour_v,golfer_stories	(eax != -2)	(MV(256, (eax != -2), !(eax != -2)))
+257	P7	0x0041bc22	skipstore	7587		championship,ui_tour_v	FD(0x10) = FD(0x54);	MSKIP(257, FD(0x10), FD(0x54));
+258	P7	0x0041b68d	const	7469		championship,ui_tour_v	0x196	MV(258, 0x196, (0x196) + 1)
+259	P7	0x00419f17	dropcall	6878		ui_tour_v	CC(0x406220, FD(0x60), FD(0x64), FD(0xc8), FD(0xc4), ebx, 1, 7);	MS(259) CC(0x406220, FD(0x60), FD(0x64), FD(0xc8), FD(0xc4), ebx, 1, 7);
+260	P7	0x0041c09d	swap	7682	7681	championship,ui_tour_v	CC(0x42fb90, ebp, G32(rec + 0x579590) - ad, FA(0x5c), FA(0x54), 0);	CC(0x406220, esi, FD(0x10) + 1, FD(0x5c), FD(0x54) + 1, 0x80000000, ebx, 7);
+261	P7	0x0041acfc	flip	7214		course_season,golfer_events,ui_tour_v,golfer_stories	(GU8(edx + 0x578376) != 0xd)	(MV(261, (GU8(edx + 0x578376) != 0xd), !(GU8(edx + 0x578376) != 0xd)))
+262	P7	0x0041b096	bound	7304		-	(G32(0x5685f0) >= 0x13)	(MV(262, (G32(0x5685f0) >= 0x13), (G32(0x5685f0) > 0x13)))
+263	P7	0x0041a158	const	6955		-	4	MV(263, 4, (4) + 1)
+264	P7	0x0041a466	skipstore	7055		-	FD(0x18) = 0;	MSKIP(264, FD(0x18), 0);
+265	Session	0x0040fa20	flip	540		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(sel == -2)	(MV(265, (sel == -2), !(sel == -2)))
+266	Session	0x0040fbb5	skipstore	581		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	GU8(0x005A34E0) = GU8(0x00571FF8 + r * 46);	MSKIP(266, GU8(0x005A34E0), GU8(0x00571FF8 + r * 46));
+267	Session	0x0040fa18	const	538		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	0x80	MV(267, 0x80, (0x80) + 1)
+268	Session	0x0040fbc9	dropcall	582		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	CC(0x0043DBE0);	MS(268) CC(0x0043DBE0);
+269	Session	0x0040fbaf	flip	579		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	(r == -1)	(MV(269, (r == -1), !(r == -1)))
+270	Session	0x0040fbe7	skipstore	586		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	G32(0x005A6364) = 6;	MSKIP(270, G32(0x005A6364), 6);
+271	Session	0x0040fbf1	flip	587		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	(f2 & 0x1000000)	(MV(271, (f2 & 0x1000000), !(f2 & 0x1000000)))
+272	Session	0x0040fb19	skipstore	561		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G32(0x00822D8C) = -1;	MSKIP(272, G32(0x00822D8C), -1);
+273	Session	0x0040fbaa	skipstore	578		sandbox_basic,course_season,golfer_events,ui_tour_v,golfer_stories	G32(0x0059BF90) = r;	MSKIP(273, G32(0x0059BF90), r);
+274	Session	0x0040fa0e	dropcall	537		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x004658B0, (mode != 6) ? 1 : 0);	MS(274) CC(0x004658B0, (mode != 6) ? 1 : 0);
+276	Session	0x0040fb14	flip	562		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(flags & 0x4000000)	(MV(276, (flags & 0x4000000), !(flags & 0x4000000)))
+277	Session	0x0040fac3	dropcall	552		-	CC(0x0044B9C0);	MS(277) CC(0x0044B9C0);
+278	Session	0x0040fa2b	const	541		-	0x2D	MV(278, 0x2D, (0x2D) + 1)
+279	Session	0x0040fa7d	skipstore	545		-	G32(0x00568D08) = fd;	MSKIP(279, G32(0x00568D08), fd);
+280	prologue/Setup	0x0040f84d	flip	229		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	(esi < 5)	(MV(280, (esi < 5), !(esi < 5)))
+281	prologue/Setup	0x0040f78f	skipstore	216		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x1FC) = 0x004C6C78;	MSKIP(281, FD(0x1FC), 0x004C6C78);
+282	prologue/Setup	0x0040f7de	const	220		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	0x100	MV(282, 0x100, (0x100) + 1)
+283	prologue/Setup	0x0040f919	dropcall	245		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	CC(0x00406250, 0);	MS(283) CC(0x00406250, 0);
+284	prologue/Setup	0x0040f672	skipstore	202		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x124C) = 0;	MSKIP(284, FD(0x124C), 0);
+285	prologue/Setup	0x0040f960	skipstore	254		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G8(0x0058DD4A) = -1;	MSKIP(285, G8(0x0058DD4A), -1);
+286	prologue/Setup	0x0040f939	skipstore	248		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G32(0x0058DD34) = -1;	MSKIP(286, G32(0x0058DD34), -1);
+287	prologue/Setup	0x0040f953	skipstore	252		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G32(0x0058DD44) = -1;	MSKIP(287, G32(0x0058DD44), -1);
+288	prologue/Setup	0x0040f8b1	skipstore	238		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	G32(0x00822C78) = Rnd(0xFFFF) & 0xFFFF;	MSKIP(288, G32(0x00822C78), Rnd(0xFFFF) & 0xFFFF);
+289	prologue/Setup	0x0040f663	dropcall	201		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	TC(0x00482FD0, FA(0x2B0));	MS(289) TC(0x00482FD0, FA(0x2B0));
+291	prologue/Setup	0x0040f784	skipstore	215		sandbox_basic,course_season,championship,golfer_events,stories_fixture,ui_tour_v,golfer_stories,mood5_fixture,stories9_fixture	FD(0x1F8) = 0x004C6C88;	MSKIP(291, FD(0x1F8), 0x004C6C88);
+292	prologue/Setup	0x0040f8df	dropcall	241		-	CC(0x00437FA0, 0x004C6C1C, 0, 0);	MS(292) CC(0x00437FA0, 0x004C6C1C, 0, 0);
