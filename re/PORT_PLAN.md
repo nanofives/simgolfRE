@@ -26,7 +26,8 @@ specification and the test oracle. It is not the code base.
   `loadInfoScreenArt`, `loadFlic`, netService / netSendMessages and about ten screens with frame-local SEH or overruns.
 - Formats documented: `.sve`, course `.cse`/`.srf`, themes, `.pro`/`.chr`, roster, story text, PCX, BMP, FLIC, WAV, MIDI,
   Terrain lighting. Not documented: Bink.
-- Open conflict: exe_2.md lists golfer records at 0x57956e stride 0x80, golfer notes use 0x5794c0 stride 0x100.
+- Resolved (g1, 2026-10-16): golfer records are 156 x 0x100 from 0x005794b8 (re/analysis/data/golfer_record.md); the
+  earlier stride-0x80 array at 0x57956e does not exist, and 0x005794c0 is field +0x08 of record 0.
 
 ## Survey scripts (run 2026-10-15; `re/tools/port_survey_globals.py`, `re/tools/port_survey_hooks.py`)
 

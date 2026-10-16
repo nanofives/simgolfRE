@@ -17,7 +17,7 @@ and the multi-chapter golfer stories.
 
 - Golfer data: the golfer record array (stride 0x100, the `g_golfers` block of 0x9c00 bytes that the save writes) is
   read by `composeGolferSprite` 0x00462020, which shifts the golfer index left by 8 (0x0046206a) and loads the word at
-  0x0057956e + index*0x100 (0x0046206d), a field of the record (0x0057956e is offset 0xae from 0x005794c0).
+  0x0057956e + index*0x100 (0x0046206d), a field of the record (0x0057956e is offset 0xb6 from the record base 0x005794b8).
   An earlier version of this note listed 0x0057956e as a separate array of stride 0x80: the disassembly does not
   support that (corrected 2026-10-16).
   - `pickGolferName` 0x00467600 reads 0x0058587a, which is field +0x2a of record 0 of the walker table
@@ -143,9 +143,9 @@ hole rater 0x0042dea0 via `postEvent` 0x0046e7b0), `buildTournamentPrep` 0x0046d
 Frontend narration: `buildScenarioIntro` 0x0045fd80, `showTutorialText` 0x004604f0.
 
 ## Open questions
-- Golfer record base: the shim sources use 0x005794c0 (stride 0x100, fields documented in U-0003) while the save
-  block and re/match use 0x005794b8 (0x9c00 bytes = 156 records of 0x100); the 8-byte difference is not resolved
-  (phase 1 of re/PORT_PLAN.md). The exact field maps are not worked out here (see U-0003/U-0004).
+- Golfer record base: resolved 2026-10-16 (g1): 156 records of 0x100 bytes from 0x005794b8; 0x005794c0 is field +0x08 of
+  record 0, not a record start. Layout: re/analysis/data/golfer_record.md; neighbouring tables:
+  re/analysis/data/record_tables.md; open byte ranges: U-0009..U-0017 in UNCERTAINTIES.md.
 - `courseActionMenu` 0x0046f550 multiplexes save/purchase/scenic paths; the dispatch key
   was not traced.
 - `g_courseTable` 0x00571fd8 is seeded with course-like names but its consumer in this
