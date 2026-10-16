@@ -12,6 +12,11 @@ seed 0x00822d9c, and the frame.
     #    the exe entry runs (static initializers and early boot count as reached); outputs under <scenario>_spawn
     py -3.12 re/frida/scenario_ab.py determinism --scenario sandbox_basic --spawn-reach
     py -3.12 re/frida/scenario_ab.py ab --scenario sandbox_basic --spawn-reach --on all
+    # 4. finer than a checkpoint (opt-in, batch c3fy2): --trace va:n,... reads those bytes at EVERY poll (100 virtual ms),
+    #    --watch va:size,... (<= 4) logs every main-thread write that changes them with the writing pc and caller chain;
+    #    both go to <run>/trace.json, and `tracecmp` prints the first poll where two runs differ and both watch logs there
+    py -3.12 re/frida/scenario_ab.py ab --scenario course_season --on 0x40f5c0 --trace 575eb8:4 --watch 575eb8:4
+    py -3.12 re/frida/scenario_ab.py tracecmp --scenario course_season --a ab_set1_off --b ab_set1_on
 
 Every run uses the install copy instances\c3ft (--instance) and SIMGOLF_ALLOW_MULTI=1, so other sessions' games are
 never touched. The ON set is written to the copy's simgolf_shim.ini [hooks] section (every registered hook not in the set
@@ -84,6 +89,32 @@ SLOT_SPECS = {                   # import slots the agent redirects (module -> {
 }
 EXTRA_REGIONS = [(0x00822D9C, 4, "rng_seed"), (0x0051B380, 4, "seed_time")]
 UNOBSERVED_MODULES = {"sound.dll"}   # modules whose effects no checkpoint observes: a SAME run gives them UNOBSERVED
+
+
+# ---------------------------------------------------------------- opt-in trace / write watch (batch c3fy2, 2026-10-16)
+def parse_spans(spec: str | None) -> list[list[int]]:
+    """`va:n,va:n` (hex va, n decimal or 0x) -> [[va, n], ...]; None or '' -> []."""
+    out = []
+    for part in (spec or "").split(","):
+        part = part.strip()
+        if not part:
+            continue
+        va, _, n = part.partition(":")
+        out.append([int(va, 16), int(n or "4", 0)])
+    return out
+
+
+def trace_spec() -> list[list[int]]:
+    """--trace / C3FT_TRACE: regions dumped at every poll (scenario_det.js cfg.trace). Default: none."""
+    return parse_spans(os.environ.get("C3FT_TRACE"))
+
+
+def watch_spec() -> list[dict]:
+    """--watch / C3FT_WATCH: main-thread hardware write watchpoints (scenario_det.js cfg.watch), size 1/2/4, <= 4."""
+    w = [{"va": va, "size": n} for va, n in parse_spans(os.environ.get("C3FT_WATCH"))]
+    if len(w) > 4 or any(x["size"] not in (1, 2, 4) for x in w):
+        raise SystemExit("--watch: at most 4 addresses, size 1, 2 or 4")
+    return w
 
 
 def slot_config() -> list[dict]:
@@ -277,6 +308,11 @@ class Run:
         self.trace: list = []
         self.debug_frames = int(os.environ.get("C3FT_DEBUG_FRAMES", "0"))
         self.regs = regions()
+        self.trace_spec = trace_spec()       # opt-in (--trace): [[va, n]] read at every poll
+        self.watch_spec = watch_spec()       # opt-in (--watch): [{va, size}] write watchpoints
+        self.trace_rows: list = []           # [T, hex] per poll
+        self.watch_rows: list = []           # agent watch log entries
+        self.watch_status = None
 
     def _on_message(self, m, data):
         if m.get("type") == "send":
@@ -295,6 +331,10 @@ class Run:
                "debugMsg": bool(os.environ.get("C3FT_DEBUG_MSG"))}
         if self.spawn_reach:                 # the key is absent in the default mode, so its agent source is unchanged
             cfg["spawnReach"] = True
+        if self.trace_spec:                  # opt-in, absent by default (c3fy2)
+            cfg["trace"] = self.trace_spec
+        if self.watch_spec:
+            cfg["watch"] = self.watch_spec
         src ="const SCENARIO_CFG = " + json.dumps(cfg) + ";\n" + (JS_DIR / "scenario_det.js").read_text()
         self.out.mkdir(parents=True, exist_ok=True)
         p = self.out / "agent.js"
@@ -365,6 +405,10 @@ class Run:
                        "wall_s": round(self.wall, 1), "slots": self.slots, "checkpoints": self.checkpoints,
                        "errors": self.errors, "schedule": self.schedule, "failure": self.failure}
             (self.out / "summary.json").write_text(json.dumps(summary, indent=1))
+            if self.trace_spec or self.watch_spec:
+                (self.out / "trace.json").write_text(json.dumps({"trace_regions": self.trace_spec, "rows": self.trace_rows,
+                                                                 "watch": self.watch_spec, "watch_log": self.watch_rows,
+                                                                 "watch_status": self.watch_status}))
         return self
 
     def _go(self, script_fn, env, js, t_start):
@@ -382,6 +426,11 @@ class Run:
                 self.polls += 1
                 ctx.T = p["st"]["T"] - T0
                 self.agent_log += p.get("log", [])
+                if "tr" in p:
+                    self.trace_rows.append([ctx.T, p["tr"]])
+                if "wl" in p:
+                    self.watch_rows += p["wl"]
+                    self.watch_status = p.get("ws")
                 self.trace.append([ctx.T, p["st"]["qpc"], p["st"]["forwarded"], round(time.time() - t_start, 3)]
                                   + ([p["bt"], p.get("reach")] if p.get("bt") else [])
                                   + ([p["st"]["msgs"], p["st"].get("dbg")] if p["st"].get("msgs") is not None else []))
@@ -795,9 +844,57 @@ def cmd_csv(a):
     return write_results(a, on, a.label, run_dir(scen_key(a), a.off_dir), run_dir(scen_key(a), a.on_dir))
 
 
+def cmd_tracecmp(a):
+    """Compare two runs' trace.json (opt-in --trace / --watch): the first poll whose traced bytes differ, with the region,
+    offset and both values, then each arm's watch log around that time."""
+    da, db = run_dir(scen_key(a), a.a), run_dir(scen_key(a), a.b)
+    ta, tb = (json.loads((d / "trace.json").read_text()) for d in (da, db))
+    spans = ta["trace_regions"]
+    if spans != tb["trace_regions"]:
+        raise SystemExit("the two runs traced different regions")
+    rb = {t: h for t, h in tb["rows"]}
+    first = None
+    for t, ha in ta["rows"]:
+        hb = rb.get(t)
+        if hb is None or hb == ha:
+            continue
+        ba, bb = bytes.fromhex(ha), bytes.fromhex(hb)
+        off = 0
+        diffs = []
+        for va, n in spans:
+            for i in range(n):
+                if ba[off + i] != bb[off + i]:
+                    diffs.append(f"0x{va + i:08x} (region 0x{va:08x}+0x{i:x}): {ba[off + i]:02x} / {bb[off + i]:02x}")
+            off += n
+        first = t
+        print(f"first differing poll T={t} ({a.a} / {a.b}):")
+        for x in diffs[:40]:
+            print("  " + x)
+        break
+    if first is None:
+        common = len(set(t for t, _ in ta["rows"]) & set(rb))
+        print(f"traces identical over {common} common polls ({len(ta['rows'])} / {len(tb['rows'])} polls)")
+    lo = (first if first is not None else 0) - a.window
+    hi = (first if first is not None else 1 << 40) + a.window
+    for name, t in ((a.a, ta), (a.b, tb)):
+        rows = [r for r in t.get("watch_log") or [] if lo <= r[0] - T0 <= hi]
+        print(f"watch log {name} ({len(t.get('watch_log') or [])} entries, status {t.get('watch_status')}), "
+              f"T in [{lo}, {hi}]:")
+        for r in rows[:a.max_rows]:
+            print(f"  T={r[0] - T0} " + " ".join(str(x) for x in r[1:]))
+    return 0 if first is None else 1
+
+
 SPAWN_HELP = ("arm the reach breakpoints when the agent loads, before the spawned process's main thread reaches the exe "
               "entry, so static initializers (__cinit 0x004a50db) and boot code count as reached; outputs go to "
               "<scenario>_spawn (folder, schedule, CSV names). Default: armed at the first poll")
+
+
+TRACE_HELP = ("opt-in: `va:n,...` regions read at EVERY poll (100 virtual ms) into <run>/trace.json; compare two runs with "
+              "`tracecmp`. Same as env C3FT_TRACE. Default: none (agent and outputs unchanged)")
+WATCH_HELP = ("opt-in: `va:size,...` (<= 4, size 1/2/4) main-thread hardware write watchpoints, armed at the first poll; "
+              "each write that changes the value is logged with the writing pc and caller chain into <run>/trace.json. "
+              "Same as env C3FT_WATCH")
 
 
 def main():
@@ -811,6 +908,8 @@ def main():
     p.add_argument("--reuse-schedule", action="store_true", help="replay the saved schedule in both runs")
     p.add_argument("--spawn-reach", action="store_true", help=SPAWN_HELP + "; both OFF runs arm every registered hook's "
                    "original entry and their reach counts are compared")
+    p.add_argument("--trace", help=TRACE_HELP)
+    p.add_argument("--watch", help=WATCH_HELP)
     p.set_defaults(fn=cmd_determinism)
     p = sp.add_parser("ab")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -821,6 +920,8 @@ def main():
     p.add_argument("--skip-off", help="reuse an earlier OFF run directory name instead of running the OFF arm")
     p.add_argument("--write-evidence", action="store_true", help="write the per-function CSVs into log/diff")
     p.add_argument("--spawn-reach", action="store_true", help=SPAWN_HELP)
+    p.add_argument("--trace", help=TRACE_HELP)
+    p.add_argument("--watch", help=WATCH_HELP)
     p.set_defaults(fn=cmd_ab)
     p = sp.add_parser("csv", help="re-score two finished arms (run folder names under log/c3/alt/c3ft/<scenario>/)")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -831,7 +932,18 @@ def main():
     p.add_argument("--write-evidence", action="store_true")
     p.add_argument("--spawn-reach", action="store_true", help="the arms are spawn-mode runs (folder <scenario>_spawn)")
     p.set_defaults(fn=cmd_csv)
+    p = sp.add_parser("tracecmp", help="compare two runs' trace.json (made with --trace / --watch)")
+    p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
+    p.add_argument("--a", required=True, help="run folder name under log/c3/alt/c3ft/<scenario>/")
+    p.add_argument("--b", required=True)
+    p.add_argument("--window", type=int, default=2000, help="virtual ms of watch log printed around the first difference")
+    p.add_argument("--max-rows", type=int, default=60)
+    p.add_argument("--spawn-reach", action="store_true")
+    p.set_defaults(fn=cmd_tracecmp)
     a = ap.parse_args()
+    for flag, var in (("trace", "C3FT_TRACE"), ("watch", "C3FT_WATCH")):
+        if getattr(a, flag, None):
+            os.environ[var] = getattr(a, flag)
     return a.fn(a)
 
 

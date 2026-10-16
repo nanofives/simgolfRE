@@ -309,7 +309,23 @@ function writable(p) {
   protectedPages.add(k);
 }
 Process.setExceptionHandler(function (d) {
-  if (d.type !== 'breakpoint') return false;
+  // opt-in write watch (cfg.watch): a debug-register data hit arrives as EXCEPTION_SINGLE_STEP after the write
+  if (d.type === 'single-step' && CFG.watch && Process.getCurrentThreadId() === MAIN) return onWatchHit(d);
+  if (d.type !== 'breakpoint') {
+    // opt-in (cfg.trace / cfg.watch): report any other main-thread exception before it kills the process
+    if ((CFG.trace || CFG.watch) && Process.getCurrentThreadId() === MAIN) {
+      let bt = [], bta = [], stack = [];
+      try { bt = Thread.backtrace(d.context, Backtracer.FUZZY).slice(0, 12).map(fmtAddr); } catch (e) { bt = ['bt ' + e.message]; }
+      try { bta = Thread.backtrace(d.context, Backtracer.ACCURATE).slice(0, 16).map(fmtAddr); } catch (e) { bta = ['bt ' + e.message]; }
+      try { for (let i = 0; i < 64; i++) stack.push(fmtAddr(d.context.esp.add(4 * i).readPointer())); } catch (e) { stack.push('stack ' + e.message); }
+      const r = d.context;
+      send({ type: 'error', where: 'exception', msg: JSON.stringify({ T: T() - CFG.t0, type: d.type, pc: fmtAddr(d.address),
+        mem: d.memory ? [d.memory.operation, d.memory.address.toString()] : null, bt, bta, stack,
+        regs: { eax: r.eax.toString(), ebx: r.ebx.toString(), ecx: r.ecx.toString(), edx: r.edx.toString(),
+                esi: r.esi.toString(), edi: r.edi.toString(), ebp: r.ebp.toString(), esp: r.esp.toString() } }) });
+    }
+    return false;
+  }
   const list = bpByAddr.get(d.address.toString());
   if (!list) return false;
   const e = list[0];
@@ -428,6 +444,65 @@ function status() {
     })() : undefined,
   };
 }
+// ---------------------------------------------------------------- opt-in trace and write watch (batch c3fy2, 2026-10-16)
+// cfg.trace = [[va, n], ...] (scenario_ab.py --trace): these regions are read at EVERY poll (100 virtual ms) and sent with
+// it as hex, so two arms can be compared between checkpoints (scenario_ab.py tracecmp prints the first poll that
+// differs). cfg.watch = [{va, size}] (scenario_ab.py --watch, at most 4, size 1/2/4): hardware WRITE watchpoints on the
+// main thread, armed at the first poll; the debug registers trap after the writing instruction, so each hit logs
+// [T, pc of the NEXT instruction, the first frames of the caller chain, the value now]. A hit is logged only when the
+// value differs from the previous hit's (a flag word the game rewrites every frame would flood the log otherwise); the
+// hit count is kept per watch. Both keys are absent in the default mode, which then runs none of this code.
+const traceRegs = CFG.trace || null;
+function traceHex() {
+  let s = '';
+  for (const [va, n] of traceRegs) {
+    const b = new Uint8Array(ptr(va).readByteArray(n));
+    for (let i = 0; i < b.length; i++) s += (b[i] < 16 ? '0' : '') + b[i].toString(16);
+  }
+  return s;
+}
+const watches = (CFG.watch || []).map((w, i) => ({ ...w, i, hits: 0, last: null, armed: false, err: null }));
+const watchLog = [];
+function watchVal(w) {
+  const p = ptr(w.va);
+  return w.size === 1 ? p.readU8() : (w.size === 2 ? p.readU16() : p.readU32());
+}
+function fmtAddr(a) {
+  const m = Process.findModuleByAddress(a);
+  return m ? m.name + '+' + a.sub(m.base).toString(16) : a.toString();
+}
+function armWatches() {
+  if (!watches.length || watches.every(w => w.armed || w.err)) return;
+  const th = Process.enumerateThreads().find(t => t.id === MAIN);
+  for (const w of watches) {
+    if (w.armed || w.err) continue;
+    try {
+      th.setHardwareWatchpoint(w.i, ptr(w.va), w.size, 'w');
+      w.armed = true;
+      w.last = watchVal(w);
+      watchLog.push([T(), 'armed', w.va, w.last]);
+    } catch (e) { w.err = String(e && e.message || e); }
+  }
+}
+function onWatchHit(d) {
+  // a write watchpoint on the main thread: which of ours (several can share a dword) changed
+  let mine = false;
+  for (const w of watches) {
+    if (!w.armed) continue;
+    const v = watchVal(w);
+    w.hits++;
+    if (v !== w.last) {
+      let bt = [];
+      try { bt = Thread.backtrace(d.context, Backtracer.ACCURATE).slice(0, 4).map(fmtAddr); } catch (e) { bt = ['bt ' + e.message]; }
+      watchLog.push([T(), fmtAddr(d.context.pc), bt, w.va, v]);
+      if (watchLog.length > 20000) watchLog.splice(0, watchLog.length - 20000);
+      w.last = v;
+    }
+    mine = true;
+  }
+  return mine;
+}
+
 let firstPollDone = false;
 function poll(now) {
   if (CFG.spawnReach && !firstPollDone) {
@@ -436,8 +511,15 @@ function poll(now) {
     for (const r of reach) { r.bootHits = r.hits; r.bootOther = r.hitsOther; }
   }
   attachReach();
+  if (watches.length) armWatches();
   const lg = log.splice(0, log.length);
-  send({ type: 'poll', st: status(), log: lg, bt: where(), reach: CFG.debugBt ? reachCounts() : undefined });
+  const msg = { type: 'poll', st: status(), log: lg, bt: where(), reach: CFG.debugBt ? reachCounts() : undefined };
+  if (traceRegs) msg.tr = traceHex();
+  if (watches.length) {
+    msg.wl = watchLog.splice(0, watchLog.length);
+    msg.ws = watches.map(w => [w.va, w.armed, w.hits, w.err]);
+  }
+  send(msg);
   for (;;) {
     let reply = null;
     recv('go', (m) => { reply = m; }).wait();

@@ -180,25 +180,69 @@ or writes:
 
 ## Findings (the original)
 - When `[0x004c2848] == 0x280`, 0x0041b209 jumps into the loop at 0x00420d83 (canStep / cellAt / addSprite) that has no
-  exit edge (0x00420e08 jumps back to 0x00420d96, 0x00420daf loops): the game hangs there. [UNCERTAIN U-00xx: the
+  exit edge (0x00420e08 jumps back to 0x00420d96, 0x00420daf loops): the game hangs there. [UNCERTAIN U-0007: the
   condition `[0x004c2848] == 0x280` is a build-tool drag state; whether it is reachable in play is not determined.]
 - P7: 0x0041b61d divides by `rateTile(...) * 3` (halved when `[0x0058f330] == 4`), faulting on a 0 result; 0x0041ac30
   reads `byte [F+0xf0+eax]` with eax in -3..3, below the 4-byte table at F+0xf0 for a negative index; 0x0041ae28 adds
   `[0x005a34f0] % 3` to F+0x180, which can be read before written.
 - (More per-phase findings in each part's notes; collected into the batch notes log/c3/c3fy_notes.txt.)
 
-## Verification status (c3fy, 2026-10-16)
+## Verification status (c3fy 2026-10-16, updated by c3fy2 the same day)
 The reimplementation is `shim/src/re/c3fy.cpp` (one function per phase in the original's order; naked entry rebuilding the
 SEH frame). Because mainLoop is entered once and only returns on the quit path, it has no per-call path-1 A/B; it is
-verified by the whole-game scenario A/B (`re/frida/scenario_ab.py`, mainLoop ON vs OFF, every other hook off,
-instance `instances/c3fy`):
-- **sandbox_basic: GREEN** — state (every `.sve` global + the RNG seeds) and all frames byte-identical to the original
-  at all 10 checkpoints (menu -> Sandbox -> Monterey, 40 s).
-- **negctl control: RED** — one extra `Random::range` per frame (`shim/src/re/c3fy_negctl.cpp`) diverges from the first
-  in-game checkpoint; so the A/B detects a wrong body and the reimplementation passes where the control fails.
-- **course_season: RED** — byte-identical through the hole build, then a 2-byte divergence at the hole_open checkpoint
-  (hole-1 +0x201 at 0x00575eb9, character-66 +0x163 at 0x004df79b) compounds to golfer/story/RNG divergence and a
-  mid-season crash. A residual bug in the hole-open / golfer-simulation path (U-0008); the reimplementation is not yet
-  byte-faithful there, so c3fy.cpp is **not** linked into `shim/re_batches.txt` (hooks default ON, so a committed live
-  hook would run the buggy loop in normal play). mainLoop stays C2 (held, `re/c3_hold.tsv`): the C2->C3 gate requires a
-  path-1 A/B, which is impossible for a once-entered loop.
+verified by the whole-game scenario A/B (`re/frida/scenario_ab.py`, mainLoop ON vs OFF, every other hook off, instance
+`instances/c3fy`, runner `log/c3/c3fy2_run.py`, outputs `log/c3/alt/c3fy2/<scenario>/`).
+
+c3fy2 (U-0008, resolved) found eight transcription defects; each is fixed in c3fy.cpp with a `c3fy2 fix` comment:
+
+| site | class | effect seen |
+|---|---|---|
+| 0x004139ee / 0x004139f5 (P3) | `cmp eax, edi; mov eax, [0x5685f0]; jle`: the C code tested the reloaded eax | uphill flag 0x1000 of the hole record from the hole index |
+| 0x00413a59 / 0x00413a60 (P3) | same, `jge` | downhill flag 0x2000 (hole-1 +0x201, 0x00575eb9; "downhill" in the hole-open notice) |
+| 0x00414a88 / 0x00414a91 (P3) | `test eax, eax; lea eax, [ecx*8]; jne` read the lea | golfer-type byte +3 (0x004df79b) took `bl << 4` instead of `(bl - 5) << 4` |
+| 0x004156ad / 0x004156b7 (P3) | `cmp edx, 4; mov edx, [F+0x88]; setle` read F+0x88 | found by the flag audit |
+| 0x00414e91 (P3) | a `jne` reached only from the `jge` at 0x00414e11 (`cmp cl, 0xb`), written as `eax != 0` | golfer animation (frame 0, anim [F+0x4c]) resets, then golfers / RNG / crash in course_season |
+| 0x0041e38f (H1) | `mov eax, [0x824130]` not transcribed before the switch at 0x0041e6f9 (`eax + 1`) | golfer_events: golfer 4 stays selected ([0x004c2e10] = 0x84) after its panel closes |
+| 0x0041cabc (H1) | strcpy idiom written as strcat (`Themes\Championship\`) | ui_tour: no overwrite prompt, the save runs and crashes in writeCourseInfo's unchecked fopen |
+| 0x0041ec50 (H1) | strcpy idiom written as strcat ("You cannot build more than 18 holes.") | found by the string audit; no scenario builds 18 holes |
+
+Audits of the original's listing that swept each class over the whole body: `log/c3/c3fy2_hazards.py` (27 jcc / setcc whose
+flag operands are overwritten before the jump; 23 were transcribed correctly), `log/c3/c3fy2_setter_check.py` (every
+machine-transcribed consumer evaluates its true flag setter: 241 OK), `log/c3/c3fy2_strcheck.py` (239 inline strcpy / strcat
+idioms; every C StrCpy / StrCat matched by hand where the matcher could not decide).
+
+Results with the fixed build (state = every `.sve` global + both RNG words, frames = pixel-exact; each scenario's two OFF runs
+identical, and for the first six a third, fresh OFF arm identical to them):
+
+| scenario | checkpoints | virtual s | mainLoop ON vs OFF |
+|---|---|---|---|
+| sandbox_basic | 10 | 48 | GREEN |
+| course_season | 12 | 628 | GREEN (was RED, U-0008) |
+| championship | 6 | 246 | GREEN |
+| golfer_events | 10 | 260 | GREEN (was RED at landmark) |
+| stories_fixture | 4 | 36 | GREEN |
+| ui_tour_v | 10 | 415 | GREEN (was a crash before `end`) |
+| golfer_stories | 6 | 272 | GREEN |
+| mood5_fixture | 4 | 54 | GREEN |
+| stories9_fixture | 5 | 146 | GREEN |
+
+`ui_tour_v` is `re/tools/scenario.py`'s ui_tour with one change (defined in `log/c3/c3fy2_run.py`): on this build's boot
+timeline the tour's "Start New Game -> Easy" opens a career that must buy its first course, so the scripted Monterey click
+is refused; the variant takes Sandbox Mode at that step and runs the rest of the tour unchanged.
+
+With all 2,945 registered hooks ON (mainLoop included), course_season and ui_tour_v are also SAME at every checkpoint.
+
+Coverage of the original mainLoop by the nine scenarios (one-shot breakpoints on all 2,554 block leaders in OFF replays,
+`log/c3/c3fy2_coverage.py`; per-block list `log/c3/c3fy2_coverage.tsv`): 1,379 blocks (54.0%), 10,775 of 21,541
+instructions (50.0%). By phase (blocks): Setup 8/9, Session 11/13, FramePreamble 66/97, P1 126/209, P2 70/193,
+P3 321/396, P4 146/285, P5 102/155, P6 81/118, P7 94/203, H1 147/466, H2 156/356, Menu 51/54. The scenario A/B
+therefore compares half of the body; the three audits above cover every instruction for their three defect classes.
+
+Controls (`shim/src/re/c3fy_negctl.cpp`, mode by env `SIMGOLF_C3FY_NEG`): mode 1 (one extra `Random::range` per frame) is
+RED in course_season from the first in-game checkpoint; mode 2 (the U-0008 compare restored at 0x00413a60, in the middle
+of the frame loop) is RED in course_season from hole_open with exactly the original symptom and GREEN in sandbox_basic,
+which never runs that block.
+
+c3fy.cpp is still **not** linked into `shim/re_batches.txt` and mainLoop stays C2 (held, `re/c3_hold.tsv`): the C2->C3
+gate requires a path-1 A/B, which is impossible for a once-entered loop; linking is the user's decision (evidence and
+open coverage questions: `log/c3/c3fy2_notes.txt`).

@@ -21,6 +21,13 @@
 // phantom slot the original pushes once at 0x0040f982). The body keeps every frame slot it shares with the original at
 // the original's offset from F, so the slots the original reads before writing, the pointers it hands to callees and the
 // SEH unwind all line up (log/c3/alt/c3fy_uninit.py, c3fy_frame_slots.txt). F = entry_esp - 0x1250.
+//
+// FIXES (c3fy2, 2026-10-16; U-0008 resolved). Eight transcription defects, localised by the scenario A/B's opt-in
+// per-poll trace and write watch (re/frida/scenario_ab.py --trace / --watch) and swept by three audits of the listing
+// (log/c3/c3fy2_hazards.py, c3fy2_setter_check.py, c3fy2_strcheck.py): a jcc / setcc that read a register reloaded
+// after the flag-setting compare (0x004139f5 and 0x00413a60, the U-0008 downhill / uphill flags; 0x00414a91; 0x004156b7),
+// a jne whose flags come from its only predecessor's compare (0x00414e91), eax not loaded before the switch it feeds
+// (0x0041e38f), and two strcpy idioms written as strcat (0x0041cabc, 0x0041ec50). Notes: log/c3/c3fy2_notes.txt.
 #include "hooks.h"
 
 namespace {
@@ -80,6 +87,33 @@ enum PhExit { kNext = 0, kFrame = 1, kRetile = 2, kMenu = 3 };
 // kFrame  = jump to the frame head 0x0040fc29 (timeGetTime, next frame)
 // kRetile = jump to 0x0040fc24 (rebuildTileCoverage, then the frame head)
 // kMenu   = jump to the title menu 0x00420e35
+
+// Negctl control (dormant unless built with -DC3FY_NEG, i.e. through shim/src/re/c3fy_negctl.cpp, which is never listed
+// in shim/re_batches.txt). The wrong body is chosen by c3fyNegMode(): the env SIMGOLF_C3FY_NEG when it is set (the
+// scenario A/B passes it to the ON arm with --env), else the exported switch c3fyNegCtl[0] (c3fy_negctl.cpp starts it
+// at 1). No fixed-address page (the switch is an exported BSS word).
+//   1  one extra Random::range draw per frame, before the preamble: shifts the RNG seed 0x00822d9c, so every scenario
+//      reads RED from its first in-game checkpoint.
+//   2  (c3fy2) the U-0008 defect put back in P3: the downhill test at 0x00413a60 compares the hole index [0x005685f0]
+//      with the tee height - 1 instead of the green height. A wrong body in the middle of the frame loop that only a
+//      scenario with a hole under construction reaches (course_season); sandbox_basic never runs that block.
+#if defined(C3FY_NEG)
+extern "C" __declspec(dllexport) volatile int c3fyNegCtl[4];
+static int c3fyNegMode() {
+    static int envMode = -2;                        // -2 not read yet, -1 env not set
+    if (envMode == -2) {
+        char buf[16];
+        DWORD n = GetEnvironmentVariableA("SIMGOLF_C3FY_NEG", buf, sizeof buf);
+        int v = -1;
+        if (n > 0 && n < sizeof buf) {
+            v = 0;
+            for (DWORD i = 0; i < n && buf[i] >= '0' && buf[i] <= '9'; i++) v = v * 10 + (buf[i] - '0');
+        }
+        envMode = v;
+    }
+    return envMode >= 0 ? envMode : c3fyNegCtl[0];
+}
+#endif
 
 }  // namespace
 namespace {
@@ -2531,9 +2565,9 @@ stk[--sp] = (int)(eax); // 0x4139e4  push eax
 edi = (edi) + 1; // 0x4139e5  inc edi
 eax = CC(0x40c170, stk[sp+0], stk[sp+1], stk[sp+2]); // heightBlend  0x4139e6
 sp += 8; // 0x4139eb  add esp, 0x20  (caller stack cleanup)
-// 0x4139ee  cmp eax, edi
-eax = G32(0x5685f0); // 0x4139f0  mov eax, dword ptr [0x5685f0]
-if ((int)(eax) <= (int)(edi)) goto La_413a11; // 0x4139f5  jle 0x413a11
+{ int cmpA = eax; // 0x4139ee  cmp eax, edi: the jle at 0x4139f5 reads the flags of THIS compare (green height vs tee+1)
+eax = G32(0x5685f0); // 0x4139f0  mov eax, dword ptr [0x5685f0] (moves never touch the flags)
+if ((int)(cmpA) <= (int)(edi)) goto La_413a11; } // 0x4139f5  jle 0x413a11  (c3fy2 fix: was eax, the hole index)
 ecx = eax; // 0x4139f7  mov ecx, eax
 ecx = (ecx) << (6); // 0x4139f9  shl ecx, 6
 ecx = (ecx) + (eax); // 0x4139fc  add ecx, eax
@@ -2566,9 +2600,12 @@ stk[--sp] = (int)(eax); // 0x413a4f  push eax
 edi = (edi) - 1; // 0x413a50  dec edi
 eax = CC(0x40c170, stk[sp+0], stk[sp+1], stk[sp+2]); // heightBlend  0x413a51
 sp += 6; // 0x413a56  add esp, 0x18  (caller stack cleanup)
-// 0x413a59  cmp eax, edi
-eax = G32(0x5685f0); // 0x413a5b  mov eax, dword ptr [0x5685f0]
-if ((int)(eax) >= (int)(edi)) goto La_413a7c; // 0x413a60  jge 0x413a7c
+{ int cmpA = eax; // 0x413a59  cmp eax, edi: the jge at 0x413a60 reads the flags of THIS compare (green height vs tee-1)
+eax = G32(0x5685f0); // 0x413a5b  mov eax, dword ptr [0x5685f0] (moves never touch the flags)
+#if defined(C3FY_NEG)
+if (c3fyNegMode() == 2) cmpA = eax;   // negctl mode 2: the U-0008 defect (compares the hole index)
+#endif
+if ((int)(cmpA) >= (int)(edi)) goto La_413a7c; } // 0x413a60  jge 0x413a7c  (c3fy2 fix U-0008: was eax, the hole index)
 ecx = eax; // 0x413a62  mov ecx, eax
 ecx = (ecx) << (6); // 0x413a64  shl ecx, 6
 ecx = (ecx) + (eax); // 0x413a67  add ecx, eax
@@ -3872,9 +3909,9 @@ G8(eax + 0x4d60ab) = (ecx & 0xff); // 0x414a73  mov byte ptr [eax + 0x4d60ab], c
 eax = CC(0x46c940, stk[sp+0]); // typeBit7Clear  0x414a79
 ecx = (int)(G16(ebp + 0x57956e)); // 0x414a7e  movsx ecx, word ptr [ebp + 0x57956e]
 sp += 1; // 0x414a85  add esp, 4  (caller stack cleanup)
-// 0x414a88  test eax, eax
-eax = (int)(ecx*8); // 0x414a8a  lea eax, [ecx*8]
-if (((eax)) != 0) goto La_414aab; // 0x414a91  jne 0x414aab
+{ int testA = eax; // 0x414a88  test eax, eax: the jne at 0x414a91 reads typeBit7Clear's result, not the lea
+eax = (int)(ecx*8); // 0x414a8a  lea eax, [ecx*8] (lea never touches the flags)
+if (((testA)) != 0) goto La_414aab; } // 0x414a91  jne 0x414aab  (c3fy2 fix: was the lea result)
 eax = (eax) - (ecx); // 0x414a93  sub eax, ecx
 ecx = (ecx & ~0xffu) | (((ebx & 0xff)) & 0xff); // 0x414a95  mov cl, bl
 ecx = (ecx & ~0xffu) | ((((ecx & 0xff)) - (5)) & 0xff); // 0x414a97  sub cl, 5
@@ -4161,7 +4198,9 @@ edx = eax >> 31; // 0x414e85  cdq
 FD(0x48) = edx; // 0x414e88  mov dword ptr [F+0x48], edx
 goto La_41530d; // 0x414e8c  jmp 0x41530d
 La_414e91:;
-if (((eax)) != 0) goto La_414f43; // 0x414e91  jne 0x414f43
+// 0x414e91 is reached only from the jge at 0x414e11, so its jne reads the flags of `cmp cl, 0xb` at 0x414e0e (ecx is
+// unchanged on that edge): taken when cl != 0xb, i.e. cl > 0xb (c3fy2 fix: was `eax != 0`)
+if (((ecx & 0xff)) != (0xb)) goto La_414f43; // 0x414e91  jne 0x414f43
 edx = (edx & ~0xffu) | ((GU8(ebp + 0x5794d4)) & 0xff); // 0x414e97  mov dl, byte ptr [ebp + 0x5794d4]
 ecx = 0xa; // 0x414e9d  mov ecx, 0xa
 // 0x414ea2  cmp dl, 0xd
@@ -4743,9 +4782,9 @@ goto La_415832; // 0x4156a0  jmp 0x415832
 La_4156a5:;
 edx = G32(0x4c2844); // 0x4156a5  mov edx, dword ptr [0x4c2844]
 eax = (eax) ^ (eax); // 0x4156ab  xor eax, eax
-// 0x4156ad  cmp edx, 4
-edx = FD(0x88); // 0x4156b0  mov edx, dword ptr [F+0x88]
-eax = (eax & ~0xffu) | ((((int)(edx) <= (int)(4)) ? 1 : 0) & 0xff); // 0x4156b7  setle al
+{ int cmpA = edx; // 0x4156ad  cmp edx, 4: edx = [0x4c2844] (0x4156a5); the setle at 0x4156b7 reads THIS compare
+edx = FD(0x88); // 0x4156b0  mov edx, dword ptr [F+0x88] (moves never touch the flags)
+eax = (eax & ~0xffu) | ((((int)(cmpA) <= (int)(4)) ? 1 : 0) & 0xff); } // 0x4156b7  setle al  (c3fy2 fix: was F+0x88)
 eax = (eax) - 1; // 0x4156ba  dec eax
 stk[--sp] = (int)(-1); // 0x4156bb  push -1
 eax = (eax & ~0xffu) | ((((eax & 0xff)) & (0xfe)) & 0xff); // 0x4156bd  and al, 0xfe
@@ -8100,7 +8139,9 @@ a41ca98:  // key 0x43
     G8(kBuf) = 0;                                      // 0x0041caaa mov byte[kBuf],0 (push -1 at 0x41caa8)
     CC(0x0040DAA0, -1);                                // 0x0041cab1 appendCourseTitle(-1)
     CC(0x0045B8B0, ebp);                               // 0x0041cab7 appendToBuffer45b8b0(0) (push ebp)
-    StrCat(kBuf, 0x004C5328);                          // 0x0041cabc..0x0041cae0 (push ebp at 0x41cac6)
+    StrCpy(kBuf, 0x004C5328);                          // 0x0041cabc..0x0041cae0 (push ebp at 0x41cac6): strcpy, the
+                                                       // destination is not scanned ("Themes\Championship\"; c3fy2 fix: was
+                                                       // StrCat, so fileExists missed the .cse and the save ran unasked)
     CC(0x0040DAA0, ebp);                               // 0x0041cae2 appendCourseTitle(0) (top push=ebp)
     StrCat(kBuf, 0x004C5F38);                          // 0x0041cae7..0x0041cb17 (push kBuf at 0x41caf1)
     eax = CC(0x004378A0, (int)kBuf);                   // 0x0041cb19 fileExists(kBuf) (top push=kBuf)
@@ -8910,7 +8951,9 @@ a41e381:
     if (eax != ebx) goto a41e39f;                      // 0x0041e381 cmp eax,ebx; jne
     edi = G32(0x0053DF54);                             // 0x0041e385
     if (edi <= ebp) goto a41e3a7;                      // 0x0041e38b cmp edi,ebp; jle (signed)
-    if (G32(0x00824130) != -1) goto a41e6f9;           // 0x0041e38f cmp [0x824130],-1; jne
+    eax = G32(0x00824130);                             // 0x0041e38f mov eax,[0x824130]: a41e6f9 switches on eax + 1
+    if (eax != -1) goto a41e6f9;                       // 0x0041e394 cmp eax,-1; 0x0041e397 jne  (c3fy2 fix: eax was
+                                                       // left as [0x822d68], so the switch took case 2, select golfer)
     goto a41e3a7;                                      // 0x0041e39d
 a41e39f:
     if (eax == ebp) goto a41e631;                      // 0x0041e39f cmp eax,ebp; je
@@ -9254,7 +9297,9 @@ a41eab0:  // click at normal speed: slot panel
     eax = Itoa(G32(0x005685F0), 0x0058A528, 0xA);       // 0x0041ebe9 __itoa
     StrCat(kBuf, (u32)eax);                             // 0x0041ebee..0x0041ec19
     StrCat(kBuf, 0x004C5C48);                           // 0x0041ec1b..0x0041ec4c
-    if (G32(0x005685F0) >= 0x13) StrCat(kBuf, 0x004C5C20);  // 0x0041ec3f..0x0041ec73
+    if (G32(0x005685F0) >= 0x13) StrCpy(kBuf, 0x004C5C20);  // 0x0041ec3f..0x0041ec73: strcpy (the destination is not
+                                                       // scanned at 0x0041ec64), "You cannot build more than 18 holes."
+                                                       // replaces the message (c3fy2 fix: was StrCat)
     CC(0x0040CB00, 0x80006000, 1, -1);                 // 0x0041ec7e startMessage (push -1,1,0x80006000)
     return kFrame;                                     // 0x0041ec86
 a41ec8b:  // edx==1: pick building tool
@@ -10371,20 +10416,7 @@ static int H2_Tail_00420ac6(int ecx) {
 // ====================================================================================================================
 namespace {
 
-// Negctl control (dormant unless built with -DC3FY_NEG, armed by the exported switch or -DC3FY_NEG_ALWAYS). The wrong
-// body is one extra Random::range draw per frame, in the middle of the frame loop: it shifts the RNG seed 0x00822d9c
-// so the whole-game scenario reads RED from the first frame's rng_seed checkpoint. No fixed-address page (the switch is
-// an exported BSS word). Source: shim/src/re/c3fy_negctl.cpp.
-#if defined(C3FY_NEG)
-extern "C" __declspec(dllexport) volatile int c3fyNegCtl[4];
-static inline bool c3fyNegOn() {
-#if defined(C3FY_NEG_ALWAYS)
-    return true;
-#else
-    return c3fyNegCtl[0] != 0;
-#endif
-}
-#endif
+// Negctl control: c3fyNegMode() at the top of this file (modes 1 and 2), source shim/src/re/c3fy_negctl.cpp.
 
 void __stdcall MainLoopBody(u8* F) {
     Setup(F);                                       // 0x0040f5e2..0x0040f9f7 -> the menu
@@ -10397,7 +10429,7 @@ void __stdcall MainLoopBody(u8* F) {
         int retile = 1;
         for (;;) {
 #if defined(C3FY_NEG)
-            if (c3fyNegOn()) Rnd(1);                // negctl: dormant extra RNG draw, shifts the seed (RED control)
+            if (c3fyNegMode() == 1) Rnd(1);         // negctl mode 1: extra RNG draw, shifts the seed (RED control)
 #endif
             FramePreamble(F, retile);               // 0x0040fc24 / 0x0040fc29 .. 0x00410604
             Ph_00410604(F);                         // P1  0x00410604..0x0041234e
