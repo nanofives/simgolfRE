@@ -222,9 +222,15 @@ void Setup(u8* F) {
     for (int esi = 0; esi < 7; esi++) {                                                  // 0x0040f813..0x0040f880
         const int hi = (esi == 6) ? 1 : 0;                                              // 0x0040f834 sete al
         const int k = hi + 2 * esi;                                                     // 0x0040f838
-        ImageDraw(0x0053B7E0 + 0x2C * k, Root(), FW(0x152 + 4 * esi), FW(0x150 + 4 * esi), 0);  // 0x0040f848
+        // c3fyc fix: argument order from the pushes. 0x0040f815 eax = [F+esi*4+0x152], 0x0040f81d ecx = [F+esi*4+0x150];
+        // push 0 / push eax (0x0040f827) / push ecx (0x0040f833) / push edx = Root (0x0040f837): Image_draw(Root, [+0x150],
+        // [+0x152], 0) (the menu's 0x00420f0c has the same order). The old line passed +0x152 first.
+        ImageDraw(0x0053B7E0 + 0x2C * k, Root(), FW(0x150 + 4 * esi), FW(0x152 + 4 * esi), 0);  // 0x0040f848
         if (esi < 5)                                                                     // 0x0040f84d..0x0040f850
-            DrawCentered(FD(0x1F4 + 4 * esi), FW(0xF6 + 4 * esi), FW(0xF4 + 4 * esi) + 8, 0x80006318);  // 0x0040f874
+            // c3fyc fix: 0x0040f852 eax = [+0xf6] + 8 (0x0040f869), 0x0040f85a ecx = [+0xf4], edx = [+0x1f4]; pushes color,
+            // eax, ecx, edx (0x0040f86c..0x0040f873): drawCentered([+0x1f4], [+0xf4], [+0xf6] + 8, color). The old line
+            // swapped +0xf4 and +0xf6.
+            DrawCentered(FD(0x1F4 + 4 * esi), FW(0xF4 + 4 * esi), FW(0xF6 + 4 * esi) + 8, 0x80006318);  // 0x0040f874
     }
     SetDrawTarget(Root(), 0x0051A028, 0, 0, 0);                                          // 0x0040f893
     G32(0x005A5A00) = -1;                                                                // 0x0040f8a5
@@ -6795,8 +6801,9 @@ static void P7_endless(u8* F) {
         int spr = CC(0x43d6f0, esi + 0x208, 0, edx);              // 0x00420dda
         G32(0x5a9cc8) = spr;                                      // 0x00420dec
         int ecx = (esi + 0x8c) | 0x200;                           // 0x00420ddf lea; 0x00420de9 or ch,2
-        // 0x00420e00 addSprite([F+0x58], [F+0x58], [F+0x58], 0x28, 0x28, spr, 4, ecx)
-        CC(0x4628d0, FD(0x58), FD(0x58), FD(0x58), 0x28, 0x28, spr, 4, ecx);  // 0x00420e00
+        // 0x00420e00 addSprite([F+0x68], [F+0x58], [F+0x58], 0x28, 0x28, spr, 4, ecx)
+        // c3fyc fix: the first argument is edx = [F+0x68] (0x00420de5 mov edx, [F+0x68]; 0x00420dff push edx), not [F+0x58]
+        CC(0x4628d0, FD(0x68), FD(0x58), FD(0x58), 0x28, 0x28, spr, 4, ecx);  // 0x00420e00
         // 0x00420e08 jmp 0x420d96
     }
 }
@@ -8404,8 +8411,12 @@ a41d270:
     }
     esi = FD(0x0C);                                     // 0x0041d41b
     edx = FD(0xBC);                                     // 0x0041d41f
+    // c3fya fix: 0x0041d42d `imul esi, esi, 0xe2` keeps the product in esi, and the point loop below indexes
+    // [(esi + edi) * 4 + 0x59fce8 / 0x59fc68] with it (0x0041d580). The old code multiplied only inside this expression,
+    // so the loop read hole k's trajectory points at index k + edi instead of k * 0xe2 + edi (the '.' / '/' routing render).
+    esi *= 0xE2;                                        // 0x0041d42d
     {
-        int idx = ((int)G16(ebp + 0x0059FC64) - 1) + esi * 0xE2;  // 0x0041d426..0x0041d435
+        int idx = ((int)G16(ebp + 0x0059FC64) - 1) + esi;          // 0x0041d426..0x0041d435
         idx <<= 2;                                      // 0x0041d43a shl eax,2
         ecx = G32(idx + 0x0059FC68);                    // 0x0041d43e
         eax = G32(idx + 0x0059FCE8);                    // 0x0041d444
@@ -8497,9 +8508,12 @@ a41d799:
     esi = FD(0x0C);                                     // 0x0041d88f
 a41d893:
     TC(0x00480C80, 0x00519A60, 0);                      // 0x0041d89a Window::refreshFull (push 0)
+    // c3fya fix: the test at 0x0041d89f / 0x0041d8a2 (`cmp esi, 0xb; jne 0x41d8eb`) comes BEFORE pumpAndRedraw and the
+    // blit back: both run only after the last hole (esi == 0xb). The old code ran them for each of the 12 holes, so the
+    // routing render ('.' / '/') pumped input 11 more times and blitted the saved screen back over each hole's drawing.
+    if (esi != 0xB) goto a41d8eb;                        // 0x0041d89f cmp esi,0xb; 0x0041d8a2 jne
     CC(0x0045C0C0, 0);                                  // 0x0041d8a6 pumpAndRedraw (push 0)
     TC(0x00475D00, FA(0x624), Root(), 0, 0, 0x320, 0x258, 0, 0, 0x320, 0x258);  // 0x0041d8d7 Surface_blit3
-    if (esi != 0xB) goto a41d8eb;                        // 0x0041d89f cmp esi,0xb; jne
     CC(0x00483D30);                                     // 0x0041d8dc enterModal483d30
     G32(0x00822D68) = 0;                                // 0x0041d8e1
 a41d8eb:
@@ -8609,9 +8623,11 @@ a41da39_lower:
                 } while (esi != 0);                     // 0x0041dac5 jne
             }
             FD(0x2C) += 0x33;                           // 0x0041dac7..0x0041dad3
-            FD(0x18) -= 1;                              // 0x0041dad2 dec ecx
-            ebx = FD(0x18);                             // (ecx=FD(0x18) tracked)
-        } while (ebx != 0);                             // 0x0041dadb jne 0x41da98 (ecx!=0)
+            FD(0x18) -= 1;                              // 0x0041dacb mov ecx,[F+0x18]; 0x0041dad2 dec ecx; 0x0041dad7 store
+            // c3fya fix: the row counter lives in ecx / [F+0x18] only; ebx keeps the start column edi - 1 (0x0041da8a)
+            // for every row (0x0041da98 cmp ebx, edi). The old `ebx = FD(0x18)` made rows 2.. start at column 1, so the
+            // brush-1 lower ('-' / right click with [0x542f20] == 1) lowered up to edi cells of the level table 0x5a4998.
+        } while (FD(0x18) != 0);                        // 0x0041dadb jne 0x41da98 (flags of dec ecx)
     }
 a41dadd:
     if (G32(0x00542F20) == 2) {                         // 0x0041dadd cmp; jne 0x41dafc
@@ -8697,9 +8713,10 @@ a41dbd5:
                 } while (esi != 0);                     // 0x0041dc65 jne
             }
             FD(0x2C) += 0x33;                           // 0x0041dc67..0x0041dc73
-            FD(0x18) -= 1;                              // 0x0041dc72
-            ebx = FD(0x18);
-        } while (ebx != 0);                             // 0x0041dc7b jne
+            FD(0x18) -= 1;                              // 0x0041dc6b mov ecx,[F+0x18]; 0x0041dc72 dec ecx; 0x0041dc77 store
+            // c3fya fix: as in the lower loop (0x0041dadb): ebx stays the start column edi - 1 (0x0041dc2a); only
+            // ecx / [F+0x18] counts the rows.
+        } while (FD(0x18) != 0);                        // 0x0041dc7b jne 0x41dc38 (flags of dec ecx)
     }
 a41dc7d:
     if (G32(0x00542F20) == 2) {                         // 0x0041dc7d cmp; jne
@@ -8868,7 +8885,9 @@ a41e070:
     if (GU8(0x00569498) == 0xA) CC(0x00454C50);        // 0x0041e116 showMembershipRoster
     eax = G32(0x005A47E0);                             // 0x0041e11b
     esi = -2;                                          // 0x0041e120 mov esi,0xfffffffe
-    if (eax == esi) CC(0x0046D200, 0);                 // 0x0041e125 buildTournamentPrep? 0-arg (call at +4)
+    // c3fyc fix: 0x0041e129 `call 0x46d200` pushes nothing (depth +4 before and after); buildTournamentPrep reads no
+    // argument (its frame offsets stay below its 0x64-byte frame), so the old extra argument 0 was unobservable.
+    if (eax == esi) CC(0x0046D200);                    // 0x0041e125 / 0x0041e127 jne / 0x0041e129 buildTournamentPrep()
     eax = G32(0x005A47E0);                             // 0x0041e12e
     edi = -1;                                          // 0x0041e133 or edi,0xffffffff
     if (eax == edi) {                                  // 0x0041e136 cmp eax,edi; jne
@@ -9104,7 +9123,12 @@ a41e6b8:
     if (edx == 0x4000000) return kMenu;                // 0x0041e6c6 cmp edx,0x4000000; je 0x420e35
     if (eax != ebp) goto a420ac6;                     // 0x0041e6d2 cmp eax,ebp; jne 0x420ac6
     if (G32(0x0059B734) != ebp) goto a420ac6;         // 0x0041e6da cmp [0x59b734],ebp; jne 0x420ac6
-    if (G32(0x005A6374) < 3) return kFrame;            // 0x0041e6e6 mov eax,[0x5a6374]; cmp eax,3; jl 0x40fc29
+    // c3fyc fix: eax = [0x5a6374] here (0x0041e6e6 mov eax), and 0x00420acb..0x00420add (cmp eax, 3) and 0x00420b45
+    // (cmp eax, 3) read it; the old code compared the global without assigning eax, so a420acb saw the eax of
+    // 0x0041e6b3 ([0x822d68], equal to ebp here) and took the quit-text arm 0x00420b4e instead of the 0x00420ae2 prompt
+    // / 0x00420e0f exit whenever [0x5a6374] >= 3 (fix 6's class, found by re/tools/c3fy_audit_live.py).
+    eax = G32(0x005A6374);                             // 0x0041e6e6 mov eax,[0x5a6374]
+    if (eax < 3) return kFrame;                        // 0x0041e6eb cmp eax,3; 0x0041e6ee jl 0x40fc29
     goto a420acb;                                    // 0x0041e6f4 jmp 0x420acb
 a41e6f9:
     // ---- 0x0041e6f9  pending golfer action ([0x824130]) ----
@@ -9320,7 +9344,8 @@ a420acb:
     if (ecx & 0x1000000) goto a420b45;                 // 0x00420acb test ecx,0x1000000; jne
     if (eax < 3) goto a420b4e;                          // 0x00420add cmp eax,3; jl (signed)
     StrCpy(kBuf, 0x004C5AD0);                           // 0x00420ae2..0x00420b15 (push 0,1,1,0x96,0xfa)
-    eax = CC(0x0046D6E0, 0xFA, 0x96, 1, 1, ebp);        // 0x00420b17 showPopup
+    // c3fyc fix: the 5th argument is the immediate 0 (0x00420aec push 0), not the local ebp
+    eax = CC(0x0046D6E0, 0xFA, 0x96, 1, 1, 0);          // 0x00420b17 showPopup
     if (eax != 0) goto a420e0f;                         // 0x00420b1f test; jne
     G32(0x005A6374) = 0;                                // 0x00420b2c
     G32(0x0059E7B8) |= 0x1000000;                       // 0x00420b27..0x00420b3b
@@ -9349,7 +9374,9 @@ a420ca7_do:
         StrCat(kBuf, 0x004C5A2C);                       // 0x00420cd7..0x00420d04
         StrCat(kBuf, 0x004C5A08);                       // 0x00420d06..0x00420d2f
         StrCat(kBuf, 0x004C59F4);                       // 0x00420d31..0x00420d5a
-        eax = CC(0x0046D6E0, 0x190, 0x64, 1, 1, ebp);   // 0x00420d5c showPopup (eax pushed = 0)
+        // c3fyc fix: the 5th argument is eax = 0 (0x00420caa xor eax, eax; 0x00420cb2 push eax) on every path into
+        // 0x00420ca7; the old line passed the local ebp, equal to 0 only if every path here zeroed it.
+        eax = CC(0x0046D6E0, 0x190, 0x64, 1, 1, 0);     // 0x00420d5c showPopup
     }
     if (eax == 1) goto a420e0a;                         // 0x00420d64 cmp eax,1; je
     if (eax == 0) return kFrame;                        // 0x00420d6d test; je 0x40fc29
