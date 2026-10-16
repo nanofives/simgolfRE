@@ -1388,3 +1388,794 @@ SCENARIOS["cov_b_people"] = {"env": {}, "phases": [], "lockstep": cov_b_people}
 SCENARIOS["cov_b_paths"] = {"env": {}, "phases": [], "lockstep": cov_b_paths}
 SCENARIOS["cov_b_shots2"] = {"env": {}, "phases": [], "lockstep": cov_b_shots2}
 SCENARIOS["cov_b_inject2"] = {"env": {}, "phases": [], "lockstep": cov_b_inject2}
+
+
+# ---- c3fya: mainLoop H1 / H2 / quit coverage (batch c3fya, 2026-10-16; notes log/c3/c3fya_notes.txt) -------------------
+# Lockstep (frame-locked Ctx) scripts for re/frida/scenario_ab.py, run through log/c3/c3fya_run.py, which boots them with
+# log/c3/s36a_run.py's per-boot restore of saves / Themes / scores and its agent extension (the s36a_* rpc used below for
+# record-run decisions: golfer-panel calls, the game date); cov_a_flags also needs the fixture saves that runner copies in.
+# Every decision taken from the screen or memory is made in the RECORD run and replayed from the schedule ("obs").
+# Characters for mainLoop's key switch 0x00421838 are posted as WM_CHAR alone (see _cova_char).
+
+def _cova_to_sandbox(c):
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("menu")
+    yield from c.click(130, 445)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "location.png"), name="location")
+    yield from c.click(270, 32)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "ingame_hud_dial.png"), crop=DIAL, threshold=30, name="hud")
+    yield from c.sleep(2000)
+    yield from c.key(0x1B); yield from c.sleep(1500)
+
+
+COVA_WM_KEYDOWN, COVA_WM_KEYUP, COVA_WM_CHAR = 0x100, 0x101, 0x102
+
+
+def _cova_char(c, ch, settle=1500):
+    """One character for mainLoop's H1 key switch ([F+0x10] = [0x822b9c], written by rootWin_onKey 0x00465750 from
+    COVA_WM_CHAR). Posted as COVA_WM_CHAR alone: a posted COVA_WM_KEYDOWN would go through the game pump's TranslateMessage, which adds
+    a COVA_WM_CHAR from the REAL keyboard state after ours (cov_a_probe2's watch log: vk 0x42 + 'B' left 'b' = 98 last)."""
+    c.act(0, k="post", msg=COVA_WM_CHAR, wp=ord(ch), lp=1, tag=f"char {ch!r}")
+    yield from c.sleep(settle)
+
+
+def _cova_vk(c, vk, settle=1500):
+    """A key-down / key-up pair for the report switch on [F+0x28] = [0x822b98] (rootWin_onChar 0x004657b0)."""
+    yield from c.key(vk, char="")
+    yield from c.sleep(settle)
+
+
+def _cova_esc(c, n=1, settle=1500):
+    for _ in range(n):
+        yield from c.key(0x1B)
+        yield from c.sleep(settle)
+
+
+def _cova_hole(c, tee, green):
+    yield from c.click(300, 527); yield from c.sleep(800)       # tee tool
+    yield from c.click(*tee); yield from c.sleep(1200)
+    yield from c.click(365, 527); yield from c.sleep(800)       # green tool
+    yield from c.click(*green); yield from c.sleep(2000)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.key(0x48); yield from c.sleep(3000)            # H: open the hole
+
+
+def _cova_two_holes(c):
+    yield from c.click(45, 470); yield from c.sleep(1500)       # Build Course palette
+    yield from _cova_hole(c, (300, 200), (520, 330))
+    yield from _cova_esc(c)
+    yield from _cova_hole(c, (570, 380), (330, 280))
+    yield from _cova_esc(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)       # close the palette
+
+
+def cov_a_keys(c):
+    """mainLoop H1: every character of the 57-case key switch 0x00421838 (index table 0x0042191c) and the report-key
+    switch 0x004219b0 cases the old scenarios miss, in a sandbox with two open holes."""
+    yield from _cova_to_sandbox(c)
+    yield from _cova_two_holes(c)
+    yield from c.checkpoint("holes")
+    c.move(400, 300); yield from c.sleep(1000)
+    for ch in "fgrstvw":                                         # 0x40d890 callers (mode 0)
+        yield from _cova_char(c, ch)
+        yield from _cova_esc(c)
+    yield from c.checkpoint("k_speed")
+    for ch in "dlhexz0":
+        yield from _cova_char(c, ch)
+    yield from _cova_esc(c)
+    yield from c.checkpoint("k_misc")
+    for ch in "pb":                                              # object tools 0 / 1, placed on the map, then Enter
+        yield from _cova_char(c, ch)
+        yield from c.click(250, 250); yield from c.sleep(2000)
+        yield from c.click(450, 420); yield from c.sleep(2000)
+        yield from _cova_char(c, "\r")
+    yield from _cova_char(c, " ")
+    yield from _cova_esc(c)
+    yield from c.checkpoint("k_tools")
+    for ch in "+NPT":                                            # P pauses (flag 4), T the terrain view (0x400)
+        yield from _cova_char(c, ch)
+        yield from _cova_esc(c)
+    yield from _cova_char(c, "P")                                     # P, T again: both flags back
+    yield from _cova_char(c, "T")
+    yield from c.checkpoint("k_cheats")
+    yield from _cova_char(c, "W", settle=3000)                        # W: the world map (0x00407d30); Esc does not close it
+    yield from c.checkpoint("k_worldmap")
+    yield from c.click(768, 557); yield from c.sleep(3000)       # its back arrow (ui_tour)
+    for ch in "^?":
+        yield from _cova_char(c, ch)
+        yield from _cova_esc(c)
+    yield from c.checkpoint("k_cheats2")
+    for ch in "1239!@#$%&*(":                                    # hole select 1..18 (holes 1, 2 exist)
+        yield from _cova_char(c, ch)
+    yield from c.checkpoint("k_holes")
+    c.move(420, 300); yield from c.sleep(1000)
+    for ch in "===---":                                          # terrain raise / lower at the cursor tile
+        yield from _cova_char(c, ch)
+    yield from _cova_char(c, "\t")
+    yield from c.checkpoint("k_terrain")
+    for vk in (0x21, 0x22, 0x24, 0x23, 0x27, 0x28, 0x25, 0x26):  # report switch: PgUp, PgDn, Home, End, arrows
+        yield from _cova_vk(c, vk)
+    yield from c.checkpoint("k_vk")
+    for ch in "SLRJ":                                            # dialogs: save, load browser, routing map, course report
+        yield from _cova_char(c, ch, settle=3000)
+        yield from c.checkpoint(f"k_dlg_{ch}")
+        yield from _cova_esc(c, 2)
+    yield from c.checkpoint("k_dialogs")
+    yield from _cova_char(c, "C", settle=3000)                        # save course for championship (+ overwrite prompt)
+    yield from c.checkpoint("k_C")
+    yield from _cova_esc(c, 2)
+    yield from _cova_char(c, "B", settle=3000)
+    yield from c.checkpoint("k_B")
+    yield from _cova_esc(c)
+    yield from c.checkpoint("k_files")
+    for ch in "./":                                              # routing render (12 holes, modal at hole 11)
+        yield from _cova_char(c, ch, settle=4000)
+        yield from c.checkpoint(f"k_render_{'dot' if ch == '.' else 'slash'}")
+        yield from c.click(400, 300); yield from c.sleep(2000)
+        yield from _cova_esc(c)
+    yield from _cova_char(c, "n", settle=3000)
+    yield from _cova_esc(c, 2)
+    yield from c.checkpoint("k_render")
+    for _ in range(10):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+# map spots (800x600 game space) on the open grass of the sandbox Monterey start view (cov_a_probe frames)
+COVA_SPOTS = [(560, 230), (620, 290), (480, 260), (700, 330), (420, 300), (520, 360), (640, 400), (380, 250), (600, 180),
+         (460, 330), (680, 250), (540, 300), (400, 350), (580, 420), (720, 380), (500, 200)]
+
+
+COVA_TERRAIN_ROW1 = [(302, 527), (365, 527), (428, 527), (490, 527), (552, 527), (614, 527), (676, 527), (740, 527)]
+
+
+COVA_TERRAIN_ROW2 = [(333, 570), (396, 570), (458, 570), (520, 570), (582, 570), (645, 570), (708, 570), (770, 570)]
+
+
+COVA_BLDG_SLOTS = [(375, 520), (460, 515), (540, 510), (615, 520), (690, 525), (410, 565), (490, 560), (570, 555), (650, 560)]
+
+
+def _cova_drag(c, a, b, steps=6, right=False, step_ms=200):
+    """press at a, move to b in `steps`, release (virtual button state + posted messages, as Ctx.click does)."""
+    vk = 0x02 if right else 0x01
+    down, up, mk = (0x204, 0x205, 2) if right else (0x201, 0x202, 1)
+    c.move(*a); yield from c.sleep(300)
+    c.act(0, k="vkey", vk=vk, st=2, tag=f"drag down {a}")
+    c.act(0, k="post", msg=down, wp=mk, lp=c.lp(*a))
+    yield from c.sleep(step_ms)
+    for i in range(1, steps + 1):
+        x = a[0] + (b[0] - a[0]) * i // steps
+        y = a[1] + (b[1] - a[1]) * i // steps
+        c.act(0, k="cursor", x=x, y=y)
+        c.act(0, k="post", msg=0x200, wp=mk, lp=c.lp(x, y))
+        yield from c.sleep(step_ms)
+    c.act(0, k="vkey", vk=vk, st=1)
+    c.act(0, k="post", msg=up, wp=0, lp=c.lp(*b))
+    yield from c.sleep(500)
+
+
+def cov_a_build(c):
+    """mainLoop H2: every terrain tool of the Build Course palette, the amenities, the buildings, the terrain-edit
+    brushes and the undo right-click, each used on the map of a sandbox."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)        # Build Course palette (terrain tab)
+    k = 0
+    for i, t in enumerate(COVA_TERRAIN_ROW1 + COVA_TERRAIN_ROW2):
+        yield from c.click(*t); yield from c.sleep(800)
+        p = COVA_SPOTS[k % len(COVA_SPOTS)]; k += 1
+        yield from c.click(*p); yield from c.sleep(1200)
+        yield from _cova_drag(c, p, (p[0] + 40, p[1] + 20))
+        yield from c.sleep(800)
+        yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+        if i % 4 == 3:
+            yield from c.checkpoint(f"terrain_{i:02d}")
+    yield from c.key(0x48); yield from c.sleep(3000)              # open a hole if a tee + green exist
+    yield from _cova_esc(c)
+    yield from c.click(235, 527); yield from c.sleep(1500)       # amenities tab
+    yield from c.checkpoint("amenities")
+    for sub in ((470, 575), (532, 575), (594, 575), (655, 575), (717, 575)):
+        yield from c.click(*sub); yield from c.sleep(1200)
+        for it in ((305, 555), (365, 560)):
+            yield from c.click(*it); yield from c.sleep(800)
+            p = COVA_SPOTS[k % len(COVA_SPOTS)]; k += 1
+            yield from c.click(*p); yield from c.sleep(1500)
+            yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+        yield from c.checkpoint(f"amen_{sub[0]}")
+    yield from c.click(45, 470); yield from c.sleep(1500)        # close
+    yield from c.click(118, 495); yield from c.sleep(1500)       # buildings
+    for j, s in enumerate(COVA_BLDG_SLOTS):
+        yield from c.click(*s); yield from c.sleep(1000)
+        p = COVA_SPOTS[k % len(COVA_SPOTS)]; k += 1
+        yield from c.click(*p); yield from c.sleep(2500)
+        yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+        yield from _cova_esc(c)
+        if j % 3 == 2:
+            yield from c.checkpoint(f"bldg_{j}")
+    yield from c.click(237, 527); yield from c.sleep(1500)       # terrain-edit brushes (grid view, flag 2)
+    for b in ((350, 540), (465, 540), (585, 540), (720, 545)):
+        yield from c.click(*b); yield from c.sleep(800)
+        for p in (COVA_SPOTS[k % len(COVA_SPOTS)], COVA_SPOTS[(k + 1) % len(COVA_SPOTS)]):
+            yield from c.click(*p); yield from c.sleep(1200)
+            yield from c.click(*p, right=True); yield from c.sleep(1200)
+        k += 2
+        yield from c.checkpoint(f"brush_{b[0]}")
+    yield from c.click(275, 567); yield from c.sleep(1500)       # undo help
+    yield from _cova_esc(c)
+    yield from c.click(118, 495); yield from c.sleep(1500)       # close buildings
+    yield from c.click(500, 300, right=True); yield from c.sleep(1500)   # undo: show, then apply
+    yield from c.click(500, 300, right=True); yield from c.sleep(2500)
+    yield from c.checkpoint("undo")
+    for _ in range(10):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def _cova_exit_menu(c):
+    yield from c.click(132, 580); yield from c.sleep(2000)       # wrench
+    yield from c.click(200, 535); yield from c.sleep(3000)       # Exit the Game -> retirement prompt (3 answers)
+
+
+def cov_a_quit(c):
+    """mainLoop quit paths: the in-game Exit the Game prompt (wrench menu) with its three answers (stay, save first, leave),
+    the title menu, then the title menu's exit icon: QUIT 0x0040fa29..0x0040fac8 (top10.sve, promptAndSaveFile, the
+    closing Bink, the credits) and mainLoop's return; the run ends when the process exits."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from _cova_hole(c, (300, 200), (520, 330))
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("game")
+    yield from _cova_exit_menu(c)
+    yield from c.checkpoint("exit_prompt")
+    yield from c.click(260, 160); yield from c.sleep(3000)       # "Wait, I don't want to quit yet!"
+    yield from c.checkpoint("exit_stay")
+    yield from _cova_exit_menu(c)
+    yield from c.click(260, 211); yield from c.sleep(4000)       # "So long for now." -> quit save -> title
+    yield from c.checkpoint("exit_leave")
+    for _ in range(4):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("title1")
+    yield from c.click(130, 445)                                 # Sandbox Mode again (a second session)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "location.png"), name="location2")
+    yield from c.click(270, 32)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "ingame_hud_dial.png"), crop=DIAL, threshold=30, name="hud2")
+    yield from c.sleep(2000)
+    yield from _cova_esc(c)
+    yield from c.checkpoint("game2")
+    yield from _cova_exit_menu(c)
+    yield from c.click(260, 186); yield from c.sleep(3000)       # "I'd like to save this game first."
+    yield from c.checkpoint("exit_save")
+    yield from c.key(0x0D, char="\r"); yield from c.sleep(4000)  # accept the proposed save name
+    yield from c.checkpoint("exit_saved")
+    for _ in range(4):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("title2")
+    c.move(750, 553); yield from c.sleep(1500)
+    c.run.exit_expected = True
+    yield from c.click(750, 553); yield from c.sleep(3000)       # the title menu's exit icon
+    for i in range(4):
+        yield from c.checkpoint(f"quit_{i:02d}")
+        yield from c.sleep(2000)
+    yield from c.checkpoint("credits")
+    yield from c.key(0x1B); yield from c.sleep(1500)             # the credits end on a key
+    for _ in range(300):
+        yield from c.sleep(1000)
+
+
+cov_a_quit.expect_exit = True
+
+
+def cov_a_quit_title(c):
+    """mainLoop QUIT 0x0040fa29..0x0040fb04 from the first title menu: the exit icon (hotspot 5, selection -2 through the
+    jump table 0x00421b04), top10.sve, promptAndSaveFile 0x00437910, playAudioFile 0x0043cce0 (SMSG_closingfinal.bik),
+    showCreditsScreen 0x0044b9c0, the frame cleanup and `ret` at 0x0040fb04; the run ends when the process exits."""
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("menu")
+    c.move(750, 553); yield from c.sleep(1500)
+    yield from c.checkpoint("hover_exit")
+    c.run.exit_expected = True
+    yield from c.click(750, 553); yield from c.sleep(2500)
+    for i in range(6):
+        yield from c.checkpoint(f"quit_{i:02d}")
+        yield from c.sleep(2000)
+    yield from c.checkpoint("credits")
+    yield from c.key(0x1B); yield from c.sleep(1500)             # the credits end on a key or a mouse button
+    yield from c.checkpoint("after_esc")
+    yield from c.click(400, 300); yield from c.sleep(1500)
+    for _ in range(300):
+        yield from c.sleep(1000)
+
+
+cov_a_quit_title.expect_exit = True
+
+def _cova_obs(c, name, fn):
+    """A decision taken from the screen in the RECORD run, kept in the schedule ("obs") and read back by every replay
+    (the method of log/c3/s36a_run.py obs())."""
+    import json as _json
+    i = getattr(c, "obs_index", 0)
+    c.obs_index = i + 1
+    key = f"{i}:{name}"
+    store = c.run.schedule.setdefault("obs", {})
+    if c.run.mode == "replay":
+        return store[key]
+    v = _json.loads(_json.dumps(fn()))
+    store[key] = v
+    return v
+
+
+COVA_SHOT_PANEL = (330, 485, 800, 535)
+
+
+def _cova_gary_turn(c):
+    return _cova_obs(c, "gary", lambda: bool(imgcmp.matches(c.run.g.shot().crop(COVA_SHOT_PANEL),
+                                                       imgcmp.load(GOLDEN / "shot_panel.png"), 25)))
+
+
+def _cova_wait_gary(c, cap_ms=120_000):
+    t0 = c.T
+    while c.T - t0 < cap_ms:
+        if (yield from _cova_gary_turn_g(c)):
+            return True
+        yield from c.sleep(700)
+        yield from c.key(0x1B); yield from c.sleep(1300)
+    return False
+
+
+def _cova_gary_turn_g(c):
+    return _cova_gary_turn(c)
+    yield  # noqa: unreachable (makes this a generator for `yield from`)
+
+
+def cov_a_champ(c):
+    """mainLoop H1 keys in a championship (flag 0x1000000, Gary Golf on the course): the shot-type keys d / f / s / l / h
+    in mode 3 ([0x567afc] == 3, Gary's turn), C with the tournament flag, X (the table reset, 0x0041ca20), and n (the
+    quit-tournament prompt, 0x0041c84a), answered Cancel then Yes."""
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("menu")
+    yield from c.click(400, 540); yield from c.sleep(2500)    # Play a Championship
+    yield from c.click(390, 125); yield from c.sleep(3000)    # Easy
+    yield from c.click(380, 122); yield from c.sleep(1000)    # first course in the list
+    yield from c.click(630, 555); yield from c.sleep(4000)    # OK
+    yield from c.click(360, 122); yield from c.sleep(1000)    # Gary Golf.pro
+    yield from c.click(632, 553); yield from c.sleep(8000)    # OK -> tournament
+    yield from c.checkpoint("tournament_start")
+    ok = yield from _cova_wait_gary(c)
+    _cova_obs(c, "gary_found", lambda: ok)
+    yield from c.checkpoint("gary_turn")
+    for ch in "fslhd":
+        yield from _cova_char(c, ch, settle=1200)
+    yield from c.checkpoint("shot_keys")
+    yield from _cova_char(c, "C", settle=3000)
+    yield from _cova_esc(c)
+    yield from _cova_char(c, "J", settle=3000)
+    yield from _cova_esc(c, 2)
+    yield from c.checkpoint("champ_CJ")
+    yield from _cova_char(c, ".", settle=4000)                      # routing render in a championship ([0x822c88] != 0)
+    yield from c.click(400, 300); yield from c.sleep(2000)
+    yield from _cova_esc(c)
+    yield from c.checkpoint("champ_render")
+    yield from _cova_char(c, "n", settle=3000)                      # quit-tournament prompt
+    yield from c.checkpoint("n_prompt")
+    yield from _cova_esc(c, 2)
+    yield from c.checkpoint("n_cancel")
+    yield from _cova_char(c, "X", settle=3000)                      # table reset (flag 0x1000000)
+    yield from c.checkpoint("X")
+    yield from _cova_char(c, "n", settle=3000)
+    yield from c.click(275, 202); yield from c.sleep(4000)     # "Yes, cancel." (answer 0: 0x0041c8b9)
+    yield from c.checkpoint("n_yes")
+    for _ in range(8):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+COVA_GOLFER_PANEL_FN = 0x0045C560
+
+
+COVA_PANEL_BUTTONS = [(312, 256), (376, 256), (440, 256), (504, 256)]
+
+
+def _cova_agent(c):
+    return c.run.g.scripts[-1].exports_sync
+
+
+def _cova_season(c, seconds):
+    t = 0
+    while t < seconds * 1000:
+        yield from c.key(0x1B)
+        yield from c.sleep(1800)
+        t += 2000
+
+
+def _cova_open_golfer(c, tries=6):
+    """Click under golfer name labels until the golfer info panel 0x0045c560 is entered again (RECORD decides from the
+    s36a agent counter, the replay reads the decision back). Returns True when a panel opened."""
+    for _try in range(tries):
+        n0 = _cova_obs(c, "pcount", lambda: _cova_agent(c).s36a_call_count(COVA_GOLFER_PANEL_FN))
+        labels = _cova_obs(c, "labels", lambda: find_golfer_labels(c.run.g.shot())[:6])
+        for x, y in labels:
+            for dy in (14, 8, 22):
+                yield from c.click(x, y + dy)
+                yield from c.sleep(1000)
+                if _cova_obs(c, "pnow", lambda: _cova_agent(c).s36a_call_count(COVA_GOLFER_PANEL_FN)) > n0:
+                    return True
+        yield from c.key(0x1B); yield from c.sleep(2000)
+    return False
+
+
+def cov_a_golfer(c):
+    """mainLoop H1 / H2 with golfers on the course: the golfer info panel's four action buttons ([0x00824130] =
+    0..4 from drawGolferInfoPanel 0x0045c560, consumed by the switch 0x00421a88 at 0x0041e6f9 on the next left click),
+    '?' on a selected golfer (0x0041d938), Ctrl / Shift clicks (GetAsyncKeyState at 0x0041ed39 / 0x0041ef79), the
+    golfer strip of mode 5 (space, 0x0041eefb..) and the screen-edge camera pan (0x0041e184..0x0041e1ab) at the four
+    camera rotations."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from _cova_hole(c, (300, 200), (520, 330))
+    yield from _cova_hole(c, (570, 380), (330, 280))
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("holes")
+    yield from _cova_season(c, 200)
+    yield from c.checkpoint("season")
+    for b, (bx, by) in enumerate(COVA_PANEL_BUTTONS):
+        ok = yield from _cova_open_golfer(c)
+        yield from c.checkpoint(f"panel_{b}")
+        if ok:
+            yield from c.click(bx, by); yield from c.sleep(2000)
+            yield from c.checkpoint(f"button_{b}")
+            yield from c.click(753, 213); yield from c.sleep(2500)   # the character sheet's check mark (button 0 opens it)
+            yield from c.click(450, 300); yield from c.sleep(2000)   # the pending action runs on the next left click
+            yield from c.click(500, 350); yield from c.sleep(2000)
+        yield from _cova_esc(c, 2)
+        yield from c.checkpoint(f"action_{b}")
+    ok = yield from _cova_open_golfer(c)                            # a golfer selected ([0x53df54] > 0): '?'
+    yield from c.click(592, 258); yield from c.sleep(1000)
+    yield from _cova_char(c, "?", settle=3000)
+    yield from c.checkpoint("q_editor")
+    yield from c.click(753, 213); yield from c.sleep(3000)     # the editor's check mark (ui_tour)
+    yield from _cova_esc(c)
+    yield from c.checkpoint("q_done")
+    labels = _cova_obs(c, "labels2", lambda: find_golfer_labels(c.run.g.shot())[:3])
+    for vk in (0x11, 0x10):                                    # Ctrl, then Shift, held over a click near a golfer
+        for x, y in labels[:2]:
+            c.act(0, k="vkey", vk=vk, st=2); yield from c.sleep(200)
+            yield from c.click(x, y + 14); yield from c.sleep(1500)
+            c.act(0, k="vkey", vk=vk, st=1); yield from c.sleep(500)
+            yield from _cova_esc(c, 2)
+        yield from c.checkpoint(f"mod_{vk:02x}")
+    for (x, y) in ((300, 200), (570, 380)):                    # Shift-click on the two tees (hole markers, bit 0x80)
+        c.act(0, k="vkey", vk=0x10, st=2); yield from c.sleep(200)
+        yield from c.click(x, y); yield from c.sleep(2500)
+        c.act(0, k="vkey", vk=0x10, st=1); yield from c.sleep(500)
+        yield from c.checkpoint(f"shift_tee_{x}")
+        yield from _cova_esc(c, 2)
+    for (x, y) in ((300, 200), (570, 380)):                    # plain clicks on the tees (rename-hole box 0x0041eedb)
+        yield from c.click(x, y); yield from c.sleep(2500)
+        yield from c.checkpoint(f"tee_{x}")
+        for vk in (0x41, 0x42):
+            yield from c.key(vk); yield from c.sleep(300)
+        yield from c.key(0x0D, char="\r"); yield from c.sleep(2000)
+        yield from _cova_esc(c)
+    yield from _cova_char(c, " ")                                   # mode 5: the golfer strip along the bottom
+    for x in (220, 252, 284, 316):
+        yield from c.click(x, 585); yield from c.sleep(1500)
+    yield from c.checkpoint("strip")
+    yield from _cova_esc(c)
+    for rot in range(4):                                       # screen-edge pans at each camera rotation
+        for (x, y) in ((0, 300), (799, 300), (400, 0), (400, 599), (0, 0), (799, 599)):
+            c.move(x, y); yield from c.sleep(700)
+        c.move(400, 300); yield from c.sleep(500)
+        yield from _cova_vk(c, 0x27)                                # rotate (report switch: Right)
+        yield from c.checkpoint(f"pan_rot{rot}")
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def cov_a_build2(c):
+    """mainLoop H2 second pass: terrain painted over a tee and a green (hole removal 0x00420907 / 0x004208bd), a second
+    tee and green for an open hole (0x00420381 message, 0x004202f0), a building painted over (remove prompt 0x00420176,
+    declined then accepted), the no-tool right-click mark and demolish (0x0041f1cf..0x0041f20b), the building tools'
+    right-click with a tool selected, and Enter / space / Esc tool resets in between."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from _cova_hole(c, (300, 200), (520, 330))
+    yield from _cova_hole(c, (570, 380), (330, 280))
+    yield from c.checkpoint("holes")
+    yield from c.click(300, 527); yield from c.sleep(800)        # tee tool: a second tee for the open hole
+    yield from c.click(600, 220); yield from c.sleep(1500)
+    yield from c.click(330, 200); yield from c.sleep(1500)
+    yield from c.click(365, 527); yield from c.sleep(800)        # green tool: a second green, and a green on a tee
+    yield from c.click(650, 260); yield from c.sleep(1500)
+    yield from c.click(300, 200); yield from c.sleep(1500)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.checkpoint("second_tee_green")
+    for tool, at in (((428, 527), (300, 200)), ((490, 527), (520, 330)), ((458, 570), (570, 380)), ((552, 527), (330, 280))):
+        yield from c.click(*tool); yield from c.sleep(800)     # bunker / fairway / rough / ... over a tee or a green
+        yield from c.click(*at); yield from c.sleep(1500)
+        yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.checkpoint("paint_over_holes")
+    yield from c.click(45, 470); yield from c.sleep(1500)        # close; buildings palette
+    yield from c.click(118, 495); yield from c.sleep(1500)
+    yield from c.click(375, 520); yield from c.sleep(1000)       # first building
+    yield from c.click(620, 290); yield from c.sleep(2500)
+    yield from c.click(460, 515); yield from c.sleep(1000)       # second building
+    yield from c.click(480, 260); yield from c.sleep(2500)
+    yield from c.click(620, 290, right=True); yield from c.sleep(1500)   # right click with a tool selected
+    yield from c.click(118, 495); yield from c.sleep(1500)
+    yield from c.checkpoint("buildings")
+    yield from c.click(45, 470); yield from c.sleep(1500)        # terrain tool over the buildings: remove prompt
+    yield from c.click(614, 527); yield from c.sleep(800)
+    yield from c.click(620, 290); yield from c.sleep(2500)
+    yield from c.checkpoint("remove_prompt1")
+    yield from _cova_esc(c)                                           # declined
+    yield from c.click(480, 260); yield from c.sleep(2500)
+    yield from c.checkpoint("remove_prompt2")
+    yield from c.key(0x0D, char="\r"); yield from c.sleep(2500)  # accepted (first answer)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("removed")
+    for p in ((620, 290), (480, 260), (520, 330)):               # no tool: right click twice = mark, then demolish
+        yield from c.click(*p, right=True); yield from c.sleep(1500)
+        yield from c.click(*p, right=True); yield from c.sleep(2000)
+    yield from c.checkpoint("demolish")
+    for ch in "\r \x1b":
+        yield from _cova_char(c, ch)
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def cov_a_keys2(c):
+    """mainLoop H1 second pass in a sandbox: space over an open report (0x0041c573), Tab in the terrain-edit grid view
+    (0x0041ca04), 'e' in build mode (0x0041cfb6), the hole keys 2 and 4..8 one per poll window, C answered Overwrite
+    (0x0041cb73 .. 0x0041cbcc), and 'x' twice."""
+    yield from _cova_to_sandbox(c)
+    yield from _cova_two_holes(c)
+    yield from c.checkpoint("holes")
+    yield from _cova_vk(c, 0x70, settle=2500)                         # F1: a report open ([0x569498] != 0)
+    yield from _cova_char(c, " ", settle=2000)
+    yield from _cova_esc(c, 2)
+    yield from c.checkpoint("report_space")
+    yield from c.click(118, 495); yield from c.sleep(1500)       # buildings palette -> terrain edit (grid, flag 2)
+    yield from c.click(237, 527); yield from c.sleep(1500)
+    for _ in range(4):
+        yield from _cova_char(c, "\t")
+    c.move(420, 300); yield from c.sleep(800)
+    for ch in "=-=-":
+        yield from _cova_char(c, ch)
+    yield from c.click(118, 495); yield from c.sleep(1500)
+    yield from c.checkpoint("tab_brush")
+    yield from c.click(45, 470); yield from c.sleep(1500)        # build mode, then 'e' twice
+    yield from _cova_char(c, "e")
+    yield from _cova_char(c, "e")
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("e_build")
+    for ch in "2456782":                                         # Esc after each: an existing hole's key opens the
+        yield from _cova_char(c, ch, settle=2500)                     # hole stats panel, which took the next key
+        yield from _cova_esc(c)
+    yield from c.checkpoint("holes_keys")
+    yield from _cova_char(c, "C", settle=3000)
+    yield from c.checkpoint("C_prompt")
+    yield from c.click(230, 202); yield from c.sleep(4000)       # "Overwrite the old version."
+    yield from c.checkpoint("C_overwrite")
+    yield from _cova_esc(c, 2)
+    for ch in "xx":
+        yield from _cova_char(c, ch)
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def cov_a_play(c):
+    """mainLoop H1 in a practice match (Gary Golf on the course, flag 0x200000 clear): the people palette's pro tab
+    starts it (ui_tour's skill-point steps), then on Gary's turn (mode 3) the shot keys f / s / l / h / d, and n (the
+    cancel-match prompt 0x0041c71a: Esc, then Yes -> the per-golfer reset loop 0x0041c78e)."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from _cova_hole(c, (300, 200), (520, 330))
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("hole")
+    yield from c.click(175, 535); yield from c.sleep(2500)       # people palette, pro tab, skill points (ui_tour)
+    yield from c.click(256, 511); yield from c.sleep(2500)
+    yield from c.click(313, 520); yield from c.sleep(2500)
+    for _ in range(3):
+        yield from c.click(265, 97); yield from c.sleep(600)
+    yield from c.click(541, 333); yield from c.sleep(2500)
+    yield from c.click(310, 286); yield from c.sleep(2000)
+    yield from c.click(541, 333); yield from c.sleep(2500)
+    yield from c.click(400, 263); yield from c.sleep(4000)       # "Yea, I don't need ..." -> the match starts
+    yield from c.checkpoint("match")
+    ok = yield from _cova_wait_gary(c)
+    _cova_obs(c, "gary_found", lambda: ok)
+    yield from c.checkpoint("gary_turn")
+    for ch in "fslhd":
+        yield from _cova_char(c, ch, settle=1200)
+    yield from c.checkpoint("shot_keys")
+    yield from _cova_char(c, "n", settle=3000)                        # cancel-match prompt: keep playing
+    yield from c.checkpoint("n_prompt")
+    yield from _cova_esc(c, 2)
+    yield from _cova_char(c, "n", settle=3000)
+    yield from c.click(275, 202); yield from c.sleep(4000)       # "Yes, cancel."
+    yield from c.checkpoint("n_yes")
+    for _ in range(8):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+# amenity sub-panels (cov_a_probe5 frames): the icon row at y 577 opens a panel of items above it
+COVA_AMENITY_SUBS = [
+    ((470, 577), [(440, 490), (540, 490), (515, 515)]),                     # benches / ball washers
+    ((532, 577), [(480, 500), (580, 495), (560, 525)]),                     # bridges (type 0x11 water only)
+    ((594, 577), [(430, 490), (580, 490), (730, 490), (545, 515)]),         # landmarks / statues
+    ((655, 577), [(430, 490), (530, 490), (630, 490), (480, 515)]),         # flower beds
+    ((717, 577), [(610, 490), (710, 490), (680, 520)]),                     # trees
+]
+
+
+COVA_WATER_SPOTS = [(345, 345), (420, 395), (300, 330)]
+
+
+def cov_a_build3(c):
+    """mainLoop H2 object tools of the amenity sub-panels (clickAmenityPanel 0x00434ae5..0x00434c4d sets [0x4c2854] to
+    0, 1, 2, 3, 4, 0x10, 0x13): each sub-panel's items placed on grass, the bridges also on and off the river (t 19,
+    type 0x11 only, 0x0041f63a), and the cart-path strip."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(2000)
+    k = 0
+    for si, (sub, items) in enumerate(COVA_AMENITY_SUBS):
+        for ii, it in enumerate(items):
+            yield from c.click(*sub); yield from c.sleep(1500)
+            yield from c.click(*it); yield from c.sleep(1000)
+            p = COVA_WATER_SPOTS[ii % len(COVA_WATER_SPOTS)] if si == 1 else COVA_SPOTS[k % len(COVA_SPOTS)]
+            k += 1
+            yield from c.click(*p); yield from c.sleep(2000)
+            if si == 1:
+                yield from c.click(*COVA_SPOTS[k % len(COVA_SPOTS)]); yield from c.sleep(1500)   # a bridge off the water
+            yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+        yield from c.checkpoint(f"amen_sub{si}")
+    yield from c.click(330, 505); yield from c.sleep(1000)      # the cart-path strip, dragged
+    yield from _cova_drag(c, (480, 260), (600, 320), steps=8)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.checkpoint("path")
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def cov_a_career(c):
+    """mainLoop H1 in a career game ([0x822c88] == 0: Start New Game -> Easy -> buy Northeast, $50,000): the routing
+    render's career arm (0x0041d2f2) and one game year to the date test 0x0041c17b ([0x834170] == 0x2200, the career-end
+    prompt 0x0041c1df..0x0041c322 when the champion's name 0x4c60a4 equals the player's 0x4d6098)."""
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("menu")
+    yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game
+    yield from c.click(390, 125); yield from c.sleep(4000)      # Easy
+    yield from c.click(492, 474)                                # Northeast's icon ($50,000, available on this boot)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "ingame_hud_dial.png"), crop=DIAL, threshold=30, name="hud")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("game")
+    yield from _cova_esc(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from _cova_hole(c, (580, 250), (470, 300))
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("hole")
+    yield from _cova_char(c, ".", settle=4000)                       # routing render, career arm ([0x822c88] == 0)
+    yield from c.click(400, 300); yield from c.sleep(2000)
+    yield from _cova_esc(c)
+    yield from c.checkpoint("render")
+    t = 0
+    while t < 1_000_000:                                        # one game year (~10 date units per virtual second)
+        d = _cova_obs(c, "date", lambda: _cova_agent(c).s36a_read_s32(0x00834170))
+        if d >= 0x21C0:                                         # close to 0x2200: stop clearing popups with Esc
+            break
+        yield from c.key(0x1B)
+        yield from c.sleep(1800)
+        t += 2000
+        if t % 100_000 == 0:
+            yield from c.checkpoint(f"year_{t // 1000:03d}")
+    for k in range(40):
+        d = _cova_obs(c, "date2", lambda: _cova_agent(c).s36a_read_s32(0x00834170))
+        if d >= 0x2200:
+            break
+        yield from c.sleep(1000)
+    yield from c.sleep(2000)
+    yield from c.checkpoint("career_popup")
+    yield from c.click(225, 199); yield from c.sleep(3000)      # "I'd like to customize my character." (answer 0)
+    yield from c.checkpoint("career_editor")
+    yield from c.click(753, 213); yield from c.sleep(3000)      # the editor's check mark
+    for k in range(4):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def _cova_load_row(c, row, title_menu, esc=True):
+    """Load the saved game in list row `row` (the list shows &AutoSave1/2 first, then the files sorted by name). No Esc
+    afterwards with esc=False: the Esc case 0x0041c9c4 clears flags 0x8000000 / 0x2 (0x0041c9db) and with 0x8000 set
+    loads "Tutorial Save.sve" (0x0041c0f9)."""
+    if title_menu:
+        yield from c.click(170, 80); yield from c.sleep(3000)   # Continue Saved Game
+    else:
+        yield from _cova_char(c, "L", settle=3000)                    # loadGameBrowserScreen(0, 0) at 0x0041cc72
+    yield from c.click(400, 121 + 16 * row); yield from c.sleep(1000)
+    yield from c.click(632, 553); yield from c.sleep(8000)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "ingame_hud_dial.png"), crop=DIAL, threshold=30, name=f"hud_row{row}")
+    yield from c.sleep(2000)
+    if esc:
+        yield from _cova_esc(c, 3)
+
+
+def cov_a_flags(c):
+    """mainLoop H1 / H2 blocks gated on flag bits of [0x59e7b8] that no instruction sets (log/c3/c3fya/flagset.py,
+    imm.py) and that only a loaded save carries (loadGame 0x0040bb08 stores the saved word): mood5.sve itself (0x1000000:
+    X resets the tables, 0x0041ca30), and three copies with one bit added (log/c3/c3fya_run.py copies them in):
+    ztut.sve 0x8000 (any key -> showTutorialText 0x0041c147; Esc -> loadGame("Tutorial Save.sve") 0x0041c0f9),
+    zdemo.sve 0x8000000 (a left click demolishes, 0x0041eccb), zedit.sve 0x2000000 (stepCourseEditQueue every frame,
+    0x0041c593). List rows: 0, 1 autosaves, 2 mood5, 3 stories5, 4 stories9, 5 zdemo, 6 zedit, 7 ztut."""
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("menu")
+    yield from _cova_load_row(c, 2, True)                             # mood5: X with 0x1000000
+    yield from c.checkpoint("mood5")
+    yield from _cova_char(c, "X", settle=3000)
+    yield from c.checkpoint("mood5_X")
+    for p in ((480, 300), (560, 260), (420, 360)):              # X sets flag 0x800 (0x0041ca8b): P6 0x004197aa makes
+        yield from c.click(*p); yield from c.sleep(2500)        # [0x4c2854] = 15 (the clubhouse); a click places it
+    yield from c.checkpoint("clubhouse")
+    yield from _cova_load_row(c, 7, False, esc=False)                 # ztut
+    yield from c.checkpoint("ztut")
+    yield from _cova_char(c, "z", settle=2500)
+    yield from _cova_esc(c)
+    yield from c.checkpoint("ztut_esc")
+    for _ in range(4):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("ztut_after")
+    yield from _cova_load_row(c, 5, False, esc=False)                 # zdemo
+    yield from c.checkpoint("zdemo")
+    for p in ((400, 300), (480, 260), (560, 330)):
+        yield from c.click(*p); yield from c.sleep(2000)
+    yield from c.checkpoint("zdemo_clicks")
+    yield from _cova_load_row(c, 6, False)                            # zedit
+    yield from c.checkpoint("zedit")
+    for _ in range(10):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+SCENARIOS["cov_a_keys"] = {"env": {}, "phases": [], "lockstep": cov_a_keys}
+SCENARIOS["cov_a_build"] = {"env": {}, "phases": [], "lockstep": cov_a_build}
+SCENARIOS["cov_a_quit"] = {"env": {}, "phases": [], "lockstep": cov_a_quit}
+SCENARIOS["cov_a_quit_title"] = {"env": {}, "phases": [], "lockstep": cov_a_quit_title}
+SCENARIOS["cov_a_champ"] = {"env": {}, "phases": [], "lockstep": cov_a_champ}
+SCENARIOS["cov_a_build2"] = {"env": {}, "phases": [], "lockstep": cov_a_build2}
+SCENARIOS["cov_a_keys2"] = {"env": {}, "phases": [], "lockstep": cov_a_keys2}
+SCENARIOS["cov_a_golfer"] = {"env": {}, "phases": [], "lockstep": cov_a_golfer}
+SCENARIOS["cov_a_play"] = {"env": {}, "phases": [], "lockstep": cov_a_play}
+SCENARIOS["cov_a_build3"] = {"env": {}, "phases": [], "lockstep": cov_a_build3}
+SCENARIOS["cov_a_career"] = {"env": {}, "phases": [], "lockstep": cov_a_career}
+SCENARIOS["cov_a_flags"] = {"env": {}, "phases": [], "lockstep": cov_a_flags}
+
+
+def cov_a_keys3(c):
+    """mainLoop H1 third pass: '?' while a golfer is selected ([0x53df54] > 0, 0x0041d938), with the golfer info panel
+    left open (closing it clears the selection)."""
+    yield from _cova_to_sandbox(c)
+    yield from _cova_two_holes(c)
+    yield from c.checkpoint("holes")
+    yield from _cova_season(c, 200)
+    yield from c.checkpoint("season")
+    ok = yield from _cova_open_golfer(c)
+    _cova_obs(c, "panel_ok", lambda: ok)
+    yield from c.checkpoint("panel")
+    yield from _cova_char(c, "?", settle=3000)                        # panel still open: [0x53df54] = golfer + 1
+    yield from c.checkpoint("q_editor")
+    yield from c.click(753, 213); yield from c.sleep(3000)       # the editor's check mark
+    yield from _cova_esc(c, 2)
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_a_keys3"] = {"env": {}, "phases": [], "lockstep": cov_a_keys3}
