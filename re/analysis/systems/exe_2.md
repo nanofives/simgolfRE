@@ -15,11 +15,14 @@ function's decompiled behaviour, strings, and caller/callee chain.
 Produces every piece of golfer-facing prose: names, thoughts, hole comments, VIP notices
 and the multi-chapter golfer stories.
 
-- Golfer records live in two arrays:
-  - `g_golferRecords` 0x0057956e, stride 0x80, read by `formatGolferTitle` 0x00462020.
-  - `g_golferRoster` 0x0058587a, stride 0x4c, read by `pickGolferName` 0x00467600
-    (copies a default first name from the name table 0x004c148c into the shared text
-    buffer `g_textBuffer` 0x0051a068).
+- Golfer data: the golfer record array (stride 0x100, the `g_golfers` block of 0x9c00 bytes that the save writes) is
+  read by `composeGolferSprite` 0x00462020, which shifts the golfer index left by 8 (0x0046206a) and loads the word at
+  0x0057956e + index*0x100 (0x0046206d), a field of the record (0x0057956e is offset 0xae from 0x005794c0).
+  An earlier version of this note listed 0x0057956e as a separate array of stride 0x80: the disassembly does not
+  support that (corrected 2026-10-16).
+  - `pickGolferName` 0x00467600 reads 0x0058587a, which is field +0x2a of record 0 of the walker table
+    `g_walkers` 0x00585850 (stride 0x4c), not a roster array; it copies a default first name from the name table
+    0x004c148c into the shared text buffer `g_textBuffer` 0x0051a068).
 - Name assembly: `buildGolferName` 0x004676e0 (full name + roman-numeral suffix, 18
   callers), `appendEndearment` 0x00467560 (gendered suffixes at 0x004e1b5c+).
 - Thoughts and comments: `emitGolferThought` 0x00467a00 (situational one-liners: first
@@ -140,8 +143,9 @@ hole rater 0x0042dea0 via `postEvent` 0x0046e7b0), `buildTournamentPrep` 0x0046d
 Frontend narration: `buildScenarioIntro` 0x0045fd80, `showTutorialText` 0x004604f0.
 
 ## Open questions
-- `g_golferRecords` (0x80) vs `g_golferRoster` (0x4c): the two strides are distinct
-  record layouts; the exact field maps are not worked out here (see U-0003/U-0004).
+- Golfer record base: the shim sources use 0x005794c0 (stride 0x100, fields documented in U-0003) while the save
+  block and re/match use 0x005794b8 (0x9c00 bytes = 156 records of 0x100); the 8-byte difference is not resolved
+  (phase 1 of re/PORT_PLAN.md). The exact field maps are not worked out here (see U-0003/U-0004).
 - `courseActionMenu` 0x0046f550 multiplexes save/purchase/scenic paths; the dispatch key
   was not traced.
 - `g_courseTable` 0x00571fd8 is seeded with course-like names but its consumer in this
