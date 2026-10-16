@@ -1,0 +1,21 @@
+vector,original,reimpl,match,state_original,state_reimpl,state_changed
+$arrend 4 0 $dtor,void,void,True,2039f9e5,2039f9e5,False
+$arrend 4 1 $dtor,void,void,True,05d42460,05d42460,True
+$arrend 4 5 $dtor,void,void,True,6242f3e2,6242f3e2,True
+$arrend 8 3 $dtor,void,void,True,9a3ebc34,9a3ebc34,True
+$arrend 44 4 $dtor,void,void,True,addd7b6f,addd7b6f,True
+$arrend 0 3 $dtor,void,void,True,c7bfee66,c7bfee66,True
+$arrend 4 -1 $dtor,void,void,True,2039f9e5,2039f9e5,False
+$arrend 4 -5 $dtor,void,void,True,2039f9e5,2039f9e5,False
+$arrend 12 10 $dtor,void,void,True,e959782d,e959782d,True
+$arrend 268 2 $dtor,void,void,True,73e2af63,73e2af63,True
+$arrend 1 7 $dtor,void,void,True,dcea2075,dcea2075,True
+$arrend 64 40 $dtor,void,void,True,802598df,802598df,True
+$arrend 4294967292 3 $dtor,void,void,True,4e8869c3,4e8869c3,True
+$arrend 4 0 0,void,void,True,2039f9e5,2039f9e5,False
+$arrend 4 -3 0,void,void,True,2039f9e5,2039f9e5,False
+state_regions,$D+0x0:528 $arr+0x0:8192 $blk+0x30:4,,
+install_witness,0xe9,0xe9,True
+meta,detour=0x5f2eee20,original=0x3ad08c0,2026-10-16T02:52:51
+distinct_results,11,,
+VERDICT,GREEN,15,

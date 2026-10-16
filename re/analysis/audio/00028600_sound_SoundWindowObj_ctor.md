@@ -6,6 +6,9 @@ Module `sound.dll` (RVA `0x00028600`), 22 bytes, 8 instructions, subsystem `audi
 __thiscall constructor, no stack argument: eax = this (0x10028600), +0 = 0x1005b8ac (0x10028607), +8 = 0 (0x1002860d), +0xc = 0 (0x10028610), the byte +4 = 0 (0x10028613); returns this. The fields are the ones SoundWindowObj_dtor 0x100286a0 reads (+4 bit 2, +8, +0xc). (`re/names/sound_17.tsv`)
 System writeup: `re/analysis/systems/sound_17.md`.
 
+## Purpose
+SoundWindowObj_ctor is `__thiscall` with no stack argument and a plain `ret` (0x10028615); it initialises the 0x10-byte object of the class whose vtable is 0x1005b8ac. It moves ecx into eax (0x10028600), stores the vtable address 0x1005b8ac at +0 (0x10028607), zeroes the dwords at +8 (0x1002860d) and +0xc (0x10028610), and clears only the BYTE at +4 (`lea edx, [eax+4]` 0x10028604, `mov [edx], cl` 0x10028613): bytes +5..+7 keep their value. It returns this. Its only caller is the dynamic initializer dynInit_soundWindowObj100b49b8 0x100091c0, through the incremental-link thunk 0x10001c62 (`jmp 0x10028600`, call 0x100091c5), with ecx = 0x100b49b8. The A/B ran 12 vectors on twelve 0x20-byte objects pre-filled with a different per-dword pattern each (fixture c3fza_ctor), so the preserved bytes +5..+7 and the untouched +0x10..+0x1f are compared state: 12 vectors GREEN, 12 change state, 0 mismatches; the return value is the object address, which differs per vector. Reimplemented in `shim/src/re/c3fza.cpp`; path-1 A/B GREEN: SoundWindowObj_ctor (12 vectors, 12 distinct results, 12 changing state, `log/diff/00028600_sound_SoundWindowObj_ctor.path1.csv`).
+
 ## Signature
 - Returns with `ret` (at 0x10028615): callee pops 0 bytes of stack arguments.
 - `ecx` is read at 0x10028600 before any write in address order: an input register (`this` (thiscall) or the first fastcall argument).

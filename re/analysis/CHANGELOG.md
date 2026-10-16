@@ -4,6 +4,11 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-16  004a5793  __ArrayUnwind  C2->C3  log/diff/004a5793___ArrayUnwind.path1.csv
+2026-10-16  004867b0  EditBox::onKey  C2->C3  log/diff/004867b0_EditBox_onKey.path1.csv
+2026-10-16  sound.dll:00028600  SoundWindowObj_ctor  C2->C3  log/diff/00028600_sound_SoundWindowObj_ctor.path1.csv
+2026-10-16  sound.dll:0004288e  __ArrayUnwind  C2->C3  log/diff/0004288e_sound_sound___ArrayUnwind.path1.csv
+2026-10-16  sound.dll:000091c0  dynInit_soundWindowObj100b49b8  C2->C3  log/diff/000091c0_sound_dynInit_soundWindowObj100b49b8_fail.path1.csv
 2026-10-16  004385d0  showCharacterEditor  C2->C3  log/diff/004385d0_showCharacterEditor.path1.csv
 2026-10-16  004725b0  showThemePackSelect  C2->C3  log/diff/004725b0_showThemePackSelect.path1.csv
 2026-10-16  0046f550  courseActionMenu  C2->C3  log/diff/0046f550_courseActionMenu.path1.csv

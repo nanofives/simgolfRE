@@ -179,3 +179,5 @@ m36d.cpp
 c3fv.cpp
 c3fw.cpp
 c3fx.cpp
+c3fz.cpp
+c3fza.cpp
