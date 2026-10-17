@@ -219,7 +219,7 @@ entry	name	size	callers	callees	ranges
 00407d30	FUN_00407d30	203	1	8	00407d30-00407dfb
 00407e00	narrateShot	6107	1	26	00407e00-004095db
 00409620	scanShotArea	803	1	7	00409620-00409943
-00409950	updatePairSnapshot	148	3	0	00409950-004099e4
+00409950	appendPairTrackPoint	148	3	0	00409950-004099e4
 004099f0	addGolferPair	151	2	1	004099f0-00409a87
 00409a90	addGolferToTable	345	1	4	00409a90-00409be9
 00409bf0	updateRollingStats	187	1	2	00409bf0-00409cab
@@ -536,7 +536,7 @@ entry	name	size	callers	callees	ranges
 0044f6b0	showFinancialReport	1075	1	17	0044f6b0-0044fae3
 0044faf0	bucketValue	50	6	0	0044faf0-0044fb22
 0044fb30	showCourseReport	14054	1	21	0044fb30-00453216
-00453260	golferScore	58	3	0	00453260-0045329a
+00453260	golferAge	58	3	0	00453260-0045329a
 004532a0	appendRatingLabel	115	1	0	004532a0-00453313
 00453330	showHoleStatsScreen	4961	1	19	00453330-00454691
 004546b0	showPlayerCommentsReport	1433	1	15	004546b0-00454c49
@@ -639,7 +639,7 @@ entry	name	size	callers	callees	ranges
 004674c0	bilinearSample	146	1	0	004674c0-00467552
 00467560	appendEndearment	90	1	0	00467560-004675ba
 004675d0	thoughtFlag	34	6	0	004675d0-004675f2
-00467600	pickGolferName	212	5	0	00467600-004676d4
+00467600	appendWalkerName	212	5	0	00467600-004676d4
 004676e0	buildGolferName	466	18	0	004676e0-004678b2
 00467a00	emitGolferThought	7763	11	14	00467a00-00469853
 00469a20	appendOpinion	180	4	0	00469a20-00469ad4
@@ -746,7 +746,7 @@ entry	name	size	callers	callees	ranges
 004766a0	Widget_draw2	85	1	1	004766a0-004766f5
 00476700	drawStringAt	80	10	1	00476700-00476750
 00476750	drawStringAt2	80	3	1	00476750-004767a0
-004767a0	allocTextBuffer	1439	1	3	004767a0-00476d3f
+004767a0	drawTextRun	1439	1	3	004767a0-00476d3f
 00476d40	scanMarkupText	60	3	0	00476d40-00476d7c
 00476d80	skipToken	65	3	0	00476d80-00476dc1
 00476dd0	scanToken	70	3	0	00476dd0-00476e16
@@ -1316,8 +1316,8 @@ entry	name	size	callers	callees	ranges
 00489f50	ListBox::setSelection	458	7	4	00489f50-0048a11a
 0048a120	ListBox::measure	1199	3	6	0048a120-0048a5cf
 0048a5d0	ListBox::build	998	3	12	0048a5d0-0048a9b6
-0048a9c0	ListBox::onNavKeyMarked	50	0	0	0048a9c0-0048a9f2
-0048aa00	ListBox::onNavKey	1169	2	2	0048aa00-0048ae91
+0048a9c0	ListBox::onPressMarked	50	0	0	0048a9c0-0048a9f2
+0048aa00	ListBox::onPress	1169	2	2	0048aa00-0048ae91
 0048aea0	ListBox::onKey	1271	2	7	0048aea0-0048b397
 0048b3f0	FUN_0048b3f0	3384	0	15	0048b3f0-0048c128
 0048c130	ListBox::drawContents	742	0	4	0048c130-0048c416
@@ -1342,8 +1342,8 @@ entry	name	size	callers	callees	ranges
 0048cc80	ListBox::onDrag_vtordisp	8	0	1	0048cc80-0048cc88
 0048cc90	ListBox::clearSelection_vtordisp	8	0	1	0048cc90-0048cc98
 0048cca0	ListBox::forwardClick_vtordisp	8	0	1	0048cca0-0048cca8
-0048ccb0	ListBox::onNavKey_vtordisp	8	0	1	0048ccb0-0048ccb8
-0048ccc0	ListBox::onNavKeyMarked_vtordisp	8	0	0	0048ccc0-0048ccc8
+0048ccb0	ListBox::onPress_vtordisp	8	0	1	0048ccb0-0048ccb8
+0048ccc0	ListBox::onPressMarked_vtordisp	8	0	0	0048ccc0-0048ccc8
 0048ccd0	ListBox::typeAhead_vtordisp	8	0	1	0048ccd0-0048ccd8
 0048cce0	ListBox::fireSelectChanged_vtordisp	8	0	1	0048cce0-0048cce8
 0048ccf0	ListBox::fireSelectChangedMarked_vtordisp	8	0	0	0048ccf0-0048ccf8
@@ -1745,7 +1745,7 @@ entry	name	size	callers	callees	ranges
 004a2400	panelCreate4a2400	1179	2	11	004a2400-004a289b
 004a28a0	listAddEntry	220	1	3	004a28a0-004a297c
 004a2980	FUN_004a2980	26	1	0	004a2980-004a299a
-004a29a0	FUN_004a29a0	19	1	0	004a29a0-004a29b3
+004a29a0	fillSlots54	19	1	0	004a29a0-004a29b3
 004a29c0	setStringField	152	1	2	004a29c0-004a2a58
 004a2a60	panelLayoutLabeledText	748	2	6	004a2a60-004a2d4c
 004a2d50	panelDrawGrid	589	2	2	004a2d50-004a2f9d

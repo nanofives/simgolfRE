@@ -65,7 +65,7 @@ SimGolf\
 ├── shim\                              # winmm.dll proxy: compat fixes, patch loader, SG_HOOK registry
 ├── patches\                           # one .ini per byte patch
 ├── re\
-│   ├── anchors.json, CONFIDENCE.md, functions_ghidra.tsv (2,497 exe fns), functions_ghidra_Terrain.dll.tsv (1,050)
+│   ├── anchors.json, CONFIDENCE.md, functions_ghidra.tsv (2,934 exe fns), functions_ghidra_Terrain.dll.tsv (1,050)
 │   ├── coverage\, versions\, replay\ (recordings, not committed), scoreboard.tsv
 │   ├── analysis\<subsystem>\<addr>_<name>.md, analysis\CHANGELOG.md, analysis\PORTABLE_RUNTIME.md
 │   ├── frida\  boot_trace.py, dump_image.py, diff_hook.py, hooks_registry.py, js\*.js
@@ -759,7 +759,37 @@ list re/analysis/data/names_pending_apply.md; hooks.csv follows through `retag`)
 ListBox::onNavKey* -> onPress* (a click handler), codecCombFilter -> codecRing5Add, new fillSlots54 0x004a29a0, four legacy hook names
 (OptionsMenuBuild, CareerRetirementFlow, GolferPanelEject, LandmarkAvailableNotice) retagged to the names rows, and g_screenWidth 0x00822c8c /
 g_screenHeight 0x00822c90 (gameMain 0x0045baf6 / 0x0045bb00, set-mode slot +0x58 at 0x0045bb2a..0x0045bb42; they were g_zoomLevel).
-Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
+Batch b1 (2026-10-17, function boundary repair of the Ghidra master, backup ghidra/backup/SimGolf.rep.pre_b1_20261017, write-up
+re/analysis/data/function_boundaries.md, per-region rows log/b1/gaps_<module>.tsv): the function lists missed code in every module. Of the
+exe's bytes outside the old ranges, 66,856 were listed functions Ghidra had cut short (mainLoop alone is one body 0x0040f5c0..0x00421615,
+73,813 B, with a bogus pointer at 0x41ea32 cleared), 28,837 were 437 separate functions reached only through .rdata vtables or stored
+pointers (largest 0x48b3f0, 3,384 B, ListBox), 9,095 jump / byte tables and 3,961 junk `call`s in the padding (716 calls after a `ret`
+into the stub 0x404a14 that jumps outside the image; origin not established, U-0018). New `ghidra/scripts/RepairBodies.java` sets
+explicit bodies (so a function created early cannot absorb its targets), adds switch references and jump-table overrides and verifies
+every body: 43 exe switch sites got references (38 table overrides), functions created exe 437, jgld 62, Terrain 56, sound 463 (+1 called
+thunk 0x10001c62) with neutral `FUN_` names, 24 false functions removed (11 each in jgld / Terrain: pieces split off the debug CRT heap
+routines; 2 in sound). Function counts: exe 2,497 -> 2,934, jgld 1,570 -> 1,621, Terrain 1,050 -> 1,095, sound 1,753 -> 2,215; no reachable
+code is outside a function. The refresh recipe (c2_note --refresh + retag) changed callers / callees on 158 hooks.csv rows (mainLoop's
+callees 55 -> 216) and no C3 / C4 row lost a caller; no new hooks.csv rows (rows come from names files). Re-run survey: 1,812 game-logic
+functions, 5,589 data addresses, 960 clusters, 893 unnamed (584 functions touch one), golfer references outside every function 444 -> 0.
+Thunks referenced only from vtable data (jgld 247, sound 550) were not created: pointer_callers.py resolves them. The b3 names (pickGolferName
+-> appendWalkerName ... ) were applied to the master afterwards: ApplyNames overwrite renamed 9 exe rows and codecRing5Add, the exe and sound
+function lists were re-exported. Lesson: a command that reverts a directory (`git checkout -- re/analysis`) also reverts siblings' uncommitted edits.
+Batch b2 (2026-10-17, reproducible scenario baseline, re/analysis/data/scenario_baseline.md, manifest scenario_refs.json, tool
+re/tools/scenario_refs.py): the boot desync of the stored references was the PC's AUDIO DEVICE, not concurrency or hooks. LIVING-PC's only
+output device is the TV's HDMI endpoint; with a device sound.dll's timeGetTime at 0x10010dc3 (DsBuffer::play) runs on the main thread during
+initSound just before seedFromTime 0x00467110, one extra clock call: seed_time 0x0051b380 = 0x00100001, ticker 0x00822c78 = 0xbb71, RNG seed
+0x1d467741 (and location prices, which come from the RNG); without one 0x00100000 / 0xb81f. All 909 stored runs map one-to-one. scenario_det.js
+now gives sound.dll and binkw32 the device-less answers by default (`C3FT_AUDIO=none`; `live` reproduces the old timeline) and scenario_ab.py
+reports an A/B whose arms ran different audio paths as INCOMPARABLE. Measured: 20/20 OFF and 20/20 ON boots identical in clock-call count
+(21,265) and state hash, also with two games overlapping; the c3fy flakes cov_b_inject2, cov_a_build3, cov_a_career and cov_b_career
+matched their reference 10/10 OFF and 10/10 ON (cov_b_career's old script sat on the location screen, whose two pixel variants of 384 and
+5,830 px occur in OFF and ON alike). 55 scenarios are pinned (det_a == det_b == det_c on winmm.dll 381ed2b2..., scenario_det.js 93e128bb...):
+regenerate with `re/tools/scenario_refs.py regen`; the 35 sound-era references under log/c3/alt/c3fy2|a|b|c are stale (use
+log/c3/alt/refs). cov_b_career now buys San Diego ($70,000) and cov_a_career Monterey ($50,000): the old clicks were unaffordable on the
+device-less timeline. Leads: cov_b_shots / cov_b_shots2 take 5-7 shots and idle (results screen not recognised); a jgld.dll data dump for
+the location-screen variants.
+Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
 `c2_note.py --refresh --out log/c2_refresh.tsv` + `re_classify.py retag log/c2_refresh.tsv` (rewrites generated notes
