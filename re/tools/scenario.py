@@ -822,13 +822,16 @@ def cov_b_build(c):
 
 
 def cov_b_career(c):
-    """Career (Start New Game -> Easy -> Phoenix, $70,000): a hole, play, then date injections into the tournament offer
-    (date % 8192 == 0x1000, 0x00417f8a) and the year end (date % 8192 == 0, 0x004182ee showEndOfYearScreen) and into
+    """Career (Start New Game -> Easy -> San Diego, $70,000; Phoenix before b2): a hole, play, then date injections into
+    the tournament offer (date % 8192 == 0x1000, 0x00417f8a) and the year end (date % 8192 == 0, 0x004182ee showEndOfYearScreen) and into
     year 2 (magazine block 0x0040ff4d needs date > 0x2000)."""
     yield from _cov_b_menu(c)
     yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game
     yield from c.click(390, 125); yield from c.sleep(8000)      # Easy
-    yield from c.click(*COV_B_LOC["phoenix"])
+    # b2: San Diego ($70,000, so $30,000 left as with Phoenix before). Location prices come from the boot RNG: on the
+    # device-less boot timeline (the audio stand-in, re/analysis/data/scenario_baseline.md) Phoenix costs $150,000 and
+    # the click was refused, so the scenario stayed on the location screen
+    yield from c.click(*COV_B_LOC["sandiego"])
     yield from _cov_b_hud(c)
     yield from c.sleep(4000)
     yield from c.checkpoint("career")
@@ -2046,15 +2049,17 @@ def cov_a_build3(c):
 
 
 def cov_a_career(c):
-    """mainLoop H1 in a career game ([0x822c88] == 0: Start New Game -> Easy -> buy Northeast, $50,000): the routing
-    render's career arm (0x0041d2f2) and one game year to the date test 0x0041c17b ([0x834170] == 0x2200, the career-end
+    """mainLoop H1 in a career game ([0x822c88] == 0: Start New Game -> Easy -> buy Monterey, $50,000; Northeast before
+    b2): the routing render's career arm (0x0041d2f2) and one game year to the date test 0x0041c17b ([0x834170] == 0x2200, the career-end
     prompt 0x0041c1df..0x0041c322 when the champion's name 0x4c60a4 equals the player's 0x4d6098)."""
     yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
     yield from c.sleep(3000)
     yield from c.checkpoint("menu")
     yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game
     yield from c.click(390, 125); yield from c.sleep(4000)      # Easy
-    yield from c.click(492, 474)                                # Northeast's icon ($50,000, available on this boot)
+    # b2: Monterey ($50,000, the price Northeast had on the boot timeline with an audio device; on the device-less one
+    # (the audio stand-in, re/analysis/data/scenario_baseline.md) Northeast costs $500,000 and the click was refused)
+    yield from c.click(*COV_B_LOC["monterey"])
     yield from c.wait_screen(imgcmp.load(GOLDEN / "ingame_hud_dial.png"), crop=DIAL, threshold=30, name="hud")
     yield from c.sleep(3000)
     yield from c.checkpoint("game")

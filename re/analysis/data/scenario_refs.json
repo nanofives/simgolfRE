@@ -1,0 +1,2514 @@
+{
+ "version": 1,
+ "root": "log/c3/alt/refs",
+ "procedure": "re/tools/scenario_refs.py regen (det_a record, det_b / det_c replay, det_b == det_c required); checklist re/analysis/data/scenario_baseline.md",
+ "updated": "2026-10-17T13:00:39",
+ "scenarios": {
+  "cov_a_build3": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_build3/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "1315bf0593e900b1db0a65cb9bd65b376c3c52ebc728c08ac1233759b4b645b1",
+   "checkpoints": [
+    "menu",
+    "amen_sub0",
+    "amen_sub1",
+    "amen_sub2",
+    "amen_sub3",
+    "amen_sub4",
+    "path",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (8 checkpoints)",
+    "det_a_vs_det_b": "SAME (8 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:58:06"
+  },
+  "cov_b_inject2": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_inject2/det_b",
+   "schedule_sha256": "5280d992bb3a2660954bc302868b1303a35cba0517a77387dd4f8c7a062d3567",
+   "reference_sha256": "48cc92374feff4d549b8c063c74b5395902e91cd7cc6766d23f59c609d796c6f",
+   "checkpoints": [
+    "course",
+    "debug_overlay",
+    "zoom_box",
+    "forced_events",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x3f4fd507",
+    "seed_time": "0x00100000",
+    "checkpoint": "course",
+    "state_sha16": "596cef3a1ad2a7ab",
+    "frame_sha16": "bdf16542520eb289",
+    "T": 101101,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:58:50"
+  },
+  "cov_a_career": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_career/det_b",
+   "schedule_sha256": "fe37bc82b5fd950ebf0a51791bc4591261732709ad4e6a4bf8a5c77a816b696a",
+   "reference_sha256": "20fdc71dbe4f28ddbc56920859693dcd9cce678f960a42c44569bab4bc419440",
+   "checkpoints": [
+    "menu",
+    "game",
+    "hole",
+    "render",
+    "year_100",
+    "year_200",
+    "year_300",
+    "year_400",
+    "year_500",
+    "year_600",
+    "year_700",
+    "year_800",
+    "career_popup",
+    "career_editor",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (15 checkpoints)",
+    "det_a_vs_det_b": "SAME (15 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T13:00:00"
+  },
+  "cov_b_career": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_career/det_b",
+   "schedule_sha256": "10df15ab611e2a063de5f3bf1607fba06aac831b2e2ab02081d30d5a13f61151",
+   "reference_sha256": "1309815c6f70c3324ffee87a19e587ada01facd22e65fc3a9c4a509136ca3752",
+   "checkpoints": [
+    "career",
+    "hole",
+    "play",
+    "offer",
+    "year_end",
+    "year2"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x000044b3",
+    "rng_seed": "0x7f0c63e7",
+    "seed_time": "0x00100000",
+    "checkpoint": "career",
+    "state_sha16": "3adfdd6cdc1cbe7d",
+    "frame_sha16": "fbb9973bd75f41f6",
+    "T": 20604,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (6 checkpoints)",
+    "det_a_vs_det_b": "SAME (6 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T13:00:20"
+  },
+  "championship": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/championship/det_b",
+   "schedule_sha256": "f80fada23b982db1acb0b5ed97173dfc59539bf00e3b65f34f8117f869f07edd",
+   "reference_sha256": "2086df8fe24c8152a4ab23b5948a6d71c695f4e70b1c68bfe2f52de72039753f",
+   "checkpoints": [
+    "menu",
+    "tournament_start",
+    "tour_0060",
+    "tour_0122",
+    "tour_0180",
+    "tournament_end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (6 checkpoints)",
+    "det_a_vs_det_b": "SAME (6 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:08:06"
+  },
+  "course_season": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/course_season/det_b",
+   "schedule_sha256": "670bfb9caed7a54b475ee00784e40a64fb6ee6d09cc93287cc3e5fa07b832617",
+   "reference_sha256": "19cd91df6a7013e1bbca552e0bc656dd71ddec3185ccd8fcbe70cba345b6e118",
+   "checkpoints": [
+    "sandbox",
+    "hole_open",
+    "season_060",
+    "season_120",
+    "season_180",
+    "season_240",
+    "season_300",
+    "season_360",
+    "season_420",
+    "season_480",
+    "season_540",
+    "season_600"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0xd81ce2c9",
+    "seed_time": "0x00100000",
+    "checkpoint": "sandbox",
+    "state_sha16": "c11c62044e3851a1",
+    "frame_sha16": "de999e4f455d2219",
+    "T": 6868,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (12 checkpoints)",
+    "det_a_vs_det_b": "SAME (12 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:08:30"
+  },
+  "golfer_events": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/golfer_events/det_b",
+   "schedule_sha256": "7f68ee2a30e0895030a19ffc030d4979fa65b105d77abfb3fc5b1c89ce9f4e78",
+   "reference_sha256": "ae445a98a6b6fc4b79bfdfb226e9f0c07b4684d6b3e00232004245ef07cb8da8",
+   "checkpoints": [
+    "menu",
+    "sandbox",
+    "hole_open",
+    "season_0050",
+    "season_0100",
+    "season_0150",
+    "season_0200",
+    "golfer_panel",
+    "landmark",
+    "after_0020"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (10 checkpoints)",
+    "det_a_vs_det_b": "SAME (10 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:09:03"
+  },
+  "golfer_stories": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/golfer_stories/det_b",
+   "schedule_sha256": "54ee6f385db2a0595e0be43af80a75b72dc504bd4abae02a0f389a42df909be8",
+   "reference_sha256": "c2af7a19339bd61506bcbbd2558ae05a61a806d8660c1bb06c439d6d118f84b8",
+   "checkpoints": [
+    "menu",
+    "sandbox",
+    "hole_open",
+    "holes_built",
+    "season_0120",
+    "season_end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (6 checkpoints)",
+    "det_a_vs_det_b": "SAME (6 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:10:22"
+  },
+  "mood5_fixture": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/mood5_fixture/det_b",
+   "schedule_sha256": "bd2f68f1ca3796ad48621b0549933f9178f26374300f2d1affb69d164821026f",
+   "reference_sha256": "87daf4463957c9405e29eef13c40615ead455c0cc5e72a3a9e03ed34f8d71bba",
+   "checkpoints": [
+    "menu",
+    "loaded",
+    "view",
+    "season_end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (4 checkpoints)",
+    "det_a_vs_det_b": "SAME (4 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:10:24"
+  },
+  "sandbox_basic": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/sandbox_basic/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "4e72dbb6dc606ea3939845335907e195d135c9402da0e13b13fe636a6ee19b27",
+   "checkpoints": [
+    "menu",
+    "sandbox_00",
+    "sandbox_05",
+    "sandbox_10",
+    "sandbox_15",
+    "sandbox_20",
+    "sandbox_25",
+    "sandbox_30",
+    "sandbox_35",
+    "sandbox_40"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (10 checkpoints)",
+    "det_a_vs_det_b": "SAME (10 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:07:22"
+  },
+  "stories9_fixture": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/stories9_fixture/det_b",
+   "schedule_sha256": "727156dfec328ffa74fb6c8f02c94dfd618e0847ac9cc03dbcdcca4a6d0ab5a9",
+   "reference_sha256": "6f573708cded303e5e0b4dfaed0302fe2fbe1f4f105fa7fc8acd4dabf14a23ad",
+   "checkpoints": [
+    "menu",
+    "loaded",
+    "view",
+    "season_end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (4 checkpoints)",
+    "det_a_vs_det_b": "SAME (4 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:10:13"
+  },
+  "stories_fixture": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/stories_fixture/det_b",
+   "schedule_sha256": "2973d6c6a262692a67d0b4215ecb104f7b63d5219becbe591bc4c3cec25148ad",
+   "reference_sha256": "25b6bc83303e36749cdee10e06903175c4db5b63e82dbc2c4e1e88633b4ac0f9",
+   "checkpoints": [
+    "menu",
+    "loaded",
+    "view",
+    "season_end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (4 checkpoints)",
+    "det_a_vs_det_b": "SAME (4 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:09:53"
+  },
+  "ui_tour": {
+   "family": "s36b",
+   "reference": "log/c3/alt/refs/ui_tour/det_b",
+   "schedule_sha256": "8ccc48b1d21c86365ec02c8255ef85740e576bb2ce4be39802ed20af676658ff",
+   "reference_sha256": "6c22db54f9e2f27bb178f39fef92d99d20f2d4884933cf962f6bc2d010f2f064",
+   "checkpoints": [
+    "menu",
+    "menu_done",
+    "game",
+    "people",
+    "reports",
+    "menus",
+    "practice",
+    "shot",
+    "cancelled",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (10 checkpoints)",
+    "det_a_vs_det_b": "SAME (10 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:13:03"
+  },
+  "ui_tour_v": {
+   "family": "s36b",
+   "reference": "log/c3/alt/refs/ui_tour_v/det_b",
+   "schedule_sha256": "d7e3968dc600d31a51a1ea1bb6989163e7013f11bbec4bc5a7943be8d89479ef",
+   "reference_sha256": "7ccee6caf69ca7163ad61ea42088232529db0c1b335645c059494046d30cf4d6",
+   "checkpoints": [
+    "menu",
+    "menu_done",
+    "game",
+    "people",
+    "reports",
+    "menus",
+    "practice",
+    "shot",
+    "cancelled",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (10 checkpoints)",
+    "det_a_vs_det_b": "SAME (10 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:12:16"
+  },
+  "cov_b_build": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_build/det_b",
+   "schedule_sha256": "670bfb9caed7a54b475ee00784e40a64fb6ee6d09cc93287cc3e5fa07b832617",
+   "reference_sha256": "5fbcfc278442eec9245af85c3641755ff30105a4f97c8c9825932112d304a85f",
+   "checkpoints": [
+    "sandbox",
+    "views",
+    "hole",
+    "golf_palette",
+    "bldg_palette",
+    "edit",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x58dc2675",
+    "seed_time": "0x00100000",
+    "checkpoint": "sandbox",
+    "state_sha16": "f68a19303950f1eb",
+    "frame_sha16": "1f452984adbca487",
+    "T": 8585,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (7 checkpoints)",
+    "det_a_vs_det_b": "SAME (7 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:19:03"
+  },
+  "cov_b_career_types": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_career_types/det_b",
+   "schedule_sha256": "7994b861100c3e0d67d31116f7215696446155fb3831e01919d9828ebbf3decf",
+   "reference_sha256": "ba26c2ee3586e1f16a8676f9f3e81e989e1e12876e1b9c95acd0192c25f9d6ba",
+   "checkpoints": [
+    "career_scotland",
+    "played_scotland",
+    "career_ireland",
+    "played_ireland",
+    "career_lasvegas",
+    "played_lasvegas",
+    "career_carolina",
+    "played_carolina",
+    "career_novascotia",
+    "played_novascotia",
+    "career_wales",
+    "played_wales"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x000044b3",
+    "rng_seed": "0x08e7b0d1",
+    "seed_time": "0x00100000",
+    "checkpoint": "career_scotland",
+    "state_sha16": "b70a4f42a3283443",
+    "frame_sha16": "eac6164a8f1d8816",
+    "T": 20806,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (12 checkpoints)",
+    "det_a_vs_det_b": "SAME (12 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:21:16"
+  },
+  "cov_b_decor": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_decor/det_b",
+   "schedule_sha256": "670bfb9caed7a54b475ee00784e40a64fb6ee6d09cc93287cc3e5fa07b832617",
+   "reference_sha256": "ebd7295689825cdff8d29cd97c1356113ae5c8b53f5152466f329c2ee90b8517",
+   "checkpoints": [
+    "sandbox",
+    "paths",
+    "decor",
+    "terrain",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x58dc2675",
+    "seed_time": "0x00100000",
+    "checkpoint": "sandbox",
+    "state_sha16": "f68a19303950f1eb",
+    "frame_sha16": "1f452984adbca487",
+    "T": 8585,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:21:56"
+  },
+  "cov_b_holes18": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_holes18/det_b",
+   "schedule_sha256": "147cd7fb6c37e81a132747f950c65d8f8e543b9f5670484c456bc626cc45b279",
+   "reference_sha256": "83947d8c40e7eb447793912c36728610a319885d7f0c39329f3da8f951963eea",
+   "checkpoints": [
+    "zoom1",
+    "long_holes",
+    "holes",
+    "hired",
+    "limit",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0xcd3160d6",
+    "seed_time": "0x00100000",
+    "checkpoint": "zoom1",
+    "state_sha16": "9b8300845695cf03",
+    "frame_sha16": "33eb3dbc4e7a37f4",
+    "T": 11413,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (6 checkpoints)",
+    "det_a_vs_det_b": "SAME (6 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:21:43"
+  },
+  "cov_b_inject": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_inject/det_b",
+   "schedule_sha256": "4eb624473cc4c89eb4a736fceb901ede60e282a353f502ac2f497738548da4b2",
+   "reference_sha256": "fc2f8457a84aad263d4015a550d6da2488744170322ae2836a492740e9ae37ab",
+   "checkpoints": [
+    "course",
+    "debug_overlay",
+    "zoom_box",
+    "forced_events",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0xc06b49a1",
+    "seed_time": "0x00100000",
+    "checkpoint": "course",
+    "state_sha16": "ddd4765a7047cc74",
+    "frame_sha16": "9dc8aff1c530bcc2",
+    "T": 86456,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:27:44"
+  },
+  "cov_b_locations": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_locations/det_b",
+   "schedule_sha256": "670bfb9caed7a54b475ee00784e40a64fb6ee6d09cc93287cc3e5fa07b832617",
+   "reference_sha256": "ce7171e532033f6f2669f42e14e6197efc912795f9d4513d4674c92371e796a8",
+   "checkpoints": [
+    "phoenix",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x0f2c608f",
+    "seed_time": "0x00100000",
+    "checkpoint": "phoenix",
+    "state_sha16": "c42068e421868ec6",
+    "frame_sha16": "d399aaf2ab047b0f",
+    "T": 8585,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (2 checkpoints)",
+    "det_a_vs_det_b": "SAME (2 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:19:23"
+  },
+  "cov_b_paths": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_paths/det_b",
+   "schedule_sha256": "670bfb9caed7a54b475ee00784e40a64fb6ee6d09cc93287cc3e5fa07b832617",
+   "reference_sha256": "5496e74bd8e5826d69dc588dd7d19e930b5afb34894bde2b700747f5c969073a",
+   "checkpoints": [
+    "paths",
+    "raised",
+    "water",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x463c8cca",
+    "seed_time": "0x00100000",
+    "checkpoint": "paths",
+    "state_sha16": "6e501d0677a94e59",
+    "frame_sha16": "2c07013faedc295a",
+    "T": 61985,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (4 checkpoints)",
+    "det_a_vs_det_b": "SAME (4 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:24:24"
+  },
+  "cov_b_people": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_people/det_b",
+   "schedule_sha256": "1255c0f4ba7f049842b507285ddfde85c7b2bcf396c920a66c972453ca34ee37",
+   "reference_sha256": "6d8d7a88829e63ad2b7918b8341d4c4e46e09d65fb83db713199979125d1650d",
+   "checkpoints": [
+    "course",
+    "prefs_off",
+    "prefs_on",
+    "hover",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x199df266",
+    "seed_time": "0x00100000",
+    "checkpoint": "course",
+    "state_sha16": "1c882f6104288383",
+    "frame_sha16": "628f82da24ad93e5",
+    "T": 40703,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:28:43"
+  },
+  "cov_b_shots": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_shots/det_b",
+   "schedule_sha256": "9f320be83b5cb53ddab410199fe67b4cb15fe91415e3c52198316a6e07bce152",
+   "reference_sha256": "cced496f84909e630d6d64267fc639dcc650472582d9f397660ef7a4c64b3bba",
+   "checkpoints": [
+    "tournament_start",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000d8db",
+    "rng_seed": "0x6f2234d7",
+    "seed_time": "0x00100000",
+    "checkpoint": "tournament_start",
+    "state_sha16": "e6af9b6c0951aa5d",
+    "frame_sha16": "3734278609a22f91",
+    "T": 26765,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (2 checkpoints)",
+    "det_a_vs_det_b": "SAME (2 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:29:36"
+  },
+  "cov_b_title": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_title/det_b",
+   "schedule_sha256": "0d11b8bd2256dabdb0d8f7c12a42410fa888849f68298e51cabb114e4741b6e4",
+   "reference_sha256": "bab1e3319e1160a929a43abba1a355856dd5f5d7561d15d4861813a7e8425724",
+   "checkpoints": [
+    "menu",
+    "theme",
+    "menu2",
+    "career",
+    "month",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "abe78f371d48754a",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (6 checkpoints)",
+    "det_a_vs_det_b": "SAME (6 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:19:54"
+  },
+  "cov_a_build": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_build/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "6c70920ba4ff694978a70bb66ce4793ab6cd3be994645b6db923790ce6a7982b",
+   "checkpoints": [
+    "menu",
+    "terrain_03",
+    "terrain_07",
+    "terrain_11",
+    "terrain_15",
+    "amenities",
+    "amen_470",
+    "amen_532",
+    "amen_594",
+    "amen_655",
+    "amen_717",
+    "bldg_2",
+    "bldg_5",
+    "bldg_8",
+    "brush_350",
+    "brush_465",
+    "brush_585",
+    "brush_720",
+    "undo",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (20 checkpoints)",
+    "det_a_vs_det_b": "SAME (20 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:38:57"
+  },
+  "cov_a_build2": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_build2/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "84789719670ede7108769ef3cb4d0eba786b72930102504bdc45a53a0aa9e278",
+   "checkpoints": [
+    "menu",
+    "holes",
+    "second_tee_green",
+    "paint_over_holes",
+    "buildings",
+    "remove_prompt1",
+    "remove_prompt2",
+    "removed",
+    "demolish",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (10 checkpoints)",
+    "det_a_vs_det_b": "SAME (10 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:40:28"
+  },
+  "cov_a_champ": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_champ/det_b",
+   "schedule_sha256": "3077cee35590ce51498b8938ec6cfcdd54834f52b591150b9c257d926bdc2059",
+   "reference_sha256": "3e3d0b0afb55ddf9f460fd6f9c0d7842dee5017917a1b84bd21d1bf3cf068bf7",
+   "checkpoints": [
+    "menu",
+    "tournament_start",
+    "gary_turn",
+    "shot_keys",
+    "champ_CJ",
+    "champ_render",
+    "n_prompt",
+    "n_cancel",
+    "X",
+    "n_yes",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (11 checkpoints)",
+    "det_a_vs_det_b": "SAME (11 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:40:58"
+  },
+  "cov_a_golfer": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_golfer/det_b",
+   "schedule_sha256": "9fdf085202859875ddab0f9ac480e4d887f38a74a2cb8cd7c598c6946cdec69d",
+   "reference_sha256": "a108d30132553ee02a15af09cba94af791c3d1784f58343e4220e3c01ca30484",
+   "checkpoints": [
+    "menu",
+    "holes",
+    "season",
+    "panel_0",
+    "button_0",
+    "action_0",
+    "panel_1",
+    "button_1",
+    "action_1",
+    "panel_2",
+    "button_2",
+    "action_2",
+    "panel_3",
+    "button_3",
+    "action_3",
+    "q_editor",
+    "q_done",
+    "mod_11",
+    "mod_10",
+    "shift_tee_300",
+    "shift_tee_570",
+    "tee_300",
+    "tee_570",
+    "strip",
+    "pan_rot0",
+    "pan_rot1",
+    "pan_rot2",
+    "pan_rot3",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (29 checkpoints)",
+    "det_a_vs_det_b": "SAME (29 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:42:36"
+  },
+  "cov_a_keys": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_keys/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "85eb804848ddd086674777e0f3adf7fd78d4a103f14cd1fbfe4be020fdce5397",
+   "checkpoints": [
+    "menu",
+    "holes",
+    "k_speed",
+    "k_misc",
+    "k_tools",
+    "k_cheats",
+    "k_worldmap",
+    "k_cheats2",
+    "k_holes",
+    "k_terrain",
+    "k_vk",
+    "k_dlg_S",
+    "k_dlg_L",
+    "k_dlg_R",
+    "k_dlg_J",
+    "k_dialogs",
+    "k_C",
+    "k_B",
+    "k_files",
+    "k_render_dot",
+    "k_render_slash",
+    "k_render",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (23 checkpoints)",
+    "det_a_vs_det_b": "SAME (23 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:38:23"
+  },
+  "cov_a_keys2": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_keys2/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "6eed0a18687b7ad5272642a48984787b7b69bacbd240353680a81df82fed7198",
+   "checkpoints": [
+    "menu",
+    "holes",
+    "report_space",
+    "tab_brush",
+    "e_build",
+    "holes_keys",
+    "C_prompt",
+    "C_overwrite",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (9 checkpoints)",
+    "det_a_vs_det_b": "SAME (9 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:41:05"
+  },
+  "cov_a_play": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_play/det_b",
+   "schedule_sha256": "2fc48ff5cc0a55ac36a7e1390fb2fada76eee16cd1155e51e8a3d2e2f3f434cb",
+   "reference_sha256": "5659d16f5e84a581f99ede73064faf80805e54a8785ff692d9dd4835e4cf060c",
+   "checkpoints": [
+    "menu",
+    "hole",
+    "match",
+    "gary_turn",
+    "shot_keys",
+    "n_prompt",
+    "n_yes",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (8 checkpoints)",
+    "det_a_vs_det_b": "SAME (8 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:41:38"
+  },
+  "cov_a_quit": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_quit/det_b",
+   "schedule_sha256": "6c7c308684b8da39353be5ebd7578905e4c731e54b4fa4222def8647b4d6d740",
+   "reference_sha256": "d23c2c3a541321c7a3a6c4fb2b0e5389a8d4c652bc216314599c3d17be92e1b4",
+   "checkpoints": [
+    "menu",
+    "game",
+    "exit_prompt",
+    "exit_stay",
+    "exit_leave",
+    "title1",
+    "game2",
+    "exit_save",
+    "exit_saved",
+    "title2",
+    "quit_00",
+    "quit_01",
+    "quit_02",
+    "quit_03",
+    "credits"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (15 checkpoints)",
+    "det_a_vs_det_b": "SAME (15 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:40:04"
+  },
+  "cov_a_quit_title": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_quit_title/det_b",
+   "schedule_sha256": "dc6ae068bc0a62687cea7e32f83b06001edef78fa108d9e43af7cddf2975b35b",
+   "reference_sha256": "2a12b943703e919afabfe1ad3ff727b4d03c0d14e6699ef9d03e6dee1d16e6c5",
+   "checkpoints": [
+    "menu",
+    "hover_exit",
+    "quit_00",
+    "quit_01",
+    "quit_02",
+    "quit_03",
+    "quit_04",
+    "quit_05",
+    "credits"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (9 checkpoints)",
+    "det_a_vs_det_b": "SAME (9 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:40:17"
+  },
+  "cov_b_shots2": {
+   "family": "c3fyb",
+   "reference": "log/c3/alt/refs/cov_b_shots2/det_b",
+   "schedule_sha256": "da1230a0c2a4253117e773a0b9830e95d7783e1c346231d3436fa37167bd88df",
+   "reference_sha256": "14429538672d9a5216c06427e64913312cf6721b0b69effa37a47a81dd37d0a3",
+   "checkpoints": [
+    "tournament_start",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000d8db",
+    "rng_seed": "0x71b2f711",
+    "seed_time": "0x00100000",
+    "checkpoint": "tournament_start",
+    "state_sha16": "58a7d7e72bf2df19",
+    "frame_sha16": "8fd04d13c01ac0db",
+    "T": 26765,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (2 checkpoints)",
+    "det_a_vs_det_b": "SAME (2 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:39:16"
+  },
+  "cov_a_flags": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_flags/det_b",
+   "schedule_sha256": "b1d992b7da32931b96642a3f4f99b215df90cc9f76eea3a7a2a94406b8c4d12f",
+   "reference_sha256": "cdf8e81e7c0b316084424efa874d8827a913ccac5bbfa2d5349d667928b6b266",
+   "checkpoints": [
+    "menu",
+    "mood5",
+    "mood5_X",
+    "clubhouse",
+    "ztut",
+    "ztut_esc",
+    "ztut_after",
+    "zdemo",
+    "zdemo_clicks",
+    "zedit",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (11 checkpoints)",
+    "det_a_vs_det_b": "SAME (11 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:44:50"
+  },
+  "cov_a_keys3": {
+   "family": "c3fya",
+   "reference": "log/c3/alt/refs/cov_a_keys3/det_b",
+   "schedule_sha256": "d851d9016f39e66c8feeb6a6dbedfd857742fcb371dd9fad577295d394328cfd",
+   "reference_sha256": "3d1cd80160da40aa699ffbbdc4cd8e0e88961c81ec89be563169907157daeec7",
+   "checkpoints": [
+    "menu",
+    "holes",
+    "season",
+    "panel",
+    "q_editor",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (6 checkpoints)",
+    "det_a_vs_det_b": "SAME (6 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:45:26"
+  },
+  "cov_k1_routing": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_routing/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "fdd19d6d67b665bb777d3313d86eff1781d706c568e680a7b739e144b7243e15",
+   "checkpoints": [
+    "menu",
+    "trees",
+    "routing",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (4 checkpoints)",
+    "det_a_vs_det_b": "SAME (4 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:47:21"
+  },
+  "cov_k2_build": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k2_build/det_b",
+   "schedule_sha256": "72b21b0e84564c49c61297ac6d7e65943d2ef5a3c133a785ccf29e180c861410",
+   "reference_sha256": "67412caaf36087157d5cf9aef28ea1f81d8149c9265b44679607992ed92acc53",
+   "checkpoints": [
+    "built",
+    "cached_miss",
+    "fairway",
+    "bulldoze",
+    "opened",
+    "decay",
+    "lot",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x40efc7e5",
+    "seed_time": "0x00100000",
+    "checkpoint": "built",
+    "state_sha16": "4388606187296315",
+    "frame_sha16": "6984c4d46cad3d4c",
+    "T": 19796,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (8 checkpoints)",
+    "det_a_vs_det_b": "SAME (8 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:45:52"
+  },
+  "cov_k2_golfers": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k2_golfers/det_b",
+   "schedule_sha256": "2c1341c4b026cad592a55cf1605fc50c2548e6d22e36519e67920e10d923c3b8",
+   "reference_sha256": "5c29514ba05180b301c8e40b1a13d5e02cd6ac514aaab72c3ed4430d958ff8fa",
+   "checkpoints": [
+    "paused",
+    "same_y",
+    "state12",
+    "partner"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x6a5b0a80",
+    "seed_time": "0x00100000",
+    "checkpoint": "paused",
+    "state_sha16": "cd172c0cf1c1db4b",
+    "frame_sha16": "cfe61ccba0c676a4",
+    "T": 108878,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (4 checkpoints)",
+    "det_a_vs_det_b": "SAME (4 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:46:08"
+  },
+  "cov_k2_label": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k2_label/det_b",
+   "schedule_sha256": "10df15ab611e2a063de5f3bf1607fba06aac831b2e2ab02081d30d5a13f61151",
+   "reference_sha256": "c0b8ee4ce618f8eb5d8efbbfbe3f7b27ee97ae0724dd0344f4155063b8ec72c5",
+   "checkpoints": [
+    "career",
+    "label0",
+    "label1",
+    "label2",
+    "label3",
+    "label4"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x000044b3",
+    "rng_seed": "0x03b04025",
+    "seed_time": "0x00100000",
+    "checkpoint": "career",
+    "state_sha16": "a165ef5a73750b58",
+    "frame_sha16": "f43584f4d204f6f2",
+    "T": 20604,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (6 checkpoints)",
+    "det_a_vs_det_b": "SAME (6 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:45:36"
+  },
+  "cov_k2_simfoto": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k2_simfoto/det_b",
+   "schedule_sha256": "8baff0628a856a28ff4b5480e7c26f71a0fbe25c9c6967215c266dab28d7fd99",
+   "reference_sha256": "25c50f28ee35a5d582d592f182fbc464dc94c43b076cebd847a12c3f850334f7",
+   "checkpoints": [
+    "paused",
+    "bottom",
+    "right"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x395b7950",
+    "seed_time": "0x00100000",
+    "checkpoint": "paused",
+    "state_sha16": "370c3fe1907f3d5d",
+    "frame_sha16": "b3ab06bcc517f8c3",
+    "T": 110393,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (3 checkpoints)",
+    "det_a_vs_det_b": "SAME (3 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:46:22"
+  },
+  "cov_k3_build": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k3_build/det_b",
+   "schedule_sha256": "faad08906e8daeead0115295e031172e2bdd087848e376c118f064016b99870b",
+   "reference_sha256": "062963ce238ac43f4b640079da25da85b28c8db9e53ee59583be583be372450a",
+   "checkpoints": [
+    "sandbox",
+    "held_sub0",
+    "held_sub1",
+    "held_sub2",
+    "held_sub3",
+    "held_sub4",
+    "held_bldg",
+    "homesites10",
+    "green19",
+    "tee19",
+    "restored",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x58dc2675",
+    "seed_time": "0x00100000",
+    "checkpoint": "sandbox",
+    "state_sha16": "f68a19303950f1eb",
+    "frame_sha16": "1f452984adbca487",
+    "T": 8585,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (12 checkpoints)",
+    "det_a_vs_det_b": "SAME (12 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:46:58"
+  },
+  "cov_k3_camera": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k3_camera/det_b",
+   "schedule_sha256": "e6c4d06c7d4aadc5f8b139b5389a3decb21ceaf70deaf07c1966305c87e1946e",
+   "reference_sha256": "954eac225d68efe9c5be61f88f2b523d1e7934c03b776549731124ef03eed704",
+   "checkpoints": [
+    "sandbox",
+    "edge",
+    "x_edge0",
+    "x_edge1",
+    "x_edge2",
+    "x_edge3",
+    "x_edge4",
+    "x_edge5",
+    "x_edge6",
+    "x_edge7",
+    "x_after",
+    "y_inj0",
+    "y_inj1",
+    "y_inj2",
+    "y_inj3",
+    "y_inj4",
+    "y_inj5",
+    "y_inj6",
+    "y_inj7",
+    "y_after",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x58dc2675",
+    "seed_time": "0x00100000",
+    "checkpoint": "sandbox",
+    "state_sha16": "f68a19303950f1eb",
+    "frame_sha16": "1f452984adbca487",
+    "T": 8585,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (21 checkpoints)",
+    "det_a_vs_det_b": "SAME (21 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:47:09"
+  },
+  "cov_k3_career": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k3_career/det_b",
+   "schedule_sha256": "bf21a721365034cb2594725aca18b5fbf731f7e00b8b7a114d29ef3aa54c9470",
+   "reference_sha256": "ba07e9ad554247a59be40c915ad17dd5dd9377ddc045cfd46da0a3bdae4f005c",
+   "checkpoints": [
+    "career",
+    "prompt",
+    "prompt2",
+    "answered",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x000044b3",
+    "rng_seed": "0x028c9e02",
+    "seed_time": "0x00100000",
+    "checkpoint": "career",
+    "state_sha16": "25b37ec2622392d7",
+    "frame_sha16": "76288b4c6b4e4b90",
+    "T": 22321,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:47:41"
+  },
+  "cov_k1_animals": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_animals/det_b",
+   "schedule_sha256": "395daaa2371342bd4e6129692dffb0a0b9c75556f71784c2d2f53d489a4076a5",
+   "reference_sha256": "dc865ee205d6a11d6a4ee8e213c0a4cb080863469d0cb96956b348174423d4be",
+   "checkpoints": [
+    "course",
+    "bought",
+    "menu2",
+    "session2",
+    "session2_end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x274dfeff",
+    "seed_time": "0x00100000",
+    "checkpoint": "course",
+    "state_sha16": "0a61c766d517402d",
+    "frame_sha16": "ff3c6b9f354799c8",
+    "T": 95142,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:50:51"
+  },
+  "cov_k1_magazine_d2900": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_magazine_d2900/det_b",
+   "schedule_sha256": "14545899fa253f4299120e5fb8ea92c3187aa8c40f51e7c37958cecaa9b26285",
+   "reference_sha256": "e73c0df0709179fd8c1d4bf2d451c3096c22456ed23a0bbb860fa3887562daff",
+   "checkpoints": [
+    "holes",
+    "article",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x7c8a1a43",
+    "seed_time": "0x00100000",
+    "checkpoint": "holes",
+    "state_sha16": "f212dd63add3a3b4",
+    "frame_sha16": "000807a09a5c8d75",
+    "T": 84335,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (3 checkpoints)",
+    "det_a_vs_det_b": "SAME (3 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:52:37"
+  },
+  "cov_k1_paths": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_paths/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "a1541a31c0bbbec6f48315e068aa73946abf867f6eef0f5d24a76a3c4340454a",
+   "checkpoints": [
+    "menu",
+    "bridge",
+    "cart",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (4 checkpoints)",
+    "det_a_vs_det_b": "SAME (4 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:50:12"
+  },
+  "cov_k1_river": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_river/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "89a71cd3db4fe9f349e4b0ea5db8046288aa3ac645c9381fd6a04ed3446b4e33",
+   "checkpoints": [
+    "menu",
+    "r00",
+    "r01",
+    "r02",
+    "r03",
+    "r04",
+    "r05",
+    "r06",
+    "r07",
+    "r08",
+    "r09",
+    "r10",
+    "r11",
+    "r12",
+    "r13",
+    "r14",
+    "r15",
+    "r16",
+    "r17",
+    "r18",
+    "r19",
+    "r20",
+    "r21",
+    "r22",
+    "r23",
+    "r24",
+    "r25",
+    "r26",
+    "r27",
+    "r28",
+    "r29",
+    "r30",
+    "r31",
+    "r32",
+    "r33",
+    "r34",
+    "r35",
+    "r36",
+    "r37",
+    "r38",
+    "r39",
+    "r40",
+    "r41",
+    "r42",
+    "r43",
+    "r44",
+    "r45",
+    "r46",
+    "r47",
+    "r48",
+    "r49",
+    "r50",
+    "r51",
+    "r52",
+    "r53",
+    "r54",
+    "r55",
+    "r56",
+    "r57",
+    "r58",
+    "r59",
+    "r60",
+    "r61",
+    "r62",
+    "r63",
+    "r64",
+    "r65",
+    "r66",
+    "r67",
+    "r68",
+    "r69",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (72 checkpoints)",
+    "det_a_vs_det_b": "SAME (72 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:52:09"
+  },
+  "cov_k1_steps": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_steps/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "17735044931e560e16594c3db82d177c561b88a9f25410dd937a2670ec84d6df",
+   "checkpoints": [
+    "menu",
+    "steps",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (3 checkpoints)",
+    "det_a_vs_det_b": "SAME (3 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:50:41"
+  },
+  "cov_k1_terrain": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_terrain/det_b",
+   "schedule_sha256": "8cd958e369776f195686c744d7f63452c2b5bdc27f61fc45b2074f38cfd9f1af",
+   "reference_sha256": "aebc9e3e5fbac1283624b4e2db38276cdc4fdd19df5d384855387aa787fedc46",
+   "checkpoints": [
+    "menu",
+    "raised",
+    "rot6",
+    "rot6_end",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:50:27"
+  },
+  "cov_k1_washers": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_washers/det_b",
+   "schedule_sha256": "741a1fec03733fd2f79210418e3918d05219295776e9fa48dea8accecfce3ba4",
+   "reference_sha256": "3635678915653b69aeb00a700c93150a0d36fa94162a629a8e50a60d80c3c667",
+   "checkpoints": [
+    "menu",
+    "washers",
+    "washers2",
+    "zoom_in",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:51:31"
+  },
+  "cov_k3_camera2": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k3_camera2/det_b",
+   "schedule_sha256": "a3c8ae2b23b84eba1b71cac8d475161e249f81e1056e5a4d371525136761cdb6",
+   "reference_sha256": "1d0012052ff4eeb6a2f2a72ed3679e8e7b20f9758242d66bf43cc9861fba5415",
+   "checkpoints": [
+    "sandbox",
+    "edge",
+    "x_edge0",
+    "x_edge1",
+    "x_edge2",
+    "x_edge3",
+    "x_edge4",
+    "x_edge5",
+    "x_edge6",
+    "x_edge7",
+    "x_edge8",
+    "x_edge9",
+    "x_after",
+    "y_inj0",
+    "y_inj1",
+    "y_inj2",
+    "y_inj3",
+    "y_inj4",
+    "y_inj5",
+    "y_inj6",
+    "y_inj7",
+    "y_inj8",
+    "y_inj9",
+    "y_after",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x58dc2675",
+    "seed_time": "0x00100000",
+    "checkpoint": "sandbox",
+    "state_sha16": "f68a19303950f1eb",
+    "frame_sha16": "1f452984adbca487",
+    "T": 8585,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (25 checkpoints)",
+    "det_a_vs_det_b": "SAME (25 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:51:48"
+  },
+  "cov_k3_champ": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k3_champ/det_b",
+   "schedule_sha256": "0bd27f6db90cfc79cee6accb62f465ccc72899ca01922609e4c1a70fb4d72d32",
+   "reference_sha256": "9c726bd607e8222b9e06b75c372f2f82eea9e3950067025ca982bf66d28208bc",
+   "checkpoints": [
+    "menu",
+    "tournament_start",
+    "gary_turn",
+    "aim0",
+    "aim1",
+    "aim2",
+    "aim3",
+    "aim4",
+    "aim5",
+    "aim6",
+    "aim7",
+    "shot",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (13 checkpoints)",
+    "det_a_vs_det_b": "SAME (13 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:49:56"
+  },
+  "cov_k3_hole19": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k3_hole19/det_b",
+   "schedule_sha256": "cb0d80001eb2b2198a22ad9cce8b832e45f160768f936663b68c6916aebca8ab",
+   "reference_sha256": "2db266d24ce1db49fe269c84fc6272bb9adeada19267aaaab55d87163c2f3e58",
+   "checkpoints": [
+    "hole",
+    "green_line0",
+    "green_line1",
+    "green19_0",
+    "green19_1",
+    "green19_2",
+    "green19_3",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0xc67e5bb3",
+    "seed_time": "0x00100000",
+    "checkpoint": "hole",
+    "state_sha16": "5482496eb54d8c83",
+    "frame_sha16": "b9e79a98511454c4",
+    "T": 26058,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (8 checkpoints)",
+    "det_a_vs_det_b": "SAME (8 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:51:57"
+  },
+  "cov_k1_label": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_k1_label/det_b",
+   "schedule_sha256": "e5bba8226db47399a2dfc1d0fb1d85a720019579f8a137c9d4e959f49568ad94",
+   "reference_sha256": "39f9cd4b82042f9af01b0a2c724131389ebd5db199e3dea8a272bfff5d01bdc6",
+   "checkpoints": [
+    "course",
+    "label",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x000097dd",
+    "rng_seed": "0x79082f68",
+    "seed_time": "0x00100000",
+    "checkpoint": "course",
+    "state_sha16": "0639c25d693563e3",
+    "frame_sha16": "2802315e79d9a2ec",
+    "T": 138168,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (3 checkpoints)",
+    "det_a_vs_det_b": "SAME (3 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "93e128bb2e6ccec85f65464f9395e24339c771beab908fa2ac19d0d099d819e9"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 1,
+    "keep_sound": true,
+    "instance": "b2b"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T12:54:10"
+  }
+ }
+}

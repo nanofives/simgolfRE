@@ -74,12 +74,35 @@ const CELLS = K(Memory.alloc(Process.pageSize));
 let cellOff = 0;
 function cell(v) { const c = CELLS.add(cellOff); cellOff += 4; c.writePointer(v); return c; }
 
-function tgtStub(realCell) {
+// opt-in CLOCK LOG (cfg.clockLog = N, scenario_ab.py --clock-log N; batch b2, 2026-10-17): the first N main-thread clock
+// calls are recorded natively as [return address, kind | slot] pairs (kind 1 = timeGetTime, 2 = QPC; slot = index into
+// CFG.slots), counter at D+0x30, so the caller of every call between spawn and a checkpoint can be compared across boots.
+// Without the key the stubs below are byte-identical to the default ones.
+const CLOG_N = CFG.clockLog ? (CFG.clockLog >>> 0) : 0;
+const CLOG = CLOG_N ? K(Memory.alloc(CLOG_N * 8 + 16)) : null;
+function clogBytes(kind, slotIndex) {
+  if (!CLOG_N) return [];
+  const tag = ((kind << 24) | (slotIndex & 0xffffff)) >>> 0;
+  const b = [0x8b, 0x0d, ...d(0x30),                 // mov ecx, [count]
+             0x81, 0xf9, ...u32(CLOG_N),             // cmp ecx, N
+             0x73, 0x00];                            // jae skip
+  const jaeAt = b.length - 1;
+  b.push(0x8b, 0x14, 0x24,                           // mov edx, [esp]       (return address)
+         0x89, 0x14, 0xcd, ...u32(CLOG),             // mov [ecx*8 + CLOG], edx
+         0xc7, 0x04, 0xcd, ...u32(CLOG.add(4)), ...u32(tag), // mov dword [ecx*8 + CLOG + 4], tag
+         0xff, 0x05, ...d(0x30));                    // inc [count]
+  b[jaeAt] = b.length - (jaeAt + 1);
+  return b;
+}
+
+function tgtStub(realCell, slotIndex) {
   // mov eax, fs:[0x24]; cmp eax, [main]; jne real
   const b = [0x64, 0xa1, 0x24, 0, 0, 0, 0x3b, 0x05, ...d(0xc), 0x75, 0x00];
   const jneAt = b.length - 1;
-  // mov eax,[T]; mov ecx,[step]; add [T],ecx; inc [tgt calls]; cmp eax,[due]; jae slow; ret
-  b.push(0xa1, ...d(0), 0x8b, 0x0d, ...d(4), 0x01, 0x0d, ...d(0), 0xff, 0x05, ...d(0x20), 0x3b, 0x05, ...d(8), 0x73, 0x01, 0xc3);
+  // mov eax,[T]; mov ecx,[step]; add [T],ecx; inc [tgt calls]; (clock log); cmp eax,[due]; jae slow; ret
+  b.push(0xa1, ...d(0), 0x8b, 0x0d, ...d(4), 0x01, 0x0d, ...d(0), 0xff, 0x05, ...d(0x20));
+  b.push(...clogBytes(1, slotIndex));
+  b.push(0x3b, 0x05, ...d(8), 0x73, 0x01, 0xc3);
   // slow: push eax; call [onDue]; pop eax; ret
   b.push(0x50, 0xff, 0x15, ...d(0x1c), 0x58, 0xc3);
   b[jneAt] = b.length - (jneAt + 1);
@@ -88,9 +111,10 @@ function tgtStub(realCell) {
   return emit(b);
 }
 
-function qpcStub(realCell) {
+function qpcStub(realCell, slotIndex) {
   const b = [0x64, 0xa1, 0x24, 0, 0, 0, 0x3b, 0x05, ...d(0xc), 0x75, 0x00];
   const jneAt = b.length - 1;
+  b.push(...clogBytes(2, slotIndex));
   b.push(0x8b, 0x44, 0x24, 0x04,                 // mov eax, [esp+4]
          0x8b, 0x0d, ...d(0x10), 0x89, 0x08,     // mov ecx, [Qlo]; mov [eax], ecx
          0x8b, 0x0d, ...d(0x14), 0x89, 0x48, 0x04, // mov ecx, [Qhi]; mov [eax+4], ecx
@@ -253,6 +277,70 @@ const SIGS = {
   timeSetEvent: ['uint32', ['uint32', 'uint32', 'pointer', 'pointer', 'uint32']], timeKillEvent: ['uint32', ['uint32']],
 };
 
+// ---------------------------------------------------------------- AUDIO STAND-IN (cfg.audio === 'none'; batch b2, 2026-10-17)
+// Whether the PC has an audio output decides the boot's timeline: with one, initSound 0x00483e90 opens the devices, the
+// sound timer thread runs and the main thread makes one more clock call before seedFromTime 0x00467110 (seed_time
+// 0x0051b380 = T0 + 1, the RNG seed and the title ticker 0x00822c78 follow); without one, every open fails and
+// g_soundReady 0x0083afc4 stays 0. On LIVING-PC the HDMI audio endpoint exists only while the TV is on, so stored
+// references flipped between the two timelines (re/analysis/data/scenario_baseline.md). This stand-in gives sound.dll the
+// device-less answers measured on this PC with no endpoint (log/c3/b2_soundprobe.js, 2026-10-17), on every PC and with
+// any device, so the no-device path runs everywhere:
+//   DSOUND #2 DirectSoundEnumerateA (sound.dll+0x1153f): the real enumeration runs, but only its NULL-guid entry (the
+//     primary driver, which DirectSound lists with or without devices; one callback, return 1) reaches sound.dll's
+//     callback; the result is the real one (DS_OK = 0 measured).
+//   ole32 CoCreateInstance (sound.dll+0x11d06) for CLSID_DirectSound {47d4d946-62e8-11cf-93bc-444553540000}: S_OK and a
+//     fake IDirectSound whose Initialize (slot 10, called from sound.dll+0x11d1d) returns DSERR_NODRIVER 0x88780078 and
+//     whose Release (slot 2, sound.dll+0x11a2a) returns 0, the two calls and results measured; other slots return
+//     DSERR_UNINITIALIZED 0x887800aa and are logged (never called on the measured path). Other CLSIDs go to the real API.
+//   binkw32 WINMM waveOutOpen: MMSYSERR_BADDEVICEID 2 (this PC's result for WAVE_MAPPER and device 0 with no device).
+// Each stand-in call is counted in audioStats (status()), any call off the measured sequence is logged.
+const audioStats = { dsenum: 0, dsenumPassed: 0, dsenumDropped: 0, cocreateDs: 0, cocreateOther: 0, dsCalls: [], waveOutOpen: 0 };
+const AUDIO_NONE = CFG.audio === 'none';
+const ACB = {};
+if (AUDIO_NONE) {
+  let gameEnumCb = null, realEnum = null, realCoCreate = null;
+  const filterCb = K(new NativeCallback(function (guid, desc, mod, ctx) {
+    if (!guid.isNull()) { audioStats.dsenumDropped++; return 1; }
+    audioStats.dsenumPassed++;
+    return gameEnumCb(guid, desc, mod, ctx);
+  }, 'int', ['pointer', 'pointer', 'pointer', 'pointer'], 'stdcall'));
+  ACB.dsenum = K(new NativeCallback(function (cb, ctx) {
+    audioStats.dsenum++;
+    gameEnumCb = new NativeFunction(cb, 'int', ['pointer', 'pointer', 'pointer', 'pointer'], 'stdcall');
+    return realEnum(filterCb, ctx);
+  }, 'int', ['pointer', 'pointer'], 'stdcall'));
+  ACB.dsenum.bind = (real) => { realEnum = new NativeFunction(real, 'int', ['pointer', 'pointer'], 'stdcall'); };
+  // fake IDirectSound: [vtbl] -> 11 slots (stdcall, this first; argument counts of the IDirectSound methods)
+  const DS_ARGS = [2, 0, 0, 3, 1, 2, 2, 0, 1, 1, 1];   // QI, AddRef, Release, CreateSoundBuffer, GetCaps, Duplicate,
+                                                       // SetCooperativeLevel, Compact, GetSpeakerConfig, Set..., Initialize
+  const DS_RET = (i) => i === 10 ? 0x88780078 : (i === 2 ? 0 : (i === 1 ? 1 : (i === 0 ? 0x80004002 : 0x887800aa)));
+  const vtbl = K(Memory.alloc(4 * 11));
+  for (let i = 0; i < 11; i++) {
+    const n = DS_ARGS[i], idx = i;
+    const cb = K(new NativeCallback(function () {
+      if (audioStats.dsCalls.length < 64) audioStats.dsCalls.push(idx);
+      return DS_RET(idx) | 0;
+    }, 'int', Array(n + 1).fill('pointer'), 'stdcall'));
+    vtbl.add(4 * i).writePointer(cb);
+  }
+  const fakeDs = K(Memory.alloc(8));
+  fakeDs.writePointer(vtbl);
+  ACB.cocreate = K(new NativeCallback(function (clsid, outer, ctx, riid, ppv) {
+    if (clsid.readU32() === 0x47d4d946 && clsid.add(4).readU32() === 0x11cf62e8 && clsid.add(8).readU32() === 0x4544bc93 &&
+        clsid.add(12).readU32() === 0x00005453) {
+      audioStats.cocreateDs++;
+      ppv.writePointer(fakeDs);
+      return 0;
+    }
+    audioStats.cocreateOther++;
+    return realCoCreate(clsid, outer, ctx, riid, ppv);
+  }, 'int', ['pointer', 'pointer', 'uint32', 'pointer', 'pointer'], 'stdcall'));
+  ACB.cocreate.bind = (real) => { realCoCreate = new NativeFunction(real, 'int', ['pointer', 'pointer', 'uint32', 'pointer', 'pointer'], 'stdcall'); };
+  ACB.waveOutOpen = K(new NativeCallback(function () { audioStats.waveOutOpen++; return 2; },
+    'uint32', ['pointer', 'uint32', 'pointer', 'pointer', 'pointer', 'uint32'], 'stdcall'));
+  ACB.waveOutOpen.bind = () => {};
+}
+
 // ---------------------------------------------------------------- IAT patching
 const patched = {};         // module name (lower) -> true
 const slotInfo = [];
@@ -267,9 +355,14 @@ function patchModule(m) {
     const real = slot.readPointer();
     const c = cell(real);
     let stub;
-    if (s.kind === 'tgt') stub = tgtStub(c);
-    else if (s.kind === 'qpc') stub = qpcStub(c);
-    else {
+    if (s.kind === 'tgt') stub = tgtStub(c, CFG.slots.indexOf(s));
+    else if (s.kind === 'qpc') stub = qpcStub(c, CFG.slots.indexOf(s));
+    else if (s.kind.startsWith('audio:')) {
+      const ak = s.kind.slice(6);
+      if (!AUDIO_NONE || !ACB[ak]) continue;
+      ACB[ak].bind(real);
+      stub = ACB[ak];
+    } else {
       if (!REAL[s.kind]) REAL[s.kind] = new NativeFunction(real, SIGS[s.kind][0], SIGS[s.kind][1], 'stdcall');
       stub = TCB[s.kind];
     }
@@ -435,6 +528,7 @@ function dumpRegions() {
 function status() {
   return {
     T: T(), tgt: D.add(0x20).readU32(), qpc: D.add(0x24).readU32(), forwarded: D.add(0x28).readU32(),
+    audio: AUDIO_NONE ? audioStats : undefined,
     timers: timers.map(t => [t.kind, t.id, t.elapse, t.fired || 0]), timerStats, events: events.length,
     msgs: CFG.debugMsg ? msgCounts : undefined,
     dbg: CFG.debugMsg ? (function () {
@@ -503,6 +597,49 @@ function onWatchHit(d) {
   return mine;
 }
 
+// opt-in WINDOW MESSAGE LOG (cfg.msgLog = N, scenario_ab.py --msg-log N; batch b2): every main-thread entry of jgld's
+// window procedure windowProc 0x100692b0 (RVA 0x692b0) as [T, msg, wParam, lParam], first N entries, sent with each dump.
+// Messages the harness posts arrive here too; anything else (activation when another window opens, the real mouse's
+// WM_NCHITTEST / WM_MOUSEMOVE, WM_PALETTECHANGED from another palette window) shows up as a difference between two runs.
+const msgLogRows = [];
+let msgLogSent = 0;
+if (CFG.msgLog) {
+  const hookWp = (m) => {
+    if (m.name.toLowerCase() !== 'jgld.dll') return;
+    Interceptor.attach(m.base.add(0x692b0), {
+      onEnter(a) {
+        if (Process.getCurrentThreadId() !== MAIN || msgLogRows.length >= CFG.msgLog) return;
+        msgLogRows.push([T() - CFG.t0, a[1].toUInt32(), a[2].toUInt32(), a[3].toUInt32()]);
+      }
+    });
+  };
+  const j = Process.findModuleByName('jgld.dll');
+  if (j) hookWp(j); else Process.attachModuleObserver({ onAdded(m) { try { hookWp(m); } catch (e) { send({ type: 'error', where: 'msgLog', msg: String(e) }); } } });
+}
+function msgLog() {
+  if (!CFG.msgLog) return undefined;
+  const out = msgLogRows.slice(msgLogSent);
+  msgLogSent = msgLogRows.length;
+  return out;
+}
+
+// opt-in clock log (see clogBytes): every recorded call as [index, 'tgt' | 'qpc', slot module, caller as module+rva]
+let clogSent = 0;
+function clockLog() {
+  if (!CLOG_N) return undefined;
+  const n = Math.min(D.add(0x30).readU32(), CLOG_N);
+  const cache = new Map(), out = [];
+  for (let i = clogSent; i < n; i++) {
+    const ra = CLOG.add(i * 8).readPointer(), tag = CLOG.add(i * 8 + 4).readU32();
+    const k = ra.toString();
+    if (!cache.has(k)) cache.set(k, fmtAddr(ra));
+    const sl = CFG.slots[tag & 0xffffff];
+    out.push([i, (tag >>> 24) === 1 ? 'tgt' : 'qpc', sl ? sl.module : '?', cache.get(k)]);
+  }
+  clogSent = n;
+  return { total: D.add(0x30).readU32(), entries: out };
+}
+
 let firstPollDone = false;
 function poll(now) {
   if (CFG.spawnReach && !firstPollDone) {
@@ -524,8 +661,13 @@ function poll(now) {
     let reply = null;
     recv('go', (m) => { reply = m; }).wait();
     if (reply.hwnd) HWND = ptr(reply.hwnd);
+    if (reply.full) {
+      // opt-in (scenario_ab.py C3FT_FULLDUMP=1, batch b2): golf_clean.exe's whole .data section (globals and .bss)
+      send({ type: 'full', va: 0x4c1000 }, ptr(0x4c1000).readByteArray(0x381174));
+      continue;
+    }
     if (reply.dump) {
-      send({ type: 'dump', st: status(), witness: witnessBytes(), reach: reachCounts() }, dumpRegions());
+      send({ type: 'dump', st: status(), witness: witnessBytes(), reach: reachCounts(), clk: clockLog(), wm: msgLog() }, dumpRegions());
       continue;
     }
     for (const a of (reply.actions || [])) {

@@ -87,6 +87,21 @@ SLOT_SPECS = {                   # import slots the agent redirects (module -> {
     "sound.dll": {"WINMM.dll!timeGetTime": "tgt"},
     "binkw32.dll": {"WINMM.dll!timeGetTime": "tgt", "KERNEL32.dll!QueryPerformanceCounter": "qpc"},
 }
+# AUDIO STAND-IN (batch b2): with C3FT_AUDIO=none (the default) sound.dll's DirectSound enumeration / creation and
+# binkw32's waveOutOpen get the answers of a PC with no audio output (scenario_det.js, re/analysis/data/
+# scenario_baseline.md), so the boot's timeline no longer depends on whether a device (the TV's HDMI endpoint) is
+# present; C3FT_AUDIO=live leaves the real APIs (the timeline then follows the device, as before 2026-10-17).
+AUDIO_SLOTS = {"sound.dll": {"DSOUND.dll!#2": "audio:dsenum", "ole32.dll!CoCreateInstance": "audio:cocreate"},
+               "binkw32.dll": {"WINMM.dll!waveOutOpen": "audio:waveOutOpen"}}
+
+
+def audio_mode() -> str:
+    m = os.environ.get("C3FT_AUDIO", "none")
+    if m not in ("none", "live"):
+        raise SystemExit(f"C3FT_AUDIO={m}: none or live")
+    return m
+
+
 EXTRA_REGIONS = [(0x00822D9C, 4, "rng_seed"), (0x0051B380, 4, "seed_time")]
 UNOBSERVED_MODULES = {"sound.dll"}   # modules whose effects no checkpoint observes: a SAME run gives them UNOBSERVED
 
@@ -120,16 +135,19 @@ def watch_spec() -> list[dict]:
 def slot_config() -> list[dict]:
     out = []
     real_timers = os.environ.get("C3FT_REAL_TIMERS") == "1"
+    audio = audio_mode() == "none"
     for mod, want in SLOT_SPECS.items():
         if real_timers:
             want = {k: v for k, v in want.items() if v in ("tgt", "qpc")}
+        if audio:
+            want = {**want, **AUDIO_SLOTS.get(mod, {})}
         pe = pefile.PE(str(ROOT / "original" / mod), fast_load=True)
         pe.parse_data_directories()
         base = pe.OPTIONAL_HEADER.ImageBase
         found = set()
         for d in pe.DIRECTORY_ENTRY_IMPORT:
             for i in d.imports:
-                key = f"{d.dll.decode()}!{(i.name or b'').decode()}"
+                key = f"{d.dll.decode()}!{i.name.decode() if i.name else f'#{i.ordinal}'}"
                 k2 = next((k for k in want if k.lower() == key.lower()), None)
                 if k2:
                     out.append({"module": mod, "rva": i.address - base, "kind": want[k2]})
@@ -313,11 +331,15 @@ class Run:
         self.trace_rows: list = []           # [T, hex] per poll
         self.watch_rows: list = []           # agent watch log entries
         self.watch_status = None
+        self.clock_log = int(os.environ.get("C3FT_CLOCK_LOG", "0") or 0)   # opt-in (--clock-log N, batch b2)
+        self.clock_rows: list = []           # [checkpoint, index, kind, slot module, caller] per recorded clock call
+        self.msg_log = int(os.environ.get("C3FT_MSG_LOG", "0") or 0)       # opt-in (--msg-log N, batch b2)
+        self.msg_rows: list = []             # [checkpoint, T, msg, wParam, lParam] per windowProc entry
 
     def _on_message(self, m, data):
         if m.get("type") == "send":
             p = m["payload"]
-            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error"):
+            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error", "full"):
                 self.q.put((p, data))
         elif m.get("type") == "error":
             self.q.put(({"type": "error", "where": "script", "msg": m.get("description", "") + " " + str(m.get("stack", ""))}, None))
@@ -335,6 +357,12 @@ class Run:
             cfg["trace"] = self.trace_spec
         if self.watch_spec:
             cfg["watch"] = self.watch_spec
+        if self.clock_log:                   # opt-in (b2): the first N main-thread clock calls with their callers
+            cfg["clockLog"] = self.clock_log
+        if self.msg_log:                     # opt-in (b2): jgld windowProc entries on the main thread
+            cfg["msgLog"] = self.msg_log
+        if audio_mode() == "none":           # b2: the device-less audio answers (default)
+            cfg["audio"] = "none"
         src ="const SCENARIO_CFG = " + json.dumps(cfg) + ";\n" + (JS_DIR / "scenario_det.js").read_text()
         self.out.mkdir(parents=True, exist_ok=True)
         p = self.out / "agent.js"
@@ -367,13 +395,49 @@ class Run:
     def take_dump(self, sc, name):
         self.post(sc, dump=True, hwnd=self.hwnd_val())
         p, data = self.wait_msg(("dump",))
-        img = self.g.shot()
+        img, shot_info = self.stable_shot(name)
         img.save(self.out / f"{name}.png")
+        if os.environ.get("C3FT_FULLDUMP") == "1":
+            # opt-in (batch b2): the exe's whole .data section at this checkpoint, for diffs outside the compared regions
+            self.post(sc, full=True, hwnd=self.hwnd_val())
+            _pf, full = self.wait_msg(("full",))
+            (self.out / f"{name}.full.bin").write_bytes(full)
         (self.out / f"{name}.bin").write_bytes(data)
+        if p.get("wm") is not None:
+            self.msg_rows += [[name] + e for e in p["wm"]]
+            (self.out / "wndmsg.json").write_text(json.dumps({"limit": self.msg_log, "rows": self.msg_rows}))
+        if p.get("clk"):
+            self.clock_rows += [[name] + e for e in p["clk"]["entries"]]
+            (self.out / "clock.json").write_text(json.dumps({"limit": self.clock_log, "total": p["clk"]["total"],
+                                                             "rows": self.clock_rows}))
         self.checkpoints[name] = {"T": p["st"]["T"], "status": p["st"], "witness": p["witness"], "reach": p["reach"],
                                   "frame_sha": hashlib.sha256(img.tobytes()).hexdigest()}
+        if shot_info is not None:
+            self.checkpoints[name]["shot"] = shot_info
         print(f"  [{self.label}] checkpoint {name} T={p['st']['T'] - T0} tgt={p['st']['tgt']} "
               f"date=0x{self.region_u32(data, 0x00834170):08x} seed=0x{self.region_u32(data, 0x00822D9C):08x}", flush=True)
+
+    def stable_shot(self, name):
+        """The checkpoint's frame. C3FT_SHOT_SETTLE=<ms> (batch b2): capture again every <ms> while the main thread is
+        blocked in the dump, until two consecutive captures are identical (at most 40), and record how many it took and
+        whether the first capture differed from the kept one (saved as <name>.first.png). Default: one capture."""
+        settle = int(os.environ.get("C3FT_SHOT_SETTLE", "0") or 0)
+        img = self.g.shot()
+        if not settle:
+            return img, None
+        first, prev, n = img, img, 1
+        t0 = time.time()
+        while n < 40:
+            time.sleep(settle / 1000)
+            cur = self.g.shot()
+            n += 1
+            if cur.tobytes() == prev.tobytes():
+                break
+            prev = cur
+        changed = first.tobytes() != prev.tobytes()
+        if changed:
+            first.save(self.out / f"{name}.first.png")
+        return prev, {"captures": n, "first_differs": changed, "ms": round((time.time() - t0) * 1000)}
 
     def region_u32(self, blob, va):
         off = 0
@@ -390,6 +454,10 @@ class Run:
     def go(self, script_fn, extra_env=None):
         js = self.agent_source()
         env = {"SIMGOLF_SKIP_INTRO": "1", **self.env, **(extra_env or {})}
+        if audio_mode() == "none":
+            # the device-less path FreeLibrary's sound.dll; game.py pins it (keepsound.js) only when this PC has no audio
+            # output, so pin it on every PC (b2)
+            os.environ["SIMGOLF_KEEP_SOUND"] = "1"
         t_start = time.time()
         self.slots = None
         self.failure = None
@@ -401,7 +469,7 @@ class Run:
         finally:
             self.wall = time.time() - t_start
             (self.out / "poll_log.json").write_text(json.dumps({"agent": self.agent_log, "trace": self.trace}))
-            summary = {"label": self.label, "mode": self.mode, "env": self.env, "polls": self.polls,
+            summary = {"label": self.label, "mode": self.mode, "env": self.env, "audio": audio_mode(), "polls": self.polls,
                        "wall_s": round(self.wall, 1), "slots": self.slots, "checkpoints": self.checkpoints,
                        "errors": self.errors, "schedule": self.schedule, "failure": self.failure}
             (self.out / "summary.json").write_text(json.dumps(summary, indent=1))
@@ -730,6 +798,24 @@ def cmd_ab(a):
     return write_results(a, on, tag, off_dir, on_run.out)
 
 
+def arm_conditions_differ(off_sum: dict, on_sum: dict) -> str:
+    """'' when the two arms booted on the same audio path, else what differs (batch b2). An arm ran the device-less path
+    when it had the audio stand-in (summary.json "audio": "none", since b2) or when its sound timer thread never called
+    timeGetTime (first checkpoint's `forwarded` == 0: no device, as on LIVING-PC with the TV off); otherwise the sound
+    engine ran. With a device the boot makes one more main-thread clock call before seedFromTime 0x00467110, so
+    seed_time 0x0051b380 and the RNG differ from the first checkpoint on, whatever the hooks do."""
+    def path(sm):
+        cps = sm.get("checkpoints") or {}
+        fwd = next(iter(cps.values()))["status"]["forwarded"] if cps else None
+        if sm.get("audio") == "none" or fwd == 0:
+            return "device-less"
+        return "sound engine live" if fwd else None
+    pa, pb = path(off_sum), path(on_sum)
+    if pa and pb and pa != pb:
+        return f"audio path {pa} / {pb}"
+    return ""
+
+
 def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> int:
     """Compare two finished arms (their run folders) and write one scenario CSV per function of the ON set."""
     key = scen_key(a)
@@ -744,6 +830,10 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
     frames_same = all(not r.get("missing") and r["frame_px_differ"] == 0 for r in cmp.values())
     # per-function CSVs
     off_sum = json.loads((off_dir / "summary.json").read_text())
+    stale = arm_conditions_differ(off_sum, on_summary)
+    if stale:
+        print(f"  INCOMPARABLE ARMS: {stale}: a difference here compares two boot timelines, not the hook set "
+              f"(re/analysis/data/scenario_baseline.md); every verdict is INCOMPARABLE", flush=True)
     on_sum = on_summary["checkpoints"]
     on_last = list(on_sum)[-1] if on_sum else None        # the ON arm's last checkpoint (none if it stopped before one)
     off_last = list(off_sum["checkpoints"])[-1]
@@ -769,7 +859,9 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
         witness_ok = wb == 0xE9
         off_live = off_wit.get(k, -1) == 0xE9      # the hook was live in the OFF arm: no A/B at all
         reached = (n_on or 0) > 0                  # entered on the MAIN thread (the deterministic, compared timeline)
-        if failure or not witness_ok or off_live:
+        if stale:
+            verdict = "INCOMPARABLE"
+        elif failure or not witness_ok or off_live:
             verdict = "RED"
         elif n_on is None or st_on != "armed":
             verdict = "UNMEASURED"
@@ -814,6 +906,8 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
                             f"boot_off={bf[0]} boot_other_off={bf[1]} armed_off={bf[2]}", ""])
             if failure:
                 w.writerow(["meta", "on_arm_failure", failure[:600].replace("\n", " "), ""])
+            if stale:
+                w.writerow(["meta", "incomparable_arms", stale, ""])
             w.writerow(["VERDICT", verdict, len(cmp), ""])
         written.append((verdict, path))
     from collections import Counter
@@ -896,6 +990,9 @@ WATCH_HELP = ("opt-in: `va:size,...` (<= 4, size 1/2/4) main-thread hardware wri
               "each write that changes the value is logged with the writing pc and caller chain into <run>/trace.json. "
               "Same as env C3FT_WATCH")
 
+CLOCK_HELP = ("opt-in: record the first N main-thread timeGetTime / QPC calls with their caller (module+rva) into "
+              "<run>/clock.json, grouped by the checkpoint whose dump read them (batch b2). Same as env C3FT_CLOCK_LOG")
+
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -910,6 +1007,7 @@ def main():
                    "original entry and their reach counts are compared")
     p.add_argument("--trace", help=TRACE_HELP)
     p.add_argument("--watch", help=WATCH_HELP)
+    p.add_argument("--clock-log", help=CLOCK_HELP)
     p.set_defaults(fn=cmd_determinism)
     p = sp.add_parser("ab")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -922,6 +1020,7 @@ def main():
     p.add_argument("--spawn-reach", action="store_true", help=SPAWN_HELP)
     p.add_argument("--trace", help=TRACE_HELP)
     p.add_argument("--watch", help=WATCH_HELP)
+    p.add_argument("--clock-log", help=CLOCK_HELP)
     p.set_defaults(fn=cmd_ab)
     p = sp.add_parser("csv", help="re-score two finished arms (run folder names under log/c3/alt/c3ft/<scenario>/)")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -941,7 +1040,7 @@ def main():
     p.add_argument("--spawn-reach", action="store_true")
     p.set_defaults(fn=cmd_tracecmp)
     a = ap.parse_args()
-    for flag, var in (("trace", "C3FT_TRACE"), ("watch", "C3FT_WATCH")):
+    for flag, var in (("trace", "C3FT_TRACE"), ("watch", "C3FT_WATCH"), ("clock_log", "C3FT_CLOCK_LOG")):
         if getattr(a, flag, None):
             os.environ[var] = getattr(a, flag)
     return a.fn(a)
