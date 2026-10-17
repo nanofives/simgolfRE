@@ -3444,3 +3444,118 @@ def cov_k1_label(c):
 
 
 SCENARIOS["cov_k1_label"] = {"env": {}, "phases": [], "lockstep": cov_k1_label}
+
+
+# ------------------------------------------------------------------------------------------------ c3fyl (2026-10-17)
+# Batch c3fyl: the last open mutants of the mainLoop transcription (log/c3/c3fyl_notes.txt, c3fyl_results.tsv).
+
+def cov_l_camera(c):
+    """Mutant 117 (0x0041df31: clamp max 0x31 of camera x in the direction-0 step) in a CAREER, where drawMoneyLabels
+    0x0040c910 draws (a sandbox skips every label: `test [0x59e7b8], 0x1000000` at 0x0040c926, and pointsPopup 0x0040c890
+    stores none there, 0x0040c898). Career Monterey (owned land x 15..34); camera x driven to 0x31 with three direction-2
+    steps and direction-0 steps (camera (49, 15)); a money label at the cursor tile (screen centre) is injected as
+    pointsPopup stores one, with the direction-0 key in the same poll: x + 4 clamps to 0x31 (original) / 0x32 (mutant) for
+    that frame's drawMoneyLabels 0x0041e07a, which projects the label with worldToScreen 0x0042fb90 (0x0040c957) and
+    draws it with drawCenteredText2 0x00404bc0 (0x0040c9f0) after the present (0x00418cd1). The injection stands for a
+    label a career raises on land bought near the edge (paint cost 0x00420858); checkpoints at the 10 polls that follow."""
+    yield from _cov_b_menu(c)
+    yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game
+    yield from c.click(390, 125); yield from c.sleep(8000)      # Easy
+    yield from c.click(*COV_B_LOC["monterey"])
+    yield from _cov_b_hud(c)
+    yield from c.sleep(4000)
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    rot = _cov_k3_get(c, "rot", COV_K3_ROT)
+    up, dr = _cov_k3_arrow(c, rot, 0), _cov_k3_arrow(c, rot, 2)
+    for _ in range(3):
+        yield from c.key(dr, char=""); yield from c.sleep(1200)
+    for k in range(8):
+        if _cov_k3_get(c, f"cam_x_{k}", COV_K3_CAM_X) >= 0x31:
+            break
+        yield from c.key(up, char=""); yield from c.sleep(1200)
+    _cov_k3_get(c, "cam_y1", COV_K3_CAM_Y)
+    yield from c.checkpoint("edge")
+    c.move(400, 300); yield from c.sleep(800)
+    yield from _cov_k3_label_key(c, "step", up)
+    yield from c.sleep(2500)
+    _cov_k3_get(c, "cam_x2", COV_K3_CAM_X)
+    yield from c.checkpoint("after")
+    yield from c.sleep(2000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_l_camera"] = {"env": {}, "phases": [], "lockstep": cov_l_camera}
+
+
+def cov_l_point(c):
+    """Mutant 272 (Session 0x0040fb19: the store [0x00822d8c] = -1 skipped). The title's Sandbox Mode is clicked and the
+    release is followed in the same poll by a second press at the same point, so the Menu pump runs rootWin_onUnpoint
+    0x00465650 (-1) and then rootWin_onPoint 0x00465610 (130) before the Menu tests [0x00822d68] (0x0042126a): at
+    0x0040fb19 the word holds 130 (watch log of the xl_point explore). The button stays down through the location
+    screen; the Monterey click (its release runs onPress1 and onUnpoint, 0x0047c16c / 0x0047c31c) ends the press. The
+    word is read only by P6 0x00419a58..0x00419bea (the distance ruler), in game frames."""
+    yield from _cov_b_menu(c)
+    x, y = 130, 445
+    c.move(x, y); yield from c.sleep(600)
+    c.act(0, k="post", msg=0x200, wp=0, lp=c.lp(x, y)); yield from c.sleep(400)
+    c.act(0, k="vkey", vk=1, st=2, tag="down 1")
+    c.act(0, k="post", msg=0x201, wp=1, lp=c.lp(x, y))
+    yield from c.sleep(300)
+    c.act(0, k="post", msg=0x202, wp=0, lp=c.lp(x, y))
+    c.act(0, k="post", msg=0x201, wp=1, lp=c.lp(x, y))
+    yield from c.sleep(4000)
+    yield from c.checkpoint("location")
+    yield from c.click(*COV_B_LOC["monterey"])
+    yield from _cov_b_hud(c)
+    for i in range(4):
+        yield from c.sleep(1000)
+        yield from c.checkpoint(f"game{i}")
+
+
+SCENARIOS["cov_l_point"] = {"env": {}, "phases": [], "lockstep": cov_l_point}
+
+
+L_BRIDGE_POP = (530, 575)        # golf palette page 2: the Scenic Bridge round button (clickAmenityPanel case 9)
+L_TILE = {(32, 18): (241, 378), (31, 17): (170, 380)}   # sandbox Monterey start view (log/c3/c3fyk1/map_monterey.json)
+
+
+def cov_l_bridge(c):
+    """Mutant 187 (P2_obj2 0x0041339a: `[0x00578804 + t] >= last` -> `>`). P2_obj2 runs for a tile of type 0x15 / 0x16
+    whose word has low bits 3 (P2_objects 0x0041311c..0x004131cd: n - 1 == 2); no stamp writes 3 (kinds >= 3, the
+    anchor gets old | kind + 1 at 0x0040e2d2), but a footprint tile keeps its low byte (`and ch, 0xec`, 0x0040e14d /
+    0x0040e152) and the Scenic Bridge writes (old & 0xe7f8) | (v & 7) | 0x120 (0x0041f63a..0x0041f677) with v =
+    [0x0056a514], which the bridge round button sets to Random::range(8) (clickAmenityPanel 0x00434c46..0x00434c57,
+    stored at 0x0041eabf; log/c3/c3fyl/audit187.md). Sandbox Monterey: 'P' sets flag 4 of [0x0059e7b8] (H1 0x0041d020;
+    P2_obj2's animated arm 0x00413341); the round button is clicked until [0x0056a514] reads 3 (RECORD decision); the
+    bridge goes on the shore water tile W = (32, 18) (word 0x123); fairway is painted on W (0x00420561..0x00420620: word
+    | 0x4000, low byte kept, animation byte [0x00578804 + W] = 0 at 0x00420619, type 2 by placeHabitat 0x00405e30);
+    within the byte's count to 11 a 2 x 2 building (buildings palette item 1, kind 7) is anchored at A = (31, 17), so W
+    becomes a non-anchor footprint tile: type 0x16, low bits 3, bit 0x4000. P2_obj2 then reads [F+0x10] = the byte
+    (0x00412395) each frame while P3 0x00413df7 counts it up; sprites 418..423 have 12 frames ([0x0053f3e8 + 4 t]), so
+    last = 11: the original clears 0x4000 and sets the byte to 0xff in the frame the byte is 11, the mutant one frame
+    later (byte 12). Checkpoints at every poll after the placement."""
+    W, A = (32, 18), (31, 17)
+    yield from _cova_to_sandbox(c)
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    yield from _cova_char(c, "P", settle=800)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(1500)
+    for k in range(40):
+        yield from c.click(*L_BRIDGE_POP); yield from c.sleep(700)
+        v = _cov_b_obs(c, f"bridge_v{k}", lambda: [_cov_b_read_u32(c, 0x0056A514), _cov_b_read_u32(c, 0x004C2854)])
+        if v[0] == 3 and v[1] == 0x13:
+            break
+        yield from c.click(500, 420, right=True); yield from c.sleep(600)
+    yield from c.click(*L_TILE[W]); yield from c.sleep(1500)
+    yield from c.checkpoint("bridge")
+    yield from c.click(270, 497); yield from c.sleep(1200)
+    yield from c.click(330, 570); yield from c.sleep(800)
+    for x, y in (L_TILE[W], (118, 495), COV_B_BLDG[1], L_TILE[A]):    # paint, buildings icon, item 1, place
+        yield from c.click(x, y, hold=40, settle=40)
+    for k in range(10):
+        yield from c.checkpoint(f"obj{k}")
+    yield from c.sleep(2000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_l_bridge"] = {"env": {}, "phases": [], "lockstep": cov_l_bridge}

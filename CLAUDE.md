@@ -811,6 +811,33 @@ plus `<name>.window.png`; `C3FT_FRAME=window` restores the old capture. Result: 
 mainLoop-ON identical at all 6 checkpoints. New regression scenario `cov_b_location`. Never probe a stack slot with a
 Frida Interceptor on the same thread: its callback runs below esp and overwrites the slot (the first measurement read
 Frida's own words).
+Batch c3fyl (2026-10-17, the six mainLoop mutants c3fyk left open; notes log/c3/c3fyl_notes.txt, tests/test_scenario_oracle_ext.py): 113, 117 and
+187 killed, 272 and 279 equivalent, 123 not settled; no transcription defect, c3fy.cpp untouched. Tally of the 45 DATA / COV survivors: 25 killed,
+18 equivalent, 1 dead, 1 open (123: the camera y is bounded at 0x34 by every static writer except those that copy a golfer, walker or ball
+position, and a golfer's turn at 0x0042b39f is not checked against the map edge). 113 is killed only by the new OPT-IN extended oracle in
+scenario_ab.py (`--call-log va:n[:ra/ra][:sK][:r][:xK]` logs main-thread calls with arguments and return value, `--extra-regions va:n` dumps more
+memory per checkpoint, `extcmp` compares two finished runs; default behaviour byte-identical, the extended result is reported next to a verdict
+that still comes from the normal comparison): playSound received 0x27 instead of 0x26. 187 is reached through the Scenic Bridge button, which
+sets the tile variant to Random::range(8) at 0x00434c57 (the popup items only give 0, 2, 4, 6), then painting fairway on the bridge tile (it keeps
+the variant bits and adds 0x4000) and a 2x2 building that covers the tile without being anchored on it; 117 needs a course with money labels (a
+sandbox draws none, 0x0040c926). New scenarios cov_l_camera, cov_l_point, cov_l_bridge.
+Batch b4 (2026-10-17, U-0018 narrowed to `partial`, re/analysis/data/safedisc_padding.md): the 716 `call` slots in the exe's padding are SafeDisc's
+own code-cave instrumentation, written before it encrypted `.text`; Safedisc2Cleaner did not create them and nothing in the project reaches them,
+so the port ignores them. original\golf.exe's `.text` is encrypted (2,682 of 754,731 bytes equal the cleaned file); from 0x00425990 on each byte is
+the plaintext XOR a table of the previous four plaintext bytes (99.90% agreement), and 566 of 619 slots decrypt byte for byte to the cleaned file's
+slots. golf_v100_clean.exe has 183 `call [IAT]` slots after a `ret` (caves filled with a copy of the function's last bytes, no `call rel32`, no
+dispatcher); the slots are redrawn per build (49 share a function end between v1.00 and v1.03, none the same import). One slot per cave of 5-13 bytes
+after a `ret`: 5-9 bytes get `call rel32`, 9-13 `call [IAT]`; the dispatcher is three pieces (0x00405099 -> 0x00404a14 -> `jmp [0x00403f9c]`, a dword
+holding 0x008a2590 inside SecServ.dll). The DLLs carry none. Open: the 97 slots below 0x00425990 use a cipher not recovered, and what changed 35
+IAT operands after encryption (SafeDisc at load time or the cleaner); a memory image of the wrapped exe after decryption would settle both.
+Batch b6 (2026-10-17, sound.dll speech codec 0x1003a900..0x10041a00, re/names/sound_18.tsv, sound_18_globals.tsv, systems sound_18.md, U-0019): of 42
+functions 23 renamed from their instructions (codecProcessBlock -> codecDecodeFrame, codecProcessResource -> codecEncodeFrame, codecStageDispatch ->
+codecAnalyzeFrame [a fixed 14-stage pipeline], codecGainSmoother -> codecPitchTrackDp, codecFeatureDecision -> codecVoicingDecision, codecCombFilter ->
+codecRing5Add, applyIir2 -> codecSynthPostFilter, floatFloorToInt -> floatRoundHalfAway, ...), 2 kept with corrected purposes (bitPermute, codecAmdfPitch),
+17 confirmed; g_codecPermTable was one dword before the real slot table (now g_codecFrameBitSlots 0x10064480, 53 entries; g_codecCoeffSignMask 0x10064458,
+g_codecErrProtect 0x100b58a8, g_codecFrameLen 0x100b58a4). Applied to the master (ApplyNames overwrite renamed 23, `ghidra/scripts/DeleteLabels.java`
+removed the misplaced labels 0x1006447c and 0x10064454, backup ghidra/backup/SimGolf.rep.pre_b6names_20261017). The reference LPC-10 source was not
+opened: structural matches rest on the m36c notes. Old spellings stay in registry keys, fixtures and SG_HOOK name strings (rows are looked up by address).
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
