@@ -4,6 +4,29 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-17  sound.dll:00040e30  codecHighPassFilter  name codecBiquadFilter->codecHighPassFilter  re/names/sound_18.tsv
+2026-10-17  sound.dll:00040da0  codecPreEmphasis  name codecFirstOrderFilter->codecPreEmphasis  re/names/sound_18.tsv
+2026-10-17  sound.dll:000404d0  codecLowPassFir31  name codecSymmetricFir->codecLowPassFir31  re/names/sound_18.tsv
+2026-10-17  sound.dll:00040330  codecInverseFilter2  name codecCorrelationLags->codecInverseFilter2  re/names/sound_18.tsv
+2026-10-17  sound.dll:00040000  codecRefinePitchLag  name codecPitchAnalysis->codecRefinePitchLag  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003f720  codecVoicingDecision  name codecFeatureDecision->codecVoicingDecision  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003f310  codecPitchTrackDp  name codecGainSmoother->codecPitchTrackDp  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003e9f0  codecCovarianceMatrix  name codecAutocorrelation->codecCovarianceMatrix  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003e6d0  codecLdlSolveClamped  name gaussSolveClamped->codecLdlSolveClamped  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003e600  codecRevertUnstableCoeffs  name substituteIfBelowThreshold->codecRevertUnstableCoeffs  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003e520  codecCorrectNibble  name decodeTableSymbol->codecCorrectNibble  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003e400  floatRoundHalfAway  name floatFloorToInt->floatRoundHalfAway  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003d0a0  codecSynthPostFilter  name applyIir2->codecSynthPostFilter  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003d040  codecHighPassFrame  name codecApplyFixedCoeffs->codecHighPassFrame  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003c640  codecAnalyzeFrame  name codecStageDispatch->codecAnalyzeFrame  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003b5a0  codecDecodeParams  name codecTransformStage->codecDecodeParams  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003b230  codecSynthesizeFrame  name codecSynthStage->codecSynthesizeFrame  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003b150  codecEncodeFrame  name codecProcessResource->codecEncodeFrame  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003aef0  codecInitDecoderContext  name codecInitContextB->codecInitDecoderContext  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003aea0  codecAllocDecoderContext  name codecAllocContextB->codecAllocDecoderContext  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003aae0  codecInitEncoderContext  name codecInitContextA->codecInitEncoderContext  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003aa90  codecAllocEncoderContext  name codecAllocContextA->codecAllocEncoderContext  re/names/sound_18.tsv
+2026-10-17  sound.dll:0003a980  codecDecodeFrame  name codecProcessBlock->codecDecodeFrame  re/names/sound_18.tsv
 2026-10-17  sound.dll:0004a010  strcpy  callers 0x1004452b;0x100479ae;0x10047e1f;0x10049efe;0x1004ca17;0x1004cbeb;0x1004cd2b;0x1004cdf7;0x1004d747;0x1004fab3;0x1004fb42;0x1004fbd7;0x10050ec5;0x10051ab7;0x10051d94->0x1004452b;0x100479ae;0x10047e1f;0x10049efe;0x1004ca17;0x1004cbeb;0x1004cd2b;0x1004cdf7;0x1004d747;0x1004fab3;0x1004fb42;0x1004fbd7;0x10050ec5;0x10051ab7;0x10051d94;0x1004e643  log/c2_refresh.tsv
 2026-10-17  sound.dll:00047771  _unlock  callers 0x10042b72;0x10042bd1;0x10042c71;0x10042cc9;0x1004352d;0x100436df;0x1004370e;0x10043731;0x1004522f;0x100453dd;0x1004552b;0x100455eb;0x10045666;0x1004593a;0x100459c3;0x10047710;0x100498b9;0x1004a2a6;0x1004aa3f;0x1004bece;0x1004c1d5;0x1004c2d3;0x1004c4b7;0x1004c7d1;0x1004d9e2;0x1004fe24;0x10050b60;0x10050c30;0x10050e81;0x10050ec5;0x10051cfd->0x10042b72;0x10042bd1;0x10042c71;0x10042cc9;0x1004352d;0x100436df;0x1004370e;0x10043731;0x1004522f;0x100453dd;0x1004552b;0x100455eb;0x10045666;0x1004593a;0x100459c3;0x10047710;0x100498b9;0x1004a2a6;0x1004aa3f;0x1004bece;0x1004c1d5;0x1004c2d3;0x1004c4b7;0x1004c7d1;0x1004d9e2;0x1004fe24;0x10050b60;0x10050c30;0x10050e81;0x10050ec5;0x10051cfd;0x1004947a;0x1004c455  log/c2_refresh.tsv
 2026-10-17  sound.dll:000458a1  calloc  callers 0x10042984;0x100440ec;0x10044171;0x1004e0d4->0x10042984;0x100440ec;0x10044171;0x1004e0d4;0x100435d1;0x1004e84f  log/c2_refresh.tsv

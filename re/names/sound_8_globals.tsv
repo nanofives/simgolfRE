@@ -11,5 +11,5 @@ sound.dll	0x100b5d0c	g_sbhGroupThreshold	uint	group-heap small-block threshold (
 sound.dll	0x100673fc	g_sbhRegionThreshold	uint	region-heap small-block threshold (< 0x781) written by setSbhThreshold 0x10045e34, read by the region allocation path at 0x10042b95
 sound.dll	0x10064ea8	g_nlgDest	int[3]	NLG destination record (EAX, arg, EBP) written by NLG_Notify 0x10042482 at 0x10064ea8/0x10064eac/0x10064eb0
 sound.dll	0x100651b8	g_cfltcvtTable	void*[6]	floating-point conversion function-pointer table written by cfltcvtInit 0x10042506 (entries __cfltcvt/__fassign/__forcdecpt and two LAB stubs)
-sound.dll	0x1005ecb0	g_codecBiquadCoeffs	float[5]	biquad section coefficients at 0x1005ecb0/0x1005ecb4/0x1005ecb8/0x1005ecbc/0x1005ecc0 read by codecBiquadFilter 0x10040e30
-sound.dll	0x1005ec6c	g_codecFirCoeffs	float[]	symmetric FIR tap coefficients starting at 0x1005ec6c read by codecSymmetricFir 0x100404d0
+sound.dll	0x1005ecb0	g_codecBiquadCoeffs	float[5]	biquad section coefficients at 0x1005ecb0/0x1005ecb4/0x1005ecb8/0x1005ecbc/0x1005ecc0 read by codecHighPassFilter 0x10040e30
+sound.dll	0x1005ec6c	g_codecFirCoeffs	float[]	symmetric FIR tap coefficients starting at 0x1005ec6c read by codecLowPassFir31 0x100404d0
