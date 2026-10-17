@@ -2179,3 +2179,376 @@ def cov_a_keys3(c):
 
 
 SCENARIOS["cov_a_keys3"] = {"env": {}, "phases": [], "lockstep": cov_a_keys3}
+
+
+# ---- c3fyk2: mutant-kill scenarios for mainLoop 0x0040f5c0 (2026-10-17) ---------------------------------------------
+# Each cov_k2_* scenario makes one or more surviving c3fyc mutants (re/tools/c3fy_mutants.tsv) see a differing value,
+# mostly by memory injection at a fixed virtual time (values read in the RECORD run, kept in the schedule "obs", written
+# identically in every arm). Runner log/c3/c3fyk2_run.py (instances/c3fyk2, outputs log/c3/alt/c3fyk2/<scenario>/);
+# notes log/c3/c3fyk2_notes.txt (each injection with the instructions it targets).
+
+COV_K2_GOLFERS = 0x005794C0          # golfer records, 0x100 bytes; world x / y at -8 / -4, screen x / y at +0 / +4
+
+
+def _cov_k2_rd(c, va):
+    return int(c.run.g.scripts[-1].exports_sync.s36a_read_s32(va)) & 0xFFFFFFFF
+
+
+def _cov_k2_rmw(c, va, name, fn):
+    """Read-modify-write of one dword: the value is read in the RECORD run (obs) and fn(old) is written in every arm."""
+    v = _cov_b_obs(c, name, lambda: _cov_k2_rd(c, va))
+    c.write32(va, fn(v) & 0xFFFFFFFF, tag=name)
+
+
+def _cov_k2_set_byte(c, va, value, name):
+    base, sh = va & ~3, (va & 3) * 8
+    _cov_k2_rmw(c, base, name, lambda v: (v & ~(0xFF << sh)) | ((value & 0xFF) << sh))
+
+
+def _cov_k2_set_word(c, va, value, name):
+    base, sh = va & ~3, (va & 3) * 8
+    _cov_k2_rmw(c, base, name, lambda v: (v & ~(0xFFFF << sh)) | ((value & 0xFFFF) << sh))
+
+
+def _cov_k2_sandbox_hole(c, tee=(300, 200), green=(420, 260), open_hole=True):
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.click(300, 527); yield from c.sleep(800)
+    yield from c.click(*tee); yield from c.sleep(1200)
+    yield from c.click(365, 527); yield from c.sleep(800)
+    yield from c.click(*green); yield from c.sleep(2000)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1500)
+    if open_hole:
+        yield from c.key(0x48); yield from c.sleep(3000)
+        yield from c.key(0x1B); yield from c.sleep(1500)
+        yield from c.click(45, 470); yield from c.sleep(1200)
+
+
+def _cov_k2_active_golfers(c):
+    """(index, byte +0x19, screen x, partner word +0x9a) of every golfer record whose byte +0x19 is neither 0 nor 0xff
+    (the per-golfer pass 0x0041497b / 0x00414983)."""
+    out = []
+    for i in range(152):
+        b = COV_K2_GOLFERS + i * 0x100
+        a = (_cov_k2_rd(c, b + 0x18) >> 8) & 0xFF
+        if a in (0, 0xFF):
+            continue
+        sx = _cov_k2_rd(c, b)
+        out.append([i, a, sx if sx < 0x80000000 else sx - 0x100000000, _cov_k2_rd(c, b + 0x98) >> 16])
+    return out
+
+
+def cov_k2_golfers(c):
+    """Survivors 209, 202 and 210 (golfer pass P3 / comment text P4). Sandbox, one hole, 80 virtual s of play, then the
+    simulation is paused with 'P' (0x0041d020 xors bit 2 of g_flags; P5_sim returns at 0x00417603 before updateGolfers), so
+    golfer positions stay where the injections put them while P3 / P4 keep running every frame.
+      209 (0x00416b4b jg): golfer i (even) and its partner i + 1 at the same world point (equal screen y), both with comment
+          byte +0x7c = 3 and comment id +0x7d = 1 (not 0x32: that arm recomputes ebx at 0x00416b92): the original takes
+          `ebx += 4` (0x00416b56: index even), the mutant `ebx -= 4`; the text y (0x00416dcf) moves 8 px.
+      202 (0x004151dc jge): golfer j in state 0x12 (+0x15) with word +0x96 = -1: 0x004151b6 passes (-1 > 0xc - [counts
+          0x3c + ebx], counts ~20), eax = 0xb + 1 = 0xc: the original keeps state 0x12 (jge), the mutant sets 0xb and
+          snaps the world point (0x004151de..0x0041520d).
+      210 (0x00416b0e movsx): golfer i's partner word +0x9a = 0xffff: the original reads golfer record -1 (edi = -0x100),
+          the mutant edi = 0xffff00 (0x0157943c)."""
+    yield from _cov_k2_sandbox_hole(c)
+    yield from _cov_b_season(c, 80000)
+    yield from _cova_char(c, "P")                                      # WM_CHAR alone (see _cova_char)
+    yield from c.checkpoint("paused")
+    act = _cov_b_obs(c, "active", lambda: _cov_k2_active_golfers(c))
+    ids = {g[0]: g for g in act}
+    pair = next((g[0] for g in act if g[0] % 2 == 0 and g[0] + 1 in ids and g[2] != -1 and g[3] == g[0] + 1), None)
+    if pair is not None:
+        a, b = COV_K2_GOLFERS + pair * 0x100, COV_K2_GOLFERS + (pair + 1) * 0x100
+        for off, nm in ((-8, "wx"), (-4, "wy")):
+            v = _cov_b_obs(c, f"g{pair}_{nm}", lambda off=off: _cov_k2_rd(c, a + off))
+            c.write32(b + off, v, tag=f"golfer {pair + 1} {nm} = golfer {pair}")
+        for g in (a, b):
+            _cov_k2_rmw(c, g + 0x7c, f"comment_{g:x}", lambda v: (v & 0xFFFF0000) | 0x0103)
+    yield from c.sleep(1500)
+    yield from c.checkpoint("same_y")
+    j = next((g[0] for g in act if pair is None or g[0] not in (pair, pair + 1)), None)
+    if j is not None:
+        r = COV_K2_GOLFERS + j * 0x100
+        _cov_k2_set_byte(c, r + 0x15, 0x12, f"g{j}_state12")
+        _cov_k2_set_word(c, r + 0x96, 0xFFFF, f"g{j}_w96")
+    yield from c.sleep(1500)
+    yield from c.checkpoint("state12")
+    if pair is not None:
+        # partner word 0xffff: the original's movsx (0x00416b0e) gives edi = -0x100, so it reads "record -1": comment byte
+        # 0x0057943c (0x00416b23) and screen y 0x005793c4 (0x00416b2b); nothing in the image references either address
+        # and neither is a .sve field. Make that phantom partner commenting at golfer `pair`'s screen y, so the original
+        # moves the text by 4 px (0x00416b56, index even) while the mutant's 0x0157943c byte decides alone.
+        _cov_k2_set_word(c, COV_K2_GOLFERS + pair * 0x100 + 0x9a, 0xFFFF, f"g{pair}_partner")
+        sy = _cov_b_obs(c, f"g{pair}_sy", lambda: _cov_k2_rd(c, COV_K2_GOLFERS + pair * 0x100 + 4))
+        _cov_k2_set_byte(c, 0x0057943C, 3, "rec_m1_comment")
+        c.write32(0x005793C4, sy, tag="rec_m1_sy")
+    yield from c.sleep(1500)
+    yield from c.checkpoint("partner")
+
+
+SCENARIOS["cov_k2_golfers"] = {"env": {}, "phases": [], "lockstep": cov_k2_golfers}
+
+COV_K2_FAIRWAY = (330, 570)          # Build Course palette slot that paints tile kind 2 (k2x_kinds probe)
+COV_K2_BULLDOZE = (770, 565)         # the slot whose click runs the kind-0xf tile animation that plays sound 0x92
+COV_K2_OBJECTS = 0x0058BCB8          # placed objects, 16 bytes: +0 s16 type, +2 x, +4 y, +6 flags, +8 buyer, +0xc value
+
+
+def _cov_k2_lot_dates(c, k, after):
+    """The next two dates > after at which P5_dateTick processes placed object k: date % (0x400 / (mode + 2)) == 0
+    (0x00417835..0x00417840) and (date / that) % (mode + 2) == k % (mode + 2) (0x004179e1..0x004179f6)."""
+    mode = _cov_b_obs(c, "mode", lambda: _cov_k2_rd(c, 0x00822C88))
+    e = mode + 2
+    per = 0x400 // e
+    d, out = (after // per + 1) * per, []
+    while len(out) < 2:
+        if (d // per) % e == k % e:
+            out.append(d)
+        d += per
+    return mode, out
+
+
+def cov_k2_build(c):
+    """Survivors 219, 204, 203, 225 and 232 on a sandbox course.
+      219 (0x00417342 skipped store): the build HUD 0x00417277 stores the yardage word +4 of the hole record (a .sve
+          field) only when P3's shot preview left it 0 (0x0041391e, set at 0x00413954 when the preview reaches the green)
+          and re-stores it above 200 yards (0x00417349). With g_flags bit 0x40000 set (0x0041390e, every frame) the
+          preview reads its landing tiles from the cache 0x00542dfc / 0x00542e24 (0x004136ef); a tree tile written there
+          (attribute 4 > 1, 0x00413740) stops it short of the green, so on this 103-yard hole the HUD store runs and the
+          mutant leaves the word 0. The cache is not a .sve field and is rewritten when a build action clears the bit.
+      204 (0x00413d04 skipped store): the pin search runs only for radii 150 / 200 / 250 below the preview's path length in
+          yards (0x00413be6), so hole 2 is a 232-yard hole, with fairway (tile kind 2, 0x00413c63, neighbour tests
+          0x00413cab..0x00413cee) painted on its approach side: the search stores x into the .sve table 0x0059ae80 (the
+          mutant keeps the -1 the rep stosd at 0x00413b93 wrote).
+      203 (0x004147a1 push 0x32): the bulldoze slot runs the kind-0xf tile animation whose frame 0 calls playSound(0x92,
+          0x32) (0x004147a8); Snd::setVolume 0x00485140 keeps the volume in m_4 of sound 0x92 (0x008115dc), a region
+          log/c3/c3fyk2_run.py adds to the compared state for cov_k2_* scenarios only.
+      225 (0x00417e75 movsx): word 0 of hole 1's 64-word statistic (0x00575d90) set to 0x8008, then the date is moved to
+          48 ticks before the month end, so the 1/8 decay 0x00417e75..0x00417e8a runs on a negative word (0x9007 after).
+          The mutant as generated assigns its unsigned load to the `short s` of P5_monthly, so it computes the same value
+          (equivalent; kept here as the run that shows the site executing with a negative word).
+      232 (0x00417abf jg): a type-5 record (a home-site lot) injected into a free slot of the placed-object table; its
+          first processing measures rateLot (value 0 -> rate); then the value v with rate + v - v / 12 == lim
+          ((nb * 300 + 400) * (mode + 2), 0x00417aa3..0x00417abc) is written before the next processing: the original
+          keeps the lot unsold (not >), the mutant sells it (startMessage, buyer, spawnObject)."""
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.click(300, 527); yield from c.sleep(800)
+    yield from c.click(300, 200); yield from c.sleep(1200)
+    yield from c.click(365, 527); yield from c.sleep(800)
+    yield from c.click(420, 260); yield from c.sleep(2000)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1500)
+    yield from c.checkpoint("built")
+    # 219: the preview cache (10 landing tiles per table) -> tree tile (38, 22) of the Monterey map
+    for i in range(10):
+        c.write32(0x00542DFC + 4 * i, 38, tag=f"preview cache x[{i}] = tree")
+        c.write32(0x00542E24 + 4 * i, 22, tag=f"preview cache y[{i}] = tree")
+    yield from c.sleep(1500)
+    yield from c.checkpoint("cached_miss")
+    yield from c.key(0x48); yield from c.sleep(3000)                  # open hole 1
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    # 204: hole 2, 232 yards (tee tile (36, 12), green (37, 21) on this view), fairway on its approach side
+    yield from c.click(300, 527); yield from c.sleep(800)
+    yield from c.click(186, 181); yield from c.sleep(1200)
+    yield from c.click(365, 527); yield from c.sleep(800)
+    yield from c.click(490, 333); yield from c.sleep(2000)
+    yield from c.click(300, 350, right=True); yield from c.sleep(1500)
+    yield from c.click(*COV_K2_FAIRWAY); yield from c.sleep(800)
+    for tx in range(35, 40):
+        for ty in range(16, 21):
+            yield from c.click(30 * (tx + ty) - 1250, 19 * (ty - tx) + 637); yield from c.sleep(300)
+    yield from c.click(300, 350, right=True); yield from c.sleep(2000)
+    yield from c.checkpoint("fairway")
+    yield from c.click(*COV_K2_BULLDOZE); yield from c.sleep(800)
+    yield from c.click(698, 330); yield from c.sleep(1500)
+    yield from c.click(698, 330, right=True); yield from c.sleep(1500)
+    yield from c.checkpoint("bulldoze")
+    yield from c.key(0x48); yield from c.sleep(3000)                  # open hole 2
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from _cov_b_season(c, 20000)
+    yield from c.checkpoint("opened")
+    # 225: a negative statistic word, then the month end
+    _cov_k2_set_word(c, 0x00575D90, 0x8008, "hole1_stat0")
+    d = _cov_b_obs(c, "date225", lambda: _cov_k2_rd(c, COV_B_DATE))
+    c.write32(COV_B_DATE, (d | 0x3FF) - 0x30, tag="date -> 48 before the month end")
+    yield from _cov_b_season(c, 8000)
+    yield from c.checkpoint("decay")
+    # 232: a home-site lot in the first free placed-object slot
+    k = _cov_b_obs(c, "free_slot", lambda: next(i for i in range(1, 256)
+                                                 if _cov_k2_rd(c, COV_K2_OBJECTS + 16 * i) & 0xFFFF == 0xFFFF))
+    rec = COV_K2_OBJECTS + 16 * k
+    c.write32(rec + 8, 0, tag="lot buyer 0")
+    c.write32(rec + 0xc, 0, tag="lot value 0")
+    c.write32(rec + 4, 30, tag="lot y 30, flags 0")
+    c.write32(rec, (30 << 16) | 5, tag="lot type 5 at x 30")
+    d = _cov_b_obs(c, "date232", lambda: _cov_k2_rd(c, COV_B_DATE))
+    mode, (d1, d2) = _cov_k2_lot_dates(c, k, d + 0x40)
+    c.write32(COV_B_DATE, d1 - 10, tag="date -> 10 before the lot's processing")
+    yield from c.sleep(3000)
+    rate = _cov_b_obs(c, "lot_rate", lambda: _cov_k2_rd(c, rec + 0xc))
+    nb = _cov_b_obs(c, "houses", lambda: _cov_k2_rd(c, 0x004C284C))
+    lim = (nb * 300 + 400) * (mode + 2)
+    want = lim - rate
+    v = next(x for x in range(0, 2 * want + 24) if x - x // 12 == want) if want >= 0 else 0
+    _cov_b_obs(c, "lot_plan", lambda: {"k": k, "mode": mode, "d1": d1, "d2": d2, "rate": rate, "lim": lim, "v": v})
+    c.write32(rec + 8, 0, tag="lot buyer 0")
+    c.write32(rec + 0xc, v, tag="lot value: rate + v - v / 12 == lim")
+    c.write32(COV_B_DATE, d2 - 10, tag="date -> 10 before the lot's next processing")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("lot")
+    yield from _cov_b_season(c, 6000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k2_build"] = {"env": {}, "phases": [], "lockstep": cov_k2_build}
+
+
+def cov_k2_label(c):
+    """Survivor 218 (0x004167d5 push 0xa): a new career (Easy, Monterey) shows the tutorial label at walker 0 (state 0xfa,
+    P4 0x00416305..0x00416838; drawn while date & 0x18 != 0, 0x00416495). Its band is drawMapLine 0x004493d0 ->
+    Terrain::drawLine with width 0xa; Terrain.dll's pixel format (0x10063e10: PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL,
+    16 bits) runs on Microsoft's GDI Generic OpenGL 1.1. Terrain::initGL 0x100033e0 enables GL_LINE_SMOOTH (GL_NICEST)
+    and nothing disables it; GDI Generic clamps smooth line widths to its range [0.5, 10], so widths 10 and 11 draw the
+    same pixels and this scenario reads SAME for the mutant with 0x004167d5 reached at every checkpoint: it is the
+    equivalence evidence for 218 (log/c3/c3fyk2_notes.txt), not a kill. Checkpoints every 0.7 virtual s."""
+    yield from _cov_b_menu(c)
+    yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game
+    yield from c.click(390, 125); yield from c.sleep(8000)      # Easy
+    yield from c.click(*COV_B_LOC["monterey"])                   # Phoenix costs more than the $100,000 start here
+    yield from _cov_b_hud(c)
+    yield from c.sleep(4000)
+    yield from c.checkpoint("career")
+    yield from c.key(0x1B); yield from c.sleep(1500)            # the welcome text
+    for i in range(5):
+        yield from c.sleep(700)
+        yield from c.checkpoint(f"label{i}")
+
+
+SCENARIOS["cov_k2_label"] = {"env": {}, "phases": [], "lockstep": cov_k2_label}
+
+COV_K2_CAM = (0x004C2BA0, 0x004C2BA4)   # camera tile x / y (arrows move it 4 tiles, events.js setCamera 1)
+
+
+def _cov_k2_pair_xy(c, g):
+    a, b = COV_K2_GOLFERS + g * 0x100, COV_K2_GOLFERS + (g ^ 1) * 0x100
+    s = lambda v: v - 0x100000000 if v >= 0x80000000 else v
+    return [s(_cov_k2_rd(c, a)), s(_cov_k2_rd(c, a + 4)), s(_cov_k2_rd(c, b)), s(_cov_k2_rd(c, b + 4))]
+
+
+def _cov_k2_place_pair(c, g, cam0, target, coarse, ok, name):
+    """Put golfers g and g ^ 1 on one world point (dwords -8 / -4 of their records) and move the camera and that point
+    until ok(pair screen points): the camera first, aimed at `coarse` (32 px in x per tile sum, 20 px in y per tile
+    difference at zoom 4; P3 adds a height offset after that, so the coarse aim stays inside the edge), then the world point
+    in steps of at most `lim` px (x follows wx + wy at 1/32 px per unit, y follows wy - wx at 1/51.2), back to the last
+    on-screen point with half the step whenever P3 reports the pair off screen (+0 = -1, 0x00414969). RECORD run only;
+    every applied step is kept in obs and the replay arms apply the same steps at the same virtual times."""
+    a, b = COV_K2_GOLFERS + g * 0x100, COV_K2_GOLFERS + (g ^ 1) * 0x100
+
+    def apply(st):
+        cx, cy, wx, wy = st
+        c.write32(COV_K2_CAM[0], cx, tag=f"{name} cam x"); c.write32(COV_K2_CAM[1], cy, tag=f"{name} cam y")
+        for r in (a, b):
+            c.write32(r - 8, wx & 0xFFFFFFFF, tag=f"{name} world x"); c.write32(r - 4, wy & 0xFFFFFFFF, tag=f"{name} world y")
+        yield from c.sleep(300)
+
+    if c.run.mode == "replay":
+        res = _cov_b_obs(c, f"{name}_place", lambda: None)
+        for st in res["steps"]:
+            yield from apply(st)
+        return res
+    steps, seen = [], []
+    wx, wy = _cov_k2_rd(c, a - 8), _cov_k2_rd(c, a - 4)
+    st = [cam0[0], cam0[1], wx, wy]
+    steps.append(st); yield from apply(st)
+    got = _cov_k2_pair_xy(c, g); seen.append(got)
+    s_, d_ = round((got[0] - coarse[0]) / 32), round((coarse[1] - got[1]) / 20)
+    if (s_ + d_) % 2:
+        d_ -= 1 if coarse[1] > got[1] else -1
+    st = [cam0[0] + (s_ + d_) // 2, cam0[1] + (s_ - d_) // 2, wx, wy]
+    steps.append(st); yield from apply(st)
+    got = _cov_k2_pair_xy(c, g); seen.append(got)
+    good, lim = (st, got) if got[0] != -1 else (None, 12), 12
+    for _ in range(24):
+        if got[0] != -1 and ok(got):
+            break
+        if got[0] == -1:
+            if good is None:
+                break
+            st, got = good
+            lim = max(1, lim // 2)
+            steps.append(st); yield from apply(st)
+            got = _cov_k2_pair_xy(c, g); seen.append(got)
+            continue
+        good = (st, got)
+        dx = max(-lim, min(lim, target[0] - got[0]))
+        dy = max(-lim, min(lim, target[1] - got[1]))
+        su, tu = 32 * dx, 51 * dy
+        st = [st[0], st[1], st[2] + (su - tu) // 2, st[3] + (su + tu) // 2]
+        steps.append(st); yield from apply(st)
+        got = _cov_k2_pair_xy(c, g); seen.append(got)
+    res = {"steps": steps, "seen": seen, "final": got, "ok": got[0] != -1 and ok(got)}
+    _cov_b_obs(c, f"{name}_place", lambda: res)
+    return res
+
+
+def cov_k2_simfoto(c):
+    """Survivors 222 and 228 (P5 SimFoto box, 0x004185bb..0x00418b02). The box is drawn around golfer g and its partner
+    g ^ 1 while [0x004c2e0c] holds g (low byte); with bit 0x100 (the form matchUpdate stores at 0x00427546 / 0x00428505)
+    the box is 0xa0 x 0x78 (0x00418642..0x00418667). The golfers' screen points come from P3's worldToScreen with margin 0
+    (0x00415395 / 0x0041539b: 0 <= x < 800, 0 <= y < 600), so the clamp tops 0x2bc / 0x1f4 bind only when the pair is at
+    the right / bottom edge: x0 = clamp(min x - (0xa0 - w) / 2 - 0x10, ..) > 0x2bc needs both x >= 794; y0 needs the pair's
+    mid y >= ~577. Sandbox, one hole, 80 virtual s, pause ('P', as cov_k2_golfers), then [0x004c2e0c] = g | 0x100 for the
+    pair whose x are closest, and the camera tile pair 0x004c2ba0 / 0x004c2ba4 moved (offset solved in the RECORD run from
+    the measured per-tile screen steps, verified on the frame, kept in obs) so the pair sits at the bottom edge (222,
+    checkpoint `bottom`) and then at the right edge (228, checkpoint `right`)."""
+    yield from _cov_k2_sandbox_hole(c)
+    yield from _cov_b_season(c, 80000)
+    yield from _cova_char(c, "P")
+    act = _cov_b_obs(c, "active", lambda: _cov_k2_active_golfers(c))
+    ids = {g[0]: g for g in act}
+    pairs = [(abs(g[2] - ids[g[0] ^ 1][2]), g[0]) for g in act if g[0] % 2 == 0 and (g[0] ^ 1) in ids
+             and g[2] != -1 and ids[g[0] ^ 1][2] != -1]
+    g = min(pairs)[1] if pairs else 0
+    yield from c.sleep(1500)
+    yield from c.checkpoint("paused")
+    cam0 = _cov_b_obs(c, "cam0", lambda: [_cov_k2_rd(c, COV_K2_CAM[0]), _cov_k2_rd(c, COV_K2_CAM[1])])
+    base = _cov_b_obs(c, "base", lambda: _cov_k2_pair_xy(c, g))
+    c.write32(COV_K2_CAM[0], cam0[0] + 1, tag="probe cam x + 1")
+    yield from c.sleep(400)
+    px = _cov_b_obs(c, "probe_x", lambda: _cov_k2_pair_xy(c, g))
+    c.write32(COV_K2_CAM[0], cam0[0], tag="probe cam x back")
+    c.write32(COV_K2_CAM[1], cam0[1] + 1, tag="probe cam y + 1")
+    yield from c.sleep(400)
+    py = _cov_b_obs(c, "probe_y", lambda: _cov_k2_pair_xy(c, g))
+    c.write32(COV_K2_CAM[1], cam0[1], tag="probe cam y back")
+    yield from c.sleep(400)
+    ux = [px[k] - base[k] for k in range(4)]
+    uy = [py[k] - base[k] for k in range(4)]
+
+    def on(p):
+        return all(0 <= p[k] < 800 for k in (0, 2)) and all(0 <= p[k] < 600 for k in (1, 3))
+
+    def bottom(p):      # 222: ebx = min y - (0x78 - h) / 2 >= 0x205 (+2 for rounding), h < 0x78
+        h = abs(p[1] - p[3])
+        return on(p) and h < 0x78 and min(p[1], p[3]) - (0x78 - h) // 2 >= 0x207
+
+    def right(p):       # 228: [F+0xc] = min x - (0xa0 - w) / 2 >= 0x2cd (+1), w < 0xa0
+        w = abs(p[0] - p[2])
+        return on(p) and w < 0xa0 and min(p[0], p[2]) - (0xa0 - w) // 2 >= 0x2ce
+
+    # the camera moves first: while [0x004c2e0c] != -1 the view (and P3's projections) stay as they were (cov_k2_simfoto's
+    # first recording: camera writes after the selector moved nothing), so the box uses the edge points
+    for name, ok, target, coarse in (("bottom", bottom, (400, 589), (400, 560)), ("right", right, (798, 300), (770, 300))):
+        yield from _cov_k2_place_pair(c, g, cam0, target, coarse, ok, name)
+        yield from c.sleep(800)
+        c.write32(0x004C2E0C, g | 0x100, tag=f"simfoto golfer {g} | 0x100")
+        yield from c.sleep(1500)
+        yield from c.checkpoint(name)
+        # leave the SimFoto as the game does: a camera key reaches 0x0041e253 (selector != -1: playSound, refreshFull,
+        # [0x004c2e0c] = -1 at 0x0041e27d, pumpAndRedraw); a plain write of -1 left the view frozen (k2 draft run x2)
+        yield from _cova_vk(c, 0x25)
+
+
+SCENARIOS["cov_k2_simfoto"] = {"env": {}, "phases": [], "lockstep": cov_k2_simfoto}
