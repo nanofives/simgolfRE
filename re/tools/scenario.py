@@ -850,6 +850,30 @@ def cov_b_career(c):
     yield from c.checkpoint("year2")
 
 
+def cov_b_location(c):
+    """b5: the location screen (courseActionMenu 0x0046f550) held on screen, the regression for scenario_det.js's stack
+    seed and scenario_ab's back-buffer frame (re/analysis/data/scenario_baseline.md section 11). Start New Game -> Easy,
+    a click on Phoenix, which the device-less boot timeline prices at $150,000 against $100,000 cash, so the purchase is
+    refused and the screen stays, with the pointer on Phoenix's entry (the nearest site: its plate blinks on bit 3 of the
+    uninitialised frame counter, 0x00470027); the warning dismissed; a date write, after which the screen draws the
+    save and load buttons (one button while the date is 0); the pointer held on the save button for the tip (the
+    uninitialised dwell counter, 0x00470299); back to the title menu."""
+    yield from _cov_b_menu(c)
+    yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game
+    yield from c.click(390, 125); yield from c.sleep(8000)      # Easy -> location screen
+    yield from c.click(*COV_B_LOC["phoenix"]); yield from c.sleep(4000)
+    yield from c.checkpoint("refused")
+    yield from c.key(0x1B); yield from c.sleep(2000)
+    yield from c.checkpoint("site_hover")
+    c.write32(COV_B_DATE, 0x0FC0, tag="date -> the location screen's save / load buttons"); yield from c.sleep(3000)
+    c.move(380, 320); yield from c.sleep(2000)                  # no site within 0x1e, no button
+    yield from c.checkpoint("buttons")
+    c.move(0x2F8, 0x1DC); yield from c.sleep(4000)              # save button (0x2f8 / 0x1dc while the date is not 0)
+    yield from c.checkpoint("tip")
+    yield from c.click(0x300, 0x22D); yield from c.sleep(4000)  # back
+    yield from c.checkpoint("back")
+
+
 def cov_b_locations(c):
     """Sandbox in the desert (Phoenix): rotations, zooms, a hole, edit mode, play."""
     yield from _cov_b_menu(c)
@@ -1108,51 +1132,139 @@ def cov_b_holes18(c):
     yield from c.checkpoint("end")
 
 
-def cov_b_shots(c, cap_s=900, max_shots=40):
-    """Championship at Moderate: on Gary's turn every shot-type key ('h' 3, 'l' 4, 's' 0, 'f' -1, 'd' 1: [0x0058f330],
-    H1 0x0041c5b9..0x0041c6f3) with the aim hovered near, mid and far (P7 drag preview 0x0041b20f..0x0041c0c5: rateTile
-    modes, club rows, swing arc), then a straight shot at the pin (scenario.py's finder, decided in the record run)."""
+# b5 (2026-10-17): Gary's turn and the panel shown after he holes out, told apart by two templates (imgcmp.distance of
+# the SHOT_PANEL crop). The old test (shot panel within 25) also took that later panel ("Accurate Putter +20%", 19.9
+# from tests/golden/shot_panel.png) for a turn: the scripts then ran a whole shot sequence, the TOURNAMENT RESULTS panel
+# came up in the middle of it and the sequence's own clicks / keys closed it to the title menu, where the old loop
+# pressed Esc until the 900 s cap (7 and 5 shots). A distance threshold alone does not work: turns measured 0.0 to 18.4
+# (the ovals differ by lie and club: 17.8 in the rough with a lob wedge). Measured over 1,620 frames of the b5 runs:
+# every turn is 19.9 or more from tests/golden/gary_skill_panel.png (that panel's crop), the panel itself 0.0.
+COV_B_PANEL_MAX = 25.0      # within this of shot_panel.png: Gary's turn or the post-hole panel
+COV_B_HOLED_MAX = 8.0       # within this of gary_skill_panel.png: the post-hole panel
+
+
+def _cov_b_tstate(c, name="tstate"):
+    """over (TOURNAMENT RESULTS) / gary (shot panel up) / holed (Gary's panel after he holes out) / menu (title menu) /
+    other, decided in the record run."""
     import scenario as SCN
-    shot = lambda: c.run.g.shot()
-    yield from _cov_b_menu(c)
+
+    def f():
+        img = c.run.g.shot()
+        if SCN.tournament_over(img):
+            return "over"
+        crop = img.crop(SCN.SHOT_PANEL)
+        if imgcmp.distance(crop, imgcmp.load(GOLDEN / "shot_panel.png")) <= COV_B_PANEL_MAX:
+            if imgcmp.distance(crop, imgcmp.load(GOLDEN / "gary_skill_panel.png")) <= COV_B_HOLED_MAX:
+                return "holed"
+            return "gary"
+        if imgcmp.matches(img, imgcmp.load(GOLDEN / "main_menu.png")):
+            return "menu"
+        return "other"
+    return _cov_b_obs(c, name, f)
+
+
+def _cov_b_over(c):
+    import scenario as SCN
+    return _cov_b_obs(c, "over", lambda: SCN.tournament_over(c.run.g.shot()))
+
+
+def _cov_b_start_champ(c, difficulty):
     yield from c.click(400, 540); yield from c.sleep(2500)    # Play a Championship
-    yield from c.click(390, 238); yield from c.sleep(3000)    # Moderate
+    yield from c.click(*difficulty); yield from c.sleep(3000)  # Easy (390, 125) / Moderate (390, 238) / Difficult (390, 356)
     yield from c.click(380, 122); yield from c.sleep(1000)    # first course in the list
     yield from c.click(630, 555); yield from c.sleep(4000)    # OK
     yield from c.click(360, 122); yield from c.sleep(1000)    # Gary Golf.pro
     yield from c.click(632, 553); yield from c.sleep(8000)    # OK -> tournament
+
+
+def _cov_b_champ_rounds(c, difficulty, turn, cap_s, max_shots):
+    """Championship rounds (the fixture course has one hole) until `max_shots` of Gary's shots or the cap: on each of
+    Gary's turns `turn(c, k, target)` (a generator of input groups: it yields False between groups, and the loop checks
+    for the results panel before the next one), Esc otherwise (after a second results check: Esc on the results panel
+    quits to the title menu), on TOURNAMENT RESULTS a checkpoint (`results` for the first round, `results_r<n>` after)
+    and its check mark, then the next round from the title menu. Checkpoints `shot_08`, `shot_16`, ... and `end`.
+    Once per round, on the panel shown after Gary holes out (`holed`), the same turn's input runs although no shot is
+    pending (not counted as a shot): outside Gary's turn the shot-type keys reach other H1 cases (0x0041c5cd and
+    0x0041c651 set tool modes 2 / 7 through 0x0040d890, 0x0041c6e9 announceBuilding 0x0040e720) and the hovers the P7
+    tool preview (0x0041a99a), which the scripts before b5 reached only through their false turn there."""
+    import scenario as SCN
+    shot = lambda: c.run.g.shot()
+    yield from _cov_b_menu(c)
+    yield from _cov_b_start_champ(c, difficulty)
     yield from c.checkpoint("tournament_start")
-    shots, t0 = 0, c.T
+    shots, rnd, t0, probed = 0, 1, c.T, set()
     while c.T - t0 < cap_s * 1000 and shots < max_shots:
-        st = _cov_b_obs(c, "tstate", lambda: "over" if SCN.tournament_over(shot()) else
-                        ("gary" if imgcmp.matches(shot().crop(SCN.SHOT_PANEL), imgcmp.load(GOLDEN / "shot_panel.png"), 25)
-                         else "other"))
+        st = _cov_b_tstate(c)
+        if st == "holed" and rnd not in probed:
+            probed.add(rnd)
+            target = _cov_b_obs(c, "holed_target", lambda: SCN.find_green(shot()) or (400, 260))
+            for v in turn(c, shots, target):
+                if v is None:
+                    yield
+                elif not v and _cov_b_over(c):
+                    break
+            yield from c.sleep(2000)
+            continue
         if st == "over":
             yield from c.sleep(2000)
-            yield from c.checkpoint("results")
+            yield from c.checkpoint("results" if rnd == 1 else f"results_r{rnd}")
             yield from c.click(*SCN.RESULTS_OK); yield from c.sleep(3000)
-            break
+            st = "menu" if _cov_b_tstate(c, "after_results") == "menu" else "other"
+        if st == "menu":
+            rnd += 1
+            yield from c.sleep(2000)
+            yield from _cov_b_start_champ(c, difficulty)
+            continue
         if st == "gary":
             green = _cov_b_obs(c, "green", lambda: SCN.find_green(shot()))
             target = _cov_b_obs(c, "target", lambda: (SCN.find_pin(shot(), green) if green else None) or green or (400, 260))
-            for ch in "hlsfd"[shots % 5:] + "hlsfd"[:shots % 5]:
-                yield from c.key(ord(ch.upper()), char=ch); yield from c.sleep(500)
-                for (dx, dy) in ((0, 0), (-120, 60), (150, -80)):
-                    c.move(target[0] + dx, target[1] + dy); yield from c.sleep(500)
-            yield from c.click(*SCN.SHOT_STRAIGHT); yield from c.sleep(800)
-            for (dx, dy) in ((-200, 100), (60, 30)):
-                c.move(target[0] + dx, target[1] + dy); yield from c.sleep(500)
-            c.move(*target); yield from c.sleep(600)
-            yield from c.click(*target)
-            shots += 1
-            yield from c.sleep(2000)
-            if shots % 8 == 0:
-                yield from c.checkpoint(f"shot_{shots:02d}")
+            fired = False
+            for v in turn(c, shots, target):
+                if v is None:                   # a poll of the turn's sleeps: pass it on
+                    yield
+                    continue
+                fired = v
+                if not fired and _cov_b_over(c):
+                    break
+            if fired:
+                shots += 1
+                yield from c.sleep(2000)
+                if shots % 8 == 0:
+                    yield from c.checkpoint(f"shot_{shots:02d}")
             continue
         yield from c.sleep(700)
+        if _cov_b_over(c):
+            continue
         yield from c.key(0x1B); yield from c.sleep(1500)
+    _cov_b_obs(c, "shots_end", lambda: {"shots": shots, "rounds": rnd, "virtual_s": (c.T - t0) // 1000})
     yield from c.sleep(3000)
     yield from c.checkpoint("end")
+
+
+def _cov_b_shots_turn(c, k, target):
+    """cov_b_shots' turn: every shot-type key with the aim hovered near, mid and far, then the straight shot."""
+    import scenario as SCN
+    for ch in "hlsfd"[k % 5:] + "hlsfd"[:k % 5]:
+        yield from c.key(ord(ch.upper()), char=ch); yield from c.sleep(500)
+        for (dx, dy) in ((0, 0), (-120, 60), (150, -80)):
+            c.move(target[0] + dx, target[1] + dy); yield from c.sleep(500)
+        yield False
+    yield from c.click(*SCN.SHOT_STRAIGHT); yield from c.sleep(800)
+    for (dx, dy) in ((-200, 100), (60, 30)):
+        c.move(target[0] + dx, target[1] + dy); yield from c.sleep(500)
+    c.move(*target); yield from c.sleep(600)
+    yield False
+    yield from c.click(*target)
+    yield True
+
+
+def cov_b_shots(c, cap_s=1800, max_shots=24):
+    """Championship rounds at Moderate: on Gary's turn every shot-type key ('h' 3, 'l' 4, 's' 0, 'f' -1, 'd' 1:
+    [0x0058f330], H1 0x0041c5b9..0x0041c6f3) with the aim hovered near, mid and far (P7 drag preview
+    0x0041b20f..0x0041c0c5: rateTile modes, club rows, swing arc), then a straight shot at the pin (scenario.py's finder,
+    decided in the record run); a new round after each results screen until 24 shots (b5: before, the round's results
+    were dismissed by the script's own input and the run idled on the title menu after 7 shots)."""
+    yield from _cov_b_champ_rounds(c, (390, 238), _cov_b_shots_turn, cap_s, max_shots)
 
 
 def _cov_b_read_u32(c, va):
@@ -1326,50 +1438,30 @@ def cov_b_paths(c):
     yield from c.checkpoint("end")
 
 
-def cov_b_shots2(c, cap_s=900, max_shots=40):
-    """Championship at Difficult: Gary aims short, wide or long of the pin by turns (lies in rough, sand and water feed
-    the P7 club-name suffix switch 0x004217f4 and the club rows 0x00421818), each preceded by the shot-type keys."""
+def _cov_b_shots2_turn(c, k, target):
+    """cov_b_shots2's turn: the shot-type keys, each followed by the aim short, wide or long of the pin by turns."""
     import scenario as SCN
-    shot = lambda: c.run.g.shot()
-    yield from _cov_b_menu(c)
-    yield from c.click(400, 540); yield from c.sleep(2500)    # Play a Championship
-    yield from c.click(390, 356); yield from c.sleep(3000)    # Difficult
-    yield from c.click(380, 122); yield from c.sleep(1000)
-    yield from c.click(630, 555); yield from c.sleep(4000)
-    yield from c.click(360, 122); yield from c.sleep(1000)
-    yield from c.click(632, 553); yield from c.sleep(8000)
-    yield from c.checkpoint("tournament_start")
-    offsets = [(-90, 45), (110, -40), (0, 0), (60, 70), (-140, -30)]
-    shots, t0 = 0, c.T
-    while c.T - t0 < cap_s * 1000 and shots < max_shots:
-        st = _cov_b_obs(c, "tstate", lambda: "over" if SCN.tournament_over(shot()) else
-                        ("gary" if imgcmp.matches(shot().crop(SCN.SHOT_PANEL), imgcmp.load(GOLDEN / "shot_panel.png"), 25)
-                         else "other"))
-        if st == "over":
-            yield from c.sleep(2000)
-            yield from c.checkpoint("results")
-            yield from c.click(*SCN.RESULTS_OK); yield from c.sleep(3000)
-            break
-        if st == "gary":
-            green = _cov_b_obs(c, "green", lambda: SCN.find_green(shot()))
-            target = _cov_b_obs(c, "target", lambda: (SCN.find_pin(shot(), green) if green else None) or green or (400, 260))
-            dx, dy = offsets[shots % len(offsets)]
-            aim = (min(max(target[0] + dx, 20), 780), min(max(target[1] + dy, 80), 460))
-            for ch in "dfslh"[shots % 5:] + "dfslh"[:shots % 5]:
-                yield from c.key(ord(ch.upper()), char=ch); yield from c.sleep(400)
-                c.move(*aim); yield from c.sleep(400)
-            yield from c.click(*SCN.SHOT_STRAIGHT); yield from c.sleep(800)
-            c.move(*aim); yield from c.sleep(600)
-            yield from c.click(*aim)
-            shots += 1
-            yield from c.sleep(2000)
-            if shots % 8 == 0:
-                yield from c.checkpoint(f"shot_{shots:02d}")
-            continue
-        yield from c.sleep(700)
-        yield from c.key(0x1B); yield from c.sleep(1500)
-    yield from c.sleep(3000)
-    yield from c.checkpoint("end")
+    dx, dy = COV_B_SHOTS2_OFFSETS[k % len(COV_B_SHOTS2_OFFSETS)]
+    aim = (min(max(target[0] + dx, 20), 780), min(max(target[1] + dy, 80), 460))
+    for ch in "dfslh"[k % 5:] + "dfslh"[:k % 5]:
+        yield from c.key(ord(ch.upper()), char=ch); yield from c.sleep(400)
+        c.move(*aim); yield from c.sleep(400)
+        yield False
+    yield from c.click(*SCN.SHOT_STRAIGHT); yield from c.sleep(800)
+    c.move(*aim); yield from c.sleep(600)
+    yield False
+    yield from c.click(*aim)
+    yield True
+
+
+COV_B_SHOTS2_OFFSETS = [(-90, 45), (110, -40), (0, 0), (60, 70), (-140, -30)]
+
+
+def cov_b_shots2(c, cap_s=1800, max_shots=24):
+    """Championship rounds at Difficult: Gary aims short, wide or long of the pin by turns (lies in rough, sand and water
+    feed the P7 club-name suffix switch 0x004217f4 and the club rows 0x00421818), each preceded by the shot-type keys; a
+    new round after each results screen until 24 shots (b5)."""
+    yield from _cov_b_champ_rounds(c, (390, 356), _cov_b_shots2_turn, cap_s, max_shots)
 
 
 def cov_b_inject2(c):
@@ -1380,6 +1472,7 @@ def cov_b_inject2(c):
 
 SCENARIOS["cov_b_build"] = {"env": {}, "phases": [], "lockstep": cov_b_build}
 SCENARIOS["cov_b_career"] = {"env": {}, "phases": [], "lockstep": cov_b_career}
+SCENARIOS["cov_b_location"] = {"env": {}, "phases": [], "lockstep": cov_b_location}
 SCENARIOS["cov_b_locations"] = {"env": {}, "phases": [], "lockstep": cov_b_locations}
 SCENARIOS["cov_b_title"] = {"env": {}, "phases": [], "lockstep": cov_b_title, "files": {"Themes/Default.pro": "log/c3/alt/s36a/pristine/Themes/Championship/Gary Golf.pro"}}
 SCENARIOS["cov_b_decor"] = {"env": {}, "phases": [], "lockstep": cov_b_decor}

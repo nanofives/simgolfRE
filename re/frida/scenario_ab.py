@@ -70,7 +70,7 @@ import imgcmp  # noqa: E402
 import numpy as np  # noqa: E402
 import pefile  # noqa: E402
 import sve  # noqa: E402
-from game import Game, JS_DIR  # noqa: E402
+from game import GAME_H, GAME_W, Game, JS_DIR  # noqa: E402
 from PIL import Image  # noqa: E402
 
 OUT_ROOT = ROOT / "log" / "c3" / "alt" / "c3ft"
@@ -97,6 +97,49 @@ SLOT_SPECS = {                   # import slots the agent redirects (module -> {
 # present; C3FT_AUDIO=live leaves the real APIs (the timeline then follows the device, as before 2026-10-17).
 AUDIO_SLOTS = {"sound.dll": {"DSOUND.dll!#2": "audio:dsenum", "ole32.dll!CoCreateInstance": "audio:cocreate"},
                "binkw32.dll": {"WINMM.dll!waveOutOpen": "audio:waveOutOpen"}}
+
+
+def frame_mode() -> str:
+    """b5: where the checkpoint frame comes from: `backbuffer` (default) or `window` (the capture used before b5)."""
+    m = os.environ.get("C3FT_FRAME", "backbuffer")
+    if m not in ("backbuffer", "window"):
+        raise SystemExit(f"C3FT_FRAME={m}: backbuffer or window")
+    return m
+
+
+def stack_seed() -> str:
+    """b5: zero-fill the stack below courseActionMenu's entry (scenario_det.js STACK SEED): `zero` (default); `probe`
+    (C3FT_STACK_SEED=probe) only records the three uninitialised words natively; C3FT_STACK_SEED=0 returns "" and leaves
+    the thunk 0x00470a00 untouched (the agent's key is then absent)."""
+    m = os.environ.get("C3FT_STACK_SEED", "1")
+    if m not in ("0", "1", "probe"):
+        raise SystemExit(f"C3FT_STACK_SEED={m}: 1, probe or 0")
+    return {"0": "", "1": "zero", "probe": "probe"}[m]
+
+
+def back_buffer_image(meta: dict, bits) -> "Image.Image | None":
+    """jgld's back buffer as the 800x600 RGB picture the window shows: RGB555 (BI_RGB, or BI_BITFIELDS 0x7c00/0x3e0/0x1f)
+    or RGB565 (BI_BITFIELDS 0xf800/0x7e0/0x1f), channels widened by (v << 3) | (v >> 2) (6-bit green: (v << 2) | (v >> 4)).
+    Rows are top-down: GetObjectA reports biHeight +600 for this DIB, but its first row in memory is the top of the
+    window (measured: the unflipped rows equal the window capture, the flipped ones differ in 418,146 px). None when
+    there is no such buffer."""
+    if not meta.get("ok") or bits is None or meta.get("bpp") != 16 or (meta.get("w"), abs(meta.get("h") or 0)) != (GAME_W, GAME_H):
+        return None
+    comp, masks = meta.get("comp"), tuple(meta.get("masks") or ())
+    if comp == 0 or (comp == 3 and masks == (0x7C00, 0x3E0, 0x1F)):
+        fmt = 555
+    elif comp == 3 and masks == (0xF800, 0x7E0, 0x1F):
+        fmt = 565
+    else:
+        return None
+    wb = meta["wb"]
+    v = np.frombuffer(bits, np.uint16, count=(wb // 2) * GAME_H).reshape(GAME_H, wb // 2)[:, :GAME_W].astype(np.uint16)
+    w5 = lambda x: ((x << 3) | (x >> 2)).astype(np.uint8)
+    if fmt == 555:
+        r, g, b = w5((v >> 10) & 31), w5((v >> 5) & 31), w5(v & 31)
+    else:
+        r, g, b = w5((v >> 11) & 31), (((v >> 5) & 63) << 2 | ((v >> 5) & 63) >> 4).astype(np.uint8), w5(v & 31)
+    return Image.fromarray(np.ascontiguousarray(np.stack([r, g, b], axis=2)), "RGB")
 
 
 def audio_mode() -> str:
@@ -467,7 +510,7 @@ class Run:
     def _on_message(self, m, data):
         if m.get("type") == "send":
             p = m["payload"]
-            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error", "full", "extra"):
+            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error", "full", "extra", "bb"):
                 self.q.put((p, data))
         elif m.get("type") == "error":
             self.q.put(({"type": "error", "where": "script", "msg": m.get("description", "") + " " + str(m.get("stack", ""))}, None))
@@ -495,6 +538,8 @@ class Run:
             cfg["extraRegions"] = self.extra_regs
         if audio_mode() == "none":           # b2: the device-less audio answers (default)
             cfg["audio"] = "none"
+        if stack_seed():                     # b5: courseActionMenu's uninitialised frame words read 0 (default)
+            cfg["stackSeed"] = stack_seed()
         src ="const SCENARIO_CFG = " + json.dumps(cfg) + ";\n" + (JS_DIR / "scenario_det.js").read_text()
         self.out.mkdir(parents=True, exist_ok=True)
         p = self.out / "agent.js"
@@ -527,7 +572,7 @@ class Run:
     def take_dump(self, sc, name):
         self.post(sc, dump=True, hwnd=self.hwnd_val())
         p, data = self.wait_msg(("dump",))
-        img, shot_info = self.stable_shot(name)
+        img, shot_info = self.checkpoint_frame(sc, name)
         img.save(self.out / f"{name}.png")
         if os.environ.get("C3FT_FULLDUMP") == "1":
             # opt-in (batch b2): the exe's whole .data section at this checkpoint, for diffs outside the compared regions
@@ -558,6 +603,32 @@ class Run:
             self.checkpoints[name]["shot"] = shot_info
         print(f"  [{self.label}] checkpoint {name} T={p['st']['T'] - T0} tgt={p['st']['tgt']} "
               f"date=0x{self.region_u32(data, 0x00834170):08x} seed=0x{self.region_u32(data, 0x00822D9C):08x}", flush=True)
+
+    def checkpoint_frame(self, sc, name):
+        """The checkpoint's frame (batch b5). Default C3FT_FRAME=backbuffer: jgld's back buffer, the DIB section the game
+        draws into and Display::present 0x10066470 BitBlts to the window, read on the blocked main thread (scenario_det.js
+        backBuffer) and converted from RGB555 by (v << 3) | (v >> 2) per channel, which is the window capture's value for
+        every pixel while the window is current (0 px differ in the 12 checkpoints compared). The window is captured too:
+        when it differs, the window picture is kept as <name>.window.png and the count goes into the checkpoint's "shot"
+        entry (window_px_differ). The location screen of cov_b_career_phx showed a window older than the back buffer in
+        1 of 6 boots for 90 virtual s while the game presented the full rect every frame, the stale picture coming from
+        outside the game (re/analysis/data/scenario_baseline.md section 11). C3FT_FRAME=window: the window capture, as
+        before b5. Falls back to the window, with the reason in "shot", when there is no 800x600 RGB555 / 565 back buffer."""
+        if frame_mode() == "window":
+            return self.stable_shot(name)
+        self.post(sc, bb=True, hwnd=self.hwnd_val())
+        pb, bits = self.wait_msg(("bb",))
+        meta = pb.get("meta") or {}
+        img = back_buffer_image(meta, bits)
+        if img is None:
+            win, info = self.stable_shot(name)
+            return win, {**(info or {}), "source": "window", "why": meta.get("why") or f"back buffer {meta}"}
+        win = self.g.shot()
+        a, b = np.asarray(img), np.asarray(win.convert("RGB"))
+        px = int((a != b).any(axis=2).sum()) if a.shape == b.shape else -1
+        if px:
+            win.save(self.out / f"{name}.window.png")
+        return img, {"source": "backbuffer", "window_px_differ": px}
 
     def stable_shot(self, name):
         """The checkpoint's frame. C3FT_SHOT_SETTLE=<ms> (batch b2): capture again every <ms> while the main thread is
@@ -611,7 +682,8 @@ class Run:
         finally:
             self.wall = time.time() - t_start
             (self.out / "poll_log.json").write_text(json.dumps({"agent": self.agent_log, "trace": self.trace}))
-            summary = {"label": self.label, "mode": self.mode, "env": self.env, "audio": audio_mode(), "polls": self.polls,
+            summary = {"label": self.label, "mode": self.mode, "env": self.env, "audio": audio_mode(), "frame": frame_mode(),
+                       "stack_seed": stack_seed(), "polls": self.polls,
                        "wall_s": round(self.wall, 1), "slots": self.slots, "checkpoints": self.checkpoints,
                        "errors": self.errors, "schedule": self.schedule, "failure": self.failure}
             if self.extra_regs:              # opt-in (c3fyl): absent by default, so default summaries are unchanged

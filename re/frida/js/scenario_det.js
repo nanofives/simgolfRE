@@ -375,6 +375,50 @@ Memory.protect(CODE, Process.pageSize, 'rwx');
 for (const m of Process.enumerateModules()) patchModule(m);
 Process.attachModuleObserver({ onAdded(m) { try { patchModule(m); } catch (e) { send({ type: 'error', where: 'patch ' + m.name, msg: String(e) }); } } });
 
+// ---------------------------------------------------------------- STACK SEED (cfg.stackSeed; batch b5, 2026-10-17)
+// courseActionMenu 0x0046f550 (the location screen) reads three frame words before writing them: the blink counter
+// [F+0x24] (0x00470027 `test byte [esp+0x24], 8`, the nearest site's plate drawn in state 3 while bit 3 is set; 0x004703c3
+// increments it), the dwell counter [F+0x28] (0x00470299) and the previous hot button [F+0x30] (0x0047028f); F = entry esp
+// - 0x4f0, so the blink counter is entry esp - 0x4cc. Measured (log/c3/b5_evlog.js, cov_b_career_phx, 8 boots): what the
+// stack holds there at entry is a HEAP POINTER left by earlier code (0x3516db4, 0x3516e04, 0x3516d44, 0x3516cb4, 0x2c76cb4,
+// 0x3516cec), different in every boot, and the one boot whose pointer's low nibble was 0xc drew the plate in the other
+// blink phase at the `career` checkpoint (384 px). So this stub, at the thunk 0x00470a00 (`jmp 0x0046f550`, the only way
+// in: the calls 0x00407d46 and 0x0040fb9f, and c3fy's mainLoop reimplementation, all call the thunk), zero-fills the 16 KB
+// below esp before the jump; the original and the hooked reimplementation (c3fw's CamFrame, other offsets) then read 0 in
+// all three words in every boot. Native, no JavaScript: push eax / ecx / edi, edi = esp - 4, ecx = 0x1000, std; rep stosd
+// (descending, so the stack's guard page is met in order), cld, pop, jmp 0x0046f550 (into the shim's hook when installed).
+// status().stackSeed = [entries (D+0x34), the three words as found at the last entry, before the fill]. Without the key
+// the thunk is untouched.
+if (CFG.stackSeed) {
+  const THUNK = ptr(0x00470a00), TARGET = 0x0046f550;
+  if (THUNK.readU8() !== 0xe9 || THUNK.add(5 + THUNK.add(1).readS32()).toUInt32() !== TARGET) {
+    send({ type: 'error', where: 'stackSeed', msg: 'thunk 0x00470a00 is not jmp 0x0046f550' });
+  } else {
+    const b = [0xff, 0x05, ...d(0x34),            // inc [entries]
+               0x50, 0x51, 0x57,                  // push eax; push ecx; push edi
+               // the three words as the stack held them (entry esp - 0x4cc / - 0x4c8 / - 0x4c0 = esp - 0x4c0 / - 0x4bc /
+               // - 0x4b4 after the pushes), kept at D+0x38 / +0x3c / +0x40 for status(): read natively, since a Frida
+               // Interceptor on the entry runs on this stack below esp and overwrites them
+               0x8b, 0x84, 0x24, ...u32(-0x4c0), 0xa3, ...d(0x38),   // mov eax, [esp - 0x4c0]; mov [D+0x38], eax
+               0x8b, 0x84, 0x24, ...u32(-0x4bc), 0xa3, ...d(0x3c),   // mov eax, [esp - 0x4bc]; mov [D+0x3c], eax
+               0x8b, 0x84, 0x24, ...u32(-0x4b4), 0xa3, ...d(0x40)];  // mov eax, [esp - 0x4b4]; mov [D+0x40], eax
+    if (CFG.stackSeed !== 'probe')                // 'probe' (C3FT_STACK_SEED=probe): record the words, fill nothing
+      b.push(0x8d, 0x7c, 0x24, 0xfc,              // lea edi, [esp - 4]
+             0xb9, 0x00, 0x10, 0x00, 0x00,        // mov ecx, 0x1000 (dwords)
+             0x31, 0xc0,                          // xor eax, eax
+             0xfd, 0xf3, 0xab, 0xfc);             // std; rep stosd; cld
+    b.push(0x5f, 0x59, 0x58,                      // pop edi; pop ecx; pop eax
+           0xe9, 0, 0, 0, 0);                     // jmp TARGET
+    const stub = emit(b);
+    const jmpAt = stub.add(b.length - 5);
+    jmpAt.add(1).writeS32(TARGET - jmpAt.add(5).toUInt32());
+    Memory.patchCode(THUNK, 5, (code) => {
+      code.writeU8(0xe9);
+      code.add(1).writeS32(stub.toUInt32() - THUNK.add(5).toUInt32());
+    });
+  }
+}
+
 // ---------------------------------------------------------------- reach (one-shot INT3, re-armed at every poll)
 // Reach is measured with one-byte breakpoints, the technique of the shim's coverage.cpp: at every poll each target's
 // first byte is saved and replaced by 0xCC; the first thread to enter it raises EXCEPTION_BREAKPOINT, the handler puts the
@@ -529,6 +573,7 @@ function status() {
   return {
     T: T(), tgt: D.add(0x20).readU32(), qpc: D.add(0x24).readU32(), forwarded: D.add(0x28).readU32(),
     audio: AUDIO_NONE ? audioStats : undefined,
+    stackSeed: CFG.stackSeed ? [D.add(0x34).readU32(), D.add(0x38).readU32(), D.add(0x3c).readU32(), D.add(0x40).readU32()] : undefined,
     timers: timers.map(t => [t.kind, t.id, t.elapse, t.fired || 0]), timerStats, events: events.length,
     msgs: CFG.debugMsg ? msgCounts : undefined,
     dbg: CFG.debugMsg ? (function () {
@@ -759,6 +804,14 @@ function poll(now) {
     if (reply.full) {
       // opt-in (scenario_ab.py C3FT_FULLDUMP=1, batch b2): golf_clean.exe's whole .data section (globals and .bss)
       send({ type: 'full', va: 0x4c1000 }, ptr(0x4c1000).readByteArray(0x381174));
+      continue;
+    }
+    if (reply.bb) {
+      // the checkpoint frame from jgld's back buffer (scenario_ab.py, default since batch b5): bits of the DIB section
+      // the game draws into and Display::present 0x10066470 BitBlts to the window (g_display 0x10128420 -> +0x148 mode
+      // -> +4 Surface -> +0x4b4 HBITMAP), read on the blocked main thread
+      const r = backBuffer();
+      send({ type: 'bb', meta: r.meta }, r.bits);
       continue;
     }
     if (reply.extra && CFG.extraRegions) {

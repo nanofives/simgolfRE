@@ -116,7 +116,9 @@ def conditions(instance: pathlib.Path) -> dict:
             "winmm_sha256": sha256(instance / "winmm.dll"), "golf_clean_sha256": sha256(instance / "golf_clean.exe"),
             "c3fy_cpp_sha256": sha256(ROOT / "shim" / "src" / "re" / "c3fy.cpp"),
             "scenario_det_js_sha256": sha256(ROOT / "re" / "frida" / "js" / "scenario_det.js"),
-            "games_running_at_start": other_games(), "instance": instance.name}
+            "games_running_at_start": other_games(), "instance": instance.name,
+            # b5: checkpoint frame source and courseActionMenu's stack seed (scenario_ab.frame_mode / stack_seed)
+            "frame": os.environ.get("C3FT_FRAME", "backbuffer"), "stack_seed": {"0": "", "1": "zero"}.get(os.environ.get("C3FT_STACK_SEED", "1"), os.environ.get("C3FT_STACK_SEED"))}
 
 
 # ---------------------------------------------------------------- boot lock
@@ -631,6 +633,9 @@ def stale_reasons(ref: pathlib.Path, run: pathlib.Path) -> list[str]:
         return out + ["conditions.json missing (a run not made by this tool): compare the boot words by hand"]
     if cr.get("golf_clean_sha256") != cn.get("golf_clean_sha256"):
         out.append(f"golf_clean.exe {cr.get('golf_clean_sha256')} / {cn.get('golf_clean_sha256')}")
+    if cr.get("stack_seed", "") != cn.get("stack_seed", ""):
+        print(f"note: stack seed {cr.get('stack_seed', '') or 'off'} / {cn.get('stack_seed', '') or 'off'}: frames taken on the "
+              f"location screen (courseActionMenu 0x0046f550) can differ (re/analysis/data/scenario_baseline.md section 11)")
     if cr.get("host") != cn.get("host"):
         print(f"note: reference made on {cr.get('host')}, run on {cn.get('host')}")
     return out

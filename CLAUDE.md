@@ -789,6 +789,28 @@ regenerate with `re/tools/scenario_refs.py regen`; the 35 sound-era references u
 log/c3/alt/refs). cov_b_career now buys San Diego ($70,000) and cov_a_career Monterey ($50,000): the old clicks were unaffordable on the
 device-less timeline. Leads: cov_b_shots / cov_b_shots2 take 5-7 shots and idle (results screen not recognised); a jgld.dll data dump for
 the location-screen variants.
+Batch b5 (2026-10-17, the two scenario leads b2 left; re/analysis/data/scenario_baseline.md sections 11-12, tests
+tests/test_scenario_b5.py): cov_b_shots / cov_b_shots2 stopped after 7 / 5 shots because Gary's post-hole skill panel
+(19.9 from tests/golden/shot_panel.png) passed the old turn test (25). The script ran a whole shot sequence, and its own
+input closed the TOURNAMENT RESULTS panel that came up meanwhile. Turns themselves measure 0.0 to 18.4 (the ovals change
+with lie and club), so `_cov_b_champ_rounds` also tests tests/golden/gary_skill_panel.png (8; every turn is 19.9 or
+more from it). It checks for the results before every input group and before every Esc, starts a new championship
+round after each results screen, runs the turn's input once per round on the post-hole panel on purpose (that reaches
+H1 key cases and P7 tool previews outside a turn), and stops at 24 shots: cov_b_shots 3 rounds, cov_b_shots2 4.
+Coverage of the original mainLoop against the b2 references: +86 blocks (H2 51), none lost; the union stays 2,103 /
+2,554. The location-screen variants of the pre-b2 cov_b_career (`log/c3/b2_oldcareer.py`) have two causes:
+(1) courseActionMenu 0x0046f550 reads its blink counter (entry esp - 0x4cc), dwell counter and previous hot button
+uninitialised. The stale blink word differed in every boot, and its bit 3 decided the 384 px variant in 8 of 8 boots.
+scenario_det.js STACK SEED (default) puts a stub at the thunk 0x00470a00, the only way in, that zero-fills 16 KB below
+esp (`C3FT_STACK_SEED=probe` records the words natively, `0` disables). (2) The window, through the
+DWM8And16BitMitigation layer, lagged the game's unchanged back buffer for 90 virtual s while the game presented the
+full rect every frame. scenario_ab.py now takes checkpoint frames from jgld's back buffer (`checkpoint_frame`:
+RGB555, `(v << 3) | (v >> 2)`, rows top-down although GetObjectA says biHeight +600), which equals the window capture in
+every pixel when the window is current, so references stay valid. Window differences are recorded as `window_px_differ`
+plus `<name>.window.png`; `C3FT_FRAME=window` restores the old capture. Result: cov_b_career_phx 20/20 OFF and 20/20
+mainLoop-ON identical at all 6 checkpoints. New regression scenario `cov_b_location`. Never probe a stack slot with a
+Frida Interceptor on the same thread: its callback runs below esp and overwrites the slot (the first measurement read
+Frida's own words).
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
