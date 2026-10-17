@@ -42,6 +42,12 @@ addresses. Nothing here launches yet: the user approves the decisions in section
 4. **Order.** Tooling first (stream A), then the subsystem streams in parallel (B-F) on disjoint address ranges, then
    integration (G) and function naming (H).
 
+**Approved by the user 2026-10-17: all four recommendations** (constants stay in the user's own exe and are read at
+startup, descriptors only; C99 header without addresses plus a separate address map; DLL FUN_ functions named on demand;
+tooling first, then the parallel streams). Account split: stream A on claude3; streams B-H on claude2 (`opus` alias for
+Opus work, Sonnet for D/F/H; bare `py` is refused there, use `~/bin/py -3.12`; claude2 cannot write the git index, so
+the parent or a claude3 child commits their files).
+
 ## 3. Streams
 
 **A. Inventory and classifier (1 Opus child, first, blocks B-F).** From the repaired index build
