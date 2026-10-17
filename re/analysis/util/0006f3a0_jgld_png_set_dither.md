@@ -219,7 +219,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - 0x10078ed0 `png_free` at 0x1006f7ec, 0x1006fbd6, 0x1006fc0b, 0x1006fc1b, 0x1006fc2b, 0x1006ff61
 - 0x1007e780 `__chkesp` at 0x1006ff74
 - 0x1007e7c0 `_memset` at 0x1006fccd, 0x1006fcfb
-- 0x1007f370 `FUN_1007f370` at 0x1006f6b8, 0x1006f6dc, 0x1006f700, 0x1006f751, 0x1006f77c, 0x1006f7a7, 0x1006f908, 0x1006f933 (+4 more)
+- 0x1007f370 `abs` at 0x1006f6b8, 0x1006f6dc, 0x1006f700, 0x1006f751, 0x1006f77c, 0x1006f7a7, 0x1006f908, 0x1006f933 (+4 more)
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

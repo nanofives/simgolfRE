@@ -57,7 +57,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `0xf` (15) at 0x10042b87, 0x10042be4
 - `0x10` (16) at 0x10042b8f
 - `0xf0` (240) at 0x10042be7
-- `0x10045744` (268719940) = address in the image (data) at 0x10042b15
+- `0x10045744` (268719940) = function `FUN_10045744` at 0x10042b15
 - `0x1005ed48` (268823880) = address in the image (data) at 0x10042b10
 - `0xfffffff0` (-16) at 0x10042b8a
 - `0xffffffff` (-1) at 0x10042b0e, 0x10042b5d, 0x10042bbb

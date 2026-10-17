@@ -114,7 +114,7 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x10000` (65536) at 0x1000b58a, 0x1000b636, 0x1000b65d
 - `0x10088` (65672) at 0x1000b58f
 - `0x10094` (65684) at 0x1000b63b, 0x1000b662
-- `0x10058846` (268798022) = address in the image (data) at 0x1000b428
+- `0x10058846` (268798022) = function `FUN_10058846` at 0x1000b428
 - `0x10063dc8` (268844488) = address in the image (data) at 0x1000b640, 0x1000b667
 - `0x100b49b8` (269175224) = address in the image (data) at 0x1000b451
 - `0x100b49f8` (269175288) = address in the image (data) at 0x1000b594

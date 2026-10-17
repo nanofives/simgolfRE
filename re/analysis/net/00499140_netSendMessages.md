@@ -340,7 +340,7 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `0x2204` (8708) at 0x0049aa25
 - `0x4e20` (20000) at 0x00499545, 0x0049961f, 0x00499e75, 0x00499f93
 - `0xfff0` (65520) at 0x004992b4
-- `0x4b8e40` (4951616) = address in the image (data) at 0x00499148
+- `0x4b8e40` (4951616) = function `FUN_004b8e40` at 0x00499148
 - `0x4ba278` (4956792) = address in the image (data) at 0x00499b43, 0x0049a39f, 0x0049a4ba, 0x0049a5ef
 - `0x4ba2d8` (4956888) = address in the image (data) at 0x0049923b, 0x004993ca, 0x004997f3, 0x004998e9, 0x004999ef, 0x00499bc6, 0x00499d58, 0x0049a1b8 (+7 more)
 - `0x4bb228` (4960808) = address in the image (data) at 0x00499af2

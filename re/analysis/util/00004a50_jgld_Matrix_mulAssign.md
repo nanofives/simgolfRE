@@ -85,7 +85,7 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x25` (37) at 0x10004a78
 - `0x94` (148) at 0x10004a68
 - `0xa0` (160) at 0x10004c2d
-- `0x100aec89` (269151369) = address in the image (data) at 0x10004a55
+- `0x100aec89` (269151369) = function `FUN_100aec89` at 0x10004a55
 - `0xcccccccc` (-858993460) at 0x10004a7d
 - `0xffffff60` (-160) at 0x10004a72
 - `0xffffffac` (-84) at 0x10004a88, 0x10004bfc, 0x10004c15

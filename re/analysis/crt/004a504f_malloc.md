@@ -22,7 +22,7 @@ None.
 - 0x004a5061 `__nh_malloc` at 0x004a5059
 
 ## Callers
-0x00401d10 `S3List_add`, 0x00402280 `S3List_add2`, 0x00431d20 `saveCourseJpg`, 0x0044b9c0 `showCreditsScreen`, 0x0045baf0 `gameMain`, 0x00473b50 `Surface_open`, 0x00474650 `recordCopyStr20`, 0x00474820 `Buf_alloc`, 0x00474ee0 `loadBmp`, 0x004767a0 `allocTextBuffer`, 0x004775b0 `drawRichText`, 0x00479b40 `ChildArray_grow`, 0x00479bb0 `Vec_release`, 0x0047abe0 `View_attach`, 0x0047b8f0 `Label::setText`, 0x00481870 `allocResampleTable`, 0x004823c0 `setNewHeap`, 0x00483190 `allocColorRange`, 0x00486250 `EditBox::resizeBuffer`, 0x00487ee0 `Reader::allocBuffers` (+34 more)
+0x00401d10 `S3List_add`, 0x00402280 `S3List_add2`, 0x00431d20 `saveCourseJpg`, 0x0044b9c0 `showCreditsScreen`, 0x0045baf0 `gameMain`, 0x00473b50 `Surface_open`, 0x00474650 `recordCopyStr20`, 0x00474820 `Buf_alloc`, 0x00474ee0 `loadBmp`, 0x004767a0 `allocTextBuffer`, 0x004775b0 `drawRichText`, 0x00479b40 `ChildArray_grow`, 0x00479bb0 `Vec_release`, 0x0047abe0 `View_attach`, 0x0047b8f0 `Label::setText`, 0x00481870 `allocResampleTable`, 0x004823c0 `setNewHeap`, 0x00483190 `allocColorRange`, 0x00486250 `EditBox::resizeBuffer`, 0x00487ee0 `Reader::allocBuffers` (+35 more)
 
 ## Constants
 None.

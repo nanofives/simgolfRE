@@ -79,7 +79,7 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x1f` (31) at 0x10005df5
 - `0x7c` (124) at 0x10005de8
 - `0x88` (136) at 0x10005f6a
-- `0x100aedc0` (269151680) = address in the image (data) at 0x10005dd5
+- `0x100aedc0` (269151680) = function `FUN_100aedc0` at 0x10005dd5
 - `0xcccccccc` (-858993460) at 0x10005dfa
 - `0xffffff78` (-136) at 0x10005def
 - `0xffffffbc` (-68) at 0x10005ea7

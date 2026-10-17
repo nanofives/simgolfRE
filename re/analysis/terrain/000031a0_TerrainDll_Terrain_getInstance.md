@@ -52,7 +52,7 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x4c` (76) at 0x100031b8
 - `0x58` (88) at 0x10003233
 - `0x164ad0` (1460944) at 0x100031d6
-- `0x1004115b` (268702043) = address in the image (data) at 0x100031a5
+- `0x1004115b` (268702043) = function `FUN_1004115b` at 0x100031a5
 - `0xcccccccc` (-858993460) at 0x100031c6
 - `0xffffffa8` (-88) at 0x100031be
 - `0xffffffff` (-1) at 0x100031a3, 0x10003211

@@ -24,7 +24,7 @@ Through registers:
 None (leaf).
 
 ## Callers
-0x100423ee `__local_unwind2`
+0x100423ee `__local_unwind2`, 0x10045744 `FUN_10045744`
 
 ## Constants
 - `0x10064ea4` (268848804) = address in the image (data) at 0x10042484

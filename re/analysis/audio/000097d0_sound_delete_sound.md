@@ -78,6 +78,6 @@ Stack (`esp`-relative; offsets shift with pushes):
 - `0x70` (112) at 0x10009917
 - `0x80` (128) at 0x10009853
 - `0x744` (1860) at 0x1000984d
-- `0x100586cb` (268797643) = address in the image (data) at 0x100097d8
+- `0x100586cb` (268797643) = function `FUN_100586cb` at 0x100097d8
 - `0xffffffbf` (-65) at 0x10009932
 - `0xffffffff` (-1) at 0x100097d6, 0x100098e5

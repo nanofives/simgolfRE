@@ -93,5 +93,5 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x70` (112) at 0x10012a16
 - `0xd4` (212) at 0x100129e6
 - `0x168` (360) at 0x1001292f
-- `0x1005899b` (268798363) = address in the image (data) at 0x100128b2
+- `0x1005899b` (268798363) = function `FUN_1005899b` at 0x100128b2
 - `0xffffffff` (-1) at 0x100128b0, 0x10012a20

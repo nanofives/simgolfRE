@@ -69,7 +69,7 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x6c` (108) at 0x1002c523
 - `0x7f` (127) at 0x1002c4b7
 - `0x3e8` (1000) at 0x1002c4f0, 0x1002c4fb
-- `0x10058e68` (268799592) = address in the image (data) at 0x1002c492
+- `0x10058e68` (268799592) = function `FUN_10058e68` at 0x1002c492
 - `0x1005bae0` (268810976) = address in the image (data) at 0x1002c4cc
 - `0x1005bb90` (268811152) = address in the image (data) at 0x1002c509
 - `0x1005bcb4` (268811444) = address in the image (data) at 0x1002c544

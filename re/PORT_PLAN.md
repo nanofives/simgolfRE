@@ -29,19 +29,25 @@ specification and the test oracle. It is not the code base.
 - Resolved (g1, 2026-10-16): golfer records are 156 x 0x100 from 0x005794b8 (re/analysis/data/golfer_record.md); the
   earlier stride-0x80 array at 0x57956e does not exist, and 0x005794c0 is field +0x08 of record 0.
 
-## Survey scripts (run 2026-10-15; `re/tools/port_survey_globals.py`, `re/tools/port_survey_hooks.py`)
+## Survey scripts (re-run 2026-10-17 after the function-boundary repair b1; `re/tools/port_survey_globals.py`, `re/tools/port_survey_hooks.py`)
 
-Globals (`log/port_globals.tsv`): the 1,537 game-logic functions (0x401000-0x4a4ecf) reference **5,302 distinct data
-addresses** in .rdata/.data/.bss, grouped into **955 clusters** (gap <= 0x40). Only 134 addresses are named exactly and
-64 clusters have a named member, so **891 clusters, touched by 500 functions, are unnamed**. Caveat: an immediate that
-happens to fall in the data range counts as an address, so the figures are an upper bound. The largest unnamed
-clusters are initialised-data tables, not mutable state, and should be classified first:
-0x4c80d0-0x4cd3cc (848 addrs, 34 fns), 0x4cd5b8-0x4d2074 (732, 4 fns), 0x4e28e0-0x4e3d54 (204, 4 fns),
-0x4d21a4-0x4d3354 (231, 16 fns). The most-shared mutable cluster is 0x83aa78-0x83ac30 (82 addrs, 99 fns).
+Globals (`log/port_globals.tsv`): the 1,812 game-logic functions (0x401000-0x4a4ecf; 1,537 before b1, whose index left
+mainLoop's far blocks and 275 game functions outside every range: vtable methods, atexit / callback targets and
+functions only mainLoop's far code calls; see
+`re/analysis/data/function_boundaries.md`) reference **5,589 distinct data addresses** in .rdata/.data/.bss (5,302 before),
+grouped into **960 clusters** (gap <= 0x40; 955 before). 138 addresses are named exactly and 67 clusters have a named
+member, so **893 clusters, touched by 584 functions, are unnamed** (888 and 500 before b1). Caveat: an immediate that
+happens to fall in the data range counts as an address, so the figures are an upper bound. The largest unnamed clusters
+are initialised-data tables, not mutable state, and should be classified first: 0x4c80d0-0x4d2074 (1,602 addrs, 37 fns;
+two clusters of 848 and 732 before mainLoop's far code was scanned), 0x4d21a4-0x4d3540 (252, 18 fns), 0x4e28e0-0x4e3d54
+(204, 4 fns), 0x4e43ac-0x4e4584 (98, 24 fns). The most-shared mutable cluster is 0x83aa78-0x83ac30 (84 addrs, 116 fns).
+The golfer-record sweep (`re/tools/record_fields.py`, 0x5794b8 x 0x100 x 156) finds the same 3,120 references, now all
+inside function ranges (444 were in code outside every range).
 
-Hooks (`log/port_hooks.tsv`): 1,577 exe SG_HOOKs in 182 linked sources, classified by their own detour body only (helpers
-are not followed, so dependence is a lower bound): **pure 313, globals only 177, original callees 568, both 507, naked 12**.
-So 1,264 (80%) call original code or read literal globals directly, and only 313 are address-free.
+Hooks (`log/port_hooks.tsv`; sources only, so b1 did not change it): 1,589 exe SG_HOOKs (1,586 addresses) in 187 linked
+sources, classified by their own detour body only (helpers are not followed, so dependence is a lower bound): **pure 313,
+globals only 177, original callees 570, both 517, naked 12**. So 1,276 (80%) call original code or read literal globals
+directly, and only 313 are address-free.
 
 ## mainLoop and gameMain (looked at 2026-10-15)
 

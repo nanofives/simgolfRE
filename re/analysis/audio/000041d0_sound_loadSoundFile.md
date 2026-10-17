@@ -220,7 +220,7 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x40c` (1036) at 0x100041e5
 - `0x418` (1048) at 0x10005079
 - `0x948` (2376) at 0x10004315
-- `0x10058539` (268797241) = address in the image (data) at 0x100041d2
+- `0x10058539` (268797241) = function `FUN_10058539` at 0x100041d2
 - `0x10063d90` (268844432) = address of a string (text not reproduced) at 0x100041f4
 - `0x10069988` (268867976) = address in the image (data) at 0x10004881, 0x10004b37
 - `0x100b49b8` (269175224) = address in the image (data) at 0x1000425a

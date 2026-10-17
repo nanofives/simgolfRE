@@ -39,5 +39,5 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x4` at 0x00491330
 - `0x10` (16) at 0x00491355, 0x00491366
 - `0x2114` (8468) at 0x00491326
-- `0x4b808b` (4948107) = address in the image (data) at 0x00491312
+- `0x4b808b` (4948107) = function `FUN_004b808b` at 0x00491312
 - `0xffffffff` (-1) at 0x00491310

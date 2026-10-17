@@ -29,7 +29,7 @@ Through registers:
 - 0x10002153 -> 0x1002ddb0 `Channel_propagateFlag0` (incremental-linking thunk) at 0x1002ddcd
 
 ## Callers
-0x1002ddb0 `Channel_propagateFlag0`
+0x1002ddb0 `Channel_propagateFlag0`, 0x1002e7c0 `FUN_1002e7c0`
 
 ## Constants
 - `0x1` at 0x1002ddbc

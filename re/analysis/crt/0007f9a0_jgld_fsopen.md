@@ -28,7 +28,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 - `jne` (equality) at 0x1007f9ad, 0x1007f9ca, 0x1007f9d1, 0x1007f9db, 0x1007f9f8, 0x1007f9ff, 0x1007fa05, 0x1007fa22 (+5 more)
 
 ## Callees
-- 0x10081f90 `__CrtDbgReport` at 0x1007f9bf, 0x1007f9ed, 0x1007fa17, 0x1007fa45
+- 0x10081f90 `_CrtDbgReport` at 0x1007f9bf, 0x1007f9ed, 0x1007fa17, 0x1007fa45
 - 0x100832a0 `__unlock_file` at 0x1007fa8a
 - 0x100855b0 `__openfile` at 0x1007fa7b
 - 0x10085940 `__getstream` at 0x1007fa59

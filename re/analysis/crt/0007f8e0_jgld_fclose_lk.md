@@ -34,7 +34,7 @@ Frame (`ebp`: positive = arguments, negative = locals):
 
 ## Callees
 - 0x10080710 `__free_dbg` at 0x1007f978
-- 0x10081f90 `__CrtDbgReport` at 0x1007f90c
+- 0x10081f90 `_CrtDbgReport` at 0x1007f90c
 - 0x10085130 `__close` at 0x1007f951
 - 0x10085260 `__freebuf` at 0x1007f942
 - 0x100853a0 `__flush` at 0x1007f933

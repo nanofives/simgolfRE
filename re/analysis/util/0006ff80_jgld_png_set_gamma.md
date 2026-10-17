@@ -34,7 +34,7 @@ Through registers:
 
 ## Callees
 - 0x1007e780 `__chkesp` at 0x1006ffee
-- 0x10082960 `_fabs` at 0x1006ffaa
+- 0x10082960 `fabs` at 0x1006ffaa
 
 ## Callers
 None found by direct call (static); indirect callers are not resolved here.

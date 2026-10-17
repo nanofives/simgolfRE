@@ -20,10 +20,10 @@ None.
 - `jne` (equality) at 0x1007e780, 0x1007e7ac
 
 ## Callees
-- 0x10081f90 `__CrtDbgReport` at 0x1007e7a1
+- 0x10081f90 `_CrtDbgReport` at 0x1007e7a1
 
 ## Callers
-0x100026c0 `MappedFile::deletingDtor`, 0x10002730 `MappedFile::ctorNameFlag`, 0x100027b0 `MappedFile::ctorName`, 0x10002820 `MappedFile::dtor`, 0x10002870 `MappedFile::openRead`, 0x10002a20 `MappedFile::openWrite`, 0x10002bd0 `MappedFile::create`, 0x10002e10 `MappedFile::close`, 0x10002ef0 `MappedFile::closeTruncate`, 0x10003050 `Quat::ctor`, 0x10003110 `Quat::ctorAxisAngle`, 0x10003170 `Quat::setIdentity`, 0x100031d0 `Matrix::ctorQuatVec`, 0x10003230 `Matrix::ctorQuat`, 0x10003290 `Matrix::ctorVec`, 0x100032f0 `Matrix::dtor`, 0x10003340 `Matrix::reset`, 0x10003390 `Transform::ctorQuatVec`, 0x10003400 `Transform::ctorQuat`, 0x10003470 `Transform::ctorVec` (+464 more)
+0x100026c0 `MappedFile::deletingDtor`, 0x10002730 `MappedFile::ctorNameFlag`, 0x100027b0 `MappedFile::ctorName`, 0x10002820 `MappedFile::dtor`, 0x10002870 `MappedFile::openRead`, 0x10002a20 `MappedFile::openWrite`, 0x10002bd0 `MappedFile::create`, 0x10002e10 `MappedFile::close`, 0x10002ef0 `MappedFile::closeTruncate`, 0x10003050 `Quat::ctor`, 0x10003110 `Quat::ctorAxisAngle`, 0x10003170 `Quat::setIdentity`, 0x100031d0 `Matrix::ctorQuatVec`, 0x10003230 `Matrix::ctorQuat`, 0x10003290 `Matrix::ctorVec`, 0x100032f0 `Matrix::dtor`, 0x10003340 `Matrix::reset`, 0x10003390 `Transform::ctorQuatVec`, 0x10003400 `Transform::ctorQuat`, 0x10003470 `Transform::ctorVec` (+465 more)
 
 ## Constants
 - `0x0` at 0x1007e786

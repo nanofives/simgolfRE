@@ -87,5 +87,5 @@ None found by direct call (static); indirect callers are not resolved here.
 - `0x10000` (65536) at 0x10031ed8
 - `0x10001b45` (268442437) = address in the image (data) at 0x10031e6b
 - `0x10001e56` (268443222) = address in the image (data) at 0x10031e70
-- `0x10059237` (268800567) = address in the image (data) at 0x10031e52
+- `0x10059237` (268800567) = function `FUN_10059237` at 0x10031e52
 - `0xffffffff` (-1) at 0x10031e50

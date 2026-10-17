@@ -19,7 +19,7 @@ None.
 - 0x004a5061 `__nh_malloc` at 0x004a57f7
 
 ## Callers
-0x00449210 `initList820f18`, 0x0044a5b0 `rebuildTileData`, 0x00475410 `flipBmpRows`, 0x00475580 `saveBmp`, 0x00475840 `loadImage`, 0x0047a4c0 `layoutViewTree`, 0x004806c0 `Window::create`, 0x00481ca0 `Flic::buildFrameTable`, 0x00481e40 `Flic::indexFrames`, 0x00481f40 `Flic::open`, 0x00482b90 `Flic::createStream`, 0x00483190 `allocColorRange`, 0x004842f0 `SndMusic::setFile`, 0x00484b80 `Snd::setName`, 0x004852e0 `VoiceRx::ctor`, 0x00485790 `Image::loadPcx`, 0x00485aa0 `Image::savePcx`, 0x0048e900 `TextView::build`, 0x00491310 `TextView::create`, 0x00492690 `HotList::grow` (+3 more)
+0x00449210 `initList820f18`, 0x0044a5b0 `rebuildTileData`, 0x004617f0 `FUN_004617f0`, 0x00475410 `flipBmpRows`, 0x00475580 `saveBmp`, 0x00475840 `loadImage`, 0x0047a4c0 `layoutViewTree`, 0x004806c0 `Window::create`, 0x00481ca0 `Flic::buildFrameTable`, 0x00481e40 `Flic::indexFrames`, 0x00481f40 `Flic::open`, 0x00482b90 `Flic::createStream`, 0x00483190 `allocColorRange`, 0x004842f0 `SndMusic::setFile`, 0x00484b80 `Snd::setName`, 0x004852e0 `VoiceRx::ctor`, 0x00485790 `Image::loadPcx`, 0x00485aa0 `Image::savePcx`, 0x0048e900 `TextView::build`, 0x00491310 `TextView::create` (+4 more)
 
 ## Constants
 - `0x1` at 0x004a57f1
