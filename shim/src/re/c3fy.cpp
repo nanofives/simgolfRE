@@ -7054,7 +7054,11 @@ L41a454:    // tool 1 (hole tee->green direction arrows): walk the 4 compass ste
     ebp = 0;                                           // 0x0041a464
     FD(0x18) = 0;                                      // 0x0041a466
 L41a46c:
-    eax = CC(0x407400, G32(0x543d08), G32(0x543d0c), 0);  // 0x0041a47a canStep
+    // c3fyk3 fix: canStep's third argument is ebp (0x0041a477 `push ebp`), the direction counter [F+0x18] = 0, 2, 4, 6
+    // (0x0041a464 / 0x0041a466, reloaded at 0x0041a510, stepped at 0x0041a517 / 0x0041a51d); canStep 0x00407400 reads it
+    // as the direction (0x00407434..0x00407448, step tables 0x004c2878 / 0x004c2898). The old code passed 0 every time, so
+    // all four arrows tested direction 0 (cov_k3_camera: arrows drawn / missing with the cursor at the map edge).
+    eax = CC(0x407400, G32(0x543d08), G32(0x543d0c), ebp);  // 0x0041a47a canStep
     if (eax == 0) goto L41a517;                        // 0x0041a482/0x0041a484
     esi = (FD(0x18) - G32(0x5685f4) + 3) & 7;          // 0x0041a48a..0x0041a49d direction 0..7
     {
@@ -7204,7 +7208,13 @@ L41ab87:    // tool/object 7: hole flag + pin preview (4-direction nib byte tabl
 L41ac73:    // object info panel (name + optional par/direction label)
     TC(0x4762d0, Root(), 0x519fd8, 0, 0, 0);           // 0x0041ac84 setDrawTarget
     {
-        int obj = G32(0x4c2848);                        // 0x0041ac89
+        // c3fyk3 fix: 0x0041ac89 is `mov ebx, [0x4c2848]`, and ebx (unchanged until 0x0041ad36) is what L41aea8 tests
+        // when 0x0041ad03 / 0x0041ad30 jump there (0x0041aea8 / 0x0041aedd `cmp ebx, 1`, 0x0041b062 `test ebx, ebx`). The
+        // old code read the tool into a local only and left ebx at its entry value -1, so the green tool's tee-to-cursor
+        // line and yardage (0x0041af3e..) and the tee tool's green-to-cursor arm (0x0041b0b7..) never ran on this path
+        // (cov_k3_hole19, probe log with markers at L41aea8 / L41aedd: ebx = -1 with [0x4c2848] = 1).
+        ebx = G32(0x4c2848);                            // 0x0041ac89
+        int obj = ebx;
         edx = 48 * obj;                                 // 0x0041ac8f..0x0041ac97 (obj*3 <<4)
         StrCpy(kBuf, 0x578350 + edx);                   // 0x0041ac9a..0x0041acb9 object name
         GU8(0x51a068) = (u8)(GU8(0x51a068) + 0xe0);     // 0x0041acbb..0x0041acc9 uppercase first letter

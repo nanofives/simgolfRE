@@ -2552,3 +2552,797 @@ def cov_k2_simfoto(c):
 
 
 SCENARIOS["cov_k2_simfoto"] = {"env": {}, "phases": [], "lockstep": cov_k2_simfoto}
+
+
+# ================================================================================================================
+# c3fyk1: kill inputs for mainLoop mutation survivors (log/c3/c3fyk1_notes.txt; runner log/c3/c3fyk1_run.py, outputs
+# log/c3/alt/c3fyk1/<scenario>/). Each scenario names the mutant ids of re/tools/c3fy_mutants.tsv it is built for.
+# ================================================================================================================
+
+def cov_k1_routing(c):
+    """Mutant 287 (Setup 0x0040f953 skips [0x0058dd44] = -1): the inverse routing table 0x0058dd34 keeps 0xff at
+    entries 6, 15, 16, 19 (the scatter 0x0040f966 writes the 16 entries of 0x004c2d28); showRoutingMapScreen 0x00456be0
+    draws a diamond for every tile whose type's entry is 0xff (0x00456d25). Tile type 16 comes from the trees sub-panel
+    (cov_a_build3's last sub-panel; tiles (30, 19), (32, 11), (32, 12)), so the routing map ('R', key 0x52 ->
+    0x0041d016) is opened over them."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(2000)
+    sub, items = COVA_AMENITY_SUBS[4]
+    for it, p in zip(items, ((720, 380), (500, 200), (560, 230))):
+        yield from c.click(*sub); yield from c.sleep(1500)
+        yield from c.click(*it); yield from c.sleep(1000)
+        yield from c.click(*p); yield from c.sleep(2000)
+        yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("trees")
+    yield from _cova_char(c, "R", settle=4000)
+    yield from c.checkpoint("routing")
+    yield from _cova_esc(c, 2)
+    yield from c.sleep(2000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k1_routing"] = {"env": {}, "phases": [], "lockstep": cov_k1_routing}
+
+
+# ---- c3fyk3: mutant-kill scenarios for mainLoop 0x0040f5c0 (2026-10-17) ---------------------------------------------
+# Survivors 247 (P6), 252 254 262 263 (P7), 117 123 (H1 camera keys), 135 137 142 (H2) of the c3fyc campaign
+# (re/tools/c3fy_mutants.tsv). Values a decision needs are read in the RECORD run (schedule "obs") and every injection
+# writes the same value in every arm. Runner log/c3/c3fyk3_run.py (instances/c3fyk3*, outputs log/c3/alt/c3fyk3/<s>/);
+# notes log/c3/c3fyk3_notes.txt (each injection with the instructions it targets).
+
+COV_K3_CAM_X, COV_K3_CAM_Y, COV_K3_ROT = 0x004C2BA0, 0x004C2BA4, 0x005685F4
+COV_K3_CUR_X, COV_K3_CUR_Y = 0x00543D08, 0x00543D0C          # cursor tile (P7 reads them, 0x00419d3e / 0x00419d4a)
+COV_K3_HOLE = 0x005685F0                                     # hole being built (COV_B_HOLES_PLUS1)
+COV_K3_REC19 = 0x00575AB0 + 19 * 0x208                       # hole record 19: tee +8/+0xc, green +0x18/+0x1c
+COV_K3_TYPES = 0x005849E0                                    # golfer types, 0x2c bytes: level byte +2, ban byte +0x29
+COV_K3_ARROW = {0: 0x26, 2: 0x27, 4: 0x28, 6: 0x25}           # report switch 0x004219f4: Up 0, Right 2, Down 4, Left 6
+
+
+def _cov_k3_rd(c, va):
+    return int(c.run.g.scripts[-1].exports_sync.s36a_read_s32(va)) & 0xFFFFFFFF
+
+
+def _cov_k3_get(c, name, va):
+    return _cov_b_obs(c, name, lambda: _cov_k3_rd(c, va))
+
+
+def _cov_k3_arrow(c, rot, direction):
+    """The arrow key whose camera step 0x0041df16 takes `direction` = (key + [0x5685f4]) & 7 (table 0x00421a50)."""
+    return COV_K3_ARROW[(direction - rot) & 7]
+
+
+def _cov_k3_held(c, name, spots=((520, 300), (540, 312))):
+    for x, y in spots:
+        c.move(x, y); yield from c.sleep(800)
+    _cov_k3_get(c, f"{name}_tool54", 0x004C2854)
+    _cov_k3_get(c, f"{name}_tool48", 0x004C2848)
+    yield from c.checkpoint(name)
+
+
+def cov_k3_build(c):
+    """Sandbox Monterey. Each step makes one survivor's site see a differing value:
+      252 (0x00419ebf, alpha 7 of the placement box's second edge) and 263 (0x0041a158, addSprite arg 4 of the tool-16
+          marker): drawn only while an object tool is held over the course; one checkpoint per amenity sub-panel tool and
+          one with a building held.
+      247 (0x004193ec, home-site row): [0x0056d1b0] == 10 exactly. holeMagazineEvent 0x0042dea0 counts the golfer types
+          with byte +0x29 != 0xff and level (byte +2 & 7) > 2, less the placed home sites: level 3 is injected into as many
+          further types as make it 10 (cov_b_inject's injection, more types).
+      254 (0x0041af1d) / 262 (0x0041b096): [0x005685f0] == 19 (the value showRoutingMapScreen 0x004586fd and the hole
+          placement 0x0040a089 store after hole 18). 254: green tool, hole record 19's green 0 and tee != 0; 262: tee tool,
+          record 19's tee 0 and green != 0. The record-19 words are set to the cursor tile read in the record run and
+          restored afterwards.
+    (135, the cost word's movsx at 0x0041f3cf, is not here: every value the game stores in [0x004c2854] is -1 or
+    0..0x13, whose words are below 0x8000; tool 23, the first with word 0xffff, kills the original at that click.)"""
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    yield from c.checkpoint("sandbox")
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(2000)
+    for si, (sub, items) in enumerate(COVA_AMENITY_SUBS):
+        yield from c.click(*sub); yield from c.sleep(1500)
+        yield from c.click(*items[0]); yield from c.sleep(1000)
+        yield from _cov_k3_held(c, f"held_sub{si}")
+        yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.click(270, 497); yield from c.sleep(1200)              # terrain tab: page 1 (tee / green slots)
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.click(118, 495); yield from c.sleep(1500)
+    yield from c.click(*COV_B_BLDG[0]); yield from c.sleep(800)
+    yield from _cov_k3_held(c, "held_bldg", spots=((450, 300), (470, 310)))
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.click(118, 495); yield from c.sleep(1200)
+    # 247
+    n0 = _cov_k3_get(c, "homesites0", 0x0056D1B0)
+    cand = _cov_b_obs(c, "type_rows", lambda: [[t, _cov_k3_rd(c, COV_K3_TYPES + 0x2C * t),
+                                                  _cov_k3_rd(c, COV_K3_TYPES + 0x2C * t + 0x28)] for t in range(76)])
+    need = 10 - (n0 if n0 < 0x80000000 else n0 - 0x100000000)
+    for t, v, w in cand:
+        if need <= 0:
+            break
+        if ((w >> 8) & 0xFF) == 0xFF or ((v >> 16) & 7) > 2:
+            continue
+        c.write32(COV_K3_TYPES + 0x2C * t, (v & 0xFFF8FFFF) | 0x00030000, tag=f"type {t} level 3")
+        need -= 1
+    yield from c.sleep(2000)
+    _cov_k3_get(c, "homesites1", 0x0056D1B0)
+    yield from c.checkpoint("homesites10")
+    # 254 / 262
+    yield from _cov_b_hole(c, (300, 200), (520, 330))
+    hc = _cov_k3_get(c, "hole", COV_K3_HOLE)
+    saved = {o: _cov_k3_get(c, f"rec19_{o:x}", COV_K3_REC19 + o) for o in (8, 0xC, 0x18, 0x1C)}
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.click(365, 527); yield from c.sleep(800)               # green tool ([0x4c2848] = 1)
+    c.move(420, 250); yield from c.sleep(800)
+    tx, ty = _cov_k3_get(c, "tile_x", COV_K3_CUR_X), _cov_k3_get(c, "tile_y", COV_K3_CUR_Y)
+    c.write32(COV_K3_HOLE, 19, tag="hole 19")
+    c.write32(COV_K3_REC19 + 0x18, 0, tag="rec19 green x 0")
+    c.write32(COV_K3_REC19 + 0x1C, 0, tag="rec19 green y 0")
+    if saved[8] == 0:
+        c.write32(COV_K3_REC19 + 8, tx, tag="rec19 tee x")
+        c.write32(COV_K3_REC19 + 0xC, ty, tag="rec19 tee y")
+    yield from c.sleep(500)
+    yield from _cov_k3_held(c, "green19", spots=((560, 330), (580, 340)))
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    for o, v in saved.items():
+        c.write32(COV_K3_REC19 + o, v, tag=f"rec19 +{o:#x} restored")
+    c.write32(COV_K3_HOLE, hc, tag="hole restored")
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(300, 527); yield from c.sleep(800)               # tee tool ([0x4c2848] = 0)
+    c.move(420, 250); yield from c.sleep(800)
+    _cov_k3_get(c, "tee_tool48", 0x004C2848)
+    c.write32(COV_K3_HOLE, 19, tag="hole 19")
+    c.write32(COV_K3_REC19 + 8, 0, tag="rec19 tee x 0")
+    c.write32(COV_K3_REC19 + 0xC, 0, tag="rec19 tee y 0")
+    c.write32(COV_K3_REC19 + 0x18, tx, tag="rec19 green x")
+    c.write32(COV_K3_REC19 + 0x1C, ty, tag="rec19 green y")
+    yield from c.sleep(500)
+    _cov_k3_get(c, "tee19_mode", 0x00567AFC)
+    _cov_k3_get(c, "tee19_55e924", 0x0055E924)
+    yield from _cov_k3_held(c, "tee19", spots=((560, 330), (580, 340)))
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    for o, v in saved.items():
+        c.write32(COV_K3_REC19 + o, v, tag=f"rec19 +{o:#x} restored")
+    c.write32(COV_K3_HOLE, hc, tag="hole restored")
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.checkpoint("restored")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("end")
+
+
+def _cov_k3_popup_then_key(c, spot, vk, name, inject=None):
+    """A bench placed at `spot` (pointsPopup 0x0040c890 from H2 0x0041fc10: its money label is drawn by drawMoneyLabels
+    0x0040c910 for 0x18 frames, through worldToScreen with the camera), then at once the arrow key `vk`; checkpoints at
+    the eight polls that follow (about one frame per poll: the frame wait 0x0041e680 spins timeGetTime ~0x57 virtual ms)."""
+    lp = c.lp(*spot)
+    c.move(*spot)
+    c.act(60, k="vkey", vk=1, st=2, tag=f"ldown {spot}")
+    c.act(60, k="post", msg=0x201, wp=1, lp=lp)
+    c.act(160, k="vkey", vk=1, st=1)
+    c.act(160, k="post", msg=0x202, wp=0, lp=lp)
+    if inject:
+        c.act(260, k="w32", addr=inject[0], v=inject[1], tag=inject[2])
+    c.act(260, k="vkey", vk=vk, st=2, tag=f"key {vk:#x}")
+    c.act(260, k="post", msg=0x100, wp=vk, lp=1)
+    c.act(400, k="vkey", vk=vk, st=1)
+    c.act(400, k="post", msg=0x101, wp=vk, lp=0xC0000001)
+    for i in range(8):
+        yield from c.checkpoint(f"{name}{i}")
+
+
+def cov_k3_camera(c):
+    """Survivors 117 (0x0041df31: clamp max 0x31 of camera x in the direction-0 step) and 123 (0x0041e024: clamp max of
+    camera y in the direction-6 step). The step's value lives only until the frame's edge-pan clamp 0x0041e22b..0x0041e24e
+    re-clamps both words; in between, drawMoneyLabels 0x0040c910 (called at 0x0041e07a) projects each money label with
+    worldToScreen 0x0042fb90, which reads the camera. So each step is taken while a money label is on screen:
+      117: camera x driven to its edge 0x31 with direction-0 keys, a bench placed (label), then direction 0 again: x + 4
+           clamps to 0x31 (original) / 0x32 (mutant) for that frame.
+      123: y can exceed 0x35 only by injection: y = 0x36 written with the key, then direction 6: y - 4 = 0x32 clamps to
+           0x31 / 0x32."""
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    rot = _cov_k3_get(c, "rot", COV_K3_ROT)
+    x0 = _cov_k3_get(c, "cam_x0", COV_K3_CAM_X)
+    _cov_k3_get(c, "cam_y0", COV_K3_CAM_Y)
+    yield from c.checkpoint("sandbox")
+    up = _cov_k3_arrow(c, rot, 0)
+    for _ in range(max(0, (0x31 - x0 + 3) // 4)):
+        yield from c.key(up, char=""); yield from c.sleep(1200)
+    _cov_k3_get(c, "cam_x1", COV_K3_CAM_X)
+    _cov_k3_get(c, "cam_y1", COV_K3_CAM_Y)
+    yield from c.checkpoint("edge")
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(2000)
+    sub, items = COVA_AMENITY_SUBS[0]
+    yield from c.click(*sub); yield from c.sleep(1500)
+    yield from c.click(*items[0]); yield from c.sleep(1000)
+    c.move(400, 260); yield from c.sleep(800)
+    _cov_k3_get(c, "tile_x", COV_K3_CUR_X)
+    _cov_k3_get(c, "tile_y", COV_K3_CUR_Y)
+    yield from _cov_k3_popup_then_key(c, (400, 260), up, "x_edge")
+    yield from c.sleep(2500)
+    _cov_k3_get(c, "cam_x2", COV_K3_CAM_X)
+    yield from c.checkpoint("x_after")
+    left = _cov_k3_arrow(c, rot, 6)
+    yield from _cov_k3_popup_then_key(c, (440, 280), left, "y_inj", inject=(COV_K3_CAM_Y, 0x36, "camera y 0x36"))
+    yield from c.sleep(2500)
+    _cov_k3_get(c, "cam_y3", COV_K3_CAM_Y)
+    yield from c.checkpoint("y_after")
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.checkpoint("end")
+
+
+def cov_k3_career(c):
+    """Survivor 142 (0x00420add: [0x005a6374] < 3 vs <= 3). The frame end 0x0041e6e6 jumps to 0x00420acb when the
+    year counter [0x005a6374] (a .sve field; showEndOfYearScreen 0x0044e064 stores it) is >= 3 in a game that is not a
+    plain sandbox; at exactly 3 the original shows the prompt 0x00420ae2 (showPopup 0x0046d6e0), the mutant takes the
+    exit-text arm 0x00420b4e. The counter is injected (it takes game years to reach)."""
+    yield from _cov_b_menu(c)
+    yield from c.click(560, 110); yield from c.sleep(3000)      # Start New Game
+    yield from c.click(390, 125); yield from c.sleep(8000)      # Easy
+    yield from c.click(*COV_B_LOC["monterey"])                 # $50,000 (Phoenix costs $150,000 on this boot timeline)
+    yield from _cov_b_hud(c)
+    yield from c.sleep(4000)
+    yield from c.key(0x1B); yield from c.sleep(1500)
+    _cov_k3_get(c, "years0", 0x005A6374)
+    yield from c.checkpoint("career")
+    c.write32(0x005A6374, 3, tag="year counter 3")
+    yield from c.sleep(2000)
+    yield from c.checkpoint("prompt")
+    yield from c.sleep(1500)
+    yield from c.checkpoint("prompt2")
+    yield from c.key(0x1B); yield from c.sleep(3000)
+    yield from c.checkpoint("answered")
+    yield from c.sleep(4000)
+    yield from c.checkpoint("end")
+
+
+def cov_k3_champ(c):
+    """Survivor 137 (0x0041f2cc: [0x004c2848] = esi = -1 when a click in mode 3 starts the player's shot). Key 't'
+    (0x0041c685) sets mode [0x00567afc] = 0 and selectTool(0xd, 1) stores [0x004c2848] = 0xd (0x0040d9ef); updateGolfers
+    puts mode 3 back while Gary's target +0xcc is -1 (0x0042bf95 / 0x0042bfa2). The aim click then runs 0x0041f29d: the
+    original stores -1, the mutant keeps 0xd, and in mode 4 the P4 block 0x004168ae.. (taken only when both tool words
+    are -1) is skipped."""
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    yield from c.sleep(3000)
+    yield from c.checkpoint("menu")
+    yield from c.click(400, 540); yield from c.sleep(2500)    # Play a Championship
+    yield from c.click(390, 125); yield from c.sleep(3000)    # Easy
+    yield from c.click(380, 122); yield from c.sleep(1000)    # first course in the list
+    yield from c.click(630, 555); yield from c.sleep(4000)    # OK
+    yield from c.click(360, 122); yield from c.sleep(1000)    # Gary Golf.pro
+    yield from c.click(632, 553); yield from c.sleep(8000)    # OK -> tournament
+    yield from c.checkpoint("tournament_start")
+    ok = yield from _cova_wait_gary(c)
+    _cova_obs(c, "gary_found", lambda: ok)
+    _cov_k3_get(c, "mode0", 0x00567AFC)
+    yield from c.checkpoint("gary_turn")
+    # P4 0x00415b8a / 0x00415b8f sets [0x4c2848] = -1 in every frame whose mode is not 0, so the tool 't' selects lives
+    # only until updateGolfers (P5) has put mode 3 back and the next P4 runs: the press must reach H2 in the frame after
+    # the 't' frame. 't' (WM_CHAR) and the button-down go out at the same poll, the button is held 400 virtual ms.
+    c.move(400, 250); yield from c.sleep(600)
+    lp = c.lp(400, 250)
+    c.act(0, k="post", msg=0x102, wp=ord("t"), lp=1, tag="char 't'")
+    c.act(0, k="vkey", vk=1, st=2, tag="ldown 400,250")
+    c.act(0, k="post", msg=0x201, wp=1, lp=lp)
+    c.act(400, k="vkey", vk=1, st=1)
+    c.act(400, k="post", msg=0x202, wp=0, lp=lp)
+    for i in range(8):
+        yield from c.checkpoint(f"aim{i}")
+    _cov_k3_get(c, "mode1", 0x00567AFC)
+    _cov_k3_get(c, "tool48_1", 0x004C2848)
+    _cov_k3_get(c, "mode2", 0x00567AFC)
+    _cov_k3_get(c, "tool48_2", 0x004C2848)
+    yield from c.sleep(6000)
+    yield from c.checkpoint("shot")
+    yield from c.sleep(6000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k3_build"] = {"env": {}, "phases": [], "lockstep": cov_k3_build}
+SCENARIOS["cov_k3_camera"] = {"env": {}, "phases": [], "lockstep": cov_k3_camera}
+SCENARIOS["cov_k3_career"] = {"env": {}, "phases": [], "lockstep": cov_k3_career}
+SCENARIOS["cov_k3_champ"] = {"env": {}, "phases": [], "lockstep": cov_k3_champ}
+
+
+# sandbox Monterey start view, screen points of tiles (a, b) measured by the cursor sweep log/c3/c3fyk1/map_monterey.json
+# (screenToTile's output [0x00543d08] / [0x00543d0c] read back at each point, P6 0x00419a1a)
+K1_TILE = {(35, 16): (270, 275), (34, 16): (240, 300), (38, 16): (366, 214), (38, 17): (400, 232), (39, 16): (400, 194),
+           (39, 17): (433, 214), (36, 17): (334, 276), (36, 18): (370, 296), (36, 19): (400, 314), (36, 20): (433, 334),
+           (35, 18): (334, 315), (34, 18): (310, 338), (34, 20): (370, 380), (34, 21): (404, 398), (33, 17): (240, 340),
+           (35, 19): (366, 334), (35, 22): (466, 396)}
+K1_PATHWAY = (327, 522)       # golf palette page 2, pathway (tool 0: tile word | 0x20, 0x0041f573)
+K1_FLOWERS = ((655, 575), (430, 495))   # golf palette page 2, flower beds round button and its first item (tool 2:
+                                        # tile word | 0x5000, 0x0041f823; tile byte = [0x0056a514] (0x0041f868))
+
+
+def cov_k1_paths(c):
+    """Mutants 173 (P1 0x00411c71, enqueueSprite p7 4 -> 5) and 188 (P2 0x00412924, enqueueSprite p4 0x50 -> 0x51).
+    173: a pathway on one water tile (34, 16) whose only path neighbour (35, 16) is land: P1_flag20 0x00411ac4 keeps
+    [F+0x10] = 1 (no water-class path neighbour, 0x00411b23) and the tile word has no 0x100 (cleared for type 0x11 at
+    0x0041f587), so both bridge cells 0x1ff are queued (0x00411c14, 0x00411c71) every frame.
+    188: a 2 x 2 flower bed (38, 16), (38, 17), (39, 16), (39, 17) on flat grass (corner level 4) at camera
+    rotation 0 ([0x005685f4] = 0 at the start) and zoom [0x004c2844] = 4: for tile (39, 17), (b + 2a) % 5 == 0, its
+    neighbours in directions 0 and 6 and the tile (38, 16) carry bit 0x1000 (0x00412818..0x00412849), so the second
+    sprite goes through switch case 0 (0x00412924); with K = 4 the x offset K * p4 * 4 / 16 is 80 vs 81."""
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(2000)
+    yield from c.click(*K1_PATHWAY); yield from c.sleep(1000)
+    for t in ((35, 16), (34, 16)):
+        yield from c.click(*K1_TILE[t]); yield from c.sleep(1500)
+    yield from c.click(500, 420, right=True); yield from c.sleep(1000)
+    yield from c.checkpoint("bridge")
+    for t in ((38, 16), (38, 17), (39, 16), (39, 17)):
+        yield from c.click(*K1_FLOWERS[0]); yield from c.sleep(1000)
+        yield from c.click(*K1_FLOWERS[1]); yield from c.sleep(800)
+        yield from c.click(*K1_TILE[t]); yield from c.sleep(1500)
+    yield from c.click(500, 420, right=True); yield from c.sleep(1000)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    c.move(600, 450); yield from c.sleep(1000)
+    yield from c.checkpoint("cart")
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+def cov_k1_terrain(c):
+    """Mutants 162 (P1 0x00410b90, clamp(cornerHeights, 0, 10) -> 11) and 172 (P1 0x00411313, water step <= 3 -> < 3).
+    Edit mode ('e'), the cursor on a tile and '=' (key 0x3d, 0x0041db46: corner level +1, clamp 3..13 at 0x0041db95,
+    then the 2 x 2 minimum cells +1 while below 0xd).
+    162: the shore wall sprite of P1_t11_4109fb runs its second half (0x00410b05..0x00410bd6) for the river tile
+    W = (32, 18) at camera rotation 6 (masks 0x00410923: wall bit 0x40 of W set, 4 clear, bit 0x10 of the diagonal tile
+    set; log/c3/c3fyk1/shore.py on the wall grid 0x005619a0); its height r is corner 3 of N = (32, 17), the level
+    (33, 17), raised 10 times to 13 > 10. Home (key 0x24, rotation - 2) turns the camera to 6.
+    172: land next to the river raised +2, +3 and +4 and painted with water (golf palette slot 5), for water-to-water
+    steps of P1_t11_411282 (0x00411302 - 0x004112de)."""
+    yield from _cova_to_sandbox(c)
+    yield from _cova_char(c, "e", settle=1500)
+    for t, n in (((33, 17), 10), ((35, 16), 2), ((35, 19), 3), ((35, 22), 4)):
+        c.move(*K1_TILE[t]); yield from c.sleep(800)
+        for _ in range(n):
+            yield from _cova_char(c, "=", settle=400)
+    yield from _cova_char(c, "e", settle=1500)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(*COV_B_GOLF_TOP[5]); yield from c.sleep(800)
+    for t in ((35, 16), (35, 19), (35, 22)):
+        yield from c.click(*K1_TILE[t]); yield from c.sleep(1500)
+    yield from c.click(500, 420, right=True); yield from c.sleep(1000)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    c.move(600, 450); yield from c.sleep(1000)
+    yield from c.checkpoint("raised")
+    yield from c.key(0x24); yield from c.sleep(2500)
+    yield from c.checkpoint("rot6")
+    for _ in range(4):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("rot6_end")
+    yield from c.key(0x21); yield from c.sleep(2500)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k1_paths"] = {"env": {}, "phases": [], "lockstep": cov_k1_paths}
+SCENARIOS["cov_k1_terrain"] = {"env": {}, "phases": [], "lockstep": cov_k1_terrain}
+
+
+K1_OBJ = 0x0058BCB8           # placed objects, 16-byte records (type word +0, x +2, y +4, flags byte +7, number +8)
+
+
+K1_STEP_TILES = {(36, 11): (146, 156), (38, 11): (210, 116), (38, 14): (310, 176), (40, 11): (270, 74),
+                 (40, 14): (370, 134), (36, 10): (113, 138), (36, 12): (170, 176), (38, 10): (174, 96),
+                 (38, 12): (240, 134), (38, 13): (273, 154), (38, 15): (334, 195), (40, 10): (240, 52),
+                 (40, 12): (306, 96), (40, 13): (330, 116), (40, 15): (400, 156)}
+
+
+def cov_k1_steps(c):
+    """Mutant 172 (P1 0x00411313: the water step `<= 3` -> `< 3` of P1_t11_411282). Edit mode, Tab once (cursor mode
+    [0x00542f20] = 1: the 2 x 2 minimum-cell brush 0x0041dbd5..0x0041dc7b instead of the single corner), grass tiles
+    raised 2..6 times, then water painted over them and their unraised neighbours (golf palette slot 6: tile type
+    0x11 on this course, stampCourseTiles 0x0040e13a). Painted water takes one level per tile (corner heights
+    0x0051b770), so neighbouring water tiles at levels 4 and 7 make a step of 3: at camera rotation 0 the water tiles
+    (36, 12) and (38, 12) (wall bit 1 of 0x005619a0 set, neighbour (a, b - 1) water) give corner 3 of the neighbour
+    minus corner 1 of the tile = 3 (log/c3/c3fyk1/step.py on the explore snapshot log/c3/alt/c3fyk1/xk_steps/tab1)."""
+    yield from _cova_to_sandbox(c)
+    yield from _cova_char(c, "e", settle=1500)
+    yield from _cova_char(c, "\t", settle=800)
+    for t, n in (((36, 11), 3), ((38, 11), 3), ((38, 14), 2), ((40, 11), 4), ((40, 14), 6)):
+        c.move(*K1_STEP_TILES[t]); yield from c.sleep(800)
+        for _ in range(n):
+            yield from _cova_char(c, "=", settle=400)
+    yield from _cova_char(c, "e", settle=1500)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(*COV_B_GOLF_TOP[6]); yield from c.sleep(800)
+    for t in ((36, 10), (36, 11), (36, 12), (38, 10), (38, 11), (38, 12), (38, 13), (38, 14), (38, 15), (40, 10),
+              (40, 11), (40, 12), (40, 13), (40, 14), (40, 15)):
+        yield from c.click(*K1_STEP_TILES[t]); yield from c.sleep(1200)
+    yield from c.click(500, 420, right=True); yield from c.sleep(1000)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    c.move(600, 450); yield from c.sleep(1000)
+    yield from c.checkpoint("steps")
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k1_steps"] = {"env": {}, "phases": [], "lockstep": cov_k1_steps}
+
+
+def cov_k1_animals(c):
+    """Mutant 154 (Menu 0x00420e5f: initRecords 0x00401750 dropped). initRecords frees the 100 records of 0x0056d1d8
+    (word +0 = -1, 0x00401755) on every return to the title menu; the only writer that fills one is spawnObject 0x004011e0,
+    called when a home site is bought (P5 0x00417c17), and tickAnimals 0x00401c00 runs placeAnimal (Random::range
+    calls, 0x004017d0) on every live record each frame (0x00415a77). Course as cov_b_inject's (a hole, three buildings,
+    membership level 3 for golfer types 0..5 so the page-2 home-site item works, home sites placed); then bit 0x80 of
+    0x0056c7b4 (P5 0x00417a58: the next home site's value = 0x9c4) is set and the season run until a record of
+    0x0056d1d8 is live (read in the RECORD run, kept in obs; at most 8 rounds). The game is then left through wrench ->
+    Exit the Game -> 'So long for now.' and a second sandbox started: with initRecords dropped the record survives."""
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    yield from _cov_b_hole(c, (300, 200), (520, 330))
+    yield from c.click(118, 495); yield from c.sleep(1500)
+    for slot, spot in ((COV_B_BLDG[0], (420, 280)), (COV_B_BLDG[1], (600, 250)), (COV_B_BLDG[7], (250, 330))):
+        yield from _cov_b_tool(c, slot, [spot, (spot[0] + 20, spot[1] + 10)])
+        yield from c.click(118, 495); yield from c.sleep(800)
+        yield from c.click(118, 495); yield from c.sleep(800)
+    yield from c.click(118, 495); yield from c.sleep(1000)
+    for t in range(6):
+        va = 0x005849E0 + 0x2C * t
+        v = _cov_b_obs(c, f"type{t}", lambda va=va: _cov_b_read_u32(c, va))
+        c.write32(va, (v & 0xFFF8FFFF) | 0x00030000, tag=f"type {t} level 3")
+    yield from c.sleep(2000)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(1500)
+    for spot in ((450, 260), (560, 300), (380, 340), (500, 380), (620, 200)):
+        yield from c.click(365, 557); yield from c.sleep(800)
+        c.move(*spot); yield from c.sleep(1200)
+        yield from c.click(*spot); yield from c.sleep(1500)
+        yield from c.click(spot[0] - 40, spot[1], right=True); yield from c.sleep(800)
+    yield from c.click(45, 470); yield from c.sleep(1000)
+    yield from c.checkpoint("course")
+    for k in range(8):
+        live = _cov_b_obs(c, f"animals{k}", lambda: sum(
+            1 for i in range(100) if (_cov_b_read_u32(c, 0x0056D1D8 + 0x3C * i) & 0xFFFF) != 0xFFFF))
+        if live:
+            break
+        _cov_b_set_bits(c, 0x0056C7B4, 0x80, f"sale{k}")
+        yield from _cov_b_season(c, 10000)
+    yield from c.checkpoint("bought")
+    yield from _cov_b_exit_to_menu(c)
+    yield from c.checkpoint("menu2")
+    yield from _cov_b_sandbox(c, "monterey")
+    yield from c.checkpoint("session2")
+    yield from _cov_b_season(c, 20000)
+    yield from c.checkpoint("session2_end")
+
+
+SCENARIOS["cov_k1_animals"] = {"env": {}, "phases": [], "lockstep": cov_k1_animals}
+
+
+
+# zoomed-out (one 'x') sandbox Monterey start view: one cursor sample point inside each of 150 grass tiles (cursor sweep
+# log/c3/c3fyk1/map_monterey_z1.json, the sample nearest the tile's centroid that screenToTile maps back to that tile)
+K1_WASHERS_Z1 = [(46, 348), (46, 332), (58, 340), (82, 348), (94, 356), (238, 444), (94, 340), (106, 348), (130, 356),
+                 (142, 372), (130, 340), (142, 348), (250, 420), (226, 380), (238, 388), (250, 396), (262, 404), (286,
+                 420), (250, 380), (274, 388), (286, 396), (298, 404), (334, 428), (346, 436), (358, 444), (154, 300),
+                 (178, 308), (190, 316), (250, 356), (274, 372), (286, 380), (298, 388), (322, 396), (334, 404), (346,
+                 420), (370, 428), (382, 436), (394, 444), (190, 300), (226, 316), (274, 348), (286, 356), (298, 364),
+                 (322, 380), (334, 388), (346, 396), (358, 404), (190, 276), (238, 308), (298, 348), (322, 356), (334,
+                 372), (346, 380), (370, 388), (442, 436), (226, 276), (238, 284), (250, 300), (274, 308), (382, 380),
+                 (466, 428), (478, 436), (490, 444), (202, 244), (238, 268), (250, 276), (262, 284), (286, 300), (394,
+                 372), (478, 420), (226, 236), (238, 244), (250, 260), (274, 268), (286, 276), (298, 284), (238, 228),
+                 (250, 236), (262, 244), (286, 260), (298, 268), (322, 276), (334, 284), (346, 300), (370, 308), (382,
+                 316), (394, 324), (490, 388), (514, 396), (526, 404), (562, 428), (574, 436), (586, 444), (250, 220),
+                 (274, 228), (286, 236), (298, 244), (322, 260), (334, 268), (346, 276), (358, 284), (382, 300), (394,
+                 308), (526, 388), (550, 404), (586, 428), (610, 436), (622, 444), (274, 212), (286, 220), (298, 228),
+                 (322, 236), (334, 244), (346, 260), (370, 268), (382, 276), (526, 364), (538, 380), (586, 404), (610,
+                 420), (622, 428), (646, 436), (250, 180), (274, 188), (286, 196), (298, 204), (322, 220), (334, 228),
+                 (346, 236), (358, 244), (382, 260), (394, 268), (418, 276), (538, 356), (610, 396), (622, 404), (634,
+                 420), (658, 428), (670, 436), (682, 444), (250, 156), (274, 172), (286, 180), (298, 188), (322, 196),
+                 (334, 204), (346, 220), (370, 228), (382, 236), (394, 244)]
+
+
+def cov_k1_washers(c):
+    """Mutant 180 (P2 0x004131d3: the object tile byte read signed). An object tile (type 0x15 / 0x16) keeps its record
+    index in the tile byte 0x0056988c (read back as a record index at 0x0041f5db) and P2 passes it to buildSceneSprites
+    0x00463180 (0x004131fc), which reads that 16-byte record of 0x0058bcb8. Every Ball Washer (golf palette page 2,
+    tool 3: the default case 0x0041f91c, stampCourseTiles 0x0041f967) takes the first free record (0x0040e300), so
+    after about 128 of them the newest have record indices >= 0x80: read zero-extended (original) the index is the
+    record, read signed it is index - 256 (a record 0x800 to 0x1000 bytes before 0x0058bcb8)."""
+    yield from _cova_to_sandbox(c)
+    yield from _cova_char(c, "x", settle=1500)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.click(235, 527); yield from c.sleep(1500)
+    yield from c.click(305, 557); yield from c.sleep(800)
+    for p in K1_WASHERS_Z1:
+        yield from c.click(*p, settle=250); yield from c.sleep(300)
+    yield from c.click(500, 470, right=True); yield from c.sleep(800)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    c.move(780, 470); yield from c.sleep(1500)
+    _cov_b_obs(c, "records", lambda: sum(1 for i in range(256) if (_cov_b_read_u32(c, K1_OBJ + 16 * i) & 0xFFFF) != 0xFFFF))
+    yield from c.checkpoint("washers")
+    for _ in range(3):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("washers2")
+    yield from _cova_char(c, "z", settle=2000)
+    yield from c.checkpoint("zoom_in")
+    for _ in range(3):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k1_washers"] = {"env": {}, "phases": [], "lockstep": cov_k1_washers}
+
+
+def _cov_k3_grass_spots(c, name, prefer=(400, 380), n=6, half=12):
+    """Screen points over open grass for a bench (RECORD run: the frame's pixels; kept in the schedule): up to n grid
+    points nearest `prefer` inside the view (y 120..440, clear of the HUD and the palette) whose (2 half + 1)^2 block is
+    green, at least 40 px apart."""
+    def find():
+        import numpy as np
+        a = np.asarray(c.run.g.shot().convert("RGB"), np.int16)
+        cand = []
+        for y in range(120, 441, 10):
+            for x in range(60, 741, 10):
+                if x > 560 and y < 160:
+                    continue
+                blk = a[y - half:y + half + 1, x - half:x + half + 1]
+                r, g, b = blk[..., 0], blk[..., 1], blk[..., 2]
+                if ((g > r + 15) & (g > b + 15) & (g > 70)).all():
+                    cand.append(((x - prefer[0]) ** 2 + (y - prefer[1]) ** 2, x, y))
+        out = []
+        for _d, x, y in sorted(cand):
+            if all((x - u) ** 2 + (y - v) ** 2 >= 1600 for u, v in out):
+                out.append([x, y])
+            if len(out) >= n:
+                break
+        return out or [list(prefer)]
+    return _cov_b_obs(c, name, find)
+
+
+def _cov_k3_label_key(c, name, vk, extra=()):
+    """A money label at the cursor tile, injected as pointsPopup 0x0040c890 stores one (slot 0: counter 0x00542f00 = 0x18
+    at 0x0040c8e8, world x / y (tile << 10) + 0x200 at 0x0040c8cf / 0x0040c8da, amount 0x00542dd8 at 0x0040c8e1), with
+    the arrow key `vk` (and the `extra` writes) in the same poll; checkpoints at the 10 polls that follow. A sandbox
+    raises no label itself: pointsPopup returns at 0x0040c894 for an amount of 0 and the sandbox charges nothing."""
+    tx, ty = _cov_k3_get(c, f"{name}_tx", COV_K3_CUR_X), _cov_k3_get(c, f"{name}_ty", COV_K3_CUR_Y)
+    c.write32(0x00542FD8, (tx << 10) + 0x200, tag=f"{name} label x")
+    c.write32(0x00542FF8, (ty << 10) + 0x200, tag=f"{name} label y")
+    c.write32(0x00542DD8, 0xFFFFFFFA, tag=f"{name} label amount -6")
+    c.write32(0x00542F00, 0x18, tag=f"{name} label counter")
+    for va, v, tag in extra:
+        c.write32(va, v, tag=tag)
+    c.act(0, k="vkey", vk=vk, st=2, tag=f"key {vk:#x}")
+    c.act(0, k="post", msg=0x100, wp=vk, lp=1)
+    c.act(150, k="vkey", vk=vk, st=1)
+    c.act(150, k="post", msg=0x101, wp=vk, lp=0xC0000001)
+    for i in range(10):
+        yield from c.checkpoint(f"{name}{i}")
+
+
+def cov_k3_camera2(c):
+    """Survivors 117 (0x0041df31: clamp max 0x31 of camera x in the direction-0 step) and 123 (0x0041e024: clamp max of
+    camera y in the direction-6 step), sandbox Monterey. The step's value lives only until the frame's edge-pan clamp
+    0x0041e22b..0x0041e24e; in between drawMoneyLabels 0x0040c910 (0x0041e07a) projects every live money label with
+    worldToScreen 0x0042fb90, which reads the camera (cov_k3_camera had no label on screen). A label is injected at a
+    land tile under the cursor (_cov_k3_label_key):
+      117: camera x at 0x31 (direction-0 keys from the start view), label, then direction 0: x + 4 clamps to 0x31
+           (original) / 0x32 (mutant) for that frame's label draw.
+      123: label, camera y = 0x36 written, then direction 6: y - 4 = 0x32 clamps to 0x31 / 0x32 (no writer of 0x004c2ba4
+           in the frame stores more than 0x31 before the step: the injection is the only way past it)."""
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    rot = _cov_k3_get(c, "rot", COV_K3_ROT)
+    x0 = _cov_k3_get(c, "cam_x0", COV_K3_CAM_X)
+    yield from c.checkpoint("sandbox")
+    up, left = _cov_k3_arrow(c, rot, 0), _cov_k3_arrow(c, rot, 6)
+    for _ in range(max(0, (0x31 - x0 + 3) // 4)):
+        yield from c.key(up, char=""); yield from c.sleep(1200)
+    _cov_k3_get(c, "cam_x1", COV_K3_CAM_X)
+    _cov_k3_get(c, "cam_y1", COV_K3_CAM_Y)
+    yield from c.checkpoint("edge")
+    c.move(560, 420); yield from c.sleep(600)
+    s1 = _cov_k3_grass_spots(c, "spots_x", prefer=(560, 420), n=1, half=6)[0]
+    c.move(*s1); yield from c.sleep(800)
+    yield from _cov_k3_label_key(c, "x_edge", up)
+    yield from c.sleep(2500)
+    _cov_k3_get(c, "cam_x2", COV_K3_CAM_X)
+    yield from c.checkpoint("x_after")
+    c.move(560, 420); yield from c.sleep(600)
+    s2 = _cov_k3_grass_spots(c, "spots_y", prefer=(560, 420), n=1, half=6)[0]
+    c.move(*s2); yield from c.sleep(800)
+    yield from _cov_k3_label_key(c, "y_inj", left, extra=((COV_K3_CAM_Y, 0x36, "camera y 0x36"),))
+    yield from c.sleep(2500)
+    _cov_k3_get(c, "cam_y3", COV_K3_CAM_Y)
+    yield from c.checkpoint("y_after")
+    yield from c.sleep(2000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k3_camera2"] = {"env": {}, "phases": [], "lockstep": cov_k3_camera2}
+
+
+def cov_k1_river(c):
+    """Mutant 179 (P2 0x00412b14: `m >= lim` -> `m > lim` of the river animation). For a water tile (type 0x11, class
+    17, tile word bit 0x100 and no 0x20, tile byte != 0; P2 0x004129ac / 0x00412abb..0x00412ae3) the frame is
+    m = (g_date + 7 b + 3 a) % 64 (0x00412ae9..0x00412b0d) and the cell 0x19f is drawn only while m < lim = [0x0053fa64]
+    (= 15 here, read in an explore run); at m == lim the mutant draws frame clamp(15, 0, 14) instead of nothing. The
+    Monterey start has three such tiles, (27, 7), (32, 8), (33, 7), all on screen after one Left arrow (camera (33, 15),
+    explore log/c3/alt/c3fyk1/xk_map/left). m == 15 holds for one date unit in 64 per tile (g_date % 64 == 13, 55, 59),
+    and the date advances about one unit per 100 virtual ms, so a checkpoint every 100 ms for 7 s covers each window."""
+    yield from _cova_to_sandbox(c)
+    yield from c.key(0x25, char=""); yield from c.sleep(1500)
+    c.move(780, 470); yield from c.sleep(1000)
+    for k in range(70):
+        yield from c.checkpoint(f"r{k:02d}")
+        yield from c.sleep(100)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k1_river"] = {"env": {}, "phases": [], "lockstep": cov_k1_river}
+
+
+def _cov_k3_tile_word(c):
+    """Tile flag word of the cursor tile: word [0x0053caf0 + 2 * (y + 50 x)] (P7 0x0041a9b4..0x0041a9d9)."""
+    x, y = _cov_k3_rd(c, COV_K3_CUR_X), _cov_k3_rd(c, COV_K3_CUR_Y)
+    va = 0x0053CAF0 + 2 * (y + 50 * x)
+    return (_cov_k3_rd(c, va & ~3) >> (8 * (va & 3))) & 0xFFFF
+
+
+def cov_k3_hole19(c):
+    """Survivor 254 (0x0041af1d: [0x005685f0] >= 0x13 vs > 0x13 in P7's green-tool arm). Sandbox Monterey, one hole,
+    the green tool held, then [0x005685f0] = 19 (the value showRoutingMapScreen 0x004586fd and the placement 0x0040a089
+    store after hole 18). Hole record 19 (0x00578148) is the clubhouse slot: its +8 / +0xc word pair is the clubhouse
+    tile (non-zero on Monterey, read in the record run) and +0x18 is 0, so the arm reaches 0x0041af1d: the original
+    leaves at 0x0041af20, the mutant projects record 19's +8 tile (tileToScreen 0x0041af3e) and draws the line and
+    yardage of 0x0041af71... The cursor rests on grass (P7 returns at 0x0041a9d9 on a tile with flag 0x4000, e.g. trees:
+    cov_k3_build's green19 hover spots were on the forest, so its 254 site never ran)."""
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    yield from _cov_b_hole(c, (300, 200), (520, 330))
+    hc = _cov_k3_get(c, "hole", COV_K3_HOLE)
+    saved = {o: _cov_k3_get(c, f"rec19_{o:x}", COV_K3_REC19 + o) for o in (8, 0xC, 0x18, 0x1C)}
+    yield from c.checkpoint("hole")
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.click(300, 527); yield from c.sleep(800)               # tee tool ([0x4c2848] = 0)
+    c.move(300, 300); yield from c.sleep(600)
+    cands = _cov_k3_grass_spots(c, "spots", prefer=(200, 360), n=8)
+    free = []
+    for k, sp in enumerate(cands):                                    # candidates whose tile has no 0x4000 flag
+        c.move(*sp); yield from c.sleep(500)                          # (P7 returns at 0x0041a9d9 on such a tile)
+        fl = _cov_b_obs(c, f"flag{k}", lambda: _cov_k3_tile_word(c))
+        if not (fl & 0x4000):
+            free.append(sp)
+    free = (free + cands)[:2] if len(free) < 2 else free[:2]
+    yield from c.click(*free[0]); yield from c.sleep(1200)            # hole 2's tee (record 2 +8 / +0xc)
+    _cov_k3_get(c, "rec2_tee", 0x00575AB0 + 2 * 0x208 + 8)
+    yield from c.click(365, 527); yield from c.sleep(800)               # green tool ([0x4c2848] = 1)
+    s = free[1]
+    c.move(*s); yield from c.sleep(800)
+    _cov_k3_get(c, "tool48", 0x004C2848)
+    # the green tool over a free tile with hole 2's tee placed: the original draws the tee-to-cursor line and yardage
+    # (0x0041aedd..0x0041b05c; c3fy.cpp missed it until the 0x0041ac89 fix: ebx stayed -1)
+    for i in range(2):
+        yield from c.checkpoint(f"green_line{i}")
+    c.write32(COV_K3_HOLE, 19, tag="hole 19")
+    if saved[0x18] != 0:
+        c.write32(COV_K3_REC19 + 0x18, 0, tag="rec19 green x 0")
+    c.move(s[0] + 10, s[1] + 5); yield from c.sleep(600)
+    _cov_k3_get(c, "tool48_19", 0x004C2848)
+    for i in range(4):
+        yield from c.checkpoint(f"green19_{i}")
+    yield from c.sleep(1000)
+    c.write32(COV_K3_HOLE, hc, tag="hole restored")
+    for o, v in saved.items():
+        c.write32(COV_K3_REC19 + o, v, tag=f"rec19 +{o:#x} restored")
+    yield from c.click(300, 350, right=True); yield from c.sleep(1000)
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.sleep(2000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k3_hole19"] = {"env": {}, "phases": [], "lockstep": cov_k3_hole19}
+
+
+def cov_k1_magazine(c, delay_ms=0):
+    """Mutants 112 (FramePreamble 0x0040ffcf: `acc < lo` -> `acc <= lo` in the article pick loop) and 113 (0x0041036e:
+    playSound 0x26 -> 0x27). The article block 0x0040ff68..0x00410394 runs for a golfer arrival (updateMembership(1)
+    0x0040fe86) whose type byte +1 is 7 (0x0040ff34) when g_date > 0x2000 (0x0040ff41) and the hole record
+    0x005760c8 + 0x208 * [0x0059b730] has a non-zero first byte (0x0040ff4d..0x0040ff62: four holes for the first
+    article). Six holes are built (COV_B_HOLE_PAIRS until [0x005685f0] - 1 >= 6, read in the RECORD run), the date is
+    set to 0x2010 (year 2002; ordinary state after one game year, as cov_b_career's date jumps), and the season is run
+    until the article counter [0x0059b730] moves (at most 15 rounds of 10 s). The pick loop draws Random::range(100)
+    until a golfer record's skill sum - 20 lies in [5 * articles - picks / 4, 5 * articles + picks / 4]; the stock
+    roster has sums - 20 of 0, -1, -2, -5 and -10 (records 16..17, 14..15, 12..13, 21, 1..11), so the first article is
+    accepted at the window's lower edge whenever that pick is one of them: the mutant then draws again."""
+    yield from _cov_b_menu(c)
+    yield from _cov_b_sandbox(c, "monterey")
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    for i, (tee, green) in enumerate(COV_B_HOLE_PAIRS):
+        n = _cov_b_obs(c, f"holes{i}", lambda: _cov_b_read_s16(c, COV_B_HOLES_PLUS1) - 1)
+        if n >= 6:
+            break
+        yield from c.click(300, 527); yield from c.sleep(700)
+        yield from c.click(*tee); yield from c.sleep(1000)
+        yield from c.click(365, 527); yield from c.sleep(700)
+        c.move(green[0] - 20, green[1]); yield from c.sleep(600)
+        yield from c.click(*green); yield from c.sleep(1500)
+        yield from c.click(300, 350, right=True); yield from c.sleep(1200)
+        yield from c.key(0x48); yield from c.sleep(2000)
+        yield from c.key(0x1B); yield from c.sleep(800)
+    yield from c.click(45, 470); yield from c.sleep(1200)
+    yield from c.checkpoint("holes")
+    yield from c.sleep(delay_ms)
+    c.write32(COV_B_DATE, 0x2010, tag="date 0x2010 (year 2002)")
+    yield from c.sleep(1000)
+    for k in range(15):
+        n = _cov_b_obs(c, f"articles{k}", lambda: _cov_b_read_u32(c, 0x0059B730))
+        if n:
+            break
+        yield from _cov_b_season(c, 10000)
+    yield from c.checkpoint("article")
+    yield from _cov_b_season(c, 10000)
+    yield from c.checkpoint("end")
+
+
+# the delay before the date jump moves the RNG state at the first article: with 2900 virtual ms the stock roster's pick
+# is accepted at the window's lower edge (the probe build logs mutant 112 infected); delays 0, 700, 1300 and 2100 were
+# tried first and are accepted inside the window (log/c3/c3fyk1_notes.txt)
+SCENARIOS["cov_k1_magazine_d2900"] = {"env": {}, "phases": [], "lockstep": lambda c: cov_k1_magazine(c, 2900)}
+
+
+def _k1_block(c, name, va, n):
+    """n bytes from va, read in the RECORD run and kept in the schedule (obs, hex)."""
+    return bytes.fromhex(_cov_b_obs(c, name, lambda: b"".join(
+        (_cov_b_read_u32(c, va + k) & 0xFFFFFFFF).to_bytes(4, "little") for k in range(0, n, 4))[:n].hex()))
+
+
+K1_LABEL_LOCS = ("northeast", "scotland", "carolina", "novascotia", "wales", "ireland", "sandiego", "rocky",
+                 "northeast", "scotland", "carolina", "novascotia")
+
+
+def cov_k1_label(c):
+    """Mutant 101 (FramePreamble 0x0041039e: the store of label pointer 0 into [F+0x238] skipped). [F+0x238] is written
+    only there (log/c3/alt/c3fy_norm.asm) and mainLoop's frame starts zero ([F+0x238] read 0 in the first frame after
+    boot, log/c3/c3fyk1_notes.txt), so the mutant keeps a NULL label pointer for the whole boot. P2_label 0x0041246b
+    builds a label for every visible tile whose word has bit 0x2000: type 17 'Lake ' + table entry (b + a) % 16 of
+    [F+0x238] (strcat 0x004124d9..0x004125f0), type 18 that entry + "'s Marsh" (strcpy 0x0041250c). Label bits come
+    only from course generation (a terrain paint rewrites the word, 0x004202e3), so careers are started (Start New Game
+    -> Easy, cash set on the location screen as cov_b_career_types does) until a generated course has a type 17 / 18
+    label tile with (b + a) % 16 == 0 (tile grids read in the RECORD run, at most 12 courses, left through wrench ->
+    Exit the Game); the camera is then put on it (camera tile (a - 4, b + 3) centres it at the default zoom: fit of a
+    cursor sweep, log/c3/c3fyk1_notes.txt)."""
+    import struct
+    yield from _cov_b_menu(c)
+    found = None
+    for k, loc in enumerate(K1_LABEL_LOCS):
+        yield from c.click(560, 110); yield from c.sleep(3000)
+        yield from c.click(390, 125); yield from c.sleep(6000)
+        c.write32(COV_B_CASH, 0x2710, tag="cash -> $1,000,000 on the location screen"); yield from c.sleep(1500)
+        yield from c.click(*COV_B_LOC[loc])
+        yield from _cov_b_hud(c, name=f"hud_{k}")
+        yield from c.sleep(3000)
+        yield from c.key(0x1B); yield from c.sleep(1500)
+        tt = _k1_block(c, f"tt{k}", 0x005722E8, 2500)
+        tw = struct.unpack("<2500H", _k1_block(c, f"tw{k}", 0x0053CAF0, 5000))
+        hits = [(i // 50, i % 50) for i in range(2500)
+                if tw[i] & 0x2000 and tt[i] in (17, 18) and (i // 50 + i % 50) % 16 == 0]
+        if hits:
+            found = hits[0]
+            break
+        yield from _cov_b_exit_to_menu(c)
+    yield from c.checkpoint("course")
+    if found is None:
+        return
+    a, b = found
+    c.write32(CAMERA_TILE[0], a - 4, tag="camera x")
+    c.write32(CAMERA_TILE[1], b + 3, tag="camera y")
+    yield from c.sleep(1500)
+    c.move(780, 470); yield from c.sleep(1000)
+    yield from c.checkpoint("label")
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_k1_label"] = {"env": {}, "phases": [], "lockstep": cov_k1_label}
