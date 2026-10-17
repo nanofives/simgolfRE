@@ -2,7 +2,7 @@
  "version": 1,
  "root": "log/c3/alt/refs",
  "procedure": "re/tools/scenario_refs.py regen (det_a record, det_b / det_c replay, det_b == det_c required); checklist re/analysis/data/scenario_baseline.md",
- "updated": "2026-10-17T13:00:39",
+ "updated": "2026-10-17T14:42:40",
  "scenarios": {
   "cov_a_build3": {
    "family": "c3fya",
@@ -2509,6 +2509,145 @@
    },
    "sound_live": false,
    "recorded": "2026-10-17T12:54:10"
+  },
+  "cov_l_camera": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_l_camera/det_b",
+   "schedule_sha256": "1d6e76bf95f9e845eaf56cb731b12c942dba708f3e2ec688504abfaed5284cf4",
+   "reference_sha256": "3d11fc930fc4eccba0f55870877e6e1b92bfe3a55e5042251de0a79f1d026078",
+   "checkpoints": [
+    "edge",
+    "step0",
+    "step1",
+    "step2",
+    "step3",
+    "step4",
+    "step5",
+    "step6",
+    "step7",
+    "step8",
+    "step9",
+    "after",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x000044b3",
+    "rng_seed": "0x7f4ebfa7",
+    "seed_time": "0x00100000",
+    "checkpoint": "edge",
+    "state_sha16": "048bce7046d88eff",
+    "frame_sha16": "44201198c56cf0c6",
+    "T": 32219,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (13 checkpoints)",
+    "det_a_vs_det_b": "SAME (13 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "457ee1fc19ef6d6e0ba310172b2ca4a63541d8f88c70bbe57ec53b340922aa0f"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 0,
+    "keep_sound": true,
+    "instance": "c3fyl"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T14:22:52"
+  },
+  "cov_l_point": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_l_point/det_b",
+   "schedule_sha256": "c1007e0955556ddf38f33bc45a2fd0ea7546bd206429c5813798193c2a36a4f2",
+   "reference_sha256": "378a3f216814b47f406bfab53eb297502374b604a10e51fce190defbf6394f49",
+   "checkpoints": [
+    "location",
+    "game0",
+    "game1",
+    "game2",
+    "game3"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x62cdba29",
+    "seed_time": "0x00100000",
+    "checkpoint": "location",
+    "state_sha16": "4efeffff9fd8323d",
+    "frame_sha16": "8b44b57cf86fa67a",
+    "T": 8787,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (5 checkpoints)",
+    "det_a_vs_det_b": "SAME (5 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "457ee1fc19ef6d6e0ba310172b2ca4a63541d8f88c70bbe57ec53b340922aa0f"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 0,
+    "keep_sound": true,
+    "instance": "c3fyl"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T14:23:09"
+  },
+  "cov_l_bridge": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_l_bridge/det_b",
+   "schedule_sha256": "ff4142a6392762e036d94ee27fdc39d0e60fa3b16ec94c2bbbb0d34c0efcea37",
+   "reference_sha256": "d945f7fcb68a5eeebd8dbd9860048bd8100145a569974f1a5c2a78f5d6198a5c",
+   "checkpoints": [
+    "menu",
+    "bridge",
+    "obj0",
+    "obj1",
+    "obj2",
+    "obj3",
+    "obj4",
+    "obj5",
+    "obj6",
+    "obj7",
+    "obj8",
+    "obj9",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x1f98dc65",
+    "seed_time": "0x00100000",
+    "checkpoint": "menu",
+    "state_sha16": "162ce36b499ecb35",
+    "frame_sha16": "b1e9c3e7ac5a01d9",
+    "T": 3434,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (13 checkpoints)",
+    "det_a_vs_det_b": "SAME (13 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "457ee1fc19ef6d6e0ba310172b2ca4a63541d8f88c70bbe57ec53b340922aa0f"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 0,
+    "keep_sound": true,
+    "instance": "c3fyl"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-17T14:28:33"
   }
  }
 }

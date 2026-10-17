@@ -17,6 +17,10 @@ seed 0x00822d9c, and the frame.
     #    both go to <run>/trace.json, and `tracecmp` prints the first poll where two runs differ and both watch logs there
     py -3.12 re/frida/scenario_ab.py ab --scenario course_season --on 0x40f5c0 --trace 575eb8:4 --watch 575eb8:4
     py -3.12 re/frida/scenario_ab.py tracecmp --scenario course_season --a ab_set1_off --b ab_set1_on
+    # 5. extended oracle (opt-in, batch c3fyl): --call-log va:n[:ra/ra][:sK][:r][:xK],... logs main-thread calls of exe
+    #    functions (arguments, string, return value) and --extra-regions va:n,... dumps more memory at each checkpoint;
+    #    both are compared between the arms; `extcmp --a <run dir> --b <run dir>` compares two finished runs
+    py -3.12 re/frida/scenario_ab.py ab --scenario cov_k1_magazine_d2900 --on 0x40f5c0 --call-log 4481b0:5
 
 Every run uses the install copy instances\c3ft (--instance) and SIMGOLF_ALLOW_MULTI=1, so other sessions' games are
 never touched. The ON set is written to the copy's simgolf_shim.ini [hooks] section (every registered hook not in the set
@@ -130,6 +134,127 @@ def watch_spec() -> list[dict]:
     if len(w) > 4 or any(x["size"] not in (1, 2, 4) for x in w):
         raise SystemExit("--watch: at most 4 addresses, size 1, 2 or 4")
     return w
+
+
+# ---------------------------------------------------------------- opt-in extended oracle (batch c3fyl, 2026-10-17)
+def call_log_spec() -> list[dict]:
+    """--call-log / C3FT_CALL_LOG: `va:n[:ra/ra...][:sK][:r][:xK],...` (hex va and return addresses, n decimal) ->
+    scenario_det.js cfg.callLog: every main-thread entry of the exe function va is logged with its return address and n
+    stack arguments, only for the listed return addresses when given, plus the C string at argument K with `sK` and the
+    return value (eax) with `r`; `xK` keeps argument K out of the comparison (a heap or stack address). Default: none."""
+    out = []
+    for part in (os.environ.get("C3FT_CALL_LOG") or "").split(","):
+        part = part.strip()
+        if not part:
+            continue
+        f = part.split(":")
+        e = {"va": int(f[0], 16), "n": int(f[1]) if len(f) > 1 and f[1] else 0}
+        for x in f[2:]:
+            if x.startswith("s"):
+                e["s"] = int(x[1:])
+            elif x == "r":
+                e["r"] = 1
+            elif x.startswith("x"):
+                e.setdefault("x", []).append(int(x[1:]))
+            elif x:
+                e["ra"] = [int(r, 16) for r in x.split("/")]
+        if not 0x401000 <= e["va"] < 0x4b0000 or e["n"] > 16 or (e.get("s") is not None and not 0 <= e["s"] < max(e["n"], 1)):
+            raise SystemExit(f"--call-log {part}: va in golf_clean.exe .text, n <= 16, sK with K < n")
+        out.append(e)
+    return out
+
+
+def extra_regions_spec() -> list[list[int]]:
+    """--extra-regions / C3FT_EXTRA_REGIONS: `va:n,...` read at every checkpoint into <name>.extra.bin, outside the
+    default dump blob. Default: none."""
+    return parse_spans(os.environ.get("C3FT_EXTRA_REGIONS"))
+
+
+def _calls_by_checkpoint(run_dir: pathlib.Path) -> dict | None:
+    p = run_dir / "calls.json"
+    if not p.exists():
+        return None
+    d = json.loads(p.read_text())
+    out: dict = {}
+    masks = {e["va"]: e.get("x", []) for e in (d.get("spec") or [])}
+    for row in d["rows"]:
+        r = list(row[1:])
+        for k in masks.get(r[1], []):        # `xK`: argument K logged but not compared (a heap or stack pointer)
+            if 3 + k < len(r):
+                r[3 + k] = None
+        # the return address is logged but not compared: in the ON arm a call the hooked function makes returns into its
+        # reimplementation (shim code, laid out per build and load address), in the OFF arm into golf_clean.exe, so two
+        # arms are compared by the calls made (time, function, arguments, string, return value), not by where from
+        if len(r) > 2:
+            r[2] = None
+        out.setdefault(row[0], []).append(r)
+    return {"spec": d.get("spec"), "dropped": d.get("dropped", 0), "by_cp": out}
+
+
+def compare_ext(a_dir: pathlib.Path, b_dir: pathlib.Path) -> dict | None:
+    """The extended oracle of two runs made with the same --call-log / --extra-regions: per checkpoint, the calls logged
+    since the previous checkpoint (T, va, return address, arguments, string) and the extra region bytes. None when
+    neither run has extended data (the default)."""
+    ca, cb = _calls_by_checkpoint(a_dir), _calls_by_checkpoint(b_dir)
+    sa = json.loads((a_dir / "summary.json").read_text())
+    sb = json.loads((b_dir / "summary.json").read_text())
+    xa, xb = sa.get("extra_regions"), sb.get("extra_regions")
+    if ca is None and cb is None and not xa and not xb:
+        return None
+    out = {"call_spec": [ca and ca["spec"], cb and cb["spec"]], "extra_spec": [xa, xb], "checkpoints": {}}
+    if (ca is None) != (cb is None) or (ca and ca["spec"] != cb["spec"]) or xa != xb:
+        out["incomparable"] = "the two runs logged different calls / regions"
+        return out
+    for name in sa["checkpoints"]:
+        if name not in sb["checkpoints"]:
+            continue
+        r = {}
+        if ca is not None:
+            la, lb = ca["by_cp"].get(name, []), cb["by_cp"].get(name, [])
+            first = next((i for i, (x, y) in enumerate(zip(la, lb)) if x != y), None)
+            if first is None and len(la) != len(lb):
+                first = min(len(la), len(lb))
+            r["calls"] = [len(la), len(lb)]
+            if first is not None:
+                r["calls_first_diff"] = {"index": first, "a": la[first] if first < len(la) else None,
+                                         "b": lb[first] if first < len(lb) else None}
+        if xa:
+            ba, bb = (d / f"{name}.extra.bin" for d in (a_dir, b_dir))
+            if ba.exists() and bb.exists():
+                pa, pb = ba.read_bytes(), bb.read_bytes()
+                diffs, off = [], 0
+                for va, n in xa:
+                    idx = [i for i in range(n) if pa[off + i] != pb[off + i]]
+                    if idx:
+                        diffs.append({"va": f"0x{va:08x}", "bytes": len(idx), "first": f"0x{va + idx[0]:08x}"})
+                    off += n
+                r["extra_differ"] = diffs
+        r["same"] = "calls_first_diff" not in r and not r.get("extra_differ")
+        out["checkpoints"][name] = r
+    out["dropped"] = [ca and ca["dropped"], cb and cb["dropped"]]
+    out["same"] = all(r["same"] for r in out["checkpoints"].values())
+    return out
+
+
+def print_compare_ext(ext: dict | None):
+    if ext is None:
+        return
+    if ext.get("incomparable"):
+        print(f"  extended oracle: INCOMPARABLE ({ext['incomparable']})")
+        return
+    for name, r in ext["checkpoints"].items():
+        s = "SAME" if r["same"] else "DIFF"
+        det = []
+        if "calls" in r:
+            det.append(f"calls {r['calls'][0]}/{r['calls'][1]}")
+        if r.get("calls_first_diff"):
+            det.append(f"first call diff #{r['calls_first_diff']['index']}: {r['calls_first_diff']['a']} / "
+                       f"{r['calls_first_diff']['b']}")
+        if r.get("extra_differ"):
+            det.append("extra " + ", ".join(f"{d['va']}({d['bytes']}@{d['first']})" for d in r["extra_differ"][:6]))
+        print(f"  ext {name}: {s}  " + "  ".join(det))
+    print(f"  extended oracle (call log / extra regions): {'SAME' if ext['same'] else 'DIFF'}"
+          + (f", dropped rows {ext['dropped']}" if any(ext["dropped"]) else ""))
 
 
 def slot_config() -> list[dict]:
@@ -335,11 +460,14 @@ class Run:
         self.clock_rows: list = []           # [checkpoint, index, kind, slot module, caller] per recorded clock call
         self.msg_log = int(os.environ.get("C3FT_MSG_LOG", "0") or 0)       # opt-in (--msg-log N, batch b2)
         self.msg_rows: list = []             # [checkpoint, T, msg, wParam, lParam] per windowProc entry
+        self.call_log = call_log_spec()      # opt-in (--call-log, batch c3fyl)
+        self.call_rows: list = []            # [checkpoint, T, va, return address, args..., string]
+        self.extra_regs = extra_regions_spec()   # opt-in (--extra-regions, batch c3fyl)
 
     def _on_message(self, m, data):
         if m.get("type") == "send":
             p = m["payload"]
-            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error", "full"):
+            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error", "full", "extra"):
                 self.q.put((p, data))
         elif m.get("type") == "error":
             self.q.put(({"type": "error", "where": "script", "msg": m.get("description", "") + " " + str(m.get("stack", ""))}, None))
@@ -361,6 +489,10 @@ class Run:
             cfg["clockLog"] = self.clock_log
         if self.msg_log:                     # opt-in (b2): jgld windowProc entries on the main thread
             cfg["msgLog"] = self.msg_log
+        if self.call_log:                    # opt-in (c3fyl): main-thread call log of exe functions
+            cfg["callLog"] = self.call_log
+        if self.extra_regs:                  # opt-in (c3fyl): regions dumped apart from the default blob
+            cfg["extraRegions"] = self.extra_regs
         if audio_mode() == "none":           # b2: the device-less audio answers (default)
             cfg["audio"] = "none"
         src ="const SCENARIO_CFG = " + json.dumps(cfg) + ";\n" + (JS_DIR / "scenario_det.js").read_text()
@@ -402,6 +534,16 @@ class Run:
             self.post(sc, full=True, hwnd=self.hwnd_val())
             _pf, full = self.wait_msg(("full",))
             (self.out / f"{name}.full.bin").write_bytes(full)
+        if self.extra_regs:
+            # opt-in (--extra-regions, batch c3fyl): the extra regions, apart from the default blob
+            self.post(sc, extra=True, hwnd=self.hwnd_val())
+            _px, xdata = self.wait_msg(("extra",))
+            (self.out / f"{name}.extra.bin").write_bytes(xdata)
+        if p.get("cl") is not None:
+            # opt-in (--call-log, batch c3fyl): the calls logged since the previous checkpoint
+            self.call_rows += [[name] + r for r in p["cl"]["rows"]]
+            (self.out / "calls.json").write_text(json.dumps({"spec": self.call_log, "dropped": p["cl"]["dropped"],
+                                                             "rows": self.call_rows}))
         (self.out / f"{name}.bin").write_bytes(data)
         if p.get("wm") is not None:
             self.msg_rows += [[name] + e for e in p["wm"]]
@@ -472,6 +614,8 @@ class Run:
             summary = {"label": self.label, "mode": self.mode, "env": self.env, "audio": audio_mode(), "polls": self.polls,
                        "wall_s": round(self.wall, 1), "slots": self.slots, "checkpoints": self.checkpoints,
                        "errors": self.errors, "schedule": self.schedule, "failure": self.failure}
+            if self.extra_regs:              # opt-in (c3fyl): absent by default, so default summaries are unchanged
+                summary["extra_regions"] = self.extra_regs
             (self.out / "summary.json").write_text(json.dumps(summary, indent=1))
             if self.trace_spec or self.watch_spec:
                 (self.out / "trace.json").write_text(json.dumps({"trace_regions": self.trace_spec, "rows": self.trace_rows,
@@ -695,6 +839,10 @@ def cmd_determinism(a):
     (OUT_ROOT / key / f"determinism_{a.label_a}_vs_{a.label_b}.json").write_text(json.dumps(cmp, indent=1))
     print(f"determinism {key}: {a.label_a} vs {a.label_b}")
     print_compare(cmp)
+    ext = compare_ext(ra.out, rb.out)        # None by default (no --call-log / --extra-regions)
+    if ext is not None:
+        (OUT_ROOT / key / f"determinism_{a.label_a}_vs_{a.label_b}_ext.json").write_text(json.dumps(ext, indent=1))
+        print_compare_ext(ext)
     same = all(not r.get("missing") and not r["regions_differ"] and r["frame_px_differ"] == 0 for r in cmp.values())
     if spawn:
         rep = spawn_reach_report([ra.out, rb.out])
@@ -826,6 +974,10 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
     (OUT_ROOT / key / f"ab_{tag}.json").write_text(json.dumps(cmp, indent=1))
     print(f"A/B {key} [{tag}]: OFF vs ON ({len(on)} hooks ON)")
     print_compare(cmp)
+    ext = compare_ext(off_dir, on_dir)       # opt-in extended oracle (c3fyl); None by default
+    if ext is not None:
+        (OUT_ROOT / key / f"ab_{tag}_ext.json").write_text(json.dumps(ext, indent=1))
+        print_compare_ext(ext)
     state_same = all(not r.get("missing") and not r["regions_differ"] for r in cmp.values())
     frames_same = all(not r.get("missing") and r["frame_px_differ"] == 0 for r in cmp.values())
     # per-function CSVs
@@ -908,6 +1060,10 @@ def write_results(a, on, tag, off_dir: pathlib.Path, on_dir: pathlib.Path) -> in
                 w.writerow(["meta", "on_arm_failure", failure[:600].replace("\n", " "), ""])
             if stale:
                 w.writerow(["meta", "incomparable_arms", stale, ""])
+            if ext is not None:
+                # opt-in (c3fyl): reported beside the verdict, which stays the checkpoint dump's
+                w.writerow(["meta", "extended_oracle", "INCOMPARABLE" if ext.get("incomparable") else
+                            ("SAME" if ext["same"] else "DIFF"), "call log / extra regions"])
             w.writerow(["VERDICT", verdict, len(cmp), ""])
         written.append((verdict, path))
     from collections import Counter
@@ -992,6 +1148,24 @@ WATCH_HELP = ("opt-in: `va:size,...` (<= 4, size 1/2/4) main-thread hardware wri
 
 CLOCK_HELP = ("opt-in: record the first N main-thread timeGetTime / QPC calls with their caller (module+rva) into "
               "<run>/clock.json, grouped by the checkpoint whose dump read them (batch b2). Same as env C3FT_CLOCK_LOG")
+CALL_HELP = ("opt-in extended oracle (batch c3fyl): `va:n[:ra/ra][:sK][:r][:xK],...` log every main-thread entry of these exe "
+             "functions (return address, n stack arguments, the C string at argument K, the return value) into <run>/calls.json and compare "
+             "them per checkpoint between arms. Same as env C3FT_CALL_LOG")
+EXTRA_HELP = ("opt-in extended oracle (batch c3fyl): `va:n,...` regions dumped at every checkpoint into <name>.extra.bin "
+              "(apart from the default blob) and compared between arms. Same as env C3FT_EXTRA_REGIONS")
+
+
+def cmd_extcmp(a):
+    """Compare two finished runs (absolute or repo-relative folders), default dump and extended oracle."""
+    da, db = (pathlib.Path(x) if pathlib.Path(x).is_absolute() else ROOT / x for x in (a.a, a.b))
+    cmp = compare_runs(da, db)
+    print_compare(cmp)
+    ext = compare_ext(da, db)
+    print_compare_ext(ext)
+    if a.out:
+        pathlib.Path(a.out).write_text(json.dumps({"default": cmp, "ext": ext}, indent=1))
+    same = all(not r.get("missing") and not r["regions_differ"] and r["frame_px_differ"] == 0 for r in cmp.values())
+    return 0 if same and (ext is None or ext.get("same")) else 1
 
 
 def main():
@@ -1008,6 +1182,8 @@ def main():
     p.add_argument("--trace", help=TRACE_HELP)
     p.add_argument("--watch", help=WATCH_HELP)
     p.add_argument("--clock-log", help=CLOCK_HELP)
+    p.add_argument("--call-log", help=CALL_HELP)
+    p.add_argument("--extra-regions", help=EXTRA_HELP)
     p.set_defaults(fn=cmd_determinism)
     p = sp.add_parser("ab")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -1021,6 +1197,8 @@ def main():
     p.add_argument("--trace", help=TRACE_HELP)
     p.add_argument("--watch", help=WATCH_HELP)
     p.add_argument("--clock-log", help=CLOCK_HELP)
+    p.add_argument("--call-log", help=CALL_HELP)
+    p.add_argument("--extra-regions", help=EXTRA_HELP)
     p.set_defaults(fn=cmd_ab)
     p = sp.add_parser("csv", help="re-score two finished arms (run folder names under log/c3/alt/c3ft/<scenario>/)")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -1039,8 +1217,14 @@ def main():
     p.add_argument("--max-rows", type=int, default=60)
     p.add_argument("--spawn-reach", action="store_true")
     p.set_defaults(fn=cmd_tracecmp)
+    p = sp.add_parser("extcmp", help="compare two finished run folders, default dump and extended oracle (c3fyl)")
+    p.add_argument("--a", required=True)
+    p.add_argument("--b", required=True)
+    p.add_argument("--out", help="write both comparisons as JSON")
+    p.set_defaults(fn=cmd_extcmp)
     a = ap.parse_args()
-    for flag, var in (("trace", "C3FT_TRACE"), ("watch", "C3FT_WATCH"), ("clock_log", "C3FT_CLOCK_LOG")):
+    for flag, var in (("trace", "C3FT_TRACE"), ("watch", "C3FT_WATCH"), ("clock_log", "C3FT_CLOCK_LOG"),
+                      ("call_log", "C3FT_CALL_LOG"), ("extra_regions", "C3FT_EXTRA_REGIONS")):
         if getattr(a, flag, None):
             os.environ[var] = getattr(a, flag)
     return a.fn(a)

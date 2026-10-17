@@ -640,6 +640,101 @@ function clockLog() {
   return { total: D.add(0x30).readU32(), entries: out };
 }
 
+// opt-in CALL LOG (cfg.callLog = [{va, n, ra, s}], scenario_ab.py --call-log; batch c3fyl, 2026-10-17): every MAIN-thread
+// entry of the golf_clean.exe function at va (absolute; the exe has no relocations) is logged as
+// [T - t0, va, return address, n stack arguments..., the C string at argument s (<= 64 bytes) when s is given,
+// ['ret', eax] when r is set (appended when the call returns)], only for
+// the return addresses in ra when ra is given, at most cfg.callLogMax rows (default 20000; the dump reports a truncation).
+// It is an extended oracle for effects the checkpoint dump does not see: the sound id and volume playSound 0x004481b0
+// receives (audio is not compared), or the text and screen position drawMoneyLabels 0x0040c910 passes to
+// drawCenteredText2 0x00404bc0 after the present. The rows go with each dump (`cl`) into <run>/calls.json. The entry
+// hook is a Frida Interceptor (no clock call, so the virtual timeline is unchanged); the key is absent by default and
+// none of this code runs then.
+const callLogRows = [];
+let callLogSent = 0, callLogDropped = 0;
+if (CFG.callLog) {
+  const max = CFG.callLogMax || 20000;
+  for (const c of CFG.callLog) {
+    const ras = c.ra ? new Set(c.ra.map(x => x >>> 0)) : null;
+    const cb = {
+      onEnter(a) {
+        if (Process.getCurrentThreadId() !== MAIN) return;
+        const ra = this.returnAddress.toUInt32();
+        if (ras && !ras.has(ra)) return;
+        if (callLogRows.length >= max) { callLogDropped++; return; }
+        const row = [T() - CFG.t0, c.va, ra];
+        for (let i = 0; i < c.n; i++) row.push(a[i].toUInt32());
+        if (c.s !== undefined && c.s !== null) {
+          try {
+            let st = null;
+            if (!a[c.s].isNull()) {
+              // the bytes up to the first NUL (at most 64), one character per byte: readCString(size) decodes all
+              // `size` bytes, so a buffer's stale tail after the NUL would be compared too
+              const by = new Uint8Array(a[c.s].readByteArray(64));
+              let n = by.indexOf(0);
+              if (n < 0) n = by.length;
+              st = String.fromCharCode.apply(null, Array.from(by.subarray(0, n)));
+            }
+            row.push(st);
+          } catch (e) { row.push('?'); }
+        }
+        callLogRows.push(row);
+        this.clRow = row;
+      }
+    };
+    // onLeave only with `r`: without it Frida does not touch the return path
+    if (c.r) cb.onLeave = function (r) { if (this.clRow) this.clRow.push(['ret', r.toUInt32()]); };
+    Interceptor.attach(ptr(c.va), cb);
+  }
+}
+function callLog() {
+  if (!CFG.callLog) return undefined;
+  const out = callLogRows.slice(callLogSent);
+  callLogSent = callLogRows.length;
+  return { rows: out, dropped: callLogDropped };
+}
+// opt-in EXTRA REGIONS (cfg.extraRegions = [[va, n], ...], scenario_ab.py --extra-regions; batch c3fyl): read on the
+// blocked main thread when a poll reply asks for them (`extra`), sent as their own binary payload, so the default dump
+// blob (and every comparison against an existing reference) is unchanged.
+function extraRegions() {
+  let total = 0;
+  for (const [, n] of CFG.extraRegions) total += n;
+  const buf = new Uint8Array(total);
+  let off = 0;
+  for (const [va, n] of CFG.extraRegions) { buf.set(new Uint8Array(ptr(va).readByteArray(n)), off); off += n; }
+  return buf.buffer;
+}
+
+// BACK BUFFER (reply.bb; batch b5, 2026-10-17). At the location screen of cov_b_career_phx one boot in six showed, at the
+// `offer` checkpoint and the two after it (90 virtual s), an older picture in the window than in the back buffer, while
+// the game called Display::present on the full 800x600 rect every frame (log/c3/b5_evlog.js) and its back buffer was the
+// same in every boot; boots run one at a time showed it in 0 of 10 (b2), boots run beside another game in 1 to 5 of 10.
+// The window's contents pass through the DWM8And16BitMitigation layer game.py starts the game with, outside the game.
+// When the window is current its capture equals the back buffer converted from RGB555 by (v << 3) | (v >> 2) per channel
+// (0 px differ in all 12 checkpoints compared, location screen and in-game), so the frame is taken from here.
+let GetObjectA = null;
+function backBuffer() {
+  const j = Process.findModuleByName('jgld.dll');
+  const meta = { ok: false };
+  if (!j) { meta.why = 'no jgld.dll'; return { meta, bits: null }; }
+  const disp = j.base.add(0x128420).readPointer();
+  if (disp.isNull()) { meta.why = 'no display'; return { meta, bits: null }; }
+  const mode = disp.add(0x148).readPointer();
+  const surf = mode.isNull() ? mode : mode.add(4).readPointer();
+  if (surf.isNull()) { meta.why = 'no surface'; return { meta, bits: null }; }
+  if (!GetObjectA) GetObjectA = new NativeFunction(Process.getModuleByName('gdi32.dll').getExportByName('GetObjectA'), 'int', ['pointer', 'int', 'pointer'], 'stdcall');
+  const ds = Memory.alloc(84);
+  const got = GetObjectA(surf.add(0x4b4).readPointer(), 84, ds);
+  meta.got = got;
+  meta.w = ds.add(4).readS32(); meta.h = ds.add(8).readS32(); meta.wb = ds.add(12).readS32(); meta.bpp = ds.add(18).readU16();
+  meta.biHeight = ds.add(32).readS32(); meta.comp = ds.add(40).readU32();
+  meta.masks = [ds.add(64).readU32(), ds.add(68).readU32(), ds.add(72).readU32()];
+  const bits = ds.add(20).readPointer();
+  if (got !== 84 || bits.isNull() || meta.wb <= 0 || meta.h === 0) { meta.why = 'not a DIB section'; return { meta, bits: null }; }
+  meta.ok = true;
+  return { meta, bits: bits.readByteArray(meta.wb * Math.abs(meta.h)) };
+}
+
 let firstPollDone = false;
 function poll(now) {
   if (CFG.spawnReach && !firstPollDone) {
@@ -666,8 +761,13 @@ function poll(now) {
       send({ type: 'full', va: 0x4c1000 }, ptr(0x4c1000).readByteArray(0x381174));
       continue;
     }
+    if (reply.extra && CFG.extraRegions) {
+      // opt-in (scenario_ab.py --extra-regions, batch c3fyl)
+      send({ type: 'extra' }, extraRegions());
+      continue;
+    }
     if (reply.dump) {
-      send({ type: 'dump', st: status(), witness: witnessBytes(), reach: reachCounts(), clk: clockLog(), wm: msgLog() }, dumpRegions());
+      send({ type: 'dump', st: status(), witness: witnessBytes(), reach: reachCounts(), clk: clockLog(), wm: msgLog(), cl: callLog() }, dumpRegions());
       continue;
     }
     for (const a of (reply.actions || [])) {
