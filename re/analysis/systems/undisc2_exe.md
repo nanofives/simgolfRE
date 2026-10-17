@@ -64,7 +64,7 @@ same slot number, the case bodies call exactly the method that class's own table
 | tag | this-adjust | class | slot 27 | slot 30 | slot 36 | slot 38 |
 |---|---|---|---|---|---|---|
 | 1 | -0x168 | viewFieldCtor49ebb0 | optionDialogOnMouse 0x0049fda0 | optionDialogUpdate 0x0049f9a0 | optionDialogOnKey 0x0049fa90 | 0x0049fc30 |
-| 2 | -0x1a0 | ListBox | ListBox::onDrag 0x0048c8a0 | ListBox::onNavKey 0x0048aa00 | ListBox::typeAhead 0x0048aea0 | ListBox::fireSelectChanged 0x0048c560 |
+| 2 | -0x1a0 | ListBox | ListBox::onDrag 0x0048c8a0 | ListBox::onPress 0x0048aa00 | ListBox::typeAhead 0x0048aea0 | ListBox::fireSelectChanged 0x0048c560 |
 | 4 | -0x04 | viewFieldCtor4a2250 | - | - | - | - |
 | 8 | -0x8c | panelSubCtor4a3110 | 0x004a4340 | hotHitCb0 0x004a43f0 | panelOnKey 0x004a4680 | hotHitCb5 0x004a4530 |
 | 0x10 | -0x180 | viewFieldCtor49d5a0 | listPanelReadValue 0x0049e7d0 | listPanelOnScroll 0x0049e230 | listPanelRefresh 0x0049e450 | listSelectionChanged 0x0049e640 |
@@ -95,7 +95,7 @@ The nineteen entries and their names:
 
 Ten of the nineteen are named after their slot number rather than a role. For those slots the already-named
 targets do not agree on one role (slot 36 holds three key handlers and `listPanelRefresh`; slot 30 holds
-`optionDialogUpdate`, `ListBox::onNavKey`, `hotHitCb0` and `listPanelOnScroll`), so the role is **not
+`optionDialogUpdate`, `ListBox::onPress`, `hotHitCb0` and `listPanelOnScroll`), so the role is **not
 determined** and the slot index is the firm fact. N1's reading of the same table from other classes gives slot 27
 as the pointer-move virtual, slot 30 as the press virtual and slots 29/31 as the release virtuals; that reading
 and the targets above have not been reconciled, and no name here depends on it.
@@ -126,7 +126,7 @@ vtordisp-target rows rather than switch dispatchers).
   on bit 0x40 of the flag byte at +0x44 and on the child pointer at +0xd8, then return that child's virtual +0x20
   / +0x24. `ListBox::fwdOnScroll` 0x0048c4f0 (slot 57) forwards to the object's own slot 58,
   `ListBox::onScroll` 0x0048c420.
-- **The 0x0083b654 pair**: `ListBox::onNavKeyMarked` 0x0048a9c0 (slot 33) and
+- **The 0x0083b654 pair**: `ListBox::onPressMarked` 0x0048a9c0 (slot 33) and
   `ListBox::fireSelectChangedMarked` 0x0048c520 (slot 39) set the global 0x0083b654 to 1, call the object's own
   slot 30 / slot 38 virtual, and clear it. That global is read in exactly two other places,
   `ListBox::setSelection` 0x00489f50 (0x0048a0c0) and `ListBox::fireSelectChanged` 0x0048c560 (0x0048c5c2), both

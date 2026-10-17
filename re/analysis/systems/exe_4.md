@@ -89,7 +89,7 @@ calls `Widget::create`, state changes invalidate via vtable `+0x120`.
   findId 0x004899d0, idAt 0x00489a30.
 - `ListBox` (vtable 0x004bb3cc): composite control = embedded Widget window [0x5c] + ListModel
   [0x5d4]. ctor 0x00489cb0, setSelection 0x00489f50 (scrolls into view, fires callbacks), measure
-  0x0048a120, build 0x0048a5d0, onNavKey 0x0048aa00, typeAhead 0x0048aea0, plus the multiple-
+  0x0048a120, build 0x0048a5d0, onPress 0x0048aa00, typeAhead 0x0048aea0, plus the multiple-
   inheritance sub-object handlers 0x0048c420-0x0048caf0 (scroll/select/click/addItem/mouse/drag/
   clearSelection/scrollBy).
 - `TextView` (vtable 0x004bb3f8, 0x2114 bytes): scrollable formatted-text view with span lists

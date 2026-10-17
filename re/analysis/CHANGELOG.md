@@ -4,6 +4,22 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-17  004722c0  announceLandmark  name LandmarkAvailableNotice->announceLandmark  log/b3_retag.tsv
+2026-10-17  004722c0  announceLandmark  subsystem course->golfer  log/b3_retag.tsv
+2026-10-17  0045c560  drawGolferInfoPanel  name GolferPanelEject->drawGolferInfoPanel  log/b3_retag.tsv
+2026-10-17  0045c560  drawGolferInfoPanel  subsystem ui->golfer  log/b3_retag.tsv
+2026-10-17  0044cff0  showEndOfYearScreen  name CareerRetirementFlow->showEndOfYearScreen  log/b3_retag.tsv
+2026-10-17  0044cff0  showEndOfYearScreen  subsystem golfer->economy  log/b3_retag.tsv
+2026-10-17  00432720  showSystemMenu  name OptionsMenuBuild->showSystemMenu  log/b3_retag.tsv
+2026-10-17  sound.dll:00040f60  codecRing5Add  name codecCombFilter->codecRing5Add  log/b3_retag.tsv
+2026-10-17  0048ccc0  ListBox::onPressMarked_vtordisp  name ListBox::onNavKeyMarked_vtordisp->ListBox::onPressMarked_vtordisp  log/b3_retag.tsv
+2026-10-17  0048ccb0  ListBox::onPress_vtordisp  name ListBox::onNavKey_vtordisp->ListBox::onPress_vtordisp  log/b3_retag.tsv
+2026-10-17  0048a9c0  ListBox::onPressMarked  name ListBox::onNavKeyMarked->ListBox::onPressMarked  log/b3_retag.tsv
+2026-10-17  0048aa00  ListBox::onPress  name ListBox::onNavKey->ListBox::onPress  log/b3_retag.tsv
+2026-10-17  004767a0  drawTextRun  name allocTextBuffer->drawTextRun  log/b3_retag.tsv
+2026-10-17  00409950  appendPairTrackPoint  name updatePairSnapshot->appendPairTrackPoint  log/b3_retag.tsv
+2026-10-17  00453260  golferAge  name golferScore->golferAge  log/b3_retag.tsv
+2026-10-17  00467600  appendWalkerName  name pickGolferName->appendWalkerName  log/b3_retag.tsv
 2026-10-16  004a5793  __ArrayUnwind  C2->C3  log/diff/004a5793___ArrayUnwind.path1.csv
 2026-10-16  004867b0  EditBox::onKey  C2->C3  log/diff/004867b0_EditBox_onKey.path1.csv
 2026-10-16  sound.dll:00028600  SoundWindowObj_ctor  C2->C3  log/diff/00028600_sound_SoundWindowObj_ctor.path1.csv

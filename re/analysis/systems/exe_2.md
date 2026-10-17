@@ -20,7 +20,7 @@ and the multi-chapter golfer stories.
   0x0057956e + index*0x100 (0x0046206d), a field of the record (0x0057956e is offset 0xb6 from the record base 0x005794b8).
   An earlier version of this note listed 0x0057956e as a separate array of stride 0x80: the disassembly does not
   support that (corrected 2026-10-16).
-  - `pickGolferName` 0x00467600 reads 0x0058587a, which is field +0x2a of record 0 of the walker table
+  - `appendWalkerName` 0x00467600 reads 0x0058587a, which is field +0x2a of record 0 of the walker table
     `g_walkers` 0x00585850 (stride 0x4c), not a roster array; it copies a default first name from the name table
     0x004c148c into the shared text buffer `g_textBuffer` 0x0051a068).
 - Name assembly: `buildGolferName` 0x004676e0 (full name + roman-numeral suffix, 18
@@ -102,7 +102,7 @@ Text layout with an inline markup language and simple widgets/windows.
   `skipToken` 0x00476d80, `scanToken` 0x00476dd0, `wrapText` 0x00476e20,
   `measureMarkupRun` 0x00476ef0, `drawMarkupRun` 0x00477280. Core renderer
   `drawRichText` 0x004775b0 (8 alignment-wrapper callers) with buffer from
-  `allocTextBuffer` 0x004767a0.
+  `drawTextRun` 0x004767a0.
 - Alignment wrappers: `drawText` 0x00477c30, `drawStringCentered` 0x00477fc0,
   `drawStringRightAt` 0x00478140, `drawCentered`/2/3 (0x00477cd0, 0x00477da0, 0x00477eb0),
   `drawRight`/2 (0x00478080, 0x004781f0), `drawBox` 0x00477e60, and the

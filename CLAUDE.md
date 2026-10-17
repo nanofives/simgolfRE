@@ -65,7 +65,7 @@ SimGolf\
 ├── shim\                              # winmm.dll proxy: compat fixes, patch loader, SG_HOOK registry
 ├── patches\                           # one .ini per byte patch
 ├── re\
-│   ├── anchors.json, CONFIDENCE.md, functions_ghidra.tsv (2,207 exe fns), functions_ghidra_Terrain.dll.tsv (1,050)
+│   ├── anchors.json, CONFIDENCE.md, functions_ghidra.tsv (2,497 exe fns), functions_ghidra_Terrain.dll.tsv (1,050)
 │   ├── coverage\, versions\, replay\ (recordings, not committed), scoreboard.tsv
 │   ├── analysis\<subsystem>\<addr>_<name>.md, analysis\CHANGELOG.md, analysis\PORTABLE_RUNTIME.md
 │   ├── frida\  boot_trace.py, dump_image.py, diff_hook.py, hooks_registry.py, js\*.js
@@ -703,6 +703,62 @@ jgld 535, sound 545, Terrain 149), C3 153 (exe 94, sound 59), C2 open 5; static 
 exe UI families only network code builds (TextView / ListBox / optionDialog / panel, about 120 rows), story / tournament /
 retirement screens, sound near misses (VC6 scheduling and register choice the permuter does not move), strchr (needs a signed
 branch offset in match.py's normalize, and is a transcription anyway).
+PORT PIVOT (2026-10-15, plan re/PORT_PLAN.md): the user's target is a portable reimplementation that plays from the user's own game
+files and loads or patches none of the four binaries. The C3/C4 hooks become the specification and the test oracle (re/match sources are
+VC6-exact transcriptions with literal addresses: reading reference, not code to copy); C4 stops being the gate. The plan holds the module
+table, seven phases (data model first) and a keep-or-fix list for original defects. Surveys: `re/tools/port_survey_globals.py`
+(log/port_globals.tsv): the 1,537 game-logic functions (0x401000-0x4a4ecf) touch 5,302 data addresses in 955 clusters (gap <= 0x40), 134
+named exactly, 891 clusters (500 functions) unnamed, the largest initialised-data tables (0x4c80d0-0x4cd3cc 848 addresses), the most-shared
+mutable cluster 0x83aa78-0x83ac30 (82 addresses, 99 functions); immediates in the data range count, so these are upper bounds.
+`re/tools/port_survey_hooks.py` (log/port_hooks.tsv): of 1,577 exe SG_HOOKs by their own detour body, pure 313, globals only 177, original
+callees 568, both 507, naked 12, so 80% do not port as written (111 sources use literal addresses, 9,660 occurrences).
+Batches after round 36 (2026-10-15/17, notes log/c3/<batch>_notes.txt): c3fv 5 (gameMain 0x45baf0, loadWorldAssets 0x43dbe0, loadInterfaceArt
+0x442180 [24 KB, 819 call sites as 48 generated tables, log/c3/alt/c3fv_segments.py], loadInfoScreenArt 0x44bde0, drawWorldObjects 0x430360;
+c3fv.js REC, an ordered TID-gated recorder with framemask's frame mapping and 64 stubs per key; gameMain also SAME at 10 checkpoints of the
+sandbox_basic spawn-reach scenario), c3fw 4 (loadGameBrowserScreen 0x43b610, showThemePackSelect 0x4725b0, pickAProScreen 0x43a8c0,
+courseActionMenu 0x46f550: round 32's SEH blocker ended by running ??_L 0x4a55d2 / ??_M 0x4a5713 for real as framemask stubs with
+`forward: true` and the Surface array declared as a {base, stride} region), c3fx 1 (showCharacterEditor 0x4385d0: the hold reason ??_L was
+wrong, the body holds one Image under SEH; the obstacle was 41 stood-in callees, solved with REC), c3fz + c3fza 5 (EditBox::onKey,
+__ArrayUnwind exe 0x4a5793 / sound 0x1004288e, sound dynInit_soundWindowObj100b49b8 and SoundWindowObj_ctor; __ArrayUnwind is a plain
+stdcall with its own SEH frame, run through an exported four-argument harness) promoted: no C2 row is open. Counts (`status --summary`,
+2026-10-17): C4 2,765 (exe 1,536, jgld 535, sound 545, Terrain 149), C3 168 (exe 106, sound 62), C2 386 (113 held, 273 end states dead /
+trivial), C1 1; exe function list 2,497.
+Golfer record (g1, 2026-10-16): g_golfers starts at 0x005794b8, 156 records of 0x100 bytes (0x2700 dwords: cleared at 0x0043160b..0x00431615,
+saved at 0x0040b107, whole-record `rep movsd` at 0x0045de3e / 0x004226ec); 0x005794c0 is field +0x08 of record 0 and the stride-0x80 array at
+0x57956e does not exist (field +0xb6). Records 152 scratch, 153 preview, 154 synthetic, 155 trialShot's copy. re/analysis/data/golfer_record.md
+(field map, flag bits, C struct) and record_tables.md (walkers/employees 0x585850 64 x 0x4c, per-class stats 0x56ae70, per-type state
+0x5849e0, story definitions 0x53a454); `re/tools/record_fields.py --base --stride --count` also scans code outside every function range (444 of
+3,120 references). golf_course.cpp, c3fa, c3fy and c3fx_deps.tsv use base 0x5794c0 (offsets 8 lower). Open ranges U-0009..U-0017.
+mainLoop 0x0040f5c0 (c3fy family, 2026-10-16/17): one body 0x0040f5c0..0x00421615 = 73,813 B, 21,541 instructions, 27 switch tables
+0x00421618..0x00421b23, one `ret` 0x0040fb04 (the Ghidra list had 8,035 B in 2 ranges); called once per process, no arguments, returns only
+on QUIT. Spec re/analysis/sim/mainLoop_structure.md + log/c3/c3fy_deps.tsv; reimplementation shim/src/re/c3fy.cpp (a naked entry rebuilds the
+SEH frame). The C2 -> C3 gate needs a path-1 A/B and none can exist for a once-per-process function, so it stays C2 (re/c3_hold.tsv NO_PATH1)
+and c3fy.cpp is NOT in shim/re_batches.txt; the evidence is whole-game scenario A/B (mainLoop ON vs OFF, other hooks off) on state, RNG words
+and frames. U-0008 resolved (c3fy2): eight transcription defects, not the original (a register reloaded between a `cmp` and its `jge` /
+`setle`, 0x00413a59, 0x004156b7; `lea` between `test` and `jne`, 0x00414a88; 0x00414e91; a missing load before a switch, 0x0041e38f; strcpy
+written as strcat, 0x0041cabc, 0x0041ec50). U-0007 open: `[0x004c2848] == 0x280` enters the exit-less loop 0x00420d83..0x00420e08 at
+0x0041b209. Block coverage of the original: 54.0% (nine c3fy2 scenarios), 82.3% (2,103 of 2,554) with c3fya's cov_a_* and c3fyb's cov_b_*
+(re/tools/scenario.py). c3fyc: five audits (re/tools/c3fy_audit_*.py) and 190 mutation modes (c3fy_mutgen.py, c3fy_mutants.tsv); the rounds
+fixed more transcription sites (c3fya 3, c3fyc 7, f19530e7 14, 7e85f800 two P7 sites 0x0041a47a / 0x0041ac89). Kill round c3fyk1-3
+(cov_k1_* / k2_* / k3_*) over the 45 surviving mutants: 22 killed (RED twice at the same checkpoint and hash, real hook GREEN twice), 16
+equivalent (argued from the code), 1 dead (129), 6 open (113 a playSound id; 187 a tile kind no stamp writes; 272; 279 a closed handle number;
+117, 123 a camera clamp read only by a money label no frame shows); verdicts log/c3/c3fyk{1,2,3}_results.tsv. TOOLING LESSONS: (1) a stored det_b
+from another instance or build, or a boot overlapping a sibling's, differs at the first checkpoint in boot words (title ticker 0x00822c78, RNG
+seed 0x00822d9c, seed_time 0x0051b380 = clock calls x 37): regress against a fresh OFF arm on the same instance; scenario_ab.py makes
+winmm.dll.c3ft_main once and restores it after EVERY control run, so a stale backup reinstalls an old build (two c3fyk3 runs voided). (2)
+Defender quarantined rebuilt mutant DLLs in instances\ (DefenseEvasion.A!ml) and Frida injection failed: rebuild and re-run, do not alter
+code to dodge it. (3) A killed `--negctl` run leaves the control DLL and a stale boot.lock: compare winmm.dll with the backup, restore,
+delete the lock. (4) TaskStop kills the shell, not its Python runners. (5) A single DIFF under load (cov_b_career, 384 px, state SAME) did not
+reproduce: count a kill only when a second run stops at the same checkpoint with the same hash.
+Batch b3 (2026-10-17): tool fixes with tests in tests/test_tool_fixes_b3.py: asm2inline.py keeps `movsx` operands and reads every range of
+a multi-range function (loadInterfaceArt reaches its `ret` 0x004480f7, not 0x00447f79); match.normalize() compares branch offsets as signed
+32-bit (strchr's `+0xfffffff0` against `+0x-10`; five match files re-run unchanged at 100%); c3_verify.py prints `hook source:` with the
+reason when a row's hooks.csv `file` names a source without the SG_HOOK. Names (re/names/exe_17.tsv, systems exe_17.md, pending ApplyNames
+list re/analysis/data/names_pending_apply.md; hooks.csv follows through `retag`): pickGolferName -> appendWalkerName, golferScore -> golferAge
+(printed after `, age ` at 0x0045c7e0..0x0045c81e), updatePairSnapshot -> appendPairTrackPoint, allocTextBuffer -> drawTextRun,
+ListBox::onNavKey* -> onPress* (a click handler), codecCombFilter -> codecRing5Add, new fillSlots54 0x004a29a0, four legacy hook names
+(OptionsMenuBuild, CareerRetirementFlow, GolferPanelEject, LandmarkAvailableNotice) retagged to the names rows, and g_screenWidth 0x00822c8c /
+g_screenHeight 0x00822c90 (gameMain 0x0045baf6 / 0x0045bb00, set-mode slot +0x58 at 0x0045bb2a..0x0045bb42; they were g_zoomLevel).
 Function bodies are not always contiguous (86 functions, e.g. mainLoop 0x40f5c0: 25 ranges up to 0x421614).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

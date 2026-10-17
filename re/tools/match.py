@@ -189,7 +189,12 @@ def normalize(code: bytes, base: int, start: int, is_abs, obj: bool = False) -> 
         elif ins.bytes[0] in (0xE8, 0xE9, 0xEB, 0xE0, 0xE1, 0xE2, 0xE3) or (ins.bytes[0] in range(0x70, 0x80)) or (ins.bytes[0] == 0x0F and ins.bytes[1] in range(0x80, 0x90)):
             # (0xE0-0xE3: loopne/loope/loop/jecxz, short relative branches in inline-asm loops)
             tgt = ins.operands[0].imm if ins.operands else 0
-            key = f"{m} +0x{tgt - start:x}"
+            # capstone gives a 32-bit target: a backward branch to before the obj's base 0 comes back as 0xfffffff0,
+            # so take the offset as a signed 32-bit value (the original side's `-0x10` and the obj's agree)
+            off = (tgt - start) & 0xFFFFFFFF
+            if off >= 0x80000000:
+                off -= 0x100000000
+            key = f"{m} +0x{off:x}"
         else:
             ops = []
             for i, op in enumerate(ins.operands):

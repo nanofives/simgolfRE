@@ -25,7 +25,7 @@ by the arithmetic each performs:
 | 0x100404d0 | codecSymmetricFir | linear-phase FIR out = x0*c0 + (x+1+x-1)*c1 + ... (taps 0x1005ec6c+) |
 | 0x10040da0 | codecFirstOrderFilter | out = x - a*state; state = x |
 | 0x10040e30 | codecBiquadFilter | two cascaded 2nd-order sections, coeffs 0x1005ecb0..0x1005ecc0, state param_4[0..3] |
-| 0x10040f60 | codecCombFilter | 5-tap circular comb accumulate at param_1+0xbde (indices +0xbd8/+0xbdc) |
+| 0x10040f60 | codecRing5Add | adds slot j of a 5-word ring at param_1+0xbe0 (1-based) into slot k and returns slot k; indices +0xbd8/+0xbdc step down and wrap 0 -> 5 |
 | 0x100414f0 | codecAmdfPitch | sum|x[i]-x[i+lag]| per lag, records min lag (*param_7) and max lag (*param_8) |
 
 The primitives (autocorrelation, AMDF pitch, biquad/FIR/comb synthesis filters, gain smoothing)

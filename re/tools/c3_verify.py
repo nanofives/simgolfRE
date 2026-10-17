@@ -52,6 +52,35 @@ def purposes(batch):
     return out
 
 
+HOOK_RE = re.compile(r'SG_HOOK\(\s*"([^"]+)"\s*,\s*(0x[0-9a-fA-F]+)')
+
+
+def source_hooks(path):
+    """{(module, address)} of the SG_HOOK lines of a shim source (empty for a missing file)."""
+    p = pathlib.Path(path)
+    if not p.is_file():
+        return set()
+    return {(m, int(a, 16)) for m, a in HOOK_RE.findall(p.read_text(encoding="utf-8", errors="replace"))}
+
+
+def hook_diagnosis(row_file, batch_source, mod, addr):
+    """Why the gate's 'SG_HOOK registered' check can fail for this row, or None when nothing is wrong. `row_file` is
+    the hooks.csv `file` column (a row demoted to C2 keeps naming the source of its old hook), `batch_source` the batch's
+    own shim/src/re/<batch>.cpp that --apply passes with --file."""
+    where = f"0x{addr:08x}" if mod == "golf_clean.exe" else f"{mod}+0x{addr:08x}"
+    has_batch = (mod, addr) in source_hooks(batch_source)
+    if row_file and (mod, addr) not in source_hooks(ROOT / row_file):
+        if has_batch:
+            return (f"hooks.csv file column names {row_file}, which has no SG_HOOK at {where}; the batch source "
+                    f"{pathlib.Path(batch_source).name} has it, so --apply passes --file {pathlib.Path(batch_source).as_posix()}")
+        return (f"hooks.csv file column names {row_file}, which has no SG_HOOK at {where}, and the batch source "
+                f"{pathlib.Path(batch_source).name} has none either: add the SG_HOOK there or promote by hand with "
+                f"`re_classify.py promote {addr:08x} --to C3 --file <the linked source>`")
+    if not has_batch:
+        return f"the batch source {pathlib.Path(batch_source).name} has no SG_HOOK at {where}; the gate will refuse the --file it is given"
+    return None
+
+
 # Functions held at C2 by a verifier's judgement that the gate cannot express (the A/B is GREEN but does not reach the
 # behaviour). --apply never promotes them; remove a row once its evidence is redone.
 HOLD = {(r["module"], int(r["addr"], 16)) for r in csv.DictReader(open(ROOT / "re" / "c3_hold.tsv"), delimiter="	")}
@@ -94,6 +123,10 @@ def main():
             status = "already " + row["confidence"]
         where = f"0x{addr:08x}" if mod == "golf_clean.exe" else f"{mod}+0x{addr:08x}"
         print(f"{where} {row.get('name', '?'):28} {status}")
+        if not status.startswith("already"):
+            why = hook_diagnosis(row.get("file", ""), ROOT / "shim" / "src" / "re" / f"{a.batch}.cpp", mod, addr)
+            if why:
+                print(f"    hook source: {why}")
         for k, f in facts.items():
             print(f"    {k:28} " + ("no CSV" if not f else f"{f['verdict']} {f['vectors']} vectors, {f['distinct']} distinct"
                                      + (f", {f['changed']} change state" if f["stateful"] else "")))
@@ -110,7 +143,8 @@ def main():
         note = ROOT / row["note"]
         t = note.read_text(encoding="utf-8")
         if "## Purpose" in t:
-            print(f"0x{addr:08x}: note already has a Purpose; not touched")
+            print(f"0x{addr:08x}: note already has a Purpose; not touched and NOT promoted (a row demoted to C2 keeps its "
+                  f"note): run `re_classify.py promote {addr:08x} --to C3 --file shim/src/re/{a.batch}.cpp --module {mod}`")
             continue
         ab = "; ".join(f"{k} ({f['vectors']} vectors, {f['distinct']} distinct results"
                        + (f", {f['changed']} changing state" if f["stateful"] else "") + f", `{f['path']}`)"
@@ -148,6 +182,9 @@ def main():
         print("\n".join(lines))
         if r.returncode != 0:                      # refused: take the Purpose back out so the note stays C2-shaped
             note.write_text(t, encoding="utf-8")
+            why = hook_diagnosis(row.get("file", ""), ROOT / "shim" / "src" / "re" / f"{a.batch}.cpp", mod, addr)
+            if why:
+                print(f"    hook source: {why}")
     return 0
 
 

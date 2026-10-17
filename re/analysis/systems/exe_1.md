@@ -87,7 +87,7 @@ saves/loads .chr/.pro files; hit-tested by `nearestCharControl` 0x438260, `charE
 `pickCharEditor` 0x438390. `showGolferPairSelect` 0x459850 picks the next pair.
 `buildGolferBioText` 0x4315e0 composes bio text (favorite colour, likes). Story/thought helpers:
 `substituteStoryNames` 0x45c460 (PARTNER/MYNAME tokens), `drawThoughtBubble` 0x45c200,
-`thoughtBalance` 0x45c420 (reads g_579540), `golferScore` 0x453260, `appendRatingLabel` 0x4532a0.
+`thoughtBalance` 0x45c420 (reads g_579540), `golferAge` 0x453260, `appendRatingLabel` 0x4532a0.
 
 ## 7. Asset loaders (subsystem: render / course)
 `loadWorldAssets` 0x43dbe0 (17732 bytes) loads every per-theme sprite/flic (trees, flowers, water,

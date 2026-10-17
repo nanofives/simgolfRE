@@ -107,7 +107,7 @@ plus the type-attribute table at 0x00578374 (stride 0x30) and 0x004c26c0 (stride
   free tiles, rebuildHeightfield), `rebuildTileCoverage` 0x0042f340 (recompute g_tileFlags bit
   0x40 coverage from holes via floodMark).
 - Golfer stories: `g_storyPairs` 0x0059fc60 (10 x 0x388). `addGolferPair` 0x004099f0 registers a
-  golfer+partner pair; `updatePairSnapshot` 0x00409950 refreshes its cached stats and event
+  golfer+partner pair; `appendPairTrackPoint` 0x00409950 refreshes its cached stats and event
   counter. `findNearestTargetTile` 0x0040de70 picks the nearest tile with g_tileFlags bit 0x200
   (writes g_nearTileDist/X/Y 0x00568d0c/0x0056a91c/0x0056a920). `computeRatingTrend` 0x004060a0
   is a weighted stat delta used by matchUpdate. `updateRollingStats` 0x00409bf0 decays a per-entry
