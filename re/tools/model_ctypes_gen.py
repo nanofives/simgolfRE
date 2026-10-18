@@ -210,11 +210,19 @@ def norm_type(t: str) -> tuple[str, list[int]] | None:
     return ALIASES.get(mm.group(1), mm.group(1)), dims
 
 
+def _map_rows():
+    """(stream, row) of the MERGED address map re/model/addresses.tsv (the integrated truth: sizes and counts G1 corrected,
+    rows it added). The six stream maps are inputs of the merge, not of the mirror."""
+    with (ROOT / "re" / "model" / "addresses.tsv").open(newline="", encoding="utf-8") as f:
+        for r in csv.DictReader(f, delimiter="	"):
+            yield (r.get("stream") or "g1"), r
+
+
 def symbols(m: Model) -> tuple[dict, list[str]]:
     out, notes = {}, []
-    for s in STREAMS:
-        with (ROOT / "re" / "model" / f"{s}_addresses.tsv").open(newline="", encoding="utf-8") as f:
-            for r in csv.DictReader(f, delimiter="\t"):
+    if True:
+        if True:
+            for s, r in _map_rows():
                 if (r.get("module") or "golf_clean.exe") != "golf_clean.exe":
                     continue
                 try:

@@ -101,5 +101,5 @@ def test_top10_value_roundtrip():
     if not p.exists():
         pytest.skip("top10.sve not present in the install copy")
     blob = p.read_bytes()
-    o = M.view("top_scores", blob)          # mainLoop writes the 0x618-byte TopScore[10] table as the whole file
-    assert bytes(M.from_values("top_scores", M.as_dict(o))) == blob
+    o = M.view("g_topScores", blob)          # mainLoop writes the 0x618-byte TopScore[10] table as the whole file
+    assert bytes(M.from_values("g_topScores", M.as_dict(o))) == blob

@@ -46,7 +46,7 @@ def rows():
             va, size = num(r.get("va")), num(r.get("size"))
             if va is None or size is None or (r.get("module") or "golf_clean.exe") != "golf_clean.exe":
                 continue
-            out.append({"stream": r.get("stream", ""), "symbol": r["symbol"], "va": va, "size": size,
+            out.append({"stream": r.get("stream", ""), "symbol": r["symbol"], "label": r["symbol"], "va": va, "size": size,
                         "type": r.get("element_type", ""), "count": num(r.get("count")), "stride": num(r.get("stride")),
                         "sve": r.get("sve_field", "-"), "conf": r.get("confidence", "")})
     return out
@@ -147,7 +147,7 @@ def main():
             status = "unnamed"
         elif typed < size:
             status = "partial"
-        elif all(placeholder(r["symbol"], r["va"]) for r, _o, _s in mem):
+        elif all(placeholder(r["label"], r["va"]) for r, _o, _s in mem):
             status = "placeholder"
         else:
             status = "named"
@@ -177,7 +177,7 @@ def main():
             "streams": ",".join(sorted({r["stream"] for r, _o, _s in mem})) or "-",
             "typed_bytes": f"0x{typed:x}", "status": status,
             "stream_sve_claims": ",".join(claims) or "-", "other_rows": ";".join(alts) or "-",
-            "names_globals": ";".join(gnames) or "-",
+            "names_globals": ";".join(gnames) or "-", "labels": ";".join(r["label"] for r, _o, _s in mem) or "-",
         }
         out.append(row)
         js.append({**row, "members": [{"symbol": r["symbol"], "stream": r["stream"], "offset": o,
