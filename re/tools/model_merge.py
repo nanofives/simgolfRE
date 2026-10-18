@@ -20,7 +20,63 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 MODEL = ROOT / "re" / "model"
 STREAMS = ["b", "c", "d", "e1", "e2", "f"]
 COLS = ["symbol", "module", "va", "size", "element_type", "c_type", "count", "stride", "signed", "stream",
-        "sve_field", "clusters", "relation", "parent", "evidence", "confidence", "stream_symbol"]
+        "sve_field", "clusters", "relation", "parent", "evidence", "confidence", "stream_symbol", "pointer"]
+
+# ---------------------------------------------------------------------------------------------------------------
+# POINTER column (phase 2.2, 2026-10-18; re/model/DECISIONS.md): whether an object's bytes hold process-specific
+# pointers, so a state image or a checkpoint comparison must not copy or compare them as data.
+#   `type`        the object's type holds a pointer by the rule of re/frida/restart_ab.py (is_pointer_object: a `*`
+#                 element / c type, `ptr` / `vtable` / `vbtable`, or a struct with a `+0x.. ptr` or `vptr` member,
+#                 propagated through members), the rule phase 2.1 used for its 195 pointer-flagged objects;
+#   `words:+0x..` dwords at these offsets hold heap pointers or handles although the type is plain data (POINTER_WORDS);
+#   `-`           neither.
+# POINTER_WORDS: symbol -> [(offset, evidence)]. Measured in phase 2.1 (U-0604, re/analysis/data/premise_check_flag_gaps.tsv:
+# values 0x0370xxxx..0x03e4xxxx in every continuous run of three scenarios, different between runs); each row cites the
+# instruction that stores the pointer where one was found. The types themselves are left alone: marking SgView's members
+# `ptr` would flag every window class (the restart rule propagates through members) and change phase 2.1's object set.
+POINTER_WORDS = {
+    "g_rootWindow": [
+        (0x11c, "SgView +0x11c, E1 `pointer (*+0x4/4)`: TextView::drawPanelWithImage dereferences it (sites 0x00491281, "
+                "0x004912dd in e1_fields.tsv); View_ctor zeroes it at 0x00479e49; the heap value's writer is not "
+                "determined [U-0610]"),
+        (0x120, "SgView +0x120, View_ctor zeroes it at 0x00479e5b; the heap value's writer is not determined [U-0610]"),
+        (0x124, "SgView +0x124, View_ctor zeroes it at 0x00479e55; writer not determined [U-0610]"),
+        (0x128, "SgView +0x128, View_ctor zeroes it at 0x00479e4f; writer not determined [U-0610]"),
+        (0x14c, "SgView +0x14c, View_ctor stores edi = 0 at 0x00479dcd; writer not determined [U-0610]"),
+        (0x278, "SgWindow +0x274 Image, Image +0x004 `surface` (e2.h `ptr`: jgld Surface from Display slot 31)"),
+        (0x378, "SgWindow +0x274 Image, Image +0x0b4 HotList +0x50 `entries` (array grown by HotList::grow)"),
+        (0x518, "SgWindow +0x274 Image, Image +0x254 HotList +0x50 `entries` (array grown by HotList::grow)"),
+    ],
+    "g_listPalette": [(0x0, "loadImage `mov [0x839a98], ebp` 0x00475987 after `mov edx, [ebp]; call [edx]` 0x00475982: "
+                            "an object with a vtable")],
+    "g_msgBoxLabelA": [(0x0, "MsgBox::setLabelA stores _malloc's result 0x0048de3a..0x0048de42 and _free's it 0x0048de1c")],
+    "g_msgBoxLabelB": [(0x0, "MsgBox::setLabelB, the same store as setLabelA (0x0048dea2..0x0048ded2)")],
+    "g_graphsyObject": [(0x0, "loadGraphsyObject stores LoadLibraryA's result 0x004a00aa..0x004a00b2 (a module handle); "
+                              "freeGraphsyObject FreeLibrary's it 0x004a0079")],
+}
+
+
+def pointer_column(rows):
+    """Fill r['pointer'] for every merged row (see POINTER_WORDS)."""
+    sys.path.insert(0, str(ROOT / "re" / "frida"))
+    from restart_ab import is_pointer_object, pointer_structs  # stdlib-only module top; the one pointer rule
+    ptrs = pointer_structs(MODEL / "include" / "sections")
+    syms = {r["symbol"] for r in rows}
+    missing = set(POINTER_WORDS) - syms
+    if missing:
+        raise SystemExit(f"POINTER_WORDS for symbols not in the map: {sorted(missing)}")
+    for r in rows:
+        if is_pointer_object(r, ptrs):
+            r["pointer"] = "type"
+        elif r["symbol"] in POINTER_WORDS:
+            offs = [o for o, _e in POINTER_WORDS[r["symbol"]]]
+            bad = [o for o in offs if o + 4 > r["size"]]
+            if bad:
+                raise SystemExit(f"{r['symbol']}: pointer word outside the object {bad}")
+            r["pointer"] = "words:" + ",".join(f"+0x{o:x}" for o in offs)
+        else:
+            r["pointer"] = "-"
+    return rows
 
 # Header type that the merged header uses for a stream's element type (the same object typed twice: D's opaque
 # placeholders and E1's early names are E2's classes; simgolf_model.h asserts the sizes and offsets agree).
@@ -322,6 +378,7 @@ def merged_rows():
     for r in keep:
         if r["parent"] != "-":
             r["parent"] = parents.get(r["parent"], r["parent"])
+    pointer_column(keep)
     return keep, dropped
 
 

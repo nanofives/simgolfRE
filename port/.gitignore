@@ -1,0 +1,3 @@
+# local only (re/PHASE23_PLAN.md decision 5): recorded corpora hold game data; build output
+corpus/
+build/

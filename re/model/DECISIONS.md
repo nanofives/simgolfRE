@@ -67,3 +67,18 @@ Applied by `re/tools/model_merge.py` (RESOLUTIONS, G_ROWS, MARKS, CANONICAL_TYPE
 - `g_titleBarH` (0x0083ff10) is stored once at startup by `initHscrollHeight` 0x00496020 as GetSystemMetrics(3), the horizontal scrollbar height.
 - Snd vtable slots 41-45 point at constant-0xb stubs (unimplemented slots, not device forwarders); `Snd+0x40` and `VoiceRx+0x40` hold the sound device pointer, `NodeList+0x14` the child pointer.
 - Applied 2026-10-18 by stream G3 after checking each against the disassembly (re/analysis/data/model_corrections.md): SpriteRef / FontRef class names, 0x004bc3b0 / b4 / bc as SgPanelSub's RecList tables, 0x004ba2a8 confirmed complete (names refreshed), g_viewTreeRoot / g_captureWindow split out of E2's window-system rows, SgNetPeerRecord and g_netPeerTable, g_hscrollHeight, g_panelListMode, g_panelListCount; the theme-slot and hole readings of 0x004c2848 / 0x004c2854 stay open (U-0600, U-0602).
+
+## 2026-10-18, phase 2.2: the `pointer` column of the address map
+- re/model/addresses.tsv gains an 18th column `pointer`, written by `re/tools/model_merge.py merge` (pointer_column): `type`
+  when the object's type holds a pointer by the rule phase 2.1 used (re/frida/restart_ab.py is_pointer_object: a `*` type,
+  `ptr` / `vtable` / `vbtable`, or a struct with a `+0x.. ptr` / `vptr` member, propagated through members; 195 top-level
+  .data objects, 2,863,036 bytes, the same set as premise_check.md section 5), `words:+0x..,..` for the dwords of a plain-typed
+  object that hold heap pointers or handles (model_merge.py POINTER_WORDS, each with its evidence), `-` otherwise.
+- The 12 dwords of U-0604 (premise_check_flag_gaps.tsv) are the `words:` rows: g_rootWindow +0x11c, +0x120, +0x124, +0x128,
+  +0x14c, +0x278 (Image.surface), +0x378 / +0x518 (the two HotList `entries` arrays of the window's Image), g_listPalette
+  (an object with a vtable, loadImage 0x00475987), g_msgBoxLabelA / B (_malloc'd strings, MsgBox::setLabelA / B),
+  g_graphsyObject (LoadLibraryA's module handle, loadGraphsyObject 0x004a00b2).
+- Why a column and not retyped members: marking SgView's members `ptr` in e1.h would make the propagating rule flag every
+  window class and change phase 2.1's measured object set; retyping the four scalars as `void *` would change the header the
+  port compiles. The column changes neither (simgolf_model.h and model_ctypes.py regenerate identically). The writers of
+  g_rootWindow +0x11c..+0x14c's heap values are not determined (U-0610).
