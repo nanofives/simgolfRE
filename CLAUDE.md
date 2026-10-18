@@ -880,6 +880,27 @@ FontRef (0x20) not GfxSurface / SurfaceRef; e1_vtables.tsv's SgRecList (0x004bc3
 g_ui83aa9c 0x0083aa9c is the root-window pointer, not int32[2]; the 16-record table (0x58 each) at pointer 0x0083ff6c is untyped; Snd slots 41-45 are
 unimplemented constant-0xb stubs. Save-field tool: model_sve_fields.py and model_ctypes_gen.py now build from the merged re/model/addresses.tsv (1,116
 mirror symbols; all 91 save fields named and resolvable).
+Phase 2.1 premise check (2026-10-18, re/analysis/data/premise_check.md, tool re/frida/restart_ab.py, runs log/p2/p21/, notes
+log/p2/p21_notes.txt, instance instances\p21 with the pinned references' winmm.dll 381ed2b2): can the ORIGINAL restart from a state
+image at a checkpoint and reproduce the next ones? Restart instant = mainLoop's frame head (the timeGetTime call at 0x0040fc29,
+return address 0x0040fc2f); the opt-in IMAGE block of scenario_det.js (cfg.image; default unchanged: a plain sandbox_basic replay is
+SAME as the pinned det_b) captures .data 0x004c1000+0x381174, the stack, T, the clock value the game receives, Q, pending events,
+virtual timers and input there, and writes them into a fresh process that replayed the schedule to an earlier checkpoint; the
+scenario script is then advanced offline over the source's polls. Scenarios sandbox_basic, course_season and p21_mood5 (mood5.sve
+with 15 checkpoints), three continuous runs each: (a) two continuous runs SAME everywhere; (c) a full .data image minus the DWORDS
+that differ in two other continuous runs restarts SAME (all of .data, frame, T) in all three, raw it crashes on frame 1 (Surface_blit3
+0x00475d73) and minus byte-level noise it crashed too (a heap pointer of another process shares its low bytes: half-written
+pointers); the non-pointer model objects alone give every simulation object equal (g_sounds' plain fields and 2 unmodeled bytes
+differ). 12 dwords in 5 objects the model types as data hold heap pointers (g_rootWindow +0x11c..+0x518, g_listPalette,
+g_msgBoxLabelA/B, g_graphsyObject: premise_check_flag_gaps.tsv, U-0604). (b) a save (the game's own saveGame at the instant,
+loadGame in the fresh process) diverges in all three (11 / 48 / 33 simulation objects at k+1); the causal state it lacks is
+g_rng 0x00822d9c and g_lastTipDate 0x0055e5ac (save + those two: no saved object differs in 48-480 virtual s; 13 stale buffers,
+UI, g_sounds and story text still do); loadGame also rebuilds g_cornerCache / g_tileWallMask / g_tileScreenY differently, edits
+g_flags and redraws Terrain.dll's state. Hidden-state table (123 objects, classes H0-H8): premise_check_hidden_state.tsv.
+Terrain.dll's state is outside every image: frames differ when the prefix had another course (U-0607). mainLoop's frame need not be
+written at the frame head. Negative controls RED: g_date +1, g_rng +1 (two scenarios); g_cash_div100 +1 is rewritten within 60 s
+(U-0605). Pitfall: a value-in-mapped-range test is not a pointer flag (string pools, grids, RNG words pass it); it is applied only
+inside pointer-flagged objects. Tests: tests/test_restart_ab.py (static), tests/test_restart_ab_runtime.py (slow, 67 s).
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

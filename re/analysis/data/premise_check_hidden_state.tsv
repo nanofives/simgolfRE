@@ -1,0 +1,124 @@
+symbol	va	size	stream	saved	class	differs_after_loadGame_in	after_save_plus_rng_lastTipDate	leave_out_result
+f_w_4c2848	0x004c2848	0x10	f	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_accuracySkillX100	0x0056949c	0x4	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_awardStories	0x00561258	0x4	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_ballRecords	0x005736b0	0x2400	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_ballStopCount	0x0053ea24	0x9c4	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_bestRounds	0x0056a524	0x28	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_cashHistory	0x0051b388	0x3e8	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_courseTable	0x00571fd8	0x30e	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_date	0x00834170	0x4	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_eventHistory	0x00568600	0x3e8	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_financeYears	0x00584210	0x7d0	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_freeUnlockMask	0x00822c70	0x4	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_funHistory	0x0053e63c	0x3e8	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_funRating	0x0059ae78	0x4	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_golferClassSlotCounts	0x0059dea0	0x80	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5,sandbox_basic	equal	-
+g_golferStats	0x0056ae70	0x1700	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_golferTypeState	0x005849e0	0xe70	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_golferTypes	0x004d6088	0xb7c0	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_golfers	0x005794b8	0x9c00	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5,sandbox_basic	equal	-
+g_habitatSlots	0x00572cb0	0xa00	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_holes	0x00575ab0	0x28a0	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_imaginationX100	0x005a636c	0x4	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_lastAllocatedGolfer	0x005a5a24	0x4	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_lastStoryAdvanceDate	0x0059b048	0x4	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_lengthSkillX100	0x005a882c	0x4	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_memberTypeHistory	0x00520640	0x3e8	b	yes	H0 saved, diverges as a consequence	p21_mood5	equal	-
+g_namePool	0x0056fcb0	0x1002	g1	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_namePoolLength	0x005a46b8	0x100	d	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_namePoolOffset	0x0059d81c	0x100	g1	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_nextArrivalOrder	0x0056a51c	0x4	b	yes	H0 saved, diverges as a consequence	course_season	equal	-
+g_nextGolferSlot	0x0059ae7c	0x4	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_skillHistory	0x005409ac	0x3e8	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_skillRatingX100	0x00541cd8	0x4	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_skyActors	0x005419d0	0x40	d	yes	H0 saved, diverges as a consequence	course_season,p21_mood5,sandbox_basic	equal	-
+g_storyPairs	0x0059fc60	0x3880	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_thoughtSeenLo	0x0059c08c	0x4	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_tileFlags	0x0053caf0	0x1388	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_tileMoodDown	0x0056c7e4	0x9c4	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_tileMoodUp	0x005a6378	0x9c4	c	yes	H0 saved, diverges as a consequence	course_season,p21_mood5	equal	-
+g_walkers	0x00585850	0x1300	b	yes	H0 saved, diverges as a consequence	course_season,p21_mood5,sandbox_basic	equal	-
+g_lastTipDate	0x0055e5ac	0x4	b	no	H1 causal, not saved	course_season,p21_mood5	equal	causal (course_season r_loo: 35 simulation objects differ at season_180)
+g_rng	0x00822d9c	0x4	b	no	H1 causal, not saved	course_season,p21_mood5,sandbox_basic	equal	causal (model --drop: 24 objects differ in sandbox_basic; --corrupt +1: RED in course_season and p21_mood5)
+g_ballScreenXs	0x005a47e8	0x80	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_ballScreenYs	0x005a4868	0x80	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_ballTrailX	0x00567b34	0x260	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_commentTone	0x0058b198	0x4	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	none (course_season r_loo)
+g_golferStripSlot	0x00567ff4	0x260	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_messageTimer	0x005a7144	0x4	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group B left out: none in course_season, g_value587ea0 self in p21_mood5
+g_nameLabelCount	0x0058bcb0	0x4	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_numberTextBuf	0x00838d9c	0xc	b	no	H2 not saved, rewritten (equal again)	p21_mood5	equal	-
+g_pathGrid	0x0058d370	0x9c4	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5,sandbox_basic	equal	none (sandbox_basic model --drop)
+g_shotFlags5a7140	0x005a7140	0x4	b	no	H2 not saved, rewritten (equal again)	course_season	equal	-
+g_shotTargetX	0x005a8828	0x4	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group D left out: none in both
+g_shotTargetY	0x005a8830	0x4	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group D left out: none in both
+g_storyReplyChapter	0x00838a94	0x4	b	no	H2 not saved, rewritten (equal again)	p21_mood5	equal	none (course_season r_loo)
+g_textBuf	0x0058a528	0x10	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+unk_0059b738	0x0059b738	0x4	b	no	H2 not saved, rewritten (equal again)	p21_mood5	equal	-
+unk_005a6d40	0x005a6d40	0x400	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group B left out: none in course_season, g_value587ea0 self in p21_mood5
+unk_005a9cc8	0x005a9cc8	0x4	b	no	H2 not saved, rewritten (equal again)	course_season,p21_mood5	equal	group D left out: none in both
+unk_005a9ccc	0x005a9ccc	0x4	b	no	H2 not saved, rewritten (equal again)	-	equal	group B left out: none in course_season, g_value587ea0 self in p21_mood5
+unk_005a9ce4	0x005a9ce4	0x4	b	no	H2 not saved, rewritten (equal again)	-	equal	group D left out: none in both
+unk_005a9ce8	0x005a9ce8	0x4	b	no	H2 not saved, rewritten (equal again)	-	equal	group D left out: none in both
+g_ballTrailY	0x00567d94	0x260	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in p21_mood5	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_infoPanelNumBuf	0x00824134	0x10	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in course_season,p21_mood5	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_pathQueueX	0x005a7404	0x800	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5,sandbox_basic	differs in sandbox_basic	self (sandbox_basic model --drop: only itself, 660 B, at every checkpoint)
+g_pathQueueY	0x005a8028	0x800	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5,sandbox_basic	differs in sandbox_basic	self (sandbox_basic r_svemin)
+g_saveIoRead	0x0053e638	0x4	g1	no	H2 not saved, stale (still differs)	p21_mood5,sandbox_basic	differs in p21_mood5	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_shotPowerCache	0x0053fd20	0x28	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in p21_mood5	group A left out: none in course_season, self in p21_mood5
+g_shotPowerCacheArg2	0x005685c8	0x28	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in p21_mood5	group A left out: none in course_season, self in p21_mood5
+g_shotPowerCacheDist	0x005a47b8	0x28	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in p21_mood5	group A left out: none in course_season, self in p21_mood5
+g_shotPowerRingIndex	0x005a9ce0	0x4	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in p21_mood5	group A left out: none in course_season, self in p21_mood5
+g_shotStartDate	0x0056962c	0x260	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in p21_mood5	self in p21_mood5, none in course_season (r_loo)
+g_thoughtArgByKind	0x00838da8	0x104	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in course_season,p21_mood5	self (course_season r_loo, p21_mood5 group C)
+g_value587ea0	0x00587ea0	0x4	b	no	H2 not saved, stale (still differs)	course_season,p21_mood5,sandbox_basic	differs in p21_mood5	group B left out: none in course_season, g_value587ea0 self in p21_mood5
+tile_anim_frame	0x00578804	0x9c4	c	no	H2 not saved, stale (still differs)	course_season,p21_mood5	differs in p21_mood5	group E left out: g_infoPanelNumBuf self in both; g_ballTrailY, tile_anim_frame self at one checkpoint of p21_mood5; the rest none
+g_panelListMode	0x00567afc	0x4	e1	no	H3 UI state	sandbox_basic	equal	-
+g_panelState	0x005a9f50	0x1c	e1	no	H3 UI state	course_season,p21_mood5,sandbox_basic	differs in course_season,p21_mood5,sandbox_basic	-
+g_rootInput	0x00822d58	0x40	e2	no	H3 UI state	p21_mood5	differs in p21_mood5	-
+g_rootWindow	0x00519a60	0x574	e1	no	H3 UI state	p21_mood5	equal	-
+g_ui_569498	0x00569498	0x1	e1	no	H3 UI state	p21_mood5	equal	-
+g_ui_5694a0	0x005694a0	0xc	e1	no	H3 UI state	course_season	equal	-
+g_ui_569628	0x00569628	0x4	e1	no	H3 UI state	course_season,p21_mood5	equal	-
+g_ui_56d1a8	0x0056d1a8	0xc	e1	no	H3 UI state	course_season,p21_mood5	equal	-
+g_ui_5a34e4	0x005a34e4	0x10	e1	no	H3 UI state	course_season,p21_mood5	equal	-
+g_ui_5aa554	0x005aa554	0x4	e1	no	H3 UI state	course_season,p21_mood5,sandbox_basic	differs in course_season,p21_mood5	-
+g_ui_5aa6b8	0x005aa6b8	0x14	e1	no	H3 UI state	sandbox_basic	equal	-
+g_flyBall4e9a9c	0x004e9a9c	0x4	e2	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_linePoint5a412c	0x005a412c	0x8	e2	no	H4 rendering (sprite queue, per-frame)	p21_mood5	differs in p21_mood5	-
+g_sceneCount838204	0x00838204	0x4	e2	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5	equal	-
+g_shot56a78c	0x0056a78c	0x4	e2	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5	equal	-
+g_shot56a790	0x0056a790	0x4	e2	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5	equal	-
+g_spriteAnchorX	0x0082b160	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteAnchorY	0x0082c164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteFlags	0x0082815c	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteObj	0x0082a15c	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteQueueCount	0x00838200	0x4	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteQueueHead	0x0082c160	0x4	d	no	H4 rendering (sprite queue, per-frame)	p21_mood5	equal	-
+g_spriteQueueNext	0x008361f4	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteShade	0x0082915c	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapAnchorX	0x0082615c	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapAnchorY	0x0082715c	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapFlags	0x0082e164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapNext	0x0082515c	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapObj	0x008351f4	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapShade	0x0082f164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapSortKey	0x0082d164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapX	0x00832164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSnapY	0x00833164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteSortKey	0x0082415c	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteX	0x00830164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_spriteY	0x00831164	0x1000	d	no	H4 rendering (sprite queue, per-frame)	course_season,p21_mood5,sandbox_basic	equal	-
+g_statusText	0x005695a8	0x80	e1	no	H5 text / story buffers	course_season,p21_mood5	equal	-
+g_story838220	0x00838220	0x2	e2	no	H5 text / story buffers	p21_mood5	differs in p21_mood5	-
+g_storyFiles	0x00838228	0x860	e2	no	H5 text / story buffers	p21_mood5	differs in p21_mood5	-
+g_textBuffer	0x0051a068	0x1000	e2	no	H5 text / story buffers	course_season,p21_mood5,sandbox_basic	equal	-
+g_sounds	0x0080d840	0x7e90	d	no	H6 audio (sound records, pointer-flagged)	course_season,p21_mood5,sandbox_basic	differs in course_season,p21_mood5	-
+g_cornerCache	0x0051b770	0x4e20	c	no	H7 derived table rebuilt by loadGame	sandbox_basic	equal	-
+g_tileScreenY	0x0055fec8	0x1388	d	no	H7 derived table rebuilt by loadGame	sandbox_basic	equal	-
+g_tileWallMask	0x005619a0	0x9c4	b	no	H7 derived table rebuilt by loadGame	sandbox_basic	equal	-
+g_flags	0x0059e7b8	0x4	b	yes	H7 saved, changed by loadGame	course_season	equal	-
+f_w_4c2e00	0x004c2e00	0x14	f	no	H7 written by loadGame (0x004c2e08 = -1 at 0x0040bba3)	course_season,p21_mood5	equal	-
+g_eoy58b388	0x0058b388	0x4	e2	no	H8 unmodeled	p21_mood5	equal	-
+unmodeled_00840b00	-	-	None	no	H8 unmodeled	p21_mood5	differs in p21_mood5	-

@@ -1,0 +1,13 @@
+symbol	va	offset	element_type	stream	scenarios	values_seen
+g_rootWindow	0x00519b7c	0x11c	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x037029d0,0x037129d0,0x037629d0,0x037a29d0
+g_rootWindow	0x00519b80	0x120	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x03702710,0x03712710,0x03762710,0x037a2710
+g_rootWindow	0x00519b84	0x124	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x03702450,0x03712450,0x03762450,0x037a2450
+g_rootWindow	0x00519b88	0x128	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x03702190,0x03712190,0x03762190,0x037a2190
+g_rootWindow	0x00519bac	0x14c	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x03702170,0x03712170,0x03762170,0x037a2170
+g_rootWindow	0x00519cd8	0x278	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x03d3ac70,0x03d4ac70,0x03d5ac70,0x03e4ac70
+g_rootWindow	0x00519dd8	0x378	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x0375577c,0x0379577c,0x0383577c,0x038a577c
+g_rootWindow	0x00519f78	0x518	SgRootWindow	e1	course_season,p21_mood5,sandbox_basic	0x03702024,0x03712024,0x03762024,0x037a2024
+g_listPalette	0x00839a98	0x0	uint32_t	e1	course_season,p21_mood5,sandbox_basic	0x0370bc90,0x0370bd40,0x0376bd40,0x037abd40
+g_msgBoxLabelA	0x0083b994	0x0	uint32_t	e1	course_season,p21_mood5,sandbox_basic	0x03702d00,0x03712d00,0x03762d00,0x037a2d00
+g_msgBoxLabelB	0x0083b998	0x0	uint32_t	e1	course_season,p21_mood5,sandbox_basic	0x03701530,0x03711530,0x03761530,0x037a1530
+g_graphsyObject	0x0084092c	0x0	uint32_t	e1	course_season,p21_mood5,sandbox_basic	0x03ab0000,0x03b20000,0x03b30000,0x03bf0000

@@ -45,7 +45,7 @@ function K(x) { keep.push(x); return x; }
 
 // ---------------------------------------------------------------- data block
 // +0x00 T   +0x04 step   +0x08 due   +0x0c main tid   +0x10 Qlo   +0x14 Qhi   +0x18 qstep   +0x1c onDue callback
-// +0x20 main-thread tgt calls   +0x24 main-thread qpc calls   +0x28 forwarded calls   +0x2c busy
+// +0x20 main-thread tgt calls   +0x24 main-thread qpc calls   +0x28 forwarded calls   +0x2c busy   (+0x48 cfg.image: stub esp)
 const D = K(Memory.alloc(Process.pageSize));
 D.writeU32(CFG.t0 >>> 0);
 D.add(4).writeU32(CFG.step >>> 0);
@@ -104,7 +104,8 @@ function tgtStub(realCell, slotIndex) {
   b.push(...clogBytes(1, slotIndex));
   b.push(0x3b, 0x05, ...d(8), 0x73, 0x01, 0xc3);
   // slow: push eax; call [onDue]; pop eax; ret
-  b.push(0x50, 0xff, 0x15, ...d(0x1c), 0x58, 0xc3);
+  // (cfg.image only: `mov [D+0x48], esp` after the push, so onDue finds the pushed eax at [esp] and the caller at [esp+4])
+  b.push(0x50, ...(CFG.image ? [0x89, 0x25, ...d(0x48)] : []), 0xff, 0x15, ...d(0x1c), 0x58, 0xc3);
   b[jneAt] = b.length - (jneAt + 1);
   // real: lock inc [forwarded]; jmp [cell]
   b.push(0xf0, 0xff, 0x05, ...d(0x28), 0xff, 0x25, ...u32(realCell));
@@ -128,10 +129,13 @@ function qpcStub(realCell, slotIndex) {
 
 // ---------------------------------------------------------------- event queue
 let seq = 0;
-const events = [];          // {t, s, fn}
-function schedule(t, fn) { events.push({ t: t >>> 0, s: seq++, fn }); recompute(); }
+const events = [];          // {t, s, fn, desc}; desc (what the event is) is read only by the opt-in IMAGE block
+function schedule(t, fn, desc) { events.push({ t: t >>> 0, s: seq++, fn, desc }); recompute(); }
+let imgWatch = null;        // opt-in IMAGE block (cfg.image): a frame-boundary site watch; null in every other mode
+let imgInput = null;        // opt-in IMAGE block: last virtual cursor / key states set by doAction; null otherwise
 function recompute() {
   if (D.add(0x2c).readU32()) return;   // onDue recomputes when it finishes
+  if (imgWatch) { setDue(0); return; } // cfg.image only: every main-thread clock call enters onDue until the site is met
   let m = 0xffffffff;
   for (const e of events) if (e.t < m) m = e.t;
   setDue(m);
@@ -152,6 +156,16 @@ const onDue = K(new NativeCallback(function () {
   D.add(0x2c).writeU32(1);
   setDue(0xffffffff);
   try {
+    if (imgWatch) {
+      // cfg.image only: the site watch sees every main-thread clock call; events still fire only at a call whose OLD T
+      // (the value the stub hands the game, pushed at [esp+4]) has reached the earliest event, as without the watch
+      const sesp = D.add(0x48).readPointer();      // the stub's esp after `push eax` (stored by the stub)
+      imgCheck(sesp);
+      const oldT = sesp.readU32();
+      let m = 0xffffffff;
+      for (const e of events) if (e.t < m) m = e.t;
+      if (oldT < m) return;
+    }
     for (;;) {
       const now = T();
       let best = -1;
@@ -191,6 +205,7 @@ let HWND = ptr(0);
 
 function doAction(a) {
   const s = shim();
+  if (imgInput) imgNoteInput(a);   // cfg.image only: the harness input state a restart must hand over
   switch (a.k) {
     case 'cursor': s.cursor(a.x, a.y); break;
     case 'vkey': s.vkey(a.vk, a.st); break;
@@ -214,7 +229,7 @@ const REAL = {};
 function armTimer(tm) {
   tm.next = (T() + Math.max(tm.elapse, 1)) >>> 0;
   const mine = tm;
-  schedule(tm.next, () => fireTimer(mine));
+  schedule(tm.next, () => fireTimer(mine), { k: 'timer', tm: mine });
 }
 function fireTimer(tm) {
   if (timers.indexOf(tm) < 0 || tm.dead) return;
@@ -798,8 +813,8 @@ function poll(now) {
   }
   send(msg);
   for (;;) {
-    let reply = null;
-    recv('go', (m) => { reply = m; }).wait();
+    let reply = null, rdata = null;
+    recv('go', (m, data) => { reply = m; rdata = data; }).wait();
     if (reply.hwnd) HWND = ptr(reply.hwnd);
     if (reply.full) {
       // opt-in (scenario_ab.py C3FT_FULLDUMP=1, batch b2): golf_clean.exe's whole .data section (globals and .bss)
@@ -819,19 +834,24 @@ function poll(now) {
       send({ type: 'extra' }, extraRegions());
       continue;
     }
+    if (reply.img && CFG.image) {
+      // opt-in (re/frida/restart_ab.py, phase 2.1): arm a frame-head capture / restore, or dump the DLLs' data sections
+      imgRequest(reply.img, rdata);
+      continue;
+    }
     if (reply.dump) {
       send({ type: 'dump', st: status(), witness: witnessBytes(), reach: reachCounts(), clk: clockLog(), wm: msgLog(), cl: callLog() }, dumpRegions());
       continue;
     }
     for (const a of (reply.actions || [])) {
       const act = a;
-      if (!a.dt) doAction(act); else schedule(now + a.dt, () => doAction(act));
+      if (!a.dt) doAction(act); else schedule(now + a.dt, () => doAction(act), { k: 'act', a: act });
     }
-    if (reply.next) schedule(now + reply.next, poll);
+    if (reply.next) schedule(now + reply.next, poll, { k: 'poll' });
     break;
   }
 }
-schedule(CFG.firstPoll, poll);
+schedule(CFG.firstPoll, poll, { k: 'poll' });
 
 // SPAWN-TIME REACH (cfg.spawnReach, scenario_ab.py --spawn-reach; batch s36c, round 36). Game.start() loads this agent
 // while the spawned process is still suspended: the shim's DllMain has installed its hooks (0xE9 at hooked entries,
@@ -858,6 +878,198 @@ if (CFG.debugMsg) {
       msgCounts[m] = (msgCounts[m] || 0) + 1;
     }
   });
+}
+
+// ---------------------------------------------------------------- IMAGE (cfg.image; phase 2.1 premise check, 2026-10-18)
+// re/frida/restart_ab.py asks, in a poll reply, for a STATE IMAGE at the next FRAME BOUNDARY, or for one to be written
+// back there. The boundary is the first main-thread clock call whose return address is cfg.image.ra (default 0x0040fc2f:
+// mainLoop's frame-head `call [0x004ba21c]` at 0x0040fc29, which stores the time into F+0x1ec; re/analysis/sim/
+// mainLoop_structure.md), so both runs stop at the same instruction with mainLoop's frame at the same depth. While a watch
+// is armed every main-thread timeGetTime call enters onDue (recompute sets due 0), but events keep firing only at a call
+// whose OLD T has reached the earliest event, the rule of the default mode.
+//   capture: send golf_clean.exe's .data section (0x004c1000, 0x381174 bytes), the main-thread stack around the site and
+//     the agent's own timeline state (T, the value the game receives, Q, pending events, virtual timers, virtual input),
+//     then optionally call saveGame 0x0040b4a0 (cdecl, name) there (`saveAs`).
+//   restore: optionally call loadGame 0x0040b9b0 (cdecl, name, a2, a3, a4) there (`load`), write the given regions and
+//     stack words, hand the game the captured clock value, set T / Q, rebuild the event queue and virtual timers from the
+//     captured descriptors and apply the captured virtual input, so the next poll arrives at the captured run's time.
+//   dlldata: send the writable ranges of jgld.dll, Terrain.dll, sound.dll and binkw32.dll (diagnostics only).
+// Without cfg.image none of this runs and the stubs, the queue and the polls behave as before.
+const IMG_RA = CFG.image ? ((CFG.image.ra || 0x0040fc2f) >>> 0) : 0;
+const IMG_DATA = [0x004c1000, 0x381174];
+if (CFG.image) imgInput = { cursor: null, vk: {} };
+function imgNoteInput(a) {
+  if (a.k === 'cursor') imgInput.cursor = [a.x, a.y];
+  else if (a.k === 'vkey') imgInput.vk[a.vk] = a.st;
+}
+function imgEvents() {
+  return events.slice().sort((x, y) => x.s - y.s).map(e => {
+    const d = e.desc || { k: '?' };
+    if (d.k === 'timer') return { t: e.t, k: 'timer', kind: d.tm.kind, id: d.tm.id, elapse: d.tm.elapse,
+                                  fn: (d.tm.proc || d.tm.cb).toString() };
+    if (d.k === 'act') return { t: e.t, k: 'act', a: d.a };
+    return { t: e.t, k: d.k };
+  });
+}
+function imgTimers() {
+  return timers.map(tm => ({ kind: tm.kind, id: tm.id, elapse: tm.elapse, periodic: !!tm.periodic, next: tm.next,
+                             fired: tm.fired || 0, fn: (tm.proc || tm.cb).toString(), dead: !!tm.dead }));
+}
+function imgDllData() {
+  const meta = [], parts = [];
+  let total = 0;
+  for (const name of ['jgld.dll', 'Terrain.dll', 'sound.dll', 'binkw32.dll']) {
+    const m = Process.findModuleByName(name);
+    if (!m) continue;
+    for (const r of m.enumerateRanges('rw-')) {
+      meta.push([name, r.base.sub(m.base).toUInt32(), r.size]);
+      parts.push(r.base.readByteArray(r.size));
+      total += r.size;
+    }
+  }
+  const buf = new Uint8Array(total);
+  let off = 0;
+  for (const p of parts) { buf.set(new Uint8Array(p), off); off += p.byteLength; }
+  return { meta, bytes: buf.buffer };
+}
+// the process's mapped ranges outside golf_clean.exe's image (heap, stacks, DLLs), coalesced: a .data dword whose value
+// falls in one of them is a pointer that is only valid in this process
+function imgRanges() {
+  const exe = Process.getModuleByName(EXE);
+  const lo = exe.base.toUInt32(), hi = lo + exe.size;
+  return Process.enumerateRanges({ protection: 'r--', coalesce: true })
+    .map(r => [r.base.toUInt32(), r.size])
+    .filter(([b, n]) => b + n <= lo || b >= hi);
+}
+let imgFns = null;
+function imgGameFns() {
+  if (!imgFns) imgFns = {
+    save: new NativeFunction(ptr(0x0040b4a0), 'void', ['pointer'], 'mscdecl'),
+    load: new NativeFunction(ptr(0x0040b9b0), 'int', ['pointer', 'int', 'int', 'int'], 'mscdecl'),
+  };
+  return imgFns;
+}
+function imgRequest(req, data) {
+  if (req.op === 'dlldata') {
+    const r = imgDllData();
+    send({ type: 'img', op: 'dlldata', meta: r.meta, ranges: imgRanges() }, r.bytes);
+    return;
+  }
+  if (req.op !== 'capture' && req.op !== 'restore') throw new Error('image: unknown op ' + req.op);
+  imgWatch = { req, data, seen: 0, max: req.maxCalls || 200000, sinceT: T() };
+}
+function imgCheck(sesp) {
+  // sesp = the stub's esp after `push eax`: [sesp] = the value the game will receive, [sesp+4] = the game's return address
+  const w = imgWatch;
+  const esp = sesp.sub(4);                        // as if at onDue's entry: [esp+4] pushed eax, [esp+8] return address
+  const ra = esp.add(8).readU32();
+  if (ra !== IMG_RA) {
+    if (++w.seen > w.max) {
+      imgWatch = null;
+      send({ type: 'img', op: 'timeout', req: w.req.op, seen: w.seen, T: T() - CFG.t0 });
+    }
+    return;
+  }
+  imgWatch = null;
+  const gesp = esp.add(12);                       // the game's esp after `call [slot]` returns
+  const req = w.req;
+  const stk = req.stack || [-0x40, 0x1400];       // [from, to) relative to the game's esp
+  if (req.op === 'capture') {
+    const meta = { op: 'capture', T: T(), ret: esp.add(4).readU32(), Qlo: D.add(0x10).readU32(), Qhi: D.add(0x14).readU32(),
+                   esp: gesp.toUInt32(), ra, seen: w.seen, sinceT: w.sinceT, events: imgEvents(), timers: imgTimers(),
+                   input: imgInput, data: IMG_DATA, stack: stk, tgt: D.add(0x20).readU32(), qpc: D.add(0x24).readU32(),
+                   ranges: imgRanges() };
+    const a = new Uint8Array(ptr(IMG_DATA[0]).readByteArray(IMG_DATA[1]));
+    const b = new Uint8Array(gesp.add(stk[0]).readByteArray(stk[1] - stk[0]));
+    const buf = new Uint8Array(a.length + b.length);
+    buf.set(a, 0); buf.set(b, a.length);
+    send({ type: 'img', op: 'capture', meta }, buf.buffer);
+    if (req.saveAs) {
+      const t0 = T();
+      imgGameFns().save(Memory.allocAnsiString(req.saveAs));
+      send({ type: 'img', op: 'saved', name: req.saveAs, clockCalls: T() - t0 });
+    }
+    return;
+  }
+  // restore
+  const out = { op: 'restored', esp: gesp.toUInt32(), seen: w.seen, sinceT: w.sinceT, T_before: T(),
+                ret_before: esp.add(4).readU32() };
+  if (req.report) {
+    // this run's own .data and stack at the site, before anything is written (what the image has to replace)
+    const a = new Uint8Array(ptr(IMG_DATA[0]).readByteArray(IMG_DATA[1]));
+    const b = new Uint8Array(gesp.add(stk[0]).readByteArray(stk[1] - stk[0]));
+    const buf = new Uint8Array(a.length + b.length);
+    buf.set(a, 0); buf.set(b, a.length);
+    send({ type: 'img', op: 'pre', meta: { esp: gesp.toUInt32(), stack: stk, T: T(), ranges: imgRanges() } }, buf.buffer);
+    if (req.twoPhase) {
+      // the writer decides the regions from this run's own state (its pointer words): wait for them, main thread held
+      let m2 = null, d2 = null;
+      recv('img2', (m, dd) => { m2 = m; d2 = dd; }).wait();
+      req.regions = m2.regions; req.stackRegions = m2.stackRegions;
+      w.data = d2;
+    }
+  }
+  if (req.load) {
+    const t0 = T();
+    out.load = imgGameFns().load(Memory.allocAnsiString(req.load.name), req.load.a2 | 0, req.load.a3 | 0, req.load.a4 | 0);
+    out.loadClockCalls = T() - t0;
+  }
+  const bytes = w.data || new ArrayBuffer(0);     // writeByteArray takes an ArrayBuffer (or a plain array)
+  let off = 0, nreg = 0, nbytes = 0;
+  for (const [va, n] of (req.regions || [])) {
+    ptr(va).writeByteArray(bytes.slice(off, off + n));
+    off += n; nreg++; nbytes += n;
+  }
+  for (const [rel, n] of (req.stackRegions || [])) {
+    gesp.add(rel).writeByteArray(bytes.slice(off, off + n));
+    off += n; nreg++; nbytes += n;
+  }
+  out.regions = nreg; out.bytes = nbytes;
+  const c = req.clock;
+  if (c) {
+    esp.add(4).writeU32(c.ret >>> 0);
+    D.writeU32(c.T >>> 0);
+    D.add(0x10).writeU32(c.Qlo >>> 0);
+    D.add(0x14).writeU32(c.Qhi >>> 0);
+  }
+  if (req.events) {
+    // virtual timers: the captured run's, matched to this run's by kind, id, period and callback; a captured timer this
+    // run does not have, or one of this run's the captured run does not have, is reported (and the latter dropped)
+    const used = new Set(), missing = [], dropped = [];
+    const byKey = (d) => timers.find(tm => !used.has(tm) && tm.kind === d.kind && tm.id === d.id && tm.elapse === d.elapse &&
+                                           (tm.proc || tm.cb).toString() === d.fn);
+    const mapT = new Map();
+    for (const d of (req.timers || [])) {
+      if (d.dead) continue;
+      const tm = byKey(d);
+      if (!tm) { missing.push(d); continue; }
+      used.add(tm); tm.next = d.next >>> 0; tm.fired = d.fired; mapT.set(d.kind + ':' + d.id, tm);
+    }
+    for (const tm of timers.slice()) {
+      if (used.has(tm)) continue;
+      dropped.push([tm.kind, tm.id, tm.elapse]);
+      tm.dead = true;
+      timers.splice(timers.indexOf(tm), 1);
+    }
+    events.length = 0;
+    for (const e of req.events) {
+      if (e.k === 'poll') schedule(e.t, poll, { k: 'poll' });
+      else if (e.k === 'act') { const act = e.a; schedule(e.t, () => doAction(act), { k: 'act', a: act }); }
+      else if (e.k === 'timer') {
+        const tm = mapT.get(e.kind + ':' + e.id);
+        if (tm) schedule(e.t, () => fireTimer(tm), { k: 'timer', tm });
+        else missing.push({ event: e });
+      } else missing.push({ event: e });
+    }
+    out.timersMissing = missing; out.timersDropped = dropped; out.events = events.length;
+  }
+  if (req.input) {
+    const s = shim();
+    if (req.input.cursor) { s.cursor(req.input.cursor[0], req.input.cursor[1]); imgInput.cursor = req.input.cursor; }
+    for (const k of Object.keys(req.input.vk || {})) { s.vkey(Number(k), req.input.vk[k]); imgInput.vk[k] = req.input.vk[k]; }
+  }
+  out.T = T(); out.ret = esp.add(4).readU32();
+  send({ type: 'img', op: 'restored', meta: out });
 }
 
 rpc.exports = {
