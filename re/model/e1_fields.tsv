@@ -1,0 +1,558 @@
+class	off	width	ctype	field	access_widths	rw	sign	evidence
+SgHotListEntry	0x0	4	uint32_t	vtbl	4	w		FUN_00492650;FUN_00492d70 | sites 0x492652,0x492d70
+SgHotListEntry	0x1c	4	uint32_t	tip_text	4	r,w		FUN_00492650;HotList::freeEntryTip | sites 0x492658,0x49266c,0x49267c
+SgHotList	0x0	4	uint32_t	vtbl	4	lea,w		View_ctor;layoutNode;View_dtor;Window::mouseEvent238;Window::mouseDispatch23c;Window::mouseDispatch240;Window::mouseDispatch244;Window::click;Window::mouseDispatch24c;Window::mouseDispatch250;Window::mouseDispatch254;Window::mouseDispatch258;TextView::ctor;FUN_00491370;Dialog::dtor;HotList::ctor;HotList::dtor;panelSubCtor4a3110;panelSubDtor4a3480;panelSubReset4a35e0;panelOnPick;hotHitCb0;hotHitCb1;hotHitCb2;hotHitCb3;hotHitCb4;hotHitCb5;hotHitCb6 | sites 0x479c65,0x479f36,0x47a483,0x47be9f,0x47bf9d,0x47c06d,0x47c13d,0x47c223,0x47c2ed,0x47c3bd,0x47c48d,0x47c55d,0x48cf71,0x491387,0x49174e,0x49287f,0x4928ed,0x4a3174,0x4a35b2,0x4a36d4,0x4a4364,0x4a4404,0x4a4444,0x4a4484,0x4a44c4,0x4a4504,0x4a4544,0x4a4584
+SgHotList	0x4	4	int32_t	f_004	4	r,w		HotList::resetFields;HotList::onMouseMove;HotList::cancelTip | sites 0x49281d,0x492d27,0x492d47,0x492d5e
+SgHotList	0x8	4	int32_t	f_008	4	r,w		HotList::resetFields;HotList::onMouseMove;HotList::cancelTip | sites 0x492820,0x492d2a,0x492d4c,0x492d61
+SgHotList	0xc	4	uint32_t	f_00c	4	r,w		HotList::resetFields;HotList::showTip;HotList::onMouseMove | sites 0x49280e,0x492bdf,0x492cd5
+SgHotList	0x10	4	int32_t	f_010	4	r,w		HotList::resetFields;HotList::showTip | sites 0x492811,0x492c69
+SgHotList	0x14	4	int32_t	f_014	4	w		HotList::resetFields | sites 0x492814
+SgHotList	0x18	4	int32_t	f_018	4	w		HotList::resetFields | sites 0x492817
+SgHotList	0x1c	4	int32_t	f_01c	4	w		HotList::resetFields | sites 0x49281a
+SgHotList	0x20	48	Timer	timer				sub-object Timer
+SgHotList	0x50	4	uint32_t	entries	4	r,w		HotList::resetFields;HotList::releaseArray;HotList::add;HotList::hitTest;HotList::hitTestRect;HotList::showTip;HotList::onMouseMove | sites 0x49280b,0x492833,0x492840,0x4929d2,0x4929df,0x492a0b,0x492a16,0x492a34,0x492a3e,0x492aa5,0x492b25,0x492bee,0x492cde,0x492cf9
+SgHotList	0x54	4	int32_t	capacity	4	r,w		HotList::grow;HotList::resetFields;HotList::add | sites 0x4926ae,0x4926b6,0x492805,0x4929b9
+SgHotList	0x58	4	int32_t	count	4	r,w		HotList::resetFields;HotList::add;HotList::hitTest;HotList::hitTestRect;HotList::onMouseMove | sites 0x492808,0x4929b6,0x4929c7,0x4929cf,0x492a95,0x492b15,0x492cd2
+SgHotList	0x5c	4	int32_t	tip_delay_ms	4	r,w		HotList::ctor;HotList::onMouseMove | sites 0x492885,0x492d09
+SgViewList	0x0	4	uint32_t	vtbl	4	w		View_ctor;View_dtor;List480::dtor;BinkFrame::scalarDtor | sites 0x479c74,0x47a3fb,0x480399,0x480419
+SgViewList	0x4	4	uint32_t	head	4	r,w		View_ctor;View_dtor;setFocusItem;Window::show;Window::dispatchAccel;Window::dispatchCommand;List480::dtor;BinkFrame::scalarDtor;panelRowCycleSelection | sites 0x479c7e,0x47a3f1,0x47a41e,0x47a43d,0x47a446,0x47a460,0x47a470,0x47aea0,0x47b72a,0x47c6fa,0x47c99a,0x480396,0x4803b4,0x4803cd,0x4803d3,0x4803e7,0x4803f4,0x480416,0x480434,0x48044d,0x480453,0x480467,0x480471,0x4a3007
+SgViewList	0x8	4	uint32_t	cursor	4	r,w		View_ctor;View_dtor;setFocusItem;Window::show;Window::dispatchAccel;Window::dispatchCommand;List480::dtor;BinkFrame::scalarDtor;panelRowCycleSelection | sites 0x479c84,0x47a427,0x47a459,0x47aeaa,0x47b734,0x47c704,0x47c9a4,0x4803ba,0x4803e3,0x48043a,0x480463,0x4a3011
+SgViewList	0xc	4	int32_t	count	4	r,w		View_ctor;View_dtor;setFocusItem;Window::show;Window::dispatchAccel;Window::dispatchCommand;List480::dtor;BinkFrame::scalarDtor;panelRowCycleSelection | sites 0x479c8a,0x47a412,0x47a466,0x47a47c,0x47ae92,0x47b720,0x47c6e6,0x47c98c,0x4803ab,0x4803ea,0x4803f7,0x48042b,0x48046a,0x480477,0x4a2ffc
+SgViewList	0x10	4	int32_t	cursor_index	4	w		View_ctor;View_dtor;List480::dtor;BinkFrame::scalarDtor | sites 0x479c90,0x47a476,0x47a489,0x4803f1,0x4803fa,0x480474,0x48047f
+SgViewList	0x14	4	int32_t	keep_data	4	r,w		View_ctor;View_dtor;List480::dtor;BinkFrame::scalarDtor | sites 0x479c96,0x47a407,0x4803a3,0x480423
+SgRecList	0x0	4	uint32_t	vtbl	4	lea,r,w		List401c70_dtor;List402_clear;ListModel::ctor;ListModel::dtor;ListModel::clear;ListModel::reset;ListModel::destroyNodes;ListBox::selectById;TextView::ctor;TextView::reset;Dialog::dtor;listPanelHoverAt;panelSubCtor4a3110;panelSubDtor4a3480;panelSubReset4a35e0 | sites 0x401c72,0x401c77,0x401ca0,0x4026b9,0x48918e,0x4891ca,0x4893ae,0x4893b1,0x4893d6,0x4893dd,0x489412,0x4894be,0x4894d7,0x489827,0x489b4d,0x489b55,0x489b8f,0x489be5,0x489bf0,0x489c17,0x489edc,0x48ce9c,0x48ceda,0x48cf15,0x48cf2b,0x48d67c,0x48d694,0x48d6fa,0x48d71d,0x49178c,0x49178f,0x4917dd,0x4917e0,0x49e7e8,0x49e853,0x4a31ac,0x4a31e7,0x4a350c,0x4a3515,0x4a354a,0x4a3605,0x4a3680
+SgRecList	0x4	4	uint32_t	vbptr	4	r,w		List401c70_dtor;ListModel::ctor;ListModel::dtor;ListModel::destroyNodes;TextView::ctor;Dialog::dtor;panelSubCtor4a3110;panelSubDtor4a3480 | sites 0x401c7d,0x489163,0x489188,0x4891a6,0x4893b7,0x4893e3,0x489b5b,0x489bf6,0x48ce6c,0x48ce96,0x48ceb6,0x48ceef,0x48cf1b,0x48cf31,0x491796,0x4917e7,0x4a3180,0x4a31a2,0x4a31c6,0x4a351b
+SgRecList	0x8	4	uint32_t	f_008	4	r,w		List401c70_dtor;List402_clear;ListModel::ctor;ListModel::dtor;ListModel::clear;ListModel::reset;ListModel::indexOfId;ListModel::selectedId;ListModel::findId;ListModel::idAt;ListModel::destroyNodes;ListBox::selectById;FUN_0048b3f0;TextView::ctor;TextView::reset;listPanelHoverAt;panelSubCtor4a3110;panelSubDtor4a3480;panelSubReset4a35e0;panelDrawItem;listFindById | sites 0x401c8b,0x401c9d,0x401cc2,0x401cc8,0x401ce5,0x401cf0,0x4026a6,0x4026b6,0x4026db,0x4026e1,0x4026fe,0x402706,0x4891ac,0x4893f1,0x489404,0x48942c,0x489436,0x489451,0x489464,0x4894b8,0x4894d4,0x4894f9,0x4894ff,0x48951b,0x48952c,0x489807,0x489824,0x489849,0x48984f,0x48986c,0x489874,0x4898d0,0x489965,0x4899d0,0x489a45,0x489b69,0x489b81,0x489ba8,0x489bae,0x489bc9,0x489bd9,0x489c04,0x489c14,0x489c39,0x489c3f,0x489c5c,0x489c63,0x489ee3,0x48b482,0x48cebc,0x48cf37,0x48d676,0x48d691,0x48d6b6,0x48d6bc,0x48d6d9,0x48d6e8,0x48d6f4,0x48d70f,0x48d736,0x48d73c,0x48d757,0x48d767,0x49e7f7,0x49e85a,0x4a31c9,0x4a3529,0x4a353c,0x4a3564,0x4a356a,0x4a3585,0x4a3596,0x4a365f,0x4a3672,0x4a3699,0x4a369f,0x4a36ba,0x4a36cb,0x4a3f8e,0x4a4890
+SgRecList	0xc	4	uint32_t	f_00c	4	r,w		List401c70_dtor;List402_clear;ListModel::ctor;ListModel::dtor;ListModel::clear;ListModel::reset;ListModel::indexOfId;ListModel::selectedId;ListModel::findId;ListModel::idAt;ListModel::destroyNodes;ListBox::selectById;FUN_0048b3f0;TextView::ctor;TextView::reset;listPanelHoverAt;panelSubCtor4a3110;panelSubDtor4a3480;panelSubReset4a35e0;panelDrawItem;listFindById | sites 0x401ca5,0x401ce1,0x4026be,0x4026fa,0x4891b2,0x48940c,0x48944b,0x4894dc,0x489515,0x48982c,0x489868,0x4898ed,0x4898f9,0x489917,0x48996d,0x489984,0x48998e,0x4899ed,0x4899f9,0x489a17,0x489a4d,0x489a62,0x489a6c,0x489b89,0x489bc3,0x489c1c,0x489c58,0x489ef6,0x489eff,0x489f14,0x48b48a,0x48b4a1,0x48b4ab,0x48cec2,0x48cf3d,0x48d699,0x48d6d2,0x48d717,0x48d751,0x49e7fd,0x49e80d,0x49e814,0x49e865,0x49e86b,0x49e87d,0x4a31cf,0x4a3544,0x4a357f,0x4a367a,0x4a36b4,0x4a3f96,0x4a3faf,0x4a3fb9,0x4a48ad,0x4a48b9,0x4a48d7
+SgRecList	0x10	4	uint32_t	f_010	4	r,w		List401c70_dtor;List402_clear;ListModel::ctor;ListModel::dtor;ListModel::clear;ListModel::reset;ListModel::indexOfId;ListModel::selectedId;ListModel::findId;ListModel::idAt;ListModel::destroyNodes;ListBox::selectById;ListBox::measure;ListBox::onPress;ListBox::onKey;FUN_0048b3f0;ListBox::onDrag;TextView::ctor;TextView::reset;listPanelHoverAt;panelSubCtor4a3110;panelSubDtor4a3480;panelSubReset4a35e0;panelDrawItem;listFindById | sites 0x401c92,0x401cde,0x401cf3,0x4026ab,0x4026f7,0x40270c,0x4891b8,0x4893f8,0x48944e,0x48946a,0x4894c8,0x489518,0x489532,0x489819,0x489865,0x48987a,0x4898df,0x489958,0x4899df,0x489a36,0x489b76,0x489bc6,0x489bdf,0x489c0b,0x489c55,0x489c69,0x489eee,0x48a12c,0x48aa1f,0x48aebc,0x48b46f,0x48c8b0,0x48cec8,0x48cf43,0x48d686,0x48d6dc,0x48d6ee,0x48d704,0x48d754,0x48d76d,0x49e7e1,0x49e834,0x49e872,0x4a31d5,0x4a3530,0x4a3582,0x4a359c,0x4a3666,0x4a36b7,0x4a36d1,0x4a3f79,0x4a489f
+SgRecList	0x14	4	int32_t	f_014	4	r,w		List401c70_dtor;List402_clear;ListModel::ctor;ListModel::dtor;ListModel::clear;ListModel::reset;ListModel::indexOfId;ListModel::findId;ListModel::destroyNodes;ListBox::selectById;TextView::ctor;TextView::reset;Dialog::dtor;listPanelHoverAt;panelSubCtor4a3110;panelSubDtor4a3480;panelSubReset4a35e0;listFindById | sites 0x401ced,0x401cf6,0x402709,0x4891be,0x4893d3,0x489467,0x48946d,0x48952f,0x489538,0x489877,0x489882,0x4898e5,0x489904,0x48990c,0x48991f,0x4899e5,0x489a04,0x489a0c,0x489a1f,0x489bdc,0x489be2,0x489c66,0x489c70,0x489ef1,0x489f07,0x489f0c,0x48cece,0x48cf49,0x48d6eb,0x48d6f1,0x48d76a,0x48d770,0x4917b3,0x491804,0x49e819,0x49e83f,0x49e86e,0x49e875,0x49e87a,0x4a31db,0x4a3599,0x4a359f,0x4a36ce,0x4a36d7,0x4a48a5,0x4a48c4,0x4a48cc,0x4a48df
+SgRecList	0x18	4	uint32_t	f_018	4	r,w		FUN_00474700;ListModel::ctor;ListModel::reset;TextView::ctor;recordCopyStr1c;bufferFree;panelSubCtor4a3110 | sites 0x474700,0x4891c4,0x489885,0x48ced4,0x48cf4f,0x4a0550,0x4a05dc,0x4a31e1
+SgRecList	0x1c	4	uint32_t	f_01c	4	lea,r		recordCopyStr20;Dialog::dtor;recordCopyStr1c | sites 0x474659,0x4917b0,0x491801,0x4a0549
+SgRecList	0x20	4	int32_t	f_020	4	r		recordCopyStr20 | sites 0x47465f
+SgRecList	0x24	4	int32_t	f_024	4	r		recordCopyStr20 | sites 0x474669
+SgRecList	0x28	8	HeapObject	heap_base				sub-object HeapObject
+SgWidgetBase	0x0	4	uint32_t	vtbl	4	lea,r,w		staticInit_404360;EditBox::dtor;View_ctor;layoutNode;View_dtor;Window::setSize;Window::show;Window::detach;Window::mouseEvent238;Window::mouseDispatch23c;Window::mouseDispatch240;Window::mouseDispatch244;Window::click;Window::mouseDispatch24c;Window::mouseDispatch250;Window::mouseDispatch254;Window::mouseDispatch258;widgetTableDtor;View::scalarDtor47d810;View4804a0::ctor;Base4805a0::dtor;Window::createBackingSurface;Window::doLayout;EditBox::ctor;FUN_00486af0;FUN_00486b00;EditBox::beginCaretDrag;EditBox::endCaretDrag;EditBox::updateCaretDrag;Button::ctor;Button::dtor;Button::create;Button::beginPress;FUN_00488bf0;FUN_00488cc0;Button::onMouseMove;Button::endPress;FUN_00488fa0;Button::setMode;ListBox::ctor;ListBox::dtor;ListBox::resetFields;ListBox::onPressMarked;ListBox::drawContents;ListBox::fwdOnScroll;ListBox::fireSelectChangedMarked;ListBox::onMouse;ListBox::clearSelection;ListBox::scrollBy;ListBox::deletingDtor;TextView::ctor;TextView::reset;TextView::build;TextView::drawContents;FUN_00491370;LabelButton::dtor;Dialog::viewDtor;Dialog::dtor;viewDeletingDtor;listPanelDeletingDtor;initWidgetTable;buildLabeledControl;controlInitBase;scrollbarOnDrag;scrollbarDraw;FUN_00497170;comboDtor;ctorGlobalObj49c020;globalObjDtor49c780;viewFieldCtor49d5a0;listPanelSlot60;listPanelSlot28;viewFieldCtor49ebb0;viewFieldDtor49ec80;optionDialogSlot60;optionDialogSlot28;optionDialogDeletingDtor;viewCtor4a0740;ctorObj4a13f0;FUN_004a21c0;viewFieldCtor4a2250;viewFieldDtor4a2330;panelRowDeletingDtor;panelSubCtor4a3110;panelSubDtor4a3480;panelSubSlot60;panelSubDeletingDtor | sites 0x404368,0x43cb6d,0x479c9c,0x479f86,0x479fb6,0x479fd6,0x47a00b,0x47a3de,0x47a4a2,0x47b4e3,0x47b4ef,0x47b707,0x47b824,0x47b88d,0x47b8bd,0x47beb7,0x47bee7,0x47bfb0,0x47bfc6,0x47c080,0x47c096,0x47c150,0x47c166,0x47c236,0x47c24c,0x47c300,0x47c316,0x47c3d0,0x47c3e6,0x47c4a0,0x47c4b6,0x47c570,0x47c586,0x47d7c0,0x47d813,0x4804db,0x4805c3,0x480b3f,0x480d97,0x4860a7,0x486af0,0x486b04,0x486bc1,0x486bf6,0x486c28,0x486c73,0x488544,0x48866d,0x4887c5,0x488b14,0x488c06,0x488c95,0x488cdf,0x488dca,0x488ec6,0x488fa0,0x4890f0,0x489cde,0x489d10,0x489df2,0x489e49,0x48a9d0,0x48a9d4,0x48c188,0x48c4f6,0x48c4fa,0x48c530,0x48c534,0x48c6ec,0x48cad7,0x48cadb,0x48cb1a,0x48cb29,0x48cb2d,0x48cba5,0x48ce3c,0x48ce4c,0x48cf81,0x48d487,0x48d64a,0x48d65c,0x48d664,0x48d66a,0x48e91e,0x490dd7,0x4913a3,0x49142d,0x491535,0x491731,0x49175e,0x49183a,0x491849,0x49186d,0x491877,0x491908,0x491ad5,0x491ae1,0x495d32,0x496055,0x496064,0x496074,0x4962f8,0x49630a,0x496312,0x496318,0x496d23,0x496d3d,0x496fe0,0x496fe6,0x496ff2,0x496ff8,0x497199,0x4971aa,0x497a40,0x497a5d,0x497a67,0x497a8f,0x497a99,0x49c069,0x49c79d,0x49d5ce,0x49e7b6,0x49e7ba,0x49e9b3,0x49e9b7,0x49ebde,0x49ec8c,0x49fd86,0x49fd8a,0x49fe37,0x49fe3b,0x49ff65,0x4a076f,0x4a0828,0x4a13fb,0x4a21ea,0x4a227e,0x4a2342,0x4a3058,0x4a3144,0x4a34b0,0x4a4879,0x4a4880,0x4a4988
+SgWidgetBase	0x4	4	uint32_t	callbacks[0]	4	w		initWidgetTable;resetWidgetTable | sites 0x495d3e,0x495eb5
+SgWidgetBase	0x8	4	uint32_t	callbacks[1]	4	w		initWidgetTable;resetWidgetTable | sites 0x495d59,0x495ecf
+SgWidgetBase	0xc	4	uint32_t	callbacks[2]	4	w		initWidgetTable;resetWidgetTable | sites 0x495d47,0x495ebe
+SgWidgetBase	0x10	4	uint32_t	callbacks[3]	4	r,w		Window::detach;initWidgetTable;resetWidgetTable | sites 0x47b8dc,0x495d50,0x495ec6
+SgWidgetBase	0x14	4	uint32_t	callbacks[4]	4	w		initWidgetTable;resetWidgetTable | sites 0x495d62,0x495ed7
+SgWidgetBase	0x18	4	uint32_t	callbacks[5]	4	w		initWidgetTable;resetWidgetTable | sites 0x495d6b,0x495ee0
+SgWidgetBase	0x1c	4	uint32_t	callbacks[6]	4	r,w		Window::mouseEvent238;initWidgetTable;resetWidgetTable | sites 0x47bef0,0x495d74,0x495ee8
+SgWidgetBase	0x20	4	uint32_t	callbacks[7]	4	r,w		Window::mouseDispatch244;initWidgetTable;resetWidgetTable | sites 0x47c16f,0x495d7d,0x495ef1
+SgWidgetBase	0x24	4	uint32_t	callbacks[8]	4	r,w		Window::click;initWidgetTable;resetWidgetTable | sites 0x47c255,0x495d86,0x495ef9
+SgWidgetBase	0x28	4	uint32_t	callbacks[9]	4	r,w		Window::mouseDispatch24c;initWidgetTable;resetWidgetTable | sites 0x47c31f,0x495d8f,0x495f02
+SgWidgetBase	0x2c	4	uint32_t	callbacks[10]	4	r,w		Window::mouseDispatch250;initWidgetTable;resetWidgetTable | sites 0x47c3f2,0x495d98,0x495f0a
+SgWidgetBase	0x30	4	uint32_t	callbacks[11]	4	r,w		Window::mouseDispatch254;initWidgetTable;resetWidgetTable | sites 0x47c4c2,0x495da1,0x495f13
+SgWidgetBase	0x34	4	uint32_t	callbacks[12]	4	r,w		Window::mouseDispatch258;initWidgetTable;resetWidgetTable | sites 0x47c592,0x495daa,0x495f1b
+SgWidgetBase	0x38	4	uint32_t	callbacks[13]	4	w		initWidgetTable;resetWidgetTable | sites 0x495db3,0x495f24
+SgWidgetBase	0x3c	4	uint32_t	callbacks[14]	4	w		initWidgetTable;resetWidgetTable | sites 0x495dbc,0x495f2c
+SgWidgetBase	0x40	4	uint32_t	callbacks[15]	4	w		initWidgetTable;resetWidgetTable | sites 0x495dc5,0x495f35
+SgWidgetBase	0x44	4	uint32_t	callbacks[16]	4	r,w		Window::mouseDispatch23c;initWidgetTable;resetWidgetTable | sites 0x47bfd2,0x495dce,0x495f3d
+SgWidgetBase	0x48	4	uint32_t	callbacks[17]	4	r,w		Window::mouseDispatch240;initWidgetTable;resetWidgetTable | sites 0x47c0a2,0x495dd7,0x495f46
+SgWidgetBase	0x4c	4	uint32_t	callbacks[18]	4	w		initWidgetTable;resetWidgetTable | sites 0x495de0,0x495f4e
+SgWidgetBase	0x50	4	uint32_t	callbacks[19]	4	w		initWidgetTable;resetWidgetTable | sites 0x495de9,0x495f57
+SgWidgetBase	0x54	4	uint32_t	callbacks[20]	4	w		initWidgetTable;resetWidgetTable | sites 0x495df2,0x495f5f
+SgWidgetBase	0x58	4	uint32_t	callbacks[21]	4	lea,w		ListBox::fwdInnerVfn20;ListBox::fwdInnerVfn24;initWidgetTable;resetWidgetTable;viewDispatchSlot6;viewDispatchSlot7 | sites 0x48cbf6,0x48cc36,0x495dfb,0x495f68,0x4a1141,0x4a1181
+SgWidgetBase	0x5c	4	uint32_t	callbacks[22]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e04,0x495f70
+SgWidgetBase	0x60	4	uint32_t	callbacks[23]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e0d,0x495f79
+SgWidgetBase	0x64	4	uint32_t	callbacks[24]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e16,0x495f81
+SgWidgetBase	0x68	4	uint32_t	callbacks[25]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e1f,0x495f8a
+SgWidgetBase	0x6c	4	uint32_t	callbacks[26]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e28,0x495f92
+SgWidgetBase	0x70	4	uint32_t	callbacks[27]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e31,0x495f9b
+SgWidgetBase	0x74	4	uint32_t	callbacks[28]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e3a,0x495fa3
+SgWidgetBase	0x78	4	uint32_t	callbacks[29]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e43,0x495fac
+SgWidgetBase	0x7c	4	uint32_t	callbacks[30]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e4c,0x495fb4
+SgWidgetBase	0x80	4	uint32_t	callbacks[31]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e55,0x495fbd
+SgWidgetBase	0x84	4	uint32_t	callbacks[32]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e61,0x495fc8
+SgWidgetBase	0x88	4	uint32_t	callbacks[33]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e6d,0x495fd4
+SgWidgetBase	0x8c	4	uint32_t	callbacks[34]	4	lea,w		initWidgetTable;resetWidgetTable;panelRowCycleSelection | sites 0x495e79,0x495fdf,0x4a2ff9
+SgWidgetBase	0x90	4	uint32_t	callbacks[35]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e85,0x495feb
+SgWidgetBase	0x94	4	uint32_t	callbacks[36]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e91,0x495ff6
+SgWidgetBase	0x98	4	uint32_t	callbacks[37]	4	w		initWidgetTable;resetWidgetTable | sites 0x495e9d,0x496002
+SgView	0x0	156	SgWidgetBase	base				sub-object WidgetBase
+SgView	0x9c	4	uint32_t	flags	1,4	r,w		View_ctor;layoutNode;View_attach;View::toParent;View::fromParent;Window::show;Window::resized;Window::mouseEvent238;Window::mouseDispatch23c;Window::mouseDispatch240;Window::mouseDispatch244;Window::click;Window::mouseDispatch24c;Window::mouseDispatch250;Window::mouseDispatch254;Window::mouseDispatch258;Window::key;Window::dispatchAccel;Window::dispatchCommand;Window::adjustSizeOuter;Window::innerSize;Window::growRect;Window::shrinkRect;rebuildFramePieces;Window::isFocusChild;drawFramePieces;FUN_0047ea30;Window::paint;Window::paintBackground;drawPanel4810d0;Window::calcSizeFromCorners;ListBox::onMouse;ListBox::scrollBy;ListBox::fwdInnerVfn20;ListBox::fwdInnerVfn24;viewDispatchSlot6;viewDispatchSlot7 | sites 0x479e6d,0x479fce,0x47a003,0x47a02e,0x47abe4,0x47b1a5,0x47b1c0,0x47b235,0x47b250,0x47b692,0x47bc6c,0x47be46,0x47bf46,0x47c016,0x47c0e6,0x47c1b8,0x47c296,0x47c366,0x47c436,0x47c506,0x47c5d8,0x47c6c5,0x47c977,0x47ca2b,0x47ca43,0x47ca58,0x47cb2b,0x47cb43,0x47cb58,0x47cc1f,0x47cc36,0x47cc4d,0x47cc98,0x47ccc2,0x47cced,0x47cd03,0x47cd1a,0x47cd68,0x47cd92,0x47d625,0x47d7d0,0x47d866,0x47ea38,0x47ea95,0x4808c7,0x480a13,0x4810fe,0x481760,0x48c72f,0x48caf9,0x48cbf9,0x48cc39,0x4a1148,0x4a1188
+SgView	0xa0	4	uint32_t	state	1,4	r,w		View_ctor;View_attach;Window::center;Window::moveTo;Window::setSize;Window::show;Window::detach;Window::mouseEvent238;Window::mouseDispatch23c;Window::mouseDispatch240;Window::mouseDispatch244;Window::click;Window::mouseDispatch24c;Window::mouseDispatch250;Window::mouseDispatch254;Window::mouseDispatch258;Window::key;Window::dispatchAccel;Window::dispatchCommand;rebuildFramePieces;drawFramePieces;Window::hitTestBorder;Window::visible;drawPanel4810d0 | sites 0x479cba,0x47abf5,0x47b31d,0x47b420,0x47b50e,0x47b676,0x47b6b1,0x47b6c4,0x47b74b,0x47b8a2,0x47b8ae,0x47be56,0x47bf56,0x47c026,0x47c0f6,0x47c1c8,0x47c2a6,0x47c376,0x47c446,0x47c516,0x47c5e8,0x47c6d9,0x47c983,0x47d618,0x47d859,0x47ed30,0x4801f0,0x4810d9
+SgView	0xa4	4	int32_t	f_0a4	4	w		View_ctor | sites 0x479cc0
+SgView	0xa8	4	int32_t	f_0a8	4	w		View_ctor | sites 0x479cc6
+SgView	0xac	4	int32_t	f_0ac	4	w		View_ctor | sites 0x479ccc
+SgView	0xb0	4	uint32_t	self	4	w		View_ctor | sites 0x479ca2
+SgView	0xb4	4	int32_t	f_0b4	4	w		View_ctor | sites 0x479cd2
+SgView	0xb8	4	int32_t	f_0b8	4	w		View_ctor | sites 0x479cd8
+SgView	0xbc	96	SgHotList	hot				sub-object HotList
+SgView	0x11c	4	uint32_t	f_11c	4	r,w		View_ctor;TextView::drawPanelWithImage | sites 0x479e49,0x491281,0x4912dd
+SgView	0x120	4	int32_t	f_120	4	w		View_ctor | sites 0x479e5b
+SgView	0x124	4	int32_t	f_124	4	w		View_ctor | sites 0x479e55
+SgView	0x128	4	int32_t	f_128	4	w		View_ctor | sites 0x479e4f
+SgView	0x12c	4	int32_t	f_12c	4	w		View_ctor | sites 0x479ee5
+SgView	0x130	4	uint32_t	parent	4	r,w		View_ctor;layoutNode;View_unlinkFromParent;Container::cycleSelection;View::toParent;View::fromParent;Panel::notify;FUN_0047ea30;Window::onPressHot;Window::setFocus;Window::paint;Window::paintBackground;EditBox::cycleSelectionIfOwned;Button::setColorNormal;Button::setColorHover;Button::setColorPressed;Button::beginPress;FUN_00488bf0;Button::onMouseMove;Button::endPress;Button::setMode;ListBox::onPress;ListBox::onKey;ListBox::drawContents;ListBox::onScroll;ListBox::fireSelectChanged;ListBox::forwardClick;ListBox::onMouse;ListBox::fwdInnerVfn20;ListBox::fwdInnerVfn24;FUN_00496d60;scrollbarScrollBy;listPanelOnScroll;listPanelRefresh;listSelectionChanged;listPanelDrawContents;optionDialogUpdate;optionDialogOnKey;optionDialogSlot38;optionDialogDrawContents;viewDispatchSlot6;viewDispatchSlot7;LabelButton::drawContents;panelDrawGrid;panelSubDrawContents | sites 0x479d0e,0x47a066,0x47ada1,0x47af63,0x47b1af,0x47b1cb,0x47b1dd,0x47b23f,0x47b25b,0x47b26d,0x47e123,0x47ea87,0x47f01c,0x47f1bb,0x4808d7,0x48092e,0x480a23,0x486b20,0x488930,0x488970,0x4889b0,0x488adb,0x488afd,0x488c1d,0x488c5c,0x488c7e,0x488d91,0x488db3,0x488edd,0x4890fe,0x48aa0c,0x48aeb5,0x48c13f,0x48c42b,0x48c56a,0x48c59a,0x48c5cd,0x48c5ef,0x48c616,0x48c735,0x48cc02,0x48cc42,0x496d64,0x496d7f,0x4973c3,0x49e248,0x49e460,0x49e649,0x49e68f,0x49f9af,0x49fa9f,0x49fc36,0x49fc70,0x4a1154,0x4a1194,0x4a15a3,0x4a15ae,0x4a2d62,0x4a45c8
+SgView	0x134	24	SgViewList	children				sub-object ViewList
+SgView	0x14c	4	int32_t	f_14c	4	w		View_ctor | sites 0x479dcd
+SgView	0x150	4	uint32_t	f_150	4	r,w		View_ctor;Window::releaseScrollbars | sites 0x479dd9,0x47d513,0x47d523
+SgView	0x154	4	uint32_t	f_154	4	r,w		View_ctor;Window::releaseScrollbars | sites 0x479ddf,0x47d52d,0x47d53d
+SgView	0x158	4	uint32_t	f_158	4	r,w		View_ctor;Window::releaseScrollbars;Window::layoutScrollbars | sites 0x479de5,0x47d547,0x47d557,0x47d59a,0x47d5b2
+SgView	0x15c	4	uint32_t	f_15c	4	r,w		View_ctor;Window::show;Window::growRect;Window::shrinkRect | sites 0x479d14,0x47b70e,0x47ccb7,0x47cd87
+SgView	0x160	4	int32_t	f_160	4	r,w		View_ctor;FUN_0047e770 | sites 0x479df7,0x47e7df
+SgView	0x164	4	int32_t	f_164	4	w		View_ctor | sites 0x479dc7
+SgView	0x168	4	int32_t	f_168	4	w		View_ctor | sites 0x479d37
+SgView	0x16c	4	int32_t	f_16c	4	w		View_ctor | sites 0x479d43
+SgView	0x170	4	int32_t	f_170	4	w		View_ctor | sites 0x479d5b
+SgView	0x174	4	int32_t	f_174	4	w		View_ctor | sites 0x479d67
+SgView	0x178	4	int32_t	f_178	4	w		View_ctor | sites 0x479d73
+SgView	0x17c	4	int32_t	f_17c	4	w		View_ctor | sites 0x479d7f
+SgView	0x180	4	int32_t	f_180	4	r,w		View_ctor;Window::growRect;Window::shrinkRect;Window::layoutScrollbars;rebuildFramePieces;drawFramePieces;drawPanel4810d0 | sites 0x479d4f,0x47cca7,0x47cd71,0x47d587,0x47d638,0x47d87f,0x481111
+SgView	0x184	4	int32_t	f_184	4	r,w		View_ctor;Window::adjustSizeOuter;Window::innerSize;Window::growRect;Window::shrinkRect;Window::layoutScrollbars | sites 0x479d8b,0x47ca63,0x47ca71,0x47cb63,0x47cb73,0x47cc5e,0x47cc8d,0x47cca1,0x47cd2a,0x47cd5b,0x47cd77,0x47d592
+SgView	0x188	4	int32_t	f_188	4	r,w		View_ctor;Window::adjustSizeOuter;Window::innerSize;Window::growRect;Window::shrinkRect | sites 0x479d97,0x47ca7f,0x47cb83,0x47cc82,0x47cd50
+SgView	0x18c	4	int32_t	f_18c	4	w		View_ctor | sites 0x479da3
+SgView	0x190	4	int32_t	f_190	4	w		View_ctor | sites 0x479daf
+SgView	0x194	4	int32_t	f_194	4	r,w		View_ctor;Window::layoutScrollbars;TextView::drawPanelWithImage | sites 0x479dbb,0x47d575,0x4912b4
+SgView	0x198	4	int32_t	f_198	4	w		View_ctor | sites 0x479dd3
+SgView	0x19c	4	int32_t	f_19c	4	r,w		View_ctor;FUN_0047e770 | sites 0x479d25,0x47e77f
+SgView	0x1a0	4	int32_t	f_1a0	4	w		View_ctor | sites 0x479d2b
+SgView	0x1a4	4	int32_t	f_1a4	4	w		View_ctor;View4804a0::ctor;Window::ctorInit;Window::calcSizeFromCorners | sites 0x479cde,0x4804ed,0x480632,0x4817b2,0x4817c6
+SgView	0x1a8	4	int32_t	f_1a8	4	w		View_ctor;View4804a0::ctor;Window::ctorInit;Window::calcSizeFromCorners | sites 0x479ce4,0x4804f3,0x480638,0x4817da,0x4817f1
+SgView	0x1ac	4	int32_t	rect_a[0]	4	lea,r,w		View_ctor;View::toParent;View::fromParent;View::toLocal;View::toGlobal;Window::setSize;Window::show;Window::passLocalRect;Window::resized;FUN_0047e770;Window::paint;Window::paintBackground;Button::onTimer | sites 0x479e15,0x47b17f,0x47b20f,0x47b2a4,0x47b2e4,0x47b517,0x47b527,0x47b52d,0x47b6ef,0x47b9a4,0x47b9ac,0x47bc8d,0x47e779,0x47e789,0x480912,0x48091a,0x480a56,0x48900b,0x489019
+SgView	0x1b0	4	int32_t	rect_a[1]	4	r,w		View_ctor;View::toParent;View::fromParent;View::toLocal;View::toGlobal;Window::setSize;Window::show;Window::passLocalRect;FUN_0047e770;Window::paint;Window::paintBackground;Button::onTimer | sites 0x479e1b,0x47b193,0x47b223,0x47b2b0,0x47b2f0,0x47b51d,0x47b538,0x47b6e3,0x47b9b1,0x47e78b,0x48091c,0x480a47,0x48901f
+SgView	0x1b4	4	int32_t	rect_a[2]	4	r,w		View_ctor;Window::setSize;Window::show;Window::passLocalRect;Window::resized;FUN_0047e770;Window::paint;Button::onTimer | sites 0x479e25,0x47b531,0x47b6e9,0x47b9b6,0x47bc87,0x47e78e,0x480921,0x489026
+SgView	0x1b8	4	int32_t	rect_a[3]	4	r,w		View_ctor;Window::setSize;Window::show;Window::passLocalRect;FUN_0047e770;Window::paint;Button::onTimer | sites 0x479e2b,0x47b53d,0x47b6dd,0x47b9c1,0x47e791,0x48092b,0x489031
+SgView	0x1bc	4	int32_t	rect_b[0]	4	lea,r,w		View_ctor;View::toParent;View::fromParent;Window::moveTo;Window::show;Window::layoutScrollbars;FUN_0047e770;Window::paint;Window::paintBackground | sites 0x479e31,0x47b179,0x47b209,0x47b435,0x47b445,0x47b754,0x47b75a,0x47d581,0x47e79e,0x4808f5,0x4808ff,0x480a41
+SgView	0x1c0	4	int32_t	rect_b[1]	4	r,w		View_ctor;View::toParent;View::fromParent;Window::moveTo;Window::show;FUN_0047e770;Window::paint;Window::paintBackground | sites 0x479e37,0x47b18d,0x47b21d,0x47b42f,0x47b453,0x47b461,0x47b762,0x47e794,0x480901,0x480a4e
+SgView	0x1c4	4	int32_t	rect_b[2]	4	r,w		View_ctor;Window::moveTo;Window::show;Window::layoutScrollbars;Window::paint | sites 0x479e3d,0x47b44b,0x47b45b,0x47b767,0x47d57b,0x480904
+SgView	0x1c8	4	int32_t	rect_b[3]	4	r,w		View_ctor;Window::moveTo;Window::show;Window::paint | sites 0x479e43,0x47b467,0x47b46f,0x47b772,0x48090b
+SgView	0x1cc	4	int32_t	f_1cc	4	w		View_ctor | sites 0x479dfd
+SgView	0x1d0	4	int32_t	f_1d0	4	w		View_ctor | sites 0x479e03
+SgView	0x1d4	4	int32_t	f_1d4	4	w		View_ctor | sites 0x479e09
+SgView	0x1d8	4	int32_t	f_1d8	4	w		View_ctor | sites 0x479e0f
+SgView	0x1dc	4	int32_t	f_1dc	4	lea,r		Window::blitToTarget | sites 0x480de0,0x480de6
+SgView	0x1e0	4	int32_t	f_1e0	4	r		Window::blitToTarget | sites 0x480df0
+SgView	0x1e4	4	int32_t	f_1e4	4	r		Window::blitToTarget | sites 0x480df7
+SgView	0x1e8	4	int32_t	f_1e8	4	r		Window::blitToTarget | sites 0x480dfe
+SgView	0x1ec	4	int32_t	f_1ec	4	w		View_ctor | sites 0x479e61
+SgView	0x1f0	4	int32_t	f_1f0	4	r,w		View_ctor;Window::hitTestBorder | sites 0x479e67,0x47ed45
+SgView	0x1f4	4	int32_t	f_1f4	4	w		View_ctor | sites 0x479e73
+SgView	0x1f8	4	int32_t	f_1f8	4	w		View_ctor | sites 0x479e79
+SgView	0x1fc	4	int32_t	f_1fc	4	w		View_ctor | sites 0x479e7f
+SgView	0x200	4	int32_t	f_200	4	w		View_ctor | sites 0x479e85
+SgView	0x204	4	int32_t	f_204	4	w		View_ctor | sites 0x479d08
+SgView	0x208	4	int32_t	f_208	4	w		View_ctor;EditBox_setCursorChar | sites 0x479cea,0x47ab1b
+SgView	0x20c	4	int32_t	f_20c	4	w		View_ctor | sites 0x479cf0
+SgView	0x210	4	int32_t	f_210	4	w		View_ctor | sites 0x479cf6
+SgView	0x214	4	int32_t	f_214	4	w		View_ctor;EditBox_setCursorChar | sites 0x479cfc,0x47ab27
+SgView	0x218	4	int32_t	f_218	4	w		View_ctor;EditBox_setCursorChar | sites 0x479d02,0x47ab21
+SgView	0x21c	4	int32_t	f_21c	4	w		View_ctor | sites 0x479d1a
+SgView	0x220	4	int32_t	f_220	4	r,w		View_ctor;Window::show;Window::doLayout | sites 0x479eeb,0x47b68c,0x47b69d,0x480d73,0x480d7f,0x480d9e,0x480da8
+SgView	0x224	4	int32_t	f_224	4	r,w		View_ctor;layoutNode;Node::contains | sites 0x479cae,0x47a04d,0x47b099
+SgView	0x228	4	int32_t	f_228	4	w		View_ctor | sites 0x479ca8
+SgView	0x22c	4	int32_t	f_22c	4	r,w		View_ctor;layoutNode;Node::contains | sites 0x479cb4,0x47a041,0x47a05b,0x47b08d,0x47b0b0
+SgView	0x230	4	int32_t	f_230	4	w		View_ctor | sites 0x479e8b
+SgView	0x234	4	int32_t	f_234	4	w		View_ctor | sites 0x479e91
+SgView	0x238	4	uint32_t	mouse_handler[0]	4	r,w		View_ctor;Window::mouseEvent238 | sites 0x479e97,0x47be75
+SgView	0x23c	4	uint32_t	mouse_handler[1]	4	r,w		View_ctor;Window::mouseDispatch23c | sites 0x479e9d,0x47bf71
+SgView	0x240	4	uint32_t	mouse_handler[2]	4	r,w		View_ctor;Window::mouseDispatch240 | sites 0x479ea3,0x47c041
+SgView	0x244	4	uint32_t	mouse_handler[3]	4	r,w		View_ctor;Window::mouseDispatch244 | sites 0x479ea9,0x47c111
+SgView	0x248	4	uint32_t	mouse_handler[4]	4	r,w		View_ctor;Window::click | sites 0x479eaf,0x47c1ec
+SgView	0x24c	4	uint32_t	mouse_handler[5]	4	r,w		View_ctor;Window::mouseDispatch24c | sites 0x479eb5,0x47c2c1
+SgView	0x250	4	uint32_t	mouse_handler[6]	4	r,w		View_ctor;Window::mouseDispatch250 | sites 0x479ebb,0x47c391
+SgView	0x254	4	uint32_t	mouse_handler[7]	4	r,w		View_ctor;Window::mouseDispatch254 | sites 0x479ec1,0x47c461
+SgView	0x258	4	uint32_t	mouse_handler[8]	4	r,w		View_ctor;Window::mouseDispatch258 | sites 0x479ec7,0x47c531
+SgView	0x25c	4	int32_t	f_25c	4	w		View_ctor | sites 0x479ecd
+SgView	0x260	4	int32_t	f_260	4	w		View_ctor | sites 0x479ed3
+SgView	0x264	4	int32_t	f_264	4	w		View_ctor | sites 0x479ed9
+SgView	0x268	4	int32_t	f_268	4	w		View_ctor | sites 0x479edf
+SgView	0x26c	4	uint32_t	scrollbar_a	4	r,w		View_ctor;layoutNode;Window::fwdScroll26c;Window::fwdRange26c;Window::setField26c5a0;Window::resized | sites 0x479deb,0x479fbd,0x479fde,0x479fe4,0x479ff3,0x47b9f0,0x47ba30,0x47ba70,0x47bc79
+SgView	0x270	4	uint32_t	scrollbar_b	4	r,w		View_ctor;layoutNode;Window::fwdScroll270;Window::fwdRange270;Window::setField2705a0;Window::resized | sites 0x479df1,0x479ff9,0x47a013,0x47a019,0x47a028,0x47ba10,0x47ba50,0x47ba90,0x47bc9d
+SgWindow	0x0	628	SgView	view				sub-object View
+SgWindow	0x274	696	Image	image				sub-object Image
+SgWindow	0x52c	4	uint32_t	frame_image[0]	4	r,w		View4804a0::ctor;Window::ctorInit;Window::create;drawPanel4810d0;Window::calcSizeFromCorners | sites 0x4804f9,0x48063e,0x4806f3,0x481117,0x481772,0x4817cc
+SgWindow	0x530	4	uint32_t	frame_image[1]	4	r,w		View4804a0::ctor;Window::ctorInit;Window::create;Window::calcSizeFromCorners | sites 0x4804ff,0x480644,0x48070b,0x48178e
+SgWindow	0x534	4	uint32_t	frame_image[2]	4	r,w		View4804a0::ctor;Window::ctorInit;Window::create;drawPanel4810d0;Window::calcSizeFromCorners | sites 0x480505,0x48064a,0x4806ff,0x481123,0x481780
+SgWindow	0x538	4	uint32_t	frame_image[3]	4	r,w		View4804a0::ctor;Window::ctorInit;Window::create;Window::calcSizeFromCorners | sites 0x48050b,0x480650,0x480716,0x48179c
+SgWindow	0x53c	4	int32_t	f_53c	4	w		View4804a0::ctor;Window::ctorInit;Window::create | sites 0x480511,0x480656,0x480739
+SgWindow	0x540	4	int32_t	f_540	4	w		View4804a0::ctor;Window::ctorInit;Window::create | sites 0x480517,0x48065c,0x480745
+SgWindow	0x544	4	int32_t	f_544	4	w		View4804a0::ctor;Window::ctorInit;Window::create | sites 0x48051d,0x480662,0x48072e
+SgWindow	0x548	4	int32_t	f_548	4	r,w		View4804a0::ctor;Window::ctorInit;Window::create;drawPanel4810d0 | sites 0x480523,0x480668,0x480722,0x48111d
+SgWindow	0x54c	4	int32_t	f_54c	4	w		View4804a0::ctor;Window::ctorInit;Window::create | sites 0x480529,0x48066e,0x480751
+SgWindow	0x550	4	int32_t	f_550	4	w		View4804a0::ctor;Window::ctorInit;Window::create | sites 0x48052f,0x480674,0x48075c
+SgWindow	0x554	4	int32_t	f_554	4	w		View4804a0::ctor;Window::ctorInit;Window::create | sites 0x480535,0x48067a,0x480768
+SgWindow	0x558	4	int32_t	f_558	4	w		View4804a0::ctor;Window::ctorInit | sites 0x48053b,0x480680
+SgWindow	0x55c	4	int32_t	f_55c	4	w		View4804a0::ctor;Window::ctorInit | sites 0x480541,0x480686
+SgWindow	0x560	4	int32_t	f_560	4	w		View4804a0::ctor;Window::ctorInit | sites 0x480547,0x48068c
+SgWindow	0x564	4	int32_t	f_564	4	w		View4804a0::ctor;Window::ctorInit | sites 0x48054d,0x480692
+SgWindow	0x568	4	uint32_t	owned_object	4	r,w		View4804a0::ctor;Window::ctorInit | sites 0x480553,0x480624,0x4806ae
+SgWindow	0x56c	4	uint32_t	list_cookie	4	w		View4804a0::ctor;Window::ctorInit | sites 0x48055f,0x48069f
+SgWindow	0x570	4	int32_t	f_570	4	r,w		View4804a0::ctor;Base4805a0::dtor;Window::ctorInit;Window::doLayout | sites 0x4804e7,0x4805d5,0x48062c,0x480d8b
+SgRootWindow	0x0	1396	SgWindow	win				sub-object Window
+SgEditBox	0x0	1396	SgWindow	win				sub-object Window
+SgEditBox	0x574	4	uint32_t	text	4	r,w		EditBox::resetFields;EditBox::releaseState;EditBox::setText;EditBox::resizeBuffer;EditBox::wrapToLines;EditBox::lineIndexAt;EditBox::charPosToPixel;FUN_004864f0 | sites 0x485ff2,0x4860d3,0x486203,0x486276,0x486288,0x48629e,0x4862c4,0x486330,0x48637a,0x48666c
+SgEditBox	0x578	4	int32_t	text_capacity	4	r,w		EditBox::resetFields;EditBox::resizeBuffer | sites 0x486004,0x486258,0x4862a4
+SgEditBox	0x57c	4	int32_t	f_57c	4	r,w		EditBox::resetFields;EditBox::charPosToPixel;FUN_004864f0 | sites 0x485ffe,0x4863a6,0x486620,0x48662e,0x48663d,0x486643,0x486698
+SgEditBox	0x580	4	int32_t	f_580	4	w		EditBox::resetFields | sites 0x485ff8
+SgEditBox	0x584	4	int32_t	f_584	4	r,w		EditBox::resetFields;FUN_004864f0 | sites 0x48601b,0x486528
+SgEditBox	0x588	4	int32_t	f_588	4	w		EditBox::resetFields | sites 0x486027
+SgEditBox	0x58c	4	int32_t	f_58c	4	w		EditBox::resetFields | sites 0x486032
+SgEditBox	0x590	4	int32_t	f_590	4	r,w		EditBox::resetFields;FUN_004864f0 | sites 0x486049,0x486548
+SgEditBox	0x594	4	int32_t	f_594	4	r,w		EditBox::resetFields;FUN_004864f0 | sites 0x486055,0x486542
+SgEditBox	0x598	4	int32_t	f_598	4	r,w		EditBox::resetFields;EditBox::wrapToLines;EditBox::charPosToPixel;EditBox::pixelToCharPos;FUN_004864f0 | sites 0x486060,0x4862d3,0x4863bd,0x4863ef,0x486536,0x486573,0x486690
+SgEditBox	0x59c	4	int32_t	f_59c	4	r,w		EditBox::resetFields;EditBox::wrapToLines;EditBox::charPosToPixel;EditBox::pixelToCharPos;FUN_004864f0 | sites 0x48603e,0x4862cd,0x4863b7,0x4863f6,0x48658b,0x4866a9
+SgEditBox	0x5a4	4	int32_t	f_5a4	4	r,w		EditBox::resetFields;FUN_004864f0;EditBox::beginCaretDrag;EditBox::endCaretDrag;EditBox::updateCaretDrag | sites 0x486010,0x4865dc,0x486672,0x486bc5,0x486c22,0x486c77
+SgEditBox	0x5a8	4	int32_t	f_5a8	4	r,w		EditBox::resetFields;FUN_004864f0 | sites 0x48600a,0x48665e
+SgEditBox	0x5ac	48	Timer	caret_timer				sub-object Timer
+SgButton	0x0	1396	SgWindow	win				sub-object Window
+SgButton	0x574	4	int32_t	f_574	4	w		Button::ctor;Button::resetFields;ctorObj4a13f0;LabelButton::reset | sites 0x48856e,0x4886f5,0x4a141b,0x4a14e3
+SgButton	0x578	4	int32_t	f_578	4	r,w		Button::setMode;ctorObj4a13f0;LabelButton::reset | sites 0x4890e8,0x4890f2,0x4a1415,0x4a14dd
+SgButton	0x57c	48	Timer	timer_a				sub-object Timer
+SgButton	0x5ac	4	int32_t	f_5ac	4	r,w		Button::ctor;Button::resetFields;Button::beginPress | sites 0x48857a,0x48870d,0x488b1e
+SgButton	0x5b0	4	int32_t	f_5b0	4	w		Button::ctor;Button::resetFields | sites 0x488580,0x488713
+SgButton	0x5b4	48	Timer	timer_b				sub-object Timer
+SgButton	0x5e4	4	int32_t	f_5e4	4	w		Button::ctor;Button::resetFields | sites 0x488574,0x4886fb
+SgButton	0x5e8	4	int32_t	f_5e8	4	r,w		Button::ctor;Button::resetFields;Button::beginPress;FUN_00488bf0;Button::onMouseMove;Button::endPress;Button::setMode | sites 0x488586,0x488707,0x488b03,0x488c84,0x488db9,0x488ef3,0x489108
+SgButton	0x5ec	4	int32_t	f_5ec	4	w		Button::ctor;Button::resetFields | sites 0x488559,0x4886e0
+SgButton	0x5f0	4	int32_t	f_5f0	4	w		Button::ctor;Button::resetFields | sites 0x488568,0x4886ef
+SgButton	0x5f4	4	int32_t	f_5f4	4	r,w		Button::ctor;Button::resetFields | sites 0x488592,0x48876b,0x488796
+SgButton	0x5f8	4	uint32_t	tooltip	4	r,w		Button::ctor;Button::resetFields;Button::setTooltip;Button::onTipTimer;Button::onTimer | sites 0x488598,0x48879c,0x4887af,0x488a25,0x488a38,0x488a5e,0x488e90,0x488fff,0x489071
+SgButton	0x5fc	4	int32_t	f_5fc	4	w		Button::ctor;Button::resetFields | sites 0x4885c7,0x48873c
+SgButton	0x600	4	int32_t	f_600	4	w		Button::ctor;Button::resetFields | sites 0x4885d3,0x488748
+SgButton	0x604	4	int32_t	f_604	4	w		Button::ctor;Button::resetFields | sites 0x4885df,0x488754
+SgButton	0x608	4	int32_t	f_608	4	w		Button::ctor;Button::resetFields | sites 0x4885ea,0x48875f
+SgButton	0x60c	4	int32_t	f_60c	4	w		Button::ctor;Button::resetFields | sites 0x4885bc,0x488731
+SgButton	0x610	4	int32_t	f_610	4	w		Button::ctor;Button::resetFields | sites 0x4885f6,0x488771
+SgButton	0x614	4	int32_t	f_614	4	r,w		Button::ctor;Button::resetFields;Button::beginPress;FUN_00488bf0;Button::onMouseMove;Button::detach | sites 0x48858c,0x488701,0x488ad1,0x488ae1,0x488c53,0x488c62,0x488d7d,0x488d97,0x48912a
+SgButton	0x618	4	int32_t	f_618	4	r,w		Button::ctor;Button::resetFields;FUN_00488bf0 | sites 0x48860c,0x488785,0x488c40
+SgButton	0x61c	4	int32_t	f_61c	4	r,w		Button::ctor;Button::resetFields;FUN_00488bf0 | sites 0x488600,0x488777,0x488c38
+SgButton	0x620	4	int32_t	f_620	4	r,w		Button::ctor;Button::resetFields;Button::beginPress;FUN_00488bf0;Button::onMouseMove;Button::detach | sites 0x48859e,0x4887b5,0x488af7,0x488c78,0x488dad,0x489120
+SgButton	0x624	4	int32_t	f_624	4	r,w		Button::ctor;Button::resetFields;Button::endPress | sites 0x4885a4,0x488719,0x488ee9
+SgButton	0x628	4	int32_t	f_628	4	w		Button::ctor;Button::resetFields | sites 0x4885aa,0x48871f
+SgButton	0x62c	4	int32_t	f_62c	4	w		Button::ctor;Button::resetFields | sites 0x4885b0,0x488725
+SgLabelButton	0x0	1584	SgButton	button				sub-object Button
+SgLabelButton	0x630	4	int32_t	f_630	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a140b,0x4a14ca
+SgLabelButton	0x634	4	int32_t	f_634	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1421,0x4a14e9
+SgLabelButton	0x638	4	int32_t	state_a[0]	4	lea,w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1437,0x4a144b,0x4a14f8,0x4a150c
+SgLabelButton	0x644	4	int32_t	state_b[0]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1448,0x4a1509
+SgLabelButton	0x650	4	int32_t	state_c[0]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a14a8,0x4a1569
+SgLabelButton	0x65c	4	int32_t	f_65c	4	w		ctorObj4a13f0 | sites 0x4a142b
+SgLabelButton	0x660	4	int32_t	f_660	4	w		ctorObj4a13f0 | sites 0x4a1431
+SgLabelButton	0x664	4	int32_t	state_tables[0]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1457,0x4a1518
+SgLabelButton	0x670	4	int32_t	state_tables[3]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1460,0x4a1521
+SgLabelButton	0x67c	4	int32_t	state_tables[6]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1469,0x4a152a
+SgLabelButton	0x688	4	int32_t	state_tables[9]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1472,0x4a1533
+SgLabelButton	0x694	4	int32_t	state_tables[12]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a147b,0x4a153c
+SgLabelButton	0x6a0	4	int32_t	state_tables[15]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1484,0x4a1545
+SgLabelButton	0x6ac	4	int32_t	state_tables[18]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a148d,0x4a154e
+SgLabelButton	0x6b8	4	int32_t	state_tables[21]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a1496,0x4a1557
+SgLabelButton	0x6c4	4	int32_t	state_tables[24]	4	w		ctorObj4a13f0;LabelButton::reset | sites 0x4a14a2,0x4a1563
+SgScrollCombo	0x0	1396	SgWindow	win				sub-object Window
+SgScrollCombo	0x574	4	int32_t	f_574	4	w		buildLabeledControl;controlInitBase | sites 0x496089,0x4961db
+SgScrollCombo	0x578	4	int32_t	f_578	4	r		FUN_00496d60 | sites 0x496d92
+SgScrollCombo	0x57c	4	int32_t	f_57c	4	r,w		buildLabeledControl;controlInitBase;FUN_00496860;scrollbarDraw;FUN_00497170;scrollbarResetState | sites 0x496095,0x4961e7,0x4968b5,0x497012,0x497193,0x4979c0
+SgScrollCombo	0x580	4	int32_t	f_580	4	w		buildLabeledControl;controlInitBase | sites 0x4960a7,0x4961f8
+SgScrollCombo	0x584	4	int32_t	f_584	4	r,w		buildLabeledControl;controlInitBase;FUN_00497260;scrollbarScrollBy | sites 0x4960b2,0x496204,0x4972b4,0x4973f2
+SgScrollCombo	0x588	4	int32_t	f_588	4	r,w		buildLabeledControl;controlInitBase;FUN_00496d60 | sites 0x49609b,0x4961ed,0x496d79
+SgScrollCombo	0x58c	4	int32_t	f_58c	4	r,w		buildLabeledControl;controlInitBase;FUN_00496860;FUN_00496d60;FUN_00497260;scrollbarScrollBy | sites 0x4960be,0x49620f,0x496891,0x496d89,0x496da9,0x4972a6,0x4973ec
+SgScrollCombo	0x590	4	int32_t	f_590	4	r,w		buildLabeledControl;controlInitBase;FUN_00497260 | sites 0x4960ca,0x49622b,0x49727c
+SgScrollCombo	0x594	4	int32_t	f_594	4	w		buildLabeledControl;controlInitBase | sites 0x4960e5,0x496236
+SgScrollCombo	0x598	4	int32_t	f_598	4	r,w		buildLabeledControl;controlInitBase;FUN_00497260;scrollbarScrollBy | sites 0x4960da,0x49621f,0x49726e,0x497292,0x4973c9
+SgScrollCombo	0x59c	4	int32_t	f_59c	4	w		buildLabeledControl;controlInitBase | sites 0x4960d0,0x496215
+SgScrollCombo	0x5a0	4	int32_t	f_5a0	4	w		buildLabeledControl;controlInitBase | sites 0x4960f1,0x496242
+SgScrollCombo	0x5a4	4	int32_t	f_5a4	4	r,w		buildLabeledControl;controlInitBase;FUN_00496860 | sites 0x4960f7,0x496248,0x49689b
+SgScrollCombo	0x5a8	4	int32_t	f_5a8	4	w		buildLabeledControl;controlInitBase | sites 0x49611b,0x49626b
+SgScrollCombo	0x5ac	4	int32_t	f_5ac	4	r,w		buildLabeledControl;controlInitBase;FUN_00496860;scrollbarResetState | sites 0x4960fd,0x49624e,0x4968af,0x4979a8,0x4979d1
+SgScrollCombo	0x5b0	4	int32_t	f_5b0	4	r,w		buildLabeledControl;controlInitBase;scrollbarResetState | sites 0x496103,0x496254,0x4979ae,0x4979d7,0x4979eb
+SgScrollCombo	0x5b4	4	int32_t	f_5b4	4	r,w		buildLabeledControl;controlInitBase;FUN_00496860;scrollbarResetState | sites 0x496109,0x49625a,0x4968a9,0x4979b4,0x4979c9,0x4979dd
+SgScrollCombo	0x5b8	4	int32_t	f_5b8	4	r,w		buildLabeledControl;controlInitBase;scrollbarResetState | sites 0x49610f,0x496260,0x4979ba,0x4979e3,0x4979f1
+SgScrollCombo	0x5bc	4	int32_t	f_5bc	4	w		buildLabeledControl;controlInitBase | sites 0x496126,0x496277
+SgScrollCombo	0x5c0	4	int32_t	f_5c0	4	r,w		FUN_00497170;scrollbarResetState | sites 0x497188,0x4971a2,0x4979a0
+SgScrollCombo	0x5c4	4	int32_t	f_5c4	4	r,w		buildLabeledControl;controlInitBase;scrollbarDraw | sites 0x496132,0x496282,0x497004
+SgScrollCombo	0x5c8	4	int32_t	f_5c8	4	w		buildLabeledControl;controlInitBase | sites 0x49613e,0x49628e
+SgScrollCombo	0x5cc	4	int32_t	f_5cc	4	w		buildLabeledControl;controlInitBase | sites 0x496149,0x496299
+SgScrollCombo	0x5d0	4	int32_t	f_5d0	4	w		buildLabeledControl;controlInitBase | sites 0x496155,0x4962a5
+SgScrollCombo	0x5d4	4	int32_t	f_5d4	4	w		buildLabeledControl;controlInitBase | sites 0x496196,0x4962e6
+SgScrollCombo	0x5d8	4	int32_t	f_5d8	4	w		buildLabeledControl;controlInitBase | sites 0x4961a2,0x4962f2
+SgScrollCombo	0x5dc	4	int32_t	state_a[0]	4	w		buildLabeledControl;controlInitBase | sites 0x49616c,0x4962bc
+SgScrollCombo	0x5e8	4	int32_t	state_b[0]	4	lea,w		buildLabeledControl;controlInitBase | sites 0x49615b,0x496175,0x4962ab,0x4962c5
+SgScrollCombo	0x5f4	4	int32_t	state_c[0]	4	w		buildLabeledControl;controlInitBase | sites 0x49617d,0x4962cd
+SgScrollCombo	0x600	4	int32_t	state_d[0]	4	w		buildLabeledControl;controlInitBase | sites 0x496186,0x4962d6
+SgScrollCombo	0x60c	1744	SgLabelButton	button_a				sub-object LabelButton
+SgScrollCombo	0xcdc	1744	SgLabelButton	button_b				sub-object LabelButton
+SgScrollCombo	0x13ac	4	int32_t	f_13ac	4	r,w		buildLabeledControl;controlInitBase;FUN_00496d60 | sites 0x4961ac,0x4962fe,0x496d9f
+SgScrollCombo	0x13b0	4	int32_t	f_13b0	4	w		buildLabeledControl;controlInitBase | sites 0x4961b2,0x496304
+SgDebugWindow	0x0	1396	SgWindow	win				sub-object Window
+SgDebugWindow	0x574	32	FontRef	surface_ref				sub-object FontRef
+SgDebugWindow	0x594	4	uint32_t	f_594	4	r,w		ctorGlobalObj49c020;?FUN_0049c0a0@f_0049c0a0@@YIXH@Z;FUN_0049c0b0 | sites 0x49c079,0x49c0a0,0x49c131
+SgDebugWindow	0x598	48	Timer	timer				sub-object Timer
+SgListModel	0x0	4	uint32_t	vtbl	4	lea,w		ListModel::ctor;ListModel::dtor;ListBox::ctor;ListBox::dtor;ListBox::resetFields;ListBox::fireSelectChanged;ListBox::onMouse;ListBox::deletingDtor;TextView::ctor;TextView::reset;Dialog::viewDtor;Dialog::dtor;viewDeletingDtor;listPanelDeletingDtor;viewFieldCtor49d5a0;listSelectionChanged;viewFieldCtor49ebb0;optionDialogDeletingDtor;viewCtor4a0740;viewFieldCtor4a2250;panelRowDeletingDtor;panelSubCtor4a3110;panelSubDeletingDtor | sites 0x4891e2,0x489391,0x489cf5,0x489d2f,0x489e11,0x489e58,0x48c584,0x48c5ab,0x48c5d4,0x48c6fd,0x48c745,0x48cbaf,0x48d451,0x48db3b,0x49155a,0x491770,0x491915,0x491b26,0x49d5e4,0x49e663,0x49ebf4,0x49ff6f,0x4a07ab,0x4a0847,0x4a2297,0x4a3065,0x4a3159,0x4a4995
+SgListModel	0x4	24	Buf	buf				sub-object Buf
+SgListModel	0x1c	4	int32_t	f_01c	4	lea,w		ListModel::clear;ListModel::reset;optionDialogOnMouse | sites 0x489540,0x489804,0x49fdb5
+SgListModel	0x20	4	int32_t	f_020	4	w		ListModel::ctor;ListModel::clear;ListModel::setKey;ListModel::reset | sites 0x48933d,0x48969f,0x4896c3,0x4897fd
+SgListModel	0x24	4	int32_t	f_024	4	lea,r,w		ListModel::ctor;ListModel::clear;TextView::ctor;TextView::reset;listPanelHoverAt | sites 0x4891ee,0x489549,0x48d458,0x48d462,0x48db42,0x48db4c,0x49e83b
+SgListModel	0x28	4	int32_t	f_028	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onMouse | sites 0x4891f1,0x48954c,0x48c73f
+SgListModel	0x2c	4	int32_t	f_02c	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onMouse | sites 0x4891f4,0x48954f,0x48c73c
+SgListModel	0x30	4	int32_t	f_030	4	w		ListModel::ctor;ListModel::clear;TextView::setFontSize | sites 0x4891fc,0x489558,0x48e166
+SgListModel	0x34	4	int32_t	f_034	4	w		ListModel::ctor;ListModel::clear;TextView::setLineSpacing | sites 0x489205,0x489560,0x48e0f6
+SgListModel	0x38	4	int32_t	f_038	4	w		ListModel::ctor;ListModel::clear | sites 0x489235,0x489594
+SgListModel	0x3c	4	int32_t	f_03c	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onPress;FUN_0048b3f0;ListBox::onDrag | sites 0x489217,0x489572,0x48aa3f,0x48b42a,0x48c8dd
+SgListModel	0x40	4	int32_t	f_040	4	w		ListModel::ctor;ListModel::clear | sites 0x48921a,0x489575
+SgListModel	0x44	4	int32_t	f_044	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onPress;FUN_0048b3f0;ListBox::onDrag | sites 0x489223,0x48957f,0x48aa52,0x48b42d,0x48b44f,0x48c8ee
+SgListModel	0x48	4	int32_t	f_048	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onPress;ListBox::onDrag;optionDialogOnMouse | sites 0x48922c,0x489588,0x48aa55,0x48c8f1,0x49fdb1
+SgListModel	0x4c	4	int32_t	f_04c	4	w		ListModel::ctor;ListModel::clear | sites 0x489238,0x48958b
+SgListModel	0x50	4	int32_t	f_050	4	r,w		ListModel::ctor;ListModel::clear;FUN_0048b3f0 | sites 0x489241,0x48959d,0x48b45f
+SgListModel	0x54	4	int32_t	f_054	4	w		ListModel::ctor;ListModel::clear | sites 0x48924a,0x4895a6
+SgListModel	0x58	4	int32_t	f_058	4	lea,r,w		ListModel::ctor;ListModel::clear;ListBox::setSelection;ListBox::onPress;ListBox::onKey;ListBox::onScroll;ListBox::onDrag | sites 0x48924d,0x4895a9,0x489fa3,0x48aa4d,0x48aedb,0x48af2a,0x48c448,0x48c8ad,0x48c8da,0x48c8e9
+SgListModel	0x5c	4	int32_t	f_05c	4	r,w		ListModel::ctor;ListModel::clear;ListBox::setSelection;ListBox::onPress;ListBox::onKey;ListBox::onDrag;optionDialogOnMouse | sites 0x489250,0x4895ac,0x489fa8,0x48aa66,0x48aed7,0x48c902,0x49fdcc
+SgListModel	0x60	4	int32_t	f_060	4	w		ListModel::ctor;ListModel::clear | sites 0x489253,0x4895af
+SgListModel	0x64	4	int32_t	f_064	4	w		ListModel::ctor;ListModel::clear | sites 0x489256,0x4895b2
+SgListModel	0x68	4	int32_t	f_068	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onPress;FUN_0048b3f0;ListBox::onDrag;optionDialogOnMouse | sites 0x489259,0x4895b5,0x48aa5a,0x48b412,0x48c8f6,0x49fdb8
+SgListModel	0x6c	4	int32_t	f_06c	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onPress;FUN_0048b3f0;ListBox::onDrag;optionDialogOnMouse | sites 0x48925c,0x4895b8,0x48aa6a,0x48b40f,0x48c906,0x49fdbc
+SgListModel	0x70	4	int32_t	f_070	4	w		ListModel::ctor;ListModel::clear | sites 0x489265,0x4895c1
+SgListModel	0x74	4	int32_t	f_074	4	w		ListModel::ctor;ListModel::clear | sites 0x48929e,0x4895fa
+SgListModel	0x78	4	int32_t	f_078	4	w		ListModel::ctor;ListModel::clear | sites 0x4892d7,0x489633
+SgListModel	0x7c	4	int32_t	f_07c	4	w		ListModel::ctor;ListModel::clear | sites 0x489310,0x48966c
+SgListModel	0x80	4	int32_t	f_080	4	w		ListModel::ctor;ListModel::clear | sites 0x4892a7,0x489603
+SgListModel	0x84	4	int32_t	f_084	4	w		ListModel::ctor;ListModel::clear | sites 0x4892e0,0x48963c
+SgListModel	0x88	4	int32_t	f_088	4	w		ListModel::ctor;ListModel::clear | sites 0x489319,0x489675
+SgListModel	0x8c	4	int32_t	f_08c	4	w		ListModel::ctor;ListModel::clear | sites 0x4892b3,0x48960f
+SgListModel	0x90	4	int32_t	f_090	4	w		ListModel::ctor;ListModel::clear | sites 0x4892ec,0x489648
+SgListModel	0x94	4	int32_t	f_094	4	w		ListModel::ctor;ListModel::clear | sites 0x489325,0x489681
+SgListModel	0x98	4	int32_t	f_098	4	w		ListModel::ctor;ListModel::clear | sites 0x4892bf,0x48961b
+SgListModel	0x9c	4	int32_t	f_09c	4	w		ListModel::ctor;ListModel::clear | sites 0x4892f8,0x489654
+SgListModel	0xa0	4	int32_t	f_0a0	4	w		ListModel::ctor;ListModel::clear | sites 0x489331,0x48968d
+SgListModel	0xa4	4	int32_t	f_0a4	4	w		ListModel::ctor;ListModel::clear | sites 0x4892cb,0x489627
+SgListModel	0xa8	4	int32_t	f_0a8	4	w		ListModel::ctor;ListModel::clear | sites 0x489304,0x489660
+SgListModel	0xac	4	int32_t	f_0ac	4	w		ListModel::ctor;ListModel::clear | sites 0x489340,0x489699
+SgListModel	0xb0	4	int32_t	f_0b0	4	w		ListModel::ctor;ListModel::clear | sites 0x48926e,0x4895ca
+SgListModel	0xb4	4	int32_t	f_0b4	4	w		ListModel::ctor;ListModel::clear | sites 0x48927a,0x4895d6
+SgListModel	0xb8	4	int32_t	f_0b8	4	w		ListModel::ctor;ListModel::clear;ListBox::ctor;ListBox::resetFields | sites 0x489286,0x4895e2,0x489db4,0x489eae
+SgListModel	0xbc	4	int32_t	f_0bc	4	w		ListModel::ctor;ListModel::clear | sites 0x489292,0x4895ee
+SgListModel	0xc0	48	SgRecList	records				sub-object RecList
+SgListModel	0xf0	4	int32_t	f_0f0	4	lea,r,w		ListModel::ctor;ListModel::clear;ListModel::indexOfId;ListModel::selectedId;ListBox::setSelection;ListBox::onKey;ListBox::onScroll;ListBox::onMouse;TextView::select;optionDialogSlot38;optionDialogOnMouse;panelOnPick | sites 0x48920b,0x489566,0x489927,0x489951,0x489f60,0x489f67,0x489f81,0x489f96,0x48aefb,0x48af09,0x48af2d,0x48c441,0x48c711,0x49098d,0x49fc4f,0x49fdd9,0x4a439d
+SgListModel	0xf4	4	int32_t	f_0f4	4	r,w		ListModel::ctor;ListModel::clear;ListBox::onDrag;ListBox::clearSelection;listPanelSlot28;optionDialogOnMouse;optionDialogSlot28 | sites 0x489211,0x48956c,0x48c8bc,0x48cac6,0x49e999,0x49fde5,0x49fdf2,0x49fe26
+SgListModel	0xf8	4	int32_t	f_0f8	4	w		listPanelSlot28 | sites 0x49e9a6
+SgListBoxNv	0x0	4	uint32_t	vtbl	4	lea,w		ListBox::ctor;ListBox::dtor;ListBox::drawContents;ListBox::deletingDtor;TextView::ctor;TextView::reset;TextView::select;Dialog::viewDtor;viewDeletingDtor;viewCtor4a0740 | sites 0x489d07,0x489de3,0x489de6,0x48c17b,0x48c1a0,0x48cba1,0x48cf61,0x48d5bd,0x490966,0x491520,0x491526,0x49159e,0x491901,0x4a081f
+SgListBoxNv	0x4	4	uint32_t	vbptr	4	r,w		ListBox::ctor;ListBox::dtor;ListBox::resetFields;ListBox::selectById;ListBox::setSelection;ListBox::measure;ListBox::onPressMarked;ListBox::onPress;ListBox::onKey;FUN_0048b3f0;ListBox::drawContents;ListBox::onScroll;ListBox::fwdOnScroll;ListBox::fireSelectChangedMarked;ListBox::fireSelectChanged;ListBox::forwardClick;ListBox::onMouse;ListBox::onDrag;ListBox::clearSelection;ListBox::scrollBy;ListBox::fwdInnerVfn20;ListBox::fwdInnerVfn24;TextView::ctor;TextView::reset;TextView::setLineSpacing;TextView::setFontSize;Dialog::viewDtor;viewCtor4a0740;viewDispatchSlot6;viewDispatchSlot7 | sites 0x489ce1,0x489d04,0x489d18,0x489d29,0x489d37,0x489d43,0x489d8d,0x489dec,0x489dfa,0x489e0b,0x489e19,0x489e26,0x489e43,0x489e52,0x489ea5,0x489ed0,0x489f5a,0x489f89,0x48a126,0x48a9ca,0x48aa06,0x48aa19,0x48aa39,0x48aeac,0x48aecb,0x48af13,0x48b407,0x48c139,0x48c154,0x48c182,0x48c425,0x48c438,0x48c4f0,0x48c52a,0x48c564,0x48c57e,0x48c594,0x48c5bd,0x48c5e8,0x48c610,0x48c6e6,0x48c6f5,0x48c706,0x48c722,0x48c8a7,0x48c8d0,0x48cac0,0x48cad1,0x48caf3,0x48cb13,0x48cb23,0x48cbf0,0x48cc30,0x48d448,0x48db32,0x48e0e5,0x48e155,0x49152c,0x491540,0x491551,0x491565,0x49157b,0x4a0775,0x4a081c,0x4a0830,0x4a0841,0x4a084f,0x4a085e,0x4a1138,0x4a1178
+SgListBoxNv	0x8	4	int32_t	f_008	1,4	lea,w		ListBox::ctor | sites 0x489db1,0x489dc2
+SgListBoxNv	0xc	4	int32_t	f_00c	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d5e,0x489e6c
+SgListBoxNv	0x10	4	int32_t	f_010	4	r,w		ListBox::ctor;ListBox::resetFields;ListBox::setSelection | sites 0x489d61,0x489e6f,0x489f72
+SgListBoxNv	0x14	4	int32_t	f_014	4	r,w		ListBox::ctor;ListBox::resetFields;ListBox::onMouse | sites 0x489dbf,0x489ec8,0x48c709,0x48c71d
+SgListBoxNv	0x18	4	int32_t	f_018	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d6a,0x489e9c
+SgListBoxNv	0x1c	4	int32_t	f_01c	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d72,0x489ea8
+SgListBoxNv	0x20	4	int32_t	f_020	4	w		ListBox::ctor;ListBox::resetFields;ListBox::onPress;ListBox::onKey;ListBox::onDrag | sites 0x489d55,0x489e64,0x48aa33,0x48aec5,0x48c8ca
+SgListBoxNv	0x24	4	int32_t	f_024	4	w		ListBox::ctor;ListBox::resetFields;ListBox::onPress;ListBox::onKey;ListBox::onDrag | sites 0x489d58,0x489e67,0x48aa36,0x48aec8,0x48c8cd
+SgListBoxNv	0x28	4	int32_t	f_028	4	r,w		ListBox::ctor;ListBox::resetFields;ListBox::setSelection;ListBox::onKey;FUN_0048b3f0;ListBox::onScroll;ListBox::scrollBy | sites 0x489d75,0x489e72,0x489f9c,0x48aef4,0x48af1a,0x48b475,0x48c43b,0x48c45d,0x48cb08,0x48cb10
+SgListBoxNv	0x2c	4	int32_t	f_02c	4	r,w		ListBox::ctor;ListBox::resetFields;ListBox::onKey | sites 0x489d78,0x489e75,0x48aef1
+SgListBoxNv	0x30	4	int32_t	f_030	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d7b,0x489e78
+SgListBoxNv	0x34	4	int32_t	f_034	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d84,0x489e81
+SgListBoxNv	0x38	4	int32_t	f_038	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d90,0x489e8a
+SgListBoxNv	0x3c	4	int32_t	f_03c	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d9b,0x489e93
+SgListBoxNv	0x40	4	int32_t	f_040	4	w		ListBox::ctor | sites 0x489d5b
+SgListBoxNv	0x44	4	int32_t	f_044	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d98,0x489eb9
+SgListBoxNv	0x48	4	int32_t	f_048	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489d9e,0x489ebc
+SgListBoxNv	0x4c	4	int32_t	f_04c	4	r,w		ListBox::ctor;ListBox::resetFields;ListBox::drawContents | sites 0x489da1,0x489ebf,0x48c174
+SgListBoxNv	0x50	4	int32_t	f_050	4	w		ListBox::ctor;ListBox::resetFields | sites 0x489da4,0x489ec2
+SgListBoxNv	0x54	4	int32_t	f_054	4	r,w		ListBox::ctor;ListBox::resetFields;ListBox::fireSelectChanged | sites 0x489da7,0x489ec5,0x48c577,0x48c58e
+SgListBox	0x0	88	SgListBoxNv	nv				sub-object ListBoxNv
+SgListBox	0x58	4	int32_t	vtordisp_win	4	r,w		ListBox::ctor;ListBox::dtor;ListBox::deletingDtor_vtordisp;ListBox::fwdInnerVfn20_vtordisp;ListBox::fwdInnerVfn24_vtordisp;ListBox::drawContents_vtordisp;ListBox::scrollBy_vtordisp;ListBox::onDrag_vtordisp;ListBox::clearSelection_vtordisp;ListBox::forwardClick_vtordisp;ListBox::onPress_vtordisp;ListBox::onPressMarked_vtordisp;ListBox::typeAhead_vtordisp;ListBox::fireSelectChanged_vtordisp;ListBox::fireSelectChangedMarked_vtordisp;ListBox::fwdOnScroll_vtordisp;ListBox::onScroll_vtordisp;ListBox::Slot60_vtordisp;FUN_0048cd30 | sites 0x489d40,0x489e22,0x48cb90,0x48cbe0,0x48cc20,0x48cc60,0x48cc70,0x48cc80,0x48cc90,0x48cca0,0x48ccb0,0x48ccc0,0x48ccd0,0x48cce0,0x48ccf0,0x48cd00,0x48cd10,0x48cd20,0x48cd30
+SgListBox	0x5c	1396	SgWindow	win				sub-object Window
+SgListBox	0x5d0	4	int32_t	vtordisp_model	4	lea,r,w		ListBox::ctor;ListBox::dtor;FUN_0048b3f0;FUN_0048cd50;ListBox::build_vtordisp;FUN_0048cd70 | sites 0x489d4f,0x489e32,0x48b463,0x48cd50,0x48cd60,0x48cd70
+SgListBox	0x5d4	252	SgListModel	model				sub-object ListModel
+SgListPanelNv	0x0	4	uint32_t	vbptr	4	lea,r,w		TextView::reset;listPanelDeletingDtor;viewFieldCtor49d5a0;viewFieldCleanup49d690;listPanelOnScroll;listPanelRefresh;listSelectionChanged;listPanelDrawContents;listPanelSlot60;listPanelHoverAt;listPanelSlot28;viewCtor4a0740 | sites 0x48d5d3,0x491ad2,0x491ad8,0x491adb,0x491ae9,0x491af9,0x491b06,0x491b12,0x49d5d1,0x49d5f3,0x49d5ff,0x49d60f,0x49d61b,0x49d627,0x49d653,0x49d6a9,0x49d6c1,0x49e23f,0x49e242,0x49e255,0x49e2ab,0x49e2c7,0x49e457,0x49e45a,0x49e46d,0x49e643,0x49e65d,0x49e686,0x49e689,0x49e6a5,0x49e7b0,0x49e7db,0x49e82e,0x49e84b,0x49e990,0x49e9a0,0x49e9ad,0x4a077c,0x4a07d9
+SgListPanelNv	0x4	4	int32_t	f_004	4	w		FUN_004913c0;viewFieldCtor49d5a0;viewFieldCleanup49d690 | sites 0x4913c8,0x49d655,0x49d6b4
+SgListPanelNv	0x8	4	int32_t	f_008	4	w		FUN_004913c0;viewFieldCtor49d5a0;viewFieldCleanup49d690 | sites 0x4913d2,0x49d642,0x49d6a0
+SgListPanelNv	0xc	4	int32_t	f_00c	4	w		FUN_004913c0;viewFieldCtor49d5a0;viewFieldCleanup49d690 | sites 0x4913d8,0x49d64a,0x49d6ab
+SgListPanelNv	0x10	4	int32_t	f_010	4	w		viewFieldCtor49d5a0;viewFieldCleanup49d690 | sites 0x49d636,0x49d695
+SgListPanelNv	0x14	4	int32_t	f_014	4	r,w		viewFieldCtor49d5a0;viewFieldCleanup49d690;listSelectionChanged | sites 0x49d639,0x49d698,0x49e656,0x49e66d
+SgListPanelNv	0x18	4	int32_t	f_018	4	w		FUN_004913f0;viewFieldCtor49d5a0 | sites 0x4913f4,0x49d663
+SgListPanelNv	0x1c	4	int32_t	f_01c	4	w		FUN_00491400;viewFieldCtor49d5a0 | sites 0x491404,0x49d674
+SgListPanelPart	0x0	32	SgListPanelNv	nv				sub-object ListPanelNv
+SgListPanelPart	0x20	4	int32_t	vtordisp_win	4	r		listPanelDeletingDtor_vtordisp;listPanelDrawContents_vtordisp;listPanelReadValue_vtordisp;listPanelSlot28_vtordisp;listPanelOnScroll_vtordisp;listPanelRefresh_vtordisp;listSelectionChanged_vtordisp;listPanelSlot60_vtordisp;FUN_00491bc0 | sites 0x491ac0,0x491b50,0x491b60,0x491b70,0x491b80,0x491b90,0x491ba0,0x491bb0,0x491bc0
+SgListPanelPart	0x24	1396	SgWindow	win				sub-object Window
+SgListPanelPart	0x598	4	int32_t	vtordisp_model	4	r		FUN_00491be0;panelBuildRow_vtordisp;FUN_00491c00 | sites 0x491be0,0x491bf0,0x491c00
+SgListPanelPart	0x59c	252	SgListModel	model				sub-object ListModel
+SgOptionPartNv	0x0	4	uint32_t	vbptr	4	lea,r,w		TextView::reset;TextView::select;viewFieldCtor49ebb0;viewFieldDtor49ec80;viewFieldCleanup49ece0;flagSet;flagIsSet;bitTest;optionListDraw;optionDialogUpdate;optionDialogOnKey;optionDialogSlot38;optionDialogDrawContents;optionDialogSlot60;optionDialogOnMouse;optionDialogSlot28;optionDialogDeletingDtor;viewCtor4a0740 | sites 0x48d5c8,0x490984,0x49ebe1,0x49ec03,0x49ec0f,0x49ec1f,0x49ec2b,0x49ec37,0x49ec83,0x49ec86,0x49ec94,0x49eca4,0x49ecb1,0x49ecbd,0x49ece5,0x49ed0b,0x49eef0,0x49ef43,0x49ef80,0x49efc8,0x49f038,0x49f37b,0x49f3ab,0x49f3ff,0x49f44a,0x49f9a6,0x49f9a9,0x49f9bc,0x49f9fb,0x49fa2a,0x49fa43,0x49fa5f,0x49fa77,0x49fa96,0x49fa99,0x49fc30,0x49fc49,0x49fc67,0x49fc6a,0x49fc7f,0x49fd80,0x49fda6,0x49fe20,0x49fe31,0x49ff61,0x4a0783,0x4a07eb
+SgOptionPartNv	0x4	4	int32_t	f_004	4	r,w		viewFieldCtor49ebb0;viewFieldCleanup49ece0;optionDialogUpdate;optionDialogOnKey | sites 0x49ec4a,0x49ece7,0x49f9fd,0x49fa11,0x49fa1f,0x49fa39,0x49faae,0x49fab7
+SgOptionPartNv	0x8	4	int32_t	f_008	4	r,w		viewFieldCtor49ebb0;viewFieldCleanup49ece0;optionDialogUpdate | sites 0x49ec4d,0x49ecea,0x49fa3c
+SgOptionPartNv	0xc	4	int32_t	f_00c	4	r,w		viewFieldCtor49ebb0;viewFieldCleanup49ece0;optionDialogSlot38 | sites 0x49ec50,0x49eced,0x49fc42
+SgOptionPartNv	0x10	4	int32_t	f_010	4	w		viewFieldCtor49ebb0;viewFieldCleanup49ece0 | sites 0x49ec61,0x49ecfe
+SgOptionPartNv	0x14	4	int32_t	f_014	4	w		viewFieldCtor49ebb0;viewFieldCleanup49ece0 | sites 0x49ec59,0x49ecf5
+SgOptionPart	0x0	24	SgOptionPartNv	nv				sub-object OptionPartNv
+SgOptionPart	0x18	4	int32_t	vtordisp_win	4	r		optionDialogDeletingDtor_vtordisp;optionDialogDrawContents_vtordisp;optionDialogOnMouse_vtordisp;optionDialogSlot28_vtordisp;optionDialogUpdate_vtordisp;optionDialogOnKey_vtordisp;optionDialogSlot38_vtordisp;optionDialogSlot60_vtordisp;FUN_004a0010 | sites 0x49ff50,0x49ffa0,0x49ffb0,0x49ffc0,0x49ffd0,0x49ffe0,0x49fff0,0x4a0000,0x4a0010
+SgOptionPart	0x1c	1396	SgWindow	win				sub-object Window
+SgOptionPart	0x590	4	int32_t	vtordisp_model	4	r		FUN_004a0030;optionDialogBuild_vtordisp;FUN_004a0050 | sites 0x4a0030,0x4a0040,0x4a0050
+SgOptionPart	0x594	252	SgListModel	model				sub-object ListModel
+SgPanelSubNv	0x0	4	uint32_t	vbptr	4	lea,r,w		TextView::reset;viewCtor4a0740;panelSubCtor4a3110;panelSubDtor4a3480;panelSubReset4a35e0;panelDrawItem;panelOnPick;panelSubDrawContents;panelSubSlot60;panelSubDeletingDtor | sites 0x48d5de,0x4a078a,0x4a07fa,0x4a314a,0x4a31f9,0x4a320a,0x4a321a,0x4a3226,0x4a3235,0x4a32bc,0x4a32e8,0x4a3312,0x4a3338,0x4a34a1,0x4a34a7,0x4a34bb,0x4a34cb,0x4a34db,0x4a34ed,0x4a35e6,0x4a35f2,0x4a3701,0x4a372d,0x4a3759,0x4a376c,0x4a3f19,0x4a3f4c,0x4a4385,0x4a4394,0x4a43a6,0x4a43b7,0x4a43c8,0x4a45b9,0x4a45bf,0x4a45d7,0x4a4870,0x4a4981
+SgPanelSubNv	0x4	4	int32_t	f_004	4	w		panelSubCtor4a3110;panelSubReset4a35e0 | sites 0x4a3244,0x4a3608
+SgPanelSubNv	0x8	4	int32_t	f_008	4	w		panelSubCtor4a3110;panelSubReset4a35e0 | sites 0x4a32a1,0x4a36e5
+SgPanelSubNv	0x10	96	SgHotList	hot				sub-object HotList
+SgPanelSubNv	0x70	4	int32_t	f_070	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;panelDrawItem | sites 0x4a3247,0x4a360b,0x4a3f37
+SgPanelSubNv	0x74	4	int32_t	f_074	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;panelDrawItem | sites 0x4a324a,0x4a360e,0x4a3f3e
+SgPanelSubNv	0x78	48	SgRecList	records				sub-object RecList
+SgPanelSubNv	0xa8	4	int32_t	f_0a8	4	w		panelSubCtor4a3110;panelSubReset4a35e0 | sites 0x4a324d,0x4a3611
+SgPanelSubNv	0xac	4	int32_t	f_0ac	4	w		panelSubCtor4a3110;panelSubReset4a35e0 | sites 0x4a3253,0x4a3617
+SgPanelSubNv	0xb0	4	int32_t	f_0b0	4	w		panelSubCtor4a3110;panelSubReset4a35e0 | sites 0x4a3259,0x4a361d
+SgPanelSubNv	0xb4	4	int32_t	f_0b4	4	w		panelSubCtor4a3110;panelSubReset4a35e0 | sites 0x4a325f,0x4a3623
+SgPanelSubNv	0xb8	4	int32_t	f_0b8	4	w		panelSubCtor4a3110;panelSubReset4a35e0 | sites 0x4a3265,0x4a3629
+SgPanelSubNv	0xbc	4	uint32_t	pick_handler	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;panelOnPick | sites 0x4a326b,0x4a362f,0x4a4374
+SgPanelSubNv	0xc0	4	uint32_t	hot_handler[0]	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;hotHitCb0 | sites 0x4a3271,0x4a3635,0x4a4414
+SgPanelSubNv	0xc4	4	uint32_t	hot_handler[1]	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;hotHitCb1 | sites 0x4a3277,0x4a363b,0x4a4454
+SgPanelSubNv	0xc8	4	uint32_t	hot_handler[2]	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;hotHitCb2 | sites 0x4a327d,0x4a3641,0x4a4494
+SgPanelSubNv	0xcc	4	uint32_t	hot_handler[3]	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;hotHitCb3 | sites 0x4a3283,0x4a3647,0x4a44d4
+SgPanelSubNv	0xd0	4	uint32_t	hot_handler[4]	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;hotHitCb4 | sites 0x4a3289,0x4a364d,0x4a4514
+SgPanelSubNv	0xd4	4	uint32_t	hot_handler[5]	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;hotHitCb5 | sites 0x4a328f,0x4a3653,0x4a4554
+SgPanelSubNv	0xd8	4	uint32_t	hot_handler[6]	4	r,w		panelSubCtor4a3110;panelSubReset4a35e0;hotHitCb6 | sites 0x4a3295,0x4a3659,0x4a4594
+SgPanelSub	0x0	220	SgPanelSubNv	nv				sub-object PanelSubNv
+SgPanelSub	0xdc	4	int32_t	vtordisp_win	4	r		panelSubDeletingDtor_vtordisp;panelSubDrawContents_vtordisp;panelSubSlot27_vtordisp;panelOnPick_vtordisp;hotHitCb0_vtordisp;hotHitCb1_vtordisp;hotHitCb2_vtordisp;hotHitCb3_vtordisp;hotHitCb4_vtordisp;panelOnKey_vtordisp;hotHitCb5_vtordisp;hotHitCb6_vtordisp;panelSubSlot60_vtordisp;FUN_004a4a80 | sites 0x4a4970,0x4a49c0,0x4a49d0,0x4a49e0,0x4a49f0,0x4a4a00,0x4a4a10,0x4a4a20,0x4a4a30,0x4a4a40,0x4a4a50,0x4a4a60,0x4a4a70,0x4a4a80
+SgPanelSub	0xe0	1396	SgWindow	win				sub-object Window
+SgPanelSub	0x654	4	int32_t	vtordisp_model	4	r		FUN_004a4aa0;panelBuild4a3880_vtordisp;FUN_004a4ac0 | sites 0x4a4aa0,0x4a4ab0,0x4a4ac0
+SgPanelSub	0x658	252	SgListModel	model				sub-object ListModel
+SgPanelRowNv	0x0	4	uint32_t	vbptr	4	lea,r,w		TextView::reset;Dialog::viewDtor;viewCtor4a0740;viewFieldCtor4a2250;viewFieldDtor4a2330;viewFieldReset4a23a0;panelDrawGrid;panelRowCycleSelection;panelRowDeletingDtor | sites 0x48d5e9,0x4915ad,0x4a0794,0x4a080c,0x4a2284,0x4a22a6,0x4a22b2,0x4a22c2,0x4a22ce,0x4a22dd,0x4a2333,0x4a2339,0x4a234d,0x4a235d,0x4a236d,0x4a237f,0x4a23e9,0x4a2d59,0x4a2d71,0x4a2ff0,0x4a3051
+SgPanelRowNv	0x4	4	int32_t	col_a[0]	4	lea,r,w		viewFieldCtor4a2250;viewFieldReset4a23a0;widgetShow | sites 0x4a22f6,0x4a23aa,0x4a23ad,0x4a23b9,0x4a2fa8
+SgPanelRowNv	0x2c	4	int32_t	col_b[0]	4	lea,r,w		viewFieldCtor4a2250;viewFieldReset4a23a0 | sites 0x4a22f1,0x4a22f9,0x4a23c6,0x4a23d6
+SgPanelRowNv	0x54	4	int32_t	col_c[0]	4	w		viewFieldCtor4a2250;viewFieldReset4a23a0 | sites 0x4a22fb,0x4a23bf
+SgPanelRowNv	0x84	4	int32_t	f_084	4	w		viewFieldCtor4a2250;viewFieldReset4a23a0 | sites 0x4a230e,0x4a23ec
+SgPanelRow	0x0	136	SgPanelRowNv	nv				sub-object PanelRowNv
+SgPanelRow	0x88	4	int32_t	vtordisp_win	4	r		panelRowDeletingDtor_vtordisp;panelDrawRow_vtordisp;widgetShow_vtordisp;panelRowCycleSelection_vtordisp;FUN_004a30c0 | sites 0x4a3040,0x4a3090,0x4a30a0,0x4a30b0,0x4a30c0
+SgPanelRow	0x8c	1396	SgWindow	win				sub-object Window
+SgPanelRow	0x600	4	int32_t	vtordisp_model	4	r		FUN_004a30e0;panelCreate4a2400_vtordisp;panelDrawRow_vtordisp_adj578 | sites 0x4a30e0,0x4a30f0,0x4a3100
+SgPanelRow	0x604	252	SgListModel	model				sub-object ListModel
+SgCompositeView	0x0	88	SgListBoxNv	list_box				sub-object ListBoxNv
+SgCompositeView	0x58	32	SgListPanelNv	list_panel				sub-object ListPanelNv
+SgCompositeView	0x78	24	SgOptionPartNv	options				sub-object OptionPartNv
+SgCompositeView	0x90	220	SgPanelSubNv	panel_sub				sub-object PanelSubNv
+SgCompositeView	0x16c	136	SgPanelRowNv	panel_row				sub-object PanelRowNv
+SgCompositeView	0x1f4	4	uint32_t	part_mask	4	r,w		TextView::init;TextView::loadScript;TextView::select;viewDispatchSlot28;viewDispatchSlot27;viewDispatchSlot30;viewDispatchSlot36;viewDispatchSelectChanged;viewDispatchDraw;viewDispatchSlot29;viewDispatchSlot33;viewDispatchSlot39;viewDispatchSlot31;viewDispatchSlot34;viewDispatchSlot32;viewDispatchOnScroll;viewDispatchBuild;viewDispatchSlot60;viewDispatchCycleSelection;viewDispatchSlot6;viewDispatchSlot7;getFieldValueByKind;viewDispatchScrollBy | sites 0x48db82,0x48e245,0x49097b,0x4a0a10,0x4a0ab0,0x4a0b50,0x4a0bf0,0x4a0c90,0x4a0d30,0x4a0db0,0x4a0e20,0x4a0e40,0x4a0e60,0x4a0e90,0x4a0eb0,0x4a0ed0,0x4a0ef0,0x4a0ff0,0x4a1090,0x4a1130,0x4a1170,0x4a1370,0x4a13c0
+SgCompositeView	0x1f8	4	int32_t	vtordisp_win	4	r,w		Dialog::viewDtor;viewDeletingDtor_vtordisp;viewDispatchSlot6_vtordisp;viewDispatchSlot7_vtordisp;viewDispatchDraw_vtordisp;viewDispatchScrollBy_vtordisp;viewDispatchSlot27_vtordisp;viewDispatchSlot28_vtordisp;viewDispatchSlot29_vtordisp;viewDispatchSlot30_vtordisp;viewDispatchSlot31_vtordisp;viewDispatchSlot32_vtordisp;viewDispatchSlot33_vtordisp;viewDispatchSlot34_vtordisp;viewDispatchSlot36_vtordisp;viewDispatchSelectChanged_vtordisp;viewDispatchSlot39_vtordisp;viewDispatchOnScroll_vtordisp57;viewDispatchOnScroll_vtordisp58;viewDispatchSlot60_vtordisp;viewDispatchCycleSelection_vtordisp;FUN_00491a70;viewCtor4a0740 | sites 0x491574,0x4918f0,0x491940,0x491950,0x491960,0x491970,0x491980,0x491990,0x4919a0,0x4919b0,0x4919c0,0x4919d0,0x4919e0,0x4919f0,0x491a00,0x491a10,0x491a20,0x491a30,0x491a40,0x491a50,0x491a60,0x491a70,0x4a085b
+SgCompositeView	0x1fc	1396	SgWindow	win				sub-object Window
+SgCompositeView	0x770	4	int32_t	vtordisp_model	4	r,w		Dialog::viewDtor;FUN_00491a90;viewDispatchBuild_vtordisp;FUN_00491ab0;viewCtor4a0740 | sites 0x49158a,0x491a90,0x491aa0,0x491ab0,0x4a086a
+SgCompositeView	0x774	252	SgListModel	model				sub-object ListModel
+SgTextView	0x0	1396	SgWindow	win				sub-object Window
+SgTextView	0x574	1	uint8_t	f_574	1	r,w		TextView::ctor;TextView::reset | sites 0x48cf97,0x48d601,0x48d867
+SgTextView	0x578	4	int32_t	f_578	4	w		TextView::loadScript | sites 0x48e220
+SgTextView	0x57c	4	int32_t	f_57c	4	w		TextView::loadScript | sites 0x48e1ef
+SgTextView	0x580	4	int32_t	f_580	4	w		TextView::loadScript | sites 0x48e214
+SgTextView	0x584	4	int32_t	f_584	4	w		TextView::loadScript | sites 0x48e21a
+SgTextView	0x588	4	int32_t	f_588	4	w		TextView::loadScript | sites 0x48e226
+SgTextView	0x58c	4	int32_t	f_58c	4	w		TextView::loadScript | sites 0x48e22c
+SgTextView	0x590	4	int32_t	f_590	4	r,w		TextView::ctor;TextView::reset;TextView::init;TextView::setLineSpacing;TextView::setFontSize;TextView::render;TextView::drawContents | sites 0x48d3d8,0x48d40d,0x48dac2,0x48daf7,0x48db78,0x48e0b3,0x48e123,0x48ff7a,0x490e01
+SgTextView	0x594	4	int32_t	f_594	4	r,w		TextView::ctor;TextView::reset | sites 0x48d3e4,0x48d439,0x48dace,0x48db23
+SgTextView	0x598	4	int32_t	f_598	4	r,w		TextView::ctor;TextView::reset | sites 0x48d3f0,0x48d433,0x48dada,0x48db1d
+SgTextView	0x59c	4	int32_t	f_59c	4	r,w		TextView::ctor;TextView::reset | sites 0x48d3fb,0x48d417,0x48dae5,0x48db01
+SgTextView	0x5a0	4	int32_t	f_5a0	4	r,w		TextView::ctor;TextView::reset | sites 0x48d407,0x48d425,0x48daf1,0x48db0f
+SgTextView	0x5a4	24	Buf	buf				sub-object Buf
+SgTextView	0x5bc	4	uint32_t	self	4	r,w		TextView::ctor;TextView::reset;TextView::render;TextView::drawContents | sites 0x48d072,0x48d500,0x48fe83,0x48feb2,0x48fede,0x48ff0a,0x48ff39,0x490daa
+SgTextView	0x5c0	4	int32_t	f_5c0	4	w		TextView::ctor;TextView::reset;TextView::select | sites 0x48d07e,0x48d625,0x49096c,0x490994
+SgTextView	0x5c4	4	int32_t	f_5c4	4	w		TextView::ctor;TextView::reset | sites 0x48d090,0x48d62b
+SgTextView	0x5c8	4	int32_t	f_5c8	4	r,w		TextView::ctor;TextView::reset | sites 0x48d0a5,0x48d631,0x48d644
+SgTextView	0x5dc	1744	SgLabelButton	button_a				sub-object LabelButton
+SgTextView	0xcac	1744	SgLabelButton	button_b				sub-object LabelButton
+SgTextView	0x137c	4	int32_t	f_137c	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d078,0x48d5fb,0x48ff4a
+SgTextView	0x1380	4	int32_t	words_1380[0]	4	lea,r,rw,w		TextView::ctor;TextView::reset | sites 0x48d096,0x48d0a3,0x48d773,0x48d77e,0x48d78a
+SgTextView	0x13a0	44	SpriteRef	surface				sub-object SpriteRef
+SgTextView	0x13cc	4	uint32_t	f_13cc	4	r,w		TextView::ctor;TextView::reset;TextView::drawPanelWithImage | sites 0x48d0fc,0x48d616,0x491294,0x4912ea
+SgTextView	0x13d0	4	int32_t	f_13d0	4	w		TextView::ctor;TextView::reset | sites 0x48d102,0x48d61c
+SgTextView	0x13d4	4	int32_t	f_13d4	4	r,w		TextView::ctor;TextView::reset;TextView::drawContents | sites 0x48d125,0x48da99,0x490df3
+SgTextView	0x13d8	4	int32_t	f_13d8	4	r,w		TextView::ctor;TextView::reset;TextView::drawContents | sites 0x48d119,0x48da8e,0x490de9
+SgTextView	0x13dc	4	int32_t	f_13dc	4	w		TextView::ctor;TextView::reset | sites 0x48d10d,0x48da82
+SgTextView	0x13e0	48	SgRecList	records_a				sub-object RecList
+SgTextView	0x1410	48	SgRecList	records_b				sub-object RecList
+SgTextView	0x1440	4	int32_t	f_1440	4	w		TextView::ctor;TextView::reset | sites 0x48d0c8,0x48d7af
+SgTextView	0x1444	4	int32_t	f_1444	4	w		TextView::ctor;TextView::reset | sites 0x48d0d3,0x48d7ba
+SgTextView	0x1448	4	int32_t	f_1448	4	w		TextView::ctor;TextView::reset | sites 0x48d0b0,0x48d797
+SgTextView	0x144c	4	int32_t	f_144c	4	w		TextView::ctor;TextView::reset | sites 0x48d0bc,0x48d7a3
+SgTextView	0x1450	4	int32_t	f_1450	4	w		TextView::ctor;TextView::reset | sites 0x48d0df,0x48d7c6
+SgTextView	0x1454	4	int32_t	f_1454	4	w		TextView::ctor;TextView::reset | sites 0x48d0f1,0x48d7d2
+SgTextView	0x1458	4	int32_t	f_1458	4	r,w		TextView::ctor;TextView::reset;TextView::drawContents | sites 0x48d05a,0x48d650,0x490da0
+SgTextView	0x145c	4	int32_t	f_145c	4	w		TextView::ctor;TextView::reset | sites 0x48d060,0x48d656
+SgTextView	0x1460	2160	SgCompositeView	composite				sub-object CompositeView
+SgTextView	0x1cd0	4	int32_t	table_a[0]	4	lea,rw		TextView::ctor;TextView::reset | sites 0x48cfa2,0x48cfc9,0x48d496,0x48d4ba
+SgTextView	0x1de8	4	int32_t	table_b[0]	4	lea,rw		TextView::ctor;TextView::reset | sites 0x48cfcb,0x48cfdb,0x48d4bc,0x48d4cc
+SgTextView	0x1f00	4	int32_t	f_1f00	4	w		TextView::ctor;TextView::reset | sites 0x48cfb4,0x48d4b2
+SgTextView	0x1f04	96	SgHotList	hot				sub-object HotList
+SgTextView	0x1f64	4	int32_t	f_1f64	4	w		TextView::ctor;TextView::reset | sites 0x48cfa8,0x48d49c
+SgTextView	0x1f68	4	int32_t	f_1f68	1,4	r,w		TextView::ctor;TextView::reset;TextView::setLineSpacing;TextView::setFontSize;TextView::render;TextView::updateSelection;FUN_00490ac0;FUN_00490ae0;FUN_00490b10 | sites 0x48d084,0x48d844,0x48e0bd,0x48e12d,0x48ff56,0x48ff68,0x490a43,0x490ac0,0x490ae0,0x490b10
+SgTextView	0x1f6c	4	int32_t	f_1f6c	4	w		TextView::ctor;TextView::reset | sites 0x48d08a,0x48d84f
+SgTextView	0x1f70	4	int32_t	f_1f70	4	rw,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d12b,0x48d7d8,0x48ff50,0x48ff62,0x48ff74
+SgTextView	0x1f74	4	int32_t	f_1f74	4	r,w		TextView::ctor;TextView::reset;TextView::drawContents | sites 0x48d131,0x48d7de,0x490dc8
+SgTextView	0x1f78	4	int32_t	f_1f78	4	r,w		TextView::ctor;TextView::reset;TextView::drawContents | sites 0x48d137,0x48d7e4,0x490dc2
+SgTextView	0x1f7c	4	int32_t	f_1f7c	4	w		TextView::ctor;TextView::reset | sites 0x48d13d,0x48d7ea
+SgTextView	0x1f80	4	int32_t	f_1f80	4	w		TextView::ctor;TextView::reset | sites 0x48d143,0x48d7f0
+SgTextView	0x1f84	4	int32_t	f_1f84	4	w		TextView::ctor;TextView::reset | sites 0x48d149,0x48d7f6
+SgTextView	0x1f88	4	int32_t	f_1f88	4	w		TextView::ctor;TextView::reset | sites 0x48d14f,0x48d7fc
+SgTextView	0x1f8c	4	int32_t	f_1f8c	4	w		TextView::ctor;TextView::reset | sites 0x48d155,0x48d802
+SgTextView	0x1f90	4	int32_t	f_1f90	4	w		TextView::ctor;TextView::reset | sites 0x48d15b,0x48d808
+SgTextView	0x1f94	4	int32_t	f_1f94	4	w		TextView::ctor;TextView::reset | sites 0x48d161,0x48d80e
+SgTextView	0x1f98	4	int32_t	f_1f98	4	w		TextView::ctor;TextView::reset | sites 0x48d167,0x48d814
+SgTextView	0x1f9c	4	int32_t	f_1f9c	4	w		TextView::ctor;TextView::reset | sites 0x48d16d,0x48d81a
+SgTextView	0x1fa0	4	int32_t	f_1fa0	4	r,w		TextView::ctor;TextView::reset;TextView::render;TextView::drawContents | sites 0x48d173,0x48d820,0x48ff86,0x490d8e
+SgTextView	0x1fa4	4	int32_t	f_1fa4	4	w		TextView::ctor;TextView::reset | sites 0x48d179,0x48d826
+SgTextView	0x1fa8	4	int32_t	f_1fa8	4	r,w		TextView::ctor;TextView::reset;TextView::drawContents | sites 0x48d17f,0x48d82c,0x490d9a
+SgTextView	0x1fac	4	int32_t	f_1fac	4	w		TextView::ctor;TextView::reset | sites 0x48d185,0x48d832
+SgTextView	0x1fb0	4	int32_t	f_1fb0	4	r,w		TextView::ctor;TextView::reset;TextView::drawContents | sites 0x48d18b,0x48d838,0x490d94
+SgTextView	0x1fb4	4	int32_t	f_1fb4	4	w		TextView::ctor;TextView::reset | sites 0x48d196,0x48d83e
+SgTextView	0x1fb8	4	int32_t	f_1fb8	4	w		TextView::ctor;TextView::reset;TextView::setSize | sites 0x48d19c,0x48d855,0x48e19b
+SgTextView	0x1fbc	4	int32_t	f_1fbc	4	w		TextView::ctor;TextView::reset;TextView::setSize | sites 0x48d1a2,0x48d85b,0x48e1ac
+SgTextView	0x1fc0	4	int32_t	f_1fc0	4	w		TextView::ctor;TextView::reset | sites 0x48d1a8,0x48d861
+SgTextView	0x1fc4	4	int32_t	f_1fc4	4	w		TextView::ctor;TextView::reset | sites 0x48d1b3,0x48d87a
+SgTextView	0x1fc8	4	int32_t	f_1fc8	4	w		TextView::ctor;TextView::reset | sites 0x48d1bf,0x48d886
+SgTextView	0x1fcc	4	int32_t	f_1fcc	4	w		TextView::ctor;TextView::reset | sites 0x48d1cb,0x48d892
+SgTextView	0x1fd0	4	int32_t	f_1fd0	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d1d6,0x48d89d,0x48ff30
+SgTextView	0x1fd4	4	int32_t	f_1fd4	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d211,0x48d8d8,0x48ff29
+SgTextView	0x1fd8	4	int32_t	f_1fd8	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d24b,0x48d912,0x48ff23
+SgTextView	0x1fdc	4	int32_t	f_1fdc	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d285,0x48d94c,0x48ff1d
+SgTextView	0x1fe0	4	int32_t	f_1fe0	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d1e2,0x48d8a9,0x48fe7c
+SgTextView	0x1fe4	4	int32_t	f_1fe4	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d21c,0x48d8e3,0x48fea9
+SgTextView	0x1fe8	4	int32_t	f_1fe8	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d257,0x48d91e,0x48fed6
+SgTextView	0x1fec	4	int32_t	f_1fec	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d291,0x48d958,0x48ff03
+SgTextView	0x1ff0	4	int32_t	f_1ff0	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d1ee,0x48d8b5,0x48fe75
+SgTextView	0x1ff4	4	int32_t	f_1ff4	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d228,0x48d8ef,0x48fea2
+SgTextView	0x1ff8	4	int32_t	f_1ff8	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d262,0x48d929,0x48fecf
+SgTextView	0x1ffc	4	int32_t	f_1ffc	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d29d,0x48d964,0x48fefc
+SgTextView	0x2000	4	int32_t	f_2000	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d1f9,0x48d8c0,0x48fe6f
+SgTextView	0x2004	4	int32_t	f_2004	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d234,0x48d8fb,0x48fe9c
+SgTextView	0x2008	4	int32_t	f_2008	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d26e,0x48d935,0x48fec9
+SgTextView	0x200c	4	int32_t	f_200c	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d2a8,0x48d96f,0x48fef6
+SgTextView	0x2010	4	int32_t	f_2010	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d205,0x48d8cc,0x48fe69
+SgTextView	0x2014	4	int32_t	f_2014	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d23f,0x48d906,0x48fe96
+SgTextView	0x2018	4	int32_t	f_2018	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d27a,0x48d941,0x48fec3
+SgTextView	0x201c	4	int32_t	f_201c	4	r,w		TextView::ctor;TextView::reset;TextView::render | sites 0x48d2b4,0x48d97b,0x48fef0
+SgTextView	0x2020	4	int32_t	f_2020	4	w		TextView::ctor;TextView::reset | sites 0x48d2ba,0x48d981
+SgTextView	0x2024	4	int32_t	f_2024	4	w		TextView::ctor;TextView::reset | sites 0x48d2c0,0x48d987
+SgTextView	0x2028	4	int32_t	f_2028	4	w		TextView::ctor;TextView::reset | sites 0x48d2c6,0x48d98d
+SgTextView	0x202c	4	int32_t	f_202c	4	w		TextView::ctor;TextView::reset | sites 0x48d2d2,0x48d999
+SgTextView	0x2030	4	int32_t	f_2030	4	w		TextView::ctor;TextView::reset | sites 0x48d30c,0x48d9d3
+SgTextView	0x2034	4	int32_t	f_2034	4	w		TextView::ctor;TextView::reset | sites 0x48d346,0x48da0d
+SgTextView	0x2038	1	uint8_t	f_2038	1	w		TextView::ctor;TextView::reset | sites 0x48d2dd,0x48d9a4
+SgTextView	0x2039	1	uint8_t	f_2039	1	w		TextView::ctor;TextView::reset | sites 0x48d318,0x48d9df
+SgTextView	0x203a	1	uint8_t	f_203a	1	w		TextView::ctor;TextView::reset | sites 0x48d352,0x48da19
+SgTextView	0x203c	4	int32_t	f_203c	4	w		TextView::ctor;TextView::reset | sites 0x48d2e9,0x48d9b0
+SgTextView	0x2040	4	int32_t	f_2040	4	w		TextView::ctor;TextView::reset | sites 0x48d323,0x48d9ea
+SgTextView	0x2044	4	int32_t	f_2044	4	w		TextView::ctor;TextView::reset | sites 0x48d35e,0x48da25
+SgTextView	0x2048	4	int32_t	f_2048	4	w		TextView::ctor;TextView::reset | sites 0x48d2f5,0x48d9bc
+SgTextView	0x204c	4	int32_t	f_204c	4	w		TextView::ctor;TextView::reset | sites 0x48d32f,0x48d9f6
+SgTextView	0x2050	4	int32_t	f_2050	4	w		TextView::ctor;TextView::reset | sites 0x48d369,0x48da30
+SgTextView	0x2054	4	int32_t	f_2054	4	w		TextView::ctor;TextView::reset | sites 0x48d300,0x48d9c7
+SgTextView	0x2058	4	int32_t	f_2058	4	w		TextView::ctor;TextView::reset | sites 0x48d33b,0x48da02
+SgTextView	0x205c	4	int32_t	f_205c	4	w		TextView::ctor;TextView::reset | sites 0x48d375,0x48da3c
+SgTextView	0x2060	1	uint8_t	f_2060	1	w		TextView::ctor;TextView::reset | sites 0x48d381,0x48dab7
+SgTextView	0x2064	4	int32_t	f_2064	4	w		TextView::ctor;TextView::reset | sites 0x48d38c,0x48da48
+SgTextView	0x2068	4	int32_t	f_2068	4	w		TextView::ctor;TextView::reset | sites 0x48d398,0x48da53
+SgTextView	0x206c	4	int32_t	f_206c	4	w		TextView::ctor;TextView::reset | sites 0x48d3a4,0x48da5f
+SgTextView	0x2070	4	int32_t	f_2070	4	w		TextView::ctor;TextView::reset | sites 0x48d3af,0x48da6b
+SgTextView	0x2074	4	int32_t	f_2074	4	w		TextView::ctor;TextView::reset | sites 0x48d3bb,0x48da76
+SgTextView	0x2078	4	int32_t	f_2078	4	lea,w		TextView::reset | sites 0x48d58a,0x48d595
+SgTextView	0x2084	4	int32_t	f_2084	4	lea,w		TextView::reset | sites 0x48d5a6,0x48d5b1
+SgTextView	0x2090	4	int32_t	row_2090[0]	4	lea,w		TextView::ctor;TextView::reset | sites 0x48cfdd,0x48cfe8,0x48d50b,0x48d516
+SgTextView	0x209c	4	int32_t	rows_209c[0]	4	w		TextView::ctor;TextView::reset | sites 0x48d005,0x48d533
+SgTextView	0x20a8	4	int32_t	rows_209c[3]	4	lea,w		TextView::ctor;TextView::reset | sites 0x48cff4,0x48d00e,0x48d522,0x48d53c
+SgTextView	0x20b4	4	int32_t	rows_209c[6]	4	w		TextView::ctor;TextView::reset | sites 0x48d016,0x48d544
+SgTextView	0x20c0	4	int32_t	rows_209c[9]	4	w		TextView::ctor;TextView::reset | sites 0x48d01f,0x48d54d
+SgTextView	0x20cc	4	int32_t	rows_209c[12]	4	w		TextView::ctor;TextView::reset | sites 0x48d028,0x48d556
+SgTextView	0x20d8	4	int32_t	rows_209c[15]	4	w		TextView::ctor;TextView::reset | sites 0x48d031,0x48d55f
+SgTextView	0x20e4	4	int32_t	rows_209c[18]	4	w		TextView::ctor;TextView::reset | sites 0x48d03a,0x48d568
+SgTextView	0x20f0	4	int32_t	rows_209c[21]	4	w		TextView::ctor;TextView::reset | sites 0x48d043,0x48d571
+SgTextView	0x20fc	4	int32_t	rows_209c[24]	4	w		TextView::ctor;TextView::reset | sites 0x48d04c,0x48d57a
+SgTextView	0x2108	4	int32_t	f_2108	4	r,w		TextView::ctor;TextView::reset | sites 0x48d066,0x48d4ce,0x48d4e1
+SgTextView	0x210c	4	int32_t	f_210c	4	r,w		TextView::ctor;TextView::reset | sites 0x48d06c,0x48d4e7,0x48d4fa
+SgTextView	0x2110	4	int32_t	f_2110	4	w		TextView::ctor;TextView::reset | sites 0x48d3c1,0x48d3cd,0x48da9f,0x48daab
+SgCursor	0x0	4	uint32_t	vtbl	4	w		Cursor_deleteDtor;Cursor::ctor | sites 0x45c003,0x488494
+SgCursor	0x4	4	int32_t	f_004	4	r,w		Cursor::ctor;Cursor::destroy | sites 0x48849a,0x4884b6,0x4884c4
+SgCursor	0x8	4	uint32_t	f_008	4	r,w		Cursor::ctor;Cursor::destroy | sites 0x4884a3,0x4884c7,0x4884d4
+SgCursor	0xc	4	int32_t	f_00c	4	w		Cursor::ctor;Cursor::destroy | sites 0x48849d,0x4884d7
+SgCursor	0x10	4	int32_t	f_010	4	w		Cursor::ctor;Cursor::destroy | sites 0x4884a0,0x4884da
