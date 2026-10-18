@@ -773,7 +773,7 @@ cluster	lo	hi	section	class	stream	rule	vote_stream	votes	non_voting	margin	addr
 771	0x0056c770	0x0056c790	bss	scalar array	E	tie on functions, broken by references B:3 E:3	E	B:2,E:2		0	2	4
 772	0x0056c794	0x0056c7b4	bss	scalar array	B	vote	B	B:4,E:2,C:1		2	2	7
 773	0x0056c7b8	0x0056c7b8	bss	object	E	global object instance	D	D:1	crt:1	1	1	2
-774	0x0056c7e4	0x0056c7e4	bss	record array	B	tie on functions, broken by references B:6 C:3	B	B:2,C:2	save:1	0	1	5
+774	0x0056c7e4	0x0056c7e4	bss	record array	C	parent override: plan section 3 gives the 50x50 tile grids to stream C (was C by tie)	B	B:2,C:2	save:1	0	1	5
 775	0x0056d1a8	0x0056d1b0	bss	scalar	E	vote	E	E:3,B:2,C:1		1	3	6
 776	0x0056d1b8	0x0056d1b8	bss	record array	B	vote	B	B:1	save:2	1	1	3
 777	0x0056d1d8	0x0056d1f2	bss	record array	B	vote	B	B:4,C:1		3	11	5
@@ -1067,7 +1067,7 @@ cluster	lo	hi	section	class	stream	rule	vote_stream	votes	non_voting	margin	addr
 1065	0x005a636c	0x005a636c	bss	scalar	C	tie on functions, broken by references C:3 E:1	C	C:1,E:1	save:3	0	1	5
 1066	0x005a6370	0x005a6370	bss	scalar	B	tie on functions, broken by references B:2 E:1	B	B:1,E:1		0	1	2
 1067	0x005a6374	0x005a6374	bss	scalar	B	vote	B	B:2	save:1	2	1	3
-1068	0x005a6378	0x005a6378	bss	record array	B	tie on functions, broken by references B:8 C:5	B	B:2,C:2	save:1	0	1	5
+1068	0x005a6378	0x005a6378	bss	record array	C	parent override: plan section 3 gives the 50x50 tile grids to stream C (was C by tie)	B	B:2,C:2	save:1	0	1	5
 1069	0x005a6d3c	0x005a6d40	bss	scalar	B	vote	B	B:12,E:5,C:4		7	2	21
 1070	0x005a7140	0x005a7144	bss	flag word	B	tie on functions, broken by references B:10 E:4	B	B:3,E:3		0	2	6
 1071	0x005a7148	0x005a7148	bss	object	E	global object instance	C	B:1,C:1,D:1	crt:1	0	1	4
