@@ -1,0 +1,225 @@
+module	interface	slot_or_export	name	function	stack_args	arg_types	call_site_evidence	return	exe_call_sites	exe_callers
+jgld.dll	Display vtable 0x1011d640	slot 0 (+0x0)	?FUN_100655c0@C_FUN_100655c0@f_100655c0@@QAEPAXI@Z	0x100655c0	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 1 (+0x4)	Display::createWindow	0x100657e0	3	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 2 (+0x8)	Display::shutdown	0x100656c0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 3 (+0xc)	Display::destroyAll	0x10065420	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	freeGraphsyObject
+jgld.dll	Display vtable 0x1011d640	slot 4 (+0x10)	Display::showWindow	0x100675e0	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	gameMain
+jgld.dll	Display vtable 0x1011d640	slot 5 (+0x14)	Display::hideWindow	0x10067640	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 6 (+0x18)	Display::minimizeWindow	0x100676a0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 7 (+0x1c)	Display::maximizeWindow	0x10067700	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 8 (+0x20)	Display::getHwnd	0x10067560	0	thiscall (this = the Display)	pushes at exe sites: 0,1,3,4	eax	10	FUN_00486f40;Surface_clip;Timer::callback;Timer::startMmOneShot;Timer::startMmPeriodic;Timer::stop;gameMain;playAudioFile
+jgld.dll	Display vtable 0x1011d640	slot 9 (+0x24)	Display::getInstance	0x100675a0	0	thiscall (this = the Display)	pushes at exe sites: 5	eax	2	gameMain
+jgld.dll	Display vtable 0x1011d640	slot 10 (+0x28)	Display::setWindowPos	0x10066810	4	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 11 (+0x2c)	Display::getCursor	0x10066780	2	thiscall (this = the Display)	pushes at exe sites: 2,5	eax	2	View_toLocal;drawCursor
+jgld.dll	Display vtable 0x1011d640	slot 12 (+0x30)	Display::invalidate	0x10066710	1	thiscall (this = the Display)	pushes at exe sites: 1	eax	4	Window::detach;Window::invalidate;Window::setSize;Window::show
+jgld.dll	Display vtable 0x1011d640	slot 13 (+0x34)	Display::getField12c130	0x100666b0	2	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 14 (+0x38)	Display::getWindowRect	0x10066650	1	thiscall (this = the Display)	pushes at exe sites: 1,5	eax	2	FUN_00495790;View_toLocal
+jgld.dll	Display vtable 0x1011d640	slot 15 (+0x3c)	Display::getField138	0x10065bf0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 16 (+0x40)	?FUN_10066e30@C_FUN_10066e30@f_10066e30@@QAEIH@Z	0x10066e30	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 17 (+0x44)	?FUN_10066df0@C_FUN_10066df0@f_10066df0@@QAEIH@Z	0x10066df0	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 18 (+0x48)	?FUN_10066e70@C_FUN_10066e70@f_10066e70@@QAEIXZ	0x10066e70	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 19 (+0x4c)	?FUN_10066ea0@C_FUN_10066ea0@f_10066ea0@@QAEXXZ	0x10066ea0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 20 (+0x50)	Display::findMode	0x10065c30	3	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 21 (+0x54)	Display::setDesktopMode	0x10066200	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 22 (+0x58)	Display::pickMode	0x10065ea0	3	thiscall (this = the Display)	pushes at exe sites: 3	eax	1	gameMain
+jgld.dll	Display vtable 0x1011d640	slot 23 (+0x5c)	Display::pickModeFreq	0x10066040	5	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 24 (+0x60)	Display::setMode	0x10065da0	4	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 25 (+0x64)	Display::setModeIndex	0x100662a0	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 26 (+0x68)	Display::enumModes	0x10065a90	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 27 (+0x6c)	Display::setResolution	0x10066890	2	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 28 (+0x70)	Display::restore	0x10066970	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 29 (+0x74)	Factory::createFont	0x10067850	1	thiscall (this = the Display)	pushes at exe sites: 1	eax	2	Surface::createFromId;Surface::createSized
+jgld.dll	Display vtable 0x1011d640	slot 30 (+0x78)	Factory::createPalette	0x10067910	1	thiscall (this = the Display)	pushes at exe sites: 1	eax	1	Cache483030::attach
+jgld.dll	Display vtable 0x1011d640	slot 31 (+0x7c)	Factory::createSurface	0x100679d0	2	thiscall (this = the Display)	pushes at exe sites: 2	eax	1	Surface_createFull
+jgld.dll	Display vtable 0x1011d640	slot 32 (+0x80)	Factory::createSprite	0x10067a90	2	thiscall (this = the Display)	pushes at exe sites: 2,3	eax	4	Surface_copyFrom;Surface_create;Surface_init2;cropSprite
+jgld.dll	Display vtable 0x1011d640	slot 33 (+0x84)	?FUN_10066ed0@C_FUN_10066ed0@f_10066ed0@@QAEIH@Z	0x10066ed0	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 34 (+0x88)	Factory::destroyFont	0x10067b50	1	thiscall (this = the Display)	pushes at exe sites: 3	eax	1	Surface::releaseBacking
+jgld.dll	Display vtable 0x1011d640	slot 35 (+0x8c)	Factory::destroyPalette	0x10067bd0	1	thiscall (this = the Display)	pushes at exe sites: 5	eax	1	Image_releaseAll
+jgld.dll	Display vtable 0x1011d640	slot 36 (+0x90)	Factory::destroySurface	0x10067c50	1	thiscall (this = the Display)	pushes at exe sites: 4	eax	1	Cache483070::reset
+jgld.dll	Display vtable 0x1011d640	slot 37 (+0x94)	Factory::destroySprite	0x10067cd0	1	thiscall (this = the Display)	pushes at exe sites: 3	eax	1	Surface_free
+jgld.dll	Display vtable 0x1011d640	slot 38 (+0x98)	?FUN_10066f10@C_FUN_10066f10@f_10066f10@@QAEXH@Z	0x10066f10	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 39 (+0x9c)	Display::setScale	0x10067d50	3	thiscall (this = the Display)	pushes at exe sites: 3,6,7,8,10	eax	40	FUN_0047ea30;LabelButton::drawContents;Sprite_drawScaled;Surface_draw;Surface_drawScaled;Surface_drawScaled2;TextView::drawContents;Window::blitToTarget;blitRight;drawAmenityRow;drawFrameR3;drawFrameS2;drawNinePatch;drawPanel4810d0;drawPanelS2;drawQueuedSprite;drawTooltip;drawWindowFrame;listPanelDraw;mainLoop;optionListDraw;panelDrawItem;scrollbarDraw;showCharacterEditor;showCourseReport;showMainRadialMenu;showMembershipRoster;showRoutingMapScreen
+jgld.dll	Display vtable 0x1011d640	slot 40 (+0xa0)	Display::getScale	0x10067da0	3	thiscall (this = the Display)	pushes at exe sites: 4,5,6,7	eax	7	Image_draw;Sprite_draw;Sprite_drawScaled;Surface_blit2;Surface_draw;Surface_drawScaled;Surface_drawScaled2
+jgld.dll	Display vtable 0x1011d640	slot 41 (+0xa4)	Display::present	0x10066470	1	thiscall (this = the Display)	pushes at exe sites: 1	eax	1	drawTooltip
+jgld.dll	Display vtable 0x1011d640	slot 42 (+0xa8)	Display::getWidth	0x10067760	0	thiscall (this = the Display)	pushes at exe sites: 0,1	eax	3	TextView::render;TextView::setFontSize;TextView::setLineSpacing
+jgld.dll	Display vtable 0x1011d640	slot 43 (+0xac)	Display::getHeight	0x100677a0	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	Window::center
+jgld.dll	Display vtable 0x1011d640	slot 44 (+0xb0)	Display::getBpp	0x100677e0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 45 (+0xb4)	?FUN_10067820@C_FUN_10067820@f_10067820@@QAEIXZ	0x10067820	0	thiscall (this = the Display)	pushes at exe sites: 0,1	eax	39	TextView::build;build16BitColorTable;comboInit;comboOpenPopup;comboRefresh;drawTextRun;loadBmpSurface;pixelGreen;pixelRed;reloadBmp;saveBmp;showHireEmployeeDialog;showShortcutsScreen
+jgld.dll	Display vtable 0x1011d640	slot 46 (+0xb8)	Display::initFonts	0x10067e00	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	setPrimarySurface
+jgld.dll	Display vtable 0x1011d640	slot 47 (+0xbc)	Display::shutdownFonts	0x10067e40	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	clearPrimarySurface
+jgld.dll	Display vtable 0x1011d640	slot 48 (+0xc0)	Display::createPalette	0x10067e80	2	thiscall (this = the Display)	pushes at exe sites: 2	eax	1	resetScreenState
+jgld.dll	Display vtable 0x1011d640	slot 49 (+0xc4)	Display::freePalette	0x10067ed0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 50 (+0xc8)	?FUN_10066f40@C_FUN_10066f40@f_10066f40@@QAEIXZ	0x10066f40	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 51 (+0xcc)	?FUN_10066f80@C_FUN_10066f80@f_10066f80@@QAEIXZ	0x10066f80	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 52 (+0xd0)	?FUN_10066fc0@C_FUN_10066fc0@f_10066fc0@@QAEIXZ	0x10066fc0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 53 (+0xd4)	?FUN_10067000@C_FUN_10067000@f_10067000@@QAEIHH@Z	0x10067000	2	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 54 (+0xd8)	?FUN_10067040@C_FUN_10067040@f_10067040@@QAEIH@Z	0x10067040	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 55 (+0xdc)	?FUN_10067080@C_FUN_10067080@f_10067080@@QAEIH@Z	0x10067080	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 56 (+0xe0)	?FUN_100670c0@C_FUN_100670c0@f_100670c0@@QAEIH@Z	0x100670c0	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 57 (+0xe4)	?FUN_10067100@C_FUN_10067100@f_10067100@@QAEIHHH@Z	0x10067100	3	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 58 (+0xe8)	?FUN_10067140@C_FUN_10067140@f_10067140@@QAEIH@Z	0x10067140	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 59 (+0xec)	?FUN_10067180@C_FUN_10067180@f_10067180@@QAEIHH@Z	0x10067180	2	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 60 (+0xf0)	?FUN_100671c0@C_FUN_100671c0@f_100671c0@@QAEIH@Z	0x100671c0	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 61 (+0xf4)	?FUN_10067200@C_FUN_10067200@f_10067200@@QAEIH@Z	0x10067200	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 62 (+0xf8)	?FUN_10067240@C_FUN_10067240@f_10067240@@QAEIH@Z	0x10067240	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 63 (+0xfc)	?FUN_10067280@C_FUN_10067280@f_10067280@@QAEIH@Z	0x10067280	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 64 (+0x100)	?FUN_100672c0@C_FUN_100672c0@f_100672c0@@QAEIHHHHHH@Z	0x100672c0	6	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 65 (+0x104)	?FUN_10067300@C_FUN_10067300@f_10067300@@QAEIHHHH@Z	0x10067300	4	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 66 (+0x108)	?FUN_10067340@C_FUN_10067340@f_10067340@@QAEIHH@Z	0x10067340	2	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 67 (+0x10c)	?FUN_10067380@C_FUN_10067380@f_10067380@@QAEIH@Z	0x10067380	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 68 (+0x110)	?FUN_100673c0@C_FUN_100673c0@f_100673c0@@QAEIH@Z	0x100673c0	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 69 (+0x114)	?FUN_10067400@C_FUN_10067400@f_10067400@@QAEIH@Z	0x10067400	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 70 (+0x118)	?FUN_10067440@C_FUN_10067440@f_10067440@@QAEIH@Z	0x10067440	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 71 (+0x11c)	?FUN_10067480@C_FUN_10067480@f_10067480@@QAEIH@Z	0x10067480	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 72 (+0x120)	?pumpPrivate@App@@QAEHXZ	0x1006b970	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 73 (+0x124)	?idle@App@@QAEXXZ	0x1006b080	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 74 (+0x128)	?pumpAll@App@@QAEHXZ	0x1006b0f0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 75 (+0x12c)	?pumpOldest@App@@QAEHXZ	0x1006b1d0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 76 (+0x130)	?pumpPaint@App@@QAEHXZ	0x1006b3a0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 77 (+0x134)	?pumpKeys@App@@QAEHXZ	0x1006b440	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 78 (+0x138)	?pumpChars@App@@QAEHXZ	0x1006b730	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 79 (+0x13c)	?pumpMouse@App@@QAEHXZ	0x1006b7e0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 80 (+0x140)	?pumpMouseMove@App@@QAEHXZ	0x1006b4f0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 81 (+0x144)	?pumpClick@App@@QAEHXZ	0x1006b5a0	0	thiscall (this = the Display)		eax	0	
+jgld.dll	Display vtable 0x1011d640	slot 82 (+0x148)	?flushKeys@App@@QAEXXZ	0x1006b890	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	modalPush483d40
+jgld.dll	Display vtable 0x1011d640	slot 83 (+0x14c)	?flushMouse@App@@QAEXXZ	0x1006b900	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	modalFocusClear483d60
+jgld.dll	Display vtable 0x1011d640	slot 84 (+0x150)	?drainPrivate@App@@QAEXXZ	0x1006ba20	0	thiscall (this = the Display)	pushes at exe sites: 0	eax	1	pumpInputDisplay483da0
+jgld.dll	Display vtable 0x1011d640	slot 85 (+0x154)	Lib::setCommandHandler	0x10067f10	1	thiscall (this = the Display)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 0 (+0x0)	Surface::deletingDtor	0x10007900	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 1 (+0x4)	allocDrawBuffer	0x10007e40	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 2 (+0x8)	Surface::release	0x10007cc0	0	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 3 (+0xc)	Surface::pixelAddr	0x10008830	2	thiscall (this = the Surface)	pushes at exe sites: 0	eax	1	Cache483060::detach
+jgld.dll	Surface vtable 0x1011d0b0	slot 4 (+0x10)	Surface::acquireDC2	0x10008730	0	thiscall (this = the Surface)	pushes at exe sites: 4,5	eax	2	Stream4838f0::puts;measureTextWidth
+jgld.dll	Surface vtable 0x1011d0b0	slot 5 (+0x14)	Surface::call3a	0x1000a810	2	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 6 (+0x18)	Surface::fwdVfn18	0x1000a750	0	thiscall (this = the Surface)	pushes at exe sites: 0	eax	1	decodePcx8
+jgld.dll	Surface vtable 0x1011d0b0	slot 7 (+0x1c)	Surface::call3b	0x1000a870	2	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 8 (+0x20)	Surface::fwdVfn20	0x1000a7b0	0	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 9 (+0x24)	Surface::releaseDC2	0x100087b0	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 10 (+0x28)	Surface::acquireDC	0x10008640	0	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 11 (+0x2c)	Surface::releaseDC	0x100086b0	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 12 (+0x30)	?FUN_10009840@C_FUN_10009840@f_10009840@@QAEXH@Z	0x10009840	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 13 (+0x34)	Surface::setClip	0x100083c0	1	thiscall (this = the Surface)	pushes at exe sites: 1	eax	1	Widget_fillRectR
+jgld.dll	Surface vtable 0x1011d0b0	slot 14 (+0x38)	Surface::blit	0x10008e50	8	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 15 (+0x3c)	Surface::blitT	0x100091a0	7	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 16 (+0x40)	Surface::stretchTo	0x10008f70	3	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 17 (+0x44)	Surface::fillRectDispatch	0x10009770	2	thiscall (this = the Surface)	pushes at exe sites: 2	eax	1	Widget_clearArea
+jgld.dll	Surface vtable 0x1011d0b0	slot 18 (+0x48)	Surface::blendRectDispatch	0x10009ac0	3	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 19 (+0x4c)	Surface::ditherRectDispatch	0x10009c50	2	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 20 (+0x50)	Surface::ditherBlendRectDispatch	0x10009e40	3	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 21 (+0x54)	Surface::blit16	0x100098f0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 22 (+0x58)	Surface::fillRect	0x10009320	3	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 23 (+0x5c)	Surface::fill2	0x10009440	2	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 24 (+0x60)	Surface::drawDashedLine	0x100095a0	9	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 25 (+0x64)	Surface::drawLine	0x100094e0	6	thiscall (this = the Surface)	pushes at exe sites: 6,7	eax	3	Widget_drawHLine;Widget_drawVLine;Widget_fillRect
+jgld.dll	Surface vtable 0x1011d0b0	slot 26 (+0x68)	Surface::unimplVfn68	0x1000abb0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 27 (+0x6c)	Surface::unimplVfn6c	0x1000abf0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 28 (+0x70)	Surface::unimplVfn70	0x1000ac30	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 29 (+0x74)	loadPng	0x100145a0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 30 (+0x78)	Surface::saveImage	0x1000a550	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 31 (+0x7c)	Surface::unimplVfn7c	0x1000ac70	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 32 (+0x80)	Surface::unimplVfn80	0x1000adb0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 33 (+0x84)	Surface::drawTo	0x10009fd0	3	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 34 (+0x88)	Surface::unimplVfn88	0x1000acb0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 35 (+0x8c)	Surface::drawToZ	0x1000a330	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 36 (+0x90)	Surface::unimplVfn90	0x1000acf0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 37 (+0x94)	Surface::unimplVfn94	0x1000ad30	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 38 (+0x98)	Surface::unimplVfn98	0x1000ad70	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 39 (+0x9c)	Surface::unimplVfn9c	0x1000adf0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 40 (+0xa0)	Surface::unimplVfna0	0x1000ae70	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 41 (+0xa4)	Surface::unimplVfna4	0x1000ae30	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 42 (+0xa8)	Surface::selectObject	0x10008ae0	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 43 (+0xac)	Surface::selectSystemFont	0x10008b90	0	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 44 (+0xb0)	Surface::setTextColor16	0x10008d00	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 45 (+0xb4)	Surface::setTextColorRGB	0x10008c40	3	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 46 (+0xb8)	Surface::textOut	0x10008da0	4	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 47 (+0xbc)	Surface::setField4d0	0x1000a5d0	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 48 (+0xc0)	Surface::getField4d0	0x1000a620	0	thiscall (this = the Surface)	pushes at exe sites: 0	eax	1	LabelButton::drawContents
+jgld.dll	Surface vtable 0x1011d0b0	slot 49 (+0xc4)	Surface::callBounds	0x1000a8d0	0	thiscall (this = the Surface)	pushes at exe sites: 0	eax	2	FUN_004864f0;drawTooltip
+jgld.dll	Surface vtable 0x1011d0b0	slot 50 (+0xc8)	Surface::getClip	0x1000a930	1	thiscall (this = the Surface)	pushes at exe sites: 1	eax	1	FUN_0047e770
+jgld.dll	Surface vtable 0x1011d0b0	slot 51 (+0xcc)	Surface::getClipRectPtr	0x1000a990	0	thiscall (this = the Surface)	pushes at exe sites: 0,4,5	eax	8	Image::dottedHLine;Image::dottedVLine;dottedHLine16;dottedVLine16
+jgld.dll	Surface vtable 0x1011d0b0	slot 52 (+0xd0)	Surface::getBounds	0x1000a9d0	1	thiscall (this = the Surface)	pushes at exe sites: 1,4,5	eax	6	Button::onMouseMove;FUN_0047ea30;FUN_004864f0;LabelButton::drawContents;Window::invalidate;clipAllWindows
+jgld.dll	Surface vtable 0x1011d0b0	slot 53 (+0xd4)	Surface::getBoundsRectPtr	0x1000aa30	0	thiscall (this = the Surface)	pushes at exe sites: 0,2	eax	4	Window::refreshFull;relayoutClip;scrollbarDraw
+jgld.dll	Surface vtable 0x1011d0b0	slot 54 (+0xd8)	Surface::width	0x1000aa70	0	thiscall (this = the Surface)	pushes at exe sites: 0,3,4,5	eax	10	EditBox::pixelToCharPos;EditBox::wrapToLines;FUN_00480f80;FUN_00496860;Surface_pixelPtr;Widget_readPixel;drawCursor;reloadBmp;scrollbarOnDown;scrollbarOnKey
+jgld.dll	Surface vtable 0x1011d0b0	slot 55 (+0xdc)	Surface::height	0x1000aab0	0	thiscall (this = the Surface)	pushes at exe sites: 0	eax	3	FUN_00496860;TextView::drawContents;Widget_readPixel
+jgld.dll	Surface vtable 0x1011d0b0	slot 56 (+0xe0)	Surface::getField40	0x1000aaf0	0	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 57 (+0xe4)	Surface::getDepthPtr	0x1000ab30	0	thiscall (this = the Surface)	pushes at exe sites: 0,1	eax	3	Widget_drawHLineDepth;Widget_drawVLineDepth;decodePcx16
+jgld.dll	Surface vtable 0x1011d0b0	slot 58 (+0xe8)	Surface::getField7c	0x1000ab70	0	thiscall (this = the Surface)		eax	0	
+jgld.dll	Surface vtable 0x1011d0b0	slot 59 (+0xec)	Surface::setPalette	0x100089d0	1	thiscall (this = the Surface)		eax	0	
+jgld.dll	export	ordinal 1	get_graphsy_object_ptr	0x10001780				eax = the library object	0	loadGraphsyObject (golf_clean.exe GetProcAddress)
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 0 (+0x0)	FUN_00495750	0x00495750	2	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 1 (+0x4)	redrawRegion	0x00495770	1	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 2 (+0x8)	FUN_00495790	0x00495790	2	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 3 (+0xc)	uiKeyEvent	0x00495910	2	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 4 (+0x10)	uiKeyEvent148	0x00495990	1	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 5 (+0x14)	uiPointerMove	0x004959b0	2	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 6 (+0x18)	FUN_00495a50	0x00495a50	3	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 7 (+0x1c)	FUN_00495aa0	0x00495aa0	3	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 8 (+0x20)	FUN_00495b90	0x00495b90	2	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 9 (+0x24)	FUN_00495bd0	0x00495bd0	3	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 10 (+0x28)	FUN_00495c30	0x00495c30	2	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 11 (+0x2c)	FUN_00495c70	0x00495c70	2	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 12 (+0x30)	Timer_fire	0x00495cb0	1	called by jgld through the stored table		eax		
+golf_clean.exe	callback table 0x004ba87c (address stored at 0x0083a4f8 by 0x004799d0)	entry 13 (+0x34)	FUN_00495d20	0x00495d20	0	called by jgld through the stored table		eax		
+sound.dll	export via g_soundFns 0x0083af6c[0] (0x0083af6c)	ordinal 1	create_sound	0x100093e0	cdecl: pushes at exe sites 3	Sound** out, const char* name, unsigned kind		int status (0 ok, 3 no MIDI device)	2	createSound4840e0
+sound.dll	export via g_soundFns 0x0083af6c[1] (0x0083af70)	ordinal 2	delete_sound	0x100097d0	cdecl: pushes at exe sites 1	types not determined; pushes between the previous call and the exe call site: 1 (an upper bound: register saves count)		eax (not determined)	2	releaseSoundObj
+sound.dll	export via g_soundFns 0x0083af6c[2] (0x0083af74)	ordinal 3	init_sound_timer	0x100092e0	cdecl: pushes at exe sites 2	types not determined; pushes between the previous call and the exe call site: 2 (an upper bound: register saves count)		eax (not determined)	2	callSoundHook74
+sound.dll	export via g_soundFns 0x0083af6c[3] (0x0083af78)	ordinal 4	release_sound	0x10009390	cdecl: pushes at exe sites 1	types not determined; pushes between the previous call and the exe call site: 1 (an upper bound: register saves count)		eax (not determined)	2	shutdownSound
+sound.dll	export via g_soundFns 0x0083af6c[4] (0x0083af7c)	ordinal 5	?create_device@Dll_Wave_Device@@KA?AW4SNDERR@@PAPAVWave_Device@@K@Z	0x1000b050	cdecl: pushes at exe sites 2	Wave_Device**, unsigned long		enum SNDERR (cdecl static)	1	openHookA
+sound.dll	export via g_soundFns 0x0083af6c[5] (0x0083af80)	ordinal 6	?delete_device@Dll_Wave_Device@@KA?AW4SNDERR@@XZ	0x1000b1a0	cdecl: pushes at exe sites 1	(none)		enum SNDERR (cdecl static)	1	closeHookA
+sound.dll	export via g_soundFns 0x0083af6c[6] (0x0083af84)	ordinal 7	?create_device@Dll_Midi_Device@@KA?AW4SNDERR@@PAPAVMidi_Device@@K@Z	0x10009a90	cdecl: pushes at exe sites 2	Midi_Device**, unsigned long		enum SNDERR (cdecl static)	1	openHookB
+sound.dll	export via g_soundFns 0x0083af6c[7] (0x0083af88)	ordinal 8	?delete_device@Dll_Midi_Device@@KA?AW4SNDERR@@XZ	0x10009bb0	cdecl: pushes at exe sites 1	(none)		enum SNDERR (cdecl static)	1	closeHookB
+sound.dll	export via g_soundFns 0x0083af6c[8] (0x0083af8c)	ordinal 9	?create_device@Dll_Wave_In_Device@@KA?AW4SNDERR@@PAPAVWave_In_Device@@K@Z	0x1000e910	cdecl: pushes at exe sites 2	Wave_In_Device**, unsigned long		enum SNDERR (cdecl static)	1	openHookC
+sound.dll	export via g_soundFns 0x0083af6c[9] (0x0083af90)	ordinal 10	?delete_device@Dll_Wave_In_Device@@KA?AW4SNDERR@@XZ	0x1000ea00	cdecl: pushes at exe sites 1	(none)		enum SNDERR (cdecl static)	1	closeHookC
+sound.dll	export via g_soundFns 0x0083af6c[10] (0x0083af94)	ordinal 11	get_sound_version	0x10009370	cdecl: pushes at exe sites 	types not determined; pushes between the previous call and the exe call site:  (an upper bound: register saves count)		eax (not determined)	1	callSoundHook94
+sound.dll	export (not in g_soundFns)	ordinal 12	?call_back@WaveInDeviceMgr@@SGXPAUHWAVEIN__@@GKKK@Z	0x1000179e		HWAVEIN, unsigned short, unsigned long, unsigned long, unsigned long		void	0	waveIn callback, not called by the exe
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 0 (+0x0)	MultiSound: MultiSound_deleteDtor / Sound5b6a8: Sound5b6a8_scalarDtor	0x10039760 / 0x1001f6c0	1	thiscall (this = the Sound)	pushes at exe sites: 6	eax	1	Screen::dtor
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 5 (+0x14)	MultiSound: MultiSound_enqueueCmd3 / Sound5b6a8: FUN_10020480	0x10039bd0 / 0x10020480	0	thiscall (this = the Sound)	pushes at exe sites: 2	eax	2	Snd::stop484550;Snd::stop484f00
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 6 (+0x18)	MultiSound: FUN_1002b1b0 / Sound5b6a8: FUN_10020d50	0x1002b1b0 / 0x10020d50	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_004845b0
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 7 (+0x1c)	MultiSound: MultiSound_start / Sound5b6a8: Voice_startPlayback	0x10039ce0 / 0x10020be0	0	thiscall (this = the Sound)	pushes at exe sites: 0	eax	1	Snd::play
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 8 (+0x20)	MultiSound: FUN_1003a040 / Sound5b6a8: Voice_requestStop	0x1003a040 / 0x10020ea0	0	thiscall (this = the Sound)	pushes at exe sites: 0	eax	1	FUN_00485520
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 13 (+0x34)	MultiSound: MultiSound::setRateGlide / Sound5b6a8: FUN_1002b400	0x1003a140 / 0x1002b400	3	thiscall (this = the Sound)	pushes at exe sites: 3	eax	1	FUN_00484790
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 16 (+0x40)	MultiSound: MultiSound::setVolume / Sound5b6a8: Seq_setField730Clamped	0x1003a0d0 / 0x10020f50	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	2	FUN_00484620;Snd::setVolume
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 18 (+0x48)	MultiSound: FUN_1003a690 / Sound5b6a8: FUN_10005d60	0x1003a690 / 0x10005d60	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00484690
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 19 (+0x4c)	MultiSound: FUN_1003a1c0 / Sound5b6a8: ?FUN_1002b2c0@C_FUN_1002b2c0@f_1002b2c0@@QAEXI@Z	0x1003a1c0 / 0x1002b2c0	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	Snd::setField34
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 23 (+0x5c)	MultiSound: FUN_1003a790 / Sound5b6a8: ?FUN_10005dd0@f_10005dd0@@YIIH@Z	0x1003a790 / 0x10005dd0	0	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	Screen::close
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 27 (+0x6c)	MultiSound: MultiSound::applyFlags / Sound5b6a8: FUN_10005b20	0x1003a370 / 0x10005b20	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	2	FUN_00484f80;Snd::configure
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 28 (+0x70)	MultiSound: MultiSound_getStatus / Sound5b6a8: FUN_10005b40	0x1003a560 / 0x10005b40	0	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	Snd::flags
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 34 (+0x88)	MultiSound: FUN_1002b8d0 / Sound5b6a8: Seq_resetTrackControllers	0x1002b8d0 / 0x10024630	2 / 1	thiscall (this = the Sound)	pushes at exe sites: 0	eax	1	FUN_00485500
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 35 (+0x8c)	MultiSound: Device_lazyCreateSound / Sound5b6a8: FUN_100245c0	0x1002bd80 / 0x100245c0	0 / 1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00485550
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 37 (+0x94)	MultiSound: MultiSound::startVoice / Sound5b6a8: FUN_100232a0	0x10039f30 / 0x100232a0	1 / 2	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_004849e0
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 38 (+0x98)	MultiSound: Channel_startVoiceTimed / Sound5b6a8: Seq_buildTrack9	0x10039e70 / 0x100229f0	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00484920
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 46 (+0xb8)	MultiSound: FUN_1003a590 / Sound5b6a8: Seq_reset	0x1003a590 / 0x10022240	1 / 0	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00485040
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 49 (+0xc4)	MultiSound: ?FUN_1002c1f0@C_FUN_1002c1f0@f_1002c1f0@@QAEIPAEIH@Z / Sound5b6a8: FUN_1002df30	0x1002c1f0 / 0x1002df30	3 / 2	thiscall (this = the Sound)	pushes at exe sites: 3	eax	1	FUN_004850b0
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 52 (+0xd0)	MultiSound: ?FUN_1002b870@C_FUN_1002b870@f_1002b870@@QAEXI@Z / Sound5b6a8: FUN_10020fa0	0x1002b870 / 0x10020fa0	1 / 3	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00484a00
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 53 (+0xd4)	MultiSound: FUN_1002b8a0 / Sound5b6a8: FUN_100212e0	0x1002b8a0 / 0x100212e0	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00484a20
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 54 (+0xd8)	MultiSound: MultiSound_set3DPosition / Sound5b6a8: Sound_lookupOrCreate	0x1003a5b0 / 0x10022320	3 / 1	thiscall (this = the Sound)	pushes at exe sites: 3	eax	1	FUN_004851b0
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 55 (+0xdc)	MultiSound: MultiSound::set3DPositionX / Sound5b6a8: ?FUN_10005f60@C_FUN_10005f60@f_10005f60@@QAEXE@Z	0x1003a5e0 / 0x10005f60	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_004851e0
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 56 (+0xe0)	MultiSound: MultiSound::set3DPositionY / Sound5b6a8: Seq_setPlayOrderMode	0x1003a630 / 0x10022750	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00485200
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 57 (+0xe4)	MultiSound: MultiSound::set3DPositionZ / Sound5b6a8: Seq_setField240	0x1003a650 / 0x100227a0	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_00485220
+sound.dll	Sound object at Snd+0x40 (create_sound: kind 1 MultiSound vtable 0x1005c7e8, kind 2 Sound5b6a8 vtable 0x1005b6a8)	slot 59 (+0xec)	MultiSound: MultiSound::set3DBuffer / Sound5b6a8: FUN_10023430	0x1003a600 / 0x10023430	1	thiscall (this = the Sound)	pushes at exe sites: 1	eax	1	FUN_004850f0
+Terrain.dll	import 0x004ba138	ordinal 9	?drawLine@Terrain@@QAEXHHHHHHH@Z	0x100048a0	7	thiscall (this = TerrainObject, c.h): int, int, int, int, int, int, int		void	2	drawMapLine
+Terrain.dll	import 0x004ba13c	ordinal 21	?loadNewCourseType@Terrain@@QAEXH@Z	0x10001af0	1	thiscall (this = TerrainObject, c.h): int		void	2	applyCourseType
+Terrain.dll	import 0x004ba140	ordinal 25	?passCollarInfo@Terrain@@QAEXQAHH@Z	0x1000a880	2	thiscall (this = TerrainObject, c.h): int*, int		void	3	applyCourseType;initTerrain
+Terrain.dll	import 0x004ba144	ordinal 35	?stripRender@Terrain@@QAEXPAVTile@@HM@Z	0x10009270	3	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), int, float		void	2	renderTerrainStrip
+Terrain.dll	import 0x004ba148	ordinal 17	?hasPath@Terrain@@QAE_NPAVTile@@@Z	0x1000a510	1	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h)		bool	3	togglePath
+Terrain.dll	import 0x004ba14c	ordinal 38	?updatePath@Terrain@@QAEXHHH@Z	0x1000a4b0	3	thiscall (this = TerrainObject, c.h): int, int, int		void	3	togglePath
+Terrain.dll	import 0x004ba150	ordinal 16	?hasConnectedPath@Terrain@@QAE_NHH@Z	0x1000a450	2	thiscall (this = TerrainObject, c.h): int, int		bool	2	togglePath
+Terrain.dll	import 0x004ba154	ordinal 23	?lowerCorner@Terrain@@QAEXPAVTile@@H@Z	0x1000a620	2	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), int		void	3	applyTileElevation
+Terrain.dll	import 0x004ba158	ordinal 24	?lowerEdgeCorner@Terrain@@QAEXPAVTile@@H0M@Z	0x1000a680	4	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), int, TerrainTile* (c.h), float		void	3	applyTileElevation
+Terrain.dll	import 0x004ba15c	ordinal 27	?render@Terrain@@QAE_NPAVTile@@M@Z	0x10005990	2	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), float		bool	5	updateTerrainRender
+Terrain.dll	import 0x004ba160	ordinal 34	?setZoomLevel@Terrain@@QAEXH@Z	0x10008fc0	1	thiscall (this = TerrainObject, c.h): int		void	2	updateTerrainRender
+Terrain.dll	import 0x004ba164	ordinal 2	?calcAllNormals@Terrain@@QAEXPAVTile@@@Z	0x1000a740	1	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h)		void	2	updateTerrainRender
+Terrain.dll	import 0x004ba168	ordinal 12	?getInstance@Terrain@@SAPAV1@XZ	0x100031a0	0	static: (none)		TerrainObject* (c.h)	2	FUN_00449170
+Terrain.dll	import 0x004ba16c	ordinal 22	?localRender@Terrain@@QAEXPAVTile@@0M@Z	0x100089e0	3	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), TerrainTile* (c.h), float		void	2	updateTerrainRender
+Terrain.dll	import 0x004ba170	ordinal 26	?pathUpdateRender@Terrain@@QAEXPAVTile@@M@Z	0x10006410	2	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), float		void	2	updateTerrainRender
+Terrain.dll	import 0x004ba174	ordinal 5	?closeSystem@Terrain@@QAEXXZ	0x10009ba0	0	thiscall (this = TerrainObject, c.h): (none)		void	2	freeTerrain
+Terrain.dll	import 0x004ba178	ordinal 1	??1Terrain@@QAE@XZ	0x10003090	0	thiscall (this = TerrainObject, c.h): (none)			2	freeTerrain
+Terrain.dll	import 0x004ba17c	ordinal 18	?initSystem@Terrain@@QAEXHHPAUHDC__@@_N@Z	0x10009c80	4	thiscall (this = TerrainObject, c.h): int, int, HDC, bool		void	2	initTerrain
+Terrain.dll	import 0x004ba180	ordinal 19	?initTerrain@Terrain@@QAEXXZ	0x1000a970	0	thiscall (this = TerrainObject, c.h): (none)		void	2	initTerrain
+Terrain.dll	import 0x004ba184	ordinal 10	?elevateCorner@Terrain@@QAEXPAVTile@@H@Z	0x1000a5c0	2	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), int		void	4	applyTileElevation;rebuildTerrainGrid
+Terrain.dll	import 0x004ba188	ordinal 3	?calcNormals@Terrain@@QAEXPAVTile@@@Z	0x1000a6f0	1	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h)		void	2	rebuildTerrainGrid
+Terrain.dll	import 0x004ba18c	ordinal 33	?setWall@Terrain@@QAEXPAVTile@@HH_N@Z	0x1000a560	4	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), int, int, bool		void	3	applyTileWalls;rebuildTerrainGrid
+Terrain.dll	import 0x004ba190	ordinal 20	?layPath@Terrain@@QAEXPAVTile@@HH@Z	0x1000a3e0	3	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), int, int		void	4	rebuildTerrainGrid;togglePath
+Terrain.dll	import 0x004ba194	ordinal 29	?resetTerrain@Terrain@@QAEXXZ	0x1000aa10	0	thiscall (this = TerrainObject, c.h): (none)		void	2	refreshTerrain
+Terrain.dll	import 0x004ba198	ordinal 14	?getVariation@Terrain@@QAEHPAVTile@@@Z	0x10003390	1	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h)		int	3	applyTileVariation;syncTiles
+Terrain.dll	import 0x004ba19c	ordinal 32	?setType@Terrain@@QAEXPAVTile@@HH@Z	0x100032f0	3	thiscall (this = TerrainObject, c.h): TerrainTile* (c.h), int, int		void	4	applyTileVariation;rebuildTerrainGrid;syncTiles

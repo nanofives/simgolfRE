@@ -1,0 +1,154 @@
+symbol	module	va	size	element_type	count	stride	signed	sve_field	clusters	evidence	confidence
+g_str4e9a84	golf_clean.exe	0x004e9a84	0x4	int8_t	4	0x1	-	-	494	string target of buildStatusText / drawMoneyLabels / appendCourseTitle [U-0471]	low
+g_flyBall4e9a88	golf_clean.exe	0x004e9a88	0x4	uint32_t	1	0x4	-	-	494	pushed by drawFlyingBall 0x00403d05 [U-0472]	low
+g_flyBall4e9a94	golf_clean.exe	0x004e9a94	0x4	int32_t	1	0x4	-	-	494	drawFlyingBall 0x00403a37 / 0x00403a50 [U-0472]	low
+g_flyBall4e9a9c	golf_clean.exe	0x004e9a9c	0x4	int32_t	1	0x4	-	-	494	drawFlyingBall 0x00403a6b / 0x00403c2c / 0x00403eb7 [U-0472]	low
+g_animPalettes	golf_clean.exe	0x004e9aa0	0xcb28	PaletteCache	591	0x58	-	-	494	ehVectorConstructorIterator(0x004e9aa0, 0x58, 591, Cache482fd0::ctor 0x00482fd0) in initGlobalArray_00404040; the 591-entry animation arrays (D: g_flicObjs 0x004f65c8, g_flicStreams 0x0050fc20)	high
+g_font519928	golf_clean.exe	0x00519928	0x20	FontRef	1	0x20	-	-	499	C4837f0::ctor 0x004837f0 with ecx = 0x00519928 (staticInit_004043f0)	high
+g_font519948	golf_clean.exe	0x00519948	0x20	FontRef	1	0x20	-	-	500	C4837f0::ctor 0x004837f0 with ecx = 0x00519948 (staticInit_00404530)	high
+g_font519968	golf_clean.exe	0x00519968	0x20	FontRef	1	0x20	-	-	501	C4837f0::ctor 0x004837f0 with ecx = 0x00519968 (staticInit_00404670)	high
+g_font519988	golf_clean.exe	0x00519988	0x20	FontRef	1	0x20	-	-	501	C4837f0::ctor 0x004837f0 with ecx = 0x00519988 (staticInit_004047a0)	high
+g_font5199a8	golf_clean.exe	0x005199a8	0x20	FontRef	1	0x20	-	-	501	C4837f0::ctor 0x004837f0 with ecx = 0x005199a8 (staticInit_004047f0)	high
+g_palette5199c8	golf_clean.exe	0x005199c8	0x58	PaletteCache	1	0x58	-	-	502	Cache482fd0::ctor 0x00482fd0 with ecx = 0x005199c8 (staticInit_004046c0)	high
+g_font51a028	golf_clean.exe	0x0051a028	0x20	FontRef	1	0x20	-	-	509	C4837f0::ctor 0x004837f0 with ecx = 0x0051a028 (staticInit_004045d0)	high
+g_font51a048	golf_clean.exe	0x0051a048	0x20	FontRef	1	0x20	-	-	509	C4837f0::ctor 0x004837f0 with ecx = 0x0051a048 (staticInit_00404840)	high
+g_textBuffer	golf_clean.exe	0x0051a068	0x1000	int8_t	4096	0x1	-	-	511	char buffer: 1,623 byte accesses; the next object starts at 0x0051b068 (Image_ctor)	medium
+g_image51b068	golf_clean.exe	0x0051b068	0x2b8	Image	1	0x2b8	-	-	512	Image_ctor 0x00474ae0 with ecx = 0x0051b068 (staticInit_004043b0)	high
+g_font51b320	golf_clean.exe	0x0051b320	0x20	FontRef	1	0x20	-	-	513	C4837f0::ctor 0x004837f0 with ecx = 0x0051b320 (staticInit_00404490)	high
+g_font51b340	golf_clean.exe	0x0051b340	0x20	FontRef	1	0x20	-	-	514	C4837f0::ctor 0x004837f0 with ecx = 0x0051b340 (staticInit_00404620)	high
+g_font51b360	golf_clean.exe	0x0051b360	0x20	FontRef	1	0x20	-	-	515	C4837f0::ctor 0x004837f0 with ecx = 0x0051b360 (staticInit_004044e0)	high
+g_seedTime	golf_clean.exe	0x0051b380	0x4	int32_t	1	0x4	-	-	515	seedFromTime 0x00467110 writes it (CLAUDE.md b2: clock calls x 37)	medium
+g_sprites520590	golf_clean.exe	0x00520590	0xb0	SpriteRef	4	0x2c	-	-	518,519,520,521	ehVectorConstructorIterator(0x00520590, 0x2c, 4, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0	high
+g_sprites53c570	golf_clean.exe	0x0053c570	0x580	SpriteRef	32	0x2c	-	-	548,550,551,552	ehVectorConstructorIterator(0x0053c570, 0x2c, 32, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0	high
+g_sprites53de78	golf_clean.exe	0x0053de78	0xdc	SpriteRef	5	0x2c	-	-	563	ehVectorConstructorIterator(0x0053de78, 0x2c, 5, Surface_ctor 0x00473ab0) in initGlobalArray_00405760	high
+g_msgState53df54	golf_clean.exe	0x0053df54	0x4	int32_t	1	0x4	-	-	563	13 reads 26 writes by startMessage, mainLoop, prepareShot, showSystemMenu ... [U-0481]	low
+g_sprites53df58	golf_clean.exe	0x0053df58	0x6e0	SpriteRef	40	0x2c	-	-	565	ehVectorConstructorIterator(0x0053df58, 0x2c, 40, Surface_ctor 0x00473ab0) in initGlobalArray_00405760; base cluster 564 E1	high
+g_sprites53fd48	golf_clean.exe	0x0053fd48	0xc08	SpriteRef	70	0x2c	-	-	589,590,598,599,605	ehVectorConstructorIterator(0x0053fd48, 0x2c, 70, Surface_ctor 0x00473ab0) in initGlobalArray_004053a0	high
+g_sprites541710	golf_clean.exe	0x00541710	0x2c0	SpriteRef	16	0x2c	-	-	613,614	ehVectorConstructorIterator(0x00541710, 0x2c, 16, Surface_ctor 0x00473ab0) in initGlobalArray_00405760	high
+g_sprites541a18	golf_clean.exe	0x00541a18	0x2c0	SpriteRef	16	0x2c	-	-	617,626,627,628	ehVectorConstructorIterator(0x00541a18, 0x2c, 16, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_sprite5423e8	golf_clean.exe	0x005423e8	0x2c	SpriteRef	1	0x2c	-	-	634	Surface_ctor 0x00473ab0 with ecx = 0x005423e8 (initGlobalArray_00404c20 0x00404cde)	high
+g_sprites542e50	golf_clean.exe	0x00542e50	0xb0	SpriteRef	4	0x2c	-	-	638,639,640,641	ehVectorConstructorIterator(0x00542e50, 0x2c, 4, Surface_ctor 0x00473ab0) in initGlobalArray_004050b0	high
+g_sprites542f28	golf_clean.exe	0x00542f28	0xb0	SpriteRef	4	0x2c	-	-	643,644,645,646	ehVectorConstructorIterator(0x00542f28, 0x2c, 4, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0	high
+g_sprites55e930	golf_clean.exe	0x0055e930	0x210	SpriteRef	12	0x2c	-	-	659,660,661,662	ehVectorConstructorIterator(0x0055e930, 0x2c, 12, Surface_ctor 0x00473ab0) in initGlobalArray_004050b0	high
+g_sve561250	golf_clean.exe	0x00561250	0x4	int32_t	1	0x4	-	0x00561250	667	.sve field [U-0473]	low
+g_sprites561260	golf_clean.exe	0x00561260	0x84	SpriteRef	3	0x2c	-	-	671	ehVectorConstructorIterator(0x00561260, 0x2c, 3, Surface_ctor 0x00473ab0) in initGlobalArray_00405760	high
+g_sprites5612e8	golf_clean.exe	0x005612e8	0x6b4	SpriteRef	39	0x2c	-	-	672	ehVectorConstructorIterator(0x005612e8, 0x2c, 39, Surface_ctor 0x00473ab0) in initGlobalArray_00405620	high
+g_sprites5628e8	golf_clean.exe	0x005628e8	0x4a40	SpriteRef	432	0x2c	-	-	695,696,697	ehVectorConstructorIterator(0x005628e8, 0x2c, 432, Surface_ctor 0x00473ab0) in initGlobalArray_00404f50; base cluster 689 B	high
+g_theme	golf_clean.exe	0x00567328	0x64	int8_t	100	0x1	-	0x00567328	698	.sve field Theme (char[100], re/tools/sve.py)	high
+g_sprites567a20	golf_clean.exe	0x00567a20	0xdc	SpriteRef	5	0x2c	-	-	711	ehVectorConstructorIterator(0x00567a20, 0x2c, 5, Surface_ctor 0x00473ab0) in initGlobalArray_00405760	high
+g_sprite567b08	golf_clean.exe	0x00567b08	0x2c	SpriteRef	1	0x2c	-	-	717	Surface_ctor 0x00473ab0 with ecx = 0x00567b08 (initGlobalArray_00404c20 0x00404cc0)	high
+g_holesPlusOne	golf_clean.exe	0x005685f0	0x4	int32_t	1	0x4	s	0x005685f0	723	.sve field; serializeCourse prints Holes as v - 1 (re/tools/sve.py); announceBuilding uses it as the hole being built	high
+g_image568d10	golf_clean.exe	0x00568d10	0x2b8	Image	1	0x2b8	-	-	731	Image_ctor 0x00474ae0 with ecx = 0x00568d10 (staticInit_004061b0)	high
+g_sprites568fc8	golf_clean.exe	0x00568fc8	0x4d0	SpriteRef	28	0x2c	-	-	732,736	ehVectorConstructorIterator(0x00568fc8, 0x2c, 28, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_sprites56a550	golf_clean.exe	0x0056a550	0x210	SpriteRef	12	0x2c	-	-	751	ehVectorConstructorIterator(0x0056a550, 0x2c, 12, Surface_ctor 0x00473ab0) in initGlobalArray_00404f50	high
+g_sprite56a760	golf_clean.exe	0x0056a760	0x2c	SpriteRef	1	0x2c	-	-	752	Surface_ctor 0x00473ab0 with ecx = 0x0056a760 (initGlobalArray_00404e00)	high
+g_shot56a78c	golf_clean.exe	0x0056a78c	0x4	int32_t	1	0x4	-	-	752	trialShot / chooseShotTarget [U-0481]	low
+g_shot56a790	golf_clean.exe	0x0056a790	0x4	int32_t	1	0x4	-	-	752	trialShot / chooseShotTarget [U-0481]	low
+g_sprites56a7b8	golf_clean.exe	0x0056a7b8	0x160	SpriteRef	8	0x2c	-	-	754	ehVectorConstructorIterator(0x0056a7b8, 0x2c, 8, Surface_ctor 0x00473ab0) in initGlobalArray_004050b0	high
+g_sprite56c7b8	golf_clean.exe	0x0056c7b8	0x2c	SpriteRef	1	0x2c	-	-	773	Surface_ctor 0x00473ab0 with ecx = 0x0056c7b8 (initGlobalArray_00404e00)	high
+g_sprites570cb8	golf_clean.exe	0x00570cb8	0x1080	SpriteRef	96	0x2c	-	-	780,782	ehVectorConstructorIterator(0x00570cb8, 0x2c, 96, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_sprites571d40	golf_clean.exe	0x00571d40	0x294	SpriteRef	15	0x2c	-	-	786,788	ehVectorConstructorIterator(0x00571d40, 0x2c, 15, Surface_ctor 0x00473ab0) in initGlobalArray_004053a0	high
+g_sprite5787a0	golf_clean.exe	0x005787a0	0x2c	SpriteRef	1	0x2c	-	-	820	Surface_ctor 0x00473ab0 with ecx = 0x005787a0 (initGlobalArray_00404c20 0x00404c8a)	high
+g_sprite5787d0	golf_clean.exe	0x005787d0	0x2c	SpriteRef	1	0x2c	-	-	822	Surface_ctor 0x00473ab0 with ecx = 0x005787d0 (initGlobalArray_00404c20 0x00404cca)	high
+g_golfer5787fc	golf_clean.exe	0x005787fc	0x4	int32_t	1	0x4	-	-	822	mainLoop / updateGolfers [U-0481]	low
+g_golfer578800	golf_clean.exe	0x00578800	0x4	int32_t	1	0x4	-	-	822	mainLoop / updateGolfers [U-0481]	low
+g_sprite5791c8	golf_clean.exe	0x005791c8	0x2c	SpriteRef	1	0x2c	-	-	823	Surface_ctor 0x00473ab0 with ecx = 0x005791c8 (initGlobalArray_00404c20 0x00404cb6)	high
+g_sprites5791f8	golf_clean.exe	0x005791f8	0x2c0	SpriteRef	16	0x2c	-	-	824,825	ehVectorConstructorIterator(0x005791f8, 0x2c, 16, Surface_ctor 0x00473ab0) in initGlobalArray_00405760	high
+g_sprites583a80	golf_clean.exe	0x00583a80	0x790	SpriteRef	44	0x2c	-	-	840,841,853,854	ehVectorConstructorIterator(0x00583a80, 0x2c, 44, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_sprites586f50	golf_clean.exe	0x00586f50	0x58	SpriteRef	2	0x2c	-	-	859	ehVectorConstructorIterator(0x00586f50, 0x2c, 2, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_sprites5873a8	golf_clean.exe	0x005873a8	0x738	SpriteRef	42	0x2c	-	-	862,868	ehVectorConstructorIterator(0x005873a8, 0x2c, 42, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_image587ae8	golf_clean.exe	0x00587ae8	0x2b8	Image	1	0x2b8	-	-	872	Image_ctor 0x00474ae0 with ecx = 0x00587ae8 (staticInit_004061f0)	high
+g_sprites58a538	golf_clean.exe	0x0058a538	0xc60	SpriteRef	72	0x2c	-	-	880,881	ehVectorConstructorIterator(0x0058a538, 0x2c, 72, Surface_ctor 0x00473ab0) in initGlobalArray_00404f50; base cluster 879 B	high
+g_sprites58b1a0	golf_clean.exe	0x0058b1a0	0x1b8	SpriteRef	10	0x2c	-	-	883	ehVectorConstructorIterator(0x0058b1a0, 0x2c, 10, Surface_ctor 0x00473ab0) in initGlobalArray_004053a0	high
+g_sprite58b358	golf_clean.exe	0x0058b358	0x2c	SpriteRef	1	0x2c	-	-	890	Surface_ctor 0x00473ab0 with ecx = 0x0058b358 (initGlobalArray_00404e00)	high
+g_sprite58b384	golf_clean.exe	0x0058b384	0x4	int32_t	1	0x4	-	-	890	mainLoop / drawQueuedSprite [U-0481]	low
+g_eoy58b388	golf_clean.exe	0x0058b388	0x4	int32_t	1	0x4	-	-	890	mainLoop / showEndOfYearScreen (also a word read) [U-0481]	low
+g_sprites58b390	golf_clean.exe	0x0058b390	0x2c0	SpriteRef	16	0x2c	-	-	891,899,900	ehVectorConstructorIterator(0x0058b390, 0x2c, 16, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_sprite58b650	golf_clean.exe	0x0058b650	0x2c	SpriteRef	1	0x2c	-	-	901	Surface_ctor 0x00473ab0 with ecx = 0x0058b650 (initGlobalArray_00404c20 0x00404cac)	high
+g_sprites58b680	golf_clean.exe	0x0058b680	0x630	SpriteRef	36	0x2c	-	-	902,905,907,909,910,911,912,913	ehVectorConstructorIterator(0x0058b680, 0x2c, 36, Surface_ctor 0x00473ab0) in initGlobalArray_00405620	high
+g_sprites58ccb8	golf_clean.exe	0x0058ccb8	0x6b4	SpriteRef	39	0x2c	-	-	917	ehVectorConstructorIterator(0x0058ccb8, 0x2c, 39, Surface_ctor 0x00473ab0) in initGlobalArray_00405620	high
+g_sprites59ab00	golf_clean.exe	0x0059ab00	0xb0	SpriteRef	4	0x2c	-	-	927,928,929,930	ehVectorConstructorIterator(0x0059ab00, 0x2c, 4, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0	high
+g_points59abb0	golf_clean.exe	0x0059abb0	0x4	int32_t	1	0x4	-	-	930	pointsPopup 0x0040c890 [U-0481]	low
+g_sprites59abb8	golf_clean.exe	0x0059abb8	0x2c0	SpriteRef	16	0x2c	-	-	930	ehVectorConstructorIterator(0x0059abb8, 0x2c, 16, Surface_ctor 0x00473ab0) in initGlobalArray_00404e00	high
+g_sprite59b740	golf_clean.exe	0x0059b740	0x2c	SpriteRef	1	0x2c	-	-	946	Surface_ctor 0x00473ab0 with ecx = 0x0059b740 (initGlobalArray_00404c20 0x00404c38)	high
+g_sprites59b778	golf_clean.exe	0x0059b778	0x2ec	SpriteRef	17	0x2c	-	-	948,949,953,954	ehVectorConstructorIterator(0x0059b778, 0x2c, 17, Surface_ctor 0x00473ab0) in initGlobalArray_004053a0	high
+g_sprites59ba68	golf_clean.exe	0x0059ba68	0x528	SpriteRef	30	0x2c	-	-	956,958	ehVectorConstructorIterator(0x0059ba68, 0x2c, 30, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_courseIndex	golf_clean.exe	0x0059bf90	0x4	int32_t	1	0x4	-	0x0059bf90	960	generateRandomCourse 0x00470a7b stores its argument and indexes the course records 0x00571ff4 [U-0482]	medium
+g_sprite59bf98	golf_clean.exe	0x0059bf98	0x2c	SpriteRef	1	0x2c	-	-	961	Surface_ctor 0x00473ab0 with ecx = 0x0059bf98 (initGlobalArray_00404e00)	high
+g_sprites59df20	golf_clean.exe	0x0059df20	0x898	SpriteRef	50	0x2c	-	-	980,981,982,983,984,989,991	ehVectorConstructorIterator(0x0059df20, 0x2c, 50, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0; base cluster 979 B	high
+g_sprites59e7c0	golf_clean.exe	0x0059e7c0	0x14a0	SpriteRef	120	0x2c	-	-	994,995	ehVectorConstructorIterator(0x0059e7c0, 0x2c, 120, Surface_ctor 0x00473ab0) in initGlobalArray_00404f50; base cluster 993 B	high
+g_sprites5a34f8	golf_clean.exe	0x005a34f8	0xc08	SpriteRef	70	0x2c	-	-	1003,1004,1012,1013,1019	ehVectorConstructorIterator(0x005a34f8, 0x2c, 70, Surface_ctor 0x00473ab0) in initGlobalArray_004053a0	high
+g_sprite5a4100	golf_clean.exe	0x005a4100	0x2c	SpriteRef	1	0x2c	-	-	1020	Surface_ctor 0x00473ab0 with ecx = 0x005a4100 (initGlobalArray_00404c20 0x00404cd4)	high
+g_linePoint5a412c	golf_clean.exe	0x005a412c	0x8	int32_t	2	0x4	-	-	1020	setLinePoint 0x0040bf00 / lineTo 0x0040bf20 [U-0481]	low
+g_sprites5a4138	golf_clean.exe	0x005a4138	0x580	SpriteRef	32	0x2c	-	-	1021	ehVectorConstructorIterator(0x005a4138, 0x2c, 32, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0	high
+g_sprites5a53c8	golf_clean.exe	0x005a53c8	0x630	SpriteRef	36	0x2c	-	-	1035,1043,1047,1049,1051,1052,1053,1054,1055	ehVectorConstructorIterator(0x005a53c8, 0x2c, 36, Surface_ctor 0x00473ab0) in initGlobalArray_00405620	high
+g_sve5a6364	golf_clean.exe	0x005a6364	0x4	int32_t	1	0x4	s	0x005a6364	1063	.sve field [U-0473]	low
+g_image5a7148	golf_clean.exe	0x005a7148	0x2b8	Image	1	0x2b8	-	-	1071	Image_ctor 0x00474ae0 with ecx = 0x005a7148 (staticInit_004058f0)	high
+g_sprites5a7c08	golf_clean.exe	0x005a7c08	0x420	SpriteRef	24	0x2c	-	-	1073,1075,1077,1078,1079,1082	ehVectorConstructorIterator(0x005a7c08, 0x2c, 24, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0	high
+g_sprites5a8c90	golf_clean.exe	0x005a8c90	0x6e0	SpriteRef	40	0x2c	-	-	1089,1093	ehVectorConstructorIterator(0x005a8c90, 0x2c, 40, Surface_ctor 0x00473ab0) in initGlobalArray_004053a0	high
+g_palette5aa560	golf_clean.exe	0x005aa560	0x58	PaletteCache	1	0x58	-	-	1115	Cache482fd0::ctor 0x00482fd0 with ecx = 0x005aa560 (staticCtor_4378e0)	high
+g_bink	golf_clean.exe	0x005aa6d0	0x1c	BinkPlayer	1	0x1c	-	-	1118	BinkPlayer::ctor 0x00487000 with ecx = 0x005aa6d0 (staticCtor_43ccb0)	high
+g_palette5aa6f0	golf_clean.exe	0x005aa6f0	0x58	PaletteCache	1	0x58	-	-	1118	Cache482fd0::ctor 0x00482fd0 with ecx = 0x005aa6f0 (staticCtor_43cc70)	high
+g_sprite5aa748	golf_clean.exe	0x005aa748	0x2c	SpriteRef	1	0x2c	-	-	1119	Surface_ctor 0x00473ab0 with ecx = 0x005aa748 (arrayStaticInit_43d460 0x0043d47b)	high
+g_audio5aa774	golf_clean.exe	0x005aa774	0x4	uint32_t	1	0x4	-	-	1119	playAudioFile, rootWin_onPoint / onUnpoint / onKey [U-0481]	low
+g_image5aa778	golf_clean.exe	0x005aa778	0x2b8	Image	1	0x2b8	-	-	1120	Image_ctor 0x00474ae0 with ecx = 0x005aa778 (staticCtor_43d640)	high
+g_fileNames	golf_clean.exe	0x0080b130	0x2710	int8_t	10000	0x1	-	-	1122	100-byte stride (listMatchingFiles, loadThemes); the area ends at the Snd array 0x0080d840 = 100 x 100 bytes	medium
+gTileBuffer	golf_clean.exe	0x00820f18	0xc	StdList	1	0xc	-	-	1508	initList820f18 0x00449210 writes +0 / +4 / +8	high
+g_terrain820f28	golf_clean.exe	0x00820f28	0x1	uint8_t	1	0x1	-	-	1508	initTerrain [U-0480]	low
+g_terrain820f2a	golf_clean.exe	0x00820f2a	0x3	uint8_t	3	0x1	-	-	1508	syncTiles, refreshTerrain, updateTerrainRender, togglePath, applyTileVariation, applyTileElevation [U-0480]	low
+g_terrain820f30	golf_clean.exe	0x00820f30	0xc	int32_t	3	0x4	-	-	1508	initTerrain, updateTerrainRender, renderTerrainStrip [U-0480]	low
+g_infoSprites821070	golf_clean.exe	0x00821070	0x58	SpritePair	1	0x58	-	-	1514	gSurfaceCtor_44ae60 with ecx = 0x00821070 (staticCtor_44af40)	high
+g_infoSprites8210c8	golf_clean.exe	0x008210c8	0x58	SpritePair	1	0x58	-	-	1516	gSurfaceCtor_44ae60 with ecx = 0x008210c8 (staticCtor_44add0)	high
+g_infoSprites821120	golf_clean.exe	0x00821120	0xdc	SpriteRow5	1	0xdc	-	-	1518	gSurfaceCtor_44b6f0 with ecx = 0x00821120 (staticCtor_44b660)	high
+g_map822b80	golf_clean.exe	0x00822b80	0x8	int32_t	2	0x4	-	-	1598	mapToScreen456b70 0x00456b70, showRoutingMapScreen, showBuyLandScreen	low
+g_rootInput	golf_clean.exe	0x00822d58	0x40	int32_t	16	0x4	-	-	1607	13 dwords 0x00822d58..0x00822d94 written by the root-window handlers [U-0474]	low
+g_sceneCount838204	golf_clean.exe	0x00838204	0x4	int32_t	1	0x4	-	-	1639	buildSceneSprites writes it 74 times	low
+g_key838208	golf_clean.exe	0x00838208	0x4	int32_t	1	0x4	-	-	1639	rootWin_onKey [U-0475]	low
+g_char83821c	golf_clean.exe	0x0083821c	0x4	int32_t	1	0x4	-	-	1639	rootWin_onChar / rootWin_onChar0 [U-0475]	low
+g_story838220	golf_clean.exe	0x00838220	0x2	int16_t	1	0x2	s	-	1639	loadGolferRoster / loadStoryStrings (word, movsx) [U-0475]	low
+g_storyFiles	golf_clean.exe	0x00838228	0x860	StoryFileRec	8	0x10c	-	-	1639	stride 0x10c, loop ends 0x00838a88 (loadGolferRoster 0x00465b0c) [U-0475]	medium
+g_loadImage	golf_clean.exe	0x00839348	0x2b8	Image	1	0x2b8	-	-	1652	Image_ctor 0x00474ae0 with ecx = 0x00839348 (initGlobalImage)	high
+g_newObjectHeap	golf_clean.exe	0x00839650	0x4	uint32_t	1	0x4	-	-	1653	copied into every HeapObject's heap field and cleared (Decoder482ae0::ctor 0x00482b04, S3List_add 0x00401dd1; 138 dword refs)	high
+g_surfaceRecreating	golf_clean.exe	0x00839ab0	0x4	int32_t	1	0x4	-	-	1657	re/names/exe_12_globals.tsv	high
+g_hitTest839ab8	golf_clean.exe	0x00839ab8	0x8	int32_t	2	0x4	-	-	1657	hitTestScreen 0x0047f71a writes, hitTestTree 0x0047f379 reads [U-0476]	low
+g_image83a500	golf_clean.exe	0x0083a500	0x2b8	Image	1	0x2b8	-	-	1664	Image_ctor 0x00474ae0 with ecx = 0x0083a500 (gImageCtor_83a500)	high
+g_blitSaveBuf	golf_clean.exe	0x0083a7b8	0x2b8	Image	1	0x2b8	-	-	1665	Image_ctor 0x00474ae0 with ecx = 0x0083a7b8 (gImageCtor_83a7b8)	high
+g_cursorClipOwner	golf_clean.exe	0x0083aa98	0x4	uint32_t	1	0x4	-	-	1667	re/names/exe_6_globals.tsv	high
+g_ui83aa9c	golf_clean.exe	0x0083aa9c	0x8	int32_t	2	0x4	-	-	1667	layoutViewTree, View_toLocal, FUN_00495750.., drawTooltip, addDirtyRect, drawCursor [U-0477]	low
+g_removingWin	golf_clean.exe	0x0083aae0	0x4	uint32_t	1	0x4	-	-	1675	re/names/exe_3_globals.tsv	high
+g_ui83aae4	golf_clean.exe	0x0083aae4	0x48	int32_t	18	0x4	-	-	1675	window-system dwords 0x0083aae4..0x0083ab28 [U-0477]	low
+g_focusedItem	golf_clean.exe	0x0083ab98	0x4	uint32_t	1	0x4	-	-	1683	re/names/exe_2_globals.tsv	high
+g_ui83ab9c	golf_clean.exe	0x0083ab9c	0x1	uint8_t	1	0x1	-	-	1683	byte flag: rootWin_onPoint / onUnpoint / onKey, BinkPlayer::play [U-0477]	low
+g_ui83aba0	golf_clean.exe	0x0083aba0	0x4	int32_t	1	0x4	-	-	1683	drawCursor writes it [U-0477]	low
+g_codeBuf	golf_clean.exe	0x0083aba4	0xa	int8_t	10	0x1	-	-	1684	re/names/exe_3_globals.tsv (matchInputCode, Window::onKeyChar)	high
+g_resample83abb0	golf_clean.exe	0x0083abb0	0x4	uint32_t	1	0x4	-	-	1684	allocResampleTable 0x004818a5 stores, reads at 0x004819e8 / 0x00481a70 [U-0478]	low
+g_ui83abdc	golf_clean.exe	0x0083abdc	0x34	int32_t	13	0x4	-	-	1684	gameMain writes 0x0083abdc; Window::paint / create / TextView::build read 0x0083abe0..0x0083ac0c [U-0477]	low
+g_resampleLen	golf_clean.exe	0x0083ac14	0x4	int32_t	1	0x4	-	-	1686	re/names/exe_3_globals.tsv	high
+g_engine83ac18	golf_clean.exe	0x0083ac18	0x4	int32_t	1	0x4	-	-	1686	View4804a0::ctor 0x00480559, Window::ctorInit 0x00480698 [U-0478]	low
+g_flic83ac24	golf_clean.exe	0x0083ac24	0x4	int32_t	1	0x4	-	-	1686	Flic::open 0x00482320 / 0x00482328 [U-0478]	low
+g_flag83ac28	golf_clean.exe	0x0083ac28	0x1	uint8_t	1	0x1	-	-	1686	atexitDtor_83aca8 [U-0478]	low
+g_screenObjList	golf_clean.exe	0x0083ac88	0x28	ScreenObjList	1	0x28	-	-	1688,1689	Cache482f60::ctor 0x00482f60 with ecx = 0x0083ac88 (staticInit_g83ac88); 0x0083aca8 = its HeapObject (+0x20), destroyed by atexitDtor_83aca8 0x00482f20	high
+g_screenMgrA	golf_clean.exe	0x0083acb0	0x58	PaletteCache	1	0x58	-	-	1690	Cache482fd0::ctor 0x00482fd0 with ecx = 0x0083acb0 (staticInit_g83acb0)	high
+g_engine83ad0c	golf_clean.exe	0x0083ad0c	0x8	int32_t	2	0x4	-	-	1691	drawTextRun 0x004768a8, rebuildFramePieces 0x0047d68e, Button::setColor*, Flic::createStream 0x00482c4e [U-0478]	low
+g_engine83ad18	golf_clean.exe	0x0083ad18	0x4	int32_t	1	0x4	-	-	1691	drawTextRun 0x00476874 [U-0478]	low
+g_font83ad20	golf_clean.exe	0x0083ad20	0x20	FontRef	1	0x20	-	-	1691	C4837f0::ctor 0x004837f0 with ecx = 0x0083ad20 (screenMgrCtor4837b0)	high
+g_sfxDevice	golf_clean.exe	0x0083ad58	0x20	StrList	1	0x20	-	-	1695	NodeListB::ctor 0x00487a20 with ecx = 0x0083ad58 (staticInit_g83ad58)	high
+g_voiceDevice	golf_clean.exe	0x0083af98	0x20	StrList	1	0x20	-	-	1703	NodeListC::ctor 0x00487b40 with ecx = 0x0083af98 (staticInit_g83af98)	high
+g_timerLock	golf_clean.exe	0x0083afec	0x4	int32_t	1	0x4	-	-	1707	re/names/exe_4_globals.tsv	high
+g_timerWnd83aff0	golf_clean.exe	0x0083aff0	0x4	int32_t	1	0x4	-	-	1707	read by FUN_00486f40 0x00486f49, Timer::callback 0x00486fa6, Timer_fire 0x00495ce0 [U-0478]	low
+g_sectionReader	golf_clean.exe	0x0083b000	0x164	Reader	1	0x164	-	-	1708	Reader::ctor 0x00487ea0 with ecx = 0x0083b000 (initGlobalReader)	high
+g_netBuf83c340	golf_clean.exe	0x0083c340	0x1	uint8_t	1	0x1	-	-	1730	byte buffer indexed by heapAlloc, netService, netSendMessages [U-0479]	low
+g_net8400ac	golf_clean.exe	0x008400ac	0x4	int32_t	1	0x4	-	-	1748	netHandleControl 0x0049b5c7 stores it	low
+g_netState	golf_clean.exe	0x008400b0	0x4	uint32_t	1	0x4	-	-	1749	called through its vtable by netSendShutdown / netPoll / netSendMessages / netService; zeroed at 0x00497d78 [U-0470]	medium
+g_netSession	golf_clean.exe	0x008400b8	0x4	uint32_t	1	0x4	-	-	1750	4 read references, no store (Window::onCommand 0x0047ee78, FUN_00495d20, gfxFlushA / B) [U-0469]	medium
+g_netControl8400bc	golf_clean.exe	0x008400bc	0x8	int32_t	2	0x4	-	-	1751	netServiceControl 0x0049ab8d..0x0049ace0 [U-0469]	low
+g_pairArray	golf_clean.exe	0x008406e8	0x1c	PairArray	1	0x1c	-	-	1755	PairArray::ctor 0x0049d050 with ecx = 0x008406e8 (initPairArrayGlobal); 0x00840708 is read / written as a byte by FUN_0049d180 (+0x20, past the object)	high
+g_pair840708	golf_clean.exe	0x00840708	0x1	uint8_t	1	0x1	-	-	1755	byte read / written by FUN_0049d180 [U-0481]	low
+g_pcxSurface	golf_clean.exe	0x00840710	0x2c	SpriteRef	1	0x2c	-	-	1756	Surface_ctor 0x00473ab0 with ecx = 0x00840710 (initGfxGlobal_840710 0x0049d160)	high
+g_pcx840740	golf_clean.exe	0x00840740	0x1	uint8_t	1	0x1	-	-	1756	byte read / written by FUN_0049d2c0 / 0x0049d320 / 0x0049d380 [U-0481]	low
+g_cursorSurfA	golf_clean.exe	0x00840830	0x2c	SpriteRef	1	0x2c	-	-	1759	Surface_ctor 0x00473ab0 with ecx = 0x00840830 (initGfxGlobal_840830 0x0049d490)	high
+g_cursorSurfB	golf_clean.exe	0x00840860	0x2c	SpriteRef	1	0x2c	-	-	1760	Surface_ctor 0x00473ab0 with ecx = 0x00840860 (initGfxGlobal_840860 0x0049d550)	high
+g_cursorSurfC	golf_clean.exe	0x00840890	0x2c	SpriteRef	1	0x2c	-	-	1761	Surface_ctor 0x00473ab0 with ecx = 0x00840890 (initGfxGlobal_840890 0x0049d4f0)	high
+g_cursor8408c0	golf_clean.exe	0x008408c0	0x1	uint8_t	1	0x1	-	-	1761	byte read / written by FUN_0049eb20 / FUN_0049eb80 [U-0481]	low
+g_logFile	golf_clean.exe	0x00840930	0xc	Logger	1	0xc	-	-	1765	loggerCtor 0x004a0180 with ecx = 0x00840930 (initLogFile 0x004a0135)	medium
+g_log840940	golf_clean.exe	0x00840940	0x4	uint32_t	1	0x4	-	-	1765	read by logWrite 0x004a0297 [U-0467]	low
