@@ -1,0 +1,149 @@
+item	va	expected	cluster	got_class	got_stride	got_count	confidence	ok	source
+g_golfers	0x005794b8	record array 0x100	828	record array	0x100	156	high	1	tuned golfer_record.md
+g_walkers	0x00585850	record array 0x4c	857	record array	0x4c	64	high	1	tuned record_tables.md
+g_golferStats	0x0056ae70	record array 0xb8	768	record array	0xb8	32	high	1	tuned record_tables.md
+g_golferTypeState	0x005849e0	record array 0x2c	856	record array	0x2c	84	high	1	tuned record_tables.md
+g_storyDefs	0x0053a454	record array 0x32	525	record array	0x32	100	high	1	tuned record_tables.md
+g_holes	0x00575ab0	record array 0x208	802	record array	0x208	20	high	1	tuned exe_*_globals.tsv
+golfer_types	0x004d60a8	record array 0x230	419	record array	0x230	76	high	1	tuned sve.py NAMES (0x4d60a8 + type*0x230)
+g_placed_objects	0x0058bcb8	record array 0x10	915	record array	0x10	256	high	1	tuned exe_0_globals.tsv
+g_animals	0x0056d1d8	record array 0x3c	777	record array	0x3c	100	high	1	tuned exe_*_globals.tsv
+g_recordBanks	0x004e6d20	record array 0x74	490	record array	0x74	1	high	1	tuned exe_0_globals.tsv
+g_storyPairs	0x0059fc60	record array 0x388	996	record array	0x388	16	high	1	tuned exe_*_globals.tsv
+g_typeAttr	0x00578372	record array 0x30	813	record array	0x30	2	high	1	tuned exe_*_globals.tsv
+g_spriteSortKey	0x0082415c	scalar array 0x4	1614	scalar array	0x4	1024	high	1	tuned exe_*_globals.tsv int[]
+g_spriteFlags	0x0082815c	scalar array 0x4	1618	scalar array	0x4	1024	high	1	tuned exe_*_globals.tsv int[]
+g_spriteX	0x00830164	scalar array 0x4	1628	scalar array	0x4	1024	high	1	tuned exe_*_globals.tsv int[]
+g_spriteY	0x00831164	scalar array 0x4	1629	scalar array	0x4	1024	high	1	tuned exe_*_globals.tsv int[]
+g_spriteQueueNext	0x008361f4	scalar array 0x4	1636	scalar array	0x4	1024	high	1	tuned exe_*_globals.tsv int[]
+g_pathQueueX	0x005a7404	scalar array 0x2	1072	scalar array	0x2	1	high	1	tuned exe_*_globals.tsv short[0x400]
+g_pathQueueY	0x005a8028	scalar array 0x2	1083	scalar array	0x2	1	high	1	tuned exe_*_globals.tsv short[0x400]
+g_shotStartDate	0x0056962c	scalar array 0x4	743	scalar array	0x4	1	high	1	tuned exe_*_globals.tsv int[152]
+rootWin vtable	0x004ba2fc	vtable	20	vtable	0x4	91	high	1	tuned CLAUDE.md round 30 (slots 29..39)
+ListBox vtable A	0x004bb3cc	vtable	66	vtable	0x4	1	medium	1	tuned function_boundaries.md
+ListBox vtable B	0x004bba3c	vtable	78	vtable	0x4	1	medium	1	tuned function_boundaries.md
+NodeListC vtable	0x004bb014	vtable	54	vtable	0x4	27	high	1	tuned CLAUDE.md round 19 (closeHookC slot 2)
+Snd vtable	0x004bacf8	vtable	45	vtable	0x4	61	high	1	tuned CLAUDE.md round 20 (Snd::flags slot 28)
+month names	0x004c2908	string table	140	string table	0x4	22	high	1	tuned sve.py MONTHS (8 pointers)
+course types	0x004c3078	string table	169	string table	0x4	4	high	1	tuned sve.py COURSE_TYPES (4 pointers)
+golfer preferences	0x004c2858	string table	137	string table	0x4	3	high	1	tuned golfer_record.md +0x19 (3 strings)
+g_date	0x00834170	scalar	1633	scalar		1	low	1	tuned sve.py NAMES
+g_cash_div100	0x00571fd4	scalar	791	scalar		1	low	1	tuned exe_*_globals.tsv int
+gCameraTileX	0x004c2ba0	scalar	145	scalar		1	high	1	tuned exe_*_globals.tsv int
+g_zoomScale	0x004c2844	scalar	132	scalar		1	high	1	tuned exe_*_globals.tsv int
+g_screenWidth	0x00822c8c	scalar	1605	scalar		1	high	1	tuned exe_*_globals.tsv int
+g_flags	0x0059e7b8	flag word	992	flag word		2	high	1	tuned sve.py NAMES (gates the tails), mainLoop_structure.md
+g_screenMgrA	0x0083acb0	object	1690	object		1	high	1	tuned exe_*_globals.tsv ScreenMgr
+g_sectionReader	0x0083b000	object	1708	object		1	high	1	tuned exe_*_globals.tsv Reader
+g_loadImage	0x00839348	object	1652	object		1	high	1	tuned exe_*_globals.tsv Image
+g_textBuffer	0x0051a068	buffer	511	buffer	0x1	19	medium	1	tuned exe_*_globals.tsv char[]
+g_pathScratch	0x0083c004	buffer	1725	buffer	0x1	1	medium	1	tuned exe_*_globals.tsv char[256]
+g_itoaBuf4e9a70	0x004e9a70	buffer	492	buffer	0x1	1	low	1	tuned exe_*_globals.tsv char[]
+gRngState	0x004ba800	flag word|scalar	27	scalar		2	medium	1	holdout exe_1_globals.tsv
+g_recordDefs	0x004c11e0	const lookup table|record array|scalar array	115	const lookup table	0x27	1	high	1	holdout exe_0_globals.tsv
+gCameraTileY	0x004c2ba4	flag word|scalar	146	scalar		1	high	1	holdout exe_1_globals.tsv
+g_recordOccupancy	0x004e6d70	buffer|record array|scalar array	491	record array	0x74	1	medium	1	holdout exe_0_globals.tsv
+g_animalCell	0x004e9a80	flag word|scalar	493	scalar		1	high	1	holdout exe_11_globals.tsv
+g_tileFlags	0x0053caf0	const lookup table|record array|scalar array	561	scalar array	0x2	2500	high	1	holdout exe_0_globals.tsv
+g_ballStopCount	0x0053ea24	buffer|record array|scalar array	568	record array	0x32	50	high	1	holdout exe_11_globals.tsv
+g_holeDirMask	0x00541318	4-bit mask of directions with a type-4 o	610						skipped holdout: type not mapped
+g_cameraRot	0x005685f4	camera rotation (0,2,4,6)	724						skipped holdout: type not mapped
+g_nearTileDist	0x00568d0c	flag word|scalar	730	scalar		1	high	1	holdout exe_6_globals.tsv
+g_nearTileX	0x0056a91c	flag word|scalar	756	scalar		1	high	1	holdout exe_6_globals.tsv
+g_nearTileY	0x0056a920	flag word|scalar	757	scalar		1	high	1	holdout exe_6_globals.tsv
+gTextBuffer	0x0056fcb0	buffer|record array|scalar array	779	scalar array	0x1	4098	high	1	holdout exe_1_globals.tsv
+g_courseTable	0x00571fd8	buffer|record array|scalar array	792	record array	0x2e	17	high	1	holdout exe_2_globals.tsv
+gCourseInfoDirty	0x00587da0	flag word|scalar	874	buffer	0x1	1	medium	0	holdout exe_1_globals.tsv
+g_textBuf	0x0058a528	buffer|scalar array	879	record array	0x2c	7	medium	0	holdout exe_0_globals.tsv
+g_pathGrid	0x0058d370	buffer|record array|scalar array	921	record array	0x32	50	high	1	holdout exe_11_globals.tsv
+gTextBuffer2	0x0059d81c	buffer|record array|scalar array	969	scalar array	0x2	128	high	1	holdout exe_1_globals.tsv
+gTextBuffer2Index	0x0059d91c	flag word|scalar	969	scalar array	0x2	128	high	0	holdout exe_1_globals.tsv
+gTerrain	0x00820ed0	flag word|scalar	1507	scalar		4	medium	1	holdout exe_1_globals.tsv
+gTileBuffer	0x00820f18	flag word|scalar	1508	object		1	high	0	holdout exe_1_globals.tsv
+gDirtyFlagA	0x00822b98	flag word|scalar	1599	scalar		1	high	1	holdout exe_1_globals.tsv
+gDirtyFlagB	0x00822b9c	flag word|scalar	1600	scalar		1	high	1	holdout exe_1_globals.tsv
+g_screenHeight	0x00822c90	flag word|scalar	1606	scalar		3	medium	1	holdout exe_2_globals.tsv
+g_tileShadeA	0x00822da0	buffer|record array|scalar array	1609	record array	0x32	50	high	1	holdout exe_2_globals.tsv
+g_tileShadeB	0x0082376c	buffer|record array|scalar array	1611	record array	0x32	50	high	1	holdout exe_2_globals.tsv
+g_color16Lut	0x00824148	flag word|scalar	1613	scalar		1	high	1	holdout exe_2_globals.tsv
+g_spriteQueueHead	0x0082c160	flag word|scalar	1623	scalar		1	high	1	holdout exe_2_globals.tsv
+g_spriteQueueCount	0x00838200	flag word|scalar	1638	scalar		1	high	1	holdout exe_2_globals.tsv
+g_sampleGrid	0x00838c1c	buffer|record array|scalar array	1642	record array	0x13	19	high	1	holdout exe_2_globals.tsv
+g_listPalette	0x00839a98	flag word|scalar	1656	scalar		5	medium	1	holdout exe_12_globals.tsv
+g_surfaceRecreating	0x00839ab0	flag word|scalar	1657	scalar		3	medium	1	holdout exe_12_globals.tsv
+g_drawList	0x00839ac0	pointer table|record array|scalar array	1658	scalar array	0x4	1	high	1	holdout exe_3_globals.tsv
+g_tipRect	0x0083a2c8	object|record array|scalar	1660	scalar		4	medium	1	holdout exe_3_globals.tsv
+g_zlist	0x0083a2d8	pointer table|record array|scalar array	1661	scalar array	0x4	1	high	1	holdout exe_3_globals.tsv
+g_dirtyRect	0x0083a4d8	object|record array|scalar	1662	scalar		2	medium	1	holdout exe_3_globals.tsv
+g_blitSaveBuf	0x0083a7b8	flag word|scalar	1665	object		1	high	0	holdout exe_3_globals.tsv
+g_cursorClipOwner	0x0083aa98	flag word|scalar	1667	scalar		3	medium	1	holdout exe_6_globals.tsv
+g_blitX	0x0083aaa4	flag word|scalar	1668	scalar		1	high	1	holdout exe_3_globals.tsv
+g_blitY	0x0083aaa8	flag word|scalar	1669	scalar		3	medium	1	holdout exe_3_globals.tsv
+g_blitW	0x0083aab4	flag word|scalar	1670	scalar		1	high	1	holdout exe_3_globals.tsv
+g_blitH	0x0083aab8	flag word|scalar	1671	scalar		2	medium	1	holdout exe_3_globals.tsv
+g_tipOwner	0x0083aac0	flag word|scalar	1672	scalar		1	high	1	holdout exe_3_globals.tsv
+g_tipText	0x0083aac4	flag word|scalar	1673	scalar		1	high	1	holdout exe_3_globals.tsv
+g_tipFont	0x0083aac8	flag word|scalar	1674	scalar		3	medium	1	holdout exe_3_globals.tsv
+g_removingWin	0x0083aae0	flag word|scalar	1675	scalar		17	medium	1	holdout exe_3_globals.tsv
+g_curWidget	0x0083ab2c	flag word|scalar	1676	scalar		1	high	1	holdout exe_3_globals.tsv
+g_scrollDragX	0x0083ab30	flag word|scalar	1677	scalar		1	high	1	holdout exe_5_globals.tsv
+g_scrollDragY	0x0083ab34	flag word|scalar	1678	scalar		3	medium	1	holdout exe_5_globals.tsv
+g_focusWin	0x0083ab40	flag word|scalar	1679	scalar		1	high	1	holdout exe_3_globals.tsv
+g_focusWin2	0x0083ab44	flag word|scalar	1680	scalar		12	medium	1	holdout exe_3_globals.tsv
+g_drawCount	0x0083ab90	flag word|scalar	1681	scalar		1	high	1	holdout exe_3_globals.tsv
+g_zcount	0x0083ab94	flag word|scalar	1682	scalar		1	high	1	holdout exe_3_globals.tsv
+g_focusedItem	0x0083ab98	flag word|scalar	1683	scalar		3	low	1	holdout exe_2_globals.tsv
+g_codeBuf	0x0083aba4	buffer|record array|scalar array	1684	scalar		16	medium	0	holdout exe_3_globals.tsv
+g_resampleBuf	0x0083ac10	flag word|scalar	1685	scalar		1	high	1	holdout exe_3_globals.tsv
+g_resampleLen	0x0083ac14	flag word|scalar	1686	scalar		4	low	1	holdout exe_3_globals.tsv
+g_screenMgrB	0x0083ac30	object	1687	buffer	0x1	1	low	0	holdout exe_3_globals.tsv
+g_screenObjList	0x0083ac88	object	1688	object		1	medium	1	holdout exe_3_globals.tsv
+g_primarySurface	0x0083ad44	flag word|scalar	1692	scalar		1	high	1	holdout exe_3_globals.tsv
+g_inputPhase	0x0083ad4c	flag word|scalar	1693	flag word		1	high	1	holdout exe_3_globals.tsv
+g_graphicsDevice	0x0083ad50	flag word|scalar	1694	scalar		1	high	1	holdout exe_2_globals.tsv
+g_sfxDevice	0x0083ad58	object	1695	object		1	high	1	holdout exe_3_globals.tsv
+g_musicDevice	0x0083ad80	object	1696	record array	0x1c	2	high	0	holdout exe_3_globals.tsv
+g_soundTail	0x0083af64	flag word|scalar	1697	scalar		1	high	1	holdout exe_3_globals.tsv
+g_soundHead	0x0083af68	flag word|scalar	1698	scalar		1	high	1	holdout exe_3_globals.tsv
+g_soundFns	0x0083af6c	pointer table|record array|scalar array	1699	scalar		5	medium	0	holdout exe_3_globals.tsv
+g_resCloseHook1	0x0083af80	flag word|scalar	1700	scalar		2	medium	1	holdout exe_4_globals.tsv
+g_resCloseHook2	0x0083af88	flag word|scalar	1701	scalar		2	medium	1	holdout exe_4_globals.tsv
+g_resCloseHook3	0x0083af90	flag word|scalar	1702	scalar		2	medium	1	holdout exe_4_globals.tsv
+g_voiceDevice	0x0083af98	object	1703	object		1	high	1	holdout exe_3_globals.tsv
+g_soundDll	0x0083afc0	flag word|scalar	1704	scalar		1	high	1	holdout exe_3_globals.tsv
+g_soundReady	0x0083afc4	flag word|scalar	1705	scalar		2	medium	1	holdout exe_3_globals.tsv
+g_engineFlags	0x0083afd0	flag word|scalar	1706	scalar		4	medium	1	holdout exe_4_globals.tsv
+g_timerLock	0x0083afec	flag word|scalar	1707	scalar		2	medium	1	holdout exe_4_globals.tsv
+g_keyTables	0x0083b170	const lookup table|record array|scalar array	1710	record array	0x120	4	low	1	holdout exe_4_globals.tsv
+g_cursorWidth	0x0083b5f8	flag word|scalar	1711	scalar		1	high	1	holdout exe_4_globals.tsv
+g_cursorHeight	0x0083b5fc	flag word|scalar	1712	scalar		3	medium	1	holdout exe_4_globals.tsv
+g_defaultButtonFont	0x0083b60c	flag word|scalar	1713	scalar		18	medium	1	holdout exe_4_globals.tsv
+g_msgBoxLabelA	0x0083b994	flag word|scalar	1718	scalar		1	high	1	holdout exe_4_globals.tsv
+g_msgBoxLabelB	0x0083b998	flag word|scalar	1719	scalar		7	medium	1	holdout exe_4_globals.tsv
+g_msgBoxButtonA	0x0083b9b4	flag word|scalar	1720	scalar		4	medium	1	holdout exe_4_globals.tsv
+g_msgBoxButtonB	0x0083b9c4	flag word|scalar	1721	scalar		12	medium	1	holdout exe_4_globals.tsv
+g_sinTable	0x0083b9f4	record array|scalar array	1722	scalar array	0x4	256	high	1	holdout exe_4_globals.tsv
+g_blitError	0x0083c310	flag word|scalar	1727	scalar		2	medium	1	holdout exe_4_globals.tsv
+g_blitContext	0x0083c328	flag word|scalar	1728	scalar		2	medium	1	holdout exe_4_globals.tsv
+g_blitSurface	0x0083c330	flag word|scalar	1729	scalar		1	high	1	holdout exe_4_globals.tsv
+g_hotListFreeGuard	0x0083d348	flag word|scalar	1731	scalar		1	high	1	holdout exe_4_globals.tsv
+g_polyFillColor	0x0083d34c	flag word|scalar	1732	scalar		2	low	1	holdout exe_4_globals.tsv
+g_polyVerts	0x0083d358	flag word|scalar	1733	scalar		3	medium	1	holdout exe_4_globals.tsv
+g_polyVertCount	0x0083d378	flag word|scalar	1734	scalar		11	medium	1	holdout exe_4_globals.tsv
+g_hudTextY	0x0083d3c8	record array|scalar array	1735	scalar array	0x4	1	high	1	holdout exe_5_globals.tsv
+g_hudTextX	0x0083e8b8	record array|scalar array	1738	scalar array	0x4	1	high	1	holdout exe_5_globals.tsv
+g_hudTextBuf	0x0083e8e0	buffer|record array|scalar array	1739	record array	0x100	1	medium	1	holdout exe_5_globals.tsv
+g_imageAssetExtMode	0x0083fe5c	flag word|scalar	1744	scalar		1	high	1	holdout exe_12_globals.tsv
+g_widgetTable	0x0083fe78	const lookup table|record array|scalar array	1745	scalar		38	medium	0	holdout exe_5_globals.tsv
+g_titleBarH	0x0083ff10	flag word|scalar	1746	scalar		4	medium	1	holdout exe_3_globals.tsv
+g_netState	0x008400b0	flag word|scalar	1749	scalar		1	high	1	holdout exe_5_globals.tsv
+g_pairArray	0x008406e8	flag word|scalar	1755	object		1	high	0	holdout exe_5_globals.tsv
+g_pcxSurface	0x00840710	object	1756	object		1	high	1	holdout exe_5_globals.tsv
+g_fileWinBuf	0x00840820	flag word|scalar	1758	scalar		2	low	1	holdout exe_5_globals.tsv
+g_cursorSurfA	0x00840830	object	1759	object		1	high	1	holdout exe_5_globals.tsv
+g_cursorSurfB	0x00840860	object	1760	object		1	high	1	holdout exe_5_globals.tsv
+g_cursorSurfC	0x00840890	object	1761	object		1	high	1	holdout exe_5_globals.tsv
+g_fontSurfA	0x008408c8	object	1762	object		1	high	1	holdout exe_5_globals.tsv
+g_fontSurfB	0x008408f8	object	1763	object		1	high	1	holdout exe_5_globals.tsv
+g_graphsyObject	0x0084092c	flag word|scalar	1764	scalar		1	high	1	holdout exe_5_globals.tsv
+g_logFile	0x00840930	flag word|scalar	1765	object		1	high	0	holdout exe_5_globals.tsv

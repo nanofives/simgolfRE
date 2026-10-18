@@ -1,0 +1,7 @@
+# Example input for re/tools/model_check.py (see its docstring). Lines starting with # are ignored.
+# py -3.12 re/tools/model_check.py re/model/check_example.tsv --out log/model_check_example.tsv
+# golfers: 0 errors, 106 warnings (re/analysis/data/model_inventory.md section 4.3)
+module	va	size	type	count	stride	sign	const	fields	name
+golf_clean.exe	0x005794b8		struct	156	0x100			cstruct:re/analysis/data/golfer_record.md#Golfer	g_golfers
+golf_clean.exe	0x0082415c		int	1024					g_spriteSortKey
+golf_clean.exe	0x004c2908		ptr	8			1		month_names
