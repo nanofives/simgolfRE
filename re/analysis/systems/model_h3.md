@@ -1,0 +1,1 @@
+Stream H chunk h3 (0x00485090..0x00488fa0): vtable slot forwarders of Snd, VoiceRx, NodeList, NodeListB/C, EditBox and Button, the Timer window-timer callback, and static-init/exit stubs. Per-function evidence and groups are in re/model/h3_notes.md and re/names/model_h3.tsv.
