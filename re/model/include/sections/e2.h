@@ -117,7 +117,7 @@ SGE2_STATIC_ASSERT(offsetof(SpriteRef, unk_28) == 0x28, SpriteRef_unk_28);
 /* FontRef (0x20 bytes). holder of the jgld object made by Display slot 29 (ctor C4837f0::ctor, methods Surface::createSized / createFromId / releaseBacking in re/names).
  * Evidence: 11 globals 0x20 apart, each built by a staticInit calling C4837f0::ctor; releaseBacking 0x004838cc..0x004838d8 */
 typedef struct FontRef {
-    uint32_t vptr;                     /* +0x000 ptr 0x004ba468 (C4837f0::ctor 0x004837f9) */
+    uint32_t vptr;                     /* +0x000 ptr 0x004ba468 (FontRef::ctor 0x004837f9) */
     uint32_t font;                     /* +0x004 ptr jgld object from Display slot 29 (Surface::createSized 0x00483850), freed through slot 34 (releaseBacking 0x004838b0) [U-0453] */
     int32_t f_08;                      /* +0x008 -1 after release [U-0452] */
     int32_t f_0c;                      /* +0x00c [U-0452] */
@@ -302,7 +302,7 @@ SGE2_STATIC_ASSERT(offsetof(Flic, unk_80) == 0x80, Flic_unk_80);
 /* Snd (0x6c bytes). sound slot (Snd::ctorDerived; bases Snd::ctor485260 0x34 bytes and Snd::ctorBase 0x58 bytes); equal to stream D's SgSnd.
  * Evidence: ehVectorConstructorIterator(0x0080d840, 0x6c, 300, Snd::ctorDerived 0x00484820, SndMusic::dtor) */
 typedef struct Snd {
-    uint32_t vptr;                     /* +0x000 ptr 0x004badec -> 0x004bac68 -> 0x004bacf8 */
+    uint32_t vptr;                     /* +0x000 ptr 0x004badec -> 0x004bac68 -> 0x004bacf8; slots 41..45 of the last table (0x004bacf8) are constant-0xb stubs (`mov eax, 0xb` 0x00485120 / 0x00485130), not device forwarders */
     int32_t volume;                    /* +0x004 0..0x7f, default 0x7f (Snd::ctor485260 0x00485273) */
     int32_t pan;                       /* +0x008 -0x40..0x3f (Snd::setPan 0x004847f0) */
     uint32_t unk_0c[9];                /* +0x00c [U-0462] */
@@ -310,7 +310,7 @@ typedef struct Snd {
     int32_t field_34;                  /* +0x034 Snd::setField34 0x004846b4, forwarded to Sound slot 19 */
     int32_t rate;                      /* +0x038 default 1000 (Snd::setField38), forwarded to Sound slot 1 */
     uint32_t group;                    /* +0x03c 0x10 = none (Snd::ctorDerived 0x00484857) [U-0486] */
-    uint32_t sound;                    /* +0x040 ptr sound.dll object from create_sound (kind 1 MultiSound, kind 2 Sound5b6a8) */
+    uint32_t sound;                    /* +0x040 ptr sound.dll object from create_sound (kind 1 MultiSound, kind 2 Sound5b6a8); the Snd::fwdVoiceNN slots forward through it */
     uint32_t state;                    /* +0x044 bit 0 playing, bit 1 in the active list (Snd::unlinkFromList 0x004844e0), bit 2 set by ctorDerived */
     uint32_t prev;                     /* +0x048 ptr 0 = head (head 0x0083af68, Snd::unlinkFromList 0x004844e9..) */
     uint32_t next;                     /* +0x04c ptr 0 = tail (tail 0x0083af64) */
@@ -346,7 +346,7 @@ SGE2_STATIC_ASSERT(offsetof(Snd, started_at) == 0x68, Snd_started_at);
  * Evidence: S3List_addVoiceRx 0x0049bdd1..0x0049be5b (heapAlloc 100) */
 typedef struct VoiceRxNode {
     uint32_t vptr;                     /* +0x000 ptr 0x004bbc3c (VoiceRx::ctor installs 0x004badf8 first) */
-    uint8_t snd_base[76];              /* +0x004 Snd +0x4..+0x4f (fields as in Snd) */
+    uint8_t snd_base[76];              /* +0x004 Snd +0x4..+0x4f (fields as in Snd; +0x40 the sound.dll object pointer) */
     uint32_t name;                     /* +0x050 ptr operator new(10) copy of the 9-byte name (VoiceRx::ctor 0x004852e0) */
     int32_t mode;                      /* +0x054 6 (Snd::setMode) */
     uint32_t vbtable;                  /* +0x058 ptr 0x004bbcd4 */
@@ -382,7 +382,7 @@ typedef struct StrList {
     int32_t f_08;                      /* +0x008 0x7f (StrList::ctor 0x00487221) [U-0465] */
     uint32_t f_0c;                     /* +0x00c [U-0465] */
     uint32_t f_10;                     /* +0x010 [U-0465] */
-    uint32_t device;                   /* +0x014 ptr sound.dll device object; StrList::dtor calls its slot 5 (+0x14); openHookA/B/C fill it through the create_device exports */
+    uint32_t device;                   /* +0x014 ptr sound.dll device object; StrList::dtor calls its slot 5 (+0x14); openHookA/B/C fill it through the create_device exports; the NodeList::fwdChildNN / NodeListB::callChildNN slots call its vtable (0x004876a0..0x004876a9) */
     int32_t count;                     /* +0x018 NodeList::clear decrements it */
     uint32_t f_1c;                     /* +0x01c [U-0465] */
 } StrList;

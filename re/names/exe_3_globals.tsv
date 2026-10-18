@@ -20,7 +20,7 @@ golf_clean.exe	0x0083aab4	g_blitW	int	pending blit width, read by addDirtyRect (
 golf_clean.exe	0x0083aab8	g_blitH	int	pending blit height, read by addDirtyRect (0x47d060)
 golf_clean.exe	0x0083ad4c	g_inputPhase	int	event-pump phase; written by pumpInput483bd0/483c90/483cf0 (0x483bd0/0x483c90/0x483cf0) around the drain loops
 golf_clean.exe	0x0083aba4	g_codeBuf	char[10]	circular recent-keystroke buffer (g_83aba4..g_83abad) scanned by matchInputCode (0x47eee0)
-golf_clean.exe	0x0083ff10	g_titleBarH	int	title bar / border thickness added by growRect/adjustSizeOuter, subtracted by shrinkRect/innerSize (0x47cc10/0x47ca10/0x47cce0/0x47cb10)
+golf_clean.exe	0x0083ff10	g_hscrollHeight	int	horizontal scrollbar height: stored only by initHscrollHeight 0x00496028 as GetSystemMetrics(SM_CYHSCROLL = 3, pushed at 0x00496020); added by growRect/adjustSizeOuter, subtracted by shrinkRect/innerSize (0x47cc10/0x47ca10/0x47cce0/0x47cb10); G3 2026-10-18: was g_titleBarH
 golf_clean.exe	0x0083afc0	g_soundDll	HMODULE	sound.dll module handle; set by soundVersionCheck (0x483fc0), freed by freeSoundLib (0x484060), gate for callSoundHook94 (0x4840c0)
 golf_clean.exe	0x0083afc4	g_soundReady	int	sound-system initialized flag; set by initSound (0x483e90), cleared by freeSoundLib (0x484060), gate for createSound4840e0 (0x4840e0)
 golf_clean.exe	0x0083af6c	g_soundFns	void*[11]	sound.dll function-pointer table; zeroed by clearSoundPtrs (0x484130), factory entry read by createSound4840e0 (0x4840e0)

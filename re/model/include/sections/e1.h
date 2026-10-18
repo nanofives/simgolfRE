@@ -22,6 +22,8 @@
  * `pointer` when the code dereferences the loaded value). unk_<offset> bytes are not accessed by any method the
  * analysis resolved (see the U id).
  * - Original defects are catalogued in model_e1.md, never repaired here.
+ * - Stream G3 (2026-10-18) edited this file by hand: SgNetPeerRecord added, SgRecList's vtbl comment
+ * (re/analysis/data/model_corrections.md).
  */
 #ifndef SIMGOLF_MODEL_SECTION_E1_H
 #define SIMGOLF_MODEL_SECTION_E1_H
@@ -84,7 +86,7 @@ typedef struct SgViewList {                         /* 0x18 bytes */
 SGE1_STATIC_ASSERT(sizeof(SgViewList) == 0x18, SgViewList_size);
 
 typedef struct SgRecList {                          /* 0x30 bytes */
-    uint32_t vtbl;                                  /* +0x000 (recordCopyStr1c, bufferFree) or (recordCopyStr20) */
+    uint32_t vtbl;                                  /* +0x000 base tables 0x004ba270 / 0x004ba2c4 (return0Pop4, retPop4); overrides 0x004bb22c (recordCopyStr1c, bufferFree: ListModel, TextView, netSendMessages) and 0x004bc3b4 (recordCopyStr20, recordFreeStr: SgPanelSub's member only) */
     uint32_t vbptr;                                 /* +0x004 / : virtual base HeapObject at +0x28 */
     uint32_t f_008;                                 /* +0x008 pointer (*+0x0/4;*+0x8/4;*+0xc/4) */
     uint32_t f_00c;                                 /* +0x00c pointer (*+0x10/4;*+0x4/4;*+0xc/4) */
@@ -647,5 +649,16 @@ typedef struct SgCursor {                           /* 0x14 bytes */
     int32_t  f_010;                                 /* +0x010 */
 } SgCursor;
 SGE1_STATIC_ASSERT(sizeof(SgCursor) == 0x14, SgCursor_size);
+
+typedef struct SgNetPeerRecord {                    /* 0x58 bytes; G3: 16 of them at +0x170 of the net session object (netService `lea eax, [ebp + 0x170]` 0x0049832b, stride 0x58 0x00498325, count 0x10 0x0049831a) */
+    uint32_t id;                                    /* +0x000 0 = free: netQueueMessage takes the first 0 (0x0049b6a1..0x0049b6a5) and stores the id (0x0049b6d1); netNameOf 0x0049aa3d and netMarkRecordCb 0x00497f79 look records up by it */
+    uint8_t  unk_004[0x4];                          /* +0x004 no access found [U-0603] */
+    int32_t  marked;                                /* +0x008 cleared for all 16 by netService 0x0049831f; set to 1 by netMarkRecordCb 0x00497fa1 when flags bit 2 is set; tested by netService (0x004986bd, 0x00498792) */
+    uint32_t reply_time;                            /* +0x00c read 0x004985c7 (a value below 0xffffffff becomes the wait bound 0x004985da); rewritten 0x004986da as (old + timeGetTime() - send time + 0x14) >> 1 */
+    uint32_t stamp;                                 /* +0x010 timeGetTime stored for record 0 by netServiceControl 0x0049ac7c, elapsed time compared with the session's +0xf0 (0x0049ac58..0x0049ac64) [U-0603 for records 1..15] */
+    uint8_t  flags;                                 /* +0x014 stored from netQueueMessage's byte argument 0x0049b6db and from a message byte 0x0049b944; bit 2 tested by netMarkRecordCb 0x00497f99 */
+    char     name[0x43];                            /* +0x015 cleared then filled by netQueueMessage's unbounded string copy (0x0049b6e1..0x0049b718); netNameOf returns its address (0x0049aa5b) */
+} SgNetPeerRecord;
+SGE1_STATIC_ASSERT(sizeof(SgNetPeerRecord) == 0x58, SgNetPeerRecord_size);
 
 #endif /* SIMGOLF_MODEL_SECTION_E1_H */

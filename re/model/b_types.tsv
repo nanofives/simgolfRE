@@ -119,7 +119,7 @@ golf_clean.exe	0x005a8c38		int	20		s			g_objectTypeLevel
 golf_clean.exe	0x005a8c88		int	1					g_frameMs
 golf_clean.exe	0x0058b198		uint	1		u			g_commentTone
 golf_clean.exe	0x005619a0		char	2500		s			g_tileWallMask
-golf_clean.exe	0x0056199c		int	1					g_value56199c
+golf_clean.exe	0x0056199c		int	1					g_panelListCount
 golf_clean.exe	0x00839338		int	1		s			g_bulletinAnimTick
 golf_clean.exe	0x00839340		flags8	1					g_staticGuard839340
 golf_clean.exe	0x0058bcb0		int	1		s			g_nameLabelCount

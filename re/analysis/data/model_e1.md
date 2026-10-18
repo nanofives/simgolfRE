@@ -173,6 +173,13 @@ HotList structs: HotList / HotListEntry are E1's, and E2's Image embeds them as 
 | cluster 507 (B) 0x00519d30..0x00519d40 | stream B scalar | bytes of g_rootWindow's Image base (+0x2d0..+0x2e0) |
 | clusters 122, 654, 839, 1123 (E1) and 0x0056e948 / 0x0056e950 | E1 | elements of other streams' objects (U-0412; 1123 is covered by E2's row 0x0080b130) |
 
+**G3 corrections (2026-10-18, re/analysis/data/model_corrections.md):** the RecList override tables 0x004bc3b0 / 0x004bc3b4
+/ 0x004bc3bc are stored only by panelSubCtor4a3110, so e1_vtables.tsv now lists them as class `SgPanelSub` (this_origin
++0xa0 / +0x78; map symbols vt_PanelSub_4bc3b0 / 4bc3b4 / 4bc3bc); 0x004bb22c keeps `SgRecList` because ListModel::ctor,
+TextView::ctor and netSendMessages all store it. g_ui_83ff6c is g_netPeerTable (pointer to 16 SgNetPeerRecord of 0x58
+bytes, new struct), g_titleBarH is g_hscrollHeight (GetSystemMetrics(3) at 0x00496028), g_ui_567afc is labelled
+g_panelListMode. The slot function names of e1_vtables.tsv were refreshed from re/names (1,099 rows).
+
 ## 7. Checks
 
 **model_check** (`log/p1/e1/check_types.tsv`, 200 ranges; flattened structs for the three window objects, SpriteRef

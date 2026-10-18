@@ -25,7 +25,7 @@ COLS = ["symbol", "module", "va", "size", "element_type", "c_type", "count", "st
 # Header type that the merged header uses for a stream's element type (the same object typed twice: D's opaque
 # placeholders and E1's early names are E2's classes; simgolf_model.h asserts the sizes and offsets agree).
 CANONICAL_TYPE = {
-    "SgSnd": "Snd", "SgSurfaceObj": "SpriteRef", "GfxSurface": "SpriteRef", "SurfaceRef": "SpriteRef",
+    "SgSnd": "Snd", "SgSurfaceObj": "SpriteRef", "GfxSurface": "SpriteRef", "SurfaceRef": "FontRef",
     "SgFlicObj": "Flic", "SgFlicStream": "FlicFrame", "SgCache58": "PaletteCache", "SgSndGroupDevice": "NodeList",
     "SgCursorObj": "SgCursor", "Surface": "SpriteRef",
     # spellings of the C99 scalar types
@@ -899,9 +899,15 @@ def check_row(r):
     return row
 
 
+# Rows a later stream edited in the stream map itself (the stream's scratch check row is stale, so the check row is
+# built from the map): G3 (2026-10-18) cut E2's g_ui83aae4 from 18 to 14 dwords when g_captureCode / g_captureWindow /
+# g_capturePoint 0x0083ab1c..0x0083ab28 were split off (re/analysis/data/model_corrections.md).
+MAP_CHECK = {("e2", "g_ui83aae4")}
+
+
 def check_rows():
     rows, _ = merged_rows()
-    edited = {(x["stream"], x["symbol"]) for x in RESOLUTIONS if x["action"] == "edit"}
+    edited = {(x["stream"], x["symbol"]) for x in RESOLUTIONS if x["action"] == "edit"} | MAP_CHECK
     stream_rows = {}
     for s, p in STREAM_CHECKS.items():
         lines = [l for l in open(ROOT / p, encoding="utf-8") if not l.startswith("#")]

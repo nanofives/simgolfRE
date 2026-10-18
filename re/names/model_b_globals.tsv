@@ -42,7 +42,7 @@ golf_clean.exe	0x0055d738	g_celebrities	CelebrityRecord[100] (0x25 bytes)	loadGo
 golf_clean.exe	0x0055e5ac	g_lastTipDate	int32_t	emitGolferThought stores g_date after posting a tip (0x0046983e..0x00469843) and requires g_date - v > 0x1f4 (0x004688b5..0x004688cb)
 golf_clean.exe	0x0055eb40	g_tileScreenX	int16_t[2500]	tileToScreen word [x * 0x64 + y * 2 + 0x55eb40] 0x0042f978 / 0x0042fa00; 0x4e2-dword clears 0x004104b1..0x004104b6
 golf_clean.exe	0x00561258	g_awardStories	int	advanceStory increments it next to logTick(0x120, story) (0x00466774..0x00466787); drawn as icons 0x0059b578 (0x00419137); ranking component 4 (0x0045f98e)
-golf_clean.exe	0x0056199c	g_value56199c	int32_t	FUN_0040d890 compares an argument below it 0x0040d90c..0x0040d913
+golf_clean.exe	0x0056199c	g_panelListCount	int32_t	panelListSelect 0x0040d890 compares its index argument below it (0x0040d90c..0x0040d913) before reading g_panelListIds 0x0054131c; no instruction writes it (U-0169)
 golf_clean.exe	0x005619a0	g_tileWallMask	int8_t[2500]	index x * 50 + y with a (1 << k) bit test in wallHeight 0x0044933e..0x00449356; trialShot 0x00422be5..0x00422beb
 golf_clean.exe	0x00567390	g_surfaces567390	SgSurfaceObj[30]	ehVectorConstructorIterator(0x567390, 0x2c, 0x1e, Surface_ctor) 0x00405638..0x0040564b
 golf_clean.exe	0x00567a18	g_tutorialPage	int32_t	showTutorialText switches on it minus 1 (table 0x00460d70) 0x004604f0..0x00460515 and increments it 0x00460b90..0x00460b9a

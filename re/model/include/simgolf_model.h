@@ -1300,7 +1300,7 @@ SGE2_STATIC_ASSERT(offsetof(SpriteRef, unk_28) == 0x28, SpriteRef_unk_28);
 /* FontRef (0x20 bytes). holder of the jgld object made by Display slot 29 (ctor C4837f0::ctor, methods Surface::createSized / createFromId / releaseBacking in re/names).
  * Evidence: 11 globals 0x20 apart, each built by a staticInit calling C4837f0::ctor; releaseBacking */
 typedef struct FontRef {
-    uint32_t vptr;                     /* +0x000 ptr (C4837f0::ctor) */
+    uint32_t vptr;                     /* +0x000 ptr (FontRef::ctor) */
     uint32_t font;                     /* +0x004 ptr jgld object from Display slot 29 (Surface::createSized), freed through slot 34 (releaseBacking) [U-0453] */
     int32_t f_08;                      /* +0x008 -1 after release [U-0452] */
     int32_t f_0c;                      /* +0x00c [U-0452] */
@@ -1485,7 +1485,7 @@ SGE2_STATIC_ASSERT(offsetof(Flic, unk_80) == 0x80, Flic_unk_80);
 /* Snd (0x6c bytes). sound slot (Snd::ctorDerived; bases Snd::ctor485260 0x34 bytes and Snd::ctorBase 0x58 bytes); equal to stream D's SgSnd.
  * Evidence: ehVectorConstructorIterator(g_sounds, 0x6c, 300, Snd::ctorDerived, SndMusic::dtor) */
 typedef struct Snd {
-    uint32_t vptr;                     /* +0x000 ptr -> -> */
+    uint32_t vptr;                     /* +0x000 ptr -> ->; slots 41..45 of the last table are constant-0xb stubs (`mov eax, 0xb`), not device forwarders */
     int32_t volume;                    /* +0x004 0..0x7f, default 0x7f (Snd::ctor485260) */
     int32_t pan;                       /* +0x008 -0x40..0x3f (Snd::setPan) */
     uint32_t unk_0c[9];                /* +0x00c [U-0462] */
@@ -1493,7 +1493,7 @@ typedef struct Snd {
     int32_t field_34;                  /* +0x034 Snd::setField34, forwarded to Sound slot 19 */
     int32_t rate;                      /* +0x038 default 1000 (Snd::setField38), forwarded to Sound slot 1 */
     uint32_t group;                    /* +0x03c 0x10 = none (Snd::ctorDerived) [U-0486] */
-    uint32_t sound;                    /* +0x040 ptr sound.dll object from create_sound (kind 1 MultiSound, kind 2 Sound5b6a8) */
+    uint32_t sound;                    /* +0x040 ptr sound.dll object from create_sound (kind 1 MultiSound, kind 2 Sound5b6a8); the Snd::fwdVoiceNN slots forward through it */
     uint32_t state;                    /* +0x044 bit 0 playing, bit 1 in the active list (Snd::unlinkFromList), bit 2 set by ctorDerived */
     uint32_t prev;                     /* +0x048 ptr 0 = head (head g_soundHead, Snd::unlinkFromList) */
     uint32_t next;                     /* +0x04c ptr 0 = tail (tail g_soundTail) */
@@ -1529,7 +1529,7 @@ SGE2_STATIC_ASSERT(offsetof(Snd, started_at) == 0x68, Snd_started_at);
  * Evidence: S3List_addVoiceRx (heapAlloc 100) */
 typedef struct VoiceRxNode {
     uint32_t vptr;                     /* +0x000 ptr (VoiceRx::ctor installs first) */
-    uint8_t snd_base[76];              /* +0x004 Snd +0x4..+0x4f (fields as in Snd) */
+    uint8_t snd_base[76];              /* +0x004 Snd +0x4..+0x4f (fields as in Snd; +0x40 the sound.dll object pointer) */
     uint32_t name;                     /* +0x050 ptr operator new(10) copy of the 9-byte name (VoiceRx::ctor) */
     int32_t mode;                      /* +0x054 6 (Snd::setMode) */
     uint32_t vbtable;                  /* +0x058 ptr */
@@ -1565,7 +1565,7 @@ typedef struct StrList {
     int32_t f_08;                      /* +0x008 0x7f (StrList::ctor) [U-0465] */
     uint32_t f_0c;                     /* +0x00c [U-0465] */
     uint32_t f_10;                     /* +0x010 [U-0465] */
-    uint32_t device;                   /* +0x014 ptr sound.dll device object; StrList::dtor calls its slot 5 (+0x14); openHookA/B/C fill it through the create_device exports */
+    uint32_t device;                   /* +0x014 ptr sound.dll device object; StrList::dtor calls its slot 5 (+0x14); openHookA/B/C fill it through the create_device exports; the NodeList::fwdChildNN / NodeListB::callChildNN slots call its vtable */
     int32_t count;                     /* +0x018 NodeList::clear decrements it */
     uint32_t f_1c;                     /* +0x01c [U-0465] */
 } StrList;
@@ -1781,6 +1781,8 @@ SGE2_STATIC_ASSERT(offsetof(StoryFileRec, f_0c) == 0xc, StoryFileRec_f_0c);
  * `pointer` when the code dereferences the loaded value). unk_<offset> bytes are not accessed by any method the
  * analysis resolved (see the U id).
  * - Original defects are catalogued in model_e1.md, never repaired here.
+ * - Stream G3 (2026-10-18) edited this file by hand: SgNetPeerRecord added, SgRecList's vtbl comment
+ * (re/analysis/data/model_corrections.md).
  */
 #ifndef SIMGOLF_MODEL_SECTION_E1_H
 #define SIMGOLF_MODEL_SECTION_E1_H
@@ -1843,7 +1845,7 @@ typedef struct SgViewList {                         /* 0x18 bytes */
 SGE1_STATIC_ASSERT(sizeof(SgViewList) == 0x18, SgViewList_size);
 
 typedef struct SgRecList {                          /* 0x30 bytes */
-    uint32_t vtbl;                                  /* +0x000 (recordCopyStr1c, bufferFree) or (recordCopyStr20) */
+    uint32_t vtbl;                                  /* +0x000 base tables (return0Pop4, retPop4); overrides (recordCopyStr1c, bufferFree: ListModel, TextView, netSendMessages) and (recordCopyStr20, recordFreeStr: SgPanelSub's member only) */
     uint32_t vbptr;                                 /* +0x004 /: virtual base HeapObject at +0x28 */
     uint32_t f_008;                                 /* +0x008 pointer (*+0x0/4;*+0x8/4;*+0xc/4) */
     uint32_t f_00c;                                 /* +0x00c pointer (*+0x10/4;*+0x4/4;*+0xc/4) */
@@ -2406,6 +2408,17 @@ typedef struct SgCursor {                           /* 0x14 bytes */
     int32_t  f_010;                                 /* +0x010 */
 } SgCursor;
 SGE1_STATIC_ASSERT(sizeof(SgCursor) == 0x14, SgCursor_size);
+
+typedef struct SgNetPeerRecord {                    /* 0x58 bytes; G3: 16 of them at +0x170 of the net session object (netService `lea eax, [ebp + 0x170]`, stride 0x58, count 0x10) */
+    uint32_t id;                                    /* +0x000 0 = free: netQueueMessage takes the first 0 and stores the id; netNameOf and netMarkRecordCb look records up by it */
+    uint8_t  unk_004[0x4];                          /* +0x004 no access found [U-0603] */
+    int32_t  marked;                                /* +0x008 cleared for all 16 by netService; set to 1 by netMarkRecordCb when flags bit 2 is set; tested by netService */
+    uint32_t reply_time;                            /* +0x00c read (a value below 0xffffffff becomes the wait bound); rewritten as (old + timeGetTime - send time + 0x14) >> 1 */
+    uint32_t stamp;                                 /* +0x010 timeGetTime stored for record 0 by netServiceControl, elapsed time compared with the session's +0xf0 [U-0603 for records 1..15] */
+    uint8_t  flags;                                 /* +0x014 stored from netQueueMessage's byte argument and from a message byte; bit 2 tested by netMarkRecordCb */
+    char     name[0x43];                            /* +0x015 cleared then filled by netQueueMessage's unbounded string copy; netNameOf returns its address */
+} SgNetPeerRecord;
+SGE1_STATIC_ASSERT(sizeof(SgNetPeerRecord) == 0x58, SgNetPeerRecord_size);
 
 #endif /* SIMGOLF_MODEL_SECTION_E1_H */
 

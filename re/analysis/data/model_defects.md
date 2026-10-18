@@ -22,6 +22,7 @@ decides each. Every entry cites the instructions; the full evidence is in the st
 | 11 | spawnWalker's free-slot search over the 64 walker records has no bound | spawnWalker 0x00402970 | model_b.md 2.5 / 4.1 |
 | 12 | the 32-entry ball-screen lists g_ballScreenXs / Ys are appended with no bound check (count 0x0058bcb0 reset at 0x0041495a) | 0x005a47e8 / 0x005a4868 | model_b.md 2.5 / 5.6 |
 | 13 | showMembershipRoster strcpy's a 0x230-byte slot into a 19-byte buffer | 0x00454fb6 | CLAUDE.md round 31 |
+| 36 | netQueueMessage copies a peer name into SgNetPeerRecord.name (0x43 bytes at +0x15) with the length strlen + 1 of its argument and no bound (`repne scasb` 0x0049b6ec, `rep movsd` / `rep movsb` 0x0049b70d / 0x0049b718): a name of 0x43 characters or more overruns into the next record (or past this + 0x6f0 for record 15) | 0x0049b6e1..0x0049b718 | model_corrections.md 5 (G3) |
 
 ## 2. Wrong width, mixed strides, uninitialised or never-written data
 
@@ -51,6 +52,8 @@ decides each. Every entry cites the instructions; the full evidence is in the st
 | 30 | resolveDataPath tests and copies three path prefixes g_dataDirA / B / C (0x83be04, 0x83bf04, 0x83c104) that no instruction in the image writes: their branches always see the empty string | 0x00491f53, 0x00491e38, 0x00491ecf (the only literals: 0x00491f54 / 0x00491f61, 0x00491e39 / 0x00491e4c, 0x00491ed0) | this file (G1) |
 | 31 | globals only ever written 0 or -1 (0x543cf4, 0x4c2e20, 0x54131c, 0x5689e8) and read-only globals never written (0x59b04c, 0x56a518, 0x4c2fc8); g_debugShotGolfer is never written, so chooseShotTarget's formatting branch never runs; g_panelSelectPending only receives -1 and g_panelListIds is never written (U-0187, U-0188) | chooseShotTarget 0x00423cb3.. | model_b.md 2.5 / 8.12 |
 | 32 | g_probeShotX / Y slots overlap between probe passes (slot = pass + stroke) | 0x004136aa..0x004136fc | model_b.md 8.12 |
+| 34 | g_viewTreeRoot 0x83aa9c is read as a Window* by six instructions (layoutViewTree, View_toLocal, uiEventForwardRootSlot3, uiPointerRegionCode x2, uiMousePress1) and written by none; its address is never taken, so every reader takes its NULL branch (a live read stayed 0 through menu, sandbox, a hole build and a season at x32) | 0x0047a6f9, 0x0047ab82, 0x00495750, 0x00495790, 0x004957d7, 0x00495abe | model_corrections.md 4 (G3) |
+| 35 | g_panelListCount 0x56199c has no writer either (U-0169), so panelListSelect mode 2 (golfer list) always takes its out-of-range arm and only clears 0x53df54 | 0x0040d90c..0x0040d913, 0x0040d972 | model_corrections.md 6 (G3) |
 
 ## 3b. State the save routine changes (port requirement)
 

@@ -115,6 +115,13 @@ The 44 exe vtable / vbtable clusters of E2 are dumped slot by slot with the curr
 stream E1's. The 10 jgld vtables (Display / DisplayBase 86, Surface / SurfaceBase 60, Sprite / SpriteBase 49, Palette /
 PaletteBase 9, Font / FontBase 5) are dumped as the API contract.
 
+**G3 corrections (2026-10-18, re/analysis/data/model_corrections.md):** the classes of 0x004ba2d8 / 0x004ba468 are
+`SpriteRef` (0x2c) and `FontRef` (0x20) as in e2_classes.tsv (slot 0 of each runs the vector destructor iterator with
+element size 0x2c at 0x0047473a and 0x20 at 0x00483b4a); the rows used `GfxSurface` / `SurfaceRef`, and the merge mapped
+`SurfaceRef` to SpriteRef. The slot function names of e2_vtables.tsv were refreshed from re/names (340 rows). The
+window-system rows g_ui83aa9c and g_ui83aae4 were split: g_viewTreeRoot 0x0083aa9c (Window*, never written),
+g_ui83aaa0, g_captureCode / g_captureWindow / g_capturePoint 0x0083ab1c..0x0083ab28.
+
 ## 5. DLL API boundary (`e2_dll_api.tsv`)
 
 - **jgld.dll**: one export, `get_graphsy_object_ptr` (ordinal 1); everything else goes through the Display object

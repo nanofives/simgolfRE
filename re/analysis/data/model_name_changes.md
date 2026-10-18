@@ -193,3 +193,5 @@ The map takes the label at an object's start (names files are the one naming sou
 - Left to stream H (function naming, evidence in the stream notes): buildGolferBioText 0x4315e0 (purpose corrected; it
   also resets the new-game state), Image::seek / Image::step 0x482490 / 0x482420 (take a Flic, U-0460 open),
   Factory::destroyPalette / destroySurface (U-0454 open), HashTable::remove 0x4876c0 (not reported by a stream).
+
+Stream G3 (2026-10-18) renames and new labels: re/analysis/data/model_corrections.md section 8.

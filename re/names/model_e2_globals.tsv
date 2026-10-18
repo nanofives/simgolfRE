@@ -108,8 +108,8 @@ golf_clean.exe	0x00838228	g_storyFiles	StoryFileRec[8]	stride 0x10c, loop ends 0
 golf_clean.exe	0x00839650	g_newObjectHeap	uint32_t	copied into every HeapObject's heap field and cleared (Decoder482ae0::ctor 0x00482b04, S3List_add 0x00401dd1; 138 dword refs)
 golf_clean.exe	0x00839ab8	g_hitTest839ab8	int32_t[2]	hitTestScreen 0x0047f71a writes, hitTestTree 0x0047f379 reads [U-0476]
 golf_clean.exe	0x0083a500	g_image83a500	Image	Image_ctor 0x00474ae0 with ecx = 0x0083a500 (gImageCtor_83a500)
-golf_clean.exe	0x0083aa9c	g_ui83aa9c	int32_t[2]	layoutViewTree, View_toLocal, FUN_00495750.., drawTooltip, addDirtyRect, drawCursor [U-0477]
-golf_clean.exe	0x0083aae4	g_ui83aae4	int32_t[18]	window-system dwords 0x0083aae4..0x0083ab28 [U-0477]
+golf_clean.exe	0x0083aa9c	g_viewTreeRoot	Window*	read as a Window* by uiEventForwardRootSlot3 (slot +0xc call 0x0049576a), uiPointerRegionCode (+0xa0 bit 2, 0x004957b2), layoutViewTree (stored as the parent at +0x130, 0x0047a6f9..0x0047a71c) and View_toLocal (0x0047ab82); never written (G3, re/analysis/data/model_corrections.md)
+golf_clean.exe	0x0083aae4	g_ui83aae4	int32_t[14]	window-system dwords 0x0083aae4..0x0083ab18 [U-0477]
 golf_clean.exe	0x0083ab9c	g_ui83ab9c	uint8_t	byte flag: rootWin_onPoint / onUnpoint / onKey, BinkPlayer::play [U-0477]
 golf_clean.exe	0x0083aba0	g_ui83aba0	int32_t	drawCursor writes it [U-0477]
 golf_clean.exe	0x0083abb0	g_resample83abb0	uint32_t	allocResampleTable 0x004818a5 stores, reads at 0x004819e8 / 0x00481a70 [U-0478]
