@@ -4,6 +4,415 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-18  004a4ac0  panelSubDrawContents_vtordisp_adj578  C1->C2  re/analysis/ui/004a4ac0_panelSubDrawContents_vtordisp_adj578.md
+2026-10-18  004a4aa0  panelSubDeletingDtor_vtordisp_adj578  C1->C2  re/analysis/ui/004a4aa0_panelSubDeletingDtor_vtordisp_adj578.md
+2026-10-18  004a4a80  panelSubDeletingDtor_adj274  C1->C2  re/analysis/ui/004a4a80_panelSubDeletingDtor_adj274.md
+2026-10-18  004a4340  TextView::endPressNop  C1->C2  re/analysis/ui/004a4340_TextView_endPressNop.md
+2026-10-18  004a3390  panelSubList_deletingDtor_adj28  C1->C2  re/analysis/ui/004a3390_panelSubList_deletingDtor_adj28.md
+2026-10-18  004a30e0  panelRowDeletingDtor_vtordisp_adj578  C1->C2  re/analysis/ui/004a30e0_panelRowDeletingDtor_vtordisp_adj578.md
+2026-10-18  004a30c0  panelRowDeletingDtor_adj274  C1->C2  re/analysis/ui/004a30c0_panelRowDeletingDtor_adj274.md
+2026-10-18  004a2980  slotArrayFieldAt574  C1->C2  re/analysis/ui/004a2980_slotArrayFieldAt574.md
+2026-10-18  004a21c0  LabelButton::endHover  C1->C2  re/analysis/ui/004a21c0_LabelButton_endHover.md
+2026-10-18  004a0150  gLoggerDtor_4a0150  C1->C2  re/analysis/boot/004a0150_gLoggerDtor_4a0150.md
+2026-10-18  004a0050  optionDialogDrawContents_vtordisp_adj578  C1->C2  re/analysis/ui/004a0050_optionDialogDrawContents_vtordisp_adj578.md
+2026-10-18  004a0030  optionDialogDeletingDtor_vtordisp_adj578  C1->C2  re/analysis/ui/004a0030_optionDialogDeletingDtor_vtordisp_adj578.md
+2026-10-18  004a0010  optionDialogDeletingDtor_adj274  C1->C2  re/analysis/ui/004a0010_optionDialogDeletingDtor_adj274.md
+2026-10-18  0049eb80  gSurfaceDtor_49eb80  C1->C2  re/analysis/boot/0049eb80_gSurfaceDtor_49eb80.md
+2026-10-18  0049eb20  gSurfaceDtor_49eb20  C1->C2  re/analysis/boot/0049eb20_gSurfaceDtor_49eb20.md
+2026-10-18  0049d570  gSurfaceDtor_49d570  C1->C2  re/analysis/boot/0049d570_gSurfaceDtor_49d570.md
+2026-10-18  0049d510  gSurfaceDtor_49d510  C1->C2  re/analysis/boot/0049d510_gSurfaceDtor_49d510.md
+2026-10-18  0049d4b0  gSurfaceDtor_49d4b0  C1->C2  re/analysis/boot/0049d4b0_gSurfaceDtor_49d4b0.md
+2026-10-18  0049d380  gSurfaceDtor_49d380  C1->C2  re/analysis/boot/0049d380_gSurfaceDtor_49d380.md
+2026-10-18  0049d320  gSurfaceDtor_49d320  C1->C2  re/analysis/boot/0049d320_gSurfaceDtor_49d320.md
+2026-10-18  0049d2c0  gSurfaceDtor_49d2c0  C1->C2  re/analysis/boot/0049d2c0_gSurfaceDtor_49d2c0.md
+2026-10-18  0049d180  gSurfaceDtor_49d180  C1->C2  re/analysis/boot/0049d180_gSurfaceDtor_49d180.md
+2026-10-18  0049d030  gPairArrayDtor_49d030  C1->C2  re/analysis/boot/0049d030_gPairArrayDtor_49d030.md
+2026-10-18  0049c0b0  DebugWindow::drawContents  C1->C2  re/analysis/ui/0049c0b0_DebugWindow_drawContents.md
+2026-10-18  0049c0a0  DebugWindow::clearField594  C1->C2  re/analysis/ui/0049c0a0_DebugWindow_clearField594.md
+2026-10-18  0049c010  gDebugWindowDtor_49c010  C1->C2  re/analysis/boot/0049c010_gDebugWindowDtor_49c010.md
+2026-10-18  00497f60  netMarkRecordCb  C1->C2  re/analysis/net/00497f60_netMarkRecordCb.md
+2026-10-18  00497260  scrollbarArrowRepeat  C1->C2  re/analysis/ui/00497260_scrollbarArrowRepeat.md
+2026-10-18  00497170  scrollbarSetSpan  C1->C2  re/analysis/ui/00497170_scrollbarSetSpan.md
+2026-10-18  00496d60  scrollbarOnRelease  C1->C2  re/analysis/ui/00496d60_scrollbarOnRelease.md
+2026-10-18  00496860  scrollbarOnMouseMove  C1->C2  re/analysis/ui/00496860_scrollbarOnMouseMove.md
+2026-10-18  00496020  initHscrollHeight  C1->C2  re/analysis/boot/00496020_initHscrollHeight.md
+2026-10-18  00495d20  uiIdleNetPoll  C1->C2  re/analysis/net/00495d20_uiIdleNetPoll.md
+2026-10-18  00495c70  uiActivateEvent  C1->C2  re/analysis/ui/00495c70_uiActivateEvent.md
+2026-10-18  00495c30  uiMouseRelease2  C1->C2  re/analysis/ui/00495c30_uiMouseRelease2.md
+2026-10-18  00495bd0  uiMousePress2  C1->C2  re/analysis/ui/00495bd0_uiMousePress2.md
+2026-10-18  00495b90  uiMouseRelease1  C1->C2  re/analysis/ui/00495b90_uiMouseRelease1.md
+2026-10-18  00495aa0  uiMousePress1  C1->C2  re/analysis/ui/00495aa0_uiMousePress1.md
+2026-10-18  00495a50  uiScrollEvent  C1->C2  re/analysis/ui/00495a50_uiScrollEvent.md
+2026-10-18  00495790  uiPointerRegionCode  C1->C2  re/analysis/ui/00495790_uiPointerRegionCode.md
+2026-10-18  00495750  uiEventForwardRootSlot3  C1->C2  re/analysis/ui/00495750_uiEventForwardRootSlot3.md
+2026-10-18  00492d70  HotListEntry::dtor  C1->C2  re/analysis/ui/00492d70_HotListEntry_dtor.md
+2026-10-18  004927a0  HotListEntry::deletingDtor  C1->C2  re/analysis/ui/004927a0_HotListEntry_deletingDtor.md
+2026-10-18  00492650  HotListEntry::ctor  C1->C2  re/analysis/ui/00492650_HotListEntry_ctor.md
+2026-10-18  00492440  initClearGlobal83c314  C1->C2  re/analysis/boot/00492440_initClearGlobal83c314.md
+2026-10-18  00491c00  listPanelDrawContents_vtordisp_adj578  C1->C2  re/analysis/ui/00491c00_listPanelDrawContents_vtordisp_adj578.md
+2026-10-18  00491be0  listPanelDeletingDtor_vtordisp_adj578  C1->C2  re/analysis/ui/00491be0_listPanelDeletingDtor_vtordisp_adj578.md
+2026-10-18  00491bc0  listPanelDeletingDtor_adj274  C1->C2  re/analysis/ui/00491bc0_listPanelDeletingDtor_adj274.md
+2026-10-18  00491ab0  viewDispatchDraw_vtordisp_adj578  C1->C2  re/analysis/ui/00491ab0_viewDispatchDraw_vtordisp_adj578.md
+2026-10-18  00491a90  viewDeletingDtor_vtordisp_adj578  C1->C2  re/analysis/ui/00491a90_viewDeletingDtor_vtordisp_adj578.md
+2026-10-18  00491a70  viewDeletingDtor_adj274  C1->C2  re/analysis/ui/00491a70_viewDeletingDtor_adj274.md
+2026-10-18  004916e0  TextView::alwaysFalse  C1->C2  re/analysis/ui/004916e0_TextView_alwaysFalse.md
+2026-10-18  00491400  TextView::setField14d4  C1->C2  re/analysis/ui/00491400_TextView_setField14d4.md
+2026-10-18  004913f0  TextView::setField14d0  C1->C2  re/analysis/ui/004913f0_TextView_setField14d0.md
+2026-10-18  004913c0  TextView::setField14bcTriple  C1->C2  re/analysis/ui/004913c0_TextView_setField14bcTriple.md
+2026-10-18  00491370  TextView::onMouseDown  C1->C2  re/analysis/ui/00491370_TextView_onMouseDown.md
+2026-10-18  00490d50  TextView::isGlobal83b8ecNull  C1->C2  re/analysis/ui/00490d50_TextView_isGlobal83b8ecNull.md
+2026-10-18  00490b30  textViewSelectionSyncCb  C1->C2  re/analysis/ui/00490b30_textViewSelectionSyncCb.md
+2026-10-18  00490b10  TextView::isNotFlag4000Arg1  C1->C2  re/analysis/ui/00490b10_TextView_isNotFlag4000Arg1.md
+2026-10-18  00490ae0  TextView::hitTest  C1->C2  re/analysis/ui/00490ae0_TextView_hitTest.md
+2026-10-18  00490ac0  TextView::isNotFlag4000  C1->C2  re/analysis/ui/00490ac0_TextView_isNotFlag4000.md
+2026-10-18  0048cd70  ListBox::drawContents_vtordisp_adj578  C1->C2  re/analysis/ui/0048cd70_ListBox_drawContents_vtordisp_adj578.md
+2026-10-18  0048cd50  ListBox::deletingDtor_vtordisp_adj578  C1->C2  re/analysis/ui/0048cd50_ListBox_deletingDtor_vtordisp_adj578.md
+2026-10-18  0048cd30  ListBox::deletingDtor_adj274  C1->C2  re/analysis/ui/0048cd30_ListBox_deletingDtor_adj274.md
+2026-10-18  0048b3f0  ListBox::drawItem  C1->C2  re/analysis/ui/0048b3f0_ListBox_drawItem.md
+2026-10-18  00489ae0  ListModel::deletingDtor_adj28  C1->C2  re/analysis/ui/00489ae0_ListModel_deletingDtor_adj28.md
+2026-10-18  00488fa0  Button::relayoutSlot60  C1->C2  re/analysis/ui/00488fa0_Button_relayoutSlot60.md
+2026-10-18  00488cc0  Button::moveIfFocusedPressed  C1->C2  re/analysis/ui/00488cc0_Button_moveIfFocusedPressed.md
+2026-10-18  00488cb0  returnZeroPop8_488cb0  C1->C2  re/analysis/ui/00488cb0_returnZeroPop8_488cb0.md
+2026-10-18  00488bf0  Button::endCapture  C1->C2  re/analysis/ui/00488bf0_Button_endCapture.md
+2026-10-18  00487e40  atexitDtor_83b170  C1->C2  re/analysis/boot/00487e40_atexitDtor_83b170.md
+2026-10-18  00487df0  initCreditsPtr1_487df0  C1->C2  re/analysis/boot/00487df0_initCreditsPtr1_487df0.md
+2026-10-18  00487dd0  initCreditsPtr0_487dd0  C1->C2  re/analysis/boot/00487dd0_initCreditsPtr0_487dd0.md
+2026-10-18  00487da0  atexitDtor_83b000  C1->C2  re/analysis/boot/00487da0_atexitDtor_83b000.md
+2026-10-18  00487cd0  NodeListC::callChild24  C1->C2  re/analysis/util/00487cd0_NodeListC_callChild24.md
+2026-10-18  00487cc0  NodeListB::callChild23  C1->C2  re/analysis/util/00487cc0_NodeListB_callChild23.md
+2026-10-18  00487cb0  returnZeroPop12_487cb0  C1->C2  re/analysis/util/00487cb0_returnZeroPop12_487cb0.md
+2026-10-18  00487c90  NodeListC::fwdChild26  C1->C2  re/analysis/util/00487c90_NodeListC_fwdChild26.md
+2026-10-18  00487c70  NodeListC::fwdChild25  C1->C2  re/analysis/util/00487c70_NodeListC_fwdChild25.md
+2026-10-18  00487b20  NodeListB::fwdChild24  C1->C2  re/analysis/util/00487b20_NodeListB_fwdChild24.md
+2026-10-18  00487b10  NodeListB::callChild22  C1->C2  re/analysis/util/00487b10_NodeListB_callChild22.md
+2026-10-18  00487990  NodeList::fwdChild42  C1->C2  re/analysis/util/00487990_NodeList_fwdChild42.md
+2026-10-18  00487970  NodeList::fwdChild41  C1->C2  re/analysis/util/00487970_NodeList_fwdChild41.md
+2026-10-18  00487950  NodeList::fwdChild40  C1->C2  re/analysis/util/00487950_NodeList_fwdChild40.md
+2026-10-18  00487930  NodeList::fwdChild39  C1->C2  re/analysis/util/00487930_NodeList_fwdChild39.md
+2026-10-18  00487910  NodeList::fwdChild38  C1->C2  re/analysis/util/00487910_NodeList_fwdChild38.md
+2026-10-18  004878f0  NodeList::fwdChild37  C1->C2  re/analysis/util/004878f0_NodeList_fwdChild37.md
+2026-10-18  004878c0  NodeList::fwdChild36  C1->C2  re/analysis/util/004878c0_NodeList_fwdChild36.md
+2026-10-18  00487890  NodeList::fwdChild35  C1->C2  re/analysis/util/00487890_NodeList_fwdChild35.md
+2026-10-18  00487870  NodeList::fwdChild34  C1->C2  re/analysis/util/00487870_NodeList_fwdChild34.md
+2026-10-18  00487850  NodeList::fwdChild33  C1->C2  re/analysis/util/00487850_NodeList_fwdChild33.md
+2026-10-18  00487830  NodeList::fwdChild31  C1->C2  re/analysis/util/00487830_NodeList_fwdChild31.md
+2026-10-18  00487810  NodeList::fwdChild32  C1->C2  re/analysis/util/00487810_NodeList_fwdChild32.md
+2026-10-18  00487800  NodeList::fwdChild30  C1->C2  re/analysis/util/00487800_NodeList_fwdChild30.md
+2026-10-18  004877d0  NodeListBucket::ctor  C1->C2  re/analysis/util/004877d0_NodeListBucket_ctor.md
+2026-10-18  004876a0  NodeList::fwdChild22  C1->C2  re/analysis/util/004876a0_NodeList_fwdChild22.md
+2026-10-18  00487680  NodeList::fwdChild21  C1->C2  re/analysis/util/00487680_NodeList_fwdChild21.md
+2026-10-18  00487660  NodeList::fwdChild27  C1->C2  re/analysis/util/00487660_NodeList_fwdChild27.md
+2026-10-18  00487650  NodeList::callChild26  C1->C2  re/analysis/util/00487650_NodeList_callChild26.md
+2026-10-18  00487640  NodeList::callChild25  C1->C2  re/analysis/util/00487640_NodeList_callChild25.md
+2026-10-18  00487610  NodeList::fwdChild9  C1->C2  re/analysis/util/00487610_NodeList_fwdChild9.md
+2026-10-18  00487600  NodeList::fwdChild16  C1->C2  re/analysis/util/00487600_NodeList_fwdChild16.md
+2026-10-18  004875e0  NodeList::fwdChild15  C1->C2  re/analysis/util/004875e0_NodeList_fwdChild15.md
+2026-10-18  004875c0  NodeList::callChild8  C1->C2  re/analysis/util/004875c0_NodeList_callChild8.md
+2026-10-18  00487500  NodeList::playChildSuspendingSounds  C1->C2  re/analysis/util/00487500_NodeList_playChildSuspendingSounds.md
+2026-10-18  004874f0  NodeList::fwdChild23  C1->C2  re/analysis/util/004874f0_NodeList_fwdChild23.md
+2026-10-18  004874d0  NodeList::fwdChild28  C1->C2  re/analysis/util/004874d0_NodeList_fwdChild28.md
+2026-10-18  004874c0  NodeList::fwdChild6  C1->C2  re/analysis/util/004874c0_NodeList_fwdChild6.md
+2026-10-18  004874b0  NodeList::fwdChild14  C1->C2  re/analysis/util/004874b0_NodeList_fwdChild14.md
+2026-10-18  004874a0  NodeList::fwdChild20  C1->C2  re/analysis/util/004874a0_NodeList_fwdChild20.md
+2026-10-18  00487490  NodeList::fwdChild19  C1->C2  re/analysis/util/00487490_NodeList_fwdChild19.md
+2026-10-18  00486f40  Timer::windowTimerProc  C1->C2  re/analysis/util/00486f40_Timer_windowTimerProc.md
+2026-10-18  00486b70  EditBox::caretBlinkTick  C1->C2  re/analysis/ui/00486b70_EditBox_caretBlinkTick.md
+2026-10-18  00486b00  EditBox::fwdSlot57From58  C1->C2  re/analysis/ui/00486b00_EditBox_fwdSlot57From58.md
+2026-10-18  00486af0  EditBox::relayoutSlot57  C1->C2  re/analysis/ui/00486af0_EditBox_relayoutSlot57.md
+2026-10-18  004864f0  EditBox::drawContents  C1->C2  re/analysis/ui/004864f0_EditBox_drawContents.md
+2026-10-18  00485570  VoiceRx::fwdDev36  C1->C2  re/analysis/audio/00485570_VoiceRx_fwdDev36.md
+2026-10-18  00485550  VoiceRx::fwdDev35  C1->C2  re/analysis/audio/00485550_VoiceRx_fwdDev35.md
+2026-10-18  00485530  VoiceRx::fwdDev5  C1->C2  re/analysis/audio/00485530_VoiceRx_fwdDev5.md
+2026-10-18  00485520  VoiceRx::callDev8  C1->C2  re/analysis/audio/00485520_VoiceRx_callDev8.md
+2026-10-18  00485500  VoiceRx::callDev34  C1->C2  re/analysis/audio/00485500_VoiceRx_callDev34.md
+2026-10-18  00485450  VoiceRx::start  C1->C2  re/analysis/audio/00485450_VoiceRx_start.md
+2026-10-18  00485390  VoiceRx::fwdDev37  C1->C2  re/analysis/audio/00485390_VoiceRx_fwdDev37.md
+2026-10-18  00485380  returnBPop4_485380  C1->C2  re/analysis/audio/00485380_returnBPop4_485380.md
+2026-10-18  00485290  SndBase::setField38  C1->C2  re/analysis/audio/00485290_SndBase_setField38.md
+2026-10-18  00485240  Snd::fwdDev58  C1->C2  re/analysis/audio/00485240_Snd_fwdDev58.md
+2026-10-18  00485220  Snd::fwdDev57  C1->C2  re/analysis/audio/00485220_Snd_fwdDev57.md
+2026-10-18  00485200  Snd::fwdDev56  C1->C2  re/analysis/audio/00485200_Snd_fwdDev56.md
+2026-10-18  004851e0  Snd::fwdDev55  C1->C2  re/analysis/audio/004851e0_Snd_fwdDev55.md
+2026-10-18  004851b0  Snd::fwdDev54  C1->C2  re/analysis/audio/004851b0_Snd_fwdDev54.md
+2026-10-18  00485130  returnBPop12_485130  C1->C2  re/analysis/audio/00485130_returnBPop12_485130.md
+2026-10-18  00485120  returnB_485120  C1->C2  re/analysis/audio/00485120_returnB_485120.md
+2026-10-18  004850f0  Snd::setField60  C1->C2  re/analysis/audio/004850f0_Snd_setField60.md
+2026-10-18  004850b0  Snd::fwdDev49  C1->C2  re/analysis/audio/004850b0_Snd_fwdDev49.md
+2026-10-18  00485090  Snd::fwdDev48  C1->C2  re/analysis/audio/00485090_Snd_fwdDev48.md
+2026-10-18  00485080  Snd::fwdVoice3c  C1->C2  re/analysis/audio/00485080_Snd_fwdVoice3c.md
+2026-10-18  00485060  Snd::fwdVoiceBC  C1->C2  re/analysis/audio/00485060_Snd_fwdVoiceBC.md
+2026-10-18  00485040  Snd::fwdVoiceB8  C1->C2  re/analysis/audio/00485040_Snd_fwdVoiceB8.md
+2026-10-18  00484f80  Snd::setFlags  C1->C2  re/analysis/audio/00484f80_Snd_setFlags.md
+2026-10-18  00484bf0  Snd::fwdVoiceF0  C1->C2  re/analysis/audio/00484bf0_Snd_fwdVoiceF0.md
+2026-10-18  00484b20  Snd::getLengthMs  C1->C2  re/analysis/audio/00484b20_Snd_getLengthMs.md
+2026-10-18  00484b00  Snd::fwdVoiceCC  C1->C2  re/analysis/audio/00484b00_Snd_fwdVoiceCC.md
+2026-10-18  00484a20  Snd::fwdVoiceD4  C1->C2  re/analysis/audio/00484a20_Snd_fwdVoiceD4.md
+2026-10-18  00484a00  Snd::fwdVoiceD0  C1->C2  re/analysis/audio/00484a00_Snd_fwdVoiceD0.md
+2026-10-18  004849e0  Snd::fwdVoice94  C1->C2  re/analysis/audio/004849e0_Snd_fwdVoice94.md
+2026-10-18  00484920  Snd::fwdVoice98  C1->C2  re/analysis/audio/00484920_Snd_fwdVoice98.md
+2026-10-18  00484870  Snd::fwdVoice60  C1->C2  re/analysis/audio/00484870_Snd_fwdVoice60.md
+2026-10-18  004847e0  Snd::fwdVoice74  C1->C2  re/analysis/audio/004847e0_Snd_fwdVoice74.md
+2026-10-18  004847d0  Snd::fwdVoice58  C1->C2  re/analysis/audio/004847d0_Snd_fwdVoice58.md
+2026-10-18  00484790  Snd::fwdVoice34  C1->C2  re/analysis/audio/00484790_Snd_fwdVoice34.md
+2026-10-18  00484770  Snd::applyField38Voice30  C1->C2  re/analysis/audio/00484770_Snd_applyField38Voice30.md
+2026-10-18  00484730  Snd::applyField38Voice28  C1->C2  re/analysis/audio/00484730_Snd_applyField38Voice28.md
+2026-10-18  00484700  Snd::setField38Voice54  C1->C2  re/analysis/audio/00484700_Snd_setField38Voice54.md
+2026-10-18  00484690  Snd::setLoop  C1->C2  re/analysis/audio/00484690_Snd_setLoop.md
+2026-10-18  00484620  Snd::setVolumeBase  C1->C2  re/analysis/audio/00484620_Snd_setVolumeBase.md
+2026-10-18  00484600  Snd::fwdVoice38  C1->C2  re/analysis/audio/00484600_Snd_fwdVoice38.md
+2026-10-18  004845b0  Snd::fwdVoice18  C1->C2  re/analysis/audio/004845b0_Snd_fwdVoice18.md
+2026-10-18  00484590  Snd::fwdVoice1c  C1->C2  re/analysis/audio/00484590_Snd_fwdVoice1c.md
+2026-10-18  00484540  returnB_484540  C1->C2  re/analysis/audio/00484540_returnB_484540.md
+2026-10-18  004844d0  Snd::getMode  C1->C2  re/analysis/audio/004844d0_Snd_getMode.md
+2026-10-18  004844c0  Snd::getPrev  C1->C2  re/analysis/audio/004844c0_Snd_getPrev.md
+2026-10-18  004844b0  Snd::getNext  C1->C2  re/analysis/audio/004844b0_Snd_getNext.md
+2026-10-18  00484450  Snd::linkIntoList  C1->C2  re/analysis/audio/00484450_Snd_linkIntoList.md
+2026-10-18  00484440  Snd::isPlaying  C1->C2  re/analysis/audio/00484440_Snd_isPlaying.md
+2026-10-18  00483e80  gVoiceDeviceDtor_483e80  C1->C2  re/analysis/audio/00483e80_gVoiceDeviceDtor_483e80.md
+2026-10-18  00483e40  gSfxDeviceDtor_483e40  C1->C2  re/analysis/audio/00483e40_gSfxDeviceDtor_483e40.md
+2026-10-18  00483e00  gMusicDeviceDtor_483e00  C1->C2  re/analysis/audio/00483e00_gMusicDeviceDtor_483e00.md
+2026-10-18  00483b30  FontRef::scalarDtor  C1->C2  re/analysis/ui/00483b30_FontRef_scalarDtor.md
+2026-10-18  004837d0  gFontRefDtor_4837d0  C1->C2  re/analysis/ui/004837d0_gFontRefDtor_4837d0.md
+2026-10-18  00483020  returnThis_483020  C1->C2  re/analysis/util/00483020_returnThis_483020.md
+2026-10-18  00482ee0  gScreenMgrBDtor_482ee0  C1->C2  re/analysis/ui/00482ee0_gScreenMgrBDtor_482ee0.md
+2026-10-18  00482ea0  gScreenMgrADtor_482ea0  C1->C2  re/analysis/ui/00482ea0_gScreenMgrADtor_482ea0.md
+2026-10-18  00480f80  Window::resizeSurfaces  C1->C2  re/analysis/ui/00480f80_Window_resizeSurfaces.md
+2026-10-18  0047ea30  View::drawEdges  C1->C2  re/analysis/ui/0047ea30_View_drawEdges.md
+2026-10-18  0047e5e0  emptyVirtual_47e5e0  C1->C2  re/analysis/ui/0047e5e0_emptyVirtual_47e5e0.md
+2026-10-18  0047e110  return0Pop8_47e110  C1->C2  re/analysis/ui/0047e110_return0Pop8_47e110.md
+2026-10-18  0047bbb0  Window::popModal  C1->C2  re/analysis/ui/0047bbb0_Window_popModal.md
+2026-10-18  00479a60  gImageDtor_479a60  C1->C2  re/analysis/render/00479a60_gImageDtor_479a60.md
+2026-10-18  00479a10  gImageDtor_479a10  C1->C2  re/analysis/render/00479a10_gImageDtor_479a10.md
+2026-10-18  00479820  return0_479820  C1->C2  re/analysis/util/00479820_return0_479820.md
+2026-10-18  00474ab0  gSurfaceDtor_474ab0  C1->C2  re/analysis/render/00474ab0_gSurfaceDtor_474ab0.md
+2026-10-18  00474720  SpriteRef::scalarDtor  C1->C2  re/analysis/render/00474720_SpriteRef_scalarDtor.md
+2026-10-18  00474700  recordFreeStr_474700  C1->C2  re/analysis/util/00474700_recordFreeStr_474700.md
+2026-10-18  00473a90  gLoadImageDtor_473a90  C1->C2  re/analysis/render/00473a90_gLoadImageDtor_473a90.md
+2026-10-18  0046f180  runBulletinBoardWithSound  C1->C2  re/analysis/frontend/0046f180_runBulletinBoardWithSound.md
+2026-10-18  0046de60  gImageDtor_46de60  C1->C2  re/analysis/render/0046de60_gImageDtor_46de60.md
+2026-10-18  004658a0  RootWindow::exitProcess  C1->C2  re/analysis/frontend/004658a0_RootWindow_exitProcess.md
+2026-10-18  004617f0  staticInit_gColor16Lut  C1->C2  re/analysis/render/004617f0_staticInit_gColor16Lut.md
+2026-10-18  0045c190  staticInit_gRngZero  C1->C2  re/analysis/sim/0045c190_staticInit_gRngZero.md
+2026-10-18  0045bad0  gSurfaceDtor_45bad0  C1->C2  re/analysis/render/0045bad0_gSurfaceDtor_45bad0.md
+2026-10-18  0045ba80  gCursorDtor_45ba80  C1->C2  re/analysis/render/0045ba80_gCursorDtor_45ba80.md
+2026-10-18  0044ada0  gSurfaceDtor_44ada0  C1->C2  re/analysis/render/0044ada0_gSurfaceDtor_44ada0.md
+2026-10-18  0044ad50  spriteRefArrayDtor_44ad50  C1->C2  re/analysis/ui/0044ad50_spriteRefArrayDtor_44ad50.md
+2026-10-18  0044acb0  fontRefsDtor_44acb0  C1->C2  re/analysis/ui/0044acb0_fontRefsDtor_44acb0.md
+2026-10-18  004492c0  emptyStaticInit_4492c0  C1->C2  re/analysis/boot/004492c0_emptyStaticInit_4492c0.md
+2026-10-18  00449250  destroyList820f18  C1->C2  re/analysis/util/00449250_destroyList820f18.md
+2026-10-18  004491e0  gSurfaceDtor_4491e0  C1->C2  re/analysis/render/004491e0_gSurfaceDtor_4491e0.md
+2026-10-18  00449190  staticInit_820f04  C1->C2  re/analysis/terrain/00449190_staticInit_820f04.md
+2026-10-18  00449170  staticInitGTerrain  C1->C2  re/analysis/terrain/00449170_staticInitGTerrain.md
+2026-10-18  00448190  gSoundsDtor_448190  C1->C2  re/analysis/audio/00448190_gSoundsDtor_448190.md
+2026-10-18  004a4ac0  panelSubDrawContents_vtordisp_adj578  C0->C1  slot 2 (+0x8) of the table 0x004bc224; `sub ecx, [ecx-4]` 0x004a4ac0, `sub ecx, 0x578` 0x004a4ac3, `jmp 0x004a45b0` 0x004a4ac9
+2026-10-18  004a4aa0  panelSubDeletingDtor_vtordisp_adj578  C0->C1  slot 0 (+0x0) of the table 0x004bc224 (sub-object at +0x658); `sub ecx, [ecx-4]` 0x004a4aa0, `sub ecx, 0x578` 0x004a4aa3, `jmp 0x004a4980` 0x004a4aa9
+2026-10-18  004a4a80  panelSubDeletingDtor_adj274  C0->C1  slot 3 (+0xc) of the table 0x004bc230 (panel sub-view at +0x354); `sub ecx, [ecx-0x278]` 0x004a4a80, `sub ecx, 0x274` 0x004a4a86, `jmp 0x004a4980` 0x004a4a8c
+2026-10-18  004a4340  TextView::endPressNop  C0->C1  slot 29 (+0x74) of the TextView table 0x004bb3f8 (slot 29 is Button::endPress 0x00488eb0 and scrollbarOnRelease 0x00496d60); body is `ret 8` at 0x004a4340; reached through panelSubSlot27_vtordisp 0x004a49d0 and called from viewDispatchSlot27 0x004a0ab0 and viewDispatchSlot28 0x004a0a10
+2026-10-18  004a3390  panelSubList_deletingDtor_adj28  C0->C1  slot 0 of the table 0x004bc3b0 (list at +0x28); same body as ListModel::deletingDtor_adj28 0x00489ae0 with the callee panelSubDtor4a33e0 0x004a33e0 at 0x004a339a instead of ListModel::destroyNodes; _free 0x004a5007 at 0x004a33bf
+2026-10-18  004a30e0  panelRowDeletingDtor_vtordisp_adj578  C0->C1  slot 0 (+0x0) of the table 0x004bc088 (sub-object at +0x604); `sub ecx, [ecx-4]` 0x004a30e0, `sub ecx, 0x578` 0x004a30e3, `jmp 0x004a3050` 0x004a30e9
+2026-10-18  004a30c0  panelRowDeletingDtor_adj274  C0->C1  slot 3 (+0xc) of the table 0x004bc094 (panel row at +0x300); `sub ecx, [ecx-0x278]` 0x004a30c0, `sub ecx, 0x274` 0x004a30c6, `jmp 0x004a3050` 0x004a30cc
+2026-10-18  004a2980  slotArrayFieldAt574  C0->C1  `mov eax, [ecx + eax*4 + 4]` 0x004a2984, returns 0 when the entry is NULL (0x004a298a), else `mov eax, [eax + 0x574]` 0x004a298c; the only caller is TextView::build 0x0048e900 (call 0x0048fe13 on this+0x15cc inside an 8-iteration loop whose result goes to setHudTextSlot 0x00494cb0)
+2026-10-18  004a21c0  LabelButton::endHover  C0->C1  slot 28 (+0x70) of the LabelButton table 0x004bb5b4; when this is the focus window (0x0083ab40 / 0x0083ab44) and 0x0083ab48 equals 1 it calls virtual +0x6c (mouse move, slot 27) with its two arguments (0x004a21f0); otherwise, when the hover flag +0x5e4 is 1 (0x004a21f7), it stops the timer at +0x57c with Timer::stop 0x00486ec0 (0x004a2205), hides the tooltip with Tooltip::hide 0x00480360 (0x004a2214), clears +0x5e4, notifies the parent at +0x130 through virtual +0xc4 with (+0x5e8, 0) (0x004a2238) and calls virtual +0x120 (0x004a2242)
+2026-10-18  004a0150  gLoggerDtor_4a0150  C0->C1  address pushed by regAtexit_4a0140 0x004a0140 (store 0x004a0141); `mov ecx, 0x840930` 0x004a0150, `jmp 0x004a01a0` (freeLoggerBuf) 0x004a0155
+2026-10-18  004a0050  optionDialogDrawContents_vtordisp_adj578  C0->C1  slot 2 (+0x8) of the table 0x004bbe90; `sub ecx, [ecx-4]` 0x004a0050, `sub ecx, 0x578` 0x004a0053, `jmp 0x0049fc60` 0x004a0059
+2026-10-18  004a0030  optionDialogDeletingDtor_vtordisp_adj578  C0->C1  slot 0 (+0x0) of the table 0x004bbe90 (sub-object at +0x594); `sub ecx, [ecx-4]` 0x004a0030, `sub ecx, 0x578` 0x004a0033, `jmp 0x0049ff60` 0x004a0039
+2026-10-18  004a0010  optionDialogDeletingDtor_adj274  C0->C1  slot 3 (+0xc) of the table 0x004bbe9c (option part at +0x290); `sub ecx, [ecx-0x278]` 0x004a0010, `sub ecx, 0x274` 0x004a0016, `jmp 0x0049ff60` 0x004a001c
+2026-10-18  0049eb80  gSurfaceDtor_49eb80  C0->C1  atexit target of regAtexit_49eb70 0x0049eb70; `mov cl, [0x8408c0]` 0x0049eb80, tests bit 0x2 with `test al, cl` (0x49eb88), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x8408f8 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x8408f8 (0x49eba3)
+2026-10-18  0049eb20  gSurfaceDtor_49eb20  C0->C1  atexit target of regAtexit_49eb10 0x0049eb10; `mov cl, [0x8408c0]` 0x0049eb20, tests bit 0x1 with `test al, cl` (0x49eb28), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x8408c8 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x8408c8 (0x49eb43)
+2026-10-18  0049d570  gSurfaceDtor_49d570  C0->C1  atexit target of regAtexit_49d560 0x0049d560; `mov cl, [0x840828]` 0x0049d570, tests bit 0x4 with `test al, cl` (0x49d578), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x840860 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x840860 (0x49d593)
+2026-10-18  0049d510  gSurfaceDtor_49d510  C0->C1  atexit target of regAtexit_49d500 0x0049d500; `mov cl, [0x840828]` 0x0049d510, tests bit 0x2 with `test al, cl` (0x49d518), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x840890 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x840890 (0x49d533)
+2026-10-18  0049d4b0  gSurfaceDtor_49d4b0  C0->C1  atexit target of regAtexit_49d4a0 0x0049d4a0; `mov cl, [0x840828]` 0x0049d4b0, tests bit 0x1 with `test al, cl` (0x49d4b8), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x840830 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x840830 (0x49d4d3)
+2026-10-18  0049d380  gSurfaceDtor_49d380  C0->C1  atexit target of regAtexit_49d370 0x0049d370; `mov cl, [0x840740]` 0x0049d380, tests bit 0x4 with `test al, cl` (0x49d388), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x8407f0 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x8407f0 (0x49d3a3)
+2026-10-18  0049d320  gSurfaceDtor_49d320  C0->C1  atexit target of regAtexit_49d310 0x0049d310; `mov cl, [0x840740]` 0x0049d320, tests bit 0x2 with `test al, cl` (0x49d328), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x840790 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x840790 (0x49d343)
+2026-10-18  0049d2c0  gSurfaceDtor_49d2c0  C0->C1  atexit target of regAtexit_49d2b0 0x0049d2b0; `mov cl, [0x840740]` 0x0049d2c0, tests bit 0x1 with `test al, cl` (0x49d2c8), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x8407c0 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x8407c0 (0x49d2e3)
+2026-10-18  0049d180  gSurfaceDtor_49d180  C0->C1  atexit target of regAtexit_49d170 0x0049d170; `mov cl, [0x840708]` 0x0049d180, tests bit 0x1 with `test al, cl` (0x49d188), when it is clear ORs it into the guard byte, stores the vtable 0x004ba2d8 at 0x840710 and `jmp 0x00473ae0` (Surface_free) with ecx = 0x840710 (0x49d1a3)
+2026-10-18  0049d030  gPairArrayDtor_49d030  C0->C1  address pushed by regAtexit_49d020 0x0049d020 (store 0x0049d021); `mov ecx, 0x8406e8` 0x0049d030, `jmp 0x0049d040` (Buf_dtor) 0x0049d035
+2026-10-18  0049c0b0  DebugWindow::drawContents  C0->C1  slot 22 (+0x58) of the SgDebugWindow table 0x004bbcf4 (slot 22 is drawContents in ListBox::drawContents 0x0048c130); sets the draw target (setDrawTarget 0x004762d0 at 0x0049c0d5), paints the window (Window::paint 0x004808c0 at 0x0049c0f0), then eight times formats an integer read through the pointer at this+0x594 (offsets +0x780 at 0x0049c138, +0x77c at 0x0049c1eb) with __itoa 0x004ad425 and draws it with drawText 0x00477c30 (0x0049c199 .. 0x0049c742)
+2026-10-18  0049c0a0  DebugWindow::clearField594  C0->C1  `mov dword ptr [ecx + 0x594], 0` 0x0049c0a0; the only caller is globalObjDtor49c780 0x0049c780, the destructor of the debug window object g_debugWindow 0x008400c8; field +0x594 is the record pointer DebugWindow::drawContents reads
+2026-10-18  0049c010  gDebugWindowDtor_49c010  C0->C1  address pushed by regAtexit_49c000 0x0049c000 (store 0x0049c001); `mov ecx, 0x8400c8` 0x0049c010, `jmp 0x0049c780` (globalObjDtor49c780) 0x0049c015
+2026-10-18  00497f60  netMarkRecordCb  C0->C1  address stored by netService 0x00497fc0 at 0x00498443; `ret 0x14` (five arguments) and returns 1 (0x00497f86, 0x00497fa8); scans the 16 records of 0x58 bytes at the pointer 0x0083ff6c (0x00497f61, add ecx 0x58 at 0x00497f7e, cmp 0x10 at 0x00497f81) for a first dword equal to the first argument (0x00497f79) and, when bit 1 of the byte at record+0x14 is set (0x00497f99), writes 1 to record+8 (0x00497fa1)
+2026-10-18  00497260  scrollbarArrowRepeat  C0->C1  slot 50 (+0xc8) of the scrollbar table 0x004bbac8; reads timeGetTime (import slot 0x004ba21c, 0x0049726c), compares the elapsed time with the delay at +0x590 (0x00497284), clears g_scrollStep 0x0083ff18 (0x0049729c); argument 1 decrements the thumb value +0x58c down to +0x580 (0x004972bf..0x004972c8), argument 2 increments it up to +0x584 (0x004972b4..0x004972bd); reports the change to the owner (virtual +0xe8, hook +0x13b0), sets +0x59c to -1 (0x0049737d) and sleeps the rest of 1000 / [+0x594] ms with Sleep (import slot 0x004ba0b0, 0x004973a6); import timeGetTime; import Sleep
+2026-10-18  00497170  scrollbarSetSpan  C0->C1  slot 23 (+0x5c) of the scrollbar table 0x004bbac8; stores the smaller of the two arguments at this+0x5c0 (0x00497188), calls scrollbarResetState 0x004979a0 (0x0049718e), then through the sub-window at this+0xcdc calls its virtual +0xc (0x004971b5, 0x00497206) and Window::moveTo 0x0047b420 (0x004971da, 0x004971ec, 0x00497230, 0x00497245) with offsets derived from the argument pair, plus 1 or 2 when [this+0x57c] is not -1
+2026-10-18  00496d60  scrollbarOnRelease  C0->C1  slot 29 (+0x74) of the scrollbar table 0x004bbac8 (slot 29 is Button::endPress 0x00488eb0); clears g_scrollStep 0x0083ff18 (0x00496d6a), stores the owner in 0x0083ab2c (0x00496d74), reports the final value at +0x58c to the owner through virtual +0xe4 (0x00496d99, 0x00496dcf), calls the hook at +0x13ac (0x00496dfd), sets +0x59c to -1 (0x00496e1b) and calls the virtual +0x120 (0x00496e25)
+2026-10-18  00496860  scrollbarOnMouseMove  C0->C1  slot 27 (+0x6c) of the scrollbar table 0x004bbac8 (slot 27 is the one LabelButton::onMouseMove 0x004a2010 calls at 0x004a21f0); acts only when this is the focus window (0x0083ab40 / 0x0083ab44, 0x00496861..0x00496879) and 0x0083ab48 is non-zero; maps the pointer position to the thumb value at +0x58c with imul and idiv over [+0x580, +0x584] (0x00496944..0x0049694a), clamps it (0x004969b0..0x004969db), auto-repeats by timeGetTime (import slot 0x004ba21c, 0x004969ec) against the delay at +0x590, then calls the owner's virtual +0xe8 / +0xe4 and the hook at +0x13b0 when the value changed (0x00496ba3, 0x00496c01); import timeGetTime
+2026-10-18  00496020  initHscrollHeight  C0->C1  `push 3` 0x00496020, `call [0x4ba1c8]` 0x00496022 (USER32 GetSystemMetrics import slot, index 3), `mov [0x83ff10], eax` 0x00496028; import GetSystemMetrics
+2026-10-18  00496010  dynInit_hscrollHeight  C0->C1  5-byte `jmp 0x00496020` at 0x00496010; the dword 0x004c1154 is slot 85 of the C++ initializer table at 0x004c1000 walked by __cinit 0x004a50db
+2026-10-18  00495d20  uiIdleNetPoll  C0->C1  slot 13 (+0x34) of the UiEventTable 0x004ba87c; `mov ecx, [0x8400b8]` 0x00495d20 (g_netSession), returns when it is 0 (0x00495d28), else `jmp 0x0049b7b0` (netPoll) 0x00495d2a
+2026-10-18  00495c70  uiActivateEvent  C0->C1  slot 11 (+0x2c) of the UiEventTable 0x004ba87c; with a zero argument it clears 0x0083ab40 and 0x0083ab44 (0x00495c80, 0x00495c87) and, when 0x0083aa98 is set, calls ClipCursor (import slot 0x004ba1d0, 0x00495c8f) with NULL; with a non-zero argument and 0x0083aa98 set it calls Surface_clip 0x00479a80 with the clip rect 0x0083aa78 (0x00495ca7); import ClipCursor
+2026-10-18  00495c30  uiMouseRelease2  C0->C1  slot 10 (+0x28) of the UiEventTable 0x004ba87c; clears the capture window 0x0083ab20 (0x00495c3a), hitTestScreen 0x0047f700 (0x00495c44) and calls the window's virtual +0x158 (Window::onReleaseInner158, slot 86) with (x, y, [0x0083ab18]) (0x00495c65); twin of uiMouseRelease1 0x00495b90
+2026-10-18  00495bd0  uiMousePress2  C0->C1  slot 9 (+0x24) of the UiEventTable 0x004ba87c; hitTestScreen 0x0047f700 (0x00495bda), calls the window's virtual +0x154 (slot 85) with (x, y, [0x0083ab18]) (0x00495c00), then the hooks at 0x0083ab08 (0x00495c19) and 0x0083aafc (0x00495c27) when set; twin of uiMousePress1 0x00495aa0 with the second hook word
+2026-10-18  00495b90  uiMouseRelease1  C0->C1  slot 8 (+0x20) of the UiEventTable 0x004ba87c; clears the capture window 0x0083ab20 (0x00495b9a), hitTestScreen 0x0047f700 (0x00495ba4), and calls the window's virtual +0x150 (Window::onReleaseInner150, slot 84) with (x, y, [0x0083ab18]) (0x00495bc5)
+2026-10-18  00495aa0  uiMousePress1  C0->C1  slot 7 (+0x1c) of the UiEventTable 0x004ba87c; hitTestScreen 0x0047f700 (0x00495aac); asks the window for its border region through virtual +0x140 (TextView::hitTest slot 80, call 0x00495afc) and, for code 2 or 10..17, stores code, window and point into 0x0083ab1c, 0x0083ab20, 0x0083ab24 and 0x0083ab28 (0x00495b26..0x00495b38); otherwise calls virtual +0x14c (Window::onPressHot slot 83) with (x, y, [0x0083ab18]) (0x00495b5b); then calls the hooks at 0x0083ab04 (0x00495b74) and 0x0083aafc (0x00495b82) when set
+2026-10-18  00495a50  uiScrollEvent  C0->C1  slot 6 (+0x18) of the UiEventTable 0x004ba87c; resolves the window under the point with hitTestScreen 0x0047f700 (0x00495a5b), calls drawCursor 0x0047d130 with (window, 1, -1, -1) (0x00495a69) and, when a window was found and [0x0083ab18] is 0 (0x00495a75), calls its virtual +0x64 (slot 25, viewDispatchScrollBy) with the three event arguments (0x00495a91)
+2026-10-18  00495790  uiPointerRegionCode  C0->C1  slot 2 (+0x8) of the UiEventTable 0x004ba87c; returns 1 unless 0x0083aa9c is set, no capture window is held in 0x0083ab20 and flag 2 of [obj+0xa0] is set (0x004957a4..0x004957b9); reads the surface size through the display 0x0083ad50 virtual +0x38 (0x004957cc), makes the point relative to it and returns region codes 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 2 or 1 from the edge tests against [obj+0x1bc..0x1c8] and [obj+0x184]
+2026-10-18  00495750  uiEventForwardRootSlot3  C0->C1  slot 0 (+0x0) of the UiEventTable 0x004ba87c stored by storeUiEventTable 0x004799d0; reads the object at 0x0083aa9c (0x00495750), returns when it is NULL (0x00495758), else pushes its two arguments and two zeros and calls the object's virtual +0xc (0x0049576a)
+2026-10-18  00492d70  HotListEntry::dtor  C0->C1  `mov [ecx], 0x4bba70` 0x00492d70 then `jmp 0x00492660` (HotList::freeEntryTip) 0x00492d76; pushed as the element destructor to the vector-delete helper at 0x004927b4 and stored by HotList::grow 0x004926d9 and HotList::alloc 0x00492965
+2026-10-18  004927a0  HotListEntry::deletingDtor  C0->C1  slot 0 of the table 0x004bba70; with bit 1 of the flag set it runs the vector-delete helper 0x004a5713 over 0x20-byte elements with HotListEntry::dtor 0x00492d70 (0x004927bd) using the count at this-4 (0x004927ad), else stores the vtable and calls HotList::freeEntryTip 0x00492660 (0x004927e0); bit 0 frees with operatorDelete_4a4ffc 0x004a4ffc (0x004927c8, 0x004927eb)
+2026-10-18  00492650  HotListEntry::ctor  C0->C1  stores the HotListEntry vtable 0x004bba70 at [eax] (0x00492652) and clears [eax+0x1c] (0x00492658); stored as the element constructor by HotList::grow 0x00492690 (0x004926de) and HotList::alloc 0x00492920 (0x0049296a)
+2026-10-18  00492440  initClearGlobal83c314  C0->C1  `mov dword ptr [0x83c314], 0` 0x00492440, `ret` 0x0049244a; reached only through dynInit_clearGlobal83c314 0x00492430
+2026-10-18  00492430  dynInit_clearGlobal83c314  C0->C1  5-byte `jmp 0x00492440` at 0x00492430; the dword 0x004c1150 is slot 84 of the C++ initializer table at 0x004c1000 that __cinit 0x004a50db walks
+2026-10-18  00491c00  listPanelDrawContents_vtordisp_adj578  C0->C1  slot 2 (+0x8) of the table 0x004bb724; `sub ecx, [ecx-4]` 0x00491c00, `sub ecx, 0x578` 0x00491c03, `jmp 0x0049e680` 0x00491c09
+2026-10-18  00491be0  listPanelDeletingDtor_vtordisp_adj578  C0->C1  slot 0 (+0x0) of the table 0x004bb724 (sub-object at +0x59c); `sub ecx, [ecx-4]` 0x00491be0, `sub ecx, 0x578` 0x00491be3, `jmp 0x00491ad0` 0x00491be9
+2026-10-18  00491bc0  listPanelDeletingDtor_adj274  C0->C1  slot 3 (+0xc) of the table 0x004bb730 (list panel part at +0x298); `sub ecx, [ecx-0x278]` 0x00491bc0, `sub ecx, 0x274` 0x00491bc6, `jmp 0x00491ad0` 0x00491bcc
+2026-10-18  00491ab0  viewDispatchDraw_vtordisp_adj578  C0->C1  slot 2 (+0x8) of the table 0x004bb8b0; `sub ecx, [ecx-4]` 0x00491ab0, `sub ecx, 0x578` 0x00491ab3, `jmp 0x004a0d30` 0x00491ab9
+2026-10-18  00491a90  viewDeletingDtor_vtordisp_adj578  C0->C1  slot 0 (+0x0) of the table 0x004bb8b0 (sub-object at +0x774); `sub ecx, [ecx-4]` 0x00491a90, `sub ecx, 0x578` 0x00491a93, `jmp 0x00491900` 0x00491a99
+2026-10-18  00491a70  viewDeletingDtor_adj274  C0->C1  slot 3 (+0xc) of the table 0x004bb8bc (composite view sub-object at +0x470); `sub ecx, [ecx-0x278]` 0x00491a70, `sub ecx, 0x274` 0x00491a76, `jmp 0x00491900` 0x00491a7c
+2026-10-18  004916e0  TextView::alwaysFalse  C0->C1  slot 105 (+0x1a4) of the TextView table 0x004bb3f8; `xor al, al` 0x004916e0, `ret 4`
+2026-10-18  00491400  TextView::setField14d4  C0->C1  slot 94 (+0x178) of the TextView table 0x004bb3f8; `mov [ecx + 0x14d4], eax` 0x00491404, `ret 4`
+2026-10-18  004913f0  TextView::setField14d0  C0->C1  slot 93 (+0x174) of the TextView table 0x004bb3f8; `mov [ecx + 0x14d0], eax` 0x004913f4, `ret 4`
+2026-10-18  004913c0  TextView::setField14bcTriple  C0->C1  slot 92 (+0x170) of the TextView table 0x004bb3f8; `ret 0xc`: first argument stored at this+0x14bc (0x004913c8), second at this+0x14c0 (0x004913d2), third at this+0x14c4 (0x004913d8)
+2026-10-18  00491370  TextView::onMouseDown  C0->C1  slot 30 (+0x78) of the TextView table 0x004bb3f8 (slot 30 is scrollbarOnDown 0x00496c30 in the scrollbar table 0x004bbac8); calls HotList::hitTest 0x00492a90 on the sub-object this+0x1f04 (0x0049138d) with (x, y) and two output words, and when the index is not -1 (0x00491392) and the first output word is 0 (0x0049139b) calls the virtual +0xd4 (slot 53) with the second output word (0x004913a8)
+2026-10-18  00490d50  TextView::isGlobal83b8ecNull  C0->C1  slot 69 (+0x114) of the TextView table 0x004bb3f8; `mov ecx, [0x83b8ec]` 0x00490d50, `test ecx, ecx` 0x00490d58, `sete al` 0x00490d5a, `ret` with no argument
+2026-10-18  00490b30  textViewSelectionSyncCb  C0->C1  address stored into [esi+0x14b4] by TextView::render 0x0048fe60 at 0x0049034e and 0x00490368; reads the TextView pointer from the global 0x0083b990 (0x00490b31), refreshes this+0x5c0 from the model with ListModel::selectedId 0x00489950 (call 0x00490b94) or from +0x15c8 (0x00490b86), clears this+0x1fc0 (0x00490b9f) and calls virtual +0x110 (0x00490bbd, 0x00490bc9), +0x16c (0x00490bd3) and, when [this+0x1f68] has bit 0x4000 (0x00490bd9), virtual +0x8 (0x00490be5)
+2026-10-18  00490b10  TextView::isNotFlag4000Arg1  C0->C1  slot 37 (+0x94) of the TextView table 0x004bb3f8; same four instructions as TextView::isNotFlag4000 0x00490ac0 at 0x00490b10..0x00490b1b, `ret 4`
+2026-10-18  00490ae0  TextView::hitTest  C0->C1  slot 80 (+0x140) of the TextView table 0x004bb3f8; returns 0 when [this+0x1f68] has bit 0x2000000 set (0x00490ae0); otherwise forwards (x, y) to Window::hitTestBorder 0x0047ed30 (call 0x00490afb); the slot is called through [edx+0x140] by uiMousePress1 0x00495aa0 at 0x00495afc
+2026-10-18  00490ac0  TextView::isNotFlag4000  C0->C1  slot 35 (+0x8c) of the TextView table 0x004bb3f8; `mov eax, [ecx + 0x1f68]` 0x00490ac0, `not eax` 0x00490ac6, `shr eax, 0xe` 0x00490ac8, `and eax, 1` 0x00490acb, `ret 8`
+2026-10-18  0048cd70  ListBox::drawContents_vtordisp_adj578  C0->C1  slot 2 (+0x8) of the table 0x004bb240; `sub ecx, [ecx-4]` 0x0048cd70, `sub ecx, 0x578` 0x0048cd73, `jmp 0x0048c130` 0x0048cd79
+2026-10-18  0048cd50  ListBox::deletingDtor_vtordisp_adj578  C0->C1  slot 0 (+0x0) of the table 0x004bb240 (sub-object at +0x5d4); `sub ecx, [ecx-4]` 0x0048cd50, `sub ecx, 0x578` 0x0048cd53, `jmp 0x0048cba0` 0x0048cd59
+2026-10-18  0048cd30  ListBox::deletingDtor_adj274  C0->C1  slot 3 (+0xc) of the table 0x004bb24c (ListBox sub-object at +0x2d0); `sub ecx, [ecx-0x278]` 0x0048cd30, `sub ecx, 0x274` 0x0048cd36, `jmp 0x0048cba0` 0x0048cd3c
+2026-10-18  0048b3f0  ListBox::drawItem  C0->C1  slot 0 of the table 0x004bb3cc installed by ListBox::ctor 0x00489cb0 (also slot 0 of 0x004bba3c, viewCtor4a0740); returns at once for a negative row (0x0048b401); walks the node list at +0xcc..+0xd8 to the row (0x0048b4b9..0x0048b4cd), computes the row rectangle from +0x40/+0x48/+0x4c/+0x60/+0x6c/+0x70, fills it with Widget_fillRectR 0x00475b00 (0x0048b6cc), fetches the id with ListModel::idAt 0x00489a30 (0x0048b70b), calls the item callback at this+0x4c (0x0048b712) and the owner's virtual +0x2c (0x0048ba2a), then draws bevels with Widget_drawBevelBoxR 0x004795d0 (0x0048bb4c) and the text with drawTextLines 0x004782d0, drawCentered 0x00477cd0 and drawRight2 0x004781f0 (0x0048bd31..0x0048c083)
+2026-10-18  00489ae0  ListModel::deletingDtor_adj28  C0->C1  slot 0 of the table 0x004bb228 (list model at +0x28); `lea edi, [ecx - 0x28]` 0x00489ae2, calls ListModel::destroyNodes 0x00489b30 at 0x00489aea, stores the HeapObject vtable 0x004ba278 at 0x00489af3, copies [esi+4] into g_newObjectHeap 0x00839650 at 0x00489afe, frees with _free 0x004a5007 at 0x00489b0f when bit 0 of the flag byte (0x00489afc) is set
+2026-10-18  00488fa0  Button::relayoutSlot60  C0->C1  slot 60 (+0xf0) of the vtables 0x004bb0a8 and 0x004bb5b4; `mov eax,[ecx]; call [eax+0x120]; ret 4` 0x00488fa0..0x00488fa8, vtable +0x120 is Window::doLayout 0x00480d70
+2026-10-18  00488cc0  Button::moveIfFocusedPressed  C0->C1  slot 28 (+0x70) of the SgButton vtable 0x004bb0a8; takes g_focusWin 0x0083ab40, else g_focusWin2 0x0083ab44 (0x00488cc0..0x00488cc9), requires it to equal this and g_pressWin 0x0083ab48 to be 1 (0x00488cd2), then calls this vtable +0x6c (Button::onMouseMove) with its two arguments (0x00488ce7)
+2026-10-18  00488cb0  returnZeroPop8_488cb0  C0->C1  `xor eax, eax; ret 8` 0x00488cb0 (5 bytes); slot 35 (+0x8c) of the vtables 0x004bb0a8 and 0x004bb5b4
+2026-10-18  00488bf0  Button::endCapture  C0->C1  slot 31 (+0x7c) of the SgButton vtable 0x004bb0a8 and SgLabelButton 0x004bb5b4 (EditBox::endCaretDrag is slot 31 of 0x004ba4a8); clears g_windowSlotA 0x0083ab30 and calls this vtable +0x10 when it equals this (0x00488bf0..0x00488c08), clears g_windowSlotB 0x0083ab34 when it equals this (0x00488c0b); with the child at +0x130 set: Timer::stop 0x00486ec0 on this+0x5b4 (0x00488c2d), import timeGetTime against +0x61c / +0x618 and import Sleep for the remainder (0x00488c4d), and when +0x614 is 1 clears it, calls the +0x78 object of the child (vtable +0x1c), the child vtable +0xcc with +0x5e8 and this vtable +0x120 (0x00488c95)
+2026-10-18  00487e40  atexitDtor_83b170  C0->C1  dword 0x00487e40 pushed at 0x00487e30 before the call to 0x004a56d2 inside the registration stub 0x00487e30; pushes 0x004882f0 (KeyTable::dtor), 4 and 0x120 with 0x0083b170 and calls 0x004a5713 (0x00487e40..0x00487e51); g_keyTables 0x0083b170 is 4 records of 0x120
+2026-10-18  00487df0  initCreditsPtr1_487df0  C0->C1  copies the dword at 0x0083b160 to 0x0083b168 (0x00487df0..0x00487df5); second slot of g_credits_text_ptrs 0x0083b164 (stride 4, count 2); entered from the stub 0x00487de0
+2026-10-18  00487de0  dynInit_initCreditsPtr1_487de0  C0->C1  `jmp 0x00487df0` 0x00487de0 (5 bytes); the dword 0x00487de0 sits in slot 0x004c1148 of the dynamic-initializer table 0x004c1004-0x004c1184 (file offset 0xc1148)
+2026-10-18  00487dd0  initCreditsPtr0_487dd0  C0->C1  copies the dword at 0x0083b15c to 0x0083b164 (0x00487dd0..0x00487dd5); g_credits_text_ptrs 0x0083b164 is read by showCreditsScreen 0x0044bb0c (re/model/addresses.tsv); entered from the stub 0x00487dc0
+2026-10-18  00487dc0  dynInit_initCreditsPtr0_487dc0  C0->C1  `jmp 0x00487dd0` 0x00487dc0 (5 bytes); the dword 0x00487dc0 sits in slot 0x004c1144 of the dynamic-initializer table 0x004c1004-0x004c1184 (file offset 0xc1144, loaded by __cinit 0x004a50db)
+2026-10-18  00487da0  atexitDtor_83b000  C0->C1  dword 0x00487da0 pushed at 0x00487d90 before the call to 0x004a56d2 inside the registration stub 0x00487d90; sets the vtable 0x004bb084 at 0x0083b000 (0x00487da0) and jumps to Reader::free 0x00487f30 (0x00487daf); g_sectionReader 0x0083b000 is built by initGlobalReader 0x00487d80
+2026-10-18  00487cd0  NodeListC::callChild24  C0->C1  slot 24 (+0x60) of the vtable 0x004bb014; loads this+0x14 (0x00487cd0), calls the child vtable +0x60 with the result dropped (0x00487cd9), returns 0
+2026-10-18  00487cc0  NodeListB::callChild23  C0->C1  slot 23 (+0x5c) of the vtables 0x004bafb0 and 0x004bb014; loads this+0x14 (0x00487cc0), calls the child vtable +0x5c with the result dropped (0x00487cc9), returns 0
+2026-10-18  00487cb0  returnZeroPop12_487cb0  C0->C1  `xor eax, eax; ret 0xc` 0x00487cb0 (5 bytes); slot 8 (+0x20) of the vtables 0x004bafb0 and 0x004bb014
+2026-10-18  00487c90  NodeListC::fwdChild26  C0->C1  slot 26 (+0x68) of the vtable 0x004bb014; loads this+0x14 (0x00487c90), calls the child vtable +0x68 with one argument (0x00487c9e); no child returns 0x13 (0x00487ca4)
+2026-10-18  00487c70  NodeListC::fwdChild25  C0->C1  slot 25 (+0x64) of the vtable 0x004bb014; loads this+0x14 (0x00487c70), calls the child vtable +0x64 with one argument (0x00487c7e); no child returns 0x13 (0x00487c84)
+2026-10-18  00487b20  NodeListB::fwdChild24  C0->C1  slot 24 (+0x60) of the vtable 0x004bafb0; loads this+0x14 (0x00487b20), tail-jumps to the child vtable +0x60 (0x00487b29); no child returns 1 (0x00487b2c)
+2026-10-18  00487b10  NodeListB::callChild22  C0->C1  slot 22 (+0x58) of the vtable 0x004bafb0; loads this+0x14 (0x00487b10), calls the child vtable +0x58 with the result dropped (0x00487b19), returns 0
+2026-10-18  00487990  NodeList::fwdChild42  C0->C1  slot 42 (+0xa8) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487990), calls the child vtable +0xa8 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487970  NodeList::fwdChild41  C0->C1  slot 41 (+0xa4) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487970), calls the child vtable +0xa4 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487950  NodeList::fwdChild40  C0->C1  slot 40 (+0xa0) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487950), calls the child vtable +0xa0 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487930  NodeList::fwdChild39  C0->C1  slot 39 (+0x9c) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487930), calls the child vtable +0x9c (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487910  NodeList::fwdChild38  C0->C1  slot 38 (+0x98) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487910), calls the child vtable +0x98 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  004878f0  NodeList::fwdChild37  C0->C1  slot 37 (+0x94) of the vtable 0x004baf00; loads this+0x14 and tests it (0x004878f0), calls the child vtable +0x94 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  004878c0  NodeList::fwdChild36  C0->C1  slot 36 (+0x90) of the vtable 0x004baf00; loads this+0x14 and tests it (0x004878c0), calls the child vtable +0x90 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487890  NodeList::fwdChild35  C0->C1  slot 35 (+0x8c) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487890), calls the child vtable +0x8c (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487870  NodeList::fwdChild34  C0->C1  slot 34 (+0x88) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487870), calls the child vtable +0x88 (tail jmp or return of its result); no child: returning 0 when there is no child
+2026-10-18  00487850  NodeList::fwdChild33  C0->C1  slot 33 (+0x84) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487850), calls the child vtable +0x84 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487830  NodeList::fwdChild31  C0->C1  slot 31 (+0x7c) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487830), calls the child vtable +0x7c (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487810  NodeList::fwdChild32  C0->C1  slot 32 (+0x80) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487810), calls the child vtable +0x80 (tail jmp or return of its result); no child: returning 0x14 when there is no child
+2026-10-18  00487800  NodeList::fwdChild30  C0->C1  slot 30 (+0x78) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487800), calls the child vtable +0x78 (tail jmp or return of its result); no child: returning 0 when there is no child
+2026-10-18  004877d0  NodeListBucket::ctor  C0->C1  re/model/e2_classes.tsv NodeListBucket; stores vtable 0x004bafac at +8 (0x004877d4), zeroes +0xc..+0x18 (0x004877db..0x004877e4), +4 = 0x7f (0x004877e7), byte +0 = 1 (0x004877ee); passed to ehVectorConstructorIterator by NodeList::ctor 0x00487280 for 16 records of 0x1c (operand 0x004872a8)
+2026-10-18  004876a0  NodeList::fwdChild22  C0->C1  slot 22 (+0x58) of the vtable 0x004baf00; loads this+0x14 and tests it (0x004876a0), calls the child vtable +0x58 (tail jmp or return of its result); no child: returning 3 when there is no child
+2026-10-18  00487680  NodeList::fwdChild21  C0->C1  slot 21 (+0x54) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487680), calls the child vtable +0x54 (tail jmp or return of its result); no child: returning 3 when there is no child
+2026-10-18  00487660  NodeList::fwdChild27  C0->C1  slot 27 (+0x6c) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487660), calls the child vtable +0x6c (tail jmp or return of its result); no child: returning 1 when there is no child
+2026-10-18  00487650  NodeList::callChild26  C0->C1  slot 26 (+0x68) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487650), calls the child vtable +0x68 (result dropped, returns 0); no child: doing nothing; the function returns 0 in both cases
+2026-10-18  00487640  NodeList::callChild25  C0->C1  slot 25 (+0x64) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487640), calls the child vtable +0x64 (result dropped, returns 0); no child: doing nothing; the function returns 0 in both cases
+2026-10-18  00487610  NodeList::fwdChild9  C0->C1  slot 9 (+0x24) of the vtable 0x004baf00; loads this+0x14 (0x00487610), calls the child vtable +0x24 with one argument and returns its result; with no child it returns without setting eax
+2026-10-18  00487600  NodeList::fwdChild16  C0->C1  slot 16 (+0x40) of the vtable 0x004baf00; loads this+0x14 and tests it (0x00487600), calls the child vtable +0x40 (tail jmp or return of its result); no child: returning 0 when there is no child
+2026-10-18  004875e0  NodeList::fwdChild15  C0->C1  slot 15 (+0x3c) of the vtable 0x004baf00; loads this+0x14 (0x004875e0), calls the child vtable +0x3c with one argument and returns its result; with no child it returns without setting eax
+2026-10-18  004875c0  NodeList::callChild8  C0->C1  slot 8 (+0x20) of the vtable 0x004baf00; loads this+0x14 and tests it (0x004875c0), calls the child vtable +0x20 (result dropped, returns 0); no child: doing nothing; the function returns 0 in both cases
+2026-10-18  00487500  NodeList::playChildSuspendingSounds  C0->C1  slot 7 (+0x1c) of the vtable 0x004baf00 (Snd::play is slot 7 of 0x004bacf8); returns 2 when this+0x14 is NULL (0x00487513); walks the sound list from g_soundHead 0x0083af68 (0x0048751e) with the node vtable +0x70 flags (Snd::flags): nodes with bit 0 set and bit 2 clear are stopped through vtable +0x14 (0x0048754c) and chained through +0x48 / +0x4c (0x00487553..0x00487562); calls the child vtable +0x1c with the argument (0x00487587); then walks the chain and reopens each node through vtable +0x10 (Snd::open) with its field +0x50 (0x004875a7)
+2026-10-18  004874f0  NodeList::fwdChild23  C0->C1  slot 23 (+0x5c) of the vtable 0x004baf00; loads this+0x14 and tests it (0x004874f0), calls the child vtable +0x5c (tail jmp or return of its result); no child: returning 0 when there is no child
+2026-10-18  004874d0  NodeList::fwdChild28  C0->C1  slot 28 (+0x70) of the vtable 0x004baf00; loads this+0x14 and tests it (0x004874d0), calls the child vtable +0x70 (tail jmp or return of its result); no child: returning 0x13 when there is no child
+2026-10-18  004874c0  NodeList::fwdChild6  C0->C1  slot 6 (+0x18) of the vtable 0x004baf00; loads this+0x14 and tests it (0x004874c0), calls the child vtable +0x18 (tail jmp or return of its result); no child: returning 0 when there is no child
+2026-10-18  004874b0  NodeList::fwdChild14  C0->C1  slot 14 (+0x38) of the vtable 0x004baf00; loads this+0x14 (0x004874b0), tail-jumps to the child vtable +0x38; no child: bare `ret`
+2026-10-18  004874a0  NodeList::fwdChild20  C0->C1  slot 20 (+0x50) of the vtable 0x004baf00; loads this+0x14 (0x004874a0), tail-jumps to the child vtable +0x50; no child: bare `ret`
+2026-10-18  00487490  NodeList::fwdChild19  C0->C1  slot 19 (+0x4c) of the vtable 0x004baf00; loads this+0x14 (0x00487490), tail-jumps to the child vtable +0x4c; no child: bare `ret`
+2026-10-18  00486f40  Timer::windowTimerProc  C0->C1  pushed at 0x00486e10 and 0x00486e84 before the SetTimer call [0x004ba1b8] inside Timer::startMmPeriodic 0x00486dc0 / Timer::startMmOneShot 0x00486e40; posts message 0x401 through import PostMessageA (0x00486f71) to the handle from the display at 0x0083ad50 slot +0x20 (0x00486f6d) and sets +0x24 = 1 (0x00486f77); skips when g_timerWnd83aff0 0x0083aff0 is set and differs (0x00486f52) or +0x24 is already set (0x00486f5b)
+2026-10-18  00486b70  EditBox::caretBlinkTick  C0->C1  pushed at 0x004861de before the call to Timer::init 0x00486cf0 on this+0x5ac (0x004861e3..0x004861e9, interval 0x1f4, resolution 5); toggles +0x5a8 of the object passed as argument (0x00486b76..0x00486b83) and tail-jumps to its vtable +0x120 (Window::doLayout) at 0x00486b89; EditBox::setCaretActive 0x00486b30 starts and stops that timer
+2026-10-18  00486b00  EditBox::fwdSlot57From58  C0->C1  slot 58 (+0xe8) of the SgEditBox vtable 0x004ba4a8; pushes its two arguments and calls this vtable +0xe4 (slot 57, EditBox::relayoutSlot57) at 0x00486b0c
+2026-10-18  00486af0  EditBox::relayoutSlot57  C0->C1  slot 57 (+0xe4) of the SgEditBox vtable 0x004ba4a8; `mov eax,[ecx]; call [eax+0x120]; ret 8` 0x00486af0..0x00486af8, vtable +0x120 is Window::doLayout 0x00480d70 (slot 72)
+2026-10-18  004864f0  EditBox::drawContents  C0->C1  slot 22 (+0x58) of the SgEditBox vtable 0x004ba4a8; paints through Window::paint 0x004808c0 (0x00486531), insets the rect once per border step and draws with Widget_drawBevelBoxR 0x004795d0 (0x00486557), fills with Widget_fillRectR 0x00475b00 (0x004865c2), wraps with EditBox::wrapToLines 0x004862b0 (0x004865d3), finds the caret line with EditBox::lineIndexAt 0x00486330 (0x004865eb), draws the visible lines with drawTextLines 0x004782d0 (0x00486659) and, when this+0x5a8 is nonzero, measures with drawMarkupRun 0x00477280 (0x00486680) and draws the caret with Widget_drawVLine 0x00478be0 (0x004866d5)
+2026-10-18  00485570  VoiceRx::fwdDev36  C0->C1  slot 36 (+0x90) of the vtable 0x004badf8 and 0x004bbc3c; loads this+0x40 and tests it (0x00485570), calls the device vtable +0x90 (tail jmp or return of its result); no device: returning 0 when there is no device
+2026-10-18  00485550  VoiceRx::fwdDev35  C0->C1  slot 35 (+0x8c) of the vtable 0x004badf8 and 0x004bbc3c; loads this+0x40 and tests it (0x00485550), calls the device vtable +0x8c (tail jmp or return of its result); no device: returning 0x13 when there is no device
+2026-10-18  00485530  VoiceRx::fwdDev5  C0->C1  slot 5 (+0x14) of the vtable 0x004badf8 and 0x004bbc3c; loads this+0x40 and tests it (0x00485530), calls the device vtable +0x14 (tail jmp or return of its result); no device: returning 0x13 when there is no device
+2026-10-18  00485520  VoiceRx::callDev8  C0->C1  slot 8 (+0x20) of the vtable 0x004badf8 and 0x004bbc3c; loads this+0x40 and tests it (0x00485520), calls the device vtable +0x20 (result dropped, returns 0); no device: doing nothing; the function returns 0 in both cases
+2026-10-18  00485500  VoiceRx::callDev34  C0->C1  slot 34 (+0x88) of the vtable 0x004badf8 and 0x004bbc3c; loads this+0x40 and tests it (0x00485500), calls the device vtable +0x88 (result dropped, returns 0); no device: doing nothing; the function returns 0 in both cases
+2026-10-18  00485450  VoiceRx::start  C0->C1  slot 33 (+0x84) of the vtables 0x004badf8 and 0x004bbc3c (Snd::start is slot 33 of 0x004bacf8); creates the device with createSound4840e0 0x004840e0 when this+0x40 is NULL (push 6 at 0x00485460, call 0x00485464), calls device vtable +0x84 with three arguments (0x00485488), on a nonzero result releases the device with releaseSoundObj 0x00484110 (0x00485497) and clears this+0x40 (0x0048549f), then calls this vtable +0x7c (0x004854a9) and returns the device result
+2026-10-18  00485390  VoiceRx::fwdDev37  C0->C1  slot 37 (+0x94) of the vtable 0x004badf8 and 0x004bbc3c; loads this+0x40 and tests it (0x00485390), calls the device vtable +0x94 (tail jmp or return of its result); no device: returning 0 when there is no device
+2026-10-18  00485380  returnBPop4_485380  C0->C1  `mov eax, 0xb; ret 4` 0x00485380 (8 bytes); slot 27 (+0x6c) of the vtables 0x004badf8 and 0x004bbc3c
+2026-10-18  00485290  SndBase::setField38  C0->C1  slot 2 (+0x8) of the vtables 0x004bac68, 0x004bacf8 and 0x004badf8 (slot 1 of 0x004badec); returns 0xa when argument 1 is 0 (0x00485298), else stores it in this+0x38 (0x004852a0) and returns 0; Snd::setField38 0x004846d0 is the same store plus the device forward
+2026-10-18  00485240  Snd::fwdDev58  C0->C1  slot 58 (+0xe8) of the vtable 0x004bacf8; loads this+0x40 and tests it (0x00485240), calls the device vtable +0xe8 (tail jmp or return of its result); no device: returning 0 when there is no device
+2026-10-18  00485220  Snd::fwdDev57  C0->C1  slot 57 (+0xe4) of the vtable 0x004bacf8; loads this+0x40 and tests it (0x00485220), calls the device vtable +0xe4 (tail jmp or return of its result); no device: returning 0x14 when there is no device
+2026-10-18  00485200  Snd::fwdDev56  C0->C1  slot 56 (+0xe0) of the vtable 0x004bacf8; loads this+0x40 and tests it (0x00485200), calls the device vtable +0xe0 (tail jmp or return of its result); no device: returning 0x14 when there is no device
+2026-10-18  004851e0  Snd::fwdDev55  C0->C1  slot 55 (+0xdc) of the vtable 0x004bacf8; loads this+0x40 and tests it (0x004851e0), calls the device vtable +0xdc (tail jmp or return of its result); no device: returning 0x14 when there is no device
+2026-10-18  004851b0  Snd::fwdDev54  C0->C1  slot 54 (+0xd8) of the vtable 0x004bacf8; loads this+0x40 and tests it (0x004851b0), calls the device vtable +0xd8 (tail jmp or return of its result); no device: returning 0x14 when there is no device
+2026-10-18  00485130  returnBPop12_485130  C0->C1  `mov eax, 0xb; ret 0xc` 0x00485130 (8 bytes); slots 42..45 (+0xa8..+0xb4) of the vtable 0x004bacf8
+2026-10-18  00485120  returnB_485120  C0->C1  `mov eax, 0xb; ret` 0x00485120 (6 bytes); slot 41 (+0xa4) of the vtable 0x004bacf8
+2026-10-18  004850f0  Snd::setField60  C0->C1  slot 59 (+0xec) of the vtable 0x004bacf8; stores argument 1 in this+0x60 (0x004850f4), calls device vtable +0xec (0x00485101); no device returns 0x14 (0x0048510a); Snd::ctorDerived 0x00484820 initialises m_60 (its recorded purpose: default pitch 1.0)
+2026-10-18  004850b0  Snd::fwdDev49  C0->C1  slot 49 (+0xc4) of the vtable 0x004bacf8; loads this+0x40 (0x004850b0), pushes three arguments and calls device vtable +0xc4 (0x004850c8); no device: stores byte 0 through argument 1 when argument 3 is nonzero (0x004850d9..0x004850dd) and returns 1 (0x004850e0)
+2026-10-18  00485090  Snd::fwdDev48  C0->C1  slot 48 (+0xc0) of the vtable 0x004bacf8; loads this+0x40 and tests it (0x00485090), calls the device vtable +0xc0 (tail jmp or return of its result); no device: returning 0 when there is no device
+2026-10-18  00485080  Snd::fwdVoice3c  C0->C1  Snd slot 15; voice = [this+0x40], default 0, tail jmp [[voice]+0x3c] (0x00485089)
+2026-10-18  00485060  Snd::fwdVoiceBC  C0->C1  Snd slot 47; voice = [this+0x40], default -1 (0x0048506f), tail jmp [[voice]+0xbc] (0x00485069)
+2026-10-18  00485040  Snd::fwdVoiceB8  C0->C1  Snd slot 46; voice = [this+0x40], one argument, calls [[voice]+0xb8] (0x0048504e), default 0 (0x00485057)
+2026-10-18  00484f80  Snd::setFlags  C0->C1  Snd slot 27, inverse of Snd::flags 0x00484ff0: bit 2 sets +0x30 (0x00484f8d), bits 1, 4, 0x40, 0x80, 0x10, 0x100, 0x400 or bits 1, 2, 8, 0x10, 4, 0x20, 0x40 into +0x58 (0x00484f94..0x00484fd0), then voice slot +0x6c (0x00484fde)
+2026-10-18  00484bf0  Snd::fwdVoiceF0  C0->C1  Snd slot 60, ret 8; no voice returns 0x13 (0x00484bf7); else re-pushes two arguments (0x00484bff..0x00484c06), calls [[voice]+0xf0] (0x00484c0b), returns 0
+2026-10-18  00484b20  Snd::getLengthMs  C0->C1  Snd slot 50; mov eax, [ecx+0x64]; ret (0x00484b20); +0x64 is length_ms, compared by Snd::busy with timeGetTime - started_at
+2026-10-18  00484b00  Snd::fwdVoiceCC  C0->C1  Snd slot 51; voice = [this+0x40], default 0, tail jmp [[voice]+0xcc] (0x00484b09)
+2026-10-18  00484a20  Snd::fwdVoiceD4  C0->C1  Snd slot 53; voice = [this+0x40], one argument, calls [[voice]+0xd4] (0x00484a2e)
+2026-10-18  00484a00  Snd::fwdVoiceD0  C0->C1  Snd slot 52; voice = [this+0x40], one argument, calls [[voice]+0xd0] (0x00484a0e)
+2026-10-18  004849e0  Snd::fwdVoice94  C0->C1  Snd slot 37; voice = [this+0x40], one argument, calls [[voice]+0x94] (0x004849ee), default 0x14 (0x004849f7)
+2026-10-18  00484920  Snd::fwdVoice98  C0->C1  Snd slot 38; voice = [this+0x40], one argument, calls [[voice]+0x98] (0x0048492e), default 0x14 (0x00484937)
+2026-10-18  00484870  Snd::fwdVoice60  C0->C1  Snd slot 24; voice = [this+0x40], default 0, tail jmp [[voice]+0x60] (0x00484879)
+2026-10-18  004847e0  Snd::fwdVoice74  C0->C1  slot 29; voice = [this+0x40], default 0, tail jmp [[voice]+0x74] (0x004847e9)
+2026-10-18  004847d0  Snd::fwdVoice58  C0->C1  slot 22; voice = [this+0x40], default 0, tail jmp [[voice]+0x58] (0x004847d9)
+2026-10-18  00484790  Snd::fwdVoice34  C0->C1  slot 13, ret 0xc; voice = [this+0x40]; re-pushes its three stack arguments (0x00484797..0x004847a3) and calls [[voice]+0x34] (0x004847a8)
+2026-10-18  00484770  Snd::applyField38Voice30  C0->C1  slot 12; same shape as 0x00484730 with tail jmp [[voice]+0x30] (0x00484780), else eax 0x13 (0x00484783)
+2026-10-18  00484730  Snd::applyField38Voice28  C0->C1  slot 10; when [this+0x38] and the voice are nonzero (0x00484730..0x0048473c) tail jmp [[voice]+0x28] (0x00484740), else eax 0x13 (0x00484743)
+2026-10-18  00484700  Snd::setField38Voice54  C0->C1  slot 21; argument 0 returns 0xa (0x00484708); else stores it at +0x38 (0x00484710) and calls voice slot +0x54 (0x0048471d), returns 0
+2026-10-18  00484690  Snd::setLoop  C0->C1  slot 18; stores the argument at +0x30 (0x00484694), the loop field of SgSnd, and calls voice slot +0x48 with it (0x004846a1)
+2026-10-18  00484620  Snd::setVolumeBase  C0->C1  slot 16 of SndBase/VoiceRx; stores arg & 0x7f at +4 (0x00484636); when group [this+0x3c] < 0x10 multiplies by the group record gain at 0x0083ada8 + group*0x1c (0x00484656, g_musicDevice+0x28), scale double 0x004bacf0 and __ftol (0x0048466d); calls voice slot +0x40 (0x00484685); Snd::setVolume 0x00485140 is the Snd override
+2026-10-18  00484600  Snd::fwdVoice38  C0->C1  slot 14; voice = [this+0x40], default 0x14, tail jmp [[voice]+0x38] (0x0048460e)
+2026-10-18  004845b0  Snd::fwdVoice18  C0->C1  slot 6; voice = [this+0x40], default 0x14, calls [[voice]+0x18] with the stack argument (0x004845b0..0x004845c3)
+2026-10-18  00484590  Snd::fwdVoice1c  C0->C1  slot 7; ecx = [this+0x40] (0x00484590), default eax 0x14, tail jmp [[voice]+0x1c] (0x0048459e); Snd::play and Snd::start call this voice slot to run the sound
+2026-10-18  00484540  returnB_484540  C0->C1  mov eax, 0xb; ret 4 (0x00484540/0x00484545); SndBase/Snd/VoiceRx slot 3, Snd slot 40
+2026-10-18  004844d0  Snd::getMode  C0->C1  mov eax, [ecx+0x54]; ret (0x004844d0); +0x54 is the mode set by Snd::setMode (SgSnd.mode)
+2026-10-18  004844c0  Snd::getPrev  C0->C1  mov eax, [ecx+0x48]; ret (0x004844c0); +0x48 is the previous link (SgSnd.prev)
+2026-10-18  004844b0  Snd::getNext  C0->C1  mov eax, [ecx+0x4c]; ret (0x004844b0); +0x4c is the next link of the active list (SgSnd.next)
+2026-10-18  00484450  Snd::linkIntoList  C0->C1  slot 31; when +0x4c and +0x48 are both 0 (0x00484450..0x0048445c) it sets head g_83af68 and tail 0x0083af64 (0x00484467/0x0048446d) or appends after the old tail (0x00484484..0x00484490), and sets state bit 1 (0x00484479/0x00484496); mirror of Snd::unlinkFromList 0x004844e0
+2026-10-18  00484440  Snd::isPlaying  C0->C1  slot 24 of SndBase/VoiceRx; (this[0x44] << 31) >> 31 (0x00484440..0x00484446): -1 when state bit 0 is set, else 0; Snd::start sets state bit 0 at start
+2026-10-18  00483e80  gVoiceDeviceDtor_483e80  C0->C1  ecx = 0x0083af98 (g_voiceDevice) and jmp NodeListC::dtor 0x00487b80 (0x00483e80/0x00483e85)
+2026-10-18  00483e40  gSfxDeviceDtor_483e40  C0->C1  ecx = 0x0083ad58 (g_sfxDevice) and jmp NodeListB::dtor 0x00487a60 (0x00483e40/0x00483e45)
+2026-10-18  00483e00  gMusicDeviceDtor_483e00  C0->C1  ecx = 0x0083ad80 (g_musicDevice) and jmp NodeList::dtor 0x00487390 (0x00483e00/0x00483e05)
+2026-10-18  00483b30  FontRef::scalarDtor  C0->C1  slot 0 of vtable 0x004ba468 (class FontRef 0x20 bytes, e2_classes.tsv); bit 1 runs the vector destructor iterator with size 0x20 (0x00483b44..0x00483b4d), else stores vtable 0x004ba468 and calls FontRef::release 0x004838b0 (0x00483b6a/0x00483b70); bit 0 frees (0x00483b7b)
+2026-10-18  004837d0  gFontRefDtor_4837d0  C0->C1  stores vtable 0x004ba468 at 0x0083ad20 (0x004837d0), ecx = 0x0083ad20 and jmp FontRef::release 0x004838b0 (0x004837df)
+2026-10-18  00483020  returnThis_483020  C0->C1  mov eax, ecx; ret 4 (0x00483020/0x00483022); one caller
+2026-10-18  00482ee0  gScreenMgrBDtor_482ee0  C0->C1  ecx = 0x0083ac30 (g_screenMgrB) and jmp PaletteCache::dtor 0x00483010 (0x00482ee0/0x00482ee5)
+2026-10-18  00482ea0  gScreenMgrADtor_482ea0  C0->C1  ecx = 0x0083acb0 (g_screenMgrA) and jmp PaletteCache::dtor 0x00483010 (0x00482ea0/0x00482ea5)
+2026-10-18  00480f80  Window::resizeSurfaces  C0->C1  slot 90 of the Window vtables; returns at once for argument 1 (0x00480f85); else w/h from the arguments or the child at +0x278 slots 0xd8/0xdc (0x00480fa3..0x00480fd1), minus g_titleBarH 0x0083ff10 by flag bits 8 and 4 (0x00480fdf..0x00480fe9), Surface_createFull 0x00474dd0 on this+0x274 (0x00481002), Widget_applyPalette 0x004789f0 (0x00481010), Image_recreateSurface 0x00474e70 on +0x568 when flag 0x40000000 (0x0048102f), Window::resized 0x0047bc60 (0x0048109b)
+2026-10-18  0047ea30  View::drawEdges  C0->C1  slot 79 of the View and Window vtables; needs flag bits 0x11 (0x0047ea38) and Window::visible 0x004801f0 (0x0047ea47); computes the clip rect with View::toLocal 0x0047b290 (0x0047ea82); each of the four children at +0x11c, +0x128, +0x124, +0x120 is drawn through DC_call84 0x00475b60 when the selector in edi is -1 or 0, 2, 3, 1 (0x0047ec4a..0x0047ece1); ends with slot +0xc4 of the target (0x0047ed18)
+2026-10-18  0047e5e0  emptyVirtual_47e5e0  C0->C1  the whole body is one ret (0x0047e5e0); stored in slots 4, 22, 24, 61, 62 and others of every Window-family vtable and in NodeList slots 3 and 24
+2026-10-18  0047e110  return0Pop8_47e110  C0->C1  xor eax, eax; ret 8 (0x0047e110/0x0047e112); slot 35 of the Window family vtables
+2026-10-18  0047bbb0  Window::popModal  C0->C1  slot 68 of every Window-family vtable; decrements g_modalDepth 0x0083ab58 (0x0047bbc0), compares g_modalStack 0x0083a4e8 entries against this (0x0047bbd4), shifts the later entries and g_modalSaved 0x0083aa88 down (0x0047bbfe..0x0047bc1d) and reloads g_modalPrev 0x0083ab50 / 0x0083ab54 from the new top (0x0047bc3e)
+2026-10-18  00479a60  gImageDtor_479a60  C0->C1  tests and sets bit 1 of the guard byte 0x0083a2c0 (0x00479a60..0x00479a6e), ecx = 0x0083a7b8 (g_blitSaveBuf) and jmp Image_dtor 0x00474c40 (0x00479a79)
+2026-10-18  00479a10  gImageDtor_479a10  C0->C1  tests and sets bit 0 of the guard byte 0x0083a2c0 (0x00479a10..0x00479a1e), ecx = 0x0083a500 (g_image83a500) and jmp Image_dtor 0x00474c40 (0x00479a29)
+2026-10-18  00479820  return0_479820  C0->C1  xor eax, eax; ret (0x00479820/0x00479822); stored in about 40 vtable slots of the window, view, edit box, list and sound classes
+2026-10-18  00474ab0  gSurfaceDtor_474ab0  C0->C1  tests and sets bit 0 of guard 0x00839a58 (0x00474ab0..0x00474abc), stores vtable 0x004ba2d8 at 0x00839a68 (0x00474abe) and jmp Surface_free 0x00473ae0 (0x00474ad3)
+2026-10-18  00474720  SpriteRef::scalarDtor  C0->C1  slot 0 of vtable 0x004ba2d8 (class SpriteRef, e2_classes.tsv); bit 1 of the flag runs the vector destructor iterator 0x004a5713 with size 0x2c (0x00474734..0x0047473d), else stores vtable 0x004ba2d8 and calls Surface_free (0x0047475a/0x00474760); bit 0 frees with operatorDelete_4a4ffc (0x0047476b)
+2026-10-18  00474700  recordFreeStr_474700  C0->C1  slot 1 of vtable 0x004bc3b4 (installed by panelSubCtor4a3110; slot 0 is recordCopyStr20); if [this+0x18] is 0 (0x00474700) and the argument record holds a pointer at +8 (0x0047470b) it calls _free 0x004a5007 (0x00474713), ret 4
+2026-10-18  00473a90  gLoadImageDtor_473a90  C0->C1  tests bit 0 of the guard byte 0x00839340 and sets it (0x00473a90..0x00473a9e), then ecx = 0x00839348 (g_loadImage) and jmp Image_dtor 0x00474c40 (0x00473aa4/0x00473aa9)
+2026-10-18  0046f180  runBulletinBoardWithSound  C0->C1  only caller mainLoop 0x0040f5c0; playSound 0x004481b0 with arguments 0x7e, 0x64, 0, 0, 0 (0x0046f180..0x0046f18a), f_w_4e3db8 = 0x63 and g_bulletinAnimTick = 0x14 (0x0046f18f/0x0046f199), showBulletinBoard 0x0046e810 (0x0046f1a3), then f_w_4e3db8 = -1, g_bulletinAnimTick = 0 and startSoundSlot 0x00448200 with 0x7e (0x0046f1a8..0x0046f1be)
+2026-10-18  0046de60  gImageDtor_46de60  C0->C1  ecx = 0x00838f98 (gImage_838f98) and jmp Image_dtor 0x00474c40 (0x0046de60/0x0046de65)
+2026-10-18  004658a0  RootWindow::exitProcess  C0->C1  slot 24 of vtable 0x004ba2fc (RootWindow): push 3; call 0x004a5108 (0x004658a0/0x004658a2), the CRT _exit whose callee is doexit 0x004a512a
+2026-10-18  004617f0  staticInit_gColor16Lut  C0->C1  push 0x50000, call operator_new 0x004a57f1 (0x004617f0/0x004617f5), store eax at g_color16Lut 0x00824148 (0x004617fd)
+2026-10-18  004617e0  dynInit_staticInit_gColor16Lut  C0->C1  5-byte jmp 0x004617f0 (0x004617e0); listed in the CRT initializer table
+2026-10-18  0045c190  staticInit_gRngZero  C0->C1  mov dword [0x00822d9c], 0 (0x0045c190); 0x00822d9c is g_rng
+2026-10-18  0045c180  dynInit_staticInit_gRngZero  C0->C1  5-byte jmp 0x0045c190 (0x0045c180); listed in the CRT initializer table
+2026-10-18  0045bad0  gSurfaceDtor_45bad0  C0->C1  stores vtable 0x004ba2d8 at 0x00822c98 (0x0045bad0), ecx = 0x00822c98 and jmp Surface_free 0x00473ae0 (0x0045badf); g_surface822c98 is built by staticCtor_45bab0
+2026-10-18  0045ba80  gCursorDtor_45ba80  C0->C1  stores vtable 0x004ba7f4 at 0x00822cc8 (0x0045ba80), ecx = 0x00822cc8 and jmp Cursor::destroy 0x004884b0 (0x0045ba8f); g_cursor822cc8 is built by staticCtor_45ba60
+2026-10-18  0044ada0  gSurfaceDtor_44ada0  C0->C1  stores vtable 0x004ba2d8 at 0x00821040 (0x0044ada0), ecx = 0x00821040 and jmp Surface_free 0x00473ae0 (0x0044adaf)
+2026-10-18  0044ad50  spriteRefArrayDtor_44ad50  C0->C1  pushes dtor 0x004041f0, count 5, element size 0x2c, base 0x00820f40 g_spriteRef_820f40 and calls the vector destructor iterator 0x004a5713 (0x0044ad50..0x0044ad5e)
+2026-10-18  0044acb0  fontRefsDtor_44acb0  C0->C1  for the five objects 0x00821ee8, 0x00821f28, 0x00821ec8, 0x00821f08, 0x00821020 stores vtable 0x004ba468 and calls FontRef::release 0x004838b0 (0x0044acb1..0x0044ad01)
+2026-10-18  004492c0  emptyStaticInit_4492c0  C0->C1  the whole body is one ret (0x004492c0); reached only from the stub 0x004492b0
+2026-10-18  004492b0  dynInit_emptyStaticInit_4492c0  C0->C1  5-byte jmp 0x004492c0 (0x004492b0); listed in the CRT initializer table
+2026-10-18  00449250  destroyList820f18  C0->C1  walks the circular list whose head pointer is 0x00820f1c (0x00449252..0x00449289), unlinks each node and frees it with operatorDelete_4a4ffc 0x004a4ffc (0x00449272), decrements the count 0x00820f20 (0x00449283), frees the head (0x00449291) and zeroes both words (0x0044929b/0x004492a0); mirror of initList820f18 0x00449210
+2026-10-18  004491e0  gSurfaceDtor_4491e0  C0->C1  stores vtable 0x004ba2d8 at 0x00820ed8 (0x004491e0), ecx = 0x00820ed8 and jmp Surface_free 0x00473ae0 (0x004491ea/0x004491ef); g_surface820ed8 is built by staticCtor_4491c0
+2026-10-18  00449190  staticInit_820f04  C0->C1  fld qword [0x004ba620] (0x00449190), fabs (0x00449196), __ftol 0x004a6030 (0x00449198), store eax at static_820f04 0x00820f04 (0x0044919d)
+2026-10-18  00449180  dynInit_staticInit_820f04  C0->C1  5-byte jmp 0x00449190 (0x00449180); listed in the CRT initializer table
+2026-10-18  00449170  staticInitGTerrain  C0->C1  calls 0x004a4f10, the Terrain.dll import thunk (jmp [0x004ba168] = Terrain::getInstance), and stores eax in gTerrain 0x00820ed0 (0x00449175)
+2026-10-18  00449160  dynInit_staticInitGTerrain  C0->C1  5-byte jmp 0x00449170 (0x00449160); listed in the CRT initializer table
+2026-10-18  00448190  gSoundsDtor_448190  C0->C1  pushes dtor 0x004848a0 (0x00448190), count 0x12c (0x00448195), element size 0x6c (0x0044819a), base 0x0080d840 g_sounds (0x0044819c), calls the vector destructor iterator 0x004a5713 (0x004481a1); counterpart of arrayStaticInit_448160
 2026-10-18  004877a0  SndGroup_isMuted  name HashTable::bucketSet->SndGroup_isMuted  log/p1/g1/retag.tsv
 2026-10-18  00487770  SndGroup_isDisabled  name HashTable::bucketEmpty->SndGroup_isDisabled  log/p1/g1/retag.tsv
 2026-10-18  00483b90  FontRef::dtor  name Surface::ctorVtbl483b90->FontRef::dtor  log/p1/g1/retag.tsv
