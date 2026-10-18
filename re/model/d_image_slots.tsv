@@ -1,0 +1,290 @@
+index	image_va	loader	path_va	path_file_offset	path_len	note
+0	0x81ca10	loadInterfaceArt	0x4d05f0	0xd05f0	17	
+1	0x81ca68	loadInterfaceArt	0x4d05f0	0xd05f0	17	
+2	0x81cac0	loadInterfaceArt	0x4d05dc	0xd05dc	17	
+3	0x81cb18	loadInterfaceArt	0x4d05c8	0xd05c8	17	
+4	0x81cb70	loadInterfaceArt	0x4d05b4	0xd05b4	17	
+5	0x81cbc8	loadInterfaceArt	0x4d05a0	0xd05a0	17	
+6	0x81cc20	loadInterfaceArt	0x4d058c	0xd058c	17	
+7	0x81cc78	loadInterfaceArt	0x4d0578	0xd0578	17	
+8	0x81ccd0	loadInterfaceArt	0x4d0564	0xd0564	17	
+9	0x81cd28	loadInterfaceArt	0x4d0550	0xd0550	17	
+10	0x81cd80	loadInterfaceArt	0x4d053c	0xd053c	17	
+14	0x81cee0	loadWorldAssets	0x4cc208	0xcc208	26	; several loads
+14	0x81cee0	loadWorldAssets	0x4cc630	0xcc630	42	; several loads
+14	0x81cee0	loadWorldAssets	0x4cca48	0xcca48	29	; several loads
+14	0x81cee0	loadWorldAssets	0x4cce1c	0xcce1c	34	; several loads
+15	0x81cf38	loadWorldAssets	0x4cc2e0	0xcc2e0	29	; several loads
+15	0x81cf38	loadWorldAssets	0x4cc748	0xcc748	42	; several loads
+15	0x81cf38	loadWorldAssets	0x4ccb28	0xccb28	36	; several loads
+15	0x81cf38	loadWorldAssets	0x4ccf0c	0xccf0c	24	; several loads
+16	0x81cf90	loadWorldAssets	0x4cc2a0	0xcc2a0	30	; several loads
+16	0x81cf90	loadWorldAssets	0x4cc6f8	0xcc6f8	40	; several loads
+16	0x81cf90	loadWorldAssets	0x4ccae0	0xccae0	24	; several loads
+16	0x81cf90	loadWorldAssets	0x4ccec4	0xccec4	36	; several loads
+17	0x81cfe8	loadWorldAssets	0x4cc260	0xcc260	30	; several loads
+17	0x81cfe8	loadWorldAssets	0x4cc6b0	0xcc6b0	35	; several loads
+17	0x81cfe8	loadWorldAssets	0x4ccac4	0xccac4	26	; several loads
+17	0x81cfe8	loadWorldAssets	0x4ccea0	0xccea0	32	; several loads
+18	0x81d040	loadWorldAssets	0x4cc240	0xcc240	28	; several loads
+18	0x81d040	loadWorldAssets	0x4cc684	0xcc684	40	; several loads
+18	0x81d040	loadWorldAssets	0x4ccaa8	0xccaa8	27	; several loads
+18	0x81d040	loadWorldAssets	0x4cce80	0xcce80	30	; several loads
+19	0x81d098	loadWorldAssets	0x4cbf6c	0xcbf6c	31	; several loads
+19	0x81d098	loadWorldAssets	0x4cc354	0xcc354	41	; several loads
+19	0x81d098	loadWorldAssets	0x4cc7bc	0xcc7bc	34	; several loads
+19	0x81d098	loadWorldAssets	0x4ccb8c	0xccb8c	28	; several loads
+20	0x81d0f0	loadWorldAssets	0x4cc1b0	0xcc1b0	27	; several loads
+20	0x81d0f0	loadWorldAssets	0x4cc5c4	0xcc5c4	34	; several loads
+20	0x81d0f0	loadWorldAssets	0x4cc9d8	0xcc9d8	38	; several loads
+20	0x81d0f0	loadWorldAssets	0x4ccdbc	0xccdbc	31	; several loads
+23	0x81d1f8	loadWorldAssets	0x4cc280	0xcc280	29	; several loads
+23	0x81d1f8	loadWorldAssets	0x4cc6d4	0xcc6d4	34	; several loads
+23	0x81d1f8	loadWorldAssets	0x4cca24	0xcca24	32	; several loads
+23	0x81d1f8	loadWorldAssets	0x4ccdfc	0xccdfc	31	; several loads
+25	0x81d2a8	loadWorldAssets	0x4cc1e8	0xcc1e8	29	; several loads
+25	0x81d2a8	loadWorldAssets	0x4cc60c	0xcc60c	34	; several loads
+25	0x81d2a8	loadWorldAssets	0x4cca84	0xcca84	32	; several loads
+25	0x81d2a8	loadWorldAssets	0x4cce60	0xcce60	31	; several loads
+26	0x81d300	loadWorldAssets	0x4cc2c0	0xcc2c0	28	; several loads
+26	0x81d300	loadWorldAssets	0x4cc724	0xcc724	34	; several loads
+26	0x81d300	loadWorldAssets	0x4ccafc	0xccafc	41	; several loads
+26	0x81d300	loadWorldAssets	0x4cceec	0xcceec	29	; several loads
+27	0x81d358	loadWorldAssets	0x4cc224	0xcc224	26	; several loads
+27	0x81d358	loadWorldAssets	0x4cc65c	0xcc65c	38	; several loads
+27	0x81d358	loadWorldAssets	0x4cca68	0xcca68	27	; several loads
+27	0x81d358	loadWorldAssets	0x4cce40	0xcce40	30	; several loads
+28	0x81d3b0	loadWorldAssets	0x4cc1cc	0xcc1cc	25	; several loads
+28	0x81d3b0	loadWorldAssets	0x4cc5e8	0xcc5e8	34	; several loads
+28	0x81d3b0	loadWorldAssets	0x4cca00	0xcca00	34	; several loads
+28	0x81d3b0	loadWorldAssets	0x4ccddc	0xccddc	30	; several loads
+29	0x81d408	loadWorldAssets	0x4cc18c	0xcc18c	33	; several loads
+29	0x81d408	loadWorldAssets	0x4cc5a4	0xcc5a4	31	; several loads
+29	0x81d408	loadWorldAssets	0x4cc9b4	0xcc9b4	32	; several loads
+29	0x81d408	loadWorldAssets	0x4ccda0	0xccda0	26	; several loads
+30	0x81d460	loadInterfaceArt	0x4d052c	0xd052c	13	
+37	0x81d6c8	loadWorldAssets	0x4c9d1c	0xc9d1c	32	; several loads
+37	0x81d6c8	loadWorldAssets	0x4c9cfc	0xc9cfc	31	; several loads
+37	0x81d6c8	loadWorldAssets	0x4c9c98	0xc9c98	25	; several loads
+38	0x81d720	loadWorldAssets	0x4c9d1c	0xc9d1c	32	; several loads
+38	0x81d720	loadWorldAssets	0x4c9cd8	0xc9cd8	32	; several loads
+38	0x81d720	loadWorldAssets	0x4c9c80	0xc9c80	23	; several loads
+39	0x81d778	loadWorldAssets	0x4c9d1c	0xc9d1c	32	; several loads
+39	0x81d778	loadWorldAssets	0x4c9cb4	0xc9cb4	32	; several loads
+39	0x81d778	loadWorldAssets	0x4c9c64	0xc9c64	25	; several loads
+40	0x81d7d0	loadWorldAssets				; path chosen at run time (pcVar13)
+41	0x81d828	loadWorldAssets	0x4c9c20	0xc9c20	36	; several loads
+41	0x81d828	loadWorldAssets	0x4c9be0	0xc9be0	23	; several loads
+41	0x81d828	loadWorldAssets	0x4c9b68	0xc9b68	29	; several loads
+41	0x81d828	loadWorldAssets	0x4c9904	0xc9904	30	; several loads
+42	0x81d880	loadWorldAssets	0x4c9bf8	0xc9bf8	36	; several loads
+42	0x81d880	loadWorldAssets	0x4c9bc0	0xc9bc0	28	; several loads
+42	0x81d880	loadWorldAssets	0x4c9b48	0xc9b48	29	; several loads
+42	0x81d880	loadWorldAssets	0x4c98e4	0xc98e4	31	; several loads
+43	0x81d8d8	loadWorldAssets	0x4c9ba4	0xc9ba4	27	; several loads
+43	0x81d8d8	loadWorldAssets	0x4c98c4	0xc98c4	31	; several loads
+44	0x81d930	loadWorldAssets	0x4c9b88	0xc9b88	25	; several loads
+44	0x81d930	loadWorldAssets	0x4c98a4	0xc98a4	31	; several loads
+45	0x81d988	loadWorldAssets	0x4c9b24	0xc9b24	33	; several loads
+45	0x81d988	loadWorldAssets	0x4c9a6c	0xc9a6c	37	; several loads
+45	0x81d988	loadWorldAssets	0x4c99ac	0xc99ac	31	; several loads
+46	0x81d9e0	loadWorldAssets	0x4c9b00	0xc9b00	33	; several loads
+46	0x81d9e0	loadWorldAssets	0x4c9a44	0xc9a44	36	; several loads
+46	0x81d9e0	loadWorldAssets	0x4c998c	0xc998c	31	; several loads
+47	0x81da38	loadWorldAssets	0x4c9adc	0xc9adc	34	; several loads
+47	0x81da38	loadWorldAssets	0x4c9a1c	0xc9a1c	37	; several loads
+47	0x81da38	loadWorldAssets	0x4c9968	0xc9968	32	; several loads
+48	0x81da90	loadWorldAssets	0x4c9ab8	0xc9ab8	34	; several loads
+48	0x81da90	loadWorldAssets	0x4c99f4	0xc99f4	37	; several loads
+48	0x81da90	loadWorldAssets	0x4c9944	0xc9944	33	; several loads
+49	0x81dae8	loadWorldAssets				; path chosen at run time (pcVar13)
+50	0x81db40	loadWorldAssets	0x4c97c0	0xc97c0	30	; several loads
+50	0x81db40	loadWorldAssets	0x4c987c	0xc987c	36	; several loads
+50	0x81db40	loadWorldAssets	0x4c984c	0xc984c	45	; several loads
+50	0x81db40	loadWorldAssets	0x4c9830	0xc9830	25	; several loads
+51	0x81db98	loadWorldAssets	0x4c97a0	0xc97a0	31	; several loads
+51	0x81db98	loadWorldAssets	0x4c987c	0xc987c	36	; several loads
+51	0x81db98	loadWorldAssets	0x4c984c	0xc984c	45	; several loads
+51	0x81db98	loadWorldAssets	0x4c9814	0xc9814	27	; several loads
+52	0x81dbf0	loadWorldAssets	0x4c9780	0xc9780	31	; several loads
+52	0x81dbf0	loadWorldAssets	0x4c987c	0xc987c	36	; several loads
+52	0x81dbf0	loadWorldAssets	0x4c984c	0xc984c	45	; several loads
+52	0x81dbf0	loadWorldAssets	0x4c97fc	0xc97fc	23	; several loads
+53	0x81dc48	loadWorldAssets				; path chosen at run time (pcVar13)
+54	0x81dca0	loadInterfaceArt	0x4d0514	0xd0514	23	
+55	0x81dcf8	loadInterfaceArt	0x4d04fc	0xd04fc	23	
+56	0x81dd50	loadInterfaceArt	0x4d04e4	0xd04e4	22	
+57	0x81dda8	loadInterfaceArt	0x4d04cc	0xd04cc	23	
+58	0x81de00	loadInterfaceArt	0x4d04b0	0xd04b0	24	
+59	0x81de58	loadInterfaceArt	0x4d0498	0xd0498	23	
+60	0x81deb0	loadWorldAssets	0x4ca2ac	0xca2ac	25	; several loads
+60	0x81deb0	loadWorldAssets	0x4ca098	0xca098	28	; several loads
+60	0x81deb0	loadWorldAssets	0x4ca48c	0xca48c	28	; several loads
+60	0x81deb0	loadWorldAssets	0x4c9e64	0xc9e64	25	; several loads
+61	0x81df08	loadInterfaceArt	0x4d0478	0xd0478	30	
+65	0x81e068	loadInterfaceArt	0x4d0460	0xd0460	23	
+66	0x81e0c0	loadInterfaceArt	0x4d0440	0xd0440	29	
+67	0x81e118	loadInterfaceArt	0x4d0424	0xd0424	27	
+68	0x81e170	loadInterfaceArt	0x4d03fc	0xd03fc	36	
+69	0x81e1c8	loadInterfaceArt	0x4d03dc	0xd03dc	29	
+70	0x81e220	loadInterfaceArt	0x4d03bc	0xd03bc	29	
+76	0x81e430	loadInterfaceArt	0x4d03a0	0xd03a0	26	
+77	0x81e488	loadWorldAssets	0x4cbfd8	0xcbfd8	25	; several loads
+77	0x81e488	loadWorldAssets	0x4cc398	0xcc398	25	; several loads
+77	0x81e488	loadWorldAssets	0x4ccbf8	0xccbf8	26	; several loads
+77	0x81e488	loadWorldAssets	0x4ccbf8	0xccbf8	26	; several loads
+78	0x81e4e0	loadWorldAssets	0x4ca34c	0xca34c	27	; several loads
+78	0x81e4e0	loadWorldAssets	0x4ca158	0xca158	26	; several loads
+78	0x81e4e0	loadWorldAssets	0x4ca588	0xca588	27	; several loads
+78	0x81e4e0	loadWorldAssets	0x4c9f2c	0xc9f2c	32	; several loads
+79	0x81e538	loadWorldAssets	0x4ca4c4	0xca4c4	32	; several loads
+79	0x81e538	loadWorldAssets	0x4ca4c4	0xca4c4	32	; several loads
+79	0x81e538	loadWorldAssets	0x4ca4c4	0xca4c4	32	; several loads
+79	0x81e538	loadWorldAssets	0x4ca4c4	0xca4c4	32	; several loads
+80	0x81e590	loadInterfaceArt	0x4d037c	0xd037c	32	
+82	0x81e640	loadInterfaceArt	0x4d0360	0xd0360	25	
+83	0x81e698	loadWorldAssets	0x4cc168	0xcc168	35	; several loads
+83	0x81e698	loadWorldAssets	0x4cc57c	0xcc57c	37	; several loads
+83	0x81e698	loadWorldAssets	0x4cc990	0xcc990	34	; several loads
+83	0x81e698	loadWorldAssets	0x4ccd84	0xccd84	25	; several loads
+84	0x81e6f0	loadInterfaceArt	0x4d0348	0xd0348	22	
+85	0x81e748	loadInterfaceArt	0x4d0328	0xd0328	29	
+86	0x81e7a0	loadInterfaceArt	0x4d030c	0xd030c	24	
+87	0x81e7f8	loadInterfaceArt	0x4d02ec	0xd02ec	28	
+88	0x81e850	loadInterfaceArt	0x4d02d4	0xd02d4	21	
+89	0x81e8a8	loadInterfaceArt	0x4d02b4	0xd02b4	29	
+90	0x81e900	loadWorldAssets	0x4cc144	0xcc144	34	; several loads
+90	0x81e900	loadWorldAssets	0x4cc554	0xcc554	36	; several loads
+90	0x81e900	loadWorldAssets	0x4cc96c	0xcc96c	33	; several loads
+90	0x81e900	loadWorldAssets	0x4ccd6c	0xccd6c	23	; several loads
+91	0x81e958	loadInterfaceArt	0x4d0298	0xd0298	25	
+92	0x81e9b0	loadInterfaceArt	0x4d027c	0xd027c	25	
+93	0x81ea08	loadWorldAssets	0x4cbf4c	0xcbf4c	29	; several loads
+93	0x81ea08	loadWorldAssets	0x4cc794	0xcc794	39	; several loads
+93	0x81ea08	loadWorldAssets	0x4ccb70	0xccb70	26	; several loads
+94	0x81ea60	loadInterfaceArt	0x4d0264	0xd0264	23	
+95	0x81eab8	loadInterfaceArt	0x4d0248	0xd0248	27	
+96	0x81eb10	loadWorldAssets	0x4cbf8c	0xcbf8c	46	; several loads
+96	0x81eb10	loadWorldAssets	0x4cc320	0xcc320	49	; several loads
+96	0x81eb10	loadWorldAssets	0x4cc7e0	0xcc7e0	47	; several loads
+96	0x81eb10	loadWorldAssets	0x4ccbac	0xccbac	49	; several loads
+99	0x81ec18	loadWorldAssets	0x4cbfbc	0xcbfbc	25	; several loads
+99	0x81ec18	loadWorldAssets	0x4cc380	0xcc380	23	; several loads
+99	0x81ec18	loadWorldAssets	0x4cc810	0xcc810	24	; several loads
+99	0x81ec18	loadWorldAssets	0x4ccbe0	0xccbe0	23	; several loads
+100	0x81ec70	loadInterfaceArt	0x4d010c	0xd010c	26	
+101	0x81ecc8	loadInterfaceArt	0x4d01d4	0xd01d4	23	
+102	0x81ed20	loadInterfaceArt	0x4d00c8	0xd00c8	33	
+103	0x81ed78	loadInterfaceArt	0x4d019c	0xd019c	27	
+104	0x81edd0	loadInterfaceArt	0x4d022c	0xd022c	25	
+105	0x81ee28	loadInterfaceArt	0x4d0068	0xd0068	31	
+106	0x81ee80	loadInterfaceArt	0x4d00a4	0xd00a4	33	
+107	0x81eed8	loadInterfaceArt	0x4d01ec	0xd01ec	30	
+108	0x81ef30	loadInterfaceArt	0x4d0144	0xd0144	25	
+109	0x81ef88	loadInterfaceArt	0x4d01b8	0xd01b8	27	
+110	0x81efe0	loadInterfaceArt	0x4d017c	0xd017c	29	
+111	0x81f038	loadInterfaceArt	0x4d0160	0xd0160	25	
+112	0x81f090	loadInterfaceArt	0x4d0128	0xd0128	25	
+113	0x81f0e8	loadInterfaceArt	0x4d020c	0xd020c	30	
+114	0x81f140	loadInterfaceArt	0x4d00ec	0xd00ec	31	
+115	0x81f198	loadInterfaceArt	0x4d0088	0xd0088	25	
+116	0x81f1f0	loadInterfaceArt	0x4d004c	0xd004c	24	
+117	0x81f248	loadInterfaceArt	0x4d002c	0xd002c	30	
+118	0x81f2a0	loadInterfaceArt	0x4d0008	0xd0008	32	
+120	0x81f350	loadInterfaceArt	0x4cffec	0xcffec	25	
+121	0x81f3a8	loadInterfaceArt	0x4cffd4	0xcffd4	22	
+122	0x81f400	loadInterfaceArt	0x4cffb8	0xcffb8	25	
+123	0x81f458	loadInterfaceArt	0x4cff9c	0xcff9c	27	
+124	0x81f4b0	loadInterfaceArt	0x4cff80	0xcff80	26	
+125	0x81f508	loadInterfaceArt	0x4cff64	0xcff64	27	
+126	0x81f560	loadInterfaceArt	0x4cff48	0xcff48	26	
+127	0x81f5b8	loadInterfaceArt	0x4cff2c	0xcff2c	24	
+128	0x81f610	loadInterfaceArt	0x4cff10	0xcff10	26	
+129	0x81f668	loadInterfaceArt	0x4cfef8	0xcfef8	23	
+130	0x81f6c0	loadInterfaceArt	0x4cfedc	0xcfedc	25	
+131	0x81f718	loadInterfaceArt	0x4cfec0	0xcfec0	24	
+132	0x81f770	loadInterfaceArt	0x4cfea8	0xcfea8	20	
+133	0x81f7c8	loadInterfaceArt	0x4cfe8c	0xcfe8c	26	
+134	0x81f820	loadInterfaceArt	0x4cfe70	0xcfe70	27	
+135	0x81f878	loadInterfaceArt	0x4cfe54	0xcfe54	26	
+136	0x81f8d0	loadInterfaceArt	0x4cfe38	0xcfe38	26	
+137	0x81f928	loadInterfaceArt	0x4cfe18	0xcfe18	28	
+140	0x81fa30	loadInterfaceArt	0x4cfe04	0xcfe04	19	
+141	0x81fa88	loadInterfaceArt	0x4cfdf0	0xcfdf0	19	
+142	0x81fae0	loadInterfaceArt	0x4cfddc	0xcfddc	19	
+143	0x81fb38	loadInterfaceArt	0x4cfdc8	0xcfdc8	19	
+144	0x81fb90	loadInterfaceArt	0x4cfdb4	0xcfdb4	19	
+145	0x81fbe8	loadInterfaceArt	0x4cfda0	0xcfda0	19	
+146	0x81fc40	loadInterfaceArt	0x4cfd8c	0xcfd8c	19	
+147	0x81fc98	loadInterfaceArt	0x4cfd78	0xcfd78	19	
+148	0x81fcf0	loadInterfaceArt	0x4cfd64	0xcfd64	19	
+149	0x81fd48	loadInterfaceArt	0x4cfd50	0xcfd50	19	
+150	0x81fda0	loadInterfaceArt	0x4cfd38	0xcfd38	23	
+151	0x81fdf8	loadWorldAssets	0x4cc120	0xcc120	32	; several loads
+151	0x81fdf8	loadWorldAssets	0x4cc52c	0xcc52c	36	; several loads
+151	0x81fdf8	loadWorldAssets	0x4cc94c	0xcc94c	31	; several loads
+151	0x81fdf8	loadWorldAssets	0x4ccd44	0xccd44	36	; several loads
+152	0x81fe50	loadWorldAssets	0x4cc0d4	0xcc0d4	30	; several loads
+152	0x81fe50	loadWorldAssets	0x4cc4d4	0xcc4d4	42	; several loads
+152	0x81fe50	loadWorldAssets	0x4cc908	0xcc908	35	; several loads
+152	0x81fe50	loadWorldAssets	0x4cccf8	0xcccf8	34	; several loads
+153	0x81fea8	loadWorldAssets	0x4cc070	0xcc070	27	; several loads
+153	0x81fea8	loadWorldAssets	0x4cc4ac	0xcc4ac	39	; several loads
+153	0x81fea8	loadWorldAssets	0x4cc8bc	0xcc8bc	34	; several loads
+153	0x81fea8	loadWorldAssets	0x4ccc98	0xccc98	30	; several loads
+154	0x81ff00	loadWorldAssets	0x4cc0ac	0xcc0ac	36	; several loads
+154	0x81ff00	loadWorldAssets	0x4cc484	0xcc484	37	; several loads
+154	0x81ff00	loadWorldAssets	0x4cc92c	0xcc92c	30	; several loads
+154	0x81ff00	loadWorldAssets	0x4cccd8	0xcccd8	29	; several loads
+155	0x81ff58	loadWorldAssets	0x4cc08c	0xcc08c	31	; several loads
+155	0x81ff58	loadWorldAssets	0x4cc45c	0xcc45c	39	; several loads
+155	0x81ff58	loadWorldAssets	0x4cc8e0	0xcc8e0	39	; several loads
+155	0x81ff58	loadWorldAssets	0x4cccb8	0xcccb8	31	; several loads
+156	0x81ffb0	loadWorldAssets	0x4cc054	0xcc054	27	; several loads
+156	0x81ffb0	loadWorldAssets	0x4cc434	0xcc434	38	; several loads
+156	0x81ffb0	loadWorldAssets	0x4cc898	0xcc898	34	; several loads
+156	0x81ffb0	loadWorldAssets	0x4ccc78	0xccc78	30	; several loads
+157	0x820008	loadWorldAssets	0x4cc034	0xcc034	29	; several loads
+157	0x820008	loadWorldAssets	0x4cc408	0xcc408	40	; several loads
+157	0x820008	loadWorldAssets	0x4cc874	0xcc874	33	; several loads
+157	0x820008	loadWorldAssets	0x4ccc54	0xccc54	32	; several loads
+158	0x820060	loadWorldAssets	0x4cc014	0xcc014	30	; several loads
+158	0x820060	loadWorldAssets	0x4cc3dc	0xcc3dc	40	; several loads
+158	0x820060	loadWorldAssets	0x4cc850	0xcc850	34	; several loads
+158	0x820060	loadWorldAssets	0x4ccc34	0xccc34	30	; several loads
+159	0x8200b8	loadWorldAssets	0x4cbff4	0xcbff4	31	; several loads
+159	0x8200b8	loadWorldAssets	0x4cc3b4	0xcc3b4	39	; several loads
+159	0x8200b8	loadWorldAssets	0x4cc82c	0xcc82c	32	; several loads
+159	0x8200b8	loadWorldAssets	0x4ccc14	0xccc14	31	; several loads
+160	0x820110	loadInterfaceArt	0x4cfd00	0xcfd00	24	
+161	0x820168	loadInterfaceArt	0x4cfce4	0xcfce4	26	
+162	0x8201c0	loadInterfaceArt	0x4cfcc0	0xcfcc0	33	
+163	0x820218	loadInterfaceArt	0x4cfca8	0xcfca8	22	
+164	0x820270	loadInterfaceArt	0x4cfc88	0xcfc88	29	
+165	0x8202c8	loadInterfaceArt	0x4cfc68	0xcfc68	30	
+166	0x820320	loadInterfaceArt	0x4cfc4c	0xcfc4c	25	
+167	0x820378	loadInterfaceArt	0x4cfc24	0xcfc24	36	
+168	0x8203d0	loadInterfaceArt	0x4cfc00	0xcfc00	32	
+169	0x820428	loadInterfaceArt	0x4cfbe4	0xcfbe4	26	
+170	0x820480	loadInterfaceArt	0x4cfbcc	0xcfbcc	20	
+171	0x8204d8	loadInterfaceArt	0x4cfbb0	0xcfbb0	26	
+172	0x820530	loadInterfaceArt	0x4cfb94	0xcfb94	25	
+173	0x820588	loadInterfaceArt	0x4cfb70	0xcfb70	33	
+174	0x8205e0	loadInterfaceArt	0x4cfb50	0xcfb50	31	
+175	0x820638	loadInterfaceArt	0x4cfb30	0xcfb30	28	
+176	0x820690	loadInterfaceArt	0x4cfb18	0xcfb18	22	
+177	0x8206e8	loadInterfaceArt	0x4cfb00	0xcfb00	23	
+178	0x820740	loadWorldAssets				; path chosen at run time (pcVar13)
+179	0x820798	loadInterfaceArt	0x4cfaec	0xcfaec	16	
+180	0x8207f0	loadInterfaceArt	0x4cfad4	0xcfad4	20	
+181	0x820848	loadInterfaceArt	0x4cfabc	0xcfabc	23	
+182	0x8208a0	loadInterfaceArt	0x4cfc4c	0xcfc4c	25	
+183	0x8208f8	loadInterfaceArt	0x4cfa98	0xcfa98	33	
+184	0x820950	loadInterfaceArt	0x4cfa80	0xcfa80	23	
+185	0x8209a8	loadInterfaceArt	0x4d0248	0xd0248	27	
+186	0x820a00	loadInterfaceArt	0x4cfa64	0xcfa64	25	
+187	0x820a58	loadWorldAssets	0x4cc0f4	0xcc0f4	40	; several loads
+187	0x820a58	loadWorldAssets	0x4cc500	0xcc500	43	; several loads
+187	0x820a58	loadWorldAssets	0x4ccd1c	0xccd1c	38	; several loads
+187	0x820a58	loadWorldAssets	0x4ccd1c	0xccd1c	38	; several loads
+188	0x820ab0	loadInterfaceArt	0x4cfd1c	0xcfd1c	24	
