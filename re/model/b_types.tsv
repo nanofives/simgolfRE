@@ -1,0 +1,165 @@
+module	va	size	type	count	stride	sign	const	fields	name
+golf_clean.exe	0x005794b8		struct	156	0x100			cstruct:re/model/include/sections/b.h#Golfer	g_golfers
+golf_clean.exe	0x00585850		struct	64	0x4c			cstruct:re/model/include/sections/b.h#Walker	g_walkers
+golf_clean.exe	0x004d6088		struct	84	0x230			cstruct:re/model/include/sections/b.h#GolferType	g_golferTypes
+golf_clean.exe	0x005849e0		struct	84	0x2c			cstruct:re/model/include/sections/b.h#GolferTypeState	g_golferTypeState
+golf_clean.exe	0x0056ae70		struct	32	0xb8			cstruct:re/model/include/sections/b.h#GolferStats	g_golferStats
+golf_clean.exe	0x0058dd50		struct	100	0x38			cstruct:re/model/include/sections/b.h#GolfPro	g_golfPros
+golf_clean.exe	0x0053a454		struct	100	0x32			cstruct:re/model/include/sections/b.h#StorySlot	g_storyDefs
+golf_clean.exe	0x0058dd34		struct	1	0x17			0:uchar[23]	unk_0058dd34
+golf_clean.exe	0x00567b34		int	152					g_ballTrailX
+golf_clean.exe	0x00567d94		int	152					g_ballTrailY
+golf_clean.exe	0x00567ff4		int	152					g_golferStripSlot
+golf_clean.exe	0x005685c8		int	10					g_shotPowerCacheArg2
+golf_clean.exe	0x0056962c		int	152					g_shotStartDate
+golf_clean.exe	0x00838a94		int	1					g_storyReplyChapter
+golf_clean.exe	0x00838a9c		int	1					g_namedStoryIndex
+golf_clean.exe	0x00838d9c		char	12					g_numberTextBuf
+golf_clean.exe	0x00838da8		int	65					g_thoughtArgByKind
+golf_clean.exe	0x00823768		int	1					g_infoPanelHoverFrames
+golf_clean.exe	0x00568258		uchar	880					g_surfaces568258
+golf_clean.exe	0x0059fc60		struct	16	0x388			cstruct:re/model/include/sections/b.h#ShotTrack	g_storyPairs
+golf_clean.exe	0x00543ca0		int	20				g_activeObjectLevel	g_activeObjectLevel
+golf_clean.exe	0x00543cf0		ptr	1				g_jpegRowCursor	g_jpegRowCursor
+golf_clean.exe	0x00543cf4		int	1				unk_00543cf4	unk_00543cf4
+golf_clean.exe	0x00543cf8		flags32	1				unk_00543cf8	unk_00543cf8
+golf_clean.exe	0x00543cfc		flags32	1				g_amenityUnlockMask	g_amenityUnlockMask
+golf_clean.exe	0x00543d00		int	1				g_cachedCameraTileY	g_cachedCameraTileY
+golf_clean.exe	0x00543d04		int	1				g_cachedCameraTileX	g_cachedCameraTileX
+golf_clean.exe	0x00543d08		int	1				g_cursorTileX	g_cursorTileX
+golf_clean.exe	0x00543d0c		int	1				g_cursorTileY	g_cursorTileY
+golf_clean.exe	0x00543d10		struct	2100	0x32			cstruct:re/model/include/sections/b.h#GolferPhrase	g_golferPhrases
+golf_clean.exe	0x00520a28		struct	2100	0x32			cstruct:re/model/include/sections/b.h#GolferPhrase	g_golferPhrasesBackup
+golf_clean.exe	0x0055d738		struct	100	0x25			cstruct:re/model/include/sections/b.h#CelebrityRecord	g_celebrities
+golf_clean.exe	0x0055e5ac		int	1				g_lastTipDate	g_lastTipDate
+golf_clean.exe	0x0055e5b0	0x370	uchar	0x370				surfaceArray_0055e5b0	unk_0055e5b0
+golf_clean.exe	0x005689e8		struct	100	8			cstruct:re/model/include/sections/b.h#ScenicDedication	g_scenicDedications
+golf_clean.exe	0x0056a51c		int	1				g_nextArrivalOrder	g_nextArrivalOrder
+golf_clean.exe	0x0056a520		int	1				unk_0056a520	unk_0056a520
+golf_clean.exe	0x00572cac		int	1				g_visitor60Count	g_visitor60Count
+golf_clean.exe	0x0053a450		int	1				g_landPurchaseCount	g_landPurchaseCount
+golf_clean.exe	0x005409a8		int	1				g_thoughtOnPartner	g_thoughtOnPartner
+golf_clean.exe	0x0058f330		int	1				g_playerShotStyle	g_playerShotStyle
+golf_clean.exe	0x0058f338	0xb7c0	uchar	0xb7c0				g_golferTypesBackup	g_golferTypesBackup
+golf_clean.exe	0x005a47b8		int	10				g_shotPowerCacheDist	g_shotPowerCacheDist
+golf_clean.exe	0x005a47e0		int	1				g_tournamentPrep	g_tournamentPrep
+golf_clean.exe	0x005a47e8		int	32				g_ballScreenXs	g_ballScreenXs
+golf_clean.exe	0x005a4868		int	32				g_ballScreenYs	g_ballScreenYs
+golf_clean.exe	0x571fd4		int	1		s			g_cash_div100
+golf_clean.exe	0x571fd8		struct	17	0x2e			cstruct:re/model/include/sections/b.h#CourseRecord	g_courseTable
+golf_clean.exe	0x584210		struct	100	0x14			cstruct:re/model/include/sections/b.h#FinanceYear	g_financeYears
+golf_clean.exe	0x51b388		short	500		s			g_cashHistory
+golf_clean.exe	0x520640		short	500		s			g_memberTypeHistory
+golf_clean.exe	0x53e63c		short	500		s			g_funHistory
+golf_clean.exe	0x5409ac		short	500		s			g_skillHistory
+golf_clean.exe	0x568600		ushort	500		u			g_eventHistory
+golf_clean.exe	0x5422f8		struct	10	0x18			cstruct:re/model/include/sections/b.h#CourseRanking	g_courseRanking
+golf_clean.exe	0x59ae80		struct	19	0x18			cstruct:re/model/include/sections/b.h#HolePoints	g_holePoints
+golf_clean.exe	0x572cb0		struct	128	0x14			cstruct:re/model/include/sections/b.h#HabitatSlot	g_habitatSlots
+golf_clean.exe	0x5736b0		struct	256	0x24			cstruct:re/model/include/sections/b.h#BallRecord	g_ballRecords
+golf_clean.exe	0x59dea0		int	32		s			g_golferClassSlotCounts
+golf_clean.exe	0x56a524		int	10		s			g_bestRounds
+golf_clean.exe	0x5a9cac		int	1		s			g_awardHoleHonours
+golf_clean.exe	0x5a9cb0		int	1		s			g_awardLots
+golf_clean.exe	0x5a9cb4		int	1		s			g_awardCashThousands
+golf_clean.exe	0x5a9cb8		int	1		s			g_rankComponent3
+golf_clean.exe	0x5a9cbc		int	1		s			unk_005a9cbc
+golf_clean.exe	0x5a9cc0		int	1		s			unk_005a9cc0
+golf_clean.exe	0x5a9cc4		int	1		s			unk_005a9cc4
+golf_clean.exe	0x5a9cc8		int	1		s			unk_005a9cc8
+golf_clean.exe	0x5a9ccc		int	1		s			unk_005a9ccc
+golf_clean.exe	0x5a9cd4		int	1		s			unk_005a9cd4
+golf_clean.exe	0x5a9cd8		int	1		s			unk_005a9cd8
+golf_clean.exe	0x5a9cdc		int	1		s			unk_005a9cdc
+golf_clean.exe	0x5a9ce0		int	1		s			g_shotPowerRingIndex
+golf_clean.exe	0x5a9ce4		int	1		s			unk_005a9ce4
+golf_clean.exe	0x5a9ce8		int	1		s			unk_005a9ce8
+golf_clean.exe	0x59aaf8		int	1		s			g_ratingMilestone
+golf_clean.exe	0x59ae7c		int	1		s			g_nextGolferSlot
+golf_clean.exe	0x59b048		int	1		s			g_lastStoryAdvanceDate
+golf_clean.exe	0x59b04c		int	1		s			unk_0059b04c
+golf_clean.exe	0x59b730		int	1		s			g_challengeLevel
+golf_clean.exe	0x59b734		int	1		s			unk_0059b734
+golf_clean.exe	0x59b738		int	1		s			unk_0059b738
+golf_clean.exe	0x59b73c		int	1		s			unk_0059b73c
+golf_clean.exe	0x5a6368		int	1		s			g_demolishPendingY
+golf_clean.exe	0x5a6374		int	1		s			g_debtYears
+golf_clean.exe	0x5787cc		int	1		s			g_awardTournamentPoints
+golf_clean.exe	0x561258		int	1		s			g_awardStories
+golf_clean.exe	0x541cd8		int	1		s			g_skillRatingX100
+golf_clean.exe	0x567b04		int	1		s			g_tournamentPurse
+golf_clean.exe	0x5a5a24		int	1		s			g_lastAllocatedGolfer
+golf_clean.exe	0x568d08		int	1		s			g_saveFd
+golf_clean.exe	0x822c88		int	1		s			g_difficulty
+golf_clean.exe	0x56a514		int	1		s			unk_0056a514
+golf_clean.exe	0x56a518		int	1		s			unk_0056a518
+golf_clean.exe	0x5a9cd0		char	1		s			unk_005a9cd0
+golf_clean.exe	0x5a6d3c		short	1		s			g_year
+golf_clean.exe	0x5a6d40		char	1024					unk_005a6d40
+golf_clean.exe	0x56a510		ptr	1					unk_0056a510
+golf_clean.exe	0x59c08c		flags32	1					g_thoughtSeenLo
+golf_clean.exe	0x571d38		flags32	1					g_thoughtSeenHi
+golf_clean.exe	0x5a6370		flags32	1					g_buildingKindMask
+golf_clean.exe	0x822c70		flags32	1					g_freeUnlockMask
+golf_clean.exe	0x00834170		int	1		s			g_date
+golf_clean.exe	0x00822d9c		struct	1	0x4			cstruct:re/model/include/sections/b.h#Random	g_rng
+golf_clean.exe	0x0059e7b8		flags32	1					g_flags
+golf_clean.exe	0x005a5a00		flags32	1					g_preferences
+golf_clean.exe	0x005a7140		flags32	1					g_shotFlags5a7140
+golf_clean.exe	0x005a7144		int	1		s			g_messageTimer
+golf_clean.exe	0x005a59f8		int	1		s			g_playerGolfer
+golf_clean.exe	0x005a59fc		int	1		s			g_lastCameraRot
+golf_clean.exe	0x005a5a04		struct	1	0x20			0:char[16],0x10:char[16]	g_playerSkills
+golf_clean.exe	0x005a34e0		char	1		s			g_courseType
+golf_clean.exe	0x0058a528		char	16					g_textBuf
+golf_clean.exe	0x00824130		int	1		s			g_infoPanelTab
+golf_clean.exe	0x00824134		char	16					g_infoPanelNumBuf
+golf_clean.exe	0x00824144		int	1					g_infoPanelToggle
+golf_clean.exe	0x005a8c38		int	20		s			g_objectTypeLevel
+golf_clean.exe	0x005a8c88		int	1					g_frameMs
+golf_clean.exe	0x0058b198		uint	1		u			g_commentTone
+golf_clean.exe	0x005619a0		char	2500		s			g_tileWallMask
+golf_clean.exe	0x0056199c		int	1					g_value56199c
+golf_clean.exe	0x00839338		int	1		s			g_bulletinAnimTick
+golf_clean.exe	0x00839340		flags8	1					g_staticGuard839340
+golf_clean.exe	0x0058bcb0		int	1		s			g_nameLabelCount
+golf_clean.exe	0x00567a18		int	1		s			g_tutorialPage
+golf_clean.exe	0x00567a1c		flags32	1					g_eventFlags567a1c
+golf_clean.exe	0x004e9a70		char	16					g_itoaBuf4e9a70
+golf_clean.exe	0x0055eb40		short	2500		s			g_tileScreenX
+golf_clean.exe	0x00567390		struct	30	0x2c			0:uint[11]	g_surfaces567390
+golf_clean.exe	0x0056a948		struct	30	0x2c			0:uint[11]	g_surfaces56a948
+golf_clean.exe	0x00587ea8		struct	224	0x2c			0:uint[11]	g_surfaces587ea8
+golf_clean.exe	0x00587ea0		int	1					g_value587ea0
+golf_clean.exe	0x004c1578		struct	22	0x30			cstruct:re/model/include/sections/b.h#BulletinEvent	g_bulletinEvents
+golf_clean.exe	0x004c284c		int	1					g_objectOfferCount
+golf_clean.exe	0x004c2850		int	1					g_greensFee
+golf_clean.exe	0x004c2c94		struct	1	0x12			cstruct:re/model/include/sections/b.h#SkillMaskBlock	g_skillMaskBlock
+golf_clean.exe	0x004c2e1c		flags32	1					g_shotGolferPrefs
+golf_clean.exe	0x004c2e20		int	1					g_panelSelectPending
+golf_clean.exe	0x004c2e24		int	1					g_demolishConfirmX
+golf_clean.exe	0x004c2e28		int	1					g_landingAnimFrame
+golf_clean.exe	0x004c2f28		struct	16	4		1	0:short,2:short	g_maskSpriteTable
+golf_clean.exe	0x004c2f68		short	25			1		g_levelFalloffKernel
+golf_clean.exe	0x004c2f9c		int	1					g_cameraGoalX
+golf_clean.exe	0x004c2fa0		int	1					g_heightRelief
+golf_clean.exe	0x004c2fa4		char	36			1		g_soundVariationCycle
+golf_clean.exe	0x004c2fc8		int	1			1		g_debugShotGolfer
+golf_clean.exe	0x004c2fcc		int	1					g_shotRedrawGolfer
+golf_clean.exe	0x0053ea24		uchar	2500					g_ballStopCount
+golf_clean.exe	0x0053fd20		int	10					g_shotPowerCache
+golf_clean.exe	0x0054131c		int	153			1		g_panelListIds
+golf_clean.exe	0x00541a10		int	1					g_probeType1Strokes
+golf_clean.exe	0x00542dfc		int	10					g_probeShotX
+golf_clean.exe	0x00542e24		int	10					g_probeShotY
+golf_clean.exe	0x00568d0c		int	1					g_nearTileDist
+golf_clean.exe	0x00569528		char	128					g_unreadText569528
+golf_clean.exe	0x0056a91c		int	1					g_nearTileX
+golf_clean.exe	0x0056a920		int	1					g_nearTileY
+golf_clean.exe	0x0056c794		int	8					g_floatLabelY
+golf_clean.exe	0x0056c7b4		flags32	1					g_forcedEventBits
+golf_clean.exe	0x0058d370		uchar	2500					g_pathGrid
+golf_clean.exe	0x005a7404		short	1024					g_pathQueueX
+golf_clean.exe	0x005a8028		short	1024					g_pathQueueY
+golf_clean.exe	0x005a8828		int	1					g_shotTargetX
+golf_clean.exe	0x005a8830		int	1					g_shotTargetY
