@@ -6,10 +6,6 @@ golf_clean.exe	0x004ba280	S3ListPayload18.vbtable	1	+0x4		vbase offset 16
 golf_clean.exe	0x004ba288	S3ListNode	0	+0x0	0x00402870	FUN_00402870	0x1c-byte list node, vtable installed through the vbtable (0x00401df3)
 golf_clean.exe	0x004ba28c	S3ListNode.vbtable	0	+0x0		vbase offset 0	vbtable of the list node and of Decoder482ae0 (0x00482af1)
 golf_clean.exe	0x004ba28c	S3ListNode.vbtable	1	+0x4		vbase offset 20	
-golf_clean.exe	0x004ba28c	S3ListNode.vbtable	2	+0x8		vbase offset 0	
-golf_clean.exe	0x004ba28c	S3ListNode.vbtable	3	+0xc		vbase offset 0	
-golf_clean.exe	0x004ba28c	S3ListNode.vbtable	4	+0x10		vbase offset 0	
-golf_clean.exe	0x004ba28c	S3ListNode.vbtable	5	+0x14		vbase offset 0	
 golf_clean.exe	0x004ba2a8	Cache482f60.HeapObject	0	+0x0	0x00402790	FUN_00402790	the HeapObject sub-object of Cache482f60 / C4021e0 during construction (0x00482f9b)
 golf_clean.exe	0x004ba2ac	Cache482f60.base	0	+0x0	0x00402180	FUN_00402180	intermediate primary vtable of Cache482f60 (0x00482f91, replaced at 0x00482fb4)
 golf_clean.exe	0x004ba2ac	Cache482f60.base	1	+0x4	0x00402190	FUN_00402190	

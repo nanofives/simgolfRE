@@ -190,7 +190,7 @@ SGC_STATIC_ASSERT(sizeof(PlacedObject) == 0x10, placed_object_size);
 typedef struct Animal {               /* 0x3c bytes */
     int32_t  u00;                     /* +0x00 written 0 on spawn, never read */
     uint8_t  u04[28];                 /* +0x04 no access outside the save [U-0203] */
-    int16_t  type;                    /* +0x20 -1 = free slot */
+    int16_t  type;                    /* +0x20 -1 = free slot; flic id base from the species byte (stream B) */
     int16_t  kind;                    /* +0x22 spawn argument 1, indexes a 0x74-stride table */
     int16_t  pad24;                   /* +0x24 no access */
     int16_t  x;                       /* +0x26 tile */
@@ -200,8 +200,8 @@ typedef struct Animal {               /* 0x3c bytes */
     int16_t  pad2e;                   /* +0x2e no access */
     int32_t  sub_x;                   /* +0x30 position inside the tile */
     int32_t  sub_y;                   /* +0x34 */
-    int8_t   u38;                     /* +0x38 read with movsx [U-0203] */
-    uint8_t  u39;                     /* +0x39 [U-0203] */
+    int8_t   heading;                 /* +0x38 0..7, turned by Random::range(3) - 1 and masked with 7; indexes the direction tables (stream B, merged by G1) */
+    uint8_t  walk_steps;              /* +0x39 0x10 when a walk starts, -1 per step, idle again at <= 0 (stream B, merged by G1) */
     int8_t   frame;                   /* +0x3a */
     uint8_t  pad3b;                   /* +0x3b no access */
 } Animal;

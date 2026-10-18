@@ -4,6 +4,30 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-18  004877a0  SndGroup_isMuted  name HashTable::bucketSet->SndGroup_isMuted  log/p1/g1/retag.tsv
+2026-10-18  00487770  SndGroup_isDisabled  name HashTable::bucketEmpty->SndGroup_isDisabled  log/p1/g1/retag.tsv
+2026-10-18  00483b90  FontRef::dtor  name Surface::ctorVtbl483b90->FontRef::dtor  log/p1/g1/retag.tsv
+2026-10-18  004838b0  FontRef::release  name Surface::releaseBacking->FontRef::release  log/p1/g1/retag.tsv
+2026-10-18  00483850  FontRef::createSized  name Surface::createSized->FontRef::createSized  log/p1/g1/retag.tsv
+2026-10-18  00483800  FontRef::createFromId  name Surface::createFromId->FontRef::createFromId  log/p1/g1/retag.tsv
+2026-10-18  004837f0  FontRef::ctor  name C4837f0::ctor->FontRef::ctor  log/p1/g1/retag.tsv
+2026-10-18  004833f0  PaletteCache::findCycleSlot  name Table483::find->PaletteCache::findCycleSlot  log/p1/g1/retag.tsv
+2026-10-18  00483070  PaletteCache::reset  name Cache483070::reset->PaletteCache::reset  log/p1/g1/retag.tsv
+2026-10-18  00483060  PaletteCache::detach  name Cache483060::detach->PaletteCache::detach  log/p1/g1/retag.tsv
+2026-10-18  00483030  PaletteCache::attach  name Cache483030::attach->PaletteCache::attach  log/p1/g1/retag.tsv
+2026-10-18  00483010  PaletteCache::dtor  name Cache483010::dtor->PaletteCache::dtor  log/p1/g1/retag.tsv
+2026-10-18  00482fd0  PaletteCache::ctor  name Cache482fd0::ctor->PaletteCache::ctor  log/p1/g1/retag.tsv
+2026-10-18  00482b20  ListNode10::ctor  name Decoder482b20::ctor->ListNode10::ctor  log/p1/g1/retag.tsv
+2026-10-18  00482ae0  S3ListNode::ctor  name Decoder482ae0::ctor->S3ListNode::ctor  log/p1/g1/retag.tsv
+2026-10-18  00481b40  Window::scalarDtor_adj274  name View4804a0::scalarDtor_adj274->Window::scalarDtor_adj274  log/p1/g1/retag.tsv
+2026-10-18  004805a0  Window::dtor  name Base4805a0::dtor->Window::dtor  log/p1/g1/retag.tsv
+2026-10-18  00480580  Window::scalarDtor  name View4804a0::scalarDtor->Window::scalarDtor  log/p1/g1/retag.tsv
+2026-10-18  004804a0  Window::ctor  name View4804a0::ctor->Window::ctor  log/p1/g1/retag.tsv
+2026-10-18  004918d0  TextView::scalarDtor_adj274  name Dialog::scalarDtor_adj274->TextView::scalarDtor_adj274  log/p1/g1/retag.tsv
+2026-10-18  00491710  TextView::dtor  name Dialog::dtor->TextView::dtor  log/p1/g1/retag.tsv
+2026-10-18  004916f0  TextView::scalarDtor  name Dialog::scalarDtor->TextView::scalarDtor  log/p1/g1/retag.tsv
+2026-10-18  00491500  CompositeView::dtor  name Dialog::viewDtor->CompositeView::dtor  log/p1/g1/retag.tsv
+2026-10-18  004914d0  CompositeView::subDtor  name Dialog::subDtor->CompositeView::subDtor  log/p1/g1/retag.tsv
 2026-10-17  sound.dll:00040e30  codecHighPassFilter  name codecBiquadFilter->codecHighPassFilter  re/names/sound_18.tsv
 2026-10-17  sound.dll:00040da0  codecPreEmphasis  name codecFirstOrderFilter->codecPreEmphasis  re/names/sound_18.tsv
 2026-10-17  sound.dll:000404d0  codecLowPassFir31  name codecSymmetricFir->codecLowPassFir31  re/names/sound_18.tsv

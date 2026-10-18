@@ -29,7 +29,7 @@ golf_clean.exe	0x005423e8	g_sprite5423e8	SpriteRef	Surface_ctor 0x00473ab0 with 
 golf_clean.exe	0x00542e50	g_sprites542e50	SpriteRef[4]	ehVectorConstructorIterator(0x00542e50, 0x2c, 4, Surface_ctor 0x00473ab0) in initGlobalArray_004050b0
 golf_clean.exe	0x00542f28	g_sprites542f28	SpriteRef[4]	ehVectorConstructorIterator(0x00542f28, 0x2c, 4, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0
 golf_clean.exe	0x0055e930	g_sprites55e930	SpriteRef[12]	ehVectorConstructorIterator(0x0055e930, 0x2c, 12, Surface_ctor 0x00473ab0) in initGlobalArray_004050b0
-golf_clean.exe	0x00561250	g_sve561250	int32_t	.sve field [U-0473]
+golf_clean.exe	0x00561250	g_courseReportScore	int32_t (save field 25)	showCourseReport stores the report score at 0x00452dc1 (`mov [0x561250], ebx`) only when > 0 (0x00452cc8); no reader outside the serializers (0x0040b0f8 / 0x0040bd54) (re/analysis/data/sve_field_status.md 3) [G1 2026-10-18: was g_sve561250]
 golf_clean.exe	0x00561260	g_sprites561260	SpriteRef[3]	ehVectorConstructorIterator(0x00561260, 0x2c, 3, Surface_ctor 0x00473ab0) in initGlobalArray_00405760
 golf_clean.exe	0x005612e8	g_sprites5612e8	SpriteRef[39]	ehVectorConstructorIterator(0x005612e8, 0x2c, 39, Surface_ctor 0x00473ab0) in initGlobalArray_00405620
 golf_clean.exe	0x005628e8	g_sprites5628e8	SpriteRef[432]	ehVectorConstructorIterator(0x005628e8, 0x2c, 432, Surface_ctor 0x00473ab0) in initGlobalArray_00404f50; base cluster 689 B
@@ -81,7 +81,7 @@ golf_clean.exe	0x005a4100	g_sprite5a4100	SpriteRef	Surface_ctor 0x00473ab0 with 
 golf_clean.exe	0x005a412c	g_linePoint5a412c	int32_t[2]	setLinePoint 0x0040bf00 / lineTo 0x0040bf20 [U-0481]
 golf_clean.exe	0x005a4138	g_sprites5a4138	SpriteRef[32]	ehVectorConstructorIterator(0x005a4138, 0x2c, 32, Surface_ctor 0x00473ab0) in initGlobalArray_004054e0
 golf_clean.exe	0x005a53c8	g_sprites5a53c8	SpriteRef[36]	ehVectorConstructorIterator(0x005a53c8, 0x2c, 36, Surface_ctor 0x00473ab0) in initGlobalArray_00405620
-golf_clean.exe	0x005a6364	g_sve5a6364	int32_t	.sve field [U-0473]
+golf_clean.exe	0x005a6364	g_buildingUnlockLevel	int32_t (save field 29)	6 at a new game (0x0040fbe7), 0x11 with the amenity mask 0x3fff (0x0040fc02, 0x00421420), +1 in announceBuilding (0x0040efef..0x0040eff0); bound of pickBuilding (`cmp eax, [0x5a6364]; jl` 0x004342ef) and drawBuildingPanel 0x00434703 (sve_field_status.md 3) [G1 2026-10-18: was g_sve5a6364]
 golf_clean.exe	0x005a7148	g_image5a7148	Image	Image_ctor 0x00474ae0 with ecx = 0x005a7148 (staticInit_004058f0)
 golf_clean.exe	0x005a7c08	g_sprites5a7c08	SpriteRef[24]	ehVectorConstructorIterator(0x005a7c08, 0x2c, 24, Surface_ctor 0x00473ab0) in initGlobalArray_004051f0
 golf_clean.exe	0x005a8c90	g_sprites5a8c90	SpriteRef[40]	ehVectorConstructorIterator(0x005a8c90, 0x2c, 40, Surface_ctor 0x00473ab0) in initGlobalArray_004053a0

@@ -110,7 +110,7 @@ golf_clean.exe	0x004587a0	showBuyLandScreen	economy	string 0x4d36cc (TRACTS FOR 
 golf_clean.exe	0x00459400	showHireEmployeeDialog	economy	string 0x4d372c (HIRE AN EMPLOYEE); string 0x4d36e8 (Thirst quenchers...); caller 0x40aa80	Shows the hire-an-employee dialog with per-week wages.
 golf_clean.exe	0x00459850	showGolferPairSelect	golfer	string 0x4d374c (SELECT THE NEXT PAIR OF GOLFERS); string 0x4d3740 ( years old)	Shows the select-next-pair-of-golfers screen with bios.
 golf_clean.exe	0x0045a090	showTournamentResults	ui	string 0x4d3784 (TOURNAMENT RESULTS); string 0x4d37c4 (LEADER BOARD of)	Shows the tournament results / leader board screen.
-golf_clean.exe	0x004315e0	buildGolferBioText	golfer	string 0x4c77f4 ( favorite color is ); string 0x4c7820 ( likes ); callee 0x45b880 (clearBuffers)	Composes a golfer's bio text (favorite color, likes) into the text buffer.
+golf_clean.exe	0x004315e0	buildGolferBioText	golfer	string 0x4c77f4 ( favorite color is ); string 0x4c7820 ( likes ); callee 0x45b880 (clearBuffers)	Resets the new-game state (one run of rep stosd clears about 20 tables: golfers, walkers, histories, award counters, ranking) and composes the bio text of golfer types 0..75 (built in 0x51a068, strcpy'd to record + 0x30, loop end 0x4e06f8 at 0x00431ad7..0x00431af3).
 golf_clean.exe	0x0045ae30	setDirtyFlagA	render	callers 0x40f5c0/0x45b2c0/0x45c0c0; writes g_822b98	Sets screen-dirty flag A (g_822b98).
 golf_clean.exe	0x0045ae50	setDirtyFlagB	render	callers 0x40f5c0/0x43a8c0/0x45c0c0; writes g_822b9c	Sets screen-dirty flag B (g_822b9c).
 golf_clean.exe	0x0045ae70	flushRedraw	render	callee 0x483c30 (drain); callee 0x483c70 (redrawAll); many callers	Flushes pending input/events and redraws the whole screen.

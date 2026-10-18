@@ -395,14 +395,21 @@ SGE2_STATIC_ASSERT(offsetof(StrList, device) == 0x14, StrList_device);
 SGE2_STATIC_ASSERT(offsetof(StrList, count) == 0x18, StrList_count);
 SGE2_STATIC_ASSERT(offsetof(StrList, f_1c) == 0x1c, StrList_f_1c);
 
-/* NodeListBucket (0x1c bytes). bucket record of NodeList (vtable 0x004bafac, ctor FUN_004877d0).
+/* NodeListBucket (0x1c bytes). bucket record of NodeList (element ctor FUN_004877d0); the vtable 0x004bafac belongs
+ * to a sub-object at +0x08, not to the record (stream G1 fix, 2026-10-18: FUN_004877d0 stores byte [+0] = 1,
+ * dword [+4] = 0x7f, dword [+8] = 0x004bafac and zeroes +0x0c..+0x18, 0x004877d4..0x004877ee; D's SgSndGroup).
  * Evidence: NodeList::ctor: ehVectorConstructorIterator(this + 0x24, 0x1c, 16, FUN_004877d0) */
 typedef struct NodeListBucket {
-    uint32_t vptr;                     /* +0x000 ptr 0x004bafac */
-    uint8_t unk_04[24];                /* +0x004 [U-0466] */
+    uint8_t enabled;                   /* +0x000 1 at construction; Snd::play returns 0x14 when 0 (D) */
+    uint8_t muted;                     /* +0x001 Snd::play returns 0x14 when nonzero (D) */
+    uint8_t unk_02[2];                 /* +0x002 no access */
+    int32_t gain;                      /* +0x004 0x7f at construction; scales the slot volume in Snd::setVolume (D) */
+    uint32_t sub_vptr;                 /* +0x008 ptr 0x004bafac (slot 0 NodeList::clearScalarDtor) */
+    uint32_t f_0c[4];                  /* +0x00c zeroed by FUN_004877d0 [U-0466] */
 } NodeListBucket;
 SGE2_STATIC_ASSERT(sizeof(NodeListBucket) == 0x1c, NodeListBucket_size);
-SGE2_STATIC_ASSERT(offsetof(NodeListBucket, unk_04) == 0x4, NodeListBucket_unk_04);
+SGE2_STATIC_ASSERT(offsetof(NodeListBucket, gain) == 0x4, NodeListBucket_gain);
+SGE2_STATIC_ASSERT(offsetof(NodeListBucket, sub_vptr) == 0x8, NodeListBucket_sub_vptr);
 
 /* NodeList (0x1e4 bytes). StrList with 16 buckets (vtable 0x004baf00); same size as D's SgSndGroupDevice (g_musicDevice 0x0083ad80).
  * Evidence: NodeList::ctor 0x00487280 */
@@ -486,7 +493,7 @@ SGE2_STATIC_ASSERT(sizeof(MappedFile) == 0x14, MappedFile_size);
 SGE2_STATIC_ASSERT(offsetof(MappedFile, view) == 0x4, MappedFile_view);
 SGE2_STATIC_ASSERT(offsetof(MappedFile, file) == 0x8, MappedFile_file);
 SGE2_STATIC_ASSERT(offsetof(MappedFile, mapping) == 0xc, MappedFile_mapping);
-SGE2_STATIC_ASSERT(offsetof(MappedFile, size) == 0x10, MappedFile_size);
+SGE2_STATIC_ASSERT(offsetof(MappedFile, size) == 0x10, MappedFile_member_size);
 
 /* Logger (0xc bytes). debug log file (loggerCtor / loggerSetPath / logWrite).
  * Evidence: loggerCtor 0x004a0188..0x004a018e */
@@ -533,7 +540,7 @@ typedef struct StdList {
 SGE2_STATIC_ASSERT(sizeof(StdList) == 0xc, StdList_size);
 SGE2_STATIC_ASSERT(offsetof(StdList, pad_01) == 0x1, StdList_pad_01);
 SGE2_STATIC_ASSERT(offsetof(StdList, head) == 0x4, StdList_head);
-SGE2_STATIC_ASSERT(offsetof(StdList, size) == 0x8, StdList_size);
+SGE2_STATIC_ASSERT(offsetof(StdList, size) == 0x8, StdList_member_size);
 
 /* SpritePair (0x58 bytes). two SpriteRefs built by gSurfaceCtor_44ae60 0x0044ae60 (Surface_ctor on this and this + 0x2c).
  * Evidence: gSurfaceCtor_44ae60 0x0044ae7d / 0x0044ae8d */

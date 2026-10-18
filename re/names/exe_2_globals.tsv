@@ -12,9 +12,9 @@ golf_clean.exe	0x00822c90	g_screenHeight	int	screen height in pixels: gameMain s
 golf_clean.exe	0x00824148	g_color16Lut	ushort*	16-bit RGB lookup table pointer, filled by build16BitColorTable 0x00461830
 golf_clean.exe	0x00822da0	g_tileShadeA	byte[]	tile shade map written (clamped 0..255) by spreadShade 0x004615f0
 golf_clean.exe	0x0082376c	g_tileShadeB	byte[]	second tile shade map written by spreadShade 0x004615f0
-golf_clean.exe	0x00838c1c	g_sampleGrid	char[]	0x13-stride value grid bilinearly sampled by bilinearSample 0x004674c0
+golf_clean.exe	0x00838c1c	g_sampleGrid	int8_t[19][19] (17 x 17 used)	0x13-stride signed grid bilinearly sampled by bilinearSample 0x004674c0; genNoise writes rows 1..16 through the biased base 0x838c1b (0x0046746e); model_c.md 6 / 13 [G1 2026-10-18: declared char[]]
 golf_clean.exe	0x0057956e	g_golferTypeSlot	short	field +0xb6 of golfer record 0 (g_golfers 0x005794b8, stride 0x100; re/analysis/data/golfer_record.md), the golfer's type: composeGolferSprite 0x00462020 loads it as movsx word [esi + 0x57956e] with esi = index << 8 (0x0046206a, 0x0046206d); c3ah and c3ec use it as the index into the 0x2c-byte type table 0x005849e0
-golf_clean.exe	0x00571fd8	g_courseTable	byte[]	12-entry table (stride 0x2e) seeded by seedCourseTable 0x0046f2b0
+golf_clean.exe	0x00571fd8	g_courseTable	CourseRecord[17] (0x2e each; 16 seeded)	seedCourseTable 0x0046f2b0 seeds 16 slots; save field 72 is 0x30e = 17 x 0x2e (model_b.md 6.1) [G1 2026-10-18: declared a 12-entry byte table]
 golf_clean.exe	0x0051a068	g_textBuffer	char[]	shared text scratch buffer, target of appendWalkerName 0x00467600
 golf_clean.exe	0x0083ad50	g_graphicsDevice	void* (graphics DLL object; *ptr is its vtable)	graphics device object pointer; vtable +0xb4 read by build16BitColorTable 0x00461830; set by engine init 0x004855b0 from 0x004a00a0 (LoadLibraryA + GetProcAddress of jgld export at RVA 0x1780, name string 0x004e4a2c)
 golf_clean.exe	0x0083ab98	g_focusedItem	void*	focused/selected list item pointer, written by setFocusItem 0x0047ae80

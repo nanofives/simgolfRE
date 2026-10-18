@@ -2,12 +2,10 @@ module	addr	name	type	evidence
 golf_clean.exe	0x00820ed0	gTerrain	Terrain* (handle)	read by every terrain-glue function that calls Terrain.dll imports (0x449470 syncTiles, 0x449540 rebuildTerrainGrid, 0x449790 initTerrain, 0x449860 freeTerrain)
 golf_clean.exe	0x004c2ba0	gCameraTileX	int	read by 0x42fb90 (worldToScreen) and 0x430020; moved by arrow keys per re/analysis camera note
 golf_clean.exe	0x004c2ba4	gCameraTileY	int	read by 0x42fb90 (worldToScreen) and 0x430020
-golf_clean.exe	0x0056fcb0	gTextBuffer	char[]	written by 0x45b9f0 (appendString); cleared by 0x45b880 (clearBuffers)
-golf_clean.exe	0x0059d81c	gTextBuffer2	char[]	cleared by 0x45b880 (clearBuffers); written by 0x45b8b0 (appendToBuffer45b8b0)
-golf_clean.exe	0x0059d91c	gTextBuffer2Index	int	written by 0x45b8b0 (appendToBuffer45b8b0)
-golf_clean.exe	0x004ba800	gRngState	unsigned (LCG state)	read and written by 0x45c1a0 (Random::next)
+golf_clean.exe	0x0056fcb0	g_namePool	char[0x1002] (save field 76)	string pool: clearBuffers zeroes it (0x0045b881..0x0045b88f); appendToBuffer45b8b0 bounds it at 0x1002 (0x0045b992) and copies strings in; appendString 0x0045b9f0 reads pool + offset; slot 0 course name, 1..18 hole names, 20..29 best-round holders (sve_field_status.md 3) [G1 2026-10-18: was gTextBuffer]
+golf_clean.exe	0x0059d81c	g_namePoolOffset	int16_t[128] (save field 77; -1 = free)	clearBuffers fills -1 (0x0045b891..0x0045b89e); appendToBuffer45b8b0 reads [slot * 2] (0x0045b8bd), clears it (0x0045b907), lowers the offsets above (loop end 0x59d91c, 0x0045b928) and stores the new one (0x0045b9bb) [G1 2026-10-18: was gTextBuffer2]
 golf_clean.exe	0x00822b98	gDirtyFlagA	int	written by 0x45ae30 (setDirtyFlagA); read by 0x45ae70/0x45aed0 (redraw)
 golf_clean.exe	0x00822b9c	gDirtyFlagB	int	written by 0x45ae50 (setDirtyFlagB); read by 0x45aed0 (waitRedrawReady)
-golf_clean.exe	0x00587da0	gCourseInfoDirty	int	read by 0x432170 (flushCourseInfo) to decide whether to rewrite the course info/thumbnails
-golf_clean.exe	0x00820f18	gTileBuffer	void*	allocated by 0x449210 (initList820f18); read by 0x44a5b0 (rebuildTileData)
+golf_clean.exe	0x00587da0	g_pendingCourseInfo	char[0xdc]	FUN_004321a0 copies a string into it (0x004321b5..0x004321c4); flushCourseInfo 0x00432170 tests byte 0, passes it to writeCourseInfo 0x431fa0 and saveThumbAndFull 0x431ee0 (0x00432179..0x00432188) and clears byte 0 (0x00432190) [G1 2026-10-18: a char buffer whose first byte doubles as the pending flag, not an int flag (re/tools/model_merge.py G_ROWS)]
+golf_clean.exe	0x00820f18	gTileBuffer	StdList (0xc: std::list header)	constructed by initList820f18 0x00449210; read by rebuildTileData 0x0044a5b0 (model_e2.md 7) [G1 2026-10-18: declared void*]
 golf_clean.exe	0x00579540	gThoughtTable	uint16_t[10] (field +0x88 of golfer record 0, g_golfers 0x005794b8; re/analysis/data/golfer_record.md)	read by 0x45c420 (thoughtBalance) to sum a golfer's positive/negative thoughts: it adds 0x579540 to index << 8 (0x0045c42a) and tests 0x4000 / 0xc000 in slots 0..4; every access is 16-bit; emitGolferThought 0x00467a00 shifts the 10 slots and writes slot 0 (0x00467bb3..0x00467be8)

@@ -158,8 +158,12 @@ StrList	0x20	0x14	p32	1	device	sound.dll device object; StrList::dtor calls its 
 StrList	0x20	0x18	i32	1	count	NodeList::clear decrements it
 StrList	0x20	0x1c	u32	1	f_1c	[U-0465]
 NodeListBucket	0x1c				(class)	bucket record of NodeList (vtable 0x004bafac, ctor FUN_004877d0); NodeList::ctor: ehVectorConstructorIterator(this + 0x24, 0x1c, 16, FUN_004877d0)
-NodeListBucket	0x1c	0x0	p32	1	vptr	0x004bafac
-NodeListBucket	0x1c	0x4	u8	24	unk_04	[U-0466]
+NodeListBucket	0x1c	0x0	u8	1	enabled	1 at construction (FUN_004877d0 0x004877ee); D: Snd::play returns 0x14 when 0 [G1 fix 2026-10-18]
+NodeListBucket	0x1c	0x1	u8	1	muted	D: Snd::play returns 0x14 when nonzero
+NodeListBucket	0x1c	0x2	u8	2	unk_02	no access
+NodeListBucket	0x1c	0x4	i32	1	gain	0x7f at construction (0x004877e7); D: scales the slot volume in Snd::setVolume
+NodeListBucket	0x1c	0x8	p32	1	sub_vptr	0x004bafac stored at 0x004877d4 (sub-object vtable, slot 0 NodeList::clearScalarDtor)
+NodeListBucket	0x1c	0xc	u32	4	f_0c	zeroed by FUN_004877d0 (0x004877db..0x004877e4) [U-0466]
 NodeList	0x1e4				(class)	StrList with 16 buckets (vtable 0x004baf00); same size as D's SgSndGroupDevice (g_musicDevice 0x0083ad80); NodeList::ctor 0x00487280
 NodeList	0x1e4	0x0	S:StrList	1	base	
 NodeList	0x1e4	0x20	i32	1	f_20	0 (NodeList::ctor 0x004872cd)

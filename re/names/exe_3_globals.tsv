@@ -12,7 +12,7 @@ golf_clean.exe	0x0083a2c8	g_tipRect	RECT	tooltip bounds; written by Tooltip::sho
 golf_clean.exe	0x0083aac4	g_tipText	char*	tooltip text pointer; written by Tooltip::show (0x480220), read by drawTooltip (0x47cdb0), cleared by Tooltip::hide (0x480360)
 golf_clean.exe	0x0083aac0	g_tipOwner	Window*	window that owns the active tooltip; written by Tooltip::show (0x480220) and hide (0x480360)
 golf_clean.exe	0x0083aac8	g_tipFont	Font*	font object used for tooltip text metrics/draw (textWidth/lineHeight in Tooltip::show 0x480220)
-golf_clean.exe	0x0083a7b8	g_blitSaveBuf	void*	saved background buffer blitted by addDirtyRect (0x47d060) and compositeScreen (0x47fab0)
+golf_clean.exe	0x0083a7b8	g_blitSaveBuf	Image (0x2b8)	the Image gImageCtor_83a7b8 0x00479a40 constructs; blitted by addDirtyRect (0x47d060) and compositeScreen (0x47fab0) (model_inventory.md 4.2, model_e2.md 7) [G1 2026-10-18: declared void*]
 golf_clean.exe	0x0083a4d8	g_dirtyRect	RECT	accumulated dirty region unioned by addDirtyRect (0x47d060)
 golf_clean.exe	0x0083aaa4	g_blitX	int	pending blit x, read by addDirtyRect (0x47d060)
 golf_clean.exe	0x0083aaa8	g_blitY	int	pending blit y, read by addDirtyRect (0x47d060)
@@ -26,11 +26,11 @@ golf_clean.exe	0x0083afc4	g_soundReady	int	sound-system initialized flag; set by
 golf_clean.exe	0x0083af6c	g_soundFns	void*[11]	sound.dll function-pointer table; zeroed by clearSoundPtrs (0x484130), factory entry read by createSound4840e0 (0x4840e0)
 golf_clean.exe	0x0083af68	g_soundHead	Snd*	head of the active-sound linked list; relinked by unlinkSound/Snd::unlinkFromList (0x4843e0/0x4844e0), drained by shutdownSound (0x483f10)
 golf_clean.exe	0x0083af64	g_soundTail	Snd*	tail of the active-sound linked list; relinked by unlinkSound (0x4843e0) and Snd::unlinkFromList (0x4844e0)
-golf_clean.exe	0x0083ad58	g_sfxDevice	SoundDevice	sfx sound device singleton (C487c00); constructed by staticInit_g83ad58 (0x483e20), loaded by initSound (0x483e90)
-golf_clean.exe	0x0083ad80	g_musicDevice	SoundDevice	main/music sound device singleton (C487c00); constructed by staticInit_g83ad80 (0x483de0), loaded by initSound (0x483e90)
-golf_clean.exe	0x0083af98	g_voiceDevice	SoundDevice	voice sound device singleton (C487c00); constructed by staticInit_g83af98 (0x483e60), loaded by initSound (0x483e90) when flag bit3 is set
-golf_clean.exe	0x0083acb0	g_screenMgrA	ScreenMgr	screen manager singleton; constructed by staticInit_g83acb0 (0x482e80), reattached by resetScreenState (0x483320)
+golf_clean.exe	0x0083ad58	g_sfxDevice	StrList (0x20 bytes; sound.dll device at +0x14)	constructed by staticInit_g83ad58 (0x483e20), loaded by initSound (0x483e90); NodeListB vtable (model_e2.md 7) [G1 2026-10-18: declared SoundDevice]
+golf_clean.exe	0x0083ad80	g_musicDevice	NodeList (0x1e4 bytes: StrList, 16 NodeListBucket sound groups at +0x24)	constructed by staticInit_g83ad80 (0x483de0), loaded by initSound (0x483e90); group bytes read by SndGroup_isDisabled 0x00487770 / SndGroup_isMuted 0x004877a0, gain by Snd::setVolume (0x83ada8 + group * 0x1c); model_d.md 2.3, model_e2.md 3 [G1 2026-10-18: declared SoundDevice]
+golf_clean.exe	0x0083af98	g_voiceDevice	StrList (0x20 bytes; sound.dll device at +0x14)	constructed by staticInit_g83af98 (0x483e60), loaded by initSound (0x483e90); NodeListC vtable (model_e2.md 7) [G1 2026-10-18: declared SoundDevice]
+golf_clean.exe	0x0083acb0	g_screenMgrA	PaletteCache (0x58)	constructed by staticInit_g83acb0 (0x482e80) with PaletteCache::ctor; its palette is passed to every Sprite create (model_e2.md 3) [G1 2026-10-18: declared ScreenMgr]
 golf_clean.exe	0x0083ac30	g_screenMgrB	ScreenMgr	screen manager singleton; constructed by staticInit_g83ac30 (0x482ec0), reattached by resetScreenState (0x483320)
-golf_clean.exe	0x0083ac88	g_screenObjList	List	screen object list; cleared by clearScreenObjects (0x483340), initialized by staticInit_g83ac88 (0x482f00)
-golf_clean.exe	0x0083ac10	g_resampleBuf	void*	work buffer allocated by allocResampleTable (0x481870), freed by freeResampleTable (0x481b20)
+golf_clean.exe	0x0083ac88	g_screenObjList	ScreenObjList (0x28; HeapObject at +0x20)	cleared by clearScreenObjects (0x483340), initialized by staticInit_g83ac88 (0x482f00) (model_e2.md 7) [G1 2026-10-18: declared List]
+golf_clean.exe	0x0083ac10	g_resampleBuf	int16_t*	malloc'd by allocResampleTable (0x004818c0), words written / read through it (0x00481a8b, 0x00481ab5); freed by freeResampleTable 0x481b20 [G1 2026-10-18: declared void*]
 golf_clean.exe	0x0083ac14	g_resampleLen	int	element count stored by allocResampleTable (0x481870)
