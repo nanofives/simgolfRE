@@ -1,0 +1,688 @@
+cluster	lo	hi	class	stream	subsystems	addresses	functions
+3	0x004ba26c	0x004ba26c	vtable	E1	ui:4,crt:1,untagged:1	1	6
+4	0x004ba270	0x004ba270	vtable	E1	ui:4,crt:1,untagged:1	1	6
+5	0x004ba278	0x004ba278	vtable	E2	ui:12,crt:5,net:4,render:3,untagged:3,util:2,boot:1,video:1	1	31
+6	0x004ba27c	0x004ba27c	vtable	E2	util:1	1	1
+7	0x004ba280	0x004ba280	vtable	E2	util:1	1	1
+8	0x004ba288	0x004ba288	vtable	E2	util:2,net:1,render:1,video:1	1	5
+9	0x004ba28c	0x004ba2a0	vtable	E2	util:3,net:1,render:1,video:1	2	6
+10	0x004ba2a8	0x004ba2a8	vtable	E2	render:2,crt:1,untagged:1	1	4
+11	0x004ba2ac	0x004ba2ac	vtable	E2	render:2,crt:1,untagged:1	1	4
+12	0x004ba2b4	0x004ba2b4	vtable	E2	render:1,util:1	1	2
+13	0x004ba2b8	0x004ba2b8	vtable	E2	render:1,util:1	1	2
+14	0x004ba2c0	0x004ba2c0	vtable	E1	ui:3,untagged:1	1	4
+15	0x004ba2c4	0x004ba2c4	vtable	E1	ui:3,untagged:1	1	4
+16	0x004ba2d8	0x004ba2d8	vtable	E2	render:25,crt:3,net:3,ui:2,economy:1,frontend:1,untagged:1,video:1	1	37
+17	0x004ba2dc	0x004ba2dc	vtable	E2	crt:2,video:1	1	3
+18	0x004ba2e0	0x004ba2e0	vtable	E2	crt:1,video:1	1	2
+19	0x004ba2e8	0x004ba2e8	vtable	E2	crt:1	1	1
+20	0x004ba2fc	0x004ba2fc	vtable	E2	crt:1	1	1
+21	0x004ba468	0x004ba468	vtable	E2	render:19,ui:1	1	20
+23	0x004ba494	0x004ba494	vtable	E1	ui:2	1	2
+24	0x004ba4a8	0x004ba4a8	vtable	E1	ui:2	1	2
+26	0x004ba7f4	0x004ba7f4	vtable	E1	ui:2,render:1	1	3
+28	0x004ba84c	0x004ba84c	vtable	E2	util:2	1	2
+29	0x004ba858	0x004ba858	vtable	E2	render:2	1	2
+30	0x004ba86c	0x004ba86c	vtable	E2	render:1	1	1
+31	0x004ba87c	0x004ba87c	vtable	E2	boot:1	1	1
+32	0x004ba8b4	0x004ba8b4	vtable	E1	ui:2	1	2
+33	0x004baa10	0x004baa10	vtable	E1	ui:2,util:1,video:1	1	4
+34	0x004baa14	0x004baa14	vtable	E1	ui:3,crt:1	1	4
+35	0x004baa1c	0x004baa1c	vtable	E1	ui:2	1	2
+36	0x004baa30	0x004baa30	vtable	E1	ui:2	1	2
+37	0x004baba8	0x004baba8	vtable	E2	render:2	1	2
+38	0x004babac	0x004babac	vtable	E2	render:2	1	2
+39	0x004babb4	0x004babb4	vtable	E2	render:1	1	1
+40	0x004babbc	0x004babbc	vtable	E2	render:2	1	2
+43	0x004bac68	0x004bac68	vtable	E2	audio:2	1	2
+45	0x004bacf8	0x004bacf8	vtable	E2	audio:2	1	2
+46	0x004badec	0x004badec	vtable	E2	audio:2	1	2
+47	0x004badf8	0x004badf8	vtable	E2	audio:1,render:1	1	2
+48	0x004baea0	0x004baea0	vtable	E2	util:2	1	2
+49	0x004baea8	0x004baea8	vtable	E2	video:2	1	2
+50	0x004baeac	0x004baeac	vtable	E2	util:2	1	2
+51	0x004baf00	0x004baf00	vtable	E2	util:2	1	2
+52	0x004bafac	0x004bafac	vtable	E2	util:3	1	3
+53	0x004bafb0	0x004bafb0	vtable	E2	util:2	1	2
+54	0x004bb014	0x004bb014	vtable	E2	util:2	1	2
+55	0x004bb084	0x004bb084	vtable	E2	util:3	1	3
+56	0x004bb088	0x004bb088	vtable	E2	util:2	1	2
+57	0x004bb094	0x004bb094	vtable	E1	ui:2	1	2
+58	0x004bb0a8	0x004bb0a8	vtable	E1	ui:2	1	2
+59	0x004bb21c	0x004bb21c	vtable	E1	ui:2	1	2
+60	0x004bb228	0x004bb228	vtable	E1	ui:5,net:1	1	6
+61	0x004bb22c	0x004bb22c	vtable	E1	ui:5,net:1	1	6
+62	0x004bb234	0x004bb234	vtable	E1	ui:2	1	2
+63	0x004bb240	0x004bb240	vtable	E1	ui:2	1	2
+64	0x004bb24c	0x004bb24c	vtable	E1	ui:2	1	2
+65	0x004bb260	0x004bb260	vtable	E1	ui:2	1	2
+66	0x004bb3cc	0x004bb3cc	vtable	E1	ui:2	1	2
+67	0x004bb3d0	0x004bb3d0	vtable	E1	ui:1	1	1
+68	0x004bb3e4	0x004bb3e4	vtable	E2	net:3,ui:2	1	5
+69	0x004bb3f8	0x004bb3f8	vtable	E2	net:3,ui:2	1	5
+70	0x004bb5a0	0x004bb5a0	vtable	E1	ui:4,net:1	1	5
+71	0x004bb5b4	0x004bb5b4	vtable	E1	ui:4,net:1	1	5
+72	0x004bb724	0x004bb724	vtable	E1	ui:4	1	4
+73	0x004bb730	0x004bb730	vtable	E1	ui:4	1	4
+74	0x004bb744	0x004bb744	vtable	E1	ui:4	1	4
+75	0x004bb8b0	0x004bb8b0	vtable	E1	ui:2	1	2
+76	0x004bb8bc	0x004bb8bc	vtable	E1	ui:2	1	2
+77	0x004bb8d0	0x004bb8d0	vtable	E1	ui:2	1	2
+78	0x004bba3c	0x004bba3c	vtable	E1	ui:2	1	2
+80	0x004bba70	0x004bba70	vtable	E1	ui:2,untagged:1	1	3
+81	0x004bba74	0x004bba74	vtable	E1	ui:2	1	2
+82	0x004bba78	0x004bba78	vtable	E2	util:2	1	2
+85	0x004bbab4	0x004bbab4	vtable	E1	ui:2	1	2
+86	0x004bbac8	0x004bbac8	vtable	E1	ui:2	1	2
+87	0x004bbc38	0x004bbc38	vtable	E2	net:1	1	1
+88	0x004bbc3c	0x004bbc3c	vtable	E2	net:1	1	1
+89	0x004bbcd4	0x004bbcd4	vtable	E2	net:1	1	1
+90	0x004bbce0	0x004bbce0	vtable	E1	ui:2	1	2
+91	0x004bbcf4	0x004bbcf4	vtable	E1	ui:2	1	2
+92	0x004bbe6c	0x004bbe6c	vtable	E2	util:1	1	1
+93	0x004bbe7c	0x004bbe7c	vtable	E1	ui:1	1	1
+94	0x004bbe90	0x004bbe90	vtable	E1	ui:2	1	2
+95	0x004bbe9c	0x004bbe9c	vtable	E1	ui:2	1	2
+96	0x004bbeb0	0x004bbeb0	vtable	E1	ui:2	1	2
+97	0x004bc01c	0x004bc01c	vtable	E1	ui:1	1	1
+98	0x004bc034	0x004bc034	vtable	E2	util:2	1	2
+99	0x004bc044	0x004bc044	vtable	E1	ui:1	1	1
+100	0x004bc050	0x004bc050	vtable	E1	ui:1	1	1
+101	0x004bc05c	0x004bc05c	vtable	E1	ui:1	1	1
+102	0x004bc068	0x004bc068	vtable	E1	ui:1	1	1
+103	0x004bc074	0x004bc074	vtable	E1	ui:1	1	1
+104	0x004bc088	0x004bc088	vtable	E1	ui:2	1	2
+105	0x004bc094	0x004bc094	vtable	E1	ui:2	1	2
+106	0x004bc0a8	0x004bc0a8	vtable	E1	ui:2	1	2
+107	0x004bc214	0x004bc214	vtable	E1	ui:1	1	1
+108	0x004bc224	0x004bc224	vtable	E1	ui:2	1	2
+109	0x004bc230	0x004bc230	vtable	E1	ui:2	1	2
+110	0x004bc244	0x004bc244	vtable	E1	ui:2	1	2
+111	0x004bc3b0	0x004bc3b0	vtable	E1	ui:1	1	1
+112	0x004bc3b4	0x004bc3b4	vtable	E1	ui:1	1	1
+113	0x004bc3bc	0x004bc3bc	vtable	E1	ui:1	1	1
+114	0x004bc3c4	0x004bc3c4	vtable	E1	ui:1	1	1
+122	0x004c15a0	0x004c15a4	record array	E1	frontend:1,sim:1,ui:1	2	3
+270	0x004c79ea	0x004c79ea	scalar array	E1	ui:1	1	1
+273	0x004c7ac0	0x004c7aec	scalar array	E1	ui:4	19	4
+275	0x004c7b10	0x004c7b34	scalar array	E1	save:1,ui:1	3	2
+303	0x004d20ac	0x004d20dc	scalar array	E1	ui:2,economy:1	2	3
+494	0x004e9a84	0x004e9aa0	record array	E2	frontend:4,golfer:3,ui:3,render:2,video:2,course:1,crt:1,economy:1,sim:1,untagged:1	5	19
+499	0x00519928	0x00519928	object	E2	ui:5,golfer:3,frontend:2,boot:1,crt:1,economy:1,render:1,sim:1	1	15
+500	0x00519948	0x00519948	object	E2	boot:1,crt:1,render:1,sim:1	1	4
+501	0x00519968	0x005199a8	object	E2	crt:3,render:3,boot:1	3	7
+502	0x005199c8	0x005199c8	object	E2	ui:2,boot:1,crt:1,render:1,sim:1	1	6
+504	0x00519a40	0x00519a40	object	E1	frontend:3,boot:1,crt:1,render:1	1	6
+505	0x00519a60	0x00519a60	object	E1	ui:25,economy:6,frontend:5,golfer:5,sim:5,render:2,save:2,terrain:2,audio:1,boot:1,crt:1,video:1	1	56
+506	0x00519cd4	0x00519cd8	object	E1	ui:15,economy:4,frontend:4,golfer:4,sim:3,terrain:3,render:1,video:1	2	35
+508	0x00519fd8	0x0051a008	object	E1	ui:15,render:4,crt:2,sim:2,boot:1,golfer:1	2	25
+509	0x0051a028	0x0051a048	object	E2	crt:2,render:2,boot:1,frontend:1,sim:1	2	7
+510	0x0051a066	0x0051a067	scalar array	E1	ui:2	2	2
+511	0x0051a068	0x0051a07a	buffer	E2	ui:46,golfer:22,course:12,economy:9,frontend:9,sim:9,save:7,render:6,util:4	4	124
+512	0x0051b068	0x0051b068	object	E2	boot:1,crt:1,render:1	1	3
+513	0x0051b320	0x0051b320	object	E2	boot:1,crt:1,render:1	1	3
+514	0x0051b340	0x0051b340	object	E2	boot:1,crt:1,render:1	1	3
+515	0x0051b360	0x0051b380	object	E2	ui:10,render:4,frontend:3,golfer:3,sim:2,boot:1,crt:1,economy:1,save:1,util:1	2	27
+518	0x00520590	0x00520590	object	E2	crt:1,render:1,sim:1,untagged:1	1	4
+519	0x005205bc	0x005205bc	object	E2	render:1,sim:1	1	2
+520	0x005205e8	0x005205e8	object	E2	render:1,sim:1	1	2
+521	0x00520614	0x00520614	object	E2	render:1,sim:1	1	2
+527	0x0053b80c	0x0053b80c	object	E1	frontend:1	1	1
+528	0x0053b838	0x0053b838	object	E1	frontend:1	1	1
+529	0x0053b864	0x0053b864	object	E1	frontend:1	1	1
+530	0x0053b890	0x0053b890	object	E1	frontend:1	1	1
+531	0x0053b8bc	0x0053b8bc	object	E1	frontend:1	1	1
+532	0x0053b8e8	0x0053b8e8	object	E1	frontend:1	1	1
+533	0x0053b914	0x0053b914	object	E1	frontend:1	1	1
+534	0x0053b940	0x0053b940	object	E1	frontend:1	1	1
+535	0x0053b96c	0x0053b96c	object	E1	frontend:1	1	1
+536	0x0053b998	0x0053b998	object	E1	frontend:1,sim:1	1	2
+537	0x0053b9c4	0x0053b9c4	object	E1	frontend:1	1	1
+538	0x0053b9f0	0x0053b9f0	object	E1	frontend:1	1	1
+539	0x0053ba1c	0x0053ba1c	object	E1	frontend:1,sim:1	1	2
+541	0x0053ba74	0x0053ba74	object	E2	render:1	1	1
+542	0x0053baa0	0x0053baa0	object	E2	render:1	1	1
+543	0x0053bacc	0x0053bacc	object	E2	render:1	1	1
+544	0x0053baf8	0x0053baf8	object	E2	render:2	1	2
+545	0x0053bb24	0x0053bb24	object	E2	render:2	1	2
+546	0x0053bba8	0x0053bba8	scalar	E1	ui:1	1	1
+548	0x0053c570	0x0053c570	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+549	0x0053c5c8	0x0053c5c8	unknown	E1	ui:1	1	1
+550	0x0053c620	0x0053c620	object	E2	render:1	1	1
+551	0x0053c6d0	0x0053c6d0	object	E2	render:1	1	1
+552	0x0053c780	0x0053c780	object	E2	render:1	1	1
+553	0x0053c830	0x0053c830	object	E1	render:1,ui:1	1	2
+554	0x0053c85c	0x0053c85c	object	E1	ui:1	1	1
+555	0x0053c888	0x0053c888	object	E1	ui:1	1	1
+556	0x0053c8e0	0x0053c8e0	scalar array	E1	ui:1	1	1
+557	0x0053c990	0x0053c990	record array	E1	ui:2	1	2
+558	0x0053ca40	0x0053ca40	object	E1	ui:1	1	1
+563	0x0053de78	0x0053df54	object	E2	ui:5,sim:3,course:1,crt:1,render:1,terrain:1,untagged:1	6	13
+564	0x0053df58	0x0053df84	record array	E1	ui:2,crt:1,untagged:1	2	4
+565	0x0053dfb0	0x0053dfb0	object	E2	render:1	1	1
+589	0x0053fd48	0x0053fd48	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+590	0x0053ff2c	0x0053ff2c	object	E2	render:1	1	1
+591	0x00540110	0x00540110	object	E1	render:1,ui:1	1	2
+592	0x0054013c	0x0054013c	object	E1	render:1,ui:1	1	2
+593	0x00540168	0x00540168	object	E1	render:1,ui:1	1	2
+594	0x00540194	0x00540194	object	E1	render:1,ui:1	1	2
+595	0x005401c0	0x005401c0	object	E1	render:1,ui:1	1	2
+596	0x005401ec	0x005401ec	object	E1	render:1,ui:1	1	2
+597	0x00540218	0x00540218	object	E1	render:1,ui:1	1	2
+598	0x00540244	0x00540244	object	E2	render:1	1	1
+599	0x005402c8	0x005402c8	object	E2	render:1	1	1
+600	0x005402f4	0x005402f4	object	E1	render:1,ui:1	1	2
+601	0x00540320	0x00540320	object	E1	render:1,ui:1	1	2
+602	0x0054034c	0x0054034c	object	E1	render:1,ui:1	1	2
+603	0x00540378	0x00540378	object	E1	render:1,ui:1	1	2
+604	0x005403d0	0x005403d0	object	E1	render:1,ui:1	1	2
+605	0x005408cc	0x005408cc	object	E2	render:1	1	1
+613	0x00541710	0x00541710	record array	E2	crt:1,frontend:1,render:1,sim:1,ui:1,untagged:1	1	6
+614	0x00541870	0x00541870	object	E2	render:1	1	1
+617	0x00541a18	0x00541a18	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+618	0x00541a44	0x00541a44	object	E1	render:1,ui:1	1	2
+619	0x00541a70	0x00541a70	object	E1	render:1,ui:1	1	2
+620	0x00541a9c	0x00541a9c	object	E1	render:1,ui:1	1	2
+621	0x00541ac8	0x00541ac8	object	E1	render:1,ui:1	1	2
+622	0x00541af4	0x00541af4	object	E1	render:1,ui:1	1	2
+623	0x00541b20	0x00541b20	object	E1	render:1,ui:1	1	2
+624	0x00541b4c	0x00541b4c	object	E1	render:1,ui:1	1	2
+625	0x00541b78	0x00541b78	object	E1	render:1,ui:1	1	2
+626	0x00541ba4	0x00541ba4	object	E2	golfer:1,render:1	1	2
+627	0x00541bd0	0x00541bd0	object	E2	golfer:1,render:1	1	2
+628	0x00541bfc	0x00541bfc	object	E2	golfer:1,render:1	1	2
+634	0x005423e8	0x005423e8	object	E2	render:2,crt:1,sim:1	1	4
+636	0x00542dd8	0x00542df8	scalar array	E1	ui:2,sim:1	2	3
+638	0x00542e50	0x00542e50	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+639	0x00542e7c	0x00542e7c	object	E2	render:1	1	1
+640	0x00542ea8	0x00542ea8	object	E2	render:1	1	1
+641	0x00542ed4	0x00542ed4	object	E2	render:1	1	1
+642	0x00542f00	0x00542f20	scalar array	E1	ui:4,sim:1	2	5
+643	0x00542f28	0x00542f28	object	E2	crt:1,render:1,sim:1,untagged:1	1	4
+644	0x00542f54	0x00542f54	object	E2	render:1,sim:1	1	2
+645	0x00542f80	0x00542f80	object	E2	render:1,sim:1	1	2
+646	0x00542fac	0x00542fac	object	E2	render:1,sim:1	1	2
+649	0x00543b40	0x00543b40	object	E2	render:1	1	1
+654	0x0055b028	0x0055b028	scalar array	E1	frontend:1	1	1
+658	0x0055e920	0x0055e928	scalar	E1	ui:6,sim:1,terrain:1	3	8
+659	0x0055e930	0x0055e930	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+660	0x0055e95c	0x0055e95c	object	E2	render:1	1	1
+661	0x0055e988	0x0055e988	object	E2	render:1	1	1
+662	0x0055e9b4	0x0055e9b4	object	E2	render:1	1	1
+663	0x0055e9e0	0x0055e9e0	object	E1	ui:1	1	1
+664	0x0055ea90	0x0055ea90	object	E1	render:1,ui:1	1	2
+667	0x00561250	0x00561250	scalar	E2	save:2,ui:1	1	3
+668	0x00561254	0x00561254	scalar	E1	ui:5,golfer:1	1	6
+671	0x00561260	0x00561260	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+672	0x005612e8	0x005612e8	object	E2	crt:1,render:1,untagged:1	1	3
+673	0x00561810	0x00561810	object	E1	render:1,ui:1	1	2
+674	0x0056183c	0x0056183c	object	E1	ui:1	1	1
+675	0x00561868	0x00561868	object	E1	ui:1	1	1
+676	0x00561894	0x00561894	object	E1	ui:1	1	1
+677	0x005618ec	0x005618ec	object	E1	ui:1	1	1
+678	0x00561918	0x00561918	object	E1	ui:1	1	1
+679	0x00561944	0x00561944	object	E1	ui:1	1	1
+681	0x00562368	0x00562368	record array	E1	crt:1,frontend:1,render:1,ui:1	1	4
+682	0x00562394	0x00562394	record array	E1	frontend:1,ui:1	1	2
+683	0x005623c0	0x005623c0	record array	E1	frontend:1,ui:1	1	2
+684	0x005623ec	0x005623ec	record array	E1	frontend:1,ui:1	1	2
+685	0x00562418	0x00562418	record array	E1	frontend:1,ui:1	1	2
+686	0x00562444	0x00562444	record array	E1	frontend:1,ui:1	1	2
+687	0x00562470	0x00562470	record array	E1	frontend:1,ui:1	1	2
+688	0x0056249c	0x0056249c	record array	E1	frontend:1,ui:1	1	2
+695	0x00564e08	0x00564e08	object	E2	render:1	1	1
+696	0x00564e34	0x00564e34	object	E2	render:1	1	1
+697	0x00564e60	0x00564e60	object	E2	render:1	1	1
+698	0x00567328	0x00567328	scalar array	E2	frontend:4,save:4,golfer:3,course:2,sim:1	1	14
+709	0x00567994	0x00567994	object	E1	golfer:1,ui:1	1	2
+711	0x00567a20	0x00567a20	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+712	0x00567a4c	0x00567a4c	object	E1	ui:1	1	1
+713	0x00567a78	0x00567a78	object	E1	ui:1	1	1
+714	0x00567aa4	0x00567aa4	object	E1	ui:1	1	1
+715	0x00567ad0	0x00567b00	object	E1	ui:13,render:3,save:2,sim:2,golfer:1	3	21
+717	0x00567b08	0x00567b08	object	E2	render:2,crt:1,sim:1	1	4
+723	0x005685f0	0x005685f0	scalar	E2	ui:10,golfer:4,course:3,save:3,sim:3,economy:2,render:2,frontend:1,terrain:1	1	29
+731	0x00568d10	0x00568d10	object	E2	crt:1,render:1,sim:1	1	3
+732	0x00568fc8	0x00568fc8	record array	E2	crt:1,ui:1,untagged:1	1	3
+733	0x00568ff4	0x00568ff4	object	E1	render:1,ui:1	1	2
+734	0x0056904c	0x0056904c	buffer	E1	ui:1	1	1
+735	0x005690a4	0x005690a4	buffer	E1	ui:1	1	1
+736	0x00569128	0x00569128	object	E2	render:1	1	1
+737	0x00569498	0x00569498	scalar	E1	ui:9,economy:2,golfer:2,sim:1	1	14
+739	0x005694a0	0x005694a8	scalar	E1	ui:2,sim:1	3	3
+741	0x005695a8	0x005695a8	scalar array	E1	sim:1,ui:1	1	2
+742	0x00569628	0x00569628	scalar	E1	ui:2	1	2
+751	0x0056a550	0x0056a550	object	E2	crt:1,render:1,untagged:1	1	3
+752	0x0056a760	0x0056a790	object	E2	render:2,sim:2,ai:1,crt:1	3	6
+753	0x0056a794	0x0056a794	scalar array	E1	ui:2	1	2
+754	0x0056a7b8	0x0056a7b8	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+755	0x0056a894	0x0056a894	buffer	E1	golfer:1,ui:1	1	2
+758	0x0056a924	0x0056a924	scalar array	E1	ui:2,sim:1	1	3
+770	0x0056c570	0x0056c570	record array	E1	ui:2	1	2
+771	0x0056c770	0x0056c790	scalar array	E1	sim:2,ui:2	2	4
+773	0x0056c7b8	0x0056c7b8	object	E2	crt:1,render:1	1	2
+775	0x0056d1a8	0x0056d1b0	scalar	E1	ui:3,sim:2,course:1	3	6
+778	0x0056e928	0x0056e928	buffer	E1	frontend:2	1	2
+780	0x00570cb8	0x00570cd4	record array	E2	ui:2,crt:1,render:1,untagged:1	2	5
+781	0x00570d3c	0x00570d3c	object	E1	ui:1	1	1
+782	0x00571658	0x00571658	object	E2	render:1	1	1
+783	0x00571b28	0x00571b28	object	E1	render:1,ui:1	1	2
+784	0x00571bd8	0x00571bd8	object	E1	render:1,ui:1	1	2
+786	0x00571d40	0x00571d40	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+787	0x00571d6c	0x00571d6c	object	E1	ui:1	1	1
+788	0x00571ecc	0x00571ecc	object	E2	render:1	1	1
+789	0x00571f50	0x00571f50	object	E1	render:1,ui:1	1	2
+790	0x00571f7c	0x00571f7c	object	E1	ui:1	1	1
+820	0x005787a0	0x005787a0	object	E2	golfer:2,render:2,crt:1	1	5
+822	0x005787d0	0x00578804	object	E2	golfer:3,render:3,sim:2,course:1,crt:1,terrain:1	4	11
+823	0x005791c8	0x005791c8	object	E2	render:2,crt:1,sim:1	1	4
+824	0x005791f8	0x005791f8	record array	E2	crt:1,frontend:1,render:1,sim:1,ui:1,untagged:1	1	6
+825	0x00579358	0x00579358	object	E2	render:1	1	1
+839	0x0058316e	0x00583170	scalar	E1	ui:1	2	1
+840	0x00583a80	0x00583a80	buffer	E2	crt:1,ui:1,untagged:1	1	3
+841	0x00583b30	0x00583b30	object	E2	render:1	1	1
+842	0x00583b88	0x00583b88	object	E1	ui:2	1	2
+843	0x00583c38	0x00583c38	object	E1	ui:2	1	2
+844	0x00583ce8	0x00583ce8	object	E1	ui:2	1	2
+845	0x00583d40	0x00583d40	record array	E1	ui:1	1	1
+846	0x00583df0	0x00583df0	record array	E1	ui:1	1	1
+847	0x00583e48	0x00583e48	object	E1	ui:1	1	1
+848	0x00583ea0	0x00583ea0	record array	E1	ui:1	1	1
+849	0x00583ef8	0x00583ef8	object	E1	ui:1	1	1
+850	0x00583f50	0x00583f50	record array	E1	ui:1	1	1
+851	0x00583fa8	0x00583fa8	unknown	E1	ui:1	1	1
+852	0x00584000	0x00584000	record array	E1	ui:1	1	1
+853	0x005840b0	0x005840b0	object	E2	render:1	1	1
+854	0x00584160	0x00584160	object	E2	render:1	1	1
+859	0x00586f50	0x00586f50	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+860	0x00586f7c	0x00586f7c	object	E1	render:1,ui:1	1	2
+862	0x005873a8	0x005873a8	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+863	0x005873d4	0x005873d4	object	E1	ui:1	1	1
+864	0x00587458	0x00587458	object	E1	ui:1	1	1
+865	0x005874dc	0x005874dc	object	E1	ui:1	1	1
+866	0x00587534	0x00587560	object	E1	render:1,ui:1	2	2
+867	0x0058758c	0x0058758c	object	E1	ui:1	1	1
+868	0x005875b8	0x005875b8	object	E2	render:1	1	1
+869	0x00587610	0x00587610	object	E1	ui:1	1	1
+870	0x00587694	0x00587694	object	E1	ui:1	1	1
+871	0x00587878	0x00587878	object	E1	ui:1	1	1
+872	0x00587ae8	0x00587ae8	object	E2	crt:1,render:1,sim:1	1	3
+880	0x0058a850	0x0058a850	object	E2	render:1	1	1
+881	0x0058ae80	0x0058ae80	object	E2	render:1	1	1
+883	0x0058b1a0	0x0058b1a0	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+884	0x0058b1cc	0x0058b1cc	object	E1	render:1,ui:1	1	2
+885	0x0058b1f8	0x0058b1f8	object	E1	render:1,ui:1	1	2
+886	0x0058b224	0x0058b224	object	E1	render:1,ui:1	1	2
+887	0x0058b250	0x0058b250	object	E1	render:1,ui:1	1	2
+888	0x0058b27c	0x0058b27c	object	E1	render:1,ui:1	1	2
+889	0x0058b2a8	0x0058b2a8	object	E1	render:1,ui:1	1	2
+890	0x0058b358	0x0058b388	object	E2	render:3,crt:1,economy:1,sim:1	3	6
+891	0x0058b390	0x0058b390	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+892	0x0058b3bc	0x0058b3bc	object	E1	render:1,ui:1	1	2
+893	0x0058b3e8	0x0058b3e8	object	E1	render:1,ui:1	1	2
+894	0x0058b414	0x0058b414	object	E1	render:1,ui:1	1	2
+895	0x0058b440	0x0058b440	object	E1	render:1,ui:1	1	2
+896	0x0058b46c	0x0058b46c	object	E1	render:1,ui:1	1	2
+897	0x0058b4c4	0x0058b4c4	object	E1	render:1,ui:1	1	2
+898	0x0058b4f0	0x0058b4f0	object	E1	render:1,ui:1	1	2
+899	0x0058b51c	0x0058b51c	object	E2	golfer:1,render:1	1	2
+900	0x0058b548	0x0058b548	object	E2	golfer:1,render:1	1	2
+901	0x0058b650	0x0058b650	object	E2	render:2,crt:1,sim:1	1	4
+902	0x0058b680	0x0058b704	object	E2	crt:1,render:1,ui:1,untagged:1	4	4
+903	0x0058b75c	0x0058b7e0	buffer	E1	ui:1	4	1
+904	0x0058b890	0x0058b8e8	object	E1	render:1,ui:1	3	2
+905	0x0058b914	0x0058b914	object	E2	render:1	1	1
+906	0x0058b998	0x0058b998	record array	E1	render:1,ui:1	1	2
+907	0x0058ba1c	0x0058ba1c	object	E2	render:1	1	1
+909	0x0058baf8	0x0058baf8	object	E2	golfer:1,render:1	1	2
+910	0x0058bb7c	0x0058bb7c	object	E2	golfer:1,render:1,ui:1	1	3
+911	0x0058bba8	0x0058bba8	object	E2	golfer:1,render:1	1	2
+912	0x0058bbd4	0x0058bbd4	object	E2	golfer:1,render:1	1	2
+913	0x0058bc00	0x0058bc00	object	E2	golfer:1,render:1	1	2
+917	0x0058ccb8	0x0058ccb8	object	E2	course:2,golfer:2,crt:1,render:1,sim:1,untagged:1	1	8
+918	0x0058d1e0	0x0058d264	object	E1	render:1,ui:1	4	2
+919	0x0058d2bc	0x0058d340	buffer	E1	ui:1	4	1
+927	0x0059ab00	0x0059ab00	object	E2	crt:1,render:1,sim:1,untagged:1	1	4
+928	0x0059ab2c	0x0059ab2c	object	E2	render:1,sim:1	1	2
+929	0x0059ab58	0x0059ab58	object	E2	render:1,sim:1	1	2
+930	0x0059ab84	0x0059abb8	object	E2	render:2,crt:1,sim:1,ui:1	3	5
+937	0x0059b28c	0x0059b28c	object	E2	economy:1,sim:1,ui:1	1	3
+938	0x0059b33c	0x0059b33c	object	E2	economy:1,sim:1,ui:1	1	3
+939	0x0059b368	0x0059b368	object	E2	economy:1	1	1
+940	0x0059b394	0x0059b394	object	E2	economy:1	1	1
+941	0x0059b3c0	0x0059b3c0	object	E2	sim:1	1	1
+942	0x0059b578	0x0059b578	object	E2	economy:1,sim:1	1	2
+943	0x0059b5fc	0x0059b5fc	object	E2	sim:1	1	1
+946	0x0059b740	0x0059b740	object	E2	crt:1,render:1	1	2
+948	0x0059b778	0x0059b778	record array	E2	ui:2,crt:1,render:1,sim:1,untagged:1	1	6
+949	0x0059b7a4	0x0059b7a4	object	E2	render:1	1	1
+950	0x0059b95c	0x0059b95c	object	E1	render:1,ui:1	1	2
+951	0x0059b988	0x0059b988	object	E1	render:1,ui:1	1	2
+952	0x0059b9b4	0x0059b9b4	object	E1	render:1,ui:1	1	2
+953	0x0059b9e0	0x0059b9e0	object	E2	render:1	1	1
+954	0x0059ba0c	0x0059ba0c	object	E2	render:1	1	1
+955	0x0059ba38	0x0059ba38	object	E1	render:1,ui:1	1	2
+956	0x0059ba68	0x0059ba68	record array	E2	crt:1,ui:1,untagged:1	1	3
+957	0x0059ba94	0x0059ba94	object	E1	ui:1	1	1
+958	0x0059baec	0x0059baec	object	E2	render:1	1	1
+959	0x0059bbc8	0x0059bbc8	object	E1	ui:1	1	1
+960	0x0059bf90	0x0059bf90	scalar	E2	ui:4,sim:3,terrain:3,course:2,save:2,frontend:1,golfer:1	1	16
+961	0x0059bf98	0x0059bf98	object	E2	render:2,crt:1,golfer:1	1	4
+965	0x0059ca54	0x0059ca54	scalar	E1	ui:4	1	4
+970	0x0059d920	0x0059d920	record array	E1	crt:1,frontend:1,render:1,ui:1	1	4
+971	0x0059d94c	0x0059d94c	record array	E1	frontend:1,ui:1	1	2
+972	0x0059d978	0x0059d978	record array	E1	frontend:1,ui:1	1	2
+973	0x0059d9a4	0x0059d9a4	record array	E1	frontend:1,ui:1	1	2
+974	0x0059d9d0	0x0059d9d0	record array	E1	frontend:1,ui:1	1	2
+975	0x0059d9fc	0x0059d9fc	record array	E1	frontend:1,ui:1	1	2
+976	0x0059da28	0x0059da28	record array	E1	frontend:1,ui:1	1	2
+977	0x0059da54	0x0059da54	record array	E1	frontend:1,ui:1	1	2
+980	0x0059e028	0x0059e054	object	E2	golfer:1,render:1	2	2
+981	0x0059e1e0	0x0059e1e0	object	E2	render:1	1	1
+982	0x0059e290	0x0059e290	object	E2	render:1	1	1
+983	0x0059e550	0x0059e550	object	E2	render:1	1	1
+984	0x0059e600	0x0059e600	object	E2	golfer:1,render:1	1	2
+985	0x0059e62c	0x0059e62c	object	E1	render:1,ui:1	1	2
+986	0x0059e658	0x0059e658	object	E1	render:1,ui:1	1	2
+987	0x0059e684	0x0059e684	object	E1	render:1,ui:1	1	2
+988	0x0059e6b0	0x0059e6b0	object	E1	render:1,ui:1	1	2
+989	0x0059e6dc	0x0059e6dc	object	E2	render:1	1	1
+990	0x0059e708	0x0059e708	record array	E1	render:1,ui:1	1	2
+991	0x0059e734	0x0059e734	object	E2	render:1	1	1
+994	0x0059e7ec	0x0059e7ec	object	E2	render:1	1	1
+995	0x0059f23c	0x0059f23c	object	E2	render:1	1	1
+1002	0x005a34e4	0x005a34f0	scalar	E1	ui:3,golfer:1,sim:1,terrain:1	4	6
+1003	0x005a34f8	0x005a34f8	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+1004	0x005a36dc	0x005a36dc	object	E2	render:1	1	1
+1005	0x005a38c0	0x005a38c0	object	E1	render:1,ui:1	1	2
+1006	0x005a38ec	0x005a38ec	object	E1	render:1,ui:1	1	2
+1007	0x005a3918	0x005a3918	object	E1	render:1,ui:1	1	2
+1008	0x005a3944	0x005a3944	object	E1	render:1,ui:1	1	2
+1009	0x005a3970	0x005a3970	object	E1	render:1,ui:1	1	2
+1010	0x005a399c	0x005a399c	object	E1	render:1,ui:1	1	2
+1011	0x005a39c8	0x005a39c8	object	E1	render:1,ui:1	1	2
+1012	0x005a39f4	0x005a39f4	object	E2	render:1	1	1
+1013	0x005a3a78	0x005a3a78	object	E2	render:1	1	1
+1014	0x005a3aa4	0x005a3aa4	object	E1	render:1,ui:1	1	2
+1015	0x005a3ad0	0x005a3ad0	object	E1	render:1,ui:1	1	2
+1016	0x005a3afc	0x005a3afc	object	E1	render:1,ui:1	1	2
+1017	0x005a3b28	0x005a3b28	object	E1	render:1,ui:1	1	2
+1018	0x005a3b80	0x005a3b80	object	E1	render:1,ui:1	1	2
+1019	0x005a407c	0x005a407c	object	E2	render:1	1	1
+1020	0x005a4100	0x005a4130	object	E2	render:4,crt:1,sim:1	3	6
+1021	0x005a4138	0x005a4138	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+1022	0x005a43f8	0x005a4450	object	E1	render:1,ui:1	3	2
+1023	0x005a44a8	0x005a44a8	scalar array	E1	ui:1	1	1
+1024	0x005a4558	0x005a4558	scalar array	E1	ui:2	1	2
+1025	0x005a4608	0x005a4608	scalar array	E1	ui:1	1	1
+1035	0x005a53c8	0x005a53c8	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+1036	0x005a53f4	0x005a53f4	object	E1	ui:1	1	1
+1037	0x005a5420	0x005a5420	object	E1	ui:1	1	1
+1038	0x005a544c	0x005a544c	object	E1	ui:1	1	1
+1039	0x005a54a4	0x005a54a4	object	E1	ui:1	1	1
+1040	0x005a54d0	0x005a54d0	object	E1	ui:1	1	1
+1041	0x005a54fc	0x005a54fc	object	E1	ui:1	1	1
+1042	0x005a5528	0x005a5528	object	E1	ui:1	1	1
+1043	0x005a5554	0x005a5554	object	E2	render:2	1	2
+1044	0x005a55d8	0x005a55d8	object	E1	render:1,ui:1	1	2
+1045	0x005a5604	0x005a5604	object	E1	ui:1	1	1
+1046	0x005a5630	0x005a5630	object	E1	ui:1	1	1
+1047	0x005a565c	0x005a565c	object	E2	render:1	1	1
+1048	0x005a56e0	0x005a56e0	record array	E1	render:1,ui:1	1	2
+1049	0x005a5764	0x005a5764	object	E2	render:1	1	1
+1051	0x005a5840	0x005a5840	object	E2	golfer:1,render:1	1	2
+1052	0x005a58c4	0x005a58c4	object	E2	golfer:1,render:1,sim:1,ui:1	1	4
+1053	0x005a58f0	0x005a58f0	object	E2	golfer:1,render:1	1	2
+1054	0x005a591c	0x005a591c	object	E2	golfer:1,render:1	1	2
+1055	0x005a5948	0x005a5948	object	E2	golfer:1,render:1	1	2
+1063	0x005a6364	0x005a6364	scalar	E2	ui:3,save:2,sim:2,course:1	1	8
+1071	0x005a7148	0x005a7148	object	E2	course:1,crt:1,render:1,sim:1	1	4
+1073	0x005a7c08	0x005a7c08	record array	E2	crt:1,render:1,ui:1,untagged:1	1	4
+1074	0x005a7c34	0x005a7c34	object	E1	render:1,ui:1	1	2
+1075	0x005a7c60	0x005a7c60	object	E2	render:1	1	1
+1076	0x005a7c8c	0x005a7c8c	record array	E1	ui:1	1	1
+1077	0x005a7cb8	0x005a7cb8	object	E2	render:1	1	1
+1078	0x005a7ce4	0x005a7ce4	object	E2	render:1	1	1
+1079	0x005a7d10	0x005a7d10	object	E2	render:1	1	1
+1080	0x005a7d68	0x005a7d68	object	E1	render:1,ui:1	1	2
+1081	0x005a7d94	0x005a7d94	object	E1	render:1,ui:1	1	2
+1082	0x005a7dc0	0x005a7dc0	object	E2	render:1	1	1
+1089	0x005a8c90	0x005a8c90	object	E2	crt:1,render:1,ui:1,untagged:1	1	4
+1090	0x005a8cbc	0x005a8cbc	object	E1	ui:1	1	1
+1091	0x005a8ce8	0x005a8ce8	object	E1	ui:1	1	1
+1092	0x005a8d6c	0x005a8d6c	object	E1	ui:1	1	1
+1093	0x005a8df0	0x005a8df0	object	E2	render:1	1	1
+1094	0x005a8e48	0x005a8e48	object	E1	ui:1	1	1
+1095	0x005a8ef8	0x005a8ef8	object	E1	ui:1	1	1
+1096	0x005a8f50	0x005a8f50	record array	E1	render:1,ui:1	1	2
+1097	0x005a8f7c	0x005a8f7c	object	E1	ui:1	1	1
+1098	0x005a8fa8	0x005a8fa8	object	E1	ui:1	1	1
+1099	0x005a9000	0x005a9000	record array	E1	ui:1	1	1
+1100	0x005a9058	0x005a9058	object	E1	ui:1	1	1
+1101	0x005a90b0	0x005a90b0	record array	E1	ui:1	1	1
+1102	0x005a9108	0x005a9108	object	E1	ui:1	1	1
+1103	0x005a9210	0x005a923c	object	E1	render:1,ui:1	2	2
+1111	0x005a9cf0	0x005a9cf0	scalar array	E1	ui:2	1	2
+1112	0x005a9f50	0x005a9f6c	scalar	E1	ui:11,frontend:2,golfer:1	7	14
+1113	0x005a9f78	0x005a9f78	object	E2	crt:1,golfer:1,ui:1	1	3
+1114	0x005aa4ec	0x005aa55c	scalar	E1	ui:9,golfer:1	9	10
+1115	0x005aa560	0x005aa564	object	E2	crt:1,render:1,save:1	2	3
+1116	0x005aa5b8	0x005aa5b8	scalar array	E1	ui:2	1	2
+1117	0x005aa6b8	0x005aa6c8	scalar	E1	ui:7,golfer:1	4	8
+1118	0x005aa6d0	0x005aa6f0	object	E2	crt:2,audio:1,render:1,video:1	2	5
+1119	0x005aa748	0x005aa774	object	E2	input:3,audio:1,crt:1,render:1	2	6
+1120	0x005aa778	0x005aa778	object	E2	render:3,crt:1	1	4
+1122	0x0080b130	0x0080b130	record array	E2	frontend:2,golfer:2,course:1,render:1,util:1	1	7
+1123	0x0080b194	0x0080b194	scalar array	E1	frontend:1	1	1
+1300	0x00813510	0x00813510	object	E2	audio:1	1	1
+1301	0x0081357c	0x0081357c	object	E2	audio:1	1	1
+1302	0x008135e8	0x008135e8	object	E2	audio:1	1	1
+1303	0x00813654	0x00813654	object	E2	audio:1	1	1
+1304	0x0081372c	0x0081372c	object	E2	audio:1	1	1
+1305	0x00813798	0x00813798	object	E2	audio:1	1	1
+1306	0x00813804	0x00813804	object	E2	audio:1	1	1
+1307	0x00813870	0x00813870	object	E2	audio:1	1	1
+1308	0x00813948	0x00813948	object	E2	audio:1	1	1
+1309	0x008139b4	0x008139b4	object	E2	audio:1	1	1
+1310	0x00813a20	0x00813a20	object	E2	audio:1	1	1
+1311	0x00813a8c	0x00813a8c	object	E2	audio:1	1	1
+1312	0x00813b64	0x00813b64	object	E2	audio:1	1	1
+1313	0x00813bd0	0x00813bd0	object	E2	audio:1	1	1
+1314	0x00813c3c	0x00813c3c	object	E2	audio:1	1	1
+1315	0x00813ca8	0x00813ca8	object	E2	audio:1	1	1
+1316	0x008141b8	0x008141b8	object	E2	audio:1	1	1
+1317	0x00814224	0x00814224	object	E2	audio:1	1	1
+1318	0x00814290	0x00814290	object	E2	audio:1	1	1
+1319	0x008143d4	0x008143d4	object	E2	audio:1	1	1
+1320	0x00814440	0x00814440	object	E2	audio:1	1	1
+1321	0x008144ac	0x008144ac	object	E2	audio:1	1	1
+1322	0x00814518	0x00814518	object	E2	audio:1	1	1
+1323	0x00814584	0x00814584	object	E2	audio:1	1	1
+1324	0x008145f0	0x008145f0	object	E2	audio:1	1	1
+1325	0x0081465c	0x0081465c	object	E2	audio:1	1	1
+1326	0x008146c8	0x008146c8	object	E2	audio:1	1	1
+1327	0x00814734	0x00814734	object	E2	audio:1	1	1
+1328	0x008147a0	0x008147a0	object	E2	audio:1	1	1
+1329	0x0081480c	0x0081480c	object	E2	audio:1	1	1
+1330	0x00814878	0x00814878	object	E2	audio:1	1	1
+1331	0x008148e4	0x008148e4	object	E2	audio:1	1	1
+1332	0x00814950	0x00814950	object	E2	audio:1	1	1
+1333	0x008149bc	0x008149bc	object	E2	audio:1	1	1
+1508	0x00820f18	0x00820f38	object	E2	terrain:10,crt:1	10	11
+1509	0x00820f40	0x00820f5c	record array	E1	ui:9,economy:3,crt:1,untagged:1	3	14
+1510	0x00820f6c	0x00820f6c	object	E1	ui:7,economy:2	1	9
+1511	0x00820fc4	0x00820ff0	object	E1	ui:2	2	2
+1512	0x00821020	0x00821030	object	E1	ui:12,economy:4,golfer:1,render:1,video:1	4	19
+1513	0x00821040	0x00821040	object	E1	ui:11,economy:3,crt:1,golfer:1,render:1	1	17
+1514	0x00821070	0x00821070	object	E2	ui:2,boot:1,crt:1,economy:1	1	5
+1515	0x0082109c	0x0082109c	object	E1	ui:2,economy:1	1	3
+1516	0x008210c8	0x008210c8	object	E2	ui:2,boot:1,crt:1,economy:1	1	5
+1517	0x008210f4	0x008210f4	object	E1	ui:2,economy:1	1	3
+1518	0x00821120	0x00821120	object	E2	ui:2,boot:1,crt:1,golfer:1	1	5
+1519	0x0082114c	0x00821164	record array	E1	ui:2,golfer:1	2	3
+1520	0x00821178	0x00821178	object	E1	ui:2	1	2
+1521	0x008211a4	0x008211a4	object	E1	ui:2	1	2
+1522	0x008211d0	0x008211d0	object	E1	ui:2	1	2
+1523	0x00821200	0x0082121c	object	E1	ui:3,boot:1,crt:1	2	5
+1524	0x0082122c	0x0082122c	object	E1	ui:3	1	3
+1525	0x00821258	0x00821274	object	E1	ui:3	2	3
+1526	0x00821284	0x00821284	object	E1	ui:3	1	3
+1527	0x008212b0	0x008212b0	object	E1	ui:3	1	3
+1528	0x008212dc	0x008212dc	object	E1	ui:3	1	3
+1529	0x00821308	0x00821324	object	E1	ui:3,boot:1,crt:1	2	5
+1530	0x00821334	0x00821334	object	E1	ui:3	1	3
+1531	0x00821360	0x00821360	object	E1	ui:3	1	3
+1532	0x0082138c	0x0082138c	object	E1	ui:3	1	3
+1533	0x008213b8	0x008213d4	object	E1	ui:3	2	3
+1534	0x008213e4	0x008213e4	object	E1	ui:3	1	3
+1535	0x00821410	0x0082142c	object	E1	ui:3	2	3
+1536	0x0082143c	0x0082143c	object	E1	ui:3	1	3
+1537	0x00821468	0x00821468	record array	E1	ui:3	1	3
+1538	0x00821754	0x00821754	record array	E1	ui:1	1	1
+1539	0x008217d8	0x008217d8	record array	E1	ui:1	1	1
+1540	0x0082185c	0x0082185c	record array	E1	ui:1	1	1
+1541	0x008218e0	0x008218e0	record array	E1	ui:1	1	1
+1542	0x00821964	0x00821964	record array	E1	ui:1	1	1
+1543	0x008219e8	0x008219e8	record array	E1	ui:1	1	1
+1544	0x00821b74	0x00821b74	object	E1	ui:1	1	1
+1545	0x00821bf8	0x00821bf8	object	E1	ui:3,boot:1,crt:1	1	5
+1546	0x00821c24	0x00821c50	object	E1	ui:10,economy:3,golfer:1	2	14
+1547	0x00821c60	0x00821c60	object	E1	ui:3,boot:1,crt:1	1	5
+1548	0x00821c8c	0x00821c8c	object	E1	ui:3	1	3
+1549	0x00821cb8	0x00821cb8	object	E1	ui:3,boot:1,crt:1	1	5
+1550	0x00821ce4	0x00821ce4	object	E1	ui:3	1	3
+1551	0x00821d10	0x00821d2c	object	E1	ui:3	2	3
+1552	0x00821d3c	0x00821d3c	object	E1	ui:3	1	3
+1553	0x00821d68	0x00821d68	object	E1	ui:3	1	3
+1554	0x00821d94	0x00821d94	object	E1	ui:3	1	3
+1555	0x00821dc0	0x00821ddc	object	E1	ui:3	2	3
+1556	0x00821dec	0x00821dec	object	E1	ui:3	1	3
+1557	0x00821e18	0x00821e34	object	E1	ui:3	2	3
+1558	0x00821e44	0x00821e44	object	E1	ui:3	1	3
+1559	0x00821e70	0x00821e8c	object	E1	ui:3	2	3
+1560	0x00821e9c	0x00821e9c	object	E1	ui:3	1	3
+1561	0x00821ec8	0x00821ec8	object	E1	ui:2,render:1	1	3
+1562	0x00821ee8	0x00821ee8	object	E1	ui:12,economy:4,golfer:1,render:1	1	18
+1563	0x00821f08	0x00821f08	object	E1	ui:2,golfer:1,render:1	1	4
+1564	0x00821f28	0x00821f28	object	E1	ui:5,economy:1,render:1	1	7
+1565	0x00821f48	0x00821f48	object	E1	ui:3,boot:1,crt:1	1	5
+1566	0x00821f74	0x00821f74	object	E1	ui:3	1	3
+1567	0x00821fa0	0x00821fa0	record array	E1	ui:3	1	3
+1568	0x00821fcc	0x00821fcc	record array	E1	ui:1	1	1
+1569	0x008221b0	0x008221b0	object	E1	ui:1	1	1
+1570	0x008221dc	0x008221dc	object	E1	ui:1	1	1
+1571	0x0082228c	0x0082228c	object	E1	ui:2	1	2
+1572	0x008222b8	0x008222d4	object	E1	ui:3,boot:1,crt:1	2	5
+1573	0x008222e4	0x008222e4	object	E1	ui:3	1	3
+1574	0x00822310	0x0082232c	object	E1	ui:3	2	3
+1575	0x0082233c	0x0082233c	object	E1	ui:3	1	3
+1576	0x00822368	0x00822368	object	E1	ui:3	1	3
+1577	0x00822394	0x00822394	object	E1	ui:3	1	3
+1578	0x008223c0	0x008223dc	object	E1	ui:3,boot:1,crt:1	2	5
+1579	0x008223ec	0x008223ec	object	E1	ui:3	1	3
+1580	0x00822418	0x00822418	object	E1	ui:3	1	3
+1581	0x00822444	0x00822444	object	E1	ui:3	1	3
+1582	0x00822470	0x00822470	object	E1	ui:3	1	3
+1583	0x0082249c	0x0082249c	object	E1	ui:3	1	3
+1584	0x008224c8	0x008224c8	object	E1	ui:3,boot:1,crt:1	1	5
+1585	0x008224f4	0x008224f4	object	E1	ui:3	1	3
+1586	0x00822520	0x00822520	object	E1	ui:2	1	2
+1587	0x0082254c	0x0082254c	object	E1	ui:1	1	1
+1588	0x00822578	0x00822578	object	E1	ui:1	1	1
+1589	0x008225a4	0x008225a4	object	E1	ui:3	1	3
+1590	0x008225d0	0x00822654	object	E1	ui:1	4	1
+1591	0x00822680	0x00822730	object	E1	ui:2	5	2
+1592	0x0082275c	0x0082275c	object	E1	ui:1	1	1
+1593	0x00822788	0x00822788	object	E1	ui:1	1	1
+1594	0x008227b4	0x008227b4	object	E1	ui:2,economy:1	1	3
+1595	0x008227e0	0x008227e0	record array	E1	economy:1,ui:1	1	2
+1596	0x00822af8	0x00822af8	object	E1	economy:1,ui:1	1	2
+1597	0x00822b24	0x00822b24	object	E1	economy:1,ui:1	1	2
+1598	0x00822b50	0x00822b84	object	E2	economy:1,render:1,ui:1	3	3
+1607	0x00822d58	0x00822d94	scalar	E2	ui:17,input:11,economy:4,frontend:4,golfer:3,sim:2,render:1,util:1,video:1	13	44
+1639	0x00838204	0x00838234	record array	E2	input:3,golfer:2,render:1	8	6
+1647	0x00838ec4	0x00838eec	scalar array	E1	ui:2	4	2
+1648	0x00838ef0	0x00838ef4	scalar array	E1	ui:1	2	1
+1649	0x00838f70	0x00838f98	scalar	E1	ui:3,render:2	9	5
+1650	0x00839250	0x008392ac	scalar	E1	ui:6,course:1,sim:1	14	8
+1652	0x00839348	0x00839348	object	E2	render:3,crt:1	1	4
+1653	0x00839650	0x00839650	scalar	E2	ui:12,crt:7,net:4,render:3,untagged:3,util:2,boot:1,video:1	1	33
+1654	0x00839658	0x00839658	buffer	E1	ui:3	1	3
+1656	0x00839a98	0x00839aa8	scalar	E1	ui:11,render:1	5	12
+1657	0x00839ab0	0x00839abc	scalar	E2	input:2,render:2,ui:1	3	5
+1660	0x0083a2c8	0x0083a2d4	scalar	E1	ui:3	4	3
+1661	0x0083a2d8	0x0083a2d8	scalar array	E1	ui:5,input:1	1	6
+1662	0x0083a4d8	0x0083a4e0	scalar	E1	render:1,ui:1	2	2
+1663	0x0083a4e8	0x0083a4f8	scalar array	E1	ui:3,boot:2	5	5
+1664	0x0083a500	0x0083a504	object	E2	render:4,ui:1	2	5
+1665	0x0083a7b8	0x0083a7bc	object	E2	render:6,ui:5,boot:1	2	12
+1666	0x0083aa78	0x0083aa8c	scalar array	E1	ui:3,render:2	6	5
+1667	0x0083aa98	0x0083aaa0	scalar	E2	ui:6,render:5,untagged:2,input:1	3	14
+1669	0x0083aaa8	0x0083aab0	scalar	E1	render:2,ui:2	3	4
+1671	0x0083aab8	0x0083aabc	scalar	E1	render:2,ui:2	2	4
+1672	0x0083aac0	0x0083aac0	scalar	E1	ui:4	1	4
+1673	0x0083aac4	0x0083aac4	scalar	E1	ui:3	1	3
+1674	0x0083aac8	0x0083aadc	scalar	E1	ui:4,render:1	3	5
+1675	0x0083aae0	0x0083ab28	scalar	E2	input:8,ui:7,render:3,untagged:3	17	21
+1676	0x0083ab2c	0x0083ab2c	scalar	E1	ui:26,input:12	1	38
+1677	0x0083ab30	0x0083ab30	scalar	E1	ui:10,input:2,util:1	1	13
+1678	0x0083ab34	0x0083ab3c	scalar	E1	ui:10,input:2,util:1	3	13
+1679	0x0083ab40	0x0083ab40	scalar	E1	ui:13,input:2,render:1	1	16
+1680	0x0083ab44	0x0083ab88	scalar	E1	ui:18,input:4,boot:2,render:2	12	26
+1681	0x0083ab90	0x0083ab90	scalar	E1	ui:2,render:1	1	3
+1682	0x0083ab94	0x0083ab94	scalar	E1	ui:6,input:1	1	7
+1683	0x0083ab98	0x0083aba0	scalar	E2	input:3,ui:3,video:1	3	7
+1684	0x0083aba4	0x0083ac0c	scalar	E2	ui:3,render:2,boot:1,input:1,util:1	16	8
+1686	0x0083ac14	0x0083ac28	scalar	E2	ui:2,boot:1,util:1,video:1	4	5
+1688	0x0083ac88	0x0083aca4	object	E2	render:2,crt:1,video:1	8	4
+1689	0x0083aca8	0x0083acac	object	E2	boot:1	2	1
+1690	0x0083acb0	0x0083acb4	object	E2	render:4,boot:1,crt:1	2	6
+1691	0x0083ad0c	0x0083ad20	scalar	E2	ui:7,render:6,boot:1,golfer:1,video:1	4	16
+1692	0x0083ad44	0x0083ad44	scalar	E1	ui:7,render:5,boot:2	1	14
+1693	0x0083ad4c	0x0083ad4c	flag word	E1	ui:6	1	6
+1695	0x0083ad58	0x0083ad58	object	E2	audio:2,crt:1,util:1	1	4
+1703	0x0083af98	0x0083af98	object	E2	audio:3,crt:1,util:1	1	5
+1706	0x0083afd0	0x0083afe0	scalar	E1	boot:2,ui:2	4	4
+1707	0x0083afec	0x0083aff0	scalar	E2	util:4,ui:1	2	5
+1708	0x0083b000	0x0083b000	object	E2	util:3,crt:2	1	5
+1711	0x0083b5f8	0x0083b5f8	scalar	E1	ui:1	1	1
+1712	0x0083b5fc	0x0083b608	scalar	E1	ui:3,boot:1	3	4
+1713	0x0083b60c	0x0083b658	scalar	E1	ui:17	18	17
+1714	0x0083b6a8	0x0083b6a8	scalar array	E1	ui:2	1	2
+1715	0x0083b7c0	0x0083b7c0	scalar array	E1	ui:2	1	2
+1716	0x0083b8d8	0x0083b8fc	scalar	E1	ui:6	9	6
+1717	0x0083b900	0x0083b990	scalar array	E1	ui:4,input:1	13	5
+1718	0x0083b994	0x0083b994	scalar	E1	ui:3	1	3
+1719	0x0083b998	0x0083b9b0	scalar	E1	ui:6	7	6
+1720	0x0083b9b4	0x0083b9c0	scalar	E1	ui:7	4	7
+1721	0x0083b9c4	0x0083b9f0	scalar	E1	ui:6,boot:1	12	7
+1730	0x0083c340	0x0083c340	buffer	E2	net:2,util:1	1	3
+1731	0x0083d348	0x0083d348	scalar	E1	ui:2	1	2
+1735	0x0083d3c8	0x0083d3c8	scalar array	E1	ui:2	1	2
+1736	0x0083dda8	0x0083dda8	scalar array	E1	ui:1	1	1
+1737	0x0083de68	0x0083de68	scalar array	E1	ui:1	1	1
+1738	0x0083e8b8	0x0083e8b8	scalar array	E1	ui:2	1	2
+1739	0x0083e8e0	0x0083e8e0	record array	E1	ui:3	1	3
+1740	0x0083f35c	0x0083f368	record array	E1	ui:2	3	2
+1741	0x0083f46c	0x0083f46c	record array	E1	ui:1	1	1
+1742	0x0083fdb8	0x0083fdbc	record array	E1	ui:1	2	1
+1743	0x0083fe08	0x0083fe08	scalar array	E1	ui:3	1	3
+1744	0x0083fe5c	0x0083fe5c	scalar	E1	render:1,ui:1	1	2
+1745	0x0083fe78	0x0083ff0c	scalar	E1	ui:2	38	2
+1746	0x0083ff10	0x0083ff20	scalar	E1	ui:19,render:1	4	20
+1747	0x0083ff24	0x0083ffa8	scalar array	E1	ui:5,net:3	10	8
+1748	0x008400ac	0x008400ac	scalar	E2	net:1	1	1
+1749	0x008400b0	0x008400b0	scalar	E2	net:7,render:2	1	9
+1750	0x008400b8	0x008400b8	scalar	E2	render:2,net:1,ui:1	1	4
+1751	0x008400bc	0x008400c0	scalar	E2	net:1	2	1
+1752	0x008400c8	0x008400c8	object	E1	ui:3	1	3
+1755	0x008406e8	0x00840708	object	E2	boot:2,util:2,render:1	2	5
+1756	0x00840710	0x00840740	object	E2	render:7	2	7
+1759	0x00840830	0x00840830	object	E2	input:2,render:2	1	4
+1760	0x00840860	0x00840860	object	E2	input:2,render:2	1	4
+1761	0x00840890	0x008408c0	object	E2	render:4,input:2	2	6
+1762	0x008408c8	0x008408c8	object	E1	render:2,ui:2	1	4
+1763	0x008408f8	0x008408f8	object	E1	render:2,ui:2	1	4
+1764	0x0084092c	0x0084092c	scalar	E1	ui:2	1	2
+1765	0x00840930	0x00840940	object	E2	util:4	2	4
+1766	0x00840948	0x008409cc	scalar array	E1	ui:5,util:1	12	6
