@@ -4,6 +4,147 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-18  0043d660  exitDtor_image5aa778_43d660  C1->C2  re/analysis/crt/0043d660_exitDtor_image5aa778_43d660.md
+2026-10-18  0043d500  exitDtor_surface820e90_43d500  C1->C2  re/analysis/crt/0043d500_exitDtor_surface820e90_43d500.md
+2026-10-18  0043d4a0  exitDtorSurfaces_43d4a0  C1->C2  re/analysis/crt/0043d4a0_exitDtorSurfaces_43d4a0.md
+2026-10-18  0043ccd0  exitDtor_bink_43ccd0  C1->C2  re/analysis/crt/0043ccd0_exitDtor_bink_43ccd0.md
+2026-10-18  0043cc90  exitDtor_palette5aa6f0_43cc90  C1->C2  re/analysis/crt/0043cc90_exitDtor_palette5aa6f0_43cc90.md
+2026-10-18  0043cc40  exitDtorArray_images_43cc40  C1->C2  re/analysis/crt/0043cc40_exitDtorArray_images_43cc40.md
+2026-10-18  0043cbc0  retPop8_43cbc0  C1->C2  re/analysis/ui/0043cbc0_retPop8_43cbc0.md
+2026-10-18  004385c0  exitDtor_characterEditorEditBox_4385c0  C1->C2  re/analysis/crt/004385c0_exitDtor_characterEditorEditBox_4385c0.md
+2026-10-18  00437900  exitDtor_palette5aa560_437900  C1->C2  re/analysis/crt/00437900_exitDtor_palette5aa560_437900.md
+2026-10-18  004321a0  setPendingCourseInfo  C1->C2  re/analysis/course/004321a0_setPendingCourseInfo.md
+2026-10-18  00431be0  saveCourseJpg_scanline  C1->C2  re/analysis/save/00431be0_saveCourseJpg_scanline.md
+2026-10-18  00421b30  Surface_createFull_fwd1  C1->C2  re/analysis/render/00421b30_Surface_createFull_fwd1.md
+2026-10-18  0040d890  panelListSelect  C1->C2  re/analysis/ui/0040d890_panelListSelect.md
+2026-10-18  0040d760  shotStyleButtonCode  C1->C2  re/analysis/ui/0040d760_shotStyleButtonCode.md
+2026-10-18  0040b680  saveCourse  C1->C2  re/analysis/save/0040b680_saveCourse.md
+2026-10-18  00407d30  switchToCourse  C1->C2  re/analysis/course/00407d30_switchToCourse.md
+2026-10-18  00406f90  lowerCornerLevelsAround  C1->C2  re/analysis/terrain/00406f90_lowerCornerLevelsAround.md
+2026-10-18  00406f20  raiseCornerLevelsAround  C1->C2  re/analysis/terrain/00406f20_raiseCornerLevelsAround.md
+2026-10-18  00406210  exitDtor_image587ae8_406210  C1->C2  re/analysis/crt/00406210_exitDtor_image587ae8_406210.md
+2026-10-18  004061d0  exitDtor_image568d10_4061d0  C1->C2  re/analysis/crt/004061d0_exitDtor_image568d10_4061d0.md
+2026-10-18  00405910  exitDtor_image5a7148_405910  C1->C2  re/analysis/crt/00405910_exitDtor_image5a7148_405910.md
+2026-10-18  00405840  exitDtorSurfaces_405840  C1->C2  re/analysis/crt/00405840_exitDtorSurfaces_405840.md
+2026-10-18  004056d0  exitDtorSurfaces_4056d0  C1->C2  re/analysis/crt/004056d0_exitDtorSurfaces_4056d0.md
+2026-10-18  00405590  exitDtorSurfaces_405590  C1->C2  re/analysis/crt/00405590_exitDtorSurfaces_405590.md
+2026-10-18  00405450  exitDtorSurfaces_405450  C1->C2  re/analysis/crt/00405450_exitDtorSurfaces_405450.md
+2026-10-18  004052e0  exitDtorSurfaces_4052e0  C1->C2  re/analysis/crt/004052e0_exitDtorSurfaces_4052e0.md
+2026-10-18  00405160  exitDtorSurfaces_405160  C1->C2  re/analysis/crt/00405160_exitDtorSurfaces_405160.md
+2026-10-18  00405010  exitDtorSurfaces_405010  C1->C2  re/analysis/crt/00405010_exitDtorSurfaces_405010.md
+2026-10-18  00404ea0  exitDtorSurfaces_404ea0  C1->C2  re/analysis/crt/00404ea0_exitDtorSurfaces_404ea0.md
+2026-10-18  00404d00  exitDtorSurfaces_404d00  C1->C2  re/analysis/crt/00404d00_exitDtorSurfaces_404d00.md
+2026-10-18  00404960  thisIdentity_404940_adj274  C1->C2  re/analysis/ui/00404960_thisIdentity_404940_adj274.md
+2026-10-18  00404940  thisIdentity_404940  C1->C2  re/analysis/ui/00404940_thisIdentity_404940.md
+2026-10-18  00404930  return1Pop8_404930  C1->C2  re/analysis/ui/00404930_return1Pop8_404930.md
+2026-10-18  00404920  Window::refreshFull_fwd0  C1->C2  re/analysis/ui/00404920_Window_refreshFull_fwd0.md
+2026-10-18  004048f0  Image_recreateSurface_fwd  C1->C2  re/analysis/render/004048f0_Image_recreateSurface_fwd.md
+2026-10-18  004048d0  Surface_createFull_fwd0  C1->C2  re/analysis/render/004048d0_Surface_createFull_fwd0.md
+2026-10-18  004048c0  return1_4048c0  C1->C2  re/analysis/ui/004048c0_return1_4048c0.md
+2026-10-18  004048b0  retPop12_4048b0  C1->C2  re/analysis/ui/004048b0_retPop12_4048b0.md
+2026-10-18  004048a0  return0Pop16_4048a0  C1->C2  re/analysis/ui/004048a0_return0Pop16_4048a0.md
+2026-10-18  00404890  returnArg1Pop4_404890  C1->C2  re/analysis/ui/00404890_returnArg1Pop4_404890.md
+2026-10-18  00404880  return0Pop12_404880  C1->C2  re/analysis/ui/00404880_return0Pop12_404880.md
+2026-10-18  00404860  exitDtor_font51a048_404860  C1->C2  re/analysis/crt/00404860_exitDtor_font51a048_404860.md
+2026-10-18  00404810  exitDtor_font5199a8_404810  C1->C2  re/analysis/crt/00404810_exitDtor_font5199a8_404810.md
+2026-10-18  004047c0  exitDtor_font519988_4047c0  C1->C2  re/analysis/crt/004047c0_exitDtor_font519988_4047c0.md
+2026-10-18  00404770  exitDtor_font51a008_404770  C1->C2  re/analysis/crt/00404770_exitDtor_font51a008_404770.md
+2026-10-18  00404720  exitDtor_font519a20_404720  C1->C2  re/analysis/crt/00404720_exitDtor_font519a20_404720.md
+2026-10-18  004046e0  exitDtor_palette5199c8_4046e0  C1->C2  re/analysis/crt/004046e0_exitDtor_palette5199c8_4046e0.md
+2026-10-18  00404690  exitDtor_font519968_404690  C1->C2  re/analysis/crt/00404690_exitDtor_font519968_404690.md
+2026-10-18  00404640  exitDtor_font51b340_404640  C1->C2  re/analysis/crt/00404640_exitDtor_font51b340_404640.md
+2026-10-18  004045f0  exitDtor_font51a028_4045f0  C1->C2  re/analysis/crt/004045f0_exitDtor_font51a028_4045f0.md
+2026-10-18  004045a0  exitDtor_font519a40_4045a0  C1->C2  re/analysis/crt/004045a0_exitDtor_font519a40_4045a0.md
+2026-10-18  00404550  exitDtor_font519948_404550  C1->C2  re/analysis/crt/00404550_exitDtor_font519948_404550.md
+2026-10-18  00404500  exitDtor_font51b360_404500  C1->C2  re/analysis/crt/00404500_exitDtor_font51b360_404500.md
+2026-10-18  004044b0  exitDtor_font51b320_4044b0  C1->C2  re/analysis/crt/004044b0_exitDtor_font51b320_4044b0.md
+2026-10-18  00404460  exitDtor_font519fd8_404460  C1->C2  re/analysis/crt/00404460_exitDtor_font519fd8_404460.md
+2026-10-18  00404410  exitDtor_font519928_404410  C1->C2  re/analysis/crt/00404410_exitDtor_font519928_404410.md
+2026-10-18  004043d0  exitDtor_image51b068_4043d0  C1->C2  re/analysis/crt/004043d0_exitDtor_image51b068_4043d0.md
+2026-10-18  00404340  exitDtor_rootWindow_404340  C1->C2  re/analysis/crt/00404340_exitDtor_rootWindow_404340.md
+2026-10-18  00404070  exitDtorArray_animPalettes_404070  C1->C2  re/analysis/crt/00404070_exitDtorArray_animPalettes_404070.md
+2026-10-18  00404010  exitDtorArray_animSprites_404010  C1->C2  re/analysis/crt/00404010_exitDtorArray_animSprites_404010.md
+2026-10-18  00403fb0  exitDtorArray_flicStreams_403fb0  C1->C2  re/analysis/crt/00403fb0_exitDtorArray_flicStreams_403fb0.md
+2026-10-18  00403f50  exitDtorArray_flicObjs_403f50  C1->C2  re/analysis/crt/00403f50_exitDtorArray_flicObjs_403f50.md
+2026-10-18  004028f0  deletingDtor_401c30_adj8_4028f0  C1->C2  re/analysis/crt/004028f0_deletingDtor_401c30_adj8_4028f0.md
+2026-10-18  004028b0  deletingDtor_401c30_adj10_4028b0  C1->C2  re/analysis/crt/004028b0_deletingDtor_401c30_adj10_4028b0.md
+2026-10-18  00402870  deletingDtor_401c30_adj14_402870  C1->C2  re/analysis/crt/00402870_deletingDtor_401c30_adj14_402870.md
+2026-10-18  00402800  deletingDtor_adj1c_402800  C1->C2  re/analysis/crt/00402800_deletingDtor_adj1c_402800.md
+2026-10-18  00402790  deletingDtor_adj1c_402790  C1->C2  re/analysis/crt/00402790_deletingDtor_adj1c_402790.md
+2026-10-18  00402720  deletingDtor_adj1c_402720  C1->C2  re/analysis/crt/00402720_deletingDtor_adj1c_402720.md
+2026-10-18  00402190  retPop4_402190  C1->C2  re/analysis/ui/00402190_retPop4_402190.md
+2026-10-18  00402180  return0Pop4_402180  C1->C2  re/analysis/ui/00402180_return0Pop4_402180.md
+2026-10-18  0043d660  exitDtor_image5aa778_43d660  C0->C1  registered by atexit through the stub at 0x0043d650 (`push 0x0043d660`, `call 0x004a56d2`); loads the object address then `jmp 0x00474c40` Image_dtor (0x0043d665)
+2026-10-18  0043d500  exitDtor_surface820e90_43d500  C0->C1  registered by atexit through the stub at 0x0043d4f0 (`push 0x0043d500`); `mov [0x00820e90], 0x004ba2d8` 0x0043d500 then `jmp 0x00473ae0` Surface_free 0x0043d50f
+2026-10-18  0043d4a0  exitDtorSurfaces_43d4a0  C0->C1  registered by atexit through the stub at 0x0043d490 (`push 0x0043d4a0`); stores vtable 0x004ba2d8 into g_sprite5aa748 0x005aa748 and calls Surface_free 0x00473ae0 (0x0043d4af), then `call 0x004a5713` over 0xdd40 elements of 0x2c bytes at 0x005aaa30 (g_cellPool)
+2026-10-18  0043ccd0  exitDtor_bink_43ccd0  C0->C1  registered by atexit through the stub at 0x0043ccc0 (`push 0x0043ccd0`, `call 0x004a56d2`); loads the object address then `jmp 0x00487040` BinkPlayer::dtor (0x0043ccd5)
+2026-10-18  0043cc90  exitDtor_palette5aa6f0_43cc90  C0->C1  registered by atexit through the stub at 0x0043cc80 (`push 0x0043cc90`, `call 0x004a56d2`); loads the object address then `jmp 0x00483010` PaletteCache::dtor (0x0043cc95)
+2026-10-18  0043cc40  exitDtorArray_images_43cc40  C0->C1  registered by atexit through the stub at 0x0043cc30 (`push 0x0043cc40`, `call 0x004a56d2`); pushes element destructor 0x00483010, count 0xbe, element size 0x58, array 0x0081ca10 and calls 0x004a5713 (the argument layout of the ehVectorConstructorIterator calls in the initGlobalArray_ routines)
+2026-10-18  0043cbc0  retPop8_43cbc0  C0->C1  `ret 8` 0x0043cbc0; 363 slot rows (slots 23, 27-34, 38-40 ...) in e1_vtables.tsv, the most shared default
+2026-10-18  004385c0  exitDtor_characterEditorEditBox_4385c0  C0->C1  registered by atexit through the stub at 0x004385b0 (`push 0x004385c0`, `call 0x004a56d2`); loads the object address then `jmp 0x0043cb50` EditBox::dtor (0x004385c5)
+2026-10-18  00437900  exitDtor_palette5aa560_437900  C0->C1  registered by atexit through the stub at 0x004378f0 (`push 0x00437900`, `call 0x004a56d2`); loads the object address then `jmp 0x00483010` PaletteCache::dtor (0x00437905)
+2026-10-18  004321a0  setPendingCourseInfo  C0->C1  strlen then `rep movsd` / `rep movsb` copy of its string argument into g_pendingCourseInfo 0x00587da0 (0x004321a6..0x004321c4); sole caller saveCourse 0x0040b6c5
+2026-10-18  00431be0  saveCourseJpg_scanline  C0->C1  function pointer stored at 0x00431ea4 inside saveCourseJpg 0x00431d20; reads RGB555 pixels from g_jpegRowCursor 0x00543cf0 with pitch g_jpegSrcPitch 0x0056125c (shr 7 / shr 2 / and 0x1f channel masks, 0x00431c50..0x00431c78), sums n x n blocks (n = word 0x004c3074), divides by n*n (0x00431cb1..0x00431cdf) into RGB bytes in the buffer 0x0056a510, advances the cursor (0x00431d12) and returns the buffer
+2026-10-18  00421b30  Surface_createFull_fwd1  C0->C1  calls 0x00474dd0 Surface_createFull at 0x00421b4b with five caller arguments and a 0 pushed as third (0x00421b47); `ret 0x14`; caller mainLoop
+2026-10-18  0040d890  panelListSelect  C0->C1  clears bit 2 of g_flags 0x0059e7b8 (0x0040d89b); switches on the word 0x00567afc: 3 sets g_playerShotStyle 0x0058f330 to 0, -1, 1, 3 or 4 by the argument 3..7 (jump table 0x0040da8c, stores 0x0040d8c3..0x0040d8f7); 2 looks the golfer up in g_panelListIds 0x0054131c (bounded by 0x0056199c) and moves the camera tile pair 0x004c2ba0 / 0x004c2ba4 to its position >> 10 (0x0040d954..0x0040d96c); 1 stores the hole to 0x004c2854 and plays sound 0xfc (0x0040d9d2); otherwise loads 0x004c2848 from 0x0059bfc4[arg] and plays sound 0xfb (0x0040da14), and for a type 0xd building at difficulty above 3 starts a message with the text at 0x004c5344 (0x0040da69); caller mainLoop
+2026-10-18  0040d760  shotStyleButtonCode  C0->C1  `add eax, -3; cmp eax, 4` 0x0040d764..0x0040d767, jump table 0x0040d790: index 0 returns 0x800043f0, 1 returns 0, 2 returns 0x8000421f, 3 returns 0x80007ff0, 4 returns 0x80007fff, anything else 0 (0x0040d78b); the same index gives the g_playerShotStyle values 0, -1, 1, 3, 4 in panelListSelect 0x0040d890; caller mainLoop
+2026-10-18  0040b680  saveCourse  C0->C1  copies g_textBuffer to a 0x64-byte local as the file name (0x0040b68e..0x0040b6b4), opens it with _open flags 0x8301 (0x0040b6d3, `call 0x004a5d48`) into g_saveFd 0x00568d08, writes two 0x64-byte caption records built from appendCourseTitle 0x0040daa0, the strings at 0x004c52e4 and 0x004d6098, g_bestRounds[0] 0x0056a524 through __itoa (0x0040b78d) and appendString (0x0040b7e9), calls deserializeCourse(0) on g_saveFd (0x0040b802; loadCourse passes 1 to read, 0x0040b94f), writes the 8-byte marker at 0x004c52c0 (0x0040b818) and closes (0x0040b824); caller mainLoop
+2026-10-18  00407d30  switchToCourse  C0->C1  skips when g_flags 0x0059e7b8 bit 0x4000000 is set (0x00407d36); calls courseActionMenu through thunk 0x00470a00 (0x00407d46); on a result other than -1 stores g_year into byte +0x23 of the record g_courseIndex 0x0059bf90 selects (0x00407d82), zeroes g_date 0x00834170 and restores it after the rebuild (0x00407d89, 0x00407ddd), copies the chosen course byte to g_courseType 0x005a34e0 (0x00407d93..0x00407d9a), calls loadInterfaceArt 0x00442180, buildGolferBioText 0x004315e0 (the new-game reset), stores g_cash_div100 0x00571fd4 into the per-year table at 0x0058421e (year % 100, 0x00407dac..0x00407dc3), then generateRandomCourse 0x00470a60, rebuildHeightfield 0x0042f7a0, applyCourseType 0x00449400, refreshTerrain 0x00449520; caller mainLoop
+2026-10-18  00406f90  lowerCornerLevelsAround  C0->C1  same window and kernel as raiseCornerLevelsAround; `dec al` stores a neighbour that is above the centre level plus the kernel entry (0x00406fca..0x00406fd8); caller mainLoop
+2026-10-18  00406f20  raiseCornerLevelsAround  C0->C1  reads g_cornerLevel 0x005a4998 at [51*x + y] (0x00406f38), walks a 5x5 window from index - 0x68 (`lea esi, [eax-0x68]` 0x00406f4d, two rows and two columns back; row step 0x33 at 0x00406f76) against g_levelFalloffKernel 0x004c2f68..0x004c2f9a (`cmp edx, 0x4c2f9a` 0x00406f79); `inc al` stores a neighbour that is below the centre level minus the kernel entry (0x00406f64..0x00406f6a); caller mainLoop
+2026-10-18  00406210  exitDtor_image587ae8_406210  C0->C1  registered by atexit through the stub at 0x00406200 (`push 0x00406210`, `call 0x004a56d2`); loads the object address then `jmp 0x00474c40` Image_dtor (0x00406215)
+2026-10-18  004061d0  exitDtor_image568d10_4061d0  C0->C1  registered by atexit through the stub at 0x004061c0 (`push 0x004061d0`, `call 0x004a56d2`); loads the object address then `jmp 0x00474c40` Image_dtor (0x004061d5)
+2026-10-18  00405910  exitDtor_image5a7148_405910  C0->C1  registered by atexit through the stub at 0x00405900 (`push 0x00405910`, `call 0x004a56d2`); loads the object address then `jmp 0x00474c40` Image_dtor (0x00405915)
+2026-10-18  00405840  exitDtorSurfaces_405840  C0->C1  registered by atexit through the stub at 0x00405830 (`push 0x00405840`, `call 0x004a56d2`); destroys 8 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  004056d0  exitDtorSurfaces_4056d0  C0->C1  registered by atexit through the stub at 0x004056c0 (`push 0x004056d0`, `call 0x004a56d2`); destroys 6 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  00405590  exitDtorSurfaces_405590  C0->C1  registered by atexit through the stub at 0x00405580 (`push 0x00405590`, `call 0x004a56d2`); destroys 6 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  00405450  exitDtorSurfaces_405450  C0->C1  registered by atexit through the stub at 0x00405440 (`push 0x00405450`, `call 0x004a56d2`); destroys 6 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  004052e0  exitDtorSurfaces_4052e0  C0->C1  registered by atexit through the stub at 0x004052d0 (`push 0x004052e0`, `call 0x004a56d2`); destroys 9 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  00405160  exitDtorSurfaces_405160  C0->C1  registered by atexit through the stub at 0x00405150 (`push 0x00405160`, `call 0x004a56d2`); destroys 6 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  00405010  exitDtorSurfaces_405010  C0->C1  registered by atexit through the stub at 0x00405000 (`push 0x00405010`, `call 0x004a56d2`); destroys 7 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  00404ea0  exitDtorSurfaces_404ea0  C0->C1  registered by atexit through the stub at 0x00404e90 (`push 0x00404ea0`, `call 0x004a56d2`); destroys 4 single Surface objects (vtable 0x004ba2d8 stored, then `call 0x00473ae0` Surface_free) and 4 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  00404d00  exitDtorSurfaces_404d00  C0->C1  registered by atexit through the stub at 0x00404cf0 (`push 0x00404d00`, `call 0x004a56d2`); destroys 8 single Surface objects (vtable 0x004ba2d8 stored, then `call 0x00473ae0` Surface_free) and 5 Surface arrays (element size 0x2c, element destructor 0x004041f0, `call 0x004a5713`)
+2026-10-18  00404960  thisIdentity_404940_adj274  C0->C1  `sub ecx, 0x274` 0x00404960, `jmp 0x00404940` 0x00404966; slot 4 of the +0x274 sub-object tables (0x004ba2e8 ...)
+2026-10-18  00404940  thisIdentity_404940  C0->C1  `mov eax, ecx` 0x00404940, `ret` 0x00404942; slot 71 of 14 window-class tables
+2026-10-18  00404930  return1Pop8_404930  C0->C1  `mov eax, 1` 0x00404930, `ret 8` 0x00404935; slots 87 and 88 of 14 window-class tables
+2026-10-18  00404920  Window::refreshFull_fwd0  C0->C1  `push 0` 0x00404920, `call 0x00480c80` Window::refreshFull 0x00404922; slot 73 of 14 window-class tables
+2026-10-18  00404910  Image_releaseAll_fwd  C0->C1  `jmp 0x00474cb0` Image_releaseAll at 0x00404910; slot 2 of the +0x274 sub-object tables
+2026-10-18  004048f0  Image_recreateSurface_fwd  C0->C1  calls 0x00474e70 Image_recreateSurface at 0x004048ff with the same three arguments; `ret 0xc`; slot 1 of the +0x274 sub-object tables
+2026-10-18  004048d0  Surface_createFull_fwd0  C0->C1  calls 0x00474dd0 Surface_createFull at 0x004048e8 with the four caller arguments in order and two zero pushes (0x004048d8, 0x004048da); `ret 0x10`; slot 0 of the +0x274 sub-object tables
+2026-10-18  004048c0  return1_4048c0  C0->C1  `mov eax, 1` 0x004048c0, `ret` 0x004048c5; slots 69 and 101 of 15 window-class tables
+2026-10-18  004048b0  retPop12_4048b0  C0->C1  `ret 0xc` 0x004048b0; slots 21, 25, 55, 100 of 15 window-class tables
+2026-10-18  004048a0  return0Pop16_4048a0  C0->C1  `xor eax, eax` 0x004048a0, `ret 0x10` 0x004048a2; slot 11 of 15 window-class tables
+2026-10-18  00404890  returnArg1Pop4_404890  C0->C1  `mov eax, [esp+4]` 0x00404890, `ret 4` 0x00404894; slots 7 and 9 of 15 window-class tables
+2026-10-18  00404880  return0Pop12_404880  C0->C1  `xor eax, eax` 0x00404880, `ret 0xc` 0x00404882; 150 slot rows (slot 5, 12-20 ...) in e1_vtables.tsv
+2026-10-18  00404860  exitDtor_font51a048_404860  C0->C1  registered by atexit through the stub at 0x00404850 (`push 0x00404860`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x0051a048 and tail-jumps to FontRef::release 0x004838b0 (0x0040486f)
+2026-10-18  00404810  exitDtor_font5199a8_404810  C0->C1  registered by atexit through the stub at 0x00404800 (`push 0x00404810`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x005199a8 and tail-jumps to FontRef::release 0x004838b0 (0x0040481f)
+2026-10-18  004047c0  exitDtor_font519988_4047c0  C0->C1  registered by atexit through the stub at 0x004047b0 (`push 0x004047c0`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x00519988 and tail-jumps to FontRef::release 0x004838b0 (0x004047cf)
+2026-10-18  00404770  exitDtor_font51a008_404770  C0->C1  registered by atexit through the stub at 0x00404760 (`push 0x00404770`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x0051a008 and tail-jumps to FontRef::release 0x004838b0 (0x0040477f)
+2026-10-18  00404720  exitDtor_font519a20_404720  C0->C1  registered by atexit through the stub at 0x00404710 (`push 0x00404720`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x00519a20 and tail-jumps to FontRef::release 0x004838b0 (0x0040472f)
+2026-10-18  004046e0  exitDtor_palette5199c8_4046e0  C0->C1  registered by atexit through the stub at 0x004046d0 (`push 0x004046e0`, `call 0x004a56d2`); loads the object address then `jmp 0x00483010` PaletteCache::dtor (0x004046e5)
+2026-10-18  00404690  exitDtor_font519968_404690  C0->C1  registered by atexit through the stub at 0x00404680 (`push 0x00404690`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x00519968 and tail-jumps to FontRef::release 0x004838b0 (0x0040469f)
+2026-10-18  00404640  exitDtor_font51b340_404640  C0->C1  registered by atexit through the stub at 0x00404630 (`push 0x00404640`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x0051b340 and tail-jumps to FontRef::release 0x004838b0 (0x0040464f)
+2026-10-18  004045f0  exitDtor_font51a028_4045f0  C0->C1  registered by atexit through the stub at 0x004045e0 (`push 0x004045f0`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x0051a028 and tail-jumps to FontRef::release 0x004838b0 (0x004045ff)
+2026-10-18  004045a0  exitDtor_font519a40_4045a0  C0->C1  registered by atexit through the stub at 0x00404590 (`push 0x004045a0`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x00519a40 and tail-jumps to FontRef::release 0x004838b0 (0x004045af)
+2026-10-18  00404550  exitDtor_font519948_404550  C0->C1  registered by atexit through the stub at 0x00404540 (`push 0x00404550`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x00519948 and tail-jumps to FontRef::release 0x004838b0 (0x0040455f)
+2026-10-18  00404500  exitDtor_font51b360_404500  C0->C1  registered by atexit through the stub at 0x004044f0 (`push 0x00404500`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x0051b360 and tail-jumps to FontRef::release 0x004838b0 (0x0040450f)
+2026-10-18  004044b0  exitDtor_font51b320_4044b0  C0->C1  registered by atexit through the stub at 0x004044a0 (`push 0x004044b0`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x0051b320 and tail-jumps to FontRef::release 0x004838b0 (0x004044bf)
+2026-10-18  00404460  exitDtor_font519fd8_404460  C0->C1  registered by atexit through the stub at 0x00404450 (`push 0x00404460`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x00519fd8 and tail-jumps to FontRef::release 0x004838b0 (0x0040446f)
+2026-10-18  00404410  exitDtor_font519928_404410  C0->C1  registered by atexit through the stub at 0x00404400 (`push 0x00404410`, `call 0x004a56d2`); stores vtable 0x004ba468 into 0x00519928 and tail-jumps to FontRef::release 0x004838b0 (0x0040441f)
+2026-10-18  004043d0  exitDtor_image51b068_4043d0  C0->C1  registered by atexit through the stub at 0x004043c0 (`push 0x004043d0`, `call 0x004a56d2`); loads the object address then `jmp 0x00474c40` Image_dtor (0x004043d5)
+2026-10-18  00404340  exitDtor_rootWindow_404340  C0->C1  registered by atexit through the stub at 0x00404330 (`push 0x00404340`, `call 0x004a56d2`); loads the object address then `jmp 0x00404350` (0x00404345)
+2026-10-18  00404070  exitDtorArray_animPalettes_404070  C0->C1  registered by atexit through the stub at 0x00404060 (`push 0x00404070`, `call 0x004a56d2`); pushes element destructor 0x00483010, count 0x24f, element size 0x58, array 0x004e9aa0 and calls 0x004a5713 (the argument layout of the ehVectorConstructorIterator calls in the initGlobalArray_ routines)
+2026-10-18  00404010  exitDtorArray_animSprites_404010  C0->C1  registered by atexit through the stub at 0x00404000 (`push 0x00404010`, `call 0x004a56d2`); pushes element destructor 0x004041f0, count 0x24f, element size 0x2c, array 0x00509688 and calls 0x004a5713 (the argument layout of the ehVectorConstructorIterator calls in the initGlobalArray_ routines)
+2026-10-18  00403fb0  exitDtorArray_flicStreams_403fb0  C0->C1  registered by atexit through the stub at 0x00403fa0 (`push 0x00403fb0`, `call 0x004a56d2`); pushes element destructor 0x00404200, count 0x24f, element size 0x44, array 0x0050fc20 and calls 0x004a5713 (the argument layout of the ehVectorConstructorIterator calls in the initGlobalArray_ routines)
+2026-10-18  00403f50  exitDtorArray_flicObjs_403f50  C0->C1  registered by atexit through the stub at 0x00403f40 (`push 0x00403f50`, `call 0x004a56d2`); pushes element destructor 0x00404280, count 0x24f, element size 0x84, array 0x004f65c8 and calls 0x004a5713 (the argument layout of the ehVectorConstructorIterator calls in the initGlobalArray_ routines)
+2026-10-18  004028f0  deletingDtor_401c30_adj8_4028f0  C0->C1  same steps as deletingDtor_401c30 0x00401c30 (store of vtable 0x004ba278, 0x00839650 restored from [this+4], `call 0x004a5007` _free when the flag bit is set) with the result and the freed pointer this - 0x8 (`lea eax, [esi-0x8]` at 0x00402908)
+2026-10-18  004028b0  deletingDtor_401c30_adj10_4028b0  C0->C1  same steps as deletingDtor_401c30 0x00401c30 (store of vtable 0x004ba278, 0x00839650 restored from [this+4], `call 0x004a5007` _free when the flag bit is set) with the result and the freed pointer this - 0x10 (`lea eax, [esi-0x10]` at 0x004028c8)
+2026-10-18  00402870  deletingDtor_401c30_adj14_402870  C0->C1  same steps as deletingDtor_401c30 0x00401c30 (store of vtable 0x004ba278, 0x00839650 restored from [this+4], `call 0x004a5007` _free when the flag bit is set) with the result and the freed pointer this - 0x14 (`lea eax, [esi-0x14]` at 0x00402888)
+2026-10-18  00402800  deletingDtor_adj1c_402800  C0->C1  `lea esi, [ecx-0x1c]` 0x00402801; stores its vtables, calls 0x004026a0 List402_clear, stores 0 at +0x14, resets the HeapObject vtable 0x004ba278 and the heap global 0x00839650, frees this when the flag bit is set (`call 0x004a5007`); slot 0 of the SgRecList +0x28 table (e1_vtables.tsv)
+2026-10-18  00402790  deletingDtor_adj1c_402790  C0->C1  `lea esi, [ecx-0x1c]` 0x00402791; stores its vtables, calls 0x004026a0 List402_clear, stores 0 at +0x14, resets the HeapObject vtable 0x004ba278 and the heap global 0x00839650, frees this when the flag bit is set (`call 0x004a5007`); slot 0 of the SgRecList +0x28 table (e1_vtables.tsv)
+2026-10-18  00402720  deletingDtor_adj1c_402720  C0->C1  `lea esi, [ecx-0x1c]` 0x00402721; stores its vtables, calls 0x004026a0 List402_clear, stores 0 at +0x14, resets the HeapObject vtable 0x004ba278 and the heap global 0x00839650, frees this when the flag bit is set (`call 0x004a5007`); slot 0 of the SgRecList +0x28 table (e1_vtables.tsv)
+2026-10-18  00402190  retPop4_402190  C0->C1  `ret 4` 0x00402190; stored in slots 1, 51-53, 59, 60, 64, 66 of 16 window-class tables (e1_vtables.tsv, 96 slot rows)
+2026-10-18  00402180  return0Pop4_402180  C0->C1  `xor eax, eax` 0x00402180, `ret 4` 0x00402182; stored in slots 0, 10, 36, 37, 50 of the SgRecList / SgRootWindow / SgView tables (e1_vtables.tsv)
 2026-10-18  004a4ac0  panelSubDrawContents_vtordisp_adj578  C1->C2  re/analysis/ui/004a4ac0_panelSubDrawContents_vtordisp_adj578.md
 2026-10-18  004a4aa0  panelSubDeletingDtor_vtordisp_adj578  C1->C2  re/analysis/ui/004a4aa0_panelSubDeletingDtor_vtordisp_adj578.md
 2026-10-18  004a4a80  panelSubDeletingDtor_adj274  C1->C2  re/analysis/ui/004a4a80_panelSubDeletingDtor_adj274.md
