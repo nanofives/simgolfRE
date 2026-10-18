@@ -865,6 +865,21 @@ showBulletinBoard writes two words one past the golfer table (record 156) into t
 names file stops being a hold-out once the streams add theirs (excluded model_* files); names_validate needs a re/analysis/systems/<id>.md stub per names
 id; claude2 children cannot write the git index, so the parent commits their files by explicit path; ownership overlaps between parallel streams were
 settled by early notes, so tell the affected streams at once.
+Stream H (2026-10-18, naming the exe game-code FUN_ functions with the finished model; brief re/model/H_BRIEF.md, candidates re/model/h_candidates.tsv in four
+chunks, four claude2 Sonnet children; notes re/model/h<k>_notes.md, names re/names/model_h<k>.tsv): 279 of 281 functions named (h1 70 distinct, h2 70, h3 71,
+h4 68; 2 deferred: 0x0047e770 View slot 78, one h2 row), 0 bad citations. Groups: atexit destructor stubs (about 70: gSurfaceDtor_*, exitDtor_*, per-global
+destructors), this-adjustor thunks and vtordisp pairs, window-class slot defaults (one constant-return default fills 363 slots), NodeList / Snd / VoiceRx
+forwarders named by target slot (Class::fwdDevN / callChildN), TextView / EditBox / Button / scrollbar slot bodies, UI event-table entries, static-init
+stubs, and ten course / terrain / UI functions called by mainLoop (raiseCornerLevelsAround, switchToCourse, saveCourse, panelListSelect ...). Applied to the Ghidra
+master (backup ghidra/backup/SimGolf.rep.pre_streamH_20261018, 279 renames); tracker: 209 rows C0 -> C1 through `re_classify.py batch re/names/model_h*.tsv --to
+C1`, 200 of them C2 through `c2_note.py --all` + `batch --to C2` (10 thunks of 5 bytes or less stay C1); exe C1 10, C2 235 after it, total C2 586. Defects
+found (not fixed, addresses in the notes): 5x5 corner-level windows with no bounds test, saveCourse's unbounded filename copy and untested _open,
+setPendingCourseInfo's unbounded copy, divisions by an untested value at 0x0047e8e1 / 0x0047e8f7 / 0x0048661e, unset eax returns in NodeList::fwdChild9 / 15.
+Model corrections reported and listed in re/model/DECISIONS.md (applied at the start of the next phase): vtables 0x004ba2d8 / 0x004ba468 are SpriteRef (0x2c) and
+FontRef (0x20) not GfxSurface / SurfaceRef; e1_vtables.tsv's SgRecList (0x004bc3b4) is not supported by its slots; no vtable rows for 0x004ba2a8;
+g_ui83aa9c 0x0083aa9c is the root-window pointer, not int32[2]; the 16-record table (0x58 each) at pointer 0x0083ff6c is untyped; Snd slots 41-45 are
+unimplemented constant-0xb stubs. Save-field tool: model_sve_fields.py and model_ctypes_gen.py now build from the merged re/model/addresses.tsv (1,116
+mirror symbols; all 91 save fields named and resolvable).
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

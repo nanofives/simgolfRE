@@ -56,3 +56,13 @@ Applied by `re/tools/model_merge.py` (RESOLUTIONS, G_ROWS, MARKS, CANONICAL_TYPE
   literal 0x4c2e18 in the image), g_namePool / g_namePoolOffset / g_namePoolLength 0x56fcb0 / 0x59d81c / 0x5a46b8 (one
   string pool: strlen + 1 stored at 0x0045b9ca, end = offset + length at 0x0045b949..0x0045b954). The old labels
   gTextBuffer / gTextBuffer2 and the E2 / D / F placeholders are replaced.
+
+## 2026-10-18, corrections reported by stream H, to apply at the start of the next phase
+- vtables 0x004ba2d8 and 0x004ba468: the classes are `SpriteRef` (0x2c bytes) and `FontRef` (0x20 bytes) (e2_classes.tsv and their installers); e2_vtables.tsv and the merged map still carry `GfxSurface` / `SurfaceRef`.
+- e1_vtables.tsv types vtable 0x004bc3b4 as `SgRecList`: its installer is `panelSubCtor4a3110` and slot 0 is `recordCopyStr20`, so the class name is not supported by the slots.
+- e1_vtables.tsv has no rows for table 0x004ba2a8 (stored as a vtable by `deletingDtor_adj1c_402790`).
+- `g_ui83aa9c` (0x0083aa9c) is a pointer to the root window object (the model types it int32_t[2]); 0x0083ab20 is the pointer-capture window.
+- The 16-record table (0x58 bytes each) at pointer 0x0083ff6c that `netMarkRecordCb` scans is untyped.
+- `g_ui_567afc` (0x00567afc) is a panel-mode word (3 shot style, 2 golfer list, 1 hole list, otherwise theme slot); `f_w_4c2848` and 0x004c2854 are the theme-slot and hole selections; `g_value56199c` bounds `g_panelListIds`.
+- `g_titleBarH` (0x0083ff10) is stored once at startup by `initHscrollHeight` 0x00496020 as GetSystemMetrics(3), the horizontal scrollbar height.
+- Snd vtable slots 41-45 point at constant-0xb stubs (unimplemented slots, not device forwarders); `Snd+0x40` and `VoiceRx+0x40` hold the sound device pointer, `NodeList+0x14` the child pointer.
