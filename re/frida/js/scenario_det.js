@@ -102,6 +102,7 @@ function tgtStub(realCell, slotIndex) {
   // mov eax,[T]; mov ecx,[step]; add [T],ecx; inc [tgt calls]; (clock log); cmp eax,[due]; jae slow; ret
   b.push(0xa1, ...d(0), 0x8b, 0x0d, ...d(4), 0x01, 0x0d, ...d(0), 0xff, 0x05, ...d(0x20));
   b.push(...clogBytes(1, slotIndex));
+  b.push(...frameHashBytes());          // cfg.frameHash only (phase 2.2); [] otherwise, so the stub is unchanged
   b.push(0x3b, 0x05, ...d(8), 0x73, 0x01, 0xc3);
   // slow: push eax; call [onDue]; pop eax; ret
   // (cfg.image only: `mov [D+0x48], esp` after the push, so onDue finds the pushed eax at [esp] and the caller at [esp+4])
@@ -215,6 +216,7 @@ function doAction(a) {
       return;
     }
     case 'w32': ptr(a.addr).writeU32(a.v >>> 0); break;
+    case 'x32': ptr(a.addr).writeU32((ptr(a.addr).readU32() ^ a.v) >>> 0); break;   // phase 2.2 perturbation (opt-in)
     case 'note': break;
     default: throw new Error('unknown action ' + a.k);
   }
@@ -834,6 +836,12 @@ function poll(now) {
       send({ type: 'extra' }, extraRegions());
       continue;
     }
+    if (reply.frh && CFG.frameHash) {
+      // opt-in (phase 2.2, scenario_ab.py C3FT_FRAMEHASH): the frame-head hash records since the last fetch
+      const r = frameHashFetch();
+      send({ type: 'frh', meta: r.meta }, r.data);
+      continue;
+    }
     if (reply.img && CFG.image) {
       // opt-in (re/frida/restart_ab.py, phase 2.1): arm a frame-head capture / restore, or dump the DLLs' data sections
       imgRequest(reply.img, rdata);
@@ -1085,3 +1093,39 @@ rpc.exports = {
   info() { return { main: MAIN, slots: slotInfo, status: status(), code: CODE.toString(), data: D.toString() }; },
 };
 send({ type: 'ready', main: MAIN, slots: slotInfo });
+
+// ---------------------------------------------------------------- FRAME-HEAD HASH (cfg.frameHash; phase 2.2, 2026-10-18)
+// re/frida/scenario_ab.py C3FT_FRAMEHASH: at every main-thread clock call whose return address is cfg.frameHash.ra
+// (mainLoop's frame head, the timeGetTime call at 0x0040fc29, return address 0x0040fc2f), the tgt stub calls a CModule
+// function natively (no JavaScript per frame) that appends [T handed to the game, frame-head index, sgh64 of every object
+// in cfg.frameHash.objs] to a buffer; a poll reply `frh` fetches and empties it. cfg.frameHash.src is
+// re/frida/js/framehash_cm.c (the hash of re/tools/state_image.py). Stub bytes, inserted before the due test:
+//   cmp dword [esp], ra; jne skip; push eax; push eax; call [D+0x50]; add esp, 4; pop eax; skip:
+// eax (the T the game receives) is preserved; ecx / edx are free in a timeGetTime call. Without cfg.frameHash
+// frameHashBytes() is [] and nothing below runs.
+function frameHashBytes() {
+  if (!CFG.frameHash) return [];
+  return [0x81, 0x3c, 0x24, ...u32(CFG.frameHash.ra >>> 0), 0x75, 12,
+          0x50, 0x50, 0xff, 0x15, ...d(0x50), 0x83, 0xc4, 0x04, 0x58];
+}
+let FH = null;
+if (CFG.frameHash) {
+  const fh = CFG.frameHash;
+  const n = fh.objs.length, cap = (fh.cap || 20000) >>> 0;
+  const ctl = K(Memory.alloc(64));
+  const objs = K(Memory.alloc(Math.max(8 * n, 8)));
+  const out = K(Memory.alloc(Math.max(cap * (8 + 8 * n), 16)));
+  ctl.writeU32(n); ctl.add(4).writeU32(cap); ctl.add(8).writeU32(0); ctl.add(12).writeU32(0); ctl.add(16).writeU32(0);
+  fh.objs.forEach(([va, size], i) => { objs.add(8 * i).writeU32(va >>> 0); objs.add(8 * i + 4).writeU32(size >>> 0); });
+  const cm = K(new CModule(fh.src, { fh_ctl: ctl, fh_objs: objs, fh_out: out }));
+  D.add(0x50).writePointer(cm.fh_frame);
+  FH = { ctl, out, n };
+}
+function frameHashFetch() {
+  const c = FH.ctl.add(8).readU32();
+  const meta = { count: c, dropped: FH.ctl.add(12).readU32(), frames: FH.ctl.add(16).readU32(), n: FH.n, T: T() };
+  const data = c ? FH.out.readByteArray(c * (8 + 8 * FH.n)) : null;
+  FH.ctl.add(8).writeU32(0);
+  FH.ctl.add(12).writeU32(0);
+  return { meta, data };
+}

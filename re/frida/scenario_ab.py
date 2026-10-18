@@ -213,6 +213,52 @@ def extra_regions_spec() -> list[list[int]]:
     return parse_spans(os.environ.get("C3FT_EXTRA_REGIONS"))
 
 
+# ---------------------------------------------------------------- opt-in checkpoint tracer (phase 2.2, 2026-10-18)
+# C3FT_OBJHASH=1 (--obj-hash): at every checkpoint the whole .data is read (the C3FT_FULLDUMP message) and one sgh64 hash
+#   per GameState object (re/tools/state_image.py, port/include/gamestate_meta.inc) goes to <name>.objhash.json; with
+#   C3FT_OBJHASH=image the .data image is kept as <name>.full.bin too.
+# C3FT_FRAMEHASH=<classes> (--frame-hash, e.g. `sim`): at every mainLoop frame head (the timeGetTime call at 0x0040fc29,
+#   return address 0x0040fc2f) the agent hashes those classes' objects natively (scenario_det.js FRAME-HEAD HASH); the
+#   records go to framehash.bin / framehash.json at each checkpoint and at the end. C3FT_FRAMEHASH_CAP: records held
+#   between two fetches (default 20000).
+# C3FT_PERTURB=<va hex>:<xor hex>@<virtual ms> (--perturb): at the first poll at or after that time, xor the dword (a
+#   negative control for locating a divergence).
+# Without these variables nothing changes (agent source, dumps, summary).
+FRAME_HEAD_RA = 0x0040FC2F
+
+
+def obj_hash_mode() -> str:
+    m = os.environ.get("C3FT_OBJHASH", "")
+    if m not in ("", "0", "1", "image"):
+        raise SystemExit(f"C3FT_OBJHASH={m}: 1 or image")
+    return "" if m in ("", "0") else m
+
+
+def frame_hash_spec() -> dict | None:
+    v = os.environ.get("C3FT_FRAMEHASH", "")
+    if not v or v == "0":
+        return None
+    import state_image as SI
+    classes = set(("sim" if v == "1" else v).split(","))
+    L = SI.layout()
+    objs = [o for o in L.objs if o["cls"] in classes]
+    if any(o["symbol"] in L.words for o in objs):
+        raise SystemExit("C3FT_FRAMEHASH: a class with pointer words (masked dwords) is not hashed per frame")
+    return {"classes": sorted(classes), "symbols": [o["symbol"] for o in objs],
+            "objs": [[L.base + o["offset"], o["size"]] for o in objs],
+            "cap": int(os.environ.get("C3FT_FRAMEHASH_CAP", "20000"))}
+
+
+def perturb_spec() -> dict | None:
+    v = os.environ.get("C3FT_PERTURB", "")
+    if not v:
+        return None
+    m = re.fullmatch(r"(?:0x)?([0-9a-fA-F]+):(?:0x)?([0-9a-fA-F]+)@(\d+)", v)
+    if not m:
+        raise SystemExit(f"C3FT_PERTURB={v}: <va>:<xor>@<virtual ms>")
+    return {"va": int(m.group(1), 16), "xor": int(m.group(2), 16), "t": int(m.group(3)), "done_at": None}
+
+
 def _calls_by_checkpoint(run_dir: pathlib.Path) -> dict | None:
     p = run_dir / "calls.json"
     if not p.exists():
@@ -506,11 +552,15 @@ class Run:
         self.call_log = call_log_spec()      # opt-in (--call-log, batch c3fyl)
         self.call_rows: list = []            # [checkpoint, T, va, return address, args..., string]
         self.extra_regs = extra_regions_spec()   # opt-in (--extra-regions, batch c3fyl)
+        self.obj_hash = obj_hash_mode()          # opt-in (phase 2.2): per-object hashes at every checkpoint
+        self.frame_hash = frame_hash_spec()      # opt-in (phase 2.2): per-frame hashes at the frame head
+        self.frame_fetches: list = []
+        self.perturb = perturb_spec()            # opt-in (phase 2.2): one xor at a virtual time
 
     def _on_message(self, m, data):
         if m.get("type") == "send":
             p = m["payload"]
-            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error", "full", "extra", "bb"):
+            if isinstance(p, dict) and p.get("type") in ("poll", "dump", "ready", "error", "full", "extra", "bb", "frh"):
                 self.q.put((p, data))
         elif m.get("type") == "error":
             self.q.put(({"type": "error", "where": "script", "msg": m.get("description", "") + " " + str(m.get("stack", ""))}, None))
@@ -540,6 +590,9 @@ class Run:
             cfg["audio"] = "none"
         if stack_seed():                     # b5: courseActionMenu's uninitialised frame words read 0 (default)
             cfg["stackSeed"] = stack_seed()
+        if self.frame_hash:                  # opt-in (phase 2.2): absent by default
+            cfg["frameHash"] = {"ra": FRAME_HEAD_RA, "objs": self.frame_hash["objs"], "cap": self.frame_hash["cap"],
+                                "src": (JS_DIR / "framehash_cm.c").read_text()}
         src ="const SCENARIO_CFG = " + json.dumps(cfg) + ";\n" + (JS_DIR / "scenario_det.js").read_text()
         self.out.mkdir(parents=True, exist_ok=True)
         p = self.out / "agent.js"
@@ -574,11 +627,16 @@ class Run:
         p, data = self.wait_msg(("dump",))
         img, shot_info = self.checkpoint_frame(sc, name)
         img.save(self.out / f"{name}.png")
+        full = None
         if os.environ.get("C3FT_FULLDUMP") == "1":
             # opt-in (batch b2): the exe's whole .data section at this checkpoint, for diffs outside the compared regions
             self.post(sc, full=True, hwnd=self.hwnd_val())
             _pf, full = self.wait_msg(("full",))
             (self.out / f"{name}.full.bin").write_bytes(full)
+        if self.obj_hash:
+            self.write_obj_hashes(sc, name, full)
+        if self.frame_hash:
+            self.fetch_frame_hashes(sc, name)
         if self.extra_regs:
             # opt-in (--extra-regions, batch c3fyl): the extra regions, apart from the default blob
             self.post(sc, extra=True, hwnd=self.hwnd_val())
@@ -603,6 +661,37 @@ class Run:
             self.checkpoints[name]["shot"] = shot_info
         print(f"  [{self.label}] checkpoint {name} T={p['st']['T'] - T0} tgt={p['st']['tgt']} "
               f"date=0x{self.region_u32(data, 0x00834170):08x} seed=0x{self.region_u32(data, 0x00822D9C):08x}", flush=True)
+
+    def write_obj_hashes(self, sc, name, full=None):
+        """Opt-in (phase 2.2, C3FT_OBJHASH): <name>.objhash.json = {symbol: [class, sgh64]} for every GameState object of
+        golf_clean.exe's .data at this checkpoint (pointer words masked, re/tools/state_image.py)."""
+        import state_image as SI
+        if full is None:
+            self.post(sc, full=True, hwnd=self.hwnd_val())
+            _pf, full = self.wait_msg(("full",))
+            if self.obj_hash == "image":
+                (self.out / f"{name}.full.bin").write_bytes(full)
+        img = SI.StateImage(full, np.ones(len(full), bool), f"checkpoint {name}")
+        hs = {k: [v["cls"], v["hash"]] for k, v in img.hashes().items()}
+        (self.out / f"{name}.objhash.json").write_text(json.dumps({"checkpoint": name, "hashes": hs}))
+
+    def fetch_frame_hashes(self, sc, name):
+        """Opt-in (phase 2.2, C3FT_FRAMEHASH): append the agent's frame-head records to framehash.bin and note the fetch in
+        framehash.json (records [T, frame-head index, sgh64 per object], little-endian u32 / u32 / u64 x n)."""
+        self.post(sc, frh=True, hwnd=self.hwnd_val())
+        p, data = self.wait_msg(("frh",))
+        meta = p["meta"]
+        start = sum(f["count"] for f in self.frame_fetches)
+        with (self.out / "framehash.bin").open("ab") as f:
+            if data:
+                f.write(data)
+        self.frame_fetches.append({"at": name, "first_record": start, **meta})
+        (self.out / "framehash.json").write_text(json.dumps({
+            "ra": f"0x{FRAME_HEAD_RA:08x}", "classes": self.frame_hash["classes"], "symbols": self.frame_hash["symbols"],
+            "sizes": [n for _va, n in self.frame_hash["objs"]], "record": "u32 T, u32 frame index, u64 sgh64 x n",
+            "fetches": self.frame_fetches, "perturb": self.perturb}, indent=1))
+        if meta.get("dropped"):
+            print(f"  [{self.label}] frame hashes: {meta['dropped']} records dropped (C3FT_FRAMEHASH_CAP)", flush=True)
 
     def checkpoint_frame(self, sc, name):
         """The checkpoint's frame (batch b5). Default C3FT_FRAME=backbuffer: jgld's back buffer, the DIB section the game
@@ -688,6 +777,13 @@ class Run:
                        "errors": self.errors, "schedule": self.schedule, "failure": self.failure}
             if self.extra_regs:              # opt-in (c3fyl): absent by default, so default summaries are unchanged
                 summary["extra_regions"] = self.extra_regs
+            if self.obj_hash:                # opt-in (phase 2.2): absent by default
+                summary["obj_hash"] = self.obj_hash
+            if self.frame_hash:
+                summary["frame_hash"] = {"classes": self.frame_hash["classes"], "objects": len(self.frame_hash["objs"]),
+                                         "fetches": self.frame_fetches}
+            if self.perturb:
+                summary["perturb"] = self.perturb
             (self.out / "summary.json").write_text(json.dumps(summary, indent=1))
             if self.trace_spec or self.watch_spec:
                 (self.out / "trace.json").write_text(json.dumps({"trace_regions": self.trace_spec, "rows": self.trace_rows,
@@ -727,6 +823,12 @@ class Run:
                         ctx.act(0, k="vkey", vk=vk, st=1)
                     first = False
                 ctx.dump_name = None
+                if self.perturb and self.perturb["done_at"] is None and ctx.T >= self.perturb["t"]:
+                    # opt-in (phase 2.2, C3FT_PERTURB): one xor at this poll, before the script's own actions
+                    self.perturb["done_at"] = ctx.T
+                    ctx.act(0, k="x32", addr=self.perturb["va"], v=self.perturb["xor"], tag="perturb")
+                    print(f"  [{self.label}] perturb 0x{self.perturb['va']:08x} ^= 0x{self.perturb['xor']:x} at T={ctx.T}",
+                          flush=True)
                 try:
                     next(gen)
                     finished = False
@@ -735,6 +837,8 @@ class Run:
                 if ctx.dump_name:
                     self.take_dump(sc, ctx.dump_name)
                 if finished:
+                    if self.frame_hash:      # opt-in (phase 2.2): the frame heads after the last checkpoint
+                        self.fetch_frame_hashes(sc, "end")
                     self.post(sc, actions=ctx.actions, hwnd=self.hwnd_val())
                     break
                 self.post(sc, actions=ctx.actions, next=POLL_MS, hwnd=self.hwnd_val())
@@ -1227,6 +1331,14 @@ EXTRA_HELP = ("opt-in extended oracle (batch c3fyl): `va:n,...` regions dumped a
               "(apart from the default blob) and compared between arms. Same as env C3FT_EXTRA_REGIONS")
 
 
+OBJHASH_HELP = ("opt-in checkpoint tracer (phase 2.2): `1` writes <name>.objhash.json (one sgh64 per GameState object) "
+                "at every checkpoint, `image` also keeps <name>.full.bin. Same as env C3FT_OBJHASH")
+FRAMEHASH_HELP = ("opt-in frame-head hashes (phase 2.2): GameState classes hashed at every mainLoop frame head, e.g. "
+                  "`sim`, into framehash.bin; compare with re/tools/frame_trace.py. Same as env C3FT_FRAMEHASH")
+PERTURB_HELP = ("opt-in negative control (phase 2.2): `<va>:<xor>@<virtual ms>` xors one dword at the first poll at "
+                "or after that time. Same as env C3FT_PERTURB")
+
+
 def cmd_extcmp(a):
     """Compare two finished runs (absolute or repo-relative folders), default dump and extended oracle."""
     da, db = (pathlib.Path(x) if pathlib.Path(x).is_absolute() else ROOT / x for x in (a.a, a.b))
@@ -1256,6 +1368,9 @@ def main():
     p.add_argument("--clock-log", help=CLOCK_HELP)
     p.add_argument("--call-log", help=CALL_HELP)
     p.add_argument("--extra-regions", help=EXTRA_HELP)
+    p.add_argument("--obj-hash", help=OBJHASH_HELP)
+    p.add_argument("--frame-hash", help=FRAMEHASH_HELP)
+    p.add_argument("--perturb", help=PERTURB_HELP)
     p.set_defaults(fn=cmd_determinism)
     p = sp.add_parser("ab")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -1271,6 +1386,9 @@ def main():
     p.add_argument("--clock-log", help=CLOCK_HELP)
     p.add_argument("--call-log", help=CALL_HELP)
     p.add_argument("--extra-regions", help=EXTRA_HELP)
+    p.add_argument("--obj-hash", help=OBJHASH_HELP)
+    p.add_argument("--frame-hash", help=FRAMEHASH_HELP)
+    p.add_argument("--perturb", help=PERTURB_HELP)
     p.set_defaults(fn=cmd_ab)
     p = sp.add_parser("csv", help="re-score two finished arms (run folder names under log/c3/alt/c3ft/<scenario>/)")
     p.add_argument("--scenario", default="sandbox_basic", choices=sorted(SCENARIOS))
@@ -1296,7 +1414,8 @@ def main():
     p.set_defaults(fn=cmd_extcmp)
     a = ap.parse_args()
     for flag, var in (("trace", "C3FT_TRACE"), ("watch", "C3FT_WATCH"), ("clock_log", "C3FT_CLOCK_LOG"),
-                      ("call_log", "C3FT_CALL_LOG"), ("extra_regions", "C3FT_EXTRA_REGIONS")):
+                      ("call_log", "C3FT_CALL_LOG"), ("extra_regions", "C3FT_EXTRA_REGIONS"),
+                      ("obj_hash", "C3FT_OBJHASH"), ("frame_hash", "C3FT_FRAMEHASH"), ("perturb", "C3FT_PERTURB")):
         if getattr(a, flag, None):
             os.environ[var] = getattr(a, flag)
     return a.fn(a)

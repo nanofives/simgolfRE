@@ -901,6 +901,49 @@ Terrain.dll's state is outside every image: frames differ when the prefix had an
 written at the frame head. Negative controls RED: g_date +1, g_rng +1 (two scenarios); g_cash_div100 +1 is rewritten within 60 s
 (U-0605). Pitfall: a value-in-mapped-range test is not a pointer flag (string pools, grids, RNG words pass it); it is applied only
 inside pointer-flagged objects. Tests: tests/test_restart_ab.py (static), tests/test_restart_ab_runtime.py (slow, 67 s).
+Phase 2.2 GameState (2026-10-18, re/analysis/data/gamestate_gen.md, notes log/p2/p22_notes.txt, runs log/p2/p22/, instance
+instances\p22 with the pinned references' winmm.dll 381ed2b2): re/model/addresses.tsv has an 18th column `pointer` (model_merge.py:
+`type` by restart_ab's rule = phase 2.1's 195 objects / 2,863,036 B; `words:+0x..` for U-0604's 12 heap dwords in g_rootWindow,
+g_listPalette, g_msgBoxLabelA / B, g_graphsyObject, evidence in POINTER_WORDS; the header and model_ctypes.py are unchanged).
+`re/tools/model_state_gen.py` generates port/include/gamestate.h (struct portsim::GameState = golf_clean.exe's .data, 0x381174 B,
+#pragma pack(1), 989 objects at their offsets with model types + 425 gap members, offsetof / size static_asserts, no address
+literal), gamestate_meta.inc (SG_OBJECT symbol, offset, size, class, pointer, hidden code, saved; SG_POINTER_WORD; SG_GAP) and
+gamestate_addresses.inc (tooling only). Classes: sim 203 objects / 518,308 B, hidden 18 / 14,594, ui 122 / 13,093, render 67 /
+120,424, audio 13 / 33,028, pointer 186 / 2,821,872, engine 51 / 11,065, const 329 / 90,789, gaps 51,311 B; never compared:
+pointer, audio, the 12 pointer words, gaps (2,906,259 B). `re/tools/state_image.py` turns a scenario_ab checkpoint dump, a full
+.data dump (.full.bin / .fh.bin / .pre.bin) or a .sve (model_ctypes over sve_fields.tsv) into a GameState image with a known mask,
+hashes objects (sgh64: dword sum with odd position multipliers + splitmix64; pointer words as 0) and diffs them (`diff`: symbol,
+class, first differing byte). Opt-in tracer in scenario_ab.py: C3FT_OBJHASH=1|image (`<name>.objhash.json` per checkpoint),
+C3FT_FRAMEHASH=sim (a native CModule, re/frida/js/framehash_cm.c, called from the tgt stub at mainLoop's frame head 0x0040fc2f, no
+JS per frame; framehash.bin), C3FT_PERTURB=va:xor@ms (agent action x32); `re/tools/frame_trace.py cmp` finds the first divergent
+frame and its objects; `re/frida/state_trace.py run|cmp|check` drives it. Proof: plain and traced sandbox_basic replays SAME as det_b
+10/10; two OFF runs equal in every frame record (sandbox_basic 439, course_season 6,296) and in every non-pointer, non-audio object
+at every checkpoint (10, 12); g_rng ^= 1 at T 20,099 located at record 154 (T 20,105, g_rng alone), g_date ^= 1 at T 300,071 at
+record 2,985 (T 300,119, g_date alone). port/ skeleton: CMakeLists.txt (C++17, library portsim, ctest gamestate_layout; x64 and
+Win32 both build and pass), README.md (rules), .gitignore (corpus/, build/). Tests: test_gamestate_gen.py (MSVC x86 / x64 compile
+with every offset asserted against addresses.tsv), test_state_image.py, test_frame_trace.py. U-0610..U-0613.
+Phase 2.3 time and input model (2026-10-18, re/analysis/sim/time_model.md, schema re/model/trace_schema.md = port/schemas/trace.md,
+notes log/p2/p23_notes.txt, instance instances\p23 with winmm.dll 381ed2b2): `re/tools/time_input_audit.py` lists every clock /
+timer / wait / input import call site of the four modules (re/analysis/sim/time_input_sites.tsv, 253). golf_clean.exe reads only
+timeGetTime; the one read whose VALUE enters simulation state is seedFromTime 0x00467110 (g_seedTime = t, g_rng = t * 37, once from
+gameMain). Game time is FRAME-counted: P5 does g_date += 1 per unpaused frame (0x0041762f; g_flags bit 2 = pause, key 0x50; bits 3
+and 17 have no setter), 1,024 frames = 1 game month, 8,192 = 1 year. The H1 wait (0x0041e631..0x0041e6b1) holds a frame to
+frame-head time + 87 ms (+125 with bit 17) in waitTicks(1, 0) steps of 10 ms; g_frameMs 0x005a8c88 is write-only; under the virtual
+clock a frame is 99 calls = 99 virtual ms (99.9% of frames; 5 course_season frames skip the wait, U-0651). pumpAndRedraw(0) (16
+callers, incl. updateGolfers / pathStep / prepareShot) blocks until a click or key (U-0650). Input: messages -> jgld windowProc ->
+root handlers (WM_LBUTTONDOWN -> rootWin_onPoint, WM_LBUTTONUP -> onPress1 = the click + onUnpoint, WM_KEYDOWN -> onChar, WM_CHAR
+-> onKey, WM_KEYUP -> onChar0); in a frame they are dispatched in H1 (never in the wait), keys one frame after posting; H1 takes
+the key / code with 0x0045ae50 / 0x0045ae30 (misnamed setDirtyFlagB / A: take-and-clear readers); capsLockOff reads
+GetKeyboardState every frame. TRACES: `re/tools/trace_tool.py record|replay|validate|summary|dump|diff` (reader
+re/tools/trace_format.py) appends re/frida/js/trace_rec.js to scenario_det.js through a Run subclass installed after
+scenario_refs.setup (no shared file edited): native wrappers over scenario_det's clock stubs log every main-thread clock call
+(site module-relative, value), FRAME records at 0x0040fc2f with the input globals, harness deliveries, window messages, root
+handlers, key-state / cursor reads, timer registrations (timers named by registration ordinal: their ids are heap pointers); REPLAY
+feeds the recorded values and deliveries back with the virtual clock unused on the main thread. sandbox_basic / course_season /
+mood5_fixture: two records byte-identical (580,656 / 7,867,550 / 371,014 B; 439 / 6,296 / 245 frames; 66,744 / 936,098 / 57,910
+clock calls), checkpoints SAME as det_b, and the replay from the trace alone writes a byte-identical trace with 0 site mismatches,
+every delivery applied and 10 / 12 / 4 checkpoints SAME. Traces go to port/corpus/traces/ (gitignored). Tests:
+tests/test_trace_format.py (static, synthetic traces), tests/test_trace_runtime.py (slow, 40 s). U-0650..U-0654.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
