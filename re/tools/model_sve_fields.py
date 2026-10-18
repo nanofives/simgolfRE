@@ -1,4 +1,4 @@
-r"""Stream G2: build re/model/sve_fields.tsv (the .sve field table) from re/tools/sve.py and the six streams' address maps.
+r"""Stream G2: build re/model/sve_fields.tsv (the .sve field table) from re/tools/sve.py and the merged address map re/model/addresses.tsv.
 
 One row per field of the save format, in file order: the 100-byte header (two for championship files), the 86 fields of
 FUN_0040afa0 (0x0040afa0..0x0040b492) and the three tail blocks. Each field is mapped onto model symbols by ADDRESS (the
@@ -38,17 +38,22 @@ def num(s):
 
 
 def rows():
+    """rows of the MERGED address map (re/model/addresses.tsv, built by re/tools/model_merge.py from the six stream maps and
+    the integration fixes); the stream column keeps the owning stream for tie-breaks."""
     out = []
-    for s in STREAMS:
-        with (ROOT / "re" / "model" / f"{s}_addresses.tsv").open(newline="") as f:
-            for r in csv.DictReader(f, delimiter="\t"):
-                va, size = num(r.get("va")), num(r.get("size"))
-                if va is None or size is None or (r.get("module") or "golf_clean.exe") != "golf_clean.exe":
-                    continue
-                out.append({"stream": s, "symbol": r["symbol"], "va": va, "size": size, "type": r.get("element_type", ""),
-                            "count": num(r.get("count")), "stride": num(r.get("stride")), "sve": r.get("sve_field", "-"),
-                            "conf": r.get("confidence", "")})
+    with (ROOT / "re" / "model" / "addresses.tsv").open(newline="", encoding="utf-8") as f:
+        for r in csv.DictReader(f, delimiter="	"):
+            va, size = num(r.get("va")), num(r.get("size"))
+            if va is None or size is None or (r.get("module") or "golf_clean.exe") != "golf_clean.exe":
+                continue
+            out.append({"stream": r.get("stream", ""), "symbol": r["symbol"], "va": va, "size": size,
+                        "type": r.get("element_type", ""), "count": num(r.get("count")), "stride": num(r.get("stride")),
+                        "sve": r.get("sve_field", "-"), "conf": r.get("confidence", "")})
     return out
+
+
+def stream_rank(r):
+    return STREAMS.index(r["stream"]) if r["stream"] in STREAMS else len(STREAMS)
 
 
 def names_globals():
@@ -95,7 +100,7 @@ def map_field(va, size, allrows):
     other = [r for r in ov if r not in exact and r not in inside and r not in cover]
     m = {"overlapping": ov}
     if exact:
-        exact.sort(key=lambda r: STREAMS.index(r["stream"]))
+        exact.sort(key=stream_rank)
         m.update(mapping="exact", members=[(exact[0], 0, None)], alternates=exact[1:] + [r for r in ov if r not in exact])
         return m
     aligned = []
