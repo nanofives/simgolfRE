@@ -118,3 +118,14 @@ game year in less than the original's frame pacing would take (headless speed ch
 - Commands vs raw input: the H1/H2 handlers mix input parsing and state effects; the command API is derived from their
   effects, so the first complete spec of each command is stage C's main work and may need extra scenarios.
 - Audio-device timeline: scenario determinism uses the stand-in default (C3FT_AUDIO=none).
+
+## 7. Decisions (user, 2026-10-18)
+
+All five recommendations of section 2 approved: (1) C++17 library `portsim`, CMake, no third-party dependencies in the core,
+C ABI export layer; (2) the port lives in `port/` in this repo; (3) generated `GameState` reproducing the model's data layout;
+(4) bit-exact including original defects behind named compatibility switches; (5) corpora local only (gitignored
+`port/corpus/`), manifests and generators committed.
+
+Step 2.1 is done (re/analysis/data/premise_check.md): segments start from frame-head full `.data` images, never saves; hidden
+state `g_rng` and `g_lastTipDate`; the 12 heap-pointer dwords (U-0604) must be flagged in the model; noise is masked per dword.
+Steps 2.2 and 2.3 run in parallel (disjoint files); 2.4 waits for both.
