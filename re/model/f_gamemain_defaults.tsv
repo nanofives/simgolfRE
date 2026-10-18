@@ -1,0 +1,39 @@
+store_va	target_va	width	value	value_source	object	other_readers
+0x0045baf6	0x00822c8c	4	0x320	imm	bss (not stream F)	scaleX@404970;mainLoop@40f5c0;tileToScreen@42f940;worldToScreen@42fb90;screenToTile@430020;updateTerrainRender@4498a0;+3
+0x0045bb00	0x00822c90	4	0x258	imm	bss (not stream F)	mainLoop@40f5c0;tileToScreen@42f940;worldToScreen@42fb90;screenToTile@430020;updateTerrainRender@4498a0
+0x0045bc48	0x0083b9f0	4	0x519a60	imm	bss (not stream F)	TextView::ctor@48ce00;TextView::reset@48d480
+0x0045bc6e	0x004e4500	4	0x7	ebp	f_cfg_TextView_4e44e4	TextView::ctor@48ce00;TextView::reset@48d480
+0x0045bc8d	0x004e4574	1	?	bl	f_cfg_TextView_4e44e4	TextView::ctor@48ce00;TextView::reset@48d480
+0x0045bcae	0x004e4580	4	0x2	ecx	f_cfg_TextView_4e44e4	TextView::ctor@48ce00;TextView::reset@48d480
+0x0045bcb4	0x004e4448	4	0x2	ecx	f_cfg_Button_4e443c	Button::ctor@488500;Button::resetFields@4886d0
+0x0045bcc3	0x004e4578	4	0x7	ebp	f_cfg_TextView_4e44e4	TextView::ctor@48ce00;TextView::reset@48d480
+0x0045bcc9	0x004e457c	4	0xf8	ebx	f_cfg_TextView_4e44e4	TextView::ctor@48ce00;TextView::reset@48d480
+0x0045bccf	0x0083b9d0	4	0x0	esi	bss (not stream F)	TextView::ctor@48ce00;TextView::reset@48d480
+0x0045bcd5	0x004e42c8	4	0x1	edi	f_cfg_View_4e42c8	View_ctor@479c40;layoutNode@479f30
+0x0045bcdb	0x004e42e4	4	0xf8	ebx	f_cfg_View_4e42c8	View_ctor@479c40;layoutNode@479f30
+0x0045bce1	0x0083ab70	4	0x0	esi	bss (not stream F)	View_ctor@479c40;layoutNode@479f30
+0x0045bce7	0x004e42dc	4	0x8	imm	f_cfg_View_4e42c8	View_ctor@479c40;layoutNode@479f30
+0x0045bcf1	0x0083ab6c	4	0xff	eax	bss (not stream F)	View_ctor@479c40;layoutNode@479f30
+0x0045bcf6	0x004e42d0	4	0x0	esi	f_cfg_View_4e42c8	View_ctor@479c40;layoutNode@479f30
+0x0045bcfc	0x004e42d4	4	0x1	edi	f_cfg_View_4e42c8	View_ctor@479c40;layoutNode@479f30
+0x0045bd02	0x004e42d8	4	0x1	edi	f_cfg_View_4e42c8	View_ctor@479c40;layoutNode@479f30
+0x0045bd08	0x004e44d4	4	0x0	esi	f_cfg_ListBox_4e44d0	ListBox::ctor@489cb0;ListBox::resetFields@489e40
+0x0045bd0e	0x004e44d8	4	0xff	eax	f_cfg_ListBox_4e44d0	ListBox::ctor@489cb0;ListBox::resetFields@489e40
+0x0045bd13	0x004e4498	4	0x7	ebp	f_cfg_ListModel_4e4488	ListModel::ctor@489150;ListModel::clear@4894b0
+0x0045bd19	0x004e43f4	4	0x1	edi	f_cfg_EditBox_4e43f0	EditBox::resetFields@485ff0
+0x0045bd1f	0x0083afd8	4	0x0	esi	bss (not stream F)	EditBox::resetFields@485ff0
+0x0045bd25	0x0083afdc	4	0x0	esi	bss (not stream F)	EditBox::resetFields@485ff0
+0x0045bd2b	0x0083afe0	4	0x0	esi	bss (not stream F)	EditBox::create@486110
+0x0045bd31	0x004e43fc	4	0xffffffff	imm	f_cfg_EditBox_4e43f0	EditBox::create@486110
+0x0045bd3b	0x004e4400	4	0x1	edi	f_cfg_EditBox_4e43f0	EditBox::create@486110
+0x0045bd41	0x004e4404	4	0x1	edi	f_cfg_EditBox_4e43f0	EditBox::create@486110
+0x0045bd47	0x004e43f0	4	0x7	ebp	f_cfg_EditBox_4e43f0	EditBox::resetFields@485ff0
+0x0045bd4d	0x004e443c	4	0xf8	ebx	f_cfg_Button_4e443c	Button::ctor@488500;Button::resetFields@4886d0
+0x0045bd53	0x004e4440	4	0xff	eax	f_cfg_Button_4e443c	Button::ctor@488500;Button::resetFields@4886d0
+0x0045bd58	0x004e4444	4	0xf8	ebx	f_cfg_Button_4e443c	Button::ctor@488500;Button::resetFields@4886d0
+0x0045bd5e	0x0083b604	4	0x0	esi	bss (not stream F)	Button::ctor@488500;Button::resetFields@4886d0
+0x0045bd64	0x0083b608	4	0x0	esi	bss (not stream F)	Button::ctor@488500;Button::resetFields@4886d0
+0x0045be5d	0x0083ad44	4	0x519928	eax	bss (not stream F)	Image_ctor@474ae0;Image_releaseAll@474cb0;Surface_createFull@474dd0;measureMarkupRun@476ef0;drawMarkupRun@477280;Widget_get@477560;+7
+0x0045be67	0x0083abdc	4	0x0	esi	bss (not stream F)	
+0x0045becc	0x00822c74	4	0x519928	eax	bss (not stream F)	mainLoop@40f5c0;drawGolferInfoPanel@45c560;drawQueuedSprite@462be0
+0x0045bf42	0x0083abdc	4	0x0	esi	bss (not stream F)	

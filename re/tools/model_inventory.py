@@ -1126,6 +1126,8 @@ def expected_from_type(t):
 def holdout(inv, tuned):
     out = []
     for va, (name, typ, fname) in sorted(inv.names.items()):
+        if fname.startswith("model_"):
+            continue    # phase 1 stream outputs (re/names/model_*_globals.tsv) are derived from this classifier's own work, not a hold-out
         if va in tuned or any(base <= va < base + stride * count for _, base, stride, count, _ in KNOWN):
             continue
         exp = expected_from_type(typ)
