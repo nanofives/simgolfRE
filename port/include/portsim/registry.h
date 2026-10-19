@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "gamestate.h"
+#include "portsim/arith.h"  // ftol_low32 and the other arithmetic helpers (phase 3.0)
 
 namespace portsim {
 
@@ -66,10 +67,31 @@ class Memory {
   std::vector<Mapping> maps_;
 };
 
+class ExeConstants;  // portsim/execonst.h
+class GameFiles;     // portsim/gamefiles.h
+
+// The context lacks a resource a port function needs (no ExeConstants or GameFiles attached, or the name is unknown).
+// The C ABI reports SG_E_NO_RESOURCE.
+struct MissingResource {
+  const char *what;
+};
+
 // One GameState (zero-filled, on the heap: 3.6 MB) and its address space.
 class Ctx {
  public:
   Ctx();
+  // Read-only constants of the user's own exe (phase 3.0) and the user's game files: attached by the caller, not
+  // owned; the accessors throw MissingResource when nothing is attached.
+  const ExeConstants *exe_ptr = nullptr;
+  GameFiles *files_ptr = nullptr;
+  const ExeConstants &exe() const {
+    if (!exe_ptr) throw MissingResource{"exe constants"};
+    return *exe_ptr;
+  }
+  GameFiles &files() const {
+    if (!files_ptr) throw MissingResource{"game files"};
+    return *files_ptr;
+  }
   GameState &gs() { return *gs_; }
   uint8_t *bytes() { return reinterpret_cast<uint8_t *>(gs_.get()); }
 
@@ -105,11 +127,24 @@ struct FuncDef {
   int *negctl;       // the function's negative-control mode (0 = correct body), or nullptr
 };
 
+// A defect of the original the port reproduces behind a named compatibility switch (phase 3.0; port/CORE.md). `*flag`
+// is 1 (default) = behave like the original, 0 = the fixed behaviour. Module code reads it through SG_DEFECT(var).
+struct DefectDef {
+  const char *name;  // "<function>.<what>", e.g. "sinScaled.readPastTable"
+  const char *ref;   // re/analysis/data/model_defects.md entry, e.g. "model_defects#10"
+  const char *what;  // one line
+  int *flag;
+};
+
 struct ModuleDef {
   const char *module;
   const FuncDef *funcs;
   size_t count;
+  const DefectDef *defects = nullptr;  // phase 3.0: the module's compatibility switches (may be empty)
+  size_t defect_count = 0;
 };
+
+#define SG_DEFECT(var) ((var) != 0)
 
 // Negative controls: a module declares `int g_negctl_<x> = 0;` and its body reads it through SG_NEGCTL(g_negctl_<x>).
 // With -DPORTSIM_NEGCTL=0 every wrong body compiles away.
@@ -121,13 +156,6 @@ struct ModuleDef {
 #else
 #define SG_NEGCTL(var) 0
 #endif
-
-// The original's double -> int conversion (__ftol: 64-bit fistp toward zero, low dword kept; NaN or out of int64
-// range gives the integer indefinite 0x8000000000000000, low dword 0).
-inline uint32_t ftol_low32(double v) {
-  if (!(v > -9223372036854775808.0 && v < 9223372036854775808.0)) return 0u;
-  return static_cast<uint32_t>(static_cast<uint64_t>(static_cast<int64_t>(v)));
-}
 
 }  // namespace portsim
 

@@ -8,6 +8,10 @@ namespace portsim {
 int registry_count();
 const FuncDef *registry_at(int i, const char **module);
 int registry_find(const char *name);  // index or -1
+// compatibility switches of every module (phase 3.0)
+int defect_count();
+const DefectDef *defect_at(int i, const char **module);
+int defect_find(const char *name);  // index or -1
 }  // namespace portsim
 
 #endif  // PORTSIM_REGISTRY_LIST_H

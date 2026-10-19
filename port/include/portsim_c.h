@@ -44,6 +44,9 @@ extern "C" {
 #define SG_E_NOT_IMPLEMENTED (-6) /* sg_run_frames until phases 3.7 / 3.8 provide the frame step */
 #define SG_E_ARG (-7)             /* bad argument (NULL, unknown class, short buffer) */
 #define SG_E_EXCEPTION (-8)       /* the port function threw something other than a fault */
+#define SG_E_DIVIDE (-9)          /* phase 3.0: an idiv / div the original runs with divisor 0 or INT_MIN / -1 (#DE) */
+#define SG_E_NO_RETURN (-10)      /* phase 3.0: a loop the original can never leave from this state */
+#define SG_E_NO_RESOURCE (-11)    /* phase 3.0: no exe constants / game files attached, or an unknown name */
 
 typedef struct sg_ctx sg_ctx;
 
@@ -109,6 +112,37 @@ typedef struct sg_msg {
 } sg_msg;
 SG_API int sg_run_frames(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, const sg_msg *queued, int32_t n_queued,
                          int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done);
+
+/* ---- compatibility switches for defects of the original (phase 3.0, port/CORE.md) ----
+ * Process-wide; 1 (default) = reproduce the original, 0 = the fixed behaviour. */
+typedef struct sg_defect_info {
+  const char *name;   /* "<function>.<what>" */
+  const char *module; /* port module file */
+  const char *ref;    /* re/analysis/data/model_defects.md entry */
+  const char *what;
+} sg_defect_info;
+SG_API int32_t sg_defect_count(void);
+SG_API int sg_defect_info_get(int32_t i, sg_defect_info *out);
+SG_API int sg_defect_set(const char *name, int32_t on); /* returns the previous value, or SG_E_ARG for an unknown name */
+SG_API int32_t sg_defect_get(const char *name);         /* 0 / 1, or SG_E_ARG */
+SG_API void sg_defect_reset(void);                      /* every switch back to 1 */
+
+/* ---- exe constants: the user's own golf_clean.exe (phase 3.0, portsim/execonst.h) ----
+ * One process-wide instance, attached to every context at sg_call. sg_exe_load verifies the file (the .data size and
+ * every descriptor's hash) and returns SG_E_NO_RESOURCE with a reason in err (may be NULL) when it is not the expected
+ * exe. */
+SG_API int sg_exe_load(const char *path, char *err, size_t errcap);
+SG_API int32_t sg_exe_loaded(void);
+/* a descriptor's bytes by model name: copies min(size, cap) bytes, *size = the descriptor's size */
+SG_API int sg_exe_const(const char *name, uint8_t *out, uint32_t cap, uint32_t *size);
+/* initial GameState values from the exe's initialised .data: mode 0 = only `const`-class objects, 1 = the whole image */
+SG_API int sg_exe_fill_state(sg_ctx *ctx, int32_t mode);
+
+/* ---- game files (phase 3.0, portsim/gamefiles.h): the context's in-memory files, or a directory ---- */
+SG_API int sg_files_put(sg_ctx *ctx, const char *name, const uint8_t *data, size_t n);
+SG_API void sg_files_clear(sg_ctx *ctx);
+SG_API int sg_files_root(sg_ctx *ctx, const char *dir);     /* read <dir>/<name> instead (NULL: back to memory) */
+SG_API int64_t sg_files_size(sg_ctx *ctx, const char *name); /* -1 when absent */
 
 SG_API const char *sg_build_info(void);                   /* "portsim <arch> <config>" */
 

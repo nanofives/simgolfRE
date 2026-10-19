@@ -41,7 +41,8 @@ def srunner(portlib):
 
 @pytest.fixture(autouse=True)
 def _negctl_reset(request):
-    """Every test starts and ends with the correct bodies selected."""
+    """Every test starts and ends with the correct bodies selected and every defect switch on (phase 3.0)."""
     yield
     if "portlib" in request.fixturenames:
         request.getfixturevalue("portlib").negctl_reset()
+        request.getfixturevalue("portlib").defect_reset()

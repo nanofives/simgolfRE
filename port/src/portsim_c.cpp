@@ -3,13 +3,30 @@
 
 #include <cstring>
 
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "portsim/execonst.h"
+#include "portsim/gamefiles.h"
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
 #include "portsim/state_hash.h"
 
 struct sg_ctx {
   portsim::Ctx ctx;
+  portsim::MemoryGameFiles mem_files;                // phase 3.0: the default game files of a context
+  std::unique_ptr<portsim::DirGameFiles> dir_files;  // set by sg_files_root
+  sg_ctx() { ctx.files_ptr = &mem_files; }
 };
+
+namespace {
+// the process-wide exe constants are attached to a context once loaded
+void attach_exe(sg_ctx *c) {
+  portsim::ExeConstants &e = portsim::default_exe_constants();
+  c->ctx.exe_ptr = e.loaded() ? &e : nullptr;
+}
+}  // namespace
 
 extern "C" {
 
@@ -75,10 +92,17 @@ int sg_call(sg_ctx *ctx, const char *name, const uint32_t *args, int32_t nargs, 
   const portsim::FuncDef *d = portsim::registry_at(i, nullptr);
   if (nargs != d->arity) return SG_E_ARITY;
   portsim::Ret r;
+  attach_exe(ctx);
   try {
     d->fn(ctx->ctx, args, r);
   } catch (const portsim::Fault &) {
     return SG_E_FAULT;
+  } catch (const portsim::DivideError &) {
+    return SG_E_DIVIDE;
+  } catch (const portsim::NoReturn &) {
+    return SG_E_NO_RETURN;
+  } catch (const portsim::MissingResource &) {
+    return SG_E_NO_RESOURCE;
   } catch (...) {
     return SG_E_EXCEPTION;
   }
@@ -162,6 +186,102 @@ int sg_run_frames(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, const sg_
   if (!ctx || !frames_done) return SG_E_ARG;
   *frames_done = 0;
   return SG_E_NOT_IMPLEMENTED;  // phases 3.7 (frame tick, command API) and 3.8 (frame loop) fill this in
+}
+
+// ------------------------------------------------------------------------------------------------ defects (phase 3.0)
+int32_t sg_defect_count(void) { return portsim::defect_count(); }
+
+int sg_defect_info_get(int32_t i, sg_defect_info *out) {
+  const char *module = nullptr;
+  const portsim::DefectDef *d = portsim::defect_at(i, &module);
+  if (!d || !out) return SG_E_ARG;
+  out->name = d->name;
+  out->module = module;
+  out->ref = d->ref;
+  out->what = d->what;
+  return SG_OK;
+}
+
+int sg_defect_set(const char *name, int32_t on) {
+  const portsim::DefectDef *d = portsim::defect_at(portsim::defect_find(name), nullptr);
+  if (!d) return SG_E_ARG;
+  const int prev = *d->flag;
+  *d->flag = on ? 1 : 0;
+  return prev;
+}
+
+int32_t sg_defect_get(const char *name) {
+  const portsim::DefectDef *d = portsim::defect_at(portsim::defect_find(name), nullptr);
+  return d ? *d->flag : SG_E_ARG;
+}
+
+void sg_defect_reset(void) {
+  for (int i = 0; i < portsim::defect_count(); ++i) *portsim::defect_at(i, nullptr)->flag = 1;
+}
+
+// ------------------------------------------------------------------------------------------------ exe constants
+int sg_exe_load(const char *path, char *err, size_t errcap) {
+  std::string why;
+  const bool ok = portsim::default_exe_constants().load_file(path, &why);
+  if (err && errcap) {
+    const size_t n = why.size() < errcap - 1 ? why.size() : errcap - 1;
+    std::memcpy(err, why.data(), n);
+    err[n] = 0;
+  }
+  return ok ? SG_OK : SG_E_NO_RESOURCE;
+}
+
+int32_t sg_exe_loaded(void) { return portsim::default_exe_constants().loaded() ? 1 : 0; }
+
+int sg_exe_const(const char *name, uint8_t *out, uint32_t cap, uint32_t *size) {
+  try {
+    uint32_t n = 0;
+    const uint8_t *p = portsim::default_exe_constants().bytes(name, &n);
+    if (size) *size = n;
+    if (out) std::memcpy(out, p, n < cap ? n : cap);
+    return SG_OK;
+  } catch (const portsim::MissingResource &) {
+    return SG_E_NO_RESOURCE;
+  }
+}
+
+int sg_exe_fill_state(sg_ctx *ctx, int32_t mode) {
+  if (!ctx || (mode != 0 && mode != 1)) return SG_E_ARG;
+  try {
+    portsim::default_exe_constants().fill_state(
+        ctx->ctx.gs(), mode ? portsim::ExeConstants::Fill::InitialImage : portsim::ExeConstants::Fill::ConstObjects);
+    return SG_OK;
+  } catch (const portsim::MissingResource &) {
+    return SG_E_NO_RESOURCE;
+  }
+}
+
+// ------------------------------------------------------------------------------------------------ game files
+int sg_files_put(sg_ctx *ctx, const char *name, const uint8_t *data, size_t n) {
+  if (!ctx || !name || (n && !data)) return SG_E_ARG;
+  ctx->mem_files.put(name, n ? std::vector<uint8_t>(data, data + n) : std::vector<uint8_t>());
+  return SG_OK;
+}
+
+void sg_files_clear(sg_ctx *ctx) {
+  if (ctx) ctx->mem_files.clear();
+}
+
+int sg_files_root(sg_ctx *ctx, const char *dir) {
+  if (!ctx) return SG_E_ARG;
+  if (dir) {
+    ctx->dir_files = std::make_unique<portsim::DirGameFiles>(dir);
+    ctx->ctx.files_ptr = ctx->dir_files.get();
+  } else {
+    ctx->ctx.files_ptr = &ctx->mem_files;
+    ctx->dir_files.reset();
+  }
+  return SG_OK;
+}
+
+int64_t sg_files_size(sg_ctx *ctx, const char *name) {
+  if (!ctx || !name || !ctx->ctx.files_ptr) return -1;
+  return ctx->ctx.files_ptr->size(name);
 }
 
 const char *sg_build_info(void) {

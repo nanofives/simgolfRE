@@ -23,6 +23,14 @@ SG_OK, SG_E_NO_FUNCTION, SG_E_ARITY, SG_E_FAULT, SG_E_MAP, SG_E_UNSUPPORTED, SG_
 ERRORS = {SG_E_NO_FUNCTION: "no such function", SG_E_ARITY: "wrong arity", SG_E_FAULT: "fault (unmapped address)",
           SG_E_MAP: "mapping refused", SG_E_UNSUPPORTED: "unsupported", SG_E_NOT_IMPLEMENTED: "not implemented",
           SG_E_ARG: "bad argument", SG_E_EXCEPTION: "exception"}
+SG_E_DIVIDE, SG_E_NO_RETURN, SG_E_NO_RESOURCE = -9, -10, -11          # phase 3.0
+ERRORS.update({SG_E_DIVIDE: "divide error (#DE in the original)", SG_E_NO_RETURN: "the original never returns here",
+               SG_E_NO_RESOURCE: "missing exe constants / game file"})
+EXE_ENV = "SG_EXE_PATH"   # the user's golf_clean.exe for ExeConstants (default original/golf_clean.exe)
+
+
+def exe_path() -> pathlib.Path:
+    return pathlib.Path(os.environ.get(EXE_ENV) or ROOT / "original" / "golf_clean.exe")
 
 
 class SgRet(C.Structure):
@@ -32,6 +40,10 @@ class SgRet(C.Structure):
 class SgFuncInfo(C.Structure):
     _fields_ = [("name", C.c_char_p), ("module", C.c_char_p), ("abi", C.c_char_p), ("ret", C.c_char_p),
                 ("arity", C.c_int32), ("fpcw", C.c_uint32)]
+
+
+class SgDefectInfo(C.Structure):
+    _fields_ = [("name", C.c_char_p), ("module", C.c_char_p), ("ref", C.c_char_p), ("what", C.c_char_p)]
 
 
 class SgMsg(C.Structure):
@@ -63,6 +75,14 @@ def _sig(dll):
         ("sg_run_frames", C.c_int, [P, C.c_char_p, SZ, C.POINTER(SgMsg), I32, I32, C.POINTER(U32), C.POINTER(U64),
                                     C.POINTER(I32)]),
         ("sg_build_info", C.c_char_p, []),
+        # phase 3.0
+        ("sg_defect_count", I32, []), ("sg_defect_info_get", C.c_int, [I32, C.POINTER(SgDefectInfo)]),
+        ("sg_defect_set", C.c_int, [C.c_char_p, I32]), ("sg_defect_get", I32, [C.c_char_p]),
+        ("sg_defect_reset", None, []),
+        ("sg_exe_load", C.c_int, [C.c_char_p, C.c_char_p, SZ]), ("sg_exe_loaded", I32, []),
+        ("sg_exe_const", C.c_int, [C.c_char_p, P, U32, C.POINTER(U32)]), ("sg_exe_fill_state", C.c_int, [P, I32]),
+        ("sg_files_put", C.c_int, [P, C.c_char_p, C.c_char_p, SZ]), ("sg_files_clear", None, [P]),
+        ("sg_files_root", C.c_int, [P, C.c_char_p]), ("sg_files_size", C.c_int64, [P, C.c_char_p]),
     ]:
         f = getattr(dll, name)
         f.restype = res
@@ -98,6 +118,44 @@ class Lib:
 
     def negctl_reset(self):
         self.dll.sg_negctl_reset()
+
+    # ---- compatibility switches (phase 3.0)
+    def defects(self) -> dict[str, dict]:
+        out = {}
+        for i in range(self.dll.sg_defect_count()):
+            d = SgDefectInfo()
+            if self.dll.sg_defect_info_get(i, C.byref(d)) == SG_OK:
+                out[d.name.decode()] = {"module": d.module.decode(), "ref": d.ref.decode(), "what": d.what.decode(),
+                                        "on": self.dll.sg_defect_get(d.name)}
+        return out
+
+    def defect(self, name: str, on: bool) -> int:
+        r = self.dll.sg_defect_set(name.encode(), 1 if on else 0)
+        if r < 0:
+            raise SgError(r, f"defect {name}")
+        return r
+
+    def defect_reset(self):
+        self.dll.sg_defect_reset()
+
+    # ---- exe constants (phase 3.0)
+    def exe_load(self, path=None) -> str:
+        """Load and verify the user's exe ($SG_EXE_PATH or original/golf_clean.exe): '' or the refusal reason."""
+        err = C.create_string_buffer(512)
+        r = self.dll.sg_exe_load(str(path or exe_path()).encode(), err, len(err))
+        return "" if r == SG_OK else (err.value.decode(errors="replace") or ERRORS.get(r, str(r)))
+
+    def exe_loaded(self) -> bool:
+        return bool(self.dll.sg_exe_loaded())
+
+    def exe_const(self, name: str) -> bytes:
+        n = C.c_uint32(0)
+        r = self.dll.sg_exe_const(name.encode(), None, 0, C.byref(n))
+        if r != SG_OK:
+            raise SgError(r, f"exe_const {name}")
+        buf = (C.c_uint8 * max(1, n.value))()
+        self.dll.sg_exe_const(name.encode(), buf, n.value, C.byref(n))
+        return bytes(buf)[:n.value]
 
     def set_fpcw(self, cw: int) -> int:
         return self.dll.sg_set_fpcw(cw)
@@ -193,6 +251,26 @@ class State:
     def unmap_all(self):
         self.lib.dll.sg_unmap_all(self.ctx)
         self._keep.clear()
+
+    # ---- exe constants and game files (phase 3.0)
+    def fill_from_exe(self, whole_image: bool = False):
+        r = self.lib.dll.sg_exe_fill_state(self.ctx, 1 if whole_image else 0)
+        if r != SG_OK:
+            raise SgError(r, "fill_from_exe")
+
+    def files_put(self, name: str, data: bytes):
+        r = self.lib.dll.sg_files_put(self.ctx, name.encode(), bytes(data), len(data))
+        if r != SG_OK:
+            raise SgError(r, f"files_put {name}")
+
+    def files_clear(self):
+        self.lib.dll.sg_files_clear(self.ctx)
+
+    def files_root(self, directory=None):
+        self.lib.dll.sg_files_root(self.ctx, str(directory).encode() if directory is not None else None)
+
+    def files_size(self, name: str) -> int:
+        return int(self.lib.dll.sg_files_size(self.ctx, name.encode()))
 
     # ---- calls and hashes
     def call(self, name: str, args: list[int]) -> SgRet:

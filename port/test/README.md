@@ -100,3 +100,20 @@ for single correctly rounded operations (+, -, *, /, sqrt) and integer conversio
 and refuses any other precision or rounding (`SG_E_UNSUPPORTED`, the vectors are then skipped with that reason). Code
 whose result depends on 80-bit intermediates or another control word (sound.dll's 0x0f7f mixers, c3fh) needs explicit
 emulation in the port; the Win32 build sets the word with `fldcw` but the 64-bit Python harness cannot load it (U-0721).
+
+## Phase 3.0 additions (2026-10-19): conventions for stage B (full text: port/CORE.md)
+
+- Port code uses `portsim/ptr.h` (`Ptr<T>`, `state_arr / state_obj / state_grid / state_va`, the VC6 string idioms)
+  and `portsim/arith.h` (wrapping arithmetic, x86 shifts, `div32` that throws `DivideError` = SG_E_DIVIDE where the
+  original's idiv raises #DE, `NoReturn` = SG_E_NO_RETURN for a loop the original can never leave).
+- Negative controls: every function has one; add each mode to `NEGCTL_RED` in test_core.py (or `NEGCTL_BLIND` with
+  the reason when the vectors cannot see it, which then puts that detail on the segments).
+- Defects: `DefectDef` rows in the module's ModuleDef, read through `SG_DEFECT`, default 1 = the original
+  (`lib.defects()`, `lib.defect(name, on)`, `sg_defect_*`); the autouse fixture resets negctl modes AND defect switches.
+- Exe constants: `lib.exe_load()` loads `$SG_EXE_PATH` or original/golf_clean.exe into the process-wide ExeConstants
+  (verified by descriptor hashes), `st.fill_from_exe()` writes the initial `const` objects, `lib.exe_const(name)`
+  returns a descriptor's bytes. Functions that need it throw MissingResource (SG_E_NO_RESOURCE) without it.
+- Game files: `st.files_put(name, bytes)`, `st.files_root(dir)`, `st.files_size(name)`.
+- Functions without vectors (static initialisers, boot code) get their own state test in test_core.py
+  (test_static_init_rng_zero, test_init_sin_table).
+- `~/bin/py -3.12 -m pytest port/test` also runs the C++ unit tests (`portsim_core_test`, ctest `portsim_core`).

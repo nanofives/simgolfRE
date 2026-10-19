@@ -2,6 +2,7 @@
 #include "portsim/registry.h"
 
 #include <cstring>
+#include <utility>
 
 #include "portsim/registry_list.h"
 
@@ -96,6 +97,33 @@ int registry_find(const char *name) {
   const std::vector<Entry> &e = entries();
   for (size_t i = 0; i < e.size(); ++i)
     if (std::strcmp(e[i].def->name, name) == 0) return static_cast<int>(i);
+  return -1;
+}
+
+namespace {
+const std::vector<std::pair<const DefectDef *, const char *>> &defects() {
+  static const std::vector<std::pair<const DefectDef *, const char *>> all = [] {
+    std::vector<std::pair<const DefectDef *, const char *>> v;
+    for (const ModuleDef *m : kModules)
+      for (size_t i = 0; i < m->defect_count; ++i) v.emplace_back(&m->defects[i], m->module);
+    return v;
+  }();
+  return all;
+}
+}  // namespace
+
+int defect_count() { return static_cast<int>(defects().size()); }
+
+const DefectDef *defect_at(int i, const char **module) {
+  if (i < 0 || i >= defect_count()) return nullptr;
+  if (module) *module = defects()[static_cast<size_t>(i)].second;
+  return defects()[static_cast<size_t>(i)].first;
+}
+
+int defect_find(const char *name) {
+  if (name == nullptr) return -1;
+  for (int i = 0; i < defect_count(); ++i)
+    if (std::strcmp(defects()[static_cast<size_t>(i)].first->name, name) == 0) return i;
   return -1;
 }
 

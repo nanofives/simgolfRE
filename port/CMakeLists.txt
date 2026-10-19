@@ -24,7 +24,9 @@ set(SIMGOLF_MODEL_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/../re/model/include")
 # one line in modules.inc, nothing here). PORTSIM_NEGCTL=OFF compiles the negative-control bodies away.
 option(PORTSIM_NEGCTL "compile the negative-control (deliberately wrong) bodies, switched at run time" ON)
 file(GLOB PORTSIM_SIM_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/sim/*.cpp")
-add_library(portsim STATIC src/portsim.cpp src/registry.cpp src/state_hash.cpp ${PORTSIM_SIM_SOURCES})
+# Phase 3.0 core: src/ptr.cpp (Ptr<T> string / copy idioms), src/execonst.cpp (ExeConstants), src/gamefiles.cpp.
+add_library(portsim STATIC src/portsim.cpp src/registry.cpp src/state_hash.cpp src/ptr.cpp src/execonst.cpp
+            src/gamefiles.cpp ${PORTSIM_SIM_SOURCES})
 target_include_directories(portsim PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${SIMGOLF_MODEL_INCLUDE}"
                            PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 if(PORTSIM_NEGCTL)
@@ -56,3 +58,12 @@ if(MSVC)
   target_compile_options(portsim_layout_test PRIVATE /W4 /WX /permissive-)
 endif()
 add_test(NAME gamestate_layout COMMAND portsim_layout_test)
+
+# Phase 3.0: unit tests of the core helpers (arith, Ptr, string idioms, GameFiles, ExeConstants). The exe checks run
+# when SG_EXE_PATH names the user's golf_clean.exe (port/test/test_core.py passes it); otherwise they are skipped.
+add_executable(portsim_core_test test/core_test.cpp)
+target_link_libraries(portsim_core_test PRIVATE portsim)
+if(MSVC)
+  target_compile_options(portsim_core_test PRIVATE /W4 /WX /permissive-)
+endif()
+add_test(NAME portsim_core COMMAND portsim_core_test)

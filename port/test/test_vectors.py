@@ -108,7 +108,7 @@ def test_skips_are_reported(vrunner):
 
 @need_corpus
 def test_unported_function_is_not_run(vrunner):
-    r = vrunner.run_function("absDiff")
+    r = vrunner.run_function("slopeMix")   # phase 3.1a; absDiff was ported in 3.0
     assert r.verdict == "NOT_PORTED" and r.run == 0 and r.ok > 0
 
 
