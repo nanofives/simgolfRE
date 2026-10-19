@@ -1,0 +1,185 @@
+// The portsim C ABI (include/portsim_c.h) over the registry, the context and the object table (phase 2.6, 2026-10-19).
+#include "portsim_c.h"
+
+#include <cstring>
+
+#include "portsim/registry.h"
+#include "portsim/registry_list.h"
+#include "portsim/state_hash.h"
+
+struct sg_ctx {
+  portsim::Ctx ctx;
+};
+
+extern "C" {
+
+size_t sg_state_size(void) { return sizeof(portsim::GameState); }
+
+sg_ctx *sg_state_new(void) {
+  try {
+    return new sg_ctx();
+  } catch (...) {
+    return nullptr;
+  }
+}
+
+void sg_state_free(sg_ctx *ctx) { delete ctx; }
+
+uint8_t *sg_state_ptr(sg_ctx *ctx) { return ctx ? ctx->ctx.bytes() : nullptr; }
+
+int sg_set_data_base(sg_ctx *ctx, uint32_t base) {
+  if (!ctx) return SG_E_ARG;
+  return ctx->ctx.mem.set_data_base(base) ? SG_OK : SG_E_MAP;
+}
+
+uint32_t sg_data_base(sg_ctx *ctx) { return ctx ? ctx->ctx.mem.data_base() : 0u; }
+
+int sg_map(sg_ctx *ctx, uint32_t base, void *host, uint32_t size, int32_t readonly) {
+  if (!ctx) return SG_E_ARG;
+  return ctx->ctx.mem.map(base, static_cast<uint8_t *>(host), size, readonly != 0) ? SG_OK : SG_E_MAP;
+}
+
+void sg_unmap_all(sg_ctx *ctx) {
+  if (ctx) ctx->ctx.mem.unmap_all();
+}
+
+int32_t sg_func_count(void) { return portsim::registry_count(); }
+
+const char *sg_func_name(int32_t i) {
+  const portsim::FuncDef *d = portsim::registry_at(i, nullptr);
+  return d ? d->name : nullptr;
+}
+
+int sg_func_info_get(int32_t i, sg_func_info *out) {
+  const char *module = nullptr;
+  const portsim::FuncDef *d = portsim::registry_at(i, &module);
+  if (!d || !out) return SG_E_ARG;
+  out->name = d->name;
+  out->module = module;
+  out->abi = d->abi;
+  out->ret = d->ret;
+  out->arity = d->arity;
+  out->fpcw = d->fpcw;
+  return SG_OK;
+}
+
+int32_t sg_func_find(const char *name) {
+  int i = portsim::registry_find(name);
+  return i < 0 ? SG_E_NO_FUNCTION : i;
+}
+
+int sg_call(sg_ctx *ctx, const char *name, const uint32_t *args, int32_t nargs, sg_ret *out) {
+  if (!ctx || !out || (nargs > 0 && !args)) return SG_E_ARG;
+  int i = portsim::registry_find(name);
+  if (i < 0) return SG_E_NO_FUNCTION;
+  const portsim::FuncDef *d = portsim::registry_at(i, nullptr);
+  if (nargs != d->arity) return SG_E_ARITY;
+  portsim::Ret r;
+  try {
+    d->fn(ctx->ctx, args, r);
+  } catch (const portsim::Fault &) {
+    return SG_E_FAULT;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  out->eax = r.eax;
+  out->edx = r.edx;
+  out->st0 = r.st0;
+  out->has_st0 = r.has_st0 ? 1 : 0;
+  return SG_OK;
+}
+
+int sg_set_fpcw(uint32_t cw) {
+#if defined(_M_IX86) && defined(_MSC_VER)
+  unsigned short w = static_cast<unsigned short>(cw);
+  __asm fldcw w
+  return SG_OK;
+#else
+  // SSE2 doubles: 53-bit significand, round to nearest, exceptions masked = x87 word 0x027f (bits 0-5 and 8-11)
+  return (cw & 0x0F3Fu) == 0x023Fu ? SG_OK : SG_E_UNSUPPORTED;
+#endif
+}
+
+int sg_negctl_set(const char *name, int32_t mode) {
+  int i = portsim::registry_find(name);
+  if (i < 0) return SG_E_NO_FUNCTION;
+  const portsim::FuncDef *d = portsim::registry_at(i, nullptr);
+  if (!d->negctl) return SG_E_UNSUPPORTED;
+  int prev = *d->negctl;
+  *d->negctl = mode;
+  return prev;
+}
+
+int32_t sg_negctl_get(const char *name) {
+  int i = portsim::registry_find(name);
+  if (i < 0) return SG_E_NO_FUNCTION;
+  const portsim::FuncDef *d = portsim::registry_at(i, nullptr);
+  return d->negctl ? *d->negctl : 0;
+}
+
+void sg_negctl_reset(void) {
+  for (int i = 0; i < portsim::registry_count(); ++i) {
+    const portsim::FuncDef *d = portsim::registry_at(i, nullptr);
+    if (d->negctl) *d->negctl = 0;
+  }
+}
+
+int32_t sg_object_count(const char *cls) { return static_cast<int32_t>(portsim::objects_of(cls).size()); }
+
+const char *sg_object_name(const char *cls, int32_t i) {
+  const auto &v = portsim::objects_of(cls);
+  return i >= 0 && static_cast<size_t>(i) < v.size() ? v[static_cast<size_t>(i)]->name : nullptr;
+}
+
+int sg_object_span(const char *cls, int32_t i, uint32_t *off, uint32_t *size) {
+  const auto &v = portsim::objects_of(cls);
+  if (i < 0 || static_cast<size_t>(i) >= v.size() || !off || !size) return SG_E_ARG;
+  *off = v[static_cast<size_t>(i)]->off;
+  *size = v[static_cast<size_t>(i)]->size;
+  return SG_OK;
+}
+
+uint64_t sg_hash_bytes(const uint8_t *data, size_t n) { return portsim::sgh64(data, n); }
+
+int32_t sg_hash_class(sg_ctx *ctx, const char *cls, uint64_t *out, int32_t cap) {
+  if (!ctx || !out) return SG_E_ARG;
+  const auto &v = portsim::objects_of(cls);
+  if (v.empty() || static_cast<size_t>(cap) < v.size()) return SG_E_ARG;
+  const uint8_t *s = ctx->ctx.bytes();
+  for (size_t k = 0; k < v.size(); ++k) out[k] = portsim::object_hash(s, *v[k]);
+  return static_cast<int32_t>(v.size());
+}
+
+int sg_run_frames(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, const sg_msg *queued, int32_t n_queued,
+                  int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done) {
+  (void)trace;
+  (void)trace_len;
+  (void)queued;
+  (void)n_queued;
+  (void)max_frames;
+  (void)out_T;
+  (void)out_hashes;
+  if (!ctx || !frames_done) return SG_E_ARG;
+  *frames_done = 0;
+  return SG_E_NOT_IMPLEMENTED;  // phases 3.7 (frame tick, command API) and 3.8 (frame loop) fill this in
+}
+
+const char *sg_build_info(void) {
+#if defined(_M_X64) || defined(__x86_64__)
+#define SG_ARCH "x64"
+#else
+#define SG_ARCH "x86"
+#endif
+#ifdef NDEBUG
+#define SG_CFG "release"
+#else
+#define SG_CFG "debug"
+#endif
+#if PORTSIM_NEGCTL
+  return "portsim " SG_ARCH " " SG_CFG " negctl";
+#else
+  return "portsim " SG_ARCH " " SG_CFG;
+#endif
+}
+
+}  // extern "C"

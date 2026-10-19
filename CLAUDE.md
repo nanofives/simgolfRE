@@ -1010,6 +1010,31 @@ from the emulation's edges): full 113, one_sided 35, partial_branch 24, thin 71,
 directly with hooks off overwrote an evidence CSV (restored from git); Frida frees an unreferenced CModule's code; a Proxy
 on Interceptor breaks its invariants; the live replay must freeze too (the menu writes g_textBuffer). Tests:
 tests/test_vector_corpus.py (static, 30), tests/test_vector_capture_runtime.py (runtime, 22 s). U-0700..U-0704.
+Phase 2.6 harness (2026-10-19, port/test/README.md, notes log/p2/p26_notes.txt): the port's test harness, judging C++ port
+code against the vector and segment corpora with no game, no Frida and no original binary run. C ABI port/include/portsim_c.h
+(DLL target portsim_c, x64 for the 64-bit Python; the Win32 build compiles too): sg_state_new / free / size / ptr, a 32-bit
+VIRTUAL address space per context (GameState at a caller-set base, sg_map for harness blocks; port code resolves 32-bit
+pointers through ctx.mem and throws portsim::Fault -> SG_E_FAULT, never casts), sg_call(ctx, name, uint32 slots) by hooks.csv
+name returning eax / edx / st(0), sg_func_count / name / info (abi, ret, arity, fpcw), sg_set_fpcw (x64 accepts only
+0x027f-equivalent SSE2 semantics), negative-control switches sg_negctl_set by function name (no fixed-address page), the
+gamestate_meta.inc object table and sgh64 in C++ (sg_hash_class; equals re/tools/state_image.py on every class), and
+sg_run_frames with its final signature returning SG_E_NOT_IMPLEMENTED until 3.7 / 3.8. Registry: port/src/sim/<module>.cpp
+defines `extern const portsim::ModuleDef kModule_<module>` (FuncDef: name, abi, ret, arity, fpcw, adapter `void(Ctx&, const
+uint32_t* args, Ret&)`, negctl int*), listed by one `SG_MODULE(<module>)` line in port/src/sim/modules.inc; CMake globs
+src/sim/*.cpp. First client port/src/sim/util.cpp (Random::next, Random::range, clamp, distance, written from the notes and
+the corpus): 4 functions, 279 / 279 vectors GREEN (15 + 32 + 160 + 72, coverage full for all four). Python: lib.py (ctypes,
+builds the DLL when stale), vectors.py VectorRunner (zero GameState mapped at the original data VA, seed then in, blocks at
+fresh page offsets, relocs, fpcw, call, ret / ret_loc / pointer returns as locations, every out region with out_ptrs, and
+no changed byte outside the out regions; skips non-ok, reloc_check false and raw-location vectors with reasons; warns under
+10 vectors, zero spread or non-full coverage), segments.py SegmentRunner (load check: frames.json symbols = the library's
+203 sim objects, no noise dword in a sim object, C++ sim hashes = frames.bin record 0; then sg_run_frames, LOADED_ONLY until
+it exists) with first_divergent_record / first_byte_divergence, report.py (`~/bin/py -3.12 -m port.test.report` ->
+log/p2/p26_report_functions.tsv / _segments.tsv). Tests: `~/bin/py -3.12 -m pytest port/test` (markers static and port,
+the new `port` marker in pytest.ini): 219 pass in about 16 s, all 190 accepted segments LOADED_ONLY. Negative controls RED:
+Random::range wrong bodies (results 0/1 swapped 8 of 15 vectors fail, scaled by n + 1 4, rounded to nearest 6), a flipped out
+byte and an incremented ret of a vector, a dropped out region (extra write), a flipped byte in any sim object of a segment
+image (load check fails and first_byte_divergence names object and byte). Finding: listAddEntry 0x004a28a0 has one ok vector
+whose argument is a `raw` location, which the schema says does not occur (U-0720). U-0720..U-0724.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

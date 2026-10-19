@@ -20,13 +20,18 @@ It plays from the user's own game files and loads or patches none of the origina
 
 ```
 port/
-├── CMakeLists.txt            # C++17; library portsim, test portsim_layout_test (ctest)
+├── CMakeLists.txt            # C++17; library portsim, DLL portsim_c, test portsim_layout_test (ctest)
 ├── include/
 │   ├── gamestate.h           # GENERATED (re/tools/model_state_gen.py): struct portsim::GameState = the original data section
 │   ├── gamestate_meta.inc    # GENERATED: X-macro table of objects (class, pointer words, hidden-state code) and gaps
 │   └── gamestate_addresses.inc  # GENERATED, tooling only: original addresses
-├── src/portsim.cpp           # the library (phase 2.2: a size export only)
+├── include/portsim_c.h       # phase 2.6: the C ABI the test harness calls (ctypes)
+├── include/portsim/          # registry.h (Ctx, FuncDef, adapters), state_hash.h (object table, sgh64), sim/<module>.h
+├── src/portsim.cpp           # size export
+├── src/registry.cpp, state_hash.cpp, portsim_c.cpp
+├── src/sim/                  # port modules (<module>.cpp) and modules.inc (the list the registry reads)
 ├── test/gamestate_layout_test.cpp
+├── test/                     # phase 2.6 pytest harness (README.md): ~/bin/py -3.12 -m pytest port/test
 ├── corpus/                   # local only
 └── build/                    # local only
 ```

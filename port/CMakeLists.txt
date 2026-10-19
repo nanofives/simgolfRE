@@ -19,12 +19,34 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # The data model header (re/model/include/simgolf_model.h, clean C99, no original addresses) is used in place.
 set(SIMGOLF_MODEL_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/../re/model/include")
 
-add_library(portsim STATIC src/portsim.cpp)
-target_include_directories(portsim PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${SIMGOLF_MODEL_INCLUDE}")
+# Phase 2.6: the registry (src/registry.cpp, modules listed in src/sim/modules.inc), the object table and sgh64
+# (src/state_hash.cpp) and every port module file src/sim/*.cpp (picked up by the glob: phase 3 children add a file and
+# one line in modules.inc, nothing here). PORTSIM_NEGCTL=OFF compiles the negative-control bodies away.
+option(PORTSIM_NEGCTL "compile the negative-control (deliberately wrong) bodies, switched at run time" ON)
+file(GLOB PORTSIM_SIM_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/sim/*.cpp")
+add_library(portsim STATIC src/portsim.cpp src/registry.cpp src/state_hash.cpp ${PORTSIM_SIM_SOURCES})
+target_include_directories(portsim PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${SIMGOLF_MODEL_INCLUDE}"
+                           PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+if(PORTSIM_NEGCTL)
+  target_compile_definitions(portsim PUBLIC PORTSIM_NEGCTL=1)
+else()
+  target_compile_definitions(portsim PUBLIC PORTSIM_NEGCTL=0)
+endif()
 if(MSVC)
   target_compile_options(portsim PRIVATE /W4 /WX /permissive-)
 else()
   target_compile_options(portsim PRIVATE -Wall -Wextra -Werror -pedantic)
+endif()
+
+# Phase 2.6: the C ABI (include/portsim_c.h) as a DLL for the Python harness port/test/ (ctypes). Build it for the
+# Python's architecture (x64): `~/bin/py -3.12 port/test/build.py`.
+add_library(portsim_c SHARED src/portsim_c.cpp)
+target_link_libraries(portsim_c PRIVATE portsim)
+target_compile_definitions(portsim_c PRIVATE PORTSIM_C_BUILD)
+if(MSVC)
+  target_compile_options(portsim_c PRIVATE /W4 /WX /permissive-)
+else()
+  target_compile_options(portsim_c PRIVATE -Wall -Wextra -Werror -pedantic)
 endif()
 
 enable_testing()
