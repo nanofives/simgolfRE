@@ -223,7 +223,7 @@ def test_exe_constants_equal_the_corpus_seeds(portlib):
 def test_exe_refused(portlib, tmp_path):
     p = tmp_path / "not_the_exe.exe"
     p.write_bytes(b"MZ" + b"\0" * 200)
-    lib = L.Lib(portlib.path)                       # same DLL: the process-wide instance is reloaded and refused
+    lib = L.Lib(portlib.path) if isinstance(portlib, L.Lib) else portlib   # same DLL: the process-wide instance (the Win32 runner has one too)
     assert lib.exe_load(p) != ""
     assert not lib.exe_loaded()
     if L.exe_path().exists():

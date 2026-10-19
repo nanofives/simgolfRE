@@ -29,8 +29,9 @@ The build uses the Visual Studio 2022 Build Tools' CMake (`port/CMakeLists.txt`,
 | `lib.py` | ctypes binding (`lib.load()`, `State`) |
 | `vectors.py` | `VectorRunner` |
 | `segments.py` | `SegmentRunner`, `first_divergent_record`, `first_byte_divergence` |
+| `lib32.py`, `runner32/runner32.cpp` | the Win32 backend (phase 3.R): `Lib32` / `State32` over an out-of-process Win32 runner, same interface as `lib.py` |
 | `report.py` | the dashboard |
-| `test_static.py`, `test_vectors.py`, `test_segments.py` | the tests (markers `static`, `port`) |
+| `test_static.py`, `test_vectors.py`, `test_segments.py`, `test_win32.py` | the tests (markers `static`, `port`, `x87`) |
 
 ## The address space
 
@@ -93,13 +94,40 @@ check), then `sg_run_frames`. Until 3.7 / 3.8 provide the frame step the result 
 objects. `first_byte_divergence(lib, image_a, image_b, classes)` gives the first differing byte (symbol, offset) of two
 state images, pointer words ignored.
 
-## x87
+## x87 and the Win32 backend (phase 3.R, 2026-10-19)
 
 On x64 the port's doubles are SSE2 (53-bit significand, round to nearest), which equals the original's x87 word 0x027f
 for single correctly rounded operations (+, -, *, /, sqrt) and integer conversions; `sg_set_fpcw` accepts 0x027f there
 and refuses any other precision or rounding (`SG_E_UNSUPPORTED`, the vectors are then skipped with that reason). Code
-whose result depends on 80-bit intermediates or another control word (sound.dll's 0x0f7f mixers, c3fh) needs explicit
-emulation in the port; the Win32 build sets the word with `fldcw` but the 64-bit Python harness cannot load it (U-0721).
+whose result depends on 80-bit intermediates or another control word (sound.dll's 0x0f7f mixers, phase 3.4 shots) is
+judged on the **Win32 backend**:
+
+```
+~/bin/py -3.12 port/test/build.py --arch Win32          # portsim_c.dll (x86) + portsim_runner32.exe, built on demand too
+SG_BACKEND=win32 ~/bin/py -3.12 -m pytest port/test      # the whole suite on the Win32 build (or --backend win32)
+SG_BACKEND=win32 ~/bin/py -3.12 -m port.test.report      # dashboard, prints `backend win32`
+~/bin/py -3.12 -m pytest port/test/test_win32.py         # both backends side by side (the `lib32` / `lib64` fixtures)
+```
+
+Design (smallest that works: no 32-bit Python exists, so an out-of-process Win32 process serves the unchanged C ABI):
+`runner32/runner32.cpp` loads the Win32 `portsim_c.dll` and answers framed requests (`u32 length, u32 op, payload` on
+stdin; `u32 length, i32 status, payload` on stdout). `lib32.py` (`Lib32`, `State32`, a `lib.State` subclass) has lib.py's
+interface, so `VectorRunner` / `SegmentRunner` / the dashboard run unchanged; `lib.load()` returns it when
+`SG_BACKEND=win32`. Default stays x64. The GameState (3.6 MB) is a named shared mapping: Python reads and writes it through
+its own view (`State32.ptr`), the runner copies it into the DLL state before every handle op and back after a call, so no
+state bytes cross the pipe. `map` / `unmap_all` / `set_data_base` are queued and sent with the next op (validated in Python
+like `Memory::map`, so `SG_E_MAP` still raises at the call site); writable blocks travel with each call and come back
+after it; the exe sections (read-only ctypes buffers the harness keeps) are uploaded once per runner. A call runs under
+`lib.set_fpcw(cw)` (any word; `fldcw` really executes), the runner then reports the control and tag word it ended with
+(`State32.last_fpu`, expected `(cw, 0xffff)`: word unchanged, x87 stack empty) and restores `0x027f` + `fninit`. The runner
+dying (native fault in port code) raises `RunnerDied`; no Win32 toolchain gives `RunnerUnavailable`, which the `lib32`
+fixture and the dashboard turn into a skip with the reason.
+
+Rules for x87 functions: port/CORE.md section 7 (C++ body for x64, `__asm` under `_M_IX86`; MSVC compiles Win32 doubles as
+SSE2 too, U-0761). `x87Probe::mulDiv` / `controlWord` (`port/src/sim/x87probe.cpp`, test-only, module `x87probe`, excluded
+from the dashboard) are the template and the proof; test_win32.py checks the probe bit for bit against an exact-rational x87
+model for six control words, runs the same vectors on x64 (skipped as unsupported) and Win32 (GREEN), and reads a
+wrong-rounding body (`negctl` mode 1) RED at every non-default word.
 
 ## Phase 3.0 additions (2026-10-19): conventions for stage B (full text: port/CORE.md)
 

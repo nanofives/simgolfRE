@@ -1054,6 +1054,22 @@ tests (initSinTable with the CRT sin equals the g_sinTable of all 190 segment st
 control (test_core.py NEGCTL_RED, all RED); four wrong bodies the vectors cannot see are recorded as NEGCTL_BLIND (U-0742).
 objectAt and sanitizeFileName have one-sided branch coverage: segments must cover them. Finding: the SafeDisc golf.exe also
 encrypts .data (404 of 155,648 bytes equal), so ExeConstants needs the unwrapped exe (U-0744). U-0740..U-0745.
+Phase 3.R 32-bit runner (2026-10-19, port/test/README.md "x87 and the Win32 backend", port/CORE.md section 7, notes log/p3/p3r_notes.txt):
+U-0721 (x64 harness, SSE2 doubles, no 32-bit Python) closed by an OUT-OF-PROCESS Win32 runner: `port/test/runner32/runner32.cpp` (CMake target
+portsim_runner32, -A Win32 only, built by `port/test/build.py --arch Win32` or on demand) loads the Win32 portsim_c.dll and serves the unchanged C ABI
+over stdin / stdout (`u32 length, u32 op, payload`; reply `u32 length, i32 status, payload`); `port/test/lib32.py` (`Lib32`, `State32` subclassing
+lib.State) has lib.py's interface, so VectorRunner / SegmentRunner / report.py run unchanged. `SG_BACKEND=win32` (or `pytest --backend win32`) makes
+`lib.load()` return it; default stays x64; `lib32` / `lib64` fixtures give both in one test; no Win32 toolchain = `RunnerUnavailable`, a skip with the
+reason. The GameState is a named shared mapping copied into the DLL state around each handle op (no state bytes on the pipe); address-space edits are
+queued and sent with the next op, writable blocks travel with each call, exe sections are cached once per runner. `sg_set_fpcw` really executes fldcw on
+Win32 (any word); the runner applies it per call, reports the control / tag word after it (`State32.last_fpu`) and restores 0x027f + fninit. Test-only module
+`x87probe` (`x87Probe::mulDiv`, `controlWord`, inline x87 asm under _M_IX86): bit-exact against an exact-rational x87 model for 0x027f 0x037f 0x0f7f 0x077f
+0x0b7f 0x007f; the same vectors are GREEN on Win32 and skipped as unsupported on x64; the wrong-rounding body (negctl 1, plain C doubles) reads RED at
+every non-default word and is an equivalent mutant at 0x027f. Numbers: all 31 ported functions give identical run / passed / distinct on both backends
+(the dashboard TSVs are byte-identical: 29 GREEN, 190 segments LOADED_ONLY, 63 s Win32 against 67 s x64); a bare call costs 0.43 ms against 0.002 ms
+(two 3.6 MB copies), a vector run 18.0 against 17.5 ms (harness setup dominates). Suites: port/test x64 387 passed, SG_BACKEND=win32 322 passed, static
+600. Caveat U-0761: MSVC compiles Win32 C++ doubles as SSE2 as well, so only `__asm` x87 code (or /arch:IA32 sources) honours fldcw: 3.4 writes x87
+functions as asm under _M_IX86 plus a C body for x64. U-0760..U-0763.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

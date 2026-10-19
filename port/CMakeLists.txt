@@ -67,3 +67,12 @@ if(MSVC)
   target_compile_options(portsim_core_test PRIVATE /W4 /WX /permissive-)
 endif()
 add_test(NAME portsim_core COMMAND portsim_core_test)
+
+# Phase 3.R: the Win32 runner (test/runner32): serves the C ABI of the Win32 portsim_c.dll to the 64-bit Python harness
+# over stdin / stdout, so x87 code runs with real fldcw. Built only for -A Win32 (port/test/build.py --arch Win32).
+if(CMAKE_SIZEOF_VOID_P EQUAL 4 AND MSVC)
+  add_executable(portsim_runner32 test/runner32/runner32.cpp)
+  target_include_directories(portsim_runner32 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+  add_dependencies(portsim_runner32 portsim_c)
+  target_compile_options(portsim_runner32 PRIVATE /W4 /WX /permissive-)
+endif()

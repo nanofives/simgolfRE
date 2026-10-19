@@ -1,0 +1,19 @@
+Phase 3.R: Win32 runner for x87 (2026-10-19), child "P3.R 32-bit runner"
+Design: port/test/README.md "x87 and the Win32 backend"; rules for x87 functions: port/CORE.md section 7.
+- Out-of-process Win32 exe port/test/runner32/runner32.cpp (CMake target portsim_runner32, only -A Win32) loads the Win32
+  portsim_c.dll and serves its C ABI over stdin/stdout (u32 len, u32 op, payload / u32 len, i32 status, payload). Client
+  port/test/lib32.py (Lib32, State32 subclassing lib.State). lib.load() returns Lib32 when SG_BACKEND=win32 (or pytest --backend).
+- GameState = named shared mapping (mmap tagname); runner copies shm -> DLL state before each handle op and back after
+  call / run_frames / exe fill. Address-space edits queued client side and sent with the next op; writable blocks sent with each
+  call and returned; read-only ctypes buffers (exe sections) cached by token in the runner.
+- sg_set_fpcw on Win32 really runs fldcw; the runner applies the word before sg_call, reads fnstcw / tag word after, restores 0x027f + fninit.
+- Probe: port/src/sim/x87probe.cpp (module x87probe, test-only): x87Probe::mulDiv (inline asm on x86), x87Probe::controlWord.
+Measurements (MARIANO-PC, Release):
+- bare sg_call of Random::next: x64 0.002 ms, win32 0.43 ms (two 3.6 MB copies + 2 pipe frames).
+- full run of Random::range (15 vectors incl. first-use setup): x64 17.5 ms/vector, win32 18.0 ms/vector.
+- dashboard: 63 s win32 vs 67 s x64 (31 ported functions, 190 segments); both TSVs byte-identical.
+- vectors on both backends: all 31 ported functions identical run / passed / distinct (test_vectors_identical_on_both_backends).
+- probe bit-exact vs exact-rational x87 model for 0x027f 0x037f 0x0f7f 0x077f 0x0b7f 0x007f; wrong body (negctl 1) RED at every non-default word, GREEN at 0x027f (equivalent mutant).
+- suites: pytest port/test x64 387 passed 10 skipped; SG_BACKEND=win32 whole suite (test_win32 deselected) 322+1 fixed passed; pytest -m static 600 passed.
+Fix needed in an existing test: test_core.py::test_exe_refused built L.Lib(portlib.path) which under win32 is the runner exe.
+Uncertainties: U-0760..U-0763 (U-0721 closed by U-0760).

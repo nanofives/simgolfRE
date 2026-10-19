@@ -3,6 +3,7 @@
     ~/bin/py -3.12 port/test/build.py [--arch x64|Win32] [--config Release|Debug] [--negctl 0|1]
 
 The DLL's architecture must match the Python's (64-bit here: x64). Output: port/build/<arch>/<config>/portsim_c.dll.
+`--arch Win32` also builds portsim_runner32.exe (the x87 backend, port/test/lib32.py).
 The build also compiles the layout test (ctest gamestate_layout).
 """
 from __future__ import annotations
@@ -40,6 +41,25 @@ def build_dir(arch: str) -> pathlib.Path:
 
 def dll_path(arch: str | None = None, config: str = "Release") -> pathlib.Path:
     return build_dir(arch or default_arch()) / config / "portsim_c.dll"
+
+
+def runner32_path(config: str = "Release") -> pathlib.Path:
+    """The Win32 runner (phase 3.R, port/test/runner32): serves the Win32 DLL's C ABI to the 64-bit Python harness."""
+    return build_dir("Win32") / config / "portsim_runner32.exe"
+
+
+def toolchain_ok() -> bool:
+    """CMake and the Visual Studio 2022 Build Tools are present (a Win32 build is possible)."""
+    return VS.exists() and (VS_CMAKE.exists() or shutil.which("cmake") is not None)
+
+
+def runner32_stale(config: str = "Release") -> bool:
+    """The Win32 DLL is older than a port source, or the runner is older than its own source / missing."""
+    exe = runner32_path(config)
+    if not exe.exists() or stale("Win32", config):
+        return True
+    t = exe.stat().st_mtime
+    return any(s.stat().st_mtime > t for s in (PORT / "test" / "runner32").glob("*.cpp"))
 
 
 def sources() -> list[pathlib.Path]:

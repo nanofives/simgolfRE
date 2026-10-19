@@ -1,7 +1,7 @@
 """Phase 3 progress dashboard (phase 2.6): every function of the vector manifest and every segment of the segment
 manifest against the current portsim build.
 
-    ~/bin/py -3.12 -m port.test.report [--no-segments] [--out log/p2]
+    ~/bin/py -3.12 -m port.test.report [--no-segments] [--out log/p2] [--backend x64|win32]   (or $SG_BACKEND)
 
 Writes <out>/p26_report_functions.tsv and <out>/p26_report_segments.tsv and prints a short summary. Corpus files are
 read, never written.
@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import collections
 import csv
+import os
 import pathlib
 import sys
 import time
@@ -19,6 +20,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from port.test import lib as L  # noqa: E402
+from port.test.lib32 import RunnerUnavailable  # noqa: E402
 from port.test import segments as S  # noqa: E402
 from port.test import vectors as V  # noqa: E402
 
@@ -36,7 +38,7 @@ def function_rows(lib: L.Lib) -> list[dict]:
     oks = manifest_ok_counts()
     rows = []
     names = V.manifest_functions()
-    extra = [f for f in vr.funcs if f not in names]       # registered functions the selection does not hold
+    extra = [f for f, i in vr.funcs.items() if f not in names and i["module"] != "x87probe"]   # registered, not selected; the test-only probe is no game function
     for fn in names + extra:
         if fn in vr.funcs:
             r = vr.run_function(fn)
@@ -84,15 +86,22 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(ROOT / "log" / "p2"))
     ap.add_argument("--no-segments", action="store_true")
+    ap.add_argument("--backend", choices=["x64", "win32"], default=None, help="default $SG_BACKEND or x64 (phase 3.R)")
     a = ap.parse_args()
+    if a.backend:
+        os.environ["SG_BACKEND"] = a.backend
     t0 = time.time()
-    lib = L.load()
+    try:
+        lib = L.load()
+    except RunnerUnavailable as e:
+        print(f"SKIPPED: the win32 backend is unavailable: {e}")
+        return 0
     out = pathlib.Path(a.out)
     fr = function_rows(lib)
     write_tsv(out / "p26_report_functions.tsv", fr)
     ported = [r for r in fr if r["ported"] == "yes"]
     v = collections.Counter(r["verdict"] for r in fr)
-    print(f"{lib.build_info()}: {len(lib.functions())} port functions registered")
+    print(f"backend {L.backend()}: {lib.build_info()}: {len(lib.functions())} port functions registered")
     print(f"functions (re/port/vectors_manifest.tsv + registered): {len(fr)}; ported {len(ported)}; verdicts "
           + ", ".join(f"{k} {n}" for k, n in sorted(v.items())))
     print(f"  ported vectors: {sum(r['passed'] for r in ported)} passed / {sum(r['run'] for r in ported)} run "

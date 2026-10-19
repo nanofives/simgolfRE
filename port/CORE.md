@@ -135,3 +135,29 @@ every negative-control mode in NEGCTL_RED reads RED. Coverage per re/port/vector
 Not taken by 3.0, left to their stage B owners: cellAt (backend-gfx in re/port/scope.tsv), tileQuery449310 and
 sampleHeight (they call cornerHeights / bilinearSample: 3.1a), slopeMix and cornerRange (3.1a), listEraseRange (heap
 list, thin coverage), fileExists (KERNEL32 FindFirstFile: a GameFiles question for 3.1b / phase 4).
+
+## 7. x87 functions (phase 3.R, 2026-10-19)
+
+The in-process harness is x64 (the Python is 64-bit): its doubles are SSE2, which equals the original's x87 word `0x027f`
+only for single correctly rounded operations (+ - * / sqrt, conversions). A function whose result depends on an 80-bit
+intermediate, on 64-bit precision or on another rounding (`0x037f`, `0x0f7f` ...) is judged on the **Win32 backend**: the
+Win32 build of the library behind `port/test/runner32` (a Win32 process serving the C ABI to Python), where `sg_set_fpcw`
+executes `fldcw`, the call runs under that word, and the runner restores `0x027f` afterwards.
+
+- **When**: `SG_BACKEND=win32 ~/bin/py -3.12 -m pytest port/test` (or `--backend win32`) runs the whole suite on it; the
+  `lib32` fixture gives it next to `portlib` in one test (`@pytest.mark.x87` tests in `port/test/test_win32.py`). Same
+  `VectorRunner` / `SegmentRunner`, no change to how functions and tests are written. Without a Win32 toolchain the
+  `lib32` tests skip with the reason.
+- **Control words**: a key's `fpcw` is applied for every vector of the key; the x64 backend skips such vectors
+  (`fpcw 0x0f7f unsupported`), the Win32 backend judges them. Set `FuncDef.fpcw` to the word the original ran under.
+- **Writing an x87 function so both builds agree**: give the body (1) a plain C++ path (SSE2 doubles; exact at `0x027f`)
+  used on x64 and (2) under `#if defined(_M_IX86) && defined(_MSC_VER)` an `__asm` block with the original's x87 sequence
+  (`fld / fmul / fdiv / fstp`), because MSVC compiles C++ doubles for Win32 as SSE2 too (U-0761) and ignores `fldcw`.
+  Mind the stack: leave st(0..7) empty (the runner reports the tag word as `State32.last_fpu` and resets the FPU).
+  Mind the store: `fstp qword` rounds by the rounding control, `fstp tbyte` does not round. `x87Probe::mulDiv`
+  (`port/src/sim/x87probe.cpp`, test-only) is the template.
+- **When the backends differ**: at `0x027f` they must not (test_vectors_identical_on_both_backends). A difference there is
+  a bug in the C++ path (double rounding, a missed `volatile`/store, SSE2 FMA contraction: keep `/fp:precise`). At any other
+  word only Win32 is authoritative; check the C++ path against `mul_div_ref`-style exact reasoning (test_win32.py) and keep the
+  vectors at that word as the judge. A wrong-rounding body must read RED on Win32 (`x87Probe::mulDiv` mode 1 does at every
+  non-default word and is an equivalent mutant at `0x027f`: vectors at `0x027f` cannot see a rounding mistake).

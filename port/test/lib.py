@@ -29,6 +29,15 @@ ERRORS.update({SG_E_DIVIDE: "divide error (#DE in the original)", SG_E_NO_RETURN
 EXE_ENV = "SG_EXE_PATH"   # the user's golf_clean.exe for ExeConstants (default original/golf_clean.exe)
 
 
+def backend() -> str:
+    """'x64' (default: portsim_c.dll loaded into this 64-bit Python) or 'win32' ($SG_BACKEND: the Win32 build with real x87
+    code, served by port/test/runner32 through lib32.py)."""
+    b = (os.environ.get("SG_BACKEND") or "x64").lower()
+    if b not in ("x64", "win32"):
+        raise ValueError(f"SG_BACKEND={b!r}: expected x64 or win32")
+    return b
+
+
 def exe_path() -> pathlib.Path:
     return pathlib.Path(os.environ.get(EXE_ENV) or ROOT / "original" / "golf_clean.exe")
 
@@ -308,6 +317,9 @@ _LIB: Lib | None = None
 def load(path: str | os.PathLike | None = None, rebuild: bool = True) -> Lib:
     """The DLL at `path`, $SG_PORTSIM_DLL, or port/build/<arch>/Release/portsim_c.dll (built first when stale)."""
     global _LIB
+    if path is None and backend() == "win32":      # phase 3.R: the same interface over the Win32 runner (lib32.py)
+        from port.test import lib32
+        return lib32.load32(rebuild)
     if path is None and _LIB is not None:
         return _LIB
     p = path or os.environ.get("SG_PORTSIM_DLL")
