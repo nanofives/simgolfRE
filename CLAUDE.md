@@ -1070,6 +1070,111 @@ every non-default word and is an equivalent mutant at 0x027f. Numbers: all 31 po
 (two 3.6 MB copies), a vector run 18.0 against 17.5 ms (harness setup dominates). Suites: port/test x64 387 passed, SG_BACKEND=win32 322 passed, static
 600. Caveat U-0761: MSVC compiles Win32 C++ doubles as SSE2 as well, so only `__asm` x87 code (or /arch:IA32 sources) honours fldcw: 3.4 writes x87
 functions as asm under _M_IX86 plus a C body for x64. U-0760..U-0763.
+Phase 3.2 economy and membership (2026-10-19, port/src/sim/economy.cpp, port/include/portsim/sim/economy.h, tests port/test/test_economy.py, notes
+log/p3/p32_notes.txt): of the 15 rows of simcore_order.tsv, 9 ported (computeRatingTrend, appendDate, appendNumber, appendRatingLabel,
+appendToBuffer45b8b0, clearCost, rateLot, updateRollingStats, updateMembership) and all pass their vectors (160 of 160); canAfford, membershipReport, addScore,
+matchUpdate and updateGolfers are straddlers (3.7) and hireEmployee has no vectors and calls modal UI (U-0840), so they are open. Coverage: appendNumber and
+appendRatingLabel full, six one_sided, updateRollingStats thin (3 vectors); 14 negative controls RED, one blind spot (updateRollingStats grace) covered by a state
+test, plus a state test of updateMembership's decline arm. Port notes: strings are named by pool offset or character, and the month names come through
+the pointer table f_ptrtab_4c2908 (U-0841); typeBit7Clear is a private copy of 3.3's row (U-0842). U-0840..U-0844.
+Phase 3.1b course (2026-10-19, port/src/sim/course.cpp, port/include/portsim/sim/course.h, tests port/test/test_course.py, notes log/p3/p31b_notes.txt):
+of the 30 rows, 7 were already ported in 3.0 and the other 23 are registered in module `course`: records (freeRecordAtPos, initRecords with resetRecordBank /
+placeRecord as internal helpers, clearMatching, staticInit_820f04, setPendingCourseInfo, clearBuffers), names and titles (appendString, landmarkName,
+buildGolferName, buildStatusText, appendHoleName, appendCourseTitle, sceneryLabel, buildScenarioIntro), geometry (nearestHole, holeQuadrants), seedCourseTable,
+files over GameFiles (fileExists, lookupThemeText with a CRT text-mode fgets model, loadThemeFile without the portrait decode / tile blits), listEraseRange,
+loadThemes and switchToCourse. 1,033 / 1,033 vectors pass (15 functions; full 9, thin 4, one_sided 1, partial_branch 1); the 8 without vectors have state tests
+(staticInit_820f04 also against the 190 segment start images). Other modules are called through the registry by hooks.csv name (MissingResource while absent):
+sceneryLabel -> 3.1a's decorationName, loadThemes -> loadGolferRoster (3.3) / listMatchingFiles (unassigned), switchToCourse -> courseActionMenu (ui) + 3.1a's
+course builders (switch_to_course_chosen is exported for 3.7); buildScenarioIntro uses a local copy of startMessage until 3.7 registers it. 22 + 2 negative
+controls RED, 4 blind on the vectors (clearMatching b, listEraseRange x2, startMessage priority) of which 3 are read by state tests. MSBuild does not recompile
+registry.cpp when only modules.inc changes: touch it. U-0820..U-0825.
+Phase 3.3 golfers, walkers, animals (2026-10-19, port/src/sim/golfers.cpp + golfers_glue / _world / _walkers / _pro.inc,
+port/include/portsim/sim/golfers.h, tests port/test/test_golfers.py, notes log/p3/p33_notes.txt): 19 of the 21 rows of 3.3 and
+3.6 ported, 367 / 367 vectors GREEN in 16 functions (appendPairTrackPoint, addGolferPair, resetGolfer, golferAge, typeBit7Clear,
+appendEndearment, appendWalkerName, spawnObject, spawnWalker, addHabitatSlot, tickAnimals, placeHabitat, updateWalkers 92/92,
+initGolferState, addGolferToTable, loadGolfPro 2/2), plus placeAnimal (judged through tickAnimals' vectors and state tests),
+resetGolferState and composeGolferSprite (no vectors: state tests; composeGolferSprite keeps only its look-index write-back into
+the type record, the layers are drawing). Not ported: loadGolferRoster (needs a GameFiles directory listing for
+listMatchingFiles, which has no owner; U-0864) and skillPointDialog (a modal input loop whose effect is a 3.7 command; U-0865).
+Every function has a negative control (RED on vectors, on a caller's vectors, or on a state test; blind modes listed in
+test_golfers.py with the state test that catches them). The VIEW / SIM BRIDGE is module `bridge` (port/src/sim/bridge.cpp,
+portsim/sim/bridge.h, tests port/test/test_bridge.py; owner 3.3 by the parent's decision): worldToScreen, playSoundAt (simulation
+part: playSound is the audio backend's), queueMessage and pointsPopup, registered under their hooks.csv names for 3.4 / 3.5. They
+have no corpus vectors, so test_bridge.py replays their C3 path-1 runs: it rebuilds each fixture in a zero GameState, calls the
+port and compares the return and diff_hook's FNV-1a hash of the compared regions (the hex of each region joined by |):
+worldToScreen 103 of 112 rows exact (the 9 others sit on TTA_LEVEL_MIN tiles whose height reads terrain grids the fixture left
+live, U-0867), playSoundAt 27 / 27 through the test-only entry bridge.playSoundAtScripted (the C3 run stood in worldToScreen and
+playSound; its call log, including volume / pan / pitch, is rebuilt and hashed), queueMessage 16 / 16, pointsPopup 72 / 72.
+playSoundAt draws g_rng only when worldToScreen puts the point on screen, so the simulation RNG depends on the camera and screen
+globals (U-0860). Peers are called by hooks.csv name through the registry. Defects reproduced as faults / NoReturn:
+model_defects 40..45 (placeHabitat's cluster loop never advances, spawnObject's cell search, loadGolfPro's two divisions and
+pro draw, placeAnimal's idiv, resetGolferState on one record, addGolferToTable's discarded draws). A private build (a
+scratchpad copy of port/ with only the compiling modules, loaded through SG_PORTSIM_DLL) kept work going while siblings'
+files were mid-edit. U-0860..U-0867.
+Phase 3.4 shots (2026-10-19, port/src/sim/shots.cpp, port/include/portsim/sim/shots.h, tests port/test/test_shots.py, notes
+log/p3/p34_notes.txt): the 7 rows of 3.4 not already in util (decaySum, decaySum2, sign, sinScaled, foldRange, absDiff came from
+3.0) are ported: shotPower 64/64, wobble 19/19, trialShot 228/228, chooseShotTarget 12/12, prepareShot 307/307, scanShotArea
+289/289, narrateShot 2/2 (921 vectors), identical on the x64 and Win32 backends, with 3.1a's real terrain callees. The cycle's own x87 code is `fild; fsqrt; __ftol`, run as inline x87 on Win32 (sqrt_ftol). Its
+vectors stay GREEN at 0x037f / 0x0f7f / 0x0b7f, and a body that rounds instead of chopping reads RED on both backends. Other
+children's callees are called through the registry by hooks.csv name (MissingResource until registered); world_to_screen
+comes from bridge.h (module bridge, 3.3). trialShot, chooseShotTarget, prepareShot and narrateShot are listed as 3.7 straddlers but are 3.4's. The first
+three drop only a debug overlay and message pumps (U-0881). narrateShot keeps its state effects and drops drawing, sound, the
+modal pumpAndRedraw and saveBmp; startMessage comes from the registry once 3.7 registers it, a local copy until then (U-0883). Uninitialised stack slots (prepareShot's
+dirs[], chooseShotTarget's strict flag) start at 0, as in the corpus's zeroed-stack emulation (U-0880). Switches: model_defects
+#18 shotPower.cacheIgnoresPutt (OFF changes exactly the 32 putt vectors), #37 chooseShotTarget.strictFlagSticky (no vector
+reaches it), #38 prepareShot.hazardCellTransposed (OFF changes only real-shot vectors), #39 narrateShot.maskNotRestored (state
+test). The static test reads any 6-digit hex literal in the exe's range as an address, so write flag bits such as 0x400000
+as shifts. chooseShotTarget's
+scoring weights and pruning are blind to its 12 vectors (each ends with one surviving cell); the segments must judge them.
+MSBuild does not rebuild registry.cpp when src/sim/modules.inc changes, so touch registry.cpp after editing it.
+U-0880..U-0883.
+Phase 3.5 events, news and golfer stories (2026-10-19, port/src/sim/events.cpp + events_{calls,story,think,news,pair}.inc,
+port/include/portsim/sim/events.h, tests port/test/test_events.py, notes log/p3/p35_notes.txt, U-0900..U-0906, model_defects 46-49): 20 of the 21
+rows of re/port/simcore_order.tsv with child 3.5 (angleFixed is 3.0's, in util): appendUpgradeText, replaceInText, thoughtBalance, thoughtFlag,
+appendOpinion, postEvent, runBulletinBoardWithSound, loadStoryStrings (the story file through GameFiles: "Themes/<theme or Standard>/<story file
+of the slot>", read in the CRT's text mode with fgets(249)), computeStoryReply, storyText, substituteStoryNames, advanceStory,
+emitGolferThought, buildGolferComment, announceLandmark, patronEvent, holeMagazineEvent, announceHoleType, announceBuilding,
+pairGolfersWithStory. One module, one .cpp plus `.inc` parts (test_static wants one .cpp per module). The long bodies are mechanical
+conversions of the hook sources (`log/p3/p35_hook2port.py`: comments dropped, data addresses to `GS(member) + off`, typed references
+`G<T>(ctx, va)` in events_hook.h) edited by hand; a flag mask between 0x400000 and 0x8fffff reads as an address to the converter and to
+test_static (advanceStory's bit 23 is written `1u << 23`). Callees of other stages go through the registry by hooks.csv names
+(ev::call_peer): typeBit7Clear, buildGolferName, buildStatusText, decorationName, holeQuadrants, appendEndearment, appendHoleName,
+appendNumber, landmarkName, golferAge; the phase 3.7 straddlers startMessage, appendCents and logTick have local copies of their hook
+bodies when not registered (U-0903), playSoundAt is the registered bridge function (3.3; counts unchanged with it), playSound is dropped when not registered
+(U-0904). Evidence: vectors 16 functions (x64 and Win32 identical; buildGolferComment 1,002/1,002 with the user's story files
+attached as GameFiles: port/test/vectors.py got one line for it); the new LIVE ORACLE `port/test/liveraw.py` judges functions the Unicorn
+emulation could not run against the RAW captures (live return value, live byte changes, port started from the captured data image,
+blocks at their live addresses; `+unstub` keys have the selected callees real, startMessage / appendCents / playSound stay stood in, so
+emitGolferThought and pairGolfersWithStory ignore the objects those would have written): loadStoryStrings 47/47, computeStoryReply
+124/124, storyText 19/19, advanceStory 68/69 (one vector reads live heap the capture did not keep), announceBuilding 22/22,
+holeMagazineEvent 5/5, announceLandmark 44/44, patronEvent 126/126, emitGolferThought 136/152, pairGolfersWithStory 284/301 (the failures follow
+the scripted startMessage return, U-0906). Negative controls: 29 modes read RED (13 vectors, 10 live, 6 unit tests), 4 blind on purpose.
+Six children building into the shared port/build/x64 lock the DLL against each other: this module was built in `port/build/p35`
+(`cmake -S port -B port/build/p35 -A x64`, `SG_PORTSIM_DLL`). runBulletinBoardWithSound has no oracle (C2): only its writes around the modal
+call are tested (U-0905).
+Phase 3.1a terrain (2026-10-19, port/src/sim/terrain*.cpp, port/include/portsim/sim/terrain.h / terrain_api.h / terrain_gen.h,
+port/test/test_terrain.py / test_terrain_gen.py, notes log/p3/p31a_notes.txt): child 3.1a's 60 rows; 8 were 3.0's (tiles / util),
+mainLoop is 3.8's, 51 are ported plus applyTileVariation / applyTileWalls (unowned backend-gfx rows rebuildTileData calls), in modules
+terrain (grids, heightfield, coverage, shade, noise, scanTileLine), terrain_text (decorationName, buildToolLabel), terrain_path
+(pathStep), terrain_setup (buildGolferBioText, customizeCharacter), terrain_course (stampCourseTiles, clearObjectFootprint,
+stepCourseEditQueue, demolishObject, buildTournamentPrep), terrain_dll (the Terrain.dll callers), terrain_gen (generateRandomCourse) and
+the TEST-ONLY terrain_fake. Vectors 6,646 / 6,646 GREEN over the list (5,595 for the new functions). TERRAIN.DLL (U-0607, U-0800): no
+sim-class write of the exe's Terrain.dll callers depends on a value Terrain.dll returns (their writes are engine / pointer class plus
+updateTerrainRender's camera memory and g_tileWallMask[0] bit 1, from its arguments), so Terrain.dll is `portsim::TerrainApi` (20
+imported methods + the engine services the same functions reach: input pump, Window::paint, blits, renderTerrainStrip, the display DC,
+GetVersionExA's major version, operator new), attached per context with set_terrain_api (MissingResource without one, so 3.1b's
+switchToCourse needs one too); the Terrain object stays in the 32-bit address space and its fields are read like the exe does. EMULATOR
+ORACLE (opt-in `SG_EMU_ORACLE=1`, development only): test_terrain.py runs the ORIGINAL function in Unicorn (vector_emu's file image) over
+random GameState images and compares the whole image and eax with the port; for the Terrain callers a recording fake (terrain_fake.cpp,
+mirrored by PyFakeTerrain) serves the original at the Terrain import traps and at the engine functions' entries, and the call logs, the
+Terrain object and the heap block are compared too. Every function equals the original there (generateRandomCourse 96 / 97 equal, 1 both
+spin), including all no-vector / thin ones, and the 4 vector-blind negative controls read RED. Default runs check GOLDEN, SHA-256 digests
+of the emulated original's results for fixed scenarios of 18 functions, from the port; every no-vector control must change them.
+Builds: siblings' half-written module files broke the shared glob build, so 3.1a built a mirror of port/ (port/build/m31a, finished
+modules only). Findings: rebuildHeightfield returns the new g_flags (stepCourseEditQueue returns it); propagateType11 / markTileKind11 /
+applyTileWalls leave eax values their callers return (demolishObject); scanTileLine zeroes type 1's walk byte while it runs; endless
+loops of the original become NoReturn (rebuildHeightfield's relax / raise, buildGolferBioText's picks, generateRandomCourse's searches,
+model_defects#50..52). U-0800..U-0806.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

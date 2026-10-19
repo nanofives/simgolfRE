@@ -1,0 +1,45 @@
+Phase 3.0 core, notes (2026-10-19, child "P3.0 portsim core")
+
+Scope taken
+- simcore_order.tsv phase3_child 3.0: appendClubName, overlayCharAt, staticInit_gRngZero, swapTableEntry, approxDistance,
+  direction8 (all six).
+- Leaves stage B calls first: sign, directionOf, angleFixed, sinScaled, foldRange, absDiff, cosScaled, bucketValue,
+  decaySum, decaySum2, tileDistance; tile accessors tileType, tileByte, tileFlag20, tileBlocked, typeAtPos, wallHeight,
+  objectAt, inRange; sanitizeFileName; initSinTable (boot, first ExeConstants client).
+- Left to owners: cellAt (scope.tsv backend-gfx, R7-GFX-OBJ), tileQuery449310 / sampleHeight / slopeMix / cornerRange
+  (call cornerHeights, bilinearSample, heightBlend: 3.1a), listEraseRange (heap list, thin), fileExists (KERNEL32).
+
+Method
+- Each function written from its analysis note's Purpose and the disassembly (capstone over original/golf_clean.exe,
+  re-read for every operand width, signedness and argument order: direction8's esi = first argument, angleFixed's
+  ebp = first argument / ebx = -second, objectAt's ebp = x / ebx = y, inRange's dist = second argument, tileDistance's
+  pushes). Matched sources (re/match) and hook sources (shim/src/re) read for cross-checking only; no literal address
+  in port code (test_static.py).
+- appendClubName's 14 string offsets in f_strpool_4c4f98 (0x218..0x288) come from its jump table 0x0040aa44 (each case
+  `mov edi, <pool address>`); the strings stay in the exe / corpus.
+- inRange: the window for types other than 0x15 / 0x16 is hi = lo = type (0x004070ed / 0x004070f1: both registers load
+  the type argument), so v < type && v > type is always false; the match source's comment calls these uninitialised.
+- initSinTable: g_sinTable[i] = __ftol(sin(i * k1) * k0), k0 = 65535.0 and k1 = 0.006159985596078431 (the two doubles of
+  f_k_dbl_4bba48, read through ExeConstants). The CRT sin reproduces all 256 entries of the table in every segment start
+  image (190 images, one distinct table); the dword after the table is 0 in all of them (model_defects#10).
+  Its trailing calls sinScaled(0x40000000, 100) / cosScaled(0xa02d82d8, 100) discard their results; both are pure.
+
+Results (dashboard ~/bin/py -3.12 -m port.test.report, log/p2/p26_report_functions.tsv)
+- 31 functions ported (27 new), 3,108 / 3,108 vectors pass, 29 GREEN, 2 without vectors (own state tests).
+- pytest port/test: all pass (see the final report for the count); C++ unit tests portsim_core_test pass with the exe.
+- Negative controls: 37 RED modes, 4 recorded blind spots (U-0742). Two first-draft modes were equivalent mutants and
+  were replaced: approxDistance's tie form (a == b gives the same value either way) and the objectAt / wallHeight /
+  tileType / decaySum details now listed as blind.
+- Defect switch: sinScaled.readPastTable (model_defects#10). OFF changes only vectors with index (angle & 0x3fffffff) >> 22
+  == 255 (test_defect_sin_past_table).
+
+Findings
+- golf.exe (SafeDisc) has encrypted .data as well as .text: 404 of 155,648 raw .data bytes equal golf_clean.exe's,
+  .rdata differs in 2,465 of 28,672 (IATs first). ExeConstants refuses it (U-0744).
+- decaySum's loop never ends for shift >= 7 with x in [0x40, 2^shift); stock data has shift 3 (U-0740).
+- No new model_defects.md entry: the out-of-range reads of the 3.0 accessors are model_defects section 1 #5 (tile grids)
+  and are reproduced by the address-space model.
+
+Not done here
+- No game, Frida or Ghidra run. No corpus, hooks.csv, CHANGELOG or master edits.
+- U-0723 (pointer-return mapping only on synthetic data) stays open: no 3.0 function returns a pointer (cellAt is gfx).

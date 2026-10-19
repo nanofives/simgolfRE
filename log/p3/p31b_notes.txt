@@ -1,0 +1,80 @@
+Phase 3.1b (stage B): course and hole records, placed objects / animals, names and titles, course table, theme files
+2026-10-19, child 3.1b (claude2). Brief re/model/STAGE_B_BRIEF.md; rows of log/p3/p31_split.tsv with child 3.1b.
+
+FILES
+  port/include/portsim/sim/course.h      declarations + one-line specs
+  port/src/sim/course.cpp                module `course` (23 functions registered; resetRecordBank / placeRecord internal)
+  port/src/sim/modules.inc               + SG_MODULE(course)
+  port/test/test_course.py               negative controls, blind spots, state tests (70 tests)
+  UNCERTAINTIES.md                       U-0820 .. U-0825
+
+SCOPE
+  30 rows. 7 were already ported in 3.0 (sanitizeFileName, distance, directionOf, bucketValue, Random::next, clamp,
+  Random::range: util / text modules, not touched). 23 new, all registered under their hooks.csv names.
+
+PER FUNCTION (vectors run/passed, coverage verdict of re/port/vectors_coverage.tsv, other evidence)
+  freeRecordAtPos      15/15   full            -
+  initRecords           3/3    thin (zero spread)  segments needed; resetRecordBank / placeRecord (backend-gfx rows,
+                                               pure data writes) are internal helpers, covered through these vectors
+  clearMatching        20/20   full            blind spot (b not compared: g_labelQueueB is 0 in every seed) closed by
+                                               test_clear_matching_compares_b
+  staticInit_820f04     none (static init)     state test + static_820f04 == 2 in all 190 segment start images
+  setPendingCourseInfo  none (C2, no hook)     state test (disassembly 0x004321a0: inline strcpy, eax = strlen + 1)
+  clearBuffers          none (C2 held)         state test
+  appendString         14/14   full
+  landmarkName         20/20   partial_branch  segments needed (types 0..18 x long/short: 11 jcc sides open)
+  buildGolferName     150/150  full
+  buildStatusText     704/704  full            U-0820 (512-byte frame copy)
+  appendHoleName        6/6    thin            segments needed
+  appendCourseTitle    24/24   full
+  nearestHole          24/24   full            fpcw 0x027f (distance)
+  holeQuadrants        12/12   one_sided       segments needed; fpcw 0x027f (tileDistance)
+  sceneryLabel          7/7    thin            GREEN only with 3.1a's decorationName registered (terrain_text.cpp);
+                                               checked in a private build with it
+  fileExists            none (excluded: FindFirstFileA)   state test over MemoryGameFiles; U-0821
+  lookupThemeText       none (excluded: CRT file I/O)     7 state tests against an independent Python oracle of the
+                                               spec (CRT text mode, fgets(0xfa), last-char cut, _stricmp, EOF repeat
+                                               cut, Ctrl-Z, 100-line limits); missing file = SG_E_FAULT; U-0822
+  listEraseRange        2/2 (10 emu_error skipped)  thin; both vectors erase an empty range; synthetic-list state test
+                                               covers the unlink path; U-0823 (no heap model)
+  loadThemeFile         none (excluded: file stand-in)    10 synthetic-.chr state tests (5 cases x 2 modes + mode 0);
+                                               portrait decode / tile blits are render backend, left out; U-0824
+  loadThemes            none                   blocked: loadGolferRoster (3.3) and listMatchingFiles (unassigned)
+                                               through the registry; only the MissingResource path is tested; U-0825
+  switchToCourse        none (C2)              blocked on courseActionMenu (ui, 3.7) and 3.1a's callees; flag gate and
+                                               MissingResource tested; switch_to_course_chosen exported for 3.7; U-0825
+  seedCourseTable      24/24   full            fpcw 0x027f (Random::range)
+  buildScenarioIntro    8/8    thin            segments needed; carries a local copy of startMessage (ui straddler,
+                                               3.7) used only while no module registers "startMessage" (3.5 carries
+                                               the same copy)
+  Total: 1,033 / 1,033 vectors pass.
+
+NEGATIVE CONTROLS
+  RED on vectors: 22 modes (test_course.py NEGCTL_RED) + 2 sceneryLabel modes when decorationName is registered.
+  BLIND on vectors (recorded): clearMatching 1, buildScenarioIntro 3 (startMessage priority 0: no message pending in
+  any vector), listEraseRange 1 and 2 (empty-range vectors). The state tests read clearMatching 1 and listEraseRange
+  1 / 2 RED.
+  State-test controls: staticInit_820f04 1, setPendingCourseInfo 1, clearBuffers 1, fileExists 1, lookupThemeText 1/2,
+  loadThemeFile 1/2. loadThemes 1 and switchToCourse 1 exist but cannot be judged until their peers exist.
+  Modes dropped as equivalent on the vectors: clearMatching "b not compared" kept as BLIND; sceneryLabel "decorationName
+  id 0" (equal to -1 on every vector's tile) replaced by "no separator"; buildScenarioIntro "priority 0" kept as BLIND.
+
+PEERS (registry calls by hooks.csv name; MissingResource when absent)
+  sceneryLabel -> decorationName (3.1a, present in terrain_text.cpp; it calls our landmarkName the same way)
+  loadThemes   -> loadGolferRoster (3.3), listMatchingFiles (unassigned)
+  switchToCourse -> courseActionMenu (ui), buildGolferBioText / generateRandomCourse / rebuildHeightfield /
+                    applyCourseType (3.1a); loadInterfaceArt / refreshTerrain only when registered (render backend)
+  buildScenarioIntro -> startMessage when registered (3.7), else the local copy
+
+FINDINGS (original behaviour, reproduced, no switch added)
+  - buildScenarioIntro calls startMessage and sets g_messageTimer = 0x80 for EVERY g_courseType at date 0x20, including
+    types outside 0..3, which build no text (0x0045fdaa `ja 0x4603ca`).
+  - lookupThemeText's separator is a space (f_strpool_4c3f70), not a newline.
+  - setPendingCourseInfo returns strlen + 1 in eax (no caller reads it: saveCourse).
+  - switchToCourse's finance row index is g_year % 100 with idiv (a negative year would index below g_financeYears).
+  - Pointer tables f_ptrtab_* (appendHoleName, buildGolferName) hold original addresses: U-0841 applies to them too.
+
+BUILD NOTE
+  Siblings' uncommitted modules did not compile in the shared tree during the work, so every build and test here ran on
+  a private copy (committed port/ files + course.* [+ 3.1a's terrain_text.cpp for sceneryLabel]) with SG_PORTSIM_DLL.
+  registry.cpp is not recompiled by MSBuild when only modules.inc changes: touch it after editing modules.inc.

@@ -1,0 +1,31 @@
+Phase 3.2 economy and membership (2026-10-19), module `economy` (port/src/sim/economy.cpp, header port/include/portsim/sim/economy.h,
+tests port/test/test_economy.py, uncertainties U-0840..U-0844).
+
+Scope. The 15 rows of re/port/simcore_order.tsv with phase3_child 3.2: five are straddlers (re/port/scope_straddlers.tsv:
+canAfford, membershipReport, addScore, matchUpdate, updateGolfers) and belong to 3.7 by the brief; they were not ported.
+hireEmployee has no vector file and calls modal dialogs, startMessage and playSound (U-0840): not ported.
+Ported (9): computeRatingTrend, appendDate, appendNumber, appendRatingLabel, appendToBuffer45b8b0, clearCost, rateLot,
+updateRollingStats, updateMembership.
+
+Per function (vectors from port/corpus/vectors, coverage verdict from re/port/vectors_coverage.tsv via port.test.report):
+  computeRatingTrend    20/20 GREEN, distinct 13, coverage one_sided. Segments needed for the other branch sides.
+  appendDate            12/12 GREEN, distinct 12, one_sided.
+  appendNumber          20/20 GREEN, distinct 20, full.
+  appendRatingLabel     34/34 GREEN (2 keys), distinct 5, full.
+  appendToBuffer45b8b0  11/11 GREEN, distinct 10, one_sided.
+  clearCost             20/20 GREEN (2 keys), distinct 9, one_sided.
+  rateLot               20/20 GREEN (2 keys), distinct 16, one_sided.
+  updateRollingStats    3/3 GREEN, distinct 3, THIN (3 vectors): own state test for the 0x400 grace; segments for the rest.
+  updateMembership      20/20 GREEN (5 keys), distinct 8, one_sided: own state test for the 999-refusal decline arm.
+No function is covered by segments yet (sg_run_frames returns NOT_IMPLEMENTED until 3.7 / 3.8, segments are LOADED_ONLY).
+
+Negative controls: 14 wrong bodies read RED (test_economy.py NEGCTL_RED); one blind spot recorded (updateRollingStats mode 1,
+no grace: the 3 vectors never sit on the boundary) and covered by test_rolling_stats_free_grace (mode 0 passes, mode 1 fails).
+
+Findings (the port reproduces them, no switch needed because they are not faults the vectors reach):
+  - appendNumber of INT_MIN: -n stays negative, r = n % 1000 = -648, appended as "-" then "-648".
+  - appendToBuffer45b8b0 with no free slot above 0x20 and id == -1 writes slot index -1 (two words below the offset table).
+  - rateLot / updateRollingStats divide by values that can be zero (first_shots + u024 / 2 + 4, d + 8): DivideError as idiv.
+  - hole record 19 (the leaving slot) supplies updateMembership's start tile (record offset 0x26a0 / 0x26a4 in g_holes bytes).
+Overlap: updateMembership calls typeBit7Clear (3.3's row): private non-registered copy in economy.cpp (U-0842).
+Pointer table: appendDate follows f_ptrtab_4c2908 (class pointer): U-0841.

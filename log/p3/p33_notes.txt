@@ -1,0 +1,84 @@
+Phase 3.3 (+ 3.6) golfers, walkers, animals and habitats, notes (2026-10-19, child "SimGolf 3.3/3.6 golfers port")
+
+Scope
+- re/port/simcore_order.tsv rows with phase3_child 3.3 (13) and 3.6 (8): 21 functions. Ported 19 in module `golfers`
+  (port/src/sim/golfers.cpp + golfers_glue.inc, golfers_world.inc, golfers_walkers.inc, golfers_pro.inc;
+  port/include/portsim/sim/golfers.h). Not ported: loadGolferRoster (U-0864), skillPointDialog (U-0865).
+- composeGolferSprite is ported for its simulation effect only (the look-index write-back into the type record); the layers
+  are drawing (U-0861).
+
+Method
+- Written from the analysis notes, the hook sources (shim/src/re/*.cpp, reading reference for per-instruction semantics)
+  and the vector corpus; every original address in a hook was mapped to a GameState member + field with
+  port/include/gamestate_meta.inc (no literal in port code). Unbounded indices go through Ptr arithmetic (spawnWalker's
+  free-slot search, model_defects#11; golfer index -1 reads; placeHabitat's slot -1 link write).
+- Peers are called through the registry by their hooks.csv names (MissingResource when absent): updateMembership (3.2),
+  holeQuadrants / loadThemeFile (3.1b), pathStep / freeAtTile / cornerHeights / heightBlend / clearObjectFootprint (3.1a),
+  thoughtFlag / emitGolferThought (3.5). C++ calls only into the committed core (util, tiles).
+- The view / sim bridge (parent's decision after the first report): module `bridge` (port/src/sim/bridge.cpp,
+  portsim/sim/bridge.h, port/test/test_bridge.py) registers worldToScreen, playSoundAt (simulation part), queueMessage and
+  pointsPopup under their hooks.csv names; golfers calls them directly (the earlier local copies in golfers_glue.inc are gone),
+  3.4 / 3.5 by name. golfers.h includes bridge.h so shots.cpp, which already used world_to_screen through golfers.h, builds
+  unchanged. playSound (audio), cellAt and enqueueSprite have no simulation effect and are dropped without a registered backend.
+  playSoundAt draws g_rng only when worldToScreen puts the point on screen: the sim RNG depends on the camera (U-0860).
+- updateWalkers was verified before 3.1a registered pathStep with a scratch transcription of pathStep in a private build
+  (scratchpad only, never committed): pathStep 281/281, updateWalkers 92/92. With 3.1a's pathStep: 92/92.
+- A private build (scratchpad copy of port/ with only compiling modules, SG_PORTSIM_DLL) was used while siblings' files were
+  mid-edit; the final runs are on the tree build.
+
+Results per function (vectors: run / passed, distinct, corpus verdict; segments: scenarios whose census or scenario CSV shows
+the function entered, with the accepted segment count of each scenario; segments run LOADED_ONLY until 3.7 / 3.8)
+| function | vectors | coverage | segments (reach) | state tests | negctl |
+| appendPairTrackPoint | 10/10, 10 | one_sided (+0x8a taken) | 7 scenarios (championship 3, course_season 10, golfer_events 5, golfer_stories 3, mood5 / stories / stories9 1) | count cap at 31 | 1 RED, 2 BLIND -> state test |
+| addGolferPair | 8/8, 8 (< 10) | thin | same 7 scenarios | full table, stale count | 1 RED, 2 BLIND -> state test |
+| resetGolfer | 16/16, 2 | full | championship, course_season, golfer_events, stories_fixture | hole cleared | 2 RED, 1 BLIND -> state test |
+| golferAge | 16/16, 16 | full | course_season, golfer_events | - | RED |
+| typeBit7Clear | 16/16, 2 | full | 8 scenarios | - | RED |
+| appendEndearment | 32/32, 4 | one_sided (the `ja` 0x0046756c cannot be taken) | not measured | - | RED |
+| appendWalkerName | 16/16, 12 | full | not measured | - | 2 RED |
+| spawnObject | 28/28, 13 | full | not measured | NoReturn with no free cell | 2 RED |
+| spawnWalker | 24/24, 24 | full | course_season, golfer_events, golfer_stories, sandbox_basic | unbounded search | 2 RED |
+| addHabitatSlot | 40/40, 31 | full | golfer_stories | - | 2 RED |
+| placeAnimal | none of its own (excluded: stood-in callees) | none | not entered in the census scenarios (no animals) | on-screen arm, walk step, frame count 0 #DE | 2 RED via tickAnimals, 1 BLIND -> state test |
+| tickAnimals | 6/6, 5 (< 10) | thin | 8 scenarios | via placeAnimal tests | RED |
+| placeHabitat | 13/13, 10 | partial_branch (every vector leaves at the 1-in-8 roll) | course_season, golfer_events, golfer_stories | success path over seeds | RED |
+| updateWalkers | 92/92, 92 | partial_branch | 8 scenarios | sale arm | 2 RED, 1 BLIND -> state test |
+| initGolferState | 14/14, 9 | full | not measured | - | RED |
+| addGolferToTable | 34/34, 16 | one_sided | not measured | full ball table | 2 RED |
+| loadGolfPro | 2/2, 2 (< 10) | thin | championship 3 | difficulty 4 #DE, no pro NoReturn | RED |
+| resetGolferState | none (no .vec) | none | not measured | par from length (9 cases), backup restore | state test RED |
+| composeGolferSprite | none (excluded) | none | 8 scenarios | write-back | state test RED |
+"not measured": re/coverage/*.tsv (5 census scenarios) and log/diff/*.scenario.csv do not list the function; the cov_* scenarios
+have no per-function reach table.
+
+Totals: 19 ported of 21; 367 vectors run, 367 passed in 16 functions with vectors (tree build); test_golfers.py 60 tests.
+
+Defects reproduced (model_defects.md section 5, entries 40..45, no compatibility switch: each is a fault or a loop the
+original can never leave, reported as SG_E_DIVIDE / SG_E_NO_RETURN like decaySum in 3.0, or a dead computation):
+- 40 placeHabitat's cluster loop never advances its slot (runs until slot + 1 is taken; NoReturn when it cannot be).
+- 41 spawnObject claims the record before its cell search, which never ends with no free cell (NoReturn).
+- 42 loadGolfPro divides by 4 - difficulty and by (5 * level + 20) * 2; no filled pro record: NoReturn.
+- 43 placeAnimal's idiv by the frame count.
+- 44 resetGolferState works on one hole record, thresholds twice.
+- 45 addGolferToTable's discarded distance comparison: only the RNG draws survive.
+Also reproduced: model_defects#8 (placeHabitat reads the byte after slot 127), #11 (spawnWalker unbounded), #16 (updateWalkers
+reads one byte of cols[400]), updateWalkers' x subtracted in the y expression (CLAUDE.md simulation plan).
+
+Overlaps and notes for other children
+- economy.cpp keeps a private type_bit7_clear (U-0842): golfers.h now exports type_bit7_clear.
+- events_calls.inc drops playSoundAt when it is not registered, which skips its RNG draw for on-screen points (U-0860).
+- holeQuadrants' writes are invisible to addGolferToTable's vectors (a wrong body that skipped the call read GREEN).
+
+Bridge (module `bridge`), judged by replaying the C3 path-1 runs (no corpus vectors exist for these four): the test rebuilds
+each fixture in a zero GameState from the fixture scripts, calls the port and compares the return and diff_hook's FNV-1a state
+hash (hex of each compared region joined by '|'):
+| function | rows | exact | not reproducible | negctl |
+| worldToScreen | 112 (8 keys: rotations 0/1/2/4/6, widths 0x400/0x500, doubling) | 103 | 9 on TTA_LEVEL_MIN tiles (cornerRange / heightBlend over live terrain grids, U-0867) | 3 modes RED |
+| playSoundAt | 27 | 27 (through the test-only entry bridge.playSoundAtScripted; the call log incl. volume / pan / pitch rebuilt) | 0 | 3 modes RED |
+| queueMessage | 16 (2 keys) | 16 | 0 | 2 modes RED |
+| pointsPopup | 72 (3 keys) | 72 | 0 | 2 modes RED |
+The worldToScreen adapter first read *sx / *sy and wrote them back only for rotations 0/2/4/6; the r1 replay showed the height
+arm and the doubling still update them for rotation 1, so the adapter now always writes them back (an untouched cell keeps its
+own value). Plus test_play_sound_at_draws_the_rng_only_on_screen (camera on / off the point).
+
+Uncertainties filed: U-0860..U-0867.

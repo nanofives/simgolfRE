@@ -1,0 +1,82 @@
+Phase 3.5 notes (2026-10-19): events, news and golfer stories. Module `events` (port/src/sim/events.cpp + events_*.inc,
+port/include/portsim/sim/events.h), tests port/test/test_events.py, live oracle port/test/liveraw.py, converter
+log/p3/p35_hook2port.py, uncertainties U-0900..U-0906, defects model_defects.md 46-49.
+
+1. Scope. Rows of re/port/simcore_order.tsv with phase3_child 3.5 (21): 20 ported. angleFixed 0x004672d0 was ported by 3.0 (util)
+   and is not repeated. loadGolfPro / loadGolferRoster are 3.3's (loadGolferRoster is not ported, U-0864). Ported: appendUpgradeText,
+   replaceInText, thoughtBalance, thoughtFlag, appendOpinion, postEvent, runBulletinBoardWithSound, loadStoryStrings,
+   computeStoryReply, storyText, substituteStoryNames, advanceStory, emitGolferThought, buildGolferComment, announceLandmark (hooks.csv name; corpus key
+   LandmarkAvailableNotice), patronEvent, holeMagazineEvent, announceHoleType, announceBuilding, pairGolfersWithStory (corpus
+   key announceVipGolfer). 20 functions in the module.
+
+2. Method. The short functions were written from the notes. The long ones (emitGolferThought 7.7 KB, buildGolferComment 11 KB,
+   patronEvent, holeMagazineEvent, announceBuilding, pairGolfersWithStory, announceLandmark, announceHoleType) were converted
+   from the hook sources (C3 reimplementations, A/B-tested against the original) by log/p3/p35_hook2port.py: comments (which cite
+   original addresses) are dropped, every literal in the exe data range becomes GS(member) + offset through re/model/addresses.tsv
+   (top-level objects only), G<T>(addr) becomes a typed reference into the address space (events_hook.h: Ref<T>, faults on a miss),
+   then post-processing (strcat / strcpy -> the VC6 idioms of ptr.h, kItoa -> the CRT's __itoa, kRange -> Random::range on g_rng)
+   and manual edits (native pointers -> virtual addresses, stack slots -> vectors, static tables made per call). Hex flag masks that
+   fall in the refused address range (0x800000) were rewritten as shifts; test_static refuses address literals in comments too.
+   The converter's only trap: a flag mask between 0x400000 and 0x8fffff reads as an address.
+
+3. Callees of other children / phases (registry names, called through ev::call_peer): typeBit7Clear, buildGolferName,
+   buildStatusText, decorationName, holeQuadrants, appendEndearment, appendHoleName, appendNumber, landmarkName, golferAge (all
+   registered by 3.1 / 3.3 when this was written). Straddlers of phase 3.7 and the audio backend: startMessage, appendCents,
+   logTick (local copies of the hook bodies when not registered, U-0903), playSound / playSoundAt (dropped when not registered,
+   U-0904), showBulletinBoard / startSoundSlot (backend_call, U-0905). Random::range, clamp, angleFixed, tileBlocked, appendClubName
+   are called as C++ (util / tiles / text headers).
+
+4. Evidence per function (vectors = port/corpus/vectors/<f>.vec run by test_vectors.py; live = raw captures through liveraw.py
+   with every callee real unless noted; unit = test_events.py). Vector coverage verdicts are re/port/vectors_coverage.tsv's.
+   function                    vectors (passed/ok)   coverage        live (passed/vectors)   unit
+   appendUpgradeText           10/10                 full            -                       -
+   replaceInText               6/6 (1 distinct)      thin            -                       6 cases
+   thoughtBalance / thoughtFlag 32/32 each           full            -                       -
+   appendOpinion               60/60                 full            -                       all ratings 0x7f / 0x80 / negative
+   postEvent                   32/32                 full            -                       -
+   runBulletinBoardWithSound   none                  -               none (C2)               state effects only (U-0905)
+   loadStoryStrings            none (CRT locks)      -               47/47                   synthetic file: cap, header count, cache, missing file
+   computeStoryReply           none                  -               124/124 (2 keys)        -
+   storyText                   4/4                   thin            19/19                   -
+   substituteStoryNames        90/90 (5 keys)        full            -                       -
+   advanceStory                14/14                 partial_branch  68/69 (1 vector reads live heap the capture did not keep)  -
+   emitGolferThought           36/36                 partial_branch  136/152 (U-0906)        -
+   buildGolferComment          1,002/1,002           partial_branch  -                       -
+   announceLandmark            44/44                 full            44/44                   -
+   patronEvent                 84/84                 partial_branch  126/126                 -
+   holeMagazineEvent           2/2                   thin            5/5                     -
+   announceHoleType            126/126               full            -                       -
+   announceBuilding            1/1                   thin            22/22                   par threshold
+   pairGolfersWithStory        none                  -               284/301 (U-0906)        -
+   Both backends (x64, Win32) read the 16 vector functions identically (test_win32.py).
+
+5. Negative controls (events.cpp / events_*.inc header comments list the modes; test_events.py NEGCTL / NEGCTL_BLIND): 29 modes
+   read RED (13 under the vector corpus, 10 under the live captures, 6 under unit tests). Blind (recorded, a reason each): advanceStory 1 (the audio call has no state effect),
+   announceLandmark 2 (the retry path), holeMagazineEvent 1 (a delta of exactly 0x31), pairGolfersWithStory 2 (a roll of exactly
+   7). holeMagazineEvent and announceBuilding stay thin: 2 + 5 and 1 + 22 vectors.
+
+6. Raw-capture oracle (port/test/liveraw.py). The vector corpus drops what the Unicorn emulation could not reproduce (the CRT's
+   locked stdio under loadStoryStrings, stood-in callees). The raw captures hold every live vector with the live return value and
+   byte changes. LiveRunner starts the port from the captured data image (the fixture's drift applied cumulatively), maps the
+   captured blocks at their live addresses, attaches the user's install as GameFiles and compares the return value, every byte the
+   port changed and every sim / hidden byte the live run changed. Pointer, audio and gap objects are never compared. Keys named
+   `+unstub` revert the stand-ins of SELECTED callees only: startMessage, appendCents, playSound(At) stay stood in (scripted
+   returns), so a comparison of a function that reaches them leaves the objects they would have written out (ignore list) and
+   cannot judge a vector whose control flow follows the scripted return (U-0906). The story file the live captures read is the
+   user's own: 47 + 124 + 19 + 68 live vectors read it through GameFiles and match.
+   Pitfalls: raw `args` pointers are live heap addresses (blocks mapped at their live bases); a read of live heap memory the
+   capture did not keep faults here (advanceStory vector 69, story id 291 out of range); blockDiff indexes the filtered block list.
+
+7. Shared files touched: port/test/vectors.py (one line: the user's `original/` install is attached as GameFiles for every
+   vector run, so functions that read story files get them), port/src/sim/modules.inc (SG_MODULE(events)), CLAUDE.md,
+   UNCERTAINTIES.md, re/analysis/data/model_defects.md (append-only). test_static.py was not changed: the module is one .cpp
+   plus .inc parts (a second .cpp would fail test_every_module_file_is_listed).
+
+8. Environment: six children build into the shared port/build/x64 and lock the DLL against each other (LNK1104) and a sibling's
+   half-edited file breaks the build for everyone; this module was built and tested from a private build directory
+   (cmake -S port -B port/build/p35, SG_PORTSIM_DLL pointing at it).
+
+9. Findings (defects of the original, details in model_defects.md 46-49): replaceInText's 512-byte stack buffer;
+   loadStoryStrings' uninitialised saved line and entry overflow; buildGolferComment's 0x40-byte slots; computeStoryReply clamps
+   mood between the story counter and 99; postEvent's unchecked id; patronEvent's unreachable fourth block; emitGolferThought
+   writes the tip date only when startMessage accepts (a refused tip repeats on the next call).

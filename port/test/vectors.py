@@ -279,6 +279,8 @@ class VectorRunner:
         info = self.funcs[fn]
         with self.lib.state() as st:
             st.set_data_base(VL.DATA_VA)
+            if (ROOT / "original").is_dir():          # phase 3.5: functions that read the user's story files get them
+                st.files_root(ROOT / "original")
             for key in doc["keys"]:
                 sizes = [b["size"] for b in key["blocks"]]
                 bases = block_bases(sizes)

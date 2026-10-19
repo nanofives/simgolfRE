@@ -1,0 +1,182 @@
+Phase 3.1a (stage B child 3.1a, 2026-10-19): tile grids, cell tables, heightfield, coverage rebuilds, terrain edit queue,
+generateRandomCourse, the Terrain.dll boundary. Brief re/model/STAGE_B_BRIEF.md; rows log/p3/p31_split.tsv (child 3.1a).
+
+1. Scope
+- 60 rows. 8 were already ported by phase 3.0 (tileBlocked, objectAt, tileType, tileByte, wallHeight, tileFlag20, typeAtPos,
+  tileDistance: modules tiles / util, untouched). mainLoop (level 10) is not ported: re/PHASE23_PLAN.md 8.5 makes it the
+  integrator's (3.8) job, oracle = segments. The other 51 are ported (section 3).
+- Also ported, because rebuildTileData calls them and no stage-B child owns them (backend-gfx rows in re/port/scope.tsv):
+  applyTileVariation 0x00449f00, applyTileWalls 0x0044a380 (terrain_dll.cpp).
+
+2. Files
+- port/include/portsim/sim/terrain.h            declarations of every terrain function (other children call them: golfers
+                                                 uses height_blend, pathStep via the registry; bridge calls cornerHeights)
+- port/include/portsim/sim/terrain_api.h        TerrainApi, the Terrain.dll boundary (section 4)
+- port/include/portsim/sim/terrain_gen.h        generateRandomCourse (written by a helper agent, section 6)
+- port/src/sim/terrain.cpp          module terrain: grids, heightfield, coverage, shade, noise, scanTileLine (38 functions)
+- port/src/sim/terrain_text.cpp     module terrain_text: decorationName, buildToolLabel
+- port/src/sim/terrain_path.cpp     module terrain_path: pathStep
+- port/src/sim/terrain_setup.cpp    module terrain_setup: buildGolferBioText, customizeCharacter
+- port/src/sim/terrain_course.cpp   module terrain_course: stampCourseTiles, clearObjectFootprint, stepCourseEditQueue,
+                                     demolishObject, buildTournamentPrep
+- port/src/sim/terrain_dll.cpp      module terrain_dll: the 7 Terrain.dll callers + applyTileVariation / applyTileWalls
+- port/src/sim/terrain_fake.cpp     module terrain_fake: TEST-ONLY recording Terrain (terrainFake::install / remove)
+- port/src/sim/terrain_gen.cpp      module terrain_gen: generateRandomCourse
+- port/test/test_terrain.py, port/test/test_terrain_gen.py
+- port/src/sim/modules.inc: lines terrain, terrain_text, terrain_path, terrain_setup, terrain_course, terrain_dll,
+  terrain_fake, terrain_gen (appended).
+
+3. Verification
+- Vectors: 6,646 / 6,646 GREEN over the 3.1a list as registered (5,595 for the 53 newly ported functions; per function in
+  section 8). Registry interfaces match the corpus (several no-argument functions have one corpus slot: rebuildTileCoverage,
+  buildGolferBioText, stepCourseEditQueue; demolishObject has 3; applyTileWalls returns uint8).
+- Emulator oracle (opt-in, `SG_EMU_ORACLE=1`, port/test/test_terrain.py): the ORIGINAL function runs in Unicorn over
+  re/tools/vector_emu.py's file image with a random GameState image (the exe's initialised .data, random grids, golfer,
+  course, hole and object records); the whole image and eax are compared with the port. Three tables:
+  ORACLE (24 grid / heightfield / label functions, vector_emu.run_call), TERRAIN_DLL (the 9 Terrain.dll callers, a recording
+  fake behind both sides, section 4) and SIM_ORACLE (stampCourseTiles, clearObjectFootprint, stepCourseEditQueue,
+  demolishObject, buildTournamentPrep with the popup skipped, buildGolferBioText), plus customizeCharacter (withPro 0) and
+  test_terrain_gen.py's generateRandomCourse. Every case equals the original (or both fault / both spin). In the original's
+  run the callees are the original ones, in the port the ported ones (3.1b / 3.2 / 3.3 modules), so these runs also cross-check
+  clearBuffers, initRecords, resetGolfer, updateMembership, rateLot, freeRecordAtPos, placeHabitat, spawnWalker, pointsPopup.
+- Default runs never run original code: GOLDEN pins SHA-256 digests (24 hex chars) of the emulated original's results for the
+  first 6 (applyTileVariation: 40) scenarios of 18 functions (the no-vector / thin ones and every Terrain.dll caller); the
+  port must reproduce them, and every negative control in GOLDEN_NEGCTL must change them. Regenerate with
+  `SG_EMU_ORACLE=update pytest port/test/test_terrain.py -k golden -s` after the oracle is GREEN.
+- Final runs (2026-10-19): opt-in oracle 251 passed + the replaced control's re-run; default `pytest port/test` on the shared
+  build 1,045 passed, 0 failed, 276 skipped (siblings' modules included); repo `-m static` 600 passed.
+- Negative controls: 29 vector modes RED, 4 vector blind spots (canStep 2, findNearestTargetTile 2, sampleHeight 2,
+  rebuildTileCoverage 2) RED in the oracle; 9 Terrain.dll caller modes and 8 footprint / setup modes RED in the oracle and
+  (Terrain.dll callers, no-vector functions) against the pinned digests; customizeCharacter 1 and generateRandomCourse 1..3 RED.
+  Two first choices were useless and replaced: applyCourseType "type 7 also collar 4" (type 7's walk byte in the exe's table
+  makes it unobservable) and the first rebuildTileCoverage / canStep / sampleHeight / findNearestTargetTile modes (vector-blind,
+  kept as mode 2); stepCourseEditQueue's "no mode-2 golfer pair" (needs g_date % 6 == 0 with a queued mode 2: the scenarios
+  drew none) became "camera glide steps by two".
+- Harness pitfalls met: scenario coordinates whose x + y is always even never made the fake's hasConnectedPath true; random
+  corner levels 0..255 made the original elevate a corner hundreds of times per tile; a 16 MB ctypes log copied per record
+  (bytes(log) inside a comprehension) cost 286 s per case. Builds: siblings' half-written module files broke the shared glob
+  build, so 3.1a built a private mirror of port/ (port/build/m31a, only the finished modules + terrain*.cpp; gitignored).
+
+4. The Terrain.dll boundary (U-0607)
+- Every exe function that calls Terrain.dll was checked for what it writes outside Terrain.dll: engine-class
+  g_terrain820f28 / g_terrain820f2a / g_terrain820f30, pointer-class gTileBuffer / g_terrainListCursor, and in
+  updateTerrainRender the sim-class camera memory g_terrainInitPending / g_terrainLastCamX / Y / g_terrainLastZoom (from its
+  arguments) plus g_tileWallMask[0] bit 1 (set after rebuildTileData, cleared by rebuildHeightfield's tail). No sim-class
+  write depends on a value Terrain.dll returns: Terrain.dll's state feeds rendering only.
+- So the port models Terrain.dll as an interface, portsim::TerrainApi (terrain_api.h): the 20 imported methods the sim
+  functions call plus the engine services the same functions reach (input pump, window paint, the two blits,
+  renderTerrainStrip, the display surface DC, GetVersionExA's major version, operator new for the render list's nodes).
+  Every method returns the original's eax. The Terrain object stays in the 32-bit address space (gTerrain holds its
+  address); the exe-side code reads its fields like the exe (width +0x14, height +0x18, tiles +0x3a4 of 0x248 bytes,
+  tile type +0x24, corner heights +4 + 8k, walls +0x234 + side) and passes Tile pointers as addresses. A renderer
+  backend (phase 4) implements TerrainApi; set_terrain_api(ctx, api) attaches it (side table in terrain_dll.cpp, no
+  shared-header change); without one the functions throw MissingResource.
+- Tests: terrain_fake.cpp is a recording fake behind TerrainApi (calls logged as 8-dword records in a mapped block, every
+  eax a pure function of the arguments, corner heights move by one per elevate / lower, setType / layPath / setWall keep
+  fields). test_terrain.py's PyFakeTerrain mirrors it and serves the ORIGINAL code in Unicorn at the Terrain.dll import
+  traps and at the engine functions' entries (pumpInput483bd0, Window::paint, Surface_blitThunk, renderTerrainStrip,
+  operator new / delete, playSound, the surface vtable slot +0x28, GetVersionExA). A scenario compares eax, the call log,
+  the GameState, the Terrain object and the heap block.
+
+5. Design decisions (each also an uncertainty row)
+- pathStep's debug overlay (g_flags bit 0x1000): its g_textBuffer / g_textBuf writes are kept, the drawing and the
+  pumpAndRedraw(0) wait for a click are dropped (U-0802; the same rule as 3.4's U-0881).
+- showPopup (a ui modal, phase 3.7) answers demolishObject's confirmation and buildTournamentPrep's par changes: it is
+  called through the registry and is a MissingResource while nothing registers it (U-0803).
+- customizeCharacter: showCharacterIntro (ui) and playSound (audio) are called only when registered (U-0804).
+- initTerrain's GetVersionExA major version comes from TerrainApi::os_major_version (U-0805).
+- rebuildTileData pushes render-list nodes; the node memory comes from TerrainApi::operator_new, the erase in
+  updateTerrainRender only unlinks (no heap model, U-0823).
+- rebuildHeightfield's relax / raise pass loops until a sweep changes nothing; the port throws NoReturn when a level grid
+  repeats with changes (the original would spin forever there).
+- buildGolferBioText's arrival pick loop throws NoReturn when no type 0..75 can satisfy the pick (residue, membership
+  byte, class): the original spins forever.
+- Callees owned by other children are called through the registry by their hooks.csv names (landmarkName, clearBuffers,
+  initRecords, loadThemeFile, freeRecordAtPos: 3.1b; resetGolfer, placeHabitat, spawnWalker: 3.3; updateMembership,
+  rateLot: 3.2; pointsPopup: 3.3's bridge when registered, else a local copy of its body, as golfers_glue.inc does).
+
+6. generateRandomCourse (0x00470a60, terrain_gen.cpp, written by a local helper agent from the c3ed hook + disassembly)
+- Sections A..M; the course record fields read are location_id (c0), acres, relief (c2), setting, course_type, year_bought;
+  hole 19's tee slots hold the clubhouse position; spawnWalker (3.3) through the registry, the rest direct calls.
+- Oracle (test_terrain_gen.py, own Unicorn runner, 500 M instruction budget): 97 random cases (c0 0..16, settings 0..2,
+  course types 0..3 plus the 4 / 5 bodies, difficulty 0..3, flag 0x01000000, rng / year / relief): 96 byte-equal, 1 both
+  spin (#79: c0 == 1 on an island desert course has no type-0x11 tile, so its search never ends; the port throws NoReturn).
+  Dense random 0x8080 / 0x400 flags or g_objectTypeLevel up to 119 make the original spin too (every clubhouse spot fails /
+  a kind-9 building covers the map): the scenarios use sparse flags and levels 0..3.
+- Unbounded random-cell searches (clubhouse, c0 4 / 1 / 5-group / 0-10, sections I and L): after 65,536 consecutive misses the
+  port checks every cell the RNG can produce and throws NoReturn only when none qualifies (state does not change while the loop
+  misses, so that is a proof); otherwise it keeps looping.
+- The uninitialised base type (course type 4 / > 4): MissingResource at the first read (U-0801, model_defects#52).
+- Default tests on a fixed image (settings 0..2): eax = final g_flags, course index / type / year writes, relief, clubhouse
+  record and camera, the posted walker, every border-sweep cell, g_tileTypeSaved, determinism, NoReturn on an all-0x8000 image.
+- Controls: camera y = column - 3, the setting != 2 border sweep skipping the far column, corner levels filled 50 x 50: RED in
+  the default tests and in the oracle.
+
+7. Uncertainties filed (UNCERTAINTIES.md): U-0800 TerrainApi boundary, U-0801 generateRandomCourse's uninitialised base type,
+   U-0802 pathStep's debug overlay, U-0803 showPopup answers, U-0804 customizeCharacter's intro / sound / pro file, U-0805
+   initTerrain's OS version byte, U-0806 rebuildHeightfield's endless relax / raise pass. model_defects.md rows 50..52.
+
+8. Per-function coverage (vectors run/passed, coverage verdict; oracle = emulator oracle + pinned digests; segments = needed
+   by re/PHASE23_PLAN.md 8.6 where the verdict is not full)
+   freeAtTile                    21/21  one_sided       vectors + oracle; segments
+   raiseCornerLevelsAround  no vectors  -               oracle; segments
+   lowerCornerLevelsAround  no vectors  -               oracle; segments
+   pushTripleEntry               50/50  full            vectors
+   setGrids                      90/90  full            vectors
+   tileBlocked                 391/391  full            vectors 3.0 (unchanged)
+   objectAt                      90/90  one_sided       vectors; segments 3.0 (unchanged)
+   floodMark                     18/18  full            vectors
+   tileType                      72/72  full            vectors 3.0 (unchanged)
+   tileByte                    110/110  full            vectors 3.0 (unchanged)
+   wallHeight                  200/200  full            vectors 3.0 (unchanged)
+   tileFlag20                  110/110  full            vectors 3.0 (unchanged)
+   applyCourseType          no vectors  none            oracle; segments
+   bilinearSample              256/256  full            vectors
+   clearTile                     72/72  full            vectors
+   canStep                     128/128  full            vectors + oracle
+   decorationName              294/294  one_sided       vectors + oracle; segments
+   buildToolLabel                32/32  one_sided       vectors + oracle; segments
+   typeAtPos                     53/53  full            vectors 3.0 (unchanged)
+   tileDistance                  25/25  full            vectors 3.0 (unchanged)
+   evalPlacementArea           360/360  one_sided       vectors + oracle; segments
+   nearestPlaced                 63/63  full            vectors + oracle
+   findNearestTargetTile         10/10  one_sided       vectors + oracle; segments
+   sampleHeight                108/108  full            vectors + oracle
+   propagateType11          no vectors  -               oracle; segments
+   rebuildTileCoverage           37/37  one_sided       vectors + oracle; segments
+   relaxTile42f630               30/30  full            vectors
+   raiseFromNeighbours         126/126  one_sided       vectors; segments
+   togglePath               no vectors  none            oracle; segments
+   spreadShade                   40/40  full            vectors + oracle
+   heightBlend                 432/432  partial_branch  vectors + oracle; segments
+   rateTile                    320/320  full            vectors + oracle
+   pathStep                    281/281  partial_branch  vectors + oracle; segments
+   markTileKind11                  8/8  thin            vectors + oracle; segments
+   buildGolferBioText              9/9  thin            vectors + oracle; segments
+   spreadAllShade                  7/7  thin            vectors + oracle; segments
+   genNoise                      12/12  full            vectors
+   customizeCharacter       no vectors  none            oracle; segments
+   scanTileLine                388/388  one_sided       vectors + oracle; segments
+   cornerRange                 110/110  full            vectors
+   cornerHeights                 15/15  one_sided       vectors + oracle; segments
+   slopeY                      330/330  one_sided       vectors + oracle; segments
+   slopeX                      330/330  one_sided       vectors + oracle; segments
+   relaxEdges42f530              63/63  full            vectors
+   heightAt42fa30              330/330  partial_branch  vectors + oracle; segments
+   tileQuery449310             225/225  full            vectors
+   slopeMix                    880/880  full            vectors
+   rebuildHeightfield              4/4  thin            vectors + oracle; segments
+   rebuildTerrainGrid       no vectors  none            oracle; segments
+   applyTileElevation              2/2  thin            vectors + oracle; segments
+   stampCourseTiles              63/63  one_sided       vectors + oracle; segments
+   clearObjectFootprint          14/14  one_sided       vectors + oracle; segments
+   initTerrain              no vectors  none            oracle; segments
+   rebuildTileData                 6/6  thin            vectors + oracle; segments
+   stepCourseEditQueue           12/12  partial_branch  vectors + oracle; segments
+   demolishObject                14/14  partial_branch  vectors + oracle; segments
+   updateTerrainRender      no vectors  none            oracle; segments
+   buildTournamentPrep      no vectors  none            oracle; segments
+   generateRandomCourse     no vectors  none            oracle; segments
+   mainLoop                 not ported (3.8 integrator; oracle = segments)
+   applyTileVariation       no vectors  none            oracle; segments
+   applyTileWalls                  5/5  thin            vectors + oracle; segments

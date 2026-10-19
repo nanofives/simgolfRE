@@ -1,0 +1,68 @@
+Phase 3.4 shots, notes (2026-10-19, child 3.4 of stage B)
+
+1. Scope
+- re/port/simcore_order.tsv phase3_child 3.4 (13 rows). Already ported by 3.0 (port/src/sim/util.cpp), not touched:
+  decaySum, decaySum2, sign, sinScaled, foldRange, absDiff. New in port/src/sim/shots.cpp (module `shots`, header
+  port/include/portsim/sim/shots.h): shotPower, wobble, trialShot, chooseShotTarget (= the note's simulateBallFlight),
+  prepareShot (= simulateShot), scanShotArea, narrateShot. 7 of 7 remaining functions ported.
+- Overlap: trialShot, chooseShotTarget, prepareShot and narrateShot are also in re/port/scope_straddlers.tsv (phase 3.7).
+  The parent assigned them by name, so they are here; for the first three the only UI parts are the debug overlay and the
+  message pumps (U-0881). narrateShot is a real straddler: its drawing / sound / modal wait are dropped (U-0883).
+- Callees owned by other children are called through the registry by hooks.csv name (shots.cpp `Foreign`), nothing is
+  stubbed: 3.1a heightAt42fa30, slopeMix, heightBlend, rateTile, scanTileLine; 3.1b holeQuadrants, buildGolferName,
+  appendHoleName; 3.3 appendPairTrackPoint, typeBit7Clear and world_to_screen (module bridge, C++ call through bridge.h: out-pointers);
+  3.5 thoughtFlag, emitGolferThought, postEvent; startMessage (a 3.7 straddler, not registered: narrateShot uses a local
+  copy of its body until it is, the pattern of 3.3 / 3.5).
+
+2. Method and x87
+- Bodies transcribed from the C3 hooks (shim/src/re/c3ea.cpp trialShot / simulateBallFlight / simulateShot, c3a.cpp
+  shotPower, c3dr.cpp wobble, c3dy.cpp scanShotArea, c3fr.cpp narrateShot), each of which cites its instructions, and the
+  analysis notes; data addresses mapped to GameState members (golfer record offsets per golfer_record.md: hole n's target
+  tile = g_holes + 0x18 + n * 0x208, type attribute byte k = g_tileTypeAttrs + 0x20 + 0x30 t + k, trialShot's record
+  copy = golfer 155, narrateShot's snapshots = golfers 152 / 153). Strings by (pool member, offset) per CORE.md 6.
+- The cycle's own x87 code is `fild; fsqrt; __ftol` (prepareShot 0x00424289, 0x00424519; chooseShotTarget 0x0042317b,
+  0x004233e1). sqrt_ftol runs it as inline x87 on Win32 (chop set for the fistp like __ftol) and as SSE2 on x64. For an
+  int32 argument the truncated root does not depend on the rounding control at 53- or 64-bit precision: for n^2 - 1 <
+  2^31, sqrt(n^2 - 1) is below n by about 1 / (2n), far more than one ulp of n, and an exact root is exact in every mode.
+  At 24-bit precision (precision control 00) that gap is below one ulp for n > 2896, so a root of n^2 - 1 can round up
+  to n there; no vector has such a distance (all GREEN at 0x007f too) and the game never sets that word.
+  Measured: trialShot, prepareShot and chooseShotTarget vectors give the same verdicts at 0x027f, 0x037f, 0x0f7f,
+  0x0b7f and 0x007f on the Win32 backend (test_square_root_is_control_word_invariant runs the first four); a body that converts under the
+  current rounding instead of chop (prepareShot negctl 3) reads RED on 54 vectors on both backends. Random::range and
+  distance are util's (C++ doubles; exact at 0x027f, the vectors' word).
+- Uninitialised stack slots start at 0 (U-0880); prepareShot's counts[] / dirs[] / 2500-byte array are one frame array
+  indexed like the original's, a negative tile type throws FrameOverrun (U-0882).
+- Build note: the shared build was broken for long stretches by other children's work in progress; 3.4 tested in a
+  private copy of port/ (scratchpad) with only compiling modules. MSBuild does not rebuild registry.cpp when
+  src/sim/modules.inc changes (registry.obj stayed stale in the copy: newly listed modules were missing from the
+  registry); touch registry.cpp after editing modules.inc.
+- Until 3.1a registered its five functions, a scratch-only transcription of them (never committed) let the cycle be
+  debugged: trialShot 228/228, chooseShotTarget 12/12, prepareShot 304/307 with it; the same counts with 3.1a's real
+  functions once they compiled.
+
+3. Defects (re/analysis/data/model_defects.md, switches in shots.cpp, default 1 = the original)
+- shotPower.cacheIgnoresPutt (#18): OFF = putt calls bypass the cache; OFF changes exactly the 32 shotPower vectors with
+  putt != 0 (test_defect_shot_power_putt).
+- chooseShotTarget.strictFlagSticky (#37, new): [F+0xb4] is never initialised or cleared, so after one qualifying landing
+  every later strict scan of the search runs with 1. No vector sees it (test_defects_the_vectors_cannot_see).
+- prepareShot.hazardCellTransposed (#38, new): the hazard probe passes y * 50 + x to the thoughts. OFF changes 2
+  real-shot vectors (simulateShot_mode+unstub), all with x == -1 (test_defect_hazard_cell_transposed); before 3.1a's real
+  terrain callees were registered no vector reached it.
+- narrateShot.maskNotRestored (#39, new): two missed-shot exits (0x00408c24 -> 0x004095d3, 0x00408c6f) return before the
+  mask restore 0x00408fae. Shown on a constructed state (test_defect_narrate_mask_not_restored).
+- trialShot's edge reads outside the grid (#5) and the never-run debug overlay (#31) are reproduced by Ptr / kept as is.
+
+4. Results (x64 and Win32 identical; vectors only, segments are LOADED_ONLY until sg_run_frames exists)
+  function          vectors run / passed   distinct  coverage        negctl
+  shotPower         64 / 64                48        partial_branch  1, 2 RED; cache hit / miss state tests
+  wobble            19 / 19                19        full            1 RED
+  trialShot         228 / 228              114       partial_branch  1, 2 RED
+  prepareShot       307 / 307              210       partial_branch  1, 2, 3 RED
+  chooseShotTarget  12 / 12                6         partial_branch  1, 2 RED; 3, 4, 5 BLIND (scoring weights)
+  scanShotArea      289 / 289              2         partial_branch  1 RED
+  narrateShot       2 / 2                  1         thin            2 RED; 1 BLIND (reward cap)
+  921 vectors, all GREEN with every sibling module registered (private build of the tree at the end of the session; the
+  3 real-shot prepareShot vectors that ended in 3.5's emitGolferThought raised SG_E_NO_RESOURCE until 3.5 fixed it).
+- Every function except wobble needs the segments for the branches the vectors leave open; chooseShotTarget's 12
+  vectors end with one surviving cell (its scoring weights and pruning are blind), narrateShot's 2 vectors only reach the
+  off-screen exit, scanShotArea's 289 give 2 distinct results.
