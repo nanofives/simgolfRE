@@ -129,3 +129,37 @@ C ABI export layer; (2) the port lives in `port/` in this repo; (3) generated `G
 Step 2.1 is done (re/analysis/data/premise_check.md): segments start from frame-head full `.data` images, never saves; hidden
 state `g_rng` and `g_lastTipDate`; the 12 heap-pointer dwords (U-0604) must be flagged in the model; noise is masked per dword.
 Steps 2.2 and 2.3 run in parallel (disjoint files); 2.4 waits for both.
+
+## 8. Phase 2 results and revisions to section 4 (2026-10-19)
+
+Done: 2.0 scope (re/port/scope.tsv, simcore_order.tsv: 169 sim-core + leaf functions in 11 levels, 126 straddlers), 2.1 premise
+check, 2.2 GameState (989 objects, 203 sim-class, 518,308 B compared), 2.3 time and input (game time is frame-counted, one clock
+value enters state: the RNG seed; traces replay byte-identically), 2.4 segments (190 accepted: 35 time-forward, 155 command;
+re/port/segments_manifest.tsv), 2.5 vectors (243 functions, 15,191 reproduced vectors; re/port/vectors_manifest.tsv and
+vectors_coverage.tsv). 2.6, the harness, is next. Section 4 is revised as follows (this section wins where they differ):
+
+1. **3.1 is split.** It held 90 of the 169 functions. 3.1a: tile grids, cell tables, heightfield and coverage rebuilds, terrain
+   edit queue, generateRandomCourse. 3.1b: course and hole records, placed objects, build/demolish effects, course switching.
+2. **3.7 takes the straddlers.** The 62 UI-module straddlers in re/port/scope_straddlers.tsv (click and handler functions that
+   carry command effects: clickGolferPanel, handleEmployeeAction, showBulletinBoard ...) are split by 3.7 into a command effect
+   (port, in the COMMAND API) and its drawing (dropped). 3.7 also owns the frame tick (preamble, P5, H1/H2 order) from
+   re/analysis/sim/time_model.md: one tick per unpaused frame, `g_date += 1`, RNG seeded from t0 at start, pumpAndRedraw(0)
+   modelled as "wait for a command", all waits dropped.
+3. **3.6 is folded into 3.3** (8 functions): walkers, animals and ambient events join the golfer child. Stage B is then 3.1a,
+   3.1b, 3.2, 3.3 (+3.6), 3.4, 3.5.
+4. **File access stays behind an interface.** loadGolferRoster, loadGolfPro, the story readers and course/theme loaders read the
+   user's own install: the sim core takes the data through a small `GameFiles` interface (bytes by logical name), implemented by
+   tests from the corpus and by phase 4 from the real install.
+5. **mainLoop is an integrator job.** It has no function-level A/B; its oracle is the segment corpus. 3.8 owns the frame loop and
+   the parity runs.
+6. **Vector coverage gap.** 160 of the 308 selected functions have thin, one-sided, partial or no vector coverage
+   (re/port/vectors_coverage.tsv), including updateGolfers, updateWalkers, pathStep, trialShot and matchUpdate. They are verified
+   by segments, so segment parity (3.8) carries more weight than the first plan assumed, and a stage B child must report for each
+   of its functions whether it is covered by vectors, by segments, or by both.
+7. **Pass criteria are now concrete.** Vectors: use only `status: ok` vectors with `reloc_check` true; compare return and out
+   regions (vector_corpus.md section 8). Segments: load start.data.bin as GameState, ignore noise.bin dwords and non-sim classes,
+   check record 0 hashes, then equal count, T and 203 sim hashes at every record plus the end checkpoint
+   (segment_corpus.md section 5). Phase 3 gate (b)/(c) are measured on the accepted segments.
+8. **Open data issues the port must carry.** Terrain.dll state is outside every image (U-0607): terrain-dependent frames need it
+   modelled in phase 3.1a. Restarts use the `data+` variant; messages in flight at a segment start are re-posted from
+   `queued_messages`.
