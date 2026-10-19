@@ -1,0 +1,309 @@
+addr	name	subsystem	level	tier	in_simcore	port_kind	keys	batches	key_list	selected	reason
+0x00401000	resetRecordBank	course	C4	sim	0	globals	1	c3e	resetRecordBank	1	-
+0x00401040	placeRecord	sim	C4	sim	0	globals	1	c3k	placeRecord	1	-
+0x004011b0	freeRecordAtPos	course	C4	sim	1	globals	1	c3q	freeRecordAtPos	1	-
+0x004011e0	spawnObject	sim	C4	sim	1	both	3	c3bs	spawnObject spawnObject_occ spawnObject_full	1	-
+0x00401750	initRecords	sim	C4	sim	1	both	3	c3dx	initRecords_p0 initRecords_p1 initRecords_p2	1	-
+0x004017d0	placeAnimal	sim	C4	sim	1	both	1	c3eb	placeAnimal	1	-
+0x00401c00	tickAnimals	sim	C4	sim	1	both	5	c3ev	tickAnimals_none tickAnimals_all tickAnimals_odd tickAnimals_ends tickAnimals_fffe	1	-
+0x00401c70	List401c70_dtor	crt	C4	crt_callee	0	both	1	c3dx	List401c70_dtor	1	-
+0x00401d10	S3List_add	util	C4	util_callee	0	pure	3	c3dd	S3List_add S3List_add_fail0 S3List_add_fail1	1	-
+0x00402130	listIterNext	util	C4	util_pure	0	pure	1	c3r	listIterNext	1	-
+0x00402160	listIterValue	util	C4	util_pure	0	pure	1	c3r	listIterValue	1	-
+0x00402280	S3List_add2	util	C4	util_callee	0	pure	3	c3dd	S3List_add2 S3List_add2_fail0 S3List_add2_fail1	1	-
+0x004026a0	List402_clear	util	C4	util_callee	0	pure	1	c3cz	List402_clear	1	-
+0x00402930	freeAtTile	sim	C4	sim	1	globals	1	c3a	freeAtTile	1	-
+0x00402970	spawnWalker	golfer	C4	sim	1	both	2	c3af	spawnWalker spawnWalker_occ	1	-
+0x00402a40	updateWalkers	sim	C4	sim	1	both	2	c3eb	updateWalkers updateWalkers_real	1	-
+0x00405920	wobble	sim	C4	sim	1	both	19	c3dr	wobble_s0 wobble_s1 wobble_s2 wobble_s3 wobble_s4 wobble_s5 wobble_s6 wobble_s7 wobble_s8 wobble_s9 wobble_s10 wobble_s11 wobble_s12 wobble_s13 wobble_s14 wobble_s15 wobble_s16 wobble_s17 wobble_s18	1	-
+0x00405970	addHabitatSlot	sim	C4	sim	1	globals	4	c3q	addHabitatSlot addHabitatSlot_0 addHabitatSlot_127 addHabitatSlot_full	1	-
+0x00405ac0	sanitizeFileName	util	C4	util_callee	1	pure	1	c3w	sanitizeFileName	1	-
+0x00405e30	placeHabitat	sim	C4	sim	1	both	1	c3fi	placeHabitat	1	-
+0x004060a0	computeRatingTrend	golfer	C4	sim	1	globals	1	c3j	computeRatingTrend	1	-
+0x00406670	membershipReport	economy	C4	sim	1	both	4	c3ah	membershipReport_busy membershipReport_quiet membershipReport membershipReport_full	1	-
+0x00406c30	canAfford	economy	C4	sim	1	both	1	c3em	canAfford	1	-
+0x00406d50	buildStatusText	ui	C4	simcore	1	both	4	c3dx	buildStatusText buildStatusText_mid buildStatusText_high buildStatusText_one	1	-
+0x00407000	holeQuadrants	course	C4	sim	1	globals	1	c3j	holeQuadrants	1	-
+0x004070b0	inRange	sim	C4	sim	1	both	1	c3dy	inRange	1	-
+0x00407280	appendHoleName	ui	C4	simcore	1	globals	1	c3g	appendHoleName	1	-
+0x00407340	nearestHole	course	C4	sim	1	globals	2	c3q	nearestHole nearestHole_far	1	-
+0x00407400	canStep	sim	C4	sim	1	globals	1	c3q	canStep	1	-
+0x004074a0	landmarkName	course	C4	sim	1	globals	1	c3ab	landmarkName	1	-
+0x00407700	decorationName	course	C4	sim	1	globals	6	c3m	decorationName decorationName_ct1 decorationName_ct1b decorationName_ct2 decorationName_ct3 decorationName_ct4	1	-
+0x00407b60	sceneryLabel	course	C4	sim	1	globals	1	c3ae	sceneryLabel	1	-
+0x00407e00	narrateShot	sim	C4	sim	1	both	1	c3fr	narrateShot	1	-
+0x00409620	scanShotArea	sim	C4	sim	1	both	2	c3dy	scanShotArea scanShotArea_real	1	-
+0x00409950	appendPairTrackPoint	golfer	C4	sim	1	globals	1	c3e	updatePairSnapshot	1	-
+0x004099f0	addGolferPair	golfer	C4	sim	1	globals	1	c3e	addGolferPair	1	-
+0x00409a90	addGolferToTable	sim	C3	sim	1	both	2	c3dy	scanNearbyGolfers scanNearbyGolfers_real	1	-
+0x00409bf0	updateRollingStats	sim	C4	sim	1	globals	3	c3e	updateRollingStats updateRollingStats_early updateRollingStats_late	1	-
+0x00409cb0	pushTripleEntry	sim	C4	sim	1	globals	5	c3q	pushTripleEntry_n0 pushTripleEntry_n7 pushTripleEntry_n255 pushTripleEntry_n256 pushTripleEntry_big	1	-
+0x00409cf0	stepCourseEditQueue	terrain	C3	sim	1	both	1	c3ed	editTerrainHeight	1	-
+0x0040a130	setGrids	render	C4	simcore	1	globals	1	c3h	setGrids	1	-
+0x0040a160	buildToolLabel	ui	C4	simcore	1	globals	1	c3o	buildToolLabel	1	-
+0x0040a4e0	demolishObject	course	C4	sim	1	both	1	c3fb	demolishObject	1	-
+0x0040a9a0	appendClubName	ui	C4	simcore	1	globals	1	c3k	appendClubName	1	-
+0x0040aa80	hireEmployee	economy	C4	sim	1	both	1	c3fa	hireEmployee	1	-
+0x0040acd0	distance	util	C4	util_callee	1	pure	1	c3b	distance	1	-
+0x0040bf60	tileBlocked	terrain	C4	sim	1	globals	1	core	tileBlocked	1	-
+0x0040bfa0	typeAtPos	terrain	C4	sim	1	globals	1	c3a	typeAtPos	1	-
+0x0040bfe0	cornerHeights	terrain	C4	sim	1	both	1	c3k	cornerHeights	1	-
+0x0040c170	heightBlend	terrain	C4	sim	1	globals	3	core	heightBlend heightBlend_c0 heightBlend_tick	1	-
+0x0040c2f0	slopeY	terrain	C4	sim	1	pure	1	core	slopeY	1	-
+0x0040c3a0	slopeX	terrain	C4	sim	1	pure	1	core	slopeX	1	-
+0x0040c450	slopeMix	terrain	C4	sim	1	both	1	core	slopeMix	1	-
+0x0040c4b0	tileDistance	util	C4	util_callee	1	pure	1	c3b	tileDistance	1	-
+0x0040c6f0	logTick	sim	C4	sim	1	globals	1	core	logTick	1	-
+0x0040c860	clearMatching	sim	C4	sim	1	globals	1	core	clearMatching	1	-
+0x0040d7b0	appendDate	ui	C4	simcore	1	globals	1	c3g	appendDate	1	-
+0x0040daa0	appendCourseTitle	ui	C4	simcore	1	globals	6	c3g	appendCourseTitle appendCourseTitle_b appendCourseTitle_c appendCourseTitle_d appendCourseTitle_e appendCourseTitle_f	1	-
+0x0040db90	evalPlacementArea	course	C4	sim	1	globals	2	core	evalPlacementArea evalPlacementArea_ct1	1	-
+0x0040ddb0	nearestPlaced	course	C4	sim	1	globals	1	c3a	nearestPlaced	1	-
+0x0040de70	findNearestTargetTile	golfer	C3	sim	1	globals	1	c3j	findNearestTargetTile	1	-
+0x0040df80	objectAt	course	C4	sim	1	globals	1	c3e	objectAt	1	-
+0x0040e000	stampCourseTiles	terrain	C4	sim	1	both	6	c3dx	stampCourseTiles stampCourseTiles_one stampCourseTiles_some stampCourseTiles_full stampCourseTiles_ct1 stampCourseTiles_ct2	1	-
+0x0040e400	clearObjectFootprint	course	C3	sim	1	both	3	c3ah	clearObjectFootprint clearObjectFootprint_k1 clearObjectFootprint_k2	1	-
+0x0040e5b0	rankValue	economy	C4	sim	0	pure	1	c3q	rankValue	1	-
+0x0040e5f0	appendUpgradeText	ui	C4	simcore	1	globals	1	c3z	appendUpgradeText	1	-
+0x0040e720	announceBuilding	course	C4	sim	1	both	22	c3ah	announceBuilding_rej_tee announceBuilding_rej_pin announceBuilding_rej_third announceBuilding_skipbi announceBuilding announceBuilding_p3short announceBuilding_p2 announceBuilding_p4short announceBuilding_p5 announceBuilding_p5long announceBuilding_p3long announceBuilding_p4long announceBuilding_p5short announceBuilding_flag60short announceBuilding_h1 announceBuilding_h6 announceBuilding_h10 announceBuilding_h18 announceBuilding_h9 announceBuilding_bi4 announceBuilding_bi0 announceBuilding_bi15	1	-
+0x0040f190	customizeCharacter	frontend	C4	simcore	1	both	1	c3fb	customizeCharacter	1	-
+0x00421bc0	updateMembership	economy	C4	sim	1	globals	5	c3m	updateMembership updateMembership_all updateMembership_conf updateMembership_fail updateMembership_big	1	-
+0x00421fa0	scanTileLine	terrain	C4	sim	1	both	2	c3n	scanTileLine scanTileLine_neg	1	-
+0x004223c0	decaySum	sim	C4	sim	1	globals	1	core	decaySum	1	-
+0x004223f0	decaySum2	sim	C4	sim	1	pure	1	core	decaySum2	1	-
+0x00422430	shotPower	sim	C4	sim	1	globals	1	c3a	shotPower	1	-
+0x00422530	rateTile	course	C4	sim	1	globals	2	core	rateTile rateTile_mode1	1	-
+0x004226a0	trialShot	ai	C4	sim	1	both	1	c3ea	trialShot	1	-
+0x00422fb0	chooseShotTarget	sim	C4	sim	1	naked	2	c3ea	simulateBallFlight simulateBallFlight_overlay	1	-
+0x00424120	prepareShot	sim	C4	sim	1	naked	3	c3ea	simulateShot_trial simulateShot_real simulateShot_mode	1	-
+0x00426670	resetGolfer	golfer	C4	sim	1	globals	1	core	resetGolfer	1	-
+0x004266b0	patronEvent	golfer	C4	sim	1	both	7	c3ag	patronEvent patronEvent_diff2 patronEvent_busy patronEvent_lm0 patronEvent_lm1 patronEvent_lm2 patronEvent_lm3	1	-
+0x00427380	matchUpdate	sim	C4	sim	1	both	16	c3aj	matchUpdate matchUpdate_fee3 matchUpdate_fee2 matchUpdate_nofee matchUpdate_match_mid matchUpdate_match_win matchUpdate_match_tie matchUpdate_match_lose matchUpdate_records matchUpdate_records_empty matchUpdate_record_msg matchUpdate_vip matchUpdate_comeback matchUpdate_patron matchUpdate_match_nopair matchUpdate_patron_wrap	1	-
+0x004289e0	updateGolfers	golfer	C4	sim	1	both	12	c3ec	updateGolfers_tick updateGolfers_leave updateGolfers_walk updateGolfers_shot updateGolfers_swing updateGolfers_flight updateGolfers_stop updateGolfers_draw updateGolfers_real updateGolfers_edge updateGolfers_edge2 updateGolfers_edge3	1	-
+0x0042dba0	sampleHeight	terrain	C4	sim	1	pure	1	c3a	sampleHeight	1	-
+0x0042dc00	appendNumber	ui	C4	simcore	1	pure	1	c3g	appendNumber	1	-
+0x0042dea0	holeMagazineEvent	course	C4	sim	1	both	5	c3ac	holeMagazineEvent holeMagazineEvent_mag2 holeMagazineEvent_busy holeMagazineEvent_diff2 holeMagazineEvent_force	1	-
+0x0042e7a0	directionOf	util	C4	util_callee	1	pure	1	c3w	directionOf	1	-
+0x0042e7e0	pathStep	sim	C4	sim	1	both	1	c3eb	pathStep	1	-
+0x0042ee80	clearCost	economy	C4	sim	1	globals	2	c3ab	clearCost clearCost_ct0	1	-
+0x0042ef40	rateLot	economy	C4	sim	1	globals	2	c3ae	rateLot rateLot_aura	1	-
+0x0042f120	floodMark	terrain	C4	sim	1	both	1	c3dm	floodMark	1	-
+0x0042f2c0	markTileKind11	terrain	C4	sim	1	both	8	c3dm	markTileKind11_w0 markTileKind11_w1 markTileKind11_w2 markTileKind11_w3 markTileKind11_w4 markTileKind11_w5 markTileKind11_w6 markTileKind11_w7	1	-
+0x0042f340	rebuildTileCoverage	course	C4	sim	1	both	1	c3dy	rebuildTileCoverage	1	-
+0x0042f4b0	cornerRange	terrain	C4	sim	1	pure	1	c3a	cornerRange	1	-
+0x0042f530	relaxEdges42f530	terrain	C4	sim	1	globals	1	c3a	relaxEdges42f530	1	-
+0x0042f630	relaxTile42f630	terrain	C4	sim	1	pure	1	c3q	relaxTile42f630	1	-
+0x0042f6e0	raiseFromNeighbours	terrain	C4	sim	1	globals	1	c3a	raiseFromNeighbours	1	-
+0x0042f7a0	rebuildHeightfield	terrain	C4	sim	1	both	4	c3n	rebuildHeightfield rebuildHeightfield_c0 rebuildHeightfield_tick rebuildHeightfield_flat	1	-
+0x0042fa30	heightAt42fa30	terrain	C4	sim	1	globals	1	core	heightAt42fa30	1	-
+0x004315e0	buildGolferBioText	golfer	C4	sim	1	both	1	c3fb	buildGolferBioText	1	-
+0x004378a0	fileExists	util	C4	util_callee	1	callees	1	c3cy	fileExists	1	-
+0x00437fa0	loadThemeFile	course	C4	sim	1	both	4	c3ep	loadThemeFile_a loadThemeFile_flag loadThemeFile_full loadThemeFile_mid	1	-
+0x004385d0	showCharacterEditor	golfer	C3	sim	0	both	1	c3fx	showCharacterEditor	1	-
+0x0043d2a0	listMatchingFiles	util	C4	util_callee	1	both	2	c3ep	listMatchingFiles listMatchingFiles_e	1	-
+0x0043d520	freeBlock	util	C4	util_pure	0	pure	1	c3b	freeBlock	1	-
+0x0043d5d0	allocBlock	util	C4	util_pure	0	pure	1	c3b	allocBlock	1	-
+0x0043d6f0	cellAt	sim	C4	sim	0	globals	1	core	cellAt	1	-
+0x00449210	initList820f18	terrain	C4	sim	0	globals	1	c3cz	allocTileBuffer	1	-
+0x004492d0	tileType	terrain	C4	sim	1	pure	1	core	tileType	1	-
+0x004492f0	tileByte	terrain	C4	sim	1	globals	1	c3a	tileByte	1	-
+0x00449310	tileQuery449310	terrain	C4	sim	1	pure	1	c3a	tileQuery449310	1	-
+0x00449330	wallHeight	terrain	C4	sim	1	pure	1	core	wallHeight	1	-
+0x004493b0	tileFlag20	terrain	C4	sim	1	globals	1	c3a	tileFlag20	1	-
+0x00449400	applyCourseType	terrain	C4	sim	1	both	1	c3dw	applyCourseType	1	-
+0x00449470	syncTiles	terrain	C4	sim	0	both	2	c3ey	syncTiles_50 syncTiles_53	1	-
+0x00449520	refreshTerrain	terrain	C4	sim	0	both	2	c3dw	refreshTerrain refreshTerrain_noterrain	1	-
+0x00449540	rebuildTerrainGrid	terrain	C4	sim	1	both	5	c3ey	rebuildTerrainGrid_50 rebuildTerrainGrid_53 rebuildTerrainGrid_37 rebuildTerrainGrid_30 rebuildTerrainGrid_noflags	1	-
+0x00449790	initTerrain	terrain	C4	sim	1	both	3	c3ez	initTerrain_v5 initTerrain_v4 initTerrain_v6	1	-
+0x00449860	freeTerrain	terrain	C4	sim	0	both	2	c3dw	freeTerrain freeTerrain_none	1	-
+0x004498a0	updateTerrainRender	terrain	C4	sim	1	both	1	c3ez	updateTerrainRender	1	-
+0x00449f00	applyTileVariation	terrain	C4	sim	0	callees	1	c3ez	applyTileVariation	1	-
+0x00449fa0	applyTileElevation	terrain	C4	sim	1	callees	1	c3ez	applyTileElevation	1	-
+0x0044a380	applyTileWalls	terrain	C4	sim	0	both	1	c3ev	applyTileWalls	1	-
+0x0044a410	togglePath	terrain	C4	sim	1	both	1	c3ez	togglePath	1	-
+0x0044a5b0	rebuildTileData	terrain	C4	sim	1	both	5	c3ez	rebuildTileData_z1 rebuildTileData_z2 rebuildTileData_z4 rebuildTileData_nullprev rebuildTileData_ylow	1	-
+0x0044a6e0	renderTerrainStrip	terrain	C4	sim	0	both	7	c3ez	renderTerrainStrip_800 renderTerrainStrip_1024 renderTerrainStrip_1280 renderTerrainStrip_bad800 renderTerrainStrip_bad1024 renderTerrainStrip_bad1280 renderTerrainStrip_bad	1	-
+0x0044ac00	listEraseRange	util	C4	util_callee	1	pure	1	c3cz	listEraseRange	1	-
+0x0044cff0	showEndOfYearScreen	economy	C3	sim	0	both	1	c3er	CareerRetirementFlow	1	-
+0x0044f6b0	showFinancialReport	economy	C4	sim	0	both	1	c3en	showFinancialReport	1	-
+0x0044faf0	bucketValue	util	C4	util_callee	1	pure	1	core	bucketValue	1	-
+0x00453260	golferAge	golfer	C4	sim	1	pure	1	core	golferScore	1	-
+0x004532a0	appendRatingLabel	golfer	C4	sim	1	globals	2	c3q	appendRatingLabel appendRatingLabel_q3	1	-
+0x00456bb0	overlayCharAt	util	C4	util_callee	1	globals	1	c3r	overlayCharAt	1	-
+0x004587a0	showBuyLandScreen	economy	C3	sim	0	both	1	c3fr	showBuyLandScreen	1	-
+0x00459400	showHireEmployeeDialog	economy	C4	sim	0	both	1	c3en	showHireEmployeeDialog	1	-
+0x00459850	showGolferPairSelect	golfer	C3	sim	0	both	1	c3et	showGolferPairSelect	1	-
+0x0045b660	lookupThemeText	course	C4	sim	1	both	1	c3eu	lookupThemeText	1	-
+0x0045b7c0	replaceInText	util	C4	util_callee	1	globals	1	c3b	replaceInText	1	-
+0x0045b8b0	appendToBuffer45b8b0	util	C4	util_callee	1	globals	1	c3f	appendToBuffer45b8b0	1	-
+0x0045b9f0	appendString	util	C4	util_callee	1	globals	1	c3b	appendString	1	-
+0x0045bf80	waitTicks	util	C4	util_callee	0	both	1	c3dy	waitTicks	1	-
+0x0045c1a0	Random::next	util	C4	util_callee	1	globals	1	core	Random_next	1	-
+0x0045c1e0	Random::range	util	C4	util_callee	1	pure	1	c3f	Random::range	1	-
+0x0045c200	drawThoughtBubble	golfer	C4	sim	0	both	1	c3ei	drawThoughtBubble	1	-
+0x0045c420	thoughtBalance	golfer	C4	sim	1	globals	1	c3a	thoughtBalance	1	-
+0x0045c460	substituteStoryNames	golfer	C4	sim	1	pure	5	c3ag	substituteStoryNames substituteStoryNames_rev substituteStoryNames_partner substituteStoryNames_none substituteStoryNames_dup	1	-
+0x0045c560	drawGolferInfoPanel	golfer	C4	sim	0	both	1	c3fr	GolferPanelEject	1	-
+0x0045de30	swapTableEntry	util	C4	util_callee	1	globals	1	c3w	swapTableEntry	1	-
+0x0045de80	pairGolfersWithStory	golfer	C4	sim	1	both	1	c3dz	announceVipGolfer	1	-
+0x0045f0f0	skillPointDialog	golfer	C4	sim	1	both	1	c3em	skillPointDialog	1	-
+0x0045f870	showCourseRanking	economy	C3	sim	0	both	1	c3fb	showCourseRanking	1	-
+0x0045fd80	buildScenarioIntro	frontend	C4	simcore	1	both	8	c3ai	buildScenarioIntro buildScenarioIntro_k1 buildScenarioIntro_k2 buildScenarioIntro_k3 buildScenarioIntro_kdef buildScenarioIntro_kneg buildScenarioIntro_flag buildScenarioIntro_late	1	-
+0x00460df0	announceHoleType	course	C4	sim	1	globals	3	c3m	announceHoleType announceHoleType_m1 announceHoleType_busy	1	-
+0x004615f0	spreadShade	terrain	C3	sim	1	both	1	c3bs	spreadShade	1	-
+0x004616f0	spreadAllShade	terrain	C4	sim	1	both	7	c3bs	spreadAllShade_empty spreadAllShade_below spreadAllShade_at10 spreadAllShade_pos spreadAllShade_neg spreadAllShade_at1750 spreadAllShade_clamped	1	-
+0x00462020	composeGolferSprite	golfer	C4	sim	1	both	1	c3ei	formatGolferTitle	1	-
+0x00463170	boundIndex	util	C4	util_pure	0	pure	1	c3r	boundIndex	1	-
+0x004658b0	loadThemes	course	C4	sim	1	both	4	c3ep	loadThemes_mix loadThemes_one loadThemes_empty loadThemes_many	1	-
+0x004659a0	loadGolferRoster	golfer	C4	sim	1	both	1	c3fc	loadGolferRoster	1	-
+0x00466370	advanceStory	golfer	C4	sim	1	both	1	c3dz	advanceStory	1	-
+0x004668f0	storyText	golfer	C4	sim	1	both	1	c3dy	storyText	1	-
+0x004669f0	computeStoryReply	golfer	C4	sim	1	both	2	c3dz	computeStoryReply computeStoryReply_chain	1	-
+0x00466b70	loadStoryStrings	golfer	C4	sim	1	both	1	c3dz	loadStoryStrings	1	-
+0x00467130	clamp	util	C4	util_callee	1	pure	1	c3f	clamp	1	-
+0x00467150	sign	util	C4	util_callee	1	pure	1	c3f	sign	1	-
+0x00467170	approxDistance	util	C4	util_callee	1	pure	1	core	approxDistance	1	-
+0x004671a0	direction8	util	C4	util_callee	1	pure	1	c3l	direction8	1	-
+0x00467270	foldRange	util	C4	util_callee	1	pure	1	c3b	foldRange	1	-
+0x004672b0	absDiff	util	C4	util_callee	1	pure	1	c3f	absDiff	1	-
+0x004672d0	angleFixed	util	C4	util_callee	1	pure	1	c3l	angleFixed	1	-
+0x004673e0	genNoise	terrain	C4	sim	1	both	12	c3dm	genNoise_s0 genNoise_s1 genNoise_s2 genNoise_s3 genNoise_s4 genNoise_s5 genNoise_s6 genNoise_s7 genNoise_s8 genNoise_s9 genNoise_s10 genNoise_s11	1	-
+0x004674c0	bilinearSample	terrain	C4	sim	1	globals	1	c3e	bilinearSample	1	-
+0x00467560	appendEndearment	golfer	C4	sim	1	globals	2	c3q	appendEndearment appendEndearment_q3	1	-
+0x004675d0	thoughtFlag	golfer	C4	sim	1	globals	1	c3a	thoughtFlag	1	-
+0x00467600	appendWalkerName	golfer	C3	sim	1	both	1	c3bs	pickGolferName	1	-
+0x004676e0	buildGolferName	golfer	C4	sim	1	globals	3	c3m	buildGolferName buildGolferName_s5 buildGolferName_s9	1	-
+0x00467a00	emitGolferThought	golfer	C4	sim	1	both	3	c3dz	emitGolferThought emitGolferThought_kinds emitGolferThought_partner	1	-
+0x00469a20	appendOpinion	golfer	C4	sim	1	globals	1	core	appendOpinion	1	-
+0x00469b00	buildGolferComment	golfer	C4	sim	1	both	2	c3dz	buildGolferComment buildGolferComment_grid	1	-
+0x0046c940	typeBit7Clear	golfer	C4	sim	1	globals	1	core	typeBit7Clear	1	-
+0x0046c970	loadGolfPro	golfer	C4	sim	1	both	1	c3fb	loadGolfPro	1	-
+0x0046d040	initGolferState	golfer	C4	sim	1	both	1	c3dw	initGolferState	1	-
+0x0046d0c0	resetGolferState	golfer	C4	sim	1	both	12	c3eo	resetGolferState resetGolferState_skip resetGolferState_bonus resetGolferState_nobonus resetGolferState_mid resetGolferState_high resetGolferState_top resetGolferState_sub resetGolferState_neg resetGolferState_edge resetGolferState_objs resetGolferState_fa	1	-
+0x0046d200	buildTournamentPrep	course	C4	sim	1	both	1	c3fb	buildTournamentPrep	1	-
+0x0046e7b0	postEvent	sim	C4	sim	1	globals	2	c3q	postEvent postEvent_off	1	-
+0x0046f1d0	tierPrice	economy	C4	sim	0	pure	1	core	tierPrice	1	-
+0x0046f2b0	seedCourseTable	sim	C4	sim	1	both	24	c3df	seedCourseTable_00 seedCourseTable_01 seedCourseTable_02 seedCourseTable_03 seedCourseTable_04 seedCourseTable_05 seedCourseTable_06 seedCourseTable_07 seedCourseTable_08 seedCourseTable_09 seedCourseTable_10 seedCourseTable_11 seedCourseTable_12 seedCourseTable_13 seedCourseTable_14 seedCourseTable_15 seedCourseTable_16 seedCourseTable_17 seedCourseTable_18 seedCourseTable_19 seedCourseTable_20 seedCourseTable_21 seedCourseTable_22 seedCourseTable_23	1	-
+0x00470a10	clearTile	terrain	C4	sim	1	globals	2	core	clearTile clearTile_kind0	1	-
+0x00470a60	generateRandomCourse	terrain	C4	sim	1	both	2	c3ed	applyTerrainEdit applyTerrainEdit_real	1	-
+0x004722c0	announceLandmark	golfer	C4	sim	1	globals	2	c3ag	LandmarkAvailableNotice LandmarkAvailableNotice_busy	1	-
+0x004732d0	addScore	course	C4	sim	1	both	7	c3ah	addScore addScore_mid addScore_last addScore_dup addScore_dupi addScore_rejid addScore_rejend	1	-
+0x00474780	Buf_init	util	C4	util_callee	0	pure	1	c3n	Buf_init	1	-
+0x004747a0	Buf_ctor	util	C4	util_callee	0	globals	1	c3n	Buf_ctor	1	-
+0x004747e0	Buf_releaseData	util	C4	util_callee	0	callees	1	c3cn	Buf_releaseData	1	-
+0x00474810	Buf_dtor	util	C4	util_callee	0	both	1	c3cn	Buf_dtor	1	-
+0x00474820	Buf_alloc	util	C4	util_callee	0	callees	1	c3cz	Buf_alloc	1	-
+0x00474860	heapAlloc	util	C4	util_callee	0	both	1	c3dd	heapAlloc	1	-
+0x00479bb0	Vec_release	util	C4	util_callee	0	pure	1	c3cz	Vec_release	1	-
+0x00480390	List480::dtor	util	C4	util_pure	0	pure	1	c3dm	List480::dtor	1	-
+0x00481b20	freeResampleTable	util	C4	util_pure	0	globals	3	c3cz	freeResampleTable_block freeResampleTable_odd freeResampleTable_null	1	-
+0x00486c90	Timer::ctor	util	C4	util_callee	0	both	1	c3dl	Timer::ctor	1	-
+0x00486ce0	Timer::dtor	util	C4	util_callee	0	both	1	c3cy	Timer::dtor	1	-
+0x00486cf0	Timer::initA	util	C4	util_callee	0	callees	1	c3cy	Timer::initA	1	-
+0x00486dc0	Timer::startMmPeriodic	util	C4	util_callee	0	callees	1	c3cy	Timer::startOnce	1	-
+0x00486ec0	Timer::stop	util	C4	util_callee	0	callees	2	c3cy	Timer::stop Timer::stop_nodisp	1	-
+0x00486f10	Timer::reset	util	C4	util_callee	0	callees	2	c3cy	Timer::reset Timer::reset_nodisp	1	-
+0x00486fe0	Timer::lockInc	util	C4	util_pure	0	globals	12	c3cz	Timer::lockInc_0 Timer::lockInc_1 Timer::lockInc_2 Timer::lockInc_3 Timer::lockInc_4 Timer::lockInc_5 Timer::lockInc_6 Timer::lockInc_7 Timer::lockInc_8 Timer::lockInc_9 Timer::lockInc_10 Timer::lockInc_11	1	-
+0x00486ff0	Timer::lockDec	util	C4	util_pure	0	globals	12	c3cz	Timer::lockDec_0 Timer::lockDec_1 Timer::lockDec_2 Timer::lockDec_3 Timer::lockDec_4 Timer::lockDec_5 Timer::lockDec_6 Timer::lockDec_7 Timer::lockDec_8 Timer::lockDec_9 Timer::lockDec_10 Timer::lockDec_11	1	-
+0x00487310	NodeList::clear	util	C4	util_pure	0	globals	1	c3cn	NodeList::clear	1	-
+0x004873f0	openHookA	util	C4	util_pure	0	globals	2	c3fm	openHookA openHookA_null	1	-
+0x00487630	resourceQuery	util	C4	util_pure	0	pure	1	c3n	resourceQuery	1	-
+0x00487770	SndGroup_isDisabled	util	C4	util_callee	0	pure	1	c3r	HashTable::bucketEmpty	1	-
+0x004877a0	SndGroup_isMuted	util	C4	util_callee	0	pure	1	c3r	HashTable::bucketSet	1	-
+0x004879b0	openHookB	util	C4	util_pure	0	globals	2	c3fm	openHookB openHookB_null	1	-
+0x00487a20	NodeListB::ctor	util	C4	util_pure	0	globals	1	c3n	NodeListB::ctor	1	-
+0x00487a70	resourceLoadB	util	C4	util_pure	0	pure	1	c3n	resourceLoadB	1	-
+0x00487b40	NodeListC::ctor	util	C4	util_pure	0	globals	1	c3n	NodeListC::ctor	1	-
+0x00487b90	openHookC	util	C4	util_pure	0	globals	2	c3fm	openHookC openHookC_null	1	-
+0x00487c00	resourceLoad	util	C4	util_pure	0	pure	1	c3n	resourceLoad	1	-
+0x00487e60	destroyGlobalReader	crt	C4	crt_callee	0	callees	2	c3cq	destroyGlobalReader_open destroyGlobalReader_closed	1	-
+0x00487e70	readSectionGlobal	util	C4	util_callee	0	both	1	c3dw	readSectionGlobal	1	-
+0x00487e90	readLineGlobal	util	C4	util_callee	0	both	1	c3dw	readLineGlobal	1	-
+0x00487f80	Reader::closeFile	util	C4	util_callee	0	callees	1	c3dl	Reader::closeFile	1	-
+0x00487fb0	Reader::open	util	C4	util_callee	0	both	1	c3fi	Reader::open	1	-
+0x00488230	Reader::readLine	util	C4	util_callee	0	callees	1	c3dw	Reader::readLine	1	-
+0x00488310	KeyTable::find	util	C4	util_callee	0	both	1	c3ev	KeyTable::find	1	-
+0x00488420	KeyTable::lookup	util	C4	util_callee	0	both	4	c3dw	KeyTable::lookup_a KeyTable::lookup_b KeyTable::lookup_c KeyTable::lookup_d	1	-
+0x0048cd80	matchDirective	util	C4	util_callee	0	globals	1	c3ae	matchDirective	1	-
+0x00491c70	sinScaled	util	C4	util_callee	1	globals	1	c3l	sinScaled	1	-
+0x00491d80	cosScaled	util	C4	util_pure	0	pure	1	c3f	cosScaled	1	-
+0x00491da0	resolveDataPath	util	C4	util_callee	0	both	4	c3eu	resolveDataPath_abc resolveDataPath_b resolveDataPath_ab resolveDataPath_bc	1	-
+0x004924e0	trimLeadingSpace	util	C4	util_callee	0	pure	1	c3b	trimLeadingSpace	1	-
+0x00492570	trimTrailingSpace	util	C4	util_callee	0	pure	1	c3b	trimTrailingSpace	1	-
+0x004925b0	trimSpaces	util	C4	util_callee	0	pure	1	c3ab	trimSpaces	1	-
+0x004925d0	stripNewline	util	C4	util_callee	0	pure	1	c3ab	stripNewline	1	-
+0x004925f0	appendNewline	util	C4	util_callee	0	pure	1	c3r	appendNewline	1	-
+0x00492610	pointInRect	util	C4	util_callee	0	pure	1	core	pointInRect	1	-
+0x00492d80	MappedFile::ctor	util	C4	util_callee	0	globals	1	c3f	MappedFile::ctor	1	-
+0x00492dc0	MappedFile::dtor	util	C4	util_callee	0	both	1	c3cy	MappedFile::dtor_exe	1	-
+0x00492dd0	MappedFile::open	util	C4	util_callee	0	callees	1	c3cy	MappedFile::open	1	-
+0x00492e80	MappedFile::close	util	C4	util_callee	0	callees	1	c3cy	MappedFile::close_exe	1	-
+0x00493580	swapInts	util	C4	util_callee	0	pure	1	c3r	swapInts	1	-
+0x004935b0	reverseFindChar	util	C4	util_callee	0	pure	1	c3r	reverseFindChar	1	-
+0x004935f0	findByteInRange	util	C4	util_callee	0	globals	1	c3w	findByteInRange	1	-
+0x00496770	orderPair	util	C4	util_callee	0	callees	1	c3cc	orderPair	1	-
+0x0049d090	strBufReset	util	C4	util_pure	0	globals	1	c3dd	strAssign	1	-
+0x0049d100	strDup	util	C4	util_pure	0	pure	1	c3dd	strDup	1	-
+0x004a00f0	resolveAndOpenFile	util	C4	util_callee	0	callees	1	c3dw	resolveAndOpenFile	1	-
+0x004a01a0	freeLoggerBuf	util	C4	util_pure	0	globals	1	c3cn	freeLoggerBuf	1	-
+0x004a0280	logWrite	util	C4	util_callee	0	both	2	c3eu	logWrite logWrite_off	1	-
+0x004a0320	logLine	util	C4	util_callee	0	both	1	c3dw	logLine	1	-
+0x004a0540	recordCopyStr1c	util	C4	util_pure	0	pure	1	c3dd	bufferCopyTo	1	-
+0x004a05d0	bufferFree	util	C4	util_pure	0	pure	1	c3cn	bufferFree	1	-
+0x004a14c0	LabelButton::reset	util	C4	util_callee	0	both	3	c3ek	resetMsgObject_a resetMsgObject_b resetMsgObject_c	1	-
+0x004a28a0	listAddEntry	util	C4	util_callee	0	pure	3	c3dd	listAddEntry listAddEntry_fail0 listAddEntry_fail1	1	-
+0x004a29c0	setStringField	util	C4	util_callee	0	pure	1	c3cz	setStringField	1	-
+0x004a4b00	listClear4a4b	util	C4	util_callee	0	callees	1	c3dl	listClear4a4b	1	-
+0x004a4b60	listAppend4a4b60	util	C4	util_callee	0	callees	3	c3dl	listAppend4a4b60 listAppend4a4b60_fnode listAppend4a4b60_fdata	1	-
+0x004a4c70	queuePop	util	C4	util_callee	0	callees	1	c3dl	queuePop	1	-
+0x004a4d30	listClearThunk	util	C4	util_callee	0	callees	1	c3dm	listClearThunk	1	-
+0x004a4d50	listClear4a4d	util	C4	util_callee	0	pure	1	c3cn	listClear4a4d	1	-
+0x004a4db0	listPush	util	C4	util_callee	0	callees	3	c3cz	listPush listPush_failnode listPush_faildata	1	-
+0x004a4ea0	readListNode	util	C4	util_callee	0	pure	1	c3r	readListNode	1	-
+0x004a4ed0	listRemoveHead	util	C4	util_callee	0	pure	1	c3cn	listRemoveHead	1	-
+0x004a4ffc	operatorDelete_4a4ffc	crt	C4	crt_callee	0	pure	1	c3cz	operatorDelete_4a4ffc	1	-
+0x004a55d2	ehVectorConstructorIterator	crt	C4	crt_callee	0	callees	3	c3fo	ehVectorConstructorIterator_none ehVectorConstructorIterator_t0 ehVectorConstructorIterator_t3	1	-
+0x004a5793	__ArrayUnwind	crt	C3	crt_callee	0	callees	3	c3fz	__ArrayUnwind __ArrayUnwind_t0 __ArrayUnwind_t2	1	-
+0x004a6030	__ftol	crt	C4	crt_callee	0	naked	5	c3fo	__ftol_w27f __ftol_wf7f __ftol_w37f __ftol_wa7f __ftol_w67f	1	-
+0x004a609f	_fclose	crt	C4	crt_callee	0	callees	1	c3fm	_fclose	1	-
+0x004a614d	_fopen	crt	C4	crt_callee	0	pure	1	c3fm	_fopen	1	-
+0x004a6170	_strchr	crt	C4	crt_callee	0	pure	1	c3fm	_strchr	1	-
+0x004a64f0	_strstr	crt	C4	crt_callee	0	callees	1	c3fm	_strstr	1	-
+0x004a65ee	_fgets	crt	C4	crt_callee	0	callees	1	c3fm	_fgets	1	-
+0x004a678b	_strtok	crt	C4	crt_callee	0	callees	3	c3fm	_strtok _strtok_end _strtok_mid	1	-
+0x004a70b5	_rewind	crt	C4	crt_callee	0	callees	1	c3fo	_rewind	1	-
+0x004a7119	_fseek	crt	C4	crt_callee	0	callees	1	c3fo	_fseek	1	-
+0x004ad425	__itoa	crt	C4	crt_callee	0	pure	1	c3fm	__itoa	1	-
+0x004ad452	_xtoa	crt	C4	crt_callee	0	callees	1	c3fm	_xtoa	1	-
+0x004ad4b0	__strcmpi	crt	C4	crt_callee	0	callees	3	c3fo	__strcmpi_c __strcmpi_loc __strcmpi_lock	1	-
+0x004ad580	__strnicmp	crt	C4	crt_callee	0	callees	3	c3fo	__strnicmp_c __strnicmp_loc __strnicmp_lock	1	-
+0x004ae220	jpeg_suppress_tables	util	C4	util_pure	0	pure	1	c3w	jpeg_suppress_tables	1	-
+0x004ae700	jpeg_quality_scaling	util	C4	util_pure	0	pure	1	c3w	jpeg_quality_scaling	1	-
+0x004ae8b0	add_huff_table	util	C4	util_pure	0	pure	2	c3be	add_huff_table add_huff_table_alloc	1	-
+0x004aef70	alloc_small	util	C4	util_pure	0	globals	2	c3cz	alloc_small alloc_small_fail	1	-
+0x004af0c0	alloc_large	util	C4	util_pure	0	pure	1	c3cz	alloc_large	1	-
+0x004af170	alloc_sarray	util	C4	util_pure	0	pure	1	c3cz	alloc_sarray	1	-
+0x004af220	alloc_barray	util	C4	util_pure	0	pure	1	c3cz	alloc_barray	1	-
+0x004af540	access_virt_sarray	util	C4	util_pure	0	pure	1	c3cs	access_virt_sarray	1	-
+0x004af730	access_virt_barray	util	C4	util_pure	0	pure	1	c3cs	access_virt_barray	1	-
+0x004af920	free_pool	util	C4	util_pure	0	pure	1	c3cz	free_pool	1	-
+0x004afa60	jpeg_abort	util	C4	util_pure	0	pure	1	c3r	jpeg_abort	1	-
+0x004afa90	jpeg_destroy	util	C4	util_pure	0	pure	1	c3r	jpeg_destroy	1	-
+0x004afab0	jpeg_alloc_quant_table	util	C4	util_pure	0	pure	1	c3af	jpeg_alloc_quant_table	1	-
+0x004afad0	jpeg_alloc_huff_table	util	C4	util_pure	0	pure	1	c3af	jpeg_alloc_huff_table	1	-
+0x004afbf0	emit_marker	util	C4	util_pure	0	pure	1	c3af	emit_marker	1	-
+0x004afc10	emit_2bytes	util	C4	util_pure	0	pure	1	c3af	emit_2bytes	1	-
+0x004afc80	emit_jfif_app0	util	C4	util_pure	0	pure	1	c3be	emit_jfif_app0	1	-
+0x004afd20	emit_adobe_app14	util	C4	util_pure	0	pure	1	c3be	emit_adobe_app14	1	-
+0x004affa0	emit_sof	util	C4	util_pure	0	pure	2	c3aa	emit_sof emit_sof_nc1	1	-
+0x004b01f0	emit_dri	util	C4	util_pure	0	pure	2	c3cs	emit_dri emit_dri_tight	1	-
+0x004b0460	jpeg_get_large	util	C4	util_pure	0	pure	1	c3cn	jpeg_get_large	1	-
+0x004b0470	jpeg_free_large	util	C4	util_pure	0	pure	1	c3cn	jpeg_free_large	1	-
+0x004b04c0	jdiv_round_up	util	C4	util_pure	0	pure	1	c3r	jdiv_round_up	1	-
+0x004b04d0	jround_up	util	C4	util_pure	0	pure	1	c3r	jround_up	1	-
+0x004b04f0	jcopy_sample_rows	util	C4	util_pure	0	pure	1	c3w	jcopy_sample_rows	1	-
+0x004b0860	start_iMCU_row	util	C4	util_pure	0	pure	1	c3be	start_iMCU_row	1	-
+0x004b1b70	flush_bits	util	C4	util_pure	0	pure	6	c3be	flush_bits flush_bits_full flush_bits_stuff flush_bits_fail flush_bits_fail2 flush_bits_loop	1	-
+0x004b2420	dump_buffer_4b2420	util	C4	util_pure	0	pure	2	c3be	dump_buffer_4b2420 dump_buffer_4b2420_err	1	-
+0x004b4390	expand_right_edge	util	C4	util_pure	0	pure	1	c3w	expand_right_edge	1	-
+0x004b59d0	select_scan_parameters	util	C4	util_pure	0	pure	10	c3aa	select_scan_parameters select_scan_parameters_nc1 select_scan_parameters_nc2 select_scan_parameters_nc4 select_scan_parameters_s0c1 select_scan_parameters_s0c2 select_scan_parameters_s0c3 select_scan_parameters_s0c4 select_scan_parameters_s1c1 select_scan_parameters_s1c2	1	-

@@ -1,0 +1,309 @@
+function	addr	tier	in_simcore	keys	keys_reproduced	ok_vectors	distinct_results	c3_vectors	c3_distinct_results	c3_csvs	jcc	jcc_both	jcc_one_side	jcc_none	open_sides	verdict	key_statuses	branch_notes
+resetRecordBank	0x00401000	sim	0	1	1	10	10	10	10	1	0	0	0	0	-	full	ok	log/c3/c3dx_purpose.md
+placeRecord	0x00401040	sim	0	1	1	12	10	12	10	1	14	11	3	0	+0x4b:taken +0x72:fall +0x8e:taken	one_sided	ok	log/c3/c3dx_purpose.md
+freeRecordAtPos	0x004011b0	sim	1	1	1	15	11	15	11	1	3	3	0	0	-	full	ok	log/c3/c3ah_purpose.md
+spawnObject	0x004011e0	sim	1	3	3	28	25	28	25	3	3	3	0	0	-	full	ok	log/c3/c3bs_purpose.md
+initRecords	0x00401750	sim	1	3	3	3	3	3	3	3	2	2	0	0	-	thin	ok	log/c3/c3dx_purpose.md
+placeAnimal	0x004017d0	sim	1	2	0	0	0	169	151	1	27	0	0	27	+0x64:both +0x73:both +0x85:both +0x8c:both +0x98:both +0xa5:both +0xb2:both +0x11b:both +0x137:both +0x202:both +0x216:both +0x229:both +0x23b:both +0x258:both +0x265:both +0x26b:both +0x294:both +0x2a3:both +0x2b8:both +0x310:both +0x314:both +0x319:both +0x31e:both +0x341:both +0x36e:both +0x3a5:both +0x412:both	none	excluded	log/c3/c3eb_purpose.md
+tickAnimals	0x00401c00	sim	1	10	6	6	6	5	5	5	2	2	0	0	-	thin	excluded,ok	log/c3/c3ev_purpose.md
+List401c70_dtor	0x00401c70	crt_callee	0	1	1	9	9	12	12	1	5	4	1	0	+0x5d:taken	thin	partial	log/c3/c3dx_purpose.md
+S3List_add	0x00401d10	util_callee	0	3	1	3	3	22	22	3	25	3	16	6	+0x1d:fall +0x2f:both +0x65:taken +0x70:taken +0x9d:both +0xd2:fall +0xf9:fall +0x106:both +0x164:taken +0x16f:taken +0x19c:both +0x1da:fall +0x21e:taken +0x254:taken +0x25f:taken +0x28c:both +0x2d0:fall +0x31c:taken +0x37a:taken +0x385:taken +0x3b2:both +0x3f0:fall	thin	excluded,partial	log/c3/c3dd_purpose.md
+listIterNext	0x00402130	util_pure	0	1	1	12	10	12	10	1	2	2	0	0	-	full	ok	log/c3/c3dv_purpose.md
+listIterValue	0x00402160	util_pure	0	1	1	12	6	12	6	1	1	1	0	0	-	full	ok	log/c3/c3dv_purpose.md
+S3List_add2	0x00402280	util_callee	0	3	1	6	6	22	22	3	25	5	16	4	+0x2f:taken +0x65:taken +0x70:taken +0x9d:both +0xd2:fall +0x106:taken +0x164:taken +0x16f:taken +0x19c:both +0x1da:fall +0x21e:taken +0x254:taken +0x25f:taken +0x28c:both +0x2d0:fall +0x31c:taken +0x37a:taken +0x385:taken +0x3b2:both +0x3f0:fall	thin	excluded,partial	log/c3/c3dd_purpose.md
+List402_clear	0x004026a0	util_callee	0	1	1	12	12	12	12	1	5	4	1	0	+0x46:taken	one_sided	ok	log/c3/c3cz_purpose.md
+freeAtTile	0x00402930	sim	1	1	1	21	14	21	14	1	4	3	1	0	+0x11:taken	one_sided	ok	log/c3/c3a_purpose.md
+spawnWalker	0x00402970	sim	1	2	2	24	24	24	24	2	2	2	0	0	-	full	ok	log/c3/c3af_purpose.md
+updateWalkers	0x00402a40	sim	1	4	2	92	92	304	304	2	115	86	20	9	+0x72:fall +0x7b:both +0x95:both +0x9e:both +0xa9:both +0xf2:fall +0xff:both +0x24b:fall +0x2b7:fall +0x2c0:both +0x505:fall +0x5c5:fall +0x5d8:fall +0x601:fall +0x61b:fall +0x642:fall +0x6eb:taken +0x6f5:taken +0x710:taken +0x7cf:fall +0x7d6:both +0x82d:taken +0x8ac:both +0x8b5:both +0xa02:fall +0xba7:taken +0xc69:taken +0xc93:taken +0xe39:taken	partial_branch	excluded,partial	log/c3/c3eb_purpose.md
+wobble	0x00405920	sim	1	19	19	19	19	19	19	19	3	3	0	0	-	full	ok	log/c3/c3dr_purpose.md
+addHabitatSlot	0x00405970	sim	1	4	4	40	31	40	31	4	2	2	0	0	-	full	ok	log/c3/c3fi_purpose.md
+sanitizeFileName	0x00405ac0	util_callee	1	1	1	10	5	10	5	1	4	3	1	0	+0x39:fall	one_sided	ok	log/c3/c3ep_purpose.md
+placeHabitat	0x00405e30	sim	1	2	1	13	11	13	13	1	12	0	1	11	+0x65:fall +0x8a:both +0x97:both +0xda:both +0xf2:both +0x100:both +0x11b:both +0x126:both +0x17d:both +0x194:both +0x199:both +0x1e9:both	partial_branch	excluded,ok	log/c3/c3eu_purpose.md
+computeRatingTrend	0x004060a0	sim	1	1	1	20	13	20	13	1	9	5	4	0	+0x8c:taken +0x98:taken +0xab:taken +0xbe:taken	one_sided	ok	log/c3/c3aj_purpose.md
+membershipReport	0x00406670	sim	1	4	2	23	23	48	48	4	26	19	7	0	+0x95:taken +0x273:fall +0x280:taken +0x402:taken +0x42b:taken +0x57e:fall +0x5a3:fall	one_sided	excluded,ok,partial	log/c3/c3ah_purpose.md
+canAfford	0x00406c30	sim	1	2	2	14	2	12	12	1	4	3	1	0	+0x2f:fall	one_sided	partial	log/c3/c3em_purpose.md
+buildStatusText	0x00406d50	simcore	1	4	4	704	431	704	431	4	2	2	0	0	-	full	ok	log/c3/c3dx_purpose.md
+holeQuadrants	0x00407000	sim	1	1	1	12	7	12	7	1	5	3	2	0	+0x1a:taken +0x57:taken	one_sided	ok	log/c3/c3dz_purpose.md
+inRange	0x004070b0	sim	1	1	1	214	114	214	214	1	20	20	0	0	-	full	ok	log/c3/c3dy_purpose.md
+appendHoleName	0x00407280	simcore	1	1	1	6	5	6	5	1	4	3	1	0	+0x25:taken	thin	ok	log/c3/c3dz_purpose.md
+nearestHole	0x00407340	sim	1	2	2	24	11	24	11	2	5	5	0	0	-	full	ok	log/c3/c3q_purpose.md
+canStep	0x00407400	sim	1	1	1	128	2	128	2	1	6	6	0	0	-	full	ok	log/c3/c3q_purpose.md
+landmarkName	0x004074a0	sim	1	1	1	20	18	20	18	1	19	8	2	9	+0x72:both +0x8d:both +0xc3:both +0xde:both +0xf9:both +0x139:both +0x16c:both +0x180:both +0x194:taken +0x1a8:fall +0x1bc:both	partial_branch	ok	log/c3/c3ab_purpose.md
+decorationName	0x00407700	sim	1	6	6	294	133	294	165	6	34	31	3	0	+0x215:taken +0x26e:taken +0x2cf:taken	one_sided	ok	log/c3/c3ae_purpose.md
+sceneryLabel	0x00407b60	sim	1	1	1	7	6	7	6	1	5	5	0	0	-	thin	ok	log/c3/c3ae_purpose.md
+narrateShot	0x00407e00	sim	1	2	2	2	2	68	67	1	128	0	10	118	+0x6e:fall +0x74:taken +0x86:fall +0x8c:fall +0x98:taken +0xa0:taken +0xbf:fall +0xf1:taken +0x107:fall +0x113:both +0x157:both +0x193:both +0x197:both +0x1d4:both +0x1df:both +0x22c:both +0x268:both +0x297:both +0x29f:both +0x2af:both +0x2b9:both +0x2c9:both +0x2db:taken +0x346:both +0x35d:both +0x364:both +0x36e:both +0x371:both +0x386:both +0x390:both +0x393:both +0x44e:both +0x45a:both +0x46b:both +0x4a2:both +0x4d9:both +0x50a:both +0x50f:both +0x5c7:both +0x5ea:both +0x627:both +0x701:both +0x71e:both +0x7c1:both +0x7db:both +0x7eb:both +0x881:both +0x92c:both +0xa40:both +0xaa9:both +0xaaf:both +0xac5:both +0xac9:both +0xadd:both +0xaf2:both +0xafe:both +0xb04:both +0xb27:both +0xb33:both +0xb40:both +0xb6d:both +0xb8d:both +0xba3:both +0xba9:both +0xbbc:both +0xbd0:both +0xbf3:both +0xbfc:both +0xc31:both +0xc50:both +0xc65:both +0xc7f:both +0xc83:both +0xc95:both +0xca8:both +0xcb5:both +0xcc2:both +0xcdd:both +0xcea:both +0xcf7:both +0xd12:both +0xd1f:both +0xd3a:both +0xd47:both +0xd62:both +0xd6f:both +0xd8a:both +0xd93:both +0xda7:both +0xdab:both +0xdbc:both +0xdc0:both +0xddb:both +0xde7:both +0xdf9:both +0xe01:both +0xe10:both +0xe20:both +0xe24:both +0xe2e:both +0xe3c:both +0xe46:both +0xe54:both +0xe60:both +0xe6f:both +0xece:both +0xf62:both +0xfb0:both +0x10c4:both +0x115f:both +0x11b5:both +0x12b2:both +0x12fe:both +0x1306:both +0x1313:both +0x1321:both +0x1326:both +0x132c:both +0x1348:both +0x1499:both +0x152b:both +0x1657:both +0x165c:both +0x1662:both +0x167a:both +0x1777:both +0x1785:both +0x17ca:both	thin	partial	log/c3/c3dw_purpose.md
+scanShotArea	0x00409620	sim	1	4	4	290	6	249	74	2	24	13	8	3	+0x18b:taken +0x1da:taken +0x1e8:both +0x1ec:both +0x212:both +0x24c:fall +0x27f:taken +0x2c3:fall +0x2dc:taken +0x2f3:taken +0x2f8:fall	partial_branch	partial	log/c3/c3dy_purpose.md
+appendPairTrackPoint	0x00409950	sim	1	1	1	10	10	10	10	1	4	3	1	0	+0x8a:taken	one_sided	ok	log/c3/c3e_purpose.md
+addGolferPair	0x004099f0	sim	1	1	1	8	8	8	8	1	2	0	1	1	+0xb:fall +0x1a:both	thin	ok	log/c3/c3e_purpose.md
+addGolferToTable	0x00409a90	sim	1	4	4	34	34	24	24	2	7	6	1	0	+0xab:fall	one_sided	ok,partial	log/c3/c3dy_purpose.md
+updateRollingStats	0x00409bf0	sim	1	3	3	3	3	3	3	3	6	5	1	0	+0xa2:fall	thin	ok	log/c3/c3e_purpose.md
+pushTripleEntry	0x00409cb0	sim	1	5	5	50	32	50	32	5	1	1	0	0	-	full	ok	log/c3/c3q_purpose.md
+stepCourseEditQueue	0x00409cf0	sim	1	2	1	12	12	90	90	1	27	3	1	23	+0x84:taken +0xd1:both +0xf2:both +0x11a:both +0x11f:both +0x124:both +0x129:both +0x12e:both +0x133:both +0x138:both +0x13d:both +0x199:both +0x1b1:both +0x1c9:both +0x1d7:both +0x1e8:both +0x1ed:both +0x206:both +0x314:both +0x328:both +0x33c:both +0x36d:both +0x3a8:both +0x3de:both	partial_branch	fixture_error,partial	log/c3/c3ed_purpose.md
+setGrids	0x0040a130	simcore	1	1	1	90	90	90	90	1	0	0	0	0	-	full	ok	log/c3/c3h_purpose.md
+buildToolLabel	0x0040a160	simcore	1	1	1	32	16	32	16	1	16	15	1	0	+0x293:fall	one_sided	ok	log/c3/c3o_purpose.md
+demolishObject	0x0040a4e0	sim	1	2	2	14	10	37	35	1	34	5	5	24	+0x3d:taken +0x60:fall +0x10a:both +0x12f:fall +0x137:both +0x141:both +0x15f:both +0x16b:both +0x17c:both +0x19e:both +0x1c4:both +0x1e3:both +0x1ee:both +0x1f3:both +0x1f8:both +0x21c:both +0x21f:both +0x223:both +0x251:both +0x257:both +0x285:both +0x347:fall +0x3f1:both +0x42f:taken +0x44d:both +0x46e:both +0x475:both +0x479:both +0x49b:both	partial_branch	partial	log/c3/c3fb_purpose.md
+appendClubName	0x0040a9a0	simcore	1	1	1	18	15	18	15	1	1	1	0	0	-	full	ok	log/c3/c3dz_purpose.md
+hireEmployee	0x0040aa80	sim	1	2	0	0	0	15	15	1	8	0	0	8	+0x10:both +0x19:both +0x31:both +0x40:both +0x8d:both +0x9f:both +0xf7:both +0x196:both	none	excluded	log/c3/c3fa_purpose.md
+distance	0x0040acd0	util_callee	1	1	1	72	14	72	14	1	2	2	0	0	-	full	ok	log/c3/c3a_purpose.md
+tileBlocked	0x0040bf60	sim	1	1	1	391	2	391	2	1	5	5	0	0	-	full	ok	log/c3/c3a_purpose.md
+typeAtPos	0x0040bfa0	sim	1	1	1	53	30	53	30	1	1	1	0	0	-	full	ok	log/c3/c3a_purpose.md
+cornerHeights	0x0040bfe0	sim	1	1	1	15	11	15	11	1	15	10	5	0	+0x11:taken +0x1d:taken +0x26:taken +0x12b:taken +0x138:taken	one_sided	ok	log/c3/c3a_purpose.md
+heightBlend	0x0040c170	sim	1	3	3	432	37	432	37	3	17	13	3	1	+0xc:taken +0x64:fall +0x75:both +0x82:taken	partial_branch	ok	log/c3/c3a_purpose.md
+slopeY	0x0040c2f0	sim	1	1	1	330	5	330	0	1	5	4	1	0	+0xb:taken	one_sided	ok	-
+slopeX	0x0040c3a0	sim	1	1	1	330	5	330	0	1	5	4	1	0	+0xb:taken	one_sided	ok	-
+slopeMix	0x0040c450	sim	1	1	1	880	11	880	0	1	1	1	0	0	-	full	ok	-
+tileDistance	0x0040c4b0	util_callee	1	1	1	25	21	25	21	1	0	0	0	0	-	full	ok	log/c3/c3b_purpose.md
+logTick	0x0040c6f0	sim	1	1	1	15	11	15	0	1	0	0	0	0	-	full	ok	log/c3/c3ac_purpose.md
+clearMatching	0x0040c860	sim	1	1	1	20	7	20	0	1	3	3	0	0	-	full	ok	-
+appendDate	0x0040d7b0	simcore	1	1	1	12	12	12	12	1	1	0	1	0	+0x31:fall	one_sided	ok	log/c3/c3ep_purpose.md
+appendCourseTitle	0x0040daa0	simcore	1	6	6	24	17	24	17	6	9	9	0	0	-	full	ok	log/c3/c3ah_purpose.md
+evalPlacementArea	0x0040db90	sim	1	2	2	360	14	360	14	2	30	25	5	0	+0x83:fall +0x8d:fall +0xa4:taken +0xdb:fall +0xe9:taken	one_sided	ok	log/c3/c3et_purpose.md
+nearestPlaced	0x0040ddb0	sim	1	1	1	63	43	63	43	1	5	5	0	0	-	full	ok	log/c3/c3a_purpose.md
+findNearestTargetTile	0x0040de70	sim	1	1	1	10	10	10	10	1	7	5	2	0	+0x35:taken +0x67:taken	one_sided	ok	log/c3/c3j_purpose.md
+objectAt	0x0040df80	sim	1	1	1	90	5	90	5	1	9	8	1	0	+0x34:taken	one_sided	ok	log/c3/c3e_purpose.md
+stampCourseTiles	0x0040e000	sim	1	6	6	63	63	107	105	6	30	26	4	0	+0x35:taken +0x50:taken +0x370:taken +0x386:taken	one_sided	ok,partial	log/c3/c3dx_purpose.md
+clearObjectFootprint	0x0040e400	sim	1	3	3	14	14	14	14	3	12	11	1	0	+0x11c:taken	one_sided	ok	log/c3/c3ah_purpose.md
+rankValue	0x0040e5b0	sim	0	1	1	26	5	26	5	1	3	3	0	0	-	full	ok	log/c3/c3fj_purpose.md
+appendUpgradeText	0x0040e5f0	simcore	1	1	1	10	10	10	10	1	2	2	0	0	-	full	ok	log/c3/c3ah_purpose.md
+announceBuilding	0x0040e720	sim	1	22	1	1	1	22	22	22	47	3	34	10	+0x1b:taken +0x29:taken +0x36:fall +0x40:both +0x90:fall +0xbc:taken +0x11a:taken +0x145:fall +0x14d:both +0x158:taken +0x179:fall +0x188:taken +0x197:fall +0x1a6:fall +0x1b6:taken +0x1c3:fall +0x205:fall +0x248:fall +0x28e:taken +0x295:fall +0x298:both +0x2a4:both +0x2d8:both +0x2e6:taken +0x31a:fall +0x321:both +0x355:both +0x583:fall +0x5b8:fall +0x66c:fall +0x69e:fall +0x700:taken +0x709:taken +0x71a:fall +0x723:both +0x731:both +0x81e:both +0x8eb:fall +0x900:fall +0x919:fall +0x934:fall +0x980:fall +0x9b5:fall +0x9f5:taken	thin	excluded,ok	log/c3/c3ah_purpose.md
+customizeCharacter	0x0040f190	simcore	1	2	0	0	0	14	12	1	17	0	0	17	+0x28:both +0x38:both +0x43:both +0x5a:both +0x78:both +0x7f:both +0x83:both +0x9b:both +0xaf:both +0xc3:both +0x110:both +0x1a4:both +0x204:both +0x2e1:both +0x2f5:both +0x3d0:both +0x3e3:both	none	excluded	log/c3/c3fa_purpose.md
+updateMembership	0x00421bc0	sim	1	5	5	20	9	20	11	5	34	32	2	0	+0x22f:taken +0x2cc:fall	one_sided	ok	log/c3/c3dw_purpose.md
+scanTileLine	0x00421fa0	sim	1	2	2	388	83	388	83	2	29	28	1	0	+0xa6:taken	one_sided	ok	log/c3/c3n_purpose.md
+decaySum	0x004223c0	sim	1	1	1	34	19	34	0	1	1	1	0	0	-	full	ok	log/c3/c3a_purpose.md
+decaySum2	0x004223f0	sim	1	1	1	143	46	143	46	1	1	1	0	0	-	full	ok	log/c3/c3a_purpose.md
+shotPower	0x00422430	sim	1	1	1	64	48	64	48	1	7	5	1	1	+0x12:fall +0x1b:both	partial_branch	ok	log/c3/c3a_purpose.md
+rateTile	0x00422530	sim	1	2	2	320	132	320	169	2	11	11	0	0	-	full	ok	-
+trialShot	0x004226a0	sim	1	2	2	228	228	114	114	1	70	58	8	4	+0x87:taken +0x355:fall +0x367:both +0x481:fall +0x4c5:taken +0x51d:fall +0x6dd:taken +0x844:fall +0x85b:both +0x86e:fall +0x876:both +0x87e:both	partial_branch	ok	log/c3/c3ea_purpose.md
+chooseShotTarget	0x00422fb0	sim	1	4	2	12	12	62	62	2	108	49	20	39	+0xde:fall +0xe6:both +0xf6:both +0x100:both +0x128:fall +0x13a:taken +0x21c:fall +0x328:fall +0x333:taken +0x3bd:taken +0x45b:taken +0x646:taken +0x71b:taken +0x751:fall +0x775:taken +0x7ef:taken +0xa54:fall +0xa61:both +0xa6e:both +0xa7d:both +0xa8e:both +0xb09:both +0xb24:both +0xb3f:both +0xb44:both +0xb5c:both +0xbb1:both +0xbef:both +0xbf6:both +0xc33:both +0xcfd:fall +0xd83:both +0xd90:both +0xe16:taken +0xe23:fall +0xed1:both +0xefa:both +0xf11:both +0xf3c:both +0xf47:both +0xf4d:both +0xf57:both +0xf8d:both +0xfa2:both +0xfac:both +0xfbe:both +0xfc9:both +0xfdd:both +0xffc:both +0x100e:both +0x1017:both +0x1030:both +0x1049:both +0x1062:both +0x107f:both +0x1095:both +0x10ae:fall +0x10cd:taken +0x111c:fall	partial_branch	excluded,partial	log/c3/c3dw_purpose.md
+prepareShot	0x00424120	sim	1	6	5	307	307	321	321	3	241	198	34	9	+0x2ab:taken +0x329:taken +0x3b1:fall +0x416:fall +0xd2d:taken +0x133e:taken +0x15e5:fall +0x15ea:both +0x15f7:both +0x1601:both +0x1624:fall +0x1632:both +0x1755:fall +0x177a:fall +0x177e:both +0x179a:fall +0x17f1:fall +0x1815:taken +0x1836:taken +0x183a:fall +0x1866:fall +0x18c2:fall +0x191a:fall +0x1935:taken +0x197d:fall +0x19ed:taken +0x19f2:taken +0x19f7:taken +0x19fc:taken +0x1a68:taken +0x1b7b:taken +0x1bae:fall +0x1bf2:fall +0x1c0a:both +0x1c24:both +0x1c38:both +0x1c42:both +0x1d7c:taken +0x1d9a:fall +0x1df6:fall +0x1ee9:fall +0x1f3a:taken +0x246d:fall	partial_branch	excluded,ok,partial	log/c3/c3ea_purpose.md
+resetGolfer	0x00426670	sim	1	1	1	16	16	16	0	1	2	2	0	0	-	full	ok	log/c3/c3fb_purpose.md
+patronEvent	0x004266b0	sim	1	7	7	84	84	126	126	7	26	11	4	11	+0x8e:taken +0x345:fall +0x3ab:both +0x647:fall +0x67f:both +0x685:both +0x6f4:both +0x825:both +0xa6e:fall +0xab0:both +0xaef:both +0xafd:both +0xbce:both +0xbd3:both +0xbde:both	partial_branch	partial	log/c3/c3ag_purpose.md
+matchUpdate	0x00427380	sim	1	16	13	35	35	47	47	16	89	55	26	8	+0x37b:fall +0x49f:taken +0x531:fall +0x78e:fall +0x9fb:taken +0xa78:taken +0xa8e:fall +0xb74:taken +0xbc4:taken +0xbda:fall +0xcc8:both +0xd18:taken +0xe05:both +0xe09:both +0xe1e:both +0xe48:both +0xe5d:both +0xf36:both +0xf84:taken +0x104f:fall +0x1079:taken +0x10ba:taken +0x10d1:taken +0x1131:taken +0x113f:taken +0x1158:taken +0x1169:fall +0x1173:taken +0x12b1:taken +0x1324:taken +0x1330:fall +0x1339:both +0x136b:taken +0x1544:taken	partial_branch	excluded,ok,partial	log/c3/c3aj_purpose.md
+updateGolfers	0x004289e0	sim	1	24	13	465	465	1240	1240	12	583	390	142	51	+0x49:fall +0x7e:fall +0x93:fall +0x1a9:fall +0x1b3:both +0x1bf:taken +0x1e6:taken +0x1ef:taken +0x221:taken +0x271:taken +0x27e:taken +0x28d:taken +0x298:taken +0x2a7:taken +0x2ae:taken +0x2ca:taken +0x36a:taken +0x3d4:fall +0x3ee:both +0x3f4:both +0x3fa:both +0x403:both +0x43d:fall +0x44f:both +0x461:both +0x559:taken +0x561:taken +0x56b:taken +0x574:taken +0x5bf:taken +0x5c3:taken +0x5c7:fall +0x600:taken +0x604:fall +0x61a:fall +0x62b:both +0x638:taken +0x665:fall +0x674:both +0x67b:both +0x687:both +0x6c4:fall +0x6d7:fall +0x75f:fall +0x789:fall +0x7b0:fall +0x7b7:both +0x7e0:fall +0x7f0:both +0x83d:both +0x9cc:fall +0xa33:fall +0xa5d:both +0xad1:both +0xb4b:both +0xbd3:both +0xcb9:both +0xd38:both +0xe5b:both +0xe9b:fall +0xec6:both +0xef2:both +0xf9e:fall +0xfaf:fall +0x125d:fall +0x12ea:taken +0x1328:fall +0x1334:taken +0x136b:fall +0x13a6:fall +0x1471:fall +0x154b:fall +0x1556:both +0x157b:both +0x1666:both +0x1844:taken +0x18bd:fall +0x18f4:fall +0x18fd:taken +0x1a06:taken +0x1a34:fall +0x1a9c:taken +0x1b0a:fall +0x1b54:taken +0x1b77:taken +0x1bdf:fall +0x1c63:taken +0x1c8b:taken +0x1d68:taken +0x1e9e:fall +0x1f32:fall +0x1faf:both +0x2011:both +0x2026:fall +0x2037:both +0x20d5:both +0x2154:both +0x2215:both +0x22c5:both +0x238d:taken +0x23a9:fall +0x23fa:taken +0x2410:taken +0x242d:fall +0x252c:taken +0x258f:taken +0x259d:taken +0x26a8:fall +0x2732:taken +0x27df:taken +0x2829:fall +0x28b1:taken +0x28c9:fall +0x2911:fall +0x291e:both +0x292c:both +0x2a84:fall +0x2b1e:taken +0x2b34:fall +0x2c53:fall +0x2c63:both +0x2ea0:taken +0x2f21:fall +0x2f40:taken +0x2f49:taken +0x2f5f:taken +0x3017:taken +0x3164:fall +0x3222:taken +0x3230:fall +0x3261:fall +0x32a9:taken +0x33ae:fall +0x346b:taken +0x3477:taken +0x3488:fall +0x34c6:fall +0x34e0:both +0x34ee:both +0x34fe:both +0x35bc:taken +0x3637:taken +0x36cd:fall +0x3804:taken +0x383e:taken +0x3890:taken +0x3aa4:fall +0x3be5:taken +0x3c89:taken +0x3d57:fall +0x3d61:both +0x3d66:both +0x3d88:fall +0x3ef5:taken +0x3f38:taken +0x3f4a:taken +0x3f78:fall +0x3fff:both +0x4080:fall +0x410c:taken +0x4178:fall +0x4197:taken +0x41be:taken +0x41e6:fall +0x41fd:fall +0x4225:fall +0x423c:fall +0x42fb:fall +0x4343:both +0x4407:fall +0x4502:fall +0x451a:both +0x454c:fall +0x46f7:taken +0x472a:fall +0x473a:both +0x4744:both +0x4752:both +0x4763:both +0x4817:taken +0x4855:fall +0x4867:both +0x4928:fall +0x492c:both +0x4963:both +0x4c01:taken +0x4cf5:taken +0x4ef6:taken +0x4f9a:taken +0x4fdc:fall +0x50e8:taken +0x5115:fall +0x512f:fall	partial_branch	excluded,partial	log/c3/c3aj_purpose.md
+sampleHeight	0x0042dba0	sim	1	1	1	108	71	108	71	1	0	0	0	0	-	full	ok	log/c3/c3a_purpose.md
+appendNumber	0x0042dc00	simcore	1	1	1	20	20	20	20	1	7	7	0	0	-	full	ok	log/c3/c3ag_purpose.md
+holeMagazineEvent	0x0042dea0	sim	1	5	2	2	2	5	5	5	52	37	15	0	+0x262:taken +0x2dd:taken +0x34b:fall +0x35f:taken +0x3cc:fall +0x409:fall +0x464:fall +0x4c8:taken +0x4fe:taken +0x584:taken +0x5ee:taken +0x740:fall +0x7bf:taken +0x7cc:taken +0x878:fall	thin	excluded,ok	log/c3/c3ac_purpose.md
+directionOf	0x0042e7a0	util_callee	1	1	1	55	4	55	4	1	1	1	0	0	-	full	ok	log/c3/c3w_purpose.md
+pathStep	0x0042e7e0	sim	1	2	2	281	247	279	251	1	61	54	3	4	+0x392:fall +0x3aa:both +0x427:both +0x43b:both +0x63a:taken +0x655:fall +0x661:both	partial_branch	partial	log/c3/c3eb_purpose.md
+clearCost	0x0042ee80	sim	1	2	2	20	16	20	16	2	9	8	1	0	+0x3b:fall	one_sided	ok	log/c3/c3ab_purpose.md
+rateLot	0x0042ef40	sim	1	2	2	20	16	20	16	2	12	10	2	0	+0xed:taken +0x15c:fall	one_sided	ok	log/c3/c3ae_purpose.md
+floodMark	0x0042f120	sim	1	1	1	18	8	18	8	1	5	5	0	0	-	full	ok	log/c3/c3dm_purpose.md
+markTileKind11	0x0042f2c0	sim	1	8	8	8	8	8	8	8	6	6	0	0	-	thin	ok	log/c3/c3dm_purpose.md
+rebuildTileCoverage	0x0042f340	sim	1	2	2	37	28	25	23	1	18	15	3	0	+0x60:taken +0xdc:taken +0x109:taken	one_sided	ok,partial	log/c3/c3dy_purpose.md
+cornerRange	0x0042f4b0	sim	1	1	1	110	30	110	30	1	6	6	0	0	-	full	ok	log/c3/c3a_purpose.md
+relaxEdges42f530	0x0042f530	sim	1	1	1	63	63	63	63	1	4	4	0	0	-	full	ok	log/c3/c3a_purpose.md
+relaxTile42f630	0x0042f630	sim	1	1	1	30	17	30	17	1	4	4	0	0	-	full	ok	log/c3/c3n_purpose.md
+raiseFromNeighbours	0x0042f6e0	sim	1	1	1	126	44	126	44	1	6	4	2	0	+0x4f:taken +0x68:taken	one_sided	ok	log/c3/c3a_purpose.md
+rebuildHeightfield	0x0042f7a0	sim	1	4	4	4	4	4	4	4	13	13	0	0	-	thin	ok	log/c3/c3ah_purpose.md
+heightAt42fa30	0x0042fa30	sim	1	1	1	330	33	330	0	1	6	3	1	2	+0xda:fall +0xe0:both +0xe4:both	partial_branch	ok	log/c3/c3ea_purpose.md
+buildGolferBioText	0x004315e0	sim	1	2	2	9	9	8	8	1	22	20	2	0	+0x1e3:taken +0x46c:taken	thin	ok,partial	log/c3/c3f_purpose.md
+fileExists	0x004378a0	util_callee	1	1	0	0	0	13	13	1	0	0	0	0	-	none	excluded	log/c3/c3cy_purpose.md
+loadThemeFile	0x00437fa0	sim	1	8	0	0	0	64	64	4	8	0	0	8	+0x32:both +0x113:both +0x17d:both +0x181:both +0x18d:both +0x1b4:both +0x207:both +0x217:both	none	excluded,fixture_error	log/c3/c3ep_purpose.md
+showCharacterEditor	0x004385d0	sim	0	2	0	0	0	13	13	1	109	0	0	109	+0x107:both +0x17b:both +0x188:both +0x197:both +0x19c:both +0x1e4:both +0x1f5:both +0x20e:both +0x266:both +0x29a:both +0x2e0:both +0x364:both +0x3a0:both +0x3c6:both +0x3d4:both +0x3de:both +0x3ed:both +0x40d:both +0x444:both +0x45b:both +0x51f:both +0x650:both +0x67a:both +0x6a4:both +0x6ce:both +0x6f8:both +0x73b:both +0x765:both +0x78f:both +0x7b9:both +0x844:both +0x8d8:both +0x916:both +0x9c1:both +0x9cd:both +0xa1f:both +0xa82:both +0xb6b:both +0xb99:both +0xba3:both +0xbc8:both +0xca9:both +0xd37:both +0xdc5:both +0xf0a:both +0xfae:both +0x100e:both +0x102f:both +0x1038:both +0x104e:both +0x1061:both +0x117f:both +0x11ad:both +0x1200:both +0x120d:both +0x12eb:both +0x1335:both +0x1362:both +0x13c2:both +0x13d8:both +0x13e4:both +0x141c:both +0x143f:both +0x14f9:both +0x1540:both +0x154c:both +0x1566:both +0x15d4:both +0x15e9:both +0x15fe:both +0x1631:both +0x1676:both +0x16bb:both +0x1706:both +0x1713:both +0x1725:both +0x177c:both +0x1802:both +0x1932:both +0x193a:both +0x193e:both +0x1980:both +0x199b:both +0x19ac:both +0x19c5:both +0x19f2:both +0x1a3e:both +0x1a4a:both +0x1b0e:both +0x1b50:both +0x1b57:both +0x1b65:both +0x1ba5:both +0x1bac:both +0x1bb7:both +0x1bf2:both +0x1bf6:both +0x1c09:both +0x1c0e:both +0x1c16:both +0x1c32:both +0x1c37:both +0x1c46:both +0x1c71:both +0x1c8b:both +0x1c93:both +0x1cad:both +0x1cb7:both +0x1cc4:both	none	excluded	log/c3/c3cz_purpose.md
+listMatchingFiles	0x0043d2a0	util_callee	1	2	0	0	0	25	17	2	9	0	0	9	+0x33:both +0x7e:both +0x90:both +0x9e:both +0xb0:both +0xc8:both +0xe0:both +0xe8:both +0x182:both	none	excluded	log/c3/c3ep_purpose.md
+freeBlock	0x0043d520	util_pure	0	1	1	12	12	12	12	1	7	5	2	0	+0x3a:fall +0x6a:fall	one_sided	ok	log/c3/c3b_purpose.md
+allocBlock	0x0043d5d0	util_pure	0	1	1	10	8	10	10	1	4	4	0	0	-	full	ok	log/c3/c3b_purpose.md
+cellAt	0x0043d6f0	sim	0	1	1	132	39	132	0	1	2	2	0	0	-	full	ok	log/c3/c3et_purpose.md
+initList820f18	0x00449210	sim	0	1	0	0	0	12	10	1	0	0	0	0	-	none	excluded	log/c3/c3cp_purpose.md
+tileType	0x004492d0	sim	1	1	1	72	32	72	0	1	0	0	0	0	-	full	ok	log/c3/c3ey_purpose.md
+tileByte	0x004492f0	sim	1	1	1	110	92	110	92	1	0	0	0	0	-	full	ok	log/c3/c3a_purpose.md
+tileQuery449310	0x00449310	sim	1	1	1	225	7	225	7	1	0	0	0	0	-	full	ok	log/c3/c3a_purpose.md
+wallHeight	0x00449330	sim	1	1	1	200	19	200	19	1	2	2	0	0	-	full	ok	log/c3/c3ev_purpose.md
+tileFlag20	0x004493b0	sim	1	1	1	110	2	110	2	1	0	0	0	0	-	full	ok	log/c3/c3a_purpose.md
+applyCourseType	0x00449400	sim	1	1	0	0	0	12	12	1	5	0	0	5	+0x1c:both +0x21:both +0x28:both +0x2f:both +0x42:both	none	excluded	log/c3/c3dp_purpose.md
+syncTiles	0x00449470	sim	0	2	0	0	0	12	12	2	8	0	0	8	+0x1e:both +0x22:both +0x27:both +0x2b:both +0x52:both +0x6e:both +0x93:both +0x9a:both	none	excluded	log/c3/c3bt_purpose.md
+refreshTerrain	0x00449520	sim	0	4	0	0	0	16	2	2	0	0	0	0	-	none	excluded	log/c3/c3dp_purpose.md
+rebuildTerrainGrid	0x00449540	sim	1	5	0	0	0	18	18	5	38	0	0	38	+0x1e:both +0x22:both +0x27:both +0x2b:both +0x66:both +0x69:both +0x87:both +0x9c:both +0xb0:both +0xbd:both +0xc1:both +0xc6:both +0xca:both +0xfa:both +0x102:both +0x105:both +0x10c:both +0x127:both +0x12b:both +0x130:both +0x134:both +0x153:both +0x156:both +0x171:both +0x17e:both +0x182:both +0x187:both +0x18b:both +0x1c4:both +0x1c7:both +0x1ca:both +0x1e7:both +0x1f4:both +0x1f8:both +0x1fd:both +0x201:both +0x23f:both +0x245:both	none	excluded	log/c3/c3bt_purpose.md
+initTerrain	0x00449790	sim	1	6	0	0	0	18	18	3	6	0	0	6	+0x1e:both +0x5c:both +0x61:both +0x68:both +0x6f:both +0x82:both	none	excluded	log/c3/c3dp_purpose.md
+freeTerrain	0x00449860	sim	0	4	0	0	0	2	2	2	1	0	0	1	+0x14:both	none	excluded	log/c3/c3dp_purpose.md
+updateTerrainRender	0x004498a0	sim	1	2	0	0	0	41	41	1	47	0	0	47	+0xb:both +0x18:both +0x46:both +0x62:both +0x9c:both +0xa0:both +0xa5:both +0xa9:both +0x115:both +0x13f:both +0x179:both +0x17d:both +0x182:both +0x186:both +0x1e8:both +0x1f0:both +0x22b:both +0x24a:both +0x257:both +0x264:both +0x268:both +0x26d:both +0x271:both +0x2a5:both +0x2b2:both +0x2ec:both +0x2f0:both +0x2f5:both +0x2f9:both +0x334:both +0x354:both +0x361:both +0x39b:both +0x39f:both +0x3a4:both +0x3a8:both +0x3f6:both +0x408:both +0x442:both +0x446:both +0x44b:both +0x44f:both +0x4f8:both +0x53a:both +0x53e:both +0x543:both +0x547:both	none	capture_error,excluded	log/c3/c3bt_purpose.md
+applyTileVariation	0x00449f00	sim	0	1	0	0	0	13	13	1	6	0	0	6	+0x1f:both +0x3b:both +0x51:both +0x57:both +0x66:both +0x6c:both	none	excluded	log/c3/c3bt_purpose.md
+applyTileElevation	0x00449fa0	sim	1	1	1	2	1	16	16	1	35	3	2	30	+0x4a:fall +0x6f:both +0x8b:both +0xc6:fall +0xdb:both +0xf0:both +0x103:both +0x118:both +0x12d:both +0x13b:both +0x149:both +0x15e:both +0x192:both +0x1d0:both +0x1d4:both +0x1dd:both +0x1e1:both +0x21c:both +0x238:both +0x24d:both +0x262:both +0x275:both +0x28a:both +0x29d:both +0x2ab:both +0x2b9:both +0x2ce:both +0x302:both +0x340:both +0x344:both +0x34d:both +0x351:both	thin	partial	log/c3/c3bt_purpose.md
+applyTileWalls	0x0044a380	sim	0	2	2	5	2	13	13	1	5	1	3	1	+0x25:fall +0x30:both +0x4f:taken +0x5a:fall	thin	partial	log/c3/c3bt_purpose.md
+togglePath	0x0044a410	sim	1	1	0	0	0	13	13	1	12	0	0	12	+0x1a:both +0x32:both +0x4e:both +0x62:both +0x83:both +0x8f:both +0xd9:both +0xf1:both +0x106:both +0x11a:both +0x13b:both +0x147:both	none	excluded	log/c3/c3bt_purpose.md
+rebuildTileData	0x0044a5b0	sim	1	5	3	6	3	24	24	5	15	2	2	11	+0x28:fall +0x47:fall +0x4f:both +0x5f:both +0x70:both +0x74:both +0x79:both +0x7d:both +0xca:both +0xe8:both +0xf4:both +0x108:both +0x116:both	thin	excluded,partial	log/c3/c3ev_purpose.md
+renderTerrainStrip	0x0044a6e0	sim	0	7	0	0	0	148	148	7	36	0	0	36	+0x11:both +0x1d:both +0x48:both +0x54:both +0x7a:both +0x86:both +0xb4:both +0xb7:both +0xbc:both +0xdb:both +0xec:both +0xfe:both +0x111:both +0x131:both +0x135:both +0x13a:both +0x153:both +0x157:both +0x15c:both +0x174:both +0x182:both +0x195:both +0x1ae:both +0x1c5:both +0x1ca:both +0x257:both +0x25c:both +0x2e7:both +0x2ec:both +0x37a:both +0x37f:both +0x413:both +0x451:both +0x455:both +0x45e:both +0x462:both	none	excluded	log/c3/c3dp_purpose.md
+listEraseRange	0x0044ac00	util_callee	1	1	1	2	2	12	12	1	2	0	1	1	+0xf:fall +0x36:both	thin	partial	log/c3/c3cz_purpose.md
+showEndOfYearScreen	0x0044cff0	sim	0	2	0	0	0	14	14	1	59	0	0	59	+0x31f:both +0x350:both +0x381:both +0x3ae:both +0x413:both +0x421:both +0x457:both +0x4a9:both +0x503:both +0x536:both +0x5ad:both +0x5bb:both +0x5f1:both +0x66e:both +0x6f7:both +0x72a:both +0x7a4:both +0x7b2:both +0x7e8:both +0x834:both +0x888:both +0x8bb:both +0x940:both +0x94e:both +0x984:both +0xa01:both +0xa80:both +0xab3:both +0xb09:both +0xb22:both +0xba4:both +0xbaa:both +0xbb8:both +0xc6f:both +0xe29:both +0xfb8:both +0xfe6:both +0x1030:both +0x103d:both +0x104d:both +0x107a:both +0x1081:both +0x1088:both +0x10df:both +0x115e:both +0x11e8:both +0x1267:both +0x12ed:both +0x136c:both +0x1472:both +0x1482:both +0x1489:both +0x1491:both +0x1498:both +0x14a0:both +0x14cb:both +0x1506:both +0x150e:both +0x1521:both	none	excluded	log/c3/c3dd_purpose.md
+showFinancialReport	0x0044f6b0	sim	0	2	0	0	0	16	16	1	20	0	0	20	+0x6d:both +0xa5:both +0xe4:both +0x11c:both +0x13e:both +0x1bf:both +0x200:both +0x219:both +0x291:both +0x2e1:both +0x310:both +0x382:both +0x389:both +0x394:both +0x39b:both +0x39f:both +0x3ca:both +0x40a:both +0x415:both +0x419:both	none	excluded	log/c3/c3dw_purpose.md
+bucketValue	0x0044faf0	util_callee	1	1	1	46	5	46	0	1	3	3	0	0	-	full	ok	log/c3/c3ah_purpose.md
+golferAge	0x00453260	sim	1	1	1	16	16	16	0	1	3	3	0	0	-	full	ok	log/c3/c3dz_purpose.md
+appendRatingLabel	0x004532a0	sim	1	2	2	34	10	34	10	2	2	2	0	0	-	full	ok	log/c3/c3eo_purpose.md
+overlayCharAt	0x00456bb0	util_callee	1	1	1	43	2	43	2	1	0	0	0	0	-	full	ok	log/c3/c3r_purpose.md
+showBuyLandScreen	0x004587a0	sim	0	2	0	0	0	10	10	1	55	0	0	55	+0x25:both +0x55:both +0xc4:both +0x198:both +0x1b3:both +0x207:both +0x245:both +0x312:both +0x362:both +0x4a0:both +0x4d6:both +0x51f:both +0x523:both +0x539:both +0x543:both +0x54f:both +0x58e:both +0x605:both +0x628:both +0x7e5:both +0x7f2:both +0x7f7:both +0x803:both +0x847:both +0x882:both +0x8c9:both +0x922:both +0x957:both +0x99c:both +0x9f6:both +0xa56:both +0xa5e:both +0xa63:both +0xa6a:both +0xa86:both +0xa92:both +0xa9f:both +0xaa7:both +0xab4:both +0xabc:both +0xac3:both +0xaca:both +0xad8:both +0xaf2:both +0xb11:both +0xb1a:both +0xb21:both +0xb3d:both +0xb4a:both +0xb56:both +0xb67:both +0xbf8:both +0xc12:both +0xc24:both +0xc29:both	none	excluded	log/c3/c3df_purpose.md
+showHireEmployeeDialog	0x00459400	sim	0	2	0	0	0	20	20	1	25	0	0	25	+0x56:both +0x5d:both +0x74:both +0x7b:both +0x95:both +0x9c:both +0xb6:both +0xbd:both +0x113:both +0x11f:both +0x127:both +0x133:both +0x13b:both +0x1bd:both +0x1c9:both +0x2d4:both +0x32c:both +0x342:both +0x36f:both +0x3bf:both +0x3e5:both +0x3ee:both +0x3fb:both +0x413:both +0x418:both	none	excluded	log/c3/c3dw_purpose.md
+showGolferPairSelect	0x00459850	sim	0	2	0	0	0	12	12	1	44	0	0	44	+0x9c:both +0xb8:both +0xbd:both +0xd0:both +0x128:both +0x12f:both +0x134:both +0x141:both +0x17f:both +0x1d5:both +0x20a:both +0x20e:both +0x213:both +0x3b7:both +0x3e1:both +0x40b:both +0x435:both +0x56a:both +0x571:both +0x595:both +0x5f5:both +0x60a:both +0x658:both +0x661:both +0x671:both +0x67b:both +0x6c8:both +0x6d1:both +0x6d5:both +0x6e2:both +0x6ef:both +0x6f8:both +0x6fc:both +0x703:both +0x712:both +0x72b:both +0x75e:both +0x771:both +0x778:both +0x77d:both +0x7b2:both +0x7b7:both +0x7c6:both +0x7ce:both	none	excluded	log/c3/c3da_purpose.md
+lookupThemeText	0x0045b660	sim	1	2	0	0	0	14	14	1	5	0	0	5	+0x59:both +0x5f:both +0x66:both +0x12d:both +0x13b:both	none	excluded	log/c3/c3eu_purpose.md
+replaceInText	0x0045b7c0	util_callee	1	1	1	6	1	6	2	1	1	0	1	0	+0x20:fall	thin	ok	log/c3/c3ag_purpose.md
+appendToBuffer45b8b0	0x0045b8b0	util_callee	1	1	1	11	10	11	10	1	12	9	3	0	+0xa8:taken +0xb0:fall +0xe7:taken	one_sided	ok	log/c3/c3aj_purpose.md
+appendString	0x0045b9f0	util_callee	1	1	1	14	11	14	13	1	2	2	0	0	-	full	ok	log/c3/c3ah_purpose.md
+waitTicks	0x0045bf80	util_callee	0	1	1	2	1	16	10	1	6	0	1	5	+0xa:fall +0x3b:both +0x48:both +0x56:both +0x5f:both +0x67:both	thin	partial	log/c3/c3dw_purpose.md
+Random::next	0x0045c1a0	util_callee	1	1	1	32	16	32	0	1	0	0	0	0	-	full	ok	log/c3/c3df_purpose.md
+Random::range	0x0045c1e0	util_callee	1	1	1	15	8	15	8	1	0	0	0	0	-	full	ok	log/c3/c3af_purpose.md
+drawThoughtBubble	0x0045c200	sim	0	2	0	0	0	38	35	1	6	0	0	6	+0x44:both +0x7a:both +0x8a:both +0x111:both +0x13c:both +0x18b:both	none	excluded	log/c3/c3ei_purpose.md
+thoughtBalance	0x0045c420	sim	1	1	1	32	3	32	3	1	3	3	0	0	-	full	ok	log/c3/c3a_purpose.md
+substituteStoryNames	0x0045c460	sim	1	5	5	90	35	90	54	5	0	0	0	0	-	full	ok	log/c3/c3ag_purpose.md
+drawGolferInfoPanel	0x0045c560	sim	0	2	0	0	0	19	19	1	73	0	0	73	+0x20:both +0x53:both +0x60:both +0x1db:both +0x205:both +0x22f:both +0x259:both +0x343:both +0x354:both +0x35d:both +0x3db:both +0x49f:both +0x4a8:both +0x51e:both +0x52b:both +0x561:both +0x8a5:both +0x929:both +0x938:both +0x9fb:both +0xaa8:both +0xab5:both +0xabd:both +0xad3:both +0xae8:both +0xaf4:both +0xb01:both +0xb98:both +0xc42:both +0xce9:both +0xdfc:both +0xe17:both +0xe2c:both +0xe56:both +0xea8:both +0xefa:both +0xf16:both +0xf5b:both +0xf8f:both +0xfba:both +0xfe9:both +0x1018:both +0x102f:both +0x1042:both +0x1046:both +0x108e:both +0x10a1:both +0x11d2:both +0x11ef:both +0x11fe:both +0x12e1:both +0x1310:both +0x133f:both +0x136e:both +0x139d:both +0x1463:both +0x14e4:both +0x14fa:both +0x1502:both +0x1512:both +0x15c7:both +0x15da:both +0x1656:both +0x170f:both +0x17b8:both +0x17c3:both +0x17d2:both +0x17df:both +0x17e7:both +0x1802:both +0x180c:both +0x1883:both +0x1886:both	none	excluded	log/c3/c3dw_purpose.md
+swapTableEntry	0x0045de30	util_callee	1	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3et_purpose.md
+pairGolfersWithStory	0x0045de80	sim	1	2	0	0	0	301	248	1	104	0	0	104	+0xc8:both +0x13b:both +0x142:both +0x17f:both +0x190:both +0x198:both +0x1a5:both +0x1cd:both +0x1e9:both +0x20d:both +0x224:both +0x247:both +0x26a:both +0x28a:both +0x2a2:both +0x2b1:both +0x2c0:both +0x2cf:both +0x2de:both +0x2fa:both +0x32c:both +0x354:both +0x37c:both +0x3a4:both +0x3cc:both +0x3f4:both +0x41c:both +0x441:both +0x466:both +0x48b:both +0x4a4:both +0x4a9:both +0x4ae:both +0x4d2:both +0x51a:both +0x540:both +0x560:both +0x584:both +0x59b:both +0x5be:both +0x5e1:both +0x601:both +0x619:both +0x628:both +0x637:both +0x646:both +0x655:both +0x671:both +0x6a3:both +0x6cd:both +0x6f7:both +0x721:both +0x74b:both +0x775:both +0x79f:both +0x7c2:both +0x7e5:both +0x808:both +0x81f:both +0x826:both +0x834:both +0x838:both +0x846:both +0x86a:both +0x876:both +0x8a6:both +0x8c1:both +0x8ca:both +0x8e2:both +0x8f2:both +0x90e:both +0xa22:both +0xa2d:both +0xa3c:both +0xa54:both +0xae0:both +0xba9:both +0xbb4:both +0xbcf:both +0xbf8:both +0xc90:both +0xd4e:both +0xd59:both +0xd74:both +0xd84:both +0xe15:both +0xed6:both +0xeec:both +0xf07:both +0xf33:both +0xf64:both +0xf8c:both +0xf98:both +0xfa2:both +0xfca:both +0xfe7:both +0x1007:both +0x102b:both +0x1048:both +0x1051:both +0x105a:both +0x1093:both +0x10b2:both +0x10f1:both	none	excluded	log/c3/c3dz_purpose.md
+skillPointDialog	0x0045f0f0	sim	1	2	0	0	0	17	17	1	39	0	0	39	+0x4b:both +0x69:both +0xc5:both +0xf7:both +0x17f:both +0x1e8:both +0x1f7:both +0x22d:both +0x25c:both +0x272:both +0x276:both +0x27d:both +0x2a8:both +0x2ac:both +0x2b3:both +0x2ba:both +0x2e5:both +0x2f3:both +0x3f0:both +0x3f8:both +0x4c3:both +0x4ed:both +0x4f6:both +0x515:both +0x536:both +0x54e:both +0x558:both +0x619:both +0x65e:both +0x666:both +0x673:both +0x688:both +0x68e:both +0x69c:both +0x6d7:both +0x6dd:both +0x6fb:both +0x718:both +0x722:both	none	excluded	log/c3/c3dl_purpose.md
+showCourseRanking	0x0045f870	sim	0	2	0	0	0	8	8	1	17	0	0	17	+0x15b:both +0x161:both +0x173:both +0x181:both +0x20b:both +0x22e:both +0x23a:both +0x25c:both +0x268:both +0x28b:both +0x297:both +0x2ba:both +0x2c6:both +0x2e8:both +0x2f9:both +0x3e5:both +0x48f:both	none	excluded	log/c3/c3fb_purpose.md
+buildScenarioIntro	0x0045fd80	simcore	1	8	8	8	8	8	8	8	4	4	0	0	-	thin	ok	log/c3/c3ai_purpose.md
+announceHoleType	0x00460df0	sim	1	3	3	126	102	126	102	3	4	4	0	0	-	full	ok	log/c3/c3ac_purpose.md
+spreadShade	0x004615f0	sim	1	1	1	40	40	40	33	1	4	4	0	0	-	full	ok	log/c3/c3bs_purpose.md
+spreadAllShade	0x004616f0	sim	1	7	7	7	7	7	7	7	8	8	0	0	-	thin	ok	log/c3/c3bs_purpose.md
+composeGolferSprite	0x00462020	sim	1	2	0	0	0	71	65	1	47	0	0	47	+0x28:both +0x3f:both +0x7e:both +0x87:both +0xb8:both +0xcd:both +0xe5:both +0xf1:both +0x10e:both +0x165:both +0x17d:both +0x1b6:both +0x1ce:both +0x204:both +0x21c:both +0x252:both +0x26a:both +0x2a6:both +0x2be:both +0x2ea:both +0x2fd:both +0x315:both +0x344:both +0x35f:both +0x38d:both +0x3a8:both +0x3d7:both +0x3f7:both +0x40f:both +0x48a:both +0x4d3:both +0x527:both +0x572:both +0x5b9:both +0x5d1:both +0x613:both +0x62b:both +0x66a:both +0x682:both +0x6c2:both +0x6d7:both +0x6df:both +0x6fc:both +0x706:both +0x721:both +0x75d:both +0x778:both	none	excluded	log/c3/c3ei_purpose.md
+boundIndex	0x00463170	util_pure	0	1	1	63	8	63	8	1	1	1	0	0	-	full	ok	log/c3/c3fj_purpose.md
+loadThemes	0x004658b0	sim	1	8	0	0	0	16	8	4	3	0	0	3	+0xe:both +0xae:both +0xdb:both	none	excluded	log/c3/c3ep_purpose.md
+loadGolferRoster	0x004659a0	sim	1	2	0	0	0	12	12	1	32	0	0	32	+0xf6:both +0x146:both +0x152:both +0x171:both +0x20f:both +0x227:both +0x27a:both +0x291:both +0x2a1:both +0x2b8:both +0x39d:both +0x3a1:both +0x483:both +0x49a:both +0x542:both +0x55e:both +0x5b3:both +0x5ce:both +0x5de:both +0x5f5:both +0x69c:both +0x6e3:both +0x7f2:both +0x7f6:both +0x80a:both +0x80e:both +0x837:both +0x853:both +0x86a:both +0x911:both +0x9aa:both +0x9bc:both	none	excluded	log/c3/c3ep_purpose.md
+advanceStory	0x00466370	sim	1	2	2	14	4	70	58	1	20	4	4	12	+0x33:fall +0x5f:fall +0x78:taken +0x7c:fall +0xf4:both +0x158:both +0x1b3:both +0x1eb:both +0x1fb:both +0x2be:both +0x2f0:both +0x31a:both +0x36c:both +0x3a5:both +0x3ae:both +0x3be:both	partial_branch	partial	log/c3/c3dz_purpose.md
+storyText	0x004668f0	sim	1	2	2	4	2	19	18	1	10	1	1	8	+0x46:taken +0x50:both +0x7f:both +0x85:both +0x8f:both +0x9a:both +0xab:both +0xb5:both +0xba:both	thin	partial	log/c3/c3dy_purpose.md
+computeStoryReply	0x004669f0	sim	1	4	0	0	0	124	118	2	14	0	0	14	+0x4b:both +0x5a:both +0x72:both +0x77:both +0x81:both +0xac:both +0xb1:both +0xd0:both +0xd7:both +0xdc:both +0xe1:both +0xe7:both +0x107:both +0x140:both	none	excluded	log/c3/c3dz_purpose.md
+loadStoryStrings	0x00466b70	sim	1	2	0	0	0	47	46	1	34	0	0	34	+0x26:both +0x2a:both +0x38:both +0x49:both +0xb5:both +0x15a:both +0x18a:both +0x196:both +0x1b6:both +0x1c1:both +0x1cb:both +0x23c:both +0x2e5:both +0x2eb:both +0x2f8:both +0x304:both +0x315:both +0x329:both +0x357:both +0x366:both +0x36f:both +0x37a:both +0x3c2:both +0x3d1:both +0x3da:both +0x455:both +0x45e:both +0x467:both +0x482:both +0x4d0:both +0x4d9:both +0x4e2:both +0x526:both +0x57a:both	none	excluded	log/c3/c3aj_purpose.md
+clamp	0x00467130	util_callee	1	1	1	160	10	160	10	1	3	3	0	0	-	full	ok	log/c3/c3a_purpose.md
+sign	0x00467150	util_callee	1	1	1	31	3	31	3	1	1	1	0	0	-	full	ok	log/c3/c3aj_purpose.md
+approxDistance	0x00467170	util_callee	1	1	1	144	38	144	38	1	3	3	0	0	-	full	ok	log/c3/c3be_purpose.md
+direction8	0x004671a0	util_callee	1	1	1	289	8	289	8	1	11	11	0	0	-	full	ok	log/c3/c3fv_purpose.md
+foldRange	0x00467270	util_callee	1	1	1	72	9	72	9	1	2	2	0	0	-	full	ok	log/c3/c3b_purpose.md
+absDiff	0x004672b0	util_callee	1	1	1	84	29	84	29	1	0	0	0	0	-	full	ok	log/c3/c3e_purpose.md
+angleFixed	0x004672d0	util_callee	1	1	1	289	208	289	208	1	10	10	0	0	-	full	ok	log/c3/c3ac_purpose.md
+genNoise	0x004673e0	sim	1	12	12	12	12	12	12	12	8	8	0	0	-	full	ok	log/c3/c3dm_purpose.md
+bilinearSample	0x004674c0	sim	1	1	1	256	175	256	175	1	0	0	0	0	-	full	ok	log/c3/c3a_purpose.md
+appendEndearment	0x00467560	sim	1	2	2	32	8	32	8	2	1	0	1	0	+0xc:taken	one_sided	ok	log/c3/c3dz_purpose.md
+thoughtFlag	0x004675d0	sim	1	1	1	32	3	32	3	1	1	1	0	0	-	full	ok	log/c3/c3a_purpose.md
+appendWalkerName	0x00467600	sim	1	1	1	16	12	16	12	1	2	2	0	0	-	full	ok	log/c3/c3bs_purpose.md
+buildGolferName	0x004676e0	sim	1	3	3	150	120	150	123	3	6	6	0	0	-	full	ok	log/c3/c3ag_purpose.md
+emitGolferThought	0x00467a00	sim	1	6	2	36	24	286	266	3	95	41	31	23	+0xe2:fall +0x125:fall +0x172:fall +0x22d:fall +0x243:taken +0x525:both +0x714:both +0x737:both +0x7bf:both +0x7e2:both +0x906:taken +0xa6f:both +0xace:taken +0xae7:taken +0xaf3:taken +0xaf8:taken +0xafd:taken +0xb02:fall +0xb0c:both +0xb10:both +0xb17:both +0xb2f:fall +0xb33:both +0xb3f:both +0xb5b:fall +0xb66:both +0xb70:both +0xb80:both +0xba0:both +0xbb4:both +0xbc3:both +0xbcb:both +0xbe8:taken +0xbf6:taken +0xbff:taken +0xc22:taken +0xc33:taken +0xc38:taken +0xc4e:fall +0xc58:both +0xc62:both +0xce7:fall +0xcf3:both +0xd0b:taken +0xd31:taken +0xd61:taken +0xd6a:taken +0xe45:taken +0xe62:fall +0xfb2:taken +0x1ddf:taken +0x1dfb:fall +0x1e0b:both +0x1e17:both	partial_branch	capture_error,excluded,partial	log/c3/c3aj_purpose.md
+appendOpinion	0x00469a20	sim	1	1	1	60	13	60	0	1	6	6	0	0	-	full	ok	log/c3/c3ag_purpose.md
+buildGolferComment	0x00469b00	sim	1	4	4	1002	520	607	557	2	125	108	16	1	+0x9a:fall +0x194:taken +0x26f:taken +0x3c3:taken +0x4c9:taken +0x644:taken +0x8b5:taken +0x8cd:taken +0xadd:taken +0x17ca:taken +0x1ab0:fall +0x1bd5:taken +0x1c55:both +0x27e6:fall +0x2886:taken +0x289a:taken +0x28d3:taken	partial_branch	partial	log/c3/c3dz_purpose.md
+typeBit7Clear	0x0046c940	sim	1	1	1	16	2	16	0	1	0	0	0	0	-	full	ok	log/c3/c3ah_purpose.md
+loadGolfPro	0x0046c970	sim	1	2	2	2	2	6	6	1	27	2	1	24	+0x8e:fall +0x1d0:both +0x1e2:both +0x245:both +0x266:both +0x287:both +0x28f:both +0x2a3:both +0x2ab:both +0x2ff:both +0x30f:both +0x320:both +0x32c:both +0x351:both +0x36b:both +0x390:both +0x39c:both +0x41f:both +0x4a1:both +0x5b4:both +0x5c8:both +0x5f0:both +0x600:both +0x629:both +0x666:both	thin	partial	log/c3/c3ev_purpose.md
+initGolferState	0x0046d040	sim	1	2	2	14	10	12	10	1	4	4	0	0	-	full	partial	log/c3/c3dw_purpose.md
+resetGolferState	0x0046d0c0	sim	1	24	0	0	0	12	12	12	16	0	0	16	+0x11:both +0x17:both +0x2c:both +0x74:both +0x91:both +0x98:both +0xa2:both +0xb5:both +0xc3:both +0xd1:both +0xdf:both +0xea:both +0xf8:both +0x106:both +0x114:both +0x11d:both	none	excluded	log/c3/c3dw_purpose.md
+buildTournamentPrep	0x0046d200	sim	1	2	0	0	0	6	6	1	26	0	0	26	+0xc9:both +0xdc:both +0xe7:both +0xf3:both +0x285:both +0x295:both +0x2c7:both +0x2d9:both +0x2f9:both +0x311:both +0x31a:both +0x328:both +0x339:both +0x352:both +0x389:both +0x3a5:both +0x3b9:both +0x3e0:both +0x3e4:both +0x3ed:both +0x3ff:both +0x40d:both +0x456:both +0x499:both +0x4ab:both +0x4d0:both	none	excluded	log/c3/c3fb_purpose.md
+postEvent	0x0046e7b0	sim	1	2	2	32	10	32	10	2	2	2	0	0	-	full	ok	log/c3/c3ac_purpose.md
+tierPrice	0x0046f1d0	sim	0	1	1	27	16	27	16	1	1	1	0	0	-	full	ok	log/c3/c3fw_purpose.md
+seedCourseTable	0x0046f2b0	sim	1	24	24	24	24	24	24	24	19	19	0	0	-	full	ok	log/c3/c3df_purpose.md
+clearTile	0x00470a10	sim	1	2	2	72	72	72	0	2	1	1	0	0	-	full	ok	-
+generateRandomCourse	0x00470a60	sim	1	4	0	0	0	268	268	2	180	0	0	180	+0x4d:both +0x50:both +0x53:both +0x8f:both +0x92:both +0x97:both +0xd0:both +0xe5:both +0x107:both +0x10c:both +0x122:both +0x1fb:both +0x216:both +0x249:both +0x264:both +0x26c:both +0x275:both +0x27e:both +0x297:both +0x2b7:both +0x2e5:both +0x325:both +0x33e:both +0x35b:both +0x375:both +0x385:both +0x3d1:both +0x3da:both +0x43c:both +0x483:both +0x494:both +0x49c:both +0x4bb:both +0x4ed:both +0x4f2:both +0x50e:both +0x530:both +0x53e:both +0x563:both +0x567:both +0x57c:both +0x598:both +0x5a6:both +0x5b8:both +0x5f6:both +0x607:both +0x613:both +0x624:both +0x63e:both +0x64a:both +0x65d:both +0x675:both +0x67c:both +0x69a:both +0x6a6:both +0x6d4:both +0x72f:both +0x7c9:both +0x7e4:both +0x7e8:both +0x7f4:both +0x7f9:both +0x7fe:both +0x827:both +0x83e:both +0x843:both +0x869:both +0x894:both +0x8ba:both +0x8bf:both +0x8c3:both +0x8c8:both +0x8d6:both +0x8eb:both +0x8fd:both +0x945:both +0x95b:both +0x968:both +0x972:both +0x9b2:both +0x9c5:both +0x9c9:both +0x9cd:both +0x9d1:both +0x9e7:both +0x9eb:both +0x9f0:both +0xa0d:both +0xa29:both +0xa2d:both +0xa78:both +0xa81:both +0xa89:both +0xa92:both +0xab9:both +0xad8:both +0xafa:both +0xaff:both +0xb2d:both +0xb3b:both +0xb53:both +0xb9d:both +0xbb6:both +0xc16:both +0xc56:both +0xcc3:both +0xcc8:both +0xd0f:both +0xd3c:both +0xd6a:both +0xd6e:both +0xd73:both +0xdc3:both +0xddf:both +0xe23:both +0xe3d:both +0xe87:both +0xea0:both +0xf09:both +0xf26:both +0xf2f:both +0xf7d:both +0xff9:both +0x1027:both +0x1035:both +0x103a:both +0x103f:both +0x1065:both +0x1089:both +0x10ce:both +0x10d7:both +0x10e2:both +0x10fa:both +0x1107:both +0x1172:both +0x117f:both +0x11eb:both +0x11ff:both +0x1231:both +0x123b:both +0x12a0:both +0x12ab:both +0x12b3:both +0x12cc:both +0x12f9:both +0x1323:both +0x132b:both +0x134e:both +0x135f:both +0x1391:both +0x139f:both +0x13ee:both +0x1431:both +0x144a:both +0x1464:both +0x14ad:both +0x14c0:both +0x14c4:both +0x14c8:both +0x14dd:both +0x14ec:both +0x14fa:both +0x1508:both +0x1516:both +0x1523:both +0x1538:both +0x1584:both +0x15a0:both +0x1615:both +0x163c:both +0x164f:both +0x16a4:both +0x16bf:both +0x1706:both +0x1730:both +0x1736:both +0x174e:both +0x176d:both +0x178e:both +0x1794:both	none	capture_error,excluded	log/c3/c3ed_purpose.md
+announceLandmark	0x004722c0	sim	1	2	2	44	32	44	34	2	5	5	0	0	-	full	ok	log/c3/c3ag_purpose.md
+addScore	0x004732d0	sim	1	7	7	7	7	7	7	7	8	7	1	0	+0x9a:taken	thin	ok	log/c3/c3ah_purpose.md
+Buf_init	0x00474780	util_callee	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3cn_purpose.md
+Buf_ctor	0x004747a0	util_callee	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3cz_purpose.md
+Buf_releaseData	0x004747e0	util_callee	0	1	1	6	6	12	12	1	1	0	1	0	+0x8:fall	thin	partial	log/c3/c3cn_purpose.md
+Buf_dtor	0x00474810	util_callee	0	1	1	6	6	12	12	1	0	0	0	0	-	thin	partial	log/c3/c3cn_purpose.md
+Buf_alloc	0x00474820	util_callee	0	1	0	0	0	12	12	1	2	0	0	2	+0x9:both +0x22:both	none	excluded	log/c3/c3cz_purpose.md
+heapAlloc	0x00474860	util_callee	0	1	1	12	10	20	18	1	4	1	1	2	+0x1a:fall +0x30:both +0x49:both	partial_branch	partial	log/c3/c3dd_purpose.md
+Vec_release	0x00479bb0	util_callee	0	1	1	5	2	16	13	1	7	1	3	3	+0xb:taken +0x1d:taken +0x27:fall +0x57:both +0x70:both +0x7a:both	thin	partial	log/c3/c3cz_purpose.md
+List480::dtor	0x00480390	util_pure	0	1	1	5	5	12	12	1	6	2	1	3	+0x22:fall +0x32:both +0x48:both +0x5f:both	thin	partial	log/c3/c3dm_purpose.md
+freeResampleTable	0x00481b20	util_pure	0	3	1	1	1	3	3	3	1	0	1	0	+0x7:fall	thin	excluded,ok	log/c3/c3cz_purpose.md
+Timer::ctor	0x00486c90	util_callee	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3co_purpose.md
+Timer::dtor	0x00486ce0	util_callee	0	1	1	2	2	12	12	1	0	0	0	0	-	thin	partial	log/c3/c3cy_purpose.md
+Timer::initA	0x00486cf0	util_callee	0	1	1	2	2	12	12	1	0	0	0	0	-	thin	partial	log/c3/c3cy_purpose.md
+Timer::startMmPeriodic	0x00486dc0	util_callee	0	1	1	3	1	12	10	1	3	0	2	1	+0x8:taken +0xf:taken +0x27:both	thin	partial	log/c3/c3ct_purpose.md
+Timer::stop	0x00486ec0	util_callee	0	2	2	10	8	24	21	2	4	2	2	0	+0x17:fall +0x2a:fall	one_sided	partial	log/c3/c3co_purpose.md
+Timer::reset	0x00486f10	util_callee	0	2	2	10	10	24	24	2	0	0	0	0	-	full	partial	log/c3/c3co_purpose.md
+Timer::lockInc	0x00486fe0	util_pure	0	12	12	12	12	12	12	12	0	0	0	0	-	full	ok	log/c3/c3cz_purpose.md
+Timer::lockDec	0x00486ff0	util_pure	0	12	12	12	12	12	12	12	0	0	0	0	-	full	ok	log/c3/c3cz_purpose.md
+NodeList::clear	0x00487310	util_pure	0	1	1	2	2	12	12	1	6	0	1	5	+0x13:fall +0x1a:both +0x3e:both +0x45:both +0x4c:both +0x70:both	thin	partial	log/c3/c3cn_purpose.md
+openHookA	0x004873f0	util_pure	0	2	2	9	3	16	10	2	2	1	1	0	+0x12:fall	thin	ok,partial	log/c3/c3fd_purpose.md
+resourceQuery	0x00487630	util_pure	0	1	1	4	1	12	5	1	1	0	1	0	+0x5:fall	thin	partial	log/c3/c3eq_purpose.md
+SndGroup_isDisabled	0x00487770	util_callee	0	1	1	24	2	24	2	1	1	1	0	0	-	full	ok	log/c3/c3r_purpose.md
+SndGroup_isMuted	0x004877a0	util_callee	0	1	1	24	2	24	2	1	1	1	0	0	-	full	ok	log/c3/c3r_purpose.md
+openHookB	0x004879b0	util_pure	0	2	2	9	3	16	10	2	2	1	1	0	+0x12:fall	thin	ok,partial	log/c3/c3fm_purpose.md
+NodeListB::ctor	0x00487a20	util_pure	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3cp_purpose.md
+resourceLoadB	0x00487a70	util_pure	0	1	0	0	0	14	14	1	2	0	0	2	+0x10:both +0x24:both	none	excluded	log/c3/c3eu_purpose.md
+NodeListC::ctor	0x00487b40	util_pure	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3cp_purpose.md
+openHookC	0x00487b90	util_pure	0	2	2	9	3	16	10	2	2	1	1	0	+0x12:fall	thin	ok,partial	log/c3/c3fd_purpose.md
+resourceLoad	0x00487c00	util_pure	0	1	0	0	0	14	14	1	2	0	0	2	+0x10:both +0x24:both	none	excluded	log/c3/c3eu_purpose.md
+destroyGlobalReader	0x00487e60	crt_callee	0	4	3	8	3	6	2	2	0	0	0	0	-	thin	excluded,ok,partial	log/c3/c3cq_purpose.md
+readSectionGlobal	0x00487e70	util_callee	0	2	1	1	1	12	12	1	0	0	0	0	-	thin	excluded,partial	log/c3/c3dw_purpose.md
+readLineGlobal	0x00487e90	util_callee	0	2	0	0	0	12	11	1	0	0	0	0	-	none	excluded	log/c3/c3dw_purpose.md
+Reader::closeFile	0x00487f80	util_callee	0	2	2	10	2	12	8	1	1	0	1	0	+0xb:fall	one_sided	partial	log/c3/c3cq_purpose.md
+Reader::open	0x00487fb0	util_callee	0	2	0	0	0	14	14	1	14	0	0	14	+0x17:both +0x39:both +0x6b:both +0xb2:both +0xcb:both +0xf0:both +0x12c:both +0x196:both +0x1ca:both +0x1d0:both +0x1fc:both +0x207:both +0x212:both +0x245:both	none	excluded	log/c3/c3dl_purpose.md
+Reader::readLine	0x00488230	util_callee	0	2	2	6	6	12	12	1	2	0	1	1	+0xd:taken +0x33:both	thin	partial	log/c3/c3dw_purpose.md
+KeyTable::find	0x00488310	util_callee	0	2	2	36	20	18	10	1	8	8	0	0	-	full	ok	log/c3/c3dw_purpose.md
+KeyTable::lookup	0x00488420	util_callee	0	8	8	8	8	48	48	4	3	1	1	1	+0x18:fall +0x25:both	thin	partial	log/c3/c3dw_purpose.md
+matchDirective	0x0048cd80	util_callee	0	1	1	9	7	9	7	1	4	4	0	0	-	thin	ok	log/c3/c3ae_purpose.md
+sinScaled	0x00491c70	util_callee	1	1	1	210	115	210	115	1	6	6	0	0	-	full	ok	log/c3/c3b_purpose.md
+cosScaled	0x00491d80	util_pure	0	1	1	84	32	84	32	1	0	0	0	0	-	full	ok	log/c3/c3ev_purpose.md
+resolveDataPath	0x00491da0	util_callee	0	4	4	8	8	32	32	4	8	1	1	6	+0x1f:taken +0x35:both +0xa5:both +0x116:both +0x19a:both +0x1ba:both +0x22b:both	thin	partial	log/c3/c3dw_purpose.md
+trimLeadingSpace	0x004924e0	util_callee	0	1	1	8	8	8	7	1	2	2	0	0	-	thin	ok	log/c3/c3ab_purpose.md
+trimTrailingSpace	0x00492570	util_callee	0	1	1	8	6	8	7	1	5	3	2	0	+0x1b:taken +0x38:fall	thin	ok	log/c3/c3ab_purpose.md
+trimSpaces	0x004925b0	util_callee	0	1	1	8	8	8	7	1	0	0	0	0	-	thin	ok	log/c3/c3ab_purpose.md
+stripNewline	0x004925d0	util_callee	0	1	1	8	6	8	6	1	1	1	0	0	-	thin	ok	log/c3/c3ab_purpose.md
+appendNewline	0x004925f0	util_callee	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3dd_purpose.md
+pointInRect	0x00492610	util_callee	0	1	1	81	2	81	0	1	3	3	0	0	-	full	ok	log/c3/c3d_purpose.md
+MappedFile::ctor	0x00492d80	util_callee	0	1	1	10	10	10	10	1	0	0	0	0	-	full	ok	log/c3/c3at_purpose.md
+MappedFile::dtor	0x00492dc0	util_callee	0	1	1	2	2	12	12	1	0	0	0	0	-	thin	partial	log/c3/c3cy_purpose.md
+MappedFile::open	0x00492dd0	util_callee	0	1	0	0	0	12	12	1	3	0	0	3	+0x3c:both +0x61:both +0x85:both	none	excluded	log/c3/c3cy_purpose.md
+MappedFile::close	0x00492e80	util_callee	0	1	1	2	1	12	11	1	3	0	3	0	+0x9:fall +0x24:fall +0x36:fall	thin	partial	log/c3/c3cy_purpose.md
+swapInts	0x00493580	util_callee	0	1	1	12	8	12	7	1	1	1	0	0	-	full	ok	log/c3/c3bx_purpose.md
+reverseFindChar	0x004935b0	util_callee	0	1	1	16	6	16	6	1	5	5	0	0	-	full	ok	log/c3/c3df_purpose.md
+findByteInRange	0x004935f0	util_callee	0	1	1	1	1	12	7	1	4	0	1	3	+0xa:fall +0x20:both +0x24:both +0x28:both	thin	partial	log/c3/c3ai_purpose.md
+orderPair	0x00496770	util_callee	0	1	0	0	0	18	18	1	1	0	0	1	+0xb:both	none	excluded	log/c3/c3bx_purpose.md
+strBufReset	0x0049d090	util_pure	0	1	0	0	0	16	16	1	2	0	0	2	+0x8:both +0x1d:both	none	excluded	log/c3/c3cz_purpose.md
+strDup	0x0049d100	util_pure	0	1	0	0	0	15	15	1	0	0	0	0	-	none	excluded	log/c3/c3dd_purpose.md
+resolveAndOpenFile	0x004a00f0	util_callee	0	2	0	0	0	12	6	1	1	0	0	1	+0x10:both	none	excluded	log/c3/c3dl_purpose.md
+freeLoggerBuf	0x004a01a0	util_pure	0	1	1	4	4	12	12	1	1	0	1	0	+0xe:fall	thin	partial	log/c3/c3cn_purpose.md
+logWrite	0x004a0280	util_callee	0	4	4	20	14	18	14	2	5	2	1	2	+0x1f:fall +0x33:both +0x3b:both	partial_branch	ok,partial	log/c3/c3dw_purpose.md
+logLine	0x004a0320	util_callee	0	2	0	0	0	12	12	1	0	0	0	0	-	none	excluded	log/c3/c3dw_purpose.md
+recordCopyStr1c	0x004a0540	util_pure	0	1	1	2	2	16	16	1	3	0	1	2	+0xe:fall +0x15:both +0x41:both	thin	partial	log/c3/c3dd_purpose.md
+bufferFree	0x004a05d0	util_pure	0	1	1	9	1	12	4	1	3	1	1	1	+0x11:fall +0x15:both	thin	partial	log/c3/c3cn_purpose.md
+LabelButton::reset	0x004a14c0	util_callee	0	6	0	0	0	42	42	3	1	0	0	1	+0xb2:both	none	excluded	log/c3/c3ef_purpose.md
+listAddEntry	0x004a28a0	util_callee	0	3	1	1	1	18	18	3	5	0	1	4	+0x16:taken +0x2a:both +0x32:both +0x57:both +0xbd:both	thin	excluded,partial	log/c3/c3dd_purpose.md
+setStringField	0x004a29c0	util_callee	0	1	1	4	4	13	13	1	4	1	1	2	+0xc:taken +0x30:both +0x55:both	thin	partial	log/c3/c3cz_purpose.md
+listClear4a4b	0x004a4b00	util_callee	0	2	0	0	0	12	12	1	4	0	0	4	+0x16:both +0x26:both +0x3c:both +0x4c:both	none	excluded	log/c3/c3dl_purpose.md
+listAppend4a4b60	0x004a4b60	util_callee	0	6	0	0	0	36	34	3	6	0	0	6	+0x1c:both +0x2b:both +0x57:both +0x9a:both +0xb3:both +0xcf:both	none	excluded	log/c3/c3dl_purpose.md
+queuePop	0x004a4c70	util_callee	0	2	0	0	0	14	14	1	8	0	0	8	+0x19:both +0x31:both +0x3e:both +0x46:both +0x60:both +0x85:both +0x92:both +0x9d:both	none	excluded	log/c3/c3dl_purpose.md
+listClearThunk	0x004a4d30	util_callee	0	1	1	2	2	12	12	1	0	0	0	0	-	thin	partial	log/c3/c3dm_purpose.md
+listClear4a4d	0x004a4d50	util_callee	0	1	1	2	2	12	12	1	4	0	1	3	+0x9:fall +0x19:both +0x2f:both +0x3f:both	thin	partial	log/c3/c3cn_purpose.md
+listPush	0x004a4db0	util_callee	0	3	3	9	6	36	25	3	7	1	1	5	+0x24:taken +0x38:both +0x47:both +0x6a:both +0x9a:both +0xb3:both	thin	partial	log/c3/c3cz_purpose.md
+readListNode	0x004a4ea0	util_callee	0	1	1	19	15	19	15	1	3	3	0	0	-	full	ok	log/c3/c3ev_purpose.md
+listRemoveHead	0x004a4ed0	util_callee	0	1	1	2	1	12	11	1	3	0	1	2	+0x9:fall +0x10:both +0x2d:both	thin	partial	log/c3/c3cn_purpose.md
+operatorDelete_4a4ffc	0x004a4ffc	crt_callee	0	1	1	1	1	12	12	1	0	0	0	0	-	thin	partial	log/c3/c3cn_purpose.md
+ehVectorConstructorIterator	0x004a55d2	crt_callee	0	3	3	16	13	24	19	3	1	1	0	0	-	full	ok,partial	log/c3/c3co_purpose.md
+__ArrayUnwind	0x004a5793	crt_callee	0	3	3	21	16	30	24	3	1	1	0	0	-	full	ok,partial	log/c3/c3fo_purpose.md
+__ftol	0x004a6030	crt_callee	0	5	0	0	0	280	145	5	0	0	0	0	-	none	excluded	log/c3/c3a_purpose.md
+_fclose	0x004a609f	crt_callee	0	1	1	4	4	14	14	1	1	0	1	0	+0xd:taken	thin	partial	log/c3/c3cq_purpose.md
+_fopen	0x004a614d	crt_callee	0	1	0	0	0	9	9	1	0	0	0	0	-	none	excluded	log/c3/c3dw_purpose.md
+_strchr	0x004a6170	crt_callee	0	1	1	51	25	51	25	1	16	16	0	0	-	full	ok	log/c3/c3df_purpose.md
+_strstr	0x004a64f0	crt_callee	0	1	1	29	17	29	17	1	11	11	0	0	-	full	ok	log/c3/c3b_purpose.md
+_fgets	0x004a65ee	crt_callee	0	1	1	3	1	19	16	1	6	0	1	5	+0xe:taken +0x22:both +0x27:both +0x3d:both +0x44:both +0x4b:both	thin	partial	log/c3/c3dw_purpose.md
+_strtok	0x004a678b	crt_callee	0	3	0	0	0	26	19	3	6	0	0	6	+0x3a:both +0x41:both +0x60:both +0x64:both +0x6f:both +0x86:both	none	excluded	log/c3/c3fc_purpose.md
+_rewind	0x004a70b5	crt_callee	0	1	0	0	0	12	12	1	2	0	0	2	+0x1e:both +0x47:both	none	excluded	log/c3/c3fi_purpose.md
+_fseek	0x004a7119	crt_callee	0	1	0	0	0	14	14	1	0	0	0	0	-	none	excluded	log/c3/c3fi_purpose.md
+__itoa	0x004ad425	crt_callee	0	1	1	22	22	22	22	1	2	2	0	0	-	full	ok	log/c3/c3ag_purpose.md
+_xtoa	0x004ad452	crt_callee	0	1	1	18	17	18	17	1	4	4	0	0	-	full	ok	log/c3/c3fm_purpose.md
+__strcmpi	0x004ad4b0	crt_callee	0	3	2	56	6	114	73	3	9	6	3	0	+0x61:taken +0xa8:taken +0xb4:taken	one_sided	excluded,ok,partial	log/c3/c3eu_purpose.md
+__strnicmp	0x004ad580	crt_callee	0	3	2	93	7	180	78	3	20	18	2	0	+0x7f:taken +0xe1:taken	one_sided	excluded,ok,partial	log/c3/c3ae_purpose.md
+jpeg_suppress_tables	0x004ae220	util_pure	0	1	1	12	12	12	12	1	5	5	0	0	-	full	ok	log/c3/c3dm_purpose.md
+jpeg_quality_scaling	0x004ae700	util_pure	0	1	1	19	11	19	11	1	3	3	0	0	-	full	ok	log/c3/c3bx_purpose.md
+add_huff_table	0x004ae8b0	util_pure	0	2	1	6	6	12	12	2	1	0	1	0	+0xa:fall	thin	excluded,ok	log/c3/c3be_purpose.md
+alloc_small	0x004aef70	util_pure	0	2	2	8	8	25	25	2	14	1	7	6	+0x19:fall +0x2b:fall +0x40:taken +0x45:fall +0x69:taken +0x76:fall +0x7c:fall +0x87:both +0xa2:both +0xb5:both +0xbc:both +0xd8:both +0x101:both	thin	partial	log/c3/c3cg_purpose.md
+alloc_large	0x004af0c0	util_pure	0	1	0	0	0	14	14	1	5	0	0	5	+0x15:both +0x27:both +0x38:both +0x3d:both +0x69:both	none	excluded	log/c3/c3cz_purpose.md
+alloc_sarray	0x004af170	util_pure	0	1	0	0	0	12	12	1	7	0	0	7	+0x1c:both +0x35:both +0x5e:both +0x66:both +0x84:both +0x99:both +0x9d:both	none	excluded	log/c3/c3cz_purpose.md
+alloc_barray	0x004af220	util_pure	0	1	0	0	0	12	12	1	7	0	0	7	+0x1f:both +0x38:both +0x61:both +0x69:both +0x8c:both +0xa1:both +0xa5:both	none	excluded	log/c3/c3cz_purpose.md
+access_virt_sarray	0x004af540	util_pure	0	1	1	10	10	26	26	1	18	6	8	4	+0x1c:taken +0x21:taken +0x26:fall +0x40:taken +0x49:fall +0x50:both +0x6a:both +0x82:both +0x90:both +0xb6:fall +0xed:taken +0x127:fall	partial_branch	partial	log/c3/c3cs_purpose.md
+access_virt_barray	0x004af730	util_pure	0	1	1	10	10	26	26	1	18	6	8	4	+0x1c:taken +0x21:taken +0x26:fall +0x3e:taken +0x47:fall +0x4e:both +0x66:both +0x7e:both +0x8c:both +0xb2:fall +0xea:taken +0x124:fall	partial_branch	partial	log/c3/c3cs_purpose.md
+free_pool	0x004af920	util_pure	0	1	1	3	3	16	16	1	13	5	6	2	+0x13:taken +0x18:fall +0x3d:taken +0x61:taken +0x8e:fall +0xb3:both +0xc5:fall +0xea:both	thin	partial	log/c3/c3cz_purpose.md
+jpeg_abort	0x004afa60	util_pure	0	1	0	0	0	12	12	1	0	0	0	0	-	none	excluded	log/c3/c3dm_purpose.md
+jpeg_destroy	0x004afa90	util_pure	0	1	1	4	4	12	12	1	1	0	1	0	+0xd:fall	thin	partial	log/c3/c3cc_purpose.md
+jpeg_alloc_quant_table	0x004afab0	util_pure	0	1	0	0	0	10	10	1	0	0	0	0	-	none	excluded	log/c3/c3aa_purpose.md
+jpeg_alloc_huff_table	0x004afad0	util_pure	0	1	0	0	0	10	10	1	0	0	0	0	-	none	excluded	log/c3/c3af_purpose.md
+emit_marker	0x004afbf0	util_pure	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3aa_purpose.md
+emit_2bytes	0x004afc10	util_pure	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3aa_purpose.md
+emit_jfif_app0	0x004afc80	util_pure	0	1	1	12	12	12	12	1	0	0	0	0	-	full	ok	log/c3/c3be_purpose.md
+emit_adobe_app14	0x004afd20	util_pure	0	1	1	10	3	10	3	1	2	2	0	0	-	full	ok	log/c3/c3be_purpose.md
+emit_sof	0x004affa0	util_pure	0	2	2	4	4	4	4	2	4	1	3	0	+0x2d:taken +0x32:fall +0x7f:taken	thin	ok	log/c3/c3aa_purpose.md
+emit_dri	0x004b01f0	util_pure	0	2	1	8	5	12	9	2	0	0	0	0	-	thin	excluded,ok	log/c3/c3cs_purpose.md
+jpeg_get_large	0x004b0460	util_pure	0	1	0	0	0	12	12	1	0	0	0	0	-	none	excluded	log/c3/c3cn_purpose.md
+jpeg_free_large	0x004b0470	util_pure	0	1	1	2	1	12	11	1	0	0	0	0	-	thin	partial	log/c3/c3cn_purpose.md
+jdiv_round_up	0x004b04c0	util_pure	0	1	1	228	75	228	75	1	0	0	0	0	-	full	ok	log/c3/c3bj_purpose.md
+jround_up	0x004b04d0	util_pure	0	1	1	228	75	228	75	1	0	0	0	0	-	full	ok	log/c3/c3cz_purpose.md
+jcopy_sample_rows	0x004b04f0	util_pure	0	1	1	12	12	12	12	1	2	2	0	0	-	full	ok	log/c3/c3cg_purpose.md
+start_iMCU_row	0x004b0860	util_pure	0	1	1	13	13	13	13	1	2	2	0	0	-	full	ok	log/c3/c3be_purpose.md
+flush_bits	0x004b1b70	util_pure	0	6	2	20	20	38	38	6	7	3	2	2	+0x40:fall +0x4d:both +0x68:fall +0x75:both	partial_branch	excluded,ok	log/c3/c3be_purpose.md
+dump_buffer_4b2420	0x004b2420	util_pure	0	2	0	0	0	24	24	2	1	0	0	1	+0x15:both	none	excluded	log/c3/c3aa_purpose.md
+expand_right_edge	0x004b4390	util_pure	0	1	1	12	9	12	9	1	3	3	0	0	-	full	ok	log/c3/c3cg_purpose.md
+select_scan_parameters	0x004b59d0	util_pure	0	10	10	10	10	10	10	10	6	3	3	0	+0x31:taken +0x93:fall +0xc0:taken	one_sided	ok	log/c3/c3aa_purpose.md
