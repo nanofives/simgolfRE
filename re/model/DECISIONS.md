@@ -82,3 +82,12 @@ Applied by `re/tools/model_merge.py` (RESOLUTIONS, G_ROWS, MARKS, CANONICAL_TYPE
   window class and change phase 2.1's measured object set; retyping the four scalars as `void *` would change the header the
   port compiles. The column changes neither (simgolf_model.h and model_ctypes.py regenerate identically). The writers of
   g_rootWindow +0x11c..+0x14c's heap values are not determined (U-0610).
+
+## 2026-10-19, pointer representation for phase 3 (U-0724, user decision)
+
+Phase 3 keeps the original's 32-bit virtual address layout. portsim::GameState stays byte-exact (pointer fields are 4-byte
+virtual addresses); every pointer argument, pointer read from state and pointer return is a 32-bit virtual address resolved
+through the context (ctx.mem), with a typed `Ptr<T>` wrapper in port code; an unmapped access is SG_E_FAULT. Port code holds no
+native pointer in state and no original address literal. Why: all 15,191 vectors and 190 segments are byte images with these
+addresses, and U-0703 means a translation table would miss plainly typed objects that hold data-section addresses. A later
+cleanup (phase 7) may convert modules to native references one at a time, with the same vectors and segments as the net.
