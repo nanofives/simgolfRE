@@ -1,0 +1,2 @@
+0044e770	showShortcutsScreen	command	g_ui_569498 cleared on the way out, the close-button press / key that ends the loop (pump model)	two backgrounds, 63 captions, close button states, display slot call, waits	emulator oracle 300, golden 120	-
+00454c50	showMembershipRoster	command	bit 7 of byte +2 of all 76 golfer-type records cleared at every redraw (exclusion bit lost, U-1023), g_ui_569498 cleared, zone / press loop (pump model)	roster drawing, row selection by name, scroll offset, icons, display slot call, waits	emulator oracle 300, golden 120	-

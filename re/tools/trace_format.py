@@ -150,6 +150,10 @@ def parse(data: bytes, decode_fields=True) -> Trace:
         meta = json.loads(data[hsize:hsize + mlen].decode("utf-8"))
     except Exception as e:  # noqa: BLE001
         raise TraceError(f"metadata: {e}") from e
+    if "q0_64" in meta:      # phase 3.8 (38f): a slice whose first QPC value needs more than 32 bits (header_bytes)
+        if meta["q0_64"] & 0xFFFFFFFF != q0:
+            raise TraceError(f"meta q0_64 0x{meta['q0_64']:x} does not end in the header's q0 0x{q0:08x}")
+        q0 = meta["q0_64"]
     off = hsize + mlen
     recs = []
     while off < len(data):
@@ -173,8 +177,13 @@ def read(path) -> Trace:
 
 # ---------------------------------------------------------------- encoding
 def header_bytes(meta: dict, step: int, t0: int, qstep: int, q0: int) -> bytes:
+    """The header and metadata. A q0 of more than 32 bits (a slice that starts late in a long run: the QPC count grows
+    10,000 per call, so course_season_6y passes 2^32 after about 40,000 frames) keeps its low 32 bits in the header field and
+    the whole value in meta `q0_64` (phase 3.8, stream 38f); parse() reads it back. Traces with a 32-bit q0 are unchanged."""
+    if q0 > 0xFFFFFFFF:
+        meta = {**meta, "q0_64": q0}
     m = json.dumps(meta, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return HEADER.pack(MAGIC, VERSION, HEADER.size, len(m), step, t0, qstep, q0) + m
+    return HEADER.pack(MAGIC, VERSION, HEADER.size, len(m), step, t0, qstep, q0 & 0xFFFFFFFF) + m
 
 
 def rec(t: int, sub: int, payload: bytes) -> bytes:

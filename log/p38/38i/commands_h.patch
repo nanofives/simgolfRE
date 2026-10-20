@@ -1,0 +1,25 @@
+diff --git a/port/include/portsim/sim/commands.h b/port/include/portsim/sim/commands.h
+index be788bf..1f98c9d 100644
+--- a/port/include/portsim/sim/commands.h
++++ b/port/include/portsim/sim/commands.h
+@@ -63,6 +63,20 @@ enum class CmdKind : uint32_t {
+   AmenitySelect = 0x105,       // clickAmenityPanel: pickAmenity434980's entry (-2, 0..9)
+   SlotPanelSelect = 0x106,     // clickSlotPanel: hitTestSlot432f90's slot (0..0x16)
+   // 0x107.. reserved for the screens not ported yet (re/port/commands_split.tsv)
++
++  // ---- semantic: INPUT ACTIONS (phase 3.8, stream 38i; portsim/sim/semantic.h, module `semantic`) ----
++  // What the player does, with no handler mechanics. Each is LOWERED to the root-handler calls its input makes (the
++  // RootHandler code above), at the dispatch point it is applied at, so mainLoop H1's key switch, H2's press code and
++  // routing and the modal screens react exactly as to that input. arg[7] of each: the clock the handlers' deadline tail
++  // compares, needed only while the deadline word g_audio5aa774 is set (it is 0 in every segment).
++  Key = 0x200,          // a key tap: arg[0] = KeyAction (semantic.h: H1's key cases by name); KeyAction::Char: arg[1] the
++                        // character, arg[2] the virtual key (0 = a character with no key-down, arg[3] = the code jgld passes)
++  PointerDown = 0x201,  // a mouse button goes down: arg[0] x, arg[1] y (root-window client coordinates), arg[2] 1 left / 2 right
++  Click = 0x202,        // the button comes up there (the click): arg[0] x, arg[1] y, arg[2] button, arg[3] modifiers (bit 0
++                        // Ctrl, bit 1 Shift held), arg[4] ClickTarget (semantic.h; checked, CommandRefused when it does
++                        // not hold), arg[5] / arg[6] the target's arguments (the tile, or the panel kind and its control)
++  TileClick = 0x203,    // a whole click (down and up) on course tile (arg[0], arg[1]) at the tile's screen centre:
++                        // arg[2] button, arg[3] modifiers; refused when that point does not select the tile
+ };
+ 
+ struct Command {

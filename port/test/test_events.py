@@ -287,11 +287,20 @@ def test_run_bulletin_board_with_sound(portlib):
             st.set_data_base(VL.DATA_VA)
             tick, words = _off(lib, "g_bulletinAnimTick"), _off(lib, "f_w_4e3db8")
             st.write(tick, struct.pack("<i", 7))
+            st.write(words + 4, struct.pack("<i", -1))   # no photo position: the board takes no camera / photo step
+            board = lib.has("showBulletinBoard")          # module dialogs (38d): the board waits for a click or a key
+            if board:
+                import ctypes as C
+                esc = (C.c_uint32 * 18)(8, 0x1B, 0, 0, 0, 0, 7, 0x1B, 0x1B, 0, 0, 0, 9, 0, 0, 0, 0, 0)   # onChar, onKey, onChar0
+                st.map(0x30000000, esc, readonly=True)
+                st.call("dialogs.setScript", [0x30000000, 3, 0x30000000, 0])
             st.call("runBulletinBoardWithSound", [])
+            if board:
+                st.call("dialogs.clearScript", [])
             got_tick = struct.unpack("<i", st.read(tick, 4))[0]
             got_word = struct.unpack("<i", st.read(words, 4))[0]
         assert got_word == -1
-        assert got_tick == (0 if mode == 0 else 0x14)
+        assert got_tick == (0 if mode == 0 else (0x15 if board else 0x14))
     lib.negctl_reset()
 
 

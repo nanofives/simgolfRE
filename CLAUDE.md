@@ -1254,6 +1254,38 @@ Snd::status, Widget_readPixel. port/test/segments.py: NON_CAUSAL = {g_textBuf} (
 log/p3/p37a_noncausal.py), reported in SegmentResult.noncausal, and run_detail. Runner log/p3/p37a_cmdsegs.py (TSV per
 segment), summary p37a_cmdsum.py; development switches SG_TICK_INPUT_LOG, SG_TICK_CALL_LIMIT, SG_TICK_TRACE. The full
 COMMAND gate is test_tick.py's slow test (about five minutes); 7 segments run by default.
+Phase 3.8 integrator (2026-10-20, plan re/PHASE38_PLAN.md, shared brief log/p38/BRIEF.md, merge log log/p38/MERGES.md, per-stream
+notes log/p38/38<x>_notes.md, U-0960..U-1053): eleven claude2 children (38a..38k), each in its own build dir with SG_PORTSIM_DLL,
+shared files changed only through patches the parent applied. Result on the merged tree: all 200 accepted segments PASS (165
+COMMAND, 35 TIME-FORWARD), x64 = Win32 in every row; 0 entries left in test_tick.py OPEN_MISSING except Text_put without a
+provider, OPEN_DIVERGENT empty. New modules: gditext (38a: the host GDI TextMetrics provider, the game's 15 startup fonts rebuilt
+with Font::create's LOGFONT over the font files read through GameFiles, equal to 11,459 / 11,459 recorded printable widths;
+recorder re/tools/widths_rec.py + re/frida/js/widths_rec.js, corpus port/corpus/widths/; SegmentRunner attaches it by default,
+SG_TEXT_METRICS=none disables it), shotstyle / loaders / saveload (38b: GameFiles list / write with an in-memory overlay that never
+touches the install, listMatchingFiles, loadGolferRoster, the load browser, courseActionMenu, saveCourse, saveGameDialog,
+promptAndSaveFile), reports (38c: showCourseReport, showEndOfYearScreen), dialogs (38d: skillPointDialog, showCharacterIntro,
+drawGolferInfoPanel, drawScrollText layout, runScrollText, scrollTextWindow, showBulletinBoard), holestats (38e:
+InputSource::clock = the trace's next clock read at a call site, showHoleStatsScreen over it), integrator (38f, test-only batch
+overrides), routing (38g: showRoutingMapScreen, showShortcutsScreen, showMembershipRoster), chareditor (38h), semantic (38i),
+menu + tick_menu.inc (38j: mainLoop's title menu and session dispatch converted from c3fy.cpp parts MV / SV, so sg_run_frames runs
+through FrameExit::Menu; loadWorldAssets with the sprite-sheet cell allocation drawing passes store into a sim word,
+loadInterfaceArt(0), startNewCourse, pickAProScreen; refreshTerrain is no longer a drop). Gates (38f, port/test/integrator.py
+segments | chain | speed | defects | ledger | compare): (c) course_season as one 6,127-frame run and the new pinned scenario
+course_season_6y (5,000 virtual s, 10 segments, 50,923 frames = 6.22 game years, re/frida/scenario_ab.py, trace_format.py meta
+q0_64 for QPC past 2^32) as one run, all checkpoints PASS; chains 335 / 335 PASS with no BREAK after 38j; (d) championship/00..02
+driven ONLY by semantic commands (38i: input-action kinds lowered to the root-handler calls the raw input makes at its dispatch
+point, port/test/semantic.py translate | xlate | gate; all 165 COMMAND segments PASS semantic-only, 10,420 dispatches, 0 gaps);
+(e) re/port/divergences.tsv (`integrator ledger`), the one row without a cause is chooseShotTarget.strictFlagSticky, which no
+segment or test reaches (U-1012); (f) 8,192 frames take 23 s x64 / 29 s Win32 against the original's 713 s of frame waits, but
+a year with no input does not exist in the original (input-gated waits, year-end screen, U-1010). Fixes the merge forced: tick's
+HeadlessTerrain arena 1 MB -> 16 MB (cov_b_holes18/00), golden digests re-pinned only through SG_EMU_ORACLE=update after the
+oracle was GREEN (clickGolferPanel, showSystemMenu, loadGolferRoster: their callees became registered), test seams that recorded
+a peer the port now has (showSystemMenu's promptAndSaveFile, loadGolferRoster's scrollTextWindow via cm::call_peer). Findings:
+c3eo.cpp's C4 hook picks the hole-stats rating word with v / 10 where the original uses v / 20 (U-1000; the port follows the
+original, the hook needs fixing); mainLoop_structure.md had the title menu's championship / sandbox selections and flags 0x4000000
+/ 0x1000000 swapped (corrected, U-1053). HYGIENE: never run `pytest port/test` as one process (it grew to 10-16 GB and exhausted
+the 64 GB commit charge, killing siblings' runs with MemoryError): log/p38/suite_by_file.sh runs one file per process; lib.load()
+rebuilds port/build/x64 from every .cpp in port/src/sim, so a tree holding a child's unmerged module tests that module too.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

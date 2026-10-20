@@ -1,0 +1,13 @@
+port/src/sim/loaders.cpp
+port/test/test_loaders.py
+port/test/golden_38b.json
+log/p38/38k_notes.md
+log/p38/38k_files.txt
+log/p38/38k_golden_38b.pre.json
+log/p38/38k_cmake.log
+log/p38/38k_build.log
+log/p38/38k_loaders_run1.log
+log/p38/38k_loaders_run2.log
+log/p38/38k_loaders_run3.log
+log/p38/38k_siblings_oracle.log
+log/p38/38k_default_static.log

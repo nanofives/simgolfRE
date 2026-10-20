@@ -1,0 +1,118 @@
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -124,7 +124,6 @@
+     {"loadImage", "image file into a surface (renderer)"},
+     {"playSound", "audio request"},
+     {"startSoundSlot", "audio request"},
+-    {"refreshTerrain", "Terrain.dll push (renderer, U-0800)"},
+     {"syncTiles", "Terrain.dll push (renderer, U-0800)"},
+     {"saveCourseJpg", "screenshot file"},
+     {"capsLockOff", "keybd_event (time_model.md section 8)"},
+@@ -407,6 +406,8 @@
+ #pragma GCC diagnostic ignored "-Wpedantic"
+ #endif
+ #include "tick_frame.inc"
++// phase 3.8 (stream 38j): mainLoop's title menu and session dispatch (log/p38/38j/conv_menu.py)
++#include "tick_menu.inc"
+ #if defined(_MSC_VER)
+ #pragma warning(pop)
+ #elif defined(__GNUC__)
+@@ -426,8 +427,15 @@
+     int h2in[6] = {0, 0, 0, 0, 0, 0};
+     int d = Ph_0041c0c5(F, h2in);
+     if (d == kNext) d = Ph_0041ecbb(F, h2in);
+-    if (d == kMenu) return FrameExit::Menu;
+-    return d == kRetile ? FrameExit::Retile : FrameExit::Frame;
++    // the title menu ML+0x11875 and the session dispatch, then the next frame head (phase 3.8, stream 38j)
++    if (d == kMenu) return menu_session(F);
++    // ML+0x664 (rebuildTileCoverage) runs before the frame head ML+0x669, where the original's frame record is taken: the
++    // rebuild belongs to this step, so the next one enters at the frame head (phase 3.8, stream 38j)
++    if (d == kRetile) {
++      cc("rebuildTileCoverage");
++      return FrameExit::Frame;
++    }
++    return FrameExit::Frame;
+   }
+ };
+ 
+@@ -855,6 +863,7 @@
+ 
+ struct TraceFrame {
+   uint32_t index = 0, pos = 0, t = 0;
++  uint32_t flags = 0;                               // g_flags in the FRAME record's snapshot (trace_schema.md, +0x54)
+   uint32_t fms_pos = UINT32_MAX;                    // the clock ordinal of H1's g_frameMs read (none: the frame has no wait)
+   std::vector<std::pair<int32_t, uint32_t>> clock;  // tgt calls of the frame: (site offset, value)
+   std::vector<uint32_t> clock_pos;                  // the clock ordinal of each (CLOCKRUN first + k): TraceInput::clock
+@@ -872,6 +881,9 @@
+   uint32_t pos = 0;      // the final POLL's position (clock calls before it)
+   int32_t site = 0;      // the call site of the clock call it rides on (offset from the frame-head ra)
+   bool at_frame = false; // a FRAME record of that same clock call follows
++  // the clock call it rides on comes after the last frame's H1 wait had ended: the checkpoint was taken later in that
++  // frame (an H2 modal screen, the title menu), not in the wait (phase 3.8, stream 38j)
++  bool after_wait = false;
+ };
+ 
+ // The FRAME records and what the trace says between them (schema v1, re/model/trace_schema.md).
+@@ -896,6 +908,7 @@
+   struct Run {
+     uint32_t first, count;
+     int32_t site;
++    uint32_t v0;
+   };
+   std::vector<Run> runs;
+   // dispatch batching (port/test/trace_commands.py batches(), the same rules)
+@@ -916,7 +929,7 @@
+           pending.emplace_back(site, v0 + k * step);
+           pending_pos.push_back(first + k);
+         }
+-      runs.push_back({first, count, site});
++      runs.push_back({first, count, site, sub == 1 ? v0 : 0u});
+       if (sub == 1 && site == tk::kSiteFrameMs && !frames.empty() && frames.back().fms_pos == UINT32_MAX)
+         frames.back().fms_pos = first;
+       if (in_handler_code(site)) {
+@@ -969,6 +982,7 @@
+       f.index = rd32(q);
+       f.pos = rd32(q + 4);
+       f.t = rd32(q + 8);
++      f.flags = rd32(q + 12 + 0x54);
+       if (!frames.empty()) {
+         // the frame-head call itself (the last clock call before this record) belongs to the new frame
+         if (!pending.empty()) {
+@@ -1011,6 +1025,17 @@
+   }
+   if (end.has_poll) {
+     end.at_frame = !frames.empty() && frames.back().pos == end.pos;
++    if (!frames.empty()) {
++      const TraceFrame &lf = frames.back();
++      const uint32_t limit = lf.t + ((((lf.flags & (1u << 17)) != 0 ? 0x4Bu : 0u) + 0xAFu) / 2u);
++      uint32_t ended_at = UINT32_MAX;
++      for (const Run &r : runs)
++        if (ended_at == UINT32_MAX && r.first >= lf.pos && r.count > 0 &&
++            (r.site == tk::kSiteFrameMs + 0x20 || r.site == tk::kSiteFrameMs + 0x4f))
++          for (uint32_t k = 0; k < r.count && ended_at == UINT32_MAX; ++k)
++            if (r.v0 + k * step >= limit) ended_at = r.first + k;
++      end.after_wait = ended_at != UINT32_MAX && end.pos >= 1 && end.pos - 1 > ended_at;
++    }
+     for (const Run &r : runs)
+       if (end.pos >= 1 && r.first <= end.pos - 1 && end.pos - 1 < r.first + r.count) end.site = r.site;
+   }
+@@ -1340,8 +1365,8 @@
+       throw;
+     }
+     after_frame(f, k, io);
+-    if (ex == FrameExit::Menu) {
+-      if (detail) *detail = "the frame left to the title menu";
++    if (ex == FrameExit::Menu || ex == FrameExit::Quit) {
++      if (detail) *detail = ex == FrameExit::Quit ? "mainLoop returned (the title menu's quit)" : "the frame left to the title menu";
+       return 0;
+     }
+     retile = ex == FrameExit::Retile;
+@@ -1362,7 +1387,7 @@
+     for (int32_t w : wait_sites) in_wait = in_wait || end.site == w;
+     const TraceFrame &f = frames[max_frames];
+     FrameInput in = frame_input(f);
+-    in.stop_at_wait = true;
++    in.stop_at_wait = !end.after_wait;
+     input.begin(f, max_frames + 1);
+     tk::FrameIoStats io;
+     std::string stop;

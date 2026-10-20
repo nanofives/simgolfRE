@@ -1,0 +1,2 @@
+segment	status	frames	record	objects	noncausal	seconds	run_detail	detail
+cov_a_keys/01	PASS	98/98				0.4	end checkpoint at site 312200 (a frame-wait site): the last frame ran to the frame wait; input: 9 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0	

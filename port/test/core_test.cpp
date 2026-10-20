@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -121,6 +123,66 @@ static void test_gamefiles() {
   CHECK(ctx.files().exists("data/a.txt"));
 }
 
+// Phase 3.8 (stream 38b): directory listings (FindFirstFileA's walk) and writes.
+static std::string names_of(const std::vector<DirEntry> &v) {
+  std::string s;
+  for (const DirEntry &e : v) s += (s.empty() ? "" : ",") + e.name + (e.is_dir ? "/" : "");
+  return s;
+}
+
+static void test_gamefiles_listing() {
+  CHECK(GameFiles::wildcard_match("*.sve", "Mood5.SVE") && !GameFiles::wildcard_match("*.sve", "a.svex"));
+  CHECK(GameFiles::wildcard_match("*", "") && GameFiles::wildcard_match("*.*", "noext") && GameFiles::wildcard_match("a?c", "ABC"));
+  CHECK(!GameFiles::wildcard_match("a?c", "ac") && GameFiles::wildcard_match("a*b*c", "aXbYbZc") && !GameFiles::wildcard_match("a*b", "abc"));
+  MemoryGameFiles m;
+  m.put("Saved Games\\mood5.sve", {1});
+  m.put("Saved Games/&AutoSave2.sve", {2});
+  m.put("Saved Games/&AutoSave1.sve", {3});
+  m.put("Saved Games/notes.txt", {4});
+  m.put("Saved Games/Sub/x.sve", {5});
+  m.put("Themes/Standard/a.chr", {6});
+  m.put("top.dat", {7});
+  // sorted by upper-cased name ('&' 0x26 before letters), the case of each name as stored, "." / ".." first when they match
+  CHECK(names_of(m.list("Saved Games\\*.sve")) == "&AutoSave1.sve,&AutoSave2.sve,mood5.sve");
+  CHECK(names_of(m.list("saved games/*")) == "./,../,&AutoSave1.sve,&AutoSave2.sve,mood5.sve,notes.txt,Sub/");
+  CHECK(names_of(m.list("Themes\\*")) == "./,../,Standard/");
+  CHECK(names_of(m.list("*.dat")) == "top.dat" && names_of(m.list("*")) == "./,../,Saved Games/,Themes/,top.dat");
+  CHECK(m.list("Nowhere/*").empty() && m.list("Saved Games/*.cse").empty());
+  CHECK(m.list("Saved Games/*.sve")[0].name == "&AutoSave1.sve" && !m.list("Saved Games/*.sve")[0].is_dir);
+  CHECK(m.write("Saved Games/While_Browsing.sve", {9, 9}) && m.size("saved games/while_browsing.sve") == 2);
+  CHECK(names_of(m.list("Saved Games/*.sve")).find("While_Browsing.sve") != std::string::npos);
+  NullGameFiles n;
+  CHECK(n.list("*").empty() && !n.write("x", {}));
+  // a real directory: same listing, and write() creates the directories above the file
+  namespace fs = std::filesystem;
+  const fs::path root = fs::temp_directory_path() / "portsim_gamefiles_list_test";
+  std::error_code ec;
+  fs::remove_all(root, ec);
+  DirGameFiles d(root.string());
+  CHECK(d.write("Saved Games/Zed.sve", {1, 2, 3}) && d.write("saved games/&a.sve", {4}) && d.write("Saved Games/b.txt", {}));
+  CHECK(d.size("Saved Games/zed.sve") >= 0 || d.size("Saved Games/Zed.sve") == 3);
+  CHECK(names_of(d.list("Saved Games\\*.sve")) == "&a.sve,Zed.sve");
+  CHECK(names_of(d.list("Saved Games/*")) == "./,../,&a.sve,b.txt,Zed.sve");
+  CHECK(d.list("Missing/*").empty());
+  // writes stay in memory (the install is never touched) unless write-through is on
+  CHECK(!fs::exists(root / "Saved Games" / "Zed.sve") && d.size("saved games/zed.sve") == 3);
+  fs::remove_all(root, ec);
+  fs::create_directories(root / "Saved Games", ec);
+  { std::ofstream(root / "Saved Games" / "disk.sve", std::ios::binary) << "abcd"; }
+  DirGameFiles ov(root.string());
+  CHECK(!ov.write_through() && ov.size("Saved Games/disk.sve") == 4);
+  CHECK(ov.write("Saved Games/new.sve", {1, 2}) && !fs::exists(root / "Saved Games" / "new.sve"));
+  CHECK(names_of(ov.list("Saved Games/*.sve")) == "disk.sve,new.sve");
+  CHECK(ov.remove("Saved Games/disk.sve") && ov.size("Saved Games/disk.sve") == -1 && fs::exists(root / "Saved Games" / "disk.sve"));
+  CHECK(names_of(ov.list("Saved Games/*.sve")) == "new.sve" && !ov.remove("Saved Games/disk.sve"));
+  CHECK(ov.write("Saved Games/disk.sve", {7}) && ov.size("saved games/disk.sve") == 1);
+  DirGameFiles wt(root.string());
+  wt.set_write_through(true);
+  CHECK(wt.write("Saved Games/thru.sve", {5, 5, 5}) && fs::file_size(root / "Saved Games" / "thru.sve") == 3);
+  CHECK(wt.remove("Saved Games/thru.sve") && !fs::exists(root / "Saved Games" / "thru.sve"));
+  fs::remove_all(root, ec);
+}
+
 static void test_execonst(const char *path) {
   ExeConstants bad;
   std::string why;
@@ -173,6 +235,7 @@ int main(int argc, char **argv) {
   test_arith();
   test_ptr();
   test_gamefiles();
+  test_gamefiles_listing();
   const char *path = argc > 1 ? argv[1] : std::getenv("SG_EXE_PATH");
   test_execonst(path);
   std::printf("portsim core tests: %s (%d failures)\n", g_fail ? "FAIL" : "ok", g_fail);

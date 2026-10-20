@@ -83,6 +83,7 @@ class Emu:
     def __init__(self):
         self.img = VE.load_image()
         self.stubs = {}           # address -> (nargs, pops, eax or callable(args, ecx) -> eax, name)
+        self.import_handlers = {}  # import name -> (nargs, fn(uc, args) -> eax): phase 3.8 (stream 38b), additive
 
     def ret_pop(self, addr) -> int:
         """the bytes the function at addr pops (its `ret N`; 0 for cdecl); every `ret` of the function must agree"""
@@ -102,12 +103,21 @@ class Emu:
         n = self.ret_pop(addr)
         return self.stub(addr, n // 4, eax, n > 0, name)
 
+    def stub_py(self, addr, nargs, fn, pops=False, name=""):
+        """replace the function at addr by fn(uc, args, ecx) -> eax: the body may read and write emulated memory (3.8)"""
+        self.stubs[addr] = (nargs, pops, ("py", fn), name or hex(addr))
+        return self
+
     def stub(self, addr, nargs, eax=0, pops=False, name=""):
         """replace the function at addr: returns eax (or eax(args, ecx)), pops its arguments when stdcall/thiscall"""
         self.stubs[addr] = (nargs, pops, eax, name or hex(addr))
         return self
 
-    def run(self, entry, args, image: bytes, inputs=(), ecx=0, budget=40_000_000, blocks=(), watch=(), cover=None):
+    def run(self, entry, args, image: bytes, inputs=(), ecx=0, budget=40_000_000, blocks=(), watch=(), cover=None,
+            clock=None, gate=None):
+        """clock (3.8, stream 38e, additive): fn(ra) -> value | None answers timeGetTime outside a handler by the call's
+        return address (None: the counter); it may raise NeedInput (the script ran out). gate: fn() -> bool, asked at
+        every non-drain dispatch: False = nothing has arrived at this pump call (no batch, no NeedInput)."""
         from unicorn import UC_ARCH_X86, UC_HOOK_CODE, UC_MODE_32, Uc, UcError
         from unicorn import x86_const as X
         img = self.img
@@ -165,6 +175,9 @@ class Emu:
             if caller in DRAIN_CALLERS:     # a drain: the scripted input never "has arrived" (QueueInput's rule)
                 log.append(("drain", DRAIN_CALLERS[caller]))
                 return finish(0, 0, False)
+            if gate is not None and not gate():   # 38e: the next batch has not arrived at this pump call
+                log.append(("nothing arrived", state["pos"]))
+                return finish(0, 0, False)
             if state["pos"] >= len(queue):
                 raise NeedInput("modal wait with no input left")
             batch = []
@@ -210,6 +223,10 @@ class Emu:
                         c = state["cur"]
                         if c is not None:
                             return finish(c.t, 0, True)
+                        if clock is not None:   # 38e: the scripted clock of this call site
+                            v = clock(struct.unpack("<I", uc.mem_read(uc.reg_read(X.UC_X86_REG_ESP), 4))[0])
+                            if v is not None:
+                                return finish(v, 0, True)
                         state["clock"] += 1
                         return finish(state["clock"], 0, True)
                     if name == "GetAsyncKeyState":
@@ -219,6 +236,9 @@ class Emu:
                         return finish(v, 1, True)
                     if name == "PeekMessageA":
                         return finish(0, 5, True)
+                    if name in self.import_handlers:
+                        nargs, fn = self.import_handlers[name]
+                        return finish(fn(uc, stack_args(nargs)), nargs, True)
                     raise RuntimeError(f"import {img.imports[addr]}")
                 if addr == FRAME_TICK and FRAME_TICK not in self.stubs:
                     log.append(("frameTick", state["pos"]))
@@ -239,6 +259,8 @@ class Emu:
                         s, p = s + ch, p + 1
                     v = sum(eax[1] + (c & eax[2]) for c in s)
                     log.append(("Text_put", s))
+                elif isinstance(eax, tuple) and eax[0] == "py":
+                    v = eax[1](uc, a, uc.reg_read(X.UC_X86_REG_ECX))
                 else:
                     v = eax(a, uc.reg_read(X.UC_X86_REG_ECX)) if callable(eax) else eax
                 return finish(v, nargs, pops)

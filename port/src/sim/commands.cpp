@@ -10,6 +10,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/course.h"
+#include "portsim/sim/semantic.h"
 #include "portsim/sim/util.h"
 
 namespace portsim {
@@ -378,7 +379,9 @@ int32_t apply_command(Ctx &ctx, const Command &cmd) {
     case CmdKind::BuildingSelect: return building_action(ctx, cmd.arg[0]);
     case CmdKind::AmenitySelect: return amenity_action(ctx, cmd.arg[0]);
     case CmdKind::SlotPanelSelect: return slot_action(ctx, cmd.arg[0]);
-    default: throw MissingResource{"command kind not implemented"};
+    default:
+      if (is_semantic_input(cmd.kind)) return semantic_apply(ctx, cmd);  // phase 3.8 (38i): input actions 0x200..
+      throw MissingResource{"command kind not implemented"};
   }
 }
 

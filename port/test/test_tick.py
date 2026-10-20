@@ -24,19 +24,12 @@ CMD_IDS = [f"{r['scenario']}/{int(r['segment']):02d}" for r in COMMAND]
 # straddlers phase 3.7b lists as gaps, re/port/commands_split.tsv) or a provider the run has none of (Text_put: a TextMetrics,
 # U-0944); OPEN_DIVERGENT are hash divergences whose cause lies outside this module.
 OPEN_MISSING = {
-    "Text_put": "BLOCKED by U-0947: showPopup / textInputBox / the browsers measure text with the host GDI rasterizer "
-                "(U-0944) and the traces record no width (re/model/trace_schema.md has no such record): no provider",
-    "drawGolferInfoPanel": "3.7b gap (6.3 KB)",
-    "showCourseReport": "3.7b gap",
-    "shotStyleButtonCode": "not registered (ui, 46 bytes)",
-    "loadGameBrowserScreen": "3.7b gap (file browser)",
-    "showHoleStatsScreen": "3.7b gap",
-    "showEndOfYearScreen": "3.7b gap",
-    "showBulletinBoard": "the board itself (modal, skillPointDialog / scrollTextWindow): 3.7b gap; tick's fallback stops there",
-    "courseActionMenu": "3.7b gap (switchToCourse's menu)",
-    "showCharacterIntro": "3.7b gap (customizeCharacter's modal intro; needs skillPointDialog U-0865); U-0931",
+    "Text_put": "only without a TextMetrics provider (SegmentRunner(text_metrics='none') / SG_TEXT_METRICS=none): the host "
+                "GDI provider (module gditext, 38a) gives the widths",
 }
-OPEN_DIVERGENT = {}
+# no COMMAND segment diverges for a cause outside this module (the four title-menu exits run through tick_menu.inc since
+# phase 3.8 stream 38j: port/test/test_menu.py test_segments_through_the_title_menu)
+OPEN_DIVERGENT: dict = {}
 # a fast subset for the default run (the full gate is marked slow: about five minutes in one process)
 CMD_FAST = ["course_season/03", "cov_a_keys/02", "cov_b_inject/00", "cov_k2_simfoto/00", "cov_k3_camera2/02",
             "cov_k1_washers/00", "ui_tour/03"]
@@ -171,7 +164,7 @@ NEGCTL_BLIND = {
     ("tick.frame", 2): "the bulletin-board fallback's counter: no TIME-FORWARD start image has a pending photo",
     ("hireEmployee", 1): "needs the hire dialog's choice (showHireEmployeeDialog, phase 3.7b): no segment or vector",
     ("drawRecords", 1): "its own writes are render-class objects (g_recordBanks, g_animalCell, the sprite queue: "
-                        "gamestate_meta.inc); blind on every PASSing COMMAND segment and cov_k1_animals/00's 18 frames",
+                        "gamestate_meta.inc); blind on every PASSing COMMAND segment and cov_k1_animals/00's 57 frames",
 }
 
 

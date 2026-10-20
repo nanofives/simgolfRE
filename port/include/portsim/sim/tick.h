@@ -50,7 +50,10 @@ struct FrameInput {
 };
 
 // Where a frame left mainLoop's frame loop.
-enum class FrameExit { Frame = 1, Retile = 2, Menu = 3, Wait = 4 };
+// Quit (phase 3.8, stream 38j): the title menu's quit returned from mainLoop. tick_frame no longer returns Menu or Retile:
+// a frame that leaves for the title menu runs the menu and the session dispatch, and one that leaves through ML+0x664
+// runs rebuildTileCoverage, before the next frame head (Frame); or the quit ends mainLoop (Quit).
+enum class FrameExit { Frame = 1, Retile = 2, Menu = 3, Wait = 4, Quit = 5 };
 
 // Runs one frame of mainLoop from its frame head to the next. Throws like every port function (Fault, DivideError,
 // NoReturn, MissingResource{callee} for a callee that is neither ported nor a documented drop, NeedInput).

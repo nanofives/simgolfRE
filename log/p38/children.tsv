@@ -1,0 +1,12 @@
+stream	session	model	effort	task
+38a	cmvg4xydilidnpq15fecaw35s	opus	xhigh	text widths (GDI provider, recorder)
+38b	cmvg4y67xliejpq15tkr7f64r	sonnet	high	shotStyleButtonCode, GameFiles listing, loadGameBrowserScreen, courseActionMenu
+38c	cmvg4ye85lif1pq15z7breg5h	sonnet	high	showCourseReport, showEndOfYearScreen
+38d	cmvg4ylpnlig1pq15mvu4502u	opus	high	skillPointDialog, showCharacterIntro, drawGolferInfoPanel, showBulletinBoard
+38e	cmvg4yshslihppq15nbxe8pxx	opus	high	clock-aware InputSource, showHoleStatsScreen
+38f	cmvg4yzbplij5pq15i3sqopp4	opus	xhigh	integrator gates c-f, multi-year season
+38g	cmvg7io98m04hpq15tioyz81z	sonnet	high	showRoutingMapScreen (new gap from 38c)
+38h	cmvg9rs6hm61zpq15xem2vein	opus	high	showCharacterEditor (new gap from 38d)
+38i	cmvgl3bgpm941pq15z55t7kx7	opus	xhigh	command-API extension, gate (d)
+38j	cmvgl3hwwm94jpq1571xrlha6	opus	xhigh	title-menu section in sg_run_frames
+38k	cmvgo7d2qmjorpq15yz089wf7	sonnet	high	test_loaders scrollTextWindow seam

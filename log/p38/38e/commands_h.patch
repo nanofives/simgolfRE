@@ -1,0 +1,58 @@
+--- a/port/include/portsim/sim/commands.h
++++ b/port/include/portsim/sim/commands.h
+@@ -107,6 +107,17 @@
+     (void)y;
+     return false;
+   }
++  // CLOCK (phase 3.8, U-0949): the timeGetTime value of one of the original's clock reads, for a ported loop that runs by
++  // wall time (showHoleStatsScreen's page animation). `site` is the read's call site as the trace keys it: the call's
++  // return address as an offset from mainLoop's frame-head return address (tick.cpp's kSite* constants; port code keeps
++  // no image address). Returns the source's NEXT read at that site after the last read it returned at any site (a
++  // trace-driven source: the frame's clock records in order), true; false = unknown (no clock, or no read at that site
++  // left): the loop throws NeedInput there, where the original was still waiting.
++  virtual bool clock(int32_t site, uint32_t &t) {
++    (void)site;
++    (void)t;
++    return false;
++  }
+ };
+ // A Blocking pump found no input left: neither an InputSource nor a remaining command (C ABI: SG_E_NO_RESOURCE). `what`
+ // is the hooks.csv name of the waiting function.
+@@ -162,12 +173,37 @@
+     y = cy_;
+     return has_cursor_;
+   }
++  // a scripted clock (tests): the values of one site, returned in order by clock(site); none left = false
++  void set_clock(int32_t site, std::vector<uint32_t> values) {
++    for (auto &s : clock_)
++      if (s.site == site) {
++        s.values = std::move(values);
++        s.next = 0;
++        return;
++      }
++    clock_.push_back({site, std::move(values), 0});
++  }
++  bool clock(int32_t site, uint32_t &t) override {
++    for (auto &s : clock_)
++      if (s.site == site) {
++        if (s.next >= s.values.size()) return false;
++        t = s.values[s.next++];
++        return true;
++      }
++    return false;
++  }
+ 
+  private:
++  struct SiteClock {
++    int32_t site;
++    std::vector<uint32_t> values;
++    size_t next;
++  };
+   std::vector<Command> cmds_;
+   size_t pos_ = 0;
+   int32_t cx_ = 0, cy_ = 0;
+   bool has_cursor_ = false;
++  std::vector<SiteClock> clock_;
+ };
+ 
+ }  // namespace portsim

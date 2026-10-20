@@ -2,7 +2,7 @@
  "version": 1,
  "root": "log/c3/alt/refs",
  "procedure": "re/tools/scenario_refs.py regen (det_a record, det_b / det_c replay, det_b == det_c required); checklist re/analysis/data/scenario_baseline.md",
- "updated": "2026-10-17T15:10:56",
+ "updated": "2026-10-20T01:29:11",
  "scenarios": {
   "cov_a_build3": {
    "family": "c3fya",
@@ -2700,6 +2700,54 @@
    },
    "sound_live": false,
    "recorded": "2026-10-17T14:42:17"
+  },
+  "course_season_6y": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/course_season_6y/det_b",
+   "schedule_sha256": "670bfb9caed7a54b475ee00784e40a64fb6ee6d09cc93287cc3e5fa07b832617",
+   "reference_sha256": "7a30560366b241abcb38e5fb849ded231bf45202928281010ac927b05f56e0c4",
+   "checkpoints": [
+    "sandbox",
+    "hole_open",
+    "season_500",
+    "season_1000",
+    "season_1500",
+    "season_2000",
+    "season_2500",
+    "season_3000",
+    "season_3500",
+    "season_4000",
+    "season_4500",
+    "season_5000"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0xd81ce2c9",
+    "seed_time": "0x00100000",
+    "checkpoint": "sandbox",
+    "state_sha16": "c11c62044e3851a1",
+    "frame_sha16": "de999e4f455d2219",
+    "T": 6868,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (12 checkpoints)",
+    "det_a_vs_det_b": "SAME (12 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "7ef71859b152b532f4dcf45b566e92ecb26f2c31d1110469efb942d2382fa577",
+    "scenario_det_js_sha256": "41acb7c842eb2897377447f6400466aa55ef6d1bb5ef3cc112301738e9247bfc"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 0,
+    "keep_sound": true,
+    "instance": "p38f2"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-20T01:26:35"
   }
  }
 }

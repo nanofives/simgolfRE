@@ -63,6 +63,20 @@ enum class CmdKind : uint32_t {
   AmenitySelect = 0x105,       // clickAmenityPanel: pickAmenity434980's entry (-2, 0..9)
   SlotPanelSelect = 0x106,     // clickSlotPanel: hitTestSlot432f90's slot (0..0x16)
   // 0x107.. reserved for the screens not ported yet (re/port/commands_split.tsv)
+
+  // ---- semantic: INPUT ACTIONS (phase 3.8, stream 38i; portsim/sim/semantic.h, module `semantic`) ----
+  // What the player does, with no handler mechanics. Each is LOWERED to the root-handler calls its input makes (the
+  // RootHandler code above), at the dispatch point it is applied at, so mainLoop H1's key switch, H2's press code and
+  // routing and the modal screens react exactly as to that input. arg[7] of each: the clock the handlers' deadline tail
+  // compares, needed only while the deadline word g_audio5aa774 is set (it is 0 in every segment).
+  Key = 0x200,          // a key tap: arg[0] = KeyAction (semantic.h: H1's key cases by name); KeyAction::Char: arg[1] the
+                        // character, arg[2] the virtual key (0 = a character with no key-down, arg[3] = the code jgld passes)
+  PointerDown = 0x201,  // a mouse button goes down: arg[0] x, arg[1] y (root-window client coordinates), arg[2] 1 left / 2 right
+  Click = 0x202,        // the button comes up there (the click): arg[0] x, arg[1] y, arg[2] button, arg[3] modifiers (bit 0
+                        // Ctrl, bit 1 Shift held), arg[4] ClickTarget (semantic.h; checked, CommandRefused when it does
+                        // not hold), arg[5] / arg[6] the target's arguments (the tile, or the panel kind and its control)
+  TileClick = 0x203,    // a whole click (down and up) on course tile (arg[0], arg[1]) at the tile's screen centre:
+                        // arg[2] button, arg[3] modifiers; refused when that point does not select the tile
 };
 
 struct Command {
@@ -105,6 +119,17 @@ class InputSource {
   virtual bool cursor(int32_t &x, int32_t &y) {
     (void)x;
     (void)y;
+    return false;
+  }
+  // CLOCK (phase 3.8, U-0949): the timeGetTime value of one of the original's clock reads, for a ported loop that runs by
+  // wall time (showHoleStatsScreen's page animation). `site` is the read's call site as the trace keys it: the call's
+  // return address as an offset from mainLoop's frame-head return address (tick.cpp's kSite* constants; port code keeps
+  // no image address). Returns the source's NEXT read at that site after the last read it returned at any site (a
+  // trace-driven source: the frame's clock records in order), true; false = unknown (no clock, or no read at that site
+  // left): the loop throws NeedInput there, where the original was still waiting.
+  virtual bool clock(int32_t site, uint32_t &t) {
+    (void)site;
+    (void)t;
     return false;
   }
 };
@@ -162,12 +187,37 @@ class QueueInput : public InputSource {
     y = cy_;
     return has_cursor_;
   }
+  // a scripted clock (tests): the values of one site, returned in order by clock(site); none left = false
+  void set_clock(int32_t site, std::vector<uint32_t> values) {
+    for (auto &s : clock_)
+      if (s.site == site) {
+        s.values = std::move(values);
+        s.next = 0;
+        return;
+      }
+    clock_.push_back({site, std::move(values), 0});
+  }
+  bool clock(int32_t site, uint32_t &t) override {
+    for (auto &s : clock_)
+      if (s.site == site) {
+        if (s.next >= s.values.size()) return false;
+        t = s.values[s.next++];
+        return true;
+      }
+    return false;
+  }
 
  private:
+  struct SiteClock {
+    int32_t site;
+    std::vector<uint32_t> values;
+    size_t next;
+  };
   std::vector<Command> cmds_;
   size_t pos_ = 0;
   int32_t cx_ = 0, cy_ = 0;
   bool has_cursor_ = false;
+  std::vector<SiteClock> clock_;
 };
 
 }  // namespace portsim

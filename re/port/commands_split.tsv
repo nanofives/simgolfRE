@@ -29,19 +29,19 @@ addr	name	class	command_effect	dropped	evidence	gap
 004362f0	drawGolferActionPanel	layout	forwards to drawEmployeeDetailPanel while the detail panel is open (mode != 3)	all else	emulator oracle 200	-
 00436c00	handleEmployeeAction	command	scroll, selection, fire (cash, finance, walker flags, pointsPopup), rename, camera	-	emulator oracle 500, golden 60	case 6 (rename) calls textInputBox (not ported: NO_RESOURCE)
 00436e50	drawEmployeeDetailPanel	layout	scroll, g_zoomScale = 4 with a selection, walker animation word +0x1e, g_employeeDetailList and count, selection clear, appendDate (g_year), hireEmployee once per opening	drawing, sprites, tooltips	emulator oracle 200	hireEmployee is 3.7a's (NO_RESOURCE until registered)
-004385d0	showCharacterEditor	gap	golfer type records, phrases, pros, comment tone	-	-	not ported: 7.5 KB modal editor with text entry and popups (U-0944)
+004385d0	showCharacterEditor	command	the edited golfer type record (title, name, personality, demographics, body, looks, custom word; Cancel restores it from type record 83), its phrase lines (textInputBox), the member's skill bytes, the preview golfer 0x99, the member's pro record looks on Exit, g_commentTone and g_textBuffer (buildGolferComment, labels), g_ui_5aa6b8[3] + addSprite, composeGolferSprite, the tip counters g_ui_5aa554 / g_panelState[1], g_ui_5aa55c; pickCharEditor, nearestCharControl, charEditorZone in module chareditor	drawing, the screen Image, sound, the bio EditBox (U-1032: MissingResource)	emulator oracle 300 / 150 / 400 / 400 (View_toLocal real over a fake display, release-wait pumps as drains), golden 120 / 80 / 200 / 200, jcc 95/109 and 17/17; cov_a_keys3/01 PASS	-
 0043a400	selectDifficultyScreen	command	the chosen level (eax) from the cursor at the click	the screen	emulator oracle 120	-
 0043a8c0	pickAProScreen	gap	g_golfers +0xb6, g_theme	-	-	not ported: modal browser with frame-local records (round 32 SEH notes), cursor and popups
 0043b610	loadGameBrowserScreen	gap	g_courseType, g_flags, loadCourse / loadGame	-	-	not ported: file browser (GameFiles directory listing, U-0864) and popups
-0044cff0	showEndOfYearScreen	gap	g_debtYears, g_memberTypeHistory, addScore	-	-	not ported yet (5.7 KB; the effect is input-independent, the loop is a click-or-key loop)
+0044cff0	showEndOfYearScreen	command	g_memberTypeHistory slot of this month, g_debtYears counter, loadStoryStrings / landmarkName calls of the highlight lines, appendNumber / appendCents formatting (g_textBuf), addScore + drawScoreSummary after the loop	drawing, text assembly, waits, audio request	emulator oracle 400 + 500, golden 150	-
 0044f6b0	showFinancialReport	command	row total written back into g_financeYears entry 8 of each shown year, g_ui_569498 = 0	the report	emulator oracle 120	-
-0044fb30	showCourseReport	gap	g_courseReportScore, g_flags, g_tournamentPurse, postEvent	-	-	not ported yet (14 KB)
-00453330	showHoleStatsScreen	gap	g_msgState53df54, buildGolferComment	-	-	not ported yet (its own clock-driven animation: timeGetTime 0x0045464c)
+0044fb30	showCourseReport	command	g_courseReportScore, g_flags bits 13 / 22, g_tournamentPurse, postEvent 0xc / 0x10 / 0x15, appendNumber / appendCents / appendHoleName formatting (g_textBuf), g_ui_569498 = 0 on the way out	drawing, text assembly, the display slot call, waits	emulator oracle 400 + 500, golden 150	-
+00453330	showHoleStatsScreen	command	g_msgState53df54 = 0, the page builds' peers appendHoleName / appendCents / appendRatingLabel / buildGolferComment, the consumed input	drawing, waits	emulator oracle 300 + 120, golden 80, InputSource::clock (38e)	-
 004546b0	showPlayerCommentsReport	command	up to 20 buildGolferComment calls from the holes' comment counts, g_ui_569498 = 0	the report	emulator oracle 120	-
-00454c50	showMembershipRoster	gap	g_golferTypeState +2, g_ui_569498	-	-	not ported yet
+00454c50	showMembershipRoster	command	bit 7 of byte +2 of all 76 golfer-type records cleared at every redraw (exclusion bit lost, U-1023), g_ui_569498 cleared, zone / press loop (pump model)	roster drawing, row selection by name, scroll offset, icons, display slot call, waits	emulator oracle 300, golden 120	-
 00455a30	showBestScoresScreen	command	g_ui_569498 = 0, input consumed	the page	emulator oracle 120	-
 00455ed0	showHistographScreen	command	g_ui_569498 = 0, input consumed	the graphs	emulator oracle 120	-
-00456be0	showRoutingMapScreen	gap	tile flags, holes, golfers, shade	-	-	not ported: map editor with cursor drag (7 KB)
+00456be0	showRoutingMapScreen	command	hole / waypoint records and tile hole numbers moved by a right click, g_ui_4d20dc mode set by a button click, walker kind word rewrite of the listed rows, golfers' hole bytes through the inverse permutation, g_holesPlusOne at exit, spreadAllShade in mode 1, appendCourseTitle / appendWalkerName / appendDate / appendNumber calls	map, hole and walker drawing, display slot calls, waits	emulator oracle 400 + edges, golden 120	-
 004587a0	showBuyLandScreen	gap	cash, finance, tile types, RNG	-	-	not ported: map screen
 00459400	showHireEmployeeDialog	command	the chosen employee kind (eax) from the cursor at the click; #DE on an empty sprite sheet	the dialog	emulator oracle 120	-
 00459850	showGolferPairSelect	gap	g_golfers +0x10, story pairs	-	-	not ported: two-step golfer picker with cursor
@@ -61,3 +61,4 @@ addr	name	class	command_effect	dropped	evidence	gap
 004724c0	listThemes	gap	g_theme	-	-	not ported: directory listing (GameFiles, U-0864)
 004725b0	showThemePackSelect	gap	g_theme	-	-	not ported: browser with frame-local records
 00473470	drawScoreSummary	command	addScore, g_textBuffer / g_scoreSummaryBuf / g_textBuf formatting of the rows, the pumpAndRedraw(0) wait	images, fills, text drawing	emulator oracle (screen family) 120 cases GREEN, jcc 6/6 + golden digests	-
+0044e770	showShortcutsScreen	command	g_ui_569498 cleared on the way out, the close-button press / key that ends the loop (pump model)	two backgrounds, 63 captions, close button states, display slot call, waits	emulator oracle 300, golden 120	-

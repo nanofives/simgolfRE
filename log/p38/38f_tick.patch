@@ -1,0 +1,20 @@
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+index bd6ca27..b716d4d 100644
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -31,6 +31,7 @@
+ #include "portsim/ptr.h"
+ #include "portsim/registry_list.h"
+ #include "portsim/sim/commands.h"
++#include "portsim/sim/integrator.h"
+ #include "portsim/sim/terrain_api.h"
+ #include "portsim/sim/util.h"
+ #include "portsim/state_hash.h"
+@@ -1133,6 +1134,7 @@ class TraceInput : public InputSource {
+     if (cnext_ > 0 && fr_->clock_pos[cnext_ - 1] >= b.pos) ++clock_late_;
+     writes_before(b.pos);
+     out = b.cmds;
++    if (const std::vector<Command> *rep = batch_override(ctx_, b.pos)) out = *rep;  // phase 3.8 gate (d): a replacement
+     ++next_;
+     ++delivered_;
+     return true;

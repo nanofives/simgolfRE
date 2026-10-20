@@ -755,9 +755,12 @@ def test_screen_equals_emulated_original(portlib, name):
 WIDGET_ENTRY = {"showPopup": 0x0046D6E0, "textInputBox": 0x0045B2C0, "nearestMenuSpot": 0x004326A0,
                 "showSystemMenu": 0x00432720, "showPreferencesMenu": 0x00432560}
 # showSystemMenu's peers the port does not have: the oracle stubs them and the port must give SG_E_NO_RESOURCE there
-WIDGET_GAP_PEERS = {0x00437910: ("promptAndSaveFile", 3)}
-# peers recorded on both sides instead of run (their drawing text in g_textBuffer is masked by their own family)
-WIDGET_RECORD = {"showSystemMenu": {"showBestScoresScreen": (0x00455A30, 0), "drawScoreSummary": (0x00473470, 0)}}
+# (promptAndSaveFile was one until module saveload registered it in phase 3.8 stream 38b: it is recorded now)
+WIDGET_GAP_PEERS = {}
+# peers recorded on both sides instead of run (their drawing text in g_textBuffer is masked by their own family;
+# promptAndSaveFile has its own oracle in test_save_dialogs.py)
+WIDGET_RECORD = {"showSystemMenu": {"showBestScoresScreen": (0x00455A30, 0), "drawScoreSummary": (0x00473470, 0),
+                                    "promptAndSaveFile": (0x00437910, 3)}}
 WIDGETS = list(WIDGET_ENTRY)
 TEXT_PUT = 0x00477250                 # Text_put(this, text), ret 4
 WIDGET_DROPPED = [0x004762D0, 0x00479830, 0x004798C0, 0x00479950, 0x0040CC00, 0x00480B00, 0x00473F60, 0x004049D0,
@@ -949,7 +952,7 @@ def port_widget(lib, name, img, args, inputs, cur, rule):
 def widget_compare(lib, name, img, args, inputs, cur, rule) -> str:
     r = emu_widget(name, img, args, inputs, cur, rule)
     pe, pimg, code, used = port_widget(lib, name, img, args, inputs, cur, rule)
-    gap = [nm for nm, _ in r.log if nm in ("promptAndSaveFile",)]
+    gap = [nm for nm, _ in r.log if nm in {v[0] for v in WIDGET_GAP_PEERS.values()}]
     if gap:
         return "" if code == L.SG_E_NO_RESOURCE else f"gap {gap[0]}: port code {code}"
     if r.err.startswith("NeedInput"):

@@ -74,18 +74,23 @@ Resets the session (SetDrawTarget, `[0x00834170]=0`, `[0x0059e7b8]=0x40000000`, 
 cursor into the root window 0x00519a60 (View_toLocal 0x0047ab50), pick the nearest of 6 hotspots with distance
 0x0040acd0, draw the highlight, Window::refreshFull, read the mouse-down word `[0x00822d68]` and the selection; on a
 click it runs the jump table **0x00421b04** (index = selection + 2, 0..7): the selection maps to 0, 1, 4, 2, 3 or -2.
-Selection 4 = Select A Theme -> `showThemePackSelect` + a preview Image at F+0xe4c (SEH state F+0x124c=1), loop to
-0x00420e35. Selection 3 = Play a Championship -> set the championship flags (`[0x571fd4]=0x186a0`, `[0x59e7b8] |=
-0x1000000`, `[0x5a6364]=0x11`, `[0x543cfc]=0x3fff`, `[0x822c88]=1`). Selections 0/-1/2 build the difficulty prompt and
-run `selectDifficultyScreen` 0x0043a400 (0x004214fb) when applicable; mode 5 shows a second preview Image at F+0xb94
-(SEH state F+0x124c=2). Selection 2 = Sandbox Mode sets `[0x5a34e0]=0xff` and `[0x59e7b8] |= 0x4000000`. Selection 6
+The hotspots 0..5 are the labels Continue Saved Game, Start New Game, Select A Theme, Play a Championship, Sandbox Mode and
+the quit spot (label pointers F+0x1f4 + 4 i, 0x0040f779..0x0040f7b6; hotspot table F+0xf4, 0x0040f705..0x0040f771); the
+table 0x00421b04 maps them to the selections 1, 0, 4, 2, 3, -2. Selection 3 = Sandbox Mode: `[0x571fd4]=0x186a0`,
+`[0x59e7b8] |= 0x1000000`, `[0x5a6364]=0x11`, `[0x543cfc]=0x3fff`, `[0x822c88]=1` (0x0042140c..0x00421439). Selections
+0/-1/2 build the difficulty prompt and run `selectDifficultyScreen` 0x0043a400 (0x004214fb); -1 from it returns to the
+menu head. Selection 2 = Play a Championship then sets `[0x5a34e0]=0xff` and `[0x59e7b8] |= 0x4000000` (0x00421541..
+0x00421557). Selection 1 (Continue Saved Game) sets `[0x822c88]=6` (0x004215f7). Selection 4 (Select A Theme) runs
+`showThemePackSelect` and a preview Image at F+0xe4c and loops to 0x00420e35; mode 5 shows a second preview at F+0xb94.
+(Corrected in phase 3.8 stream 38j, U-1053: selections 2 and 3 and the flags 0x4000000 / 0x1000000 were swapped here.)
+Selection 6
 (set by the themes path) -> `showLoadingScreen(-1)` + `seedCourseTable` + `jmp 0x0040f9fc`. The menu carries the chosen
 mode in ebx to the session dispatch. (Full per-step detail: part MV notes.)
 
 ## SESSION DISPATCH 0x0040f9fc..0x0040fc24 (reimplementation `Session`, part SV)
 Reads the mode `[0x00822c88]`, calls `loadThemes(mode != 6)` and `startSoundSlot(0x80)`. If ebx == -2 it runs QUIT
-(below) and mainLoop returns. Otherwise per-session setup: `[0x00567afc]=5`, `[0x00822d8c]=-1`; if the sandbox flag
-`[0x0059e7b8] & 0x4000000` is set it calls `startNewCourse` (0x0040fb25) and, on 0, clears the flag and returns to the
+(below) and mainLoop returns. Otherwise per-session setup: `[0x00567afc]=5`, `[0x00822d8c]=-1`; if the championship flag
+`[0x0059e7b8] & 0x4000000` is set it calls `startNewCourse` (0x0040fb25: the course list loadGameBrowserScreen(1, 1), the pro list pickAProScreen, loadGolfPro) and, on 0, clears the flag and returns to the
 menu, else `loadWorldAssets` and enters the frame; if mode == 6 it calls `loadGameBrowserScreen(1,0)` (0x0040fb49) and
 returns to the menu on 0, else `loadThemes(1)`, `loadWorldAssets`, enter the frame; otherwise the normal new-course
 path (`courseActionMenu` 0x0046f550 via thunk 0x00470a00; on -1 return to the menu; else `generateRandomCourse`,
@@ -167,7 +172,7 @@ Each `jmp [reg*4 + T]` is bounded by a preceding `cmp`/`ja` (or a byte index tab
 675 distinct data addresses (217 written). Full table with width and R/W per address: `log/c3/alt/c3fy_globals.tsv`;
 dependency rows for the port: `log/c3/c3fy_deps.tsv`. The named ones (from re/names/*_globals.tsv) that mainLoop reads
 or writes:
-- `[0x0059e7b8]` g_flags: session mode bits, read/written throughout (0x4000000 sandbox, 0x1000000 championship,
+- `[0x0059e7b8]` g_flags: session mode bits, read/written throughout (0x4000000 championship, 0x1000000 sandbox,
   0x8000000 ..., 0x400000 ..., 0x200000 story advance enabled).
 - `[0x00822c88]` session mode (-1 none, 1 championship, 2 sandbox, 5/6 ...); `[0x00822c90]` g_screenHeight,
   `[0x00822c8c]` g_screenWidth; `[0x00822c78]` title ticker seed; `[0x00822d9c]` the RNG seed (Random::range).

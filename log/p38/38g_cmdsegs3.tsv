@@ -1,0 +1,3 @@
+segment	status	frames	record	objects	noncausal	seconds	run_detail	detail
+ui_tour/00	PASS	247/247				0.6	end checkpoint at site 60001 (a frame-wait site): the last frame ran to the frame wait; input: 45 dispatches delivered, 0 left, 20 at another cursor count (first: record 2); cursor reads over/under 2/1399 (first: record 2); async-key reads over/under 0/0	
+ui_tour_v/00	PASS	247/247				0.8	end checkpoint at site 312244 (a frame-wait site): the last frame ran to the frame wait; input: 45 dispatches delivered, 0 left, 20 at another cursor count (first: record 2); cursor reads over/under 2/1398 (first: record 2); async-key reads over/under 0/0	

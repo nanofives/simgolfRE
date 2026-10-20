@@ -31,6 +31,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/integrator.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/util.h"
 #include "portsim/state_hash.h"
@@ -123,7 +124,6 @@ const Drop kDrops[] = {
     {"loadImage", "image file into a surface (renderer)"},
     {"playSound", "audio request"},
     {"startSoundSlot", "audio request"},
-    {"refreshTerrain", "Terrain.dll push (renderer, U-0800)"},
     {"syncTiles", "Terrain.dll push (renderer, U-0800)"},
     {"saveCourseJpg", "screenshot file"},
     {"capsLockOff", "keybd_event (time_model.md section 8)"},
@@ -406,6 +406,8 @@ struct Frame : TkBase {
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 #include "tick_frame.inc"
+// phase 3.8 (stream 38j): mainLoop's title menu and session dispatch (log/p38/38j/conv_menu.py)
+#include "tick_menu.inc"
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #elif defined(__GNUC__)
@@ -425,8 +427,15 @@ struct Frame : TkBase {
     int h2in[6] = {0, 0, 0, 0, 0, 0};
     int d = Ph_0041c0c5(F, h2in);
     if (d == kNext) d = Ph_0041ecbb(F, h2in);
-    if (d == kMenu) return FrameExit::Menu;
-    return d == kRetile ? FrameExit::Retile : FrameExit::Frame;
+    // the title menu ML+0x11875 and the session dispatch, then the next frame head (phase 3.8, stream 38j)
+    if (d == kMenu) return menu_session(F);
+    // ML+0x664 (rebuildTileCoverage) runs before the frame head ML+0x669, where the original's frame record is taken: the
+    // rebuild belongs to this step, so the next one enters at the frame head (phase 3.8, stream 38j)
+    if (d == kRetile) {
+      cc("rebuildTileCoverage");
+      return FrameExit::Frame;
+    }
+    return FrameExit::Frame;
   }
 };
 
@@ -710,7 +719,7 @@ class HeadlessTerrain : public NullTerrain {
 
  private:
   static constexpr uint32_t kObjSize = 0x3A4 + 2500 * 0x248;  // the tile array's end (kTerTiles + 50 * 50 * kTileSize)
-  static constexpr uint32_t kArenaSize = 0x00100000u;
+  static constexpr uint32_t kArenaSize = 0x01000000u;   // 16 MB: cov_b_holes18/00 ran a 1 MB arena out at record 1140 (38d)
   struct Blocks {
     std::vector<uint8_t> terrain, sentinel, arena;
     uint32_t terrain_va = 0, sentinel_va = 0, arena_va = 0, arena_used = 0;
@@ -854,8 +863,10 @@ struct TWrite {
 
 struct TraceFrame {
   uint32_t index = 0, pos = 0, t = 0;
+  uint32_t flags = 0;                               // g_flags in the FRAME record's snapshot (trace_schema.md, +0x54)
   uint32_t fms_pos = UINT32_MAX;                    // the clock ordinal of H1's g_frameMs read (none: the frame has no wait)
   std::vector<std::pair<int32_t, uint32_t>> clock;  // tgt calls of the frame: (site offset, value)
+  std::vector<uint32_t> clock_pos;                  // the clock ordinal of each (CLOCKRUN first + k): TraceInput::clock
   std::vector<std::pair<int32_t, int32_t>> cursor;  // CURSOR records of the frame (successful reads)
   std::vector<std::pair<uint8_t, uint16_t>> async;  // GetAsyncKeyState reads outside the root handlers (vk, result)
   std::vector<TBatch> batches;
@@ -870,6 +881,9 @@ struct TraceEnd {
   uint32_t pos = 0;      // the final POLL's position (clock calls before it)
   int32_t site = 0;      // the call site of the clock call it rides on (offset from the frame-head ra)
   bool at_frame = false; // a FRAME record of that same clock call follows
+  // the clock call it rides on comes after the last frame's H1 wait had ended: the checkpoint was taken later in that
+  // frame (an H2 modal screen, the title menu), not in the wait (phase 3.8, stream 38j)
+  bool after_wait = false;
 };
 
 // The FRAME records and what the trace says between them (schema v1, re/model/trace_schema.md).
@@ -890,9 +904,11 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
   const uint32_t frame_ra = static_cast<uint32_t>(std::strtoul(meta.c_str() + fk + 11, nullptr, 10));
   size_t p = hdr + meta_len;
   std::vector<std::pair<int32_t, uint32_t>> pending;
+  std::vector<uint32_t> pending_pos;
   struct Run {
     uint32_t first, count;
     int32_t site;
+    uint32_t v0;
   };
   std::vector<Run> runs;
   // dispatch batching (port/test/trace_commands.py batches(), the same rules)
@@ -909,8 +925,11 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
       const uint32_t v0 = rd32(q + 16);
       const int32_t site = static_cast<int32_t>(ra - frame_ra);
       if (sub == 1)
-        for (uint32_t k = 0; k < count; ++k) pending.emplace_back(site, v0 + k * step);
-      runs.push_back({first, count, site});
+        for (uint32_t k = 0; k < count; ++k) {
+          pending.emplace_back(site, v0 + k * step);
+          pending_pos.push_back(first + k);
+        }
+      runs.push_back({first, count, site, sub == 1 ? v0 : 0u});
       if (sub == 1 && site == tk::kSiteFrameMs && !frames.empty() && frames.back().fms_pos == UINT32_MAX)
         frames.back().fms_pos = first;
       if (in_handler_code(site)) {
@@ -963,10 +982,15 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
       f.index = rd32(q);
       f.pos = rd32(q + 4);
       f.t = rd32(q + 8);
+      f.flags = rd32(q + 12 + 0x54);
       if (!frames.empty()) {
         // the frame-head call itself (the last clock call before this record) belongs to the new frame
-        if (!pending.empty()) pending.pop_back();
+        if (!pending.empty()) {
+          pending.pop_back();
+          pending_pos.pop_back();
+        }
         frames.back().clock = pending;
+        frames.back().clock_pos = pending_pos;
         // writes made inside the frame-head call (pos = the new frame's pos) are seen by the new frame's body
         auto &w = frames.back().writes;
         while (!w.empty() && w.back().pos >= f.pos) {
@@ -975,6 +999,7 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
         }
       }
       pending.clear();
+      pending_pos.clear();
       cur = nullptr;
       open_batch = false;
       ctx_ra = frame_ra;
@@ -987,7 +1012,10 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
     }
     p += 4 + len;
   }
-  if (!frames.empty()) frames.back().clock = pending;
+  if (!frames.empty()) {
+    frames.back().clock = pending;
+    frames.back().clock_pos = pending_pos;
+  }
   for (TraceFrame &f : frames) {  // a write in the frame-head call of a frame's own record
     auto &w = f.writes;
     while (!w.empty() && w.front().pos <= f.pos) {
@@ -997,6 +1025,17 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
   }
   if (end.has_poll) {
     end.at_frame = !frames.empty() && frames.back().pos == end.pos;
+    if (!frames.empty()) {
+      const TraceFrame &lf = frames.back();
+      const uint32_t limit = lf.t + ((((lf.flags & (1u << 17)) != 0 ? 0x4Bu : 0u) + 0xAFu) / 2u);
+      uint32_t ended_at = UINT32_MAX;
+      for (const Run &r : runs)
+        if (ended_at == UINT32_MAX && r.first >= lf.pos && r.count > 0 &&
+            (r.site == tk::kSiteFrameMs + 0x20 || r.site == tk::kSiteFrameMs + 0x4f))
+          for (uint32_t k = 0; k < r.count && ended_at == UINT32_MAX; ++k)
+            if (r.v0 + k * step >= limit) ended_at = r.first + k;
+      end.after_wait = ended_at != UINT32_MAX && end.pos >= 1 && end.pos - 1 > ended_at;
+    }
     for (const Run &r : runs)
       if (end.pos >= 1 && r.first <= end.pos - 1 && end.pos - 1 < r.first + r.count) end.site = r.site;
   }
@@ -1013,6 +1052,10 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
 struct InputStats {
   uint64_t delivered = 0, undelivered = 0, misaligned = 0, cursor_over = 0, cursor_under = 0, async_over = 0, async_under = 0;
   int32_t first_undelivered = -1, first_misaligned = -1, first_cursor = -1, first_async = -1;
+  // the clock queries of wall-time loops (InputSource::clock): served, refused (no read at the site left), and dispatches
+  // delivered after the port had taken a clock read the original made only after that dispatch (late)
+  uint64_t clock_served = 0, clock_none = 0, clock_late = 0;
+  int32_t first_clock = -1;
   std::string first_undelivered_what;
   std::string text() const {
     std::string s = "input: " + std::to_string(delivered) + " dispatches delivered, " + std::to_string(undelivered) +
@@ -1024,6 +1067,11 @@ struct InputStats {
     if (first_cursor >= 0) s += " (first: record " + std::to_string(first_cursor) + ")";
     s += "; async-key reads over/under " + std::to_string(async_over) + "/" + std::to_string(async_under);
     if (first_async >= 0) s += " (first: record " + std::to_string(first_async) + ")";
+    if (clock_served || clock_none || clock_late) {  // only runs with a wall-time loop say anything here
+      s += "; clock queries " + std::to_string(clock_served) + " served, " + std::to_string(clock_none) + " none left, " +
+           std::to_string(clock_late) + " dispatches late";
+      if (first_clock >= 0) s += " (first: record " + std::to_string(first_clock) + ")";
+    }
     return s;
   }
 };
@@ -1048,6 +1096,7 @@ class TraceInput : public InputSource {
     fr_ = &f;
     next_ = 0;
     wnext_ = 0;
+    cnext_ = 0;
     refused_at_ = SIZE_MAX;
     record_ = record;
     if (SG_NEGCTL(g_negctl_frame) != 5)
@@ -1071,6 +1120,11 @@ class TraceInput : public InputSource {
     st.misaligned += misaligned_;
     if (misaligned_ && st.first_misaligned < 0) st.first_misaligned = record_;
     delivered_ = misaligned_ = 0;
+    st.clock_served += clock_served_;
+    st.clock_none += clock_none_;
+    st.clock_late += clock_late_;
+    if ((clock_none_ || clock_late_) && st.first_clock < 0) st.first_clock = record_;
+    clock_served_ = clock_none_ = clock_late_ = 0;
     if (partial) {
       fr_ = nullptr;
       return;
@@ -1102,8 +1156,10 @@ class TraceInput : public InputSource {
     }
     refused_at_ = SIZE_MAX;
     if (io.cursor_used != b.cursors) ++misaligned_;
+    if (cnext_ > 0 && fr_->clock_pos[cnext_ - 1] >= b.pos) ++clock_late_;
     writes_before(b.pos);
     out = b.cmds;
+    if (const std::vector<Command> *rep = batch_override(ctx_, b.pos)) out = *rep;  // phase 3.8 gate (d): a replacement
     ++next_;
     ++delivered_;
     return true;
@@ -1124,6 +1180,20 @@ class TraceInput : public InputSource {
     y = io.cursor_y;
     return true;
   }
+  // a wall-time loop's clock read (commands.h, CLOCK): the frame's next timeGetTime record at `site` after the last record
+  // this source returned (the frame body's own reads go through FrameIo::clock and do not move it)
+  bool clock(int32_t site, uint32_t &t) override {
+    if (fr_)
+      for (size_t i = cnext_; i < fr_->clock.size(); ++i)
+        if (fr_->clock[i].first == site) {
+          t = fr_->clock[i].second;
+          cnext_ = i + 1;
+          ++clock_served_;
+          return true;
+        }
+    ++clock_none_;
+    return false;
+  }
 
  private:
   void writes_before(uint32_t pos) {
@@ -1136,8 +1206,10 @@ class TraceInput : public InputSource {
   Ctx &ctx_;
   const TraceFrame *fr_ = nullptr;
   size_t next_ = 0, wnext_ = 0;
+  size_t cnext_ = 0;  // the clock record after the last one clock() returned
   int32_t record_ = 0;
   uint64_t delivered_ = 0, misaligned_ = 0;
+  uint64_t clock_served_ = 0, clock_none_ = 0, clock_late_ = 0;
   size_t refused_at_ = SIZE_MAX;
 };
 
@@ -1293,8 +1365,8 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
       throw;
     }
     after_frame(f, k, io);
-    if (ex == FrameExit::Menu) {
-      if (detail) *detail = "the frame left to the title menu";
+    if (ex == FrameExit::Menu || ex == FrameExit::Quit) {
+      if (detail) *detail = ex == FrameExit::Quit ? "mainLoop returned (the title menu's quit)" : "the frame left to the title menu";
       return 0;
     }
     retile = ex == FrameExit::Retile;
@@ -1315,7 +1387,7 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
     for (int32_t w : wait_sites) in_wait = in_wait || end.site == w;
     const TraceFrame &f = frames[max_frames];
     FrameInput in = frame_input(f);
-    in.stop_at_wait = true;
+    in.stop_at_wait = !end.after_wait;
     input.begin(f, max_frames + 1);
     tk::FrameIoStats io;
     std::string stop;

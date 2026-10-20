@@ -1,0 +1,4 @@
+segment	status	frames	record	objects	noncausal	seconds	run_detail	detail
+cov_a_flags/01	PASS	105/105				0.6	input: 5 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0	
+cov_a_flags/03	PASS	105/105				0.5	input: 5 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0	
+cov_a_flags/04	PASS	156/156				0.8	end checkpoint at site 312244 (a frame-wait site): the last frame ran to the frame wait; input: 11 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0	

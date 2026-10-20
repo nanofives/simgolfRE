@@ -330,7 +330,11 @@ int sg_exe_fill_state(sg_ctx *ctx, int32_t mode) {
 // ------------------------------------------------------------------------------------------------ game files
 int sg_files_put(sg_ctx *ctx, const char *name, const uint8_t *data, size_t n) {
   if (!ctx || !name || (n && !data)) return SG_E_ARG;
-  ctx->mem_files.put(name, n ? std::vector<uint8_t>(data, data + n) : std::vector<uint8_t>());
+  std::vector<uint8_t> bytes = n ? std::vector<uint8_t>(data, data + n) : std::vector<uint8_t>();
+  // with a root directory attached the file joins the directory's view (its in-memory overlay: the install on disk is
+  // never touched), so a harness can add the fixture files a recording's install held
+  if (ctx->dir_files) ctx->dir_files->write(name, bytes);
+  else ctx->mem_files.put(name, std::move(bytes));
   return SG_OK;
 }
 

@@ -27,6 +27,9 @@ file(GLOB PORTSIM_SIM_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src
 # Phase 3.0 core: src/ptr.cpp (Ptr<T> string / copy idioms), src/execonst.cpp (ExeConstants), src/gamefiles.cpp.
 add_library(portsim STATIC src/portsim.cpp src/registry.cpp src/state_hash.cpp src/ptr.cpp src/execonst.cpp
             src/gamefiles.cpp ${PORTSIM_SIM_SOURCES})
+# MSBuild does not see the #include of modules.inc in registry.cpp: rebuild it whenever the module list changes.
+set_source_files_properties(src/registry.cpp PROPERTIES
+                            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/sim/modules.inc")
 target_include_directories(portsim PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${SIMGOLF_MODEL_INCLUDE}"
                            PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 if(PORTSIM_NEGCTL)

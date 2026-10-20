@@ -40,7 +40,8 @@ offset 0   char[8] magic "SGTRACE\0"
       16   u32 step     virtual ms per main-thread timeGetTime call (1)
       20   u32 t0       value of the first timeGetTime call (0x00100000)
       24   u32 qstep    QPC counts per main-thread QPC call (= host QPC frequency / 1000; 10,000 here)
-      28   u32 q0       value of the first QPC call (0x10000000)
+      28   u32 q0       value of the first QPC call (0x10000000); when it needs more than 32 bits (a slice that starts late
+                        in a long run), the low 32 bits, and meta key "q0_64" holds the whole value (phase 3.8, 38f)
       32   meta_len bytes of UTF-8 JSON, keys sorted, no spaces:
            {"schema":1, "scenario":..., "frame_ra":4258863, "slots":[[module, kind, rva], ...],
             "snapshot":[[va, len], ...], "spec":"re/model/trace_schema.md"}

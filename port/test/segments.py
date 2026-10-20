@@ -17,6 +17,7 @@ from __future__ import annotations
 import csv
 import dataclasses
 import json
+import os
 import pathlib
 import struct
 import sys
@@ -27,6 +28,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from port.test import lib as L  # noqa: E402
+from port.test import segment_files  # noqa: E402  (the files a recording's install held beyond original/, 3.8 stream 38b)
 
 SEG_DIR = ROOT / "port" / "corpus" / "segments"
 MANIFEST_TSV = ROOT / "re" / "port" / "segments_manifest.tsv"
@@ -176,9 +178,12 @@ def _pointer_words() -> dict:
 
 # ------------------------------------------------------------------------------------------- runner
 class SegmentRunner:
-    def __init__(self, lib: L.Lib | None = None):
+    def __init__(self, lib: L.Lib | None = None, text_metrics: str | None = None):
         self.lib = lib or L.load()
         self.sim = self.lib.objects("sim")
+        # phase 3.8 (38a): "gdi" attaches the host GDI TextMetrics provider (module gditext) to every run when the
+        # library has it; "none" (or SG_TEXT_METRICS=none) runs without one (U-0944, U-0947)
+        self.text_metrics = text_metrics or os.environ.get("SG_TEXT_METRICS", "gdi")
 
     def noise_sim_bytes(self, seg: Segment) -> int:
         bits = np.unpackbits(np.frombuffer(seg.noise, np.uint8), bitorder="little")
@@ -215,34 +220,48 @@ class SegmentRunner:
             # the user's own install as the game files (story files, rosters), as the vector runner attaches it
             if INSTALL.is_dir():
                 st.files_root(INSTALL)
-            why = self.load_check(seg, st)
-            if why:
-                res.detail = why
-                return res
-            code, n, ts, hs = st.run_frames(seg.trace, seg.queued, res.frames_expected)
-            res.run_detail = self._detail(st)
-            if code == L.SG_E_NOT_IMPLEMENTED:
-                res.status, res.detail = "LOADED_ONLY", "load check passed; sg_run_frames not implemented"
-                return res
-            res.frames_run = n
-            if code != L.SG_OK:
-                res.status, res.detail = "FAIL", f"sg_run_frames returned {code} ({L.ERRORS.get(code, '?')})"
-                return res
-            got = [seg.records[0]] + [(ts[k], 0, hs[k]) for k in range(n)]
-            div = first_divergent_record(seg.records, got, seg.symbols, ignore=NON_CAUSAL)
-            res.noncausal = noncausal_differences(seg.records, got, seg.symbols)
-            if div is None:
-                end = self.end_check(seg, st)
-                nc_end = [s for s in end if s in NON_CAUSAL]
-                end = [s for s in end if s not in NON_CAUSAL]
-                if nc_end:
-                    res.noncausal = ",".join(filter(None, [res.noncausal] + [f"{s}@end" for s in nc_end]))
-                if end:
-                    div = {"record": "end", "objects": end}
-            res.first_divergence = div
-            res.status = "PASS" if div is None else "FAIL"
-            res.detail = "" if div is None else json.dumps(div)[:300]
+            for fname, data in segment_files.files_for(seg.scenario).items():   # overlay only: original/ is not written
+                st.files_put(fname, data)
+            # phase 3.8 (38a): the widgets' Text_put widths from the host GDI provider, detached before the context is
+            # freed (the provider maps are keyed by the context's address, which a later context can reuse)
+            gdi = self.text_metrics == "gdi" and self.lib.has("gditext.attach")
+            if gdi:
+                st.call("gditext.attach", [])
+            try:
+                return self._run_loaded(seg, st, res)
+            finally:
+                if gdi:
+                    st.call("gditext.detach", [])
+
+    def _run_loaded(self, seg: Segment, st: L.State, res: SegmentResult) -> SegmentResult:
+        why = self.load_check(seg, st)
+        if why:
+            res.detail = why
             return res
+        code, n, ts, hs = st.run_frames(seg.trace, seg.queued, res.frames_expected)
+        res.run_detail = self._detail(st)
+        if code == L.SG_E_NOT_IMPLEMENTED:
+            res.status, res.detail = "LOADED_ONLY", "load check passed; sg_run_frames not implemented"
+            return res
+        res.frames_run = n
+        if code != L.SG_OK:
+            res.status, res.detail = "FAIL", f"sg_run_frames returned {code} ({L.ERRORS.get(code, '?')})"
+            return res
+        got = [seg.records[0]] + [(ts[k], 0, hs[k]) for k in range(n)]
+        div = first_divergent_record(seg.records, got, seg.symbols, ignore=NON_CAUSAL)
+        res.noncausal = noncausal_differences(seg.records, got, seg.symbols)
+        if div is None:
+            end = self.end_check(seg, st)
+            nc_end = [s for s in end if s in NON_CAUSAL]
+            end = [s for s in end if s not in NON_CAUSAL]
+            if nc_end:
+                res.noncausal = ",".join(filter(None, [res.noncausal] + [f"{s}@end" for s in nc_end]))
+            if end:
+                div = {"record": "end", "objects": end}
+        res.first_divergence = div
+        res.status = "PASS" if div is None else "FAIL"
+        res.detail = "" if div is None else json.dumps(div)[:300]
+        return res
 
     def _detail(self, st: L.State) -> str:
         f = getattr(getattr(self.lib, "dll", None), "sg_run_frames_detail", None)

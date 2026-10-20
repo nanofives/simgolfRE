@@ -450,7 +450,7 @@ def select_segments(caps: list[dict], checkpoints: list[dict], frame_T, min_fram
 
 
 def max_segments(scenario: str) -> int:
-    return 10 if scenario == "course_season" else MAX_SEGMENTS
+    return 10 if scenario in ("course_season", "course_season_6y") else MAX_SEGMENTS
 
 
 # ================================================================ runs (need the game; one run per process)

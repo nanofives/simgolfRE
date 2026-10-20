@@ -896,7 +896,15 @@ def sc_course_season(c: Ctx, season_s=600, every_s=60):
             yield from c.checkpoint(f"season_{t // 1000:03d}")
 
 
-SCENARIOS = {"sandbox_basic": sc_sandbox_basic, "course_season": sc_course_season}
+def sc_course_season_6y(c: Ctx):
+    """Phase 3.8 (stream 38f, log/p38/38f_notes.md): course_season with a 5,000 virtual s season and a checkpoint every
+    500 s, about 50,000 frame heads. The date advances one unit per unpaused frame and a game year is 8,192 units
+    (re/analysis/sim/time_model.md), so this spans about six game years."""
+    yield from sc_course_season(c, season_s=5000, every_s=500)
+
+
+SCENARIOS = {"sandbox_basic": sc_sandbox_basic, "course_season": sc_course_season,
+             "course_season_6y": sc_course_season_6y}
 
 
 # ---------------------------------------------------------------- comparison
