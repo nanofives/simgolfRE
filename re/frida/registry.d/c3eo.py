@@ -64,7 +64,7 @@ _HS = dict(module=EXE, addr=0x00453330, abi="default", ret="void", args=["int"],
            vectors=[(h,) for h in range(1, 19)])
 
 HOOKS["showHoleStatsScreen"] = dict(fixture="c3eo_hs", **_HS)
-for _k in ("p1", "p2", "p3", "p4", "click", "hover", "phase", "norounds", "nopar", "zero"):
+for _k in ("p1", "p2", "p3", "p4", "click", "hover", "phase", "norounds", "nopar", "zero", "rating"):
     HOOKS[f"showHoleStatsScreen_{_k}"] = dict(fixture=f"c3eo_hs_{_k}", **_HS)
 
 # ---------------------------------------------------------------------------------- showTournamentResults 0x0045a090

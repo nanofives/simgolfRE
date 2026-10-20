@@ -1,0 +1,3 @@
+showHoleStatsScreen_rating: RED  18 vectors, 10 mismatches, state checked (18 vectors change it, 10 state mismatches), witness 0xe9 -> log\p38\u1000_prefix\00453330_showHoleStatsScreen_rating.path1.csv
+showHoleStatsScreen: GREEN  18 vectors, 0 mismatches, state checked (18 vectors change it, 0 state mismatches), witness 0xe9 -> log\p38\u1000_prefix\00453330_showHoleStatsScreen.path1.csv
+{'showHoleStatsScreen_rating': False, 'showHoleStatsScreen': True}

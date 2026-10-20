@@ -500,6 +500,10 @@
   // par 0: the banner block at 0x004541fe runs, and the clock's bit 0x200 is set so its text is drawn too
   F.c3eo_hs_nopar = hsKey({ clock0: hsClock(0, true), script: HS_KEYEXIT,
                             rec: function () { return { par: 0 }; } });
+  // the rating word (U-1000): d24 2 and rounds 95 make the divisor 1 + 95 + 4 = 100 (0x00453e3e), so v = c08 = 5h - 10
+  // runs from -5 to 80 over the 18 holes and reaches every arm of the v / 20 switch at 0x00453eb9..0x00453ed5
+  F.c3eo_hs_rating = hsKey({ clock0: hsClock(0), script: HS_KEYEXIT,
+                             rec: function (h) { return { d24: 2, rounds: 95, c08: 5 * h - 10 }; } });
   // every record field zero: no histogram total, no comment, the rating line skipped
   F.c3eo_hs_zero = hsKey({ clock0: hsClock(2), script: HS_KEYEXIT, quad: 0x80007d08,
                            rec: function () { return { d24: 0, c08: 0, c0c: 0, c0e: 0, c10: 0, c12: 0, c16: 0,

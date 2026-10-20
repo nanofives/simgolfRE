@@ -562,7 +562,7 @@ void __cdecl ShowHoleStatsScreen_re(int hole) {
             const char* word;
             if (v < 0) word = reinterpret_cast<const char*>(0x004D31E4);         // 0x00453eac / 0x00453eb2
             else {
-                int tier = v / 10;                                               // 0x00453eb9..0x00453ec8
+                int tier = v / 20;   // 0x66666667 * v, sar edx 3: 0x00453eb9..0x00453ec8 (was v / 10 until U-1000)
                 word = tier == 0 ? reinterpret_cast<const char*>(0x004D31B8)     // 0x00453eca
                      : tier == 1 ? reinterpret_cast<const char*>(0x004D31C0)     // 0x00453ecf
                      : tier == 2 ? reinterpret_cast<const char*>(0x004D31C8)     // 0x00453ed2

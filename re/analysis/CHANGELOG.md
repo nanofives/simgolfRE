@@ -4,6 +4,7 @@ One line per confidence change, written only by `scripts/re_classify.py`. Never 
 add a correcting entry instead.
 
 <!-- ENTRIES -->
+2026-10-20  00453330  showHoleStatsScreen  C4<-C3  DEMOTED: U-1000: c3eo.cpp picked the rating word with v / 10, the original divides by 20 (0x00453eb9..0x00453ec0, sar edx 3); the C4 scenario evidence was taken on that body and its checkpoints never showed the line. Hook fixed, new key showHoleStatsScreen_rating RED before the fix (10 of 18) and GREEN after, all 12 keys GREEN
 2026-10-18  0043d660  exitDtor_image5aa778_43d660  C1->C2  re/analysis/crt/0043d660_exitDtor_image5aa778_43d660.md
 2026-10-18  0043d500  exitDtor_surface820e90_43d500  C1->C2  re/analysis/crt/0043d500_exitDtor_surface820e90_43d500.md
 2026-10-18  0043d4a0  exitDtorSurfaces_43d4a0  C1->C2  re/analysis/crt/0043d4a0_exitDtorSurfaces_43d4a0.md
