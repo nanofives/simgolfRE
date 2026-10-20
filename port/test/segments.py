@@ -31,6 +31,21 @@ from port.test import lib as L  # noqa: E402
 SEG_DIR = ROOT / "port" / "corpus" / "segments"
 MANIFEST_TSV = ROOT / "re" / "port" / "segments_manifest.tsv"
 TRACE_MAGIC = b"SGTRACE\x00"
+INSTALL = ROOT / "original"  # the user's own install (game files for the frame step; tests skip what needs it)
+DATA_VA = 0x004C1000  # golf_clean.exe .data base (tooling knowledge of the harness, = re/tools/vector_lib.py DATA_VA)
+
+# NON-CAUSAL sim objects (phase 3.7a): hashed with the sim class, but no value they hold at a frame head can reach any later
+# state, so a difference there alone does not fail a segment; it is reported in its own column (SegmentResult.noncausal).
+# Each entry cites the evidence; nothing goes here to make a hash match.
+NON_CAUSAL = {
+    # char[16] at 0x0058a528: all 81 references in golf_clean.exe are address-takes (re/model/inventory_addresses.tsv: 0 direct
+    # reads or writes), and every one is the buffer argument of the static CRT's __itoa 0x004ad425 (log/p3/p37a_noncausal.py:
+    # 81 of 81), which writes the digits and a NUL from the start and returns the buffer; its readers (appendNumber,
+    # appendCents, appendDate and 16 more functions) read the returned text up to that NUL. So what the buffer held before an
+    # __itoa call, and every byte past the NUL, is never read. Drawing paths (drawMoneyLabels, panels, report screens) format
+    # numbers into it every frame they show one, which a port that drops drawing does not reproduce (U-0946).
+    "g_textBuf": "every reference is an __itoa destination (log/p3/p37a_noncausal.py), read only up to its NUL",
+}
 
 
 @dataclasses.dataclass
@@ -86,20 +101,36 @@ class SegmentResult:
     frames_expected: int = 0
     frames_run: int = 0
     first_divergence: dict | None = None
+    noncausal: str = ""     # differences in NON_CAUSAL objects only: "<object>@<first record>,..." (not a failure)
+    run_detail: str = ""    # sg_run_frames_detail (why the run stopped; the input summary)
 
 
 # ------------------------------------------------------------------------------------------- divergence helpers
-def first_divergent_record(expected: list, got: list, symbols: list) -> dict | None:
-    """Expected / got records [(T, index, [hash])] aligned in order (record 0 = the start). None when equal."""
+def first_divergent_record(expected: list, got: list, symbols: list, ignore=()) -> dict | None:
+    """Expected / got records [(T, index, [hash])] aligned in order (record 0 = the start). None when equal. Objects named in
+    `ignore` are not compared."""
     for k in range(max(len(expected), len(got))):
         if k >= len(expected) or k >= len(got):
             return {"record": k, "why": f"record count {len(got)} != expected {len(expected)}"}
         te, _, he = expected[k]
         tg, _, hg = got[k]
-        objs = [symbols[i] for i in range(len(symbols)) if he[i] != hg[i]]
+        objs = [symbols[i] for i in range(len(symbols)) if he[i] != hg[i] and symbols[i] not in ignore]
         if te != tg or objs:
             return {"record": k, "T_expected": te, "T_got": tg, "objects": objs}
     return None
+
+
+def noncausal_differences(expected: list, got: list, symbols: list) -> str:
+    """The NON_CAUSAL objects whose hash differs in some record, each with its first such record: "g_textBuf@12"."""
+    out = []
+    for i, name in enumerate(symbols):
+        if name not in NON_CAUSAL:
+            continue
+        for k in range(1, min(len(expected), len(got))):
+            if expected[k][2][i] != got[k][2][i]:
+                out.append(f"{name}@{k}")
+                break
+    return ",".join(out)
 
 
 def first_byte_divergence(lib: L.Lib, a: bytes, b: bytes, classes=("sim",), pointer_words: dict | None = None) -> dict | None:
@@ -178,11 +209,18 @@ class SegmentRunner:
     def run(self, seg: Segment) -> SegmentResult:
         res = SegmentResult(seg.name, "LOAD_FAILED", frames_expected=len(seg.records) - 1)
         with self.lib.state() as st:
+            # phase 3.7a: the GameState at the original data section's base, as in the vector runner: some sim-class
+            # objects hold addresses of state (unk_005a9cc8 = cellAt's cell pointer), which only match at that base
+            st.set_data_base(DATA_VA)
+            # the user's own install as the game files (story files, rosters), as the vector runner attaches it
+            if INSTALL.is_dir():
+                st.files_root(INSTALL)
             why = self.load_check(seg, st)
             if why:
                 res.detail = why
                 return res
             code, n, ts, hs = st.run_frames(seg.trace, seg.queued, res.frames_expected)
+            res.run_detail = self._detail(st)
             if code == L.SG_E_NOT_IMPLEMENTED:
                 res.status, res.detail = "LOADED_ONLY", "load check passed; sg_run_frames not implemented"
                 return res
@@ -191,15 +229,32 @@ class SegmentRunner:
                 res.status, res.detail = "FAIL", f"sg_run_frames returned {code} ({L.ERRORS.get(code, '?')})"
                 return res
             got = [seg.records[0]] + [(ts[k], 0, hs[k]) for k in range(n)]
-            div = first_divergent_record(seg.records, got, seg.symbols)
+            div = first_divergent_record(seg.records, got, seg.symbols, ignore=NON_CAUSAL)
+            res.noncausal = noncausal_differences(seg.records, got, seg.symbols)
             if div is None:
                 end = self.end_check(seg, st)
+                nc_end = [s for s in end if s in NON_CAUSAL]
+                end = [s for s in end if s not in NON_CAUSAL]
+                if nc_end:
+                    res.noncausal = ",".join(filter(None, [res.noncausal] + [f"{s}@end" for s in nc_end]))
                 if end:
                     div = {"record": "end", "objects": end}
             res.first_divergence = div
             res.status = "PASS" if div is None else "FAIL"
             res.detail = "" if div is None else json.dumps(div)[:300]
             return res
+
+    def _detail(self, st: L.State) -> str:
+        f = getattr(getattr(self.lib, "dll", None), "sg_run_frames_detail", None)
+        if f is None:
+            return ""
+        import ctypes as C
+        f.restype = C.c_char_p
+        f.argtypes = [C.c_void_p]
+        try:
+            return (f(st.ctx) or b"").decode("utf-8", "replace")
+        except Exception:  # noqa: BLE001 (the Win32 runner's State has no in-process ctx)
+            return ""
 
     def end_check(self, seg: Segment, st: L.State) -> list:
         """Sim objects whose hash differs from the end checkpoint (checkpoints.json, the last checkpoint)."""

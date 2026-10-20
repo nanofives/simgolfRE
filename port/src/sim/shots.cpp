@@ -26,6 +26,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/bridge.h"
+#include "portsim/sim/commands.h"
 #include "portsim/sim/text.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
@@ -107,6 +108,7 @@ const Foreign f_buildGolferName("buildGolferName", "3.1b"); // (g, with_title)
 const Foreign f_appendHoleName("appendHoleName", "3.1b");   // (hole)
 const Foreign f_postEvent("postEvent", "3.5");             // (id, a, b)
 const Foreign f_startMessage("startMessage", "3.7");       // (arg, prio, sound): ui straddler, draws g_rng
+const Foreign f_pumpAndRedraw("pumpAndRedraw", "3.7b");    // (limit): the modal wait for a command (narrateShot)
 
 // ------------------------------------------------------------------------------------------------ record and tables
 // golfer record byte offsets (re/analysis/data/golfer_record.md)
@@ -201,28 +203,9 @@ int32_t sqrt_ftol(int32_t v) {
 #endif
 }
 
-// startMessage(arg, prio, sound) (a ui function that changes simulation state): the registered one when 3.7
-// has registered it, else this copy of its body (re/analysis/ui/0040cb00_startMessage.md, the pattern of 3.3 / 3.5):
-// refused (0) while a message runs or waits and prio <= 0, or in panel mode 3; otherwise the text buffer becomes the
-// message, its timer strlen / (3 + (difficulty != 0)) + 16, and two draws of g_rng place it.
-int32_t start_message(Ctx &ctx, int32_t arg, int32_t prio, int32_t sound) {
-  if (registry_find("startMessage") >= 0) return f_startMessage(ctx, {arg, prio, sound});
-  GameState &gs = ctx.gs();
-  const Ptr<uint8_t> dir = state_obj(ctx, &GameState::g_ui_569498).as<uint8_t>();
-  if (((dir.get() != 0 || gs.g_msgState53df54 != 0) && prio <= 0) || gs.g_panelListMode == 3) return 0;
-  gs.g_msgState53df54 = 0;
-  const uint32_t text = state_va(ctx, &GameState::g_textBuffer);
-  vstrcpy(ctx.mem, state_va(ctx, &GameState::unk_005a6d40), text);
-  dir.set(1);
-  (state_arr(ctx, &GameState::g_ui_5a34e4) + 2).set(arg);
-  gs.g_messageTimer = static_cast<int32_t>(vstrlen(ctx.mem, text)) / ((gs.g_difficulty != 0 ? 1 : 0) + 3) + 16;
-  (state_arr(ctx, &GameState::f_w_4c2e00) + 2).set(sound);
-  if (prio < 0) (state_arr(ctx, &GameState::g_ui_5694a0) + 1).set(neg32(prio));
-  const Ptr<int32_t> out = state_arr(ctx, &GameState::g_ui_56d1a8);
-  out.set(i32(random_range(gs.g_rng.state, 600)));
-  (out + 1).set(add32(i32(random_range(gs.g_rng.state, 200)), 200));
-  return 1;
-}
+// startMessage(arg, prio, sound) (a ui function that changes simulation state): phase 3.7a's registered function
+// (module tick; the local copy stage B kept was replaced, 2026-10-19); MissingResource when none is registered.
+int32_t start_message(Ctx &ctx, int32_t arg, int32_t prio, int32_t sound) { return f_startMessage(ctx, {arg, prio, sound}); }
 
 // VC6 _itoa(v, buf, 10): '-' and the decimal digits of |v| (as unsigned), NUL-terminated
 void vitoa10(const Memory &m, uint32_t buf, int32_t v) {
@@ -1858,7 +1841,11 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
     m.store<uint8_t>(f, static_cast<uint8_t>(m.load<uint8_t>(f) | 1u));
   }
   if ((any != 0 && s.g_playerGolfer == -1) || g == s.g_playerGolfer) {
-    // (pumpAndRedraw(0): the modal wait, dropped; the key it leaves decides the SimFoto save)
+    // pumpAndRedraw(0), the modal wait whose key decides the SimFoto save: with an InputSource attached (a run with
+    // recorded or live input, portsim/sim/commands.h) the registered pump waits for the next command, as the original
+    // does (phase 3.7a: the COMMAND segments' dispatches arrive here); with none (the vector harness, whose capture stood
+    // the wait in) nothing waits
+    if (input_source(ctx) != nullptr) f_pumpAndRedraw(ctx, {0});
     if (m.load<int32_t>(state_va(ctx, &GameState::g_rootInput) + 0x3c) == 0x79) {
       const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c4970);
       vstrcpy(m, text, pool + 0x4d8);

@@ -1,0 +1,172 @@
+Phase 3.7a TICK (2026-10-19): mainLoop's frame step, sg_run_frames, and the straddler leaves the frame calls.
+Brief: re/model/STAGE_C_BRIEF.md. Module `tick` (port/src/sim/tick.cpp + tick_*.inc, port/include/portsim/sim/tick.h,
+port/src/sim/tick_hook.h), tests port/test/test_tick.py, uncertainties U-0920..U-0929.
+
+1. RESULT
+   The 35 TIME-FORWARD segments (1,534 frames): 35 PASS. Every frame record (T and the 203 sim-object hashes) and the end
+   checkpoint's sim hashes equal the original's (SegmentRunner, port/test/test_tick.py::test_time_forward_segment_passes).
+   COMMAND segments (155) run but are not this child's gate: sg_run_frames does not apply their input yet (U-0925).
+
+2. METHOD
+   - The frame body is the C3 transcription shim/src/re/c3fy.cpp (FramePreamble .. H2, 9,849 lines) converted mechanically
+     by log/p3/p37a_conv.py: every .data literal becomes GS(<GameState object>) + offset (GameState keeps the .data layout,
+     so any address is base + offset), CC / TC calls become calls by hooks.csv name, the idiv blocks become idiv64 (DivideError
+     on #DE), frame slots live in a frame block mapped into the context's address space (FD / FA give virtual addresses).
+     Comments keep their citations without the 0x prefix (ML+0x.. = mainLoop offset, <object>+0x.., <function>+0x..).
+     log/p3/p37a_patch_frame.py makes the hand edits (asserted exact replacements): the clock reads (frame head = the trace
+     FRAME value, H1's g_frameMs read = the trace value at its call site), GetAsyncKeyState (the run's key state), the x87
+     sqrt (exact at 0x027f), the display vtable call, a host-pointer strcmp, and the five switch byte tables inside
+     mainLoop's .text written as case lists (Frame::sw_*). The H1 wait is dropped (pacing only, time_model.md 3 / 7).
+   - Callees by name (TkBase::call): (1) kDrops in tick.cpp, 48 drawing / audio / pump / wait / Terrain-push functions,
+     each with its reason; the static census log/p3/p37a_simwrites.py over each one's call closure finds no write and no
+     address of a sim-class object (log/p3/p37a_drop_census.tsv, U-0927); (2) the registry (every module); (3) tick
+     fallbacks for four functions of 3.7b's list (U-0926); otherwise MissingResource{name}, reported by
+     sg_run_frames_detail. The frame never skips an unported effect silently.
+   - Other hook sources converted with `p37a_conv.py --hook` + log/p3/p37a_patch_scene.py (part per function):
+     buildSceneSprites (c3fj), drawFlyingBall (c3fs), updateGolfers (c3ec), matchUpdate (c3aj), membershipReport (c3ah),
+     drawBuildingPanel (c3ei), showTournamentResults (c3eo). Hand-written from their hook sources: the sprite queue,
+     cellAt, tileToScreen, screenToTile, View_toLocal / View::fromParent, setDirtyFlagA / B, flushCourseInfo,
+     drawWorldObjects, startMessage, appendCents, logTick, tickMessage, drawWindow / drawThoughtBubble (sim parts),
+     drawLabels, drawMoneyLabels, saveGame (state part), canAfford, addScore, hireEmployee, and the fallbacks
+     showBulletinBoard (non-modal prefix), showMainRadialMenu + nearestMenuSpot.
+     Regenerate everything: port/build/p37a/gen.sh (local helper; the commands are those of the two patch scripts).
+   - Drawing passes keep their sim effects: P1..P4 store sprite cell addresses into unk_005a9cc8 (a sim-class word holding a
+     state address, so SegmentRunner now maps the GameState at the original data base), the itoa buffer g_textBuf, the
+     sky actors (drawWorldObjects), walker screen points (drawFlyingBall), golfer look indices (composeGolferSprite via
+     drawQueuedSprite / drawThoughtBubble), tile flags / rotation bytes (buildSceneSprites), g_tileScreenX / Y.
+   - The end checkpoint of every TIME-FORWARD slice is taken inside the last frame's H1 wait (log/p3/p37a_polls.py: the
+     final POLL rides on a waitTicks / frame-wait clock call): sg_run_frames runs that frame up to the wait (StopAtWait)
+     before the end check. A checkpoint elsewhere mid-frame is reported, not guessed.
+   - Inputs per frame from the trace: FRAME t (frame head, also the record T), the tgt calls by site (g_frameMs), CURSOR
+     records (View_toLocal's cursor, carried across frames). Terrain.dll: a null TerrainApi when the caller attached none
+     (U-0800: no sim write depends on Terrain.dll).
+
+3. LOCALISED DIVERGENCES (fixed, not tuned)
+   - cov_a_flags/05 record 64 (g_golfers, g_rng): an SG_TICK_DUMP of advanceStory's call + log/p3/p37a_emucheck.py (the
+     original under Unicorn on the port's pre-call state) showed the original reading the story file; the port's
+     storyText found no text because the segment run had no game files. SegmentRunner attaches original/ as the game files
+     root (U-0929). Then 35 / 35.
+   - The end checkpoints (all 35 failed with the frame records equal): the polls are inside the frame wait (above).
+
+4. FUNCTIONS (registered in module tick unless noted)
+   function            evidence                                   vectors (run/pass, coverage)
+   updateGolfers       segments (34 TF segments) + vectors        465/465, partial_branch
+   matchUpdate         segments (2) + vectors                     35/35, partial_branch
+   membershipReport    vectors                                    23/23, one_sided
+   canAfford           vectors + state test                       14/14, one_sided (zero spread)
+   addScore            vectors                                    7/7, thin (< 10 vectors)
+   cellAt              segments (34) + vectors                    132/132, full
+   logTick             vectors (no TF frame logs)                 15/15, full
+   startMessage        state test; stage B vectors call it        none
+   appendCents         state test; segments (35, P6 status bar)   none
+   tickMessage         segment (cov_k1_label/00)                  none
+   drawLabels / drawMoneyLabels  segments (35) + state test       none
+   saveGame (state)    segment (cov_k3_build/05) + state test     none
+   hireEmployee (sim)  none (needs 3.7b's showHireEmployeeDialog) none
+   the sprite queue, tileToScreen, screenToTile, View_toLocal, View::fromParent, setDirtyFlagA / B, flushCourseInfo,
+   buildSceneSprites, drawWorldObjects, drawFlyingBall, drawWindow, drawThoughtBubble, snapshotTables: segments
+   fallbacks (not registered): showBulletinBoard, showMainRadialMenu, nearestMenuSpot, drawBuildingPanel,
+   showTournamentResults: segments
+   Not ported: loadWorldAssets / loadInterfaceArt (session setup, not frame), the modal screens (3.7b).
+
+5. NEGATIVE CONTROLS (log/p3/p37a_negctl.py over the 35 TF segments; test_tick.py)
+   RED on segments: tick.frame 1 (extra RNG draw, 35/35), cellAt 1 (34), screenToTile 1 (29), drawQueuedSprite 1 / 2
+   (1), buildSceneSprites 1 (1), drawWorldObjects 1 (31), drawFlyingBall 1 (26), tickMessage 1 (1), updateGolfers 1 (34),
+   View_toLocal 1 (35), View::fromParent 1 (1), matchUpdate 1 (2).
+   RED on vectors: cellAt, logTick, updateGolfers, matchUpdate, addScore, membershipReport.
+   RED on state tests: startMessage, appendCents, drawLabels, drawMoneyLabels, flushCourseInfo, setDirtyFlagA / B,
+   saveGame, drawWindow, drawThoughtBubble, tileToScreen, canAfford.
+   Blind (recorded): snapshotTables 1 (render-class arrays only), tick.frame 2 (no pending bulletin photo in any TF
+   image), hireEmployee 1 (no segment or vector).
+
+6. CHANGES OUTSIDE THE MODULE (smallest, additive)
+   - port/src/portsim_c.cpp: sg_run_frames calls tick_run_frames (a hardware #DE inside a frame is SG_E_DIVIDE through a
+     __try wrapper); new C functions sg_run_frames_detail (why a run stopped) and sg_tick_callee_counts (development).
+     port/include/portsim_c.h declares them.
+   - port/test/segments.py: SegmentRunner maps the GameState at DATA_VA (0x004c1000) and attaches original/ as game files.
+   - port/test/test_segments.py: test_segment_loads checks the load path only (a full run is test_tick's / 3.8's).
+   - Stage B local copies replaced by registry calls: course.cpp start_message, shots.cpp start_message,
+     events_calls.inc start_message / append_cents / log_tick (owners' tests re-run, section 7).
+   - UNCERTAINTIES.md U-0920..U-0929.
+
+7. TESTS: see the final report (port/test, -m static).
+
+8. COORDINATION WITH 3.7b
+   tickFrame applies no Commands yet (FrameInput.commands is carried, U-0925). 3.7b registers the click / panel functions
+   the H1 / H2 code calls by name (hitBuildingTool, showInfoCursorPanel, drawGolferActionPanel ... were theirs in the
+   tree this child ran against); four per-frame functions of their list are tick fallbacks (U-0926).
+
+9. INPUT (second session, 2026-10-19): the trace-driven InputSource and the 155 COMMAND segments
+   RESULT: 109 of 155 COMMAND segments PASS (every frame record's T and 203 sim hashes and the end checkpoint); the 35
+   TIME-FORWARD segments still PASS. Of the 46 others, 44 stop with SG_E_NO_RESOURCE on a name outside this module and 2
+   diverge (both caused outside this module); per-segment table log/p3/p37a_cmdsegs.tsv (log/p3/p37a_cmdsegs.py, summary
+   log/p3/p37a_cmdsum.py).
+   - Text_put 17 (showPopup / showSystemMenu, also reached from demolishObject, measure text: no TextMetrics provider
+     exists, U-0944), drawGolferInfoPanel 8, showCourseReport 5, shotStyleButtonCode 4, loadGameBrowserScreen 3,
+     showHoleStatsScreen 2, showEndOfYearScreen 2, showBulletinBoard 2 (the modal board; tick's fallback stops there),
+     courseActionMenu 1 (from switchToCourse).
+   - ui_tour/02 record 154, ui_tour_v/02 record 160 (g_skillMaskBlock, f_w_4c2e00, g_cursorTileX / Y, g_golfers,
+     g_playerSkills): H2's clickGolferPanel -> customizeCharacter(0) (3.1a, terrain_setup.cpp) calls showCharacterIntro
+     only `if registered(...)`, so the port skips the modal the original runs there (60+ cursor reads; 14 dispatches left).
+     showCharacterIntro is a 3.7b gap (re/port/commands_split.tsv: needs skillPointDialog, U-0865). U-0931.
+   MODEL (tick.cpp "trace slices", TraceInput; time_model.md section 7):
+   - A DISPATCH is one pump call's root-handler calls (port/test/trace_commands.py's batches: HANDLER records with no clock
+     read between them but the handlers' own). Its pump CLASS comes from the last clock site before it: the frame head or
+     jgld's Palette::update QPC = a pump of the frame body, anything else = a modal loop. WHICH body pump: the frame's cursor
+     reads before it. The frame body reads the cursor in P6's status bar, after P6's pumpInput483bd0 and in H1 after its
+     pumpMessages (course_season/03 frame 1: CURSOR, KBSTATE, dispatch, CURSOR, TAKE, TAKE, CURSOR): 4,329 of the corpus's
+     dispatches come in P6's pumpInput483bd0, not in H1 (time_model.md's "H1" counted the clock site only). A pump takes the
+     frame's next dispatch of its class once the port has made as many cursor reads in the frame as the original had before
+     it (a Blocking loop without cursor reads, pumpAndRedraw's, at its second refused call); a Drain pump takes none (a
+     message arrives between two pump calls only inside a clock call, which ends a batch: U-0941). Over the 109 PASSing
+     segments: 4,192 dispatches delivered, 0 left, 62 at another cursor count, cursor reads 0 over / 1,909 under (the port's
+     modal loops read the cursor less often than the original's), GetAsyncKeyState reads 0 over / 0 under.
+   - GetAsyncKeyState outside the root handlers (P6 0x10, H2 0x10 / 0x11): the frame's KEYSTATE records in order, per key.
+     The press handlers' own Ctrl / Shift and the deadline clocks of handlers 2 / 3 / 7 go into each Command.
+   - DELIVER w32 (the harness's memory writes): applied before the first dispatch that follows them, at H1's frame wait
+     (TkBase::wait_point, up to the first dispatch after H1's g_frameMs read), or at the frame's end; one made inside the
+     frame-head clock call applies before the frame body. The other DELIVER kinds are visible through the records they cause.
+   - queued_messages (start.json, 2 segments): the slice's HANDLER records already hold their dispatch; both PASS.
+   - END CHECKPOINT inside a modal wait (pumpAndRedraw's or a screen loop's clock site): the last frame runs until its
+     Blocking pump has no recorded input left (NeedInput) and that state is compared; 5 PASSing segments end so.
+   - pumpMessages / pumpInput483bd0 are tick bodies now (from c3dw.cpp; pump_at gives the site), pumpLight is 3.7b's
+     registered one. showTournamentResults' pumpMessages is a Blocking pump (its NeedInput throw was removed).
+   - sg_run_frames_detail ends with the input summary; a stop adds `stopped in <callee> < <caller> ...` (TkBase::call).
+     Development switches: SG_TICK_INPUT_LOG=<file> (per-frame read / dispatch mismatches), SG_TICK_CALL_LIMIT=<n>,
+     SG_TICK_TRACE=<file> (every callee call).
+   FIXES THE SEGMENTS FORCED (each located, not tuned):
+   - 39 faults in updateTerrainRender (3.1a): the Terrain object and the render list's nodes live on the original's heap,
+     which no image holds. The headless run's Terrain stand-in (tick.cpp HeadlessTerrain) maps a 50 x 50 zeroed Terrain
+     object at the image's gTerrain, an empty list sentinel at gTileBuffer's head when the list size is 0, and an arena
+     for operator new; it takes Terrain::elevateCorner / lowerCorner / lowerEdgeCorner's corner step (+1 / -1 at tile + 4 *
+     corner, re/match/terrain_methods.cpp / terrain_corner.cpp), without which applyTileElevation loops for ever (found by a
+     hang: SG_TICK_TRACE showed updateTerrainRender as the last callee). Nothing of it reaches a sim object (U-0800). U-0932.
+   - championship/01 (end), cov_b_inject/01 and cov_b_inject2/00 (record 180 / 133, g_frameMs), cov_k2_simfoto/00 (end):
+     narrateShot (3.4, called by scanShotArea from updateGolfers) waits in pumpAndRedraw(0) and reads the key it leaves
+     (g_rootInput+0x3c, the SimFoto save); stage B dropped the wait, so its dispatch and the harness writes made inside it
+     (cov_b_inject: unk_0059b04c = 0, which gates H1's g_frameMs block) never arrived. shots.cpp now calls the registered
+     pumpAndRedraw there when the context has an InputSource (none in the vector harness, whose capture stood the wait in);
+     test_shots 26 passed. U-0933.
+   - New tick functions: rankValue (c3q.cpp, buildSceneSprites ranks takings; 26 / 26 vectors), playHabitatSound (c3eu.cpp;
+     kept because playSoundAt draws g_rng on screen, U-0860), drawRecords (c3ei.cpp via p37a_conv.py --hook + the `drec`
+     part of p37a_patch_scene.py, appended to tick_panels.inc; an odd camera rotation stops the run: the hook's start values
+     of the two registers its switch leaves stale are not the original's). New drops (census p37a_simwrites.py: no sim
+     write, no sim address in the closure): drawTerrainToolbar (3.7b's audit: drawing only), enterModal483d30, Snd::status
+     (ML+0xf3c discards it), Widget_readPixel (it only gates a dropped sprite draw in P5's zoom, ML+0x95d3).
+   NON-CAUSAL (port/test/segments.py NON_CAUSAL, own column SegmentResult.noncausal): g_textBuf only. All 81 references in
+   golf_clean.exe are address-takes consumed as __itoa 0x004ad425's buffer (log/p3/p37a_noncausal.py; 7 have inline strcat
+   code between the push and the call, 0x0041a613 an intervening cdecl call that pops only its own 8 bytes), so its content
+   before an __itoa call and past the NUL is never read. Seen in ui_tour/02 and ui_tour_v/02 only (both diverge anyway). U-0935.
+   NEGATIVE CONTROLS (test_tick.py): RED on COMMAND segments tick.frame 3 (body dispatches dropped, cov_k1_washers/00), 4
+   (async keys 0, cov_b_holes18/02), 5 (harness writes skipped, cov_k3_camera2/02), playHabitatSound 1 (golfer_stories/00);
+   rankValue 1 on vectors; drawRecords 1 blind (its writes are render class). log/p3/p37a_negctl_cmd.py finds them.
+   TESTS: test_tick.py test_command_segment_passes (7 fast segments, default) and the slow full gate
+   test_command_segment_passes_or_stops_for_its_open_cause (PASS, or the documented OPEN_MISSING / OPEN_DIVERGENT cause).
+   TEXT WIDTHS (parent's question, from 3.7b): the trace schema (re/model/trace_schema.md) and its recorder
+   (re/frida/js/trace_rec.js) record no Text_put / GetTextExtentPoint32A result, and the widths come from the host's GDI
+   rasterizer over the game's font file (U-0944), so no recorded width table exists: the segments that reach Text_put
+   (showPopup, textInputBox, the browsers, showHoleStatsScreen) are BLOCKED by U-0947; no table was guessed.
+   SHOWCHARACTERINTRO (user's decision, 2026-10-19): customizeCharacter (terrain_setup.cpp) now calls showCharacterIntro
+   unconditionally when no skill is set, so an absent registration is MissingResource{showCharacterIntro}: ui_tour/02 and
+   ui_tour_v/02 stop at records 154 / 160 with every earlier record equal; test_terrain / test_terrain_gen / test_static 95
+   passed (their customizeCharacter cases set a skill). COMMAND tally: 109 PASS, 46 stop on unregistered names, 0 diverge.

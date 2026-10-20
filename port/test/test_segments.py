@@ -50,8 +50,12 @@ def test_segment_loads(srunner, row):
         pytest.skip(f"{d} not present")
     seg = S.load_segment(d)
     assert len(seg.records) == int(row["frames"]) + 1, (len(seg.records), row["frames"])   # record 0 = the start
-    r = srunner.run(seg)
-    assert r.status in ("LOADED_ONLY", "PASS"), f"{r.name}: {r.status} {r.detail}"
+    # phase 3.7a: sg_run_frames exists, so a full run is judged elsewhere (port/test/test_tick.py: the TIME-FORWARD
+    # segments; the COMMAND ones need phase 3.7b / 3.8's input); here the load path alone, for every accepted segment
+    with srunner.lib.state() as st:
+        st.set_data_base(S.DATA_VA)
+        why = srunner.load_check(seg, st)
+    assert why is None, f"{seg.name}: {why}"
 
 
 @need_corpus
@@ -71,7 +75,7 @@ def test_corrupted_segment_fails_load(portlib, srunner):
         div = S.first_byte_divergence(portlib, good, bytes(bad))
         assert div["symbol"] == name and div["object_offset"] == k and div["objects_differing"] == [name]
     seg.start = good
-    assert srunner.run(seg).status in ("LOADED_ONLY", "PASS")
+    assert srunner.run(seg).status != "LOAD_FAILED"
 
 
 @need_corpus
@@ -90,11 +94,13 @@ def test_byte_divergence_ignores_pointer_words_and_other_classes(portlib):
 
 @need_corpus
 def test_run_frames_contract(portlib):
-    """Until phases 3.7 / 3.8 exist sg_run_frames answers SG_E_NOT_IMPLEMENTED with no frame run."""
+    """sg_run_frames returns SG_OK or a documented stop code, with frames_done records of T and sim hashes (phase 3.7a:
+    the frames run; whether they equal the original is port/test/test_tick.py's question)."""
     seg = S.load_segment(S.segment_dir(ACCEPTED[0]))
     with portlib.state() as st:
+        st.set_data_base(S.DATA_VA)   # some sim objects hold state addresses (unk_005a9cc8), valid at this base only
         st.load_image(seg.start)
         code, n, ts, hs = st.run_frames(seg.trace, seg.queued, len(seg.records) - 1)
-    assert code in (L.SG_E_NOT_IMPLEMENTED, L.SG_OK)
-    if code == L.SG_E_NOT_IMPLEMENTED:
-        assert n == 0
+    assert code in (L.SG_OK, L.SG_E_FAULT, L.SG_E_DIVIDE, L.SG_E_NO_RETURN, L.SG_E_NO_RESOURCE), code
+    assert 0 <= n <= len(seg.records) - 1 and len(ts) == n and len(hs) == n
+    assert all(len(h) == len(portlib.objects("sim")) for h in hs)

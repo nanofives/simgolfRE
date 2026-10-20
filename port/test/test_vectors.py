@@ -108,7 +108,7 @@ def test_skips_are_reported(vrunner):
 
 @need_corpus
 def test_unported_function_is_not_run(vrunner):
-    r = vrunner.run_function("cellAt")   # backend-gfx, no stage-B owner (slopeMix was ported by 3.1a, absDiff by 3.0)
+    r = vrunner.run_function("KeyTable::find")   # no port owner (cellAt was ported by 3.7a, slopeMix by 3.1a, absDiff by 3.0)
     assert r.verdict == "NOT_PORTED" and r.run == 0 and r.ok > 0
 
 

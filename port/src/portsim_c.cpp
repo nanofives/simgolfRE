@@ -12,11 +12,23 @@
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
 #include "portsim/state_hash.h"
+#include "portsim/sim/tick.h"
+
+#if defined(_MSC_VER)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#endif
 
 struct sg_ctx {
   portsim::Ctx ctx;
   portsim::MemoryGameFiles mem_files;                // phase 3.0: the default game files of a context
   std::unique_ptr<portsim::DirGameFiles> dir_files;  // set by sg_files_root
+  std::string run_detail;                            // phase 3.7a: why sg_run_frames stopped
   sg_ctx() { ctx.files_ptr = &mem_files; }
 };
 
@@ -26,6 +38,48 @@ void attach_exe(sg_ctx *c) {
   portsim::ExeConstants &e = portsim::default_exe_constants();
   c->ctx.exe_ptr = e.loaded() ? &e : nullptr;
 }
+// what the run had written into its detail before it stopped (tick_run_frames' input summary)
+std::string tail(const sg_ctx *c) { return c->run_detail.empty() ? std::string() : "; " + c->run_detail; }
+int run_frames_cpp(sg_ctx *c, const uint8_t *trace, size_t n, const uint32_t *q, int32_t nq, int32_t max_frames,
+                   uint32_t *out_T, uint64_t *out_hashes, int32_t *done) {
+  try {
+    const int r = portsim::tick_run_frames(c->ctx, trace, n, q, nq, max_frames, out_T, out_hashes, done, &c->run_detail);
+    return r;
+  } catch (const portsim::Fault &f) {
+    c->run_detail = "fault at va " + std::to_string(f.va) + tail(c);
+    return SG_E_FAULT;
+  } catch (const portsim::DivideError &) {
+    c->run_detail = "divide error" + tail(c);
+    return SG_E_DIVIDE;
+  } catch (const portsim::NoReturn &e) {
+    c->run_detail = std::string("no return: ") + (e.where ? e.where : "?") + tail(c);
+    return SG_E_NO_RETURN;
+  } catch (const portsim::MissingResource &e) {
+    c->run_detail = std::string("missing: ") + (e.what ? e.what : "?") + tail(c);
+    return SG_E_NO_RESOURCE;
+  } catch (...) {
+    c->run_detail = "exception" + tail(c);
+    return SG_E_EXCEPTION;
+  }
+}
+
+#if defined(_MSC_VER)
+int run_frames_guarded(sg_ctx *c, const uint8_t *trace, size_t n, const uint32_t *q, int32_t nq, int32_t max_frames,
+                       uint32_t *out_T, uint64_t *out_hashes, int32_t *done) {
+  __try {
+    return run_frames_cpp(c, trace, n, q, nq, max_frames, out_T, out_hashes, done);
+  } __except (GetExceptionCode() == EXCEPTION_INT_DIVIDE_BY_ZERO || GetExceptionCode() == EXCEPTION_INT_OVERFLOW
+                  ? EXCEPTION_EXECUTE_HANDLER
+                  : EXCEPTION_CONTINUE_SEARCH) {
+    return SG_E_DIVIDE;
+  }
+}
+#else
+int run_frames_guarded(sg_ctx *c, const uint8_t *trace, size_t n, const uint32_t *q, int32_t nq, int32_t max_frames,
+                       uint32_t *out_T, uint64_t *out_hashes, int32_t *done) {
+  return run_frames_cpp(c, trace, n, q, nq, max_frames, out_T, out_hashes, done);
+}
+#endif
 }  // namespace
 
 extern "C" {
@@ -176,16 +230,33 @@ int32_t sg_hash_class(sg_ctx *ctx, const char *cls, uint64_t *out, int32_t cap) 
 
 int sg_run_frames(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, const sg_msg *queued, int32_t n_queued,
                   int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done) {
-  (void)trace;
-  (void)trace_len;
-  (void)queued;
-  (void)n_queued;
-  (void)max_frames;
-  (void)out_T;
-  (void)out_hashes;
-  if (!ctx || !frames_done) return SG_E_ARG;
+  if (!ctx || !frames_done || !trace || (max_frames > 0 && (!out_T || !out_hashes))) return SG_E_ARG;
   *frames_done = 0;
-  return SG_E_NOT_IMPLEMENTED;  // phases 3.7 (frame tick, command API) and 3.8 (frame loop) fill this in
+  ctx->run_detail.clear();
+  std::vector<uint32_t> q;
+  for (int32_t i = 0; i < n_queued && queued; ++i) {
+    q.push_back(queued[i].msg);
+    q.push_back(queued[i].wp);
+    q.push_back(queued[i].lp);
+    q.push_back(queued[i].cls);
+  }
+  // phase 3.7a: the frame step (port/src/sim/tick.cpp); a hardware #DE inside it (a plain division the original runs with
+  // divisor 0) is reported as SG_E_DIVIDE like DivideError
+  return run_frames_guarded(ctx, trace, trace_len, q.data(), n_queued, max_frames, out_T, out_hashes, frames_done);
+}
+
+const char *sg_run_frames_detail(sg_ctx *ctx) { return ctx ? ctx->run_detail.c_str() : ""; }
+
+int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset) {
+  std::string out;
+  for (const auto &kv : portsim::tick_callee_counts()) out += kv.first + "=" + std::to_string(kv.second) + "\n";
+  if (reset) portsim::tick_callee_counts_reset();
+  if (buf && cap > 0) {
+    const size_t n = out.size() < static_cast<size_t>(cap - 1) ? out.size() : static_cast<size_t>(cap - 1);
+    std::memcpy(buf, out.data(), n);
+    buf[n] = 0;
+  }
+  return static_cast<int32_t>(out.size());
 }
 
 // ------------------------------------------------------------------------------------------------ defects (phase 3.0)

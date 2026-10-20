@@ -112,6 +112,11 @@ typedef struct sg_msg {
 } sg_msg;
 SG_API int sg_run_frames(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, const sg_msg *queued, int32_t n_queued,
                          int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done);
+/* phase 3.7a: why the last sg_run_frames of this context stopped (empty after a full run); valid until the next call */
+SG_API const char *sg_run_frames_detail(sg_ctx *ctx);
+/* phase 3.7a (development): one "name=count" line per callee the frame step called on this thread since the last reset; returns
+ * the text length (the text is cut at cap - 1); reset != 0 clears the counts */
+SG_API int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset);
 
 /* ---- compatibility switches for defects of the original (phase 3.0, port/CORE.md) ----
  * Process-wide; 1 (default) = reproduce the original, 0 = the fixed behaviour. */

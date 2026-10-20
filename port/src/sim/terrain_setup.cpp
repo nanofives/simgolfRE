@@ -164,8 +164,10 @@ int32_t customize_character(Ctx &ctx, int32_t with_pro) {
   for (int i = 0; i < 12; ++i)
     if (g.g_playerSkills[i] != 0) mask = static_cast<uint16_t>(mask | (1 << i));
   ctx.mem.store<uint16_t>(mask_va, mask);
-  // the character intro screen (UI, phase 3.7) when no skill is chosen yet
-  if (mask == 0 && registered("showCharacterIntro")) call_peer(ctx, "showCharacterIntro", {});
+  // the character intro screen when no skill is chosen yet: a modal whose result the original writes into g_skillMaskBlock /
+  // g_playerSkills (phase 3.7b's gap, re/port/commands_split.tsv), so MissingResource while no module registers it
+  // (phase 3.7a, 2026-10-19: skipping it made ui_tour/02 diverge, U-0931)
+  if (mask == 0) call_peer(ctx, "showCharacterIntro", {});
   const int32_t pro = g.g_proChallenger;
   const int32_t cycle = g.g_nextGolferSlot;
   if (cycle & 2) g.g_nextGolferSlot = mod32(add32(cycle, 2), 0x98);

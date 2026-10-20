@@ -37,69 +37,20 @@ int32_t rng_range(Ctx &ctx, int32_t n) {
   return i32(random_range(state_obj(ctx, &GameState::g_rng).field(&Random::state).ref(), u32(n)));
 }
 
+// startMessage / appendCents: phase 3.7a's registered functions (module tick); the local copies stage B kept were replaced
+// (2026-10-19). MissingResource when no module registers them.
 int32_t start_message(Ctx &ctx, int32_t arg, int32_t prio, int32_t sound) {
-  if (registered("startMessage")) return i32(call_peer(ctx, "startMessage", {u32(arg), u32(prio), u32(sound)}).eax);
-  GameState &gs = ctx.gs();
-  const Ptr<uint8_t> dir = state_obj(ctx, &GameState::g_ui_569498).as<uint8_t>();
-  if (((dir.get() != 0 || gs.g_msgState53df54 != 0) && prio <= 0) || gs.g_panelListMode == 3) return 0;
-  gs.g_msgState53df54 = 0;
-  const uint32_t text = text_va(ctx);
-  vstrcpy(ctx.mem, state_va(ctx, &GameState::unk_005a6d40), text);
-  dir.set(1);
-  (state_arr(ctx, &GameState::g_ui_5a34e4) + 2).set(arg);
-  gs.g_messageTimer = static_cast<int32_t>(vstrlen(ctx.mem, text)) / ((gs.g_difficulty != 0 ? 1 : 0) + 3) + 16;
-  (state_arr(ctx, &GameState::f_w_4c2e00) + 2).set(sound);
-  if (prio < 0) (state_arr(ctx, &GameState::g_ui_5694a0) + 1).set(neg32(prio));
-  const Ptr<int32_t> out = state_arr(ctx, &GameState::g_ui_56d1a8);
-  out.set(rng_range(ctx, 600));
-  (out + 1).set(add32(rng_range(ctx, 200), 200));
-  return 1;
+  return i32(call_peer(ctx, "startMessage", {u32(arg), u32(prio), u32(sound)}).eax);
 }
 
-void append_cents(Ctx &ctx, int32_t n) {
-  if (registered("appendCents")) {
-    call_peer(ctx, "appendCents", {u32(n)});
-    return;
-  }
-  const Memory &m = ctx.mem;
-  const uint32_t buf = text_va(ctx);
-  state_obj(ctx, &GameState::g_ui_569628).set(n);
-  if (n < 0) {
-    const uint32_t len = vstrlen(m, buf);
-    if (m.load<uint8_t>(buf + len - 1) == '+') m.store<uint8_t>(buf + len - 1, 0);
-    uint32_t end = buf + vstrlen(m, buf);
-    m.store<uint8_t>(end, '-');
-    m.store<uint8_t>(end + 1, 0);
-    n = neg32(n);
-  }
-  const uint32_t num = state_va(ctx, &GameState::g_textBuf);
-  itoa10(ctx, n / 100, num);
-  vstrcat(m, buf, num);
-  uint32_t end = buf + vstrlen(m, buf);
-  m.store<uint8_t>(end, '.');
-  m.store<uint8_t>(end + 1, 0);
-  if (n % 100 < 10) {
-    end = buf + vstrlen(m, buf);
-    m.store<uint8_t>(end, '0');
-    m.store<uint8_t>(end + 1, 0);
-  }
-  itoa10(ctx, n % 100, num);
-  vstrcat(m, buf, num);
-}
+void append_cents(Ctx &ctx, int32_t n) { call_peer(ctx, "appendCents", {u32(n)}); }
 
 void backend_call(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
   if (registered(name)) call_peer(ctx, name, args);   // the front end / audio backend's function when it exists
 }
 
-void log_tick(Ctx &ctx, int32_t a, int32_t b) {
-  if (registered("logTick")) {
-    call_peer(ctx, "logTick", {u32(a), u32(b)});
-    return;
-  }
-  // logTick (phase 3.7's): the event history slot of the current game month gets (a | b)
-  const int32_t tick = ctx.gs().g_date;
-  (state_arr(ctx, &GameState::g_eventHistory) + (tick / 1024 % 500)).set(static_cast<uint16_t>(a | b));
-}
+// logTick: phase 3.7a's registered function (module tick; the local copy was replaced, 2026-10-19)
+void log_tick(Ctx &ctx, int32_t a, int32_t b) { call_peer(ctx, "logTick", {u32(a), u32(b)}); }
 
 void play_sound(Ctx &ctx, int32_t idx, int32_t volume, int32_t pan, int32_t pitch, int32_t f34) {
   if (registered("playSound")) {

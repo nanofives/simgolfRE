@@ -373,31 +373,15 @@ const FuncDef *peer(const char *name) {
   return i < 0 ? nullptr : registry_at(i, nullptr);
 }
 
-// startMessage(arg, prio, sound) (re/analysis/ui/0040cb00, a ui straddler of phase 3.7). The registered function when
-// there is one; otherwise this copy of its body (port it once 3.7 registers it; 3.5 carries the same copy).
+// startMessage(arg, prio, sound) (re/analysis/ui/0040cb00, a ui straddler): phase 3.7a's registered function (module
+// tick); MissingResource when no module registers it (the local copy stage B kept was replaced, 2026-10-19).
 int32_t start_message(Ctx &ctx, int32_t arg, int32_t prio, int32_t sound) {
-  if (const FuncDef *f = peer("startMessage")) {
-    const uint32_t a[3] = {u32(arg), u32(prio), u32(sound)};
-    Ret r;
-    f->fn(ctx, a, r);
-    return i32(r.eax);
-  }
-  GameState &gs = ctx.gs();
-  if (((gs.g_ui_569498 != 0 || gs.g_msgState53df54 != 0) && prio <= 0) || gs.g_panelListMode == 3) return 0;
-  gs.g_msgState53df54 = 0;
-  const uint32_t text = text_va(ctx);
-  vstrcpy(ctx.mem, state_va(ctx, &GameState::unk_005a6d40), text);
-  gs.g_ui_569498 = 1;
-  gs.g_ui_5a34e4[2] = arg;
-  gs.g_messageTimer = static_cast<int32_t>(vstrlen(ctx.mem, text)) / ((gs.g_difficulty != 0 ? 1 : 0) + 3) + 16;
-  gs.f_w_4c2e00[2] = sound;
-  if (prio < 0) gs.g_ui_5694a0[1] = neg32(prio);
-  uint32_t &seed = state_obj(ctx, &GameState::g_rng).field(&Random::state).ref();
-  const int32_t a = i32(random_range(seed, 600));
-  ctx.gs().g_ui_56d1a8[0] = a;
-  const int32_t b = i32(random_range(seed, 200));
-  ctx.gs().g_ui_56d1a8[1] = add32(b, 200);
-  return 1;
+  const FuncDef *f = peer("startMessage");
+  if (!f) throw MissingResource{"startMessage"};
+  const uint32_t a[3] = {u32(arg), u32(prio), u32(sound)};
+  Ret r;
+  f->fn(ctx, a, r);
+  return i32(r.eax);
 }
 }  // namespace
 

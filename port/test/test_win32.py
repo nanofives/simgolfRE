@@ -279,8 +279,13 @@ def test_segment_load_check_through_the_runner(lib32, row):
     d = S.segment_dir(row)
     if not d.exists():
         pytest.skip(f"{d} not present")
-    r = S.SegmentRunner(lib32).run(S.load_segment(d))
-    assert r.status in ("LOADED_ONLY", "PASS"), f"{r.name}: {r.status} {r.detail}"
+    # phase 3.7a: sg_run_frames runs frames now, so the full run is judged by port/test/test_tick.py; here the load path
+    seg = S.load_segment(d)
+    runner = S.SegmentRunner(lib32)
+    with lib32.state() as st:
+        st.set_data_base(S.DATA_VA)
+        why = runner.load_check(seg, st)
+    assert why is None, f"{seg.name}: {why}"
 
 
 def test_class_hashes_equal_on_both_backends(lib32, lib64):

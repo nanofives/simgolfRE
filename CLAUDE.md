@@ -1175,6 +1175,25 @@ modules only). Findings: rebuildHeightfield returns the new g_flags (stepCourseE
 applyTileWalls leave eax values their callers return (demolishObject); scanTileLine zeroes type 1's walk byte while it runs; endless
 loops of the original become NoReturn (rebuildHeightfield's relax / raise, buildGolferBioText's picks, generateRandomCourse's searches,
 model_defects#50..52). U-0800..U-0806.
+Phase 3.7a tick (2026-10-19, port/src/sim/tick.cpp + tick_*.inc, port/include/portsim/sim/tick.h, port/src/sim/tick_hook.h, tests
+port/test/test_tick.py, notes log/p3/p37a_notes.txt, U-0920..U-0929): mainLoop's frame step and sg_run_frames. All 35 TIME-FORWARD
+segments PASS (every frame record's T and 203 sim hashes plus the end checkpoint). The frame body is the C3 transcription
+shim/src/re/c3fy.cpp (FramePreamble .. H2) converted mechanically by log/p3/p37a_conv.py (.data literals -> GS(<object>) + offset,
+calls by hooks.csv name, idiv -> DivideError, frame slots in a frame block of the address space, citations as ML+0x<off> /
+<object>+0x<off> without the 0x prefix of an address) and edited only by the asserted replacements of log/p3/p37a_patch_frame.py
+(clock reads from the trace, GetAsyncKeyState from the run's key state, the five switch byte tables of mainLoop's .text as case
+lists, the H1 wait dropped); other hook sources go through `p37a_conv.py --hook` + log/p3/p37a_patch_scene.py (updateGolfers
+465/465 vectors, matchUpdate 35/35, membershipReport 23/23, buildSceneSprites, drawFlyingBall, drawBuildingPanel,
+showTournamentResults). A callee is a registered port function, one of 48 documented drops (tick.cpp kDrops; their call closures
+write and address no sim object, log/p3/p37a_simwrites.py, log/p3/p37a_drop_census.tsv), or a tick fallback used only while no
+module registers the name (showBulletinBoard prefix, showMainRadialMenu, drawBuildingPanel, showTournamentResults, tickMessage:
+3.7b's list); anything else is MissingResource{name}, readable through the new sg_run_frames_detail. Drawing passes keep their sim
+effects (cell addresses in unk_005a9cc8, the itoa buffer g_textBuf, sky actors, walker screen points, golfer look indices, tile
+flags). Every TIME-FORWARD end checkpoint is taken inside the last frame's H1 wait (log/p3/p37a_polls.py), so sg_run_frames runs
+that frame up to the wait. Harness: SegmentRunner maps the GameState at 0x4c1000 (unk_005a9cc8 holds a state address) and attaches
+original/ as GameFiles (advanceStory's story text; without it cov_a_flags/05 diverged at record 64, found with SG_TICK_DUMP +
+log/p3/p37a_emucheck.py, the original under Unicorn on the port's pre-call state). Stage B's local copies of startMessage /
+appendCents / logTick (course, shots, events) now call the registered functions. Input is not applied yet (U-0925).
 Phase 3.7b commands (2026-10-19, port/src/sim/commands.cpp + commands_panels / _layout / _screens.inc, commands_internal.h,
 port/include/portsim/sim/commands.h, tests port/test/test_commands.py, oracle port/test/cmdemu.py, trace mapping
 port/test/trace_commands.py, split table re/port/commands_split.tsv, notes log/p3/p37b_notes.txt, U-0940..U-0946): the 62 UI-module
@@ -1214,6 +1233,27 @@ left. log/p3/p37b/seg_reach.py maps every call site a COMMAND trace records to i
 reach). Segment runs reaching the widgets need a host provider (U-0947). Equivalent-mutant trap: drawEmployeeViewPanel's old
 control (limit 0x2f3) changed nothing because no wide column falls in 0x2b8..0x2f3; check a control's arithmetic, not only
 its digest.
+Phase 3.7a input (2026-10-19, second session; port/src/sim/tick.cpp "trace slices", notes log/p3/p37a_notes.txt section 9,
+U-0930..U-0935): sg_run_frames now feeds the trace's input. tick.cpp's TraceInput (the context's InputSource during a run)
+splits the slice into DISPATCHES (port/test/trace_commands.py's batches) and gives each to the pump call that made it in the
+original: the clock site before it gives the class (frame head or jgld's Palette::update QPC = a pump of the frame body, else
+a modal loop) and the frame's cursor reads before it say which pump. Most of the corpus's dispatches come in P6's
+pumpInput483bd0 (between the status bar's and P6's cursor reads), the rest in H1's pumpMessages; both are tick bodies now
+(`pump_at` sets the site), pumpLight is 3.7b's. GetAsyncKeyState reads outside the root handlers come from the frame's
+KEYSTATE records per key; the harness's memory writes (DELIVER w32) apply before the next dispatch, at H1's frame wait
+(TkBase::wait_point) or at the frame's end. An end checkpoint inside a modal wait is compared where the last frame's
+Blocking pump runs out of recorded input. Result: 109 of 155 COMMAND segments PASS (35 / 35 TIME-FORWARD still); 44 stop on
+names outside tick (Text_put 17: no TextMetrics provider, U-0944; drawGolferInfoPanel 8, showCourseReport 5,
+shotStyleButtonCode 4, loadGameBrowserScreen 3, showHoleStatsScreen 2, showEndOfYearScreen 2, the modal showBulletinBoard 2,
+courseActionMenu 1) and 2 diverged (ui_tour/02, ui_tour_v/02: 3.1a's customizeCharacter skipped the unregistered
+showCharacterIntro; its call site now throws MissingResource, so they stop there, U-0931). Fixes the segments forced: a headless Terrain stand-in for the heap objects the exe side reads
+(HeadlessTerrain: Terrain object, list sentinel, operator-new arena, the corner step applyTileElevation's loop waits for,
+U-0932); narrateShot's modal pumpAndRedraw(0) (shots.cpp) now waits for the next command when an InputSource is attached
+(U-0933); new tick functions rankValue, playHabitatSound, drawRecords; drops drawTerrainToolbar, enterModal483d30,
+Snd::status, Widget_readPixel. port/test/segments.py: NON_CAUSAL = {g_textBuf} (all 81 references are __itoa destinations,
+log/p3/p37a_noncausal.py), reported in SegmentResult.noncausal, and run_detail. Runner log/p3/p37a_cmdsegs.py (TSV per
+segment), summary p37a_cmdsum.py; development switches SG_TICK_INPUT_LOG, SG_TICK_CALL_LIMIT, SG_TICK_TRACE. The full
+COMMAND gate is test_tick.py's slow test (about five minutes); 7 segments run by default.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run
