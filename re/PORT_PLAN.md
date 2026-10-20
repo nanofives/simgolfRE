@@ -97,8 +97,29 @@ Dropped from the port: the CRT, unwind funclets, vendored libpng/zlib/libjpeg (u
 7. **Decisions on original defects.** One list: keep (affects saves or balance) or fix (hangs, overruns). Start from the
    findings in CLAUDE.md.
 
-## First steps
+## Status (2026-10-20)
 
-- Resolve the golfer-record conflict and produce the typed struct header (phase 1).
-- Cover `mainLoop`, `gameMain`, `loadWorldAssets`, `loadInterfaceArt` with hooks (they define tick order and assets).
-- Run the two scripts the survey could not: globals referenced by game-logic functions, and pure vs state-dependent hooks.
+| Phase | Status | Where |
+|---|---|---|
+| 1. Data model | done (2026-10-18) | re/PHASE1_PLAN.md, re/model/, port/include/gamestate.h |
+| 2. Oracle | done (2026-10-19): traces, 190 + 10 segments, 15,191 vectors, harness with x64 and Win32 (x87) backends | re/PHASE23_PLAN.md, port/test/ |
+| 3. Headless simulation core | done (2026-10-20): all 200 accepted segments PASS on x64 and Win32; gates (c) 6.22-year course_season_6y as one run, (d) championship driven by semantic commands only, (e) divergence ledger, (f) 8,192 frames in 23 s x64 / 29 s Win32 | re/PHASE38_PLAN.md section 5, log/p38/MERGES.md |
+| 4. Formats and loaders | partly done inside phase 3: GameFiles (bytes, list, write overlay), themes, story files, golfer roster, saveGame / loadGame / saveCourse, the load browser, loadWorldAssets / loadInterfaceArt(0) as the sim needs them | modules course, loaders, saveload, menu |
+| 5. Backends | not started; text widths exist as a host GDI provider (module gditext) and Terrain.dll as the TerrainApi interface with a headless stand-in | portsim/sim/gditext.h, terrain_api.h |
+| 6. UI and screens | command effects of every screen a segment reaches are ported (Command / InputSource, semantic commands); drawing is dropped | modules commands, dialogs, reports, routing, chareditor, semantic |
+| 7. Defect decisions | not started; every reproduced defect has a switch (default = the original) | re/port/divergences.tsv, re/analysis/data/model_defects.md |
+
+Shim side: 2,765 functions at C4, 168 at C3 (`re_classify.py status --summary`); U-1000 (a C4 hook's wrong divisor, found by the
+port's oracle) fixed and re-verified.
+
+## Next steps
+
+- **Phase 4 completion.** A `.sve` round trip through the port (load an original save, run, save, compare with the original's
+  save of the same frame); course files; the asset manifest for the full Setup path (loadInterfaceArt(full != 0), U-1050).
+- **Phase 5, backends.** Start with the software 16-bit gfx backend: draw what the dropped drawing paths draw and compare with
+  the recorded checkpoint frames (scenario_ab's back-buffer frames). Then Terrain.dll's renderer behind TerrainApi, then audio.
+  Decide whether text widths stay GDI or come from the font files (TrueType advances + GDI rounding, U-0960 / U-0961).
+- **Open items from phase 3:** the title menu's Select A Theme and Quit paths (U-1050), the character editor's bio entry
+  (U-1032), the scroll-text layout reached only by the oracle, chooseShotTarget.strictFlagSticky with no evidence (U-1012),
+  and input that arrives during a world load (U-1051).
+- **Phase 7:** go through re/port/divergences.tsv and model_defects.md and decide keep or fix per defect.
