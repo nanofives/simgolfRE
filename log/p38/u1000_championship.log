@@ -1,0 +1,25 @@
+  [off] checkpoint menu T=3434 tgt=3434 date=0x00000000 seed=0x1f98dc65
+  [off] checkpoint tournament_start T=26866 tgt=26866 date=0x00002c52 seed=0xc5657607
+  [off] checkpoint tour_0060 T=87163 tgt=87163 date=0x00002eb7 seed=0x1b7861d8
+  [off] checkpoint tour_0122 T=149682 tgt=149682 date=0x00003134 seed=0x2b76cb15
+  [off] checkpoint tour_0180 T=207555 tgt=207555 date=0x00003375 seed=0x01860d8c
+  [s36a] tournament end=results shots=10 virtual_s=228
+  [off] checkpoint tournament_end T=258459 tgt=258459 date=0x00003501 seed=0x91d1a8c4
+  [on] checkpoint menu T=3434 tgt=3434 date=0x00000000 seed=0x1f98dc65
+  [on] checkpoint tournament_start T=26866 tgt=26866 date=0x00002c52 seed=0xc5657607
+  [on] checkpoint tour_0060 T=87163 tgt=87163 date=0x00002eb7 seed=0x1b7861d8
+  [on] checkpoint tour_0122 T=149682 tgt=149682 date=0x00003134 seed=0x2b76cb15
+  [on] checkpoint tour_0180 T=207555 tgt=207555 date=0x00003375 seed=0x01860d8c
+  [s36a] tournament end=results shots=10 virtual_s=228
+  [on] checkpoint tournament_end T=258459 tgt=258459 date=0x00003501 seed=0x91d1a8c4
+A/B championship [u1000]: OFF vs ON (1 hooks ON)
+  menu: T 3434/3434  state SAME  frame SAME
+  tournament_start: T 26866/26866  state SAME  frame SAME
+  tour_0060: T 87163/87163  state SAME  frame SAME
+  tour_0122: T 149682/149682  state SAME  frame SAME
+  tour_0180: T 207555/207555  state SAME  frame SAME
+  tournament_end: T 258459/258459  state SAME  frame SAME
+  GREEN      log/c3/alt/s36a/championship/csv_u1000/00453330_showHoleStatsScreen_championship.scenario.csv
+  verdicts: {'GREEN': 1} -> log/c3/alt/s36a/championship/csv_u1000
+  evidence: 1 GREEN CSVs copied to log/diff
+state SAME, frames SAME

@@ -6,6 +6,6 @@ tour_0122 T=149682,state=22b9350848bef247 frame=6ba25548997ad59f,state=22b935084
 tour_0180 T=207555,state=06c074edbfa91381 frame=c984fb6d53bdfc44,state=06c074edbfa91381 frame=c984fb6d53bdfc44,True
 tournament_end T=258459,state=147bddd4b3585a1f frame=53d328cbe0f414b0,state=147bddd4b3585a1f frame=53d328cbe0f414b0,True
 install_witness,0xe9,0xe9,True
-meta,scenario=championship hooks_on=2927 tag=all2,reach_on=2 other_threads=0 (armed) reach_off=2 other_threads=0 (armed) off_byte=0x81,2026-10-15T11:08:11
-meta,off=log/c3/alt/s36a/championship/ab_all2_off,on=log/c3/alt/s36a/championship/ab_all2_on,clock=virtual step 1 ms poll 100 ms
+meta,scenario=championship hooks_on=1 tag=u1000,reach_on=2 other_threads=0 (armed) reach_off=2 other_threads=0 (armed) off_byte=0x81,2026-10-20T12:46:15
+meta,off=log/c3/alt/s36a/championship/ab_u1000_off,on=log/c3/alt/s36a/championship/ab_u1000_on,clock=virtual step 1 ms poll 100 ms
 VERDICT,GREEN,6,
