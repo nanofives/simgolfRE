@@ -1,0 +1,135 @@
+Phase 3.7b COMMANDS (2026-10-19): module `commands` (port/src/sim/commands.cpp + commands_panels.inc, commands_layout.inc,
+commands_screens.inc, commands_internal.h; header port/include/portsim/sim/commands.h; tests port/test/test_commands.py,
+oracle port/test/cmdemu.py, trace mapping port/test/trace_commands.py; split table re/port/commands_split.tsv).
+
+1. The interface (commands.h, given to 3.7a through the parent within the first half hour, then extended twice)
+   - Command{kind, handler, a0, a1, async_ctrl, async_shift, t, arg[8]}. RAW kind RootHandler = one root-window handler
+     call exactly as a trace HANDLER record gives it (handler id 1..11, two stack arguments), plus the GetAsyncKeyState
+     results the press handlers read (KEYSTATE) and the clock value the deadline tail compares (the handler's own CLOCKRUN).
+     apply_command performs that handler's writes: g_rootInput, gDirtyFlagA / B, g_char83821c, g_key838208, g_ui83ab9c.
+   - SEMANTIC kinds 0x100..0x106 = one ported click handler's action with its hit test decided (arg[0] = the hit test's
+     value); test_semantic_command_equals_the_click shows each equals the click at a point with that hit result.
+   - tickFrame applies the frame's own raw commands at H1 (apply_commands) and attaches the rest as an InputSource. Every
+     pump inside a straddler asks the source for ONE batch (one original dispatch call) with a PumpKind: Blocking (a loop
+     that only ends on input: pumpAndRedraw(0), the screens' click-or-key loops; none left -> NeedInput, a MissingResource
+     -> SG_E_NO_RESOURCE) or Drain (pumpLight, interruptible waitTicks: returns at once when nothing has arrived). A
+     clockless port cannot tell what "has arrived" at a drain, so the source carries the timing (U-0940). QueueInput
+     (tests): Blocking takes every command up to and including the first press or key, Drain takes nothing. The source
+     also answers cursor reads (View_toLocal) for the screens whose effect depends on the cursor (U-0943).
+   - Messages to the parent: the header (twice), composeGolferSprite's sim write from drawing (drawQueuedSprite in P4),
+     g_value587ea0 / appendDate / showInfoCursorPanel's esi write, and g_textBuf (a hashed sim object that is only
+     appendNumber / appendCents formatting scratch, written by drawing paths every frame; U-0944).
+
+2. Method
+   - No corpus vectors exist for any of the 62 (re/port/vectors_manifest.tsv: every key excluded). The evidence is an
+     EMULATOR ORACLE (cmdemu.py, opt-in SG_EMU_ORACLE=1): the ORIGINAL function runs in Unicorn from the user's file image
+     over constructed GameState images; the callees the port drops are stubbed with their own convention (from their
+     `ret N`); frameTick483cd0 (the dispatch point) runs the ORIGINAL root handlers on the next scripted batch through a
+     trampoline, with GetAsyncKeyState / timeGetTime answered from the command; a pumpMessages whose caller is pumpLight
+     or waitTicks (the return address at [esp + 0x20] on entry) is a Drain and gets nothing; View_toLocal returns the
+     scripted cursor. eax, consumed input and the whole data image must equal the port's (layout and screen functions
+     mask only the drawing scratch the port does not reproduce: g_textBuffer, the hover counters g_panelState[1] /
+     g_ui_5aa554, the sprite cell g_ui_5aa6b8[3], g_value587ea0, the itoa buffers g_panelNumberText / g_ui_821c50 /
+     g_infoPanelNumBuf, appendCents' g_ui_569628). Branch coverage per jcc side is measured on the same cases
+     (log/p3/p37b/cover.py). Peers of other children are run for real on both sides, except buildGolferComment in
+     showPlayerCommentsReport, whose calls are recorded on both sides (commands.recordPeer) and compared as sequences
+     (U-0945).
+   - The default suite runs no original code: GOLDEN digests (port/test/golden_commands.json, 60 fixed cases per
+     function: eax, error, consumed input, whole image) pinned from the port only after the oracle was GREEN on them
+     (SG_EMU_ORACLE=update), plus every negative control against those digests (and against the original with the oracle).
+   - The 62 were classified by a write audit (log/p3/p37b/audit.py: every data address each body writes, its object and
+     class, and every function that reads it): a write that a click handler, mainLoop or a simulation function reads is
+     an effect even when it sits in a drawing function (drawAmenitiesPanel's g_panelState[0], drawEmployeeViewPanel's
+     list, drawEmployeeDetailPanel's list / zoom / walker animation word / hire trigger, appendDate's g_year).
+   - Built in a private mirror (log/p3/p37b/mirror.py: port/ at HEAD for every file a sibling modified, plus this child's
+     new files; 3.7a's tick* excluded while it did not compile) at port/build/m37b, each build copied to
+     port/build/m37b_run so a running test never locks the next build.
+
+3. Result per function (re/port/commands_split.tsv has all 62)
+   ported 22 of the 62 (plus the 11 root handlers, the pump models pumpAndRedraw / pumpMessages / flushRedraw / pumpLight and
+   7 hit tests, registered under their hooks.csv names):
+     command (14): clickSlotPanel, clickBuildTool433d30, pickBuilding, clickAmenityPanel, clickEmployeeView,
+       clickGolferPanel, handleEmployeeAction, selectDifficultyScreen, showHireEmployeeDialog, showFinancialReport,
+       showPlayerCommentsReport, showBestScoresScreen, showHistographScreen, showLoadingScreen (its two RNG draws)
+     layout (6 + 2 helpers): tickMessage, drawAmenitiesPanel (+ drawAmenityRow's hit), showInfoCursorPanel,
+       drawEmployeeViewPanel, drawGolferActionPanel, drawEmployeeDetailPanel; drawWindow / drawThoughtBubble as the
+       draw_window_effect helper (sound request, composeGolferSprite)
+     owned elsewhere (4): queueMessage, pointsPopup (3.3 bridge), startMessage, appendCents (3.7a)
+     drawing, nothing kept (10): drawLabels, drawMoneyLabels, drawFrameS2, drawPanelBackdrop, drawTerrainToolbar,
+       drawBuildingPanel, wrapMessageBuffer, drawMessageBuffer, drawMatchScoreboard, showMainRadialMenu
+     gaps (not ported, reason in the table, 26): showCharacterIntro, panelListSelect (C2: no hook source),
+       showPreferencesMenu / showSystemMenu / showPopup / textInputBox (font-metric hit tests, U-0944), showCharacterEditor,
+       pickAProScreen, loadGameBrowserScreen, listThemes, showThemePackSelect (file browsing / frame-local records),
+       showEndOfYearScreen, showCourseReport, showHoleStatsScreen, showMembershipRoster, showRoutingMapScreen,
+       showBuyLandScreen, showGolferPairSelect, showTournamentResults, drawGolferInfoPanel, showCourseRanking,
+       showTutorialText, runScrollText, showBulletinBoard, courseActionMenu, drawScoreSummary
+   Oracle cases (all GREEN): root handlers 400 + controls; panels 500 each; layout 200 each; screens 120 each;
+   the semantic kinds equal the click at a point with that hit result (80 cases each, port against port).
+   Branch coverage (both sides of every jcc of the function's own body, panels): 12/12, 7/7, 7/8 (the unreachable
+   `local == 1`), 7/7, 10/10, 6/6, 5/5, handleEmployeeAction 12/12, clickEmployeeView 10/10, clickGolferPanel 21/22,
+   clickBuildTool433d30 3/3, pickBuilding 9/9, clickAmenityPanel 9/9, clickSlotPanel 4/6 (r == 0x14 and r > 0x16 cannot
+   come from this exe's slot table: its 0xff terminator ends the walk after 16 slots).
+
+4. Segments (the 155 COMMAND segments; log/p3/p37b/segment_map.py -> log/p3/p37b/segment_commands.tsv)
+   Every HANDLER record maps to exactly one RootHandler command (by construction); port/test/trace_commands.py groups them
+   into dispatch batches with the frame and the pump context: 8,352 commands in 5,420 batches: 5,130 dispatched by the
+   frame's H1 pump (after the frame head or jgld's palette QPC), 257 inside a screen's loop after a waitTicks, 29 inside
+   pumpAndRedraw, 4 inside showHoleStatsScreen's own clock loop. log/p3/p37b/dispatch_sites.py: no batch lies between two
+   iterations of a waitTicks loop (so pumpInput483c30 never dispatched in these runs; the model's single dispatch point
+   holds there). The segments cannot be RUN by this child: sg_run_frames is 3.7a's (U-0925); what a segment run needs from
+   3.7b is in place (apply_command for the raw kinds, the registered straddlers, the batch mapping).
+
+5. Findings in the original (also in the split table)
+   - drawing writes simulation state: composeGolferSprite's type-record write-back (thought bubbles, P4 sprites),
+     appendDate's g_year, appendNumber / appendCents' g_textBuf (hashed), drawEmployeeDetailPanel's g_zoomScale = 4, its
+     walker animation word reset (mode 0xc -> 0xb at phase 0) and the hireEmployee call on the panel's first draw.
+   - showFinancialReport writes each shown year's total back into entry 8 (model_defects: known).
+   - showHireEmployeeDialog's sprite frame counter is divided by the sheet sizes even when nothing is drawn (#DE on 0).
+   - hitTestSlot432f90 reads the palette sprites' height field (g_sprites570cb8 +0x1c, a pointer-class object): the
+     toolbar's hit boxes depend on the loaded art.
+   - 3.5's buildGolferComment faults on random hole comment arguments where the original returns (reproducer: U-0945).
+
+6. Lessons
+   - Unicorn caches translated blocks: rewriting code at one address runs the old translation (a fresh trampoline slot per
+     dispatch, ctl_remove_cache when the slots wrap).
+   - test_static refuses every 6-8 digit literal in the image ranges, comments included: write flag masks as shifts and
+     cite functions by name in port code (addresses stay in notes and the split table).
+   - A sibling's in-flight edit of a shared file (events_calls.inc lost its startMessage copy) breaks other modules' tests:
+     a private mirror at HEAD + own files keeps the baseline stable.
+
+7. Round 2 (resumed session, 2026-10-19)
+   - Tree check: the full working tree (tick + commands) builds in port/build/p37b (log/p3/p37b/bfull.sh, copied per build
+     to port/build/p37b_run). Three negative controls were blind on the 60 golden cases: handleEmployeeAction 1 and
+     clickGolferPanel 1 (rare arms; their golden sets are now 200 cases, GOLDEN_N_FOR) and drawEmployeeViewPanel 1, an
+     EQUIVALENT mutant (wide columns sit at 0x145 + k * 0x79: 0x2b0 then 0x329, none in 0x2b8..0x2f3); its control is now
+     the limit 0x2af, which drops the fourth column. The other port/test failures of that run were 3.7a's in-flight files.
+   - Which gaps the COMMAND segments reach (log/p3/p37b/seg_reach.py -> seg_reach.tsv, seg_keys.tsv: every recorded call
+     site mapped to its function, plus the H1 takes): showPopup (5 segments), textInputBox (4), loadGameBrowserScreen (4),
+     showHoleStatsScreen (2) directly; the H1 letter keys f / r / g / s / t / w / v (40+ takes each) all call
+     panelListSelect; F5 shows showRoutingMapScreen, F10 runBulletinBoardWithSound, the other F keys only set a mode.
+   - U-0944 DECIDED from the code: Font::textWidth 0x10068e60 is GDI GetTextExtentPoint32A (0x10068eb8) on a
+     CreateFontIndirectA font (0x1006897f) over the game's own font file (CreateScalableFontResourceA 0x10068c10,
+     AddFontResourceA 0x10068c74): widths are the host rasterizer's. Interface TextMetrics in commands.h (text_put(draw
+     context, base font the caller's setDrawTarget chose, text)); test provider commands.setTextWidth (sum of base +
+     (c & mask)); cmdemu's stub kind ("width", base, mask) answers the original's Text_put with the same rule.
+   - Ported (all registered by hooks.csv name): showPopup, textInputBox (commands_popup.inc), panelListSelect
+     (commands_keys.inc, transcribed from its 506 bytes: it had no hook source), nearestMenuSpot, showPreferencesMenu,
+     showSystemMenu, drawScoreSummary (commands_menus.inc). Oracle (SG_EMU_ORACLE=1): widgets 300 cases each GREEN,
+     panelListSelect 500, drawScoreSummary 120; jcc both sides: showPopup 39/41 (0x46dc92 fall-through and 0x46dd84 taken
+     are unreachable: with flag4 set a button returns or restarts the pass before the click test), textInputBox 23/25
+     (0x45b54f / 0x45b5fc are loop-entry tests that need cursor > length; cursor starts at the length and no edit lets it
+     pass it), panelListSelect 13/13, nearestMenuSpot 3/3, showPreferencesMenu 1/1, showSystemMenu 7/8 (0x43294d: needs
+     promptAndSaveFile, not ported), drawScoreSummary 6/6. Golden digests pinned after the oracle was GREEN on them; 12 new
+     negative controls, all RED against the digests and against the original.
+   - showSystemMenu's report screens are recorded peers in its test (WIDGET_RECORD): their drawing text in g_textBuffer
+     (an unhashed H5 buffer) is masked by their own family. drawScoreSummary reproduces g_textBuffer, the itoa scratch
+     g_scoreSummaryBuf and appendCents' g_textBuf anyway.
+   - nearestMenuSpot is now registered, so tick's fallback (fb_nearest_menu_spot) is no longer used: same body (c3d.cpp).
+   - Findings in the original: showPopup reads the first option's y from an uninitialised frame slot when the text has no
+     option line (the port uses 0, the zeroed-stack convention); showSystemMenu's System popup reads the course name at
+     0x004d6098, inside the model's g_golferTypes (U-0948); a key sends onChar and onKey, both setting the code word, so a
+     popup sees an arrow key twice per WM_KEYDOWN + WM_CHAR pair (arrows send no WM_CHAR, so real arrows move once).
+   - Still gaps (20, re/port/commands_split.tsv): showHoleStatsScreen (wall-time animation, U-0949), runScrollText (needs
+     drawScrollText's layout, U-0950), loadGameBrowserScreen / listThemes / showThemePackSelect / pickAProScreen (file
+     listing, U-0864), showCharacterIntro (skillPointDialog), the rest of the report and map screens. Segment runs that reach
+     the widgets need a host TextMetrics (U-0947).

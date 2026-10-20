@@ -1,0 +1,63 @@
+addr	name	class	command_effect	dropped	evidence	gap
+00406250	showLoadingScreen	command	two Random::range draws (12, 11) on g_rng (c3fi.cpp 0x00406297, 0x004063f5)	the picture, hint text, progress bar	emulator oracle 120	-
+004065c0	showCharacterIntro	gap	f_w_4c2e00[2] = -1, g_skillMaskBlock+8 = skillPointDialog's result	text, drawWindow	-	skillPointDialog 0x0045f0f0 (modal, cursor hover + click) not ported (3.3 U-0865)
+0040c720	queueMessage	owned	(phase 3.3 module bridge)	-	3.3 test_bridge	-
+0040c7a0	drawLabels	drawing	none (label timers g_labelQueueB are read only by drawLabels)	all	write audit	-
+0040c890	pointsPopup	owned	(phase 3.3 module bridge)	-	3.3 test_bridge	-
+0040c910	drawMoneyLabels	drawing	none (g_moneyLabelTime read only by itself)	all	write audit	-
+0040cb00	startMessage	owned	(phase 3.7a; commands calls events' copy, which prefers the registered one)	-	-	-
+0040d0b0	drawFrameS2	drawing	none	all	write audit	-
+0040d320	drawWindow	layout-helper	playSound 0x10b when no golfer selected and mode 0; composeGolferSprite(f_w_4c2e00[2]) when >= 0	frame, text, g_value587ea0 and wrapMessageBuffer's line breaks (font metrics, U-0942)	state test test_draw_window_effect_composes_the_selected_golfer	g_value587ea0 (read by mainLoop) not reproduced
+0040d6a0	tickMessage	layout	delay countdown, text copy, open counter unk_005a9ccc, g_messageTimer, mode byte g_ui_569498	drawWindow drawing	emulator oracle 200 cases	-
+0040d890	panelListSelect	command	g_flags bit 1, g_playerShotStyle, g_msgState53df54 + camera, f_w_4c2848[0]/[3], g_panelSelectPending, refusal message	playSound (audio backend)	transcribed from its instructions (C2, no hook source); oracle 500 cases GREEN, jcc 13/13	-
+0042dd50	appendCents	owned	(phase 3.7a)	-	-	-
+00432560	showPreferencesMenu	command	g_preferences = showPopup's mask	-	emulator oracle (SG_EMU_ORACLE=1, Text_put stubbed with the same scripted width rule the port's TextMetrics gets) + golden digests; 300 cases GREEN, jcc 1/1	-
+00432620	drawPanelBackdrop	drawing	none	all	write audit	-
+00432720	showSystemMenu	command	g_panelListMode, f_w_4c2848[0]/[3], g_msgState53df54, unk_0059b734, the popups' command codes, rename via textInputBox	-	emulator oracle (SG_EMU_ORACLE=1, Text_put stubbed with the same scripted width rule the port's TextMetrics gets) + golden digests (showBestScoresScreen / drawScoreSummary recorded as peers on both sides); 300 cases GREEN, jcc 7/8	promptAndSaveFile (save module, not ported): the save-for-championship answer is SG_E_NO_RESOURCE
+00432ba0	showMainRadialMenu	drawing	none (hover counter g_ui_5aa6b8 read only by itself)	all	write audit	eax (hover count / panel draw result) not reproduced; no direct mainLoop call site
+00433040	clickSlotPanel	command	tool f_w_4c2848[0], help window, amenities palette, Random::range(3)	help window drawing	emulator oracle 500 cases, golden 60	r == 0x14 and r > 0x16 unreachable with this exe's slot table
+00433190	showInfoCursorPanel	layout	the amenities palette's row selection (drawAmenitiesPanel) when it is open	the info panel	emulator oracle 200 cases	the info-panel path's write of 6 into mainLoop's saved esi (re/c3_hold.tsv) belongs to the frame step
+00433d30	clickBuildTool433d30	command	terrain tool, g_flags bit 1, palette close, help window	help window drawing	emulator oracle 500, golden 60	-
+00433e50	drawTerrainToolbar	drawing	none (hover g_panelState[1] / g_ui_5aa554 read only by drawing)	all	write audit	-
+00434140	pickBuilding	command	building tool f_w_4c2848[3] or the refusal (sound, startMessage), palette switch, help window	help window drawing	emulator oracle 500, golden 60	-
+00434350	drawBuildingPanel	drawing	none (forwards to drawTerrainToolbar, hover counters)	all	write audit	-
+00434ac0	clickAmenityPanel	command	amenity tool, variant Random::range(4/7/8), g_panelState[0]/[4], palette close, help window	help window drawing	emulator oracle 500, golden 60	-
+00434cf0	drawAmenitiesPanel	layout	g_panelState[0] = the row under the cursor of the active amenity tool (drawAmenityRow's hit)	the palette, tooltips	emulator oracle 200	-
+00435680	clickEmployeeView	command	golfer selection g_msgState53df54, camera, panel modes, scroll	-	emulator oracle 500, golden 60	-
+00435760	drawEmployeeViewPanel	layout	g_employeeViewList (the listed golfers), scroll fix	the list drawing	emulator oracle 200	-
+00436060	clickGolferPanel	command	shot-preview flags, shot style g_playerShotStyle, panel modes, command 0x4a, editor opening	3 Image_draw	emulator oracle 500, golden 60	case 0 calls showCharacterEditor (not ported: NO_RESOURCE)
+004362f0	drawGolferActionPanel	layout	forwards to drawEmployeeDetailPanel while the detail panel is open (mode != 3)	all else	emulator oracle 200	-
+00436c00	handleEmployeeAction	command	scroll, selection, fire (cash, finance, walker flags, pointsPopup), rename, camera	-	emulator oracle 500, golden 60	case 6 (rename) calls textInputBox (not ported: NO_RESOURCE)
+00436e50	drawEmployeeDetailPanel	layout	scroll, g_zoomScale = 4 with a selection, walker animation word +0x1e, g_employeeDetailList and count, selection clear, appendDate (g_year), hireEmployee once per opening	drawing, sprites, tooltips	emulator oracle 200	hireEmployee is 3.7a's (NO_RESOURCE until registered)
+004385d0	showCharacterEditor	gap	golfer type records, phrases, pros, comment tone	-	-	not ported: 7.5 KB modal editor with text entry and popups (U-0944)
+0043a400	selectDifficultyScreen	command	the chosen level (eax) from the cursor at the click	the screen	emulator oracle 120	-
+0043a8c0	pickAProScreen	gap	g_golfers +0xb6, g_theme	-	-	not ported: modal browser with frame-local records (round 32 SEH notes), cursor and popups
+0043b610	loadGameBrowserScreen	gap	g_courseType, g_flags, loadCourse / loadGame	-	-	not ported: file browser (GameFiles directory listing, U-0864) and popups
+0044cff0	showEndOfYearScreen	gap	g_debtYears, g_memberTypeHistory, addScore	-	-	not ported yet (5.7 KB; the effect is input-independent, the loop is a click-or-key loop)
+0044f6b0	showFinancialReport	command	row total written back into g_financeYears entry 8 of each shown year, g_ui_569498 = 0	the report	emulator oracle 120	-
+0044fb30	showCourseReport	gap	g_courseReportScore, g_flags, g_tournamentPurse, postEvent	-	-	not ported yet (14 KB)
+00453330	showHoleStatsScreen	gap	g_msgState53df54, buildGolferComment	-	-	not ported yet (its own clock-driven animation: timeGetTime 0x0045464c)
+004546b0	showPlayerCommentsReport	command	up to 20 buildGolferComment calls from the holes' comment counts, g_ui_569498 = 0	the report	emulator oracle 120	-
+00454c50	showMembershipRoster	gap	g_golferTypeState +2, g_ui_569498	-	-	not ported yet
+00455a30	showBestScoresScreen	command	g_ui_569498 = 0, input consumed	the page	emulator oracle 120	-
+00455ed0	showHistographScreen	command	g_ui_569498 = 0, input consumed	the graphs	emulator oracle 120	-
+00456be0	showRoutingMapScreen	gap	tile flags, holes, golfers, shade	-	-	not ported: map editor with cursor drag (7 KB)
+004587a0	showBuyLandScreen	gap	cash, finance, tile types, RNG	-	-	not ported: map screen
+00459400	showHireEmployeeDialog	command	the chosen employee kind (eax) from the cursor at the click; #DE on an empty sprite sheet	the dialog	emulator oracle 120	-
+00459850	showGolferPairSelect	gap	g_golfers +0x10, story pairs	-	-	not ported: two-step golfer picker with cursor
+0045a090	showTournamentResults	gap	cash, awards, purse, flags, finance	-	-	not ported yet (3.5 KB; effect before the loop)
+0045af30	wrapMessageBuffer	drawing	none for the simulation (line breaks in g_textBuffer by font metrics)	all	write audit	U-0942
+0045b0d0	drawMessageBuffer	drawing	none	all	write audit	-
+0045b2c0	textInputBox	command	g_textBuffer edited by keys (cut to the width from TextMetrics, the stale length kept), eax = last takeCode	drawing, the frame copies, the caret measure	emulator oracle (SG_EMU_ORACLE=1, Text_put stubbed with the same scripted width rule the port's TextMetrics gets) + golden digests; 300 cases GREEN, jcc 23/25 (2 loop-entry tests need cursor > length, never true)	-
+0045c200	drawThoughtBubble	layout-helper	composeGolferSprite(g) (mode != 1: once)	all	via drawWindow's state test	-
+0045c560	drawGolferInfoPanel	gap	g_infoPanelTab (read by mainLoop), hover frames, buildGolferComment / computeStoryReply / skillPointDialog	-	-	not ported yet (6.3 KB)
+0045f870	showCourseRanking	gap	g_courseRanking	-	-	not ported yet
+004604f0	showTutorialText	gap	camera, zoom, rotation, g_flags, tutorial page, saveGame	-	-	not ported yet (2.1 KB, modal)
+00461110	drawMatchScoreboard	drawing	none (returns 0x300)	all	write audit	-
+0046d6e0	showPopup	command	the chosen option / toggled mask (eax), the input consumed, g_textBuffer unchanged; widths from TextMetrics (U-0944)	drawing, colour reads, waitTicks(10, 0)	emulator oracle (SG_EMU_ORACLE=1, Text_put stubbed with the same scripted width rule the port's TextMetrics gets) + golden digests; 300 cases GREEN, jcc 39/41 (2 unreachable: with flag4 set a button never reaches the click test)	-
+0046dea0	runScrollText	gap	input consumed (scroll state is ui read by drawScrollText only)	-	-	not ported: its hit tests read the line layout drawScrollText computes with Text_put widths (line count, bounds, disabled mask, hotkeys); needs drawScrollText's layout part over TextMetrics
+0046e810	showBulletinBoard	gap	camera, photo index, g_date save/restore, skillPointDialog	-	-	not ported yet (2.4 KB; reaches skillPointDialog and scrollTextWindow)
+0046f550	courseActionMenu	gap	cash, amenity unlocks, loadCourse / loadGame, RNG	-	-	not ported: course menu with popups and file I/O (5 KB)
+004724c0	listThemes	gap	g_theme	-	-	not ported: directory listing (GameFiles, U-0864)
+004725b0	showThemePackSelect	gap	g_theme	-	-	not ported: browser with frame-local records
+00473470	drawScoreSummary	command	addScore, g_textBuffer / g_scoreSummaryBuf / g_textBuf formatting of the rows, the pumpAndRedraw(0) wait	images, fills, text drawing	emulator oracle (screen family) 120 cases GREEN, jcc 6/6 + golden digests	-

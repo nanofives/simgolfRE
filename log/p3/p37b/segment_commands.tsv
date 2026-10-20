@@ -1,0 +1,191 @@
+scenario	segment	class	frames	handler_records	batches	contexts	handlers_by_id
+championship	0	COMMAND	636	78	52	frame-palette:52	1:6;2:6;3:6;7:20;8:20;9:20
+championship	1	COMMAND	577	72	48	frame-palette:48	1:4;2:4;3:4;7:20;8:20;9:20
+championship	2	COMMAND	394	73	45	frame-palette:43;other:0x45464c:2	1:6;2:6;3:6;7:22;8:16;9:17
+course_season	0	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	1	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	2	COMMAND	609	90	60	frame-palette:59;pumpAndRedraw:1	7:30;8:30;9:30
+course_season	3	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	4	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	5	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	6	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	7	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	8	COMMAND	612	90	60	frame-palette:60	7:30;8:30;9:30
+course_season	9	COMMAND	613	90	60	frame-palette:60	7:30;8:30;9:30
+cov_a_build	0	COMMAND	334	48	32	frame-palette:32	1:12;2:12;3:12;4:4;5:4;6:4
+cov_a_build	1	COMMAND	129	21	14	frame-palette:14	1:5;2:5;3:5;4:2;5:2;6:2
+cov_a_build	2	COMMAND	129	21	14	frame-palette:14	1:5;2:5;3:5;4:2;5:2;6:2
+cov_a_build	3	COMMAND	250	36	24	frame-palette:24	1:6;2:6;3:6;4:3;5:3;6:3;7:3;8:3;9:3
+cov_a_build	4	COMMAND	88	15	10	frame-palette:10	1:3;2:3;3:3;4:2;5:2;6:2
+cov_a_build	5	TIME-FORWARD	102	0	0		
+cov_a_build2	0	COMMAND	220	36	24	frame-palette:24	1:8;2:8;3:8;4:4;5:4;6:4
+cov_a_build2	1	COMMAND	184	24	16	frame-palette:16	1:7;2:7;3:7;4:1;5:1;6:1
+cov_a_build2	2	COMMAND	43	9	6	frame-palette:6	1:3;2:3;3:3
+cov_a_build2	3	COMMAND	66	10	6	frame-palette:6	1:1;2:1;3:1;4:1;5:1;6:1;7:2;8:1;9:1
+cov_a_build2	4	COMMAND	123	18	12	frame-palette:10;waitTicks:2	4:6;5:6;6:6
+cov_a_build2	5	COMMAND	97	3	3	frame-palette:3	7:3
+cov_a_build3	0	COMMAND	338	48	32	frame-palette:32	1:12;2:12;3:12;4:4;5:4;6:4
+cov_a_build3	1	COMMAND	338	48	32	frame-palette:32	1:12;2:12;3:12;4:4;5:4;6:4
+cov_a_build3	2	COMMAND	254	36	24	frame-palette:24	1:9;2:9;3:9;4:3;5:3;6:3
+cov_a_build3	3	COMMAND	62	9	6	frame-palette:6	1:2;2:2;3:2;4:1;5:1;6:1
+cov_a_build3	4	TIME-FORWARD	51	0	0		
+cov_a_career	0	COMMAND	40	7	5	frame-palette:3;pumpAndRedraw:2	1:1;2:1;3:1;7:2;8:1;9:1
+cov_a_career	1	COMMAND	1020	150	100	frame-palette:100	7:50;8:50;9:50
+cov_a_career	2	COMMAND	1020	150	100	frame-palette:100	7:50;8:50;9:50
+cov_a_career	3	COMMAND	1020	150	100	frame-palette:100	7:50;8:50;9:50
+cov_a_career	4	COMMAND	981	147	98	frame-palette:95;pumpAndRedraw:2;waitTicks:1	7:49;8:49;9:49
+cov_a_career	5	TIME-FORWARD	70	0	0		
+cov_a_champ	0	COMMAND	61	5	5	frame-palette:5	7:5
+cov_a_champ	1	COMMAND	113	11	8	frame-palette:8	7:5;8:3;9:3
+cov_a_champ	2	COMMAND	40	7	5	frame-palette:3;pumpAndRedraw:2	1:1;2:1;3:1;7:2;8:1;9:1
+cov_a_champ	3	COMMAND	36	7	5	frame-palette:4;waitTicks:1	7:3;8:2;9:2
+cov_a_champ	4	COMMAND	31	1	1	frame-palette:1	7:1
+cov_a_flags	0	COMMAND	98	9	6	frame-head:6	1:3;2:3;3:3
+cov_a_flags	1	COMMAND	105	7	5	frame-head:1;waitTicks:4	1:2;2:2;3:2;7:1
+cov_a_flags	2	TIME-FORWARD	41	0	0		
+cov_a_flags	3	COMMAND	105	7	5	frame-palette:1;waitTicks:4	1:2;2:2;3:2;7:1
+cov_a_flags	4	COMMAND	156	16	11	frame-palette:7;waitTicks:4	1:2;2:2;3:2;7:4;8:3;9:3
+cov_a_flags	5	TIME-FORWARD	102	0	0		
+cov_a_golfer	0	COMMAND	116	21	14	frame-palette:14	1:7;2:7;3:7
+cov_a_golfer	1	COMMAND	25	6	4	frame-palette:4	1:2;2:2;3:2
+cov_a_golfer	2	COMMAND	122	15	10	frame-palette:10	1:3;2:3;3:3;7:2;8:2;9:2
+cov_a_golfer	3	COMMAND	39	3	2	frame-palette:2	1:1;2:1;3:1
+cov_a_golfer	4	COMMAND	155	28	17	frame-palette:17	1:4;2:4;3:4;7:8;8:4;9:4
+cov_a_golfer	5	TIME-FORWARD	51	0	0		
+cov_a_keys	0	COMMAND	125	10	9	frame-palette:9	7:8;8:1;9:1
+cov_a_keys	1	COMMAND	98	12	9	frame-palette:7;waitTicks:2	1:1;2:1;3:1;7:5;8:2;9:2
+cov_a_keys	2	COMMAND	139	16	16	frame-palette:16	7:8;9:8
+cov_a_keys	3	COMMAND	35	5	4	frame-palette:4	7:2;8:1;9:2
+cov_a_keys	4	COMMAND	20	4	3	frame-palette:3	7:2;8:1;9:1
+cov_a_keys	5	TIME-FORWARD	102	0	0		
+cov_a_keys2	0	COMMAND	195	17	14	frame-palette:14	1:3;2:3;3:3;7:8
+cov_a_keys2	1	COMMAND	74	8	6	frame-palette:6	1:2;2:2;3:2;7:2
+cov_a_keys2	2	COMMAND	254	28	21	frame-palette:19;other:0x45464c:2	7:14;8:7;9:7
+cov_a_keys2	3	COMMAND	43	4	3	frame-palette:1;waitTicks:2	1:1;2:1;3:1;7:1
+cov_a_keys2	4	COMMAND	116	8	6	frame-palette:6	7:4;8:2;9:2
+cov_a_keys3	0	COMMAND	132	24	16	frame-palette:16	1:8;2:8;3:8
+cov_a_keys3	1	COMMAND	118	10	7	frame-palette:5;waitTicks:2	1:1;2:1;3:1;7:3;8:2;9:2
+cov_a_play	0	COMMAND	45	6	4	frame-palette:4	7:2;8:2;9:2
+cov_a_play	1	COMMAND	61	5	5	frame-palette:5	7:5
+cov_a_play	2	COMMAND	78	11	8	frame-palette:5;waitTicks:3	1:1;2:1;3:1;7:4;8:2;9:2
+cov_a_play	3	TIME-FORWARD	82	0	0		
+cov_b_build	0	COMMAND	181	28	18	frame-palette:18	1:6;2:6;3:6;4:1;5:1;6:1;7:3;8:2;9:2
+cov_b_build	1	COMMAND	1252	159	106	frame-palette:106	1:36;2:36;3:36;4:17;5:17;6:17
+cov_b_build	2	COMMAND	1505	216	144	frame-palette:142;pumpAndRedraw:2	1:58;2:58;3:58;4:14;5:14;6:14
+cov_b_build	3	COMMAND	338	99	50	frame-palette:50	7:49;8:25;9:25
+cov_b_build	4	COMMAND	757	114	72	frame-palette:72	7:42;8:36;9:36
+cov_b_career	0	COMMAND	408	60	40	frame-palette:40	7:20;8:20;9:20
+cov_b_career	1	COMMAND	219	21	14	frame-palette:14	7:7;8:7;9:7
+cov_b_career	2	COMMAND	248	30	20	frame-palette:16;pumpAndRedraw:3;waitTicks:1	7:10;8:10;9:10
+cov_b_career	3	COMMAND	612	90	60	frame-palette:59;waitTicks:1	7:30;8:30;9:30
+cov_b_career_types	0	COMMAND	67	24	16	frame-palette:6;waitTicks:10	1:6;2:6;3:6;7:2;8:2;9:2
+cov_b_career_types	1	COMMAND	68	24	16	frame-palette:6;waitTicks:10	1:6;2:6;3:6;7:2;8:2;9:2
+cov_b_career_types	2	COMMAND	67	24	16	frame-palette:6;waitTicks:10	1:6;2:6;3:6;7:2;8:2;9:2
+cov_b_career_types	3	COMMAND	291	46	32	frame-palette:32	7:20;8:10;9:16
+cov_b_career_types	4	COMMAND	291	46	32	frame-head:2;frame-palette:30	7:20;8:10;9:16
+cov_b_career_types	5	COMMAND	291	46	32	frame-palette:32	7:20;8:10;9:16
+cov_b_decor	0	COMMAND	2685	396	264	frame-palette:262;pumpAndRedraw:2	1:99;2:99;3:99;4:33;5:33;6:33
+cov_b_decor	1	COMMAND	372	57	38	frame-palette:36;pumpAndRedraw:2	1:14;2:14;3:14;4:4;5:4;6:4;7:1;8:1;9:1
+cov_b_decor	2	COMMAND	588	89	61	frame-palette:61	7:34;8:24;9:31
+cov_b_holes18	0	COMMAND	2130	374	236	frame-head:234;waitTicks:2	1:68;2:68;3:68;4:17;5:17;6:17;7:51;8:34;9:34
+cov_b_holes18	1	COMMAND	881	84	56	frame-head:54;waitTicks:2	1:20;2:20;3:20;7:8;8:8;9:8
+cov_b_holes18	2	COMMAND	280	42	28	frame-head:28	1:8;2:8;3:8;4:2;5:2;6:2;7:4;8:4;9:4
+cov_b_holes18	3	COMMAND	424	63	42	frame-head:42	1:1;2:1;3:1;7:20;8:20;9:20
+cov_b_inject	0	COMMAND	42	4	2	frame-palette:1;pumpAndRedraw:1	7:2;8:1;9:1
+cov_b_inject	1	COMMAND	491	45	30	frame-palette:29;pumpAndRedraw:1	7:15;8:15;9:15
+cov_b_inject	2	COMMAND	306	45	30	frame-palette:30	7:15;8:15;9:15
+cov_b_inject2	0	COMMAND	444	46	31	frame-palette:30;pumpAndRedraw:1	7:15;8:15;9:16
+cov_b_inject2	1	COMMAND	306	45	30	frame-palette:30	7:15;8:15;9:15
+cov_b_paths	0	COMMAND	234	42	28	frame-palette:28	1:12;2:12;3:12;4:2;5:2;6:2
+cov_b_paths	1	COMMAND	461	73	50	frame-palette:49;pumpAndRedraw:1	7:29;8:19;9:25
+cov_b_people	0	COMMAND	28	27	18	frame-palette:2;waitTicks:16	1:9;2:9;3:9
+cov_b_people	1	COMMAND	659	58	38	frame-palette:38	7:20;8:19;9:19
+cov_b_people	2	COMMAND	306	45	30	frame-palette:30	7:15;8:15;9:15
+cov_b_shots	0	COMMAND	913	112	68	frame-palette:68	1:4;2:4;3:4;7:40;8:30;9:30
+cov_b_shots	1	COMMAND	2032	289	166	frame-palette:166	1:16;2:16;3:16;7:107;8:67;9:67
+cov_b_shots	2	COMMAND	361	50	30	frame-palette:30	1:2;2:2;3:2;7:18;8:13;9:13
+cov_b_shots	3	COMMAND	2333	316	184	frame-palette:184	1:16;2:16;3:16;7:116;8:76;9:76
+cov_b_shots	4	TIME-FORWARD	31	0	0		
+cov_b_shots2	0	COMMAND	1093	179	106	frame-palette:106	1:8;2:8;3:8;7:65;8:45;9:45
+cov_b_shots2	1	COMMAND	1723	294	176	frame-palette:176	1:12;2:12;3:12;7:106;8:76;9:76
+cov_b_shots2	2	COMMAND	1017	156	94	frame-palette:94	1:6;2:6;3:6;7:56;8:41;9:41
+cov_b_shots2	3	COMMAND	2053	361	214	frame-palette:214	1:16;2:16;3:16;7:131;8:91;9:91
+cov_b_shots2	4	COMMAND	352	47	28	frame-head:2;frame-palette:26	1:2;2:2;3:2;7:17;8:12;9:12
+cov_b_shots2	5	TIME-FORWARD	31	0	0		
+cov_b_title	0	COMMAND	305	45	30	frame-palette:29;pumpAndRedraw:1	7:15;8:15;9:15
+cov_k1_animals	0	COMMAND	57	19	13	frame-palette:5;waitTicks:8	1:5;2:5;3:5;7:1;8:1;9:2
+cov_k1_animals	1	COMMAND	204	30	20	frame-palette:20	7:10;8:10;9:10
+cov_k1_label	0	TIME-FORWARD	51	0	0		
+cov_k1_magazine_d2900	0	COMMAND	102	15	10	frame-palette:10	7:5;8:5;9:5
+cov_k1_paths	0	TIME-FORWARD	51	0	0		
+cov_k1_river	0	TIME-FORWARD	21	0	0		
+cov_k1_river	1	TIME-FORWARD	20	0	0		
+cov_k1_river	2	TIME-FORWARD	21	0	0		
+cov_k1_river	3	TIME-FORWARD	21	0	0		
+cov_k1_river	4	TIME-FORWARD	20	0	0		
+cov_k1_river	5	TIME-FORWARD	21	0	0		
+cov_k1_routing	0	COMMAND	55	4	3	frame-palette:3	7:1;8:1;9:2
+cov_k1_terrain	0	TIME-FORWARD	41	0	0		
+cov_k1_terrain	1	COMMAND	28	2	2	frame-palette:2	7:1;9:1
+cov_k1_washers	0	COMMAND	20	1	1	frame-palette:1	7:1
+cov_k1_washers	1	TIME-FORWARD	31	0	0		
+cov_k2_build	0	COMMAND	447	103	68	frame-palette:68	1:30;2:30;3:30;4:2;5:2;6:2;7:3;8:2;9:2
+cov_k2_build	1	COMMAND	60	9	6	frame-palette:6	1:2;2:2;3:2;4:1;5:1;6:1
+cov_k2_build	2	COMMAND	272	40	26	frame-palette:26	1:1;2:1;3:1;7:13;8:12;9:12
+cov_k2_build	3	COMMAND	82	12	8	frame-palette:8	7:4;8:4;9:4
+cov_k2_build	4	COMMAND	61	0	0		
+cov_k2_build	5	COMMAND	61	9	6	frame-palette:6	7:3;8:3;9:3
+cov_k2_golfers	0	COMMAND	31	0	0		
+cov_k2_label	0	TIME-FORWARD	23	0	0		
+cov_k2_simfoto	0	COMMAND	38	1	1	frame-palette:1	9:1
+cov_k3_build	0	COMMAND	74	9	6	frame-palette:6	1:2;2:2;3:2;4:1;5:1;6:1
+cov_k3_build	1	COMMAND	73	9	6	frame-palette:6	1:2;2:2;3:2;4:1;5:1;6:1
+cov_k3_build	2	COMMAND	107	15	10	frame-palette:10	1:4;2:4;3:4;4:1;5:1;6:1
+cov_k3_build	3	COMMAND	56	6	4	frame-palette:4	1:1;2:1;3:1;4:1;5:1;6:1
+cov_k3_build	4	COMMAND	102	12	8	frame-palette:8	1:3;2:3;3:3;4:1;5:1;6:1
+cov_k3_build	5	TIME-FORWARD	31	0	0		
+cov_k3_camera	0	COMMAND	97	12	8	frame-head:8	1:4;2:4;3:4
+cov_k3_camera	1	COMMAND	34	5	4	frame-head:4	1:1;2:1;3:1;7:1;9:1
+cov_k3_camera	2	COMMAND	34	5	4	frame-head:4	1:1;2:1;3:1;7:1;9:1
+cov_k3_camera	3	COMMAND	36	6	4	frame-head:4	1:1;2:1;3:1;4:1;5:1;6:1
+cov_k3_camera2	0	COMMAND	20	2	2	frame-head:2	7:1;9:1
+cov_k3_camera2	1	TIME-FORWARD	29	0	0		
+cov_k3_camera2	2	COMMAND	20	2	2	frame-head:2	7:1;9:1
+cov_k3_camera2	3	TIME-FORWARD	29	0	0		
+cov_k3_camera2	4	TIME-FORWARD	21	0	0		
+cov_k3_champ	0	COMMAND	76	4	2	frame-palette:2	1:1;2:1;3:1;7:1
+cov_k3_champ	1	TIME-FORWARD	62	0	0		
+cov_k3_hole19	0	COMMAND	78	6	4	frame-palette:4	1:1;2:1;3:1;4:1;5:1;6:1
+cov_l_bridge	0	TIME-FORWARD	30	0	0		
+cov_l_camera	0	COMMAND	34	2	2	frame-head:2	7:1;9:1
+cov_l_camera	1	TIME-FORWARD	21	0	0		
+cov_l_point	0	TIME-FORWARD	21	0	0		
+golfer_events	0	COMMAND	510	75	50	frame-palette:50	7:25;8:25;9:25
+golfer_events	1	COMMAND	510	75	50	frame-palette:50	7:25;8:25;9:25
+golfer_events	2	COMMAND	506	75	50	frame-palette:49;pumpAndRedraw:1	7:25;8:25;9:25
+golfer_events	3	COMMAND	511	75	50	frame-palette:50	7:25;8:25;9:25
+golfer_events	5	COMMAND	204	30	20	frame-palette:20	7:10;8:10;9:10
+golfer_stories	0	COMMAND	382	57	36	frame-palette:36	1:12;2:12;3:12;4:3;5:3;6:3;7:6;8:3;9:3
+golfer_stories	1	COMMAND	1205	180	120	frame-palette:117;pumpAndRedraw:3	7:60;8:60;9:60
+golfer_stories	2	COMMAND	326	45	30	frame-palette:30	7:15;8:15;9:15
+mood5_fixture	0	COMMAND	122	15	10	frame-palette:10	7:5;8:5;9:5
+sandbox_basic	0	TIME-FORWARD	51	0	0		
+sandbox_basic	1	TIME-FORWARD	51	0	0		
+sandbox_basic	2	TIME-FORWARD	51	0	0		
+sandbox_basic	3	TIME-FORWARD	51	0	0		
+sandbox_basic	4	TIME-FORWARD	51	0	0		
+sandbox_basic	5	TIME-FORWARD	51	0	0		
+stories9_fixture	0	COMMAND	411	60	40	frame-palette:38;pumpAndRedraw:2	7:20;8:20;9:20
+stories_fixture	0	COMMAND	123	15	10	frame-palette:10	7:5;8:5;9:5
+ui_tour	0	COMMAND	247	65	45	frame-palette:19;waitTicks:26	1:3;2:3;3:3;7:27;8:14;9:15
+ui_tour	1	COMMAND	233	81	52	frame-palette:21;pumpAndRedraw:1;waitTicks:30	1:17;2:17;3:17;7:12;8:9;9:9
+ui_tour	2	COMMAND	296	41	26	frame-palette:12;waitTicks:14	1:11;2:11;3:11;7:4;8:2;9:2
+ui_tour	3	COMMAND	169	9	6	frame-palette:6	1:2;2:2;3:2;7:1;8:1;9:1
+ui_tour	4	COMMAND	157	18	12	frame-palette:4;waitTicks:8	1:6;2:6;3:6
+ui_tour	5	COMMAND	135	24	16	frame-palette:8;waitTicks:8	1:4;2:4;3:4;7:4;8:4;9:4
+ui_tour_v	0	COMMAND	247	65	45	frame-palette:19;waitTicks:26	1:3;2:3;3:3;7:27;8:14;9:15
+ui_tour_v	1	COMMAND	234	81	52	frame-palette:21;pumpAndRedraw:1;waitTicks:30	1:17;2:17;3:17;7:12;8:9;9:9
+ui_tour_v	2	COMMAND	302	44	28	frame-palette:14;waitTicks:14	1:12;2:12;3:12;7:4;8:2;9:2
+ui_tour_v	3	COMMAND	169	9	6	frame-palette:6	1:2;2:2;3:2;7:1;8:1;9:1
+ui_tour_v	4	COMMAND	157	18	12	frame-palette:4;waitTicks:8	1:6;2:6;3:6
+ui_tour_v	5	COMMAND	135	24	16	frame-palette:8;waitTicks:8	1:4;2:4;3:4;7:4;8:4;9:4
