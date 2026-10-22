@@ -40,8 +40,9 @@ from port.test import sve_refs
 pytestmark = pytest.mark.port
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SCENARIOS = ("cov_r_sve", "cov_r_reload")
-SAVES_DIR = "Saved Games/"
+SCENARIOS = ("cov_r_sve", "cov_r_reload", "cov_r_course")
+# files the original writes that the port does not: the course screenshots saveThumbAndFull takes (rendering, phase 5)
+NOT_PORTED = ("Thumb.jpg", "Full.jpg")
 FIELDS = ROOT / "re" / "model" / "sve_fields.tsv"
 
 
@@ -76,22 +77,36 @@ def _first_diff(a: bytes, b: bytes) -> str:
 HEADER = 0x64
 
 
-def _compare(got: bytes | None, want: bytes) -> tuple[str, str]:
-    """(failure, residue note) for one written file; '' when that part is equal."""
+def _headers(name: str) -> int:
+    """0x64-byte g_textBuffer header lines at the start of the file: one in a saved game (saveGame), two in a course file
+    (saveCourse: the title line and the course-record line); the info file .srf has none (compared whole)."""
+    low = name.lower()
+    return 1 if low.endswith(".sve") else 2 if low.endswith(".cse") else 0
+
+
+def _compare(got: bytes | None, want: bytes, name: str = ".sve") -> tuple[str, str]:
+    """(failure, residue note) for one written file; '' when that part is equal. Each header line is compared up to and
+    including its NUL; the bytes after it are residue (U-1060)."""
     if got is None:
         return "the port has no such file (the original wrote it)", ""
     if len(got) != len(want):
         return _first_diff(got, want), ""
-    nul = want.find(0, 0, HEADER)
-    text = HEADER if nul < 0 else nul + 1
-    if got[:text] != want[:text]:
-        return "header text: " + _first_diff(got[:text], want[:text]), ""
-    if got[HEADER:] != want[HEADER:]:
-        k = next(i for i in range(HEADER, len(want)) if got[i] != want[i])
-        nd = sum(1 for i in range(HEADER, len(want)) if got[i] != want[i])
-        return (f"body: {nd} bytes differ, first at 0x{k:x} ({_field_at(k)}): port {got[k]:02x} original {want[k]:02x}"), ""
-    nres = sum(1 for i in range(text, HEADER) if got[i] != want[i])
-    return "", (f"{nres} header residue bytes after the NUL at 0x{text - 1:x}" if nres else "")
+    body = HEADER * _headers(name)
+    notes = []
+    for h in range(0, body, HEADER):
+        nul = want.find(0, h, h + HEADER)
+        text = h + HEADER if nul < 0 else nul + 1
+        if got[h:text] != want[h:text]:
+            return f"header line {h // HEADER} text: " + _first_diff(got[h:text], want[h:text]), ""
+        nres = sum(1 for i in range(text, h + HEADER) if got[i] != want[i])
+        if nres:
+            notes.append(f"{nres} residue bytes after line {h // HEADER}'s NUL at 0x{text - 1:x}")
+    if got[body:] != want[body:]:
+        k = next(i for i in range(body, len(want)) if got[i] != want[i])
+        nd = sum(1 for i in range(body, len(want)) if got[i] != want[i])
+        where = f" ({_field_at(k)})" if body == HEADER else ""
+        return (f"body: {nd} bytes differ, first at 0x{k:x}{where}: port {got[k]:02x} original {want[k]:02x}"), ""
+    return "", "; ".join(notes)
 
 
 def roundtrip(lib: L.Lib, row: dict) -> tuple[SG.SegmentResult, dict[str, str], int, dict[str, str]]:
@@ -102,17 +117,28 @@ def roundtrip(lib: L.Lib, row: dict) -> tuple[SG.SegmentResult, dict[str, str], 
     if orig is None:
         pytest.skip(f"no collected saves for {scen}@{end} (port/test/sve_refs.py collect {scen})")
     seg = SG.load_segment(SG.segment_dir(row))
-    install = {n: (SG.INSTALL / "Saved Games" / n).read_bytes() for n in orig
-               if (SG.INSTALL / "Saved Games" / n).exists()}
+    disk = {n: (SG.INSTALL / sve_refs.logical(n)).read_bytes() for n in orig
+            if (SG.INSTALL / sve_refs.logical(n)).exists()}
+    # the files the original held at the segment's start (a load before it can autosave): given to the port in its
+    # overlay where they differ from the install, and the baseline "written in the segment" is judged against
+    start = sve_refs.load(scen, row["start_checkpoint"])
+    install = dict(disk) if start is None else start
     bad, residue, written = {}, {}, 0
+
+    def before(st):
+        for name, data in (start or {}).items():
+            if disk.get(name) != data:
+                st.files_put(sve_refs.logical(name), data)
 
     def after(st, res):
         nonlocal written
         for name, want in orig.items():
-            got = st.files_read(SAVES_DIR + name)
-            if install.get(name) != want:
+            got = st.files_read(sve_refs.logical(name))
+            if install.get(name) != want and name.endswith(NOT_PORTED):
+                residue[name] = "written by the original, not by the port (rendering, phase 5)"
+            elif install.get(name) != want:
                 written += 1
-                why, note = _compare(got, want)
+                why, note = _compare(got, want, name)
                 if why:
                     bad[name] = why
                 if note:
@@ -120,7 +146,7 @@ def roundtrip(lib: L.Lib, row: dict) -> tuple[SG.SegmentResult, dict[str, str], 
             elif got != want:
                 bad[name] = "unchanged by the original, changed by the port: " + _first_diff(got or b"", want)
 
-    res = SG.SegmentRunner(lib).run(seg, after=after)
+    res = SG.SegmentRunner(lib).run(seg, after=after, before=before)
     return res, bad, written, residue
 
 
@@ -161,7 +187,10 @@ NEGCTL = [("cov_r_sve", "saveGame", 4, "one body byte of the file flipped (no re
           ("cov_r_reload", "saveGame", 1, "no date in the header", None),
           ("cov_r_reload", "saveGame", 3, "a 0x63-byte header", None),
           ("cov_r_reload", "loadGame", 9, "the third body field is skipped on load", None),
-          ("cov_r_sve", "pumpAndRedraw", 3, "the SimFoto wait not paced by its clock reads", None)]
+          ("cov_r_sve", "pumpAndRedraw", 3, "the SimFoto wait not paced by its clock reads", None),
+          ("cov_r_course", "saveCourse", 2, "a 4-byte end marker in the course file", None),
+          ("cov_r_course", "saveCourse", 1, "no course body (the tournament then loads the port's broken file)", "FAIL"),
+          ("cov_r_course", "flushCourseInfo", 2, "the info file's Holes line without the - 1", "PASS")]
 
 
 @pytest.mark.parametrize("scen,fname,mode,what,seg", NEGCTL)

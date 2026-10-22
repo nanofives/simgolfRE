@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "portsim/arith.h"
+#include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
@@ -53,7 +54,7 @@ int g_negctl_snapshot_tables = 0;
 int g_negctl_build_scene_sprites = 0;
 int g_negctl_draw_world_objects = 0;
 int g_negctl_draw_flying_ball = 0;
-int g_negctl_flush_course_info = 0;
+int g_negctl_flush_course_info = 0;   // 1 = the path is not cleared, 2 = the info file says Holes = g_holesPlusOne
 int g_negctl_start_message = 0;
 int g_negctl_append_cents = 0;
 int g_negctl_log_tick = 0;

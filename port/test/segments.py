@@ -211,9 +211,10 @@ class SegmentRunner:
             return f"record 0 hash differs for {len(bad)} sim objects: {', '.join(bad[:6])}"
         return None
 
-    def run(self, seg: Segment, after=None) -> SegmentResult:
-        """`after(st, res)`, when given, runs once the segment has run, on the same context (phase 4: the .sve round
-        trip reads the files the port wrote back through it)."""
+    def run(self, seg: Segment, after=None, before=None) -> SegmentResult:
+        """`before(st)` runs once the game files are attached and before the segment runs; `after(st, res)` once it has run,
+        on the same context (phase 4: the .sve round trip gives the port the files the original held at the segment's
+        start and reads the files the port wrote back)."""
         res = SegmentResult(seg.name, "LOAD_FAILED", frames_expected=len(seg.records) - 1)
         with self.lib.state() as st:
             # phase 3.7a: the GameState at the original data section's base, as in the vector runner: some sim-class
@@ -224,6 +225,8 @@ class SegmentRunner:
                 st.files_root(INSTALL)
             for fname, data in segment_files.files_for(seg.scenario).items():   # overlay only: original/ is not written
                 st.files_put(fname, data)
+            if before is not None:
+                before(st)
             # phase 3.8 (38a): the widgets' Text_put widths from the host GDI provider, detached before the context is
             # freed (the provider maps are keyed by the context's address, which a later context can reuse)
             gdi = self.text_metrics == "gdi" and self.lib.has("gditext.attach")

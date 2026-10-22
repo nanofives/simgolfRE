@@ -3586,9 +3586,10 @@ def _cov_r_written():
     return sorted(p.name for p in _cov_r_saves_dir().glob("*.sve") if p.name.lower() not in R_SAVES_PRISTINE)
 
 
-def _cov_r_collect(c, name):
-    """After checkpoint `name`: copy every save the game has written (new names, and the autosaves when they changed) into
-    <run>/saves/<name>/, with an index of sha256s."""
+def _cov_r_collect(c, name, extra=()):
+    """Copy every save in the saved-games folder into <run>/saves/<name>/ with an index of sha256s (keys: the file names).
+    `extra`: more install folders (relative, e.g. Themes/Championship) whose files are copied too, keyed by their path
+    relative to the install with forward slashes (stored under the same folder with '/' as '__')."""
     import hashlib
     import json
     import shutil as _sh
@@ -3598,6 +3599,13 @@ def _cov_r_collect(c, name):
     for p in sorted(_cov_r_saves_dir().glob("*.sve")):
         _sh.copy2(p, out / p.name)
         idx[p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
+    root = _cov_r_saves_dir().parent
+    for rel in extra:
+        for p in sorted((root / rel).glob("*")):
+            if p.is_file():
+                key = f"{rel}/{p.name}"
+                _sh.copy2(p, out / key.replace("/", "__"))
+                idx[key] = hashlib.sha256(p.read_bytes()).hexdigest()
     (out / "index.json").write_text(json.dumps(idx, indent=1))
 
 
@@ -3625,6 +3633,7 @@ def cov_r_sve(c):
     yield from c.checkpoint("loaded")
     for _ in range(20):
         yield from c.sleep(1000)
+    _cov_r_collect(c, "run_a")    # the files a segment starting here starts from (the load can autosave before it)
     yield from c.checkpoint("run_a")
     yield from _cova_load_row(c, _cov_r_row("stories5.sve"), False)    # an original save through the in-game browser
     for _ in range(20):
@@ -3658,6 +3667,7 @@ def cov_r_reload(c):
     yield from c.checkpoint("loaded")
     for _ in range(20):
         yield from c.sleep(1000)
+    _cov_r_collect(c, "run_a")    # the files a segment starting here starts from (the load can autosave before it)
     yield from c.checkpoint("run_a")
     yield from _cova_esc(c, 1)
     yield from _cova_load_row(c, _cov_r_row("stories5.sve"), False)
@@ -3687,3 +3697,44 @@ def cov_r_reload(c):
 
 
 SCENARIOS["cov_r_reload"] = {"env": {}, "phases": [], "lockstep": cov_r_reload}
+
+
+R_CHAMP_DIR = "Themes/Championship"
+
+
+def cov_r_course(c):
+    """Phase 4 course-file round trip. Load stories9.sve (Harold's Keep GC, title menu); play; the 'C' key builds
+    Themes/Championship/<title>.cse and, as no such file exists, saveCourse 0x0040b680 writes it (mainLoop key 0x43;
+    g_flags bit 0x200000 clear); Exit the Game -> "So long for now." (the quit save, back to the title); Play a
+    Championship -> Easy -> the first course in the list, which is the file just written (Harold's Keep GC sorts before the
+    install's Ocean's Edge MC) -> Gary Golf -> the tournament on it: loadGameBrowserScreen's championship load
+    (loadCourse(0)) reads the file back. The RECORD run stops unless the 'C' key wrote exactly one new .cse."""
+    yield from _cov_b_menu(c)
+    yield from _cova_load_row(c, 4, True)                              # stories9 (rows: 0, 1 autosaves, 2 mood5, 3, 4)
+    yield from c.checkpoint("loaded")
+    for _ in range(10):
+        yield from c.sleep(1000)
+    _cov_r_collect(c, "run_a", extra=(R_CHAMP_DIR,))   # the files the segment starts from
+    yield from c.checkpoint("run_a")
+    root = _cov_r_saves_dir().parent / R_CHAMP_DIR
+    before = {p.name for p in root.glob("*.cse")}
+    yield from _cova_esc(c, 1)
+    yield from _cova_char(c, "C", settle=3000)
+    yield from _cova_esc(c, 1)
+    new = sorted({p.name for p in root.glob("*.cse")} - before)
+    if c.run.mode == "record" and len(new) != 1:
+        raise RuntimeError(f"the C key wrote {new}, expected one new .cse")
+    for _ in range(5):
+        yield from c.sleep(1000)
+    yield from _cova_exit_menu(c)
+    yield from c.click(260, 211); yield from c.sleep(4000)       # "So long for now." -> quit save -> title
+    yield from _cov_b_menu(c)
+    yield from _cov_b_start_champ(c, (390, 125))                     # Easy, course row 0, Gary Golf
+    yield from _cov_b_hud(c, name="champ_hud")
+    for _ in range(20):
+        yield from c.sleep(1000)
+    _cov_r_collect(c, "end", extra=(R_CHAMP_DIR,))   # before the checkpoint: a script is not resumed after its last one
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_r_course"] = {"env": {}, "phases": [], "lockstep": cov_r_course}

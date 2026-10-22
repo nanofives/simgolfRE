@@ -265,18 +265,59 @@ struct Rend : TkBase {
   // (c3eu.cpp) cuts it at its last '.' and appends the info-file extension (f_strpool_4c7818+0x110), fills g_textBuffer
   // with the course title (appendCourseTitle(1)) and then name string 0x14 (appendString), and writes the info file;
   // saveThumbAndFull (c3fa.cpp) cuts the path again and appends the thumbnail and full-size image names
-  // (f_strpool_4c7818+0x20, +0x14) around its two screenshots. The file writes and screenshots are dropped (output files,
-  // not state); the path edits, the text and the cleared first byte are kept.
+  // (f_strpool_4c7818+0x20, +0x14) around its two screenshots. The screenshots are dropped (rendering, phase 5); the path
+  // edits, the text, the cleared first byte and (phase 4) the info file are kept.
+  std::string cstr(uint32_t s) {
+    std::string out;
+    for (uint8_t b; (b = GU8(s)) != 0; ++s) out.push_back(static_cast<char>(b));
+    return out;
+  }
+  // one fprintf of writeCourseInfo: the exe's own format at f_strpool_4c7818 + off with one or two arguments
+  template <class... A> std::string fmt(uint32_t off, A... a) {
+    const std::string f = cstr(GS(f_strpool_4c7818) + off);
+    char b[512];
+    const int n = std::snprintf(b, sizeof b, f.c_str(), a...);
+    return std::string(b, n > 0 ? static_cast<size_t>(n) : 0);
+  }
+  // writeCourseInfo (c3eu.cpp): the [Course] info file, every fprintf in the original's order, written through the context's
+  // GameFiles when the path's file is closed. The original opens it with mode "wt" (f_strpool_4c7818+0x10c): the CRT's text
+  // mode writes each LF as CR LF. Its fopen result is never tested; with no writable GameFiles the port writes nothing.
+  void writeCourseInfo(uint32_t path) {
+    const int mode = SG_NEGCTL(g_negctl_flush_course_info);
+    GameState &g = gs();
+    std::string out = fmt(0x100);
+    GU8(kBuf) = 0;
+    cc("appendCourseTitle", 1);
+    out += fmt(0xf4, cstr(kBuf).c_str());
+    out += fmt(0xe8, g.g_holesPlusOne - (mode == 2 ? 0 : 1));
+    out += fmt(0xe0, g.g_coursePar);
+    out += fmt(0xd4, g.g_courseYards);
+    out += fmt(0xc8, cstr(GU32(GS(f_ptrtab_4c3078) + 4u * (static_cast<uint32_t>(g.g_courseType) & 3u))).c_str());
+    out += fmt(0xbc, cstr(GS(g_theme)).c_str());
+    out += fmt(0xac, cstr(GS(g_golferTypes) + 0x10).c_str());
+    GU8(kBuf) = 0;
+    cc("appendString", 0x14);
+    out += fmt(0x98, g.g_bestRounds[0], cstr(kBuf).c_str());
+    out += fmt(0x8c, static_cast<int32_t>(static_cast<uint32_t>(g.g_cash_div100) * 100u));
+    out += fmt(0x7c, g.g_funRating);
+    out += fmt(0x68, static_cast<double>(g.g_skillRatingX100) * 0.01);
+    out += fmt(0x54, static_cast<double>(g.g_lengthSkillX100) * 0.01);
+    out += fmt(0x40, static_cast<double>(g.g_accuracySkillX100) * 0.01);
+    out += fmt(0x2c, static_cast<double>(g.g_imaginationX100) * 0.01);
+    std::vector<uint8_t> bytes;
+    for (char ch : out) {
+      if (ch == '\n') bytes.push_back('\r');
+      bytes.push_back(static_cast<uint8_t>(ch));
+    }
+    if (ctx.files_ptr != nullptr && ctx.files().writable()) ctx.files().write(cstr(path), bytes);
+  }
   void flushCourseInfo() {
     const uint32_t path = GS(g_pendingCourseInfo);
     if (GU8(path) == 0) return;
     uint32_t dot = vstrrchr(path, '.');
     if (dot != 0) GU8(dot) = 0;
     StrCat(path, GS(f_strpool_4c7818) + 0x110);
-    GU8(kBuf) = 0;
-    cc("appendCourseTitle", 1);
-    GU8(kBuf) = 0;
-    cc("appendString", 0x14);
+    writeCourseInfo(path);
     dot = vstrrchr(path, '.');
     if (dot != 0) GU8(dot) = 0;
     StrCat(path, GS(f_strpool_4c7818) + 0x20);

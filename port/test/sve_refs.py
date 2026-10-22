@@ -52,20 +52,32 @@ def collect(scenario: str) -> dict:
         dst.mkdir(parents=True)
         src = ref_run[cp] / "saves" / cp
         for name in idx:
-            shutil.copy2(src / name, dst / name)
+            shutil.copy2(src / disk_name(name), dst / disk_name(name))
         (dst / "index.json").write_text(json.dumps({"files": idx, "runs": [str(r.relative_to(ROOT)) for r in runs]},
                                                    indent=1))
         print(f"{scenario}@{cp}: {len(idx)} files, {len(runs)} runs agree -> {dst.relative_to(ROOT)}")
     return ref
 
 
+def disk_name(key: str) -> str:
+    """Index keys are saved-game file names, or install-relative paths such as Themes/Championship/x.cse (re/tools/scenario.py
+    _cov_r_collect's `extra`), stored with '/' as '__'."""
+    return key.replace("/", "__")
+
+
+def logical(key: str) -> str:
+    """The GameFiles name of an index key."""
+    return key if "/" in key else "Saved Games/" + key
+
+
 def load(scenario: str, checkpoint: str) -> dict[str, bytes] | None:
-    """{file name: bytes} the original's saved-games directory held at `checkpoint`, None when not collected."""
+    """{index key: bytes} of the files the original's install held at `checkpoint` (the saved games, plus any collected
+    install folder), None when not collected."""
     d = CORPUS / scenario / checkpoint
     if not (d / "index.json").exists():
         return None
     idx = json.loads((d / "index.json").read_text())["files"]
-    return {n: (d / n).read_bytes() for n in idx}
+    return {n: (d / disk_name(n)).read_bytes() for n in idx}
 
 
 if __name__ == "__main__":

@@ -1304,6 +1304,13 @@ wait reads its clock sites through the source and a Blocking dispatch waits unti
 is unread. The 200 earlier segments keep their digests. g_redrawPending / gDirtyFlagA / gDirtyFlagB are class `render`, which
 the segment gate does not compare. Diagnosing a modal-wait slip: `C3FT_CALL_LOG=<va>:<n>:r,...` on a `scenario_refs.py run`
 logs the original's main-thread calls with returns (calls.json); SG_TICK_INPUT_LOG takes a FILE NAME, not 1.
+Course files (2026-10-22, same write-up): cov_r_course saves stories9's course with the 'C' key (Themes\Championship\<title>.cse
+via saveCourse, then flushCourseInfo writes the `[Course]` .srf), quits to the title and plays a championship on that file.
+The port now WRITES the .srf (writeCourseInfo in tick_render.inc: the exe's formats from f_strpool_4c7818, text mode CR LF);
+.cse body + both header texts, .srf and &QuitSave.sve equal; the Thumb / Full .jpg screenshots are phase 5 (reported). Each
+cov_r_* scenario collects the folders at run_a too, and the test seeds the port with the original's files at the segment
+start: a load before the segment can write an autosave the install's copy lacks. Controls RED incl. saveCourse mode 1 (the
+tournament loads the port's broken file and faults). 15 tests x64 + Win32; gate 203 / 203, earlier digests unchanged.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

@@ -315,17 +315,25 @@ def test_take_and_clear_readers(portlib):
                 assert _r32(st, _off(portlib, sym)) == left, (fn, mode)
 
 
+@need_segments
 def test_flush_course_info(portlib):
-    """A pending course-info path gets the info-file extension, then the two image names, and is consumed (byte 0 = 0)."""
-    for mode, first in ((0, 0), (1, ord("c"))):
+    """A pending course-info path gets the info-file extension, then the two image names, and is consumed (byte 0 = 0); on
+    the way the [Course] info file course.srf is written (phase 4: text mode, CR LF). On a real frame-head state: the info
+    file reads the exe's format strings and the course-type name table, which a zero state does not hold."""
+    for mode, first in ((0, 0), (1, ord("c")), (2, 0)):
         with portlib.state() as st:
+            _from_segment(st)
             off = _off(portlib, "g_pendingCourseInfo")
             st.write(off, b"course.sve\0")
+            holes = struct.unpack("<i", st.read(_off(portlib, "g_holesPlusOne"), 4))[0]
             portlib.negctl("flushCourseInfo", mode)
             st.call("flushCourseInfo", [])
             portlib.negctl_reset()
             assert st.read(off, 1)[0] == first
             assert st.read(off + 1, 5) == b"ourse"
+            srf = st.files_read("course.srf")
+            assert srf is not None and srf.startswith(b"[Course]\r\nName=") and srf.endswith(b"\r\n")
+            assert f"\r\nHoles={holes - (0 if mode == 2 else 1)}\r\n".encode() in srf
 
 
 def _from_segment(st, name="sandbox_basic/00"):

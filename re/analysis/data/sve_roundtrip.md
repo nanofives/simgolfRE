@@ -77,7 +77,41 @@ InputSource::pace (commands.h, tick.cpp TraceInput, commands.cpp pump_and_redraw
 3 controls; scenarios cov_r_sve / cov_r_reload (re/tools/scenario.py, family prefix `cov_r` in re/tools/scenario_refs.py);
 re/analysis/data/scenario_refs.json, re/port/segments_manifest.tsv. Local: port/corpus/saves/, log/p4/.
 
+## Course files (2026-10-22)
+
+Scenario `cov_r_course`: title menu, load stories9.sve (Harold's Keep GC); 10 s; Esc, the 'C' key: mainLoop key 0x43 (g_flags
+bit 0x200000 clear) builds `Themes\Championship\<title>.cse` (strings at 0x004c5328 and 0x004c5f38), fileExists finds none,
+saveCourse 0x0040b680 writes it and sets g_pendingCourseInfo; the next frame's flushCourseInfo writes the `[Course]` info
+file `.srf` (writeCourseInfo 0x00431fa0, fopen mode `wt`, 15 fprintf lines with the exe's formats at 0x004c7844..0x004c7918)
+and saveThumbAndFull the two screenshots; then Exit the Game -> "So long for now." (writes `&QuitSave.sve`) -> title ->
+Play a Championship -> Easy -> course row 0 (Harold's Keep GC sorts before the install's Ocean's Edge MC) -> Gary Golf: the
+tournament's loadCourse(0) reads the file just written. One accepted COMMAND segment, run_a -> end, 409 frames; 11 runs of
+the original agree on all 16 files.
+
+The port wrote the `.cse` already (saveCourse, phase 3.8); the `.srf` was dropped as an output file. It is now written:
+`writeCourseInfo` in port/src/sim/tick_render.inc (inside flushCourseInfo, same order as the original, the formats read
+from f_strpool_4c7818, the type name through f_ptrtab_4c3078, LF written as CR LF for the text mode).
+
+| file the original wrote | port |
+|---|---|
+| `Themes/Championship/Harold's Keep GC.cse` | body equal; both 0x64-byte header lines equal up to their NUL (52 residue bytes after each, U-1060) |
+| `Themes/Championship/Harold's Keep GC.srf` | equal, every byte |
+| `Saved Games/&QuitSave.sve` | equal, every byte (residue included) |
+| `...GCThumb.jpg`, `...GCFull.jpg` | not written (screenshots: rendering, phase 5), reported |
+
+Controls RED: saveCourse mode 2 (a 4-byte end marker); flushCourseInfo mode 2 (`Holes=` without the - 1; segment still PASS,
+only the bytes see it); saveCourse mode 1 (no course body): the tournament loads the port's broken file and the segment
+FAILS with a fault, so the championship load reads the file the port wrote.
+
+**Start files.** The first course run failed on `&AutoSave2.sve`: the original writes it while loading stories9, before the
+segment's start checkpoint, so the port (starting from the install's copy) and the original disagreed on a file neither
+wrote in the segment. Every cov_r_* scenario now also collects the folder at `run_a` (a Python-side copy; replays SAME as
+det_b), and the test gives the port the original's files at the segment's start (in its overlay where they differ from the
+install) and judges `written` against them.
+
+Result: test_sve_roundtrip.py 15 passed on x64 and Win32; segment gate 203 / 203 on both, digests equal, the 201 earlier
+digests unchanged.
+
 ## Not done here
 
-Course files (saveCourse / loadCourse round trip through a championship course) and the asset manifest of the full Setup
-path (loadInterfaceArt(full != 0), U-1050) are the rest of phase 4.
+The asset manifest of the full Setup path (loadInterfaceArt(full != 0), U-1050) is the rest of phase 4.
