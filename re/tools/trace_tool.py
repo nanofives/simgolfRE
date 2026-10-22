@@ -66,6 +66,11 @@ def install(S, scenario: str, mode: str, state: dict):
                         self.trec_chunks[pl["seq"]] = bytes(data or b"")
                         if pl.get("final"):
                             self.trec_final = pl["seq"]
+                            # an agent ending at ExitProcess waits for this before the process goes (trace_rec.js)
+                            try:
+                                self.g.scripts[-1].post({"type": "trec_ack"})
+                            except Exception:
+                                pass
                     elif pl["type"] == "trec_stats":
                         self.trec_stats = pl
                     return

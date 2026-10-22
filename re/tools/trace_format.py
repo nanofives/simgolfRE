@@ -256,6 +256,7 @@ def validate(tr: Trace, virtual_clock=True) -> list[str]:
     last_pos = 0
     finals = 0
     ended = False
+    by_exit = False
     for i, r in enumerate(tr.records):
         if ended:
             errs.append(f"record {i} ({r.name}) after END")
@@ -305,14 +306,15 @@ def validate(tr: Trace, virtual_clock=True) -> list[str]:
             finals += f["final"]
         elif r.type == END:
             ended = True
+            by_exit = r.sub == 1
             if f["n"] != n:
                 errs.append(f"END n {f['n']} != {n} clock calls")
             if f["frames"] != frame_i or f["polls"] != poll_i or f["dumps"] != dumps:
                 errs.append(f"END counts {f['frames']}/{f['polls']}/{f['dumps']} != {frame_i}/{poll_i}/{dumps}")
     if not ended:
         errs.append("no END record")
-    if finals != 1:
-        errs.append(f"{finals} final polls (expected 1)")
+    if finals != (0 if ended and by_exit else 1):
+        errs.append(f"{finals} final polls (expected {0 if ended and by_exit else 1})")
     return errs
 
 

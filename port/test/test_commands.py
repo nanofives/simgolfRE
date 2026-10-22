@@ -1143,7 +1143,9 @@ def test_every_command_function_has_a_negctl(portlib):
 SHARED_NEGCTL = {"showInfoCursorPanel", "drawGolferActionPanel", "showHistographScreen", "showPlayerCommentsReport",
                  "pumpLight"}
 # functions whose negative control is judged by a state test instead (name -> test)
-BLIND_OR_STATE = {"flushRedraw": "test_flush_redraw_state"}
+BLIND_OR_STATE = {"flushRedraw": "test_flush_redraw_state",
+                  # phase 4: judged by the quit boot run (its mode 1 makes cov_r_quit run out of input)
+                  "showCreditsScreen": "test_boot.py::test_quit_negctl_reads_red"}
 
 
 def test_flush_redraw_state(portlib):

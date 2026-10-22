@@ -230,6 +230,10 @@ def setup(scen: str, instance: pathlib.Path):
             R = __import__("c3fyb_run")
         else:
             R = None
+            import scenario as SCN0
+            # a lockstep scenario that ends with the game's own exit (cov_r_quit) needs c3fya_run's exit support
+            if getattr((SCN0.SCENARIOS.get(scen) or {}).get("lockstep"), "expect_exit", False):
+                R = __import__("c3fya_run")
         import s36a_run as A
         S = A.S
         if fam == "s36a":

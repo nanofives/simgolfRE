@@ -112,6 +112,34 @@ install) and judges `written` against them.
 Result: test_sve_roundtrip.py 15 passed on x64 and Win32; segment gate 203 / 203 on both, digests equal, the 201 earlier
 digests unchanged.
 
+## The quit (2026-10-22, U-1050 part 2)
+
+Scenario `cov_r_quit` (re/tools/scenario.py; pinned on instances\p4q, a fresh copy of original\ with the pinned shim): cov_a_quit's
+path (a Sandbox session, Exit the Game answered "stay", then "So long for now"; a second session saved first with the proposed
+name; the title menu's exit icon), with the saved games, Themes, Themes/Standard and top10.sve collected at the start and just
+before the credits checkpoint. mainLoop's QUIT block has by then written top10.sve (__open / __write / __close of the
+0x618-byte g_topScores block) and promptAndSaveFile(0, -2, 0) Themes/Default.pro; the closing Bink plays, the credits scroll
+until the scripted Esc, mainLoop returns and the process exits.
+
+- Recording a quitting game: trace_rec.js now ends the trace at ExitProcess (END sub 1) and holds the exiting thread until
+  Python acknowledges the last chunk (`trec_ack`); trace_format's validator accepts zero final polls for such a trace. An
+  exiting lockstep scenario of the s36a family loads c3fya_run's exit support (scenario_refs.py).
+- The original's files: 12 runs (record, det_a..c, three captures, restarts, two trace recordings) agree; Default.pro only on
+  its records (the type, phrase and skill records and the marker, 0x72a bytes): the portrait PCX that follows differs in one
+  byte (file offset 0x760, an uninitialised stack byte Image::savePcx writes, round 29), and the port does not write the
+  portrait (U-0979). sve_refs compares character files that way (`compared_bytes`). top10.sve is written with the bytes it
+  was loaded with (no championship in the scenario), so its control (__write four bytes short) shows the port writes it.
+- The port: a boot run (port/test/boot.py `to_end`: the last frame runs on to the end of the trace) passes all 301 records,
+  reaches mainLoop's return, and top10.sve, Default.pro's records, &QuitSave.sve and `Ocean's Edge 2 March 2001.sve` equal the
+  original's. New in the port: `__open` / `__write` / `__close` (saveload.cpp, a descriptor table per context in
+  `Ctx::lowio`), showCreditsScreen (commands_screens.inc), drops playAudioFile and PaletteCache::dtor (no sim-class write in
+  their call closures), FontRef +8 = -1 from gditext.createFont (every FontRef of the original holds it; the credits' line
+  height reads it).
+- Controls RED (test_boot.py test_quit_negctl_reads_red): __write mode 1 (top10.sve), promptAndSaveFile mode 1 (Default.pro),
+  saveGame mode 4 (&QuitSave.sve), showCreditsScreen mode 1 (the key does not end the scroll: the run runs out of input).
+- One recording was contaminated by a real volume key (VK 174) with no harness delivery and ended early (U-1067); it was
+  discarded and recorded again.
+
 ## Not done here
 
-The asset manifest of the full Setup path (loadInterfaceArt(full != 0), U-1050) is the rest of phase 4.
+Course screenshots (Thumb / Full .jpg) and character portraits are rendering (phase 5).

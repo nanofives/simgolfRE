@@ -70,7 +70,10 @@ def scenarios() -> list[str]:
     return sorted(p.stem for p in TRACES.glob("*.trace") if (CAPTURES / p.stem / "c_a" / "framehash.bin").exists())
 
 
-def run(scenario: str, lib: L.Lib | None = None, max_records: int | None = None, before=None, after=None) -> BootResult:
+def run(scenario: str, lib: L.Lib | None = None, max_records: int | None = None, before=None, after=None,
+        to_end: bool = False) -> BootResult:
+    """to_end: after the last record the last frame runs on to the end of the trace (cov_r_quit: the title menu's quit, whose
+    files `after` can read); the record comparison is the same."""
     lib = lib or L.load()
     symbols, exp = expected_records(scenario)
     tr = TRACES / f"{scenario}.trace"
@@ -100,7 +103,7 @@ def run(scenario: str, lib: L.Lib | None = None, max_records: int | None = None,
         try:
             if before:
                 before(st)
-            code, done, ts, hs = st.run_boot(tr.read_bytes(), n)
+            code, done, ts, hs = st.run_boot(tr.read_bytes(), n + 1 if to_end else n)
             res.run_detail = SG.SegmentRunner(lib)._detail(st)
             if after:
                 after(st, res)

@@ -126,3 +126,59 @@ def test_negctl_reads_red(portlib, scen, fname, mode, what):
     finally:
         portlib.negctl_reset()
     assert r.status not in ("PASS", "KNOWN"), f"{fname} mode {mode} ({what}) read GREEN on {scen}"
+
+
+# ------------------------------------------------------------------------------------------------ the quit (U-1050 part 2)
+# cov_r_quit (re/tools/scenario.py): a Sandbox session, Exit the Game with its three answers, a second session saved before
+# leaving, then the title menu's exit icon. mainLoop's QUIT block writes top10.sve (__open / __write / __close of the 0x618-byte
+# g_topScores block), promptAndSaveFile(0, -2, 0) Themes/Default.pro, the closing Bink plays (dropped), the credits scroll
+# until the recorded Esc, mainLoop returns. The boot run goes on past the last record (to_end) to the end of the trace, and
+# then every file the original wrote (its end folder against its start folder: port/test/sve_refs.py, 11 runs agree) and
+# top10.sve must be in the port's files with the same compared bytes (a character file: its records, sve_refs.compared_bytes).
+from port.test import sve_refs  # noqa: E402
+
+QUIT = "cov_r_quit"
+# (function, mode, what it does wrong, the file it must break or None = the run itself fails)
+QUIT_NEGCTL = [("__write", 1, "top10.sve written four bytes short", "top10.sve"),
+               ("promptAndSaveFile", 1, "the skill record's first byte flipped", "Themes/Default.pro"),
+               ("saveGame", 4, "one body byte of the save flipped", "&QuitSave.sve"),
+               ("showCreditsScreen", 1, "a key does not end the scroll", None)]
+
+
+def _quit_run(portlib):
+    end, start = sve_refs.load(QUIT, "end"), sve_refs.load(QUIT, "run_a")
+    if end is None or start is None:
+        pytest.skip("no collected cov_r_quit files (~/bin/py -3.12 -m port.test.sve_refs collect cov_r_quit)")
+    _need(QUIT)
+    want = {k: v for k, v in end.items() if start.get(k) != v or k == "top10.sve"}
+    got = {}
+
+    def after(st, res):
+        for k in want:
+            got[k] = st.files_read(sve_refs.logical(k))
+
+    r = B.run(QUIT, portlib, after=after, to_end=True)
+    bad = {k: ("missing" if got.get(k) is None else "differs") for k, v in want.items()
+           if got.get(k) is None or sve_refs.compared_bytes(k, got[k]) != sve_refs.compared_bytes(k, v)}
+    return r, want, bad
+
+
+def test_quit_writes_the_originals_files(portlib):
+    r, want, bad = _quit_run(portlib)
+    assert r.status == "PASS", f"{r.status} {r.detail} | {r.run_detail[:300]}"
+    assert "mainLoop returned" in r.run_detail, r.run_detail[:300]
+    assert {"top10.sve", "Themes/Default.pro", "&QuitSave.sve"} <= set(want), sorted(want)
+    assert not bad, bad
+
+
+@pytest.mark.parametrize("fname,mode,what,target", QUIT_NEGCTL)
+def test_quit_negctl_reads_red(portlib, fname, mode, what, target):
+    portlib.negctl(fname, mode)
+    try:
+        r, want, bad = _quit_run(portlib)
+    finally:
+        portlib.negctl_reset()
+    if target is None:
+        assert r.status != "PASS" or "mainLoop returned" not in r.run_detail, f"{fname} mode {mode} ({what}) read GREEN"
+    else:
+        assert target in bad, f"{fname} mode {mode} ({what}) left {target} equal ({r.status}, bad {bad})"

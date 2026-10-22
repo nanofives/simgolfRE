@@ -46,6 +46,7 @@ int g_negctl_save_course = 0;   // 1 = no course body, 2 = a 4-byte marker
 int g_negctl_save_game_dialog = 0;   // 1 = a refused name goes on, 2 = an existing file is not asked about
 int g_negctl_prompt_and_save_file = 0;   // 1 = the skill record's first byte flipped
 int g_negctl_refresh_terrain = 0;   // 1 = the repaint flag byte is not set
+int g_negctl_lowio = 0;   // 1 = __write writes four bytes short
 int g_negctl_load_top_scores = 0;   // 1 = the name's byte 2 raised by range(0x19), 2 = 0x614 bytes read (phase 4, the boot path)
 
 struct SaveField {
@@ -1004,8 +1005,59 @@ int32_t load_top_scores(Ctx &ctx) {
   return 1;
 }
 
+// ------------------------------------------------------------------------------------------------ __open / __write / __close
+// The static CRT's low-level file calls (FID names: no hooks.csv rows) as mainLoop's QUIT block uses them (ML+0x4ad..ML+0x4ce: top10.sve, the 0x618-byte
+// g_topScores block): __open(name, flags, pmode) gives a descriptor (the lowest free one from 4, the first the CRT hands out,
+// U-0922; -1 when the file cannot be opened), __write(fd, buf, n) appends n bytes and returns n, __close(fd) ends the file (a
+// file opened for writing reaches GameFiles there) and returns 0, -1 for a descriptor that is not open. A flag word with
+// _O_WRONLY or _O_RDWR (bits 0..1) opens for writing, otherwise for reading. Writes go to the context's in-memory overlay:
+// the user's install is never written.
+namespace {
+struct LowIo {
+  std::map<int32_t, IoFile> fds;
+};
+LowIo &lowio(Ctx &ctx) {
+  if (!ctx.lowio) ctx.lowio = std::make_shared<LowIo>();
+  return *static_cast<LowIo *>(ctx.lowio.get());
+}
+}  // namespace
+
+int32_t crt_open(Ctx &ctx, uint32_t name, int32_t flags, int32_t pmode) {
+  (void)pmode;
+  LowIo &io = lowio(ctx);
+  const std::string path = read_str(ctx.mem, name);
+  IoFile f = (flags & 3) != 0 ? open_for_write(ctx, path) : open_for_read(ctx, path);
+  if (!f.open) return -1;
+  int32_t fd = kFirstDescriptor;
+  while (io.fds.count(fd)) ++fd;
+  io.fds[fd] = std::move(f);
+  return fd;
+}
+
+int32_t crt_write(Ctx &ctx, int32_t fd, uint32_t buf, uint32_t n) {
+  LowIo &io = lowio(ctx);
+  auto it = io.fds.find(fd);
+  if (it == io.fds.end()) return -1;
+  if (SG_NEGCTL(g_negctl_lowio) == 1 && n >= 4) n -= 4;   // negative control: four bytes short
+  std::vector<uint8_t> bytes(n);
+  if (n) std::memcpy(bytes.data(), ctx.mem.at(buf, n), n);
+  return it->second.write(bytes.data(), n);
+}
+
+int32_t crt_close(Ctx &ctx, int32_t fd) {
+  LowIo &io = lowio(ctx);
+  auto it = io.fds.find(fd);
+  if (it == io.fds.end()) return -1;
+  const int32_t r = it->second.close(ctx);
+  io.fds.erase(it);
+  return r;
+}
+
 // ------------------------------------------------------------------------------------------------ adapters
 namespace {
+void a_crt_open(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(crt_open(c, a[0], static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]))); }
+void a_crt_write(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(crt_write(c, static_cast<int32_t>(a[0]), a[1], a[2])); }
+void a_crt_close(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(crt_close(c, static_cast<int32_t>(a[0]))); }
 void a_load_top_scores(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(load_top_scores(c)); }
 void a_save_game(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(save_game(c, a[0])); }
 void a_load_game(Ctx &c, const uint32_t *a, Ret &r) {
@@ -1026,6 +1078,9 @@ void a_browser(Ctx &c, const uint32_t *a, Ret &r) {
 
 const FuncDef kFuncs[] = {
     {"loadTopScores", "default", "int", 0, 0, a_load_top_scores, &g_negctl_load_top_scores},
+    {"__open", "default", "int", 3, 0, a_crt_open, &g_negctl_lowio},
+    {"__write", "default", "int", 3, 0, a_crt_write, &g_negctl_lowio},
+    {"__close", "default", "int", 1, 0, a_crt_close, &g_negctl_lowio},
     {"saveGame", "default", "int", 1, 0, a_save_game, &g_negctl_save_game},
     {"loadGame", "default", "int", 4, 0, a_load_game, &g_negctl_load_game},
     {"loadCourse", "default", "int", 1, 0, a_load_course, &g_negctl_load_course},

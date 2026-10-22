@@ -122,6 +122,109 @@ int32_t show_player_comments_report(Ctx &ctx) {
 // waitTicks, then: a button ends it; a key alone returns -1 without pumpLight), pumpLight, and the row mapped to
 // (row / 2) * 3 + 1 + (row & 1) (-1 outside 0..0xc). The four animated sprites divide the frame counter by their sheet
 // sizes (g_sheetCols[0x20e + s], [0x212 + s] for the hovered one): a zero size is the original's #DE.
+// showCreditsScreen (c3en.cpp; the QUIT block's last screen): the lines of the CREDITS section of credits.txt are read
+// (Reader::open over the global reader: the key `#` + section matched case-insensitively against a line stripped of its
+// newline and spaces, then readLine until a line that starts with '#'; each kept line is a malloc'd copy, counted; no
+// section = nothing happens). Then the scroll runs on the clock: t0 at the start, y = 0x258 - (now - t0) / 0x1e per pass
+// (unsigned division), the loop ends when -y exceeds lineH * count + 0x96, on a mouse button or on a key (flushRedraw); while
+// y < 0x258 each pass draws lines from y down, lineH apart, with one pumpMessages per line until y reaches 0x258. lineH is
+// g_fontRef_821020's +0xc when its +8 is negative, else +0x10 + +8. The backgrounds, the logo, the text, the line blocks and
+// waitTicks(1, 0) are drawing / waits. Its clock reads pace the recorded dispatches as pumpAndRedraw's do (commands.h, PACE).
+namespace {
+constexpr int32_t kSiteCreditsStart = 0x3bf68, kSiteCreditsPass = 0x3bfaa;   // the two timeGetTime returns, from ML's frame head
+std::string credits_str(Ctx &ctx, uint32_t va) {
+  std::string s;
+  for (uint8_t c; (c = ctx.mem.load<uint8_t>(va)) != 0; ++va) s.push_back(static_cast<char>(c));
+  return s;
+}
+int32_t credits_line_count(Ctx &ctx, bool &found) {
+  found = false;
+  std::string name = credits_str(ctx, GS(f_strpool_4d21a4) + 0x8);
+  if (name.find('.') == std::string::npos) name += credits_str(ctx, GS(f_strpool_4e4418));
+  if (ctx.files_ptr == nullptr || !ctx.files().exists(name)) return 0;
+  const std::vector<uint8_t> data = ctx.files().read_all(name);
+  // fgets in text mode: lines split at LF with CR LF read as LF, then stripNewline / trimSpaces
+  std::vector<std::string> lines;
+  std::string cur;
+  for (size_t i = 0; i < data.size(); ++i) {
+    if (data[i] == '\r' && i + 1 < data.size() && data[i + 1] == '\n') continue;
+    if (data[i] == '\n') {
+      lines.push_back(cur);
+      cur.clear();
+    } else {
+      cur.push_back(static_cast<char>(data[i]));
+    }
+  }
+  if (!cur.empty()) lines.push_back(cur);
+  auto trim = [](std::string s) {
+    while (!s.empty() && (s.back() == ' ' || s.back() == '\t')) s.pop_back();
+    size_t k = 0;
+    while (k < s.size() && (s[k] == ' ' || s[k] == '\t')) ++k;
+    return s.substr(k);
+  };
+  auto lower = [](std::string s) {
+    for (char &c : s) c = static_cast<char>(c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c);
+    return s;
+  };
+  const std::string key = lower(credits_str(ctx, GS(f_str_4e4438)) + credits_str(ctx, GS(f_strpool_4d21a4) + 0x14));
+  size_t i = 0;
+  while (i < lines.size() && lower(trim(lines[i])) != key) ++i;
+  if (i == lines.size()) return 0;
+  found = true;
+  int32_t count = 0;
+  for (++i; i < lines.size(); ++i) {
+    const std::string t = trim(lines[i]);
+    if (!t.empty() && t[0] == '#') break;
+    ++count;
+  }
+  return count;
+}
+}  // namespace
+
+int32_t show_credits_screen(Ctx &ctx) {
+  GameState &gs = ctx.gs();
+  const int mode = SG_NEGCTL(g_negctl_credits);
+  bool found = false;
+  const int32_t count = credits_line_count(ctx, found);
+  if (!found) return 0;
+  InputSource *src = input_source(ctx);
+  uint32_t t0 = 0;
+  if (!src || !src->clock(kSiteCreditsStart, t0)) throw NeedInput{{"showCreditsScreen"}};
+  const uint32_t font = GS(g_fontRef_821020);
+  int32_t line_h = ctx.mem.load<int32_t>(font + 0xc);
+  if (ctx.mem.load<int32_t>(font + 8) >= 0) line_h = add32(ctx.mem.load<int32_t>(font + 0x10), ctx.mem.load<int32_t>(font + 8));
+  if (count == 0) return 0;
+  const int64_t total = int64_t(line_h) * count + 0x96;
+  src->pace(kSiteCreditsPass);
+  struct Unpace {
+    InputSource *s;
+    ~Unpace() { s->pace(0); }
+  } unpace{src};
+  bool running = true;
+  do {
+    uint32_t now = 0;
+    if (!src->clock(kSiteCreditsPass, now)) throw NeedInput{{"showCreditsScreen"}};
+    int32_t y = 0x258 - static_cast<int32_t>((now - t0) / 0x1e);
+    if (-int64_t(y) > total) running = false;
+    if (y < 0x258)
+      for (int32_t i = 0; i < count; ++i) {
+        y = add32(y, line_h);
+        // the scroll does not wait for input: once the source holds no further dispatch the pumps receive nothing, as the
+        // original's do (a Blocking pump would ask for one and fail)
+        if (src->exhausted()) {
+          if (gs.g_rootInput[kClicked] == 0) gs.g_rootInput[kButton] = 0;
+          gs.g_rootInput[kClicked] = 0;
+        } else {
+          pump_messages(ctx, PumpKind::Blocking, "showCreditsScreen");
+        }
+        if (y >= 0x258) break;
+      }
+    if (gs.g_rootInput[kButton] != 0) running = false;
+    else if (mode != 1 && flush_redraw(ctx) != 0) running = false;
+  } while (running);
+  return 0;
+}
+
 int32_t show_hire_employee_dialog(Ctx &ctx) {
   GameState &gs = ctx.gs();
   InputSource *src = input_source(ctx);

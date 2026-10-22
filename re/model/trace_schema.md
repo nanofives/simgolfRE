@@ -67,7 +67,7 @@ record:    u8 type, u8 sub, u16 payload length, payload
 | 0x0b | SLEEP | 0 | u32 pos, u32 ra, u32 ms | Sleep from golf_clean.exe (wall time only) |
 | 0x0c | MAPVK | 0 | u32 pos, u32 ra, u32 code, u32 maptype, u32 result | MapVirtualKeyA from golf_clean.exe (Window::dispatchAccel, ListBox::onKey): keyboard-layout dependent |
 | 0x0d | TIMERSET | 1 SetTimer, 2 KillTimer, 3 timeSetEvent, 4 timeKillEvent | u32 pos, u32 ra, u32 handle, u32 period, u32 fn, u32 extra | a timer registration or kill by golf_clean.exe (handle = registration ordinal; extra = fuEvent for timeSetEvent, the API result for kills) |
-| 0x7f | END | 0 | u32 n, u32 frames, u32 polls, u32 dumps | totals; nothing follows |
+| 0x7f | END | 0, or 1 = ended at the process's ExitProcess (a game that quits never reaches the final poll) | u32 n, u32 frames, u32 polls, u32 dumps | totals; nothing follows |
 
 Readers must reject an unknown type (version 1 has no skippable records).
 
@@ -79,7 +79,7 @@ Readers must reject an unknown type (version 1 has no skippable records).
    t0 + i*step and the i-th QPC call q0 + i*qstep, over the whole file.
 4. Every other record's pos is <= the clock calls before it and never decreases.
 5. FRAME indices count from 0; a FRAME follows a clock call whose ra is `meta.frame_ra` and its pos equals the clock count.
-6. POLL indices count from 0; exactly one final poll; END is last and its totals equal the counts.
+6. POLL indices count from 0; exactly one final poll (none when END's sub is 1); END is last and its totals equal the counts.
 
 ## 5. Replay contract (what makes a trace sufficient)
 

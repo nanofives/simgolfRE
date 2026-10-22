@@ -115,12 +115,12 @@ port's oracle) fixed and re-verified.
 ## Next steps
 
 - **Phase 4 completion.** Done: the .sve and course-file round trips (re/analysis/data/sve_roundtrip.md) and the boot path
-  (re/PHASE4_BOOT_PLAN.md). Left: the quit's top10.sve write (U-1050 part 2), scenarios for the tutorial pages and the theme
-  screen's Cancel (U-1066).
+  (re/PHASE4_BOOT_PLAN.md) and the quit (cov_r_quit: top10.sve, Default.pro, the saves). Left: scenarios for the tutorial pages
+  and the theme screen's Cancel (U-1066).
 - **Phase 5, backends.** Start with the software 16-bit gfx backend: draw what the dropped drawing paths draw and compare with
   the recorded checkpoint frames (scenario_ab's back-buffer frames). Then Terrain.dll's renderer behind TerrainApi, then audio.
   Decide whether text widths stay GDI or come from the font files (TrueType advances + GDI rounding, U-0960 / U-0961).
-- **Open items from phase 3:** the title menu's Quit path (U-1050), the character editor's bio entry
+- **Open items from phase 3:** the character editor's bio entry
   (U-1032), the scroll-text layout reached only by the oracle, chooseShotTarget.strictFlagSticky with no evidence (U-1012),
   and input that arrives during a world load (U-1051).
 - **Phase 7:** go through re/port/divergences.tsv and model_defects.md and decide keep or fix per defect.

@@ -3586,10 +3586,11 @@ def _cov_r_written():
     return sorted(p.name for p in _cov_r_saves_dir().glob("*.sve") if p.name.lower() not in R_SAVES_PRISTINE)
 
 
-def _cov_r_collect(c, name, extra=()):
+def _cov_r_collect(c, name, extra=(), root_files=()):
     """Copy every save in the saved-games folder into <run>/saves/<name>/ with an index of sha256s (keys: the file names).
     `extra`: more install folders (relative, e.g. Themes/Championship) whose files are copied too, keyed by their path
-    relative to the install with forward slashes (stored under the same folder with '/' as '__')."""
+    relative to the install with forward slashes (stored under the same folder with '/' as '__'). `root_files`: single
+    files of the install root (top10.sve), keyed by their name; an absent one is left out of the index."""
     import hashlib
     import json
     import shutil as _sh
@@ -3606,6 +3607,11 @@ def _cov_r_collect(c, name, extra=()):
                 key = f"{rel}/{p.name}"
                 _sh.copy2(p, out / key.replace("/", "__"))
                 idx[key] = hashlib.sha256(p.read_bytes()).hexdigest()
+    for rel in root_files:
+        p = root / rel
+        if p.is_file():
+            _sh.copy2(p, out / rel)
+            idx[rel] = hashlib.sha256(p.read_bytes()).hexdigest()
     (out / "index.json").write_text(json.dumps(idx, indent=1))
 
 
@@ -3738,3 +3744,61 @@ def cov_r_course(c):
 
 
 SCENARIOS["cov_r_course"] = {"env": {}, "phases": [], "lockstep": cov_r_course}
+
+
+R_QUIT_DIRS = ("Themes", "Themes/Standard")
+
+
+def cov_r_quit(c):
+    """Phase 4 quit round trip (U-1050 part 2): cov_a_quit's path (a Sandbox session, Exit the Game with its three answers,
+    a second session saved before leaving, the title menu's exit icon), with the install's files collected at the start
+    and just before the credits. mainLoop's QUIT block 0x0040fa29..0x0040fac8 has written top10.sve (the 0x618-byte
+    g_topScores block through __open / __write / __close) and promptAndSaveFile(0, -2, 0) Themes/Default.pro by then; the
+    run ends when the process exits."""
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "main_menu.png"), name="main_menu")
+    _cov_r_collect(c, "run_a", extra=R_QUIT_DIRS, root_files=("top10.sve",))
+    yield from _cova_to_sandbox(c)
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from _cova_hole(c, (300, 200), (520, 330))
+    yield from c.click(45, 470); yield from c.sleep(1500)
+    yield from c.checkpoint("game")
+    yield from _cova_exit_menu(c)
+    yield from c.checkpoint("exit_prompt")
+    yield from c.click(260, 160); yield from c.sleep(3000)       # "Wait, I don't want to quit yet!"
+    yield from c.checkpoint("exit_stay")
+    yield from _cova_exit_menu(c)
+    yield from c.click(260, 211); yield from c.sleep(4000)       # "So long for now." -> quit save -> title
+    yield from c.checkpoint("exit_leave")
+    for _ in range(4):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("title1")
+    yield from c.click(130, 445)                                 # Sandbox Mode again (a second session)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "location.png"), name="location2")
+    yield from c.click(270, 32)
+    yield from c.wait_screen(imgcmp.load(GOLDEN / "ingame_hud_dial.png"), crop=DIAL, threshold=30, name="hud2")
+    yield from c.sleep(2000)
+    yield from _cova_esc(c)
+    yield from c.checkpoint("game2")
+    yield from _cova_exit_menu(c)
+    yield from c.click(260, 186); yield from c.sleep(3000)       # "I'd like to save this game first."
+    yield from c.checkpoint("exit_save")
+    yield from c.key(0x0D, char="\r"); yield from c.sleep(4000)  # accept the proposed save name
+    yield from c.checkpoint("exit_saved")
+    for _ in range(4):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("title2")
+    c.move(750, 553); yield from c.sleep(1500)
+    c.run.exit_expected = True
+    yield from c.click(750, 553); yield from c.sleep(3000)       # the title menu's exit icon
+    for i in range(4):
+        yield from c.checkpoint(f"quit_{i:02d}")
+        yield from c.sleep(2000)
+    _cov_r_collect(c, "end", extra=R_QUIT_DIRS, root_files=("top10.sve",))
+    yield from c.checkpoint("credits")
+    yield from c.key(0x1B); yield from c.sleep(1500)             # the credits end on a key
+    for _ in range(300):
+        yield from c.sleep(1000)
+
+
+cov_r_quit.expect_exit = True
+SCENARIOS["cov_r_quit"] = {"env": {}, "phases": [], "lockstep": cov_r_quit}

@@ -31,6 +31,30 @@ def run_dirs(scenario: str) -> list[pathlib.Path]:
     return out
 
 
+# A character file (.pro / .chr, promptAndSaveFile) is the 0x230-byte type record, the 0x4e2-byte phrase record, the 16-byte
+# skill record and an 8-byte marker, then a portrait PCX whose header carries an uninitialised stack byte (Image::savePcx,
+# measured at file offset 0x760 in cov_r_quit: one byte differs between runs) and which the port does not write (U-0979):
+# runs are compared, and the port is judged, on the records only.
+CHAR_RECORDS = 0x230 + 0x4E2 + 0x10 + 8
+ROOT_FILES = ("top10.sve",)   # install-root files collected by name (re/tools/scenario.py _cov_r_collect root_files)
+
+
+def compared_bytes(key: str, data: bytes) -> bytes:
+    """The part of a collected file that runs (and the port) are compared on."""
+    return data[:CHAR_RECORDS] if key.lower().endswith((".pro", ".chr")) else data
+
+
+def _digests(cp: pathlib.Path, idx: dict) -> dict:
+    import hashlib
+    out = {}
+    for k, v in idx.items():
+        if k.lower().endswith((".pro", ".chr")):
+            out[k] = hashlib.sha256(compared_bytes(k, (cp / disk_name(k)).read_bytes())).hexdigest()
+        else:
+            out[k] = v
+    return out
+
+
 def collect(scenario: str) -> dict:
     """{checkpoint: index} after checking every run agrees; copies the files of the first run into the corpus."""
     runs = run_dirs(scenario)
@@ -39,7 +63,7 @@ def collect(scenario: str) -> dict:
     ref, ref_run = {}, {}
     for r in runs:
         for cp in sorted(p for p in (r / "saves").iterdir() if p.is_dir()):
-            idx = json.loads((cp / "index.json").read_text())
+            idx = _digests(cp, json.loads((cp / "index.json").read_text()))
             if cp.name not in ref:
                 ref[cp.name], ref_run[cp.name] = idx, r
             elif idx != ref[cp.name]:
@@ -67,7 +91,7 @@ def disk_name(key: str) -> str:
 
 def logical(key: str) -> str:
     """The GameFiles name of an index key."""
-    return key if "/" in key else "Saved Games/" + key
+    return key if "/" in key or key in ROOT_FILES else "Saved Games/" + key
 
 
 def load(scenario: str, checkpoint: str) -> dict[str, bytes] | None:

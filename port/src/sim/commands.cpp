@@ -2,10 +2,15 @@
 // reading reference, the corpora); no original address or code.
 #include "portsim/sim/commands.h"
 
+#include <cstdio>
+#include <cstdlib>
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "commands_internal.h"
+#include "portsim/gamefiles.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
@@ -35,6 +40,7 @@ namespace {
 //   tickMessage           1 = the open counter counts up to 4
 //   report screens        1 = the mode byte is left 1, 2 = the financial total + 1, 3 = the loading picture draw 11
 //   showHireEmployeeDialog 1 = the row mapping without the + 1, 2 = the row text appended instead of copied
+//   showCreditsScreen 1 = a key does not end the scroll
 //   selectDifficultyScreen 1 = the back button is not mapped to -1
 //   showPopup             1 = a check-list click ORs the option bit (instead of toggling it), 2 = Up passes the first option
 //   textInputBox          1 = the width cut at width - 0x18, 2 = an inserted character is stored + 1
@@ -66,6 +72,7 @@ int g_negctl_view_panel = 0;
 int g_negctl_tick_message = 0;
 int g_negctl_reports = 0;
 int g_negctl_hire_dialog = 0;
+int g_negctl_credits = 0;
 int g_negctl_difficulty = 0;
 int g_negctl_popup = 0;
 int g_negctl_text_input = 0;
@@ -626,6 +633,7 @@ const FuncDef kFuncs[] = {
     {"showFinancialReport", "default", "void", 0, 0, V0(show_financial_report), &g_negctl_reports},
     {"showPlayerCommentsReport", "default", "void", 0, 0, V0(show_player_comments_report), &g_negctl_reports},
     {"showHireEmployeeDialog", "default", "int", 0, 0, V0(show_hire_employee_dialog), &g_negctl_hire_dialog},
+    {"showCreditsScreen", "default", "void", 0, 0, V0(show_credits_screen), &g_negctl_credits},
     {"selectDifficultyScreen", "default", "int", 0, 0, V0(select_difficulty_screen), &g_negctl_difficulty},
     {"showLoadingScreen", "default", "int", 1, 0,
      [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(show_loading_screen(c, static_cast<int32_t>(a[0]))); },

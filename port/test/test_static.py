@@ -74,5 +74,5 @@ def test_manifests_readable():
     assert len(fns) >= 300 and "Random::range" in fns
     rows = S.manifest_rows()
     # 190 from phase 2.4, plus course_season_6y's 10 (phase 3.8, stream 38f: the multi-year recording), plus one each of
-    # cov_r_sve, cov_r_reload and cov_r_course (phase 4: the .sve and course-file round trips)
-    assert sum(r["status"] == "accepted" for r in rows) == 203
+    # cov_r_sve, cov_r_reload and cov_r_course (phase 4: the .sve and course-file round trips), plus cov_r_quit's two (the quit)
+    assert sum(r["status"] == "accepted" for r in rows) == 205

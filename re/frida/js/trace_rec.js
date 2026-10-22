@@ -283,16 +283,29 @@ poll = function (now) {
   trEvent(TRT.POLL, (name !== null ? 1 : 0) | (final ? 2 : 0), [['u32', pos], ['u32', trPolls++], ['u8', nb.length], ['bytes', nb]]);
   if (final) trEnd();
 };
-function trEnd() {
+function trEnd(byExit) {
   if (trEnded) return;
   trFlush(); trCloseRun();
-  trRec(TRT.END, 0, [['u32', tn()], ['u32', trFrames], ['u32', trPolls], ['u32', trDumps]]);
+  trRec(TRT.END, byExit ? 1 : 0, [['u32', tn()], ['u32', trFrames], ['u32', trPolls], ['u32', trDumps]]);
   trEnded = true;
   trSendChunk(true);
   send({ type: 'trec_stats', stats: trStats, n: tn(), frames: trFrames, polls: trPolls, dumps: trDumps,
          replay: TR_REPLAY ? { mismatches: TD.add(0x18).readU32(), firstMismatch: TD.add(0x1c).readU32(), overrun: TD.add(0x20).readU32(),
                                delivered: TR_PLAN.idx, planned: TR_PLAN.deliveries.length } : undefined });
 }
+
+// A game that quits (mainLoop's QUIT, cov_a_quit / cov_r_quit) never reaches the scenario's final poll: when the process
+// calls ExitProcess the trace is ended there (END record, last chunk) and the exiting thread waits until Python has the
+// final chunk (`trec_ack`), so the bytes are not lost with the process. A run that ended at its final poll is unchanged.
+try {
+  const k32 = Process.getModuleByName('kernel32.dll');
+  Interceptor.attach(k32.getExportByName('ExitProcess'), {
+    onEnter() {
+      if (trEnded) return;
+      try { trEnd(true); recv('trec_ack', () => {}).wait(); } catch (e) { send({ type: 'error', where: 'trace exit', msg: String(e) }); }
+    }
+  });
+} catch (e) { send({ type: 'error', where: 'trace exit hook', msg: String(e) }); }
 
 // ---- replay: re-apply the recorded deliveries at their ordinals
 let trGameHwnd = null;

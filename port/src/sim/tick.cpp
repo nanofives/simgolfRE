@@ -93,6 +93,9 @@ struct Drop {
 };
 const Drop kDrops[] = {
     {"Image_draw", "blit of an image onto a surface"},
+    // phase 4, the QUIT block: no sim-class write in either call closure (log/p3/p37a_simwrites.py on both)
+    {"playAudioFile", "the closing Bink video (binkw32); its pumps dispatch no recorded input in the corpus"},
+    {"PaletteCache::dtor", "the frame's palette cache (renderer)"},
     {"Image_ctor", "frame Image object (renderer)"},
     {"Image_dtor", "frame Image object (renderer)"},
     {"Sprite_draw", "sprite blit"},
@@ -1420,6 +1423,25 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
   for (int32_t k = k0; k <= max_frames; ++k) {
     if (static_cast<size_t>(k) >= frames.size()) {
       if (detail) *detail = "trace slice has no further FRAME record";
+      if (boot && static_cast<size_t>(k) == frames.size()) {
+        // a boot run's last frame: no FRAME record follows it, so it gives no record, but it runs to the end of the
+        // trace (cov_r_quit: back to the title menu and the QUIT block, whose files the caller reads afterwards)
+        const TraceFrame &f = frames[k - 1];
+        const FrameInput in = frame_input(f);
+        input.begin(f, k);
+        tk::FrameIoStats io;
+        FrameExit ex;
+        try {
+          ex = tk::tick_frame_io(ctx, in, io);
+        } catch (...) {
+          after_frame(f, k, io);
+          throw;
+        }
+        after_frame(f, k, io);
+        if (detail)
+          *detail = ex == FrameExit::Quit ? "the last frame ran to the end of the trace: mainLoop returned (the title menu's quit)"
+                                          : "the last frame ran to the end of the trace";
+      }
       return 0;
     }
     const TraceFrame &f = frames[k - 1];

@@ -67,3 +67,7 @@ What the boot runs forced, in the order found:
 
 Not reached by any scenario, so unverified: tutorial pages 1..29 (every corpus call has page 0), the theme screen's Cancel,
 palette groups 21 / 22 in a click (their cut fields are compared as state instead), U-1066.
+
+Quit (same day): cov_r_quit runs from boot through mainLoop's QUIT block to its return, every record equal, and the files the
+quit writes equal the original's (re/analysis/data/sve_roundtrip.md "The quit"); the boot gate holds 61 scenarios: 58 PASS,
+2 KNOWN, 1 NO_FRAMES, x64 = Win32.
