@@ -46,6 +46,7 @@ int g_negctl_save_course = 0;   // 1 = no course body, 2 = a 4-byte marker
 int g_negctl_save_game_dialog = 0;   // 1 = a refused name goes on, 2 = an existing file is not asked about
 int g_negctl_prompt_and_save_file = 0;   // 1 = the skill record's first byte flipped
 int g_negctl_refresh_terrain = 0;   // 1 = the repaint flag byte is not set
+int g_negctl_load_top_scores = 0;   // 1 = the name's byte 2 raised by range(0x19), 2 = 0x614 bytes read (phase 4, the boot path)
 
 struct SaveField {
   uint32_t off;  // offset into GameState
@@ -958,8 +959,54 @@ void a_clear_script(Ctx &c, const uint32_t *, Ret &) {
 }
 }  // namespace
 
+// ------------------------------------------------------------------------------------------------ loadTopScores
+// loadTopScores (re/analysis/save/0040ad60; c3eu.cpp, which cites every instruction), called once by mainLoop's Setup (phase 4,
+// the boot path). FindFirstFileA of the score file (f_strpool_4c528c+0x20) is GameFiles::exists. Missing: g_topScores
+// (0x618 bytes) zeroed and ten 0x9c-byte records from +0x80 filled from g_rng: +8 range(0x320) + base, +0 range(0x64) + c,
+// +4 range(0x5a) + b, the word +0x16 = a / 3, +0x18 = -1, the name built in g_textBuffer from f_strpool_4c528c+0x14 with byte
+// 0 raised by range(0x1a) and byte 2 by range(0x18) and copied to record - 0x80, f_strpool_4c528c copied to record - 0x40
+// (base 0x1c20, c 0x384, b 0x32a, a 9, stepping down by 0x320 / 0x64 / 0x5a / 1 while base stays above -0x320); returns 0.
+// Found: the name in g_textBuffer, _open (g_saveFd), _read of 0x618 bytes into g_topScores, _close; returns 1.
+int32_t load_top_scores(Ctx &ctx) {
+  const int mode = SG_NEGCTL(g_negctl_load_top_scores);
+  GameState &gs = ctx.gs();
+  const uint32_t text = text_va(ctx);
+  const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c528c);
+  const uint32_t table = state_va(ctx, &GameState::g_topScores);
+  if (ctx.files_ptr == nullptr || !ctx.files().exists(read_str(ctx.mem, pool + 0x20))) {
+    for (uint32_t i = 0; i < 0x186; ++i) ctx.mem.store<uint32_t>(table + 4 * i, 0);
+    int32_t a = 9, b = 0x32a, c = 0x384, base = 0x1c20;
+    uint32_t rec = table + 0x80;
+    do {
+      ctx.mem.store<int32_t>(rec + 8, add32(cm::rng_range(ctx, 0x320), base));
+      ctx.mem.store<int32_t>(rec, add32(cm::rng_range(ctx, 0x64), c));
+      ctx.mem.store<int32_t>(rec + 4, add32(cm::rng_range(ctx, 0x5a), b));
+      ctx.mem.store<int16_t>(rec + 0x16, static_cast<int16_t>(a / 3));
+      ctx.mem.store<int32_t>(rec + 0x18, -1);
+      vstrcpy(ctx.mem, text, pool + 0x14);
+      ctx.mem.store<uint8_t>(text, static_cast<uint8_t>(ctx.mem.load<uint8_t>(text) + cm::rng_range(ctx, 0x1a)));
+      ctx.mem.store<uint8_t>(text + 2, static_cast<uint8_t>(ctx.mem.load<uint8_t>(text + 2) + cm::rng_range(ctx, mode == 1 ? 0x19 : 0x18)));
+      vstrcpy(ctx.mem, rec - 0x80, text);
+      vstrcpy(ctx.mem, rec - 0x40, pool);
+      base = sub32(base, 0x320);
+      c = sub32(c, 0x64);
+      b = sub32(b, 0x5a);
+      --a;
+      rec += 0x9c;
+    } while (base > -0x320);
+    return 0;
+  }
+  vstrcpy(ctx.mem, text, pool + 0x20);
+  IoFile f = open_for_read(ctx, read_str(ctx.mem, text));
+  f.read(ctx, table, mode == 2 ? 0x614u : 0x618u);
+  (void)gs;
+  f.close(ctx);
+  return 1;
+}
+
 // ------------------------------------------------------------------------------------------------ adapters
 namespace {
+void a_load_top_scores(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(load_top_scores(c)); }
 void a_save_game(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(save_game(c, a[0])); }
 void a_load_game(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_i32(load_game(c, a[0], static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]), static_cast<int32_t>(a[3])));
@@ -978,6 +1025,7 @@ void a_browser(Ctx &c, const uint32_t *a, Ret &r) {
 }
 
 const FuncDef kFuncs[] = {
+    {"loadTopScores", "default", "int", 0, 0, a_load_top_scores, &g_negctl_load_top_scores},
     {"saveGame", "default", "int", 1, 0, a_save_game, &g_negctl_save_game},
     {"loadGame", "default", "int", 4, 0, a_load_game, &g_negctl_load_game},
     {"loadCourse", "default", "int", 1, 0, a_load_course, &g_negctl_load_course},

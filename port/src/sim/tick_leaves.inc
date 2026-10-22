@@ -82,14 +82,16 @@ struct Leaves : TkBase {
   }
 
   // drawWindow(x, y, p3, mode) (c3ei.cpp), simulation part: with a portrait selection (f_w_4c2e00+8 >= 0) drawThoughtBubble's
-  // composeGolferSprite. The window height it stores into the hidden word g_value587ea0 depends on wrapMessageBuffer's line
-  // count, which measures text with the renderer's font (Text_put): not computed (U-0921). The frames, blits, the wrapped
-  // text and the sound are drawing / audio. Returns 0 (no frame code reads the result).
+  // composeGolferSprite. The window height it stores into the hidden word g_value587ea0 (mainLoop reads it) comes from
+  // wrapMessageBuffer's line count, measured with the renderer's font (Text_put): made through commands.windowHeight when the
+  // context has a TextMetrics provider (phase 4), not computed without one (U-0921). The frames, blits, the text drawing and
+  // the sound are drawing / audio. Returns 0 (no frame code reads the result).
   int drawWindow(int x, int y, int p3, int mode) {
     (void)x;
     (void)y;
     (void)p3;
     (void)mode;
+    if (text_metrics(ctx)) G32(GS(g_value587ea0)) = cc("commands.windowHeight");
     const int sel = G32(GS(f_w_4c2e00) + 8);
     if (sel != -1 && sel >= 0 && SG_NEGCTL(g_negctl_draw_window) != 1) drawThoughtBubble(sel, 0, 0, -1);
     return 0;
@@ -297,5 +299,167 @@ struct Leaves : TkBase {
       eax = 0;  // drawCenteredText2's result (drawing)
     }
     return eax;
+  }
+
+  // showTutorialText() (c3ai.cpp, converted with log/p3/p37a_conv.py --hook): one page of the tutorial. The page word
+  // g_tutorialPage picks it (pages 1..29; 12..20 and anything else do nothing); every page that exists builds its text in
+  // g_textBuffer, points the camera at the feature it talks about (from the first three holes' corner tiles or the first
+  // placed objects), some set the zoom, and hands the text to startMessage(0x80002190, 1, -1), then the page goes up by
+  // one. Pages 11 and 29 save the game first (saveGame with the tutorial's file name), clear bit 15 of g_flags and
+  // reset the page to 0. The camera reset g_cachedCameraTileX = -1 and rotation 0 come first (phase 4, the boot path:
+  // cov_a_flags reaches it).
+  void showTutorialText() {
+      if (SG_NEGCTL(g_negctl_show_tutorial_text) != 4) G32(GS(g_cachedCameraTileX)) = -1;   // showTutorialText+0xb
+      G32(GS(g_cameraRot)) = 0;                               // showTutorialText+0x15
+      if (static_cast<unsigned>(G32(GS(g_tutorialPage)) - 1) > 0x1c) return;    // showTutorialText+0x6..showTutorialText+0x1f
+
+      // negative control 3: the camera put back when the page returns (its move dropped)
+      struct CamBack {
+        Ctx &c;
+        uint32_t xa, ya;
+        int32_t x, y;
+        ~CamBack() {
+          if (SG_NEGCTL(g_negctl_show_tutorial_text) != 3) return;
+          c.mem.store<int32_t>(xa, x);
+          c.mem.store<int32_t>(ya, y);
+        }
+      } cam_back{ctx, GS(gCameraTileX), GS(gCameraTileY), G32(GS(gCameraTileX)), G32(GS(gCameraTileY))};
+      switch (G32(GS(g_tutorialPage)) - 1) {                                    // showTutorialText+0x25, table code:60d70
+      case 0:                                                // showTutorialText+0x2c
+          G32(GS(g_zoomScale)) = 2;                           // showTutorialText+0x36
+          StrCpy(kBuf, GS(f_strpool_4d5140));
+          StrCat(kBuf, GS(f_strpool_4d50f4));
+          break;
+      case 1:                                                // showTutorialText+0x65
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 532)) - 8;                    // showTutorialText+0x70 / showTutorialText+0x76
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 528)) + 8;                    // showTutorialText+0x73 / showTutorialText+0x7c
+          G32(GS(g_zoomScale)) = 4;                           // showTutorialText+0x8b
+          StrCpy(kBuf, GS(f_strpool_4d50a0));
+          StrCat(kBuf, (GS(f_strpool_4d5028) + 36));
+          StrCat(kBuf, GS(f_strpool_4d5028));
+          StrCat(kBuf, (GS(f_strpool_4d4fb8) + 44));
+          break;
+      case 2:                                                // showTutorialText+0x110
+          G32(GS(gCameraTileX)) = (G32((GS(g_holes) + 528)) + G32((GS(g_holes) + 544))) / 2 + 5;    // showTutorialText+0x11b..showTutorialText+0x133
+          G32(GS(gCameraTileY)) = (G32((GS(g_holes) + 532)) + G32((GS(g_holes) + 548))) / 2 - 5;    // showTutorialText+0x138..showTutorialText+0x147
+          StrCpy(kBuf, GS(f_strpool_4d4fb8));
+          StrCat(kBuf, (GS(f_strpool_4d4f0c) + 84));
+          StrCat(kBuf, (GS(f_strpool_4d4f0c) + 36));
+          StrCat(kBuf, GS(f_strpool_4d4f0c));
+          break;
+      case 3:                                                // showTutorialText+0x1c9
+          G32(GS(gCameraTileX)) = (G32((GS(g_holes) + 1064)) + G32((GS(g_holes) + 1048))) / 2 + 8;    // showTutorialText+0x1d4..showTutorialText+0x1ec
+          G32(GS(gCameraTileY)) = (G32((GS(g_holes) + 1068)) + G32((GS(g_holes) + 1052))) / 2 - 4;    // showTutorialText+0x1f1..showTutorialText+0x200
+          StrCpy(kBuf, GS(f_strpool_4d4ea8));
+          StrCat(kBuf, GS(f_strpool_4d4e38));
+          break;
+      case 4:                                                // showTutorialText+0x22c
+          G32(GS(gCameraTileX)) = (G32((GS(g_holes) + 1048)) + G32((GS(g_holes) + 1064))) / 2 + 4;    // showTutorialText+0x237..showTutorialText+0x24f
+          G32(GS(gCameraTileY)) = (G32((GS(g_holes) + 1052)) + G32((GS(g_holes) + 1068))) / 2 - 4;    // showTutorialText+0x254..showTutorialText+0x263
+          StrCpy(kBuf, GS(f_strpool_4d4dcc));
+          StrCat(kBuf, GS(f_strpool_4d4d74));
+          break;
+      case 5:                                                // showTutorialText+0x28f
+          G32(GS(gCameraTileX)) = (G32((GS(g_holes) + 1568)) + G32((GS(g_holes) + 1584))) / 2 + 4;    // showTutorialText+0x29a..showTutorialText+0x2b2
+          G32(GS(gCameraTileY)) = (G32((GS(g_holes) + 1572)) + G32((GS(g_holes) + 1588))) / 2 - 4;    // showTutorialText+0x2b7..showTutorialText+0x2c6
+          StrCpy(kBuf, GS(f_strpool_4d4d28));
+          StrCat(kBuf, (GS(f_strpool_4d4c88) + 76));
+          StrCat(kBuf, (GS(f_strpool_4d4c88) + 48));
+          break;
+      case 6:                                                // showTutorialText+0x31d: no camera move
+          StrCpy(kBuf, GS(f_strpool_4d4c88));
+          StrCat(kBuf, GS(f_strpool_4d4c40));
+          break;
+      case 7:                                                // showTutorialText+0x34c
+          G32(GS(gCameraTileX)) = G16(GS(g_placed_objects) + 82).get() + 4;                  // showTutorialText+0x34c / showTutorialText+0x35a / showTutorialText+0x360
+          G32(GS(gCameraTileY)) = G16(GS(g_placed_objects) + 84).get() - 4;                  // showTutorialText+0x353 / showTutorialText+0x35d / showTutorialText+0x365
+          StrCpy(kBuf, (GS(f_strpool_4d4b9c) + 56));
+          StrCat(kBuf, GS(f_strpool_4d4b9c));
+          break;
+      case 8:                                                // showTutorialText+0x39a: no camera move
+          StrCpy(kBuf, (GS(f_strpool_4d4b18) + 44));
+          StrCat(kBuf, GS(f_strpool_4d4b18));
+          break;
+      case 9:                                                // showTutorialText+0x3c9
+          G32(GS(gCameraTileX)) = G16(GS(g_placed_objects) + 2).get() + 4;                  // showTutorialText+0x3c9 / showTutorialText+0x3d7 / showTutorialText+0x3dd
+          G32(GS(gCameraTileY)) = G16(GS(g_placed_objects) + 4).get() - 4;                  // showTutorialText+0x3d0 / showTutorialText+0x3da / showTutorialText+0x3e2
+          G32(GS(g_zoomScale)) = 2;                           // showTutorialText+0x3f2
+          StrCpy(kBuf, GS(f_strpool_4d4acc));
+          StrCat(kBuf, GS(f_strpool_4d4a48));
+          break;
+      case 20:                                               // showTutorialText+0x421
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 1048)) + 8;                    // showTutorialText+0x42c / showTutorialText+0x432
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 1052)) - 8;                    // showTutorialText+0x42f / showTutorialText+0x437
+          G32(GS(g_zoomScale)) = 2;                           // showTutorialText+0x447
+          StrCpy(kBuf, (GS(f_strpool_4d4990) + 64));
+          StrCat(kBuf, GS(f_strpool_4d4990));
+          break;
+      case 21:                                               // showTutorialText+0x476
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 1052)) - 8;                    // showTutorialText+0x481 / showTutorialText+0x487
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 1048)) + 8;                    // showTutorialText+0x484 / showTutorialText+0x48d
+          G32(GS(g_zoomScale)) = 2;                           // showTutorialText+0x49c
+          StrCpy(kBuf, GS(f_strpool_4d4930));
+          StrCat(kBuf, (GS(f_strpool_4d48a8) + 32));
+          StrCat(kBuf, GS(f_strpool_4d48a8));
+          StrCat(kBuf, (GS(f_strpool_4d4fb8) + 44));
+          break;
+      case 22:                                               // showTutorialText+0x521
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 528)) + 5;                    // showTutorialText+0x52c / showTutorialText+0x532
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 532)) - 10;                   // showTutorialText+0x52f / showTutorialText+0x537
+          G32(GS(g_zoomScale)) = 4;                           // showTutorialText+0x547
+          StrCpy(kBuf, GS(f_strpool_4d4858));
+          StrCat(kBuf, (GS(f_strpool_4d47e0) + 36));
+          StrCat(kBuf, GS(f_strpool_4d47e0));
+          break;
+      case 23:                                               // showTutorialText+0x5a1
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 1048)) + 5;                    // showTutorialText+0x5ac / showTutorialText+0x5b2
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 1052)) - 5;                    // showTutorialText+0x5af / showTutorialText+0x5b7
+          StrCpy(kBuf, (GS(f_strpool_4d4704) + 120));
+          StrCat(kBuf, (GS(f_strpool_4d4704) + 64));
+          break;
+      case 24:                                               // showTutorialText+0x5ec: one string, no append
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 1048)) + 4;                    // showTutorialText+0x5f7 / showTutorialText+0x5fd
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 1052)) - 4;                    // showTutorialText+0x5fa / showTutorialText+0x602
+          StrCpy(kBuf, GS(f_strpool_4d4704));                      // showTutorialText+0x608, copied at showTutorialText+0x7cf
+          break;
+      case 25:                                               // showTutorialText+0x626
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 1568)) + 6;                    // showTutorialText+0x631 / showTutorialText+0x637
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 1572)) - 6;                    // showTutorialText+0x634 / showTutorialText+0x63c
+          StrCpy(kBuf, GS(f_strpool_4d467c));
+          StrCat(kBuf, (GS(f_strpool_4d4620) + 16));
+          break;
+      case 26:                                               // showTutorialText+0x6b1
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 1584)) + 1;                    // showTutorialText+0x6bc / showTutorialText+0x6be
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 1588)) - 1;                    // showTutorialText+0x6bd / showTutorialText+0x6c3
+          StrCpy(kBuf, GS(f_strpool_4d4620));
+          StrCat(kBuf, (GS(f_strpool_4d4588) + 60));
+          break;
+      case 27:                                               // showTutorialText+0x738
+          G32(GS(gCameraTileX)) = G32((GS(g_holes) + 1048)) + 8;                    // showTutorialText+0x743 / showTutorialText+0x749
+          G32(GS(gCameraTileY)) = G32((GS(g_holes) + 1052)) - 8;                    // showTutorialText+0x746 / showTutorialText+0x74e
+          G32(GS(g_zoomScale)) = 2;                           // showTutorialText+0x75e
+          StrCpy(kBuf, GS(f_strpool_4d4588));
+          StrCat(kBuf, (GS(f_strpool_4d43c0) + 368));
+          StrCat(kBuf, (GS(f_strpool_4d43c0) + 320));
+          break;
+      case 10:                                               // showTutorialText+0x7fa, shared with case 28: saves first
+      case 28:
+          cc("saveGame", (GS(f_strpool_4d43c0) + 316));                        // showTutorialText+0x7ff
+          G32(GS(gCameraTileX)) = G16(GS(g_placed_objects) + 2).get() + 4;                  // showTutorialText+0x804 / showTutorialText+0x812 / showTutorialText+0x818
+          G32(GS(gCameraTileY)) = G16(GS(g_placed_objects) + 4).get() - 4;                  // showTutorialText+0x80b / showTutorialText+0x815 / showTutorialText+0x81d
+          G32(GS(g_zoomScale)) = 4;                           // showTutorialText+0x84c
+          StrCpy(kBuf, (GS(f_strpool_4d43c0) + 288));                      // showTutorialText+0x848
+          if (SG_NEGCTL(g_negctl_show_tutorial_text) != 2) startMessage(0x80002190, 1, -1);                  // showTutorialText+0x85b
+          {
+              const unsigned f = G32(GS(g_flags));   // showTutorialText+0x860
+              G32(GS(g_tutorialPage)) = 0;                                      // showTutorialText+0x86b
+              G32(GS(g_flags)) = f & ~0x8000u;       // showTutorialText+0x868 (and ah, 0x7f) / showTutorialText+0x875
+          }
+          return;
+      default:                                               // pages 12..20: the table sends them to showTutorialText+0x87a
+          return;
+      }
+      if (SG_NEGCTL(g_negctl_show_tutorial_text) != 2) startMessage(0x80002190, 1, -1);                      // showTutorialText+0x7d6..showTutorialText+0x7e4
+      if (SG_NEGCTL(g_negctl_show_tutorial_text) != 1) G32(GS(g_tutorialPage)) = G32(GS(g_tutorialPage)) + 1;                                       // showTutorialText+0x7e9 / showTutorialText+0x7f3 (re-read after the call)
   }
 };

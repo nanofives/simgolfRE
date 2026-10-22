@@ -24,22 +24,27 @@ namespace portsim {
 namespace {
 // Negative controls (port/test/README.md): mode 0 is the correct body.
 //   loadWorldAssets  1 = the object-type table is not copied from its initial image, 2 = type 3's last name write (the
-//                    build-item name at +0xb4) skipped, 3 = a free-list allocation leaves the cell cursor at the sheet's end
-//   loadInterfaceArt 1 = the ranking cells drawn by Random::range(3)
+//                    build-item name at +0xb4) skipped, 3 = a free-list allocation leaves the cell cursor at the sheet's end, 4 = the
+//                    terrain buttons not cut (their geometry left 0), 5 = the tool strip not cut
+//   loadInterfaceArt 1 = the ranking cells drawn by Random::range(3), 2 = (full != 0) the first interface flic not loaded,
+//                    3 = (full != 0) the palette cuts not stored
 //   allocBlock       1 = a region of exactly n is carved instead of consumed (its length 0 left in place)
 //   freeBlock        1 = the region before base grows by n + 1
 //   startNewCourse   1 = the date is 0x2c01, 2 = a refused pro list leaves the flags set
 //   pickAProScreen   1 = a row press loads the row below, 2 = the load button does not load the selection again,
 //                    3 = the theme name is not restored on the load exit
+//   showThemePackSelect 1 = a row press does not change g_theme, 2 = Cancel keeps the theme
 //   tick.menu        (the menu / session bodies, tick_menu.inc) 1 = buildGolferBioText dropped from the menu's session reset,
 //                    2 = g_date not reset by the menu, 3 = Session's course type taken from the next course record,
 //                    4 = Session's building unlock level 7 instead of 6 on the new-course path
 int g_negctl_load_world_assets = 0;
 int g_negctl_load_interface_art = 0;
+int g_negctl_seed_from_time = 0;   // 1 = the clock value + 1
 int g_negctl_alloc_block = 0;
 int g_negctl_free_block = 0;
 int g_negctl_start_new_course = 0;
 int g_negctl_pick_a_pro = 0;
+int g_negctl_theme_pack = 0;
 int g_negctl_menu = 0;
 
 std::string read_str(const Memory &m, uint32_t s) {
@@ -208,6 +213,15 @@ void load_flic(Ctx &ctx, const FlicCall &f, int mode) {
 void run(Ctx &ctx, const FlicCall *t, int n, int mode) {
   for (int k = 0; k < n; ++k) load_flic(ctx, t[k], mode);
 }
+// cropSprite (its hook in c3ee.cpp) into a palette SpriteRef stores the cut's kind (+0x28), width (+0x18) and height
+// (+0x1c) before it reads a pixel; the trimmed size and offsets (+0x10, +0x14, +0x20, +0x24) come from the pixels and are the
+// renderer's. The build palette's hit test (hitTestSlot432f90) reads the height.
+void cut_geometry(Ctx &ctx, uint32_t sp, uint32_t w, uint32_t h, int32_t kind) {
+  ctx.mem.store<int32_t>(sp + 0x28, kind);
+  ctx.mem.store<uint32_t>(sp + 0x18, w);
+  ctx.mem.store<uint32_t>(sp + 0x1c, h);
+}
+
 }  // namespace
 #define RUN(t) run(ctx, t, t##_n, mode)
 
@@ -224,6 +238,33 @@ int32_t load_world_assets(Ctx &ctx) {
   const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c95f4);
   const uint32_t pool2 = state_va(ctx, &GameState::f_strpool_4c8a28);
   gs.g_flag4c89a8 = 0;                         // loadWorldAssets+0x2c6d
+  // phase 4 (the boot path): the terrain buttons (loadWorldAssets+0xcc3..+0xd27, c3fv.cpp): 13 rows of 4 cells of 0x3e x 0x36
+  // cut into the 52 SpriteRefs from g_sprites570cb8 (stride 0x2c). The pixels are the renderer's; the geometry the cut leaves
+  // is read by the build palette's hit test (hitTestSlot432f90, the height at +0x1c): the size twice (+0x10 / +0x14 and
+  // +0x18 / +0x1c), 0 at +0x20 / +0x24 and 1 at +0x28 (measured: all 52 in the frame-head images of cov_b_career_types,
+  // course_season, championship and cov_k1_animals; the exe's initial image holds 0). Every course-type branch loads a
+  // palette image into the working image first, so the cut runs for every type.
+  for (uint32_t i = 0; i < 52 && mode != 4; ++i) {
+    const uint32_t sp = state_va(ctx, &GameState::g_sprites570cb8) + 0x2c * i;
+    m.store<int32_t>(sp + 0x10, 0x3e);
+    m.store<int32_t>(sp + 0x14, 0x36);
+    m.store<int32_t>(sp + 0x18, 0x3e);
+    m.store<int32_t>(sp + 0x1c, 0x36);
+    m.store<int32_t>(sp + 0x20, 0);
+    m.store<int32_t>(sp + 0x24, 0);
+    m.store<int32_t>(sp + 0x28, 1);
+  }
+  // the tool strip (+0xd29..+0xef6, c3fv.cpp): per course type 0..3 three cells per column, x from 0x208 in steps of 0x50
+  // while below 0x2f8, into SpriteRefs 52 + k, 56 + k and 60 + k at y 0 / 0x96 / 0x12c, sizes from the type's table
+  if (known) {
+    static const int32_t kStrip[4][6] = {{0x41, 0x54, 0x3E, 0x46, 0x3E, 0x58}, {0x4B, 0x4A, 0x3E, 0x43, 0x41, 0x68},
+                                         {0x48, 0x4F, 0x3E, 0x51, 0x41, 0x68}, {0x43, 0x54, 0x3E, 0x58, 0x43, 0x4C}};
+    const int32_t *s = kStrip[t];
+    const uint32_t spr = state_va(ctx, &GameState::g_sprites570cb8);
+    for (uint32_t k = 0; k < 3; ++k)
+      for (uint32_t r = 0; r < 3; ++r)
+        if (mode != 5) cut_geometry(ctx, spr + 0x2c * (52 + 4 * r + k), static_cast<uint32_t>(s[2 * r]), static_cast<uint32_t>(s[2 * r + 1]), 1);
+  }
   gs.g_sheetBase = 0;                          // +0xfd8
   free_range(ctx, 0x1B6, 0x207);               // +0xfde..+0x1011
   free_range(ctx, 0x22E, 0x23C);               // +0x1013..+0x1046
@@ -328,10 +369,70 @@ int32_t load_world_assets(Ctx &ctx) {
 // slot counts, the finance years, the golfer statistics, the course ranking; the hole count g_holesPlusOne = 1, the hole
 // points -1, tile flags, ball stops and corner levels 0, the theme slots 0..7, every placed object's type -1, the challenge
 // level 0); nine ranking rows drawn by Random::range(9) on g_rng until an empty one comes up, the i-th (i = 0..8) getting
-// i + 1 marks in its cells Random::range(4); then with full == 0 loadWorldAssets. The boot path (full != 0: the sheet tables
-// reset and every interface flic and image) runs only in mainLoop's Setup, which the port does not run: MissingResource.
+// i + 1 marks in its cells Random::range(4); then with full == 0 loadWorldAssets. full != 0 (mainLoop's Setup only, phase 4:
+// the boot path) runs the full arm instead: menu_iart.inc's steps in the original's order (the phrase table, the sheet tables
+// and the cell free list reset, every interface loadFlic, the stores between the loads and the two golfer-head scans); the
+// palettes, images and cut rectangles between them are the renderer's.
+namespace {
+enum IaKind : uint8_t { IaSet, IaFill, IaFlic, IaHeads, IaCut };
+struct IaStep {
+  IaKind k;
+  uint32_t a, b, c;
+  int32_t frames, delay, flag;
+};
+#define GSO(sym, off) (static_cast<uint32_t>(offsetof(GameState, sym)) + static_cast<uint32_t>(off))
+#include "menu_iart.inc"
+#undef GSO
+
+// LoadHeads (c3fv.cpp): listMatchingFiles(the heads pattern, "", "") lists the head files into g_fileNames (0x64-byte names);
+// the counter starts at 0x13 and the scan stops at 0x48; each name whose first byte is `up` or `low` is loaded from the heads
+// directory + the name (built in g_textBuffer) and cut into three Surfaces (the renderer's), and the counter goes up by one
+void load_heads(Ctx &ctx, uint32_t counter, uint8_t up, uint8_t low) {
+  const Memory &m = ctx.mem;
+  const uint32_t pool = state_va(ctx, &GameState::f_strpool_4cd6a4);
+  const uint32_t empty = state_va(ctx, &GameState::g_str4e9a84);
+  const int32_t n = static_cast<int32_t>(cm::call_peer(ctx, "listMatchingFiles", {pool + 8, empty, empty}).eax);
+  m.store<int32_t>(counter, 0x13);
+  if (n <= 0) return;
+  uint32_t name = state_va(ctx, &GameState::g_fileNames);
+  const uint32_t text = state_va(ctx, &GameState::g_textBuffer);
+  for (int32_t i = 0; i < n; ++i, name += 0x64) {
+    if (m.load<int32_t>(counter) >= 0x48) break;
+    const uint8_t c = m.load<uint8_t>(name);
+    if (c != up && c != low) continue;
+    vstrcpy(m, text, pool);
+    vstrcat(m, text, name);
+    m.store<int32_t>(counter, add32(m.load<int32_t>(counter), 1));
+  }
+}
+
+void load_interface_art_full(Ctx &ctx) {
+  const Memory &m = ctx.mem;
+  const uint32_t base = m.data_base();
+  const int mode = SG_NEGCTL(g_negctl_load_interface_art);
+  for (int k = 0; k < kIaFull_n; ++k) {
+    const IaStep &st = kIaFull[k];
+    switch (st.k) {
+      case IaSet: m.store<uint32_t>(base + st.a, st.b); break;
+      case IaFill:
+        for (uint32_t i = 0; i < st.b; ++i) m.store<uint32_t>(base + st.a + 4 * i, st.c);
+        break;
+      case IaFlic: {
+        if (mode == 2 && st.a == 0x175) break;   // negative control: the first interface flic not loaded
+        const FlicCall f{st.a, st.b, st.frames, st.delay, st.flag};
+        load_flic(ctx, f, 0);
+        break;
+      }
+      case IaHeads: load_heads(ctx, base + st.a, static_cast<uint8_t>(st.b & 0xff), static_cast<uint8_t>(st.b >> 8)); break;
+      case IaCut:
+        if (mode != 3) cut_geometry(ctx, base + st.a, st.b, st.c, st.flag);
+        break;
+    }
+  }
+}
+}  // namespace
+
 int32_t load_interface_art(Ctx &ctx, int32_t full) {
-  if (full != 0) throw MissingResource{"loadInterfaceArt(full != 0): the boot art (mainLoop's Setup)"};
   GameState &gs = ctx.gs();
   const Memory &m = ctx.mem;
   cm::call_peer(ctx, "genNoise", {});
@@ -376,7 +477,27 @@ int32_t load_interface_art(Ctx &ctx, int32_t full) {
       m.store<int32_t>(count, add32(m.load<int32_t>(count), 1));
     }
   }
+  if (full != 0) {
+    load_interface_art_full(ctx);
+    return 0;
+  }
   return load_world_assets(ctx);
+}
+
+// ------------------------------------------------------------------------------------------------ seedFromTime
+// seedFromTime (c3cy.cpp; called once, by gameMain): t = timeGetTime(), stored in g_seedTime and, times 37, as the seed of
+// g_rng; returns t. The clock value is the original's read at the call's return address (InputSource::clock, the site as an
+// offset from mainLoop's frame-head return address): a run with no such read stops with NeedInput (phase 4, the boot path).
+constexpr int32_t kSiteSeedFromTime = 0x574e7;
+int32_t seed_from_time(Ctx &ctx) {
+  InputSource *src = input_source(ctx);
+  uint32_t t = 0;
+  if (src == nullptr || !src->clock(kSiteSeedFromTime, t)) throw NeedInput{{"seedFromTime"}};
+  if (SG_NEGCTL(g_negctl_seed_from_time) == 1) t += 1;
+  GameState &gs = ctx.gs();
+  gs.g_seedTime = static_cast<int32_t>(t);
+  state_obj(ctx, &GameState::g_rng).field(&Random::state).ref() = t + (t + t * 8) * 4;
+  return static_cast<int32_t>(t);
 }
 
 // ------------------------------------------------------------------------------------------------ startNewCourse
@@ -542,6 +663,116 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
   return result;
 }
 
+// ------------------------------------------------------------------------------------------------ listThemes
+// listThemes (c3ep.cpp): listMatchingFiles over the themes pattern f_strpool_4e40a0 with both filters empty, then the
+// directory table g_fileNames from entry ONE to its end (entry 0 is FindFirstFileA's "."): a name that contains the string
+// f_strpool_4c4944, an empty one and the championship theme f_strpool_4c3c5c are skipped, the others copied into
+// g_themeName (0x32 each); g_theme becomes "Standard". Returns the count.
+int32_t list_themes(Ctx &ctx) {
+  const Memory &m = ctx.mem;
+  const uint32_t none = state_va(ctx, &GameState::g_str4e9a84);
+  list_matching_files(ctx, state_va(ctx, &GameState::f_strpool_4e40a0), none, none);
+  const std::string dot = read_str(m, state_va(ctx, &GameState::f_strpool_4c4944));
+  const std::string champ = read_str(m, state_va(ctx, &GameState::f_strpool_4c3c5c));
+  const uint32_t table = state_va(ctx, &GameState::g_fileNames);
+  uint32_t out = state_va(ctx, &GameState::g_themeName);
+  int32_t count = 0;
+  for (uint32_t ent = table + 0x64; ent < table + sizeof(GameState::g_fileNames); ent += 0x64) {
+    const std::string name = read_str(m, ent);
+    if (name.find(dot) != std::string::npos || name.empty() || name == champ) continue;
+    ++count;
+    vstrcpy(m, out, ent);
+    out += 0x32;
+  }
+  vstrcpy(m, state_va(ctx, &GameState::g_theme), state_va(ctx, &GameState::f_strpool_4c6ba4) + 0x6c);
+  return count;
+}
+
+// ------------------------------------------------------------------------------------------------ showThemePackSelect
+// showThemePackSelect (c3fw.cpp; the title menu's theme-pack screen): listThemes, then a modal loop over the theme rows. The
+// six FindFirstFileA probes per theme (which pack files exist: the flag column icons), the Surface arrays, the sheet cuts and
+// the drawing are the renderer's. Each redraw copies every theme name to g_textBuffer to compare it with g_theme. Each pass:
+// waitTicks(2, 0) (dropped: its clock reads are not this loop's), pumpMessages, the cursor, the hot button by
+// approxDistance (0 Load, 1 Cancel, 2 / 3 the arrows), the tip text after 0x1e passes on one button; with no button down a
+// flushRedraw that reports a key acts as Cancel. A press: Load keeps g_theme, Cancel sets it back to "Standard", an arrow
+// redraws, a press on no button picks row (click y - 0x5b) / 32 into g_theme (outside the list: leave as is). The original
+// returns ??_M's eax, which the title menu does not read.
+int32_t show_theme_pack_select(Ctx &ctx) {
+  const int mode = SG_NEGCTL(g_negctl_theme_pack);
+  GameState &gs = ctx.gs();
+  const Memory &m = ctx.mem;
+  const uint32_t text = state_va(ctx, &GameState::g_textBuffer);
+  const uint32_t theme = state_va(ctx, &GameState::g_theme);
+  const uint32_t names = state_va(ctx, &GameState::g_themeName);
+  const int32_t count = list_themes(ctx);
+  enter_modal(ctx);
+  gs.g_rootInput[kRootButton] = 0;
+  int exit_kind = 3;
+  for (;;) {
+    // ---- redraw: the rows (the drawing dropped); the current theme's row is the selection
+    int32_t selected = -1;
+    for (int32_t i = 0; i < count; ++i) {
+      const uint32_t nm = names + 0x32u * static_cast<uint32_t>(i);
+      vstrcpy(m, text, nm);
+      if (read_str(m, text) == read_str(m, theme)) selected = static_cast<int32_t>(nm);
+    }
+    // ---- the input loop
+    int32_t hot = -1, dwell = 0;
+    bool redraw = false;
+    for (;;) {
+      cm::pump_messages(ctx, PumpKind::Blocking, "showThemePackSelect");
+      InputSource *src = input_source(ctx);
+      int32_t x = 0, y = 0;
+      if (!src || !src->cursor(x, y)) throw NeedInput{{"showThemePackSelect"}};
+      const int32_t prev = hot;
+      hot = -1;
+      if (approx_distance(sub32(x, 0x267), sub32(y, 0x22B)) < 0x1A) hot = 0;
+      if (approx_distance(sub32(x, 0x2ED), sub32(y, 0x22C)) < 0x18) hot = 1;
+      if (approx_distance(sub32(x, 0x30A), sub32(y, 0x63)) < 0x14) hot = 2;
+      if (approx_distance(sub32(x, 0x30A), sub32(y, 0x1E7)) < 0x14) hot = 3;
+      if (hot != prev) {
+        dwell = 0;
+      } else {
+        dwell = add32(dwell, 1);
+        if (dwell > 0x1E && hot != -1) {
+          m.store<uint8_t>(text, 0);
+          if (hot == 0)
+            vstrcpy(m, text, selected == -1 ? state_va(ctx, &GameState::g_str4e9a84) : state_va(ctx, &GameState::f_strpool_4c8794) + 0x50);
+          else if (hot == 1)
+            vstrcpy(m, text, state_va(ctx, &GameState::f_strpool_4c84e8) + 0xA8);
+        }
+      }
+      int32_t btn = gs.g_rootInput[kRootButton];
+      if (btn == 0) {
+        if (cm::flush_redraw(ctx) == 0) continue;
+        btn = gs.g_rootInput[kRootButton];
+        if (btn == 0) hot = 1;   // a key: Cancel
+      }
+      if (hot == -1) {
+        const int32_t idx = div32(sub32(gs.g_rootInput[kRootClickY], 0x5B), 32);
+        if (idx < 0 || idx >= count) break;                     // exit kind 3
+        if (mode != 1) vstrcpy(m, theme, names + 0x32u * static_cast<uint32_t>(idx));
+        redraw = true;
+        break;
+      }
+      gs.g_rootInput[kRootButton] = 0;
+      if (hot == 0) {
+        exit_kind = 2;
+        break;
+      }
+      if (hot == 1) {
+        exit_kind = 1;
+        break;
+      }
+      redraw = true;
+      break;
+    }
+    if (!redraw) break;
+  }
+  if (exit_kind == 1 && mode != 2) vstrcpy(m, theme, state_va(ctx, &GameState::f_strpool_4c6ba4) + 0x6c);
+  return 0;
+}
+
 // ------------------------------------------------------------------------------------------------ registry
 namespace {
 inline int32_t S(const uint32_t *a, int i) { return static_cast<int32_t>(a[i]); }
@@ -552,15 +783,20 @@ void a_free_block(Ctx &c, const uint32_t *a, Ret &) { free_block(c, S(a, 0), S(a
 void a_free_table(Ctx &c, const uint32_t *a, Ret &) { free_table(c, S(a, 0)); }
 void a_start_new_course(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(start_new_course(c)); }
 void a_pick_a_pro(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(pick_a_pro_screen(c)); }
+void a_list_themes(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(list_themes(c)); }
+void a_theme_pack(Ctx &c, const uint32_t *, Ret &r) { r.set_i32(show_theme_pack_select(c)); }
 
 const FuncDef kFuncs[] = {
     {"loadWorldAssets", "default", "void", 0, 0, a_load_world_assets, &g_negctl_load_world_assets},
     {"loadInterfaceArt", "default", "void", 1, 0, a_load_interface_art, &g_negctl_load_interface_art},
+    {"seedFromTime", "default", "int", 0, 0, [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(seed_from_time(c)); }, &g_negctl_seed_from_time},
     {"allocBlock", "default", "int", 1, 0, a_alloc_block, &g_negctl_alloc_block},
     {"freeBlock", "default", "void", 2, 0, a_free_block, &g_negctl_free_block},
     {"freeTable", "default", "void", 1, 0, a_free_table, nullptr},
     {"startNewCourse", "default", "int", 0, 0, a_start_new_course, &g_negctl_start_new_course},
     {"pickAProScreen", "default", "int", 0, 0, a_pick_a_pro, &g_negctl_pick_a_pro},
+    {"listThemes", "default", "int", 0, 0, a_list_themes, nullptr},
+    {"showThemePackSelect", "default", "int", 0, 0, a_theme_pack, &g_negctl_theme_pack},
     // the switch of the title menu / session bodies of the tick module (tick_menu.inc reads it through the registry);
     // calling it does nothing
     {"tick.menu", "default", "void", 0, 0, [](Ctx &, const uint32_t *, Ret &) {}, &g_negctl_menu},

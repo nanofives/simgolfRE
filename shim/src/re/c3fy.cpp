@@ -9328,6 +9328,7 @@ a41eab0:  // click at normal speed: slot panel
         u32 src = (G32(h * 8 + 0x00575AC8) != 0) ? 0x004C5CD4 : 0x004C5CA4;  // 0x0041eb79..0x0041eb89
         StrCat(kBuf, src);                             // 0x0041eb8e..0x0041ebbc (push 0xa,0x58a528,edx)
     }
+    StrCat(kBuf, 0x004C5C7C);                           // 0x0041ebbe..0x0041ebe7 (phase 4 fix: this strcat was missing)
     eax = Itoa(G32(0x005685F0), 0x0058A528, 0xA);       // 0x0041ebe9 __itoa
     StrCat(kBuf, (u32)eax);                             // 0x0041ebee..0x0041ec19
     StrCat(kBuf, 0x004C5C48);                           // 0x0041ec1b..0x0041ec4c

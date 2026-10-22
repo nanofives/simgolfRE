@@ -47,6 +47,7 @@ struct FrameInput {
   void *on_wait_arg = nullptr;
   bool retile = false;            // the frame was entered through rebuildTileCoverage (the previous frame's exit)
   bool stop_at_wait = false;      // run only up to H1's frame wait (a checkpoint taken inside the wait)
+  bool boot = false;              // phase 4: run the boot step (gameMain's part, Setup, the menu) instead of a frame
 };
 
 // Where a frame left mainLoop's frame loop.
@@ -61,8 +62,12 @@ FrameExit tick_frame(Ctx &ctx, const FrameInput &in);
 
 // sg_run_frames behind the C ABI: parses a schema-v1 trace slice (re/model/trace_schema.md), runs a frame per FRAME record
 // after the first, and fills T / the sim-class hashes per frame head. Returns an SG_E_* code; `detail` says why it stopped.
+// boot (phase 4, re/PHASE4_BOOT_PLAN.md): the trace starts at process start and the context holds the exe's initialised data
+// (sg_exe_fill_state 1); the records before the first FRAME form a frame 0 that the boot step (gameMain's part, mainLoop's
+// Setup, the title menu and Session) consumes, and record 0 of the output is the state at the first frame head.
 int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint32_t *queued, int32_t n_queued,
-                    int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done, std::string *detail);
+                    int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done, std::string *detail,
+                    bool boot = false);
 
 // Per-callee call counts of the frames run on this thread since the last reset (development and notes).
 std::vector<std::pair<std::string, uint64_t>> tick_callee_counts();

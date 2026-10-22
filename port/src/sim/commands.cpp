@@ -34,7 +34,7 @@ namespace {
 //                           equivalent mutant: the wide columns are 0x145 + k * 0x79, none in 0x2b8..0x2f3)
 //   tickMessage           1 = the open counter counts up to 4
 //   report screens        1 = the mode byte is left 1, 2 = the financial total + 1, 3 = the loading picture draw 11
-//   showHireEmployeeDialog 1 = the row mapping without the + 1
+//   showHireEmployeeDialog 1 = the row mapping without the + 1, 2 = the row text appended instead of copied
 //   selectDifficultyScreen 1 = the back button is not mapped to -1
 //   showPopup             1 = a check-list click ORs the option bit (instead of toggling it), 2 = Up passes the first option
 //   textInputBox          1 = the width cut at width - 0x18, 2 = an inserted character is stored + 1
@@ -365,8 +365,68 @@ int32_t pump_and_redraw(Ctx &ctx, int32_t limit, const char *where) {
   return 1;
 }
 
+// wrapMessageBuffer(cols) (c3dv.cpp, which cites every instruction): breaks g_textBuffer into lines no wider than cols * 8
+// as measured by Text_put on the current text object (f_stateptr_4c1570[0]) with the font `font` its caller's setDrawTarget
+// selected: '^' becomes ' ' plus a line break after it, an existing LF counts, a span wider than the limit breaks at its last
+// space (that byte becomes LF), '_' becomes ' '. Returns the number of breaks. The original measures a copy of the span on
+// its stack; the port measures the span in place behind a temporary NUL (Text_put stops at the NUL: the same width).
+// Needs the context's TextMetrics (MissingResource{"Text_put"} without it).
+int32_t wrap_message_buffer(Ctx &ctx, int32_t cols, uint32_t font) {
+  TextMetrics *tm = text_metrics(ctx);
+  if (!tm) throw MissingResource{"Text_put"};
+  const Memory &m = ctx.mem;
+  const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+  int32_t count = 0, S = 0, L = -1;
+  uint32_t i = 0;
+  if (vstrlen(m, buf) == 0) return 0;
+  do {
+    uint32_t p = buf + i;
+    if (m.load<uint8_t>(p) == '^') {
+      m.store<uint8_t>(p, ' ');
+      S = i32(i) + 2;
+      ++count;
+      m.store<uint8_t>(buf + i + 1, 0x0a);
+    }
+    if (m.load<uint8_t>(p) == 0x0a) {
+      ++count;
+      S = i32(i) + 1;
+    }
+    if (i32(i) > S) {
+      const uint8_t keep = m.load<uint8_t>(buf + i);
+      m.store<uint8_t>(buf + i, 0);
+      const int32_t w = tm->text_put(ctx, ctx.gs().f_stateptr_4c1570[0], font, buf + u32(S));
+      m.store<uint8_t>(buf + i, keep);
+      if (w > mul32(cols, 8) && L != -1) {
+        i = u32(L);
+        ++count;
+        p = buf + i;
+        L = -1;
+        m.store<uint8_t>(p, 0x0a);
+        S = i32(i) + 1;
+      }
+    }
+    if (m.load<uint8_t>(p) == '_') m.store<uint8_t>(p, ' ');
+    if (m.load<uint8_t>(p) == ' ') L = i32(i);
+    ++i;
+  } while (i < vstrlen(m, buf));
+  return count;
+}
+
+// drawWindow's H (c3ei.cpp, drawWindow+0x1d..drawWindow+0x5e): 15 * wrapMessageBuffer(sel != -1 ? 0x25 : 0x2c) + 0x20 on the font its
+// setDrawTarget selects (g_font51b360), at least 0x60 with a golfer selected (f_w_4c2e00[2] != -1)
+int32_t window_height(Ctx &ctx) {
+  const int32_t sel = ctx.gs().f_w_4c2e00[2];
+  const int32_t r = wrap_message_buffer(ctx, sel != -1 ? 0x25 : 0x2c, state_va(ctx, &GameState::g_font51b360));
+  int32_t h = add32(mul32(r, 15), 0x20);
+  if (sel != -1 && h < 0x60) h = 0x60;
+  return h;
+}
+
 int32_t draw_window_effect(Ctx &ctx, int32_t mode) {
   const int32_t sel = ctx.gs().f_w_4c2e00[2];
+  // phase 4: the window height H = 15 * wrapMessageBuffer(sel != -1 ? 0x25 : 0x2c) + 0x20 (at least 0x60 with a golfer) into
+  // g_value587ea0, which mainLoop reads, and the line breaks in g_textBuffer; with no TextMetrics both stay dropped (U-0942)
+  if (text_metrics(ctx)) ctx.gs().g_value587ea0 = window_height(ctx);
   if (sel == -1 && mode == 0) call_optional(ctx, "playSound", {0x10b, 0x64, 0, 0, 0});
   if (sel >= 0) call_peer(ctx, "composeGolferSprite", {u32(sel)});
   return 0;
@@ -536,6 +596,8 @@ const FuncDef kFuncs[] = {
      [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(text_input_box(c, a[0], S(a, 1), S(a, 2), S(a, 3))); },
      &g_negctl_text_input},
     {"pumpAndRedraw", "default", "int", 1, 0, a_pump_and_redraw, &g_negctl_pump},
+    // phase 4 (internal): drawWindow's window height with its wrapMessageBuffer pass, for tick's drawWindow
+    {"commands.windowHeight", "default", "int", 0, 0, [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(cm::window_height(c)); }, nullptr},
     {"flushRedraw", "default", "int", 0, 0, a_flush_redraw, &g_negctl_none},
     {"hitGolferPanel435f00", "default", "int", 2, 0, XY(hit_golfer_panel), &g_negctl_hit_golfer_panel},
     {"hitEmployeeSlot435570", "default", "int", 2, 0, XY(hit_employee_slot), &g_negctl_hit_employee_slot},

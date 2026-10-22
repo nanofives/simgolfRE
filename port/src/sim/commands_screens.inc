@@ -134,8 +134,17 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
     else if (py >= 0x139 && py < 0x161) sel = 4 + (py >= 0x14d ? 1 : 0);
     else if (py >= 0x180 && py < 0x1a8) sel = 6 + (py >= 0x194 ? 1 : 0);
     else sel = -1;
-    for (int32_t k = 0; k < 8; ++k)   // the cost of each row through appendNumber (g_textBuf is hashed)
+    // each row's text in g_textBuffer: its name from the pointer table f_ptrtab_4c1464, a separator, the cost through
+    // appendNumber (g_textBuf is hashed) and a suffix, then drawn (phase 4, the boot path: without the copy the eight
+    // appendNumber calls of every pass grew the text past g_textBuffer into the FontRefs above it, ui_tour record 1090)
+    const uint32_t text = GS(g_textBuffer);
+    for (int32_t k = 0; k < 8; ++k) {
+      if (SG_NEGCTL(g_negctl_hire_dialog) != 2)
+        cpy(ctx, text, ctx.mem.load<uint32_t>(state_va(ctx, &GameState::f_ptrtab_4c1464) + 4u * u32(k)));
+      cat(ctx, text, state_va(ctx, &GameState::f_strpool_4d21a4) + 0x7b4);
       call_peer(ctx, "appendNumber", {u32(mul32(static_cast<int32_t>(*(state_arr(ctx, &GameState::f_tab_bytes_4c2e2c) + k)), 100))});
+      cat(ctx, text, state_va(ctx, &GameState::f_strpool_4d36bc) + 0x20);
+    }
     frame = add32(frame, 1);
     for (int32_t s = 0, b = 1; b < 9; b += 2, ++s) {
       const int32_t c = s * 4 + (sel == b ? 0x10 : 0);

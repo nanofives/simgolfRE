@@ -69,9 +69,14 @@ int32_t take_code(Ctx &ctx);
 // plays sound 0x10b (the audio backend's: a registered playSound, else nothing); with a golfer (f_w_4c2e00[2] >= 0) the
 // thought bubble composes that golfer's sprite (drawThoughtBubble with mode -1 calls composeGolferSprite once, whose
 // type-record write-back is a simulation write). The hidden-class writes it makes (g_value587ea0, which mainLoop reads, and
-// the line breaks wrapMessageBuffer puts into g_textBuffer) depend on font metrics (Text_put) and are dropped (U-0942).
+// the line breaks wrapMessageBuffer puts into g_textBuffer) depend on font metrics (Text_put): made when the context has a
+// TextMetrics provider (phase 4), dropped without one (U-0942).
 // Returns 0 (the dropped callees' eax).
 int32_t draw_window_effect(Ctx &ctx, int32_t mode);
+// wrapMessageBuffer(cols): g_textBuffer's line breaks for a cols * 8 width measured with `font` (see commands.cpp)
+int32_t wrap_message_buffer(Ctx &ctx, int32_t cols, uint32_t font);
+// drawWindow's window height H (15 * wrapped lines + 0x20, at least 0x60 with a golfer), wrapping g_textBuffer on the way
+int32_t window_height(Ctx &ctx);
 
 }  // namespace cm
 }  // namespace portsim

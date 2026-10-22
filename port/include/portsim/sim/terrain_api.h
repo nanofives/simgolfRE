@@ -59,6 +59,10 @@ class TerrainApi {
   virtual uint32_t render_strip(int32_t x, int32_t y, int32_t dx, int32_t dy, int32_t rot, int32_t zoom) = 0;
   // the engine's allocator (operator new) for the render tile list's nodes; the port has no heap model (U-0823)
   virtual uint32_t operator_new(uint32_t size) = 0;
+  // Terrain::getInstance (phase 4, the boot path): the C++ static initializer staticInitGTerrain stores it in gTerrain
+  // before gameMain. 0 = this implementation has no Terrain object to give (a run from a frame-head image keeps the
+  // image's gTerrain).
+  virtual uint32_t get_instance() { return 0; }
 };
 
 // The TerrainApi of a context (not owned); MissingResource when none is attached.

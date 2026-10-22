@@ -32,7 +32,7 @@ DEFAULT_CW = 0x027F
 (OP_QUIT, OP_HELLO, OP_FUNCS, OP_NEGCTL_SET, OP_NEGCTL_GET, OP_NEGCTL_RESET, OP_DEFECTS, OP_DEFECT_SET, OP_DEFECT_GET,
  OP_DEFECT_RESET, OP_EXE_LOAD, OP_EXE_LOADED, OP_EXE_CONST, OP_OBJECTS, OP_HASH_BYTES, OP_STATE_NEW, OP_STATE_FREE,
  OP_CALL, OP_HASH_CLASS, OP_RUN_FRAMES, OP_EXE_FILL, OP_FILES_PUT, OP_FILES_CLEAR, OP_FILES_ROOT, OP_FILES_SIZE,
- OP_SYNC, OP_FILES_READ) = range(27)
+ OP_SYNC, OP_FILES_READ, OP_RUN_BOOT) = range(28)
 P_BASE, P_MAP, P_UNMAP = 1, 2, 3
 
 
@@ -359,6 +359,16 @@ class State32(L.State):
         for m in queued:
             body += struct.pack("<IIII", m["msg"], m["wp"], m["lp"], m["cls"])
         code, r = self._tx(OP_RUN_FRAMES, body + struct.pack("<i", max_frames))
+        if not r.d:
+            return code, 0, [], []
+        n = r.i32()
+        ts = list(struct.unpack(f"<{n}I", r.raw(4 * n)))
+        hs = struct.unpack(f"<{n * nsim}Q", r.raw(8 * n * nsim))
+        return code, n, ts, [list(hs[k * nsim:(k + 1) * nsim]) for k in range(n)]
+
+    def run_boot(self, trace: bytes, max_frames: int):
+        nsim = len(self.lib.objects("sim"))
+        code, r = self._tx(OP_RUN_BOOT, struct.pack("<I", len(trace)) + bytes(trace) + struct.pack("<i", max_frames))
         if not r.d:
             return code, 0, [], []
         n = r.i32()

@@ -8677,6 +8677,7 @@ a41eab0:  // click at normal speed: slot panel
         u32 src = (G32(h * 8 + (GS(g_holes) + 24)) != 0) ? (GS(f_strpool_4c5c10) + 196) : (GS(f_strpool_4c5c10) + 148);  // ML+0xf5b9..ML+0xf5c9
         StrCat(kBuf, src);                             // ML+0xf5ce..ML+0xf5fc (push 0xa,g_textBuf,edx)
     }
+    StrCat(kBuf, (GS(f_strpool_4c5c10) + 108));                          // ML+0xf5fe..ML+0xf627 (phase 4 fix: this strcat was missing)
     eax = Itoa(G32(GS(g_holesPlusOne)), GS(g_textBuf), 0xA);       // ML+0xf629 __itoa
     StrCat(kBuf, (u32)eax);                             // ML+0xf62e..ML+0xf659
     StrCat(kBuf, (GS(f_strpool_4c5c10) + 56));                           // ML+0xf65b..ML+0xf68c

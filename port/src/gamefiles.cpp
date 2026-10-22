@@ -20,6 +20,9 @@ std::string GameFiles::normalize(const std::string &name) {
   for (char c : name) {
     if (c == '\\') c = '/';
     if (c >= 'A' && c <= 'Z') c = static_cast<char>(c - 'A' + 'a');
+    // Win32 treats consecutive separators as one: loadThemeFile builds "Themes\" + an empty theme + "\" + the name
+    // during mainLoop's Setup, and fopen opens "Themes\\Default.pro"
+    if (c == '/' && !s.empty() && s.back() == '/') continue;
     s.push_back(c);
   }
   while (s.compare(0, 2, "./") == 0) s.erase(0, 2);

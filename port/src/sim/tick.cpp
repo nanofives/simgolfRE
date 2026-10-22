@@ -78,6 +78,8 @@ int g_negctl_hire_employee = 0;
 int g_negctl_set_dirty_flag_a = 0;
 int g_negctl_set_dirty_flag_b = 0;
 int g_negctl_frame = 0;
+int g_negctl_show_tutorial_text = 0;  // 1 = the page is not advanced after its message, 2 = no startMessage, 3 = no camera move,
+                                      // 4 = the camera cache reset g_cachedCameraTileX = -1 skipped
 }  // namespace neg
 using namespace neg;
 
@@ -409,6 +411,8 @@ struct Frame : TkBase {
 #include "tick_frame.inc"
 // phase 3.8 (stream 38j): mainLoop's title menu and session dispatch (log/p38/38j/conv_menu.py)
 #include "tick_menu.inc"
+// phase 4: the boot path (gameMain's part and mainLoop's Setup, then the title menu)
+#include "tick_boot.inc"
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #elif defined(__GNUC__)
@@ -707,6 +711,14 @@ class HeadlessTerrain : public NullTerrain {
   uint32_t elevate_corner(uint32_t, uint32_t tile, int32_t c) override { return step_corner(tile, c, 1); }
   uint32_t lower_corner(uint32_t, uint32_t tile, int32_t c) override { return step_corner(tile, c, -1); }
   uint32_t lower_edge_corner(uint32_t, uint32_t tile, int32_t c, uint32_t, uint32_t) override { return step_corner(tile, c, -1); }
+  // Terrain::getInstance for a boot run (phase 4): the object the exe reads fields of (width +0x14, height +0x18, the tile
+  // array from +0x3a4), carved from the arena like the ones mapped at a segment image's gTerrain: zeroed but the 50 x 50 size
+  uint32_t get_instance() override {
+    const uint32_t va = operator_new(kObjSize);
+    ctx_.mem.store<int32_t>(va + 0x14, 50);
+    ctx_.mem.store<int32_t>(va + 0x18, 50);
+    return va;
+  }
   uint32_t operator_new(uint32_t n) override {
     std::lock_guard<std::mutex> g(mu());
     Blocks &b = blocks()[&ctx_];
@@ -804,7 +816,7 @@ FrameExit tick_frame_io(Ctx &ctx, const FrameInput &in, FrameIoStats &st) {
   io.on_wait_arg = in.on_wait_arg;
   io.h1_commands = in.commands.empty() ? nullptr : &in.commands;
   try {
-    return fr.run(F, in.retile);
+    return in.boot ? fr.boot(F) : fr.run(F, in.retile);
   } catch (const tk::StopAtWait &) {
     return FrameExit::Wait;
   }
@@ -888,7 +900,8 @@ struct TraceEnd {
 };
 
 // The FRAME records and what the trace says between them (schema v1, re/model/trace_schema.md).
-bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, TraceEnd &end, std::string *why) {
+bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, TraceEnd &end, std::string *why,
+                 bool boot = false) {
   if (n < 32 || std::memcmp(tr, "SGTRACE\0", 8) != 0) {
     if (why) *why = "no SGTRACE header";
     return false;
@@ -912,16 +925,28 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
     uint32_t v0;
   };
   std::vector<Run> runs;
+  // boot: frame 0 holds the records before the first FRAME (process start .. the first frame head)
+  if (boot) frames.emplace_back();
   // dispatch batching (port/test/trace_commands.py batches(), the same rules)
   bool open_batch = false;
   uint32_t ctx_ra = frame_ra;
   TBatch *cur = nullptr;  // the last batch (a handler's own clock / key reads belong to its last command)
+  // jgld's window procedure reads the cursor once for every WM_MOUSEMOVE it is given (in all 60 traces each of the 5,422
+  // MSG 0x200 records is followed by one CURSOR record at its position, and no other message is): a read of the original's
+  // engine, made inside a dispatch, which the port does not run. It is left out of the frame's cursor reads, so the count
+  // that says which pump takes a dispatch counts only the reads the port makes (cov_a_golfer frame 2623: two mouse moves in
+  // showHoleStatsScreen's loop had put its closing click two passes late). Negative control tick.frame 6 keeps them.
+  bool after_mousemove = false;
   while (p + 4 <= n) {
     const uint8_t type = tr[p], sub = tr[p + 1];
     const uint32_t len = uint32_t(tr[p + 2]) | uint32_t(tr[p + 3]) << 8;
     const uint8_t *q = tr + p + 4;
     if (p + 4 + len > n) break;
-    if (type == 0x01) {  // CLOCKRUN: first, count, ra, slot, v0 (u64); kind 1 tgt, 2 qpc
+    const bool window_proc_read = after_mousemove && type == 0x08;
+    after_mousemove = type == 0x05 && len >= 8 && rd32(q + 4) == 0x200 && SG_NEGCTL(tk::g_negctl_frame) != 6;
+    if (window_proc_read) {
+      // the window procedure's read (above): not one of the frame's
+    } else if (type == 0x01) {  // CLOCKRUN: first, count, ra, slot, v0 (u64); kind 1 tgt, 2 qpc
       const uint32_t first = rd32(q), count = rd32(q + 4), ra = rd32(q + 8);
       const uint32_t v0 = rd32(q + 16);
       const int32_t site = static_cast<int32_t>(ra - frame_ra);
@@ -1270,7 +1295,8 @@ struct LocalReg {
 }  // namespace tk
 
 int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint32_t *queued, int32_t n_queued,
-                    int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done, std::string *detail) {
+                    int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done, std::string *detail,
+                    bool boot) {
   // Messages queued before the start frame head (start.json queued_messages) are dispatched inside the slice, so the slice's
   // HANDLER records already hold their handler calls: they need nothing else here.
   (void)queued;
@@ -1278,7 +1304,7 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
   *frames_done = 0;
   std::vector<TraceFrame> frames;
   TraceEnd end;
-  if (!parse_trace(trace, trace_len, frames, end, detail)) return -7;  // SG_E_ARG
+  if (!parse_trace(trace, trace_len, frames, end, detail, boot)) return -7;  // SG_E_ARG
   const bool own_terrain = !has_terrain_api(ctx);
   std::unique_ptr<tk::HeadlessTerrain> headless;
   if (own_terrain) {
@@ -1361,7 +1387,37 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
     }
     undelivered_seen = stats.undelivered;
   };
-  for (int32_t k = 1; k <= max_frames; ++k) {
+  // boot: frame 0 (process start .. the first frame head) through the boot step; its output record is record 0
+  int32_t k0 = 1;
+  if (boot && max_frames > 0) {
+    if (frames.size() < 2) {
+      if (detail) *detail = "trace has no FRAME record after the boot";
+      return 0;
+    }
+    FrameInput in = frame_input(frames[0]);
+    in.boot = true;
+    input.begin(frames[0], 0);
+    tk::FrameIoStats io;
+    FrameExit ex;
+    try {
+      ex = tk::tick_frame_io(ctx, in, io);
+    } catch (...) {
+      after_frame(frames[0], 0, io);
+      throw;
+    }
+    after_frame(frames[0], 0, io);
+    if (ex == FrameExit::Quit) {
+      if (detail) *detail = "mainLoop returned (the title menu's quit) during the boot";
+      return 0;
+    }
+    retile = false;
+    out_T[0] = frames[1].t;
+    const uint8_t *s = ctx.bytes();
+    for (size_t j = 0; j < sim.size(); ++j) out_hashes[j] = object_hash(s, *sim[j]);
+    *frames_done = 1;
+    k0 = 2;
+  }
+  for (int32_t k = k0; k <= max_frames; ++k) {
     if (static_cast<size_t>(k) >= frames.size()) {
       if (detail) *detail = "trace slice has no further FRAME record";
       return 0;
@@ -1449,6 +1505,7 @@ void a_draw_flying_ball(Ctx &c, const uint32_t *, Ret &) {
 void a_flush_course_info(Ctx &c, const uint32_t *, Ret &) { Rend(c).flushCourseInfo(); }
 using tk::Leaves;
 void a_start_message(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(Leaves(c).startMessage(S(a, 0), S(a, 1), S(a, 2))); }
+void a_show_tutorial_text(Ctx &c, const uint32_t *, Ret &) { Leaves(c).showTutorialText(); }
 void a_append_cents(Ctx &c, const uint32_t *a, Ret &) { Leaves(c).appendCents(S(a, 0)); }
 void a_log_tick(Ctx &c, const uint32_t *a, Ret &) { Leaves(c).logTick(S(a, 0), S(a, 1)); }
 void a_draw_window(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(Leaves(c).drawWindow(S(a, 0), S(a, 1), S(a, 2), S(a, 3))); }
@@ -1499,6 +1556,7 @@ const FuncDef kFuncs[] = {
     {"drawFlyingBall", "default", "void", 0, 0, a_draw_flying_ball, &g_negctl_draw_flying_ball},
     {"flushCourseInfo", "default", "void", 0, 0, a_flush_course_info, &g_negctl_flush_course_info},
     {"startMessage", "default", "int", 3, 0, a_start_message, &g_negctl_start_message},
+    {"showTutorialText", "default", "void", 0, 0, a_show_tutorial_text, &g_negctl_show_tutorial_text},
     {"appendCents", "default", "void", 1, 0, a_append_cents, &g_negctl_append_cents},
     {"logTick", "default", "void", 2, 0, a_log_tick, &g_negctl_log_tick},
     {"drawWindow", "default", "int", 4, 0, a_draw_window, &g_negctl_draw_window},

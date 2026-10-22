@@ -29,6 +29,7 @@ struct sg_ctx {
   portsim::MemoryGameFiles mem_files;                // phase 3.0: the default game files of a context
   std::unique_ptr<portsim::DirGameFiles> dir_files;  // set by sg_files_root
   std::string run_detail;                            // phase 3.7a: why sg_run_frames stopped
+  bool boot_next = false;                            // phase 4: the next sg_run_frames is sg_run_boot's
   sg_ctx() { ctx.files_ptr = &mem_files; }
 };
 
@@ -43,7 +44,9 @@ std::string tail(const sg_ctx *c) { return c->run_detail.empty() ? std::string()
 int run_frames_cpp(sg_ctx *c, const uint8_t *trace, size_t n, const uint32_t *q, int32_t nq, int32_t max_frames,
                    uint32_t *out_T, uint64_t *out_hashes, int32_t *done) {
   try {
-    const int r = portsim::tick_run_frames(c->ctx, trace, n, q, nq, max_frames, out_T, out_hashes, done, &c->run_detail);
+    const bool boot = c->boot_next;
+    c->boot_next = false;
+    const int r = portsim::tick_run_frames(c->ctx, trace, n, q, nq, max_frames, out_T, out_hashes, done, &c->run_detail, boot);
     return r;
   } catch (const portsim::Fault &f) {
     c->run_detail = "fault at va " + std::to_string(f.va) + tail(c);
@@ -243,6 +246,15 @@ int sg_run_frames(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, const sg_
   // phase 3.7a: the frame step (port/src/sim/tick.cpp); a hardware #DE inside it (a plain division the original runs with
   // divisor 0) is reported as SG_E_DIVIDE like DivideError
   return run_frames_guarded(ctx, trace, trace_len, q.data(), n_queued, max_frames, out_T, out_hashes, frames_done);
+}
+
+int sg_run_boot(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, int32_t max_frames, uint32_t *out_T,
+                uint64_t *out_hashes, int32_t *frames_done) {
+  if (!ctx) return SG_E_ARG;
+  ctx->boot_next = true;
+  const int r = sg_run_frames(ctx, trace, trace_len, nullptr, 0, max_frames, out_T, out_hashes, frames_done);
+  ctx->boot_next = false;
+  return r;
 }
 
 const char *sg_run_frames_detail(sg_ctx *ctx) { return ctx ? ctx->run_detail.c_str() : ""; }

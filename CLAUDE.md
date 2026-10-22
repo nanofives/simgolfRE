@@ -1311,6 +1311,22 @@ The port now WRITES the .srf (writeCourseInfo in tick_render.inc: the exe's form
 cov_r_* scenario collects the folders at run_a too, and the test seeds the port with the original's files at the segment
 start: a load before the segment can write an autosave the install's copy lacks. Controls RED incl. saveCourse mode 1 (the
 tournament loads the port's broken file and faults). 15 tests x64 + Win32; gate 203 / 203, earlier digests unchanged.
+Phase 4 boot path (2026-10-22, re/PHASE4_BOOT_PLAN.md "Result", port/test/boot.py, port/test/test_boot.py, U-1062..U-1066): the
+port runs a whole scenario from process start over the user's exe image alone. C ABI `sg_run_boot` (Win32 runner op 27): the
+trace records before the first FRAME are a frame 0 (parse_trace boot flag) that runs port/src/sim/tick_boot.inc (BootCrt,
+BootGameMain, BootSetup, then the title menu and session); loadInterfaceArt(1) is the generated table menu_iart.inc
+(`~/bin/py -3.12 re/tools/gen_iart.py [--check]` from c3fv.cpp). Gate `~/bin/py -3.12 -m port.test.boot --all --jobs 3 --out
+log/p4/boot_gate.tsv` compares every record with log/p2/p24/<scenario>/c_a/framehash.bin: 57 / 60 PASS, cov_a_golfer and
+cov_b_holes18 KNOWN (boot.py KNOWN table: the cursor tile only, U-1062), cov_b_location NO_FRAMES; x64 = Win32; segment
+digests unchanged. Lessons: a boot run needs the scenario's own install files (scenario.py "files", read by
+segment_files.files_for: cov_b_title's Default.pro); instances\p24 still holds a leftover Default.pro (= Gary Golf.pro) from
+a cov_b_title run, so never take an instance's directory as the install a capture saw. The captures' frame-hash tracer runs on
+the main thread's stack at the frame head, so a function that reads uninitialised stack (screenToTile) can behave differently
+with the tracer on: find such cases with a `C3FT_CALL_LOG` run with and without `C3FT_FRAMEHASH=sim`. The call log's second
+column is virtual ms since t0, not the trace position (cov_b_title: the trace's first FRAME t 1113321 = 0x100000 + 64745). jgld's window procedure
+reads the cursor once per WM_MOUSEMOVE; parse_trace drops those reads (U-1064). Debug recipe for a boot divergence:
+record-k sim hashes give the original's value of a one-dword object by brute force over sgh64 (re/tools/state_image.py), and
+SG_TICK_DUMP=<callee>;<dir> brackets each call with the port's state.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

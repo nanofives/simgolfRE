@@ -112,6 +112,11 @@ typedef struct sg_msg {
 } sg_msg;
 SG_API int sg_run_frames(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, const sg_msg *queued, int32_t n_queued,
                          int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done);
+/* phase 4 (re/PHASE4_BOOT_PLAN.md): sg_run_frames from process start. The context holds the exe's initialised data
+ * (sg_exe_fill_state 1) and the trace starts at the game's spawn; the records before the first FRAME run the boot (gameMain's
+ * part, mainLoop's Setup, the title menu and Session) and output record 0 is the state at the first frame head. */
+SG_API int sg_run_boot(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, int32_t max_frames, uint32_t *out_T,
+                       uint64_t *out_hashes, int32_t *frames_done);
 /* phase 3.7a: why the last sg_run_frames of this context stopped (empty after a full run); valid until the next call */
 SG_API const char *sg_run_frames_detail(sg_ctx *ctx);
 /* phase 3.7a (development): one "name=count" line per callee the frame step called on this thread since the last reset; returns

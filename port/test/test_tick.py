@@ -158,6 +158,9 @@ NEGCTL_STATE = {
     ("drawWindow", 1): "test_thought_bubble_composes_the_portrait",
     ("tileToScreen", 1): "test_tile_to_screen_caches",
     ("canAfford", 1): "test_can_afford_boundary",
+    # phase 4: every corpus call has page 0, which only resets the camera cache; mode 4 skips that reset and reads RED on
+    # the boot run of cov_a_flags (port/test/test_boot.py test_negctl_reads_red); modes 1..3 are unexercised (U-1066)
+    ("showTutorialText", 4): "test_boot.py::test_negctl_reads_red",
 }
 NEGCTL_BLIND = {
     ("snapshotTables", 1): "writes render-class arrays only (the sprite snapshot): no simulation object can see it",

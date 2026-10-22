@@ -543,8 +543,21 @@ void a_font_metrics(Ctx &c, const uint32_t *a, Ret &r) {
   r.set_i32(a[1] < 5 ? out[a[1]] : 0);
 }
 
+// gditext.createFont(fontref) (phase 4, the boot path): what FontRef::createFromId / createSized leave in the FontRef for the
+// port's readers: the Font object word +4 non-zero (a token: the port only tests it against 0, the original holds jgld's heap
+// object) and the five metrics Font::create stores at +0xc..+0x1c, from the provider's font for that FontRef (the same words
+// the provider checks a frame-head image's FontRef against). The vtable +0 and the -1 at +8 are not read by the port.
+void a_create_font(Ctx &c, const uint32_t *a, Ret &r) {
+  int32_t out[5];
+  provider(c).font_metrics(c, a[0], out);
+  c.mem.store<uint32_t>(a[0] + 4, 1);
+  for (uint32_t i = 0; i < 5; ++i) c.mem.store<int32_t>(a[0] + 0xc + 4 * i, out[i]);
+  r.set_i32(0);
+}
+
 const FuncDef kFuncs[] = {
     {"gditext.attach", "default", "int", 0, 0, a_attach, &g_negctl_gditext},
+    {"gditext.createFont", "default", "int", 1, 0, a_create_font, &g_negctl_gditext},
     {"gditext.attachScripted", "default", "int", 2, 0, a_attach_scripted, &g_negctl_gditext},
     {"gditext.detach", "default", "int", 0, 0, a_detach, &g_negctl_gditext},
     {"gditext.fontWidth", "default", "int", 3, 0,

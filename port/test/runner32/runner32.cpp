@@ -51,6 +51,7 @@ struct Api {
   F(uint64_t, sg_hash_bytes, (const uint8_t *, size_t))
   F(int32_t, sg_hash_class, (sg_ctx *, const char *, uint64_t *, int32_t))
   F(int, sg_run_frames, (sg_ctx *, const uint8_t *, size_t, const sg_msg *, int32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+  F(int, sg_run_boot, (sg_ctx *, const uint8_t *, size_t, int32_t, uint32_t *, uint64_t *, int32_t *))
   F(int32_t, sg_defect_count, (void))
   F(int, sg_defect_info_get, (int32_t, sg_defect_info *))
   F(int, sg_defect_set, (const char *, int32_t))
@@ -97,6 +98,7 @@ bool load_api(const char *path) {
   F(uint64_t, sg_hash_bytes, (const uint8_t *, size_t))
   F(int32_t, sg_hash_class, (sg_ctx *, const char *, uint64_t *, int32_t))
   F(int, sg_run_frames, (sg_ctx *, const uint8_t *, size_t, const sg_msg *, int32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+  F(int, sg_run_boot, (sg_ctx *, const uint8_t *, size_t, int32_t, uint32_t *, uint64_t *, int32_t *))
   F(int32_t, sg_defect_count, (void))
   F(int, sg_defect_info_get, (int32_t, sg_defect_info *))
   F(int, sg_defect_set, (const char *, int32_t))
@@ -409,7 +411,7 @@ int main(int argc, char **argv) {
         }
         break;
       }
-      default: {  // handle ops 17..26
+      default: {  // handle ops 17..27
         uint32_t h = r.get<uint32_t>();
         auto it = g_states.find(h);
         if (it == g_states.end()) { status = SG_E_ARG; break; }
@@ -501,6 +503,20 @@ int main(int argc, char **argv) {
           int64_t got = sz < 0 ? -1 : A.sg_files_read(s.ctx, n.c_str(), 0, buf.data(), static_cast<uint64_t>(sz));
           w.put<int64_t>(got);
           if (got > 0) w.bytes(buf.data(), static_cast<size_t>(got));
+        } else if (op == 27) {  // run boot (phase 4): u32 trace length, trace, i32 max records
+          uint32_t tn = r.get<uint32_t>();
+          const uint8_t *trace = r.bytes(tn);
+          int32_t maxf = r.get<int32_t>();
+          int32_t nsim = A.sg_object_count("sim");
+          std::vector<uint32_t> ts(maxf > 0 ? maxf : 1);
+          std::vector<uint64_t> hs(static_cast<size_t>(maxf > 0 ? maxf : 1) * static_cast<size_t>(nsim > 0 ? nsim : 1));
+          int32_t done = 0;
+          status = A.sg_run_boot(s.ctx, trace, tn, maxf, ts.data(), hs.data(), &done);
+          x87_reset();
+          sync_out(s);
+          w.put<int32_t>(done);
+          w.bytes(ts.data(), sizeof(uint32_t) * static_cast<size_t>(done));
+          w.bytes(hs.data(), sizeof(uint64_t) * static_cast<size_t>(done) * static_cast<size_t>(nsim));
         } else if (op == 25) {  // apply pending only (map errors surface here)
         } else {
           status = SG_E_ARG;

@@ -44,7 +44,10 @@ DROPPED = sorted((set(WIDGET_DROPPED) | {
     0x00473E60,   # Image_draw
     0x00474AE0, 0x00474DD0, 0x00475C60, 0x00474C40,   # the frame Image: ctor, create, blit thunk, dtor
     0x0045BF80,   # waitTicks (with a zero second argument it dispatches nothing)
-    0x0040D320,   # drawWindow (its effect with no golfer and mode -2: none; wrapMessageBuffer's text is drawing)
+    # drawWindow runs for real (phase 4: its wrapMessageBuffer writes newlines into g_textBuffer and its window height into
+    # g_value587ea0, which mainLoop reads); its drawing callees are stubbed: drawWindowFrame, playSound, drawMessageBuffer,
+    # Surface_blitThunk, Surface_drawScaled (drawThoughtBubble runs: its composeGolferSprite is scripted on both sides)
+    0x0040CDD0, 0x004481B0, 0x0045B0D0, 0x00473F60, 0x00473CB0,
     0x004740F0,   # Surface_blit2
     0x00432620,   # drawPanelBackdrop
     0x0040D0B0, 0x0046E710, 0x00404A20,   # drawFrameS2, drawRectScaled, drawTextScaled

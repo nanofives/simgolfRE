@@ -54,6 +54,9 @@ int32_t tier_price(int32_t tier);
 // effects only (see the function's comment). Returns -1 after back or a load, or the course record bought.
 int32_t course_action_menu(Ctx &ctx);
 
+// loadTopScores (re/analysis/save/0040ad60): the best-scores table g_topScores from the score file, or a default one drawn from
+// g_rng when the file is missing (phase 4, the boot path; see the function's comment). Returns 1 when read, 0 when built.
+int32_t load_top_scores(Ctx &ctx);
 // saveCourse (re/analysis/save/0040b680): saves the course named in g_textBuffer (two header lines, the course body, the marker).
 int32_t save_course(Ctx &ctx);
 // saveGameDialog (re/analysis/save/00405b10): the name prompt of the save key, then saveGame.

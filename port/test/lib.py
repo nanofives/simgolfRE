@@ -83,6 +83,7 @@ def _sig(dll):
         ("sg_hash_class", I32, [P, C.c_char_p, C.POINTER(U64), I32]),
         ("sg_run_frames", C.c_int, [P, C.c_char_p, SZ, C.POINTER(SgMsg), I32, I32, C.POINTER(U32), C.POINTER(U64),
                                     C.POINTER(I32)]),
+        ("sg_run_boot", C.c_int, [P, C.c_char_p, SZ, I32, C.POINTER(U32), C.POINTER(U64), C.POINTER(I32)]),
         ("sg_build_info", C.c_char_p, []),
         # phase 3.0
         ("sg_defect_count", I32, []), ("sg_defect_info_get", C.c_int, [I32, C.POINTER(SgDefectInfo)]),
@@ -317,6 +318,17 @@ class State:
         done = C.c_int32(0)
         code = self.lib.dll.sg_run_frames(self.ctx, bytes(trace), len(trace), q, len(queued), max_frames, out_t, out_h,
                                           C.byref(done))
+        n = done.value
+        return code, n, list(out_t[:n]), [list(out_h[k * nsim:(k + 1) * nsim]) for k in range(n)]
+
+    def run_boot(self, trace: bytes, max_frames: int):
+        """sg_run_boot (phase 4): a run from process start over the exe image; record 0 = the first frame head.
+        (code, records_done, [T], [[hash] * n_sim])."""
+        nsim = self.lib.dll.sg_object_count(b"sim")
+        out_t = (C.c_uint32 * max(1, max_frames))()
+        out_h = (C.c_uint64 * max(1, max_frames * nsim))()
+        done = C.c_int32(0)
+        code = self.lib.dll.sg_run_boot(self.ctx, bytes(trace), len(trace), max_frames, out_t, out_h, C.byref(done))
         n = done.value
         return code, n, list(out_t[:n]), [list(out_h[k * nsim:(k + 1) * nsim]) for k in range(n)]
 

@@ -28,8 +28,30 @@ def flagged_copy(raw: bytes, bit: int) -> bytes:
     return bytes(b)
 
 
+def declared_files(scenario: str) -> dict:
+    """The scenario's own install files: re/tools/scenario.py SCENARIOS[<name>]["files"] = {logical name: source path}, which
+    the recording harness copies into the instance before each run (scenario_refs.py restore_files). cov_b_title boots with
+    Themes/Default.pro = the Championship theme's Gary Golf.pro, which mainLoop's Setup loads into golfer type 0. Read from
+    the source text (importing scenario.py would load the game harness)."""
+    import ast
+    import re
+    src = (ROOT / "re" / "tools" / "scenario.py").read_text(encoding="utf-8")
+    m = re.search(r'^SCENARIOS\["%s"\] = \{.*?"files": (\{[^}]*\})' % re.escape(scenario), src, re.M)
+    if not m:
+        return {}
+    out = {}
+    for name, rel in ast.literal_eval(m.group(1)).items():
+        f = ROOT / rel
+        if f.is_file():
+            out[name] = f.read_bytes()
+    return out
+
+
 def files_for(scenario: str) -> dict:
     """{logical name: bytes} to add to the install for the scenario's segments ({} when it needs none)"""
+    declared = declared_files(scenario)
+    if declared:
+        return declared
     if scenario == "cov_a_flags":
         base = INSTALL / "Saved Games" / "mood5.sve"
         if not base.exists():
