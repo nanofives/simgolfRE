@@ -211,7 +211,9 @@ class SegmentRunner:
             return f"record 0 hash differs for {len(bad)} sim objects: {', '.join(bad[:6])}"
         return None
 
-    def run(self, seg: Segment) -> SegmentResult:
+    def run(self, seg: Segment, after=None) -> SegmentResult:
+        """`after(st, res)`, when given, runs once the segment has run, on the same context (phase 4: the .sve round
+        trip reads the files the port wrote back through it)."""
         res = SegmentResult(seg.name, "LOAD_FAILED", frames_expected=len(seg.records) - 1)
         with self.lib.state() as st:
             # phase 3.7a: the GameState at the original data section's base, as in the vector runner: some sim-class
@@ -228,7 +230,10 @@ class SegmentRunner:
             if gdi:
                 st.call("gditext.attach", [])
             try:
-                return self._run_loaded(seg, st, res)
+                out = self._run_loaded(seg, st, res)
+                if after is not None:
+                    after(st, out)
+                return out
             finally:
                 if gdi:
                     st.call("gditext.detach", [])

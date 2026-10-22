@@ -132,6 +132,13 @@ class InputSource {
     (void)t;
     return false;
   }
+  // PACE (phase 4, the .sve round trip): a modal loop that reads no cursor but reads the clock once per pass after its pump
+  // (pumpAndRedraw's `now = timeGetTime()`) names that read's site (as clock() keys it) for as long as it runs, and 0 when
+  // it leaves. Meanwhile a Blocking pump takes the next modal dispatch only on the pass the original took it in: when at
+  // most one of the source's reads at `site` before that dispatch is still unread. The pass matters: the loop's first
+  // flushRedraw clears a pending redraw left by an earlier key (textInputBox's Enter), so a key handed to the first pass is
+  // cleared with it where the original's, arriving passes later, ends the wait (cov_r_sve, the SimFoto wait).
+  virtual void pace(int32_t site) { (void)site; }
 };
 // A Blocking pump found no input left: neither an InputSource nor a remaining command (C ABI: SG_E_NO_RESOURCE). `what`
 // is the hooks.csv name of the waiting function.

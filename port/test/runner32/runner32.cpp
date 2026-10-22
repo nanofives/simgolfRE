@@ -64,6 +64,7 @@ struct Api {
   F(void, sg_files_clear, (sg_ctx *))
   F(int, sg_files_root, (sg_ctx *, const char *))
   F(int64_t, sg_files_size, (sg_ctx *, const char *))
+  F(int64_t, sg_files_read, (sg_ctx *, const char *, uint64_t, uint8_t *, uint64_t))
   F(const char *, sg_build_info, (void))
 #undef F
 };
@@ -109,6 +110,7 @@ bool load_api(const char *path) {
   F(void, sg_files_clear, (sg_ctx *))
   F(int, sg_files_root, (sg_ctx *, const char *))
   F(int64_t, sg_files_size, (sg_ctx *, const char *))
+  F(int64_t, sg_files_read, (sg_ctx *, const char *, uint64_t, uint8_t *, uint64_t))
   F(const char *, sg_build_info, (void))
 #undef F
   return ok;
@@ -407,7 +409,7 @@ int main(int argc, char **argv) {
         }
         break;
       }
-      default: {  // handle ops 17..24
+      default: {  // handle ops 17..26
         uint32_t h = r.get<uint32_t>();
         auto it = g_states.find(h);
         if (it == g_states.end()) { status = SG_E_ARG; break; }
@@ -492,6 +494,13 @@ int main(int argc, char **argv) {
         } else if (op == 24) {
           int64_t n = A.sg_files_size(s.ctx, r.str().c_str());
           w.put<int64_t>(n);
+        } else if (op == 26) {  // whole file: i64 n, then n bytes (n -1 = absent)
+          std::string n = r.str();
+          int64_t sz = A.sg_files_size(s.ctx, n.c_str());
+          std::vector<uint8_t> buf(static_cast<size_t>(sz > 0 ? sz : 1));
+          int64_t got = sz < 0 ? -1 : A.sg_files_read(s.ctx, n.c_str(), 0, buf.data(), static_cast<uint64_t>(sz));
+          w.put<int64_t>(got);
+          if (got > 0) w.bytes(buf.data(), static_cast<size_t>(got));
         } else if (op == 25) {  // apply pending only (map errors surface here)
         } else {
           status = SG_E_ARG;

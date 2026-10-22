@@ -148,6 +148,8 @@ SG_API int sg_files_put(sg_ctx *ctx, const char *name, const uint8_t *data, size
 SG_API void sg_files_clear(sg_ctx *ctx);
 SG_API int sg_files_root(sg_ctx *ctx, const char *dir);     /* read <dir>/<name> instead (NULL: back to memory) */
 SG_API int64_t sg_files_size(sg_ctx *ctx, const char *name); /* -1 when absent */
+/* up to cap bytes of `name` from `offset` as the port sees it (overlay writes included); bytes read, -1 when absent */
+SG_API int64_t sg_files_read(sg_ctx *ctx, const char *name, uint64_t offset, uint8_t *buf, uint64_t cap);
 
 SG_API const char *sg_build_info(void);                   /* "portsim <arch> <config>" */
 

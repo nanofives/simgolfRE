@@ -19,7 +19,8 @@ namespace {
 // Negative controls: mode 0 is the correct body.
 //   commands.rootHandler  1 = onPress1 stores the button word 2, 2 = the press handlers' scaled x is x / scale (not 2x),
 //                         3 = onKey keeps a for codes 0x60..0x69, 4 = onUnpoint stores 0 instead of -1
-//   pumpAndRedraw         1 = the click flag does not keep the button word, 2 = the key words are not copied after the wait
+//   pumpAndRedraw         1 = the click flag does not keep the button word, 2 = the key words are not copied after the wait,
+//                         3 = not paced by its clock reads (a recorded key reaches the first pass)
 //   handleEmployeeAction  1 = firing costs 0x18
 //   clickEmployeeView     1 = camera x >> 9
 //   clickGolferPanel      1 = shot style 7 -> 4
@@ -324,14 +325,30 @@ int32_t flush_redraw(Ctx &ctx) {
   return 0;
 }
 
+// pumpAndRedraw's two timeGetTime reads as clock sites (offsets from mainLoop's frame-head return address, InputSource::clock):
+// `start` before the loop and `now` after each pass's pump
+constexpr int32_t kSitePumpStart = 0x4c49d, kSitePumpPass = 0x4c4b6;
+
 int32_t pump_and_redraw(Ctx &ctx, int32_t limit, const char *where) {
-  (void)limit;  // every caller passes 0: the wait has no time limit (the clock reads are dropped)
+  (void)limit;  // every caller passes 0: the wait has no time limit (the clock values are not used)
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_pump);
   gs.g_rootInput[15] = 0;
   gs.g_rootInput[kButton] = 0;
+  // PACE: the original's reads pace the passes, so a recorded dispatch reaches the pass it reached there (commands.h)
+  InputSource *src = input_source(ctx);
+  uint32_t t = 0;
+  const bool paced = src != nullptr && mode != 3 && src->clock(kSitePumpStart, t);
+  if (paced) src->pace(kSitePumpPass);
+  struct Unpace {
+    InputSource *s;
+    ~Unpace() {
+      if (s) s->pace(0);
+    }
+  } unpace{paced ? src : nullptr};
   for (;;) {
     pump_messages(ctx, PumpKind::Blocking, where);
+    if (paced && !src->clock(kSitePumpPass, t)) src->pace(0);   // no read left at the site: nothing more to pace by
     if (mode == 1) gs.g_rootInput[kButton] = 0;
     if (gs.g_rootInput[kButton] != 0) break;
     if (flush_redraw(ctx) != 0) break;

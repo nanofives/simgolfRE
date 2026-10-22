@@ -236,7 +236,7 @@ def setup(scen: str, instance: pathlib.Path):
             import scenario as SCN
             files = {}
             for n, e in SCN.SCENARIOS.items():
-                if n.startswith(("cov_k", "cov_l")) and "lockstep" in e:   # c3fyl: cov_l_* too
+                if n.startswith(("cov_k", "cov_l", "cov_r")) and "lockstep" in e:   # c3fyl: cov_l_*; phase 4: cov_r_*
                     S.SCENARIOS[n] = e["lockstep"]
                     files[n] = e.get("files", {})
             if files.get(scen):

@@ -36,7 +36,7 @@ namespace {
 //                 6 = loadThemes never runs after a load, 7 = delete removes the next row's file, 8 = load button radius 0x19
 //   loadCourse    1 = mode 3 reads the body, 2 = mode 0 does not rebuild the heightfield, 3 = the two slots keep their value
 //   serialize     (through saveGame / loadGame) 9 = the third body field is skipped on load
-int g_negctl_save_game = 0;
+int g_negctl_save_game = 0;   // 1 = no date, 2 = no .sve extension, 3 = a 0x63-byte header, 4 = body byte 0xf9c flipped
 int g_negctl_load_game = 0;
 int g_negctl_load_course = 0;
 int g_negctl_browser = 0;
@@ -221,6 +221,7 @@ int32_t save_game(Ctx &ctx, uint32_t name) {
   if (mode != 1) peer(ctx, "appendDate", {u32(gs.g_date)});
   f.write(ctx.mem.at(text, 0x64), mode == 3 ? 0x63u : 0x64u);
   serialize_course(ctx, f, 0);
+  if (mode == 4 && f.data.size() > 0x1000) f.data[0x1000] ^= 1;   // a body byte of the file only (the state is untouched)
   return f.close(ctx);
 }
 

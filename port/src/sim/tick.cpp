@@ -1097,6 +1097,7 @@ class TraceInput : public InputSource {
     next_ = 0;
     wnext_ = 0;
     cnext_ = 0;
+    pace_site_ = 0;
     refused_at_ = SIZE_MAX;
     record_ = record;
     if (SG_NEGCTL(g_negctl_frame) != 5)
@@ -1154,6 +1155,7 @@ class TraceInput : public InputSource {
       refused_at_ = io.cursor_used;
       if (!stuck) return false;
     }
+    if (kind == PumpKind::Blocking && pace_site_ != 0 && unread_before(pace_site_, b.pos) > 1) return false;  // PACE
     refused_at_ = SIZE_MAX;
     if (io.cursor_used != b.cursors) ++misaligned_;
     if (cnext_ > 0 && fr_->clock_pos[cnext_ - 1] >= b.pos) ++clock_late_;
@@ -1195,7 +1197,16 @@ class TraceInput : public InputSource {
     return false;
   }
 
+ void pace(int32_t site) override { pace_site_ = site; }
+
  private:
+  // the frame's clock reads at `site` made before clock ordinal `pos` that clock() has not returned yet
+  size_t unread_before(int32_t site, uint32_t pos) const {
+    size_t n = 0;
+    for (size_t i = cnext_; fr_ && i < fr_->clock.size() && fr_->clock_pos[i] < pos; ++i)
+      if (fr_->clock[i].first == site) ++n;
+    return n;
+  }
   void writes_before(uint32_t pos) {
     if (SG_NEGCTL(g_negctl_frame) == 5) return;  // negative control: the harness's memory writes skipped
     while (fr_ && wnext_ < fr_->writes.size() && fr_->writes[wnext_].pos < pos) {
@@ -1207,6 +1218,7 @@ class TraceInput : public InputSource {
   const TraceFrame *fr_ = nullptr;
   size_t next_ = 0, wnext_ = 0;
   size_t cnext_ = 0;  // the clock record after the last one clock() returned
+  int32_t pace_site_ = 0;  // PACE: the clock site of the modal loop running (0 = none)
   int32_t record_ = 0;
   uint64_t delivered_ = 0, misaligned_ = 0;
   uint64_t clock_served_ = 0, clock_none_ = 0, clock_late_ = 0;

@@ -32,7 +32,7 @@ DEFAULT_CW = 0x027F
 (OP_QUIT, OP_HELLO, OP_FUNCS, OP_NEGCTL_SET, OP_NEGCTL_GET, OP_NEGCTL_RESET, OP_DEFECTS, OP_DEFECT_SET, OP_DEFECT_GET,
  OP_DEFECT_RESET, OP_EXE_LOAD, OP_EXE_LOADED, OP_EXE_CONST, OP_OBJECTS, OP_HASH_BYTES, OP_STATE_NEW, OP_STATE_FREE,
  OP_CALL, OP_HASH_CLASS, OP_RUN_FRAMES, OP_EXE_FILL, OP_FILES_PUT, OP_FILES_CLEAR, OP_FILES_ROOT, OP_FILES_SIZE,
- OP_SYNC) = range(26)
+ OP_SYNC, OP_FILES_READ) = range(27)
 P_BASE, P_MAP, P_UNMAP = 1, 2, 3
 
 
@@ -385,6 +385,11 @@ class State32(L.State):
     def files_size(self, name: str) -> int:
         _, r = self._tx(OP_FILES_SIZE, _s(name))
         return struct.unpack("<q", r.raw(8))[0]
+
+    def files_read(self, name: str) -> bytes | None:
+        _, r = self._tx(OP_FILES_READ, _s(name))
+        (n,) = struct.unpack("<q", r.raw(8))
+        return None if n < 0 else bytes(r.raw(n))
 
 
 _LIB32: Lib32 | None = None

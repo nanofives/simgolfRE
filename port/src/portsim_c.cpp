@@ -359,6 +359,11 @@ int64_t sg_files_size(sg_ctx *ctx, const char *name) {
   return ctx->ctx.files_ptr->size(name);
 }
 
+int64_t sg_files_read(sg_ctx *ctx, const char *name, uint64_t offset, uint8_t *buf, uint64_t cap) {
+  if (!ctx || !name || !ctx->ctx.files_ptr || (cap && !buf)) return -1;
+  return ctx->ctx.files_ptr->read(name, offset, buf, cap);
+}
+
 const char *sg_build_info(void) {
 #if defined(_M_X64) || defined(__x86_64__)
 #define SG_ARCH "x64"

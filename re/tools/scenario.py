@@ -3559,3 +3559,131 @@ def cov_l_bridge(c):
 
 
 SCENARIOS["cov_l_bridge"] = {"env": {}, "phases": [], "lockstep": cov_l_bridge}
+
+
+# ---- Phase 4 .sve round trip (2026-10-21) ------------------------------------------------------------------------
+# The ORIGINAL loads a save, plays, saves through the save key, loads the file it just wrote, plays, saves again. Every
+# .sve the game wrote is copied out at each checkpoint (<run>/saves/<checkpoint>/<name>), so the port's files can be
+# compared byte for byte with the original's (port/test/test_sve_roundtrip.py). Everything after the first in-frame
+# checkpoint that depends on a file the run wrote stays inside ONE segment (no checkpoint between save_1 and its load):
+# a restart from a later frame-head image boots on the restored saves and would not find the file.
+R_SAVES_PRISTINE = ("&autosave1.sve", "&autosave2.sve", "mood5.sve", "stories5.sve", "stories9.sve")
+
+
+def _cov_r_saves_dir():
+    import sys
+    return sys.modules["scenario_ab"].INSTANCE / "saved games"
+
+
+def _cov_r_row(name):
+    """The browser's row of `name`: loadGameBrowserScreen lists Saved Games/*.sve in FindFirstFileA order (upper-cased,
+    log/p38/38b_notes.md section 2)."""
+    names = sorted((p.name for p in _cov_r_saves_dir().glob("*.sve")), key=str.upper)
+    return [n.upper() for n in names].index(name.upper())
+
+
+def _cov_r_written():
+    return sorted(p.name for p in _cov_r_saves_dir().glob("*.sve") if p.name.lower() not in R_SAVES_PRISTINE)
+
+
+def _cov_r_collect(c, name):
+    """After checkpoint `name`: copy every save the game has written (new names, and the autosaves when they changed) into
+    <run>/saves/<name>/, with an index of sha256s."""
+    import hashlib
+    import json
+    import shutil as _sh
+    out = c.run.out / "saves" / name
+    out.mkdir(parents=True, exist_ok=True)
+    idx = {}
+    for p in sorted(_cov_r_saves_dir().glob("*.sve")):
+        _sh.copy2(p, out / p.name)
+        idx[p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
+    (out / "index.json").write_text(json.dumps(idx, indent=1))
+
+
+def _cov_r_save(c, tag):
+    """The save key: saveGameDialog 0x00405b10 proposes `<course title> <day> <date>` (textInputBox), Enter accepts it,
+    saveGame 0x0040b4a0 writes it, startMessage reports it."""
+    before = set(_cov_r_written())
+    yield from _cova_char(c, "S", settle=3000)
+    yield from c.key(0x0D, char="\r"); yield from c.sleep(4000)
+    yield from _cova_esc(c, 1)
+    new = sorted(set(_cov_r_written()) - before)
+    if c.run.mode == "record" and len(new) != 1:
+        raise RuntimeError(f"{tag}: expected one new save, found {new}")
+    return new[0] if new else None
+
+
+def cov_r_sve(c):
+    """Load mood5.sve (title menu), play; load stories5.sve through the in-game browser ('L'), play 20 s, save (save_1);
+    then the second 'L' meant to load save_1. `loaded` is the segment corpus's prefix, so the corpus has one segment,
+    run_a -> end (979 frames). As recorded, a SimFoto wait (narrateShot's pumpAndRedraw(0), from scanShotArea) began 107
+    passes before that 'L' and took it as its key, so the browser never opened and save_2 continues the same game (U-1061;
+    the regression for that wait's pacing). cov_r_reload makes the reload happen."""
+    yield from _cov_b_menu(c)
+    yield from _cova_load_row(c, 2, True)                              # mood5 (rows: 0, 1 autosaves, 2 mood5, 3, 4)
+    yield from c.checkpoint("loaded")
+    for _ in range(20):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("run_a")
+    yield from _cova_load_row(c, _cov_r_row("stories5.sve"), False)    # an original save through the in-game browser
+    for _ in range(20):
+        yield from c.sleep(1000)
+    s1 = yield from _cov_r_save(c, "save_1")
+    for _ in range(5):
+        yield from c.sleep(1000)
+    if s1:
+        yield from _cova_load_row(c, _cov_r_row(s1), False)            # the file this run just wrote
+    for _ in range(20):
+        yield from c.sleep(1000)
+    yield from _cov_r_save(c, "save_2")
+    for _ in range(3):
+        yield from c.sleep(1000)
+    _cov_r_collect(c, "end")      # before the checkpoint: a script is not resumed after its last one
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_r_sve"] = {"env": {}, "phases": [], "lockstep": cov_r_sve}
+
+
+G_DATE = 0x00834170                         # g_date (re/names/exe_10_globals.tsv)
+
+
+def cov_r_reload(c):
+    """cov_r_sve with the reload made sure: an Esc before every browser and save key closes a SimFoto or message window
+    that would take the key (cov_r_sve lost its second 'L' that way), and in the RECORD run the date read after loading
+    save_1 must be back below the date read before it, or the recording stops."""
+    yield from _cov_b_menu(c)
+    yield from _cova_load_row(c, 2, True)                              # mood5
+    yield from c.checkpoint("loaded")
+    for _ in range(20):
+        yield from c.sleep(1000)
+    yield from c.checkpoint("run_a")
+    yield from _cova_esc(c, 1)
+    yield from _cova_load_row(c, _cov_r_row("stories5.sve"), False)
+    for _ in range(20):
+        yield from c.sleep(1000)
+    yield from _cova_esc(c, 1)
+    d1 = _cov_b_obs(c, "date_save1", lambda: _cov_b_read_u32(c, G_DATE))
+    s1 = yield from _cov_r_save(c, "save_1")
+    for _ in range(10):
+        yield from c.sleep(1000)
+    yield from _cova_esc(c, 1)
+    before = _cov_b_obs(c, "date_before_reload", lambda: _cov_b_read_u32(c, G_DATE))
+    if s1:
+        yield from _cova_load_row(c, _cov_r_row(s1), False)            # the file this run just wrote
+    after = _cov_b_obs(c, "date_after_reload", lambda: _cov_b_read_u32(c, G_DATE))
+    # the date is read about 15 s after the load (the browser helper's waits): back below `before` only through the load
+    if c.run.mode == "record" and not (d1 <= after < before):
+        raise RuntimeError(f"save_1 not reloaded: date at save 0x{d1:x}, before 0x{before:x}, after 0x{after:x}")
+    for _ in range(20):
+        yield from c.sleep(1000)
+    yield from _cova_esc(c, 1)
+    yield from _cov_r_save(c, "save_2")
+    for _ in range(3):
+        yield from c.sleep(1000)
+    _cov_r_collect(c, "end")      # before the checkpoint: a script is not resumed after its last one
+    yield from c.checkpoint("end")
+
+
+SCENARIOS["cov_r_reload"] = {"env": {}, "phases": [], "lockstep": cov_r_reload}

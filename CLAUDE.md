@@ -1286,6 +1286,24 @@ original, the hook needs fixing); mainLoop_structure.md had the title menu's cha
 / 0x1000000 swapped (corrected, U-1053). HYGIENE: never run `pytest port/test` as one process (it grew to 10-16 GB and exhausted
 the 64 GB commit charge, killing siblings' runs with MemoryError): log/p38/suite_by_file.sh runs one file per process; lib.load()
 rebuilds port/build/x64 from every .cpp in port/src/sim, so a tree holding a child's unmerged module tests that module too.
+Phase 4 .sve round trip (2026-10-21, re/analysis/data/sve_roundtrip.md, port/test/test_sve_roundtrip.py, U-1060 / U-1061):
+scenarios cov_r_reload (load mood5, browser-load stories5, play, save key = save_1, browser-load save_1 back, play, save_2; an
+Esc before every browser / save key; the record run requires g_date to go back on the reload) and cov_r_sve (no Esc: a SimFoto
+wait took the second 'L', so no reload; kept as that wait's regression), family s36a (prefix `cov_r` in scenario_refs.py). Each
+run copies the saved-games folder to `<run>/saves/end/` before its end checkpoint; `~/bin/py -3.12 -m port.test.sve_refs
+collect <scenario>` checks that every run agrees (9 per scenario did) and copies the files to port/corpus/saves/. The port runs
+the one segment of each (979 / 1,047 frames PASS) and reads its files back with the new C ABI call `sg_files_read` (lib.py /
+lib32.py `files_read`; `SegmentRunner.run(seg, after=fn)` gives the context after the run): all 10 files the original wrote
+have equal body bytes and equal header text up to the NUL, x64 and Win32; the header's 0x64 bytes past the NUL are leftover
+g_textBuffer text from drawing the port does not do (reported, not failed, U-1060). Controls RED: saveGame mode 4 (one body
+byte; cov_r_sve's segment still PASSES, cov_r_reload's reload reads it back and FAILS), modes 1 / 3, loadGame mode 9,
+pumpAndRedraw mode 3. PORT DEFECT FIXED: TraceInput handed a modal dispatch to the first pass of the cursor-less SimFoto wait
+(narrateShot's pumpAndRedraw(0)); the original took it on pass 107, after the first pass's flushRedraw had cleared the pending
+redraw textInputBox's Enter left, so the port cleared the key too and starved. `InputSource::pace(site)` (commands.h): the
+wait reads its clock sites through the source and a Blocking dispatch waits until at most one read at the pass site before it
+is unread. The 200 earlier segments keep their digests. g_redrawPending / gDirtyFlagA / gDirtyFlagB are class `render`, which
+the segment gate does not compare. Diagnosing a modal-wait slip: `C3FT_CALL_LOG=<va>:<n>:r,...` on a `scenario_refs.py run`
+logs the original's main-thread calls with returns (calls.json); SG_TICK_INPUT_LOG takes a FILE NAME, not 1.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

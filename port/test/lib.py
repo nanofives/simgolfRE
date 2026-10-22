@@ -92,6 +92,7 @@ def _sig(dll):
         ("sg_exe_const", C.c_int, [C.c_char_p, P, U32, C.POINTER(U32)]), ("sg_exe_fill_state", C.c_int, [P, I32]),
         ("sg_files_put", C.c_int, [P, C.c_char_p, C.c_char_p, SZ]), ("sg_files_clear", None, [P]),
         ("sg_files_root", C.c_int, [P, C.c_char_p]), ("sg_files_size", C.c_int64, [P, C.c_char_p]),
+        ("sg_files_read", C.c_int64, [P, C.c_char_p, C.c_uint64, C.c_char_p, C.c_uint64]),
     ]:
         f = getattr(dll, name)
         f.restype = res
@@ -280,6 +281,15 @@ class State:
 
     def files_size(self, name: str) -> int:
         return int(self.lib.dll.sg_files_size(self.ctx, name.encode()))
+
+    def files_read(self, name: str) -> bytes | None:
+        """The whole file as the port sees it (the overlay's writes included), None when absent."""
+        n = self.files_size(name)
+        if n < 0:
+            return None
+        buf = C.create_string_buffer(max(1, n))
+        got = int(self.lib.dll.sg_files_read(self.ctx, name.encode(), 0, buf, n))
+        return None if got < 0 else buf.raw[:got]
 
     # ---- calls and hashes
     def call(self, name: str, args: list[int]) -> SgRet:

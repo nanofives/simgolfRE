@@ -97,14 +97,14 @@ Dropped from the port: the CRT, unwind funclets, vendored libpng/zlib/libjpeg (u
 7. **Decisions on original defects.** One list: keep (affects saves or balance) or fix (hangs, overruns). Start from the
    findings in CLAUDE.md.
 
-## Status (2026-10-20)
+## Status (2026-10-21)
 
 | Phase | Status | Where |
 |---|---|---|
 | 1. Data model | done (2026-10-18) | re/PHASE1_PLAN.md, re/model/, port/include/gamestate.h |
 | 2. Oracle | done (2026-10-19): traces, 190 + 10 segments, 15,191 vectors, harness with x64 and Win32 (x87) backends | re/PHASE23_PLAN.md, port/test/ |
 | 3. Headless simulation core | done (2026-10-20): all 200 accepted segments PASS on x64 and Win32; gates (c) 6.22-year course_season_6y as one run, (d) championship driven by semantic commands only, (e) divergence ledger, (f) 8,192 frames in 23 s x64 / 29 s Win32 | re/PHASE38_PLAN.md section 5, log/p38/MERGES.md |
-| 4. Formats and loaders | partly done inside phase 3: GameFiles (bytes, list, write overlay), themes, story files, golfer roster, saveGame / loadGame / saveCourse, the load browser, loadWorldAssets / loadInterfaceArt(0) as the sim needs them | modules course, loaders, saveload, menu |
+| 4. Formats and loaders | .sve round trip done (2026-10-21): in cov_r_sve and cov_r_reload the port writes the 10 saves the original wrote with equal bodies and header text (x64 and Win32) and plays on from its own save; header residue after the NUL not compared (U-1060). Done inside phase 3: GameFiles, themes, story files, golfer roster, the load browser, loadWorldAssets / loadInterfaceArt(0). Open: course files, loadInterfaceArt(full != 0) | re/analysis/data/sve_roundtrip.md, port/test/test_sve_roundtrip.py; modules course, loaders, saveload, menu |
 | 5. Backends | not started; text widths exist as a host GDI provider (module gditext) and Terrain.dll as the TerrainApi interface with a headless stand-in | portsim/sim/gditext.h, terrain_api.h |
 | 6. UI and screens | command effects of every screen a segment reaches are ported (Command / InputSource, semantic commands); drawing is dropped | modules commands, dialogs, reports, routing, chareditor, semantic |
 | 7. Defect decisions | not started; every reproduced defect has a switch (default = the original) | re/port/divergences.tsv, re/analysis/data/model_defects.md |
@@ -114,8 +114,9 @@ port's oracle) fixed and re-verified.
 
 ## Next steps
 
-- **Phase 4 completion.** A `.sve` round trip through the port (load an original save, run, save, compare with the original's
-  save of the same frame); course files; the asset manifest for the full Setup path (loadInterfaceArt(full != 0), U-1050).
+- **Phase 4 completion.** Course files: a saveCourse / loadCourse round trip through a championship course, gated the same way
+  as the .sve one (re/analysis/data/sve_roundtrip.md); the asset manifest for the full Setup path (loadInterfaceArt(full != 0),
+  U-1050).
 - **Phase 5, backends.** Start with the software 16-bit gfx backend: draw what the dropped drawing paths draw and compare with
   the recorded checkpoint frames (scenario_ab's back-buffer frames). Then Terrain.dll's renderer behind TerrainApi, then audio.
   Decide whether text widths stay GDI or come from the font files (TrueType advances + GDI rounding, U-0960 / U-0961).
