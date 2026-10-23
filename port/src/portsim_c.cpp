@@ -12,6 +12,8 @@
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
 #include "portsim/state_hash.h"
+#include "portsim/sim/gl_sink.h"
+#include "portsim/sim/terrain_render.h"
 #include "portsim/sim/tick.h"
 
 #if defined(_MSC_VER)
@@ -30,6 +32,7 @@ struct sg_ctx {
   std::unique_ptr<portsim::DirGameFiles> dir_files;  // set by sg_files_root
   std::string run_detail;                            // phase 3.7a: why sg_run_frames stopped
   bool boot_next = false;                            // phase 4: the next sg_run_frames is sg_run_boot's
+  portsim::TerrainGlobals gl_globals;                // phase 5: the Terrain.dll statics of the render path (sg_gl_set_globals)
   sg_ctx() { ctx.files_ptr = &mem_files; }
 };
 
@@ -374,6 +377,62 @@ int64_t sg_files_size(sg_ctx *ctx, const char *name) {
 int64_t sg_files_read(sg_ctx *ctx, const char *name, uint64_t offset, uint8_t *buf, uint64_t cap) {
   if (!ctx || !name || !ctx->ctx.files_ptr || (cap && !buf)) return -1;
   return ctx->ctx.files_ptr->read(name, offset, buf, cap);
+}
+
+int sg_gl_set_globals(sg_ctx *ctx, const sg_gl_globals *g) {
+  if (!ctx || !g) return SG_E_ARG;
+  portsim::TerrainGlobals &t = ctx->gl_globals;
+  auto fcopy = [](const float *p, uint32_t n) { return p ? std::vector<float>(p, p + n) : std::vector<float>(); };
+  t.vertices = fcopy(g->vertices, g->n_vertices * 3);
+  t.normals = fcopy(g->normals, g->n_normals * 3);
+  t.textures = g->textures ? std::vector<uint32_t>(g->textures, g->textures + g->n_textures) : std::vector<uint32_t>();
+  t.wall_texture = g->wall_texture;
+  t.fence_texture0 = g->fence_texture0;
+  t.fence_texture1 = g->fence_texture1;
+  t.tex_coords = fcopy(g->tex_coords, g->n_tex_coords);
+  if (g->side_normals) std::memcpy(t.side_normals, g->side_normals, sizeof t.side_normals);
+  std::memcpy(&t.screen_scale, &g->screen_scale_bits, 4);
+  t.view_index = g->view_index;
+  return SG_OK;
+}
+
+int sg_gl_render(sg_ctx *ctx, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2, char *out,
+                 size_t cap, size_t *len) {
+  (void)a2;
+  if (!ctx || !out || !len || cap == 0) return SG_E_ARG;
+  *len = 0;
+  portsim::gl::GlStreamSink sink;
+  try {
+    switch (entry) {
+      case 2: {
+        float angle;
+        std::memcpy(&angle, &a1, 4);
+        portsim::terrain_render(ctx->ctx, sink, ctx->gl_globals, terrain, a0, angle);
+        break;
+      }
+      default: return SG_E_NO_FUNCTION;
+    }
+  } catch (const portsim::Fault &f) {
+    ctx->run_detail = "fault at va " + std::to_string(f.va);
+    return SG_E_FAULT;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  *len = sink.text.size();
+  if (sink.text.size() + 1 > cap) return SG_E_ARG;
+  std::memcpy(out, sink.text.data(), sink.text.size());
+  out[sink.text.size()] = 0;
+  return SG_OK;
+}
+
+int32_t sg_gl_view_index(sg_ctx *ctx) { return ctx ? ctx->gl_globals.view_index : 0; }
+
+int sg_gl_negctl(int32_t mode) {
+  static int32_t prev = 0;
+  const int32_t p = prev;
+  prev = mode;
+  portsim::terrain_render_negctl(mode);
+  return p;
 }
 
 const char *sg_build_info(void) {

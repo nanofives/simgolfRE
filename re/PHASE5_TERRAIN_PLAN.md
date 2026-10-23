@@ -176,3 +176,41 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    replay that "agrees" with an unchanged frame (differing pixels = changed pixels) drew nothing; read ndiff against the changed count.
    Still open: a second PC / build; cliff / wall / bridge / water passes; passes at other course types (the 473-texture set is per course type);
    and the port itself producing these streams from GameState.
+
+9. DONE, the port's GL sink and Terrain::render (2026-10-23; port/include/portsim/sim/gl_sink.h, terrain_render.h,
+   port/src/sim/terrain_render.cpp, C ABI sg_gl_* in portsim_c.h, harness port/test/glcorpus.py, tests port/test/test_terrain_render.py).
+   - FIRST TARGET: the corpus's entry-call field (gl_rec.js hooks the four exported render entry points) shows the game calls
+     Terrain::render(tile, angle) for the full view and Terrain::localRender(tile, pivot, angle) for local redraws, never stripRender
+     (kind 1) and never pathUpdateRender (kind 4) in these scenarios. So the first port slice is render + Tile::render + the three
+     immediate-mode helpers (drawSkirts, drawWalls, drawPaths + drawCornerOverlays) + isCulled + setViewAngle + tileAt.
+   - GlSink: an abstract interface of the 19 GL calls that path makes (matrix ops, glRotated / glRotatef / glTranslatef, texture bind,
+     glBegin / glEnd, glTexCoord2f / 2fv, glArrayElement, glNormal3fv, glVertex3f / 3fv, enable / disable, glBlendFunc, glFlush).
+     GlStreamSink (header-only) writes one text line per call, floats as bit patterns and doubles low dword first, in the recorder's
+     form with the pointer argument of the glXXXfv calls dropped (the values behind it kept). A rasteriser sink is the next backend.
+   - Terrain::render is written from the specification: the Terrain object and its tiles are read through the context's 32-bit address
+     space (Ptr / Memory, faults where the original would fault: an unmapped tile, a vertex or texture index past the supplied arrays);
+     TerrainGlobals carries what Terrain.dll keeps beside its code (vertex and normal arrays, texture-id table, wall / fence textures,
+     texture-coordinate table, side normals, screen scale, the view quadrant setViewAngle writes). Original quirks kept: Tile::render's
+     texture cache starts as the debug build's 0xcccccccc stack fill (the first face always binds), isCulled leaves A..D at the same
+     fill for a window size other than 800x600 / 1024x768 / 1280x1024.
+   - EVIDENCE: corpus c7 (re/tools/gl_corpus.py, 40 steps, 34 snapshots, 31 started by Terrain::render; `port.test.glcorpus export`
+     copies the 34 into port/corpus/gl/c7). All 31 port streams equal the original's line for line (up to 198,000 lines each: zoom 0,
+     1, 2 and four rotations, built hole and edits, plus the fuzzed passes below), and all 34 snapshots replay bit-exact through
+     Windows' software GL (replay_all.sh). Eight negative controls (sg_gl_negctl 1..8: skirt depth, texture cache off, isCulled 90 / 180
+     swapped, fence textures swapped, path half-width 16.0, x walked upward at angle 0, overlay masks 5 / 9 swapped, rotated texture one
+     quadrant off) each read RED on at least one pass. Before the fuzzed passes three of them (5, 7, 8) read GREEN everywhere: the real
+     scenarios drew one lone path tile and no type-7 tile, so path bands toward neighbours, the overlay masks and the rotated textures
+     were unjudged; the UI clicks that were meant to build paths and bunkers did not take effect, so the corpus was widened differently:
+   - STATE FUZZING OF THE ORIGINAL (gl_rec.js glrecFuzz): a queued mutation of the live Terrain object's draw fields (path flags on ~25%
+     of tiles, wall flags and heights on every side, hidden tiles for skirts, type-7 tiles, random rotation and variation) is applied
+     ON THE GAME THREAD at the next Terrain::render entry and undone right after that pass's glFlush, and the pass is kept under its own
+     snapshot kind (22). The first version mutated from the rpc thread and raced the render thread: the pass lines and the Terrain object
+     snapshot belonged to different moments, 12 comparisons failed with an offset pairing (fuzzed state with plain stream and the other
+     way round). Lesson: touch the original's state only from its own thread, at a function boundary.
+   - Limits: x64 harness only (runner32 has no sg_gl ops); localRender / pathUpdateRender / stripRender and the draw list are not ported
+     (their snapshots are in the corpus: kind 3 steps `*_local`); TerrainGlobals is filled from a recorded Terrain.dll image, not yet from
+     the port's own Terrain model (the setters that build faces, vertices, normals and texture ids are the next big block); the texture
+     coordinate and side-normal tables are still read from the snapshot instead of the user's own Terrain.dll file; no rasteriser yet.
+   NEXT: localRender + its draw list (drawTile ordering) and pathUpdateRender on kind-3 / kind-4 snapshots; then the rasteriser sink
+   judged against dib_post of the corpus; then the state side (Terrain::setType, elevateCorner, layPath, setWall ... against tobj / vertex
+   snapshots before and after each call).

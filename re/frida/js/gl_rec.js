@@ -40,7 +40,8 @@
   // multi mode (glrecSnap(true, true)): a pass (first glPushMatrix .. the glFlush after the matching glPopMatrix, plus the glLoadIdentity
   // before it) is kept OUT of the stream in `passLines`, so one boot can snapshot many passes without the stream growing; the
   // snapshot carries the pass lines and `stateIdx` = the number of stream lines before it (state calls only).
-  let snapMode = false, multi = false, passActive = false, inDraw = false, depth = 0, passLines = null, hdc = 0, snap = null, cur = null, vp = 0, np = 0;
+  let snapMode = false, multi = false, passActive = false, inDraw = false, depth = 0, passLines = null, hdc = 0, snap = null, cur = null, vp = 0, np = 0, wantT = false, entryRec = null;
+  const lastByKind = {};
   const sentTex = {};
   const gdi = Process.getModuleByName('gdi32.dll');
   const GetCurrentObject = new NativeFunction(gdi.getExportByName('GetCurrentObject'), 'pointer', ['pointer', 'uint32'], 'stdcall');
@@ -147,8 +148,18 @@
             const post = dibRead();
             snap = { pre: cur.pre, post: post, startIdx: cur.startIdx, endIdx: this.idx, maxIdx: cur.maxIdx, stateIdx: multi ? cur.stateIdx : buf.length,
                      passLines: multi ? passLines.slice() : null,
-                     vtx: vp ? ptr(vp).readByteArray((cur.maxIdx + 1) * 12) : null, nrm: np ? ptr(np).readByteArray((cur.maxIdx + 1) * 12) : null };
+                     vtx: vp ? ptr(vp).readByteArray((cur.maxIdx + 1) * 12) : null, nrm: np ? ptr(np).readByteArray((cur.maxIdx + 1) * 12) : null,
+                     entry: entryRec, tobj: null, tdata: null, tobjAddr: 0 };
+            if (wantT && tm) {   // the Terrain object (g_terrain 0x106b4c, 0x164ad0 bytes) and the DLL's .rdata + .data image
+              const op = tm.base.add(0x106b4c).readPointer();
+              if (!op.isNull()) { snap.tobjAddr = op.toUInt32(); snap.tobj = op.readByteArray(0x164ad0); }
+              snap.tdata = tm.base.add(0x5f000).readByteArray(0xb4000);
+            }
+            lastByKind[snap.entry ? snap.entry.kind : 0] = snap;
+            if (fuzzLive) lastByKind[22] = snap;   // pseudo-kind 22: the pass that ran on fuzzed tiles (a later plain pass must not replace it)
           }
+          if (fuzzLive) { restoreFuzz(); fuzzLive = false; fuzzDone++; }
+          entryRec = null;
           if (multi && passActive) { passActive = false; passLines = null; cur = null; }
         }
       }
@@ -164,6 +175,16 @@
     done = true;
     for (const n in T) hook('opengl32.dll', n, T[n]);
     if (Process.findModuleByName('glu32.dll')) for (const n in GLU) hook('glu32.dll', n, GLU[n]);
+    // the exported render entry points: which one starts a pass and with what (this, pivot / tile, direction / pivot, angle)
+    const ENTRY = { stripRender: [0x9270, 1], render: [0x5990, 2], localRender: [0x89e0, 3], pathUpdateRender: [0x6410, 4] };
+    for (const en in ENTRY) {
+      Interceptor.attach(tm.base.add(ENTRY[en][0]), { onEnter(a) {
+        // a queued fuzz is applied here, ON THE GAME THREAD, just before a Terrain::render pass starts, and undone right after
+        // that pass's glFlush (onLeave below): the rpc thread never touches the tiles while the game thread reads them
+        if (en === 'render' && pendingFuzz && !fuzzLive) { applyFuzz(pendingFuzz.seed, pendingFuzz.p); pendingFuzz = null; fuzzLive = true; }
+        if (snapMode && !entryRec) entryRec = { kind: ENTRY[en][1], name: en, ecx: this.context.ecx.toUInt32(), a0: a[0].toUInt32(), a1: a[1].toUInt32(), a2: a[2].toUInt32() };
+      } });
+    }
     send({ glrec: 'installed', hooks: state.installed, terrain: !!tm });
   }
   // Process.attachModuleObserver fires as each module is mapped, i.e. before the loader reaches the exe's entry point, so the
@@ -181,21 +202,72 @@
     send({ glrec: 'done', calls: lines.length, dropped: state.dropped });
     return lines.length;
   };
-  rpc.exports.glrecSnap = function (on, mult) { snapMode = !!on; multi = !!mult; return snapMode; };
-  rpc.exports.glrecSendSnap = function () {
-    if (!snap || !snap.pre || !snap.post) return false;
-    const s = snap; snap = null;      // each snapshot is sent once; the next call reports false until a new pass completes
+  rpc.exports.glrecSnap = function (on, mult, tstate) { snapMode = !!on; multi = !!mult; wantT = !!tstate; return snapMode; };
+  rpc.exports.glrecSendSnap = function (kind) {
+    // kind 0 = the most recent pass, else the most recent pass started by that entry point (1 stripRender, 2 render,
+    // 3 localRender, 4 pathUpdateRender)
+    const pick = kind ? lastByKind[kind] : snap;
+    if (!pick || !pick.pre || !pick.post) return false;
+    const s = pick;
+    if (snap === s) snap = null;
+    lastByKind[s.entry ? s.entry.kind : 0] = null;   // each snapshot is sent once; the next call reports false until a new pass completes
+    if (kind === 22) lastByKind[22] = null;
+    snap = null;
     if (s.passLines) for (let i = 0; i < s.passLines.length; i += 20000) send({ glrec: 'passlines', i: i, lines: s.passLines.slice(i, i + 20000) });
     snap = s;
-    send({ glrec: 'snapmeta', startIdx: snap.startIdx, endIdx: snap.endIdx, maxIdx: snap.maxIdx, stateIdx: snap.stateIdx, meta: snap.pre.meta, postMeta: snap.post.meta });
+    send({ glrec: 'snapmeta', startIdx: snap.startIdx, endIdx: snap.endIdx, maxIdx: snap.maxIdx, stateIdx: snap.stateIdx, meta: snap.pre.meta, postMeta: snap.post.meta, entry: snap.entry, tobjAddr: snap.tobjAddr });
     send({ glrec: 'snapdata', kind: 'pre' }, snap.pre.bytes);
     send({ glrec: 'snapdata', kind: 'post' }, snap.post.bytes);
     if (snap.vtx) send({ glrec: 'snapdata', kind: 'vtx' }, snap.vtx);
     if (snap.nrm) send({ glrec: 'snapdata', kind: 'nrm' }, snap.nrm);
+    if (snap.tobj) send({ glrec: 'snapdata', kind: 'tobj' }, snap.tobj);
+    if (snap.tdata) send({ glrec: 'snapdata', kind: 'tdata' }, snap.tdata);
     send({ glrec: 'snapend' });
     snap = null;
     return true;
   };
+  // State fuzzing of the ORIGINAL: randomise the draw-relevant fields of the live Terrain object's 2,500 tiles so the render path's
+  // rarely taken branches run (path bands toward connected neighbours, every wall side, hidden neighbours for skirts, type-7
+  // rotated textures, rotation and variation), then glrecRestore() writes the original bytes back. Fields (Tile): type +0x24,
+  // rotation +0x28, path flags +0x208 (has) +0x209 (connected) +0x20a (draw), wall kinds +0x210 (9 ints), wall flags +0x234 (9
+  // bytes), variation +0x240. p = [path, wall, hidden, type7] probabilities.
+  let fuzzSaved = null, pendingFuzz = null, fuzzLive = false, fuzzDone = 0;
+  function terrainObj() { const op = tm.base.add(0x106b4c).readPointer(); return op.isNull() ? null : op; }
+  // glrecFuzz queues one mutation for the next Terrain::render pass (applied and undone on the game thread);
+  // glrecFuzzDone() counts the passes that ran mutated
+  rpc.exports.glrecFuzz = function (seed, p) { pendingFuzz = { seed: seed, p: p }; return true; };
+  rpc.exports.glrecFuzzDone = function () { return fuzzDone; };
+  function applyFuzz(seed, p) {
+    const op = terrainObj();
+    if (!op) return -1;
+    const base = op.add(0x3a4);
+    if (!fuzzSaved) fuzzSaved = { ptr: base, bytes: base.readByteArray(2500 * 0x248) };
+    let s = seed >>> 0;
+    const rnd = function () { s = (s + 0x6d2b79f5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    let n = 0;
+    for (let i = 0; i < 2500; i++) {
+      const t = base.add(i * 0x248);
+      if (rnd() < p[0]) {   // a path tile; neighbours often have one too, so bands and overlay masks vary
+        t.add(0x208).writeU8(1); t.add(0x209).writeU8(rnd() < 0.5 ? 1 : 0); t.add(0x20a).writeU8(rnd() < 0.85 ? 1 : 0); n++;
+      }
+      for (let k = 0; k < 9; k++) {
+        if (rnd() < p[1]) { t.add(0x234 + k).writeU8(1); t.add(0x210 + 4 * k).writeS32(rnd() < 0.5 ? 1 : 2); }
+      }
+      const r = rnd();
+      if (r < p[2]) t.add(0x24).writeS32(0x14);
+      else if (r < p[2] + p[3]) t.add(0x24).writeS32(7);
+      t.add(0x28).writeS32(Math.floor(rnd() * 4));
+      t.add(0x240).writeS32(Math.floor(rnd() * 3));
+    }
+    return n;
+  };
+  function restoreFuzz() {
+    if (!fuzzSaved) return false;
+    fuzzSaved.ptr.writeByteArray(fuzzSaved.bytes);
+    fuzzSaved = null;
+    return true;
+  }
+  rpc.exports.glrecRestore = restoreFuzz;
   rpc.exports.glrecSeen = function () { return seen; };
   rpc.exports.glrecState = function () { return { armed: state.armed, n: state.n, dropped: state.dropped, hooks: state.installed, flushLeft: state.flushLeft }; };
 })();

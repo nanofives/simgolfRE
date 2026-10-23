@@ -156,6 +156,29 @@ SG_API int64_t sg_files_size(sg_ctx *ctx, const char *name); /* -1 when absent *
 /* up to cap bytes of `name` from `offset` as the port sees it (overlay writes included); bytes read, -1 when absent */
 SG_API int64_t sg_files_read(sg_ctx *ctx, const char *name, uint64_t offset, uint8_t *buf, uint64_t cap);
 
+/* ---- terrain renderer (phase 5 step 3, portsim/sim/terrain_render.h) ----
+ * The Terrain.dll statics the render path reads, supplied by the host (the test harness fills them from a recorded
+ * snapshot, port/test/glcorpus.py). Arrays are copied. Float values travel as IEEE bit patterns where a scalar. */
+typedef struct sg_gl_globals {
+  const float *vertices; uint32_t n_vertices;       /* 3 floats per vertex */
+  const float *normals; uint32_t n_normals;         /* 3 floats per vertex */
+  const uint32_t *textures; uint32_t n_textures;    /* [0x25][0x19][9] GL texture ids */
+  uint32_t wall_texture, fence_texture0, fence_texture1;
+  const float *tex_coords; uint32_t n_tex_coords;   /* floats: [selector][3][4][2] */
+  const float *side_normals;                        /* 4 blocks x 2 x 3 floats */
+  uint32_t screen_scale_bits;                       /* the x rotation of every pass (a float) */
+  int32_t view_index;
+} sg_gl_globals;
+SG_API int sg_gl_set_globals(sg_ctx *ctx, const sg_gl_globals *g);
+/* Run one render entry point of the original over the context's address space (the Terrain object mapped with sg_map)
+ * and write the GL calls it makes as text (portsim/sim/gl_sink.h): entry 2 = Terrain::render(a0 = tile address,
+ * a1 = angle bits). out gets the text (NUL-terminated); *len = its length; SG_E_ARG when cap is too small. After the
+ * call sg_gl_view_index returns the view quadrant the pass left in the globals. */
+SG_API int sg_gl_render(sg_ctx *ctx, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2, char *out,
+                        size_t cap, size_t *len);
+SG_API int32_t sg_gl_view_index(sg_ctx *ctx);
+SG_API int sg_gl_negctl(int32_t mode);                    /* deliberately wrong renderer bodies (0 = correct); previous mode */
+
 SG_API const char *sg_build_info(void);                   /* "portsim <arch> <config>" */
 
 #ifdef __cplusplus
