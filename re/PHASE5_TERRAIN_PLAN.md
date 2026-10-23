@@ -328,3 +328,49 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     not recorded), mip-mapped loads and 1-D textures (the loader throws MissingResource: no call site uses them), loadNewCourseType.
     NEXT: the state side (the Terrain object: tiles, faces, vertex / normal arrays, buildArrays, setType, elevateCorner, layPath, setWall),
     then localRender and the draw list, then the overlay drawing.
+
+13. IN PROGRESS, the state side of Terrain.dll (2026-10-23; port/include/portsim/sim/terrain_state.h, port/src/sim/terrain_state.cpp,
+    C ABI sg_ts_* in portsim_c.h, tests port/test/test_terrain_state.py, recorder re/frida/js/terrain_calls.js + re/tools/terrain_calls.py,
+    corpus reader port/test/terraincorpus.py). Goal: the renderer's inputs (the Terrain object, its tiles and faces, the vertex / normal
+    arrays) produced by the port instead of a snapshot. Steps 1 and 2 of the plan are done.
+    - LAYOUT (step 1). Clean pack(1) structs with static_asserts: TerrainFace (0x38: v[3], tc[6], texture +0x24, piece +0x28, normal
+      +0x2c), TerrainTile (0x248: level[8] with the corner heights at the odd indices, type +0x24, rotation +0x28, x / y, neighbour[4] by
+      side 0 = y-1, 1 = y+1, 2 = x-1, 3 = x+1, face_count +0x44, face[8], path bytes +0x208..+0x20e, wall heights +0x210, wall flags
+      +0x234, variation +0x240, normals_dirty +0x244), TerrainTypeInfo (0x18) and TerrainObjectHeader (0x3a4; +0x00 is initSystem's
+      HGLRC, not a plain int: U-1074). The object stays in the 32-bit address space so the renderer reads what the state side writes. The
+      original allocates it with the debug CRT's operator new: every byte no code writes holds 0xcd (the even level slots, +0x20, the wall
+      heights, wall flags 1 / 3 / 5 / 7 / 8, the face bytes after `piece`), and the port's object reproduces that.
+    - CONSTRUCTION AND ARRAYS (step 2): Terrain::Terrain's state part, Tile::reset, Faces::build (with the shared-edge copies between faces
+      2 / 3 and 4 / 5), initGrid (each tile owns its own 3 x 3 vertex patch in a 150 x 150 grid: tiles share no vertex), buildArrays
+      (neighbour links), plus terrain_apply_gl_state, which writes the GL setup's results (type names with strcpy's 0xcd tails, variation
+      counts, flags, window size, zoom, texture table, course type) into the object. EVIDENCE: built from scratch over a 0xcd block at the
+      recorded address, every construction-determined byte equals the original's object in all 34 c7 snapshots and all 14 t1 views (two
+      object addresses, zoom 0 / 1 / 2), and the vertex grid's x / z equal all 22,500 entries.
+    - NORMALS: faceNormal, normalize, Tile::smoothNormals (its four corner cases, including the read of neighbour face 1 that the (0, 3)
+      case never recomputes), Tile::calcNormals, the exported calcNormals / calcAllNormals; x87 at 53 bits as double arithmetic rounded to
+      float at each store. EVIDENCE: over a snapshot's own vertices, recomputing every tile the original had recomputed (not dirty in the
+      snapshot) gives the normal array bit for bit (all 22,500) and every face normal by value, on all 34 c7 snapshots (dirty and fuzzed
+      ones included) and all 14 t1 views; nothing else in the object changes. The only byte difference is the sign of zero on faces the
+      original never recomputed since Faces::build (U-1075).
+    - FACE TEXTURES: setFaceTexture (type overrides, face-to-slot map), blendFaceTextures with edgeKind / isSolidType / isOpenType /
+      flagCode / idClass, reblendNeighbourhood, resetFaceTextures (types 0 / 9). They need g_collarInfo, a heap block no c7 file holds, so a
+      second recording was made: re/tools/terrain_calls.py (corpus t1, log/p5/terrain/t1, exported to port/corpus/terrain/t1) logs every
+      exported Terrain call from process start with raw arguments, return value, setType's drawn variation and passCollarInfo's table
+      (31,644 calls: getInstance, passCollarInfo, initSystem, initTerrain, 5,021 setType, 17,942 elevateCorner, 5,000 calcNormals, 113
+      lowerCorner, 253 setWall, 30 layPath, a course switch loadNewCourseType + resetTerrain, the sandbox edits, 3,110 drawLine), with
+      snapshots taken on the game thread at a Terrain::render entry after each scenario step and before / after the first calls of each
+      mutator (64 snapshots). EVIDENCE: on all 14 t1 views, resetFaceTextures on the type 0 / 9 tiles and blendFaceTextures(-1) on every
+      tile leave the WHOLE Terrain object byte-equal to the original's: every texture and piece of the final state is a function of that
+      state (types, rotations, variations, collar table, course type).
+    - Negative controls (sg_ts_negctl): 1 no shared-edge copies, 2 grid one column off, 3 x neighbours swapped (construction); 4 cross
+      product reversed, 5 centre sum without face 7, 6 (0, 3) without the diagonal, 7 normalize summing in float (normals); 8 flagCode
+      weight 11, 9 face slots 2 / 3 swapped, 10 edgeKind's water arm 1 (textures): all RED. Blind on purpose: 11 Tile::reset's default
+      type (the exe's setType overwrites every tile before any snapshot).
+    - History, not state (U-1075): the centre vertex heights (a running max / min over elevateCorner / lowerCorner) and which faces were
+      ever recomputed depend on the order of the exe's calls. Corner heights (level x 15.0) and edge midpoints (the mean of their corners)
+      are functions of the state.
+    NEXT (steps 3-4): port the mutators (setType / setTypeId with enter / leave type 6 / 7, elevateCorner / lowerCorner / lowerEdgeCorner,
+    layPath / updatePath, setWall, loadNewCourseType / resetTerrain, setZoomLevel's state) and the DLL CRT's rand() for setType's
+    variation (the log records each drawn variation, so the LCG is checked call by call), then REPLAY the t1 call log from construction and
+    compare the object and the arrays at each of its 64 snapshots (the before / after pairs isolate single calls). Then build the object
+    from the exe's own calls (TerrainApi) and drop tobj / vtx / nrm from run_chain_from_setup.

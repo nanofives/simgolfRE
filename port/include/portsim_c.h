@@ -190,6 +190,24 @@ typedef struct sg_raster sg_raster;
 SG_API int sg_gl_render_to_raster(sg_ctx *ctx, sg_raster *r, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2);
 SG_API int sg_gl_negctl(int32_t mode);                    /* deliberately wrong renderer bodies (0 = correct); previous mode */
 
+/* ---- terrain state side (phase 5 step 3, portsim/sim/terrain_state.h) over the context's address space and the globals of
+ * sg_gl_set_globals. One entry per operation, by name:
+ *   construct (t = Terrain, a0 = width, a1 = height)   build_arrays (t)          init_grid (a0 = width, a1 = height)
+ *   tile_reset (t = tile, a0 = x, a1 = y)               faces_build (t = tile, a0 = x, a1 = y, a2 = width)
+ *   face_normal (t = face)   smooth_normals (t = tile, a0, a1)   calc_normals (t = tile; the exported, NULL-safe one)
+ *   calc_all_normals (t = Terrain, a0 = tile)   set_face_texture (t = tile, a0 = type, a1 = face, a2 = piece)
+ *   blend (t = tile, a0 = type or -1)   reblend (t = tile)   reset_face_textures (t = tile)   edge_kind (t = tile, a0 = other)
+ *   tile_at (t = Terrain, a0 = x, a1 = y)
+ *   gl_setup (t = Terrain, a0 = zoom 0 / 1 / 2): the port's GL setup from the context's files (sg_gl_setup), its results written
+ *            into the object and the globals (texture table, type names and counts, flags, window size, zoom, course type)
+ * *ret (may be NULL) receives the value the operation returns (0 for void ones). */
+SG_API int sg_ts_op(sg_ctx *ctx, const char *op, uint32_t t, int32_t a0, int32_t a1, int32_t a2, int32_t *ret);
+SG_API int sg_ts_arrays(sg_ctx *ctx, float *vertices, float *normals, uint32_t n);   /* copy out the first n vertices / normals */
+SG_API int sg_ts_textures(sg_ctx *ctx, uint32_t *out, uint32_t n);                   /* copy out the texture table */
+SG_API int sg_ts_set_collar(sg_ctx *ctx, const int32_t *table, int32_t n);           /* passCollarInfo; n < 0 = NULL again */
+SG_API int sg_ts_set_course_type(sg_ctx *ctx, int32_t type);
+SG_API int sg_ts_negctl(int32_t mode);                                               /* previous mode */
+
 /* ---- software rasteriser (phase 5 step 3, portsim/sim/gl_raster.h): replay a recorded GL stream into an RGB555 frame ---- */
 typedef struct sg_raster sg_raster;
 SG_API sg_raster *sg_raster_new(int32_t w, int32_t h);

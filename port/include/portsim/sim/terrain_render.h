@@ -35,6 +35,10 @@ struct TerrainGlobals {
   float side_normals[4][2][3] = {};  // four blocks of two normals (row by view quadrant), in the order the data lies
   float screen_scale = 0.0f;         // the x rotation of every pass
   int32_t view_index = 0;            // the camera quadrant 0..3 (written by set_view_angle)
+  // state side only (terrain_state.h); the renderer does not read these
+  bool collar_set = false;           // g_collarInfo != NULL (passCollarInfo has run)
+  std::vector<int32_t> collar;       // g_collarInfo: collar group per tile type, as many entries as the exe passed
+  int32_t course_type = 0;           // g_courseType: 0 Parkland, 1 Desert, 2 Tropical, 3 Links
 };
 
 // Terrain::render(tile, angle) of the original: draws the window of tiles around `tile` (or the fixed region without one)

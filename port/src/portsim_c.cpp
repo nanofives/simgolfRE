@@ -16,6 +16,7 @@
 #include "portsim/sim/gl_sink.h"
 #include "portsim/sim/terrain_gl_setup.h"
 #include "portsim/sim/terrain_render.h"
+#include "portsim/sim/terrain_state.h"
 #include "portsim/sim/tick.h"
 
 #if defined(_MSC_VER)
@@ -515,6 +516,92 @@ int sg_gl_negctl(int32_t mode) {
   const int32_t p = prev;
   prev = mode;
   portsim::terrain_render_negctl(mode);
+  return p;
+}
+
+int sg_ts_op(sg_ctx *ctx, const char *op, uint32_t t, int32_t a0, int32_t a1, int32_t a2, int32_t *ret) {
+  if (!ctx || !op) return SG_E_ARG;
+  portsim::Ctx &c = ctx->ctx;
+  portsim::TerrainGlobals &g = ctx->gl_globals;
+  int32_t r = 0;
+  const std::string o = op;
+  try {
+    if (o == "construct") portsim::terrain_construct(c, g, t, a0, a1);
+    else if (o == "build_arrays") r = portsim::terrain_build_arrays(c, g, t) ? 1 : 0;
+    else if (o == "init_grid") portsim::init_grid(g, a0, a1);
+    else if (o == "tile_reset") portsim::tile_reset(c, t, a0, a1);
+    else if (o == "faces_build") portsim::faces_build(c, t, a0, a1, a2);
+    else if (o == "face_normal") portsim::face_normal(c, g, t);
+    else if (o == "smooth_normals") portsim::tile_smooth_normals(c, g, t, a0, a1);
+    else if (o == "calc_normals") portsim::terrain_calc_normals(c, g, t);
+    else if (o == "calc_all_normals") portsim::terrain_calc_all_normals(c, g, t, static_cast<uint32_t>(a0));
+    else if (o == "set_face_texture") portsim::tile_set_face_texture(c, g, t, a0, a1, a2);
+    else if (o == "blend") portsim::tile_blend_face_textures(c, g, t, a0);
+    else if (o == "reblend") portsim::tile_reblend_neighbourhood(c, g, t);
+    else if (o == "reset_face_textures") portsim::tile_reset_face_textures(c, g, t);
+    else if (o == "edge_kind") r = portsim::tile_edge_kind(c, g, t, static_cast<uint32_t>(a0));
+    else if (o == "tile_at") r = static_cast<int32_t>(portsim::terrain_tile_at(c, t, a0, a1));
+    else if (o == "gl_setup") {
+      portsim::gl::GlStreamSink sink;
+      portsim::TerrainGlState st;
+      portsim::terrain_gl_construct(c, sink, st);
+      portsim::terrain_gl_init_system(c, sink, st, 800, 600, true);
+      portsim::terrain_gl_init_terrain(sink);
+      if (a0 == 1) portsim::terrain_gl_set_zoom_level(sink, st, 2);
+      else if (a0 == 2) portsim::terrain_gl_set_zoom_level(sink, st, 1);
+      portsim::terrain_apply_gl_state(c, g, t, st);
+    } else return SG_E_NO_FUNCTION;
+  } catch (const portsim::Fault &f) {
+    ctx->run_detail = "fault at va " + std::to_string(f.va);
+    return SG_E_FAULT;
+  } catch (const portsim::MissingResource &) {
+    return SG_E_NO_RESOURCE;
+  } catch (const portsim::NoReturn &) {
+    return SG_E_NO_RETURN;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  if (ret) *ret = r;
+  return SG_OK;
+}
+
+int sg_ts_arrays(sg_ctx *ctx, float *vertices, float *normals, uint32_t n) {
+  if (!ctx) return SG_E_ARG;
+  const portsim::TerrainGlobals &g = ctx->gl_globals;
+  if (static_cast<size_t>(n) * 3 > g.vertices.size() || static_cast<size_t>(n) * 3 > g.normals.size()) return SG_E_ARG;
+  if (vertices) std::memcpy(vertices, g.vertices.data(), static_cast<size_t>(n) * 12);
+  if (normals) std::memcpy(normals, g.normals.data(), static_cast<size_t>(n) * 12);
+  return SG_OK;
+}
+
+int sg_ts_textures(sg_ctx *ctx, uint32_t *out, uint32_t n) {
+  if (!ctx || !out || n > ctx->gl_globals.textures.size()) return SG_E_ARG;
+  std::memcpy(out, ctx->gl_globals.textures.data(), static_cast<size_t>(n) * 4);
+  return SG_OK;
+}
+
+int sg_ts_set_collar(sg_ctx *ctx, const int32_t *table, int32_t n) {
+  if (!ctx || (n > 0 && !table)) return SG_E_ARG;
+  if (n < 0) {
+    ctx->gl_globals.collar_set = false;
+    ctx->gl_globals.collar.clear();
+  } else {
+    portsim::terrain_pass_collar_info(ctx->gl_globals, table, n);
+  }
+  return SG_OK;
+}
+
+int sg_ts_set_course_type(sg_ctx *ctx, int32_t type) {
+  if (!ctx) return SG_E_ARG;
+  ctx->gl_globals.course_type = type;
+  return SG_OK;
+}
+
+int sg_ts_negctl(int32_t mode) {
+  static int32_t prev = 0;
+  const int32_t p = prev;
+  prev = mode;
+  portsim::terrain_state_negctl(mode);
   return p;
 }
 
