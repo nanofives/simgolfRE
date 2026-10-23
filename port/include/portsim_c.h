@@ -177,7 +177,26 @@ SG_API int sg_gl_set_globals(sg_ctx *ctx, const sg_gl_globals *g);
 SG_API int sg_gl_render(sg_ctx *ctx, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2, char *out,
                         size_t cap, size_t *len);
 SG_API int32_t sg_gl_view_index(sg_ctx *ctx);
+typedef struct sg_raster sg_raster;
+/* the same render entry, with the rasteriser as the sink: the port's Terrain::render drives sg_raster directly (its state
+   already set up with sg_raster_exec, its arrays taken from sg_gl_set_globals) */
+SG_API int sg_gl_render_to_raster(sg_ctx *ctx, sg_raster *r, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2);
 SG_API int sg_gl_negctl(int32_t mode);                    /* deliberately wrong renderer bodies (0 = correct); previous mode */
+
+/* ---- software rasteriser (phase 5 step 3, portsim/sim/gl_raster.h): replay a recorded GL stream into an RGB555 frame ---- */
+typedef struct sg_raster sg_raster;
+SG_API sg_raster *sg_raster_new(int32_t w, int32_t h);
+SG_API void sg_raster_free(sg_raster *r);
+SG_API void sg_raster_texture(sg_raster *r, const char *hash, const uint8_t *data, size_t n);  /* tex=<hash> bytes (RGB or RGBA) */
+SG_API void sg_raster_arrays(sg_raster *r, const float *vertices, size_t n_vertices, const float *normals, size_t n_normals);
+/* newline-separated recorder lines; returns the number of lines whose call is unknown to the rasteriser */
+SG_API int32_t sg_raster_exec(sg_raster *r, const char *text, size_t len);
+SG_API void sg_raster_set_pixels(sg_raster *r, const uint16_t *px, size_t n);   /* n = w * h */
+SG_API size_t sg_raster_get_pixels(sg_raster *r, uint16_t *out, size_t cap);    /* pixels copied (0 when cap is short) */
+SG_API void sg_raster_keep_float(sg_raster *r, int32_t on);                     /* diagnostics: keep pre-quantisation colours */
+SG_API size_t sg_raster_get_float(sg_raster *r, float *out, size_t cap);        /* w * h * 3 floats (-1 = never written) */
+SG_API size_t sg_raster_get_source(sg_raster *r, float *out, size_t cap);       /* w * h * 8 floats: src rgb, alpha, dst rgb, blended */
+SG_API int sg_raster_stats(sg_raster *r, int64_t out[5]);   /* triangles, culled, drawn px, blended px, skipped */
 
 SG_API const char *sg_build_info(void);                   /* "portsim <arch> <config>" */
 

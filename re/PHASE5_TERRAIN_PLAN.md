@@ -214,3 +214,43 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    NEXT: localRender + its draw list (drawTile ordering) and pathUpdateRender on kind-3 / kind-4 snapshots; then the rasteriser sink
    judged against dib_post of the corpus; then the state side (Terrain::setType, elevateCorner, layPath, setWall ... against tobj / vertex
    snapshots before and after each call).
+
+10. DONE, the software rasteriser (2026-10-23; port/include/portsim/sim/gl_raster.h, port/src/sim/gl_raster.cpp, C ABI sg_raster_* and
+    sg_gl_render_to_raster, harness port/test/glraster.py, fit tool glraster_fit.py, tests port/test/test_gl_raster.py). GlRaster is a GlSink
+    with the original's setup calls added (viewport, ortho, lights, material, texture objects, front face, enables); a recorded stream
+    replays into it (exec_line), and the port's own Terrain::render can drive it directly. RESULT on corpus c7, against the original's
+    back buffers (dib_post): not bit-exact, within a measured tolerance. On all 34 passes the rasteriser's pixel equals the original's in 96.8
+    to 98.8 % of the drawn pixels, every other pixel is ONE 5-bit level off in one channel (independent per channel), and 0 to 62 pixels per
+    pass (a few per frame) differ by more: seams where the original covers or leaves a pixel the rasteriser does the opposite for. Criterion in
+    the tests: one-level pixels <= 3.5 % of the drawn, <= 70 pixels more than one level. All 34 stream replays and all 31 Terrain::render
+    chains (port renderer -> rasteriser, no recorded stream between) meet it; eight negative controls (no dither, dither offset 0, white
+    lighting, nearest minification, texture env REPLACE, blending ignored, front faces culled, no specular) each break it.
+    What the data fixed (each was a hypothesis the corpus judged; the first run was 99 % of pixels wrong by 6 to 10 levels):
+    - The original's `glTexEnvi(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE, GL_REPLACE)` names the wrong target (0xde1, not 0x2300): GL_INVALID_ENUM,
+      ignored. The mode stays GL_MODULATE, so the lit colour multiplies every texel (all that made the frame ~9 % too bright).
+    - Lighting (vertex, smooth shaded): light 0 directional (its direction transformed by the modelview at the glLightfv call), ambient and
+      diffuse from the recorded values, specular with exponent 13 and material specular (1,1,1,1), GL default global ambient 0.2 and material
+      ambient 0.2 / diffuse 0.8, viewer at infinity, no GL_NORMALIZE, normals through the inverse transpose of the modelview. float32 or
+      double lighting gave the same pixels; a 256..1024-entry specular table is wrong (17,000 more errors), the exponent is exact.
+    - Writing to the 16-bit RGB555 surface: out = floor(c * 31 / 255 + (k + 0.5) / 16) per channel, k from the 4x4 ordered-dither matrix
+      {15,7,13,5 / 3,11,1,9 / 12,4,14,6 / 0,8,2,10} indexed by (window y & 3, x & 3), the same for R, G, B; fitted from the pre-quantisation
+      colours (0.5 % residual; 31/256 or a 0.1 % scale error multiplies the errors by 3 to 9; 8-bit rounding of any intermediate is wrong).
+    - Eight RGBA path textures are uploaded to ONE texture object, 0xcccccccc (the original binds an uninitialised id, the debug stack fill),
+      so every path band and corner overlay uses the last one uploaded; their filters come from glTexParameterf with float values
+      (9728.0 = GL_NEAREST), which the replay must honour.
+    - A bound texture object with no image (id 0: type-7 tiles whose rotated texture slots were never loaded) is incomplete: OpenGL draws it
+      untextured, the fragment being the lit colour (the pale diamonds of the fuzzed passes).
+    - Rest: front face GL_CW, back faces culled, window y = memory row, texture filter chosen per triangle from the texel-per-pixel scale
+      (<= 1 magnification: NEAREST; else LINEAR bilinear at level 0, REPEAT), source-alpha blending against the destination expanded as
+      d * 255 / 31 (the path textures' alpha is 0 or 255, so it acts as a cut-out), sampling at the pixel centre.
+    Did not help (glraster_fit.py knobs, all left off): bilinear weight bits 4..12 and weight rounding, texture-coordinate fraction bits,
+    light colour at 8..16 bits, vertex snapping to 2^-2..2^-12 pixel, float32 geometry and float32 lighting, a 1/64 pixel shift of the
+    sampling position (5x more errors: the optimum is exactly the pixel centre), edge tie-break variants (never exercised), rounding of the
+    filtered texel or of each lerp stage, the dither offset and scale grid. So the exact double pipeline is the best found; the one-level
+    noise stays unexplained (it sits within 0.004 levels of a quantisation threshold in the median, so the original's arithmetic differs
+    from the double pipeline by about 1e-4 relative somewhere in the texture or colour path).
+    Limits: lines, points and the overlay primitives (Terrain::drawLine and friends: GL_LINES with smoothing, glOrtho 2D passes) are not
+    rasterised; only Terrain::render passes are chained (localRender snapshots replay through the stream path only); x64 harness; the
+    rasteriser reads the state stream the recording holds, because the port does not yet produce the original's setup calls itself.
+    NEXT: localRender and the draw list in the renderer, then the exe-side overlay drawing, then producing the state stream (initGL,
+    lighting file, projection) from the port, and finally the Terrain state side.

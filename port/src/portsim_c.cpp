@@ -12,6 +12,7 @@
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
 #include "portsim/state_hash.h"
+#include "portsim/sim/gl_raster.h"
 #include "portsim/sim/gl_sink.h"
 #include "portsim/sim/terrain_render.h"
 #include "portsim/sim/tick.h"
@@ -25,6 +26,11 @@
 #endif
 #include <windows.h>
 #endif
+
+struct sg_raster {
+  portsim::gl::GlRaster r;
+  sg_raster(int w, int h) : r(w, h) {}
+};
 
 struct sg_ctx {
   portsim::Ctx ctx;
@@ -425,6 +431,31 @@ int sg_gl_render(sg_ctx *ctx, int32_t entry, uint32_t terrain, uint32_t a0, uint
   return SG_OK;
 }
 
+int sg_gl_render_to_raster(sg_ctx *ctx, sg_raster *rast, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2) {
+  (void)a2;
+  if (!ctx || !rast) return SG_E_ARG;
+  try {
+    switch (entry) {
+      case 2: {
+        float angle;
+        std::memcpy(&angle, &a1, 4);
+        // the vertex and normal arrays the faces index are the renderer's globals; the rasteriser reads them for glArrayElement
+        const portsim::TerrainGlobals &g = ctx->gl_globals;
+        rast->r.set_arrays(g.vertices.data(), g.vertices.size() / 3, g.normals.data(), g.normals.size() / 3);
+        portsim::terrain_render(ctx->ctx, rast->r, ctx->gl_globals, terrain, a0, angle);
+        break;
+      }
+      default: return SG_E_NO_FUNCTION;
+    }
+  } catch (const portsim::Fault &f) {
+    ctx->run_detail = "fault at va " + std::to_string(f.va);
+    return SG_E_FAULT;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  return SG_OK;
+}
+
 int32_t sg_gl_view_index(sg_ctx *ctx) { return ctx ? ctx->gl_globals.view_index : 0; }
 
 int sg_gl_negctl(int32_t mode) {
@@ -433,6 +464,54 @@ int sg_gl_negctl(int32_t mode) {
   prev = mode;
   portsim::terrain_render_negctl(mode);
   return p;
+}
+
+sg_raster *sg_raster_new(int32_t w, int32_t h) { return (w > 0 && h > 0) ? new sg_raster(w, h) : nullptr; }
+void sg_raster_free(sg_raster *r) { delete r; }
+void sg_raster_texture(sg_raster *r, const char *hash, const uint8_t *data, size_t n) {
+  if (r && hash && (data || n == 0)) r->r.add_texture_bytes(hash, std::vector<uint8_t>(data, data + n));
+}
+void sg_raster_arrays(sg_raster *r, const float *v, size_t nv, const float *n, size_t nn) {
+  if (r) r->r.set_arrays(v, nv, n, nn);
+}
+int32_t sg_raster_exec(sg_raster *r, const char *text, size_t len) {
+  if (!r || !text) return -1;
+  int32_t unknown = 0;
+  size_t i = 0;
+  while (i < len) {
+    size_t j = i;
+    while (j < len && text[j] != 10) ++j;
+    size_t e = j;
+    if (e > i && text[e - 1] == 13) --e;
+    if (!r->r.exec_line(std::string(text + i, e - i))) ++unknown;
+    i = j + 1;
+  }
+  return unknown;
+}
+void sg_raster_set_pixels(sg_raster *r, const uint16_t *px, size_t n) {
+  if (r && px && n == r->r.pixels().size()) std::memcpy(r->r.pixels().data(), px, n * 2);
+}
+size_t sg_raster_get_pixels(sg_raster *r, uint16_t *out, size_t cap) {
+  if (!r || !out || cap < r->r.pixels().size()) return 0;
+  std::memcpy(out, r->r.pixels().data(), r->r.pixels().size() * 2);
+  return r->r.pixels().size();
+}
+void sg_raster_keep_float(sg_raster *r, int32_t on) { if (r) r->r.keep_float(on != 0); }
+size_t sg_raster_get_float(sg_raster *r, float *out, size_t cap) {
+  if (!r || !out || cap < r->r.float_pixels().size()) return 0;
+  std::memcpy(out, r->r.float_pixels().data(), r->r.float_pixels().size() * 4);
+  return r->r.float_pixels().size();
+}
+size_t sg_raster_get_source(sg_raster *r, float *out, size_t cap) {
+  if (!r || !out || cap < r->r.source_pixels().size()) return 0;
+  std::memcpy(out, r->r.source_pixels().data(), r->r.source_pixels().size() * 4);
+  return r->r.source_pixels().size();
+}
+int sg_raster_stats(sg_raster *r, int64_t out[5]) {
+  if (!r || !out) return SG_E_ARG;
+  out[0] = r->r.stats.triangles; out[1] = r->r.stats.culled; out[2] = r->r.stats.drawn_px;
+  out[3] = r->r.stats.blended_px; out[4] = r->r.stats.bad_texture;
+  return SG_OK;
 }
 
 const char *sg_build_info(void) {

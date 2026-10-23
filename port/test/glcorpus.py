@@ -31,6 +31,7 @@ N_VERTICES = 22500                       # entries of g_vertices / g_normals (th
 N_TEXTURES = 0x25 * 0x19 * 9
 N_TEXCOORD_FLOATS = (RVA["pfd"] - RVA["tex_coords"]) // 4
 NEEDED = ("pass.gl.txt", "tobj.bin", "tdata.bin", "meta.txt")
+RASTER = ("vtx.bin", "nrm.bin", "dib_pre.bin", "dib_post.bin")   # extra files of a snapshot for the rasteriser tests
 ENTRY_RENDER = 2
 
 
@@ -106,26 +107,33 @@ def snaps(root: pathlib.Path = CORPUS / "c7", kind: int | None = None) -> list[s
     return out
 
 
+def load(lib, st, snap: Snap) -> list:
+    """Map the snapshot's Terrain object into the state `st` at its original address and hand the renderer its globals; the
+    returned arrays must stay alive while the context is used."""
+    bind(lib.dll)
+    st.map(snap.terrain, (C.c_uint8 * len(snap.tobj)).from_buffer_copy(snap.tobj))
+    g = SgGlGlobals()
+    keep = [snap.arr(RVA["vertices"], N_VERTICES * 3, C.c_float), snap.arr(RVA["normals"], N_VERTICES * 3, C.c_float),
+            snap.arr(RVA["textures"], N_TEXTURES, C.c_uint32), snap.arr(RVA["tex_coords"], N_TEXCOORD_FLOATS, C.c_float),
+            snap.arr(RVA["side_normals"], 24, C.c_float)]
+    g.vertices, g.n_vertices = C.addressof(keep[0]), N_VERTICES
+    g.normals, g.n_normals = C.addressof(keep[1]), N_VERTICES
+    g.textures, g.n_textures = C.addressof(keep[2]), N_TEXTURES
+    g.tex_coords, g.n_tex_coords = C.addressof(keep[3]), N_TEXCOORD_FLOATS
+    g.side_normals = C.addressof(keep[4])
+    g.wall_texture, g.fence_texture1, g.fence_texture0 = snap.u32(RVA["wall"]), snap.u32(RVA["fence1"]), snap.u32(RVA["fence0"])
+    g.screen_scale_bits = snap.u32(RVA["scale"])
+    g.view_index = 0
+    code = lib.dll.sg_gl_set_globals(st.ctx, C.byref(g))
+    if code:
+        raise RuntimeError(f"sg_gl_set_globals {code}")
+    return keep
+
+
 def render(lib, snap: Snap, cap: int = 1 << 26) -> list[str]:
     """Run the port's Terrain::render over the snapshot; returns the call lines."""
-    bind(lib.dll)
     with lib.state() as st:
-        st.map(snap.terrain, (C.c_uint8 * len(snap.tobj)).from_buffer_copy(snap.tobj))
-        g = SgGlGlobals()
-        keep = [snap.arr(RVA["vertices"], N_VERTICES * 3, C.c_float), snap.arr(RVA["normals"], N_VERTICES * 3, C.c_float),
-                snap.arr(RVA["textures"], N_TEXTURES, C.c_uint32), snap.arr(RVA["tex_coords"], N_TEXCOORD_FLOATS, C.c_float),
-                snap.arr(RVA["side_normals"], 24, C.c_float)]
-        g.vertices, g.n_vertices = C.addressof(keep[0]), N_VERTICES
-        g.normals, g.n_normals = C.addressof(keep[1]), N_VERTICES
-        g.textures, g.n_textures = C.addressof(keep[2]), N_TEXTURES
-        g.tex_coords, g.n_tex_coords = C.addressof(keep[3]), N_TEXCOORD_FLOATS
-        g.side_normals = C.addressof(keep[4])
-        g.wall_texture, g.fence_texture1, g.fence_texture0 = snap.u32(RVA["wall"]), snap.u32(RVA["fence1"]), snap.u32(RVA["fence0"])
-        g.screen_scale_bits = snap.u32(RVA["scale"])
-        g.view_index = 0
-        code = lib.dll.sg_gl_set_globals(st.ctx, C.byref(g))
-        if code:
-            raise RuntimeError(f"sg_gl_set_globals {code}")
+        keep = load(lib, st, snap)  # noqa: F841
         out = C.create_string_buffer(cap)
         n = C.c_size_t(0)
         a = [snap.meta.get(f"entry_a{i}", 0) for i in range(3)]
@@ -147,16 +155,22 @@ def first_difference(a: list[str], b: list[str]):
 
 
 def export(src: pathlib.Path, label: str) -> None:
-    """Copy the files the tests need from a gl_corpus.py corpus into port/corpus/gl/<label>."""
+    """Copy the files the tests need from a gl_corpus.py corpus into port/corpus/gl/<label>: per snapshot the renderer's inputs
+    and the rasteriser's (arrays, back buffer before / after); in the root the state stream and the texture bytes."""
     dst = CORPUS / label
     n = 0
     for d in sorted((src / "snaps").iterdir()):
         if not all((d / f).exists() for f in NEEDED):
             continue
         (dst / "snaps" / d.name).mkdir(parents=True, exist_ok=True)
-        for f in NEEDED:
-            shutil.copyfile(d / f, dst / "snaps" / d.name / f)
+        for f in NEEDED + RASTER:
+            if (d / f).exists():
+                shutil.copyfile(d / f, dst / "snaps" / d.name / f)
         n += 1
+    shutil.copyfile(src / "stream.gl.txt", dst / "stream.gl.txt")
+    (dst / "tex").mkdir(exist_ok=True)
+    for f in (src / "tex").glob("*.bin"):
+        shutil.copyfile(f, dst / "tex" / f.name)
     print(f"exported {n} snapshots to {dst}")
 
 
