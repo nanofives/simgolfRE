@@ -1,10 +1,13 @@
-/* Replay one captured Terrain.dll draw pass through the real Windows software GL and compare it with the game's own result.
-   Input: a directory written by `re/tools/gl_record.py --init --snap` (stream.gl.txt, tex/<hash>.bin, vtx.bin, nrm.bin,
-   dib_pre.bin, dib_post.bin, meta.txt). Steps: create the same DIB (size, 16 bpp, BI_BITFIELDS masks, orientation) and pixel
-   format (PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL, 16 colour bits: g_pfd 0x10063e10), a context, replay every state call between
-   wglCreateContext and the pass (draw blocks of earlier passes skipped, texture ids mapped), put dib_pre in the DIB, replay the
-   pass (glPushMatrix .. glFlush), compare the DIB with dib_post.
-   Usage: glreplay <dir> [out.bin]       GLREPLAY_CTL=1 skips one glBegin..glEnd block of the pass (negative control). */
+/* Replay captured Terrain.dll draw passes through the real Windows software GL and compare each with the game's own result.
+   Inputs come from `re/tools/gl_record.py --init --snap` (one pass, flat directory: stream.gl.txt, tex/<hash>.bin, vtx.bin, nrm.bin,
+   dib_pre.bin, dib_post.bin, meta.txt) or from `re/tools/gl_corpus.py` (a corpus root with stream.gl.txt, tex/ and snaps/<step>/ holding
+   pass.gl.txt, vtx.bin, nrm.bin, dib_pre.bin, dib_post.bin, meta.txt).
+   Steps: create the same DIB (size, 16 bpp, BI_BITFIELDS masks, orientation) and pixel format (PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL,
+   16 colour bits: g_pfd 0x10063e10), a context, replay every state call between wglCreateContext and the pass (draw blocks and flushes
+   skipped, texture ids mapped), put dib_pre in the DIB, replay the pass (glPushMatrix .. glFlush), compare the DIB with dib_post.
+   Usage: glreplay <dir> [out.bin]            single-pass directory
+          glreplay <root> <step> [out.bin]    corpus step
+   GLREPLAY_CTL=1 skips one glBegin..glEnd block of the pass (negative control). Exit status 0 = bit-exact. */
 #include <windows.h>
 #include <GL/gl.h>
 #include <stdio.h>
@@ -14,8 +17,8 @@
 typedef unsigned int u32;
 static char **lines; static int nlines;
 static int meta_i(const char *dir, const char *key, int def) {
-    char path[512], k[64]; int v; FILE *f;
-    sprintf(path, "%s\\meta.txt", dir); f = fopen(path, "r"); if (!f) return def;
+    char path[700], k[64]; int v; FILE *f;
+    sprintf(path, "%s/meta.txt", dir); f = fopen(path, "r"); if (!f) return def;
     while (fscanf(f, "%63s %d", k, &v) == 2) if (!strcmp(k, key)) { fclose(f); return v; }
     fclose(f); return def;
 }
@@ -23,7 +26,7 @@ static unsigned char *slurp(const char *path, size_t *n) {
     FILE *f = fopen(path, "rb"); unsigned char *b; long sz;
     if (!f) return 0;
     fseek(f, 0, SEEK_END); sz = ftell(f); fseek(f, 0, SEEK_SET);
-    b = (unsigned char *)malloc(sz + 1); fread(b, 1, sz, f); fclose(f); if (n) *n = sz; return b;
+    b = (unsigned char *)malloc(sz + 1); fread(b, 1, sz, f); fclose(f); b[sz] = 0; if (n) *n = sz; return b;
 }
 static unsigned long long fnv64(const unsigned char *p, size_t n) {
     unsigned long long h = 1469598103934665603ULL; while (n--) { h ^= *p++; h *= 1099511628211ULL; } return h;
@@ -35,9 +38,20 @@ static double D(u32 lo, u32 hi) { unsigned long long q = ((unsigned long long)hi
 static u32 idmap_rec[MAXID], idmap_real[MAXID]; static int nid;
 static u32 mapid(u32 rec) { int i; for (i = nid - 1; i >= 0; i--) if (idmap_rec[i] == rec) return idmap_real[i]; return rec; }
 
-static const char *dir; static unsigned char *vtx, *nrm; static int nskipped_tex;
+static const char *dir, *sdir; static unsigned char *vtx, *nrm; static int nskipped_tex;
 
-/* returns number of u32 args parsed; extras: v[] floats bits, tex hash, ids */
+/* split a text buffer into lines in place; returns the count */
+static int split(unsigned char *text, char ***out) {
+    unsigned char *p; int n = 0; char **v = 0;
+    for (p = text; *p; ) {
+        unsigned char *e = p; while (*e && *e != 10) e++;
+        v = (char **)realloc(v, sizeof(char *) * (n + 1)); v[n++] = (char *)p;
+        if (*e) { if (e > p && e[-1] == 13) e[-1] = 0; *e = 0; p = e + 1; } else p = e;
+    }
+    *out = v; return n;
+}
+
+/* returns number of u32 args parsed; extras: v[] float bits, tex hash, ids */
 static int parse(char *line, char *name, u32 *a, u32 *v, int *nv, char *tex, u32 *ids, int *nids) {
     char *sp = strchr(line, ' '), *p, *tok; int n = 0;
     *nv = 0; *nids = 0; tex[0] = 0;
@@ -58,7 +72,7 @@ static int parse(char *line, char *name, u32 *a, u32 *v, int *nv, char *tex, u32
     return n;
 }
 
-static int exec(char *line, int in_pass) {
+static int exec(char *line) {
     char name[64], tex[32]; u32 a[16] = {0}, v[8], ids[64]; int nv, nids; GLuint real[64]; int i;
     char buf[2048]; strncpy(buf, line, sizeof buf - 1); buf[sizeof buf - 1] = 0;
     if (!buf[0] || buf[0] == '#') return 0;
@@ -87,8 +101,8 @@ static int exec(char *line, int in_pass) {
     }
     else if (!strcmp(name, "glBindTexture")) glBindTexture(a[0], mapid(a[1]));
     else if (!strcmp(name, "glTexImage2D")) {
-        char path[600]; size_t n; unsigned char *px;
-        sprintf(path, "%s\\tex\\%s.bin", dir, tex);
+        char path[800]; size_t n; unsigned char *px;
+        sprintf(path, "%s/tex/%s.bin", dir, tex);
         px = tex[0] ? slurp(path, &n) : 0;
         if (!px) { nskipped_tex++; return 0; }
         glTexImage2D(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], px);
@@ -120,37 +134,40 @@ static int exec(char *line, int in_pass) {
     else if (!strcmp(name, "glMateriali")) glMateriali(a[0], a[1], a[2]);
     else if (!strcmp(name, "glLightfv")) { float f[4]; for (i = 0; i < 4; i++) f[i] = F(v[i]); glLightfv(a[0], a[1], f); }
     else { printf("unhandled call %s\n", name); return 1; }
-    (void)in_pass;
     return 0;
 }
 
 int main(int argc, char **argv) {
-    char path[600]; size_t n, sz; unsigned char *text, *p, *pre, *post;
+    char path[800], sdpath[800]; size_t n, sz, psz = 0; unsigned char *text, *pre, *post, *ptext = 0;
+    int corpus = 0, outarg = 2, state_end = -1, npl = 0; char **plines = 0;
     int W, H, wb, bpp, bih, comp, start, end, i, ctx_line = -1, unh = 0;
     BYTE bi_buf[sizeof(BITMAPINFOHEADER) + 12]; BITMAPINFOHEADER *bih_p = (BITMAPINFOHEADER *)bi_buf; DWORD *masks = (DWORD *)(bi_buf + sizeof(BITMAPINFOHEADER));
     void *bits = 0; HDC dc; HBITMAP bm; HGLRC rc; int pf; PIXELFORMATDESCRIPTOR pfd;
-    if (argc < 2) { printf("usage: glreplay <dir> [out.bin]\n"); return 2; }
-    dir = argv[1];
-    W = meta_i(dir, "w", 800); H = meta_i(dir, "h", 600); wb = meta_i(dir, "wb", 1600); bpp = meta_i(dir, "bpp", 16);
-    bih = meta_i(dir, "biHeight", 600); comp = meta_i(dir, "comp", 3); start = meta_i(dir, "startIdx", -1); end = meta_i(dir, "endIdx", -1);
-    sprintf(path, "%s\\stream.gl.txt", dir); text = slurp(path, &sz);
-    sprintf(path, "%s\\vtx.bin", dir); vtx = slurp(path, 0);
-    sprintf(path, "%s\\nrm.bin", dir); nrm = slurp(path, 0);
-    sprintf(path, "%s\\dib_pre.bin", dir); pre = slurp(path, &n);
-    sprintf(path, "%s\\dib_post.bin", dir); post = slurp(path, &n);
-    if (!text || !vtx || !nrm || !pre || !post || start < 0) { printf("missing input\n"); return 2; }
-    text[sz] = 0;
-    for (p = text; *p; ) {   /* split lines in place */
-        unsigned char *e = p; while (*e && *e != '\n') e++;
-        lines = (char **)realloc(lines, sizeof(char *) * (nlines + 1)); lines[nlines++] = (char *)p;
-        if (*e) { if (e > p && e[-1] == '\r') e[-1] = 0; *e = 0; p = e + 1; } else p = e;
+    if (argc < 2) { printf("usage: glreplay <dir> [out.bin] | glreplay <root> <step> [out.bin]\n"); return 2; }
+    dir = argv[1]; sdir = dir;
+    if (argc > 2 && (strlen(argv[2]) < 4 || strcmp(argv[2] + strlen(argv[2]) - 4, ".bin"))) {   /* corpus layout */
+        sprintf(sdpath, "%s/snaps/%s", dir, argv[2]); sdir = sdpath; corpus = 1;
     }
+    outarg = corpus ? 3 : 2;
+    W = meta_i(sdir, "w", 800); H = meta_i(sdir, "h", 600); wb = meta_i(sdir, "wb", 1600); bpp = meta_i(sdir, "bpp", 16);
+    bih = meta_i(sdir, "biHeight", 600); comp = meta_i(sdir, "comp", 3); start = meta_i(sdir, "startIdx", -1); end = meta_i(sdir, "endIdx", -1);
+    state_end = meta_i(sdir, "stateIdx", -1);
+    sprintf(path, "%s/stream.gl.txt", dir); text = slurp(path, &sz);
+    sprintf(path, "%s/vtx.bin", sdir); vtx = slurp(path, 0);
+    sprintf(path, "%s/nrm.bin", sdir); nrm = slurp(path, 0);
+    sprintf(path, "%s/dib_pre.bin", sdir); pre = slurp(path, &n);
+    sprintf(path, "%s/dib_post.bin", sdir); post = slurp(path, &n);
+    if (corpus) { sprintf(path, "%s/pass.gl.txt", sdir); ptext = slurp(path, &psz); start = state_end; }
+    if (!text || !vtx || !nrm || !pre || !post || start < 0 || (corpus && !ptext)) { printf("missing input\n"); return 2; }
+    nlines = split(text, &lines);
+    if (corpus) { npl = split(ptext, &plines); end = npl - 1; }
     for (i = 0; i < nlines; i++) if (!strncmp(lines[i], "wglCreateContext", 16)) { ctx_line = i; break; }
-    printf("stream %d lines, context at %d, pass %d..%d, DIB %dx%d %dbpp comp %d biHeight %d\n", nlines, ctx_line, start, end, W, H, bpp, comp, bih);
+    printf("stream %d lines, context at %d, pass %s%d lines, DIB %dx%d %dbpp comp %d biHeight %d\n", nlines, ctx_line,
+           corpus ? "" : "in stream ", corpus ? npl : end - start + 1, W, H, bpp, comp, bih);
 
     memset(bi_buf, 0, sizeof bi_buf);
     bih_p->biSize = sizeof(BITMAPINFOHEADER); bih_p->biWidth = W; bih_p->biHeight = bih; bih_p->biPlanes = 1; bih_p->biBitCount = (WORD)bpp; bih_p->biCompression = comp;
-    masks[0] = meta_i(dir, "m0", 0x7c00); masks[1] = meta_i(dir, "m1", 0x3e0); masks[2] = meta_i(dir, "m2", 0x1f);
+    masks[0] = meta_i(sdir, "m0", 0x7c00); masks[1] = meta_i(sdir, "m1", 0x3e0); masks[2] = meta_i(sdir, "m2", 0x1f);
     dc = CreateCompatibleDC(0);
     bm = CreateDIBSection(dc, (BITMAPINFO *)bi_buf, DIB_RGB_COLORS, &bits, 0, 0);
     SelectObject(dc, bm);
@@ -162,31 +179,33 @@ int main(int argc, char **argv) {
 
     {   /* state calls before the pass: no draw blocks, no flushes */
         int in_begin = 0;
-        for (i = ctx_line + 1; i < start; i++) {
+        for (i = ctx_line + 1; i < start && i < nlines; i++) {
             if (!strncmp(lines[i], "glBegin", 7)) { in_begin = 1; continue; }
             if (!strncmp(lines[i], "glEnd", 5)) { in_begin = 0; continue; }
             if (in_begin || !strncmp(lines[i], "glFlush", 7)) continue;
-            unh += exec(lines[i], 0);
+            unh += exec(lines[i]);
         }
     }
     memcpy(bits, pre, (size_t)wb * (bih < 0 ? -bih : bih)); GdiFlush();
-    {   int blocks = 0, skip_block = getenv("GLREPLAY_CTL") ? 500 : -1, skipping = 0;
-        for (i = start; i <= end && i < nlines; i++) {
-            if (!strncmp(lines[i], "glBegin", 7)) { if (blocks++ == skip_block) { skipping = 1; continue; } }
-            if (skipping) { if (!strncmp(lines[i], "glEnd", 5)) skipping = 0; continue; }
-            unh += exec(lines[i], 1);
+    {   int blocks = 0, skip_block = getenv("GLREPLAY_CTL") ? 500 : -1, skipping = 0, first = corpus ? 0 : start, last = corpus ? npl - 1 : (end < nlines ? end : nlines - 1);
+        char **src = corpus ? plines : lines;
+        for (i = first; i <= last; i++) {
+            if (!strncmp(src[i], "glBegin", 7)) { if (blocks++ == skip_block) { skipping = 1; continue; } }
+            if (skipping) { if (!strncmp(src[i], "glEnd", 5)) skipping = 0; continue; }
+            unh += exec(src[i]);
         }
+        printf("draw blocks in the pass: %d\n", blocks);
     }
     glFlush(); GdiFlush();
-    {   size_t bytes = (size_t)wb * (bih < 0 ? -bih : bih), k, ndiff = 0, first = (size_t)-1; unsigned short *x = (unsigned short *)bits, *y = (unsigned short *)post;
-        for (k = 0; k < bytes / 2; k++) if (x[k] != y[k]) { if (first == (size_t)-1) first = k; ndiff++; }
+    {   size_t bytes = (size_t)wb * (bih < 0 ? -bih : bih), k, ndiff = 0, changed = 0, first = (size_t)-1;
+        unsigned short *x = (unsigned short *)bits, *y = (unsigned short *)post, *z = (unsigned short *)pre;
+        for (k = 0; k < bytes / 2; k++) { if (x[k] != y[k]) { if (first == (size_t)-1) first = k; ndiff++; } if (z[k] != y[k]) changed++; }
         printf("replay hash %016llx  game hash %016llx  pre hash %016llx\n", fnv64((unsigned char *)bits, bytes), fnv64(post, bytes), fnv64(pre, bytes));
-        { size_t changed = 0; for (k = 0; k < bytes / 2; k++) if (((unsigned short *)pre)[k] != y[k]) changed++;
-          printf("pixels the game changed in the pass: %lu\n", (unsigned long)changed); }
+        printf("pixels the game changed in the pass: %lu\n", (unsigned long)changed);
         printf("pixels differing from the game's result: %lu of %lu%s", (unsigned long)ndiff, (unsigned long)(bytes / 2), ndiff ? "" : "  -> BIT-EXACT");
         if (ndiff) printf("  (first at x=%lu row-in-memory=%lu: replay %04x game %04x)", (unsigned long)(first % W), (unsigned long)(first / W), x[first], y[first]);
         printf("\ntexture uploads without bytes skipped: %d, unhandled calls: %d\n", nskipped_tex, unh);
-        if (argc > 2) { FILE *f = fopen(argv[2], "wb"); fwrite(bits, 1, bytes, f); fclose(f); }
+        if (argc > outarg) { FILE *f = fopen(argv[outarg], "wb"); fwrite(bits, 1, bytes, f); fclose(f); }
         return ndiff ? 1 : 0;
     }
 }

@@ -37,7 +37,10 @@
   // texture bytes of every glTexImage2D (once per FNV hash, sent as they happen), the glGenTextures / glDeleteTextures ids, and for
   // each pass the DIB the context draws into BEFORE (at glPushMatrix) and AFTER (glFlush returned), the vertex / normal array
   // memory up to the largest glArrayElement index, and the stream line numbers the pass spans.
-  let snapMode = false, hdc = 0, snap = null, cur = null, vp = 0, np = 0;
+  // multi mode (glrecSnap(true, true)): a pass (first glPushMatrix .. the glFlush after the matching glPopMatrix, plus the glLoadIdentity
+  // before it) is kept OUT of the stream in `passLines`, so one boot can snapshot many passes without the stream growing; the
+  // snapshot carries the pass lines and `stateIdx` = the number of stream lines before it (state calls only).
+  let snapMode = false, multi = false, passActive = false, inDraw = false, depth = 0, passLines = null, hdc = 0, snap = null, cur = null, vp = 0, np = 0;
   const sentTex = {};
   const gdi = Process.getModuleByName('gdi32.dll');
   const GetCurrentObject = new NativeFunction(gdi.getExportByName('GetCurrentObject'), 'pointer', ['pointer', 'uint32'], 'stdcall');
@@ -99,14 +102,32 @@
             const ids = []; for (let i = 0; i < w[0] && i < 64; i++) ids.push(hex(ptr(w[1]).add(4 * i).readU32()));
             line += ' ids=' + ids.join(',');
           } else if (name === 'glPushMatrix') {
-            const d = dibRead();
-            cur = { pre: d, startIdx: buf.length - (buf.length && buf[buf.length - 1].startsWith('glLoadIdentity') ? 1 : 0), maxIdx: -1 };
-          } else if (name === 'glArrayElement' && cur && w[0] > cur.maxIdx) cur.maxIdx = w[0];
+            const afterIdent = buf.length > 0 && buf[buf.length - 1].startsWith('glLoadIdentity');
+            if (!multi) {
+              cur = { pre: dibRead(), startIdx: buf.length - (afterIdent ? 1 : 0), maxIdx: -1 };
+            } else {
+              if (!passActive) {   // nested pushes of one pass keep the first pre-pass DIB
+                passActive = true; depth = 0; passLines = [];
+                cur = { pre: dibRead(), stateIdx: buf.length - (afterIdent ? 1 : 0), maxIdx: -1 };
+                if (afterIdent) passLines.push(buf[buf.length - 1]);
+              }
+              depth++;
+            }
+          } else if (name === 'glPopMatrix' && multi) depth--;
+          else if (name === 'glArrayElement' && cur && w[0] > cur.maxIdx) cur.maxIdx = w[0];
         }
         this.rec = true;
-        this.idx = buf.length;
         this.w = w;
-        buf.push(line);
+        // multi mode: the stream keeps EVERY call except the bodies of glBegin..glEnd blocks (their vertex data is the pass's own),
+        // because passes also change state that outlasts them (glMatrixMode, glOrtho, colour, blending of overlay drawing);
+        // passLines holds the complete pass, draw blocks included.
+        let toStream = true;
+        if (multi) { if (name === 'glBegin') inDraw = true; toStream = !inDraw; if (name === 'glEnd') inDraw = false; }
+        this.toStream = toStream;
+        this.idx = buf.length;
+        if (toStream) buf.push(line);
+        this.pidx = -1;
+        if (multi && passActive) { this.pidx = passLines.length; passLines.push(line); }
         state.n++;
         if (name === 'glFlush' && !snapMode && --state.flushLeft <= 0) {
           state.armed = false;
@@ -119,11 +140,16 @@
         if (!this.rec || !snapMode) return;
         if (name === 'glGenTextures' && this.w[0] > 0 && this.w[0] <= 64) {   // the ids the driver handed out
           const ids = []; for (let i = 0; i < this.w[0]; i++) ids.push(hex(ptr(this.w[1]).add(4 * i).readU32()));
-          buf[this.idx] += ' ids=' + ids.join(',');
-        } else if (name === 'glFlush' && cur && cur.maxIdx >= 0) {
-          const post = dibRead();
-          snap = { pre: cur.pre, post: post, startIdx: cur.startIdx, endIdx: this.idx, maxIdx: cur.maxIdx,
-                   vtx: vp ? ptr(vp).readByteArray((cur.maxIdx + 1) * 12) : null, nrm: np ? ptr(np).readByteArray((cur.maxIdx + 1) * 12) : null };
+          if (this.toStream) buf[this.idx] += ' ids=' + ids.join(',');
+          if (this.pidx >= 0) passLines[this.pidx] += ' ids=' + ids.join(',');
+        } else if (name === 'glFlush' && (!multi || depth <= 0)) {
+          if (cur && cur.maxIdx >= 0) {
+            const post = dibRead();
+            snap = { pre: cur.pre, post: post, startIdx: cur.startIdx, endIdx: this.idx, maxIdx: cur.maxIdx, stateIdx: multi ? cur.stateIdx : buf.length,
+                     passLines: multi ? passLines.slice() : null,
+                     vtx: vp ? ptr(vp).readByteArray((cur.maxIdx + 1) * 12) : null, nrm: np ? ptr(np).readByteArray((cur.maxIdx + 1) * 12) : null };
+          }
+          if (multi && passActive) { passActive = false; passLines = null; cur = null; }
         }
       }
     });
@@ -155,15 +181,19 @@
     send({ glrec: 'done', calls: lines.length, dropped: state.dropped });
     return lines.length;
   };
-  rpc.exports.glrecSnap = function (on) { snapMode = !!on; return snapMode; };
+  rpc.exports.glrecSnap = function (on, mult) { snapMode = !!on; multi = !!mult; return snapMode; };
   rpc.exports.glrecSendSnap = function () {
     if (!snap || !snap.pre || !snap.post) return false;
-    send({ glrec: 'snapmeta', startIdx: snap.startIdx, endIdx: snap.endIdx, maxIdx: snap.maxIdx, meta: snap.pre.meta, postMeta: snap.post.meta });
+    const s = snap; snap = null;      // each snapshot is sent once; the next call reports false until a new pass completes
+    if (s.passLines) for (let i = 0; i < s.passLines.length; i += 20000) send({ glrec: 'passlines', i: i, lines: s.passLines.slice(i, i + 20000) });
+    snap = s;
+    send({ glrec: 'snapmeta', startIdx: snap.startIdx, endIdx: snap.endIdx, maxIdx: snap.maxIdx, stateIdx: snap.stateIdx, meta: snap.pre.meta, postMeta: snap.post.meta });
     send({ glrec: 'snapdata', kind: 'pre' }, snap.pre.bytes);
     send({ glrec: 'snapdata', kind: 'post' }, snap.post.bytes);
     if (snap.vtx) send({ glrec: 'snapdata', kind: 'vtx' }, snap.vtx);
     if (snap.nrm) send({ glrec: 'snapdata', kind: 'nrm' }, snap.nrm);
     send({ glrec: 'snapend' });
+    snap = null;
     return true;
   };
   rpc.exports.glrecSeen = function () { return seen; };

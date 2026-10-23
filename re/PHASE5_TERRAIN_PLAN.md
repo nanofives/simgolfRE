@@ -157,3 +157,22 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    Open: (a) the same replay on a second PC / Windows build; (b) other zooms, rotations and a pass with path tiles / walls (one pass so far);
    (c) deriving the stream, arrays and textures from the port's own GameState instead of from a recording, which is the port's job
    (Terrain::stripRender / drawTile / Tile::render in C++); (d) the rasteriser itself, or shipping a call into the host's GL.
+
+8. DONE, replay corpus (`re/tools/gl_corpus.py`, `glreplay.exe <root> <step>`, `re/tools/glexact/replay_all.sh <root>`; data in log/p5/gl/corpus/c2,
+   not committed): one boot of the original Terrain.dll code, hooks off, sandbox Monterey, 24 steps (built hole, cart-path drags, terrain edit
+   '=' / '-', the buildings-palette terrain tools, then PgUp rotations at zoom 0, 1, 2 and back), a snapshot of the last completed pass after each
+   step (a nudge right and back once when a step drew nothing). Result: 21 snapshots, ALL 21 replay bit-exact (0 differing pixels), 0 unhandled
+   calls, 0 texture uploads without bytes. Honest count: 18 distinct passes (z1_r0 = z1_r1 = zoom1, z0_r3 = terrain_tools: the same pass sent twice),
+   and 3 of them (hole, paths, edit_raise: 207-235 draw blocks of the immediate-mode local redraw, glNormal3fv / glVertex3fv / glTexCoord2f) changed
+   no pixel (pre DIB = post DIB), so their EXACT is weak evidence. The other 15 changed 177,588 to 458,647 pixels each: full strip passes
+   of 3,400-3,500 triangle blocks at zoom 0, 8,664-9,939 at zoom 1, 11,289-18,929 at zoom 2, each with its own rotation; 242 distinct
+   texture ids are bound across them (473 uploaded). New call kinds beyond section 5's frame: glEnable / glDisable / glBlendFunc (blended path and
+   overlay geometry; `paths`, `terrain_tools` and every pass from z0_r0 on), glVertex3f next to glVertex3fv (rotated views). Unknown: whether any
+   pass drew cliff / retaining-wall geometry (the GL stream does not name it; the terrain-tool drags were clicks at guessed palette spots).
+   Recorder fix this needed (gl_rec.js multi mode): passes are not pure draws. Overlay drawing inside a push / pop pair (the 395 glMatrixMode
+   calls between strip passes) changes state that outlasts the pass, so the first corpus (c1) kept passes out of the stream and 10 of 13 replays
+   were wrong (the replay drew nothing: matrix mode left in the wrong state). The stream now keeps every call except the bodies of glBegin..glEnd
+   blocks (they live in the snapshot's pass.gl.txt with the complete pass), and stateIdx is the stream line where the pass starts. Lesson: a
+   replay that "agrees" with an unchanged frame (differing pixels = changed pixels) drew nothing; read ndiff against the changed count.
+   Still open: a second PC / build; cliff / wall / bridge / water passes; passes at other course types (the 473-texture set is per course type);
+   and the port itself producing these streams from GameState.
