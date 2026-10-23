@@ -36,9 +36,9 @@ SNAPS = G.snaps(CORPUS)
 # controls that construction / buildArrays reveal, and those the normals recompute reveals
 NEGCTL_CONSTRUCT = (1, 2, 3)
 NEGCTL_NORMALS = (4, 5, 6, 7)
-# wrong bodies these checks cannot see, on purpose: Tile::reset's default type is overwritten by the exe's setType on every tile
-# before any snapshot (the step-3 captures around single calls must judge it)
-NEGCTL_BLIND = {11: "Tile::reset default type 5"}
+# wrong bodies these per-snapshot checks cannot see: Tile::reset's default type is overwritten by the exe's setType on every tile
+# before any snapshot; the replay from construction (test_negctl_replay, every mode 1..21) reads it RED
+NEGCTL_BLIND = {11: "Tile::reset default type 5 (RED on the replay)"}
 
 
 @pytest.fixture(scope="module")
@@ -356,3 +356,279 @@ def test_normals_equal_the_original_t1(lib, step):
     obj, n = recompute(lib, snap)
     d = normals_diff(obj, n, snap)
     assert d["normals"] == 0 and d["faces_value"] == 0, d
+
+
+# ------------------------------------------------------------------------------------------------------- replay (steps 3-4)
+# The whole t1 call log replayed from an empty 0xcd block: getInstance (the constructor and the GL setup from original/), then every
+# exported call the exe made, in order. At each of the 64 snapshot positions the port's object, vertex and normal arrays, texture
+# table and view quadrant must equal the original's.
+
+def bind_dll(dll):
+    P, U32, I32 = C.c_void_p, C.c_uint32, C.c_int32
+    dll.sg_ts_dll_begin.restype, dll.sg_ts_dll_begin.argtypes = C.c_int, [P, U32]
+    dll.sg_ts_call.restype = C.c_int
+    dll.sg_ts_call.argtypes = [P, C.c_char_p, U32, C.POINTER(U32), C.POINTER(I32), I32, C.POINTER(U32)]
+    dll.sg_ts_view_index.restype, dll.sg_ts_view_index.argtypes = I32, [P]
+    dll.sg_run_frames_detail.restype, dll.sg_run_frames_detail.argtypes = C.c_char_p, [P]
+
+
+def state_diff(lib, st, obj, snap) -> dict:
+    a = np.frombuffer(bytes(obj), np.uint8).copy()
+    b = np.frombuffer(snap.tobj, np.uint8).copy()
+    handles = 0
+    for off in TC.HANDLE_FIELDS:
+        za, zb = a[off:off + 4].any(), b[off:off + 4].any()
+        handles += int(za != zb)
+        a[off:off + 4] = b[off:off + 4]
+    bad = np.nonzero(a != b)[0]
+    v, n = arrays(lib, st)
+    sv, sn = snap_arrays(snap)
+    tex = (C.c_uint32 * G.N_TEXTURES)()
+    assert lib.dll.sg_ts_textures(st.ctx, tex, G.N_TEXTURES) == 0
+    stex = np.frombuffer(snap.tdata, "<u4", G.N_TEXTURES, G.RVA["textures"] - G.DATA_RVA0)
+    view = struct.unpack_from("<i", snap.tdata, G.RVA["view"] - G.DATA_RVA0)[0]
+    tiles = sorted({(int(o) - TILES) // TILE for o in bad if TILES <= o < TILES + 2500 * TILE})
+    return {"bytes": len(bad), "first": int(bad[0]) if len(bad) else -1, "tiles": len(tiles), "first_tile": tiles[0] if tiles else -1,
+            "handles": handles, "vertices": int((v != sv).any(axis=1).sum()), "normals": int((n != sn).any(axis=1).sum()),
+            "textures": int((np.frombuffer(bytes(tex), "<u4") != stex).sum()), "view": int(lib.dll.sg_ts_view_index(st.ctx) != view)}
+
+
+def run_log(lib, root, stops, on_stop, stop_on_error=True) -> dict:
+    """Replay the call log of `root` from an empty 0xcd block; before the first call whose seq is >= a stop position, call
+    on_stop(key, st, obj). stops: [(position, key)]. Returns {'_calls', '_rets', '_error'?}."""
+    bind(lib.dll)
+    bind_dll(lib.dll)
+    log = TC.calls(root)
+    stops = sorted(stops, key=lambda p: p[0])
+    out = {}
+    first = log[0]
+    assert first.name == "getInstance"
+    base = first.ret
+    with lib.state() as st:
+        st.files_root(str(INSTALL))
+        obj = (C.c_uint8 * OBJ)(*([0xCD] * OBJ))
+        st.map(base, obj)
+        assert lib.dll.sg_ts_dll_begin(st.ctx, base) == 0
+        k = 0
+        rets = 0
+        args = (C.c_uint32 * 5)()
+        r = C.c_uint32(0)
+        for c in log + [None]:
+            while k < len(stops) and (c is None or stops[k][0] <= c.seq):
+                on_stop(stops[k][1], st, obj)
+                k += 1
+            if c is None:
+                break
+            for i in range(5):
+                args[i] = c.args[i]
+            tbl, n = None, 0
+            if "tbl" in c.extra:
+                vals = [int(x) for x in c.extra["tbl"].split(",")]
+                tbl, n = (C.c_int32 * len(vals))(*vals), len(vals)
+            code = lib.dll.sg_ts_call(st.ctx, c.name.encode(), c.self, args, tbl, n, C.byref(r))
+            if code:
+                out["_error"] = f"call {c.seq} {c.name}: code {code} {lib.dll.sg_run_frames_detail(st.ctx)}"
+                if stop_on_error:
+                    break
+            if c.name == "getInstance" and r.value != c.ret:
+                rets += 1
+            if c.name == "render" and (r.value & 0xFF) != (c.ret & 0xFF):
+                rets += 1
+        out["_calls"] = len(log)
+        out["_rets"] = rets
+    return out
+
+
+def replay(lib, root, names, stop_on_error=True) -> dict:
+    """Replay the call log once, comparing at each snapshot position; returns {snapshot: diff} plus '_calls' / '_rets' / '_error'."""
+    res = {}
+
+    def on_stop(name, st, obj):
+        res[name] = state_diff(lib, st, obj, TC.TSnap(root, name))
+
+    out = run_log(lib, root, [(TC.position(TC.TSnap(root, n)), n) for n in names], on_stop, stop_on_error)
+    res.update(out)
+    return res
+
+
+# ------------------------------------------------------------------------------------------------------------ the chain
+# Corpus t3 (terrain_calls.py --frames --inject): the call log plus, after each scenario step, the original's frame of the last
+# Terrain::render pass (gl_corpus form under frames/). The chain: the log replayed up to that render call builds the Terrain object,
+# its arrays and texture table; the port's GL setup from original/ sets up the rasteriser at the replayed zoom; the port's
+# Terrain::render draws over the original's starting back buffer; the result must meet test_gl_raster's frame criterion. Inputs
+# still taken from the recording: the starting back buffer, the DLL's constant texture-coordinate and side-normal tables.
+from port.test import glraster as R  # noqa: E402
+
+T3 = TC.CORPUS / "t3"
+WALL, FENCE1, FENCE0 = ((G.RVA[k] - G.RVA["textures"]) // 4 for k in ("wall", "fence1", "fence0"))   # entries of the texture table
+MAX_ONE_LEVEL, MAX_BIG = 0.02, 70   # test_gl_raster.py's frame criterion
+# calls that change nothing a Terrain::render pass reads (the view quadrant they set, render sets again from its own angle)
+DRAW_ONLY = {"render", "localRender", "stripRender", "pathUpdateRender", "drawLine", "drawCircle", "drawCardinalSpline",
+             "drawBezierSpline", "renderTile"}
+
+
+def frames(root=T3) -> list[str]:
+    f = root / "frames" / "index.json"
+    import json
+    return json.loads(f.read_text()) if f.exists() else []
+
+
+def frame_render_call(root, name):
+    """The Terrain::render call the frame shows. The frame is the last COMPLETED pass when it was fetched, so a render that was still
+    running then can follow it in the log: take the latest render with the pass's recorded this / tile / angle among the run of
+    draw-only calls just before the fetch position (DRAW_ONLY: every candidate there sees the same state)."""
+    d = root / "frames" / "snaps" / name
+    pos = int((d / "tcseq.txt").read_text())
+    meta = G.meta(d / "meta.txt")
+    want = (meta["entry_ecx"], meta["entry_a0"], meta["entry_a1"])
+    for c in reversed([c for c in TC.calls(root) if c.seq < pos]):
+        if c.name not in DRAW_ONLY:
+            break
+        if c.name != "render":
+            continue
+        if (c.self, c.args[0], c.args[1]) == want:
+            return c
+    raise AssertionError(f"{name}: no render call with the pass's arguments after the last state change")
+
+
+def chain(lib, root, names, extra=None) -> dict:
+    """{frame: (post, got, stats, pre)} for each frame, every frame drawn from the replayed state alone."""
+    R.bind(lib.dll)
+    G.bind(lib.dll)
+    dll = lib.dll
+    dll.sg_ts_set_render_data.restype = C.c_int
+    dll.sg_ts_set_render_data.argtypes = [C.c_void_p, C.c_void_p, C.c_uint32, C.c_void_p, C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint32]
+    dll.sg_gl_render_to_raster.restype = C.c_int
+    dll.sg_gl_render_to_raster.argtypes = [C.c_void_p, C.c_void_p, C.c_int32, C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint32]
+    dll.sg_gl_setup_to_raster.restype = C.c_int
+    dll.sg_gl_setup_to_raster.argtypes = [C.c_void_p, C.c_void_p, C.c_int32, C.POINTER(C.c_uint32)]
+    out = {}
+
+    def on_stop(name, st, obj):
+        if extra:
+            extra(name, st, obj)
+        call = frame_render_call(root, name)
+        snap = G.Snap(root / "frames", name)
+        tex = (C.c_uint32 * G.N_TEXTURES)()
+        assert dll.sg_ts_textures(st.ctx, tex, G.N_TEXTURES) == 0
+        tc = snap.arr(G.RVA["tex_coords"], G.N_TEXCOORD_FLOATS, C.c_float)
+        sn = snap.arr(G.RVA["side_normals"], 24, C.c_float)
+        assert dll.sg_ts_set_render_data(st.ctx, tc, G.N_TEXCOORD_FLOATS, sn, tex[WALL], tex[FENCE0], tex[FENCE1], 0) == 0
+        zoom = struct.unpack_from("<i", bytes(obj), 0x1C)[0]
+        r = dll.sg_raster_new(R.W, R.H)
+        try:
+            table = (C.c_uint32 * G.N_TEXTURES)()
+            assert dll.sg_gl_setup_to_raster(st.ctx, r, zoom, table) == 0
+            assert list(table) == list(tex), f"{name}: the rasteriser's texture names differ from the replayed table"
+            d = root / "frames" / "snaps" / name
+            pre = (d / "dib_pre.bin").read_bytes()
+            dll.sg_raster_set_pixels(r, pre, R.W * R.H)
+            code = dll.sg_gl_render_to_raster(st.ctx, r, 2, call.self, call.args[0], call.args[1], call.args[2])
+            assert code == 0, f"{name}: sg_gl_render_to_raster {code}"
+            buf = C.create_string_buffer(R.W * R.H * 2)
+            dll.sg_raster_get_pixels(r, buf, R.W * R.H * 2)
+            stt = (C.c_int64 * 5)()
+            dll.sg_raster_stats(r, stt)
+            out[name] = (np.frombuffer((d / "dib_post.bin").read_bytes(), dtype="<u2"), np.frombuffer(buf.raw, dtype="<u2"),
+                         list(stt), np.frombuffer(pre, dtype="<u2"))
+        finally:
+            dll.sg_raster_free(r)
+
+    res = run_log(lib, root, [(frame_render_call(root, n).seq, n) for n in names], on_stop)
+    assert "_error" not in res, res["_error"]
+    return out
+
+
+def judge(post, got, stats, pre):
+    rep = R.report(post, got, pre)
+    one = rep["diff"] - rep["gt1"]
+    return rep["gt1"] <= MAX_BIG and one <= MAX_ONE_LEVEL * max(stats[2], 1), rep, one, stats[2]
+
+
+# --------------------------------------------------------------------------------------------------------------- tests
+REPLAY_CORPORA = [c for c in ("t1", "t2", "t3") if TC.snaps(TC.CORPUS / c)]
+REPLAY_KEYS = [(c, n) for c in REPLAY_CORPORA for n in TC.snaps(TC.CORPUS / c)]
+_REPLAYS: dict = {}
+
+
+def _replay_cached(lib, corpus):
+    if corpus not in _REPLAYS:
+        root = TC.CORPUS / corpus
+        _REPLAYS[corpus] = replay(lib, root, TC.snaps(root))
+    return _REPLAYS[corpus]
+
+
+@pytest.mark.parametrize("corpus,step", REPLAY_KEYS or [("none", "none")])
+def test_replay_equals_the_original(lib, corpus, step):
+    """The whole call log replayed from construction: at the snapshot's log position the Terrain object (handles as zero /
+    nonzero), the vertex and normal arrays, the texture table and the view quadrant equal the original's."""
+    if not REPLAY_KEYS:
+        pytest.skip("no t1 / t2 / t3 corpus (re/tools/terrain_calls.py; python -m port.test.terraincorpus export)")
+    res = _replay_cached(lib, corpus)
+    assert "_error" not in res, res["_error"]
+    assert res["_rets"] == 0, "getInstance / render returned other values than the original"
+    d = res[step]
+    assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures", "view")), d
+
+
+NEGCTL_REPLAY = tuple(range(1, 22))
+
+
+@pytest.mark.parametrize("mode", NEGCTL_REPLAY)
+def test_negctl_replay(lib, mode):
+    """Every deliberately wrong body reads RED on the replay of t2 (the scenario plus the injected calls: type 6 / 7 blocks, paths on
+    buildings, filled setWall dwords, the spline step, lowerEdgeCorner at every angle, a Desert course switch)."""
+    root = TC.CORPUS / "t2"
+    if not TC.snaps(root):
+        pytest.skip("no t2 corpus")
+    lib.dll.sg_ts_negctl(mode)
+    try:
+        res = replay(lib, root, TC.snaps(root))
+    finally:
+        lib.dll.sg_ts_negctl(0)
+    red = [k for k, d in res.items() if not k.startswith("_") and any(d[x] for x in ("bytes", "handles", "vertices", "normals",
+                                                                                          "textures", "view"))]
+    assert red or "_error" in res, f"mode {mode} reads GREEN on the whole replay"
+
+
+T3_FRAMES = frames()
+_CHAINS: dict = {}
+
+
+def _chain_cached(lib):
+    if "t3" not in _CHAINS:
+        states = {}
+
+        def keep_state(name, st, obj):
+            states[name] = state_diff(lib, st, obj, G.Snap(T3 / "frames", name))
+
+        _CHAINS["state"] = states
+        _CHAINS["t3"] = chain(lib, T3, T3_FRAMES, extra=keep_state)
+    return _CHAINS
+
+
+@pytest.mark.parametrize("frame", T3_FRAMES or ["none"])
+def test_chain_state_equals_the_frames_snapshot(lib, frame):
+    """At the render call the frame shows, the replayed object and arrays equal the snapshot gl_rec.js took of that pass."""
+    if not T3_FRAMES:
+        pytest.skip("no t3 corpus with frames")
+    d = _chain_cached(lib)["state"][frame]
+    assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures")), d
+
+
+@pytest.mark.parametrize("frame", T3_FRAMES or ["none"])
+def test_chain_frame(lib, frame):
+    """The frame drawn from the replayed state alone is pixel-identical to the frame drawn from the recorded snapshot (the state
+    side adds no error) and meets test_gl_raster's criterion; the zoom-2 frames of t3 exceed its one-level fraction (U-1076)."""
+    if not T3_FRAMES:
+        pytest.skip("no t3 corpus with frames")
+    if not (INSTALL / "Data" / "Textures" / "Parkland").is_dir():
+        pytest.skip("no install with Data/Textures (original/)")
+    post, got, stats, pre = _chain_cached(lib)["t3"][frame]
+    _, ref, _, _ = R.run_chain_from_setup(lib, R.Setup(T3 / "frames"), frame, INSTALL)
+    assert (got == ref).all(), f"{frame}: {int((got != ref).sum())} pixels differ from the snapshot-driven chain"
+    ok, rep, one, drawn = judge(post, got, stats, pre)
+    zoom = struct.unpack_from("<i", G.Snap(T3 / "frames", frame).tobj, 0x1C)[0]
+    if not ok and zoom == 2 and rep["gt1"] == 0:
+        pytest.xfail(f"zoom 2: {one} one-level pixels = {one / max(drawn, 1):.4f} of drawn, none further (U-1076)")
+    assert ok, (rep, one, drawn)

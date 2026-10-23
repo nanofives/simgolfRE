@@ -27,6 +27,11 @@ namespace {
 //   9 setFaceTexture sends face argument 1 to face slot 2 (and 0 to 3)
 //  10 edgeKind's water arm returns 1 where it returns 2
 //  11 Tile::reset's default type is 5 instead of 4
+//  12 elevateCorner keeps the centre's min instead of its max      13 leaveType6 subtracts on its one += corner too
+//  14 rand() adds 2531013                                          15 setPathFlagForType leaves type 0x16 out
+//  16 lowerCorner's type-7 offset 12.0 instead of 13.0             17 setTypeId skips leaveType7
+//  18 enterType7 dirties every neighbour                           19 setWall stores `on != 0` instead of its low byte
+//  20 layPath ignores its direction flag                           21 setViewAngle maps 90 to quadrant 2
 int32_t g_negctl = 0;
 
 using TileP = Ptr<TerrainTile>;
@@ -260,6 +265,21 @@ void terrain_pass_collar_info(TerrainGlobals &g, const int32_t *table, int32_t n
 
 void terrain_construct(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, int32_t width, int32_t height) {
   const auto h = hdr_p(ctx, terrain);
+  // the member constructors first: the vector constructor of the 0x9c4 tiles runs Tile::Tile, whose members Faces (count 0),
+  // PathInfo (clear) and WallInfo (clear) construct themselves (re/match/terrain_tile6.cpp); the draw list follows (below)
+  for (int32_t i = 0; i < kTerrainMaxTiles; ++i) {
+    const TileP t = tile_p(ctx, terrain + kTerrainTilesOffset + static_cast<uint32_t>(i) * static_cast<uint32_t>(sizeof(TerrainTile)));
+    t.field(&TerrainTile::face_count).set(0);
+    t.field(&TerrainTile::connected).set(0);
+    t.field(&TerrainTile::has_path).set(0);
+    t.field(&TerrainTile::draw_path).set(0);
+    for (int32_t k = 0; k < 4; ++k) t.field(&TerrainTile::path_b3).at(k).set(0);
+    const auto on = t.field(&TerrainTile::wall_on);
+    on.at(0).set(0);
+    on.at(2).set(0);
+    on.at(6).set(0);
+    on.at(4).set(0);
+  }
   g.collar_set = false;
   g.collar.clear();
   h.field(&TerrainObjectHeader::width).set(width);
@@ -278,6 +298,11 @@ void terrain_construct(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, int32_t wi
   g.course_type = 0;
   for (int32_t i = 0; i < kTerrainTextureTypes; ++i) (h.field(&TerrainObjectHeader::types) + i).field(&TerrainTypeInfo::count).set(0);
   g.textures.assign(static_cast<size_t>(kTerrainTextureTypes) * kTerrainTextureVariations * kTerrainTextureSlots, 0u);
+  // the draw list's constructor (std::list<Tile*>, re/match/terrain_list.cpp): the allocator byte is copied from a default-constructed
+  // temporary in the debug build's stack fill (0xcc), the head node comes from operator new (a heap address: a token here), size 0
+  Ptr<uint8_t>(ctx.mem, terrain + kTerrainDrawListOffset).set(0xcc);
+  Ptr<uint32_t>(ctx.mem, terrain + kTerrainDrawListOffset + 4).set(kListHeadToken);
+  Ptr<uint32_t>(ctx.mem, terrain + kTerrainDrawListOffset + 8).set(0u);
 }
 
 void terrain_apply_gl_state(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, const TerrainGlState &st) {
@@ -294,8 +319,10 @@ void terrain_apply_gl_state(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, const
   h.field(&TerrainObjectHeader::glrc).set(st.has_context ? kContextToken : 0u);
   h.field(&TerrainObjectHeader::flip_y).set(st.flip_y ? 1 : 0);
   h.field(&TerrainObjectHeader::textures_loaded).set(st.textures_loaded ? 1 : 0);
-  h.field(&TerrainObjectHeader::screen_w).set(st.screen_w);
-  h.field(&TerrainObjectHeader::screen_h).set(st.screen_h);
+  if (st.has_context) {   // the window size is written by initSystem only (the constructor leaves it at the allocation's fill)
+    h.field(&TerrainObjectHeader::screen_w).set(st.screen_w);
+    h.field(&TerrainObjectHeader::screen_h).set(st.screen_h);
+  }
   h.field(&TerrainObjectHeader::zoom).set(st.zoom);
   g.textures = st.textures;
   g.course_type = st.course_type;
@@ -558,6 +585,363 @@ void tile_reset_face_textures(Ctx &ctx, TerrainGlobals &g, uint32_t tile) {
     for (int32_t j = 0; j < n; ++j) face_p(ctx, tile, j).field(&TerrainFace::texture).set(tex_slot(g, t_type(ctx, tile), var, 3));
   }
   tile_reblend_neighbourhood(ctx, g, tile);
+}
+
+// ---------------------------------------------------------------------------------------------------------------- mutators
+
+int32_t terrain_rand(TerrainGlobals &g) {
+  g.rand_state = g.rand_state * 214013u + (g_negctl == 14 ? 2531013u : 2531011u);
+  return static_cast<int32_t>((g.rand_state >> 16) & 0x7fffu);
+}
+
+namespace {
+
+float &vy(TerrainGlobals &g, int32_t index) { return vtx(g, index)[1]; }
+// vertex k of face f of tile t, as a vertex index; f and k may be the debug build's stack fill (an index the original never checks)
+int32_t fvx(Ctx &c, uint32_t t, int32_t f, int32_t k) {
+  return (Ptr<int32_t>(c.mem, t + 0x48u + static_cast<uint32_t>(f) * 0x38u) + k).get();
+}
+void add_y(TerrainGlobals &g, int32_t index, float d) {
+  float &y = vy(g, index);
+  y = f32(static_cast<double>(y) + d);
+}
+void set_dirty(Ctx &c, uint32_t t) { tile_p(c, t).field(&TerrainTile::normals_dirty).set(1); }
+
+// the 3 x 3 neighbourhood's normals-dirty marks, in the original's order (a diagonal is reached through n0 / n1 and faults when that
+// neighbour's own link is NULL); only_type >= 0: a neighbour is marked only when it has that type (enterType7)
+void dirty_neighbourhood(Ctx &c, uint32_t t, int32_t only_type = -1) {
+  auto mark = [&](uint32_t n) {
+    if (only_type < 0 || t_type(c, n) == only_type) set_dirty(c, n);
+  };
+  set_dirty(c, t);
+  const uint32_t n0 = t_nb(c, t, 0), n1 = t_nb(c, t, 1), n2 = t_nb(c, t, 2), n3 = t_nb(c, t, 3);
+  if (n0) mark(n0);
+  if (n0 && n2) mark(t_nb(c, n0, 2));
+  if (n0 && n3) mark(t_nb(c, n0, 3));
+  if (n2) mark(n2);
+  if (n3) mark(n3);
+  if (n1) mark(n1);
+  if (n1 && n2) mark(t_nb(c, n1, 2));
+  if (n1 && n3) mark(t_nb(c, n1, 3));
+}
+
+// The vertex walk of enter / leaveType6 and enter / leaveType7 (re/match/terrain_type6.cpp): the centre, then every vertex this tile
+// shares with a neighbour or diagonal of type k, moved by d. `own00` is the move of this tile's face 0 vertex 0 (the n0 / n2 diagonal
+// case): leaveType6 adds there where it subtracts everywhere else.
+void type_walk(Ctx &c, TerrainGlobals &g, uint32_t t, int32_t k, float d, float own00) {
+  auto is = [&](uint32_t x) { return t_type(c, x) == k; };
+  add_y(g, fvx(c, t, 0, 2), d);
+  const uint32_t n0 = t_nb(c, t, 0), n1 = t_nb(c, t, 1), n2 = t_nb(c, t, 2), n3 = t_nb(c, t, 3);
+  if (n0 != 0 && is(n0)) {
+    add_y(g, fvx(c, t, 1, 2), d);
+    add_y(g, fvx(c, n0, 5, 1), d);
+    if (n2 != 0 && is(n2) && is(t_nb(c, n0, 2))) {
+      add_y(g, fvx(c, t, 0, 0), own00);
+      add_y(g, fvx(c, n0, 4, 1), d);
+      add_y(g, fvx(c, n2, 3, 2), d);
+      add_y(g, fvx(c, t_nb(c, n0, 2), 7, 1), d);
+    }
+    if (n3 != 0 && is(n3) && is(t_nb(c, n0, 3))) {
+      add_y(g, fvx(c, t, 3, 2), d);
+      add_y(g, fvx(c, n0, 7, 1), d);
+      add_y(g, fvx(c, n3, 0, 0), d);
+      add_y(g, fvx(c, t_nb(c, n0, 3), 4, 1), d);
+    }
+  }
+  if (n1 != 0 && is(n1)) {
+    add_y(g, fvx(c, t, 5, 1), d);
+    add_y(g, fvx(c, n1, 1, 2), d);
+    if (n2 != 0 && is(n2) && is(t_nb(c, n1, 2))) {
+      add_y(g, fvx(c, t, 5, 0), d);
+      add_y(g, fvx(c, n1, 0, 0), d);
+      add_y(g, fvx(c, n2, 7, 1), d);
+      add_y(g, fvx(c, t_nb(c, n1, 2), 3, 2), d);
+    }
+    if (n3 != 0 && is(n3) && is(t_nb(c, n1, 3))) {
+      add_y(g, fvx(c, t, 7, 1), d);
+      add_y(g, fvx(c, n1, 3, 2), d);
+      add_y(g, fvx(c, n3, 4, 1), d);
+      add_y(g, fvx(c, t_nb(c, n1, 3), 0, 0), d);
+    }
+  }
+  if (n2 != 0 && is(n2)) {
+    add_y(g, fvx(c, t, 0, 1), d);
+    add_y(g, fvx(c, n2, 3, 1), d);
+  }
+  if (n3 != 0 && is(n3)) {
+    add_y(g, fvx(c, t, 3, 1), d);
+    add_y(g, fvx(c, n3, 0, 1), d);
+  }
+}
+
+// elevate / lowerCorner's six (face, vertex) pairs per corner: f5 = the corner itself, f0 = the opposite corner (the centre's mean),
+// f1 / f2 = the two edge midpoints, f3 / f4 = their far ends. The switch has cases 1, 7, 3 and 5 only: any other corner leaves all
+// twelve locals at the debug build's stack fill.
+struct CornerMap {
+  int32_t f5, v5, f0, v0, f1, v1, f2, v2, f3, v3, f4, v4;
+};
+CornerMap corner_map(int32_t corner) {
+  switch (corner) {
+    case 1: return {3, 2, 4, 1, 3, 1, 1, 2, 7, 1, 0, 0};
+    case 7: return {0, 0, 7, 1, 1, 2, 0, 1, 3, 2, 4, 1};
+    case 3: return {7, 1, 0, 0, 5, 1, 3, 1, 4, 1, 3, 2};
+    case 5: return {4, 1, 3, 2, 0, 1, 5, 1, 0, 0, 7, 1};
+    default: {
+      const int32_t u = static_cast<int32_t>(0xccccccccu);
+      return {u, u, u, u, u, u, u, u, u, u, u, u};
+    }
+  }
+}
+
+void corner_move(Ctx &c, TerrainGlobals &g, uint32_t t, int32_t corner, int32_t step) {
+  const CornerMap m = corner_map(corner);
+  const auto level = Ptr<int32_t>(c.mem, t) + corner;
+  const float new_h = f32(static_cast<double>(add32(level.get(), step)) * g.corner_step);
+  const float a = vy(g, fvx(c, t, m.f0, m.v0));
+  const float b = vy(g, fvx(c, t, m.f3, m.v3));
+  const float cc = vy(g, fvx(c, t, m.f4, m.v4));
+  const float h = new_h;
+  const float mean = f32((static_cast<double>(h) + a) * 0.5);
+  float &centre = vy(g, fvx(c, t, 0, 2));
+  const bool keep_max = step > 0 && g_negctl != 12;
+  centre = keep_max ? (mean > centre ? mean : centre) : (mean < centre ? mean : centre);
+  vy(g, fvx(c, t, m.f1, m.v1)) = f32((static_cast<double>(h) + b) * 0.5);
+  vy(g, fvx(c, t, m.f2, m.v2)) = f32((static_cast<double>(h) + cc) * 0.5);
+  level.set(add32(level.get(), step));
+  vy(g, fvx(c, t, m.f5, m.v5)) = new_h;
+  if (step < 0 && t_type(c, t) == 7) {
+    const float low = f32(static_cast<double>(new_h) - (g_negctl == 16 ? 12.0 : 13.0));
+    const uint32_t n0 = t_nb(c, t, 0), n1 = t_nb(c, t, 1), n2 = t_nb(c, t, 2), n3 = t_nb(c, t, 3);
+    vy(g, fvx(c, t, 0, 2)) = low;
+    if (n0 != 0 && t_type(c, n0) == 7) {
+      vy(g, fvx(c, t, 1, 2)) = low;
+      if (n2 != 0 && t_type(c, n2) == 7 && t_type(c, t_nb(c, n0, 2)) == 7) vy(g, fvx(c, t, 0, 0)) = low;
+      if (n3 != 0 && t_type(c, n3) == 7 && t_type(c, t_nb(c, n0, 3)) == 7) vy(g, fvx(c, t, 3, 2)) = low;
+    }
+    if (n1 != 0 && t_type(c, n1) == 7) {
+      vy(g, fvx(c, t, 5, 1)) = low;
+      if (n2 != 0 && t_type(c, n2) == 7 && t_type(c, t_nb(c, n1, 2)) == 7) vy(g, fvx(c, t, 5, 0)) = low;
+      if (n3 != 0 && t_type(c, n3) == 7 && t_type(c, t_nb(c, n1, 3)) == 7) vy(g, fvx(c, t, 7, 1)) = low;
+    }
+    if (n2 != 0 && t_type(c, n2) == 7) vy(g, fvx(c, t, 0, 1)) = low;
+    if (n3 != 0 && t_type(c, n3) == 7) vy(g, fvx(c, t, 3, 1)) = low;
+  }
+  dirty_neighbourhood(c, t);
+}
+
+}  // namespace
+
+void tile_elevate_corner(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t corner) { corner_move(ctx, g, tile, corner, 1); }
+void tile_lower_corner(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t corner) { corner_move(ctx, g, tile, corner, -1); }
+
+void tile_leave_type6(Ctx &ctx, TerrainGlobals &g, uint32_t tile) {
+  type_walk(ctx, g, tile, 6, -20.0f, g_negctl == 13 ? -20.0f : 20.0f);
+  dirty_neighbourhood(ctx, tile);
+}
+void tile_leave_type7(Ctx &ctx, TerrainGlobals &g, uint32_t tile) {
+  type_walk(ctx, g, tile, 7, 13.0f, 13.0f);
+  dirty_neighbourhood(ctx, tile);
+}
+void tile_enter_type6(Ctx &ctx, TerrainGlobals &g, uint32_t tile) {
+  type_walk(ctx, g, tile, 6, 20.0f, 20.0f);
+  dirty_neighbourhood(ctx, tile);
+  tile_reblend_neighbourhood(ctx, g, tile);
+}
+void tile_enter_type7(Ctx &ctx, TerrainGlobals &g, uint32_t tile) {
+  tile_p(ctx, tile).field(&TerrainTile::draw_path).set(0);
+  type_walk(ctx, g, tile, 7, -13.0f, -13.0f);
+  dirty_neighbourhood(ctx, tile, g_negctl == 18 ? -1 : 7);
+  tile_reblend_neighbourhood(ctx, g, tile);
+}
+
+void tile_set_path_flag_for_type(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t type) {
+  const TileP t = tile_p(ctx, tile);
+  if (t.field(&TerrainTile::has_path).get()) {
+    const bool clear = type == 0x14 || type == 0x11 || (type == 0x16 && g_negctl != 15) || type == 0 || type == 2 || type == 1 ||
+                       type == 3 || type == 7 || type == 9;
+    t.field(&TerrainTile::draw_path).set(clear ? 0 : 1);
+  }
+  tile_reblend_neighbourhood(ctx, g, tile);
+}
+
+void tile_set_type_id(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t type) {
+  const TileP t = tile_p(ctx, tile);
+  if (t.field(&TerrainTile::has_path).get()) t.field(&TerrainTile::draw_path).set(1);
+  if (t_type(ctx, tile) == 7 && g_negctl != 17) tile_leave_type7(ctx, g, tile);
+  if (t_type(ctx, tile) == 6) tile_leave_type6(ctx, g, tile);
+  else if (t_type(ctx, tile) == 0x11) t.field(&TerrainTile::normals_dirty).set(1);
+  t.field(&TerrainTile::type).set(type);
+  switch (type) {
+    case 7: tile_enter_type7(ctx, g, tile); break;
+    case 0x11: tile_set_path_flag_for_type(ctx, g, tile, type); break;
+    case 6: tile_enter_type6(ctx, g, tile); break;
+    case 0xd: case 0xe: case 0xf: case 0x10: tile_set_path_flag_for_type(ctx, g, tile, 0xd); break;
+    case 0: case 9: tile_reset_face_textures(ctx, g, tile); break;
+    case 4: case 0x14: tile_reblend_neighbourhood(ctx, g, tile); break;
+    default: tile_set_path_flag_for_type(ctx, g, tile, type); break;
+  }
+}
+
+void terrain_set_type(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, uint32_t tile, int32_t type, int32_t rotation) {
+  // m_types[type].variations: the type index is not checked
+  const int32_t count = Ptr<int32_t>(ctx.mem, terrain + 0x2cu + static_cast<uint32_t>(type) * 0x18u + 0x14u).get();
+  const TileP t = tile_p(ctx, tile);
+  if (count > 0) t.field(&TerrainTile::variation).set(terrain_rand(g) % count);
+  else t.field(&TerrainTile::variation).set(0);
+  t.field(&TerrainTile::rotation).set(rotation);
+  tile_set_type_id(ctx, g, tile, type);
+}
+
+void tile_lay_path(Ctx &ctx, uint32_t tile, bool on, int32_t dir) {
+  const TileP t = tile_p(ctx, tile);
+  if (on) {
+    t.field(&TerrainTile::has_path).set(1);
+    if (dir && g_negctl != 20) t.field(&TerrainTile::connected).set(1);
+    const int32_t ty = t_type(ctx, tile);
+    const bool clear = ty == 0x16 || ty == 0 || ty == 2 || ty == 1 || ty == 3 || ty == 7 || ty == 9;
+    t.field(&TerrainTile::draw_path).set(clear ? 0 : 1);
+  } else {
+    t.field(&TerrainTile::has_path).set(0);
+    t.field(&TerrainTile::connected).set(0);
+    t.field(&TerrainTile::draw_path).set(0);
+  }
+}
+
+void tile_set_wall(Ctx &ctx, uint32_t tile, int32_t side, int32_t height, uint8_t on) {
+  const TileP t = tile_p(ctx, tile);
+  (t.field(&TerrainTile::wall_on) + side).set(on);
+  (t.field(&TerrainTile::wall_height) + side).set(height);
+}
+
+void terrain_set_view_angle(TerrainGlobals &g, float angle) {
+  if (angle == 0.0f) g.view_index = 0;
+  else if (angle == 90.0f) g.view_index = g_negctl == 21 ? 2 : 1;
+  else if (angle == 180.0f) g.view_index = 2;
+  else g.view_index = 3;
+}
+
+void terrain_reset_terrain(Ctx &ctx, TerrainGlobals &g, uint32_t terrain) {
+  const auto h = hdr_p(ctx, terrain);
+  const int32_t w = h.field(&TerrainObjectHeader::width).get(), ht = h.field(&TerrainObjectHeader::height).get();
+  for (int32_t x = 0; x < w; ++x)
+    for (int32_t y = 0; y < ht; ++y)
+      tile_reset(ctx, terrain + kTerrainTilesOffset + static_cast<uint32_t>(x + y * w) * static_cast<uint32_t>(sizeof(TerrainTile)), x, y);
+  terrain_build_arrays(ctx, g, terrain);
+}
+
+// ------------------------------------------------------------------------------------------------------ exported methods
+
+uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const std::string &name, uint32_t self, const uint32_t *a,
+                          const int32_t *table, int32_t n) {
+  auto i32 = [&](int k) { return static_cast<int32_t>(a[k]); };
+  auto fl = [&](int k) {
+    float f;
+    std::memcpy(&f, &a[k], 4);
+    return f;
+  };
+  auto sync = [&]() {
+    dll.sink.text.clear();
+    terrain_apply_gl_state(ctx, g, self, dll.st);
+  };
+  if (name == "getInstance") {
+    if (!dll.constructed) {
+      terrain_construct(ctx, g, dll.terrain, 50, 50);
+      terrain_gl_construct(ctx, dll.sink, dll.st);
+      terrain_apply_gl_state(ctx, g, dll.terrain, dll.st);
+      dll.sink.text.clear();
+      dll.constructed = true;
+    }
+    return dll.terrain;
+  }
+  if (name == "passCollarInfo") {
+    terrain_pass_collar_info(g, table, n);
+    return 0;
+  }
+  if (name == "initSystem") {
+    if (Ptr<uint32_t>(ctx.mem, self).get() != 0) return 0;
+    if (a[2] == 0) throw MissingResource{"initSystem without a display surface"};
+    terrain_gl_init_system(ctx, dll.sink, dll.st, i32(0), i32(1), (a[3] & 0xffu) != 0);
+    sync();
+    return 0;
+  }
+  if (name == "initTerrain") {
+    terrain_init_terrain(ctx, g, self);
+    return 0;
+  }
+  if (name == "resetTerrain") {
+    terrain_reset_terrain(ctx, g, self);
+    return 0;
+  }
+  if (name == "loadNewCourseType") {
+    dll.st.course_type = g.course_type;
+    terrain_gl_load_new_course_type(ctx, dll.sink, dll.st, i32(0));
+    sync();
+    return 0;
+  }
+  if (name == "setZoomLevel") {
+    terrain_gl_set_zoom_level(dll.sink, dll.st, i32(0));
+    sync();
+    return 0;
+  }
+  if (name == "setType") {
+    terrain_set_type(ctx, g, self, a[0], i32(1), i32(2));
+    return 0;
+  }
+  if (name == "elevateCorner") {
+    if (a[0]) tile_elevate_corner(ctx, g, a[0], i32(1));
+    return 0;
+  }
+  if (name == "lowerCorner") {
+    if (a[0]) tile_lower_corner(ctx, g, a[0], i32(1));
+    return 0;
+  }
+  if (name == "lowerEdgeCorner") {
+    if (a[0]) {
+      // renderTileAtFiveOffsets(tile, other, amount) first: it draws, reads the pivot's position and sets the view quadrant
+      (void)tile_p(ctx, a[2]).field(&TerrainTile::x).get();
+      terrain_set_view_angle(g, fl(3));
+      tile_lower_corner(ctx, g, a[0], i32(1));
+    }
+    return 0;
+  }
+  if (name == "calcNormals") {
+    terrain_calc_normals(ctx, g, a[0]);
+    return 0;
+  }
+  if (name == "calcAllNormals") {
+    terrain_calc_all_normals(ctx, g, self, a[0]);
+    return 0;
+  }
+  if (name == "setWall") {
+    tile_set_wall(ctx, a[0], i32(1), i32(2), static_cast<uint8_t>(g_negctl == 19 ? (a[3] != 0 ? 1u : 0u) : (a[3] & 0xffu)));
+    return 0;
+  }
+  if (name == "layPath") {
+    tile_lay_path(ctx, a[0], a[1] != 0, i32(2));
+    return 0;
+  }
+  if (name == "updatePath") {
+    const uint32_t t = terrain_tile_at(ctx, self, i32(0), i32(1));
+    tile_p(ctx, t).field(&TerrainTile::connected).set(a[2] != 0 ? 1 : 0);
+    return 0;
+  }
+  if (name == "setSplineHeight") {
+    g.corner_step = fl(0);
+    return 0;
+  }
+  // the draw passes: their state effect is the view quadrant (the draw list they fill is empty again when they return)
+  if (name == "render") {
+    terrain_set_view_angle(g, fl(1));
+    return 1;
+  }
+  if (name == "localRender" || name == "stripRender") {
+    terrain_set_view_angle(g, fl(2));
+    return 0;
+  }
+  if (name == "pathUpdateRender" || name == "drawLine" || name == "drawCircle" || name == "drawCardinalSpline" ||
+      name == "drawBezierSpline" || name == "renderTile" || name == "resize")
+    return 0;
+  throw MissingResource{"terrain_dll_call: method not ported"};
 }
 
 // No sg_call functions: the state side works on the host's Terrain object and globals through its own C entry points (sg_ts_*).

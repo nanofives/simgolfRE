@@ -41,6 +41,7 @@ struct sg_ctx {
   std::string run_detail;                            // phase 3.7a: why sg_run_frames stopped
   bool boot_next = false;                            // phase 4: the next sg_run_frames is sg_run_boot's
   portsim::TerrainGlobals gl_globals;                // phase 5: the Terrain.dll statics of the render path (sg_gl_set_globals)
+  std::unique_ptr<portsim::TerrainDll> terrain_dll;  // phase 5: the state side driven call by call (sg_ts_call)
   sg_ctx() { ctx.files_ptr = &mem_files; }
 };
 
@@ -562,6 +563,51 @@ int sg_ts_op(sg_ctx *ctx, const char *op, uint32_t t, int32_t a0, int32_t a1, in
     return SG_E_EXCEPTION;
   }
   if (ret) *ret = r;
+  return SG_OK;
+}
+
+int sg_ts_dll_begin(sg_ctx *ctx, uint32_t terrain) {
+  if (!ctx) return SG_E_ARG;
+  ctx->terrain_dll = std::make_unique<portsim::TerrainDll>();
+  ctx->terrain_dll->terrain = terrain;
+  ctx->gl_globals = portsim::TerrainGlobals();
+  ctx->gl_globals.vertices.assign(static_cast<size_t>(22500) * 3, 0.0f);   // the DLL's bss arrays: 22,500 vertices each
+  ctx->gl_globals.normals.assign(static_cast<size_t>(22500) * 3, 0.0f);
+  return SG_OK;
+}
+
+int sg_ts_call(sg_ctx *ctx, const char *name, uint32_t self, const uint32_t *args, const int32_t *table, int32_t n, uint32_t *ret) {
+  if (!ctx || !name || !args || !ctx->terrain_dll) return SG_E_ARG;
+  try {
+    const uint32_t r = portsim::terrain_dll_call(ctx->ctx, ctx->gl_globals, *ctx->terrain_dll, name, self, args, table, n);
+    if (ret) *ret = r;
+  } catch (const portsim::Fault &f) {
+    ctx->run_detail = std::string(name) + ": fault at va " + std::to_string(f.va);
+    return SG_E_FAULT;
+  } catch (const portsim::MissingResource &m) {
+    ctx->run_detail = std::string(name) + ": " + m.what;
+    return SG_E_NO_RESOURCE;
+  } catch (const portsim::NoReturn &) {
+    return SG_E_NO_RETURN;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  return SG_OK;
+}
+
+int32_t sg_ts_view_index(sg_ctx *ctx) { return ctx ? ctx->gl_globals.view_index : 0; }
+
+int sg_ts_set_render_data(sg_ctx *ctx, const float *tex_coords, uint32_t n_tex_coords, const float *side_normals, uint32_t wall,
+                          uint32_t fence0, uint32_t fence1, uint32_t screen_scale_bits) {
+  if (!ctx || (n_tex_coords && !tex_coords)) return SG_E_ARG;
+  portsim::TerrainGlobals &t = ctx->gl_globals;
+  t.tex_coords.assign(tex_coords, tex_coords + n_tex_coords);
+  if (side_normals) std::memcpy(t.side_normals, side_normals, sizeof t.side_normals);
+  t.wall_texture = wall;
+  t.fence_texture0 = fence0;
+  t.fence_texture1 = fence1;
+  std::memcpy(&t.screen_scale, &screen_scale_bits, 4);
+  if (screen_scale_bits == 0 && ctx->terrain_dll) t.screen_scale = ctx->terrain_dll->st.screen_scale;   // initSystem's value
   return SG_OK;
 }
 

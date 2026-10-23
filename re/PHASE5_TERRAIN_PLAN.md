@@ -329,10 +329,10 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     NEXT: the state side (the Terrain object: tiles, faces, vertex / normal arrays, buildArrays, setType, elevateCorner, layPath, setWall),
     then localRender and the draw list, then the overlay drawing.
 
-13. IN PROGRESS, the state side of Terrain.dll (2026-10-23; port/include/portsim/sim/terrain_state.h, port/src/sim/terrain_state.cpp,
+13. DONE (steps 1-4), the state side of Terrain.dll (2026-10-23; port/include/portsim/sim/terrain_state.h, port/src/sim/terrain_state.cpp,
     C ABI sg_ts_* in portsim_c.h, tests port/test/test_terrain_state.py, recorder re/frida/js/terrain_calls.js + re/tools/terrain_calls.py,
     corpus reader port/test/terraincorpus.py). Goal: the renderer's inputs (the Terrain object, its tiles and faces, the vertex / normal
-    arrays) produced by the port instead of a snapshot. Steps 1 and 2 of the plan are done.
+    arrays) produced by the port instead of a snapshot.
     - LAYOUT (step 1). Clean pack(1) structs with static_asserts: TerrainFace (0x38: v[3], tc[6], texture +0x24, piece +0x28, normal
       +0x2c), TerrainTile (0x248: level[8] with the corner heights at the odd indices, type +0x24, rotation +0x28, x / y, neighbour[4] by
       side 0 = y-1, 1 = y+1, 2 = x-1, 3 = x+1, face_count +0x44, face[8], path bytes +0x208..+0x20e, wall heights +0x210, wall flags
@@ -369,8 +369,53 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     - History, not state (U-1075): the centre vertex heights (a running max / min over elevateCorner / lowerCorner) and which faces were
       ever recomputed depend on the order of the exe's calls. Corner heights (level x 15.0) and edge midpoints (the mean of their corners)
       are functions of the state.
-    NEXT (steps 3-4): port the mutators (setType / setTypeId with enter / leave type 6 / 7, elevateCorner / lowerCorner / lowerEdgeCorner,
-    layPath / updatePath, setWall, loadNewCourseType / resetTerrain, setZoomLevel's state) and the DLL CRT's rand() for setType's
-    variation (the log records each drawn variation, so the LCG is checked call by call), then REPLAY the t1 call log from construction and
-    compare the object and the arrays at each of its 64 snapshots (the before / after pairs isolate single calls). Then build the object
-    from the exe's own calls (TerrainApi) and drop tobj / vtx / nrm from run_chain_from_setup.
+    - MUTATORS (step 3, 2026-10-23): Terrain::setType (the variation is rand() % the type's count, then setRotation and setTypeId),
+      Tile::setTypeId with enter / leaveType6 (+-20.0) and enter / leaveType7 (-+13.0) vertex walks, setPathFlagForType,
+      resetFaceTextures; elevateCorner / lowerCorner (corner level x g_splineHeight, the centre's running max / min, the type-7
+      lowering), lowerEdgeCorner (its renderTileAtFiveOffsets draws and sets the view quadrant, then lowerCorner), layPath / updatePath,
+      setWall, setSplineHeight (g_splineHeight 0x10063e54 IS the corner step: the matched sources name it so in setSplineHeight and read
+      it as the 15.0 step in elevateCorner), resetTerrain, loadNewCourseType (lighting, reloadTextures, relight through the setup code),
+      setZoomLevel's zoom, initSystem's flags / size / handle, setViewAngle for render / localRender / stripRender, the constructor's member
+      constructors (Faces count 0, PathInfo / WallInfo clears, the draw list header: allocator byte 0xcc, head node, size 0). rand(): Terrain.dll's
+      debug CRT on the game thread, _holdrand from 1, h = h * 214013 + 2531011, (h >> 16) & 0x7fff; all 5,021 recorded variations of t1
+      equal it with no other draw in between. The even corners (2 / 4 / 6) take the switch's missing default: the twelve face / vertex
+      locals keep the /GZ fill 0xcccccccc and the port computes the same wrapped addresses, which fault (no recording reaches them: the
+      original dies there). The exported methods are one dispatcher, terrain_dll_call (C ABI sg_ts_dll_begin / sg_ts_call), fed the exe's
+      calls as recorded: undecorated name, ecx, the five stack dwords, passCollarInfo's table.
+    - REPLAY (steps 3-4). Three recordings of the original, each replayed from an empty 0xcd block (getInstance builds the object and
+      runs the port's GL setup from original/), every outermost exported call in log order, the state compared at every snapshot position:
+      t1 (31,642 calls, 64 positions), t2 (29,158 calls with 60 INJECTED calls, 128 positions), t3 (26,508 calls, the same injections, 124
+      positions, plus frames). INJECTION (re/frida/js/terrain_calls.js tcInject, re/tools/terrain_calls.py --inject): the paths no
+      scenario reaches are called on the ORIGINAL, on the game thread at a Terrain::render entry, logged as ordinary calls with a snapshot
+      after each: a 2 x 2 type-6 block entered and left (leaveType6's += corner), a type-7 block in every rotation with lowerCorner on it,
+      paths on buildings, updatePath, the setFaceTexture overrides (tricky green 0x80, water depths, 0x15, 0x16 rotations 0x40..0x47),
+      setWall with the flag inside a filled dword, setSplineHeight 20.0 between two elevateCorner, lowerEdgeCorner at 0 / 90 / 180 / 270,
+      and loadNewCourseType(1) (Desert, with water next to open types) and back. EVIDENCE: at all 316 positions the Terrain object (the
+      context handle and the draw list's head node compared as zero / nonzero), the 22,500 vertices, the 22,500 normals, the texture
+      table and the view quadrant equal the original's byte for byte; getInstance and render return what the original returned. This
+      settles U-1075: the centre heights and which faces were ever recomputed come out right when the calls are replayed.
+      TEXTURE NAMES: the Desert switch first left 553 table entries different: Windows' software GL handed out 1, 2, 3 ... again after
+      reloadTextures had deleted every name (Desert got 1..553, Parkland back 1..518), where the port's sinks counted on. GlStreamSink
+      and GlRaster now give the lowest name not in use and free deleted ones (U-1077: only the delete-everything case is measured).
+    - Negative controls 1..21 (sg_ts_negctl; 12..21 for the mutators: centre min for max, leaveType6 without its += corner, rand
+      increment, setPathFlagForType without 0x16, type-7 lowering 12.0, setTypeId without leaveType7, enterType7 dirtying every
+      neighbour, setWall's whole dword, layPath without the direction flag, setViewAngle 90 -> 2): every one reads RED on the replay of t2.
+      On t1 alone 13, 15, 16 and 19 read GREEN (no type-6 tile, no lowerCorner on type 7, no path on a building, setWall flags only
+      0 / 1): that is why t2 injects those calls.
+    - CHAIN (step 4, corpus t3 = terrain_calls.py --frames --inject: gl_rec.js beside the call recorder, the last Terrain::render pass of
+      each step saved in gl_corpus form under frames/ with the call-log position it was fetched at). For each of the 15 frames the log is
+      replayed up to the render call the frame shows (the latest render with the pass's this / tile / angle after the last state change:
+      a fetch can race the render the step's own snapshot started), the port's GL setup from original/ sets up the rasteriser at the
+      replayed zoom (its texture names equal the replayed table), and the port's Terrain::render draws over the original's starting back
+      buffer. No recorded Terrain object, vertex or normal array, texture table or screen scale is used; the wall / fence textures are
+      entries [0x22..0x24][0][0] of the replayed table. Inputs still from the recording: the starting back buffer and the DLL's constant
+      texture-coordinate and side-normal tables. EVIDENCE: at every frame the replayed state equals gl_rec's snapshot of that pass, and
+      the frame is pixel-identical to the snapshot-driven chain (port/test/glraster.py run_chain_from_setup, which stays for c7, the
+      corpus without a call log); 11 frames (zoom 0 and 1) meet test_gl_raster's criterion, the 4 zoom-2 frames have no pixel more
+      than one level off but 2.63 .. 2.82 % one-level pixels against the 2 % limit (xfail, U-1076: the same with the snapshot's object).
+    - Tests: port/test/test_terrain_state.py (489: construction, normals, textures, the three replays at 316 positions, 21 replay
+      controls, chain state and frames). Corpora local: port/corpus/terrain/t1, t2, t3 (export with port.test.terraincorpus).
+    NEXT: a TerrainApi implementation over terrain_dll_call, so the port's exe-side callers (terrain_dll.cpp, rebuildTerrainGrid ...)
+    build the object from the GameState grids, judged against a terrain_calls recording of a pinned scenario (same calls, same
+    order); the constant texture-coordinate / side-normal tables from the user's Terrain.dll file; the zoom-2 one-level noise; then
+    localRender and the draw list, Desert / Tropical / Links frames, overlay primitives.

@@ -58,11 +58,47 @@ def views(root: pathlib.Path) -> list[str]:
     return [n for n in snaps(root) if not n.endswith((".before", ".after"))]
 
 
+class Call:
+    __slots__ = ("seq", "tid", "depth", "name", "self", "args", "ret", "extra")
+
+    def __init__(self, line: str):
+        p = line.split()
+        self.seq, self.tid, self.depth, self.name = int(p[0]), int(p[1]), int(p[2]), p[3]
+        self.self = int(p[4], 16)
+        self.args = [0 if v == "-" else int(v, 16) for v in p[5:10]]
+        self.ret = int(p[10], 16)
+        self.extra = dict(kv.split("=", 1) for kv in p[11:])
+
+
+def calls(root: pathlib.Path) -> list[Call]:
+    """The outermost calls (depth 0) in call order; a nested exported call is part of its caller."""
+    out = [Call(ln) for ln in (root / "calls.txt").read_text().splitlines() if ln.strip()]
+    return sorted((c for c in out if c.depth == 0), key=lambda c: c.seq)
+
+
+def position(snap: TSnap) -> int:
+    """The number of the first call NOT applied in the snapshot's state: a view snapshot sits before the Terrain::render call
+    meta.seq; <method>_<S>.before before call S, .after after it."""
+    name = snap.step
+    if name.endswith((".before", ".after")):
+        s = int(name.rsplit(".", 1)[0].rsplit("_", 1)[1])
+        return s if name.endswith(".before") else s + 1
+    return snap.seq
+
+
+# the bytes of the object a comparison treats as handles (zero / nonzero): initSystem's GL context, the draw list's head node
+HANDLE_FIELDS = (0x0, 0x164AC8)
+
+
 def export(src: pathlib.Path, label: str) -> None:
     dst = CORPUS / label
     (dst / "snaps").mkdir(parents=True, exist_ok=True)
     for f in ("calls.txt", "index.json"):
         shutil.copyfile(src / f, dst / f)
+    if (src / "frames").is_dir():   # --frames: the original's frames of each step (gl_corpus form) beside the call log
+        if (dst / "frames").exists():
+            shutil.rmtree(dst / "frames")
+        shutil.copytree(src / "frames", dst / "frames")
     n = 0
     for d in sorted((src / "snaps").iterdir()):
         (dst / "snaps" / d.name).mkdir(exist_ok=True)

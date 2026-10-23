@@ -391,6 +391,16 @@ void terrain_gl_set_zoom_level(gl::GlSink &gl, TerrainGlState &st, int32_t level
   gl.matrix_mode(0x1700);
 }
 
+// Terrain::loadNewCourseType(type): nothing unless the course type changes; then rebuild (the course's lighting file), reloadTextures
+// and relight (re/match/terrain_methods2.cpp).
+void terrain_gl_load_new_course_type(Ctx &ctx, gl::GlSink &gl, TerrainGlState &st, int32_t type) {
+  if (st.course_type == type) return;
+  st.course_type = type;
+  load_lighting(ctx, gl, lighting_file(st.course_type));
+  reload_textures(gl, st);
+  relight(ctx, gl, st);
+}
+
 void terrain_gl_init_terrain(gl::GlSink &gl) {
   gl.vertex_pointer(3, 0x1406, 0);   // GL_FLOAT
   gl.normal_pointer(0x1406, 0);

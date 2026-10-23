@@ -47,6 +47,8 @@ void terrain_gl_init_system(Ctx &ctx, gl::GlSink &gl, TerrainGlState &st, int32_
 // Terrain::setZoomLevel(level): level 4 = the normal view (the resize projection, zoom 0), 2 = zoom 1, 1 = zoom 2; any other level
 // changes nothing but the projection matrix mode and its identity.
 void terrain_gl_set_zoom_level(gl::GlSink &gl, TerrainGlState &st, int32_t level);
+// Terrain::loadNewCourseType(type): when the type changes, the course's lighting, reloadTextures and relight.
+void terrain_gl_load_new_course_type(Ctx &ctx, gl::GlSink &gl, TerrainGlState &st, int32_t type);
 // Terrain::initTerrain's GL part: the vertex and normal pointers.
 void terrain_gl_init_terrain(gl::GlSink &gl);
 

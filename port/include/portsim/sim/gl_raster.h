@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include <set>
 #include <vector>
 
 #include "portsim/sim/gl_sink.h"
@@ -122,7 +123,7 @@ class GlRaster : public GlSink {
   void tex_param_(uint32_t pname, uint32_t value);
   void tex_env_(uint32_t target, uint32_t pname, uint32_t value);
   bool ctx_ = true;
-  uint32_t next_name_ = 1;
+  std::set<uint32_t> used_names_;   // texture names in use (the lowest free one is handed out)
 
   int w_, h_;
   std::vector<uint16_t> fb_;

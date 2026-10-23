@@ -21,12 +21,14 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <string>
+
 #include "portsim/registry.h"
+#include "portsim/sim/gl_sink.h"
+#include "portsim/sim/terrain_gl_setup.h"
 #include "portsim/sim/terrain_render.h"
 
 namespace portsim {
-
-struct TerrainGlState;  // terrain_gl_setup.h
 
 #pragma pack(push, 1)
 // One triangle of a tile (Faces::build writes v and tc; setFaceTexture texture and piece; faceNormal normal).
@@ -101,6 +103,7 @@ constexpr uint32_t kTerrainDrawListOffset = kTerrainTilesOffset + kTerrainMaxTil
 constexpr uint32_t kTerrainObjectSize = kTerrainDrawListOffset + 0x0c;
 static_assert(kTerrainDrawListOffset == 0x164ac4 && kTerrainObjectSize == 0x164ad0, "Terrain object size (operator new argument)");
 constexpr uint8_t kNewFill = 0xcd;            // the debug CRT's fill of new memory
+constexpr uint32_t kListHeadToken = 2;        // the port's stand-in for the draw list's heap head node (compare zero / nonzero)
 constexpr uint32_t kContextToken = 1;         // the port's stand-in for a GL context handle in TerrainObjectHeader::glrc
 constexpr int32_t kTerrainTextureTypes = 0x25, kTerrainTextureVariations = 0x19, kTerrainTextureSlots = 9;
 
@@ -137,6 +140,39 @@ void tile_blend_face_textures(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_
 void tile_reblend_neighbourhood(Ctx &ctx, TerrainGlobals &g, uint32_t tile);
 void tile_reset_face_textures(Ctx &ctx, TerrainGlobals &g, uint32_t tile);   // types 0 and 9 (setTypeId)
 int32_t tile_edge_kind(Ctx &ctx, const TerrainGlobals &g, uint32_t tile, uint32_t other);
+
+// ---- mutators (step 3) ----
+int32_t terrain_rand(TerrainGlobals &g);   // rand() of Terrain.dll's debug CRT on the game thread
+void terrain_set_type(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, uint32_t tile, int32_t type, int32_t rotation);
+void tile_set_type_id(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t type);
+void tile_enter_type6(Ctx &ctx, TerrainGlobals &g, uint32_t tile);
+void tile_leave_type6(Ctx &ctx, TerrainGlobals &g, uint32_t tile);
+void tile_enter_type7(Ctx &ctx, TerrainGlobals &g, uint32_t tile);
+void tile_leave_type7(Ctx &ctx, TerrainGlobals &g, uint32_t tile);
+void tile_set_path_flag_for_type(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t type);
+void tile_elevate_corner(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t corner);
+void tile_lower_corner(Ctx &ctx, TerrainGlobals &g, uint32_t tile, int32_t corner);
+void tile_lay_path(Ctx &ctx, uint32_t tile, bool on, int32_t dir);
+void tile_set_wall(Ctx &ctx, uint32_t tile, int32_t side, int32_t height, uint8_t on);
+void terrain_set_view_angle(TerrainGlobals &g, float angle);
+void terrain_reset_terrain(Ctx &ctx, TerrainGlobals &g, uint32_t terrain);
+
+// ---- the exported methods, as the exe calls them (step 4) ----
+// The DLL's whole state for one context: the object's address (the host maps kTerrainObjectSize bytes there, filled with kNewFill),
+// the module globals, the GL setup's state and a sink for the GL calls the setup makes (the replay keeps only their state).
+struct TerrainDll {
+  uint32_t terrain = 0;          // where getInstance puts the object
+  bool constructed = false;      // g_terrain != NULL
+  TerrainGlState st;
+  gl::GlStreamSink sink;
+};
+// One call of an exported Terrain method by its undecorated name ("setType", "elevateCorner", ..., "getInstance"), `self` = ecx,
+// args = the stack dwords as the exe pushed them (floats as bit patterns; bool arguments use their low byte), `table` / `n` the
+// ints behind passCollarInfo's pointer. Returns eax where the method returns a value (getInstance: the object; render: 1), else 0.
+// Methods with no state effect (drawLine, drawCircle, the splines, renderTile, the getters) only check their arguments' reads;
+// methods not ported throw MissingResource{name}.
+uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const std::string &name, uint32_t self, const uint32_t *args,
+                          const int32_t *table, int32_t n);
 
 // Negative-control mode of the state side's deliberately wrong bodies (0 = correct); see terrain_state.cpp.
 void terrain_state_negctl(int32_t mode);

@@ -206,6 +206,17 @@ SG_API int sg_ts_arrays(sg_ctx *ctx, float *vertices, float *normals, uint32_t n
 SG_API int sg_ts_textures(sg_ctx *ctx, uint32_t *out, uint32_t n);                   /* copy out the texture table */
 SG_API int sg_ts_set_collar(sg_ctx *ctx, const int32_t *table, int32_t n);           /* passCollarInfo; n < 0 = NULL again */
 SG_API int sg_ts_set_course_type(sg_ctx *ctx, int32_t type);
+/* The exported Terrain methods as the exe calls them (terrain_dll_call): sg_ts_dll_begin starts a fresh DLL state (globals reset, the
+   22,500-entry arrays zeroed) whose getInstance builds the object at `terrain` (the host maps 0x164ad0 bytes there, filled 0xcd);
+   sg_ts_call runs one method by undecorated name with ecx = self and the five stack dwords; table / n = passCollarInfo's ints. */
+SG_API int sg_ts_dll_begin(sg_ctx *ctx, uint32_t terrain);
+SG_API int sg_ts_call(sg_ctx *ctx, const char *name, uint32_t self, const uint32_t *args, const int32_t *table, int32_t n, uint32_t *ret);
+SG_API int32_t sg_ts_view_index(sg_ctx *ctx);
+/* The renderer's inputs the state side does not produce, set without touching the replayed arrays and table: the constant
+   texture-coordinate and side-normal tables of the DLL's data, the wall / fence textures and the screen scale (bits; 0 = the value
+   the replayed initSystem set). */
+SG_API int sg_ts_set_render_data(sg_ctx *ctx, const float *tex_coords, uint32_t n_tex_coords, const float *side_normals,
+                                 uint32_t wall, uint32_t fence0, uint32_t fence1, uint32_t screen_scale_bits);
 SG_API int sg_ts_negctl(int32_t mode);                                               /* previous mode */
 
 /* ---- software rasteriser (phase 5 step 3, portsim/sim/gl_raster.h): replay a recorded GL stream into an RGB555 frame ---- */

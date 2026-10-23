@@ -44,6 +44,46 @@
                  collarAddr: cp.toUInt32(), collar: (!cp.isNull() && collarN > 0) ? cp.readByteArray(collarN * 4) : null });
   }
 
+  // ---- injection (tcInject): calls of the ORIGINAL's exported methods with chosen arguments, made on the game thread at the next
+  // outermost Terrain::render entry (before that render is logged), each logged as an ordinary depth-0 call, with a snapshot before
+  // the first and after each one (labels <method>#<seq>, like tcDetail). A tile argument is given as ['T', x, y].
+  let injecting = false, injectQ = null, injected = 0;
+  const NF = {};
+  function nf(name) {
+    if (!NF[name]) {
+      const n = BODY[name][1];
+      const at = [];
+      for (let i = 0; i < n; i++) at.push('uint32');
+      NF[name] = new NativeFunction(tm.base.add(BODY[name][0]), 'uint32', ['pointer'].concat(at), 'thiscall');
+    }
+    return NF[name];
+  }
+  function runInject(tid) {
+    const q = injectQ;
+    injectQ = null;
+    const t = terrain();
+    const tileVa = function (x, y) { return t.add(0x3a4 + (x + y * 50) * 0x248).toUInt32(); };
+    injecting = true;
+    try {
+      for (let k = 0; k < q.length; k++) {
+        const name = q[k][0];
+        const args = q[k].slice(1).map(function (v) { return Array.isArray(v) ? tileVa(v[1], v[2]) : (v >>> 0); });
+        const s = seq++;
+        if (k === 0) capture(name + '#' + s, 'before');
+        const r = nf(name).apply(null, [t].concat(args));
+        const shown = [];
+        for (let i = 0; i < 5; i++) shown.push(i < args.length ? hex(args[i]) : '-');
+        let extra = '';
+        if (name === 'setType') extra = ' var=' + ptr(args[0]).add(0x240).readS32();
+        log.push([s, tid, 0, name, hex(t.toUInt32())].concat(shown).join(' ') + ' ' + hex(r) + extra);
+        capture(name + '#' + s, 'after');
+        injected++;
+      }
+    } finally {
+      injecting = false;
+    }
+  }
+
   function install() {
     if (done) return;
     tm = Process.findModuleByName('Terrain.dll');
@@ -53,7 +93,9 @@
       const rva = BODY[name][0], nargs = BODY[name][1];
       Interceptor.attach(tm.base.add(rva), {
         onEnter(a) {
+          if (injecting) { this.skip = true; this.inj = true; return; }
           const tid = this.threadId;
+          if (name === 'render' && !(depth[tid] > 0) && injectQ !== null) runInject(tid);
           const d = depth[tid] || 0;
           depth[tid] = d + 1;
           this.d = d;
@@ -77,6 +119,7 @@
           if (this.det) { detail[name]--; capture(name + '#' + this.seq, 'before'); }
         },
         onLeave(r) {
+          if (this.inj) return;
           const tid = this.threadId;
           depth[tid] = (depth[tid] || 1) - 1;
           if (this.skip) return;
@@ -93,6 +136,8 @@
   install();
   const iv = setInterval(function () { install(); if (done) clearInterval(iv); }, 5);
 
+  rpc.exports.tcInject = function (calls) { injectQ = calls; return true; };
+  rpc.exports.tcInjected = function () { return { pending: injectQ !== null, done: injected }; };
   rpc.exports.tcSnap = function (label) { snapReq = label; return true; };
   rpc.exports.tcPending = function () { return snapReq !== null; };
   rpc.exports.tcDetail = function (name, n) { detail[name] = n; return true; };

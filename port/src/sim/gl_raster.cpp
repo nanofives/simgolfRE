@@ -178,7 +178,12 @@ void GlRaster::tex_envi(uint32_t target, uint32_t pname, int32_t v) {
 }
 bool GlRaster::gen_textures(int32_t n, uint32_t *names) {
   if (!ctx_) return false;
-  for (int32_t i = 0; i < n; ++i) names[i] = next_name_++;
+  for (int32_t i = 0; i < n; ++i) {   // the lowest name not in use (gl_sink.h GlStreamSink::take_name)
+    uint32_t k = 1;
+    while (used_names_.count(k)) ++k;
+    used_names_.insert(k);
+    names[i] = k;
+  }
   return true;
 }
 void GlRaster::color4f(float r, float g, float b, float a) { cur_c_[0] = r; cur_c_[1] = g; cur_c_[2] = b; cur_c_[3] = a; }
@@ -195,7 +200,10 @@ void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t 
 }
 void GlRaster::delete_textures(int32_t n, const uint32_t *ids) {
   if (!ctx_) return;
-  for (int i = 0; i < n; ++i) textures_.erase(ids[i]);
+  for (int i = 0; i < n; ++i) {
+    textures_.erase(ids[i]);
+    used_names_.erase(ids[i]);
+  }
 }
 void GlRaster::bind_texture(uint32_t, uint32_t id) {
   if (ctx_) bound_ = id;

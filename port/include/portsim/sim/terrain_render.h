@@ -39,6 +39,8 @@ struct TerrainGlobals {
   bool collar_set = false;           // g_collarInfo != NULL (passCollarInfo has run)
   std::vector<int32_t> collar;       // g_collarInfo: collar group per tile type, as many entries as the exe passed
   int32_t course_type = 0;           // g_courseType: 0 Parkland, 1 Desert, 2 Tropical, 3 Links
+  uint32_t rand_state = 1;           // the game thread's rand() state in Terrain.dll's debug CRT (_holdrand, 1 until srand)
+  float corner_step = 15.0f;         // g_splineHeight: elevate / lowerCorner's step, setSplineHeight's target
 };
 
 // Terrain::render(tile, angle) of the original: draws the window of tiles around `tile` (or the fixed region without one)

@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <set>
 #include <string>
 
 namespace portsim {
@@ -188,7 +189,7 @@ class GlStreamSink : public GlSink {
     }
     std::string ids = "ids=";
     for (int32_t i = 0; i < n; ++i) {
-      names[i] = next_name_++;
+      names[i] = take_name();
       if (i) ids += ',';
       hex(ids, names[i]);
     }
@@ -204,6 +205,8 @@ class GlStreamSink : public GlSink {
       hex(ids, names[i]);
     }
     line("glDeleteTextures", s + " " + ids);
+    if (context_)
+      for (int32_t i = 0; i < n; ++i) used_names_.erase(names[i]);
   }
   void tex_parameteri(uint32_t t, uint32_t p, int32_t v) override { line3("glTexParameteri", t, p, static_cast<uint32_t>(v)); }
   void tex_parameterf(uint32_t t, uint32_t p, float v) override {
@@ -286,7 +289,15 @@ class GlStreamSink : public GlSink {
     return s;
   }
   bool context_ = false;
-  uint32_t next_name_ = 1;
+  // texture names as the original's driver (Windows' software GL) hands them out: the lowest name not in use, a deleted name free
+  // again (measured: after reloadTextures deleted every name, the next loads got 1, 2, 3 ... again; corpus t2's course switches)
+  std::set<uint32_t> used_names_;
+  uint32_t take_name() {
+    uint32_t k = 1;
+    while (used_names_.count(k)) ++k;
+    used_names_.insert(k);
+    return k;
+  }
   void vec(const char *name, const float *v, int n) {
     std::string s = "v=";
     for (int i = 0; i < n; ++i) {
