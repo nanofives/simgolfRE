@@ -50,6 +50,9 @@ void BootGameMain() {
     cc("seedFromTime");                                                // gameMain+0x28d
     G32(GS(g_primarySurface)) = GS(g_font519928);                      // gameMain+0x36d
     G32(GS(g_ui83abdc)) = 0;                                           // gameMain+0x377
+    // gameMain+0x41f showTitleScreen: the intro movie and the title button / window-frame sprites (a drop; the phase 5 graphics
+    // backend draws its sprite part when one is attached). loadSoundTable (gameMain+0x42e) and the colour cycle are not the boot's.
+    cc("showTitleScreen");
     G32(GS(g_ui83abdc)) = 0;                                           // gameMain+0x452
 }
 

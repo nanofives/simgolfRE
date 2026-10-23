@@ -16,6 +16,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/course.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/loaders.h"
 #include "portsim/sim/util.h"
 
@@ -429,6 +430,8 @@ void load_interface_art_full(Ctx &ctx) {
         break;
     }
   }
+  // phase 5: an attached graphics backend loads and cuts the images of the full arm (the part it models, gfx.cpp)
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.images", nullptr, 0);
 }
 }  // namespace
 

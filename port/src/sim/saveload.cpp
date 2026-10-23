@@ -17,6 +17,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/course.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/loaders.h"
 #include "portsim/sim/text.h"
 #include "portsim/sim/util.h"
@@ -705,6 +706,14 @@ uint32_t site_def(Ctx &ctx, int32_t k) { return state_va(ctx, &GameState::f_tab_
 // site k's map spot: two words
 int32_t spot_x(Ctx &ctx, int32_t k) { return ctx.mem.load<int16_t>(state_va(ctx, &GameState::f_tab_point16_4e3dc0) + 4u * u32(k)); }
 int32_t spot_y(Ctx &ctx, int32_t k) { return ctx.mem.load<int16_t>(state_va(ctx, &GameState::f_tab_point16_4e3dc0) + 4u * u32(k) + 2); }
+
+// Phase 5 (re/PHASE5_GFX_PLAN.md): the drawing calls of the original, made at their places for an attached graphics backend
+// (portsim/sim/gfx.h); without one they cost one test. The frame's local Surface array and Image are backend objects named by
+// gfx_local_key; drawn text is the text buffer as the strings above leave it.
+void gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+}
+constexpr uint32_t kBlack = 0x80000000u, kLabel = 0x80002108u;
 }  // namespace
 
 // The world map where the player picks, buys, saves or loads a course (re/analysis/ui/0046f550; c3fw.cpp's transcription).
@@ -734,25 +743,69 @@ int32_t course_action_menu(Ctx &ctx) {
   auto put_item = [&](int32_t v) {   // _itoa(v, number buffer, 10) appended to the text buffer
     vstrcat(ctx.mem, text, crt_itoa10(ctx, v, number_buf));
   };
+  // drawing (phase 5): the root surface, the three fonts, the frame's Surface array (8) and Image
+  const uint32_t root = gs.f_stateptr_4c1570[0];
+  const uint32_t f_large = state_va(ctx, &GameState::g_font51b360), f_small = state_va(ctx, &GameState::g_fontRef_519fd8),
+                 f_cash = state_va(ctx, &GameState::g_font519928);
+  auto arr = [](uint32_t i) { return gfx_local_key(0x2C * i); };
+  const uint32_t img = gfx_local_key(0x1000);
+  const uint32_t plates = state_va(ctx, &GameState::g_sprites53c570), masks = state_va(ctx, &GameState::g_sprites5a4138);
+  gx(ctx, "courseActionMenu.setup", {});   // the WorldButton / WorldBase loads and the 8 cuts
+  int32_t mod16 = 0;
   for (;;) {
     // ---- one frame: the site table (the byte is not bound-checked in the original: a site outside 0..15 would write the frame)
     for (int32_t c = 0; c < 16; ++c) {
       const int32_t s = static_cast<int8_t>(rec_byte(ctx, c, 0));
       if (s >= 0 && s < 16) site[s] = c;
     }
+    gx(ctx, "Surface_fillRegion", {img, root, 0, 0, 0x320, 0x258});
+    if (gs.g_date == 0) {
+      gx(ctx, "Image_draw", {arr(0), root, 0x2D4, 0x198, 0});
+    } else {
+      gx(ctx, "Image_draw", {arr(2), root, 0x2D4, 0x1CA, 0});
+      gx(ctx, "Image_draw", {arr(4), root, 0x2D4, 0x198, 0});
+    }
+    gx(ctx, "setDrawTarget", {root, f_large, 0, 0, 0});
+    gx(ctx, "drawCenteredText", {p4e4004 + 0x20, 0x7E, 0x13, kBlack});   // "Where will you build"
+    gx(ctx, "drawCenteredText", {p4e4004 + 0xC, 0x7E, 0x21, kBlack});
+    gx(ctx, "setDrawTarget", {root, f_cash, 0, 0, 0});
     vstrcpy(ctx.mem, text, cash_label);
     peer(ctx, "appendNumber", {u32(mul32(gs.g_cash_div100, 100))});
     if ((gs.g_flags & 0x1000000u) != 0) {
       vstrcpy(ctx.mem, text, p4e4004);
       vstrcat(ctx.mem, text, cash_label);
     }
+    gx(ctx, "drawCenteredText", {text, 0x2E4, 0x12, kBlack});
+    // the legend: the three pin states (cells 17, 16, 18 of the plate array over their masks) and their labels
+    gx(ctx, "setDrawTarget", {root, f_small, 0, 0, 0});
+    gx(ctx, "Surface_stretchBlit", {plates + 0x2C * 17, masks + 0x2C * 17, root, 0x18, 0x226, 0});
+    gx(ctx, "drawText4049d0", {p4e3fbc + 0x3C, 0x2C, 0x230, kBlack});
+    gx(ctx, "Surface_stretchBlit", {plates + 0x2C * 16, masks + 0x2C * 16, root, 0x7C, 0x226, 0});
+    gx(ctx, "drawText4049d0", {p4e3fbc + 0x28, 0x90, 0x230, kBlack});
+    gx(ctx, "Surface_stretchBlit", {plates + 0x2C * 18, masks + 0x2C * 18, root, 0xF4, 0x226, 0});
+    gx(ctx, "drawText4049d0", {p4e3fbc + 0x14, 0x108, 0x230, kBlack});
+    mod16 = nearest % 16;
     for (int32_t k = 15; k >= 0; --k) {
       const uint32_t d = site_def(ctx, k);
       const int32_t kind = ctx.mem.load<int8_t>(d + 0x3E);
       const int32_t c = site[k];
+      const int32_t x = spot_x(ctx, k), y = spot_y(ctx, k);
+      gx(ctx, "setDrawTarget", {root, f_large, 0, 0, 0});
       vstrcpy(ctx.mem, text, d);   // the name
       const bool open = rec_byte(ctx, c, 6) == 0xFF;
+      {  // the site's plate: 1 when the price is within the cash, 0 when not or bought; the nearest plate is drawn wide (state
+         // 2) when it can be bought, else the wide plate of its kind goes under the small one
+        int32_t st = (gs.g_cash_div100 >= tier_price(c) && open) ? 1 : 0;
+        if (k == nearest) {
+          if (st == 0) gx(ctx, "Image_draw", {plates + 0x58 + u32(kind) * 0xB0, root, u32(x), u32(y), 0});
+          else st = 2;
+        }
+        gx(ctx, "Image_draw", {plates + u32(st + kind * 4) * 0x2C, root, u32(x), u32(y), 0});
+      }
+      gx(ctx, "drawCenteredText", {text, u32(x + 0x60), u32(y + 4), kBlack});
+      gx(ctx, "setDrawTarget", {root, f_small, 0, 0, 0});
       vstrcpy(ctx.mem, text, d + 0x41);   // the text
+      gx(ctx, "drawCenteredText", {text, u32(x + 0x68), u32(y + 0x10), kBlack});
       if (k == nearest && open) {
         vstrcpy(ctx.mem, text, p4e3fbc + 0xC);
         put_item(rec_byte(ctx, c, 1));
@@ -761,6 +814,7 @@ int32_t course_action_menu(Ctx &ctx) {
         if (b1 == 0) vstrcat(ctx.mem, text, p4e3fa4);
         else if (b1 == 1) vstrcat(ctx.mem, text, p4e3fa4 + 8);
         else if (b1 == 2) vstrcat(ctx.mem, text, p4e3fa4 + 0x10);
+        gx(ctx, "drawCenteredText", {text, u32(x + 0x70), u32(y + 0x1E), kLabel});
         ctx.mem.store<uint8_t>(text, 0);
         const int32_t b2 = ctx.mem.load<int8_t>(d + 0x3F);
         if (b2 == 0) vstrcat(ctx.mem, text, p4e3f80);
@@ -771,10 +825,12 @@ int32_t course_action_menu(Ctx &ctx) {
         else if (kind == 2) vstrcat(ctx.mem, text, p4e3f54 + 0x20);
         else if (kind == 3) vstrcat(ctx.mem, text, p4e3f54 + 0xC);
         vstrcat(ctx.mem, text, p4e3f54);
+        gx(ctx, "drawCenteredText", {text, u32(x + 0x6A), u32(y + 0x28), kLabel});
         ctx.mem.store<uint8_t>(text, 0);
         vstrcat(ctx.mem, text, p4e3f3c + 0xC);
         peer(ctx, "appendNumber", {u32(mul32(tier_price(c), 100))});
         vstrcat(ctx.mem, text, p4c4944);
+        if ((gs.g_flags & 0x1000000u) == 0) gx(ctx, "drawCenteredText", {text, u32(x + 0x68), u32(y + 0x32), kLabel});
         ctx.mem.store<uint8_t>(text, 0);
       } else {
         ctx.mem.store<uint8_t>(text, 0);
@@ -789,7 +845,28 @@ int32_t course_action_menu(Ctx &ctx) {
           const uint8_t y7 = rec_byte(ctx, c, 7);
           if (y7 == 0xFF) vstrcat(ctx.mem, text, p4e3f30);
           else vstrcat(ctx.mem, text, crt_itoa10(ctx, add32(static_cast<int8_t>(y7), 0x7D1), number_buf));
+          if (k == nearest) gx(ctx, "drawCenteredText", {p4e3e7c + 0xA0, u32(x + 0x70), u32(y + 0x2D), kLabel});
         }
+        if ((gs.g_flags & 0x1000000u) == 0) gx(ctx, "drawCenteredText", {text, u32(x + 0x70), u32(y + 0x1E), kLabel});
+      }
+      {  // the map pin: 2 bought, 1 affordable, 0 not, 3 the nearest site while bit 3 of the blink counter is set; its arrow
+         // quadrant (4..7) from the definition's point against (0xc8, 0x12c), drawn at the point and again at the plate's end
+        int32_t ms = gs.g_cash_div100 >= tier_price(c) ? 1 : 0;
+        if (!open) ms = 2;
+        if (mod16 == k && (blink & 8) != 0) ms = 3;
+        const int32_t dx = ctx.mem.load<int16_t>(d + 0x3A), dy = ctx.mem.load<int16_t>(d + 0x3C);
+        int32_t v, px, py;
+        if (0xC8 - dx > 0) {
+          if (0x12C - dy > 0) v = 4, px = dx - 0xC, py = dy - 0xE;
+          else v = 5, px = dx - 0xF, py = dy;
+        } else if (0x12C - dy > 0) {
+          v = 6, px = dx, py = dy - 0xE;
+        } else {
+          v = 7, px = dx, py = dy;
+        }
+        const uint32_t e = u32(ms + v * 4);
+        gx(ctx, "Surface_stretchBlit", {plates + e * 0x2C, masks + e * 0x2C, root, u32(px), u32(py), 0});
+        gx(ctx, "Surface_stretchBlit", {plates + e * 0x2C, masks + e * 0x2C, root, u32(x + 0xA0), u32(y + 0xA), 0});
       }
     }
 
@@ -806,6 +883,10 @@ int32_t course_action_menu(Ctx &ctx) {
       tested = true;
     }
     if (tested || hot != -1) {
+      if (static_cast<uint32_t>(hot) <= 3u) {   // the hot button's highlighted piece
+        static const int32_t kHx[4] = {0x2D4, 0x2D4, 0x2D4, 0x2DC}, kHy[4] = {0x198, 0x1CA, 0x198, 0x214};
+        gx(ctx, "Image_draw", {arr(u32(2 * hot + 1)), root, u32(kHx[hot]), u32(kHy[hot]), 0});
+      }
       if (prev_hot != hot) {
         dwell = 0;
       } else {
@@ -813,12 +894,14 @@ int32_t course_action_menu(Ctx &ctx) {
         if (dwell > 0x14 && static_cast<uint32_t>(hot) <= 3u) {   // the tip: its text through the text buffer
           static const uint32_t kTipOff[3] = {0x94, 0x88, 0x7C};
           vstrcpy(ctx.mem, text, hot < 3 ? p4e3e7c + kTipOff[hot] : p4c84e8 + 0xA8);
+          static const int32_t kTipX[4] = {0x2F8, 0x2F8, 0x306, 0x300}, kTipY[4] = {0x1DC, 0x1DC, 0x1A9, 0x22D};
+          gx(ctx, "drawPanelBackdrop", {u32(kTipX[hot]), u32(kTipY[hot])});
         }
       }
       prev_hot = hot;
     }
-    blink = add32(blink, 1);   // only the plate blink reads it (drawing)
-    (void)blink;
+    gx(ctx, "Window::refreshFull", {state_va(ctx, &GameState::g_rootWindow), 0});
+    blink = add32(blink, 1);   // only the pin blink reads it (drawing)
     if (!src->cursor(a, b)) throw NeedInput{{"courseActionMenu"}};
     // ---- the nearest site within 0x1e of the pointer, against its map spot (+0x19) and its definition x / y
     int32_t best = mode == 4 ? 0x1D : 0x1E;
@@ -879,6 +962,7 @@ int32_t course_action_menu(Ctx &ctx) {
     const int32_t cheat = gs.g_buildingUnlockLevel == 0x11 ? 1 : 0;
     if (gs.g_cash_div100 < tier_price(c) && cheat == 0) {
       peer(ctx, "drawWindow", {0xC8, 0xC8, 0x80006000u, u32(-2)});
+      gx(ctx, "Window::refreshFull", {state_va(ctx, &GameState::g_rootWindow), 0});
       cm::pump_and_redraw(ctx, cheat, "courseActionMenu");
       continue;
     }

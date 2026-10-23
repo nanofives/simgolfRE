@@ -32,6 +32,7 @@
 #include "portsim/ptr.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/integrator.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/util.h"
@@ -92,6 +93,9 @@ struct Drop {
   const char *name, *why;
 };
 const Drop kDrops[] = {
+    // phase 5 (re/PHASE5_GFX_PLAN.md): gameMain's title-screen setup, called by the boot; its loads and crops fill render objects only
+    // and its intro movie is the video backend's (with a gfx backend attached, gfx.cpp draws its part)
+    {"showTitleScreen", "title button and window-frame sprites, intro movie (renderer / video)"},
     {"Image_draw", "blit of an image onto a surface"},
     // phase 4, the QUIT block: no sim-class write in either call closure (log/p3/p37a_simwrites.py on both)
     {"playAudioFile", "the closing Bink video (binkw32); its pumps dispatch no recorded input in the corpus"},
@@ -273,6 +277,8 @@ int TkBase::call(const char *name, const uint32_t *a, int n) {
   } path{name};
   switch (e.kind) {
     case 1:
+      // phase 5: an attached graphics backend draws what the drop drew; the frame keeps the drop's result
+      if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a, n);
       return 0;
     case 2:
       return e.local(*this, a, n);
@@ -806,6 +812,7 @@ FrameExit tick_frame_io(Ctx &ctx, const FrameInput &in, FrameIoStats &st) {
   io.t_head = in.t_head;
   io.clock = &in.clock;
   io.cursor = &in.cursor;
+  io.cursor_pos = &in.cursor_pos;
   io.cursor_x = in.cursor_start_x;
   io.cursor_y = in.cursor_start_y;
   const uint32_t F = tk::frame_block(ctx);
@@ -884,6 +891,7 @@ struct TraceFrame {
   std::vector<std::pair<int32_t, uint32_t>> clock;  // tgt calls of the frame: (site offset, value)
   std::vector<uint32_t> clock_pos;                  // the clock ordinal of each (CLOCKRUN first + k): TraceInput::clock
   std::vector<std::pair<int32_t, int32_t>> cursor;  // CURSOR records of the frame (successful reads)
+  std::vector<uint32_t> cursor_pos;                 // the clock ordinal of each (phase 5: gfx snapshots)
   std::vector<std::pair<uint8_t, uint16_t>> async;  // GetAsyncKeyState reads outside the root handlers (vk, result)
   std::vector<TBatch> batches;
   std::vector<TWrite> head_writes;                  // made inside the frame-head clock call: before the frame body
@@ -972,7 +980,10 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
         open_batch = false;
       }
     } else if (type == 0x08 && sub == 1) {  // CURSOR: pos, x, y (client coordinates after ScreenToClient)
-      if (!frames.empty()) frames.back().cursor.emplace_back(static_cast<int32_t>(rd32(q + 4)), static_cast<int32_t>(rd32(q + 8)));
+      if (!frames.empty()) {
+        frames.back().cursor.emplace_back(static_cast<int32_t>(rd32(q + 4)), static_cast<int32_t>(rd32(q + 8)));
+        frames.back().cursor_pos.push_back(rd32(q));
+      }
     } else if (type == 0x06 && sub == 2) {  // KEYSTATE GetAsyncKeyState: pos, ra, vk, result
       const int32_t site = static_cast<int32_t>(rd32(q + 4) - frame_ra);
       const uint32_t vk = rd32(q + 8);
@@ -1189,18 +1200,38 @@ class TraceInput : public InputSource {
     if (io.cursor_used != b.cursors) ++misaligned_;
     if (cnext_ > 0 && fr_->clock_pos[cnext_ - 1] >= b.pos) ++clock_late_;
     writes_before(b.pos);
+    gfx_progress_fast(ctx_, b.pos);
     out = b.cmds;
     if (const std::vector<Command> *rep = batch_override(ctx_, b.pos)) out = *rep;  // phase 3.8 gate (d): a replacement
     ++next_;
     ++delivered_;
     return true;
   }
-  // a Blocking pump waits for the frame's next modal dispatch; another kind next (or none) = no input for it
-  bool exhausted() const override { return !fr_ || next_ >= fr_->batches.size() || fr_->batches[next_].body; }
+  // a Blocking pump waits for the frame's next modal dispatch; another kind next (or none) = no input for it. TAIL IDLE (the
+  // boot of a trace with no frame head, phase 5): past the frame's last dispatch a modal loop still makes the idle passes the
+  // original made, one per unread CURSOR record (each pass must read one, or the run ends there)
+  bool exhausted() const override {
+    const bool ex = !fr_ || next_ >= fr_->batches.size() || fr_->batches[next_].body;
+    if (ex && tail_idle_ && fr_ && next_ >= fr_->batches.size()) {
+      const FrameIo &io = cur_io();
+      if (io.cursor && io.cursor_used < io.cursor->size() && io.cursor_used != idle_mark_) {
+        idle_mark_ = io.cursor_used;
+        return false;
+      }
+    }
+    return ex;
+  }
+  void set_tail_idle(bool on) { tail_idle_ = on; }
   // the modal loops' cursor reads share the frame's CURSOR records with the frame body's (one read order)
   bool cursor(int32_t &x, int32_t &y) override {
     FrameIo &io = cur_io();
     if (io.cursor && io.cursor_used < io.cursor->size()) {
+      if (io.cursor_pos && io.cursor_used < io.cursor_pos->size()) {
+        // phase 5: the harness's memory writes made before this read (a modal loop with no dispatch between a write and the
+        // reads after it, cov_b_location's date write on the location screen) apply here, as they did in the original
+        if (SG_NEGCTL(g_negctl_frame) != 7) writes_before((*io.cursor_pos)[io.cursor_used]);
+        gfx_progress_fast(ctx_, (*io.cursor_pos)[io.cursor_used]);
+      }
       io.cursor_x = (*io.cursor)[io.cursor_used].first;
       io.cursor_y = (*io.cursor)[io.cursor_used].second;
       ++io.cursor_used;
@@ -1252,6 +1283,8 @@ class TraceInput : public InputSource {
   uint64_t delivered_ = 0, misaligned_ = 0;
   uint64_t clock_served_ = 0, clock_none_ = 0, clock_late_ = 0;
   size_t refused_at_ = SIZE_MAX;
+  bool tail_idle_ = false;
+  mutable size_t idle_mark_ = SIZE_MAX;
 };
 
 // The dispatch point of a pump of the frame body (frameTick483cd0 / pumpInput483bd0's showScreen loop, where jgld's pumps
@@ -1351,6 +1384,7 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
     in.clock = f.clock;
     in.retile = retile;
     in.cursor = f.cursor;
+    in.cursor_pos = f.cursor_pos;
     in.cursor_start_x = cx;
     in.cursor_start_y = cy;
     if (SG_NEGCTL(tk::g_negctl_frame) != 4) {  // negative control 4: every GetAsyncKeyState read answers 0
@@ -1394,7 +1428,21 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
   int32_t k0 = 1;
   if (boot && max_frames > 0) {
     if (frames.size() < 2) {
-      if (detail) *detail = "trace has no FRAME record after the boot";
+      // no frame head follows the boot (cov_b_location's capture stays on the location screen): the boot still runs over the
+      // whole trace, which gives no record (phase 5 reads what it drew); it stops where the recorded input runs out
+      FrameInput in = frame_input(frames[0]);
+      in.boot = true;
+      input.begin(frames[0], 0);
+      input.set_tail_idle(true);
+      tk::FrameIoStats io;
+      try {
+        tk::tick_frame_io(ctx, in, io);
+      } catch (const NeedInput &) {
+        // the menus wait for input the trace no longer holds: the end of the recording
+        gfx_end_of_input(ctx);
+      }
+      after_frame(frames[0], 0, io);
+      if (detail) *detail = "trace has no FRAME record after the boot; the boot ran to the end of the trace";
       return 0;
     }
     FrameInput in = frame_input(frames[0]);

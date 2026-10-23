@@ -56,6 +56,13 @@ class GdiTextMetrics : public TextMetrics {
   // tmInternalLeading, +0x14 tmInternalLeading, +0x18 tmAscent, +0x1c tmDescent) for the provider's own font.
   void font_metrics(Ctx &ctx, uint32_t fontref, int32_t out[5]);
 
+  // Phase 5 drawing services (commands.h TextMetrics, re/PHASE5_GFX_PLAN.md): the same font objects, and TextOutA on a
+  // 16-bit top-down DIB section that holds the surface's words (copied in and back out around the call)
+  bool glyph_width(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n, int32_t &w) override;
+  bool glyph_ascent(Ctx &ctx, uint32_t fontref, int32_t &a) override;
+  bool draw_glyphs(Ctx &ctx, uint32_t fontref, const std::string &text, int32_t x, int32_t y, uint32_t colorref,
+                   uint16_t *px, int32_t w, int32_t h) override;
+
   // TEST ONLY: replace the GDI measurement by a fixed rule (Font::textWidth = the sum over the n bytes c of base +
   // ((fontref >> 2) & 7) + (c & mask); n <= 0 gives 0), so an emulator run of the original's drawMarkupRun with the
   // same rule in place of measureTextWidth's font slot judges the token logic alone. No GDI resource is used.

@@ -34,6 +34,7 @@ struct FrameInput {
   // the cursor positions the frame reads (Display::getCursor: GetCursorPos + ScreenToClient), in read order; the position
   // before the frame's first read is `cursor_start`
   std::vector<std::pair<int32_t, int32_t>> cursor;
+  std::vector<uint32_t> cursor_pos;  // each cursor read's clock ordinal in the trace (phase 5: gfx snapshots; may be empty)
   int32_t cursor_start_x = 0, cursor_start_y = 0;
   // the frame's raw commands for H1's pump point (pumpMessages), applied in order when the context has no InputSource that
   // delivers them (a trace run's TraceInput gives every recorded dispatch to the pump call that made it instead)

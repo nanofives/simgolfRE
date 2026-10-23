@@ -339,6 +339,86 @@ int32_t GdiTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t s, 
 #endif
 }
 
+// ------------------------------------------------------------------------------------------------ phase 5 drawing
+bool GdiTextMetrics::glyph_width(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n, int32_t &w) {
+#ifdef _WIN32
+  if (scripted_) return false;
+  w = font_text_width(ctx, fontref, s, n);
+  return true;
+#else
+  (void)ctx; (void)fontref; (void)s; (void)n; (void)w;
+  return false;
+#endif
+}
+
+bool GdiTextMetrics::glyph_ascent(Ctx &ctx, uint32_t fontref, int32_t &a) {
+#ifdef _WIN32
+  if (scripted_) return false;
+  int32_t m[5];
+  font_metrics(ctx, fontref, m);
+  a = m[1];
+  return true;
+#else
+  (void)ctx; (void)fontref; (void)a;
+  return false;
+#endif
+}
+
+// jgld's text path on the root surface: the surface's DIB section (allocDrawBuffer: biBitCount 16, biHeight -h, BI_RGB,
+// BkMode TRANSPARENT, TextAlign 0x18) with the FontRef's font selected (Surface slot +0xa8), SetTextColor (+0xb4) and
+// TextOutA (+0xb8). The provider keeps one DIB section per size, copies the surface's words in, draws, copies them back.
+bool GdiTextMetrics::draw_glyphs(Ctx &ctx, uint32_t fontref, const std::string &text, int32_t x, int32_t y,
+                                 uint32_t colorref, uint16_t *px, int32_t w, int32_t h) {
+#ifdef _WIN32
+  if (scripted_ || w <= 0 || h <= 0) return false;
+  Impl::Font &f = resolve(*impl_, ctx, fontref);
+  struct Dib {
+    HDC dc = nullptr;
+    HBITMAP bmp = nullptr;
+    void *bits = nullptr;
+    int32_t w = 0, h = 0;
+  };
+  static thread_local Dib dib;
+  if (dib.w != w || dib.h != h) {
+    if (dib.bmp) DeleteObject(dib.bmp);
+    if (!dib.dc) dib.dc = CreateCompatibleDC(nullptr);
+    if (!dib.dc) return false;
+    BITMAPINFO bi;
+    std::memset(&bi, 0, sizeof(bi));
+    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bi.bmiHeader.biWidth = w;
+    bi.bmiHeader.biHeight = -h;
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 16;
+    bi.bmiHeader.biCompression = BI_RGB;
+    dib.bmp = CreateDIBSection(dib.dc, &bi, DIB_RGB_COLORS, &dib.bits, nullptr, 0);
+    if (!dib.bmp) {
+      dib.w = dib.h = 0;
+      return false;
+    }
+    SelectObject(dib.dc, dib.bmp);
+    SetBkMode(dib.dc, TRANSPARENT);
+    SetTextAlign(dib.dc, TA_BASELINE);
+    dib.w = w;
+    dib.h = h;
+  }
+  const size_t pitch = static_cast<size_t>((w + 1) & ~1);   // allocDrawBuffer's 16-bit pitch: (w + 1) >> 1 << 1 words
+  uint16_t *bits = static_cast<uint16_t *>(dib.bits);
+  GdiFlush();
+  for (int32_t r = 0; r < h; ++r) std::memcpy(bits + pitch * r, px + static_cast<size_t>(w) * r, 2u * w);
+  SelectObject(dib.dc, f.h);
+  SetTextColor(dib.dc, colorref);
+  TextOutA(dib.dc, x, y, text.data(), static_cast<int>(text.size()));
+  SelectObject(dib.dc, GetStockObject(SYSTEM_FONT));
+  GdiFlush();
+  for (int32_t r = 0; r < h; ++r) std::memcpy(px + static_cast<size_t>(w) * r, bits + pitch * r, 2u * w);
+  return true;
+#else
+  (void)ctx; (void)fontref; (void)text; (void)x; (void)y; (void)colorref; (void)px; (void)w; (void)h;
+  return false;
+#endif
+}
+
 // measureTextWidth(font, str, maxlen): 0 when the FontRef's handle word is 0 or str is NULL; else the count is maxlen
 // when maxlen < strlen(str) (signed), otherwise strlen(str), and the font's textWidth slot measures that many bytes.
 int32_t GdiTextMetrics::measure_text_width(Ctx &ctx, uint32_t fontref, uint32_t str, int32_t maxlen) {

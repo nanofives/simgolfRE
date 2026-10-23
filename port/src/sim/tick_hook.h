@@ -11,6 +11,7 @@
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/registry.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/tick.h"
 
 namespace portsim {
@@ -149,6 +150,7 @@ struct FrameIo {
   // the cursor in client coordinates as Display::getCursor returns it, read by read in the frame (the trace's CURSOR
   // records); past the frame's last record the last position stays
   const std::vector<std::pair<int32_t, int32_t>> *cursor = nullptr;
+  const std::vector<uint32_t> *cursor_pos = nullptr;  // each record's clock ordinal (phase 5: gfx snapshots)
   size_t cursor_used = 0;
   int32_t cursor_x = 0, cursor_y = 0;
   uint32_t cursor_overrun = 0;  // reads with no record left (the port read the cursor more often than the original)
@@ -235,6 +237,7 @@ struct TkBase {
   // the next cursor position (Display::getCursor)
   void cursor_read(int32_t &x, int32_t &y) {
     if (io.cursor && io.cursor_used < io.cursor->size()) {
+      if (io.cursor_pos && io.cursor_used < io.cursor_pos->size()) gfx_progress_fast(ctx, (*io.cursor_pos)[io.cursor_used]);
       io.cursor_x = (*io.cursor)[io.cursor_used].first;
       io.cursor_y = (*io.cursor)[io.cursor_used].second;
       ++io.cursor_used;

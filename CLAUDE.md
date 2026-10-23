@@ -1328,6 +1328,31 @@ reads the cursor once per WM_MOUSEMOVE; parse_trace drops those reads (U-1064). 
 record-k sim hashes give the original's value of a one-dword object by brute force over sgh64 (re/tools/state_image.py), and
 SG_TICK_DUMP=<callee>;<dir> brackets each call with the port's state.
 Phase 4 quit (2026-10-22, re/analysis/data/sve_roundtrip.md "The quit", U-1050 part 2 resolved, U-1067): scenario cov_r_quit (pinned on instances\p4q) ends with the title menu's exit; trace_rec.js ends a trace at ExitProcess (END sub 1, the exiting thread waits for `trec_ack`), an exiting s36a-family lockstep scenario loads c3fya_run's exit support. The port's boot run goes past the last record with boot.run(to_end=True) and writes top10.sve, Default.pro and both saves as 12 runs of the original did (character files compared on their records: sve_refs.compared_bytes). New: __open / __write / __close (Ctx::lowio), showCreditsScreen, drops playAudioFile / PaletteCache::dtor, FontRef +8 = -1. A real key press reached one recording (VK 174, no DELIVER before it) and ended it early: compare a new recording's checkpoint count with the reference's.
+Phase 5 step 1, the gfx backend (2026-10-22, re/PHASE5_GFX_PLAN.md, port/test/gfx.py, test_gfx.py, U-1068..U-1070): module `gfx`
+(port/src/sim/gfx.cpp) is a software RGB555 renderer owned by the port, attached per context (gfx.attach) like the text provider. With
+one attached, TkBase::call hands a drop it has a body for to gfx_drop (the frame keeps the drop's result; nothing is written into the
+GameState, so sim hashes and segment digests are unchanged by construction); without one nothing changes. Bodies: showTitleScreen (the
+boot now calls it at gameMain+0x41f as a drop), loadImage (8-bit RLE PCX via GameFiles, palette `>> 3` = Palette::apply's RGB555),
+Surface_blit (cropSprite with its 0xff trims), Surface_blit3 (1:1), Image_draw (draw16: bytes >= 0xfe transparent), setDrawTarget,
+drawCenteredText (plain text: x + (0 - width) / 2, baseline y + the font's +0x10, TextOutA through TextMetrics::draw_glyphs, which
+GdiTextMetrics implements on a 16-bit DIB: the original draws its labels with GDI too) and Window::refreshFull (root -> back buffer).
+Anything else is recorded as unsupported (gfx.log). GATE: a checkpoint frame is jgld's back buffer at the checkpoint's clock call
+(summary.json status.tgt = the index of the trace's tgt call, its ordinal P); gfx.snapshotAt(P) copies the port's back buffer when
+the run first consumes a CURSOR record (FrameInput::cursor_pos) or a dispatch past P, into the files overlay `$gfx/snapshot_<k>.555`;
+compare with re/tools/imgcmp.py exact_diff per region. sandbox_basic `menu`: 0 of 480,000 px differ (x64 and Win32), controls
+wrong blit / wrong palette word / no present RED, `> 0xfe` blind (no 0xfe byte in the title images); segments 205 / 205 and boot
+58 / 2 / 1 unchanged.
+Phase 5 step 2, the location screen (2026-10-22, re/PHASE5_GFX_PLAN.md section 6, U-1071 / U-1072): all five cov_b_location
+checkpoints (refused, site_hover, buttons, tip, back) equal the original's back buffer in every pixel, x64 and Win32. New
+bodies: loadInterfaceArt(1)'s image tail (`loadInterfaceArt.images`, called after menu.cpp's table), courseActionMenu's own
+Image / Surface array under `gfx_local_key` (a range no GameState address reaches; the draw calls are back in saveload.cpp as
+`gx(...)`), Surface_fillRegion, Surface_stretchBlit = jgld bltS -> blitPair1 (the mask blend from the matched asm),
+drawText4049d0, drawPanelBackdrop (its Terrain::drawLine bar is OpenGL, not in the back buffer) and drawWindow's
+drawFrameR3 + drawMessageBuffer for a dialog without a golfer (blitPanel's 0xf8 bytes shade through build16BitColorTable's
+block 1). Port changes: TraceInput applies the harness's memory writes at a modal loop's cursor reads too (cov_b_location's
+date write; control tick.frame 7), and a boot trace with no frame head now runs to its end, with idle passes per unread
+CURSOR record and the pending snapshots taken when the input runs out (gfx_end_of_input); boot.run(to_end=True) no longer
+returns NO_FRAMES before running. Segments 205 / 205 (digests unchanged) and boot 58 / 2 / 1 unchanged.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

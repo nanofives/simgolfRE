@@ -79,8 +79,9 @@ def run(scenario: str, lib: L.Lib | None = None, max_records: int | None = None,
     tr = TRACES / f"{scenario}.trace"
     if exp is None or not tr.exists():
         return BootResult(scenario, "MISSING", detail="no trace or no capture frame hashes")
-    if not exp:
+    if not exp and not to_end:
         # the capture never reached mainLoop's frame head (cov_b_location stays on the location screen): nothing to compare
+        # (with to_end the boot still runs over the whole trace, for what `after` reads: phase 5's frames)
         return BootResult(scenario, "NO_FRAMES", detail="the capture has no frame record")
     names = [n for n, _, _ in lib.objects("sim")]
     if symbols != names:
@@ -111,6 +112,9 @@ def run(scenario: str, lib: L.Lib | None = None, max_records: int | None = None,
             if gdi:
                 st.call("gditext.detach", [])
     res.records = done
+    if not exp:
+        res.status, res.detail = "NO_FRAMES", f"ran to the end of the trace (sg_run_boot {code}); no frame record to compare"
+        return res
     known = KNOWN.get(scenario, [])
     seen = []   # (range, first and last record that differed in it)
     for k in range(done):

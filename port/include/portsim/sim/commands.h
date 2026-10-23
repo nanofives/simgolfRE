@@ -37,6 +37,7 @@
 #define PORTSIM_SIM_COMMANDS_H
 
 #include <cstdint>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -163,6 +164,17 @@ class TextMetrics {
  public:
   virtual ~TextMetrics() = default;
   virtual int32_t text_put(Ctx &ctx, uint32_t draw_ctx, uint32_t font, uint32_t text) = 0;
+  // Phase 5 (re/PHASE5_GFX_PLAN.md): the services the graphics backend draws text with. A provider that cannot answer
+  // returns false (the backend then records the call as unsupported). jgld Font::textWidth on the FontRef's font:
+  virtual bool glyph_width(Ctx &, uint32_t /*fontref*/, uint32_t /*s*/, int32_t /*n*/, int32_t & /*w*/) { return false; }
+  // the FontRef's +0x10 word (tmAscent - tmInternalLeading), the run drawer's baseline offset
+  virtual bool glyph_ascent(Ctx &, uint32_t /*fontref*/, int32_t & /*a*/) { return false; }
+  // jgld's TextOutA of `text` at (x, y) on a 16-bit RGB555 top-down surface (w x h words) with BkMode TRANSPARENT,
+  // TextAlign TA_BASELINE and SetTextColor(colorref), the FontRef's font selected
+  virtual bool draw_glyphs(Ctx &, uint32_t /*fontref*/, const std::string & /*text*/, int32_t /*x*/, int32_t /*y*/,
+                           uint32_t /*colorref*/, uint16_t * /*px*/, int32_t /*w*/, int32_t /*h*/) {
+    return false;
+  }
 };
 void set_text_metrics(Ctx &ctx, TextMetrics *tm);  // not owned; nullptr detaches
 TextMetrics *text_metrics(Ctx &ctx);               // or nullptr
