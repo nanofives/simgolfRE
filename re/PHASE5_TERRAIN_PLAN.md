@@ -79,5 +79,17 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    stripRender drawing its list in painter's order. Consequence: the reference rasteriser is that software GL (its triangle fill, texture
    filter and 16-bit dithering rules), not a GPU driver, so an exact-pixel target is plausible. Whether it is reproducible bit for bit on this
    Windows build is the first thing to test (render one recorded stream twice, then against a second PC).
-3. OPEN, GL call stream: not recorded yet (needs a Frida recorder over the 45 OPENGL32 and 2 GLU32 imports of Terrain.dll on the main thread).
-   The gate for the command layer depends on it.
+3. DONE (first pass), GL call stream: `re/tools/gl_record.py` + `re/frida/js/gl_rec.js` hook the 47 OPENGL32 / GLU32 exports of Terrain.dll
+   (all 47 installed, lazily, once Terrain.dll and opengl32 are mapped) and record calls made from Terrain.dll code until N glFlush, with raw
+   stack dwords (floats and doubles as bit patterns), the floats behind the glXXXfv pointers and an FNV of texture memory. IMPORTANT: with the
+   shim's hooks on, the GL calls come from WINMM.dll (the C3/C4 Terrain reimplementations run live), so the original stream needs
+   `--hooks-off` (SIMGOLF_HOOKS_OFF=all). One sandbox frame of the original (log/p5/gl/orig_a.gl.txt, not committed): 31,567 calls =
+   glLoadIdentity, glPushMatrix, glRotated(g_screenScale), glRotatef(45 + angle) 0x42340000 = 45.0, glTranslatef((25 - X) * 100, 0, (25 - Y) * 100),
+   then 3,672 triangles (glBegin(GL_TRIANGLES) / 3 x [glTexCoord2fv + glArrayElement] / glEnd, i.e. vertex arrays indexed per vertex, texcoords
+   by pointer) in 2,184 texture-bind runs, glPopMatrix, glFlush. No glEnable / glLightfv / glMaterial call occurs per frame (state is set once at
+   init: 518 glGenTextures / glTexImage2D / 510 glTexEnvi were seen at load). The tile loop issues no glNormal per vertex: lighting normals come
+   from the normal array. Two recordings differ only in the camera pivot (the first glTranslatef: 0xc42f0000 vs 0xc4960000), because the
+   camera was moved by real-time arrow keys: the stream depends on the camera, so reproducibility needs the pinned scenario_det timeline
+   (scenario_ab.py checkpoint) rather than this live harness. NEXT: arm the recorder inside a scenario_ab checkpoint (course_season
+   hole_open / season_060) so each checkpoint's stream is paired with its back-buffer frame, and record the init stream (glViewport, glEnable,
+   glLightfv, glMaterialfv, glHint, texture upload order) from process start, which this run did not cover.
