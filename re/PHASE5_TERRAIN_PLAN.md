@@ -67,3 +67,17 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
   original, see the C3 notes). The port must pick a documented behaviour per defect (re/port/divergences.tsv).
 - x87 code in normalize/faceNormal/hermitePoint: the 53-bit control word is the A/B thread's; match with the Win32 runner, not x64 SSE.
 - Scope creep: audio and font rasterisation are separate steps (plan 4.3, 4.4).
+
+## 6. Measurements (2026-10-23)
+
+1. DONE, back buffer vs window: `re/tools/scenario_refs.py run --scenario course_season --label gl_probe` (hooks off, log/c3/alt/refs/course_season/gl_probe):
+   all 12 checkpoints (sandbox, hole_open, season_060..600) have source `backbuffer` and `window_px_differ` 0, and the frames show the
+   full 3D course view (terrain, trees, water, golfers). So the terrain pixels ARE in jgld's back buffer: case (A), pixel compare.
+2. DONE, why: Terrain.dll's g_pfd (0x10063e10, read from the file) has dwFlags 0x28 = PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL, cColorBits 16,
+   cDepthBits 0, no DOUBLEBUFFER, and initSystem takes the display surface's DC (acquire_dc). The GL runs on Microsoft's generic software
+   implementation (opengl32 on a DIB DC) and draws straight into the game's 16-bit back buffer. No depth buffer was requested, which fits
+   stripRender drawing its list in painter's order. Consequence: the reference rasteriser is that software GL (its triangle fill, texture
+   filter and 16-bit dithering rules), not a GPU driver, so an exact-pixel target is plausible. Whether it is reproducible bit for bit on this
+   Windows build is the first thing to test (render one recorded stream twice, then against a second PC).
+3. OPEN, GL call stream: not recorded yet (needs a Frida recorder over the 45 OPENGL32 and 2 GLU32 imports of Terrain.dll on the main thread).
+   The gate for the command layer depends on it.
