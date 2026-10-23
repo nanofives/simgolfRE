@@ -33,12 +33,36 @@
     return hex(h);
   }
 
+  // ---- snapshot mode (glrecSnap(true)): everything a replay needs for the LAST draw pass (glPushMatrix .. glFlush) ----
+  // texture bytes of every glTexImage2D (once per FNV hash, sent as they happen), the glGenTextures / glDeleteTextures ids, and for
+  // each pass the DIB the context draws into BEFORE (at glPushMatrix) and AFTER (glFlush returned), the vertex / normal array
+  // memory up to the largest glArrayElement index, and the stream line numbers the pass spans.
+  let snapMode = false, hdc = 0, snap = null, cur = null, vp = 0, np = 0;
+  const sentTex = {};
+  const gdi = Process.getModuleByName('gdi32.dll');
+  const GetCurrentObject = new NativeFunction(gdi.getExportByName('GetCurrentObject'), 'pointer', ['pointer', 'uint32'], 'stdcall');
+  const GetObjectA = new NativeFunction(gdi.getExportByName('GetObjectA'), 'int', ['pointer', 'int', 'pointer'], 'stdcall');
+  function dibRead() {
+    if (!hdc) return null;
+    const hbm = GetCurrentObject(ptr(hdc), 7);              // OBJ_BITMAP
+    if (hbm.isNull()) return null;
+    const ds = Memory.alloc(96);
+    if (GetObjectA(hbm, 84, ds) < 84) return null;           // sizeof(DIBSECTION) on x86
+    const bits = ds.add(20).readPointer();                   // BITMAP.bmBits
+    const wb = ds.add(12).readS32(), w = ds.add(4).readS32(), bh = ds.add(32).readS32();   // bmWidthBytes, bmWidth, dsBmih.biHeight
+    const meta = { w: w, h: ds.add(8).readS32(), wb: wb, bpp: ds.add(18).readU16(), biHeight: bh, comp: ds.add(40).readU32(),
+                   m0: ds.add(64).readU32(), m1: ds.add(68).readU32(), m2: ds.add(72).readU32() };
+    if (bits.isNull()) return null;
+    return { meta: meta, bytes: bits.readByteArray(wb * Math.abs(bh)) };
+  }
+
   function hook(mod, name, spec) {
     let addr = null;
     try { addr = Process.getModuleByName(mod).getExportByName(name); } catch (e) { return; }
     const nargs = spec[0], ptrs = spec[1] || {};
     Interceptor.attach(addr, {
       onEnter(a) {
+        this.rec = false;
         const key = name + '@' + (Process.findModuleByAddress(this.returnAddress) || { name: '?' }).name;
         seen[key] = (seen[key] || 0) + 1;
         if (!state.armed) return;
@@ -51,11 +75,15 @@
           try {
             if (k === 'ptr') {          // glVertexPointer(size,type,stride,ptr) / glNormalPointer(type,stride,ptr): keep the pointer
               line += ' p=' + hex(w[w.length - 1]);
-            } else if (k === 'tex') {   // glTexImage2D(..., w=3,h=4,border=5,fmt=6,type=7,pixels=8): hash 4 bytes per pixel bound
+            } else if (k === 'tex') {   // glTexImage2D(..., w=3,h=4,border=5,fmt=6,type=7,pixels=8): hash bytes per pixel bound
               const wd = w[3], ht = w[4];
               const px = w[w.length - 1];
               const bpp = w[6] === 0x1907 ? 3 : w[6] === 0x1908 ? 4 : 0;   // GL_RGB / GL_RGBA, unsigned byte (fmt = w[6], type = w[7])
-              if (px && bpp && wd > 0 && ht > 0 && wd * ht < 4194304) line += ' tex=' + fnv(ptr(px), wd * ht * bpp);
+              if (px && bpp && wd > 0 && ht > 0 && wd * ht < 4194304) {
+                const hs = fnv(ptr(px), wd * ht * bpp);
+                line += ' tex=' + hs;
+                if (snapMode && !sentTex[hs]) { sentTex[hs] = 1; send({ glrec: 'tex', hash: hs, w: wd, h: ht, fmt: w[6] }, ptr(px).readByteArray(wd * ht * bpp)); }
+              }
             } else {
               const p = ptr(w[+k]); const fl = [];
               for (let i = 0; i < ptrs[k]; i++) fl.push(hex(p.add(4 * i).readU32()));
@@ -63,13 +91,39 @@
             }
           } catch (e) { line += ' v=?'; }
         }
+        if (snapMode) {
+          if (name === 'wglMakeCurrent' && w[0]) hdc = w[0];
+          else if (name === 'glVertexPointer') vp = w[3];
+          else if (name === 'glNormalPointer') np = w[2];
+          else if (name === 'glDeleteTextures' && w[1]) {
+            const ids = []; for (let i = 0; i < w[0] && i < 64; i++) ids.push(hex(ptr(w[1]).add(4 * i).readU32()));
+            line += ' ids=' + ids.join(',');
+          } else if (name === 'glPushMatrix') {
+            const d = dibRead();
+            cur = { pre: d, startIdx: buf.length - (buf.length && buf[buf.length - 1].startsWith('glLoadIdentity') ? 1 : 0), maxIdx: -1 };
+          } else if (name === 'glArrayElement' && cur && w[0] > cur.maxIdx) cur.maxIdx = w[0];
+        }
+        this.rec = true;
+        this.idx = buf.length;
+        this.w = w;
         buf.push(line);
         state.n++;
-        if (name === 'glFlush' && --state.flushLeft <= 0) {
+        if (name === 'glFlush' && !snapMode && --state.flushLeft <= 0) {
           state.armed = false;
           const lines = buf; buf = [];
           for (let i = 0; i < lines.length; i += 20000) send({ glrec: 'chunk', i: i, lines: lines.slice(i, i + 20000) });
           send({ glrec: 'done', calls: lines.length, dropped: state.dropped });
+        }
+      },
+      onLeave(r) {
+        if (!this.rec || !snapMode) return;
+        if (name === 'glGenTextures' && this.w[0] > 0 && this.w[0] <= 64) {   // the ids the driver handed out
+          const ids = []; for (let i = 0; i < this.w[0]; i++) ids.push(hex(ptr(this.w[1]).add(4 * i).readU32()));
+          buf[this.idx] += ' ids=' + ids.join(',');
+        } else if (name === 'glFlush' && cur && cur.maxIdx >= 0) {
+          const post = dibRead();
+          snap = { pre: cur.pre, post: post, startIdx: cur.startIdx, endIdx: this.idx, maxIdx: cur.maxIdx,
+                   vtx: vp ? ptr(vp).readByteArray((cur.maxIdx + 1) * 12) : null, nrm: np ? ptr(np).readByteArray((cur.maxIdx + 1) * 12) : null };
         }
       }
     });
@@ -100,6 +154,17 @@
     for (let i = 0; i < lines.length; i += 20000) send({ glrec: 'chunk', i: i, lines: lines.slice(i, i + 20000) });
     send({ glrec: 'done', calls: lines.length, dropped: state.dropped });
     return lines.length;
+  };
+  rpc.exports.glrecSnap = function (on) { snapMode = !!on; return snapMode; };
+  rpc.exports.glrecSendSnap = function () {
+    if (!snap || !snap.pre || !snap.post) return false;
+    send({ glrec: 'snapmeta', startIdx: snap.startIdx, endIdx: snap.endIdx, maxIdx: snap.maxIdx, meta: snap.pre.meta, postMeta: snap.post.meta });
+    send({ glrec: 'snapdata', kind: 'pre' }, snap.pre.bytes);
+    send({ glrec: 'snapdata', kind: 'post' }, snap.post.bytes);
+    if (snap.vtx) send({ glrec: 'snapdata', kind: 'vtx' }, snap.vtx);
+    if (snap.nrm) send({ glrec: 'snapdata', kind: 'nrm' }, snap.nrm);
+    send({ glrec: 'snapend' });
+    return true;
   };
   rpc.exports.glrecSeen = function () { return seen; };
   rpc.exports.glrecState = function () { return { armed: state.armed, n: state.n, dropped: state.dropped, hooks: state.installed, flushLeft: state.flushLeft }; };

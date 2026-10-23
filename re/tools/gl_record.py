@@ -21,6 +21,24 @@ import scenario  # noqa: E402
 OUT = ROOT / "log" / "p5" / "gl"
 
 
+def write_snap(d, lines, tex, snapd, snapm):
+    """Replay inputs for tools/glexact/glreplay.c: stream.gl.txt, tex/<hash>.bin, vtx.bin, nrm.bin, dib_pre.bin, dib_post.bin, meta.txt."""
+    (d / "tex").mkdir(parents=True, exist_ok=True)
+    (d / "stream.gl.txt").write_text(chr(10).join(lines) + chr(10))
+    for h, (p, data) in tex.items():
+        (d / "tex" / f"{h}.bin").write_bytes(bytes(data))
+    for k, fn in (("pre", "dib_pre.bin"), ("post", "dib_post.bin"), ("vtx", "vtx.bin"), ("nrm", "nrm.bin")):
+        if k in snapd:
+            (d / fn).write_bytes(bytes(snapd[k]))
+    m = snapm.get("meta", {})
+    with open(d / "meta.txt", "w") as f:
+        for k in ("w", "h", "wb", "bpp", "biHeight", "comp", "m0", "m1", "m2"):
+            f.write(f"{k} {m.get(k, 0)}" + chr(10))
+        for k in ("startIdx", "endIdx", "maxIdx"):
+            f.write(f"{k} {snapm.get(k, -1)}" + chr(10))
+    print("snapshot:", {k: snapm.get(k) for k in ("startIdx", "endIdx", "maxIdx")}, m, "textures", len(tex), "->", d)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--label", required=True)
@@ -29,16 +47,25 @@ def main():
     ap.add_argument("--timeout", type=float, default=30)
     ap.add_argument("--hooks-off", action="store_true", help="run the ORIGINAL Terrain.dll code (SIMGOLF_HOOKS_OFF=all)")
     ap.add_argument("--init", action="store_true", help="record from process start through the sandbox load (no frame wait), marks at menu / sandbox")
+    ap.add_argument("--snap", action="store_true", help="with --init: also capture the replay inputs of the last draw pass (textures, arrays, DIB before / after) into log/p5/gl/<label>/")
     ap.add_argument("--hole", action="store_true", help="build the first hole before recording")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     chunks, done, info = {}, [], {}
 
+    tex, snapd, snapm = {}, {}, {}
+
     def on_msg(m, _d):
         p = m.get("payload") if m.get("type") == "send" else None
         if not isinstance(p, dict) or "glrec" not in p:
             return
-        if p["glrec"] == "chunk":
+        if p["glrec"] == "tex":
+            tex[p["hash"]] = (p, _d)
+        elif p["glrec"] == "snapmeta":
+            snapm.update(p)
+        elif p["glrec"] == "snapdata":
+            snapd[p["kind"]] = _d
+        elif p["glrec"] == "chunk":
             chunks[p["i"]] = p["lines"]
         elif p["glrec"] == "done":
             done.append(p)
@@ -53,12 +80,22 @@ def main():
             time.sleep(0.25)
         if a.init:
             rec0 = g.scripts[-1].exports_sync
+            if a.snap:
+                t1 = time.time()
+                while "hooks" not in info and time.time() - t1 < 15:
+                    time.sleep(0.1)
+                rec0.glrec_snap(True)
             imgcmp = scenario.imgcmp
             imgcmp.wait_for(g, imgcmp.load(scenario.GOLDEN / "main_menu.png"), timeout=60)
             rec0.glrec_mark("main_menu")
             scenario.to_sandbox(g)
             rec0.glrec_mark("sandbox")
             time.sleep(1.5)
+            if a.snap:
+                g.key(0x27, hold=0.1)       # nudge the camera so a fresh terrain pass is drawn
+                time.sleep(1.5)
+                ok = rec0.glrec_send_snap()
+                print("snapshot sent:", ok, flush=True)
             rec0.glrec_dump()
             t0 = time.time()
             while not done and time.time() - t0 < 30:
@@ -88,6 +125,8 @@ def main():
             img.save(OUT / f"{a.label}.png")
     lines = [l for i in sorted(chunks) for l in chunks[i]]
     (OUT / f"{a.label}.gl.txt").write_text("\n".join(lines) + "\n")
+    if a.snap:
+        write_snap(OUT / a.label, lines, tex, snapd, snapm)
     names = {}
     for l in lines:
         n = l.split(" ", 1)[0]

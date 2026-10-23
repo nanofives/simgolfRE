@@ -141,3 +141,19 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    Verdict: on this PC and Windows build, the game's GL path is bit-exact run to run and process to process. Still open: a second PC / build,
    and a replay of the game's own arrays and textures (the recorded stream holds neither the vertex array contents nor the texture bytes,
    only their hashes), which is what the port's rasteriser must finally equal.
+
+7. DONE, real-frame replay: a captured terrain draw pass replays BIT-EXACT through Windows' software GL. `gl_record.py --init --snap --hooks-off`
+   (gl_rec.js snapshot mode, enabled by rpc before the menu) captures, for the last pass (glPushMatrix .. glFlush) of a sandbox boot after a camera
+   nudge: the stream (stream.gl.txt, with the ids glGenTextures / glDeleteTextures handed out), the bytes of every glTexImage2D (473 distinct
+   64x64 images, tex/<hash>.bin), the vertex and normal array memory up to the largest glArrayElement index (13,911 vertices, 12 bytes each),
+   and the DIB the context draws into before the pass and after glFlush (read through the DC of wglMakeCurrent: 800x600, 16 bpp, BI_BITFIELDS
+   0x7c00 / 0x3e0 / 0x1f, biHeight +600). `re/tools/glexact/glreplay.c` rebuilds that DIB and the pixel format (format 204, "GDI Generic"),
+   replays every state call from wglCreateContext to the pass (draw blocks and flushes of earlier passes skipped, texture ids mapped), puts the
+   pre DIB in, replays the pass and compares. Result (log/p5/gl/snap_a, 30,598 stream lines, 3,6xx triangles): 0 of 480,000 pixels differ, hash
+   d8be662c44cef51e equals the game's, twice; the game changed 471,326 pixels in the pass (1,332 distinct colours; the frame is the real textured
+   terrain with paths, rough, rocks and water). Negative control (GLREPLAY_CTL=1, one glBegin..glEnd block skipped): hash differs, 172 px.
+   The pre-pass DIB is all zeros: the exe draws nothing under the terrain, so the pass needs no prior back-buffer content. So the TARGET for the
+   port's renderer is now concrete and reproducible: given the stream, the arrays and the 64x64 textures, produce these 480,000 words.
+   Open: (a) the same replay on a second PC / Windows build; (b) other zooms, rotations and a pass with path tiles / walls (one pass so far);
+   (c) deriving the stream, arrays and textures from the port's own GameState instead of from a recording, which is the port's job
+   (Terrain::stripRender / drawTile / Tile::render in C++); (d) the rasteriser itself, or shipping a call into the host's GL.
