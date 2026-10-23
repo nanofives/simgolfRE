@@ -93,3 +93,14 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    (scenario_ab.py checkpoint) rather than this live harness. NEXT: arm the recorder inside a scenario_ab checkpoint (course_season
    hole_open / season_060) so each checkpoint's stream is paired with its back-buffer frame, and record the init stream (glViewport, glEnable,
    glLightfv, glMaterialfv, glHint, texture upload order) from process start, which this run did not cover.
+
+4. DONE, software GL determinism (`re/tools/glexact/glexact.c`, `build.bat`; x86, set CL= first or cl hangs on the inherited /MP12):
+   a synthetic terrain-like scene (initGL state: line smoothing, texture 2D, lighting with light 0, cull face, vertex and normal arrays,
+   glArrayElement + glTexCoord2fv, GL_TRIANGLES, 2 mip-mapped 64x64 textures via gluBuild2DMipmaps, glRotated / glRotatef / glTranslatef)
+   rendered through the same setup as Terrain.initSystem (16-bit BI_RGB DIB section, PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL, 16 colour
+   bits). Result on this PC (GL vendor Microsoft Corporation, renderer "GDI Generic"): 3 passes in each of 3 separate processes give the
+   same FNV-64 of the DIB bits (8b2f0fb9d9f1b523) and byte-identical BMPs; 480,000 px, 223 distinct colours. So the software GL is bit-exact
+   run to run and process to process on one machine. Note: ChoosePixelFormat granted format 204 with cDepthBits 16 although the descriptor
+   asks for 0, so a depth buffer exists in the original (the painter's-order reading in section 6.2 is not proven; depth testing is only
+   used if the DLL enables GL_DEPTH_TEST: grep the 47 imports, glEnable is called with the capability list to confirm). NOT yet shown: the
+   same hash on a second PC or Windows build, and this scene is synthetic (the recorded stream's arrays and textures were not replayed).
