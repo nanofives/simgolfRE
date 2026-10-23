@@ -129,3 +129,15 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    - Consequences for the glexact probe: it used mip-mapped GL_LINEAR_MIPMAP_LINEAR, GL_MODULATE and the wrong light data; the next probe
      must use the recorded state (GL_REPLACE, LINEAR / NEAREST, no mip-maps, GL_CW winding, the recorded light, ortho and viewport) before
      its bit-exact verdict is read as covering the game's path.
+
+6. DONE, software GL determinism with the RECORDED state (glexact.c rebuilt from section 5: glFrontFace(GL_CW), glTexEnvi REPLACE,
+   MAG NEAREST / MIN LINEAR, wrap REPEAT, glTexImage2D level 0 only, no mip-maps, the recorded light, material, glOrtho(-884, 883, -663, 662,
+   -5000, 5000) and viewport 800x600, 16-bit BI_RGB DIB, PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL, no GL_DEPTH_TEST). Results: 5 passes in
+   each of 3 processes give one FNV-64 (f6d186e667fb959a) and byte-identical bitmaps; 40,539 non-background pixels, 515 distinct colours.
+   Negative control (GLEXACT_CTL=1, one vertex 1 unit higher): different hash, 71 px differ. Two traps caught on the way: (1) with GL_CW and
+   the old index order every triangle was culled and the three runs agreed on an all-black frame (hash "same", 0 px): a determinism result
+   needs a non-blank image, now checked; (2) with GL_REPLACE the light does not tint the texture (the lit colour is replaced), so lighting
+   (and with it the loadLighting garbage w component) cannot change the terrain pixels except through specular, which REPLACE also drops.
+   Verdict: on this PC and Windows build, the game's GL path is bit-exact run to run and process to process. Still open: a second PC / build,
+   and a replay of the game's own arrays and textures (the recorded stream holds neither the vertex array contents nor the texture bytes,
+   only their hashes), which is what the port's rasteriser must finally equal.
