@@ -20,7 +20,7 @@
   };
   const GLU = { gluBuild2DMipmaps: [7, { tex: 6 }], gluBuild1DMipmaps: [6, { tex: 5 }] };
   let tm = null;
-  const state = { armed: false, flushLeft: 0, n: 0, dropped: 0, installed: 0, tid: 0 };
+  const state = { armed: true, flushLeft: 1e9, n: 0, dropped: 0, installed: 0, tid: 0 };
   let buf = [];
   const seen = {};
   const CAP = 4000000;
@@ -54,7 +54,8 @@
             } else if (k === 'tex') {   // glTexImage2D(..., w=3,h=4,border=5,fmt=6,type=7,pixels=8): hash 4 bytes per pixel bound
               const wd = w[3], ht = w[4];
               const px = w[w.length - 1];
-              if (px && wd > 0 && ht > 0 && wd * ht < 4194304) line += ' tex=' + fnv(ptr(px), wd * ht * 4);
+              const bpp = w[6] === 0x1907 ? 3 : w[6] === 0x1908 ? 4 : 0;   // GL_RGB / GL_RGBA, unsigned byte (fmt = w[6], type = w[7])
+              if (px && bpp && wd > 0 && ht > 0 && wd * ht < 4194304) line += ' tex=' + fnv(ptr(px), wd * ht * bpp);
             } else {
               const p = ptr(w[+k]); const fl = [];
               for (let i = 0; i < ptrs[k]; i++) fl.push(hex(p.add(4 * i).readU32()));
@@ -75,15 +76,31 @@
     state.installed++;
   }
   // the script loads at spawn, before the loader has mapped Terrain.dll / opengl32.dll: install when they are there
-  const iv = setInterval(function () {
+  let done = false;
+  function tryInstall() {
+    if (done) return;
     tm = Process.findModuleByName('Terrain.dll');
     if (!tm || !Process.findModuleByName('opengl32.dll')) return;
-    clearInterval(iv);
+    done = true;
     for (const n in T) hook('opengl32.dll', n, T[n]);
     if (Process.findModuleByName('glu32.dll')) for (const n in GLU) hook('glu32.dll', n, GLU[n]);
     send({ glrec: 'installed', hooks: state.installed, terrain: !!tm });
-  }, 100);
-  rpc.exports.glrecArm = function (n) { buf = []; state.n = 0; state.dropped = 0; state.flushLeft = n; state.armed = true; return true; };
+  }
+  // Process.attachModuleObserver fires as each module is mapped, i.e. before the loader reaches the exe's entry point, so the
+  // first GL call is seen; the timer is the fallback for a Frida without it.
+  try { Process.attachModuleObserver({ onAdded: function () { tryInstall(); } }); } catch (e) { }
+  tryInstall();
+  const iv = setInterval(function () { tryInstall(); if (done) clearInterval(iv); }, 5);
+  // init mode: recording is armed from the moment the hooks are installed (flushLeft huge); glrecMark inserts a '#mark' line,
+  // glrecDump sends everything recorded so far (chunks + done) and disarms. glrecArm(n) (frame mode) resets the buffer.
+  rpc.exports.glrecMark = function (label) { if (state.armed) buf.push('#mark ' + label + ' n=' + buf.length); return buf.length; };
+  rpc.exports.glrecDump = function () {
+    state.armed = false;
+    const lines = buf; buf = [];
+    for (let i = 0; i < lines.length; i += 20000) send({ glrec: 'chunk', i: i, lines: lines.slice(i, i + 20000) });
+    send({ glrec: 'done', calls: lines.length, dropped: state.dropped });
+    return lines.length;
+  };
   rpc.exports.glrecSeen = function () { return seen; };
   rpc.exports.glrecState = function () { return { armed: state.armed, n: state.n, dropped: state.dropped, hooks: state.installed, flushLeft: state.flushLeft }; };
 })();

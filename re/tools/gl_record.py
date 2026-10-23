@@ -28,6 +28,7 @@ def main():
     ap.add_argument("--move", action="store_true", help="press an arrow key to force a terrain re-render")
     ap.add_argument("--timeout", type=float, default=30)
     ap.add_argument("--hooks-off", action="store_true", help="run the ORIGINAL Terrain.dll code (SIMGOLF_HOOKS_OFF=all)")
+    ap.add_argument("--init", action="store_true", help="record from process start through the sandbox load (no frame wait), marks at menu / sandbox")
     ap.add_argument("--hole", action="store_true", help="build the first hole before recording")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
@@ -50,24 +51,41 @@ def main():
         t0 = time.time()
         while not g.hwnd() and time.time() - t0 < 30:
             time.sleep(0.25)
-        scenario.to_sandbox(g)
-        if a.hole:
-            scenario.build_first_hole(g)
-        rec = g.scripts[-1].exports_sync
-        t0 = time.time()
-        while "hooks" not in info and time.time() - t0 < 15:
-            time.sleep(0.2)
-        print("recorder:", info, flush=True)
-        rec.glrec_arm(a.flushes)
-        t0 = time.time()
-        while not done and time.time() - t0 < a.timeout:
-            if a.move:
-                g.key(0x27, hold=0.1)   # VK_RIGHT: camera moves, terrain re-renders
-            time.sleep(0.5)
-        st = rec.glrec_state()
-        print('seen (all callers):', dict(sorted(rec.glrec_seen().items(), key=lambda kv: -kv[1])[:12]))
-        img = g.shot()
-        img.save(OUT / f"{a.label}.png")
+        if a.init:
+            rec0 = g.scripts[-1].exports_sync
+            imgcmp = scenario.imgcmp
+            imgcmp.wait_for(g, imgcmp.load(scenario.GOLDEN / "main_menu.png"), timeout=60)
+            rec0.glrec_mark("main_menu")
+            scenario.to_sandbox(g)
+            rec0.glrec_mark("sandbox")
+            time.sleep(1.5)
+            rec0.glrec_dump()
+            t0 = time.time()
+            while not done and time.time() - t0 < 30:
+                time.sleep(0.2)
+            st = rec0.glrec_state()
+            img = g.shot()
+            img.save(OUT / f"{a.label}.png")
+        else:
+            scenario.to_sandbox(g)
+        if not a.init:
+            if a.hole:
+                scenario.build_first_hole(g)
+            rec = g.scripts[-1].exports_sync
+            t0 = time.time()
+            while "hooks" not in info and time.time() - t0 < 15:
+                time.sleep(0.2)
+            print("recorder:", info, flush=True)
+            rec.glrec_arm(a.flushes)
+            t0 = time.time()
+            while not done and time.time() - t0 < a.timeout:
+                if a.move:
+                    g.key(0x27, hold=0.1)   # VK_RIGHT: camera moves, terrain re-renders
+                time.sleep(0.5)
+            st = rec.glrec_state()
+            print('seen (all callers):', dict(sorted(rec.glrec_seen().items(), key=lambda kv: -kv[1])[:12]))
+            img = g.shot()
+            img.save(OUT / f"{a.label}.png")
     lines = [l for i in sorted(chunks) for l in chunks[i]]
     (OUT / f"{a.label}.gl.txt").write_text("\n".join(lines) + "\n")
     names = {}

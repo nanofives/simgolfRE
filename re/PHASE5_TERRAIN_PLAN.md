@@ -104,3 +104,28 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    asks for 0, so a depth buffer exists in the original (the painter's-order reading in section 6.2 is not proven; depth testing is only
    used if the DLL enables GL_DEPTH_TEST: grep the 47 imports, glEnable is called with the capability list to confirm). NOT yet shown: the
    same hash on a second PC or Windows build, and this scene is synthetic (the recorded stream's arrays and textures were not replayed).
+
+5. DONE, init stream from process start (`gl_record.py --init --hooks-off`; gl_rec.js now installs through Process.attachModuleObserver and is
+   armed from the first call; marks `main_menu` and `sandbox`; logs log/p5/gl/init_a / init_b, not committed). Two recordings of the original
+   Terrain.dll code agree call for call after masking pointers: the first 4,120 calls (everything before the main menu) are byte-identical,
+   and so is every non-draw call afterwards. Content of the stream:
+   - Before the main menu, 518 x [glGenTextures, glTexParameteri x4, glTexEnvi, glBindTexture, glTexImage2D] with NO GL context yet
+     (wglCreateContext comes after the `main_menu` mark, at sandbox start), so those uploads reach no context and are lost; the same 518
+     textures (510 RGB + 8 RGBA, all 64x64, 473 distinct images by hash) are uploaded again after the context exists. Same set in both runs.
+   - Context: wglCreateContext(hdc), wglMakeCurrent. initGL: glHint(PERSPECTIVE_CORRECTION, FASTEST), glEnable(LINE_SMOOTH),
+     glHint(LINE_SMOOTH, NICEST), glEnable(TEXTURE_2D), glEnable(LIGHTING), glFrontFace(0x900 = GL_CW), glEnable(CULL_FACE),
+     glEnableClientState(VERTEX_ARRAY, NORMAL_ARRAY). Lighting: GL_LIGHT0 position (-0.607331, 0.768866, 0.199985, 0), ambient (0.784314,
+     0.784314, 0.705882, w), diffuse (0.941176 x3, 0.784314), specular (1.0, 1.0, 0.960784, 0.941176), glEnable(LIGHT0); glMaterialfv(FRONT,
+     SPECULAR, 1 1 1 1), glMateriali(FRONT, SHININESS, 13). The fourth float of each light vector is read past the file's float[3]
+     (ambient w = 0x36e8040 in one run and 0x3632040 in the other: the only value that differs; diffuse w is the next array's first element),
+     which is the loadLighting defect already noted; it does not reach the image (no blending, no alpha channel in RGB555).
+   - Then glDeleteTextures x ~925 (ids 0..), 518 re-uploads, glViewport(0, 0, 800, 600), GL_PROJECTION, glLoadIdentity,
+     glOrtho(-884, 883, -663, 662, -5000, 5000), GL_MODELVIEW, glLoadIdentity, glVertexPointer(3, GL_FLOAT, 0, Terrain.dll 0x100b28c8),
+     glNormalPointer(GL_FLOAT, 0, 0x10070a18).
+   - Texture state: min filter 0x2601 (GL_LINEAR), mag filter 0x2600 (GL_NEAREST), wrap S/T 0x2901 (GL_REPEAT), TEXTURE_ENV_MODE 0x1e01
+     (GL_REPLACE). No mip-maps: gluBuild1D/2DMipmaps never run in this path, and glTexImage2D level 0 only (RGB 0x1907 or RGBA 0x1908,
+     GL_UNSIGNED_BYTE). glEnable capabilities used: 0xb20, 0xde1, 0xb50, 0xb44, 0x4000. NO glEnable(GL_DEPTH_TEST) (0xb71): the 16-bit depth
+     buffer ChoosePixelFormat granted is never used, so draws are painter's order as read in section 6.2 (now confirmed).
+   - Consequences for the glexact probe: it used mip-mapped GL_LINEAR_MIPMAP_LINEAR, GL_MODULATE and the wrong light data; the next probe
+     must use the recorded state (GL_REPLACE, LINEAR / NEAREST, no mip-maps, GL_CW winding, the recorded light, ortho and viewport) before
+     its bit-exact verdict is read as covering the game's path.
