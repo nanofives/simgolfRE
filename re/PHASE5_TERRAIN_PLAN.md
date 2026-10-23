@@ -149,7 +149,7 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
    and the DIB the context draws into before the pass and after glFlush (read through the DC of wglMakeCurrent: 800x600, 16 bpp, BI_BITFIELDS
    0x7c00 / 0x3e0 / 0x1f, biHeight +600). `re/tools/glexact/glreplay.c` rebuilds that DIB and the pixel format (format 204, "GDI Generic"),
    replays every state call from wglCreateContext to the pass (draw blocks and flushes of earlier passes skipped, texture ids mapped), puts the
-   pre DIB in, replays the pass and compares. Result (log/p5/gl/snap_a, 30,598 stream lines, 3,6xx triangles): 0 of 480,000 pixels differ, hash
+   pre DIB in, replays the pass and compares. Result (log/p5/gl/snap_a, 30,598 stream lines, 3,598 triangles): 0 of 480,000 pixels differ, hash
    d8be662c44cef51e equals the game's, twice; the game changed 471,326 pixels in the pass (1,332 distinct colours; the frame is the real textured
    terrain with paths, rough, rocks and water). Negative control (GLREPLAY_CTL=1, one glBegin..glEnd block skipped): hash differs, 172 px.
    The pre-pass DIB is all zeros: the exe draws nothing under the terrain, so the pass needs no prior back-buffer content. So the TARGET for the
