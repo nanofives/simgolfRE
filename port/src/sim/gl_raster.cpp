@@ -43,6 +43,11 @@ int quantize(double c, int x, int y, int ctl) {
   const int o = static_cast<int>(std::floor(v));
   return o < 0 ? 0 : (o > 31 ? 31 : o);
 }
+// Where the original evaluates colours and texture coordinates: not at the pixel centre but at a position scaled about the
+// viewport centre, x' = c + (x - c) * (1 + e). Fitted from integer-scale texture probes (port/test/glshift_fit.py): e = 1.046e-5
+// in x, 1.355e-5 in y, no offset, no cross term (rms residual 0.0008 pixel). Coverage is NOT shifted. tune[6] / tune[15]
+// override e in units of 1e-9 (0 = the fitted constant, -1 = none).
+constexpr double kAttrScaleX = 1.046e-5, kAttrScaleY = 1.355e-5;
 int wrap_repeat(int64_t i, uint32_t n) {
   const int64_t m = i % static_cast<int64_t>(n);
   return static_cast<int>(m < 0 ? m + n : m);
@@ -160,6 +165,7 @@ void GlRaster::material(uint32_t pname, const float *v) {
   if (pname == 0x1202) std::memcpy(mat_spec_, v, 16);
 }
 void GlRaster::material_shininess(int32_t sh) { shininess_ = static_cast<float>(sh); }
+void GlRaster::color4f(float r, float g, float b, float a) { cur_c_[0] = r; cur_c_[1] = g; cur_c_[2] = b; cur_c_[3] = a; }
 void GlRaster::normal3f(float x, float y, float z) { cur_n_[0] = x; cur_n_[1] = y; cur_n_[2] = z; }
 void GlRaster::tex_image2d(uint32_t width, uint32_t height, uint32_t format, const uint8_t *data) {
   Tex &t = textures_[bound_];
@@ -207,7 +213,7 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
   v.z = (cz / cw + 1.0) * 0.5;
   v.s = cur_s_;
   v.t = cur_t_;
-  v.r = v.g = v.b = v.a = 1.0;
+  v.r = cur_c_[0]; v.g = cur_c_[1]; v.b = cur_c_[2]; v.a = cur_c_[3];
   const bool f32 = tune[12] != 0;   // experiment: round every lighting intermediate to float32
   auto Q = [f32](double x) { return f32 ? static_cast<double>(static_cast<float>(x)) : x; };
   if (lighting_) {
@@ -305,7 +311,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
   const double dvdx = ((t1 - t0) * (v2->y - v0->y) - (t2 - t0) * (v1->y - v0->y)) / ar;
   const double dvdy = ((t2 - t0) * (v1->x - v0->x) - (t1 - t0) * (v2->x - v0->x)) / ar;
   const double rho = std::max(std::sqrt(dudx * dudx + dvdx * dvdx), std::sqrt(dudy * dudy + dvdy * dvdy));
-  const uint32_t filter = rho <= 1.0 ? tex.mag : tex.min;
+  const uint32_t filter = rho <= 1.0 + 1e-6 ? tex.mag : tex.min;   // exactly one texel per pixel is still magnification in the original
   const bool linear = (filter == kLinear || filter == 0x2701 || filter == 0x2703) && tune[11] != 4;
   const int minx = std::max(0, static_cast<int>(std::floor(std::min({v0->x, v1->x, v2->x}))));
   const int maxx = std::min(w_ - 1, static_cast<int>(std::ceil(std::max({v0->x, v1->x, v2->x}))));
@@ -329,16 +335,23 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
       const double w2 = edge(v0->x, v0->y, v1->x, v1->y, px, py);
       if (w0 < 0 || w1 < 0 || w2 < 0) continue;
       if ((w0 == 0 && !inc0) || (w1 == 0 && !inc1) || (w2 == 0 && !inc2)) continue;
-      // experiment: sample the attributes at a position shifted by tune[13] / tune[14] 1/256 pixel (coverage is unaffected)
-      double a0 = w0, a1 = w1, a2 = w2;
-      if (tune[13] != 0 || tune[14] != 0) {
+      // the attributes are evaluated at the shifted position (spx, spy); coverage above used the pixel centre
+      const double ex_ = tune[6] == 0 ? kAttrScaleX : tune[6] < 0 ? 0.0 : tune[6] * 1e-9;
+      const double ey_ = tune[15] == 0 ? kAttrScaleY : tune[15] < 0 ? 0.0 : tune[15] * 1e-9;
+      const double spx = px + (px - (vp_x_ + vp_w_ * 0.5)) * ex_, spy = py + (py - (vp_y_ + vp_h_ * 0.5)) * ey_;
+      double a0 = edge(v1->x, v1->y, v2->x, v2->y, spx, spy);
+      double a1 = edge(v2->x, v2->y, v0->x, v0->y, spx, spy);
+      double a2 = edge(v0->x, v0->y, v1->x, v1->y, spx, spy);
+      if (tune[13] != 0 || tune[14] != 0) {   // experiment: a further shift of 1/256 pixel per unit
         const double sx = tune[13] / 256.0, sy = tune[14] / 256.0;
         a0 += (v1->y - v2->y) * sx + (v2->x - v1->x) * sy;
         a1 += (v2->y - v0->y) * sx + (v0->x - v2->x) * sy;
         a2 += (v0->y - v1->y) * sx + (v1->x - v0->x) * sy;
       }
-      const double s = (a0 * v0->s + a1 * v1->s + a2 * v2->s) / ar;
-      const double t = (a0 * v0->t + a1 * v1->t + a2 * v2->t) / ar;
+      // Nearest sampling is exact at the pixel centre (probes: 0 differences at 0.25..0.75 texel per pixel without any shift);
+      // the bilinear filter and the interpolated colours are evaluated at the shifted position.
+      const double s = linear ? (a0 * v0->s + a1 * v1->s + a2 * v2->s) / ar : (w0 * v0->s + w1 * v1->s + w2 * v2->s) / ar;
+      const double t = linear ? (a0 * v0->t + a1 * v1->t + a2 * v2->t) / ar : (w0 * v0->t + w1 * v1->t + w2 * v2->t) / ar;
       double u = s * tex.w, v = t * tex.h;
       if (tune[2] > 0) {
         const double q = static_cast<double>(1ull << tune[2]);
@@ -385,8 +398,8 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
         r = acc[0]; g = acc[1]; bl = acc[2];
         if (bpp == 4) al = acc[3];
       }
-      double cr = (w0 * v0->r + w1 * v1->r + w2 * v2->r) / ar, cg = (w0 * v0->g + w1 * v1->g + w2 * v2->g) / ar;
-      double cb = (w0 * v0->b + w1 * v1->b + w2 * v2->b) / ar;
+      double cr = (a0 * v0->r + a1 * v1->r + a2 * v2->r) / ar, cg = (a0 * v0->g + a1 * v1->g + a2 * v2->g) / ar;
+      double cb = (a0 * v0->b + a1 * v1->b + a2 * v2->b) / ar;
       if (tune[3] > 0) {
         const double q = static_cast<double>((1ull << tune[3]) - 1);
         cr = std::floor(cr * q + 0.5) / q;
@@ -477,8 +490,9 @@ bool GlRaster::exec_line(const std::string &line) {
   if (name == "glNormal3f") { normal3f(F(0), F(1), F(2)); return true; }
   if (name == "glTexParameterf") { tex_parameter(A(1), static_cast<uint32_t>(F(2))); return true; }   // the filter values arrive as floats
   if (name == "glEnableClientState" || name == "glHint" || name == "glGenTextures" ||
-      name == "glVertexPointer" || name == "glNormalPointer" || name == "glLineWidth" || name == "glColor4f")
+      name == "glVertexPointer" || name == "glNormalPointer" || name == "glLineWidth")
     return true;
+  if (name == "glColor4f") { color4f(F(0), F(1), F(2), F(3)); return true; }
   if (name == "glFrontFace") front_face(A(0));
   else if (name == "glEnable") enable(A(0));
   else if (name == "glDisable") disable(A(0));

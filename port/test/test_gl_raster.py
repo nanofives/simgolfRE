@@ -4,14 +4,16 @@ Each corpus snapshot (re/tools/gl_corpus.py, exported with `port.test.glcorpus e
 Terrain.dll code and the 800x600 RGB555 back buffer before and after it. The rasteriser replays the state stream and the
 pass's GL calls (port/test/glraster.py) onto the same starting buffer; the result is compared with the original's pixel by pixel.
 
-THE CRITERION. Not bit-exact, on purpose and measured: on the 34 passes of corpus c7 the rasteriser writes the original's pixel
-in 96.8 to 98.8 % of the drawn pixels, every other pixel is one 5-bit level off in one channel, and 0 to 62 pixels per pass differ
-by more (the original's triangle seams leave a pixel uncovered where the rasteriser covers it, and the reverse). So a snapshot
-passes when the one-level pixels are at most 3.5 % of the drawn pixels and at most 70 pixels differ by more than one level. What
-the pipeline reproduces exactly was fitted from the data and is written in gl_raster.cpp and re/PHASE5_TERRAIN_PLAN.md: the
-GL_MODULATE lighting (the original's glTexEnvi call names GL_TEXTURE_2D, an invalid target, so the mode stays modulate), the
-4x4 ordered dither, the 31/255 channel scale, texture object 0xcccccccc shared by the eight path textures with NEAREST
-filters, untextured fragments for an incomplete texture, source-alpha blending.
+THE CRITERION. Not bit-exact, on purpose and measured: on the 34 passes of corpus c7 the rasteriser writes the original's pixel in
+98.4 to 99.5 % of the drawn pixels, every other pixel is one 5-bit level off in one channel, and 0 to 62 pixels per pass differ by
+more (the original's triangle seams leave a pixel uncovered where the rasteriser covers it, and the reverse). So a snapshot passes
+when the one-level pixels are at most 2 % of the drawn pixels and at most 70 pixels differ by more than one level. What the
+pipeline reproduces exactly was fitted from the data and from probes against the real software GL (glprobe.py) and is written in
+gl_raster.cpp and re/PHASE5_TERRAIN_PLAN.md: the GL_MODULATE lighting (the original's glTexEnvi call names GL_TEXTURE_2D, an
+invalid target, so the mode stays modulate), the 4x4 ordered dither and the 31/255 channel scale (a flat-colour probe matches
+exactly), texture object 0xcccccccc shared by the eight path textures with NEAREST filters, untextured fragments for an incomplete
+texture, source-alpha blending, and the position at which bilinear samples and colours are evaluated (the pixel centre scaled
+about the viewport centre by 1.05e-5 in x and 1.36e-5 in y).
 
 Negative controls (the `#tune 11 <mode>` knob of GlRaster), each of which must break the criterion on at least one pass.
 """
@@ -27,7 +29,7 @@ pytestmark = pytest.mark.port
 
 ROOT = G.CORPUS / "c7"
 STEPS = G.snaps(ROOT)
-MAX_ONE_LEVEL = 0.035     # of the drawn pixels
+MAX_ONE_LEVEL = 0.02      # of the drawn pixels
 MAX_BIG = 70              # pixels more than one level off
 
 CONTROLS = {1: "no dither", 2: "dither offset 0 instead of 0.5", 3: "lighting colour white", 4: "minification filter nearest",

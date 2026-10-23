@@ -254,3 +254,39 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     rasteriser reads the state stream the recording holds, because the port does not yet produce the original's setup calls itself.
     NEXT: localRender and the draw list in the renderer, then the exe-side overlay drawing, then producing the state stream (initGL,
     lighting file, projection) from the port, and finally the Terrain state side.
+
+11. DONE, the remaining one-level noise investigated with probes of the REAL software GL (2026-10-23; port/test/glprobe.py,
+    glshift_fit.py, glcover_fit.py; rasteriser changes in gl_raster.cpp). Method: synthetic scenes in the recorder's text form run through
+    glreplay.exe (Windows' generic OpenGL, which writes its DIB) and through GlRaster, compared pixel by pixel, one pipeline stage per
+    scene. Findings, stage by stage:
+    - Flat colours (256 grey levels, glColor4f c / 255, unlit, untextured): EXACT, 0 of 480,000 pixels differ; the quantisation
+      floor(c * 31 / 255 + (k + 0.5) / 16) with the 4x4 matrix fits every one of 442,368 pixels of the probe.
+    - Gouraud triangles at random fractional positions: 0.2 % of the drawn pixels differ (153 of 76,415), 17 of them coverage; after the
+      attribute-position fix below 80 differ. Interpolating colours is not the noisy stage.
+    - Texture magnification (0.25 .. 0.75 texel per pixel, NEAREST): EXACT, 0 differences. Bilinear at 1.25 .. 3 texels per pixel is the
+      filter with u - 0.5 / v - 0.5 texel centres and REPEAT (97.5 % / 94.5 % / 89.9 % of the channel values at 1.25 / 2 / 3 before the
+      fix; nearest, no half-texel shift and a box filter match 0.1 .. 40 %). Weights are not quantised (8 .. 16 bit weights, fixed-point
+      or reduced-mantissa texture coordinates, vertex or texcoord snapping all raise the error).
+    - WHERE the bilinear filter and the interpolated colours are evaluated: at integer texel-per-pixel scales the weights are constant
+      inside a quad, so the real GL's weights can be fitted per quad. They are the exact ones shifted by a pure scale about the screen
+      centre: sample position = pixel centre + 1.046e-5 * (x - 400) in x and 1.355e-5 * (y - 300) in y (no offset, no cross term, no
+      quadratic term; rms residual 0.0008 px over 48 quads; mean match with the fitted weights 99.3 % against 94.5 % with the exact ones).
+      It is the same for projections of 0.5 .. 4.4 world units per pixel (so it belongs to the viewport, not the matrices), equals about
+      0.0041 px at the viewport edges in both axes (about 1 / 256 px), and does NOT apply to nearest sampling (0 differences without it)
+      nor to coverage. Implemented as kAttrScaleX / Y in gl_raster.cpp for bilinear texture coordinates and for colours. Effect on corpus c7:
+      one-level pixels 1.2 .. 3.2 % -> 0.5 .. 1.6 % of the drawn pixels (e.g. sandbox 7,186 -> 2,780 differing pixels), pixels more
+      than one level off unchanged (0 .. 62 per pass); the test criterion is tightened to 2 % / 70 pixels.
+    - Magnification vs minification: rho <= 1 is nearest (probes: 0.90 .. 1.0 nearest, 1.005 and up bilinear). At rho within about 1e-7 of
+      1.0 the original's choice is float32 noise (a 1.0 texel-per-pixel probe gives bilinear in 21 of 48 quads, nearest in the others);
+      the rasteriser treats rho <= 1 + 1e-6 as nearest and so differs on those quads only. Corpus passes have rho 1.4 .. 3, away from it.
+    - Coverage: the original's edge position has a symmetric noise of about +-0.004 px (a pixel centre 0.004 px outside is covered 17 % of
+      the time, 0.004 px inside 86 %); 47 of 22,660 covered pixels in a 480-triangle probe (0.2 %) differ from exact edge functions.
+      No bias by edge direction, side or position along the scanline. Not reproduced by: vertex snapping at 2^-2 .. 2^-16 and grids of
+      1/2000 .. 1/100 px, span-end snapping, scanline walkers in fixed point (8 .. 24 bits) or float32, float32 edge functions (two forms),
+      a per-pixel-cell sample offset (160 -> 128 misclassified of 3,318 with 32 free offsets).
+    - Residual after all of this: a per-quad position error of about 0.0007 px (the two triangles of one quad differ by 0.0009 px in y,
+      not in x) that does not depend on the distance from the quad's edges; on an extreme-contrast random texture it is a 5 % pixel
+      mismatch at 2 texels per pixel, on the game's textures 0.5 .. 1.6 %.
+    NEXT for this thread, if the last half percent matters: the origin of the 1 / 256-pixel viewport constant and of the per-triangle y
+    residual (a probe with triangles of controlled vertex order and top vertex would separate prestep from setup); the float32 rho
+    arithmetic for the rho == 1 case.

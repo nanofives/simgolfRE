@@ -72,6 +72,7 @@ class GlRaster : public GlSink {
   void material(uint32_t pname, const float *v);                    // GL_SPECULAR only (the render path sets nothing else)
   void material_shininess(int32_t s);
   void normal3f(float x, float y, float z);
+  void color4f(float r, float g, float b, float a);   // the current colour (used when lighting is off)
   void tex_image2d(uint32_t width, uint32_t height, uint32_t format, const uint8_t *data);   // GL_RGB / GL_RGBA, unsigned byte, level 0
   void delete_textures(const uint32_t *ids, int n);
   void set_arrays(const float *vertices, size_t n_vertices, const float *normals, size_t n_normals);
@@ -131,6 +132,7 @@ class GlRaster : public GlSink {
   // current vertex attributes and the primitive being assembled
   float cur_s_ = 0, cur_t_ = 0;
   float cur_n_[3] = {0, 0, 1};
+  float cur_c_[4] = {1, 1, 1, 1};
   // lighting: light 0 (ambient, diffuse, specular, eye-space position), material specular and shininess; the rest are GL defaults
   float light_[4][4] = {{0, 0, 0, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {0, 0, 1, 0}};
   float mat_spec_[4] = {0, 0, 0, 1};
