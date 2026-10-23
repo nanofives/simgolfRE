@@ -45,6 +45,32 @@ class GlSink {
   virtual void disable(uint32_t cap) = 0;
   virtual void blend_func(uint32_t src, uint32_t dst) = 0;
   virtual void flush() = 0;
+
+  // ---- the calls of the original's setup (Terrain constructor, initSystem, initTerrain) ----
+  // They default to nothing so a sink that only draws need not know them. Like a real driver, a sink ignores every call made before
+  // a context exists (the Terrain constructor loads all its textures that way), and glGenTextures then writes no name.
+  virtual void context_create() {}                         // wglCreateContext + wglMakeCurrent on the display surface
+  virtual void hint(uint32_t target, uint32_t mode) { (void)target; (void)mode; }
+  virtual void enable_client_state(uint32_t array) { (void)array; }
+  virtual void front_face(uint32_t mode) { (void)mode; }
+  virtual void viewport(int32_t x, int32_t y, int32_t w, int32_t h) { (void)x; (void)y; (void)w; (void)h; }
+  virtual void matrix_mode(uint32_t mode) { (void)mode; }
+  virtual void ortho(double l, double r, double b, double t, double n, double f) { (void)l; (void)r; (void)b; (void)t; (void)n; (void)f; }
+  virtual void light(uint32_t light, uint32_t pname, const float *v4) { (void)light; (void)pname; (void)v4; }       // four floats
+  virtual void material(uint32_t face, uint32_t pname, const float *v4) { (void)face; (void)pname; (void)v4; }      // four floats
+  virtual void material_shininess(uint32_t face, int32_t s) { (void)face; (void)s; }
+  // false when no context exists (the names are not written: the caller's variables keep their old values)
+  virtual bool gen_textures(int32_t n, uint32_t *names) { (void)n; (void)names; return false; }
+  virtual void delete_textures(int32_t n, const uint32_t *names) { (void)n; (void)names; }
+  virtual void tex_parameteri(uint32_t target, uint32_t pname, int32_t v) { (void)target; (void)pname; (void)v; }
+  virtual void tex_parameterf(uint32_t target, uint32_t pname, float v) { (void)target; (void)pname; (void)v; }
+  virtual void tex_envi(uint32_t target, uint32_t pname, int32_t v) { (void)target; (void)pname; (void)v; }
+  virtual void tex_image2d(uint32_t target, int32_t level, int32_t internal, int32_t w, int32_t h, int32_t border, uint32_t format,
+                           uint32_t type, const uint8_t *data) {
+    (void)target; (void)level; (void)internal; (void)w; (void)h; (void)border; (void)format; (void)type; (void)data;
+  }
+  virtual void vertex_pointer(int32_t size, uint32_t type, int32_t stride) { (void)size; (void)type; (void)stride; }
+  virtual void normal_pointer(uint32_t type, int32_t stride) { (void)type; (void)stride; }
 };
 
 // One text line per call: "<name> <hex args,...>" plus " v=<hex floats>" for the glXXXfv calls (no pointers), lines
@@ -118,6 +144,95 @@ class GlStreamSink : public GlSink {
   }
   void flush() override { line("glFlush"); }
 
+  // setup calls: the same lines as the recorder's, with the pointer arguments dropped (texture names and bytes: ids= / tex= tokens)
+  void context_create() override {
+    line("wglCreateContext");
+    line("wglMakeCurrent");
+    context_ = true;
+  }
+  void hint(uint32_t t, uint32_t m) override { line2("glHint", t, m); }
+  void enable_client_state(uint32_t a) override { line1("glEnableClientState", a); }
+  void front_face(uint32_t m) override { line1("glFrontFace", m); }
+  void viewport(int32_t x, int32_t y, int32_t w, int32_t h) override {
+    std::string s;
+    arg_u(s, static_cast<uint32_t>(x)); arg_u(s, static_cast<uint32_t>(y)); arg_u(s, static_cast<uint32_t>(w)); arg_u(s, static_cast<uint32_t>(h));
+    line("glViewport", s);
+  }
+  void matrix_mode(uint32_t m) override { line1("glMatrixMode", m); }
+  void ortho(double l, double r, double b, double t, double n, double f) override {
+    std::string s;
+    arg_d(s, l); arg_d(s, r); arg_d(s, b); arg_d(s, t); arg_d(s, n); arg_d(s, f);
+    line("glOrtho", s);
+  }
+  void light(uint32_t l, uint32_t p, const float *v) override {
+    std::string s;
+    arg_u(s, l); arg_u(s, p);
+    line("glLightfv", s + " " + vec_text(v, 4));
+  }
+  void material(uint32_t face, uint32_t p, const float *v) override {
+    std::string s;
+    arg_u(s, face); arg_u(s, p);
+    line("glMaterialfv", s + " " + vec_text(v, 4));
+  }
+  void material_shininess(uint32_t face, int32_t v) override {
+    std::string s;
+    arg_u(s, face); arg_u(s, 0x1601u); arg_u(s, static_cast<uint32_t>(v));
+    line("glMateriali", s);
+  }
+  bool gen_textures(int32_t n, uint32_t *names) override {
+    std::string s;
+    arg_u(s, static_cast<uint32_t>(n));
+    if (!context_) {
+      line("glGenTextures", s);
+      return false;
+    }
+    std::string ids = "ids=";
+    for (int32_t i = 0; i < n; ++i) {
+      names[i] = next_name_++;
+      if (i) ids += ',';
+      hex(ids, names[i]);
+    }
+    line("glGenTextures", s + " " + ids);
+    return true;
+  }
+  void delete_textures(int32_t n, const uint32_t *names) override {
+    std::string s;
+    arg_u(s, static_cast<uint32_t>(n));
+    std::string ids = "ids=";
+    for (int32_t i = 0; i < n; ++i) {
+      if (i) ids += ',';
+      hex(ids, names[i]);
+    }
+    line("glDeleteTextures", s + " " + ids);
+  }
+  void tex_parameteri(uint32_t t, uint32_t p, int32_t v) override { line3("glTexParameteri", t, p, static_cast<uint32_t>(v)); }
+  void tex_parameterf(uint32_t t, uint32_t p, float v) override {
+    std::string s;
+    arg_u(s, t); arg_u(s, p); arg_f(s, v);
+    line("glTexParameterf", s);
+  }
+  void tex_envi(uint32_t t, uint32_t p, int32_t v) override { line3("glTexEnvi", t, p, static_cast<uint32_t>(v)); }
+  void tex_image2d(uint32_t target, int32_t level, int32_t internal, int32_t w, int32_t h, int32_t border, uint32_t format, uint32_t type,
+                   const uint8_t *data) override {
+    std::string s;
+    arg_u(s, target); arg_u(s, static_cast<uint32_t>(level)); arg_u(s, static_cast<uint32_t>(internal)); arg_u(s, static_cast<uint32_t>(w));
+    arg_u(s, static_cast<uint32_t>(h)); arg_u(s, static_cast<uint32_t>(border)); arg_u(s, format); arg_u(s, type);
+    // the recorder's FNV-1a (32 bit) of w * h * bytes-per-pixel bytes, "tex=0x<hex>"
+    const int bpp = format == 0x1907u ? 3 : format == 0x1908u ? 4 : 0;
+    if (data && bpp && w > 0 && h > 0) {
+      uint32_t hh = 0x811c9dc5u;
+      const size_t n = static_cast<size_t>(w) * static_cast<size_t>(h) * static_cast<size_t>(bpp);
+      for (size_t i = 0; i < n; ++i) { hh ^= data[i]; hh *= 0x01000193u; }
+      std::string t = "tex=";
+      hex(t, hh);
+      line("glTexImage2D", s + " " + t);
+    } else {
+      line("glTexImage2D", s);
+    }
+  }
+  void vertex_pointer(int32_t size, uint32_t type, int32_t stride) override { line3("glVertexPointer", static_cast<uint32_t>(size), type, static_cast<uint32_t>(stride)); }
+  void normal_pointer(uint32_t type, int32_t stride) override { line2("glNormalPointer", type, static_cast<uint32_t>(stride)); }
+
  private:
   static void hex(std::string &s, uint32_t v) {
     char b[16];
@@ -145,6 +260,33 @@ class GlStreamSink : public GlSink {
     text += '\n';
     ++calls;
   }
+  void line1(const char *name, uint32_t a) {
+    std::string s;
+    arg_u(s, a);
+    line(name, s);
+  }
+  void line2(const char *name, uint32_t a, uint32_t b) {
+    std::string s;
+    arg_u(s, a); arg_u(s, b);
+    line(name, s);
+  }
+  void line3(const char *name, uint32_t a, uint32_t b, uint32_t c) {
+    std::string s;
+    arg_u(s, a); arg_u(s, b); arg_u(s, c);
+    line(name, s);
+  }
+  static std::string vec_text(const float *v, int n) {
+    std::string s = "v=";
+    for (int i = 0; i < n; ++i) {
+      if (i) s += ',';
+      uint32_t b;
+      std::memcpy(&b, &v[i], 4);
+      hex(s, b);
+    }
+    return s;
+  }
+  bool context_ = false;
+  uint32_t next_name_ = 1;
   void vec(const char *name, const float *v, int n) {
     std::string s = "v=";
     for (int i = 0; i < n; ++i) {

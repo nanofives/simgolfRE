@@ -107,14 +107,14 @@ def snaps(root: pathlib.Path = CORPUS / "c7", kind: int | None = None) -> list[s
     return out
 
 
-def load(lib, st, snap: Snap) -> list:
+def load(lib, st, snap: Snap, textures=None) -> list:
     """Map the snapshot's Terrain object into the state `st` at its original address and hand the renderer its globals; the
     returned arrays must stay alive while the context is used."""
     bind(lib.dll)
     st.map(snap.terrain, (C.c_uint8 * len(snap.tobj)).from_buffer_copy(snap.tobj))
     g = SgGlGlobals()
     keep = [snap.arr(RVA["vertices"], N_VERTICES * 3, C.c_float), snap.arr(RVA["normals"], N_VERTICES * 3, C.c_float),
-            snap.arr(RVA["textures"], N_TEXTURES, C.c_uint32), snap.arr(RVA["tex_coords"], N_TEXCOORD_FLOATS, C.c_float),
+            (C.c_uint32 * N_TEXTURES)(*textures) if textures is not None else snap.arr(RVA["textures"], N_TEXTURES, C.c_uint32), snap.arr(RVA["tex_coords"], N_TEXCOORD_FLOATS, C.c_float),
             snap.arr(RVA["side_normals"], 24, C.c_float)]
     g.vertices, g.n_vertices = C.addressof(keep[0]), N_VERTICES
     g.normals, g.n_normals = C.addressof(keep[1]), N_VERTICES

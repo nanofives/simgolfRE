@@ -11,7 +11,7 @@ when the one-level pixels are at most 2 % of the drawn pixels and at most 70 pix
 pipeline reproduces exactly was fitted from the data and from probes against the real software GL (glprobe.py) and is written in
 gl_raster.cpp and re/PHASE5_TERRAIN_PLAN.md: the GL_MODULATE lighting (the original's glTexEnvi call names GL_TEXTURE_2D, an
 invalid target, so the mode stays modulate), the 4x4 ordered dither and the 31/255 channel scale (a flat-colour probe matches
-exactly), texture object 0xcccccccc shared by the eight path textures with NEAREST filters, untextured fragments for an incomplete
+exactly), glTexParameterf filters (GL_LINEAR, passed as floats) for the path textures, untextured fragments for an incomplete
 texture, source-alpha blending, and the position at which bilinear samples and colours are evaluated (the pixel centre scaled
 about the viewport centre by 1.05e-5 in x and 1.36e-5 in y).
 
@@ -81,6 +81,23 @@ def test_chain_frame_matches_the_original(lib, setup, step):
     assert one <= MAX_ONE_LEVEL * drawn, f"{step}: {one} one-level pixels of {drawn} drawn"
 
 
+INSTALL = G.ROOT / "original"
+
+
+@pytest.mark.parametrize("step", RENDER_STEPS or ["-"])
+def test_chain_from_the_ports_own_setup_matches_the_original(lib, setup, step):
+    """No recorded state at all between the user's files and the pixels: the port's GL setup (texture load, lighting file, projection)
+    and its Terrain::render drive the rasteriser; only the Terrain object and the arrays come from the snapshot."""
+    if not (INSTALL / "Data" / "Textures" / "Parkland").is_dir():
+        pytest.skip("no install with Data/Textures (original/)")
+    post, got, st, pre = R.run_chain_from_setup(lib, setup, step, INSTALL)
+    rep = R.report(post, got, pre)
+    drawn = max(st[2], 1)
+    one = rep["diff"] - rep["gt1"]
+    assert rep["gt1"] <= MAX_BIG, f"{step}: {rep['gt1']} pixels more than one level off (max {rep['max']})"
+    assert one <= MAX_ONE_LEVEL * drawn, f"{step}: {one} one-level pixels of {drawn} drawn"
+
+
 @pytest.mark.parametrize("mode", sorted(CONTROLS))
 def test_negative_control_breaks_the_criterion(lib, setup, mode):
     broken = []
@@ -91,3 +108,21 @@ def test_negative_control_breaks_the_criterion(lib, setup, mode):
         if big > MAX_BIG or one > MAX_ONE_LEVEL * drawn:
             broken.append(step)
     assert broken, f"control {mode} ({CONTROLS[mode]}) passed the criterion on every pass: the corpus cannot see it"
+
+
+def test_chain_control_the_lighting_file_reaches_the_pixels(lib, setup, tmp_path):
+    """With the lighting file edited (ambient 200 -> 60) the setup-driven chain must no longer match the original's frame: the
+    user's file really is what lights the picture."""
+    import shutil
+    if not (INSTALL / "Data" / "Textures" / "Parkland").is_dir():
+        pytest.skip("no install with Data/Textures (original/)")
+    dst = tmp_path / "install"
+    (dst / "Data" / "Textures").mkdir(parents=True)
+    shutil.copytree(INSTALL / "Data" / "Textures" / "Parkland", dst / "Data" / "Textures" / "Parkland")
+    text = (INSTALL / "ParklandLighting.txt").read_text().replace("200 200 180", "60 60 60", 1)
+    (dst / "ParklandLighting.txt").write_text(text)
+    post, got, st, pre = R.run_chain_from_setup(lib, setup, "sandbox", dst)
+    rep = R.report(post, got, pre)
+    drawn = max(st[2], 1)
+    one = rep["diff"] - rep["gt1"]
+    assert rep["gt1"] > MAX_BIG or one > MAX_ONE_LEVEL * drawn

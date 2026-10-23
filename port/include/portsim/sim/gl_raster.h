@@ -61,20 +61,27 @@ class GlRaster : public GlSink {
   void blend_func(uint32_t src, uint32_t dst) override;
   void flush() override;
 
-  // ---- the state calls of the original's setup ----
-  void viewport(int32_t x, int32_t y, int32_t w, int32_t h);
-  void matrix_mode(uint32_t mode);
-  void ortho(double l, double r, double b, double t, double n, double f);
-  void front_face(uint32_t mode);
-  void tex_parameter(uint32_t pname, uint32_t value);
-  void tex_env(uint32_t target, uint32_t pname, uint32_t value);   // only target GL_TEXTURE_ENV (0x2300) takes effect
-  void light(uint32_t light, uint32_t pname, const float *v);       // GL_LIGHT0; pname AMBIENT / DIFFUSE / SPECULAR / POSITION
-  void material(uint32_t pname, const float *v);                    // GL_SPECULAR only (the render path sets nothing else)
-  void material_shininess(int32_t s);
+  // ---- the state calls of the original's setup (the GlSink overrides) ----
+  // A driver ignores every call made while no context exists: no_context() puts the rasteriser in that state (the Terrain
+  // constructor loads its textures that way), context_create() ends it. A rasteriser used for replays starts with a context.
+  void no_context() { ctx_ = false; }
+  void context_create() override { ctx_ = true; }
+  void viewport(int32_t x, int32_t y, int32_t w, int32_t h) override;
+  void matrix_mode(uint32_t mode) override;
+  void ortho(double l, double r, double b, double t, double n, double f) override;
+  void front_face(uint32_t mode) override;
+  void light(uint32_t light, uint32_t pname, const float *v) override;     // GL_LIGHT0; pname AMBIENT / DIFFUSE / SPECULAR / POSITION
+  void material(uint32_t face, uint32_t pname, const float *v) override;   // GL_SPECULAR only (the render path sets nothing else)
+  void material_shininess(uint32_t face, int32_t s) override;
+  bool gen_textures(int32_t n, uint32_t *names) override;                 // sequential names from 1, like the original's driver
+  void delete_textures(int32_t n, const uint32_t *names) override;
+  void tex_parameteri(uint32_t target, uint32_t pname, int32_t v) override;
+  void tex_parameterf(uint32_t target, uint32_t pname, float v) override;
+  void tex_envi(uint32_t target, uint32_t pname, int32_t v) override;      // only target GL_TEXTURE_ENV (0x2300) takes effect
+  void tex_image2d(uint32_t target, int32_t level, int32_t internal, int32_t w, int32_t h, int32_t border, uint32_t format, uint32_t type,
+                   const uint8_t *data) override;                           // GL_RGB / GL_RGBA, unsigned byte, level 0
   void normal3f(float x, float y, float z);
   void color4f(float r, float g, float b, float a);   // the current colour (used when lighting is off)
-  void tex_image2d(uint32_t width, uint32_t height, uint32_t format, const uint8_t *data);   // GL_RGB / GL_RGBA, unsigned byte, level 0
-  void delete_textures(const uint32_t *ids, int n);
   void set_arrays(const float *vertices, size_t n_vertices, const float *normals, size_t n_normals);
 
   // ---- recorded streams ----
@@ -111,6 +118,11 @@ class GlRaster : public GlSink {
   struct Mat {
     double m[16];         // column-major
   };
+
+  void tex_param_(uint32_t pname, uint32_t value);
+  void tex_env_(uint32_t target, uint32_t pname, uint32_t value);
+  bool ctx_ = true;
+  uint32_t next_name_ = 1;
 
   int w_, h_;
   std::vector<uint16_t> fb_;

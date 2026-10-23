@@ -235,9 +235,11 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     - Writing to the 16-bit RGB555 surface: out = floor(c * 31 / 255 + (k + 0.5) / 16) per channel, k from the 4x4 ordered-dither matrix
       {15,7,13,5 / 3,11,1,9 / 12,4,14,6 / 0,8,2,10} indexed by (window y & 3, x & 3), the same for R, G, B; fitted from the pre-quantisation
       colours (0.5 % residual; 31/256 or a 0.1 % scale error multiplies the errors by 3 to 9; 8-bit rounding of any intermediate is wrong).
-    - Eight RGBA path textures are uploaded to ONE texture object, 0xcccccccc (the original binds an uninitialised id, the debug stack fill),
-      so every path band and corner overlay uses the last one uploaded; their filters come from glTexParameterf with float values
-      (9728.0 = GL_NEAREST), which the replay must honour.
+    - The eight RGBA path textures (LoadTGA) set their filters with glTexParameterf, the values arriving as floats (9729.0 =
+      0x46180400 = GL_LINEAR for both minification and magnification); a replay that drops glTexParameterf leaves them at the GL
+      defaults and draws every path band wrongly. (An earlier version of this note read 0x46180400 as GL_NEAREST and claimed the
+      eight textures share one object 0xcccccccc: that id belongs to the PRE-context load of the Terrain constructor, see section 12;
+      the passes bind ordinary names 0x1ff..0x206.)
     - A bound texture object with no image (id 0: type-7 tiles whose rotated texture slots were never loaded) is incomplete: OpenGL draws it
       untextured, the fragment being the lit colour (the pale diamonds of the fuzzed passes).
     - Rest: front face GL_CW, back faces culled, window y = memory row, texture filter chosen per triangle from the texel-per-pixel scale
@@ -290,3 +292,39 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     NEXT for this thread, if the last half percent matters: the origin of the 1 / 256-pixel viewport constant and of the per-triangle y
     residual (a probe with triangles of controlled vertex order and top vertex would separate prestep from setup); the float32 rho
     arithmetic for the rho == 1 case.
+
+12. DONE, the GL setup produced by the port instead of replayed (2026-10-23; port/include/portsim/sim/terrain_gl_setup.h,
+    port/src/sim/terrain_gl_setup.cpp, GlSink setup virtuals in gl_sink.h, tests port/test/test_terrain_gl_setup.py and the setup-driven
+    chain in test_gl_raster.py). What the original's Terrain.dll does before the first frame, reconstructed from its matched sources and the
+    recorder's stream (9,191 calls up to initTerrain's glNormalPointer), now produced from the user's own files through GameFiles:
+    - Terrain::Terrain names the tile types and calls relight() BEFORE any GL context exists: all 518 texture files of the Parkland set
+      are loaded and every GL call is a no-op in the driver. glGenTextures then writes no name, each loader goes on with its uninitialised
+      local (0xcccccccc, the debug build's stack fill: the recorded `glBindTexture 0xde1,0xcccccccc` lines) and the texture table ends up
+      full of 0xcccccccc. 4,120 recorded calls, pure waste.
+    - Terrain::initSystem: wglCreateContext + wglMakeCurrent, initGL (hint, line smooth, texture 2D, lighting, front face CW because
+      the y-flip flag is set, cull face, vertex and normal arrays), initLighting -> rebuild -> loadLighting("ParklandLighting.txt") (the
+      three colour lines after #AMBIENT / #DIFFUSE / #SPECULAR as integer / 255, light 0 from (-0.5, 0.1, -1, 0) rotated 40 degrees about
+      x and 45 about y with the original's quirk that the second component uses the already rotated first, normalised, white specular
+      material, shininess 13), relight again (m_texturesLoaded is set, so reloadTextures first: 925 glDeleteTextures of nine names each
+      over the whole 0x25 x 0x19 table, still full of 0xcccccccc, then the same 518 loads with a context: names 1..518), resize(800, 600)
+      (viewport, orthographic extent 1767 x 1325 halved with the original's arithmetic shift, y flipped).
+    - Terrain::initTerrain: glVertexPointer / glNormalPointer (the buildArrays step is state, not GL, and is not ported here).
+    - Terrain::setZoomLevel (levels 4 / 2 / 1 = zoom 0 / 1 / 2): the projection redone from scratch, w and h scaled by 2 or 4.
+    - Light colours: the arrays are float[3] but glLightfv reads four floats; on the original's stack they lie specular, diffuse, ambient,
+      so each fourth float is the first of the next array and the ambient's is garbage that differs from run to run (set to 0 here,
+      masked in the comparison); it does not reach a pixel.
+    EVIDENCE. The port's 9,191 calls equal the recorded ones line for line (pointers, context handles and the ambient w dropped), down
+    to the light direction bits, all 1,036 texture hashes (the recorder's FNV of the bytes the loaders pass to glTexImage2D) and the 925
+    deletes with their 0xcccccccc names; the texture table the setup leaves equals the one in a snapshot of the original's Terrain.dll image
+    (518 distinct names). Controls: one flipped byte in one texture, an edited lighting file and a missing texture file each change the
+    stream; an unmodified copy of the files does not. END TO END, with no recorded GL state at all: the port's setup drives GlRaster
+    (which now ignores calls without a context and hands out names 1, 2, 3 ... like the original's driver), its table feeds the renderer,
+    and Terrain::render draws each snapshot over the snapshot's Terrain object and arrays: all 31 Terrain::render passes meet the frame
+    criterion (zoom 1 and 2 passes through setZoomLevel); a control with the lighting file edited (ambient 200 -> 60) breaks it.
+    What still comes from the recording in that chain: the Terrain object (tiles, faces) and the vertex / normal arrays, i.e. the state side
+    of Terrain.dll, and the starting back buffer; the texture-coordinate and side-normal tables and the screen scale are still read from the
+    snapshot (the screen scale is also produced by the setup, 38.682186, but the renderer's globals take the snapshot's value).
+    Not covered: courses other than Parkland (Desert / Tropical / Links textures and lighting go through the same code; their files were
+    not recorded), mip-mapped loads and 1-D textures (the loader throws MissingResource: no call site uses them), loadNewCourseType.
+    NEXT: the state side (the Terrain object: tiles, faces, vertex / normal arrays, buildArrays, setType, elevateCorner, layPath, setWall),
+    then localRender and the draw list, then the overlay drawing.

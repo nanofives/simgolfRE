@@ -140,19 +140,19 @@ void GlRaster::disable(uint32_t cap) {
 }
 void GlRaster::front_face(uint32_t mode) { front_ = mode; }
 void GlRaster::blend_func(uint32_t src, uint32_t dst) { blend_src_ = src; blend_dst_ = dst; }
-void GlRaster::tex_parameter(uint32_t pname, uint32_t value) {
+void GlRaster::tex_param_(uint32_t pname, uint32_t value) {
   Tex &t = textures_[bound_];
   if (pname == 0x2800) t.mag = value;
   else if (pname == 0x2801) t.min = value;
   else if (pname == 0x2802) t.wrap_s = value;
   else if (pname == 0x2803) t.wrap_t = value;
 }
-void GlRaster::tex_env(uint32_t target, uint32_t pname, uint32_t value) {
+void GlRaster::tex_env_(uint32_t target, uint32_t pname, uint32_t value) {
   // glTexEnvi(GL_TEXTURE_2D, ...) as the original calls it is GL_INVALID_ENUM and changes nothing: the mode stays GL_MODULATE
   if (target == 0x2300 && pname == 0x2200) env_mode_ = value;
 }
 void GlRaster::light(uint32_t light, uint32_t pname, const float *v) {
-  if (light != 0x4000) return;
+  if (!ctx_ || light != 0x4000) return;
   if (pname == 0x1200) std::memcpy(light_[0], v, 16);
   else if (pname == 0x1201) std::memcpy(light_[1], v, 16);
   else if (pname == 0x1202) std::memcpy(light_[2], v, 16);
@@ -161,13 +161,31 @@ void GlRaster::light(uint32_t light, uint32_t pname, const float *v) {
     for (int i = 0; i < 4; ++i) light_[3][i] = static_cast<float>(m[i] * v[0] + m[4 + i] * v[1] + m[8 + i] * v[2] + m[12 + i] * v[3]);
   }
 }
-void GlRaster::material(uint32_t pname, const float *v) {
-  if (pname == 0x1202) std::memcpy(mat_spec_, v, 16);
+void GlRaster::material(uint32_t, uint32_t pname, const float *v) {
+  if (ctx_ && pname == 0x1202) std::memcpy(mat_spec_, v, 16);
 }
-void GlRaster::material_shininess(int32_t sh) { shininess_ = static_cast<float>(sh); }
+void GlRaster::material_shininess(uint32_t, int32_t sh) {
+  if (ctx_) shininess_ = static_cast<float>(sh);
+}
+void GlRaster::tex_parameteri(uint32_t, uint32_t pname, int32_t v) {
+  if (ctx_) tex_param_(pname, static_cast<uint32_t>(v));
+}
+void GlRaster::tex_parameterf(uint32_t, uint32_t pname, float v) {
+  if (ctx_) tex_param_(pname, static_cast<uint32_t>(v));   // the filters arrive as floats
+}
+void GlRaster::tex_envi(uint32_t target, uint32_t pname, int32_t v) {
+  if (ctx_) tex_env_(target, pname, static_cast<uint32_t>(v));
+}
+bool GlRaster::gen_textures(int32_t n, uint32_t *names) {
+  if (!ctx_) return false;
+  for (int32_t i = 0; i < n; ++i) names[i] = next_name_++;
+  return true;
+}
 void GlRaster::color4f(float r, float g, float b, float a) { cur_c_[0] = r; cur_c_[1] = g; cur_c_[2] = b; cur_c_[3] = a; }
 void GlRaster::normal3f(float x, float y, float z) { cur_n_[0] = x; cur_n_[1] = y; cur_n_[2] = z; }
-void GlRaster::tex_image2d(uint32_t width, uint32_t height, uint32_t format, const uint8_t *data) {
+void GlRaster::tex_image2d(uint32_t, int32_t level, int32_t, int32_t w, int32_t h, int32_t, uint32_t format, uint32_t, const uint8_t *data) {
+  if (!ctx_ || level != 0 || w <= 0 || h <= 0 || !data) return;
+  const uint32_t width = static_cast<uint32_t>(w), height = static_cast<uint32_t>(h);
   Tex &t = textures_[bound_];
   t.w = width;
   t.h = height;
@@ -175,10 +193,13 @@ void GlRaster::tex_image2d(uint32_t width, uint32_t height, uint32_t format, con
   const size_t n = static_cast<size_t>(width) * height * (format == kGlRgba ? 4 : 3);
   t.data.assign(data, data + n);
 }
-void GlRaster::delete_textures(const uint32_t *ids, int n) {
+void GlRaster::delete_textures(int32_t n, const uint32_t *ids) {
+  if (!ctx_) return;
   for (int i = 0; i < n; ++i) textures_.erase(ids[i]);
 }
-void GlRaster::bind_texture(uint32_t, uint32_t id) { bound_ = id; }
+void GlRaster::bind_texture(uint32_t, uint32_t id) {
+  if (ctx_) bound_ = id;
+}
 void GlRaster::set_arrays(const float *v, size_t nv, const float *n, size_t nn) {
   varr_.assign(v, v + nv * 3);
   narr_.assign(n, n + nn * 3);
@@ -483,12 +504,12 @@ bool GlRaster::exec_line(const std::string &line) {
   for (size_t k = 0; k < 2 && k < vbits.size(); ++k) f2[k] = bits_f(vbits[k]);
   float f4[4] = {0, 0, 0, 0};
   for (size_t k = 0; k < 4 && k < vbits.size(); ++k) f4[k] = bits_f(vbits[k]);
-  if (name == "glMaterialfv") { material(A(1), f4); return true; }
-  if (name == "glMateriali") { material_shininess(static_cast<int32_t>(A(2))); return true; }
+  if (name == "glMaterialfv") { material(A(0), A(1), f4); return true; }
+  if (name == "glMateriali") { material_shininess(A(0), static_cast<int32_t>(A(2))); return true; }
   if (name == "glLightfv") { light(A(0), A(1), f4); return true; }
   if (name == "glNormal3fv") { normal3fv(f3); return true; }
   if (name == "glNormal3f") { normal3f(F(0), F(1), F(2)); return true; }
-  if (name == "glTexParameterf") { tex_parameter(A(1), static_cast<uint32_t>(F(2))); return true; }   // the filter values arrive as floats
+  if (name == "glTexParameterf") { tex_parameterf(A(0), A(1), F(2)); return true; }
   if (name == "glEnableClientState" || name == "glHint" || name == "glGenTextures" ||
       name == "glVertexPointer" || name == "glNormalPointer" || name == "glLineWidth")
     return true;
@@ -499,14 +520,15 @@ bool GlRaster::exec_line(const std::string &line) {
   else if (name == "glVertex3fv") vertex3fv(f3);
   else if (name == "glTexCoord2fv") tex_coord2fv(f2);
   else if (name == "glArrayElement") array_element(static_cast<int32_t>(A(0)));
-  else if (name == "glTexParameteri") tex_parameter(A(1), A(2));
-  else if (name == "glTexEnvi") tex_env(A(0), A(1), A(2));
-  else if (name == "glDeleteTextures") delete_textures(ids.data(), static_cast<int>(ids.size()));
+  else if (name == "glTexParameteri") tex_parameteri(A(0), A(1), static_cast<int32_t>(A(2)));
+  else if (name == "glTexEnvi") tex_envi(A(0), A(1), static_cast<int32_t>(A(2)));
+  else if (name == "glDeleteTextures") delete_textures(static_cast<int32_t>(ids.size()), ids.data());
   else if (name == "glBindTexture") bind_texture(A(0), A(1));
   else if (name == "glTexImage2D") {
     const auto it = tex_bytes_.find(tex);
     if (it == tex_bytes_.end()) return true;   // a pre-context upload the recorder has no bytes for
-    tex_image2d(A(3), A(4), A(6), it->second.data());
+    tex_image2d(A(0), static_cast<int32_t>(A(1)), static_cast<int32_t>(A(2)), static_cast<int32_t>(A(3)), static_cast<int32_t>(A(4)),
+                static_cast<int32_t>(A(5)), A(6), A(7), it->second.data());
   }
   else if (name == "glViewport") viewport(static_cast<int32_t>(A(0)), static_cast<int32_t>(A(1)), static_cast<int32_t>(A(2)), static_cast<int32_t>(A(3)));
   else if (name == "glScalef") { Mat r; std::memset(r.m, 0, sizeof r.m); r.m[0] = F(0); r.m[5] = F(1); r.m[10] = F(2); r.m[15] = 1.0; mul(r); }

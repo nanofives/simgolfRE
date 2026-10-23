@@ -127,6 +127,47 @@ def run_chain(lib, setup: Setup, step: str, patch=None):
         dll.sg_raster_free(r)
 
 
+def run_chain_from_setup(lib, setup: Setup, step: str, install, patch=None):
+    """The chain with NO recorded state: the port's own GL setup (constructor texture load, initSystem, initTerrain) from the user's
+    files drives the rasteriser, its texture table feeds the renderer, then Terrain::render draws the pass over the snapshot's Terrain
+    object. Only the Terrain object, the vertex / normal arrays and the starting buffer come from the snapshot."""
+    dll = lib.dll
+    bind(dll)
+    G.bind(dll)
+    dll.sg_gl_render_to_raster.restype = C.c_int
+    dll.sg_gl_render_to_raster.argtypes = [C.c_void_p, C.c_void_p, C.c_int32, C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint32]
+    dll.sg_gl_setup_to_raster.restype = C.c_int
+    dll.sg_gl_setup_to_raster.argtypes = [C.c_void_p, C.c_void_p, C.c_int32, C.POINTER(C.c_uint32)]
+    snap = G.Snap(setup.root, step)
+    d = setup.root / "snaps" / step
+    r = dll.sg_raster_new(W, H)
+    try:
+        with lib.state() as st:
+            st.files_root(str(install))
+            table = (C.c_uint32 * G.N_TEXTURES)()
+            zoom = int.from_bytes(snap.tobj[0x1C:0x20], "little", signed=True)   # Terrain +0x1c: the zoom the pass ran at
+            code = dll.sg_gl_setup_to_raster(st.ctx, r, zoom, table)
+            if code:
+                raise RuntimeError(f"sg_gl_setup_to_raster {code}")
+            keep = G.load(lib, st, snap, textures=list(table))  # noqa: F841
+            pre = (d / "dib_pre.bin").read_bytes()
+            post = np.frombuffer((d / "dib_post.bin").read_bytes(), dtype="<u2")
+            dll.sg_raster_set_pixels(r, pre, W * H)
+            if patch:
+                patch(r, dll)
+            a = [snap.meta.get(f"entry_a{i}", 0) for i in range(3)]
+            code = dll.sg_gl_render_to_raster(st.ctx, r, snap.kind, snap.terrain, a[0], a[1], a[2])
+            if code:
+                raise RuntimeError(f"sg_gl_render_to_raster {code}")
+            buf = C.create_string_buffer(W * H * 2)
+            dll.sg_raster_get_pixels(r, buf, W * H * 2)
+            stt = (C.c_int64 * 5)()
+            dll.sg_raster_stats(r, stt)
+            return post, np.frombuffer(buf.raw, dtype="<u2"), list(stt), np.frombuffer(pre, dtype="<u2")
+    finally:
+        dll.sg_raster_free(r)
+
+
 def report(post, got, pre) -> dict:
     diff = post != got
     changed = post != pre

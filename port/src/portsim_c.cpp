@@ -14,6 +14,7 @@
 #include "portsim/state_hash.h"
 #include "portsim/sim/gl_raster.h"
 #include "portsim/sim/gl_sink.h"
+#include "portsim/sim/terrain_gl_setup.h"
 #include "portsim/sim/terrain_render.h"
 #include "portsim/sim/tick.h"
 
@@ -453,6 +454,57 @@ int sg_gl_render_to_raster(sg_ctx *ctx, sg_raster *rast, int32_t entry, uint32_t
   } catch (...) {
     return SG_E_EXCEPTION;
   }
+  return SG_OK;
+}
+
+int sg_gl_setup(sg_ctx *ctx, char *out, size_t cap, size_t *len, uint32_t *textures_out) {
+  if (!ctx || !out || !len || cap == 0) return SG_E_ARG;
+  *len = 0;
+  portsim::gl::GlStreamSink sink;
+  portsim::TerrainGlState st;
+  try {
+    portsim::terrain_gl_construct(ctx->ctx, sink, st);
+    portsim::terrain_gl_init_system(ctx->ctx, sink, st, 800, 600, true);
+    portsim::terrain_gl_init_terrain(sink);
+  } catch (const portsim::Fault &f) {
+    ctx->run_detail = "fault at va " + std::to_string(f.va);
+    return SG_E_FAULT;
+  } catch (const portsim::MissingResource &) {
+    return SG_E_NO_RESOURCE;
+  } catch (const portsim::NoReturn &) {
+    return SG_E_NO_RETURN;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  if (textures_out) std::memcpy(textures_out, st.textures.data(), st.textures.size() * 4);
+  *len = sink.text.size();
+  if (sink.text.size() + 1 > cap) return SG_E_ARG;
+  std::memcpy(out, sink.text.data(), sink.text.size());
+  out[sink.text.size()] = 0;
+  return SG_OK;
+}
+
+int sg_gl_setup_to_raster(sg_ctx *ctx, sg_raster *rast, int32_t zoom, uint32_t *textures_out) {
+  if (!ctx || !rast) return SG_E_ARG;
+  portsim::TerrainGlState st;
+  try {
+    rast->r.no_context();   // the Terrain constructor runs before any context exists
+    portsim::terrain_gl_construct(ctx->ctx, rast->r, st);
+    portsim::terrain_gl_init_system(ctx->ctx, rast->r, st, 800, 600, true);
+    portsim::terrain_gl_init_terrain(rast->r);
+    if (zoom == 1) portsim::terrain_gl_set_zoom_level(rast->r, st, 2);   // the exe's setZoomLevel(2) / (1) after a zoom key
+    else if (zoom == 2) portsim::terrain_gl_set_zoom_level(rast->r, st, 1);
+  } catch (const portsim::Fault &f) {
+    ctx->run_detail = "fault at va " + std::to_string(f.va);
+    return SG_E_FAULT;
+  } catch (const portsim::MissingResource &) {
+    return SG_E_NO_RESOURCE;
+  } catch (const portsim::NoReturn &) {
+    return SG_E_NO_RETURN;
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  if (textures_out) std::memcpy(textures_out, st.textures.data(), st.textures.size() * 4);
   return SG_OK;
 }
 

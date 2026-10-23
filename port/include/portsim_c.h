@@ -177,6 +177,13 @@ SG_API int sg_gl_set_globals(sg_ctx *ctx, const sg_gl_globals *g);
 SG_API int sg_gl_render(sg_ctx *ctx, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2, char *out,
                         size_t cap, size_t *len);
 SG_API int32_t sg_gl_view_index(sg_ctx *ctx);
+/* The GL setup of Terrain.dll produced by the port from the context's game files (portsim/sim/terrain_gl_setup.h): the Terrain
+   constructor's texture load without a context, initSystem (800 x 600, display surface, y flipped), initTerrain. The calls come
+   back as text (portsim/sim/gl_sink.h); textures_out (may be NULL) receives the texture table, 0x25 * 0x19 * 9 names. */
+SG_API int sg_gl_setup(sg_ctx *ctx, char *out, size_t cap, size_t *len, uint32_t *textures_out);
+typedef struct sg_raster sg_raster;
+/* the same setup with the rasteriser as the sink (its state starts with no context, like the original's constructor) */
+SG_API int sg_gl_setup_to_raster(sg_ctx *ctx, sg_raster *r, int32_t zoom, uint32_t *textures_out);   /* zoom 0 / 1 / 2: setZoomLevel after */
 typedef struct sg_raster sg_raster;
 /* the same render entry, with the rasteriser as the sink: the port's Terrain::render drives sg_raster directly (its state
    already set up with sg_raster_exec, its arrays taken from sg_gl_set_globals) */
