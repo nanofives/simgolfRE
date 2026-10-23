@@ -212,6 +212,16 @@ SG_API int sg_ts_set_course_type(sg_ctx *ctx, int32_t type);
 SG_API int sg_ts_dll_begin(sg_ctx *ctx, uint32_t terrain);
 SG_API int sg_ts_call(sg_ctx *ctx, const char *name, uint32_t self, const uint32_t *args, const int32_t *table, int32_t n, uint32_t *ret);
 SG_API int32_t sg_ts_view_index(sg_ctx *ctx);
+/* LiveTerrain (portsim/sim/terrain_live.h): the context's TerrainApi becomes the port's own Terrain.dll state, so a run's exe-side calls
+   build the object (at `va`, 0 = a free range). snap_after: call counts after which the state is copied. The log has one line per
+   call in re/frida/js/terrain_calls.js's form; sg_ts_live_snapshot(k < 0) returns the number of copies, else fills copy k (object
+   0x164ad0 bytes, 22,500 x 3 floats each array, 0x25 * 0x19 * 9 texture names) and returns the object size. */
+SG_API int sg_ts_live_attach(sg_ctx *ctx, uint32_t va, const uint32_t *snap_after, int32_t n);
+SG_API int sg_ts_live_detach(sg_ctx *ctx);
+SG_API uint32_t sg_ts_live_object(sg_ctx *ctx);
+SG_API int sg_ts_live_log(sg_ctx *ctx, char *out, size_t cap, size_t *len);
+SG_API int32_t sg_ts_live_snapshot(sg_ctx *ctx, int32_t k, uint8_t *object, float *vertices, float *normals, uint32_t *textures,
+                                   int32_t *view, uint32_t *after);
 /* The renderer's inputs the state side does not produce, set without touching the replayed arrays and table: the constant
    texture-coordinate and side-normal tables of the DLL's data, the wall / fence textures and the screen scale (bits; 0 = the value
    the replayed initSystem set). */

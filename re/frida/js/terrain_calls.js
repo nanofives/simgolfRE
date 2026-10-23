@@ -139,6 +139,13 @@
   rpc.exports.tcInject = function (calls) { injectQ = calls; return true; };
   rpc.exports.tcInjected = function () { return { pending: injectQ !== null, done: injected }; };
   rpc.exports.tcSnap = function (label) { snapReq = label; return true; };
+  // a snapshot NOW, for a caller that knows the game thread is stopped outside every Terrain call (a pinned scenario's checkpoint:
+  // the main thread waits in the clock stub); refused (false) while any thread is inside an exported Terrain method
+  rpc.exports.tcSnapNow = function (label) {
+    for (const t in depth) if (depth[t] > 0) return false;
+    capture(label, 'now');
+    return true;
+  };
   rpc.exports.tcPending = function () { return snapReq !== null; };
   rpc.exports.tcDetail = function (name, n) { detail[name] = n; return true; };
   rpc.exports.tcState = function () { return { seq: seq, logged: log.length, queued: queue.length, counts: counts, installed: done }; };

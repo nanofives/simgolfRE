@@ -419,3 +419,39 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     build the object from the GameState grids, judged against a terrain_calls recording of a pinned scenario (same calls, same
     order); the constant texture-coordinate / side-normal tables from the user's Terrain.dll file; the zoom-2 one-level noise; then
     localRender and the draw list, Desert / Tropical / Links frames, overlay primitives.
+
+14. DONE, the Terrain interface over the port's own Terrain.dll state, judged on pinned scenarios (2026-10-23/24;
+    port/include/portsim/sim/terrain_live.h, port/src/sim/terrain_live.cpp, C ABI sg_ts_live_*, harness port/test/terrainlive.py, tests
+    port/test/test_terrain_live.py, recorder mode re/tools/terrain_calls.py --scenario).
+    - LiveTerrain is a TerrainApi whose Terrain.dll methods go to terrain_dll_call (section 13) on a Terrain object the port builds in the
+      context's address space; getInstance (the boot's static initializer) maps it with operator new's 0xcd fill, so the exe side reads
+      the real tile fields (types, corner levels, wall bytes) where a headless run reads a zeroed stand-in. The engine services of the
+      interface (input pump, window paint, blits, operator new for the render list) are a headless run's (tick.h make_headless_terrain).
+      initSystem gets a nonzero DC token, since the headless engine has no display surface but the port's rasteriser is one. Every call is
+      logged in the recorder's line form, and copies of the state are kept after given call counts.
+    - TerrainApi gained reset_terrain (default 0, so the recording fake and the headless runs are unchanged): refreshTerrain
+      (re/analysis/terrain/00449520) calls Terrain::resetTerrain with ecx = gTerrain before rebuildTerrainGrid, and the port's
+      refresh_terrain had no way to pass it on. The first comparison showed it: the first 12,705 calls of sandbox_basic were equal, then
+      the original reset the grid on the course switch and the port rebuilt over the old one (3,169 extra lowerCorner calls).
+    - RECORDER, PINNED: terrain_calls.py --scenario <name> replays a pinned scenario through scenario_refs.py (instance and boot locks,
+      the family's restore of saves, the pinned schedule under the virtual clock) with terrain_calls.js appended to its agent (the pattern
+      of trace_tool.py); at each checkpoint the main thread waits in the clock stub outside every Terrain call, so the state is copied
+      there (tcSnapNow). The hooked runs are compared with the pinned references: SAME for sandbox_basic (10 checkpoints),
+      course_season (12), cov_k1_terrain (5), cov_b_paths (4), cov_l_bridge (13), cov_k1_river (72) and cov_b_holes18 (6). cov_r_reload
+      differs at its last checkpoint in two hooked runs while a run without the recorder is SAME (U-1078): it is used up to `run_a`.
+    - EVIDENCE: the port boots each scenario on its trace (the boot gate) with LiveTerrain attached. Over those 8 scenarios its 205,008
+      calls of the interface's methods equal the original's line for line (method, tile as tile index, every other argument, the drawn
+      variation of every setType), and at all 124 checkpoints the Terrain object (context handle and draw-list head as zero / nonzero),
+      the 22,500 vertices, the 22,500 normals, the texture table and the view quadrant equal the original's byte for byte; the boot gate
+      still passes (PASS, cov_b_holes18 KNOWN as before). Not compared: the exe's Terrain calls outside the interface, 14,257 drawLine
+      (overlay lines the port's exe side drops) and one stripRender (renderTerrainStrip's, an engine service of the interface). Controls on sandbox_basic: 22 (the exported resetTerrain does nothing), 14 (rand)
+      and 12 (centre min for max) read RED.
+    - INSTALL HYGIENE, found on the way: cov_r_reload's boot gate failed at record 378 with and without LiveTerrain, and with the DLL of
+      22c8abc8 too. The sandbox walks of this phase (gl_corpus.py, terrain_calls.py without --scenario) boot the game in original/, and
+      it had written autosaves and dated saves into original/saved games, which the port's boot runs read as the install, so the load
+      browser listed other files. The folder was restored to log/c3/alt/s36a/pristine (today's files kept in
+      log/p5/terrain/original_saves_backup_20261023) and cov_r_reload passes again; both walk tools now wrap the boot in
+      game.preserve_saves(), which puts the folder back exactly.
+    NEXT: localRender and the draw list (the kind-3 snapshots), the constant texture-coordinate / side-normal tables from the user's
+    Terrain.dll file, the zoom-2 one-level noise (U-1076), and Desert / Tropical / Links frames; then the in-game frame with the terrain
+    drawn by the port behind the 2D layers.

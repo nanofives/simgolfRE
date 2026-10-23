@@ -63,6 +63,13 @@ class TerrainApi {
   // before gameMain. 0 = this implementation has no Terrain object to give (a run from a frame-head image keeps the
   // image's gTerrain).
   virtual uint32_t get_instance() { return 0; }
+  // Terrain::resetTerrain (refreshTerrain, re/analysis/terrain/00449520_refreshTerrain.md: ecx = gTerrain, no NULL test, before
+  // rebuildTerrainGrid). Phase 5 step 3 added it (LiveTerrain needs it; the original's call log has it on every course switch);
+  // implementations without Terrain state return 0 like the stand-ins' other void methods.
+  virtual uint32_t reset_terrain(uint32_t self) {
+    (void)self;
+    return 0;
+  }
 };
 
 // The TerrainApi of a context (not owned); MissingResource when none is attached.

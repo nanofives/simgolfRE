@@ -17,6 +17,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
 #include "portsim/sim/course.h"
+#include "portsim/sim/terrain_api.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/loaders.h"
 #include "portsim/sim/text.h"
@@ -195,6 +196,7 @@ Ret peer_optional(Ctx &ctx, const char *name, std::initializer_list<uint32_t> ar
 // Returns what rebuildTerrainGrid returns. mainLoop's own call sites keep dropping it (tick.cpp kDrops).
 int32_t refresh_terrain(Ctx &ctx) {
   const int mode = SG_NEGCTL(g_negctl_refresh_terrain);
+  if (has_terrain_api(ctx)) terrain_api(ctx).reset_terrain(ctx.gs().gTerrain);
   const Ret r = peer(ctx, "rebuildTerrainGrid", {});
   if (mode != 1) ctx.gs().g_terrain820f2a[0] = 1;
   return static_cast<int32_t>(r.eax);

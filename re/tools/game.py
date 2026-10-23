@@ -59,6 +59,33 @@ def _enum_windows(pid: int, cls: str | None = None):
     return out
 
 
+class preserve_saves:
+    """`with preserve_saves(game_dir):` copies <game_dir>/saved games before a boot and puts it back exactly afterwards (files the
+    run wrote are removed, changed ones restored). Tools that boot the game in original/ outside scenario_refs.py (which restores
+    the pinned saves itself) must use it: the port's boot runs read original/ as the install, and saves a sandbox walk left there
+    (autosaves, dated saves) changed what cov_r_reload's load browser listed (2026-10-23, U-1078's investigation)."""
+
+    def __init__(self, game_dir=None):
+        self.dir = pathlib.Path(game_dir or os.environ.get("SIMGOLF_GAME_DIR") or pathlib.Path(__file__).resolve().parents[2] / "original") / "saved games"
+        self.saved: dict[str, bytes] = {}
+
+    def __enter__(self):
+        self.saved = {p.name: p.read_bytes() for p in self.dir.glob("*") if p.is_file()} if self.dir.is_dir() else {}
+        return self
+
+    def __exit__(self, *exc):
+        if not self.dir.is_dir():
+            return False
+        for p in self.dir.glob("*"):
+            if p.is_file() and p.name not in self.saved:
+                p.unlink()
+        for name, data in self.saved.items():
+            p = self.dir / name
+            if not p.exists() or p.read_bytes() != data:
+                p.write_bytes(data)
+        return False
+
+
 def purge_frida_temp(min_age_s: float = 600) -> tuple[int, int]:
     """Delete leaked Frida agent dirs (%TEMP%\\frida-<hash>, 22-50 MB each). frida-core unpacks one per Python process
     and removes it only on a clean exit, so every runner killed on a timeout leaks one; on 2026-10-12 6,461 of them

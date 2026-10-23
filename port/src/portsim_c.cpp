@@ -16,6 +16,7 @@
 #include "portsim/sim/gl_sink.h"
 #include "portsim/sim/terrain_gl_setup.h"
 #include "portsim/sim/terrain_render.h"
+#include "portsim/sim/terrain_live.h"
 #include "portsim/sim/terrain_state.h"
 #include "portsim/sim/tick.h"
 
@@ -42,6 +43,7 @@ struct sg_ctx {
   bool boot_next = false;                            // phase 4: the next sg_run_frames is sg_run_boot's
   portsim::TerrainGlobals gl_globals;                // phase 5: the Terrain.dll statics of the render path (sg_gl_set_globals)
   std::unique_ptr<portsim::TerrainDll> terrain_dll;  // phase 5: the state side driven call by call (sg_ts_call)
+  std::unique_ptr<portsim::LiveTerrain> live;        // phase 5: the TerrainApi over that state (sg_ts_live_attach)
   sg_ctx() { ctx.files_ptr = &mem_files; }
 };
 
@@ -596,6 +598,51 @@ int sg_ts_call(sg_ctx *ctx, const char *name, uint32_t self, const uint32_t *arg
 }
 
 int32_t sg_ts_view_index(sg_ctx *ctx) { return ctx ? ctx->gl_globals.view_index : 0; }
+
+int sg_ts_live_attach(sg_ctx *ctx, uint32_t va, const uint32_t *snap_after, int32_t n) {
+  if (!ctx || (n > 0 && !snap_after)) return SG_E_ARG;
+  if (ctx->live) portsim::set_terrain_api(ctx->ctx, nullptr);
+  ctx->live = std::make_unique<portsim::LiveTerrain>(ctx->ctx, va,
+                                                     std::vector<uint32_t>(snap_after, snap_after + (n > 0 ? n : 0)));
+  portsim::set_terrain_api(ctx->ctx, ctx->live.get());
+  return SG_OK;
+}
+
+int sg_ts_live_detach(sg_ctx *ctx) {
+  if (!ctx) return SG_E_ARG;
+  if (ctx->live) portsim::set_terrain_api(ctx->ctx, nullptr);
+  ctx->live.reset();
+  return SG_OK;
+}
+
+uint32_t sg_ts_live_object(sg_ctx *ctx) { return ctx && ctx->live ? ctx->live->object_va() : 0; }
+
+int sg_ts_live_log(sg_ctx *ctx, char *out, size_t cap, size_t *len) {
+  if (!ctx || !ctx->live || !len) return SG_E_ARG;
+  std::string s;
+  for (const std::string &l : ctx->live->log()) s += l + "\n";
+  *len = s.size();
+  if (!out || s.size() + 1 > cap) return SG_E_ARG;
+  std::memcpy(out, s.data(), s.size());
+  out[s.size()] = 0;
+  return SG_OK;
+}
+
+int32_t sg_ts_live_snapshot(sg_ctx *ctx, int32_t k, uint8_t *object, float *vertices, float *normals, uint32_t *textures,
+                            int32_t *view, uint32_t *after) {
+  if (!ctx || !ctx->live) return -1;
+  const auto &v = ctx->live->snapshots();
+  if (k < 0) return static_cast<int32_t>(v.size());
+  if (static_cast<size_t>(k) >= v.size()) return -1;
+  const auto &s = v[static_cast<size_t>(k)];
+  if (object) std::memcpy(object, s.object.data(), s.object.size());
+  if (vertices) std::memcpy(vertices, s.vertices.data(), s.vertices.size() * 4);
+  if (normals) std::memcpy(normals, s.normals.data(), s.normals.size() * 4);
+  if (textures) std::memcpy(textures, s.textures.data(), s.textures.size() * 4);
+  if (view) *view = s.view_index;
+  if (after) *after = s.after;
+  return static_cast<int32_t>(s.object.size());
+}
 
 int sg_ts_set_render_data(sg_ctx *ctx, const float *tex_coords, uint32_t n_tex_coords, const float *side_normals, uint32_t wall,
                           uint32_t fence0, uint32_t fence1, uint32_t screen_scale_bits) {

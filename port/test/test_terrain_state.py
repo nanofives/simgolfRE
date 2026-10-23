@@ -571,7 +571,7 @@ def test_replay_equals_the_original(lib, corpus, step):
     assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures", "view")), d
 
 
-NEGCTL_REPLAY = tuple(range(1, 22))
+NEGCTL_REPLAY = tuple(range(1, 23))
 
 
 @pytest.mark.parametrize("mode", NEGCTL_REPLAY)

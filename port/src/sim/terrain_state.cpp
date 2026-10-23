@@ -32,6 +32,7 @@ namespace {
 //  16 lowerCorner's type-7 offset 12.0 instead of 13.0             17 setTypeId skips leaveType7
 //  18 enterType7 dirties every neighbour                           19 setWall stores `on != 0` instead of its low byte
 //  20 layPath ignores its direction flag                           21 setViewAngle maps 90 to quadrant 2
+//  22 the exported resetTerrain does nothing
 int32_t g_negctl = 0;
 
 using TileP = Ptr<TerrainTile>;
@@ -869,7 +870,7 @@ uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const st
     return 0;
   }
   if (name == "resetTerrain") {
-    terrain_reset_terrain(ctx, g, self);
+    if (g_negctl != 22) terrain_reset_terrain(ctx, g, self);
     return 0;
   }
   if (name == "loadNewCourseType") {

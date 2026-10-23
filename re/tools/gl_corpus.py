@@ -99,7 +99,7 @@ def main():
     g = game.Game(extra_js=[str(ROOT / "re" / "frida" / "js" / "gl_rec.js")],
                   env={"SIMGOLF_SKIP_INTRO": "1", "SIMGOLF_HOOKS_OFF": "all"})
     g.on_message = c.on_msg
-    with g:
+    with game.preserve_saves(), g:   # leave original/saved games as found (the port boots read it as the install)
         t0 = time.time()
         while not g.hwnd() and time.time() - t0 < 30:
             time.sleep(0.25)

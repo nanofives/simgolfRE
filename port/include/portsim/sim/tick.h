@@ -16,6 +16,7 @@
 #define PORTSIM_SIM_TICK_H
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -69,6 +70,12 @@ FrameExit tick_frame(Ctx &ctx, const FrameInput &in);
 int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint32_t *queued, int32_t n_queued,
                     int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done, std::string *detail,
                     bool boot = false);
+
+// The Terrain.dll side a headless run uses when no TerrainApi is attached (tick.cpp HeadlessTerrain: stand-in objects for what the exe
+// reads, an operator-new arena, the corner-level steps applyTileElevation waits for, the engine services as no-ops). Exposed for a
+// TerrainApi that keeps Terrain.dll's state itself and delegates the engine services (terrain_live.cpp).
+class TerrainApi;
+std::unique_ptr<TerrainApi> make_headless_terrain(Ctx &ctx);
 
 // Per-callee call counts of the frames run on this thread since the last reset (development and notes).
 std::vector<std::pair<std::string, uint64_t>> tick_callee_counts();

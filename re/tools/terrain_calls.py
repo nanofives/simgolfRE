@@ -113,13 +113,92 @@ def save(root: pathlib.Path, s: dict, used: dict) -> str:
     return name
 
 
+def run_pinned(scenario: str, label: str, instance: str | None) -> int:
+    """--scenario: a pinned scenario (re/analysis/data/scenario_refs.json) replayed by re/tools/scenario_refs.py under the virtual
+    clock, with terrain_calls.js appended to its agent (the pattern of re/tools/trace_tool.py). At every checkpoint the main thread
+    waits in the agent's clock stub, outside every Terrain call, so the state is copied there (tcSnapNow, snapshot named after the
+    checkpoint); the log and the copies are fetched before the scenario's last reply. Output log/p5/terrain/<label>/ in the layout
+    of the other recordings (port.test.terraincorpus); the run itself (checkpoints compared with the pinned reference) is
+    log/c3/alt/refs/<scenario>/<label>."""
+    import scenario_refs as R
+    root = OUT / label
+    (root / "snaps").mkdir(parents=True, exist_ok=True)
+    c = Collector()
+    used, names = {}, []
+    js = (ROOT / "re" / "frida" / "js" / "terrain_calls.js").read_text()
+    orig_setup = R.setup
+
+    def install(S):
+        Base = S.Run
+
+        class TerrainRun(Base):
+            def agent_source(self):
+                p = super().agent_source()
+                p.write_text(p.read_text() + chr(10) + js)
+                return p
+
+            def _on_message(self, m, data):
+                pl = m.get("payload") if m.get("type") == "send" else None
+                if isinstance(pl, dict) and "tc" in pl:
+                    c.on_msg(m, data)
+                    return
+                return super()._on_message(m, data)
+
+            def _rec(self):
+                return self.g.scripts[-1].exports_sync
+
+            def take_dump(self, sc, name):
+                if not self._rec().tc_snap_now(name):
+                    print(f"  checkpoint {name}: a Terrain call is in progress, no state copy", flush=True)
+                return super().take_dump(sc, name)
+
+            def post(self, sc, **kw):
+                if "actions" in kw and not kw.get("next"):
+                    # the scenario's last reply: fetch everything while the game still waits
+                    rec = self._rec()
+                    n = rec.tc_take()
+                    t0 = time.time()
+                    while len(c.snaps) < n and time.time() - t0 < 60:
+                        time.sleep(0.05)
+                    rec.tc_dump()
+                    t0 = time.time()
+                    while not c.done and time.time() - t0 < 60:
+                        time.sleep(0.05)
+                return super().post(sc, **kw)
+
+        S.Run = TerrainRun
+
+    def setup(scen, inst):
+        S = orig_setup(scen, inst)
+        install(S)
+        return S
+
+    R.setup = setup
+    a = argparse.Namespace(instance=instance or R.DEFAULT_INSTANCES[0], scenario=scenario, label=label, schedule=None, record=False,
+                           on=None, env=None, stop_after=0, clock_log=0, msg_log=0, trace=None, watch=None)
+    rc = R.cmd_run(a)
+    for s in c.snaps:
+        s["meta"]["where"] = "render"   # saved under the checkpoint's own name
+        names.append(save(root, s, used))
+    lines = [l for ch in c.chunks for l in ch]
+    (root / "calls.txt").write_text(NL.join(lines) + NL)
+    (root / "index.json").write_text(json.dumps({"snaps": names, "calls": len(lines), "scenario": scenario,
+                                                 "run": str(R.REFS / scenario / label), "rc": rc}, indent=1))
+    print(f"{len(lines)} calls, {len(names)} snapshots -> {root} (scenario_refs rc {rc})")
+    return 0 if names and lines and rc == 0 else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--label", required=True)
     ap.add_argument("--settle", type=float, default=1.6)
     ap.add_argument("--inject", action="store_true", help="also inject the calls of INJECT after the scenario")
     ap.add_argument("--frames", action="store_true", help="also save the original's frame of each step (gl_rec.js) under frames/")
+    ap.add_argument("--scenario", help="a pinned scenario replayed by scenario_refs.py instead of the sandbox walk")
+    ap.add_argument("--instance", default=None)
     a = ap.parse_args()
+    if a.scenario:
+        return run_pinned(a.scenario, a.label, a.instance)
     root = OUT / a.label
     root.mkdir(parents=True, exist_ok=True)
     c = Collector()
@@ -134,7 +213,7 @@ def main():
     g.on_message = (lambda m, d: (c.on_msg(m, d), gc.on_msg(m, d))) if gc else c.on_msg
     names = []
     frames = []
-    with g:
+    with game.preserve_saves(), g:   # leave original/saved games as found (the port boots read it as the install)
         t0 = time.time()
         while not g.hwnd() and time.time() - t0 < 30:
             time.sleep(0.25)

@@ -791,6 +791,8 @@ class HeadlessTerrain : public NullTerrain {
 
 }  // namespace tk
 
+std::unique_ptr<TerrainApi> make_headless_terrain(Ctx &ctx) { return std::make_unique<tk::HeadlessTerrain>(ctx); }
+
 // ------------------------------------------------------------------------------------------------ public API
 namespace tk {
 // tick_frame, plus what the frame's cursor / GetAsyncKeyState reads did against its records (filled on every exit)
