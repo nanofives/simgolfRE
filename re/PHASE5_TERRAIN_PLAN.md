@@ -455,3 +455,12 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     NEXT: localRender and the draw list (the kind-3 snapshots), the constant texture-coordinate / side-normal tables from the user's
     Terrain.dll file, the zoom-2 one-level noise (U-1076), and Desert / Tropical / Links frames; then the in-game frame with the terrain
     drawn by the port behind the 2D layers.
+
+15. DONE, Terrain.dll's constant tables from the user's file (2026-10-24; terrain_state.h terrain_load_dll_constants). The side normals
+    (RVA 0x63c40, 96 bytes) and the texture-coordinate table (RVA 0x63ca0, 92 floats) are initialised .data of Terrain.dll (file offset =
+    RVA, no base relocation inside), equal to the running original's bytes in every recording. The port reads them from GameFiles
+    "Terrain.dll" through the PE section table at getInstance and checks each against an FNV-1a-64 (no table bytes in the port); a file
+    with one byte changed is refused (MissingResource), no file leaves them empty. terrain_apply_gl_state also fills the wall / fence
+    textures (entries [0x24] / [0x22] / [0x23][0][0] of the table) and initSystem's screen scale. EVIDENCE: at all 316 replay positions
+    of t1 / t2 / t3 the two tables, the three textures and the scale equal the original's; the t3 chain (15 frames) now takes nothing
+    from the recording but the starting back buffer and gives the same pixels as before.

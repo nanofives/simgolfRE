@@ -8,6 +8,7 @@
 #include <utility>
 #include <cstring>
 
+#include "portsim/gamefiles.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/terrain_gl_setup.h"
 
@@ -125,6 +126,61 @@ int32_t collar_of(const TerrainGlobals &g, int32_t type) {
 }  // namespace
 
 void terrain_state_negctl(int32_t mode) { g_negctl = mode; }
+
+// ------------------------------------------------------------------------------------------------- Terrain.dll constants
+
+namespace {
+struct DllTable {
+  const char *name;
+  uint32_t rva, size;
+  uint64_t fnv;
+};
+// the user's Terrain.dll (the anchored file of re/anchors.json): .data, file offset = RVA, no base relocation inside either table
+const DllTable kSideNormals = {"side_normals", 0x63c40u, 96u, 0x8d2173301ec05d75ull};
+const DllTable kTexCoords = {"tex_coords", 0x63ca0u, 368u, 0x8990157bf2dc3345ull};
+
+uint64_t fnv1a64(const uint8_t *p, size_t n) {
+  uint64_t h = 0xcbf29ce484222325ull;
+  for (size_t i = 0; i < n; ++i) h = (h ^ p[i]) * 0x100000001b3ull;
+  return h;
+}
+uint32_t le32_at(const std::vector<uint8_t> &f, size_t off) {
+  if (off + 4 > f.size()) throw MissingResource{"Terrain.dll: truncated PE headers"};
+  return static_cast<uint32_t>(f[off]) | (static_cast<uint32_t>(f[off + 1]) << 8) | (static_cast<uint32_t>(f[off + 2]) << 16) |
+         (static_cast<uint32_t>(f[off + 3]) << 24);
+}
+// the file offset of an RVA through the section table (the section whose raw data holds it)
+size_t rva_to_offset(const std::vector<uint8_t> &f, uint32_t rva) {
+  const uint32_t pe = le32_at(f, 0x3c);
+  if (le32_at(f, pe) != 0x00004550u) throw MissingResource{"Terrain.dll: not a PE file"};
+  const uint32_t nsec = le32_at(f, pe + 4) >> 16;              // FileHeader.NumberOfSections (high half of the dword at +4)
+  const uint32_t optsz = le32_at(f, pe + 20) & 0xffffu;        // FileHeader.SizeOfOptionalHeader
+  const size_t sec = pe + 24 + optsz;
+  for (uint32_t i = 0; i < nsec; ++i) {
+    const size_t s = sec + 40u * i;
+    const uint32_t va = le32_at(f, s + 12), raw_size = le32_at(f, s + 16), raw_ptr = le32_at(f, s + 20);
+    if (rva >= va && rva - va < raw_size) return raw_ptr + (rva - va);
+  }
+  throw MissingResource{"Terrain.dll: table outside the file's sections"};
+}
+std::vector<float> read_table(const std::vector<uint8_t> &f, const DllTable &t) {
+  const size_t off = rva_to_offset(f, t.rva);
+  if (off + t.size > f.size()) throw MissingResource{"Terrain.dll: truncated table"};
+  if (fnv1a64(f.data() + off, t.size) != t.fnv) throw MissingResource{"Terrain.dll: not the anchored file (a constant table differs)"};
+  std::vector<float> v(t.size / 4);
+  std::memcpy(v.data(), f.data() + off, t.size);
+  return v;
+}
+}  // namespace
+
+bool terrain_load_dll_constants(Ctx &ctx, TerrainGlobals &g) {
+  if (!ctx.files_ptr || !ctx.files().exists("Terrain.dll")) return false;
+  const std::vector<uint8_t> f = ctx.files().read_all("Terrain.dll");
+  const std::vector<float> sn = read_table(f, kSideNormals);
+  g.tex_coords = read_table(f, kTexCoords);
+  std::memcpy(g.side_normals, sn.data(), sizeof g.side_normals);
+  return true;
+}
 
 // ---------------------------------------------------------------------------------------------------------------- tiles
 
@@ -327,6 +383,13 @@ void terrain_apply_gl_state(Ctx &ctx, TerrainGlobals &g, uint32_t terrain, const
   h.field(&TerrainObjectHeader::zoom).set(st.zoom);
   g.textures = st.textures;
   g.course_type = st.course_type;
+  // the wall and fence textures Tile::render binds are entries of the texture table itself (the renderer's operands lie inside it):
+  // [0x24][0][0] the skirt wall, [0x22][0][0] fences of kinds other than 1, [0x23][0][0] kind 1
+  auto entry = [&](int32_t type) { return g.textures.empty() ? 0u : g.textures[static_cast<size_t>(type) * kTerrainTextureVariations * kTerrainTextureSlots]; };
+  g.wall_texture = entry(0x24);
+  g.fence_texture0 = entry(0x22);
+  g.fence_texture1 = entry(0x23);
+  if (st.has_context) g.screen_scale = st.screen_scale;   // initSystem's value for the window size
 }
 
 // --------------------------------------------------------------------------------------------------------------- normals
@@ -850,6 +913,7 @@ uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const st
       terrain_gl_construct(ctx, dll.sink, dll.st);
       terrain_apply_gl_state(ctx, g, dll.terrain, dll.st);
       dll.sink.text.clear();
+      terrain_load_dll_constants(ctx, g);   // the module's constant tables (static data: there before getInstance runs)
       dll.constructed = true;
     }
     return dll.terrain;

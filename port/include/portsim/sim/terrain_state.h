@@ -121,6 +121,12 @@ void terrain_init_terrain(Ctx &ctx, TerrainGlobals &g, uint32_t terrain);
 // Terrain::passCollarInfo(table, n): the collar group per tile type that blending compares.
 void terrain_pass_collar_info(TerrainGlobals &g, const int32_t *table, int32_t n);
 
+// The constant data of Terrain.dll the renderer reads, from the user's own Terrain.dll (GameFiles "Terrain.dll", like ExeConstants
+// for the exe): the side normals (4 x 2 x 3 floats) and the texture-coordinate table (92 floats), initialised .data the module never
+// writes (equal to the running original's bytes in every recording). Descriptors hold the RVA, the size and an FNV-1a-64 of the bytes
+// only. Returns false when the context's files have no Terrain.dll; MissingResource when the file's bytes there differ.
+bool terrain_load_dll_constants(Ctx &ctx, TerrainGlobals &g);
+
 // ---- tiles ----
 uint32_t terrain_tile_at(Ctx &ctx, uint32_t terrain, int32_t x, int32_t y);   // 0 outside the grid
 void tile_reset(Ctx &ctx, uint32_t tile, int32_t x, int32_t y);

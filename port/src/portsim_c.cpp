@@ -1,6 +1,7 @@
 // The portsim C ABI (include/portsim_c.h) over the registry, the context and the object table (phase 2.6, 2026-10-19).
 #include "portsim_c.h"
 
+#include <algorithm>
 #include <cstring>
 
 #include <memory>
@@ -544,6 +545,7 @@ int sg_ts_op(sg_ctx *ctx, const char *op, uint32_t t, int32_t a0, int32_t a1, in
     else if (o == "reset_face_textures") portsim::tile_reset_face_textures(c, g, t);
     else if (o == "edge_kind") r = portsim::tile_edge_kind(c, g, t, static_cast<uint32_t>(a0));
     else if (o == "tile_at") r = static_cast<int32_t>(portsim::terrain_tile_at(c, t, a0, a1));
+    else if (o == "load_dll_constants") r = portsim::terrain_load_dll_constants(c, g) ? 1 : 0;
     else if (o == "gl_setup") {
       portsim::gl::GlStreamSink sink;
       portsim::TerrainGlState st;
@@ -642,6 +644,20 @@ int32_t sg_ts_live_snapshot(sg_ctx *ctx, int32_t k, uint8_t *object, float *vert
   if (view) *view = s.view_index;
   if (after) *after = s.after;
   return static_cast<int32_t>(s.object.size());
+}
+
+int sg_ts_render_data(sg_ctx *ctx, float *tex_coords, uint32_t cap, uint32_t *n_tex_coords, float *side_normals, uint32_t *wall,
+                      uint32_t *fence0, uint32_t *fence1, uint32_t *screen_scale_bits) {
+  if (!ctx) return SG_E_ARG;
+  const portsim::TerrainGlobals &t = ctx->gl_globals;
+  if (n_tex_coords) *n_tex_coords = static_cast<uint32_t>(t.tex_coords.size());
+  if (tex_coords) std::memcpy(tex_coords, t.tex_coords.data(), std::min<size_t>(cap, t.tex_coords.size()) * 4);
+  if (side_normals) std::memcpy(side_normals, t.side_normals, sizeof t.side_normals);
+  if (wall) *wall = t.wall_texture;
+  if (fence0) *fence0 = t.fence_texture0;
+  if (fence1) *fence1 = t.fence_texture1;
+  if (screen_scale_bits) std::memcpy(screen_scale_bits, &t.screen_scale, 4);
+  return SG_OK;
 }
 
 int sg_ts_set_render_data(sg_ctx *ctx, const float *tex_coords, uint32_t n_tex_coords, const float *side_normals, uint32_t wall,

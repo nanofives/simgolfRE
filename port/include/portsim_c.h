@@ -198,6 +198,7 @@ SG_API int sg_gl_negctl(int32_t mode);                    /* deliberately wrong 
  *   calc_all_normals (t = Terrain, a0 = tile)   set_face_texture (t = tile, a0 = type, a1 = face, a2 = piece)
  *   blend (t = tile, a0 = type or -1)   reblend (t = tile)   reset_face_textures (t = tile)   edge_kind (t = tile, a0 = other)
  *   tile_at (t = Terrain, a0 = x, a1 = y)
+ *   load_dll_constants: Terrain.dll's constant tables from the context's files (ret 1, 0 without a Terrain.dll)
  *   gl_setup (t = Terrain, a0 = zoom 0 / 1 / 2): the port's GL setup from the context's files (sg_gl_setup), its results written
  *            into the object and the globals (texture table, type names and counts, flags, window size, zoom, course type)
  * *ret (may be NULL) receives the value the operation returns (0 for void ones). */
@@ -225,6 +226,10 @@ SG_API int32_t sg_ts_live_snapshot(sg_ctx *ctx, int32_t k, uint8_t *object, floa
 /* The renderer's inputs the state side does not produce, set without touching the replayed arrays and table: the constant
    texture-coordinate and side-normal tables of the DLL's data, the wall / fence textures and the screen scale (bits; 0 = the value
    the replayed initSystem set). */
+/* the renderer inputs the state side holds: the texture-coordinate table (up to cap floats; *n = its length), the side normals
+   (24 floats), the wall / fence textures and the screen scale's bits */
+SG_API int sg_ts_render_data(sg_ctx *ctx, float *tex_coords, uint32_t cap, uint32_t *n_tex_coords, float *side_normals,
+                             uint32_t *wall, uint32_t *fence0, uint32_t *fence1, uint32_t *screen_scale_bits);
 SG_API int sg_ts_set_render_data(sg_ctx *ctx, const float *tex_coords, uint32_t n_tex_coords, const float *side_normals,
                                  uint32_t wall, uint32_t fence0, uint32_t fence1, uint32_t screen_scale_bits);
 SG_API int sg_ts_negctl(int32_t mode);                                               /* previous mode */

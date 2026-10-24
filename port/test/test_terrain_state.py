@@ -370,6 +370,8 @@ def bind_dll(dll):
     dll.sg_ts_call.argtypes = [P, C.c_char_p, U32, C.POINTER(U32), C.POINTER(I32), I32, C.POINTER(U32)]
     dll.sg_ts_view_index.restype, dll.sg_ts_view_index.argtypes = I32, [P]
     dll.sg_run_frames_detail.restype, dll.sg_run_frames_detail.argtypes = C.c_char_p, [P]
+    dll.sg_ts_render_data.restype = C.c_int
+    dll.sg_ts_render_data.argtypes = [P, P, U32, C.POINTER(U32), P, C.POINTER(U32), C.POINTER(U32), C.POINTER(U32), C.POINTER(U32)]
 
 
 def state_diff(lib, st, obj, snap) -> dict:
@@ -388,7 +390,15 @@ def state_diff(lib, st, obj, snap) -> dict:
     stex = np.frombuffer(snap.tdata, "<u4", G.N_TEXTURES, G.RVA["textures"] - G.DATA_RVA0)
     view = struct.unpack_from("<i", snap.tdata, G.RVA["view"] - G.DATA_RVA0)[0]
     tiles = sorted({(int(o) - TILES) // TILE for o in bad if TILES <= o < TILES + 2500 * TILE})
-    return {"bytes": len(bad), "first": int(bad[0]) if len(bad) else -1, "tiles": len(tiles), "first_tile": tiles[0] if tiles else -1,
+    # the renderer's other inputs: the constant tables (read from original/Terrain.dll by getInstance), the wall / fence textures
+    # (entries of the table), the screen scale (initSystem's)
+    tc, ntc, side = (C.c_float * 256)(), C.c_uint32(), (C.c_float * 24)()
+    wall, f0, f1, scale = C.c_uint32(), C.c_uint32(), C.c_uint32(), C.c_uint32()
+    assert lib.dll.sg_ts_render_data(st.ctx, tc, 256, C.byref(ntc), side, C.byref(wall), C.byref(f0), C.byref(f1), C.byref(scale)) == 0
+    rd = lambda k, n: snap.tdata[G.RVA[k] - G.DATA_RVA0:G.RVA[k] - G.DATA_RVA0 + n]
+    render = int(bytes(tc)[:4 * ntc.value] != rd("tex_coords", 4 * G.N_TEXCOORD_FLOATS)) + int(bytes(side) != rd("side_normals", 96))
+    render += sum(int(v.value != snap.u32(G.RVA[k])) for v, k in ((wall, "wall"), (f0, "fence0"), (f1, "fence1"), (scale, "scale")))
+    return {"render": render, "bytes": len(bad), "first": int(bad[0]) if len(bad) else -1, "tiles": len(tiles), "first_tile": tiles[0] if tiles else -1,
             "handles": handles, "vertices": int((v != sv).any(axis=1).sum()), "normals": int((n != sn).any(axis=1).sum()),
             "textures": int((np.frombuffer(bytes(tex), "<u4") != stex).sum()), "view": int(lib.dll.sg_ts_view_index(st.ctx) != view)}
 
@@ -455,8 +465,8 @@ def replay(lib, root, names, stop_on_error=True) -> dict:
 # Corpus t3 (terrain_calls.py --frames --inject): the call log plus, after each scenario step, the original's frame of the last
 # Terrain::render pass (gl_corpus form under frames/). The chain: the log replayed up to that render call builds the Terrain object,
 # its arrays and texture table; the port's GL setup from original/ sets up the rasteriser at the replayed zoom; the port's
-# Terrain::render draws over the original's starting back buffer; the result must meet test_gl_raster's frame criterion. Inputs
-# still taken from the recording: the starting back buffer, the DLL's constant texture-coordinate and side-normal tables.
+# Terrain::render draws over the original's starting back buffer; the result must meet test_gl_raster's frame criterion. The only
+# input still taken from the recording is the starting back buffer (the constant tables come from original/Terrain.dll).
 from port.test import glraster as R  # noqa: E402
 
 T3 = TC.CORPUS / "t3"
@@ -511,9 +521,6 @@ def chain(lib, root, names, extra=None) -> dict:
         snap = G.Snap(root / "frames", name)
         tex = (C.c_uint32 * G.N_TEXTURES)()
         assert dll.sg_ts_textures(st.ctx, tex, G.N_TEXTURES) == 0
-        tc = snap.arr(G.RVA["tex_coords"], G.N_TEXCOORD_FLOATS, C.c_float)
-        sn = snap.arr(G.RVA["side_normals"], 24, C.c_float)
-        assert dll.sg_ts_set_render_data(st.ctx, tc, G.N_TEXCOORD_FLOATS, sn, tex[WALL], tex[FENCE0], tex[FENCE1], 0) == 0
         zoom = struct.unpack_from("<i", bytes(obj), 0x1C)[0]
         r = dll.sg_raster_new(R.W, R.H)
         try:
@@ -568,7 +575,7 @@ def test_replay_equals_the_original(lib, corpus, step):
     assert "_error" not in res, res["_error"]
     assert res["_rets"] == 0, "getInstance / render returned other values than the original"
     d = res[step]
-    assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures", "view")), d
+    assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures", "view", "render")), d
 
 
 NEGCTL_REPLAY = tuple(range(1, 23))
@@ -587,7 +594,7 @@ def test_negctl_replay(lib, mode):
     finally:
         lib.dll.sg_ts_negctl(0)
     red = [k for k, d in res.items() if not k.startswith("_") and any(d[x] for x in ("bytes", "handles", "vertices", "normals",
-                                                                                          "textures", "view"))]
+                                                                                          "textures", "view", "render"))]
     assert red or "_error" in res, f"mode {mode} reads GREEN on the whole replay"
 
 
@@ -613,7 +620,7 @@ def test_chain_state_equals_the_frames_snapshot(lib, frame):
     if not T3_FRAMES:
         pytest.skip("no t3 corpus with frames")
     d = _chain_cached(lib)["state"][frame]
-    assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures")), d
+    assert all(d[k] == 0 for k in ("bytes", "handles", "vertices", "normals", "textures", "render")), d
 
 
 @pytest.mark.parametrize("frame", T3_FRAMES or ["none"])
@@ -632,3 +639,36 @@ def test_chain_frame(lib, frame):
     if not ok and zoom == 2 and rep["gt1"] == 0:
         pytest.xfail(f"zoom 2: {one} one-level pixels = {one / max(drawn, 1):.4f} of drawn, none further (U-1076)")
     assert ok, (rep, one, drawn)
+
+
+# --------------------------------------------------------------------------------------- Terrain.dll's constant tables
+def _load_constants(lib, files: dict | None):
+    bind(lib.dll)
+    with lib.state() as st:
+        if files is None:
+            st.files_root(str(INSTALL))
+        else:
+            for k, v in files.items():
+                st.files_put(k, v)
+        r = C.c_int32(0)
+        code = lib.dll.sg_ts_op(st.ctx, b"load_dll_constants", 0, 0, 0, 0, C.byref(r))
+        return code, r.value
+
+
+def test_dll_constants_from_the_users_file(lib):
+    if not (INSTALL / "Terrain.dll").exists():
+        pytest.skip("no original/Terrain.dll")
+    assert _load_constants(lib, None) == (0, 1)
+
+
+def test_dll_constants_refuse_another_file(lib):
+    """A Terrain.dll whose texture-coordinate table differs in one byte is refused (MissingResource = SG_E_NO_RESOURCE), and a
+    context without one leaves the tables empty."""
+    if not (INSTALL / "Terrain.dll").exists():
+        pytest.skip("no original/Terrain.dll")
+    from port.test import lib as L
+    raw = bytearray((INSTALL / "Terrain.dll").read_bytes())
+    raw[0x63CA0 + 5] ^= 1
+    code, _ = _load_constants(lib, {"Terrain.dll": bytes(raw)})
+    assert code == L.SG_E_NO_RESOURCE
+    assert _load_constants(lib, {}) == (0, 0)
