@@ -86,7 +86,8 @@ section's files lists as `files:`. On MERGED update BASELINE.md with the new num
 ## Committing (you, after MERGED)
 
 - Stage exactly the paths of the merge report's `files:` list plus BASELINE.md, sections.tsv, ORCH_LOG.md (never `git add -A`, never
-  a directory checkout: siblings share the tree).
+  a directory checkout: siblings share the tree). `log/*` is in .gitignore: stage the section's notes, briefs, merge reports and
+  small result TSVs under log/ with `git add -f <path>`, never its raw run logs, captures or build output.
 - Message: `S<n>: <what the gate now shows, with numbers>`, then
   ```
   Generated with [Claude Code](https://claude.ai/code)
