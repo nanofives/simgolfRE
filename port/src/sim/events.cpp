@@ -37,6 +37,13 @@ namespace {
 // (the story functions' and pairGolfersWithStory's modes are listed in events_story.inc / events_pair.inc)
 int g_negctl_append_upgrade_text = 0;
 int g_negctl_replace_in_text = 0;
+
+// Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original.
+//   replaceInText.tailLimit  model_defects#46 (D46): the saved tail goes into a 0x200-byte stack buffer; the original
+//                            completes for tails up to 0x1ff characters and is derailed from 0x200 on (the NUL lands on
+//                            the return address). Fixed (0): a tail of 0x200 characters or more refuses the replacement
+//                            and leaves the text untouched.
+int g_defect_replace_tail_limit = 1;
 int g_negctl_thought_balance = 0;
 int g_negctl_thought_flag = 0;
 int g_negctl_append_opinion = 0;
@@ -87,13 +94,14 @@ void put(Ctx &ctx, uint32_t dst, const std::vector<uint8_t> &bytes) {
   for (size_t k = 0; k < bytes.size(); ++k) ctx.mem.store<uint8_t>(dst + static_cast<uint32_t>(k), bytes[k]);
 }
 
-void replace_with(Ctx &ctx, uint32_t key, const std::vector<uint8_t> &repl) {
+void replace_with(Ctx &ctx, uint32_t key, const std::vector<uint8_t> &repl, bool limit_tail) {
   const Memory &m = ctx.mem;
   const uint32_t buf = text_va(ctx);
   const uint32_t p = vstrstr(m, buf, key);
   if (p == 0) return;
   // the tail from the match on is saved first (a 512-byte stack buffer in the original; longer tails overflow it: U-0900)
   const std::vector<uint8_t> tail = grab(ctx, p);
+  if (limit_tail && !SG_DEFECT(g_defect_replace_tail_limit) && tail.size() > 0x200) return;  // size counts the NUL
   m.store<uint8_t>(p, 0);
   uint32_t end = buf + vstrlen(m, buf);
   for (uint8_t c : repl) {
@@ -151,7 +159,7 @@ void append_upgrade_text(Ctx &ctx, int32_t i) {
     vstrcat(m, buf, swap ? clause0 : clause1);
 }
 
-void replace_in_text(Ctx &ctx, uint32_t key, uint32_t repl) { ev::replace_with(ctx, key, ev::grab(ctx, repl)); }
+void replace_in_text(Ctx &ctx, uint32_t key, uint32_t repl) { ev::replace_with(ctx, key, ev::grab(ctx, repl), true); }
 
 int32_t thought_balance(Ctx &ctx, int32_t g) {
   const Ptr<uint16_t> w = (state_arr(ctx, &GameState::g_golfers) + g).field(&Golfer::thought_arg);
@@ -250,6 +258,12 @@ void a_announce_hole_type(Ctx &c, const uint32_t *a, Ret &) { announce_hole_type
 void a_announce_building(Ctx &c, const uint32_t *, Ret &) { announce_building(c); }
 void a_pair_golfers(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(pair_golfers_with_story(c, i32(a[0]), i32(a[1]))); }
 
+const DefectDef kDefects[] = {
+    {"replaceInText.tailLimit", "model_defects#46",
+     "a tail of 0x200 characters or more after the match overflows the original's stack buffer",
+     &g_defect_replace_tail_limit},
+};
+
 const FuncDef kFuncs[] = {
     {"appendUpgradeText", "default", "void", 1, 0, a_append_upgrade_text, &g_negctl_append_upgrade_text},
     {"replaceInText", "default", "void", 2, 0, a_replace_in_text, &g_negctl_replace_in_text},
@@ -274,6 +288,7 @@ const FuncDef kFuncs[] = {
 };
 }  // namespace
 
-extern const ModuleDef kModule_events = {"events", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern const ModuleDef kModule_events = {"events", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                         sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

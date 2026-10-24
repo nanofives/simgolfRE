@@ -1,0 +1,14 @@
+switch	value	decision_id	reason
+# Membership list of the `fixed` profile (port/test/profiles.py). Columns, tab separated:
+#   switch       a sg_defect switch name as lib.defects() lists it (e.g. sinScaled.readPastTable); unknown names are an error
+#   value        0 or 1 (the switch default is 1 = the original's behaviour; `fixed` lists the switches whose value differs)
+#   decision_id  the lead's decision row that approved the fix (D<n> from re/roadmap/*)
+#   reason       one line: the original defect the switch removes and the model_defects entry
+# Lines starting with # and blank lines are ignored. The profile `original` is never listed here: it is every switch at 1.
+# Filled by the S6 lead from re/port/defect_decisions.tsv rows with recommendation `fix` (D5, pre-approved: hangs and faults only).
+placeHabitat.clusterLoopBound	0	D8,D40a,D40b	slot 127 with the byte after the table 0xff is treated as taken: the cluster loop (never ends in the original) is not entered and the link word before the table is not written
+spawnObject.cellSearchBound	0	D41	no free cell in the bank's 4 x 4 corner: return before the animal record is claimed and before any RNG draw (the original's search never ends)
+loadGolfPro.divideAndRejectGuard	0	D42a,D42b	a zero divisor (difficulty -4 or 4) or an empty pro roster ends the draw with pick 0 instead of raising #DE / never ending
+placeAnimal.zeroFrameCount	0	D43	sprite frame count 0: return before the idiv that raises #DE in the original
+replaceInText.tailLimit	0	D46	a tail of 0x200 or more characters (the original overwrites its return address) is refused and the text left untouched
+generateRandomCourse.searchBound	0	D52b1,D52b2	the type-0x11 search and the clubhouse search (both never end in the original when no cell qualifies) give up: skip the feature / take the window centre

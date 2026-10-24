@@ -1,0 +1,13 @@
+port/src/sim/golfers.cpp
+port/src/sim/golfers_world.inc
+port/src/sim/golfers_pro.inc
+port/test/test_defects_golfers.py
+log/roadmap/S6/4_notes.md
+log/roadmap/S6/4_merge.md
+log/roadmap/S6/4_uncertain.tsv
+log/roadmap/S6/4_files.txt
+log/roadmap/S6/4_build.log
+log/roadmap/S6/4_test.log
+log/roadmap/S6/4_golfers.log
+log/roadmap/S6/4_vectors.log
+log/roadmap/S6/4_segments.log

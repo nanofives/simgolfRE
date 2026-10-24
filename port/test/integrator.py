@@ -864,7 +864,17 @@ def ledger_rows(seg_tsv: pathlib.Path, chain_tsv: pathlib.Path | None, defects_t
         tests = {"sinScaled.readPastTable": "port/test/test_core.py::test_defect_sin_past_table (vectors)",
                  "shotPower.cacheIgnoresPutt": "port/test/test_shots.py::test_defect_shot_power_putt (vectors)",
                  "prepareShot.hazardCellTransposed": "port/test/test_shots.py::test_defect_hazard_cell_transposed (vectors)",
-                 "narrateShot.maskNotRestored": "port/test/test_shots.py::test_defect_narrate_mask_not_restored (state)"}
+                 "narrateShot.maskNotRestored": "port/test/test_shots.py::test_defect_narrate_mask_not_restored (state)",
+                 # S6 (log/roadmap/S6/MERGE.md): each judged by the state the original hangs or faults on (Unicorn probes
+                 # log/roadmap/S6/6_probes/) plus a completing control equal at 1 and 0 and a wrong body that reads RED
+                 "placeHabitat.clusterLoopBound": "port/test/test_defects_golfers.py::test_place_habitat_table_full_slot_127 (state)",
+                 "spawnObject.cellSearchBound": "port/test/test_defects_golfers.py::test_spawn_object_full_bank (state)",
+                 "loadGolfPro.divideAndRejectGuard": "port/test/test_defects_golfers.py::test_load_golf_pro_zero_divisor, "
+                                                     "test_load_golf_pro_empty_roster (state)",
+                 "placeAnimal.zeroFrameCount": "port/test/test_defects_golfers.py::test_place_animal_zero_frame_count (state)",
+                 "replaceInText.tailLimit": "port/test/test_defects_gen.py::test_d46_overflowing_tail (state)",
+                 "generateRandomCourse.searchBound": "port/test/test_defects_gen.py::test_d52b1_type_0x11_window_without_a_cell, "
+                                                     "test_d52b2_clubhouse_window_without_a_spot (state)"}
         for r in read_tsv(defects_tsv):
             n = int(r["segments_changed"])
             ev = [f"{n} segments change ({r['changed']})"] if n else []

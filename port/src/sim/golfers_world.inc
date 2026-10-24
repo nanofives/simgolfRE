@@ -31,6 +31,7 @@ void place_animal(Ctx &ctx, int32_t idx) {
       }
       const int32_t dir = (gs.g_cameraRot - heading.get() - 2) & 7;
       const Ptr<int32_t> cols = state_arr(ctx, &GameState::g_sheetCols) + sprite;
+      if (cols.get() <= (mode == 3 ? 1 : 0) && !SG_DEFECT(g_defect_zero_frame_count)) return;  // D43: nothing is written before the idiv
       const int8_t fr = static_cast<int8_t>(mod32(frame.get(), cols.get()));  // idiv: a frame count 0 faults
       frame.set(fr);
       const int32_t cell = gl::cell_at(ctx, sprite, fr, dir);
@@ -134,10 +135,13 @@ uint32_t place_habitat(Ctx &ctx, int32_t x, int32_t y, int32_t type) {
   if (slot == -1) return c;
   // the loop's slot never changes and c never changes: it runs until slot + 1 is taken (the first free slot is taken by
   // each addHabitatSlot); a full table with slot + 1 outside it (slot 127) and that byte 0xff never ends
-  while ((slots + slot + 1).field(&HabitatSlot::kind).get() == 0xff && i32(c) < 3) {
+  // D8 / D40a: with the switch off slot 128 counts as taken, so the loop is not entered for the last slot
+  while ((SG_DEFECT(g_defect_cluster_loop_bound) || slot + (mode == 2 ? 2 : 1) < kHabitats) &&
+         (slots + slot + 1).field(&HabitatSlot::kind).get() == 0xff && i32(c) < 3) {
     const int32_t a = i32(random_range(rng(ctx), 3) & 0xffffu);
     const int32_t b = i32(random_range(rng(ctx), 3) & 0xffffu);
     const int32_t t = add_habitat_slot(ctx, a + x2 - 1, b + y2 - 1, i32(k));
+    if (t == -1 && !SG_DEFECT(g_defect_cluster_loop_bound)) break;  // D40b: no write before the table
     (slots + t).field(&HabitatSlot::link).set(static_cast<int16_t>(slot));
     if (t == -1 && (slots + slot + 1).field(&HabitatSlot::kind).get() == 0xff) throw NoReturn{"placeHabitat"};
   }

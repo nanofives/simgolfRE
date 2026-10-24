@@ -52,7 +52,7 @@ Ptr<Golfer> golfer(Ctx &ctx, int32_t g);
 void itoa_into(Ctx &ctx, int32_t v);
 std::vector<uint8_t> grab(Ctx &ctx, uint32_t va);   // the string at va with its NUL
 void put(Ctx &ctx, uint32_t dst, const std::vector<uint8_t> &bytes);
-void replace_with(Ctx &ctx, uint32_t key, const std::vector<uint8_t> &repl);
+void replace_with(Ctx &ctx, uint32_t key, const std::vector<uint8_t> &repl, bool limit_tail = false);
 // a per-hole record field: base + hole * 0x208 (hole records are 0x208 bytes)
 template <class T> inline Ref<T> fld(Ctx &ctx, uint32_t base, int32_t hole) { return G<T>(ctx, base + u32(mul32(hole, 0x208))); }
 // the CRT's __itoa(v, buf, 10): writes the text at buf and returns buf

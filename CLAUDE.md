@@ -1353,6 +1353,29 @@ block 1). Port changes: TraceInput applies the harness's memory writes at a moda
 date write; control tick.frame 7), and a boot trace with no frame head now runs to its end, with idle passes per unread
 CURSOR record and the pending snapshots taken when the input runs out (gfx_end_of_input); boot.run(to_end=True) no longer
 returns NO_FRAMES before running. Segments 205 / 205 (digests unchanged) and boot 58 / 2 / 1 unchanged.
+Phase 7 defect decisions, section S6 of the roadmap orchestrator (2026-10-24, notes log/roadmap/S6/, U-1550..U-1597): `re/port/defect_decisions.tsv`
+holds every defect of model_defects.md (#1-#52, some split by arm) and every non-PASS row of divergences.tsv (grouped by cause) with its class
+(hang / fault / overrun-silent / wrong-value / dead-state / port-gap / harmless), six effect columns (save / balance / sim / frame / hang / fault),
+a recommendation and the switch: 74 rows, 10 `fix`, 26 `ask`, 38 `keep` (generator `log/roadmap/S6/merge_decisions.py --write`; schema
+log/roadmap/S6/SCHEMA.md). The classification came in two passes: S6.1 / S6.2 from the model notes, then S6.6 re-read the cited instructions and ran
+the ORIGINAL in Unicorn on constructed states (log/roadmap/S6/6_probes/, one probe per defect, each hang with a completing control at the same
+budget). Corrections it made: spawnWalker with 64 live walkers completes (writes the record over g_editQueueX, returns 0x40) instead of hanging;
+stampCourseTiles' scan only reads and the original already refuses a full table; showMembershipRoster copies a type name, not the 0x230-byte slot;
+D22's register test is equivalent; rebuildHeightfield's relax pass and buildGolferBioText's picks cannot loop on the shipped tables; the movie id
+list of serviceMovie has no writer; and one new hang, loadGolfPro with g_difficulty 5 or 6 never ends even with every pro record filled (D42c, `ask`).
+Profiles (port/test/profiles.py, tests test_profiles.py 19): `original` = every sg_defect switch 1 and is the oracle (equal to no profile); `fixed`
+= the members of re/port/defect_profiles.tsv, and only decision D5's class: a hang or fault whose fix changes no save, balance value, simulation state
+or frame on a run the original completes. Six switches, each default 1, each judged by the probe state that hangs or faults in the original (the
+port returns cleanly at 0) and by a completing control whose result is identical at 1 and 0, plus a wrong body that reads RED:
+placeHabitat.clusterLoopBound (slot 127 with 0xff after the table is treated as taken), spawnObject.cellSearchBound (return before the animal record
+is claimed), loadGolfPro.divideAndRejectGuard (a zero divisor or an empty roster ends the draw at pick 0: U-1590, no original run exists there),
+placeAnimal.zeroFrameCount, replaceInText.tailLimit (a tail of 0x200 or more is refused: the original overwrites its return address from there;
+U-1597 truncation instead), generateRandomCourse.searchBound (the type-0x11 search skips the feature, the clubhouse search takes the window centre:
+U-1596, a port choice). Tests port/test/test_defects_golfers.py (25) and test_defects_gen.py (13). The 26 `ask` rows (every fix there changes a
+save, balance, sim state or a frame) are in log/roadmap/S6/ASK_LIST.md for Mariano: D1 D5 D6 D10 D11 D12 D17-D21 D23 D24 D26 D32 D37-D39 D42c D44
+D47b D48a D48b D49a D52a D52b3. Findings in the original: loadGolfPro hangs for difficulty 5 and 6; replaceInText derails the return address from a
+tail of 0x200 bytes (0x204 returns to the tail's own bytes); spawnObject's cell search draws about 250,000 times before the budget ends when all 16
+cells are taken; the five existing switch rows keep their evidence, chooseShotTarget.strictFlagSticky still has none (U-1012).
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

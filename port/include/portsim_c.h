@@ -136,6 +136,13 @@ SG_API int sg_defect_info_get(int32_t i, sg_defect_info *out);
 SG_API int sg_defect_set(const char *name, int32_t on); /* returns the previous value, or SG_E_ARG for an unknown name */
 SG_API int32_t sg_defect_get(const char *name);         /* 0 / 1, or SG_E_ARG */
 SG_API void sg_defect_reset(void);                      /* every switch back to 1 */
+/* Profiles over the sg_defect switches (S6, log/roadmap/S6/3_merge.md). `original` = every switch 1. `fixed` = the members
+ * the caller passes (switch names and values, from re/port/defect_profiles.tsv read by the host): every switch is reset to 1,
+ * then each member is set. Returns SG_OK, or SG_E_ARG for an unknown profile or switch, a NULL list with n > 0, n < 0, or a
+ * member list given with `original` (nothing is changed then). */
+SG_API int sg_profile_set(const char *profile, const char *const *switches, const int32_t *values, int32_t n);
+/* "original" when every switch is 1, "fixed" when set by sg_profile_set("fixed", ...) and not changed since, else "custom". */
+SG_API const char *sg_profile_get(void);
 
 /* ---- exe constants: the user's own golf_clean.exe (phase 3.0, portsim/execonst.h) ----
  * One process-wide instance, attached to every context at sg_call. sg_exe_load verifies the file (the .data size and

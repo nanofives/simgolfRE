@@ -1,0 +1,5 @@
+# merge queue, first = next integrator (orchestrator-owned)
+S0 wave 1 (doc-only; S0 lead closed: on REFUSED spawn a fresh S0 lead)
+S4 wave 1 (S4.1 + S4.2; after commit tell the S4 lead to delete port/build/S4_mirror)
+S1 wave 1 (apply log/roadmap/S1/tick_combined.diff first; then remove the needs_load_pump marker in test_s1_4_scenarios.py; integrator must run the Win32 boot gate and the SG_EMU_ORACLE=1 runs the lead did not repeat; S1 lead closed)
+S8 wave 1 (edits tick.cpp kDrops and tick_boot.inc: apply after S1 so both tick.cpp edits meet in one tree; S8 lead closed)

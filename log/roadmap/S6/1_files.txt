@@ -1,0 +1,4 @@
+log/roadmap/S6/1_decisions.tsv
+log/roadmap/S6/1_notes.md
+log/roadmap/S6/1_uncertain.tsv
+log/roadmap/S6/1_files.txt

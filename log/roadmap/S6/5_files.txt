@@ -1,0 +1,17 @@
+port/src/sim/events.cpp
+port/src/sim/events_hook.h
+port/src/sim/terrain_gen.cpp
+port/test/test_defects_gen.py
+log/roadmap/S6/5_notes.md
+log/roadmap/S6/5_merge.md
+log/roadmap/S6/5_uncertain.tsv
+log/roadmap/S6/5_files.txt
+log/roadmap/S6/5_probe_b1.py
+log/roadmap/S6/5_probe_b1.log
+log/roadmap/S6/5_build.log
+log/roadmap/S6/5_test_defects.log
+log/roadmap/S6/5_gate_vectors.log
+log/roadmap/S6/5_gate_test_defects_gen.log
+log/roadmap/S6/5_gate_test_events.log
+log/roadmap/S6/5_gate_test_terrain_gen.log
+log/roadmap/S6/5_gate_test_core.log

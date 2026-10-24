@@ -1,0 +1,4 @@
+id	address	kind	text	status
+U-1595	generateRandomCourse D52b1	reach	fixed D52b1 verified on one constructed image (loc 1 setting 0 type 0 difficulty 3); other NoReturn searches after the give-up not enumerated	open
+U-1596	generateRandomCourse D52b2	choice	fixed clubhouse search falls back to the window centre; the original has no such arm	open
+U-1597	replaceInText D46	choice	fixed profile refuses the replacement for a tail of 0x200 characters or more instead of truncating	open

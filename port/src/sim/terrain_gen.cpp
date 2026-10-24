@@ -20,6 +20,13 @@ namespace {
 //                         clearTile (the far column), 3 = the corner-level fill stops at 50 x 50 (row / column 50 kept)
 int g_negctl_generate = 0;
 
+// Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original.
+//   generateRandomCourse.searchBound  model_defects#52 (D52b1, D52b2): the type-0x11 search of layout kind 1 and the
+//                            clubhouse search never end when their window holds no qualifying cell. 1 = NoReturn once
+//                            no cell can qualify; fixed (0): the type-0x11 search gives up and skips that feature, the
+//                            clubhouse search takes the window centre (x 0x17, y 0x17) and goes on.
+int g_defect_search_bound = 1;
+
 Ret call_peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
   const int i = registry_find(name);
   if (i < 0) throw MissingResource{name};
@@ -37,6 +44,12 @@ Ret call_peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) 
 constexpr int32_t kProbe = 1 << 16;
 template <class F> void miss(int32_t &misses, F any_candidate) {
   if (++misses == kProbe && !any_candidate()) throw NoReturn{"generateRandomCourse"};
+}
+// The same probe for the two searches the fixed profile bounds: true = give up (switch 0 and no cell qualifies).
+template <class F> bool miss_bounded(int32_t &misses, F any_candidate) {
+  if (++misses != kProbe || any_candidate()) return false;
+  if (SG_DEFECT(g_defect_search_bound)) throw NoReturn{"generateRandomCourse"};
+  return true;
 }
 }  // namespace
 
@@ -364,12 +377,16 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       cx = rnd(0x11) + 0xF;
       cy = rnd(0x11) + 0xF;
       if (ok(cx, cy)) break;
-      miss(misses, [&] {
-        for (int32_t a = 0xF; a < 0x20; ++a)
-          for (int32_t b = 0xF; b < 0x20; ++b)
-            if (ok(a, b)) return true;
-        return false;
-      });
+      if (miss_bounded(misses, [&] {
+            for (int32_t a = 0xF; a < 0x20; ++a)
+              for (int32_t b = 0xF; b < 0x20; ++b)
+                if (ok(a, b)) return true;
+            return false;
+          })) {
+        cx = 0x17;
+        cy = 0x17;
+        break;
+      }
     }
   }
   stamp_course_tiles(ctx, cx, cy, 0xF, 0x60);
@@ -436,18 +453,23 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
           int32_t done = 0;
           do {
             int32_t ix, misses = 0;
+            bool gave_up = false;
             for (;;) {
               const int32_t s = rnd(0x1E) + 0xA;
               const int32_t c = rnd(0x1E);
               ix = cell(s, c);
               if (ty(ix) == 0x11) break;
-              miss(misses, [&] {
-                for (int32_t a = 0xA; a < 0x28; ++a)
-                  for (int32_t b = 0; b < 0x1E; ++b)
-                    if (ty(cell(a, b)) == 0x11) return true;
-                return false;
-              });
+              if (miss_bounded(misses, [&] {
+                    for (int32_t a = 0xA; a < 0x28; ++a)
+                      for (int32_t b = 0; b < 0x1E; ++b)
+                        if (ty(cell(a, b)) == 0x11) return true;
+                    return false;
+                  })) {
+                gave_up = true;
+                break;
+              }
             }
+            if (gave_up) break;  // no type-0x11 cell in the window: the remaining features of this kind are skipped
             or_word(ix, 0x100);
             ++done;
           } while (done < sub32(8, g.g_difficulty));
@@ -690,8 +712,15 @@ void a_generate(Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(generate_random_c
 const FuncDef kFuncs[] = {
     {"generateRandomCourse", "default", "int", 1, 0x027F, a_generate, &g_negctl_generate},
 };
+
+const DefectDef kDefects[] = {
+    {"generateRandomCourse.searchBound", "model_defects#52",
+     "the type-0x11 search (layout kind 1) and the clubhouse search never end when their window holds no qualifying cell",
+     &g_defect_search_bound},
+};
 }  // namespace
 
-extern const ModuleDef kModule_terrain_gen = {"terrain_gen", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+extern const ModuleDef kModule_terrain_gen = {"terrain_gen", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                              sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

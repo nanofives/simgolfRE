@@ -62,12 +62,18 @@ int32_t load_golf_pro(Ctx &ctx) {
       // the pro draw: a rejection loop over the 100 pro records
       bool eligible = false;
       for (int32_t k = 1; k < 100 && !eligible; ++k) eligible = (pros + k).field(&GolfPro::look_hi).get() != -1;
-      if (!eligible) throw NoReturn{"loadGolfPro"};  // every draw is rejected before the try count moves
-      int32_t tries = 0, pick, v;
-      for (;;) {
+      const bool guard = !SG_DEFECT(g_defect_pro_divide_guard);
+      bool gave_up = false;  // D42: the guarded cases end with pick 0, the arm a repeated pick already takes
+      int32_t tries = 0, pick = 0, v;
+      if (!eligible) {
+        if (guard) gave_up = true;
+        else throw NoReturn{"loadGolfPro"};  // every draw is rejected before the try count moves
+      }
+      while (!gave_up) {
         pick = gl::rnd(ctx, 0x64) & 0xffff;
         int32_t level = gs.g_difficulty;
         const int32_t skill = (pros + pick).field(&GolfPro::skill_sum).get();
+        if (guard && mul32(add32(mul32(level, 5), 0x14), 2) == 0) { gave_up = true; break; }
         v = div32(mul32(skill - 10, skill - 10), mul32(add32(mul32(level, 5), 0x14), 2));
         if (g == 0) {
           const int32_t hi = static_cast<int32_t>((static_cast<int64_t>(static_cast<int32_t>(0xd5555555u)) *
@@ -84,12 +90,15 @@ int32_t load_golf_pro(Ctx &ctx) {
         if (tries < 0x320 && taken[pick] != 0) continue;
         const int32_t cash = gs.g_cash_div100 / 200;
         const int32_t rep = gs.g_tournamentPurse / 10;
+        if (guard && (sub32(4, level) == 0 || (mode == 2 && sub32(4, level) == 1))) { gave_up = true; break; }
         if (v > add32(add32(div32(tries, sub32(4, level)), rep), cash)) continue;  // 4 - level == 0 faults (model_defects)
         const int32_t slack = g != 0 ? tries : tries / 4;
         if (v < add32(sub32(rep, slack), cash)) continue;
         break;
       }
-      if (taken[pick] != 0)
+      if (gave_up)
+        pick = 0;
+      else if (taken[pick] != 0)
         pick = 0;
       else
         taken[pick] = 1;

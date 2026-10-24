@@ -1,0 +1,1 @@
+U-1590	open	loadGolfPro.divideAndRejectGuard OFF: pick 0 makes the golfer take pro record 0 (not a filled record); the original has no run in this state, so the choice is documented not oracle-judged

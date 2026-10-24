@@ -1,0 +1,6 @@
+id	topic	statement	status
+U-1560	D32 probe slot overlap	Which later reads consume the overlapped g_probeShotX / Y slots was not traced; the fix effect on shots is unmeasured	open
+U-1561	D40 split	The hang fix is classified fix, the addHabitatSlot -1 write before the table is kept; whether a completing run ever reaches the -1 write was not measured	open
+U-1562	D46 replaceInText	No recorded run has a tail of 512 bytes or more, so whether the original survives the overflow is unmeasured	open
+U-1563	D48a buildGolferComment slots	No corpus name or text reaches 64 bytes; the overflow effect is unmeasured	open
+U-1564	D49a postEvent id	No recorded call passes id 22 or more; callers' id ranges were not enumerated	open

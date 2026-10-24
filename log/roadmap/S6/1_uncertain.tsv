@@ -1,0 +1,11 @@
+id	address	kind	description	needed	status
+U-1550	0x0046f0f9	behavioural	D1: the store into record 156 is reproduced by the port, but no segment reaches the board with the store (cov_b_holes18/00 and /01 stop on missing showBulletinBoard); whether the cell values 182 / 184..185 are read before the next write was not measured here	run cov_b_holes18 once the board is ported and diff g_tileBuildCode with the store disabled	open
+U-1551	0x004481b0	reach	D2: whether any caller of playSound / startSoundSlot can compute an id of 300 or more was not read	callers of 0x004481b0 and their id sources (re/tools/xref.py)	open
+U-1552	0x0047e330	reach	D3 / D4 / D15: reach of the draw list (512), movie ids (19), sprite queue (0x3fe) overflows and whether a stale sprite link is read after resetSpriteQueue's single-dword stores	max window-tree size, max sprites per frame in the corpus	open
+U-1553	0x00470fbb	behavioural	D6: whether generateRandomCourse's outside-row reads change the course bytes (golden digests exist, not split per defect)	a run with the reads clamped against the emulator oracle	open
+U-1554	0x0040e2f6	reach	D7 / D8: a full 256-object table and habitat slot 127 were not exercised; the byte at 0x005736c2 and the first free-looking byte after the placed-object table were not read	fixture that fills the table, then a Unicorn run of the original	open
+U-1555	0x0041ed7a	reach	D9 / D22: whether a hole field of 20 or more, or a negative x in the inline tileAt, is ever produced by shipped data or user input	static range of the writers of the tile hole field and of tileAt's x argument	open
+U-1556	0x00402970	behavioural	D11: with 64 live walkers the unbounded scan ends or faults is not shown (depends on bytes after the walker table)	Unicorn run of spawnWalker with a full table	open
+U-1557	0x005a47e8	reach	D12: maximum balls in flight per frame in the corpus is not measured	call-count of the append sites over the segment corpus	open
+U-1558	0x00454fb6	behavioural	D13 / D36: overrun target of showMembershipRoster's strcpy (stack or global) and whether a peer name can reach 0x43 characters over the network	disassembly of the frame at 0x00454f24; net name input path	open
+U-1559	0x00403455	reach	D16: whether any shipped sheet has 256 or more frames (U-0328)	g_sheetCols values after loadFlic for all 590 sheets	open

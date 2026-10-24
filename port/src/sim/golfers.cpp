@@ -23,17 +23,18 @@ namespace {
 //   typeBit7Clear        1 = tests bit 6
 //   appendEndearment     1 = phrases 1 and 2 swapped
 //   appendWalkerName     1 = the two table strings in the other order, 2 = flag bit 2 instead of bit 3
-//   spawnObject          1 = row and column swapped, 2 = sprite base 0x14d
+//   spawnObject          1 = row and column swapped, 2 = sprite base 0x14d, 3 = (cellSearchBound off) gives up with one free cell
 //   spawnWalker          1 = direction without the -2, 2 = start offset 0x400
 //   addHabitatSlot       1 = state -10, 2 = link 0
-//   placeAnimal          1 = on screen the frame never wraps, 2 = the wait is not counted down
+//   placeAnimal          1 = on screen the frame never wraps, 2 = the wait is not counted down,
+//                        3 = (zeroFrameCount off) returns for a frame count of 1 too
 //   tickAnimals          1 = the last record skipped
-//   placeHabitat         1 = only flag bit 0x20 cleared (mask 0xdf)
+//   placeHabitat         1 = only flag bit 0x20 cleared (mask 0xdf), 2 = (clusterLoopBound off) skips the loop for slot 126 too
 //   updateWalkers        1 = a sale adds 3 to the cash, 2 = a leaving walker moves at speed 4,
 //                        3 = the walking sequence wraps after 9
 //   initGolferState      1 = one golfer per open hole
 //   addGolferToTable     1 = speed / 4, 2 = the forced event bit 0 is not cleared
-//   loadGolfPro          1 = sets flag 0x100000 instead of 0x200000
+//   loadGolfPro          1 = sets flag 0x100000 instead of 0x200000, 2 = (divideAndRejectGuard off) gives up when 4 - difficulty is 1
 //   resetGolferState     1 = par 6 from length 0x271 (>= instead of >)
 //   composeGolferSprite  1 = look_24 / look_25 written swapped
 int g_negctl_append_pair_track_point = 0;
@@ -55,6 +56,12 @@ int g_negctl_add_golfer_to_table = 0;
 int g_negctl_load_golf_pro = 0;
 int g_negctl_reset_golfer_state = 0;
 int g_negctl_compose_golfer_sprite = 0;
+
+// Compatibility switches (S6.4, profile `fixed`): 1 = the original (NoReturn / DivideError), 0 = a clean return.
+int g_defect_cluster_loop_bound = 1;  // placeHabitat.clusterLoopBound (D8, D40a, D40b)
+int g_defect_cell_search_bound = 1;   // spawnObject.cellSearchBound (D41)
+int g_defect_pro_divide_guard = 1;    // loadGolfPro.divideAndRejectGuard (D42a, D42b)
+int g_defect_zero_frame_count = 1;    // placeAnimal.zeroFrameCount (D43)
 
 Ptr<Golfer> golfer(Ctx &c, int32_t g) { return state_arr(c, &GameState::g_golfers) + g; }
 Ptr<ShotTrack> track(Ctx &c, int32_t p) { return state_arr(c, &GameState::g_storyPairs) + p; }
@@ -170,6 +177,13 @@ void spawn_object(Ctx &ctx, int32_t lot, int32_t kind, int32_t a, int32_t b) {
   while ((animals + idx).field(&Animal::type).get() != -1)
     if (++idx >= kAnimals) return;
   const Ptr<Animal> r = animals + idx;
+  if (!SG_DEFECT(g_defect_cell_search_bound)) {  // D41: no free cell in the 4 x 4 corner, give up before claiming the record
+    const Ptr<int8_t> m0 = (state_arr(ctx, &GameState::g_recordBanks) + lot).field(&SgRecordBank::occupancy);
+    int32_t free_cells = 0;
+    for (int32_t i = 0; i < 4; ++i)
+      for (int32_t j = 0; j < 4; ++j) free_cells += static_cast<uint8_t>(m0[i * 6 + j]) == 0xff;
+    if (free_cells < (SG_NEGCTL(g_negctl_spawn_object) == 3 ? 2 : 1)) return;
+  }
   const int8_t cat = (state_arr(ctx, &GameState::g_celebrities) + kind).field(&CelebrityRecord::category).get();
   r.field(&Animal::u00).set(0);
   r.field(&Animal::kind).set(static_cast<int16_t>(lot));
@@ -283,6 +297,18 @@ const FuncDef kFuncs[] = {
 };
 }  // namespace
 
-extern const ModuleDef kModule_golfers = {"golfers", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0])};
+const DefectDef kDefects[] = {
+    {"placeHabitat.clusterLoopBound", "model_defects#40",
+     "a table-full cluster loop (slot 127, the byte after the table 0xff) never ends and its second addHabitatSlot writes the link word before the table",
+     &g_defect_cluster_loop_bound},
+    {"spawnObject.cellSearchBound", "model_defects#41",
+     "the cell search never ends when all 16 cells of the bank's 4 x 4 corner are occupied", &g_defect_cell_search_bound},
+    {"loadGolfPro.divideAndRejectGuard", "model_defects#42",
+     "idiv by a zero divisor (difficulty -4 or 4) and a rejection loop over an empty pro roster", &g_defect_pro_divide_guard},
+    {"placeAnimal.zeroFrameCount", "model_defects#43", "idiv by a sprite frame count of 0", &g_defect_zero_frame_count},
+};
+
+extern const ModuleDef kModule_golfers = {"golfers", kFuncs, sizeof(kFuncs) / sizeof(kFuncs[0]), kDefects,
+                                          sizeof(kDefects) / sizeof(kDefects[0])};
 
 }  // namespace portsim

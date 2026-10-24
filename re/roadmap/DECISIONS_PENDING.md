@@ -25,3 +25,21 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 - **D6, network play, 2026-10-24: a section later.** Row S9 in re/roadmap/sections.tsv, status `later`, after S7. Not started in this
   round.
 - **Session cap, 2026-10-24: 12** claude2 sessions alive at once under the orchestrator (leads and workers; the orchestrator excluded).
+- **G1, S4's gate reading, 2026-10-24: the emulated original.** Each ported sound.dll function is judged against the ORIGINAL
+  function run in Unicorn over the user's sound.dll (relocated) on its fixture replayed into a virtual address space: return and
+  every compared region byte for byte; the emulated original is tied to the live path-1 CSV on every address-independent field
+  (scalar return, state_changed, distinct_results, hashes of regions without run addresses); default runs check golden digests
+  pinned from the emulator (3.1a / 3.7b pattern). Detail: log/roadmap/S4/STATUS.md section G1.
+- **G2, S3's terrain criterion, 2026-10-24: 4bfefc2a's constants.** A terrain region passes with one-level pixels <= 1.5 % of
+  the drawn pixels (glraster.MAX_ONE_LEVEL) and <= 70 pixels more than one level off (MAX_BIG), as the code enforces since the P5.3
+  handoff 4bfefc2a (measured over 49 passes: one-level mean 0.47 %, worst 1.05 %; beyond one level 139 px in total, worst pass 50).
+  It replaces the row's max(2 %, 0.4 % x median rho) / 0-beyond criterion. U-1076's remaining per-triangle term stays open as work.
+- **G3, S6's 26 `ask` defects, 2026-10-24: keep 24, fix the two hangs.** (a) the memory overruns D1 D5 D6 D10 D11 D12 D47b D48a
+  D49a, (b) the wrong values in shots, golfers and stories D17 D18 D19 D32 D37 D38 D39 D44 D48b and (c) the course, terrain and money
+  rows D20 D21 D23 D24 D26 D52a stay `keep`: both profiles reproduce the original, the switches stay at 1 and can be revisited row by
+  row. (d) the two hangs whose reach is not proven, D42c (loadGolfPro with difficulty 5 / 6) and D52b3 (generateRandomCourse's
+  search), become `fix` and join the `fixed` profile (S6 wave 2); `original` keeps the hang.
+- **G4, FreeType install route, 2026-10-24: the orchestrator runs vcpkg.** Done the same day from the claude3 session: the clone
+  C:\Users\maria\vcpkg (microsoft/vcpkg 0c2a9ace) bootstrapped with `-disableMetrics` (vcpkg-tool 2026-09-26, signature validated),
+  then `vcpkg install freetype[core]:x64-windows freetype[core]:x86-windows`: FreeType 2.14.3 built from source for both triplets
+  under C:\Users\maria\vcpkg\installed\<triplet> (logs log/roadmap/S5/vcpkg_*.log). License FTL or GPL-2.0-or-later.

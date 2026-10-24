@@ -287,6 +287,10 @@ int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset) {
 }
 
 // ------------------------------------------------------------------------------------------------ defects (phase 3.0)
+namespace {
+bool g_profile_fixed = false;  // the last sg_profile_set was "fixed" and no switch was set directly since
+}  // namespace
+
 int32_t sg_defect_count(void) { return portsim::defect_count(); }
 
 int sg_defect_info_get(int32_t i, sg_defect_info *out) {
@@ -303,6 +307,7 @@ int sg_defect_info_get(int32_t i, sg_defect_info *out) {
 int sg_defect_set(const char *name, int32_t on) {
   const portsim::DefectDef *d = portsim::defect_at(portsim::defect_find(name), nullptr);
   if (!d) return SG_E_ARG;
+  g_profile_fixed = false;
   const int prev = *d->flag;
   *d->flag = on ? 1 : 0;
   return prev;
@@ -315,6 +320,28 @@ int32_t sg_defect_get(const char *name) {
 
 void sg_defect_reset(void) {
   for (int i = 0; i < portsim::defect_count(); ++i) *portsim::defect_at(i, nullptr)->flag = 1;
+}
+
+// S6: profiles over the switches (log/roadmap/S6/3_merge.md); every name is checked before anything changes
+int sg_profile_set(const char *profile, const char *const *switches, const int32_t *values, int32_t n) {
+  if (!profile || n < 0 || (n > 0 && (!switches || !values))) return SG_E_ARG;
+  const bool fixed = std::strcmp(profile, "fixed") == 0;
+  if (!fixed && (std::strcmp(profile, "original") != 0 || n != 0)) return SG_E_ARG;
+  for (int32_t i = 0; i < n; ++i)
+    if (!switches[i] || !portsim::defect_at(portsim::defect_find(switches[i]), nullptr)) return SG_E_ARG;
+  sg_defect_reset();
+  for (int32_t i = 0; i < n; ++i)
+    *portsim::defect_at(portsim::defect_find(switches[i]), nullptr)->flag = values[i] ? 1 : 0;
+  g_profile_fixed = fixed;
+  return SG_OK;
+}
+
+const char *sg_profile_get(void) {
+  bool all_on = true;
+  for (int i = 0; i < portsim::defect_count(); ++i)
+    if (*portsim::defect_at(i, nullptr)->flag != 1) all_on = false;
+  if (all_on) return "original";
+  return g_profile_fixed ? "fixed" : "custom";
 }
 
 // ------------------------------------------------------------------------------------------------ exe constants

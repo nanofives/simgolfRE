@@ -83,6 +83,12 @@ unchanged, boot gate, gfx and terrain tests, the section's own gate). Tee every 
 log/roadmap/merges/S<n>-<m>.md: verdict line `MERGED` or `REFUSED <gate>`, the numbers against BASELINE.md, and the union of the
 section's files lists as `files:`. On MERGED update BASELINE.md with the new numbers. Do not commit. Report in at most 8 lines."
 
+Amendment (2026-10-24, first merge): the shared working tree holds every section's unfinished files, so an integrator never judges the
+gates there. It builds a MIRROR (git archive of HEAD into port/build/I<m>_S<n> plus the junctions of log/roadmap/S0/export.md, the
+section's files.txt paths copied in, the MERGE.md edits applied), runs every gate in the mirror (boot gate counted over HEAD's scenarios
+plus the section's own, U-1102; heavy runs one at a time after checking the free commit charge), then applies the same shared-file edits in
+the shared tree and checks the staged paths are byte-identical to the mirror. Template: log/roadmap/INTEGRATOR_PROMPT.md.
+
 ## Committing (you, after MERGED)
 
 - Stage exactly the paths of the merge report's `files:` list plus BASELINE.md, sections.tsv, ORCH_LOG.md (never `git add -A`, never
