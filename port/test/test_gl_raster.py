@@ -4,16 +4,16 @@ Each corpus snapshot (re/tools/gl_corpus.py, exported with `port.test.glcorpus e
 Terrain.dll code and the 800x600 RGB555 back buffer before and after it. The rasteriser replays the state stream and the
 pass's GL calls (port/test/glraster.py) onto the same starting buffer; the result is compared with the original's pixel by pixel.
 
-THE CRITERION. Not bit-exact, on purpose and measured: on the 34 passes of corpus c7 the rasteriser writes the original's pixel in
-98.4 to 99.5 % of the drawn pixels, every other pixel is one 5-bit level off in one channel, and 0 to 62 pixels per pass differ by
-more (the original's triangle seams leave a pixel uncovered where the rasteriser covers it, and the reverse). So a snapshot passes
-when the one-level pixels are at most 2 % of the drawn pixels and at most 70 pixels differ by more than one level. What the
+THE CRITERION. Not bit-exact, on purpose and measured: with the fixed-point triangle setup (section 18) the rasteriser writes the
+original's pixel in all but 0.47 % of the drawn pixels on average over the 49 passes of c7 and t3 (worst pass 1.05 %), every other
+pixel is one 5-bit level off in one channel, and up to 50 pixels per pass differ by more (triangle seams covered on one side only).
+So a snapshot passes when the one-level pixels are at most 1.5 % of the drawn pixels and at most 70 pixels differ by more. What the
 pipeline reproduces exactly was fitted from the data and from probes against the real software GL (glprobe.py) and is written in
 gl_raster.cpp and re/PHASE5_TERRAIN_PLAN.md: the GL_MODULATE lighting (the original's glTexEnvi call names GL_TEXTURE_2D, an
 invalid target, so the mode stays modulate), the 4x4 ordered dither and the 31/255 channel scale (a flat-colour probe matches
 exactly), glTexParameterf filters (GL_LINEAR, passed as floats) for the path textures, untextured fragments for an incomplete
-texture, source-alpha blending, and the position at which bilinear samples and colours are evaluated (the pixel centre scaled
-about the viewport centre by 1.05e-5 in x and 1.36e-5 in y).
+texture, source-alpha blending, and the triangle setup: vertices scaled by 1 - 2^-8 / h about the viewport centre and rounded to
+8 fractional bits, for coverage and attributes, sampled at pixel centres (section 18; `#tune 26 1` restores the linear model).
 
 Negative controls (the `#tune 11 <mode>` knob of GlRaster), each of which must break the criterion on at least one pass.
 """
@@ -29,8 +29,8 @@ pytestmark = pytest.mark.port
 
 ROOT = G.CORPUS / "c7"
 STEPS = G.snaps(ROOT)
-MAX_ONE_LEVEL = 0.02      # of the drawn pixels
-MAX_BIG = 70              # pixels more than one level off
+MAX_ONE_LEVEL = R.MAX_ONE_LEVEL   # of the drawn pixels (glraster.py, section 18)
+MAX_BIG = R.MAX_BIG               # pixels more than one level off
 
 CONTROLS = {1: "no dither", 2: "dither offset 0 instead of 0.5", 3: "lighting colour white", 4: "minification filter nearest",
             5: "texture env REPLACE", 6: "blending ignored", 7: "front faces culled", 8: "no specular term"}
@@ -126,3 +126,20 @@ def test_chain_control_the_lighting_file_reaches_the_pixels(lib, setup, tmp_path
     drawn = max(st[2], 1)
     one = rep["diff"] - rep["gt1"]
     assert rep["gt1"] > MAX_BIG or one > MAX_ONE_LEVEL * drawn
+
+
+@pytest.mark.parametrize("step", STEPS or ["none"])
+def test_fixed_point_setup_beats_the_linear_model(lib, setup, step):
+    """Section 18: on every pass the generic GL's triangle setup (8-fractional-bit vertices of a viewport of half-size h - 2^-8, for
+    coverage and attributes; the default) gives fewer one-level pixels than the earlier exact-edge, linear-sample-shift model (tune 26)."""
+    if step == "none":
+        pytest.skip("no corpus")
+    one = []
+    for knob in (0, 1):
+        def patch(r, dll, knob=knob):
+            if knob:
+                dll.sg_raster_exec(r, b"#tune 26 1\n", 11)
+        post, got, st, unknown, pre = R.run(lib, setup, step, patch=patch)
+        rep = R.report(post, got, pre)
+        one.append(rep["diff"] - rep["gt1"])
+    assert one[0] < one[1], f"{step}: fixed-point setup {one[0]} one-level pixels, linear model {one[1]}"

@@ -468,7 +468,8 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     of t1 / t2 / t3 the two tables, the three textures and the scale equal the original's; the t3 chain (15 frames) now takes nothing
     from the recording but the starting back buffer and gives the same pixels as before.
 
-16. DONE, the zoom-2 one-level noise (U-1076; 2026-10-24). The rasteriser records each drawn pixel's texel-per-pixel scale rho with its
+16. DONE, SUPERSEDED BY SECTION 18 (the noise's growth with rho and the rho-scaled allowance were the linear model's), the zoom-2
+    one-level noise (U-1076; 2026-10-24). The rasteriser records each drawn pixel's texel-per-pixel scale rho with its
     diagnostics on (sg_raster_get_rho). Measured on t3 and c7: the one-level mismatch rate is 0.6 .. 0.7 % of the drawn pixels at rho 2 .. 3
     (zoom 0), 1.6 % at rho 4 .. 6 (zoom 1), 2.9 % at rho 8 .. 12 (zoom 2), about 0.3 % per unit of rho at every zoom, none more than one
     level off, no blended pixel among them. A grid of the sample-position scale (25 pairs) has its optimum at section 11's constants at
@@ -492,3 +493,35 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     log/p5/terrain/original_saves_backup_20261024). All eight pinned recordings were made again with the instance in effect: every one
     SAME as its reference (cov_r_reload included, all 3 checkpoints), original/saved games untouched afterwards. With them: 232,020
     interface calls equal line for line and all 125 checkpoints equal, cov_r_reload compared in full (52,033 calls).
+
+18. DONE, the origin of the per-triangle residual (U-1076; 2026-10-24): the generic GL's triangle setup. Method, step by step:
+    - The corpus first (t3 zoom 1 / 2, c7 sandbox; the rasteriser now exports per-pixel triangle ids and the triangles, sg_raster_get_tri_ids /
+      sg_raster_get_triangles, and takes an absolute sample shift, tune 18 / 19): each pixel's 5-bit value and dither cell bound the true
+      colour, so each pixel is a linear constraint on a sample shift; fitted per triangle, a constant shift removes 77 .. 90 % of the
+      mismatches (zoom 1: 7,327 -> 766 of 457,201 pixels), against 36 .. 54 % for a per-triangle colour offset (3 parameters) or scale. So the
+      error is where each triangle samples, about 0.0015 .. 0.0019 px rms, constant inside a triangle (top / bottom and left / right halves
+      agree as well as random halves), and in screen space (the texture-space error grows with the screen gradient).
+    - Probes of the real software GL (glreplay.exe, quads at exactly 2 or 4 texels per pixel so the bilinear weights are constant): a first
+      sub-pixel translation sweep looked like a 1/512-px sawtooth, but it was confounded (each quad had its own offset AND its own place);
+      redone with a dense position map (234 quads) the raw shift is a pure function of the quad's place: dx depends only on its column, dy
+      only on its row, and for vertices on integer pixels it is a STAIRCASE, -1/256 px where |ndc| >= 0.5 on the left / top, 0 in between,
+      +1/256 px right / bottom, the same at 2 and 4 texels per pixel and at every depth; a quad straddling a step ramps across its extent
+      (the offset belongs to the vertices and is interpolated). With fractional vertex positions the same profile becomes the straight line
+      section 11 had fitted (1.046e-5 / 1.355e-5 per px), with a spread of 0.25 .. 0.3 / 256 px: the uniform error of a rounding to 1/256.
+    - Both are one mechanism: the vertex window coordinates are scaled about the viewport centre by 1 - 2^-8 / h (h the half-size: the
+      viewport transform uses h - 2^-8) and rounded to nearest at 8 fractional bits; the triangle's edges AND its attribute planes come from
+      those fixed-point vertices, and pixels are sampled at their centres. At an integer vertex the scaled position rounds back to the integer
+      until 2^-8 |ndc| exceeds 1/512, i.e. |ndc| = 0.5, then by one full step: the staircase; at random fractions it averages to the line.
+      Variants judged on the corpus: scale factors 0.8 .. 1.2 x 2^-8 / h (exactly 1 best, +-10 % costs 50 .. 80 %), floor / ceil / truncation
+      (5 .. 10 times worse), the tie rule (no difference), a float32 evaluation (mixed: not adopted), the opposite sign (4 .. 10 times worse).
+    - RESULT, now the rasteriser's default (gl_raster.cpp TRIANGLE SETUP; tune 26 = 1 restores the earlier model): over all 49 passes of c7
+      and t3 the one-level pixels drop from 0.98 % to 0.47 % of the drawn pixels on average (worst pass 2.82 % -> 1.05 %), the pixels more
+      than one level off from 307 to 139 (worst 62 -> 50, fuzz4), and every pass improves; section 11's coverage probe (480 random triangles):
+      17 -> 3 coverage differences (the +-0.004 px edge noise was this rounding). The zoom dependence of section 16 is gone (t3 zoom 2:
+      2.64 % -> 0.51 %): it was the straight-line model's misfit of the staircase, magnified by minification. The frame criterion is a
+      constant again and tighter: one-level pixels <= 1.5 % of the drawn (glraster.MAX_ONE_LEVEL), <= 70 further; every rasteriser
+      control and the old setup model (on the zoom-2 frames) break it; test_gl_raster checks that the new setup beats the old on every c7 pass.
+    - LEFT (U-1076 stays open for it): a per-triangle constant shift would still remove about 70 % of the remaining one-level pixels (t3
+      zoom 1: 2,588 -> 729), so one per-triangle term is still missing; not the rounding mode, the scale, the centre (moving it by 0.25 px
+      changes 2 .. 6 % through ties only) or depth. Candidates for the next probe: the attribute gradients' own precision and the span start
+      (now that the vertices are known exactly, a probe with one vertex moved on the 1/256 grid isolates them).

@@ -43,10 +43,13 @@ int quantize(double c, int x, int y, int ctl) {
   const int o = static_cast<int>(std::floor(v));
   return o < 0 ? 0 : (o > 31 ? 31 : o);
 }
-// Where the original evaluates colours and texture coordinates: not at the pixel centre but at a position scaled about the
-// viewport centre, x' = c + (x - c) * (1 + e). Fitted from integer-scale texture probes (port/test/glshift_fit.py): e = 1.046e-5
-// in x, 1.355e-5 in y, no offset, no cross term (rms residual 0.0008 pixel). Coverage is NOT shifted. tune[6] / tune[15]
-// override e in units of 1e-9 (0 = the fitted constant, -1 = none).
+// TRIANGLE SETUP (U-1076, re/PHASE5_TERRAIN_PLAN.md section 18): the generic GL sets up coverage and attributes from vertex window
+// coordinates in fixed point with 8 fractional bits, rounded to nearest, of a viewport whose half-size is h - 2^-8:
+// x' = round(256 * (c + (x - c) * (1 - 2^-8 / h))) / 256 (c, h: the viewport's centre and half-size, per axis), and samples at the
+// pixel centres. Measured with probes of the real software GL (a per-vertex offset of exactly 1/256 px where |ndc| >= 0.5 for
+// integer vertices, the mean of a linear ramp for fractional ones). The older model below (tune 26 = 1) kept exact edges and
+// sampled at x' = c + (x - c) * (1 + e), the straight-line fit of that staircase: e = 1.046e-5 in x, 1.355e-5 in y (glshift_fit.py);
+// tune[6] / tune[15] override e in units of 1e-9 (0 = the fitted constant, -1 = none).
 constexpr double kAttrScaleX = 1.046e-5, kAttrScaleY = 1.355e-5;
 int wrap_repeat(int64_t i, uint32_t n) {
   const int64_t m = i % static_cast<int64_t>(n);
@@ -355,22 +358,108 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
     if (tie == 5) return true;
     return ((tie & 1) ? ey < 0 : ey > 0) || (ey == 0 && ((tie & 2) ? ex > 0 : ex < 0));
   };
-  const bool inc0 = inclusive(*v1, *v2), inc1 = inclusive(*v2, *v0), inc2 = inclusive(*v0, *v1);
+  const bool fixed = tune[26] == 0;   // the fixed-point setup (default); tune 26 = 1: the earlier exact edges + linear attribute scale
+  if (fixed) {
+    const double hx = vp_w_ * 0.5, hy = vp_h_ * 0.5, cxv = vp_x_ + hx, cyv = vp_y_ + hy;
+    const Vtx *vs[3] = {v0, v1, v2};
+    // tune 24: the rounding to 8 fractional bits (0 half to even, 1 floor, 2 ceil, 3 toward the centre, 4 half up, 5 half down)
+    auto q = [this](double v, double c) {
+      const double f = 256.0 * v;
+      switch (tune[24]) {
+        case 1: return std::floor(f) / 256.0;
+        case 2: return std::ceil(f) / 256.0;
+        case 3: return (v >= c ? std::floor(f) : std::ceil(f)) / 256.0;
+        case 4: return std::floor(f + 0.5) / 256.0;   // half up
+        case 5: return std::ceil(f - 0.5) / 256.0;    // half down
+        default: return std::nearbyint(f) / 256.0;    // half to even
+      }
+    };
+    // the scale: tune 22 = +-1 is 1 +- 2^-8 / half-size; |tune 22| > 1 gives it in hundredths (-100 = -1); tune 21: the centre moved by
+    // tune 21 / 256 px
+    const double k = tune[22] == 0 ? -1.0 : (tune[22] == 1 || tune[22] == -1) ? tune[22] : tune[22] / 100.0;
+    const double cxs = cxv + tune[21] / 256.0, cys = cyv + tune[21] / 256.0;
+    for (int i = 0; i < 3; ++i) {
+      if (tune[25] != 0) {
+        // float32 evaluation of ndc * (half-size - 2^-8) + centre (tune 25)
+        const float nx = static_cast<float>((vs[i]->x - cxs) / hx), ny = static_cast<float>((vs[i]->y - cys) / hy);
+        const float sxf = static_cast<float>(hx + k / 256.0), syf = static_cast<float>(hy + k / 256.0);
+        sx_[i] = q(static_cast<double>(nx * sxf + static_cast<float>(cxs)), cxs);
+        sy_[i] = q(static_cast<double>(ny * syf + static_cast<float>(cys)), cys);
+        continue;
+      }
+      sx_[i] = q(cxs + (vs[i]->x - cxs) * (1.0 + k / (256.0 * hx)), cxs);
+      sy_[i] = q(cys + (vs[i]->y - cys) * (1.0 + k / (256.0 * hy)), cys);
+    }
+  }
+  // tune 23 (with 22): coverage from the same fixed-point vertices
+  Vtx cov[3] = {*v0, *v1, *v2};
+  if (fixed && tune[23] == 0)   // tune 23 = 1: the fixed-point vertices for the attributes only
+    for (int i = 0; i < 3; ++i) { cov[i].x = sx_[i]; cov[i].y = sy_[i]; }
+  const Vtx *c0 = &cov[0], *c1 = &cov[1], *c2 = &cov[2];
+  const bool cinc0 = inclusive(*c1, *c2), cinc1 = inclusive(*c2, *c0), cinc2 = inclusive(*c0, *c1);
+  const int32_t tri_id = keep_float_ ? static_cast<int32_t>(tris_.size() / 12) : -1;
+  if (keep_float_) {
+    for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->x); tris_.push_back(q->y); }
+    for (const Vtx *q : {v0, v1, v2}) { tris_.push_back(q->s); tris_.push_back(q->t); }
+  }
   for (int y = miny; y <= maxy; ++y) {
     for (int x = minx; x <= maxx; ++x) {
       const double px = x + 0.5, py = y + 0.5;
-      const double w0 = edge(v1->x, v1->y, v2->x, v2->y, px, py);
-      const double w1 = edge(v2->x, v2->y, v0->x, v0->y, px, py);
-      const double w2 = edge(v0->x, v0->y, v1->x, v1->y, px, py);
+      const double w0 = edge(c1->x, c1->y, c2->x, c2->y, px, py);
+      const double w1 = edge(c2->x, c2->y, c0->x, c0->y, px, py);
+      const double w2 = edge(c0->x, c0->y, c1->x, c1->y, px, py);
       if (w0 < 0 || w1 < 0 || w2 < 0) continue;
-      if ((w0 == 0 && !inc0) || (w1 == 0 && !inc1) || (w2 == 0 && !inc2)) continue;
+      if ((w0 == 0 && !cinc0) || (w1 == 0 && !cinc1) || (w2 == 0 && !cinc2)) continue;
       // the attributes are evaluated at the shifted position (spx, spy); coverage above used the pixel centre
-      const double ex_ = tune[6] == 0 ? kAttrScaleX : tune[6] < 0 ? 0.0 : tune[6] * 1e-9;
-      const double ey_ = tune[15] == 0 ? kAttrScaleY : tune[15] < 0 ? 0.0 : tune[15] * 1e-9;
-      const double spx = px + (px - (vp_x_ + vp_w_ * 0.5)) * ex_, spy = py + (py - (vp_y_ + vp_h_ * 0.5)) * ey_;
+      const double ex_ = fixed ? 0.0 : tune[6] == 0 ? kAttrScaleX : tune[6] < 0 ? 0.0 : tune[6] * 1e-9;
+      const double ey_ = fixed ? 0.0 : tune[15] == 0 ? kAttrScaleY : tune[15] < 0 ? 0.0 : tune[15] * 1e-9;
+      const double spx = px + (px - (vp_x_ + vp_w_ * 0.5)) * ex_ + tune[18] * 1e-5, spy = py + (py - (vp_y_ + vp_h_ * 0.5)) * ey_ + tune[19] * 1e-5;
       double a0 = edge(v1->x, v1->y, v2->x, v2->y, spx, spy);
       double a1 = edge(v2->x, v2->y, v0->x, v0->y, spx, spy);
       double a2 = edge(v0->x, v0->y, v1->x, v1->y, spx, spy);
+      double arA = ar;   // the area the attribute weights are divided by
+      if (fixed) {
+        // attribute setup from fixed-point window coordinates, 8 fractional bits, of a viewport scaled by
+        // (half-size + 2^-8) about its centre: x' = round(256 * (c + (x - c) * (1 + 2^-8 / h))) / 256; sampled at the pixel centre
+        const double a0x = sx_[0], a0y = sy_[0], a1x = sx_[1], a1y = sy_[1], a2x = sx_[2], a2y = sy_[2];
+        a0 = edge(a1x, a1y, a2x, a2y, spx, spy);   // spx / spy: the pixel centre (plus tune 18 / 19 only, with 6 / 15 off)
+        a1 = edge(a2x, a2y, a0x, a0y, spx, spy);
+        a2 = edge(a0x, a0y, a1x, a1y, spx, spy);
+        arA = std::fabs(edge(a0x, a0y, a1x, a1y, a2x, a2y));
+      }
+      if (tune[20] != 0) {
+        // experiment (U-1076): the attribute plane is set up from vertices offset by sign(ndc) * 2^-8 px per axis where |ndc| >= 0.5 (the
+        // probes' per-vertex rule), sampled at the pixel centre; coverage keeps the exact vertices
+        const double hx = vp_w_ * 0.5, hy = vp_h_ * 0.5, cxv = vp_x_ + hx, cyv = vp_y_ + hy, o = tune[20] / 256.0;
+        const double oy = (tune[21] != 0 ? tune[21] : tune[20]) / 256.0;   // tune 21: the y offset's own value (0 = the same as x)
+        auto off = [&](double p, double c, double h, double oo) {
+          const double n = (p - c) / h;
+          return n >= 0.5 ? oo : n <= -0.5 ? -oo : 0.0;
+        };
+        const double x0 = v0->x + off(v0->x, cxv, hx, o), y0 = v0->y + off(v0->y, cyv, hy, oy);
+        const double x1 = v1->x + off(v1->x, cxv, hx, o), y1 = v1->y + off(v1->y, cyv, hy, oy);
+        const double x2 = v2->x + off(v2->x, cxv, hx, o), y2 = v2->y + off(v2->y, cyv, hy, oy);
+        a0 = edge(x1, y1, x2, y2, px, py);
+        a1 = edge(x2, y2, x0, y0, px, py);
+        a2 = edge(x0, y0, x1, y1, px, py);
+        arA = std::fabs(edge(x0, y0, x1, y1, x2, y2));
+      }
+      if (tune[16] > 0 || tune[17] != 0) {
+        // experiment (U-1076): the attribute plane from vertices rounded as f32(v + 2^k) - 2^k (a float32 window-coordinate bias,
+        // tune 16 = k) and / or with every difference and product in float32 (tune 17 = 1); coverage above stays exact
+        const double B = tune[16] > 0 ? std::ldexp(1.0, tune[16]) : 0.0;
+        auto snap = [B](double v) { return B > 0 ? static_cast<double>(static_cast<float>(v + B)) - B : v; };
+        const bool f = tune[17] != 0;
+        auto F = [f](double v) { return f ? static_cast<double>(static_cast<float>(v)) : v; };
+        const double x0 = snap(v0->x), y0 = snap(v0->y), x1 = snap(v1->x), y1 = snap(v1->y), x2 = snap(v2->x), y2 = snap(v2->y);
+        auto E = [&](double ax, double ay, double bx, double by, double qx, double qy) {
+          return F(F(F(bx - ax) * F(qy - ay)) - F(F(by - ay) * F(qx - ax)));
+        };
+        a0 = E(x1, y1, x2, y2, spx, spy);
+        a1 = E(x2, y2, x0, y0, spx, spy);
+        a2 = E(x0, y0, x1, y1, spx, spy);
+        arA = std::fabs(E(x0, y0, x1, y1, x2, y2));
+      }
       if (tune[13] != 0 || tune[14] != 0) {   // experiment: a further shift of 1/256 pixel per unit
         const double sx = tune[13] / 256.0, sy = tune[14] / 256.0;
         a0 += (v1->y - v2->y) * sx + (v2->x - v1->x) * sy;
@@ -379,8 +468,8 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
       }
       // Nearest sampling is exact at the pixel centre (probes: 0 differences at 0.25..0.75 texel per pixel without any shift);
       // the bilinear filter and the interpolated colours are evaluated at the shifted position.
-      const double s = linear ? (a0 * v0->s + a1 * v1->s + a2 * v2->s) / ar : (w0 * v0->s + w1 * v1->s + w2 * v2->s) / ar;
-      const double t = linear ? (a0 * v0->t + a1 * v1->t + a2 * v2->t) / ar : (w0 * v0->t + w1 * v1->t + w2 * v2->t) / ar;
+      const double s = linear ? (a0 * v0->s + a1 * v1->s + a2 * v2->s) / arA : (w0 * v0->s + w1 * v1->s + w2 * v2->s) / ar;
+      const double t = linear ? (a0 * v0->t + a1 * v1->t + a2 * v2->t) / arA : (w0 * v0->t + w1 * v1->t + w2 * v2->t) / ar;
       double u = s * tex.w, v = t * tex.h;
       if (tune[2] > 0) {
         const double q = static_cast<double>(1ull << tune[2]);
@@ -427,8 +516,8 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
         r = acc[0]; g = acc[1]; bl = acc[2];
         if (bpp == 4) al = acc[3];
       }
-      double cr = (a0 * v0->r + a1 * v1->r + a2 * v2->r) / ar, cg = (a0 * v0->g + a1 * v1->g + a2 * v2->g) / ar;
-      double cb = (a0 * v0->b + a1 * v1->b + a2 * v2->b) / ar;
+      double cr = (a0 * v0->r + a1 * v1->r + a2 * v2->r) / arA, cg = (a0 * v0->g + a1 * v1->g + a2 * v2->g) / arA;
+      double cb = (a0 * v0->b + a1 * v1->b + a2 * v2->b) / arA;
       if (tune[3] > 0) {
         const double q = static_cast<double>((1ull << tune[3]) - 1);
         cr = std::floor(cr * q + 0.5) / q;
@@ -445,6 +534,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
         sp[4] = static_cast<float>((dst >> 10) & 31); sp[5] = static_cast<float>((dst >> 5) & 31); sp[6] = static_cast<float>(dst & 31);
         sp[7] = blend_ ? 1.0f : 0.0f;
         rfb_[static_cast<size_t>(y) * w_ + x] = static_cast<float>(rho);
+        tid_[static_cast<size_t>(y) * w_ + x] = tri_id;
       }
       if (blend_ && tune[11] != 6) {
         // GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA against the 5-bit destination expanded to 8 bits
@@ -472,7 +562,7 @@ bool GlRaster::exec_line(const std::string &line) {
     char *e = nullptr;
     const long i = std::strtol(line.c_str() + 6, &e, 10);
     const long v = std::strtol(e, nullptr, 10);
-    if (i >= 0 && i < 16) tune[i] = static_cast<int>(v);
+    if (i >= 0 && i < kTunes) tune[i] = static_cast<int>(v);
     return true;
   }
   if (line.empty() || line[0] == '#') return true;

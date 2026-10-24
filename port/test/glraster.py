@@ -169,12 +169,17 @@ def run_chain_from_setup(lib, setup: Setup, step: str, install, patch=None):
         dll.sg_raster_free(r)
 
 
-def one_level_limit(median_rho: float) -> float:
-    """The frame criterion's allowance of one-level pixels, as a fraction of the drawn pixels (re/PHASE5_TERRAIN_PLAN.md section 16).
-    The rasteriser's residual is a sub-1/256-pixel sample-position error per triangle; minification turns it into a texel error rho
-    times larger, and the measured one-level rate is 0.24 .. 0.36 % of the drawn pixels per unit of rho at zoom 0, 1 and 2. So the
-    allowance is 2 % up to rho 5 (every c7 pass: rho 1.4 .. 3) and 0.4 % x rho above."""
-    return max(0.02, 0.004 * median_rho)
+# The frame criterion (re/PHASE5_TERRAIN_PLAN.md section 18): pixels one 5-bit level off at most MAX_ONE_LEVEL of the drawn pixels,
+# at most MAX_BIG pixels further off. Since the rasteriser sets triangles up like the generic GL (8-fractional-bit fixed-point vertices
+# of a viewport of half-size h - 2^-8), the one-level rate is 0.24 .. 1.05 % on every pass of c7 and t3 at every zoom (it no longer
+# grows with the texel-per-pixel scale: that came from the earlier linear sample-position model).
+MAX_ONE_LEVEL = 0.015
+MAX_BIG = 70
+
+
+def one_level_limit(median_rho: float = 0.0) -> float:
+    """The one-level allowance as a fraction of the drawn pixels: MAX_ONE_LEVEL at every texel-per-pixel scale (section 18)."""
+    return MAX_ONE_LEVEL
 
 
 def report(post, got, pre) -> dict:

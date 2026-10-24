@@ -33,7 +33,7 @@ class GlRaster : public GlSink {
   // diagnostics: the colour of every written pixel before it is quantised to 5 bits (0..255 per channel, 3 floats a pixel)
   void keep_float(bool on) {
     keep_float_ = on;
-    if (on) { ffb_.assign(fb_.size() * 3, -1.0f); sfb_.assign(fb_.size() * 8, -1.0f); rfb_.assign(fb_.size(), -1.0f); }
+    if (on) { ffb_.assign(fb_.size() * 3, -1.0f); sfb_.assign(fb_.size() * 8, -1.0f); rfb_.assign(fb_.size(), -1.0f); tid_.assign(fb_.size(), -1); tris_.clear(); }
   }
   // per written pixel: source r g b (0..255, after lighting), source alpha (0..255), the destination's r g b 5-bit values and
   // 1 when the write was blended
@@ -41,6 +41,10 @@ class GlRaster : public GlSink {
   const std::vector<float> &float_pixels() const { return ffb_; }
   // per written pixel: the texel-per-pixel scale (rho) of its triangle, the last write's (-1 where nothing was written)
   const std::vector<float> &rho_pixels() const { return rfb_; }
+  // per written pixel: the index of the triangle that wrote it last (-1 none); per drawn triangle 12 doubles: the window x, y of its
+  // three vertices in the counter-clockwise order the rasteriser uses, then their s, t
+  const std::vector<int32_t> &triangle_ids() const { return tid_; }
+  const std::vector<double> &triangles() const { return tris_; }
   const std::vector<uint16_t> &pixels() const { return fb_; }
 
   // ---- the GlSink calls of the render path ----
@@ -100,7 +104,11 @@ class GlRaster : public GlSink {
   // 8 filtered texel rounding (1 round, 2 floor, 3 ceil to an integer 0..255), 9 two-stage lerp (1 round / 2 floor per stage)
   // 11 negative controls (deliberately wrong pipelines): 1 no dither, 2 dither offset 0, 3 lighting colour white, 4 min filter
   // nearest, 5 texture env REPLACE, 6 blending ignored, 7 front faces culled, 8 no specular
-  int tune[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  // 16 attribute-plane vertex rounding f32(v + 2^k) - 2^k, 17 attribute arithmetic in float32, 18 / 19 an absolute shift of the
+  // attribute sample position in x / y, in units of 1e-5 pixel, 20 per-vertex attribute offsets sign(ndc) * value / 256 px where |ndc| >= 0.5,
+  // 22 attribute setup from 8-fractional-bit window coordinates of a viewport scaled by half-size + 2^-8 (U-1076 experiments)
+  static constexpr int kTunes = 32;
+  int tune[kTunes] = {};
 
   // counters of the last frame (what the rasteriser saw), for the tests' diagnostics
   struct Stats {
@@ -131,6 +139,9 @@ class GlRaster : public GlSink {
   std::vector<uint16_t> fb_;
   std::vector<float> ffb_, sfb_;
   std::vector<float> rfb_;   // rho per pixel (keep_float)
+  std::vector<int32_t> tid_; // triangle index per pixel (keep_float)
+  std::vector<double> tris_; // 12 per triangle (keep_float)
+  double sx_[3] = {}, sy_[3] = {};   // tune 22: the triangle's fixed-point setup vertices
   bool keep_float_ = false;
   // matrices
   uint32_t mode_ = 0x1700;               // GL_MODELVIEW

@@ -471,7 +471,7 @@ from port.test import glraster as R  # noqa: E402
 
 T3 = TC.CORPUS / "t3"
 WALL, FENCE1, FENCE0 = ((G.RVA[k] - G.RVA["textures"]) // 4 for k in ("wall", "fence1", "fence0"))   # entries of the texture table
-MAX_ONE_LEVEL, MAX_BIG = 0.02, 70   # test_gl_raster.py's frame criterion
+MAX_ONE_LEVEL, MAX_BIG = R.MAX_ONE_LEVEL, R.MAX_BIG   # the frame criterion (glraster.py, section 18)
 # calls that change nothing a Terrain::render pass reads (the view quadrant they set, render sets again from its own angle)
 DRAW_ONLY = {"render", "localRender", "stripRender", "pathUpdateRender", "drawLine", "drawCircle", "drawCardinalSpline",
              "drawBezierSpline", "renderTile"}
@@ -552,8 +552,7 @@ def chain(lib, root, names, extra=None) -> dict:
 
 
 def judge(post, got, stats, pre):
-    """test_gl_raster's criterion with the one-level allowance scaled by the frame's median texel-per-pixel scale
-    (glraster.one_level_limit: 2 % up to rho 5, the same as test_gl_raster's for every c7 pass)."""
+    """test_gl_raster's frame criterion (glraster.one_level_limit: the same allowance at every texel-per-pixel scale since section 18)."""
     rep = R.report(post, got, pre)
     one = rep["diff"] - rep["gt1"]
     limit = R.one_level_limit(stats[5] if len(stats) > 5 else 0.0)
@@ -634,7 +633,7 @@ def test_chain_state_equals_the_frames_snapshot(lib, frame):
 @pytest.mark.parametrize("frame", T3_FRAMES or ["none"])
 def test_chain_frame(lib, frame):
     """The frame drawn from the replayed state alone is pixel-identical to the frame drawn from the recorded snapshot (the state
-    side adds no error) and meets the frame criterion with the one-level allowance scaled by the frame's texel-per-pixel scale (U-1076)."""
+    side adds no error) and meets the frame criterion (U-1076: the same allowance at every zoom since the fixed-point setup, section 18)."""
     if not T3_FRAMES:
         pytest.skip("no t3 corpus with frames")
     if not (INSTALL / "Data" / "Textures" / "Parkland").is_dir():
@@ -679,18 +678,18 @@ def test_dll_constants_refuse_another_file(lib):
     assert _load_constants(lib, {}) == (0, 0)
 
 
-@pytest.mark.parametrize("mode", (1, 2, 3, 4, 5, 7, 8))
-def test_scaled_criterion_still_rejects_the_controls(lib, mode):
-    """The rho-scaled allowance at zoom 2 (glraster.one_level_limit) must still reject the rasteriser's deliberately wrong pipelines
-    (test_gl_raster CONTROLS; 6, blending ignored, has nothing to show in these frames: no blended pixel at zoom 2)."""
+@pytest.mark.parametrize("mode", (1, 2, 3, 4, 5, 7, 8, "setup"))
+def test_criterion_rejects_the_controls_at_zoom2(lib, mode):
+    """At zoom 2 the frame criterion rejects the rasteriser's deliberately wrong pipelines (test_gl_raster CONTROLS; 6, blending ignored,
+    has nothing to show in these frames: no blended pixel at zoom 2) and the earlier setup model (tune 26 = 1, section 18)."""
     if not T3_FRAMES:
         pytest.skip("no t3 corpus with frames")
     chains = _chain_cached(lib)["t3"]
     setup = R.Setup(T3 / "frames")
     for frame in ("zoom2", "after_inject"):
         def patch(r, dll):
-            t = f"#tune 11 {mode}\n".encode()
+            t = b"#tune 26 1\n" if mode == "setup" else f"#tune 11 {mode}\n".encode()
             dll.sg_raster_exec(r, t, len(t))
         post, got, st, _unknown, pre = R.run(lib, setup, frame, patch=patch)
         ok, rep, one, drawn = judge(post, got, list(st) + [chains[frame][2][5]], pre)
-        assert not ok, f"control {mode} meets the scaled criterion on {frame} ({one / max(drawn, 1):.4f} one-level, {rep['gt1']} further)"
+        assert not ok, f"control {mode} meets the criterion on {frame} ({one / max(drawn, 1):.4f} one-level, {rep['gt1']} further)"
