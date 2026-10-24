@@ -96,6 +96,9 @@ Dropped from the port: the CRT, unwind funclets, vendored libpng/zlib/libjpeg (u
 6. **UI and screens.** Toolkit first, then screens in `ui_tour` order.
 7. **Decisions on original defects.** One list: keep (affects saves or balance) or fix (hangs, overruns). Start from the
    findings in CLAUDE.md.
+8. **Playable host (added 2026-10-24, the user's decision D1).** A Windows executable first (window, real input as root-handler
+   commands, real-time frame pacing, the gfx back buffer and the terrain raster presented, GDI text); audio out after phase 5's
+   audio, a non-Windows host after text without GDI. Network play is a later section (D6), not in this round.
 
 ## Status (2026-10-22)
 
@@ -108,11 +111,17 @@ Dropped from the port: the CRT, unwind funclets, vendored libpng/zlib/libjpeg (u
 | 5. Backends | step 1 done (2026-10-22): the software RGB555 gfx backend (module gfx) draws sandbox_basic's title menu frame and all five cov_b_location (location screen) checkpoints pixel-exact against the original's back buffer (x64 and Win32), from the user's install, labels through the host GDI provider; segment and boot gates unchanged. Before it: text widths as a host GDI provider (module gditext) and Terrain.dll as the TerrainApi interface with a headless stand-in | re/PHASE5_GFX_PLAN.md, port/test/gfx.py, test_gfx.py, portsim/sim/gfx.h, gditext.h, terrain_api.h |
 | 6. UI and screens | command effects of every screen a segment reaches are ported (Command / InputSource, semantic commands); drawing is dropped | modules commands, dialogs, reports, routing, chareditor, semantic |
 | 7. Defect decisions | not started; every reproduced defect has a switch (default = the original) | re/port/divergences.tsv, re/analysis/data/model_defects.md |
+| 8. Playable host | not started (orchestrator section S7) | re/roadmap/sections.tsv |
 
 Shim side: 2,765 functions at C4, 168 at C3 (`re_classify.py status --summary`); U-1000 (a C4 hook's wrong divisor, found by the
 port's oracle) fixed and re-verified.
 
 ## Next steps
+
+From 2026-10-24 the remaining roadmap runs through the roadmap orchestrator: re/ROADMAP_ORCHESTRATOR.md, its sections
+re/roadmap/sections.tsv (S0 baseline and frame census .. S9 network) and the user's decisions re/roadmap/DECISIONS_PENDING.md
+(D1 phase 8 Windows first, D2 Bink skipped for now, D3 audio recordings postponed, D4 FreeType for the comparison, D5 hang and fault
+fixes pre-approved, D6 network later). The items below are its starting material.
 
 - **Phase 4 completion.** Done: the .sve and course-file round trips (re/analysis/data/sve_roundtrip.md) and the boot path
   (re/PHASE4_BOOT_PLAN.md) and the quit (cov_r_quit: top10.sve, Default.pro, the saves). Left: scenarios for the tutorial pages
