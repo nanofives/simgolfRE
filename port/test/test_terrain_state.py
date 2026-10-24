@@ -530,14 +530,19 @@ def chain(lib, root, names, extra=None) -> dict:
             d = root / "frames" / "snaps" / name
             pre = (d / "dib_pre.bin").read_bytes()
             dll.sg_raster_set_pixels(r, pre, R.W * R.H)
+            dll.sg_raster_keep_float(r, 1)   # diagnostics: the texel-per-pixel scale of every drawn pixel (the criterion's rho)
             code = dll.sg_gl_render_to_raster(st.ctx, r, 2, call.self, call.args[0], call.args[1], call.args[2])
             assert code == 0, f"{name}: sg_gl_render_to_raster {code}"
             buf = C.create_string_buffer(R.W * R.H * 2)
             dll.sg_raster_get_pixels(r, buf, R.W * R.H * 2)
             stt = (C.c_int64 * 5)()
             dll.sg_raster_stats(r, stt)
+            rho = (C.c_float * (R.W * R.H))()
+            dll.sg_raster_get_rho(r, rho, R.W * R.H)
+            rr = np.frombuffer(bytes(rho), "<f4")
+            stats = list(stt) + [float(np.median(rr[rr >= 0])) if (rr >= 0).any() else 0.0]   # [5] = median rho of the drawn pixels
             out[name] = (np.frombuffer((d / "dib_post.bin").read_bytes(), dtype="<u2"), np.frombuffer(buf.raw, dtype="<u2"),
-                         list(stt), np.frombuffer(pre, dtype="<u2"))
+                         stats, np.frombuffer(pre, dtype="<u2"))
         finally:
             dll.sg_raster_free(r)
 
@@ -547,9 +552,12 @@ def chain(lib, root, names, extra=None) -> dict:
 
 
 def judge(post, got, stats, pre):
+    """test_gl_raster's criterion with the one-level allowance scaled by the frame's median texel-per-pixel scale
+    (glraster.one_level_limit: 2 % up to rho 5, the same as test_gl_raster's for every c7 pass)."""
     rep = R.report(post, got, pre)
     one = rep["diff"] - rep["gt1"]
-    return rep["gt1"] <= MAX_BIG and one <= MAX_ONE_LEVEL * max(stats[2], 1), rep, one, stats[2]
+    limit = R.one_level_limit(stats[5] if len(stats) > 5 else 0.0)
+    return rep["gt1"] <= MAX_BIG and one <= limit * max(stats[2], 1), rep, one, stats[2]
 
 
 # --------------------------------------------------------------------------------------------------------------- tests
@@ -626,7 +634,7 @@ def test_chain_state_equals_the_frames_snapshot(lib, frame):
 @pytest.mark.parametrize("frame", T3_FRAMES or ["none"])
 def test_chain_frame(lib, frame):
     """The frame drawn from the replayed state alone is pixel-identical to the frame drawn from the recorded snapshot (the state
-    side adds no error) and meets test_gl_raster's criterion; the zoom-2 frames of t3 exceed its one-level fraction (U-1076)."""
+    side adds no error) and meets the frame criterion with the one-level allowance scaled by the frame's texel-per-pixel scale (U-1076)."""
     if not T3_FRAMES:
         pytest.skip("no t3 corpus with frames")
     if not (INSTALL / "Data" / "Textures" / "Parkland").is_dir():
@@ -635,10 +643,7 @@ def test_chain_frame(lib, frame):
     _, ref, _, _ = R.run_chain_from_setup(lib, R.Setup(T3 / "frames"), frame, INSTALL)
     assert (got == ref).all(), f"{frame}: {int((got != ref).sum())} pixels differ from the snapshot-driven chain"
     ok, rep, one, drawn = judge(post, got, stats, pre)
-    zoom = struct.unpack_from("<i", G.Snap(T3 / "frames", frame).tobj, 0x1C)[0]
-    if not ok and zoom == 2 and rep["gt1"] == 0:
-        pytest.xfail(f"zoom 2: {one} one-level pixels = {one / max(drawn, 1):.4f} of drawn, none further (U-1076)")
-    assert ok, (rep, one, drawn)
+    assert ok, (rep, one, drawn, "median rho", stats[5])
 
 
 # --------------------------------------------------------------------------------------- Terrain.dll's constant tables
@@ -672,3 +677,20 @@ def test_dll_constants_refuse_another_file(lib):
     code, _ = _load_constants(lib, {"Terrain.dll": bytes(raw)})
     assert code == L.SG_E_NO_RESOURCE
     assert _load_constants(lib, {}) == (0, 0)
+
+
+@pytest.mark.parametrize("mode", (1, 2, 3, 4, 5, 7, 8))
+def test_scaled_criterion_still_rejects_the_controls(lib, mode):
+    """The rho-scaled allowance at zoom 2 (glraster.one_level_limit) must still reject the rasteriser's deliberately wrong pipelines
+    (test_gl_raster CONTROLS; 6, blending ignored, has nothing to show in these frames: no blended pixel at zoom 2)."""
+    if not T3_FRAMES:
+        pytest.skip("no t3 corpus with frames")
+    chains = _chain_cached(lib)["t3"]
+    setup = R.Setup(T3 / "frames")
+    for frame in ("zoom2", "after_inject"):
+        def patch(r, dll):
+            t = f"#tune 11 {mode}\n".encode()
+            dll.sg_raster_exec(r, t, len(t))
+        post, got, st, _unknown, pre = R.run(lib, setup, frame, patch=patch)
+        ok, rep, one, drawn = judge(post, got, list(st) + [chains[frame][2][5]], pre)
+        assert not ok, f"control {mode} meets the scaled criterion on {frame} ({one / max(drawn, 1):.4f} one-level, {rep['gt1']} further)"

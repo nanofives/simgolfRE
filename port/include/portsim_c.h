@@ -246,6 +246,7 @@ SG_API void sg_raster_set_pixels(sg_raster *r, const uint16_t *px, size_t n);   
 SG_API size_t sg_raster_get_pixels(sg_raster *r, uint16_t *out, size_t cap);    /* pixels copied (0 when cap is short) */
 SG_API void sg_raster_keep_float(sg_raster *r, int32_t on);                     /* diagnostics: keep pre-quantisation colours */
 SG_API size_t sg_raster_get_float(sg_raster *r, float *out, size_t cap);        /* w * h * 3 floats (-1 = never written) */
+SG_API size_t sg_raster_get_rho(sg_raster *r, float *out, size_t cap);          /* w * h floats: rho (keep_float), -1 unwritten */
 SG_API size_t sg_raster_get_source(sg_raster *r, float *out, size_t cap);       /* w * h * 8 floats: src rgb, alpha, dst rgb, blended */
 SG_API int sg_raster_stats(sg_raster *r, int64_t out[5]);   /* triangles, culled, drawn px, blended px, skipped */
 

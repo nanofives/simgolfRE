@@ -320,7 +320,9 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     stream; an unmodified copy of the files does not. END TO END, with no recorded GL state at all: the port's setup drives GlRaster
     (which now ignores calls without a context and hands out names 1, 2, 3 ... like the original's driver), its table feeds the renderer,
     and Terrain::render draws each snapshot over the snapshot's Terrain object and arrays: all 31 Terrain::render passes meet the frame
-    criterion (zoom 1 and 2 passes through setZoomLevel); a control with the lighting file edited (ambient 200 -> 60) breaks it.
+    criterion (zoom 1 passes through setZoomLevel; CORRECTED 2026-10-24: c7's steps named zoom1 / zoom2 / z1_* / z2_* hold zoom 0 in
+    their Terrain object, only view_zoom1 and fuzz7..9_z1 are zoom 1, and c7 has no zoom-2 pass: those come from t3, section 16);
+    a control with the lighting file edited (ambient 200 -> 60) breaks it.
     What still comes from the recording in that chain: the Terrain object (tiles, faces) and the vertex / normal arrays, i.e. the state side
     of Terrain.dll, and the starting back buffer; the texture-coordinate and side-normal tables and the screen scale are still read from the
     snapshot (the screen scale is also produced by the setup, 38.682186, but the renderer's globals take the snapshot's value).
@@ -439,7 +441,8 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
       there (tcSnapNow). The hooked runs are compared with the pinned references: SAME for sandbox_basic (10 checkpoints),
       course_season (12), cov_k1_terrain (5), cov_b_paths (4), cov_l_bridge (13), cov_k1_river (72) and cov_b_holes18 (6). cov_r_reload
       differs at its last checkpoint in two hooked runs while a run without the recorder is SAME (U-1078): it is used up to `run_a`.
-    - EVIDENCE: the port boots each scenario on its trace (the boot gate) with LiveTerrain attached. Over those 8 scenarios its 205,008
+    - EVIDENCE (numbers of the first recordings; section 17 has the re-made ones: 232,020 calls, 125 checkpoints, cov_r_reload in
+      full): the port boots each scenario on its trace (the boot gate) with LiveTerrain attached. Over those 8 scenarios its 205,008
       calls of the interface's methods equal the original's line for line (method, tile as tile index, every other argument, the drawn
       variation of every setType), and at all 124 checkpoints the Terrain object (context handle and draw-list head as zero / nonzero),
       the 22,500 vertices, the 22,500 normals, the texture table and the view quadrant equal the original's byte for byte; the boot gate
@@ -464,3 +467,28 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
     textures (entries [0x24] / [0x22] / [0x23][0][0] of the table) and initSystem's screen scale. EVIDENCE: at all 316 replay positions
     of t1 / t2 / t3 the two tables, the three textures and the scale equal the original's; the t3 chain (15 frames) now takes nothing
     from the recording but the starting back buffer and gives the same pixels as before.
+
+16. DONE, the zoom-2 one-level noise (U-1076; 2026-10-24). The rasteriser records each drawn pixel's texel-per-pixel scale rho with its
+    diagnostics on (sg_raster_get_rho). Measured on t3 and c7: the one-level mismatch rate is 0.6 .. 0.7 % of the drawn pixels at rho 2 .. 3
+    (zoom 0), 1.6 % at rho 4 .. 6 (zoom 1), 2.9 % at rho 8 .. 12 (zoom 2), about 0.3 % per unit of rho at every zoom, none more than one
+    level off, no blended pixel among them. A grid of the sample-position scale (25 pairs) has its optimum at section 11's constants at
+    every zoom, and a further global shift of 1/256 px in either axis triples the mismatches everywhere. So the zoom-2 excess is section
+    11's per-triangle sample-position residual (below 1/256 px), which minification multiplies by rho in texel space; nothing new and
+    nothing the state side adds. The frame criterion's one-level allowance is now max(2 %, 0.4 % x median rho) (glraster.one_level_limit):
+    the same 2 % for every c7 pass (rho 1.4 .. 3), 3.8 % at zoom 2, where every rasteriser control the frames can show (1, 2, 3, 4, 5, 7, 8;
+    6 has no blended pixel to act on) still breaks it (test_scaled_criterion_still_rejects_the_controls). All 15 t3 chain frames pass;
+    the four expected failures are gone. The residual's origin stays open (U-1076, section 11's probes). Correction: c7's steps named
+    zoom1 / zoom2 / z1_* / z2_* are zoom 0 in their Terrain object (only view_zoom1 and fuzz7..9_z1 are zoom 1); section 12 said otherwise.
+
+17. DONE, what perturbed cov_r_reload's recording (U-1078; 2026-10-24). Not the recorder: under trace_tool.py's entry point the same call
+    recorder (with or without the checkpoint copies) gave runs SAME at all 3 checkpoints, their traces byte-identical to a run without it;
+    through terrain_calls.py --scenario, every run differed at `end`, in a new variant almost each time, with or without the copies.
+    Frame hashes (C3FT_FRAMEHASH=sim) put the first divergence against the capture run at frame record 378: another game loaded. Cause:
+    terrain_calls.py imported game.py at module load, and game.py fixes its install dir from SIMGOLF_GAME_DIR when imported, before
+    scenario_ab sets it from --instance. So every pinned run booted the game in original/ while the family restore reset instances\b2,
+    and each cov_r_reload run started from the saves its predecessor left in original/saved games (nine dated saves had accumulated:
+    those, not only the walk tools, had broken the boot gate in section 14). Fixed: game / scenario are imported only in the walk mode and
+    --scenario refuses to run with game already imported; original/saved games restored from log/c3/alt/s36a/pristine (extras kept in
+    log/p5/terrain/original_saves_backup_20261024). All eight pinned recordings were made again with the instance in effect: every one
+    SAME as its reference (cov_r_reload included, all 3 checkpoints), original/saved games untouched afterwards. With them: 232,020
+    interface calls equal line for line and all 125 checkpoints equal, cov_r_reload compared in full (52,033 calls).

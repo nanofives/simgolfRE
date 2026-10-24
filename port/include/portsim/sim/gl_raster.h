@@ -33,12 +33,14 @@ class GlRaster : public GlSink {
   // diagnostics: the colour of every written pixel before it is quantised to 5 bits (0..255 per channel, 3 floats a pixel)
   void keep_float(bool on) {
     keep_float_ = on;
-    if (on) { ffb_.assign(fb_.size() * 3, -1.0f); sfb_.assign(fb_.size() * 8, -1.0f); }
+    if (on) { ffb_.assign(fb_.size() * 3, -1.0f); sfb_.assign(fb_.size() * 8, -1.0f); rfb_.assign(fb_.size(), -1.0f); }
   }
   // per written pixel: source r g b (0..255, after lighting), source alpha (0..255), the destination's r g b 5-bit values and
   // 1 when the write was blended
   const std::vector<float> &source_pixels() const { return sfb_; }
   const std::vector<float> &float_pixels() const { return ffb_; }
+  // per written pixel: the texel-per-pixel scale (rho) of its triangle, the last write's (-1 where nothing was written)
+  const std::vector<float> &rho_pixels() const { return rfb_; }
   const std::vector<uint16_t> &pixels() const { return fb_; }
 
   // ---- the GlSink calls of the render path ----
@@ -128,6 +130,7 @@ class GlRaster : public GlSink {
   int w_, h_;
   std::vector<uint16_t> fb_;
   std::vector<float> ffb_, sfb_;
+  std::vector<float> rfb_;   // rho per pixel (keep_float)
   bool keep_float_ = false;
   // matrices
   uint32_t mode_ = 0x1700;               // GL_MODELVIEW

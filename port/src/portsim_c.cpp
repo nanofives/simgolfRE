@@ -750,6 +750,11 @@ size_t sg_raster_get_float(sg_raster *r, float *out, size_t cap) {
   std::memcpy(out, r->r.float_pixels().data(), r->r.float_pixels().size() * 4);
   return r->r.float_pixels().size();
 }
+size_t sg_raster_get_rho(sg_raster *r, float *out, size_t cap) {
+  if (!r || !out || cap < r->r.rho_pixels().size()) return 0;
+  std::memcpy(out, r->r.rho_pixels().data(), r->r.rho_pixels().size() * 4);
+  return r->r.rho_pixels().size();
+}
 size_t sg_raster_get_source(sg_raster *r, float *out, size_t cap) {
   if (!r || !out || cap < r->r.source_pixels().size()) return 0;
   std::memcpy(out, r->r.source_pixels().data(), r->r.source_pixels().size() * 4);

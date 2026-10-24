@@ -37,6 +37,7 @@ def bind(dll):
     dll.sg_raster_get_source.restype, dll.sg_raster_get_source.argtypes = SZ, [P, C.c_char_p, SZ]
     dll.sg_raster_keep_float.restype, dll.sg_raster_keep_float.argtypes = None, [P, I32]
     dll.sg_raster_get_float.restype, dll.sg_raster_get_float.argtypes = SZ, [P, C.c_char_p, SZ]
+    dll.sg_raster_get_rho.restype, dll.sg_raster_get_rho.argtypes = SZ, [P, C.c_void_p, SZ]
 
 
 class Setup:
@@ -166,6 +167,14 @@ def run_chain_from_setup(lib, setup: Setup, step: str, install, patch=None):
             return post, np.frombuffer(buf.raw, dtype="<u2"), list(stt), np.frombuffer(pre, dtype="<u2")
     finally:
         dll.sg_raster_free(r)
+
+
+def one_level_limit(median_rho: float) -> float:
+    """The frame criterion's allowance of one-level pixels, as a fraction of the drawn pixels (re/PHASE5_TERRAIN_PLAN.md section 16).
+    The rasteriser's residual is a sub-1/256-pixel sample-position error per triangle; minification turns it into a texel error rho
+    times larger, and the measured one-level rate is 0.24 .. 0.36 % of the drawn pixels per unit of rho at zoom 0, 1 and 2. So the
+    allowance is 2 % up to rho 5 (every c7 pass: rho 1.4 .. 3) and 0.4 % x rho above."""
+    return max(0.02, 0.004 * median_rho)
 
 
 def report(post, got, pre) -> dict:

@@ -18,8 +18,10 @@ import time
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "re" / "tools"))
-import game  # noqa: E402
-import scenario  # noqa: E402
+# game.py reads SIMGOLF_GAME_DIR when it is imported, and scenario_ab sets it from --instance when IT is imported: so in --scenario
+# mode nothing may import game before scenario_refs has set the instance up. An early `import game` here once made every pinned
+# run boot in original/ while the family restore reset the instance (U-1078). The walk mode imports them in main().
+game = scenario = None
 
 OUT = ROOT / "log" / "p5" / "terrain"
 NL = chr(10)
@@ -113,13 +115,15 @@ def save(root: pathlib.Path, s: dict, used: dict) -> str:
     return name
 
 
-def run_pinned(scenario: str, label: str, instance: str | None) -> int:
+def run_pinned(scenario: str, label: str, instance: str | None, snaps: bool = True) -> int:
     """--scenario: a pinned scenario (re/analysis/data/scenario_refs.json) replayed by re/tools/scenario_refs.py under the virtual
     clock, with terrain_calls.js appended to its agent (the pattern of re/tools/trace_tool.py). At every checkpoint the main thread
     waits in the agent's clock stub, outside every Terrain call, so the state is copied there (tcSnapNow, snapshot named after the
     checkpoint); the log and the copies are fetched before the scenario's last reply. Output log/p5/terrain/<label>/ in the layout
     of the other recordings (port.test.terraincorpus); the run itself (checkpoints compared with the pinned reference) is
     log/c3/alt/refs/<scenario>/<label>."""
+    if "game" in sys.modules:
+        raise RuntimeError("game.py was imported before scenario_refs: the game would boot in the wrong install dir (U-1078)")
     import scenario_refs as R
     root = OUT / label
     (root / "snaps").mkdir(parents=True, exist_ok=True)
@@ -148,6 +152,8 @@ def run_pinned(scenario: str, label: str, instance: str | None) -> int:
                 return self.g.scripts[-1].exports_sync
 
             def take_dump(self, sc, name):
+                if not snaps:
+                    return super().take_dump(sc, name)
                 if not self._rec().tc_snap_now(name):
                     print(f"  checkpoint {name}: a Terrain call is in progress, no state copy", flush=True)
                 return super().take_dump(sc, name)
@@ -185,7 +191,7 @@ def run_pinned(scenario: str, label: str, instance: str | None) -> int:
     (root / "index.json").write_text(json.dumps({"snaps": names, "calls": len(lines), "scenario": scenario,
                                                  "run": str(R.REFS / scenario / label), "rc": rc}, indent=1))
     print(f"{len(lines)} calls, {len(names)} snapshots -> {root} (scenario_refs rc {rc})")
-    return 0 if names and lines and rc == 0 else 1
+    return 0 if (names or not snaps) and lines and rc == 0 else 1
 
 
 def main():
@@ -196,9 +202,13 @@ def main():
     ap.add_argument("--frames", action="store_true", help="also save the original's frame of each step (gl_rec.js) under frames/")
     ap.add_argument("--scenario", help="a pinned scenario replayed by scenario_refs.py instead of the sandbox walk")
     ap.add_argument("--instance", default=None)
+    ap.add_argument("--no-snaps", action="store_true", help="--scenario without the state copies at the checkpoints")
     a = ap.parse_args()
     if a.scenario:
-        return run_pinned(a.scenario, a.label, a.instance)
+        return run_pinned(a.scenario, a.label, a.instance, snaps=not a.no_snaps)
+    global game, scenario
+    import game  # noqa: E402,F811
+    import scenario  # noqa: E402,F811
     root = OUT / a.label
     root.mkdir(parents=True, exist_ok=True)
     c = Collector()

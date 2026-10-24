@@ -444,6 +444,7 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
         sp[0] = static_cast<float>(r); sp[1] = static_cast<float>(g); sp[2] = static_cast<float>(bl); sp[3] = static_cast<float>(al);
         sp[4] = static_cast<float>((dst >> 10) & 31); sp[5] = static_cast<float>((dst >> 5) & 31); sp[6] = static_cast<float>(dst & 31);
         sp[7] = blend_ ? 1.0f : 0.0f;
+        rfb_[static_cast<size_t>(y) * w_ + x] = static_cast<float>(rho);
       }
       if (blend_ && tune[11] != 6) {
         // GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA against the 5-bit destination expanded to 8 bits
