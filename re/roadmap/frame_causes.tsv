@@ -1,0 +1,24 @@
+ranking	cause	checkpoints_blocked	scenarios	terrain_yes	terrain_no	example_checkpoint
+primary	terrain not drawn	520	60	520	0	championship/tournament_start
+primary	NOT_RUN: MISSING: no trace	34	3	0	0	cov_a_quit/menu
+primary	unsupported: no body: Widget_writePixel	5	1	0	5	cov_r_quit/quit_00
+primary	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 573 of 573 records; every sim hash equ)	2	1	0	2	cov_a_champ/n_yes
+primary	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 60 of 60 records; every sim hash equal)	2	1	0	2	cov_k3_career/answered
+primary	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 2305 of 2305 records; every sim hash e)	1	1	1	0	championship/tournament_end
+2d_all	unsupported: no body: Widget_writePixel	316	35	311	5	course_season/sandbox
+2d_all	unsupported: Surface_blit3: a source or destination the backend does not model	168	19	168	0	cov_a_build/terrain_03
+2d_all	unsupported: Image_draw: a SpriteRef the backend has no sprite for	39	5	39	0	championship/tournament_start
+2d_all	NOT_RUN: MISSING: no trace	34	3	0	0	cov_a_quit/menu
+2d_all	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 573 of 573 records; every sim hash equ)	2	1	0	2	cov_a_champ/n_yes
+2d_all	unsupported: no body: Surface_drawScaled2	2	1	2	0	cov_b_locations/phoenix
+2d_all	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 60 of 60 records; every sim hash equal)	2	1	0	2	cov_k3_career/answered
+2d_all	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 2305 of 2305 records; every sim hash e)	1	1	1	0	championship/tournament_end
+2d_terrain_no	NOT_RUN: MISSING: no trace	34	3	0	0	cov_a_quit/menu
+2d_terrain_no	unsupported: no body: Widget_writePixel	5	1	0	5	cov_r_quit/quit_00
+2d_terrain_no	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 573 of 573 records; every sim hash equ)	2	1	0	2	cov_a_champ/n_yes
+2d_terrain_no	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 60 of 60 records; every sim hash equal)	2	1	0	2	cov_k3_career/answered
+2d_terrain_yes	unsupported: no body: Widget_writePixel	311	35	311	0	course_season/sandbox
+2d_terrain_yes	unsupported: Surface_blit3: a source or destination the backend does not model	168	19	168	0	cov_a_build/terrain_03
+2d_terrain_yes	unsupported: Image_draw: a SpriteRef the backend has no sprite for	39	5	39	0	championship/tournament_start
+2d_terrain_yes	unsupported: no body: Surface_drawScaled2	2	1	2	0	cov_b_locations/phoenix
+2d_terrain_yes	NOT_RUN: no snapshot (boot KNOWN: KNOWN by S0.3: sg_run_boot returned -11 (missing exe constants / game file) after 2305 of 2305 records; every sim hash e)	1	1	1	0	championship/tournament_end

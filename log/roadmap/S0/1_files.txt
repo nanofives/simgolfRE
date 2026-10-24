@@ -1,0 +1,23 @@
+re/roadmap/BASELINE.md
+log/roadmap/S0/1_notes.md
+log/roadmap/S0/1_files.txt
+log/roadmap/S0/1_uncertain.tsv
+log/roadmap/S0/1_suite_by_file.sh
+log/roadmap/S0/1_probe_files_root.py
+log/roadmap/S0/1_boot_compare.py
+log/roadmap/S0/1_boot_compare.log
+log/roadmap/S0/1_boot_gate.log
+log/roadmap/S0/1_boot_gate.tsv
+log/roadmap/S0/1_segs_x64.log
+log/roadmap/S0/1_segs_x64.tsv
+log/roadmap/S0/1_segs_x64_compare.log
+log/roadmap/S0/1_segs_win32.log
+log/roadmap/S0/1_segs_win32.tsv
+log/roadmap/S0/1_segs_win32_compare.log
+log/roadmap/S0/1_static_rerun.log
+log/roadmap/S0/1_suite_x64.log
+log/roadmap/S0/1_suite_win32.log
+log/roadmap/S0/1_suite/
+log/roadmap/S0/1_suite_win32/
+log/roadmap/S0/1_build/
+(export, gitignored: port/build/S0_head/shim/build and re/replay junctions; port/build/S0_head/port/build/x64 and Win32 builds)

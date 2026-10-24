@@ -1353,6 +1353,27 @@ block 1). Port changes: TraceInput applies the harness's memory writes at a moda
 date write; control tick.frame 7), and a boot trace with no frame head now runs to its end, with idle passes per unread
 CURSOR record and the pending snapshots taken when the input runs out (gfx_end_of_input); boot.run(to_end=True) no longer
 returns NO_FRAMES before running. Segments 205 / 205 (digests unchanged) and boot 58 / 2 / 1 unchanged.
+Roadmap S0, baseline and frame census (2026-10-24, re/roadmap/BASELINE.md, frame_census.tsv, frame_causes.tsv, notes
+log/roadmap/S0/, U-1100..U-1102, U-1110..U-1115, U-1120 / U-1121). Every regression gate was measured on HEAD 4bfefc2a in a
+git-archive export (port/build/S0_head, with junctions to the gitignored data), so the S1 / S4 / S6 working-tree edits were not in it.
+Results: repo static 600 / 2 skipped, port suite x64 41 / 41 files, segments 205 / 205 on x64 and Win32 with 0 digests changed, boot
+gate 58 PASS / 2 KNOWN / 1 NO_FRAMES on the 61 HEAD scenarios, tick 250, sve_roundtrip 15, gl_raster 139, terrain_state 500,
+terrain_render 40, terrain_gl_setup 6, gfx 17, port static 6, terrain_live 144. The Win32 backend suite has no record after phase 3.R:
+20 failures in 8 files are its baseline. Of these, 11 are x64-only helpers (U-1100) and 9 are browser / load / save digests and
+files not yet diagnosed (U-1101). port/corpus is shared, so `boot --all` also runs uncommitted recordings: count the HEAD scenarios
+only (U-1102). port/test/framegate.py runs every checkpoint of a scenario in one boot with gfx.attach and LiveTerrain attached. It
+writes one row per checkpoint with: status PASS / UNSUPPORTED / FAIL / NOT_RUN; screen kind (title, location, ingame, frame); the
+terrain-on-screen rule from the trace's clock sites (U-1110 / U-1111); px per region (in-game: hud_title, hud_meters, hud_message,
+toolbar, bottom_panel, view); one-level and beyond-one-level px; the unsupported drawing calls before the snapshot. LiveTerrain at
+an address of its own leaves every sim hash equal. The census over HEAD's 609 checkpoints (64 scenarios) gives PASS 45 (title menu,
+location screen and one world map), UNSUPPORTED 525 and NOT_RUN 39. Of the 39, 34 have no trace (cov_a_quit, cov_a_quit_title,
+golfer_events) and 5 got no snapshot. U-1120 covers those 5: with a gfx.snapshotAt pending, sg_run_boot returns -11 at the end of
+cov_a_champ, championship and cov_k3_career. Terrain checkpoints are 522, and 520 of them rank under `terrain not drawn`. Terrain
+pixels never reach the gfx back buffer at HEAD, because terrain_state's draw passes only set the view quadrant. The G2 criterion
+(1.5 % one-level, 70 px beyond one level, glraster constants) is applied to the view region's area until S3 draws the terrain
+(U-1121). 2D causes (the first unsupported drawing call): Widget_writePixel 316, Surface_blit3 with an unmodelled source or
+destination 168, Image_draw with a SpriteRef the backend has no sprite for 39, Surface_drawScaled2 2. No non-PASS row lacks an
+unsupported call.
 Phase 7 defect decisions, section S6 of the roadmap orchestrator (2026-10-24, notes log/roadmap/S6/, U-1550..U-1597): `re/port/defect_decisions.tsv`
 holds every defect of model_defects.md (#1-#52, some split by arm) and every non-PASS row of divergences.tsv (grouped by cause) with its class
 (hang / fault / overrun-silent / wrong-value / dead-state / port-gap / harmless), six effect columns (save / balance / sim / frame / hang / fault),

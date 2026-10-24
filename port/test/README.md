@@ -145,3 +145,8 @@ wrong-rounding body (`negctl` mode 1) RED at every non-default word.
 - Functions without vectors (static initialisers, boot code) get their own state test in test_core.py
   (test_static_init_rng_zero, test_init_sin_table).
 - `~/bin/py -3.12 -m pytest port/test` also runs the C++ unit tests (`portsim_core_test`, ctest `portsim_core`).
+
+port/test/framegate.py (roadmap S0.2): every checkpoint of a pinned scenario in one boot run with the gfx backend and LiveTerrain
+attached. It writes one TSV row per checkpoint: status, screen kind, context, the terrain rule, px per region (one-level / beyond one
+level) and the unsupported calls before the snapshot. `~/bin/py -3.12 -m port.test.framegate --all --jobs 2 --out <tsv> --resume`
+is the census (re/roadmap/frame_census.tsv, frame_causes.tsv). Tests: test_framegate.py.
