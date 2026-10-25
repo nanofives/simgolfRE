@@ -878,7 +878,10 @@ def ledger_rows(seg_tsv: pathlib.Path, chain_tsv: pathlib.Path | None, defects_t
                  "placeAnimal.zeroFrameCount": "port/test/test_defects_golfers.py::test_place_animal_zero_frame_count (state)",
                  "replaceInText.tailLimit": "port/test/test_defects_gen.py::test_d46_overflowing_tail (state)",
                  "generateRandomCourse.searchBound": "port/test/test_defects_gen.py::test_d52b1_type_0x11_window_without_a_cell, "
-                                                     "test_d52b2_clubhouse_window_without_a_spot (state)"}
+                                                     "test_d52b2_clubhouse_window_without_a_spot (state)",
+                 "loadGolfPro.negativeWindowBound": "port/test/test_defects_golfers_w2.py::test_probe_course_season_hangs_on_returns_off, "
+                                                    "test_synthetic_hang_on_returns_off (state)",
+                 "generateRandomCourse.placementBound": "port/test/test_defects_gen_w2.py::test_blocked_site_search_hangs_at_1_and_returns_at_0 (state)"}
         for r in read_tsv(defects_tsv):
             n = int(r["segments_changed"])
             ev = [f"{n} segments change ({r['changed']})"] if n else []

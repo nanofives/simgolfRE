@@ -1,0 +1,12 @@
+log/roadmap/S2/12_notes.md
+log/roadmap/S2/12_files.txt
+log/roadmap/S2/12_uncertain.tsv
+log/roadmap/S2/12_cursor.py
+log/roadmap/S2/12_cursor.log
+log/roadmap/S2/12_boot.tsv
+log/roadmap/S2/12_run_fh.log
+log/roadmap/S2/12_run_nofh.log
+log/roadmap/S2/12_trace_dump.txt
+log/c3/alt/refs/cov_r_s2_screens/s212_fh/ (run output)
+log/c3/alt/refs/cov_r_s2_screens/s212_nofh/ (run output)
+instances/s2_12/ (instance)

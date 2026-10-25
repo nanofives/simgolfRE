@@ -51,3 +51,8 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 - **G7, where children run after claude2 hit 100 %, 2026-10-24: claude3, cap 12.** All 12 roadmap children were moved to claude3
   (a Terminal session, `Stop claude2 sessions at 100%, move to claude3`). New leads, workers and integrators spawn on claude3 with the
   alias models, under the same cap of 12 roadmap sessions, until claude2 resets; then new spawns go back to claude2.
+- **G8, the play session (S7's last gate), 2026-10-25: wait for the sprites and the HUD.** The app was ready
+  (log/roadmap/S7/5_play.bat, guide log/roadmap/S7/5_notes.md section 6: title menu, location screen and terrain drawn as the original;
+  HUD panels, radial toolbar, build palettes, message boxes and sprites not drawn yet, U-1641; zoom frames 144..186 ms, U-1640; no
+  sound before S4). Mariano plays once S3.5 (sprites), S3.6 / S3.6b (HUD panels) and S3.7 (ticker, cursor, tooltip) are merged; S7's
+  gate stays open until then.

@@ -1,4 +1,7 @@
-# S6: defects whose fix changes a save, a balance value, the simulation state or a frame (decision D5: Mariano decides)
+# S6 ask list: ANSWERED by Mariano (G3, re/roadmap/DECISIONS_PENDING.md, 2026-10-24)
+
+Answer: the 24 rows of groups (a) overruns, (b) wrong values and (c) course / terrain / money stay `keep` in both profiles; D42c (loadGolfPro, difficulty 5 / 6) and D52b3 (generateRandomCourse's placement search) become `fix` and joined the `fixed` profile in wave 2 (switches loadGolfPro.negativeWindowBound and generateRandomCourse.placementBound). re/port/defect_decisions.tsv carries the answer in its `decision` column (G3 keep / G3 fix). The text below is the question as it was asked.
+
 
 Default for every row below: `keep` (both profiles reproduce the original). A row you turn into `fix` gets a switch (default 1 = original) and joins the `fixed` profile.
 Columns: S = changes a save, B = balance, M = simulation state, F = frame (yes / no / unknown). Source: re/port/defect_decisions.tsv.

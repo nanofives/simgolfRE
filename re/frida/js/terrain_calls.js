@@ -84,6 +84,114 @@
     }
   }
 
+  // ---- frames (tcFrames(true), roadmap S3.2): the root surface the GL context draws into, around every terrain pass ----
+  // initSystem's third argument is the DC of the root window's surface (initTerrain passes slot +0x28 of the jgld surface at
+  // g_rootWindow + 0x278); its bitmap's bits are the pixels the passes draw. For every call of the exe's updateTerrainRender on the
+  // game thread the bits are copied (native memcpy into preallocated buffers) at its entry and its return, and at the entry and
+  // the return of each depth-0 render / localRender / stripRender / pathUpdateRender inside it (the first PASS_CAP passes). Only the
+  // last completed frame is kept; tcSnapNow sends it with the checkpoint (message tc 'frame').
+  const UTR = ptr(0x004498a0), PASS_CAP = 8;
+  const PASSES = { render: 1, localRender: 1, stripRender: 1, pathUpdateRender: 1 };
+  let framesOn = !!globalThis.TC_FRAMES, rootHdc = null, dib = null, frameNo = 0, inFrame = false, fcur = null, flast = null;
+  const LITE = !!globalThis.TC_FRAMES_LITE;   // only the last frame's entry and exit (the census recordings)
+  let flastPass = null, lastIdx = 1, flastStrip = null, flastPath = null;
+  const sentExtra = {};   // frame ordinals already sent as an extra frame (.pass / .strip / .path)
+  // three buffer sets of [entry, exit, pass pre / post x PASS_CAP]: the frame being written, the last completed frame (lastIdx),
+  // the last completed frame that had a pass (set 2)
+  let bufs = null;
+  function dibInfo() {
+    if (dib || !rootHdc) return dib;
+    const gdi = Process.getModuleByName('gdi32.dll');
+    const GetCurrentObject = new NativeFunction(gdi.getExportByName('GetCurrentObject'), 'pointer', ['pointer', 'uint32'], 'stdcall');
+    const GetObjectA = new NativeFunction(gdi.getExportByName('GetObjectA'), 'int', ['pointer', 'int', 'pointer'], 'stdcall');
+    const hbm = GetCurrentObject(rootHdc, 7);                 // OBJ_BITMAP
+    if (hbm.isNull()) return null;
+    const ds = Memory.alloc(96);
+    if (GetObjectA(hbm, 84, ds) < 84) return null;           // sizeof(DIBSECTION) on x86
+    const bits = ds.add(20).readPointer();                   // BITMAP.bmBits
+    if (bits.isNull()) return null;
+    const wb = ds.add(12).readS32(), bh = ds.add(32).readS32();
+    dib = { bits: bits, n: wb * Math.abs(bh), meta: { w: ds.add(4).readS32(), h: ds.add(8).readS32(), wb: wb, bpp: ds.add(18).readU16(),
+            biHeight: bh, comp: ds.add(40).readU32(), m0: ds.add(64).readU32(), m1: ds.add(68).readU32(), m2: ds.add(72).readU32() } };
+    const mk = function () { const a = []; for (let i = 0; i < 2 + 2 * PASS_CAP; i++) a.push(Memory.alloc(dib.n)); return a; };
+    bufs = [mk(), mk(), mk(), mk(), mk()];   // + 3 the last frame with a stripRender, 4 with a pathUpdateRender
+    return dib;
+  }
+  function fcopy(slot) {
+    if (!dibInfo()) return;
+    Memory.copy(bufs[0][slot], dib.bits, dib.n);
+  }
+  function passEnter(name, a, ecx) {
+    if (!framesOn || !inFrame || fcur.passes.length >= PASS_CAP) return -1;   // (LITE: the pass is listed, not copied)
+    const k = fcur.passes.length;
+    const args = [];
+    for (let i = 0; i < BODY[name][1]; i++) args.push(a[i].toUInt32());
+    fcur.passes.push({ name: name, seq: seq, args: args, ecx: ecx });
+    if (LITE) return -1;
+    fcopy(2 + 2 * k);
+    return k;
+  }
+  function passLeave(k) {
+    if (k >= 0) fcopy(3 + 2 * k);
+  }
+  function hookFrames() {
+    Interceptor.attach(UTR, {
+      onEnter(a) {
+        if (!framesOn || inFrame) { this.no = true; return; }
+        inFrame = true;
+        this.no = false;
+        fcur = { frame: frameNo++, seq: seq, args: [a[0].toInt32(), a[1].toInt32(), a[2].toInt32(), a[3].toInt32()], passes: [] };
+        fcopy(0);
+      },
+      onLeave(r) {
+        if (this.no) return;
+        fcopy(1);
+        fcur.ret = r.toInt32();
+        fcur.seqEnd = seq;
+        inFrame = false;
+        // a frame with a pass also becomes the last frame with a pass (buffer set 2); any frame becomes the last one
+        const k = fcur.passes.length > 0 ? 2 : 1;
+        const has = function (nm) { return fcur.passes.some(function (p) { return p.name === nm; }); };
+        if (bufs) {
+          // a frame with a stripRender / pathUpdateRender pass is also copied into set 3 / 4 (rare: native copies of the set)
+          if (has('stripRender')) { for (let i = 0; i < bufs[0].length; i++) Memory.copy(bufs[3][i], bufs[0][i], dib.n); flastStrip = fcur; }
+          if (has('pathUpdateRender')) { for (let i = 0; i < bufs[0].length; i++) Memory.copy(bufs[4][i], bufs[0][i], dib.n); flastPath = fcur; }
+          const t = bufs[0]; bufs[0] = bufs[k]; bufs[k] = t;
+        }
+        if (k === 2) flastPass = fcur;
+        flast = fcur;
+        lastIdx = k;
+        fcur = null;
+      }
+    });
+  }
+  hookFrames();
+  rpc.exports.tcFrames = function (on) { framesOn = !!on; return { on: framesOn, hdc: rootHdc ? rootHdc.toUInt32() : 0 }; };
+  // the checkpoint's frames: the last frame with a pass (label + '.pass', when it is not the last frame itself), then the last frame
+  function sendFrame(label) {
+    if (!flast || !dib) { send({ tc: 'frame', label: label, none: 1 }); return; }
+    const extra = function (f, suffix, b) {
+      if (!f || f === flast || sentExtra[f.frame]) return;
+      sentExtra[f.frame] = 1;
+      sendOne(label + suffix, f, b);
+    };
+    if (!LITE) extra(flastStrip, '.strip', bufs[3]);
+    if (!LITE) extra(flastPath, '.path', bufs[4]);
+    if (!LITE) extra(flastPass, '.pass', bufs[2]);
+    sendOne(label, flast, bufs[lastIdx]);
+  }
+  function sendOne(label, f, b) {
+    send({ tc: 'frame', label: label, frame: f.frame, seq: f.seq, seqEnd: f.seqEnd, args: f.args, ret: f.ret, passes: f.passes,
+           dib: dib.meta });
+    send({ tc: 'fdata', kind: 'entry' }, b[0].readByteArray(dib.n));
+    send({ tc: 'fdata', kind: 'exit' }, b[1].readByteArray(dib.n));
+    for (let k = 0; !LITE && k < f.passes.length; k++) {
+      send({ tc: 'fdata', kind: 'pass' + k + '_pre' }, b[2 + 2 * k].readByteArray(dib.n));
+      send({ tc: 'fdata', kind: 'pass' + k + '_post' }, b[3 + 2 * k].readByteArray(dib.n));
+    }
+    send({ tc: 'frameend', label: label });
+  }
+
   function install() {
     if (done) return;
     tm = Process.findModuleByName('Terrain.dll');
@@ -102,6 +210,8 @@
           counts[name] = (counts[name] || 0) + 1;
           if (name === 'render' && d === 0 && snapReq !== null) { capture(snapReq, 'render'); snapReq = null; }
           if (GETTERS[name]) { this.skip = true; return; }
+          if (name === 'initSystem' && d === 0) rootHdc = a[2];
+          this.pk = (PASSES[name] && d === 0) ? passEnter(name, a, this.context.ecx.toUInt32()) : -1;
           this.seq = seq++;
           const args = [];
           for (let i = 0; i < 5; i++) args.push(i < nargs ? hex(a[i].toUInt32()) : '-');
@@ -123,6 +233,7 @@
           const tid = this.threadId;
           depth[tid] = (depth[tid] || 1) - 1;
           if (this.skip) return;
+          passLeave(this.pk);
           let extra = this.extra;
           if (name === 'setType' && !this.tile.isNull()) extra += 'var=' + this.tile.add(0x240).readS32();
           log.push(this.line.join(' ') + ' ' + hex(r.toUInt32()) + (extra ? ' ' + extra : ''));
@@ -144,6 +255,7 @@
   rpc.exports.tcSnapNow = function (label) {
     for (const t in depth) if (depth[t] > 0) return false;
     capture(label, 'now');
+    if (framesOn) sendFrame(label);
     return true;
   };
   rpc.exports.tcPending = function () { return snapReq !== null; };

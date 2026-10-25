@@ -1,0 +1,41 @@
+port/build/S2_7_head/port/src/sim/gfx_boot_screens.cpp
+port/build/S2_7_head/port/test/test_gfx_boot_screens.py
+port/build/S2_7_head/port/src/sim/menu.cpp
+port/build/S2_7_head/port/src/sim/commands_screens.inc
+port/build/S2_7_head/port/src/sim/tick_boot.inc
+port/build/S2_7_head/port/src/sim/gfx_families.inc
+log/roadmap/S2/7_notes.md
+log/roadmap/S2/7_files.txt
+log/roadmap/S2/7_merge.md
+log/roadmap/S2/7_shared.patch
+log/roadmap/S2/7_shared_wt.patch
+log/roadmap/S2/7_uncertain.tsv
+log/roadmap/S2/7_build.log
+log/roadmap/S2/7_build_w32.log
+log/roadmap/S2/7_build_w32_runner.log
+log/roadmap/S2/7_fg_base.tsv
+log/roadmap/S2/7_fg_base.log
+log/roadmap/S2/7_fg_dev.tsv
+log/roadmap/S2/7_fg_col5none.tsv
+log/roadmap/S2/7_negctl_1.tsv .. 7_negctl_13.tsv
+log/roadmap/S2/7_negctl_frames.log
+log/roadmap/S2/7_census_x64.tsv
+log/roadmap/S2/7_census_x64.log
+log/roadmap/S2/7_census_compare.log
+log/roadmap/S2/7_worse_S2_4.tsv
+log/roadmap/S2/7_worse_S2_7.tsv
+log/roadmap/S2/7_segs_x64.tsv
+log/roadmap/S2/7_segs_x64.log
+log/roadmap/S2/7_segs_x64_compare.log
+log/roadmap/S2/7_segs_win32.tsv
+log/roadmap/S2/7_segs_win32.log
+log/roadmap/S2/7_segs_win32_compare.log
+log/roadmap/S2/7_boot_gate.tsv
+log/roadmap/S2/7_boot_gate.log
+log/roadmap/S2/7_boot_compare.log
+log/roadmap/S2/7_test_x64.log
+log/roadmap/S2/7_test_x64_b.log
+log/roadmap/S2/7_test_commands_rerun.log
+log/roadmap/S2/7_test_w32.log
+(local, not to commit: log/roadmap/S2/7_img/ (rendered game frames), the *.tsv.d/ dirs, the mirror port/build/S2_7_head and the
+builds port/build/S2_7, port/build/S2_7_head/port/build/Win32)

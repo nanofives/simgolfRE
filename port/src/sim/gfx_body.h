@@ -39,6 +39,7 @@ struct Image8 {
 // A cropSprite result: the kept rectangle, its trims (the SpriteRef's +0x20 left, +0x24 top) and the source's palette.
 struct Sprite8 {
   int32_t w = 0, h = 0, left = 0, top = 0;
+  int32_t cut_w = 0, cut_h = 0;   // the requested rectangle's size (the SpriteRef's +0x18 / +0x1c; roadmap S2.8)
   std::vector<uint8_t> px;
   std::array<uint16_t, 256> pal{};
 };
@@ -64,6 +65,15 @@ class Gfx {
   std::vector<size_t> snap_unsupported;  // per snapshot: the distinct unsupported reasons that had occurred before it
   std::map<std::string, uint64_t> handled, unsupported;
   std::vector<std::string> notes;       // every distinct unsupported reason, in first-occurrence order (gfx.log `first`)
+  // terrain on the surfaces (roadmap S3.2, S0 recommendation 2): set on the root surface by a terrain pass or the restore of
+  // the terrain picture (gfx_terrain.cpp), cleared by a 2D write that covers the whole root surface, copied to the back buffer
+  // at Window::refreshFull; each snapshot keeps the back buffer's (gfx.log `snapshot_terrain`)
+  int root_terrain = 0, back_terrain = 0;
+  std::vector<int> snap_terrain;
+  // a 2D write of the rectangle (x, y, w, h) onto the root surface: clears root_terrain when it covers the whole surface
+  void note_root_write(int32_t x, int32_t y, int32_t w, int32_t h) {
+    if (x <= 0 && y <= 0 && static_cast<int64_t>(x) + w >= root.w && static_cast<int64_t>(y) + h >= root.h) root_terrain = 0;
+  }
   // per-family state (roadmap S2.3): a family keeps its own objects under its name, so they live and die with this Gfx
   std::map<std::string, std::shared_ptr<void>> family_state;
   template <class T>

@@ -9,6 +9,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/terrain.h"
 #include "portsim/sim/terrain_api.h"
+#include "portsim/sim/terrain_live.h"
 #include "portsim/sim/tiles.h"
 
 namespace portsim {
@@ -340,7 +341,18 @@ int32_t init_terrain(Ctx &ctx, int32_t w, int32_t h) {
   return rebuild_terrain_grid(ctx);
 }
 
+namespace {
+int32_t update_terrain_render_body(Ctx &ctx, int32_t x, int32_t y, int32_t zoom, int32_t rot);
+}
+// The frame bracket for the drawing (roadmap S3.2, terrain_live.h): the body's every exit returns through here.
 int32_t update_terrain_render(Ctx &ctx, int32_t x, int32_t y, int32_t zoom, int32_t rot) {
+  terrain_live_frame(ctx, true);
+  const int32_t r = update_terrain_render_body(ctx, x, y, zoom, rot);
+  terrain_live_frame(ctx, false);
+  return r;
+}
+namespace {
+int32_t update_terrain_render_body(Ctx &ctx, int32_t x, int32_t y, int32_t zoom, int32_t rot) {
   const auto api = [&ctx]() -> TerrainApi & { return terrain_api(ctx); };  // looked up per call: a path that calls no Terrain method needs none
   GameState &g = ctx.gs();
   const uint32_t self = terrain_self(ctx);
@@ -427,6 +439,7 @@ int32_t update_terrain_render(Ctx &ctx, int32_t x, int32_t y, int32_t zoom, int3
   store_camera();
   return i32(r);
 }
+}  // namespace
 
 // ------------------------------------------------------------------------------------------------ adapters
 namespace {

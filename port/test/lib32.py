@@ -32,7 +32,7 @@ DEFAULT_CW = 0x027F
 (OP_QUIT, OP_HELLO, OP_FUNCS, OP_NEGCTL_SET, OP_NEGCTL_GET, OP_NEGCTL_RESET, OP_DEFECTS, OP_DEFECT_SET, OP_DEFECT_GET,
  OP_DEFECT_RESET, OP_EXE_LOAD, OP_EXE_LOADED, OP_EXE_CONST, OP_OBJECTS, OP_HASH_BYTES, OP_STATE_NEW, OP_STATE_FREE,
  OP_CALL, OP_HASH_CLASS, OP_RUN_FRAMES, OP_EXE_FILL, OP_FILES_PUT, OP_FILES_CLEAR, OP_FILES_ROOT, OP_FILES_SIZE,
- OP_SYNC, OP_FILES_READ, OP_RUN_BOOT) = range(28)
+ OP_SYNC, OP_FILES_READ, OP_RUN_BOOT, OP_LIVE_ATTACH, OP_LIVE_DETACH, OP_LIVE_OBJECT, OP_LIVE_LOG, OP_LIVE_SNAPSHOT) = range(33)
 P_BASE, P_MAP, P_UNMAP = 1, 2, 3
 
 
@@ -400,6 +400,37 @@ class State32(L.State):
         _, r = self._tx(OP_FILES_READ, _s(name))
         (n,) = struct.unpack("<q", r.raw(8))
         return None if n < 0 else bytes(r.raw(n))
+
+    # ---- LiveTerrain (roadmap S3.2: sg_ts_live_* over the runner, S0 recommendation 5); port/test/terrainlive.py dispatches here
+    def live_attach(self, va: int, snap_after=()) -> int:
+        ks = list(snap_after)
+        code, _ = self._tx(OP_LIVE_ATTACH, struct.pack("<Ii", va, len(ks)) + b"".join(struct.pack("<I", k) for k in ks))
+        return code
+
+    def live_detach(self) -> int:
+        code, _ = self._tx(OP_LIVE_DETACH)
+        return code
+
+    def live_object(self) -> int:
+        _, r = self._tx(OP_LIVE_OBJECT)
+        return r.u32() if r.d else 0
+
+    def live_log(self) -> str:
+        code, r = self._tx(OP_LIVE_LOG)
+        if code != L.SG_OK:
+            raise L.SgError(code, "sg_ts_live_log")
+        return r.s()
+
+    def live_snapshot(self, k: int, nobj: int = 0, nv: int = 0, nt: int = 0):
+        """k < 0: the number of copies; else (after, view, object bytes, vertices bytes, normals bytes, textures bytes) or None"""
+        _, r = self._tx(OP_LIVE_SNAPSHOT, struct.pack("<iIII", k, nobj, nv, nt))
+        res = r.i32()
+        if k < 0:
+            return res
+        if res < 0:
+            return None
+        after, view = r.u32(), r.i32()
+        return after, view, bytes(r.raw(nobj)), bytes(r.raw(4 * nv)), bytes(r.raw(4 * nv)), bytes(r.raw(4 * nt))
 
 
 _LIB32: Lib32 | None = None

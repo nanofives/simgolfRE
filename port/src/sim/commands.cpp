@@ -16,6 +16,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/course.h"
 #include "portsim/sim/gfx.h"
+#include "gfx_reports.h"
 #include "portsim/sim/semantic.h"
 #include "portsim/sim/util.h"
 

@@ -38,9 +38,20 @@ def main():
         out[r["id"]] = dict(r, verified="first pass (model notes, port source)")
     for r in c:
         out[r["id"]] = dict(r, verified="disassembly + Unicorn (S6.6)")
-    cols = list(h6) + ["verified", "profile_fixed"]
+    cols = list(h6) + ["verified", "decision", "profile_fixed"]
     rows = sorted(out.values(), key=lambda r: key(r["id"]))
+    # G3 (Mariano, re/roadmap/DECISIONS_PENDING.md): the two hangs become fix, the other 24 ask rows stay keep.
+    g3_fix = {"D42c": "loadGolfPro.negativeWindowBound", "D52b3": "generateRandomCourse.placementBound"}
     for r in rows:
+        r["decision"] = ""
+        if r["id"] in g3_fix:
+            r.update(recommendation="fix", switch=g3_fix[r["id"]], decision="G3 fix (wave 2)")
+        elif r["recommendation"] == "ask":
+            r.update(recommendation="keep", decision="G3 keep")
+        elif r["recommendation"] == "fix":
+            r["decision"] = "D5 fix (wave 1)"
+        if r["recommendation"] == "fix":
+            r["switch_state"] = "implemented"
         r["profile_fixed"] = "yes" if r["recommendation"] == "fix" else "no"
     dest = ROOT / "re" / "port" / "defect_decisions.tsv"
     if "--write" in sys.argv:

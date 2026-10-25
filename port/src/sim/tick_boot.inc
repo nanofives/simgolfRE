@@ -68,7 +68,31 @@ void BootSetup(u32 F) {
     MenuSeedSlots(F);                                                  // ML+0xbd..ML+0x1f6 the button geometry and labels
     tc("setDrawTarget", Root(), GS(g_font51a028), 0, 0, 0);            // ML+0x201
     tc("loadImage", GS(g_image568d10), (GS(f_strpool_4c6ba4) + 152), GS(g_palette5199c8), 0, 0x100, 0);   // ML+0x21e
-    // ML+0x24e Surface_blit3 and the seven menu items and five labels ML+0x253..ML+0x2c0: drawing
+    // ML+0x24e Surface_blit3 and the seven menu items and five labels ML+0x253..ML+0x2c0: drawing, issued with an attached
+    // graphics backend (roadmap S2.7: the title art the boot's loading screens are drawn over; negative control 10 of
+    // gfx.family.boot_screens leaves it out). The same calls as the title menu's first draw (tick_menu.inc) without the theme
+    // line under Start New Game.
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+#if PORTSIM_NEGCTL
+        static const int fam = registry_find("gfx.family.boot_screens");
+        const FuncDef *fd = fam >= 0 ? registry_at(fam, nullptr) : nullptr;
+        const bool art = !(fd && fd->negctl && *fd->negctl == 10);
+#else
+        const bool art = true;
+#endif
+        if (art) {
+            tc("Surface_blit3", GS(g_image568d10), Root(), 0, 0, 0x320, 0x258, 0, 0,
+               G32(GS(g_screenWidth)), G32(GS(g_screenHeight)));                              // ML+0x24e
+            for (int esi = 0; esi < 7; esi++) {                                               // ML+0x253..ML+0x2c0
+                const int k = ((esi == 6) ? 1 : 0) + 2 * esi;
+                tc("Image_draw", k * 44 + GS(g_spriteRef_53b7e0), Root(), (int)FW(0x150 + esi * 4),
+                   (int)FW(0x152 + esi * 4), 0);                                              // ML+0x288
+                if (esi < 5)
+                    cc("drawCenteredText", FD(0x1F4 + esi * 4), (int)FW(0xF4 + esi * 4), (int)FW(0xF6 + esi * 4) + 8,
+                       (int)0x80006318);                                                      // ML+0x2b4
+            }
+        }
+    }
     tc("setDrawTarget", Root(), GS(g_font51a028), 0, 0, 0);            // ML+0x2d3
     G32(GS(g_preferences)) = -1;                                       // ML+0x2e5
     G32(GS(g_difficulty)) = -1;                                        // ML+0x2eb session mode = none

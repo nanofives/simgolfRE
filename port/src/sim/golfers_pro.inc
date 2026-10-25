@@ -63,6 +63,19 @@ int32_t load_golf_pro(Ctx &ctx) {
       bool eligible = false;
       for (int32_t k = 1; k < 100 && !eligible; ++k) eligible = (pros + k).field(&GolfPro::look_hi).get() != -1;
       const bool guard = !SG_DEFECT(g_defect_pro_divide_guard);
+      const bool window_guard = !SG_DEFECT(g_defect_pro_window_bound);
+      int64_t vmax = 0;  // D42c: |v| is bounded by the roster's skills, so the acceptance window can be shown empty
+      if (eligible && sub32(4, gs.g_difficulty) < 0) {
+        const int64_t div0 = (static_cast<int64_t>(gs.g_difficulty) * 5 + 0x14) * 2;
+        int64_t smax = 0;
+        for (int32_t k = 0; k < 100; ++k) {
+          const int64_t sk = static_cast<int64_t>((pros + k).field(&GolfPro::skill_sum).get()) - 10;
+          smax = std::max<int64_t>(smax, sk < 0 ? -sk : sk);
+        }
+        const int64_t dv = div0 < 0 ? -div0 : div0;
+        const int64_t vbase = dv != 0 ? (smax * smax) / dv : 0;
+        vmax = vbase * (1 + (gs.g_difficulty < 0 ? -static_cast<int64_t>(gs.g_difficulty) : gs.g_difficulty)) + 0x10000;
+      }
       bool gave_up = false;  // D42: the guarded cases end with pick 0, the arm a repeated pick already takes
       int32_t tries = 0, pick = 0, v;
       if (!eligible) {
@@ -91,6 +104,17 @@ int32_t load_golf_pro(Ctx &ctx) {
         const int32_t cash = gs.g_cash_div100 / 200;
         const int32_t rep = gs.g_tournamentPurse / 10;
         if (guard && (sub32(4, level) == 0 || (mode == 2 && sub32(4, level) == 1))) { gave_up = true; break; }
+        if (sub32(4, level) < 0) {
+          // v <= tries / (4 - level) + rep + cash with 4 - level < 0: the bound only falls, so once it is under every
+          // possible v the draw can never be accepted and the original spins for ever (D42c)
+          const int64_t upper = static_cast<int64_t>(tries / sub32(4, level)) + rep + cash;
+          const int64_t lim = mode == 3 ? 1 : -vmax;
+          if (upper < lim) {
+            if (!window_guard) throw NoReturn{"loadGolfPro"};
+            gave_up = true;
+            break;
+          }
+        }
         if (v > add32(add32(div32(tries, sub32(4, level)), rep), cash)) continue;  // 4 - level == 0 faults (model_defects)
         const int32_t slack = g != 0 ? tries : tries / 4;
         if (v < add32(sub32(rep, slack), cash)) continue;

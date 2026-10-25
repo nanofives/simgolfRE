@@ -17,7 +17,9 @@ namespace portsim {
 namespace {
 // Negative controls: mode 0 is the correct body.
 //   generateRandomCourse  1 = camera y = clubhouse column - 3, 2 = the border sweep (setting != 2) skips its third
-//                         clearTile (the far column), 3 = the corner-level fill stops at 50 x 50 (row / column 50 kept)
+//                         clearTile (the far column), 3 = the corner-level fill stops at 50 x 50 (row / column 50 kept),
+//                         4 = placementBound 0 on location 4 still stamps the object at the last draw, 5 = placementBound 0
+//                         on locations 5, 6, 8, 12, 13, 15 still runs the object pass
 int g_negctl_generate = 0;
 
 // Compatibility switches (port/CORE.md "Defects"), 1 = behave like the original.
@@ -26,6 +28,12 @@ int g_negctl_generate = 0;
 //                            no cell can qualify; fixed (0): the type-0x11 search gives up and skips that feature, the
 //                            clubhouse search takes the window centre (x 0x17, y 0x17) and goes on.
 int g_defect_search_bound = 1;
+//   generateRandomCourse.placementBound  model_defects#52 (D52b3): the two feature-site searches gated by
+//                            eval_placement_area (location 4: a 2 x 2 site, kind 4; locations 5, 6, 8, 12, 13, 15: a 5 x 5
+//                            site, kind 0xF) never end when no cell the draws can reach is accepted. 1 = NoReturn once
+//                            no cell is accepted; fixed (0): the search gives up and the feature is skipped. A second
+//                            switch so that searchBound (D52b1, D52b2) keeps its meaning.
+int g_defect_placement_bound = 1;
 
 Ret call_peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
   const int i = registry_find(name);
@@ -49,6 +57,12 @@ template <class F> void miss(int32_t &misses, F any_candidate) {
 template <class F> bool miss_bounded(int32_t &misses, F any_candidate) {
   if (++misses != kProbe || any_candidate()) return false;
   if (SG_DEFECT(g_defect_search_bound)) throw NoReturn{"generateRandomCourse"};
+  return true;
+}
+// The same probe for the two eval_placement_area searches (placementBound).
+template <class F> bool miss_placement(int32_t &misses, F any_candidate) {
+  if (++misses != kProbe || any_candidate()) return false;
+  if (SG_DEFECT(g_defect_placement_bound)) throw NoReturn{"generateRandomCourse"};
   return true;
 }
 }  // namespace
@@ -415,18 +429,22 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
         rebuild_tile_coverage(ctx);
         if (c0 == 4 || c0 == 3) {
           int32_t s2, d2, misses = 0;
+          bool gave_up = false;
           for (;;) {
             s2 = rnd(0x28) + 5;
             d2 = rnd(0x28) + 5;
             if (eval_placement_area(ctx, s2, d2, 2, 4) != -1) break;
-            miss(misses, [&] {
-              for (int32_t a = 5; a < 0x2D; ++a)
-                for (int32_t b = 5; b < 0x2D; ++b)
-                  if (eval_placement_area(ctx, a, b, 2, 4) != -1) return true;
-              return false;
-            });
+            if (miss_placement(misses, [&] {
+                  for (int32_t a = 5; a < 0x2D; ++a)
+                    for (int32_t b = 5; b < 0x2D; ++b)
+                      if (eval_placement_area(ctx, a, b, 2, 4) != -1) return true;
+                  return false;
+                })) {
+              gave_up = mode != 4;  // no site for the object: it is not stamped
+              break;
+            }
           }
-          obj_value(stamp_course_tiles(ctx, s2, d2, 4, 0)).set(0xE);
+          if (!gave_up) obj_value(stamp_course_tiles(ctx, s2, d2, 4, 0)).set(0xE);
         }
         break;
       }
@@ -478,17 +496,22 @@ int32_t generate_random_course(Ctx &ctx, int32_t n) {
       case 5: case 6: case 8: case 12: case 13: case 15: {
         {
           int32_t misses = 0;
+          bool gave_up = false;
           for (;;) {
             const int32_t s3 = rnd(0x28) + 3;
             const int32_t d3 = rnd(0x28) + 3;
             if (eval_placement_area(ctx, s3, d3, 5, 0xF) != -1) break;
-            miss(misses, [&] {
-              for (int32_t a = 3; a < 0x2B; ++a)
-                for (int32_t b = 3; b < 0x2B; ++b)
-                  if (eval_placement_area(ctx, a, b, 5, 0xF) != -1) return true;
-              return false;
-            });
+            if (miss_placement(misses, [&] {
+                  for (int32_t a = 3; a < 0x2B; ++a)
+                    for (int32_t b = 3; b < 0x2B; ++b)
+                      if (eval_placement_area(ctx, a, b, 5, 0xF) != -1) return true;
+                  return false;
+                })) {
+              gave_up = true;
+              break;
+            }
           }
+          if (gave_up && mode != 5) break;  // no site accepted: the feature (its objects) is skipped
         }
         int32_t p3 = 0;
         if (sub32(8, g.g_difficulty) > 0) {
@@ -717,6 +740,9 @@ const DefectDef kDefects[] = {
     {"generateRandomCourse.searchBound", "model_defects#52",
      "the type-0x11 search (layout kind 1) and the clubhouse search never end when their window holds no qualifying cell",
      &g_defect_search_bound},
+    {"generateRandomCourse.placementBound", "model_defects#52",
+     "the feature-site searches gated by eval_placement_area (locations 4, 5, 6, 8, 12, 13, 15) never end when no cell is accepted",
+     &g_defect_placement_bound},
 };
 }  // namespace
 

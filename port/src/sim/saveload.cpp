@@ -343,12 +343,25 @@ int32_t save_course(Ctx &ctx) {
 // saveGameDialog (re/analysis/save/00405b10; c3fa.cpp): the name prompt of the S key. The default name (title, the day of the
 // month, the date) is built in g_textBuffer and textInputBox edits it; an empty answer or a name sanitizeFileName refuses shows
 // the invalid-name message through startMessage; an existing file asks showPopup (a non-zero answer is returned); then
-// saveGame(name) and the saved message. Returns the last callee's eax. The panel and heading drawing is dropped.
+// saveGame(name) and the saved message. Returns the last callee's eax. The panel and its heading are drawing calls for the
+// graphics backend (roadmap S2.9, c3fa.cpp SaveGameDialog_re): drawPanelS2(0x36, 0x50, 0x274, 0x50), setDrawTarget(root,
+// g_font51b360) and drawCenteredText2(f_strpool_4c3f74, 0x180, 0x58, white), inside the dialog markers.
 int32_t save_game_dialog(Ctx &ctx) {
   const int mode = SG_NEGCTL(g_negctl_save_game_dialog);
   GameState &gs = ctx.gs();
   const uint32_t text = text_va(ctx);
   const uint32_t dirs = state_va(ctx, &GameState::f_strpool_4c3ee0);
+  auto draw = [&](const char *name, std::initializer_list<uint32_t> a) {
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+  };
+  struct Mark {
+    Ctx &c;
+    explicit Mark(Ctx &x) : c(x) { gfx_drop(c, "dialogs.begin", nullptr, 0); }
+    ~Mark() { gfx_drop(c, "dialogs.end", nullptr, 0); }
+  } mark(ctx);
+  draw("drawPanelS2", {0x36, 0x50, 0x274, 0x50});
+  draw("setDrawTarget", {gs.f_stateptr_4c1570[0], state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+  draw("drawCenteredText2", {state_va(ctx, &GameState::f_strpool_4c3f74), 0x180, 0x58, 0x80007fffu});
   ctx.mem.store<uint8_t>(text, 0);
   append_course_title(ctx, -1);
   const uint32_t blank = state_va(ctx, &GameState::f_strpool_4c3f70);

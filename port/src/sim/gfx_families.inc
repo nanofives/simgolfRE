@@ -3,9 +3,13 @@
 // `int g_negctl_gfx_<family>`. gfx.cpp expands this list into explicit references (dispatch table and one registry entry
 // `gfx.family.<family>` per family, whose negctl switch is the family's). Adding a family: one line here, nothing else.
 SG_GFX_FAMILY(selftest)
+SG_GFX_FAMILY(terrain)
 SG_GFX_FAMILY(surface)
 SG_GFX_FAMILY(prim_text)
 SG_GFX_FAMILY(credits)
 SG_GFX_FAMILY(prim_fill)
 SG_GFX_FAMILY(prim_text2)
 SG_GFX_FAMILY(routing)
+SG_GFX_FAMILY(boot_screens)
+SG_GFX_FAMILY(reports)
+SG_GFX_FAMILY(dialogs)

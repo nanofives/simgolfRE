@@ -1438,6 +1438,57 @@ from the trace SAME at 31 of 32 (theme_packs differs in the frame only, 2,170 px
 g_eventFlags567a1c to reach end of year and buy land. The port's boot equals the capture up to record 1156 except the cursor tile
 at record 771 (U-1253, cause not measured), then stops at the unported showBuyLandScreen (U-1251). Scroll text has no checkpoint: the
 character editor's load control stops the lockstep clock inside runScrollText (U-1250).
+Roadmap S2.7, the boot screens (2026-10-24, notes log/roadmap/S2/7_notes.md, U-1260..U-1263): cov_r_s2_screens loading_t200,
+loading_t300, theme_packs, difficulty, champ_courses and pick_a_pro equal the original's back buffer in every pixel. Family
+`boot_screens` (gfx_boot_screens.cpp): showLoadingScreen.draw (picture r and hint r2 from the screen's two Random::range draws,
+drawMessageBuffer with drawTextSurface's shadow, the bar), selectDifficultyScreen / showThemePackSelect setup, redraw, hover, tip,
+teardown, pickAProScreen setup / textSurface / teardown; the screens' port functions issue them, Setup now draws the title art
+under the boot's loading screens, and load_flic issues the refreshFull and consumes waitTicks(10, 0)'s clock reads that follow
+each boot loading screen (a checkpoint inside that wait shows it). U-1252 settled: showThemePackSelect draws a sixth column cell at
+an uninitialised stack word w (U-1260); the pinned runs have w = 0x1a, the trace recorder's runs a w that hides it; the backend
+uses 0x1a (SG_GFX_THEMEPACK_COL5 overrides). Controls 13 modes RED (11 on the frames, 2 in unit tests).
+Roadmap S2.8, the report screens over the course (2026-10-24, notes log/roadmap/S2/8_notes.md, U-1270..U-1278): on cov_r_s2_screens
+rep_comments, rep_histograph, rep_financial, rep_shortcuts, rep_roster, hole_stats, best_scores and end_of_year equal the
+original's back buffer in every judged pixel, and hire differs only in its four animated employees (addSprite FLIC cells, S3,
+1,397 px pinned). JUDGED PIXELS: every report dims the whole in-game frame (black.pcx through Sprite::drawAlpha's quarter band =
+draw16_1002ed60's 555 arithmetic, U-1271) and lies over the course the backend does not draw yet, so test_gfx_reports.py boots
+three more times with the root filled with 0x0000 / 0x7fff / 0x2a55 at the screen's first call (`reports.begin`, negctl modes
+101..103) and judges only the pixels that do not change with that underlay; their counts are pinned. Family `reports`
+(gfx_reports.cpp): Surface_drawSprite, Widget_draw / Widget_draw2 / drawStringAt / drawStringAt2 (font swap, left / centred /
+right / centred in a width), Widget_fillRect (jgld line16 with its octant walk and clip), Surface_box / Surface::callBounds (the
+clip), reports.begin; gfx_reports.h ScreenDraw gives the screens gx calls, texts built in g_textBuffer under save / restore and the
+art's cut sizes (Sprite8::cut_w / cut_h = SpriteRef +0x18 / +0x1c). framegate now judges the checkpoints before a boot that stops
+on a missing name (U-1270). rep_report1 and preferences are S2.9's functions (U-1276). Gates: segments 205 / 205 x64 + Win32,
+0 digests changed; boot equal to S2.4 on its 67 rows; goldens of showEndOfYearScreen / showPlayerCommentsReport re-pinned through
+the oracle; controls 17 modes, 14 RED on the frames, 3 RED in unit tests.
+Roadmap S2.9, dialogs over the course (2026-10-24, notes log/roadmap/S2/9_notes.md, U-1280..U-1283): showPopup (every popup and
+the System menu, which is a showPopup), textInputBox with saveGameDialog's panel, and showCourseReport's association page are
+drawn by the backend. The course under a dialog is S3's, so each dialog is judged in its own rectangle, measured on the
+reference frame (the region of the fill colour 0x4e79 grown by 5 px; the page's panel colour), on the pixels the dialogs decide:
+family `dialogs`' probe (negctl modes >= 0x10000) fills the root surface when a dialog stack starts, and a pixel is judged when
+three probe backgrounds (black, white, a pseudo-random pattern) and the plain run agree. All 14 rectangles of the 10 pinned
+checkpoints (cov_r_quit exit_prompt / exit_save, cov_a_keys k_dlg_S / k_dlg_J / k_C, cov_a_keys2 C_prompt, cov_a_champ /
+cov_a_play n_prompt, cov_a_build2 remove_prompt1, cov_k3_career prompt / prompt2) have 0 failing pixels, x64 and Win32; held:
+9..32 px per popup (blended border corners), 28,579 on the page (its drawAlpha pass and transparent parts). Family `dialogs`
+(gfx_dialogs.cpp, 8 bodies): the dialog art loadInterfaceArt cuts (popup border and masks, option bullets, the icon row),
+drawPanelS2, drawTextSurface, (Widget_fillRect, Surface_drawSprite, Widget_draw, drawStringAt, drawStringAt2: the reports family's bodies after S2.13), showPopup's
+odd-y box (the colour read from the root under it), dialogs.begin / dialogs.end. The screens' calls are in commands_popup.inc,
+saveload.cpp and reports.cpp (texts built in g_textBuffer, which is put back with g_textBuf). Gates: census 609 rows against
+S2.4, same 427 / better 146 / worse 36 (5 = cov_a_quit rows S2.5 made runnable, 31 = dialog pixels left in unsupported in-game
+frames, first unsupported call unchanged); segments 205 / 205 x64 + Win32, 0 digests changed; boot equal to S2.4. Controls: 11
+modes RED (8 on the frames, 4 in unit tests), 0 blind.
+Roadmap S2.13, integration of S2.7-S2.9 (2026-10-25, notes log/roadmap/S2/13_notes.md, U-1205..U-1207): the three steps' trees
+merged on HEAD 2c05f02a + waves 1-4 by 3-way merges (log/roadmap/S2/13_tools/make_mirror.py), one patch 13_shared.patch. U-1278:
+the five body names both reports and dialogs registered (Surface_drawSprite, Widget_fillRect, Widget_draw, drawStringAt,
+drawStringAt2) are the reports family's only (gfx.check 0 duplicates): jgld Sprite::drawAlpha's flag byte starts 1 and is cleared
+only when the destination format's +4 is 1, and with it set the quarter band is draw16_1002ed60 (RGB555 masks), the member S2.8
+measured on the references; the dialogs' controls moved with the bodies (reports modes 9, 10, 20, 21 and 1). U-1254 fixed: the
+end-of-year and course-report modal loops make the original's per-pass View_toLocal cursor read (reports.cpp report_loop; after
+the pump on the end-of-year screen, before it in the course report), so cov_r_s2_screens' boot equals the capture through record
+1156 and stops only at the unported showBuyLandScreen (U-1251); control showEndOfYearScreen mode 6 brings back the record-771
+cursor-tile divergence. Gates: test_gfx 25, credits 47, routing 35, boot_screens 32, reports 36, dialogs 32, port static 6,
+commands 83 / 44 skipped, tick 250, reports 14 (16 with SG_EMU_ORACLE=1), s2_5 3, s2_6 4 (x64); segments 205 / 205 x64 + Win32,
+0 digests changed; Win32 gfx files and s2_6 pass; boot 70 rows 65 PASS / 2 KNOWN / 2 NO_FRAMES / 1 FAIL (cov_r_s2_screens at 1156).
 Roadmap S3 wave 1, the terrain draw-list passes and the rasteriser's last two rules (2026-10-24, steps S3.1 / S3.1b, notes
 log/roadmap/S3/1_notes.md, 1b_notes.md, U-1300..U-1304, U-1390..U-1392):
 port/src/sim/terrain_render.cpp now ports localRender (25 window tiles, no culling of its own; drawTileObjects' camera-facing wall
@@ -1463,6 +1514,24 @@ snapshot (U-1301), NULL tile / pivot paths (U-1303), vacuous G2 on 4 localRender
 through sg_gl_*; LiveTerrain's draw passes into the back buffer are step S3.2. U-1120 resolved (S3.3): a boot run with to_end
 ended in its last frame's Blocking pump with no input left, NeedInput (a MissingResource) surfaced as -11 and pending snapshots
 were never taken; run_frames now takes them there (cov_a_champ, championship, cov_k3_career: 22 census rows run).
+Roadmap S3 wave 3, the terrain in the frame (2026-10-24/25, step S3.2, notes log/roadmap/S3/2_notes.md, U-1310..): the
+original's GL draws into the ROOT surface (initTerrain gives Terrain::initSystem the DC of the jgld surface at
+[g_rootWindow + 0x278]; that DIB's memory row 0 is the picture's top row, so GlRaster's buffer and gfx.root are the same
+array, no flip). updateTerrainRender clears the root through Window::paint(g_rootWindow, 0x80000000) (clear16 with colour 0),
+the passes draw over it, Surface_blitThunk copies root -> the exe's back surface g_image51b068, an unmoved camera copies the
+back surface whole onto the root and local-renders changed tiles, and renderTerrainStrip draws the strip and copies the shifted
+old picture back. Body family `terrain` (port/src/sim/gfx_terrain.cpp: terrain.windowPaint, terrain.pass, terrain.blit) runs
+LiveTerrain's passes through S3.1's terrain_render_entry into a GlRaster over gfx.root; the GL setup is the port's own
+(terrain_gl_setup). gfx.log carries a per-snapshot terrain flag (snapshot_terrain) and framegate a `terrain_drawn` column;
+LiveTerrain attaches on Win32 too (runner32 / lib32 ops). EVIDENCE: the original's root surface recorded at the return of every
+updateTerrainRender (re/tools/terrain_calls.py --pass-frames / --frames-lite, instance s3_2, every hooked run SAME as its
+reference): per census checkpoint the port's root at the last pass before the checkpoint meets G2 over the pixels the original
+drew on all 527 terrain checkpoints (log/roadmap/S3/2_terrain_verdicts.tsv; S0's `terrain not drawn` 520 -> 0), four themes,
+x64 = Win32 terrain pixels; controls (wrong zoom, wrong theme texture set, pass skipped, strip shift, Window::paint not clearing)
+RED. Segments 205 / 205 and boot 58 / 2 / 1 unchanged (the backend writes no GameState byte). Frida spawns hung 5 times on the
+instance (U-0683 pattern): kill the own PID and retry. Open: U-1310 (rasteriser fixed at 800 x 600), U-1311 (the back surface's
+depth inferred from results), U-1312 (pathUpdateRender never runs organically), U-1313 (one organic strip direction framed),
+U-1315 (two title rows keep the terrain flag at 1).
 Phase 7 defect decisions, section S6 of the roadmap orchestrator (2026-10-24, notes log/roadmap/S6/, U-1550..U-1597): `re/port/defect_decisions.tsv`
 holds every defect of model_defects.md (#1-#52, some split by arm) and every non-PASS row of divergences.tsv (grouped by cause) with its class
 (hang / fault / overrun-silent / wrong-value / dead-state / port-gap / harmless), six effect columns (save / balance / sim / frame / hang / fault),
@@ -1486,6 +1555,20 @@ save, balance, sim state or a frame) are in log/roadmap/S6/ASK_LIST.md for Maria
 D47b D48a D48b D49a D52a D52b3. Findings in the original: loadGolfPro hangs for difficulty 5 and 6; replaceInText derails the return address from a
 tail of 0x200 bytes (0x204 returns to the tail's own bytes); spawnObject's cell search draws about 250,000 times before the budget ends when all 16
 cells are taken; the five existing switch rows keep their evidence, chooseShotTarget.strictFlagSticky still has none (U-1012).
+S6 wave 2 (2026-10-24, notes log/roadmap/S6/7_notes.md and 8_notes.md, U-1591, U-1592, U-1598, U-1599): Mariano's answer G3 kept the 24 `ask` rows of groups
+overruns, wrong values and course / terrain / money at `keep` and turned the two hangs into `fix`, so re/port/defect_decisions.tsv reads 74 rows,
+12 fix / 62 keep, with a `decision` column (D5 fix, G3 fix, G3 keep) and profile `fixed` has 8 switches (re/port/defect_profiles.tsv). D42c:
+loadGolfPro with g_difficulty 5 or 6 never ends in the original (4 - d < 0 makes the acceptance bound fall without end); switch
+loadGolfPro.negativeWindowBound (own switch, tests port/test/test_defects_golfers_w2.py, 45): the port's old behaviour at those difficulties was an
+endless spin like the original's, now switch 1 raises NoReturn once the falling bound is below every value the roster can give and switch 0 ends the draw
+with pick 0; where the original completes the check never fires and 1 and 0 agree, the 11 of 36 synthetic states in which the original hangs in Unicorn are exactly
+the ones the port gives up on, and the golfers vectors are 367/367 GREEN at 1 and 0 (U-1591 the cutoff argument, U-1592 the emulator stops at loadThemeFile's
+file reads on the states where the original passes). D52b3: the feature-site searches gated by evalPlacementArea hang the original at location 4 (2 x 2 site,
+0x0047172e..0x0047176f) and at locations 5, 6, 8, 12, 13, 15 (5 x 5 site, 0x004718a4..0x004718e7) when no reachable cell is accepted (300 M instructions
+exhausted at about 921,000 iterations on the port's own images); switch generateRandomCourse.placementBound (wave 1's searchBound keeps D52b1 / D52b2),
+tests port/test/test_defects_gen_w2.py (30; controls for all 8 locations equal the original byte for byte at 1 and 0, location 3 on the same image
+completes): at 0 location 4 stamps no object and locations 5..15 skip the whole feature (U-1598, U-1599, port choices). The opt-in emulator oracle for
+terrain_gen (115 tests) passes. The old S6.7 note that wave 1's loadGolfPro guard raised NoReturn at d = 5 / 6 was wrong: the port spun.
 Roadmap S1, loose ends of phases 3 and 4 (2026-10-24, log/roadmap/S1, plan re/roadmap/S1_steps.tsv, five step workers on claude2 and an
 integration check): U-1067 resolved: trace_format.validate rejects a first-generation input MSG (WM_KEYDOWN/UP, SYSKEY, mouse buttons) with
 no earlier harness DELIVER (WM_CHAR and WM_MOUSEMOVE are derived and exempt; a trace slice is exempt up to its second FRAME, U-1151);

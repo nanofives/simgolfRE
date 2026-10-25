@@ -16,6 +16,12 @@
 #include "portsim/sim/commands.h"
 #include "portsim/sim/util.h"
 #include "commands_internal.h"
+#include "gfx_reports.h"
+#include "portsim/sim/gfx.h"
+
+#include <cstring>
+#include <string>
+#include <vector>
 
 namespace portsim {
 
@@ -26,7 +32,8 @@ namespace {
 //                        criterion does not zero the report, 6 = the leave clears the mode byte to 1
 //   showEndOfYearScreen  1 = the member history stores the live count + 1, 2 = the debt counter is not cleared outside
 //                        debt, 3 = a right click ends the screen too, 4 = the story-text event 0x120 passes the subject + 1
-//                        to loadStoryStrings, 5 = addScore is not asked after the loop
+//                        to loadStoryStrings, 5 = addScore is not asked after the loop, 6 = the loop's View_toLocal cursor
+//                        read is left out (roadmap S2.13, U-1254)
 int g_negctl_course_report = 0;
 int g_negctl_end_of_year = 0;
 
@@ -44,10 +51,52 @@ void cents(Ctx &ctx, int32_t v) {
 
 // the one-button modal loop both screens end with: a Blocking pump per pass, then the exit tests. The course report
 // leaves on any button or a key (button tested first), the end-of-year screen only on the left button or a key.
-void report_loop(Ctx &ctx, bool left_only, const char *where) {
+//
+// Roadmap S2.13 (U-1254): every pass also makes the original's View_toLocal(root window, &x, &y) cursor read, before the
+// pump in the course report (c3fr.cpp ShowCourseReport_re: waitTicks, View_toLocal, the button hover, pumpMessages) and
+// after it on the end-of-year screen (c3er.cpp CareerRetirementFlow_re: waitTicks, pumpMessages, View_toLocal,
+// refreshFull, the button hover). Like the frame step's View_toLocal (tick_render.inc viewToLocal) the read is made when
+// the display exists (g_graphicsDevice != 0), so a trace-driven source's cursor count stays aligned with the original's:
+// without it the end-of-year screen left its CURSOR records unread and the frame's next read (P6's View_toLocal after the
+// screen) got the cursor from before it (cov_r_s2_screens record 771). The value only selects the button's hover image
+// (`hover`, drawn with a backend attached). Negative control: showEndOfYearScreen mode 6 leaves the read out.
+struct Hover {
+  int32_t x = 0, y = 0;   // the button's top left; the button is 0x2c x 0x2c
+  bool lit = false;
+};
+bool backend_on() { return g_gfx_attached.load(std::memory_order_relaxed) != 0; }
+void gx2(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
+  gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+}
+// View_toLocal(root window, &x, &y): the display's cursor when there is a display; false without one (x, y stay 0)
+bool cursor_read(Ctx &ctx, int32_t &px, int32_t &py) {
+  px = py = 0;
+  if (ctx.gs().g_graphicsDevice == 0) return false;
+  if (InputSource *src = input_source(ctx)) src->cursor(px, py);
+  return true;
+}
+// the button's hover: the lit image while the point is inside, the plain one when it leaves, each followed by a refresh
+void hover(Ctx &ctx, Hover *h, int32_t px, int32_t py) {
+  if (!h || !backend_on()) return;
+  const bool in = px >= h->x && px < add32(h->x, 0x2c) && py >= h->y && py < add32(h->y, 0x2c);
+  if (in == h->lit) return;
+  h->lit = in;
+  const uint32_t win = state_va(ctx, &GameState::g_rootWindow);
+  // the plain image g_spriteRef_820f40[0], the lit one [1] (+0x2c)
+  gx2(ctx, "Image_draw", {state_va(ctx, &GameState::g_spriteRef_820f40) + (in ? 0x2cu : 0u), win + 0x274, u32(h->x), u32(h->y), 0});
+  gx2(ctx, "Window::refreshFull", {win, 0});
+}
+void report_loop(Ctx &ctx, bool left_only, const char *where, Hover *h = nullptr) {
   GameState &gs = ctx.gs();
+  int32_t px = 0, py = 0;
   for (;;) {
+    if (!left_only && cursor_read(ctx, px, py)) hover(ctx, h, px, py);
     cm::pump_messages(ctx, PumpKind::Blocking, where);
+    if (left_only && SG_NEGCTL(g_negctl_end_of_year) != 6) {
+      const bool made = cursor_read(ctx, px, py);
+      if (backend_on()) gx2(ctx, "Window::refreshFull", {state_va(ctx, &GameState::g_rootWindow), 0});
+      if (made) hover(ctx, h, px, py);
+    }
     const int32_t button = gs.g_rootInput[4];
     if (!left_only) {
       if (button != 0) break;
@@ -61,6 +110,150 @@ void report_loop(Ctx &ctx, bool left_only, const char *where) {
 }
 
 constexpr uint32_t kHoleSize = 0x208;
+
+// ------------------------------------------------------------------------------------------------ the grading page's drawing
+// Roadmap S2.9: the association's page (modes 1 / 2) as drawing calls for the graphics backend (gfx_drop; nothing without
+// one attached), in the order of c3fr.cpp ShowCourseReport_re (instruction addresses there). The values are the ones the
+// computation above produced (Page); each drawn text is built in g_textBuffer as the original builds it (string-pool
+// pieces, _itoa base 10, appendNumber), drawn, and g_textBuffer and the itoa buffer g_textBuf are put back, so a run with
+// a backend leaves the GameState as one without. Strings are offsets into f_strpool_4d2c28 unless named otherwise.
+struct Page {
+  int32_t flags = 0, crit = 0, ideal = 0, step = 1, cnt = 0, half = 0, holes = 0;
+  int32_t len = 0, g = 0, hp1 = 0, g2 = 0, tm = 0, g3 = 0, pc = 0, g4 = 0, counts[5] = {0}, gc[5] = {0}, fac = 0, gf = 0;
+  int32_t score = 0, prize = 0;
+};
+struct ReportDraw {
+  Ctx &ctx;
+  const Memory &m;
+  uint32_t root, win, tb, itoa_buf, pool, f_ee8, f_020, f_f28;
+  explicit ReportDraw(Ctx &c)
+      : ctx(c), m(c.mem), root(state_va(c, &GameState::g_rootWindow) + 0x274), win(state_va(c, &GameState::g_rootWindow)),
+        tb(state_va(c, &GameState::g_textBuffer)), itoa_buf(state_va(c, &GameState::g_textBuf)),
+        pool(state_va(c, &GameState::f_strpool_4d2c28)), f_ee8(state_va(c, &GameState::g_fontRef_821ee8)),
+        f_020(state_va(c, &GameState::g_fontRef_821020)), f_f28(state_va(c, &GameState::g_fontRef_821f28)) {}
+  static bool on() { return g_gfx_attached.load(std::memory_order_relaxed) != 0; }
+  void gx(const char *name, std::initializer_list<uint32_t> a) const { gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size())); }
+  void quad(uint32_t c) const { gx("Widget_setQuad", {root, c, 0xffffffffu, 2, 2}); }
+  // Widget_draw / drawStringAt / drawStringAt2 (target, font, text, x, y, strlen(text))
+  void str(const char *kind, uint32_t font, uint32_t s, int32_t x, int32_t y) const {
+    gx(kind, {root, font, s, u32(x), u32(y), vstrlen(m, s)});
+  }
+  void img(uint32_t s, int32_t x, int32_t y) const { gx("Image_draw", {s, root, u32(x), u32(y), 0}); }
+  // a text built in the buffer by `build`, drawn with `kind`, then the two buffers put back
+  template <class F>
+  void text(F build, const char *kind, uint32_t font, int32_t x, int32_t y) const {
+    std::vector<uint8_t> keep(0x1000), keep_itoa(0x10);
+    std::memcpy(keep.data(), m.at(tb, 0x1000), 0x1000);
+    std::memcpy(keep_itoa.data(), m.at(itoa_buf, 0x10), 0x10);
+    m.store<uint8_t>(tb, 0);
+    build();
+    str(kind, font, tb, x, y);
+    std::memcpy(m.at(tb, 0x1000, true), keep.data(), 0x1000);
+    std::memcpy(m.at(itoa_buf, 0x10, true), keep_itoa.data(), 0x10);
+  }
+  void cat(uint32_t s) const { vstrcat(m, tb, s); }
+  void cat_itoa(int32_t v) const {   // strcat(text, _itoa(v, g_textBuf, 10))
+    const std::string d = std::to_string(v);
+    std::memcpy(m.at(itoa_buf, static_cast<uint32_t>(d.size() + 1), true), d.c_str(), d.size() + 1);
+    cat(itoa_buf);
+  }
+  void number(int32_t v) const { call_peer(ctx, "appendNumber", {u32(v)}); }
+  void stars(int32_t n, int32_t y) const {   // n stars (g_surfaces59b050 cell 17) from x 0x12f, 0xe apart
+    for (int32_t k = 0, x = 0x12f; k < n; ++k, x += 0xe) img(state_va(ctx, &GameState::g_surfaces59b050) + 0x2c * 17, x, y);
+  }
+  void unacceptable(int32_t y) const {   // the red `not acceptable` mark
+    quad(0x80007d08u);
+    str("drawStringAt", f_ee8, pool + 0x3ac, 0x182, y);
+    quad(0x80000000u);
+  }
+  // the page head: the display scale, the 1/4 black sprite over the screen, the association's background over its mask
+  void head() const {
+    gx("Display::setScale", {1, 1, 1});
+    gx("Surface_drawSprite", {state_va(ctx, &GameState::g_spriteRef_821040), root, 0, 0, 0x3e800000u, 0, 1});
+    quad(0x80000000u);
+    const uint32_t sga = state_va(ctx, &GameState::g_spriteRef_821c60);
+    gx("Surface_stretchBlit", {sga, sga + 0x2c, root, 0x23, 0x1a, 0});
+    quad(0x80000000u);
+  }
+  void page(const Page &p) const {
+    const uint32_t cl = state_va(ctx, &GameState::f_strpool_4c59e0);   // ")"
+    str("Widget_draw", f_020, pool + 0x4dc, 0xbe, 0x2a);
+    text([&] { cat(pool + 0x4c4); cat(m.load<uint32_t>(state_va(ctx, &GameState::f_ptrtab_4c2a18) + 4 * u32(p.flags))); },
+         "Widget_draw", f_ee8, 0x4b, 0x4d);
+    str("Widget_draw", f_ee8, pool + 0x4bc, 0x132, 0x4d);
+    str("Widget_draw", f_ee8, pool + 0x4a8, 0x1f1, 0x4d);
+    str("drawStringAt", f_ee8, pool + 0x494, 0x77, 0x68);
+    text([&] {
+      number(p.ideal);
+      cat(pool + 0x48c);
+      number(p.crit == 0x12 ? sub32(p.ideal, 1000) : sub32(p.ideal, div32(mul32(p.ideal, 10), add32(mul32(p.flags, 5), 0x14))));
+      cat(cl);
+    }, "Widget_draw", f_ee8, 0x1ea, 0x68);
+    str("drawStringAt", f_ee8, pool + 0x47c, 0x77, 0x79);
+    text([&] { cat_itoa(p.crit); cat(pool + 0x478); cat_itoa(sub32(p.crit, div32(9, p.step))); cat(cl); }, "Widget_draw", f_ee8,
+         0x1ea, 0x79);
+    str("drawStringAt", f_ee8, pool + 0x468, 0x77, 0x8a);
+    str("Widget_draw", f_ee8, pool + 0x448, 0x1ea, 0x8a);
+    str("drawStringAt", f_ee8, pool + 0x43c, 0x77, 0x9b);
+    str("Widget_draw", f_ee8, pool + 0x434, 0x1ea, 0x9b);
+    static const uint32_t kCrit[5] = {0x420, 0x410, 0x400, 0x3ec, 0x3d8};
+    for (int c = 0; c < 5; ++c) {
+      const int32_t ry = 0xac + 0x11 * c;
+      str("drawStringAt", f_ee8, pool + kCrit[c], 0x77, ry);
+      text([&] { cat_itoa(p.cnt); cat(pool + 0x478); cat_itoa(clamp(sub32(p.cnt, 9), 0, 0x63)); cat(cl); }, "Widget_draw", f_ee8,
+           0x1ea, ry);
+    }
+    str("drawStringAt", f_ee8, pool + 0x3c0, 0x77, 0x101);
+    text([&] { cat_itoa(add32(p.half, 1)); cat(pool + 0x478); cat_itoa(clamp(sub32(add32(p.half, 1), 4), 0, 0x63)); cat(cl); },
+         "Widget_draw", f_ee8, 0x1ea, 0x101);
+    if (p.holes != 0) {
+      text([&] { number(p.len); cat(state_va(ctx, &GameState::f_strpool_4c615c) + 0x38); }, "drawStringAt", f_ee8, 0xee, 0x68);
+      if (p.g > 0) stars(p.g, 0x68);
+      if (p.g == 0) unacceptable(0x68);
+      text([&] { cat_itoa(sub32(p.hp1, 1)); }, "drawStringAt", f_ee8, 0xee, 0x79);
+      if (p.g2 > 0) stars(p.g2, 0x79);
+      if (p.g2 == 0) unacceptable(0x79);
+      text([&] {
+        if (!(p.tm < 0x3c)) {
+          cat_itoa(p.tm / 60);
+          cat(pool + 0x3a8);
+        }
+        cat_itoa(p.tm % 60);
+        cat(pool + 0x3a4);
+      }, "drawStringAt", f_ee8, 0xee, 0x8a);
+      if (p.g3 > 0) stars(p.g3, 0x8a);
+      if (p.g3 == 0) unacceptable(0x8a);
+      text([&] { cat_itoa(p.pc); cat(state_va(ctx, &GameState::f_strpool_4c60c4)); }, "drawStringAt", f_ee8, 0xee, 0x9b);
+      if (p.g4 > 0) stars(p.g4, 0x9b);
+      if (p.g4 == 0) unacceptable(0x9b);
+      for (int c = 0; c < 5; ++c) {
+        const int32_t ry = 0xac + 0x11 * c;
+        text([&] { cat_itoa(p.counts[c]); }, "drawStringAt", f_ee8, 0xee, ry);
+        if (p.gc[c] > 0) stars(p.gc[c], ry);
+        if (p.gc[c] == 0) unacceptable(ry);
+      }
+      text([&] { cat_itoa(p.fac); }, "drawStringAt", f_ee8, 0xee, 0x101);
+      if (p.gf > 0) stars(p.gf, 0x101);
+      if (p.gf == 0) unacceptable(0x101);
+    }
+    str("Widget_draw", f_ee8, pool + 0x388, 0xae, 0x120);
+    if (!(p.score > 0)) {
+      quad(0x80007d08u);
+      str("Widget_draw", f_ee8, pool + 0x380, 0x172, 0x50);
+      str("drawStringAt", f_f28, pool + 0x368, 0x190, 0x136);
+      quad(0x80000000u);
+    } else {
+      text([&] { cat_itoa(p.score); cat(pool + 0x360); }, "drawStringAt2", f_ee8, 0x18c, 0x4d);
+      const uint32_t gi = u32(sub32(div32(sub32(p.score, 0x28), 5), 1));
+      static const uint32_t kGrade[9] = {0x260, 0x278, 0x288, 0x2a0, 0x2bc, 0x2d4, 0x2ec, 0x2fc, 0x318};
+      const uint32_t gr = gi > 0xb ? 0x248 : gi <= 8 ? kGrade[gi] : (p.cnt != 0x12 ? 0x32c : 0x344);
+      text([&] { cat(pool + gr); }, "drawStringAt", f_020, 0x190, 0x136);
+      text([&] { cat(state_va(ctx, &GameState::f_strpool_4c61dc) + 4); number(p.prize); cat(pool + 0x234); }, "drawStringAt", f_f28,
+           0x190, 0x152);
+    }
+    img(state_va(ctx, &GameState::g_spriteRef_820f40), 0x2bd, 0x18e);   // the OK button
+  }
+};
 
 // showCourseReport(mode): mode 0 the per-hole table, 1 / 2 the association's grading page (2 returns without waiting)
 int32_t show_course_report(Ctx &ctx, int32_t mode) {
@@ -190,6 +383,19 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
     number(ctx, mul32(S[11], 100));
   }
 
+  ReportDraw rd(ctx);
+  Page pg;
+  struct Mark {   // the dialog markers around the grading page (the backend's held-pixel probe reads them; gfx_dialogs.cpp)
+    Ctx &c;
+    bool on;
+    Mark(Ctx &x, bool o) : c(x), on(o) {
+      if (on) gfx_drop(c, "dialogs.begin", nullptr, 0);
+    }
+    ~Mark() {
+      if (on) gfx_drop(c, "dialogs.end", nullptr, 0);
+    }
+  } mark(ctx, mode != 0 && ReportDraw::on());
+  if (mode != 0 && ReportDraw::on()) rd.head();
   if (mode == 0) {
     // the table's foot is drawing; the button belongs to the modal loop below
   } else {
@@ -214,31 +420,48 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
     const int32_t step = sub32(4, flags);
     (void)div32(9, step);   // the criteria text divides 9 by it
     const int32_t half = cnt / 2;
+    pg.flags = flags;
+    pg.crit = crit;
+    pg.ideal = ideal;
+    pg.step = step;
+    pg.cnt = cnt;
+    pg.half = half;
+    pg.holes = nholes;
+    pg.hp1 = hp1;
     if (nholes != 0) {
       const int32_t len = S[0];
       number(ctx, len);
       int32_t g = best != 0x12 ? add32(div32(mul32(mul32(sub32(len, ideal), add32(flags, 4)), 5), ideal), 10)
                                : sub32(10, div32(sub32(ideal, len), 100));
       g = clamp(g, 0, 10);
+      pg.len = len;
+      pg.g = g;
       score = g;
       if (g == 0) score = -999;
       int32_t g2 = sub32(10, mul32(abs32(add32(sub32(best, hp1), 1)), step));
       if (g2 < 0) g2 = 0;
+      pg.g2 = g2;
       int32_t sc = add32(score, g2);
       if (g2 == 0) sc = -999;
       const int32_t tm = S[3];
       int32_t g3 = sub32(10, div32(sub32(tm, 0xeb), 6));
       if (g3 == 0 && !(tm > 0x12c)) g3 = 1;
       g3 = clamp(g3, 0, 10);
+      pg.tm = tm;
+      pg.g3 = g3;
       sc = add32(sc, g3);
       if (g3 == 0) sc = -999;
       const int32_t pc = div32(S[4], nholes);
       const int32_t g4 = clamp(add32(div32(sub32(pc, 0x6d), 10), 10), 0, 10);
+      pg.pc = pc;
+      pg.g4 = g4;
       score = add32(sc, g4);
       if (g4 == 0) score = -999;
       const int32_t counts[5] = {S[8], many, cnt_a, cnt_b, cnt_c};
       for (int k = 0; k < 5; ++k) {
         const int32_t gc = clamp(add32(sub32(counts[k], cnt), 10), 0, 10);
+        pg.counts[k] = counts[k];
+        pg.gc[k] = gc;
         score = add32(score, gc);
         if (gc == 0) score = -999;
       }
@@ -246,6 +469,8 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
       for (int bit = mutant == 4 ? 7 : 6; bit < 0x14; ++bit)
         if ((gs.g_buildingKindMask & (1u << bit)) != 0) ++fac;
       const int32_t gf = clamp(add32(mul32(sub32(fac, half), 2), 8), 0, 10);
+      pg.fac = fac;
+      pg.gf = gf;
       score = add32(score, gf);
       if (gf == 0 && mutant != 5) {
         score = -999;
@@ -266,12 +491,17 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
                                 ? mul32(mul32(mul32(add32(div32(sub32(score, 0x32), 5), 4), add32(flags, 1)), hp1), 2)
                                 : mul32(mul32(mul32(add32(div32(sub32(score, 0x32), 5), 5), add32(flags, 1)), hp1), 2);
       gs.g_tournamentPurse = prize;
+      pg.prize = prize;
       number(ctx, prize);
       gs.g_flags |= mutant == 2 ? (1u << 22) : (1u << 22) | (1u << 13);
     }
+    pg.score = score;
+    if (ReportDraw::on()) rd.page(pg);
   }
   if (mode == 2) return 0;
-  report_loop(ctx, false, "showCourseReport");
+  if (mode != 0 && ReportDraw::on()) rd.gx("Window::refreshFull", {rd.win, 0});   // the modal loop's first refresh
+  Hover ok{0x2bd, 0x18e, false};   // the page's OK button (mode 0's table draws nothing, so no hover either)
+  report_loop(ctx, false, "showCourseReport", mode != 0 ? &ok : nullptr);
   gs.g_ui_569498 = mutant == 6 ? 1 : 0;
   cm::pump_light(ctx, "showCourseReport");
   return 0;
@@ -280,12 +510,54 @@ int32_t show_course_report(Ctx &ctx, int32_t mode) {
 // showEndOfYearScreen: the year's statistics rows (numbers formatted through the shared buffer), the membership history
 // slot of this month, the month's highlight lines (two kinds call another stage), the board's debt warning counter, the
 // one-button loop and the score summary
+//
+// Roadmap S2.8: the highlight lines are built in g_textBuffer as the original builds them (the month name, ': ', the event's
+// text pieces, with loadStoryStrings / landmarkName at their places and the subject's digits through itoa into g_ui_821c50),
+// which the port now does too (the buffers are not simulation objects); with an attached backend the screen is drawn as
+// c3er.cpp CareerRetirementFlow_re draws it: its frame Image and six Surfaces (backend keys gfx_local_key(0x5400 ..)) take the
+// top, bottom and line strips of interface\infoscreens\endoyear.pcx and of its alpha mask, the screen is dimmed, the top strip
+// blended on, the title and heads, the four statistics rows (label + verdict, last year's value ending at 0x259, this year's
+// ending at 0x1f4 in the verdict's colour), one line strip per highlight line and debt warning (the line strip's height apart
+// from the top strip's height + 0x28), the bottom strip, the close button 8 below it; the objects are freed at the end.
 int32_t show_end_of_year_screen(Ctx &ctx) {
   GameState &gs = ctx.gs();
   const Memory &m = ctx.mem;
   const int mutant = SG_NEGCTL(g_negctl_end_of_year);
+  const gfxr::ScreenDraw d(ctx);
+  const uint32_t root = d.root(), font_b = state_va(ctx, &GameState::g_fontRef_821ee8);
+  const uint32_t pool = state_va(ctx, &GameState::f_strpool_4d21a4), buf = d.buf(), num = state_va(ctx, &GameState::g_ui_821c50);
+  const uint32_t img = gfx_local_key(0x5400), top = gfx_local_key(0x5500), top_a = gfx_local_key(0x5600),
+                 bottom = gfx_local_key(0x5700), bottom_a = gfx_local_key(0x5800), line = gfx_local_key(0x5900),
+                 line_a = gfx_local_key(0x5a00);
+  if (d.on) {
+    d.gx("reports.begin", {});
+    d.gx("Image_ctor", {img});
+    for (uint32_t o : {top, top_a, bottom, bottom_a, line, line_a}) d.gx("Surface_ctor", {o});
+    d.gx("Surface_createFull", {img, 0x320, 0x258, 0, 1, 0, 0});
+    d.gx("loadImage", {img, pool + 0x898, 0, 0, 0x100, 1});
+    d.gx("Surface_blitTakeDirty", {top, img, 0xbb, 0x28, 0x1ad, 0xb0, 1, 0});
+    d.gx("Surface_blitTakeDirty", {bottom, img, 0xbb, 0x176, 0x1ad, 0x37, 1, 0});
+    d.gx("Surface_blitTakeDirty", {line, img, 0xbb, 0x123, 0x1ad, 0xf, 1, 0});
+    d.gx("loadImage", {img, pool + 0x86c, 0, 0, 0x100, 1});
+    d.gx("Surface_blitTakeDirty", {top_a, img, 0xbb, 0x28, 0x1ad, 0xb0, 1, 0});
+    d.gx("Surface_blitTakeDirty", {bottom_a, img, 0xbb, 0x176, 0x1ad, 0x37, 1, 0});
+    d.gx("Surface_blitTakeDirty", {line_a, img, 0xbb, 0x123, 0x1ad, 0xf, 1, 0});
+    d.gx("Image_releaseAll", {img});
+  }
   cm::call_optional(ctx, "playSound", {0x7f, 100, 0, 0, 0});
-
+  const uint32_t button_quad = m.load<uint32_t>(state_va(ctx, &GameState::g_rootWindow) + 0x2e0);   // the root surface's +0x6c
+  d.gx("Surface_drawSprite", {state_va(ctx, &GameState::g_spriteRef_821040), root, 0, 0, 0x3e800000u, 0, 1});
+  d.gx("Surface_stretchBlit", {top, top_a, root, 0xbb, 0x28, 0});
+  d.gx("Widget_setQuad", {root, 0x80000000u, 0xffffffffu, 2, 2});
+  d.text(
+      [&] {
+        cm::cpy(ctx, buf, pool + 0x85c);
+        d.append(std::to_string(add32(static_cast<int16_t>(gs.g_year), 0x7d0)));
+      },
+      [&](uint32_t t) { d.gx("drawStringAt", {root, state_va(ctx, &GameState::g_fontRef_821020), t, 0x196, 0x37, d.len(t)}); });
+  d.gx("drawStringAt", {root, font_b, pool + 0x850, 0x1d1, 0x5d, d.len(pool + 0x850)});
+  d.gx("drawStringAt", {root, font_b, pool + 0x844, 0x236, 0x5d, d.len(pool + 0x844)});
+  d.gx("drawStringAt", {root, font_b, pool + 0x838, 0x194, 0xc8, d.len(pool + 0x838)});
   const int32_t month = gs.g_date / 1024;
   const int32_t this_idx = mod32(month, 500);
   const int32_t last_idx = mod32(sub32(month, 8), 500);
@@ -293,32 +565,136 @@ int32_t show_end_of_year_screen(Ctx &ctx) {
   const uint32_t cash = state_va(ctx, &GameState::g_cashHistory);
   const uint32_t skill = state_va(ctx, &GameState::g_skillHistory);
 
+  // one statistics row's drawing (the numbers formatted again inside ScreenDraw::text, which gives the buffers back): kind 0
+  // appendNumber(v * 100), 1 itoa, 2 appendCents
+  auto stat_row = [&](uint32_t base, int32_t y, uint32_t label, int kind) {
+    if (!d.on) return;
+    const int32_t last = hist(base, last_idx), now = hist(base, this_idx);
+    auto value = [&](int32_t v) {
+      d.put("");
+      if (kind == 0) call_peer(ctx, "appendNumber", {u32(mul32(v, 100))});
+      else if (kind == 1) d.append(std::to_string(v));
+      else cm::append_cents(ctx, v);
+    };
+    d.text(
+        [&] {
+          cm::cpy(ctx, buf, label);
+          cm::cat(ctx, buf, pool + (last < now ? 0x818u : last == now ? 0x80cu : 0x800u));
+        },
+        [&](uint32_t t) { d.gx("drawStringAt", {root, font_b, t, 0x12d, u32(y), d.len(t)}); });
+    d.text([&] { value(last); }, [&](uint32_t t) { d.gx("drawStringAt2", {root, font_b, t, 0x259, u32(y), d.len(t)}); });
+    d.text([&] { value(now); },
+           [&](uint32_t t) {
+             d.gx("Widget_setQuad",
+                  {root, last < now ? 0x80001284u : last != now ? 0x80007d08u : 0x80000000u, 0xffffffffu, 2, 2});
+             d.gx("drawStringAt2", {root, font_b, t, 0x1f4, u32(y), d.len(t)});
+             d.gx("Widget_setQuad", {root, 0x80000000u, 0xffffffffu, 2, 2});
+           });
+  };
   number(ctx, mul32(hist(cash, last_idx), 100));      // cash row: last year, this year
   number(ctx, mul32(hist(cash, this_idx), 100));
+  stat_row(cash, 0x73, pool + 0x824, 0);
+  stat_row(state_va(ctx, &GameState::g_funHistory), 0x87, pool + 0x7e8, 1);
   cents(ctx, hist(skill, last_idx));                  // skill row
   cents(ctx, hist(skill, this_idx));
+  stat_row(skill, 0x9b, pool + 0x7d0, 2);
   // the membership row first copies the live count into this month's slot
   const int32_t members = static_cast<int16_t>(gs.g_eoy58b388 & 0xffffu);
   m.store<int16_t>(state_va(ctx, &GameState::g_memberTypeHistory) + 2 * u32(this_idx),
                    static_cast<int16_t>(mutant == 1 ? members + 1 : members));
+  stat_row(state_va(ctx, &GameState::g_memberTypeHistory), 0xaf, pool + 0x7b8, 1);
 
+  // the highlight lines, built in the text buffer as the original builds them (see above)
+  int32_t y = add32(d.cut_h(top), 0x28);
+  const int32_t step = add32(d.cut_h(line), gfxr::ScreenDraw::ctl(17) ? 1 : 0);
+  auto draw_line = [&]() {
+    d.gx("Surface_stretchBlit", {line, line_a, root, 0xbb, u32(y), 0});
+    d.gx("drawStringAt", {root, font_b, buf, 0x194, u32(add32(y, 2)), d.len(buf)});
+    y = add32(y, step);
+  };
+  auto cat_num = [&](int32_t v) {   // strcat(buf, itoa(v, g_ui_821c50, 10))
+    const std::string t = std::to_string(v);
+    for (size_t i = 0; i <= t.size(); ++i) m.store<uint8_t>(num + static_cast<uint32_t>(i), static_cast<uint8_t>(i < t.size() ? t[i] : 0));
+    cm::cat(ctx, buf, num);
+  };
   const uint32_t events = state_va(ctx, &GameState::g_eventHistory);
   for (int32_t k = last_idx; k <= this_idx; ++k) {
     const int32_t ev = static_cast<int16_t>(m.load<uint16_t>(events + 2 * u32(k)));
     if (ev == 0) continue;
+    cm::cpy(ctx, buf, m.load<uint32_t>(state_va(ctx, &GameState::f_ptrtab_4c2908) + 4 * u32(clamp(sub32(k, last_idx), 0, 7))));
+    cm::cat(ctx, buf, pool + 0x7b4);
     const int32_t kind = (ev & ~0xff) | (ev & 0xe0);
     const int32_t n = ev & 0x1f;
-    if (kind == 0x120) call_peer(ctx, "loadStoryStrings", {u32(mutant == 4 ? n + 1 : n), u32(-1), 0, 0});
-    else if (kind == 0x160) call_peer(ctx, "landmarkName", {u32(n), 0});
+    uint32_t tail = 0;
+    if (kind > 0xc0) {
+      if (kind == 0xe0) {
+        cm::cat(ctx, buf, state_va(ctx, &GameState::g_golferTypes) + 0x10);
+        cm::cat(ctx, buf, pool + 0x754);
+        cat_num(n);
+        tail = pool + 0x744;
+      } else if (kind == 0x100) {
+        cm::cat(ctx, buf, m.load<uint32_t>(state_va(ctx, &GameState::f_ptrtab_4c2c10) + 8));
+        tail = pool + 0x730;
+      } else if (kind == 0x120) {
+        cm::cat(ctx, buf, pool + 0x720);
+        call_peer(ctx, "loadStoryStrings", {u32(mutant == 4 ? n + 1 : n), u32(-1), 0, 0});
+      } else if (kind == 0x140) {
+        tail = pool + 0x6f0;
+      } else if (kind == 0x160) {
+        cm::cat(ctx, buf, pool + 0x70c);
+        call_peer(ctx, "landmarkName", {u32(n), 0});
+      }
+    } else if (kind == 0xc0) {
+      cm::cat(ctx, buf, state_va(ctx, &GameState::g_celebrities) + 0x25 * u32(n));
+      tail = pool + 0x760;
+    } else if (kind == 0x20) {
+      cm::cat(ctx, buf, state_va(ctx, &GameState::f_strpool_4c4970) + 8);
+      cat_num(n);
+      cm::cat(ctx, buf, pool + 0x7a8);
+      if (m.load<int8_t>(state_va(ctx, &GameState::g_holes) + kHoleSize * u32(n)) == 0) {   // a hole without a par drops the line
+        m.store<uint8_t>(buf, 0);
+        continue;
+      }
+    } else if (kind == 0x40) {
+      cm::cat(ctx, buf, state_va(ctx, &GameState::f_tab_buildItems_4c26b0) + 0x14 * u32(n));
+      tail = pool + 0x7a0;
+    } else if (kind == 0x60) {
+      cm::cat(ctx, buf, pool + 0x770);
+      tail = state_va(ctx, &GameState::g_golfPros) + 0x38 * u32(n);
+    } else if (kind == 0x80 || kind == 0xa0) {
+      cm::cat(ctx, buf, state_va(ctx, &GameState::f_strpool_4c4970) + 8);
+      cat_num(n);
+      tail = pool + (kind == 0x80 ? 0x790u : 0x780u);
+    }
+    if (tail) cm::cat(ctx, buf, tail);
+    if (m.load<uint8_t>(buf) == 0) continue;
+    draw_line();
   }
 
   // the board's debt warnings: the counter picks the wording and is raised while the money is negative
-  if (gs.g_cash_div100 < 0 && (gs.g_flags & (1u << 24)) == 0) gs.g_debtYears = add32(gs.g_debtYears, 1);
-  else if (mutant != 2) gs.g_debtYears = 0;
+  if (gs.g_cash_div100 < 0 && (gs.g_flags & (1u << 24)) == 0) {
+    const int32_t warn = gs.g_debtYears;
+    gs.g_debtYears = add32(gs.g_debtYears, 1);
+    d.gx("Widget_setQuad", {root, 0x80007d08u, 0xffffffffu, 2, 2});
+    static const uint32_t kWarn[3][2] = {{0x5e4, 0x5b4}, {0x64c, 0x620}, {0x6b8, 0x680}};   // f_strpool_4d21a4 offsets
+    if (d.on && warn >= 0 && warn <= 2)
+      for (int k = 0; k < 2; ++k)
+        d.text([&] { cm::cpy(ctx, buf, pool + kWarn[warn][k]); }, [&](uint32_t) { draw_line(); });
+  } else if (mutant != 2) {
+    gs.g_debtYears = 0;
+  }
+  d.gx("Surface_stretchBlit", {bottom, bottom_a, root, 0xbb, u32(y), 0});
+  d.gx("Widget_setQuad", {root, button_quad, 0xffffffffu, 2, 2});
+  y = add32(y, 8);
+  d.gx("Image_draw", {state_va(ctx, &GameState::g_spriteRef_820f40), root, 0x226, u32(y), 0});
+  d.gx("Window::refreshFull", {d.window(), 0});
 
-  report_loop(ctx, true, "showEndOfYearScreen");
+  Hover close{0x226, y, false};   // the close button drawn above at (0x226, y)
+  report_loop(ctx, true, "showEndOfYearScreen", &close);
   cm::pump_light(ctx, "showEndOfYearScreen");
   if (mutant != 5 && i32(call_peer(ctx, "addScore", {}).eax) != -1) call_peer(ctx, "drawScoreSummary", {});
+  for (uint32_t o : {top, bottom, line, top_a, bottom_a, line_a, line_a, line, bottom_a, bottom, top_a, top}) d.gx("Surface_free", {o});
+  d.gx("Image_dtor", {img});
   return 0;
 }
 

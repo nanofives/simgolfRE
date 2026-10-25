@@ -1,22 +1,20 @@
 ranking	cause	checkpoints_blocked	scenarios	terrain_yes	terrain_no	example_checkpoint
-primary	terrain not drawn	589	67	589	0	championship/tournament_start
+primary	terrain not drawn	591	67	591	0	championship/tournament_start
 primary	NOT_RUN: MISSING: no trace	10	1	0	0	golfer_events/menu
-primary	NOT_RUN: boot FAIL at record 771: {"record": 771, "T_port": 1220177, "T_orig": 1220177, "objects": ["g_cursorTileX", "g_cursorTileY"]}	8	1	8	0	cov_r_s2_screens/end_of_year
-primary	FAIL no unsupported call (frame): frame	4	1	0	4	cov_r_s2_screens/loading_t200
-primary	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	3	2	0	3	cov_a_champ/n_yes
-primary	NOT_RUN: no snapshot (boot FAIL: {"record": 771, "T_port": 1220177, "T_orig": 1220177, "objects": ["g_cursorTileX", "g_cursorTileY"]})	2	1	2	0	cov_r_s2_screens/buy_land
+primary	unsupported: no body: Widget_writePixel	4	1	4	0	cov_l_camera/edge
+primary	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	3	2	1	2	cov_a_champ/n_yes
+primary	NOT_RUN: no snapshot (boot FAIL: sg_run_boot returned -11 (missing exe constants / game file) after 1156 of 1268 records)	2	1	2	0	cov_r_s2_screens/buy_land
+primary	NOT_RUN: boot FAIL at record 1156: sg_run_boot returned -11 (missing exe constants / game file) after 1156 of 1268 records	1	1	1	0	cov_r_s2_screens/land_popup
 2d_all	unsupported: no body: Widget_writePixel	453	49	453	0	course_season/sandbox
-2d_all	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	126	15	123	3	championship/tournament_start
+2d_all	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	132	15	130	2	championship/tournament_start
 2d_all	unsupported: no body: Surface_drawScaled2	13	3	13	0	cov_b_locations/phoenix
 2d_all	NOT_RUN: MISSING: no trace	10	1	0	0	golfer_events/menu
-2d_all	NOT_RUN: boot FAIL at record 771: {"record": 771, "T_port": 1220177, "T_orig": 1220177, "objects": ["g_cursorTileX", "g_cursorTileY"]}	8	1	8	0	cov_r_s2_screens/end_of_year
-2d_all	FAIL no unsupported call (frame): frame	4	1	0	4	cov_r_s2_screens/loading_t200
-2d_all	NOT_RUN: no snapshot (boot FAIL: {"record": 771, "T_port": 1220177, "T_orig": 1220177, "objects": ["g_cursorTileX", "g_cursorTileY"]})	2	1	2	0	cov_r_s2_screens/buy_land
+2d_all	NOT_RUN: no snapshot (boot FAIL: sg_run_boot returned -11 (missing exe constants / game file) after 1156 of 1268 records)	2	1	2	0	cov_r_s2_screens/buy_land
+2d_all	NOT_RUN: boot FAIL at record 1156: sg_run_boot returned -11 (missing exe constants / game file) after 1156 of 1268 records	1	1	1	0	cov_r_s2_screens/land_popup
 2d_terrain_no	NOT_RUN: MISSING: no trace	10	1	0	0	golfer_events/menu
-2d_terrain_no	FAIL no unsupported call (frame): frame	4	1	0	4	cov_r_s2_screens/loading_t200
-2d_terrain_no	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	3	2	0	3	cov_a_champ/n_yes
+2d_terrain_no	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	2	1	0	2	cov_a_champ/n_yes
 2d_terrain_yes	unsupported: no body: Widget_writePixel	453	49	453	0	course_season/sandbox
-2d_terrain_yes	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	123	15	123	0	championship/tournament_start
+2d_terrain_yes	unsupported: Surface_stretchBlit: a SpriteRef the backend has no sprite for	130	15	130	0	championship/tournament_start
 2d_terrain_yes	unsupported: no body: Surface_drawScaled2	13	3	13	0	cov_b_locations/phoenix
-2d_terrain_yes	NOT_RUN: boot FAIL at record 771: {"record": 771, "T_port": 1220177, "T_orig": 1220177, "objects": ["g_cursorTileX", "g_cursorTileY"]}	8	1	8	0	cov_r_s2_screens/end_of_year
-2d_terrain_yes	NOT_RUN: no snapshot (boot FAIL: {"record": 771, "T_port": 1220177, "T_orig": 1220177, "objects": ["g_cursorTileX", "g_cursorTileY"]})	2	1	2	0	cov_r_s2_screens/buy_land
+2d_terrain_yes	NOT_RUN: no snapshot (boot FAIL: sg_run_boot returned -11 (missing exe constants / game file) after 1156 of 1268 records)	2	1	2	0	cov_r_s2_screens/buy_land
+2d_terrain_yes	NOT_RUN: boot FAIL at record 1156: sg_run_boot returned -11 (missing exe constants / game file) after 1156 of 1268 records	1	1	1	0	cov_r_s2_screens/land_popup

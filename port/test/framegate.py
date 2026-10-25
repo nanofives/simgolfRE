@@ -7,9 +7,10 @@ checkpoint at the trace ordinal of the checkpoint's clock call) and LiveTerrain 
 the port's own Terrain.dll state; the Terrain object goes to the address the pin_<scenario> recording's getInstance returned, or, for a
 scenario without a recording, to the address LiveTerrain picks itself: 0 = "the first free 4 MB step above the GameState + 32 MB").
 The boot's verdict (PASS / KNOWN) with both attached is the proof that neither changes a sim hash: boot.run compares every frame
-record with the capture's framehash.bin, as the boot gate does. On the Win32 backend (SG_BACKEND=win32) the runner has no
-sg_ts_live op, so LiveTerrain is not attached there (column liveterrain = n/a); nothing in a row's status or pixels depends on it at
-HEAD (terrain_state's draw passes set only the view quadrant: no terrain pixel reaches the back buffer).
+record with the capture's framehash.bin, as the boot gate does. On the Win32 backend (SG_BACKEND=win32) the runner's ops 28..32
+carry the sg_ts_live calls (roadmap S3.2, port/test/terrainlive.py live_*). With LiveTerrain and gfx attached the terrain passes
+are rasterised into the backend's root surface (the terrain body family, port/src/sim/gfx_terrain.cpp); gfx.log's
+snapshot_terrain gives column terrain_drawn.
 
 One TSV row per checkpoint (columns in COLUMNS):
   status   PASS (0 px differ) / FAIL (px differ, no unsupported drawing call before the snapshot; detail = px by region) /
@@ -64,7 +65,7 @@ MAX_JOBS = 2
 PROBE_LIMIT = 3_000_000      # TkBase calls traced by the order probe (about 60 MB of trace, deleted afterwards)
 COLUMNS = ["scenario", "checkpoint", "status", "detail", "kind", "context", "frame", "wait_ticks", "terrain", "terrain_rule", "total_px",
            "one_level_px", "one_level_pct", "beyond_px", "regions", "unsup_before", "first_unsupported", "first_unsupported_drawing", "unsupported_before",
-           "unsup_order", "boot_status", "boot_records", "liveterrain", "backend", "variant", "reference"]
+           "unsup_order", "boot_status", "boot_records", "liveterrain", "backend", "variant", "reference", "terrain_drawn"]
 
 # The H1 frame wait of mainLoop (re/analysis/sim/time_model.md: 0x0041e631..0x0041e6b1, timeGetTime via [0x004ba21c] then
 # waitTicks(1, 0) steps): its own clock reads return inside this range
@@ -419,9 +420,10 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
     to_end = no_frames or max_records > len(frames_pos)
     del tr
     snaps, glog_txt, live_info = {}, "", {"attached": "n/a"}
-    use_live = live and backend == "x64" and lib.has("gfx.attach")
+    use_live = live and lib.has("gfx.attach")
     va = (terrain_address(scenario) if terrain_va is None else terrain_va) if use_live else 0
-    if use_live:
+    from port.test import terrainlive as TLm
+    if use_live and getattr(lib, "dll", None) is not None:
         _bind_live(lib.dll)
 
     def before(st):
@@ -429,7 +431,7 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
         for o, _c in ords:
             st.call("gfx.snapshotAt", [o])
         if use_live:
-            if lib.dll.sg_ts_live_attach(st.ctx, va, None, 0) != 0:
+            if TLm.live_attach(lib, st, va) != 0:
                 raise RuntimeError("sg_ts_live_attach failed")
 
     def after(st, _res):
@@ -443,15 +445,11 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
         glog_txt = t.decode() if t else ""
         st.call("gfx.detach", [])
         if use_live:
-            n = C.c_size_t(0)
-            lib.dll.sg_ts_live_log(st.ctx, None, 0, C.byref(n))
-            b = C.create_string_buffer(n.value + 1)
-            lib.dll.sg_ts_live_log(st.ctx, b, n.value + 1, C.byref(n))
-            names = [ln.split()[3] for ln in b.raw[:n.value].decode().splitlines() if len(ln.split()) > 3]
-            live_info.update(attached=f"0x{lib.dll.sg_ts_live_object(st.ctx):x}", calls=len(names),
+            names = [ln.split()[3] for ln in TLm.live_log(lib, st).splitlines() if len(ln.split()) > 3]
+            live_info.update(attached=f"0x{TLm.live_object(lib, st):x}", calls=len(names),
                              renders=sum(1 for x in names if x in ("render", "localRender", "pathUpdateRender")),
                              init=int("initSystem" in names and "initTerrain" in names))
-            lib.dll.sg_ts_live_detach(st.ctx)
+            TLm.live_detach(lib, st)
 
     prev = lib.negctl(negctl[0], negctl[1]) if negctl else None
     t0 = time.time()
@@ -469,6 +467,10 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
     live_txt = live_info["attached"] if live_info["attached"] == "n/a" else \
         f"{live_info['attached']} calls={live_info['calls']} renders={live_info['renders']} init={live_info['init']}"
     div = (bres.first_divergence or {}).get("record")
+    if div is None and bres.status == "FAIL" and bres.records < bres.expected:
+        # the run stopped without a divergence (sg_run_boot returned an error, e.g. a missing name, after `records` equal
+        # records): the checkpoints before that record are still judged (S2.8, U-1270)
+        div = bres.records
     rows = []
     for i, (o, c) in enumerate(ords):
         m = meta[c]
@@ -479,6 +481,7 @@ def run_scenario(scenario: str, checkpoints: list[str] | None = None, lib=None, 
         row["terrain"], row["terrain_rule"] = terrain_rule(m["context"], m["frame"])
         if i in glog["snap_terrain"]:
             row["terrain_rule"] += f"; gfx snapshot_terrain={glog['snap_terrain'][i]}"
+            row["terrain_drawn"] = glog["snap_terrain"][i]
         ub, order = unsupported_before(glog, i, pr)
         drawing = [r for r in ub if reason_name(r) not in NOT_DRAWING]
         row.update(unsup_before=glog["snap_unsup"].get(i, 0), unsupported_before="|".join(ub),

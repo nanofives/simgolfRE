@@ -67,6 +67,11 @@ struct Api {
   F(int64_t, sg_files_size, (sg_ctx *, const char *))
   F(int64_t, sg_files_read, (sg_ctx *, const char *, uint64_t, uint8_t *, uint64_t))
   F(const char *, sg_build_info, (void))
+  F(int, sg_ts_live_attach, (sg_ctx *, uint32_t, const uint32_t *, int32_t))
+  F(int, sg_ts_live_detach, (sg_ctx *))
+  F(uint32_t, sg_ts_live_object, (sg_ctx *))
+  F(int, sg_ts_live_log, (sg_ctx *, char *, size_t, size_t *))
+  F(int32_t, sg_ts_live_snapshot, (sg_ctx *, int32_t, uint8_t *, float *, float *, uint32_t *, int32_t *, uint32_t *))
 #undef F
 };
 Api A;
@@ -114,6 +119,11 @@ bool load_api(const char *path) {
   F(int64_t, sg_files_size, (sg_ctx *, const char *))
   F(int64_t, sg_files_read, (sg_ctx *, const char *, uint64_t, uint8_t *, uint64_t))
   F(const char *, sg_build_info, (void))
+  F(int, sg_ts_live_attach, (sg_ctx *, uint32_t, const uint32_t *, int32_t))
+  F(int, sg_ts_live_detach, (sg_ctx *))
+  F(uint32_t, sg_ts_live_object, (sg_ctx *))
+  F(int, sg_ts_live_log, (sg_ctx *, char *, size_t, size_t *))
+  F(int32_t, sg_ts_live_snapshot, (sg_ctx *, int32_t, uint8_t *, float *, float *, uint32_t *, int32_t *, uint32_t *))
 #undef F
   return ok;
 }
@@ -411,7 +421,7 @@ int main(int argc, char **argv) {
         }
         break;
       }
-      default: {  // handle ops 17..27
+      default: {  // handle ops 17..32
         uint32_t h = r.get<uint32_t>();
         auto it = g_states.find(h);
         if (it == g_states.end()) { status = SG_E_ARG; break; }
@@ -517,6 +527,41 @@ int main(int argc, char **argv) {
           w.put<int32_t>(done);
           w.bytes(ts.data(), sizeof(uint32_t) * static_cast<size_t>(done));
           w.bytes(hs.data(), sizeof(uint64_t) * static_cast<size_t>(done) * static_cast<size_t>(nsim));
+        } else if (op == 28) {  // LiveTerrain attach (roadmap S3.2): u32 va, i32 n, n x u32 snapshot positions
+          uint32_t va = r.get<uint32_t>();
+          int32_t n = r.get<int32_t>();
+          std::vector<uint32_t> ks(n > 0 ? n : 1);
+          for (int32_t i = 0; i < n; ++i) ks[i] = r.get<uint32_t>();
+          status = r.bad ? SG_E_ARG : A.sg_ts_live_attach(s.ctx, va, n > 0 ? ks.data() : nullptr, n > 0 ? n : 0);
+        } else if (op == 29) {  // LiveTerrain detach
+          status = A.sg_ts_live_detach(s.ctx);
+        } else if (op == 30) {  // LiveTerrain object address
+          w.put<uint32_t>(A.sg_ts_live_object(s.ctx));
+        } else if (op == 31) {  // LiveTerrain call log: str
+          size_t n = 0;
+          status = A.sg_ts_live_log(s.ctx, nullptr, 0, &n);
+          std::vector<char> b(n + 1);
+          if (n || status == SG_E_ARG) status = A.sg_ts_live_log(s.ctx, b.data(), n + 1, &n);
+          if (status == SG_OK) w.str(b.data());
+        } else if (op == 32) {  // LiveTerrain copy k (k < 0: the count): i32 result, then u32 after, i32 view, object, arrays, textures
+          int32_t k = r.get<int32_t>();
+          uint32_t nobj = r.get<uint32_t>(), nv = r.get<uint32_t>(), nt = r.get<uint32_t>();
+          std::vector<uint8_t> obj(nobj ? nobj : 1);
+          std::vector<float> v(nv ? nv : 1), nn(nv ? nv : 1);
+          std::vector<uint32_t> tex(nt ? nt : 1);
+          int32_t view = 0;
+          uint32_t after = 0;
+          int32_t res = k < 0 ? A.sg_ts_live_snapshot(s.ctx, k, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr)
+                              : A.sg_ts_live_snapshot(s.ctx, k, obj.data(), v.data(), nn.data(), tex.data(), &view, &after);
+          w.put<int32_t>(res);
+          if (k >= 0 && res >= 0) {
+            w.put<uint32_t>(after);
+            w.put<int32_t>(view);
+            w.bytes(obj.data(), nobj);
+            w.bytes(v.data(), 4u * nv);
+            w.bytes(nn.data(), 4u * nv);
+            w.bytes(tex.data(), 4u * nt);
+          }
         } else if (op == 25) {  // apply pending only (map errors surface here)
         } else {
           status = SG_E_ARG;

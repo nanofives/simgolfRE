@@ -1,0 +1,3 @@
+scenario	status	records	expected	detail	run_detail
+cov_a_keys	PASS	2103	2103		end checkpoint at site 312244 (a frame-wait site): the last frame ran to the frame wait; input: 184 dispatches delivered, 0 left, 2 at another cursor count (first: record 1732); cursor reads over/under 1/272 (first: record 1660); async-key reads over/under 0/0; clock queries 10598 served, 0 none left, 0 dispatches late
+golfer_stories	PASS	2084	2084		end checkpoint at site 312200 (a frame-wait site): the last frame ran to the frame wait; input: 204 dispatches delivered, 0 left, 2 at another cursor count (first: record 1351); cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 2090 served, 0 none left, 0 dispatches late

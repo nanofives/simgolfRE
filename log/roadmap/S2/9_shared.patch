@@ -1,0 +1,476 @@
+diff --git a/port/src/sim/gfx_families.inc b/port/src/sim/gfx_families.inc
+--- a/port/src/sim/gfx_families.inc
++++ b/port/src/sim/gfx_families.inc
+@@ -9,3 +9,4 @@
+ SG_GFX_FAMILY(prim_fill)
+ SG_GFX_FAMILY(prim_text2)
+ SG_GFX_FAMILY(routing)
++SG_GFX_FAMILY(dialogs)
+diff --git a/port/src/sim/commands_popup.inc b/port/src/sim/commands_popup.inc
+--- a/port/src/sim/commands_popup.inc
++++ b/port/src/sim/commands_popup.inc
+@@ -9,6 +9,79 @@
+   TextMetrics *tm = text_metrics(ctx);
+   if (!tm) throw MissingResource{"Text_put"};
+   return tm->text_put(ctx, ctx.gs().f_stateptr_4c1570[0], font, text);
++}
++
++// ------------------------------------------------------------------------------------------------ the drawing (roadmap S2.9)
++// The drawing calls the two widgets make, handed to the graphics backend (gfx_drop; nothing without one attached). A text
++// line of the buffer is cut where the original cuts it (its 0x0a replaced by 0 while it is drawn, put back after), so a
++// pass with a backend leaves the GameState as one without. The bodies are gfx_dialogs.cpp's and the core's.
++bool popup_gfx_on(Ctx &ctx) { return g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr; }
++void popup_gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
++  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++}
++// dialogs.begin / dialogs.end around a dialog (the backend's held-pixel probe reads them; they draw nothing)
++struct DialogMark {
++  Ctx &ctx;
++  explicit DialogMark(Ctx &c) : ctx(c) { popup_gx(ctx, "dialogs.begin", {}); }
++  ~DialogMark() { popup_gx(ctx, "dialogs.end", {}); }
++  DialogMark(const DialogMark &) = delete;
++  DialogMark &operator=(const DialogMark &) = delete;
++};
++
++// one pass of showPopup's drawing (c3em.cpp ShowPopup_re, the pass from the box to Window::refreshFull): the box (an even y
++// drawPanelS2, an odd y the two fills over the colour read before the loop), the close button for a check list, then per
++// line ended by 0x0a: a caption centred with drawCenteredText2 (white, 0x80007ff0 + 0xf for flag4), an option with its
++// text at left + 0x24 (drawTextSurface one row up for the selection) and its bullet (check box for flag4 == 0), and the
++// refresh
++void draw_popup_pass(Ctx &ctx, int32_t x, int32_t y, int32_t box_w, int32_t box_h, int32_t inner, int32_t flag4,
++                     int32_t mask, int32_t disabled, int32_t sel) {
++  if (!popup_gfx_on(ctx)) return;
++  const Memory &m = ctx.mem;
++  const uint32_t buf = GS(g_textBuffer);
++  const uint32_t root = ctx.gs().f_stateptr_4c1570[0];
++  const uint32_t win = GS(g_rootWindow);
++  const int32_t odd = y & 1;
++  const int32_t half = box_w / 2;
++  const int32_t left = sub32(x, half);
++  if (odd == 0) popup_gx(ctx, "drawPanelS2", {u32(left), u32(y), u32(box_w), u32(box_h)});
++  else popup_gx(ctx, "showPopup.oddBox", {u32(left), u32(y), u32(box_w), u32(box_h), u32(inner)});
++  const uint32_t bullets = GS(g_surfaces5678b8), bmask = GS(g_sprites56a7b8);
++  if (flag4 == 0)
++    popup_gx(ctx, "Surface_stretchBlit", {bullets + 0xdc, bmask + 0xdc, root, u32(add32(sub32(half, 0x28), x)),
++                                          u32(add32(sub32(box_h, 0x28), y)), 0});
++  int32_t line_y = add32(y, 0xc), line_idx = 0, first = -1;
++  uint32_t seg = 0;
++  for (uint32_t k = 0; k < vstrlen(m, buf); ++k) {
++    if (m.load<uint8_t>(buf + k) != 0x0a) continue;
++    const uint32_t line = buf + seg;
++    m.store<uint8_t>(buf + k, 0);
++    if (m.load<uint8_t>(line) == ' ') {
++      if (first == -1) first = line_idx;
++      const int32_t idx = line_idx - first;
++      const uint32_t bit = 1u << (u32(idx) & 31);
++      if ((u32(disabled) & bit) == 0) {
++        const uint32_t set = bit & u32(mask);
++        const uint32_t colour = set != 0 ? 0x80007fffu : 0x80000210u + (odd != 0 ? 0x1ef8u : 0u);
++        if (sel == idx) popup_gx(ctx, "drawTextSurface", {line, u32(add32(left, 0x24)), u32(add32(line_y, 7)), colour});
++        else popup_gx(ctx, "drawText4049d0", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), colour});
++        if (flag4 == 0)
++          popup_gx(ctx, "Surface_drawScaled", {GS(g_sprites561260) + 0x2c * (set != 0 ? 1u : 2u), root,
++                                               u32(add32(left, 8)), u32(line_y), 1, 1, 1, 0});
++        else
++          popup_gx(ctx, "Surface_stretchBlit", {bullets + 0x2c * (set != 0 ? 0u : 2u), bmask, root, u32(add32(left, 0xc)),
++                                                u32(add32(line_y, 4)), 0});
++      } else {
++        popup_gx(ctx, "drawText4049d0", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), 0x80006318u});
++      }
++    } else {
++      popup_gx(ctx, "drawCenteredText2", {line, u32(x), u32(line_y), 0x80007ff0u + (flag4 != 0 ? 0xfu : 0u)});
++    }
++    m.store<uint8_t>(buf + k, 0x0a);
++    seg = k + 1;
++    line_y = add32(line_y, (first != -1 ? 6 : 0) + 0x12);
++    ++line_idx;
++  }
++  popup_gx(ctx, "Window::refreshFull", {win, 0});
+ }
+ 
+ // showPopup (x, y, mask, flag4, disabled): a box over the lines of g_textBuffer (one per 0x0a; a line that starts with a
+@@ -25,6 +98,8 @@
+   const int mode = SG_NEGCTL(g_negctl_popup);
+   const uint32_t buf = GS(g_textBuffer);
+   const uint32_t font = GS(g_font519928);
++  DialogMark dialog_mark(ctx);
++  popup_gx(ctx, "setDrawTarget", {ctx.gs().f_stateptr_4c1570[0], font, 0, 0, 0});
+   int32_t mask = flag4 != 0 ? 0 : init_mask;
+   // measuring pass: each line is measured with its 0x0a replaced by a 0 (put back after), then the tail
+   int32_t widest = 0, lines = 0;
+@@ -44,6 +119,7 @@
+   const int32_t box_w = add32(inner, 0x31);
+   const int32_t box_h = mul32(add32(mul32(lines, 3), 3), 8);
+   int32_t sel = -1, result = 0, key_latch = 0, first_y = 0;
++  if ((y & 1) != 0) popup_gx(ctx, "showPopup.readColour", {u32(x), u32(y)});
+   for (;;) {
+     const int32_t half = box_w / 2;
+     const int32_t left = sub32(x, half);
+@@ -65,6 +141,7 @@
+       ++line_idx;
+     }
+     const int32_t count = sub32(line_idx, first);
++    draw_popup_pass(ctx, x, y, box_w, box_h, inner, flag4, mask, disabled, sel);
+     pump_messages(ctx, PumpKind::Blocking, "showPopup");
+     if (flag4 != 0) {
+       if (flush_redraw(ctx) != 0) {
+@@ -88,7 +165,10 @@
+       }
+       mask = i32(1u << (u32(sel) & 31));
+       if (gs.g_rootInput[kButton] != 0) {
+-        if ((u32(disabled) & u32(mask)) == 0) return sel;
++        if ((u32(disabled) & u32(mask)) == 0) {
++          if ((y & 1) != 0) popup_gx(ctx, "showPopup.oddRepaint", {u32(sub32(x, box_w / 2)), u32(y), u32(box_w), u32(box_h)});
++          return sel;
++        }
+         call_optional(ctx, "playSound", {0x18, 0x64, 0, 0, 0});   // a disabled option: the refusal sound, a new pass
+         continue;
+       }
+@@ -142,9 +222,6 @@
+ // the caret measure and all drawing are dropped. An empty text whose width 0 is still above the limit (maxLen <= 1)
+ // makes the original write a 0 before the buffer forever: NoReturn after that write.
+ int32_t text_input_box(Ctx &ctx, uint32_t title, int32_t x, int32_t y, int32_t max_len) {
+-  (void)title;
+-  (void)x;
+-  (void)y;
+   GameState &gs = ctx.gs();
+   const Memory &m = ctx.mem;
+   if (!text_metrics(ctx)) throw MissingResource{"Text_put"};   // the first width is measured before any write
+@@ -154,7 +231,26 @@
+   int32_t len = i32(vstrlen(m, tb));
+   int32_t cur = len;
+   const int32_t width = mul32(max_len, 12);
++  DialogMark dialog_mark(ctx);
++  const uint32_t root = gs.f_stateptr_4c1570[0];
+   for (;;) {
++    // the box (c3el.cpp TextInputBox_re, the draw at the top of every pass): three frames, the title, the white field,
++    // the text, the caret at the cursor (the head before it measured with Text_put, its byte cut as the original cuts it)
++    if (popup_gfx_on(ctx)) {
++      popup_gx(ctx, "setDrawTarget", {root, GS(g_font51b360), 0, 0, 0});
++      popup_gx(ctx, "Win_fillRect", {root, u32(sub32(x, 1)), u32(sub32(y, 1)), u32(add32(width, 0x20)), 0x30, 0x80007fffu});
++      popup_gx(ctx, "Win_fillRect", {root, u32(add32(x, 1)), u32(add32(y, 1)), u32(add32(width, 0x20)), 0x30, 0x80000000u});
++      popup_gx(ctx, "Win_fillRect", {root, u32(x), u32(y), u32(add32(width, 0x20)), 0x30, 0x800035b3u});
++      popup_gx(ctx, "drawText4049d0", {title, u32(add32(x, 4)), u32(add32(y, 6)), 0x80007fffu});
++      popup_gx(ctx, "Win_fillRect", {root, u32(add32(x, 0x10)), u32(add32(y, 0x17)), u32(width), 0x16, 0x80007fffu});
++      popup_gx(ctx, "setDrawTarget", {root, font, 0, 0, 0});
++      popup_gx(ctx, "drawText4049d0", {tb, u32(add32(x, 0x14)), u32(add32(y, 0x1c)), 0x80000000u});
++      const uint8_t saved = m.load<uint8_t>(tb + u32(cur));
++      m.store<uint8_t>(tb + u32(cur), 0);
++      const int32_t cx = add32(add32(x, text_put(ctx, font, tb)), 0x14);
++      m.store<uint8_t>(tb + u32(cur), saved);
++      popup_gx(ctx, "Widget_fillRect", {root, u32(cx), u32(add32(y, 0x1a)), u32(cx), u32(add32(y, 0x2a)), 0x80006000u});
++    }
+     int32_t w = text_put(ctx, font, tb);
+     while (w > sub32(width, mode == 1 ? 0x18 : 0x10)) {
+       const uint32_t n = vstrlen(m, tb);
+@@ -164,6 +260,9 @@
+       if (u32(cur) > n2) cur = i32(n2);
+       w = text_put(ctx, font, tb);
+     }
++    // the underscore after the text and the refresh
++    popup_gx(ctx, "fillWindowRect", {GS(g_rootWindow), u32(add32(add32(w, x), 0x15)), u32(add32(y, 0x29)), 8, 2, 0x80004210u});
++    popup_gx(ctx, "Window::refreshFull", {GS(g_rootWindow), 0});
+     do {
+       pump_messages(ctx, PumpKind::Blocking, "textInputBox");
+     } while (gs.g_rootInput[kButton] == 0 && flush_redraw(ctx) == 0);
+diff --git a/port/src/sim/saveload.cpp b/port/src/sim/saveload.cpp
+--- a/port/src/sim/saveload.cpp
++++ b/port/src/sim/saveload.cpp
+@@ -343,12 +343,25 @@
+ // saveGameDialog (re/analysis/save/00405b10; c3fa.cpp): the name prompt of the S key. The default name (title, the day of the
+ // month, the date) is built in g_textBuffer and textInputBox edits it; an empty answer or a name sanitizeFileName refuses shows
+ // the invalid-name message through startMessage; an existing file asks showPopup (a non-zero answer is returned); then
+-// saveGame(name) and the saved message. Returns the last callee's eax. The panel and heading drawing is dropped.
++// saveGame(name) and the saved message. Returns the last callee's eax. The panel and its heading are drawing calls for the
++// graphics backend (roadmap S2.9, c3fa.cpp SaveGameDialog_re): drawPanelS2(0x36, 0x50, 0x274, 0x50), setDrawTarget(root,
++// g_font51b360) and drawCenteredText2(f_strpool_4c3f74, 0x180, 0x58, white), inside the dialog markers.
+ int32_t save_game_dialog(Ctx &ctx) {
+   const int mode = SG_NEGCTL(g_negctl_save_game_dialog);
+   GameState &gs = ctx.gs();
+   const uint32_t text = text_va(ctx);
+   const uint32_t dirs = state_va(ctx, &GameState::f_strpool_4c3ee0);
++  auto draw = [&](const char *name, std::initializer_list<uint32_t> a) {
++    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++  };
++  struct Mark {
++    Ctx &c;
++    explicit Mark(Ctx &x) : c(x) { gfx_drop(c, "dialogs.begin", nullptr, 0); }
++    ~Mark() { gfx_drop(c, "dialogs.end", nullptr, 0); }
++  } mark(ctx);
++  draw("drawPanelS2", {0x36, 0x50, 0x274, 0x50});
++  draw("setDrawTarget", {gs.f_stateptr_4c1570[0], state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
++  draw("drawCenteredText2", {state_va(ctx, &GameState::f_strpool_4c3f74), 0x180, 0x58, 0x80007fffu});
+   ctx.mem.store<uint8_t>(text, 0);
+   append_course_title(ctx, -1);
+   const uint32_t blank = state_va(ctx, &GameState::f_strpool_4c3f70);
+diff --git a/port/src/sim/reports.cpp b/port/src/sim/reports.cpp
+--- a/port/src/sim/reports.cpp
++++ b/port/src/sim/reports.cpp
+@@ -16,6 +16,10 @@
+ #include "portsim/sim/commands.h"
+ #include "portsim/sim/util.h"
+ #include "commands_internal.h"
++#include "portsim/sim/gfx.h"
++
++#include <cstring>
++#include <vector>
+ 
+ namespace portsim {
+ 
+@@ -61,6 +65,150 @@
+ }
+ 
+ constexpr uint32_t kHoleSize = 0x208;
++
++// ------------------------------------------------------------------------------------------------ the grading page's drawing
++// Roadmap S2.9: the association's page (modes 1 / 2) as drawing calls for the graphics backend (gfx_drop; nothing without
++// one attached), in the order of c3fr.cpp ShowCourseReport_re (instruction addresses there). The values are the ones the
++// computation above produced (Page); each drawn text is built in g_textBuffer as the original builds it (string-pool
++// pieces, _itoa base 10, appendNumber), drawn, and g_textBuffer and the itoa buffer g_textBuf are put back, so a run with
++// a backend leaves the GameState as one without. Strings are offsets into f_strpool_4d2c28 unless named otherwise.
++struct Page {
++  int32_t flags = 0, crit = 0, ideal = 0, step = 1, cnt = 0, half = 0, holes = 0;
++  int32_t len = 0, g = 0, hp1 = 0, g2 = 0, tm = 0, g3 = 0, pc = 0, g4 = 0, counts[5] = {0}, gc[5] = {0}, fac = 0, gf = 0;
++  int32_t score = 0, prize = 0;
++};
++struct ReportDraw {
++  Ctx &ctx;
++  const Memory &m;
++  uint32_t root, win, tb, itoa_buf, pool, f_ee8, f_020, f_f28;
++  explicit ReportDraw(Ctx &c)
++      : ctx(c), m(c.mem), root(state_va(c, &GameState::g_rootWindow) + 0x274), win(state_va(c, &GameState::g_rootWindow)),
++        tb(state_va(c, &GameState::g_textBuffer)), itoa_buf(state_va(c, &GameState::g_textBuf)),
++        pool(state_va(c, &GameState::f_strpool_4d2c28)), f_ee8(state_va(c, &GameState::g_fontRef_821ee8)),
++        f_020(state_va(c, &GameState::g_fontRef_821020)), f_f28(state_va(c, &GameState::g_fontRef_821f28)) {}
++  static bool on() { return g_gfx_attached.load(std::memory_order_relaxed) != 0; }
++  void gx(const char *name, std::initializer_list<uint32_t> a) const { gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size())); }
++  void quad(uint32_t c) const { gx("Widget_setQuad", {root, c, 0xffffffffu, 2, 2}); }
++  // Widget_draw / drawStringAt / drawStringAt2 (target, font, text, x, y, strlen(text))
++  void str(const char *kind, uint32_t font, uint32_t s, int32_t x, int32_t y) const {
++    gx(kind, {root, font, s, u32(x), u32(y), vstrlen(m, s)});
++  }
++  void img(uint32_t s, int32_t x, int32_t y) const { gx("Image_draw", {s, root, u32(x), u32(y), 0}); }
++  // a text built in the buffer by `build`, drawn with `kind`, then the two buffers put back
++  template <class F>
++  void text(F build, const char *kind, uint32_t font, int32_t x, int32_t y) const {
++    std::vector<uint8_t> keep(0x1000), keep_itoa(0x10);
++    std::memcpy(keep.data(), m.at(tb, 0x1000), 0x1000);
++    std::memcpy(keep_itoa.data(), m.at(itoa_buf, 0x10), 0x10);
++    m.store<uint8_t>(tb, 0);
++    build();
++    str(kind, font, tb, x, y);
++    std::memcpy(m.at(tb, 0x1000, true), keep.data(), 0x1000);
++    std::memcpy(m.at(itoa_buf, 0x10, true), keep_itoa.data(), 0x10);
++  }
++  void cat(uint32_t s) const { vstrcat(m, tb, s); }
++  void cat_itoa(int32_t v) const {   // strcat(text, _itoa(v, g_textBuf, 10))
++    const std::string d = std::to_string(v);
++    std::memcpy(m.at(itoa_buf, static_cast<uint32_t>(d.size() + 1), true), d.c_str(), d.size() + 1);
++    cat(itoa_buf);
++  }
++  void number(int32_t v) const { call_peer(ctx, "appendNumber", {u32(v)}); }
++  void stars(int32_t n, int32_t y) const {   // n stars (g_surfaces59b050 cell 17) from x 0x12f, 0xe apart
++    for (int32_t k = 0, x = 0x12f; k < n; ++k, x += 0xe) img(state_va(ctx, &GameState::g_surfaces59b050) + 0x2c * 17, x, y);
++  }
++  void unacceptable(int32_t y) const {   // the red `not acceptable` mark
++    quad(0x80007d08u);
++    str("drawStringAt", f_ee8, pool + 0x3ac, 0x182, y);
++    quad(0x80000000u);
++  }
++  // the page head: the display scale, the 1/4 black sprite over the screen, the association's background over its mask
++  void head() const {
++    gx("Display::setScale", {1, 1, 1});
++    gx("Surface_drawSprite", {state_va(ctx, &GameState::g_spriteRef_821040), root, 0, 0, 0x3e800000u, 0, 1});
++    quad(0x80000000u);
++    const uint32_t sga = state_va(ctx, &GameState::g_spriteRef_821c60);
++    gx("Surface_stretchBlit", {sga, sga + 0x2c, root, 0x23, 0x1a, 0});
++    quad(0x80000000u);
++  }
++  void page(const Page &p) const {
++    const uint32_t cl = state_va(ctx, &GameState::f_strpool_4c59e0);   // ")"
++    str("Widget_draw", f_020, pool + 0x4dc, 0xbe, 0x2a);
++    text([&] { cat(pool + 0x4c4); cat(m.load<uint32_t>(state_va(ctx, &GameState::f_ptrtab_4c2a18) + 4 * u32(p.flags))); },
++         "Widget_draw", f_ee8, 0x4b, 0x4d);
++    str("Widget_draw", f_ee8, pool + 0x4bc, 0x132, 0x4d);
++    str("Widget_draw", f_ee8, pool + 0x4a8, 0x1f1, 0x4d);
++    str("drawStringAt", f_ee8, pool + 0x494, 0x77, 0x68);
++    text([&] {
++      number(p.ideal);
++      cat(pool + 0x48c);
++      number(p.crit == 0x12 ? sub32(p.ideal, 1000) : sub32(p.ideal, div32(mul32(p.ideal, 10), add32(mul32(p.flags, 5), 0x14))));
++      cat(cl);
++    }, "Widget_draw", f_ee8, 0x1ea, 0x68);
++    str("drawStringAt", f_ee8, pool + 0x47c, 0x77, 0x79);
++    text([&] { cat_itoa(p.crit); cat(pool + 0x478); cat_itoa(sub32(p.crit, div32(9, p.step))); cat(cl); }, "Widget_draw", f_ee8,
++         0x1ea, 0x79);
++    str("drawStringAt", f_ee8, pool + 0x468, 0x77, 0x8a);
++    str("Widget_draw", f_ee8, pool + 0x448, 0x1ea, 0x8a);
++    str("drawStringAt", f_ee8, pool + 0x43c, 0x77, 0x9b);
++    str("Widget_draw", f_ee8, pool + 0x434, 0x1ea, 0x9b);
++    static const uint32_t kCrit[5] = {0x420, 0x410, 0x400, 0x3ec, 0x3d8};
++    for (int c = 0; c < 5; ++c) {
++      const int32_t ry = 0xac + 0x11 * c;
++      str("drawStringAt", f_ee8, pool + kCrit[c], 0x77, ry);
++      text([&] { cat_itoa(p.cnt); cat(pool + 0x478); cat_itoa(clamp(sub32(p.cnt, 9), 0, 0x63)); cat(cl); }, "Widget_draw", f_ee8,
++           0x1ea, ry);
++    }
++    str("drawStringAt", f_ee8, pool + 0x3c0, 0x77, 0x101);
++    text([&] { cat_itoa(add32(p.half, 1)); cat(pool + 0x478); cat_itoa(clamp(sub32(add32(p.half, 1), 4), 0, 0x63)); cat(cl); },
++         "Widget_draw", f_ee8, 0x1ea, 0x101);
++    if (p.holes != 0) {
++      text([&] { number(p.len); cat(state_va(ctx, &GameState::f_strpool_4c615c) + 0x38); }, "drawStringAt", f_ee8, 0xee, 0x68);
++      if (p.g > 0) stars(p.g, 0x68);
++      if (p.g == 0) unacceptable(0x68);
++      text([&] { cat_itoa(sub32(p.hp1, 1)); }, "drawStringAt", f_ee8, 0xee, 0x79);
++      if (p.g2 > 0) stars(p.g2, 0x79);
++      if (p.g2 == 0) unacceptable(0x79);
++      text([&] {
++        if (!(p.tm < 0x3c)) {
++          cat_itoa(p.tm / 60);
++          cat(pool + 0x3a8);
++        }
++        cat_itoa(p.tm % 60);
++        cat(pool + 0x3a4);
++      }, "drawStringAt", f_ee8, 0xee, 0x8a);
++      if (p.g3 > 0) stars(p.g3, 0x8a);
++      if (p.g3 == 0) unacceptable(0x8a);
++      text([&] { cat_itoa(p.pc); cat(state_va(ctx, &GameState::f_strpool_4c60c4)); }, "drawStringAt", f_ee8, 0xee, 0x9b);
++      if (p.g4 > 0) stars(p.g4, 0x9b);
++      if (p.g4 == 0) unacceptable(0x9b);
++      for (int c = 0; c < 5; ++c) {
++        const int32_t ry = 0xac + 0x11 * c;
++        text([&] { cat_itoa(p.counts[c]); }, "drawStringAt", f_ee8, 0xee, ry);
++        if (p.gc[c] > 0) stars(p.gc[c], ry);
++        if (p.gc[c] == 0) unacceptable(ry);
++      }
++      text([&] { cat_itoa(p.fac); }, "drawStringAt", f_ee8, 0xee, 0x101);
++      if (p.gf > 0) stars(p.gf, 0x101);
++      if (p.gf == 0) unacceptable(0x101);
++    }
++    str("Widget_draw", f_ee8, pool + 0x388, 0xae, 0x120);
++    if (!(p.score > 0)) {
++      quad(0x80007d08u);
++      str("Widget_draw", f_ee8, pool + 0x380, 0x172, 0x50);
++      str("drawStringAt", f_f28, pool + 0x368, 0x190, 0x136);
++      quad(0x80000000u);
++    } else {
++      text([&] { cat_itoa(p.score); cat(pool + 0x360); }, "drawStringAt2", f_ee8, 0x18c, 0x4d);
++      const uint32_t gi = u32(sub32(div32(sub32(p.score, 0x28), 5), 1));
++      static const uint32_t kGrade[9] = {0x260, 0x278, 0x288, 0x2a0, 0x2bc, 0x2d4, 0x2ec, 0x2fc, 0x318};
++      const uint32_t gr = gi > 0xb ? 0x248 : gi <= 8 ? kGrade[gi] : (p.cnt != 0x12 ? 0x32c : 0x344);
++      text([&] { cat(pool + gr); }, "drawStringAt", f_020, 0x190, 0x136);
++      text([&] { cat(state_va(ctx, &GameState::f_strpool_4c61dc) + 4); number(p.prize); cat(pool + 0x234); }, "drawStringAt", f_f28,
++           0x190, 0x152);
++    }
++    img(state_va(ctx, &GameState::g_spriteRef_820f40), 0x2bd, 0x18e);   // the OK button
++  }
++};
+ 
+ // showCourseReport(mode): mode 0 the per-hole table, 1 / 2 the association's grading page (2 returns without waiting)
+ int32_t show_course_report(Ctx &ctx, int32_t mode) {
+@@ -190,6 +338,19 @@
+     number(ctx, mul32(S[11], 100));
+   }
+ 
++  ReportDraw rd(ctx);
++  Page pg;
++  struct Mark {   // the dialog markers around the grading page (the backend's held-pixel probe reads them; gfx_dialogs.cpp)
++    Ctx &c;
++    bool on;
++    Mark(Ctx &x, bool o) : c(x), on(o) {
++      if (on) gfx_drop(c, "dialogs.begin", nullptr, 0);
++    }
++    ~Mark() {
++      if (on) gfx_drop(c, "dialogs.end", nullptr, 0);
++    }
++  } mark(ctx, mode != 0 && ReportDraw::on());
++  if (mode != 0 && ReportDraw::on()) rd.head();
+   if (mode == 0) {
+     // the table's foot is drawing; the button belongs to the modal loop below
+   } else {
+@@ -214,31 +375,48 @@
+     const int32_t step = sub32(4, flags);
+     (void)div32(9, step);   // the criteria text divides 9 by it
+     const int32_t half = cnt / 2;
++    pg.flags = flags;
++    pg.crit = crit;
++    pg.ideal = ideal;
++    pg.step = step;
++    pg.cnt = cnt;
++    pg.half = half;
++    pg.holes = nholes;
++    pg.hp1 = hp1;
+     if (nholes != 0) {
+       const int32_t len = S[0];
+       number(ctx, len);
+       int32_t g = best != 0x12 ? add32(div32(mul32(mul32(sub32(len, ideal), add32(flags, 4)), 5), ideal), 10)
+                                : sub32(10, div32(sub32(ideal, len), 100));
+       g = clamp(g, 0, 10);
++      pg.len = len;
++      pg.g = g;
+       score = g;
+       if (g == 0) score = -999;
+       int32_t g2 = sub32(10, mul32(abs32(add32(sub32(best, hp1), 1)), step));
+       if (g2 < 0) g2 = 0;
++      pg.g2 = g2;
+       int32_t sc = add32(score, g2);
+       if (g2 == 0) sc = -999;
+       const int32_t tm = S[3];
+       int32_t g3 = sub32(10, div32(sub32(tm, 0xeb), 6));
+       if (g3 == 0 && !(tm > 0x12c)) g3 = 1;
+       g3 = clamp(g3, 0, 10);
++      pg.tm = tm;
++      pg.g3 = g3;
+       sc = add32(sc, g3);
+       if (g3 == 0) sc = -999;
+       const int32_t pc = div32(S[4], nholes);
+       const int32_t g4 = clamp(add32(div32(sub32(pc, 0x6d), 10), 10), 0, 10);
++      pg.pc = pc;
++      pg.g4 = g4;
+       score = add32(sc, g4);
+       if (g4 == 0) score = -999;
+       const int32_t counts[5] = {S[8], many, cnt_a, cnt_b, cnt_c};
+       for (int k = 0; k < 5; ++k) {
+         const int32_t gc = clamp(add32(sub32(counts[k], cnt), 10), 0, 10);
++        pg.counts[k] = counts[k];
++        pg.gc[k] = gc;
+         score = add32(score, gc);
+         if (gc == 0) score = -999;
+       }
+@@ -246,6 +424,8 @@
+       for (int bit = mutant == 4 ? 7 : 6; bit < 0x14; ++bit)
+         if ((gs.g_buildingKindMask & (1u << bit)) != 0) ++fac;
+       const int32_t gf = clamp(add32(mul32(sub32(fac, half), 2), 8), 0, 10);
++      pg.fac = fac;
++      pg.gf = gf;
+       score = add32(score, gf);
+       if (gf == 0 && mutant != 5) {
+         score = -999;
+@@ -266,11 +446,15 @@
+                                 ? mul32(mul32(mul32(add32(div32(sub32(score, 0x32), 5), 4), add32(flags, 1)), hp1), 2)
+                                 : mul32(mul32(mul32(add32(div32(sub32(score, 0x32), 5), 5), add32(flags, 1)), hp1), 2);
+       gs.g_tournamentPurse = prize;
++      pg.prize = prize;
+       number(ctx, prize);
+       gs.g_flags |= mutant == 2 ? (1u << 22) : (1u << 22) | (1u << 13);
+     }
++    pg.score = score;
++    if (ReportDraw::on()) rd.page(pg);
+   }
+   if (mode == 2) return 0;
++  if (mode != 0 && ReportDraw::on()) rd.gx("Window::refreshFull", {rd.win, 0});   // the modal loop's first refresh
+   report_loop(ctx, false, "showCourseReport");
+   gs.g_ui_569498 = mutant == 6 ? 1 : 0;
+   cm::pump_light(ctx, "showCourseReport");
+diff --git a/port/src/sim/menu.cpp b/port/src/sim/menu.cpp
+--- a/port/src/sim/menu.cpp
++++ b/port/src/sim/menu.cpp
+@@ -432,6 +432,8 @@
+   }
+   // phase 5: an attached graphics backend loads and cuts the images of the full arm (the part it models, gfx.cpp)
+   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.images", nullptr, 0);
++  // roadmap S2.9: the cuts the dialogs draw (the popup border, its masks, the option bullets; gfx_dialogs.cpp)
++  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.dialogArt", nullptr, 0);
+ }
+ }  // namespace
+ 

@@ -6,6 +6,14 @@
 //
 // For the comparison with a recording of the original (re/tools/terrain_calls.py --scenario): every call is logged in the recorder's
 // line form, and copies of the state can be kept after a given number of calls.
+//
+// Drawing (roadmap S3.2): the original's GL context draws into the root window's surface (initTerrain hands initSystem the DC of the
+// jgld surface of the root window), and the exe keeps the finished terrain picture in its back surface (gameMain's image object
+// g_image51b068: updateTerrainRender copies the root surface there after every pass and back when the camera has not moved). Here the
+// GL setup also goes to a rasteriser (gl::GlRaster, the TerrainDll's SetupTee), and when a graphics backend is attached to the context
+// (gfx.h) the draw passes, Window::paint of the root window, the two whole-surface copies and renderTerrainStrip's shifted copy are
+// handed to it by drop name (the body family `terrain`, gfx_terrain.cpp), which draws them into the backend's root surface. None of
+// it writes the GameState or the address space: the simulation is the same with or without a backend.
 #ifndef PORTSIM_SIM_TERRAIN_LIVE_H
 #define PORTSIM_SIM_TERRAIN_LIVE_H
 
@@ -14,11 +22,27 @@
 #include <string>
 #include <vector>
 
+#include <set>
+
 #include "portsim/registry.h"
+#include "portsim/sim/gl_raster.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/terrain_state.h"
 
 namespace portsim {
+
+// What the terrain body family keeps per LiveTerrain (gfx_terrain.cpp): the exe's back surface, the frame count, and the frames
+// whose root surface the harness wants copied (sg_call terrainLive.keepFrame(k), terrain_live.cpp).
+struct LiveTerrainView {
+  std::vector<uint16_t> back_surface;   // the exe's back surface (RGB555, rows top-down like the root surface), made at first use
+  int32_t back_w = 0, back_h = 0;
+  int back_terrain = 0;                 // the back surface holds a terrain picture
+  std::set<uint32_t> keep_frames;       // updateTerrainRender ordinals (from 0, every call of the process) to copy
+  uint32_t frames = 0;                  // updateTerrainRender calls begun
+  bool in_frame = false;
+  int32_t passes_in_frame = 0;
+  int64_t passes = 0, pixels_drawn = 0; // passes rasterised, pixels they wrote (GlRaster stats)
+};
 
 class LiveTerrain : public TerrainApi {
  public:
@@ -69,6 +93,13 @@ class LiveTerrain : public TerrainApi {
   const std::vector<Snapshot> &snapshots() const { return snaps_; }
   uint32_t object_va() const { return dll_.terrain; }
   TerrainGlobals &globals() { return g_; }
+  // drawing (roadmap S3.2)
+  gl::GlRaster &raster() { return *raster_; }
+  LiveTerrainView &view() { return view_; }
+  bool setup_names_differ() const { return dll_.setup.names_differ; }
+  // updateTerrainRender's entry and return (terrain_dll.cpp): the frame bracket of the drawing
+  void frame_begin();
+  void frame_end();
 
  private:
   uint32_t call(const char *name, uint32_t self, std::initializer_list<uint32_t> args, const int32_t *table = nullptr,
@@ -83,7 +114,14 @@ class LiveTerrain : public TerrainApi {
   size_t next_snap_ = 0;
   std::vector<Snapshot> snaps_;
   std::vector<std::string> log_;
+  std::unique_ptr<gl::GlRaster> raster_;
+  LiveTerrainView view_;
+  bool to_gfx(const char *name, std::initializer_list<uint32_t> args);
+  uint32_t terrain_tile_at_exe(int32_t x, int32_t y);
 };
+
+// updateTerrainRender's bracket for the attached TerrainApi when it is a LiveTerrain (no effect otherwise)
+void terrain_live_frame(Ctx &ctx, bool begin);
 
 }  // namespace portsim
 

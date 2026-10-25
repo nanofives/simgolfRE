@@ -1,13 +1,13 @@
-# S2 status (2D screens; lead session cmvmns3ax3frbo1152mcm7eg2)
-steps: 14: accepted 11 (S2.1-S2.9, S2.12 partial, S2.13), running 2 (S2.10, S2.11 on claude3)
-accepted / merge waves: 1-4 with I5; wave 5 = S2.7-S2.9 + S2.13 (MERGE_wave5.md, 13_shared.patch)   held: k_dlg_R (S3), scroll text U-1250
-live workers (cap 2, claude3): S2.10 cmvncanfd6upxo115u3cj3svi (char editor, buy land, skill points, radial); S2.11 cmvncb29y6uqlo1153sxbjj5g (results, bulletin, SimFoto)
-game slots: none held (s2_12 returned)
+# S2 status (2D screens; lead session cmvmns3ax3frbo1152mcm7eg2): DONE, all steps accepted or held with a measured reason
+steps: 14: accepted 14 (partials: S2.4 k_dlg_R, S2.6 scroll text, S2.8 hire icons, S2.10 editor needs S3.5/S3.6, S2.12 measurement only)
+merge waves: 1-4 committed (b3d61e41); 5 with I6; 6 (S2.10) and 7 (S2.11) requested: MERGE_wave6.md, MERGE_wave7.md; union files_all.txt
+live workers: none (all 13 children closed)
+game slots: none held
 gate now (S2.13 tree): census 83 PASS; terrain-free not PASS: k_dlg_R (held), char editor 3 (S2.10), title -11 4 (S3.3);
   title NOT_RUN -11 4 = S3.3); cov_a_quit + cov_a_quit_title: 19 terrain-free rows PASS with the S2.4 DLL (S2.5 traces; 5 in-game rows = S3)
 gate reading: "no terrain on screen" taken from the viewed reference (S2_screens.tsv full_screen yes), not only the census rule (U-1210)
 next: S2.13 integration (needs a non-claude2 session or the lead), then S2.10 / S2.11; waves 5+ = S2.7-S2.9 after S2.13
-last event: 2026-10-25 S2.13 accepted, wave 5 requested; S2.10 + S2.11 spawned
+last event: 2026-10-25 S2.11 accepted (wave 7); section complete
 
 ## Log
 - 2026-10-24: lead started; steps S2.1 / S2.2 spawned.
@@ -29,3 +29,5 @@ last event: 2026-10-25 S2.13 accepted, wave 5 requested; S2.10 + S2.11 spawned
 - G7 (orchestrator): new workers on claude3, cap 2. S2.13 spawned (integration + U-1254).
 - 2026-10-25: S2.13 accepted (combined tree, U-1278 reports owns the 5 shared bodies, U-1254 fixed: boot cov_r_s2_screens equal through 1156; segments 205/205; 9/9 controls RED). MERGE_wave5.md written. S2.10, S2.11 spawned on claude3.
 - 2026-10-25: orchestrator: Surface_drawSprite stays S2's (gfx_reports.cpp); S3.5 drops its registration. Radial menu, Surface_drawScaled, drawFrameR3 / S2 moved to S3.6.
+- 2026-10-25: S2.10 accepted PARTIAL: buyland module (showBuyLandScreen + syncTiles), boot cov_r_s2_screens PASS 1268/1268; editor checkpoints 0 px with S3.5/S3.6; census 83 PASS, none worse. Wave 6 requested.
+- 2026-10-25: S2.11 accepted (results / bulletin / SimFoto, patch rebased onto wave 6, combined-build tests 4/4 files pass). Section DONE; waves 6 + 7 requested.

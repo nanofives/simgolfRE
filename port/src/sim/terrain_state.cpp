@@ -6,6 +6,8 @@
 #include <cmath>
 #include <string>
 #include <utility>
+#include <vector>
+#include <algorithm>
 #include <cstring>
 
 #include "portsim/gamefiles.h"
@@ -895,6 +897,16 @@ void terrain_reset_terrain(Ctx &ctx, TerrainGlobals &g, uint32_t terrain) {
 
 // ------------------------------------------------------------------------------------------------------ exported methods
 
+bool SetupTee::gen_textures(int32_t n, uint32_t *names) {
+  const bool r = a_->gen_textures(n, names);
+  if (b && n > 0) {
+    std::vector<uint32_t> other(static_cast<size_t>(n), 0);
+    const bool rb = b->gen_textures(n, other.data());
+    if (rb != r || (r && !std::equal(other.begin(), other.end(), names))) names_differ = true;
+  }
+  return r;
+}
+
 uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const std::string &name, uint32_t self, const uint32_t *a,
                           const int32_t *table, int32_t n) {
   auto i32 = [&](int k) { return static_cast<int32_t>(a[k]); };
@@ -910,7 +922,7 @@ uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const st
   if (name == "getInstance") {
     if (!dll.constructed) {
       terrain_construct(ctx, g, dll.terrain, 50, 50);
-      terrain_gl_construct(ctx, dll.sink, dll.st);
+      terrain_gl_construct(ctx, dll.setup, dll.st);
       terrain_apply_gl_state(ctx, g, dll.terrain, dll.st);
       dll.sink.text.clear();
       terrain_load_dll_constants(ctx, g);   // the module's constant tables (static data: there before getInstance runs)
@@ -925,7 +937,7 @@ uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const st
   if (name == "initSystem") {
     if (Ptr<uint32_t>(ctx.mem, self).get() != 0) return 0;
     if (a[2] == 0) throw MissingResource{"initSystem without a display surface"};
-    terrain_gl_init_system(ctx, dll.sink, dll.st, i32(0), i32(1), (a[3] & 0xffu) != 0);
+    terrain_gl_init_system(ctx, dll.setup, dll.st, i32(0), i32(1), (a[3] & 0xffu) != 0);
     sync();
     return 0;
   }
@@ -939,12 +951,12 @@ uint32_t terrain_dll_call(Ctx &ctx, TerrainGlobals &g, TerrainDll &dll, const st
   }
   if (name == "loadNewCourseType") {
     dll.st.course_type = g.course_type;
-    terrain_gl_load_new_course_type(ctx, dll.sink, dll.st, i32(0));
+    terrain_gl_load_new_course_type(ctx, dll.setup, dll.st, i32(0));
     sync();
     return 0;
   }
   if (name == "setZoomLevel") {
-    terrain_gl_set_zoom_level(dll.sink, dll.st, i32(0));
+    terrain_gl_set_zoom_level(dll.setup, dll.st, i32(0));
     sync();
     return 0;
   }

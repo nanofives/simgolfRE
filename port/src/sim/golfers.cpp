@@ -2,6 +2,7 @@
 // (analysis notes, hook sources as reading reference, vector corpus); no original address or code.
 #include "portsim/sim/golfers.h"
 
+#include <algorithm>
 #include <initializer_list>
 #include <utility>
 
@@ -34,7 +35,7 @@ namespace {
 //                        3 = the walking sequence wraps after 9
 //   initGolferState      1 = one golfer per open hole
 //   addGolferToTable     1 = speed / 4, 2 = the forced event bit 0 is not cleared
-//   loadGolfPro          1 = sets flag 0x100000 instead of 0x200000, 2 = (divideAndRejectGuard off) gives up when 4 - difficulty is 1
+//   loadGolfPro          1 = sets flag 0x100000 instead of 0x200000, 2 = (divideAndRejectGuard off) gives up when 4 - difficulty is 1, 3 = (negativeWindowBound off) gives up when the bound is 0
 //   resetGolferState     1 = par 6 from length 0x271 (>= instead of >)
 //   composeGolferSprite  1 = look_24 / look_25 written swapped
 int g_negctl_append_pair_track_point = 0;
@@ -60,6 +61,7 @@ int g_negctl_compose_golfer_sprite = 0;
 // Compatibility switches (S6.4, profile `fixed`): 1 = the original (NoReturn / DivideError), 0 = a clean return.
 int g_defect_cluster_loop_bound = 1;  // placeHabitat.clusterLoopBound (D8, D40a, D40b)
 int g_defect_cell_search_bound = 1;   // spawnObject.cellSearchBound (D41)
+int g_defect_pro_window_bound = 1;    // loadGolfPro.negativeWindowBound (D42c)
 int g_defect_pro_divide_guard = 1;    // loadGolfPro.divideAndRejectGuard (D42a, D42b)
 int g_defect_zero_frame_count = 1;    // placeAnimal.zeroFrameCount (D43)
 
@@ -305,6 +307,8 @@ const DefectDef kDefects[] = {
      "the cell search never ends when all 16 cells of the bank's 4 x 4 corner are occupied", &g_defect_cell_search_bound},
     {"loadGolfPro.divideAndRejectGuard", "model_defects#42",
      "idiv by a zero divisor (difficulty -4 or 4) and a rejection loop over an empty pro roster", &g_defect_pro_divide_guard},
+    {"loadGolfPro.negativeWindowBound", "model_defects#42",
+     "difficulty 5 or 6: the acceptance bound tries / (4 - difficulty) falls without end, so the pro draw never accepts", &g_defect_pro_window_bound},
     {"placeAnimal.zeroFrameCount", "model_defects#43", "idiv by a sprite frame count of 0", &g_defect_zero_frame_count},
 };
 

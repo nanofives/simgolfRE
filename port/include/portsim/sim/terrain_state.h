@@ -164,6 +164,66 @@ void terrain_set_view_angle(TerrainGlobals &g, float angle);
 void terrain_reset_terrain(Ctx &ctx, TerrainGlobals &g, uint32_t terrain);
 
 // ---- the exported methods, as the exe calls them (step 4) ----
+// The GL setup's calls go to the stream sink and, when a rasteriser is attached (roadmap S3.2: LiveTerrain's, which draws the
+// passes into the graphics backend's root surface), to it as well, so the rasteriser holds the context, the textures, the light
+// and the projection the setup made. Both hand out texture names by the same rule (the lowest free name); `names_differ` is set
+// when they ever disagree (the renderer binds the stream sink's).
+class SetupTee : public gl::GlSink {
+ public:
+  explicit SetupTee(gl::GlSink *a) : a_(a) {}
+  SetupTee(const SetupTee &) = delete;   // holds the address of its TerrainDll's stream sink
+  SetupTee &operator=(const SetupTee &) = delete;
+  gl::GlSink *b = nullptr;       // the attached rasteriser, or null
+  bool names_differ = false;
+  void load_identity() override { a_->load_identity(); if (b) b->load_identity(); }
+  void push_matrix() override { a_->push_matrix(); if (b) b->push_matrix(); }
+  void pop_matrix() override { a_->pop_matrix(); if (b) b->pop_matrix(); }
+  void rotated(double an, double x, double y, double z) override { a_->rotated(an, x, y, z); if (b) b->rotated(an, x, y, z); }
+  void rotatef(float an, float x, float y, float z) override { a_->rotatef(an, x, y, z); if (b) b->rotatef(an, x, y, z); }
+  void translatef(float x, float y, float z) override { a_->translatef(x, y, z); if (b) b->translatef(x, y, z); }
+  void bind_texture(uint32_t t, uint32_t id) override { a_->bind_texture(t, id); if (b) b->bind_texture(t, id); }
+  void begin(uint32_t m) override { a_->begin(m); if (b) b->begin(m); }
+  void end() override { a_->end(); if (b) b->end(); }
+  void tex_coord2fv(const float *v) override { a_->tex_coord2fv(v); if (b) b->tex_coord2fv(v); }
+  void tex_coord2f(float s, float t) override { a_->tex_coord2f(s, t); if (b) b->tex_coord2f(s, t); }
+  void array_element(int32_t i) override { a_->array_element(i); if (b) b->array_element(i); }
+  void normal3fv(const float *v) override { a_->normal3fv(v); if (b) b->normal3fv(v); }
+  void vertex3fv(const float *v) override { a_->vertex3fv(v); if (b) b->vertex3fv(v); }
+  void vertex3f(float x, float y, float z) override { a_->vertex3f(x, y, z); if (b) b->vertex3f(x, y, z); }
+  void enable(uint32_t c) override { a_->enable(c); if (b) b->enable(c); }
+  void disable(uint32_t c) override { a_->disable(c); if (b) b->disable(c); }
+  void blend_func(uint32_t s, uint32_t d) override { a_->blend_func(s, d); if (b) b->blend_func(s, d); }
+  void flush() override { a_->flush(); if (b) b->flush(); }
+  void context_create() override { a_->context_create(); if (b) b->context_create(); }
+  void hint(uint32_t t, uint32_t m) override { a_->hint(t, m); if (b) b->hint(t, m); }
+  void enable_client_state(uint32_t a) override { a_->enable_client_state(a); if (b) b->enable_client_state(a); }
+  void front_face(uint32_t m) override { a_->front_face(m); if (b) b->front_face(m); }
+  void viewport(int32_t x, int32_t y, int32_t w, int32_t h) override { a_->viewport(x, y, w, h); if (b) b->viewport(x, y, w, h); }
+  void matrix_mode(uint32_t m) override { a_->matrix_mode(m); if (b) b->matrix_mode(m); }
+  void ortho(double l, double r, double bo, double t, double n, double f) override {
+    a_->ortho(l, r, bo, t, n, f);
+    if (b) b->ortho(l, r, bo, t, n, f);
+  }
+  void light(uint32_t l, uint32_t p, const float *v) override { a_->light(l, p, v); if (b) b->light(l, p, v); }
+  void material(uint32_t f, uint32_t p, const float *v) override { a_->material(f, p, v); if (b) b->material(f, p, v); }
+  void material_shininess(uint32_t f, int32_t s) override { a_->material_shininess(f, s); if (b) b->material_shininess(f, s); }
+  bool gen_textures(int32_t n, uint32_t *names) override;   // terrain_state.cpp
+  void delete_textures(int32_t n, const uint32_t *names) override { a_->delete_textures(n, names); if (b) b->delete_textures(n, names); }
+  void tex_parameteri(uint32_t t, uint32_t p, int32_t v) override { a_->tex_parameteri(t, p, v); if (b) b->tex_parameteri(t, p, v); }
+  void tex_parameterf(uint32_t t, uint32_t p, float v) override { a_->tex_parameterf(t, p, v); if (b) b->tex_parameterf(t, p, v); }
+  void tex_envi(uint32_t t, uint32_t p, int32_t v) override { a_->tex_envi(t, p, v); if (b) b->tex_envi(t, p, v); }
+  void tex_image2d(uint32_t t, int32_t l, int32_t i, int32_t w, int32_t h, int32_t bo, uint32_t f, uint32_t ty,
+                   const uint8_t *d) override {
+    a_->tex_image2d(t, l, i, w, h, bo, f, ty, d);
+    if (b) b->tex_image2d(t, l, i, w, h, bo, f, ty, d);
+  }
+  void vertex_pointer(int32_t s, uint32_t t, int32_t st) override { a_->vertex_pointer(s, t, st); if (b) b->vertex_pointer(s, t, st); }
+  void normal_pointer(uint32_t t, int32_t st) override { a_->normal_pointer(t, st); if (b) b->normal_pointer(t, st); }
+
+ private:
+  gl::GlSink *a_;
+};
+
 // The DLL's whole state for one context: the object's address (the host maps kTerrainObjectSize bytes there, filled with kNewFill),
 // the module globals, the GL setup's state and a sink for the GL calls the setup makes (the replay keeps only their state).
 struct TerrainDll {
@@ -171,6 +231,7 @@ struct TerrainDll {
   bool constructed = false;      // g_terrain != NULL
   TerrainGlState st;
   gl::GlStreamSink sink;
+  SetupTee setup{&sink};         // the setup's sink: `sink`, plus the rasteriser when setup.b is set
 };
 // One call of an exported Terrain method by its undecorated name ("setType", "elevateCorner", ..., "getInstance"), `self` = ecx,
 // args = the stack dwords as the exe pushed them (floats as bit patterns; bool arguments use their low byte), `table` / `n` the

@@ -1,0 +1,15 @@
+scenario	checkpoint	rect	px	opaque	fail	held	held_differ
+cov_r_quit	exit_prompt	(240, 100, 559, 243)	46080	46061	0	19	15
+cov_r_quit	exit_prompt	(82, 337, 417, 559)	74928	74909	0	19	12
+cov_r_quit	exit_save	(49, 80, 687, 159)	51120	51088	0	32	31
+cov_r_quit	exit_save	(240, 155, 559, 243)	28480	28471	0	9	6
+cov_r_quit	exit_save	(82, 337, 417, 559)	74928	74909	0	19	11
+cov_a_keys	k_dlg_S	(49, 80, 687, 159)	51120	51088	0	32	30
+cov_a_keys	k_dlg_J	(34, 25, 766, 444)	307860	279281	0	28579	28561
+cov_a_keys	k_C	(192, 137, 607, 263)	52832	52813	0	19	15
+cov_a_keys2	C_prompt	(192, 137, 607, 263)	52832	52813	0	19	17
+cov_a_champ	n_prompt	(256, 137, 543, 263)	36576	36557	0	19	16
+cov_a_play	n_prompt	(272, 137, 527, 263)	32512	32493	0	19	14
+cov_a_build2	remove_prompt1	(248, 97, 551, 223)	38608	38589	0	19	15
+cov_k3_career	prompt	(66, 147, 433, 273)	46736	46717	0	19	16
+cov_k3_career	prompt2	(66, 147, 433, 273)	46736	46717	0	19	16

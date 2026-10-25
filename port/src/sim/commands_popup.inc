@@ -11,6 +11,79 @@ int32_t text_put(Ctx &ctx, uint32_t font, uint32_t text) {
   return tm->text_put(ctx, ctx.gs().f_stateptr_4c1570[0], font, text);
 }
 
+// ------------------------------------------------------------------------------------------------ the drawing (roadmap S2.9)
+// The drawing calls the two widgets make, handed to the graphics backend (gfx_drop; nothing without one attached). A text
+// line of the buffer is cut where the original cuts it (its 0x0a replaced by 0 while it is drawn, put back after), so a
+// pass with a backend leaves the GameState as one without. The bodies are gfx_dialogs.cpp's and the core's.
+bool popup_gfx_on(Ctx &ctx) { return g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr; }
+void popup_gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+}
+// dialogs.begin / dialogs.end around a dialog (the backend's held-pixel probe reads them; they draw nothing)
+struct DialogMark {
+  Ctx &ctx;
+  explicit DialogMark(Ctx &c) : ctx(c) { popup_gx(ctx, "dialogs.begin", {}); }
+  ~DialogMark() { popup_gx(ctx, "dialogs.end", {}); }
+  DialogMark(const DialogMark &) = delete;
+  DialogMark &operator=(const DialogMark &) = delete;
+};
+
+// one pass of showPopup's drawing (c3em.cpp ShowPopup_re, the pass from the box to Window::refreshFull): the box (an even y
+// drawPanelS2, an odd y the two fills over the colour read before the loop), the close button for a check list, then per
+// line ended by 0x0a: a caption centred with drawCenteredText2 (white, 0x80007ff0 + 0xf for flag4), an option with its
+// text at left + 0x24 (drawTextSurface one row up for the selection) and its bullet (check box for flag4 == 0), and the
+// refresh
+void draw_popup_pass(Ctx &ctx, int32_t x, int32_t y, int32_t box_w, int32_t box_h, int32_t inner, int32_t flag4,
+                     int32_t mask, int32_t disabled, int32_t sel) {
+  if (!popup_gfx_on(ctx)) return;
+  const Memory &m = ctx.mem;
+  const uint32_t buf = GS(g_textBuffer);
+  const uint32_t root = ctx.gs().f_stateptr_4c1570[0];
+  const uint32_t win = GS(g_rootWindow);
+  const int32_t odd = y & 1;
+  const int32_t half = box_w / 2;
+  const int32_t left = sub32(x, half);
+  if (odd == 0) popup_gx(ctx, "drawPanelS2", {u32(left), u32(y), u32(box_w), u32(box_h)});
+  else popup_gx(ctx, "showPopup.oddBox", {u32(left), u32(y), u32(box_w), u32(box_h), u32(inner)});
+  const uint32_t bullets = GS(g_surfaces5678b8), bmask = GS(g_sprites56a7b8);
+  if (flag4 == 0)
+    popup_gx(ctx, "Surface_stretchBlit", {bullets + 0xdc, bmask + 0xdc, root, u32(add32(sub32(half, 0x28), x)),
+                                          u32(add32(sub32(box_h, 0x28), y)), 0});
+  int32_t line_y = add32(y, 0xc), line_idx = 0, first = -1;
+  uint32_t seg = 0;
+  for (uint32_t k = 0; k < vstrlen(m, buf); ++k) {
+    if (m.load<uint8_t>(buf + k) != 0x0a) continue;
+    const uint32_t line = buf + seg;
+    m.store<uint8_t>(buf + k, 0);
+    if (m.load<uint8_t>(line) == ' ') {
+      if (first == -1) first = line_idx;
+      const int32_t idx = line_idx - first;
+      const uint32_t bit = 1u << (u32(idx) & 31);
+      if ((u32(disabled) & bit) == 0) {
+        const uint32_t set = bit & u32(mask);
+        const uint32_t colour = set != 0 ? 0x80007fffu : 0x80000210u + (odd != 0 ? 0x1ef8u : 0u);
+        if (sel == idx) popup_gx(ctx, "drawTextSurface", {line, u32(add32(left, 0x24)), u32(add32(line_y, 7)), colour});
+        else popup_gx(ctx, "drawText4049d0", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), colour});
+        if (flag4 == 0)
+          popup_gx(ctx, "Surface_drawScaled", {GS(g_sprites561260) + 0x2c * (set != 0 ? 1u : 2u), root,
+                                               u32(add32(left, 8)), u32(line_y), 1, 1, 1, 0});
+        else
+          popup_gx(ctx, "Surface_stretchBlit", {bullets + 0x2c * (set != 0 ? 0u : 2u), bmask, root, u32(add32(left, 0xc)),
+                                                u32(add32(line_y, 4)), 0});
+      } else {
+        popup_gx(ctx, "drawText4049d0", {line, u32(add32(left, 0x24)), u32(add32(line_y, 8)), 0x80006318u});
+      }
+    } else {
+      popup_gx(ctx, "drawCenteredText2", {line, u32(x), u32(line_y), 0x80007ff0u + (flag4 != 0 ? 0xfu : 0u)});
+    }
+    m.store<uint8_t>(buf + k, 0x0a);
+    seg = k + 1;
+    line_y = add32(line_y, (first != -1 ? 6 : 0) + 0x12);
+    ++line_idx;
+  }
+  popup_gx(ctx, "Window::refreshFull", {win, 0});
+}
+
 // showPopup (x, y, mask, flag4, disabled): a box over the lines of g_textBuffer (one per 0x0a; a line that starts with a
 // space is an option, the others are captions). Returns the chosen option index (flag4 != 0: Enter / Space / a click
 // on an enabled option; Esc -1), or for flag4 == 0 (a check list) the toggled mask when the close button is clicked.
@@ -25,6 +98,8 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
   const int mode = SG_NEGCTL(g_negctl_popup);
   const uint32_t buf = GS(g_textBuffer);
   const uint32_t font = GS(g_font519928);
+  DialogMark dialog_mark(ctx);
+  popup_gx(ctx, "setDrawTarget", {ctx.gs().f_stateptr_4c1570[0], font, 0, 0, 0});
   int32_t mask = flag4 != 0 ? 0 : init_mask;
   // measuring pass: each line is measured with its 0x0a replaced by a 0 (put back after), then the tail
   int32_t widest = 0, lines = 0;
@@ -44,6 +119,7 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
   const int32_t box_w = add32(inner, 0x31);
   const int32_t box_h = mul32(add32(mul32(lines, 3), 3), 8);
   int32_t sel = -1, result = 0, key_latch = 0, first_y = 0;
+  if ((y & 1) != 0) popup_gx(ctx, "showPopup.readColour", {u32(x), u32(y)});
   for (;;) {
     const int32_t half = box_w / 2;
     const int32_t left = sub32(x, half);
@@ -65,6 +141,7 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
       ++line_idx;
     }
     const int32_t count = sub32(line_idx, first);
+    draw_popup_pass(ctx, x, y, box_w, box_h, inner, flag4, mask, disabled, sel);
     pump_messages(ctx, PumpKind::Blocking, "showPopup");
     if (flag4 != 0) {
       if (flush_redraw(ctx) != 0) {
@@ -88,7 +165,10 @@ int32_t show_popup(Ctx &ctx, int32_t x, int32_t y, int32_t init_mask, int32_t fl
       }
       mask = i32(1u << (u32(sel) & 31));
       if (gs.g_rootInput[kButton] != 0) {
-        if ((u32(disabled) & u32(mask)) == 0) return sel;
+        if ((u32(disabled) & u32(mask)) == 0) {
+          if ((y & 1) != 0) popup_gx(ctx, "showPopup.oddRepaint", {u32(sub32(x, box_w / 2)), u32(y), u32(box_w), u32(box_h)});
+          return sel;
+        }
         call_optional(ctx, "playSound", {0x18, 0x64, 0, 0, 0});   // a disabled option: the refusal sound, a new pass
         continue;
       }
@@ -142,9 +222,6 @@ int32_t crt_isprint(Ctx &ctx, int32_t c) {
 // the caret measure and all drawing are dropped. An empty text whose width 0 is still above the limit (maxLen <= 1)
 // makes the original write a 0 before the buffer forever: NoReturn after that write.
 int32_t text_input_box(Ctx &ctx, uint32_t title, int32_t x, int32_t y, int32_t max_len) {
-  (void)title;
-  (void)x;
-  (void)y;
   GameState &gs = ctx.gs();
   const Memory &m = ctx.mem;
   if (!text_metrics(ctx)) throw MissingResource{"Text_put"};   // the first width is measured before any write
@@ -154,7 +231,26 @@ int32_t text_input_box(Ctx &ctx, uint32_t title, int32_t x, int32_t y, int32_t m
   int32_t len = i32(vstrlen(m, tb));
   int32_t cur = len;
   const int32_t width = mul32(max_len, 12);
+  DialogMark dialog_mark(ctx);
+  const uint32_t root = gs.f_stateptr_4c1570[0];
   for (;;) {
+    // the box (c3el.cpp TextInputBox_re, the draw at the top of every pass): three frames, the title, the white field,
+    // the text, the caret at the cursor (the head before it measured with Text_put, its byte cut as the original cuts it)
+    if (popup_gfx_on(ctx)) {
+      popup_gx(ctx, "setDrawTarget", {root, GS(g_font51b360), 0, 0, 0});
+      popup_gx(ctx, "Win_fillRect", {root, u32(sub32(x, 1)), u32(sub32(y, 1)), u32(add32(width, 0x20)), 0x30, 0x80007fffu});
+      popup_gx(ctx, "Win_fillRect", {root, u32(add32(x, 1)), u32(add32(y, 1)), u32(add32(width, 0x20)), 0x30, 0x80000000u});
+      popup_gx(ctx, "Win_fillRect", {root, u32(x), u32(y), u32(add32(width, 0x20)), 0x30, 0x800035b3u});
+      popup_gx(ctx, "drawText4049d0", {title, u32(add32(x, 4)), u32(add32(y, 6)), 0x80007fffu});
+      popup_gx(ctx, "Win_fillRect", {root, u32(add32(x, 0x10)), u32(add32(y, 0x17)), u32(width), 0x16, 0x80007fffu});
+      popup_gx(ctx, "setDrawTarget", {root, font, 0, 0, 0});
+      popup_gx(ctx, "drawText4049d0", {tb, u32(add32(x, 0x14)), u32(add32(y, 0x1c)), 0x80000000u});
+      const uint8_t saved = m.load<uint8_t>(tb + u32(cur));
+      m.store<uint8_t>(tb + u32(cur), 0);
+      const int32_t cx = add32(add32(x, text_put(ctx, font, tb)), 0x14);
+      m.store<uint8_t>(tb + u32(cur), saved);
+      popup_gx(ctx, "Widget_fillRect", {root, u32(cx), u32(add32(y, 0x1a)), u32(cx), u32(add32(y, 0x2a)), 0x80006000u});
+    }
     int32_t w = text_put(ctx, font, tb);
     while (w > sub32(width, mode == 1 ? 0x18 : 0x10)) {
       const uint32_t n = vstrlen(m, tb);
@@ -164,6 +260,9 @@ int32_t text_input_box(Ctx &ctx, uint32_t title, int32_t x, int32_t y, int32_t m
       if (u32(cur) > n2) cur = i32(n2);
       w = text_put(ctx, font, tb);
     }
+    // the underscore after the text and the refresh
+    popup_gx(ctx, "fillWindowRect", {GS(g_rootWindow), u32(add32(add32(w, x), 0x15)), u32(add32(y, 0x29)), 8, 2, 0x80004210u});
+    popup_gx(ctx, "Window::refreshFull", {GS(g_rootWindow), 0});
     do {
       pump_messages(ctx, PumpKind::Blocking, "textInputBox");
     } while (gs.g_rootInput[kButton] == 0 && flush_redraw(ctx) == 0);

@@ -23,7 +23,8 @@ NEGCTL_SCENARIO = "sandbox_basic"
 def lib():
     from port.test import lib as L
     lb = L.load()
-    TL.bind(lb.dll)
+    if getattr(lb, "dll", None) is not None:
+        TL.bind(lb.dll)
     return lb
 
 
@@ -72,6 +73,8 @@ def test_state_equals_the_original(lib, scenario, checkpoint):
 
 @pytest.mark.parametrize("mode", sorted(NEGCTL))
 def test_negctl(lib, mode):
+    if getattr(lib, "dll", None) is None:
+        pytest.skip("sg_ts_negctl is an x64 ctypes entry (the Win32 runner has no op for it)")
     if NEGCTL_SCENARIO not in SCENARIOS:
         pytest.skip(f"no pinned recording of {NEGCTL_SCENARIO}")
     lib.dll.sg_ts_negctl(mode)
@@ -82,3 +85,122 @@ def test_negctl(lib, mode):
     if NEGCTL[mode] == "calls":
         assert not r.calls_equal, f"mode {mode} leaves the call log equal"
     assert any(any(d.values()) for d in r.states.values()) or not r.calls_equal, f"mode {mode} reads GREEN"
+
+
+# ------------------------------------------------------------------------------------------------ the course view (roadmap S3.2)
+# Recordings of the original's root surface around the last terrain frame before each checkpoint (and, in the s32p_ ones, the last
+# frame with a draw pass: <checkpoint>.pass), re/tools/terrain_calls.py --scenario <s> --pass-frames, in log/p5/terrain/<label>/frames
+# (local data, like the GL corpora). The port boots the same trace with the graphics backend and LiveTerrain attached; every copy
+# (the frame's exit, each pass's pre and post) must meet the G2 criterion over the pixels the original's frame drew.
+FRAME_RECORDINGS = {"s32_sandbox": "sandbox_basic", "s32_course_season": "course_season", "s32_cov_b_holes18": "cov_b_holes18",
+                    "s32_cov_b_career_types": "cov_b_career_types", "s32p_cov_l_camera": "cov_l_camera",
+                    "s32p_cov_b_paths": "cov_b_paths", "s32p_cov_k1_terrain": "cov_k1_terrain", "s32p_cov_k3_camera": "cov_k3_camera",
+                    "s32q_cov_b_holes18": "cov_b_holes18", "s32q_cov_k1_paths": "cov_k1_paths",
+                    "s32t_cov_b_s34_hawaii": "cov_b_s34_hawaii"}
+# Tropical (course type 2): the stock game dies on every tropical course (U-1330), so the study scenario cov_b_s34_hawaii was recorded
+# with S3.4's Tree alias in the instance, its trace beside the frames (log/roadmap/S3/2_tools/tropical_rec.sh); the port runs that trace
+# with run_trace (no capture to compare sim hashes with: the boot gate never sees it)
+TRACE_RUNS = {"s32t_cov_b_s34_hawaii"}
+_REC: dict = {}
+_PORT: dict = {}
+
+
+def _rec(label):
+    if label not in _REC:
+        _REC[label] = TL.recorded_frames(label)
+    return _REC[label]
+
+
+def _copies(label):
+    out = []
+    for c, e in sorted(_rec(label).items(), key=lambda kv: kv[1]["meta"]["frame"]):
+        for what in sorted(k for k in e if k not in ("meta", "entry")):
+            out.append((label, c, what))
+    return out
+
+
+FRAME_KEYS = [k for lb in FRAME_RECORDINGS for k in _copies(lb)]
+
+
+def _port(lib, label, negctl=None):
+    key = (label, negctl, getattr(lib, "dll", None) is None)
+    if key not in _PORT:
+        rec = _rec(label)
+        last = max(rec, key=lambda c: rec[c]["meta"]["frame"])
+        frames = sorted({e["meta"]["frame"] for e in rec.values()})
+        tr = TL.ROOT / "log" / "p5" / "terrain" / label / "trace.trace" if label in TRACE_RUNS else None
+        _PORT[key] = TL.port_frames(lib, FRAME_RECORDINGS[label], frames, last.split(".")[0], negctl=negctl, trace=tr)
+    return _PORT[key]
+
+
+def _judge(rec, got, c, what):
+    e = rec[c]
+    p = got.get((e["meta"]["frame"], what.replace("pass", "p")))
+    if p is None:
+        return None
+    return TL.g2(e[what], p, e["entry"])
+
+
+@pytest.mark.parametrize("label,checkpoint,what", FRAME_KEYS or [("none", "none", "none")])
+def test_course_view_equals_the_original(lib, label, checkpoint, what):
+    """The port's root surface after the terrain pass (or the frame) is within G2 of the original's."""
+    if label == "none":
+        pytest.skip("no --pass-frames recording in log/p5/terrain")
+    got = _port(lib, label)
+    assert got["boot"].status in ("PASS", "KNOWN", "RAN"), (got["boot"].status, got["boot"].detail)
+    r = _judge(_rec(label), got, checkpoint, what)
+    assert r is not None, f"the port kept no copy of frame {_rec(label)[checkpoint]['meta']['frame']} {what}"
+    assert r["pass"], r
+
+
+def test_course_view_draws(lib):
+    """The terrain family handled passes and drew pixels, and no terrain body reported an unsupported case."""
+    label = next((lb for lb in FRAME_RECORDINGS if _rec(lb)), None)
+    if label is None:
+        pytest.skip("no recording")
+    got = _port(lib, label)
+    assert got["passes"] > 0
+    bad = [ln for ln in got["log"].splitlines() if ln.startswith("unsupported\tterrain")]
+    assert not bad, bad
+
+
+# negative controls of the terrain family (gfx_terrain.cpp): each must break G2 on the recording that exercises it
+TERRAIN_NEGCTL = {1: ("s32_cov_b_holes18", "wrong zoom: the rasteriser misses setZoomLevel's projection"),
+                  2: ("s32_cov_b_career_types", "wrong theme texture set: loadNewCourseType's reload not rasterised"),
+                  3: ("s32_sandbox", "pass skipped"),
+                  4: ("s32q_cov_b_holes18", "renderTerrainStrip's copy without its shift"),
+                  5: ("s32_course_season", "Window::paint leaves the root surface")}
+
+
+@pytest.mark.parametrize("mode", sorted(TERRAIN_NEGCTL))
+def test_terrain_negctl_reads_red(lib, mode):
+    label, why = TERRAIN_NEGCTL[mode]
+    if not _rec(label):
+        pytest.skip(f"no recording {label}")
+    got = _port(lib, label, negctl=("gfx.family.terrain", mode))
+    res = [_judge(_rec(label), got, c, w) for _lb, c, w in _copies(label)]
+    red = [r for r in res if r is None or not r["pass"]]
+    assert red, f"mode {mode} ({why}) reads GREEN on all {len(res)} copies of {label}"
+
+
+def test_x64_equals_win32_terrain_pixels(lib, request):
+    """LiveTerrain attaches on the Win32 backend (the runner's sg_ts_live ops) and gives the same terrain pixels as x64.
+    SG_PORTSIM_DLL32 / SG_PORTSIM_RUNNER32 name a Win32 build outside port/build/Win32 (a private mirror)."""
+    import os
+    from port.test import lib as L
+    label = "s32_sandbox"
+    if not _rec(label):
+        pytest.skip("no recording")
+    if os.environ.get("SG_PORTSIM_DLL32"):
+        from port.test import integrator as I
+        l32 = I.load_lib(I.LibSpec(backend="win32", dll32=os.environ["SG_PORTSIM_DLL32"],
+                                   runner32=os.environ.get("SG_PORTSIM_RUNNER32")))
+    else:
+        l32 = request.getfixturevalue("lib32")
+    l64 = lib if getattr(lib, "dll", None) is not None else L.load()
+    a, b = _port(l64, label), _port(l32, label)
+    assert b["passes"] == a["passes"] > 0
+    keys = sorted(k for k in a if isinstance(k, tuple))
+    assert keys and keys == sorted(k for k in b if isinstance(k, tuple))
+    for k in keys:
+        assert (a[k] == b[k]).all(), k

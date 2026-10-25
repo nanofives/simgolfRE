@@ -74,6 +74,9 @@ class Collector:
         self.cur = None
         self.info = {}
         self.ev = threading.Event()
+        self.frames = []        # tcFrames (roadmap S3.2): the root surface around the last terrain frame before each checkpoint
+        self.fcur = None
+        self.frames_asked = 0
 
     def on_msg(self, m, d):
         p = m.get("payload") if m.get("type") == "send" else None
@@ -91,6 +94,16 @@ class Collector:
         elif k == "snapend":
             self.snaps.append(self.cur)
             self.cur = None
+        elif k == "frame":
+            self.fcur = {"meta": p, "data": {}}
+            if p.get("none"):
+                self.frames.append(self.fcur)
+                self.fcur = None
+        elif k == "fdata":
+            self.fcur["data"][p["kind"]] = bytes(d)
+        elif k == "frameend":
+            self.frames.append(self.fcur)
+            self.fcur = None
         elif k == "chunk":
             self.chunks.append(p["lines"])
         elif k == "done":
@@ -115,7 +128,16 @@ def save(root: pathlib.Path, s: dict, used: dict) -> str:
     return name
 
 
-def run_pinned(scenario: str, label: str, instance: str | None, snaps: bool = True) -> int:
+def save_frame(root: pathlib.Path, f: dict) -> None:
+    d = root / "frames" / f["meta"]["label"]
+    d.mkdir(parents=True, exist_ok=True)
+    import zlib
+    for k, v in f["data"].items():   # RGB555 surfaces, zlib-compressed (port/test/terrainlive.py recorded_frames reads them)
+        (d / f"{k}.z").write_bytes(zlib.compress(v, 6))
+    (d / "meta.json").write_text(json.dumps(f["meta"], indent=1))
+
+
+def run_pinned(scenario: str, label: str, instance: str | None, snaps: bool = True, frames: bool = False, lite: bool = False) -> int:
     """--scenario: a pinned scenario (re/analysis/data/scenario_refs.json) replayed by re/tools/scenario_refs.py under the virtual
     clock, with terrain_calls.js appended to its agent (the pattern of re/tools/trace_tool.py). At every checkpoint the main thread
     waits in the agent's clock stub, outside every Terrain call, so the state is copied there (tcSnapNow, snapshot named after the
@@ -138,7 +160,8 @@ def run_pinned(scenario: str, label: str, instance: str | None, snaps: bool = Tr
         class TerrainRun(Base):
             def agent_source(self):
                 p = super().agent_source()
-                p.write_text(p.read_text() + chr(10) + js)
+                p.write_text(p.read_text() + chr(10) + ("globalThis.TC_FRAMES = true;" + chr(10) if frames else "") +
+                             ("globalThis.TC_FRAMES_LITE = true;" + chr(10) if lite else "") + js)
                 return p
 
             def _on_message(self, m, data):
@@ -156,6 +179,8 @@ def run_pinned(scenario: str, label: str, instance: str | None, snaps: bool = Tr
                     return super().take_dump(sc, name)
                 if not self._rec().tc_snap_now(name):
                     print(f"  checkpoint {name}: a Terrain call is in progress, no state copy", flush=True)
+                else:
+                    c.frames_asked += 1
                 return super().take_dump(sc, name)
 
             def post(self, sc, **kw):
@@ -165,6 +190,9 @@ def run_pinned(scenario: str, label: str, instance: str | None, snaps: bool = Tr
                     n = rec.tc_take()
                     t0 = time.time()
                     while len(c.snaps) < n and time.time() - t0 < 60:
+                        time.sleep(0.05)
+                    t0 = time.time()
+                    while frames and sum(not f["meta"]["label"].endswith((".pass", ".strip", ".path")) for f in c.frames) < c.frames_asked                             and time.time() - t0 < 60:
                         time.sleep(0.05)
                     rec.tc_dump()
                     t0 = time.time()
@@ -186,6 +214,8 @@ def run_pinned(scenario: str, label: str, instance: str | None, snaps: bool = Tr
     for s in c.snaps:
         s["meta"]["where"] = "render"   # saved under the checkpoint's own name
         names.append(save(root, s, used))
+    for f in c.frames:
+        save_frame(root, f)
     lines = [l for ch in c.chunks for l in ch]
     (root / "calls.txt").write_text(NL.join(lines) + NL)
     (root / "index.json").write_text(json.dumps({"snaps": names, "calls": len(lines), "scenario": scenario,
@@ -203,9 +233,13 @@ def main():
     ap.add_argument("--scenario", help="a pinned scenario replayed by scenario_refs.py instead of the sandbox walk")
     ap.add_argument("--instance", default=None)
     ap.add_argument("--no-snaps", action="store_true", help="--scenario without the state copies at the checkpoints")
+    ap.add_argument("--pass-frames", action="store_true",
+                    help="--scenario: also save the root surface around the last terrain frame before each checkpoint (frames/)")
+    ap.add_argument("--frames-lite", action="store_true",
+                    help="with --pass-frames: only the last frame's entry and exit (no pass copies, no extra frames)")
     a = ap.parse_args()
     if a.scenario:
-        return run_pinned(a.scenario, a.label, a.instance, snaps=not a.no_snaps)
+        return run_pinned(a.scenario, a.label, a.instance, snaps=not a.no_snaps, frames=a.pass_frames or a.frames_lite, lite=a.frames_lite)
     global game, scenario
     import game  # noqa: E402,F811
     import scenario  # noqa: E402,F811

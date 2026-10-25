@@ -233,6 +233,8 @@ int crop_sprite(Gfx &g, uint32_t self, const Image8 &src, int32_t x, int32_t y, 
   s.h = keep_h;
   s.left = left;
   s.top = top;
+  s.cut_w = w;
+  s.cut_h = h;
   s.pal = src.pal;
   s.px.resize(static_cast<size_t>(keep_w) * keep_h);
   for (int32_t r = 0; r < keep_h; ++r) std::memcpy(s.px.data() + static_cast<size_t>(r) * keep_w, row(top + r) + left, keep_w);
@@ -342,6 +344,7 @@ static void b_surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
     return;
   }
   copy8(it->second, g.root, x, y, w, h, x2, y2);
+  g.note_root_write(x2, y2, w, h);
 }
 
 // Image_draw(this, surf, x, y, mask) (c3df.cpp ImageDraw_re): at (m_20 * t0 / t2 + x, m_24 * t1 / t2 + y) with the
@@ -470,6 +473,7 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   if (SG_NEGCTL(g_negctl_gfx) == 4) return;
   g.back.px = g.root.px;
+  g.back_terrain = g.root_terrain;
 }
 
 // Surface_fillRegion(this, s, x, y, w, h) (c3h.cpp SurfaceFillRegion_re): this's handle slot +0x40 (Surface::stretchTo) with
@@ -483,6 +487,7 @@ static void b_fill_region(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   }
   const int32_t x = static_cast<int32_t>(a[2]), y = static_cast<int32_t>(a[3]);
   copy8(it->second, g.root, x, y, static_cast<int32_t>(a[4]), static_cast<int32_t>(a[5]), x, y);
+  g.note_root_write(x, y, static_cast<int32_t>(a[4]), static_cast<int32_t>(a[5]));
 }
 
 // Surface_stretchBlit(this, mask, dst, x, y, extra) (c3da.cpp): this's handle slot +0x54 = jgld Sprite::bltS (16-bit target,
@@ -913,6 +918,7 @@ void gfx_progress(Ctx &ctx, uint32_t pos) {
   while (g->snap_next < g->snap_at.size() && pos > g->snap_at[g->snap_next]) {
     g->ensure_root(ctx);
     g->snap_unsupported.push_back(g->unsupported.size());
+    g->snap_terrain.push_back(g->back_terrain);
     try {
       gfxb::put_file(ctx, "$gfx/snapshot_" + std::to_string(g->snap_next) + ".555", gfxb::surface_bytes(g->back));
     } catch (...) {
@@ -970,6 +976,8 @@ void a_log(Ctx &c, const uint32_t *, Ret &r) {
   s += "snapshots\t" + std::to_string(g.snap_next) + " of " + std::to_string(g.snap_at.size()) + "\n";
   for (size_t k = 0; k < g.snap_unsupported.size(); ++k)
     s += "snapshot\t" + std::to_string(k) + "\tunsupported before it\t" + std::to_string(g.snap_unsupported[k]) + "\n";
+  for (size_t k = 0; k < g.snap_terrain.size(); ++k)
+    s += "snapshot_terrain\t" + std::to_string(k) + "\t" + std::to_string(g.snap_terrain[k]) + "\n";
   gfxb::put_file(c, "$gfx/log.txt", std::vector<uint8_t>(s.begin(), s.end()));
   r.set_i32(static_cast<int32_t>(g.unsupported.size()));
 }

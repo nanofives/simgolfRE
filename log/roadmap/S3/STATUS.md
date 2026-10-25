@@ -1,13 +1,13 @@
 # S3 status (in-game frame) — lead session cmvmns8sn3fsbo115g4dgm1nf
 
-steps: 11 total: 6 accepted (S3.1, S3.1b, S3.2, S3.3, S3.4, S3.4b), 2 running (S3.5, S3.6), 3 pending (S3.7-S3.9), 0 held
-live workers: S3.5 scene sprites (claude3 opus, cmvn8tbat6h1no115cyem832q); S3.6 Widget_writePixel + HUD (opus, cmvn220ah5iupo115bsu69hor); cap 2
-game slots held: 1 (granted 2026-10-25 for S3.5, instance s3_5)
-mirror: port/build/S3_head = git archive c6d7d78b + junctions (original, log, port/corpus, tests/golden, tests/fixtures, re/versions, tools/vc6)
-waiting on: S2 wave 1 commit for S3.2 / S3.6 merges (they build on S2 accepted files: S3.6 from port/build/S2_4_head)
+steps: 14 total: 9 accepted, 3 running (S3.5b, S3.7, S3.8), 2 pending (S3.10, S3.9), 0 held
+live workers: S3.5b rebase + standing figure (claude2 sonnet, cmvnuhlg68dljo115obipvwx9); S3.7 HUD text (claude2 opus, cmvnprucy848bo1156wzjx7p7); S3.8 overlay lines (claude2 opus, cmvnqcdb785r3o115e5i7g5mk); cap 3
+game slots held: 0 (S3.5 released s3_5 2026-10-25); S3.8 will ask NEED_GAME for line recordings
+mirror: port/build/S3_head2 = git archive b3d61e41 (S2 w1-4 + S3 w1 committed) + junctions; old S3_head (c6d7d78b) kept for running workers
+waiting on: I6 (S3 waves 2 + 3 with S6 w2, S2 w5); S3.5 / S3.6 rebase onto S3_head2 (+ waves 2-3) before their merge
 Widget_writePixel: moved to S3 (orchestrator 2026-10-24), given to S3.6 (gfx_pixel.cpp, own merge section)
-last event: 2026-10-25 S3.2 accepted (terrain 527/527 G2); wave 3 = S3.2 (MERGE_w3.md -> 2_merge.md); S3.5 spawned on claude3
-next: S3.6 accept -> S3.7; then S3.8 (overlay lines) when a slot frees
+last event: 2026-10-25 cap raised to 3; S3.5b spawned
+next: S3.5b first when a worker frees (play path G8: S3.5 + S3.6/6b + S3.7 merged); S3.10 rasteriser speed (U-1640) after; S3.9 last
 
 ## Log
 - 2026-10-24: lead started. Steps planned from census causes: terrain not drawn 520 (S3.1 + S3.2), Surface_blit3 168 (S3.6),
@@ -34,3 +34,11 @@ next: S3.6 accept -> S3.7; then S3.8 (overlay lines) when a slot frees
 - 2026-10-25: slot granted for S3.5 (s3_5); waves 2 + 3 queued for I6 (with S6 w2, S2 w5) after I5.
 - 2026-10-25: orchestrator: Surface_drawSprite single body = S2's gfx_reports.cpp (S3.5 drops its registration, oracle must pass on it or merge-note the change); radial menu / Surface_drawScaled / drawFrameR3 / drawFrameS2 -> S3.6; addSprite figures -> S3.5. Both workers told.
 - 2026-10-25: S3.6 reported PARTIAL (pixel + blit3 + HUD done; 19 blit3 scenarios clean; 155/169 HUD rows; 4 blind controls measured; employee panels undrawn U-1359). Sent back for the full census of its causes over the other 45 scenarios and a test re-run. Decisions: hover tips -> S3.7, hole flag / amenity sprites -> S3.5, Widget_fillRect S2's body wins.
+- 2026-10-25: wave 1 committed (b3d61e41). New mirror port/build/S3_head2 at b3d61e41. Waves 2 + 3 with I6.
+
+- 2026-10-25: S3.6 accepted on its second turn (census over all 64 scenarios + S1 recordings; tests re-run x64 + Win32). S3.6b spawned for the rebase onto S3_head2 and the two employee panels.- 2026-10-25: orchestrator: claude2 back in use; new spawns go to claude2 (alias models); running claude3 workers stay. Cap 2.
+
+- 2026-10-25: S3.5 accepted (550/582 checkpoints exact in every sprite pixel; 4 cov_r_bio unjudged in old base, 5 blend px over terrain U-1347, overlay lines U-1349 -> S3.8, one standing figure -> S3.5b). Slot released. S3.7 spawned (claude2).
+- 2026-10-25: S3.6b accepted. Wave 4 (S3.6 + S3.6b) written: MERGE_w4.md, files_w4.txt. S3.8 spawned (claude2).- 2026-10-25: G8: play session once S3.5, S3.6/6b, S3.7 are merged -> S3.5b next. New step S3.10 rasteriser speed (U-1640: zoom frames 144..186 ms vs 87 ms), G2 unchanged.
+
+- 2026-10-25: cap 3 (S2 lead closed). S3.5b spawned. S3.10 gate states PC, build and load.

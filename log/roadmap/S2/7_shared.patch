@@ -1,0 +1,340 @@
+diff --git a/port/src/sim/menu.cpp b/port/src/sim/menu.cpp
+index cf99471..7635713 100644
+--- a/port/src/sim/menu.cpp
++++ b/port/src/sim/menu.cpp
+@@ -169,7 +169,32 @@ void load_flic(Ctx &ctx, const FlicCall &f, int mode) {
+   GameState &gs = ctx.gs();
+   const int32_t c = add32(gs.g_flicLoadCount, 1);
+   gs.g_flicLoadCount = c;
+-  if (c % 100 == 0 && gs.g_difficulty == -1) cm::call_peer(ctx, "showLoadingScreen", {static_cast<uint32_t>(c / 4)});
++  if (c % 100 == 0 && gs.g_difficulty == -1) {
++    cm::call_peer(ctx, "showLoadingScreen", {static_cast<uint32_t>(c / 4)});
++    // roadmap S2.7, with an attached graphics backend only: the Window::refreshFull(root, 0) that follows the loading screen
++    // (+0x3c..+0x43), then waitTicks(10, 0) (+0x48..+0x4c) over the source's clock reads at its three sites (waitTicks+0x33,
++    // +0x37, +0x63; offsets from the frame-head return address as tick.cpp keys them), so a checkpoint taken inside that wait
++    // shows this loading screen. Negative controls 11 / 12 of gfx.family.boot_screens leave out one each.
++    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
++#if PORTSIM_NEGCTL
++      static const int fam = registry_find("gfx.family.boot_screens");
++      const FuncDef *fd = fam >= 0 ? registry_at(fam, nullptr) : nullptr;
++      const int neg = fd && fd->negctl ? *fd->negctl : 0;
++#else
++      const int neg = 0;
++#endif
++      if (neg != 11) {
++        const uint32_t a[2] = {state_va(ctx, &GameState::g_rootWindow), 0};
++        gfx_drop(ctx, "Window::refreshFull", a, 2);
++      }
++      InputSource *src = input_source(ctx);
++      constexpr int32_t kSiteWait = 0x4c384;
++      uint32_t t0 = 0, t = 0;
++      if (neg != 12 && src && src->clock(kSiteWait, t0) && src->clock(kSiteWait + 4, t))
++        while (t - t0 < 100u && src->clock(kSiteWait + 0x30, t)) {
++        }
++    }
++  }
+   const int32_t frames = f.delay == -1 ? 1 : f.frames;
+   const int32_t id = add32(static_cast<int32_t>(f.id), gs.g_sheetBase);
+   const uint32_t path = ctx.mem.data_base() + f.path;
+@@ -551,33 +576,89 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
+   const uint32_t none = state_va(ctx, &GameState::g_str4e9a84);
+   const std::string theme_copy = read_str(m, theme);
+   vstrcpy(m, theme, state_va(ctx, &GameState::f_strpool_4c3c5c));   // the championship theme's name for the screen
++  // roadmap S2.7: the drawing with an attached graphics backend (c3fw.cpp PickAProScreen_re; frame objects and cuts in
++  // gfx_boot_screens.cpp, which keys them gfx_local_key(0x73000 + 0x2c k) and gfx_local_key(0x73400)): each redraw, the
++  // hover changes, the tips, the loading message
++  auto gfx_pick_a_pro_surface = [](uint32_t k) { return gfx_local_key(0x73000 + 0x2C * k); };
++  auto gfx_pick_a_pro_image = []() { return gfx_local_key(0x73400); };
++  const bool draw = g_gfx_attached.load(std::memory_order_relaxed) != 0;
++  auto gx = [&](const char *name, std::initializer_list<uint32_t> a) {
++    if (draw) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++  };
++  const uint32_t root = gs.f_stateptr_4c1570[0], win = state_va(ctx, &GameState::g_rootWindow);
++  static const int32_t kBtnX[5] = {0x258, 0x2E4, 0x30A, 0x30A, 0x29E}, kBtnY[5] = {0x208, 0x212, 0x064, 0x17C, 0x208};
++  auto img_at = [&](uint32_t k, int32_t x, int32_t y) {
++    gx("Image_draw", {gfx_pick_a_pro_surface(k), root, static_cast<uint32_t>(x), static_cast<uint32_t>(y), 0});
++  };
++  auto disabled = [&]() {   // the load and delete buttons' disabled images while nothing is selected
++    img_at(10, 0x258, 0x208);
++    img_at(14, 0x29E, 0x208);
++  };
++  constexpr uint32_t kInk = 0x80000000u, kWhite = 0x80007FFFu, kSkill = 0x80000210u;
++  // the rows' pen x 0x140; negative control 13 of gfx.family.boot_screens draws them at 0x141
++  uint32_t row_x = 0x140;
++#if PORTSIM_NEGCTL
++  if (draw) {
++    static const int fam = registry_find("gfx.family.boot_screens");
++    const FuncDef *fd = fam >= 0 ? registry_at(fam, nullptr) : nullptr;
++    if (fd && fd->negctl && *fd->negctl == 13) row_x = 0x141;
++  }
++#endif
++  gx("pickAProScreen.setup", {});
+   int32_t sel = -1, scroll = 0, n = 0, max_scroll = 0, result = 0;
+   gs.g_rootInput[kRootButton] = 0;
+   for (;;) {
+-    // ---- redraw (the drawing dropped): the .pro files listed, the visible rows through the text buffer
++    // ---- redraw: the .pro files listed, the visible rows through the text buffer
++    gx("setDrawTarget", {root, state_va(ctx, &GameState::g_fontRef_519a40), 0, 0, 0});
++    gx("Surface_blitThunk", {gfx_pick_a_pro_image(), root, 0, 0, 0, 0, 0x320, 0x258});
++    if (sel == -1) disabled();
++    gx("drawCenteredText", {p8808 + 0x28, 0x1F8, 0x2A, kInk});
+     vstrcpy(m, text, p8808 + 0xC);
+     n = list_matching_files(ctx, text, none, none);
++    gx("setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
+     max_scroll = sub32(n, 0x10);
+     if (scroll > max_scroll) scroll = max_scroll;
+     if (scroll < 0) scroll = 0;
+-    for (int32_t i = scroll; i < add32(scroll, 0x10) && i < n; ++i) vstrcpy(m, text, name_at(ctx, i));
++    int32_t row_y = 0x74;
++    for (int32_t i = scroll; i < add32(scroll, 0x10) && i < n; ++i) {
++      vstrcpy(m, text, name_at(ctx, i));
++      if (sel == i) gx("fillWindowRect", {win, 0x136, static_cast<uint32_t>(row_y - 1), 0x1C8, 0xF, 0x80001284u});
++      gx("drawText4049d0", {text, row_x, static_cast<uint32_t>(row_y), sel == i ? kWhite : kInk});
++      row_y = add32(row_y, 0x10);
++    }
+     if (sel != -1) {   // the selected pro's card: its texts
++      if (draw) {   // the portrait: Surface g_sprites5628e8 + 0x2c + 0x84 (c + 72 t), c the signed type byte +0x22, t = 1
++                    // when bit 7 of +0x21 is clear (Surface_drawScaled at (1, 1, 1) = Image_draw's path)
++        const uint32_t gt = state_va(ctx, &GameState::g_golferTypes);
++        const int32_t t = (m.load<uint8_t>(gt + 0x21) & 0x80) ? 0 : 1;
++        const int32_t c = m.load<int8_t>(gt + 0x22);
++        gx("Image_draw", {state_va(ctx, &GameState::g_sprites5628e8) + 0x2C + static_cast<uint32_t>(mul32(add32(c, mul32(t, 72)), 0x84)),
++                          root, 0x45, 0x3D, 0});
++      }
+       vstrcpy(m, text, state_va(ctx, &GameState::g_golferTypes) + 0x10);
+       vstrcat(m, text, p8808);
++      gx("drawText4049d0", {text, 0x38, 0xFF, kInk});
+       vstrcpy(m, text, quote);
+       m.store<int16_t>(state_va(ctx, &GameState::g_golfers) + 0xB6, 0);
+       cm::call_peer(ctx, "buildGolferComment", {0x3E, 0, 0, 0});
+       vstrcat(m, text, quote);
++      gx("pickAProScreen.textSurface", {text, 0x24, 0x232, kWhite});
++      gx("drawText4049d0", {p8794 + 0x60, 0x38, 0x220, kInk});
+       const uint32_t names = state_va(ctx, &GameState::f_ptrtab_4c2c3c);
++      int32_t skill_y = 0x117;
+       for (uint32_t i = 0; i < 10; ++i) {
+         vstrcpy(m, text, m.load<uint32_t>(names + 4u * i));
++        gx("drawText4049d0", {text, 0x5E, static_cast<uint32_t>(skill_y), kSkill});
+         vstrcpy(m, text, state_va(ctx, &GameState::f_strpool_4c5340));
+         // the skill byte of row i (signed) * 10
+         const int32_t v = mul32(m.load<int8_t>(state_va(ctx, &GameState::g_playerSkills) + i), 10);
+         vstrcat(m, text, crt_itoa10(ctx, v, state_va(ctx, &GameState::g_panelNumberText)));
+         vstrcat(m, text, state_va(ctx, &GameState::f_strpool_4c60c4));
++        gx("drawCenteredText", {text, 0x3B, static_cast<uint32_t>(skill_y), kSkill});
++        skill_y = add32(skill_y, 0x18);
+       }
+     }
++    gx("Window::refreshFull", {win, 0});
+     // ---- the input loop: pumpMessages, the hot button under the cursor, the tip after 0x1e passes on one button
+     int32_t hot = -1, dwell = 0, action = 0;
+     for (;;) {
+@@ -593,6 +674,10 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
+       if (approx_distance(sub32(x, 0x310), sub32(y, 0x190)) < 0x14) hot = 3;
+       if (approx_distance(sub32(x, 0x2C0), sub32(y, 0x22B)) < 0x17) hot = 4;
+       if (hot != prev) {
++        if (prev != -1) img_at(static_cast<uint32_t>(prev), kBtnX[prev], kBtnY[prev]);
++        if (hot != -1) img_at(static_cast<uint32_t>(5 + hot), kBtnX[hot], kBtnY[hot]);
++        if (sel == -1) disabled();
++        gx("Window::refreshFull", {win, 0});
+         dwell = 0;
+       } else {
+         dwell = add32(dwell, 1);
+@@ -601,6 +686,8 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
+           if (hot == 0) vstrcpy(m, text, sel == -1 ? none : p8794 + 0x50);
+           else if (hot == 1) vstrcpy(m, text, state_va(ctx, &GameState::f_strpool_4c84e8) + 0xA8);
+           else if (hot == 4) vstrcpy(m, text, p8794 + 0x58);
++          gx("drawCenteredText2", {text, static_cast<uint32_t>(kBtnX[hot] + 0x1E), static_cast<uint32_t>(kBtnY[hot] + 0x10), kWhite});
++          gx("Window::refreshFull", {win, 0});
+         }
+       }
+       if (gs.g_rootInput[kRootButton] == 0) {
+@@ -623,12 +710,17 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
+           result = 0;
+           break;
+         }
++        gx("setDrawTarget", {root, state_va(ctx, &GameState::g_font519928), 0, 0, 0});   // the loading message
++        gx("drawText4049d0", {state_va(ctx, &GameState::f_strpool_4c3f74) + 0x34, 0x184, 0x1D8, kWhite});
++        gx("setDrawTarget", {root, state_va(ctx, &GameState::g_font51b360), 0, 0, 0});
++        gx("Window::refreshFull", {win, 0});
+         if (mode != 2) cm::call_peer(ctx, "loadThemeFile", {name_at(ctx, sel), 0, 1});
+         result = 1;
+         break;
+       }
+       if (action == 1) {   // back: the theme name stays as the screen set it
+         enter_modal(ctx);
++        gx("pickAProScreen.teardown", {});
+         return 0;
+       }
+       if (action == 2) {
+@@ -660,9 +752,11 @@ int32_t pick_a_pro_screen(Ctx &ctx) {
+       continue;
+     }
+     sel = -1;
++    disabled();   // a press on no row
+   }
+   enter_modal(ctx);
+   if (mode != 3) write_str(m, theme, theme_copy);
++  gx("pickAProScreen.teardown", {});
+   return result;
+ }
+ 
+@@ -708,17 +802,25 @@ int32_t show_theme_pack_select(Ctx &ctx) {
+   const uint32_t theme = state_va(ctx, &GameState::g_theme);
+   const uint32_t names = state_va(ctx, &GameState::g_themeName);
+   const int32_t count = list_themes(ctx);
++  // roadmap S2.7: the drawing with an attached graphics backend (gfx_boot_screens.cpp): the probes and frame objects, each
++  // redraw, the hover changes, the tips
++  const bool draw = g_gfx_attached.load(std::memory_order_relaxed) != 0;
++  auto gx = [&](const char *name, std::initializer_list<uint32_t> a) {
++    if (draw) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++  };
++  gx("showThemePackSelect.setup", {static_cast<uint32_t>(count)});
+   enter_modal(ctx);
+   gs.g_rootInput[kRootButton] = 0;
+   int exit_kind = 3;
+   for (;;) {
+-    // ---- redraw: the rows (the drawing dropped); the current theme's row is the selection
++    // ---- redraw: the rows; the current theme's row is the selection
+     int32_t selected = -1;
+     for (int32_t i = 0; i < count; ++i) {
+       const uint32_t nm = names + 0x32u * static_cast<uint32_t>(i);
+       vstrcpy(m, text, nm);
+       if (read_str(m, text) == read_str(m, theme)) selected = static_cast<int32_t>(nm);
+     }
++    gx("showThemePackSelect.redraw", {static_cast<uint32_t>(count)});
+     // ---- the input loop
+     int32_t hot = -1, dwell = 0;
+     bool redraw = false;
+@@ -734,6 +836,7 @@ int32_t show_theme_pack_select(Ctx &ctx) {
+       if (approx_distance(sub32(x, 0x30A), sub32(y, 0x63)) < 0x14) hot = 2;
+       if (approx_distance(sub32(x, 0x30A), sub32(y, 0x1E7)) < 0x14) hot = 3;
+       if (hot != prev) {
++        gx("showThemePackSelect.hover", {static_cast<uint32_t>(prev), static_cast<uint32_t>(hot)});
+         dwell = 0;
+       } else {
+         dwell = add32(dwell, 1);
+@@ -743,6 +846,7 @@ int32_t show_theme_pack_select(Ctx &ctx) {
+             vstrcpy(m, text, selected == -1 ? state_va(ctx, &GameState::g_str4e9a84) : state_va(ctx, &GameState::f_strpool_4c8794) + 0x50);
+           else if (hot == 1)
+             vstrcpy(m, text, state_va(ctx, &GameState::f_strpool_4c84e8) + 0xA8);
++          gx("showThemePackSelect.tip", {text, static_cast<uint32_t>(hot), static_cast<uint32_t>(dwell)});
+         }
+       }
+       int32_t btn = gs.g_rootInput[kRootButton];
+@@ -773,6 +877,7 @@ int32_t show_theme_pack_select(Ctx &ctx) {
+     if (!redraw) break;
+   }
+   if (exit_kind == 1 && mode != 2) vstrcpy(m, theme, state_va(ctx, &GameState::f_strpool_4c6ba4) + 0x6c);
++  gx("showThemePackSelect.teardown", {});
+   return 0;
+ }
+ 
+diff --git a/port/src/sim/commands_screens.inc b/port/src/sim/commands_screens.inc
+index 5b319f2..fb96211 100644
+--- a/port/src/sim/commands_screens.inc
++++ b/port/src/sim/commands_screens.inc
+@@ -314,18 +314,34 @@ int32_t show_hire_employee_dialog(Ctx &ctx) {
+ int32_t select_difficulty_screen(Ctx &ctx) {
+   GameState &gs = ctx.gs();
+   InputSource *src = input_source(ctx);
++  // roadmap S2.7: the drawing with an attached graphics backend (gfx_boot_screens.cpp): the frame objects, each pass's
++  // redraw before the pump, the back button's tip after 0x1e passes on it, refreshFull after the choice
++  const bool draw = g_gfx_attached.load(std::memory_order_relaxed) != 0;
++  auto gx = [&](const char *name, std::initializer_list<uint32_t> a) {
++    if (draw) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++  };
++  gx("selectDifficultyScreen.setup", {});
+   gs.g_rootInput[kButton] = 0;
+-  int32_t sel = -1;
++  int32_t sel = -1, dwell = 0;
+   for (;;) {
++    gx("selectDifficultyScreen.redraw", {static_cast<uint32_t>(sel)});
+     pump_messages(ctx, PumpKind::Blocking, "selectDifficultyScreen");
+     int32_t x = 0, y = 0;
+     if (!src || !src->cursor(x, y)) throw NeedInput{{"selectDifficultyScreen"}};
++    const int32_t prev = sel;
+     sel = -1;
+     if (approx_distance(sub32(x, 0x15c) / 2, sub32(y, 0x6b)) < 0x50) sel = 0;
+     if (approx_distance(sub32(x, 0x13f) / 2, sub32(y, 0xda)) < 0x50) sel = 1;
+     if (approx_distance(sub32(x, 0x140) / 2, sub32(y, 0x16f)) < 0x50) sel = 2;
+     if (approx_distance(sub32(x, 0x16b) / 2, sub32(y, 0x1ef)) < 0x50) sel = 3;
+     if (approx_distance(sub32(x, 0x2ff), sub32(y, 0x22d)) < 0x19) sel = 4;
++    if (sel == prev) {
++      dwell = add32(dwell, 1);
++      if (dwell > 0x1e && sel == 4) gx("selectDifficultyScreen.tip", {});
++    } else {
++      dwell = 0;
++    }
++    gx("Window::refreshFull", {state_va(ctx, &GameState::g_rootWindow), 0});
+     if (gs.g_rootInput[kButton] != 0) break;
+     if (flush_redraw(ctx) == 0) continue;
+     if (gs.g_rootInput[kButton] == 0) {
+@@ -335,14 +351,19 @@ int32_t select_difficulty_screen(Ctx &ctx) {
+     break;
+   }
+   if (sel == 4 && SG_NEGCTL(g_negctl_difficulty) != 1) sel = -1;
++  gx("selectDifficultyScreen.teardown", {});
+   return sel;
+ }
+ 
+ // showLoadingScreen (percent): the loading picture is Random::range(12) (always one of the twelve: loadImage is the
+ // renderer's) and the hint Random::range(11) (0..10 all have a text); both draws always happen, the rest is drawing
+ int32_t show_loading_screen(Ctx &ctx, int32_t percent) {
+-  (void)percent;
+-  rng_range(ctx, SG_NEGCTL(g_negctl_reports) == 3 ? 11 : 12);
+-  rng_range(ctx, 11);
++  const int32_t r = rng_range(ctx, SG_NEGCTL(g_negctl_reports) == 3 ? 11 : 12);
++  const int32_t r2 = rng_range(ctx, 11);
++  // roadmap S2.7: the drawing (picture r, hint r2, the bar) with an attached graphics backend (gfx_boot_screens.cpp)
++  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
++    const uint32_t a[3] = {static_cast<uint32_t>(percent), static_cast<uint32_t>(r), static_cast<uint32_t>(r2)};
++    gfx_drop(ctx, "showLoadingScreen.draw", a, 3);
++  }
+   return 0;
+ }
+diff --git a/port/src/sim/tick_boot.inc b/port/src/sim/tick_boot.inc
+index c263e7f..3ffb9fe 100644
+--- a/port/src/sim/tick_boot.inc
++++ b/port/src/sim/tick_boot.inc
+@@ -65,7 +65,31 @@ void BootSetup(u32 F) {
+     MenuSeedSlots(F);                                                  // ML+0xbd..ML+0x1f6 the button geometry and labels
+     tc("setDrawTarget", Root(), GS(g_font51a028), 0, 0, 0);            // ML+0x201
+     tc("loadImage", GS(g_image568d10), (GS(f_strpool_4c6ba4) + 152), GS(g_palette5199c8), 0, 0x100, 0);   // ML+0x21e
+-    // ML+0x24e Surface_blit3 and the seven menu items and five labels ML+0x253..ML+0x2c0: drawing
++    // ML+0x24e Surface_blit3 and the seven menu items and five labels ML+0x253..ML+0x2c0: drawing, issued with an attached
++    // graphics backend (roadmap S2.7: the title art the boot's loading screens are drawn over; negative control 10 of
++    // gfx.family.boot_screens leaves it out). The same calls as the title menu's first draw (tick_menu.inc) without the theme
++    // line under Start New Game.
++    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
++#if PORTSIM_NEGCTL
++        static const int fam = registry_find("gfx.family.boot_screens");
++        const FuncDef *fd = fam >= 0 ? registry_at(fam, nullptr) : nullptr;
++        const bool art = !(fd && fd->negctl && *fd->negctl == 10);
++#else
++        const bool art = true;
++#endif
++        if (art) {
++            tc("Surface_blit3", GS(g_image568d10), Root(), 0, 0, 0x320, 0x258, 0, 0,
++               G32(GS(g_screenWidth)), G32(GS(g_screenHeight)));                              // ML+0x24e
++            for (int esi = 0; esi < 7; esi++) {                                               // ML+0x253..ML+0x2c0
++                const int k = ((esi == 6) ? 1 : 0) + 2 * esi;
++                tc("Image_draw", k * 44 + GS(g_spriteRef_53b7e0), Root(), (int)FW(0x150 + esi * 4),
++                   (int)FW(0x152 + esi * 4), 0);                                              // ML+0x288
++                if (esi < 5)
++                    cc("drawCenteredText", FD(0x1F4 + esi * 4), (int)FW(0xF4 + esi * 4), (int)FW(0xF6 + esi * 4) + 8,
++                       (int)0x80006318);                                                      // ML+0x2b4
++            }
++        }
++    }
+     tc("setDrawTarget", Root(), GS(g_font51a028), 0, 0, 0);            // ML+0x2d3
+     G32(GS(g_preferences)) = -1;                                       // ML+0x2e5
+     G32(GS(g_difficulty)) = -1;                                        // ML+0x2eb session mode = none
+diff --git a/port/src/sim/gfx_families.inc b/port/src/sim/gfx_families.inc
+index 366b9f3..0a7eb33 100644
+--- a/port/src/sim/gfx_families.inc
++++ b/port/src/sim/gfx_families.inc
+@@ -9,3 +9,4 @@ SG_GFX_FAMILY(credits)
+ SG_GFX_FAMILY(prim_fill)
+ SG_GFX_FAMILY(prim_text2)
+ SG_GFX_FAMILY(routing)
++SG_GFX_FAMILY(boot_screens)
