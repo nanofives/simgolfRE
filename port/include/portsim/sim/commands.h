@@ -83,7 +83,9 @@ enum class CmdKind : uint32_t {
 struct Command {
   CmdKind kind = CmdKind::None;
   // RootHandler: the handler id (1 onPress1, 2 onPoint, 3 onUnpoint, 4 onPress2, 5 onPoint2, 6 onUnpoint2, 7 onKey,
-  // 8 onChar, 9 onChar0, 10 onPress1b, 11 onPress2b; trace_schema.md HANDLER).
+  // 8 onChar, 9 onChar0, 10 onPress1b, 11 onPress2b; trace_schema.md HANDLER; 12 a WM_KEYDOWN and 13 a WM_CHAR that a
+  // focused child window took before any root handler (tick.cpp parse_trace; a0 = wParam; apply_command does nothing
+  // with them, the bio entry in chareditor.cpp gives them to its EditBox)).
   uint32_t handler = 0;
   int32_t a0 = 0, a1 = 0;  // RootHandler: the handler's two stack arguments (x, y / a, code / c)
   // RootHandler 1 / 4 (onPress1 / onPress2): the GetAsyncKeyState(VK_CONTROL) and (VK_SHIFT) results (low 16 bits) the
@@ -105,7 +107,9 @@ int32_t apply_command(Ctx &ctx, const Command &cmd);
 void apply_commands(Ctx &ctx, const std::vector<Command> &cmds);
 
 // What kind of pump asks (see MODAL BLOCKS).
-enum class PumpKind : uint32_t { Blocking = 1, Drain = 2 };
+//   PumpKind::Load      loadFlic's pumpInput483bd0 (U-1051): a Drain that also takes the one dispatch a trace puts before
+//                       a world load's first palette QPC read (a message posted before the load began)
+enum class PumpKind : uint32_t { Blocking = 1, Drain = 2, Load = 3 };
 
 // The run's raw input after the current frame's, for the pumps inside straddlers (see MODAL BLOCKS).
 class InputSource {

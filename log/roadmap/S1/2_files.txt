@@ -1,0 +1,10 @@
+port/test/test_shots_strict.py
+log/roadmap/S1/2_notes.md
+log/roadmap/S1/2_files.txt
+log/roadmap/S1/2_uncertain.tsv
+log/roadmap/S1/2_merge.md
+log/roadmap/S1/2_default.log
+log/roadmap/S1/2_oracle.log
+log/roadmap/S1/2_oracle_scans.log
+log/roadmap/S1/2_golden_update.log
+log/roadmap/S1/2_build.log

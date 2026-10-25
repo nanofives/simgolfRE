@@ -1,0 +1,8 @@
+re/tools/trace_format.py
+tests/test_trace_format_s1.py
+port/test/test_sve_header_readers.py
+re/analysis/data/sve_header_readers.md
+log/roadmap/S1/1_notes.md
+log/roadmap/S1/1_files.txt
+log/roadmap/S1/1_uncertain.tsv
+log/roadmap/S1/1_browser_decomp.txt

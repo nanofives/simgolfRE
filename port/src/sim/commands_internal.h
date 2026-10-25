@@ -54,6 +54,7 @@ inline void cat(Ctx &ctx, uint32_t dst, uint32_t src) { vstrcat(ctx.mem, dst, sr
 // jgld's pumps deliver window messages) applies the batch the context's InputSource delivers to a pump of this kind
 // (commands.h, MODAL BLOCKS); then the click flag is cleared. A Blocking pump with no input left throws NeedInput.
 void pump_messages(Ctx &ctx, PumpKind kind, const char *where);
+void pump_load(Ctx &ctx);   // loadFlic +0x54: pumpInput483bd0, whose dispatch is a Load pump (U-1051)
 // pumpLight: the button word cleared, then pumpMessages (a Drain) again while a click or a key is left
 void pump_light(Ctx &ctx, const char *where);
 // flushRedraw: a set g_redrawPending is cleared together with both key words; then (pumpInput483c30 dispatches nothing in

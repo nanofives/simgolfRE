@@ -311,10 +311,41 @@ def validate(tr: Trace, virtual_clock=True) -> list[str]:
                 errs.append(f"END n {f['n']} != {n} clock calls")
             if f["frames"] != frame_i or f["polls"] != poll_i or f["dumps"] != dumps:
                 errs.append(f"END counts {f['frames']}/{f['polls']}/{f['dumps']} != {frame_i}/{poll_i}/{dumps}")
+    errs.extend(undelivered_input(tr))
     if not ended:
         errs.append("no END record")
     if finals != (0 if ended and by_exit else 1):
         errs.append(f"{finals} final polls (expected {0 if ended and by_exit else 1})")
+    return errs
+
+
+def is_first_generation_input(msg: int) -> bool:
+    """Messages a harness DELIVER/post makes: WM_KEYDOWN/UP, WM_SYSKEYDOWN/UP and the mouse buttons 0x201..0x209.
+    WM_CHAR (0x102) is made by TranslateMessage from a KEYDOWN and WM_MOUSEMOVE (0x200) by the cursor, so neither has
+    a DELIVER of its own (measured 2026-10-24: 176 of 266 stored traces hold them undelivered)."""
+    return msg in (0x100, 0x101, 0x104, 0x105) or 0x201 <= msg <= 0x209
+
+
+def undelivered_input(tr: Trace) -> list[str]:
+    """U-1067: an input-class MSG record needs an earlier harness DELIVER post of the same message (each delivery
+    explains one message). Input from outside the harness (a real key press, the machine's media keys) has none.
+    A segment slice (meta `slice`) may start with messages already in the Windows queue (segment_corpus.md, INPUT IN
+    FLIGHT: `queued_messages`): its messages before the second FRAME record are exempt (cov_l_camera/00)."""
+    errs: list[str] = []
+    owed: dict[int, int] = {}
+    is_slice = "slice" in tr.meta
+    frames = 0
+    for i, r in enumerate(tr.records):
+        if r.type == FRAME:
+            frames += 1
+        f = r.f or decode(r)
+        if r.type == DELIVER and f["kind"] == "post":
+            owed[f["msg"]] = owed.get(f["msg"], 0) + 1
+        elif r.type == MSG and is_first_generation_input(f["msg"]):
+            if owed.get(f["msg"], 0) > 0:
+                owed[f["msg"]] -= 1
+            elif not (is_slice and frames <= 1):
+                errs.append(f"record {i}: input MSG {f['msg']:#06x} wp={f['wp']} has no preceding harness DELIVER")
     return errs
 
 

@@ -181,7 +181,8 @@ def test_defect_hazard_cell_transposed(portlib, vrunner):
 @pytest.mark.parametrize("name,function", [("chooseShotTarget.strictFlagSticky", "chooseShotTarget")])
 def test_defects_the_vectors_cannot_see(portlib, vrunner, name, function):
     """model_defects#37: no vector reaches it (recorded; the segments must cover it, PHASE23_PLAN.md 8.6). Starts
-    failing when the corpus grows: then turn this into a real ON / OFF test."""
+    failing when the corpus grows: then turn this into a real ON / OFF test. The switch itself is judged by the constructed
+    states of port/test/test_shots_strict.py (roadmap S1.2, U-1012)."""
     if _missing(portlib, function):
         pytest.skip(f"{function}: callees not registered yet")
     portlib.defect(name, 0)

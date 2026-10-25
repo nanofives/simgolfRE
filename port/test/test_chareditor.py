@@ -9,8 +9,9 @@ over a fake display whose cursor slot serves the sequence, because the port's ed
 View::fromParent too. The editor's two release-wait pumps are DRAINS in the oracle (nothing has arrived there); the
 port's test source refuses those pumps the same way. Peers whose own evidence is elsewhere and which read files or heap
 objects are scripted on both sides and their calls compared (composeGolferSprite, buildGolferComment, listMatchingFiles,
-loadThemeFile, promptAndSaveFile). The whole data image, eax, the consumed input and the number of cursor reads must be
-equal. The default suite checks GOLDEN digests of fixed cases computed from the port (pinned only after the oracle was
+loadThemeFile, promptAndSaveFile). The bio entry (control 20, roadmap S1.5) runs the original's EditBox family over
+port/test/test_chareditor_bio.py's stubs (its own oracle, with the key routing, is there). The whole data image (minus the
+EditBox vtable word only that stub writes), eax, the consumed input and the number of cursor reads must be equal. The default suite checks GOLDEN digests of fixed cases computed from the port (pinned only after the oracle was
 GREEN on them: SG_EMU_ORACLE=update) and every negative control against them.
 """
 from __future__ import annotations
@@ -51,7 +52,6 @@ COMPOSITOR_VA, PART_TABLES = 0x0081CA14, [(0x0081CA6C + 88 * k) for k in range(0
 # Palette::nearest (bio only)
 DROPPED = sorted(set(DIALOG_DROPPED) | {0x00448200, 0x0045B0D0, 0x00483420})
 RELEASE_DRAINS = {0x0043A23A: "release wait 1", 0x0043A254: "release wait 2"}   # return addresses of their pumpMessages calls
-BIO_EDITBOX = 0x00486110          # EditBox::create: the bio entry the port does not take
 SCRIPTED = {"composeGolferSprite": (0x00462020, 1), "buildGolferComment": (0x00469B00, 4),
             "listMatchingFiles": (0x0043D2A0, 3), "loadThemeFile": (0x00437FA0, 3), "promptAndSaveFile": (0x00437910, 3)}
 del SCRIPTED["composeGolferSprite"]   # reached through addSprite too: it runs for real on both sides (FAKE_COMP)
@@ -99,9 +99,8 @@ def emu_run(name, img, args, inputs, cursors, rule, salt=None, cover=None):
     emu.stub(SLOT38_STUB, 1, 0, True, "display slot 0x38")
     emu.stub(COMP_STUB, 3, 0, True, "compositor slot")
 
-    def bio(uc, a, ecx):
-        raise RuntimeError("bio EditBox")
-    emu.stub_py(BIO_EDITBOX, 6, bio, True, "EditBox::create")
+    from port.test import test_chareditor_bio as BIO
+    bio_block = BIO.editor_oracle_stubs(emu)   # the bio entry's EditBox family (roadmap S1.5, U-1032)
     for a, n in EH_VEC.items():
         emu.stub(a, n, 0, True)
     if salt is not None:
@@ -110,7 +109,7 @@ def emu_run(name, img, args, inputs, cursors, rule, salt=None, cover=None):
     saved = dict(CE.DRAIN_CALLERS)
     CE.DRAIN_CALLERS.update(RELEASE_DRAINS)
     try:
-        r = emu.run(ENTRY[name], args, img, inputs=inputs, blocks=[_display_block()], cover=cover)
+        r = emu.run(ENTRY[name], args, img, inputs=inputs, blocks=[_display_block()] + bio_block, cover=cover)
     finally:
         CE.DRAIN_CALLERS.clear()
         CE.DRAIN_CALLERS.update(saved)
@@ -118,7 +117,9 @@ def emu_run(name, img, args, inputs, cursors, rule, salt=None, cover=None):
     return r
 
 
-def port_run(lib, name, img, args, inputs, cursors, rule, salt=None):
+def port_run(lib, name, img, args, inputs, cursors, rule, salt=None, peek=None):
+    """peek = (va, n): n bytes of the context's space at va after the run go to port_run.last_peek (the bio's live
+    EditBox buffer when the run stops inside the bio, roadmap S1.5)"""
     import ctypes as C
     with lib.state() as st:
         st.set_data_base(DATA_VA)
@@ -146,6 +147,12 @@ def port_run(lib, name, img, args, inputs, cursors, rule, salt=None):
         st.call("commands.clearTextWidth", [])
         n = min(logbuf[0], PEER_LOG_CAP)
         calls = [tuple(logbuf[1 + 8 * k: 1 + 8 * k + 8]) for k in range(n)]
+        port_run.last_peek = None
+        if peek is not None:
+            pb = (C.c_uint8 * peek[1])()
+            st.map(0x35000000, pb)
+            st.call("chareditor.peek", [peek[0], 0x35000000, peek[1]])
+            port_run.last_peek = bytes(pb)
         return eax, st.image(), code, stats & 0xFFFF, stats >> 16, calls
 
 
@@ -153,8 +160,6 @@ def compare(lib, name, case) -> str:
     img, args, inputs, cursors, rule, salt = case
     r = emu_run(name, img, args, inputs, cursors, rule, salt)
     pe, pimg, code, used, reads, calls = port_run(lib, name, img, args, inputs, cursors, rule, salt)
-    if "bio EditBox" in r.err:
-        return "" if code == L.SG_E_NO_RESOURCE else f"original reaches the bio EditBox, port {code} {pe}"
     if r.err.startswith("NeedInput"):
         if code != L.SG_E_NO_RESOURCE:
             return f"original waits for input, port {code} {pe}"
@@ -176,7 +181,8 @@ def compare(lib, name, case) -> str:
         if orig != port:
             k = next((i for i in range(min(len(orig), len(port))) if orig[i] != port[i]), min(len(orig), len(port)))
             return f"peer calls differ at {k}: port {port[k:k + 2]} original {orig[k:k + 2]} ({len(port)} / {len(orig)})"
-    return first_diff(pimg, r.image, lib)
+    from port.test import test_chareditor_bio as BIO
+    return first_diff(BIO._masked(pimg, BIO.editor_stub_words()), BIO._masked(r.image, BIO.editor_stub_words()), lib)
 
 
 # ------------------------------------------------------------------------------------------------ cases
@@ -498,8 +504,9 @@ def test_negctl_reads_red(portlib, name, mode):
 
 
 def test_every_chareditor_function_has_a_negctl(portlib):
+    from port.test import test_chareditor_bio as BIO   # the EditBox family's controls (roadmap S1.5)
     mine = {n for n, f in portlib.functions().items() if f.get("module") == "chareditor" and not n.startswith("chareditor.")}
-    assert mine == {n for n, _ in NEGCTL_RED}, sorted(mine)
+    assert mine == {n for n, _ in NEGCTL_RED} | {n for n, _m, _c in BIO.NEGCTL_RED}, sorted(mine)
 
 
 @need_exe

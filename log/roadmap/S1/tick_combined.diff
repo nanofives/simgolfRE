@@ -1,0 +1,194 @@
+--- a/port/include/portsim/sim/chareditor.h
++++ b/port/include/portsim/sim/chareditor.h
+@@ -8,8 +8,10 @@
+ // next pass). Its command effect: the edited character record (the golfer type record: title, name, personality,
+ // demographics, body, looks, the custom word, the bio), the phrase lines of that type, the member's skill bytes, the preview
+ // golfer 0x99, the pro record of a member, the comment tone and the text it builds for drawing in g_textBuffer.
+-// Drawing, sound and the screen Image are dropped. The bio entry (an EditBox in the window tree) is not ported: a press on
+-// it throws MissingResource before any of its writes.
++// Drawing, sound and the screen Image are dropped. The bio entry (control 20, non-members) edits the record's bio through
++// the EditBox family registered by this module (EditBox::create / setText / resizeBuffer / insertChar / onKey /
++// resetFields / releaseState; roadmap S1.5); keys the window tree gives the EditBox arrive as RootHandler commands 12 / 13
++// (commands.h). Up / Down need the font's line wrap and throw MissingResource (U-1190).
+ #ifndef PORTSIM_SIM_CHAREDITOR_H
+ #define PORTSIM_SIM_CHAREDITOR_H
+ 
+--- a/port/include/portsim/sim/commands.h
++++ b/port/include/portsim/sim/commands.h
+@@ -83,7 +83,9 @@
+ struct Command {
+   CmdKind kind = CmdKind::None;
+   // RootHandler: the handler id (1 onPress1, 2 onPoint, 3 onUnpoint, 4 onPress2, 5 onPoint2, 6 onUnpoint2, 7 onKey,
+-  // 8 onChar, 9 onChar0, 10 onPress1b, 11 onPress2b; trace_schema.md HANDLER).
++  // 8 onChar, 9 onChar0, 10 onPress1b, 11 onPress2b; trace_schema.md HANDLER; 12 a WM_KEYDOWN and 13 a WM_CHAR that a
++  // focused child window took before any root handler (tick.cpp parse_trace; a0 = wParam; apply_command does nothing
++  // with them, the bio entry in chareditor.cpp gives them to its EditBox)).
+   uint32_t handler = 0;
+   int32_t a0 = 0, a1 = 0;  // RootHandler: the handler's two stack arguments (x, y / a, code / c)
+   // RootHandler 1 / 4 (onPress1 / onPress2): the GetAsyncKeyState(VK_CONTROL) and (VK_SHIFT) results (low 16 bits) the
+@@ -105,7 +107,9 @@
+ void apply_commands(Ctx &ctx, const std::vector<Command> &cmds);
+ 
+ // What kind of pump asks (see MODAL BLOCKS).
+-enum class PumpKind : uint32_t { Blocking = 1, Drain = 2 };
++//   PumpKind::Load      loadFlic's pumpInput483bd0 (U-1051): a Drain that also takes the one dispatch a trace puts before
++//                       a world load's first palette QPC read (a message posted before the load began)
++enum class PumpKind : uint32_t { Blocking = 1, Drain = 2, Load = 3 };
+ 
+ // The run's raw input after the current frame's, for the pumps inside straddlers (see MODAL BLOCKS).
+ class InputSource {
+--- a/port/src/sim/commands.cpp
++++ b/port/src/sim/commands.cpp
+@@ -308,6 +308,15 @@
+   if (src && src->batch(kind, batch))
+     for (const Command &c : batch) apply_command(ctx, c);
+   gs.g_rootInput[kClicked] = 0;
++}
++
++// pumpInput483bd0 in loadFlic (+0x54): the display's showScreen loop dispatches what has arrived; no click / button words
++// are touched (pumpMessages' are not this pump's)
++void pump_load(Ctx &ctx) {
++  InputSource *src = input_source(ctx);
++  std::vector<Command> batch;
++  if (src && src->batch(PumpKind::Load, batch))
++    for (const Command &c : batch) apply_command(ctx, c);
+ }
+ 
+ void pump_light(Ctx &ctx, const char *where) {
+--- a/port/src/sim/commands_internal.h
++++ b/port/src/sim/commands_internal.h
+@@ -54,6 +54,7 @@
+ // jgld's pumps deliver window messages) applies the batch the context's InputSource delivers to a pump of this kind
+ // (commands.h, MODAL BLOCKS); then the click flag is cleared. A Blocking pump with no input left throws NeedInput.
+ void pump_messages(Ctx &ctx, PumpKind kind, const char *where);
++void pump_load(Ctx &ctx);   // loadFlic +0x54: pumpInput483bd0, whose dispatch is a Load pump (U-1051)
+ // pumpLight: the button word cleared, then pumpMessages (a Drain) again while a click or a key is left
+ void pump_light(Ctx &ctx, const char *where);
+ // flushRedraw: a set g_redrawPending is cleared together with both key words; then (pumpInput483c30 dispatches nothing in
+--- a/port/src/sim/menu.cpp
++++ b/port/src/sim/menu.cpp
+@@ -158,7 +158,7 @@
+ // loadFlic(id, path, frames, delay, flag) (re/analysis/render/0043d740_loadFlic.md, a C2 row: written from its instructions,
+ // cited by offset). The prefix: g_flicLoadCount + 1 (+0x0..+0x15); on every 100th load waitTicks(10, 0) and, while
+ // g_difficulty is -1 (boot only: a session sets it from the menu first), showLoadingScreen(count / 4) (+0x1f..+0x34); then
+-// pumpInput483bd0 (+0x54: a pump of a modal site, the port's takes nothing, U-1052). A delay of -1 loads one frame
++// pumpInput483bd0 (+0x54: a Load pump, U-1051: it takes the one dispatch a trace puts before the load's first palette QPC). A delay of -1 loads one frame
+ // (+0x5d..+0x62). The sheet id + g_sheetBase (+0x87..+0x91) gets the path (+0xab..+0xd1) and its columns from the flic
+ // (flicOpenStream +0x231; an optional shadow flic's open writes the same word first, +0x178), rows = frames (+0x266). The
+ // cells: with a free list (g_cellFreeStart[0] != -2, +0x263) allocBlock(rows * columns) (+0x279); none fits (-1) or no free
+@@ -170,6 +170,7 @@
+   const int32_t c = add32(gs.g_flicLoadCount, 1);
+   gs.g_flicLoadCount = c;
+   if (c % 100 == 0 && gs.g_difficulty == -1) cm::call_peer(ctx, "showLoadingScreen", {static_cast<uint32_t>(c / 4)});
++  cm::pump_load(ctx);   // +0x54 pumpInput483bd0
+   const int32_t frames = f.delay == -1 ? 1 : f.frames;
+   const int32_t id = add32(static_cast<int32_t>(f.id), gs.g_sheetBase);
+   const uint32_t path = ctx.mem.data_base() + f.path;
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -879,6 +879,11 @@
+ struct TBatch {
+   uint32_t pos = 0, cursors = 0;
+   bool body = false;
++  // U-1051: the next clock read after the dispatch's handlers is jgld's Palette::update QPC although the pump before it was
++  // not one of the frame body's (the last clock site was a wait loop's): a pumpInput483bd0 of a world load
++  // (loadFlic +0x54: the 15th of the load in cov_r_flic_input) took it, a message posted before the load started; the harness's
++  // polls ride on timeGetTime reads and the load makes none
++  bool load = false;
+   std::vector<Command> cmds;
+ };
+ // A harness memory write (DELIVER kind 4, a dword) and the clock ordinal it was made in.
+@@ -950,6 +955,36 @@
+   // that says which pump takes a dispatch counts only the reads the port makes (cov_a_golfer frame 2623: two mouse moves in
+   // showHoleStatsScreen's loop had put its closing click two passes late). Negative control tick.frame 6 keeps them.
+   bool after_mousemove = false;
++  // KEYS THE WINDOW TREE'S FOCUS CHILD TOOK (roadmap S1.5, U-1032; log/roadmap/S1/5_notes.md). A WM_KEYDOWN reaches the
++  // root's onChar (HANDLER 8; a key with no character, MapVirtualKeyA 0, the root's onKey with a0 = 0: HANDLER 7) and a
++  // WM_CHAR the root's onKey (HANDLER 7) only when no focused child window returns non-zero for it first (uiKeyEvent ->
++  // onCommand -> dispatchAccel, uiKeyEvent148 -> Window::onKeyChar -> Window::key, which ask the root's focus ring before
++  // the root's own slot). A key MSG record that no HANDLER record follows before the next MSG record, clock read or frame
++  // head was taken by such a child (the character editor's bio EditBox: EditBox::onKey, EditBox::insertChar): it becomes a
++  // RootHandler command 12 (WM_KEYDOWN, a0 = the virtual key) or 13 (WM_CHAR, a0 = the character), which apply_command
++  // treats as nothing and the bio entry routes to its EditBox (chareditor.cpp). Such commands only join a batch some
++  // HANDLER record opens (the open one, or the next one of the same frame), so no batch is added. In the 64 corpus traces
++  // every one of the 11,312 WM_KEYDOWN / WM_CHAR MSG records is followed by a root handler, so none of them gets one.
++  struct PendKey {
++    bool on = false;
++    uint32_t msg = 0, wp = 0;
++  } pend_key;
++  std::vector<Command> focus_held;
++  auto focus_resolve = [&]() {  // the pending key MSG record got no matching root handler
++    if (!pend_key.on) return;
++    Command c;
++    c.kind = CmdKind::RootHandler;
++    c.handler = pend_key.msg == 0x100 ? 12u : 13u;
++    c.a0 = static_cast<int32_t>(pend_key.wp);
++    if (SG_NEGCTL(tk::g_negctl_frame) != 8) focus_held.push_back(c);  // negative control 8: the commands dropped
++    pend_key.on = false;
++  };
++  auto focus_flush = [&]() {  // into the open batch, after the handlers it holds so far
++    if (open_batch && cur && !focus_held.empty()) {
++      cur->cmds.insert(cur->cmds.end(), focus_held.begin(), focus_held.end());
++      focus_held.clear();
++    }
++  };
+   while (p + 4 <= n) {
+     const uint8_t type = tr[p], sub = tr[p + 1];
+     const uint32_t len = uint32_t(tr[p + 2]) | uint32_t(tr[p + 3]) << 8;
+@@ -978,9 +1013,17 @@
+           if (c.handler == 2 || c.handler == 3 || c.handler == 7) c.t = v0;
+         }
+       } else {
++        focus_resolve();
++        focus_flush();
++        if (open_batch && cur && !cur->body && sub == 2 && ra == kPaletteQpcRa) cur->load = true;   // U-1051
+         ctx_ra = ra;
+         open_batch = false;
+       }
++    } else if (type == 0x05 && len >= 16) {  // MSG: pos, msg, wParam, lParam (the keys the focus child may take, above)
++      focus_resolve();
++      focus_flush();
++      const uint32_t msg = rd32(q + 4);
++      if (msg == 0x100 || msg == 0x102) pend_key = {true, msg, rd32(q + 8)};
+     } else if (type == 0x08 && sub == 1) {  // CURSOR: pos, x, y (client coordinates after ScreenToClient)
+       if (!frames.empty()) {
+         frames.back().cursor.emplace_back(static_cast<int32_t>(rd32(q + 4)), static_cast<int32_t>(rd32(q + 8)));
+@@ -999,6 +1042,7 @@
+         frames.back().async.emplace_back(static_cast<uint8_t>(vk), res);
+       }
+     } else if (type == 0x09) {  // HANDLER (id = sub): pos, a0, a1
++      pend_key.on = false;  // the key reached a root handler
+       if (!frames.empty()) {
+         TraceFrame &f = frames.back();
+         if (!open_batch) {
+@@ -1010,6 +1054,7 @@
+           open_batch = true;
+         }
+         cur = &f.batches.back();
++        focus_flush();
+         Command c;
+         c.kind = CmdKind::RootHandler;
+         c.handler = sub;
+@@ -1020,6 +1065,9 @@
+     } else if (type == 0x03 && sub == 4) {  // DELIVER w32: pos, addr, value
+       if (!frames.empty()) frames.back().writes.push_back({rd32(q), rd32(q + 4), rd32(q + 8)});
+     } else if (type == 0x02) {  // FRAME: frame, pos, t, snapshot
++      focus_resolve();
++      focus_flush();
++      focus_held.clear();  // a taken key with no batch of its frame to join (none in the corpus)
+       TraceFrame f;
+       f.index = rd32(q);
+       f.pos = rd32(q + 4);
+@@ -1190,7 +1238,11 @@
+     if (!fr_ || next_ >= fr_->batches.size()) return false;
+     const FrameIo &io = cur_io();
+     const TBatch &b = fr_->batches[next_];
+-    if (io.pump_site == kPumpSiteModal ? (kind != PumpKind::Blocking || b.body) : !b.body) return false;
++    if (kind == PumpKind::Load) {  // loadFlic's pump (U-1051): the dispatch the trace puts before the load's first palette QPC
++      if (b.body || !b.load || SG_NEGCTL(g_negctl_frame) == 8) return false;
++    } else if (io.pump_site == kPumpSiteModal ? (kind != PumpKind::Blocking || b.body) : !b.body) {
++      return false;
++    }
+     if (b.body && SG_NEGCTL(g_negctl_frame) == 3) return false;  // negative control: the frame body's dispatches dropped
+     if (io.cursor_used < b.cursors) {  // the original made more cursor reads before this dispatch: a later pump's
+       const bool stuck = kind == PumpKind::Blocking && refused_at_ == io.cursor_used;

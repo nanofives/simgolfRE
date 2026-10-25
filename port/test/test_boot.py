@@ -11,10 +11,9 @@ the capture's frame-hash tracer the junk gives distance 0 and the original keeps
 727..733, cursor tile only); cov_b_location has no frame record (the capture stays on the location screen).
 
 Negative controls (NEGCTL, all RED): the RNG seed, the top-score file read, the first interface flic, the terrain buttons'
-and the tool strip's cut geometry, the tutorial camera reset, the theme-pack row press, the window procedure's mouse-move
+and the tool strip's cut geometry, the tutorial camera reset, the theme-pack row press and Cancel, the window procedure's mouse-move
 cursor reads counted, the hire dialog's row text appended. Controls the trace corpus cannot see, so they are not listed:
-showTutorialText 1..3 (every corpus call is with page 0, which returns after the camera reset), showThemePackSelect 2 (no
-scenario cancels the theme screen), loadInterfaceArt 3 (no click reaches palette groups 21 / 22): that one is read by
+showTutorialText 1..3 (every corpus call is with page 0, which returns after the camera reset), loadInterfaceArt 3 (no click reaches palette groups 21 / 22): that one is read by
 test_palette_cuts_equal_the_original instead, which compares the cut fields with the original's segment-start images.
 """
 from __future__ import annotations
@@ -40,6 +39,7 @@ NEGCTL = [("sandbox_basic", "seedFromTime", 1, "the clock value + 1"),
           ("cov_k2_build", "loadWorldAssets", 5, "the tool strip not cut"),
           ("cov_a_flags", "showTutorialText", 4, "the camera cache reset skipped"),
           ("cov_b_title", "showThemePackSelect", 1, "a row press does not change g_theme"),
+          ("cov_r_theme_cancel", "showThemePackSelect", 2, "Cancel keeps the theme"),
           ("cov_a_golfer", "tick.frame", 6, "the window procedure's mouse-move cursor reads counted"),
           ("ui_tour", "showHireEmployeeDialog", 2, "the row text appended instead of copied")]
 

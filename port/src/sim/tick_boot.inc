@@ -52,6 +52,9 @@ void BootGameMain() {
     G32(GS(g_ui83abdc)) = 0;                                           // gameMain+0x377
     // gameMain+0x41f showTitleScreen: the intro movie and the title button / window-frame sprites (a drop; the phase 5 graphics
     // backend draws its sprite part when one is attached). loadSoundTable (gameMain+0x42e) and the colour cycle are not the boot's.
+    // gameMain+0x41f showTitleScreen plays the intro first (its call at showTitleScreen+0x27, immediate 0): the video
+    // module (S8.3), whose default host takes the original's own skip path (BinkOpen NULL)
+    cc("playAudioFile", (GS(f_strpool_4c89ac) + 96), 0);           // ./flics/SMSG_introfinal.bik
     cc("showTitleScreen");
     G32(GS(g_ui83abdc)) = 0;                                           // gameMain+0x452
 }

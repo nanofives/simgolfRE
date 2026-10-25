@@ -1,0 +1,133 @@
+{
+ "intro_early": {
+  "dwords": 918621,
+  "differ_first_runs": 47150,
+  "unstable_on": 47150,
+  "unstable_skip": 46873,
+  "attributed": [
+   {
+    "va": "0x0083ab9c",
+    "symbol": "g_ui83ab9c",
+    "class": "engine",
+    "pointer_flag": "none",
+    "skip": "0x00000000",
+    "on": "0x00000001",
+    "delta": "0x00000001",
+    "heap_pointer_like": false
+   }
+  ]
+ },
+ "menu": {
+  "dwords": 918621,
+  "differ_first_runs": 47150,
+  "unstable_on": 47150,
+  "unstable_skip": 46873,
+  "attributed": [
+   {
+    "va": "0x0083ab9c",
+    "symbol": "g_ui83ab9c",
+    "class": "engine",
+    "pointer_flag": "none",
+    "skip": "0x00000000",
+    "on": "0x00000001",
+    "delta": "0x00000001",
+    "heap_pointer_like": false
+   }
+  ]
+ },
+ "hover_exit": {
+  "dwords": 918621,
+  "differ_first_runs": 47150,
+  "unstable_on": 47150,
+  "unstable_skip": 46873,
+  "attributed": [
+   {
+    "va": "0x0083ab9c",
+    "symbol": "g_ui83ab9c",
+    "class": "engine",
+    "pointer_flag": "none",
+    "skip": "0x00000000",
+    "on": "0x00000001",
+    "delta": "0x00000001",
+    "heap_pointer_like": false
+   }
+  ]
+ },
+ "quit_00": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_01": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_02": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_03": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_04": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_05": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_06": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_07": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_08": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "quit_09": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ },
+ "credits": {
+  "dwords": 918621,
+  "differ_first_runs": 47149,
+  "unstable_on": 47150,
+  "unstable_skip": 46872,
+  "attributed": []
+ }
+}

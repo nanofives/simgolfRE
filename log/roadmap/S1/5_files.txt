@@ -1,0 +1,23 @@
+port/src/sim/chareditor.cpp
+port/test/test_chareditor_bio.py
+port/test/test_chareditor.py
+port/test/golden_chareditor.json
+re/tools/scenario_s1_5.py
+re/analysis/data/scenario_refs.json
+log/roadmap/S1/5_notes.md
+log/roadmap/S1/5_merge.md
+log/roadmap/S1/5_uncertain.tsv
+log/roadmap/S1/5_files.txt
+log/roadmap/S1/5/mirror.py
+log/roadmap/S1/5/patches.py
+log/roadmap/S1/5/s15dis.py
+log/roadmap/S1/5/unmatched_keys.py
+log/roadmap/S1/5/unmatched_keys2.py
+log/roadmap/S1/5/eb_spread.py
+log/roadmap/S1/5/bio_spread.py
+log/roadmap/S1/5/dbg1.py
+log/roadmap/S1/5/dbg2.py
+log/roadmap/S1/5/inloop_block.txt
+log/roadmap/S1/5_*.log, 5_*.tsv (run logs and gate tables)
+log/roadmap/S1/5/suite/*.txt
+local, not committed: port/corpus/traces/cov_r_bio.trace(.json), log/p2/p24/cov_r_bio/, log/c3/alt/refs/cov_r_bio/

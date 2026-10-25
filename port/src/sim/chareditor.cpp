@@ -305,11 +305,283 @@ int32_t pick_char_editor(Ctx &ctx, int32_t row) {
   }
 }
 
+// ------------------------------------------------------------------------------------------------ the EditBox family
+// Roadmap S1.5 (log/roadmap/S1/5_notes.md, U-1032): the text model of the window-tree EditBox the bio entry builds, written
+// from the C3 / C4 hook sources (c3v setText, c3cz resizeBuffer, c3de insertChar, c3fz onKey, c3dl resetFields, c3ef
+// releaseState, c3ep create; read as reference) and judged by port/test/test_chareditor_bio.py against the original in
+// Unicorn. Fields: text pointer +0x574 (a block of the context's EditBox arena below), capacity +0x578, caret +0x5a4,
+// caret-blink flag +0x5a8, the style words +0x584..+0x59c. What the window-tree side does is drawing or ui-class
+// bookkeeping and is not modelled: the virtual layout slot +0x120 (Window::doLayout: the +0x220 pass bit, g_curWidget, a
+// relayout and an invalidate), Window::create and its ring entry in the parent, the frame quad and cursor character, the
+// caret Timer, MessageBeep, Window::ctorInit (U-1191).
+namespace {
+//   EditBox::insertChar   1 = the caret is not advanced
+//   EditBox::onKey        1 = Back removes the character AT the caret (Delete's move), 2 = Home puts the caret at 1
+//   EditBox::setText      1 = the caret keeps its value
+//   EditBox::resizeBuffer 1 = the old text is not copied into the new buffer
+//   EditBox::resetFields  1 = +0x598 takes the config word +8
+//   EditBox::releaseState 1 = the fields are not reset
+//   EditBox::create       1 = a 0x3f-character buffer
+int g_negctl_eb_insert = 0;
+int g_negctl_eb_key = 0;
+int g_negctl_eb_settext = 0;
+int g_negctl_eb_resize = 0;
+int g_negctl_eb_reset = 0;
+int g_negctl_eb_release = 0;
+int g_negctl_eb_create = 0;
+
+// The text buffers resizeBuffer takes from malloc: blocks of a per-context arena mapped above the GameState (the original's
+// heap addresses are not part of any compared state: the EditBox is a `ui` object and its text is copied out before the
+// buffer is freed). A free only marks the block; the cursor goes back to the start when no block is live.
+constexpr uint32_t kArenaSize = 0x10000;
+struct Arena {
+  std::vector<uint8_t> host;
+  uint32_t va = 0, cur = 0;
+  std::map<uint32_t, uint32_t> live;  // va -> size
+};
+std::map<const Ctx *, Arena> &arenas() {
+  static std::map<const Ctx *, Arena> m;
+  return m;
+}
+Arena &arena(Ctx &ctx) {
+  Arena &a = arenas()[&ctx];
+  if (a.va != 0) {
+    try {
+      if (ctx.mem.at(a.va, kArenaSize) == a.host.data()) return a;
+    } catch (const Fault &) {
+    }
+  }
+  a.host.assign(kArenaSize, 0);
+  a.cur = 0;
+  a.live.clear();
+  uint32_t base = (ctx.mem.data_base() + static_cast<uint32_t>(sizeof(GameState)) + 0x02800000u) & ~0xFFFFu;
+  for (int tries = 0; tries < 64; ++tries, base += 0x00100000u)
+    if (ctx.mem.map(base, a.host.data(), kArenaSize, false)) {
+      a.va = base;
+      return a;
+    }
+  throw MissingResource{"EditBox arena (no free address range)"};
+}
+uint32_t eb_malloc(Ctx &ctx, uint32_t n) {
+  Arena &a = arena(ctx);
+  if (a.live.empty()) a.cur = 0;
+  const uint32_t size = (n + 15u) & ~15u;
+  if (n > kArenaSize || a.cur + size > kArenaSize) throw MissingResource{"EditBox arena overflow"};
+  const uint32_t p = a.va + a.cur;
+  a.cur += size;
+  a.live[p] = size;
+  return p;
+}
+void eb_free(Ctx &ctx, uint32_t p) { arena(ctx).live.erase(p); }
+
+uint32_t vstrlen_at(const Memory &m, uint32_t p) {
+  uint32_t n = 0;
+  while (m.load<uint8_t>(p + n) != 0) ++n;
+  return n;
+}
+// the static CRT's strncpy: at most n bytes, the rest of the n padded with NULs
+void vstrncpy(const Memory &m, uint32_t dst, uint32_t src, uint32_t n) {
+  uint32_t i = 0;
+  for (; i < n; ++i) {
+    const uint8_t c = m.load<uint8_t>(src + i);
+    m.store<uint8_t>(dst + i, c);
+    if (c == 0) break;
+  }
+  for (; i < n; ++i) m.store<uint8_t>(dst + i, 0);
+}
+// a forward byte move of n bytes (the CRT's memmove and the inline rep movsd / movsb, which agree for these overlaps)
+void vmove(const Memory &m, uint32_t dst, uint32_t src, uint32_t n) {
+  if (dst > src)
+    for (uint32_t i = n; i-- > 0;) m.store<uint8_t>(dst + i, m.load<uint8_t>(src + i));
+  else
+    for (uint32_t i = 0; i < n; ++i) m.store<uint8_t>(dst + i, m.load<uint8_t>(src + i));
+}
+
+constexpr uint32_t kText = 0x574, kCap = 0x578, kCaret = 0x5a4, kBlink = 0x5a8;
+
+// resizeBuffer(n): the same capacity returns; otherwise a block of n + 1 bytes (NUL at [n] and [0]), the old text copied in
+// with strncpy(new, old, n) and the old block freed, the new block and capacity stored.
+void editbox_resize_buffer(Ctx &ctx, uint32_t eb, uint32_t n) {
+  const Memory &m = ctx.mem;
+  if (n == m.load<uint32_t>(eb + kCap)) return;
+  const uint32_t p = eb_malloc(ctx, n + 1);
+  m.store<uint8_t>(p + n, 0);
+  m.store<uint8_t>(p, 0);
+  const uint32_t old = m.load<uint32_t>(eb + kText);
+  if (old != 0) {
+    if (SG_NEGCTL(g_negctl_eb_resize) != 1) vstrncpy(m, p, old, n);
+    eb_free(ctx, old);
+  }
+  m.store<uint32_t>(eb + kText, p);
+  m.store<uint32_t>(eb + kCap, n);
+}
+
+// setText(text): no buffer does nothing; a NULL text empties it, otherwise strncpy of at most the capacity; the caret goes
+// to the length (then the layout slot).
+void editbox_set_text(Ctx &ctx, uint32_t eb, uint32_t text) {
+  const Memory &m = ctx.mem;
+  const uint32_t buf = m.load<uint32_t>(eb + kText);
+  if (buf == 0) return;
+  if (text == 0) m.store<uint8_t>(buf, 0);
+  else vstrncpy(m, buf, text, m.load<uint32_t>(eb + kCap));
+  if (SG_NEGCTL(g_negctl_eb_settext) != 1) m.store<uint32_t>(eb + kCaret, vstrlen_at(m, buf));
+}
+
+// insertChar(ch, a2): a character 0..0x1f returns 0 (a2 is never read: its arm needs ch == 0, which returned already); a
+// text as long as the capacity (an equality test) beeps and returns 1; otherwise the tail from the caret moves up one byte
+// (at the end only the byte after the NUL is cleared), the low byte of ch goes in at the caret, the caret advances, 1.
+int32_t editbox_insert_char(Ctx &ctx, uint32_t eb, int32_t ch) {
+  const Memory &m = ctx.mem;
+  if (ch >= 0 && ch < 0x20) return 0;
+  const uint32_t buf = m.load<uint32_t>(eb + kText);
+  if (vstrlen_at(m, buf) == m.load<uint32_t>(eb + kCap)) return 1;  // MessageBeep(0)
+  const uint32_t p = buf + m.load<uint32_t>(eb + kCaret);
+  if (m.load<uint8_t>(p) == 0) m.store<uint8_t>(p + 1, 0);
+  else vmove(m, p + 1, p, vstrlen_at(m, p) + 1);
+  m.store<uint8_t>(m.load<uint32_t>(eb + kText) + m.load<uint32_t>(eb + kCaret), static_cast<uint8_t>(ch));
+  if (SG_NEGCTL(g_negctl_eb_insert) != 1) m.store<uint32_t>(eb + kCaret, m.load<uint32_t>(eb + kCaret) + 1);
+  return 1;
+}
+
+// onKey(key): the low 16 bits select Back 8, End 0x23, Home 0x24, Left 0x25, Up 0x26, Right 0x27, Down 0x28, Delete 0x2e,
+// each returning 1 (a refused move beeps); any other key returns 0. Up / Down place the caret through the line wrap
+// (wrapToLines, charPosToPixel, pixelToCharPos over the font's widths), which the port does not have (U-1190).
+int32_t editbox_on_key(Ctx &ctx, uint32_t eb, int32_t key) {
+  const Memory &m = ctx.mem;
+  const int neg = SG_NEGCTL(g_negctl_eb_key);
+  const uint32_t buf = m.load<uint32_t>(eb + kText);
+  const uint32_t caret = m.load<uint32_t>(eb + kCaret);
+  switch (static_cast<uint32_t>(key) & 0xffffu) {
+    case 0x08:  // Back: the text from the caret on (its NUL included) one byte down, caret - 1
+      if (caret == 0) return 1;
+      if (neg == 1) vmove(m, buf + caret, buf + caret + 1, vstrlen_at(m, buf + caret + 1) + 1);
+      else vmove(m, buf + caret - 1, buf + caret, vstrlen_at(m, buf + caret) + 1);
+      m.store<uint32_t>(eb + kCaret, m.load<uint32_t>(eb + kCaret) - 1);
+      return 1;
+    case 0x23: m.store<uint32_t>(eb + kCaret, vstrlen_at(m, buf)); return 1;  // End
+    case 0x24: m.store<uint32_t>(eb + kCaret, neg == 2 ? 1u : 0u); return 1;  // Home
+    case 0x25:                                                               // Left
+      if (caret != 0) m.store<uint32_t>(eb + kCaret, caret - 1);
+      return 1;
+    case 0x27:  // Right
+      if (m.load<uint8_t>(buf + caret) != 0) m.store<uint32_t>(eb + kCaret, caret + 1);
+      return 1;
+    case 0x2e:  // Delete: the tail after the caret's byte (its NUL included) one byte down; the caret stays
+      if (m.load<uint8_t>(buf + caret) != 0) vmove(m, buf + caret, buf + caret + 1, vstrlen_at(m, buf + caret + 1) + 1);
+      return 1;
+    case 0x26:
+    case 0x28: throw MissingResource{"EditBox::onKey: Up / Down (EditBox::wrapToLines)"};
+    default: return 0;
+  }
+}
+
+// resetFields: text, +0x580, +0x57c, capacity, blink flag and caret cleared; the style words from the EditBox config
+// f_cfg_EditBox_4e43f0 (+0, +0x1c, +0x18, +8, +4) and g_editBoxDefaults (+0, +4); eax = the config word +4.
+int32_t editbox_reset_fields(Ctx &ctx, uint32_t eb) {
+  const Memory &m = ctx.mem;
+  for (uint32_t off : {kText, 0x580u, 0x57cu, kCap, kBlink, kCaret}) m.store<uint32_t>(eb + off, 0);
+  const uint32_t cfg = GS(f_cfg_EditBox_4e43f0), def = GS(g_editBoxDefaults);
+  m.store<uint32_t>(eb + 0x584, m.load<uint32_t>(cfg));
+  m.store<uint32_t>(eb + 0x588, m.load<uint32_t>(cfg + 0x1c));
+  m.store<uint32_t>(eb + 0x58c, m.load<uint32_t>(cfg + 0x18));
+  m.store<uint32_t>(eb + 0x59c, m.load<uint32_t>(cfg + 8));
+  m.store<uint32_t>(eb + 0x590, m.load<uint32_t>(def));
+  m.store<uint32_t>(eb + 0x594, m.load<uint32_t>(def + 4));
+  const uint32_t w = m.load<uint32_t>(cfg + (SG_NEGCTL(g_negctl_eb_reset) == 1 ? 8 : 4));
+  m.store<uint32_t>(eb + 0x598, w);
+  return i32(w);
+}
+
+// releaseState: the text block freed, resetFields; Timer::reset of the caret timer and Window::ctorInit are the window
+// tree's (U-1191). The original returns Window::ctorInit's eax; the port returns 0 (no caller in the port reads it).
+int32_t editbox_release_state(Ctx &ctx, uint32_t eb) {
+  const uint32_t buf = ctx.mem.load<uint32_t>(eb + kText);
+  if (buf != 0) eb_free(ctx, buf);
+  if (SG_NEGCTL(g_negctl_eb_release) != 1) editbox_reset_fields(ctx, eb);
+  return 0;
+}
+
+// create(x, y, w, h, parent): releaseState; no parent returns 3; a 0x40-character buffer; Window::create (the window tree,
+// taken to succeed: its failures come from Surface allocations); +0x2b4 and +0x5a0 cleared, the caret at the text's length
+// (empty); 0.
+int32_t editbox_create(Ctx &ctx, uint32_t eb, uint32_t parent) {
+  editbox_release_state(ctx, eb);
+  if (parent == 0) return 3;
+  editbox_resize_buffer(ctx, eb, SG_NEGCTL(g_negctl_eb_create) == 1 ? 0x3f : 0x40);
+  const Memory &m = ctx.mem;
+  m.store<uint32_t>(eb + 0x2b4, 0);
+  m.store<uint32_t>(eb + 0x5a0, 0);
+  m.store<uint32_t>(eb + kCaret, vstrlen_at(m, m.load<uint32_t>(eb + kText)));
+  return 0;
+}
+}  // namespace
+
 // ------------------------------------------------------------------------------------------------ showCharacterEditor
 namespace {
 // the hover tips of controls 8..19 (offsets in f_strpool_4c84e8); control 20's tip is shown for non-members only
 constexpr uint32_t kTips[12] = {284, 268, 256, 244, 232, 220, 208, 196, 184, 176, 168, 160};
 constexpr uint32_t kTipBio = 148;
+
+// THE BIO ENTRY (control 20, non-members). Drawing first (drawPanelS2, the three pixel reads, Palette::nearest for the
+// text colour: dropped); EditBox::create on g_characterEditorEditBox (x 0x1e0, y 0x70, w 0x12c, h 0xc8, parent the root
+// window), the caret blink on, a 500-character buffer, setText(bio), the style words +0x584 (the nearest-white colour:
+// 0, the drawing's), +0x590 1, +0x594 2, +0x598 0, +0x59c 4, Window::show; the button word and gDirtyFlagB cleared. Then
+// the loop: showScreen, redrawAll, leaveModal483d80 (the screen's), pumpMessages, Window::refreshFull (drawing), until a
+// press (the button word) or gDirtyFlagB == 0x0d (rootWin_onKey of an Enter). The loop reads neither the clock nor the
+// cursor. The bio becomes "" + the EditBox's text (the original's strcat into the NUL'd bio), and releaseState ends it.
+//
+// KEY ROUTING. In the original the root window's focus ring holds the EditBox from EditBox::create on (measured, cov_r_bio
+// probe4: Window::onKeyChar -> Window::key(root) -> Window::key(EditBox) -> EditBox::insertChar; uiKeyEvent -> onCommand ->
+// dispatchAccel(root) -> dispatchAccel(EditBox) -> EditBox::onKey), and the root handlers run only for what the EditBox
+// returns 0 on. A key it consumed reaches no root handler, so the trace has its MSG record and no HANDLER record; tick.cpp
+// parse_trace turns those into RootHandler commands 12 (a WM_KEYDOWN the focus child took: a0 = the virtual key) and 13 (a
+// WM_CHAR it took: a0 = the character), which apply_command treats as nothing. Here, while the EditBox has the focus,
+// 12 goes to EditBox::onKey and 13 to EditBox::insertChar (with the character's low byte sign-extended, the movsx of
+// Window::onKeyChar); a command the EditBox refuses means the recording and the model disagree. The root handlers the
+// trace does hold (an Enter's onKey, onChar for keys the EditBox ignores, the press) apply as everywhere.
+constexpr uint32_t kFocusKeyDown = 12, kFocusChar = 13;
+
+int32_t bio_command(Ctx &ctx, uint32_t eb, const Command &c) {
+  if (c.kind == CmdKind::RootHandler && (c.handler == kFocusKeyDown || c.handler == kFocusChar)) {
+    const int32_t r = c.handler == kFocusChar ? editbox_insert_char(ctx, eb, static_cast<int8_t>(c.a0 & 0xff))
+                                              : editbox_on_key(ctx, eb, c.a0);
+    if (r == 0) throw MissingResource{"showCharacterEditor: a key the recording gives the bio EditBox, which refuses it"};
+    return r;
+  }
+  return apply_command(ctx, c);
+}
+
+void bio_entry(Ctx &ctx, uint32_t bio) {
+  GameState &gs = ctx.gs();
+  const Memory &m = ctx.mem;
+  const int neg = SG_NEGCTL(g_negctl_editor);
+  const uint32_t eb = GS(g_characterEditorEditBox);
+  editbox_create(ctx, eb, GS(g_rootWindow));
+  m.store<uint32_t>(eb + kBlink, 1);  // setCaretActive(1): the flag (its Timer::startOnce is the window tree's)
+  editbox_resize_buffer(ctx, eb, 0x1f4);
+  editbox_set_text(ctx, eb, bio);
+  m.store<uint32_t>(eb + 0x584, 0);
+  m.store<uint32_t>(eb + 0x590, 1);
+  m.store<uint32_t>(eb + 0x594, 2);
+  m.store<uint32_t>(eb + 0x598, 0);
+  m.store<uint32_t>(eb + 0x59c, 4);
+  gs.g_rootInput[kButton] = 0;
+  gs.gDirtyFlagB = 0;
+  do {
+    if (gs.g_rootInput[kClicked] == 0) gs.g_rootInput[kButton] = 0;
+    InputSource *src = input_source(ctx);
+    if (!src || src->exhausted()) throw NeedInput{{"showCharacterEditor: the bio EditBox"}};
+    std::vector<Command> batch;
+    if (src->batch(PumpKind::Blocking, batch))
+      for (const Command &c : batch) bio_command(ctx, eb, c);
+    gs.g_rootInput[kClicked] = 0;
+  } while (gs.g_rootInput[kButton] == 0 && gs.gDirtyFlagB != (neg == 10 ? 0x0a : 0x0d));
+  if (neg != 11) {
+    m.store<uint8_t>(bio, 0);
+    cat(ctx, bio, m.load<uint32_t>(eb + kText));
+  }
+  editbox_release_state(ctx, eb);
+}
 }  // namespace
 
 // Entry: the tip state word cleared, the edited record copied to golfer type record 83 (Cancel restores it), the preview
@@ -599,9 +871,10 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
           if (neg != 2) SB(Gr + 0x19, B(P + 0x19));
           m.store<uint32_t>(R1 + 0x2c, (B(P + 0x19) & 7u) | (m.load<uint32_t>(R1 + 0x2c) & 0xfffffff8u));
           break;
-        case 20:  // the bio: an EditBox of the window tree takes the typed text (UI phase)
+        case 20:  // the bio (non-members): the global EditBox edits the record's bio until a press or Enter
           if (member) break;
-          throw MissingResource{"showCharacterEditor: the bio EditBox"};
+          bio_entry(ctx, R1 + 0x30);
+          break;
       }
     } else if (ctl == -1) {
       int32_t yy = y;
@@ -788,6 +1061,13 @@ const FuncDef kFuncs[] = {
     {"chareditor.setScript", "default", "void", 4, 0, a_set_script, &g_negctl_none},
     {"chareditor.scriptStats", "default", "int", 0, 0, a_script_stats, &g_negctl_none},
     {"chareditor.clearScript", "default", "void", 0, 0, a_clear_script, &g_negctl_none},
+    // chareditor.peek(src, dst, n): n bytes copied between two addresses of the context's space (tests read the EditBox
+    // arena with it)
+    {"chareditor.peek", "default", "void", 3, 0,
+     [](Ctx &c, const uint32_t *a, Ret &) {
+       for (uint32_t i = 0; i < a[2]; ++i) c.mem.store<uint8_t>(a[1] + i, c.mem.load<uint8_t>(a[0] + i));
+     },
+     &g_negctl_none},
     {"showCharacterEditor", "default", "int", 2, 0,
      [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(show_character_editor(c, S(a, 0), S(a, 1))); }, &g_negctl_editor},
     {"pickCharEditor", "default", "int", 1, 0, [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(pick_char_editor(c, S(a, 0))); },
@@ -796,6 +1076,21 @@ const FuncDef kFuncs[] = {
      [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(nearest_char_control(c, S(a, 0), S(a, 1))); }, &g_negctl_nearest},
     {"charEditorZone", "default", "int", 2, 0,
      [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(char_editor_zone(c, S(a, 0), S(a, 1))); }, &g_negctl_zone},
+    // the EditBox family (S1.5): thiscall, a[0] = this
+    {"EditBox::setText", "thiscall", "void", 2, 0, [](Ctx &c, const uint32_t *a, Ret &) { editbox_set_text(c, a[0], a[1]); },
+     &g_negctl_eb_settext},
+    {"EditBox::resizeBuffer", "thiscall", "void", 2, 0,
+     [](Ctx &c, const uint32_t *a, Ret &) { editbox_resize_buffer(c, a[0], a[1]); }, &g_negctl_eb_resize},
+    {"EditBox::insertChar", "thiscall", "int", 3, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(editbox_insert_char(c, a[0], S(a, 1))); }, &g_negctl_eb_insert},
+    {"EditBox::onKey", "thiscall", "int", 2, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(editbox_on_key(c, a[0], S(a, 1))); }, &g_negctl_eb_key},
+    {"EditBox::resetFields", "thiscall", "int", 1, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(editbox_reset_fields(c, a[0])); }, &g_negctl_eb_reset},
+    {"EditBox::releaseState", "thiscall", "int", 1, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(editbox_release_state(c, a[0])); }, &g_negctl_eb_release},
+    {"EditBox::create", "thiscall", "int", 7, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) { r.set_i32(editbox_create(c, a[0], a[5])); }, &g_negctl_eb_create},
 };
 }  // namespace
 

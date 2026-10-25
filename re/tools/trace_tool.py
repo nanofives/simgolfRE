@@ -92,12 +92,20 @@ def install(S, scenario: str, mode: str, state: dict):
     S.Run = TraceRun
     if mode == "replay":
         polls = state["polls"]
+        # U-1714 (roadmap S8.2): a scenario that ends with the game's own exit (its lockstep function has expect_exit) is
+        # replayed expecting the exit and keeps answering polls after the recorded ones, until ExitProcess ends the trace
+        exits = getattr(S.SCENARIOS.get(scenario), "expect_exit", False)
 
         def replay_script(c):
+            if exits:
+                c.run.exit_expected = True
             for name in polls[:-1]:
                 if name:
                     yield from c.checkpoint(name)
                 else:
+                    yield
+            if exits:
+                for _ in range(300):
                     yield
         S.SCENARIOS[scenario] = replay_script
 

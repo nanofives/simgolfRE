@@ -1397,6 +1397,45 @@ save, balance, sim state or a frame) are in log/roadmap/S6/ASK_LIST.md for Maria
 D47b D48a D48b D49a D52a D52b3. Findings in the original: loadGolfPro hangs for difficulty 5 and 6; replaceInText derails the return address from a
 tail of 0x200 bytes (0x204 returns to the tail's own bytes); spawnObject's cell search draws about 250,000 times before the budget ends when all 16
 cells are taken; the five existing switch rows keep their evidence, chooseShotTarget.strictFlagSticky still has none (U-1012).
+Roadmap S1, loose ends of phases 3 and 4 (2026-10-24, log/roadmap/S1, plan re/roadmap/S1_steps.tsv, five step workers on claude2 and an
+integration check): U-1067 resolved: trace_format.validate rejects a first-generation input MSG (WM_KEYDOWN/UP, SYSKEY, mouse buttons) with
+no earlier harness DELIVER (WM_CHAR and WM_MOUSEMOVE are derived and exempt; a trace slice is exempt up to its second FRAME, U-1151);
+266 of 266 stored traces validate. U-1060 resolved: the four header read sites (loadGame, loadCourse) and the two writers are pinned by
+port/test/test_sve_header_readers.py and none reads past the NUL, so the leftover g_textBuffer residue is dead data. U-1012 resolved:
+port/test/test_shots_strict.py builds GameStates (42 of 700 seeds) where the original keeps chooseShotTarget's strict flag (frame word
+[esp+0xb4], one store at 0x00423b0e, read at 0x00423b20) after a later landing fails the test; the port with the switch ON equals the
+original in Unicorn (eax and the whole image), OFF is RED 8 / 8 (SG_EMU_ORACLE=1). U-1066: cov_r_theme_cancel (the Cancel after a row
+press in the same visit; showThemePackSelect control 2 RED) and cov_r_palette_hot (Undo hotspot 0x15 and wrench tab 0x16) are pinned;
+the palette SpriteRefs 84 / 88 are read only by showInfoCursorPanel's drawing, so loadInterfaceArt control 3 reads GREEN by hash and
+test_s1_3_scenarios.py compares all 96 cut fields with the original's images (U-1170); cov_r_tutorial runs showTutorialText pages 1..29 and
+30 (the page word 0x00567a18 and bit 15 of g_flags are harness writes: no instruction stores a nonzero page, U-1182), boot 1,195 / 1,195,
+controls 1..4 RED. U-1051: cov_r_flic_input posts a key in courseActionMenu's wait; the original dispatches it from the 15th pumpInput483bd0
+of loadFlic (loadWorldAssets makes no clock read); the port takes it with PumpKind::Load (U-1181, U-1183 open). U-1032: the character editor's
+bio entry is ported over the EditBox family (chareditor.cpp: create, setText, resizeBuffer, insertChar, onKey without Up / Down, resetFields,
+releaseState); the original routes keys to a focused EditBox through the window tree, so a key it takes leaves a MSG record with no HANDLER
+record and tick.cpp parse_trace makes those RootHandler commands 12 / 13 (none exist in the 64 older traces); the bio loop makes no clock call,
+so cov_r_bio posts its keys from the scenario agent's own doAction at leaveModal483d80 (DELIVER logged); oracle 7 x 300 EditBox cases and 120
+editor cases (212 bio entries) equal the original, golden_chareditor.json re-pinned for cases 43, 61, 90 after the oracle was GREEN. New
+scenarios register through the hook at the end of re/tools/scenario.py (re/tools/scenario_s1_*.py). Mirror run with every patch: boot gate 63
+PASS / 2 KNOWN / 1 NO_FRAMES (the three rows that differ from the S0 baseline are cov_r_bio, cov_r_flic_input, cov_r_tutorial), segments 205 / 205
+x64 and Win32 with every digest equal. Findings in the original: Window::key / dispatchAccel feed an EditBox before any root handler; the
+bio loop never reads the clock; the page word has no nonzero store. Open: U-1170..U-1172, U-1180..U-1183, U-1190..U-1195, U-1151, U-1160..U-1162.
+S8 video, skip path (2026-10-24, D2: no decoder this round; re/analysis/video/MOVIES.md, movie_runs.md, skip_path.md, re/port/movies.tsv,
+flics_census.tsv): the game plays exactly two Bink movies, both through playAudioFile 0x0043cce0 -> BinkPlayer::play 0x00487090 (its only caller): the
+intro SMSG_introfinal.bik from showTitleScreen 0x0043cd97 (path 0x004c8a0c) and the closing SMSG_closingfinal.bik from mainLoop 0x0040faa4 (path
+0x004c6bb4); jgld.dll, Terrain.dll and sound.dll import nothing from binkw32. No FLIC is a cutscene: all 1,893 .flc files are loadFlic sprite animations
+(S3); the serviceMovie family (0x0049c8e0) is an unused RIFF/mmio player (table 0x00840698 never written). Measured on the original with the intro ON
+(instance s8_2, three runs per condition identical): both play to the clip end (825 and 589 frames), binkw32 paces with QueryPerformanceCounter (54,945
+main-thread calls for the intro) and never reads timeGetTime, so the movies add no virtual T and no scenario poll runs inside them; against the skipped
+intro the only run-stable GameState word that differs is g_ui83ab9c 0x0083ab9c (0 -> 1, written by BinkPlayer::play, cleared by the root-window input
+handlers); g_seedTime, g_rng and every sim object are equal. Port: module `video` (port/src/sim/video.cpp, portsim/sim/video.h) ports playAudioFile and
+BinkPlayer::play / setTarget / close behind a MovieHost; the default host answers "unavailable", i.e. the original's own BinkOpen-NULL path (deadline word
+set and cleared, g_bink target set, one pumpInput483bd0, g_ui83ab9c untouched), which is what the pinned corpus recorded; the intro call is made from the
+boot (tick_boot.inc), the closing call from the QUIT block (playAudioFile is no longer a drop). binkw32's QPC records never enter a clock list
+(parse_trace keeps timeGetTime values and reads are site-keyed), so an intro-ON trace needs nothing else. Evidence: emulator oracle 23 / 23 cases, 12 / 12
+branches both ways; 5 negative controls RED; new intro-ON boot scenario cov_r_s8_play (re/tools/s8_boot_capture.py) PASS 216 / 216 and to the exit with the
+quit files equal; boot rows 61 / 61 unchanged, segments 205 / 205 x64 = Win32 with 0 digests changed. U-1700..U-1723 (input during a playing movie is
+modelled not measured; the drawing around a movie and the sound argument are not ported).
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

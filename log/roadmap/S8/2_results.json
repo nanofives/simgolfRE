@@ -1,0 +1,1920 @@
+{
+ "scenarios": {
+  "cov_r_s8_full": {
+   "identity_on": {
+    "labels": [
+     "rec_on",
+     "on2",
+     "on3"
+    ],
+    "all_identical": true,
+    "clock_total": 138628,
+    "checkpoints": {
+     "intro_early": {
+      "T": 1050697,
+      "tgt": 2121,
+      "qpc": 68097,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "f387cafd52d10e54"
+     },
+     "menu": {
+      "T": 1053828,
+      "tgt": 5252,
+      "qpc": 68097,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "f387cafd52d10e54"
+     },
+     "hover_exit": {
+      "T": 1055444,
+      "tgt": 6868,
+      "qpc": 68097,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "51d6ebd9788bb1fe",
+      "objhash": "829224eb5b5121b6"
+     },
+     "quit_00": {
+      "T": 1058676,
+      "tgt": 10100,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "09fc324074572393",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_01": {
+      "T": 1060797,
+      "tgt": 12221,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "fb23776f43db3d5c",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_02": {
+      "T": 1062918,
+      "tgt": 14342,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "9730b17fef5e1ee0",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_03": {
+      "T": 1065039,
+      "tgt": 16463,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "c671101f674c5c4f",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_04": {
+      "T": 1067160,
+      "tgt": 18584,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "6736b2d1c03092f2",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_05": {
+      "T": 1069281,
+      "tgt": 20705,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "9b703fb7befe9d0f",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_06": {
+      "T": 1071402,
+      "tgt": 22826,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "a3152ee33c37549f",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_07": {
+      "T": 1073523,
+      "tgt": 24947,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "0a0195ab00f4fa7e",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_08": {
+      "T": 1075644,
+      "tgt": 27068,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "9db312d4bc147954",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_09": {
+      "T": 1077765,
+      "tgt": 29189,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "a5ebdc924a61d7bd",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "credits": {
+      "T": 1079886,
+      "tgt": 31310,
+      "qpc": 107318,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "abe33d3eb335052d",
+      "objhash": "ea05e07370dbfd7a"
+     }
+    },
+    "exit_code": 0
+   },
+   "identity_skip": {
+    "labels": [
+     "skip_rec",
+     "skip2",
+     "skip3"
+    ],
+    "all_identical": true,
+    "clock_total": 83683,
+    "checkpoints": {
+     "intro_early": {
+      "T": 1050697,
+      "tgt": 2121,
+      "qpc": 13151,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "4bf9ef2018c1c376"
+     },
+     "menu": {
+      "T": 1053828,
+      "tgt": 5252,
+      "qpc": 13151,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "4bf9ef2018c1c376"
+     },
+     "hover_exit": {
+      "T": 1055444,
+      "tgt": 6868,
+      "qpc": 13151,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "51d6ebd9788bb1fe",
+      "objhash": "c44ce59a86e4b00f"
+     },
+     "quit_00": {
+      "T": 1058676,
+      "tgt": 10100,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "09fc324074572393",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_01": {
+      "T": 1060797,
+      "tgt": 12221,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "fb23776f43db3d5c",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_02": {
+      "T": 1062918,
+      "tgt": 14342,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "9730b17fef5e1ee0",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_03": {
+      "T": 1065039,
+      "tgt": 16463,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "c671101f674c5c4f",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_04": {
+      "T": 1067160,
+      "tgt": 18584,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "6736b2d1c03092f2",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_05": {
+      "T": 1069281,
+      "tgt": 20705,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "9b703fb7befe9d0f",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_06": {
+      "T": 1071402,
+      "tgt": 22826,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "a3152ee33c37549f",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_07": {
+      "T": 1073523,
+      "tgt": 24947,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "0a0195ab00f4fa7e",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_08": {
+      "T": 1075644,
+      "tgt": 27068,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "9db312d4bc147954",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "quit_09": {
+      "T": 1077765,
+      "tgt": 29189,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "a5ebdc924a61d7bd",
+      "objhash": "ea05e07370dbfd7a"
+     },
+     "credits": {
+      "T": 1079886,
+      "tgt": 31310,
+      "qpc": 52373,
+      "state_sha": "a00913fbadf2f395",
+      "frame_sha": "abe33d3eb335052d",
+      "objhash": "ea05e07370dbfd7a"
+     }
+    },
+    "exit_code": 0
+   },
+   "clock_added_by_intro": {
+    "qpc binkw32.dll binkw32.dll+b6e7": [
+     94157,
+     39212,
+     54945
+    ]
+   },
+   "clock_sites_common": {
+    "qpc jgld.dll jgld.dll+6a414": [
+     13160,
+     13160
+    ],
+    "tgt golf_clean.exe golf_clean.exe+4bbd9": [
+     1936,
+     1936
+    ],
+    "tgt golf_clean.exe golf_clean.exe+5bfb3": [
+     2592,
+     2592
+    ],
+    "tgt golf_clean.exe golf_clean.exe+5bfb7": [
+     2592,
+     2592
+    ],
+    "tgt golf_clean.exe golf_clean.exe+5bfe3": [
+     24187,
+     24187
+    ]
+   },
+   "statediff": {
+    "intro_early": {
+     "differ_first_runs": 47150,
+     "unstable_on": 47150,
+     "unstable_skip": 46873,
+     "attributed": [
+      {
+       "va": "0x0083ab9c",
+       "symbol": "g_ui83ab9c",
+       "class": "engine",
+       "pointer_flag": "none",
+       "skip": "0x00000000",
+       "on": "0x00000001",
+       "delta": "0x00000001",
+       "heap_pointer_like": false
+      }
+     ]
+    },
+    "menu": {
+     "differ_first_runs": 47150,
+     "unstable_on": 47150,
+     "unstable_skip": 46873,
+     "attributed": [
+      {
+       "va": "0x0083ab9c",
+       "symbol": "g_ui83ab9c",
+       "class": "engine",
+       "pointer_flag": "none",
+       "skip": "0x00000000",
+       "on": "0x00000001",
+       "delta": "0x00000001",
+       "heap_pointer_like": false
+      }
+     ]
+    },
+    "hover_exit": {
+     "differ_first_runs": 47150,
+     "unstable_on": 47150,
+     "unstable_skip": 46873,
+     "attributed": [
+      {
+       "va": "0x0083ab9c",
+       "symbol": "g_ui83ab9c",
+       "class": "engine",
+       "pointer_flag": "none",
+       "skip": "0x00000000",
+       "on": "0x00000001",
+       "delta": "0x00000001",
+       "heap_pointer_like": false
+      }
+     ]
+    },
+    "quit_00": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_01": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_02": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_03": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_04": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_05": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_06": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_07": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_08": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "quit_09": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    },
+    "credits": {
+     "differ_first_runs": 47149,
+     "unstable_on": 47150,
+     "unstable_skip": 46872,
+     "attributed": []
+    }
+   },
+   "movies_on": [
+    {
+     "name": "./flics/SMSG_introfinal.bik",
+     "open_hdr": [
+      800,
+      600,
+      825,
+      1,
+      4294967295,
+      15,
+      1,
+      0
+     ],
+     "close_hdr": [
+      800,
+      600,
+      825,
+      825,
+      825,
+      15,
+      1,
+      0
+     ],
+     "calls": {
+      "_BinkOpen@8": 1,
+      "_BinkBufferSetOffset@12": 2,
+      "_BinkBufferOpen@16": 1,
+      "_BinkWait@4": 51640,
+      "_BinkDoFrame@4": 825,
+      "_BinkBufferLock@4": 825,
+      "_BinkCopyToBuffer@28": 825,
+      "_BinkBufferUnlock@4": 825,
+      "_BinkGetRects@8": 825,
+      "_BinkBufferBlit@12": 825,
+      "_BinkNextFrame@4": 824,
+      "_BinkClose@4": 1
+     },
+     "virtual_ms_q": 54940.0,
+     "virtual_ms_t": 0,
+     "ended_by": "clip end (FrameNum == Frames at BinkClose)",
+     "wait_nonzero_calls": 50815,
+     "wait_zero_calls": 825,
+     "qpc_steps_per_export": {
+      "_BinkBufferSetOffset@12": 0,
+      "_BinkBufferOpen@16": 0,
+      "_BinkWait@4": 51639,
+      "_BinkDoFrame@4": 2476,
+      "_BinkBufferLock@4": 0,
+      "_BinkCopyToBuffer@28": 0,
+      "_BinkBufferUnlock@4": 0,
+      "_BinkGetRects@8": 0,
+      "_BinkBufferBlit@12": 0,
+      "_BinkNextFrame@4": 824,
+      "_BinkClose@4": 1
+     },
+     "copy_flag_values": [
+      3,
+      2147483651
+     ],
+     "open_args": [
+      5016076,
+      16777216
+     ],
+     "first_rows": [
+      [
+       1,
+       2,
+       "_BinkOpen@8",
+       [
+        5016076,
+        16777216
+       ],
+       12530400,
+       {
+        "name": "./flics/SMSG_introfinal.bik",
+        "hdr": [
+         800,
+         600,
+         825,
+         1,
+         4294967295,
+         15,
+         1,
+         0
+        ]
+       },
+       130000
+      ],
+      [
+       2,
+       2,
+       "_BinkBufferSetOffset@12",
+       [
+        12519744,
+        0,
+        0
+       ],
+       1,
+       null,
+       130000
+      ],
+      [
+       3,
+       2,
+       "_BinkBufferOpen@16",
+       [
+        16386864,
+        800,
+        600,
+        0
+       ],
+       12519744,
+       null,
+       130000
+      ],
+      [
+       4,
+       2,
+       "_BinkBufferSetOffset@12",
+       [
+        12519744,
+        0,
+        0
+       ],
+       1,
+       null,
+       130000
+      ],
+      [
+       5,
+       2,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       0,
+       [
+        1,
+        2,
+        2,
+        130000,
+        130000
+       ],
+       130000
+      ],
+      [
+       6,
+       2,
+       "_BinkDoFrame@4",
+       [
+        12530400
+       ],
+       0,
+       null,
+       170000
+      ],
+      [
+       7,
+       2,
+       "_BinkBufferLock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       8,
+       2,
+       "_BinkCopyToBuffer@28",
+       [
+        12530400,
+        96272384,
+        3200,
+        600,
+        0,
+        0,
+        2147483651
+       ],
+       0,
+       null,
+       170000
+      ],
+      [
+       9,
+       2,
+       "_BinkBufferUnlock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       10,
+       2,
+       "_BinkGetRects@8",
+       [
+        12530400,
+        3
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       11,
+       2,
+       "_BinkBufferBlit@12",
+       [
+        12519744,
+        12530452,
+        1
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       12,
+       2,
+       "_BinkNextFrame@4",
+       [
+        12530400
+       ],
+       3360,
+       null,
+       180000
+      ],
+      [
+       13,
+       2,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       1,
+       [
+        63,
+        2,
+        2,
+        190000,
+        810000
+       ],
+       190000
+      ],
+      [
+       14,
+       2,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       0,
+       [
+        1,
+        2,
+        2,
+        820000,
+        820000
+       ],
+       820000
+      ]
+     ],
+     "last_rows": [
+      [
+       7420,
+       2,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       1,
+       [
+        62,
+        2,
+        2,
+        548870000,
+        549480000
+       ],
+       548870000
+      ],
+      [
+       7421,
+       2,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       0,
+       [
+        1,
+        2,
+        2,
+        549490000,
+        549490000
+       ],
+       549490000
+      ],
+      [
+       7422,
+       2,
+       "_BinkDoFrame@4",
+       [
+        12530400
+       ],
+       0,
+       null,
+       549520000
+      ],
+      [
+       7423,
+       2,
+       "_BinkBufferLock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       549520000
+      ],
+      [
+       7424,
+       2,
+       "_BinkCopyToBuffer@28",
+       [
+        12530400,
+        96272384,
+        3200,
+        600,
+        0,
+        0,
+        3
+       ],
+       0,
+       null,
+       549520000
+      ],
+      [
+       7425,
+       2,
+       "_BinkBufferUnlock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       549520000
+      ],
+      [
+       7426,
+       2,
+       "_BinkGetRects@8",
+       [
+        12530400,
+        3
+       ],
+       0,
+       null,
+       549520000
+      ],
+      [
+       7427,
+       2,
+       "_BinkBufferBlit@12",
+       [
+        12519744,
+        12530452,
+        0
+       ],
+       12530452,
+       null,
+       549520000
+      ],
+      [
+       7428,
+       2,
+       "_BinkClose@4",
+       [
+        12530400
+       ],
+       1,
+       {
+        "hdr": [
+         800,
+         600,
+         825,
+         825,
+         825,
+         15,
+         1,
+         0
+        ]
+       },
+       549530000
+      ]
+     ]
+    },
+    {
+     "name": "./flics/SMSG_closingfinal.bik",
+     "open_hdr": [
+      800,
+      600,
+      589,
+      1,
+      4294967295,
+      15,
+      1,
+      0
+     ],
+     "close_hdr": [
+      800,
+      600,
+      589,
+      589,
+      589,
+      15,
+      1,
+      0
+     ],
+     "calls": {
+      "_BinkOpen@8": 1,
+      "_BinkBufferSetOffset@12": 2,
+      "_BinkBufferOpen@16": 1,
+      "_BinkWait@4": 36851,
+      "_BinkDoFrame@4": 589,
+      "_BinkBufferLock@4": 589,
+      "_BinkCopyToBuffer@28": 589,
+      "_BinkBufferUnlock@4": 589,
+      "_BinkGetRects@8": 589,
+      "_BinkBufferBlit@12": 589,
+      "_BinkNextFrame@4": 588,
+      "_BinkClose@4": 1
+     },
+     "virtual_ms_q": 39207.0,
+     "virtual_ms_t": 0,
+     "ended_by": "clip end (FrameNum == Frames at BinkClose)",
+     "wait_nonzero_calls": 36262,
+     "wait_zero_calls": 589,
+     "qpc_steps_per_export": {
+      "_BinkBufferSetOffset@12": 0,
+      "_BinkBufferOpen@16": 0,
+      "_BinkWait@4": 36850,
+      "_BinkDoFrame@4": 1768,
+      "_BinkBufferLock@4": 0,
+      "_BinkCopyToBuffer@28": 0,
+      "_BinkBufferUnlock@4": 0,
+      "_BinkGetRects@8": 0,
+      "_BinkBufferBlit@12": 0,
+      "_BinkNextFrame@4": 588,
+      "_BinkClose@4": 1
+     },
+     "copy_flag_values": [
+      3,
+      2147483651
+     ],
+     "open_args": [
+      5008308,
+      16777216
+     ],
+     "first_rows": [
+      [
+       7431,
+       8078,
+       "_BinkOpen@8",
+       [
+        5008308,
+        16777216
+       ],
+       12530400,
+       {
+        "name": "./flics/SMSG_closingfinal.bik",
+        "hdr": [
+         800,
+         600,
+         589,
+         1,
+         4294967295,
+         15,
+         1,
+         0
+        ]
+       },
+       681070000
+      ],
+      [
+       7432,
+       8078,
+       "_BinkBufferSetOffset@12",
+       [
+        12519744,
+        0,
+        0
+       ],
+       1,
+       null,
+       681070000
+      ],
+      [
+       7433,
+       8078,
+       "_BinkBufferOpen@16",
+       [
+        16386864,
+        800,
+        600,
+        0
+       ],
+       12519744,
+       null,
+       681070000
+      ],
+      [
+       7434,
+       8078,
+       "_BinkBufferSetOffset@12",
+       [
+        12519744,
+        0,
+        0
+       ],
+       1,
+       null,
+       681070000
+      ],
+      [
+       7435,
+       8078,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       0,
+       [
+        1,
+        8078,
+        8078,
+        681070000,
+        681070000
+       ],
+       681070000
+      ],
+      [
+       7436,
+       8078,
+       "_BinkDoFrame@4",
+       [
+        12530400
+       ],
+       0,
+       null,
+       681110000
+      ],
+      [
+       7437,
+       8078,
+       "_BinkBufferLock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       681110000
+      ],
+      [
+       7438,
+       8078,
+       "_BinkCopyToBuffer@28",
+       [
+        12530400,
+        236322816,
+        3200,
+        600,
+        0,
+        0,
+        2147483651
+       ],
+       0,
+       null,
+       681110000
+      ],
+      [
+       7439,
+       8078,
+       "_BinkBufferUnlock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       681110000
+      ],
+      [
+       7440,
+       8078,
+       "_BinkGetRects@8",
+       [
+        12530400,
+        3
+       ],
+       1,
+       null,
+       681110000
+      ],
+      [
+       7441,
+       8078,
+       "_BinkBufferBlit@12",
+       [
+        12519744,
+        12530452,
+        1
+       ],
+       1,
+       null,
+       681110000
+      ],
+      [
+       7442,
+       8078,
+       "_BinkNextFrame@4",
+       [
+        12530400
+       ],
+       2416,
+       null,
+       681120000
+      ],
+      [
+       7443,
+       8078,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       1,
+       [
+        63,
+        8078,
+        8078,
+        681130000,
+        681750000
+       ],
+       681130000
+      ],
+      [
+       7444,
+       8078,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       0,
+       [
+        1,
+        8078,
+        8078,
+        681760000,
+        681760000
+       ],
+       681760000
+      ]
+     ],
+     "last_rows": [
+      [
+       12726,
+       8078,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       1,
+       [
+        62,
+        8078,
+        8078,
+        1072480000,
+        1073090000
+       ],
+       1072480000
+      ],
+      [
+       12727,
+       8078,
+       "_BinkWait@4",
+       [
+        12530400
+       ],
+       0,
+       [
+        1,
+        8078,
+        8078,
+        1073100000,
+        1073100000
+       ],
+       1073100000
+      ],
+      [
+       12728,
+       8078,
+       "_BinkDoFrame@4",
+       [
+        12530400
+       ],
+       0,
+       null,
+       1073130000
+      ],
+      [
+       12729,
+       8078,
+       "_BinkBufferLock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       1073130000
+      ],
+      [
+       12730,
+       8078,
+       "_BinkCopyToBuffer@28",
+       [
+        12530400,
+        236322816,
+        3200,
+        600,
+        0,
+        0,
+        3
+       ],
+       0,
+       null,
+       1073130000
+      ],
+      [
+       12731,
+       8078,
+       "_BinkBufferUnlock@4",
+       [
+        12519744
+       ],
+       1,
+       null,
+       1073130000
+      ],
+      [
+       12732,
+       8078,
+       "_BinkGetRects@8",
+       [
+        12530400,
+        3
+       ],
+       0,
+       null,
+       1073130000
+      ],
+      [
+       12733,
+       8078,
+       "_BinkBufferBlit@12",
+       [
+        12519744,
+        12530452,
+        0
+       ],
+       12530452,
+       null,
+       1073130000
+      ],
+      [
+       12734,
+       8078,
+       "_BinkClose@4",
+       [
+        12530400
+       ],
+       1,
+       {
+        "hdr": [
+         800,
+         600,
+         589,
+         589,
+         589,
+         15,
+         1,
+         0
+        ]
+       },
+       1073140000
+      ]
+     ]
+    }
+   ],
+   "movies_skip": [
+    {
+     "name": "./flics/SMSG_introfinal.bik",
+     "calls": {
+      "_BinkOpen@8": 1
+     },
+     "ended_by": null,
+     "open_returned_null": true
+    },
+    {
+     "name": "./flics/SMSG_closingfinal.bik",
+     "calls": {
+      "_BinkOpen@8": 1,
+      "_BinkBufferSetOffset@12": 2,
+      "_BinkBufferOpen@16": 1,
+      "_BinkWait@4": 36851,
+      "_BinkDoFrame@4": 589,
+      "_BinkBufferLock@4": 589,
+      "_BinkCopyToBuffer@28": 589,
+      "_BinkBufferUnlock@4": 589,
+      "_BinkGetRects@8": 589,
+      "_BinkBufferBlit@12": 589,
+      "_BinkNextFrame@4": 588,
+      "_BinkClose@4": 1
+     },
+     "ended_by": "clip end (FrameNum == Frames at BinkClose)",
+     "open_returned_null": false
+    }
+   ],
+   "bink_notes": []
+  },
+  "cov_r_s8_intro": {
+   "identity_on": {
+    "labels": [
+     "i1",
+     "i2",
+     "i3"
+    ],
+    "all_identical": true,
+    "clock_total": 78500,
+    "checkpoints": {
+     "intro_early": {
+      "T": 1050697,
+      "tgt": 2121,
+      "qpc": 68097,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "f387cafd52d10e54"
+     },
+     "menu": {
+      "T": 1053828,
+      "tgt": 5252,
+      "qpc": 68097,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "f387cafd52d10e54"
+     },
+     "menu_late": {
+      "T": 1058979,
+      "tgt": 10403,
+      "qpc": 68097,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "f387cafd52d10e54"
+     }
+    },
+    "exit_code": null
+   },
+   "identity_skip": {
+    "labels": [
+     "j1",
+     "j2",
+     "j3"
+    ],
+    "all_identical": true,
+    "clock_total": 23554,
+    "checkpoints": {
+     "intro_early": {
+      "T": 1050697,
+      "tgt": 2121,
+      "qpc": 13151,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "4bf9ef2018c1c376"
+     },
+     "menu": {
+      "T": 1053828,
+      "tgt": 5252,
+      "qpc": 13151,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "4bf9ef2018c1c376"
+     },
+     "menu_late": {
+      "T": 1058979,
+      "tgt": 10403,
+      "qpc": 13151,
+      "state_sha": "162ce36b499ecb35",
+      "frame_sha": "b1e9c3e7ac5a01d9",
+      "objhash": "4bf9ef2018c1c376"
+     }
+    },
+    "exit_code": null
+   },
+   "clock_added_by_intro": {
+    "qpc binkw32.dll binkw32.dll+b6d3": [
+     1,
+     0,
+     1
+    ],
+    "qpc binkw32.dll binkw32.dll+b6e7": [
+     54945,
+     0,
+     54945
+    ]
+   },
+   "clock_sites_common": {
+    "qpc jgld.dll jgld.dll+6a414": [
+     13151,
+     13151
+    ],
+    "tgt golf_clean.exe golf_clean.exe+5bfb3": [
+     921,
+     921
+    ],
+    "tgt golf_clean.exe golf_clean.exe+5bfb7": [
+     921,
+     921
+    ],
+    "tgt golf_clean.exe golf_clean.exe+5bfe3": [
+     8559,
+     8559
+    ]
+   },
+   "statediff": {
+    "intro_early": {
+     "differ_first_runs": 47151,
+     "unstable_on": 47150,
+     "unstable_skip": 47150,
+     "attributed": [
+      {
+       "va": "0x0083ab9c",
+       "symbol": "g_ui83ab9c",
+       "class": "engine",
+       "pointer_flag": "none",
+       "skip": "0x00000000",
+       "on": "0x00000001",
+       "delta": "0x00000001",
+       "heap_pointer_like": false
+      }
+     ]
+    },
+    "menu": {
+     "differ_first_runs": 47151,
+     "unstable_on": 47150,
+     "unstable_skip": 47150,
+     "attributed": [
+      {
+       "va": "0x0083ab9c",
+       "symbol": "g_ui83ab9c",
+       "class": "engine",
+       "pointer_flag": "none",
+       "skip": "0x00000000",
+       "on": "0x00000001",
+       "delta": "0x00000001",
+       "heap_pointer_like": false
+      }
+     ]
+    },
+    "menu_late": {
+     "differ_first_runs": 47151,
+     "unstable_on": 47150,
+     "unstable_skip": 47150,
+     "attributed": [
+      {
+       "va": "0x0083ab9c",
+       "symbol": "g_ui83ab9c",
+       "class": "engine",
+       "pointer_flag": "none",
+       "skip": "0x00000000",
+       "on": "0x00000001",
+       "delta": "0x00000001",
+       "heap_pointer_like": false
+      }
+     ]
+    }
+   },
+   "movies_on": [
+    {
+     "name": "./flics/SMSG_introfinal.bik",
+     "open_hdr": [
+      800,
+      600,
+      825,
+      1,
+      4294967295,
+      15,
+      1,
+      0
+     ],
+     "close_hdr": [
+      800,
+      600,
+      825,
+      825,
+      825,
+      15,
+      1,
+      0
+     ],
+     "calls": {
+      "_BinkOpen@8": 1,
+      "_BinkBufferSetOffset@12": 2,
+      "_BinkBufferOpen@16": 1,
+      "_BinkWait@4": 51640,
+      "_BinkDoFrame@4": 825,
+      "_BinkBufferLock@4": 825,
+      "_BinkCopyToBuffer@28": 825,
+      "_BinkBufferUnlock@4": 825,
+      "_BinkGetRects@8": 825,
+      "_BinkBufferBlit@12": 825,
+      "_BinkNextFrame@4": 824,
+      "_BinkClose@4": 1
+     },
+     "virtual_ms_q": 54940.0,
+     "virtual_ms_t": 0,
+     "ended_by": "clip end (FrameNum == Frames at BinkClose)",
+     "wait_nonzero_calls": 50815,
+     "wait_zero_calls": 825,
+     "qpc_steps_per_export": {
+      "_BinkBufferSetOffset@12": 0,
+      "_BinkBufferOpen@16": 0,
+      "_BinkWait@4": 51639,
+      "_BinkDoFrame@4": 2476,
+      "_BinkBufferLock@4": 0,
+      "_BinkCopyToBuffer@28": 0,
+      "_BinkBufferUnlock@4": 0,
+      "_BinkGetRects@8": 0,
+      "_BinkBufferBlit@12": 0,
+      "_BinkNextFrame@4": 824,
+      "_BinkClose@4": 1
+     },
+     "copy_flag_values": [
+      3,
+      2147483651
+     ],
+     "open_args": [
+      5016076,
+      16777216
+     ],
+     "first_rows": [
+      [
+       1,
+       2,
+       "_BinkOpen@8",
+       [
+        5016076,
+        16777216
+       ],
+       46478048,
+       {
+        "name": "./flics/SMSG_introfinal.bik",
+        "hdr": [
+         800,
+         600,
+         825,
+         1,
+         4294967295,
+         15,
+         1,
+         0
+        ]
+       },
+       130000
+      ],
+      [
+       2,
+       2,
+       "_BinkBufferSetOffset@12",
+       [
+        46467392,
+        0,
+        0
+       ],
+       1,
+       null,
+       130000
+      ],
+      [
+       3,
+       2,
+       "_BinkBufferOpen@16",
+       [
+        20317508,
+        800,
+        600,
+        0
+       ],
+       46467392,
+       null,
+       130000
+      ],
+      [
+       4,
+       2,
+       "_BinkBufferSetOffset@12",
+       [
+        46467392,
+        0,
+        0
+       ],
+       1,
+       null,
+       130000
+      ],
+      [
+       5,
+       2,
+       "_BinkWait@4",
+       [
+        46478048
+       ],
+       0,
+       [
+        1,
+        2,
+        2,
+        130000,
+        130000
+       ],
+       130000
+      ],
+      [
+       6,
+       2,
+       "_BinkDoFrame@4",
+       [
+        46478048
+       ],
+       0,
+       null,
+       170000
+      ],
+      [
+       7,
+       2,
+       "_BinkBufferLock@4",
+       [
+        46467392
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       8,
+       2,
+       "_BinkCopyToBuffer@28",
+       [
+        46478048,
+        96468992,
+        3200,
+        600,
+        0,
+        0,
+        2147483651
+       ],
+       0,
+       null,
+       170000
+      ],
+      [
+       9,
+       2,
+       "_BinkBufferUnlock@4",
+       [
+        46467392
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       10,
+       2,
+       "_BinkGetRects@8",
+       [
+        46478048,
+        3
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       11,
+       2,
+       "_BinkBufferBlit@12",
+       [
+        46467392,
+        46478100,
+        1
+       ],
+       1,
+       null,
+       170000
+      ],
+      [
+       12,
+       2,
+       "_BinkNextFrame@4",
+       [
+        46478048
+       ],
+       3360,
+       null,
+       180000
+      ],
+      [
+       13,
+       2,
+       "_BinkWait@4",
+       [
+        46478048
+       ],
+       1,
+       [
+        63,
+        2,
+        2,
+        190000,
+        810000
+       ],
+       190000
+      ],
+      [
+       14,
+       2,
+       "_BinkWait@4",
+       [
+        46478048
+       ],
+       0,
+       [
+        1,
+        2,
+        2,
+        820000,
+        820000
+       ],
+       820000
+      ]
+     ],
+     "last_rows": [
+      [
+       7420,
+       2,
+       "_BinkWait@4",
+       [
+        46478048
+       ],
+       1,
+       [
+        62,
+        2,
+        2,
+        548870000,
+        549480000
+       ],
+       548870000
+      ],
+      [
+       7421,
+       2,
+       "_BinkWait@4",
+       [
+        46478048
+       ],
+       0,
+       [
+        1,
+        2,
+        2,
+        549490000,
+        549490000
+       ],
+       549490000
+      ],
+      [
+       7422,
+       2,
+       "_BinkDoFrame@4",
+       [
+        46478048
+       ],
+       0,
+       null,
+       549520000
+      ],
+      [
+       7423,
+       2,
+       "_BinkBufferLock@4",
+       [
+        46467392
+       ],
+       1,
+       null,
+       549520000
+      ],
+      [
+       7424,
+       2,
+       "_BinkCopyToBuffer@28",
+       [
+        46478048,
+        96468992,
+        3200,
+        600,
+        0,
+        0,
+        3
+       ],
+       0,
+       null,
+       549520000
+      ],
+      [
+       7425,
+       2,
+       "_BinkBufferUnlock@4",
+       [
+        46467392
+       ],
+       1,
+       null,
+       549520000
+      ],
+      [
+       7426,
+       2,
+       "_BinkGetRects@8",
+       [
+        46478048,
+        3
+       ],
+       0,
+       null,
+       549520000
+      ],
+      [
+       7427,
+       2,
+       "_BinkBufferBlit@12",
+       [
+        46467392,
+        46478100,
+        0
+       ],
+       46478100,
+       null,
+       549520000
+      ],
+      [
+       7428,
+       2,
+       "_BinkClose@4",
+       [
+        46478048
+       ],
+       1,
+       {
+        "hdr": [
+         800,
+         600,
+         825,
+         825,
+         825,
+         15,
+         1,
+         0
+        ]
+       },
+       549530000
+      ]
+     ]
+    }
+   ],
+   "movies_skip": [],
+   "bink_notes": []
+  }
+ },
+ "traces": {
+  "full_on_rp1": {
+   "sha256": "6e013d10982960af0dbdd6eb969a2f7c51093c4c248a00dca6781a5291dfa84a",
+   "size": 299247,
+   "validate": null,
+   "byte_identical": false,
+   "same_as_source": {
+    "same": false,
+    "where": "record",
+    "index": 11219,
+    "frame": -1,
+    "a": [
+     "0x00049086 CLOCKRUN  kind=1 first=138728 count=1 ra=0x0045bfe3 slot=4 v0=1079986",
+     "0x000490a2 DELIVER   pos=138729 kind=vkey vk=27 st=2",
+     "0x000490b2 DELIVER   pos=138729 kind=post cls=1 hwnd=0x00000000 msg=256 wp=27 lp=1",
+     "0x000490ce POLL      pos=138729 index=309 checkpoint=None final=False",
+     "0x000490db CLOCKRUN  kind=1 first=138729 count=8 ra=0x0045bfe3 slot=4 v0=1079987",
+     "0x000490f7 CLOCKRUN  kind=1 first=138737 count=1 ra=0x0044bbd9 slot=4 v0=1079995",
+     "0x00049113 MSG       pos=138738 msg=0x0100 wp=27 lp=1 wp_is_timer=False"
+    ],
+    "b": [
+     "0x00049086 CLOCKRUN  kind=1 first=138728 count=1 ra=0x0045bfe3 slot=4 v0=1079986",
+     "0x000490a2 DELIVER   pos=138729 kind=vkey vk=27 st=2",
+     "0x000490b2 DELIVER   pos=138729 kind=post cls=1 hwnd=0x00000000 msg=256 wp=27 lp=1",
+     "0x000490ce POLL      pos=138729 index=309 checkpoint=None final=True",
+     "0x000490db END       n=138729 frames=0 polls=310 dumps=14"
+    ]
+   }
+  },
+  "full_on_rp2": {
+   "sha256": "6e013d10982960af0dbdd6eb969a2f7c51093c4c248a00dca6781a5291dfa84a",
+   "size": 299247,
+   "validate": null,
+   "byte_identical": false,
+   "same_as_source": {
+    "same": false,
+    "where": "record",
+    "index": 11219,
+    "frame": -1,
+    "a": [
+     "0x00049086 CLOCKRUN  kind=1 first=138728 count=1 ra=0x0045bfe3 slot=4 v0=1079986",
+     "0x000490a2 DELIVER   pos=138729 kind=vkey vk=27 st=2",
+     "0x000490b2 DELIVER   pos=138729 kind=post cls=1 hwnd=0x00000000 msg=256 wp=27 lp=1",
+     "0x000490ce POLL      pos=138729 index=309 checkpoint=None final=False",
+     "0x000490db CLOCKRUN  kind=1 first=138729 count=8 ra=0x0045bfe3 slot=4 v0=1079987",
+     "0x000490f7 CLOCKRUN  kind=1 first=138737 count=1 ra=0x0044bbd9 slot=4 v0=1079995",
+     "0x00049113 MSG       pos=138738 msg=0x0100 wp=27 lp=1 wp_is_timer=False"
+    ],
+    "b": [
+     "0x00049086 CLOCKRUN  kind=1 first=138728 count=1 ra=0x0045bfe3 slot=4 v0=1079986",
+     "0x000490a2 DELIVER   pos=138729 kind=vkey vk=27 st=2",
+     "0x000490b2 DELIVER   pos=138729 kind=post cls=1 hwnd=0x00000000 msg=256 wp=27 lp=1",
+     "0x000490ce POLL      pos=138729 index=309 checkpoint=None final=True",
+     "0x000490db END       n=138729 frames=0 polls=310 dumps=14"
+    ]
+   }
+  },
+  "full_on_rp3": {
+   "sha256": "d04ed10092efa7907b3229795fdc14d319f8e030189d7cd6b86d28f0aee20d0e",
+   "size": 299543,
+   "validate": null,
+   "byte_identical": true,
+   "same_as_source": {
+    "same": true,
+    "records": 11234
+   }
+  },
+  "full_on_t1": {
+   "sha256": "d04ed10092efa7907b3229795fdc14d319f8e030189d7cd6b86d28f0aee20d0e",
+   "size": 299543,
+   "validate": "OK",
+   "byte_identical": null,
+   "same_as_source": null,
+   "clock_calls": 138749,
+   "records": {
+    "CLOCKRUN": 9983,
+    "TIMERSET": 2,
+    "DELIVER": 265,
+    "POLL": 310,
+    "CURSOR": 655,
+    "MSG": 7,
+    "HANDLER": 5,
+    "KEYSTATE": 5,
+    "MAPVK": 1,
+    "END": 1
+   }
+  },
+  "full_on_t2": {
+   "sha256": "d04ed10092efa7907b3229795fdc14d319f8e030189d7cd6b86d28f0aee20d0e",
+   "size": 299543,
+   "validate": "OK",
+   "byte_identical": null,
+   "same_as_source": null,
+   "clock_calls": 138749,
+   "records": {
+    "CLOCKRUN": 9983,
+    "TIMERSET": 2,
+    "DELIVER": 265,
+    "POLL": 310,
+    "CURSOR": 655,
+    "MSG": 7,
+    "HANDLER": 5,
+    "KEYSTATE": 5,
+    "MAPVK": 1,
+    "END": 1
+   }
+  },
+  "full_on_t3": {
+   "sha256": "d04ed10092efa7907b3229795fdc14d319f8e030189d7cd6b86d28f0aee20d0e",
+   "size": 299543,
+   "validate": "OK",
+   "byte_identical": null,
+   "same_as_source": null,
+   "clock_calls": 138749,
+   "records": {
+    "CLOCKRUN": 9983,
+    "TIMERSET": 2,
+    "DELIVER": 265,
+    "POLL": 310,
+    "CURSOR": 655,
+    "MSG": 7,
+    "HANDLER": 5,
+    "KEYSTATE": 5,
+    "MAPVK": 1,
+    "END": 1
+   }
+  }
+ }
+}

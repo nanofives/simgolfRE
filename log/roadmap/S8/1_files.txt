@@ -1,0 +1,8 @@
+re/analysis/video/MOVIES.md
+re/port/movies.tsv
+re/port/flics_census.tsv
+re/tools/movie_inventory.py
+tests/test_movie_inventory.py
+log/roadmap/S8/1_notes.md
+log/roadmap/S8/1_files.txt
+log/roadmap/S8/1_uncertain.tsv

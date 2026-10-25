@@ -310,6 +310,15 @@ void pump_messages(Ctx &ctx, PumpKind kind, const char *where) {
   gs.g_rootInput[kClicked] = 0;
 }
 
+// pumpInput483bd0 in loadFlic (+0x54): the display's showScreen loop dispatches what has arrived; no click / button words
+// are touched (pumpMessages' are not this pump's)
+void pump_load(Ctx &ctx) {
+  InputSource *src = input_source(ctx);
+  std::vector<Command> batch;
+  if (src && src->batch(PumpKind::Load, batch))
+    for (const Command &c : batch) apply_command(ctx, c);
+}
+
 void pump_light(Ctx &ctx, const char *where) {
   GameState &gs = ctx.gs();
   gs.g_rootInput[kButton] = 0;

@@ -1,0 +1,3 @@
+scenario	status	records	expected	detail	run_detail
+cov_r_palette_hot	PASS	565	565		end checkpoint at site 312244 (a frame-wait site): the last frame ran to the frame wait; input: 56 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 2184 served, 0 none left, 0 dispatches late
+cov_r_theme_cancel	PASS	123	123		end checkpoint at site 312244 (a frame-wait site): the last frame ran to the frame wait; input: 32 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 1 served, 0 none left, 0 dispatches late

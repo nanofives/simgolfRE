@@ -43,3 +43,8 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
   C:\Users\maria\vcpkg (microsoft/vcpkg 0c2a9ace) bootstrapped with `-disableMetrics` (vcpkg-tool 2026-09-26, signature validated),
   then `vcpkg install freetype[core]:x64-windows freetype[core]:x86-windows`: FreeType 2.14.3 built from source for both triplets
   under C:\Users\maria\vcpkg\installed\<triplet> (logs log/roadmap/S5/vcpkg_*.log). License FTL or GPL-2.0-or-later.
+- **G5, the port's text default, 2026-10-24: keep GDI.** GDI stays the default text provider on Windows; FreeType stays in the build
+  as an option (SG_TEXT_METRICS=freetype, configured with SG_FREETYPE_ROOT) for a host without GDI, judged by S5's measured numbers
+  (widths and metrics equal, label pixels differ, U-1520).
+- **G6, a `cmake` allow rule on claude2, 2026-10-24: yes.** `Bash(cmake:*)` is in C:\Users\maria\.claude-account2\settings.json
+  (it was already there when the orchestrator went to add it: the file had been edited at 16:38 the same day).

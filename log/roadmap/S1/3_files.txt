@@ -1,0 +1,24 @@
+re/tools/scenario_s1_3.py
+port/test/test_s1_3_scenarios.py
+re/analysis/data/scenario_refs.json
+log/roadmap/S1/3_notes.md
+log/roadmap/S1/3_files.txt
+log/roadmap/S1/3_merge.md
+log/roadmap/S1/3_uncertain.tsv
+log/roadmap/S1/3_boot_gate.tsv
+log/roadmap/S1/3_boot_run.log
+log/roadmap/S1/3_controls.log
+log/roadmap/S1/3_pytest.log
+log/roadmap/S1/3_static.log
+log/roadmap/S1/3_build.log
+log/roadmap/S1/3_regen_theme.log
+log/roadmap/S1/3_regen_palette.log
+log/roadmap/S1/3_capture_cov_r_theme_cancel.log
+log/roadmap/S1/3_capture_cov_r_palette_hot.log
+log/roadmap/S1/3_trace_cov_r_theme_cancel.log
+log/roadmap/S1/3_trace_cov_r_palette_hot.log
+log/c3/alt/refs/cov_r_theme_cancel/ (schedule, det_a, det_b, det_c; gitignored)
+log/c3/alt/refs/cov_r_palette_hot/ (same; gitignored)
+log/p2/p24/cov_r_theme_cancel/ and log/p2/p24/cov_r_palette_hot/ (capture c_a, trace; gitignored)
+port/corpus/traces/cov_r_theme_cancel.trace(.json), cov_r_palette_hot.trace(.json) (gitignored)
+instances/s1_3/ (gitignored); port/build/S1_3/ (gitignored)

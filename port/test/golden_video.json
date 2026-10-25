@@ -1,0 +1,117 @@
+{
+ "close_both": {
+  "digest": "ee981a8729f2f0f46c10d340f2e1bd316e07d7fe9b29633938e0d2857d70274a",
+  "eax": 1,
+  "frame_num": null
+ },
+ "close_handle_only": {
+  "digest": "6221fd8a89e0e181791acaedfbdf05589666c9c9b03bb883e36fd487baf570a6",
+  "eax": 0,
+  "frame_num": null
+ },
+ "close_none": {
+  "digest": "b90b345eda45956a5eaff11bbe7ff80cca16b199de918c2cd659c06d8dd4aae7",
+  "eax": 0,
+  "frame_num": null
+ },
+ "closing_absent": {
+  "digest": "6221fd8a89e0e181791acaedfbdf05589666c9c9b03bb883e36fd487baf570a6",
+  "eax": 0,
+  "frame_num": null
+ },
+ "closing_key": {
+  "digest": "25b3d260ce43dd37f192fd4d1baf3d59658fe641ca81abdf355dc80c0e73d827",
+  "eax": 1,
+  "frame_num": 1
+ },
+ "closing_play4": {
+  "digest": "600dbc85d43db8b53e3c90b2474bc8a6885c32557bf619c18dc4bb7dbe0e0332",
+  "eax": 1,
+  "frame_num": 4
+ },
+ "closing_skip": {
+  "digest": "7c452ee5f8d3fdbe56c5bd575b17363c161f2a5140e58aef75851c5eb2be1202",
+  "eax": 0,
+  "frame_num": null
+ },
+ "closing_skip_dirty": {
+  "digest": "59ea39c5f86b37648851086e654016093e185b9001c2a04fc31b5376c9734956",
+  "eax": 0,
+  "frame_num": null
+ },
+ "intro_absent": {
+  "digest": "6221fd8a89e0e181791acaedfbdf05589666c9c9b03bb883e36fd487baf570a6",
+  "eax": 0,
+  "frame_num": null
+ },
+ "intro_errhandle": {
+  "digest": "7c452ee5f8d3fdbe56c5bd575b17363c161f2a5140e58aef75851c5eb2be1202",
+  "eax": 0,
+  "frame_num": null
+ },
+ "intro_imm7": {
+  "digest": "7c452ee5f8d3fdbe56c5bd575b17363c161f2a5140e58aef75851c5eb2be1202",
+  "eax": 0,
+  "frame_num": null
+ },
+ "intro_key_early": {
+  "digest": "be907d929215b1264f7f30ed5f48a3fdf1185b904974df9b80189a26abeaec82",
+  "eax": 1,
+  "frame_num": 6
+ },
+ "intro_key_late": {
+  "digest": "58cb7ee424a16264259e3b5c7399f8ee7ca774f05a1408d9d46e110f1996e769",
+  "eax": 1,
+  "frame_num": 2
+ },
+ "intro_nobuffer": {
+  "digest": "6d3f27a7576fe70424df496bddcfa48d90e5bfe4ee0b00adf5eaf5c8c0da550c",
+  "eax": 0,
+  "frame_num": 1
+ },
+ "intro_nowindow": {
+  "digest": "6221fd8a89e0e181791acaedfbdf05589666c9c9b03bb883e36fd487baf570a6",
+  "eax": 0,
+  "frame_num": null
+ },
+ "intro_play3": {
+  "digest": "156a2a25b4584281be09ddbb74e4f260f8ee01b4362409d07521edc7c43f146b",
+  "eax": 1,
+  "frame_num": 3
+ },
+ "intro_skip": {
+  "digest": "7c452ee5f8d3fdbe56c5bd575b17363c161f2a5140e58aef75851c5eb2be1202",
+  "eax": 0,
+  "frame_num": null
+ },
+ "intro_skip_dirty": {
+  "digest": "0ecc7924a75d24f606ab9d289ad880fc5efe486d568db42f72e9d10470774119",
+  "eax": 0,
+  "frame_num": null
+ },
+ "play_nobuffer": {
+  "digest": "9eb5971271e98c2f9c2f48493eb5c3e03e57a56e36d42c572e5db1477a699095",
+  "eax": 1,
+  "frame_num": 1
+ },
+ "play_notarget": {
+  "digest": "201fdb3e86e5f0f9de7d791b346f0f1d0febeba1ce45fa27f75b412aebbef122",
+  "eax": 7,
+  "frame_num": null
+ },
+ "play_offsets_sound": {
+  "digest": "f31d22d867a09dc49fc94d53eb2ba2bbd68b73859a1c9a93384016c2885f5a44",
+  "eax": 0,
+  "frame_num": 2
+ },
+ "play_skip_self": {
+  "digest": "389f3f8814537e6743b9fd250143905bb08db8c548ce77ef23e4b670e05c69f7",
+  "eax": 1,
+  "frame_num": null
+ },
+ "target": {
+  "digest": "74047dcd6c71c3bba4b45abe0203eb1c306c88a17c0c111d3044cca56527fc39",
+  "eax": 2882343476,
+  "frame_num": null
+ }
+}

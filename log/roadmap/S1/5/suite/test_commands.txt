@@ -1,0 +1,13 @@
+sssssssssssssssssssssssssss.ssssssssssssss.............................. [ 56%]
+..s...............................s...................s                  [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] port\test\test_commands.py:139: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [4] port\test\test_commands.py:161: judged against the emulated original (SG_EMU_ORACLE=1)
+SKIPPED [16] port\test\test_commands.py:431: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [6] port\test\test_commands.py:548: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [9] port\test\test_commands.py:739: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [5] port\test\test_commands.py:979: opt-in: SG_EMU_ORACLE=1 runs the original under Unicorn (development oracle)
+SKIPPED [1] port\test\test_commands.py:1111: showLoadingScreen: no pinned digests (SG_EMU_ORACLE=update)
+SKIPPED [1] port\test\test_commands.py:1123: showLoadingScreen: no pinned digests
+SKIPPED [1] port\test\test_commands.py:1213: no pinned digests (SG_EMU_ORACLE=update)
+83 passed, 44 skipped in 86.83s (0:01:26)

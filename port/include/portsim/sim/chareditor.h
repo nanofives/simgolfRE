@@ -8,8 +8,10 @@
 // next pass). Its command effect: the edited character record (the golfer type record: title, name, personality,
 // demographics, body, looks, the custom word, the bio), the phrase lines of that type, the member's skill bytes, the preview
 // golfer 0x99, the pro record of a member, the comment tone and the text it builds for drawing in g_textBuffer.
-// Drawing, sound and the screen Image are dropped. The bio entry (an EditBox in the window tree) is not ported: a press on
-// it throws MissingResource before any of its writes.
+// Drawing, sound and the screen Image are dropped. The bio entry (control 20, non-members) edits the record's bio through
+// the EditBox family registered by this module (EditBox::create / setText / resizeBuffer / insertChar / onKey /
+// resetFields / releaseState; roadmap S1.5); keys the window tree gives the EditBox arrive as RootHandler commands 12 / 13
+// (commands.h). Up / Down need the font's line wrap and throw MissingResource (U-1190).
 #ifndef PORTSIM_SIM_CHAREDITOR_H
 #define PORTSIM_SIM_CHAREDITOR_H
 

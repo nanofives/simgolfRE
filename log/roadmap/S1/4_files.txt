@@ -1,0 +1,33 @@
+re/tools/scenario_s1_4.py
+port/test/test_s1_4_scenarios.py
+re/analysis/data/scenario_refs.json
+log/c3/alt/refs/cov_r_tutorial/ (pinned references, local)
+log/c3/alt/refs/cov_r_flic_input/ (pinned references, local)
+log/p2/p24/cov_r_tutorial/ and cov_r_flic_input/ (captures, local)
+port/corpus/traces/cov_r_tutorial.trace(.json), cov_r_flic_input.trace(.json) (local)
+instances/s1_4/ (my game instance)
+port/build/S1_4, port/build/S1_4_m, port/build/S1_4_root (private builds)
+log/roadmap/S1/4_boot_gate_mirror.log
+log/roadmap/S1/4_boot_gate_mirror.tsv
+log/roadmap/S1/4_boot_tutorial.log
+log/roadmap/S1/4_boot_tutorial.tsv
+log/roadmap/S1/4_boot_tutorial_long_FAIL.log
+log/roadmap/S1/4_build.log
+log/roadmap/S1/4_build_mirror.log
+log/roadmap/S1/4_capture_cov_r_flic_input.log
+log/roadmap/S1/4_capture_cov_r_tutorial.log
+log/roadmap/S1/4_flic_probe1.log
+log/roadmap/S1/4_load_pump.diff
+log/roadmap/S1/4_merge.md
+log/roadmap/S1/4_notes.md
+log/roadmap/S1/4_probe1.log
+log/roadmap/S1/4_regen_flic_input.log
+log/roadmap/S1/4_regen_tutorial.log
+log/roadmap/S1/4_segs_mirror_x64.log
+log/roadmap/S1/4_segs_mirror_x64.tsv
+log/roadmap/S1/4_tests_base.log
+log/roadmap/S1/4_tests_mirror.log
+log/roadmap/S1/4_trace_cov_r_flic_input.log
+log/roadmap/S1/4_trace_cov_r_tutorial.log
+log/roadmap/S1/4_tutorial_tests.log
+log/roadmap/S1/4_uncertain.tsv

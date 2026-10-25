@@ -3802,3 +3802,11 @@ def cov_r_quit(c):
 
 cov_r_quit.expect_exit = True
 SCENARIOS["cov_r_quit"] = {"env": {}, "phases": [], "lockstep": cov_r_quit}
+
+
+# Roadmap S1 and S8 (log/roadmap/S1, S8): each step worker registers its own scenarios from re/tools/scenario_s<n>_<k>.py
+# (names start with cov_r so scenario_refs' s36a family picks them up); one hook here, no further edits to this file.
+import glob as _glob  # noqa: E402
+import importlib as _importlib  # noqa: E402
+for _p in sorted(_glob.glob(str(pathlib.Path(__file__).with_name("scenario_s[18]_*.py")))):
+    _importlib.import_module(pathlib.Path(_p).stem)

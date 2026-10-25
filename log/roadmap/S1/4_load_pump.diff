@@ -1,0 +1,95 @@
+--- port/src/sim/tick.cpp	2026-10-23 18:53:18.610185800 -0300
++++ port/src/sim/tick.cpp	2026-10-24 10:14:05.319795400 -0300
+@@ -879,6 +879,11 @@
+ struct TBatch {
+   uint32_t pos = 0, cursors = 0;
+   bool body = false;
++  // U-1051: the next clock read after the dispatch's handlers is jgld's Palette::update QPC although the pump before it was
++  // not one of the frame body's (the last clock site was a wait loop's): a pumpInput483bd0 of a world load
++  // (loadFlic +0x54: the 15th of the load in cov_r_flic_input) took it, a message posted before the load started; the harness's
++  // polls ride on timeGetTime reads and the load makes none
++  bool load = false;
+   std::vector<Command> cmds;
+ };
+ // A harness memory write (DELIVER kind 4, a dword) and the clock ordinal it was made in.
+@@ -978,6 +983,7 @@
+           if (c.handler == 2 || c.handler == 3 || c.handler == 7) c.t = v0;
+         }
+       } else {
++        if (open_batch && cur && !cur->body && sub == 2 && ra == kPaletteQpcRa) cur->load = true;   // U-1051
+         ctx_ra = ra;
+         open_batch = false;
+       }
+@@ -1190,7 +1196,11 @@
+     if (!fr_ || next_ >= fr_->batches.size()) return false;
+     const FrameIo &io = cur_io();
+     const TBatch &b = fr_->batches[next_];
+-    if (io.pump_site == kPumpSiteModal ? (kind != PumpKind::Blocking || b.body) : !b.body) return false;
++    if (kind == PumpKind::Load) {  // loadFlic's pump (U-1051): the dispatch the trace puts before the load's first palette QPC
++      if (b.body || !b.load || SG_NEGCTL(g_negctl_frame) == 8) return false;
++    } else if (io.pump_site == kPumpSiteModal ? (kind != PumpKind::Blocking || b.body) : !b.body) {
++      return false;
++    }
+     if (b.body && SG_NEGCTL(g_negctl_frame) == 3) return false;  // negative control: the frame body's dispatches dropped
+     if (io.cursor_used < b.cursors) {  // the original made more cursor reads before this dispatch: a later pump's
+       const bool stuck = kind == PumpKind::Blocking && refused_at_ == io.cursor_used;
+--- port/include/portsim/sim/commands.h	2026-10-22 15:54:52.102734700 -0300
++++ port/include/portsim/sim/commands.h	2026-10-24 09:40:03.800914200 -0300
+@@ -105,7 +105,9 @@
+ void apply_commands(Ctx &ctx, const std::vector<Command> &cmds);
+ 
+ // What kind of pump asks (see MODAL BLOCKS).
+-enum class PumpKind : uint32_t { Blocking = 1, Drain = 2 };
++//   PumpKind::Load      loadFlic's pumpInput483bd0 (U-1051): a Drain that also takes the one dispatch a trace puts before
++//                       a world load's first palette QPC read (a message posted before the load began)
++enum class PumpKind : uint32_t { Blocking = 1, Drain = 2, Load = 3 };
+ 
+ // The run's raw input after the current frame's, for the pumps inside straddlers (see MODAL BLOCKS).
+ class InputSource {
+--- port/src/sim/commands_internal.h	2026-10-22 10:29:59.425498200 -0300
++++ port/src/sim/commands_internal.h	2026-10-24 09:40:03.801916100 -0300
+@@ -54,6 +54,7 @@
+ // jgld's pumps deliver window messages) applies the batch the context's InputSource delivers to a pump of this kind
+ // (commands.h, MODAL BLOCKS); then the click flag is cleared. A Blocking pump with no input left throws NeedInput.
+ void pump_messages(Ctx &ctx, PumpKind kind, const char *where);
++void pump_load(Ctx &ctx);   // loadFlic +0x54: pumpInput483bd0, whose dispatch is a Load pump (U-1051)
+ // pumpLight: the button word cleared, then pumpMessages (a Drain) again while a click or a key is left
+ void pump_light(Ctx &ctx, const char *where);
+ // flushRedraw: a set g_redrawPending is cleared together with both key words; then (pumpInput483c30 dispatches nothing in
+--- port/src/sim/commands.cpp	2026-10-22 14:08:17.962118500 -0300
++++ port/src/sim/commands.cpp	2026-10-24 09:40:03.803949800 -0300
+@@ -310,6 +310,15 @@
+   gs.g_rootInput[kClicked] = 0;
+ }
+ 
++// pumpInput483bd0 in loadFlic (+0x54): the display's showScreen loop dispatches what has arrived; no click / button words
++// are touched (pumpMessages' are not this pump's)
++void pump_load(Ctx &ctx) {
++  InputSource *src = input_source(ctx);
++  std::vector<Command> batch;
++  if (src && src->batch(PumpKind::Load, batch))
++    for (const Command &c : batch) apply_command(ctx, c);
++}
++
+ void pump_light(Ctx &ctx, const char *where) {
+   GameState &gs = ctx.gs();
+   gs.g_rootInput[kButton] = 0;
+--- port/src/sim/menu.cpp	2026-10-22 16:59:35.022902800 -0300
++++ port/src/sim/menu.cpp	2026-10-24 09:40:13.011215800 -0300
+@@ -158,7 +158,7 @@
+ // loadFlic(id, path, frames, delay, flag) (re/analysis/render/0043d740_loadFlic.md, a C2 row: written from its instructions,
+ // cited by offset). The prefix: g_flicLoadCount + 1 (+0x0..+0x15); on every 100th load waitTicks(10, 0) and, while
+ // g_difficulty is -1 (boot only: a session sets it from the menu first), showLoadingScreen(count / 4) (+0x1f..+0x34); then
+-// pumpInput483bd0 (+0x54: a pump of a modal site, the port's takes nothing, U-1052). A delay of -1 loads one frame
++// pumpInput483bd0 (+0x54: a Load pump, U-1051: it takes the one dispatch a trace puts before the load's first palette QPC). A delay of -1 loads one frame
+ // (+0x5d..+0x62). The sheet id + g_sheetBase (+0x87..+0x91) gets the path (+0xab..+0xd1) and its columns from the flic
+ // (flicOpenStream +0x231; an optional shadow flic's open writes the same word first, +0x178), rows = frames (+0x266). The
+ // cells: with a free list (g_cellFreeStart[0] != -2, +0x263) allocBlock(rows * columns) (+0x279); none fits (-1) or no free
+@@ -170,6 +170,7 @@
+   const int32_t c = add32(gs.g_flicLoadCount, 1);
+   gs.g_flicLoadCount = c;
+   if (c % 100 == 0 && gs.g_difficulty == -1) cm::call_peer(ctx, "showLoadingScreen", {static_cast<uint32_t>(c / 4)});
++  cm::pump_load(ctx);   // +0x54 pumpInput483bd0
+   const int32_t frames = f.delay == -1 ? 1 : f.frames;
+   const int32_t id = add32(static_cast<int32_t>(f.id), gs.g_sheetBase);
+   const uint32_t path = ctx.mem.data_base() + f.path;

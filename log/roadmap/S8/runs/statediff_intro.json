@@ -1,0 +1,56 @@
+{
+ "intro_early": {
+  "dwords": 918621,
+  "differ_first_runs": 47151,
+  "unstable_on": 47150,
+  "unstable_skip": 47150,
+  "attributed": [
+   {
+    "va": "0x0083ab9c",
+    "symbol": "g_ui83ab9c",
+    "class": "engine",
+    "pointer_flag": "none",
+    "skip": "0x00000000",
+    "on": "0x00000001",
+    "delta": "0x00000001",
+    "heap_pointer_like": false
+   }
+  ]
+ },
+ "menu": {
+  "dwords": 918621,
+  "differ_first_runs": 47151,
+  "unstable_on": 47150,
+  "unstable_skip": 47150,
+  "attributed": [
+   {
+    "va": "0x0083ab9c",
+    "symbol": "g_ui83ab9c",
+    "class": "engine",
+    "pointer_flag": "none",
+    "skip": "0x00000000",
+    "on": "0x00000001",
+    "delta": "0x00000001",
+    "heap_pointer_like": false
+   }
+  ]
+ },
+ "menu_late": {
+  "dwords": 918621,
+  "differ_first_runs": 47151,
+  "unstable_on": 47150,
+  "unstable_skip": 47150,
+  "attributed": [
+   {
+    "va": "0x0083ab9c",
+    "symbol": "g_ui83ab9c",
+    "class": "engine",
+    "pointer_flag": "none",
+    "skip": "0x00000000",
+    "on": "0x00000001",
+    "delta": "0x00000001",
+    "heap_pointer_like": false
+   }
+  ]
+ }
+}

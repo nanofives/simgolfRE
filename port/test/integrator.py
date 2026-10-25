@@ -863,6 +863,10 @@ def ledger_rows(seg_tsv: pathlib.Path, chain_tsv: pathlib.Path | None, defects_t
     if defects_tsv and defects_tsv.exists():
         tests = {"sinScaled.readPastTable": "port/test/test_core.py::test_defect_sin_past_table (vectors)",
                  "shotPower.cacheIgnoresPutt": "port/test/test_shots.py::test_defect_shot_power_putt (vectors)",
+                 # roadmap S1.2 (U-1012): constructed states where the original keeps the strict flag; the original in Unicorn
+                 # with SG_EMU_ORACLE=1 (test_original_equals_port_with_the_flag_sticky), OFF RED 8 / 8
+                 "chooseShotTarget.strictFlagSticky": "port/test/test_shots_strict.py::test_the_switch_changes_the_search, "
+                                                      "test_golden_digests_of_the_original (state)",
                  "prepareShot.hazardCellTransposed": "port/test/test_shots.py::test_defect_hazard_cell_transposed (vectors)",
                  "narrateShot.maskNotRestored": "port/test/test_shots.py::test_defect_narrate_mask_not_restored (state)",
                  # S6 (log/roadmap/S6/MERGE.md): each judged by the state the original hangs or faults on (Unicorn probes

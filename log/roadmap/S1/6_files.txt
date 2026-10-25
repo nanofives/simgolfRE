@@ -1,0 +1,15 @@
+log/roadmap/S1/tick_combined.diff
+log/roadmap/S1/6_notes.md
+log/roadmap/S1/6_files.txt
+log/roadmap/S1/6_build.log
+log/roadmap/S1/6_build_w32.log
+log/roadmap/S1/6_boot_gate.log
+log/roadmap/S1/6_boot_gate.tsv
+log/roadmap/S1/6_segs_x64.log
+log/roadmap/S1/6_segs_x64.tsv
+log/roadmap/S1/6_segs_win32.log
+log/roadmap/S1/6_segs_win32.tsv
+log/roadmap/S1/6/patches6.py
+log/roadmap/S1/6/mirror6.py
+log/roadmap/S1/6/t_*.log
+local, not committed: port/build/S1_6*, port/build/S1_6_base_root

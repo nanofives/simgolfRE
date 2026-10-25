@@ -98,7 +98,6 @@ const Drop kDrops[] = {
     {"showTitleScreen", "title button and window-frame sprites, intro movie (renderer / video)"},
     {"Image_draw", "blit of an image onto a surface"},
     // phase 4, the QUIT block: no sim-class write in either call closure (log/p3/p37a_simwrites.py on both)
-    {"playAudioFile", "the closing Bink video (binkw32); its pumps dispatch no recorded input in the corpus"},
     {"PaletteCache::dtor", "the frame's palette cache (renderer)"},
     {"Image_ctor", "frame Image object (renderer)"},
     {"Image_dtor", "frame Image object (renderer)"},
@@ -879,6 +878,11 @@ bool in_handler_code(int32_t site) {
 struct TBatch {
   uint32_t pos = 0, cursors = 0;
   bool body = false;
+  // U-1051: the next clock read after the dispatch's handlers is jgld's Palette::update QPC although the pump before it was
+  // not one of the frame body's (the last clock site was a wait loop's): a pumpInput483bd0 of a world load
+  // (loadFlic +0x54: the 15th of the load in cov_r_flic_input) took it, a message posted before the load started; the harness's
+  // polls ride on timeGetTime reads and the load makes none
+  bool load = false;
   std::vector<Command> cmds;
 };
 // A harness memory write (DELIVER kind 4, a dword) and the clock ordinal it was made in.
@@ -950,6 +954,36 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
   // that says which pump takes a dispatch counts only the reads the port makes (cov_a_golfer frame 2623: two mouse moves in
   // showHoleStatsScreen's loop had put its closing click two passes late). Negative control tick.frame 6 keeps them.
   bool after_mousemove = false;
+  // KEYS THE WINDOW TREE'S FOCUS CHILD TOOK (roadmap S1.5, U-1032; log/roadmap/S1/5_notes.md). A WM_KEYDOWN reaches the
+  // root's onChar (HANDLER 8; a key with no character, MapVirtualKeyA 0, the root's onKey with a0 = 0: HANDLER 7) and a
+  // WM_CHAR the root's onKey (HANDLER 7) only when no focused child window returns non-zero for it first (uiKeyEvent ->
+  // onCommand -> dispatchAccel, uiKeyEvent148 -> Window::onKeyChar -> Window::key, which ask the root's focus ring before
+  // the root's own slot). A key MSG record that no HANDLER record follows before the next MSG record, clock read or frame
+  // head was taken by such a child (the character editor's bio EditBox: EditBox::onKey, EditBox::insertChar): it becomes a
+  // RootHandler command 12 (WM_KEYDOWN, a0 = the virtual key) or 13 (WM_CHAR, a0 = the character), which apply_command
+  // treats as nothing and the bio entry routes to its EditBox (chareditor.cpp). Such commands only join a batch some
+  // HANDLER record opens (the open one, or the next one of the same frame), so no batch is added. In the 64 corpus traces
+  // every one of the 11,312 WM_KEYDOWN / WM_CHAR MSG records is followed by a root handler, so none of them gets one.
+  struct PendKey {
+    bool on = false;
+    uint32_t msg = 0, wp = 0;
+  } pend_key;
+  std::vector<Command> focus_held;
+  auto focus_resolve = [&]() {  // the pending key MSG record got no matching root handler
+    if (!pend_key.on) return;
+    Command c;
+    c.kind = CmdKind::RootHandler;
+    c.handler = pend_key.msg == 0x100 ? 12u : 13u;
+    c.a0 = static_cast<int32_t>(pend_key.wp);
+    if (SG_NEGCTL(tk::g_negctl_frame) != 8) focus_held.push_back(c);  // negative control 8: the commands dropped
+    pend_key.on = false;
+  };
+  auto focus_flush = [&]() {  // into the open batch, after the handlers it holds so far
+    if (open_batch && cur && !focus_held.empty()) {
+      cur->cmds.insert(cur->cmds.end(), focus_held.begin(), focus_held.end());
+      focus_held.clear();
+    }
+  };
   while (p + 4 <= n) {
     const uint8_t type = tr[p], sub = tr[p + 1];
     const uint32_t len = uint32_t(tr[p + 2]) | uint32_t(tr[p + 3]) << 8;
@@ -978,9 +1012,17 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
           if (c.handler == 2 || c.handler == 3 || c.handler == 7) c.t = v0;
         }
       } else {
+        focus_resolve();
+        focus_flush();
+        if (open_batch && cur && !cur->body && sub == 2 && ra == kPaletteQpcRa) cur->load = true;   // U-1051
         ctx_ra = ra;
         open_batch = false;
       }
+    } else if (type == 0x05 && len >= 16) {  // MSG: pos, msg, wParam, lParam (the keys the focus child may take, above)
+      focus_resolve();
+      focus_flush();
+      const uint32_t msg = rd32(q + 4);
+      if (msg == 0x100 || msg == 0x102) pend_key = {true, msg, rd32(q + 8)};
     } else if (type == 0x08 && sub == 1) {  // CURSOR: pos, x, y (client coordinates after ScreenToClient)
       if (!frames.empty()) {
         frames.back().cursor.emplace_back(static_cast<int32_t>(rd32(q + 4)), static_cast<int32_t>(rd32(q + 8)));
@@ -999,6 +1041,7 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
         frames.back().async.emplace_back(static_cast<uint8_t>(vk), res);
       }
     } else if (type == 0x09) {  // HANDLER (id = sub): pos, a0, a1
+      pend_key.on = false;  // the key reached a root handler
       if (!frames.empty()) {
         TraceFrame &f = frames.back();
         if (!open_batch) {
@@ -1010,6 +1053,7 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
           open_batch = true;
         }
         cur = &f.batches.back();
+        focus_flush();
         Command c;
         c.kind = CmdKind::RootHandler;
         c.handler = sub;
@@ -1020,6 +1064,9 @@ bool parse_trace(const uint8_t *tr, size_t n, std::vector<TraceFrame> &frames, T
     } else if (type == 0x03 && sub == 4) {  // DELIVER w32: pos, addr, value
       if (!frames.empty()) frames.back().writes.push_back({rd32(q), rd32(q + 4), rd32(q + 8)});
     } else if (type == 0x02) {  // FRAME: frame, pos, t, snapshot
+      focus_resolve();
+      focus_flush();
+      focus_held.clear();  // a taken key with no batch of its frame to join (none in the corpus)
       TraceFrame f;
       f.index = rd32(q);
       f.pos = rd32(q + 4);
@@ -1190,7 +1237,11 @@ class TraceInput : public InputSource {
     if (!fr_ || next_ >= fr_->batches.size()) return false;
     const FrameIo &io = cur_io();
     const TBatch &b = fr_->batches[next_];
-    if (io.pump_site == kPumpSiteModal ? (kind != PumpKind::Blocking || b.body) : !b.body) return false;
+    if (kind == PumpKind::Load) {  // loadFlic's pump (U-1051): the dispatch the trace puts before the load's first palette QPC
+      if (b.body || !b.load || SG_NEGCTL(g_negctl_frame) == 8) return false;
+    } else if (io.pump_site == kPumpSiteModal ? (kind != PumpKind::Blocking || b.body) : !b.body) {
+      return false;
+    }
     if (b.body && SG_NEGCTL(g_negctl_frame) == 3) return false;  // negative control: the frame body's dispatches dropped
     if (io.cursor_used < b.cursors) {  // the original made more cursor reads before this dispatch: a later pump's
       const bool stuck = kind == PumpKind::Blocking && refused_at_ == io.cursor_used;
@@ -1437,14 +1488,16 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
       input.begin(frames[0], 0);
       input.set_tail_idle(true);
       tk::FrameIoStats io;
+      FrameExit fex = FrameExit::Menu;
       try {
-        tk::tick_frame_io(ctx, in, io);
+        fex = tk::tick_frame_io(ctx, in, io);
       } catch (const NeedInput &) {
         // the menus wait for input the trace no longer holds: the end of the recording
         gfx_end_of_input(ctx);
       }
       after_frame(frames[0], 0, io);
-      if (detail) *detail = "trace has no FRAME record after the boot; the boot ran to the end of the trace";
+      if (detail) *detail = fex == FrameExit::Quit ? "trace has no FRAME record after the boot; mainLoop returned (the title menu's quit)"
+                                                   : "trace has no FRAME record after the boot; the boot ran to the end of the trace";
       return 0;
     }
     FrameInput in = frame_input(frames[0]);

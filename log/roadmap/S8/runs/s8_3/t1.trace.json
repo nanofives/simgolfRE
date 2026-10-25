@@ -1,0 +1,235 @@
+{
+ "scenario": "cov_r_s8_play",
+ "label": "t1",
+ "mode": "record",
+ "run_dir": "log\\c3\\alt\\refs\\cov_r_s8_play\\t1",
+ "rc": 0,
+ "stats": {
+  "type": "trec_stats",
+  "stats": {
+   "otherMsgs": {
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "5": 1,
+    "6": 1,
+    "7": 1,
+    "15": 1,
+    "20": 1,
+    "24": 1,
+    "28": 1,
+    "29": 5,
+    "36": 1,
+    "61": 2,
+    "70": 3,
+    "71": 2,
+    "127": 7,
+    "128": 2,
+    "129": 1,
+    "130": 1,
+    "131": 1,
+    "133": 1,
+    "134": 1,
+    "144": 1,
+    "174": 2,
+    "641": 2,
+    "642": 2,
+    "799": 1,
+    "49391": 1
+   },
+   "chunks": 1,
+   "replayErrors": []
+  },
+  "n": 167571,
+  "frames": 216,
+  "polls": 553,
+  "dumps": 11
+ },
+ "sha256": "1ec7f915b8af53c477a161eee8fc04d4d7c6b903ce3d2bc820537cbf6c4b6244",
+ "size": 537416,
+ "validate": "OK",
+ "reference": "no pinned reference",
+ "summary": {
+  "size": 537416,
+  "records": {
+   "CLOCKRUN": 16256,
+   "TIMERSET": 2,
+   "DELIVER": 358,
+   "POLL": 553,
+   "CURSOR": 2214,
+   "MSG": 62,
+   "HANDLER": 48,
+   "KEYSTATE": 41,
+   "FRAME": 216,
+   "KBSTATE": 216,
+   "MAPVK": 3,
+   "TAKE": 4,
+   "END": 1
+  },
+  "bytes": {
+   "CLOCKRUN": 455168,
+   "TIMERSET": 56,
+   "DELIVER": 6436,
+   "POLL": 7269,
+   "CURSOR": 35424,
+   "MSG": 1240,
+   "HANDLER": 768,
+   "KEYSTATE": 820,
+   "FRAME": 24192,
+   "KBSTATE": 5212,
+   "MAPVK": 72,
+   "TAKE": 64,
+   "END": 20
+  },
+  "clock_calls": 167571,
+  "tgt": 55967,
+  "qpc": 111604,
+  "frames": 216,
+  "polls": 553,
+  "checkpoints": [
+   "intro_early",
+   "menu",
+   "game",
+   "exit_prompt",
+   "exit_leave",
+   "title",
+   "quit_00",
+   "quit_01",
+   "quit_02",
+   "quit_03",
+   "credits"
+  ],
+  "clock_calls_per_frame": {
+   "min": 11,
+   "median": 109,
+   "max": 129,
+   "mean": 112.21
+  },
+  "virtual_ms_per_frame": {
+   "min": 1,
+   "median": 99,
+   "max": 99,
+   "mean": 96.72
+  },
+  "date_step_per_frame": {
+   "min": 1,
+   "median": 1,
+   "max": 1,
+   "mean": 1.0
+  },
+  "paused_frames": 0,
+  "top_sites": [
+   [
+    "0x8400b6e7",
+    "qpc",
+    94157
+   ],
+   [
+    "0x0045bfe3",
+    "tgt",
+    44441
+   ],
+   [
+    "0x8106a414",
+    "qpc",
+    17446
+   ],
+   [
+    "0x0045bfb3",
+    "tgt",
+    4139
+   ],
+   [
+    "0x0045bfb7",
+    "tgt",
+    4139
+   ],
+   [
+    "0x0041e690",
+    "tgt",
+    1680
+   ],
+   [
+    "0x0044bbd9",
+    "tgt",
+    927
+   ],
+   [
+    "0x0040fc2f",
+    "tgt",
+    216
+   ],
+   [
+    "0x0041e641",
+    "tgt",
+    211
+   ],
+   [
+    "0x0041e661",
+    "tgt",
+    211
+   ],
+   [
+    "0x00467116",
+    "tgt",
+    1
+   ],
+   [
+    "0x0043cd00",
+    "tgt",
+    1
+   ]
+  ],
+  "deliveries": {
+   "vkey": 285,
+   "cursor": 14,
+   "post": 59
+  },
+  "messages": {
+   "0x0200": 27,
+   "0x0201": 12,
+   "0x0202": 12,
+   "0x0100": 3,
+   "0x0102": 4,
+   "0x0101": 2,
+   "0x0204": 1,
+   "0x0205": 1
+  },
+  "handlers": {
+   "rootWin_onPoint": 12,
+   "rootWin_onPress1": 12,
+   "rootWin_onUnpoint": 12,
+   "rootWin_onChar": 3,
+   "rootWin_onKey": 4,
+   "rootWin_onChar0": 2,
+   "rootWin_onPoint2": 1,
+   "rootWin_onPress2": 1,
+   "rootWin_onUnpoint2": 1
+  },
+  "end": {
+   "n": 167571,
+   "frames": 216,
+   "polls": 553,
+   "dumps": 11
+  }
+ },
+ "conditions": {
+  "host": "LIVING-PC",
+  "os": "Windows-11-10.0.26300-SP0",
+  "waveOutGetNumDevs": 0,
+  "audio": "none",
+  "keep_sound": true,
+  "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+  "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+  "c3fy_cpp_sha256": "ea6af5d1834f1be62c3c1ba6a96ee3614109363c422a42ddec35631a724c2ce2",
+  "scenario_det_js_sha256": "41acb7c842eb2897377447f6400466aa55ef6d1bb5ef3cc112301738e9247bfc",
+  "games_running_at_start": 0,
+  "instance": "s8_3",
+  "frame": "backbuffer",
+  "stack_seed": "zero",
+  "on": [],
+  "mode": "replay",
+  "stop_after": 0,
+  "finished": "2026-10-24T11:25:24"
+ }
+}

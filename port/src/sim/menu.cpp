@@ -158,7 +158,7 @@ int32_t flic_cols(Ctx &ctx, const std::string &name) {
 // loadFlic(id, path, frames, delay, flag) (re/analysis/render/0043d740_loadFlic.md, a C2 row: written from its instructions,
 // cited by offset). The prefix: g_flicLoadCount + 1 (+0x0..+0x15); on every 100th load waitTicks(10, 0) and, while
 // g_difficulty is -1 (boot only: a session sets it from the menu first), showLoadingScreen(count / 4) (+0x1f..+0x34); then
-// pumpInput483bd0 (+0x54: a pump of a modal site, the port's takes nothing, U-1052). A delay of -1 loads one frame
+// pumpInput483bd0 (+0x54: a Load pump, U-1051: it takes the one dispatch a trace puts before the load's first palette QPC). A delay of -1 loads one frame
 // (+0x5d..+0x62). The sheet id + g_sheetBase (+0x87..+0x91) gets the path (+0xab..+0xd1) and its columns from the flic
 // (flicOpenStream +0x231; an optional shadow flic's open writes the same word first, +0x178), rows = frames (+0x266). The
 // cells: with a free list (g_cellFreeStart[0] != -2, +0x263) allocBlock(rows * columns) (+0x279); none fits (-1) or no free
@@ -170,6 +170,7 @@ void load_flic(Ctx &ctx, const FlicCall &f, int mode) {
   const int32_t c = add32(gs.g_flicLoadCount, 1);
   gs.g_flicLoadCount = c;
   if (c % 100 == 0 && gs.g_difficulty == -1) cm::call_peer(ctx, "showLoadingScreen", {static_cast<uint32_t>(c / 4)});
+  cm::pump_load(ctx);   // +0x54 pumpInput483bd0
   const int32_t frames = f.delay == -1 ? 1 : f.frames;
   const int32_t id = add32(static_cast<int32_t>(f.id), gs.g_sheetBase);
   const uint32_t path = ctx.mem.data_base() + f.path;

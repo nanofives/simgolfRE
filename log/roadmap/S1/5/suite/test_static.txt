@@ -1,0 +1,19 @@
+.F....                                                                   [100%]
+================================== FAILURES ===================================
+______________________ test_every_module_file_is_listed _______________________
+
+    def test_every_module_file_is_listed():
+        listed = set(re.findall(r"^SG_MODULE\((\w+)\)", (PORT / "src" / "sim" / "modules.inc").read_text(), re.M))
+        files = {p.stem for p in (PORT / "src" / "sim").glob("*.cpp")}
+>       assert files == listed, f"files {sorted(files)} != modules.inc {sorted(listed)}"
+E       AssertionError: files ['audio_core', 'bridge', 'chareditor', 'commands', 'core', 'course', 'dialogs', 'economy', 'events', 'gditext', 'gfx', 'gl_raster', 'golfers', 'holestats', 'integrator', 'loaders', 'menu', 'reports', 'routing', 'saveload', 'semantic', 'shots', 'shotstyle', 'terrain', 'terrain_course', 'terrain_dll', 'terrain_fake', 'terrain_gen', 'terrain_gl_setup', 'terrain_live', 'terrain_path', 'terrain_render', 'terrain_setup', 'terrain_state', 'terrain_text', 'text', 'tick', 'tiles', 'util', 'x87probe'] != modules.inc ['bridge', 'chareditor', 'commands', 'core', 'course', 'dialogs', 'economy', 'events', 'gditext', 'gfx', 'gl_raster', 'golfers', 'holestats', 'integrator', 'loaders', 'menu', 'reports', 'routing', 'saveload', 'semantic', 'shots', 'shotstyle', 'terrain', 'terrain_course', 'terrain_dll', 'terrain_fake', 'terrain_gen', 'terrain_gl_setup', 'terrain_live', 'terrain_path', 'terrain_render', 'terrain_setup', 'terrain_state', 'terrain_text', 'text', 'tick', 'tiles', 'util', 'x87probe']
+E       assert {'audio_core'...'course', ...} == {'bridge', 'c...dialogs', ...}
+E         
+E         Extra items in the left set:
+E         'audio_core'
+E         Use -v to get more diff
+
+port\test\test_static.py:40: AssertionError
+=========================== short test summary info ===========================
+FAILED port/test/test_static.py::test_every_module_file_is_listed - Assertion...
+1 failed, 5 passed in 0.36s

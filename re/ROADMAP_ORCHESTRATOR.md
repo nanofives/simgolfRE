@@ -62,6 +62,9 @@ Heartbeat: run under `/loop` (dynamic). Every turn that leaves children running 
 child notifications are the primary wake signal. On a heartbeat with no new report, call `mcp__happy__list_children`: a child
 `stopped` at a session limit sends no report. Try `mcp__happy__resume_child` once; if it does not come back, spawn a fresh lead of
 the same model with "continue from log/roadmap/S<n>/STATUS.md" and close the stopped one.
+On every heartbeat also read the 10-line top block of each active lead's log/roadmap/S<n>/STATUS.md: a lead's report can fail to
+arrive (2026-10-24: S2's wave-1 request and its game-slot request were only on its STATUS.md). Merge state: log/roadmap/merge.lock
+(the running integrator) and log/roadmap/merge.queue (next first).
 
 ## Caps (LIVING-PC, shared with the Mashed orchestrator and other sessions)
 
@@ -71,6 +74,8 @@ the same model with "continue from log/roadmap/S<n>/STATUS.md" and close the sto
   for a game slot in its report (`NEED_GAME <n>`) and you grant it in the row's notes before it spawns the worker.
 - At most 2 heavy test runs at once (the port suite one file per process, the segment gate, the boot gate): the 64 GB commit charge.
 - One integrator at a time. Only the integrator writes shared files and port/build/x64.
+- Per-lead worker caps are set by the orchestrator so that leads + workers + one integrator <= 12; count with list_peers (claude2
+  rows in this folder) every few turns. 2026-10-24 caps: S2 2, S3 2, S4 2, S7 1 (the total had reached 14).
 
 ## Integrator prompt (spawn with this text)
 

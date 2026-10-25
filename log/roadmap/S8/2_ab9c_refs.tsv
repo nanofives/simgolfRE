@@ -1,0 +1,6 @@
+field	record	addr	kind	width	sign	access	ins	function	name	text
+0x00	0	0x0083ab9c	abs	1		w	0x0046563a	0x00465610	rootWin_onPoint	mov byte ptr [0x83ab9c], 0
+0x00	0	0x0083ab9c	abs	1		w	0x00465671	0x00465650	rootWin_onUnpoint	mov byte ptr [0x83ab9c], 0
+0x00	0	0x0083ab9c	abs	1		w	0x004657a0	0x00465750	rootWin_onKey	mov byte ptr [0x83ab9c], 0
+0x00	0	0x0083ab9c	abs	1		w	0x00487124	0x00487090	BinkPlayer::play	mov byte ptr [0x83ab9c], 1
+0x00	0	0x0083ab9c	abs	1		r	0x0048713d	0x00487090	BinkPlayer::play	mov al, byte ptr [0x83ab9c]
