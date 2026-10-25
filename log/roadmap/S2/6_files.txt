@@ -1,0 +1,30 @@
+re/tools/scenario_s2_6.py
+re/tools/s2_6_runs.py
+port/test/test_s2_6_scenario.py
+re/analysis/data/scenario_refs.json (key cov_r_s2_screens, written by regen; see 6_merge.md)
+port/corpus/traces/cov_r_s2_screens.trace, .trace.json (local corpus)
+log/p2/p24/cov_r_s2_screens/ (c_a, t_rec; local)
+log/c3/alt/refs/cov_r_s2_screens/ (det_a, det_b, det_c, t_rep1, schedule.json; local)
+log/roadmap/S2/6_notes.md
+log/roadmap/S2/6_merge.md
+log/roadmap/S2/6_uncertain.tsv
+log/roadmap/S2/6_files.txt
+log/roadmap/S2/6_probe.py
+log/roadmap/S2/6_montage.py
+log/roadmap/S2/6_build.log
+log/roadmap/S2/6_regen.log
+log/roadmap/S2/6_capture.log
+log/roadmap/S2/6_trace.log
+log/roadmap/S2/6_replay.log
+log/roadmap/S2/6_boot.log
+log/roadmap/S2/6_framegate.tsv
+log/roadmap/S2/6_framegate.tsv.d/
+log/roadmap/S2/6_framegate.log
+log/roadmap/S2/6_framegate_known.tsv
+log/roadmap/S2/6_framegate_known.tsv.d/
+log/roadmap/S2/6_framegate_known.log
+log/roadmap/S2/6_test.log
+log/roadmap/S2/6_probe1.log .. 6_probe13.log
+log/roadmap/S2/6_img/
+instances/s2_6/ (local)
+port/build/S2_6, port/build/S2_6_mirror (local)

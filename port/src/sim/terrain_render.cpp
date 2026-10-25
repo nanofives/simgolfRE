@@ -4,9 +4,16 @@
 // terrain_paths.cpp and terrain_corneroverlay.cpp as reading reference. Tests: port/test/test_terrain_render.py, which
 // replays recorded passes of the original (re/tools/gl_corpus.py) and compares the call streams line by line.
 //
-// Not here yet (the plan's next steps): localRender / pathUpdateRender / stripRender (the draw-list passes), and the
-// state side of Terrain.dll (the setters that build faces, vertices and normals).
+// The draw-list passes (roadmap step S3.1): localRender, stripRender and pathUpdateRender queue tiles with drawTile into the
+// Terrain object's draw list (sorted back to front for the camera angle), follow walls with drawTileObjects, then render the
+// list with Tile::render and clear it. Reading reference re/match/terrain_localrender.cpp, terrain_drawtile.cpp,
+// terrain_strip.cpp, terrain_pathrender.cpp; evidence: kind-3 / kind-4 / kind-1 passes of the GL corpora
+// (port/test/test_terrain_render.py).
+#include <algorithm>
+#include <cstddef>
 #include <cstdint>
+#include <cstring>
+#include <vector>
 
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
@@ -22,6 +29,9 @@ namespace {
 //   3 isCulled swaps its 90 and 180 degree tests      4 drawWalls swaps the two fence textures
 //   5 drawPaths uses a half-width of 16.0             6 Terrain::render walks x upward at angle 0
 //   7 drawCornerOverlays swaps masks 5 and 9          8 Tile::render rotates type-7 textures one quadrant too far
+//   9 the draw list is rendered in reverse order       10 the draw list's second tile is not rendered
+//  11 stripRender's outer loops start one row later   12 pathUpdateRender clips its left edge at x (not x + 1)
+//  13 drawTileObjects follows no wall                 14 drawTile keeps duplicates (no same-tile test)
 int32_t g_negctl_terrain_render = 0;
 
 // Terrain object fields
@@ -34,6 +44,8 @@ constexpr uint32_t kTileFaceCount = 0x44, kTileFaces = 0x48, kFaceSize = 0x38;
 constexpr uint32_t kFaceVertex = 0x00, kFaceUv = 0x0C, kFaceTexture = 0x24, kFaceSlot = 0x28;
 constexpr uint32_t kTileHasPath = 0x208, kTileConnected = 0x209, kTileDrawPath = 0x20A;
 constexpr uint32_t kTileWallKind = 0x210, kTileWallOn = 0x234, kTileVariation = 0x240;
+// the draw list (a std::list<Tile*>): +0x164ac4 allocator, +0x164ac8 head node, +0x164acc size
+constexpr uint32_t kTerDrawListSize = 0x164ACC;
 constexpr int32_t kTypeHidden = 0x14, kTypeRotated = 7;
 constexpr uint32_t kTextureVariations = 0x19, kTextureSlots = 9;   // textures[type][variation][slot], 0x25 types
 
@@ -102,6 +114,124 @@ class Renderer {
     return true;
   }
 
+  // Terrain::localRender(pTile, pivot, angle): the 5 x 5 tiles around pTile (hidden ones skipped, no culling test) queued with
+  // drawTile and drawTileObjects in the camera's order, the camera translated to `pivot`, then the list drawn.
+  void local_render(uint32_t ptile, uint32_t pivot, float angle) {
+    // the original asserts pTile != NULL before its first GL call; the debug assert ends the process there
+    if (ptile == 0) throw Fault{0, 4};
+    begin_pass(ptile != 0 ? pivot : 0, angle, ptile != 0);
+    set_view_angle(angle);
+    const int32_t px = tile_x(ptile), py = tile_y(ptile);
+    auto visit = [&](int32_t x, int32_t y) {
+      const uint32_t t = tile_at(x, y);
+      if (t == 0 || hidden(t)) return;
+      draw_tile(t, angle);
+      draw_tile_objects(t, ptile, angle);
+    };
+    if (angle == 0.0f) {
+      for (int32_t y = py - 2; y <= py + 2; ++y)
+        for (int32_t x = px + 2; x >= px - 2; --x) visit(x, y);
+    } else if (angle == 90.0f) {
+      for (int32_t x = px + 2; x >= px - 2; --x)
+        for (int32_t y = py + 2; y >= py - 2; --y) visit(x, y);
+    } else if (angle == 180.0f) {
+      for (int32_t y = py + 2; y >= py - 2; --y)
+        for (int32_t x = px - 2; x <= px + 2; ++x) visit(x, y);
+    } else {
+      for (int32_t y = py - 2; y <= py + 2; ++y)
+        for (int32_t x = px - 2; x <= px + 2; ++x) visit(x, y);
+    }
+    end_pass();
+  }
+
+  // Terrain::stripRender(pivot, dir, angle): the tiles of diagonal strips around `pivot` for view direction 1..8. An odd
+  // direction is two complete nested passes (its neighbouring even directions), each with its own matrix push, list and flush;
+  // the outer pass then draws its own (empty) list. Any other direction draws nothing. Strip windows scale with the zoom shift.
+  void strip_render(uint32_t pivot, int32_t dir, float angle) {
+    begin_pass(pivot, angle, pivot != 0);
+    set_view_angle(angle);
+    const int32_t zoom = i32(terrain_ + kTerZoom);
+    const int32_t late = g_negctl_terrain_render == 11 ? 1 : 0;
+    auto visit = [&](uint32_t t) {
+      if (!hidden(t) && !is_culled(t, pivot, angle)) {
+        draw_tile(t, angle);
+        draw_tile_objects(t, pivot, angle);
+      }
+    };
+    switch (dir) {
+      case 1: strip_render(pivot, 8, angle); strip_render(pivot, 2, angle); break;
+      case 3: strip_render(pivot, 2, angle); strip_render(pivot, 4, angle); break;
+      case 5: strip_render(pivot, 4, angle); strip_render(pivot, 6, angle); break;
+      case 7: strip_render(pivot, 8, angle); strip_render(pivot, 6, angle); break;
+      case 2: {
+        const int32_t back = 15 << zoom, front = 3 << zoom, left = (zoom << zoom) + 5, right = 4;
+        for (int32_t i = tile_x(pivot) - left + late; i < tile_x(pivot) + right; ++i)
+          for (int32_t y = tile_y(pivot) - back, x = i; y < tile_y(pivot) + front; ++x, ++y) {
+            const uint32_t t = tile_at(x, y);
+            if (y > 49 || x > 49) break;
+            if (x >= 0 && y >= 0) visit(t);
+          }
+        break;
+      }
+      case 4: {
+        const int32_t near_x = 4 << zoom, far_x = 16 << zoom, front = 2, back = (zoom << zoom) + 9;
+        for (int32_t j = tile_y(pivot) - back + late; j < tile_y(pivot) + front; ++j)
+          for (int32_t x = tile_x(pivot) + far_x, y = j; x > tile_x(pivot) - near_x; --x, ++y) {
+            const uint32_t t = tile_at(x, y);
+            if (x < 0 || y > 49) break;
+            if (y >= 0 && x <= 49) visit(t);
+          }
+        break;
+      }
+      case 6: {
+        const int32_t near_x = 3 << zoom, far_x = 16 << zoom, front = 4, back = (zoom << zoom) + 8;
+        for (int32_t j = tile_y(pivot) - back + late; j < tile_y(pivot) + front; ++j)
+          for (int32_t x = tile_x(pivot) - far_x, y = j; x < tile_x(pivot) + near_x; ++x, ++y) {
+            const uint32_t t = tile_at(x, y);
+            if (y > 49 || x > 49) break;
+            if (x >= 0 && y >= 0) visit(t);
+          }
+        break;
+      }
+      case 8: {
+        const int32_t near_x = 4 << zoom, far_x = 17 << zoom, front = (zoom << zoom) + 12, back = -2;
+        for (int32_t j = tile_y(pivot) + back + late; j < tile_y(pivot) + front; ++j)
+          for (int32_t x = tile_x(pivot) - far_x, y = j; x < tile_x(pivot) + near_x; ++x, --y) {
+            const uint32_t t = tile_at(x, y);
+            if (y < 0 || x > 49) break;
+            if (x >= 0 && y <= 49) visit(t);
+          }
+        break;
+      }
+      default: break;
+    }
+    end_pass();
+  }
+
+  // Terrain::pathUpdateRender(pivot, angle): the tiles with a path in the window of 15 << zoom tiles around `pivot`, queued like
+  // the other passes. It does not call setViewAngle: the view quadrant is the one the previous pass left. Original quirks kept:
+  // the left edge is clipped to x + 1 (not x) and the right edge to 49 - x; pivot is read after the GL calls even when NULL.
+  void path_update_render(uint32_t pivot, float angle) {
+    const int32_t zoom = i32(terrain_ + kTerZoom);
+    int32_t top, bottom, left, right;
+    top = bottom = left = right = 15 << zoom;
+    begin_pass(pivot, angle, pivot != 0);
+    const int32_t px = tile_x(pivot), py = tile_y(pivot);
+    if (py < top) top = py;
+    if (50 - py < bottom) bottom = 50 - py;
+    if (px < left) left = g_negctl_terrain_render == 12 ? px : px + 1;
+    if (49 - px < right) right = 49 - px;
+    for (int32_t y = py - top; y < py + bottom; ++y)
+      for (int32_t x = px + right; x > px - left; --x) {
+        const uint32_t t = tile_at(x, y);
+        if (u8(t + kTileHasPath) != 0 && !hidden(t) && !is_culled(t, pivot, angle)) {
+          draw_tile(t, angle);
+          draw_tile_objects(t, pivot, angle);
+        }
+      }
+    end_pass();
+  }
+
  private:
   Ctx &c_;
   gl::GlSink &gl_;
@@ -146,6 +276,104 @@ class Renderer {
     const int64_t i = ((static_cast<int64_t>(a) * 3 + b) * 4 + view) * 2;
     if (i < 0 || static_cast<uint64_t>(i) + 2 > g_.tex_coords.size()) throw Fault{static_cast<uint32_t>(i), 8};
     return &g_.tex_coords[static_cast<size_t>(i)];
+  }
+
+  // ---- the draw-list passes ----
+  // The draw list is a std::list<Tile*> in the Terrain object; every pass empties it before it returns, so a pass always finds
+  // it empty (size 0 in every corpus snapshot). Its nodes live on Terrain.dll's heap: the port keeps the order in list_ and
+  // leaves the object's header as it was, which is also what the original's clear() leaves.
+  std::vector<uint32_t> list_;
+
+  // the frame every draw-list pass opens with: modelview reset, pushed, the screen-scale tilt, the camera angle, the pivot
+  void begin_pass(uint32_t pivot, float angle, bool translate) {
+    if (i32(terrain_ + kTerDrawListSize) != 0) throw Fault{terrain_ + kTerDrawListSize, 4};   // never seen: not modelled
+    gl_.load_identity();
+    gl_.push_matrix();
+    gl_.rotated(static_cast<double>(g_.screen_scale), 1.0, 0.0, 0.0);
+    gl_.rotatef(45.0f + angle, 0.0f, 1.0f, 0.0f);
+    if (translate)
+      gl_.translatef(static_cast<float>(25 - tile_x(pivot)) * 100.0f, 0.0f, static_cast<float>(25 - tile_y(pivot)) * 100.0f);
+  }
+
+  // the list drawn front to back as queued (Tile::render each), cleared, the matrix popped, glFlush
+  void end_pass() {
+    std::vector<uint32_t> l;
+    l.swap(list_);
+    if (g_negctl_terrain_render == 9) std::reverse(l.begin(), l.end());
+    for (size_t i = 0; i < l.size(); ++i) {
+      if (g_negctl_terrain_render == 10 && i == 1) continue;
+      tile_render(l[i]);
+    }
+    gl_.pop_matrix();
+    gl_.flush();
+  }
+
+  // Terrain::drawTile(t, center, angle): insert t into the draw list, kept back to front for the angle, unless the list already
+  // holds a tile at t's position. Per angle the primary / secondary keys and their directions are:
+  //   0: x descending, then y ascending      90: y descending, then x descending
+  //   180: x ascending, then y descending    other: y ascending, then x ascending
+  // The `other` branch tests `y < it.y` after a walk that stopped at the first it.y >= y, so that test never holds and the
+  // secondary walk always runs (an equal-key insert lands before the first tile of the next row, as in the other branches).
+  void draw_tile(uint32_t t, float angle) {
+    const int32_t x = tile_x(t), y = tile_y(t);
+    std::vector<uint32_t> &L = list_;
+    if (L.empty()) {
+      L.push_back(t);
+      return;
+    }
+    size_t it = 0;
+    const size_t n = L.size();
+    auto X = [&](size_t i) { return tile_x(L[i]); };
+    auto Y = [&](size_t i) { return tile_y(L[i]); };
+    const bool dup = g_negctl_terrain_render == 14;
+    if (angle == 0.0f) {
+      while (it != n && x < X(it)) ++it;
+      if (it == n || X(it) < x) { L.insert(L.begin() + static_cast<std::ptrdiff_t>(it), t); return; }
+      while (it != n && y > Y(it) && X(it) == x) ++it;
+    } else if (angle == 90.0f) {
+      while (it != n && y < Y(it)) ++it;
+      if (it == n || Y(it) < y) { L.insert(L.begin() + static_cast<std::ptrdiff_t>(it), t); return; }
+      while (it != n && x < X(it) && Y(it) == y) ++it;
+    } else if (angle == 180.0f) {
+      while (it != n && x > X(it)) ++it;
+      if (it == n || X(it) > x) { L.insert(L.begin() + static_cast<std::ptrdiff_t>(it), t); return; }
+      while (it != n && y < Y(it) && X(it) == x) ++it;
+    } else {
+      while (it != n && y > Y(it)) ++it;
+      if (it == n || Y(it) < y) { L.insert(L.begin() + static_cast<std::ptrdiff_t>(it), t); return; }
+      while (it != n && x > X(it) && Y(it) == y) ++it;
+    }
+    if (!dup && it != n && Y(it) == y && X(it) == x) return;
+    L.insert(L.begin() + static_cast<std::ptrdiff_t>(it), t);
+  }
+
+  // Terrain::drawTileObjects(t, center, angle): the neighbours behind t's walls that face the camera (wall 6 = x - 1 and 4 = y + 1
+  // at 0 degrees, 6 / 0 at 90, 2 / 0 at 180, 2 / 4 otherwise, plus the diagonal tile between them), each not hidden and not
+  // culled against `center`, queued and followed recursively in the order x side, y side, diagonal.
+  void draw_tile_objects(uint32_t t, uint32_t center, float angle) {
+    if (g_negctl_terrain_render == 13) return;
+    const int32_t x = tile_x(t), y = tile_y(t);
+    uint32_t n[3] = {0, 0, 0};
+    auto wall = [&](uint32_t side) { return u8(t + kTileWallOn + side) != 0; };   // Terrain::getWall -> Tile::getWall
+    int32_t sx, sy, wx, wy;   // the x-side wall and neighbour step, the y-side wall and neighbour step
+    if (angle == 0.0f) { sx = -1; sy = 1; wx = 6; wy = 4; }
+    else if (angle == 90.0f) { sx = -1; sy = -1; wx = 6; wy = 0; }
+    else if (angle == 180.0f) { sx = 1; sy = -1; wx = 2; wy = 0; }
+    else { sx = 1; sy = 1; wx = 2; wy = 4; }
+    if (wall(static_cast<uint32_t>(wx))) {
+      n[0] = tile_at(x + sx, y);
+      n[2] = tile_at(x + sx, y + sy);
+    }
+    if (wall(static_cast<uint32_t>(wy))) {
+      n[1] = tile_at(x, y + sy);
+      n[2] = tile_at(x + sx, y + sy);
+    }
+    for (uint32_t k : n) {
+      if (k != 0 && !hidden(k) && !is_culled(k, center, angle)) {
+        draw_tile(k, angle);
+        draw_tile_objects(k, center, angle);
+      }
+    }
   }
 
   // Terrain::setViewAngle
@@ -433,6 +661,37 @@ class Renderer {
 bool terrain_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t tile, float angle) {
   Renderer r(ctx, gl, g, terrain);
   return r.render(tile, angle);
+}
+
+void terrain_local_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t tile, uint32_t pivot, float angle) {
+  Renderer r(ctx, gl, g, terrain);
+  r.local_render(tile, pivot, angle);
+}
+
+void terrain_strip_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t pivot, int32_t dir, float angle) {
+  Renderer r(ctx, gl, g, terrain);
+  r.strip_render(pivot, dir, angle);
+}
+
+void terrain_path_update_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t pivot, float angle) {
+  Renderer r(ctx, gl, g, terrain);
+  r.path_update_render(pivot, angle);
+}
+
+bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1,
+                          uint32_t a2) {
+  auto f = [](uint32_t bits) {
+    float v;
+    std::memcpy(&v, &bits, 4);
+    return v;
+  };
+  switch (entry) {
+    case kEntryStripRender: terrain_strip_render(ctx, gl, g, terrain, a0, static_cast<int32_t>(a1), f(a2)); return true;
+    case kEntryRender: terrain_render(ctx, gl, g, terrain, a0, f(a1)); return true;
+    case kEntryLocalRender: terrain_local_render(ctx, gl, g, terrain, a0, a1, f(a2)); return true;
+    case kEntryPathUpdateRender: terrain_path_update_render(ctx, gl, g, terrain, a0, f(a1)); return true;
+    default: return false;
+  }
 }
 
 void terrain_render_negctl(int32_t mode) { g_negctl_terrain_render = mode; }

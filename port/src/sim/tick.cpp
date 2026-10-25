@@ -1304,6 +1304,10 @@ class TraceInput : public InputSource {
           t = fr_->clock[i].second;
           cnext_ = i + 1;
           ++clock_served_;
+          // roadmap S2.3: the original has reached this read, so a checkpoint taken at or before its ordinal shows the frame
+          // as it is now (showCreditsScreen's scroll reads the clock once per pass and dispatches nothing)
+          // (negative control 11: clock reads advance no snapshot)
+          if (i < fr_->clock_pos.size() && SG_NEGCTL(g_negctl_frame) != 11) gfx_progress_fast(ctx_, fr_->clock_pos[i] + 1);
           return true;
         }
     ++clock_none_;
@@ -1533,17 +1537,24 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
         const FrameInput in = frame_input(f);
         input.begin(f, k);
         tk::FrameIoStats io;
-        FrameExit ex;
+        FrameExit ex = FrameExit::Wait;
+        bool out_of_input = false;
         try {
           ex = tk::tick_frame_io(ctx, in, io);
+        } catch (const NeedInput &) {
+          // the last frame's Blocking pump finds no recorded input left: the end of the recording (roadmap S3.3, U-1120).
+          // Every snapshot not yet taken is past the last item the run could consume
+          out_of_input = true;
+          gfx_end_of_input(ctx);
         } catch (...) {
           after_frame(f, k, io);
           throw;
         }
         after_frame(f, k, io);
         if (detail)
-          *detail = ex == FrameExit::Quit ? "the last frame ran to the end of the trace: mainLoop returned (the title menu's quit)"
-                                          : "the last frame ran to the end of the trace";
+          *detail = out_of_input ? "the last frame ran to the end of the trace: a Blocking pump with no input left"
+                    : ex == FrameExit::Quit ? "the last frame ran to the end of the trace: mainLoop returned (the title menu's quit)"
+                                            : "the last frame ran to the end of the trace";
       }
       return 0;
     }
@@ -1590,6 +1601,7 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
       stop = ex == FrameExit::Wait ? "the frame wait" : "the frame's end (no wait reached)";
     } catch (const NeedInput &e) {
       stop = std::string("a Blocking pump with no input left (") + (e.what ? e.what : "?") + ")";
+      gfx_end_of_input(ctx);  // snapshots still pending lie past the last recorded item (S3.3)
     }
     input.end(stats, true);
     if (detail)

@@ -51,6 +51,18 @@ int quantize(double c, int x, int y, int ctl) {
 // sampled at x' = c + (x - c) * (1 + e), the straight-line fit of that staircase: e = 1.046e-5 in x, 1.355e-5 in y (glshift_fit.py);
 // tune[6] / tune[15] override e in units of 1e-9 (0 = the fitted constant, -1 = none).
 constexpr double kAttrScaleX = 1.046e-5, kAttrScaleY = 1.355e-5;
+// SPECULAR (U-1300, log/roadmap/S3/1b_notes.md): the generic GL does not evaluate (n.h)^shininess; it reads a table of 256 entries
+// spanning [t, 1], t = 0.0005^(1 / shininess) (below t the term is 0), at the entry NEAREST to n.h, without interpolation:
+// i = round((n.h - t) * 255 / (1 - t)), value (t + i * (1 - t) / 255)^shininess. Measured with untextured constant-colour quads of
+// the real software GL (port/test/glprobe.py untex, white specular only): 0 of 4,923 quads outside the interval their 16 dither
+// cells allow, against 793 for the exact pow; shininess 13 is the terrain's (initGL's glMateriali).
+double spec_lookup(double nh, double shininess) {
+  const double t = std::pow(0.0005, 1.0 / shininess);
+  if (nh <= t) return 0.0;
+  const double scale = 255.0 / (1.0 - t);
+  const double i = std::min(255.0, std::floor((nh - t) * scale + 0.5));
+  return std::pow(t + i / scale, shininess);
+}
 int wrap_repeat(int64_t i, uint32_t n) {
   const int64_t m = i % static_cast<int64_t>(n);
   return static_cast<int>(m < 0 ? m + n : m);
@@ -277,7 +289,8 @@ void GlRaster::emit(double x, double y, double z, const float *normal) {
           const double n = static_cast<double>(tune[7] < 0 ? -tune[7] : tune[7]);
           nh = (tune[7] < 0 ? std::floor(nh * n) : std::floor(nh * n + 0.5)) / n;
         }
-        const double f = Q(nh > 0 ? std::pow(nh, shininess_) : 0.0);
+        double f = Q(nh > 0 ? std::pow(nh, shininess_) : 0.0);
+        if (tune[7] == 0 && tune[27] == 0 && shininess_ > 0) f = spec_lookup(nh, shininess_);   // tune 27 = 1: the exact pow
         for (int k = 0; k < 3; ++k) col[k] += f * light_[2][k] * mat_spec_[k];
       }
     }
@@ -350,8 +363,12 @@ void GlRaster::triangle(const Vtx &a, const Vtx &b, const Vtx &c) {
   const int miny = std::max(0, static_cast<int>(std::floor(std::min({v0->y, v1->y, v2->y}))));
   const int maxy = std::min(h_ - 1, static_cast<int>(std::ceil(std::max({v0->y, v1->y, v2->y}))));
   const int bpp = tex.fmt == kGlRgba ? 4 : 3;
-  // top-left tie-break: an edge owns the pixel centres exactly on it when it points down, or left on a horizontal edge
-  const int tie = tune[10];   // experiment: which side of a shared edge owns the pixel centres lying exactly on it
+  // tie-break (U-1300): an edge (counter-clockwise order, window y = memory row) owns the pixel centres exactly on it when it points
+  // to +y, or to +x on a horizontal edge; as spans, rows with ymin <= y + 0.5 < ymax and columns with xl < x + 0.5 <= xr. Measured
+  // with probes of the real GL (glprobe tie: 48 coverage differences against 288 .. 923 for the other five rules, the 48 all at
+  // a vertex or a diagonal edge exactly on a centre) and on g6/i005_raised_pathupd (pixels more than one level off 145 -> 10:
+  // path bands whose horizontal edge rounds to y = 344.5 exactly). tune 10 = 2 restores the earlier rule (-x on horizontal edges).
+  const int tie = tune[10] == 0 ? 2 : tune[10] == 2 ? 0 : tune[10];   // experiment: rules 1, 3, 4, 5 (see `inclusive`)
   auto inclusive = [tie](const Vtx &p, const Vtx &q) {
     const double ex = q.x - p.x, ey = q.y - p.y;
     if (tie == 4) return false;

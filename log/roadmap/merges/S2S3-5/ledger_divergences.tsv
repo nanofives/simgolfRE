@@ -1,0 +1,28 @@
+# re/port/divergences.tsv: every segment, chained run, rejected segment, segment-less scenario and defect switch that is not a plain PASS, with its cause. Regenerate: ~/bin/py -3.12 -m port.test.integrator ledger [--run --dll <portsim_c.dll>] (--run first rewrites the inputs: i5/ledger/segs_x64.tsv, i5/ledger/chain_x64.tsv, i5/ledger/defects_x64.tsv).
+kind	name	status	frames	stop	cause	u_rows	owner	explained
+segment-rejected	cov_a_quit/00	rejected			trace slice: no trace of this scenario: the recorder delivered no complete trace (trace_tool record; a scenario that ends with the game quitting never reaches the final poll)		2.4 corpus	yes
+segment-rejected	cov_a_quit/01	rejected			trace slice: no trace of this scenario: the recorder delivered no complete trace (trace_tool record; a scenario that ends with the game quitting never reaches the final poll)		2.4 corpus	yes
+segment-rejected	golfer_events/04	rejected			trace slice: the slice holds 1 DELIVER record(s) of a kind schema v1 does not define (unknown0: a scenario_det action trace_rec.js does not encode, e.g. k='call')	U-0681	2.4 corpus	yes
+scenario-no-segment	cov_a_quit_title	no segment			no checkpoint capture met a frame head inside the frame loop, so no restart prefix exists (re/analysis/data/segment_corpus.md section 4.2, rule 1)		2.4 corpus	yes
+scenario-no-segment	cov_b_location	no segment			no checkpoint capture met a frame head inside the frame loop, so no restart prefix exists (re/analysis/data/segment_corpus.md section 4.2, rule 1)		2.4 corpus	yes
+scenario-no-segment	cov_b_locations	no segment			no checkpoint after the prefix `phoenix` leaves 20 frame heads (segment_corpus.md section 1, step 3)		2.4 corpus	yes
+scenario-no-segment	cov_k1_steps	no segment			no checkpoint after the prefix `steps` leaves 20 frame heads (segment_corpus.md section 1, step 3)		2.4 corpus	yes
+scenario-no-segment	cov_k3_career	no segment			no checkpoint after the prefix `career` leaves 20 frame heads (segment_corpus.md section 1, step 3)		2.4 corpus	yes
+scenario-no-segment	cov_r_bio	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
+scenario-no-segment	cov_r_flic_input	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
+scenario-no-segment	cov_r_palette_hot	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
+scenario-no-segment	cov_r_s2_screens	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
+scenario-no-segment	cov_r_theme_cancel	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
+scenario-no-segment	cov_r_tutorial	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
+defect-switch	sinScaled.readPastTable	evidence			49 segments change (course_season/02,course_season/03,course_season/06,course_season/08,course_season_6y/00,course_season_6y/01,course_season_6y/02,course_season_6y/03,course_season_6y/04,course_season_6y/05,course_season_6y/06,course_season_6y/07 ...); port/test/test_core.py::test_defect_sin_past_table (vectors)		util	yes
+defect-switch	replaceInText.tailLimit	evidence			port/test/test_defects_gen.py::test_d46_overflowing_tail (state)		events	yes
+defect-switch	placeHabitat.clusterLoopBound	evidence			port/test/test_defects_golfers.py::test_place_habitat_table_full_slot_127 (state)		golfers	yes
+defect-switch	spawnObject.cellSearchBound	evidence			port/test/test_defects_golfers.py::test_spawn_object_full_bank (state)		golfers	yes
+defect-switch	loadGolfPro.divideAndRejectGuard	evidence			port/test/test_defects_golfers.py::test_load_golf_pro_zero_divisor, test_load_golf_pro_empty_roster (state)		golfers	yes
+defect-switch	placeAnimal.zeroFrameCount	evidence			port/test/test_defects_golfers.py::test_place_animal_zero_frame_count (state)		golfers	yes
+defect-switch	shotPower.cacheIgnoresPutt	evidence			port/test/test_shots.py::test_defect_shot_power_putt (vectors)		shots	yes
+defect-switch	chooseShotTarget.strictFlagSticky	evidence			port/test/test_shots_strict.py::test_the_switch_changes_the_search, test_golden_digests_of_the_original (state)		shots	yes
+defect-switch	prepareShot.hazardCellTransposed	evidence			13 segments change (cov_b_career/00,cov_b_career/01,cov_b_holes18/00,cov_b_inject/01,cov_b_inject2/00,cov_b_inject2/01,cov_b_shots/00,cov_b_shots2/00,cov_b_shots2/02,cov_r_reload/00,cov_r_sve/00,stories_fixture/00 ...); port/test/test_shots.py::test_defect_hazard_cell_transposed (vectors)		shots	yes
+defect-switch	narrateShot.maskNotRestored	evidence			port/test/test_shots.py::test_defect_narrate_mask_not_restored (state)		shots	yes
+defect-switch	generateRandomCourse.searchBound	evidence			port/test/test_defects_gen.py::test_d52b1_type_0x11_window_without_a_cell, test_d52b2_clubhouse_window_without_a_spot (state)		terrain_gen	yes
+defect-switch	showRoutingMapScreen.exitRemapReadsFrame	no evidence				U-1012	routing	NO

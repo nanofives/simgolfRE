@@ -442,15 +442,7 @@ int sg_gl_render(sg_ctx *ctx, int32_t entry, uint32_t terrain, uint32_t a0, uint
   *len = 0;
   portsim::gl::GlStreamSink sink;
   try {
-    switch (entry) {
-      case 2: {
-        float angle;
-        std::memcpy(&angle, &a1, 4);
-        portsim::terrain_render(ctx->ctx, sink, ctx->gl_globals, terrain, a0, angle);
-        break;
-      }
-      default: return SG_E_NO_FUNCTION;
-    }
+    if (!portsim::terrain_render_entry(ctx->ctx, sink, ctx->gl_globals, entry, terrain, a0, a1, a2)) return SG_E_NO_FUNCTION;
   } catch (const portsim::Fault &f) {
     ctx->run_detail = "fault at va " + std::to_string(f.va);
     return SG_E_FAULT;
@@ -468,18 +460,10 @@ int sg_gl_render_to_raster(sg_ctx *ctx, sg_raster *rast, int32_t entry, uint32_t
   (void)a2;
   if (!ctx || !rast) return SG_E_ARG;
   try {
-    switch (entry) {
-      case 2: {
-        float angle;
-        std::memcpy(&angle, &a1, 4);
-        // the vertex and normal arrays the faces index are the renderer's globals; the rasteriser reads them for glArrayElement
-        const portsim::TerrainGlobals &g = ctx->gl_globals;
-        rast->r.set_arrays(g.vertices.data(), g.vertices.size() / 3, g.normals.data(), g.normals.size() / 3);
-        portsim::terrain_render(ctx->ctx, rast->r, ctx->gl_globals, terrain, a0, angle);
-        break;
-      }
-      default: return SG_E_NO_FUNCTION;
-    }
+    // the vertex and normal arrays the faces index are the renderer's globals; the rasteriser reads them for glArrayElement
+    const portsim::TerrainGlobals &g = ctx->gl_globals;
+    rast->r.set_arrays(g.vertices.data(), g.vertices.size() / 3, g.normals.data(), g.normals.size() / 3);
+    if (!portsim::terrain_render_entry(ctx->ctx, rast->r, ctx->gl_globals, entry, terrain, a0, a1, a2)) return SG_E_NO_FUNCTION;
   } catch (const portsim::Fault &f) {
     ctx->run_detail = "fault at va " + std::to_string(f.va);
     return SG_E_FAULT;

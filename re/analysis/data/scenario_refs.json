@@ -2,7 +2,7 @@
  "version": 1,
  "root": "log/c3/alt/refs",
  "procedure": "re/tools/scenario_refs.py regen (det_a record, det_b / det_c replay, det_b == det_c required); checklist re/analysis/data/scenario_baseline.md",
- "updated": "2026-10-24T10:08:19",
+ "updated": "2026-10-24T18:34:03",
  "scenarios": {
   "cov_a_build3": {
    "family": "c3fya",
@@ -3153,6 +3153,74 @@
    },
    "sound_live": false,
    "recorded": "2026-10-24T09:46:06"
+  },
+  "cov_r_s2_screens": {
+   "family": "s36a",
+   "reference": "log/c3/alt/refs/cov_r_s2_screens/det_b",
+   "schedule_sha256": "a3e32c277f53c51901a0546eb7224cadce617b54b8cadb44bd7e76a2a1449ad2",
+   "reference_sha256": "325f1f018e8896cb7c700f2943f0ef54f88645c674dac653aff98f00890426b1",
+   "checkpoints": [
+    "loading_t200",
+    "loading_t300",
+    "menu",
+    "theme_packs",
+    "difficulty",
+    "champ_courses",
+    "pick_a_pro",
+    "title_back",
+    "course",
+    "radial_hover",
+    "rep_comments",
+    "rep_histograph",
+    "rep_financial",
+    "rep_report1",
+    "rep_shortcuts",
+    "rep_roster",
+    "bulletin",
+    "hole_stats",
+    "best_scores",
+    "system_menu",
+    "preferences",
+    "hire",
+    "end_of_year",
+    "skill_points",
+    "skill_popup",
+    "practice",
+    "cancel_prompt",
+    "editor",
+    "pre_land",
+    "land_popup",
+    "buy_land",
+    "end"
+   ],
+   "first_checkpoint": {
+    "ticker": "0x0000b81f",
+    "rng_seed": "0x49afaac8",
+    "seed_time": "0x00100000",
+    "checkpoint": "loading_t200",
+    "state_sha16": "ceedcfd853462292",
+    "frame_sha16": "afdfbd606f41b565",
+    "T": 202,
+    "forwarded": 0
+   },
+   "verified": {
+    "det_b_vs_det_c": "SAME (32 checkpoints)",
+    "det_a_vs_det_b": "SAME (32 checkpoints)"
+   },
+   "build": {
+    "winmm_sha256": "381ed2b2e1f668fedb260dfd3eb5b531c3e831676771a78bb08d2ba735da8d31",
+    "golf_clean_sha256": "e74ea9f95350796432cb1ccda3bffe00e48789f3e410cd5ffb61f70aceb26789",
+    "c3fy_cpp_sha256": "ea6af5d1834f1be62c3c1ba6a96ee3614109363c422a42ddec35631a724c2ce2",
+    "scenario_det_js_sha256": "41acb7c842eb2897377447f6400466aa55ef6d1bb5ef3cc112301738e9247bfc"
+   },
+   "conditions": {
+    "host": "LIVING-PC",
+    "waveOutGetNumDevs": 0,
+    "keep_sound": true,
+    "instance": "s2_6"
+   },
+   "sound_live": false,
+   "recorded": "2026-10-24T18:31:38"
   }
  }
 }

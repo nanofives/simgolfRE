@@ -12,13 +12,21 @@
 //     order (the pump model of module commands).
 // What is dropped: the tile map, hole and walker drawing (backdrop images, polygons, lines, sprites, text), the display slot
 // calls, window refresh and the waits. Their scratch words (the line point, the last cell pointer) are not written.
+// Roadmap S2.4: with a graphics backend attached (gfx.attach) the screen makes the original's drawing calls through
+// gfx_drop (struct MapDraw below, in the order of c3et.cpp ShowRoutingMap_re). A drawn text the original builds in the
+// text buffer is built there, drawn and the buffer's bytes put back, so the GameState after a pass with a backend equals
+// the one without (the segment and boot gates run without one and with one).
 #include <cstring>
+#include <string>
+#include <vector>
 
 #include "portsim/arith.h"
+#include "portsim/execonst.h"
 #include "portsim/ptr.h"
 #include "portsim/registry.h"
 #include "portsim/registry_list.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/util.h"
 #include "commands_internal.h"
 
@@ -71,6 +79,250 @@ int32_t route_hit(int32_t mode, int32_t x, int32_t y, int32_t count) {
   return -1;
 }
 
+// ------------------------------------------------------------------------------------------------ the drawing (S2.4)
+// The original's drawing calls of one redraw pass (c3et.cpp ShowRoutingMap_re, instruction addresses there), made only with
+// a graphics backend attached. Images: g_spriteRef_8224c8 (loadInfoScreenArt, gfx_routing.cpp) cell offsets: +0 the bottom
+// art, +0x2c / +0x58 / +0x84 / +0xb0 the course / employee / aura / value screens, +0xdc.. the twelve route buttons.
+// Negative control (g_negctl_routing_map): 10 the selected hole's highlight is drawn one row lower.
+constexpr uint32_t kBlack = 0x80000000u;
+struct MapDraw {
+  Ctx &ctx;
+  GameState &gs;
+  const Memory &m;
+  bool on;
+  uint32_t root, win, refs, text;
+  explicit MapDraw(Ctx &c)
+      : ctx(c),
+        gs(c.gs()),
+        m(c.mem),
+        on(g_gfx_attached.load(std::memory_order_relaxed) != 0),
+        root(c.gs().f_stateptr_4c1570[0]),
+        win(state_va(c, &GameState::g_rootWindow)),
+        refs(state_va(c, &GameState::g_spriteRef_8224c8)),
+        text(state_va(c, &GameState::g_textBuffer)) {}
+  void gx(const char *name, std::initializer_list<uint32_t> a) const {
+    gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+  }
+  void scale(uint32_t den) const { gx("Display::setScale", {1, 1, den}); }   // display slot +0x9c (1, 1, den)
+  void image(uint32_t off, int32_t x, int32_t y) const { gx("Image_draw", {refs + off, root, u32(x), u32(y), 0}); }
+  void font(uint32_t f) const { gx("setDrawTarget", {root, f, 0, 0, 0}); }
+  void centred(uint32_t s, int32_t x, int32_t y, uint32_t c = kBlack) const { gx("drawCenteredText", {s, u32(x), u32(y), c}); }
+  void left(uint32_t s, int32_t x, int32_t y, uint32_t c = kBlack) const { gx("drawText4049d0", {s, u32(x), u32(y), c}); }
+  // a text the original builds in the text buffer: built there, drawn by `draw`, and the buffer's bytes put back
+  template <class F>
+  void with_text(const std::string &s, F draw) const {
+    std::vector<uint8_t> keep(0x1000);
+    std::memcpy(keep.data(), m.at(text, 0x1000), 0x1000);
+    std::memcpy(m.at(text, static_cast<uint32_t>(s.size() + 1), true), s.c_str(), s.size() + 1);
+    draw(text);
+    std::memcpy(m.at(text, 0x1000, true), keep.data(), 0x1000);
+  }
+  std::string str(uint32_t va) const {
+    std::string s;
+    for (uint32_t a = va; m.load<uint8_t>(a) != 0; ++a) s += static_cast<char>(m.load<uint8_t>(a));
+    return s;
+  }
+  // mapToScreen456b70 (c3t.cpp): x = 6 (a + b) + 0x6a, y = 3 (b - a) + 0x1b8 - d, d = 1 when g_map822b80[0] != 0, else -1
+  void map_to_screen(int32_t a, int32_t b, int32_t &x, int32_t &y) const {
+    x = add32(mul32(add32(a, b), 6), 0x6a);
+    y = add32(sub32(mul32(sub32(b, a), 3), gs.g_map822b80[0] != 0 ? 1 : -1), 0x1b8);
+  }
+
+  // the backdrop: only while g_map822b80[0] is 0; modes -1..2 pick their screen, others the course one
+  void backdrop(int32_t mode) const {
+    if (gs.g_map822b80[0] != 0) return;
+    image(0, 0, 0xfd);
+    image(mode >= -1 && mode < 3 ? 0x58u + 0x2Cu * static_cast<uint32_t>(mode) : 0x2Cu, 0, 0);
+  }
+
+  // the two tile passes: pass 1 a diamond in 0x80001284 under every tile whose type byte of
+  // unk_0058dd34 is 0xff; pass 2 one diamond per tile in the mode's colour (no tile = type 0x14, skipped by both)
+  void tiles(int32_t mode) const {
+    const uint32_t grid = state_va(ctx, &GameState::g_tileType), tbyte = state_va(ctx, &GameState::unk_0058dd34);
+    const uint32_t attrs = state_va(ctx, &GameState::g_tileTypeAttrs);
+    for (int32_t x = 0; x < 50; ++x)
+      for (int32_t y = 0; y < 50; ++y) {
+        const int32_t t = m.load<int8_t>(grid + u32(x * 50 + y));
+        if (t == 0x14 || m.load<uint8_t>(tbyte + u32(t)) != 0xff) continue;
+        int32_t sx, sy;
+        map_to_screen(x, y, sx, sy);
+        gx("drawRoutingPoly.diamond", {u32(sx), u32(sy), 0x80001284u});
+      }
+    uint32_t colour = 0;
+    for (int32_t x = 0; x < 50; ++x)
+      for (int32_t y = 0; y < 50; ++y) {
+        const int32_t t = m.load<int8_t>(grid + u32(x * 50 + y));
+        if (t == 0x14) continue;
+        int32_t sx, sy;
+        map_to_screen(x, y, sx, sy);
+        if (mode == 2) {   // the home value: rateLot and evalPlacementArea
+          const int32_t lot = i32(cm::call_peer(ctx, "rateLot", {u32(x), u32(y)}).eax);
+          const int32_t area = i32(cm::call_peer(ctx, "evalPlacementArea", {u32(x), u32(y), 2, 5}).eax);
+          const int32_t v = clamp(mul32(sub32(lot / 4, area), 3) / 2, 0, 0xff);
+          colour = 0x80000000u | ((static_cast<uint32_t>(v) & 0xff) >> 3) << 5;
+          if (area == -1) colour = 0x80002000u;
+        }
+        if (mode == 1) {   // the aura: shade A >> 3 red, shade B >> 3 green, (A + B) & 0xff >> 4 blue
+          const uint32_t a = m.load<uint8_t>(state_va(ctx, &GameState::g_tileShadeA) + u32(x * 50 + y));
+          const uint32_t b = m.load<uint8_t>(state_va(ctx, &GameState::g_tileShadeB) + u32(x * 50 + y));
+          colour = 0x80000000u | (a >> 3) << 10 | (b >> 3) << 5 | ((a + b) & 0xff) >> 4;
+          if (t == 0x11) colour = 0x80000218u;
+        }
+        if (mode != 0 && cm::call_peer(ctx, "tileBlocked", {u32(x), u32(y)}).eax != 0) colour = 0x80002108u;
+        if (mode <= 0) {   // the type record's byte +0x26 through the jump table
+          switch (m.load<int8_t>(attrs + 0x26 + 0x30u * u32(t))) {
+            case 0: case 1: colour = 0x80003394u; break;
+            case 2: colour = 0x80001310u; break;
+            case 4: colour = 0x80000204u; break;
+            case 7: colour = 0x80006310u; break;
+            case 10: colour = 0x80005304u; break;
+            case 13: colour = 0x80001184u; break;
+            case 17: colour = 0x80000218u; break;
+            case 18: colour = 0x800010c8u; break;
+            default: colour = 0x8000318cu; break;
+          }
+          if (cm::call_peer(ctx, "tileBlocked", {u32(x), u32(y)}).eax != 0) colour = 0x80000000u;
+        }
+        gx("drawRoutingPoly.diamond", {u32(sx), u32(sy), colour});
+      }
+  }
+
+  // the title and the mode's legend; the text buffer holds the course title (appendCourseTitle(1))
+  void legend(int32_t mode) const {
+    const uint32_t p35c8 = state_va(ctx, &GameState::f_strpool_4d35c8), p3414 = state_va(ctx, &GameState::f_strpool_4d3414);
+    font(state_va(ctx, &GameState::g_fontRef_821f28));
+    const int32_t ty = mode != 0 ? 0x3a : 0x30;
+    if (mode == 0) with_text(str(text) + str(p35c8 + 0x88), [&](uint32_t s) { centred(s, 0x190, ty); });
+    else centred(text, 0x190, ty);
+    font(state_va(ctx, &GameState::g_fontRef_821020));
+    centred(p35c8 + 0x7c, 0x190, 0xf);
+    font(state_va(ctx, &GameState::g_fontRef_821ee8));
+    if (mode == -1) {
+      const uint32_t hole = state_va(ctx, &GameState::f_strpool_4c581c) + 0x100, par = state_va(ctx, &GameState::f_strpool_4d35c4),
+                     yds = state_va(ctx, &GameState::f_strpool_4d35c0), tim = state_va(ctx, &GameState::f_strpool_4d2120) + 4;
+      centred(p35c8 + 0x38, 0x190, 0x55);
+      centred(p35c8 + 0x1c, 0x190, 0x6c);
+      centred(p35c8 + 0x00, 0x190, 0x7e);
+      centred(hole, 0x47, 0x55);
+      centred(hole, 0x234, 0x55);
+      centred(par, 0x84, 0x55);
+      centred(par, 0x276, 0x55);
+      centred(yds, 0xb6, 0x55);
+      centred(yds, 0x2a8, 0x55);
+      centred(tim, 0xef, 0x55);
+      centred(tim, 0x2e1, 0x55);
+    } else if (mode == 1) {
+      centred(p35c8 + 0x58, 0x190, 0xbc);
+      centred(p35c8 + 0x50, 0x190, 0x55);
+      left(state_va(ctx, &GameState::f_strpool_4c6980) + 0x58, 0x270, 0xce);
+      left(p35c8 + 0x48, 0x88, 0xce);
+    } else if (mode == 2) {
+      centred(p35c8 + 0x6c, 0x190, 0xbc);
+      left(p35c8 + 0x64, 0x277, 0xce);
+      left(state_va(ctx, &GameState::f_strpool_4d32e8) + 4, 0x8e, 0xce);
+    }
+    if (mode == 1) {   // Widget_setQuad(root, black, -1, 2, 2), the explanation through drawCenteredTextLines
+      gx("Widget_setQuad", {root, kBlack, 0xffffffffu, 2, 2});
+      with_text(str(p3414 + 0x12c), [&](uint32_t s) { gx("drawCenteredTextLines", {root, s, 0xfa, 0x6e, 0x12c}); });
+    }
+    if (mode == 2) {
+      left(p3414 + 0x108, 0x33, 0x56);
+      left(p3414 + 0xec, 0x33, 0x68);
+      left(p3414 + 0xd0, 0x33, 0x79);
+      left(p3414 + 0xac, 0x33, 0x8a);
+      // "Building a " + the building name at f_tab_buildItems_4c26b0 + 0xf0
+      with_text(str(p3414 + 0xa0) + str(state_va(ctx, &GameState::f_tab_buildItems_4c26b0) + 0xf0),
+                [&](uint32_t s) { left(s, 0x33, 0x9c); });
+      left(p3414 + 0x7c, 0x1ee, 0x56);
+      left(p3414 + 0x64, 0x1ee, 0x68);
+      left(p3414 + 0x48, 0x1ee, 0x79);
+      left(p3414 + 0x24, 0x1ee, 0x8a);
+      left(p3414 + 0x04, 0x1ee, 0x9c);
+    }
+  }
+
+  // the hole list row of hole h in mode -1
+  void hole_row(int32_t mode, int32_t h, uint32_t rec, int32_t selected, int mutant) const {
+    if (mode != -1) return;
+    const int32_t y = add32(mul32((h - 1) % 9, 17), 0x68), col = h <= 9 ? 0x47 : 0x239;
+    if (h == selected) {
+      const int32_t hy = mutant == 10 ? add32(y, 17) : y;
+      gx("fillWindowRect", {win, u32(col - 0x27), u32(hy - 3), 0xee, 0x11, 0x800023e8u});
+      gx("fillWindowRect", {win, u32(col - 0x26), u32(hy - 2), 0xec, 0xf, 0x80007fffu});
+    }
+    const int8_t par = m.load<int8_t>(rec);
+    with_text(std::to_string(h), [&](uint32_t s) { centred(s, col, y, par != 0 ? kBlack : 0x80006318u); });
+    if (par == 0) return;
+    with_text(std::to_string(par), [&](uint32_t s) { centred(s, col + 0x3d, y); });
+    with_text(std::to_string(m.load<int16_t>(rec + 4)), [&](uint32_t s) { centred(s, col + 0x6f, y); });
+    const int32_t n = m.load<int32_t>(rec + 0x20);
+    if (n != 0)
+      with_text(std::to_string(div32(div32(m.load<int32_t>(rec + 0x1ec), n), 40)) + str(state_va(ctx, &GameState::f_strpool_4d3140)),
+                [&](uint32_t s) { centred(s, col + 0xa8, y); });
+  }
+
+  // the hole's tee, waypoint line, number and green on the map. Drawn: the hole number
+  // (drawCenteredText2 in 0x80007ff0, outside the employee mode) at the waypoint, or halfway between tee and green. Not
+  // drawn, reported through drops without a body: the tee and flag sprites (addSprite of a sprite-sheet cell: the FLIC
+  // sheets and the sprite queue's scaled draw are roadmap S3.4 / S3.5) and the lines (lineTo = Terrain::drawLine, an
+  // OpenGL line into the same back buffer: S3.8).
+  void hole_map(int32_t mode, int32_t h, uint32_t rec, uint32_t way) const {
+    int32_t tx, ty;
+    map_to_screen(m.load<int32_t>(rec + 8), m.load<int32_t>(rec + 0xc), tx, ty);
+    gx("showRoutingMapScreen.teeSprite", {u32(tx), u32(ty)});
+    int32_t ax = 0, ay = 0;
+    bool have = true;
+    if (m.load<int32_t>(way + 0x10) != -1) {
+      ax = sar32(m.load<int32_t>(way + 0x10), 10);
+      ay = sar32(m.load<int32_t>(way + 0x14), 10);
+    } else if (m.load<int32_t>(way + 8) != -1) {
+      ax = sar32(m.load<int32_t>(way + 8), 10);
+      ay = sar32(m.load<int32_t>(way + 0xc), 10);
+    } else {
+      have = false;
+    }
+    int32_t gx_, gy_;
+    map_to_screen(m.load<int32_t>(rec + 0x18), m.load<int32_t>(rec + 0x1c), gx_, gy_);
+    if (have) {
+      int32_t sx, sy;
+      map_to_screen(ax, ay, sx, sy);
+      gx("showRoutingMapScreen.line", {u32(sx), u32(sy)});
+      if (mode != 0)
+        with_text(std::to_string(h), [&](uint32_t s) { gx("drawCenteredText2", {s, u32(sx), u32(sub32(sy, 4)), 0x80007ff0u}); });
+    } else if (mode != 0) {
+      with_text(std::to_string(h), [&](uint32_t s) {
+        gx("drawCenteredText2", {s, u32(add32(gx_, tx) / 2), u32(sub32(add32(gy_, ty) / 2, 4)), 0x80007ff0u});
+      });
+    }
+    gx("showRoutingMapScreen.line", {u32(gx_), u32(gy_)});
+    gx("showRoutingMapScreen.flagSprite", {u32(gx_), u32(gy_)});
+  }
+
+  // the buttons: the hovered button's image, the mode's own button, the compass, then the refresh
+  void buttons(int32_t mode, int32_t state) const {
+    scale(1);
+    struct Img { uint32_t off; int32_t x, y; };
+    static const Img kState[5] = {{0x134, 0xb6, 0xfe}, {0xdc, 0x3c, 0x139}, {0x160, 0x1e3, 0xfe}, {0x108, 0x264, 0x139},
+                                  {0x23c, 0x296, 0x214}};
+    const Img *si = state == -2 ? &kState[4] : state == 1 ? &kState[1] : state == 0 ? &kState[0] : state == 2 ? &kState[2]
+                  : state == 3 ? &kState[3] : nullptr;
+    if (si) image(si->off, si->x, si->y);
+    if (mode == 0) {
+      if (state == 9) image(0x268, 0x307, 0x40);
+      else if (state == 10) image(0x294, 0x307, 0xcd);
+      image(0x18c, 0x3c, 0x139);
+    } else if (mode == -1) {
+      image(0x1e4, 0xb6, 0xfe);
+    } else if (mode == 1) {
+      image(0x210, 0x1e2, 0xfe);
+    } else if (mode == 2) {
+      image(0x1b8, 0x264, 0x139);
+    }
+    image(0x688, 0x47, 0x215);
+    gx("Window::refreshFull", {win, 0});
+  }
+};
+
 struct Screen {
   Ctx &ctx;
   GameState &gs;
@@ -120,11 +372,29 @@ struct Screen {
 
   // one redraw pass without the drawing: the shade mode's spread, the title, the hole list's divisions and the walker rows.
   // Returns false when the screen ends here (the map's own end flag). `more` = walkers are hidden below the scroll window.
-  bool redraw(int32_t scroll, int32_t count, bool &more) {
+  bool redraw(int32_t scroll, int32_t count, bool &more, int32_t state, int32_t selected) {
+    const MapDraw d(ctx);
+    if (d.on) d.backdrop(mode());
     if (mode() == 1) call_peer(ctx, "spreadAllShade", {});
-    if (gs.g_map822b80[0] != 0) return false;
+    if (d.on) {
+      d.scale(5);   // display slot +0x9c (1, 1, 5)
+      d.tiles(mode());
+    }
+    if (gs.g_map822b80[0] != 0) {
+      if (d.on) d.scale(1);   // the display scale back to (1, 1, 1)
+      return false;
+    }
     reset_text(ctx);
     call_peer(ctx, "appendCourseTitle", {1});
+    if (d.on) {
+      d.legend(mode());
+      for (int32_t h = 1; h <= 18; ++h) {
+        d.hole_row(mode(), h, hole(h), selected, mutant);
+        if (m.load<int8_t>(hole(h)) != 0) d.hole_map(mode(), h, hole(h), way(h));
+      }
+      if (mode() == 0) d.gx("showRoutingMapScreen.walkers", {});   // the walker list and markers: no body, reported
+      d.buttons(mode(), state);
+    }
     if (mode() == -1) {
       // the hole list prints each hole's average time: the one division the screen makes there
       for (int32_t h = 1; h <= 18; ++h) {
@@ -240,7 +510,7 @@ int32_t show_routing_map_screen(Ctx &ctx) {
   }
   bool more = false;
   for (;;) {
-    if (!s.redraw(scroll, count, more)) break;
+    if (!s.redraw(scroll, count, more, state, selected)) break;
     bool redraw = false, quit = false;
     while (!redraw && !quit) {
       int32_t px = 0, py = 0;

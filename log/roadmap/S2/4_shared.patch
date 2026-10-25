@@ -1,0 +1,635 @@
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -60,6 +60,10 @@
+ }
+ }  // namespace
+ 
++namespace gfxf {
++const int32_t *blit_scale(Gfx &g);   // gfx_prim_fill.cpp (roadmap S2.4): Display::setScale's three words
++}
++
+ void Gfx::unsup(const std::string &why) {
+   if (++unsupported[why] == 1) notes.push_back(why);
+ }
+@@ -341,10 +345,17 @@
+ }
+ 
+ // Image_draw(this, surf, x, y, mask) (c3df.cpp ImageDraw_re): at (m_20 * t0 / t2 + x, m_24 * t1 / t2 + y) with the
+-// display's scale triple, (1, 1, 1) unless Display::setScale changed it (not modelled: it is restored to 1 by every
++// display's scale triple, (1, 1, 1) unless Display::setScale changed it (any other scale is reported; it is restored to 1 by every
+ // caller the menu reaches), through Sprite::drawB -> draw16_1001bc40 for an 8-bit sprite on the 16-bit root surface.
+ static void b_image_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   g.ensure_root(ctx);
++  // the display's blit scale (Display::setScale, gfx_prim_fill.cpp; roadmap S2.4): drawB's blitters scale by nx / den and
++  // ny / den, which the backend does not model
++  const int32_t *scale = gfxf::blit_scale(g);
++  if (scale[0] != 1 || scale[1] != 1 || scale[2] != 1) {
++    g.unsup("Image_draw: a display scale other than (1, 1, 1)");
++    return;
++  }
+   if (!gfx_is_local_key(a[0]) && ctx.mem.load<uint32_t>(a[0] + 8) != 0) {
+     g.unsup("Image_draw: the load arm (a file name at +8)");
+     return;
+--- a/port/src/sim/gfx_families.inc
++++ b/port/src/sim/gfx_families.inc
+@@ -6,3 +6,6 @@
+ SG_GFX_FAMILY(surface)
+ SG_GFX_FAMILY(prim_text)
+ SG_GFX_FAMILY(credits)
++SG_GFX_FAMILY(prim_fill)
++SG_GFX_FAMILY(prim_text2)
++SG_GFX_FAMILY(routing)
+--- a/port/src/sim/routing.cpp
++++ b/port/src/sim/routing.cpp
+@@ -12,13 +12,21 @@
+ //     order (the pump model of module commands).
+ // What is dropped: the tile map, hole and walker drawing (backdrop images, polygons, lines, sprites, text), the display slot
+ // calls, window refresh and the waits. Their scratch words (the line point, the last cell pointer) are not written.
++// Roadmap S2.4: with a graphics backend attached (gfx.attach) the screen makes the original's drawing calls through
++// gfx_drop (struct MapDraw below, in the order of c3et.cpp ShowRoutingMap_re). A drawn text the original builds in the
++// text buffer is built there, drawn and the buffer's bytes put back, so the GameState after a pass with a backend equals
++// the one without (the segment and boot gates run without one and with one).
+ #include <cstring>
++#include <string>
++#include <vector>
+ 
+ #include "portsim/arith.h"
++#include "portsim/execonst.h"
+ #include "portsim/ptr.h"
+ #include "portsim/registry.h"
+ #include "portsim/registry_list.h"
+ #include "portsim/sim/commands.h"
++#include "portsim/sim/gfx.h"
+ #include "portsim/sim/util.h"
+ #include "commands_internal.h"
+ 
+@@ -71,6 +79,250 @@
+   return -1;
+ }
+ 
++// ------------------------------------------------------------------------------------------------ the drawing (S2.4)
++// The original's drawing calls of one redraw pass (c3et.cpp ShowRoutingMap_re, instruction addresses there), made only with
++// a graphics backend attached. Images: g_spriteRef_8224c8 (loadInfoScreenArt, gfx_routing.cpp) cell offsets: +0 the bottom
++// art, +0x2c / +0x58 / +0x84 / +0xb0 the course / employee / aura / value screens, +0xdc.. the twelve route buttons.
++// Negative control (g_negctl_routing_map): 10 the selected hole's highlight is drawn one row lower.
++constexpr uint32_t kBlack = 0x80000000u;
++struct MapDraw {
++  Ctx &ctx;
++  GameState &gs;
++  const Memory &m;
++  bool on;
++  uint32_t root, win, refs, text;
++  explicit MapDraw(Ctx &c)
++      : ctx(c),
++        gs(c.gs()),
++        m(c.mem),
++        on(g_gfx_attached.load(std::memory_order_relaxed) != 0),
++        root(c.gs().f_stateptr_4c1570[0]),
++        win(state_va(c, &GameState::g_rootWindow)),
++        refs(state_va(c, &GameState::g_spriteRef_8224c8)),
++        text(state_va(c, &GameState::g_textBuffer)) {}
++  void gx(const char *name, std::initializer_list<uint32_t> a) const {
++    gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++  }
++  void scale(uint32_t den) const { gx("Display::setScale", {1, 1, den}); }   // display slot +0x9c (1, 1, den)
++  void image(uint32_t off, int32_t x, int32_t y) const { gx("Image_draw", {refs + off, root, u32(x), u32(y), 0}); }
++  void font(uint32_t f) const { gx("setDrawTarget", {root, f, 0, 0, 0}); }
++  void centred(uint32_t s, int32_t x, int32_t y, uint32_t c = kBlack) const { gx("drawCenteredText", {s, u32(x), u32(y), c}); }
++  void left(uint32_t s, int32_t x, int32_t y, uint32_t c = kBlack) const { gx("drawText4049d0", {s, u32(x), u32(y), c}); }
++  // a text the original builds in the text buffer: built there, drawn by `draw`, and the buffer's bytes put back
++  template <class F>
++  void with_text(const std::string &s, F draw) const {
++    std::vector<uint8_t> keep(0x1000);
++    std::memcpy(keep.data(), m.at(text, 0x1000), 0x1000);
++    std::memcpy(m.at(text, static_cast<uint32_t>(s.size() + 1), true), s.c_str(), s.size() + 1);
++    draw(text);
++    std::memcpy(m.at(text, 0x1000, true), keep.data(), 0x1000);
++  }
++  std::string str(uint32_t va) const {
++    std::string s;
++    for (uint32_t a = va; m.load<uint8_t>(a) != 0; ++a) s += static_cast<char>(m.load<uint8_t>(a));
++    return s;
++  }
++  // mapToScreen456b70 (c3t.cpp): x = 6 (a + b) + 0x6a, y = 3 (b - a) + 0x1b8 - d, d = 1 when g_map822b80[0] != 0, else -1
++  void map_to_screen(int32_t a, int32_t b, int32_t &x, int32_t &y) const {
++    x = add32(mul32(add32(a, b), 6), 0x6a);
++    y = add32(sub32(mul32(sub32(b, a), 3), gs.g_map822b80[0] != 0 ? 1 : -1), 0x1b8);
++  }
++
++  // the backdrop: only while g_map822b80[0] is 0; modes -1..2 pick their screen, others the course one
++  void backdrop(int32_t mode) const {
++    if (gs.g_map822b80[0] != 0) return;
++    image(0, 0, 0xfd);
++    image(mode >= -1 && mode < 3 ? 0x58u + 0x2Cu * static_cast<uint32_t>(mode) : 0x2Cu, 0, 0);
++  }
++
++  // the two tile passes: pass 1 a diamond in 0x80001284 under every tile whose type byte of
++  // unk_0058dd34 is 0xff; pass 2 one diamond per tile in the mode's colour (no tile = type 0x14, skipped by both)
++  void tiles(int32_t mode) const {
++    const uint32_t grid = state_va(ctx, &GameState::g_tileType), tbyte = state_va(ctx, &GameState::unk_0058dd34);
++    const uint32_t attrs = state_va(ctx, &GameState::g_tileTypeAttrs);
++    for (int32_t x = 0; x < 50; ++x)
++      for (int32_t y = 0; y < 50; ++y) {
++        const int32_t t = m.load<int8_t>(grid + u32(x * 50 + y));
++        if (t == 0x14 || m.load<uint8_t>(tbyte + u32(t)) != 0xff) continue;
++        int32_t sx, sy;
++        map_to_screen(x, y, sx, sy);
++        gx("drawRoutingPoly.diamond", {u32(sx), u32(sy), 0x80001284u});
++      }
++    uint32_t colour = 0;
++    for (int32_t x = 0; x < 50; ++x)
++      for (int32_t y = 0; y < 50; ++y) {
++        const int32_t t = m.load<int8_t>(grid + u32(x * 50 + y));
++        if (t == 0x14) continue;
++        int32_t sx, sy;
++        map_to_screen(x, y, sx, sy);
++        if (mode == 2) {   // the home value: rateLot and evalPlacementArea
++          const int32_t lot = i32(cm::call_peer(ctx, "rateLot", {u32(x), u32(y)}).eax);
++          const int32_t area = i32(cm::call_peer(ctx, "evalPlacementArea", {u32(x), u32(y), 2, 5}).eax);
++          const int32_t v = clamp(mul32(sub32(lot / 4, area), 3) / 2, 0, 0xff);
++          colour = 0x80000000u | ((static_cast<uint32_t>(v) & 0xff) >> 3) << 5;
++          if (area == -1) colour = 0x80002000u;
++        }
++        if (mode == 1) {   // the aura: shade A >> 3 red, shade B >> 3 green, (A + B) & 0xff >> 4 blue
++          const uint32_t a = m.load<uint8_t>(state_va(ctx, &GameState::g_tileShadeA) + u32(x * 50 + y));
++          const uint32_t b = m.load<uint8_t>(state_va(ctx, &GameState::g_tileShadeB) + u32(x * 50 + y));
++          colour = 0x80000000u | (a >> 3) << 10 | (b >> 3) << 5 | ((a + b) & 0xff) >> 4;
++          if (t == 0x11) colour = 0x80000218u;
++        }
++        if (mode != 0 && cm::call_peer(ctx, "tileBlocked", {u32(x), u32(y)}).eax != 0) colour = 0x80002108u;
++        if (mode <= 0) {   // the type record's byte +0x26 through the jump table
++          switch (m.load<int8_t>(attrs + 0x26 + 0x30u * u32(t))) {
++            case 0: case 1: colour = 0x80003394u; break;
++            case 2: colour = 0x80001310u; break;
++            case 4: colour = 0x80000204u; break;
++            case 7: colour = 0x80006310u; break;
++            case 10: colour = 0x80005304u; break;
++            case 13: colour = 0x80001184u; break;
++            case 17: colour = 0x80000218u; break;
++            case 18: colour = 0x800010c8u; break;
++            default: colour = 0x8000318cu; break;
++          }
++          if (cm::call_peer(ctx, "tileBlocked", {u32(x), u32(y)}).eax != 0) colour = 0x80000000u;
++        }
++        gx("drawRoutingPoly.diamond", {u32(sx), u32(sy), colour});
++      }
++  }
++
++  // the title and the mode's legend; the text buffer holds the course title (appendCourseTitle(1))
++  void legend(int32_t mode) const {
++    const uint32_t p35c8 = state_va(ctx, &GameState::f_strpool_4d35c8), p3414 = state_va(ctx, &GameState::f_strpool_4d3414);
++    font(state_va(ctx, &GameState::g_fontRef_821f28));
++    const int32_t ty = mode != 0 ? 0x3a : 0x30;
++    if (mode == 0) with_text(str(text) + str(p35c8 + 0x88), [&](uint32_t s) { centred(s, 0x190, ty); });
++    else centred(text, 0x190, ty);
++    font(state_va(ctx, &GameState::g_fontRef_821020));
++    centred(p35c8 + 0x7c, 0x190, 0xf);
++    font(state_va(ctx, &GameState::g_fontRef_821ee8));
++    if (mode == -1) {
++      const uint32_t hole = state_va(ctx, &GameState::f_strpool_4c581c) + 0x100, par = state_va(ctx, &GameState::f_strpool_4d35c4),
++                     yds = state_va(ctx, &GameState::f_strpool_4d35c0), tim = state_va(ctx, &GameState::f_strpool_4d2120) + 4;
++      centred(p35c8 + 0x38, 0x190, 0x55);
++      centred(p35c8 + 0x1c, 0x190, 0x6c);
++      centred(p35c8 + 0x00, 0x190, 0x7e);
++      centred(hole, 0x47, 0x55);
++      centred(hole, 0x234, 0x55);
++      centred(par, 0x84, 0x55);
++      centred(par, 0x276, 0x55);
++      centred(yds, 0xb6, 0x55);
++      centred(yds, 0x2a8, 0x55);
++      centred(tim, 0xef, 0x55);
++      centred(tim, 0x2e1, 0x55);
++    } else if (mode == 1) {
++      centred(p35c8 + 0x58, 0x190, 0xbc);
++      centred(p35c8 + 0x50, 0x190, 0x55);
++      left(state_va(ctx, &GameState::f_strpool_4c6980) + 0x58, 0x270, 0xce);
++      left(p35c8 + 0x48, 0x88, 0xce);
++    } else if (mode == 2) {
++      centred(p35c8 + 0x6c, 0x190, 0xbc);
++      left(p35c8 + 0x64, 0x277, 0xce);
++      left(state_va(ctx, &GameState::f_strpool_4d32e8) + 4, 0x8e, 0xce);
++    }
++    if (mode == 1) {   // Widget_setQuad(root, black, -1, 2, 2), the explanation through drawCenteredTextLines
++      gx("Widget_setQuad", {root, kBlack, 0xffffffffu, 2, 2});
++      with_text(str(p3414 + 0x12c), [&](uint32_t s) { gx("drawCenteredTextLines", {root, s, 0xfa, 0x6e, 0x12c}); });
++    }
++    if (mode == 2) {
++      left(p3414 + 0x108, 0x33, 0x56);
++      left(p3414 + 0xec, 0x33, 0x68);
++      left(p3414 + 0xd0, 0x33, 0x79);
++      left(p3414 + 0xac, 0x33, 0x8a);
++      // "Building a " + the building name at f_tab_buildItems_4c26b0 + 0xf0
++      with_text(str(p3414 + 0xa0) + str(state_va(ctx, &GameState::f_tab_buildItems_4c26b0) + 0xf0),
++                [&](uint32_t s) { left(s, 0x33, 0x9c); });
++      left(p3414 + 0x7c, 0x1ee, 0x56);
++      left(p3414 + 0x64, 0x1ee, 0x68);
++      left(p3414 + 0x48, 0x1ee, 0x79);
++      left(p3414 + 0x24, 0x1ee, 0x8a);
++      left(p3414 + 0x04, 0x1ee, 0x9c);
++    }
++  }
++
++  // the hole list row of hole h in mode -1
++  void hole_row(int32_t mode, int32_t h, uint32_t rec, int32_t selected, int mutant) const {
++    if (mode != -1) return;
++    const int32_t y = add32(mul32((h - 1) % 9, 17), 0x68), col = h <= 9 ? 0x47 : 0x239;
++    if (h == selected) {
++      const int32_t hy = mutant == 10 ? add32(y, 17) : y;
++      gx("fillWindowRect", {win, u32(col - 0x27), u32(hy - 3), 0xee, 0x11, 0x800023e8u});
++      gx("fillWindowRect", {win, u32(col - 0x26), u32(hy - 2), 0xec, 0xf, 0x80007fffu});
++    }
++    const int8_t par = m.load<int8_t>(rec);
++    with_text(std::to_string(h), [&](uint32_t s) { centred(s, col, y, par != 0 ? kBlack : 0x80006318u); });
++    if (par == 0) return;
++    with_text(std::to_string(par), [&](uint32_t s) { centred(s, col + 0x3d, y); });
++    with_text(std::to_string(m.load<int16_t>(rec + 4)), [&](uint32_t s) { centred(s, col + 0x6f, y); });
++    const int32_t n = m.load<int32_t>(rec + 0x20);
++    if (n != 0)
++      with_text(std::to_string(div32(div32(m.load<int32_t>(rec + 0x1ec), n), 40)) + str(state_va(ctx, &GameState::f_strpool_4d3140)),
++                [&](uint32_t s) { centred(s, col + 0xa8, y); });
++  }
++
++  // the hole's tee, waypoint line, number and green on the map. Drawn: the hole number
++  // (drawCenteredText2 in 0x80007ff0, outside the employee mode) at the waypoint, or halfway between tee and green. Not
++  // drawn, reported through drops without a body: the tee and flag sprites (addSprite of a sprite-sheet cell: the FLIC
++  // sheets and the sprite queue's scaled draw are roadmap S3.4 / S3.5) and the lines (lineTo = Terrain::drawLine, an
++  // OpenGL line into the same back buffer: S3.8).
++  void hole_map(int32_t mode, int32_t h, uint32_t rec, uint32_t way) const {
++    int32_t tx, ty;
++    map_to_screen(m.load<int32_t>(rec + 8), m.load<int32_t>(rec + 0xc), tx, ty);
++    gx("showRoutingMapScreen.teeSprite", {u32(tx), u32(ty)});
++    int32_t ax = 0, ay = 0;
++    bool have = true;
++    if (m.load<int32_t>(way + 0x10) != -1) {
++      ax = sar32(m.load<int32_t>(way + 0x10), 10);
++      ay = sar32(m.load<int32_t>(way + 0x14), 10);
++    } else if (m.load<int32_t>(way + 8) != -1) {
++      ax = sar32(m.load<int32_t>(way + 8), 10);
++      ay = sar32(m.load<int32_t>(way + 0xc), 10);
++    } else {
++      have = false;
++    }
++    int32_t gx_, gy_;
++    map_to_screen(m.load<int32_t>(rec + 0x18), m.load<int32_t>(rec + 0x1c), gx_, gy_);
++    if (have) {
++      int32_t sx, sy;
++      map_to_screen(ax, ay, sx, sy);
++      gx("showRoutingMapScreen.line", {u32(sx), u32(sy)});
++      if (mode != 0)
++        with_text(std::to_string(h), [&](uint32_t s) { gx("drawCenteredText2", {s, u32(sx), u32(sub32(sy, 4)), 0x80007ff0u}); });
++    } else if (mode != 0) {
++      with_text(std::to_string(h), [&](uint32_t s) {
++        gx("drawCenteredText2", {s, u32(add32(gx_, tx) / 2), u32(sub32(add32(gy_, ty) / 2, 4)), 0x80007ff0u});
++      });
++    }
++    gx("showRoutingMapScreen.line", {u32(gx_), u32(gy_)});
++    gx("showRoutingMapScreen.flagSprite", {u32(gx_), u32(gy_)});
++  }
++
++  // the buttons: the hovered button's image, the mode's own button, the compass, then the refresh
++  void buttons(int32_t mode, int32_t state) const {
++    scale(1);
++    struct Img { uint32_t off; int32_t x, y; };
++    static const Img kState[5] = {{0x134, 0xb6, 0xfe}, {0xdc, 0x3c, 0x139}, {0x160, 0x1e3, 0xfe}, {0x108, 0x264, 0x139},
++                                  {0x23c, 0x296, 0x214}};
++    const Img *si = state == -2 ? &kState[4] : state == 1 ? &kState[1] : state == 0 ? &kState[0] : state == 2 ? &kState[2]
++                  : state == 3 ? &kState[3] : nullptr;
++    if (si) image(si->off, si->x, si->y);
++    if (mode == 0) {
++      if (state == 9) image(0x268, 0x307, 0x40);
++      else if (state == 10) image(0x294, 0x307, 0xcd);
++      image(0x18c, 0x3c, 0x139);
++    } else if (mode == -1) {
++      image(0x1e4, 0xb6, 0xfe);
++    } else if (mode == 1) {
++      image(0x210, 0x1e2, 0xfe);
++    } else if (mode == 2) {
++      image(0x1b8, 0x264, 0x139);
++    }
++    image(0x688, 0x47, 0x215);
++    gx("Window::refreshFull", {win, 0});
++  }
++};
++
+ struct Screen {
+   Ctx &ctx;
+   GameState &gs;
+@@ -120,11 +372,29 @@
+ 
+   // one redraw pass without the drawing: the shade mode's spread, the title, the hole list's divisions and the walker rows.
+   // Returns false when the screen ends here (the map's own end flag). `more` = walkers are hidden below the scroll window.
+-  bool redraw(int32_t scroll, int32_t count, bool &more) {
++  bool redraw(int32_t scroll, int32_t count, bool &more, int32_t state, int32_t selected) {
++    const MapDraw d(ctx);
++    if (d.on) d.backdrop(mode());
+     if (mode() == 1) call_peer(ctx, "spreadAllShade", {});
+-    if (gs.g_map822b80[0] != 0) return false;
++    if (d.on) {
++      d.scale(5);   // display slot +0x9c (1, 1, 5)
++      d.tiles(mode());
++    }
++    if (gs.g_map822b80[0] != 0) {
++      if (d.on) d.scale(1);   // the display scale back to (1, 1, 1)
++      return false;
++    }
+     reset_text(ctx);
+     call_peer(ctx, "appendCourseTitle", {1});
++    if (d.on) {
++      d.legend(mode());
++      for (int32_t h = 1; h <= 18; ++h) {
++        d.hole_row(mode(), h, hole(h), selected, mutant);
++        if (m.load<int8_t>(hole(h)) != 0) d.hole_map(mode(), h, hole(h), way(h));
++      }
++      if (mode() == 0) d.gx("showRoutingMapScreen.walkers", {});   // the walker list and markers: no body, reported
++      d.buttons(mode(), state);
++    }
+     if (mode() == -1) {
+       // the hole list prints each hole's average time: the one division the screen makes there
+       for (int32_t h = 1; h <= 18; ++h) {
+@@ -240,7 +510,7 @@
+   }
+   bool more = false;
+   for (;;) {
+-    if (!s.redraw(scroll, count, more)) break;
++    if (!s.redraw(scroll, count, more, state, selected)) break;
+     bool redraw = false, quit = false;
+     while (!redraw && !quit) {
+       int32_t px = 0, py = 0;
+--- a/port/src/sim/saveload.cpp
++++ b/port/src/sim/saveload.cpp
+@@ -35,7 +35,8 @@
+ //                 7 = the championship file reads one header, 8 = the body read leaves g_saveIoRead at 0
+ //   loadGameBrowserScreen  1 = the scroll-down button scrolls 5, 2 = list rows by 17 pixels, 3 = the load button takes the
+ //                 row after the selection, 4 = back does not restore the flags, 5 = the browsing save is not reloaded,
+-//                 6 = loadThemes never runs after a load, 7 = delete removes the next row's file, 8 = load button radius 0x19
++//                 6 = loadThemes never runs after a load, 7 = delete removes the next row's file, 8 = load button radius 0x19,
++//                 9 = the file names drawn one pixel right (roadmap S2.4, the drawing)
+ //   loadCourse    1 = mode 3 reads the body, 2 = mode 0 does not rebuild the heightfield, 3 = the two slots keep their value
+ //   serialize     (through saveGame / loadGame) 9 = the third body field is skipped on load
+ int g_negctl_save_game = 0;   // 1 = no date, 2 = no .sve extension, 3 = a 0x63-byte header, 4 = body byte 0xf9c flipped
+@@ -473,47 +474,132 @@
+   vstrcat(ctx.mem, text, crt_itoa10(ctx, v, state_va(ctx, &GameState::g_panelNumberText)));
+ }
+ 
+-// the text the selection details page builds (the drawing around it is dropped): the page numbers go through the
+-// text buffer and the number buffer, and the money and skill values through appendNumber / appendCents
+-void details_text(Ctx &ctx) {
++// the drawing calls (defined with the course action menu's below): a no-op without an attached graphics backend
++void gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a);
++
++// The browser's drawing (roadmap S2.4; c3fw.cpp LoadGameBrowserScreen_re, instruction addresses there). Frame objects as
++// backend keys: the 15-element Surface array at gfx_local_key(0x4000 + 0x2c k), the Image at gfx_local_key(0x4400).
++// Button k's normal image is element k, its highlighted image 5 + k, 10 / 14 the load / delete buttons' disabled images.
++const int32_t kBtnX[5] = {0x258, 0x2E4, 0x30A, 0x30A, 0x29E};
++const int32_t kBtnY[5] = {0x208, 0x212, 0x064, 0x17C, 0x208};
++uint32_t bsurf(uint32_t k) { return gfx_local_key(0x4000 + 0x2C * k); }
++uint32_t bimage() { return gfx_local_key(0x4400); }
++uint32_t broot(Ctx &ctx) { return ctx.gs().f_stateptr_4c1570[0]; }
++uint32_t bwin(Ctx &ctx) { return state_va(ctx, &GameState::g_rootWindow); }
++void bimg(Ctx &ctx, uint32_t k, int32_t x, int32_t y) { gx(ctx, "Image_draw", {bsurf(k), broot(ctx), u32(x), u32(y), 0}); }
++void bfont(Ctx &ctx, uint32_t f) { gx(ctx, "setDrawTarget", {broot(ctx), f, 0, 0, 0}); }
++void bcentre(Ctx &ctx, uint32_t s, int32_t x, int32_t y, uint32_t c) { gx(ctx, "drawCenteredText", {s, u32(x), u32(y), c}); }
++void bleft(Ctx &ctx, uint32_t s, int32_t x, int32_t y, uint32_t c) { gx(ctx, "drawText4049d0", {s, u32(x), u32(y), c}); }
++void brefresh(Ctx &ctx) { gx(ctx, "Window::refreshFull", {bwin(ctx), 0}); }
++// the frame objects and the two images' cuts
++void browser_setup(Ctx &ctx) {
++  for (uint32_t k = 0; k < 15; ++k) gx(ctx, "Surface_ctor", {bsurf(k)});
++  gx(ctx, "Image_ctor", {bimage()});
++  struct Cut { uint32_t elem; int32_t x, y, w, h; };
++  static const Cut kMO[7] = {{5, 0x258, 0x208, 0x46, 0x46}, {6, 0x2E4, 0x212, 0x3C, 0x3C}, {7, 0x30A, 0x064, 0x16, 0x28},
++                             {8, 0x30A, 0x17C, 0x16, 0x28}, {9, 0x29E, 0x208, 0x46, 0x46}, {10, 0x258, 0x1B3, 0x46, 0x46},
++                             {14, 0x29E, 0x1B3, 0x46, 0x46}};
++  static const Cut kPlain[5] = {{0, 0x258, 0x208, 0x46, 0x46}, {1, 0x2E4, 0x212, 0x3C, 0x3C}, {2, 0x30A, 0x064, 0x16, 0x28},
++                                {3, 0x30A, 0x17C, 0x16, 0x28}, {4, 0x29E, 0x208, 0x46, 0x46}};
++  const uint32_t p8808 = state_va(ctx, &GameState::f_strpool_4c8808), p8910 = state_va(ctx, &GameState::f_strpool_4c8910);
++  gx(ctx, "loadImage", {bimage(), p8808 + 0x50, 0, 0, 0x100, 2});   // interface\Title_LoadGame_MO
++  for (const Cut &c : kMO) gx(ctx, "Surface_blit", {bsurf(c.elem), bimage(), u32(c.x), u32(c.y), u32(c.w), u32(c.h), 1, 1});
++  gx(ctx, "loadImage", {bimage(), p8910 + 0x6C, 0, 0, 0x100, 2});   // interface\Title_LoadGame
++  for (const Cut &c : kPlain) gx(ctx, "Surface_blit", {bsurf(c.elem), bimage(), u32(c.x), u32(c.y), u32(c.w), u32(c.h), 1, 1});
++}
++void browser_teardown(Ctx &ctx) {
++  gx(ctx, "Image_dtor", {bimage()});
++  for (uint32_t k = 0; k < 15; ++k) gx(ctx, "Surface_free", {bsurf(k)});   // ??_M's element destructor releases the handle
++}
++
++// the text the selection details page builds: the page numbers go through the text buffer and the number buffer, and the
++// money and skill values through appendNumber / appendCents. With `draw` the original's drawing calls between them
++//: each number is drawn from the text buffer as the step before it leaves it.
++void details_text(Ctx &ctx, bool draw) {
+   GameState &gs = ctx.gs();
+   const uint32_t text = text_va(ctx);
+   const uint32_t pool88 = state_va(ctx, &GameState::f_strpool_4c8808);
++  const uint32_t holes_s = state_va(ctx, &GameState::f_strpool_4c88fc), par_s = state_va(ctx, &GameState::f_strpool_4c88f8);
++  constexpr uint32_t hdr = 0x80004210u, val = 0x80000000u, lbl = 0x80002108u, skill = 0x80000210u, info = 0x80007FFFu;
++  if (draw) {
++    bcentre(ctx, holes_s, 0x42, 0x7C, hdr);
++    bcentre(ctx, par_s, 0x7D, 0x7C, hdr);
++    bcentre(ctx, pool88 + 0xE8, 0xB8, 0x7C, hdr);
++  }
+   put_number(ctx, sub32(gs.g_holesPlusOne, 1));
++  if (draw) bcentre(ctx, text, 0x42, 0x92, val);
+   put_number(ctx, gs.g_coursePar);
++  if (draw) bcentre(ctx, text, 0x7D, 0x92, val);
+   put_number(ctx, gs.g_courseYards);
++  if (draw) {
++    bcentre(ctx, text, 0xB8, 0x92, val);
++    bcentre(ctx, pool88 + 0xE0, 0x4B, 0xA9, lbl);
++  }
+   ctx.mem.store<uint8_t>(text, 0);
+   peer(ctx, "appendNumber", {u32(mul32(gs.g_cash_div100, 100))});
++  if (draw) {
++    bcentre(ctx, text, 0xA1, 0xA9, val);
++    bleft(ctx, pool88 + 0xD4, 0x30, 0xC0, lbl);
++    bleft(ctx, pool88 + 0xC4, 0x30, 0xD2, lbl);
++    bleft(ctx, pool88 + 0xB4, 0x30, 0xE4, lbl);
++    bleft(ctx, pool88 + 0xA8, 0x30, 0xF6, lbl);
++  }
+   put_number(ctx, gs.g_funRating);
++  if (draw) bcentre(ctx, text, 0xB8, 0xC0, 0x80001284u);
+   ctx.mem.store<uint8_t>(text, 0);
+   peer(ctx, "appendCents", {u32(gs.g_lengthSkillX100)});
++  if (draw) bcentre(ctx, text, 0xB8, 0xD2, skill);
+   ctx.mem.store<uint8_t>(text, 0);
+   peer(ctx, "appendCents", {u32(gs.g_accuracySkillX100)});
++  if (draw) bcentre(ctx, text, 0xB8, 0xE4, skill);
+   ctx.mem.store<uint8_t>(text, 0);
+   peer(ctx, "appendCents", {u32(gs.g_imaginationX100)});
++  if (draw) {
++    bcentre(ctx, text, 0xB8, 0xF6, skill);
++    bcentre(ctx, pool88 + 0xA0, 0x42, 0x10E, hdr);
++    bcentre(ctx, par_s, 0x7D, 0x10E, hdr);
++    bcentre(ctx, pool88 + 0xE8, 0xB8, 0x10E, hdr);
++  }
+   // one row per hole 1 .. holes (the bound re-read every pass): hole number, par (the signed byte of the hole record) and
+   // yards (the signed word at +4)
+   const uint32_t holes = state_va(ctx, &GameState::g_holes);
+   uint32_t rec = holes + 0x208;
++  int32_t row = 0x11E;
+   for (int32_t h = 1; h < gs.g_holesPlusOne; ++h) {
+     put_number(ctx, h);
++    if (draw) bcentre(ctx, text, 0x42, row, val);
+     put_number(ctx, ctx.mem.load<int8_t>(rec));
++    if (draw) bcentre(ctx, text, 0x7D, row, val);
+     put_number(ctx, ctx.mem.load<int16_t>(rec + 4));
++    if (draw) bcentre(ctx, text, 0xB8, row, val);
+     rec += 0x208;
++    row = add32(row, 0x11);
+   }
+   ctx.mem.store<uint8_t>(text, 0);
+   append_course_title(ctx, 0);
+   vstrcat(ctx.mem, text, pool88 + 0x94);
+   vstrcat(ctx.mem, text, state_va(ctx, &GameState::g_theme));
+   vstrcat(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c59e0));
++  if (draw) bleft(ctx, text, 0x184, 0x1BA, info);
+   vstrcpy(ctx.mem, text, pool88 + 0x84);
+   vstrcat(ctx.mem, text, state_va(ctx, &GameState::g_golferTypes) + 0x10);
++  if (draw) bleft(ctx, text, 0x184, 0x1CA, info);
+   const int32_t record = gs.g_bestRounds[0];
+   if (record != 0) {
+     vstrcpy(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c52c0) + 0x14);
+     put_number(ctx, record, false);
+     vstrcat(ctx.mem, text, pool88 + 0x7C);
+     peer(ctx, "appendString", {0x14});
++    if (draw) bleft(ctx, text, 0x184, 0x1DA, info);
++  }
++  if (draw) {
++    // the course's picture: c = the signed byte +0 of course record g_courseIndex
++    // (g_courseTable + 0x1c, stride 0x2e); u = the signed byte at f_tab_locations_4c1e90 + 0x18 + 0x82 c; the Surface
++    // g_sprites541710 cell u over the mask g_sprites5791f8 cell u at (0x54, 0x20)
++    const int32_t c = ctx.mem.load<int8_t>(state_va(ctx, &GameState::g_courseTable) + 0x1c + u32(mul32(gs.g_courseIndex, 0x2e)));
++    const int32_t u = ctx.mem.load<int8_t>(state_va(ctx, &GameState::f_tab_locations_4c1e90) + 0x18 + u32(mul32(c, 0x82)));
++    gx(ctx, "Surface_stretchBlit", {state_va(ctx, &GameState::g_sprites541710) + u32(mul32(u, 0x2C)),
++                                    state_va(ctx, &GameState::g_sprites5791f8) + u32(mul32(u, 0x2C)), broot(ctx), 0x54, 0x20, 0});
+   }
+ }
+ }  // namespace
+@@ -534,9 +620,17 @@
+   const std::string theme_copy = read_str(ctx.mem, state_va(ctx, &GameState::g_theme));
+   int32_t sel = -1, scroll = 0, n = 0, max_scroll = 0, pick = -1;
+   bool load = false;
++  browser_setup(ctx);
+   gs.g_rootInput[kRootButton] = 0;
+   for (;;) {
+-    // ---- redraw: the list of files (the drawing is dropped)
++    // ---- redraw: the list of files and the selection's details (drawn with a graphics backend, roadmap S2.4)
++    bfont(ctx, state_va(ctx, &GameState::g_fontRef_519a40));
++    gx(ctx, "Surface_blitThunk", {bimage(), broot(ctx), 0, 0, 0, 0, 0x320, 0x258});
++    if (sel == -1) {
++      bimg(ctx, 10, 0x258, 0x208);
++      bimg(ctx, 14, 0x29E, 0x208);
++    }
++    bcentre(ctx, browse + (championship != 0 ? 0x50 : 0x20), 0x1F8, 0x2A, 0x80000000u);
+     if (championship != 0) {
+       vstrcpy(ctx.mem, text, browse + 0x34);
+       n = list_matching_files(ctx, text, none, none);
+@@ -544,9 +638,17 @@
+       vstrcpy(ctx.mem, text, browse + 0xC);
+       n = list_matching_files(ctx, text, none, browsing_name);
+     }
++    bfont(ctx, state_va(ctx, &GameState::g_font51b360));
+     max_scroll = sub32(n, 0x10);
+     if (scroll > max_scroll) scroll = max_scroll;
+     if (scroll < 0) scroll = 0;
++    if (n != 0) {   // the scroll bar
++      const int32_t pos = div32(mul32(scroll, 0xE4), n);
++      const int32_t vis = clamp(sub32(n, scroll), 0, 0x10);
++      const int32_t len = clamp(div32(mul32(vis, 0xE4), n), 0, sub32(0xE4, pos));
++      gx(ctx, "fillWindowRect", {bwin(ctx), 0x30D, u32(add32(pos, 0x93)), 6, u32(len), 0x80007FFFu});
++    }
++    int32_t row_y = 0x74;
+     for (int32_t i = scroll; i < add32(scroll, 0x10) && i < n; ++i) {
+       const uint32_t name = name_at(ctx, i);
+       vstrcpy(ctx.mem, text, name);
+@@ -559,8 +661,13 @@
+           ctx.mem.store<uint8_t>(text + static_cast<uint32_t>(k), k < line.size() ? static_cast<uint8_t>(line[k]) : 0);
+         vstrcat(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c59e0));
+       }
++      if (sel == i) gx(ctx, "fillWindowRect", {bwin(ctx), 0x136, u32(row_y - 1), 0x1C8, 0xF, 0x80007B20u});
++      bleft(ctx, text, mode == 9 ? 0x141 : 0x140, row_y, 0x80000000u);
++      row_y = add32(row_y, 0x10);
+     }
+-    if (sel != -1) details_text(ctx);
++    if (n > add32(scroll, 0x10)) bleft(ctx, state_va(ctx, &GameState::f_strpool_4c88fc) + 8, 0x140, row_y, 0x80000000u);
++    if (sel != -1) details_text(ctx, true);
++    brefresh(ctx);
+ 
+     // ---- the input loop
+     int32_t hot = -1, dwell = 0, action = 0;
+@@ -570,13 +677,20 @@
+       int32_t x = 0, y = 0;
+       if (!src || !src->cursor(x, y)) throw NeedInput{{"loadGameBrowserScreen"}};
+       const int32_t prev = hot;
+-      hot = -1;
++      hot = -1;   // (the original waits waitTicks(2, 0) before the pump; the port's pump model has no wait)
+       if (approx_distance(sub32(x, 0x279), sub32(y, 0x22B)) < (mode == 8 ? 0x19 : 0x1A)) hot = 0;
+       if (approx_distance(sub32(x, 0x301), sub32(y, 0x22C)) < 0x18) hot = 1;
+       if (approx_distance(sub32(x, 0x310), sub32(y, 0x78)) < 0x14) hot = 2;
+       if (approx_distance(sub32(x, 0x310), sub32(y, 0x190)) < 0x14) hot = 3;
+       if (approx_distance(sub32(x, 0x2C0), sub32(y, 0x22B)) < 0x17) hot = 4;
+       if (hot != prev) {
++        if (prev != -1) bimg(ctx, u32(prev), kBtnX[prev], kBtnY[prev]);   // the hover change
++        if (hot != -1) bimg(ctx, u32(5 + hot), kBtnX[hot], kBtnY[hot]);
++        if (sel == -1) {
++          bimg(ctx, 10, 0x258, 0x208);
++          bimg(ctx, 14, 0x29E, 0x208);
++        }
++        brefresh(ctx);
+         dwell = 0;
+       } else {
+         dwell = add32(dwell, 1);
+@@ -585,6 +699,9 @@
+           if (hot == 0) vstrcpy(ctx.mem, text, sel == -1 ? none : tips + 0x50);
+           else if (hot == 1) vstrcpy(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c84e8) + 0xA8);
+           else if (hot == 4) vstrcpy(ctx.mem, text, tips + 0x58);
++          if (dwell == 0x1F) gx(ctx, "blitPanel", {u32(kBtnX[hot] + 6), u32(kBtnY[hot] + 0xE), 0x30, 0x10, 0});
++          gx(ctx, "drawCenteredText2", {text, u32(kBtnX[hot] + 0x1E), u32(kBtnY[hot] + 0x10), 0x80007FFFu});
++          brefresh(ctx);
+         }
+       }
+       if (gs.g_rootInput[kRootButton] != 0) {
+@@ -656,12 +773,18 @@
+       continue;
+     }
+     sel = -1;
++    bimg(ctx, 10, 0x258, 0x208);   // a click on no row
++    bimg(ctx, 14, 0x29E, 0x208);
+   }
+ 
+   if (load) {
+     gs.g_courseType = static_cast<int8_t>(saved_type);
+     gs.g_flags = saved_flags;
+     if (pick >= 0 && pick < n) {
++      bfont(ctx, state_va(ctx, &GameState::g_font519928));   // the loading message
++      bleft(ctx, state_va(ctx, &GameState::f_strpool_4c3f74) + 0x34, 0x226, 0x1C8, 0x80007B20u);
++      bfont(ctx, state_va(ctx, &GameState::g_font51b360));
++      brefresh(ctx);
+       if (championship != 0) {
+         vstrcpy(ctx.mem, text, champ_dir);
+         vstrcat(ctx.mem, text, name_at(ctx, pick));
+@@ -671,6 +794,7 @@
+       }
+       if (read_str(ctx.mem, state_va(ctx, &GameState::g_theme)) != theme_copy && mode != 6) load_themes(ctx, 1);
+       peer_optional(ctx, "enterModal483d30", {});
++      browser_teardown(ctx);
+       return 1;
+     }
+     if (plain && mode != 5) load_game(ctx, course_pool + 0x54, 1, 0, 0);
+@@ -680,6 +804,7 @@
+     if (plain && mode != 5) load_game(ctx, course_pool + 0x54, 1, 0, 0);
+   }
+   peer_optional(ctx, "enterModal483d30", {});
++  browser_teardown(ctx);
+   return 0;
+ }
+ 
+--- a/port/src/sim/tick_boot.inc
++++ b/port/src/sim/tick_boot.inc
+@@ -81,6 +81,8 @@
+                              GS(g_fontRef_821ee8)};
+         for (u32 f : fonts) cc("gditext.createFont", f);
+     }
++    // its image half: the report screens' art cut into their Surfaces (roadmap S2.4, gfx_routing.cpp)
++    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInfoScreenArt.images", nullptr, 0);
+     cc("showLoadingScreen", 0);                                        // ML+0x359
+     tc("Window::refreshFull", GS(g_rootWindow), 0);                    // ML+0x368
+     cc("loadInterfaceArt", 1);                                         // ML+0x36f

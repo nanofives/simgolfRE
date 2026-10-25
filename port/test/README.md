@@ -150,3 +150,26 @@ port/test/framegate.py (roadmap S0.2): every checkpoint of a pinned scenario in 
 attached. It writes one TSV row per checkpoint: status, screen kind, context, the terrain rule, px per region (one-level / beyond one
 level) and the unsupported calls before the snapshot. `~/bin/py -3.12 -m port.test.framegate --all --jobs 2 --out <tsv> --resume`
 is the census (re/roadmap/frame_census.tsv, frame_causes.tsv). Tests: test_framegate.py.
+
+## Body families (graphics backend, roadmap S2.1)
+
+The software graphics backend (module `gfx`, port/src/sim/gfx.cpp) dispatches a drop to the drawing body of that name. Bodies
+live in the core table of gfx.cpp and in FAMILY files, one per area of the screen code, so parallel workers never edit the same
+file:
+
+1. Create `port/src/sim/gfx_<family>.cpp`: include `gfx_body.h`, define `int g_negctl_gfx_<family> = 0;`, a `GfxBodyDef`
+   table `{drop name, body}` (bodies take `(Gfx &, Ctx &, const uint32_t *a, int n)`, a[0..12) the drop's argument slots),
+   an optional not-drawing name list, and `extern const portsim::GfxFamily kGfxFamily_<family> = {"<family>", ...};`.
+2. Add one line `SG_GFX_FAMILY(<family>)` to `port/src/sim/gfx_families.inc`. Nothing else is shared: gfx.cpp references every
+   listed family by name (a static library would drop a self-registering object), and the registry gets `gfx.family.<family>`
+   (returns the body count) with the family's negctl switch (`sg_negctl_set("gfx.family.<family>", mode)`).
+3. Bodies use the shared helpers of gfx_body.h (load_image, crop_sprite, draw16, copy8, draw_g16, draw_text, draw_frame_r3,
+   draw_message_buffer ...), write only the backend's objects, and report a case they do not model with `Gfx::unsup`.
+4. Tests: `gfx.call(name_va, a0..a10)` drives one body without a trace (the drop name as a NUL-terminated string in the
+   context's address space); `gfx.check()` writes `$gfx/bodies.txt` (every body and not-drawing name with its owner, plus
+   `duplicate` lines) and returns the number of names registered twice, which must be 0. The test-only family `selftest`
+   (gfx_selftest.cpp, names prefixed `gfx_selftest.`) is the worked example; port/test/test_gfx.py's S2.1 tests read RED when
+   its line is removed from gfx_families.inc.
+
+gfx.log (`$gfx/log.txt`) lists `handled` and `unsupported` counts, then `first\t<k>\t<reason>` for every distinct unsupported
+reason in first-occurrence order (no cap); a snapshot's `unsupported before it` count n means the first n of them.

@@ -1,0 +1,11 @@
+port/test/test_s2_5_traces.py
+log/roadmap/S2/5_notes.md
+log/roadmap/S2/5_files.txt
+log/roadmap/S2/5_trace_quit.log
+log/roadmap/S2/5_trace_quit_title.log
+log/roadmap/S2/5_boot.log
+log/roadmap/S2/5_framegate.log
+log/roadmap/S2/5_old_cov_a_quit.trace.json
+log/roadmap/S2/5_old_cov_a_quit_title.trace.json
+port/corpus/traces/cov_a_quit.trace(.json) (local)
+port/corpus/traces/cov_a_quit_title.trace(.json) (local)

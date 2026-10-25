@@ -50,10 +50,12 @@ def test_scenarios_registered():
 
 
 def test_scenario_hook_in_scenario_py_loads_this_module():
-    """re/tools/scenario.py's end-of-file hook globs scenario_s[18]_*.py (S8 merge item 5), so it registers this module; the
-    driver still imports scenario_s8_2 itself."""
+    """re/tools/scenario.py's end-of-file hook globs scenario_s[0-9]*_*.py (S8 merge item 5, widened by S2 wave 4), so it registers
+    this module; the driver still imports scenario_s8_2 itself."""
+    import fnmatch
     src = (ROOT / "re" / "tools" / "scenario.py").read_text(encoding="utf-8")
-    assert 'scenario_s[18]_*.py' in src
+    assert 'scenario_s[0-9]*_*.py' in src
+    assert fnmatch.fnmatch("scenario_s8_2.py", "scenario_s[0-9]*_*.py")
     assert "import scenario_s8_2" in (ROOT / "re" / "tools" / "s8_movie_runs.py").read_text(encoding="utf-8")
 
 

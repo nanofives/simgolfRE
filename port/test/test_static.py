@@ -36,7 +36,12 @@ def test_no_original_addresses_in_port_code():
 
 def test_every_module_file_is_listed():
     listed = set(re.findall(r"^SG_MODULE\((\w+)\)", (PORT / "src" / "sim" / "modules.inc").read_text(), re.M))
-    files = {p.stem for p in (PORT / "src" / "sim").glob("*.cpp")}
+    # gfx body families (roadmap S2.1, port/src/sim/gfx_body.h): gfx_<f>.cpp files listed in gfx_families.inc, not modules
+    families = set(re.findall(r"^SG_GFX_FAMILY\((\w+)\)", (PORT / "src" / "sim" / "gfx_families.inc").read_text(), re.M))
+    for f in families:
+        src = (PORT / "src" / "sim" / f"gfx_{f}.cpp").read_text(encoding="utf-8")
+        assert f"kGfxFamily_{f}" in src and f"g_negctl_gfx_{f}" in src, f
+    files = {p.stem for p in (PORT / "src" / "sim").glob("*.cpp")} - {f"gfx_{f}" for f in families}
     assert files == listed, f"files {sorted(files)} != modules.inc {sorted(listed)}"
     for m in listed:
         src = (PORT / "src" / "sim" / f"{m}.cpp").read_text(encoding="utf-8")

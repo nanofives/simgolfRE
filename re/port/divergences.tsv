@@ -1,4 +1,4 @@
-# re/port/divergences.tsv: every segment, chained run, rejected segment, segment-less scenario and defect switch that is not a plain PASS, with its cause. Regenerate: ~/bin/py -3.12 -m port.test.integrator ledger [--run --dll <portsim_c.dll>] (--run first rewrites the inputs: port/build/I4_ledger/segs_x64.tsv, port/build/I4_ledger/chain_x64_merged.tsv, port/build/I4_ledger/defects_x64.tsv).
+# re/port/divergences.tsv: every segment, chained run, rejected segment, segment-less scenario and defect switch that is not a plain PASS, with its cause. Regenerate: ~/bin/py -3.12 -m port.test.integrator ledger [--run --dll <portsim_c.dll>] (--run first rewrites the inputs: i5/ledger/segs_x64.tsv, i5/ledger/chain_x64.tsv, i5/ledger/defects_x64.tsv).
 kind	name	status	frames	stop	cause	u_rows	owner	explained
 segment-rejected	cov_a_quit/00	rejected			trace slice: no trace of this scenario: the recorder delivered no complete trace (trace_tool record; a scenario that ends with the game quitting never reaches the final poll)		2.4 corpus	yes
 segment-rejected	cov_a_quit/01	rejected			trace slice: no trace of this scenario: the recorder delivered no complete trace (trace_tool record; a scenario that ends with the game quitting never reaches the final poll)		2.4 corpus	yes
@@ -11,6 +11,7 @@ scenario-no-segment	cov_k3_career	no segment			no checkpoint after the prefix `c
 scenario-no-segment	cov_r_bio	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
 scenario-no-segment	cov_r_flic_input	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
 scenario-no-segment	cov_r_palette_hot	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
+scenario-no-segment	cov_r_s2_screens	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
 scenario-no-segment	cov_r_theme_cancel	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
 scenario-no-segment	cov_r_tutorial	no segment			no segment corpus run yet (log/p2/p24/<scenario>/plan.json absent)		2.4 corpus	yes
 defect-switch	sinScaled.readPastTable	evidence			49 segments change (course_season/02,course_season/03,course_season/06,course_season/08,course_season_6y/00,course_season_6y/01,course_season_6y/02,course_season_6y/03,course_season_6y/04,course_season_6y/05,course_season_6y/06,course_season_6y/07 ...); port/test/test_core.py::test_defect_sin_past_table (vectors)		util	yes

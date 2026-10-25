@@ -35,7 +35,8 @@ namespace {
 //                 7 = the championship file reads one header, 8 = the body read leaves g_saveIoRead at 0
 //   loadGameBrowserScreen  1 = the scroll-down button scrolls 5, 2 = list rows by 17 pixels, 3 = the load button takes the
 //                 row after the selection, 4 = back does not restore the flags, 5 = the browsing save is not reloaded,
-//                 6 = loadThemes never runs after a load, 7 = delete removes the next row's file, 8 = load button radius 0x19
+//                 6 = loadThemes never runs after a load, 7 = delete removes the next row's file, 8 = load button radius 0x19,
+//                 9 = the file names drawn one pixel right (roadmap S2.4, the drawing)
 //   loadCourse    1 = mode 3 reads the body, 2 = mode 0 does not rebuild the heightfield, 3 = the two slots keep their value
 //   serialize     (through saveGame / loadGame) 9 = the third body field is skipped on load
 int g_negctl_save_game = 0;   // 1 = no date, 2 = no .sve extension, 3 = a 0x63-byte header, 4 = body byte 0xf9c flipped
@@ -473,47 +474,132 @@ void put_number(Ctx &ctx, int32_t v, bool reset = true) {
   vstrcat(ctx.mem, text, crt_itoa10(ctx, v, state_va(ctx, &GameState::g_panelNumberText)));
 }
 
-// the text the selection details page builds (the drawing around it is dropped): the page numbers go through the
-// text buffer and the number buffer, and the money and skill values through appendNumber / appendCents
-void details_text(Ctx &ctx) {
+// the drawing calls (defined with the course action menu's below): a no-op without an attached graphics backend
+void gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a);
+
+// The browser's drawing (roadmap S2.4; c3fw.cpp LoadGameBrowserScreen_re, instruction addresses there). Frame objects as
+// backend keys: the 15-element Surface array at gfx_local_key(0x4000 + 0x2c k), the Image at gfx_local_key(0x4400).
+// Button k's normal image is element k, its highlighted image 5 + k, 10 / 14 the load / delete buttons' disabled images.
+const int32_t kBtnX[5] = {0x258, 0x2E4, 0x30A, 0x30A, 0x29E};
+const int32_t kBtnY[5] = {0x208, 0x212, 0x064, 0x17C, 0x208};
+uint32_t bsurf(uint32_t k) { return gfx_local_key(0x4000 + 0x2C * k); }
+uint32_t bimage() { return gfx_local_key(0x4400); }
+uint32_t broot(Ctx &ctx) { return ctx.gs().f_stateptr_4c1570[0]; }
+uint32_t bwin(Ctx &ctx) { return state_va(ctx, &GameState::g_rootWindow); }
+void bimg(Ctx &ctx, uint32_t k, int32_t x, int32_t y) { gx(ctx, "Image_draw", {bsurf(k), broot(ctx), u32(x), u32(y), 0}); }
+void bfont(Ctx &ctx, uint32_t f) { gx(ctx, "setDrawTarget", {broot(ctx), f, 0, 0, 0}); }
+void bcentre(Ctx &ctx, uint32_t s, int32_t x, int32_t y, uint32_t c) { gx(ctx, "drawCenteredText", {s, u32(x), u32(y), c}); }
+void bleft(Ctx &ctx, uint32_t s, int32_t x, int32_t y, uint32_t c) { gx(ctx, "drawText4049d0", {s, u32(x), u32(y), c}); }
+void brefresh(Ctx &ctx) { gx(ctx, "Window::refreshFull", {bwin(ctx), 0}); }
+// the frame objects and the two images' cuts
+void browser_setup(Ctx &ctx) {
+  for (uint32_t k = 0; k < 15; ++k) gx(ctx, "Surface_ctor", {bsurf(k)});
+  gx(ctx, "Image_ctor", {bimage()});
+  struct Cut { uint32_t elem; int32_t x, y, w, h; };
+  static const Cut kMO[7] = {{5, 0x258, 0x208, 0x46, 0x46}, {6, 0x2E4, 0x212, 0x3C, 0x3C}, {7, 0x30A, 0x064, 0x16, 0x28},
+                             {8, 0x30A, 0x17C, 0x16, 0x28}, {9, 0x29E, 0x208, 0x46, 0x46}, {10, 0x258, 0x1B3, 0x46, 0x46},
+                             {14, 0x29E, 0x1B3, 0x46, 0x46}};
+  static const Cut kPlain[5] = {{0, 0x258, 0x208, 0x46, 0x46}, {1, 0x2E4, 0x212, 0x3C, 0x3C}, {2, 0x30A, 0x064, 0x16, 0x28},
+                                {3, 0x30A, 0x17C, 0x16, 0x28}, {4, 0x29E, 0x208, 0x46, 0x46}};
+  const uint32_t p8808 = state_va(ctx, &GameState::f_strpool_4c8808), p8910 = state_va(ctx, &GameState::f_strpool_4c8910);
+  gx(ctx, "loadImage", {bimage(), p8808 + 0x50, 0, 0, 0x100, 2});   // interface\Title_LoadGame_MO
+  for (const Cut &c : kMO) gx(ctx, "Surface_blit", {bsurf(c.elem), bimage(), u32(c.x), u32(c.y), u32(c.w), u32(c.h), 1, 1});
+  gx(ctx, "loadImage", {bimage(), p8910 + 0x6C, 0, 0, 0x100, 2});   // interface\Title_LoadGame
+  for (const Cut &c : kPlain) gx(ctx, "Surface_blit", {bsurf(c.elem), bimage(), u32(c.x), u32(c.y), u32(c.w), u32(c.h), 1, 1});
+}
+void browser_teardown(Ctx &ctx) {
+  gx(ctx, "Image_dtor", {bimage()});
+  for (uint32_t k = 0; k < 15; ++k) gx(ctx, "Surface_free", {bsurf(k)});   // ??_M's element destructor releases the handle
+}
+
+// the text the selection details page builds: the page numbers go through the text buffer and the number buffer, and the
+// money and skill values through appendNumber / appendCents. With `draw` the original's drawing calls between them
+//: each number is drawn from the text buffer as the step before it leaves it.
+void details_text(Ctx &ctx, bool draw) {
   GameState &gs = ctx.gs();
   const uint32_t text = text_va(ctx);
   const uint32_t pool88 = state_va(ctx, &GameState::f_strpool_4c8808);
+  const uint32_t holes_s = state_va(ctx, &GameState::f_strpool_4c88fc), par_s = state_va(ctx, &GameState::f_strpool_4c88f8);
+  constexpr uint32_t hdr = 0x80004210u, val = 0x80000000u, lbl = 0x80002108u, skill = 0x80000210u, info = 0x80007FFFu;
+  if (draw) {
+    bcentre(ctx, holes_s, 0x42, 0x7C, hdr);
+    bcentre(ctx, par_s, 0x7D, 0x7C, hdr);
+    bcentre(ctx, pool88 + 0xE8, 0xB8, 0x7C, hdr);
+  }
   put_number(ctx, sub32(gs.g_holesPlusOne, 1));
+  if (draw) bcentre(ctx, text, 0x42, 0x92, val);
   put_number(ctx, gs.g_coursePar);
+  if (draw) bcentre(ctx, text, 0x7D, 0x92, val);
   put_number(ctx, gs.g_courseYards);
+  if (draw) {
+    bcentre(ctx, text, 0xB8, 0x92, val);
+    bcentre(ctx, pool88 + 0xE0, 0x4B, 0xA9, lbl);
+  }
   ctx.mem.store<uint8_t>(text, 0);
   peer(ctx, "appendNumber", {u32(mul32(gs.g_cash_div100, 100))});
+  if (draw) {
+    bcentre(ctx, text, 0xA1, 0xA9, val);
+    bleft(ctx, pool88 + 0xD4, 0x30, 0xC0, lbl);
+    bleft(ctx, pool88 + 0xC4, 0x30, 0xD2, lbl);
+    bleft(ctx, pool88 + 0xB4, 0x30, 0xE4, lbl);
+    bleft(ctx, pool88 + 0xA8, 0x30, 0xF6, lbl);
+  }
   put_number(ctx, gs.g_funRating);
+  if (draw) bcentre(ctx, text, 0xB8, 0xC0, 0x80001284u);
   ctx.mem.store<uint8_t>(text, 0);
   peer(ctx, "appendCents", {u32(gs.g_lengthSkillX100)});
+  if (draw) bcentre(ctx, text, 0xB8, 0xD2, skill);
   ctx.mem.store<uint8_t>(text, 0);
   peer(ctx, "appendCents", {u32(gs.g_accuracySkillX100)});
+  if (draw) bcentre(ctx, text, 0xB8, 0xE4, skill);
   ctx.mem.store<uint8_t>(text, 0);
   peer(ctx, "appendCents", {u32(gs.g_imaginationX100)});
+  if (draw) {
+    bcentre(ctx, text, 0xB8, 0xF6, skill);
+    bcentre(ctx, pool88 + 0xA0, 0x42, 0x10E, hdr);
+    bcentre(ctx, par_s, 0x7D, 0x10E, hdr);
+    bcentre(ctx, pool88 + 0xE8, 0xB8, 0x10E, hdr);
+  }
   // one row per hole 1 .. holes (the bound re-read every pass): hole number, par (the signed byte of the hole record) and
   // yards (the signed word at +4)
   const uint32_t holes = state_va(ctx, &GameState::g_holes);
   uint32_t rec = holes + 0x208;
+  int32_t row = 0x11E;
   for (int32_t h = 1; h < gs.g_holesPlusOne; ++h) {
     put_number(ctx, h);
+    if (draw) bcentre(ctx, text, 0x42, row, val);
     put_number(ctx, ctx.mem.load<int8_t>(rec));
+    if (draw) bcentre(ctx, text, 0x7D, row, val);
     put_number(ctx, ctx.mem.load<int16_t>(rec + 4));
+    if (draw) bcentre(ctx, text, 0xB8, row, val);
     rec += 0x208;
+    row = add32(row, 0x11);
   }
   ctx.mem.store<uint8_t>(text, 0);
   append_course_title(ctx, 0);
   vstrcat(ctx.mem, text, pool88 + 0x94);
   vstrcat(ctx.mem, text, state_va(ctx, &GameState::g_theme));
   vstrcat(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c59e0));
+  if (draw) bleft(ctx, text, 0x184, 0x1BA, info);
   vstrcpy(ctx.mem, text, pool88 + 0x84);
   vstrcat(ctx.mem, text, state_va(ctx, &GameState::g_golferTypes) + 0x10);
+  if (draw) bleft(ctx, text, 0x184, 0x1CA, info);
   const int32_t record = gs.g_bestRounds[0];
   if (record != 0) {
     vstrcpy(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c52c0) + 0x14);
     put_number(ctx, record, false);
     vstrcat(ctx.mem, text, pool88 + 0x7C);
     peer(ctx, "appendString", {0x14});
+    if (draw) bleft(ctx, text, 0x184, 0x1DA, info);
+  }
+  if (draw) {
+    // the course's picture: c = the signed byte +0 of course record g_courseIndex
+    // (g_courseTable + 0x1c, stride 0x2e); u = the signed byte at f_tab_locations_4c1e90 + 0x18 + 0x82 c; the Surface
+    // g_sprites541710 cell u over the mask g_sprites5791f8 cell u at (0x54, 0x20)
+    const int32_t c = ctx.mem.load<int8_t>(state_va(ctx, &GameState::g_courseTable) + 0x1c + u32(mul32(gs.g_courseIndex, 0x2e)));
+    const int32_t u = ctx.mem.load<int8_t>(state_va(ctx, &GameState::f_tab_locations_4c1e90) + 0x18 + u32(mul32(c, 0x82)));
+    gx(ctx, "Surface_stretchBlit", {state_va(ctx, &GameState::g_sprites541710) + u32(mul32(u, 0x2C)),
+                                    state_va(ctx, &GameState::g_sprites5791f8) + u32(mul32(u, 0x2C)), broot(ctx), 0x54, 0x20, 0});
   }
 }
 }  // namespace
@@ -534,9 +620,17 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
   const std::string theme_copy = read_str(ctx.mem, state_va(ctx, &GameState::g_theme));
   int32_t sel = -1, scroll = 0, n = 0, max_scroll = 0, pick = -1;
   bool load = false;
+  browser_setup(ctx);
   gs.g_rootInput[kRootButton] = 0;
   for (;;) {
-    // ---- redraw: the list of files (the drawing is dropped)
+    // ---- redraw: the list of files and the selection's details (drawn with a graphics backend, roadmap S2.4)
+    bfont(ctx, state_va(ctx, &GameState::g_fontRef_519a40));
+    gx(ctx, "Surface_blitThunk", {bimage(), broot(ctx), 0, 0, 0, 0, 0x320, 0x258});
+    if (sel == -1) {
+      bimg(ctx, 10, 0x258, 0x208);
+      bimg(ctx, 14, 0x29E, 0x208);
+    }
+    bcentre(ctx, browse + (championship != 0 ? 0x50 : 0x20), 0x1F8, 0x2A, 0x80000000u);
     if (championship != 0) {
       vstrcpy(ctx.mem, text, browse + 0x34);
       n = list_matching_files(ctx, text, none, none);
@@ -544,9 +638,17 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
       vstrcpy(ctx.mem, text, browse + 0xC);
       n = list_matching_files(ctx, text, none, browsing_name);
     }
+    bfont(ctx, state_va(ctx, &GameState::g_font51b360));
     max_scroll = sub32(n, 0x10);
     if (scroll > max_scroll) scroll = max_scroll;
     if (scroll < 0) scroll = 0;
+    if (n != 0) {   // the scroll bar
+      const int32_t pos = div32(mul32(scroll, 0xE4), n);
+      const int32_t vis = clamp(sub32(n, scroll), 0, 0x10);
+      const int32_t len = clamp(div32(mul32(vis, 0xE4), n), 0, sub32(0xE4, pos));
+      gx(ctx, "fillWindowRect", {bwin(ctx), 0x30D, u32(add32(pos, 0x93)), 6, u32(len), 0x80007FFFu});
+    }
+    int32_t row_y = 0x74;
     for (int32_t i = scroll; i < add32(scroll, 0x10) && i < n; ++i) {
       const uint32_t name = name_at(ctx, i);
       vstrcpy(ctx.mem, text, name);
@@ -559,8 +661,13 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
           ctx.mem.store<uint8_t>(text + static_cast<uint32_t>(k), k < line.size() ? static_cast<uint8_t>(line[k]) : 0);
         vstrcat(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c59e0));
       }
+      if (sel == i) gx(ctx, "fillWindowRect", {bwin(ctx), 0x136, u32(row_y - 1), 0x1C8, 0xF, 0x80007B20u});
+      bleft(ctx, text, mode == 9 ? 0x141 : 0x140, row_y, 0x80000000u);
+      row_y = add32(row_y, 0x10);
     }
-    if (sel != -1) details_text(ctx);
+    if (n > add32(scroll, 0x10)) bleft(ctx, state_va(ctx, &GameState::f_strpool_4c88fc) + 8, 0x140, row_y, 0x80000000u);
+    if (sel != -1) details_text(ctx, true);
+    brefresh(ctx);
 
     // ---- the input loop
     int32_t hot = -1, dwell = 0, action = 0;
@@ -570,13 +677,20 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
       int32_t x = 0, y = 0;
       if (!src || !src->cursor(x, y)) throw NeedInput{{"loadGameBrowserScreen"}};
       const int32_t prev = hot;
-      hot = -1;
+      hot = -1;   // (the original waits waitTicks(2, 0) before the pump; the port's pump model has no wait)
       if (approx_distance(sub32(x, 0x279), sub32(y, 0x22B)) < (mode == 8 ? 0x19 : 0x1A)) hot = 0;
       if (approx_distance(sub32(x, 0x301), sub32(y, 0x22C)) < 0x18) hot = 1;
       if (approx_distance(sub32(x, 0x310), sub32(y, 0x78)) < 0x14) hot = 2;
       if (approx_distance(sub32(x, 0x310), sub32(y, 0x190)) < 0x14) hot = 3;
       if (approx_distance(sub32(x, 0x2C0), sub32(y, 0x22B)) < 0x17) hot = 4;
       if (hot != prev) {
+        if (prev != -1) bimg(ctx, u32(prev), kBtnX[prev], kBtnY[prev]);   // the hover change
+        if (hot != -1) bimg(ctx, u32(5 + hot), kBtnX[hot], kBtnY[hot]);
+        if (sel == -1) {
+          bimg(ctx, 10, 0x258, 0x208);
+          bimg(ctx, 14, 0x29E, 0x208);
+        }
+        brefresh(ctx);
         dwell = 0;
       } else {
         dwell = add32(dwell, 1);
@@ -585,6 +699,9 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
           if (hot == 0) vstrcpy(ctx.mem, text, sel == -1 ? none : tips + 0x50);
           else if (hot == 1) vstrcpy(ctx.mem, text, state_va(ctx, &GameState::f_strpool_4c84e8) + 0xA8);
           else if (hot == 4) vstrcpy(ctx.mem, text, tips + 0x58);
+          if (dwell == 0x1F) gx(ctx, "blitPanel", {u32(kBtnX[hot] + 6), u32(kBtnY[hot] + 0xE), 0x30, 0x10, 0});
+          gx(ctx, "drawCenteredText2", {text, u32(kBtnX[hot] + 0x1E), u32(kBtnY[hot] + 0x10), 0x80007FFFu});
+          brefresh(ctx);
         }
       }
       if (gs.g_rootInput[kRootButton] != 0) {
@@ -656,12 +773,18 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
       continue;
     }
     sel = -1;
+    bimg(ctx, 10, 0x258, 0x208);   // a click on no row
+    bimg(ctx, 14, 0x29E, 0x208);
   }
 
   if (load) {
     gs.g_courseType = static_cast<int8_t>(saved_type);
     gs.g_flags = saved_flags;
     if (pick >= 0 && pick < n) {
+      bfont(ctx, state_va(ctx, &GameState::g_font519928));   // the loading message
+      bleft(ctx, state_va(ctx, &GameState::f_strpool_4c3f74) + 0x34, 0x226, 0x1C8, 0x80007B20u);
+      bfont(ctx, state_va(ctx, &GameState::g_font51b360));
+      brefresh(ctx);
       if (championship != 0) {
         vstrcpy(ctx.mem, text, champ_dir);
         vstrcat(ctx.mem, text, name_at(ctx, pick));
@@ -671,6 +794,7 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
       }
       if (read_str(ctx.mem, state_va(ctx, &GameState::g_theme)) != theme_copy && mode != 6) load_themes(ctx, 1);
       peer_optional(ctx, "enterModal483d30", {});
+      browser_teardown(ctx);
       return 1;
     }
     if (plain && mode != 5) load_game(ctx, course_pool + 0x54, 1, 0, 0);
@@ -680,6 +804,7 @@ int32_t load_game_browser_screen(Ctx &ctx, int32_t resume, int32_t championship)
     if (plain && mode != 5) load_game(ctx, course_pool + 0x54, 1, 0, 0);
   }
   peer_optional(ctx, "enterModal483d30", {});
+  browser_teardown(ctx);
   return 0;
 }
 

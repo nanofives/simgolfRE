@@ -47,6 +47,27 @@ struct TerrainGlobals {
 // for one camera angle. Always returns true.
 bool terrain_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t tile, float angle);
 
+// The draw-list passes (roadmap step S3.1). Each queues tiles into the Terrain object's draw list (drawTile: back to front for
+// the angle, one entry per position; drawTileObjects: the neighbours behind camera-facing walls), then draws the list with
+// Tile::render, empties it, pops the matrix and flushes.
+//   localRender(tile, pivot, angle): the 5 x 5 tiles around `tile`, the camera at `pivot`; faults on a NULL tile (the
+//     original's debug assert).
+//   stripRender(pivot, dir, angle): diagonal strips for view direction 1..8 (odd = two nested passes of the neighbouring
+//     even directions; any other value draws nothing).
+//   pathUpdateRender(pivot, angle): the path tiles of the window around `pivot`; keeps the view quadrant the last pass set.
+void terrain_local_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t tile, uint32_t pivot, float angle);
+void terrain_strip_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t pivot, int32_t dir, float angle);
+void terrain_path_update_render(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, uint32_t terrain, uint32_t pivot, float angle);
+
+// The four exported render entry points by the corpus's entry kind, with the raw argument dwords of the exported call (floats
+// as bit patterns): 1 stripRender(a0 pivot, a1 dir, a2 angle), 2 render(a0 tile, a1 angle), 3 localRender(a0 tile, a1 pivot,
+// a2 angle), 4 pathUpdateRender(a0 pivot, a1 angle). Returns false for any other kind (nothing drawn).
+enum TerrainRenderEntry : int32_t {
+  kEntryStripRender = 1, kEntryRender = 2, kEntryLocalRender = 3, kEntryPathUpdateRender = 4
+};
+bool terrain_render_entry(Ctx &ctx, gl::GlSink &gl, TerrainGlobals &g, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1,
+                          uint32_t a2);
+
 // Negative-control mode of the renderer's deliberately wrong bodies (0 = correct); see terrain_render.cpp.
 void terrain_render_negctl(int32_t mode);
 

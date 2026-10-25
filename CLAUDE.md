@@ -1374,6 +1374,95 @@ pixels never reach the gfx back buffer at HEAD, because terrain_state's draw pas
 (U-1121). 2D causes (the first unsupported drawing call): Widget_writePixel 316, Surface_blit3 with an unmodelled source or
 destination 168, Image_draw with a SpriteRef the backend has no sprite for 39, Surface_drawScaled2 2. No non-PASS row lacks an
 unsupported call.
+Roadmap S2 wave 1, the gfx body families (2026-10-24, notes log/roadmap/S2/1_notes.md, 2_notes.md, steps re/roadmap/S2_steps.tsv,
+screen map re/roadmap/S2_screens.tsv, U-1200, U-1210..U-1214). Drawing bodies of the gfx backend can now live in their own files:
+`port/src/sim/gfx_<family>.cpp` includes port/src/sim/gfx_body.h (Image8 / Sprite8 / Surface16 / Gfx and the shared helpers, moved
+out of gfx.cpp), defines a GfxBodyDef table and `kGfxFamily_<family>`, and is listed by one `SG_GFX_FAMILY(<family>)` line in
+port/src/sim/gfx_families.inc, which gfx.cpp expands into explicit references (portsim is a static library, so a self-registering
+object would be dropped) and one registry entry `gfx.family.<family>` carrying the family's negctl switch. New test entries
+`gfx.call(name_va, a0..a10)` (one body without a trace) and `gfx.check()` (`$gfx/bodies.txt`, the count of names registered
+twice); test-only family `selftest` (gfx_selftest.cpp). S0 recommendations 1, 3, 4: gfx.log lists every distinct unsupported reason
+in first-occurrence order with no cap (`first	<k>	<reason>`), kNotDrawing gains playSound, Snd::status, capsLockOff,
+emptyFunc_4a0890, saveCourseJpg, Widget_readPixel, enterModal483d30, and gfx.render's budget is the FRAME records up to the last
+checkpoint + 2 with to_end past the last FRAME record (record_budget). Gates: test_gfx 25 / 25 x64 and Win32 (17 + 8; 6 of the 8
+RED with the selftest line removed), segments 205 / 205 x64 + Win32 with 0 digests changed, boot 58 / 2 / 1 of HEAD's 61, framegate
+sandbox_basic + cov_b_location + cov_r_quit equal to the census in status and px (first_unsupported now the first drawing call,
+Widget_writePixel instead of Snd::status), port test_static 6 / 6 with the family-aware module listing. Controls 8 / 9 RED, gfx 3
+blind on every PASS checkpoint (U-1200). Screen map (S2.2): of the non-PASS census rows, the pinned full-screen 2D checkpoints are
+credits (cov_r_quit, 5), load browser (cov_a_keys k_dlg_L), routing map (k_dlg_R, cov_k1_routing routing) and the character editor
+(cov_a_career career_editor, cov_a_golfer button_0, cov_a_keys3 q_editor); the census marks the last six terrain yes (U-1210). The
+port's screen functions make no drawing calls (3.7b dropped them), so each screen family adds its calls. Twelve families have no
+pinned checkpoint (difficulty, theme packs, pick a pro, hire, F1-F10 reports, end of year, preferences, scroll text / skill points,
+shortcuts / roster, buy land, loading, radial menu). The 480 non-PASS H1WAIT rows are course view plus HUD (S3). claude2 workers have
+no allow rule for a bare `cmake`, so a cmake call waits on an approval nobody sees: S2 workers build through
+log/roadmap/S2/build.py (`~/bin/py`, VS Build Tools' cmake).
+Roadmap S2.3, the credits screen (2026-10-24, notes log/roadmap/S2/3_notes.md, U-1220..U-1226): cov_r_quit's five credits
+checkpoints (quit_00..03, credits: the scroll at five positions) equal the original's back buffer in every pixel, x64 and Win32.
+Three body families: `surface` (gfx_surface.cpp: Image_ctor / dtor / releaseAll, Surface_ctor / free / createFull erase the key's
+backend entries; Surface_blitTakeDirty = Surface_blit; Surface_drawRegion = jgld Sprite::draw -> draw16_1001cde0, which draws
+0xfe and skips only 0xff, at the trims; Surface_blitThunk = Surface_blit3 with one shared size), `prim_text` (gfx_prim_text.cpp:
+Widget_setQuad's colour words per target in the new per-family Gfx::state_of, drawText's min(strlen, limit) characters in the
+main colour, no shadow) and `credits` (gfx_credits.cpp: the logo at its own size, the kept lines read by the backend, one line per
+call, the logo centred by its kept width). loadImage's flag bit 0 decodes with the file's palette. The port's show_credits_screen
+makes the original's drawing calls (credits_gx, local keys). TraceInput::clock advances the gfx snapshots past a served clock read
+(ordinal + 1): the credits scroll reads the clock once per pass and dispatches nothing, so before it every snapshot came from the
+end of the input. Gates: census 609 rows, 604 unchanged, the 5 credits rows UNSUPPORTED -> PASS (PASS 45 -> 50); segments
+205 / 205 x64 + Win32, 0 digests changed; boot equal to S2.1 in all 67 rows (HEAD's 61: 58 / 2 / 1); test_gfx_credits 47 x64 and
+Win32, test_gfx 25, port test_static 6, test_commands 83 / 44 skipped, test_tick 250. Controls: 4 RED on the frames (prim_text 1,
+2, credits 2, tick.frame 11), every other mode RED in a unit test (equivalent on the five frames, U-1223); gfx.attach 3 stays blind
+(the background has no byte 0xfe, U-1200).
+Roadmap S2.4, the routing map and the load browser (2026-10-24, notes log/roadmap/S2/4_notes.md, U-1230..U-1234): cov_k1_routing
+`routing` and cov_a_keys `k_dlg_L` equal the original's back buffer in every pixel, x64 and Win32; cov_a_keys `k_dlg_R` (two holes
+built) differs in 370 px, all in the map's hole overlay: the tee / flag sprites (FLIC sheet cells through the sprite queue's
+scaled draw, S3.4 / S3.5) and the OpenGL tee-to-green lines (Terrain::drawLine, S3.8), reported as drops without a body. Three
+body families: `prim_fill` (gfx_prim_fill.cpp: fillWindowRect / Win_fillRect = jgld fillRect16 with a direct colour, blitPanel
+style 0 / nine-cell over Sprite::drawG, Display::setScale as state, fillConvexPoly16 with its edge walker and span filler),
+`prim_text2` (drawCenteredText2: a shadow run in run-palette colour 1 at (+0, +1), entry 1 measured as RGB (0x80, 0, 0), U-1230)
+and `routing` (gfx_routing.cpp: loadInfoScreenArt's whole art manifest, now drawn at boot; the map's tile diamond). Image_draw
+reports a display scale other than (1, 1, 1). routing.cpp's MapDraw and saveload.cpp's browser issue the original's drawing
+calls; a text the original builds in g_textBuffer is built there, drawn and the buffer put back, so the GameState with a
+backend equals the one without. Gates: census 609 rows against S2.3, PASS 48 -> 50 (raw), 12 already-unsupported rows grew by 344 .. 1,012 px from
+stale root content and partly drawn character-editor frames (first unsupported call unchanged); segments 205 / 205 x64 + Win32, 0 digests changed; boot
+equal to S2.3; test_gfx_routing 35 x64 and Win32, test_gfx 25, test_gfx_credits 47, port test_static 6. Controls: 12 modes RED
+(10 on the frames, 2 only in unit tests), 0 blind.
+Roadmap S2.5 / S2.6, scenarios for the 2D screens (2026-10-24, notes log/roadmap/S2/5_notes.md, 6_notes.md, U-1250..U-1253).
+S2.5 recorded the missing traces of cov_a_quit and cov_a_quit_title (the p24-era runs ended at the exit with a 147-byte .trace.json;
+trace_rec.js's ExitProcess hook now ends them; no re-pin): every one of their 24 checkpoints now runs, the port's boot gives cov_a_quit
+PASS 301 / 301 and cov_a_quit_title NO_FRAMES (it never leaves the title menu and credits), and with the S2.4 backend framegate reads
+19 PASS (every terrain-free row) and 5 in-game rows UNSUPPORTED. S2.6 pinned cov_r_s2_screens (re/tools/scenario_s2_6.py, driven by
+re/tools/s2_6_runs.py, which imports it because scenario.py's hook then globbed only scenario_s1_*.py): 32 checkpoints inside the 2D
+screens no earlier checkpoint showed (loading at T 100 / 200 / 300, theme packs, difficulty, championship course list, pick a pro,
+radial hover label, reports F2 / F3 / F4 / F7 / F8 / F9, the F10 board, hole stats, best scores, the system menu alone, preferences,
+hire, end of year, skill points and their popup, the land popup, buy land), det_a == det_b == det_c on instances\s2_6, the replay
+from the trace SAME at 31 of 32 (theme_packs differs in the frame only, 2,170 px, U-1252). The scenario writes g_date and
+g_eventFlags567a1c to reach end of year and buy land. The port's boot equals the capture up to record 1156 except the cursor tile
+at record 771 (U-1253, cause not measured), then stops at the unported showBuyLandScreen (U-1251). Scroll text has no checkpoint: the
+character editor's load control stops the lockstep clock inside runScrollText (U-1250).
+Roadmap S3 wave 1, the terrain draw-list passes and the rasteriser's last two rules (2026-10-24, steps S3.1 / S3.1b, notes
+log/roadmap/S3/1_notes.md, 1b_notes.md, U-1300..U-1304, U-1390..U-1392):
+port/src/sim/terrain_render.cpp now ports localRender (25 window tiles, no culling of its own; drawTileObjects' camera-facing wall
+neighbours, recursive and culled against pTile), stripRender (odd directions are two complete nested passes, 8 + 2, 2 + 4, 4 + 6,
+8 + 6, each with its own push / list / flush) and pathUpdateRender (no setViewAngle: it keeps the quadrant the previous pass left;
+left edge clipped to x + 1, U-1302), with drawTile's sorted insert (its `other angle` branch test never holds, so the secondary walk
+always runs) and the draw list empty at every pass entry (137 snapshots); terrain_render_entry serves sg_gl_render(_to_raster)'s
+entry kinds 1 strip, 2 render, 3 local, 4 pathUpdate. Recorder: re/tools/gl_record.py --scenario runs a pinned scenario through
+scenario_refs.py with gl_rec.js from process start and --inject queues draw passes on the game thread (Frida runs NO hook for a
+call made inside an Interceptor.attach callback, so the injection is an Interceptor.replace of render / localRender; state the
+module observer's tryInstall reads must be declared before it). Recordings g2 .. g6 (instances\s3_1, cov_b_holes18 / cov_b_paths,
+every run SAME as its reference; port/corpus/gl/<label> via `port.test.glcorpus export`). Evidence: 237 draw-list passes equal the
+original line for line (33 localRender, 160 stripRender, 44 pathUpdateRender; zoom 0 / 1 / 2, four angles, directions 1..8);
+GlRaster from the port's stream meets G2 on 209 / 209 passes outside g6 (one-level 0.08 .. 1.25 % of drawn, at most 24 beyond);
+g6 (60 % type 7, border column not hidden) missed on 16 / 28 with the original's own stream too (U-1300), which S3.1b traced to two
+rules of Windows' generic GL that GlRaster lacked (found with glreplay.exe, which replays g6 bit-exact): the specular term is a
+256-entry table over [0.0005^(1/n), 1] read at the nearest entry, not the exact pow (gl_raster.cpp spec_lookup; 0 of 4,923 probe
+quads wrong; tune 27 = 1 restores the pow, U-1390), and a pixel centre exactly on a horizontal edge belongs to the edge pointing to
++x (tune 10 = 2 restores the old rule, U-1391). Now every pass meets G2 (g6 28 / 28) and one-level pixels fell everywhere: the 209
+other draw-list passes 0.46 -> 0.03 % mean, c7 + t3 0.47 -> 0.06 %; the residual 0 .. 0.21 % is not split further (U-1392);
+controls 9 .. 14 RED on the streams (14 redraws a tile over itself: blind in pixels). Unjudged: passes that draw no tile leave no
+snapshot (U-1301), NULL tile / pivot paths (U-1303), vacuous G2 on 4 localRender passes (U-1304). The renderer is still reached only
+through sg_gl_*; LiveTerrain's draw passes into the back buffer are step S3.2. U-1120 resolved (S3.3): a boot run with to_end
+ended in its last frame's Blocking pump with no input left, NeedInput (a MissingResource) surfaced as -11 and pending snapshots
+were never taken; run_frames now takes them there (cov_a_champ, championship, cov_k3_career: 22 census rows run).
 Phase 7 defect decisions, section S6 of the roadmap orchestrator (2026-10-24, notes log/roadmap/S6/, U-1550..U-1597): `re/port/defect_decisions.tsv`
 holds every defect of model_defects.md (#1-#52, some split by arm) and every non-PASS row of divergences.tsv (grouped by cause) with its class
 (hang / fault / overrun-silent / wrong-value / dead-state / port-gap / harmless), six effect columns (save / balance / sim / frame / hang / fault),

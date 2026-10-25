@@ -525,3 +525,22 @@ Texture handling: load the user's own BMP/TGA through `GameFiles` (never copied 
       zoom 1: 2,588 -> 729), so one per-triangle term is still missing; not the rounding mode, the scale, the centre (moving it by 0.25 px
       changes 2 .. 6 % through ties only) or depth. Candidates for the next probe: the attribute gradients' own precision and the span start
       (now that the vertices are known exactly, a probe with one vertex moved on the 1/256 grid isolates them).
+
+19. DONE, the draw-list passes (roadmap S3.1, 2026-10-24; log/roadmap/S3/1_notes.md): localRender, stripRender and pathUpdateRender
+    with drawTile's sorted draw list and drawTileObjects' wall recursion in terrain_render.cpp (terrain_render_entry for the four
+    entry kinds). Evidence: 237 draw-list passes of the original equal line for line (33 localRender, 160 stripRender, 44
+    pathUpdateRender: c3 .. c7 plus the new recordings g2 .. g6 of re/tools/gl_record.py --scenario, injected on the game thread
+    through an Interceptor.replace of render / localRender, every hooked run SAME as its pinned reference), and every pass rasterised
+    from the port's stream meets G2 except 16 of g6's constructed type-7-heavy state, where the original's own stream misses it
+    identically (U-1300, resolved by item 20). Controls 9 .. 14 RED; 12 only on g6 (U-1302).
+20. DONE, the specular table and the tie rule (roadmap S3.1b, U-1300 / U-1390 / U-1391; 2026-10-24; notes log/roadmap/S3/1b_notes.md).
+    Recording g6 (60 % type-7 tiles) missed the criterion on 16 of 28 passes with the ORIGINAL's own stream. Split by block category
+    against glreplay.exe (log/roadmap/S3/1b_probe.py): the untextured tiles (bound texture 0, drawn with the lit colour) had 6.25 %
+    one-level pixels, all on one constant colour sitting 0.0034 (8-bit units) above a quantisation threshold. Probes of lit
+    untextured quads (glprobe.py untex) showed ambient and diffuse exact and the specular term a step function: the generic GL reads
+    (n.h)^shininess from a 256-entry table over [t, 1], t = 0.0005^(1 / shininess), at the nearest entry (0 of 4,923 probe quads
+    outside their intervals; exact at shininess 1 .. 128; gl_raster.cpp spec_lookup, tune 27 = 1 restores the pow). It was also most
+    of the one-level noise everywhere: c7 0.46 -> 0.06 %, t3 0.49 -> 0.05 %, g2 .. g5 0.37 .. 0.49 -> 0.03 .. 0.04 %. g6/i005's
+    145 pixels more than one level off were path bands whose horizontal bottom edge rounds to y = 344.5 exactly: centres on a
+    horizontal edge belong to edges pointing to +x, not -x (tie probe 48 coverage differences against 288 for the old rule; tune 10 = 2
+    restores it); 10 are left. Result: all 271 recorded-stream replays and all 237 draw-list chains meet G2, no pass worse.

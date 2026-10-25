@@ -48,3 +48,6 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
   (widths and metrics equal, label pixels differ, U-1520).
 - **G6, a `cmake` allow rule on claude2, 2026-10-24: yes.** `Bash(cmake:*)` is in C:\Users\maria\.claude-account2\settings.json
   (it was already there when the orchestrator went to add it: the file had been edited at 16:38 the same day).
+- **G7, where children run after claude2 hit 100 %, 2026-10-24: claude3, cap 12.** All 12 roadmap children were moved to claude3
+  (a Terminal session, `Stop claude2 sessions at 100%, move to claude3`). New leads, workers and integrators spawn on claude3 with the
+  alias models, under the same cap of 12 roadmap sessions, until claude2 resets; then new spawns go back to claude2.

@@ -179,21 +179,60 @@ int32_t credits_line_count(Ctx &ctx, bool &found) {
   }
   return count;
 }
+// Phase 5 / roadmap S2.3: the original's drawing calls, made at their places for an attached graphics backend
+// (portsim/sim/gfx.h); without one each costs one test. The two Surfaces and the Image of the original's frame are backend
+// objects named by gfx_local_key (offsets from 0x3000, apart from the other screens' frame objects); the kept lines are the
+// backend's own (showCreditsScreen.lines, gfx_credits.cpp).
+void credits_gx(Ctx &ctx, const char *name, std::initializer_list<uint32_t> a) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+}
+constexpr uint32_t kCreditsBg = gfx_local_key(0x3000), kCreditsLogo = gfx_local_key(0x3100),
+                   kCreditsImg = gfx_local_key(0x3200);
+// the objects' end: both Surfaces freed, the Image destroyed, then each Surface freed again (its base class shares the
+// destructor)
+void credits_teardown(Ctx &ctx) {
+  credits_gx(ctx, "Surface_free", {kCreditsBg});
+  credits_gx(ctx, "Surface_free", {kCreditsLogo});
+  credits_gx(ctx, "Image_dtor", {kCreditsImg});
+  credits_gx(ctx, "Surface_free", {kCreditsLogo});
+  credits_gx(ctx, "Surface_free", {kCreditsBg});
+}
 }  // namespace
 
 int32_t show_credits_screen(Ctx &ctx) {
   GameState &gs = ctx.gs();
   const int mode = SG_NEGCTL(g_negctl_credits);
+  const uint32_t root = gs.f_stateptr_4c1570[0], pool = GS(f_strpool_4d21a4);
+  // the objects, the 800 x 600 surface of the Image, the background (the pool's text +0x28) taken whole by the first Surface,
+  // the logo (text +0x1c) taken by the second at its own size, the Image's data released
+  credits_gx(ctx, "Surface_ctor", {kCreditsBg});
+  credits_gx(ctx, "Surface_ctor", {kCreditsLogo});
+  credits_gx(ctx, "Image_ctor", {kCreditsImg});
+  credits_gx(ctx, "Surface_createFull", {kCreditsImg, 0x320, 0x258, 0, 1, 0, 0});
+  credits_gx(ctx, "loadImage", {kCreditsImg, pool + 0x28, 0, 0, 0x100, 1});
+  credits_gx(ctx, "Surface_blitTakeDirty", {kCreditsBg, kCreditsImg, 0, 0, 0x320, 0x258, 1, 0});
+  credits_gx(ctx, "loadImage", {kCreditsImg, pool + 0x1c, 0, 0, 0x100, 1});
+  credits_gx(ctx, "showCreditsScreen.logo", {kCreditsLogo, kCreditsImg});
+  credits_gx(ctx, "Image_releaseAll", {kCreditsImg});
   bool found = false;
   const int32_t count = credits_line_count(ctx, found);
-  if (!found) return 0;
+  if (!found) {
+    credits_teardown(ctx);
+    return 0;
+  }
+  credits_gx(ctx, "showCreditsScreen.lines", {u32(count)});
+  credits_gx(ctx, "setDrawTarget", {root, GS(g_fontRef_821020), 0, 0, 0});
+  credits_gx(ctx, "Widget_setQuad", {root, 0x80007fffu, 0xffffffffu, 2, 2});
   InputSource *src = input_source(ctx);
   uint32_t t0 = 0;
   if (!src || !src->clock(kSiteCreditsStart, t0)) throw NeedInput{{"showCreditsScreen"}};
   const uint32_t font = GS(g_fontRef_821020);
   int32_t line_h = ctx.mem.load<int32_t>(font + 0xc);
   if (ctx.mem.load<int32_t>(font + 8) >= 0) line_h = add32(ctx.mem.load<int32_t>(font + 0x10), ctx.mem.load<int32_t>(font + 8));
-  if (count == 0) return 0;
+  if (count == 0) {
+    credits_teardown(ctx);
+    return 0;
+  }
   const int64_t total = int64_t(line_h) * count + 0x96;
   src->pace(kSiteCreditsPass);
   struct Unpace {
@@ -205,9 +244,11 @@ int32_t show_credits_screen(Ctx &ctx) {
     uint32_t now = 0;
     if (!src->clock(kSiteCreditsPass, now)) throw NeedInput{{"showCreditsScreen"}};
     int32_t y = 0x258 - static_cast<int32_t>((now - t0) / 0x1e);
+    credits_gx(ctx, "Image_draw", {kCreditsBg, root, 0, 0, 0});
     if (-int64_t(y) > total) running = false;
     if (y < 0x258)
       for (int32_t i = 0; i < count; ++i) {
+        credits_gx(ctx, "showCreditsScreen.line", {u32(i), u32(y), kCreditsLogo});
         y = add32(y, line_h);
         // the scroll does not wait for input: once the source holds no further dispatch the pumps receive nothing, as the
         // original's do (a Blocking pump would ask for one and fail)
@@ -221,7 +262,10 @@ int32_t show_credits_screen(Ctx &ctx) {
       }
     if (gs.g_rootInput[kButton] != 0) running = false;
     else if (mode != 1 && flush_redraw(ctx) != 0) running = false;
+    credits_gx(ctx, "Window::refreshFull", {GS(g_rootWindow), 0});
   } while (running);
+  credits_gx(ctx, "showCreditsScreen.free", {});
+  credits_teardown(ctx);
   return 0;
 }
 

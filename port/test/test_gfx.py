@@ -25,6 +25,9 @@ border blend ignores its mask) RED on buttons, gfx 6 (the panel's shade byte dra
 """
 from __future__ import annotations
 
+import ctypes
+
+import numpy as np
 import pytest
 
 from port.test import boot as B
@@ -130,3 +133,167 @@ def test_whole_boot_with_the_backend_attached(portlib):
     run = GX.render(SCEN, [CHK], portlib, max_records=10**6)
     assert run.boot.status == "PASS", run.boot.detail
     assert run.boot.records == run.boot.expected
+
+
+# ------------------------------------------------------------------------------------------------ roadmap S2.1: the family table
+# A test-only body family (port/src/sim/gfx_selftest.cpp, listed in gfx_families.inc) is dispatched through the same table as
+# every real body. Removing its line from gfx_families.inc makes these tests RED: gfx.family.selftest is gone and gfx.call
+# reports `no body: gfx_selftest.fillRoot` instead of drawing (log/roadmap/S2/1_notes.md, the removal control).
+NAME_VA = 0x30000000
+ROOT_W, ROOT_H = 0x320, 0x258
+SELFTEST_NEGCTL = [(1, "fillRoot leaves the rectangle's last column unfilled"), (2, "loadCopy copies to (x + 1, y)")]
+# kNotDrawing (gfx.cpp): drops that draw nothing, never reported unsupported (S0 recommendation 1; framegate.py NOT_DRAWING)
+NOT_DRAWING = ("waitTicks", "startSoundSlot", "playSound", "Snd::status", "capsLockOff", "emptyFunc_4a0890", "saveCourseJpg",
+               "Widget_readPixel", "enterModal483d30")
+
+
+@pytest.fixture(scope="module")
+def flib():
+    lib = L.load()
+    if not lib.has("gfx.attach"):
+        pytest.skip("the library has no gfx module")
+    return lib
+
+
+def _gstate(lib):
+    st = lib.state()
+    st._namebuf = st.map(NAME_VA, bytearray(0x1000))
+    st.call("gfx.attach", [])
+    return st
+
+
+def _put_str(st, off: int, s: str) -> int:
+    raw = s.encode() + b"\0"
+    ctypes.memmove(ctypes.addressof(st._namebuf) + off, raw, len(raw))
+    return NAME_VA + off
+
+
+def _gcall(st, name: str, args=()) -> int:
+    _put_str(st, 0, name)
+    return st.call("gfx.call", [NAME_VA] + list(args) + [0] * (11 - len(args))).eax
+
+
+def _root(st):
+    assert st.call("gfx.dump", [1]).eax == 0
+    raw = st.files_read("$gfx/root.555")
+    return np.frombuffer(raw, "<u2").reshape(ROOT_H, ROOT_W)
+
+
+def _log(st) -> str:
+    st.call("gfx.log", [])
+    return st.files_read("$gfx/log.txt").decode()
+
+
+def _pcx(w: int, h: int, rows: list[list[int]], pal: dict[int, tuple[int, int, int]]) -> bytes:
+    """A synthetic 8-bit PCX (version 5, RLE, one plane; literal bytes < 0xc0 only) with the given palette entries."""
+    bpl = w + (w & 1)
+    hdr = bytearray(0x80)
+    hdr[0], hdr[1], hdr[2], hdr[3] = 0xA, 5, 1, 8
+    hdr[8:10] = (w - 1).to_bytes(2, "little")
+    hdr[10:12] = (h - 1).to_bytes(2, "little")
+    hdr[65] = 1
+    hdr[66:68] = bpl.to_bytes(2, "little")
+    body = bytearray()
+    for r in rows:
+        body += bytes(r + [0] * (bpl - len(r)))
+    p = bytearray(0x300)
+    for k, (r, g, b) in pal.items():
+        p[3 * k:3 * k + 3] = bytes((r, g, b))
+    return bytes(hdr) + bytes(body) + b"\x0c" + bytes(p)
+
+
+def _rgb555(r, g, b):
+    return ((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3)
+
+
+def test_family_table_registers_selftest(flib):
+    assert flib.has("gfx.family.selftest"), "gfx_families.inc does not list the selftest family"
+    with _gstate(flib) as st:
+        assert st.call("gfx.family.selftest", []).eax == 2
+        assert st.call("gfx.check", []).eax == 0, st.files_read("$gfx/bodies.txt")
+        lines = set(st.files_read("$gfx/bodies.txt").decode().splitlines())
+    assert "body\tgfx_selftest.fillRoot\tselftest" in lines
+    assert "body\tgfx_selftest.loadCopy\tselftest" in lines
+    assert "not_drawing\tgfx_selftest.quiet\tselftest" in lines
+    for core in ("showTitleScreen", "loadImage", "Image_draw", "Window::refreshFull"):
+        assert f"body\t{core}\tgfx" in lines, core
+    for nd in NOT_DRAWING:
+        assert f"not_drawing\t{nd}\tgfx" in lines, nd
+
+
+def test_selftest_fill_is_dispatched(flib):
+    with _gstate(flib) as st:
+        assert _gcall(st, "gfx_selftest.fillRoot", [10, 20, 5, 3, 0x1234]) == 1
+        img = _root(st)
+        log = _log(st)
+    assert (img[20:23, 10:15] == 0x1234).all()
+    assert int((img == 0x1234).sum()) == 15
+    assert "handled\tgfx_selftest.fillRoot\t1" in log
+
+
+def test_selftest_load_copy_uses_the_shared_helpers(flib):
+    pal = {1: (0xff, 0, 0), 2: (0, 0x80, 0), 3: (8, 16, 0xf8)}
+    data = _pcx(3, 2, [[1, 2, 3], [3, 2, 1]], pal)
+    with _gstate(flib) as st:
+        st.files_put("selftest.pcx", data)
+        assert _gcall(st, "gfx_selftest.loadCopy", [_put_str(st, 0x100, "selftest.pcx"), 40, 50]) == 1
+        img = _root(st)
+        log = _log(st)
+    assert "unsupported\t" not in log, log
+    want = [[_rgb555(*pal[i]) for i in row] for row in ([1, 2, 3], [3, 2, 1])]
+    assert img[50:52, 40:43].tolist() == want
+
+
+@pytest.mark.parametrize("mode,what", SELFTEST_NEGCTL)
+def test_selftest_negctl_red(flib, mode, what):
+    prev = flib.negctl("gfx.family.selftest", mode)
+    try:
+        with _gstate(flib) as st:
+            st.files_put("selftest.pcx", _pcx(3, 2, [[1, 2, 3], [3, 2, 1]], {1: (0xff, 0, 0), 2: (0, 0x80, 0), 3: (8, 16, 0xf8)}))
+            _gcall(st, "gfx_selftest.fillRoot", [10, 20, 5, 3, 0x1234])
+            _gcall(st, "gfx_selftest.loadCopy", [_put_str(st, 0x100, "selftest.pcx"), 40, 50])
+            img = _root(st)
+    finally:
+        flib.negctl("gfx.family.selftest", prev or 0)
+    fill_ok = int((img == 0x1234).sum()) == 15 and (img[20:23, 10:15] == 0x1234).all()
+    copy_ok = img[50, 40] == _rgb555(0xff, 0, 0) and img[51, 42] == _rgb555(0xff, 0, 0)
+    assert not (fill_ok and copy_ok), (mode, what)
+
+
+def test_not_drawing_drops_are_never_unsupported(flib):
+    with _gstate(flib) as st:
+        for nd in NOT_DRAWING + ("gfx_selftest.quiet",):
+            assert _gcall(st, nd) == 0, nd
+        assert st.call("gfx.log", []).eax == 0, _log(st)
+
+
+def test_log_lists_every_reason_in_first_occurrence_order(flib):
+    # S0 recommendation 3: no 64 cap; `first\t<k>\t<reason>` in the order the reasons first occurred (framegate.py reads them)
+    names = [f"gfx_selftest.none{k:03d}" for k in range(80, 0, -1)]   # descending, so a sorted list would differ
+    with _gstate(flib) as st:
+        for n in names:
+            assert _gcall(st, n) == 0
+        _gcall(st, names[5])                                              # a repeat adds no line
+        n_unsup = st.call("gfx.log", []).eax
+        log = st.files_read("$gfx/log.txt").decode()
+    first = [ln.split("\t") for ln in log.splitlines() if ln.startswith("first\t")]
+    assert n_unsup == len(names)
+    assert [int(f[1]) for f in first] == list(range(len(names)))
+    assert [f[2] for f in first] == [f"no body: {n}" for n in names]
+    assert f"unsupported\tno body: {names[5]}\t2" in log
+
+
+def test_record_budget_runs_one_frame_past_the_checkpoint():
+    # S0 recommendation 4: FRAME records at or before the last checkpoint's ordinal + 2; past the trace's last FRAME, to_end
+    if not (B.TRACES / f"{SCEN}.trace").exists() or not (GX.REFS / SCEN / "det_b" / "summary.json").exists():
+        pytest.skip("no trace or pinned reference for sandbox_basic")
+    import trace_format as TF
+    tr = TF.read(B.TRACES / f"{SCEN}.trace")
+    pos = [r.f["pos"] for r in tr.records if r.type == TF.FRAME]
+    o = GX.checkpoint_ordinal(SCEN, CHK)
+    mr, to_end = GX.record_budget(SCEN, o)
+    assert mr == sum(1 for p in pos if p <= o) + 2
+    assert to_end is (mr > len(pos))
+    mr2, to_end2 = GX.record_budget(SCEN, pos[-1] + 1)
+    assert mr2 == len(pos) + 2 and to_end2 is True
+    assert GX.record_budget(SCEN, o, max_records=7) == (7, False)

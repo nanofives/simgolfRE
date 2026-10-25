@@ -24,6 +24,9 @@
   let buf = [];
   const seen = {};
   const CAP = 4000000;
+  // injection state (glrecInject, below), declared first: the module observer can run tryInstall while this script evaluates
+  let injectQ = null, injecting = false, injCur = 0, injSeq = 0, injDone = 0, injLog = [], replaced = false, injectCond = null;
+  const injSnaps = [], entryDepth = {}, NF = {};
 
   function hex(v) { return '0x' + (v >>> 0).toString(16); }
   function fnv(p, n) {
@@ -57,7 +60,7 @@
     const meta = { w: w, h: ds.add(8).readS32(), wb: wb, bpp: ds.add(18).readU16(), biHeight: bh, comp: ds.add(40).readU32(),
                    m0: ds.add(64).readU32(), m1: ds.add(68).readU32(), m2: ds.add(72).readU32() };
     if (bits.isNull()) return null;
-    return { meta: meta, bytes: bits.readByteArray(wb * Math.abs(bh)) };
+    return { meta: meta, bytes: bits.readByteArray(wb * Math.abs(bh)), bits: bits };
   }
 
   function hook(mod, name, spec) {
@@ -155,8 +158,9 @@
               if (!op.isNull()) { snap.tobjAddr = op.toUInt32(); snap.tobj = op.readByteArray(0x164ad0); }
               snap.tdata = tm.base.add(0x5f000).readByteArray(0xb4000);
             }
-            lastByKind[snap.entry ? snap.entry.kind : 0] = snap;
-            if (fuzzLive) lastByKind[22] = snap;   // pseudo-kind 22: the pass that ran on fuzzed tiles (a later plain pass must not replace it)
+            if (snap.entry && snap.entry.inj) { injSnaps.push(snap); snap = null; }   // an injected pass (glrecInject): its own list
+            else lastByKind[snap.entry ? snap.entry.kind : 0] = snap;
+            if (fuzzLive && snap) lastByKind[22] = snap;   // pseudo-kind 22: the pass that ran on fuzzed tiles (a later plain pass must not replace it)
           }
           if (fuzzLive) { restoreFuzz(); fuzzLive = false; fuzzDone++; }
           entryRec = null;
@@ -175,15 +179,19 @@
     done = true;
     for (const n in T) hook('opengl32.dll', n, T[n]);
     if (Process.findModuleByName('glu32.dll')) for (const n in GLU) hook('glu32.dll', n, GLU[n]);
+    if (injectQ !== null) installReplace();
     // the exported render entry points: which one starts a pass and with what (this, pivot / tile, direction / pivot, angle)
     const ENTRY = { stripRender: [0x9270, 1], render: [0x5990, 2], localRender: [0x89e0, 3], pathUpdateRender: [0x6410, 4] };
     for (const en in ENTRY) {
       Interceptor.attach(tm.base.add(ENTRY[en][0]), { onEnter(a) {
+        const tid = this.threadId;
+        const d = entryDepth[tid] || 0;
+        entryDepth[tid] = d + 1;
         // a queued fuzz is applied here, ON THE GAME THREAD, just before a Terrain::render pass starts, and undone right after
         // that pass's glFlush (onLeave below): the rpc thread never touches the tiles while the game thread reads them
         if (en === 'render' && pendingFuzz && !fuzzLive) { applyFuzz(pendingFuzz.seed, pendingFuzz.p); pendingFuzz = null; fuzzLive = true; }
-        if (snapMode && !entryRec) entryRec = { kind: ENTRY[en][1], name: en, ecx: this.context.ecx.toUInt32(), a0: a[0].toUInt32(), a1: a[1].toUInt32(), a2: a[2].toUInt32() };
-      } });
+        if (snapMode && !entryRec) entryRec = { kind: ENTRY[en][1], name: en, ecx: this.context.ecx.toUInt32(), a0: a[0].toUInt32(), a1: a[1].toUInt32(), a2: a[2].toUInt32(), inj: injecting ? injCur : 0 };
+      }, onLeave() { entryDepth[this.threadId] = (entryDepth[this.threadId] || 1) - 1; } });
     }
     send({ glrec: 'installed', hooks: state.installed, terrain: !!tm });
   }
@@ -203,6 +211,109 @@
     return lines.length;
   };
   rpc.exports.glrecSnap = function (on, mult, tstate) { snapMode = !!on; multi = !!mult; wantT = !!tstate; return snapMode; };
+  // ---- injection (glrecInject, S3.1): passes of the ORIGINAL's draw-list entry points that the scenarios never (or rarely)
+  // reach, called with chosen arguments ON THE GAME THREAD at the next outermost Terrain::render / localRender entry, before
+  // that call starts. Each entry is [name, args...]: name stripRender (pivot, dir, angle), pathUpdateRender (pivot, angle),
+  // localRender (tile, pivot, angle) or render (tile, angle), or ['zoom', z]: the Terrain object's zoom shift (+0x1c) set to z for
+  // the injected calls after it (written back when the injection ends; the GL projection stays the current one, like glrecFuzz's
+  // state changes: the passes are the original's for that object state); an argument 'P' is the interrupted call's pivot (render's tile,
+  // localRender's pivot = the camera tile), 'A' its angle bits, ['T', x, y] a tile, a number a raw dword (floats as bits).
+  // Each injected pass is kept in injSnaps (snapshot form, entry.inj = its sequence number); after the last one the back
+  // buffer is written back to what it held before the first, so the game's frame and everything after it are unchanged.
+  // The calls are made from an Interceptor.replace callback of render / localRender (installed at the first glrecInject, while
+  // the scenario's main thread waits at a checkpoint outside every Terrain call): Frida runs no hook for a call made from inside
+  // an Interceptor.attach callback, so injected from onEnter the passes drew without one GL call recorded (g1, S3.1 notes).
+  const BODY = { stripRender: [0x9270, 3], render: [0x5990, 2], localRender: [0x89e0, 3], pathUpdateRender: [0x6410, 2] };
+  function nf(name) {
+    if (!NF[name]) {
+      const at = ['pointer'];
+      for (let i = 0; i < BODY[name][1]; i++) at.push('uint32');
+      NF[name] = new NativeFunction(tm.base.add(BODY[name][0]), 'void', at, 'thiscall');
+    }
+    return NF[name];
+  }
+  function runInject(ecx, pivot, angle, where) {
+    const q = injectQ;
+    injectQ = null;
+    const dib = dibRead();
+    const t = ptr(ecx);
+    const w = t.add(0x14).readS32();
+    const tileVa = function (x, y) { return t.add(0x3a4 + (x + y * w) * 0x248).toUInt32(); };
+    const zoom0 = t.add(0x1c).readS32();
+    let fuzzedHere = false;
+    injecting = true;
+    try {
+      for (let k = 0; k < q.length; k++) {
+        const name = q[k][0];
+        if (name === 'zoom') { t.add(0x1c).writeS32(q[k][1]); injLog.push({ seq: 0, name: 'zoom', args: [hex(q[k][1])], at: where }); continue; }
+        // ['fuzz', seed, p]: glrecFuzz's mutation of the tiles' draw fields for the injected calls after it (undone at the end)
+        if (name === 'fuzz') { if (!fuzzSaved) { applyFuzz(q[k][1], q[k][2]); fuzzedHere = true; } injLog.push({ seq: 0, name: 'fuzz', args: [hex(q[k][1])], at: where }); continue; }
+        const args = q[k].slice(1).map(function (v) {
+          if (v === 'P') return pivot.toUInt32();
+          if (v === 'A') return angle.toUInt32();
+          if (Array.isArray(v)) return tileVa(v[1], v[2]);
+          return v >>> 0;
+        });
+        injCur = ++injSeq;
+        entryRec = null;
+        nf(name).apply(null, [t].concat(args));
+        injLog.push({ seq: injCur, name: name, args: args.map(hex), at: where });
+      }
+    } finally {
+      injecting = false;
+      t.add(0x1c).writeS32(zoom0);
+      if (fuzzedHere) restoreFuzz();
+      injCur = 0;
+      entryRec = null;
+      if (dib) dib.bits.writeByteArray(dib.bytes);
+      injDone++;
+    }
+  }
+  function installReplace() {
+    if (replaced || !tm) return;
+    replaced = true;
+    const REPL = { render: [0x5990, 2, 0, 1], localRender: [0x89e0, 3, 1, 2] };   // body, args, pivot index, angle index
+    for (const en in REPL) {
+      const r = REPL[en];
+      const orig = new NativeFunction(tm.base.add(r[0]), 'void', r[1] === 2 ? ['pointer', 'uint32', 'uint32'] : ['pointer', 'uint32', 'uint32', 'uint32'], 'thiscall');
+      const cb = function (self, x0, x1, x2) {
+        const args = [x0, x1, x2];
+        // the attach listener of this entry ran first (depth 1 = outermost) and set entryRec for this call: keep it aside
+        if (injectQ !== null && !injecting && snapMode && multi && (entryDepth[Process.getCurrentThreadId()] || 0) === 1 &&
+            (injectCond === null || self.add(0x1c).readS32() === injectCond.zoom)) {
+          const saved = entryRec;
+          entryRec = null;
+          runInject(self, ptr(args[r[2]]), ptr(args[r[3]]), en);
+          entryRec = saved;
+        }
+        if (r[1] === 2) orig(self, x0, x1); else orig(self, x0, x1, x2);
+      };
+      Interceptor.replace(tm.base.add(r[0]), r[1] === 2
+        ? new NativeCallback(function (s, a0, a1) { cb(s, a0, a1, 0); }, 'void', ['pointer', 'uint32', 'uint32'], 'thiscall')
+        : new NativeCallback(function (s, a0, a1, a2) { cb(s, a0, a1, a2); }, 'void', ['pointer', 'uint32', 'uint32', 'uint32'], 'thiscall'));
+    }
+  }
+  // cond (optional) {zoom: z}: run only at a call whose Terrain object has that zoom shift (a pass at a zoom the scenario holds
+  // between two checkpoints); a list queued before Terrain.dll is mapped is installed with the other hooks
+  rpc.exports.glrecInject = function (list, cond) { injectQ = list; injectCond = cond || null; installReplace(); return true; };
+  rpc.exports.glrecInjected = function () { return { pending: injectQ !== null, done: injDone, snaps: injSnaps.length, log: injLog }; };
+  function sendOne(s, tag) {
+    if (s.passLines) for (let i = 0; i < s.passLines.length; i += 20000) send({ glrec: 'passlines', i: i, lines: s.passLines.slice(i, i + 20000) });
+    send({ glrec: 'snapmeta', startIdx: s.startIdx, endIdx: s.endIdx, maxIdx: s.maxIdx, stateIdx: s.stateIdx, meta: s.pre.meta, postMeta: s.post.meta, entry: s.entry, tobjAddr: s.tobjAddr, tag: tag });
+    send({ glrec: 'snapdata', kind: 'pre' }, s.pre.bytes);
+    send({ glrec: 'snapdata', kind: 'post' }, s.post.bytes);
+    if (s.vtx) send({ glrec: 'snapdata', kind: 'vtx' }, s.vtx);
+    if (s.nrm) send({ glrec: 'snapdata', kind: 'nrm' }, s.nrm);
+    if (s.tobj) send({ glrec: 'snapdata', kind: 'tobj' }, s.tobj);
+    if (s.tdata) send({ glrec: 'snapdata', kind: 'tdata' }, s.tdata);
+    send({ glrec: 'snapend', tag: tag });
+  }
+  // every injected pass completed so far, in order (then forgotten); returns how many were sent
+  rpc.exports.glrecSendInjected = function () {
+    const l = injSnaps.splice(0, injSnaps.length);
+    for (let i = 0; i < l.length; i++) if (l[i].pre && l[i].post) sendOne(l[i], 'inj' + l[i].entry.inj);
+    return l.length;
+  };
   rpc.exports.glrecSendSnap = function (kind) {
     // kind 0 = the most recent pass, else the most recent pass started by that entry point (1 stripRender, 2 render,
     // 3 localRender, 4 pathUpdateRender)

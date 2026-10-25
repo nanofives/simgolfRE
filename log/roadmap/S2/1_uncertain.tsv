@@ -1,0 +1,2 @@
+id	address	kind	description	needed	status
+U-1200		control	gfx negctl 3 (draw16's transparency test `> 0xfe` instead of `>= 0xfe`) is an equivalent mutant on every PASS checkpoint the gate has (sandbox_basic menu, the five cov_b_location rows, cov_r_quit menu / exit_leave / title1 / exit_saved / title2: framegate --negctl gfx.attach=3 gives the same 11 PASS, log/roadmap/S2/1_framegate_negctl3.tsv); test_gfx keeps it in NEGCTL_BLIND	a checkpoint whose drawn sprites hold colour index 0xfe (an in-game sprite once S2 bodies draw them)	open

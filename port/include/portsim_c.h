@@ -178,8 +178,9 @@ typedef struct sg_gl_globals {
 } sg_gl_globals;
 SG_API int sg_gl_set_globals(sg_ctx *ctx, const sg_gl_globals *g);
 /* Run one render entry point of the original over the context's address space (the Terrain object mapped with sg_map)
- * and write the GL calls it makes as text (portsim/sim/gl_sink.h): entry 2 = Terrain::render(a0 = tile address,
- * a1 = angle bits). out gets the text (NUL-terminated); *len = its length; SG_E_ARG when cap is too small. After the
+ * and write the GL calls it makes as text (portsim/sim/gl_sink.h): entry 1 = stripRender(a0 = pivot, a1 = direction,
+ * a2 = angle bits), 2 = Terrain::render(a0 = tile address, a1 = angle bits), 3 = localRender(a0 = tile, a1 = pivot,
+ * a2 = angle bits), 4 = pathUpdateRender(a0 = pivot, a1 = angle bits); SG_E_NO_FUNCTION otherwise. out gets the text (NUL-terminated); *len = its length; SG_E_ARG when cap is too small. After the
  * call sg_gl_view_index returns the view quadrant the pass left in the globals. */
 SG_API int sg_gl_render(sg_ctx *ctx, int32_t entry, uint32_t terrain, uint32_t a0, uint32_t a1, uint32_t a2, char *out,
                         size_t cap, size_t *len);

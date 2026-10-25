@@ -11,6 +11,7 @@ tooling, never in port code. The port's call stream is compared line by line wit
 arguments of the glXXXfv calls (the port has no such pointers; the values behind them are compared).
 
     ~/bin/py -3.12 -m port.test.glcorpus export log/p5/gl/corpus/c7 c7     # copy what the tests need into port/corpus/gl/c7
+    ~/bin/py -3.12 -m port.test.glcorpus export log/p5/gl/corpus/c4 c4 3   # only the snapshots started by localRender (kind 3)
 """
 from __future__ import annotations
 
@@ -32,7 +33,8 @@ N_TEXTURES = 0x25 * 0x19 * 9
 N_TEXCOORD_FLOATS = (RVA["pfd"] - RVA["tex_coords"]) // 4
 NEEDED = ("pass.gl.txt", "tobj.bin", "tdata.bin", "meta.txt")
 RASTER = ("vtx.bin", "nrm.bin", "dib_pre.bin", "dib_post.bin")   # extra files of a snapshot for the rasteriser tests
-ENTRY_RENDER = 2
+ENTRY_STRIP, ENTRY_RENDER, ENTRY_LOCAL, ENTRY_PATH = 1, 2, 3, 4   # the exported call that started a pass (meta entry_kind)
+CORPORA = ("c3", "c4", "c5", "c6", "c7")   # corpora whose snapshots carry the Terrain object (c1 / c2 predate it)
 
 
 class SgGlGlobals(C.Structure):
@@ -124,7 +126,8 @@ def load(lib, st, snap: Snap, textures=None, map_tobj: bool = True) -> list:
     g.side_normals = C.addressof(keep[4])
     g.wall_texture, g.fence_texture1, g.fence_texture0 = snap.u32(RVA["wall"]), snap.u32(RVA["fence1"]), snap.u32(RVA["fence0"])
     g.screen_scale_bits = snap.u32(RVA["scale"])
-    g.view_index = 0
+    # the view quadrant the previous pass left: render / localRender / stripRender set their own, pathUpdateRender reads it
+    g.view_index = snap.u32(RVA["view"])
     code = lib.dll.sg_gl_set_globals(st.ctx, C.byref(g))
     if code:
         raise RuntimeError(f"sg_gl_set_globals {code}")
@@ -155,13 +158,28 @@ def first_difference(a: list[str], b: list[str]):
     return None
 
 
-def export(src: pathlib.Path, label: str) -> None:
+def all_snaps(kinds) -> list[tuple[str, str]]:
+    """(corpus label, step) of every exported snapshot whose entry kind is in `kinds`, over CORPORA and any other exported
+    corpus under port/corpus/gl (the S3.1 recordings)."""
+    labels = list(CORPORA) + sorted(p.name for p in CORPUS.iterdir() if p.is_dir() and p.name not in CORPORA) if CORPUS.is_dir() else []
+    out = []
+    for lb in labels:
+        for s in snaps(CORPUS / lb):
+            if meta(CORPUS / lb / "snaps" / s / "meta.txt").get("entry_kind") in kinds:
+                out.append((lb, s))
+    return out
+
+
+def export(src: pathlib.Path, label: str, kinds=None) -> None:
     """Copy the files the tests need from a gl_corpus.py corpus into port/corpus/gl/<label>: per snapshot the renderer's inputs
-    and the rasteriser's (arrays, back buffer before / after); in the root the state stream and the texture bytes."""
+    and the rasteriser's (arrays, back buffer before / after); in the root the state stream and the texture bytes. `kinds`: only
+    the snapshots started by those entry kinds."""
     dst = CORPUS / label
     n = 0
     for d in sorted((src / "snaps").iterdir()):
         if not all((d / f).exists() for f in NEEDED):
+            continue
+        if kinds is not None and meta(d / "meta.txt").get("entry_kind") not in kinds:
             continue
         (dst / "snaps" / d.name).mkdir(parents=True, exist_ok=True)
         for f in NEEDED + RASTER:
@@ -176,7 +194,7 @@ def export(src: pathlib.Path, label: str) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 4 and sys.argv[1] == "export":
-        export(pathlib.Path(sys.argv[2]), sys.argv[3])
+    if len(sys.argv) in (4, 5) and sys.argv[1] == "export":   # export <src> <label> [kinds, e.g. 3,4]
+        export(pathlib.Path(sys.argv[2]), sys.argv[3], {int(k) for k in sys.argv[4].split(",")} if len(sys.argv) == 5 else None)
     else:
         print(__doc__)

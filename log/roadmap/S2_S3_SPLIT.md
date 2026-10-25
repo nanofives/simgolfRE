@@ -20,8 +20,13 @@ until the orchestrator changes them.
   (FLIC sprite cells, the sprite queue), golfers, ball, HUD panels, ticker text with markup, cursor and tooltip, overlay lines, S0's
   recommendations 2, 5 and 6 (terrain flag per snapshot, sg_ts_live on Win32, U-1120).
 - A primitive both need belongs to S2; S3 asks for it in its report (`NEED <primitive> from S2`) instead of writing its own.
+- Exception (orchestrator, 2026-10-24 22:3x): Widget_writePixel moves to S3 (step S3.6, running), since no S2 step had taken it
+  after two hours and it blocks 316 census checkpoints. S3.6 writes it in its own file with a body S2 can call; S2's screens that
+  need it (credits in cov_a_quit_title, U-1250 area) use it after S3's merge.
 
 ## Coordination
 - Each lead reads the other's re/roadmap/S<n>_steps.tsv before spawning a worker. No file appears in both sections' files_owned.
 - port/src/sim/chareditor.cpp is S1's (its merge is queued): S2's character-editor step starts after S1's commit.
 - S3 owns port/src/sim/gl_raster.cpp, gl_raster.h, the terrain_* files and re/tools/glexact/ from the P5.3 handoff 4bfefc2a on.
+- 2026-10-25: Surface_drawSprite has one body, S2's (gfx_reports.cpp, wave 5); S3.5 draws through it and puts any change it needs
+  into its merge notes. The radial menu, Surface_drawScaled and drawFrameR3 / drawFrameS2 are S3.6's; the addSprite figures S3.5's.

@@ -14,7 +14,8 @@ each lead spawns its own STEP WORKERS, one INTEGRATOR at a time merges a finishe
 | 2 | step worker S<n>.<k> | claude2, `sonnet` medium (default), `opus` high (renderer, mixer, x87, design), `haiku` low (census runs, mechanical) | its own module files, tests, notes | its lead |
 | - | integrator I<m> | claude2, `opus`, effort high, one at a time | shared files, port/build/x64, the regression gates | you |
 
-On claude2 pass the ALIAS (`opus`, `sonnet`, `haiku`): a full id such as `claude-opus-5-5` silently runs as claude-sonnet-4-6.
+2026-10-24 (G7): claude2 hit 100 % and every child moved to claude3; new children spawn on claude3 (alias models, same cap 12)
+until claude2 resets. On claude2 pass the ALIAS (`opus`, `sonnet`, `haiku`): a full id such as `claude-opus-5-5` silently runs as claude-sonnet-4-6.
 After each spawn, check the model with `mcp__happy__read_session`; respawn with the alias if it was downgraded. Nested spawning
 was probed on 2026-10-24: a claude2 child spawned, waited for, read and closed its own grandchild. `wait_for_children` with
 `until: "idle"` can return before the child's final message is written: act on the completion notification, not on the wait.

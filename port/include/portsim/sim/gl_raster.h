@@ -106,7 +106,8 @@ class GlRaster : public GlSink {
   // nearest, 5 texture env REPLACE, 6 blending ignored, 7 front faces culled, 8 no specular
   // 16 attribute-plane vertex rounding f32(v + 2^k) - 2^k, 17 attribute arithmetic in float32, 18 / 19 an absolute shift of the
   // attribute sample position in x / y, in units of 1e-5 pixel, 20 per-vertex attribute offsets sign(ndc) * value / 256 px where |ndc| >= 0.5,
-  // 22 attribute setup from 8-fractional-bit window coordinates of a viewport scaled by half-size + 2^-8 (U-1076 experiments)
+  // 22 attribute setup from 8-fractional-bit window coordinates of a viewport scaled by half-size + 2^-8 (U-1076 experiments),
+  // 27 = 1 the exact pow for the specular term instead of the generic GL's 256-entry nearest-entry table (U-1300)
   static constexpr int kTunes = 32;
   int tune[kTunes] = {};
 

@@ -172,7 +172,9 @@ def run_chain_from_setup(lib, setup: Setup, step: str, install, patch=None):
 # The frame criterion (re/PHASE5_TERRAIN_PLAN.md section 18): pixels one 5-bit level off at most MAX_ONE_LEVEL of the drawn pixels,
 # at most MAX_BIG pixels further off. Since the rasteriser sets triangles up like the generic GL (8-fractional-bit fixed-point vertices
 # of a viewport of half-size h - 2^-8), the one-level rate is 0.24 .. 1.05 % on every pass of c7 and t3 at every zoom (it no longer
-# grows with the texel-per-pixel scale: that came from the earlier linear sample-position model).
+# grows with the texel-per-pixel scale: that came from the earlier linear sample-position model). With the specular table and the
+# tie rule of roadmap S3.1b (U-1300) the rate is 0.0 .. 0.21 % on every recorded pass (c3 .. c7, t3, g2 .. g6), at most 13 pixels
+# further off; the constants stay those of the roadmap's G2 criterion.
 MAX_ONE_LEVEL = 0.015
 MAX_BIG = 70
 

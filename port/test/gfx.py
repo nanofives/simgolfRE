@@ -85,6 +85,23 @@ class GfxRun:
     boot: object = None                              # boot.BootResult of the same run (sim hashes compared as usual)
 
 
+def record_budget(scenario: str, last_ordinal: int, max_records: int | None = None) -> tuple[int, bool]:
+    """(max_records, to_end) of a boot run that snapshots up to the clock ordinal `last_ordinal`.
+
+    max_records = the FRAME records at or before it plus 2 (S0 recommendation 4, U-1114; framegate.py does the same): a
+    checkpoint in a frame's H1 wait is snapshotted at the next cursor read or dispatch past it, which lies in the following
+    frame's body, so the old `plus 1` stopped one frame short. to_end: the run goes on past the last FRAME record (the title
+    menu after the session, the quit) to the end of the trace when the budget exceeds the trace's FRAME records, or when the
+    capture has no frame record at all (cov_b_location stays on the location screen). An explicit max_records is kept."""
+    no_frames = not (boot.expected_records(scenario)[1] or [])
+    tr = TF.read(boot.TRACES / f"{scenario}.trace")
+    frames_pos = [r.f["pos"] for r in tr.records if r.type == TF.FRAME]
+    del tr
+    if max_records is None:
+        max_records = sum(1 for p in frames_pos if p <= last_ordinal) + 2
+    return max_records, no_frames or max_records > len(frames_pos)
+
+
 def render(scenario: str, checkpoints: list[str], lib: L.Lib | None = None, negctl: int = 0,
            max_records: int | None = None, negctl_name: str = "gfx.attach") -> GfxRun:
     lib = lib or L.load()
@@ -92,14 +109,7 @@ def render(scenario: str, checkpoints: list[str], lib: L.Lib | None = None, negc
         raise RuntimeError("the library has no gfx module")
     ords = sorted((checkpoint_ordinal(scenario, c), c) for c in checkpoints)
     out = GfxRun(scenario)
-    # a scenario whose capture has no frame record (cov_b_location stays on the location screen) runs over its whole trace
-    no_frames = not (boot.expected_records(scenario)[1] or [])
-    if max_records is None:
-        # enough frame records to pass the last checkpoint: the FRAME records at or before its ordinal, plus one
-        tr = TF.read(boot.TRACES / f"{scenario}.trace")
-        last = ords[-1][0]
-        frames = sum(1 for r in tr.records if r.type == TF.FRAME and r.f["pos"] <= last)
-        max_records = frames + 1
+    max_records, to_end = record_budget(scenario, ords[-1][0], max_records)
 
     def before(st):
         st.call("gfx.attach", [])
@@ -124,7 +134,7 @@ def render(scenario: str, checkpoints: list[str], lib: L.Lib | None = None, negc
 
     prev = lib.negctl(negctl_name, negctl) if negctl else None
     try:
-        out.boot = boot.run(scenario, lib, max_records=max_records, before=before, after=after, to_end=no_frames)
+        out.boot = boot.run(scenario, lib, max_records=max_records, before=before, after=after, to_end=to_end)
     finally:
         if negctl:
             lib.negctl(negctl_name, prev or 0)

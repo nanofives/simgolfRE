@@ -8,6 +8,9 @@
 // sprite per exe SpriteRef (cropSprite), the root window's 16-bit surface and the back buffer Display::present shows.
 // Nothing is written into the GameState or its address space.
 //
+// Drawing bodies live here (the core table kBodies) and in family files port/src/sim/gfx_<family>.cpp listed in
+// gfx_families.inc; what a body needs is in gfx_body.h (roadmap S2.1).
+//
 // Negative controls (g_negctl_gfx, read RED by port/test/test_gfx.py against the original's frame):
 //   1 Image_draw one pixel to the right of the original's point (a wrong blit)
 //   2 the palette word of the colour index at a loaded image's top-left pixel off by one (a wrong palette entry)
@@ -19,6 +22,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include "portsim/sim/gfx.h"
+#include "gfx_body.h"
 
 #include <algorithm>
 #include <array>
@@ -42,72 +46,6 @@ std::atomic<int> g_gfx_attached{0};
 namespace {
 int g_negctl_gfx = 0;
 
-// An 8 bpp image: jgld allocDrawBuffer's top-down DIB section (pitch (w + 3) & ~3) and the colour table the palette gives it.
-struct Image8 {
-  int32_t w = 0, h = 0, pitch = 0;
-  std::vector<uint8_t> px;
-  std::array<uint16_t, 256> pal{};
-};
-// A cropSprite result: the kept rectangle, its trims (the SpriteRef's +0x20 left, +0x24 top) and the source's palette.
-struct Sprite8 {
-  int32_t w = 0, h = 0, left = 0, top = 0;
-  std::vector<uint8_t> px;
-  std::array<uint16_t, 256> pal{};
-};
-// A 16 bpp RGB555 surface, top-down, clip = the whole surface (allocDrawBuffer's setClip of (0, 0, w, h)).
-struct Surface16 {
-  int32_t w = 0, h = 0;
-  std::vector<uint16_t> px;
-  void make(int32_t nw, int32_t nh) {
-    w = nw;
-    h = nh;
-    px.assign(static_cast<size_t>(nw) * static_cast<size_t>(nh), 0);   // a new DIB section is zero-filled
-  }
-};
-
-uint16_t rgb555(uint8_t r, uint8_t g, uint8_t b) {   // Palette::apply: (B >> 3) | (G << 2) & 0x3e0 | (R << 7) & 0x7c00
-  return static_cast<uint16_t>(((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3));
-}
-
-std::string vstring(const Memory &m, uint32_t va) {
-  const uint32_t n = vstrlen(m, va);
-  std::string s(n, '\0');
-  if (n) std::memcpy(&s[0], m.at(va, n), n);
-  return s;
-}
-
-}  // namespace
-
-class Gfx {
- public:
-  std::map<uint32_t, Image8> images;    // exe Image objects (loadImage)
-  std::map<uint32_t, Sprite8> sprites;  // exe SpriteRef objects (cropSprite)
-  Surface16 root, back;                 // the root window's surface (g_rootWindow + 0x274) and the presented frame
-  uint32_t fonts[4] = {0, 0, 0, 0};     // the root surface's +0x5c..+0x68 (setDrawTarget)
-  std::vector<uint32_t> snap_at;        // clock ordinals to snapshot past, ascending
-  size_t snap_next = 0;
-  std::vector<size_t> snap_unsupported;  // per snapshot: the distinct unsupported reasons that had occurred before it
-  std::map<std::string, uint64_t> handled, unsupported;
-  std::vector<std::string> notes;       // the first few reasons, for the log
-
-  void unsup(const std::string &why) {
-    ++unsupported[why];
-    if (notes.size() < 64 && unsupported[why] == 1) notes.push_back(why);
-  }
-  // the root surface, made at its first use: Window::create's size scaleX(0x140) x scaleX(0xf0), scaleX(v) =
-  // (g_screenWidth * v + 160) / 320 (gditext.cpp's two scaled fonts use the same rule)
-  void ensure_root(Ctx &ctx) {
-    if (root.w) return;
-    const int32_t sw = ctx.gs().g_screenWidth;
-    const int32_t w = div32(add32(mul32(sw, 0x140), 160), 320), h = div32(add32(mul32(sw, 0xf0), 160), 320);
-    root.make(w > 0 ? w : 0x320, h > 0 ? h : 0x258);
-    back.make(root.w, root.h);
-  }
-  uint32_t root_va(Ctx &ctx) { return ctx.gs().f_stateptr_4c1570[0]; }
-};
-
-namespace {
-
 std::mutex &mu() {
   static std::mutex m;
   return m;
@@ -119,6 +57,34 @@ std::map<const Ctx *, Gfx *> &attached() {
 std::map<const Ctx *, std::unique_ptr<Gfx>> &owned() {
   static std::map<const Ctx *, std::unique_ptr<Gfx>> m;
   return m;
+}
+}  // namespace
+
+namespace gfxf {
+const int32_t *blit_scale(Gfx &g);   // gfx_prim_fill.cpp (roadmap S2.4): Display::setScale's three words
+}
+
+void Gfx::unsup(const std::string &why) {
+  if (++unsupported[why] == 1) notes.push_back(why);
+}
+// the root surface, made at its first use: Window::create's size scaleX(0x140) x scaleX(0xf0), scaleX(v) =
+// (g_screenWidth * v + 160) / 320 (gditext.cpp's two scaled fonts use the same rule)
+void Gfx::ensure_root(Ctx &ctx) {
+  if (root.w) return;
+  const int32_t sw = ctx.gs().g_screenWidth;
+  const int32_t w = div32(add32(mul32(sw, 0x140), 160), 320), h = div32(add32(mul32(sw, 0xf0), 160), 320);
+  root.make(w > 0 ? w : 0x320, h > 0 ? h : 0x258);
+  back.make(root.w, root.h);
+}
+uint32_t Gfx::root_va(Ctx &ctx) { return ctx.gs().f_stateptr_4c1570[0]; }
+
+namespace gfxb {
+
+std::string vstring(const Memory &m, uint32_t va) {
+  const uint32_t n = vstrlen(m, va);
+  std::string s(n, '\0');
+  if (n) std::memcpy(&s[0], m.at(va, n), n);
+  return s;
 }
 
 // A file the backend writes for the harness (snapshots, the log): the files overlay, never the install (refused when the
@@ -142,7 +108,7 @@ std::vector<uint8_t> surface_bytes(const Surface16 &s) {
 // decodePcx8 (c3ee.cpp DecodePaletted_re) into `img`, with the palette words for count entries from ofs; returns the
 // original's result code (0 = decoded). The file's magic-text prefix (a copy of the exe's text) is not modelled: a file
 // that does not start with the PCX manufacturer byte is reported.
-int decode_pcx8(Gfx &g, const std::vector<uint8_t> &data, int32_t ofs, int32_t count, bool pal_arg, Image8 &img) {
+static int decode_pcx8(Gfx &g, const std::vector<uint8_t> &data, int32_t ofs, int32_t count, bool pal_arg, Image8 &img) {
   if (data.size() < 0x80 + 0x300) return 3;
   const uint8_t *d = data.data();
   if (d[0] != 0xa) {
@@ -209,14 +175,13 @@ int decode_pcx8(Gfx &g, const std::vector<uint8_t> &data, int32_t ofs, int32_t c
 }
 
 // loadImage(this, name, pal, ofs, count, flags) (c3ee.cpp LoadImage_re): the name gets ".pcx" when no '.' follows its first
-// character (AddDefaultExt walks back from the end down to, not including, the first byte); flag bit 0 (the image's own
-// palette cache) is not modelled.
+// character (AddDefaultExt walks back from the end down to, not including, the first byte). Flag bit 0 decodes into the
+// image's own palette cache (a palette argument with it returns 3; roadmap S2.3): the file's entries ofs..ofs + count replace
+// the cache's, as flag bit 1's fresh palette does, so a full palette (ofs 0, count 0x100) gives the same words; a partial one
+// keeps the cache's other entries, which the backend does not model (reported below).
 int load_image(Gfx &g, Ctx &ctx, uint32_t name_va, uint32_t pal, int32_t ofs, int32_t count, uint32_t flags, Image8 &img) {
   if (name_va == 0) return 3;
-  if (flags & 1) {
-    g.unsup("loadImage: flag bit 0 (the image's palette cache)");
-    return 3;
-  }
+  if ((flags & 1) && pal != 0) return 3;
   std::string name = vstring(ctx.mem, name_va);
   bool dot = false;
   for (size_t q = name.size(); q > 0; --q)
@@ -224,7 +189,7 @@ int load_image(Gfx &g, Ctx &ctx, uint32_t name_va, uint32_t pal, int32_t ofs, in
   if (!dot) name += vstring(ctx.mem, state_va(ctx, &GameState::f_strpool_4e4218) + 0x1c);   // ".pcx"
   if (!ctx.files().exists(name)) return 6;
   const std::vector<uint8_t> data = ctx.files().read_all(name);
-  return decode_pcx8(g, data, ofs, count, (flags & 2) != 0 || pal != 0, img);   // loadImageData gets the palette in use
+  return decode_pcx8(g, data, ofs, count, (flags & 3) != 0 || pal != 0, img);   // loadImageData gets the palette in use
 }
 
 // cropSprite(this, src, x, y, w, h, kind, trim) (c3ee.cpp CropSprite_re), reached through Surface_blit; the source must be
@@ -291,15 +256,14 @@ void draw16(const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
 }
 
 // ------------------------------------------------------------------------------------------------ the bodies
-using Body = void (*)(Gfx &, Ctx &, const uint32_t *, int);
 
-uint32_t sref(Ctx &ctx, SpriteRef (GameState::*arr)[14], uint32_t k) { return state_va(ctx, arr) + 0x2c * k; }
+static uint32_t sref(Ctx &ctx, SpriteRef (GameState::*arr)[14], uint32_t k) { return state_va(ctx, arr) + 0x2c * k; }
 
 // showTitleScreen (c3fb.cpp ShowTitleScreen_re): the drawing part. Its frame Image takes four loads with flags 2; the
 // first two are cut into the 8-piece window-frame sets g_spriteRef_562368 / g_spriteRef_59d920 (4 sets, kind 1, no trim),
 // the last two into the 7 title buttons, unselected into g_spriteRef_53b7e0[2b], highlighted into [2b + 1] (kind 1, trim).
 // The intro movie (playAudioFile) is the video backend's.
-void b_show_title_screen(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+static void b_show_title_screen(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   struct Piece { int k, sx, dy, w, h; };
   static const Piece kFrame[8] = {{1, 0, 0, 0x10, 0x10},    {2, 0, 0x11, 0x10, 0x10},     {3, 0, 0x22, 0x10, 0x1a},
                                   {4, 0x11, 0, 0x10, 0x10}, {5, 0x22, 0, 0x1a, 0x10},     {6, 0x22, 0x11, 0x1a, 0x10},
@@ -328,14 +292,14 @@ void b_show_title_screen(Gfx &g, Ctx &ctx, const uint32_t *, int) {
 }
 
 // loadImage(this, name, pal, ofs, count, flags)
-void b_load_image(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_load_image(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   Image8 img;
   if (load_image(g, ctx, a[1], a[2], static_cast<int32_t>(a[3]), static_cast<int32_t>(a[4]), a[5], img) == 0)
     g.images[a[0]] = std::move(img);
 }
 
 // Surface_blit(this, src, x, y, w, h, kind, trim) (c3h.cpp SurfaceBlit_re): an 8-bit source -> cropSprite
-void b_surface_blit(Gfx &g, Ctx &, const uint32_t *a, int) {
+static void b_surface_blit(Gfx &g, Ctx &, const uint32_t *a, int) {
   auto it = g.images.find(a[1]);
   if (it == g.images.end()) {
     g.unsup("Surface_blit: a source the backend has no image for");
@@ -363,7 +327,7 @@ void copy8(const Image8 &s, Surface16 &d, int32_t x, int32_t y, int32_t w, int32
 // Surface_blit3(this, dst, x, y, w, h, x2, y2, w2, h2) (c3h.cpp SurfaceBlit3_re): jgld Surface::stretchTo, StretchBlt SRCCOPY
 // of this's rectangle onto dst's. Modelled: an 8-bit image onto the root surface at the same size (a copy through the
 // image's colour table, which GDI converts to RGB555 by the same truncation as Palette::apply).
-void b_surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   auto it = g.images.find(a[0]);
   if (it == g.images.end() || a[1] != g.root_va(ctx)) {
@@ -381,10 +345,17 @@ void b_surface_blit3(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 
 // Image_draw(this, surf, x, y, mask) (c3df.cpp ImageDraw_re): at (m_20 * t0 / t2 + x, m_24 * t1 / t2 + y) with the
-// display's scale triple, (1, 1, 1) unless Display::setScale changed it (not modelled: it is restored to 1 by every
+// display's scale triple, (1, 1, 1) unless Display::setScale changed it (any other scale is reported; it is restored to 1 by every
 // caller the menu reaches), through Sprite::drawB -> draw16_1001bc40 for an 8-bit sprite on the 16-bit root surface.
-void b_image_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_image_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
+  // the display's blit scale (Display::setScale, gfx_prim_fill.cpp; roadmap S2.4): drawB's blitters scale by nx / den and
+  // ny / den, which the backend does not model
+  const int32_t *scale = gfxf::blit_scale(g);
+  if (scale[0] != 1 || scale[1] != 1 || scale[2] != 1) {
+    g.unsup("Image_draw: a display scale other than (1, 1, 1)");
+    return;
+  }
   if (!gfx_is_local_key(a[0]) && ctx.mem.load<uint32_t>(a[0] + 8) != 0) {
     g.unsup("Image_draw: the load arm (a file name at +8)");
     return;
@@ -406,7 +377,7 @@ void b_image_draw(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 }
 
 // setDrawTarget(this, surf, a, b, c) (c3k.cpp SetDrawTarget_re): the font words of the root surface
-void b_set_draw_target(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_set_draw_target(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (a[0] != g.root_va(ctx)) {
     g.unsup("setDrawTarget: a target other than the root surface");
     return;
@@ -466,15 +437,15 @@ void draw_text(Gfx &g, Ctx &ctx, const uint32_t *a, bool centre, const char *who
   if (a[0] == 0) return;
   draw_text_string(g, ctx, vstring(ctx.mem, a[0]), a[0], static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]), a[3], centre, who);
 }
-void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, true, "drawCenteredText"); }
-void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, false, "drawText4049d0"); }
+static void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, true, "drawCenteredText"); }
+static void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, false, "drawText4049d0"); }
 
 // drawPanelBackdrop(x, y) (c3dw.cpp DrawPanelBackdrop_re): setDrawTarget(Root, g_fontRef_519fd8, 0, 0, 0); w = 3 * strlen of
 // the text buffer; half = x raised to w and lowered to 0x320 - w (signed); drawMapLine(half - w, y, half + w, y, 0x80000000,
 // 0xa, 5) = Terrain::drawLine, an OpenGL line in the terrain view's GL context (re/match/terrain_drawline.cpp), which is not
 // jgld's back buffer: the location screen's tip frame shows no line (U-1071); then drawCenteredText(text buffer, half, y - 5,
 // 0x80007fff).
-void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   const uint32_t text = state_va(ctx, &GameState::g_textBuffer);
   const uint32_t font = state_va(ctx, &GameState::g_fontRef_519fd8);
   if (ctx.mem.load<uint32_t>(font + 4) != 0) g.fonts[0] = font;
@@ -491,7 +462,7 @@ void b_panel_backdrop(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // Window::refreshFull(this, 0): redrawDrawList -> Window::blitToTarget copies the root window's surface into the screen
 // image that Display::present shows (the window tree's other members and the tooltip are not modelled: none is drawn in
 // the title menu or the location screen)
-void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   if (a[0] != state_va(ctx, &GameState::g_rootWindow)) {
     g.unsup("Window::refreshFull: a window other than the root");
@@ -503,7 +474,7 @@ void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 
 // Surface_fillRegion(this, s, x, y, w, h) (c3h.cpp SurfaceFillRegion_re): this's handle slot +0x40 (Surface::stretchTo) with
 // the rectangle (x, y, x + w, y + h) as source and destination: a 1:1 copy of an 8-bit image's rectangle onto the root surface
-void b_fill_region(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_fill_region(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   auto it = g.images.find(a[0]);
   if (it == g.images.end() || a[1] != g.root_va(ctx)) {
@@ -521,7 +492,7 @@ void b_fill_region(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // other mask byte m writes, per channel, (((dst8 * m) >> 8) + src8) >> 3 with dst8 / src8 the channel as `(w >> 7) & 0xf8`,
 // `(w >> 2) & 0xf8`, `(w << 3) & 0xf8`, red shifted left 10 and green 5, the three ORed into a 16-bit word (a channel sum
 // above 31 carries into the next field).
-void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   if (a[2] != g.root_va(ctx) || a[5] != 0) {
     g.unsup("Surface_stretchBlit: a destination other than the root surface or a palette override");
@@ -566,7 +537,7 @@ void b_stretch_blit(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
 // courseActionMenu's setup (c3fw.cpp CourseActionMenu_re): its frame Image loads interface\WorldButton.pcx (flags 2) and cuts
 // seven pieces into its Surface array (kind 1, trim 1), then loads interface\WorldBase.pcx with its palette cache (flags 0)
 // and cuts piece 6; the Image keeps WorldBase, which every frame copies whole onto the root surface (Surface_fillRegion).
-void b_cam_setup(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+static void b_cam_setup(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   const uint32_t pool = state_va(ctx, &GameState::f_strpool_4e4004);
   static const struct { int elem, x, y, w, h; } kCuts[7] = {
       {0, 0x0FA, 0x198, 0x4C, 0x72}, {1, 0x2D4, 0x198, 0x4C, 0x72}, {2, 0x226, 0x1CA, 0x4C, 0x40}, {3, 0x190, 0x1CA, 0x4C, 0x40},
@@ -587,7 +558,7 @@ void b_cam_setup(Gfx &g, Ctx &ctx, const uint32_t *, int) {
 // cells 0..15 (four per course kind); TacksandArrow -> four columns c of four 0x14 x 0x18 cells at (0x32 c, 0x32 r) into cells
 // 16 + 4 c + r; TacksandArrow_A -> the same cells of g_sprites5a4138. WideRow: cells at x = 2 + 0xc8 i, y 0, the first two
 // w0 x h0, the others 0xb6 x h1, kind 1, trim 1.
-void b_iart_images(Gfx &g, Ctx &ctx, const uint32_t *, int) {
+static void b_iart_images(Gfx &g, Ctx &ctx, const uint32_t *, int) {
   const uint32_t pool = state_va(ctx, &GameState::f_strpool_4c95f4);
   const uint32_t plates = state_va(ctx, &GameState::g_sprites53c570), masks = state_va(ctx, &GameState::g_sprites5a4138);
   Image8 img;
@@ -670,7 +641,7 @@ void draw_g16(Gfx &g, const Sprite8 &s, Surface16 &d, int32_t x, int32_t y) {
 
 // the 16-pixel rounding of the frame drawers (c3da.cpp round16): a size not a multiple of 16 grows by r = 15 - (size & 15)
 // and the position moves back by r / 2
-void round16(int32_t &pos, int32_t &size) {
+static void round16(int32_t &pos, int32_t &size) {
   const int32_t low = size & 0xf;
   if (low != 0) {
     const int32_t r = 0xf - low;
@@ -682,7 +653,7 @@ void round16(int32_t &pos, int32_t &size) {
 // blitPanel(x, y, w, h, 1) (c3da.cpp BlitPanel_re): 16 x 16 tiles from g_surfaces541580 (cell cx + 3 cy: 0 in the first
 // column / row, 2 when the tile reaches the end, else 1) through Surface_blit2 (the tile's trims added) -> Sprite::drawG with
 // the shade table
-void blit_panel(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h) {
+static void blit_panel(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h) {
   const uint32_t tiles = state_va(ctx, &GameState::g_surfaces541580);
   const int32_t xe = add32(x, w), ye = add32(y, h);
   for (int32_t xi = x; xi < xe; xi += 16)
@@ -741,7 +712,7 @@ void draw_frame_r3(Gfx &g, Ctx &ctx, int32_t x, int32_t y, int32_t w, int32_t h)
 
 // Widget_value(target) (c3c.cpp Value_re): the target's font (+0x5c; the backend's font 0): its +8 >= 0 gives +0x10 + +8,
 // else +0xc (the line height Font::create stored)
-int32_t widget_value(Gfx &g, Ctx &ctx) {
+static int32_t widget_value(Gfx &g, Ctx &ctx) {
   const uint32_t f = g.fonts[0] ? g.fonts[0] : ctx.gs().g_primarySurface;
   const int32_t i = ctx.mem.load<int32_t>(f + 8);
   return i >= 0 ? add32(ctx.mem.load<int32_t>(f + 0x10), i) : ctx.mem.load<int32_t>(f + 0xc);
@@ -803,7 +774,7 @@ void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, u
 // drawWindow(x, y, p3, mode) (c3ei.cpp DrawWindow_re), the drawing after the window height H the port already stored
 // (g_value587ea0): modelled for sel == -1 (no golfer) and mode -2: drawFrameR3(x - 8, y - 8, 0x1a0, H + 0x10, 1), then
 // setDrawTarget(Root, g_font51b360, 0, 0, 0) and drawMessageBuffer(0x63, x + 0xc, y + 0x10, 0x80007fff)
-void b_draw_window(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+static void b_draw_window(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   const int32_t sel = ctx.gs().f_w_4c2e00[2];
   const int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), mode = static_cast<int32_t>(a[3]);
@@ -819,11 +790,7 @@ void b_draw_window(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   draw_message_buffer(g, ctx, 0x63, add32(x, 0xc), add32(y, 0x10), 0x80007fffu);
 }
 
-struct Named {
-  const char *name;
-  Body body;
-};
-const Named kBodies[] = {
+const GfxBodyDef kBodies[] = {
     {"showTitleScreen", b_show_title_screen},     {"loadImage", b_load_image},
     {"Surface_blit", b_surface_blit},             {"Surface_blit3", b_surface_blit3},
     {"Image_draw", b_image_draw},                 {"setDrawTarget", b_set_draw_target},
@@ -834,10 +801,73 @@ const Named kBodies[] = {
     {"drawPanelBackdrop", b_panel_backdrop},    {"drawWindow.frame", b_draw_window},
 };
 
-// Drops that draw nothing (pacing, audio): not reported as unsupported drawing
-const char *const kNotDrawing[] = {"waitTicks", "startSoundSlot"};
+// Drops that draw nothing (pacing, audio, input, files, the window tree's modal stack): not reported as unsupported drawing.
+// Each one's reason in tick.cpp's kDrops table says it does not draw: waitTicks "wait loop (pacing)", startSoundSlot / playSound
+// "audio request", Snd::status "audio device status query", capsLockOff "keybd_event", emptyFunc_4a0890 "empty function",
+// saveCourseJpg "screenshot file", Widget_readPixel "a pixel read of the root surface", enterModal483d30 "modal stack push and
+// focus clear of the window tree" (port/test/framegate.py NOT_DRAWING holds the same names).
+const char *const kNotDrawing[] = {"waitTicks", "startSoundSlot", "playSound",        "Snd::status",     "capsLockOff",
+                                   "emptyFunc_4a0890", "saveCourseJpg", "Widget_readPixel", "enterModal483d30"};
 
+}  // namespace gfxb
+
+// ------------------------------------------------------------------------------------------------ the family table
+// Every family of gfx_families.inc by explicit reference (port/src/sim/gfx_body.h).
+#define SG_GFX_FAMILY(f)                  \
+  extern const GfxFamily kGfxFamily_##f; \
+  extern int g_negctl_gfx_##f;
+#include "gfx_families.inc"
+#undef SG_GFX_FAMILY
+
+namespace {
+const GfxFamily *const kFamilies[] = {
+#define SG_GFX_FAMILY(f) &kGfxFamily_##f,
+#include "gfx_families.inc"
+#undef SG_GFX_FAMILY
+    nullptr};
+constexpr size_t kFamilyCount = sizeof(kFamilies) / sizeof(kFamilies[0]) - 1;
+
+struct BodyIndex {
+  std::map<std::string, std::pair<GfxBody, const char *>> bodies;   // name -> body, owner
+  std::map<std::string, const char *> not_drawing;
+  std::vector<std::string> duplicates;                                // "<name>\t<owner>\t<other owner>"
+  BodyIndex() {
+    auto add = [&](const char *owner, const GfxBodyDef *b, size_t n, const char *const *nd, size_t nn) {
+      for (size_t i = 0; i < n; ++i) {
+        auto it = bodies.find(b[i].name);
+        if (it != bodies.end() || not_drawing.count(b[i].name))
+          duplicates.push_back(std::string(b[i].name) + "\t" + owner + "\t" + (it != bodies.end() ? it->second.second : "not-drawing"));
+        else
+          bodies[b[i].name] = {b[i].body, owner};
+      }
+      for (size_t i = 0; nd && i < nn; ++i) {
+        if (bodies.count(nd[i]) || not_drawing.count(nd[i]))
+          duplicates.push_back(std::string(nd[i]) + "\t" + owner + "\tnot-drawing");
+        else
+          not_drawing[nd[i]] = owner;
+      }
+    };
+    add("gfx", gfxb::kBodies, sizeof(gfxb::kBodies) / sizeof(gfxb::kBodies[0]), gfxb::kNotDrawing,
+        sizeof(gfxb::kNotDrawing) / sizeof(gfxb::kNotDrawing[0]));
+    for (size_t k = 0; k < kFamilyCount; ++k) {
+      const GfxFamily &f = *kFamilies[k];
+      add(f.family, f.bodies, f.count, f.not_drawing, f.not_drawing_count);
+    }
+  }
+};
+const BodyIndex &body_index() {
+  static const BodyIndex ix;   // built once (C++11 thread-safe local static)
+  return ix;
+}
 }  // namespace
+
+GfxBody gfxb::find_body(const char *name, const char **family) {
+  const BodyIndex &ix = body_index();
+  auto it = ix.bodies.find(name);
+  if (it == ix.bodies.end()) return nullptr;
+  if (family) *family = it->second.second;
+  return it->second.first;
+}
 
 void set_gfx(Ctx &ctx, Gfx *g) {
   std::lock_guard<std::mutex> l(mu());
@@ -861,20 +891,18 @@ bool gfx_drop(Ctx &ctx, const char *name, const uint32_t *a, int n) {
   if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return false;
   Gfx *g = gfx(ctx);
   if (!g) return false;
-  for (const Named &b : kBodies)
-    if (std::strcmp(b.name, name) == 0) {
-      ++g->handled[name];
-      uint32_t args[12] = {};
-      for (int i = 0; i < n && i < 12; ++i) args[i] = a[i];
-      try {
-        b.body(*g, ctx, args, n);
-      } catch (...) {
-        g->unsup(std::string(name) + ": the body failed (an exception)");
-      }
-      return true;
+  if (GfxBody body = gfxb::find_body(name)) {
+    ++g->handled[name];
+    uint32_t args[12] = {};
+    for (int i = 0; i < n && i < 12; ++i) args[i] = a[i];
+    try {
+      body(*g, ctx, args, n);
+    } catch (...) {
+      g->unsup(std::string(name) + ": the body failed (an exception)");
     }
-  for (const char *nd : kNotDrawing)
-    if (std::strcmp(nd, name) == 0) return false;
+    return true;
+  }
+  if (body_index().not_drawing.count(name)) return false;
   g->unsup(std::string("no body: ") + name);
   return false;
 }
@@ -886,7 +914,7 @@ void gfx_progress(Ctx &ctx, uint32_t pos) {
     g->ensure_root(ctx);
     g->snap_unsupported.push_back(g->unsupported.size());
     try {
-      put_file(ctx, "$gfx/snapshot_" + std::to_string(g->snap_next) + ".555", surface_bytes(g->back));
+      gfxb::put_file(ctx, "$gfx/snapshot_" + std::to_string(g->snap_next) + ".555", gfxb::surface_bytes(g->back));
     } catch (...) {
       g->unsup("snapshot: the files overlay refused it");
     }
@@ -898,7 +926,6 @@ void gfx_end_of_input(Ctx &ctx) {
   Gfx *g = gfx(ctx);
   if (g) gfx_progress(ctx, UINT32_MAX);
 }
-
 namespace {
 // gfx.attach(): a backend owned by this context (replaces any other)
 void a_attach(Ctx &c, const uint32_t *, Ret &r) {
@@ -929,20 +956,47 @@ void a_snapshot_at(Ctx &c, const uint32_t *a, Ret &r) {
 void a_dump(Ctx &c, const uint32_t *a, Ret &r) {
   Gfx &g = need(c);
   g.ensure_root(c);
-  r.set_i32(put_file(c, a[0] ? "$gfx/root.555" : "$gfx/back.555", surface_bytes(a[0] ? g.root : g.back)) ? 0 : 1);
+  r.set_i32(gfxb::put_file(c, a[0] ? "$gfx/root.555" : "$gfx/back.555", gfxb::surface_bytes(a[0] ? g.root : g.back)) ? 0 : 1);
 }
-// gfx.log(): `$gfx/log.txt`, one line per handled and per unsupported case with its count; returns the number of
-// unsupported cases (distinct reasons)
+// gfx.log(): `$gfx/log.txt`, one line per handled and per unsupported case with its count, then `first\t<k>\t<reason>` for
+// every distinct unsupported reason in first-occurrence order (snapshot k's `unsupported before it` count n means the first n
+// of them; port/test/framegate.py reads them); returns the number of unsupported cases (distinct reasons)
 void a_log(Ctx &c, const uint32_t *, Ret &r) {
   Gfx &g = need(c);
   std::string s;
   for (const auto &kv : g.handled) s += "handled\t" + kv.first + "\t" + std::to_string(kv.second) + "\n";
   for (const auto &kv : g.unsupported) s += "unsupported\t" + kv.first + "\t" + std::to_string(kv.second) + "\n";
+  for (size_t k = 0; k < g.notes.size(); ++k) s += "first\t" + std::to_string(k) + "\t" + g.notes[k] + "\n";
   s += "snapshots\t" + std::to_string(g.snap_next) + " of " + std::to_string(g.snap_at.size()) + "\n";
   for (size_t k = 0; k < g.snap_unsupported.size(); ++k)
     s += "snapshot\t" + std::to_string(k) + "\tunsupported before it\t" + std::to_string(g.snap_unsupported[k]) + "\n";
-  put_file(c, "$gfx/log.txt", std::vector<uint8_t>(s.begin(), s.end()));
+  gfxb::put_file(c, "$gfx/log.txt", std::vector<uint8_t>(s.begin(), s.end()));
   r.set_i32(static_cast<int32_t>(g.unsupported.size()));
+}
+
+// gfx.call(name, a0..a10): test entry, gfx_drop(name, a0..a10) with the NUL-terminated drop name at the address `name` of the
+// context's address space; returns 1 when a body handled it. Lets a test drive one body without a trace.
+void a_call(Ctx &c, const uint32_t *a, Ret &r) {
+  need(c);
+  const std::string name = gfxb::vstring(c.mem, a[0]);
+  r.set_i32(gfx_drop(c, name.c_str(), a + 1, 11) ? 1 : 0);
+}
+// gfx.check(): `$gfx/bodies.txt`, one line `body\t<name>\t<owner>` per registered body, `not_drawing\t<name>\t<owner>` per
+// not-drawing drop and `duplicate\t<name>\t<owner>\t<other owner>` per name registered twice (the later one is ignored);
+// returns the number of duplicates. Needs no backend attached, only the context's files overlay.
+void a_check(Ctx &c, const uint32_t *, Ret &r) {
+  const BodyIndex &ix = body_index();
+  std::string s;
+  for (const auto &kv : ix.bodies) s += "body\t" + kv.first + "\t" + kv.second.second + "\n";
+  for (const auto &kv : ix.not_drawing) s += "not_drawing\t" + kv.first + "\t" + kv.second + "\n";
+  for (const auto &d : ix.duplicates) s += "duplicate\t" + d + "\n";
+  gfxb::put_file(c, "$gfx/bodies.txt", std::vector<uint8_t>(s.begin(), s.end()));
+  r.set_i32(static_cast<int32_t>(ix.duplicates.size()));
+}
+// gfx.family.<f>(): the number of bodies family f registers (its registry entry carries the family's negctl switch)
+template <const GfxFamily &F>
+void a_family(Ctx &, const uint32_t *, Ret &r) {
+  r.set_i32(static_cast<int32_t>(F.count));
 }
 
 const FuncDef kFuncs[] = {
@@ -951,6 +1005,11 @@ const FuncDef kFuncs[] = {
     {"gfx.snapshotAt", "default", "int", 1, 0, a_snapshot_at, &g_negctl_gfx},
     {"gfx.dump", "default", "int", 1, 0, a_dump, &g_negctl_gfx},
     {"gfx.log", "default", "int", 0, 0, a_log, &g_negctl_gfx},
+    {"gfx.call", "default", "int", 12, 0, a_call, &g_negctl_gfx},
+    {"gfx.check", "default", "int", 0, 0, a_check, &g_negctl_gfx},
+#define SG_GFX_FAMILY(f) {"gfx.family." #f, "default", "int", 0, 0, a_family<kGfxFamily_##f>, &g_negctl_gfx_##f},
+#include "gfx_families.inc"
+#undef SG_GFX_FAMILY
 };
 }  // namespace
 

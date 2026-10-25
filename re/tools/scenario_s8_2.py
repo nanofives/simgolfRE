@@ -1,5 +1,5 @@
 """Roadmap S8.2 scenarios (log/roadmap/S8/2_notes.md). Registered by re/tools/scenario.py's end-of-file hook (it globs
-scenario_s[18]_*.py); re/tools/s8_movie_runs.py also imports this module explicitly before scenario_refs.setup runs.
+scenario_s[0-9]*_*.py); re/tools/s8_movie_runs.py also imports this module explicitly before scenario_refs.setup runs.
 Names start with cov_r so scenario_refs' s36a family runs them; `expect_exit` makes setup load c3fya_run's exit support.
 
 cov_r_s8_intro: process start to the title menu and a short stay on it. Meant to run with SIMGOLF_SKIP_INTRO=0 (SMSG_IntroFinal.bik

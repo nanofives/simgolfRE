@@ -232,10 +232,111 @@ def report(real, port, quiet, name):
     return res
 
 
+# The terrain's light (Terrain.dll initGL's glLightfv / glMaterial calls as recorded in every corpus stream): direction, ambient,
+# diffuse, specular of light 0, material specular 1 and shininess 13.
+TERRAIN_LIGHT = ["glLightfv 0x4000,0x1203,0x0 v=0xbf1b7a09,0x3f44d46b,0x3e4cc8db,0x0",
+                 "glLightfv 0x4000,0x1200,0x0 v=0x3f48c8c9,0x3f48c8c9,0x3f34b4b5,0x38c8040",
+                 "glLightfv 0x4000,0x1201,0x0 v=0x3f70f0f1,0x3f70f0f1,0x3f70f0f1,0x3f48c8c9",
+                 "glLightfv 0x4000,0x1202,0x0 v=0x3f800000,0x3f800000,0x3f75f5f6,0x3f70f0f1",
+                 "glEnable 0x4000",
+                 "glMaterialfv 0x404,0x1202,0x0 v=0x3f800000,0x3f800000,0x3f800000,0x3f800000",
+                 "glMateriali 0x404,0x1601,0xd"]
+
+
+def light_lines(amb=None, dif=None, spe=None, direction=None) -> list:
+    """TERRAIN_LIGHT with any of light 0's ambient / diffuse / specular / direction replaced (4 floats each)."""
+    out = list(TERRAIN_LIGHT)
+    for k, (pname, v) in enumerate(((0x1203, direction), (0x1200, amb), (0x1201, dif), (0x1202, spe))):
+        if v is not None:
+            out[k] = "glLightfv 0x4000,0x%x,0x0 v=%s" % (pname, ",".join(fb(x) for x in v))
+    return out
+
+
+def untex_scene(mode: str, seed: int = 5, side: int = 16, light: list | None = None):
+    """Constant-colour 16 x 16 quads (each covers every dither cell 16 times), no texture image: `unlit` random float colours
+    with texturing off, `unlit_t0` the same with GL_TEXTURE_2D on and texture 0 bound (incomplete), `lit` / `lit_t0` the terrain's
+    light (or `light`, light_lines' form) with one random upward normal per quad. Returns (scene, quads) with quads =
+    [(x, y, colour-or-normal)]."""
+    rng = np.random.default_rng(seed)
+    sc = Scene()
+    sc.setup2d()
+    if mode.startswith("lit"):
+        sc.state += ["glEnable 0xb50"] + (light or TERRAIN_LIGHT)
+    if mode.endswith("_t0"):
+        sc.state += ["glEnable 0xde1", "glBindTexture 0xde1,0x0"]
+    quads = []
+    for gy in range(H // (side + 2)):
+        for gx in range(W // (side + 2)):
+            x, y = gx * (side + 2) + 1, gy * (side + 2) + 1
+            if mode.startswith("lit"):
+                n = rng.normal(size=3)
+                n[1] = abs(n[1]) + 0.3
+                n /= np.linalg.norm(n)
+                p = sc.pass_
+                for tri in (((x, y), (x + side, y), (x + side, y + side)), ((x, y), (x + side, y + side), (x, y + side))):
+                    p.append("glBegin 0x4")
+                    for vx, vy in tri:
+                        p.append("glNormal3f " + ",".join(fb(v) for v in n))
+                        p.append("glVertex3f %s,%s,%s" % (fb(vx), fb(vy), fb(0.0)))
+                    p.append("glEnd")
+                quads.append((x, y, n))
+            else:
+                c = tuple(rng.uniform(0, 1, 3)) + (1.0,)
+                sc.quad(x, y, x + side, y + side, colors=[c] * 4)
+                quads.append((x, y, c))
+    return sc, quads
+
+
+def probe_untex(lib, modes=("unlit", "unlit_t0", "lit", "lit_t0")):
+    """Untextured constant-colour quads through the real GL and GlRaster (U-1300: the incomplete-texture tiles of g6)."""
+    out = {}
+    for mode in modes:
+        sc, quads = untex_scene(mode)
+        d = sc.write("untex_" + mode)
+        real = real_frame(d)
+        port = port_frame(lib, d)
+        out[mode] = (real, port, quads)
+        report(real, port, False, "untex " + mode)
+    return out
+
+
+def tie_scene(seed: int = 9):
+    """Flat-coloured triangles whose vertices sit on pixel centres (x + 0.5, y + 0.5) inside |ndc| < 0.5, where the fixed-point
+    setup leaves them unmoved, so many edges (horizontal, vertical and diagonal) pass exactly through pixel centres: which
+    triangle owns those centres is the tie rule. Both windings, culling off."""
+    rng = np.random.default_rng(seed)
+    sc = Scene()
+    sc.setup2d()
+    for gy in range(10):
+        for gx in range(13):
+            ox, oy = 205 + gx * 30, 155 + gy * 29
+            pts = []
+            for _ in range(3):
+                pts.append((ox + int(rng.integers(0, 24)) + 0.5, oy + int(rng.integers(0, 24)) + 0.5))
+            if rng.random() < 0.4:   # force an axis-aligned edge
+                k = int(rng.integers(0, 2))
+                pts[1] = (pts[1][0], pts[0][1]) if k == 0 else (pts[0][0], pts[1][1])
+            c = tuple(rng.uniform(0.2, 1, 3)) + (1.0,)
+            sc.tri(*pts, colors=[c] * 3)
+    return sc
+
+
+def probe_tie(lib):
+    """The real GL against GlRaster's tie rules (tune 10 = 0..5) on tie_scene: coverage differences per rule."""
+    sc = tie_scene()
+    d = sc.write("tie")
+    real = real_frame(d)
+    out = {}
+    for tie in range(6):
+        port = port_frame(lib, d, {10: tie})
+        out[tie] = report(real, port, False, f"tie rule {tie}")
+    return out
+
+
 def main():
     lib = L.load()
     which = sys.argv[1] if len(sys.argv) > 1 else "flat"
-    {"flat": probe_flat, "ramp": probe_ramp, "snap": sweep_snap, "tex": probe_tex}[which](lib)
+    {"flat": probe_flat, "ramp": probe_ramp, "snap": sweep_snap, "tex": probe_tex, "untex": probe_untex, "tie": probe_tie}[which](lib)
 
 
 if __name__ == "__main__":

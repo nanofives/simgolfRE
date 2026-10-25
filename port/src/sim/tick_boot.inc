@@ -84,6 +84,8 @@ void BootSetup(u32 F) {
                              GS(g_fontRef_821ee8)};
         for (u32 f : fonts) cc("gditext.createFont", f);
     }
+    // its image half: the report screens' art cut into their Surfaces (roadmap S2.4, gfx_routing.cpp)
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInfoScreenArt.images", nullptr, 0);
     cc("showLoadingScreen", 0);                                        // ML+0x359
     tc("Window::refreshFull", GS(g_rootWindow), 0);                    // ML+0x368
     cc("loadInterfaceArt", 1);                                         // ML+0x36f

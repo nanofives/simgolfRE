@@ -1,0 +1,38 @@
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -1480,17 +1480,24 @@
+         const FrameInput in = frame_input(f);
+         input.begin(f, k);
+         tk::FrameIoStats io;
+-        FrameExit ex;
++        FrameExit ex = FrameExit::Wait;
++        bool out_of_input = false;
+         try {
+           ex = tk::tick_frame_io(ctx, in, io);
++        } catch (const NeedInput &) {
++          // the last frame's Blocking pump finds no recorded input left: the end of the recording (roadmap S3.3, U-1120).
++          // Every snapshot not yet taken is past the last item the run could consume
++          out_of_input = true;
++          gfx_end_of_input(ctx);
+         } catch (...) {
+           after_frame(f, k, io);
+           throw;
+         }
+         after_frame(f, k, io);
+         if (detail)
+-          *detail = ex == FrameExit::Quit ? "the last frame ran to the end of the trace: mainLoop returned (the title menu's quit)"
+-                                          : "the last frame ran to the end of the trace";
++          *detail = out_of_input ? "the last frame ran to the end of the trace: a Blocking pump with no input left"
++                    : ex == FrameExit::Quit ? "the last frame ran to the end of the trace: mainLoop returned (the title menu's quit)"
++                                            : "the last frame ran to the end of the trace";
+       }
+       return 0;
+     }
+@@ -1537,6 +1544,7 @@
+       stop = ex == FrameExit::Wait ? "the frame wait" : "the frame's end (no wait reached)";
+     } catch (const NeedInput &e) {
+       stop = std::string("a Blocking pump with no input left (") + (e.what ? e.what : "?") + ")";
++      gfx_end_of_input(ctx);  // snapshots still pending lie past the last recorded item (S3.3)
+     }
+     input.end(stats, true);
+     if (detail)
