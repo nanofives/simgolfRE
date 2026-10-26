@@ -1,13 +1,13 @@
 # S3 status (in-game frame) — lead session cmvmns8sn3fsbo115g4dgm1nf
 
-steps: 14 total: 9 accepted, 3 running (S3.5b, S3.7, S3.8), 2 pending (S3.10, S3.9), 0 held
-live workers: S3.5b rebase + standing figure (claude2 sonnet, cmvnuhlg68dljo115obipvwx9); S3.7 HUD text (claude2 opus, cmvnprucy848bo1156wzjx7p7); S3.8 overlay lines (claude2 opus, cmvnqcdb785r3o115e5i7g5mk); cap 3
+steps: 18 total: 16 accepted, 0 running, 2 pending (S3.12 wave 6 after wave 5 + S7 wave 3; S3.9 section gate), 0 held
+live workers: none
 game slots held: 0 (S3.5 released s3_5 2026-10-25); S3.8 will ask NEED_GAME for line recordings
 mirror: port/build/S3_head2 = git archive b3d61e41 (S2 w1-4 + S3 w1 committed) + junctions; old S3_head (c6d7d78b) kept for running workers
-waiting on: I6 (S3 waves 2 + 3 with S6 w2, S2 w5); S3.5 / S3.6 rebase onto S3_head2 (+ waves 2-3) before their merge
+waiting on: I9 (S3 waves 2+4+5 resubmission + S7 wave 3; after I7 and I8); S3.12 held until I9 commits (orchestrator will message)
 Widget_writePixel: moved to S3 (orchestrator 2026-10-24), given to S3.6 (gfx_pixel.cpp, own merge section)
-last event: 2026-10-25 cap raised to 3; S3.5b spawned
-next: S3.5b first when a worker frees (play path G8: S3.5 + S3.6/6b + S3.7 merged); S3.10 rasteriser speed (U-1640) after; S3.9 last
+last event: 2026-10-25 S3.11 accepted; resubmission ready: log/roadmap/S3/MERGE_w5.md, files_w5.txt (479 paths)
+next: after the merge lands: S3.12 (wave 6 on HEAD + S7 wave 3), then S3.9 section gate
 
 ## Log
 - 2026-10-24: lead started. Steps planned from census causes: terrain not drawn 520 (S3.1 + S3.2), Surface_blit3 168 (S3.6),
@@ -41,4 +41,16 @@ next: S3.5b first when a worker frees (play path G8: S3.5 + S3.6/6b + S3.7 merge
 - 2026-10-25: S3.5 accepted (550/582 checkpoints exact in every sprite pixel; 4 cov_r_bio unjudged in old base, 5 blend px over terrain U-1347, overlay lines U-1349 -> S3.8, one standing figure -> S3.5b). Slot released. S3.7 spawned (claude2).
 - 2026-10-25: S3.6b accepted. Wave 4 (S3.6 + S3.6b) written: MERGE_w4.md, files_w4.txt. S3.8 spawned (claude2).- 2026-10-25: G8: play session once S3.5, S3.6/6b, S3.7 are merged -> S3.5b next. New step S3.10 rasteriser speed (U-1640: zoom frames 144..186 ms vs 87 ms), G2 unchanged.
 
-- 2026-10-25: cap 3 (S2 lead closed). S3.5b spawned. S3.10 gate states PC, build and load.
+- 2026-10-25: cap 3 (S2 lead closed). S3.5b spawned. S3.10 gate states PC, build and load.- 2026-10-25: I6 committed bbc9072f with wave 3; wave 2 REFUSED (test_menu tropical digests, test_terrain_live hawaii boots hit the default-1 Fault). New step S3.4c. Wave 4 depends on wave 2 (test_gfx_hud counts FLIC sheet cells) -> resubmit waves 2+4 together.
+
+- 2026-10-25: cap 4 for S3.4c (drops to 3 at the next close). S3.4c spawned. Heavy runs one at a time across workers.
+- 2026-10-25: S3.8 accepted. Its merge edits S2 files (routing.cpp, test_gfx_routing.py): asked orchestrator. S3.5's Image_draw / Surface_drawSprite changes fail 1 + 1 + 3 S2 tests (measured by S3.8 on the base): added to S3.5b's gate.- 2026-10-25: orchestrator approved S3.8's edits to routing.cpp / test_gfx_routing.py (S3 owns them now). Conditions: exact-text edits re-checked on HEAD after I7 (S2 waves 6-7, 10_shared.patch); test_gfx_routing / dialogs / reports green x64 + Win32. Plan: one resubmission waves 2 + 4 + 5 + S3.8, assembled and re-measured on I7's HEAD (assembly by S3.4c's successor or the lead's mirror).
+
+- 2026-10-25: S3.7 accepted. S3.10 waits for S3.5b (keeps the machine quiet for S3.4c's heavy suite and the speed measure).- 2026-10-25: S3.7 late note: test_gfx_text x64 32 passed; Win32 30/30 before its last frame test, not re-run after -> re-run on Win32 in the assembled resubmission.
+
+- 2026-10-25: S3.5b accepted. Win32 segment course_season/08 failed once (record 51) and passed twice on re-run: flagged for the resubmission gate. S3.10 spawned.
+- 2026-10-25: S3.4c accepted. test_gfx_dialogs fails on wave 4 alone (Surface_drawSprite alpha outside the quarter band); S3.5 edit 10 covers it, checked in the assembly. S3.11 spawned to build and measure the one resubmission tree.
+- 2026-10-25: S3.10 accepted as PARTIAL (rasteriser ~4x, 299 passes bit-identical; zoom frames 83..108 ms at 96..100 % load, the rest is terrain_state rebuild U-1388). S3.10b spawned. Wave 6 note: S3.8 (wave 5) and S3.10 both change gfx_terrain.cpp: wave 6 rebases on wave 5.
+- 2026-10-25: S3.10b accepted. Wave 6 = S3.10 + S3.10b (rebase on wave 5: gfx_terrain.cpp). Its LiveTerrain::call log patch touches S7's app host.cpp: asked orchestrator. Note: S3.10b regenerated the untracked 10_app_ingame_facts_app.json (now a later session's facts).- 2026-10-25: orchestrator approved the host.cpp + terrain_live log switch for wave 6 (U-1673), after S7 wave 3; gate adds S7 test_app_present / ingame / live, pacing reported with load; S3.10's facts path to become a parameter. Step S3.12 (wave 6 assembly) planned.
+
+- 2026-10-25: S3.11 accepted. Resubmission = MERGE_w5.md / files_w5.txt (supersedes MERGE_w2.md and MERGE_w4.md). Two files_w5 entries are a local-corpus glob and the S6 file to restore from prepared_s3w2.- 2026-10-25: resubmission queued as I9 with S7 wave 3 (after I7, I8). S3.12 held until I9 commits. No workers alive.

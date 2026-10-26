@@ -1,0 +1,25 @@
+scenario	table	fontref	bytes	want	got	control_only	cause	extra
+cov_a_champ	widths	0x0051a028	0a	11	0	True		
+cov_a_champ	textput	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_a_champ	markup	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_a_keys2	widths	0x0051a028	0a	11	0	True		
+cov_a_keys2	textput	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_a_keys2	markup	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_a_play	widths	0x0051a028	0a	0	11	True		
+cov_a_play	textput	0x0051a028	0a	0	11	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_a_play	markup	0x0051a028	0a	0	11	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_b_career	widths	0x00519a40	0a	14	0	True		
+cov_b_career	textput	0x00519a40	0a	14	0	True		after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]
+cov_b_career	markup	0x00519a40	0a	14	0	True		after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]
+cov_b_career_types	widths	0x0051a028	0a	11	0	True		
+cov_b_career_types	textput	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_b_career_types	markup	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_b_people	widths	0x0051a028	0a	11	0	True		
+cov_b_people	textput	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_b_people	markup	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+ui_tour	widths	0x0051b360	0a	0	8	True		
+ui_tour	textput	0x0051b360	0a	0	8	True		after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
+ui_tour	markup	0x0051b360	0a	0	8	True		after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
+ui_tour_v	widths	0x0051a028	0a	11	0	True		
+ui_tour_v	textput	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+ui_tour_v	markup	0x0051a028	0a	11	0	True		after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]

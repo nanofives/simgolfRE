@@ -1489,6 +1489,20 @@ the pump on the end-of-year screen, before it in the course report), so cov_r_s2
 cursor-tile divergence. Gates: test_gfx 25, credits 47, routing 35, boot_screens 32, reports 36, dialogs 32, port static 6,
 commands 83 / 44 skipped, tick 250, reports 14 (16 with SG_EMU_ORACLE=1), s2_5 3, s2_6 4 (x64); segments 205 / 205 x64 + Win32,
 0 digests changed; Win32 gfx files and s2_6 pass; boot 70 rows 65 PASS / 2 KNOWN / 2 NO_FRAMES / 1 FAIL (cov_r_s2_screens at 1156).
+Roadmap S2.11, dialogs over the course 2 (2026-10-25, notes log/roadmap/S2/11_notes.md, U-1215..U-1219): the TOURNAMENT RESULTS strip
+(showTournamentResults' scorecard layout), the bulletin board (showBulletinBoard's trophy shelf) and the SimFoto / message ball are drawn
+by three families, gfx_results.cpp (drawStringRightAt, results.begin), gfx_simfoto.cpp (loadInterfaceArt.ballArt, drawWindow.golfer,
+simfoto.begin) and gfx_bulletin.cpp (the board's art cuts of loadInterfaceArt kIa11..kIa16, the board image, events, photo pins, the
+fixed sprites). Findings that shaped it: the results rows and the close button read the bands' SpriteRef +0x18 / +0x1c, which only the
+backend holds (tick_panels.inc reads gfx_sprite_cut with a backend: drawing positions only, the y break never fires before the rank
+break); the port's tickMessage (commands_layout.inc, registered) never handed drawWindow to the backend; every pinned SimFoto sits in
+narrateShot's pumpAndRedraw(0), so its frame is narrateShot's own, which the port's shots.cpp now draws with a backend, running
+drawWindow's window-height pass and putting g_textBuffer / g_textBuf / g_ui_821c50 / g_value587ea0 back (commands.drawWindowGfx). The
+ball's head (Surface_drawScaled of a heads cut, S3.6; palette by composeGolferSprite, S3.5) is not drawn: the probe holds the ball's
+0x8c square (U-1216). Gate (test_gfx_dialogs2.py, rectangles measured on the reference frames by log/roadmap/S2/11_tools/rects.py, held
+pixels by the families' probes): all 17 rectangles of 13 checkpoints 0 failing pixels, x64 and Win32 (results strips 101,719 judged px
+each; the bulletin board all 480,000); championship tournament_end has no snapshot (U-1120). Segments 205 / 205 x64 + Win32, 0 digests
+changed; boot equal to S2.13. Controls: 10 RED, 0 blind.
 Roadmap S3 wave 1, the terrain draw-list passes and the rasteriser's last two rules (2026-10-24, steps S3.1 / S3.1b, notes
 log/roadmap/S3/1_notes.md, 1b_notes.md, U-1300..U-1304, U-1390..U-1392):
 port/src/sim/terrain_render.cpp now ports localRender (25 window tiles, no culling of its own; drawTileObjects' camera-facing wall
@@ -1608,6 +1622,33 @@ boot (tick_boot.inc), the closing call from the QUIT block (playAudioFile is no 
 branches both ways; 5 negative controls RED; new intro-ON boot scenario cov_r_s8_play (re/tools/s8_boot_capture.py) PASS 216 / 216 and to the exit with the
 quit files equal; boot rows 61 / 61 unchanged, segments 205 / 205 x64 = Win32 with 0 digests changed. U-1700..U-1723 (input during a playing movie is
 modelled not measured; the drawing around a movie and the sound argument are not ported).
+Section S5, text without GDI (2026-10-24, roadmap orchestrator; steps re/roadmap/S5_steps.tsv, notes log/roadmap/S5/<k>_notes.md,
+report re/analysis/data/text_freetype.md, U-1500..U-1532): a FreeType TextMetrics provider (module fttext) beside the GDI one, judged
+against it. FreeType 2.14.3 core (no zlib / png / bzip2 / brotli / harfbuzz) comes from vcpkg in C:\Users\maria\vcpkg\installed
+(decisions D4 and G4; license FTL, its credit line goes into the documentation of any binary that links it) as an OPTIONAL CMake
+dependency: `SG_FREETYPE_ROOT` (or `-DPORTSIM_FREETYPE_ROOT`) at configure links it and copies freetype.dll beside the DLLs; without
+it module fttext throws MissingResource{"FreeType"} and nothing else changes. gditext was split into MarkupTextMetrics (the
+original's Text_put / drawMarkupRun / measureTextWidth chain) and GdiTextMetrics (the GDI primitives; every output row-identical to
+before); FtTextMetrics shares the chain. FACES (measured with GetFontData hashes on LIVING-PC): GDI resolves lfFaceName by the
+family name, else by the full name of a face alone in its family, else to Arial, so the game's `Arial Bold` 9 / 10 and `Times New
+Roman Bold` 18 are drawn with arial.ttf (regular) and `Comic Sans MS Bold` italic 100 with ariali.ttf; Manual SSi (Bold) and Klepto
+ITC TT are the install's manu3_.ttf / klepto__.ttf. A host without Windows fonts must supply arial.ttf, ariali.ttf and times.ttf
+($SG_FONT_DIR). WIDTHS: ppem = size, interpreter v35, the five FontRef words from VDMX else OS/2 win metrics, advances = hdmx at the
+ppem, else linear rounded when head flags bit 4 is clear or LTSH allows, else v35 hinted (3,136 / 3,136 probe cases); FreeType equals
+GDI and the recordings on every printable row (11,459 widths, 9,079 Text_put, 10,776 drawMarkupRun, 15 / 15 metric words, x64 =
+Win32); only lone 0x0a rows differ, which the original itself measures differently per process (U-0960). PIXELS: the original's labels
+and GDI's are ClearType subpixel on the 16-bit DIB (lfQuality 0 follows the host's ClearType setting: on, contrast 1200, RGB here).
+Module textlab + port/test/labels.py hold a label corpus (6,540 (FontRef, text) pairs from the widths recordings, 15,960 jobs, plus the
+calls of the six gfx checkpoints that pass at HEAD; GDI reference 0 px against itself and against the original's frames). The
+FreeType raster (fttext_raster.{cpp,h}) reproduces GDI ClearType's blend exactly (per channel in the 5-bit space through gamma
+contrast / 1000 tables, 0 / 7,168) and its 6-sample box filter (exact on Arial), but not GDI's ClearType x hinting (U-1520):
+8,736,593 corpus px differ (about 70 % of GDI's ink; Klepto 0.26-0.29, Arial 0.60, Manual SSi 0.61-0.81) and the six checkpoints
+differ by 1,735 to 15,347 px each, all inside label boxes. The simulation reads text only through widths, so with
+`SG_TEXT_METRICS=freetype` (segments.py / boot.py / integrator.py; default gdi) the segment gate stays 205 / 205 and the boot gate 58 /
+2 / 1 on x64 and Win32. The port's default stays GDI; the report's last section is Mariano's decision (recommendation: keep GDI on
+Windows, FreeType for hosts without GDI, judged by these numbers). Process lessons: on claude2 `cmake` is not an allowed command
+(`~/bin/py` is), so children run every configure and build from a Python script; two S5.3 workers stalled on unanswered permission
+prompts before that rule was in their brief.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

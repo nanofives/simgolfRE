@@ -11,9 +11,11 @@
 #include <vector>
 
 #include "commands_internal.h"
+#include "gfx_reports.h"
 #include "portsim/arith.h"
 #include "portsim/ptr.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/util.h"
 
 namespace portsim {
@@ -116,11 +118,57 @@ Ret peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
   return call_peer(ctx, name, args);
 }
 
-// drawThoughtBubble (g, x, y, mode) without its drawing: composeGolferSprite(g) once, twice with mode 1 (its two sprite
-// layers each compose the golfer); its other callees (typeBit7Clear, thoughtFlag) only read
-void thought_bubble(Ctx &ctx, int32_t g, int32_t mode) {
+// Roadmap S2.10: the drawing calls of the skill dialog and of drawThoughtBubble, made only with a graphics backend attached
+// (gfx_drop; c3em.cpp SkillPointDialog_re and c3ei.cpp DrawThoughtBubble_re in their order and with their arguments)
+struct SkDraw {
+  Ctx &ctx;
+  const bool on;
+  const uint32_t root;
+  explicit SkDraw(Ctx &c)
+      : ctx(c), on(g_gfx_attached.load(std::memory_order_relaxed) != 0), root(c.gs().f_stateptr_4c1570[0]) {}
+  void gx(const char *name, std::initializer_list<uint32_t> a) const {
+    if (on) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
+  }
+  void stretch(uint32_t s, uint32_t mask, int32_t x, int32_t y) const { gx("Surface_stretchBlit", {s, mask, root, u32(x), u32(y), 0}); }
+  void scaled(uint32_t s, int32_t x, int32_t y) const { gx("Surface_drawScaled", {s, root, u32(x), u32(y), 1, 1, 1, 0}); }
+  void text(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawText4049d0", {t, u32(x), u32(y), c}); }
+  void centred2(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawCenteredText2", {t, u32(x), u32(y), c}); }
+};
+
+// drawThoughtBubble (g, x, y, mode): composeGolferSprite(g) once, twice with mode 1 (its two sprite layers each compose the
+// golfer); its other callees (typeBit7Clear, thoughtFlag) only read. With `draw` (roadmap S2.10) and a backend attached, the
+// drawing between: mode 0 a white box (Win_fillRect at (x + 4, y), 0x50 x 0x60); mode != 1 the head g_sprites5628e8 cell
+// 3 * (look + 72 * typeBit7Clear) + thoughtFlag at (x, y); mode 1 the hat (type record +0x2c bit 3) at (x + 0x10, y + 0x4c),
+// the body g_surfaces5439e0 cell (hair column + 4 with the hat, + 8 * typeBit7Clear) at (x + 0x13, y + 0x4c) in the composed
+// palette g_images[0], and the head g_sprites59e7c0 (look below 0x14: 3 * (look + 20 * typeBit7Clear) + thoughtFlag, at (x,
+// y - 0x14)) or g_sprites5628e8 (at (x - 0x14, y - 0x14)).
+void thought_bubble(Ctx &ctx, int32_t g, int32_t mode, int32_t x = 0, int32_t y = 0, bool draw = false) {
+  const SkDraw d(ctx);
+  const bool on = draw && d.on;
+  const Memory &m = ctx.mem;
+  const uint32_t T = GS(g_golferTypes) + u32(mul32(m.load<int16_t>(rec(ctx, g) + 0xb6), 0x230));
+  const int32_t look = m.load<int8_t>(T + 0x22);
+  const int32_t col = (m.load<uint8_t>(T + 0x23) >> 4) & 3;
+  auto tb7 = [&] { return i32(call_peer(ctx, "typeBit7Clear", {u32(g)}).eax); };
+  auto tf = [&] { return i32(call_peer(ctx, "thoughtFlag", {u32(g)}).eax); };
+  if (on && mode == 0) d.gx("Win_fillRect", {d.root, u32(x + 4), u32(y), 0x50, 0x60, 0x80007fffu});
   peer(ctx, "composeGolferSprite", {u32(g)});
-  if (mode == 1) peer(ctx, "composeGolferSprite", {u32(g)});
+  if (on) d.gx("composeGolferSprite", {u32(g)});
+  if (mode != 1) {
+    if (on) d.scaled(GS(g_sprites5628e8) + 0x2cu * u32(add32(mul32(3, add32(look, mul32(tb7(), 72))), tf())), x, y);
+    return;
+  }
+  const bool hat = (m.load<uint8_t>(T + 0x2c) & 8) != 0;
+  if (on && hat) d.gx("Image_draw", {GS(g_sprite5787a0), d.root, u32(x + 0x10), u32(y + 0x4c), 0});
+  peer(ctx, "composeGolferSprite", {u32(g)});
+  if (!on) return;
+  d.gx("composeGolferSprite", {u32(g)});
+  const int32_t e = add32(col + (hat ? 4 : 0), mul32(tb7(), 8));
+  d.gx("Image_draw", {GS(g_surfaces5439e0) + 0x2cu * u32(e), d.root, u32(x + 0x13), u32(y + 0x4c), GS(g_images)});
+  if (look < 0x14)
+    d.scaled(GS(g_sprites59e7c0) + 0x2cu * u32(add32(mul32(3, add32(look, mul32(tb7(), 20))), tf())), x, y - 0x14);
+  else
+    d.scaled(GS(g_sprites5628e8) + 0x2cu * u32(add32(mul32(3, add32(look, mul32(tb7(), 72))), tf())), x - 0x14, y - 0x14);
 }
 
 // the cursor a View_toLocal read returns (the context's InputSource; none = the dialog waits for input it cannot have)
@@ -156,8 +204,15 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
   for (uint32_t i = 0; i < 32; ++i) entry[i] = m.load<int8_t>(skills + i);
   int32_t used = 0, left = points;
   int32_t lx = 0, ly = 0;  // frame slots only the cursor read writes (zeroed-stack convention before it)
+  const SkDraw d(ctx);
+  const int32_t titleX = add32(xbase, 0xd2);
   for (;;) {
+    if (xbase < 0) d.gx("drawFrameR3", {u32(xbase + 0x4e), 0x32, 0xd0, 0x13c, 1});
+    else d.gx("drawFrameR3", {u32(xbase + 0x2e), 0x32, 0x140, 0x13c, 1});
+    d.gx("setDrawTarget", {d.root, GS(g_font519928), 0, 0, 0});
+    d.centred2(title, titleX, 0x3a, 0x80007fffu);
     if (xbase >= 0) {
+      d.scaled(GS(g_sprite59bf98), xbase + 0xf7, 0x56);
       int32_t who = golfer;
       if (golfer == -1) {
         const uint32_t r = rec(ctx, 0x99);
@@ -165,12 +220,15 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
         m.store<int16_t>(r + 0xb8, static_cast<int16_t>(m.load<int8_t>(GS(g_golferTypes) + 0x21)));
         who = 0x99;
       }
-      thought_bubble(ctx, who, 1);
+      thought_bubble(ctx, who, 1, xbase + 0xff, 0x66, true);
+      d.stretch(GS(g_surfaces5678b8) + 0xdc, GS(g_sprites56a7b8) + 0xdc, xbase + 0x146, 0x13e);
     }
     int32_t hover = -1;
     if (points > 0) read_cursor(ctx, lx, ly, "skillPointDialog");
+    d.gx("setDrawTarget", {d.root, GS(g_font51b360), 0, 0, 0});
     const int32_t colX = add32(xbase, 0x52);
     const int32_t arrowX = add32(xbase, 0x32);
+    const uint32_t s5 = GS(g_sprites5a53c8), m5 = GS(g_sprites58b680);
     for (int32_t i = 0; i < 10; ++i) {
       const int32_t rowY = 0x5a + 0x18 * i;
       int32_t value;
@@ -178,22 +236,34 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
         value = m.load<uint8_t>(rec(ctx, golfer) + 0xf0 + u32(i));
       else
         value = m.load<uint8_t>(skills + u32(i));
+      d.stretch(s5 + 0x478, m5 + 0x478, colX, rowY);
+      if (points > 0) d.stretch(s5 + 0x528, m5 + 0x528, arrowX, rowY);
       if (lx < colX) {
-        if (lx >= arrowX && ly > rowY && ly <= rowY + (mode == 4 ? 0xb : 0xc)) hover = i;
-        if (lx < colX && lx >= arrowX && ly > rowY + 0xc && ly <= rowY + 0x18) hover = i + 10;
+        if (lx >= arrowX && ly > rowY && ly <= rowY + (mode == 4 ? 0xb : 0xc)) {
+          d.stretch(s5 + 0x554, m5 + 0x554, arrowX, rowY);
+          hover = i;
+        }
+        if (lx < colX && lx >= arrowX && ly > rowY + 0xc && ly <= rowY + 0x18) {
+          d.stretch(s5 + 0x580, m5 + 0x580, arrowX, rowY + 0xc);
+          hover = i + 10;
+        }
       }
       if (value != 0) {
         cpy(ctx, tb, value < 10 ? GS(f_strpool_4c5340) : GS(g_str4e9a84));
         cat(ctx, tb, itoa10(ctx, value * 10, GS(g_infoPanelNumBuf)));
         cat(ctx, tb, GS(f_strpool_4c60c4));
+        d.text(tb, xbase + 0x57, rowY + 7, 0x80000000u);
       }
+      d.text(m.load<uint32_t>(GS(f_ptrtab_4c2c3c) + 4 * u32(i)), xbase + 0x8a, rowY + 7, value != 0 ? 0x80000000u : 0x80004210u);
     }
     if (points > 0) {
       cpy(ctx, tb, GS(f_strpool_4d3c3c) + 0x10);
       cat(ctx, tb, itoa10(ctx, left, GS(g_infoPanelNumBuf)));
       cat(ctx, tb, GS(f_strpool_4d3c3c));
+      d.centred2(tb, titleX, 0x50, used > points ? 0x80007d08u : 0x80007fffu);
     }
     if (points == -1) return -1;
+    d.gx("Window::refreshFull", {GS(g_rootWindow), 0});
     cm::pump_messages(ctx, PumpKind::Blocking, "skillPointDialog");
     if (gs.g_rootInput[kButton] == 0 && cm::flush_redraw(ctx) == 0) continue;
     const int32_t button = gs.g_rootInput[kButton];
@@ -252,6 +322,7 @@ int32_t show_character_intro(Ctx &ctx) {
     if (m.load<int32_t>(GS(g_bulletinEvents) + 0x28 + 0x30 * k) != 0) points += mode == 1 ? 2 : 3;
   if (mode != 2) ctx.gs().f_w_4c2e00[2] = -1;
   cm::draw_window_effect(ctx, -2);
+  SkDraw(ctx).gx("drawWindow.frame", {0xc8, 0x172, 0x80007fffu, u32(-2)});   // drawWindow(0xc8, 0x172, 0x80007fff, -2)
   const int32_t r = skill_point_dialog(ctx, GS(g_golferTypes) + 0x10, 0, points, -1, 0xc8);
   m.store<int16_t>(GS(g_skillMaskBlock) + 8, static_cast<int16_t>(r));
   return r;
@@ -824,6 +895,10 @@ void show_bulletin_board(Ctx &ctx) {
   gs.g_bulletinAnimTick = seen;
   if (seen < 0x14) return;
   if (m.load<int32_t>(photo) != 0x63) cm::call_optional(ctx, "playSound", {0x38, 0x64, 0, 0, 0});
+  // roadmap S2.11: the board's drawing for an attached graphics backend (gfx_bulletin.cpp; nothing without one)
+  const gfxr::ScreenDraw draw(ctx);
+  draw.gx("showBulletinBoard.board", {});
+  int32_t draw_y = 0x1bb, draw_xoff = 0, drawn = 0;   // the event lines' pen (ShowBulletinBoard_re)
   const uint32_t ev = GS(g_bulletinEvents) + 0x28;   // 22 records of 0x30: date, course index, ...
   int32_t order[22];
   bool used[22] = {};
@@ -843,6 +918,7 @@ void show_bulletin_board(Ctx &ctx) {
   }
   for (int32_t k = 0; k < count; ++k) {
     const int32_t e = order[neg == 1 ? count - 1 - k : k];
+    draw.gx("setDrawTarget", {draw.root(), GS(g_fontRef_519fd8), 0, 0, 0});
     const int32_t saved_date = gs.g_date;
     const int32_t saved_course = gs.g_courseIndex;
     m.store<uint8_t>(tb, 0);
@@ -859,10 +935,19 @@ void show_bulletin_board(Ctx &ctx) {
     call_peer(ctx, "appendDate", {u32(gs.g_date)});
     gs.g_courseIndex = saved_course;
     gs.g_date = saved_date;
+    const int32_t draw_x = ((drawn & 1) != 0 ? 0x203 : 0) + 0x14 + draw_xoff % 0x32;
+    draw.gx("showBulletinBoard.event", {u32(draw_x), u32(draw_y)});
+    draw.gx("drawText4049d0", {tb, u32(draw_x), u32(draw_y), 0x80002108u});
     cpy(ctx, tb, GS(f_strpool_4e3e7c));   // the photo's file name (loadBmpSurface: drawing)
     cat(ctx, tb, itoa10(ctx, e, numbuf));
     cat(ctx, tb, GS(f_strpool_4c4970) + 0x4d0);
+    draw_xoff += 0x23;
+    ++drawn;
+    draw.gx("showBulletinBoard.photo", {u32(draw_x), u32(draw_y), u32(drawn)});
+    draw_y -= 0xe;
   }
+  draw.gx("showBulletinBoard.fixed", {});
+  draw.gx("Window::refreshFull", {draw.window(), 0});
   for (;;) {
     pump_input_blocking(ctx, "showBulletinBoard");
     if (gs.g_rootInput[kButton] != 0) break;

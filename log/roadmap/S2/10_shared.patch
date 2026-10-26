@@ -1,0 +1,567 @@
+diff --git a/port/src/sim/chareditor.cpp b/port/src/sim/chareditor.cpp
+index c4c31dc..f2bb360 100644
+--- a/port/src/sim/chareditor.cpp
++++ b/port/src/sim/chareditor.cpp
+@@ -13,6 +13,7 @@
+ #include "portsim/arith.h"
+ #include "portsim/ptr.h"
+ #include "portsim/sim/commands.h"
++#include "portsim/sim/gfx.h"
+ #include "portsim/sim/util.h"
+ 
+ namespace portsim {
+@@ -584,6 +585,38 @@ void bio_entry(Ctx &ctx, uint32_t bio) {
+ }
+ }  // namespace
+ 
++// Roadmap S2.10: the editor's drawing (c3fx.cpp ShowCharacterEditor_re's callees in its order, with its arguments), made only
++// with a graphics backend attached (gfx_drop; bodies in gfx.cpp, gfx_prim_text.cpp, gfx_prim_fill.cpp, gfx_dialogs.cpp,
++// gfx_chareditor.cpp and, for the sprite cuts, the scaled draws and the golfer palette, the in-game families). The texts are the
++// ones the port builds in g_textBuffer anyway; a draw never writes the GameState.
++struct EdDraw {
++  Ctx &ctx;
++  const bool on;
++  const uint32_t root, win;
++  explicit EdDraw(Ctx &c)
++      : ctx(c),
++        on(g_gfx_attached.load(std::memory_order_relaxed) != 0),
++        root(c.gs().f_stateptr_4c1570[0]),
++        win(state_va(c, &GameState::g_rootWindow)) {}
++  void gx(const char *name, std::initializer_list<uint32_t> a) const {
++    if (on) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++  }
++  void font(uint32_t f) const { gx("setDrawTarget", {root, f, 0, 0, 0}); }
++  // Surface_drawScaled(sprite, root, x, y, 1, 1, 1, 0)
++  void scaled(uint32_t s, int32_t x, int32_t y) const { gx("Surface_drawScaled", {s, root, u32(x), u32(y), 1, 1, 1, 0}); }
++  void image(uint32_t s, int32_t x, int32_t y, uint32_t pal = 0) const { gx("Image_draw", {s, root, u32(x), u32(y), pal}); }
++  void centred(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawCenteredText", {t, u32(x), u32(y), c}); }
++  void centred2(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawCenteredText2", {t, u32(x), u32(y), c}); }
++  void text(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawText4049d0", {t, u32(x), u32(y), c}); }
++  void fill(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t c) const {
++    gx("fillWindowRect", {win, u32(x), u32(y), u32(w), u32(h), c});
++  }
++  // a control's spot (f_tab_point16_4c7b90: x, y words per control)
++  int32_t spot(int32_t k, int32_t half) const {
++    return ctx.mem.load<int16_t>(GS(f_tab_point16_4c7b90) + 4u * u32(k) + 2u * u32(half));
++  }
++};
++
+ // Entry: the tip state word cleared, the edited record copied to golfer type record 83 (Cancel restores it), the preview
+ // golfer 0x99 set up (type = character, class = Random::range(3), traits = the record's signed demographics byte, kind 0,
+ // preferences = the golfer's). Every pass: the cursor read, the control under it (nearestCharControl; control 15 only for a
+@@ -631,16 +664,51 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+   SB(P + 0x19, B(Gr + 0x19));
+   gs.g_rootInput[kButton] = 0;
+   Scratch xy(ctx, 8);  // x and y: frame slots only View_toLocal writes (zeroed-stack convention before the first read)
++  const EdDraw d(ctx);
++  // the frame Image and the background of the character's gender (Image_ctor, loadImage(path, 0, 0, 0x100, 2))
++  d.gx("showCharacterEditor.setup", {pool(ctx, (B(R1 + 0x21) & 0x80) ? 0x218u : 0x1fcu)});
+   int32_t style = 0;   // the hair-style counter: an uninitialised frame slot in the original (zeroed-stack convention)
+ 
+   for (;;) {
++    d.gx("showCharacterEditor.background", {d.root});
+     view_to_local(ctx, xy.va, xy.va + 4, "showCharacterEditor");
+     const int32_t x = m.load<int32_t>(xy.va), y = m.load<int32_t>(xy.va + 4);
+     int32_t ctl = nearest_char_control(ctx, x, y);
+     if (ctl == 0xf && (B(R1 + 0x21) & 0x80) == 0) ctl = -1;
+-    // (the name area's hover line only picks text colours)
++    // the name area's hover line (it only picks text colours) or the control's hover sprite
++    int32_t hot = -1;
++    if (d.on) {
++      if (ctl == -1 || ctl == 0x14) {
++        if (abs32(sub32(x, 0x9a)) < 0x50 && abs32(sub32(y, 0x40)) < 0x28) {
++          const int32_t q = div32(sub32(y, 0x18), 0x14);
++          if (u32(q) <= 4) hot = q;
++        }
++      } else {
++        d.scaled(GS(g_sprites59df20) + 0x58u * u32(ctl), d.spot(ctl, 0), d.spot(ctl, 1));
++      }
++    }
+     // ---- the figure
++    if (d.on) {
++      const uint32_t R = preview_rec();
++      if (B(R + 0x2c) & 8) d.image(GS(g_sprite5787a0), 0x160, 0x74);
++    }
+     call_peer(ctx, "composeGolferSprite", {u32(kPreview)});
++    if (d.on) {
++      // the golfer's palette layers into g_images[0], the body sheet drawn with it, then the head (three expressions a row)
++      d.gx("composeGolferSprite", {u32(kPreview)});
++      const uint32_t R = preview_rec();
++      const int32_t hs = (B(R + 0x23) >> 4) & 3, body = m.load<int8_t>(R + 0x22);
++      const int32_t sheet = (B(R + 0x2c) & 8) ? hs + 4 : hs;
++      const int32_t g = type_bit7_clear(ctx, kPreview);
++      d.image(GS(g_surfaces5439e0) + 0x2cu * u32(add32(sheet, mul32(g, 8))), 0x163, 0x74, GS(g_images));
++      const int32_t tf = i32(call_peer(ctx, "thoughtFlag", {u32(kPreview)}).eax);
++      if (body < 0x14)
++        d.scaled(GS(g_sprites59e7c0) + 0x2cu * u32(add32(mul32(add32(body, mul32(g, 0x14)), 3), tf)), 0x150, 0x14);
++      else
++        d.scaled(GS(g_sprites5628e8) + 0x2cu * u32(add32(mul32(add32(body, mul32(g, 0x48)), 3), tf)), 0x13c, 0x14);
++      if (ctx.gs().g_graphicsDevice != 0) d.gx("Display::setScale", {1, 1, 1});
++      d.image(GS(g_sprites59df20) + 0x6e0, 0x12b, 0xdc);
++    }
+     int32_t set;
+     if (type_bit7_clear(ctx, kPreview) == 0) {
+       const uint32_t R = preview_rec();
+@@ -664,12 +732,16 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+     gs.g_ui_5aa6b8[3] = cell;
+     call_peer(ctx, "addSprite", {0x14f, 0xef, 0xef, 0x1e, 0x28, u32(cell), 4, 0x199});
+     // ---- the name lines
++    d.font(GS(g_font519928));
+     m.store<uint8_t>(tb, 0);
+     call_peer(ctx, "buildGolferName", {u32(kPreview), 0});
+     if (B(preview_rec() + 0x2c) & 8) cat(ctx, tb, pool(ctx, 500));
++    d.centred2(tb, 0x9a, 0x18, hot != 0 ? 0x80000848u : 0x80007b20u);
+     cpy(ctx, tb, GS(f_strpool_4c59e0) + 4);
+     cat(ctx, tb, preview_rec());
+     cat(ctx, tb, GS(f_strpool_4c59e0));
++    d.centred2(tb, 0x9a, 0x30, hot != 1 ? 0x80000848u : 0x80007fffu);
++    d.font(GS(g_font51b360));
+     {
+       const uint8_t st = B(P + 0xb8);
+       m.store<uint8_t>(tb, 0);
+@@ -678,6 +750,8 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+       if (st & 0x20) cpy(ctx, tb, pool(ctx, 472));
+       if (st & 0x40) cpy(ctx, tb, pool(ctx, 464));
+     }
++    if (hot == 2) d.centred2(tb, 0x9a, 0x45, 0x80007fffu);
++    else d.centred(tb, 0x9a, 0x45, 0x80000848u);
+     {
+       const uint8_t st = B(P + 0xb8);
+       m.store<uint8_t>(tb, 0);
+@@ -685,38 +759,78 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+       if (st & 2) cpy(ctx, tb, pool(ctx, 444));
+       if (st & 4) cpy(ctx, tb, pool(ctx, 436));
+     }
++    if (hot == 3) d.centred2(tb, 0x9a, 0x5a, 0x80007fffu);
++    else d.centred(tb, 0x9a, 0x5a, 0x80000848u);
+     // ---- the five personality labels and the three preference labels (first letter raised by 0xe0)
+-    for (uint32_t k = 0; k < 5; ++k) cpy(ctx, tb, m.load<uint32_t>(GS(f_ptrtab_4c2858) + 4 * (3 + k)));
++    d.font(GS(g_font51b360));
++    const int32_t traits = m.load<int8_t>(preview_rec() + 0x20);
++    for (uint32_t k = 0; k < 5; ++k) {
++      const bool bit = ((1 << k) & traits) != 0;
++      if (bit) d.scaled(GS(g_sprites59df20) + 0x134 + 0x58 * k, d.spot(i32(3 + k), 0), d.spot(i32(3 + k), 1));
++      cpy(ctx, tb, m.load<uint32_t>(GS(f_ptrtab_4c2858) + 4 * (3 + k)));
++      d.centred(tb, 0x5d, i32(0x7a + 0x1c * k), bit ? 0x80000848u : 0x80004210u);
++    }
++    d.font(GS(g_font519928));
+     for (uint32_t k = 0; k < 3; ++k) {
++      const bool bit = ((1u << k) & B(P + 0x19)) != 0;
++      if (bit) d.scaled(GS(g_sprites59df20) + 0x2c + 0x58 * k, d.spot(i32(k), 0), d.spot(i32(k), 1));
+       cpy(ctx, tb, m.load<uint32_t>(GS(f_ptrtab_4c2858) + 4 * k));
+       SB(tb, B(tb) + 0xe0);
++      d.centred(tb, 0xd4, i32(0x8e + 0x23 * k), bit ? 0x80000848u : 0x80004210u);
+     }
+     if (member) {
+       // ---- the member's ten skills (the player's skills for character 0)
++      d.centred(pool(ctx, 0x1a0), 0x249, 0x1e, 0x80000000u);
++      d.font(GS(g_font51b360));
+       for (uint32_t k = 0; k < 10; ++k) {
+         const uint32_t skill = character != 0 ? B(Gr + 0xf0 + k) : B(GS(g_playerSkills) + k);
++        const int32_t yy = i32(0x3d + 0x10 * k);
++        d.fill(0x1f2, yy - 3, 0x2a, 0xe, 0x80000000u);
++        d.fill(0x1f3, yy - 2, 0x28, 0xc, skill != 0 ? 0x800023e8u : 0x80007d08u);
+         if (skill != 0) {
+           cpy(ctx, tb, GS(f_strpool_4c5340));
+           cat(ctx, tb, itoa10(ctx, i32(skill * 10), nb));
+           cat(ctx, tb, GS(f_strpool_4c60c4));
++          d.text(tb, 0x1f5, yy, 0x80000000u);
+         }
++        d.text(m.load<uint32_t>(GS(f_ptrtab_4c2c3c) + 4 * k), 0x222, yy, skill != 0 ? 0x80000000u : 0x80004210u);
+       }
+     } else {
+       // ---- the character's type card and bio (drawMessageBuffer puts back every NUL it writes)
+       const uint32_t T = GS(g_golferTypeState) + u32(mul32(character, 0x2c));
++      if (d.on) {
++        int32_t kind = B(T + 2) & 7;
++        if (B(T + 0x29) == 0xff) kind = -1;
++        else if (kind > 3) d.fill(0x1f4, 0x1c, 0xa0, 0x11, 0x80000210u);
++        switch (kind + 1) {
++          case 0: d.centred(pool(ctx, 0x194), 0x244, 0x1e, 0x80006000u); break;
++          case 2: d.centred(GS(f_strpool_4c3ac0), 0x244, 0x1e, 0x80006318u); break;
++          case 3: d.centred(pool(ctx, 0x18c), 0x244, 0x1e, 0x80004210u); break;
++          case 4: d.centred(pool(ctx, 0x17c), 0x244, 0x1e, 0x80002108u); break;
++          case 5: d.centred(pool(ctx, 0x170), 0x244, 0x1e, 0x80007ff0u); break;
++          case 6: d.centred2(pool(ctx, 0x160), 0x244, 0x1e, 0x80007fffu); break;
++          default: break;
++        }
++      }
++      d.font(GS(g_font51b360));
+       cpy(ctx, tb, pool(ctx, 340));
+       cat(ctx, tb, B(T) != 0 ? itoa10(ctx, B(T), nb) : GS(f_strpool_4c52bc));
++      d.centred(tb, 0x244, 0x32, 0x80002108u);
+       cpy(ctx, tb, pool(ctx, 328));
+       {
+         const int32_t v = m.load<int8_t>(T + 1);
+         cat(ctx, tb, v > 0 ? itoa10(ctx, v, nb) : GS(f_strpool_4c52bc));
+       }
++      d.centred(tb, 0x244, 0x40, 0x80002108u);
+       cpy(ctx, tb, pool(ctx, 312));
+       {
+         const int32_t v = m.load<int16_t>(T + 0x2a);
+         cat(ctx, tb, v != 0 ? itoa10(ctx, v, nb) : pool(ctx, 304));
+       }
++      d.centred(tb, 0x244, 0x4e, 0x80002108u);
++      d.centred(pool(ctx, 0x12c), 0x244, 0x62, ctl != 0x14 ? 0x8000211fu : 0x80007b20u);
+       cpy(ctx, tb, R1 + 0x30);
++      d.gx("drawMessageBuffer", {0x1e, 0x1e4, 0x72, 0x80000018u});
+     }
+     // ---- the 20 comment lines: buildGolferComment's text is overwritten by the label at once; an empty line shows the
+     // comment of its kind in the grey tone
+@@ -724,6 +838,8 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+       uint32_t kinds = GS(f_tab_bytes_4c2d10);
+       uint32_t labels = GS(f_ptrtab_4c2ca8) + 24;
+       uint32_t line = GS(g_golferPhrases) + u32(mul32(character, 0x4e2));
++      d.font(GS(g_font51b360));
++      int32_t yy = 0x10f;
+       for (;;) {
+         int32_t kind = m.load<int8_t>(kinds);
+         m.store<int16_t>(P + 0xae, 0);
+@@ -732,6 +848,7 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+              {u32(kind), m.load<uint32_t>(GS(g_thoughtArgByKind) + 4 * u32(kind)) & 0x3fffu, 0, u32(kPreview)});
+         cpy(ctx, tb, m.load<uint32_t>(labels));
+         cat(ctx, tb, GS(f_strpool_4c5d20) + 148);
++        d.text(tb, 0x34, yy, gs.g_commentTone);
+         gs.g_commentTone = 0x80000848u;
+         cpy(ctx, tb, line);
+         if (B(tb) == 0) {
+@@ -740,6 +857,8 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+                {u32(kind), m.load<uint32_t>(GS(g_thoughtArgByKind) + 4 * u32(kind)) & 0x3fffu, 0, u32(kPreview)});
+           gs.g_commentTone = 0x80004210u;
+         }
++        d.text(tb, 0x19c, yy, gs.g_commentTone);
++        yy += 0x10;
+         line += 0x32;
+         labels += 4;
+         const int8_t next = m.load<int8_t>(kinds + 1);
+@@ -758,14 +877,18 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+         if (n > (neg == 6 ? 9 : 10)) {
+           m.store<uint8_t>(tb, 0);
+           const uint32_t t = u32(ctl - 8);
++          bool draw = true;
+           if (t < 12) cpy(ctx, tb, pool(ctx, kTips[t]));
+           else if (t == 12 && !member) cpy(ctx, tb, pool(ctx, kTipBio));
++          else draw = false;
++          if (draw && t <= 12 && B(tb) != 0) d.gx("drawPanelBackdrop", {u32(x), u32(y)});
+         }
+       } else {
+         gs.g_ui_5aa554 = 0;
+         m.store<int32_t>(lastva, ctl);
+       }
+     }
++    d.gx("Window::refreshFull", {d.win, 0});
+     pump_pass(ctx, "showCharacterEditor");
+     int32_t btn = gs.g_rootInput[kButton];
+     if (btn == 0) continue;
+@@ -862,6 +985,7 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+         case 17:  // the gender (the background Image reload is drawing)
+           SB(R1 + 0x21, B(R1 + 0x21) ^ 0x80);
+           m.store<uint32_t>(R1 + 0x2c, m.load<uint32_t>(R1 + 0x2c) | 0x80);
++          d.gx("showCharacterEditor.setup", {pool(ctx, (B(R1 + 0x21) & 0x80) ? 0x218u : 0x1fcu)});
+           break;
+         case 18:  // Cancel: the entry copy back, the editor stays open
+           if (neg != 3) copy(R1, backup, 0x230);
+@@ -873,6 +997,8 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+           break;
+         case 20:  // the bio (non-members): the global EditBox edits the record's bio until a press or Enter
+           if (member) break;
++          d.gx("drawPanelS2", {0x1d8, 0x68, 0x13c, 0xd8, 1});
++          d.gx("showCharacterEditor.bio", {});   // the EditBox's own drawing: reported, not modelled
+           bio_entry(ctx, R1 + 0x30);
+           break;
+       }
+@@ -970,6 +1096,7 @@ int32_t show_character_editor(Ctx &ctx, int32_t character, int32_t golfer) {
+   }
+   cm::call_optional(ctx, "startSoundSlot", {(B(R1 + 0x21) & 0x80) ? 0x7du : 0x80u});
+   cm::call_optional(ctx, "playSound", {0x2d, 0x64, 0, 0, 0});
++  d.gx("showCharacterEditor.teardown", {});
+   return 0;
+ }
+ 
+diff --git a/port/src/sim/dialogs.cpp b/port/src/sim/dialogs.cpp
+index 41a5a36..e4e7e54 100644
+--- a/port/src/sim/dialogs.cpp
++++ b/port/src/sim/dialogs.cpp
+@@ -14,6 +14,7 @@
+ #include "portsim/arith.h"
+ #include "portsim/ptr.h"
+ #include "portsim/sim/commands.h"
++#include "portsim/sim/gfx.h"
+ #include "portsim/sim/util.h"
+ 
+ namespace portsim {
+@@ -116,11 +117,57 @@ Ret peer(Ctx &ctx, const char *name, std::initializer_list<uint32_t> args) {
+   return call_peer(ctx, name, args);
+ }
+ 
+-// drawThoughtBubble (g, x, y, mode) without its drawing: composeGolferSprite(g) once, twice with mode 1 (its two sprite
+-// layers each compose the golfer); its other callees (typeBit7Clear, thoughtFlag) only read
+-void thought_bubble(Ctx &ctx, int32_t g, int32_t mode) {
++// Roadmap S2.10: the drawing calls of the skill dialog and of drawThoughtBubble, made only with a graphics backend attached
++// (gfx_drop; c3em.cpp SkillPointDialog_re and c3ei.cpp DrawThoughtBubble_re in their order and with their arguments)
++struct SkDraw {
++  Ctx &ctx;
++  const bool on;
++  const uint32_t root;
++  explicit SkDraw(Ctx &c)
++      : ctx(c), on(g_gfx_attached.load(std::memory_order_relaxed) != 0), root(c.gs().f_stateptr_4c1570[0]) {}
++  void gx(const char *name, std::initializer_list<uint32_t> a) const {
++    if (on) gfx_drop(ctx, name, a.begin(), static_cast<int>(a.size()));
++  }
++  void stretch(uint32_t s, uint32_t mask, int32_t x, int32_t y) const { gx("Surface_stretchBlit", {s, mask, root, u32(x), u32(y), 0}); }
++  void scaled(uint32_t s, int32_t x, int32_t y) const { gx("Surface_drawScaled", {s, root, u32(x), u32(y), 1, 1, 1, 0}); }
++  void text(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawText4049d0", {t, u32(x), u32(y), c}); }
++  void centred2(uint32_t t, int32_t x, int32_t y, uint32_t c) const { gx("drawCenteredText2", {t, u32(x), u32(y), c}); }
++};
++
++// drawThoughtBubble (g, x, y, mode): composeGolferSprite(g) once, twice with mode 1 (its two sprite layers each compose the
++// golfer); its other callees (typeBit7Clear, thoughtFlag) only read. With `draw` (roadmap S2.10) and a backend attached, the
++// drawing between: mode 0 a white box (Win_fillRect at (x + 4, y), 0x50 x 0x60); mode != 1 the head g_sprites5628e8 cell
++// 3 * (look + 72 * typeBit7Clear) + thoughtFlag at (x, y); mode 1 the hat (type record +0x2c bit 3) at (x + 0x10, y + 0x4c),
++// the body g_surfaces5439e0 cell (hair column + 4 with the hat, + 8 * typeBit7Clear) at (x + 0x13, y + 0x4c) in the composed
++// palette g_images[0], and the head g_sprites59e7c0 (look below 0x14: 3 * (look + 20 * typeBit7Clear) + thoughtFlag, at (x,
++// y - 0x14)) or g_sprites5628e8 (at (x - 0x14, y - 0x14)).
++void thought_bubble(Ctx &ctx, int32_t g, int32_t mode, int32_t x = 0, int32_t y = 0, bool draw = false) {
++  const SkDraw d(ctx);
++  const bool on = draw && d.on;
++  const Memory &m = ctx.mem;
++  const uint32_t T = GS(g_golferTypes) + u32(mul32(m.load<int16_t>(rec(ctx, g) + 0xb6), 0x230));
++  const int32_t look = m.load<int8_t>(T + 0x22);
++  const int32_t col = (m.load<uint8_t>(T + 0x23) >> 4) & 3;
++  auto tb7 = [&] { return i32(call_peer(ctx, "typeBit7Clear", {u32(g)}).eax); };
++  auto tf = [&] { return i32(call_peer(ctx, "thoughtFlag", {u32(g)}).eax); };
++  if (on && mode == 0) d.gx("Win_fillRect", {d.root, u32(x + 4), u32(y), 0x50, 0x60, 0x80007fffu});
+   peer(ctx, "composeGolferSprite", {u32(g)});
+-  if (mode == 1) peer(ctx, "composeGolferSprite", {u32(g)});
++  if (on) d.gx("composeGolferSprite", {u32(g)});
++  if (mode != 1) {
++    if (on) d.scaled(GS(g_sprites5628e8) + 0x2cu * u32(add32(mul32(3, add32(look, mul32(tb7(), 72))), tf())), x, y);
++    return;
++  }
++  const bool hat = (m.load<uint8_t>(T + 0x2c) & 8) != 0;
++  if (on && hat) d.gx("Image_draw", {GS(g_sprite5787a0), d.root, u32(x + 0x10), u32(y + 0x4c), 0});
++  peer(ctx, "composeGolferSprite", {u32(g)});
++  if (!on) return;
++  d.gx("composeGolferSprite", {u32(g)});
++  const int32_t e = add32(col + (hat ? 4 : 0), mul32(tb7(), 8));
++  d.gx("Image_draw", {GS(g_surfaces5439e0) + 0x2cu * u32(e), d.root, u32(x + 0x13), u32(y + 0x4c), GS(g_images)});
++  if (look < 0x14)
++    d.scaled(GS(g_sprites59e7c0) + 0x2cu * u32(add32(mul32(3, add32(look, mul32(tb7(), 20))), tf())), x, y - 0x14);
++  else
++    d.scaled(GS(g_sprites5628e8) + 0x2cu * u32(add32(mul32(3, add32(look, mul32(tb7(), 72))), tf())), x - 0x14, y - 0x14);
+ }
+ 
+ // the cursor a View_toLocal read returns (the context's InputSource; none = the dialog waits for input it cannot have)
+@@ -156,8 +203,15 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
+   for (uint32_t i = 0; i < 32; ++i) entry[i] = m.load<int8_t>(skills + i);
+   int32_t used = 0, left = points;
+   int32_t lx = 0, ly = 0;  // frame slots only the cursor read writes (zeroed-stack convention before it)
++  const SkDraw d(ctx);
++  const int32_t titleX = add32(xbase, 0xd2);
+   for (;;) {
++    if (xbase < 0) d.gx("drawFrameR3", {u32(xbase + 0x4e), 0x32, 0xd0, 0x13c, 1});
++    else d.gx("drawFrameR3", {u32(xbase + 0x2e), 0x32, 0x140, 0x13c, 1});
++    d.gx("setDrawTarget", {d.root, GS(g_font519928), 0, 0, 0});
++    d.centred2(title, titleX, 0x3a, 0x80007fffu);
+     if (xbase >= 0) {
++      d.scaled(GS(g_sprite59bf98), xbase + 0xf7, 0x56);
+       int32_t who = golfer;
+       if (golfer == -1) {
+         const uint32_t r = rec(ctx, 0x99);
+@@ -165,12 +219,15 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
+         m.store<int16_t>(r + 0xb8, static_cast<int16_t>(m.load<int8_t>(GS(g_golferTypes) + 0x21)));
+         who = 0x99;
+       }
+-      thought_bubble(ctx, who, 1);
++      thought_bubble(ctx, who, 1, xbase + 0xff, 0x66, true);
++      d.stretch(GS(g_surfaces5678b8) + 0xdc, GS(g_sprites56a7b8) + 0xdc, xbase + 0x146, 0x13e);
+     }
+     int32_t hover = -1;
+     if (points > 0) read_cursor(ctx, lx, ly, "skillPointDialog");
++    d.gx("setDrawTarget", {d.root, GS(g_font51b360), 0, 0, 0});
+     const int32_t colX = add32(xbase, 0x52);
+     const int32_t arrowX = add32(xbase, 0x32);
++    const uint32_t s5 = GS(g_sprites5a53c8), m5 = GS(g_sprites58b680);
+     for (int32_t i = 0; i < 10; ++i) {
+       const int32_t rowY = 0x5a + 0x18 * i;
+       int32_t value;
+@@ -178,22 +235,34 @@ int32_t skill_point_dialog(Ctx &ctx, uint32_t title, int32_t mask, int32_t point
+         value = m.load<uint8_t>(rec(ctx, golfer) + 0xf0 + u32(i));
+       else
+         value = m.load<uint8_t>(skills + u32(i));
++      d.stretch(s5 + 0x478, m5 + 0x478, colX, rowY);
++      if (points > 0) d.stretch(s5 + 0x528, m5 + 0x528, arrowX, rowY);
+       if (lx < colX) {
+-        if (lx >= arrowX && ly > rowY && ly <= rowY + (mode == 4 ? 0xb : 0xc)) hover = i;
+-        if (lx < colX && lx >= arrowX && ly > rowY + 0xc && ly <= rowY + 0x18) hover = i + 10;
++        if (lx >= arrowX && ly > rowY && ly <= rowY + (mode == 4 ? 0xb : 0xc)) {
++          d.stretch(s5 + 0x554, m5 + 0x554, arrowX, rowY);
++          hover = i;
++        }
++        if (lx < colX && lx >= arrowX && ly > rowY + 0xc && ly <= rowY + 0x18) {
++          d.stretch(s5 + 0x580, m5 + 0x580, arrowX, rowY + 0xc);
++          hover = i + 10;
++        }
+       }
+       if (value != 0) {
+         cpy(ctx, tb, value < 10 ? GS(f_strpool_4c5340) : GS(g_str4e9a84));
+         cat(ctx, tb, itoa10(ctx, value * 10, GS(g_infoPanelNumBuf)));
+         cat(ctx, tb, GS(f_strpool_4c60c4));
++        d.text(tb, xbase + 0x57, rowY + 7, 0x80000000u);
+       }
++      d.text(m.load<uint32_t>(GS(f_ptrtab_4c2c3c) + 4 * u32(i)), xbase + 0x8a, rowY + 7, value != 0 ? 0x80000000u : 0x80004210u);
+     }
+     if (points > 0) {
+       cpy(ctx, tb, GS(f_strpool_4d3c3c) + 0x10);
+       cat(ctx, tb, itoa10(ctx, left, GS(g_infoPanelNumBuf)));
+       cat(ctx, tb, GS(f_strpool_4d3c3c));
++      d.centred2(tb, titleX, 0x50, used > points ? 0x80007d08u : 0x80007fffu);
+     }
+     if (points == -1) return -1;
++    d.gx("Window::refreshFull", {GS(g_rootWindow), 0});
+     cm::pump_messages(ctx, PumpKind::Blocking, "skillPointDialog");
+     if (gs.g_rootInput[kButton] == 0 && cm::flush_redraw(ctx) == 0) continue;
+     const int32_t button = gs.g_rootInput[kButton];
+@@ -252,6 +321,7 @@ int32_t show_character_intro(Ctx &ctx) {
+     if (m.load<int32_t>(GS(g_bulletinEvents) + 0x28 + 0x30 * k) != 0) points += mode == 1 ? 2 : 3;
+   if (mode != 2) ctx.gs().f_w_4c2e00[2] = -1;
+   cm::draw_window_effect(ctx, -2);
++  SkDraw(ctx).gx("drawWindow.frame", {0xc8, 0x172, 0x80007fffu, u32(-2)});   // drawWindow(0xc8, 0x172, 0x80007fff, -2)
+   const int32_t r = skill_point_dialog(ctx, GS(g_golferTypes) + 0x10, 0, points, -1, 0xc8);
+   m.store<int16_t>(GS(g_skillMaskBlock) + 8, static_cast<int16_t>(r));
+   return r;
+diff --git a/port/src/sim/gfx.cpp b/port/src/sim/gfx.cpp
+index 54af74b..203d53b 100644
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -18,6 +18,7 @@
+ //   4 Window::refreshFull does not copy the root surface into the back buffer
+ //   5 Surface_stretchBlit (blitPair1) ignores the mask's blend bytes (every pixel the colour sprite's word)
+ //   6 drawG16's shade byte 0xf8 drawn as a palette colour instead of shading the destination through the table
++//   7 drawCenteredText / drawText4049d0 leave the target's Widget_setQuad words alone (roadmap S2.10, U-1293)
+ #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+ #define _CRT_SECURE_NO_WARNINGS
+ #endif
+@@ -439,8 +440,22 @@ void draw_text(Gfx &g, Ctx &ctx, const uint32_t *a, bool centre, const char *who
+   if (a[0] == 0) return;
+   draw_text_string(g, ctx, vstring(ctx.mem, a[0]), a[0], static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]), a[3], centre, who);
+ }
+-static void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, true, "drawCenteredText"); }
+-static void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, false, "drawText4049d0"); }
++// Both wrappers start with Widget_setQuad(f_stateptr_4c1570[0], colour, -1, 2, 2) (c3dq.cpp), whose words stay on the target for
++// the drawers that read them later (drawText, drawStringAt, ...): the prim_text family's body keeps them (roadmap S2.10, U-1293)
++static void set_quad_root(Gfx &g, Ctx &ctx, uint32_t colour, uint32_t shadow, uint32_t dx, uint32_t dy) {
++  if (SG_NEGCTL(g_negctl_gfx) == 7) return;
++  const GfxBody q = find_body("Widget_setQuad");
++  const uint32_t qa[5] = {ctx.gs().f_stateptr_4c1570[0], colour, shadow, dx, dy};
++  if (q) q(g, ctx, qa, 5);
++}
++static void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
++  set_quad_root(g, ctx, a[3], 0xffffffffu, 2, 2);
++  draw_text(g, ctx, a, true, "drawCenteredText");
++}
++static void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
++  set_quad_root(g, ctx, a[3], 0xffffffffu, 2, 2);
++  draw_text(g, ctx, a, false, "drawText4049d0");
++}
+ 
+ // drawPanelBackdrop(x, y) (c3dw.cpp DrawPanelBackdrop_re): setDrawTarget(Root, g_fontRef_519fd8, 0, 0, 0); w = 3 * strlen of
+ // the text buffer; half = x raised to w and lowered to 0x320 - w (signed); drawMapLine(half - w, y, half + w, y, 0x80000000,
+diff --git a/port/src/sim/gfx_prim_text2.cpp b/port/src/sim/gfx_prim_text2.cpp
+index a701da0..469d6e1 100644
+--- a/port/src/sim/gfx_prim_text2.cpp
++++ b/port/src/sim/gfx_prim_text2.cpp
+@@ -15,6 +15,7 @@
+ //
+ // Negative controls (g_negctl_gfx_prim_text2, sg_negctl_set "gfx.family.prim_text2"):
+ //   1 no shadow run                    2 the shadow one pixel right as well (offset (1, 1))
++//   3 the target's Widget_setQuad words are left alone (roadmap S2.10, U-1293)
+ #include <cstdint>
+ #include <string>
+ 
+@@ -32,6 +33,11 @@ int mode() { return SG_NEGCTL(g_negctl_gfx_prim_text2); }
+ constexpr uint32_t kRunPalette1 = 0x80000000u | (0x80u >> 3) << 10;
+ 
+ void b_draw_centered_text2(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
++  // Widget_setQuad(target, colour, 1, 0, 1) first: its words stay on the target (roadmap S2.10, U-1293)
++  if (const GfxBody q = mode() == 3 ? nullptr : gfxb::find_body("Widget_setQuad")) {
++    const uint32_t qa[5] = {ctx.gs().f_stateptr_4c1570[0], a[3], 1, 0, 1};
++    q(g, ctx, qa, 5);
++  }
+   if (a[0] == 0) return;
+   const std::string text = gfxb::vstring(ctx.mem, a[0]);
+   const int32_t x = static_cast<int32_t>(a[1]), y = static_cast<int32_t>(a[2]);
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+index 6dfb6da..4d1994e 100644
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -133,7 +133,6 @@ const Drop kDrops[] = {
+     {"loadImage", "image file into a surface (renderer)"},
+     {"playSound", "audio request"},
+     {"startSoundSlot", "audio request"},
+-    {"syncTiles", "Terrain.dll push (renderer, U-0800)"},
+     {"saveCourseJpg", "screenshot file"},
+     {"capsLockOff", "keybd_event (time_model.md section 8)"},
+     {"emptyFunc_4a0890", "empty function"},
+diff --git a/port/src/sim/modules.inc b/port/src/sim/modules.inc
+index bab951c..5b0d14c 100644
+--- a/port/src/sim/modules.inc
++++ b/port/src/sim/modules.inc
+@@ -41,3 +41,4 @@ SG_MODULE(terrain_gl_setup)
+ SG_MODULE(terrain_state)
+ SG_MODULE(terrain_live)
+ SG_MODULE(video)
++SG_MODULE(buyland)
+diff --git a/port/src/sim/gfx_families.inc b/port/src/sim/gfx_families.inc
+index 57d96af..5f25cb4 100644
+--- a/port/src/sim/gfx_families.inc
++++ b/port/src/sim/gfx_families.inc
+@@ -12,3 +12,5 @@ SG_GFX_FAMILY(routing)
+ SG_GFX_FAMILY(boot_screens)
+ SG_GFX_FAMILY(reports)
+ SG_GFX_FAMILY(dialogs)
++SG_GFX_FAMILY(buyland)
++SG_GFX_FAMILY(chareditor)
+diff --git a/port/test/test_s2_6_scenario.py b/port/test/test_s2_6_scenario.py
+index 091b9f4..1b91739 100644
+--- a/port/test/test_s2_6_scenario.py
++++ b/port/test/test_s2_6_scenario.py
+@@ -1,8 +1,9 @@
+ """Roadmap S2.6 (log/roadmap/S2/6_notes.md): the pinned scenario cov_r_s2_screens (re/tools/scenario_s2_6.py), one checkpoint
+ inside each 2D screen no older pinned checkpoint shows, run from process start by the port.
+ 
+-The boot run equals the original's capture in every record up to 1156 of 1268. showBuyLandScreen is not ported
+-(re/port/commands_split.tsv: gap, U-1251), so the scenario visits buy land last and the run stops there with that name missing.
++The boot run equals the original's capture in every record (1268 of 1268). The scenario visits buy land last: showBuyLandScreen
++(U-1251) and syncTiles, the frame's first call after the purchase, are ported by roadmap S2.10 (port/src/sim/buyland.cpp; their
++evidence and controls are in port/test/test_buyland.py).
+ 
+ Record 771 (the first frame after the end-of-year screen) used to differ in g_cursorTileX / g_cursorTileY (U-1253, U-1254): the
+ port's end-of-year loop made no cursor read per pass, so the frame's next read (P6's View_toLocal) got the cursor from before
+@@ -23,7 +24,7 @@ pytestmark = pytest.mark.port
+ 
+ SCEN = "cov_r_s2_screens"
+ AFTER_YEAR_END = 771               # the first record after the end-of-year screen
+-STOP_AT_BUY_LAND = 1156            # records the port reaches before it needs showBuyLandScreen
++STOP_AT_BUY_LAND = 1156            # the frame records before the land popup's frame
+ 
+ 
+ @pytest.fixture(scope="module")
+@@ -50,15 +51,10 @@ def test_boot_equals_the_original_up_to_buy_land(portlib):
+     assert r.status == "PASS" and r.records == STOP_AT_BUY_LAND, f"{r.status} {r.detail} | {r.run_detail[:300]}"
+ 
+ 
+-def test_boot_stops_only_at_buy_land(portlib):
++def test_boot_runs_to_the_end(portlib):
+     _need()
+     r = _run(portlib)
+-    assert r.first_divergence is None, f"{r.status} {r.detail}"
+-    if r.status not in ("PASS", "KNOWN"):
+-        if r.run_detail:
+-            assert "showBuyLandScreen" in r.run_detail, f"{r.status} {r.detail} | {r.run_detail[:300]}"
+-        else:   # the Win32 runner gives no run detail text: the stop is judged by its record
+-            assert r.records == STOP_AT_BUY_LAND and "-11" in r.detail, f"{r.status} {r.detail}"
++    assert r.status == "PASS" and r.records == r.expected, f"{r.status} {r.records}/{r.expected} {r.detail} | {r.run_detail[:300]}"
+ 
+ 
+ def test_end_of_year_cursor_read_control_reads_red(portlib):

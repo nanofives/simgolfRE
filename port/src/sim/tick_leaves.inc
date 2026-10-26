@@ -92,11 +92,13 @@ struct Leaves : TkBase {
     (void)p3;
     (void)mode;
     if (text_metrics(ctx)) G32(GS(g_value587ea0)) = cc("commands.windowHeight");
-    // phase 5: an attached graphics backend draws the frame and the text (gfx.cpp b_draw_window)
+    // phase 5: an attached graphics backend draws the frame and the text (gfx.cpp b_draw_window; with a golfer selected the
+    // simfoto family's drawWindow.golfer, roadmap S2.11, which also needs the unclamped height in the fifth slot)
     if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
-      const uint32_t v[4] = {static_cast<uint32_t>(x), static_cast<uint32_t>(y), static_cast<uint32_t>(p3),
-                             static_cast<uint32_t>(mode)};
-      gfx_drop(ctx, "drawWindow.frame", v, 4);
+      const uint32_t v[5] = {static_cast<uint32_t>(x), static_cast<uint32_t>(y), static_cast<uint32_t>(p3),
+                             static_cast<uint32_t>(mode),
+                             static_cast<uint32_t>(text_metrics(ctx) ? cc("commands.windowHeightRaw") : 0)};
+      gfx_drop(ctx, "drawWindow.frame", v, 5);
     }
     const int sel = G32(GS(f_w_4c2e00) + 8);
     if (sel != -1 && sel >= 0 && SG_NEGCTL(g_negctl_draw_window) != 1) drawThoughtBubble(sel, 0, 0, -1);

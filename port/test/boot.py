@@ -98,9 +98,9 @@ def run(scenario: str, lib: L.Lib | None = None, max_records: int | None = None,
             st.files_root(SG.INSTALL)
         for fname, data in segment_files.files_for(scenario).items():
             st.files_put(fname, data)
-        gdi = lib.has("gditext.attach") and os.environ.get("SG_TEXT_METRICS", "gdi") == "gdi"
-        if gdi:
-            st.call("gditext.attach", [])
+        tp = SG.text_provider(os.environ.get("SG_TEXT_METRICS", "gdi"), lib)
+        if tp:
+            st.call(f"{tp}.attach", [])
         try:
             if before:
                 before(st)
@@ -109,8 +109,8 @@ def run(scenario: str, lib: L.Lib | None = None, max_records: int | None = None,
             if after:
                 after(st, res)
         finally:
-            if gdi:
-                st.call("gditext.detach", [])
+            if tp:
+                st.call(f"{tp}.detach", [])
     res.records = done
     if not exp:
         res.status, res.detail = "NO_FRAMES", f"ran to the end of the trace (sg_run_boot {code}); no frame record to compare"

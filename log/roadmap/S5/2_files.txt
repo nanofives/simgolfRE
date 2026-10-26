@@ -1,0 +1,25 @@
+port/src/sim/textlab.cpp
+port/include/portsim/sim/textlab.h
+port/test/labels.py
+port/test/test_labels.py
+port/corpus/labels/ (local, gitignored: corpus.json, reference.json, facts.json, rasters/, checkpoints/, compare_*.json)
+log/roadmap/S5/2_notes.md
+log/roadmap/S5/2_files.txt
+log/roadmap/S5/2_merge.md
+log/roadmap/S5/2_uncertain.tsv
+log/roadmap/S5/2_mirror.py
+log/roadmap/S5/2_colours.py
+log/roadmap/S5/2_colours.tsv
+log/roadmap/S5/2_build.log
+log/roadmap/S5/2_build_w32.log
+log/roadmap/S5/2_reference.log
+log/roadmap/S5/2_facts.log
+log/roadmap/S5/2_checkpoints_x64.log
+log/roadmap/S5/2_checkpoints_win32.log
+log/roadmap/S5/2_compare_gdi_x64_n0.log
+log/roadmap/S5/2_compare_gdi_x64_n1.log
+log/roadmap/S5/2_compare_gdi_x64_n2.log
+log/roadmap/S5/2_compare_gdi_x64_n3.log
+log/roadmap/S5/2_compare_gdi_x64_n4.log
+log/roadmap/S5/2_compare_gdi_win32.log
+log/roadmap/S5/2_test_labels.log

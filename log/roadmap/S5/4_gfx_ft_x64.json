@@ -1,0 +1,94 @@
+{
+ "sandbox_basic/menu": {
+  "boot": "PASS",
+  "total": 1735,
+  "regions": {
+   "label_continue": 357,
+   "label_new": 528,
+   "label_theme": 190,
+   "label_champ": 390,
+   "label_sandbox": 270,
+   "button_continue": 357,
+   "button_new": 528,
+   "button_theme": 190,
+   "button_champ": 390,
+   "button_sandbox": 270,
+   "button_exit": 0,
+   "logo": 0,
+   "rest": 0
+  },
+  "bbox": [
+   89,
+   74,
+   686,
+   550
+  ],
+  "in_label_boxes": 1735,
+  "outside_label_boxes": 0
+ },
+ "cov_b_location/refused": {
+  "boot": "NO_FRAMES",
+  "total": 15347,
+  "regions": {},
+  "bbox": [
+   43,
+   17,
+   783,
+   568
+  ],
+  "in_label_boxes": 15347,
+  "outside_label_boxes": 0
+ },
+ "cov_b_location/site_hover": {
+  "boot": "NO_FRAMES",
+  "total": 13964,
+  "regions": {},
+  "bbox": [
+   43,
+   17,
+   783,
+   568
+  ],
+  "in_label_boxes": 13964,
+  "outside_label_boxes": 0
+ },
+ "cov_b_location/buttons": {
+  "boot": "NO_FRAMES",
+  "total": 13600,
+  "regions": {},
+  "bbox": [
+   43,
+   17,
+   783,
+   568
+  ],
+  "in_label_boxes": 13600,
+  "outside_label_boxes": 0
+ },
+ "cov_b_location/tip": {
+  "boot": "NO_FRAMES",
+  "total": 13714,
+  "regions": {},
+  "bbox": [
+   43,
+   17,
+   787,
+   568
+  ],
+  "in_label_boxes": 13714,
+  "outside_label_boxes": 0
+ },
+ "cov_b_location/back": {
+  "boot": "NO_FRAMES",
+  "total": 1735,
+  "regions": {},
+  "bbox": [
+   89,
+   74,
+   686,
+   550
+  ],
+  "in_label_boxes": 1735,
+  "outside_label_boxes": 0
+ }
+}

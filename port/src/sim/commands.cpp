@@ -432,10 +432,14 @@ int32_t wrap_message_buffer(Ctx &ctx, int32_t cols, uint32_t font) {
 
 // drawWindow's H (c3ei.cpp, drawWindow+0x1d..drawWindow+0x5e): 15 * wrapMessageBuffer(sel != -1 ? 0x25 : 0x2c) + 0x20 on the font its
 // setDrawTarget selects (g_font51b360), at least 0x60 with a golfer selected (f_w_4c2e00[2] != -1)
+// roadmap S2.11: the unclamped height 15 * r + 0x20 of the last call (drawWindow's text offset for h < 0x60 needs it; tick's
+// drawWindow reads it through "commands.windowHeightRaw" for the graphics backend). No simulation state.
+thread_local int32_t t_window_h_raw = 0;
 int32_t window_height(Ctx &ctx) {
   const int32_t sel = ctx.gs().f_w_4c2e00[2];
   const int32_t r = wrap_message_buffer(ctx, sel != -1 ? 0x25 : 0x2c, state_va(ctx, &GameState::g_font51b360));
   int32_t h = add32(mul32(r, 15), 0x20);
+  t_window_h_raw = h;
   if (sel != -1 && h < 0x60) h = 0x60;
   return h;
 }
@@ -448,6 +452,27 @@ int32_t draw_window_effect(Ctx &ctx, int32_t mode) {
   if (sel == -1 && mode == 0) call_optional(ctx, "playSound", {0x10b, 0x64, 0, 0, 0});
   if (sel >= 0) call_peer(ctx, "composeGolferSprite", {u32(sel)});
   return 0;
+}
+
+// roadmap S2.11: drawWindow(x, y, p3, mode)'s drawing for an attached graphics backend (gfx.cpp b_draw_window; with a golfer
+// selected the simfoto family's drawWindow.golfer), after draw_window_effect stored H; the unclamped height in the fifth
+// slot. Draws nothing into the GameState.
+void draw_window_gfx(Ctx &ctx, int32_t x, int32_t y, int32_t mode) {
+  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return;
+  const uint32_t v[5] = {u32(x), u32(y), 0, u32(mode), u32(text_metrics(ctx) ? t_window_h_raw : 0)};
+  gfx_drop(ctx, "drawWindow.frame", v, 5);
+}
+
+// roadmap S2.11: drawWindow(x, y, p3, mode)'s drawing for callers whose simulation part leaves drawWindow out (narrateShot):
+// the window-height pass (wrapMessageBuffer's line breaks in g_textBuffer, H into g_value587ea0) runs as the original's
+// drawWindow runs it, then the drawing; the text buffers (gfxr::ScreenDraw::text) and g_value587ea0 are put back after, so
+// the GameState equals a run without a backend. Without a backend or a TextMetrics provider nothing happens.
+void draw_window_gfx_saved(Ctx &ctx, int32_t x, int32_t y, int32_t mode) {
+  gfxr::ScreenDraw d(ctx);
+  if (!d.on || !text_metrics(ctx)) return;
+  const int32_t saved_h = ctx.gs().g_value587ea0;
+  d.text([&] { ctx.gs().g_value587ea0 = window_height(ctx); }, [&](uint32_t) { draw_window_gfx(ctx, x, y, mode); });
+  ctx.gs().g_value587ea0 = saved_h;
 }
 
 }  // namespace cm
@@ -616,6 +641,11 @@ const FuncDef kFuncs[] = {
     {"pumpAndRedraw", "default", "int", 1, 0, a_pump_and_redraw, &g_negctl_pump},
     // phase 4 (internal): drawWindow's window height with its wrapMessageBuffer pass, for tick's drawWindow
     {"commands.windowHeight", "default", "int", 0, 0, [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(cm::window_height(c)); }, nullptr},
+    // roadmap S2.11 (internal): drawWindow(x, y, .., mode)'s drawing with the window-height pass put back (narrateShot)
+    {"commands.drawWindowGfx", "default", "int", 3, 0,
+     [](Ctx &c, const uint32_t *a, Ret &r) { cm::draw_window_gfx_saved(c, S(a, 0), S(a, 1), S(a, 2)); r.set_i32(0); }, nullptr},
+    // roadmap S2.11 (internal): the unclamped height of the last commands.windowHeight call
+    {"commands.windowHeightRaw", "default", "int", 0, 0, [](Ctx &, const uint32_t *, Ret &r) { r.set_i32(cm::t_window_h_raw); }, nullptr},
     {"flushRedraw", "default", "int", 0, 0, a_flush_redraw, &g_negctl_none},
     {"hitGolferPanel435f00", "default", "int", 2, 0, XY(hit_golfer_panel), &g_negctl_hit_golfer_panel},
     {"hitEmployeeSlot435570", "default", "int", 2, 0, XY(hit_employee_slot), &g_negctl_hit_employee_slot},

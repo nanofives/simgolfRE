@@ -18,6 +18,7 @@
 //   4 Window::refreshFull does not copy the root surface into the back buffer
 //   5 Surface_stretchBlit (blitPair1) ignores the mask's blend bytes (every pixel the colour sprite's word)
 //   6 drawG16's shade byte 0xf8 drawn as a palette colour instead of shading the destination through the table
+//   7 drawCenteredText / drawText4049d0 leave the target's Widget_setQuad words alone (roadmap S2.10, U-1293)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -440,8 +441,22 @@ void draw_text(Gfx &g, Ctx &ctx, const uint32_t *a, bool centre, const char *who
   if (a[0] == 0) return;
   draw_text_string(g, ctx, vstring(ctx.mem, a[0]), a[0], static_cast<int32_t>(a[1]), static_cast<int32_t>(a[2]), a[3], centre, who);
 }
-static void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, true, "drawCenteredText"); }
-static void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) { draw_text(g, ctx, a, false, "drawText4049d0"); }
+// Both wrappers start with Widget_setQuad(f_stateptr_4c1570[0], colour, -1, 2, 2) (c3dq.cpp), whose words stay on the target for
+// the drawers that read them later (drawText, drawStringAt, ...): the prim_text family's body keeps them (roadmap S2.10, U-1293)
+static void set_quad_root(Gfx &g, Ctx &ctx, uint32_t colour, uint32_t shadow, uint32_t dx, uint32_t dy) {
+  if (SG_NEGCTL(g_negctl_gfx) == 7) return;
+  const GfxBody q = find_body("Widget_setQuad");
+  const uint32_t qa[5] = {ctx.gs().f_stateptr_4c1570[0], colour, shadow, dx, dy};
+  if (q) q(g, ctx, qa, 5);
+}
+static void b_draw_centered_text(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  set_quad_root(g, ctx, a[3], 0xffffffffu, 2, 2);
+  draw_text(g, ctx, a, true, "drawCenteredText");
+}
+static void b_draw_text_4049d0(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  set_quad_root(g, ctx, a[3], 0xffffffffu, 2, 2);
+  draw_text(g, ctx, a, false, "drawText4049d0");
+}
 
 // drawPanelBackdrop(x, y) (c3dw.cpp DrawPanelBackdrop_re): setDrawTarget(Root, g_fontRef_519fd8, 0, 0, 0); w = 3 * strlen of
 // the text buffer; half = x raised to w and lowered to 0x320 - w (signed); drawMapLine(half - w, y, half + w, y, 0x80000000,
@@ -728,7 +743,7 @@ static int32_t widget_value(Gfx &g, Ctx &ctx) {
 // '^', or a width above cols * 8, draws the line from its start to the break (drawTextSurface when the line height H =
 // Widget_value - 4, at least 10, is above 16 and the colour is white, else drawText4049d0), y += H, and the scan resumes
 // after the break; y > 0x248 stops. A pending line is drawn at the end. drawTextSurface's shadow (setQuad's 1, 0, 1: palette
-// colour 1 one pixel down) needs the run palette's entry 1, which the backend does not model (U-1072): its main text is drawn.
+// colour 1 one pixel down) is the run palette's entry 1 as prim_text2 measured it (U-1230; U-1072 before roadmap S2.11).
 void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
   TextMetrics *tm = text_metrics(ctx);
   const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
@@ -745,10 +760,18 @@ void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, u
     std::string line;
     for (uint32_t k = st; k < e && k < len; ++k) line += static_cast<char>(m.load<uint8_t>(buf + k));
     (void)saved;
-    if (H > 0x10 && colour == 0x80007fffu) {
-      g.unsup("drawMessageBuffer: drawTextSurface's shadow colour (palette entry 1) is not modelled");
-    }
     // the line is drawn from a copy (the original cuts the buffer at the break and restores it)
+    if (H > 0x10 && colour == 0x80007fffu) {
+      // drawTextSurface(line, x, y, white) (c3dq.cpp DrawTextSurface_re; roadmap S2.11): its bottom clamp (y = h - v - 1
+      // when v + y >= h, v = Widget_value, h the root's height), then the shadow in the run palette's entry 1 one pixel
+      // down (RGB (0x80, 0, 0) as prim_text2 measured it, U-1230) and the white text
+      int32_t yy = y;
+      const int32_t v = widget_value(g, ctx);
+      if (add32(v, yy) >= g.root.h) yy = sub32(sub32(g.root.h, v), 1);
+      draw_text_string(g, ctx, line, 0, x, add32(yy, 1), 0x80000000u | (0x80u >> 3) << 10, false, "drawTextSurface (shadow)");
+      draw_text_string(g, ctx, line, 0, x, yy, colour, false, "drawTextSurface");
+      return;
+    }
     draw_text_string(g, ctx, line, 0, x, y, colour, false, "drawMessageBuffer");
   };
   uint32_t st = 0, e = 0, i = 0;
@@ -778,13 +801,25 @@ void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, u
 
 // drawWindow(x, y, p3, mode) (c3ei.cpp DrawWindow_re), the drawing after the window height H the port already stored
 // (g_value587ea0): modelled for sel == -1 (no golfer) and mode -2: drawFrameR3(x - 8, y - 8, 0x1a0, H + 0x10, 1), then
-// setDrawTarget(Root, g_font51b360, 0, 0, 0) and drawMessageBuffer(0x63, x + 0xc, y + 0x10, 0x80007fff)
+// setDrawTarget(Root, g_font51b360, 0, 0, 0) and drawMessageBuffer(0x63, x + 0xc, y + 0x10, 0x80007fff). With a golfer or
+// an icon selected (sel != -1) the simfoto family's drawWindow.golfer draws (roadmap S2.11; the fifth slot is the unclamped
+// window height tick's drawWindow passes)
 static void b_draw_window(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   g.ensure_root(ctx);
   const int32_t sel = ctx.gs().f_w_4c2e00[2];
   const int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), mode = static_cast<int32_t>(a[3]);
-  if (sel != -1 || mode != -2) {
-    g.unsup("drawWindow: a golfer, a thought or a frame other than drawFrameR3");
+  if (sel != -1) {   // a golfer or an icon selected: the simfoto family's body (roadmap S2.11, gfx_simfoto.cpp)
+    if (GfxBody b = find_body("drawWindow.golfer")) {
+      uint32_t v[12] = {};
+      for (int i = 0; i < 5; ++i) v[i] = a[i];
+      b(g, ctx, v, 5);
+    } else {
+      g.unsup("drawWindow: a golfer or an icon selected");
+    }
+    return;
+  }
+  if (mode != -2) {
+    g.unsup("drawWindow: a thought or a frame other than drawFrameR3");
     return;
   }
   const uint32_t font = state_va(ctx, &GameState::g_font51b360);

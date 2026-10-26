@@ -50,9 +50,13 @@ RESIDUAL = {"hire": (1397, (556, 167, 586, 403))}
 FRAME_CONTROLS = {2: ["rep_financial", "end_of_year"], 3: ["rep_comments", "rep_histograph", "rep_financial", "rep_shortcuts",
                                                          "rep_roster", "hole_stats", "best_scores", "end_of_year"],
                   4: ["rep_comments", "rep_financial", "rep_shortcuts", "rep_roster", "hole_stats", "best_scores"],
-                  6: ["rep_roster"], 8: ["rep_financial", "rep_shortcuts", "rep_roster", "hole_stats", "best_scores", "end_of_year"],
+                  6: ["rep_roster"], 8: ["rep_financial", "rep_shortcuts", "rep_roster", "best_scores", "end_of_year"],
                   11: ["rep_financial"], 12: ["rep_comments"], 13: ["best_scores"], 14: ["hole_stats"], 15: ["rep_roster"],
                   16: ["rep_shortcuts"], 17: ["end_of_year"], 18: ["hire"], 19: ["rep_histograph"]}
+
+# (roadmap S2.11: control 8 no longer lists hole_stats. There it changed 8 judged pixels, one-level differences of the hole-stats
+# panel's blended border over the roster screen the port left in the root; since the bulletin board is drawn, the root under
+# the panel is the board, which the control does not change: log/roadmap/S2/11_ctl8.log, 11_notes.md section 5.)
 
 
 def held_masks(checkpoints, lib=None) -> dict:

@@ -30,3 +30,6 @@ until the orchestrator changes them.
 - S3 owns port/src/sim/gl_raster.cpp, gl_raster.h, the terrain_* files and re/tools/glexact/ from the P5.3 handoff 4bfefc2a on.
 - 2026-10-25: Surface_drawSprite has one body, S2's (gfx_reports.cpp, wave 5); S3.5 draws through it and puts any change it needs
   into its merge notes. The radial menu, Surface_drawScaled and drawFrameR3 / drawFrameS2 are S3.6's; the addSprite figures S3.5's.
+- 2026-10-25: S2 is DONE (lead closed); S3 owns S3.8's edits to port/src/sim/routing.cpp and port/test/test_gfx_routing.py (the routing
+  map's hole line), applied as exact-text edits after S2's waves 6-7; S2's tests stay green or a changed expectation is explained from
+  the original's behaviour.

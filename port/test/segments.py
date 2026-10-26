@@ -177,12 +177,23 @@ def _pointer_words() -> dict:
 
 
 # ------------------------------------------------------------------------------------------- runner
+TEXT_PROVIDERS = {"gdi": "gditext", "freetype": "fttext"}
+
+
+def text_provider(mode: str | None, lib: L.Lib) -> str | None:
+    """Module of the TextMetrics provider SG_TEXT_METRICS / text_metrics `mode` selects ("gdi" = gditext, "freetype" =
+    fttext), None for "none", an unknown mode, or a library without that module (S5.4; the default stays "gdi")."""
+    mod = TEXT_PROVIDERS.get(mode or "")
+    return mod if mod and lib.has(f"{mod}.attach") else None
+
+
 class SegmentRunner:
     def __init__(self, lib: L.Lib | None = None, text_metrics: str | None = None):
         self.lib = lib or L.load()
         self.sim = self.lib.objects("sim")
-        # phase 3.8 (38a): "gdi" attaches the host GDI TextMetrics provider (module gditext) to every run when the
-        # library has it; "none" (or SG_TEXT_METRICS=none) runs without one (U-0944, U-0947)
+        # "gdi" | "freetype" | "none". Phase 3.8 (38a): "gdi" attaches the host GDI TextMetrics provider (module gditext) to
+        # every run when the library has it, "freetype" the FreeType one (module fttext, S5.4); "none" (or
+        # SG_TEXT_METRICS=none) runs without one (U-0944, U-0947)
         self.text_metrics = text_metrics or os.environ.get("SG_TEXT_METRICS", "gdi")
 
     def noise_sim_bytes(self, seg: Segment) -> int:
@@ -229,17 +240,17 @@ class SegmentRunner:
                 before(st)
             # phase 3.8 (38a): the widgets' Text_put widths from the host GDI provider, detached before the context is
             # freed (the provider maps are keyed by the context's address, which a later context can reuse)
-            gdi = self.text_metrics == "gdi" and self.lib.has("gditext.attach")
-            if gdi:
-                st.call("gditext.attach", [])
+            tp = text_provider(self.text_metrics, self.lib)
+            if tp:
+                st.call(f"{tp}.attach", [])
             try:
                 out = self._run_loaded(seg, st, res)
                 if after is not None:
                     after(st, out)
                 return out
             finally:
-                if gdi:
-                    st.call("gditext.detach", [])
+                if tp:
+                    st.call(f"{tp}.detach", [])
 
     def _run_loaded(self, seg: Segment, st: L.State, res: SegmentResult) -> SegmentResult:
         why = self.load_check(seg, st)

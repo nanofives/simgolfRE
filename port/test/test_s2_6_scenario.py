@@ -1,8 +1,9 @@
 """Roadmap S2.6 (log/roadmap/S2/6_notes.md): the pinned scenario cov_r_s2_screens (re/tools/scenario_s2_6.py), one checkpoint
 inside each 2D screen no older pinned checkpoint shows, run from process start by the port.
 
-The boot run equals the original's capture in every record up to 1156 of 1268. showBuyLandScreen is not ported
-(re/port/commands_split.tsv: gap, U-1251), so the scenario visits buy land last and the run stops there with that name missing.
+The boot run equals the original's capture in every record (1268 of 1268). The scenario visits buy land last: showBuyLandScreen
+(U-1251) and syncTiles, the frame's first call after the purchase, are ported by roadmap S2.10 (port/src/sim/buyland.cpp; their
+evidence and controls are in port/test/test_buyland.py).
 
 Record 771 (the first frame after the end-of-year screen) used to differ in g_cursorTileX / g_cursorTileY (U-1253, U-1254): the
 port's end-of-year loop made no cursor read per pass, so the frame's next read (P6's View_toLocal) got the cursor from before
@@ -23,7 +24,7 @@ pytestmark = pytest.mark.port
 
 SCEN = "cov_r_s2_screens"
 AFTER_YEAR_END = 771               # the first record after the end-of-year screen
-STOP_AT_BUY_LAND = 1156            # records the port reaches before it needs showBuyLandScreen
+STOP_AT_BUY_LAND = 1156            # the frame records before the land popup's frame
 
 
 @pytest.fixture(scope="module")
@@ -50,15 +51,10 @@ def test_boot_equals_the_original_up_to_buy_land(portlib):
     assert r.status == "PASS" and r.records == STOP_AT_BUY_LAND, f"{r.status} {r.detail} | {r.run_detail[:300]}"
 
 
-def test_boot_stops_only_at_buy_land(portlib):
+def test_boot_runs_to_the_end(portlib):
     _need()
     r = _run(portlib)
-    assert r.first_divergence is None, f"{r.status} {r.detail}"
-    if r.status not in ("PASS", "KNOWN"):
-        if r.run_detail:
-            assert "showBuyLandScreen" in r.run_detail, f"{r.status} {r.detail} | {r.run_detail[:300]}"
-        else:   # the Win32 runner gives no run detail text: the stop is judged by its record
-            assert r.records == STOP_AT_BUY_LAND and "-11" in r.detail, f"{r.status} {r.detail}"
+    assert r.status == "PASS" and r.records == r.expected, f"{r.status} {r.records}/{r.expected} {r.detail} | {r.run_detail[:300]}"
 
 
 def test_end_of_year_cursor_read_control_reads_red(portlib):

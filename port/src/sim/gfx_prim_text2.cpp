@@ -15,6 +15,7 @@
 //
 // Negative controls (g_negctl_gfx_prim_text2, sg_negctl_set "gfx.family.prim_text2"):
 //   1 no shadow run                    2 the shadow one pixel right as well (offset (1, 1))
+//   3 the target's Widget_setQuad words are left alone (roadmap S2.10, U-1293)
 #include <cstdint>
 #include <string>
 
@@ -32,6 +33,11 @@ int mode() { return SG_NEGCTL(g_negctl_gfx_prim_text2); }
 constexpr uint32_t kRunPalette1 = 0x80000000u | (0x80u >> 3) << 10;
 
 void b_draw_centered_text2(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+  // Widget_setQuad(target, colour, 1, 0, 1) first: its words stay on the target (roadmap S2.10, U-1293)
+  if (const GfxBody q = mode() == 3 ? nullptr : gfxb::find_body("Widget_setQuad")) {
+    const uint32_t qa[5] = {ctx.gs().f_stateptr_4c1570[0], a[3], 1, 0, 1};
+    q(g, ctx, qa, 5);
+  }
   if (a[0] == 0) return;
   const std::string text = gfxb::vstring(ctx.mem, a[0]);
   const int32_t x = static_cast<int32_t>(a[1]), y = static_cast<int32_t>(a[2]);

@@ -174,6 +174,7 @@ int32_t tick_message(Ctx &ctx) {
     count = sub32(count, 1);
   }
   draw_window_effect(ctx, v);
+  draw_window_gfx(ctx, 0xf0, -8, v);   // roadmap S2.11: drawWindow(0xf0, -8, ..)'s drawing (a graphics backend only)
   const uint32_t flags = gs.g_flags;
   if (flags & 0x8000u) return i32(flags);
   const int32_t date = gs.g_date;

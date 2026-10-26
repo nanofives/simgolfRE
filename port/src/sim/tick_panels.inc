@@ -178,6 +178,22 @@ int drawBuildingPanel(int a, int b) {
 // the file-scope pointers of c3eo.cpp the body uses (the text buffer, the itoa scratch, the root window's surface)
 VP<char> kText = vp<char>(GS(g_textBuffer));
 u32 kItoaBuf = GS(g_ui_821c50);
+// roadmap S2.11: a SpriteRef's cut width / height (+0x18 / +0x1c, which the original's cropSprite stores). The port keeps the
+// cuts in the graphics backend (gfx_sprite_cut), so with one attached the layout reads them there; without one the GameState
+// word (0) as before. Only drawing positions depend on them: the row step's y >= 0x225 limit is never reached before the
+// 0x12-rank limit (rows start at y 0x4d and step 0x1a or 0x12, so 18 rows end at most at 0x221), and the close button's box
+// only chooses which button image is drawn.
+int SprW(u32 s) {
+    int32_t w = 0, h = 0;
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) && gfx_sprite_cut(ctx, s, w, h)) return w;
+    return G<int>(s + 24);
+}
+int SprH(u32 s) {
+    int32_t w = 0, h = 0;
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) && gfx_sprite_cut(ctx, s, w, h))
+        return h + (results_control(2) ? 1 : 0);
+    return G<int>(s + 28);
+}
 u32 kScreen = GS(g_rootWindow) + 0x274;
 u32 kRootWindow = GS(g_rootWindow);
 void showTournamentResults() {
@@ -237,7 +253,8 @@ void showTournamentResults() {
         }
         y = 0x2D;                                                                // showTournamentResults+0x3c5
     } else {
-        // showTournamentResults+0x3cc: the scorecard header
+        // showTournamentResults+0x3cc: the scorecard header (roadmap S2.11: the results family's marker first)
+        if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "results.begin", nullptr, 0);
         kDrawSprite((u32)(GS(g_spriteRef_821040)), 0, static_cast<int>(kScreen), 0, 0, 0x3E800000, 0, 1);
         kStretchBlit((u32)(GS(g_spriteRef_821cb8)), 0, (GS(g_spriteRef_821cb8) + 44), static_cast<int>(kScreen), 0, 0, 0);
         kSetDrawTarget(G<u32>(GS(f_stateptr_4c1570)), 0, GS(g_fontRef_821020), 0, 0, 0);            // showTournamentResults+0x427
@@ -364,10 +381,10 @@ void showTournamentResults() {
                                 }
                             }
                         }
-                        y += G<int>((GS(g_spriteRef_821cb8) + 116));                                 // showTournamentResults+0xb30 / showTournamentResults+0xb39
+                        y += SprH(GS(g_spriteRef_821cb8) + 88);                                 // showTournamentResults+0xb30 / showTournamentResults+0xb39
                         G<int>(GS(g_tournamentPurse)) = (2 * G<int>(GS(g_tournamentPurse))) / 3;       // showTournamentResults+0xb36..showTournamentResults+0xb48
                     } else {
-                        y += G<int>((GS(g_spriteRef_821cb8) + 292));                                 // showTournamentResults+0xb50
+                        y += SprH(GS(g_spriteRef_821cb8) + 264);                                 // showTournamentResults+0xb50
                     }
                 }
             }
@@ -382,11 +399,11 @@ void showTournamentResults() {
         if (rank == 0x12 && G<int>(GS(g_holesPlusOne)) == 0x13) {                        // showTournamentResults+0xbcd / showTournamentResults+0xbd6
             kStretchBlit((u32)((GS(g_spriteRef_821cb8) + 352)), 0, (GS(g_spriteRef_821cb8) + 396), static_cast<int>(kScreen),
                          0, y - 7, 0);                                           // showTournamentResults+0xbff
-            buttonY = y - 0x36 + G<int>((GS(g_spriteRef_821cb8) + 380));                             // showTournamentResults+0xc04..showTournamentResults+0xc12
+            buttonY = y - 0x36 + SprH(GS(g_spriteRef_821cb8) + 352);                             // showTournamentResults+0xc04..showTournamentResults+0xc12
         } else {
             kStretchBlit((u32)((GS(g_spriteRef_821cb8) + 440)), 0, (GS(g_spriteRef_821cb8) + 484), static_cast<int>(kScreen),
                          0, y - 4, 0);                                           // showTournamentResults+0xc34
-            buttonY = y - 0x33 + G<int>((GS(g_spriteRef_821cb8) + 468));                             // showTournamentResults+0xc39..showTournamentResults+0xc41
+            buttonY = y - 0x33 + SprH(GS(g_spriteRef_821cb8) + 440);                             // showTournamentResults+0xc39..showTournamentResults+0xc41
         }
         kPlaySound(0x38, 100, 0, 0, 0);                                          // showTournamentResults+0xc4d
         kImageDraw((u32)(GS(g_spriteRef_820f40)), 0, static_cast<int>(kScreen), 0x2DC, buttonY, 0);
@@ -398,8 +415,8 @@ void showTournamentResults() {
         for (;;) {
             kWaitTicks(1, 0);                                                    // showTournamentResults+0xc99
             kViewToLocal(kRootWindow, 0, &px, &py);                              // showTournamentResults+0xcb0
-            bool inBox = px >= 0x2DC && px < 0x2DC + G<int>((GS(g_spriteRef_820f40) + 24))
-                      && py >= buttonY && py < buttonY + G<int>((GS(g_spriteRef_820f40) + 28));     // showTournamentResults+0xcb5..showTournamentResults+0xcd6
+            bool inBox = px >= 0x2DC && px < 0x2DC + SprW(GS(g_spriteRef_820f40))
+                      && py >= buttonY && py < buttonY + SprH(GS(g_spriteRef_820f40));     // showTournamentResults+0xcb5..showTournamentResults+0xcd6
             if (!inBox) {
                 if (hover) {                                                     // showTournamentResults+0xcde
                     kImageDraw((u32)(GS(g_spriteRef_820f40)), 0, static_cast<int>(kScreen),

@@ -5582,6 +5582,10 @@ void P5_simfoto(u32 F) {
     const int wb = ww + 0x20;                              // ML+0x9141
     FD(0x18) = y1;                                         // ML+0x9159
     FD(0x34) = wb;                                         // ML+0x915d
+    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // roadmap S2.11: the frame's outer rectangle (simfoto's marker)
+        const uint32_t v[4] = {(u32)(x0 - 0x10), (u32)(y0 - 0x10), (u32)(x1 + 0x10), (u32)(y1 + 0x10)};
+        gfx_drop(ctx, "simfoto.begin", v, 4);
+    }
     tc("fillWindowRect", GS(g_rootWindow), x0 - 0x10, y0 - 0x10, wb, 0x10, (int)0x80007fff);   // ML+0x9161 fillWindowRect
     const int hh = y1 - y0;                                // ML+0x9166 / ML+0x916d
     FD(0x20) = hh;                                         // ML+0x9174

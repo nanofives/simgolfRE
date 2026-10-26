@@ -4,6 +4,8 @@
 // re/match/jgld_font.cpp (Font::create, Font::loadFile, Font::textWidth, initFonts), the C4 hook sources of drawMarkupRun
 // (c3o.cpp), Text_put (c3df.cpp), measureTextWidth (c3ab.cpp), scanMarkupText (c3l.cpp), skipToken / scanToken
 // (c3s.cpp) and the font creation calls of gameMain / loadInfoScreenArt (c3fv.cpp) and setPrimarySurface (c3dq.cpp).
+// Roadmap S5.1 (log/roadmap/S5/1_notes.md): the chain is class MarkupTextMetrics, shared with the FreeType provider
+// (module fttext); GdiTextMetrics supplies only the GDI font primitives, and the font table is exported (game_font).
 //
 // Negative controls (g_negctl_gditext, read RED by port/test/test_gditext.py against the recorded widths):
 //   1 Font::textWidth returns the extent plus one
@@ -247,14 +249,46 @@ const FontSpec &spec_of(Ctx &ctx, uint32_t fontref) {
     if (state_va(ctx, s.ref) == fontref) return s;
   throw MissingResource{"text font (a FontRef the game never creates at startup)"};
 }
+// the size argument Font::create receives (scaleX applied where gameMain scales it)
+int32_t size_of(Ctx &ctx, const FontSpec &s) {
+  int32_t size = s.size;
+  if (s.scaled) size = div32(add32(mul32(ctx.gs().g_screenWidth, size), 160), 320);
+  return size;
+}
 }  // namespace
+
+// ------------------------------------------------------------------------------------------------ the font table
+GameFont game_font(Ctx &ctx, uint32_t fontref) {
+  const FontSpec &s = spec_of(ctx, fontref);
+  GameFont g;
+  g.face = vstring(ctx.mem, s.face(ctx));
+  if (s.file) g.file = vstring(ctx.mem, s.file(ctx));
+  g.size = size_of(ctx, s);
+  g.style = s.style;
+  return g;
+}
+size_t game_font_count() { return sizeof(kFonts) / sizeof(kFonts[0]); }
+uint32_t game_font_ref(Ctx &ctx, size_t i) {
+  if (i >= game_font_count()) throw MissingResource{"text font (index past the game's font table)"};
+  return state_va(ctx, kFonts[i].ref);
+}
+std::vector<std::string> game_font_files(Ctx &ctx) {
+  std::vector<std::string> out;
+  for (const FontSpec &s : kFonts) {
+    if (!s.file) continue;
+    const std::string f = vstring(ctx.mem, s.file(ctx));
+    bool seen = false;
+    for (const std::string &o : out) seen = seen || GameFiles::normalize(o) == GameFiles::normalize(f);
+    if (!seen) out.push_back(f);
+  }
+  return out;
+}
 
 #ifdef _WIN32
 namespace {
 // Font::create's LOGFONTA for one FontRef
 LOGFONTA logfont_of(Ctx &ctx, const FontSpec &s) {
-  int32_t size = s.size;
-  if (s.scaled) size = div32(add32(mul32(ctx.gs().g_screenWidth, size), 160), 320);
+  const int32_t size = size_of(ctx, s);
   LOGFONTA lf;
   std::memset(&lf, 0, sizeof(lf));
   lf.lfHeight = neg32(size);
@@ -306,10 +340,8 @@ void GdiTextMetrics::font_metrics(Ctx &ctx, uint32_t fontref, int32_t out[5]) {
 #endif
 }
 
-// jgld Font::textWidth: 0 for a NULL string; else the font selected into the DC, GetTextExtentPoint32A(dc, s, n), the
-// stock SYSTEM_FONT selected back, and the extent's cx returned. The SIZE starts as the debug build's 0xcccccccc fill,
-// which a failed call (a negative count) leaves.
-int32_t GdiTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n) {
+// jgld Font::textWidth: 0 for a NULL string; else the back end's measurement of the n bytes
+int32_t MarkupTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n) {
   if (s == 0) return 0;
   if (scripted_) {   // test only (gditext.attachScripted): the rule port/test/test_gditext.py's emulator stub applies too
     int32_t w = 0;
@@ -317,6 +349,12 @@ int32_t GdiTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t s, 
       w = add32(w, add32(add32(script_base_, i32((fontref >> 2) & 7u)), i32(ctx.mem.load<uint8_t>(s + u32(i)) & script_mask_)));
     return w;
   }
+  return font_extent(ctx, fontref, s, n);
+}
+
+// GDI: the font selected into the DC, GetTextExtentPoint32A(dc, s, n), the stock SYSTEM_FONT selected back, and the
+// extent's cx returned. The SIZE starts as the debug build's 0xcccccccc fill, which a failed call (a negative count) leaves.
+int32_t GdiTextMetrics::font_extent(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n) {
 #ifdef _WIN32
   Impl::Font &f = resolve(*impl_, ctx, fontref);
   const std::vector<uint8_t> b = vbytes(ctx.mem, s, n > 0 ? u32(n) : 0u);
@@ -334,6 +372,7 @@ int32_t GdiTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t s, 
 #else
   (void)ctx;
   (void)fontref;
+  (void)s;
   (void)n;
   throw MissingResource{"host GDI"};
 #endif
@@ -342,7 +381,7 @@ int32_t GdiTextMetrics::font_text_width(Ctx &ctx, uint32_t fontref, uint32_t s, 
 // ------------------------------------------------------------------------------------------------ phase 5 drawing
 bool GdiTextMetrics::glyph_width(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t n, int32_t &w) {
 #ifdef _WIN32
-  if (scripted_) return false;
+  if (scripted()) return false;
   w = font_text_width(ctx, fontref, s, n);
   return true;
 #else
@@ -353,7 +392,7 @@ bool GdiTextMetrics::glyph_width(Ctx &ctx, uint32_t fontref, uint32_t s, int32_t
 
 bool GdiTextMetrics::glyph_ascent(Ctx &ctx, uint32_t fontref, int32_t &a) {
 #ifdef _WIN32
-  if (scripted_) return false;
+  if (scripted()) return false;
   int32_t m[5];
   font_metrics(ctx, fontref, m);
   a = m[1];
@@ -370,7 +409,7 @@ bool GdiTextMetrics::glyph_ascent(Ctx &ctx, uint32_t fontref, int32_t &a) {
 bool GdiTextMetrics::draw_glyphs(Ctx &ctx, uint32_t fontref, const std::string &text, int32_t x, int32_t y,
                                  uint32_t colorref, uint16_t *px, int32_t w, int32_t h) {
 #ifdef _WIN32
-  if (scripted_ || w <= 0 || h <= 0) return false;
+  if (scripted() || w <= 0 || h <= 0) return false;
   Impl::Font &f = resolve(*impl_, ctx, fontref);
   struct Dib {
     HDC dc = nullptr;
@@ -421,7 +460,7 @@ bool GdiTextMetrics::draw_glyphs(Ctx &ctx, uint32_t fontref, const std::string &
 
 // measureTextWidth(font, str, maxlen): 0 when the FontRef's handle word is 0 or str is NULL; else the count is maxlen
 // when maxlen < strlen(str) (signed), otherwise strlen(str), and the font's textWidth slot measures that many bytes.
-int32_t GdiTextMetrics::measure_text_width(Ctx &ctx, uint32_t fontref, uint32_t str, int32_t maxlen) {
+int32_t MarkupTextMetrics::measure_text_width(Ctx &ctx, uint32_t fontref, uint32_t str, int32_t maxlen) {
   if (ctx.mem.load<uint32_t>(fontref + 4) == 0) return 0;
   if (str == 0) return 0;
   const int32_t sl = i32(vstrlen(ctx.mem, str));
@@ -441,7 +480,7 @@ int32_t GdiTextMetrics::measure_text_width(Ctx &ctx, uint32_t fontref, uint32_t 
 // f_strpool_4e4218 + 0x3c (+0x3c = 1, style 3, 5 more bytes skipped), the 9-byte token at + 0x30 (+0x4c = 1, 9 more
 // skipped) or the 9-byte token at + 0x24 (+0x4c = 1, style 3, 9 more skipped). A pending arrow adds 0x19 (+0x54 set)
 // or 0x1e mid-run, 0x1e at the end. The last piece ends the run and clears +0x3c and +0x4c.
-int32_t GdiTextMetrics::markup_run(Ctx &ctx, uint32_t dc, uint32_t text, int32_t len, const uint32_t *ov) {
+int32_t MarkupTextMetrics::markup_run(Ctx &ctx, uint32_t dc, uint32_t text, int32_t len, const uint32_t *ov) {
   const Memory &m = ctx.mem;
   auto F = [&](uint32_t off) { return m.load<uint32_t>(dc + off); };
   auto S = [&](uint32_t off, uint32_t v) { m.store<uint32_t>(dc + off, v); };
@@ -562,17 +601,17 @@ int32_t GdiTextMetrics::markup_run(Ctx &ctx, uint32_t dc, uint32_t text, int32_t
   }
 }
 
-int32_t GdiTextMetrics::draw_markup_run(Ctx &ctx, uint32_t draw_ctx, uint32_t text, int32_t len) {
+int32_t MarkupTextMetrics::draw_markup_run(Ctx &ctx, uint32_t draw_ctx, uint32_t text, int32_t len) {
   return markup_run(ctx, draw_ctx, text, len, nullptr);
 }
 
 // Text_put(ctx, text): 0 for a NULL text, else drawMarkupRun(ctx, text, strlen(text))
-int32_t GdiTextMetrics::text_put_state(Ctx &ctx, uint32_t draw_ctx, uint32_t text) {
+int32_t MarkupTextMetrics::text_put_state(Ctx &ctx, uint32_t draw_ctx, uint32_t text) {
   if (text == 0) return 0;
   return markup_run(ctx, draw_ctx, text, i32(vstrlen(ctx.mem, text)), nullptr);
 }
 
-int32_t GdiTextMetrics::text_put(Ctx &ctx, uint32_t draw_ctx, uint32_t font, uint32_t text) {
+int32_t MarkupTextMetrics::text_put(Ctx &ctx, uint32_t draw_ctx, uint32_t font, uint32_t text) {
   if (text == 0) return 0;
   // setDrawTarget(font, 0, 0, 0): the base font only when the FontRef's handle word is set, the style fonts none
   const bool keep = SG_NEGCTL(g_negctl_gditext) == 7 || ctx.mem.load<uint32_t>(font + 4) == 0;
@@ -586,8 +625,8 @@ std::map<const Ctx *, std::unique_ptr<GdiTextMetrics>> &owned() {
   static std::map<const Ctx *, std::unique_ptr<GdiTextMetrics>> m;
   return m;
 }
-GdiTextMetrics &provider(Ctx &c) {
-  auto *p = dynamic_cast<GdiTextMetrics *>(text_metrics(c));
+MarkupTextMetrics &provider(Ctx &c) {
+  auto *p = dynamic_cast<MarkupTextMetrics *>(text_metrics(c));
   if (!p) throw MissingResource{"Text_put"};
   return *p;
 }

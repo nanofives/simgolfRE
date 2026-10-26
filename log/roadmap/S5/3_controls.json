@@ -1,0 +1,133 @@
+{
+ "base_px_vs_gdi": 8736593,
+ "base_checkpoints_px_vs_gdi": {
+  "sandbox_basic/menu": 3369,
+  "cov_b_location/refused": 20138,
+  "cov_b_location/site_hover": 20138,
+  "cov_b_location/buttons": 20138,
+  "cov_b_location/tip": 20252,
+  "cov_b_location/back": 20780
+ },
+ "modes": {
+  "5": {
+   "what": "glyph origin + 1 px",
+   "jobs_changed": 15626,
+   "jobs": 15960,
+   "changed_per_font": {
+    "0x00519928": 542,
+    "0x00519948": 63,
+    "0x00519a40": 471,
+    "0x00519fd8": 1071,
+    "0x0051a028": 558,
+    "0x0051b360": 11495,
+    "0x00821020": 390,
+    "0x00821ee8": 910,
+    "0x00821f28": 126
+   },
+   "unchanged_per_config": {
+    "base": 8,
+    "inverse": 8,
+    "sweep": 315,
+    "shadow": 3
+   },
+   "px_vs_gdi": 13336568,
+   "checkpoints_px_vs_gdi": {
+    "sandbox_basic/menu": 11646,
+    "cov_b_location/refused": 39345,
+    "cov_b_location/site_hover": 39345,
+    "cov_b_location/buttons": 39345,
+    "cov_b_location/tip": 39585,
+    "cov_b_location/back": 41220
+   },
+   "checkpoints_changed": {
+    "sandbox_basic/menu": true,
+    "cov_b_location/refused": true,
+    "cov_b_location/site_hover": true,
+    "cov_b_location/buttons": true,
+    "cov_b_location/tip": true,
+    "cov_b_location/back": true
+   },
+   "red": true
+  },
+  "6": {
+   "what": "colour: red one 5-bit step",
+   "jobs_changed": 15737,
+   "jobs": 15960,
+   "changed_per_font": {
+    "0x00519928": 560,
+    "0x00519948": 66,
+    "0x00519a40": 486,
+    "0x00519fd8": 1074,
+    "0x0051a028": 576,
+    "0x0051b360": 11508,
+    "0x00821020": 408,
+    "0x00821ee8": 927,
+    "0x00821f28": 132
+   },
+   "unchanged_per_config": {
+    "base": 8,
+    "inverse": 23,
+    "sweep": 189,
+    "shadow": 3
+   },
+   "px_vs_gdi": 11315834,
+   "checkpoints_px_vs_gdi": {
+    "sandbox_basic/menu": 9795,
+    "cov_b_location/refused": 30068,
+    "cov_b_location/site_hover": 30068,
+    "cov_b_location/buttons": 30068,
+    "cov_b_location/tip": 30259,
+    "cov_b_location/back": 31542
+   },
+   "checkpoints_changed": {
+    "sandbox_basic/menu": true,
+    "cov_b_location/refused": true,
+    "cov_b_location/site_hover": true,
+    "cov_b_location/buttons": true,
+    "cov_b_location/tip": true,
+    "cov_b_location/back": true
+   },
+   "red": true
+  },
+  "7": {
+   "what": "raster hinting off",
+   "jobs_changed": 15602,
+   "jobs": 15960,
+   "changed_per_font": {
+    "0x00519928": 542,
+    "0x00519948": 63,
+    "0x00519a40": 471,
+    "0x00519fd8": 1047,
+    "0x0051a028": 558,
+    "0x0051b360": 11495,
+    "0x00821020": 390,
+    "0x00821ee8": 910,
+    "0x00821f28": 126
+   },
+   "unchanged_per_config": {
+    "base": 20,
+    "inverse": 20,
+    "sweep": 315,
+    "shadow": 3
+   },
+   "px_vs_gdi": 10460942,
+   "checkpoints_px_vs_gdi": {
+    "sandbox_basic/menu": 5924,
+    "cov_b_location/refused": 23764,
+    "cov_b_location/site_hover": 23764,
+    "cov_b_location/buttons": 23764,
+    "cov_b_location/tip": 23888,
+    "cov_b_location/back": 24788
+   },
+   "checkpoints_changed": {
+    "sandbox_basic/menu": true,
+    "cov_b_location/refused": true,
+    "cov_b_location/site_hover": true,
+    "cov_b_location/buttons": true,
+    "cov_b_location/tip": true,
+    "cov_b_location/back": true
+   },
+   "red": true
+  }
+ }
+}

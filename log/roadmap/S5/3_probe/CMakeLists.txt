@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.16)
+project(s5_3_probe LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+  set(_trip x86-windows)
+else()
+  set(_trip x64-windows)
+endif()
+find_package(freetype CONFIG REQUIRED HINTS "$ENV{USERPROFILE}/vcpkg/installed/${_trip}")
+add_library(s5probe SHARED probe.cpp)
+target_link_libraries(s5probe PRIVATE Freetype::Freetype)
+add_custom_command(TARGET s5probe POST_BUILD COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:freetype>"
+                   "$<TARGET_FILE_DIR:s5probe>")

@@ -460,6 +460,9 @@ void load_interface_art_full(Ctx &ctx) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.images", nullptr, 0);
   // roadmap S2.9: the cuts the dialogs draw (the popup border, its masks, the option bullets; gfx_dialogs.cpp)
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.dialogArt", nullptr, 0);
+  // roadmap S2.11: the message ball and its mask (gfx_simfoto.cpp), the bulletin board's art (gfx_bulletin.cpp)
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.ballArt", nullptr, 0);
+  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.bulletinArt", nullptr, 0);
 }
 }  // namespace
 

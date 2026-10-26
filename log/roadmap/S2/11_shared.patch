@@ -1,0 +1,410 @@
+diff --git a/port/src/sim/commands.cpp b/port/src/sim/commands.cpp
+--- a/port/src/sim/commands.cpp
++++ b/port/src/sim/commands.cpp
+@@ -432,10 +432,14 @@
+ 
+ // drawWindow's H (c3ei.cpp, drawWindow+0x1d..drawWindow+0x5e): 15 * wrapMessageBuffer(sel != -1 ? 0x25 : 0x2c) + 0x20 on the font its
+ // setDrawTarget selects (g_font51b360), at least 0x60 with a golfer selected (f_w_4c2e00[2] != -1)
++// roadmap S2.11: the unclamped height 15 * r + 0x20 of the last call (drawWindow's text offset for h < 0x60 needs it; tick's
++// drawWindow reads it through "commands.windowHeightRaw" for the graphics backend). No simulation state.
++thread_local int32_t t_window_h_raw = 0;
+ int32_t window_height(Ctx &ctx) {
+   const int32_t sel = ctx.gs().f_w_4c2e00[2];
+   const int32_t r = wrap_message_buffer(ctx, sel != -1 ? 0x25 : 0x2c, state_va(ctx, &GameState::g_font51b360));
+   int32_t h = add32(mul32(r, 15), 0x20);
++  t_window_h_raw = h;
+   if (sel != -1 && h < 0x60) h = 0x60;
+   return h;
+ }
+@@ -448,6 +452,27 @@
+   if (sel == -1 && mode == 0) call_optional(ctx, "playSound", {0x10b, 0x64, 0, 0, 0});
+   if (sel >= 0) call_peer(ctx, "composeGolferSprite", {u32(sel)});
+   return 0;
++}
++
++// roadmap S2.11: drawWindow(x, y, p3, mode)'s drawing for an attached graphics backend (gfx.cpp b_draw_window; with a golfer
++// selected the simfoto family's drawWindow.golfer), after draw_window_effect stored H; the unclamped height in the fifth
++// slot. Draws nothing into the GameState.
++void draw_window_gfx(Ctx &ctx, int32_t x, int32_t y, int32_t mode) {
++  if (g_gfx_attached.load(std::memory_order_relaxed) == 0) return;
++  const uint32_t v[5] = {u32(x), u32(y), 0, u32(mode), u32(text_metrics(ctx) ? t_window_h_raw : 0)};
++  gfx_drop(ctx, "drawWindow.frame", v, 5);
++}
++
++// roadmap S2.11: drawWindow(x, y, p3, mode)'s drawing for callers whose simulation part leaves drawWindow out (narrateShot):
++// the window-height pass (wrapMessageBuffer's line breaks in g_textBuffer, H into g_value587ea0) runs as the original's
++// drawWindow runs it, then the drawing; the text buffers (gfxr::ScreenDraw::text) and g_value587ea0 are put back after, so
++// the GameState equals a run without a backend. Without a backend or a TextMetrics provider nothing happens.
++void draw_window_gfx_saved(Ctx &ctx, int32_t x, int32_t y, int32_t mode) {
++  gfxr::ScreenDraw d(ctx);
++  if (!d.on || !text_metrics(ctx)) return;
++  const int32_t saved_h = ctx.gs().g_value587ea0;
++  d.text([&] { ctx.gs().g_value587ea0 = window_height(ctx); }, [&](uint32_t) { draw_window_gfx(ctx, x, y, mode); });
++  ctx.gs().g_value587ea0 = saved_h;
+ }
+ 
+ }  // namespace cm
+@@ -616,6 +641,11 @@
+     {"pumpAndRedraw", "default", "int", 1, 0, a_pump_and_redraw, &g_negctl_pump},
+     // phase 4 (internal): drawWindow's window height with its wrapMessageBuffer pass, for tick's drawWindow
+     {"commands.windowHeight", "default", "int", 0, 0, [](Ctx &c, const uint32_t *, Ret &r) { r.set_i32(cm::window_height(c)); }, nullptr},
++    // roadmap S2.11 (internal): drawWindow(x, y, .., mode)'s drawing with the window-height pass put back (narrateShot)
++    {"commands.drawWindowGfx", "default", "int", 3, 0,
++     [](Ctx &c, const uint32_t *a, Ret &r) { cm::draw_window_gfx_saved(c, S(a, 0), S(a, 1), S(a, 2)); r.set_i32(0); }, nullptr},
++    // roadmap S2.11 (internal): the unclamped height of the last commands.windowHeight call
++    {"commands.windowHeightRaw", "default", "int", 0, 0, [](Ctx &, const uint32_t *, Ret &r) { r.set_i32(cm::t_window_h_raw); }, nullptr},
+     {"flushRedraw", "default", "int", 0, 0, a_flush_redraw, &g_negctl_none},
+     {"hitGolferPanel435f00", "default", "int", 2, 0, XY(hit_golfer_panel), &g_negctl_hit_golfer_panel},
+     {"hitEmployeeSlot435570", "default", "int", 2, 0, XY(hit_employee_slot), &g_negctl_hit_employee_slot},
+diff --git a/port/src/sim/commands_layout.inc b/port/src/sim/commands_layout.inc
+--- a/port/src/sim/commands_layout.inc
++++ b/port/src/sim/commands_layout.inc
+@@ -174,6 +174,7 @@
+     count = sub32(count, 1);
+   }
+   draw_window_effect(ctx, v);
++  draw_window_gfx(ctx, 0xf0, -8, v);   // roadmap S2.11: drawWindow(0xf0, -8, ..)'s drawing (a graphics backend only)
+   const uint32_t flags = gs.g_flags;
+   if (flags & 0x8000u) return i32(flags);
+   const int32_t date = gs.g_date;
+diff --git a/port/src/sim/dialogs.cpp b/port/src/sim/dialogs.cpp
+--- a/port/src/sim/dialogs.cpp
++++ b/port/src/sim/dialogs.cpp
+@@ -11,6 +11,7 @@
+ #include <vector>
+ 
+ #include "commands_internal.h"
++#include "gfx_reports.h"
+ #include "portsim/arith.h"
+ #include "portsim/ptr.h"
+ #include "portsim/sim/commands.h"
+@@ -894,6 +895,10 @@
+   gs.g_bulletinAnimTick = seen;
+   if (seen < 0x14) return;
+   if (m.load<int32_t>(photo) != 0x63) cm::call_optional(ctx, "playSound", {0x38, 0x64, 0, 0, 0});
++  // roadmap S2.11: the board's drawing for an attached graphics backend (gfx_bulletin.cpp; nothing without one)
++  const gfxr::ScreenDraw draw(ctx);
++  draw.gx("showBulletinBoard.board", {});
++  int32_t draw_y = 0x1bb, draw_xoff = 0, drawn = 0;   // the event lines' pen (ShowBulletinBoard_re)
+   const uint32_t ev = GS(g_bulletinEvents) + 0x28;   // 22 records of 0x30: date, course index, ...
+   int32_t order[22];
+   bool used[22] = {};
+@@ -913,6 +918,7 @@
+   }
+   for (int32_t k = 0; k < count; ++k) {
+     const int32_t e = order[neg == 1 ? count - 1 - k : k];
++    draw.gx("setDrawTarget", {draw.root(), GS(g_fontRef_519fd8), 0, 0, 0});
+     const int32_t saved_date = gs.g_date;
+     const int32_t saved_course = gs.g_courseIndex;
+     m.store<uint8_t>(tb, 0);
+@@ -929,10 +935,19 @@
+     call_peer(ctx, "appendDate", {u32(gs.g_date)});
+     gs.g_courseIndex = saved_course;
+     gs.g_date = saved_date;
++    const int32_t draw_x = ((drawn & 1) != 0 ? 0x203 : 0) + 0x14 + draw_xoff % 0x32;
++    draw.gx("showBulletinBoard.event", {u32(draw_x), u32(draw_y)});
++    draw.gx("drawText4049d0", {tb, u32(draw_x), u32(draw_y), 0x80002108u});
+     cpy(ctx, tb, GS(f_strpool_4e3e7c));   // the photo's file name (loadBmpSurface: drawing)
+     cat(ctx, tb, itoa10(ctx, e, numbuf));
+     cat(ctx, tb, GS(f_strpool_4c4970) + 0x4d0);
+-  }
++    draw_xoff += 0x23;
++    ++drawn;
++    draw.gx("showBulletinBoard.photo", {u32(draw_x), u32(draw_y), u32(drawn)});
++    draw_y -= 0xe;
++  }
++  draw.gx("showBulletinBoard.fixed", {});
++  draw.gx("Window::refreshFull", {draw.window(), 0});
+   for (;;) {
+     pump_input_blocking(ctx, "showBulletinBoard");
+     if (gs.g_rootInput[kButton] != 0) break;
+diff --git a/port/src/sim/gfx.cpp b/port/src/sim/gfx.cpp
+--- a/port/src/sim/gfx.cpp
++++ b/port/src/sim/gfx.cpp
+@@ -740,7 +740,7 @@
+ // '^', or a width above cols * 8, draws the line from its start to the break (drawTextSurface when the line height H =
+ // Widget_value - 4, at least 10, is above 16 and the colour is white, else drawText4049d0), y += H, and the scan resumes
+ // after the break; y > 0x248 stops. A pending line is drawn at the end. drawTextSurface's shadow (setQuad's 1, 0, 1: palette
+-// colour 1 one pixel down) needs the run palette's entry 1, which the backend does not model (U-1072): its main text is drawn.
++// colour 1 one pixel down) is the run palette's entry 1 as prim_text2 measured it (U-1230; U-1072 before roadmap S2.11).
+ void draw_message_buffer(Gfx &g, Ctx &ctx, int32_t cols, int32_t x, int32_t y, uint32_t colour) {
+   TextMetrics *tm = text_metrics(ctx);
+   const uint32_t buf = state_va(ctx, &GameState::g_textBuffer);
+@@ -757,10 +757,18 @@
+     std::string line;
+     for (uint32_t k = st; k < e && k < len; ++k) line += static_cast<char>(m.load<uint8_t>(buf + k));
+     (void)saved;
++    // the line is drawn from a copy (the original cuts the buffer at the break and restores it)
+     if (H > 0x10 && colour == 0x80007fffu) {
+-      g.unsup("drawMessageBuffer: drawTextSurface's shadow colour (palette entry 1) is not modelled");
+-    }
+-    // the line is drawn from a copy (the original cuts the buffer at the break and restores it)
++      // drawTextSurface(line, x, y, white) (c3dq.cpp DrawTextSurface_re; roadmap S2.11): its bottom clamp (y = h - v - 1
++      // when v + y >= h, v = Widget_value, h the root's height), then the shadow in the run palette's entry 1 one pixel
++      // down (RGB (0x80, 0, 0) as prim_text2 measured it, U-1230) and the white text
++      int32_t yy = y;
++      const int32_t v = widget_value(g, ctx);
++      if (add32(v, yy) >= g.root.h) yy = sub32(sub32(g.root.h, v), 1);
++      draw_text_string(g, ctx, line, 0, x, add32(yy, 1), 0x80000000u | (0x80u >> 3) << 10, false, "drawTextSurface (shadow)");
++      draw_text_string(g, ctx, line, 0, x, yy, colour, false, "drawTextSurface");
++      return;
++    }
+     draw_text_string(g, ctx, line, 0, x, y, colour, false, "drawMessageBuffer");
+   };
+   uint32_t st = 0, e = 0, i = 0;
+@@ -790,13 +798,25 @@
+ 
+ // drawWindow(x, y, p3, mode) (c3ei.cpp DrawWindow_re), the drawing after the window height H the port already stored
+ // (g_value587ea0): modelled for sel == -1 (no golfer) and mode -2: drawFrameR3(x - 8, y - 8, 0x1a0, H + 0x10, 1), then
+-// setDrawTarget(Root, g_font51b360, 0, 0, 0) and drawMessageBuffer(0x63, x + 0xc, y + 0x10, 0x80007fff)
++// setDrawTarget(Root, g_font51b360, 0, 0, 0) and drawMessageBuffer(0x63, x + 0xc, y + 0x10, 0x80007fff). With a golfer or
++// an icon selected (sel != -1) the simfoto family's drawWindow.golfer draws (roadmap S2.11; the fifth slot is the unclamped
++// window height tick's drawWindow passes)
+ static void b_draw_window(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
+   g.ensure_root(ctx);
+   const int32_t sel = ctx.gs().f_w_4c2e00[2];
+   const int32_t x = static_cast<int32_t>(a[0]), y = static_cast<int32_t>(a[1]), mode = static_cast<int32_t>(a[3]);
+-  if (sel != -1 || mode != -2) {
+-    g.unsup("drawWindow: a golfer, a thought or a frame other than drawFrameR3");
++  if (sel != -1) {   // a golfer or an icon selected: the simfoto family's body (roadmap S2.11, gfx_simfoto.cpp)
++    if (GfxBody b = find_body("drawWindow.golfer")) {
++      uint32_t v[12] = {};
++      for (int i = 0; i < 5; ++i) v[i] = a[i];
++      b(g, ctx, v, 5);
++    } else {
++      g.unsup("drawWindow: a golfer or an icon selected");
++    }
++    return;
++  }
++  if (mode != -2) {
++    g.unsup("drawWindow: a thought or a frame other than drawFrameR3");
+     return;
+   }
+   const uint32_t font = state_va(ctx, &GameState::g_font51b360);
+diff --git a/port/src/sim/gfx_families.inc b/port/src/sim/gfx_families.inc
+--- a/port/src/sim/gfx_families.inc
++++ b/port/src/sim/gfx_families.inc
+@@ -14,3 +14,6 @@
+ SG_GFX_FAMILY(dialogs)
+ SG_GFX_FAMILY(buyland)
+ SG_GFX_FAMILY(chareditor)
++SG_GFX_FAMILY(results)
++SG_GFX_FAMILY(simfoto)
++SG_GFX_FAMILY(bulletin)
+diff --git a/port/src/sim/menu.cpp b/port/src/sim/menu.cpp
+--- a/port/src/sim/menu.cpp
++++ b/port/src/sim/menu.cpp
+@@ -460,6 +460,9 @@
+   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.images", nullptr, 0);
+   // roadmap S2.9: the cuts the dialogs draw (the popup border, its masks, the option bullets; gfx_dialogs.cpp)
+   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.dialogArt", nullptr, 0);
++  // roadmap S2.11: the message ball and its mask (gfx_simfoto.cpp), the bulletin board's art (gfx_bulletin.cpp)
++  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.ballArt", nullptr, 0);
++  if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "loadInterfaceArt.bulletinArt", nullptr, 0);
+ }
+ }  // namespace
+ 
+diff --git a/port/src/sim/shots.cpp b/port/src/sim/shots.cpp
+--- a/port/src/sim/shots.cpp
++++ b/port/src/sim/shots.cpp
+@@ -27,6 +27,7 @@
+ #include "portsim/registry_list.h"
+ #include "portsim/sim/bridge.h"
+ #include "portsim/sim/commands.h"
++#include "portsim/sim/gfx.h"
+ #include "portsim/sim/text.h"
+ #include "portsim/sim/tiles.h"
+ #include "portsim/sim/util.h"
+@@ -109,6 +110,7 @@
+ const Foreign f_postEvent("postEvent", "3.5");             // (id, a, b)
+ const Foreign f_startMessage("startMessage", "3.7");       // (arg, prio, sound): ui straddler, draws g_rng
+ const Foreign f_pumpAndRedraw("pumpAndRedraw", "3.7b");    // (limit): the modal wait for a command (narrateShot)
++const Foreign f_drawWindowGfx("commands.drawWindowGfx", "S2.11");   // (x, y, mode): drawWindow's drawing (a backend only)
+ 
+ // ------------------------------------------------------------------------------------------------ record and tables
+ // golfer record byte offsets (re/analysis/data/golfer_record.md)
+@@ -1823,8 +1825,12 @@
+   } else {
+     frame = true;
+   }
++  // roadmap S2.11: with a graphics backend attached the frame and the ball are drawn (nothing else changes)
++  const bool gfx_on = g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr;
+   if (frame) {
+     s.f_w_4c2e00[2] = g;  // read by drawWindow
++    // drawWindow(0x96, y, 0x80002108, -2): y = minY - 0xc0 when minY >= 0xc0, else clamp(maxY + 0x28, 0, 0x1c2)
++    if (gfx_on) f_drawWindowGfx(ctx, {0x96, minY >= 0xc0 ? minY - 0xc0 : clamp(add32(maxY, 0x28), 0, 0x1c2), -2});
+     s.f_w_4c2e00[2] = -1;
+   }
+   {
+@@ -1835,6 +1841,30 @@
+     catNum(mul32(d % 1024, 30) / 1024 + 1);
+     cat(state_va(ctx, &GameState::f_strpool_4c4e54));
+     catNum(add32(s.g_year, 0x7d1));
++  }
++  if (gfx_on) {
++    // roadmap S2.11: the SimFoto frame (narrateShot's drawing, c3fr.cpp): the box (minX - 0x28, minY - 0x28) .. (maxX + 0x28,
++    // maxY + 0x28) gets a 16-pixel border (four fillWindowRect, colour 0x80007d08 with the flag set, else white), a 1-pixel
++    // black frame (four Widget_fillRect), the caption f_strpool_4c4e58 centred under it (drawCenteredText at bottom + 4, grey
++    // 0x80006318, the target's current font), the date (built above in g_textBuffer) by drawTextSurface at (right - 0x50,
++    // bottom - 0x10), then Window::refreshFull. The marker simfoto.begin first (the simfoto family's probe).
++    const int32_t right = add32(maxX, 0x28), bottom = add32(maxY, 0x28), left = sub32(minX, 0x28), top = sub32(minY, 0x28);
++    const int32_t fw16 = add32(sub32(right, left), 0x20);
++    const uint32_t c = flag != 0 ? 0x80007d08u : 0x80007fffu;
++    const uint32_t win = state_va(ctx, &GameState::g_rootWindow), surf = win + 0x274;
++    auto gx = [&](const char *nm, std::initializer_list<uint32_t> a) { gfx_drop(ctx, nm, a.begin(), static_cast<int>(a.size())); };
++    gx("simfoto.begin", {u32(left - 0x10), u32(top - 0x10), u32(right + 0x10), u32(bottom + 0x10)});
++    gx("fillWindowRect", {win, u32(left - 0x10), u32(top - 0x10), u32(fw16), 0x10, c});
++    gx("fillWindowRect", {win, u32(left - 0x10), u32(top), 0x10, u32(bottom - top), c});
++    gx("fillWindowRect", {win, u32(right), u32(top), 0x10, u32(bottom - top), c});
++    gx("fillWindowRect", {win, u32(left - 0x10), u32(bottom), u32(fw16), 0x10, c});
++    gx("Widget_fillRect", {surf, u32(left), u32(top), u32(right), u32(top), 0x80000000u});
++    gx("Widget_fillRect", {surf, u32(left), u32(top), u32(left), u32(bottom), 0x80000000u});
++    gx("Widget_fillRect", {surf, u32(left), u32(bottom), u32(right), u32(bottom), 0x80000000u});
++    gx("Widget_fillRect", {surf, u32(right), u32(top), u32(right), u32(bottom), 0x80000000u});
++    gx("drawCenteredText", {state_va(ctx, &GameState::f_strpool_4c4e58), u32((right + left) / 2), u32(bottom + 4), 0x80006318u});
++    gx("drawTextSurface", {text, u32(right - 0x50), u32(bottom - 0x10), 0x80007ff0u});
++    gx("Window::refreshFull", {win, 0});
+   }
+   {
+     const uint32_t f = holeFlag(R);
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -40,6 +40,10 @@
+ #include "tick_hook.h"
+ 
+ namespace portsim {
++// roadmap S2.11: the graphics backend's cut size of a SpriteRef (gfx_reports.cpp) and the results family's layout controls
++// (gfx_results.cpp), for showTournamentResults' drawing positions (tick_panels.inc)
++bool gfx_sprite_cut(Ctx &ctx, uint32_t sref, int32_t &w, int32_t &h);
++bool results_control(int m);
+ namespace tk {
+ 
+ // ------------------------------------------------------------------------------------------------ negative controls
+diff --git a/port/src/sim/tick_frame.inc b/port/src/sim/tick_frame.inc
+--- a/port/src/sim/tick_frame.inc
++++ b/port/src/sim/tick_frame.inc
+@@ -5582,6 +5582,10 @@
+     const int wb = ww + 0x20;                              // ML+0x9141
+     FD(0x18) = y1;                                         // ML+0x9159
+     FD(0x34) = wb;                                         // ML+0x915d
++    if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {   // roadmap S2.11: the frame's outer rectangle (simfoto's marker)
++        const uint32_t v[4] = {(u32)(x0 - 0x10), (u32)(y0 - 0x10), (u32)(x1 + 0x10), (u32)(y1 + 0x10)};
++        gfx_drop(ctx, "simfoto.begin", v, 4);
++    }
+     tc("fillWindowRect", GS(g_rootWindow), x0 - 0x10, y0 - 0x10, wb, 0x10, (int)0x80007fff);   // ML+0x9161 fillWindowRect
+     const int hh = y1 - y0;                                // ML+0x9166 / ML+0x916d
+     FD(0x20) = hh;                                         // ML+0x9174
+diff --git a/port/src/sim/tick_leaves.inc b/port/src/sim/tick_leaves.inc
+--- a/port/src/sim/tick_leaves.inc
++++ b/port/src/sim/tick_leaves.inc
+@@ -92,11 +92,13 @@
+     (void)p3;
+     (void)mode;
+     if (text_metrics(ctx)) G32(GS(g_value587ea0)) = cc("commands.windowHeight");
+-    // phase 5: an attached graphics backend draws the frame and the text (gfx.cpp b_draw_window)
++    // phase 5: an attached graphics backend draws the frame and the text (gfx.cpp b_draw_window; with a golfer selected the
++    // simfoto family's drawWindow.golfer, roadmap S2.11, which also needs the unclamped height in the fifth slot)
+     if (g_gfx_attached.load(std::memory_order_relaxed) != 0) {
+-      const uint32_t v[4] = {static_cast<uint32_t>(x), static_cast<uint32_t>(y), static_cast<uint32_t>(p3),
+-                             static_cast<uint32_t>(mode)};
+-      gfx_drop(ctx, "drawWindow.frame", v, 4);
++      const uint32_t v[5] = {static_cast<uint32_t>(x), static_cast<uint32_t>(y), static_cast<uint32_t>(p3),
++                             static_cast<uint32_t>(mode),
++                             static_cast<uint32_t>(text_metrics(ctx) ? cc("commands.windowHeightRaw") : 0)};
++      gfx_drop(ctx, "drawWindow.frame", v, 5);
+     }
+     const int sel = G32(GS(f_w_4c2e00) + 8);
+     if (sel != -1 && sel >= 0 && SG_NEGCTL(g_negctl_draw_window) != 1) drawThoughtBubble(sel, 0, 0, -1);
+diff --git a/port/src/sim/tick_panels.inc b/port/src/sim/tick_panels.inc
+--- a/port/src/sim/tick_panels.inc
++++ b/port/src/sim/tick_panels.inc
+@@ -178,6 +178,22 @@
+ // the file-scope pointers of c3eo.cpp the body uses (the text buffer, the itoa scratch, the root window's surface)
+ VP<char> kText = vp<char>(GS(g_textBuffer));
+ u32 kItoaBuf = GS(g_ui_821c50);
++// roadmap S2.11: a SpriteRef's cut width / height (+0x18 / +0x1c, which the original's cropSprite stores). The port keeps the
++// cuts in the graphics backend (gfx_sprite_cut), so with one attached the layout reads them there; without one the GameState
++// word (0) as before. Only drawing positions depend on them: the row step's y >= 0x225 limit is never reached before the
++// 0x12-rank limit (rows start at y 0x4d and step 0x1a or 0x12, so 18 rows end at most at 0x221), and the close button's box
++// only chooses which button image is drawn.
++int SprW(u32 s) {
++    int32_t w = 0, h = 0;
++    if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) && gfx_sprite_cut(ctx, s, w, h)) return w;
++    return G<int>(s + 24);
++}
++int SprH(u32 s) {
++    int32_t w = 0, h = 0;
++    if (g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) && gfx_sprite_cut(ctx, s, w, h))
++        return h + (results_control(2) ? 1 : 0);
++    return G<int>(s + 28);
++}
+ u32 kScreen = GS(g_rootWindow) + 0x274;
+ u32 kRootWindow = GS(g_rootWindow);
+ void showTournamentResults() {
+@@ -237,7 +253,8 @@
+         }
+         y = 0x2D;                                                                // showTournamentResults+0x3c5
+     } else {
+-        // showTournamentResults+0x3cc: the scorecard header
++        // showTournamentResults+0x3cc: the scorecard header (roadmap S2.11: the results family's marker first)
++        if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, "results.begin", nullptr, 0);
+         kDrawSprite((u32)(GS(g_spriteRef_821040)), 0, static_cast<int>(kScreen), 0, 0, 0x3E800000, 0, 1);
+         kStretchBlit((u32)(GS(g_spriteRef_821cb8)), 0, (GS(g_spriteRef_821cb8) + 44), static_cast<int>(kScreen), 0, 0, 0);
+         kSetDrawTarget(G<u32>(GS(f_stateptr_4c1570)), 0, GS(g_fontRef_821020), 0, 0, 0);            // showTournamentResults+0x427
+@@ -364,10 +381,10 @@
+                                 }
+                             }
+                         }
+-                        y += G<int>((GS(g_spriteRef_821cb8) + 116));                                 // showTournamentResults+0xb30 / showTournamentResults+0xb39
++                        y += SprH(GS(g_spriteRef_821cb8) + 88);                                 // showTournamentResults+0xb30 / showTournamentResults+0xb39
+                         G<int>(GS(g_tournamentPurse)) = (2 * G<int>(GS(g_tournamentPurse))) / 3;       // showTournamentResults+0xb36..showTournamentResults+0xb48
+                     } else {
+-                        y += G<int>((GS(g_spriteRef_821cb8) + 292));                                 // showTournamentResults+0xb50
++                        y += SprH(GS(g_spriteRef_821cb8) + 264);                                 // showTournamentResults+0xb50
+                     }
+                 }
+             }
+@@ -382,11 +399,11 @@
+         if (rank == 0x12 && G<int>(GS(g_holesPlusOne)) == 0x13) {                        // showTournamentResults+0xbcd / showTournamentResults+0xbd6
+             kStretchBlit((u32)((GS(g_spriteRef_821cb8) + 352)), 0, (GS(g_spriteRef_821cb8) + 396), static_cast<int>(kScreen),
+                          0, y - 7, 0);                                           // showTournamentResults+0xbff
+-            buttonY = y - 0x36 + G<int>((GS(g_spriteRef_821cb8) + 380));                             // showTournamentResults+0xc04..showTournamentResults+0xc12
++            buttonY = y - 0x36 + SprH(GS(g_spriteRef_821cb8) + 352);                             // showTournamentResults+0xc04..showTournamentResults+0xc12
+         } else {
+             kStretchBlit((u32)((GS(g_spriteRef_821cb8) + 440)), 0, (GS(g_spriteRef_821cb8) + 484), static_cast<int>(kScreen),
+                          0, y - 4, 0);                                           // showTournamentResults+0xc34
+-            buttonY = y - 0x33 + G<int>((GS(g_spriteRef_821cb8) + 468));                             // showTournamentResults+0xc39..showTournamentResults+0xc41
++            buttonY = y - 0x33 + SprH(GS(g_spriteRef_821cb8) + 440);                             // showTournamentResults+0xc39..showTournamentResults+0xc41
+         }
+         kPlaySound(0x38, 100, 0, 0, 0);                                          // showTournamentResults+0xc4d
+         kImageDraw((u32)(GS(g_spriteRef_820f40)), 0, static_cast<int>(kScreen), 0x2DC, buttonY, 0);
+@@ -398,8 +415,8 @@
+         for (;;) {
+             kWaitTicks(1, 0);                                                    // showTournamentResults+0xc99
+             kViewToLocal(kRootWindow, 0, &px, &py);                              // showTournamentResults+0xcb0
+-            bool inBox = px >= 0x2DC && px < 0x2DC + G<int>((GS(g_spriteRef_820f40) + 24))
+-                      && py >= buttonY && py < buttonY + G<int>((GS(g_spriteRef_820f40) + 28));     // showTournamentResults+0xcb5..showTournamentResults+0xcd6
++            bool inBox = px >= 0x2DC && px < 0x2DC + SprW(GS(g_spriteRef_820f40))
++                      && py >= buttonY && py < buttonY + SprH(GS(g_spriteRef_820f40));     // showTournamentResults+0xcb5..showTournamentResults+0xcd6
+             if (!inBox) {
+                 if (hover) {                                                     // showTournamentResults+0xcde
+                     kImageDraw((u32)(GS(g_spriteRef_820f40)), 0, static_cast<int>(kScreen),
+diff --git a/port/test/test_gfx_reports.py b/port/test/test_gfx_reports.py
+--- a/port/test/test_gfx_reports.py
++++ b/port/test/test_gfx_reports.py
+@@ -50,9 +50,13 @@
+ FRAME_CONTROLS = {2: ["rep_financial", "end_of_year"], 3: ["rep_comments", "rep_histograph", "rep_financial", "rep_shortcuts",
+                                                          "rep_roster", "hole_stats", "best_scores", "end_of_year"],
+                   4: ["rep_comments", "rep_financial", "rep_shortcuts", "rep_roster", "hole_stats", "best_scores"],
+-                  6: ["rep_roster"], 8: ["rep_financial", "rep_shortcuts", "rep_roster", "hole_stats", "best_scores", "end_of_year"],
++                  6: ["rep_roster"], 8: ["rep_financial", "rep_shortcuts", "rep_roster", "best_scores", "end_of_year"],
+                   11: ["rep_financial"], 12: ["rep_comments"], 13: ["best_scores"], 14: ["hole_stats"], 15: ["rep_roster"],
+                   16: ["rep_shortcuts"], 17: ["end_of_year"], 18: ["hire"], 19: ["rep_histograph"]}
++
++# (roadmap S2.11: control 8 no longer lists hole_stats. There it changed 8 judged pixels, one-level differences of the hole-stats
++# panel's blended border over the roster screen the port left in the root; since the bulletin board is drawn, the root under
++# the panel is the board, which the control does not change: log/roadmap/S2/11_ctl8.log, 11_notes.md section 5.)
+ 
+ 
+ def held_masks(checkpoints, lib=None) -> dict:

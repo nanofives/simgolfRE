@@ -27,6 +27,7 @@
 #include "portsim/registry_list.h"
 #include "portsim/sim/bridge.h"
 #include "portsim/sim/commands.h"
+#include "portsim/sim/gfx.h"
 #include "portsim/sim/text.h"
 #include "portsim/sim/tiles.h"
 #include "portsim/sim/util.h"
@@ -109,6 +110,7 @@ const Foreign f_appendHoleName("appendHoleName", "3.1b");   // (hole)
 const Foreign f_postEvent("postEvent", "3.5");             // (id, a, b)
 const Foreign f_startMessage("startMessage", "3.7");       // (arg, prio, sound): ui straddler, draws g_rng
 const Foreign f_pumpAndRedraw("pumpAndRedraw", "3.7b");    // (limit): the modal wait for a command (narrateShot)
+const Foreign f_drawWindowGfx("commands.drawWindowGfx", "S2.11");   // (x, y, mode): drawWindow's drawing (a backend only)
 
 // ------------------------------------------------------------------------------------------------ record and tables
 // golfer record byte offsets (re/analysis/data/golfer_record.md)
@@ -1823,8 +1825,12 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
   } else {
     frame = true;
   }
+  // roadmap S2.11: with a graphics backend attached the frame and the ball are drawn (nothing else changes)
+  const bool gfx_on = g_gfx_attached.load(std::memory_order_relaxed) != 0 && gfx(ctx) != nullptr;
   if (frame) {
     s.f_w_4c2e00[2] = g;  // read by drawWindow
+    // drawWindow(0x96, y, 0x80002108, -2): y = minY - 0xc0 when minY >= 0xc0, else clamp(maxY + 0x28, 0, 0x1c2)
+    if (gfx_on) f_drawWindowGfx(ctx, {0x96, minY >= 0xc0 ? minY - 0xc0 : clamp(add32(maxY, 0x28), 0, 0x1c2), -2});
     s.f_w_4c2e00[2] = -1;
   }
   {
@@ -1835,6 +1841,30 @@ int32_t narrate_shot(Ctx &ctx, int32_t shot, int32_t dist, int32_t yards, int32_
     catNum(mul32(d % 1024, 30) / 1024 + 1);
     cat(state_va(ctx, &GameState::f_strpool_4c4e54));
     catNum(add32(s.g_year, 0x7d1));
+  }
+  if (gfx_on) {
+    // roadmap S2.11: the SimFoto frame (narrateShot's drawing, c3fr.cpp): the box (minX - 0x28, minY - 0x28) .. (maxX + 0x28,
+    // maxY + 0x28) gets a 16-pixel border (four fillWindowRect, colour 0x80007d08 with the flag set, else white), a 1-pixel
+    // black frame (four Widget_fillRect), the caption f_strpool_4c4e58 centred under it (drawCenteredText at bottom + 4, grey
+    // 0x80006318, the target's current font), the date (built above in g_textBuffer) by drawTextSurface at (right - 0x50,
+    // bottom - 0x10), then Window::refreshFull. The marker simfoto.begin first (the simfoto family's probe).
+    const int32_t right = add32(maxX, 0x28), bottom = add32(maxY, 0x28), left = sub32(minX, 0x28), top = sub32(minY, 0x28);
+    const int32_t fw16 = add32(sub32(right, left), 0x20);
+    const uint32_t c = flag != 0 ? 0x80007d08u : 0x80007fffu;
+    const uint32_t win = state_va(ctx, &GameState::g_rootWindow), surf = win + 0x274;
+    auto gx = [&](const char *nm, std::initializer_list<uint32_t> a) { gfx_drop(ctx, nm, a.begin(), static_cast<int>(a.size())); };
+    gx("simfoto.begin", {u32(left - 0x10), u32(top - 0x10), u32(right + 0x10), u32(bottom + 0x10)});
+    gx("fillWindowRect", {win, u32(left - 0x10), u32(top - 0x10), u32(fw16), 0x10, c});
+    gx("fillWindowRect", {win, u32(left - 0x10), u32(top), 0x10, u32(bottom - top), c});
+    gx("fillWindowRect", {win, u32(right), u32(top), 0x10, u32(bottom - top), c});
+    gx("fillWindowRect", {win, u32(left - 0x10), u32(bottom), u32(fw16), 0x10, c});
+    gx("Widget_fillRect", {surf, u32(left), u32(top), u32(right), u32(top), 0x80000000u});
+    gx("Widget_fillRect", {surf, u32(left), u32(top), u32(left), u32(bottom), 0x80000000u});
+    gx("Widget_fillRect", {surf, u32(left), u32(bottom), u32(right), u32(bottom), 0x80000000u});
+    gx("Widget_fillRect", {surf, u32(right), u32(top), u32(right), u32(bottom), 0x80000000u});
+    gx("drawCenteredText", {state_va(ctx, &GameState::f_strpool_4c4e58), u32((right + left) / 2), u32(bottom + 4), 0x80006318u});
+    gx("drawTextSurface", {text, u32(right - 0x50), u32(bottom - 0x10), 0x80007ff0u});
+    gx("Window::refreshFull", {win, 0});
   }
   {
     const uint32_t f = holeFlag(R);

@@ -165,19 +165,19 @@ def run_from(lib, name: str, start: S.Segment, trace: bytes, expected: list, end
         if S.INSTALL.is_dir():
             st.files_root(S.INSTALL)
         # the same set-up as SegmentRunner.run (port/test/segments.py after 38a / 38b's merges): the files the recording's
-        # install held beyond original/, and the host GDI TextMetrics provider unless SG_TEXT_METRICS=none
+        # install held beyond original/, and the TextMetrics provider SG_TEXT_METRICS=none|gdi|freetype selects (default gdi)
         overlay = getattr(S, "segment_files", None)
         if overlay is not None:
             for fname, data in overlay.files_for(start.scenario).items():
                 st.files_put(fname, data)
-        gdi = getattr(runner, "text_metrics", "none") == "gdi" and lib.has("gditext.attach")
-        if gdi:
-            st.call("gditext.attach", [])
+        tp = S.text_provider(getattr(runner, "text_metrics", "none"), lib)
+        if tp:
+            st.call(f"{tp}.attach", [])
         try:
             return _run_loaded(lib, runner, res, t0, st, start, trace, expected, end_hashes, prepare, after)
         finally:
-            if gdi:
-                st.call("gditext.detach", [])
+            if tp:
+                st.call(f"{tp}.detach", [])
 
 
 def _run_loaded(lib, runner, res, t0, st, start, trace, expected, end_hashes, prepare, after) -> RunResult:

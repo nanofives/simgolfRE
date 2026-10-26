@@ -1,0 +1,2690 @@
+[
+ {
+  "fontref": "g_font83ad20",
+  "face": "Times New Roman",
+  "size": 12,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\WINDOWS\\Fonts\\times.ttf",
+  "text_face": "Times New Roman",
+  "five": [
+   16,
+   9,
+   3,
+   12,
+   3
+  ],
+  "tm": {
+   "tmHeight": 15,
+   "tmAscent": 12,
+   "tmDescent": 3,
+   "tmInternalLeading": 3,
+   "tmExternalLeading": 1,
+   "tmAveCharWidth": 5,
+   "tmMaxCharWidth": 31,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 4500,
+   "hdmx": 113672,
+   "LTSH": 4735,
+   "kern": 5220,
+   "EBLC": 0,
+   "fpgm": 2649,
+   "prep": 3987,
+   "gasp": 16
+  },
+  "head_flags": 2073,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 64,
+  "names": {
+   "1": [
+    [
+     0,
+     3,
+     0,
+     "Times New Roman"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Times New Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Times New Roman"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     3,
+     0,
+     "Regular"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1027,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1029,
+     "oby\u010dejn\u00e9"
+    ],
+    [
+     3,
+     1,
+     1030,
+     "normal"
+    ],
+    [
+     3,
+     1,
+     1031,
+     "Standard"
+    ],
+    [
+     3,
+     1,
+     1032,
+     "\u039a\u03b1\u03bd\u03bf\u03bd\u03b9\u03ba\u03ac"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1034,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1035,
+     "Normaali"
+    ],
+    [
+     3,
+     1,
+     1036,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1038,
+     "Norm\u00e1l"
+    ],
+    [
+     3,
+     1,
+     1040,
+     "Normale"
+    ],
+    [
+     3,
+     1,
+     1043,
+     "Standaard"
+    ],
+    [
+     3,
+     1,
+     1044,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1045,
+     "Normalny"
+    ],
+    [
+     3,
+     1,
+     1046,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1049,
+     "\u041e\u0431\u044b\u0447\u043d\u044b\u0439"
+    ],
+    [
+     3,
+     1,
+     1051,
+     "Norm\u00e1lne"
+    ],
+    [
+     3,
+     1,
+     1053,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1055,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1060,
+     "Navadno"
+    ],
+    [
+     3,
+     1,
+     1066,
+     "th\u01b0\u01a1\u0300ng"
+    ],
+    [
+     3,
+     1,
+     1069,
+     "Arrunta"
+    ],
+    [
+     3,
+     1,
+     2058,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     2070,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3082,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3084,
+     "Normal"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     3,
+     0,
+     "Times New Roman"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Times New Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Times New Roman"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     3,
+     0,
+     "TimesNewRomanPSMT"
+    ],
+    [
+     1,
+     0,
+     0,
+     "TimesNewRomanPSMT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "TimesNewRomanPSMT"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_font51b320",
+  "face": "Arial Bold",
+  "size": 9,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\WINDOWS\\Fonts\\arial.ttf",
+  "text_face": "Arial",
+  "five": [
+   12,
+   6,
+   3,
+   9,
+   3
+  ],
+  "tm": {
+   "tmHeight": 12,
+   "tmAscent": 9,
+   "tmDescent": 3,
+   "tmInternalLeading": 3,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 4,
+   "tmMaxCharWidth": 24,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 4500,
+   "hdmx": 111752,
+   "LTSH": 4655,
+   "kern": 5472,
+   "EBLC": 0,
+   "fpgm": 2992,
+   "prep": 3119,
+   "gasp": 16
+  },
+  "head_flags": 2075,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 64,
+  "names": {
+   "1": [
+    [
+     0,
+     3,
+     0,
+     "Arial"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     3,
+     0,
+     "Regular"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1027,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1029,
+     "oby\u010dejn\u00e9"
+    ],
+    [
+     3,
+     1,
+     1030,
+     "normal"
+    ],
+    [
+     3,
+     1,
+     1031,
+     "Standard"
+    ],
+    [
+     3,
+     1,
+     1032,
+     "\u039a\u03b1\u03bd\u03bf\u03bd\u03b9\u03ba\u03ac"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1034,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1035,
+     "Normaali"
+    ],
+    [
+     3,
+     1,
+     1036,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1038,
+     "Norm\u00e1l"
+    ],
+    [
+     3,
+     1,
+     1040,
+     "Normale"
+    ],
+    [
+     3,
+     1,
+     1043,
+     "Standaard"
+    ],
+    [
+     3,
+     1,
+     1044,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1045,
+     "Normalny"
+    ],
+    [
+     3,
+     1,
+     1046,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1049,
+     "\u041e\u0431\u044b\u0447\u043d\u044b\u0439"
+    ],
+    [
+     3,
+     1,
+     1051,
+     "Norm\u00e1lne"
+    ],
+    [
+     3,
+     1,
+     1053,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1055,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1060,
+     "Navadno"
+    ],
+    [
+     3,
+     1,
+     1066,
+     "th\u01b0\u01a1\u0300ng"
+    ],
+    [
+     3,
+     1,
+     1069,
+     "Arrunta"
+    ],
+    [
+     3,
+     1,
+     2058,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     2070,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3082,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3084,
+     "Normal"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     3,
+     0,
+     "Arial"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     3,
+     0,
+     "ArialMT"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ArialMT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ArialMT"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_fontRef_519fd8",
+  "face": "Arial Bold",
+  "size": 10,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\WINDOWS\\Fonts\\arial.ttf",
+  "text_face": "Arial",
+  "five": [
+   13,
+   7,
+   3,
+   10,
+   3
+  ],
+  "tm": {
+   "tmHeight": 13,
+   "tmAscent": 10,
+   "tmDescent": 3,
+   "tmInternalLeading": 3,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 4,
+   "tmMaxCharWidth": 27,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 4500,
+   "hdmx": 111752,
+   "LTSH": 4655,
+   "kern": 5472,
+   "EBLC": 0,
+   "fpgm": 2992,
+   "prep": 3119,
+   "gasp": 16
+  },
+  "head_flags": 2075,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 64,
+  "names": {
+   "1": [
+    [
+     0,
+     3,
+     0,
+     "Arial"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     3,
+     0,
+     "Regular"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1027,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1029,
+     "oby\u010dejn\u00e9"
+    ],
+    [
+     3,
+     1,
+     1030,
+     "normal"
+    ],
+    [
+     3,
+     1,
+     1031,
+     "Standard"
+    ],
+    [
+     3,
+     1,
+     1032,
+     "\u039a\u03b1\u03bd\u03bf\u03bd\u03b9\u03ba\u03ac"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1034,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1035,
+     "Normaali"
+    ],
+    [
+     3,
+     1,
+     1036,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1038,
+     "Norm\u00e1l"
+    ],
+    [
+     3,
+     1,
+     1040,
+     "Normale"
+    ],
+    [
+     3,
+     1,
+     1043,
+     "Standaard"
+    ],
+    [
+     3,
+     1,
+     1044,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1045,
+     "Normalny"
+    ],
+    [
+     3,
+     1,
+     1046,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1049,
+     "\u041e\u0431\u044b\u0447\u043d\u044b\u0439"
+    ],
+    [
+     3,
+     1,
+     1051,
+     "Norm\u00e1lne"
+    ],
+    [
+     3,
+     1,
+     1053,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1055,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1060,
+     "Navadno"
+    ],
+    [
+     3,
+     1,
+     1066,
+     "th\u01b0\u01a1\u0300ng"
+    ],
+    [
+     3,
+     1,
+     1069,
+     "Arrunta"
+    ],
+    [
+     3,
+     1,
+     2058,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     2070,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3082,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3084,
+     "Normal"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     3,
+     0,
+     "Arial"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     3,
+     0,
+     "ArialMT"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ArialMT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ArialMT"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_font51b360",
+  "face": "Manual SSi Bold",
+  "size": 15,
+  "style": 0,
+  "file_arg": "manu3_.ttf",
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\manu3_.ttf",
+  "text_face": "Manual SSi Bold",
+  "five": [
+   19,
+   10,
+   4,
+   14,
+   5
+  ],
+  "tm": {
+   "tmHeight": 19,
+   "tmAscent": 14,
+   "tmDescent": 5,
+   "tmInternalLeading": 4,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 7,
+   "tmMaxCharWidth": 22,
+   "tmWeight": 700,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 3848,
+   "LTSH": 0,
+   "kern": 1734,
+   "EBLC": 0,
+   "fpgm": 20,
+   "prep": 87,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 700,
+  "os2_fsSelection": 32,
+  "names": {
+   "1": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Bold"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi Bold"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ManualSSiBold"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_font519928",
+  "face": "Manual SSi Bold",
+  "size": 20,
+  "style": 0,
+  "file_arg": "manu3_.ttf",
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\manu3_.ttf",
+  "text_face": "Manual SSi Bold",
+  "five": [
+   25,
+   14,
+   5,
+   19,
+   6
+  ],
+  "tm": {
+   "tmHeight": 25,
+   "tmAscent": 19,
+   "tmDescent": 6,
+   "tmInternalLeading": 5,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 9,
+   "tmMaxCharWidth": 29,
+   "tmWeight": 700,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 3848,
+   "LTSH": 0,
+   "kern": 1734,
+   "EBLC": 0,
+   "fpgm": 20,
+   "prep": 87,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 700,
+  "os2_fsSelection": 32,
+  "names": {
+   "1": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Bold"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi Bold"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ManualSSiBold"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_font51a028",
+  "face": "Klepto ITC TT",
+  "size": 18,
+  "style": 0,
+  "file_arg": "klepto__.ttf",
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\klepto__.ttf",
+  "text_face": "Klepto ITC TT",
+  "five": [
+   21,
+   13,
+   3,
+   16,
+   5
+  ],
+  "tm": {
+   "tmHeight": 21,
+   "tmAscent": 16,
+   "tmDescent": 5,
+   "tmInternalLeading": 3,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 7,
+   "tmMaxCharWidth": 19,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 0,
+   "LTSH": 0,
+   "kern": 7770,
+   "EBLC": 0,
+   "fpgm": 140,
+   "prep": 871,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 0,
+  "names": {
+   "1": [
+    [
+     1,
+     0,
+     0,
+     "Klepto ITC TT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Klepto ITC TT"
+    ]
+   ],
+   "2": [
+    [
+     1,
+     0,
+     0,
+     "Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Roman"
+    ]
+   ],
+   "4": [
+    [
+     1,
+     0,
+     0,
+     "Klepto ITC TT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Klepto ITC TT"
+    ]
+   ],
+   "6": [
+    [
+     1,
+     0,
+     0,
+     "KleptoITCTT-Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "KleptoITCTT-Roman"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_fontRef_519a40",
+  "face": "Klepto ITC TT",
+  "size": 24,
+  "style": 0,
+  "file_arg": "klepto__.ttf",
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\klepto__.ttf",
+  "text_face": "Klepto ITC TT",
+  "five": [
+   28,
+   17,
+   4,
+   21,
+   7
+  ],
+  "tm": {
+   "tmHeight": 28,
+   "tmAscent": 21,
+   "tmDescent": 7,
+   "tmInternalLeading": 4,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 10,
+   "tmMaxCharWidth": 26,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 0,
+   "LTSH": 0,
+   "kern": 7770,
+   "EBLC": 0,
+   "fpgm": 140,
+   "prep": 871,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 0,
+  "names": {
+   "1": [
+    [
+     1,
+     0,
+     0,
+     "Klepto ITC TT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Klepto ITC TT"
+    ]
+   ],
+   "2": [
+    [
+     1,
+     0,
+     0,
+     "Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Roman"
+    ]
+   ],
+   "4": [
+    [
+     1,
+     0,
+     0,
+     "Klepto ITC TT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Klepto ITC TT"
+    ]
+   ],
+   "6": [
+    [
+     1,
+     0,
+     0,
+     "KleptoITCTT-Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "KleptoITCTT-Roman"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_font519948",
+  "face": "Manual SSi Bold",
+  "size": 24,
+  "style": 0,
+  "file_arg": "manu3_.ttf",
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\manu3_.ttf",
+  "text_face": "Manual SSi Bold",
+  "five": [
+   31,
+   16,
+   7,
+   23,
+   8
+  ],
+  "tm": {
+   "tmHeight": 31,
+   "tmAscent": 23,
+   "tmDescent": 8,
+   "tmInternalLeading": 7,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 11,
+   "tmMaxCharWidth": 35,
+   "tmWeight": 700,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 3848,
+   "LTSH": 0,
+   "kern": 1734,
+   "EBLC": 0,
+   "fpgm": 20,
+   "prep": 87,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 700,
+  "os2_fsSelection": 32,
+  "names": {
+   "1": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Bold"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi Bold"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ManualSSiBold"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_font51b340",
+  "face": "Comic Sans MS Bold",
+  "size": 100,
+  "style": 2,
+  "file_arg": null,
+  "selected_file": "C:\\WINDOWS\\Fonts\\ariali.ttf",
+  "text_face": "Arial",
+  "five": [
+   116,
+   77,
+   13,
+   90,
+   23
+  ],
+  "tm": {
+   "tmHeight": 113,
+   "tmAscent": 90,
+   "tmDescent": 23,
+   "tmInternalLeading": 13,
+   "tmExternalLeading": 3,
+   "tmAveCharWidth": 44,
+   "tmMaxCharWidth": 188,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 255
+  },
+  "tables": {
+   "VDMX": 4500,
+   "hdmx": 82280,
+   "LTSH": 3430,
+   "kern": 5160,
+   "EBLC": 0,
+   "fpgm": 1589,
+   "prep": 1739,
+   "gasp": 16
+  },
+  "head_flags": 2073,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 1,
+  "names": {
+   "1": [
+    [
+     0,
+     3,
+     0,
+     "Arial"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     3,
+     0,
+     "Italic"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Italic"
+    ],
+    [
+     3,
+     1,
+     1027,
+     "Cursiva"
+    ],
+    [
+     3,
+     1,
+     1029,
+     "kurz\u00edva"
+    ],
+    [
+     3,
+     1,
+     1030,
+     "kursiv"
+    ],
+    [
+     3,
+     1,
+     1031,
+     "Kursiv"
+    ],
+    [
+     3,
+     1,
+     1032,
+     "\u03a0\u03bb\u03ac\u03b3\u03b9\u03b1"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Italic"
+    ],
+    [
+     3,
+     1,
+     1034,
+     "Cursiva"
+    ],
+    [
+     3,
+     1,
+     1035,
+     "Kursivoitu"
+    ],
+    [
+     3,
+     1,
+     1036,
+     "Italique"
+    ],
+    [
+     3,
+     1,
+     1038,
+     "D\u0151lt"
+    ],
+    [
+     3,
+     1,
+     1040,
+     "Corsivo"
+    ],
+    [
+     3,
+     1,
+     1043,
+     "Cursief"
+    ],
+    [
+     3,
+     1,
+     1044,
+     "Kursiv"
+    ],
+    [
+     3,
+     1,
+     1045,
+     "Kursywa"
+    ],
+    [
+     3,
+     1,
+     1046,
+     "It\u00e1lico"
+    ],
+    [
+     3,
+     1,
+     1049,
+     "\u041a\u0443\u0440\u0441\u0438\u0432"
+    ],
+    [
+     3,
+     1,
+     1051,
+     "Kurz\u00edva"
+    ],
+    [
+     3,
+     1,
+     1053,
+     "Kursiv"
+    ],
+    [
+     3,
+     1,
+     1055,
+     "\u0130talik"
+    ],
+    [
+     3,
+     1,
+     1060,
+     "Po\u0161evno"
+    ],
+    [
+     3,
+     1,
+     1066,
+     "nghi\u00eang"
+    ],
+    [
+     3,
+     1,
+     1069,
+     "Etzana"
+    ],
+    [
+     3,
+     1,
+     2058,
+     "Cursiva"
+    ],
+    [
+     3,
+     1,
+     2070,
+     "It\u00e1lico"
+    ],
+    [
+     3,
+     1,
+     3082,
+     "Cursiva"
+    ],
+    [
+     3,
+     1,
+     3084,
+     "Italique"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     3,
+     0,
+     "Arial Italic"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial Italic"
+    ],
+    [
+     3,
+     1,
+     1027,
+     "Arial Cursiva"
+    ],
+    [
+     3,
+     1,
+     1029,
+     "Arial kurz\u00edva"
+    ],
+    [
+     3,
+     1,
+     1030,
+     "Arial kursiv"
+    ],
+    [
+     3,
+     1,
+     1031,
+     "Arial Kursiv"
+    ],
+    [
+     3,
+     1,
+     1032,
+     "Arial \u03a0\u03bb\u03ac\u03b3\u03b9\u03b1"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial Italic"
+    ],
+    [
+     3,
+     1,
+     1034,
+     "Arial Cursiva"
+    ],
+    [
+     3,
+     1,
+     1035,
+     "Arial Kursivoitu"
+    ],
+    [
+     3,
+     1,
+     1036,
+     "Arial Italique"
+    ],
+    [
+     3,
+     1,
+     1038,
+     "Arial D\u0151lt"
+    ],
+    [
+     3,
+     1,
+     1040,
+     "Arial Corsivo"
+    ],
+    [
+     3,
+     1,
+     1043,
+     "Arial Cursief"
+    ],
+    [
+     3,
+     1,
+     1044,
+     "Arial Kursiv"
+    ],
+    [
+     3,
+     1,
+     1045,
+     "Arial Kursywa"
+    ],
+    [
+     3,
+     1,
+     1046,
+     "Arial It\u00e1lico"
+    ],
+    [
+     3,
+     1,
+     1049,
+     "Arial \u041a\u0443\u0440\u0441\u0438\u0432"
+    ],
+    [
+     3,
+     1,
+     1051,
+     "Arial Kurz\u00edva"
+    ],
+    [
+     3,
+     1,
+     1053,
+     "Arial Kursiv"
+    ],
+    [
+     3,
+     1,
+     1055,
+     "Arial \u0130talik"
+    ],
+    [
+     3,
+     1,
+     1060,
+     "Arial Po\u0161evno"
+    ],
+    [
+     3,
+     1,
+     1066,
+     "Arial nghi\u00eang"
+    ],
+    [
+     3,
+     1,
+     1069,
+     "Arial Etzana"
+    ],
+    [
+     3,
+     1,
+     2058,
+     "Arial Cursiva"
+    ],
+    [
+     3,
+     1,
+     2070,
+     "Arial It\u00e1lico"
+    ],
+    [
+     3,
+     1,
+     3082,
+     "Arial Cursiva"
+    ],
+    [
+     3,
+     1,
+     3084,
+     "Arial Italique"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     3,
+     0,
+     "Arial-ItalicMT"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial-ItalicMT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial-ItalicMT"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_font519968",
+  "face": "Times New Roman Bold",
+  "size": 18,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\WINDOWS\\Fonts\\arial.ttf",
+  "text_face": "Arial",
+  "five": [
+   22,
+   14,
+   3,
+   17,
+   4
+  ],
+  "tm": {
+   "tmHeight": 21,
+   "tmAscent": 17,
+   "tmDescent": 4,
+   "tmInternalLeading": 3,
+   "tmExternalLeading": 1,
+   "tmAveCharWidth": 8,
+   "tmMaxCharWidth": 48,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 4500,
+   "hdmx": 111752,
+   "LTSH": 4655,
+   "kern": 5472,
+   "EBLC": 0,
+   "fpgm": 2992,
+   "prep": 3119,
+   "gasp": 16
+  },
+  "head_flags": 2075,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 64,
+  "names": {
+   "1": [
+    [
+     0,
+     3,
+     0,
+     "Arial"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     3,
+     0,
+     "Regular"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1027,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1029,
+     "oby\u010dejn\u00e9"
+    ],
+    [
+     3,
+     1,
+     1030,
+     "normal"
+    ],
+    [
+     3,
+     1,
+     1031,
+     "Standard"
+    ],
+    [
+     3,
+     1,
+     1032,
+     "\u039a\u03b1\u03bd\u03bf\u03bd\u03b9\u03ba\u03ac"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Regular"
+    ],
+    [
+     3,
+     1,
+     1034,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1035,
+     "Normaali"
+    ],
+    [
+     3,
+     1,
+     1036,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1038,
+     "Norm\u00e1l"
+    ],
+    [
+     3,
+     1,
+     1040,
+     "Normale"
+    ],
+    [
+     3,
+     1,
+     1043,
+     "Standaard"
+    ],
+    [
+     3,
+     1,
+     1044,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1045,
+     "Normalny"
+    ],
+    [
+     3,
+     1,
+     1046,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1049,
+     "\u041e\u0431\u044b\u0447\u043d\u044b\u0439"
+    ],
+    [
+     3,
+     1,
+     1051,
+     "Norm\u00e1lne"
+    ],
+    [
+     3,
+     1,
+     1053,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1055,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     1060,
+     "Navadno"
+    ],
+    [
+     3,
+     1,
+     1066,
+     "th\u01b0\u01a1\u0300ng"
+    ],
+    [
+     3,
+     1,
+     1069,
+     "Arrunta"
+    ],
+    [
+     3,
+     1,
+     2058,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     2070,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3082,
+     "Normal"
+    ],
+    [
+     3,
+     1,
+     3084,
+     "Normal"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     3,
+     0,
+     "Arial"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Arial"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Arial"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     3,
+     0,
+     "ArialMT"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ArialMT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ArialMT"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_fontRef_821020",
+  "face": "Klepto ITC TT",
+  "size": 24,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\klepto__.ttf",
+  "text_face": "Klepto ITC TT",
+  "five": [
+   28,
+   17,
+   4,
+   21,
+   7
+  ],
+  "tm": {
+   "tmHeight": 28,
+   "tmAscent": 21,
+   "tmDescent": 7,
+   "tmInternalLeading": 4,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 10,
+   "tmMaxCharWidth": 26,
+   "tmWeight": 400,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 0,
+   "LTSH": 0,
+   "kern": 7770,
+   "EBLC": 0,
+   "fpgm": 140,
+   "prep": 871,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 400,
+  "os2_fsSelection": 0,
+  "names": {
+   "1": [
+    [
+     1,
+     0,
+     0,
+     "Klepto ITC TT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Klepto ITC TT"
+    ]
+   ],
+   "2": [
+    [
+     1,
+     0,
+     0,
+     "Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Roman"
+    ]
+   ],
+   "4": [
+    [
+     1,
+     0,
+     0,
+     "Klepto ITC TT"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Klepto ITC TT"
+    ]
+   ],
+   "6": [
+    [
+     1,
+     0,
+     0,
+     "KleptoITCTT-Roman"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "KleptoITCTT-Roman"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_fontRef_821f08",
+  "face": "Manual SSi",
+  "size": 20,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\manu3_.ttf",
+  "text_face": "Manual SSi",
+  "five": [
+   25,
+   14,
+   5,
+   19,
+   6
+  ],
+  "tm": {
+   "tmHeight": 25,
+   "tmAscent": 19,
+   "tmDescent": 6,
+   "tmInternalLeading": 5,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 9,
+   "tmMaxCharWidth": 29,
+   "tmWeight": 700,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 3848,
+   "LTSH": 0,
+   "kern": 1734,
+   "EBLC": 0,
+   "fpgm": 20,
+   "prep": 87,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 700,
+  "os2_fsSelection": 32,
+  "names": {
+   "1": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Bold"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi Bold"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ManualSSiBold"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_fontRef_821ec8",
+  "face": "Manual SSi",
+  "size": 18,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\manu3_.ttf",
+  "text_face": "Manual SSi",
+  "five": [
+   23,
+   12,
+   5,
+   17,
+   6
+  ],
+  "tm": {
+   "tmHeight": 23,
+   "tmAscent": 17,
+   "tmDescent": 6,
+   "tmInternalLeading": 5,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 8,
+   "tmMaxCharWidth": 26,
+   "tmWeight": 700,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 3848,
+   "LTSH": 0,
+   "kern": 1734,
+   "EBLC": 0,
+   "fpgm": 20,
+   "prep": 87,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 700,
+  "os2_fsSelection": 32,
+  "names": {
+   "1": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Bold"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi Bold"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ManualSSiBold"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_fontRef_821f28",
+  "face": "Manual SSi",
+  "size": 16,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\manu3_.ttf",
+  "text_face": "Manual SSi",
+  "five": [
+   20,
+   11,
+   4,
+   15,
+   5
+  ],
+  "tm": {
+   "tmHeight": 20,
+   "tmAscent": 15,
+   "tmDescent": 5,
+   "tmInternalLeading": 4,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 7,
+   "tmMaxCharWidth": 23,
+   "tmWeight": 700,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 3848,
+   "LTSH": 0,
+   "kern": 1734,
+   "EBLC": 0,
+   "fpgm": 20,
+   "prep": 87,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 700,
+  "os2_fsSelection": 32,
+  "names": {
+   "1": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Bold"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi Bold"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ManualSSiBold"
+    ]
+   ]
+  }
+ },
+ {
+  "fontref": "g_fontRef_821ee8",
+  "face": "Manual SSi",
+  "size": 14,
+  "style": 0,
+  "file_arg": null,
+  "selected_file": "C:\\Users\\maria\\Desktop\\Proyectos\\SimGolf\\original\\manu3_.ttf",
+  "text_face": "Manual SSi",
+  "five": [
+   17,
+   10,
+   3,
+   13,
+   4
+  ],
+  "tm": {
+   "tmHeight": 17,
+   "tmAscent": 13,
+   "tmDescent": 4,
+   "tmInternalLeading": 3,
+   "tmExternalLeading": 0,
+   "tmAveCharWidth": 6,
+   "tmMaxCharWidth": 20,
+   "tmWeight": 700,
+   "tmOverhang": 0,
+   "tmItalic": 0
+  },
+  "tables": {
+   "VDMX": 0,
+   "hdmx": 3848,
+   "LTSH": 0,
+   "kern": 1734,
+   "EBLC": 0,
+   "fpgm": 20,
+   "prep": 87,
+   "gasp": 0
+  },
+  "head_flags": 3,
+  "units_per_em": 2048,
+  "os2_weight": 700,
+  "os2_fsSelection": 32,
+  "names": {
+   "1": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi"
+    ]
+   ],
+   "2": [
+    [
+     0,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Bold"
+    ]
+   ],
+   "4": [
+    [
+     0,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "Manual SSi Bold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "Manual SSi Bold"
+    ]
+   ],
+   "6": [
+    [
+     0,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     1,
+     0,
+     0,
+     "ManualSSiBold"
+    ],
+    [
+     3,
+     1,
+     1033,
+     "ManualSSiBold"
+    ]
+   ]
+  }
+ }
+]

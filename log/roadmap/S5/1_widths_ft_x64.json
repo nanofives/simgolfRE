@@ -1,0 +1,1744 @@
+{
+ "total": {
+  "widths.rows": 11481,
+  "widths.equal": 11473,
+  "widths.calls": 1703706,
+  "widths.calls_equal": 1701675,
+  "widths.control_rows": 22,
+  "widths.control_equal": 14,
+  "widths.error": 0,
+  "widths.skipped": 0,
+  "textput.rows": 9101,
+  "textput.equal": 9093,
+  "textput.calls": 585837,
+  "textput.calls_equal": 583806,
+  "textput.control_rows": 22,
+  "textput.control_equal": 14,
+  "textput.error": 0,
+  "textput.skipped": 0,
+  "textput.token_rows": 0,
+  "textput.token_equal": 0,
+  "textput.setdraw_rows": 9101,
+  "textput.setdraw_equal": 9093,
+  "markup.rows": 10798,
+  "markup.equal": 10790,
+  "markup.calls": 927170,
+  "markup.calls_equal": 925139,
+  "markup.control_rows": 22,
+  "markup.control_equal": 14,
+  "markup.error": 0,
+  "markup.skipped": 0,
+  "markup.token_rows": 28,
+  "markup.token_equal": 28,
+  "markup.setdraw_rows": 0,
+  "markup.setdraw_equal": 0,
+  "per_font": {
+   "0x0051a028 Klepto ITC TT -18": [
+    833,
+    830
+   ],
+   "0x0051b360 Manual SSi Bold -15": [
+    8425,
+    8422
+   ],
+   "0x00519928 Manual SSi Bold -20": [
+    223,
+    223
+   ],
+   "0x00519fd8 Arial Bold -10": [
+    1198,
+    1198
+   ],
+   "0x00519a40 Klepto ITC TT -24": [
+    256,
+    254
+   ],
+   "0x00821ee8 Manual SSi -14": [
+    515,
+    515
+   ],
+   "0x00821020 Klepto ITC TT -24": [
+    24,
+    24
+   ],
+   "0x00821f28 Manual SSi -16": [
+    5,
+    5
+   ],
+   "0x00519948 Manual SSi Bold -24": [
+    2,
+    2
+   ]
+  }
+ },
+ "scenarios": [
+  {
+   "scenario": "cov_a_build2",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 584,
+    "equal": 583,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 81538,
+    "calls_equal": 81378,
+    "examples": [
+     {
+      "fontref": "0x0051b360",
+      "face": "Manual SSi Bold",
+      "bytes": "0a",
+      "want": 0,
+      "got": 8
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 1,
+    "control_differ": [
+     {
+      "fontref": "0x0051b360",
+      "bytes": "0a",
+      "want": 0,
+      "got": 8,
+      "count": 160
+     }
+    ],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      84,
+      84
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      363,
+      362
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      6,
+      6
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      131,
+      131
+     ]
+    }
+   },
+   "textput": {
+    "rows": 425,
+    "equal": 424,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 43093,
+    "calls_equal": 42933,
+    "setdraw_rows": 425,
+    "setdraw_equal": 424,
+    "examples": [
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5354336,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 8,
+      "after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 1,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 521,
+    "equal": 520,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 55437,
+    "calls_equal": 55277,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5354336,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 8,
+      "after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 1,
+    "token_rows": 7,
+    "token_equal": 7
+   },
+   "diffs": [
+    {
+     "scenario": "cov_a_build2",
+     "table": "widths",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "cov_a_build2",
+     "table": "textput",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]"
+    },
+    {
+     "scenario": "cov_a_build2",
+     "table": "markup",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]"
+    }
+   ],
+   "ok_all": false,
+   "ok": true
+  },
+  {
+   "scenario": "cov_a_champ",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 268,
+    "equal": 267,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 103157,
+    "calls_equal": 103156,
+    "examples": [
+     {
+      "fontref": "0x00519a40",
+      "face": "Klepto ITC TT",
+      "bytes": "0a",
+      "want": 0,
+      "got": 14
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 1,
+    "control_differ": [
+     {
+      "fontref": "0x00519a40",
+      "bytes": "0a",
+      "want": 0,
+      "got": 14,
+      "count": 1
+     }
+    ],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      78,
+      78
+     ],
+     "0x00519a40 Klepto ITC TT -24": [
+      53,
+      52
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      71,
+      71
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      11,
+      11
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      55,
+      55
+     ]
+    }
+   },
+   "textput": {
+    "rows": 157,
+    "equal": 156,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 39276,
+    "calls_equal": 39275,
+    "setdraw_rows": 157,
+    "setdraw_equal": 156,
+    "examples": [
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5347904,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 14,
+      "after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 1,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 216,
+    "equal": 215,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 58368,
+    "calls_equal": 58367,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5347904,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 14,
+      "after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 1,
+    "token_rows": 1,
+    "token_equal": 1
+   },
+   "diffs": [
+    {
+     "scenario": "cov_a_champ",
+     "table": "widths",
+     "fontref": "0x00519a40",
+     "bytes": "0a",
+     "want": 0,
+     "got": 14,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "cov_a_champ",
+     "table": "textput",
+     "fontref": "0x00519a40",
+     "bytes": "0a",
+     "want": 0,
+     "got": 14,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]"
+    },
+    {
+     "scenario": "cov_a_champ",
+     "table": "markup",
+     "fontref": "0x00519a40",
+     "bytes": "0a",
+     "want": 0,
+     "got": 14,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]"
+    }
+   ],
+   "ok_all": false,
+   "ok": true
+  },
+  {
+   "scenario": "cov_a_keys2",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 427,
+    "equal": 427,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 64363,
+    "calls_equal": 64363,
+    "examples": [],
+    "control_rows": 1,
+    "control_equal": 1,
+    "control_differ": [],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      84,
+      84
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      185,
+      185
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      10,
+      10
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      101,
+      101
+     ],
+     "0x00821ee8 Manual SSi -14": [
+      45,
+      45
+     ],
+     "0x00821020 Klepto ITC TT -24": [
+      2,
+      2
+     ]
+    }
+   },
+   "textput": {
+    "rows": 235,
+    "equal": 235,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 10019,
+    "calls_equal": 10019,
+    "setdraw_rows": 235,
+    "setdraw_equal": 235,
+    "examples": [],
+    "control_rows": 1,
+    "control_equal": 1,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 382,
+    "equal": 382,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 27914,
+    "calls_equal": 27914,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [],
+    "control_rows": 1,
+    "control_equal": 1,
+    "token_rows": 2,
+    "token_equal": 2
+   },
+   "diffs": [],
+   "ok_all": true,
+   "ok": true
+  },
+  {
+   "scenario": "cov_a_play",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 532,
+    "equal": 530,
+    "differ": 2,
+    "error": 0,
+    "skipped": 0,
+    "calls": 38955,
+    "calls_equal": 38946,
+    "examples": [
+     {
+      "fontref": "0x0051a028",
+      "face": "Klepto ITC TT",
+      "bytes": "0a",
+      "want": 0,
+      "got": 11
+     },
+     {
+      "fontref": "0x0051b360",
+      "face": "Manual SSi Bold",
+      "bytes": "0a",
+      "want": 0,
+      "got": 8
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 0,
+    "control_differ": [
+     {
+      "fontref": "0x0051a028",
+      "bytes": "0a",
+      "want": 0,
+      "got": 11,
+      "count": 6
+     },
+     {
+      "fontref": "0x0051b360",
+      "bytes": "0a",
+      "want": 0,
+      "got": 8,
+      "count": 3
+     }
+    ],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      84,
+      83
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      349,
+      348
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      11,
+      11
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      88,
+      88
+     ]
+    }
+   },
+   "textput": {
+    "rows": 399,
+    "equal": 397,
+    "differ": 2,
+    "error": 0,
+    "skipped": 0,
+    "calls": 6821,
+    "calls_equal": 6812,
+    "setdraw_rows": 399,
+    "setdraw_equal": 397,
+    "examples": [
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5349416,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 11,
+      "after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "error": null
+     },
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5354336,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 8,
+      "after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 0,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 479,
+    "equal": 477,
+    "differ": 2,
+    "error": 0,
+    "skipped": 0,
+    "calls": 15533,
+    "calls_equal": 15524,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5349416,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 11,
+      "after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "error": null
+     },
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5354336,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 8,
+      "after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 2,
+    "control_equal": 0,
+    "token_rows": 2,
+    "token_equal": 2
+   },
+   "diffs": [
+    {
+     "scenario": "cov_a_play",
+     "table": "widths",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "cov_a_play",
+     "table": "widths",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "cov_a_play",
+     "table": "textput",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]"
+    },
+    {
+     "scenario": "cov_a_play",
+     "table": "textput",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]"
+    },
+    {
+     "scenario": "cov_a_play",
+     "table": "markup",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]"
+    },
+    {
+     "scenario": "cov_a_play",
+     "table": "markup",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]"
+    }
+   ],
+   "ok_all": false,
+   "ok": true
+  },
+  {
+   "scenario": "cov_b_career",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 1429,
+    "equal": 1428,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 144044,
+    "calls_equal": 144040,
+    "examples": [
+     {
+      "fontref": "0x0051a028",
+      "face": "Klepto ITC TT",
+      "bytes": "0a",
+      "want": 0,
+      "got": 11
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 2,
+    "control_differ": [
+     {
+      "fontref": "0x0051a028",
+      "bytes": "0a",
+      "want": 0,
+      "got": 11,
+      "count": 4
+     }
+    ],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      78,
+      77
+     ],
+     "0x00519a40 Klepto ITC TT -24": [
+      51,
+      51
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      1081,
+      1081
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      13,
+      13
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      164,
+      164
+     ],
+     "0x00821020 Klepto ITC TT -24": [
+      2,
+      2
+     ],
+     "0x00821ee8 Manual SSi -14": [
+      39,
+      39
+     ],
+     "0x00821f28 Manual SSi -16": [
+      1,
+      1
+     ]
+    }
+   },
+   "textput": {
+    "rows": 1155,
+    "equal": 1154,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 33025,
+    "calls_equal": 33021,
+    "setdraw_rows": 1155,
+    "setdraw_equal": 1154,
+    "examples": [
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5349416,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 11,
+      "after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 2,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 1374,
+    "equal": 1373,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 69341,
+    "calls_equal": 69337,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5349416,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 11,
+      "after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 2,
+    "token_rows": 2,
+    "token_equal": 2
+   },
+   "diffs": [
+    {
+     "scenario": "cov_b_career",
+     "table": "widths",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "cov_b_career",
+     "table": "textput",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]"
+    },
+    {
+     "scenario": "cov_b_career",
+     "table": "markup",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]"
+    }
+   ],
+   "ok_all": false,
+   "ok": true
+  },
+  {
+   "scenario": "cov_b_career_types",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 1911,
+    "equal": 1910,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 403576,
+    "calls_equal": 403569,
+    "examples": [
+     {
+      "fontref": "0x00519a40",
+      "face": "Klepto ITC TT",
+      "bytes": "0a",
+      "want": 0,
+      "got": 14
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 2,
+    "control_differ": [
+     {
+      "fontref": "0x00519a40",
+      "bytes": "0a",
+      "want": 0,
+      "got": 14,
+      "count": 7
+     }
+    ],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      78,
+      78
+     ],
+     "0x00519a40 Klepto ITC TT -24": [
+      82,
+      81
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      1640,
+      1640
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      16,
+      16
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      95,
+      95
+     ]
+    }
+   },
+   "textput": {
+    "rows": 1743,
+    "equal": 1742,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 128248,
+    "calls_equal": 128241,
+    "setdraw_rows": 1743,
+    "setdraw_equal": 1742,
+    "examples": [
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5347904,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 14,
+      "after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 2,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 1877,
+    "equal": 1876,
+    "differ": 1,
+    "error": 0,
+    "skipped": 0,
+    "calls": 215868,
+    "calls_equal": 215861,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5347904,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 14,
+      "after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5347904
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 2,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "diffs": [
+    {
+     "scenario": "cov_b_career_types",
+     "table": "widths",
+     "fontref": "0x00519a40",
+     "bytes": "0a",
+     "want": 0,
+     "got": 14,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "cov_b_career_types",
+     "table": "textput",
+     "fontref": "0x00519a40",
+     "bytes": "0a",
+     "want": 0,
+     "got": 14,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]"
+    },
+    {
+     "scenario": "cov_b_career_types",
+     "table": "markup",
+     "fontref": "0x00519a40",
+     "bytes": "0a",
+     "want": 0,
+     "got": 14,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]"
+    }
+   ],
+   "ok_all": false,
+   "ok": true
+  },
+  {
+   "scenario": "cov_b_people",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 500,
+    "equal": 500,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 75668,
+    "calls_equal": 75668,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "control_differ": [],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      84,
+      84
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      300,
+      300
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      18,
+      18
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      98,
+      98
+     ]
+    }
+   },
+   "textput": {
+    "rows": 383,
+    "equal": 383,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 11375,
+    "calls_equal": 11375,
+    "setdraw_rows": 383,
+    "setdraw_equal": 383,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 466,
+    "equal": 466,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 31486,
+    "calls_equal": 31486,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "token_rows": 2,
+    "token_equal": 2
+   },
+   "diffs": [],
+   "ok_all": true,
+   "ok": true
+  },
+  {
+   "scenario": "cov_k1_animals",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 1069,
+    "equal": 1069,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 91761,
+    "calls_equal": 91761,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "control_differ": [],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      89,
+      89
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      864,
+      864
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      15,
+      15
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      101,
+      101
+     ]
+    }
+   },
+   "textput": {
+    "rows": 914,
+    "equal": 914,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 37411,
+    "calls_equal": 37411,
+    "setdraw_rows": 914,
+    "setdraw_equal": 914,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 1027,
+    "equal": 1027,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 54944,
+    "calls_equal": 54944,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "token_rows": 6,
+    "token_equal": 6
+   },
+   "diffs": [],
+   "ok_all": true,
+   "ok": true
+  },
+  {
+   "scenario": "ui_tour",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 2903,
+    "equal": 2901,
+    "differ": 2,
+    "error": 0,
+    "skipped": 0,
+    "calls": 441553,
+    "calls_equal": 439703,
+    "examples": [
+     {
+      "fontref": "0x0051a028",
+      "face": "Klepto ITC TT",
+      "bytes": "0a",
+      "want": 0,
+      "got": 11
+     },
+     {
+      "fontref": "0x0051b360",
+      "face": "Manual SSi Bold",
+      "bytes": "0a",
+      "want": 0,
+      "got": 8
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 1,
+    "control_differ": [
+     {
+      "fontref": "0x0051a028",
+      "bytes": "0a",
+      "want": 0,
+      "got": 11,
+      "count": 5
+     },
+     {
+      "fontref": "0x0051b360",
+      "bytes": "0a",
+      "want": 0,
+      "got": 8,
+      "count": 1845
+     }
+    ],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      85,
+      84
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      2263,
+      2262
+     ],
+     "0x00519a40 Klepto ITC TT -24": [
+      64,
+      64
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      60,
+      60
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      206,
+      206
+     ],
+     "0x00821020 Klepto ITC TT -24": [
+      10,
+      10
+     ],
+     "0x00821ee8 Manual SSi -14": [
+      212,
+      212
+     ],
+     "0x00821f28 Manual SSi -16": [
+      2,
+      2
+     ],
+     "0x00519948 Manual SSi Bold -24": [
+      1,
+      1
+     ]
+    }
+   },
+   "textput": {
+    "rows": 2349,
+    "equal": 2347,
+    "differ": 2,
+    "error": 0,
+    "skipped": 0,
+    "calls": 198182,
+    "calls_equal": 196332,
+    "setdraw_rows": 2349,
+    "setdraw_equal": 2347,
+    "examples": [
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5349416,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 11,
+      "after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "error": null
+     },
+     {
+      "kind": "textput",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5354336,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 8,
+      "after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 1,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 2746,
+    "equal": 2744,
+    "differ": 2,
+    "error": 0,
+    "skipped": 0,
+    "calls": 268991,
+    "calls_equal": 267141,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5349416,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 11,
+      "after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5349416
+      ],
+      "error": null
+     },
+     {
+      "kind": "markup",
+      "text": "0a",
+      "before": [
+       0,
+       0,
+       1,
+       0,
+       0,
+       5354336,
+       0,
+       0,
+       0
+      ],
+      "want": 0,
+      "got": 8,
+      "after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "want_after": [
+       0,
+       0,
+       0,
+       5354336
+      ],
+      "error": null
+     }
+    ],
+    "control_rows": 3,
+    "control_equal": 1,
+    "token_rows": 3,
+    "token_equal": 3
+   },
+   "diffs": [
+    {
+     "scenario": "ui_tour",
+     "table": "widths",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "ui_tour",
+     "table": "widths",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": ""
+    },
+    {
+     "scenario": "ui_tour",
+     "table": "textput",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]"
+    },
+    {
+     "scenario": "ui_tour",
+     "table": "textput",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]"
+    },
+    {
+     "scenario": "ui_tour",
+     "table": "markup",
+     "fontref": "0x0051a028",
+     "bytes": "0a",
+     "want": 0,
+     "got": 11,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]"
+    },
+    {
+     "scenario": "ui_tour",
+     "table": "markup",
+     "fontref": "0x0051b360",
+     "bytes": "0a",
+     "want": 0,
+     "got": 8,
+     "control_only": true,
+     "cause": "control-only text: both providers give this result, the recording another (U-0960)",
+     "extra": "after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]"
+    }
+   ],
+   "ok_all": false,
+   "ok": true
+  },
+  {
+   "scenario": "ui_tour_v",
+   "provider": "freetype",
+   "image": "segment start image",
+   "widths": {
+    "rows": 1858,
+    "equal": 1858,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 259091,
+    "calls_equal": 259091,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "control_differ": [],
+    "per_font": {
+     "0x0051a028 Klepto ITC TT -18": [
+      89,
+      89
+     ],
+     "0x0051b360 Manual SSi Bold -15": [
+      1309,
+      1309
+     ],
+     "0x00519a40 Klepto ITC TT -24": [
+      6,
+      6
+     ],
+     "0x00519928 Manual SSi Bold -20": [
+      63,
+      63
+     ],
+     "0x00519fd8 Arial Bold -10": [
+      159,
+      159
+     ],
+     "0x00821020 Klepto ITC TT -24": [
+      10,
+      10
+     ],
+     "0x00821ee8 Manual SSi -14": [
+      219,
+      219
+     ],
+     "0x00821f28 Manual SSi -16": [
+      2,
+      2
+     ],
+     "0x00519948 Manual SSi Bold -24": [
+      1,
+      1
+     ]
+    }
+   },
+   "textput": {
+    "rows": 1341,
+    "equal": 1341,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 78387,
+    "calls_equal": 78387,
+    "setdraw_rows": 1341,
+    "setdraw_equal": 1341,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "token_rows": 0,
+    "token_equal": 0
+   },
+   "markup": {
+    "rows": 1710,
+    "equal": 1710,
+    "differ": 0,
+    "error": 0,
+    "skipped": 0,
+    "calls": 129288,
+    "calls_equal": 129288,
+    "setdraw_rows": 0,
+    "setdraw_equal": 0,
+    "examples": [],
+    "control_rows": 2,
+    "control_equal": 2,
+    "token_rows": 3,
+    "token_equal": 3
+   },
+   "diffs": [],
+   "ok_all": true,
+   "ok": true
+  }
+ ]
+}

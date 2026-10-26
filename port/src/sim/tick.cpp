@@ -40,6 +40,10 @@
 #include "tick_hook.h"
 
 namespace portsim {
+// roadmap S2.11: the graphics backend's cut size of a SpriteRef (gfx_reports.cpp) and the results family's layout controls
+// (gfx_results.cpp), for showTournamentResults' drawing positions (tick_panels.inc)
+bool gfx_sprite_cut(Ctx &ctx, uint32_t sref, int32_t &w, int32_t &h);
+bool results_control(int m);
 namespace tk {
 
 // ------------------------------------------------------------------------------------------------ negative controls
@@ -133,7 +137,6 @@ const Drop kDrops[] = {
     {"loadImage", "image file into a surface (renderer)"},
     {"playSound", "audio request"},
     {"startSoundSlot", "audio request"},
-    {"syncTiles", "Terrain.dll push (renderer, U-0800)"},
     {"saveCourseJpg", "screenshot file"},
     {"capsLockOff", "keybd_event (time_model.md section 8)"},
     {"emptyFunc_4a0890", "empty function"},

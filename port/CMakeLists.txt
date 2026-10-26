@@ -79,3 +79,45 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 4 AND MSVC)
   add_dependencies(portsim_runner32 portsim_c)
   target_compile_options(portsim_runner32 PRIVATE /W4 /WX /permissive-)
 endif()
+
+# Roadmap S5.1 (decision D4): FreeType, the system library with its core features only, as an OPTIONAL dependency of
+# module fttext (src/sim/fttext.cpp, the FreeType TextMetrics provider). Nothing is hard-coded: the install comes from
+# outside, as PORTSIM_FREETYPE_ROOT (cache; default $ENV{SG_FREETYPE_ROOT}) = an install prefix, or a vcpkg `installed`
+# directory holding one prefix per triplet (x64-windows / x86-windows, picked by the architecture), or through
+# CMAKE_TOOLCHAIN_FILE (vcpkg.cmake), CMAKE_PREFIX_PATH or freetype_DIR. Without it, or with -DPORTSIM_FREETYPE=OFF,
+# fttext still builds and every call throws MissingResource{"FreeType"}; the GDI text default is unchanged either way.
+# A shared FreeType's DLL is copied next to the targets that load it (portsim_c.dll, the Win32 runner, the C++ tests).
+# FreeType is used under the FreeType License (FTL): the port's documentation must carry its credit line (1_notes.md).
+option(PORTSIM_FREETYPE "link FreeType when it is found (module fttext)" ON)
+set(PORTSIM_FREETYPE_ROOT "$ENV{SG_FREETYPE_ROOT}" CACHE PATH "a FreeType install prefix or a vcpkg installed directory")
+if(PORTSIM_FREETYPE)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(_sg_ft_triplet x86-windows)
+  else()
+    set(_sg_ft_triplet x64-windows)
+  endif()
+  set(_sg_ft_hints)
+  if(PORTSIM_FREETYPE_ROOT)
+    list(APPEND _sg_ft_hints "${PORTSIM_FREETYPE_ROOT}/${_sg_ft_triplet}" "${PORTSIM_FREETYPE_ROOT}")
+  endif()
+  find_package(freetype CONFIG QUIET HINTS ${_sg_ft_hints})
+endif()
+if(PORTSIM_FREETYPE AND TARGET Freetype::Freetype)
+  target_link_libraries(portsim PRIVATE Freetype::Freetype)
+  target_compile_definitions(portsim PRIVATE PORTSIM_HAVE_FREETYPE=1)
+  message(STATUS "portsim: FreeType ${freetype_VERSION} from ${freetype_DIR} (module fttext)")
+  if(TARGET freetype)
+    get_target_property(_sg_ft_type freetype TYPE)
+    if(_sg_ft_type STREQUAL "SHARED_LIBRARY")
+      foreach(_sg_ft_tgt IN ITEMS portsim_c portsim_runner32 portsim_layout_test portsim_core_test)
+        if(TARGET ${_sg_ft_tgt})
+          add_custom_command(TARGET ${_sg_ft_tgt} POST_BUILD
+                             COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:freetype>"
+                                     "$<TARGET_FILE_DIR:${_sg_ft_tgt}>")
+        endif()
+      endforeach()
+    endif()
+  endif()
+else()
+  message(STATUS "portsim: no FreeType (module fttext throws MissingResource)")
+endif()

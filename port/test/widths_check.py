@@ -12,7 +12,14 @@ game files:
   setdraw  for the rows whose style fonts are none, the TextMetrics interface call (gditext.textPut, setDrawTarget(font,
            0, 0, 0) semantics, the context's +0x5c cleared first) must give the same result.
 
-    ~/bin/py -3.12 -m port.test.widths_check [--scenario s ...] [--negctl N]     (SG_PORTSIM_DLL selects the DLL)
+Roadmap S5.1: `--provider freetype` runs the same checks with module fttext's FtTextMetrics (FreeType) in place of the
+GDI provider (the chain is the same code, only the font primitives differ). Every row whose result differs is listed with
+its CAUSE: the bytes whose single-byte advance differs between the FreeType and the GDI provider in the same process
+(`advance 0xNN ft F gdi G`), else `no single-byte advance differs` (a difference the per-byte sums do not explain).
+`--diff-tsv` writes those rows; the summary gives the textWidth row counts per font (`per_font`).
+
+    ~/bin/py -3.12 -m port.test.widths_check [--provider gdi|freetype] [--scenario s ...] [--negctl N] [--diff-tsv f]
+                                             (SG_PORTSIM_DLL selects the DLL)
 """
 from __future__ import annotations
 
@@ -73,9 +80,13 @@ def i32(v: int) -> int:
     return v - (1 << 32) if v & 0x80000000 else v
 
 
+PROVIDERS = {"gdi": "gditext", "freetype": "fttext"}
+
+
 class Checker:
-    def __init__(self, lib: L.Lib, scenario: str):
-        self.lib, self.scenario = lib, scenario
+    def __init__(self, lib: L.Lib, scenario: str, provider: str = "gdi"):
+        self.lib, self.scenario, self.provider = lib, scenario, provider
+        self.mod = PROVIDERS[provider]
         self.offs = {n: o for n, o, _ in lib.objects()}
         self.st = lib.state()
         self.st.set_data_base(DATA_VA)
@@ -87,16 +98,45 @@ class Checker:
             self.st.load_image(img)
             self.image = "segment start image"
         self.st.files_root(INSTALL)
-        self.st.call("gditext.attach", [])
+        self.st.call(f"{self.mod}.attach", [])
         self.text = (L.C.c_uint8 * 0x2000)()
         self.st.map(TEXT_VA, self.text)
         self.ctx_blocks: dict[int, object] = {}
+        self.ref = None          # the GDI provider for cause lookups (freetype only), made on the first differing row
+        self.diffs: list[dict] = []
 
     def close(self):
         try:
-            self.st.call("gditext.detach", [])
+            self.st.call(f"{self.mod}.detach", [])
         finally:
             self.st.close()
+            if self.ref is not None:
+                self.ref.close()
+
+    def advance(self, fontref: int, b: int):
+        self.put_text(bytes([b]))
+        return self.call(f"{self.mod}.fontWidth", [fontref, TEXT_VA, 1])[0]
+
+    def cause(self, fontref: int, data: bytes) -> str:
+        """Why a FreeType result differs: the bytes whose single-byte advance differs from the GDI provider's."""
+        if self.provider == "gdi":
+            return ""
+        if self.ref is None:
+            self.ref = Checker(self.lib, self.scenario, "gdi")
+        out = []
+        for b in sorted(set(data)):
+            f, g = self.advance(fontref, b), self.ref.advance(fontref, b)
+            if f != g:
+                out.append(f"advance 0x{b:02x} ft {f} gdi {g}")
+        if not out and control_only(data.hex()):
+            return "control-only text: both providers give this result, the recording another (U-0960)"
+        return "; ".join(out) if out else "no single-byte advance differs"
+
+    def note(self, table: str, fontref: int, data: bytes, want, got, err, extra=""):
+        self.diffs.append({"scenario": self.scenario, "table": table, "fontref": f"0x{fontref:08x}", "bytes": data.hex(),
+                           "want": want, "got": got if err is None else f"error {err}",
+                           "control_only": control_only(data.hex()),
+                           "cause": self.cause(fontref, data) if err is None else "error", "extra": extra})
 
     def put_text(self, b: bytes):
         L.C.memset(self.text, 0, len(self.text))
@@ -133,7 +173,7 @@ class Checker:
     # ---- the three checks
     def widths(self) -> dict:
         res = {"rows": 0, "equal": 0, "differ": 0, "error": 0, "skipped": 0, "calls": 0, "calls_equal": 0, "examples": [],
-               "control_rows": 0, "control_equal": 0, "control_differ": []}
+               "control_rows": 0, "control_equal": 0, "control_differ": [], "per_font": {}}
         for r in rows(WIDTHS / f"{self.scenario}.widths.tsv"):
             n, copied, cnt = int(r["n"]), int(r["copied"]), int(r["count"])
             if n > copied and n > 0:
@@ -143,7 +183,12 @@ class Checker:
             res["calls"] += cnt
             fontref = int(r["fontref"], 16)
             self.put_text(bytes.fromhex(r["bytes"]))
-            got, err = self.call("gditext.fontWidth", [fontref, TEXT_VA, n])
+            got, err = self.call(f"{self.mod}.fontWidth", [fontref, TEXT_VA, n])
+            pf = res["per_font"].setdefault(f"{r['fontref']} {r['face']} {r['height']}", [0, 0])
+            pf[0] += 1
+            pf[1] += 1 if err is None and got == int(r["result"]) else 0
+            if err is not None or got != int(r["result"]):
+                self.note("widths", fontref, bytes.fromhex(r["bytes"])[:max(n, 0)], int(r["result"]), got, err)
             if err:
                 res["error"] += 1
                 if len(res["examples"]) < 6:
@@ -209,6 +254,9 @@ class Checker:
             if has_token(r["text"]):
                 res["token_rows"] += 1
                 res["token_equal"] += 1 if ok else 0
+            if not ok:
+                self.note(kind, before[5], bytes.fromhex(r["text"]), int(r["result"]), got, err,
+                          f"after {after} want {want_after}")
             if not ok and len(res["examples"]) < 6:
                 res["examples"].append({"kind": kind, "text": r["text"][:80], "before": before, "want": int(r["result"]),
                                         "got": got, "after": after, "want_after": want_after, "error": err})
@@ -216,18 +264,19 @@ class Checker:
             if kind == "textput" and before[6] == before[7] == before[8] == 0 and before[5] != 0:
                 setup()
                 self.ctx_write(ctx, 0x5c, 0)
-                g2, e2 = self.call("gditext.textPut", [ctx, before[5], TEXT_VA])
+                g2, e2 = self.call(f"{self.mod}.textPut", [ctx, before[5], TEXT_VA])
                 res["setdraw_rows"] += 1
                 if e2 is None and g2 == int(r["result"]):
                     res["setdraw_equal"] += 1
         return res
 
 
-def check(lib: L.Lib, scenario: str) -> dict:
-    c = Checker(lib, scenario)
+def check(lib: L.Lib, scenario: str, provider: str = "gdi") -> dict:
+    c = Checker(lib, scenario, provider)
     try:
-        out = {"scenario": scenario, "image": c.image, "widths": c.widths(), "textput": c.runs("textput"),
-               "markup": c.runs("markup")}
+        out = {"scenario": scenario, "provider": provider, "image": c.image, "widths": c.widths(),
+               "textput": c.runs("textput"), "markup": c.runs("markup")}
+        out["diffs"] = c.diffs
     finally:
         c.close()
     w, t, m = out["widths"], out["textput"], out["markup"]
@@ -261,16 +310,18 @@ def main():
     ap.add_argument("--scenario", action="append")
     ap.add_argument("--negctl", type=int, default=0)
     ap.add_argument("--json")
+    ap.add_argument("--provider", default="gdi", choices=sorted(PROVIDERS))
+    ap.add_argument("--diff-tsv", help="write every differing row with its cause")
     ap.add_argument("--win32", help="a Win32 build directory: measure inside its 32-bit runner process")
     a = ap.parse_args()
     lib = load_win32(pathlib.Path(a.win32)) if a.win32 else L.load()
     if a.negctl:
-        lib.negctl("gditext.fontWidth", a.negctl)
+        lib.negctl(f"{PROVIDERS[a.provider]}.fontWidth", a.negctl)
     outs = []
     tot = {}
     names = a.scenario or scenarios()
     for i, s in enumerate(names, 1):
-        o = check(lib, s)
+        o = check(lib, s, a.provider)
         outs.append(o)
         w, t, m = o["widths"], o["textput"], o["markup"]
         for tag, x in (("widths", w), ("textput", t), ("markup", m)):
@@ -287,7 +338,23 @@ def main():
         for ex in [e for e in (w["examples"] + t["examples"] + m["examples"])
                    if not control_only(e.get("bytes", e.get("text", "")))][:4]:
             print("    ", json.dumps(ex)[:300])
+    per_font = {}
+    for o in outs:
+        for k, (n, e) in o["widths"]["per_font"].items():
+            pf = per_font.setdefault(k, [0, 0])
+            pf[0] += n
+            pf[1] += e
+    for k in sorted(per_font):
+        print(f"  per font {k}: textWidth rows {per_font[k][1]}/{per_font[k][0]}")
+    tot["per_font"] = per_font
     print(json.dumps(tot))
+    if a.diff_tsv:
+        cols = ["scenario", "table", "fontref", "bytes", "want", "got", "control_only", "cause", "extra"]
+        with open(a.diff_tsv, "w", encoding="utf-8", newline="") as fh:
+            fh.write("\t".join(cols) + "\n")
+            for o in outs:
+                for d in o["diffs"]:
+                    fh.write("\t".join(str(d[c]) for c in cols) + "\n")
     if a.json:
         pathlib.Path(a.json).write_text(json.dumps({"total": tot, "scenarios": outs}, indent=1))
     return 0 if all(o["ok"] for o in outs) else 1

@@ -1,0 +1,25 @@
+scenario	table	fontref	bytes	want	got	control_only	cause	extra
+cov_a_build2	widths	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	
+cov_a_build2	textput	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
+cov_a_build2	markup	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
+cov_a_champ	widths	0x00519a40	0a	0	14	True	control-only text: both providers give this result, the recording another (U-0960)	
+cov_a_champ	textput	0x00519a40	0a	0	14	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]
+cov_a_champ	markup	0x00519a40	0a	0	14	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]
+cov_a_play	widths	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	
+cov_a_play	widths	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	
+cov_a_play	textput	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_a_play	textput	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
+cov_a_play	markup	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_a_play	markup	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
+cov_b_career	widths	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	
+cov_b_career	textput	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_b_career	markup	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+cov_b_career_types	widths	0x00519a40	0a	0	14	True	control-only text: both providers give this result, the recording another (U-0960)	
+cov_b_career_types	textput	0x00519a40	0a	0	14	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]
+cov_b_career_types	markup	0x00519a40	0a	0	14	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5347904] want [0, 0, 0, 5347904]
+ui_tour	widths	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	
+ui_tour	widths	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	
+ui_tour	textput	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+ui_tour	textput	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
+ui_tour	markup	0x0051a028	0a	0	11	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5349416] want [0, 0, 0, 5349416]
+ui_tour	markup	0x0051b360	0a	0	8	True	control-only text: both providers give this result, the recording another (U-0960)	after [0, 0, 0, 5354336] want [0, 0, 0, 5354336]
