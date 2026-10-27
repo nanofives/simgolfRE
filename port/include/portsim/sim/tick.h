@@ -25,8 +25,15 @@
 
 namespace portsim {
 
+namespace tk {
+struct LiveIo;  // roadmap S7.1 (port/src/sim/tick_hook.h)
+}
+
 // What a frame takes from outside the state.
 struct FrameInput {
+  // roadmap S7.1: a live run (portsim/sim/live.h) answers the frame body's clock, cursor and GetAsyncKeyState reads on demand
+  // through this, in place of `clock` / `cursor` / `async_keys` below (nullptr in every trace run)
+  tk::LiveIo *live = nullptr;
   uint32_t t_head = 0;       // the frame-head timeGetTime value (stored at frame slot +0x1ec)
   // The main-thread timeGetTime values of the frame by call site (code offset from the frame-head return address, as the
   // trace records sites), in call order: H1's g_frameMs read takes the first value recorded at its site; a site with no
@@ -76,6 +83,8 @@ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint
 // TerrainApi that keeps Terrain.dll's state itself and delegates the engine services (terrain_live.cpp).
 class TerrainApi;
 std::unique_ptr<TerrainApi> make_headless_terrain(Ctx &ctx);
+// roadmap S7.9 (U-1681): drops the blocks make_headless_terrain keeps for this context (call before the context is freed)
+void release_headless_terrain(const Ctx &ctx);
 
 // Per-callee call counts of the frames run on this thread since the last reset (development and notes).
 std::vector<std::pair<std::string, uint64_t>> tick_callee_counts();

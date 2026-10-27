@@ -1,0 +1,1310 @@
+diff --git a/port/include/portsim/sim/live.h b/port/include/portsim/sim/live.h
+index f7115c7..7d89653 100644
+--- a/port/include/portsim/sim/live.h
++++ b/port/include/portsim/sim/live.h
+@@ -109,6 +109,11 @@ class LiveHost {
+   virtual void pace(Ctx &, int32_t site) { (void)site; }
+   // H1's frame wait (TkBase::wait_point): nothing is dispatched there
+   virtual void wait_point(Ctx &) {}
++  // roadmap S7.8 (U-1642): the frame code (tick's drops) ran Window::refreshFull, the point where the original's back buffer
++  // reaches its window (refreshFull -> Window::refreshRect -> drawTooltip -> Display::present; log/roadmap/S7/8_notes.md).
++  // A presenting host shows the back buffer here. Modal screens that draw through their own module (credits, routing map,
++  // load browser) do not come here; their pumps do.
++  virtual void present_point(Ctx &) {}
+   // whether a must_deliver decline is asked again (a host that waits for its player); false: the decline stands
+   virtual bool blocking() const { return true; }
+   // the core's write log (set by run_live before boot)
+@@ -125,6 +130,15 @@ struct LiveOptions {
+   uint32_t frame_ra = 0;
+   std::string scenario;      // the recording's meta "scenario"
+   bool record = true;        // build the recording
++  // roadmap S7.8 (U-1643): a long session. trace_file non-empty: the recording is written to that file as the session goes
++  // (the events of finished frames are encoded and dropped every `spill_events` events; the file gets the same bytes
++  // LiveResult::trace would hold, and LiveResult::trace stays empty). on_record: each frame record is handed over as it is
++  // made (record index, T, the sim hashes); with keep_records false LiveResult::T / hashes stay empty.
++  std::string trace_file;
++  uint32_t spill_events = 4096;
++  void (*on_record)(void *arg, int32_t record, uint32_t t, const uint64_t *hashes, size_t n) = nullptr;
++  void *on_record_arg = nullptr;
++  bool keep_records = true;
+ };
+ 
+ struct LiveResult {
+@@ -146,6 +160,9 @@ struct LiveResult {
+   // loop that pumped twice at one cursor count), and each LiveMarker::mark's snapshot position (filled when the run ends)
+   uint64_t idle_declines = 0, inflated = 0;
+   std::vector<uint32_t> mark_pos;
++  // roadmap S7.8: with LiveOptions::trace_file, the file's size (0: not written) and the events spilled before the end; the
++  // recorder's events held at the end (all of them without a trace_file)
++  uint64_t trace_file_bytes = 0, spilled_events = 0, held_events = 0;
+ };
+ 
+ // Runs the boot and frames from the context's current state (sg_exe_fill_state 1 and the install's files attached, as
+diff --git a/port/src/sim/live.cpp b/port/src/sim/live.cpp
+index fe73c1f..ba200b9 100644
+--- a/port/src/sim/live.cpp
++++ b/port/src/sim/live.cpp
+@@ -47,6 +47,7 @@ namespace {
+ //   what 6 (roadmap S7.6): the n-th dispatch the host gives is applied but left out of the recording (a dropped batch)
+ //   what 7 (U-1604): no Palette::update QPC record after a load dispatch (the replay does not see it as a load batch)
+ //   what 8 (U-1604): the focus keys (RootHandler 12 / 13) left out of the recording
++//   what 9 (roadmap S7.8): a spilling recorder drops the last event of every spill (LiveOptions::trace_file only)
+ int g_negctl_recorder = 0;
+ 
+ constexpr int32_t kSiteFrameHead = 0;         // the frame head itself (the trace's frame_ra)
+@@ -85,6 +86,7 @@ class Recorder {
+   uint32_t frame_ra = 0;
+   std::string scenario;
+   std::vector<std::vector<uint8_t>> snaps;
++  size_t snaps_base = 0;  // roadmap S7.8: FRAME snapshots spilled before snaps[0]
+   std::vector<Ev> ev;
+   uint32_t frames = 0;
+ 
+@@ -113,7 +115,7 @@ class Recorder {
+     e.type = 0x02;
+     e.a = frames++;
+     e.b = t;
+-    e.snap = static_cast<uint32_t>(snaps.size());
++    e.snap = static_cast<uint32_t>(snaps_base + snaps.size());
+     snaps.push_back(std::move(snap));
+     ev.push_back(e);
+   }
+@@ -148,40 +150,15 @@ class Recorder {
+     ev.swap(out);
+   }
+ 
+-  // The schema v1 bytes. CLOCKRUN records join consecutive answers of one site and slot that step by the header's step.
+-  std::vector<uint8_t> bytes(bool quit, uint32_t data_snapshot_va[9], std::vector<uint32_t> *mark_pos = nullptr) const {
++  // The body encoder (roadmap S7.8, U-1643): the schema v1 records of the events fed to it, in order. CLOCKRUN records join
++  // consecutive answers of one site and slot that step by the header's step. bytes() feeds every event at once; a spilling
++  // recorder (spill_open / spill / spill_finish) feeds the events of finished frames as the session goes and writes their
++  // bytes to a file, so a long session keeps only the latest events in memory. The bytes are the same either way.
++  struct Encoder {
++    static constexpr uint32_t step = 1, qstep = 10000;
+     std::vector<uint8_t> body;
+-    auto u8 = [&](uint8_t x) { body.push_back(x); };
+-    auto u16 = [&](uint16_t x) {
+-      u8(static_cast<uint8_t>(x));
+-      u8(static_cast<uint8_t>(x >> 8));
+-    };
+-    auto u32 = [&](uint32_t x) {
+-      for (int i = 0; i < 4; ++i) u8(static_cast<uint8_t>(x >> (8 * i)));
+-    };
+-    auto u64 = [&](uint64_t x) {
+-      u32(static_cast<uint32_t>(x));
+-      u32(static_cast<uint32_t>(x >> 32));
+-    };
+-    auto head = [&](uint8_t type, uint8_t sub, uint16_t len) {
+-      u8(type);
+-      u8(sub);
+-      u16(len);
+-    };
+-    const uint32_t step = 1, qstep = 10000;
+     uint64_t t0 = 0x00100000u, q0 = 0x10000000u;
+     bool have_t = false, have_q = false;
+-    for (const Ev &e : ev)
+-      if (e.type == 0x01) {
+-        if (e.sub == 1 && !have_t) {
+-          t0 = e.v;
+-          have_t = true;
+-        }
+-        if (e.sub == 2 && !have_q) {
+-          q0 = e.v;
+-          have_q = true;
+-        }
+-      }
+     uint32_t n = 0;  // clock calls written
+     uint32_t polls = 0;
+     struct Run {
+@@ -190,7 +167,24 @@ class Recorder {
+       uint32_t first = 0, count = 0, ra = 0, slot = 0;
+       uint64_t v0 = 0;
+     } run;
+-    auto flush = [&]() {
++    void u8(uint8_t x) { body.push_back(x); }
++    void u16(uint16_t x) {
++      u8(static_cast<uint8_t>(x));
++      u8(static_cast<uint8_t>(x >> 8));
++    }
++    void u32(uint32_t x) {
++      for (int i = 0; i < 4; ++i) u8(static_cast<uint8_t>(x >> (8 * i)));
++    }
++    void u64(uint64_t x) {
++      u32(static_cast<uint32_t>(x));
++      u32(static_cast<uint32_t>(x >> 32));
++    }
++    void head(uint8_t type, uint8_t sub, uint16_t len) {
++      u8(type);
++      u8(sub);
++      u16(len);
++    }
++    void flush() {
+       if (!run.open) return;
+       head(0x01, run.sub, 24);
+       u32(run.first);
+@@ -199,9 +193,17 @@ class Recorder {
+       u32(run.slot);
+       u64(run.v0);
+       run.open = false;
+-    };
+-    for (const Ev &e : ev) {
++    }
++    void feed(const Ev &e, const std::vector<uint8_t> *snap, std::vector<uint32_t> *mark_pos) {
+       if (e.type == 0x01) {
++        if (e.sub == 1 && !have_t) {
++          t0 = e.v;
++          have_t = true;
++        }
++        if (e.sub == 2 && !have_q) {
++          q0 = e.v;
++          have_q = true;
++        }
+         const uint64_t st = e.sub == 1 ? step : qstep;
+         if (run.open && run.sub == e.sub && run.ra == e.a && run.slot == e.b && e.v == run.v0 + run.count * st) {
+           ++run.count;
+@@ -210,24 +212,24 @@ class Recorder {
+           run = {true, e.sub, n, 1, e.a, e.b, e.v};
+         }
+         ++n;
+-        continue;
++        return;
+       }
+       if (e.type == kMark) {  // the clock calls written before it: a gfx.snapshotAt position (live.h LiveMarker)
+         if (mark_pos) {
+           if (mark_pos->size() <= e.a) mark_pos->resize(e.a + 1, 0);
+           (*mark_pos)[e.a] = n;
+         }
+-        continue;
++        return;
+       }
+-      if (e.type == kGone) continue;
++      if (e.type == kGone) return;
+       flush();
+       switch (e.type) {
+         case 0x02:  // FRAME: frame, pos, t, snapshot
+-          head(0x02, 0, static_cast<uint16_t>(12 + snaps[e.snap].size()));
++          head(0x02, 0, static_cast<uint16_t>(12 + snap->size()));
+           u32(e.a);
+           u32(n);
+           u32(e.b);
+-          body.insert(body.end(), snaps[e.snap].begin(), snaps[e.snap].end());
++          body.insert(body.end(), snap->begin(), snap->end());
+           break;
+         case 0x03:  // DELIVER w32: pos, addr, value; post (sub 3, roadmap S7.6): pos, cls 1 (the game window), hwnd 0, msg, wp, lp
+           if (e.sub == 3) {
+@@ -275,20 +277,25 @@ class Recorder {
+           break;
+       }
+     }
+-    flush();
+-    if (!quit) {  // the final poll (no checkpoint)
+-      head(0x04, 2, 9);
++    void end(bool quit, uint32_t frames) {
++      flush();
++      if (!quit) {  // the final poll (no checkpoint)
++        head(0x04, 2, 9);
++        u32(n);
++        u32(polls);
++        u8(0);
++        ++polls;
++      }
++      head(0x7f, quit ? 1 : 0, 16);
+       u32(n);
++      u32(frames);
+       u32(polls);
+-      u8(0);
+-      ++polls;
++      u32(0);
+     }
+-    head(0x7f, quit ? 1 : 0, 16);
+-    u32(n);
+-    u32(frames);
+-    u32(polls);
+-    u32(0);
+-    // header + metadata (keys sorted, no spaces, as trace_format.header_bytes writes them)
++  };
++
++  // the file header + metadata (keys sorted, no spaces, as trace_format.header_bytes writes them)
++  std::vector<uint8_t> header(const Encoder &enc, const uint32_t data_snapshot_va[9]) const {
+     std::ostringstream m;
+     m << "{\"frame_ra\":" << frame_ra << ",\"live\":1,\"scenario\":\"";
+     for (char ch : scenario)
+@@ -311,14 +318,84 @@ class Recorder {
+     o16(1);
+     o16(32);
+     o32(static_cast<uint32_t>(meta.size()));
+-    o32(step);
+-    o32(static_cast<uint32_t>(t0));
+-    o32(qstep);
+-    o32(static_cast<uint32_t>(q0));
++    o32(Encoder::step);
++    o32(static_cast<uint32_t>(enc.t0));
++    o32(Encoder::qstep);
++    o32(static_cast<uint32_t>(enc.q0));
+     out.insert(out.end(), meta.begin(), meta.end());
+-    out.insert(out.end(), body.begin(), body.end());
+     return out;
+   }
++  const std::vector<uint8_t> *snap_of(const Ev &e) const {
++    return e.type == 0x02 ? &snaps[e.snap - snaps_base] : nullptr;
++  }
++
++  // The schema v1 bytes of every event held (a recorder that never spilled: the whole session).
++  std::vector<uint8_t> bytes(bool quit, uint32_t data_snapshot_va[9], std::vector<uint32_t> *mark_pos = nullptr) const {
++    Encoder enc;
++    for (const Ev &e : ev) enc.feed(e, snap_of(e), mark_pos);
++    enc.end(quit, frames);
++    std::vector<uint8_t> out = header(enc, data_snapshot_va);
++    out.insert(out.end(), enc.body.begin(), enc.body.end());
++    return out;
++  }
++
++  // ---- spilling (roadmap S7.8, U-1643)
++  Encoder sp;                       // the encoder of the events spilled so far (its body is written out at every spill)
++  std::FILE *sp_fh = nullptr;       // `<path>.body`: the body bytes of the spilled events
++  std::string sp_path;
++  std::vector<uint32_t> sp_marks;   // mark positions of the spilled events
++  bool drop_on_spill = false;       // negative control 9
++  uint64_t sp_events = 0, sp_body_bytes = 0;
++  bool spill_open(const std::string &path) {
++    sp_path = path;
++    sp_fh = std::fopen((path + ".body").c_str(), "wb");
++    return sp_fh != nullptr;
++  }
++  // feeds events [0, upto) to the spill encoder, writes their bytes, and drops them (and their FRAME snapshots)
++  void spill(size_t upto) {
++    if (!sp_fh || upto == 0) return;
++    size_t frames_fed = 0;
++    for (size_t i = 0; i < upto; ++i) {
++      if (drop_on_spill && i + 1 == upto && ev[i].type != 0x02) continue;  // negative control 9
++      sp.feed(ev[i], snap_of(ev[i]), &sp_marks);
++      if (ev[i].type == 0x02) ++frames_fed;
++    }
++    if (!sp.body.empty()) std::fwrite(sp.body.data(), 1, sp.body.size(), sp_fh);
++    sp_body_bytes += sp.body.size();
++    std::vector<uint8_t>().swap(sp.body);
++    ev.erase(ev.begin(), ev.begin() + static_cast<std::ptrdiff_t>(upto));
++    snaps.erase(snaps.begin(), snaps.begin() + static_cast<std::ptrdiff_t>(frames_fed));
++    snaps_base += frames_fed;
++    sp_events += upto;
++  }
++  // the rest of the events, then the trace file `sp_path` (header + body); its size, or 0 on a write error
++  uint64_t spill_finish(bool quit, uint32_t data_snapshot_va[9], std::vector<uint32_t> *mark_pos) {
++    if (!sp_fh) return 0;
++    for (const Ev &e : ev) sp.feed(e, snap_of(e), &sp_marks);
++    sp.end(quit, frames);
++    bool ok = sp.body.empty() || std::fwrite(sp.body.data(), 1, sp.body.size(), sp_fh) == sp.body.size();
++    sp_body_bytes += sp.body.size();
++    std::vector<uint8_t>().swap(sp.body);
++    ok = std::fclose(sp_fh) == 0 && ok;
++    sp_fh = nullptr;
++    if (mark_pos) *mark_pos = sp_marks;
++    const std::vector<uint8_t> hdr = header(sp, data_snapshot_va);
++    std::FILE *out = std::fopen(sp_path.c_str(), "wb");
++    std::FILE *in = std::fopen((sp_path + ".body").c_str(), "rb");
++    uint64_t total = 0;
++    if (out && in && ok) {
++      ok = std::fwrite(hdr.data(), 1, hdr.size(), out) == hdr.size();
++      total = hdr.size();
++      std::vector<uint8_t> buf(1 << 20);
++      for (size_t r; ok && (r = std::fread(buf.data(), 1, buf.size(), in)) > 0; total += r) ok = std::fwrite(buf.data(), 1, r, out) == r;
++    } else {
++      ok = false;
++    }
++    if (in) std::fclose(in);
++    if (out) ok = std::fclose(out) == 0 && ok;
++    std::remove((sp_path + ".body").c_str());
++    return ok ? total : 0;
++  }
+ };
+ 
+ // ------------------------------------------------------------------------------------------------ the core
+@@ -340,6 +417,8 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public
+     return t;
+   }
+   void body_cursor(int32_t &x, int32_t &y) override { cursor_answer(false, x, y); }
++  // roadmap S7.8 (U-1642): tick ran Window::refreshFull (tick_hook.h LiveIo::present_point)
++  void present_point() override { host_.present_point(ctx_); }
+   uint16_t async_key(int vk) override {
+     const uint16_t r = host_.async_key(ctx_, vk & 0xff);
+     ++res_.asyncs;
+@@ -508,6 +587,8 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public
+   void run() {
+     host_.writes = this;
+     host_.marker = this;
++    spill_on_ = rec_.on && !opt_.trace_file.empty() && rec_.spill_open(opt_.trace_file);
++    rec_.drop_on_spill = (mode_ & 15) == 9;
+     const bool own_terrain = !has_terrain_api(ctx_);
+     std::unique_ptr<TerrainApi> headless;
+     if (own_terrain) {
+@@ -571,8 +652,11 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public
+         }
+         begin_frame();
+         frame_head_record(t);
+-        res_.T.push_back(t);
+-        res_.hashes.insert(res_.hashes.end(), hs.begin(), hs.end());
++        if (opt_.keep_records) {
++          res_.T.push_back(t);
++          res_.hashes.insert(res_.hashes.end(), hs.begin(), hs.end());
++        }
++        if (opt_.on_record) opt_.on_record(opt_.on_record_arg, res_.records, t, hs.data(), hs.size());  // roadmap S7.8
+         ++res_.records;
+         FrameInput fi;
+         fi.t_head = t;
+@@ -832,6 +916,14 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public
+     if (placeholder_ != SIZE_MAX) fill_placeholder(last_t_);
+     fill_cursor_placeholder();
+     host_.frame_end(ctx_, frame_);
++    maybe_spill();
++  }
++  // roadmap S7.8 (U-1643): with a trace file, the events of finished frames go to it (end_frame has filled both placeholders,
++  // so no held index points into them); not under the dispatch-swap control, which reorders the whole recording at the end
++  void maybe_spill() {
++    if (!spill_on_ || (mode_ & 15) == 2 || rec_.ev.size() < opt_.spill_events) return;
++    if (placeholder_ != SIZE_MAX || cursor_ph_ != SIZE_MAX) return;
++    rec_.spill(rec_.ev.size());
+   }
+   void frame_head_record(uint32_t t) {
+     last_t_ = t;
+@@ -878,7 +970,13 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public
+     if ((mode_ & 15) == 2) rec_.swap_groups(static_cast<uint32_t>(mode_ >> 4) + 1);  // control: two dispatches reordered
+     res_.stop = stop_;
+     res_.mark_pos.clear();
+-    if (rec_.on) res_.trace = rec_.bytes(quit, snapshot_vas(), &res_.mark_pos);
++    res_.held_events = rec_.ev.size();
++    if (spill_on_) {
++      res_.spilled_events = rec_.sp_events;
++      res_.trace_file_bytes = rec_.spill_finish(quit, snapshot_vas(), &res_.mark_pos);
++    } else if (rec_.on) {
++      res_.trace = rec_.bytes(quit, snapshot_vas(), &res_.mark_pos);
++    }
+     if (res_.mark_pos.size() < marks_) res_.mark_pos.resize(marks_, 0);
+   }
+ 
+@@ -887,6 +985,7 @@ class Core : public tk::LiveIo, public InputSource, public LiveWriteLog, public
+   const LiveOptions &opt_;
+   LiveResult &res_;
+   Recorder rec_;
++  bool spill_on_ = false;  // roadmap S7.8: the recording goes to LiveOptions::trace_file
+   int mode_ = 0;
+   uint32_t frame_ = 0;
+   uint32_t ordinal_ = 0;
+@@ -1255,6 +1354,7 @@ class PrefixHost : public LiveHost {
+   bool exhausted() const override { return on_b_ ? b_->exhausted() : a_->exhausted(); }
+   void pace(Ctx &c, int32_t site) override { (on_b_ ? static_cast<LiveHost &>(*b_) : *a_).pace(c, site); }
+   void wait_point(Ctx &c) override { (on_b_ ? static_cast<LiveHost &>(*b_) : *a_).wait_point(c); }
++  void present_point(Ctx &c) override { (on_b_ ? static_cast<LiveHost &>(*b_) : *a_).present_point(c); }
+   bool blocking() const override { return on_b_ ? b_->blocking() : a_->blocking(); }
+ 
+  private:
+diff --git a/port/app/host.h b/port/app/host.h
+index e59819f..f773983 100644
+--- a/port/app/host.h
++++ b/port/app/host.h
+@@ -1,6 +1,8 @@
+ // The live session of the Windows host (roadmap S7.6): the simulation on its own thread through the live run core
+ // (portsim/sim/live.h, roadmap S7.1), fed by the window's real input (window.h, S7.2's translator), paced in real time
+-// (pacing.h) and presented at every frame wait and every modal pump call whose back buffer changed (present.h).
++// (pacing.h) and presented where the original presents (S7.8: every Window::refreshFull of the frame code, the original's
++// refreshFull -> refreshRect -> drawTooltip -> Display::present), then at every frame wait and every modal pump call whose
++// back buffer changed since (present.h).
+ //
+ // THREADS. The window thread owns the window and its message loop; every input message reaches LiveSession::on_input
+ // (AppWindow's sink), which queues the message's root-handler commands and wakes the sim thread. The sim thread runs
+@@ -52,10 +54,56 @@
+ 
+ namespace portsim {
+ struct LiveTerrainView;
++class LiveTerrain;
+ }
+ 
+ namespace portapp {
+ 
++// S7.8 (U-1643): LiveTerrain logs one text line per Terrain call (terrain_live.h: for the comparison with a recording of the
++// original) and never drops one, so a play session's memory grows with every call. The app reads the log only for its length,
++// so at each frame end the lines are dropped and counted (calls() stays the session's total). A LiveTerrain option that keeps
++// no log is requested from S3 (log/roadmap/S7/8_merge.md); until it lands the lines are cleared through the log's reference.
++struct TerrainLogBound {
++  portsim::LiveTerrain *live = nullptr;
++  bool keep = false;          // negative control (--negctl terrain-log-keep): never drop the lines
++  uint64_t dropped = 0;       // lines dropped so far
++  uint64_t max_len = 0;       // the most lines the log held at a frame end
++  void frame_end();
++  uint64_t calls() const;     // every call logged since the LiveTerrain was made
++  uint64_t length() const;    // lines held now
++};
++
++// S7.8 (U-1643): a session's records go to disk as they are made: the live core spills the recording into
++// <dir>/trace.trace (LiveOptions::trace_file) and every frame record is appended to <dir>/framehash.bin (LiveOptions::on_record,
++// the captures' layout: u32 T, u32 record, u64 sgh64 x sim objects); `in_memory` (HostOptions) keeps S7.5's way, everything in
++// LiveResult and written at the end
++struct RecordStreams {
++  bool on = false;
++  std::FILE *fh = nullptr;
++  bool open(const std::string &dir, portsim::LiveOptions &o);
++  void close();
++  static void on_record(void *self, int32_t record, uint32_t t, const uint64_t *hashes, size_t n);
++};
++std::vector<uint8_t> framehash_bytes(const portsim::LiveResult &r);  // the in-memory records in framehash.bin's layout
++
++// S7.8: the process's memory (GetProcessMemoryInfo: working set, peak working set, private bytes), sampled at the session's
++// start, every `every` live frames and at its end (memory.tsv)
++struct MemSample {
++  uint32_t frame;
++  uint64_t working_set, peak_working_set, private_bytes, terrain_log;
++};
++bool process_memory(MemSample &m);
++struct MemSampler {
++  uint32_t every = 1000;
++  std::vector<MemSample> samples;
++  void sample(uint32_t frame, uint64_t terrain_log);  // always records
++  void maybe(uint32_t frame, uint64_t terrain_log) {
++    if (every && frame % every == 0) sample(frame, terrain_log);
++  }
++  std::string tsv() const;
++  std::string json() const;  // {"start":{..},"end":{..},"samples":n}
++};
++
+ enum class CursorSource : uint8_t { System = 0, Message = 1 };
+ 
+ // Deliberately wrong behaviours for the negative controls (main.cpp --negctl).
+@@ -63,6 +111,7 @@ enum class HostDefect : uint8_t {
+   None = 0,
+   PacingOff = 1,     // the frame wait does not wait
+   PresentLate = 2,   // each present shows the previous present's frame (a stale buffer)
++  NoPresentPoint = 3,  // S7.8: no present at Window::refreshFull (S7.5's points only: frame wait and modal pumps)
+ };
+ 
+ struct HostOptions {
+@@ -78,6 +127,7 @@ struct HostOptions {
+                                   // exactly this; the original's first main-thread timeGetTime is seedFromTime's), else timeGetTime
+   bool keys_from_messages = false;  // GetKeyState / GetAsyncKeyState answered from the key messages the window received
+                                     // (down 0x8000 / 0x8001, as the shim's SetVirtualKey forced-down answers), not the keyboard
++  bool in_memory = false;           // S7.8: keep the recording and the frame records in memory until the end (RecordStreams)
+ };
+ 
+ class LiveSession : public portsim::LiveHost {
+@@ -116,7 +166,11 @@ class LiveSession : public portsim::LiveHost {
+   uint16_t async_key(portsim::Ctx &, int vk) override;
+   portsim::LiveReply pump(portsim::Ctx &, const portsim::LivePump &p, std::vector<portsim::Command> &out) override;
+   void wait_point(portsim::Ctx &) override;
++  void present_point(portsim::Ctx &) override;  // S7.8: present where the original's Display::present runs ('r')
++  void frame_end(portsim::Ctx &, uint32_t frame) override;  // S7.8: the terrain log bound and the memory samples
+   bool blocking() const override { return true; }
++  TerrainLogBound *terrain_log = nullptr;  // S7.8 (main.cpp sets it with the LiveTerrain; read only inside run)
++  MemSampler memory;                        // S7.8
+ 
+   // S7.5: the attached LiveTerrain's drawing counters (terrain passes rasterised, pixels written), written cumulatively in
+   // waits.tsv columns 7 / 8 so the frame work can be read against the terrain drawing it did; nullptr = headless terrain
+@@ -129,11 +183,22 @@ class LiveSession : public portsim::LiveHost {
+  private:
+   struct Present {
+     uint32_t index, mark, frame, records;
+-    char kind;  // 'w' frame wait, 'm' modal pump, 'p' paced pump
++    char kind;  // 'r' Window::refreshFull (the original's present, S7.8), 'w' frame wait, 'm' modal pump, 'p' paced pump
+     uint64_t hash;
+   };
+   void present(portsim::Ctx &ctx, char kind);
+   bool stopping() const { return stop_.load(); }
++  // S7.8: present opportunities (calls of present) and presents by kind, and 'r' presents that replaced an earlier 'r' present
++  // before any frame wait or modal pump came (frames S7.5's points would not have shown)
++  uint64_t opportunities_[4] = {}, made_[4] = {}, r_superseded_ = 0;
++  bool r_pending_ = false;
++  // S7.8: whether the frame wait must look at the back buffer: set at the frame head and by every modal callback (a modal pump,
++  // clock or cursor read), cleared by an 'r' present; w_skipped_ counts the waits that did not look
++  bool w_check_ = true;
++  uint64_t w_skipped_ = 0;
++  // S7.8: terrain_log's counters as run left them (-1: no LiveTerrain), for summary_json after the terrain is gone
++  int64_t tlog_calls_ = -1, tlog_max_ = -1, tlog_end_ = -1;
++  bool tlog_kept_ = false;
+ 
+   HostOptions opt_;
+   std::string rec_;
+@@ -187,8 +252,8 @@ uint64_t frame_hash(const std::vector<uint16_t> &px);
+ 
+ // Roadmap S7.5: the app's live path over a corpus trace (main.cpp --live-trace). Every answer comes from the inner host
+ // (portsim::make_trace_live_host: the trace through tick.cpp's own parse_trace / TraceInput), and the presents are made
+-// where LiveSession makes them: at H1's frame wait ('w') and before every modal pump call the host is asked about ('m', 'p'
+-// for a paced loop), when the back buffer changed. Each present row also says how many gfx.snapshotAt snapshots existed
++// where LiveSession makes them: where the frame code runs Window::refreshFull ('r', S7.8), at H1's frame wait ('w') and before
++// every modal pump call the host is asked about ('m', 'p' for a paced loop), when the back buffer changed. Each present row also says how many gfx.snapshotAt snapshots existed
+ // when it was made (`snaps`), so a snapshot taken at a checkpoint can be matched with the present that showed it: the last
+ // present made before the snapshot appeared. No window, no real time: the trace's clock answers.
+ class LiveTracePresenter : public portsim::LiveHost {
+@@ -205,7 +270,7 @@ class LiveTracePresenter : public portsim::LiveHost {
+ 
+   void boot(portsim::Ctx &ctx) override;
+   bool frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) override;
+-  void frame_end(portsim::Ctx &ctx, uint32_t frame) override { inner_->frame_end(ctx, frame); }
++  void frame_end(portsim::Ctx &ctx, uint32_t frame) override;
+   bool clock(portsim::Ctx &ctx, int32_t site, bool body, uint32_t &t) override { return inner_->clock(ctx, site, body, t); }
+   void cursor(portsim::Ctx &ctx, bool modal, int32_t &x, int32_t &y) override { inner_->cursor(ctx, modal, x, y); }
+   uint16_t async_key(portsim::Ctx &ctx, int vk) override { return inner_->async_key(ctx, vk); }
+@@ -213,10 +278,17 @@ class LiveTracePresenter : public portsim::LiveHost {
+   bool exhausted() const override { return inner_->exhausted(); }
+   void pace(portsim::Ctx &ctx, int32_t site) override { inner_->pace(ctx, site); }
+   void wait_point(portsim::Ctx &ctx) override;
++  void present_point(portsim::Ctx &ctx) override;  // S7.8 ('r'); `no_present_point` = the S7.5 points only (control)
+   bool blocking() const override { return inner_->blocking(); }
++  bool no_present_point = false;
++  TerrainLogBound *terrain_log = nullptr;  // S7.8 (U-1643)
++  MemSampler memory;                        // S7.8
++  // S7.8 counters (as LiveSession's): presents by kind 'r' 'w' 'm' 'p', and 'r' presents superseded before a w / m / p point
++  uint64_t made[4] = {}, r_superseded = 0;
+ 
+  private:
+   void present(portsim::Ctx &ctx, char kind);
++  bool r_pending_ = false;
+   std::unique_ptr<portsim::LiveHost> inner_;
+   uint32_t snaps_requested_ = 0;
+   uint32_t frame_ = 0;
+diff --git a/port/app/host.cpp b/port/app/host.cpp
+index 90e169a..2c28283 100644
+--- a/port/app/host.cpp
++++ b/port/app/host.cpp
+@@ -9,6 +9,7 @@
+ #endif
+ #include <windows.h>
+ #include <mmsystem.h>
++#include <psapi.h>
+ 
+ #include <algorithm>
+ #include <chrono>
+@@ -29,6 +30,86 @@ namespace fs = std::filesystem;
+ 
+ namespace portapp {
+ 
++// ------------------------------------------------------------------------------------------------ S7.8: resources (U-1643)
++void TerrainLogBound::frame_end() {
++  if (!live) return;
++  const uint64_t n = live->log().size();
++  max_len = std::max(max_len, n);
++  if (keep || n == 0) return;
++  dropped += n;
++  // LiveTerrain::log() hands out its own vector (terrain_live.h); the app is its only reader and needs no line of it
++  std::vector<std::string> &lines = const_cast<std::vector<std::string> &>(live->log());
++  std::vector<std::string>().swap(lines);
++}
++uint64_t TerrainLogBound::calls() const { return dropped + length(); }
++
++bool RecordStreams::open(const std::string &dir, portsim::LiveOptions &o) {
++  std::error_code ec;
++  fs::create_directories(dir, ec);
++  fh = std::fopen((fs::path(dir) / "framehash.bin").string().c_str(), "wb");
++  if (!fh) return false;
++  o.trace_file = (fs::path(dir) / "trace.trace").string();
++  o.on_record = &RecordStreams::on_record;
++  o.on_record_arg = this;
++  o.keep_records = false;
++  on = true;
++  return true;
++}
++void RecordStreams::close() {
++  if (fh) std::fclose(fh);
++  fh = nullptr;
++}
++void RecordStreams::on_record(void *self, int32_t record, uint32_t t, const uint64_t *hashes, size_t n) {
++  RecordStreams &s = *static_cast<RecordStreams *>(self);
++  if (!s.fh) return;
++  const uint32_t hdr[2] = {t, static_cast<uint32_t>(record)};
++  std::fwrite(hdr, 4, 2, s.fh);
++  std::fwrite(hashes, 8, n, s.fh);
++}
++std::vector<uint8_t> framehash_bytes(const portsim::LiveResult &r) {
++  const size_t nsim = portsim::objects_of("sim").size();
++  std::vector<uint8_t> fh;
++  for (int32_t k = 0; k < r.records && static_cast<size_t>(k) < r.T.size(); ++k) {
++    const uint32_t hdr[2] = {r.T[static_cast<size_t>(k)], static_cast<uint32_t>(k)};
++    fh.insert(fh.end(), reinterpret_cast<const uint8_t *>(hdr), reinterpret_cast<const uint8_t *>(hdr) + 8);
++    const uint8_t *h = reinterpret_cast<const uint8_t *>(&r.hashes[static_cast<size_t>(k) * nsim]);
++    fh.insert(fh.end(), h, h + nsim * 8);
++  }
++  return fh;
++}
++uint64_t TerrainLogBound::length() const { return live ? live->log().size() : 0; }
++
++bool process_memory(MemSample &m) {
++  PROCESS_MEMORY_COUNTERS_EX pmc{};
++  pmc.cb = sizeof pmc;
++  if (!K32GetProcessMemoryInfo(GetCurrentProcess(), reinterpret_cast<PROCESS_MEMORY_COUNTERS *>(&pmc), sizeof pmc)) return false;
++  m.working_set = pmc.WorkingSetSize;
++  m.peak_working_set = pmc.PeakWorkingSetSize;
++  m.private_bytes = pmc.PrivateUsage;
++  return true;
++}
++void MemSampler::sample(uint32_t frame, uint64_t terrain_log) {
++  MemSample m{frame, 0, 0, 0, terrain_log};
++  if (process_memory(m)) samples.push_back(m);
++}
++std::string MemSampler::tsv() const {
++  std::string t = "frame\tworking_set\tpeak_working_set\tprivate_bytes\tterrain_log\n";
++  for (const MemSample &m : samples)
++    t += std::to_string(m.frame) + "\t" + std::to_string(m.working_set) + "\t" + std::to_string(m.peak_working_set) + "\t" +
++         std::to_string(m.private_bytes) + "\t" + std::to_string(m.terrain_log) + "\n";
++  return t;
++}
++std::string MemSampler::json() const {
++  auto one = [](const MemSample &m) {
++    return "{\"frame\":" + std::to_string(m.frame) + ",\"working_set\":" + std::to_string(m.working_set) +
++           ",\"peak_working_set\":" + std::to_string(m.peak_working_set) + ",\"private_bytes\":" + std::to_string(m.private_bytes) +
++           ",\"terrain_log\":" + std::to_string(m.terrain_log) + "}";
++  };
++  if (samples.empty()) return "null";
++  return "{\"start\":" + one(samples.front()) + ",\"end\":" + one(samples.back()) + ",\"samples\":" +
++         std::to_string(samples.size()) + "}";
++}
++
+ uint64_t frame_hash(const std::vector<uint16_t> &px) {
+   return portsim::sgh64(reinterpret_cast<const uint8_t *>(px.data()), px.size() * 2);  // little-endian words = the file bytes
+ }
+@@ -199,13 +280,25 @@ uint32_t LiveSession::now() {
+   return real + clk_off_;
+ }
+ 
++// S7.8: index of a present kind in the counters ('r' 0, 'w' 1, 'm' 2, 'p' 3)
++static int kind_index(char kind) { return kind == 'r' ? 0 : kind == 'w' ? 1 : kind == 'm' ? 2 : 3; }
++
+ void LiveSession::present(portsim::Ctx &ctx, char kind) {
++  const int ki = kind_index(kind);
++  ++opportunities_[ki];
++  const bool was_pending = r_pending_;
++  if (kind != 'r') r_pending_ = false;
+   if (!reg_call(ctx, "gfx.dump", 0)) return;
+   const int64_t n = ctx.files_ptr ? ctx.files().size("$gfx/back.555") : -1;
+   if (n != static_cast<int64_t>(kLogicalW) * kLogicalH * 2) return;
+   std::vector<uint16_t> px(static_cast<size_t>(n / 2));
+   ctx.files().read("$gfx/back.555", 0, px.data(), static_cast<uint64_t>(n));
+   if (px == last_presented_) return;
++  ++made_[ki];
++  if (kind == 'r') {
++    if (was_pending) ++r_superseded_;
++    r_pending_ = true;
++  }
+   const uint32_t mark = marker ? marker->mark() : 0;
+   std::vector<uint16_t> show = px;
+   if (opt_.defect == HostDefect::PresentLate) {  // negative control: the window gets the previous present's frame
+@@ -235,7 +328,8 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
+   t = now();
+   frame_ = frame;
+   frame_now_.store(frame);
+-  records_ = frame;  // the core writes this frame's record (index frame - 1) as it returns
++  records_ = frame;
++  w_check_ = true;  // S7.8: no Window::refreshFull of this frame has presented yet  // the core writes this frame's record (index frame - 1) as it returns
+   const uint32_t va = portsim::state_va(ctx, &portsim::GameState::g_flags);
+   uint32_t flags = ctx.mem.load<uint32_t>(va);
+   const bool set = opt_.flag17_from >= 0 && frame == static_cast<uint32_t>(opt_.flag17_from);
+@@ -252,12 +346,14 @@ bool LiveSession::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t &t) {
+   return true;
+ }
+ 
+-bool LiveSession::clock(portsim::Ctx &, int32_t, bool, uint32_t &t) {
++bool LiveSession::clock(portsim::Ctx &, int32_t, bool body, uint32_t &t) {
++  if (!body) w_check_ = true;  // S7.8: a wall-time loop ran (a modal screen may have drawn through its own module)
+   t = now();
+   return true;
+ }
+ 
+-void LiveSession::cursor(portsim::Ctx &, bool, int32_t &x, int32_t &y) {
++void LiveSession::cursor(portsim::Ctx &, bool modal, int32_t &x, int32_t &y) {
++  if (modal) w_check_ = true;  // S7.8
+   std::lock_guard<std::mutex> lk(mu_);
+   if (opt_.cursor == CursorSource::Message) {
+     x = msg_cursor_.x;
+@@ -280,6 +376,7 @@ uint16_t LiveSession::async_key(portsim::Ctx &, int vk) {
+ 
+ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump &p, std::vector<portsim::Command> &out) {
+   if (stopping()) return portsim::LiveReply::Stop;
++  if (!p.body) w_check_ = true;  // S7.8
+   // one dispatch: the queued commands up to the first release whose press is in the same dispatch (a press and its release
+   // are never dispatched by one pump call: real input has the player's hold between them, and the game's loops read the
+   // button word between pumps; the script host's click / key chunks, live.cpp). Press: onPoint 2, onPoint2 5, onChar 8;
+@@ -395,9 +492,26 @@ portsim::LiveReply LiveSession::pump(portsim::Ctx &ctx, const portsim::LivePump
+   }
+ }
+ 
++// S7.8 (U-1642): the frame code ran Window::refreshFull, where the original's back buffer reaches the window (host.h)
++void LiveSession::present_point(portsim::Ctx &ctx) {
++  if (opt_.defect == HostDefect::NoPresentPoint) return;  // negative control: S7.5's present points only
++  present(ctx, 'r');
++  w_check_ = false;
++}
++
++void LiveSession::frame_end(portsim::Ctx &, uint32_t frame) {
++  if (terrain_log) terrain_log->frame_end();
++  memory.maybe(frame, terrain_log ? terrain_log->length() : 0);
++}
++
+ void LiveSession::wait_point(portsim::Ctx &ctx) {
+-  const uint32_t work = timeGetTime() - head_t_;  // the frame's own work up to its wait (presents excluded)
+-  present(ctx, 'w');
++  // the frame's own work up to its wait (S7.8: the 'r' present at the frame's Window::refreshFull included, as the original's
++  // Display::present is part of its frame)
++  const uint32_t work = timeGetTime() - head_t_;
++  // S7.8: the back buffer changes only at Window::refreshFull (presented there) and inside modal screens; with neither since the
++  // frame's last 'r' present the wait has nothing new to show (LiveTracePresenter checks every wait: 0 'w' presents, 8_notes.md)
++  if (w_check_) present(ctx, 'w');
++  else ++w_skipped_;
+   if (opt_.defect == HostDefect::PacingOff) return;  // negative control: no frame wait
+   WaitClock clk(mu_, cv_, stop_);
+   const uint32_t flags = ctx.mem.load<uint32_t>(portsim::state_va(ctx, &portsim::GameState::g_flags));
+@@ -425,7 +539,17 @@ LiveSession::Result LiveSession::run(portsim::Ctx &ctx) {
+   o.max_records = opt_.max_records;
+   o.scenario = "simgolf_port live";
+   last_pass_ms_ = timeGetTime();
++  RecordStreams streams;  // S7.8 (U-1643)
++  if (!opt_.in_memory) streams.open(rec_, o);
++  memory.sample(0, terrain_log ? terrain_log->length() : 0);
+   r.code = run_guarded(&ctx, this, &o, &r.live, &r.detail);
++  memory.sample(frame_, terrain_log ? terrain_log->length() : 0);
++  if (terrain_log) {
++    tlog_calls_ = static_cast<int64_t>(terrain_log->calls());
++    tlog_max_ = static_cast<int64_t>(terrain_log->max_len);
++    tlog_end_ = static_cast<int64_t>(terrain_log->length());
++    tlog_kept_ = terrain_log->keep;
++  }
+   if (period_) timeEndPeriod(1);
+   if (frames_log_) {
+     std::fclose(frames_log_);
+@@ -435,18 +559,15 @@ LiveSession::Result LiveSession::run(portsim::Ctx &ctx) {
+     std::fclose(waits_log_);
+     waits_log_ = nullptr;
+   }
+-  // the recording
++  // the recording (S7.8: already on disk unless in_memory: trace.trace spilled by the core, framehash.bin per record)
+   const fs::path rec(rec_);
+-  write_file(rec / "trace.trace", r.live.trace.data(), r.live.trace.size());
+   const size_t nsim = portsim::objects_of("sim").size();
+-  std::vector<uint8_t> fh;
+-  for (int32_t k = 0; k < r.live.records; ++k) {
+-    const uint32_t hdr[2] = {r.live.T[static_cast<size_t>(k)], static_cast<uint32_t>(k)};
+-    fh.insert(fh.end(), reinterpret_cast<const uint8_t *>(hdr), reinterpret_cast<const uint8_t *>(hdr) + 8);
+-    const uint8_t *h = reinterpret_cast<const uint8_t *>(&r.live.hashes[static_cast<size_t>(k) * nsim]);
+-    fh.insert(fh.end(), h, h + nsim * 8);
++  if (!streams.on) {
++    write_file(rec / "trace.trace", r.live.trace.data(), r.live.trace.size());
++    const std::vector<uint8_t> fh = framehash_bytes(r.live);
++    write_file(rec / "framehash.bin", fh.data(), fh.size());
+   }
+-  write_file(rec / "framehash.bin", fh.data(), fh.size());
++  streams.close();
+   std::string js = "{\"classes\":[\"sim\"],\"source\":\"simgolf_port live\",\"symbols\":[";
+   for (size_t i = 0; i < nsim; ++i) js += std::string(i ? "," : "") + "\"" + portsim::objects_of("sim")[i]->name + "\"";
+   js += "]}\n";
+@@ -485,6 +606,8 @@ LiveSession::Result LiveSession::run(portsim::Ctx &ctx) {
+     write_file(rec / "body_calls.tsv", s.data(), s.size());
+   }
+   if (!last_presented_.empty()) write_file(rec / "back.555", last_presented_.data(), last_presented_.size() * 2);
++  const std::string mt = memory.tsv();  // S7.8
++  write_file(rec / "memory.tsv", mt.data(), mt.size());
+   void *h;
+   {
+     std::lock_guard<std::mutex> lk(mu_);
+@@ -507,9 +630,20 @@ std::string LiveSession::summary_json(const Result &r) const {
+   s += ",\"paced_calls\":" + std::to_string(l.paced_calls) + ",\"idle_declines\":" + std::to_string(l.idle_declines);
+   s += ",\"inflated\":" + std::to_string(l.inflated) + ",\"marks\":" + std::to_string(l.mark_pos.size());
+   s += ",\"presents\":" + std::to_string(presents_.size()) + ",\"idle_passes\":" + std::to_string(idle_passes_);
++  s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made_[0]) + ",\"w\":" + std::to_string(made_[1]) +
++       ",\"m\":" + std::to_string(made_[2]) + ",\"p\":" + std::to_string(made_[3]) + "}";
++  s += ",\"present_points\":{\"r\":" + std::to_string(opportunities_[0]) + ",\"w\":" + std::to_string(opportunities_[1]) +
++       ",\"m\":" + std::to_string(opportunities_[2]) + ",\"p\":" + std::to_string(opportunities_[3]) + "}";
++  s += ",\"r_superseded\":" + std::to_string(r_superseded_) + ",\"w_skipped\":" + std::to_string(w_skipped_);
++  s += ",\"memory\":" + memory.json();
++  if (tlog_calls_ >= 0)
++    s += ",\"terrain_log\":{\"calls\":" + std::to_string(tlog_calls_) + ",\"max_len\":" + std::to_string(tlog_max_) +
++         ",\"len_end\":" + std::to_string(tlog_end_) + ",\"kept\":" + (tlog_kept_ ? "true" : "false") + "}";
+   s += ",\"waits\":" + std::to_string(waits_) + ",\"wait_ms\":" + std::to_string(wait_ms_total_);
+   s += ",\"deliveries\":" + std::to_string(deliveries_) + ",\"delivered_commands\":" + std::to_string(delivered_cmds_);
+-  s += ",\"stalls\":" + std::to_string(stalls_) + ",\"trace_bytes\":" + std::to_string(l.trace.size()) + "}";
++  s += ",\"stalls\":" + std::to_string(stalls_) + ",\"trace_bytes\":" + std::to_string(l.trace.size() + l.trace_file_bytes) +
++       ",\"trace_streamed\":" + (l.trace_file_bytes ? "true" : "false") + ",\"spilled_events\":" + std::to_string(l.spilled_events) +
++       ",\"held_events\":" + std::to_string(l.held_events) + "}";
+   return s;
+ }
+ 
+@@ -526,12 +660,19 @@ bool LiveTracePresenter::frame_head(portsim::Ctx &ctx, uint32_t frame, uint32_t
+ }
+ 
+ void LiveTracePresenter::present(portsim::Ctx &ctx, char kind) {
++  const bool was_pending = r_pending_;
++  if (kind != 'r') r_pending_ = false;
+   if (!reg_call(ctx, "gfx.dump", 0)) return;
+   const int64_t n = ctx.files_ptr ? ctx.files().size("$gfx/back.555") : -1;
+   if (n != static_cast<int64_t>(kLogicalW) * kLogicalH * 2) return;
+   std::vector<uint16_t> px(static_cast<size_t>(n / 2));
+   ctx.files().read("$gfx/back.555", 0, px.data(), static_cast<uint64_t>(n));
+   if (px == last_) return;
++  ++made[kind_index(kind)];
++  if (kind == 'r') {
++    if (was_pending) ++r_superseded;
++    r_pending_ = true;
++  }
+   uint32_t snaps = 0;
+   while (snaps < snaps_requested_ && ctx.files().size("$gfx/snapshot_" + std::to_string(snaps) + ".555") >= 0) ++snaps;
+   presents_.push_back({static_cast<uint32_t>(presents_.size()), frame_, snaps, kind, frame_hash(px)});
+@@ -544,6 +685,17 @@ portsim::LiveReply LiveTracePresenter::pump(portsim::Ctx &ctx, const portsim::Li
+   return inner_->pump(ctx, p, out);
+ }
+ 
++void LiveTracePresenter::frame_end(portsim::Ctx &ctx, uint32_t frame) {
++  inner_->frame_end(ctx, frame);
++  if (terrain_log) terrain_log->frame_end();
++  memory.maybe(frame, terrain_log ? terrain_log->length() : 0);
++}
++
++void LiveTracePresenter::present_point(portsim::Ctx &ctx) {
++  if (!no_present_point) present(ctx, 'r');
++  inner_->present_point(ctx);
++}
++
+ void LiveTracePresenter::wait_point(portsim::Ctx &ctx) {
+   present(ctx, 'w');
+   inner_->wait_point(ctx);
+diff --git a/port/app/main.cpp b/port/app/main.cpp
+index 71ccc31..0ad0ba2 100644
+--- a/port/app/main.cpp
++++ b/port/app/main.cpp
+@@ -27,7 +27,9 @@
+ // system cursor); --idle-ms / --pass-ms set the idle passes of the menu loops (U-1601); --flag17 a:b (tests) sets g_flags
+ // bit 17 at live frame a and clears it at b as recorded harness writes; --max-records ends the session after n records.
+ // The session ends when the window closes (at the next frame head or pump) or when the game quits (the window closes).
+-// Negative controls: --negctl pacing-off | present-late (host.h HostDefect), recorder:<mode> (live.recorder, live.cpp).
++// Negative controls: --negctl pacing-off | present-late | present-point-off (host.h HostDefect; present-point-off also on
++// --live-trace), terrain-log-keep (S7.8, host.h TerrainLogBound), recorder:<mode> (live.recorder, live.cpp).
++// S7.8: --mem-every <n> samples the process's memory every n live frames into memory.tsv (default 1000; 0 = start and end).
+ //
+ // No original binary is loaded: golf_clean.exe is read as a file for its constants (ExeConstants) and the GameState's base
+ // address (its .data section's address, from the file's PE header); jgld.dll, Terrain.dll, sound.dll and binkw32.dll are
+@@ -234,6 +236,8 @@ struct Options {
+   std::vector<std::pair<std::string, std::string>> puts;
+   int64_t snapshot_at = -1;
+   int32_t max_records = -1;
++  bool in_memory = false;                // S7.8: --in-memory (S7.5's way: records held until the end)
++  int32_t mem_every = 1000;             // S7.8: --mem-every (memory.tsv sampling period in live frames)
+   uint32_t dpi = 0, exit_after = 0;
+   bool activate = true, window = true, selftest = false;
+   // S7.6 live sessions
+@@ -443,6 +447,11 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
+   std::vector<uint16_t> last;
+   int64_t tpasses = -1, tpixels = -1, tcalls = -1;
+   uint32_t snaps_taken = 0;
++  uint64_t made[4] = {}, r_superseded = 0;  // S7.8: presents by kind r w m p, superseded 'r' presents
++  std::string mem_json = "null", mem_tsv;   // S7.8 (U-1643)
++  int64_t tlog_max = -1, tlog_end = -1;
++  RecordStreams streams;  // S7.8: the recording and the frame records written as they are made
++  bool streamed = false;
+   if (err.empty()) {
+     auto ctx = std::make_unique<portsim::Ctx>();
+     ctx->exe_ptr = &ec;
+@@ -462,17 +471,33 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
+       if (!inner) err = "trace host refused: " + why;
+       if (err.empty()) {
+         LiveTracePresenter host(std::move(inner), static_cast<uint32_t>(o.snapshot_list.size()));
++        host.no_present_point = o.negctl == "present-point-off";
++        TerrainLogBound tlog;  // S7.8 (U-1643)
++        tlog.live = terrain.live.get();
++        tlog.keep = o.negctl == "terrain-log-keep";
++        if (tlog.live) host.terrain_log = &tlog;
++        host.memory.every = static_cast<uint32_t>(std::max<int32_t>(0, o.mem_every));
++        host.memory.sample(0, tlog.length());
+         portsim::LiveOptions lopt;
+         lopt.max_records = o.max_records;
+         lopt.scenario = "simgolf_port live-trace";
++        if (!o.in_memory) streamed = streams.open(rec.string(), lopt);  // S7.8 (U-1643)
+         code = live_guarded(ctx.get(), &host, &lopt, &res, &detail);
++        streams.close();
++        host.memory.sample(static_cast<uint32_t>(res.records), tlog.length());
+         presents = host.presents();
+         last = host.last();
+         if (terrain.live) {
+           tpasses = terrain.live->view().passes;
+           tpixels = terrain.live->view().pixels_drawn;
+-          tcalls = static_cast<int64_t>(terrain.live->log().size());
++          tcalls = static_cast<int64_t>(tlog.calls());
++          tlog_max = static_cast<int64_t>(tlog.max_len);
++          tlog_end = static_cast<int64_t>(tlog.length());
+         }
++        for (int k = 0; k < 4; ++k) made[k] = host.made[k];
++        r_superseded = host.r_superseded;
++        mem_json = host.memory.json();
++        mem_tsv = host.memory.tsv();
+       }
+       for (size_t k = 0; k < o.snapshot_list.size(); ++k) {
+         const std::string name = "$gfx/snapshot_" + std::to_string(k) + ".555";
+@@ -500,15 +525,11 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
+   }
+   write_file(rec / "presents.tsv", pt.data(), pt.size());
+   if (!last.empty()) write_file(rec / "back.555", last.data(), last.size() * 2);
+-  const size_t nsim = portsim::objects_of("sim").size();
+-  std::vector<uint8_t> fh;
+-  for (int32_t k = 0; k < res.records; ++k) {
+-    const uint32_t hdr[2] = {res.T[static_cast<size_t>(k)], static_cast<uint32_t>(k)};
+-    fh.insert(fh.end(), reinterpret_cast<const uint8_t *>(hdr), reinterpret_cast<const uint8_t *>(hdr) + 8);
+-    const uint8_t *h = reinterpret_cast<const uint8_t *>(&res.hashes[static_cast<size_t>(k) * nsim]);
+-    fh.insert(fh.end(), h, h + nsim * 8);
++  if (!streamed) {  // S7.8: in memory until now (--in-memory, or the files could not be opened)
++    const std::vector<uint8_t> fh = framehash_bytes(res);
++    write_file(rec / "framehash.bin", fh.data(), fh.size());
++    write_file(rec / "trace.trace", res.trace.data(), res.trace.size());
+   }
+-  write_file(rec / "framehash.bin", fh.data(), fh.size());
+   std::string s = "{\"app\":\"simgolf_port\",\"mode\":\"live-trace\",\"trace\":\"" + jesc(tp) + "\",\"terrain\":\"" + o.terrain + "\"";
+   s += ",\"error\":\"" + jesc(err) + "\",\"code\":" + std::to_string(code) + ",\"detail\":\"" + jesc(detail.substr(0, 2000)) + "\"";
+   s += ",\"stop\":\"" + jesc(res.stop) + "\",\"records\":" + std::to_string(res.records);
+@@ -516,7 +537,15 @@ int run_live_trace(const Options &o, AppFiles &files, const fs::path &rec) {
+   s += ",\"snapshots_requested\":" + std::to_string(o.snapshot_list.size()) + ",\"snapshots_taken\":" + std::to_string(snaps_taken);
+   s += ",\"terrain_passes\":" + std::to_string(tpasses) + ",\"terrain_pixels\":" + std::to_string(tpixels);
+   s += ",\"terrain_calls\":" + std::to_string(tcalls);
++  s += ",\"presents_by_kind\":{\"r\":" + std::to_string(made[0]) + ",\"w\":" + std::to_string(made[1]) + ",\"m\":" +
++       std::to_string(made[2]) + ",\"p\":" + std::to_string(made[3]) + "},\"r_superseded\":" + std::to_string(r_superseded);
++  s += ",\"terrain_log_max\":" + std::to_string(tlog_max) + ",\"terrain_log_end\":" + std::to_string(tlog_end);
++  s += ",\"memory\":" + mem_json;
++  s += ",\"streamed\":" + std::string(streamed ? "true" : "false") + ",\"trace_bytes\":" +
++       std::to_string(res.trace.size() + res.trace_file_bytes) + ",\"spilled_events\":" + std::to_string(res.spilled_events) +
++       ",\"held_events\":" + std::to_string(res.held_events);
+   s += ",\"data_va\":" + std::to_string(data_va) + "}\n";
++  if (!mem_tsv.empty()) write_file(rec / "memory.tsv", mem_tsv.data(), mem_tsv.size());
+   write_file(rec / "session.json", s.data(), s.size());
+   std::printf("DONE live-trace records=%d code=%d stop=%s presents=%zu snapshots=%u\n", res.records, code, res.stop.c_str(),
+               presents.size(), snaps_taken);
+@@ -574,10 +603,16 @@ LiveOut live_run(const Options &o, AppFiles &files, LiveSession &session, const
+   RegNegctl reg_negctl(o.negctl);
+   terrain.attach(o, *ctx);
+   session.terrain_view = terrain.live ? &terrain.live->view() : nullptr;
++  TerrainLogBound tlog;  // S7.8 (U-1643)
++  tlog.live = terrain.live.get();
++  tlog.keep = o.negctl == "terrain-log-keep";
++  session.terrain_log = tlog.live ? &tlog : nullptr;
++  session.memory.every = static_cast<uint32_t>(std::max<int32_t>(0, o.mem_every));
+   lo.res = session.run(*ctx);
+   session.terrain_view = nullptr;
++  session.terrain_log = nullptr;
+   if (terrain.live) {
+-    lo.terrain_calls = static_cast<int64_t>(terrain.live->log().size());
++    lo.terrain_calls = static_cast<int64_t>(tlog.calls());
+     lo.terrain_passes = terrain.live->view().passes;
+   }
+   if (rec_mode) *rec_mode = 0;
+@@ -600,8 +635,10 @@ int run_live_window(const Options &o, AppFiles &files, const fs::path &rec) {
+   ho.max_records = o.max_records;
+   ho.clock_origin = o.clock_origin;
+   ho.keys_from_messages = o.keys == "message";
++  ho.in_memory = o.in_memory;
+   if (o.negctl == "pacing-off") ho.defect = HostDefect::PacingOff;
+   if (o.negctl == "present-late") ho.defect = HostDefect::PresentLate;
++  if (o.negctl == "present-point-off") ho.defect = HostDefect::NoPresentPoint;
+   LiveSession session(ho, rec.string());
+ 
+   PresentDefect pd = o.negctl == "present-stale" ? PresentDefect::Stale
+@@ -978,6 +1015,8 @@ bool parse(int argc, char **argv, Options &o) {
+     else if (a == "--negctl") { if (!val(o.negctl)) return false; }
+     else if (a == "--snapshot-at") { if (!val(v)) return false; o.snapshot_at = std::strtoll(v.c_str(), nullptr, 0); }
+     else if (a == "--max-records") { if (!val(v)) return false; o.max_records = std::atoi(v.c_str()); }
++    else if (a == "--in-memory") o.in_memory = true;
++    else if (a == "--mem-every") { if (!val(v)) return false; o.mem_every = std::atoi(v.c_str()); }
+     else if (a == "--dpi") { if (!val(v)) return false; o.dpi = static_cast<uint32_t>(std::atoi(v.c_str())); }
+     else if (a == "--exit-after") { if (!val(v)) return false; o.exit_after = static_cast<uint32_t>(std::atoi(v.c_str())); }
+     else if (a == "--put") {
+diff --git a/port/test/test_app_ingame.py b/port/test/test_app_ingame.py
+index 22a91fb..7794ed6 100644
+--- a/port/test/test_app_ingame.py
++++ b/port/test/test_app_ingame.py
+@@ -54,11 +54,12 @@ INSTALL = ROOT / "original"
+ W, H = 800, 600
+ QUANTUM = 10                # one waitTicks(1, 0) step (pacing.h)
+ JITTER = 2                  # timeGetTime / Sleep granularity at timeBeginPeriod(1)
++FRAME_KINDS = "rw"          # S7.8: a frame's own presents: at Window::refreshFull ('r', the original's present point) or the H1 wait ('w')
+ SNAP_CHUNK = 60             # gfx.snapshotAt requests per replay run (each snapshot is 960,000 bytes in memory)
+ # the scenarios whose in-game checkpoints the app's live path is judged on (2): the ones framegate passes in game under S3
+ # (5_notes.md section 2 lists the census rows) and two with the course view on screen at every in-game checkpoint
+ LIVE_TRACE_SCENARIOS = ("cov_a_keys", "cov_k1_routing", "sandbox_basic", "course_season")
+-FACTS = ROOT / "log" / "roadmap" / "S7" / "5_app_ingame_facts.json"
++FACTS = ROOT / "log" / "roadmap" / "S7" / "8_app_ingame_facts.json"  # S7.8 (S7.5 wrote 5_app_ingame_facts.json)
+ 
+ 
+ def _sources():
+@@ -378,7 +379,7 @@ def ingame(exe):
+                "work_ms_frames_with_terrain_passes": _stats([w for (_f, n, w) in pf if n > 0]),
+                "frames_with_terrain_passes": sum(1 for (_f, n, _w) in pf if n > 0),
+                "terrain_passes": s.waits[-1][6] if s.waits else 0, "terrain_pixels": s.waits[-1][7] if s.waits else 0,
+-               "kinds": {k: sum(1 for p in s.presents if p["kind"] == k) for k in "mwp"}, "presents": len(s.presents)}
++               "kinds": {k: sum(1 for p in s.presents if p["kind"] == k) for k in "rmwp"}, "presents": len(s.presents)}
+     yield s
+     _save_facts("ingame_session", s.facts)
+     s.cleanup()
+@@ -412,7 +413,7 @@ def test_ingame_presents_equal_the_port_back_buffer(ingame):
+     assert not bad, (len(bad), bad[:10])
+     lo = _ingame_from(ingame)
+     # a present is made only when the back buffer changed: the frames of an idle course view present nothing new
+-    assert sum(1 for p in ingame.presents if p["kind"] == "w" and p["frame"] >= lo) >= 50
++    assert sum(1 for p in ingame.presents if p["kind"] in FRAME_KINDS and p["frame"] >= lo) >= 50
+     by_index = {p["index"]: p["hash"] for p in ingame.presents}
+     assert ingame.shown and not [(i, h) for i, h in ingame.shown if by_index.get(i) != h]
+ 
+@@ -420,7 +421,7 @@ def test_ingame_presents_equal_the_port_back_buffer(ingame):
+ def test_ingame_presents_hold_the_terrain(ingame):
+     """the last in-game present is LiveTerrain's drawing: the replay without LiveTerrain (headless terrain) gives another
+     frame at that position, differing in the course view"""
+-    last_w = [p for p in ingame.presents if p["kind"] == "w"][-1]
++    last_w = [p for p in ingame.presents if p["kind"] in FRAME_KINDS][-1]
+     with_t = replay(ingame, [last_w["pos"]])
+     without = replay(ingame, [last_w["pos"]], terrain=False)
+     assert with_t["snapshots"][0] == last_w["hash"]
+@@ -522,7 +523,7 @@ def test_control_terrain_pass_skipped_in_the_app(exe):
+     replay's back buffer"""
+     s = Session(exe, _short, extra=["--negctl", "reg:gfx.family.terrain=3"])
+     try:
+-        ws = [p for p in s.presents if p["kind"] == "w" and p["frame"] >= _ingame_from(s) - 5]
++        ws = [p for p in s.presents if p["kind"] in FRAME_KINDS and p["frame"] >= _ingame_from(s) - 5]
+         r = replay(s, [p["pos"] for p in ws])
+         assert ws and [p for p, h in zip(ws, r["snapshots"]) if h != p["hash"]]      # RED
+     finally:
+@@ -551,7 +552,7 @@ def test_control_headless_terrain_in_the_app(exe):
+     s = Session(exe, _short, extra=["--terrain", "headless"])
+     try:
+         assert s.waits and all(w[6] == 0 for w in s.waits)      # no terrain drawn
+-        last_w = [p for p in s.presents if p["kind"] == "w"][-1]
++        last_w = [p for p in s.presents if p["kind"] in FRAME_KINDS][-1]
+         assert replay(s, [last_w["pos"]])["snapshots"][0] != last_w["hash"]   # RED
+     finally:
+         s.cleanup()
+diff --git a/port/test/test_app_live.py b/port/test/test_app_live.py
+index 1c88f34..d1c8075 100644
+--- a/port/test/test_app_live.py
++++ b/port/test/test_app_live.py
+@@ -308,9 +308,9 @@ def main(exe):
+         if (s.rec / "waits.tsv").exists() else []
+     facts = {"idle_cpu_pct": round(s.facts.get("idle_cpu", -1), 2), "normal": stats(normal), "slow": stats(slow),
+              "work_ms": stats([w[1] for w in waits]), "wait_end_ms": stats([w[3] for w in waits]),
+-             "kinds": {k: sum(1 for p in s.presents if p["kind"] == k) for k in "mwp"}, "shown": len(s.shown),
++             "kinds": {k: sum(1 for p in s.presents if p["kind"] == k) for k in "rmwp"}, "shown": len(s.shown),
+              "hover_new_presents": [h[2] for h in s.facts.get("hover", [])], "session": s.session["session"]}
+-    out = ROOT / "log" / "roadmap" / "S7" / "6_app_live_facts.json"
++    out = ROOT / "log" / "roadmap" / "S7" / "8_app_live_facts.json"  # S7.8 (S7.6 wrote 6_app_live_facts.json)
+     if out.parent.is_dir():
+         out.write_text(json.dumps(facts, indent=1))
+     s.cleanup()
+@@ -351,7 +351,8 @@ def test_hover_follows_the_cursor(main):
+     assert all(n >= 1 for (_x, _y, n, _h, _img) in hv), [(x, y, n) for x, y, n, _h, _i in hv]
+     hashes = [int(h, 16) for (_x, _y, _n, h, _i) in hv]
+     assert len(set(hashes)) == len(hv)
+-    assert all(next(p["kind"] for p in main.presents if p["hash"] == h) == "m" for h in hashes)
++    # S7.8: the menu loop's pass presents at its Window::refreshFull ('r'), before the pump ('m') finds nothing new
++    assert all(next(p["kind"] for p in main.presents if p["hash"] == h) in ("r", "m") for h in hashes)
+     # the presented frames, rebuilt by a replay of the recording (gfx.snapshotAt at their positions; _hover_frames checks
+     # each snapshot's sgh64 against the present's), against the client pixels captured at each point
+     for (x, y, _n, _h, img), fr in zip(hv, _hover_frames(main, hashes)):
+@@ -391,7 +392,7 @@ def test_shown_frames_are_the_presents(main):
+     bad = [(i, h) for i, h in main.shown if by_index.get(i) != h]
+     assert not bad, bad[:5]
+     kinds = {p["kind"] for p in main.presents}
+-    assert {"m", "w"} <= kinds, kinds
++    assert "r" in kinds and kinds <= set("rwmp"), kinds  # S7.8: 'r' = Window::refreshFull, the original's present point
+ 
+ 
+ def test_pacing_held(main):
+diff --git a/port/test/test_app_present.py b/port/test/test_app_present.py
+new file mode 100644
+index 0000000..d97d085
+--- /dev/null
++++ b/port/test/test_app_present.py
+@@ -0,0 +1,200 @@
++"""Roadmap S7.8 (log/roadmap/S7/8_notes.md): where the Windows app presents (U-1642) and what a long play session keeps in
++memory (U-1643).
++
++U-1642. The original's back buffer reaches its window only through jgld's Display::present (display vtable slot +0xa4, BitBlt of
++the back buffer clipped to a rect), and the exe calls that slot in one place: the end of drawTooltip, which Window::refreshFull
++reaches through Window::refreshRect (the cursor, tooltip and WM_PAINT paths reach it too, none of them drawn by the port). The
++slot P6 calls (+0x9c) is Display::setScale. The port's back buffer changes only inside the Window::refreshFull body of the gfx
++backend, so the app now presents where tick runs that drop ('r', LiveHost::present_point), as the original does, and keeps the
++frame-wait ('w') and modal-pump ('m' / 'p') presents for anything drawn elsewhere. Gate: over four corpus traces no present is
++left for the frame wait (every in-frame change is presented at its refreshFull), every checkpoint snapshot equals the last
++present made before it, and the count of 'r' presents a later 'r' replaced before any w / m / p point (frames S7.5's points
++never showed) is recorded. Control: `--negctl present-point-off` (S7.5's points only) leaves the frame-wait presents.
++
++U-1643. LiveTerrain logs one line per Terrain call and never drops one; the app drops the lines at every frame end
++(host.h TerrainLogBound). The larger growth was the live core's own: every frame record and recorder event held until the
++end; the app now streams them (host.h RecordStreams: framehash.bin per record, trace.trace spilled by the core). Gate:
++course_season_6y over the app's live path (51,092 records), framehash.bin equal to the original's capture byte for byte, the
++terrain log empty at the end, private bytes after frame 2,000 within GROWTH_LIMIT; the control (`--in-memory --negctl
++terrain-log-keep`, S7.5's way) grows past ten times the limit (RED) and gives the same records and the same recording.
++
++Run with SG_APP_EXE / SG_PORTSIM_DLL set to one build (test_app_ingame.py's `exe` fixture). The long runs take about ten
++minutes each and are marked slow.
++"""
++from __future__ import annotations
++
++import hashlib
++import json
++import pathlib
++import shutil
++import subprocess
++import tempfile
++import time
++
++import pytest
++
++from port.test.test_app_ingame import INSTALL, ROOT, _lib, app_live_trace, checkpoint_plan, exe  # noqa: F401 (fixture)
++
++pytestmark = pytest.mark.port
++
++PRESENT_SCENARIOS = ("sandbox_basic", "course_season", "cov_a_keys", "cov_k1_routing")
++LONG = "course_season_6y"
++OUT = ROOT / "log" / "roadmap" / "S7" / "8_long"
++FACTS = ROOT / "log" / "roadmap" / "S7" / "8_present_facts.json"
++
++
++def _facts_update(key: str, value) -> None:
++    if not FACTS.parent.is_dir():
++        return
++    d = json.loads(FACTS.read_text()) if FACTS.exists() else {}
++    d[key] = value
++    FACTS.write_text(json.dumps(d, indent=1))
++
++
++# ------------------------------------------------------------------------------------------------ U-1642: the present point
++@pytest.fixture(scope="module")
++def present_runs(exe):  # noqa: F811
++    return {sc: app_live_trace(exe, sc, checkpoint_plan(sc)) for sc in PRESENT_SCENARIOS}
++
++
++def test_presents_at_the_original_point(present_runs):
++    """every back-buffer change of the frame code is presented at its Window::refreshFull: no frame-wait present is left"""
++    facts = {}
++    for sc, run in present_runs.items():
++        s = run["session"]
++        assert run["rc"] == 0 and s.get("code") == 0, (sc, run["stderr"])
++        k = s["presents_by_kind"]
++        facts[sc] = {"presents_by_kind": k, "r_superseded": s["r_superseded"], "records": s["records"],
++                     "presents": s["presents"]}
++        assert k["r"] > 0, (sc, k)
++        assert k["w"] == 0, (sc, k)
++    _facts_update("present_point", facts)
++
++
++def test_every_checkpoint_is_shown_by_a_present(present_runs):
++    """the replay's snapshot at each checkpoint equals the last present the app made before it"""
++    lib = _lib()
++    for sc, run in present_runs.items():
++        n = 0
++        for k, (c, raw) in enumerate(run["snapshots"].items()):
++            if raw is None:
++                continue
++            before = [p for p in run["presents"] if p["snaps"] <= k]
++            assert before and before[-1]["hash"] == lib.hash_bytes(raw), (sc, c, before[-1]["kind"] if before else None)
++            n += 1
++        assert n >= 1, sc
++
++
++def test_control_present_point_off(exe):  # noqa: F811
++    """S7.5's present points only: the frame's changes are left for the frame wait (RED for the gate above)"""
++    run = app_live_trace(exe, "sandbox_basic", checkpoint_plan("sandbox_basic"), extra=["--negctl", "present-point-off"])
++    k = run["session"]["presents_by_kind"]
++    assert k["r"] == 0 and k["w"] > 0, k     # RED: test_presents_at_the_original_point asserts w == 0
++
++
++# ------------------------------------------------------------------------------------------------ U-1643: a long session
++GROWTH_LIMIT = 4 << 20   # private bytes a bounded run may gain after frame 2,000 (measured: 28,672 over 49,000 frames)
++
++
++def _long_run(exe, variant: str, extra=()) -> dict:  # noqa: F811
++    tmp = pathlib.Path(tempfile.mkdtemp(prefix="s7_8_long_"))
++    try:
++        args = [str(exe), "--install", str(INSTALL), "--data", str(tmp / "data"), "--record-dir", str(tmp / "rec"),
++                "--live-trace", str(ROOT / "port" / "corpus" / "traces" / f"{LONG}.trace"), "--mem-every", "1000"]
++        t0 = time.time()
++        r = subprocess.run(args + list(extra), cwd=str(ROOT), capture_output=True, text=True, timeout=5400)
++        rec = tmp / "rec"
++        out = {"rc": r.returncode, "stderr": r.stderr[-2000:], "seconds": round(time.time() - t0, 1),
++               "session": json.loads((rec / "session.json").read_text()),
++               "memory": [[int(x) for x in l.split("\t")] for l in (rec / "memory.tsv").read_text().splitlines()[1:] if l],
++               "framehash": (rec / "framehash.bin").read_bytes(),
++               "trace_sha": hashlib.sha256((rec / "trace.trace").read_bytes()).hexdigest()}
++        if OUT.parent.is_dir():
++            dst = OUT / variant
++            dst.mkdir(parents=True, exist_ok=True)
++            for f in ("session.json", "memory.tsv"):
++                shutil.copyfile(rec / f, dst / f)
++        return out
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
++
++
++def _trace_run(exe, scenario: str, extra=()) -> tuple[str, str, dict]:  # noqa: F811
++    """one --live-trace run: (sha256 of trace.trace, of framehash.bin, session.json)"""
++    tmp = pathlib.Path(tempfile.mkdtemp(prefix="s7_8_tr_"))
++    try:
++        args = [str(exe), "--install", str(INSTALL), "--data", str(tmp / "data"), "--record-dir", str(tmp / "rec"),
++                "--live-trace", str(ROOT / "port" / "corpus" / "traces" / f"{scenario}.trace")]
++        subprocess.run(args + list(extra), cwd=str(ROOT), capture_output=True, text=True, timeout=3600)
++        rec = tmp / "rec"
++        sha = lambda f: hashlib.sha256((rec / f).read_bytes()).hexdigest() if (rec / f).exists() else ""  # noqa: E731
++        return sha("trace.trace"), sha("framehash.bin"), json.loads((rec / "session.json").read_text())
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
++
++
++@pytest.mark.slow
++def test_spilled_recording_equals_the_in_memory_one(exe):  # noqa: F811
++    """course_season: the recording spilled to disk as the session goes (45,801 events in 4,096-event spills) is the in-memory
++    recording byte for byte, and so is framehash.bin; the control (live.recorder 9: each spill drops its last event) is RED"""
++    a = _trace_run(exe, "course_season")
++    b = _trace_run(exe, "course_season", ["--in-memory"])
++    c = _trace_run(exe, "course_season", ["--negctl", "reg:live.recorder=9"])
++    assert a[2]["streamed"] and not b[2]["streamed"] and a[2]["spilled_events"] > 0, (a[2], b[2])
++    assert a[0] == b[0] and a[1] == b[1]
++    assert c[0] != b[0] and c[1] == b[1]      # RED: the spilled recording lost events (the frame records are the core's)
++
++
++@pytest.fixture(scope="module")
++def long_bound(exe):  # noqa: F811
++    return _long_run(exe, "bound")
++
++
++@pytest.fixture(scope="module")
++def long_keep(exe):  # noqa: F811
++    """the control: S7.5's way (records and recording held until the end) and every terrain log line kept"""
++    return _long_run(exe, "keep", ["--in-memory", "--negctl", "terrain-log-keep"])
++
++
++def _growth(mem: list[list[int]]) -> int:
++    """private bytes at the end minus at the first sample from frame 2,000 on (the world is loaded by then)"""
++    after = [m for m in mem if m[0] >= 2000]
++    return after[-1][3] - after[0][3]
++
++
++@pytest.mark.slow
++def test_long_session_equals_the_capture(long_bound):
++    """>= 20,000 frames over the app's live path: framehash.bin (every record's T and 203 sim hashes) is the original's
++    capture byte for byte"""
++    ref = (ROOT / "log" / "p2" / "p24" / LONG / "c_a" / "framehash.bin").read_bytes()
++    assert long_bound["rc"] == 0 and long_bound["session"]["code"] == 0, long_bound["stderr"]
++    assert long_bound["session"]["records"] >= 20_000 and long_bound["session"]["streamed"]
++    assert long_bound["framehash"] == ref
++
++
++@pytest.mark.slow
++def test_long_session_terrain_log_bounded(long_bound):
++    s = long_bound["session"]
++    assert s["terrain_log_end"] == 0, s
++    assert all(m[4] == 0 for m in long_bound["memory"]), long_bound["memory"][:3]
++    assert s["terrain_log_max"] <= s["terrain_calls"], s
++
++
++@pytest.mark.slow
++def test_long_session_memory_bounded(long_bound, long_keep):
++    """the streaming run's private bytes stay flat after the world load; the control's grow with every frame (RED); both runs
++    give the same frame records and the same recording"""
++    gb, gk = _growth(long_bound["memory"]), _growth(long_keep["memory"])
++    ks = long_keep["session"]
++    _facts_update("long_memory", {"growth_bound": gb, "growth_keep": gk, "records": long_bound["session"]["records"],
++                                  "bound_seconds": long_bound["seconds"], "keep_seconds": long_keep["seconds"],
++                                  "bound_memory": long_bound["session"]["memory"], "keep_memory": ks["memory"],
++                                  "terrain_calls": long_bound["session"]["terrain_calls"],
++                                  "keep_terrain_log_end": ks["terrain_log_end"], "trace_bytes": long_bound["session"]["trace_bytes"],
++                                  "spilled_events": long_bound["session"]["spilled_events"]})
++    assert gb < GROWTH_LIMIT, gb
++    assert gk > 10 * GROWTH_LIMIT, gk                                    # RED for the bound above
++    assert ks["terrain_log_end"] == ks["terrain_calls"], ks              # the control kept every line
++    assert long_bound["framehash"] == long_keep["framehash"]
++    assert long_bound["trace_sha"] == long_keep["trace_sha"]             # the spilled recording = the in-memory one
++

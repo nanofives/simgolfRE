@@ -1,0 +1,14 @@
+{
+ "app": "hole",
+ "label": "x5",
+ "masked": [
+  "g_frameMs"
+ ],
+ "records_differing_per_object": {
+  "g_frameMs": 339
+ },
+ "app_records": 340,
+ "orig_records": 347,
+ "same_records": 340,
+ "first": null
+}

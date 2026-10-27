@@ -1,0 +1,16 @@
+== I10 run 1
+FAILED port/test/test_fttext.py::test_font_metrics_equal_gdi_and_the_originals
+FAILED port/test/test_fttext.py::test_font_metrics_equal_on_win32 - Assertion...
+2 failed, 20 deselected in 3.80s
+== I10 run 2
+FAILED port/test/test_fttext.py::test_font_metrics_equal_gdi_and_the_originals
+FAILED port/test/test_fttext.py::test_font_metrics_equal_on_win32 - Assertion...
+2 failed, 20 deselected in 3.72s
+== I7b run 1
+FAILED port/test/test_fttext.py::test_font_metrics_equal_gdi_and_the_originals
+FAILED port/test/test_fttext.py::test_font_metrics_equal_on_win32 - Assertion...
+2 failed, 20 deselected in 3.71s
+== I7b run 2
+FAILED port/test/test_fttext.py::test_font_metrics_equal_gdi_and_the_originals
+FAILED port/test/test_fttext.py::test_font_metrics_equal_on_win32 - Assertion...
+2 failed, 20 deselected in 3.69s

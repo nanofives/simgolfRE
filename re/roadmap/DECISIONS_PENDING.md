@@ -9,6 +9,9 @@ Open questions the orchestrator batches (AskUserQuestion, four per call). Each h
 
 ## Answered
 
+- **G9, merge order and the play test, 2026-10-27: S3 before S4, no preview build.** The S3 resubmission (I12) merges before the
+  S4 audio resubmission (I11) so the play test (G8) comes sooner; Mariano plays only the gated, merged build (no ungated preview of S7 + S3).
+
 - **D1, phase 8 (S7), 2026-10-24: yes, Windows first.** A playable host joins the roadmap as phase 8: a Win32 window, the GDI text
   provider, the port's software rasteriser for the terrain. A non-Windows host comes later, after S4 and S5.
 - **D2, Bink movies (S8), 2026-10-24: skip path for now.** S8 documents and tests a skip path (the tests already boot with skip_intro)

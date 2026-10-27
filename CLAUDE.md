@@ -1650,6 +1650,86 @@ differ by 1,735 to 15,347 px each, all inside label boxes. The simulation reads 
 Windows, FreeType for hosts without GDI, judged by these numbers). Process lessons: on claude2 `cmake` is not an allowed command
 (`~/bin/py` is), so children run every configure and build from a Python script; two S5.3 workers stalled on unanswered permission
 prompts before that rule was in their brief.
+Roadmap S7, the Windows host, wave 1 (2026-10-24/25, log/roadmap/S7, plan re/roadmap/S7_steps.tsv, U-1600..U-1664): `port/app` builds
+`simgolf_port.exe` (port/CMakeLists.txt add_subdirectory(app)), which plays from the user's install (`--install <dir>`, saves under its
+own `--data` dir, never in the install; no original binary loaded). LIVE CORE (module `live`, port/src/sim/live.cpp, live.h; tick.cpp
+asks a LiveHost through tk::LiveIo, inert in trace runs): the frame loop takes the frame-head clock, every clock read, pump batches,
+cursor reads and GetAsyncKeyState from a host on demand and records every answer as a schema v1 trace plus framehash.bin; a host
+that answers from a corpus trace equals sg_run_boot in 68 of 70 boot scenarios plus 2 NO_FRAMES, x64 = Win32, 0 replay
+differences; idle passes of unpaced modal loops (title menu hover) are recorded so the replay takes the same passes (U-1601);
+S1's world-load pump and focus-child keys are handled (U-1604). INPUT (port/app/input_map.*): Windows messages to root-handler
+commands, cursor and async-key answers, 0 mismatches over all 26,861 MSG records of the 67 corpus traces. APP (host.*, window.*,
+present.*, pacing.*, saves.*): sim thread above normal priority, frame wait in real time (355 periods 87..100 ms, median 93; 125..135
+with g_flags bit 17), the gfx back buffer presented at every frame wait and modal pump (title menu 0 px against the original's
+sandbox_basic `menu` checkpoint at 96, 144 and 240 dpi), idle on the title menu 3.1 % of one core, every session recorded and
+replayed through sg_run_boot equal in every record (422 / 422). Tests: port/test/test_live.py (32 x64, 32 Win32), test_app_live.py
+13, test_app_shell.py 18, test_app_input.py 16. Open: U-1610..U-1619 (double click, wheel, Alt, modifiers, chars above 0x7f
+unmeasured), U-1620..U-1626, U-1650 (bio EditBox keys from the real keyboard), U-1660, U-1662, U-1663.
+Roadmap S7.4, app recordings in the boot gate (2026-10-25, notes log/roadmap/S7/4_notes.md, U-1630..U-1637; U-1611 /
+U-1612 resolved):
+- `port/test/app_replay.py record <hole|saveload|report>` drives the app with posted messages only. The app runs with
+  `--cursor message --keys message --clock-origin 0x100000`, and the session goes into port/corpus/app/<name>/
+  (local), together with posted.json and the app's new dispatch log (input_dispatch.tsv, dispatches.tsv, body_calls.tsv).
+- `app_replay.py gate [--backend win32]` runs sg_run_boot over each recording against its own framehash.bin.
+  hole 340, saveload 266 and report 205 records PASS on x64 and Win32 (port/test/test_app_replay.py, 14 tests).
+- The recordings hold:
+  - Shift / Ctrl clicks, a double click, the wheel, Alt+X and Shift+A;
+  - one hole built and opened;
+  - a save the `S` key wrote into the app's overlay, loaded back through the browser (g_date returns to the save's value);
+  - the F1..F4 report screens (modal).
+- CROSS-CHECK (log/roadmap/S7/4_xcheck.py, instance s7_4): the app's raw input was posted into the original at the same
+  pump calls, by frame-head count:
+  - P6 = the `call pumpInput483bd0` at 0x004199e0;
+  - H1 = the `call pumpMessages` at 0x0041c0cd;
+  - the cursor reads were answered from the app's CURSOR records;
+  - the virtual keys were set as the messages were posted.
+  Result: all 340 records equal the original's in every sim object but g_frameMs, which stores a timeGetTime value
+  (U-1637). All 59 root-handler calls are identical in handler, arguments and frame.
+- The cross-check found three things, fixed:
+  - the translator dropped uiKeyEvent's modifier bits;
+  - the translator dropped the double click's rootWin_onPress1b;
+  - the host let H1 take several messages or a key. H1 takes ONE mouse-range message: pumpMessages drains WM_MOUSEMOVE,
+    then display slot +0x13c (jgld 0x1006b7e0) makes one PeekMessage(0x200..0x20a). P6 loops PeekMessage(0, 0) until
+    the queue is empty.
+- Control: the tee click moved by 64 px in the original's input diverges at record 185, the head right after that click.
+Roadmap S7.5, the in-game frame in the app (2026-10-25, notes log/roadmap/S7/5_notes.md, U-1640..U-1643): simgolf_port.exe now
+attaches a LiveTerrain (`--terrain live`, the default; `headless` = tick.cpp's stand-in) after gfx.attach, as framegate does, so
+the course is drawn into the gfx root surface and presented with the 2D bodies; waits.tsv carries the cumulative terrain passes /
+pixels. `--live-trace <scenario>` runs the live core over a corpus trace with a LiveTracePresenter (presents where a session
+makes them) and gfx.snapshotAt at `--snapshots`; `--negctl reg:<name>=<mode>` sets any port negctl switch. Gate
+(port/test/test_app_ingame.py, 12 passed + 1 xfail): an in-game session driven by posted messages (Monterey, seven camera moves,
+four zoom keys, a hole built) has every present (84) equal to the replay's back buffer with LiveTerrain at the same recorded
+position, and its view differs from a headless replay in 358,874 px; over cov_a_keys, cov_k1_routing, sandbox_basic and
+course_season every checkpoint (49, 46 in game) produced on the app's live path equals framegate's frame in every pixel and the
+present that showed it, and the three in-game rows framegate passes (k_worldmap, k_dlg_L, routing) pass; 368 in-game frames hold
+87..98 ms (median 93). Open: frames with two terrain passes (zoom) work 144..186 ms (U-1640); HUD panels, toolbar
+and sprites are not drawn at this base (U-1641). Controls RED: terrain pass skipped in the app and on the live path, pacing off,
+headless terrain. S7.6's test_app_live replays now attach LiveTerrain (5_test_app_live.patch).
+Roadmap S7.8, the app's present point and a long session's memory (2026-10-25, notes log/roadmap/S7/8_notes.md, merge 8_merge.md,
+U-1670..U-1673; U-1642 / U-1643 resolved): the original's back buffer reaches its window only through jgld Display::present (vtable
+slot +0xa4), which the exe calls once, at the end of drawTooltip 0x0047cdb0; Window::refreshFull reaches it through refreshRect (H1
+0x0041e29b in an ordinary frame), the jgld Listener's paint / mouse-move slots and the tooltip through the other callers. P6's
+[[0x0083ad50]+0x9c] is Display::setScale(1, 1, 1), not a present (mainLoop_structure.md row P6 corrected). tick.cpp calls
+LiveIo::present_point after the Window::refreshFull drop of a live run, and the app presents there ('r'): 0 frame-wait presents over
+four traces and the in-game session. U-1643's terrain log was small after the world load (25,404 of 25,671 calls in it over
+course_season_6y); the growth was the live core's in-memory records (3.3 KB per frame). LiveOptions::trace_file spills the recording
+to disk every 4,096 events (byte-identical to the in-memory one) and on_record hands each frame record to the app, which writes
+framehash.bin as it goes: over course_season_6y's 51,092 records private bytes stay flat after frame 2,000 and framehash.bin equals
+the original's capture byte for byte. `--in-memory` restores the old way.
+Roadmap S7.9, S7 waves 1-3 merged as one (2026-10-26, notes log/roadmap/S7/9_notes.md, merge 9_merge.md / 9_apply.py, U-1680..U-1685):
+rebased on 78ffb06d with I7's three refusals fixed. (1) cov_a_keys no longer takes the live core's stuck delivery (U-1680); the test
+now runs ui_tour / ui_tour_v (4 inflated dispatches each) and judges the call through TraceInput's count of deliveries at another cursor
+count, which must equal the live run's inflated count: live.recorder control 10 (the CURSOR record left out) is RED there and blind in
+every frame record and drawing call. (2) tick.cpp's HeadlessTerrain kept its 16 MB arena per freed context in a process-wide map keyed
+by the Ctx address, so one Win32 runner grew up to 48 MB per equivalence scenario and died near 2 GB: ~sg_ctx now calls
+release_headless_terrain (one runner stays at 4-5 MB over 8 scenarios, 52 -> 117 MB without it), and test_equivalence_all runs one
+process per scenario (live.py run_parallel). (3) port/CMakeLists.txt adds the app before S5's FreeType block, which copies freetype.dll
+beside simgolf_port (the x64 app had loaded a JDK's from PATH). Since S2.7 the boot's loading screens and the module-drawn modal screens
+refresh outside TkBase::call, so the app presented none of them: the present point is now a refresh hook the gfx backend calls at the end
+of every Window::refreshFull body (gfx_set_refresh_hook, set by the live core for its run only; U-1670 resolved); the boot's title and
+first loading screen share one recording position, so the app tests judge the last present at each position (U-1685). Gates: port suite x64 75 / 75 files, Win32 the known 8 files / 20 failures, test_equivalence_all x64 + Win32,
+live equivalence 68 PASS + 2 NO_FRAMES x64 = Win32, app replay 3 / 3, segments 205 / 205 and boot 66 / 2 / 2 on both backends with 0 rows
+differing from 78ffb06d, repo static 614 / 2.
 Function bodies are not always contiguous (86 functions before b1; mainLoop 0x40f5c0 is now one body ending at 0x421615).
 `re/functions_ghidra*.tsv` carry a `ranges` column (ListFunctions.java) and xref.py / c2_note.py disassemble every
 range; before that, calls in the far ranges were missed (clearMatching looked uncalled). After the index changes, run

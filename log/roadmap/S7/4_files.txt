@@ -1,0 +1,46 @@
+port/test/app_replay.py
+port/test/test_app_replay.py
+port/app/host.h
+port/app/host.cpp
+port/app/main.cpp
+port/corpus/app/hole/ (local, gitignored)
+port/corpus/app/saveload/ (local, gitignored)
+port/corpus/app/report/ (local, gitignored)
+instances/s7_4/ (game instance; winmm.dll = instances/p24's 381ed2b2)
+log/c3/alt/refs/cov_r_s74x/ (cross-check runs x1 x2 x3 x5 x6_tee, schedule.json)
+log/roadmap/S7/4_mirror.py
+log/roadmap/S7/4_window.patch
+log/roadmap/S7/4_input_map.patch
+log/roadmap/S7/4_xcheck.py
+log/roadmap/S7/4_notes.md
+log/roadmap/S7/4_merge.md
+log/roadmap/S7/4_uncertain.tsv
+log/roadmap/S7/4_files.txt
+log/roadmap/S7/4_app_live_facts.json
+log/roadmap/S7/6_app_live_facts.json (rewritten by test_app_live.py's run, as every run of that test does)
+log/roadmap/S7/4_build_x64.log
+log/roadmap/S7/4_build_w32.log
+log/roadmap/S7/4_sync.log
+log/roadmap/S7/4_patch_check.log
+log/roadmap/S7/4_record_hole.log
+log/roadmap/S7/4_record_saveload.log
+log/roadmap/S7/4_record_report.log
+log/roadmap/S7/4_gate_x64.tsv
+log/roadmap/S7/4_gate_x64.log
+log/roadmap/S7/4_gate_w32.tsv
+log/roadmap/S7/4_gate_w32.log
+log/roadmap/S7/4_test_app_replay.log
+log/roadmap/S7/4_test_app_live.log
+log/roadmap/S7/4_test_app_shell.log
+log/roadmap/S7/4_test_app_input.log
+log/roadmap/S7/4_test_static.log
+log/roadmap/S7/4_test_static_repo.log
+log/roadmap/S7/4_xcheck_x1.log
+log/roadmap/S7/4_xcheck_x2.log
+log/roadmap/S7/4_xcheck_x3.log
+log/roadmap/S7/4_xcheck_x5.log
+log/roadmap/S7/4_xcheck_x5_compare.json
+log/roadmap/S7/4_xcheck_x5_handlers.json
+log/roadmap/S7/4_xcheck_x6.log
+log/roadmap/S7/4_xcheck_x6_compare.json
+port/build/S7_4_head/ (private mirror)

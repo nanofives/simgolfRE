@@ -19,6 +19,7 @@
 #include "portsim/sim/terrain_render.h"
 #include "portsim/sim/terrain_live.h"
 #include "portsim/sim/terrain_state.h"
+#include "portsim/sim/live.h"
 #include "portsim/sim/tick.h"
 
 #if defined(_MSC_VER)
@@ -45,7 +46,9 @@ struct sg_ctx {
   portsim::TerrainGlobals gl_globals;                // phase 5: the Terrain.dll statics of the render path (sg_gl_set_globals)
   std::unique_ptr<portsim::TerrainDll> terrain_dll;  // phase 5: the state side driven call by call (sg_ts_call)
   std::unique_ptr<portsim::LiveTerrain> live;        // phase 5: the TerrainApi over that state (sg_ts_live_attach)
+  portsim::LiveResult live_res;                      // roadmap S7.1: the last live run (sg_live_*)
   sg_ctx() { ctx.files_ptr = &mem_files; }
+  ~sg_ctx() { portsim::release_headless_terrain(ctx); }  // roadmap S7.9 (U-1681): the headless Terrain blocks of this context
 };
 
 namespace {
@@ -273,6 +276,210 @@ int sg_run_boot(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, int32_t max
 }
 
 const char *sg_run_frames_detail(sg_ctx *ctx) { return ctx ? ctx->run_detail.c_str() : ""; }
+
+// ---- live runs (roadmap S7.1, portsim/sim/live.h)
+}  // extern "C"
+namespace {
+class CHost : public portsim::LiveHost {
+ public:
+  explicit CHost(const sg_live_host &h) : h_(h) {}
+  bool frame_head(portsim::Ctx &, uint32_t frame, uint32_t &t) override {
+    return h_.frame_head && h_.frame_head(h_.user, frame, &t) != 0;
+  }
+  bool clock(portsim::Ctx &, int32_t site, bool body, uint32_t &t) override {
+    if (!h_.clock) return false;
+    const bool ok = h_.clock(h_.user, site, body ? 1 : 0, &t) != 0;
+    if (!ok && body) throw portsim::MissingResource{"live host: no value for the frame body's clock read"};
+    return ok;
+  }
+  void cursor(portsim::Ctx &, bool modal, int32_t &x, int32_t &y) override {
+    if (h_.cursor) h_.cursor(h_.user, modal ? 1 : 0, &x, &y);
+  }
+  uint16_t async_key(portsim::Ctx &, int vk) override {
+    return h_.async_key ? static_cast<uint16_t>(h_.async_key(h_.user, vk)) : 0;
+  }
+  portsim::LiveReply pump(portsim::Ctx &, const portsim::LivePump &p, std::vector<portsim::Command> &out) override {
+    if (!h_.pump) return portsim::LiveReply::Stop;
+    sg_live_pump cp{static_cast<uint32_t>(p.kind), p.body ? 1 : 0, p.may_deliver ? 1 : 0, p.must_deliver ? 1 : 0,
+                    p.frame, p.cursor_reads, p.pace_site, p.calls, p.idle_ok ? 1 : 0};
+    sg_live_cmd buf[64];
+    int32_t n = 0;
+    const int32_t r = h_.pump(h_.user, &cp, buf, 64, &n);
+    if (r == 2) return portsim::LiveReply::Stop;
+    if (r != 1) return portsim::LiveReply::Decline;
+    for (int32_t i = 0; i < n && i < 64; ++i) {
+      portsim::Command c;
+      c.kind = portsim::CmdKind::RootHandler;
+      c.handler = buf[i].handler;
+      c.a0 = buf[i].a0;
+      c.a1 = buf[i].a1;
+      c.async_ctrl = buf[i].async_ctrl;
+      c.async_shift = buf[i].async_shift;
+      c.t = buf[i].t;
+      out.push_back(c);
+    }
+    return portsim::LiveReply::Deliver;
+  }
+
+ private:
+  sg_live_host h_;
+};
+
+int live_run_cpp(sg_ctx *c, portsim::LiveHost &host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
+                 uint64_t *out_hashes, int32_t *records) {
+  c->live_res = portsim::LiveResult();
+  c->run_detail.clear();
+  portsim::LiveOptions opt;
+  opt.max_records = max_records;
+  opt.frame_ra = frame_ra;
+  int code = SG_OK;
+  try {
+    portsim::run_live(c->ctx, host, opt, c->live_res);
+  } catch (const portsim::Fault &f) {
+    c->run_detail = "fault at va " + std::to_string(f.va);
+    code = SG_E_FAULT;
+  } catch (const portsim::DivideError &) {
+    c->run_detail = "divide error";
+    code = SG_E_DIVIDE;
+  } catch (const portsim::NoReturn &e) {
+    c->run_detail = std::string("no return: ") + (e.where ? e.where : "?");
+    code = SG_E_NO_RETURN;
+  } catch (const portsim::MissingResource &e) {
+    c->run_detail = std::string("missing: ") + (e.what ? e.what : "?");
+    code = SG_E_NO_RESOURCE;
+  } catch (...) {
+    c->run_detail = "exception";
+    code = SG_E_EXCEPTION;
+  }
+  const portsim::LiveResult &r = c->live_res;
+  c->run_detail += (c->run_detail.empty() ? "" : "; ") + std::string("live: ") + r.stop + ", " +
+                   std::to_string(r.records) + " records, " + std::to_string(r.dispatches) + " dispatches, " +
+                   std::to_string(r.violations) + " violations" +
+                   (r.first_violation >= 0
+                        ? " (first at record " + std::to_string(r.first_violation) + ": " + r.first_violation_what + ")"
+                        : std::string());
+  const int32_t n = r.records;
+  const size_t nsim = portsim::objects_of("sim").size();
+  *records = max_records >= 0 ? std::min(n, max_records) : n;
+  if (out_T && out_hashes && max_records > 0)  // caller buffers of max_records; else sg_live_records
+    for (int32_t k = 0; k < *records; ++k) {
+      const size_t i = static_cast<size_t>(k);
+      out_T[k] = r.T[i];
+      for (size_t j = 0; j < nsim; ++j) out_hashes[i * nsim + j] = r.hashes[i * nsim + j];
+    }
+  return code;
+}
+
+#if defined(_MSC_VER)
+int live_run_guarded(sg_ctx *c, portsim::LiveHost &host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
+                     uint64_t *out_hashes, int32_t *records) {
+  __try {
+    return live_run_cpp(c, host, frame_ra, max_records, out_T, out_hashes, records);
+  } __except (GetExceptionCode() == EXCEPTION_INT_DIVIDE_BY_ZERO || GetExceptionCode() == EXCEPTION_INT_OVERFLOW
+                  ? EXCEPTION_EXECUTE_HANDLER
+                  : EXCEPTION_CONTINUE_SEARCH) {
+    return SG_E_DIVIDE;
+  }
+}
+#else
+int live_run_guarded(sg_ctx *c, portsim::LiveHost &host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
+                     uint64_t *out_hashes, int32_t *records) {
+  return live_run_cpp(c, host, frame_ra, max_records, out_T, out_hashes, records);
+}
+#endif
+
+std::unique_ptr<portsim::LiveHost> builtin_host(sg_ctx *ctx, int32_t kind, const uint8_t *data, size_t n, std::string &why) {
+  if (kind == 1) return portsim::make_trace_live_host(ctx->ctx, data, n, &why);
+  if (kind == 2) return portsim::make_script_live_host(std::string(reinterpret_cast<const char *>(data), n), &why);
+  if (kind == 3) {  // roadmap S7.7: u32 trace length, the trace, then the script text (portsim::make_prefix_live_host)
+    uint32_t tn = 0;
+    if (n >= 4) std::memcpy(&tn, data, 4);
+    if (n < 4 || tn > n - 4) {
+      why = "kind 3: bad trace length";
+      return nullptr;
+    }
+    return portsim::make_prefix_live_host(ctx->ctx, data + 4, tn,
+                                          std::string(reinterpret_cast<const char *>(data + 4 + tn), n - 4 - tn), &why);
+  }
+  why = "unknown live host kind";
+  return nullptr;
+}
+}  // namespace
+extern "C" {
+
+int sg_live_run(sg_ctx *ctx, const sg_live_host *host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
+                uint64_t *out_hashes, int32_t *records) {
+  if (!ctx || !host || !records || (max_records > 0 && (!out_T || !out_hashes))) return SG_E_ARG;
+  *records = 0;
+  CHost h(*host);
+  return live_run_guarded(ctx, h, frame_ra, max_records, out_T, out_hashes, records);
+}
+
+int sg_live_run_builtin(sg_ctx *ctx, int32_t kind, const uint8_t *data, size_t n, uint32_t frame_ra, int32_t max_records,
+                        uint32_t *out_T, uint64_t *out_hashes, int32_t *records) {
+  if (!ctx || !records || !data || (max_records > 0 && (!out_T || !out_hashes))) return SG_E_ARG;
+  *records = 0;
+  std::string why;
+  std::unique_ptr<portsim::LiveHost> h;
+  try {
+    h = builtin_host(ctx, kind, data, n, why);
+  } catch (...) {
+    return SG_E_EXCEPTION;
+  }
+  if (!h) {
+    ctx->run_detail = why;
+    return SG_E_ARG;
+  }
+  return live_run_guarded(ctx, *h, frame_ra, max_records, out_T, out_hashes, records);
+}
+
+int sg_live_recording(sg_ctx *ctx, uint8_t *buf, size_t cap, size_t *len) {
+  if (!ctx || !len) return SG_E_ARG;
+  const std::vector<uint8_t> &t = ctx->live_res.trace;
+  *len = t.size();
+  if (buf && cap && !t.empty()) std::memcpy(buf, t.data(), std::min(cap, t.size()));
+  return SG_OK;
+}
+
+int32_t sg_live_records(sg_ctx *ctx, int32_t first, int32_t cap, uint32_t *out_T, uint64_t *out_hashes) {
+  if (!ctx || first < 0 || cap < 0) return SG_E_ARG;
+  const portsim::LiveResult &r = ctx->live_res;
+  const size_t nsim = portsim::objects_of("sim").size();
+  int32_t k = 0;
+  for (; k < cap && first + k < r.records; ++k) {
+    const size_t i = static_cast<size_t>(first + k);
+    if (out_T) out_T[k] = r.T[i];
+    if (out_hashes)
+      for (size_t j = 0; j < nsim; ++j) out_hashes[static_cast<size_t>(k) * nsim + j] = r.hashes[i * nsim + j];
+  }
+  return k;
+}
+
+int sg_live_stats(sg_ctx *ctx, int64_t out[12]) {
+  if (!ctx || !out) return SG_E_ARG;
+  const portsim::LiveResult &r = ctx->live_res;
+  const int64_t v[12] = {static_cast<int64_t>(r.violations), r.first_violation, static_cast<int64_t>(r.asks),
+                        static_cast<int64_t>(r.reasks), static_cast<int64_t>(r.clocks), static_cast<int64_t>(r.cursors),
+                        static_cast<int64_t>(r.asyncs), static_cast<int64_t>(r.dispatches), static_cast<int64_t>(r.writes),
+                        static_cast<int64_t>(r.body_calls), static_cast<int64_t>(r.modal_calls),
+                        static_cast<int64_t>(r.paced_calls)};
+  for (int i = 0; i < 12; ++i) out[i] = v[i];
+  return SG_OK;
+}
+
+int sg_live_stats_ext(sg_ctx *ctx, int64_t out[2]) {
+  if (!ctx || !out) return SG_E_ARG;
+  out[0] = static_cast<int64_t>(ctx->live_res.idle_declines);
+  out[1] = static_cast<int64_t>(ctx->live_res.inflated);
+  return SG_OK;
+}
+
+int32_t sg_live_marks(sg_ctx *ctx, uint32_t *out, int32_t cap) {
+  if (!ctx || cap < 0) return SG_E_ARG;
+  const std::vector<uint32_t> &m = ctx->live_res.mark_pos;
+  for (int32_t k = 0; out && k < cap && static_cast<size_t>(k) < m.size(); ++k) out[k] = m[static_cast<size_t>(k)];
+  return static_cast<int32_t>(m.size());
+}
 
 int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset) {
   std::string out;

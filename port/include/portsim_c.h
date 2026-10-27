@@ -123,6 +123,63 @@ SG_API const char *sg_run_frames_detail(sg_ctx *ctx);
  * the text length (the text is cut at cap - 1); reset != 0 clears the counts */
 SG_API int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset);
 
+/* ---- live runs (roadmap S7.1, portsim/sim/live.h) ----
+ * sg_run_boot with the outside values asked on demand from a host instead of read from a trace: the frame-head clock, every
+ * clock read the port makes, every cursor and GetAsyncKeyState read, every pump call. The sim runs on the calling thread
+ * and blocks inside the callbacks. Every answer is recorded as a schema v1 trace (sg_live_recording) that sg_run_boot
+ * replays to the same frame records. out_T / out_hashes / records as sg_run_boot (cap = max_records; max_records < 0:
+ * no limit, then out_T / out_hashes may be NULL and the records are read with sg_live_records). frame_ra: the recording's
+ * meta frame_ra (each clock site is written as frame_ra + site; 0 = the sites themselves). sg_run_frames_detail says why
+ * the session ended. */
+typedef struct sg_live_pump {
+  uint32_t kind;          /* 1 Blocking, 2 Drain (commands.h PumpKind) */
+  int32_t body;           /* a pump of the frame body (P6 / H1) */
+  int32_t may_deliver;    /* 0: a batch given here replays at an earlier pump call (applied, counted as a violation) */
+  int32_t must_deliver;   /* 1: the host is asked again until it delivers or stops */
+  uint32_t frame;         /* live frame: 0 = the boot */
+  uint32_t cursor_reads;  /* cursor reads of this frame before this call */
+  int32_t pace_site;      /* the paced loop's clock site, 0 = none */
+  uint32_t calls;         /* pump calls of this class since the last delivery, this one included */
+  int32_t idle_ok;        /* roadmap S7.6: 1 = a decline here replays as an idle pass of a modal loop (live.h) */
+} sg_live_pump;
+typedef struct sg_live_cmd {  /* one root-window handler call (commands.h Command, kind RootHandler) */
+  uint32_t handler;           /* 1..11 (trace_schema.md HANDLER) */
+  int32_t a0, a1;
+  uint32_t async_ctrl, async_shift;  /* handlers 1 / 4: GetAsyncKeyState(VK_CONTROL) / (VK_SHIFT), low 16 bits */
+  uint32_t t;                 /* handlers 2 / 3 / 7: the deadline tail's timeGetTime (0 = no read) */
+} sg_live_cmd;
+typedef struct sg_live_host {
+  void *user;
+  /* the head of live frame `frame` (1, 2, ...): 1 with *t set, 0 = end the session */
+  int32_t (*frame_head)(void *user, uint32_t frame, uint32_t *t);
+  /* a timeGetTime read at `site` (offset from mainLoop's frame-head return address); body = the frame body's own read
+     (must answer); returns 1 with *t set, 0 = no value */
+  int32_t (*clock)(void *user, int32_t site, int32_t body, uint32_t *t);
+  void (*cursor)(void *user, int32_t modal, int32_t *x, int32_t *y);
+  uint32_t (*async_key)(void *user, int32_t vk);
+  /* 0 decline, 1 deliver (*n commands written to out, at most cap), 2 stop */
+  int32_t (*pump)(void *user, const sg_live_pump *p, sg_live_cmd *out, int32_t cap, int32_t *n);
+} sg_live_host;
+SG_API int sg_live_run(sg_ctx *ctx, const sg_live_host *host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
+                       uint64_t *out_hashes, int32_t *records);
+/* the built-in hosts: kind 1 = a schema v1 trace as the host (data = the trace; the equivalence gate), kind 2 = a script
+   (data = the script text, live.cpp SCRIPT HOST), kind 3 = a trace until its first dispatch holding a focus-child key, then a
+   script (data = u32 trace length, the trace, the script text; live.cpp PREFIX HOST, roadmap S7.7) */
+SG_API int sg_live_run_builtin(sg_ctx *ctx, int32_t kind, const uint8_t *data, size_t n, uint32_t frame_ra,
+                               int32_t max_records, uint32_t *out_T, uint64_t *out_hashes, int32_t *records);
+/* the last live run's recording: copies min(len, cap) bytes, *len = its length */
+SG_API int sg_live_recording(sg_ctx *ctx, uint8_t *buf, size_t cap, size_t *len);
+/* the last live run's records from `first`: up to cap records into out_T / out_hashes (n_sim hashes each); returns the count */
+SG_API int32_t sg_live_records(sg_ctx *ctx, int32_t first, int32_t cap, uint32_t *out_T, uint64_t *out_hashes);
+/* the last live run's counters: violations, first violation record, asks, reasks, clocks, cursors, asyncs, dispatches,
+   writes, body / modal / paced pump calls (12 values) */
+SG_API int sg_live_stats(sg_ctx *ctx, int64_t out[12]);
+/* roadmap S7.6: idle passes (declines at idle_ok calls) and dispatches recorded with a CURSOR record in front of them */
+SG_API int sg_live_stats_ext(sg_ctx *ctx, int64_t out[2]);
+/* roadmap S7.6: the last live run's LiveMarker positions (gfx.snapshotAt positions in its recording): copies up to cap,
+   returns the count */
+SG_API int32_t sg_live_marks(sg_ctx *ctx, uint32_t *out, int32_t cap);
+
 /* ---- compatibility switches for defects of the original (phase 3.0, port/CORE.md) ----
  * Process-wide; 1 (default) = reproduce the original, 0 = the fixed behaviour. */
 typedef struct sg_defect_info {

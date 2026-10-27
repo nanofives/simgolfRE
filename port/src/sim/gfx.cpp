@@ -59,7 +59,18 @@ std::map<const Ctx *, std::unique_ptr<Gfx>> &owned() {
   static std::map<const Ctx *, std::unique_ptr<Gfx>> m;
   return m;
 }
+// roadmap S7.9: the refresh hooks (gfx.h gfx_set_refresh_hook)
+std::map<const Ctx *, std::pair<GfxRefreshHook, void *>> &refresh_hooks() {
+  static std::map<const Ctx *, std::pair<GfxRefreshHook, void *>> m;
+  return m;
+}
 }  // namespace
+
+void gfx_set_refresh_hook(Ctx &ctx, GfxRefreshHook fn, void *arg) {
+  std::lock_guard<std::mutex> l(mu());
+  if (fn) refresh_hooks()[&ctx] = {fn, arg};
+  else refresh_hooks().erase(&ctx);
+}
 
 namespace gfxf {
 const int32_t *blit_scale(Gfx &g);   // gfx_prim_fill.cpp (roadmap S2.4): Display::setScale's three words
@@ -489,6 +500,13 @@ static void b_refresh_full(Gfx &g, Ctx &ctx, const uint32_t *a, int) {
   if (SG_NEGCTL(g_negctl_gfx) == 4) return;
   g.back.px = g.root.px;
   g.back_terrain = g.root_terrain;
+  std::pair<GfxRefreshHook, void *> h{nullptr, nullptr};
+  {
+    std::lock_guard<std::mutex> l(mu());
+    auto it = refresh_hooks().find(&ctx);
+    if (it != refresh_hooks().end()) h = it->second;
+  }
+  if (h.first) h.first(h.second);  // roadmap S7.9: a live run presents here (gfx.h)
 }
 
 // Surface_fillRegion(this, s, x, y, w, h) (c3h.cpp SurfaceFillRegion_re): this's handle slot +0x40 (Surface::stretchTo) with

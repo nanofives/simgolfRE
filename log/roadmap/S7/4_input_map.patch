@@ -1,0 +1,69 @@
+--- a/port/app/input_map.cpp	2026-10-25 02:06:56.745139900 -0300
++++ b/port/app/input_map.cpp	2026-10-25 02:20:18.908003400 -0300
+@@ -92,8 +92,17 @@
+ 
+   switch (m) {
+     case kWmKeyDown: {
+-      // uiKeyEvent reads the three modifier states first, then the key's character is looked up
+-      for (uint32_t vk : {kVkShift, kVkControl, kVkMenu}) st.push_back(read_key(ReadApi::GetKeyState, vk, host.get_key_state(vk)));
++      // uiKeyEvent reads the three modifier states first, then the key's character is looked up. It ORs 0x10000 (Shift),
++      // 0x20000 (Ctrl), 0x40000 (Alt) into the code it passes on when GetKeyState's high bit is set (0x00495918..0x00495943;
++      // roadmap S7.4's cross-check measured onKey(0, 0x10010), (0, 0x20011), (0, 0x40012) and onChar(0x40058) in the
++      // original, log/roadmap/S7/4_notes.md; no corpus trace has a modifier down at a key-down, U-1611)
++      uint32_t mods = 0;
++      for (uint32_t vk : {kVkShift, kVkControl, kVkMenu}) {
++        const uint16_t s = host.get_key_state(vk);
++        st.push_back(read_key(ReadApi::GetKeyState, vk, s));
++        if (s & 0x8000u) mods |= vk == kVkShift ? 0x10000u : vk == kVkControl ? 0x20000u : 0x40000u;
++      }
++      const uint32_t code = wp | mods;
+       const uint32_t mapped = host.map_virtual_key(wp, kMapVkToChar);
+       Step r;
+       r.kind = Step::Kind::Read;
+@@ -102,7 +111,7 @@
+       r.map_type = kMapVkToChar;
+       r.result = mapped;
+       st.push_back(r);
+-      last_vk_ = wp;
++      last_vk_ = code;  // a WM_CHAR's code is the key-down's code with its modifier bits (S7.4: onKey(0x61, 0x10041) with Shift)
+       if (defect_ != Defect::IgnoreFocusTake && host.focus_child_takes(kWmKeyDown, wp)) {
+         st.push_back(call(kFocusKeyDown, static_cast<int32_t>(wp), 0));
+         break;
+@@ -112,9 +121,9 @@
+         c = call(kOnKey, static_cast<int32_t>(wp), static_cast<int32_t>(wp));
+         c.t = host.now_ms();
+       } else if (mapped != 0 || defect_ == Defect::AlwaysOnChar) {
+-        c = call(kOnChar, static_cast<int32_t>(wp), 0);
++        c = call(kOnChar, static_cast<int32_t>(code), 0);
+       } else {
+-        c = call(kOnKey, 0, static_cast<int32_t>(wp));
++        c = call(kOnKey, 0, static_cast<int32_t>(code));
+         c.t = host.now_ms();
+       }
+       st.push_back(c);
+@@ -154,6 +163,12 @@
+     case kWmLButtonDown:
+     case kWmRButtonDown: {
+       const Point p = lparam_point(lp);
++      if (msg == kWmLButtonDblClk || msg == kWmRButtonDblClk) {
++        // a double click: rootWin_onPress1b 0x004657e0 / onPress2b 0x00465840 (handlers 10 / 11: the click point, the
++        // button word 0x00822d68 = 1 / 2, flags 0x00822d78 / 0x00822d74 = 1; no key or clock read) and then the press
++        // handler, the order roadmap S7.4's cross-check measured in the original for WM_LBUTTONDBLCLK (U-1612)
++        st.push_back(call(msg == kWmLButtonDblClk ? 10 : 11, p.x, p.y));
++      }
+       Step c = call(m == kWmLButtonDown ? kOnPoint : kOnPoint2, p.x, p.y);
+       c.t = host.now_ms();
+       st.push_back(c);
+--- a/port/app/tools/input_check.cpp	2026-10-25 02:12:51.817958200 -0300
++++ b/port/app/tools/input_check.cpp	2026-10-25 02:12:53.416144800 -0300
+@@ -378,7 +378,9 @@
+   auto a = t.translate(kWmLButtonDown, 1, lp, h);
+   check(a.steps.size() == 1 && a.steps[0].handler == kOnPoint && a.steps[0].a0 == 100 && a.steps[0].a1 == 50, "lbuttondown -> onPoint(x, y)");
+   auto d = t.translate(kWmLButtonDblClk, 1, lp, h);
+-  check(d.evidence == Evidence::Unmeasured && d.steps.size() == 1 && d.steps[0].handler == kOnPoint, "dblclk is a press, flagged unmeasured");
++  // roadmap S7.4's cross-check: the original calls rootWin_onPress1b (handler 10) and then onPoint for WM_LBUTTONDBLCLK
++  check(d.evidence == Evidence::Unmeasured && d.steps.size() == 2 && d.steps[0].handler == 10 && d.steps[0].a0 == 100 &&
++            d.steps[1].handler == kOnPoint, "dblclk -> onPress1b + onPoint, flagged unmeasured (not in the corpus)");
+   h.as[0x11] = 0x8001;
+   auto u = t.translate(kWmLButtonUp, 0, lp, h);
+   check(u.steps.size() == 4 && u.steps[0].handler == kOnPress1 && u.steps[0].async_ctrl == 0x8001 && u.steps[3].handler == kOnUnpoint,

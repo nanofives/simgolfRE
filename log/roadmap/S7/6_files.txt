@@ -1,0 +1,43 @@
+port/app/host.h
+port/app/host.cpp
+port/app/main.cpp
+port/app/CMakeLists.txt
+port/test/test_app_live.py
+log/roadmap/S7/6_capi.patch
+log/roadmap/S7/6_merge.md
+log/roadmap/S7/6_notes.md
+log/roadmap/S7/6_files.txt
+log/roadmap/S7/6_uncertain.tsv
+log/roadmap/S7/6_mirror.py
+log/roadmap/S7/6_make_patches.py
+log/roadmap/S7/6_probe.py
+log/roadmap/S7/6_boot_compare.py
+log/roadmap/S7/6_app_live_facts.json
+log/roadmap/S7/6_build_x64.log
+log/roadmap/S7/6_build_w32.log
+log/roadmap/S7/6_test_live_first.log
+log/roadmap/S7/6_u1600_check.log
+log/roadmap/S7/6_test_live_x64.log
+log/roadmap/S7/6_test_live_w32.log
+log/roadmap/S7/6_equiv_x64.tsv
+log/roadmap/S7/6_equiv_x64.log
+log/roadmap/S7/6_equiv_w32.tsv
+log/roadmap/S7/6_equiv_w32.log
+log/roadmap/S7/6_segs_x64.tsv
+log/roadmap/S7/6_segs_x64.log
+log/roadmap/S7/6_segs_win32.tsv
+log/roadmap/S7/6_segs_win32.log
+log/roadmap/S7/6_boot_gate.tsv
+log/roadmap/S7/6_boot_gate.log
+log/roadmap/S7/6_boot_cov_a_play.tsv
+log/roadmap/S7/6_boot_cov_a_play.log
+log/roadmap/S7/6_boot_compare.log
+log/roadmap/S7/6_test_static.log
+log/roadmap/S7/6_test_app_input.log
+log/roadmap/S7/6_test_app_shell.log
+log/roadmap/S7/6_test_app_live_first.log
+log/roadmap/S7/6_test_app_live_second.log
+log/roadmap/S7/6_test_app_live.log
+# reference copies in the mirror port/build/S7_6_head (same relative paths; S7.1's files, superseded by this step's edits):
+#   port/include/portsim/sim/live.h, port/src/sim/live.cpp, port/test/live.py, port/test/test_live.py
+# the C ABI edits are only in 6_capi.patch (applied in the mirror over S7.1's 1_capi.patch)

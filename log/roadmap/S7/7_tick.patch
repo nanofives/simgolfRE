@@ -1,0 +1,257 @@
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -34,6 +34,7 @@
+ #include "portsim/sim/commands.h"
+ #include "portsim/sim/gfx.h"
+ #include "portsim/sim/integrator.h"
++#include "portsim/sim/live.h"
+ #include "portsim/sim/terrain_api.h"
+ #include "portsim/sim/util.h"
+ #include "portsim/state_hash.h"
+@@ -330,6 +331,7 @@
+ }
+ 
+ uint32_t TkBase::clock_site(int32_t site) {
++  if (io.live) return io.live->clock_site(site);  // roadmap S7.1: a live run
+   if (io.clock)
+     for (const auto &c : *io.clock)
+       if (c.first == site) return c.second;
+@@ -811,6 +813,7 @@
+     }
+   } fill{io, st};
+   io.t_head = in.t_head;
++  io.live = in.live;  // roadmap S7.1
+   io.clock = &in.clock;
+   io.cursor = &in.cursor;
+   io.cursor_pos = &in.cursor_pos;
+@@ -1190,7 +1193,10 @@
+     refused_at_ = SIZE_MAX;
+     record_ = record;
+     if (SG_NEGCTL(g_negctl_frame) != 5)
+-      for (const TWrite &w : f.head_writes) ctx_.mem.store<uint32_t>(w.va, w.value);
++      for (const TWrite &w : f.head_writes) {
++        ctx_.mem.store<uint32_t>(w.va, w.value);
++        if (write_hook) write_hook(write_arg, w.va, w.value);
++      }
+   }
+   // H1's frame wait: the writes made in the frame's clock calls up to the first dispatch after H1's g_frameMs read (a
+   // dispatch of an H2 modal); the wait itself dispatches nothing (time_model.md section 7)
+@@ -1275,6 +1281,9 @@
+     return ex;
+   }
+   void set_tail_idle(bool on) { tail_idle_ = on; }
++  // roadmap S7.1: told of every harness write this source applies (the trace host of the live run core records them)
++  void (*write_hook)(void *, uint32_t va, uint32_t value) = nullptr;
++  void *write_arg = nullptr;
+   // the modal loops' cursor reads share the frame's CURSOR records with the frame body's (one read order)
+   bool cursor(int32_t &x, int32_t &y) override {
+     FrameIo &io = cur_io();
+@@ -1313,6 +1322,7 @@
+  void pace(int32_t site) override { pace_site_ = site; }
+ 
+  private:
++  friend class TraceHost;
+   // the frame's clock reads at `site` made before clock ordinal `pos` that clock() has not returned yet
+   size_t unread_before(int32_t site, uint32_t pos) const {
+     size_t n = 0;
+@@ -1324,6 +1334,7 @@
+     if (SG_NEGCTL(g_negctl_frame) == 5) return;  // negative control: the harness's memory writes skipped
+     while (fr_ && wnext_ < fr_->writes.size() && fr_->writes[wnext_].pos < pos) {
+       ctx_.mem.store<uint32_t>(fr_->writes[wnext_].va, fr_->writes[wnext_].value);
++      if (write_hook) write_hook(write_arg, fr_->writes[wnext_].va, fr_->writes[wnext_].value);
+       ++wnext_;
+     }
+   }
+@@ -1380,8 +1391,118 @@
+   }
+ } g_local_reg;
+ 
++// Roadmap S7.1: a LiveHost (portsim/sim/live.h) that answers every request of the live run core from a trace, with this
++// file's parse_trace and TraceInput: the equivalence gate of port/src/sim/live.cpp (the trace as a live host gives what
++// tick_run_frames gives). Live frame 0 is the trace's boot frame (frames[0]), live frame j its frames[j]. The answers
++// follow the trace path exactly: the frame body's clock read takes the frame's first value at its site (TkBase::clock_site),
++// cursor and GetAsyncKeyState reads take the frame's records in order and carry the last record into the next frame
++// (tick_run_frames' after_frame), modal reads and pumps go to TraceInput (with its harness writes reported to the core).
++class TraceHost : public LiveHost {
++ public:
++  explicit TraceHost(Ctx &c) : input_(c) {}
++  bool load(const uint8_t *tr, size_t n, std::string *why) { return parse_trace(tr, n, frames_, end_, why, true); }
++
++  void boot(Ctx &) override {
++    input_.write_hook = &TraceHost::on_write;
++    input_.write_arg = this;
++    start(0);
++    if (frames_.size() < 2) input_.set_tail_idle(true);
++  }
++  bool frame_head(Ctx &, uint32_t frame, uint32_t &t) override {
++    if (frame >= frames_.size()) return false;
++    start(frame);
++    t = frames_[frame].t;
++    return true;
++  }
++  void frame_end(Ctx &, uint32_t) override {
++    input_.end(stats_);
++    const TraceFrame &f = frames_[k_];
++    if (!f.cursor.empty()) {
++      cx_ = f.cursor.back().first;
++      cy_ = f.cursor.back().second;
++    }
++    for (const auto &a : f.async) keys_[a.first] = a.second;
++  }
++  bool clock(Ctx &, int32_t site, bool body, uint32_t &t) override {
++    if (!body) return input_.clock(site, t);
++    for (const auto &c : frames_[k_].clock)
++      if (c.first == site) {
++        t = c.second;
++        return true;
++      }
++    t = frames_[k_].t;
++    return true;
++  }
++  void cursor(Ctx &c, bool modal, int32_t &x, int32_t &y) override {
++    const TraceFrame &f = frames_[k_];
++    if (next_cursor_ < f.cursor.size()) {
++      if (next_cursor_ < f.cursor_pos.size()) {
++        if (modal && SG_NEGCTL(g_negctl_frame) != 7) input_.writes_before(f.cursor_pos[next_cursor_]);
++        gfx_progress_fast(c, f.cursor_pos[next_cursor_]);
++      }
++      x_ = f.cursor[next_cursor_].first;
++      y_ = f.cursor[next_cursor_].second;
++    }
++    ++next_cursor_;
++    x = x_;
++    y = y_;
++  }
++  uint16_t async_key(Ctx &, int vk) override {
++    vk &= 0xff;
++    if (SG_NEGCTL(g_negctl_frame) == 4) return 0;  // as frame_input's negative control 4
++    const auto &a = frames_[k_].async;
++    uint32_t i = anext_[vk];
++    while (i < a.size() && a[i].first != vk) ++i;
++    if (i < a.size()) {
++      akey_[vk] = a[i].second;
++      anext_[vk] = i + 1;
++    } else {
++      anext_[vk] = static_cast<uint32_t>(a.size());
++    }
++    return akey_[vk];
++  }
++  LiveReply pump(Ctx &, const LivePump &p, std::vector<Command> &out) override {
++    return input_.batch(p.kind, out) ? LiveReply::Deliver : LiveReply::Decline;
++  }
++  bool exhausted() const override { return input_.exhausted(); }
++  void pace(Ctx &, int32_t site) override { input_.pace(site); }
++  void wait_point(Ctx &) override { TraceInput::on_wait(&input_); }
++  bool blocking() const override { return false; }  // TraceInput's decline is the trace's own decision
++
++ private:
++  void start(uint32_t k) {
++    k_ = k;
++    input_.begin(frames_[k], static_cast<int32_t>(k));
++    next_cursor_ = 0;
++    x_ = cx_;
++    y_ = cy_;
++    std::memset(anext_, 0, sizeof anext_);
++    std::memcpy(akey_, keys_, sizeof akey_);
++  }
++  static void on_write(void *self, uint32_t va, uint32_t value) {
++    TraceHost &h = *static_cast<TraceHost *>(self);
++    if (h.writes) h.writes->wrote(va, value);
++  }
++  TraceInput input_;
++  std::vector<TraceFrame> frames_;
++  TraceEnd end_;
++  InputStats stats_;
++  uint32_t k_ = 0;
++  size_t next_cursor_ = 0;
++  int32_t cx_ = 0, cy_ = 0, x_ = 0, y_ = 0;
++  uint16_t keys_[256] = {}, akey_[256] = {};
++  uint32_t anext_[256] = {};
++};
++
+ }  // namespace
+ }  // namespace tk
++
++// roadmap S7.1 (portsim/sim/live.h)
++std::unique_ptr<LiveHost> make_trace_live_host(Ctx &ctx, const uint8_t *trace, size_t n, std::string *why) {
++  auto h = std::make_unique<tk::TraceHost>(ctx);
++  if (!h->load(trace, n, why)) return nullptr;
++  return h;
++}
+ 
+ int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint32_t *queued, int32_t n_queued,
+                     int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done, std::string *detail,
+diff --git a/port/src/sim/tick_hook.h b/port/src/sim/tick_hook.h
+--- a/port/src/sim/tick_hook.h
++++ b/port/src/sim/tick_hook.h
+@@ -128,8 +128,18 @@
+ // mainLoop's phase exits (where control goes after a phase that can leave the frame's straight order)
+ enum PhExit { kNext = 0, kFrame = 1, kRetile = 2, kMenu = 3 };
+ 
++// Roadmap S7.1: a live run's on-demand answers (port/src/sim/live.cpp). When FrameIo::live is set, the frame body's clock,
++// cursor and GetAsyncKeyState reads ask it instead of reading the recorded lists; every trace run leaves it null.
++struct LiveIo {
++  virtual ~LiveIo() = default;
++  virtual uint32_t clock_site(int32_t site) = 0;        // TkBase::clock_site
++  virtual void body_cursor(int32_t &x, int32_t &y) = 0; // TkBase::cursor_read (the frame body's Display::getCursor)
++  virtual uint16_t async_key(int vk) = 0;               // TkBase::key_async
++};
++
+ // What a converted body needs from the frame driver: the clock values of the frame and the asynchronous key state.
+ struct FrameIo {
++  LiveIo *live = nullptr;  // roadmap S7.1 (above)
+   uint32_t t_head = 0;
+   const std::vector<std::pair<int32_t, uint32_t>> *clock = nullptr;
+   size_t clock_used = 0;
+@@ -167,6 +177,9 @@
+ 
+ // The FrameIo of the frame running on this thread (a default one outside a frame: clock 0, no key down).
+ FrameIo &cur_io();
++// tick_frame with what the frame's cursor / GetAsyncKeyState reads did against its records (tick.cpp; the live run core,
++// roadmap S7.1, drives frames through it too)
++FrameExit tick_frame_io(Ctx &ctx, const FrameInput &in, FrameIoStats &st);
+ struct IoScope {  // installs a frame's FrameIo for the duration of the frame
+   FrameIo *prev;
+   explicit IoScope(FrameIo &f);
+@@ -236,6 +249,13 @@
+   void stack_pop(uint32_t n);
+   // the next cursor position (Display::getCursor)
+   void cursor_read(int32_t &x, int32_t &y) {
++    if (io.live) {  // roadmap S7.1: a live run
++      io.live->body_cursor(io.cursor_x, io.cursor_y);
++      ++io.cursor_used;
++      x = io.cursor_x;
++      y = io.cursor_y;
++      return;
++    }
+     if (io.cursor && io.cursor_used < io.cursor->size()) {
+       if (io.cursor_pos && io.cursor_used < io.cursor_pos->size()) gfx_progress_fast(ctx, (*io.cursor_pos)[io.cursor_used]);
+       io.cursor_x = (*io.cursor)[io.cursor_used].first;
+@@ -250,6 +270,7 @@
+   // GetAsyncKeyState(vk) as the game sees it (low 16 bits): the frame's next recorded read of that key
+   int key_async(int vk) {
+     vk &= 0xff;
++    if (io.live) return io.async_key[vk] = io.live->async_key(vk);  // roadmap S7.1: a live run
+     if (io.async) {
+       uint32_t i = io.async_next[vk];
+       while (i < io.async->size() && (*io.async)[i].first != vk) ++i;
+diff --git a/port/include/portsim/sim/tick.h b/port/include/portsim/sim/tick.h
+--- a/port/include/portsim/sim/tick.h
++++ b/port/include/portsim/sim/tick.h
+@@ -25,8 +25,15 @@
+ 
+ namespace portsim {
+ 
++namespace tk {
++struct LiveIo;  // roadmap S7.1 (port/src/sim/tick_hook.h)
++}
++
+ // What a frame takes from outside the state.
+ struct FrameInput {
++  // roadmap S7.1: a live run (portsim/sim/live.h) answers the frame body's clock, cursor and GetAsyncKeyState reads on demand
++  // through this, in place of `clock` / `cursor` / `async_keys` below (nullptr in every trace run)
++  tk::LiveIo *live = nullptr;
+   uint32_t t_head = 0;       // the frame-head timeGetTime value (stored at frame slot +0x1ec)
+   // The main-thread timeGetTime values of the frame by call site (code offset from the frame-head return address, as the
+   // trace records sites), in call order: H1's g_frameMs read takes the first value recorded at its site; a site with no

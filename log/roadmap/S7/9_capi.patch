@@ -1,0 +1,361 @@
+diff --git a/port/include/portsim_c.h b/port/include/portsim_c.h
+index 73f9c64..401f774 100644
+--- a/port/include/portsim_c.h
++++ b/port/include/portsim_c.h
+@@ -123,6 +123,63 @@ SG_API const char *sg_run_frames_detail(sg_ctx *ctx);
+  * the text length (the text is cut at cap - 1); reset != 0 clears the counts */
+ SG_API int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset);
+ 
++/* ---- live runs (roadmap S7.1, portsim/sim/live.h) ----
++ * sg_run_boot with the outside values asked on demand from a host instead of read from a trace: the frame-head clock, every
++ * clock read the port makes, every cursor and GetAsyncKeyState read, every pump call. The sim runs on the calling thread
++ * and blocks inside the callbacks. Every answer is recorded as a schema v1 trace (sg_live_recording) that sg_run_boot
++ * replays to the same frame records. out_T / out_hashes / records as sg_run_boot (cap = max_records; max_records < 0:
++ * no limit, then out_T / out_hashes may be NULL and the records are read with sg_live_records). frame_ra: the recording's
++ * meta frame_ra (each clock site is written as frame_ra + site; 0 = the sites themselves). sg_run_frames_detail says why
++ * the session ended. */
++typedef struct sg_live_pump {
++  uint32_t kind;          /* 1 Blocking, 2 Drain (commands.h PumpKind) */
++  int32_t body;           /* a pump of the frame body (P6 / H1) */
++  int32_t may_deliver;    /* 0: a batch given here replays at an earlier pump call (applied, counted as a violation) */
++  int32_t must_deliver;   /* 1: the host is asked again until it delivers or stops */
++  uint32_t frame;         /* live frame: 0 = the boot */
++  uint32_t cursor_reads;  /* cursor reads of this frame before this call */
++  int32_t pace_site;      /* the paced loop's clock site, 0 = none */
++  uint32_t calls;         /* pump calls of this class since the last delivery, this one included */
++  int32_t idle_ok;        /* roadmap S7.6: 1 = a decline here replays as an idle pass of a modal loop (live.h) */
++} sg_live_pump;
++typedef struct sg_live_cmd {  /* one root-window handler call (commands.h Command, kind RootHandler) */
++  uint32_t handler;           /* 1..11 (trace_schema.md HANDLER) */
++  int32_t a0, a1;
++  uint32_t async_ctrl, async_shift;  /* handlers 1 / 4: GetAsyncKeyState(VK_CONTROL) / (VK_SHIFT), low 16 bits */
++  uint32_t t;                 /* handlers 2 / 3 / 7: the deadline tail's timeGetTime (0 = no read) */
++} sg_live_cmd;
++typedef struct sg_live_host {
++  void *user;
++  /* the head of live frame `frame` (1, 2, ...): 1 with *t set, 0 = end the session */
++  int32_t (*frame_head)(void *user, uint32_t frame, uint32_t *t);
++  /* a timeGetTime read at `site` (offset from mainLoop's frame-head return address); body = the frame body's own read
++     (must answer); returns 1 with *t set, 0 = no value */
++  int32_t (*clock)(void *user, int32_t site, int32_t body, uint32_t *t);
++  void (*cursor)(void *user, int32_t modal, int32_t *x, int32_t *y);
++  uint32_t (*async_key)(void *user, int32_t vk);
++  /* 0 decline, 1 deliver (*n commands written to out, at most cap), 2 stop */
++  int32_t (*pump)(void *user, const sg_live_pump *p, sg_live_cmd *out, int32_t cap, int32_t *n);
++} sg_live_host;
++SG_API int sg_live_run(sg_ctx *ctx, const sg_live_host *host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
++                       uint64_t *out_hashes, int32_t *records);
++/* the built-in hosts: kind 1 = a schema v1 trace as the host (data = the trace; the equivalence gate), kind 2 = a script
++   (data = the script text, live.cpp SCRIPT HOST), kind 3 = a trace until its first dispatch holding a focus-child key, then a
++   script (data = u32 trace length, the trace, the script text; live.cpp PREFIX HOST, roadmap S7.7) */
++SG_API int sg_live_run_builtin(sg_ctx *ctx, int32_t kind, const uint8_t *data, size_t n, uint32_t frame_ra,
++                               int32_t max_records, uint32_t *out_T, uint64_t *out_hashes, int32_t *records);
++/* the last live run's recording: copies min(len, cap) bytes, *len = its length */
++SG_API int sg_live_recording(sg_ctx *ctx, uint8_t *buf, size_t cap, size_t *len);
++/* the last live run's records from `first`: up to cap records into out_T / out_hashes (n_sim hashes each); returns the count */
++SG_API int32_t sg_live_records(sg_ctx *ctx, int32_t first, int32_t cap, uint32_t *out_T, uint64_t *out_hashes);
++/* the last live run's counters: violations, first violation record, asks, reasks, clocks, cursors, asyncs, dispatches,
++   writes, body / modal / paced pump calls (12 values) */
++SG_API int sg_live_stats(sg_ctx *ctx, int64_t out[12]);
++/* roadmap S7.6: idle passes (declines at idle_ok calls) and dispatches recorded with a CURSOR record in front of them */
++SG_API int sg_live_stats_ext(sg_ctx *ctx, int64_t out[2]);
++/* roadmap S7.6: the last live run's LiveMarker positions (gfx.snapshotAt positions in its recording): copies up to cap,
++   returns the count */
++SG_API int32_t sg_live_marks(sg_ctx *ctx, uint32_t *out, int32_t cap);
++
+ /* ---- compatibility switches for defects of the original (phase 3.0, port/CORE.md) ----
+  * Process-wide; 1 (default) = reproduce the original, 0 = the fixed behaviour. */
+ typedef struct sg_defect_info {
+diff --git a/port/src/portsim_c.cpp b/port/src/portsim_c.cpp
+index bfe2078..bda9cac 100644
+--- a/port/src/portsim_c.cpp
++++ b/port/src/portsim_c.cpp
+@@ -19,6 +19,7 @@
+ #include "portsim/sim/terrain_render.h"
+ #include "portsim/sim/terrain_live.h"
+ #include "portsim/sim/terrain_state.h"
++#include "portsim/sim/live.h"
+ #include "portsim/sim/tick.h"
+ 
+ #if defined(_MSC_VER)
+@@ -45,7 +46,9 @@ struct sg_ctx {
+   portsim::TerrainGlobals gl_globals;                // phase 5: the Terrain.dll statics of the render path (sg_gl_set_globals)
+   std::unique_ptr<portsim::TerrainDll> terrain_dll;  // phase 5: the state side driven call by call (sg_ts_call)
+   std::unique_ptr<portsim::LiveTerrain> live;        // phase 5: the TerrainApi over that state (sg_ts_live_attach)
++  portsim::LiveResult live_res;                      // roadmap S7.1: the last live run (sg_live_*)
+   sg_ctx() { ctx.files_ptr = &mem_files; }
++  ~sg_ctx() { portsim::release_headless_terrain(ctx); }  // roadmap S7.9 (U-1681): the headless Terrain blocks of this context
+ };
+ 
+ namespace {
+@@ -274,6 +277,210 @@ int sg_run_boot(sg_ctx *ctx, const uint8_t *trace, size_t trace_len, int32_t max
+ 
+ const char *sg_run_frames_detail(sg_ctx *ctx) { return ctx ? ctx->run_detail.c_str() : ""; }
+ 
++// ---- live runs (roadmap S7.1, portsim/sim/live.h)
++}  // extern "C"
++namespace {
++class CHost : public portsim::LiveHost {
++ public:
++  explicit CHost(const sg_live_host &h) : h_(h) {}
++  bool frame_head(portsim::Ctx &, uint32_t frame, uint32_t &t) override {
++    return h_.frame_head && h_.frame_head(h_.user, frame, &t) != 0;
++  }
++  bool clock(portsim::Ctx &, int32_t site, bool body, uint32_t &t) override {
++    if (!h_.clock) return false;
++    const bool ok = h_.clock(h_.user, site, body ? 1 : 0, &t) != 0;
++    if (!ok && body) throw portsim::MissingResource{"live host: no value for the frame body's clock read"};
++    return ok;
++  }
++  void cursor(portsim::Ctx &, bool modal, int32_t &x, int32_t &y) override {
++    if (h_.cursor) h_.cursor(h_.user, modal ? 1 : 0, &x, &y);
++  }
++  uint16_t async_key(portsim::Ctx &, int vk) override {
++    return h_.async_key ? static_cast<uint16_t>(h_.async_key(h_.user, vk)) : 0;
++  }
++  portsim::LiveReply pump(portsim::Ctx &, const portsim::LivePump &p, std::vector<portsim::Command> &out) override {
++    if (!h_.pump) return portsim::LiveReply::Stop;
++    sg_live_pump cp{static_cast<uint32_t>(p.kind), p.body ? 1 : 0, p.may_deliver ? 1 : 0, p.must_deliver ? 1 : 0,
++                    p.frame, p.cursor_reads, p.pace_site, p.calls, p.idle_ok ? 1 : 0};
++    sg_live_cmd buf[64];
++    int32_t n = 0;
++    const int32_t r = h_.pump(h_.user, &cp, buf, 64, &n);
++    if (r == 2) return portsim::LiveReply::Stop;
++    if (r != 1) return portsim::LiveReply::Decline;
++    for (int32_t i = 0; i < n && i < 64; ++i) {
++      portsim::Command c;
++      c.kind = portsim::CmdKind::RootHandler;
++      c.handler = buf[i].handler;
++      c.a0 = buf[i].a0;
++      c.a1 = buf[i].a1;
++      c.async_ctrl = buf[i].async_ctrl;
++      c.async_shift = buf[i].async_shift;
++      c.t = buf[i].t;
++      out.push_back(c);
++    }
++    return portsim::LiveReply::Deliver;
++  }
++
++ private:
++  sg_live_host h_;
++};
++
++int live_run_cpp(sg_ctx *c, portsim::LiveHost &host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
++                 uint64_t *out_hashes, int32_t *records) {
++  c->live_res = portsim::LiveResult();
++  c->run_detail.clear();
++  portsim::LiveOptions opt;
++  opt.max_records = max_records;
++  opt.frame_ra = frame_ra;
++  int code = SG_OK;
++  try {
++    portsim::run_live(c->ctx, host, opt, c->live_res);
++  } catch (const portsim::Fault &f) {
++    c->run_detail = "fault at va " + std::to_string(f.va);
++    code = SG_E_FAULT;
++  } catch (const portsim::DivideError &) {
++    c->run_detail = "divide error";
++    code = SG_E_DIVIDE;
++  } catch (const portsim::NoReturn &e) {
++    c->run_detail = std::string("no return: ") + (e.where ? e.where : "?");
++    code = SG_E_NO_RETURN;
++  } catch (const portsim::MissingResource &e) {
++    c->run_detail = std::string("missing: ") + (e.what ? e.what : "?");
++    code = SG_E_NO_RESOURCE;
++  } catch (...) {
++    c->run_detail = "exception";
++    code = SG_E_EXCEPTION;
++  }
++  const portsim::LiveResult &r = c->live_res;
++  c->run_detail += (c->run_detail.empty() ? "" : "; ") + std::string("live: ") + r.stop + ", " +
++                   std::to_string(r.records) + " records, " + std::to_string(r.dispatches) + " dispatches, " +
++                   std::to_string(r.violations) + " violations" +
++                   (r.first_violation >= 0
++                        ? " (first at record " + std::to_string(r.first_violation) + ": " + r.first_violation_what + ")"
++                        : std::string());
++  const int32_t n = r.records;
++  const size_t nsim = portsim::objects_of("sim").size();
++  *records = max_records >= 0 ? std::min(n, max_records) : n;
++  if (out_T && out_hashes && max_records > 0)  // caller buffers of max_records; else sg_live_records
++    for (int32_t k = 0; k < *records; ++k) {
++      const size_t i = static_cast<size_t>(k);
++      out_T[k] = r.T[i];
++      for (size_t j = 0; j < nsim; ++j) out_hashes[i * nsim + j] = r.hashes[i * nsim + j];
++    }
++  return code;
++}
++
++#if defined(_MSC_VER)
++int live_run_guarded(sg_ctx *c, portsim::LiveHost &host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
++                     uint64_t *out_hashes, int32_t *records) {
++  __try {
++    return live_run_cpp(c, host, frame_ra, max_records, out_T, out_hashes, records);
++  } __except (GetExceptionCode() == EXCEPTION_INT_DIVIDE_BY_ZERO || GetExceptionCode() == EXCEPTION_INT_OVERFLOW
++                  ? EXCEPTION_EXECUTE_HANDLER
++                  : EXCEPTION_CONTINUE_SEARCH) {
++    return SG_E_DIVIDE;
++  }
++}
++#else
++int live_run_guarded(sg_ctx *c, portsim::LiveHost &host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
++                     uint64_t *out_hashes, int32_t *records) {
++  return live_run_cpp(c, host, frame_ra, max_records, out_T, out_hashes, records);
++}
++#endif
++
++std::unique_ptr<portsim::LiveHost> builtin_host(sg_ctx *ctx, int32_t kind, const uint8_t *data, size_t n, std::string &why) {
++  if (kind == 1) return portsim::make_trace_live_host(ctx->ctx, data, n, &why);
++  if (kind == 2) return portsim::make_script_live_host(std::string(reinterpret_cast<const char *>(data), n), &why);
++  if (kind == 3) {  // roadmap S7.7: u32 trace length, the trace, then the script text (portsim::make_prefix_live_host)
++    uint32_t tn = 0;
++    if (n >= 4) std::memcpy(&tn, data, 4);
++    if (n < 4 || tn > n - 4) {
++      why = "kind 3: bad trace length";
++      return nullptr;
++    }
++    return portsim::make_prefix_live_host(ctx->ctx, data + 4, tn,
++                                          std::string(reinterpret_cast<const char *>(data + 4 + tn), n - 4 - tn), &why);
++  }
++  why = "unknown live host kind";
++  return nullptr;
++}
++}  // namespace
++extern "C" {
++
++int sg_live_run(sg_ctx *ctx, const sg_live_host *host, uint32_t frame_ra, int32_t max_records, uint32_t *out_T,
++                uint64_t *out_hashes, int32_t *records) {
++  if (!ctx || !host || !records || (max_records > 0 && (!out_T || !out_hashes))) return SG_E_ARG;
++  *records = 0;
++  CHost h(*host);
++  return live_run_guarded(ctx, h, frame_ra, max_records, out_T, out_hashes, records);
++}
++
++int sg_live_run_builtin(sg_ctx *ctx, int32_t kind, const uint8_t *data, size_t n, uint32_t frame_ra, int32_t max_records,
++                        uint32_t *out_T, uint64_t *out_hashes, int32_t *records) {
++  if (!ctx || !records || !data || (max_records > 0 && (!out_T || !out_hashes))) return SG_E_ARG;
++  *records = 0;
++  std::string why;
++  std::unique_ptr<portsim::LiveHost> h;
++  try {
++    h = builtin_host(ctx, kind, data, n, why);
++  } catch (...) {
++    return SG_E_EXCEPTION;
++  }
++  if (!h) {
++    ctx->run_detail = why;
++    return SG_E_ARG;
++  }
++  return live_run_guarded(ctx, *h, frame_ra, max_records, out_T, out_hashes, records);
++}
++
++int sg_live_recording(sg_ctx *ctx, uint8_t *buf, size_t cap, size_t *len) {
++  if (!ctx || !len) return SG_E_ARG;
++  const std::vector<uint8_t> &t = ctx->live_res.trace;
++  *len = t.size();
++  if (buf && cap && !t.empty()) std::memcpy(buf, t.data(), std::min(cap, t.size()));
++  return SG_OK;
++}
++
++int32_t sg_live_records(sg_ctx *ctx, int32_t first, int32_t cap, uint32_t *out_T, uint64_t *out_hashes) {
++  if (!ctx || first < 0 || cap < 0) return SG_E_ARG;
++  const portsim::LiveResult &r = ctx->live_res;
++  const size_t nsim = portsim::objects_of("sim").size();
++  int32_t k = 0;
++  for (; k < cap && first + k < r.records; ++k) {
++    const size_t i = static_cast<size_t>(first + k);
++    if (out_T) out_T[k] = r.T[i];
++    if (out_hashes)
++      for (size_t j = 0; j < nsim; ++j) out_hashes[static_cast<size_t>(k) * nsim + j] = r.hashes[i * nsim + j];
++  }
++  return k;
++}
++
++int sg_live_stats(sg_ctx *ctx, int64_t out[12]) {
++  if (!ctx || !out) return SG_E_ARG;
++  const portsim::LiveResult &r = ctx->live_res;
++  const int64_t v[12] = {static_cast<int64_t>(r.violations), r.first_violation, static_cast<int64_t>(r.asks),
++                        static_cast<int64_t>(r.reasks), static_cast<int64_t>(r.clocks), static_cast<int64_t>(r.cursors),
++                        static_cast<int64_t>(r.asyncs), static_cast<int64_t>(r.dispatches), static_cast<int64_t>(r.writes),
++                        static_cast<int64_t>(r.body_calls), static_cast<int64_t>(r.modal_calls),
++                        static_cast<int64_t>(r.paced_calls)};
++  for (int i = 0; i < 12; ++i) out[i] = v[i];
++  return SG_OK;
++}
++
++int sg_live_stats_ext(sg_ctx *ctx, int64_t out[2]) {
++  if (!ctx || !out) return SG_E_ARG;
++  out[0] = static_cast<int64_t>(ctx->live_res.idle_declines);
++  out[1] = static_cast<int64_t>(ctx->live_res.inflated);
++  return SG_OK;
++}
++
++int32_t sg_live_marks(sg_ctx *ctx, uint32_t *out, int32_t cap) {
++  if (!ctx || cap < 0) return SG_E_ARG;
++  const std::vector<uint32_t> &m = ctx->live_res.mark_pos;
++  for (int32_t k = 0; out && k < cap && static_cast<size_t>(k) < m.size(); ++k) out[k] = m[static_cast<size_t>(k)];
++  return static_cast<int32_t>(m.size());
++}
++
+ int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset) {
+   std::string out;
+   for (const auto &kv : portsim::tick_callee_counts()) out += kv.first + "=" + std::to_string(kv.second) + "\n";
+diff --git a/port/test/runner32/runner32.cpp b/port/test/runner32/runner32.cpp
+index cbe3475..c8aa95b 100644
+--- a/port/test/runner32/runner32.cpp
++++ b/port/test/runner32/runner32.cpp
+@@ -52,6 +52,10 @@ struct Api {
+   F(int32_t, sg_hash_class, (sg_ctx *, const char *, uint64_t *, int32_t))
+   F(int, sg_run_frames, (sg_ctx *, const uint8_t *, size_t, const sg_msg *, int32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+   F(int, sg_run_boot, (sg_ctx *, const uint8_t *, size_t, int32_t, uint32_t *, uint64_t *, int32_t *))
++  F(int, sg_live_run_builtin, (sg_ctx *, int32_t, const uint8_t *, size_t, uint32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
++  F(int, sg_live_recording, (sg_ctx *, uint8_t *, size_t, size_t *))
++  F(int, sg_live_stats, (sg_ctx *, int64_t *))
++  F(const char *, sg_run_frames_detail, (sg_ctx *))
+   F(int32_t, sg_defect_count, (void))
+   F(int, sg_defect_info_get, (int32_t, sg_defect_info *))
+   F(int, sg_defect_set, (const char *, int32_t))
+@@ -104,6 +108,10 @@ bool load_api(const char *path) {
+   F(int32_t, sg_hash_class, (sg_ctx *, const char *, uint64_t *, int32_t))
+   F(int, sg_run_frames, (sg_ctx *, const uint8_t *, size_t, const sg_msg *, int32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+   F(int, sg_run_boot, (sg_ctx *, const uint8_t *, size_t, int32_t, uint32_t *, uint64_t *, int32_t *))
++  F(int, sg_live_run_builtin, (sg_ctx *, int32_t, const uint8_t *, size_t, uint32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
++  F(int, sg_live_recording, (sg_ctx *, uint8_t *, size_t, size_t *))
++  F(int, sg_live_stats, (sg_ctx *, int64_t *))
++  F(const char *, sg_run_frames_detail, (sg_ctx *))
+   F(int32_t, sg_defect_count, (void))
+   F(int, sg_defect_info_get, (int32_t, sg_defect_info *))
+   F(int, sg_defect_set, (const char *, int32_t))
+@@ -489,6 +497,33 @@ int main(int argc, char **argv) {
+           w.put<int32_t>(done);
+           w.bytes(ts.data(), sizeof(uint32_t) * static_cast<size_t>(done));
+           w.bytes(hs.data(), sizeof(uint64_t) * static_cast<size_t>(done) * static_cast<size_t>(nsim));
++        } else if (op == 40) {  // live run, built-in host (roadmap S7.1; op 40, clear of S3.2's 28..32): i32 kind, u32 frame_ra, i32 max records, u32 n, data
++          int32_t kind = r.get<int32_t>();
++          uint32_t fra = r.get<uint32_t>();
++          int32_t maxf = r.get<int32_t>();
++          uint32_t dn = r.get<uint32_t>();
++          const uint8_t *data = r.bytes(dn);
++          if (r.bad || !data) { status = SG_E_ARG; break; }
++          int32_t nsim = A.sg_object_count("sim");
++          std::vector<uint32_t> ts(maxf > 0 ? maxf : 1);
++          std::vector<uint64_t> hs(static_cast<size_t>(maxf > 0 ? maxf : 1) * static_cast<size_t>(nsim > 0 ? nsim : 1));
++          int32_t done = 0;
++          status = A.sg_live_run_builtin(s.ctx, kind, data, dn, fra, maxf, ts.data(), hs.data(), &done);
++          x87_reset();
++          sync_out(s);
++          w.put<int32_t>(done);
++          w.bytes(ts.data(), sizeof(uint32_t) * static_cast<size_t>(done));
++          w.bytes(hs.data(), sizeof(uint64_t) * static_cast<size_t>(done) * static_cast<size_t>(nsim));
++          size_t rl = 0;
++          A.sg_live_recording(s.ctx, nullptr, 0, &rl);
++          std::vector<uint8_t> rec(rl ? rl : 1);
++          A.sg_live_recording(s.ctx, rec.data(), rl, &rl);
++          w.put<uint32_t>(static_cast<uint32_t>(rl));
++          w.bytes(rec.data(), rl);
++          int64_t st[12] = {0};
++          A.sg_live_stats(s.ctx, st);
++          w.bytes(st, sizeof st);
++          w.str(A.sg_run_frames_detail(s.ctx));
+         } else if (op == 20) {
+           status = A.sg_exe_fill_state(s.ctx, r.get<int32_t>());
+           sync_out(s);

@@ -1,0 +1,2 @@
+scenario	status	records	expected	detail	run_detail
+cov_a_play	PASS	595	595		end checkpoint at site 312200 (a frame-wait site): the last frame ran to the frame wait; input: 59 dispatches delivered, 0 left, 0 at another cursor count; cursor reads over/under 0/0; async-key reads over/under 0/0; clock queries 1 served, 0 none left, 0 dispatches late

@@ -1,6 +1,22 @@
-# Regression baseline at HEAD bbc9072f + S2 waves 6 / 7 + S5 wave 1 (I7, 2026-10-26)
+# Regression baseline at HEAD 919dbdd5 + S7 waves 1-3 (I10, 2026-10-27)
 
-This file now describes **HEAD + S2 waves 6 / 7 + S5**: commit `bbc9072f` (which holds S0, S6 waves 1 / 2, S1, S8, S2 waves 1-5 and
+This file now describes **HEAD + S7**: commit `919dbdd5` (= `78ffb06d`, the I7 state below, plus the user's test-tier commit: pytest.ini
+addopts `-m "not slow and not ghidra"`, which touches no port file) plus S7 waves 1-3 merged as one request (`log/roadmap/S7/9_merge.md`,
+S7.9: the live core `live`, sg_live_* C ABI and runner op 40, the Windows app port/app with freetype.dll beside it, the gfx refresh hook,
+HeadlessTerrain release per context) and the shared-file edits of `9_apply.py` (`log/roadmap/merges/I10.md`). Measured by I10 in the mirror
+`port/build/I10` (git archive 78ffb06d + the S0 junctions + shim/build, re/replay, extracted + `9_apply.py port/build/I10 --files`; builds
+with SG_FREETYPE_ROOT); 9_apply.py on 919dbdd5 gives the same bytes except 919dbdd5's own four files (I10.md section 4). Every number below
+that I10 re-measured is equal to the I7 / I7b one unless the I10 column or note says otherwise; the I7 text stays as the record of how the
+78ffb06d numbers were taken. Raw I10 logs in `log/roadmap/merges/I10/`. Under 919dbdd5's pytest.ini a plain `pytest port/test/<file>`
+deselects slow tests: pass `-m ""` for the counts below.
+
+Host change found by I10 (not a code change): since the 2026-10-27 05:24 restart the GDI provider's FontRef metric words differ from the
+stored originals for three fonts, so test_fttext's two GDI metric tests fail on x64 and Win32 in every mirror, the 78ffb06d control included
+(I10.md section 3). Widths are unchanged.
+
+## Before S7 (I7, 2026-10-26)
+
+The state before S7 described **HEAD + S2 waves 6 / 7 + S5**: commit `bbc9072f` (which holds S0, S6 waves 1 / 2, S1, S8, S2 waves 1-5 and
 S3 waves 1 / 3) plus S2 wave 6 (`log/roadmap/S2/MERGE_wave6.md` -> `10_merge.md`, S2.10: buy land, syncTiles, the character editor's and
 skill dialog's drawing), S2 wave 7 (`MERGE_wave7.md` -> `11_merge.md`, S2.11: tournament results, bulletin board, SimFoto / message ball),
 S5 wave 1 (`log/roadmap/S5/MERGE.md`: modules textlab / fttext / fttext_raster, the OPTIONAL FreeType CMake block, SG_TEXT_METRICS=gdi|
@@ -17,6 +33,22 @@ Raw logs in `log/roadmap/merges/I7/` (I7) and `log/roadmap/merges/I7/b/` (I7b).
 The previous baselines (S0.1, I1, I4, I5, I6) are in git history; their logs stay in `log/roadmap/S0/` and `log/roadmap/merges/`.
 
 ## Summary
+
+| Gate | HEAD + S7 (I10) |
+|---|---|
+| repo static | 614 passed, 2 skipped, 46 deselected (= I7) |
+| port suite x64 | 75 files (68 + S7's test_live and six test_app_* files): 74 PASS with S7.9's counts; test_fttext 2 failed (host, above); test_live 39 (incl. test_equivalence_all), test_app_live 13 (load-sensitive: 2 of 3 runs failed on wall-clock checks, I10.md section 2), test_app_ingame 12 + 1 xfail (U-1640), test_app_present 7, test_app_shell 18, test_app_input 16, test_app_replay 14, test_win32 179 + 258 skipped |
+| port suite Win32 | 59 files (I7's 58 + test_live): 50 PASS; the same 20 failing test ids in the same 8 files + test_fttext's 2 (host); test_live 39 incl. test_equivalence_all |
+| segments x64 / Win32 | 205 / 205 each, 0 rows (digests included) differ from I7b's or between backends |
+| boot x64 / Win32 | 70 rows 66 / 2 KNOWN / 2 NO_FRAMES each, 0 rows differ from I7b's or between backends |
+| S7 live equivalence (`port.test.live equiv --all`) x64 / Win32 | 68 PASS, 2 NO_FRAMES each, = I7's rows, x64 = Win32 |
+| S7 app replay gate x64 / Win32 | hole 340 / 340, report 205 / 205, saveload 266 / 266 PASS, = I7's rows |
+| chains / defects / ledger | 342 / 342 (= I7 row for row); 14 switches (= I7); ledger rows = re/port/divergences.tsv |
+| gfx.check | 0 duplicates, 101 rows (91 bodies + 10 not_drawing) |
+| frame census / terrain verdict | 698 rows PASS 88 / UNSUPPORTED 600 / NOT_RUN 10, = I7b row for row; terrain 527 PASS / 75 NOT_MEASURED |
+| not re-run by I10 | SG_TEXT_METRICS=freetype segments / boot, S5 widths / labels (S7 does not touch the text providers) |
+
+The I7 summary (before S7):
 
 | Gate | HEAD + S2w6 + S2w7 + S5 | HEAD (I6) | Same? |
 |---|---|---|---|
@@ -145,6 +177,13 @@ record 1,156), 0 PASS rows lost; over S0's 609 rows PASS 73, 0 lost. NOT_RUN 10 
 no trace 10. Terrain verdict: **527 PASS, 0 FAIL**, 75 NOT_MEASURED.
 
 ## What a later run must hold
+
+(HEAD + S7, I10) Everything below, plus: the x64 suite's 75 files with I10's counts (S7's files as in the summary; test_fttext's two GDI
+metric tests fail on this host until the host change of I10.md section 3 is settled, in every mirror); the Win32 suite's 20 known failures
+(+ test_fttext's 2 on this host) and test_live 39 there; live equivalence 68 PASS + 2 NO_FRAMES on x64 and Win32 with the rows of
+`log/roadmap/merges/I10/equiv_x64.tsv` / `equiv_win32.tsv`; the app replay gate 340 / 205 / 266 PASS on both backends; the reference TSVs
+`log/roadmap/merges/I10/{segs,boot}_{x64,win32}.tsv` (equal to I7b's). test_app_live checks wall-clock pacing and live captures: re-run it
+alone on a quiet machine before counting a failure.
 
 - repo static 614 passed / 2 skipped; every file of section 2 PASS with its count (test_boot 95 passed);
 - segments 205 / 205 PASS on both backends with 0 digests differing from `log/roadmap/merges/I7/b/segs_x64.tsv` and `segs_win32.tsv`

@@ -1,0 +1,2 @@
+scenario	status	records	expected	boot_status	live_vs_boot	replay_vs_live	violations	detail	extra
+cov_l_point	PASS	45	45	PASS			0		{"live_code": 0, "boot_code": 0, "stats": {"violations": 0, "first_violation": -1, "asks": 1091, "reasks": 0, "clocks": 47, "cursors": 721, "asyncs": 0, "dispatches": 4, "writes": 0, "body_calls": 90, "modal_calls": 1001, "paced_calls": 0, "idle_declines": 491, "inflated": 0}, "live_detail": "live: max_records, 45 records, 4 dispatches, 0 violations", "live_capture_status": "PASS", "replay_code": 0}

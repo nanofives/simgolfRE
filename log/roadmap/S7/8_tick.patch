@@ -1,0 +1,29 @@
+diff --git a/port/src/sim/tick.cpp b/port/src/sim/tick.cpp
+index c7adc20..d5c086d 100644
+--- a/port/src/sim/tick.cpp
++++ b/port/src/sim/tick.cpp
+@@ -279,6 +279,8 @@ int TkBase::call(const char *name, const uint32_t *a, int n) {
+     case 1:
+       // phase 5: an attached graphics backend draws what the drop drew; the frame keeps the drop's result
+       if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_drop(ctx, name, a, n);
++      // roadmap S7.8 (U-1642): a live run's host presents where the original's Display::present runs (tick_hook.h)
++      if (io.live && std::strcmp(name, "Window::refreshFull") == 0) io.live->present_point();
+       return 0;
+     case 2:
+       return e.local(*this, a, n);
+diff --git a/port/src/sim/tick_hook.h b/port/src/sim/tick_hook.h
+index e1ecc38..8ecb340 100644
+--- a/port/src/sim/tick_hook.h
++++ b/port/src/sim/tick_hook.h
+@@ -135,6 +135,11 @@ struct LiveIo {
+   virtual uint32_t clock_site(int32_t site) = 0;        // TkBase::clock_site
+   virtual void body_cursor(int32_t &x, int32_t &y) = 0; // TkBase::cursor_read (the frame body's Display::getCursor)
+   virtual uint16_t async_key(int vk) = 0;               // TkBase::key_async
++  // roadmap S7.8 (U-1642): the frame code ran the drop Window::refreshFull. In the original that call is where the back
++  // buffer reaches the window: refreshFull -> Window::refreshRect -> drawTooltip, whose last call is Display::present
++  // (display vtable slot +0xa4, BitBlt of the back buffer), the only Display::present call in the exe
++  // (log/roadmap/S7/8_notes.md section 1).
++  virtual void present_point() {}
+ };
+ 
+ // What a converted body needs from the frame driver: the clock values of the frame and the asynchronous key state.

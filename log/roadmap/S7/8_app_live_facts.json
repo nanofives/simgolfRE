@@ -1,0 +1,116 @@
+{
+ "idle_cpu_pct": 2.19,
+ "normal": {
+  "n": 354,
+  "min": 87,
+  "max": 157,
+  "median": 91.0,
+  "mean": 92.48,
+  "within_quantum": 0.9548
+ },
+ "slow": {
+  "n": 58,
+  "min": 125,
+  "max": 135,
+  "median": 132.0,
+  "mean": 131.62,
+  "within_quantum": 0.0
+ },
+ "work_ms": {
+  "n": 421,
+  "min": 4,
+  "max": 328,
+  "median": 7,
+  "mean": 9.34,
+  "within_quantum": 0.9881
+ },
+ "wait_end_ms": {
+  "n": 421,
+  "min": 87,
+  "max": 328,
+  "median": 91,
+  "mean": 98.33,
+  "within_quantum": 0.8266
+ },
+ "kinds": {
+  "r": 384,
+  "m": 0,
+  "w": 0,
+  "p": 0
+ },
+ "shown": 384,
+ "hover_new_presents": [
+  1,
+  1,
+  1
+ ],
+ "session": {
+  "code": 0,
+  "detail": "",
+  "stop": "host",
+  "records": 421,
+  "violations": 0,
+  "first_violation": -1,
+  "first_violation_what": "",
+  "asks": 1433,
+  "reasks": 0,
+  "dispatches": 4,
+  "clocks": 4133805,
+  "cursors": 1357,
+  "asyncs": 0,
+  "body_calls": 842,
+  "modal_calls": 591,
+  "paced_calls": 0,
+  "idle_declines": 81,
+  "inflated": 0,
+  "marks": 384,
+  "presents": 384,
+  "idle_passes": 81,
+  "presents_by_kind": {
+   "r": 384,
+   "w": 0,
+   "m": 0,
+   "p": 0
+  },
+  "present_points": {
+   "r": 510,
+   "w": 0,
+   "m": 85,
+   "p": 0
+  },
+  "r_superseded": 376,
+  "w_skipped": 421,
+  "memory": {
+   "start": {
+    "frame": 0,
+    "working_set": 38006784,
+    "peak_working_set": 38006784,
+    "private_bytes": 31911936,
+    "terrain_log": 0
+   },
+   "end": {
+    "frame": 421,
+    "working_set": 71688192,
+    "peak_working_set": 376332288,
+    "private_bytes": 63606784,
+    "terrain_log": 0
+   },
+   "samples": 3
+  },
+  "terrain_log": {
+   "calls": 27601,
+   "max_len": 27600,
+   "len_end": 0,
+   "kept": false
+  },
+  "waits": 81,
+  "wait_ms": 16061,
+  "deliveries": 4,
+  "delivered_commands": 6,
+  "stalls": 0,
+  "trace_bytes": 115838160,
+  "trace_streamed": true,
+  "spilled_events": 4133587,
+  "held_events": 3325
+ }
+}

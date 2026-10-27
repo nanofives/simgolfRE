@@ -80,6 +80,10 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 4 AND MSVC)
   target_compile_options(portsim_runner32 PRIVATE /W4 /WX /permissive-)
 endif()
 
+# Roadmap S7: the Windows host (input translation library and its trace checker; S7.3 adds the app executable).
+# It comes before S5's FreeType block, which copies freetype.dll beside simgolf_port too (roadmap S7.9, I7).
+add_subdirectory(app)
+
 # Roadmap S5.1 (decision D4): FreeType, the system library with its core features only, as an OPTIONAL dependency of
 # module fttext (src/sim/fttext.cpp, the FreeType TextMetrics provider). Nothing is hard-coded: the install comes from
 # outside, as PORTSIM_FREETYPE_ROOT (cache; default $ENV{SG_FREETYPE_ROOT}) = an install prefix, or a vcpkg `installed`
@@ -116,6 +120,11 @@ if(PORTSIM_FREETYPE AND TARGET Freetype::Freetype)
                                      "$<TARGET_FILE_DIR:${_sg_ft_tgt}>")
         endif()
       endforeach()
+      if(TARGET simgolf_port)   # roadmap S7: the app links portsim; add_custom_command(TARGET) works only in its own directory
+        add_custom_target(simgolf_port_freetype ALL
+                          COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:freetype>" "$<TARGET_FILE_DIR:simgolf_port>")
+        add_dependencies(simgolf_port_freetype simgolf_port)
+      endif()
     endif()
   endif()
 else()

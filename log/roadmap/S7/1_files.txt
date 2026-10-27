@@ -1,0 +1,34 @@
+port/include/portsim/sim/live.h
+port/src/sim/live.cpp
+port/test/live.py
+port/test/test_live.py
+log/roadmap/S7/1_tick.patch
+log/roadmap/S7/1_capi.patch
+log/roadmap/S7/1_merge.md
+log/roadmap/S7/1_notes.md
+log/roadmap/S7/1_files.txt
+log/roadmap/S7/1_uncertain.tsv
+log/roadmap/S7/1_make_patches.py
+log/roadmap/S7/1_survey.py
+log/roadmap/S7/1_survey.tsv
+log/roadmap/S7/1_cursor_ctl_search.py
+log/roadmap/S7/1_cursor_ctl_search.log
+log/roadmap/S7/1_violations.log
+log/roadmap/S7/1_equiv_x64.tsv
+log/roadmap/S7/1_equiv_x64.log
+log/roadmap/S7/1_equiv_w32.tsv
+log/roadmap/S7/1_equiv_w32.log
+log/roadmap/S7/1_test_live_x64.log
+log/roadmap/S7/1_test_live_w32.log
+log/roadmap/S7/1_segs_x64.tsv
+log/roadmap/S7/1_segs_x64.log
+log/roadmap/S7/1_segs_win32.tsv
+log/roadmap/S7/1_segs_win32.log
+log/roadmap/S7/1_boot_gate.tsv
+log/roadmap/S7/1_boot_gate.log
+log/roadmap/S7/1_boot_compare.py
+log/roadmap/S7/1_boot_compare.log
+log/roadmap/S7/1_build_base_x64.log
+log/roadmap/S7/1_build_w32.log
+# the four port/ files above live in the mirror port/build/S7_1_head (same relative paths) until the integrator copies them;
+# the shared files' edits are only in the two patches (applied in the mirror)

@@ -34,6 +34,7 @@
 #include "portsim/sim/commands.h"
 #include "portsim/sim/gfx.h"
 #include "portsim/sim/integrator.h"
+#include "portsim/sim/live.h"
 #include "portsim/sim/terrain_api.h"
 #include "portsim/sim/util.h"
 #include "portsim/state_hash.h"
@@ -333,6 +334,7 @@ void TkBase::idiv64(int &edx, int &eax, int d) {
 }
 
 uint32_t TkBase::clock_site(int32_t site) {
+  if (io.live) return io.live->clock_site(site);  // roadmap S7.1: a live run
   if (io.clock)
     for (const auto &c : *io.clock)
       if (c.first == site) return c.second;
@@ -782,6 +784,16 @@ class HeadlessTerrain : public NullTerrain {
     slot = c.mem.map(va, host.data(), n, false) ? va : 0;
     return slot != 0;
   }
+ public:
+  // roadmap S7.9 (U-1681): the blocks live per context address in a process-wide map; a freed context's entry was never
+  // erased, so every context the heap put at a new address kept its 16 MB arena (a Win32 runner reached 2 GB after about 35
+  // scenarios). A context reusing an address re-zeroes and re-maps the entry's blocks, so erasing it changes no run.
+  static void release(const Ctx &c) {
+    std::lock_guard<std::mutex> g(mu());
+    blocks().erase(&c);
+  }
+
+ private:
   uint32_t step_corner(uint32_t tile, int32_t c, int32_t d) {
     if (tile == 0) return 0;
     const uint32_t va = tile + 4u * static_cast<uint32_t>(c);
@@ -794,6 +806,7 @@ class HeadlessTerrain : public NullTerrain {
 }  // namespace tk
 
 std::unique_ptr<TerrainApi> make_headless_terrain(Ctx &ctx) { return std::make_unique<tk::HeadlessTerrain>(ctx); }
+void release_headless_terrain(const Ctx &ctx) { tk::HeadlessTerrain::release(ctx); }
 
 // ------------------------------------------------------------------------------------------------ public API
 namespace tk {
@@ -814,6 +827,7 @@ FrameExit tick_frame_io(Ctx &ctx, const FrameInput &in, FrameIoStats &st) {
     }
   } fill{io, st};
   io.t_head = in.t_head;
+  io.live = in.live;  // roadmap S7.1
   io.clock = &in.clock;
   io.cursor = &in.cursor;
   io.cursor_pos = &in.cursor_pos;
@@ -1193,7 +1207,10 @@ class TraceInput : public InputSource {
     refused_at_ = SIZE_MAX;
     record_ = record;
     if (SG_NEGCTL(g_negctl_frame) != 5)
-      for (const TWrite &w : f.head_writes) ctx_.mem.store<uint32_t>(w.va, w.value);
+      for (const TWrite &w : f.head_writes) {
+        ctx_.mem.store<uint32_t>(w.va, w.value);
+        if (write_hook) write_hook(write_arg, w.va, w.value);
+      }
   }
   // H1's frame wait: the writes made in the frame's clock calls up to the first dispatch after H1's g_frameMs read (a
   // dispatch of an H2 modal); the wait itself dispatches nothing (time_model.md section 7)
@@ -1278,6 +1295,9 @@ class TraceInput : public InputSource {
     return ex;
   }
   void set_tail_idle(bool on) { tail_idle_ = on; }
+  // roadmap S7.1: told of every harness write this source applies (the trace host of the live run core records them)
+  void (*write_hook)(void *, uint32_t va, uint32_t value) = nullptr;
+  void *write_arg = nullptr;
   // the modal loops' cursor reads share the frame's CURSOR records with the frame body's (one read order)
   bool cursor(int32_t &x, int32_t &y) override {
     FrameIo &io = cur_io();
@@ -1320,6 +1340,7 @@ class TraceInput : public InputSource {
  void pace(int32_t site) override { pace_site_ = site; }
 
  private:
+  friend class TraceHost;
   // the frame's clock reads at `site` made before clock ordinal `pos` that clock() has not returned yet
   size_t unread_before(int32_t site, uint32_t pos) const {
     size_t n = 0;
@@ -1331,6 +1352,7 @@ class TraceInput : public InputSource {
     if (SG_NEGCTL(g_negctl_frame) == 5) return;  // negative control: the harness's memory writes skipped
     while (fr_ && wnext_ < fr_->writes.size() && fr_->writes[wnext_].pos < pos) {
       ctx_.mem.store<uint32_t>(fr_->writes[wnext_].va, fr_->writes[wnext_].value);
+      if (write_hook) write_hook(write_arg, fr_->writes[wnext_].va, fr_->writes[wnext_].value);
       ++wnext_;
     }
   }
@@ -1387,8 +1409,118 @@ struct LocalReg {
   }
 } g_local_reg;
 
+// Roadmap S7.1: a LiveHost (portsim/sim/live.h) that answers every request of the live run core from a trace, with this
+// file's parse_trace and TraceInput: the equivalence gate of port/src/sim/live.cpp (the trace as a live host gives what
+// tick_run_frames gives). Live frame 0 is the trace's boot frame (frames[0]), live frame j its frames[j]. The answers
+// follow the trace path exactly: the frame body's clock read takes the frame's first value at its site (TkBase::clock_site),
+// cursor and GetAsyncKeyState reads take the frame's records in order and carry the last record into the next frame
+// (tick_run_frames' after_frame), modal reads and pumps go to TraceInput (with its harness writes reported to the core).
+class TraceHost : public LiveHost {
+ public:
+  explicit TraceHost(Ctx &c) : input_(c) {}
+  bool load(const uint8_t *tr, size_t n, std::string *why) { return parse_trace(tr, n, frames_, end_, why, true); }
+
+  void boot(Ctx &) override {
+    input_.write_hook = &TraceHost::on_write;
+    input_.write_arg = this;
+    start(0);
+    if (frames_.size() < 2) input_.set_tail_idle(true);
+  }
+  bool frame_head(Ctx &, uint32_t frame, uint32_t &t) override {
+    if (frame >= frames_.size()) return false;
+    start(frame);
+    t = frames_[frame].t;
+    return true;
+  }
+  void frame_end(Ctx &, uint32_t) override {
+    input_.end(stats_);
+    const TraceFrame &f = frames_[k_];
+    if (!f.cursor.empty()) {
+      cx_ = f.cursor.back().first;
+      cy_ = f.cursor.back().second;
+    }
+    for (const auto &a : f.async) keys_[a.first] = a.second;
+  }
+  bool clock(Ctx &, int32_t site, bool body, uint32_t &t) override {
+    if (!body) return input_.clock(site, t);
+    for (const auto &c : frames_[k_].clock)
+      if (c.first == site) {
+        t = c.second;
+        return true;
+      }
+    t = frames_[k_].t;
+    return true;
+  }
+  void cursor(Ctx &c, bool modal, int32_t &x, int32_t &y) override {
+    const TraceFrame &f = frames_[k_];
+    if (next_cursor_ < f.cursor.size()) {
+      if (next_cursor_ < f.cursor_pos.size()) {
+        if (modal && SG_NEGCTL(g_negctl_frame) != 7) input_.writes_before(f.cursor_pos[next_cursor_]);
+        gfx_progress_fast(c, f.cursor_pos[next_cursor_]);
+      }
+      x_ = f.cursor[next_cursor_].first;
+      y_ = f.cursor[next_cursor_].second;
+    }
+    ++next_cursor_;
+    x = x_;
+    y = y_;
+  }
+  uint16_t async_key(Ctx &, int vk) override {
+    vk &= 0xff;
+    if (SG_NEGCTL(g_negctl_frame) == 4) return 0;  // as frame_input's negative control 4
+    const auto &a = frames_[k_].async;
+    uint32_t i = anext_[vk];
+    while (i < a.size() && a[i].first != vk) ++i;
+    if (i < a.size()) {
+      akey_[vk] = a[i].second;
+      anext_[vk] = i + 1;
+    } else {
+      anext_[vk] = static_cast<uint32_t>(a.size());
+    }
+    return akey_[vk];
+  }
+  LiveReply pump(Ctx &, const LivePump &p, std::vector<Command> &out) override {
+    return input_.batch(p.kind, out) ? LiveReply::Deliver : LiveReply::Decline;
+  }
+  bool exhausted() const override { return input_.exhausted(); }
+  void pace(Ctx &, int32_t site) override { input_.pace(site); }
+  void wait_point(Ctx &) override { TraceInput::on_wait(&input_); }
+  bool blocking() const override { return false; }  // TraceInput's decline is the trace's own decision
+
+ private:
+  void start(uint32_t k) {
+    k_ = k;
+    input_.begin(frames_[k], static_cast<int32_t>(k));
+    next_cursor_ = 0;
+    x_ = cx_;
+    y_ = cy_;
+    std::memset(anext_, 0, sizeof anext_);
+    std::memcpy(akey_, keys_, sizeof akey_);
+  }
+  static void on_write(void *self, uint32_t va, uint32_t value) {
+    TraceHost &h = *static_cast<TraceHost *>(self);
+    if (h.writes) h.writes->wrote(va, value);
+  }
+  TraceInput input_;
+  std::vector<TraceFrame> frames_;
+  TraceEnd end_;
+  InputStats stats_;
+  uint32_t k_ = 0;
+  size_t next_cursor_ = 0;
+  int32_t cx_ = 0, cy_ = 0, x_ = 0, y_ = 0;
+  uint16_t keys_[256] = {}, akey_[256] = {};
+  uint32_t anext_[256] = {};
+};
+
 }  // namespace
 }  // namespace tk
+
+// roadmap S7.1 (portsim/sim/live.h)
+std::unique_ptr<LiveHost> make_trace_live_host(Ctx &ctx, const uint8_t *trace, size_t n, std::string *why) {
+  auto h = std::make_unique<tk::TraceHost>(ctx);
+  if (!h->load(trace, n, why)) return nullptr;
+  return h;
+}
 
 int tick_run_frames(Ctx &ctx, const uint8_t *trace, size_t trace_len, const uint32_t *queued, int32_t n_queued,
                     int32_t max_frames, uint32_t *out_T, uint64_t *out_hashes, int32_t *frames_done, std::string *detail,

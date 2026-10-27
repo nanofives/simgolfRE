@@ -1,0 +1,40 @@
+--- a/port/app/window.h	2026-10-25 01:26:01.496892900 -0300
++++ b/port/app/window.h	2026-10-25 01:26:22.879091200 -0300
+@@ -77,6 +77,10 @@
+   InputDefect input_defect = InputDefect::None;
+   // the focused child's key test (U-1616: the port's window tree answers it in S7.6); default: never
+   std::function<bool(uint32_t msg, uint32_t wp)> focus_child_takes;
++  // roadmap S7.4: called with every input message before the translator reads anything for it, and the key state the
++  // translator's GetKeyState / GetAsyncKeyState reads get (a result < 0: ask Windows); both default to nothing
++  std::function<void(uint32_t msg, uint32_t wp)> before_translate;
++  std::function<int32_t(uint32_t vk, bool async)> key_state;
+ };
+ 
+ class AppWindow {
+--- a/port/app/window.cpp	2026-10-25 01:26:01.500397800 -0300
++++ b/port/app/window.cpp	2026-10-25 01:26:22.898350100 -0300
+@@ -34,12 +34,14 @@
+  public:
+   LiveHost(HWND hwnd, const WindowOptions &opt, std::vector<HostAnswer> &log) : hwnd_(hwnd), opt_(opt), log_(log) {}
+   uint16_t get_key_state(uint32_t vk) override {
+-    const uint16_t r = static_cast<uint16_t>(GetKeyState(static_cast<int>(vk)));
++    const int32_t k = opt_.key_state ? opt_.key_state(vk, false) : -1;  // S7.4: keys from messages
++    const uint16_t r = k >= 0 ? static_cast<uint16_t>(k) : static_cast<uint16_t>(GetKeyState(static_cast<int>(vk)));
+     put(HostAnswer::Api::KeyState, vk, 0, r);
+     return r;
+   }
+   uint16_t get_async_key_state(uint32_t vk) override {
+-    const uint16_t r = static_cast<uint16_t>(GetAsyncKeyState(static_cast<int>(vk)));
++    const int32_t k = opt_.key_state ? opt_.key_state(vk, true) : -1;
++    const uint16_t r = k >= 0 ? static_cast<uint16_t>(k) : static_cast<uint16_t>(GetAsyncKeyState(static_cast<int>(vk)));
+     put(HostAnswer::Api::AsyncKeyState, vk, 0, r);
+     return r;
+   }
+@@ -224,6 +226,7 @@
+   e.wp = wp;
+   e.lp = lp;
+   e.vp = tr_.viewport();
++  if (opt_.before_translate) opt_.before_translate(msg, wp);
+   if (opt_.input_defect == InputDefect::Bypass) {
+     // the wrong path: client coordinates straight into a click, no reads
+     e.evidence = Translator::evidence_of(msg);

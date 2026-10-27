@@ -1,0 +1,56 @@
+diff --git a/port/include/portsim_c.h b/port/include/portsim_c.h
+--- a/port/include/portsim_c.h
++++ b/port/include/portsim_c.h
+@@ -140,6 +140,7 @@
+   uint32_t cursor_reads;  /* cursor reads of this frame before this call */
+   int32_t pace_site;      /* the paced loop's clock site, 0 = none */
+   uint32_t calls;         /* pump calls of this class since the last delivery, this one included */
++  int32_t idle_ok;        /* roadmap S7.6: 1 = a decline here replays as an idle pass of a modal loop (live.h) */
+ } sg_live_pump;
+ typedef struct sg_live_cmd {  /* one root-window handler call (commands.h Command, kind RootHandler) */
+   uint32_t handler;           /* 1..11 (trace_schema.md HANDLER) */
+@@ -172,6 +173,11 @@
+ /* the last live run's counters: violations, first violation record, asks, reasks, clocks, cursors, asyncs, dispatches,
+    writes, body / modal / paced pump calls (12 values) */
+ SG_API int sg_live_stats(sg_ctx *ctx, int64_t out[12]);
++/* roadmap S7.6: idle passes (declines at idle_ok calls) and dispatches recorded with a CURSOR record in front of them */
++SG_API int sg_live_stats_ext(sg_ctx *ctx, int64_t out[2]);
++/* roadmap S7.6: the last live run's LiveMarker positions (gfx.snapshotAt positions in its recording): copies up to cap,
++   returns the count */
++SG_API int32_t sg_live_marks(sg_ctx *ctx, uint32_t *out, int32_t cap);
+ 
+ /* ---- compatibility switches for defects of the original (phase 3.0, port/CORE.md) ----
+  * Process-wide; 1 (default) = reproduce the original, 0 = the fixed behaviour. */
+diff --git a/port/src/portsim_c.cpp b/port/src/portsim_c.cpp
+--- a/port/src/portsim_c.cpp
++++ b/port/src/portsim_c.cpp
+@@ -300,7 +300,7 @@
+   portsim::LiveReply pump(portsim::Ctx &, const portsim::LivePump &p, std::vector<portsim::Command> &out) override {
+     if (!h_.pump) return portsim::LiveReply::Stop;
+     sg_live_pump cp{static_cast<uint32_t>(p.kind), p.body ? 1 : 0, p.may_deliver ? 1 : 0, p.must_deliver ? 1 : 0,
+-                    p.frame, p.cursor_reads, p.pace_site, p.calls};
++                    p.frame, p.cursor_reads, p.pace_site, p.calls, p.idle_ok ? 1 : 0};
+     sg_live_cmd buf[64];
+     int32_t n = 0;
+     const int32_t r = h_.pump(h_.user, &cp, buf, 64, &n);
+@@ -454,6 +454,20 @@
+                         static_cast<int64_t>(r.paced_calls)};
+   for (int i = 0; i < 12; ++i) out[i] = v[i];
+   return SG_OK;
++}
++
++int sg_live_stats_ext(sg_ctx *ctx, int64_t out[2]) {
++  if (!ctx || !out) return SG_E_ARG;
++  out[0] = static_cast<int64_t>(ctx->live_res.idle_declines);
++  out[1] = static_cast<int64_t>(ctx->live_res.inflated);
++  return SG_OK;
++}
++
++int32_t sg_live_marks(sg_ctx *ctx, uint32_t *out, int32_t cap) {
++  if (!ctx || cap < 0) return SG_E_ARG;
++  const std::vector<uint32_t> &m = ctx->live_res.mark_pos;
++  for (int32_t k = 0; out && k < cap && static_cast<size_t>(k) < m.size(); ++k) out[k] = m[static_cast<size_t>(k)];
++  return static_cast<int32_t>(m.size());
+ }
+ 
+ int32_t sg_tick_callee_counts(char *buf, int32_t cap, int32_t reset) {

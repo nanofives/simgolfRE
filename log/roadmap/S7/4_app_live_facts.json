@@ -1,0 +1,75 @@
+{
+ "idle_cpu_pct": 3.87,
+ "normal": {
+  "n": 356,
+  "min": 87,
+  "max": 105,
+  "median": 93.0,
+  "mean": 92.4,
+  "within_quantum": 0.9916
+ },
+ "slow": {
+  "n": 58,
+  "min": 125,
+  "max": 139,
+  "median": 129.0,
+  "mean": 129.48,
+  "within_quantum": 0.0
+ },
+ "work_ms": {
+  "n": 423,
+  "min": 3,
+  "max": 27,
+  "median": 6,
+  "mean": 6.52,
+  "within_quantum": 1.0
+ },
+ "wait_end_ms": {
+  "n": 423,
+  "min": 87,
+  "max": 138,
+  "median": 93,
+  "mean": 97.36,
+  "within_quantum": 0.8534
+ },
+ "kinds": {
+  "m": 7,
+  "w": 320,
+  "p": 0
+ },
+ "shown": 327,
+ "hover_new_presents": [
+  1,
+  1,
+  1
+ ],
+ "session": {
+  "code": 0,
+  "detail": "",
+  "stop": "host",
+  "records": 423,
+  "violations": 0,
+  "first_violation": -1,
+  "first_violation_what": "",
+  "asks": 1438,
+  "reasks": 0,
+  "dispatches": 4,
+  "clocks": 425,
+  "cursors": 1364,
+  "asyncs": 0,
+  "body_calls": 846,
+  "modal_calls": 592,
+  "paced_calls": 0,
+  "idle_declines": 82,
+  "inflated": 0,
+  "marks": 327,
+  "presents": 327,
+  "idle_passes": 82,
+  "waits": 82,
+  "wait_ms": 16195,
+  "deliveries": 4,
+  "delivered_commands": 6,
+  "stalls": 0,
+  "trace_bytes": 107916
+ }
+}

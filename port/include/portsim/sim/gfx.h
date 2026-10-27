@@ -39,6 +39,11 @@ void gfx_progress(Ctx &ctx, uint32_t pos);
 // tick.cpp: the run stopped because the recorded input ran out (the menus wait for input the trace no longer holds): every
 // snapshot not yet taken is past the last item the run could consume, so the back buffer as it is now is its frame
 void gfx_end_of_input(Ctx &ctx);
+// roadmap S7.9 (U-1670): called after every Window::refreshFull the backend's body handled, whatever path issued it (the frame
+// code's drop, a module's own drawing calls, a family calling the body), with the back buffer already updated: where the
+// original's back buffer reaches the window. nullptr removes it. Only a live run's core sets one (live.cpp).
+using GfxRefreshHook = void (*)(void *arg);
+void gfx_set_refresh_hook(Ctx &ctx, GfxRefreshHook fn, void *arg);
 inline void gfx_progress_fast(Ctx &ctx, uint32_t pos) {
   if (g_gfx_attached.load(std::memory_order_relaxed) != 0) gfx_progress(ctx, pos);
 }

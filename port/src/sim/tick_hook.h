@@ -128,8 +128,18 @@ struct FrameSlots {
 // mainLoop's phase exits (where control goes after a phase that can leave the frame's straight order)
 enum PhExit { kNext = 0, kFrame = 1, kRetile = 2, kMenu = 3 };
 
+// Roadmap S7.1: a live run's on-demand answers (port/src/sim/live.cpp). When FrameIo::live is set, the frame body's clock,
+// cursor and GetAsyncKeyState reads ask it instead of reading the recorded lists; every trace run leaves it null.
+struct LiveIo {
+  virtual ~LiveIo() = default;
+  virtual uint32_t clock_site(int32_t site) = 0;        // TkBase::clock_site
+  virtual void body_cursor(int32_t &x, int32_t &y) = 0; // TkBase::cursor_read (the frame body's Display::getCursor)
+  virtual uint16_t async_key(int vk) = 0;               // TkBase::key_async
+};
+
 // What a converted body needs from the frame driver: the clock values of the frame and the asynchronous key state.
 struct FrameIo {
+  LiveIo *live = nullptr;  // roadmap S7.1 (above)
   uint32_t t_head = 0;
   const std::vector<std::pair<int32_t, uint32_t>> *clock = nullptr;
   size_t clock_used = 0;
@@ -167,6 +177,9 @@ enum { kPumpSiteModal = 0, kPumpSiteP6 = 1, kPumpSiteH1 = 2 };
 
 // The FrameIo of the frame running on this thread (a default one outside a frame: clock 0, no key down).
 FrameIo &cur_io();
+// tick_frame with what the frame's cursor / GetAsyncKeyState reads did against its records (tick.cpp; the live run core,
+// roadmap S7.1, drives frames through it too)
+FrameExit tick_frame_io(Ctx &ctx, const FrameInput &in, FrameIoStats &st);
 struct IoScope {  // installs a frame's FrameIo for the duration of the frame
   FrameIo *prev;
   explicit IoScope(FrameIo &f);
@@ -236,6 +249,13 @@ struct TkBase {
   void stack_pop(uint32_t n);
   // the next cursor position (Display::getCursor)
   void cursor_read(int32_t &x, int32_t &y) {
+    if (io.live) {  // roadmap S7.1: a live run
+      io.live->body_cursor(io.cursor_x, io.cursor_y);
+      ++io.cursor_used;
+      x = io.cursor_x;
+      y = io.cursor_y;
+      return;
+    }
     if (io.cursor && io.cursor_used < io.cursor->size()) {
       if (io.cursor_pos && io.cursor_used < io.cursor_pos->size()) gfx_progress_fast(ctx, (*io.cursor_pos)[io.cursor_used]);
       io.cursor_x = (*io.cursor)[io.cursor_used].first;
@@ -250,6 +270,7 @@ struct TkBase {
   // GetAsyncKeyState(vk) as the game sees it (low 16 bits): the frame's next recorded read of that key
   int key_async(int vk) {
     vk &= 0xff;
+    if (io.live) return io.async_key[vk] = io.live->async_key(vk);  // roadmap S7.1: a live run
     if (io.async) {
       uint32_t i = io.async_next[vk];
       while (i < io.async->size() && (*io.async)[i].first != vk) ++i;

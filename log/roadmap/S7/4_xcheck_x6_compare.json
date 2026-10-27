@@ -1,0 +1,50 @@
+{
+ "app": "hole",
+ "label": "x6_tee",
+ "masked": [
+  "g_frameMs"
+ ],
+ "records_differing_per_object": {
+  "g_frameMs": 339,
+  "g_tileFlags": 155,
+  "g_tileLevel": 155,
+  "g_tileType": 155,
+  "g_holes": 155,
+  "g_tileBuildCode": 155,
+  "g_tileRefund": 155,
+  "g_lastEditTileY": 26,
+  "g_pathGrid": 138,
+  "g_textBuf": 5,
+  "g_probeType1Strokes": 128,
+  "g_probeShotX": 128,
+  "g_probeShotY": 128,
+  "g_golfers": 128,
+  "g_shotTargetX": 128,
+  "g_shotTargetY": 128,
+  "unk_005a9ce4": 128,
+  "g_rng": 128,
+  "g_walkers": 126,
+  "g_skyActors": 111,
+  "unk_005a6d40": 96,
+  "g_tileVariant": 95,
+  "g_courseYards": 95,
+  "g_golferClassSlotCounts": 83
+ },
+ "app_records": 340,
+ "orig_records": 347,
+ "same_records": 185,
+ "first": {
+  "record": 185,
+  "objects": [
+   "g_tileFlags",
+   "g_tileLevel",
+   "g_tileType",
+   "g_holes",
+   "g_tileBuildCode",
+   "g_tileRefund",
+   "g_lastEditTileY"
+  ],
+  "app_T": 1071448,
+  "orig_T": 1072587
+ }
+}

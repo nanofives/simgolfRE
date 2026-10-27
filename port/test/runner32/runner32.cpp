@@ -52,6 +52,10 @@ struct Api {
   F(int32_t, sg_hash_class, (sg_ctx *, const char *, uint64_t *, int32_t))
   F(int, sg_run_frames, (sg_ctx *, const uint8_t *, size_t, const sg_msg *, int32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
   F(int, sg_run_boot, (sg_ctx *, const uint8_t *, size_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+  F(int, sg_live_run_builtin, (sg_ctx *, int32_t, const uint8_t *, size_t, uint32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+  F(int, sg_live_recording, (sg_ctx *, uint8_t *, size_t, size_t *))
+  F(int, sg_live_stats, (sg_ctx *, int64_t *))
+  F(const char *, sg_run_frames_detail, (sg_ctx *))
   F(int32_t, sg_defect_count, (void))
   F(int, sg_defect_info_get, (int32_t, sg_defect_info *))
   F(int, sg_defect_set, (const char *, int32_t))
@@ -104,6 +108,10 @@ bool load_api(const char *path) {
   F(int32_t, sg_hash_class, (sg_ctx *, const char *, uint64_t *, int32_t))
   F(int, sg_run_frames, (sg_ctx *, const uint8_t *, size_t, const sg_msg *, int32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
   F(int, sg_run_boot, (sg_ctx *, const uint8_t *, size_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+  F(int, sg_live_run_builtin, (sg_ctx *, int32_t, const uint8_t *, size_t, uint32_t, int32_t, uint32_t *, uint64_t *, int32_t *))
+  F(int, sg_live_recording, (sg_ctx *, uint8_t *, size_t, size_t *))
+  F(int, sg_live_stats, (sg_ctx *, int64_t *))
+  F(const char *, sg_run_frames_detail, (sg_ctx *))
   F(int32_t, sg_defect_count, (void))
   F(int, sg_defect_info_get, (int32_t, sg_defect_info *))
   F(int, sg_defect_set, (const char *, int32_t))
@@ -489,6 +497,33 @@ int main(int argc, char **argv) {
           w.put<int32_t>(done);
           w.bytes(ts.data(), sizeof(uint32_t) * static_cast<size_t>(done));
           w.bytes(hs.data(), sizeof(uint64_t) * static_cast<size_t>(done) * static_cast<size_t>(nsim));
+        } else if (op == 40) {  // live run, built-in host (roadmap S7.1; op 40, clear of S3.2's 28..32): i32 kind, u32 frame_ra, i32 max records, u32 n, data
+          int32_t kind = r.get<int32_t>();
+          uint32_t fra = r.get<uint32_t>();
+          int32_t maxf = r.get<int32_t>();
+          uint32_t dn = r.get<uint32_t>();
+          const uint8_t *data = r.bytes(dn);
+          if (r.bad || !data) { status = SG_E_ARG; break; }
+          int32_t nsim = A.sg_object_count("sim");
+          std::vector<uint32_t> ts(maxf > 0 ? maxf : 1);
+          std::vector<uint64_t> hs(static_cast<size_t>(maxf > 0 ? maxf : 1) * static_cast<size_t>(nsim > 0 ? nsim : 1));
+          int32_t done = 0;
+          status = A.sg_live_run_builtin(s.ctx, kind, data, dn, fra, maxf, ts.data(), hs.data(), &done);
+          x87_reset();
+          sync_out(s);
+          w.put<int32_t>(done);
+          w.bytes(ts.data(), sizeof(uint32_t) * static_cast<size_t>(done));
+          w.bytes(hs.data(), sizeof(uint64_t) * static_cast<size_t>(done) * static_cast<size_t>(nsim));
+          size_t rl = 0;
+          A.sg_live_recording(s.ctx, nullptr, 0, &rl);
+          std::vector<uint8_t> rec(rl ? rl : 1);
+          A.sg_live_recording(s.ctx, rec.data(), rl, &rl);
+          w.put<uint32_t>(static_cast<uint32_t>(rl));
+          w.bytes(rec.data(), rl);
+          int64_t st[12] = {0};
+          A.sg_live_stats(s.ctx, st);
+          w.bytes(st, sizeof st);
+          w.str(A.sg_run_frames_detail(s.ctx));
         } else if (op == 20) {
           status = A.sg_exe_fill_state(s.ctx, r.get<int32_t>());
           sync_out(s);
