@@ -8,7 +8,8 @@ Layers (select with -m):
 
     py -3.12 -m pytest tests -m static
     py -3.12 -m pytest tests -m "runtime and not slow"
-    py -3.12 -m pytest tests            # everything
+    py -3.12 -m pytest tests            # default: skips slow and ghidra (pytest.ini addopts)
+    py -3.12 -m pytest tests -m ""      # everything (a command-line -m replaces the default)
 """
 from __future__ import annotations
 

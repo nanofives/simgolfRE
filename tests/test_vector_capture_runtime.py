@@ -14,7 +14,7 @@ import pytest
 
 from conftest import ROOT
 
-pytestmark = pytest.mark.runtime
+pytestmark = [pytest.mark.runtime, pytest.mark.slow]  # three subprocess boots, ~22 s
 
 TOOLS = ROOT / "re" / "tools"
 

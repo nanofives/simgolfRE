@@ -195,6 +195,7 @@ py -3.12 -m pytest -m static                  # anchors, SafeDisc removal, porta
 py -3.12 -m pytest -m "runtime and not slow"  # boots the game windowed; Frida; input; in-game; patches; A/B tool
 py -3.12 -m pytest -m ghidra                  # master project, headless facts via a pool slot, MCP tools/list
 py -3.12 -m pytest -m slow                    # 5x boot reliability, full intro through the Bink fix
+py -3.12 -m pytest -m ""                      # FULL suite (pytest.ini addopts skips slow and ghidra by default)
 ```
 
 ## Workflow rules
